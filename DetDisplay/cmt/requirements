@@ -1,0 +1,25 @@
+package DetDisplay
+
+
+branches src cmt doc
+
+use glastmedia
+use GlastSvc
+use GuiSvc
+
+set   DetDisplayShr           "${DETDISPLAYROOT}/${DEBUGDIR}/libDetDisplay"
+
+private
+
+library DetDisplay  *.cxx *.h  Dll/*.cxx
+
+macro DetDisplay_linkopts   " "\
+      VisualC " DataObject.obj "
+ 
+
+
+include_path $(DETDISPLAYROOT)
+
+
+macro DetDisplay_shlibflags "$(componentshr_linkopts) $(use_linkopts) "\
+       VisualC "$(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
