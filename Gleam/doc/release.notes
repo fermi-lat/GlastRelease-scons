@@ -3,6 +3,11 @@
  * package manager:T.Burnett
  * $Id$
 
+* v5r0p6 THB 03-feb-03   Add G4GeometryScv.
+* v5r0p5 THB 26-jan-03   Clean up joboptions a bit.
+
+* v5r0  
+* ========================== GlastRelease ===========================
 * v4r1   THB 28-nov-02     
      use Event             v9r5p1
 * v4   THB 21-nov-02     
