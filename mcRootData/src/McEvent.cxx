@@ -32,7 +32,6 @@ m_eventId(0), m_runId(0)
 }
 
 McEvent::~McEvent() {
-    Clear();
     
     if (m_particleCol == m_staticParticleCol) m_staticParticleCol = 0;
     m_particleCol->Delete();
@@ -48,7 +47,8 @@ McEvent::~McEvent() {
     m_integratingHitCol->Delete();
     delete m_integratingHitCol;
     m_integratingHitCol = 0;
-    
+
+	Clear();
 }
 
 void McEvent::initialize(UInt_t nEvent, UInt_t nRun) {
@@ -63,9 +63,9 @@ void McEvent::Clear(Option_t *option) {
     m_eventId = 0;
     m_runId = 0;
     
-    m_particleCol->Delete();
-    m_positionHitCol->Delete();
-    m_integratingHitCol->Delete();
+    if (m_particleCol) m_particleCol->Delete();
+    if (m_positionHitCol) m_positionHitCol->Delete();
+    if (m_integratingHitCol) m_integratingHitCol->Delete();
 }
 
 void McEvent::Print(Option_t *option) const {
