@@ -3,28 +3,14 @@
 
 using namespace Event;
 
-TkrVertex::TkrVertex(int ilyr, int itwr, double energy, double quality, const Ray& testRay)
+TkrVertex::TkrVertex(idents::TkrId tkrID, double energy, double quality, double chisq, 
+			       double radlen, double doca, double s1, double s2, double z,
+				   TkrTrackParams params):
+           m_params(params), m_energy(energy), m_quality(quality), m_chiSquare(chisq), m_statusBits(0), 
+		   m_doca(doca), m_arcLen1(s1), m_arcLen2(s2), m_radlen(radlen), m_vtxID(tkrID)
 {
-    m_position   = testRay.position();
-    m_direction  = testRay.direction();
-    m_energy     = energy;
-    m_quality    = quality;
-    m_firstLayer = ilyr;
-    m_itower     = itwr;
-
-    if (m_direction.mag() != 1.) 
-    {
-        m_direction = m_direction.unit();
-    }
-
-    m_vertexPar  = TkrFitPar(m_position.x(),m_direction.x()/m_direction.z(),m_position.y(),m_direction.y()/m_direction.z());
-    m_vertexCov  = TkrFitMatrix();
-
-    m_vertexCov(1,1) = 1.;
-    m_vertexCov(2,2) = 1.;
-    m_vertexCov(3,3) = 1.;
-    m_vertexCov(4,4) = 1.;
-
+    m_position   = Point(params(1), params(3), z);
+    m_direction  = 	Vector(-params(2), -params(4), -1.).unit();
     m_tracks.clear();
 }
 
@@ -38,54 +24,17 @@ void TkrVertex::writeOut(MsgStream& log) const
             << getPosition().y()  << " " << getPosition().z() << endreq
             << " Direction     = " << getDirection().x() << " " 
             << getDirection().y() << " " << getDirection().z() << endreq
-            << " Energy        = " << getEnergy() << endreq
-            << " first Layer   = " << getLayer() << endreq
-            << " Tower         = " << getTower();
+            << " Energy        = " << getEnergy();
     }
     log << endreq;
 }
 
-double        TkrVertex::getQuality()            const 
-{
-    return m_quality;
-};
-double        TkrVertex::getEnergy(TrackEnd)     const 
-{
-    return m_energy;
+std::ostream& TkrVertex::fillStream( std::ostream& s ) const 
+{ 
+  s << " Position      = " << getPosition().x()  << " " << getPosition().y()  << " " << getPosition().z()  << "\n"
+    << " Direction     = " << getDirection().x() << " " << getDirection().y() << " " << getDirection().z() << "\n"
+    << " Energy        = " << getEnergy() << "\n"
+    << " quality       = " << getQuality();
+  
+  return s; 
 }
-int           TkrVertex::getLayer(TrackEnd )     const 
-{
-    return m_firstLayer;
-}
-int           TkrVertex::getTower(TrackEnd )     const 
-{
-    return m_itower;
-}
-Point         TkrVertex::getPosition(TrackEnd )  const 
-{
-    return m_position;
-}
-Vector        TkrVertex::getDirection(TrackEnd ) const 
-{
-    return m_direction;
-}
-Ray           TkrVertex::getRay(TrackEnd )       const 
-{
-    return Ray(getPosition(),getDirection());
-}
-TkrFitPar     TkrVertex::getTrackPar(TrackEnd )  const 
-{
-    return m_vertexPar;
-}
-double        TkrVertex::getTrackParZ(TrackEnd ) const 
-{
-    return m_position.z();
-}
-TkrFitMatrix  TkrVertex::getTrackCov(TrackEnd )  const 
-{
-    return m_vertexCov;}
-bool          TkrVertex::empty(int)              const 
-{
-    return m_firstLayer >= 0;
-}
-
