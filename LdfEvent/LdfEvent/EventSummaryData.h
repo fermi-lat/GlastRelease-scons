@@ -32,15 +32,56 @@ namespace LdfEvent{
             EVTSEQ = 1
         } EventFlags ;
 
+
+        typedef enum {
+            GEM = 0,
+            OSW = 1,
+            ERR = 2, 
+            DIAG = 3,
+            AEM = 4
+        }Contribution;
+
         virtual ~EventSummaryData();
         virtual std::ostream& fillStream(std::ostream &s) const;
         friend std::ostream& operator << (std::ostream &s, const EventSummaryData &obj);
 
-        EventSummaryData() {m_summary=0; m_flags = 0;};
-        EventSummaryData(unsigned int summary) {m_summary=summary; m_flags = 0;};
+        EventSummaryData() { clear(); };
+        EventSummaryData(unsigned int summary) {clear(); m_summary=summary; };
+        void clear() { 
+            m_summary = 0; m_flags = 0;
+            unsigned int i;
+            for (i = 0; i<16; i++) m_temLen[i] = 0;
+            m_otherContribLen[GEM] = 0;
+            m_otherContribLen[AEM] = 0;
+            m_otherContribLen[OSW] = 0;
+            m_otherContribLen[ERR] = 0;
+            m_otherContribLen[DIAG] = 0;
+        }
+
         void initialize(unsigned int summary){m_summary=summary;};
         void initEventFlags(unsigned int flags) { m_flags = flags; };
+        void initTemContribLen(unsigned long *len) {
+            unsigned int i;
+            for (i = 0; i < 16; i++) { m_temLen[i] = len[i]; }
+        }
+        void initContribLen(unsigned long *tem, unsigned long gemLen, unsigned long oswLen,
+            unsigned long errLen, unsigned long diagLen, unsigned long aemLen) {
+
+            m_otherContribLen[GEM] = gemLen;
+            m_otherContribLen[OSW] = oswLen;
+            m_otherContribLen[ERR] = errLen;
+            m_otherContribLen[DIAG] = diagLen;
+            m_otherContribLen[AEM] = aemLen;
+            initTemContribLen(tem);
+        }
         
+        unsigned long temLength(unsigned int tem) { m_temLen[tem]; }
+        unsigned long gemLength() const { return m_otherContribLen[GEM]; }
+        unsigned long oswLength() const { return m_otherContribLen[OSW]; }
+        unsigned long aemLength() const { return m_otherContribLen[AEM]; }
+        unsigned long errLength() const { return m_otherContribLen[ERR]; }
+        unsigned long diagLength() const { return m_otherContribLen[DIAG]; }
+
         unsigned int eventFlags() const { return m_flags; };
         bool goodEvent() const { return (m_flags == 0); };
         bool badEventSeq() const { return (m_flags && EVTSEQ); };
@@ -69,6 +110,8 @@ namespace LdfEvent{
     /// Event Flags - used to denote bad events
     /// flags = 0 is "good"
     unsigned int m_flags;
+    unsigned long m_temLen[16];
+    unsigned long m_otherContribLen[5];
     };
 
     inline EventSummaryData::~EventSummaryData(){
@@ -82,7 +125,18 @@ namespace LdfEvent{
           << "\nzeroSuppress: " << zeroSuppress() << " marker: " << marker()
           << "\nerror: " << error() << " diagnostic: " << diagnostic()
           << "\neventNumber: " << eventNumber() << " trgParityError: " << trgParityError() << "\n"
-          << "Event Flags: " << m_flags << "\n";
+          << "Event Flags: " << m_flags << "\n"
+          << "Contribution Lengths: \n"
+          << "GEM Length: " << m_otherContribLen[GEM] << "\n"
+          << "OSW Length: " << m_otherContribLen[OSW] << "\n"
+          << "AEM Length: " << m_otherContribLen[AEM] << "\n"
+          << "Diagnostic Length: " << m_otherContribLen[DIAG] << "\n"
+          << "Error Length: " << m_otherContribLen[ERR] << "\n"
+          << "TEM Lengths: \n";
+        unsigned int i;
+        for (i = 0; i < 16; i++) 
+            s << "TEM " << i << " Length: " << m_temLen[i] << "\n";
+           
         return s;
     }
 
