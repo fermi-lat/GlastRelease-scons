@@ -191,6 +191,9 @@ StatusCode digiRootWriterAlg::writeCalDigi() {
     Event::CalDigiCol::const_iterator calDigiTds;
 
     for (calDigiTds = calDigiColTds->begin(); calDigiTds != calDigiColTds->end(); calDigiTds++) {
+        log << MSG::DEBUG;
+        (*calDigiTds)->fillStream(log.stream());
+        log << endreq;
         CalDigi *calDigiRoot = new CalDigi();
         idents::CalXtalId::CalTrigMode modeTds = (*calDigiTds)->getMode();
         idents::CalXtalId idTds = (*calDigiTds)->getPackedId();
