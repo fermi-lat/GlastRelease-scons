@@ -3,7 +3,7 @@
 <!-- 1 Feb 2001   Default length unit is now mm.  Change constants
                    accordingly.                             (jrb) -->
 
-<!DOCTYPE gdd SYSTEM "geochoice.dtd"
+<!DOCTYPE gdd SYSTEM "gdd.dtd"
   [
 <!-- Following 4 definitions are used to identify diodes -->
     <!ENTITY dminus    "0" >
@@ -111,8 +111,6 @@ Material for CAL flange
 </prim>
 	<prim name="traySpacing" value="32.0">Center-to-center distance between trays
 </prim>
-        <prim name="ssdDieSize" value="95.0">Si wafer size
-</prim>
         <prim name="guardRing" value="0.8">guard ring size
 </prim>
         <prim name="ssdGap" value="0.1">gap between Si dies
@@ -148,8 +146,6 @@ form a square array of this dimension</prim>
         <prim name= "faceThick" value= "0.2">**insert comment here**
 </prim>
         <prim name= "panelThick" value= "28.8">Thickness of converter + core??
-</prim>
-        <prim name="nSiDies" value="4" uType="count">Number of dies on a side
 </prim>
         <prim name="nFeChips" value="7" uType="count">Number of front-end readout strips per die
 (determines number of Si strips)
