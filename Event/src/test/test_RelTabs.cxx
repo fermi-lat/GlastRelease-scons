@@ -72,6 +72,7 @@ int main()
   Relation<FakeOne, FakeTwo> *rel2 = new Relation<FakeOne, FakeTwo>(person2, location1, "06/08/2002");
   Relation<FakeOne, FakeTwo> *rel3 = new Relation<FakeOne, FakeTwo>(person3, location2, "10/08/2002");
   Relation<FakeOne, FakeTwo> *rel4 = new Relation<FakeOne, FakeTwo>(person1, location2, "20/09/2002");
+  Relation<FakeOne, FakeTwo> *rel5 = new Relation<FakeOne, FakeTwo>(person2, location1, "09/10/2002");
 
   // Using the TDS, we should only require an ObjectList of Relations, ie:
   // typdef ObjectList< Relation<FakeOne, FakeTwo> > ListRelations;
@@ -82,10 +83,18 @@ int main()
   RelTable<FakeOne, FakeTwo> tab;
   tab.init();
 
+  // The table is empty and so the following query should return an emtpy vector
+  std::vector< Relation<FakeOne, FakeTwo>* > empty = tab.getRelByFirst(person1);
+  std::cout << "Querying and empty table the size of the returned vector is " 
+	    << empty.size() << std::endl;  
+  
+  
   tab.addRelation(rel1);
   tab.addRelation(rel2);
   tab.addRelation(rel3);
   tab.addRelation(rel4);
+
+  tab.addNoDupRel(rel5);
 
   // Using the TDS, the table is directly initialized by the ObjectList of relations: 
   // RelTable<FakeOne, FakeTwo> tab(rels);
@@ -184,6 +193,24 @@ int main()
                 << "     ssn: " << (*i)->getFirst()->ssn   << std::endl;
     }
 
+
+
+ std::cout << std::endl << person2->name << std::endl;
+
+
+  int index;
+  // Now, we verify how many times person2 has been in a location
+  locs = tab.getRelByFirst(person2);
+  for (i = locs.begin(); i != locs.end(); i++)
+    {
+      std::cout << "Address: " << (*i)->getSecond()->address << std::endl;
+      std::cout << "Floor: " << (*i)->getSecond()->floor << std::endl;  
+      std::cout << "Dates : " << std::endl;
+      for ( index = 0; index < (*i)->getInfos().size(); index++)
+	{
+	  std::cout << (*i)->getInfos()[index] << std::endl;
+	}
+    }
  
 
   // Using the TDS, one can finally register the collection of relations:

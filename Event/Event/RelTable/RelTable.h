@@ -7,16 +7,17 @@
 #include "GaudiKernel/SmartRef.h"
 #include "Relation.h"
 #include <vector>
+#include <algorithm>
 
 /** 
 * @class RelTable
 *
 * @brief This class is used to wrap a collection of Relations.
 *
-* The RelTable class wraps a vector (a Gaudi ObjectList) of Relations. It
+* The RelTable class wraps a list (a Gaudi ObjectList) of Relations. It
 * lets the user search for all object related to a given one. The search can be
 * done with respect to an object of the first or the second field of the
-* relations
+* relations. The user can also modify or delete relations.
 * 
 *
 * @author Marco Frailis
@@ -40,8 +41,16 @@ public:
   /// Initialize the internal pointer to an ObjectList of relations
   void init() { m_relations = new ObjectList< Relation<T1,T2> >;}
   
-  /// The following method add a new Relation to the vector of relations.
+  /// The following method add a new Relation to the list of relations.
   void addRelation(Relation<T1,T2>* rel);
+
+  /**
+  * The following method add a Relation to the table if it doesn't contain
+  * a relation between the same two objects, otherwise it appends the info
+  * vector to the exsisting relation (if this info vector is different from
+  * the exsisting one)
+  */
+  void addNoDupRel(Relation<T1,T2>* rel);
   
   /**
   * This method search for all relations having obj in the first
@@ -100,6 +109,9 @@ private:
   void removeFirst(Relation<T1,T2> *rel);
   void removeSecond(Relation<T1,T2> *rel);
 
+  Relation<T1,T2>* findDup(Relation<T1,T2> *rel1, Relation<T1,T2>* rel2);
+  bool bindRelationNoDup(Relation<T1,T2> *rel);
+
 
   };
   
@@ -125,6 +137,22 @@ private:
   
   
   template <class T1,class T2>
+    void RelTable<T1,T2>::addNoDupRel(Relation<T1,T2>* rel) {
+    // Purpose and Method:  This routine add a relation to the table if it doesn't 
+    // contain a relation between the same two objects, otherwise it appends the info
+    // vector to the exsisting relation (if this info vector is different from
+    // the exsisting one)
+    // Inputs:  rel is a pointer to the relation to be added.
+    
+    if (bindRelationNoDup(rel))
+      {
+	bindRelationSecond(rel);
+	m_relations->push_back(rel);
+      }
+  }
+
+
+  template <class T1,class T2>
     std::vector< Relation<T1,T2>* > RelTable<T1,T2>::getRelByFirst(const T1* pobj) const {
     // Purpose and Method: This routine finds all relations having pobj in the
     // first field.  
@@ -132,6 +160,7 @@ private:
     // Outputs: A pointer to a vector of Relation* including pobj
     
     std::vector< Relation<T1,T2>* > rels;
+    if (!m_relations->size()) return rels;
     SmartRef< Relation<T1,T2> > r = m_relations->front();
     while (pobj != r->getFirst() && r->m_first.getFirst())
     {
@@ -158,6 +187,7 @@ private:
     // Inputs: pobj is a pointer to the object to be searched in the second field
     // Outputs: A pointer to a vector of Relation* including pobj
     std::vector< Relation<T1,T2>* > rels;
+    if (!m_relations->size()) return rels;
     SmartRef< Relation<T1,T2> > r = m_relations->front();
     while (pobj != r->getSecond() && r->m_second.getFirst())
     {
@@ -305,6 +335,72 @@ private:
       }
     }    
   }
+
+
+ 
+  template <class T1,class T2>
+    inline Relation<T1,T2>* RelTable<T1,T2>::findDup(Relation<T1,T2> *rel1, Relation<T1,T2>* rel2)
+    {
+      while (rel1)
+	{
+	  if (rel1->getSecond() == rel2->getSecond())
+	    return rel1;
+	  rel1 = rel1->m_first.getSame();
+	}
+      return rel1;
+    }
+	  
+ 
+
+  template <class T1,class T2>
+    inline bool RelTable<T1,T2>::bindRelationNoDup(Relation<T1,T2> *rel) {
+    
+    Relation<T1,T2>* temp;
+
+    if (m_relations->size())
+    {
+      SmartRef< Relation<T1,T2> > r = m_relations->front();
+      while ((r->getFirst() != rel->getFirst()))
+      {
+        if (r->m_first.getFirst())
+        {
+          r = r->m_first.getFirst();
+        }
+        else
+        {
+          break;
+        }
+      }
+      
+      if (r->getFirst() != rel->getFirst())
+      {
+        r->m_first.setFirst(rel);
+        rel->m_first.setPrev(r);
+	return true;
+      }
+      else
+      {
+	temp = findDup(r,rel);
+	if (!temp)
+	  {
+	    temp = r->m_first.getSame();
+	    rel->m_first.setSame(temp);
+	    if (temp)
+	      temp->m_first.setPrev(rel);
+	    r->m_first.setSame(rel);
+	    rel->m_first.setPrev(r);
+	    return true;
+	  }
+	else
+	  {
+	    std::copy(rel->m_infos.begin(),rel->m_infos.end(),back_inserter(temp->m_infos));
+	    return false;
+	  }
+      }
+    }
+    return true;
+  }
+
 
 
   template <class T1,class T2>
