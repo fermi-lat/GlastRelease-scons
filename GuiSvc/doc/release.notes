@@ -3,6 +3,7 @@
  * Manager T Burnett
  * @verbatim
  *
+ * v3r5p3 19-feb-2004  THB restore pause setting
  * v3r5p2 01-nov-2003  TK  update properties to most common usage; rm duplicate button
  * v3r5p1 08-nov-2003  THB minor fix for gcc
  * v3r5   07-nov-2003  THB add new alg to control when to update display

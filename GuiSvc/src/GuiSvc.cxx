@@ -45,7 +45,7 @@ GuiSvc::GuiSvc(const std::string& name,ISvcLocator* svc)
     // declare the properties and set defaults
 
     declareProperty ("size", m_size=-3000);
-    declareProperty( "pause_interval", m_pause_interval=-1);
+    declareProperty( "pause_interval", m_pause_interval=0);
     declareProperty( "paused", m_paused=true);
 
     declareProperty("EvtMax", m_evtMax=0xFEEDBABE);
