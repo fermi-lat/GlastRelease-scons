@@ -134,7 +134,7 @@ const CalXtalReadout* CalDigi::getReadoutCol() {
     if ((m_readoutCol) && (!m_numReadouts)){
         TIter cloneIter(m_readoutCol);
         CalXtalReadout *readout = 0;
-        while (readout = (CalXtalReadout*)cloneIter.Next()) {
+        while ((readout = (CalXtalReadout*)cloneIter.Next())!=0) {
             addReadout(readout->getRange(CalXtalId::POS), readout->getAdc(CalXtalId::POS),
                 readout->getRange(CalXtalId::NEG), readout->getAdc(CalXtalId::NEG));
         }

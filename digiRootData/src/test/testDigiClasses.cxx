@@ -19,11 +19,11 @@
 * $Header$
 */
 const UInt_t runNum = 1;
-const UInt_t numXtals = 10;
+const Int_t numXtals = 10;
 const UInt_t numDigi = 12;
 const UInt_t numAcd = 11;
-const UInt_t numCalDiag = 4;
-const UInt_t numTkrDiag = 2;
+const Int_t numCalDiag = 4;
+const Int_t numTkrDiag = 2;
 const Bool_t fromMc = true;
 Float_t randNum;
 
@@ -196,7 +196,7 @@ int checkCalDigi(CalDigi *digi, UInt_t ievent) {
     return 0;
 }
 
-int checkTkrDigi(TkrDigi *digi, UInt_t ievent, UInt_t idigi) {
+int checkTkrDigi(TkrDigi *digi, UInt_t ievent, Int_t idigi) {
 
     TowerId id = digi->getTower();
     if ((id.ix() != 3) || (id.iy() != 2) ) {
@@ -226,7 +226,7 @@ int checkTkrDigi(TkrDigi *digi, UInt_t ievent, UInt_t idigi) {
         std::cout << "TkrDigi number of hit strip is wrong: " << digi->getNumHits() << std::endl;
         return -1;
     }
-    UInt_t istrip;
+    Int_t istrip;
     for (istrip = 0; istrip < idigi; istrip++) {
         Int_t strip = digi->getHit(istrip);
         if (strip != istrip) {
@@ -375,7 +375,7 @@ int read(char* fileName, int numEvents) {
         const TObjArray *calDigiCol = evt->getCalDigiCol();
         TIter calDigiIt(calDigiCol);
         CalDigi *digi = 0;
-        while(digi = (CalDigi*)calDigiIt.Next()) {
+        while((digi = (CalDigi*)calDigiIt.Next())!=0) {
             digi->Print();
             if (checkCalDigi(digi, ievent) < 0) return -1;
         }
@@ -383,7 +383,7 @@ int read(char* fileName, int numEvents) {
         TIter tkrDigiIt(tkrDigiCol);
         TkrDigi *tDigi = 0;
         UInt_t idigi = 0;
-        while (tDigi = (TkrDigi*)tkrDigiIt.Next()) {
+        while ((tDigi = (TkrDigi*)tkrDigiIt.Next())!=0) {
             tDigi->Print();
             if (checkTkrDigi(tDigi, ievent, idigi) < 0) return -1;
             idigi++;
@@ -393,7 +393,7 @@ int read(char* fileName, int numEvents) {
         TIter acdDigiIt(acdDigiCol);
         AcdDigi *aDigi = 0;
         idigi = 0;
-        while (aDigi = (AcdDigi*)acdDigiIt.Next()) {
+        while ((aDigi = (AcdDigi*)acdDigiIt.Next())!=0) {
             aDigi->Print();
             if (checkAcdDigi(aDigi, ievent, idigi) < 0) return -1;
             idigi++;
@@ -404,7 +404,7 @@ int read(char* fileName, int numEvents) {
         if (calDiagCol->GetEntries() != numCalDiag) return -1;
         TIter calDiagIt(calDiagCol);
         CalDiagnosticData *cDiag = 0;
-        while (cDiag=(CalDiagnosticData*)calDiagIt.Next()) {
+        while ((cDiag=(CalDiagnosticData*)calDiagIt.Next())!=0) {
             cDiag->Print();
             if (checkCalDiagnostic(cDiag) < 0) return -1;
         }
@@ -413,7 +413,7 @@ int read(char* fileName, int numEvents) {
         if (tkrDiagCol->GetEntries() != numTkrDiag) return -1;
         TIter tkrDiagIt(tkrDiagCol);
         TkrDiagnosticData *tDiag = 0;
-        while (tDiag=(TkrDiagnosticData*)tkrDiagIt.Next()) {
+        while ((tDiag=(TkrDiagnosticData*)tkrDiagIt.Next())!=0) {
             tDiag->Print();
             if (checkTkrDiagnostic(tDiag) < 0) return -1;
         }

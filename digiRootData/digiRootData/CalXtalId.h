@@ -55,7 +55,7 @@ public:
 
     CalXtalId();
 
-    CalXtalId(const CalXtalId& id) { m_packedId = id.m_packedId; };
+    CalXtalId(const CalXtalId& id):TObject(id) { m_packedId = id.m_packedId; };
 
     CalXtalId(UInt_t packedId);
     

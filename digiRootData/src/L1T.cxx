@@ -16,7 +16,7 @@ L1T::L1T(UInt_t trigger) : m_trigger(trigger) {
 
 }
 
-L1T::L1T(const L1T& level1) {
+L1T::L1T(const L1T& level1):TObject(level1) {
     m_trigger = level1.m_trigger;
 }
 

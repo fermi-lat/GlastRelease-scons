@@ -236,7 +236,7 @@ const TClonesArray* DigiEvent::getCalDigiCol() {
     if ((m_calDigiCol) && (m_calDigiCloneCol->GetEntries()==0)) {
         TIter objIter(m_calDigiCol);
         CalDigi *calDigiObj = 0;
-        while (calDigiObj = (CalDigi*)objIter.Next()) {
+        while ((calDigiObj = (CalDigi*)objIter.Next())!=0) {
             CalDigi *newObj = addCalDigi();
             newObj->initialize(calDigiObj->getMode(), calDigiObj->getPackedId());
             if (calDigiObj->getMode() == CalXtalId::BESTRANGE) {

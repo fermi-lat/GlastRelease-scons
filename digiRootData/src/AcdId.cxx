@@ -18,7 +18,7 @@ UShort_t AcdId::badId = 3799;
 AcdId::AcdId() : m_id(0), m_used(1) {
 }
 
-AcdId::AcdId(const AcdId& id) : m_id(id.m_id), m_used(id.m_used) 
+AcdId::AcdId(const AcdId& id) : TObject(id), m_id(id.m_id), m_used(id.m_used) 
 { 
 }
 

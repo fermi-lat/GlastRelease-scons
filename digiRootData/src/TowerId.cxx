@@ -25,7 +25,7 @@ void TowerId::Print(Option_t *option) const {
 
 Bool_t TowerId::neighbor (const TowerId& n) const
 {
-    UInt_t dx = ix()-n.ix(), dy=iy()-n.iy();
+    Int_t dx = ix()-n.ix(), dy=iy()-n.iy();
     return dx<2 && dx>-2 && dy<2 && dy>-2; 
 }
 
