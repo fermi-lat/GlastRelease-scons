@@ -158,7 +158,7 @@ crystal and its diodes</notes>
         <const name="cellHorWall_dz">
           <notes>Z position rel. to cell of upper horiz. wall</notes>
           <mul>
-            <const value="2.0" />
+            <const value="0.5" />
             <minus>
               <refer refTo="cellVertPitch" />
               <refer refTo="cellHorWallHalfThick" />
@@ -177,7 +177,7 @@ crystal and its diodes</notes>
           <notes>Y displacement rel. to cell of vertical cell wall
 (here Y means perp. to height and length directions)</notes>
           <mul>
-            <const value="2.0" />
+            <const value="0.5" />
             <minus>
               <refer refTo="cellHorPitch" />
               <refer refTo="cellVertWallHalfThick" />
