@@ -8,7 +8,7 @@ version  v2r2p1
 use GaudiSys    v9r0p6
 
 # ROOT add-on
-use ROOT        v3r2p9
+use ROOT               v3r2p10
 use RootHistCnv v5r0p1
 
 # basic Glast packages
@@ -47,7 +47,7 @@ use GlastSvc    v8r1p2
 
 use FluxSvc     v5r7
 use FluxDisplay v2r0p1
-use G4Generator v4r1p4
+use G4Generator         v4r1p5
 
 #digitization
 use CalDigi     v1r0p1
@@ -65,7 +65,7 @@ use CalRecon    v5r5p2
 use AcdRecon    v0r3p1       
 
 #ROOT persistence: RootIo specifies the data packages
-use RootIo      v4r6
+use RootIo               v4r7
 
 #diagnostic and summary of bottom line
 use merit                v5r6
