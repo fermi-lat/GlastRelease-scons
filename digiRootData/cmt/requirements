@@ -17,7 +17,7 @@ apply_pattern ld_library_path
 private
 
 # Create the Root Cint classes
-macro root_headers "ACDTile.h CalHit.h ESAPID.h Event.h L1T.h LogID.h StripID.h Tagger.h TileID.h TkrLayer.h EventLinkDef.h"
+macro root_headers "AcdHeader.h AcdId.h AcdTile.h CalHeader.h CalLog.h ESAPID.h Event.h L1T.h LogId.h StripId.h SubSystemHeader.h Tagger.h TkrHeader.h TkrLayer.h EventLinkDef.h"
 
 # try to build this by adding to compilation for requirements
 macro digiRootData_customBuild ""\
