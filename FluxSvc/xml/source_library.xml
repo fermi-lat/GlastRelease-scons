@@ -139,6 +139,10 @@
     <source name="chime" >
         <spectrum escale="GeV"> <SpectrumClass name="CHIMESpectrum"/> <use_spectrum/> </spectrum>
     </source>
+     <!-- the CHIME spectrum at Maximum flux. angular dependence and rate are from the CHIME spectrum object -->
+    <source name="chimemax" >
+        <spectrum escale="GeV"> <SpectrumClass name="CHIMESpectrum" params="-28.5,110"/> <use_spectrum/> </spectrum>
+    </source>
 
 
   <!-- default creme is the orbit average -->   
@@ -257,6 +261,8 @@
         <nestedSource sourceRef="albedo_electronpositronlow"/>
         <nestedSource sourceRef="albedo_electronpositronhi"/>
     </source>
+
+
 
 
 </source_library>
