@@ -154,8 +154,10 @@ StatusCode RootTupleSvc::addItem(const std::string & tupleName,
      MsgStream log(msgSvc(),name());
     StatusCode status = StatusCode::SUCCESS;
     std::string treename=tupleName.empty()? m_treename.value() : tupleName;
+    TDirectory *saveDir = gDirectory;
     if( m_tree.find(treename)==m_tree.end()){
         // create new tree
+        m_tf->cd();
         TTree* t = new TTree(treename.c_str(), m_title.value().c_str());
         t->SetAutoSave(m_autoSave);
         m_tree[treename]=t;
@@ -164,6 +166,7 @@ StatusCode RootTupleSvc::addItem(const std::string & tupleName,
 
     // this adds a branch with a pointer to a double (the "/D" after the second name)
     m_tree[treename]->Branch(itemName.c_str(), (void*)pval, (itemName+"/D").c_str());
+    saveDir->cd();
     return status;
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
