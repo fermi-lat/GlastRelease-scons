@@ -1,6 +1,6 @@
 package AnalysisNtuple
 
-version v1r8p8
+version v1r8p9
 
 author Leon Rochester <lsrea@slac.stanford.edu>
 
@@ -29,6 +29,17 @@ use RootIo          v*
 
 
 set JOBOPTIONS ${ANALYSISNTUPLEROOT}/src/test/jobOptions.txt
+
+# This is a kludge to get the program pointed the proper particle.cdf file
+# The problem has something to do with the new CMT handling "privates" better
+# It may be necessary to move this to the public part for some configurations
+#   other than vanilla Gleam.
+#
+use FluxSvc         v*
+set LCHBDBASE  ${FLUXSVCROOT}/cdf
+#
+# End of kludge
+
 
 
 apply_pattern package_headers
