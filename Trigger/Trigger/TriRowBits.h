@@ -18,6 +18,7 @@
 
 #include "Event/TopLevel/Definitions.h"
 #include "Event/TopLevel/EventModel.h"
+#include <iostream>
 
 /**
 * @class TriRowBits
@@ -25,6 +26,7 @@
 * author Luis C. Reyes   lreyes@milkyway.gsfc.nasa.gov
 */
  
+#define NUM_TWRS 16
 static const CLID& CLID_TriRowBitsTds = InterfaceID("TriRowBitsTds", 1, 0);
 
 
@@ -35,34 +37,66 @@ namespace TriRowBitsTds{
       
         TriRowBits();
       	virtual ~TriRowBits();
-      	unsigned int getTriRowBits(const int tower);
-	void setTriRowBits(const int tower, unsigned int bitword);
+	//! 3 in row combinations defined by the digi hits
+      	unsigned int getDigiTriRowBits(const int tower);
+	void setDigiTriRowBits(const int tower, unsigned int bitword);
 
+	//! 3 in row combinations defined by the trigger requests (see TkrDiagnosticData)
+      	unsigned int getTrgReqTriRowBits(const int tower);
+	void setTrgReqTriRowBits(const int tower, unsigned int bitword);
 
+	friend std::ostream& operator<<( std::ostream& s, const TriRowBits& obj ){return obj.fillStream(s);}
+	std::ostream& fillStream( std::ostream& s ) const;
 
       private:
 
-      	unsigned int m_TriRowBits[16];
+      	unsigned int m_DigiTriRowBits[NUM_TWRS];
+      	unsigned int m_TrgReqTriRowBits[NUM_TWRS];
 
       };
 
       //! Initialize arrays
       inline TriRowBits::TriRowBits(){
-          for(int i=0; i<16; i++) m_TriRowBits[i]=0;
+          for(int i=0; i<NUM_TWRS; i++)
+	    {
+	      m_DigiTriRowBits[i]=0;
+	      m_TrgReqTriRowBits[i]=0;
+	    }
       }
 
       inline TriRowBits::~TriRowBits(){
       }
      
       //! Retrieves the bitword for a given tower
-      inline unsigned int TriRowBits::getTriRowBits(const int tower){
-              return m_TriRowBits[tower];
+      inline unsigned int TriRowBits::getDigiTriRowBits(const int tower){
+              return m_DigiTriRowBits[tower];
       }
 
       //! Sets the value of the Bitword for a given tower
-      inline void TriRowBits::setTriRowBits(const int tower, unsigned int bitword){
-              m_TriRowBits[tower]=bitword;
+      inline void TriRowBits::setDigiTriRowBits(const int tower, unsigned int bitword){
+              m_DigiTriRowBits[tower]=bitword;
       }
+
+      //! Retrieves the bitword for a given tower
+      inline unsigned int TriRowBits::getTrgReqTriRowBits(const int tower){
+              return m_TrgReqTriRowBits[tower];
+      }
+
+      //! Sets the value of the Bitword for a given tower
+      inline void TriRowBits::setTrgReqTriRowBits(const int tower, unsigned int bitword){
+              m_TrgReqTriRowBits[tower]=bitword;
+      }
+
+      inline std::ostream& TriRowBits::fillStream( std::ostream& s ) const
+	{
+	  s <<"Tower   DigiTriRow   TrgReqTriRow \n";
+	  for(int i=0; i<NUM_TWRS; i++)
+	    {
+	      if(m_DigiTriRowBits[i]!=0 || m_TrgReqTriRowBits[i]!=0)
+		s<<i<<" "<<m_DigiTriRowBits[i]<<" "<< m_TrgReqTriRowBits[i]<<"\n";
+	    }
+	  return s;
+	}
 }// namespace TriRowBitsTds
 
 #endif
@@ -101,7 +135,7 @@ Combination		Coincidence of Layers
 
 [a,b]:= a & b
 
-When such 3-fold coincidence occurs for a given combination, the respective bit in the bitword takes
+When such 3-fold coincidence occurs for a given combination, the respective bit in the bitword takes 
 a value of 1. The bit is equal to 0 when there is no such coincidence.
 
 The 16 bits are arranged in the bitword from right to left.
