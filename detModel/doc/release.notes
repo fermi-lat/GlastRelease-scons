@@ -2,6 +2,7 @@
  * Package detModel
  * Coordinator: R.Giannitrapani
  *
+ * v2r15p3 jrb 25-Feb-04   Fetch dtd version, cvs id of geometry input
  * v2r15p2 jrb 19-Feb-04   Small changes for gcc 3.3 compilation
  * v2r15p1 jrb  4-Feb-04   Bug fix: keep track of id fields for *all* position
  *                         elements
