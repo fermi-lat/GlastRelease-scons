@@ -94,9 +94,10 @@ StatusCode BariMcToHitTool::initialize()
         return sc;
     }
 
-    sc = service("TkrGeometrySvc", m_geoSvc);
+    sc = service("TkrGeometrySvc", m_geoSvc, true);
     if( sc.isFailure() ) {
-        log << MSG::ERROR << "could not find TkrGeometrySvc !" << endreq;
+        log << MSG::ERROR << "Couldn't set up TkrGeometrySvc!" << endreq;
+        //        log << MSG::ERROR << "could not find TkrGeometrySvc !" << endreq;
         return sc;
     }
 
