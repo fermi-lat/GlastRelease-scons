@@ -1,0 +1,7 @@
+#!/bin/sh
+
+glastpack.pl run Gleam $1 Gleam.exe jobOptions.txt
+
+root -b start.c RUN
+
+mv Histograms.root VerticalGamma1GeVHistos.root
