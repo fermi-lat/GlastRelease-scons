@@ -1,0 +1,137 @@
+// $Header$
+
+#include <string>
+#include "RootCalGainCnv.h"
+#include "TTree.h"
+#include "TFile.h"
+#include "TBranch.h"
+
+#include "GaudiKernel/CnvFactory.h"
+#include "GaudiKernel/IOpaqueAddress.h"
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/IAddressCreator.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IConversionSvc.h"
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/GenericAddress.h"
+
+#include "CalibSvc/ICalibRootSvc.h"      // maybe
+#include "CalibSvc/ICalibMetaCnvSvc.h"
+
+#include "RootTkrTotCnv.h"
+
+#include "CalibData/Tkr/TkrTot.h"
+// #include "CalibData/CalibTime.h"
+#include "commonRootData/idents/TkrId.h"
+#include "calibRootData/Tkr/Tot.h"
+#include "idents/TkrId.h"
+
+// Temporary.  Hope to find a better way to do this
+#include "CalibData/CalibModel.h"
+
+static CnvFactory<RootTkrTotCnv> s_factory;
+const  ICnvFactory& RootTkrTotCnvFactory = s_factory;
+
+RootTkrTotCnv::RootTkrTotCnv( ISvcLocator* svc) :
+  RootTkrBaseCnv(svc, CLID_Calib_TKR_TOTSignal) { 
+}
+
+
+const CLID& RootTkrTotCnv::objType() const {
+  return CLID_Calib_TKR_TOTSignal;
+}
+
+const CLID& RootTkrTotCnv::classID() {
+  return CLID_Calib_TKR_TOTSignal;
+}
+
+StatusCode RootTkrTotCnv::i_createObj (const std::string& fname,
+                                       DataObject*& refpObject) {
+  using CalibData::TkrBase;
+  using CalibData::TkrTotCol;
+  // open file
+  openRead(fname);
+
+  // Call CalibData::TkrTotCol constructor
+  // The next two executable lines are the only ones in this routine which
+  // are unique to this calibration type.  Remaining code specific to
+  // this calib type is in readUnis
+  TkrTotCol* totCol = new TkrTotCol();
+  refpObject = totCol;
+
+  StatusCode ret;
+  for (unsigned iTow = 0; iTow < TKRBASE_MAXTOWER; iTow++) {
+    TTree* tree = findTower(iTow);
+    if (tree) {
+      // handle generic tracker part
+      ret = readTower(tree, iTow, totCol);
+      if (ret != StatusCode::SUCCESS) return ret;
+
+      // read in Tot info for each uniplane
+      ret = readUnis(tree, iTow,  totCol);
+      if (ret != StatusCode::SUCCESS) return ret;
+    }
+  }
+  return ret;
+}
+
+StatusCode RootTkrTotCnv::readUnis(TTree* tree, int iTow,
+                                   CalibData::TkrTotCol* col) {
+  using CalibData::TkrTotCol;
+  using CalibData::UniBase;
+  using CalibData::TkrTotStrip;
+  // set branch 
+  TBranch* branch = tree->GetBranch("calibRootData::TotUnilayer");
+
+  // find #unis
+  Stat_t nEntries = branch->GetEntries();
+
+  for (unsigned ix = 0; ix < nEntries; ix++) {  // process a unilayer
+
+    calibRootData::TotUnilayer* rootUni = 0;
+    TObject* pObj = rootUni;
+
+    StatusCode ret = 
+      readRootObj(tree, "calibRootData::TotUnilayer", pObj, ix);
+    if (ret != StatusCode::SUCCESS) return ret;
+
+    idents::TkrId id;
+  
+    const commonRootData::TkrId& rootId = rootUni->getId();
+    ret = convertId(rootId, &id);
+    if (ret != StatusCode::SUCCESS) {
+      // complain -- illegal commonRootData::TkrId
+      return ret;
+    }
+
+    if (!checkTower(id, iTow)) {
+      // complain == uni doesn't belong to the right tower
+      return StatusCode::FAILURE; 
+    }
+
+    unsigned uniIx = 2*id.getTray() + id.getBotTop();
+    /*
+    TkrTotUni* dest = dynamic_cast<TkrTotUni* > (&tdsTow->m_unis[uniIx]);
+    */
+    const std::vector<UniBase*> unis = col->getUnis(iTow);
+    CalibData::TkrTotUni* dest = 
+      dynamic_cast<CalibData::TkrTotUni*>(unis[uniIx]);
+    if (!dest) {
+      // tilt!
+      return StatusCode::FAILURE;
+    }
+    int nStrips = rootUni->getNStrips();
+    if (nStrips > 0) {   // copy strip info
+      for (unsigned iStrip = 0;  iStrip < nStrips; iStrip++) {
+        const calibRootData::TotStrip* rStrip = rootUni->getStrip(iStrip);
+        TkrTotStrip tdsStrip(rStrip->getStripId(), rStrip->getSlope(),
+                             rStrip->getIntercept(), rStrip->getQuad(),
+                             rStrip->getChi2(), rStrip->getDf());
+        bool ok = dest->putStrip(tdsStrip);
+      }
+    }    
+    delete rootUni;  // is this required or forbidden?
+    rootUni = 0;
+  }    // end unilayer
+  return StatusCode::SUCCESS;
+}

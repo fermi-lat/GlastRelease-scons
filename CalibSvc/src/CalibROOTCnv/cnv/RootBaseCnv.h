@@ -81,6 +81,17 @@ public:
   virtual StatusCode createRoot(const std::string& fname, 
                                 CalibData::CalibBase* pTDSObj);
 
+  /**
+     Read in object (by default the first) from specified branch. 
+  */
+  virtual StatusCode readRootObj(const std::string& treename,
+                                 const std::string& branch, TObject*& pCalib,
+                                 unsigned index=0);
+
+  virtual StatusCode readRootObj(TTree*  tree,
+                                 const std::string& branch, TObject*& pCalib,
+                                 unsigned index=0);
+
 protected:
   /** This creates the transient representation of an object from the
    *  corresponding ROOT object it, then fills it and process it.

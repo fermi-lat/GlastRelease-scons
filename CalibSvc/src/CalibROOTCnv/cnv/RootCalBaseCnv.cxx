@@ -67,6 +67,9 @@ StatusCode RootCalBaseCnv::fillRoot(CalibData::CalibBase* pTDSObj,
   return StatusCode::SUCCESS;
 }
 
+/* TODO
+   Change implementation to invoke RootBaseCnv::readRootObj
+*/
  StatusCode RootCalBaseCnv::readRootObj(const std::string& branch, 
                                         TObject*& pCalib) {
   TTree* pTree = (TTree*)m_inFile->Get("Calib");

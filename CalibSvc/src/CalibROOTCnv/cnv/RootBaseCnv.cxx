@@ -97,6 +97,7 @@ StatusCode RootBaseCnv::createRoot(const std::string& /* fname */,
       << endreq;
   return StatusCode::FAILURE;
 }
+
 /*
 StatusCode RootBaseCnv::openRead(const std::string& fname, 
                                  const std::string& branch,
@@ -230,6 +231,22 @@ StatusCode RootBaseCnv::closeWrite() {
   return ret;
 }
 
+
+StatusCode RootBaseCnv::readRootObj(const std::string& treename, 
+                                    const std::string& branch,
+                                    TObject*& pObj, unsigned ix){
+  TTree* pTree = (TTree*)m_inFile->Get(treename.c_str());
+
+  return readRootObj(pTree, branch, pObj, ix);
+ }
+
+StatusCode RootBaseCnv::readRootObj(TTree* pTree,
+                                    const std::string& branch,
+                                    TObject*& pObj, unsigned ix){
+  pTree->SetBranchAddress(branch.c_str(), &pObj);
+  pTree->GetEvent(ix);
+  return StatusCode::SUCCESS;
+ }
 
 bool RootBaseCnv::doClean() {
   bool ret = false;
