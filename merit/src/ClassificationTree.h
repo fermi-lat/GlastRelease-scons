@@ -31,18 +31,25 @@ public:
     ~ClassificationTree();
 
 private:
+    double backgroundRejection();
 
     classification::Tree * m_classifier;
     const TupleItem*  m_firstLayer; /// access to the first layer in the tuple
     const TupleItem*  m_calTotRLn; 
     const TupleItem*  m_calEnergySum;
-    const TupleItem*  m_vtxAngle; // needed for vtx cut
+    const TupleItem*  m_acdTileCount;
+    const TupleItem*  m_evtTkrEComptonRatio;
+    const TupleItem*  m_calMIPDiff;
+    const TupleItem*  m_evtEnergySumOpt;
+    const TupleItem*  m_calLRmsRatio;
+    const TupleItem*  m_vtxAngle;
+
 
     double m_goodCalProb;
     double m_coreProb; 
     double m_vtxProb ;
     double m_psfErrPred; 
-   
+    double m_gammaProb ;
     
 
     std::ostream& m_log;
