@@ -6,7 +6,7 @@
 
 class CalRecLogs;
 class CsIClusterList;
-class CalGeometrySvc;
+class ICalGeometrySvc;
 
 /**
     Display the Cal reconstructed information
@@ -31,7 +31,7 @@ private:
     
 	CalRecLogs* m_crl;
 	CsIClusterList* m_cls;
-	CalGeometrySvc* m_CalGeo; 
+	ICalGeometrySvc* m_CalGeo; 
 
 };
 

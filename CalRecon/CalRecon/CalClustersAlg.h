@@ -3,7 +3,7 @@
 #define __CALCLUSTERSALG_H 1
 
 #include "GaudiKernel/Algorithm.h"
-#include "CalGeometrySvc.h"
+#include "ICalGeometrySvc.h"
 
 class CalRecLogs;
 class CsIClusterList;
@@ -81,7 +81,7 @@ protected:
 
 private:
 
-	CalGeometrySvc* m_CalGeo; 
+	ICalGeometrySvc* m_CalGeo; 
 	//! the log list, the input of the reconstruction
 	CalRecLogs* m_CalRecLogs;
 	//! the clusters list, the output of the reconstruction

@@ -4,7 +4,7 @@
 
 // Include files
 #include "GaudiKernel/Algorithm.h"
-#include "CalGeometrySvc.h"
+#include "ICalGeometrySvc.h"
 class IGlastDetSvc;
 
 

@@ -50,8 +50,10 @@ StatusCode CalIRFAlg::initialize() {
 
     //Look for the geometry service
     StatusCode sc = service("CalGeometrySvc", m_CalGeo);
+
     if (!sc.isSuccess ()){
         log << MSG::ERROR << "Couldn't find the CalGeometrySvc!" << endreq;
+        return sc;
     }
     
     // now try to find the GlastDevSvc service

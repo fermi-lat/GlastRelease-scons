@@ -436,24 +436,31 @@ StatusCode CalClustersAlg::initialize()
 //################################################
 {
     MsgStream log(msgSvc(), name());
-	StatusCode sc = StatusCode::SUCCESS;
-     sc = service("CalGeometrySvc", m_CalGeo);
-	 logheight = m_CalGeo->logHeight();
-	
-//	m_CsIClusterList = dataManager::instance()->getData("CsIClusterList",m_CsIClusterList);
-//	m_CalRecLogs  = dataManager::instance()->getData("CalRecLogs",m_CalRecLogs);
-//	m_CsIClusterList->clear();
+    StatusCode sc = StatusCode::SUCCESS;
+    sc = service("CalGeometrySvc", m_CalGeo);
 
-        // Minuit object
-        minuit = new Midnight(5);
+    if(sc.isFailure())
+    {
+        log << MSG::ERROR << "CalGeometrySvc could not be found" <<endreq;
+        return sc;
+    }
 
-        //Sets the function to be minimized
-        minuit->SetFCN(fcn);
-
-	
-	g_elayer.clear();
-   
-	return sc;
+    logheight = m_CalGeo->logHeight();
+    
+    //	m_CsIClusterList = dataManager::instance()->getData("CsIClusterList",m_CsIClusterList);
+    //	m_CalRecLogs  = dataManager::instance()->getData("CalRecLogs",m_CalRecLogs);
+    //	m_CsIClusterList->clear();
+    
+    // Minuit object
+    minuit = new Midnight(5);
+    
+    //Sets the function to be minimized
+    minuit->SetFCN(fcn);
+    
+    
+    g_elayer.clear();
+    
+    return sc;
 }
 
 //################################################

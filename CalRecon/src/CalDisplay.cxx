@@ -12,7 +12,7 @@
 #include "gui/GuiMgr.h"
 #include "CalRecon/CsIClusters.h"
 #include "CalRecon/CalRecLogs.h"
-#include "CalRecon/CalGeometrySvc.h"
+#include "CalRecon/ICalGeometrySvc.h"
 #include "CalRecon/CalDisplay.h"
 
 
@@ -158,27 +158,36 @@ public:
 StatusCode CalDisplay::initialize()
 {
     //Look for the gui service
+    MsgStream log(msgSvc(), name());
     IGuiSvc* guiSvc = 0;
     StatusCode sc = service("GuiSvc", guiSvc);
-
+    
     m_crl = 0;
     m_cls = 0;
-	
-     sc = service("CalGeometrySvc", m_CalGeo);
-	 float logheight = m_CalGeo->logHeight();
-     float layerheight = m_CalGeo->layerHeight();
-     int nlayers = m_CalGeo->numLayers()*m_CalGeo->numViews();
-     float Z0 = m_CalGeo->Z0();
-     float calZtop = Z0+(nlayers-1)*layerheight;
-     float calZbottom = Z0;
+    
+    sc = service("CalGeometrySvc", m_CalGeo);
 
+    if(sc.isFailure())
+    {
+        log << MSG::ERROR << "ICalGeometrySvc could not be found" <<endreq;
+        return sc;
+    }
 
-
+       
+    float logheight = m_CalGeo->logHeight();
+    float layerheight = m_CalGeo->layerHeight();
+    int nlayers = m_CalGeo->numLayers()*m_CalGeo->numViews();
+    float Z0 = m_CalGeo->Z0();
+    float calZtop = Z0+(nlayers-1)*layerheight;
+    float calZbottom = Z0;
+    
+    
+    
     //Ok, see if we can set up the display
     if (sc.isSuccess())  {
-	//Set up the display rep for Clusters
-	guiSvc->guiMgr()->display().add(
-        new CalRep(&m_crl,&m_cls,logheight,calZtop,calZbottom), "Cal recon");
+        //Set up the display rep for Clusters
+        guiSvc->guiMgr()->display().add(
+            new CalRep(&m_crl,&m_cls,logheight,calZtop,calZbottom), "Cal recon");
     }
     
     return sc;

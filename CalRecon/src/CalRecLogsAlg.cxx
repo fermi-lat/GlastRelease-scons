@@ -16,46 +16,54 @@ static const AlgFactory<CalRecLogsAlg>  Factory;
 const IAlgFactory& CalRecLogsAlgFactory = Factory;
 
 
-	// constructor
+// constructor
 CalRecLogsAlg::CalRecLogsAlg(const std::string& name, ISvcLocator* pSvcLocator):
-	  Algorithm(name, pSvcLocator) {
-			declareProperty("PedFile",m_PedFileName);
-			declareProperty("GainFile",m_GainFileName);
-			declareProperty("IntlinFile",m_IntlinFileName);
-			declareProperty("RailFile",m_RailFileName);
-			declareProperty("SlopeFile",m_SlopeFileName);
-			
-	  }
+Algorithm(name, pSvcLocator) {
+    declareProperty("PedFile",m_PedFileName);
+    declareProperty("GainFile",m_GainFileName);
+    declareProperty("IntlinFile",m_IntlinFileName);
+    declareProperty("RailFile",m_RailFileName);
+    declareProperty("SlopeFile",m_SlopeFileName);
+    
+}
 
 
 //################################################
 StatusCode CalRecLogsAlg::initialize()
 //################################################
 {
-	StatusCode sc = StatusCode::SUCCESS;
-/*	
-	m_CalPedLogs   = dataManager::instance()->getData("CalPedCalib",m_CalPedLogs);
-	m_CalCalibLogs = dataManager::instance()->getData("CalCalibLogs",m_CalCalibLogs);
-	m_CalGeoLogs   = dataManager::instance()->geo()->cal();
+    MsgStream log(msgSvc(), name());
+    StatusCode sc = StatusCode::SUCCESS;
+    /*	
+    m_CalPedLogs   = dataManager::instance()->getData("CalPedCalib",m_CalPedLogs);
+    m_CalCalibLogs = dataManager::instance()->getData("CalCalibLogs",m_CalCalibLogs);
+    m_CalGeoLogs   = dataManager::instance()->geo()->cal();
+    
+      m_CalRawLogs   = dataManager::instance()->getData("CalRawLogs",m_CalRawLogs);
+      m_CalRecLogs   = dataManager::instance()->getData("CalRecLogs",m_CalRecLogs);
+    */
+    sc = service("CalGeometrySvc", m_CalGeo);
 
-	m_CalRawLogs   = dataManager::instance()->getData("CalRawLogs",m_CalRawLogs);
-	m_CalRecLogs   = dataManager::instance()->getData("CalRecLogs",m_CalRecLogs);
-*/
-     sc = service("CalGeometrySvc", m_CalGeo);
-  
-
-	m_CalPedLogs  = new CalPedCalib(); 
-	m_CalPedLogs->setFileName(m_PedFileName);
-	m_CalPedLogs->make();
-
-	m_CalCalibLogs = new CalCalibLogs();
-	m_CalCalibLogs->setFileNames(m_IntlinFileName, m_GainFileName, m_RailFileName, m_SlopeFileName);
-	m_CalCalibLogs->make();
-
-
-//	m_CalRecLogs->clear();
-
-	return sc;
+    if(sc.isFailure())
+    {
+        log <<MSG::ERROR << "Error ICalGeometrySvc not found" << endreq;
+        return sc;
+    }
+    
+    
+    
+    m_CalPedLogs  = new CalPedCalib(); 
+    m_CalPedLogs->setFileName(m_PedFileName);
+    m_CalPedLogs->make();
+    
+    m_CalCalibLogs = new CalCalibLogs();
+    m_CalCalibLogs->setFileNames(m_IntlinFileName, m_GainFileName, m_RailFileName, m_SlopeFileName);
+    m_CalCalibLogs->make();
+    
+    
+    //	m_CalRecLogs->clear();
+    
+    return sc;
 }
 //################################################
 StatusCode CalRecLogsAlg::execute()
