@@ -179,7 +179,7 @@ void rootplot::init(std::vector<const char*> argv)
         }
         
         EventSource *e = fm.source(sources[i]);
-        
+
         if(longterm){
             fm.pass(2.);
             time+=2.;
@@ -189,6 +189,8 @@ void rootplot::init(std::vector<const char*> argv)
         std::cout << loc.first << "   " << loc.second << std::endl;
         //	  std::cout << "orbit angle=" << GPS::instance()-> << "orbit phase=" << << std::endl;
         
+		
+
         if( 0==e ) {std::cerr << "Source \"" << sources[i] << "\" not found: -list for a list" << std::endl;
         return;}
         
@@ -226,21 +228,12 @@ void rootplot::init(std::vector<const char*> argv)
         angle_hist.setThetaXLabel("Cos(Theta)");
         angle_hist.setThetaYLabel("Particles");
         
-        double scale_factor;
+
         
-        if(true == use_integrated_flux)
-        {
-            double rate = e->rate(time)/e->totalArea();
-            scale_factor = rate/loop*num_bins/log(energy_max/energy_min);
-            std::cout << "RATE IS: " << rate << std::endl;
-        }
-        else
-        {
-            double flux = e->flux(time);
-            scale_factor = flux/loop*num_bins/log(energy_max/energy_min);
-            std::cout << "FLUX IS: " << 1.0*flux << std::endl;
-        }
-        
+		GPS::instance()->synch();
+        std::cout << "Initial (p/s/m^2): " << e->rate(time)/e->totalArea() << std::endl;
+        std::cout << "Initial (p/s/m^2/sr): " << e->flux(time) << std::endl;
+                
         for(j = 0; j < loop; j++) 
         {
             EventSource *f = e->event(time);
@@ -251,7 +244,7 @@ void rootplot::init(std::vector<const char*> argv)
             HepVector3D dir = f->launchDir();
             double energy = f->energy();
             double cos_theta = dir.z();
-            
+
             double phi = atan2(dir.y(),dir.x());
             if(phi < 0)
                 phi = 2*M_PI + phi;
@@ -260,18 +253,33 @@ void rootplot::init(std::vector<const char*> argv)
             angle_hist.storeTheta(cos_theta);
             angle_hist.storePhi(phi);
             
-            if(j % 1000 == 0) std::cerr << "\r" << j << ": " << energy << "...";
+			if(j % 1000 == 0) {std::cerr << "\r" << j << ": " << energy << "...";
+					std::cout << "Solid Angle is: " << f->solidAngle();
+			}
         }
         
         std::cerr << "\n";
 
-        double flux2=(loop/time)/e->totalArea();
-        std::cout << "FLUX IS: " << flux2 << " (p/s*m^2)"<< std::endl;
-        //should this be set by the time also, like so?
-        //scale_factor = flux2/loop*num_bins/log(energy_max/energy_min);
+		double scale_factor;
+		double flux=(loop/time)/e->totalArea();
+		// There's probably a better way to get at the solid angle but
+		// e->solidAngle doesn't seem to be initialized.
+		double solidangle = e->rate(time)/(e->flux(time)*e->totalArea());
+
+		// These scale factors are approximately correct for sources that have
+		// spectrums that change over time.  For static sources these will work 
+		// very well.  To do: Apply scale factor to each event individually rather
+		// than an average scale factor to them all at the end.
+        if(true == use_integrated_flux)
+			scale_factor = flux/loop*num_bins/log(energy_max/energy_min);
+        else
+			scale_factor = flux/loop*num_bins/log(energy_max/energy_min)/solidangle;
 
 
-        // Scale factor must be applied before the draw member function can be called
+		std::cout << "Average (p/s/m^2): " << flux  << std::endl;
+        std::cout << "Average (p/s/m^2/sr): " << flux/solidangle << std::endl;
+
+		// Scale factor must be applied before the draw member function can be called
         energy_hist.apply(scale_factor);
         angle_hist.apply(scale_factor);
         
