@@ -52,8 +52,9 @@ namespace xmlUtil {
   Arith::Arith(const DOM_Element elt) {
     int i = 0;
     bool notFound = true;
-    //    std::string tagName = xml::Dom::getTagName(elt);
-    const char* tagName = (xml::Dom::getTagName(elt)).c_str();
+    std::string tagNameStr = xml::Dom::getTagName(elt);
+    //    const char* tagName = (xml::Dom::getTagName(elt)).c_str();
+    const char* tagName = tagNameStr.c_str();
     m_elt = elt;
     m_evaluated = false;
     m_tag = -1;
