@@ -2,6 +2,13 @@
  * package Gleam
  * package manager:T.Burnett
 
+* v2r2p1 THB 19-jun-02 
+      use ROOT                 v3r2p10 
+      use G4Generator          v4r1p5
+      use AcdRecon             v0r4       
+      use RootIo               v4r7
+      use merit                v5r6
+
 * v2r2 THB 13-jun-02
      use idents               v2r8p2
      use Event                 v8r9
