@@ -279,8 +279,8 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
         
         int status = m_ebfParser->loadData();
         if (status < 0) {
-            log << MSG::ERROR << "Failed to get Event" << endreq;
-            log << MSG::ERROR << "This job will terminate after reading" 
+            log << MSG::INFO << "Failed to get Event" << endreq;
+            log << MSG::INFO << "This job will terminate after reading" 
                 << endreq;
             *(irfIt) = m_evtEnd;
         }
