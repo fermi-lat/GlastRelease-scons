@@ -195,7 +195,7 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("EvtMax"     , m_evtMax=0);
     declareProperty("StartTime"   , m_startTime=0);
     declareProperty("EndTime",      m_endTime=0);
-    declareProperty("DeltaTime",    m_deltaTime=1);
+    declareProperty("DeltaTime",    m_deltaTime=0);
 
 }
 
