@@ -1,7 +1,5 @@
 package G4Generator
 
-version v0
-
 use Geant4
 use GaudiSvc
 use GaudiAlg
@@ -30,4 +28,6 @@ library G4Generator ${G4Generator_headers} *.cxx   Dll/*.cxx
 
 # stuff for test
 apply_pattern package_test
+
+
 

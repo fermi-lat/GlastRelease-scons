@@ -45,11 +45,14 @@ void G4MaterialsVisitor::visitElement(detModel::Element* element)
   if (symbol != "") {
     G4Element* el = new G4Element(name, symbol, z, a);
   }
-  else {
-      if(name==std::string("Vacuum"))return; // right thing?
-      if( z==0  ) { z=6; a=12*g/mole;density=2.265*g/cm3;} // kluge: make it into carbon
-
-    G4Material* el = new G4Material(name, z, a, density);
+  else {// This is temporary waiting for a new material category with pressure and temp
+    if(name==std::string("Vacuum"))
+      {
+	G4Material* el = new G4Material(name, z, a, density,kStateGas,
+					2.73*kelvin,3.e-18*pascal);
+      }
+    else
+      G4Material* el = new G4Material(name, z, a, density);
   }
 }
 
@@ -83,16 +86,13 @@ void G4MaterialsVisitor::visitComposite(detModel::Composite* composite)
 	{
 	  G4Element* ptElement = 0;
 	  G4Material* ptMaterial = 0;
-	  
-	  if (!((ptElement = G4Element::GetElement((G4String) el->getName())) ||
-		(ptMaterial = G4Material::GetMaterial((G4String) el->getName()))))
+
+	  el->Accept(this);
+	  if (!(ptElement = G4Element::GetElement((G4String) el->getName())))
 	    {
-	      el->Accept(this);
-	      if (!(ptElement = G4Element::GetElement((G4String) el->getName())))
-		{
-		  ptMaterial = G4Material::GetMaterial((G4String) el->getName());
-		}
+	      ptMaterial = G4Material::GetMaterial((G4String) el->getName());
 	    }
+	  
 	  if (ptElement)
 	    {
 	      if (composite->isFractions())
@@ -143,6 +143,7 @@ void G4MaterialsVisitor::visitComposite(detModel::Composite* composite)
 	}
     }
 }
+
 		   
 	 
 	   
