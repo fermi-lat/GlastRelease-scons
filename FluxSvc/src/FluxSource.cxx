@@ -6,7 +6,7 @@
 #include "dom/DOM_NodeList.hpp"
 #include "xml/Dom.h"
 
-#include "FluxSvc/SpectrumFactoryTable.h"
+#include "SpectrumFactoryTable.h"
 
 #include "FluxSvc/SimpleSpectrum.h"
 
@@ -16,7 +16,7 @@
 #include "geometry/Ray.h"
 #include "geometry/Box.h"
 
-#include "FluxSvc/Orbit.h"
+#include "Orbit.h"
 
 #include "FluxException.h" // for FATAL_MACRO
 

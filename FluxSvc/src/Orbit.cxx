@@ -1,9 +1,9 @@
 // $Header$
 
-#include "FluxSvc/Orbit.h"
+#include "Orbit.h"
 
 #include "CLHEP/Random/RandFlat.h"
-#include "FluxSvc/GPS.h"
+#include "GPS.h"
 
 #include <cmath>
 #include <cassert>

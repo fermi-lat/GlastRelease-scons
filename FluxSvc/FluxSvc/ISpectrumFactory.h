@@ -8,7 +8,7 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-#include "FluxSvc/Spectrum.h"
+#include "../src/Spectrum.h"
 
 //!   This is an abstract base class for the SpectrumFactory template classes.
 

@@ -1,19 +1,17 @@
 // $Id$
 
-
-// File: CHIMESpectrum.h
+// File: HeSpectrum.h
 //
-//! Calculate the cosmic ray proton spectrum in low earth orbit.
+//! Calculate the cosmic ray 4He spectrum in low earth orbit.
 //! Uses data produced by CHIME, assuming 600 km circular orbit
 //!  at solar minimum (worst case).
-//
-//  Patrick Nolan, Stanford University, 1998
+//!  Patrick Nolan, Stanford University, 1998
 //
 /*! Interface:
     The constructor arguments specify the satellite position
      (latitude, longitude) in degrees.
     The position can be changed by use of the setPosition() member.
-    The total flux in protons/(m^2 sec ster) is returned by the
+    The total flux in nuclei/(m^2 sec ster) is returned by the
      flux() member.  There are 3 ways to call flux(): With no arguments
      it uses the current cutoff energy.  If there is one argument, it
      is assumed to be a cutoff.  Two arguments are assumed to be latitude
@@ -34,21 +32,20 @@
      from the east, +pi/2 from the north, -pi/2 from the south.  At
      energies near the cutoff, particles come mainly from the west.
 */
+#ifndef HE_SPECTRUM_H
+#define HE_SPECTRUM_H
 
-#ifndef CHIME_SPECTRUM_H
-#define CHIME_SPECTRUM_H
-
-#include "FluxSvc/Spectrum.h"
+#include "Spectrum.h"
 #include "facilities/Observer.h"
 #include <vector>
 #include <string>
 
 
-class CHIMESpectrum : public Spectrum
+class HeSpectrum : public Spectrum
 {
   
  public:
-    CHIMESpectrum(const std::string& params);
+    HeSpectrum(const std::string& params);
 
     virtual double calculate_rate(double old_rate);
 
@@ -57,24 +54,18 @@ class CHIMESpectrum : public Spectrum
 
     /// calcualte effective solid angle for the given energy 
     virtual double solidAngle()const;
-
-
-    /// Total flux in protons / m^2 sec ster
+ 
+    /// Total flux in nuclei / m^2 sec ster
     /// Interpolate in table if possible, otherwise assume power law
     ///  tail at high energy.
     float flux(float cut) const;
 
-    /// Flux as a function of latitude and longitude in a 600 km orbit.
-    /// Linear interpolate in a table with a 5 degree sampling grid.
-    virtual float flux(float lat, float lon) const;
-    virtual float flux(std::pair<double, double> coords) const;
 
     virtual float operator() (float)const;
 
     float cutoff () const {return m_cutoff;};
 
     virtual void setPosition(double lat, double lon);
-    virtual void setPosition(std::pair<double,double> coords);
 
     /// this one asks the GPS for position
     int askGPS();
@@ -84,25 +75,22 @@ class CHIMESpectrum : public Spectrum
 
     /// determine the cutoff value at a geographical location
     float findCutoff(float lat, float lon) const;
-    float findCutoff(std::pair<double,double> coords) const;
-
+  
     /// return solid angle pair (costh, phi) for the given energy
     virtual std::pair<float,float> dir(float energy)const;
 
     virtual std::string title() const;
     virtual const char * particleName() const;
-    inline  const char * nameOf() const {return "CHIMESpectrum";}
+    inline  const char * nameOf() const {return "HeSpectrum";}
     //   use default destructor, copy constructor, and assignment op.
     
-    /// set the particle name. (default is "p")
+    /// set the particle name. (default is "alpha")
     void setParticleName(std::string name);
- 
 
     typedef std::pair<int,float> Intrp;
-
- protected:
-    void init(std::string params);
  private:
+    double HeSpectrum::flux(double lat, double lon) const;
+
     /// a vector with methods added to do searches and linear interpolation
     class InterpVec : public std::vector<float> {
 
@@ -112,12 +100,12 @@ class CHIMESpectrum : public Spectrum
 	float interpolate(Intrp) const;
     };
 
-    
+    void init(float lat, float lon);
     InterpVec m_en; // values of energy in the table
     InterpVec m_fl; // values of integral flux in the table
     InterpVec m_fluxes; // integral flux, unmodulated by earth's field
     float m_expo;   // exponent of power-law spectrum above table (integral)
-    double /*float*/ m_normfact; // fraction of sky not blocked by earth
+    float m_normfact; // fraction of sky not blocked by earth
     float m_tot;    // total flux above the current cutoff energy
     float m_upper;  // total flux in the power-law part of spectrum
     float m_etop;   // energy at which table transitions to power law
@@ -133,32 +121,9 @@ class CHIMESpectrum : public Spectrum
     static const float m_altitude;  // altitude of circular orbit
 
     std::string m_particle_name;
-    ObserverAdapter< CHIMESpectrum > m_observer; //obsever tag
+    ObserverAdapter< HeSpectrum > m_observer; //obsever tag
 
 };
 
-class CHIMEMax : public CHIMESpectrum
-{
- public:
-     CHIMEMax();
-     ~CHIMEMax(){}
-};
-
-class CHIMEMin : public CHIMESpectrum
-{
- public:
-     CHIMEMin();
-     ~CHIMEMin(){}
-};
-
-
-class CHIMEAvg : public CHIMESpectrum
-{
- public:
-     CHIMEAvg();
-     ~CHIMEAvg(){}
-};
-
-
-#endif // CHIME_SPECTRUM_H
+#endif // HE_SPECTRUM_H
 

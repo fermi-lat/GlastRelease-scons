@@ -6,7 +6,7 @@
 
 #include <string>
 
-#include "GPS.h"
+#include "../src/GPS.h"
 
 
 class DOM_Element;

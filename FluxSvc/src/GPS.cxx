@@ -2,9 +2,9 @@
 // $Id$
 //////////////////////////////////////////////////////////////////////
 
-#include "FluxSvc/GPS.h"
+#include "GPS.h"
 
-#include "FluxSvc/Orbit.h"
+#include "Orbit.h"
 #include "CLHEP/Random/RandFlat.h"
 
 #include <iomanip>

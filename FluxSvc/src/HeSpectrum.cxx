@@ -1,6 +1,6 @@
 // $Id$
 
-#include "FluxSvc/HeSpectrum.h"
+#include "HeSpectrum.h"
 
 #include "HeSpectrum.inc"  // numerical data: energies, fluxes, gfluxes
 
@@ -8,9 +8,9 @@
 #include <algorithm>
 #include <functional>
 #include "CLHEP/Random/Random.h"
-#include "FluxSvc/GPS.h"
+#include "GPS.h"
 
-#include "FluxSvc/SpectrumFactory.h"
+#include "SpectrumFactory.h"
 
 static SpectrumFactory<HeSpectrum> factory;
 const ISpectrumFactory& HeSpectrumFactory = factory;

@@ -6,7 +6,7 @@
 #define FluxSource_h 1
 
 #include "FluxSvc/EventSource.h"
-#include "FluxSvc/Spectrum.h"
+#include "../src/Spectrum.h"
 #include "geometry/Point.h"
 
 // forward declarations

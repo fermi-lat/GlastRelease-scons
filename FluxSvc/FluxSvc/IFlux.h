@@ -10,7 +10,7 @@
 #include <string>
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
-#include "FluxSvc/SpectrumFactoryTable.h"
+#include "../src/SpectrumFactoryTable.h"
 
 class ParticleProperty;
 

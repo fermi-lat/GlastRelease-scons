@@ -3,11 +3,11 @@
 #include "FluxSvc/FluxMgr.h"
 #include "FluxSvc/EventSource.h"
 #include "FluxSvc/ISpectrumFactory.h"
-#include "FluxSvc/SpectrumFactoryTable.h"
+#include "../../SpectrumFactoryTable.h"
 #include <iostream>
 #include <algorithm>
-#include "FluxSvc/CHIMESpectrum.h"
-#include "FluxSvc/Orbit.h"
+#include "../../CHIMESpectrum.h"
+#include "../../Orbit.h"
 
 
 static int default_count = 10;

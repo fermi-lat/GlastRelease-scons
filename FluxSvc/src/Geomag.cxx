@@ -1,4 +1,4 @@
-#include "FluxSvc/Geomag.h"
+#include "Geomag.h"
 
 #include "Geomag.inc"
 

@@ -5,13 +5,13 @@
 #pragma implementation
 #endif
 
-#include "FluxSvc/GalElSpectrum.h"
-#include "FluxSvc/GPS.h"
+#include "GalElSpectrum.h"
+#include "GPS.h"
 
 #include <cmath>
 #include "CLHEP/Random/Random.h"
 
-#include "FluxSvc/SpectrumFactory.h"
+#include "SpectrumFactory.h"
 
 static SpectrumFactory<GalElSpectrum> factory;
 const ISpectrumFactory& GalElSpectrumFactory = factory;

@@ -27,7 +27,7 @@
 #include "CrSpectrum.h"
 
 // define a factory for anonomous instantiation
-#include "FluxSvc/SpectrumFactory.h"
+#include "SpectrumFactory.h"
 
 static SpectrumFactory<CrElectron> factory;
 const ISpectrumFactory& CrElectronFactory = factory;

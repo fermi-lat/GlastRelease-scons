@@ -3,8 +3,8 @@
 
 #include "FluxSvc/FluxMgr.h"
 #include "FluxSvc/FluxSource.h"
-#include "FluxSvc/SpectrumFactoryTable.h"
-#include "FluxSvc/GPS.h"
+#include "SpectrumFactoryTable.h"
+#include "GPS.h"
 #include "FluxException.h" // defines FATAL_MACRO
 
 #include "dom/DOM_Document.hpp"
@@ -12,7 +12,7 @@
 #include "xml/Dom.h"
 #include "xml/IFile.h"
 
-#include "FluxSvc/Orbit.h"
+#include "Orbit.h"
 
 
 #define DLL_DECL_SPECTRUM(x)   extern const ISpectrumFactory& x##Factory; x##Factory.addRef();

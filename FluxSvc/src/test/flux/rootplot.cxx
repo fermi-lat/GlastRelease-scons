@@ -14,7 +14,7 @@
 #include "FluxSvc/FluxMgr.h"
 #include "FluxSvc/EventSource.h"
 #include "FluxSvc/ISpectrumFactory.h"
-#include "FluxSvc/SpectrumFactoryTable.h"
+#include "../../SpectrumFactoryTable.h"
 
 #include "rootEnergyHist.h"
 #include "rootAngleHist.h"

@@ -3,7 +3,7 @@
 // $Heading:$
 // Initial author: Theodore Hierath
 //
-#include "FluxSvc/Spectrum.h"
+#include "Spectrum.h"
 #include "facilities/Observer.h"
 #include <vector>
 #include <string>

@@ -4,8 +4,8 @@
 
 #include "dom/DOM_Element.hpp"
 #include "xml/Dom.h"
-#include "FluxSvc/GPS.h"
-#include "FluxSvc/Orbit.h"
+#include "GPS.h"
+#include "Orbit.h"
 #include "CLHEP/Random/RandExponential.h"
 
 #include <strstream>

@@ -1,15 +1,15 @@
 // $Id$
 
 
-#include "FluxSvc/AlbedoPSpectrum.h"
+#include "AlbedoPSpectrum.h"
 
 #include <cmath>
 #include <algorithm>
 #include <functional>
 #include "CLHEP/Random/Random.h"
-#include "FluxSvc/GPS.h"
-#include "FluxSvc/Geomag.h"
-#include "FluxSvc/SpectrumFactory.h"
+#include "GPS.h"
+#include "Geomag.h"
+#include "SpectrumFactory.h"
 
 static SpectrumFactory<AlbedoPSpectrum> factory;
 const ISpectrumFactory& AlbedoPSpectrumFactory = factory;
