@@ -70,6 +70,8 @@ public:
 private:
     /// internal init method
     StatusCode doInit();
+    /// mode: currently "default" or "EM"
+    std::string m_mode;
     /// name of file containing splits
     std::string m_ToTFile;
     /// default Gain
