@@ -15,9 +15,10 @@ ApplicationMgr.ExtSvc += { "RootIoSvc" };
 ApplicationMgr.Runable= "RootIoSvc"; 
 
 // ApplicationMgr.TopAlg = {"digiRootReaderAlg", "EvtClock", "UseCalib",
-//		      "UseBadStrips" };
-ApplicationMgr.TopAlg = {"digiRootReaderAlg", "EvtClock",
-		      "UsePeds" };
+ApplicationMgr.TopAlg = {"digiRootReaderAlg", "EvtClock", 
+		      "UseBadStrips" };
+// ApplicationMgr.TopAlg = {"digiRootReaderAlg", "EvtClock",
+//		      "UsePeds" };
 digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
 
 
