@@ -34,5 +34,12 @@ ApplicationMgr.TopAlg = { "PropertiesCheckAlg" } ;
 ApplicationMgr.TopAlg += { "TkrCalibAlg" } ;
 ApplicationMgr.TopAlg += { "Sequencer/Simulation" } ;
 ApplicationMgr.TopAlg += { "Sequencer/Reconstruction" } ;
+PropertiesCheckAlg.exclude = {
+  "ApplicationMgr", "EventSelector", "MessageSvc", "", "", "",
+  "GlastDetSvc", "DetectorPersistencySvc", "EventPersistencySvc",
+  "CalibDataSvc", "CalCalibSvc",
+  "PropertiesCheckAlg" } ;
+  
+// etc
 MessageSvc.OutputLevel = 2 ;
 

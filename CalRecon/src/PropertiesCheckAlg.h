@@ -20,13 +20,18 @@ public:
 private: 
 
     //! clients whose properties must be checked
-    StringArrayProperty m_targets ;
+    StringArrayProperty m_exclude ;
     
     //! count the used properties
     void readPropertyCallBack( Property & ) ;
     
-    //! the map of used properties
-    std::map<std::string,int> m_properties ;
+    //! the map of checked properties
+    struct PropertyInfo
+     {
+      std::string client ;
+      int used ;
+     } ;
+    std::map<std::string,PropertyInfo> m_properties ;
 } ;
 
 #endif

@@ -19,7 +19,6 @@ ApplicationMgr.Runable = "FluxSvc" ;
 // generation
 ApplicationMgr.ExtSvc += { "GlastRandomSvc" } ;
 Simulation.Members += { "FluxAlg", "G4Generator", "ExposureAlg" } ;
-PropertiesCheckAlg.targets += { "FluxAlg", "G4Generator", "ExposureAlg" } ;
 FluxAlg.source_name = "gamma_5_gev_normal" ;
 G4Generator.defaultCutValue = 0.7 ; 
 G4Generator.defaultTkrCutValue = 0.1 ;
@@ -31,17 +30,14 @@ ApplicationMgr.ExtSvc += {"CalCalibSvc" } ;
 CalCalibSvc.DefaultFlavor  = "ideal" ;
 ApplicationMgr.DLLs += { "TkrDigi", "CalDigi", "AcdDigi" } ;
 Simulation.Members += { "TkrDigiAlg", "CalDigiAlg", "AcdDigiAlg" } ;
-PropertiesCheckAlg.targets += { "TkrDigiAlg", "CalDigiAlg", "AcdDigiAlg" } ;
 
 // reconstruction first pass
 ApplicationMgr.DLLs += { "CalRecon", "TkrRecon" } ;
 ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" } ;
 Reconstruction.Members += { "CalXtalRecAlg", "CalClustersAlg", "TkrReconAlg" } ;
-PropertiesCheckAlg.targets += { "CalXtalRecAlg", "CalClustersAlg", "TkrReconAlg" } ;
 
 // output
 Reconstruction.Members += { "digiRootWriterAlg", "reconRootWriterAlg" } ;
-PropertiesCheckAlg.targets = { "digiRootWriterAlg", "reconRootWriterAlg" } ;
 digiRootWriterAlg.digiRootFile = "$CALRECONROOT/src/test/gamma_5_gev_normal-digi.root" ;
 reconRootWriterAlg.reconRootFile = "$CALRECONROOT/src/test/gamma_5_gev_normal-recon.root" ;
 

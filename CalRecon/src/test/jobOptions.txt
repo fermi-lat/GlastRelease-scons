@@ -3,7 +3,6 @@
 
 // read back simulation and reconstruction first pass
 Simulation.Members += { "digiRootReaderAlg", "reconRootReaderAlg" } ;  
-PropertiesCheckAlg.targets += { "digiRootReaderAlg", "reconRootReaderAlg"  } ;
 digiRootReaderAlg.digiRootFile = "$CALRECONROOT/src/test/gamma_5_gev_normal-digi.root" ;
 reconRootReaderAlg.reconRootFile = "$CALRECONROOT/src/test/gamma_5_gev_normal-recon.root" ;
 
@@ -11,7 +10,6 @@ reconRootReaderAlg.reconRootFile = "$CALRECONROOT/src/test/gamma_5_gev_normal-re
 ApplicationMgr.DLLs += { "CalRecon" } ;
 ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" } ;
 Reconstruction.Members += { "CalXtalRecAlg", "CalClustersAlg" } ;
-PropertiesCheckAlg.targets += { "CalXtalRecAlg", "CalClustersAlg" } ;
 ApplicationMgr.TopAlg += { "test_CalRecon" } ;
 
 
