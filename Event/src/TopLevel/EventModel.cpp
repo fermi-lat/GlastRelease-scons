@@ -34,7 +34,7 @@ public:
         EventModel::Digi::AcdDigiCol         = EventModel::Digi::Event + "/AcdDigiCol";
         EventModel::Digi::TkrDigiCol         = EventModel::Digi::Event + "/TkrDigiCol";
         EventModel::Digi::CalDigiCol         = EventModel::Digi::Event + "/CalDigiCol";
-
+        EventModel::Digi::CalDigiHitTab      = EventModel::Digi::Event + "/CalDigiHitTab";
         
 
         // reconstructed data (Tracker)

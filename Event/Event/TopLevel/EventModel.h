@@ -46,6 +46,7 @@
             _EXTERN_ std::string AcdDigiCol;
             _EXTERN_ std::string TkrDigiCol;
             _EXTERN_ std::string CalDigiCol;
+            _EXTERN_ std::string CalDigiHitTab;
         }
 
         namespace TkrRecon {
