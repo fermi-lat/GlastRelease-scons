@@ -223,6 +223,8 @@ void IDmapBuilder::insertVolume(Volume* vol)
 	  pos->setTranslation(m_actualPos);
 	  pos->setRotation(m_actualRot);
 	  m_volMap[m_actualID] = pos;
+          // also save a vector of id's
+          m_idvec.push_back(m_actualID);
 	}
     }
 }  

@@ -62,6 +62,10 @@ namespace detModel{
     PVmap::const_iterator end()const{return m_volMap.end();}
     size_t size()const{return m_volMap.size();}
 
+    //! return pointer to a vector of ids, in order created
+    typedef std::vector<idents::VolumeIdentifier> IdVector;
+    const IdVector* getIdVector()const { return &m_idvec;}
+
   private:
     /// This string contains the topVolume used for the visit
     std::string m_actualVolume;
@@ -73,6 +77,9 @@ namespace detModel{
     HepRotation m_actualRot;
     /// This is the map of PositionedVolume pointers indicized by ids
     PVmap m_volMap;
+
+    /// a secondary vector to preserve the order
+    IdVector m_idvec;
   };
 
 }
