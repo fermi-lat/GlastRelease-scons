@@ -1,5 +1,5 @@
 package AnalysisNtuple
-version v1r9p10
+version v1r9p11
 
 author Leon Rochester <lsrea@slac.stanford.edu>
 
@@ -10,6 +10,7 @@ use GlastPolicy v*
 # these really belong below the "private" line, but apparently linux can't handle it...
 use TkrUtil     v*
 use G4Propagator v*
+use Trigger     v*
 
 use ntupleWriterSvc v*
 
