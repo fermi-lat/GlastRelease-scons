@@ -394,7 +394,7 @@ StatusCode digiRootReaderAlg::readTkrDigi() {
         unsigned int iHit;
         for (iHit = 0; iHit < numStrips; iHit++) {
             int strip = tkrDigiRoot->getHit(iHit);
-            if (strip < lastController0Strip) {
+            if (strip <= lastController0Strip) {
                 tkrDigiTds->addC0Hit(strip);
             } else {
                 tkrDigiTds->addC1Hit(strip);

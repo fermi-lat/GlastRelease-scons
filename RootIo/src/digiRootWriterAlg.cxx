@@ -342,7 +342,7 @@ StatusCode digiRootWriterAlg::writeTkrDigi() {
         unsigned int iHit;
         for (iHit = 0; iHit < numHits; iHit++) {
             Int_t strip = (*tkrDigiTds)->getHit(iHit);
-            if (strip < lastController0Strip) {
+            if (strip <= lastController0Strip) {
                 tkrDigiRoot->addC0Hit(strip);
             } else {
                 tkrDigiRoot->addC1Hit(strip);
