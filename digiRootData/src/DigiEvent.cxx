@@ -63,7 +63,7 @@ void DigiEvent::Clear(Option_t *option) {
     m_levelOneTrigger.Clear();
     m_calDigiCol->Delete();
     m_tkrDigiCol->Delete();
-    m_acdDigiCol->Delete();
+    m_acdDigiCol->Clear("C");
     m_numAcdDigis = -1;
 
 }
