@@ -138,6 +138,7 @@ void TreeMaker::CreateTree(Int_t numEvents)
     ReconTree->Branch("ThetaXZ",&ThetaXZ,"ThetaXZ/D");
     ReconTree->Branch("ThetaYZ",&ThetaYZ,"ThetaYZ/D");
     TreeCollection->Add(ReconTree);
+
   }
   
   // determine how many events to process
