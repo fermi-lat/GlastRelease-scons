@@ -33,4 +33,4 @@ macro_append use_linkopts " $(GuiSvc_lib)"
 macro jobOptions "" VisualC "jobOptions.txt"
 
 macro WinJobOptions  "" VisualC "test/jobOptions.txt"
-application test_DetDisplay test/*.cxx *.cxx *.h Dll/*.cxx ${WinJobOptions}
+application test_DetDisplay test/*.cxx *.cxx *.h Dll/*.cxx ${WinJobOptions} ${Win32Resource}
