@@ -1,0 +1,37 @@
+// ---------------------------------------------------------
+// Options for Gleam that are specific to running Fred
+// $Header$
+// ---------------------------------------------------------
+
+// this necessary (for now) to see the event
+G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
+G4Generator.saveTrajectories=true;
+
+ApplicationMgr.ExtSvc += {"GuiSvc"};
+
+GuiSvc.size=-3000;  // set size, orientation
+
+ApplicationMgr.DLLs   += {"FluxDisplay", "DetDisplay" };    
+
+// these are algorithms 
+EventDisplay.Members = {
+   "FluxDisplay",
+   "CalDisplay",
+   "AcdDisplay"  
+   };
+
+// GeometryDepth tells how much geometry detail you want available
+// Default is 4, which is just the tower outlines, and is appropriate
+// for general event viewing
+// Anything higher than 8 generates an infinite loop!
+//HepRepSvc.GeometryDepth = 8;
+
+// this doesn't work for Fred yet, because Fred pauses after each event!
+Triggered.Members += {"GuiPause"};  // allow pause when triggered
+
+// -------end display-specific stuff-------
+// ----------------------------------
+
+ApplicationMgr.DLLs+= { "HepRepSvc", "HepRepXml", "HepRepCorba"};
+ApplicationMgr.ExtSvc += {"HepRepSvc"};
+ApplicationMgr.Runable = "HepRepSvc";
