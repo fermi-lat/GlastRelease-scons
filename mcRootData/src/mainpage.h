@@ -17,8 +17,8 @@
     -# initial momentum
     -# final momentum
     -# reference (TRef) to mother McParticle
-    -# collection of daughter McParticles
-  - Collection of McPositionHits
+    -# collection of McParticle daughters
+  - Collection of McPositionHit
     -# monte carlo particle id
     -# volume id
     -# reference (TRef) to the origin McParticle
@@ -28,7 +28,7 @@
     -# particle energy
     -# time of flight
     -# direction cosine - calculated at run time
-  - Collection of McIntgratinghits
+  - Collection of McIntgratingHit
     -# volume id
     -# reference (TRef) to an McParticle
     -# status flags
@@ -38,13 +38,14 @@
   @attention In ROOT 3.02.07, it is not possible to access TRefs stored in a
   ROOT file from compiled code.  This bug has been fixed in the development 
   version of ROOT.  For now, one must use ROOT interactively to gain access to 
-  TRefs stored to a ROOT file.
+  TRefs stored in a ROOT file.
 
   <hr>
   @section notes release notes
   release.notes
+  <hr>
   @section requirements requirements
-  @include requirements
+  @verbinclude requirements
 
 */
 
