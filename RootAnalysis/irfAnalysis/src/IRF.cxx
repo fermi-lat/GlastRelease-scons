@@ -1,3 +1,7 @@
+/** @file IRF.cxx
+  $Header$
+  */
+  
 #include "IRF.h"
 #include <iostream>
 #include "TPaveLabel.h"
@@ -7,17 +11,10 @@
 int IRF::angles[] = {0, 37, 53, 66, 78}; //cos theta 1, .8., .6, .4, .2
 
 
-IRF::IRF() :m_file(0), m_tree(0)
+IRF::IRF(std::string summary_root_filename)
+: m_file(0), m_tree(0)
+, m_summary_filename(output_file_root()+summary_root_filename)
 {
-    // define basic cuts
-    goodCal="CalTotRLn>2&&CalEnergySum>5.0 && IMgoodCalProb>0.5";
-    goodPSF ="IMcoreProb>0.3&&IMpsfErrPred<3.0"; // this is Bill's minimal cut
-    TCut tempFix("Tkr1KalEne > 0.5* McEnergy"); // temporary fix for bad energy estimate
-    goodEvent=goodCal&&goodPSF;  
-
-    std::cout << "Applying global cut " << goodEvent.GetTitle() << std::endl;
-    // define root files
-    m_input_filename=input_file_root()+"/fulltup.root";
 
     // energy binning: 3 per decade
     logestart=5./3., logedelta=1./3.;
@@ -25,13 +22,6 @@ IRF::IRF() :m_file(0), m_tree(0)
 
     // angle binning : delta cos(theta) = 0.2.
     angle_bins=4;
-
-     // load the file and access the TTree
-    std::cout << "reading from " << input_filename() << std::endl;
-    m_file = new TFile(input_filename().c_str());
-    if( ! m_file->IsOpen()) throw "could not open input file";
-    m_tree = (TTree*)m_file->Get("1");
-    if( m_tree==0) throw "did not find the TTree";
 
     // redefine some defaults
     gStyle->SetPadColor(10); // out with the gray
@@ -43,7 +33,32 @@ IRF::IRF() :m_file(0), m_tree(0)
 
    // this applies it to new hist
    gROOT->ForceStyle();
-    
+}
+
+void IRF::open_input_file()
+{
+     // load the file and access the TTree
+    m_file = new TFile(input_filename().c_str());
+    if( ! m_file->IsOpen()){
+        std::cerr << "Could not open root file " << input_filename() << std::endl;
+        throw "could not open input file";
+    }
+    std::cout << "Opened root file " << input_filename() << std::endl;
+    m_tree = (TTree*)m_file->Get("1");
+    if( m_tree==0) {
+        std::cerr << "Did not find tree \"i\" in the input file" << std::endl;
+        throw "did not find the TTree";
+    }
+
+    // define basic cuts
+    goodCal="CalTotRLn>2&&CalEnergySum>5.0 && IMgoodCalProb>0.5";
+    goodPSF ="IMcoreProb>0.3&&IMpsfErrPred<3.0"; // this is Bill's minimal cut
+    TCut tempFix("Tkr1KalEne > 0.5* McEnergy"); // temporary fix for bad energy estimate
+    goodEvent=goodCal&&goodPSF;  
+
+    std::cout << "good event definition: " << goodEvent.GetTitle() << std::endl;
+
+
 }
 
 IRF::~IRF(){

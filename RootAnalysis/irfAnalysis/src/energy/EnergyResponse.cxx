@@ -3,6 +3,7 @@ Create a set of histograms to allow analysis of the energy  response
 */
 #include "IRF.h"
 
+#include <fstream>
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class EnergyResponse : public IRF {
@@ -11,6 +12,7 @@ public:
     void define();
     void draw(std::string ps);
     void drawEnergy(std::string ps);
+    void dump_hists(std::string text);
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -21,12 +23,13 @@ EnergyResponse::EnergyResponse()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void EnergyResponse::define() 
 {
+    open_input_file();
 
     TFile  hist_file(summary_filename().c_str(), "recreate"); // for the histograms
 
     std::cout << " writing hists to " << summary_filename() << std::endl;
 
-    int nbins=80; double xmin=0, xmax=2.0, ymax=0.15;
+    int nbins=40; double xmin=0, xmax=2.0, ymax=0.15;
     for(int i=0; i<angle_bins; ++i){
         // loop over angle ranges
 
@@ -41,7 +44,6 @@ void EnergyResponse::define()
             char title[256];
             sprintf(title, "Energy response for %d MeV, angles %d-%d", (int)(eCenter(j)+0.5), angles[i],angles[i+1]);
             TH1F* h = new TH1F(hist_name(i,j), title, nbins, xmin, xmax);
-            h->SetLineColor(i+1);
             h->GetXaxis()->SetTitle("Emeas/Egen");
             h->GetXaxis()->CenterTitle(true);
 
@@ -49,12 +51,6 @@ void EnergyResponse::define()
             m_tree->Project(h->GetName(), "EvtEnergySumOpt/McEnergy", goodEvent&&TCut(energy_cut(j))&&angle);
             double scale = h->Integral(), mean= h->GetMean(), rms=h->GetRMS();
             printf(" count %5.0f mean %5.2f rms %5.2f\n", scale, mean, rms);
-            if(scale>0){ 
-                //h->Sumw2();
-                h->Scale(1./scale);
-                h->SetMaximum(ymax);
-                h->SetStats(false);
-            }
             h->SetDirectory(&hist_file);  // move to the summary file
         }
     }
@@ -68,35 +64,48 @@ void EnergyResponse::draw(std::string ps)
 
     TFile hist_file(summary_filename().c_str() ); // for the histograms
     if( ! hist_file.IsOpen()){
-        std::cerr <<  "could not open psf root file " << summary_filename() << std::endl;
+        std::cerr <<  "could not open root file " << summary_filename() << std::endl;
         return;;
     }
+    double ymax=0.5, ymin=1e-4;
 
-    TCanvas c("energy", "energy");
-    divideCanvas(c,4,2, std::string("Energy response  plots from ")+summary_filename());
+    TCanvas c;
+    divideCanvas(c,4,2, std::string("Energy plots from ")+summary_filename());
     for(int j=0; j<energy_bins; ++j){
 
         c.cd(j+1);
-        TLegend *leg = new TLegend(0.55,0.7, 0.89,0.89);
-        leg->SetTextSize(0.03);
+        gPad->SetLogy();
+        gPad->SetRightMargin(0.02);
+        gPad->SetTopMargin(0.03);
+        TLegend *leg = new TLegend(0.65,0.75, 0.95,0.95);
+        leg->SetTextSize(0.028);
         leg->SetHeader("Angle range mean rms");
 
         for( int i=0; i<angle_bins; ++i){
             TH1F* h =(TH1F*)hist_file.Get(hist_name(i,j)) ; 
             if(h==0){
-                std::cerr << "could not find "<< hist_name(i,j) << " in summary file " << hist_file.GetName() <<std::endl;
+                std::cerr << "could not find "<< hist_name(i,j) 
+                    << " in summary file " << hist_file.GetName() <<std::endl;
                 return;
             }
             printf("Drawing ...%s\n", h->GetTitle());
             char title[256]; // rewrite the title for the multiple plot
-            sprintf(title, "%6d MeV", (int)(eCenter(j)+0.5));
+            sprintf(title, "     %6d MeV", (int)(eCenter(j)+0.5));
+            h->SetLineColor(i+1);
             h->SetTitle( title); 
             h->GetXaxis()->CenterTitle(true);
             h->SetLineColor(i+1);
+            double scale = h->Integral(), mean= h->GetMean(), rms=h->GetRMS();
+            if(scale>0){ 
+                //h->Sumw2();
+                h->Scale(1./scale);
+                h->SetMaximum(ymax);h->SetMinimum(ymin);
+                h->SetStats(false);
+            }
 
-            if(i==0)h->Draw(); else h->Draw("same");
-            char entry[64]; sprintf(entry," %d - %d   %5.2f %5.2f", 
-                angles[i], angles[i+1],h->GetMean(), h->GetRMS());
+            h->Draw(i==0?"":"same");
+            char entry[64]; sprintf(entry," %2d-%d  %5.2f %5.2f", 
+                angles[i], angles[i+1],mean, rms);
             leg->AddEntry( h, entry, "l");
         }
         leg->SetFillColor(10);
@@ -158,18 +167,49 @@ void EnergyResponse::drawEnergy(std::string ps)
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void EnergyResponse::dump_hists(std::string text_filename)
+{
+    TFile hist_file(summary_filename().c_str() ); // for the histograms
+    if( ! hist_file.IsOpen()){
+        std::cerr <<  "could not open psf root file " << summary_filename() << std::endl;
+        return;;
+    }
+    std::ofstream out((output_file_root()+text_filename).c_str());
+
+    for(int j=0; j<energy_bins; ++j){
+
+        for( int i=0; i<angle_bins; ++i){
+            TH1F* h =(TH1F*)hist_file.Get(hist_name(i,j)) ; 
+            if(h==0){
+                std::cerr << "could not find "<< hist_name(i,j) << " in summary file " << hist_file.GetName() <<std::endl;
+                return;
+            }
+            out <<  h->GetTitle() << "\t";
+            int nbins = h->GetNbinsX();
+            for( int k=1; k<nbins+1; ++k){
+                out << h->GetBinContent(k)<<"\t";
+            }
+            out << std::endl;
+        }
+    }
+}
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 int main(){
     EnergyResponse er;
-
     if( !er.fileExists() ) er.define();
-    if( !er.fileExists() ) { std::cerr << "cound not open  root file " << er.summary_filename() << std::endl;
+    if( !er.fileExists() ) { std::cerr << "cound not open root file " << er.summary_filename() << std::endl;
         return -1;
     }
 
+#if 1
     std::string psfile(er.output_file_root()+"energy.ps");
     er.draw(psfile+"(");
     er.drawEnergy(psfile+")");
-
+#else
+    er.dump_hists("dump.txt");
+#endif
     printf("done\n");
     return 0;
 }

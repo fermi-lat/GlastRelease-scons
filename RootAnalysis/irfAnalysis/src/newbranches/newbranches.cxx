@@ -5,6 +5,7 @@ static inline double sqr(double x){return x*x;}
 
 int main(){
 
+    using namespace std;
     /******************************************************
     Procedure:
 

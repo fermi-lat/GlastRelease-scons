@@ -13,6 +13,7 @@
 #include "TH1F.h"
 
 #include "SumOfGaussians.h"
+#include <cassert>
 
 SumOfGaussians::SumOfGaussians(int maxTrys) : m_func(0), m_maxTrys(maxTrys) {
 // Use a more natural formulation of the Gaussian function than Root's

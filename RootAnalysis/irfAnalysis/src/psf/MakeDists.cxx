@@ -25,6 +25,8 @@ void MakeDists::project(const std::string &branchName,
                         double xmin, double xmax, int nbins,
                         Fitter * fitter) {
 
+     open_input_file();
+
 // Output file for the histograms.
    TFile histFile(m_summary_filename.c_str(), "recreate");
 

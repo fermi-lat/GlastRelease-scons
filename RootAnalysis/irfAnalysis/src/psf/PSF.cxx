@@ -1,22 +1,82 @@
+/** @file PSF.cxx
+$Header$
+
+*/
+#include "PSF.h"
+
 #include "SumOfGaussians.h"
 #include "MakeDists.h"
+#include "TProfile.h"
 
-#include "PSF.h"
+
 
 double PSF::probSum[2]={0.68, 0.95}; // for defining quantiles
 
-PSF::PSF()
-: nbins(50), xmin(0), xmax(5.0), ymax(0.16)
+static inline double sqr(double x){return x*x;}
+
+
+PSF::PSF(std::string summary_root_filename) 
+: IRF(summary_root_filename)
+, nbins(50), xmin(0), xmax(5.0), ymax(0.16)
 {
-    m_summary_filename=output_file_root()+"psf.root";
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void PSF::makeFriend() 
+{
+    // open the input file and set the tree
+    open_input_file();
+
+    // stuff to get from the input tuple
+    double Tkr1FirstLayer, Tkr1PhiErr, Tkr1ThetaErr, IMvertexProb, VtxAngle,McTkr1DirErr,McDirErr;
+    m_tree->SetBranchAddress("Tkr1FirstLayer",&Tkr1FirstLayer);
+    m_tree->SetBranchAddress("Tkr1ThetaErr",  &Tkr1ThetaErr);
+    m_tree->SetBranchAddress("Tkr1PhiErr",    &Tkr1PhiErr);
+    m_tree->SetBranchAddress("IMvertexProb",  &IMvertexProb);
+    m_tree->SetBranchAddress("VtxAngle",      &VtxAngle);
+    m_tree->SetBranchAddress("McTkr1DirErr",  &McTkr1DirErr);
+    m_tree->SetBranchAddress("McDirErr",      &McDirErr);
+
+    // make a new file, with a tree and branches
+    TFile fr(friend_file().c_str(),"recreate");
+    TTree* friend_tree = new TTree("t2", "friend tree");
+    float dir_err, psf_scale_factor;
+    friend_tree->Branch("PSFscaleFactor", &psf_scale_factor, "PSFscaleFactor/F");
+    friend_tree->Branch("BestDirErr", &dir_err, "BestDirErr/F");
+
+    int count=m_tree->GetEntries();
+    for(int k=0; k<count; ++k){
+        m_tree->GetEntry(k);
+        psf_scale_factor=sqrt(sqr(Tkr1ThetaErr)+sqr(Tkr1PhiErr));
+        if (Tkr1FirstLayer<12.0) psf_scale_factor *= 2.5; else psf_scale_factor*=3.5;
+        if (IMvertexProb<0.5||VtxAngle==0.0){
+            dir_err=McTkr1DirErr;
+        }else{
+            dir_err=McDirErr;
+        }
+        friend_tree->Fill();
+    }
+    fr.cd();
+    friend_tree->Write();
+}
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void PSF::project() 
 {
+    TFile fr( friend_file().c_str() );
+    if( ! fr.IsOpen() ) {
+        std::cout << "Creating friend file with derived stuff: this takes a while" << std::endl;
+        makeFriend();
+    }else fr.Close();
+
+    open_input_file();
+    m_tree->AddFriend("t2", friend_file().c_str() );
+
     TFile  psf_file(m_summary_filename.c_str(), "recreate"); // for the histograms
 
-    std::cout << " writing hists to " << summary_filename() << std::endl;
+    std::cout << " writing hists and derived tree to " << summary_filename() << std::endl;
+
+
+    // now just do a bunch of projects to fill the histograms
 
     for(int i=0; i<angle_bins; ++i){
 
@@ -79,8 +139,10 @@ void PSF::draw(std::string ps_filename)
 
     for(int j=0; j<energy_bins; ++j){
         c.cd(j+1);
+        gPad->SetRightMargin(0.02);
+        gPad->SetTopMargin(0.03);
 
-        TLegend *leg = new TLegend(0.45,0.7, 0.89,0.89);
+        TLegend *leg = new TLegend(0.40,0.75, 0.95,0.95);
         leg->SetTextSize(0.04);
         leg->SetHeader("Angle range   68%   95%");
         double logecenter=logestart+logedelta*j, ecenter=pow(10, logecenter);
@@ -118,7 +180,7 @@ void PSF::draw(std::string ps_filename)
         leg->SetBorderSize(1);
         leg->Draw();
     }
-    c.Print ( ps_filename.c_str() ); // print ps file,
+    c.Print ((output_file_root()+ ps_filename).c_str() ); // print ps file,
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -153,7 +215,7 @@ void PSF::drawError(std::string ps)
     leg->SetBorderSize(1);
     leg->Draw();
 
-    c.Print(ps.c_str());
+    c.Print((output_file_root()+ps).c_str());
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -224,39 +286,6 @@ void PSF::drawAeff(std::string ps)
     leg->SetFillColor(10);
     leg->SetBorderSize(1);
     leg->Draw();
-    c.Print(ps.c_str());
+    c.Print((output_file_root()+ps).c_str());
 }
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-int main()
-{
-    PSF p;
-    if(!p.fileExists())  p.project();
-    std::string ps = p.output_file_root()+ "psf.ps";
-    p.draw(ps+"(");
-    p.drawAeff(ps);
-    p.drawError(ps);
-    p.drawAsymmetry(ps+")");
-    
-// Fit the angle ErrDists with a sum of two Gaussian functions.
-    Fitter * twoGauss = new SumOfGaussians();
-
-// Set bounds on fit parameters.
-    double lower[] = {0., -3.5, 0., 0., -3.5, 0.};
-    double upper[] = {1e3, -0.5, 3., 1e3, -0.5, 3.};
-    std::vector<double> lower_bounds(lower, lower+6);
-    std::vector<double> upper_bounds(upper, upper+6);
-    twoGauss->setBounds(lower_bounds, upper_bounds);
-
-// Create the distributions.
-    MakeDists thetaErrDist("Tkr1ThetaErr.root");
-    thetaErrDist.project("log10(Tkr1ThetaErr)", -3.5, -0.5, 50, twoGauss);
-    thetaErrDist.draw("Tkr1ThetaErr.ps", 0.3);
-
-    MakeDists phiErrDist("Tkr1PhiErr.root");
-    phiErrDist.project("log10(Tkr1PhiErr)", -3.5, -0.5, 50, twoGauss);
-    phiErrDist.draw("Tkr1PhiErr.ps", 0.3);
-
-    std::cout << "done" << std::endl;
-    return 0;
-}

@@ -1,5 +1,7 @@
-/*  
-Create a set of histograms to allow analysis of the  response
+/** @file IRF.h
+  @brief Create a set of histograms to allow analysis of the  response
+
+  $Header$
 */
 #ifndef IRF_H
 #define IRF_H
@@ -23,8 +25,12 @@ Create a set of histograms to allow analysis of the  response
 */
 class IRF{
 public:
-    IRF();
+    IRF(std::string summary_root_filename="irf.root");
     ~IRF();
+
+    /// open the input root file(s)
+    void open_input_file();
+
     /// divide a canvas
     void IRF::divideCanvas(TCanvas & c, int nx, int ny, std::string top_title) ;
 
@@ -66,7 +72,7 @@ public:
     }
 
     std::string summary_filename(){ return m_summary_filename;}
-    std::string input_filename(){return m_input_filename;}
+    std::string input_filename(){return ::getenv("input_file");}
 
 //should be private::
     TCut goodCal, goodPSF, goodEvent;

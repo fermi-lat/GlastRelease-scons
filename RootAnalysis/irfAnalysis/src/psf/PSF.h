@@ -2,11 +2,10 @@
 #define RootAnalysis_irfAnalysis_PSF_h
 
 #include "IRF.h"
-#include "TProfile.h"
 
 class PSF : public IRF {
 public:
-    PSF();
+    PSF(std::string summary_root_filename="ps.root");
     void project();
     void draw(std::string ps_filename);
     void drawError(std::string ps_filename);
@@ -18,7 +17,15 @@ public:
         return f.IsOpen();
     }
 
+
+    std::string friend_file(){
+        return output_file_root()+"psf_friend.root";
+    }
+
+    void PSF::makeFriend(); 
+    
     static double probSum[2]; // for defining quantiles
+
     // histogram and display
     int nbins; 
     double xmin,xmax, ymax;
