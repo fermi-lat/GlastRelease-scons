@@ -39,7 +39,7 @@ StatusCode VtxSingleTrkTool::doVtxFit(Event::TkrVertexCol& theVtxCol)
   Event::TkrFitConPtr itr = m_theTracks->begin();
   while(itr != m_theTracks->end())
     {
-      Event::TkrFitTrack* theTrack = *itr++;
+      Event::TkrFitTrackBase* theTrack = *itr++;
       Event::TkrVertex* 
         vertex = new Event::TkrVertex(theTrack->getLayer(),
                                       theTrack->getTower(),
