@@ -408,14 +408,22 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
 
       // case of HEX1 range 
       // adc vals have a ceiling in HEX1
-      if (rng == RngNum::N_VALS-1) {
+      if (rng == HEX1) {
         if (tmpADC[xRng] > ULDThold.getVal()) {
+          // set ADC to max val
+          tmpADC[xRng] =  ULDThold.getVal();
+          
+          // set 'pegged' flag
           if (face == POS_FACE) peggedP = true;
           else peggedN = true;
-          tmpADC[xRng] =  ULDThold.getVal();
-          break; // quit before rng is incremented 1 too many
         }
-      } else if (tmpADC[xRng] < ULDThold.getVal()) break;  // break on 1st energy rng that is < threshold
+        
+        // break before rng is incremented out-of-bounds
+        break; 
+      } else { // 1st 3 ranges
+        // break on 1st energy rng that is < threshold
+        if (tmpADC[xRng] <= ULDThold.getVal()) break;
+      }
     }
     
     // assign range selection
