@@ -185,9 +185,9 @@ const TkrLayer* Event::getTkrLayer(unsigned int layerNum) {
     unsigned int planeNum = layerNum >> 1;
     tempLayer.setPlaneNum(planeNum);
     if ( (planeNum % 2) == 0 ) {    // even plane
-        tempLayer.setXY((layerNum&1) ? TkrLayer::TKRAxes::X : TkrLayer::TKRAxes::Y);
+        tempLayer.setXY((layerNum&1) ? TkrLayer::X : TkrLayer::Y);
     } else {                        // odd plane
-        tempLayer.setXY((layerNum&1) ? TkrLayer::TKRAxes::Y : TkrLayer::TKRAxes::X);
+        tempLayer.setXY((layerNum&1) ? TkrLayer::Y : TkrLayer::X);
     }
     int index = m_TkrDigiVec->BinarySearch(&tempLayer);
     if (index >= 0) return ((TkrLayer*)m_TkrDigiVec->At(index));

@@ -1,8 +1,8 @@
 /********************************************************************
-* EventCint.h
+* ../digiRootData/EventCint.h
 ********************************************************************/
 #ifdef __CINT__
-#error EventCint.h/C is only for compilation. Abort cint.
+#error ../digiRootData/EventCint.h/C is only for compilation. Abort cint.
 #endif
 #include <stddef.h>
 #include <stdio.h>
