@@ -31,26 +31,29 @@ LdfDiagnosticCnv::LdfDiagnosticCnv(ISvcLocator* svc)
 
 StatusCode LdfDiagnosticCnv::createObj(IOpaqueAddress* , 
                                     DataObject*& refpObject) {
-    // Purpose and Method:  This converter will store EBF diagnostic data on the TDS
+    // Purpose and Method:  This converter will store LDF diagnostic data on the TDS
     LdfEvent::DiagnosticData *diag = new LdfEvent::DiagnosticData();
     refpObject = diag;
     
     // Retrieve the LAT data for this event and print out its contents
     ldfReader::LatData* myLatData = ldfReader::LatData::instance();
-    const ldfReader::DiagnosticData *diagnostic = myLatData->diagnostic();
-    unsigned int numCal = diagnostic->getNumCalDiagnostic();
-    unsigned int ind;
-    for (ind = 0; ind < numCal; ind++) {
-        ldfReader::CalDiagnosticData ldfCalDiag = diagnostic->getCalDiagnosticByIndex(ind);
-        //LdfEvent::CalDiagnosticData cal(diagnostic->getCalDiagnosticByIndex(ind).dataWord());
-        LdfEvent::CalDiagnosticData cal(ldfCalDiag.dataWord(), ldfCalDiag.tower(), ldfCalDiag.layer());
-        diag->addCalDiagnostic(cal);
-    }
-    unsigned int numTkr = diagnostic->getNumTkrDiagnostic();
-    for (ind = 0; ind < numTkr; ind++) {
-        ldfReader::TkrDiagnosticData ldfTkrDiag = diagnostic->getTkrDiagnosticByIndex(ind);
-        LdfEvent::TkrDiagnosticData tkr(ldfTkrDiag.dataWord(), ldfTkrDiag.tower(), ldfTkrDiag.gtcc());
-        diag->addTkrDiagnostic(tkr);
+    unsigned int i;
+    for (i = 0; i < 16; i++) {
+        if(myLatData->getTower(i)) {
+            if (!myLatData->getTower(i)->getTem().exist()) continue;
+
+            const ldfReader::DiagnosticData* diagnostic = myLatData->getTower(i)->getTem().getDiagnostic();
+
+            if (!diagnostic->exist()) continue;
+
+            ldfReader::CalDiagnosticData ldfCalDiag = diagnostic->getCalDiagnostic();
+            LdfEvent::CalDiagnosticData cal(ldfCalDiag.dataWord(), ldfCalDiag.tower(), ldfCalDiag.layer());
+            diag->addCalDiagnostic(cal);
+
+            ldfReader::TkrDiagnosticData ldfTkrDiag = diagnostic->getTkrDiagnostic();
+             LdfEvent::TkrDiagnosticData tkr(ldfTkrDiag.dataWord(), ldfTkrDiag.tower(), ldfTkrDiag.gtcc());
+             diag->addTkrDiagnostic(tkr);
+        }
     }
     return StatusCode::SUCCESS;
 }

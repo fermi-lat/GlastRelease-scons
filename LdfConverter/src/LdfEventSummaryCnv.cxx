@@ -43,15 +43,17 @@ StatusCode LdfEventSummaryCnv::createObj(IOpaqueAddress* ,
     // Retrieve the contribution lengths and store them in the EventSummaryData
     unsigned int gemLen = ldfReader::LatData::instance()->getGem().lenInBytes();
     unsigned int oswLen = ldfReader::LatData::instance()->getOsw().lenInBytes();
-    unsigned int errLen = ldfReader::LatData::instance()->getErr().lenInBytes();
-    unsigned int diagLen = ldfReader::LatData::instance()->diagnostic()->lenInBytes();
     unsigned int aemLen = ldfReader::LatData::instance()->getAem().lenInBytes();
     unsigned int temLen[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    unsigned int diagLen[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    unsigned int errLen[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     unsigned int i;
     for (i = 0; i < 16; i++) {
         if(ldfReader::LatData::instance()->getTower(i)) {
             if (!ldfReader::LatData::instance()->getTower(i)->getTem().exist()) continue;
             temLen[i] = ldfReader::LatData::instance()->getTower(i)->getTem().lenInBytes();
+            diagLen[i] = ldfReader::LatData::instance()->getTower(i)->getTem().getDiagnostic()->lenInBytes();
+            errLen[i] = ldfReader::LatData::instance()->getTower(i)->getTem().getErr()->lenInBytes();
         }
     }
 
