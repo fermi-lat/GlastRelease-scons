@@ -24,6 +24,10 @@ TkrPatCand::TkrPatCand(int layer, int tower, double energy, double quality, cons
     return;
 }
 
+TkrPatCand::~TkrPatCand()
+{
+}
+
 void TkrPatCand::addCandHit(TkrCluster* pCluster)
 {
     m_hits.push_back(TkrPatCandHit(pCluster));
