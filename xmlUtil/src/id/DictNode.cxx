@@ -102,7 +102,7 @@ namespace xmlUtil {
     
     // Otherwise sort nodes by minValue of parent constraint
     POrder parOrder;
-    sort(m_children.begin(), m_children.end(), parOrder);
+    std::sort(m_children.begin(), m_children.end(), parOrder);
     
     // Check that parent constraints are disjoint or identical
     for (it = m_children.begin(); (it + 1) != m_children.end(); ++it) {

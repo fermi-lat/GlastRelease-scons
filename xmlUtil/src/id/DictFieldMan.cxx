@@ -19,7 +19,7 @@
 
 
 namespace xmlUtil {
-  typedef pair<const char *, DictField*> RegPair;
+  typedef std::pair<const char *, DictField*> RegPair;
 
   typedef Registry::iterator RegIterator;
 

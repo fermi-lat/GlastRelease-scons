@@ -45,7 +45,7 @@ namespace xmlUtil {
       unsigned value;
     }  IdField;
 
-    typedef vector <IdField* > Fields;
+    typedef std::vector <IdField* > Fields;
     
     Fields *m_fields;
   };

@@ -40,7 +40,7 @@ namespace xmlUtil {
     ~IdDict();
 
     //! Verify that dictionary is valid
-    bool isValid() const;
+    bool isValid();
 
     //! Verify that supplied identifier is valid w.r.t. the idDict.
     bool idOk(const Identifier& id) const;

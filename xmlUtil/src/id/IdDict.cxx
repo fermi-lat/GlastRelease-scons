@@ -8,6 +8,7 @@
 #include "xmlUtil/id/DictField.h"
 #include "xmlUtil/id/DictNode.h"
 #include "xmlUtil/id/DictValidVisitor.h"
+#include <assert.h>
 namespace xmlUtil {
   IdDict::IdDict(DOM_Element elt)  {
     // Check that element has the right tag name: idDict
@@ -47,7 +48,7 @@ namespace xmlUtil {
 
 
   bool IdDict::accept(DictVisitor *vis, unsigned mask) {
-    unsigned status = 1;
+    bool status = true;
 
     if (!vis->visitDict(this)) return false;
 
@@ -57,8 +58,7 @@ namespace xmlUtil {
     if (status && (mask & fieldManager)) {
       status &= m_fieldMan->accept(vis);
     }
-
-    return false;
+    return status;
   }
 
   /* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -67,7 +67,7 @@ namespace xmlUtil {
      replaced with something real.
   */
 
-  bool IdDict::isValid() const {
+  bool IdDict::isValid()  {
     DictValidVisitor visitor;
 
     accept(&visitor);

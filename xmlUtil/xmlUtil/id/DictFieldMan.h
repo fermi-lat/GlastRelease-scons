@@ -26,7 +26,7 @@ namespace xmlUtil {
       return strcmp(s1, s2) == 0;
     }
   };
-  typedef hash_map<const char *, DictField*, hash<const char *>, eqstr> 
+  typedef std::hash_map<const char *, DictField*, std::hash<const char *>, eqstr> 
   Registry;
 #else
   struct ltstr {
@@ -35,7 +35,7 @@ namespace xmlUtil {
       return strcmp(s1, s2) < 0;
     }
   };
-  typedef map<const char *, DictField*, ltstr> Registry;
+  typedef std::map<const char *, DictField*, ltstr> Registry;
 #endif
 
   class DictFieldMan : public DictObject {

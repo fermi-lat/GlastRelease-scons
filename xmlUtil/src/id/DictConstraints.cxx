@@ -42,7 +42,7 @@ namespace xmlUtil {
         m_style = ESTYLE_uninit;
         return;
       }
-      m_valList = new vector<unsigned>(nChild);
+      m_valList = new std::vector<unsigned>(nChild);
       for (unsigned ix = 0; ix < nChild; ix++) {
         int temp;
         DOM_Node    childNode = children.item(ix);
@@ -68,7 +68,7 @@ namespace xmlUtil {
       if (m_valList) {
         for (unsigned iy = m_minVal + 1; iy < m_maxVal; iy++) {
           // if there is anything we can't find, we really need a list
-          if (find(m_valList->begin(), m_valList->end(), iy) == 
+          if (std::find(m_valList->begin(), m_valList->end(), iy) == 
               m_valList->end()) {
             m_style = ESTYLE_list;
             return; 
@@ -95,7 +95,7 @@ namespace xmlUtil {
     m_valList = new DictValList(*list);
     m_minVal = 0xffffffff;
     m_maxVal = 0;
-    for (DictValList::iterator it = list->begin(); 
+    for (DictValList::iterator it = (unsigned int *) list->begin(); 
          it != list->end(); ++it) {
       const unsigned val = *it;
       if (val > m_maxVal) m_maxVal = val;
@@ -145,7 +145,7 @@ namespace xmlUtil {
       return ((value >= m_minVal) & (value <= m_maxVal));
     case ESTYLE_list:
       return 
-        (find(m_valList->begin(), m_valList->end(), value) != 
+        (std::find(m_valList->begin(), m_valList->end(), value) != 
          m_valList->end());
     default:
       
