@@ -1,14 +1,13 @@
 package Event
-version v9r11p1
+version v9r11p13
 
 branches Event cmt doc src
-use idents v2r*
 
-use GaudiInterface * IExternal 
-use CLHEP  v2* IExternal
+use GaudiInterface v0r* IExternal 
+use CLHEP          v2r* IExternal
 
-use geometry  v3*
-
+use geometry  v3r*
+use idents    v2r*
 
 apply_pattern package_include
 apply_pattern package_linkopts
@@ -35,14 +34,14 @@ library Event -no_share\
         Utilities/*.cxx\
         ${Event_headers}
 
-
-macro GlastEvent_stamps   "${EventDir)/Event.stamp"
+###  non-standard definition -- why is it needed?
+macro GlastEvent_stamps   "${Event_root}/${BINDIR}/Event.stamp"
 
 # simple test program
 # use this when we want to make a Gaudi test program apply_pattern package_test
 
-application test_Event test/testmain.cxx
+application test_Event    test/testmain.cxx
 
-application test_Tables test/test_RelTabs.cxx
+application test_Tables   test/test_RelTabs.cxx
 
 application test_TkrRecon test/test_TkrRecon.cxx
