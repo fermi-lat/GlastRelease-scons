@@ -3,6 +3,7 @@
  * Coordinator: J. Bogart
  *       *  EOH *
 
+   v1r3p3 15-Mar-2005 jrb Make <generic> the same in the 2 tracker dtd's
    v1r3p2  7-Mar-2005 jrb Mods to badStrips.dtd, tkrCalibration.dtd after 
                           consultation with Online, I&T and Tracker folk
    v1r3p1  2-Mar-2005 jrb Update VEND for old rows as appropriate when inserting
