@@ -2,6 +2,7 @@
 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/IConversionSvc.h"
+#include "GaudiKernel/IConverter.h"
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
@@ -10,6 +11,8 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/GenericAddress.h"
 #include "CalibRootCnvSvc.h"
+#include "CalibData/CalibBase.h"
+#include "cnv/RootBaseCnv.h"
 
 // Make instances only via static factory class
 static SvcFactory<CalibRootCnvSvc> calibRootCnvSvc_factory;
@@ -17,7 +20,7 @@ const ISvcFactory& CalibRootCnvSvcFactory = calibRootCnvSvc_factory;
 
 CalibRootCnvSvc::CalibRootCnvSvc(const std::string& name, 
                                ISvcLocator* svc) :
-  ConversionSvc(name, svc, ROOT_StorageType),
+  ConversionSvc(name, svc, CALIBROOT_StorageType),
   m_detPersSvc(0), m_detDataSvc(0)   {
 
   // Some day might have a property to declare having to do with path to
@@ -26,16 +29,16 @@ CalibRootCnvSvc::CalibRootCnvSvc(const std::string& name,
 
 StatusCode CalibRootCnvSvc::queryInterface(const IID& riid,
                                           void** ppvInterface) {
-  /* Uncomment if choose to derive from abstract root conv. interface
+  /* Uncomment if choose to derive from abstract root conv. interface */
   if (IID_ICalibRootSvc.versionMatch(riid))  {
     *ppvInterface = (ICalibRootSvc*)this;
   }
   else {
-  */
     // Interface is not directly availible: try out a base class
     return ConversionSvc::queryInterface(riid, ppvInterface);
     /*  }  */
   addRef();
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -48,16 +51,16 @@ StatusCode CalibRootCnvSvc::initialize() {
 
   // Locate the Calib Data Service.  Since it inherits from DataSvc
   // it has to implement IDataProviderSvc
-  IDataProviderSvc* pCDS = 0;
+  m_detDataSvc = 0;
   sc = serviceLocator()->getService 
-    ("CalibDataSvc",  IID_IDataProviderSvc, (IInterface*&)pCDS);
+    ("CalibDataSvc",  IID_IDataProviderSvc, (IInterface*&) m_detDataSvc);
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR << "Could not locate CalibDataSvc" << endreq;
     return sc;
   }
 
   // Set the CalibDataSvc as data provider service
-  sc = setDataProvider(pCDS);
+  sc = setDataProvider(m_detDataSvc);
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR << "Could not set data provider" << endreq;
     return sc;
@@ -119,7 +122,7 @@ StatusCode CalibRootCnvSvc::createAddress(unsigned char svc_type,
 
   MsgStream log( msgSvc(), name() );
 
-  if (svc_type != ROOT_StorageType) {
+  if (svc_type != CALIBROOT_StorageType) {
     log << MSG::ERROR << "bad storage type" << (int)svc_type << endreq;
     return StatusCode::FAILURE;
   }
@@ -134,7 +137,7 @@ StatusCode CalibRootCnvSvc::createAddress(unsigned char svc_type,
   // opaque address implementation for this package to use.  All
   // dealings with (calibration) opaque addresses are confined to
   // the CalibSvc package.
-  refpAddress = new GenericAddress(ROOT_StorageType,
+  refpAddress = new GenericAddress(CALIBROOT_StorageType,
                                    clid,
                                    dataIdent,  
                                    fullpath,
@@ -144,3 +147,44 @@ StatusCode CalibRootCnvSvc::createAddress(unsigned char svc_type,
 
 }
 
+StatusCode CalibRootCnvSvc::writeToRoot(const std::string& outfile, 
+                                        const std::string& tdsPath) {
+  MsgStream log( msgSvc(), name() );
+
+  // Find corresponding object
+  DataObject* pObj;
+  m_detDataSvc->findObject(tdsPath, pObj);
+  if (!pObj) {
+    log << "No object in TDS with path " << tdsPath << endreq;
+    return StatusCode::FAILURE;
+  }
+
+  CalibData::CalibBase* pCalib = 
+    dynamic_cast<CalibData::CalibBase*> (pObj);
+
+  if (!pCalib) {
+    log << "Object with path " << tdsPath << " not of proper type" << endreq;
+    return StatusCode::FAILURE;
+  }
+  return writeToRoot(outfile, pCalib);
+}
+StatusCode CalibRootCnvSvc::writeToRoot(const std::string& outfile,
+                                        CalibData::CalibBase* pCalib) {
+  MsgStream log(msgSvc(), name() );
+
+  // Find converter corresponding to this object
+  IConverter* converter = ConversionSvc::converter(pCalib->clID());
+  if (!converter) {
+    log << "No converter found for object with CLID  " << pCalib->clID()
+        << endreq;
+    return StatusCode::FAILURE;
+  }
+  RootBaseCnv* pCnv = dynamic_cast<RootBaseCnv*>(converter);
+  if (!pCnv) {
+    log << "Converter for CLID " << pCalib->clID() <<  " not of proper type" 
+        << endreq;
+    return StatusCode::FAILURE;
+  }
+  // Call its createRoot method
+  return pCnv->createRoot(outfile, pCalib);
+}

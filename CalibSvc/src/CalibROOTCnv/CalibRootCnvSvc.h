@@ -4,6 +4,7 @@
 
 #include <string>
 
+#include "CalibSvc/ICalibRootSvc.h"
 #include "GaudiKernel/ConversionSvc.h"
 
 
@@ -15,14 +16,7 @@
 //  isomorphic to the XML description) rather than with the physical
 //  file.  Putting that kind of functionality in the conversion service
 //  is probably a good idea, but it doesn't have to be defined in
-//  an abstract interface.  In retrospect, I'd be tempted to just 
-//  let the converters have direct access to the conversion service
-//  implementation and not bother with ICalibXmlSvc.
-//  If there are similar things that the ROOT conversion service 
-//  might do, they belong inside CalibRootCnvSvc as public methods
-//  (and also in an abstract interface if you decide you want one).
-
-// #include "CalibSvc/ICalibXmlSvc.h"
+//  an abstract interface.
 
 /// Forward and external declarations
 template <class TYPE> class SvcFactory;
@@ -30,17 +24,20 @@ template <class TYPE> class SvcFactory;
 class IDetDataSvc;
 class IOpaqueAddress;
 
+namespace CalibData {
+  class CalibBase;
+}
 
 ///---------------------------------------------------------------------------
 /** @class CalibRootCnvSvc
 
     A conversion service for GLAST calibration bulk data in ROOT format.
 
-    @author H Kelly, J. Bogart
-    @date February 2003
+    @author J. Bogart
+    @date July 2004
 *///--------------------------------------------------------------------------
 
-class CalibRootCnvSvc : public ConversionSvc
+class CalibRootCnvSvc : public ConversionSvc, virtual public ICalibRootSvc
 {
   /// Only factories can access protected constructors
   friend class SvcFactory<CalibRootCnvSvc>;
@@ -56,6 +53,12 @@ class CalibRootCnvSvc : public ConversionSvc
 
   virtual StatusCode queryInterface( const IID& riid, 
 				     void** ppvInterface);  
+
+  // Reimplemented from ICalibRootSvc
+  virtual StatusCode writeToRoot(const std::string& outputFile, 
+                                 const std::string& tdsPath);
+  virtual StatusCode writeToRoot(const std::string& outputFile, 
+                                 CalibData::CalibBase *calib);
 
  public:
 
@@ -97,17 +100,8 @@ class CalibRootCnvSvc : public ConversionSvc
   /// Handle to the IConversionSvc interface of the DetectorPersistencySvc
   IConversionSvc*      m_detPersSvc;
 
-  // Ditto (don't really need to keep this either)
-  /// Handle to the IDetDataSvc interface of the CalibDataSvc
-  IDetDataSvc*         m_detDataSvc;
+  /// Handle to IDataProviderSvc interface of CalibDataSvc
+  IDataProviderSvc*         m_detDataSvc;
 
 };
 #endif   
-
-
-
-
-
-
-
-
