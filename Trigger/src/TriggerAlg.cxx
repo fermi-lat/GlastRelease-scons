@@ -219,10 +219,10 @@ StatusCode TriggerAlg::execute()
     //JCT
     for(int tower_id=0;tower_id<16;++tower_id)
       {
-	std::cout<<"Tower Id: "<<tower_id<<std::endl;
- 	std::cout<<"3inRow: "<<(pGltDigi->getTkrThreeInRow())[tower_id]<<std::endl;
- 	std::cout<<"CAL_LO: "<<(pGltDigi->getCAL_LO())[tower_id]<<std::endl;
- 	std::cout<<"CAL_HI: "<<(pGltDigi->getCAL_HI())[tower_id]<<std::endl;
+	log<<MSG::DEBUG<<"Tower Id: "<<tower_id<<endreq;
+ 	log<<MSG::DEBUG<<"3inRow: "<<(pGltDigi->getTkrThreeInRow())[tower_id]<<endreq;
+ 	log<<MSG::DEBUG<<"CAL_LO: "<<(pGltDigi->getCAL_LO())[tower_id]<<endreq;
+ 	log<<MSG::DEBUG<<"CAL_HI: "<<(pGltDigi->getCAL_HI())[tower_id]<<endreq;
       }
     delete pGltDigi;
     
