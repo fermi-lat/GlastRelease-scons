@@ -65,7 +65,6 @@ private:
     double m_pointSpread;
     int m_projectionType;
     
-    int m_exposureMode;
     double m_exposedArea[360][180];
     double m_currentTime;
     double m_passedTime;  //time passed during this event
@@ -95,7 +94,6 @@ Algorithm(name, pSvcLocator){
     
     declareProperty("source_name", m_source_name="default");
     declareProperty("glastExposureAngle", m_glastExposureAngle=10.);
-    declareProperty("exposureMode", m_exposureMode=1.);
     declareProperty("exposureFunction", m_exposureFunction=0);
     declareProperty("pointSpread", m_pointSpread=0.);
     declareProperty("projectionType", m_projectionType=0);
@@ -126,9 +124,7 @@ StatusCode FluxTestAlg::initialize() {
     }
     
     // set up the standard time candle spectrum
-    makeTimeCandle(fsvc);
-    //    static RemoteSpectrumFactory<TimeCandle> timecandle(fsvc);  
-    
+    makeTimeCandle(fsvc);    
     
     log << MSG::INFO << "loading source..." << endreq;
     
@@ -149,7 +145,6 @@ StatusCode FluxTestAlg::initialize() {
     
     return sc;
 }
-
 
 //! simple prototype of a spectrum class definition - this implememts all of the necessary methods in an ISpectrum
 class TimeCandle : public ISpectrum {
@@ -295,10 +290,8 @@ StatusCode FluxTestAlg::execute() {
     
     std::vector<exposureSet> exposed;
     exposed = findExposed(l,b,m_passedTime);
-    addToTotalExposure(exposed);
+    addToTotalExposure(exposed);    
     
-    
-    //m_flux->pass(10.);
     return sc;
 }
 
@@ -310,149 +303,30 @@ StatusCode FluxTestAlg::finalize() {
 }
 
 
-
 std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b,double deltat){    
     MsgStream log(msgSvc(), name());
     
     std::vector<exposureSet> returned;
     double angularRadius = m_glastExposureAngle/2.;
     
-    if(m_exposureMode == 0){
-        exposureSet point;
-        point.x = l; //yes, this is doing an implicit cast.
-        point.y = b;
-        point.amount = deltat;
-        returned.push_back(point);
-    }
-    
-    else if(m_exposureMode == 1){
-        for(int i= l-angularRadius ; i<=l+angularRadius ; i++){
-            for(int j= b-angularRadius ; j<=b+angularRadius ; j++){
-                
-                if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
-                    //set up the point, and stick it into the vector
-                    exposureSet point;// = new exposureSet;
-                    //                    float correctedl = fmod(i, 360);   // Fold into the range [0, 360)
-                    //                    float correctedb = fmod(j, 180);   // Fold into the range [0, 360)
-                    //                    if(correctedl < 0)correctedl+=360;
-                    //                    if(correctedb < 0)correctedb+=180;
-                    float correctedl = i;   // Fold into the range [0, 360)
-                    float correctedb = j;   // Fold into the range [0, 360)
-                    
-                    if(correctedl < 0)correctedl+=360;
-                    if(correctedb < /*-90*/0)correctedb+=180;
-                    if(correctedl > 360)correctedl-=360;
-                    if(correctedb > /*90*/180)correctedb-=180;
-                    
-                    
-                    point.x = correctedl; //yes, this is doing an implicit cast.
-                    point.y = correctedb;
-                    point.amount = deltat;
-                    returned.push_back(point);
-                }
-            }
+    //if(m_exposureMode == 6){
+        double startl=0; double startb=0;
+        double endl=360; double endb=180;
+        //now, if you can afford to be more economical when searching here, do so:
+        if(m_exposureFunction == 0){
+                startl=l;
+                startb=b;
+                endl=l;
+                endb=b;
+        }else if(m_exposureFunction == 1 || m_exposureFunction == 2){
+                startl=l-angularRadius;
+                startb=b-angularRadius;
+                endl=l+angularRadius+1;
+                endb=b+angularRadius+1;
         }
-    }
-    else if(m_exposureMode == 2){
-        for(int i= l-angularRadius ; i<=l+angularRadius ; i++){
-            for(int j= b-angularRadius ; j<=b+angularRadius ; j++){
-                
-                if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
-                    //set up the point, and stick it into the vector
-                    exposureSet point;
-                    float correctedl = fmod(i, 360);   // Fold into the range [0, 360)
-                    float correctedb = fmod(j, 180);   // Fold into the range [0, 360)
-                    if(correctedl < 0)correctedl+=360;
-                    if(correctedb < 0)correctedb+=180;
-                    
-                    point.x = correctedl; //yes, this is doing an implicit cast.
-                    point.y = correctedb;
-                    
-                    //here, the amount depends on the time, and a gaussian in azimuth
-                    double gaussian = pow(2.71828, -(pow(l-i,2)+pow(b-j,2))/(2*pow(angularRadius,2)));
-                    point.amount = deltat*gaussian;
-                    returned.push_back(point);
-                }
-            }
-        }
-    }
-    else if(m_exposureMode == 3){
-        for(int i= 0 ; i<360 ; i++){
-            for(int j= 0 ; j<180 ; j++){
-                double degToRad = M_PI/180;
-                
-                if(1.5*acos(sin((j-90.)*degToRad)*sin((b-90.)*degToRad)+cos((b-90.)*degToRad)*cos((j-90.)*degToRad)*cos((l-i)*degToRad))/degToRad  <= pow(angularRadius,1)){
-                    //set up the point, and stick it into the vector
-                    exposureSet point;// = new exposureSet;
-                    float correctedl = i;   // Fold into the range [0, 360)
-                    float correctedb = j;   // Fold into the range [0, 360)
-                    
-                    if(correctedl < 0)correctedl+=360;
-                    if(correctedb < /*-90*/0)correctedb+=180;
-                    if(correctedl > 360)correctedl-=360;
-                    if(correctedb > /*90*/180)correctedb-=180;
-                    
-                    
-                    point.x = correctedl; //yes, this is doing an implicit cast.
-                    point.y = correctedb;
-                    point.amount = deltat;
-                    returned.push_back(point);
-                }
-            }
-        }
-    }
-    else if(m_exposureMode == 4){
-        for(int i= l-angularRadius ; i<=l+angularRadius ; i++){
-            for(int j= b-angularRadius ; j<=b+angularRadius ; j++){
-                
-                if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
-                    //set up the point, and stick it into the vector
-                    exposureSet point;// = new exposureSet;
-                    //                    float correctedl = fmod(i, 360);   // Fold into the range [0, 360)
-                    //                    float correctedb = fmod(j, 180);   // Fold into the range [0, 360)
-                    //                    if(correctedl < 0)correctedl+=360;
-                    //                    if(correctedb < 0)correctedb+=180;
-                    float correctedl = i;   // Fold into the range [0, 360)
-                    float correctedb = j;   // Fold into the range [0, 360)
-                    
-                    if(correctedl < 0)correctedl+=360;
-                    if(correctedb < /*-90*/0)correctedb+=180;
-                    if(correctedl > 360)correctedl-=360;
-                    if(correctedb > /*90*/180)correctedb-=180;
-                    
-                    std::pair<double,double> abc = hammerAitoff(correctedl-180.,correctedb-90.);
-                    point.x = abc.first; //yes, this is doing an implicit cast.
-                    point.y = abc.second;
-                    point.amount = deltat*pow(cos((point.y-90.)*M_PI/180.),1);;
-                    returned.push_back(point);
-                }
-            }
-        }
-    }
-    //     long double x,y,theta,phi;
-    // 
-    // theta=log(1.0/random());
-    // phi=random()*2.0*3.141592653589793238;
-    // 
-    // x=theta*sin(phi);
-    // y=theta*cos(phi);
-    else if(m_exposureMode == 5){
-        exposureSet point;
-        double lshift,bshift,theta,phi;
-        theta=5.*log10(10.0/(RandFlat::shoot(1.0)));
-        phi=RandFlat::shoot(1.0)*M_2PI;
-        lshift=theta*sin(phi);
-        bshift=theta*cos(phi);
-        
-        point.x = l+lshift; //yes, this is doing an implicit cast.
-        point.y = b+bshift;
-        point.amount = deltat;//*pow(cos((point.y-90.)*M_PI/180.),2);
-        returned.push_back(point);
-    }
-    
-    else if(m_exposureMode == 6){
-        for(int i= 0; i<360 ; i++){
-            for(int j= 0 ; j<180 ; j++){
+        //and now start looping over the important area
+        for(int i= startl; i<endl ; i++){
+            for(int j= startb ; j<endb ; j++){
                 
                 //if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
                     //set up the point, and stick it into the vector
@@ -469,8 +343,8 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
                     int validpoint=0;
                     double exposure;
                     if(m_exposureFunction == 0){
-                        point.x = i; //yes, this is doing an implicit cast.
-                        point.y = j;
+                        point.x = l; //yes, this is doing an implicit cast.
+                        point.y = b;
                         exposure = 1.;
                         validpoint++;
                     }else if(m_exposureFunction == 1){
@@ -525,16 +399,11 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
                     }
                     if(validpoint) returned.push_back(point);
                 }
-            }
-        //}
-    }
-       
-    else{
-        log << MSG::ERROR << "Invalid Exposure Mode " << endreq;
     }
     return returned;
     }
     
+//------------------------------------------------------------------------------------
     void FluxTestAlg::addToTotalExposure(std::vector<FluxTestAlg::exposureSet> toBeAdded){
         std::vector<exposureSet>::iterator iter = toBeAdded.begin();
         int x,y;
@@ -553,7 +422,7 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
             std::cout << "error in addToTotalExposure - null vector input" <<std::endl;
         }
     }
-    
+//------------------------------------------------------------
     void FluxTestAlg::displayExposure(){
         //make the file
         std::ofstream out_file("data.dat", std::ios::ate);
@@ -572,7 +441,7 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
         //then use rootDisplay to display the stuff in the file
         rootDisplay();
     }
-    
+//------------------------------------------------------------------    
     void FluxTestAlg::rootDisplay(){
         
         std::ofstream out_file("graph.cxx", std::ios::app);
@@ -585,9 +454,7 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
             "  FILE *fp;\n"
             "  float ptmp,p[20];\n"
             "  int i, iline=0;\n";
-        out_file << 
-            "  ntuple = new TNtuple(" << '"' << "ntuple" << '"' << "," << '"' << "NTUPLE" << '"' << "," << '"' <<"x:y:z" << '"' << ");\n";
-        
+       
         
         out_file <<
             "  TH2D *hist1 = new TH2D(" << '"' << "hist1" << '"' << "," << '"' << "Total Exposure" << '"' << ",360,0.,360.,180,-90.,90.);\n";
@@ -606,17 +473,11 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
             "    if (i==3){\n"
             "      i=0; \n"
             "      iline++;\n"
-            "      ntuple->Fill(p[0],p[1],p[2]); \n"
             "      hist1->Fill(p[0],p[1],p[2]); \n"
             "    }\n"
             "  }\n"
             
-            
-            //"  ntuple.Draw(" << '"' << "z:y:x" << '"' 
-            //<< "," << '"' << '"'
-            //<< "," << '"' << "HIST" << '"' 
-            //<< ");\n"
-            
+                      
             "  hist1.Draw("
             << '"' << "COLZ" << '"' 
             << ");\n"
