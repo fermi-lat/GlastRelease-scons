@@ -1,8 +1,6 @@
 package CalRecon
 version v5r10p1
 
-apply_pattern packageShr
-
 branches src cmt doc
 
 use GuiSvc v3*
@@ -10,6 +8,8 @@ use Event *
 use GlastSvc *
 use CalUtil v1r*
 use geometry v3*
+
+apply_pattern packageShr
 
 ### hide the packages used only for test program
 private
@@ -44,10 +44,11 @@ private
 
 
 apply_pattern package_Cshlibflags 
+set JOBOPTIONS ${CALRECONROOT}/src/test/jobOptions.txt
 
 
 # build this for testing, console only. Load all objects directly. 
 
-macro WinJobOptions  ""  VisualC   "test/jobOptions.txt"
+#macro WinJobOptions  ""  VisualC   "test/jobOptions.txt"
 
-application test_CalRecon test/*.cxx ${WinJobOptions}
+application test_CalRecon $(GlastMain) test/*.cxx 

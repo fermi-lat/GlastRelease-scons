@@ -2,6 +2,7 @@ package CalRecon
 
 package manager: Alexandre Chekhtman
 
+  v5r10p3 07-jan-2003 RXD change test_app to Algorithm.
   v5r7p6 06-nov-2002 AC INFO messages in CalClusterAlg changed to DEBUG
   v5r7p5 24-sep-2002 AC  cal response constants from xml file are now expressed in MeV
   v5r7p4 13-sep-2002 AC  warnings in linux compilation corrected
