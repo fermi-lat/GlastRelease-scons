@@ -1,6 +1,6 @@
 package GlastSvc
 version v4
-branches src mgr doc
+branches src cmt doc
 use GlastEvent
 
 
@@ -27,11 +27,6 @@ library GlastSvc GlastDetSvc/*.cxx\
                  ${GlastSvc_headers}
             
 
-# define link options
-apply_pattern package_Clinkopts
-
-
-
 # get flags to build shared library
 
 apply_pattern package_Cshlibflags
@@ -42,7 +37,8 @@ private
 # VC++ workspace, without causing build problems on unix
 
 macro WinInclude "" WIN32 "test/*.h  test/*.txt test/*.xml" 
-
+public 
 # build this for non-shareable testing
-application test  test/*.cpp   $(WinInclude) 
+set JOBOPTIONS  "${GLASTSVCROOT}/src/test/jobOptions.txt"
+application test  ${GlastMain} test/*.cpp   $(WinInclude) 
 
