@@ -2,6 +2,7 @@
  * Package xmlUtil
  * Coordinator: J. Bogart
  *
+ * 17-apr-2003: jrb - tag v2r9p3 Add author line
  * 14-mar-2003: jrb - tag v2r9p2 Start path of Xerces includes with xercesc/
  * 21-feb-2003: THB - tag v2r9p1 with small patch to IdConverter
  * 30-oct-2002: jrb - tag v2r8p6 Another change for g++3: get rid of use of

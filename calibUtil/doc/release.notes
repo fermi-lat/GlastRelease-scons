@@ -2,6 +2,7 @@
  * Package calibUtil
  * Coordinator: J. Bogart
  *
+ * v0r2p4 17-Apr-2003 jrb  Add author line
  * v0r2p3 28-Mar-2003 jrb  Add ideal files to CVS for ped, gain, mu slope (LAT)
  * v0r2p2 22-Mar-2003 jrb  Mods to Calorimeter mu slope & gain calibration
  * v0r2p1 17-Mar-2003 jrb  Support for Calorimeter mu slope calibration
