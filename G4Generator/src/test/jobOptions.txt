@@ -41,13 +41,13 @@ G4Generator.source_name="muon_pencil";
 //G4Generator.source_name="gamma_test";
 
 // optionally specify a top volume to create
-//G4Generator.topVolume="LAT";
+G4Generator.topVolume="LAT";
 //G4Generator.topVolume="CsIElement";
 //G4Generator.topVolume="CALLayer";
 //G4Generator.topVolume="CALLayers";
 //G4Generator.topVolume="oneTower";
 //G4Generator.topVolume="trayReg";
-G4Generator.topVolume="trayBot";
+//G4Generator.topVolume="trayBot";
 
 
 // commands to run before each event. 
