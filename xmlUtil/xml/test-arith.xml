@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!--  test-arith.xml .. for use with xml package test program  -->
+<!--  test-arith.xml .. for use with xmlUtil package eval.exe test program  -->
 <!--  $Id$ -->
 <!-- The included dtd has been extracted from the "real" dtd. In
      particular, everything needed to deal with constants and
@@ -74,9 +74,11 @@
       <overview>Here's the required overview</overview>
       <prim name="one" value="1.0" unitLength="cm">Here's a constant in cm</prim>
       <prim name="two" value="2.0" type="int">Here's a 2nd constant</prim>
-      <prim name="three" value="3.0">Here's a 3rd constant</prim>
-      <prim name="four" value="4.1" type="int">Here's a 4th constant</prim>
-      <prim name="fourPointFive" value="4.5">Here's a 5th constant</prim>
+      <prim name="three" value="2.9"  type="int">Here's a 3rd constant</prim>
+      <prim name="neg3" value="-2.9"  type="int">Here's a neg constant</prim>
+      <prim name="four" value="4.1" type="int">Here's a 4th pos constant</prim>
+      <prim name="neg4" value="-4.1" type="int">Another neg constant</prim>
+      <prim name="fourPointFive" value="4.5">Here's a 5th pos constant</prim>
     </primCategory>
   </primary>
   <derived>
