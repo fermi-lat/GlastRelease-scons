@@ -1,6 +1,5 @@
 #include "reconRootData/TkrRecon.h"
 #include "reconRootData/TkrTrack.h"
-#include "reconRootData/TkrGamma.h"
 #include "reconRootData/TkrSiCluster.h"
 
 ClassImp(TkrRecon)
@@ -8,7 +7,7 @@ ClassImp(TkrRecon)
 TkrRecon::TkrRecon() {
     // default constructor
     m_tracks = 0;
-    m_gamma = 0;
+//    m_gamma = 0;
     m_SiClusters = 0;
 }
 
@@ -32,10 +31,10 @@ void TkrRecon::Clean() {
         m_tracks = 0;
     }
 
-    if (m_gamma) {
-        delete m_gamma;
-        m_gamma = 0;
-    }
+    //if (m_gamma) {
+    //    delete m_gamma;
+    //    m_gamma = 0;
+   // }
 
     if (m_SiClusters) {
         int nEntries = m_SiClusters->GetEntries();
@@ -50,4 +49,5 @@ void TkrRecon::Clean() {
 void TkrRecon::Create() {
     if (!m_tracks) m_tracks = new TObjArray();
     if (!m_SiClusters) m_SiClusters = new TObjArray();
+    m_gamma.Create();
 }
