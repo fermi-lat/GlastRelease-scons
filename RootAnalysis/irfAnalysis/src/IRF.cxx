@@ -20,12 +20,13 @@ IRF::IRF(std::string summary_root_filename)
 {
 #if 0
     // energy binning: 3 per decade
-    logestart=5./3., logedelta=1./3.;
+    logestart = 5./3.
+    logedelta = 1./3.;
     energy_bins = 10;
 #else
-    logedelta=0.5; // 2 per decade
-    logestart = 1.75;
-    energy_bins=8;
+    logedelta = 0.5; // 2 per decade
+    logestart = 1.5;
+    energy_bins = 8;
 #endif
     // angle binning : delta cos(theta) = 0.2.
     angle_bins=4;
