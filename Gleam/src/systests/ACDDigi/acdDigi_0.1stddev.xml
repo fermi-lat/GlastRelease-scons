@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+
+<!DOCTYPE acdDigi [
+<!ELEMENT acdDigi (section)* >
+<!ATTLIST acdDigi cvs_Header CDATA #REQUIRED
+                     cvs_Revision CDATA #REQUIRED>
+<!ELEMENT section (#PCDATA | item | section)*  >
+<!ATTLIST section name CDATA #REQUIRED>
+<!ELEMENT item   (#PCDATA)>
+<!ATTLIST item  name CDATA #REQUIRED
+                value CDATA #REQUIRED>
+]>
+
+<!--    GLAST digi constants
+        Do not modify and check in this file without permission!
+        Note that the text in the item field cannot have direct ampersands of brackets!
+  -->
+<acdDigi cvs_Header="$Header$"
+         cvs_Revision="$Revision$">
+
+    <section name="thresholds">  ACD thresholds
+	<item name="low_threshold_mips"     value="0.1"> MIP threshold enables PHA</item>
+        <item name="veto_threshold_mips"      value="0.3"> MIP nominal veto </item>
+        <item name="high_threshold_mips" value="10.5"> MIP threshold CNO </item>
+    </section>
+
+    <section name="global_constants"> 
+        <item name="mean_pe_per_mip"   value="18"> number of photoelectrons per mip </item>
+        <item name="noise_std_dev_pha" value="0.1"> std deviation for pha gaussian noise </item>
+        <item name="noise_std_dev_veto" value="0.1"> std deviation for veto gaussian noise </item>
+        <item name="noise_std_dev_cno" value="0.1"> std deviation for cno gaussian noise </item>
+        <item name="full_scale" value="4095"> full scale for PHA </item>
+        <item name="mips_full_scale" value="20.0"> number of MIPs at full scale </item>
+        <item name="mev_per_mip" value="1.9"> Mev per MIP </item>
+    </section>
+
+    <section name="edge_effects">
+        <item name="max_edge_dist"  value="20"> mm </item>
+        <item name="edge_slope"     value="0.01"> slope of linear function </item>
+        <item name="edge_intercept" value="0.8"> y-intercept of linear function </item>
+    </section>
+
+</acdDigi>

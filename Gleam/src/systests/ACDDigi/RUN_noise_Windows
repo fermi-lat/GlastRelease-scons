@@ -1,0 +1,35 @@
+{
+  // Not sure why root can't find libPhysics.so
+  // but it can't and libreconRootData.so needs
+  // the TVector3d class in it so we grab it explicitly
+  gSystem->Load("libPhysics.dll");
+
+  gSystem->Load("mcRootData.dll");
+  gSystem->Load("digiRootData.dll");
+  gSystem->Load("reconRootData.dll");
+
+  gROOT->Reset();
+  gROOT->LoadMacro("systest_Gleam.cxx");
+
+
+  RootTreeAnalysis m_0("gamma_pencil_miss_0stddev-digi.root","","","hist-0stdev.root");
+  m_0.Go();
+  m_0.histFile->Write();
+
+  RootTreeAnalysis m_01("gamma_pencil_miss_0.01stddev-digi.root","","","hist-0.01stdev.root");
+  m_01.Go();
+  m_01.histFile->Write();
+
+  RootTreeAnalysis m_02("gamma_pencil_miss_0.02stddev-digi.root","","","hist-0.02stdev.root");
+  m_02.Go();
+  m_02.histFile->Write();
+
+  RootTreeAnalysis m_04("gamma_pencil_miss_0.04stddev-digi.root","","","hist-0.04stdev.root");
+  m_04.Go();
+  m_04.histFile->Write();
+
+  RootTreeAnalysis m_1("gamma_pencil_miss_0.1stddev-digi.root","","","hist-0.1stdev.root");
+  m_1.Go();
+  m_1.histFile->Write();
+
+}
