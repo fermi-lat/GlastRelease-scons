@@ -78,10 +78,7 @@ private:
     TkrFitCol    m_tracks;
 };
 
-//Following typedefs for containing fit track objects
-typedef std::vector<TkrVertex*>            TkrVertexVec;
-typedef std::vector<TkrVertex*>::iterator  TkrVertexVecPtr;
-
+//typedef for the Container
 typedef ObjectVector<TkrVertex>     TkrVertexCol;
 
 }; //Namespace
