@@ -9,7 +9,7 @@ GuiSvc.size=-3000;
 
 ApplicationMgr.DLLs   += {"FluxDisplay" };
 
-// these are algorithms, but are for initialize only
+// these are algorithms 
 EventDisplay.Members = {
     "FluxDisplay",
    "TkrDisplayAlg",

@@ -148,11 +148,8 @@ digiRootWriterAlg.OutputLevel=3;
 reconRootWriterAlg.OutputLevel=3;
      
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-MessageSvc.OutputLevel = 2;
-
-// for setting the run number
-TriggerAlg.run=100;
-
+MessageSvc.OutputLevel = 3;
+ToolSvc.OutputLevel=4;    // too verbose in debug
 
 //==============================================================
 //
