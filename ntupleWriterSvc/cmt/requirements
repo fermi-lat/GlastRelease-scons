@@ -1,12 +1,12 @@
 package ntupleWriterSvc
-version v1r1
+version v2r0
 
 branches src mgr doc
 
-use GlastPolicy
-use facilities
-use GaudiSvc
-use RootHistCnv
+use GlastPolicy v4r*
+use facilities v2r4p*
+use GaudiSvc v7r*
+use RootHistCnv v5r*
 
 apply_pattern package_include
 apply_pattern packageShr
