@@ -2,6 +2,8 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
+ *  3-Nov-2004: jrb v0r14p3: Trim trailing white space from data_ident 
+ *                           (calib. filename)
  * 15-Oct-2004: jrb v0r14p2: Modify UsePeds test algorithm to make use of
  *                           enhanced idents::CalXtalId
  *  7-Oct-2004: jrb v0r14p1: Add test algorithms, job options for CAL_TholdCI;
