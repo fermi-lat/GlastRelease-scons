@@ -43,8 +43,8 @@ public:
     {}
 
     TkrFitPlane(unsigned id, int kplane, double ene, double z, const TkrFitHit& hit, AXIS prj)
-        : m_IDHit(id), m_IDPlane(kplane), m_zplane(z), m_eneplane(ene), m_projection(prj),
-          m_radLen(0), m_activeDist(0)  
+        : m_IDHit(id), m_IDPlane(kplane), m_eneplane(ene), m_zplane(z), m_projection(prj),
+          m_radLen(0), m_activeDist(0)   
     { 
 	    setHit(hit); 
     }

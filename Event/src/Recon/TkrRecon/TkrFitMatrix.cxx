@@ -160,7 +160,7 @@ TkrFitMatrix::TkrFitMatrix(double step)
 }
 
 // Special constructor to  produce matrix H
-TkrFitMatrix::TkrFitMatrix(int one) 
+TkrFitMatrix::TkrFitMatrix(int) 
 {
 
   m_11 = 1.0;

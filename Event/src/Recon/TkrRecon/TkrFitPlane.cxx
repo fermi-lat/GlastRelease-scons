@@ -14,7 +14,7 @@
 using namespace Event;
     
 void TkrFitPlane::initializeInfo(unsigned int hit, unsigned int tower, unsigned int plane, 
-                                 AXIS proj, AXIS nextProj, double z, double energy, 
+                                 AXIS, AXIS, double z, double energy, 
                                  double radLen, double activeDist) {
     m_IDHit = hit;
     m_IDTower = tower;

@@ -24,10 +24,6 @@ TkrPatCand::TkrPatCand(int layer, int tower, double energy, double quality, cons
     return;
 }
 
-TkrPatCand::~TkrPatCand()
-{
-}
-
 void TkrPatCand::addCandHit(TkrCluster* pCluster)
 {
     m_hits.push_back(TkrPatCandHit(pCluster));
@@ -69,12 +65,12 @@ TkrPatCandHit* TkrPatCand::getFoLPlane(TrackEnd end)
     }
 }
 
-TkrFitPar TkrPatCand::getTrackPar(TrackEnd end)    const
+TkrFitPar TkrPatCand::getTrackPar(TrackEnd)    const
 {
     return TkrFitPar(m_position.x(),m_direction.x(),m_position.y(),m_direction.y());
 }
     
-TkrFitMatrix TkrPatCand::getTrackCov(TrackEnd end)    const
+TkrFitMatrix TkrPatCand::getTrackCov(TrackEnd)    const
 {
     TkrFitMatrix cov;
 

@@ -23,7 +23,7 @@ class TkrPatCand: public TkrRecInfo
 public:
     
     TkrPatCand(int layer, int tower, double energy, double quality, const Ray& testRay);
-   ~TkrPatCand();
+    ~TkrPatCand() {}
 
     /// Define the TkrRecInfo routines
     double        getQuality()                      const ;
