@@ -399,7 +399,7 @@ namespace detModel{
     if (m_docClient->getSections() != DOM_Node()){
       //      currentGdd->addSection(buildSection(const_cast<DOM_Node*>(m_docClient->getSections())));
       currentGdd->addSection
-        (buildSection(const_cast<DOM_Node>(m_docClient->getSections())));
+        (buildSection((m_docClient->getSections())));
     }
     
     currentGdd->buildVolumeMap();
