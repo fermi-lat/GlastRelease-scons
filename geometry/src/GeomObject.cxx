@@ -9,7 +9,7 @@
 
 const char* GeomObject::nameOf()const
 {
-	const type_info& t1 = typeid(*this);
+	const std::type_info& t1 = typeid(*this);
 	return t1.name();
 }
 
