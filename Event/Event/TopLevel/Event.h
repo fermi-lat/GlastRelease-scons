@@ -11,9 +11,6 @@
 #include "GlastEvent/Utilities/TimeStamp.h"
 #include "GlastEvent/TopLevel/Definitions.h"
 
-// Externals 
-extern const CLID& CLID_Event;
-
 
 //------------------------------------------------------------------------------
 //
