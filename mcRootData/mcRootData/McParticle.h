@@ -9,10 +9,10 @@
 
 #include <string>
 
-/**
-* @class McParticle
+/** @class McParticle
 * @brief GLAST Monte Carlo particle class.  This class mirrors the TDS 
 * McParticle class.
+*
 * Each McParticle contains:
 * - Particle Id
 * - Status flags
@@ -23,8 +23,9 @@
 * - An array of daughter McParticles - if any
 * - String containing the name of the process that produced the particle
 *
-*  \author Daniel Flath and Heather Kelly
+* @author Daniel Flath and Heather Kelly
 *  
+* $Header$
 */
 class McParticle: public TObject {
     
@@ -39,11 +40,11 @@ public:
             INTERACT=1<<5,  //! Interacted, no further decision to be made
             INTSHDEP=1<<6,  //! Interacted, further decision depends on ! selection of shower deposition  
             PRIMARY =1<<7,  //! primary particle 
-            SWERROR =1<<8,  //! Error occurred in swimming the track 
-            SW2MNYST=1<<9,  //! Swim aborted: too many steps (ISTOP=99)  
-            WOUTOFT =1<<10, //! Swim aborted: out of sensitive time of ! detector (ISTOP=4) 
+			SWERROR =1<<8,  //! Error occurred in swimming the track 
+			BCKSPL=1<<9,    //! The particle is backsplashed from the CAL back in the TKR region
+            POSHIT =1<<10,  //! The particle released a hit a PositionHit detector
             NOTTRACK=1<<11, //! Not tracked by user request 
-            Swum =   1<<12,  //! this particle was produced by the swimmer
+            Swum =   1<<12, //! this particle was produced by the swimmer
             CALOSHOWER = 1 << 13,
             ORIGIN_PRIMARY = 1 << 14,
             ORIGIN_CALOSHOWER  = 1 << 15,
@@ -75,6 +76,9 @@ public:
     
     /// return an McParticle pointer to the mother particle
     const McParticle* getMother();
+
+	/// add a daughter particle to the list
+	void addDaugther(McParticle* part) { m_daughters.Add(part); };
 
     /// return a daughter McParticle corresponding to index
     const McParticle* getDaughter(Int_t index) const;
