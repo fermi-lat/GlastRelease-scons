@@ -109,7 +109,7 @@ public:
 class EventSize : public Analyze{
 public:
     EventSize(const Tuple&t ) : Analyze("Average Event size"),
-        m_acd(t, "No_Vetos_Hit", "ACD Hits (19 b)"),
+        m_acd(t, "ACD_TileCount", "ACD Hits (19 b)"),
         m_ssd(t, "TKR_Cnv_Lyr_Hits", "SSD Hits (20 b)"),
         m_cal(t, "Cal_No_Xtals", "CAL Hits (40 b)")
     {}
@@ -162,7 +162,7 @@ public:
 //=============================================================================
 class FOMnacdtiles : public Summation {
 public:
-    FOMnacdtiles(const Tuple&t ): Summation(t, "No_Vetos_Hit", "ACD tiles hit (avg):"){};
+    FOMnacdtiles(const Tuple&t ): Summation(t, "ACD_TileCount", "ACD tiles hit (avg):"){};
     void FOMnacdtiles::report(ostream& out)
     {
 	out << endl << make_label(name());
