@@ -721,7 +721,7 @@ idents::VolumeIdentifier G4PropagationTool::getVolumeId(double arcLen) const
 
 //    G4VPhysicalVolume* pCurVolume = getVolume(stepPtr->GetCoords(), true);
 
-    return constructId(stepPtr->GetEndPoint(), true);
+    return constructId(stepPtr->GetEndPoint(), stepPtr->GetDirection(), true);
 }
 
 //! Return volume identifer after stepping
@@ -739,7 +739,7 @@ idents::VolumeIdentifier G4PropagationTool::getStepVolumeId(int stepIdx) const
 
 //    G4VPhysicalVolume* pCurVolume = getVolume(getStep(stepIdx).GetCoords(), true);
 
-    return constructId(getStep(stepIdx).GetEndPoint(), true);
+    return constructId(getStep(stepIdx).GetEndPoint(), getStep(stepIdx).GetDirection(), true);
 }
 
 
