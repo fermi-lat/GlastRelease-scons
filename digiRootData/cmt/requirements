@@ -1,5 +1,5 @@
 package digiRootData
-version v3r5p2
+version v3r5p3
 
 use mcRootData v2r*
 use GlastPolicy v4r*
@@ -15,7 +15,7 @@ apply_pattern ld_library_path
 
 #-------------------------------------------------------
 private
-use RootPolicy v0r*
+use RootPolicy v1r*
 
 macro root_headers "\
  ../digiRootData/AcdDigi.h\
