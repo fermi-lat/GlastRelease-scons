@@ -104,8 +104,8 @@ private:
     static UInt_t getXY(UInt_t tagWord);
 public:
     // orientation of the layer
-    // X logs are oriented along the X axis
-    // Y logs are oriented along the Y axis
+    // X logs are oriented along the X axis, measures Y
+    // Y logs are oriented along the Y axis, measures X
     typedef enum {
         X = 0,
         Y
