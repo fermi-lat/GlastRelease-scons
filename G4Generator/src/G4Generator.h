@@ -35,13 +35,6 @@ private:
     /// set of UI commands for setup
     StringArrayProperty m_UIcommands;
 
-
-    // the top volume for instantiating the detector
-    std::string m_topvol;
-
-    // the visitor mode
-    std::string m_visitorMode;
-
     /// This is the G4 manager that handles the simulation
     RunManager* m_runManager;
 

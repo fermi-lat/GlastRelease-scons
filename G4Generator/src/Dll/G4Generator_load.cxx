@@ -14,8 +14,6 @@
 //! Load all  services: 
 void G4Generator_load() {
     DLL_DECL_ALGORITHM( G4Generator );
-    DLL_DECL_ALGORITHM( IrfDisplay );
-
 } 
 
 extern "C" void G4Generator_loadRef()    {

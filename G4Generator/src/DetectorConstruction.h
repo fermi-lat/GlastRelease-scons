@@ -10,6 +10,8 @@ class G4VPhysicalVolume;
 #include <map>
 #include "G4VUserDetectorConstruction.hh"
 #include "idents/VolumeIdentifier.h"
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+#include "GaudiKernel/IDataProviderSvc.h"
 
 class GlastDetectorManager;
 
@@ -22,9 +24,9 @@ class GlastDetectorManager;
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
 public:
-  //! @param topvol Name of the topvolume, e.g. "LAT"
-  //! @param mode   Visitor mode
-  DetectorConstruction(std::string topvol, std::string mode);
+  //! @param gds A pointer to the abstract interface of the GlastDetSvc
+
+  DetectorConstruction(IGlastDetSvc* gds, IDataProviderSvc* esv);
   ~DetectorConstruction();
   
   //! actual call to construct things.
@@ -38,6 +40,8 @@ public:
   const std::string & topVolumeName()const {return m_topvol;}
   
 private:
+  /// A pointer to the GlastDetSvc
+  IGlastDetSvc* m_gsv;
   
   std::string m_topvol;
   

@@ -16,7 +16,7 @@
     <source name="muon_pencil">
        <spectrum> 
          <particle name="mu+"><energy e="2"/> </particle>
-           <direction theta="20" phi="0" />
+           <direction theta="22" phi="00" />
            <launch_point x="21" y="3" z="80" />
        </spectrum>
      </source>

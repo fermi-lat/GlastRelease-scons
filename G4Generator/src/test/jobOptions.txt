@@ -18,6 +18,10 @@ EventSelector.Input = "NONE";
 // make sure that this service does not try to instantatiate the (gismo) detector
 GlastDetSvc.PersistencyFile="(none)";
 
+// Stuff for detModel
+// The top volume used for this run
+GlastDetSvc.topVolume="LAT";
+
 
 #include "$FLUXSVCROOT/src/defaultOptions.txt"
 // Append (no replace) the list of source library documents
@@ -28,8 +32,6 @@ ApplicationMgr.TopAlg = {
     "G4Generator",
     "G4TestAlg"};
 
-ApplicationMgr.TopAlg += { "IrfDisplay" }; 
-
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
 
@@ -39,16 +41,6 @@ MessageSvc.OutputLevel      = 2;
 G4Generator.source_name="muon_pencil";
 //G4Generator.source_name="muon_patch";
 //G4Generator.source_name="gamma_test";
-
-//  specify a top volume to create
-G4Generator.topVolume="LAT";
-//G4Generator.topVolume="CsIElement";
-//G4Generator.topVolume="CALLayer";
-//G4Generator.topVolume="CALLayers";
-//G4Generator.topVolume="oneTower";
-//G4Generator.topVolume="trayReg";
-//G4Generator.topVolume="trayBot";
-
 
 // commands to run before each event. 
 //G4Generator.UIcommands+={"/run/verbose 3"};

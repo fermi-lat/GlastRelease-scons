@@ -28,12 +28,10 @@ use xml      v4
 use xmlUtil  v2r7p1
 
 use idents   v2r3p1
-use detModel    v2r6p1
 
-use instrument      v6
 use data     v4r2
-use GlastEvent v5
-use GlastSvc        v3r1
+use GlastEvent v4*
+use GlastSvc v3*
 
 # flux determination
 use FluxSvc  v5

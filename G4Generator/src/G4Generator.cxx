@@ -9,9 +9,7 @@
 #include "RunManager.h"
 #include "PrimaryGeneratorAction.h"
 
-#include "McHitsManager.h"
 // Gaudi
-
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -22,11 +20,8 @@
 
 // special to setup the TdGlastData structure
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "GlastEvent/data/TdGlastData.h"
-#include "instrument/GlastDetector.h"
-#include "data/CsIData.h"
-#include "data/IVetoData.h"
-#include "data/SiData.h"
+
+#include "GlastEvent/MonteCarlo/McPositionHit.h"
 
 //flux
 #include "FluxSvc/IFluxSvc.h"
@@ -52,9 +47,6 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
 // set defined properties
      declareProperty("source_name",  m_source_name="default");
      declareProperty("UIcommands", m_UIcommands);
-     declareProperty("topVolume", m_topvol="");
-     declareProperty("visitorMode", m_visitorMode="fastmc");
-
 }
     
 ////////////////////////////////////////////////////////////////////////////
@@ -80,10 +72,6 @@ StatusCode G4Generator::initialize()
 
     setupGui();
 
-    // Set the geant4 classes needed for the simulation
-    // The manager, with specified (maybe) top volume
-    m_runManager = new RunManager(m_topvol, m_visitorMode);
-
     if( !m_UIcommands.value().empty() ) {
         G4UImanager* UI = G4UImanager::GetUIpointer();
         for( std::vector<std::string>::const_iterator k = m_UIcommands.value().begin(); 
@@ -92,9 +80,6 @@ StatusCode G4Generator::initialize()
             log << MSG::INFO << "UI command: " << (*k) << endreq;
         }
     }  
-    // Initialize Geant4
-    m_runManager->Initialize();
-
 
     // Get the Glast detector service 
     IGlastDetSvc* gsv=0;
@@ -102,10 +87,15 @@ StatusCode G4Generator::initialize()
         log << MSG::ERROR << "Couldn't set up GlastDetSvc!" << endreq;
         return StatusCode::FAILURE;
     }
-    // this is necessary for the converter to find the GlastDetector hierarcy that was
-    // built by the GlastDetectorManager object
-    gsv->setDetector(GlastDetector::findDetector(0)); 
 
+    // Set the geant4 classes needed for the simulation
+    // The manager, with specified (maybe) top volume
+    m_runManager = new RunManager(gsv,eventSvc());
+
+    // Initialize Geant4
+    m_runManager->Initialize();
+
+    log << MSG::DEBUG << "G4 RunManager ready" << endreq;
     return StatusCode::SUCCESS;
 
 }
@@ -191,11 +181,6 @@ StatusCode G4Generator::execute()
     primaryGenerator->setPosition(p);
     primaryGenerator->setEnergy(ke);
  
-
-    // Initialization of the McHitsManager
-    McHitsManager* mchits = McHitsManager::getPointer();
-    mchits->init();
-
     // Run geant4
     m_runManager->BeamOn(); 
     
@@ -207,40 +192,8 @@ StatusCode G4Generator::execute()
     }
 
 
-    mchits->sort();
-    McPositionHitVector* hitsContainer = mchits->getVector();
-    
-    
-    eventSvc()->registerObject("/Event/MC/PositionHitsCol", hitsContainer);
-
     SmartDataPtr<McPositionHitVector> hits(eventSvc(), "/Event/MC/PositionHitsCol");
-    if (hits) log << MSG::INFO << "Number of hits in the event = " << hits->size() << endreq;
-
-    /*
-    McPositionHitVector::const_iterator iter;
-
-    for( iter = hits->begin(); iter != hits->end(); iter++ ) {
-        mc::McPositionHit *hit = (*iter);
-       if (hit)
-	 {
-	   log << MSG::INFO << "hit id = " << hit->volumeID().name() << endreq;
-	 }
-    }
-    */
-
-    //
-    // extract the hits/digis to the TDS via the converter
-    //
-    static std::string path("/Event/TdGlastData");
-    SmartDataPtr<TdGlastData> data(eventSvc(), path);
-    if( 0==data) { log << MSG::ERROR << "could not find \""<< path <<"\"" << endreq;
-        return StatusCode::FAILURE;
-    }
-    log << MSG::DEBUG << "G4 event generated ok: " 
-        << data->getVetoData()->count()<< ", "
-        << data->getSiData()->totalHits()<< ", "
-        << data->getCsIData()->count() << " hits in acd, tkr, cal"
-        << endreq;
+     if (hits) log << MSG::INFO << "Number of hits in the event = " << hits->size() << endreq;
 
     return StatusCode::SUCCESS;
 }

@@ -10,65 +10,20 @@
 #include "globals.hh"
 #include "G4SDManager.hh"
 
-#include "detModel/Management/Manager.h"
-#include "detModel/Management/XercesBuilder.h"
-#include "detModel/Sections/Shape.h"
-#include "detModel/Sections/Volume.h"
-#include "detModel/Sections/Box.h"
-#include "detModel/Gdd.h"
-#include "detModel/Management/IDmapBuilder.h"
-#include "detModel/Utilities/PositionedVolume.h"
-
-#include "G4SectionsVisitor.h"
-#include "G4MaterialsVisitor.h"
 #include "GlastDetectorManager.h"
+
+#include "G4Geometry.h"
+#include "G4Media.h"
 
 #include <iomanip>
 #include <cassert>
 
-DetectorConstruction::DetectorConstruction(std::string topvol, std::string visitorMode)
-: m_topvol(topvol)
+DetectorConstruction::DetectorConstruction(IGlastDetSvc* gsv,
+                                           IDataProviderSvc* esv):m_gsv(gsv)
 {
-    //! TODO: make this depend on env var set by the service
-    const char * xmlroot = ::getenv("XMLUTILROOT");
-    assert(xmlroot);
-  std::string filename= std::string(xmlroot)+"/xml/flight.xml" ;
-
-  detModel::Manager* gddManager = detModel::Manager::getPointer();
-  
-  gddManager->setBuilder(new detModel::XercesBuilder);  
-
-  gddManager->setNameFile(filename);
-
-  gddManager->setMode(visitorMode);
-
-  gddManager->build(detModel::Manager::all);
-
-  
-  detModel::IDmapBuilder idmap(topvol);
-  
-  gddManager->startVisitor(&idmap);
-  idmap.summary(std::cout);
-
+    
   // now create the GlastDetector manager, and pass in the id map
-  m_glastdet = new GlastDetectorManager(this, idmap);
-
-
-    // setup display of detector volumes
-    DisplayManager* dm = DisplayManager::instance();
-    if (dm !=0){
-        for( detModel::IDmapBuilder::PVmap::const_iterator id = idmap.begin(); id!=idmap.end(); ++id){
-            const detModel::PositionedVolume * pv = (*id).second;
-            const detModel::Volume* vol = pv->getVolume();
-            const detModel::Box* b = dynamic_cast<const detModel::Box*>(pv->getVolume());
-            if (b !=0) {
-                dm->addDetectorBox(vol->getName(), 
-                    HepTransform3D( pv->getRotation(),pv->getTranslation()), 
-                    b->getX(), b->getY(), b->getZ());
-            }
-        }
-    }
-
+  m_glastdet = new GlastDetectorManager(this, esv);
 
 
 }
@@ -76,40 +31,19 @@ DetectorConstruction::DetectorConstruction(std::string topvol, std::string visit
 DetectorConstruction::~DetectorConstruction()
 
 { 
-  detModel::Manager* gddManager = detModel::Manager::getPointer();
-  gddManager->cleanGdd(); 
   delete m_glastdet;
 }
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {  
-  detModel::Manager* gddManager = detModel::Manager::getPointer();
-
-  //  build the material  with a MaterialVisitor
-  gddManager->startVisitor(&G4MaterialsVisitor());
-  
-  //  build the geometry with a visitor
-  // create the visitor as with the topvolume, with a pointer to the map to fill
-  G4SectionsVisitor visitor (m_topvol, &m_idMap);
-  
-  gddManager->startVisitor(&visitor);
-
-  detModel::Gdd* gdd = gddManager->getGdd();
-
-  for( G4SectionsVisitor::Logicals::const_iterator it = visitor.begin(); it !=visitor.end(); ++it){
-      G4LogicalVolume * lv = *it;
-      detModel::Shape* sh = gdd->getShapeByName(lv->GetName());
-      if( sh  && sh->getSensitive() ){
-          m_glastdet->process(lv);
-      }
-  }
-  //----------------------------------------
-
-
-  //G4VPhysicalVolume* res = visitor.worldphys;
-   //visitor.summary(std::cout);
-  
-  return visitor.getWorld();
+  G4Geometry* geom = new G4Geometry(m_glastdet, &m_idMap);
+  G4Media* media = new G4Media();
+  m_gsv->accept(*media);
+  m_gsv->accept(*geom);
+  //  std::cout << (*G4Material::GetMaterialTable()) <<std::endl;
+  std::cout << "Geometry done with " << geom->getPhysicalNumber() << 
+      " physical volumes" << std::endl;
+  return geom->getWorld();
 }
 
 

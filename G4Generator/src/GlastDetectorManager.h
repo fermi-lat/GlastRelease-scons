@@ -14,19 +14,10 @@
 #include "idents/VolumeIdentifier.h"
 #include "DetectorConstruction.h"
 
-// detModel
-#include "detModel/Management/IDmapBuilder.h"
-
+#include "GlastEvent/MonteCarlo/McPositionHit.h"
+#include "GaudiKernel/IDataProviderSvc.h"
 
 #include <map>
-
-class Instrument;
-class SiDetector;
-class CsIDetector;
-class Scintillator;
-class DiodeDetector;
-class GenericDet;
-namespace detModel { class IDmapBuilder; }
 
 /**
 A single class that manages the GlastDetector hierarchy in the G4 environment:
@@ -42,7 +33,7 @@ public:
     //! constructor called with pointer to DetectorConstruction, for map of (partial) ids
     //! needed for constructing the from the list of physical volumes in the touchable history
     //! @param idmap map of volume ids for all sensitive detectors
-    GlastDetectorManager( DetectorConstruction* det, const detModel::IDmapBuilder& idmap );
+    GlastDetectorManager( DetectorConstruction*, IDataProviderSvc*);
     
     ~GlastDetectorManager();
     
@@ -59,32 +50,20 @@ public:
     
     //! Called from DetectorConstruction to set the sensitive detector propery
     void process(G4LogicalVolume*);
-    
-    //! used in initialization
-    void addSiDetector(SiDetector* si);
-    void addCsIDetector(CsIDetector* csi);
-    void addDiodeDetector(DiodeDetector* diode);
-    void addACDtile(Scintillator* acd);
+
 private:
-    Instrument* m_instrument;
     DetectorConstruction::IdMap* m_idMap;
-    idents::VolumeIdentifier checkId(idents::VolumeIdentifier::int64 newid, const char * name);
-    // this map is used to connect the GlastDetector object with the volume ids
-    typedef std::map<idents::VolumeIdentifier, GenericDet*> DetectorMap;
-    DetectorMap m_detMap;
-
-    // vector of volume ids used to correlate with GlastDetector list
-    detModel::IDmapBuilder::IdVector::const_iterator m_id_it;
-    detModel::IDmapBuilder::IdVector::const_iterator m_id_end;
-
-    // for debugging: summary of energy per logical volume
-    std::map<std::string, double> m_energySummary;
     
     //! keep track of detectors
     typedef std::map<idents::VolumeIdentifier, unsigned int> DetectorList;
     typedef std::map<idents::VolumeIdentifier, double>DetectorEnergyTotal;
     DetectorList m_detectorList;
     DetectorEnergyTotal m_detectorEnergy;
+
+    /// The pointer to the IdataProviderSvc
+    IDataProviderSvc* m_esv;
+    /// The collection of McPositionHit to save in the TDS
+    McPositionHitVector *m_posHit;  
     
 };
 
