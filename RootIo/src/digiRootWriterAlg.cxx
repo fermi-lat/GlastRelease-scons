@@ -324,15 +324,15 @@ StatusCode digiRootWriterAlg::writeEventSummary() {
     }
     m_digiEvt->getEventSummaryData().initialize(summaryTds->summary());
     m_digiEvt->getEventSummaryData().initEventFlags(summaryTds->eventFlags());
-    const unsigned int nTem = 16;
-    unsigned int tem[nTem];
-    unsigned int iTem;
-    for (iTem = 0; iTem < nTem; iTem++) {
-        tem[iTem] = summaryTds->temLength(iTem);
-    }
-    m_digiEvt->getEventSummaryData().initContribLen(tem, 
+    //const unsigned int nTem = 16;
+    //unsigned int tem[nTem];
+    //unsigned int iTem;
+    //for (iTem = 0; iTem < nTem; iTem++) {
+    //    tem[iTem] = summaryTds->temLength(iTem);
+    //}
+    m_digiEvt->getEventSummaryData().initContribLen(summaryTds->temLength(), 
         summaryTds->gemLength(), summaryTds->oswLength(), 
-        summaryTds->errLength(), summaryTds->diagLength(), 
+        summaryTds->errorLength(), summaryTds->diagnosticLength(), 
         summaryTds->aemLength());
     return sc;
 }

@@ -403,12 +403,12 @@ tSummary");
 
     evtSumTds->initialize(summaryWord);
     evtSumTds->initEventFlags(eventFlags);
-    const unsigned int nTem = 16;
-    unsigned int iTem;
-    unsigned int tem[nTem];
-    for (iTem = 0; iTem < nTem; iTem++) 
-        tem[iTem] = evtSummary.temLength(iTem);
-    evtSumTds->initContribLen(tem, evtSummary.gemLength(), 
+    //const unsigned int nTem = 16;
+    //unsigned int iTem;
+    //unsigned int tem[nTem];
+    //for (iTem = 0; iTem < nTem; iTem++) 
+    //    tem[iTem] = evtSummary.temLength(iTem);
+    evtSumTds->initContribLen(evtSummary.temLength(), evtSummary.gemLength(), 
                               evtSummary.oswLength(), evtSummary.errLength(), 
                               evtSummary.diagLength(), evtSummary.aemLength());
     return sc;

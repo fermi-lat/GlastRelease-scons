@@ -28,12 +28,14 @@ void EventSummaryData::Clear(Option_t *option) {
     m_summary = 0;
     m_flags = 0;
     UInt_t i;
-    for (i = 0; i<16; i++) m_temLen[i] = 0;
+    for (i = 0; i<16; i++) { 
+        m_temLen[i] = 0;
+        m_diagLen[i] = 0;
+        m_errLen[i] = 0;
+    }
     m_otherContribLen[GEM] = 0;
     m_otherContribLen[AEM] = 0;
     m_otherContribLen[OSW] = 0;
-    m_otherContribLen[ERR] = 0;
-    m_otherContribLen[DIAG] = 0;
 }
 
 void EventSummaryData::Print(Option_t *option) const {
@@ -44,11 +46,11 @@ void EventSummaryData::Print(Option_t *option) const {
     UInt_t i;
     for (i = 0; i<16; i++)
         cout << "Tem: " << i << " Len: " << m_temLen[i] << endl;
+        cout << "Diag: " << i << " Len: " << m_diagLen[i] << endl;
+        cout << "Error: " << i << " Len: " << m_errLen[i] << endl;
     cout << "GEM Len: " << m_otherContribLen[GEM] << " AEM Len: " << 
          m_otherContribLen[AEM] << endl;
-    cout << "OSW Len: " << m_otherContribLen[OSW] << " ERR Len: " <<
-         m_otherContribLen[ERR] << " Diag Len: " << m_otherContribLen[DIAG] 
-         << endl;
+    cout << "OSW Len: " << m_otherContribLen[OSW] << " ERR Len: " << endl; 
 }
 
 UInt_t EventSummaryData::calStrobe() {return EventSummary::calStrobe(m_summary); }
@@ -69,7 +71,7 @@ UInt_t EventSummaryData::diagnostic() { return EventSummary::diagnostic(m_summar
 
 UInt_t EventSummaryData::eventNumber() { return EventSummary::eventNumber(m_summary); }
 
-UInt_t EventSummaryData::trgParityError() { return EventSummary::trgParityError(m_summary); }
+UInt_t EventSummaryData::getTrgParityError() { return EventSummary::trgParityError(m_summary); }
 
 UInt_t EventSummaryData::eventSequence() const {
     UInt_t eventNumber = EventSummary::eventNumber(m_summary);

@@ -21,9 +21,7 @@ public:
     typedef enum {
         GEM = 0,
         OSW = 1,
-        ERR = 2,
-        DIAG = 3,
-        AEM = 4
+        AEM = 2
     }Contribution;
 	/*@}*/
 
@@ -34,11 +32,13 @@ public:
         m_flags = summary.m_flags;
         m_otherContribLen[GEM] = summary.m_otherContribLen[GEM];
         m_otherContribLen[OSW] = summary.m_otherContribLen[OSW];
-        m_otherContribLen[ERR] = summary.m_otherContribLen[ERR];
-        m_otherContribLen[DIAG] = summary.m_otherContribLen[DIAG];
         m_otherContribLen[AEM] = summary.m_otherContribLen[AEM];
         int i;
-        for (i = 0; i < 16; i++) { m_temLen[i] = summary.m_temLen[i]; }
+        for (i = 0; i < 16; i++) { 
+           m_temLen[i] = summary.m_temLen[i]; 
+           m_errLen[i] = summary.m_errLen[i];
+           m_diagLen[i] = summary.m_diagLen[i];
+        }
     }
 
     virtual ~EventSummaryData();
@@ -47,18 +47,20 @@ public:
 
     void initEventFlags(UInt_t flags) { m_flags = flags; };
 
-    void initTemContribLen(unsigned int *len) {
+    void initTemContribLen(unsigned int *len, unsigned int *diag, unsigned int *err) {
         unsigned int i;
-        for (i = 0; i < 16; i++) { m_temLen[i] = len[i]; }
+        for (i = 0; i < 16; i++) { 
+            m_temLen[i] = len[i]; 
+            m_errLen[i] = err[i];
+            m_diagLen[i] = diag[i];
+        }
     }
-    void initContribLen(unsigned int *tem, unsigned int gemLen, unsigned int oswLen, unsigned int errLen, unsigned int diagLen, unsigned int aemLen) {
+    void initContribLen(unsigned int *tem, unsigned int gemLen, unsigned int oswLen, unsigned int *errLen, unsigned int *diagLen, unsigned int aemLen) {
 
         m_otherContribLen[GEM] = gemLen;
         m_otherContribLen[OSW] = oswLen;
-        m_otherContribLen[ERR] = errLen;
-        m_otherContribLen[DIAG] = diagLen;
         m_otherContribLen[AEM] = aemLen;
-        initTemContribLen(tem);
+        initTemContribLen(tem, diagLen, errLen);
     }
 
 
@@ -79,7 +81,8 @@ public:
     UInt_t error();
     UInt_t diagnostic();
     UInt_t eventNumber();
-    UInt_t trgParityError();
+    // renamed to promote the other trgParityError method
+    UInt_t getTrgParityError();
 
 
     UInt_t eventSequence() const;
@@ -93,11 +96,14 @@ public:
     /// Checks the TkrRecon bit, if set an error occurred during TkrRecon
     Bool_t badTkrRecon() const { return (m_flags & enums::TKRRECON); };
     Bool_t packetError() const { return (m_flags & enums::PACKETERROR); };
+    Bool_t temError() const { return (m_flags & enums::SUMMARYERROR); };
+    // old name for temError method
     Bool_t errorEventSummary() const { return (m_flags & enums::SUMMARYERROR); };
-    Bool_t trgParityErrorSummary() const { return (m_flags & enums::TRGPARITYERROR); };
+    Bool_t trgParityError() const { return (m_flags & enums::TRGPARITYERROR); };
     
     /// Returns the length in bytes of the TEM contribution identified by a value in [0,15]
-    UInt_t temLength(unsigned int tem) { return m_temLen[tem]; }
+    UInt_t temLength(unsigned int tem) const { return m_temLen[tem]; }
+    const UInt_t* temLength() const { return m_temLen; };
     /// Returns the length in bytes of the GEM contribution
     UInt_t gemLength() const { return m_otherContribLen[GEM]; }
     /// Returns the length in bytes of the OSW contribution
@@ -105,9 +111,11 @@ public:
     /// Returns the length in bytes of the AEM contribution
     UInt_t aemLength() const { return m_otherContribLen[AEM]; }
     /// Returns the length in bytes of the ERROR contribution
-    UInt_t errLength() const { return m_otherContribLen[ERR]; }
+    UInt_t errLength(unsigned int tem) const { return m_errLen[tem]; }
+    const UInt_t* errLength() const { return m_errLen; };
     /// Returns the length in bytes of the DIAGNOSTIC contribution
-    UInt_t diagLength() const { return m_otherContribLen[DIAG]; }
+    UInt_t diagLength(unsigned int tem) const { return m_diagLen[tem]; }
+    const UInt_t* diagLength() const { return m_diagLen; };
     /*@}*/
 
 private:
@@ -117,11 +125,12 @@ private:
 
     /// Stores the lengths from each TEM contribution
     UInt_t m_temLen[16];
+    UInt_t m_diagLen[16], m_errLen[16];
     /// Stores the lengths of the "other" contributions
-    /// GEM, AEM, Error, DIAGNOSTIC, OSW
-    UInt_t m_otherContribLen[5];
+    /// GEM, AEM,, OSW
+    UInt_t m_otherContribLen[3];
 
-    ClassDef(EventSummaryData,3) // Storage for Event Summary Data 
+    ClassDef(EventSummaryData,4) // Storage for Event Summary Data 
 }; 
 
 #endif
