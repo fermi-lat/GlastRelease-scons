@@ -1,0 +1,4 @@
+package manager:H. Kelly
+
+ 15-Jun-01 HMK : add new methods to store a flag to denote whether or not to store a row.
+                 new TAG v1r2
