@@ -42,5 +42,6 @@ StatusCode RegisterTest::registerMe(IFluxSvc* fsvc)
 /* the following is an example
     static RemoteSpectrumFactory<GRBSpectrum> factory(fsvc);
 */
+    log << MSG::INFO << "About to return" << endreq;
     return StatusCode::SUCCESS;
 } 
