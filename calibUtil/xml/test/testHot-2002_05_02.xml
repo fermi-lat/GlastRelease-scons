@@ -31,7 +31,7 @@
           <stripSpan first="3" last="9" />
         </veryBad>
       </unilayer>
-    </tray>
+    </tray> 
     <tray trayNum="7">
       <unilayer which="bot">
         <bad>
