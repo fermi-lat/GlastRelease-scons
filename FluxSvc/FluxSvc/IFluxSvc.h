@@ -62,7 +62,7 @@ public:
     virtual Rotation transformGlastToGalactic(double time)const=0;
 
     /// get the current satellite location
-    std::pair<double,double> location();
+    virtual std::pair<double,double> location()=0;
 
  
 };
