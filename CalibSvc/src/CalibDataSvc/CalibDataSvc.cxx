@@ -33,12 +33,14 @@ CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
   // Have default list in one of the standard options files.  
   // User can add others.
   declareProperty("CalibNameList", m_calibList);
+  declareProperty("CalibFlavorList", m_flavorList);
 
   declareProperty("CalibRootName",   m_calibRootName  = "Calib" ); 
 
-  m_rootName = "/Calib";
-
+  // m_rootName and m_rootCLID are declared in base class DataSvc
+  m_rootName = "/" + m_calibRootName;
   m_rootCLID = CLID_DataObject;  
+
   m_eventTimeDefined = false;
   m_eventTime = 0;
   declareProperty("CalibInstrumentName", m_instrumentName = "LAT" );
@@ -148,43 +150,42 @@ StatusCode CalibDataSvc::initialize()   {
     // when constants are requested by invoking our (CalibDataSvc) time
     // and instrument name services, resp.
 
-    calibTypePath += "/vanilla";
-    std::string args[] = {calibTypePath};
-
+    // Always do vanilla
+    std::string fullpath = calibTypePath + "/vanilla";
+    std::string args[] = {fullpath};
     sc = calibCreator->createAddress(m_calibStorageType, 
                                      pairIt->second,   // class id
-                                     args,
-                                     iargs,
-                                     pAddress);  //result stored here
+                                     args, iargs, pAddress); 
     if (!sc.isSuccess()) {
-      log << MSG::ERROR << "Unable to create Calib address" 
-          << endreq;
-    }
+      log << MSG::ERROR << "Unable to create Calib address" << endreq;
+      }
 
     // A node of a specific flavor is a child of the per-calibration type
     // node for which an object was registered above.
-    //    calibTypePath += "/vanilla";
-    
-    sc = registerAddress(calibTypePath, pAddress);
+    sc = registerAddress(fullpath, pAddress);
     if (!sc.isSuccess()) {
-      log << MSG::ERROR << "Unable to register Calib address" 
-          << endreq;
+      log << MSG::ERROR << "Unable to register Calib address" << endreq;
     }
-  }
 
-  // Somebody maybe also needs to register addresses for all the
-  // expected flavors of calibrations -- includes at least /vanilla
-  // for each type.  Could maybe be done by CalibCnvSvc.  If in
-  // CalibCnvSvc::initialize(), how to insure that it runs after
-  // this set-up has been done?  
-  // Might need to move above code to something that CalibCnvSvc
-  // can call from its initialize() to force proper sequence.
+    // Now do the same for any requested flavors
+    int ix;
+    for (ix = 0; ix < m_flavorList.size(); ix++) {
+      fullpath = calibTypePath + "/" + m_flavorList[ix];
+      args[0] = fullpath;
 
-  // OR, can ask persistency service to create the addresses (should
-  // delegate to CalibCnvSvc.  This is the approach attempted above.
-  //
-  // what about additional flavors of standard calibration types 
-  // specified by job options?
+      sc = calibCreator->createAddress(m_calibStorageType, 
+                                       pairIt->second,
+                                       args, iargs, pAddress); 
+      if (!sc.isSuccess()) {
+        log << MSG::ERROR << "Unable to create Calib address" << endreq;
+      }
+
+      sc = registerAddress(fullpath, pAddress);
+      if (!sc.isSuccess()) {
+        log << MSG::ERROR << "Unable to register Calib address" << endreq;
+      }
+    }    // end flavor loop 
+  }      // end calibType loop
 
   return StatusCode::SUCCESS;
 }

@@ -105,10 +105,9 @@ public:
 
   /// calibration types
   StringArrayProperty m_calibList;
-  /*
-  /// Flag to control if the persistency is required
-  bool             m_usePersistency;
-  */
+
+  //  StringArrayProperty m_flavorList;
+  std::vector<std::string>  m_flavorList;
 
   /// Has the event time been defined?
   bool             m_eventTimeDefined;
