@@ -20,6 +20,7 @@ DECLARE_FACTORY_ENTRIES(CalRecon) {
     DLL_DECL_TOOL( SingleClusterTool );
     DLL_DECL_TOOL( LastLayerCorrTool );
     DLL_DECL_TOOL( ProfileTool );
+    DLL_DECL_TOOL( CalValsCorrTool );
 } 
 
 
