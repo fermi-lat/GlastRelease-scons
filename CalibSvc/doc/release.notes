@@ -2,6 +2,10 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
+ * 11-Aug-2004: hmk v0r13p2: Roll back to old LdfEvent and add Toby fixes for 
+ *                           Windows.  Big fix due to rootcint propagation to
+ *                           those packages that use CalibSvc - we'll clean this
+ *                           up soon.
  * 10-Aug-2004: jrb v0r13p1: Pick up newer LdfEvent
  *  9-Aug-2004: jrb v0r13p0: Minor clean-up of test algorithms
  *  9-Aug-2004: jrb v0r13:   1. Support for TKR splits calibration
