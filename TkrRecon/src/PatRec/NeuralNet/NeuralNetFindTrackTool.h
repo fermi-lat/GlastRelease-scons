@@ -16,26 +16,57 @@
 #include "GaudiKernel/DataSvc.h"
 #include "TkrRecon/PatRec/ITkrFindTrackTool.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
+#include "Event/Recon/TkrRecon/TkrPatCand.h"
+#include "src/PatRec/NeuralNet/TkrNeuron.h"
 
 class NeuralNetFindTrackTool : public AlgTool, virtual public ITkrFindTrackTool
 {
-public:
-    /// Standard Gaudi Tool interface constructor
-    NeuralNetFindTrackTool(const std::string& type, const std::string& name, const IInterface* parent);
-    virtual ~NeuralNetFindTrackTool() {}
+ public:
 
-    /// @brief Method to find candidate tracks. Will retrieve the necessary information from
-    ///        the TDS, including calorimeter energy, and then use TkrNeuralNet to find all
-    ///        possible track candidates. The resulting track candidate collection is then 
-    ///        stored in the TDS for the next stage.
-    StatusCode findTracks();
+  /// Standard Gaudi Tool interface constructor
+  NeuralNetFindTrackTool(const std::string& type, 
+			 const std::string& name, 
+			 const IInterface* parent);
 
-private:
-    /// Pointer to the local Tracker geometry service
-    ITkrGeometrySvc* m_tkrGeo;
+  virtual ~NeuralNetFindTrackTool() {}
+  
+  /// initialize method allows to load the properties
+  StatusCode initialize()
+    {
+      setProperties();
+      return StatusCode::SUCCESS;
+    }
 
-    /// Pointer to the Gaudi data provider service (interface to the TDS)
-    DataSvc*        m_dataSvc;
+  /// @brief Method to find candidate tracks. Will retrieve the necessary information from
+  ///        the TDS, including calorimeter energy, and then use TkrNeuralNet to find all
+  ///        possible track candidates. The resulting track candidate collection is then   
+  ///        stored in the TDS for the next stage.
+  StatusCode findTracks();
+
+
+  /// Instantiation and fake fit of the TkrPatCand candidate tracks.
+  void buildCand( Event::TkrPatCandCol&, 
+		  const TkrNeuronList&, 
+		  Event::TkrClusterCol* );
+  
+
+ private:
+  /// Pointer to the local Tracker geometry service
+  ITkrGeometrySvc* pTkrGeo;
+      
+  /// Pointer to the Gaudi data provider service (interface to the TDS)
+  DataSvc*        m_dataSvc;
+
+  /// The properties to be passed to TkrNeuralNet
+  double m_MaxLayerDiff;
+  double m_MaxPitch;
+  double m_Lambda;
+  double m_Mu;
+  double m_AlphaUP;
+  double m_AlphaDOWN;
+  double m_Bias;
+  double m_Gamma;
+  double m_temperature;
 };
 
 #endif
