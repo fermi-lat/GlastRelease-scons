@@ -1,6 +1,6 @@
 package Gleam
 
-version  v2r0
+version  v2r1
 
 # This is a checkout package
 # $Id$
@@ -15,7 +15,7 @@ use RootHistCnv v5r0p1
 # basic Glast packages
 
 use XMLEXT      v2r2 
-use GlastPolicy v4r3 
+use GlastPolicy          v4r4 
 use facilities  v2r4p1
 use xml         v4r1p3 
 use xmlUtil     v2r8p1
@@ -28,7 +28,7 @@ use gui         v3r1
 use geomrep     v4r1
 
 # the geometry data base
-use idents      v2r6 
+use idents               v2r8
 use detModel    v2r10
 use xmlGeoDbs   v1r4
 
@@ -39,26 +39,28 @@ use Geant4      v1r1p0
 
 use GuiSvc      v3
 
-use Event                v8r1
-use GlastSvc             v8r0
+use Event                v8r2
+use GlastSvc    v8r0
 
 # simulation
 
-use FluxSvc              v5r6
-use G4Generator          v4r0
+use FluxSvc     v5r6
+use FluxDisplay          v2r0
+use G4Generator          v4r1
 
 #digitization
-use GlastDigi            v3r0
+use GlastDigi            v4r0
 
 #reconstruction
-use Recon                v2r0
-use TkrRecon             v6r0
-use CalRecon             v5r0       
+use Trigger              v3r0
+use Recon                v2r1
+use TkrRecon    v6r0
+use CalRecon    v5r0       
 
 
 #ROOT persistence
 use mcRootData  v2r1p1
-use RootIo                v2r0
+use RootIo      v2r0
 
 
 ### define a simple executable 

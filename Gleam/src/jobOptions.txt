@@ -8,6 +8,7 @@ ApplicationMgr.DLLs   = {
     "G4Generator",
     "Recon",
     "GlastDigi",
+    "Trigger",
     "TkrRecon",
     "CalRecon",
     "RootIo"};
@@ -25,7 +26,9 @@ EventSelector.Input = "NONE";
 ApplicationMgr.TopAlg = {
     "FluxAlg", 
     "G4Generator",
-    "HitDisplay"    
+    "HitDisplay",
+    "TkrSimpleDigiAlg", "CalDigiAlg", "AcdDigiAlg",
+    "TriggerAlg"  
     };
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
@@ -34,9 +37,19 @@ MessageSvc.OutputLevel      = 2;
 
 ApplicationMgr.EvtMax = 100;
 
+#include "$FLUXSVCROOT/src/defaultOptions.txt"
+
+// Append (no replace) the list of source library documents
+FluxSvc.source_lib = {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
+
+G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
+
 // un comment following to enable display: must be before RecoSvc??
 ApplicationMgr.ExtSvc += {"GuiSvc"};
 GuiSvc.size=-2000;
+ApplicationMgr.DLLs   += {"FluxDisplay" };
+ApplicationMgr.ExtSvc += {"FluxMenuSvc" };
+// ----------end display-specific
 
 // select one of the following 
 GlastDetSvc.topVolume="LAT"; 
@@ -55,10 +68,6 @@ ApplicationMgr.ExtSvc += {"RecoSvc"};
 RecoSvc.axisSize=1000;   // test turning off axes (default 1000)
 RecoSvc.showLevel=2;  // test high show level (default2)
 
-#include "$FLUXSVCROOT/src/defaultOptions.txt"
-G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
-// Append (no replace) the list of source library documents
-FluxSvc.source_lib = {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
 
 
 FluxAlg.source_name="muon_pencil_angle";
