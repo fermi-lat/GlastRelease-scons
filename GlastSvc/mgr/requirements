@@ -3,10 +3,10 @@ version v1
 
 branches src mgr doc
 
-use instrument v2r1
+use instrument v2r2
 use Gaudi
 use data 
-use GlastEvent v1
+use GlastEvent v1r1
 
 use GaudiSvc v3r1
 

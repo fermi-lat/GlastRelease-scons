@@ -8,6 +8,7 @@
 //forward declarations
 
 class TdCsIData;
+#include "idents/ModuleId.h"
 #include "GlastEvent/TopLevel/ObjectVector.h"
 #include "GlastEvent/MonteCarlo/MCACDhit.h"
 #include "GlastEvent/MonteCarlo/MCTrack.h"
@@ -40,11 +41,11 @@ public:
     //! not implemented
     virtual void forward ( const MCTruth& mc);
 
-    //! sets m_tower
-    virtual void forward( const Tower& t);
-
     //! called due to GlastDetector::accept(), handles TKR strip data
     virtual void forward ( const SiDetector& si) ;
+
+    //! sets m_tower
+    virtual void forward( const Tower& t);
 
     //! provide access to the list of ACD tile data
     MCACDHitVector* getACDTiles() ;
@@ -57,7 +58,7 @@ public:
 
 
 private:
-     idents::ModuleId m_tower; // set by forward with tower
+    idents::ModuleId m_towerId;
 
     // one of Gaudi's ObjectContainers
         TdCsIData* allcsiData;
