@@ -31,7 +31,15 @@ private:
 
     // Data Members
     gui::GuiMgr* m_guiMgr;
-
+#if defined(__GNUC__) && (__GNUC__ == 2)
+    //   ----------------------------------
+    class TestCommand : public gui::Command { 
+    public:
+        TestCommand(gui::GUI& gui):m_gui(gui){}
+        void execute(){m_gui.inform("test button pressed");}
+        gui::GUI& m_gui;
+    };
+#endif
 };
 
 
@@ -68,15 +76,16 @@ void TestMenu::finishSetup()
 
     MsgStream log( msgSvc(), name() );
 
-    
+#if !defined(__GNUC__) || (__GNUC__ != 2)
     //   ----------------------------------
-    class TestCommand : public gui::Command { 
+    class TestCommand : public gui::Command {
     public:
         TestCommand(gui::GUI& gui):m_gui(gui){}
         void execute(){m_gui.inform("test button pressed");}
         gui::GUI& m_gui;
     };
-
+#endif
+    
     // now get the filemenu and add a source button to it.
     gui::SubMenu& filemenu = m_guiMgr->menu().file_menu();
     
