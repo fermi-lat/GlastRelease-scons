@@ -139,8 +139,9 @@ ApplicationMgr.ExtSvc   += { "TkrInitSvc"};
 // -------------------------------------------
 // Calorimeter services
 //
-ApplicationMgr.DLLs += {"CalXtalResponse"};
-ApplicationMgr.ExtSvc += {"CalCalibSvc"};
+// comment out since backed off
+//ApplicationMgr.DLLs += {"CalXtalResponse"};
+//ApplicationMgr.ExtSvc += {"CalCalibSvc"};
 
 
 // Start up a CalibDataSvc 
