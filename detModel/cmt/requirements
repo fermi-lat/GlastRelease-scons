@@ -7,10 +7,11 @@ use xmlUtil
 use idents
 
 include_dirs "${DETMODELROOT}"
+path_append LD_LIBRARY_PATH "${detModelDir}"
 
 apply_pattern package_linkopts
+apply_pattern packageShr
 
-private
 
 macro headers "" WIN32 "\
      ../detModel/Management/*.h \
@@ -19,7 +20,7 @@ macro headers "" WIN32 "\
      ../detModel/Materials/*.h \
      ../detModel/Utilities/*.h ../detModel/GDD.h"
 
-library detModel -no_share $(headers) \
+library detModel $(headers) \
       Management/*.cxx \
       Sections/*.cxx \
       Constants/*.cxx \
@@ -27,6 +28,10 @@ library detModel -no_share $(headers) \
       Materials/*.cxx \
       Gdd.cxx
 	
+private
+
+apply_pattern package_shlibflags
+
     
 application test main.cxx 
 

@@ -15,6 +15,7 @@ namespace detModel{
   PrinterMaterialsVisitor::PrinterMaterialsVisitor()
   {
     setRecursive(1);
+    m_gdd = 0;
   };
 
   void PrinterMaterialsVisitor::visitGdd(Gdd* gdd)
@@ -24,6 +25,7 @@ namespace detModel{
     std::cout << "CVSid: " << gdd->getCVSid() << std::endl;
     std::cout << "-----------------------------" << std::endl;
     std::cout << " " << std::endl;
+    m_gdd = gdd;
   }
   
   void  PrinterMaterialsVisitor::visitMatCollection(MatCollection* materials)
@@ -48,10 +50,10 @@ namespace detModel{
       std::cout << "\t\t whose density is " << element->getDensity() << std::endl;
     std::cout << "\t\t whose aweight is " << element->getAweight() << std::endl;
 
-    Manager* man = Manager::getPointer();
-    Gdd* g = man->getGdd();
+    //    Manager* man = Manager::getPointer();
+    //    Gdd* g = man->getGdd();
 
-    if(Color* col = g->getMaterialColorByName(element->getName()))
+    if(Color* col = m_gdd->getMaterialColorByName(element->getName()))
       {
 	std::cout << "\t\t whose color is (RGBT) ";
 	std::cout << col->getRed() << " " <<
@@ -80,10 +82,10 @@ namespace detModel{
 	  std::cout << " -> n atoms = " << comp->getAtoms()[i] << std::endl;
       }
 
-    Manager* man = Manager::getPointer();
-    Gdd* g = man->getGdd();
+    //    Manager* man = Manager::getPointer();
+    //    Gdd* g = man->getGdd();
 
-    if(Color* col = g->getMaterialColorByName(comp->getName()))
+    if(Color* col = m_gdd->getMaterialColorByName(comp->getName()))
       {
 	std::cout << "\t\t whose color is (RGBT) ";
 	std::cout << col->getRed() << " " <<

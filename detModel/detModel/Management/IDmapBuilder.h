@@ -58,9 +58,9 @@ namespace detModel{
     //! make a summary on the stream
     void summary(std::ostream& );
     //! access to the container
-    PVmap::const_iterator begin()const{return m_volMap.begin();}
-    PVmap::const_iterator end()const{return m_volMap.end();}
-    size_t size()const{return m_volMap.size();}
+    PVmap::const_iterator begin()const;
+    PVmap::const_iterator end()const;
+    size_t size()const;
 
     //! return pointer to a vector of ids, in order created
     typedef std::vector<idents::VolumeIdentifier> IdVector;
@@ -80,6 +80,8 @@ namespace detModel{
 
     /// a secondary vector to preserve the order
     IdVector m_idvec;
+
+    Gdd*  m_gdd;
   };
 
 }

@@ -48,12 +48,13 @@ IDmapBuilder::~IDmapBuilder()
 }
 
 
-void IDmapBuilder::visitGdd(Gdd* Gdd)
+void IDmapBuilder::visitGdd(Gdd* gdd)
 {
   typedef std::vector<Section*>sec;
   std::vector <Section*>::iterator i;
 
-  sec s = Gdd->getSections();
+  m_gdd = gdd;
+  sec s = gdd->getSections();
   for(i=s.begin(); i!=s.end();i++)
     (*i)->AcceptNotRec(this);
 
@@ -78,9 +79,11 @@ void  IDmapBuilder::visitSection(Section* section)
     }
   else
     {
-      Manager* manager = Manager::getPointer();
-      if (manager->getGdd()->getVolumeByName(m_actualVolume))
-	vol = manager->getGdd()->getVolumeByName(m_actualVolume);
+      //      Manager* manager = Manager::getPointer();
+      //      if (manager->getGdd()->getVolumeByName(m_actualVolume))
+      //	vol = manager->getGdd()->getVolumeByName(m_actualVolume);
+      if (m_gdd->getVolumeByName(m_actualVolume))
+	vol = m_gdd->getVolumeByName(m_actualVolume);
       else
 	{
 	  std::cout << "No such volume" << std::endl;
@@ -208,8 +211,9 @@ void IDmapBuilder::insertVolume(Volume* vol)
   /// This is necessary to deal with Choice volume
   if(Choice* choice = dynamic_cast<Choice*>(vol))
     {
-      Manager* man = Manager::getPointer();
-      volume = choice->getVolumeByMode(man->getMode());
+      //      Manager* man = Manager::getPointer();
+      //      volume = choice->getVolumeByMode(man->getMode());
+      volume = choice->getVolumeByMode(m_mode);
     }
   else volume = vol;
 
@@ -260,4 +264,16 @@ void IDmapBuilder::summary(std::ostream & out)
     }
     out << std::setw(20) << "total:" << std::setw(10) << size() << std::endl;
 }
+
+IDmapBuilder::PVmap::const_iterator IDmapBuilder::begin()const {
+  return m_volMap.begin();
+}
+IDmapBuilder::PVmap::const_iterator IDmapBuilder::end()const {
+  return m_volMap.end();
+}
+
+size_t IDmapBuilder::size()const {
+  return m_volMap.size();
+}
+
 }//namespace

@@ -24,12 +24,15 @@ namespace detModel{
   {
     setRecursive(0);
     m_actualVolume = nvol;
+    m_gdd = 0;
   };
 
   void CountMaterial::visitGdd(Gdd* gdd)
   {
     typedef std::vector<Section*>sec;
     std::vector <Section*>::iterator i;
+
+    m_gdd = gdd;
 
     /// We iterate on all the sections (actually there should be only 1)
     sec s = gdd->getSections();
@@ -59,9 +62,11 @@ namespace detModel{
       }
     else /// otherwise we use the volume speicified in the constructor
       {
-	Manager* manager = Manager::getPointer();
-	if (manager->getGdd()->getVolumeByName(m_actualVolume))
-	  vol = manager->getGdd()->getVolumeByName(m_actualVolume);
+        //	Manager* manager = Manager::getPointer();
+        //	if (manager->getGdd()->getVolumeByName(m_actualVolume))
+	if (m_gdd->getVolumeByName(m_actualVolume))
+          //	  vol = manager->getGdd()->getVolumeByName(m_actualVolume);
+	  vol = m_gdd->getVolumeByName(m_actualVolume);
 	else /// we abort if such a volume does not exists
 	  detAbort("No such a volume!!");
       }

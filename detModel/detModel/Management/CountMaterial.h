@@ -44,6 +44,7 @@ namespace detModel{
 
     /// The name of the topVolume
     std::string m_actualVolume;    
+    Gdd*  m_gdd;
   };
 
 }

@@ -27,13 +27,12 @@ DawnSectionsVisitor::DawnSectionsVisitor(std::string nvol)
 
   setRecursive(0);
   actualVolume = nvol;
-
+  
   out.open("sections.prim");
 
-  Manager* manager = Manager::getPointer();
-  Gdd* g = manager->getGdd();
+  //  Manager* manager = Manager::getPointer();
+  //  Gdd* g = manager->getGdd();
 
-  colorsMap = g->getMaterials()->getMaterialColors();
   
   actualPos = new Vector(0,0,0);
   actualXAxis = new Vector(1,0,0);
@@ -52,12 +51,14 @@ DawnSectionsVisitor::~DawnSectionsVisitor()
 }
 
 
-void DawnSectionsVisitor::visitGdd(Gdd* Gdd)
+void DawnSectionsVisitor::visitGdd(Gdd* gdd)
 {
   typedef std::vector<Section*>sec;
   std::vector <Section*>::iterator i;
 
-  sec s = Gdd->getSections();
+  m_gdd = gdd;
+  colorsMap = gdd->getMaterials()->getMaterialColors();
+  sec s = gdd->getSections();
   for(i=s.begin(); i!=s.end();i++)
     (*i)->AcceptNotRec(this);
 }
@@ -81,9 +82,10 @@ void  DawnSectionsVisitor::visitSection(Section* section)
     }
   else
     {
-      Manager* manager = Manager::getPointer();
-      if (manager->getGdd()->getVolumeByName(actualVolume))
-	vol = manager->getGdd()->getVolumeByName(actualVolume);
+      //      Manager* manager = Manager::getPointer();
+      //      if (manager->getGdd()->getVolumeByName(actualVolume))
+      if (m_gdd->getVolumeByName(actualVolume))
+	vol = m_gdd->getVolumeByName(actualVolume);
       else
 	{
 	  std::cout << "No such volume" << std::endl;

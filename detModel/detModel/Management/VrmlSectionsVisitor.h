@@ -77,7 +77,7 @@ namespace detModel{
     void makeColor();
 
     void setDepth(std::string, int);
-
+  private:
     std::string actualVolume;
 
     std::ofstream out;
@@ -91,7 +91,7 @@ namespace detModel{
     std::map <std::string, int> depthMap;
 
     int numVol;
-
+    Gdd* m_gdd;
   };
 
 }

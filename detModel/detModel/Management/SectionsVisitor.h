@@ -57,6 +57,20 @@ namespace detModel{
      * This is the visitor for the Seg 
      */
     virtual void visitSeg(Seg *) = 0;
+
+    // Do we really need to keep this class pure virtual?  Or
+    // would it be better to go ahead and implement setMode 
+    // and getMode here to avoid replication in all section visitors?
+    // Since Visitor is already not pure virtual, might as
+    // well go ahead and implemen...
+
+    /// Allow client to set the mode for Choice elements
+    virtual void setMode(std::string pmode) {m_mode = pmode;}
+    virtual std::string getMode() {return m_mode;}
+    
+  protected:       
+    SectionsVisitor::SectionsVisitor() : m_mode(""){};
+    std::string m_mode;
   };
 
 }

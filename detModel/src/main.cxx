@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
   manager->setNameFile(argv[1]);
   
   // We set the mode for the choice elements in the XML file
-  manager->setMode("digi");
+  //manager->setMode("digi");
 
   // We build the hierarchy; in that case we build all, i.e. both the constants
   // the sections and the materials
@@ -67,6 +67,7 @@ int main(int argc, char* argv[]) {
   else
     visitor = new detModel::VrmlSectionsVisitor(argv[2]);  
 
+  visitor->setMode("digi");
   // We retrive the hierarchy entry point, i.e. the GDD object. It
   // contains all the relevant information
   detModel::Gdd* g = manager->getGdd();
@@ -85,15 +86,31 @@ int main(int argc, char* argv[]) {
   // constants tables. Colors and layout are stolen from Joanne ones.
   manager->startVisitor(new detModel::HtmlConstantsVisitor);
   // We set a mode for choices
-  manager->setMode("propagate");
+  //  manager->setMode("propagate");
   // We start the vrml visitor
   manager->startVisitor(visitor);
 
   manager->startVisitor(new detModel::CountMaterial(argv[2]));
 
   detModel::IDmapBuilder idMap(argv[2]);
+  idMap.setMode("digi");
   manager->startVisitor(&idMap);
-  
+  idMap.summary(std::cout);
+
+  /* Diagnostic */
+  //  for( detModel::IDmapBuilder::PVmap::const_iterator id = idMap.begin(); 
+  //       id!=idMap.end(); ++id){
+  //    const detModel::PositionedVolume * pv = (*id).second;
+  //    const detModel::Volume* vol = pv->getVolume();
+  //    const detModel::Box* b = 
+  //      dynamic_cast<const detModel::Box*>(pv->getVolume());
+  //    if (b !=0) {
+  //      std::cout << "Got box with id ";
+  //       std::cout << ((*id).first).name() << " named "
+  //                << vol->getName() << std::endl;
+  //    }
+  }
+
   delete visitor;
   delete manager;
   return(0);

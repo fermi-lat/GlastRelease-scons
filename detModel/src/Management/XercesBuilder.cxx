@@ -389,7 +389,7 @@ namespace detModel{
     Choice* b = new Choice(xml::Dom::getAttribute(el, "name"),
 			   xml::Dom::getAttribute(el, "default"));
 
-    Manager* Manager = Manager::getPointer();
+    //    Manager* Manager = Manager::getPointer();
 
     DOM_NodeList childs = e->getChildNodes();
   

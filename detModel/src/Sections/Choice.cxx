@@ -42,15 +42,17 @@ namespace detModel{
 
   void Choice::Accept(SectionsVisitor* s)
   {
-    Manager* man = Manager::getPointer();
-    Volume* v = getVolumeByMode(man->getMode());
+    //    Manager* man = Manager::getPointer();
+    //    Volume* v = getVolumeByMode(man->getMode());
+    Volume* v = getVolumeByMode(s->getMode());
     v->Accept(s);
   }
   
   void Choice::AcceptNotRec(SectionsVisitor* s)
   {
-    Manager* man = Manager::getPointer();
-    Volume* v = getVolumeByMode(man->getMode());
+    //    Manager* man = Manager::getPointer();
+    //    Volume* v = getVolumeByMode(man->getMode());
+    Volume* v = getVolumeByMode(s->getMode());
     v->AcceptNotRec(s);
 
   }  

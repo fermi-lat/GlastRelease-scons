@@ -35,6 +35,8 @@ namespace detModel{
      * This is the visitor for the Composite 
      */
     virtual void visitComposite(Composite*);
+  private:
+    Gdd* m_gdd;
   };
 }
 

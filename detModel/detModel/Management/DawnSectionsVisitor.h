@@ -66,7 +66,7 @@ namespace detModel{
      * This is the visitor for the GDDseg 
      */
     virtual void visitSeg(Seg*);
-    
+  private:
     std::string actualVolume;
     
     std::ofstream out;
@@ -82,7 +82,7 @@ namespace detModel{
 
     /// This map holds the colors for the material
     std::map <std::string, Color*> colorsMap;
-    
+    Gdd* m_gdd;
   };
 }
 #endif //DAWNSECTIONSVISITOR_H
