@@ -40,7 +40,7 @@ use Geant4      v1r1p0
 
 public
 # this is the minimal G4 runtime only stuff
-use Geant4Runtime v1r0
+use Geant4Runtime          v1r1
 
 # Gaudi component packages follow
 
