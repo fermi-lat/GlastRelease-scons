@@ -1,10 +1,9 @@
 ///
 ///    GRBShell: Class that describes the a Shell
-///    Authors: Nicola Omodei & Johann Coen Tanugi 
+///    Authors: Nicola Omodei & Johann Cohen Tanugi 
 ///
 
 #include "GRBShell.h"
-#include "GRBConstants.h"
 #include <iostream>
 #include <math.h>
 #include <stdlib.h>
@@ -12,13 +11,12 @@
 #include "CLHEP/Random/RandGeneral.h"
 #include "CLHEP/Random/RandExponential.h"
 #include "CLHEP/Random/RandFlat.h"
-//#include "CLHEP/Random/Random.h"
 #include "CLHEP/Random/RanluxEngine.h"
 
 GRBShell::GRBShell(double ei) 
 { 
-  _gamma = generateGamma(cst.gamma0,cst.dgamma);
-  _mass = ei/(_gamma*cst.c2);
+  _gamma = generateGamma(cst::gamma0,cst::dgamma);
+  _mass = ei/(_gamma*cst::c2);
 }
 
 
@@ -46,5 +44,5 @@ double GRBShell::beta(const double gamma)
 
 void GRBShell::evolve(double time) 
 {
-  _radius += beta(_gamma)*cst.c*cst.dt1;
+  _radius += beta(_gamma)*cst::c*cst::dt1;
 }

@@ -1,12 +1,9 @@
 ///
 ///    GRBShock: Class that describes the a Shock between 2 Shells
-///    Authors: Nicola Omodei & Johann Coen Tanugi 
+///    Authors: Nicola Omodei & Johann Cohen Tanugi 
 ///
 #include <math.h>
 #include "GRBShock.h"
-#include "GRBShell.h"
-#include "GRBConstants.h"
-#include "GRBUniverse.h"
 
 GRBShock::GRBShock(GRBShell* Sh1, GRBShell* Sh2) 
 { 
@@ -24,14 +21,14 @@ GRBShock::GRBShock(GRBShell* Sh1, GRBShell* Sh2)
   double m11=pow(m1,2);
   double m22=pow(m2,2);
   double m12=m1*m2;
-  double eb=cst.alphab/0.01;
+  double eb=cst::alphab/0.01;
     
   //Calculated by Nich
-  m_Eint=cst.c2*(sqrt(m11+m22+2*m12*(g1*g2)*(1-b1*b2))-(m1+m2));
+  m_Eint=cst::c2*(sqrt(m11+m22+2*m12*(g1*g2)*(1-b1*b2))-(m1+m2));
   m_gf=(m1*g1+m2*g2)/sqrt(m11+m22+2*m12*(g1*g2)*(1-b1*b2));
 
   //Gamma Shock
-  m_gsh =1.0+(m_Eint/((m1+m2)*cst.c2));
+  m_gsh =1.0+(m_Eint/((m1+m2)*cst::c2));
 
   // Value for the resulting Shell:
   Sh1->setMass(m1+m2);
@@ -43,11 +40,11 @@ GRBShock::GRBShock(GRBShell* Sh1, GRBShell* Sh2)
   m_mass= Sh1->Mass();
   
   //Comoving Volume [cm^3]
-  m_VolCom = Sh1->VolCom()*cst.c;
+  m_VolCom = Sh1->VolCom()*cst::c;
 
   //Number and density of protons:
-  // m_npart =m_Eint*cst.erg2MeV/(cst.mpc2);
-  m_npart=(m1+m2)*cst.c2*cst.erg2MeV/(cst.mpc2);
+  // m_npart =m_Eint*cst::erg2MeV/(cst::mpc2);
+  m_npart=(m1+m2)*cst::c2*cst::erg2MeV/(cst::mpc2);
   double E52=m_Eint/1e+52;
   double np=m_npart/m_VolCom;
   double X=0.0;
@@ -55,34 +52,34 @@ GRBShock::GRBShock(GRBShell* Sh1, GRBShell* Sh2)
 
   //B Field
   m_Beq=(.23/5.9)*sqrt(eb)*m_gf*sqrt(np);  
-
+  
   //Gamma Lorentz  e-
-  m_gemin =cst.alphae*m_gf*(cst.mpc2)/(cst.mec2)*(cst.p-2.0)/(cst.p-1.0);
+  m_gemin =cst::alphae*m_gf*(cst::mpc2)/(cst::mec2)*(cst::p-2.0)/(cst::p-1.0);
   m_gemax = 2.36e+8*1/sqrt(1.0+X+Y)*pow(eb,-1/4)*pow(m_gf,-1/2)*np;
   m_gecoo = 5.24e+4/((1+X+Y)*eb)*pow(m_gf,-1/3)*pow(np,-2/3)/pow(E52,1/3);
- 
-  m_riset=(dr1+dr2)/(cst.c);
+  
+  m_riset=(dr1+dr2)/(cst::c);
 }
 
 double GRBShock::Esyn(double gammae)
 {
-  return (4.3e+6)*(m_gf*m_Beq*pow(gammae,2))*cst.hplanck;
+  return (4.3e+6)*(m_gf*m_Beq*pow(gammae,2))*cst::hplanck;
 }
 
 double GRBShock::Eic(double gammae)
 {
-  return (4.3e+6)*(m_gf*m_Beq*pow(gammae,4))*cst.hplanck;
+  return (4.3e+6)*(m_gf*m_Beq*pow(gammae,4))*cst::hplanck;
 }
 
 double GRBShock::OpticalDepht()
 {  
   return 1.0;
-  // cst.st*cst.csi*np*min(dr,c*tsyn*((esyn/1.d+5)**(-1/2)))
+  // cst::st*cst::csi*np*min(dr,c*tsyn*((esyn/1.d+5)**(-1/2)))
 }
 
 double GRBShock::tsyn(double ee)
 {
-  return 6.22e+11*pow(m_Beq,(-5./2.))*sqrt((m_gf*cst.hplanck)/ee);
+  return 6.22e+11*pow(m_Beq,(-5./2.))*sqrt((m_gf*cst::hplanck)/ee);
 }
 
 
@@ -92,15 +89,15 @@ double GRBShock::fred(double ee,double tt)
   double riset;
   riset=m_riset*sqrt(1.0e+5/ee);
   double tp=m_tobs+riset;
-
+  
   if (tsyn(ee)>riset){
     decayt=tsyn(ee);
   }  else {
     decayt=riset;
   } 
- 
+  
   double norma=decayt+riset-(riset*exp((m_tobs-tp)/riset));
-
+  
   //  cout<< decayt<<riset<<tp<<norma<<endl;
   
   if (tt<=m_tobs)
@@ -120,26 +117,29 @@ double GRBShock::Fsyn(double ee,double tt)
   double fmax=m_Beq*pow(m_gf,2);
   //erg/s/eV
   double flux;
-  if (Esyn(m_gemin)>=Esyn(m_gecoo)){
-    //    cout<<"Fast Cooling"<<endl;
-    if (ee<=Esyn(m_gecoo))
-      flux = pow(ee/Esyn(m_gecoo),1./3.);
-    else if (ee<=Esyn(m_gemin)) 
-      flux = pow(ee/Esyn(m_gecoo),-1./2.);
-    else if (ee<=Esyn(m_gemax))
-      flux = pow(Esyn(m_gemin)/Esyn(m_gecoo),-1./2.)*pow(ee/Esyn(m_gemin),-cst.p/2.);
-    else 
-      flux = 0.0;
-  } else {   //    cout<<"Slow Cooling"<<endl;
-    if (ee<=Esyn(m_gemin))   
-      flux = pow(ee/Esyn(m_gemin),1/3);
-    else if (ee<=Esyn(m_gecoo)) 
-      flux = pow(ee/Esyn(m_gemin),-(cst.p-1)/2);
-    else if (ee<=Esyn(m_gemax)) 
-      flux = pow(Esyn(m_gecoo)/Esyn(m_gemin),-(cst.p-1)/2)*pow(ee/Esyn(m_gecoo),-cst.p/2);
-    else 
-      flux = 0.0;
-  }
+  if (Esyn(m_gemin)>=Esyn(m_gecoo))
+    {
+      //    cout<<"Fast Cooling"<<endl;
+      if (ee<=Esyn(m_gecoo))
+	flux = pow(ee/Esyn(m_gecoo),1./3.);
+      else if (ee<=Esyn(m_gemin)) 
+	flux = pow(ee/Esyn(m_gecoo),-1./2.);
+      else if (ee<=Esyn(m_gemax))
+	flux = pow(Esyn(m_gemin)/Esyn(m_gecoo),-1./2.)*pow(ee/Esyn(m_gemin),-cst::p/2.);
+      else 
+	flux = 0.0;
+    } else 
+      {   //    cout<<"Slow Cooling"<<endl;
+	if (ee<=Esyn(m_gemin))   
+	  flux = pow(ee/Esyn(m_gemin),1/3);
+	else if (ee<=Esyn(m_gecoo)) 
+	  flux = pow(ee/Esyn(m_gemin),-(cst::p-1)/2);
+	else if (ee<=Esyn(m_gemax)) 
+	  flux = pow(Esyn(m_gecoo)/Esyn(m_gemin),-(cst::p-1)/2)*
+	    pow(ee/Esyn(m_gecoo),-cst::p/2);
+	else 
+	  flux = 0.0;
+      }
   //  cout<<fmax<<flux<<fred(ee,tt);
   return fmax*flux*fred(ee,tt);
 }
@@ -149,39 +149,47 @@ double GRBShock::Fic(double ee,double tt)
   double fmax=m_Beq*pow(m_gf,2);
   //erg/s/eV
   double flux;
-  if (Eic(m_gemin)>=Eic(m_gecoo)){
-    //    cout<<"Fast Cooling"<<endl;
-    if (ee<=Eic(m_gecoo))
-      flux = pow(ee/Eic(m_gecoo),1./3.);
-    else if (Eic(m_gemin)<Esyn(m_gemax)){
-      if (ee<=Eic(m_gemin)) 
-	flux = pow(ee/Eic(m_gecoo),-1./2.);
-      else if (ee<=Esyn(m_gemax)) //note the suppression at Asyn max approx KN energy !! 
-	flux = pow(Eic(m_gemin)/Eic(m_gecoo),-1./2.)*pow(ee/Eic(m_gemin),-cst.p/2.);
-      else
-	flux = 0.0;
-    } else {
-      if (ee<=Esyn(m_gemax)) 
-	flux = pow(ee/Eic(m_gecoo),-1./2.);
-      else
-	flux = 0.0;
-    }
-    
-  } else {
-    if (ee<=Eic(m_gemin))
-      flux = pow(ee/Eic(m_gemin),1/3);
-    else if(Eic(m_gecoo)<Esyn(m_gemax)) {
-      if (ee<=Eic(m_gecoo)) 
-	flux = pow(ee/Eic(m_gemin),-(cst.p-1)/2);
-      else if (ee<=Esyn(m_gemax)) //note the suppression at Esyn max approx KN energy !! 
-	flux = pow(Eic(m_gecoo)/Eic(m_gemin),-(cst.p-1)/2)*pow(ee/Eic(m_gecoo),-cst.p/2);
-    else 
-      flux = 0.0;
-    } else {
-      if (ee<=Esyn(m_gemax))
-	flux = pow(ee/Eic(m_gemin),-(cst.p-1)/2);
-    }
-  }
+  if (Eic(m_gemin)>=Eic(m_gecoo))
+    {
+      //    cout<<"Fast Cooling"<<endl;
+      if (ee<=Eic(m_gecoo))
+	flux = pow(ee/Eic(m_gecoo),1./3.);
+      else if (Eic(m_gemin)<Esyn(m_gemax))
+	{
+	  if (ee<=Eic(m_gemin)) 
+	    flux = pow(ee/Eic(m_gecoo),-1./2.);
+	  else if (ee<=Esyn(m_gemax)) //note the suppression at Asyn max approx KN energy !! 
+	    flux = pow(Eic(m_gemin)/Eic(m_gecoo),-1./2.)*
+	      pow(ee/Eic(m_gemin),-cst::p/2.);
+	  else
+	    flux = 0.0;
+	} else 
+	  {
+	    if (ee<=Esyn(m_gemax)) 
+	      flux = pow(ee/Eic(m_gecoo),-1./2.);
+	    else
+	      flux = 0.0;
+	  }
+      
+    } else 
+      {
+	if (ee<=Eic(m_gemin))
+	  flux = pow(ee/Eic(m_gemin),1/3);
+	else if(Eic(m_gecoo)<Esyn(m_gemax)) 
+	  {
+	    if (ee<=Eic(m_gecoo)) 
+	      flux = pow(ee/Eic(m_gemin),-(cst::p-1)/2);
+	    else if (ee<=Esyn(m_gemax)) //note the suppression at Esyn max approx KN energy !! 
+	      flux = pow(Eic(m_gecoo)/Eic(m_gemin),-(cst::p-1)/2)*
+		pow(ee/Eic(m_gecoo),-cst::p/2);
+	    else 
+	      flux = 0.0;
+	  } else 
+	    {
+	      if (ee<=Esyn(m_gemax))
+		flux = pow(ee/Eic(m_gemin),-(cst::p-1)/2);
+	    }
+      }
   return fmax*flux*fred(ee/1.0e+5,tt);
 }
 
@@ -197,12 +205,6 @@ void GRBShock::Write()
   cout<< "E IC min " << Eic(m_gemin) << " EIC max " << Eic(m_gemax) << " EIC Cooling " << Eic(m_gecoo) << endl;
   cout<< "Vol Com = "<< m_VolCom <<" num ele "<<m_npart<< " n el = "<< m_npart/m_VolCom << endl;
   cout<<" ******* " <<m_radius<< "** T obs = "<<m_tobs<<endl; 
-}
-
-void GRBShock::process() 
-{  
-  //This is to separate the IC and Sync processes from the simple 
-  //initialization of an object GRBShock...
 }
 
 

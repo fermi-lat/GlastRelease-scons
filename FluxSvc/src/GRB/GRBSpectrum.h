@@ -2,7 +2,7 @@
  * GRBSpectrum: Spectrum Class for GRB Source Simulation
  *
  * /author Nicola Omodei nicola.omodei@pi.infn.it 
- * /author Johann Coen Tanugi johann.cohen@pi.infn.it
+ * /author Johann Cohen Tanugi johann.cohen@pi.infn.it
  *
  * \b revision:
  *   02/15/2002
@@ -12,18 +12,17 @@
 #define GRBSpectrum_H
 // $Heading:$
 //
-#include "FluxSvc/mainpage.h"
 
-#include "FluxSvc/Spectrum.h"
-#include "GRBSim.h"
-#include "facilities/Observer.h"
 #include <vector>
 #include <string>
 #include <map>
 #include <cmath>
+#include "FluxSvc/mainpage.h"
+#include "FluxSvc/Spectrum.h"
+#include "facilities/Observer.h"
 #include "src/GPS.h"
-
 #include "CLHEP/Random/RandomEngine.h"
+#include "GRBSim.h"
 
 ///  Spectrum that reads its differential spectrum from a table
 class GRBSpectrum : public Spectrum
@@ -39,15 +38,13 @@ class GRBSpectrum : public Spectrum
   double rate(double time)const;
   
   double solidAngle() const;
-  /// sample a single particle energy from the spectrum
-  std::pair<float,float> dir(float energy)const;
   
+  std::pair<float,float> dir(float energy) const;
+  
+  /// sample a single particle energy from the spectrum
   float operator() (float) const ;
   
   double energySrc(HepRandomEngine*, double /*time*/ );
-  
-  //   double DrawPhotonFromSpectrum(std::vector<double>/*Espectrum*/);
-  
   
   inline std::string title() const {return "GRBSpectrum";}
   inline const char * particleName() const {return "GRBgamma";}
@@ -58,7 +55,4 @@ class GRBSpectrum : public Spectrum
   GRBSim*              m_grbsim;
   std::vector<double>  m_spectrum;
 };
-
-
-
 #endif

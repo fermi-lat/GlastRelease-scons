@@ -5,7 +5,6 @@
 
 // Original author: Theodore Hierath
 
-
 /**
   Test program for graphing the spectrums available through the flux
   package.
@@ -15,7 +14,6 @@
 #include "FluxSvc/EventSource.h"
 #include "FluxSvc/ISpectrumFactory.h"
 #include "FluxSvc/SpectrumFactoryTable.h"
-
 #include "rootEnergyHist.h"
 #include "rootAngleHist.h"
 

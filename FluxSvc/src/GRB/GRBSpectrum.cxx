@@ -3,7 +3,7 @@
 ///    Authors: Nicola Omodei & Johann Cohen Tanugi 
 ///
 #include "GRBSpectrum.h"
-#include "GRBConstants.h"
+#include "CLHEP/Random/RandFlat.h"
 #include <math.h>
 
 // define a factory for anonomous instantiation
@@ -12,14 +12,9 @@
 static SpectrumFactory<GRBSpectrum> factory;
 const ISpectrumFactory& GRBSpectrumFactory = factory;
 
-static const GRBConstants cst;
-
-//static const   TROOT root("GUI", "GUI test environement");
-
-
 GRBSpectrum::GRBSpectrum(const std::string& params) 
 {
-  m_grbsim = new GRBSim();
+  m_grbsim = new GRBSim(char("../src/test/Parameters.txt"));
   m_grbsim->Start();
 }
 
@@ -36,7 +31,6 @@ double GRBSpectrum::solidAngle() const
 double GRBSpectrum::flux(double time) const
 {
   m_grbsim->ComputeFlux(time);
-  cout<<"**** FLUX ***** "<<m_grbsim->IRate()<<endl;
   return m_grbsim->IRate(); // in ph/(m^2 s) 
 }
 
@@ -44,7 +38,6 @@ double GRBSpectrum::flux(double time) const
 double GRBSpectrum::rate(double time) const
 {
   m_grbsim->ComputeFlux(time);
-  cout<<"**** RATE ***** "<<m_grbsim->IRate()<<endl;
   return m_grbsim->IRate(); // in ph/(m^2 s) 
 }
 
@@ -61,11 +54,15 @@ double GRBSpectrum::energySrc(HepRandomEngine* engine, double time)
 
 float GRBSpectrum::operator() (float u) const
 {
-  float energy = m_grbsim->DrawPhotonFromSpectrum(m_spectrum);
-  return (float)energy;
+  float energy = m_grbsim->DrawPhotonFromSpectrum(m_spectrum, u);
+  //  cout<<energy<<endl;
+  return (float) energy;
 }
 
-std::pair<float,float> GRBSpectrum::dir(float energy)const
-{
-  return std::make_pair(0.5,0.5);
+std::pair<float,float> GRBSpectrum::dir(float energy) const
+{  
+  return m_grbsim->GRBdir();
 }
+
+
+
