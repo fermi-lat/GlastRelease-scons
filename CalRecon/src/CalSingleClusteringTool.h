@@ -27,8 +27,8 @@ class CalSingleClusteringTool : public CalClusteringTool
         
   protected:
 
-    // use a single global cluster
-    xTalDataVec nextXtalsSet( xTalDataVec & xTalVec ) ;
+    //! Distinguish sets of related xtals
+    virtual void makeSets( const XtalDataVec & xtals, XtalDataVecVec & clusters ) ;
 
  } ;
 

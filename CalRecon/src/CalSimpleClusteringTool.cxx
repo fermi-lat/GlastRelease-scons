@@ -36,16 +36,17 @@ CalSimpleClusteringTool::CalSimpleClusteringTool
 CalSimpleClusteringTool::~CalSimpleClusteringTool()
  {}
  
-/// This finds the next highest energy cluster in a vector of CalXtalRecData pointers
-CalClusteringTool::xTalDataVec CalSimpleClusteringTool::nextXtalsSet(xTalDataVec& xTalVec)
-{
-    xTalDataVec cluster;
-    cluster.clear();
+void CalSimpleClusteringTool::makeSets( const XtalDataVec & xtals, XtalDataVecVec & clusters )
+ {
+  XtalDataVec xTalVec(xtals) ;
+  while (xTalVec.size()>0)
+   {
+    XtalDataVec * cluster = new XtalDataVec ;
 
     //Start by finding the highest energy crystal in the vector
     double bestE = 0.;
-    xTalDataVec::iterator bestIter;
-    xTalDataVec::iterator xTalVecIter;
+    XtalDataVec::iterator bestIter;
+    XtalDataVec::iterator xTalVecIter;
     for(xTalVecIter = xTalVec.begin(); xTalVecIter != xTalVec.end(); xTalVecIter++)
     {
         Event::CalXtalRecData* xTalRec = *xTalVecIter;
@@ -59,18 +60,18 @@ CalClusteringTool::xTalDataVec CalSimpleClusteringTool::nextXtalsSet(xTalDataVec
 
     //Add this crystal to our new cluster list and remove from the old list
     Event::CalXtalRecData* xTal = *bestIter;
-    cluster.push_back(*bestIter);
+    cluster->push_back(*bestIter);
     xTalVec.erase(bestIter);
 
     //Now build up a list of all xTals in this layer which are neighbors 
-    Event::CalXtalRecData* nxtXtal = getNearestXtalInSameLayer(xTalVec, cluster, xTal);
+    Event::CalXtalRecData* nxtXtal = getNearestXtalInSameLayer(xTalVec, *cluster, xTal);
 
-    if (nxtXtal) cluster.push_back(nxtXtal);
+    if (nxtXtal) cluster->push_back(nxtXtal);
 
     //Do again to pick up neighbor on the other side (we need a better algorithm here...) 
-    nxtXtal = getNearestXtalInSameLayer(xTalVec, cluster, xTal);
+    nxtXtal = getNearestXtalInSameLayer(xTalVec, *cluster, xTal);
 
-    if (nxtXtal) cluster.push_back(nxtXtal);
+    if (nxtXtal) cluster->push_back(nxtXtal);
 
     //Get the current xTal id
     const idents::CalXtalId xTalId = xTal->getPackedId();
@@ -87,13 +88,13 @@ CalClusteringTool::xTalDataVec CalSimpleClusteringTool::nextXtalsSet(xTalDataVec
         //if (bestXtal == 0) continue;
 
         //Add to cluster
-        cluster.push_back(bestXtal);
+        cluster->push_back(bestXtal);
 
         //Searches for nearest neigbors, removes from current list when found
-        nxtXtal = getNearestXtalInSameLayer(xTalVec, cluster, bestXtal);
-        if (nxtXtal) cluster.push_back(nxtXtal);
-        nxtXtal = getNearestXtalInSameLayer(xTalVec, cluster, bestXtal);
-        if (nxtXtal) cluster.push_back(nxtXtal);
+        nxtXtal = getNearestXtalInSameLayer(xTalVec, *cluster, bestXtal);
+        if (nxtXtal) cluster->push_back(nxtXtal);
+        nxtXtal = getNearestXtalInSameLayer(xTalVec, *cluster, bestXtal);
+        if (nxtXtal) cluster->push_back(nxtXtal);
     }
 
     //Loop "down" (if possible) associating xTals below us
@@ -105,21 +106,22 @@ CalClusteringTool::xTalDataVec CalSimpleClusteringTool::nextXtalsSet(xTalDataVec
         if (bestXtal == 0) break;
         //if (bestXtal == 0) continue;
 
-        cluster.push_back(bestXtal);
+        cluster->push_back(bestXtal);
 
-        nxtXtal = getNearestXtalInSameLayer(xTalVec, cluster, bestXtal);
-        if (nxtXtal) cluster.push_back(nxtXtal);
-        nxtXtal = getNearestXtalInSameLayer(xTalVec, cluster, bestXtal);
-        if (nxtXtal) cluster.push_back(nxtXtal);
+        nxtXtal = getNearestXtalInSameLayer(xTalVec, *cluster, bestXtal);
+        if (nxtXtal) cluster->push_back(nxtXtal);
+        nxtXtal = getNearestXtalInSameLayer(xTalVec, *cluster, bestXtal);
+        if (nxtXtal) cluster->push_back(nxtXtal);
     }
 
-    // Finished! 
-    return cluster;
+    clusters.push_back(cluster) ;
+   }
+  // Finished! 
 }
 
-CalClusteringTool::xTalDataVec CalSimpleClusteringTool::getXtalsInLayer(xTalDataVec& xTalVec, Event::CalXtalRecData* xTal)
+CalClusteringTool::XtalDataVec CalSimpleClusteringTool::getXtalsInLayer(XtalDataVec& xTalVec, Event::CalXtalRecData* xTal)
 {
-    xTalDataVec newVec;
+    XtalDataVec newVec;
     newVec.clear();
 
     //Extract the ID information we need from current crystal
@@ -128,7 +130,7 @@ CalClusteringTool::xTalDataVec CalSimpleClusteringTool::getXtalsInLayer(xTalData
     int                     curLayer = xTalId.getLayer();
 
     //Loop through input vector of Xtals looking for a match to this layer
-    xTalDataVec::iterator xTalVecIter;
+    XtalDataVec::iterator xTalVecIter;
     for(xTalVecIter = xTalVec.begin(); xTalVecIter != xTalVec.end(); xTalVecIter++)
     {
         Event::CalXtalRecData* xTalRec = *xTalVecIter;
@@ -142,7 +144,7 @@ CalClusteringTool::xTalDataVec CalSimpleClusteringTool::getXtalsInLayer(xTalData
     return newVec;
 }
 
-Event::CalXtalRecData* CalSimpleClusteringTool::getNearestXtalInSameLayer(xTalDataVec& xTalVec, xTalDataVec& NNvec, Event::CalXtalRecData* xTal)
+Event::CalXtalRecData* CalSimpleClusteringTool::getNearestXtalInSameLayer(XtalDataVec& xTalVec, XtalDataVec& NNvec, Event::CalXtalRecData* xTal)
 {
     //Extract the ID information we need from current crystal
     const idents::CalXtalId xTalId    = xTal->getPackedId();
@@ -151,7 +153,7 @@ Event::CalXtalRecData* CalSimpleClusteringTool::getNearestXtalInSameLayer(xTalDa
     int                     curColumn = xTalId.getColumn();
 
     //Loop through input vector of Xtals looking for a nearest neighbor match
-    xTalDataVec::iterator xTalVecIter;
+    XtalDataVec::iterator xTalVecIter;
     for(xTalVecIter = xTalVec.begin(); xTalVecIter != xTalVec.end(); xTalVecIter++)
     {
         Event::CalXtalRecData* xTalRec  = *xTalVecIter;
@@ -180,7 +182,7 @@ Event::CalXtalRecData* CalSimpleClusteringTool::getNearestXtalInSameLayer(xTalDa
     return 0;
 }
 
-Event::CalXtalRecData* CalSimpleClusteringTool::getNearestXtalInDiffLayer(xTalDataVec& xTalVec, Event::CalXtalRecData* xTal, int layer)
+Event::CalXtalRecData* CalSimpleClusteringTool::getNearestXtalInDiffLayer(XtalDataVec& xTalVec, Event::CalXtalRecData* xTal, int layer)
 {
     Event::CalXtalRecData* newXtal = 0;
 
@@ -191,11 +193,11 @@ Event::CalXtalRecData* CalSimpleClusteringTool::getNearestXtalInDiffLayer(xTalDa
     //bool                    isXlyr   = layer % 2 == 0;
 
     //Keep track of the best match
-    xTalDataVec::iterator bestXtalIter = xTalVec.end();
+    XtalDataVec::iterator bestXtalIter = xTalVec.end();
     double                bestDist     = 10.;
 
     //Loop through input vector of Xtals looking for a nearest neighbor match
-    xTalDataVec::iterator xTalVecIter;
+    XtalDataVec::iterator xTalVecIter;
     for(xTalVecIter = xTalVec.begin(); xTalVecIter != xTalVec.end(); xTalVecIter++)
     {
         Event::CalXtalRecData*  xTalRec = *xTalVecIter;

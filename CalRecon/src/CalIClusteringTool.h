@@ -30,7 +30,7 @@ class CalIClusteringTool : virtual public IAlgTool {
 
     //! main method
     virtual StatusCode findClusters(
-        Event::CalXtalRecCol *,
+        const Event::CalXtalRecCol *,
         Event::CalClusterCol *
       ) =0 ;
 

@@ -17,11 +17,7 @@ CalSingleClusteringTool::CalSingleClusteringTool
 CalSingleClusteringTool::~CalSingleClusteringTool()
  {}
 
-CalClusteringTool::xTalDataVec CalSingleClusteringTool::nextXtalsSet( xTalDataVec & xTalVec )
- {
-  xTalDataVec copy = xTalVec ;
-  xTalVec.clear() ;
-  return copy ;
- }
+void CalSingleClusteringTool::makeSets( const XtalDataVec & xtals, XtalDataVecVec & clusters )
+ { clusters.push_back(new XtalDataVec(xtals)) ; }
 
 

@@ -30,14 +30,14 @@ class CalSimpleClusteringTool : public CalClusteringTool
     
   protected:
 
-    /// This finds the next highest energy cluster in a vector of CalXtalRecData pointers
-    xTalDataVec            nextXtalsSet(xTalDataVec& xTalVec);
+    //! Distinguish sets of related xtals
+    virtual void makeSets( const XtalDataVec & xtals, XtalDataVecVec & clusters ) ;
 
   private:
   
-    xTalDataVec            getXtalsInLayer(xTalDataVec& xTalVec, Event::CalXtalRecData* xTal);
-    Event::CalXtalRecData* getNearestXtalInSameLayer(xTalDataVec& xTalVec, xTalDataVec& NNvec, Event::CalXtalRecData* xTal);
-    Event::CalXtalRecData* getNearestXtalInDiffLayer(xTalDataVec& xTalVec, Event::CalXtalRecData* xTal, int layer);
+    XtalDataVec            getXtalsInLayer(XtalDataVec& xTalVec, Event::CalXtalRecData* xTal);
+    Event::CalXtalRecData* getNearestXtalInSameLayer(XtalDataVec& xTalVec, XtalDataVec& NNvec, Event::CalXtalRecData* xTal);
+    Event::CalXtalRecData* getNearestXtalInDiffLayer(XtalDataVec& xTalVec, Event::CalXtalRecData* xTal, int layer);
 
  } ;
 

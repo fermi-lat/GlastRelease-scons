@@ -54,7 +54,7 @@ StatusCode CalClusteringTool::initialize()
  }
 
 StatusCode CalClusteringTool::findClusters(
-    Event::CalXtalRecCol * calXtalRecCol,
+    const Event::CalXtalRecCol * calXtalRecCol,
     Event::CalClusterCol * calClusterCol )
 //Purpose and method:
 //
@@ -69,48 +69,55 @@ StatusCode CalClusteringTool::findClusters(
 // 
 // TDS input: CalXtalRecCol
 // TDS output: CalClustersCol
+ {
+  MsgStream log(msgSvc(),name()) ;
 
-
-{
-    MsgStream log(msgSvc(), name());
-
-    //Copy pointers to crystal objects for local use
-    xTalDataVec xTalData;
-    xTalData.clear();
-
-    Event::CalXtalRecCol::const_iterator it;
-    for (it = calXtalRecCol->begin(); it != calXtalRecCol->end(); it++)
-    {
-        // get pointer to the reconstructed data for given crystal
-		Event::CalXtalRecData* recData = *it;
-        xTalData.push_back(recData);
-    }
-
-    //Make clusters
-    if (int numLeft  = xTalData.size() > 0)
-    {
-        while(numLeft > 0)
-        {
-            xTalDataVec cluster = nextXtalsSet(xTalData);
-
-            //int numXtals = cluster.size();
-
-            numLeft  = xTalData.size();
-
-            makeCluster(cluster,calClusterCol);
-        }
-    }
-  // Always store a zero cluster so downstream code runs ok
+  // prepare the initital set of xtals
+  XtalDataVec xtals ;
+  getXtals(calXtalRecCol,xtals) ;
+  
+  // find out groups, with at least a zero
+  // cluster so that downstream code runs ok
+  XtalDataVecVec clusters ;
+  if (xtals.size()>0)
+   { makeSets(xtals,clusters) ; }
   else
-   { makeCluster(xTalData,calClusterCol) ; }
+   { clusters.push_back(new XtalDataVec) ; }
 
+  // make the clusters
+  setClusters(clusters,calClusterCol) ;
+  XtalDataVecVec::iterator cluster ;
+  for ( cluster = clusters.begin() ;
+        cluster != clusters.end() ;
+        ++cluster )
+    delete (*cluster) ;
+  
   return StatusCode::SUCCESS ;
  }
 
-/// This makes a CalCluster out of associated CalXtalRecData pointers
-void CalClusteringTool::makeCluster( xTalDataVec& xTalVec,
-    Event::CalClusterCol * calClusterCol)
-{
+//! Collect CalXtalRecData pointers
+void CalClusteringTool::getXtals( const Event::CalXtalRecCol * calXtalRecCol, XtalDataVec & xtals )
+ {
+  xtals.clear();
+  Event::CalXtalRecCol::const_iterator it ;
+  for ( it = calXtalRecCol->begin() ; it != calXtalRecCol->end() ; ++it )
+   {
+    // get pointer to the reconstructed data for given crystal
+	Event::CalXtalRecData * recData = *it ;
+    xtals.push_back(recData) ;
+   }
+ }
+ 
+/// This makes CalClusters out of associated CalXtalRecData pointers
+void CalClusteringTool::setClusters
+ ( const XtalDataVecVec & clusters,
+   Event::CalClusterCol * calClusterCol )
+ {
+  XtalDataVecVec::const_iterator cluster ;
+  for ( cluster = clusters.begin() ;
+        cluster != clusters.end() ;
+        ++cluster )
+   {    
     const Point p0(0.,0.,0.);  
 
     //Initialize variables
@@ -123,8 +130,8 @@ void CalClusteringTool::makeCluster( xTalDataVec& xTalVec,
     // Compute barycenter and various moments
     
     // loop over all crystals in the current cluster
-    xTalDataVec::iterator xTalIter;
-    for(xTalIter = xTalVec.begin(); xTalIter != xTalVec.end(); xTalIter++)
+    XtalDataVec::const_iterator xTalIter;
+    for(xTalIter = (**cluster).begin(); xTalIter != (**cluster).end(); xTalIter++)
     {
         // get pointer to the reconstructed data for given crystal
 		Event::CalXtalRecData* recData = *xTalIter;
@@ -233,8 +240,9 @@ void CalClusteringTool::makeCluster( xTalDataVec& xTalVec,
 
     calClusterCol->add(cl);
 
-    return;
-}
+   }
+  return ;
+ }
 
 Vector CalClusteringTool::fitDirection
  ( std::vector<Vector> pos,
