@@ -8,6 +8,7 @@ package CalRecon
 
 package manager: Alexandre Chekhtman
 
+  v5r22p4  2-mar-05   ZF  uses latest CalXtalResponse
   v5r22p3 20-feb-05   THB include CalValsCoorTool update to correct tracker plane numbering.  
   v5r22p2 20-feb-05   THB replace xml with xmlBase, so that xml package can be removed.  
   v5r22p1 18-feb-05   ZF  once again... DOS path had bad case, had to fix for linux
