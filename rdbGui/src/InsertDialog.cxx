@@ -44,16 +44,12 @@ long InsertDialog::onGoPress(FXObject *sender,FXSelector sel, void* ptr)
   
   std::vector<std::string> colNames;
   std::vector<std::string> values;
-  
-  std::cout << m_tableName << std::endl;
-  
+    
   for(i=0;i<m_widgets.size();i++)
   {
     ColWidget* temp = m_widgets[i]; 
     colNames.push_back(temp->getColumn()->getName()); 
     values.push_back(temp->getValue());
-    std::cout << temp->getColumn()->getName() << " -> ";    
-    std::cout << temp->getValue() << std::endl;
   }
    
 

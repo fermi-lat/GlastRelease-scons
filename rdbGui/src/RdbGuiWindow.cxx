@@ -375,10 +375,10 @@ long RdbGUIWindow::onInsert(FXObject*,FXSelector, void*)
 
   if (m_dgInsert->execute(PLACEMENT_OWNER) != 0)
   {
-    return 1; 
+		uiLog->update();
+		return 1; 
   }
 
-  uiLog->update();
   
   return 0;
 }
