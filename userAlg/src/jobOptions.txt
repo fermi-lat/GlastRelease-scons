@@ -11,19 +11,22 @@
 MessageSvc.OutputLevel      = 3;
 
 // include algorithms in this package to append to GismoGenerator, and pdr recon
-ApplicationMgr.TopAlg += { "PauseEvent"};
+ApplicationMgr.TopAlg += { "UserAlg"};
 
 // add this guy the the general n-tuple
-//UserAlg.tupleName="PDR";
+UserAlg.tupleName="PDR";
 
 // and redefine the tuple output file.
 NTupleSvc.Output = {"PDR DATAFILE='userAlg.root' OPT='NEW'"};
 
 // source name from flux/xml/source_library.xml, and number of events.
-GismoGenerator.source_name="backgndmaxpdr"; 
+//GismoGenerator.source_name="default"; 
+//ApplicationMgr.EvtMax = 10000;
 
-// a list of events of interest
-PauseEvent.event_list = {1578, 3545, 6358, 6485, 7632};
+// How to pause the GUI with a list of events of interest
+//ApplicationMgr.TopAlg +={"PauseEvent"};
+//PauseEvent.event_list = {1578, 3545, 6358, 6485, 7632};
+
 //==============================================================
 //
 // End of job options file
