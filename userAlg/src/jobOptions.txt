@@ -3,7 +3,7 @@
 //
 // Job options file for user algorithm development
 //
-#include "$USERALGROOT/src/g4Options.txt"
+#include "$GLEAMROOT/src/jobOptions.txt"
 #include "$USERALGROOT/src/ntuple.txt"
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )

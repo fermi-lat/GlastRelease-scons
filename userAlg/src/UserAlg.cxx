@@ -16,12 +16,12 @@
 #include "gui/DisplayControl.h"
 
 // TDS class declarations: input data, and McParticle tree
-#include "GlastEvent/MonteCarlo/McParticle.h"
-#include "GlastEvent/MonteCarlo/McIntegratingHit.h"
-#include "GlastEvent/MonteCarlo/McPositionHit.h"
+#include "Event/MonteCarlo/McParticle.h"
+#include "Event/MonteCarlo/McIntegratingHit.h"
+#include "Event/MonteCarlo/McPositionHit.h"
 
-#include "GlastEvent/TopLevel/Event.h"
-#include "GlastEvent/TopLevel/EventModel.h"
+#include "Event/TopLevel/Event.h"
+#include "Event/TopLevel/EventModel.h"
 
 // for access to instrument.ini
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
@@ -114,11 +114,11 @@ StatusCode UserAlg::execute()
         sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "NumCalls", m_count);
     
     // An example of retrieving data from the TDS
-    SmartDataPtr<mc::McParticleCol> particles(eventSvc(), EventModel::MC::McParticleCol);
+    SmartDataPtr<Event::McParticleCol> particles(eventSvc(), EventModel::MC::McParticleCol);
     
     if (particles) {
         
-        mc::McParticleCol::const_iterator p;
+        Event::McParticleCol::const_iterator p;
         
         for (p = particles->begin(); p != particles->end(); p++) {
             

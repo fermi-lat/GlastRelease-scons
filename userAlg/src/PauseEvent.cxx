@@ -10,8 +10,8 @@
 #include "gui/GuiMgr.h"
 #include "gui/DisplayControl.h"
 
-#include "GlastEvent/MonteCarlo/McParticle.h"
-#include "GlastEvent/TopLevel/Event.h"
+#include "Event/MonteCarlo/McParticle.h"
+#include "Event/TopLevel/Event.h"
 
 // for access to instrument.ini
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
@@ -99,7 +99,7 @@ StatusCode PauseEvent::execute()
 	
     // Check the event Id for this event, if this id and run number combination
     // is in our eventList, we will pause the GUI.
-    SmartDataPtr<Event> event(eventSvc(), "/Event");
+    SmartDataPtr<Event::EventHeader> event(eventSvc(), "/Event");
 	
 	if (event) {
 		unsigned int runNum = 0;
