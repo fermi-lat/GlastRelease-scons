@@ -244,7 +244,7 @@ void GDDXercesBuilder::buildSections()
     {
       std::string str = std::string(xml::Dom::transToChar(childs.item(i).getNodeName()));
       if(str == "section"){
-	currentGDD->getSections()->push_back( buildSection( &(childs.item(i) )  ));
+	currentGDD->addSection(buildSection(&(childs.item(i))));
       }
     }
   currentGDD->buildVolumeMap();

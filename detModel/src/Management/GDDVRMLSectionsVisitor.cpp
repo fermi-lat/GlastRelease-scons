@@ -75,29 +75,29 @@ void  GDDVRMLSectionsVisitor::visitSection(GDDsection* section)
   float dimX, dimY, dimZ;
   GDDvolume* vol=0;
   std::vector <GDDvolume*>::iterator v;
-
+  
   if (actualVolume == "")
     {
-      for(v=section->getVolumes().begin(); 
-	  v!=section->getVolumes().end();v++){
+      std::vector<GDDvolume*> volumes = section->getVolumes();
+      
+      for(v=volumes.begin(); v!=volumes.end(); v++){
 	if((*v)->getVolumeType() == composition)
 	  {
 	    GDDcomposition* comp = static_cast<GDDcomposition*>(*v);
 	    if (comp == section->getTopVolume())
-		vol = *v;
+	      vol = *v;
 	  }
       }
     }
   else
     {
       GDDmanager* manager = GDDmanager::getPointer();
-      
       if (manager->getGDD()->getVolumeByName(actualVolume))
 	{
 	  vol = manager->getGDD()->getVolumeByName(actualVolume);
 	}
     }
-
+  
   /// We calulate the dimensions for the projected views
   dimX = 2*vol->getBBX()/0.005;
   dimY = 2*vol->getBBY()/0.005;
