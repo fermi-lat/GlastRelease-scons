@@ -20,4 +20,8 @@
 #pragma link C++ class VolumeIdentifier+;
 //#pragma link C++ class BadPointerException;
 
+#pragma link C++ class RootObj<Int_t> ;
+#pragma link C++ class RootObj<Double_t> ;
+#pragma link C++ class FileHeader ;
+
 #endif
