@@ -37,13 +37,12 @@ macro CalRecon_shlibflags   "$(libraryshr_linkopts) $(use_linkopts)"\
       VisualC               "DataObject.obj $(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
 
 
-# build this for testing, console only 
+# build this for testing, console only. Load all objects directly. 
 
 
-macro WinJobOptions  "" \
-      VisualC       "test/jobOptions.txt"
+macro WinJobOptions  ""  VisualC   "test/jobOptions.txt"
 
 macro_append use_linkopts $(console_linkopts)
 
-application test_CalRecon test/*.cxx ${WinJobOptions}
+application test_CalRecon test/*.cxx *.cxx *.cpp  Dll/*.cpp ${WinJobOptions}
 

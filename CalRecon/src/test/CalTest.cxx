@@ -29,8 +29,9 @@ void FATAL(const char* text){std::cerr << text << std::endl;}
 //  Description: Test Main Program
 //
 //------------------------------------------------------------------------------
-
+void CalRecon_load(); 
 int main( int argn, char** argc) {
+    if(0) CalRecon_load();
 
     // get the path to this package from its root environment variable: if not there,
     // assume that we are in the root
