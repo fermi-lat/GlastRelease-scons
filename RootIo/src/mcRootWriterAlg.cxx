@@ -416,16 +416,22 @@ StatusCode mcRootWriterAlg::writeMcIntegratingHits() {
 
         // Setup the ROOT McIntegratingHit
         mcIntHit->initialize(idRoot);
-
+        
         Event::McIntegratingHit::energyDepositMap tdsMap = (*hit)->itemizedEnergy();
-        Event::McIntegratingHit::energyDepositMap::const_iterator mapIt;
-        for (mapIt = tdsMap.begin(); mapIt != tdsMap.end(); mapIt++) {
-            Event::McParticle *mcPartTds = mapIt->first;
-            McParticle *mcPartRoot = m_particleMap[mcPartTds];
-            Double_t e = mapIt->second;
-            HepPoint3D posTds = mcPartTds->finalPosition();
-            TVector3 posRoot(posTds.x(), posTds.y(), posTds.z());
-            mcIntHit->addEnergyItem(e, mcPartRoot, posRoot);
+        if (tdsMap.size() <= 0) {
+            // If we have not stored the full tree, assume we are using the minimal tree
+            mcIntHit->setEnergyItems(e, (*hit)->energyArray(), moment1Root, moment2Root);
+            
+        } else {
+            Event::McIntegratingHit::energyDepositMap::const_iterator mapIt;
+            for (mapIt = tdsMap.begin(); mapIt != tdsMap.end(); mapIt++) {
+                Event::McParticle *mcPartTds = mapIt->first;
+                McParticle *mcPartRoot = m_particleMap[mcPartTds];
+                Double_t e = mapIt->second;
+                HepPoint3D posTds = mcPartTds->finalPosition();
+                TVector3 posRoot(posTds.x(), posTds.y(), posTds.z());
+                mcIntHit->addEnergyItem(e, mcPartRoot, posRoot);
+            }
         }
 
         // Add the ROOT McIntegratingHit to the ROOT collection of McIntegratingHits
