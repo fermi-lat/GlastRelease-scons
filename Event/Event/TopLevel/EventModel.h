@@ -50,6 +50,7 @@
             _EXTERN_ std::string Event;
             _EXTERN_ std::string AcdDigis;
             _EXTERN_ std::string TkrDigis;
+            _EXTERN_ std::string CalDigiCol;
         }
 
         namespace Data {

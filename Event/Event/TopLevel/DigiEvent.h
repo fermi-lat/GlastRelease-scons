@@ -15,30 +15,29 @@ extern const CLID& CLID_DigiEvent;
 * It can be identified by "/Event/Digi" on the TDS
 * 
 * It contains:
-* - flag, if comming from Monte Carlo
+* - flag, if coming from Monte Carlo
 * 
 */
+namespace Event {  // NameSpace
 
-class DigiEvent : public DataObject                                             {
+class DigiEvent : public DataObject {
     
 public:
     
     DigiEvent()
-        : DataObject(), m_fromMC(false) { }
+        : DataObject(), m_fromMc(false) { }
     
     virtual ~DigiEvent() { }
     
+    void initialize(bool fromMc) { m_fromMc = fromMc; };
+
     /// Retrieve reference to class definition structure
     virtual const CLID& clID() const  { return DigiEvent::classID(); }
     static const CLID& classID() { return CLID_DigiEvent; }
     
     ///  Retrieve flag of origin
-    bool fromMC () const                                                         {
-        return m_fromMC;
-    }
-    ///  Update flag of origine
-    void setFromMC (bool value)                                                  {
-        m_fromMC = value;
+    bool fromMc () const {
+        return m_fromMc;
     }
     
     /// Serialize the object for writing
@@ -55,9 +54,10 @@ public:
     
 private: 
     /// Flag of origin
-    bool m_fromMC;
+    bool m_fromMc;
 };
 
+}
 
 //
 // Inline code must be outside the class definition
@@ -65,28 +65,28 @@ private:
 
 
 /// Serialize the object for writing
-inline StreamBuffer& DigiEvent::serialize( StreamBuffer& s ) const              {
+inline StreamBuffer& Event::DigiEvent::serialize( StreamBuffer& s ) const              {
     DataObject::serialize(s);
-    unsigned char u = (m_fromMC) ? 1 : 0;
+    unsigned char u = (m_fromMc) ? 1 : 0;
     return s << u;
 }
 
 
 /// Serialize the object for reading
-inline StreamBuffer& DigiEvent::serialize( StreamBuffer& s )                    {
+inline StreamBuffer& Event::DigiEvent::serialize( StreamBuffer& s )                    {
     DataObject::serialize(s);
     unsigned char u;
     s >> u;
-    m_fromMC = (u) ? true : false;
+    m_fromMc = (u) ? true : false;
     return s;
 }
 
 
 /// Fill the output stream (ASCII)
-inline std::ostream& DigiEvent::fillStream( std::ostream& s ) const             {
+inline std::ostream& Event::DigiEvent::fillStream( std::ostream& s ) const             {
     s << "class DigiEvent :"
         << "\n    Flag of origin    = ";
-    if( m_fromMC ) {
+    if( m_fromMc ) {
         s << " true";
     }
     else {
