@@ -246,11 +246,11 @@
 
     <composition name="TKRCoreReg" envelope="TKRCoreRegEnv">
       <posXYZ volume="TKRCoreRegBox">
-        <idField name="fBorderCmp" value="eCenter" />
+        <idField name="fBorderCmp" valueREF="eCenter" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutRegLong"
               YREF="TKRCloseout_dt">
-        <idField name="fBorderCmp" value="eTop" />
+        <idField name="fBorderCmp" valueREF="eTop" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutRegLong"
               YREF="TKRCloseout_dtn">

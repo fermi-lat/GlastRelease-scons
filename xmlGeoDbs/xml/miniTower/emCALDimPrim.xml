@@ -4,7 +4,7 @@
 </overview>
   <prim name="CALTransverseStayClear" value="364.0">Transverse dimension of
 CAL Stay Clear envelope from LAT-DS-00038-2</prim>
-  <prim name="CALVertStayClear" value="224.3.">Z-dimension of CAL
+  <prim name="CALVertStayClear" value="224.3">Z-dimension of CAL
  Stay Clear envelope from LAT-DS-00038-2</prim>
   <prim name="diodeX" value="0.30"> Depletion depth of diode Si
 </prim>
