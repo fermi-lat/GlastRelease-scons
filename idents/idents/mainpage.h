@@ -8,6 +8,7 @@ This package contains identifier definitions for
 - crystals (XtalId)
 - ACD Tiles (ScintillatorId) 
 - Tracker strips
+- Volumes (VolumeIdentifier)
 
 <hr>
   \section notes release notes

@@ -31,8 +31,8 @@ VolumeIdentifier::VolumeIdentifier():  m_value(0), m_size(0){}
 
 VolumeIdentifier::init(int64 value, unsigned int size)
 {
-  m_value = value;
-  m_size = size;
+    m_value = value;
+    m_size = size;
 }
 
 // Return the equivalent string of the volume identifier, that is the single
@@ -44,23 +44,23 @@ std::string VolumeIdentifier::name(const char* delimiter) const
 #else
     std::stringstream s;
 #endif
-
+    
     unsigned int bufIds = 0;
-
+    
     // this is a 64 bit mask with the first 6 bits set to 1 and the others to 0
-	  int64 mask = 63;
-
+    static int64 mask = 63;
+    
     // shift the 1's to bit 54
     mask = mask << 54;
     int64 copyValue = m_value;
-
-	  int i;
+    
+    int i;
     s << delimiter;
-	  for (i = 0; i < m_size; i++)
+    for (i = 0; i < m_size; i++)
     {
-      bufIds = (copyValue & mask) >> 54;
-      s << bufIds << delimiter;
-      copyValue = copyValue << 6;
+        bufIds = (copyValue & mask) >> 54;
+        s << bufIds << delimiter;
+        copyValue = copyValue << 6;
     }
     
 #ifndef WIN32
@@ -73,11 +73,11 @@ std::string VolumeIdentifier::name(const char* delimiter) const
 
 unsigned int VolumeIdentifier::operator[](unsigned int index)
 {
-	int64 mask = 63;
-	int64 copyShifted = m_value >> (54 - 6*index);
-  return (copyShifted & mask);
+    static int64 mask = 63;
+    int64 copyShifted = m_value >> (54 - 6*index);
+    return (copyShifted & mask);
 }
- 
+
 void VolumeIdentifier::prepend( const VolumeIdentifier& id)
 {
     m_value = (m_value >> (6*id.size())) | id;

@@ -16,7 +16,7 @@
  * @author Toby Burnett
  * @author Marco Frailis
  *    
- * \$Header\$
+ * \$Header$
  */
 
 namespace idents{
@@ -66,7 +66,7 @@ public:
 private:
 
     /// internal rappresentation of the volume identifier
-    mutable int64 m_value; // for sorting
+    int64 m_value; // for sorting
     /// number of single ids which constitute the volume identifier
     int m_size;
 };

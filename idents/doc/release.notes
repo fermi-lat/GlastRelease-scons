@@ -1,5 +1,7 @@
 package manager:T.Burnett 
 
+8-Mar-02 THB tag v2r4
+6-Mar-02 Marco fixes VolumeIdentifier
 20001126  THB create to hold id classes
 20010804 HMK update AcdId to store 2 bits for layer number
 20010804 HMK tag v2r2
