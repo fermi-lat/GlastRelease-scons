@@ -36,6 +36,7 @@ Tracker::~Tracker() {
 
 
 void Tracker::loadGeometry(TString filename) {
+    m_geoFileName = filename;
     gSystem->ExpandPathName(filename);
     if ( !myGeometry->IsEmpty() ) {
         std::cout << "WARNING: Geometry not empty!  Maybe you filled it before?"
@@ -47,6 +48,7 @@ void Tracker::loadGeometry(TString filename) {
         std::cout << "File " << filename << " could not be opened!" <<std::endl;
         return;
     }
+    std::cout << "loading " << filename << std::endl;
     std::string line;
     while ( !fin.eof() ) {
         std::getline(fin, line);

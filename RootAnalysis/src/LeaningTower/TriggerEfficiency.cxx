@@ -20,7 +20,7 @@ private:
     Event*   myEvent;
     Tracker* myTracker;
 public:
-    TriggerEfficiency(const TString="MyRootFile.root");
+    TriggerEfficiency(const TString="MyRootFile.root", TString geoFileName="");
     ~TriggerEfficiency() {
         delete myEvent;
         delete myTracker;
@@ -29,11 +29,12 @@ public:
     void Go(int lastEntry=-1);
 };
 
-TriggerEfficiency::TriggerEfficiency(TString filename) {
+TriggerEfficiency::TriggerEfficiency(const TString filename, TString geoFileName) {
+    if ( geoFileName.Length() == 0 )
+        geoFileName = "$ROOTANALYSISROOT/src/LeaningTower/geometry/TowerBgeometry306000517.txt";
     myTracker = new Tracker;
     // the geometry is only needed to determine the order of the planes
-    myTracker->loadGeometry(gSystem->ExpandPathName(
-             "$ROOTANALYSISROOT/src/LeaningTower/geometry/TowerAgeometry.txt"));
+    myTracker->loadGeometry(geoFileName);
     myTracker->SetTower(true);
     myEvent = new Event(filename, myTracker->GetGeometry());
 }

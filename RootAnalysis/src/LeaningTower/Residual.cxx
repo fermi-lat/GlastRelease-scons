@@ -21,7 +21,8 @@ private:
     Tracker* myTracker;
     TString  myResFileName;
 public:
-    Residual(const TString="MyRootFile.root", const TString="residual.root");
+    Residual(const TString="MyRootFile.root", const TString="residual.root",
+             const TString geo="");
     ~Residual() {
         delete myEvent;
         delete myTracker;
@@ -46,14 +47,11 @@ public:
     void DrawResOrdCorr(TString plane, TCut="");
 };
 
-Residual::Residual(TString filename, TString resFileName) {
+Residual::Residual(TString filename, TString resFileName, TString geoFileName) {
+    if ( geoFileName.Length() == 0 )
+        geoFileName = "$ROOTANALYSISROOT/src/LeaningTower/geometry/TowerBgeometry306000517.txt";
     myTracker = new Tracker;
-    myTracker->loadGeometry(gSystem->ExpandPathName
-     (
-      //"$ROOTANALYSISROOT/src/LeaningTower/geometry/TowerGeometryGleamv5r8.txt"
-      //"$ROOTANALYSISROOT/src/LeaningTower/geometry/TowerAgeometry357.txt"
-      "$ROOTANALYSISROOT/src/LeaningTower/geometry/TowerAgeometry384.txt"
-        ));
+    myTracker->loadGeometry(geoFileName);
     myTracker->SetTower(true);
     myEvent = new Event(filename, myTracker->GetGeometry());
     myResFileName = resFileName;
@@ -318,8 +316,8 @@ void Residual::DrawResSlopeAll(TCut cut) {
     gStyle->SetStatW(0.35);
     gStyle->SetFitFormat(".3f");
     int i=0;
-    std::ofstream fout("newGeometry.txt");
     TList* myGeometry = myTracker->GetGeometry();
+    std::ofstream fout(myTracker->GetGeoFileName()+".new"/*, ios_base::out*/);
     TIter next(myGeometry);
     while ( Layer* plane = (Layer*)next() ) {
         TString planeName = plane->GetName();
@@ -380,9 +378,8 @@ void Residual::DrawResOrdAll(TCut cut) {
     gStyle->SetStatW(0.35);
     gStyle->SetFitFormat(".3g");
     int i=0;
-    std::ofstream fout("newGeometry.txt");
-
     TList* myGeometry = myTracker->GetGeometry();
+    std::ofstream fout(myTracker->GetGeoFileName()+".new"/*, ios_base::out*/);
     TIter next(myGeometry);
     while ( Layer* plane = (Layer*)next() ) {
         TString planeName = plane->GetName();
@@ -402,14 +399,18 @@ void Residual::DrawResOrdAll(TCut cut) {
             TF1* f = htemp->GetFunction("pol1");
             // dangZ is the rotation around z (check the sign)
             dangZ = 1000. * f->GetParameter(1);  // mrad
-            // dh is the horizontal shift.  This should have been alredy fitted
+            // dh is the horizontal shift.  This should have been already fitted
             // before.  Most likely, it's 0 or close to 0.
+            // However, here it is the offset a hor=0, not the offset for the
+            // center of the plane.  Thus, I don't use it here.
             float dh = f->GetParameter(0);
+            /*
             if ( plane->GetView() )
                 dy = dh;
             else
                 dx = dh;
-            std::cout << planeName << " dh = " << std::setprecision(3)
+            */
+            std::cout << planeName << " dh(h=0) = " << std::setprecision(3)
                       << std::fixed << dh << " rotZ = " << dangZ << std::endl;
         }
         fout << plane->GetGeometry(dz, dy, dx, dangZ) <<std::endl;

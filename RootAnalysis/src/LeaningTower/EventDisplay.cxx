@@ -43,22 +43,22 @@ private:
     TLine anYtrack;
 
 public:
-    EventDisplay(TString="MyRootFile.root");
+    EventDisplay(TString="MyRootFile.root", TString geo="");
     void Go(int=-1);
 };
 
 
-EventDisplay::EventDisplay(TString filename) {
+EventDisplay::EventDisplay(TString filename, TString geoFileName) {
     gStyle->SetCanvasColor(10);
     myTracker = new Tracker;
-    if ( TOWER ) {  
-        myTracker->loadGeometry(
-              "$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0Geometry.txt");
+    if ( TOWER ) {
+        if ( geoFileName.Length() == 0 )
+            geoFileName = "$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0Geometry.txt";
         myTracker->SetTower(TOWER);
     }
     else
-        myTracker->loadGeometry(
-              "$ROOTANALYSISROOT/src/LeaningTower/geometry/stack2geometry.txt");
+        geoFileName = "$ROOTANALYSISROOT/src/LeaningTower/geometry/stack2geometry.txt";
+    myTracker->loadGeometry(geoFileName);
 
     myEvent = new Event(filename, myTracker->GetGeometry());
   

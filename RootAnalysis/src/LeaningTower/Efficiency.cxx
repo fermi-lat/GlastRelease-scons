@@ -21,7 +21,8 @@ private:
     Tracker* myTracker;
     TString  myEffFileName;
 public:
-    Efficiency(const TString="MyRootFile.root",const TString="efficiency.root");
+    Efficiency(const TString="MyRootFile.root", const TString="efficiency.root",
+               TString geoFileName="");
     ~Efficiency() {
         delete myEvent;
         delete myTracker;
@@ -47,10 +48,12 @@ private:
     void PrintEfficiency(TString plane, float ineff, int hits, int missing) const;
 };
 
-Efficiency::Efficiency(TString filename, TString effFileName) {
+Efficiency::Efficiency(const TString filename, const TString effFileName,
+                       TString geoFileName) {
+    if ( geoFileName.Length() == 0 )
+        geoFileName = "$ROOTANALYSISROOT/src/LeaningTower/geometry/TowerBgeometry306000517.txt";
     myTracker = new Tracker;
-    myTracker->loadGeometry(gSystem->ExpandPathName(
-             "$ROOTANALYSISROOT/src/LeaningTower/geometry/TowerAgeometry.txt"));
+    myTracker->loadGeometry(geoFileName);
     myTracker->SetTower(true);
     myEvent = new Event(filename, myTracker->GetGeometry());
     myEffFileName = effFileName;
