@@ -38,10 +38,10 @@ public:
 private:
 	
 	/// clusters information
-    TkrRecon::TkrClusterCol* m_TkrClusters;
+    Event::TkrClusterCol* m_TkrClusters;
 
     /// Fit control information
-    TkrRecon::TkrTrackFit* m_TrackFit;
+    Event::TkrTrackFit* m_TrackFit;
 
     /// Propagator type, currently RcParticle or G4Propagator
     int    m_PropagatorType;

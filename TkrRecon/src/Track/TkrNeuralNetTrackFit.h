@@ -18,7 +18,7 @@
 #include "src/Track/TkrNeuralNetFit.h"
 #include "TkrRecon/Track/TkrTrackFit.h"
 
-namespace TkrRecon { //Namespace
+namespace Event { //Namespace
 
 class TkrNeuralNetTrackFit : public TkrTrackFit
 {

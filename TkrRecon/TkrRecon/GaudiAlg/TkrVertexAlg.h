@@ -34,7 +34,7 @@ public:
     
 private:
     
-    TkrRecon::TkrFindVertex* pFindVertex;
+    Event::TkrFindVertex* pFindVertex;
 };
 
 #endif // __TKRVERTEXALG_H

@@ -27,7 +27,7 @@
 #include "TkrRecon/GaudiAlg/TkrVertexAlg.h"
 #include "TkrRecon/Services/TkrInitSvc.h"
 
-using namespace TkrRecon;
+using namespace Event;
 
 static const AlgFactory<TkrVertexAlg>  Factory;
 const IAlgFactory& TkrVertexAlgFactory = Factory;

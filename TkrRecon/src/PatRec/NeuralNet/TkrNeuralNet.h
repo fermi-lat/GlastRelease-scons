@@ -27,7 +27,7 @@
 #include "TkrRecon/Track/TkrBase.h"
 #include <vector>
 
-using namespace TkrRecon;
+using namespace Event;
 
 class TkrNeuralNet : public TkrPatCandCol 
 {

@@ -48,9 +48,9 @@ private:
     ITkrBadStripsSvc*        pBadStrips;
     
 	/// pointer to Tkr digis
-    TkrDigiCol*              m_TkrDigis;
+    Event::TkrDigiCol*       m_TkrDigis;
 	/// pointer to generated TkrClusterCol
-    TkrRecon::TkrClusterCol* m_TkrClusterCol;
+    Event::TkrClusterCol*    m_TkrClusterCol;
 };
 
 #endif //  TKRCLUSTERALG_H

@@ -24,7 +24,7 @@
 * $Header$
 */
 
-namespace TkrRecon { //Namespace
+//namespace Event { //Namespace
 
 class TkrMakeClusters
 {
@@ -51,14 +51,14 @@ public:
 
 	/// This constructor actually makes the clusters
 	/// the pointers to services and data are passed through the constructor
-    TkrMakeClusters(TkrClusterCol* pClus, 
+    TkrMakeClusters(Event::TkrClusterCol* pClus, 
 		ITkrGeometrySvc* pTkrGeo, ITkrBadStripsSvc* pBadStrips, 
-		TkrDigiCol* pTkrDigiCol);
+        Event::TkrDigiCol* pTkrDigiCol);
 
 	~TkrMakeClusters() { }
     
     /// gets the position of a cluster
-	Point position(int ilayer, TkrCluster::view v, 
+    Point position(int ilayer, Event::TkrCluster::view v, 
 		int strip0, int stripf, int tower = 0);
     /// returns true if the two hits have a gap between them
     bool isGapBetween(const int lowHit, const int highHit);
@@ -89,6 +89,6 @@ private:
 	/// cluster list
 };
 
-}; // Namespace
+//}; // Namespace
 
 #endif // TKRMAKECLUSTERS

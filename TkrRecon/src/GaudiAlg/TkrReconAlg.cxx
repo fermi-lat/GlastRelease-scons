@@ -29,14 +29,14 @@
 #include "GlastSvc/Reco/IRecoSvc.h"
 #include "GlastSvc/Reco/IPropagatorSvc.h"
 
-using namespace TkrRecon;
+using namespace Event;
 
 static const AlgFactory<TkrReconAlg>  Factory;
 const IAlgFactory& TkrReconAlgFactory = Factory;
 
 IKalmanParticle* TkrReconAlg::m_KalParticle = 0;
 
-using namespace TkrRecon;
+using namespace Event;
 
 TkrReconAlg::TkrReconAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator) 
