@@ -5,6 +5,7 @@
 
 #include "CLHEP/Geometry/Vector3D.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+#include "idents/VolumeIdentifier.h"
 /**
     Static functions only for geometry of individual Si plane
   */
@@ -21,6 +22,9 @@ public:
      
     /// location of strip ix in local coords
     static double localX ( unsigned int ix); 
+
+	// Returns the coordinate in the plane from the ladder coordinate
+	static HepPoint3D siPlaneCoord( const HepPoint3D& p, idents::VolumeIdentifier id);
 	  
     /// insideActiveArea for local coords
     static double insideActiveArea(double x, double y); 

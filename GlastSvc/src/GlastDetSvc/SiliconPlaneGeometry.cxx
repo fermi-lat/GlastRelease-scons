@@ -129,6 +129,29 @@ double SiliconPlaneGeometry::localX (unsigned ix) {
 	*/
 }
 
+/// siPlaneCoord - return a plane coordinate given a ladder coordinate
+HepPoint3D SiliconPlaneGeometry::siPlaneCoord( const HepPoint3D& p, idents::VolumeIdentifier id) {
+	double xShift = 0, yShift = 0;
+	int view      = id[5];
+	if (id.size()==9) {
+		int ladderNum = id[7];
+		//std::cout << " sgp ladder " << ladderNum << std::endl;
+	    xShift = 0.5*die_width() + ladderNum*(die_width() + ladder_gap()) - 0.5*panel_width();
+	    if (view==1) xShift = -xShift;
+
+    	double panelLength = n_si_dies()*die_width() + (n_si_dies()-1)*ssd_gap();
+	    yShift = 0.5*die_width() + ladderNum*(die_width() + ssd_gap()) - 0.5*panelLength;
+	}
+
+	xShift+= p.x();
+	//std::cout << " spg view " << view << " " << xShift ;
+	if (view==1) xShift = -xShift; 
+	//std::cout << " " << xShift  << std::endl;
+	yShift+= p.y();
+
+	return HepPoint3D(xShift, yShift, p.z());
+}
+
 
 
 /// n_si_strips - return the number of Si strips in a single layer

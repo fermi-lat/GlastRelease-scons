@@ -54,6 +54,9 @@ public:
     /// location of strip ix in local coords
     virtual double stripLocalXDouble( double stripid)=0;    
 
+	/// returns plane coord given ladder coord
+	virtual HepPoint3D siPlaneCoord( const HepPoint3D& p, idents::VolumeIdentifier id)=0;
+
     /// (-) if non-active or gap (P is in local system)    
     virtual double insideActiveArea (const HepPoint3D& p)=0;  
 

@@ -190,3 +190,8 @@ double GlastDetSvc::stripLocalXDouble( double strip)
 {
     return SiliconPlaneGeometry::localXDouble(strip);
 }
+
+HepPoint3D GlastDetSvc::siPlaneCoord( const HepPoint3D &p, idents::VolumeIdentifier id)
+{   
+	return SiliconPlaneGeometry::siPlaneCoord( p, id);
+}

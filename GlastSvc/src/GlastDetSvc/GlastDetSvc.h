@@ -72,7 +72,10 @@ public:
     virtual double stripLocalX ( unsigned int istrip); 
 	
     /// location of strip ix in local coords
-    virtual double stripLocalXDouble ( double strip);    
+    virtual double stripLocalXDouble ( double strip);   
+	
+	/// return plane coordinate given wafer coordinate
+	virtual HepPoint3D siPlaneCoord( const HepPoint3D &p, idents::VolumeIdentifier id);
 
 
 private:
