@@ -110,6 +110,7 @@ in the case you will use the proton for example. The "only-em" has the Decay pro
 processes (where I commented out the MuonAbsorption), all the e-/e+ and 
 gamma processes and the multiple scattering + ionisation for hadrons and 
 ions. For the full there is the actual choice of processes. 
+ * @param G4Generator.eLossCurrent [true]  If true: replace the native G4 energy loss code with the 5.2 version.
 
 
  *

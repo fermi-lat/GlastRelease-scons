@@ -80,7 +80,7 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("physics_dir", m_physics_dir="G4cuts/100micron/");
 
   declareProperty("mscatOption",  m_mscatOption  = true); 
-  declareProperty("eLossCurrent", m_eLossCurrent = false); 
+  declareProperty("eLossCurrent", m_eLossCurrent = true);  // default is to use the current, not 5.2.
 }
     
 ////////////////////////////////////////////////////////////////////////////
