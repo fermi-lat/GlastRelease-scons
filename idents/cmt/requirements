@@ -1,0 +1,8 @@
+package idents
+
+version v1
+use glast_settings
+
+include_path $(IDENTSROOT)
+
+library idents -no_share *.cxx ../idents/*.h
