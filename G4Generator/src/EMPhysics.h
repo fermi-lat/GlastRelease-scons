@@ -5,7 +5,7 @@
 #include "G4ios.hh"
 
 #include "G4VPhysicsConstructor.hh"
-
+#include "Geant4/MultipleScatteringFactory.h"
 
 
 /** 
@@ -27,7 +27,7 @@
 class EMPhysics : public G4VPhysicsConstructor
 {
   public: 
-    EMPhysics(const G4String& name ="EM");
+      EMPhysics(const G4String& name , Geant4::MultipleScatteringFactory& msfactory);
     virtual ~EMPhysics();
 
   public: 
@@ -39,6 +39,9 @@ class EMPhysics : public G4VPhysicsConstructor
     // each physics process will be instantiated and
     // registered to the process manager of each particle type 
     virtual void ConstructProcess();
+
+private:
+    Geant4::MultipleScatteringFactory& m_msFactory;
 };
 
 

@@ -22,6 +22,9 @@
 #include "RunManager.h"
 #include "PrimaryGeneratorAction.h"
 #include "McParticleManager.h"
+// GLAST Geant4
+
+#include "Geant4/MultipleScatteringFactory.h"
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
@@ -33,6 +36,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
+
 
 
 //special to setup the TdGlastData structure
@@ -75,6 +79,8 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("physics_choice", m_physics_choice="full");
   declareProperty("physics_tables", m_physics_table="build");
   declareProperty("physics_dir", m_physics_dir="G4cuts/100micron/");
+
+  declareProperty("mscatOption", m_mscatOption=true); 
 }
     
 ////////////////////////////////////////////////////////////////////////////
@@ -132,6 +138,14 @@ StatusCode G4Generator::initialize()
       return StatusCode::FAILURE;
   }
 
+  // create a factory for the multiplescattering to pass around to the physics guys
+  Geant4::MultipleScatteringFactory msFactory(
+      m_mscatOption? Geant4::MultipleScatteringFactory::OLD32 
+                   : Geant4::MultipleScatteringFactory::NATIVE);
+
+  log << MSG::ERROR << "Using the " << (m_mscatOption? "Old 3.2" : "current G4") 
+      << " version of Multiple scattering" << endreq;
+
   log << MSG::INFO << "Initializing run manager...\n";
   // The geant4 manager
   if (!(m_runManager = RunManager::GetRunManager()))
@@ -142,7 +156,8 @@ StatusCode G4Generator::initialize()
                                     m_defaultCalCutValue,
                                     m_physics_choice, 
                                     m_physics_table, 
-                                    m_physics_dir);
+                                    m_physics_dir,
+                                    msFactory);
 
       log << "\n done." << endreq;
     }

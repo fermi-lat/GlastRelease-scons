@@ -14,8 +14,8 @@
 #include "g4std/iomanip"   
 
 
-EMPhysics::EMPhysics(const G4String& name)
-               :  G4VPhysicsConstructor(name)
+EMPhysics::EMPhysics(const G4String& name, Geant4::MultipleScatteringFactory& msFactory)
+               :  G4VPhysicsConstructor(name), m_msFactory(msFactory)
 {
 }
 
@@ -55,7 +55,7 @@ void EMPhysics::ConstructParticle()
 #include "G4PhotoElectricEffect.hh"
 #include "G4ComptonScattering.hh"
 #include "G4GammaConversion.hh"
-#include "G4MultipleScattering.hh"
+//THB #include "G4MultipleScattering.hh"
 #include "G4eIonisation.hh"
 #include "G4eBremsstrahlung.hh"
 #include "G4eplusAnnihilation.hh"
@@ -82,7 +82,7 @@ void EMPhysics::ConstructProcess()
 
   pManager = G4Electron::Electron()->GetProcessManager();
 
-  G4MultipleScattering* theElectronMultipleScattering = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess* theElectronMultipleScattering = m_msFactory();
   G4eIonisation* theElectronIonisation = new G4eIonisation();
   G4eBremsstrahlung* theElectronBremsStrahlung = new G4eBremsstrahlung();
   pManager->AddDiscreteProcess(theElectronBremsStrahlung);  
@@ -97,7 +97,7 @@ void EMPhysics::ConstructProcess()
 
   pManager = G4Positron::Positron()->GetProcessManager();
 
-  G4MultipleScattering* thePositronMultipleScattering  = new  G4MultipleScattering();
+  G4VContinuousDiscreteProcess* thePositronMultipleScattering  =  m_msFactory();
   G4eIonisation* thePositronIonisation = new  G4eIonisation(); 
   G4eBremsstrahlung* thePositronBremsStrahlung = new G4eBremsstrahlung();  
   G4eplusAnnihilation* theAnnihilation = new G4eplusAnnihilation();

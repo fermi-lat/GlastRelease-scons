@@ -4,3 +4,4 @@ NMake
 *.mak*
 Makefile
 
+*.bat 

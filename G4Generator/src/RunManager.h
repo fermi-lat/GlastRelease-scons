@@ -51,6 +51,8 @@ class Hep3Vector;
  *    
  * $Header$
  */
+namespace Geant4 { class MultipleScatteringFactory; }
+
 class RunManager
 {
  public: 
@@ -80,7 +82,8 @@ class RunManager
              double defaultCalCutValue,
              std::string& physics_choice, 
              std::string& physics_table,
-             std::string&  physics_dir);
+             std::string&  physics_dir,
+             Geant4::MultipleScatteringFactory& msfactory);
   
   virtual ~RunManager();
 

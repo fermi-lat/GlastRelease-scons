@@ -12,8 +12,9 @@
 #include "G4ios.hh"
 #include "g4std/iomanip"   
 
-IonPhysics::IonPhysics(const G4String& name, std::string& physicsChoice)
-  :  G4VPhysicsConstructor(name), m_physicsChoice(physicsChoice)
+IonPhysics::IonPhysics(const G4String& name, std::string& physicsChoice
+                       , Geant4::MultipleScatteringFactory& msfactory)
+  :  G4VPhysicsConstructor(name), m_physicsChoice(physicsChoice), m_msFactory(msfactory)
 {
 }
 
@@ -52,7 +53,7 @@ void IonPhysics::ConstructParticle()
 #include "G4LEAlphaInelastic.hh"
 
 #include "G4hIonisation.hh"
-#include "G4MultipleScattering.hh"
+//THB#include "G4MultipleScattering.hh"
 
 
 void IonPhysics::ConstructProcess()
@@ -123,7 +124,7 @@ void IonPhysics::ConstructProcess()
   
   pManager = G4GenericIon::GenericIon()->GetProcessManager();
   
-  G4MultipleScattering*   fIonMultipleScattering = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess*   fIonMultipleScattering = m_msFactory();
   G4hIonisation*          fIonIonisation = new  G4hIonisation();
   pManager->AddProcess(fIonIonisation, ordInActive, 2, 2);
   
@@ -135,7 +136,7 @@ void IonPhysics::ConstructProcess()
   
   pManager = G4Deuteron::Deuteron()->GetProcessManager();
 
-  G4MultipleScattering*        fDeuteronMultipleScattering = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess*        fDeuteronMultipleScattering = m_msFactory();
   G4hIonisation*               fDeuteronIonisation= new  G4hIonisation();
   pManager->AddProcess(fDeuteronIonisation, ordInActive, 2, 2);
   pManager->AddProcess(fDeuteronMultipleScattering);
@@ -146,7 +147,7 @@ void IonPhysics::ConstructProcess()
       
   pManager = G4Triton::Triton()->GetProcessManager();
 
-  G4MultipleScattering*        fTritonMultipleScattering = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess*        fTritonMultipleScattering = m_msFactory();
   G4hIonisation*               fTritonIonisation = new  G4hIonisation();
   pManager->AddProcess(fTritonIonisation, ordInActive, 2, 2);
   pManager->AddProcess(fTritonMultipleScattering);
@@ -157,7 +158,7 @@ void IonPhysics::ConstructProcess()
   
   pManager = G4Alpha::Alpha()->GetProcessManager();
 
-  G4MultipleScattering*        fAlphaMultipleScattering  = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess*        fAlphaMultipleScattering  = m_msFactory();
   G4hIonisation*               fAlphaIonisation= new  G4hIonisation();
   pManager->AddProcess(fAlphaIonisation, ordInActive, 2, 2);
   pManager->AddProcess(fAlphaMultipleScattering);
@@ -167,7 +168,7 @@ void IonPhysics::ConstructProcess()
   // He3
   
   pManager = G4He3::He3()->GetProcessManager();
-  G4MultipleScattering*        fHe3MultipleScattering  = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess*        fHe3MultipleScattering  = m_msFactory();
   G4hIonisation*               fHe3Ionisation= new  G4hIonisation();
   pManager->AddProcess(fHe3Ionisation, ordInActive, 2, 2);
   pManager->AddProcess(fHe3MultipleScattering);

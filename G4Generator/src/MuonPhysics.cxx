@@ -12,8 +12,9 @@
 #include "G4ios.hh"
 #include "g4std/iomanip"   
 
-MuonPhysics::MuonPhysics(const G4String& name)
-                   :  G4VPhysicsConstructor(name)
+MuonPhysics::MuonPhysics(const G4String& name, 
+                         Geant4::MultipleScatteringFactory& msfactory)
+                   :  G4VPhysicsConstructor(name), m_msFactory(msfactory)
 {
 }
 
@@ -56,7 +57,7 @@ void MuonPhysics::ConstructParticle()
 
 #include "G4ProcessManager.hh"
 
-#include "G4MultipleScattering.hh"
+//#include "G4MultipleScattering.hh"
 #include "G4MuBremsstrahlung.hh"
 #include "G4MuPairProduction.hh"
 #include "G4MuIonisation.hh"
@@ -75,7 +76,7 @@ void MuonPhysics::ConstructProcess()
 
   pManager = G4MuonPlus::MuonPlus()->GetProcessManager();
   
-  G4MultipleScattering*   fMuPlusMultipleScattering = new  G4MultipleScattering(); 
+  G4VContinuousDiscreteProcess*   fMuPlusMultipleScattering = m_msFactory(); 
   G4MuBremsstrahlung*     fMuPlusBremsstrahlung = new G4MuBremsstrahlung();
   G4MuPairProduction*     fMuPlusPairProduction = new G4MuPairProduction();
   G4MuIonisation*         fMuPlusIonisation = new G4MuIonisation();
@@ -91,7 +92,7 @@ void MuonPhysics::ConstructProcess()
 
   pManager = G4MuonMinus::MuonMinus()->GetProcessManager();
 
-  G4MultipleScattering*   fMuMinusMultipleScattering = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess*   fMuMinusMultipleScattering = m_msFactory();
   G4MuBremsstrahlung*     fMuMinusBremsstrahlung = new G4MuBremsstrahlung();
   G4MuPairProduction*     fMuMinusPairProduction = new G4MuPairProduction();
   G4MuIonisation*         fMuMinusIonisation = new  G4MuIonisation();
@@ -108,7 +109,7 @@ void MuonPhysics::ConstructProcess()
 
   pManager = G4TauPlus::TauPlus()->GetProcessManager();
 
-  G4MultipleScattering*   fTauPlusMultipleScattering = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess*   fTauPlusMultipleScattering = m_msFactory();
   G4hIonisation*          fTauPlusIonisation = new G4hIonisation();
   pManager->AddProcess(fTauPlusIonisation, ordInActive,2, 2);
   pManager->AddProcess(fTauPlusMultipleScattering);
@@ -119,7 +120,7 @@ void MuonPhysics::ConstructProcess()
 
   pManager = G4TauMinus::TauMinus()->GetProcessManager();
 
-  G4MultipleScattering*   fTauMinusMultipleScattering = new  G4MultipleScattering();
+  G4VContinuousDiscreteProcess*   fTauMinusMultipleScattering =  m_msFactory();
   G4hIonisation*          fTauMinusIonisation = new G4hIonisation();
   pManager->AddProcess(fTauMinusIonisation, ordInActive,2, 2);
   pManager->AddProcess(fTauMinusMultipleScattering);

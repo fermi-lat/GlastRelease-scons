@@ -71,7 +71,8 @@ RunManager::RunManager(std::ostream& log,
                        double defaultCalCutValue,
                        std::string& physics_choice, 
                        std::string& physics_table,
-                       std::string&  physics_dir)
+                       std::string&  physics_dir,
+                       Geant4::MultipleScatteringFactory& msfactory)
   :m_log(log),
    physicsList(NULL),
    userPrimaryGeneratorAction(NULL),
@@ -109,7 +110,7 @@ RunManager::RunManager(std::ostream& log,
   randomNumberStatusDir = "./";
 
   // The user stuff
-  physicsList = new PhysicsList(defaultCutValue, physics_choice, physics_table, physics_dir);
+  physicsList = new PhysicsList(defaultCutValue, physics_choice, physics_table, physics_dir, msfactory);
   userPrimaryGeneratorAction = new PrimaryGeneratorAction;
 }
 

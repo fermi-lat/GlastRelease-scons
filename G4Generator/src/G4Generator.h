@@ -77,6 +77,9 @@ class G4Generator : public Algorithm {
   std::string m_physics_table;
   std::string m_physics_dir;
 
+  /// if true, use Glast special version
+  BooleanProperty m_mscatOption;
+
 };
 
 #endif

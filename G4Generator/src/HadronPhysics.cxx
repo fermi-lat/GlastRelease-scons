@@ -15,8 +15,9 @@
 #include "G4ios.hh"
 #include "g4std/iomanip"   
 
-HadronPhysics::HadronPhysics(const G4String& name, std::string& physicsChoice)
-  :  G4VPhysicsConstructor(name),  m_physicsChoice(physicsChoice)
+HadronPhysics::HadronPhysics(const G4String& name, std::string& physicsChoice,
+                             Geant4::MultipleScatteringFactory& msFactory)
+  :  G4VPhysicsConstructor(name),  m_physicsChoice(physicsChoice), m_msFactory(msFactory)
 {
 }
 
@@ -53,7 +54,7 @@ void HadronPhysics::ConstructParticle()
 
 
 #include "G4ProcessManager.hh"
-#include "G4MultipleScattering.hh"
+//THB #include "G4MultipleScattering.hh"
 #include "G4hIonisation.hh"
 
 #include "G4HadronElasticProcess.hh"
@@ -171,7 +172,7 @@ void HadronPhysics::ConstructProcess()
   
   pManager = G4PionPlus::PionPlus()->GetProcessManager();
   
-  G4MultipleScattering* thePionPlusMult = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess* thePionPlusMult = m_msFactory();
   G4hIonisation* thePionPlusIonisation = new G4hIonisation();
   pManager->AddProcess(thePionPlusIonisation, ordInActive,2, 2);
   pManager->AddProcess(thePionPlusMult);
@@ -182,7 +183,7 @@ void HadronPhysics::ConstructProcess()
 
   pManager = G4PionMinus::PionMinus()->GetProcessManager();
 
-  G4MultipleScattering* thePionMinusMult = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess* thePionMinusMult = m_msFactory();
   G4hIonisation* thePionMinusIonisation =  new G4hIonisation();
   pManager->AddProcess(thePionMinusIonisation, ordInActive,2, 2);
   pManager->AddProcess(thePionMinusMult);
@@ -193,7 +194,7 @@ void HadronPhysics::ConstructProcess()
 
   pManager = G4KaonPlus::KaonPlus()->GetProcessManager();
 
-  G4MultipleScattering* theKaonPlusMult = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess* theKaonPlusMult = m_msFactory();
   G4hIonisation* theKaonPlusIonisation = new G4hIonisation();
   pManager->AddProcess(theKaonPlusIonisation, ordInActive,2, 2);
   pManager->AddProcess(theKaonPlusMult);
@@ -204,7 +205,7 @@ void HadronPhysics::ConstructProcess()
   
   pManager = G4KaonMinus::KaonMinus()->GetProcessManager();
   
-  G4MultipleScattering* theKaonMinusMult = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess* theKaonMinusMult = m_msFactory();
   G4hIonisation* theKaonMinusIonisation = new G4hIonisation(); 
   pManager->AddProcess(theKaonMinusIonisation, ordInActive,2, 2);
   pManager->AddProcess(theKaonMinusMult);
@@ -215,7 +216,7 @@ void HadronPhysics::ConstructProcess()
 
   pManager = G4Proton::Proton()->GetProcessManager();
 
-  G4MultipleScattering* theProtonMult = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess* theProtonMult = m_msFactory();
   G4hIonisation* theProtonIonisation = new G4hIonisation() ;
   pManager->AddProcess(theProtonIonisation, ordInActive,2, 2);
   pManager->AddProcess(theProtonMult);
@@ -226,7 +227,7 @@ void HadronPhysics::ConstructProcess()
   
   pManager = G4AntiProton::AntiProton()->GetProcessManager();
   
-  G4MultipleScattering* theAntiProtonMult = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess* theAntiProtonMult = m_msFactory();
   G4hIonisation* theAntiProtonIonisation = new G4hIonisation();
   G4AntiProtonAnnihilationAtRest*  theAntiProtonAnnihilation = new G4AntiProtonAnnihilationAtRest();
   pManager->AddProcess(theAntiProtonIonisation, ordInActive,2, 2);
@@ -246,7 +247,7 @@ void HadronPhysics::ConstructProcess()
   
   pManager = G4SigmaMinus::SigmaMinus()->GetProcessManager();
   
-  G4MultipleScattering* theSigmaMinusMult =  new G4MultipleScattering();
+  G4VContinuousDiscreteProcess* theSigmaMinusMult =  m_msFactory();
   G4hIonisation* theSigmaMinusIonisation = new G4hIonisation();
   pManager->AddProcess(theSigmaMinusIonisation, ordInActive,2, 2);
   pManager->AddProcess(theSigmaMinusMult);
@@ -258,7 +259,7 @@ void HadronPhysics::ConstructProcess()
   
   pManager = G4AntiSigmaMinus::AntiSigmaMinus()->GetProcessManager();
 
-  G4MultipleScattering* theAntiSigmaMinusMult = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess* theAntiSigmaMinusMult = m_msFactory();
   G4hIonisation* theAntiSigmaMinusIonisation = new G4hIonisation();
   pManager->AddProcess(theAntiSigmaMinusIonisation, ordInActive,2, 2);
   pManager->AddProcess(theAntiSigmaMinusMult);
@@ -269,7 +270,7 @@ void HadronPhysics::ConstructProcess()
   
   pManager = G4SigmaPlus::SigmaPlus()->GetProcessManager();
   
-  G4MultipleScattering* theSigmaPlusMult = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess* theSigmaPlusMult = m_msFactory();
   G4hIonisation* theSigmaPlusIonisation = new G4hIonisation();
   pManager->AddProcess(theSigmaPlusIonisation, ordInActive,2, 2);
   pManager->AddProcess(theSigmaPlusMult);
@@ -280,7 +281,7 @@ void HadronPhysics::ConstructProcess()
   
   pManager = G4AntiSigmaPlus::AntiSigmaPlus()->GetProcessManager();
 
-  G4MultipleScattering* theAntiSigmaPlusMult = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess* theAntiSigmaPlusMult = m_msFactory();
   G4hIonisation* theAntiSigmaPlusIonisation = new G4hIonisation();
   pManager->AddProcess(theAntiSigmaPlusIonisation, ordInActive,2, 2);
   pManager->AddProcess(theAntiSigmaPlusMult);
@@ -291,7 +292,7 @@ void HadronPhysics::ConstructProcess()
   
   pManager = G4XiMinus::XiMinus()->GetProcessManager();
   
-  G4MultipleScattering* theXiMinusMult = new G4MultipleScattering() ;
+  G4VContinuousDiscreteProcess* theXiMinusMult = m_msFactory() ;
   G4hIonisation* theXiMinusIonisation = new G4hIonisation();
   pManager->AddProcess(theXiMinusIonisation, ordInActive,2, 2);
   pManager->AddProcess(theXiMinusMult);
@@ -302,7 +303,7 @@ void HadronPhysics::ConstructProcess()
       
   pManager = G4AntiXiMinus::AntiXiMinus()->GetProcessManager();
 
-  G4MultipleScattering* theAntiXiMinusMult = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess* theAntiXiMinusMult = m_msFactory();
   G4hIonisation* theAntiXiMinusIonisation = new G4hIonisation();
   pManager->AddProcess(theAntiXiMinusIonisation, ordInActive,2, 2);
   pManager->AddProcess(theAntiXiMinusMult);
@@ -313,7 +314,7 @@ void HadronPhysics::ConstructProcess()
       
   pManager = G4OmegaMinus::OmegaMinus()->GetProcessManager();
   
-  G4MultipleScattering* theOmegaMinusMult = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess* theOmegaMinusMult = m_msFactory();
   G4hIonisation* theOmegaMinusIonisation = new G4hIonisation();
   pManager->AddProcess(theOmegaMinusIonisation, ordInActive,2, 2);
   pManager->AddProcess(theOmegaMinusMult);
@@ -324,7 +325,7 @@ void HadronPhysics::ConstructProcess()
       
   pManager = G4AntiOmegaMinus::AntiOmegaMinus()->GetProcessManager();
 
-  G4MultipleScattering* theAntiOmegaMinusMult = new G4MultipleScattering();
+  G4VContinuousDiscreteProcess* theAntiOmegaMinusMult = m_msFactory();
   G4hIonisation* theAntiOmegaMinusIonisation = new G4hIonisation();
   pManager->AddProcess(theAntiOmegaMinusIonisation, ordInActive,2, 2);
   pManager->AddProcess(theAntiOmegaMinusMult);
