@@ -109,7 +109,7 @@ RootTupleSvc::RootTupleSvc(const std::string& name,ISvcLocator* svc)
 : Service(name,svc), m_trials(0)
 {
     // declare the properties and set defaults
-    declareProperty("filename",  m_filename="glast.root");
+    declareProperty("filename",  m_filename="RootTupleSvc.root");
     declareProperty("treename", m_treename="1");
     declareProperty("title", m_title="Glast tuple");
     declareProperty("defaultStoreFlag", m_defaultStoreFlag=false);
