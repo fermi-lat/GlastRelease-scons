@@ -9,6 +9,7 @@
      use G4Generator         v4r1p1
      use GlastDigi           v4r1
      use CalDigi             v1r0p1
+     use digiRootData        v3r1p1
      use mcRootData          v2r2
 
 

@@ -63,7 +63,8 @@ use CalRecon    v5r1
 
 #ROOT persistence
 use mcRootData          v2r2
-use RootIo      v2r0p1
+use digiRootData        v3r1p1
+use RootIo              v3r1
 
 
 ### define a simple executable with GUI
