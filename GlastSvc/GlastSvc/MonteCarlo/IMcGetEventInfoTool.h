@@ -14,6 +14,7 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/MonteCarlo/McEventStructure.h"
 #include "Event/MonteCarlo/McRelTableDefs.h"
+#include "Event/Recon/TkrRecon/TkrCluster.h"
 
 static const InterfaceID IID_IMcGetEventInfoTool("IMcGetEventInfoTool", 2 , 0);
 
