@@ -1,0 +1,104 @@
+
+<source_library>
+   <!-- standard particle generater used as a default -->
+    <source name="default_test" flux="1.0">
+          <spectrum>
+              <particle name="gamma"> <energy e="0.1"/> </particle>
+               <direction/>
+          </spectrum>
+     </source>
+
+    <source name="gamma_pencil_test">
+       <spectrum> 
+         <particle name="gamma"><energy e="0.1"/> </particle>
+           <direction theta="0" phi="0" />
+           <launch_point />
+       </spectrum>
+     </source>
+
+    <source name="gamma_patch_test">
+       <spectrum> 
+         <particle name="gamma"><energy e="0.1"/> </particle>
+           <direction theta="0" phi="0" />
+           <patch />
+       </spectrum>
+     </source>
+
+	<source name="default2" flux="1.0">
+       <spectrum> 
+         <particle name="gamma"><energy e="0.1"/> </particle>
+           <direction theta="1.0" phi="1.0"/>
+           <launch_point />
+       </spectrum>
+     </source>
+
+
+     <!-- Test source at the galactic origin -->
+     <source name="galcenter" flux="1.0">
+          <spectrum>
+              <particle name="gamma"> <energy e="0.1"/> </particle>
+               <galactic_dir l="0" b="0"/>
+          </spectrum>
+     </source>
+
+
+    <source name="gamma_pencil">
+       <spectrum> 
+         <particle name="gamma"><energy e="0.1"/> </particle>
+           <direction theta="0" phi="0" />
+           <launch_point />
+       </spectrum>
+     </source>
+
+
+    <source name="gamma_patch">
+       <spectrum> 
+         <particle name="gamma"><energy e="0.1"/> </particle>
+           <direction theta="0" phi="0" />
+           <patch />
+       </spectrum>
+     </source>
+
+
+	
+	<!-- the CHIME spectrum at minimum flux. angular dependence and rate are from the CHIME spectrum object -->
+    <source name="chimemin" >
+        <spectrum> <SpectrumClass name="CHIMESpectrum" params="10.00, 144.37"/> <use_spectrum/> </spectrum>
+    </source>
+
+
+	<!-- the CHIME spectrum above Palestine, TX. angular dependence and rate are from the CHIME spectrum object -->
+    <source name="chimepal" >
+        <spectrum> <SpectrumClass name="CHIMESpectrum" params="31.8, 264.14"/> <use_spectrum/> </spectrum>
+    </source>
+
+	<!-- the albedo proton spectrum, measured by AMS, implemented by AlbedoPSpectrum. isotropic for now  -->
+    <source name="albedo_proton_min">
+         <spectrum> <SpectrumClass name="AlbedoPSpectrum" params="-20.923,185.25"/>  <solid_angle mincos="-1.0" maxcos="1.0"/>
+         </spectrum>
+    </source>
+
+
+	<!-- the albedo proton spectrum above palestine, TX, measured by AMS, implemented by AlbedoPSpectrum. isotropic for now  -->
+    <source name="albedo_proton_pal">
+         <spectrum> <SpectrumClass name="AlbedoPSpectrum" params="31.8,264.14"/>  <solid_angle mincos="-1.0" maxcos="1.0"/>
+         </spectrum>
+    </source>
+
+
+    <!-- background mixture 3 - at Palestine-->
+    <source name="backgndpal">
+        <nestedSource sourceRef="chimepal"/>
+        <nestedSource sourceRef="albedo_proton_pal"/>
+    </source>
+
+
+	<!-- background mixture 5 - minimums-->
+    <source name="backgndmin">
+        <nestedSource sourceRef="chimemin"/>
+        <nestedSource sourceRef="albedo_proton_min"/>
+    </source>
+
+
+
+</source_library>

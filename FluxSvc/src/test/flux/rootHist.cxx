@@ -1,0 +1,56 @@
+//  class rootHist
+//  Author:  Theodore Hierath
+//  This class contains a basic histogram function
+//  The bins are numbered from 0 to number of bins - 1;
+
+#include <iostream>
+#include "rootHist.h"
+
+// Specify the number of bins for the histogram
+rootHist::rootHist(int bins) : num_bins(bins)
+{
+   if(bins <= 0)
+   {
+      std::cerr << "ERROR in constructor for roothist:\n" 
+                   "   The total number of bins must be greater than zero."
+                << std::endl;
+      exit(0);
+   }
+
+   hist = new double[num_bins];
+   for (int i = 0; i < num_bins; i++) hist[i] = 0;
+}
+
+rootHist::~rootHist(void)
+{
+   delete [] hist;
+   hist = NULL;
+}
+
+rootHist::rootHist(const rootHist &oldHist) : num_bins(oldHist.num_bins)
+{
+   hist = new double[num_bins];
+   for (int i = 0; i < num_bins; i++) hist[i] = oldHist.hist[i];
+}
+
+// Update a specific bin by replacing its contents
+void rootHist::updateBin(int binNumber, double data)
+{
+   if(binNumber < 0 || binNumber >= num_bins)
+   {
+      std::cerr << "Error:  bin number is out of range" << std::endl;
+      exit(0);
+   }
+   hist[binNumber] = data;
+}
+
+// Retrieve the contents of a bin
+double rootHist::retrieveBin(int binNumber)
+{
+   if(binNumber < 0 || binNumber >= num_bins)
+   {
+      std::cerr << "Error:  bin number is out of range" << std::endl;
+      exit(0);
+   }
+   return hist[binNumber];
+}

@@ -21,7 +21,7 @@
 
 #include "Flux.h"
 
-#include "flux/FluxMgr.h"
+#include "FluxSvc/FluxMgr.h"
 #include <algorithm>
 
 // declare the service factories for the FluxSvc
@@ -148,3 +148,6 @@ HepRandomEngine* FluxSvc::getEngine()
 void FluxSvc::pass ( double t){
 m_fluxMgr->pass(t);
 }
+
+void WARNING (const char * text ){  std::cerr << "WARNING: " << text << '\n';}
+void FATAL(const char* s){std::cerr << "\nERROR: "<< s;}
