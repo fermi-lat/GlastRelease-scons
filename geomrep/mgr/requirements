@@ -1,6 +1,6 @@
 package geomrep
 
-version v3r2
+version v4
 #$Header$
 
 use geometry 
@@ -8,7 +8,6 @@ use gui
 
 use GlastPolicy
 
-ignore_pattern include_none
 apply_pattern package_include
 apply_pattern package_linkopts
 apply_pattern package_headers
