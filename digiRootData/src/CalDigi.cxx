@@ -50,10 +50,10 @@ const CalXtalReadout* CalDigi::addReadout(Char_t rangeP, UShort_t adcP, Char_t r
     // Add a new CalXtalReadout entry, note that
     // TClonesArrays can only be filled via
     // a new with placement call
-    ++m_numXtals;
+    //++m_numXtals;
     TClonesArray &xtals = *m_readoutCol;
     new(xtals[m_numXtals]) CalXtalReadout(rangeP, adcP, rangeM, adcM);
-    return ((CalXtalReadout*)(xtals[m_numXtals]));
+    return ((CalXtalReadout*)(xtals[m_numXtals++]));
 } 
 
 Char_t CalDigi::getRange(short readoutIndex, CalXtalId::XtalFace face) const
