@@ -523,6 +523,7 @@ int checkTkrVertex(const TkrVertex* vertex, UInt_t ievent, UInt_t ivertex) {
     (!floatInRange(params.getXSlope(), f*f) ) ){
         std::cout << "Vertex X Param wrong: (" << params.getXPos() << ","
             << params.getXSlope() << ")" << std::endl;
+        std::cout << "f = " << f << " f*f = " << f*f << std::endl;
         return -1;
     }
     
@@ -533,23 +534,41 @@ int checkTkrVertex(const TkrVertex* vertex, UInt_t ievent, UInt_t ivertex) {
         return -1;
     }
 
-
     TkrCovMat mat = vertex->getTrackCov();
-    if ( (!floatInRange(mat.getCovX0X0(), f) )||
-        (!floatInRange(mat.getCovSxSx(), f*2.) )||
-        (!floatInRange(mat.getCovX0Sx(), f*3.) ) ) {
-        std::cout << "Vertex matrix x vals are wrong: " << mat.getCovX0X0() << " "
-            << mat.getCovSxSx() << " " << mat.getCovX0Sx() << std::endl;
+    if ( (!floatInRange(mat.getCovX0X0(), f) ) ||
+        (!floatInRange(mat.getCovX0Sx(), f*2.) ) ||
+        (!floatInRange(mat.getCovX0Y0(), f*3.) ) || 
+        (!floatInRange(mat.getCovX0Sy(), f*4.)) ) {
+        std::cout << "Vertex matrix row 0 vals are wrong: " << mat.getCovX0X0() << " "
+            << mat.getCovX0Sx() << " " << mat.getCovX0Y0() << " " << mat.getCovX0Sy() << std::endl;
         return -1;
     }
 
-    if ( (!floatInRange(mat.getCovY0Y0(), f*4.) ) ||
-        (!floatInRange(mat.getCovSySy(), f*5.) ) ||
-        (!floatInRange(mat.getCovY0Sy(), f*6.) ) ) {
-        std::cout << "Vertex matrix y vals are wrong: " << mat.getCovY0Y0() << " "
-            << mat.getCovY0Sy() << " " << mat.getCovSySy() << std::endl;
+    if ( (!floatInRange(mat.getCovSxX0(), f*5.)) ||
+        (!floatInRange(mat.getCovSxSx(), f*6.))  ||
+        (!floatInRange(mat.getCovSxY0(), f*7.)) || 
+        (!floatInRange(mat.getCovSxSy(), f*8.)) ) {
+        std::cout << "Vertex matrix row 1 vals are wrong: " << mat.getCovSxX0() << " "
+            << mat.getCovSxSx() << " " << mat.getCovSxY0() << " " << mat.getCovSxSy() << std::endl;
         return -1;
+    }
 
+    if ( (!floatInRange(mat.getCovY0X0(), f*9.)) ||
+        (!floatInRange(mat.getCovY0Sx(), f*10.)) ||
+        (!floatInRange(mat.getCovY0Y0(), f*11.)) || 
+        (!floatInRange(mat.getCovY0Sy(), f*12.)) ) {
+        std::cout << "Vertex matrix row 2 vals are wrong: " << mat.getCovY0X0() << " "
+            << mat.getCovY0Sx() << " " << mat.getCovY0Y0() << " " << mat.getCovY0Sy() << std::endl;
+        return -1;
+    }
+
+    if ( (!floatInRange(mat.getCovSyX0(), f*13.)) ||
+        (!floatInRange(mat.getCovSySx(), f*14.))  ||
+        (!floatInRange(mat.getCovSyY0(), f*15.))  || 
+        (!floatInRange(mat.getCovSySy(), f*16.)) ) {
+        std::cout << "Vertex matrix row 3 vals are wrong: " << mat.getCovSyX0() << " "
+            << mat.getCovSySx() << " " << mat.getCovSyY0() << " " << mat.getCovSySy() << std::endl;
+        return -1;
     }
 
 
@@ -926,13 +945,24 @@ int write(char* fileName, int numEvents) {
             vtxPar.initialize(ax, sx, ay, sy);
             
             TkrCovMat vtxCov;
-            Double_t a = f;
-            Double_t b = f*2.;
-            Double_t c = f*3.;
-            Double_t d = f*4.;
-            Double_t e = f*5.;
-            Double_t g = f*6.;
-            vtxCov.initialize(a, b, c, d, e, g);
+            Double_t a_00 = f;
+            Double_t a_01 = f*2.;
+            Double_t a_02 = f*3.;
+            Double_t a_03 = f*4.;
+            Double_t a_10 = f*5.;
+            Double_t a_11 = f*6.;
+            Double_t a_12 = f*7.;
+            Double_t a_13 = f*8.;
+            Double_t a_20 = f*9.;
+            Double_t a_21 = f*10.;
+            Double_t a_22 = f*11.;
+            Double_t a_23 = f*12.;
+            Double_t a_30 = f*13.;
+            Double_t a_31 = f*14.;
+            Double_t a_32 = f*15.;
+            Double_t a_33 = f*16.;
+            vtxCov.initialize(a_00, a_01, a_02, a_03, a_10, a_11, a_12, a_13,
+                a_20, a_21, a_22, a_23, a_30, a_31, a_32, a_33);
 
             TVector3 pos(f, f*randNum, f*randNum*2.);
             TVector3 dir(randNum*2., randNum*3., randNum*4.);

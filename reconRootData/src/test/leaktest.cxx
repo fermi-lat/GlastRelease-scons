@@ -164,13 +164,24 @@
             vtxPar.initialize(ax, sx, ay, sy);
             
             TkrCovMat vtxCov;
-            Double_t a = f;
-            Double_t b = f*2.;
-            Double_t c = f*3.;
-            Double_t d = f*4.;
-            Double_t e = f*5.;
-            Double_t g = f*6.;
-            vtxCov.initialize(a, b, c, d, e, g);
+            Double_t a_00 = f;
+            Double_t a_01 = f*2.;
+            Double_t a_02 = f*3.;
+            Double_t a_03 = f*4.;
+            Double_t a_10 = f*5.;
+            Double_t a_11 = f*6.;
+            Double_t a_12 = f*7.;
+            Double_t a_13 = f*8.;
+            Double_t a_20 = f*9.;
+            Double_t a_21 = f*10.;
+            Double_t a_22 = f*11.;
+            Double_t a_23 = f*12.;
+            Double_t a_30 = f*13.;
+            Double_t a_31 = f*14.;
+            Double_t a_32 = f*15.;
+            Double_t a_33 = f*16.;
+            vtxCov.initialize(a_00, a_01, a_02, a_03, a_10, a_11, a_12, a_13,
+                a_20, a_21, a_22, a_23, a_30, a_31, a_32, a_33);
 
             TVector3 pos(f, f*randNum, f*randNum*2.);
             TVector3 dir(randNum*2., randNum*3., randNum*4.);
