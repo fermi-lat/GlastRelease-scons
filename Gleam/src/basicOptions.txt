@@ -71,7 +71,9 @@ ApplicationMgr.ExtSvc += { "GlastRandomSvc"};
 ApplicationMgr.DLLs +={ "G4Generator","G4Propagator"};
 ApplicationMgr.ExtSvc += {"G4GeometrySvc"};
 Generator.Members = {"FluxAlg", "G4Generator"};
-G4Generator.defaultCutValue=0.7; // instead of 0.1 default
+G4Generator.defaultCutValue=0.7; 
+G4Generator.defaultTkrCutValue=0.1;
+G4Generator.defaultCalCutValue=0.7;
 
 #include "$FLUXSVCROOT/src/defaultOptions.txt"
 
