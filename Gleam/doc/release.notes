@@ -2,6 +2,17 @@
  * package Gleam
  * package manager:T.Burnett
 
+* v2r1p9 10-jun-02 THB remove some gcc warnings (or errors?)
+     use idents              v2r8p1
+     use detModel            v2r12
+     use Event               v8r7p2
+     use GlastSvc            v8r1p2
+     use G4Generator         v4r1p4
+     use RootIo              v4r3p1
+     use Trigger             v3r3p3
+     use merit               v5r4
+
+
 * v2r1p8 05-jun-02 THB  many changes resulting from collection mods
      use GlastPolicy            v4r5 
      use Event                  v8r7p1
