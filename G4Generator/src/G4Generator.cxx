@@ -218,12 +218,14 @@ StatusCode G4Generator::execute()
     ke = ke*1000;
   } else {
     // yes: get it from the TDS
+      assert(pcol->size()==1); // something wrong: must be only one
     mc::McParticle* primary = pcol->front();
     mc::McParticle::StdHepId hepid= primary->particleProperty();
     ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
     name = ppty->particle(); 
     const HepLorentzVector& pfinal = primary->finalFourMomentum();
     dir=    pfinal.vect().unit();
+    p =   primary->finalPosition();
 
     // note possibility of truncation error here! especially with MeV.
     ke =   pfinal.e() - pfinal.m(); 
