@@ -84,7 +84,7 @@ public:
     
     /// writes out the information of the cluster if msglevel is set to debug
     void writeOut(MsgStream& log) const;
-/// Why protected???    
+	/// Why protected???    
 protected:
     
     /// initializes the member variables of the cluster (to illegal values!) Why do we need this?
