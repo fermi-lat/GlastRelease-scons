@@ -141,7 +141,7 @@ StatusCode FluxTestAlg::execute() {
             log << MSG::ERROR << "Couldn't find the ParticlePropertySvc!" << endreq;
             return StatusCode::FAILURE;
         }
-        partName = m_partSvc->find(pID)->particle();
+        partName = m_partSvc->findByStdHepID(pID)->particle();
     }   
    
     log << MSG::INFO << partName
