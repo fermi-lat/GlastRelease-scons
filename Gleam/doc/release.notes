@@ -1,6 +1,15 @@
 /** @file release.notes
  * package Gleam
  * package manager:T.Burnett
+ *
+ * v2r1p3 23-may-02 THB AcdDigi split; have reconRootData!
+      use Event                 v8r5p1
+      use GlastDigi             v4r2
+      use AcdDigi               v0r1
+      use digiRootData         v3r2
+      use reconRootData        v3r0p1
+      use RootIo               v4r1p0
+
 
  * v2r1p2 21-may-02 THB
      use FluxSvc             v5r6p2
