@@ -30,6 +30,7 @@ public:
     : m_glastEvtSel(glastEvtSel){
 	  m_inputDataIt =  inpIt;
 	  m_recId = recId;
+          m_evtCount = 0;
   }
   virtual ~GlastEvtIterator() { }
   virtual IOpaqueAddress* operator*() const  { return m_glastEvtSel->reference(*this);}
@@ -46,11 +47,12 @@ public:
     const GlastEvtIterator* glastIt = dynamic_cast<const GlastEvtIterator*>(&it);
     return((m_recId != glastIt->m_recId));
   }
-
+  void setFileNameIterator(std::list<std::string>::const_iterator inpIt) { m_inputDataIt = inpIt; }
 private:
   const IEvtSelector*   m_glastEvtSel;
   int                   m_recId;
   std::list<std::string>::const_iterator  m_inputDataIt;
+  int                   m_evtCount;
 
 };
 

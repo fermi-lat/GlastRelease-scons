@@ -36,9 +36,14 @@ class IDataProviderSvc;
 // Event Selector 
 //--------------------------------------------------------------------
 
-/*! Select events for Glast I/O.
- * Copied from SicBEvent.
-
+/*! GlastEventSelector performes the function of controlling the 
+    ApplicationMgr loop. Upgraded on (02/28/2001) to be more general
+    then just handeling the IRF input. The input property can now be set 
+    to NONE and the loop will run until it hits EvtMax. A new class
+    variable was added m_evtMax which is a local copy of the AppMgrs 
+    property. You can change the number of events run my changing the
+    the EvtMax property of this Svc. Examples of how to do this can be
+    found in the GuiSvc.
 */
 class GlastEventSelector : virtual public Service, 
                       virtual public IEvtSelector,
@@ -47,6 +52,8 @@ public:
   static IService* createClassObject( const std::string& svcname, ISvcLocator* svcloc );
   // IEvtSelector implementation
   virtual StatusCode initialize();
+  
+  //! The string from Input parameter gets passed in here
   virtual StatusCode setCriteria( const std::string& criteria );
   virtual StatusCode setCriteria( const SelectionCriteria& criteria ); 
 
@@ -55,10 +62,6 @@ public:
   virtual IEvtSelector::Iterator& next(IEvtSelector::Iterator& it) const;
   virtual IEvtSelector::Iterator& previous(IEvtSelector::Iterator& it) const; 
   IOpaqueAddress* reference(const IEvtSelector::Iterator& it) const;
-
-  // IProperty implementation
-   //virtual StatusCode setProperty(const Property& property);
-   //virtual StatusCode getProperty( Property* property ) const;
 
   // IInterface implementation
   virtual StatusCode queryInterface(const IID& riid, void** ppvInterface);
@@ -69,20 +72,30 @@ public:
 
 private:
   // New types
-  enum    CriteriaType { IRFFILE };
+  enum    CriteriaType { 
+      IRFFILE, //When the input is a IRF file
+      NONE     //When there is no input
+  };
+
   typedef std::list<std::string>   ListName;
   
-
+  //! Used internally to get the MaxEvent from the ApplicationMgr
+  StatusCode GlastEventSelector::getMaxEvent();
+  //! Parses out single environment variables and well as multiple files
   StatusCode GlastEventSelector::parseStringInList(const std::string& namelist, ListName* flist );
+  //! Takes a null string and sticks into it the current file name being worked on.
   StatusCode GlastEventSelector::getFileName(ListName::const_iterator* inputIt, std::string& fName) const;
 
-  std::string                 m_criteria;
-  std::string                 m_jobInput;
-  CriteriaType                m_criteriaType;
-  GlastEvtIterator            m_evtEnd;
-  ListName*                   m_inputDataList;
-  IGlastDetSvc*       m_detSvc;
-  IDataProviderSvc* m_eventDataSvc;         // Reference to the Event Data Service
+  std::string           m_criteria;
+  std::string           m_jobInput;
+  CriteriaType          m_criteriaType;
+  GlastEvtIterator      m_evtEnd;
+  ListName*             m_inputDataList;
+  IGlastDetSvc*         m_detSvc;
+  IDataProviderSvc*     m_eventDataSvc;
+  GlastEvtIterator*     m_it; 
+  int                   m_evtMax;
+  
 
 };
 

@@ -1,13 +1,9 @@
 // $Header$
-//====================================================================
+//
+//
 //  GlastEventSelector.cpp
-//--------------------------------------------------------------------
-//
-//  Package    : GlastEventSelector  (The Glast IRF Event Selector Package)
 //
 //
-//====================================================================
-
 // Include files
 #include "GlastEventSelector.h"
 
@@ -18,6 +14,7 @@
 #include "Gaudi/Kernel/AddrFactory.h"
 
 #include "Gaudi/Interfaces/IDataProviderSvc.h"
+#include "Gaudi/JobOptionsSvc/Property.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "instrument/DetectorConverter.h"
@@ -58,7 +55,7 @@ StatusCode GlastEventSelector::initialize()     {
 	//StatusCode sc;
 	sc = serviceLocator()->getService( "EventDataSvc", IID_IDataProviderSvc, (IInterface*&)m_eventDataSvc );
 	if( sc.isFailure() ) {
-		log << MSG::ERROR << "Unable to locate service " << "EventDataSvc" << endreq;    
+		log << MSG::ERROR << "Unable to locate service " << "EventDataSvc" << endreq;
 	}
 
 
@@ -72,8 +69,14 @@ GlastEventSelector::GlastEventSelector( const std::string& name, ISvcLocator* sv
 {
     //declareProperty( "JobInput", m_jobInput=" ");
     declareProperty( "Input", m_jobInput=" ");
+    declareProperty( "EvtMax", m_evtMax);
     m_inputDataList = new ListName; 
+    m_it = new GlastEvtIterator(this, -1, m_inputDataList->begin());
     // GlastEvtIterator m_evtEnd(this, -1, m_inputDataList->end());
+
+    //Here we get the maxEvt number from the aplication mgr property;
+    //Sets the environment variable m_evtMax;
+    getMaxEvent();
 }
 
 
@@ -98,18 +101,30 @@ StatusCode GlastEventSelector::setCriteria( const std::string& criteria ) {
     rest      = rest.substr(ipos, -1);            // remove blanks before
     int lpos  = rest.find_first_of(' ');          // locate next blank
     type      = rest.substr(0,lpos );
-    rest      = rest.substr(lpos, -1);
+    
+
     if( type == "IRFFILE" ) {
+        rest      = rest.substr(lpos, -1);
         m_criteriaType = IRFFILE;
-    } else {
+        sc = parseStringInList(rest, m_inputDataList);
+
+        //We need the method below because the m_it is created in the
+        //constructor and we need to move the data string iterator to
+        //point to the new first string
+        m_it->setFileNameIterator(m_inputDataList->begin());
+    }else if( type == "NONE"){
+        m_criteriaType = NONE;
+        log << MSG::INFO << "GlastEventSelector input has been set to NONE" << endreq;
+    }
+    else {
         log << MSG::ERROR << "Invalid Event Selection Criteria: " << criteria << endreq;
         return StatusCode::FAILURE;
     }
-    sc = parseStringInList(rest, m_inputDataList);
     if( sc.isFailure() ) {
         log << MSG::ERROR << "Invalid Event Selection Criteria: " << criteria << endreq;
         return sc;
     }
+
     sc = serviceLocator()->getService ("GlastDetSvc",
          IID_IGlastDetSvc, reinterpret_cast<IInterface*&>( m_detSvc ));
     
@@ -124,40 +139,47 @@ StatusCode GlastEventSelector::setCriteria( const std::string& criteria ) {
 
 // Parse criteria string: Fill in the list of input files or Job Id's
 // Also parse out an environment variable and sustitute for it.
+
 StatusCode GlastEventSelector::parseStringInList( const std::string& namelist, ListName* inputDataList ) {
-    std::string rest = namelist;
-    std::string substitute;
-    while(true) {
-        int ipos = rest.find_first_not_of(" ,");
-        if (ipos == -1 ) break;
-        rest = rest.substr(ipos, -1);            // remove blanks before
-        int lpos  = rest.find_first_of(" ,");    // locate next blank
-        if (lpos == -1 ) {
-            rest = rest.substr(0,lpos );
 
-            //now pull out and substitute for environment vaiables
-            int envStart = rest.find_first_of("$(");
-            int envEnd = rest.find_first_of(")");
+    if(m_criteriaType != NONE)
+    {
+        std::string rest = namelist;
+        std::string substitute;
+        while(true) {
+            int ipos = rest.find_first_not_of(" ,");
+            if (ipos == -1 ) break;
+            rest = rest.substr(ipos, -1);            // remove blanks before
+            int lpos  = rest.find_first_of(" ,");    // locate next blank
+            if (lpos == -1 ) {
+                rest = rest.substr(0,lpos );
+
+                //now pull out and substitute for environment vaiables
+                int envStart = rest.find_first_of("$(");
+                int envEnd = rest.find_first_of(")");
             
-            // add 2 characters to get rid of $(
-            int afterBracket = envStart + 2;
+                // add 2 characters to get rid of $(
+                int afterBracket = envStart + 2;
             
-            if(!((envStart==-1)||(envEnd==-1)))
-            {
-                std::string envVariable = rest.substr(afterBracket,(envEnd-afterBracket));
-                const char * instruPath = ::getenv(envVariable.data());
-                substitute = rest.replace(envStart,(envEnd+1), instruPath);
-                inputDataList->push_back(substitute);       // insert last item in list and
-                break;
+                if(!((envStart==-1)||(envEnd==-1)))
+                {
+                    std::string envVariable = rest.substr(afterBracket,(envEnd-afterBracket));
+                    const char * instruPath = ::getenv(envVariable.data());
+                    substitute = rest.replace(envStart,(envEnd+1), instruPath);
+                    inputDataList->push_back(substitute);       // insert last item in list and
+                    break;
+                }
+                inputDataList->push_back(rest);    
+                break;                                 
             }
-            inputDataList->push_back(rest);      
-            break;                                 
+            inputDataList->push_back( rest.substr(0,lpos ));   // insert in list
+            rest = rest.substr(lpos, -1);                      // get the rest
         }
-        inputDataList->push_back( rest.substr(0,lpos ));   // insert in list
-        rest = rest.substr(lpos, -1);                      // get the rest
-    }
 
-    return StatusCode::SUCCESS;
+        return StatusCode::SUCCESS;
+    } else {
+        return StatusCode::FAILURE;
+    }
 }
 
 // IEvtSelector::setCriteria
@@ -166,6 +188,23 @@ StatusCode GlastEventSelector::setCriteria( const SelectionCriteria& criteria ) 
 }
 
 
+//  Find out the name of the file from list of files or Jobs.
+StatusCode GlastEventSelector::getFileName(ListName::const_iterator* inputIt, std::string& fName) const {
+    MsgStream log(messageService(), name());
+
+    if( m_criteriaType == IRFFILE){                 // If CRITERIA = FILE Get File name
+        fName = **inputIt;
+    } else if(m_criteriaType == NONE)  {
+        log << MSG::ERROR << "Selection Criteria set to NONE can't get file Name" << endreq;
+        return StatusCode::FAILURE;
+    } else {
+        log << MSG::ERROR << "Wrong Selection Criteria, either NONE or IRFFILE" << endreq;
+        return StatusCode::FAILURE;
+    }
+
+    return StatusCode::SUCCESS;
+}
+
 
 // IEvtSelector::begin()
 // Event Selector Iterator begin
@@ -173,53 +212,40 @@ StatusCode GlastEventSelector::setCriteria( const SelectionCriteria& criteria ) 
 IEvtSelector::Iterator* GlastEventSelector::begin() const {
     MsgStream log(messageService(), name());
     StatusCode sc;
-    // Ian Note Here is the problem I need to step through right here
-    GlastEvtIterator* it = new GlastEvtIterator(this, -1, m_inputDataList->begin());
+
+
+    if(m_criteriaType == IRFFILE){
     
-    if( (it->m_inputDataIt) ==  m_inputDataList->end()) { 
-        return it;                               // If no data available  return begin = end
-    }
-    log << MSG::DEBUG << " First input data set is " << *(it->m_inputDataIt) << endreq;
-    it->m_recId = 0;                            // If data file is found Initialize record iterator
+        if( (m_it->m_inputDataIt) ==  m_inputDataList->end()) { 
+            return m_it;                               // If no data available  return begin = end
+        }
+        log << MSG::DEBUG << " First input data set is " << *(m_it->m_inputDataIt) << endreq;
+        m_it->m_recId = 0;                            // If data file is found Initialize record iterator
     
-    std::string fName;
-    sc = getFileName(&(it->m_inputDataIt), fName);
+        std::string fName;
+        sc = getFileName(&(m_it->m_inputDataIt), fName);
         
-    // assumes GlastDetectors have been init. Open for read
-    //it->m_inputFile = new ResponseFile (fName.c_str(), true);
-//	fName = "D:\\Gaudi2\\GlastSvc\\v1\\src\\test\\muontest.irf";//Ian Note
-    sc = m_detSvc->openIRF(fName);
-    if(sc.isFailure()){
-        *(it) = m_evtEnd; 
-        log << MSG::INFO << "failed to open file " << fName << endreq;
-        return it;
-    }
+        // assumes GlastDetectors have been init. Open for read
+        //it->m_inputFile = new ResponseFile (fName.c_str(), true);
+        sc = m_detSvc->openIRF(fName);
+        if(sc.isFailure()){
+            *(m_it) = m_evtEnd; 
+            log << MSG::INFO << "failed to open file " << fName << endreq;
+            return m_it;
+        }
 
     
-    (*it)++;  // increment to the first event
+        (*m_it)++;  // increment to the first event
     
-    return it;
-}
-
-//  Find out the name of the file from list of files or Jobs.
-StatusCode GlastEventSelector::getFileName(ListName::const_iterator* inputIt, std::string& fName) const {
-    
-    MsgStream log(messageService(), name());
-    if( m_criteriaType == IRFFILE){                 // If CRITERIA = FILE Get File name
-        fName = **inputIt;
-    } else {
-        log << MSG::ERROR << " Wrong Event selector Criteria " << endreq;
-        return StatusCode::FAILURE;
-    }
-    return StatusCode::SUCCESS;
-}
-
-
-// IEvtSelector::end()
-// Event Selector Iterator end() function
-IEvtSelector::Iterator* GlastEventSelector::end() const {
-    IEvtSelector::Iterator* it = (IEvtSelector::Iterator*)(&m_evtEnd);
-    return it; 
+        return m_it;
+    } else if(m_criteriaType == NONE)
+    {
+        log << MSG::DEBUG << "Using Simple counter GlastEventSelector" << endreq;
+        log << MSG::INFO << "No input file selected for GlastEventSelector" << endreq;
+        (*m_it)++;
+        return m_it;
+    } 
+    return 0;
 }
 
 
@@ -228,23 +254,63 @@ IEvtSelector::Iterator* GlastEventSelector::end() const {
 // Event Selector iterator next(it)
 IEvtSelector::Iterator& GlastEventSelector::next(IEvtSelector::Iterator& it) const {
     MsgStream log(messageService(), name());
-    GlastEvtIterator* irfIt = dynamic_cast<GlastEvtIterator*>(&it);
-    (irfIt->m_recId)++;
-    log << MSG::DEBUG << "Reading Event " <<  irfIt->m_recId << endreq;
+
+    if(m_criteriaType == IRFFILE)
+    {
+        GlastEvtIterator* irfIt = dynamic_cast<GlastEvtIterator*>(&it);
+        
+        log << MSG::DEBUG << "Reading Event " <<  irfIt->m_recId << endreq;
     
-    // causes data from the current event in the IRF file to be loaded into the GlastDetector
-    // objects
-    StatusCode sc = m_detSvc->readIRF();// Ian Note: This is where the events are read in.
 
-    if (sc.isFailure()){
-        log << MSG::ERROR << " Failed to get Event " << irfIt->m_recId << endreq;
-        log << MSG::ERROR << "The job will STOP normally after reading : " 
-            << --(irfIt->m_recId) << " Events" << endreq;
-        *(irfIt) = m_evtEnd;
+        irfIt->m_evtCount++;
+
+        // causes data from the current event in the IRF file to be loaded into the GlastDetector
+        // objects
+        StatusCode sc = m_detSvc->readIRF();// Ian Note: This is where the events are read in.
+
+        if (sc.isFailure()){
+            log << MSG::ERROR << " Failed to get Event " << irfIt->m_recId << endreq;
+            log << MSG::ERROR << "The job will STOP normally after reading : " 
+                << --(irfIt->m_recId) << " Events" << endreq;
+            *(irfIt) = m_evtEnd;
+        }
+        
+        if(irfIt->m_evtCount > m_evtMax) {
+            *(irfIt) = m_evtEnd;
+            log << MSG::INFO << "Stoping loop at user maxEvent Request" << endreq;
+        }
+
+        return *irfIt;
+    } 
+    else if( m_criteriaType == NONE)
+    {
+        GlastEvtIterator* simpleIt = dynamic_cast<GlastEvtIterator*>(&it);
+        //TODO: What the hell this really does?
+        (simpleIt->m_recId)++;
+        log << MSG::DEBUG << "Reading Event " <<  simpleIt->m_evtCount << endreq;
+        simpleIt->m_evtCount++;
+
+        //If we go over the count set equal to the end
+        if(simpleIt->m_evtCount > m_evtMax) {
+            *(simpleIt) = m_evtEnd;
+        }
+        return *simpleIt;
+    } else {
+        //We are going to blow up if this situation happens
+        //TODO: Error needs to be handled better
+        log << MSG::FATAL << "Cannot iterate a dead iterator" << endreq;
+        return it;
     }
-
-    return *irfIt;
 }
+
+// IEvtSelector::end()
+// Event Selector Iterator end() function
+IEvtSelector::Iterator* GlastEventSelector::end() const {
+    IEvtSelector::Iterator* it = (IEvtSelector::Iterator*)(&m_evtEnd);
+    return it;
+
+}
+
 // IEvtSelector::previous
 IEvtSelector::Iterator& GlastEventSelector::previous(IEvtSelector::Iterator& it) const {
     MsgStream log(msgSvc(), name());
@@ -254,14 +320,14 @@ IEvtSelector::Iterator& GlastEventSelector::previous(IEvtSelector::Iterator& it)
 }
 
 
-//  IEvtSelector::reference
 
 /*! Called from ApplicationMgr_i::nextEvent()       
-Create root address and assign address to data service
-IOpaqueAddress* addr = **m_evtIterator;
+    Create root address and assign address to data service
+    IOpaqueAddress* addr = **m_evtIterator;
 */
 IOpaqueAddress* GlastEventSelector::reference(const IEvtSelector::Iterator& it) const 
 {
+    //TODO: understand what I need to do to in the simple case
     MsgStream log(msgSvc(), name());
     
     // convert to our iterator
@@ -279,15 +345,6 @@ IOpaqueAddress* GlastEventSelector::reference(const IEvtSelector::Iterator& it) 
     return addr;
 }
 
-// IProperty::setProperty
-//StatusCode GlastEventSelector::setProperty(const Property& property) {
-//    return StatusCode::SUCCESS;
-//}
-
-// IProperty::getProperty
-//StatusCode GlastEventSelector::getProperty(Property* property) const {
-//    return StatusCode::SUCCESS;
-//}
 
 // IInterface::queryInterface
 StatusCode GlastEventSelector::queryInterface(const IID& riid, void** ppvInterface)  {
@@ -304,4 +361,25 @@ StatusCode GlastEventSelector::queryInterface(const IID& riid, void** ppvInterfa
     return SUCCESS;
 }
 
+
+
+StatusCode GlastEventSelector::getMaxEvent()
+{
+    IProperty* appPropMgr=0;
+    StatusCode status = 
+        serviceLocator()->getService("ApplicationMgr", IID_IProperty,
+                         reinterpret_cast<IInterface*&>( appPropMgr ));
+    if( status.isFailure() ) return status;
+      
+    IntegerProperty evtMax("EvtMax",0);
+    status = appPropMgr->getProperty( &evtMax );
+    if (status.isFailure()) return status;
+
+    int max_event = evtMax.value();
+
+    status = appPropMgr->setProperty( evtMax );
+    appPropMgr->release();
+    m_evtMax = max_event;
+    return status;
+}
 
