@@ -11,8 +11,10 @@
 #include "G4SDManager.hh"
 #include "G4RunManager.hh"
 #include "globals.hh"
+#ifndef WIN32  // THB: not in our distribution
 #include "G4VisAttributes.hh"
 #include "G4Colour.hh"
+#endif
 #include "G4VSensitiveDetector.hh"
 #include "G4Transform3D.hh"
 #include "G4RotationMatrix.hh"
@@ -39,8 +41,8 @@
 
 G4SectionsVisitor::G4SectionsVisitor()
 {
-  typedef std::map<string,float>M1;
-  typedef std::map<string,detModel::Material*>M2;
+    typedef std::map<std::string,float>M1;
+    typedef std::map<std::string,detModel::Material*>M2;
   
   M2::const_iterator k;
 
@@ -91,8 +93,9 @@ void  G4SectionsVisitor::visitSection(detModel::Section* section)
   worldlog = new G4LogicalVolume(world,ptMaterial,"motherVolume",0,0,0);
 
   /// We set the mother invisible
+#ifndef WIN32 //THB
   worldlog->SetVisAttributes (G4VisAttributes::Invisible);  
-  
+#endif
   worldphys
     = new G4PVPlacement(0,G4ThreeVector(),"motherVolume",
 			worldlog,0,false,0);
@@ -170,8 +173,9 @@ void  G4SectionsVisitor::visitEnsemble(detModel::Ensemble* ensemble)
 
 
   /// We don't want to see the composition volume
+#ifndef WIN32 //THB
   g4Logicals.back()->SetVisAttributes (G4VisAttributes::Invisible);
-
+#endif
   /// This is the index of the actual physic volume
   logind = g4Logicals.size() - 1;
 
@@ -188,7 +192,7 @@ void  G4SectionsVisitor::visitEnsemble(detModel::Ensemble* ensemble)
 
 void  G4SectionsVisitor::visitBox(detModel::Box* box)
 {
-  typedef map<string, G4VisAttributes*> M;
+    typedef std::map<std::string, G4VisAttributes*> M;
   M::const_iterator i; 
 
   G4Material* ptMaterial = G4Material::GetMaterial(box->getMaterial());
@@ -218,9 +222,9 @@ void  G4SectionsVisitor::visitPosXYZ(detModel::PosXYZ* pos)
 {
   unsigned int i;
   int  ind = -1;
-  char temp[10];  string tmp = "";
-  typedef map<G4VPhysicalVolume*,string>M;
-  string volName;
+  char temp[10];  std::string tmp = "";
+  typedef std::map<G4VPhysicalVolume*,std::string>M;
+  std::string volName;
 
   if (detModel::Choice* choice = dynamic_cast<detModel::Choice*>(pos->getVolume()))
     {
@@ -272,9 +276,9 @@ void  G4SectionsVisitor::visitAxisMPos(detModel::AxisMPos* pos)
 {
   unsigned int i, ncopy, j;
   int  ind = -1;
-  string tmp = "";
+  std::string tmp = "";
   char temp[10];
-  typedef map<G4VPhysicalVolume*,string>M;
+  typedef std::map<G4VPhysicalVolume*,std::string>M;
   detModel::Volume* volume;
 
 
@@ -286,7 +290,7 @@ void  G4SectionsVisitor::visitAxisMPos(detModel::AxisMPos* pos)
   else
     volume = pos->getVolume();
 
-  string volName = volume->getName();
+  std::string volName = volume->getName();
  
 
   ncopy = pos->getNcopy();
@@ -373,9 +377,9 @@ void  G4SectionsVisitor::visitSeg(detModel::Seg*)
 
 }
 
-void G4SectionsVisitor::setOpacity(string name, float op)
+void G4SectionsVisitor::setOpacity(std::string name, float op)
 {
-  typedef map<string, float> M;
+    typedef std::map<std::string, float> M;
   M::const_iterator j; 
   
   j = opacityMap.find(name);
@@ -389,7 +393,8 @@ void G4SectionsVisitor::setOpacity(string name, float op)
 
 void G4SectionsVisitor::makeColor()
 {
-  typedef map<string, G4VisAttributes*> Ma;
+#ifndef WIN32  //THB
+    typedef std::map<std::string, G4VisAttributes*> Ma;
   Ma::const_iterator j; 
   typedef std::map<std::string, detModel::Color*> M;
   M::const_iterator k; 
@@ -412,9 +417,10 @@ void G4SectionsVisitor::makeColor()
   for (j=g4VisAttributes.begin(); j!=g4VisAttributes.end(); j++){
     j->second->SetForceSolid(true);
   }
+#endif
 }
 
-G4LogicalVolume* G4SectionsVisitor::getLogicalByName(string name){
+G4LogicalVolume* G4SectionsVisitor::getLogicalByName(std::string name){
   unsigned int i;
 
   for(i=0;i<g4Logicals.size();i++)

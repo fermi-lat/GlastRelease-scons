@@ -65,17 +65,17 @@ class G4SectionsVisitor : public detModel::SectionsVisitor {
   /// This method build the colors for the VRML file
   void makeColor();
 
-  void setOpacity(string, float);
+  void setOpacity(std::string, float);
 
   void setActualMother(G4LogicalVolume* pactualMother){actualMother = pactualMother;};
 
-  void setActualVolume(string pvol){actualVolume = pvol;};
-  string getActualVolume(){return actualVolume;};
+  void setActualVolume(std::string pvol){actualVolume = pvol;};
+  std::string getActualVolume(){return actualVolume;};
 
-  G4LogicalVolume* getLogicalByName(string name);
+  G4LogicalVolume* getLogicalByName(std::string name);
 
   /// This map holds the opacity information of the material colors
-  map <string, float> opacityMap;
+  std::map <std::string, float> opacityMap;
 
   double compX;
   double compY;
@@ -83,14 +83,14 @@ class G4SectionsVisitor : public detModel::SectionsVisitor {
   double trans;
   double halfPrec;
 
-  vector <G4Box*> g4Boxes;
-  vector <G4LogicalVolume*> g4Logicals;  
-  vector <G4VPhysicalVolume*> g4Physicals;  
-  map <string, G4VisAttributes*> g4VisAttributes;  
+  std::vector <G4Box*> g4Boxes;
+  std::vector <G4LogicalVolume*> g4Logicals;  
+  std::vector <G4VPhysicalVolume*> g4Physicals;  
+  std::map <std::string, G4VisAttributes*> g4VisAttributes;  
 
-  map <G4VPhysicalVolume*, string> g4Identifiers;  
+  std::map <G4VPhysicalVolume*, std::string> g4Identifiers;  
 
-  string actualVolume;
+  std::string actualVolume;
 
   G4VSensitiveDetector* sensibleDet;
   G4LogicalVolume* actualMother;
