@@ -232,7 +232,7 @@ private:
     /// dimension of arrays
     // the flight instrument only has (4 ladders)x(4 wafers) but to allow
     //   for possible conversion to BFEM/BTEM I've started with 5 each.
-    enum {NLAYERS = 18, NVIEWS = 2, NTOWERS = 16, NLADDERS= 4, NWAFERS = 4,
+    enum {NLAYERS = 18, NTRAYS = 19, NVIEWS = 2, NTOWERS = 16, NLADDERS= 4, NWAFERS = 4,
         NELEMENTS = NLAYERS*NVIEWS*NTOWERS*NLADDERS*NWAFERS};
     
     /// array to hold simulation constants  [ max needed: 9216 = 16*18*2*4*4 ]   
