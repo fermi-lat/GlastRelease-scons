@@ -13,9 +13,10 @@
 // the std::ostream* PrintControl::instance()->out(); 
 
 
+#include "gui/SubMenu.h"
 #include "gui/PrintControl.h"
 #include "gui/SimpleCommand.h"
-#include "gui/SubMenu.h"
+
 
 #include <cassert>
 
