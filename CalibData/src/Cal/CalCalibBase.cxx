@@ -25,8 +25,8 @@ namespace CalibData {
 
   RangeBase*  CalCalibBase::getRange(idents::CalXtalId id, unsigned range, 
                                      unsigned face) {
-    unsigned ix = m_finder->findIx(id, range, face);
-    if (ix < m_finder->getSize() ) { 
+    if (m_finder->checkIx(id, range, face)) {
+      unsigned ix = m_finder->findIx(id, range, face);
       return m_ranges[ix];
     }
     else return 0;
@@ -34,9 +34,10 @@ namespace CalibData {
   RangeBase*  CalCalibBase::getRange(unsigned towerRow, unsigned towerCol, 
                                      unsigned layer, unsigned xtal, 
                                      unsigned range, unsigned face) {
-    unsigned ix = m_finder->findIx(towerRow, towerCol, layer, xtal, 
-                                   range, face);
-    if (ix < m_finder->getSize() ) { 
+    if (m_finder->checkIx(towerRow, towerCol, layer, xtal, 
+                          range, face)) {
+      unsigned ix = m_finder->findIx(towerRow, towerCol, layer, xtal, 
+                                     range, face);
       return m_ranges[ix];
     }
     else return 0;
@@ -45,25 +46,33 @@ namespace CalibData {
   bool CalCalibBase::putRange(unsigned towerRow, unsigned towerCol, 
                               unsigned layer, unsigned xtal, unsigned range,
                               unsigned face, RangeBase* data) {
-    unsigned ix = m_finder->findIx(towerRow, towerCol, layer, xtal, 
-                                   range, face);
-    if (ix >= m_finder->getSize() ) return false;
+    if (m_finder->checkIx(towerRow, towerCol, layer, xtal, 
+                          range, face)) {
 
-    RangeBase* pDest = m_ranges[ix];
+      unsigned ix = m_finder->findIx(towerRow, towerCol, layer, xtal, 
+                                     range, face);
+      //    if (ix >= m_finder->getSize() ) return false;
 
-    pDest->update(data);
-    return true;
+      RangeBase* pDest = m_ranges[ix];
+      
+      pDest->update(data);
+      return true;
+    }
+    return false;
   }
 
   bool CalCalibBase::putRange(idents::CalXtalId id, unsigned range, 
                               unsigned face, RangeBase* data) {
-    unsigned ix = m_finder->findIx(id, range, face);
-    if (ix >= m_finder->getSize() ) return false;
+    if (m_finder->checkIx(id, range, face)) {
+      unsigned ix = m_finder->findIx(id, range, face);
+      //    if (ix >= m_finder->getSize() ) return false;
 
-    RangeBase* pDest = m_ranges[ix];
+      RangeBase* pDest = m_ranges[ix];
 
-    pDest->update(data);
-    return true;
+      pDest->update(data);
+      return true;
+    }
+    return false;
   }
 
   bool CalCalibBase::putDacCol(unsigned range, DacCol* dacs) {
