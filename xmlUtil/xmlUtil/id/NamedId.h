@@ -5,10 +5,12 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "xmlUtil/id/Identifier.h"
+
 namespace xmlUtil {
 
   //! An \b Identifier is simply a finite list of non-neg. integers
-  typedef std::vector<unsigned> Identifier;
+  //  typedef std::vector<unsigned> Identifier;
 
   //! Another convenience typedef for a list of strings (the
   //! id field names which may be extracted from a \b NamedId )

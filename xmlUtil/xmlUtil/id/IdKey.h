@@ -6,7 +6,7 @@
 #include <deque>
 #include <string>
 #include <iterator>
-
+#include "xmlUtil/id/Identifier.h"
 
 namespace xmlUtil {
 
@@ -14,8 +14,8 @@ namespace xmlUtil {
   ///  be used as a key for a map.
   class IdKey {
   public:
-    /// Construct an IdKey from  a vector
-    IdKey(const std::vector<unsigned int> id);
+    /// Construct an IdKey from  an Identifier
+    IdKey(const Identifier id);
 
     /// Construct an IdKey from  a deque
     IdKey(const std::deque<unsigned int> id);
