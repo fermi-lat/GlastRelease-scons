@@ -158,12 +158,6 @@
                 <pValues>
                   <vEnumVal valueREF="eTowerCAL" />
                 </pValues>
-                <vList>
-                  <vEnumVal valueREF="eBottomFrame" />
-                  <vEnumVal valueREF="eBottomPlate" />
-                  <vEnumVal valueREF="eTopFrame" />
-                  <vEnumVal valueREF="eTopPlate" />
-                </vList> 
               </dictNode>
 
               <!-- TKR  -->
