@@ -49,10 +49,10 @@ public:
 
     void initialize(UInt_t eventId, UInt_t runId, Double_t time, 
         Double_t liveTime, const L1T& level1, const EventSummaryData &summary, 
-        Bool_t fromMc=true);
+        Bool_t fromMc);
 
     void initialize(UInt_t eventId, UInt_t runId, Double_t time, 
-        Double_t liveTime, const L1T& level1, Bool_t fromMc=true);
+        Double_t liveTime, const L1T& level1, Bool_t fromMc);
 
     void initEventSummary(const EventSummaryData& summary) { 
          m_summary = summary; };
