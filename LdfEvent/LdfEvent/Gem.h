@@ -191,7 +191,7 @@ private:
     };
 
 
-   void Gem::initTrigger(unsigned short tkr, unsigned short roi,
+   inline void Gem::initTrigger(unsigned short tkr, unsigned short roi,
                   unsigned short calLE, unsigned short calHE, 
                   unsigned short cno, unsigned short conditionSummary, 
                   const GemDataTileList &tileList) {
@@ -204,7 +204,7 @@ private:
         m_tileList = tileList;
     }
 
-    void Gem::initSummary(unsigned liveTime, unsigned prescaled, 
+    inline void Gem::initSummary(unsigned liveTime, unsigned prescaled, 
                   unsigned discarded, unsigned sent, unsigned triggerTime,
                   const GemDataOnePpsTime &time, unsigned deltaEvtTime) {
         m_liveTime = liveTime;
@@ -216,7 +216,7 @@ private:
         m_deltaEventTime = deltaEvtTime;
     }
 
-    void Gem::clear() {
+    inline void Gem::clear() {
         m_tkrVector = 0;
         m_roiVector = 0;  
         m_cal_LE_Vector = 0;
