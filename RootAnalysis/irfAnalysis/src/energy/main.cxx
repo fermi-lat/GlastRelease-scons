@@ -13,8 +13,10 @@ public:
         : Fitter(outputFile), m_maxTrys(maxTrys) 
     {
         m_func 
-            = new TF1("myModel",  "x*[0]*exp(-0.5*pow((x-[1])/[2], 2))");
-
+            = new TF1("myModel",  "[0]*exp(-0.5*pow((x-[1])/[2], 2))");
+        m_func->SetParLimits(0, 0.0, 1.0);
+        m_func->SetParLimits(1, 0.5, 1.5);
+	m_func->SetParLimits(2, 0.0, 0.5);
         // Set up the branches in the output tree.
         const char* names[]={"norm", "mean", "sigma"};
         int npars=sizeof(names)/sizeof(void*);
@@ -48,6 +50,29 @@ int main(){
     irf.set_ymin(1e-3);
     irf.set_ymax(0.2);
     irf.draw("energy_fit.ps",  true , myfit);
+    myfit->writeFitPars();
+    delete myfit;
+
+    myfit = new EnergyModel("energy_fit_parameters_thick.root");
+    MakeDists irf_thick("energy_fit_thick.root");
+    irf_thick.set_user_cut(TCut("Tkr1FirstLayer>=12.0"));
+    if(!irf_thick.fileExists())
+       irf_thick.project("EvtEnergySumOpt/McEnergy", 0, 2, 100);
+    irf_thick.set_ymin(1e-3);
+    irf_thick.set_ymax(0.2);
+    irf_thick.draw("energy_fit_thick.ps", true, myfit);
+    myfit->writeFitPars();
+    delete myfit;
+
+
+    myfit = new EnergyModel("energy_fit_parameters_thin.root");
+    MakeDists irf_thin("energy_fit_thin.root");
+    irf_thin.set_user_cut(TCut("Tkr1FirstLayer<12.0"));
+    if(!irf_thin.fileExists())
+       irf_thin.project("EvtEnergySumOpt/McEnergy", 0, 2, 100);
+    irf_thin.set_ymin(1e-3);
+    irf_thin.set_ymax(0.2);
+    irf_thin.draw("energy_fit_thin.ps", true, myfit);
     myfit->writeFitPars();
     delete myfit;
 
