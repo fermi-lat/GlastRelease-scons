@@ -1,21 +1,11 @@
 # $Header$
-### Might end up changing this name to have a prefix a bit more general
-### than "Calib"; e.g., DetData or CondData
+
 package CalibData
 version v0r0p0
 
-## would be nice if we could get away without the "use calibUtil"
-## to divorce ourselves from xml and MySQL, but as things stand
-## now we can't.  Would need to separate calibUtil into two pieces:
-## one simply defining the data and access methods for calib data
-## classes, and another for (friend?) classes which would know how to
-## fill the data classes.  Then CalibData.. 
-
 use facilities v2r*
-use calibUtil v0r*
 
 use GaudiPolicy v5r4p*
-## use GaudiAlg    v5r*  not using yet
 use GaudiAud    v5r*
 use GaudiKernel v11r*
 use GaudiSvc    v7r*
@@ -24,7 +14,6 @@ use GlastPolicy v4r*
 apply_pattern package_include
 apply_pattern package_headers
 
-## 
 library CalibData *.cxx Cal/*.cxx ${CalibData_headers}
 
 
