@@ -126,6 +126,7 @@ StatusCode McValsTool::initialize()
     
     // load up the map
 
+    addItem("McSourceId",     &MC_SourceId);
     addItem("McId",           &MC_Id);  
     addItem("McCharge",       &MC_Charge);
     addItem("McEnergy",       &MC_Energy);  
