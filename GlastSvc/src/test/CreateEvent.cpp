@@ -16,9 +16,6 @@
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "GlastEvent/TopLevel/EventModel.h"
 #include "GlastEvent/TopLevel/Event.h"
-#include "GlastEvent/MonteCarlo/MCACDHit.h"
-#include "GlastEvent/MonteCarlo/MCCalorimeterHit.h"
-#include "GlastEvent/MonteCarlo/MCSiLayer.h"
 #include "GlastEvent/TopLevel/ObjectVector.h"
 
 #include "GlastEvent/Raw/TdCsIData.h"
