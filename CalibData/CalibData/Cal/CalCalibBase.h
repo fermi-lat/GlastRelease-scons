@@ -21,7 +21,7 @@ namespace CalibData {
        individual per-range datasets and a pointer to a helper class,
        CalFinder, which knows how to compute indices.
   */
-  class CalCalibBase : CalibBase {
+  class CalCalibBase : public CalibBase {
 
   public:
     CalCalibBase(unsigned nTowerRow=4, unsigned nTowerCol=4, unsigned nLayer=8, 
