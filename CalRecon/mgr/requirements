@@ -13,7 +13,7 @@ macro CalReconDir  "$(CALRECONROOT)/$(DEBUGDIR)"
 
 
 # have a seperate library to export the calorimeter recon data classes 
-library CalReconData -no_share CalLogID.cpp calorimeterGeo.cpp \
+library CalReconData -no_share CalLogID.cpp CalGeometrySvc.cpp\
                      CalBase.cpp CalADCLogs.cpp CalRecLogs.cpp \
                      CsIClusters.cpp
 
@@ -51,6 +51,4 @@ macro WinJobOptions  ""  VisualC   "test/jobOptions.txt"
 
 macro_append use_linkopts $(console_linkopts)
 
-#application test_CalRecon test/*.cxx *.cxx *.cpp Dll/*.cpp ${WinJobOptions}
 application test_CalRecon test/*.cxx ${WinJobOptions}
-
