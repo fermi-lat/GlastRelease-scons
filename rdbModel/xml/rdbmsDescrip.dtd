@@ -45,7 +45,8 @@ $Header$
      identifying information of program user. -->
 <!ELEMENT from EMPTY>
 <!ATTLIST from agent (auto_increment | now | enduser | service) #REQUIRED 
-               contents (unspecified | service_name | username) "unspecified" >
+               contents (unspecified | service_name | username | insert_time) 
+         "unspecified" >
 
 <!ELEMENT default EMPTY>
 <!ATTLIST default value NMTOKEN #REQUIRED>
