@@ -41,7 +41,7 @@ Residual::Residual(TString filename, TString resFileName) {
              "$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0Geometry.txt"));
     myTracker->loadFitting(gSystem->ExpandPathName(
         "$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0FittingPlanes.txt"));
-    myTracker->IsTower(true);
+    myTracker->SetTower(true);
     myEvent = new Event(filename, (TMap*)myTracker->GetGeometry());
     myResFileName = resFileName;
 }

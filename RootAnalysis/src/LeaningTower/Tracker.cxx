@@ -11,10 +11,17 @@
 #include <sstream>
 #include <string>
 
-Tracker::Tracker()
-{
-  myGeometry = new TMap();
-  TOWER=false;
+Tracker::Tracker() {
+    // myGeometry was a TMap.  The key was name, and the object was a Layer
+    // object.  A TMap is stored in arbitrary order, and cannot be sorted.
+    // There is also no other advantage in having a TMap, as the information is
+    // redundant (the name is contained in the Layer).
+
+    // Thus, let's use a TList.  A TList can be filled ordered, and moreover can
+    // be sorted, if neccessary.
+
+    myGeometry = new TMap();
+    TOWER=false;
 }
 
 Tracker::~Tracker() {
@@ -23,61 +30,63 @@ Tracker::~Tracker() {
 }
 
 
-void Tracker::loadGeometry(TString filename) {
-  if ( !myGeometry->IsEmpty() ) {
-    std::cout << "WARNING: Geometry not empty!  Maybe you filled it before?"
-              << std::endl;
-    return;
-  }
-  std::ifstream fin(filename);
-  if ( !fin ) {
-      std::cout << "File " << filename << " could not be opened!" << std::endl;
-      return;
-  }
-  std::string line;
-  while ( !fin.eof() ) {
-      std::getline(fin, line);
-      TString layer;
-      double z, y, x;
-      z = y = x = 0;
-      std::istringstream ist(line);
-      ist >> layer >> z >> y >> x;
-      if ( layer == "" )
-          continue;
-      Layer* aLayer = new Layer(layer, z, y, x);
-      myGeometry->Add(new TObjString(layer), aLayer);
-      std::cout << "layer " << layer << std::endl;
-  }
+void Tracker::loadGeometry(TString f) {
+    TString filename = gSystem->ExpandPathName(f);
+    if ( !myGeometry->IsEmpty() ) {
+        std::cout << "WARNING: Geometry not empty!  Maybe you filled it before?"
+                  << std::endl;
+        return;
+    }
+    std::ifstream fin(filename);
+    if ( !fin ) {
+        std::cout << "File " << filename << " could not be opened!" <<std::endl;
+        return;
+    }
+    std::string line;
+    while ( !fin.eof() ) {
+        std::getline(fin, line);
+        TString layer;
+        double z, y, x;
+        z = y = x = 0;
+        std::istringstream ist(line);
+        ist >> layer >> z >> y >> x;
+        if ( layer == "" )
+            continue;
+        Layer* aLayer = new Layer(layer, z, y, x);
+        myGeometry->Add(new TObjString(layer), aLayer);
+        std::cout << "layer " << layer << std::endl;
+    }
 
-  fin.close();
-  myGeometry->Print();
+    fin.close();
+    myGeometry->Print();
 }
 
-void Tracker::loadFitting(TString filename) {
-  if ( myGeometry->IsEmpty() ) {
-    std::cout << "WARNING: Geometry is empty!" << std::endl;
-    return;
-  }
-  std::ifstream fin(filename);
-  if ( !fin ) {
-      std::cout << "File " << filename << " could not be opened!" << std::endl;
-      return;
-  }
-  TString name;
-  double value;
-  while ( 1 ) {
-      fin >> name >> value;
-      if ( !fin.good() ) break;
-      std::vector<TString> v;
-      for ( int i=0; i<value; ++i ) {
-          TString dummy;
-          fin >> dummy;
-          v.push_back(dummy);
-      }
-      Layer* l = (Layer*)myGeometry->GetValue(name);
-      l->SetPlanesForFittingCol(v);
+void Tracker::loadFitting(TString f) {
+    TString filename = gSystem->ExpandPathName(f);
+    if ( myGeometry->IsEmpty() ) {
+        std::cout << "WARNING: Geometry is empty!" << std::endl;
+        return;
     }
-  fin.close();
+    std::ifstream fin(filename);
+    if ( !fin ) {
+        std::cout << "File " << filename << " could not be opened!" <<std::endl;
+        return;
+    }
+    TString name;
+    double value;
+    while ( 1 ) {
+        fin >> name >> value;
+        if ( !fin.good() ) break;
+        std::vector<TString> v;
+        for ( int i=0; i<value; ++i ) {
+            TString dummy;
+            fin >> dummy;
+            v.push_back(dummy);
+        }
+        Layer* l = (Layer*)myGeometry->GetValue(name);
+        l->SetPlanesForFittingCol(v);
+    }
+    fin.close();
 }
 
 std::vector<TString> Tracker::GetPlaneNameCol(const TString view,
@@ -104,7 +113,7 @@ std::vector<TString> Tracker::GetPlaneNameCol(const int view,
             continue;
         if ( onlyTheGood && l->GetPlanesForFittingCol().size() == 0 )
             continue;
-        v.push_back(l->GetLayerName());
+        v.push_back(l->GetName());
     }
     return v;
 }

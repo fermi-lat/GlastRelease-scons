@@ -16,29 +16,26 @@
 // We have 36 of these.
 //////// HISTORICAL //////////
 
-class Layer : public TObject {
+class Layer : public TNamed {
  public:
     Layer(TString name, float zz, float yy=0, float xx=0);
     ~Layer();
     void SetPlanesForFittingCol(std::vector<TString> v) {planesForFittingCol=v;}
 
-    TString GetLayerName() const { return Name; }
-    double GetHeight()     const { return GetZ(); }
-    double GetZ()          const { return Z; }
-    double GetY()          const { return Y; }
-    double GetX()          const { return X; }
+    double GetHeight() const { return GetZ(); }
+    double GetZ()      const { return Z; }
+    double GetY()      const { return Y; }
+    double GetX()      const { return X; }
 
     double GetCoordinate(int stripId);
     bool checkActiveArea(double ParallelCoordinate, double NormalCoordinate,
                          double BorderWidth);
     void DrawLayer();
     void DrawGhostLayer();
-    //  bool IsX() const { return Name.Contains("X"); }
-    //  bool IsY() const { return Name.Contains("Y"); }
     // the following 3 definitions rely on names of the structure "X7" or "Y13"
-    bool IsX() const { return Name(0,1) == "X"; }
-    bool IsY() const { return Name(0,1) == "Y"; }
-    int GetLayer() const { return atoi(Name(1,Name.Length()-1).Data()); }
+    bool IsX() const { return fName(0,1) == "X"; }
+    bool IsY() const { return fName(0,1) == "Y"; }
+    int GetLayer() const { return atoi(fName(1,fName.Length()-1).Data()); }
     // digi counts up, recon down
     int GetReconLayer() const { return 17 - GetLayer(); }
     int GetView() const {
@@ -46,20 +43,8 @@ class Layer : public TObject {
         if ( IsY() ) return 1;
         return -1;
     }
-
-    TString Name;
-    float X;
-    float Y;
-    float Z;
-    TLine *LayerLine;
-    TLine *LadderLine[4];
-    TTree *LayerTree;
-    TText *LayerLabel;
     void SetTree(TFile *file);
-    void GetEvent(int event);
-
-    int TkrNumHits;
-    int TkrHits[128];
+    void GetEvent(int event) { LayerTree->GetEntry(event); }
 
     void AddHitInActiveArea() { HitsInActiveArea++; }
     void AddMissedHit() { MissedHits++; }
@@ -73,6 +58,17 @@ class Layer : public TObject {
         return planesForFittingCol; }
   
  private:
+    float X;
+    float Y;
+    float Z;
+    TLine *LayerLine;
+    TLine *LadderLine[4];
+    TTree *LayerTree;
+    TText *LayerLabel;
+
+    int TkrNumHits;
+    int TkrHits[128];
+
     double EDGE_WIDTH,WAFER_WIDTH,STRIP_PITCH,LADDER_SEPARATION;
     int HitsInActiveArea,MissedHits;
     Bool_t TriggerReq0;

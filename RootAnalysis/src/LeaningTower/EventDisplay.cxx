@@ -9,7 +9,6 @@
 #include "TObjString.h"
 #include "TString.h"
 #include "TStyle.h"
-#include "TSystem.h"
 #include "TText.h"
 #include "TTree.h"
 
@@ -53,16 +52,19 @@ EventDisplay::EventDisplay(TString filename) {
     gStyle->SetCanvasColor(10);
     myTracker = new Tracker;
     if ( TOWER ) {  
-        myTracker->loadGeometry(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0Geometry.txt"));
-        myTracker->loadFitting(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0FittingPlanes.txt"));
-        myTracker->IsTower(TOWER);
+        myTracker->loadGeometry(
+              "$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0Geometry.txt");
+        myTracker->loadFitting(
+         "$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0FittingPlanes.txt");
+        myTracker->SetTower(TOWER);
     }
     else
-        myTracker->loadGeometry(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/stack2geometry.txt"));
+        myTracker->loadGeometry(
+              "$ROOTANALYSISROOT/src/LeaningTower/geometry/stack2geometry.txt");
   
     myEvent = new Event(filename, (TMap*)myTracker->GetGeometry());
   
-    myEventDisplay = new TCanvas("myEventDisplay", "myEventDisplay", 1100, 800);  
+    myEventDisplay = new TCanvas("myEventDisplay", "myEventDisplay", 1100, 800);
     myTracker->Display(myEventDisplay);
   
     for ( int i=0; i<36; ++i ) {
@@ -86,7 +88,7 @@ EventDisplay::EventDisplay(TString filename) {
 }
 
 void EventDisplay::Go(int numEvent) {
-    // actually, numEvent is the number of the record in the tree, not the event id
+    // numEvent is the number of the record in the tree, not the event id
     static int entry = -1;
     if ( numEvent < 0 ) // display the next (special case, the first)
         ++entry;
@@ -120,7 +122,8 @@ void EventDisplay::Go(int numEvent) {
     std::cout << "TkrNumTracks    = " << TkrNumTracks << std::endl;
     std::cout << "TkrTrk1NumClus  = " << TkrTrk1NumClus << std::endl;
     if ( TkrTrk1NumClus > TkrNumClus || TkrNumClus > TkrTotalNumHits )
-        std::cout << "??? TkrTrk1NumClus > TkrNumClus > TkrTotalNumHits ???" << std::endl;
+        std::cout << "??? TkrTrk1NumClus > TkrNumClus > TkrTotalNumHits ???"
+                  << std::endl;
 
     TMapIter ti(myGeometry);
     TObjString* key;
@@ -143,9 +146,11 @@ void EventDisplay::Go(int numEvent) {
         else
             myEventDisplay->cd(2);
 
-        TriggerReqText[i][0].SetText( -5, height, aLayer->GetTriggerReq(false) ? "x" : ".");
-        TriggerReqText[i][1].SetText(365, height, aLayer->GetTriggerReq(true) ? "x" : ".");
-        LabelNumHits[i].SetText(410, height, (TString("(")+=LayerNumHits) + ")");
+        TriggerReqText[i][0].SetText(-5, height,
+                                     aLayer->GetTriggerReq(false) ? "x" : ".");
+        TriggerReqText[i][1].SetText(365, height,
+                                     aLayer->GetTriggerReq(true) ? "x" : ".");
+        LabelNumHits[i].SetText(410, height, (TString("(")+=LayerNumHits)+")");
         TriggerReqText[i][0].Draw();
         TriggerReqText[i][1].Draw();
         LabelNumHits[i].Draw();
@@ -228,22 +233,22 @@ void EventDisplay::Go(int numEvent) {
     // print debug
 
     /*
-      std::cout << "TGraphXhits: " << TGraphXhits->GetN() << std::endl;
-      TGraphXhits->Print();
-      std::cout << "TGraphYhits: " << TGraphYhits->GetN() << std::endl;
-      TGraphYhits->Print();
-      std::cout << "TGraphXclusters1: " << TGraphXclusters1->GetN() << std::endl;
-      TGraphXclusters1->Print();
-      std::cout << "TGraphYclusters1: " << TGraphYclusters1->GetN() << std::endl;
-      TGraphYclusters1->Print();
-      std::cout << "TGraphXclusters2: " << TGraphXclusters2->GetN() << std::endl;
-      TGraphXclusters2->Print();
-      std::cout << "TGraphYclusters2: " << TGraphYclusters2->GetN() << std::endl;
-      TGraphYclusters2->Print();
-      recon->PrintTkrTrk1Clusters();
-      std::cout << "anXtrack" << std::endl;
-      anXtrack.Print();
-      std::cout << "anYtrack" << std::endl;
-      anYtrack.Print();
+    std::cout << "TGraphXhits: " << TGraphXhits->GetN() << std::endl;
+    TGraphXhits->Print();
+    std::cout << "TGraphYhits: " << TGraphYhits->GetN() << std::endl;
+    TGraphYhits->Print();
+    std::cout << "TGraphXclusters1: " << TGraphXclusters1->GetN() << std::endl;
+    TGraphXclusters1->Print();
+    std::cout << "TGraphYclusters1: " << TGraphYclusters1->GetN() << std::endl;
+    TGraphYclusters1->Print();
+    std::cout << "TGraphXclusters2: " << TGraphXclusters2->GetN() << std::endl;
+    TGraphXclusters2->Print();
+    std::cout << "TGraphYclusters2: " << TGraphYclusters2->GetN() << std::endl;
+    TGraphYclusters2->Print();
+    recon->PrintTkrTrk1Clusters();
+    std::cout << "anXtrack" << std::endl;
+    anXtrack.Print();
+    std::cout << "anYtrack" << std::endl;
+    anYtrack.Print();
     */
 }
