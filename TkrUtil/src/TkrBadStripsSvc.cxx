@@ -48,6 +48,8 @@ StatusCode TkrBadStripsSvc::initialize()
     
     MsgStream log(msgSvc(), name());
 
+    Service::initialize();
+
     if(m_visitor==0) {
         m_visitor = new BadVisitor;
         m_visitor->setService(this);

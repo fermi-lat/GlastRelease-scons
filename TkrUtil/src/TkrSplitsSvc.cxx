@@ -79,6 +79,8 @@ StatusCode TkrSplitsSvc::initialize ()
 
     // Open the message log
     MsgStream log( msgSvc(), name() );
+
+    Service::initialize();
       
     m_pGeoSvc = 0;
     if( service( "TkrGeometrySvc", m_pGeoSvc, true).isFailure() ) {

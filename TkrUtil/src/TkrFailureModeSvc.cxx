@@ -71,6 +71,8 @@ StatusCode TkrFailureModeSvc::initialize ()
 
     StatusCode  sc = StatusCode::SUCCESS;
 
+    Service::initialize();
+
     sc = service("TkrGeometrySvc", m_pGeoSvc, true);
     if ( !sc.isSuccess() ) {
         log << MSG::ERROR 
