@@ -21,7 +21,7 @@ int main(int argn, char** argc) {
     gSystem->Load("libTree.dll");
     gSystem->Load("reconRootData.dll");
 #endif
-    unsigned int numEvents = 25;
+    Long64_t numEvents = 25;
     const char* path = ::getenv("ROOTTESTDATAROOT");
     if ( argn > 5) numEvents = atoi(argc[5]);
     std::string digiFileName(path);
