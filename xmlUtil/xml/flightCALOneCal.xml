@@ -144,40 +144,112 @@
          materialREF = "CALCellMat"
      />
 
-<!-- Define boxed for glommed-together picture frames.  Define outer
+<!-- Original: 
+     Define boxed for glommed-together picture frames.  Define outer
      boxes made of frame material, then inner boxes of vacuum to 
      empty out the middle. -->
-    <box name="CALTopFrameEnv"
-         XREF="CALModuleWidth"
-         YREF="CALModuleWidth"
+  <!-- 
+    <box name="CALTopFrameCutout"
+         XREF="CALTopFrameCutoutWidth"
+         YREF="CALTopFrameCutoutWidth"
          ZREF="CALTopFrameZ"
-         materialREF="CALFrameMat" />
+         materialREF="vacuumMat" />
 
-    <box name="CALBottomFrameEnv"
-         XREF="CALModuleWidth"
-         YREF="CALModuleWidth"
+    <box name="CALBottomFrameCutout"
+         XREF="CALBottomFrameCutoutWidth"
+         YREF="CALBottomFrameCutoutWidth"
          ZREF="CALBottomFrameZ"
-         materialREF="CALFrameMat" />
+         materialREF="vacuumMat" />
 
-<box name="CALTopFrameCutout"
-     XREF="CALTopFrameCutoutWidth"
-     YREF="CALTopFrameCutoutWidth"
-     ZREF="CALTopFrameZ"
-     materialREF="vacuumMat" />
+    <composition name="CALTopFrame" envelope="CALTopFrameEnv">
+       <posXYZ volume="CALTopFrameCutout" />
+    </composition>
 
-<box name="CALBottomFrameCutout"
-     XREF="CALBottomFrameCutoutWidth"
-     YREF="CALBottomFrameCutoutWidth"
-     ZREF="CALBottomFrameZ"
-     materialREF="vacuumMat" />
+    <composition name="CALBottomFrame" envelope="CALBottomFrameEnv">
+       <posXYZ volume="CALBottomFrameCutout" />
+    </composition>
 
-<composition name="CALTopFrame" envelope="CALTopFrameEnv">
-  <posXYZ volume="CALTopFrameCutout" />
-</composition>
+-->
 
-<composition name="CALBottomFrame" envelope="CALBottomFrameEnv">
-  <posXYZ volume="CALBottomFrameCutout" />
-</composition>
+<!-- New style for frames:  build up out of four pieces as is done
+     for grid and for TKR closeout.  Use old envelope boxes but
+     material is now vacuum.  -->
+     <box name="CALTopFrameEnv"
+          XREF="CALModuleWidth"
+          YREF="CALModuleWidth"
+          ZREF="CALTopFrameZ"
+          materialREF="vacuumMat" />
+
+     <box name="CALBottomFrameEnv"
+          XREF="CALModuleWidth"
+          YREF="CALModuleWidth"
+          ZREF="CALBottomFrameZ"
+          materialREF="vacuumMat" />
+
+     <box name="CALTopFrameLongSide"
+       XREF="CALModuleWidth"
+       YREF="CALTopFrameWidth"
+       ZREF="CALTopFrameZ"
+       materialREF="CALFrameMat" />
+     <box name="CALTopFrameShortSide"
+       XREF="CALTopFrameShort"
+       YREF="CALTopFrameWidth"
+       ZREF="CALTopFrameZ"
+       materialREF="CALFrameMat" />
+
+     <box name="CALBottomFrameLongSide"
+       XREF="CALModuleWidth"
+       YREF="CALBottomFrameWidth"
+       ZREF="CALBottomFrameZ"
+       materialREF="CALFrameMat" />
+     <box name="CALBottomFrameShortSide"
+       XREF="CALBottomFrameShort"
+       YREF="CALBottomFrameWidth"
+       ZREF="CALBottomFrameZ"
+       materialREF="CALFrameMat" />
+
+     <composition name="CALTopFrame" envelope="CALTopFrameEnv">
+       <posXYZ volume="CALTopFrameLongSide" 
+               YREF="CALTopFrame_dt" >
+         <idField name="fBorderCmp" value="eTop" />
+       </posXYZ>
+       <posXYZ volume="CALTopFrameLongSide" 
+               YREF="CALTopFrame_dtn" >
+         <idField name="fBorderCmp" value="eBottom" />
+       </posXYZ>
+       <posXYZ volume="CALTopFrameShortSide" 
+               zrot="90"
+               XREF="CALTopFrame_dt" >
+         <idField name="fBorderCmp" value="eRight" />
+       </posXYZ>
+       <posXYZ volume="CALTopFrameShortSide" 
+               zrot="90"
+               XREF="CALTopFrame_dtn" >
+         <idField name="fBorderCmp" value="eLeft" />
+       </posXYZ>
+     </composition>
+
+     <composition name="CALBottomFrame" envelope="CALBottomFrameEnv">
+       <posXYZ volume="CALBottomFrameLongSide" 
+               YREF="CALBottomFrame_dt" >
+         <idField name="fBorderCmp" value="eTop" />
+       </posXYZ>
+       <posXYZ volume="CALBottomFrameLongSide" 
+               YREF="CALBottomFrame_dtn" >
+         <idField name="fBorderCmp" value="eBottom" />
+       </posXYZ>
+       <posXYZ volume="CALBottomFrameShortSide" 
+               zrot="90"
+               XREF="CALBottomFrame_dt" >
+         <idField name="fBorderCmp" value="eRight" />
+       </posXYZ>
+       <posXYZ volume="CALBottomFrameShortSide" 
+               zrot="90"
+               XREF="CALBottomFrame_dtn" >
+         <idField name="fBorderCmp" value="eLeft" />
+       </posXYZ>
+     </composition>
+
 
 
 <!-- Cell layers are stacked up with no intervening space

@@ -153,11 +153,14 @@
               </dictNode> 
             </dictNode>
 
-            <!-- CAL non-detector  -->
+            <!-- CAL non-detector.  Could add additional parent
+                 constraint on fBorderCmp field.  It can only
+                 occur for frame pieces  -->
             <dictNode fieldName="fCALStructural" >
               <pValues>
                 <vEnumVal valueREF="eTowerCAL" />
               </pValues>
+              <dictNode fieldName="fBorderCmp" />
             </dictNode>
 
             <!-- TKR  -->

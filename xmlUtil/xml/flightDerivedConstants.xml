@@ -302,6 +302,68 @@ grid, etc. (may be superseded by info from Eric)</notes>
           </minus>
         </const>
 
+        <!-- for new-style frame built out of 4 pieces rather than
+             cutouts.  Two pieces of length = CALModuleWidth; two
+             are shorter by the frame width -->
+        <const name="CALTopFrameShort" >
+          <notes>Length of shorter pieces in CAL top frame</notes>
+          <minus>
+            <refer refTo="CALModuleWidth" />
+            <mul>
+              <const value="2" uType="count" />
+              <refer refTo="CALTopFrameWidth" />
+            </mul>
+          </minus>
+        </const>
+
+        <const name="CALBottomFrameShort" >
+          <notes>Length of shorter pieces in CAL bottom frame</notes>
+          <minus>
+            <refer refTo="CALModuleWidth" />
+            <mul>
+              <const value="2" uType="count" />
+              <refer refTo="CALBottomFrameWidth" />
+            </mul>
+          </minus>
+        </const>
+
+        <const name="CALTopFrame_dt" >
+          <notes>Transverse displacement of top frame pieces</notes>
+          <quo>
+            <minus>
+              <refer refTo="CALModuleWidth" />
+              <refer refTo="CALTopFrameWidth" />
+            </minus>
+            <const value="2" uType="count" />
+          </quo>
+        </const>
+
+        <const name="CALTopFrame_dtn" >
+          <notes>Negative transverse displacement of top frame pieces</notes>
+          <uminus>
+            <refer refTo="CALTopFrame_dt" />
+          </uminus>
+        </const>
+
+        <const name="CALBottomFrame_dt" >
+          <notes>Transverse displacement of bottom frame pieces</notes>
+          <quo>
+            <minus>
+              <refer refTo="CALModuleWidth" />
+              <refer refTo="CALBottomFrameWidth" />
+            </minus>
+            <const value="2" uType="count" />
+          </quo>
+        </const>
+
+        <const name="CALBottomFrame_dtn" >
+          <notes>Negative transverse displacement of bottom 
+                 frame pieces</notes>
+          <uminus>
+            <refer refTo="CALBottomFrame_dt" />
+          </uminus>
+        </const>
+
 <!-- Make sure values for CALStructural field are distinct from layer #'s -->
         <const name="eBottomFrame" uType="count">
           <notes>For use in identifiers</notes>
