@@ -36,10 +36,10 @@ StatusCode MCEventCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObje
     // Purpose and Method:  Converter just creates an empty instance of MCEvent
     //   for the TDS.  The data members will be initialized by other components.
 
-    refpObject = new MCEvent();
+    refpObject = new Event::MCEvent();
     StatusCode sc=StatusCode::SUCCESS;
     return sc;
 }
 
 
-const CLID& MCEventCnv::classID(){ return MCEvent::classID();}
+const CLID& MCEventCnv::classID(){ return Event::MCEvent::classID();}

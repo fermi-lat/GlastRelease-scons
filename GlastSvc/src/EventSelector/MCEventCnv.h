@@ -5,8 +5,9 @@
 
 class IDataDirectory;
 class ISvcLocator;
+namespace Event {
 class MCEvent;
-
+}
 // Abstract factory to create the converter
 template <class T> class CnvFactory;
 
