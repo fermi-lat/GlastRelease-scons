@@ -1,59 +1,62 @@
 ///////////////////////////////////////////////////////////////////////////
 //                                                                       
-// The AcdTile class contains the information about a single ACD tile.
+// The ACDTile class contains the information about a single ACD tile.
 // This includes the PHA value, and above thresh information.  
 //                                                                       
 ///////////////////////////////////////////////////////////////////////////
 
-#include "digiRootData/AcdTile.h"
+#include "digiRootData/ACDTile.h"
 
-ClassImp(AcdTile)
+ClassImp(ACDTile)
 
 ///________________________________________________________________________
-AcdTile::AcdTile() : m_tag(0){
+ACDTile::ACDTile() : m_tag(0){
     // Default constructor
-    m_tileID = 0;
+    m_tileID.setID(0);
 }
 ///________________________________________________________________________
-AcdTile::AcdTile(TileID* id) : m_tag(0) {
-    // Create a AcdTile object with tileID of id
-    m_tileID = id;
+//ACDTile::ACDTile(TileID& id) : m_tag(0) {
+    // Create a ACDTile object with tileID of id
+//    m_tileID = id;
+//}
+ACDTile::ACDTile(UShort_t i) : m_tag(0){//, m_tileId(i) {
+    m_tileID.setID(i);
 }
 //_________________________________________________________________________
-AcdTile::~AcdTile(){
+ACDTile::~ACDTile(){
     // Destructor 
-    if (m_tileID) {
-        delete m_tileID;
-        m_tileID = 0;
-    }
+   // if (m_tileID) {
+   //     delete m_tileID;
+   //     m_tileID = 0;
+    //}
 }
 //_________________________________________________________________________
-Int_t AcdTile::Compare(const TObject *obj) const {
+Int_t ACDTile::Compare(const TObject *obj) const {
     if (this == obj) return 0;
-    if (AcdTile::Class() != obj->IsA()) return -1;
-    UInt_t id_this = m_tileID->getID();
-    UInt_t id_tile = ((AcdTile*)obj)->getID()->getID();
+    if (ACDTile::Class() != obj->IsA()) return -1;
+    UInt_t id_this = m_tileID.getID();
+    UInt_t id_tile = ((ACDTile*)obj)->getID()->getID();
     if (id_this == id_tile)
         return 0;
     else
         return (id_this > id_tile) ? 1 : -1; 
 }
 //_________________________________________________________________________
-Bool_t AcdTile::IsSortable() const {
+Bool_t ACDTile::IsSortable() const {
   return kTRUE;
 }
 //_________________________________________________________________________
-UChar_t AcdTile::getHit() {
+UChar_t ACDTile::getHit() {
     // Returns 1 if tile above thresh, 0 otherwise
     return ((m_tag >> ACD_V_HIT) & ACD_M_HIT);
 }
 //_________________________________________________________________________
-UShort_t AcdTile::getPHA() {
+UShort_t ACDTile::getPHA() {
     // Returns the PMT value for this tile
     return ((m_tag >> ACD_V_PMT) & ACD_M_PMT);
 }
 //_________________________________________________________________________
-Bool_t AcdTile::setPHA(UShort_t pmtVal)
+Bool_t ACDTile::setPHA(UShort_t pmtVal)
 {
     // Set the PMT/PHA value for this tile
     // Valid PMT/PHA values are in the range of [0,2047]
@@ -66,7 +69,7 @@ Bool_t AcdTile::setPHA(UShort_t pmtVal)
     }
 }
 //_________________________________________________________________________
-Bool_t AcdTile::setHit(UChar_t hitVal)
+Bool_t ACDTile::setHit(UChar_t hitVal)
 {
     // Set the 'hit' status of this tile
     // 1 == above thresh, 0 == below

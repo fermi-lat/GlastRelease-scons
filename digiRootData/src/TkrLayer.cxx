@@ -12,7 +12,6 @@
 // Dec 1999 Daniel Flath - Creation
 
 #include "digiRootData/TkrLayer.h"
-//#include "TClass.h"
 
 ClassImp(TkrLayer)
 

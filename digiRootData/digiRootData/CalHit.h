@@ -4,11 +4,11 @@
 
 #include "LogID.h"
 #include "TObject.h"
-//#include "TObjArray.h"
 
 /*! \class CalHit
 \brief
- Jan 1999 Daniel Flath - ROOT HTML comments added
+ Jun 2001 Heather Kelly - remove pointer to LogID
+ Jan 2000 Daniel Flath - ROOT HTML comments added
  Dec 1999 Daniel Flath - Rewritten for GLAST
  Oct 25,1999 Richard Dubois Clone from LCD version
 */
@@ -47,7 +47,7 @@ private:
         ADC_M_VAL = ((1 << ADC_K_VAL) - 1),
     };
 
-    LogID* m_log;       // Log identity info class
+    LogID m_log;       // Log identity info class
 
 //    UShort_t ADCValues[2][4];
     UShort_t ADCValues[8];
@@ -107,9 +107,9 @@ public:
     };
 
     CalHit();
-    CalHit(LogID* log);
+    //CalHit(LogID* log);
     virtual ~CalHit();
-    inline LogID* getLogID() { return m_log; };
+    inline LogID* getLogID() { return &m_log; };
    // void Clean();
     
     /// Root >= 3.0 is now const correct for the Compare function

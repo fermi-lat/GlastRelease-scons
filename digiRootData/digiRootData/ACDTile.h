@@ -1,23 +1,24 @@
 
-#ifndef AcdTile_H
-#define AcdTile_H
+#ifndef ACDTile_H
+#define ACDTile_H
 
 #include "TileID.h"
 #include "TObject.h"
 
-/*! \class AcdTile
+/*! \class ACDTile
 \brief 
- Feb 1999 Daniel Flath - Rewrite to facilitate standardization of
+ Jun 2001 Heather Kelly - Remove pointer to TileID
+ Feb 2000 Daniel Flath - Rewrite to facilitate standardization of
                          code & interface across all classes.
- Jan 1999 Daniel Flath - ROOT HTML comments added
+ Jan 2000 Daniel Flath - ROOT HTML comments added
  Dec 1999 Daniel Flath - Rewritten for GLAST
  Oct 25,1999 Richard Dubois Clone from LCD version
 */
 
-class AcdTile: public TObject {
+class ACDTile: public TObject {
 private:
     /*!
-    AcdTile tag word layout
+    ACDTile tag word layout
     (defined in following enum):
      _______________________________________________
     |15|  |  |12|11|  |  |  |  |  |  |  |  |  |  |00|
@@ -36,12 +37,13 @@ private:
         ACD_M_HIT = ((1 << ACD_K_HIT) - 1)
     };
     UShort_t m_tag;     // Packed word containing tile data
-    TileID* m_tileID;   // Tile identity info class
+    TileID m_tileID;   // Tile identity info class
 public:
-    AcdTile();
-    AcdTile(TileID* id);
-    virtual ~AcdTile();
-    TileID* getID() { return m_tileID; };
+    ACDTile();
+   // ACDTile(TileID& id);
+    ACDTile(UShort_t id);
+    virtual ~ACDTile();
+    TileID* getID() { return &m_tileID; };
     UShort_t getPHA();
     UChar_t getHit();
     Bool_t setPHA(UShort_t pmtVal);
@@ -51,7 +53,7 @@ public:
     Int_t Compare(const TObject *obj) const; 
     Bool_t IsSortable() const;
 
-    ClassDef(AcdTile,3)         // Information on a single ACD Tile
+    ClassDef(ACDTile,3)         // Information on a single ACD Tile
 };
 
 #endif

@@ -15,27 +15,23 @@ ClassImp(CalHit)
 ///________________________________________________________________________
 CalHit::CalHit() {
     // Default constructor
-    m_log = 0;
+    //m_log.setTag(0);
 }
 ///________________________________________________________________________
-CalHit::CalHit(LogID* log) {
+//CalHit::CalHit(LogID* log) {
     // Create a CalHit object with LogID of log
-    m_log = log;
-}
+//    m_log = log;
+//}
 //_________________________________________________________________________
 CalHit::~CalHit() {
     // Destructor
   //  Clean();
-    if (m_log) {
-        delete m_log;
-        m_log = 0;
-    }
 }
 //_________________________________________________________________________
 Int_t CalHit::Compare(const TObject *obj) const {
     if (this == obj) return 0;
     if (CalHit::Class() != obj->IsA()) return -1;
-    UInt_t id_this = m_log->getID();
+    UInt_t id_this = m_log.getID();
     UInt_t id_hit = ((CalHit*)obj)->getLogID()->getID();
     if (id_this == id_hit)
         return 0;

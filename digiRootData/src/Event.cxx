@@ -9,77 +9,90 @@
 
 ClassImp(Event)
 
-CalDigi *Event::m_staticCal=0;
-AcdDigi *Event::m_staticAcd=0;
-TkrDigi *Event::m_staticTkr=0;
-L1T *Event::m_staticL1T=0;
+// Allocate the TClonesArrays and TObjArray just once
+TClonesArray *Event::m_staticAcdData = 0;
+TClonesArray *Event::m_staticCalData = 0;
+TObjArray *Event::m_staticTkrData = 0;
 
 //__________________________________________________________________________
 Event::Event() {
     // Default constructor.
     // Assign default values to members
-    
-   // if (!m_staticAcd) m_staticAcd = new AcdDigi();
-   // m_ACD = m_staticAcd;
-    
-    //if (!m_staticCal) m_staticCal = new CalDigi();
-   // m_CAL = m_staticCal;
-    
-    //if (!m_staticTkr) m_staticTkr = new TkrDigi();
-    //m_TKR = m_staticTkr;
-    
-    //if (!m_staticL1T) m_staticL1T = new L1T();
-    //m_L1Trigger = m_staticL1T;
-    
-    m_ACD = 0;
-    m_CAL = 0;
-    m_TKR = 0;
-    m_L1Trigger = 0;
+    if (!m_staticAcdData) m_staticAcdData = new TClonesArray("ACDTile", 24);
+    m_AcdData = m_staticAcdData;
+    m_numTiles = -1;
 
+    if (!m_staticCalData) m_staticCalData = new TClonesArray("CalHit", 80);
+    m_CalData = m_staticCalData;
+    m_numLogs = -1;
+
+    if (!m_staticTkrData) m_staticTkrData = new TObjArray();
+    m_TkrData = m_staticTkrData;
+    m_numLayers = -1;
+
+        
   //  m_Tagger = 0;  
     m_eventId = 0;
     m_run = 0;
 }
 //_________________________________________________________________________
 Event::~Event() {
-  // Destructor
-    Clean();
-    
-    //if (m_ACD == m_staticAcd) m_staticAcd = 0;
-    if (m_ACD)
-    delete m_ACD;
-    //if (m_CAL == m_staticCal) m_staticCal = 0;
-    if (m_CAL)
-    delete m_CAL;
-    //if (m_TKR == m_staticTkr) m_staticTkr = 0;
-    if (m_TKR)
-    delete m_TKR;
-    //if (m_L1Trigger == m_staticL1T) m_staticL1T = 0;
-    if (m_L1Trigger)
-    delete m_L1Trigger;
+  // Destructor    
+    if(m_AcdData == m_staticAcdData) m_staticAcdData = 0;
+    m_AcdData->Delete();
+    delete m_AcdData;
+    m_AcdData = 0;
+  
+    if(m_CalData == m_staticCalData) m_staticCalData = 0;
+    m_CalData->Delete();
+    delete m_CalData;
+    m_CalData = 0;
 
+    if(m_TkrData == m_staticTkrData) m_staticTkrData = 0;
+    m_TkrData->Delete();
+    delete m_TkrData;
+    m_TkrData = 0;
+    
 }
 //_________________________________________________________________________
 void Event::Clean(Option_t *option) {
-    if (m_ACD) {
-        m_ACD->Clean();
-        delete m_ACD;
-        m_ACD = 0;
-    }
-    if (m_CAL) {
-        m_CAL->Clean();
-        delete m_CAL;
-        m_CAL = 0;
-    }
-    if (m_TKR) {
-        m_TKR->Clean();
-        delete m_TKR;
-        m_TKR = 0;
-    }
-    if (m_L1Trigger) {
-        delete m_L1Trigger;
-        m_L1Trigger = 0;
-    }
+    m_AcdHeader.Clean();
+    m_AcdData->Delete();
+    m_numTiles = -1;
+
+    m_CalHeader.Clean();
+    m_CalData->Delete();
+    m_numLogs = -1;
+
+    m_TkrHeader.Clean();
+    m_TkrData->Delete();
+    m_numLayers = -1;
+
+    m_L1T.Clean();
 }
 
 
+ACDTile* Event::AddTile(UShort_t id) {
+    // Add a new ACDTile entry, note that
+    // TClonesArrays can only be filled via
+    // a new with placement call
+    ++m_numTiles;
+    TClonesArray &tiles = *m_AcdData;
+    new(tiles[m_numTiles]) ACDTile(id);
+    return ((ACDTile*)(tiles[m_numTiles]));
+}
+
+CalHit* Event::AddLog() {
+    // Add a new ACDTile entry, note that
+    // TClonesArrays can only be filled via
+    // a new with placement call
+    ++m_numLogs;
+    TClonesArray &logs = *m_CalData;
+    new(logs[m_numLogs]) CalHit();
+    return ((CalHit*)(logs[m_numLogs]));
+}
+
+void Event::AddLayer(TkrLayer *layer) {
+    m_TkrData->Add(layer);
+    ++m_numLayers;
+}

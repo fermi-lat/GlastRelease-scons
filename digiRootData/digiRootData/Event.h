@@ -2,18 +2,25 @@
 #ifndef Event_H
 #define Event_H
 
-//#include "TMath.h"
 #include "TObject.h"
 #include "L1T.h"
 //#include "Tagger.h"
+#include "TClonesArray.h"
+#include "TObjArray.h"
 
-#include "AcdDigi.h"
-#include "CalDigi.h"
-#include "TkrDigi.h"
+#include "AcdHeader.h"
+#include "CalHeader.h"
+#include "TkrHeader.h"
+
+#include "ACDTile.h"
+#include "CalHit.h"
+#include "TkrLayer.h"
 
 /*! \class Event
-\brief
- Jan 1999 Daniel Flath - ROOT HTML comments added
+\brief This is the top-level event class to store the
+raw (digi) data.
+ Jun 2001 Heather Kelly - revised to use TClonesArray
+ Jan 2000 Daniel Flath - ROOT HTML comments added
  Dec 1999 Daniel Flath - Rewritten for GLAST
  Oct 25,1999 Richard Dubois - Clone from LCD version
  */
@@ -21,41 +28,75 @@
 
 class Event: public TObject {
 private:
-    UInt_t m_run;           // Run number
-    UInt_t m_eventId;         // Event number
+    /// Run number
+    UInt_t m_run;  
+    /// Event Number 
+    UInt_t m_eventId;  
     
-    static CalDigi *m_staticCal;
-    static AcdDigi *m_staticAcd;
-    static TkrDigi *m_staticTkr;
-    static L1T *m_staticL1T;
+    /// Store Level 1 trigger
+    L1T m_L1T;
 
-    CalDigi* m_CAL;       // List of Calorimeter logs
-    AcdDigi* m_ACD;       //-> List of ACD tiles
-    TkrDigi* m_TKR;       // List of Tracker layers
-    static L1T *s_L1T;
-    L1T *m_L1Trigger;       // Level 1 trigger object
     //Tagger *m_Tagger;       // Tagger object
 
+    /// data members to store ACD data
+    TClonesArray *m_AcdData;  //-> 
+    UInt_t m_numTiles;
+    static TClonesArray *m_staticAcdData;
+    AcdHeader m_AcdHeader;
+
+    /// data members to store CAL data
+    TClonesArray *m_CalData;  //->
+    UInt_t m_numLogs;
+    static TClonesArray *m_staticCalData;
+    CalHeader m_CalHeader;
+
+    /// data members to store TKR data
+    static TObjArray *m_staticTkrData;
+    TObjArray* m_TkrData;       //-> List of Tracker layers
+    UInt_t m_numLayers;
+    TkrHeader m_TkrHeader;
+
+
 public:
+
     Event();
     virtual ~Event();
+
     void Clean(Option_t *option="");
-    inline void setEventId(UInt_t id) { m_eventId = id; };
-    inline void setRun(UInt_t run) { m_run = run; };
-    inline void setL1Trigger(L1T *L1TVal) { m_L1Trigger = L1TVal; };
-   // inline void setTagger(Tagger *TaggerVal) { m_Tagger = TaggerVal; };
-    inline Int_t getEvent() { return m_eventId; };
-    inline Int_t getRun() { return m_run; };
-    void setCAL(CalDigi *cal) { m_CAL = cal; };
-    CalDigi* getCAL() { return m_CAL; };
-    void setACD(AcdDigi *acd) { m_ACD = acd; };
-    AcdDigi* getACD() { return m_ACD; };
-    void setTKR(TkrDigi *tkr){ m_TKR = tkr; };
-    TkrDigi* getTKR() { return m_TKR; };
-    inline L1T *getL1T() const { return m_L1Trigger; };
-    //inline Tagger *getTagger() const { return m_Tagger; };
     
 
+    /// Access the Event number
+    inline void setEventId(UInt_t id) { m_eventId = id; };
+    inline Int_t getEventId() { return m_eventId; };
+
+    /// Access the run number
+    inline void setRun(UInt_t run) { m_run = run; };
+    inline Int_t getRun() { return m_run; };
+
+    /// Access ACD data
+    AcdHeader* getAcdHeader() { return &m_AcdHeader; };
+    TClonesArray* getAcdData() { return m_AcdData; };
+    /// Add a new ACDTile entry into the ACD data array
+    ACDTile* AddTile(UShort_t id);
+
+    /// Access CAL data
+    CalHeader* getCalHeader() { return &m_CalHeader; };
+    TClonesArray* getCalData() { return m_CalData; };
+    /// Add a new CalHit entry into the CAL data array
+    CalHit* AddLog();
+
+    /// Access TKR data
+    TkrHeader* getTkrHeader() { return &m_TkrHeader; };
+    TObjArray* getTkrData() { return m_TkrData; };
+    /// Add a TkrLayer entry into the TKR data array
+    void AddLayer(TkrLayer *layer);
+
+    /// Access Level 1 Trigger data
+    inline L1T* getL1T() { return &m_L1T; };
+
+    // inline void setTagger(Tagger *TaggerVal) { m_Tagger = TaggerVal; };
+    //inline Tagger *getTagger() const { return m_Tagger; };
+    
     ClassDef(Event,3)       // Storage for per-event and subsystem data
 }; 
 

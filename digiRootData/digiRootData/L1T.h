@@ -24,6 +24,7 @@ public:
 	L1T(Int_t trigCount, Int_t trigTimeValue, Int_t xCapture, Int_t yCapture,
 		 UShort_t vetoCapture, UChar_t deadTimeReason, UShort_t deadTime);
     virtual ~L1T();
+    void Clean();
     Int_t TrigCount(){ return m_trigCount; };
     Int_t TrigTimeValue(){ return m_trigTimeValue; };
     Int_t XCapture(){ return m_xCapture; };

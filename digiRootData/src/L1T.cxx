@@ -6,7 +6,6 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "digiRootData/L1T.h"
-//#include "TClass.h"
 
 ClassImp(L1T)
 
@@ -18,7 +17,9 @@ L1T::L1T( Int_t trigCount, Int_t trigTimeValue, Int_t xCapture, Int_t yCapture,
 	m_deadTimeReason(deadTimeReason), m_deadTime(deadTime) {
 }
 //_________________________________________________________________________
-L1T::L1T(){
+L1T::L1T() : m_trigCount(0), m_trigTimeValue(0), m_xCapture(0), m_yCapture(0),
+m_vetoCapture(0), m_deadTimeReason(0), m_deadTime(0)
+{
   // Default constructor
 }
 //_________________________________________________________________________
@@ -26,3 +27,12 @@ L1T::~L1T(){
   // Destructor
 }
 
+void L1T::Clean() {
+    m_trigCount = 0;  
+    m_trigTimeValue = 0;
+    m_xCapture = 0;
+    m_yCapture = 0; 
+    m_vetoCapture = 0;  
+    m_deadTimeReason = 0; 
+    m_deadTime = 0;     
+}

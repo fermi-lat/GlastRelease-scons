@@ -1,30 +1,21 @@
-#ifndef TkrDigi_H
-#define TkrDigi_H
+#ifndef AcdHeader_H
+#define AcdHeader_H
 
 #include "TObject.h"
-#include "TObjArray.h"
 
-#include "TkrLayer.h"
-
-/*! \class TkrDigi
-\brief Root class to contain the TKR digitization data for
+/*! \class AcdHeader
+\brief Root class to contain the ACD header data for
 one event. 
 */
-class TkrDigi: public TObject {
+class AcdHeader: public TObject {
 
 public:
     
-    TkrDigi();
+    AcdHeader();
 
-    virtual ~TkrDigi();
+    virtual ~AcdHeader();
 
     void Clean(Option_t *option="");
-
-    /// provide mechanism to update array of logs
-    void Add(TkrLayer *layer);
-
-    /// provide access to array of logs
-    TObjArray* getLayers() { return m_layers; };
 
     unsigned long eventId() { return m_eventId; };
     void eventId(unsigned int id) { m_eventId = id; };
@@ -43,17 +34,13 @@ public:
 
 private:
 
-    TObjArray *m_layers;
+    UInt_t m_eventId;
+    UInt_t m_timerWord;
+    UInt_t m_TREQ_VETO_status;
+    UInt_t m_deadTime;
+    UInt_t m_deadTimeCause;
 
-    static TObjArray *m_staticArray;
-
-    unsigned long m_eventId;
-    unsigned long m_timerWord;
-    unsigned long m_TREQ_VETO_status;
-    unsigned long m_deadTime;
-    unsigned long m_deadTimeCause;
-    
-    ClassDef(TkrDigi,1)
+    ClassDef(AcdHeader,1)
 };
 
 #endif
