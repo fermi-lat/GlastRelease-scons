@@ -84,6 +84,8 @@ StatusCode UserAlg::initialize(){
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
 
+    if( m_tupleName.empty()) {log << MSG::ERROR << "tupleName property not set!"<<endreq;
+        return StatusCode::FAILURE;}
     // now try to find the GlastDevSvc service
     if (service("GlastDetSvc", m_detSvc).isFailure()){
         log << MSG::ERROR << "Couldn't find the GlastDetSvc!" << endreq;
