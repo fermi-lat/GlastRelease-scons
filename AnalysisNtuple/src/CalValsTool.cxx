@@ -335,12 +335,7 @@ StatusCode CalValsTool::calculate()
     //    pClusters(m_pEventSvc,EventModel::TkrRecon::TkrClusterCol);
     SmartDataPtr<Event::CalClusterCol>     
         pCals(m_pEventSvc,EventModel::CalRecon::CalClusterCol);
-    
-    //if(!pCals || !pTracks || !pVerts) return StatusCode::FAILURE;
-
-    std::cout  << " smartptrs: tracks, verts, clusters "
-        << pTracks << " " << pVerts << " " << pCals << std::endl;
-    
+        
     //Make sure we have valid cluster data
     if (!pCals) return sc;
     
