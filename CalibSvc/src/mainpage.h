@@ -68,8 +68,9 @@
   <dt> CalibInstrumentName</dt>  <dd>defaults to "LAT"</dd>
   </dl>
 
-  The class EvtClock, used in the test program to generate fake event
-  times and store them with CalibDataSvc, has job options properties
+  The algorithm CalibEvtClock, used in the test program to generate fake event
+  times and store them with CalibDataSvc, may also be scheduled by user
+  applications.  It has job options properties
 
   <ul>
   <li>  startTime, defaults to current time. Time assigned to first event </li>
