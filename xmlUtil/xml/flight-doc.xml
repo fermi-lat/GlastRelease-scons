@@ -23,7 +23,7 @@
     <!ENTITY idDict SYSTEM "flightIdDict.xml">
   ]>
 <gdd CVSid="$Id$" DTDversion="2.0" substituted="false">
-  <source inputId="Id: flight.xml,v 1.9 2001/07/03 21:34:14 jrb Exp " creatorId="Id: makeXmlForDoc.cxx,v 1.2 2001/04/23 23:26:02 jrb Exp ">
+  <source inputId="Id: flight.xml,v 1.10 2001/07/12 21:25:22 jrb Exp " creatorId="Id: makeXmlForDoc.cxx,v 1.2 2001/04/23 23:26:02 jrb Exp ">
     Do not edit! This file automatically created by xmlUtil/v1/src/forDoc.exe  </source>
   <constants>
     <version major="0" minor="0" />
@@ -613,20 +613,20 @@ crystal and its diodes          </notes>
                horizontal walls          </notes>
         </const>
         <!--  offsets for positioning cell walls inside the cel -->
-        <const name="cellHorWall_dz" uType="length" value="41.85" unitAngle="deg" unitLength="mm">
+        <const name="cellHorWall_dz" uType="length" value="10.4625" unitAngle="deg" unitLength="mm">
           <notes>
             Z position rel. to cell of upper horiz. wall          </notes>
         </const>
-        <const name="cellHorWall_dzn" uType="length" value="-41.85" unitAngle="deg" unitLength="mm">
+        <const name="cellHorWall_dzn" uType="length" value="-10.4625" unitAngle="deg" unitLength="mm">
           <notes>
             Z position rel. to cell of lower horiz. wall          </notes>
         </const>
-        <const name="cellVertWall_dy" uType="length" value="55.198" unitAngle="deg" unitLength="mm">
+        <const name="cellVertWall_dy" uType="length" value="13.7995" unitAngle="deg" unitLength="mm">
           <notes>
             Y displacement rel. to cell of vertical cell wall
 (here Y means perp. to height and length directions)          </notes>
         </const>
-        <const name="cellVertWall_dyn" uType="length" value="-55.198" unitAngle="deg" unitLength="mm">
+        <const name="cellVertWall_dyn" uType="length" value="-13.7995" unitAngle="deg" unitLength="mm">
           <notes>
             Neg. of Y  displacement rel. to cell of vertical cell wall
 (here Y means perp. to height and length directions)          </notes>

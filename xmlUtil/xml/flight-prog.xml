@@ -23,7 +23,7 @@
     <!ENTITY idDict SYSTEM "flightIdDict.xml">
   ]>
 <gdd CVSid="$Id$" DTDversion="2.0" substituted="false">
-  <source inputId="Id: flight.xml,v 1.9 2001/07/03 21:34:14 jrb Exp " creatorId="Id: makeXmlForProg.cxx,v 1.2 2001/03/30 19:46:20 jrb Exp ">
+  <source inputId="Id: flight.xml,v 1.10 2001/07/12 21:25:22 jrb Exp " creatorId="Id: makeXmlForProg.cxx,v 1.2 2001/03/30 19:46:20 jrb Exp ">
     Do not edit! This file automatically created by xmlUtil/v1/src/forProg.exe  </source>
   <constants>
     <version major="0" minor="0" />
@@ -586,10 +586,10 @@ ACD tile        </prim>
         </const>
         <const name="cellIntWallZ" uType="length" value="20.5" unitAngle="deg" unitLength="mm" />
         <!--  offsets for positioning cell walls inside the cel -->
-        <const name="cellHorWall_dz" uType="length" value="41.85" unitAngle="deg" unitLength="mm" />
-        <const name="cellHorWall_dzn" uType="length" value="-41.85" unitAngle="deg" unitLength="mm" />
-        <const name="cellVertWall_dy" uType="length" value="55.198" unitAngle="deg" unitLength="mm" />
-        <const name="cellVertWall_dyn" uType="length" value="-55.198" unitAngle="deg" unitLength="mm" />
+        <const name="cellHorWall_dz" uType="length" value="10.4625" unitAngle="deg" unitLength="mm" />
+        <const name="cellHorWall_dzn" uType="length" value="-10.4625" unitAngle="deg" unitLength="mm" />
+        <const name="cellVertWall_dy" uType="length" value="13.7995" unitAngle="deg" unitLength="mm" />
+        <const name="cellVertWall_dyn" uType="length" value="-13.7995" unitAngle="deg" unitLength="mm" />
         <!--  the following should be the maximum of the length of a single
      CsIElement and the transverse distance across the whole 
      collection of CsIElements in a layer, so
@@ -990,19 +990,19 @@ ACD tile        </prim>
       </posXYZ>
       <!--  Also need to position cell walls -->
       <!--  top cell wall -->
-      <posXYZ S="0" X="0" Y="0" Z="41.85" xrot="0" yrot="0" zrot="0" volume="cellHorWall" unitAngle="deg" unitLength="mm">
+      <posXYZ S="0" X="0" Y="0" Z="10.4625" xrot="0" yrot="0" zrot="0" volume="cellHorWall" unitAngle="deg" unitLength="mm">
         <idField name="fCALCellCmp" step="0" value="5" />
       </posXYZ>
       <!--  bottom cell wall -->
-      <posXYZ S="0" X="0" Y="0" Z="-41.85" xrot="0" yrot="0" zrot="0" volume="cellHorWall" unitAngle="deg" unitLength="mm">
+      <posXYZ S="0" X="0" Y="0" Z="-10.4625" xrot="0" yrot="0" zrot="0" volume="cellHorWall" unitAngle="deg" unitLength="mm">
         <idField name="fCALCellCmp" step="0" value="5" />
       </posXYZ>
       <!--  pos side cell wall -->
-      <posXYZ S="0" X="0" Y="55.198" Z="0" xrot="0" yrot="0" zrot="0" volume="cellVertWall" unitAngle="deg" unitLength="mm">
+      <posXYZ S="0" X="0" Y="13.7995" Z="0" xrot="0" yrot="0" zrot="0" volume="cellVertWall" unitAngle="deg" unitLength="mm">
         <idField name="fCALCellCmp" step="0" value="5" />
       </posXYZ>
       <!--  neg side cell wall -->
-      <posXYZ S="0" X="0" Y="-55.198" Z="0" xrot="0" yrot="0" zrot="0" volume="cellVertWall" unitAngle="deg" unitLength="mm">
+      <posXYZ S="0" X="0" Y="-13.7995" Z="0" xrot="0" yrot="0" zrot="0" volume="cellVertWall" unitAngle="deg" unitLength="mm">
         <idField name="fCALCellCmp" step="0" value="5" />
       </posXYZ>
     </composition>
