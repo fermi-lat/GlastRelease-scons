@@ -25,6 +25,8 @@
         files</a><br>
         </strong><a href="#Calibration">Calibration</a></font>
         </p>
+        <p><font size="2">EventDisplay</font>
+        </p>
         <p><font size="2"><strong><a href="#Event Loop processing">Event Loop
         Processing</a></strong></font><font size="3"><br>
         </font><font size="2"><a href="#RootTreeAnalysis">RootTreeAnalysis</a><br>
@@ -106,6 +108,15 @@
         <p>Currently by default, the RootTreeAnalysis and RawValidate macros
         will read in and use the Balloon pedestal files.&nbsp; You may modify
         this behavior if desired.</p>
+        <h3><a name="EventDisplay">EventDisplay</a></h3>
+        <p>Included with the RootAnalysis distribution is the EventDisplay
+        developed in Italy, release tag ED-1-4.&nbsp; The Event Display
+        documentation is available at: <a href="http://www.pi.infn.it/glast/docs/EDDoc_new.html">http://www.pi.infn.it/glast/docs/EDDoc_new.html</a></p>
+        <p>Please note that the EventDisplay expects that reconstruction ROOT
+        files are named *-recon.root.&nbsp; If you try to load a reconstruction
+        ROOT file that does not contain &quot;-recon&quot; in the name, the file
+        will not be loaded.&nbsp; Please rename any reconstruction ROOT files so
+        that &quot;-recon&quot; appears in the file name.</p>
         <h3><a name="Event Loop processing">Event Loop processing</a></h3>
         <p><font size="3"><b><a name="RootTreeAnalysis">RootTreeAnalysis</a></b></font></p>
         <p><font size="3">Our generic event loop macro.&nbsp; Handles raw,
