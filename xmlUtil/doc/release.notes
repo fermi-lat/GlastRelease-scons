@@ -2,6 +2,8 @@
  * Package xmlUtil
  * Coordinator: J. Bogart
  *
+ * 23-jul-2002: jrb - tag v2r8p2 Be sure values for nominal ints are really
+ *                               int
  * 04-apr-2002: jrb - tag v2r8p1 Get rid of unnecessary packageShr pattern
  *              jrb - tag v2r8
  * 31-jan-2002: jrb - tag v2r7p1 - Add doc directory and this file
