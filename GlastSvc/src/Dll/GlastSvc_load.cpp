@@ -30,6 +30,9 @@ void GlastSvc_load() {
     //DLL_DECL_CONVERTER( MCACDHitCnv );
     DLL_DECL_CONVERTER( EventCnv );
     DLL_DECL_CONVERTER( MCEventCnv );
+
+    DLL_DECL_CONVERTER( McVertexCnv );
+   
     DLL_DECL_CONVERTER( DigiEventCnv );
 
     // DLL_DECL_CONVERTER( MCSiLayerCnv );

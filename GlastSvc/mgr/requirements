@@ -22,6 +22,7 @@ macro_append GlastSvc_headers "" WIN32 " \
 library GlastSvc GlastDetSvc/*.cpp \
                  EventSelector/*.cpp \
                  data/*.cpp \
+                 MonteCarlo/*.cpp\
 		 Dll/*.cpp \
                  ${GlastSvc_headers}
             
