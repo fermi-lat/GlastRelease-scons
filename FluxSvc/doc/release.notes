@@ -3,7 +3,8 @@
 
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
- * 27-aug-03         thb tag
+ * 27-AUG-03  v6r7p3 thb fix time management, mostly reporting. tag
+ * 27-aug-03         sean pointing stuff?
  * 26-aug-03         thb fix time set
  * 29-jul=03  v6r6   thb split out flux to separate package (Brian)
  * 17-jul=03  v6r5p3 thb extend allgamma source to 56 GeV
