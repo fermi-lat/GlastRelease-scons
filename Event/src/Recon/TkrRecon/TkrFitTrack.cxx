@@ -16,8 +16,8 @@ using namespace Event;
 // be inherited from a class which actually does the track fit. 
 TkrFitTrack::TkrFitTrack()
 { 
-    m_chisq       = -9999.;
-    m_chisqSmooth = -9999.;
+    m_chisq       = -1e6;
+    m_chisqSmooth = -1e6;
     m_rmsResid    = 0.;
     m_Q           = -1e6;
     m_KalEnergy   = 0.;
@@ -51,8 +51,7 @@ Vector TkrFitTrack::getDirection(TrackEnd end) const
 {
     TkrFitPar trkPar = getFoLPlane(end).getHit(TkrFitHit::SMOOTH).getPar();
 
-    if   (end == TkrRecInfo::Start) return Vector( trkPar.getXSlope(), trkPar.getYSlope(), 1.).unit();
-    else                            return Vector(-trkPar.getXSlope(),-trkPar.getYSlope(),-1.).unit();
+    return Vector(-trkPar.getXSlope(),-trkPar.getYSlope(),-1.).unit();
 }
 
 
