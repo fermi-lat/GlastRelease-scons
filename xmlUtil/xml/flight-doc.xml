@@ -28,7 +28,7 @@
     <!ENTITY idDict SYSTEM "flightIdDict.xml">
   ]>
 <gdd CVSid="$Id$" DTDversion="2.0" substituted="false">
-  <source inputId="Id: flight.xml,v 1.11 2001/10/17 23:45:48 jrb Exp " creatorId="Id: makeXmlForDoc.cxx,v 1.3 2001/07/03 22:40:24 jrb Exp ">
+  <source inputId="Id: flight.xml,v 1.11 2001/10/17 23:45:48 jrb Exp " creatorId="Id: makeXmlForDoc.cxx,v 1.4 2001/11/05 22:19:04 jrb Exp ">
     Do not edit! This file automatically created by xmlUtil/v1/src/forDoc.exe  </source>
   <constants>
     <version major="0" minor="0" />
@@ -401,6 +401,9 @@ TKR Stay Clear envelope from LAT-DS-00038-2        </prim>
         <prim name="coreThickOuter" type="double" uType="length" value="34.27" unitAngle="deg" unitLength="mm">
           Core thickness for
             bottom and top trays  (15oct01)        </prim>
+        <prim name="TKRCloseoutWidth" type="double" uType="length" value="4.0" unitAngle="deg" unitLength="mm">
+          Width of closeout 
+            walls        </prim>
         <prim name="glueSiThick" type="double" uType="length" value="0.15" unitAngle="deg" unitLength="mm">
           Thickness of glue
             between Si and bias plane        </prim>
@@ -789,6 +792,38 @@ grid, etc. (may be superseded by info from Eric)          </notes>
           <notes>
             Transverse dimension of bias board (for now assuming
           it's a square          </notes>
+        </const>
+        <const name="TKRCloseoutThick" uType="length" value="27.92" unitAngle="deg" unitLength="mm">
+          <notes>
+            Z dimension of closeout for trays other than top
+                 and bottom          </notes>
+        </const>
+        <const name="TKRCloseoutThickOuter" uType="length" value="34.27" unitAngle="deg" unitLength="mm">
+          <notes>
+            Z dimension of closeout for top and bottom trays          </notes>
+        </const>
+        <const name="TKRCloseoutLen" uType="length" value="360.6" unitAngle="deg" unitLength="mm">
+          <notes>
+            Transverse length of longer of (imaginary) closeout 
+                pieces, just the same as the face sheet          </notes>
+        </const>
+        <const name="TKRCloseoutLenShort" uType="length" value="352.6" unitAngle="deg" unitLength="mm">
+          <notes>
+            Transverse length of shorter of (imaginary) closeout
+                 pieces          </notes>
+        </const>
+        <const name="TKRCoreWidth" uType="length" value="352.6" unitAngle="deg" unitLength="mm">
+          <notes>
+            Length of sides for core           </notes>
+        </const>
+        <const name="TKRCloseout_dt" uType="length" value="178.3" unitAngle="deg" unitLength="mm">
+          <notes>
+            Transverse (x or y) offset of closeout pieces 
+                 w.r.t. tray          </notes>
+        </const>
+        <const name="TKRCloseout_dtn" uType="length" value="-178.3" unitAngle="deg" unitLength="mm">
+          <notes>
+            Negative transverse offset of closeout pieces          </notes>
         </const>
         <const name="biasGlueThick" uType="length" value="0.25" unitAngle="deg" unitLength="mm">
           <notes>
