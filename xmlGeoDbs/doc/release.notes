@@ -2,6 +2,8 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 09-apr-2002: jrb - tag v1r4 - Fix crystal ordering in Y layers;
+ *                               add new fineChoice attribute to <section>
  * 28-mar-2002: jrb - tag v1r3 - Include enough p's in 
  *                                cal.zeroSuppressEnergy
  * 22-mar-2002: jrb - tag v1r2 - Alternate flight description segmenting
