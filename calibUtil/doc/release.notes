@@ -3,6 +3,8 @@
  * Coordinator: J. Bogart
  *       *  EOH *
 
+   v1r3p5 18-Mar-2005 jrb Fix bug in tkrCalibration.dtd affecting chargeScale
+                          calibrations
    v1r3p4 17-Mar-2005 jrb Add a (defaulted) attribute to <tower> in 
                           tkrCalibration.dtd
    v1r3p3 15-Mar-2005 jrb Make <generic> the same in the 2 tracker dtd's
