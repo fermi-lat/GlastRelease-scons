@@ -29,6 +29,16 @@ namespace CalibData {
     }
     else return 0;
   }
+  RangeBase*  CalCalibBase::getRange(unsigned towerRow, unsigned towerCol, 
+                                     unsigned layer, unsigned xtal, 
+                                     unsigned range, unsigned face) {
+    unsigned ix = m_finder->findIx(towerRow, towerCol, layer, xtal, 
+                                   range, face);
+    if (ix < m_finder->getSize() ) { 
+      return m_ranges[ix];
+    }
+    else return 0;
+  }
 
   bool CalCalibBase::putRange(unsigned towerRow, unsigned towerCol, 
                               unsigned layer, unsigned xtal, unsigned range,

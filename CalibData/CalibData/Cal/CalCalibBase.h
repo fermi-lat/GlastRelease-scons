@@ -7,10 +7,10 @@
 
 #include <vector>
 #include "CalibData/CalibBase.h"
+#include "CalibData/Cal/CalFinder.h"
 #include "idents/CalXtalId.h"
 
 namespace CalibData {
-  class CalFinder;
   class RangeBase;
   class DacCol;
 
@@ -38,6 +38,10 @@ namespace CalibData {
     virtual RangeBase* getRange(idents::CalXtalId id, 
                                 unsigned range=0, unsigned face=0);
 
+    virtual RangeBase* getRange(unsigned towerRow, unsigned towerCol,
+                                unsigned layer, unsigned xtal,
+                                unsigned range=0, unsigned face=0);
+
     bool putRange(idents::CalXtalId id, unsigned range, unsigned face, 
                   RangeBase* data);
 
@@ -48,6 +52,30 @@ namespace CalibData {
     bool putDacCol(unsigned range, DacCol* dacs);
 
     DacCol* getDacCol(unsigned range);
+
+    // Get dimensioning information; needed when transforming to 
+    // permanent storage
+    /// Get # tower rows
+    unsigned getNTowerRow() const {return m_finder->getNTowerRow();}
+
+    /// Get # tower columns
+    unsigned getNTowerCol() const {return m_finder->getNTowerCol();}
+
+    /// Get #  layers
+    unsigned getNLayer() const {return m_finder->getNLayer();}
+
+    /// Get # crystals/layer
+    unsigned getNXtal() const {return m_finder->getNXtal();}
+
+    /// Get # face relevant for this calibration
+    unsigned getNFace() const {return m_finder->getNFace();}
+
+    /// Get # ranges relevant for this calibration
+    unsigned getNRange() const {return m_finder->getNRange();}
+
+    /// Get # dac setting collections
+    unsigned getNDacCol() const {return m_finder->getNDacCol();}
+
 
     virtual const CLID& clID() const = 0;     // must be overridden
     static const CLID& classID();   // shouldn't get called

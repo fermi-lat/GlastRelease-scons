@@ -31,6 +31,7 @@ namespace CalibData {
                     virtual public IValidity {
 
     friend class XmlBaseCnv;
+    friend class RootBaseCnv;
     
   public:
     CalibBase();
