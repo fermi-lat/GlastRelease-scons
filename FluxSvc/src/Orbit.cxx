@@ -83,17 +83,25 @@ std::pair<double,double> Orbit::coords(double time) const {
 Rotation Orbit::CELtransform(double time){
     
     //THIS IS THE PART WHERE WE MAKE THE MATRIX CEL INTO SOMETHING WE CAN USE
-    Rotation gal,cel;
+    Rotation gal,cel,cel1,cel2,cel3;
     
     //and here we construct the rotation matrices
+
+    //gal is the matrix which rotates (cartesian)celestial coordiantes into (cartesian)galactic ones
     gal.rotateZ(-282.25/m_degsPerRad).rotateX(-62.6/m_degsPerRad).rotateZ(33./m_degsPerRad);
     
-    cel.rotateY((time/m_precessPeriod)*M_2PI).rotateZ(-m_inclination*M_2PI/360.).rotateY(phase(time));
-    //cel.rotateZ(phase(time)).rotateX(m_inclination*M_2PI/360.);
-    Rotation glstToGal = gal*cel;
+    //cel is the matrix which rotates (cartesian)local coordinates into (cartesian)celestial ones
+    //cel.rotateY((time/m_precessPeriod)*M_2PI).rotateZ(m_inclination*M_2PI/360.).rotateY(phase(time));
+    cel1.rotateY(phase(time));
+    cel2.rotateZ(m_inclination*M_2PI/360.);
+    cel3.rotateY((time/m_precessPeriod)*M_2PI);
+
+    //so gal*cel should be the matrix that makes local coordiates into galactic ones.
+    Rotation glstToGal = gal*cel1*cel2*cel3;
 
     //displayRotation(glstToGal);
 
+    //we want the rotation from galactic to local.
     return glstToGal.inverse();
 }
 
