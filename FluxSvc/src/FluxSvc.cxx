@@ -11,6 +11,13 @@
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/Property.h"
+#include "GaudiKernel/IRndmGenSvc.h"
+
+// nasty include needed so that we can get at the HepRandomEngine
+// in the initialize method. (Ian Gable) 
+// The actual is GaudiSvc
+#include "src/RndmGenSvc/HepRndmBaseEngine.h"
+#include "CLHEP/Random/Random.h"
 
 #include "Flux.h"
 
@@ -81,6 +88,39 @@ StatusCode FluxSvc::initialize ()
         log << MSG::ERROR  << "Did not initialize properly: no sources detected" << endreq;
         status = StatusCode::FAILURE;
     }
+    // set up the random number service to use Gaudi's default (in progress )
+    IRndmGenSvc* randSvc = 0;
+    StatusCode sc = service( "RndmGenSvc", randSvc, true );
+    if( sc.isFailure() ) { log << MSG::ERROR << "Failed to get random service " << endreq; return sc; }
+
+    IRndmEngine* engine = 0;
+    if( (engine=randSvc->engine())==0 ) {
+        log << MSG::ERROR << "Failed to get the IRndmEngine" << endreq;
+    }
+   
+
+    // cast to the base type so that we can actually get access to the 
+    // HepRandomEngine.
+    HepRndm::BaseEngine* baseEngine = dynamic_cast<HepRndm::BaseEngine*>(engine);
+    
+    if(!baseEngine)
+    {
+        log << MSG::ERROR << "Failed to cast IRndmEngine to BaseEngine" <<endreq;
+        return StatusCode::FAILURE;
+    }
+    
+    
+    HepRandomEngine* hepengine = baseEngine->hepEngine();
+    
+    if(!hepengine)
+    {
+        log << MSG::ERROR << "No HepRandomEngine available from gaudi!" << endreq;
+        return StatusCode::FAILURE;
+    }
+    
+    HepRandom* gen = HepRandom::getTheGenerator(); 
+    gen->setTheEngine(hepengine);
+   
 
 
     return status;
