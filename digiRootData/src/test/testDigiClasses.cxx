@@ -217,7 +217,7 @@ int main(int argc, char **argv) {
     sc = read(fileName, numEvents);
     
     if (sc == 0) {
-        std::cout << "DIGI ROOT file writing and reading suceeded!" << std::endl;
+        std::cout << "DIGI ROOT file writing and reading succeeded!" << std::endl;
     } else {
         std::cout << "FAILED digi writing and reading" << std::endl;
     }
