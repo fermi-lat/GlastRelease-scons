@@ -9,7 +9,7 @@ version v1r2p1
 use GaudiSys    v9r0p6
 
 # ROOT add-on
-use ROOT        	v3r2p9
+use ROOT        v3r2p9
 use RootHistCnv v5r0p1
 
 # basic Glast packages
@@ -39,6 +39,7 @@ use Geant4      v1r1p0
 
 use GuiSvc      v3
 use GlastEvent  v7r3
+use Event             v8
 use GlastSvc    v7r2
 
 # simulation
@@ -51,7 +52,7 @@ use GlastDigi   v2r6
 
 #reconstruction
 use Recon       v1r3
-use TkrRecon           v5r7
+use TkrRecon    v5r7
 use CalRecon    v4r1       
 
 
