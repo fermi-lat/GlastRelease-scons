@@ -284,7 +284,7 @@ StatusCode mcRootWriterAlg::writeMcParticles() {
                 
         // Setup the ROOT McParticle
         mcPart->initialize(momRoot, idRoot, statFlagsRoot, initMomRoot, 
-            finalMomRoot, initPosRoot, finalPosRoot, (*p)->getProcess());
+            finalMomRoot, initPosRoot, finalPosRoot, (*p)->getProcess().c_str());
         
         /* HMK This is probably no longer necessary - as this is handled in McParticle::initialize
         // Process the Daughter Particles

@@ -333,9 +333,10 @@ StatusCode mcRootReaderAlg::readMcParticles() {
             momTds = pTds;
         }
 
+        std::string processTdsStr(pRoot->getProcess().Data());
         // Setup the TDS version fo the McParticle
         pTds->init(momTds, idTds, statusBitsTds, initialMomTds, 
-            finalMomTds, initPosTds, finalPosTds, pRoot->getProcess() );
+            finalMomTds, initPosTds, finalPosTds, processTdsStr );
 
 		// Process the list of daughters
 		const TRefArray daughterArr = pRoot->getDaughterList();
