@@ -2,6 +2,9 @@
  * Package xmlUtil
  * Coordinator: J. Bogart
  *
+ * 13-sep-2002: jrb - tag v2r8p3 Add support for <primEnergy> element.
+ *               (Constants::normalizePrimary will substitute an 
+ *               equivalent <prim>, converting GeV to MeV if necessary
  * 23-jul-2002: jrb - tag v2r8p2 Be sure values for nominal ints are really
  *                               int
  * 04-apr-2002: jrb - tag v2r8p1 Get rid of unnecessary packageShr pattern
