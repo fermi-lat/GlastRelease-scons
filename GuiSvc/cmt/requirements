@@ -1,0 +1,30 @@
+package GuiSvc
+version v1
+
+branches GuiSvc mgr doc
+
+use gui 
+use GaudiSvc
+# need to use this to make the dll available.
+use RootHistCnv
+
+# library is not shareable since it is expected to be linked into the executable
+library GuiSvc -no_share\
+ *.cxx *.h\
+ dll/*.cxx\
+ ../GuiSvc/*.h 
+
+include_path $(GUISVCROOT)
+
+
+macro GuiSvc_linkopts " "\
+  VisualC ' service.obj ${GUISVCROOT}/${BINDIR}/libGuiSvc.lib ' 
+
+
+
+private
+# note redefinition of the macro to *not* include any other dependent libs
+macro use_linkopts " $(Gaudi_linkopts) $(GuiSvc_linkopts) $(gui_linkopts) "
+
+
+application GuiTest test/*.h test/*.cxx test/*.txt  $(GUIROOT)/src/test/Demo.cxx $(Win32Resource)
