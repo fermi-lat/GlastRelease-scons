@@ -10,7 +10,7 @@ use GlastEvent
 
 use GaudiSvc v4
 use Auditors v1
-use RootHistCnv v1
+use RootHistCnv v1r1
 
 
 library GlastSvc ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
