@@ -320,7 +320,8 @@ void reconRootWriterAlg::fillFitTracks(TkrRecon* recon, Event::TkrFitTrackCol* t
                                  projPlus,
                                  planeTds.getZPlane(),
                                  planeTds.getEnergy(),
-                                 planeTds.getRadLen() );
+                                 planeTds.getRadLen(),
+                                 planeTds.getActiveDist() );
 
             // Here we build the hit info (one at a time) starting with measured
             TkrParams           params;
