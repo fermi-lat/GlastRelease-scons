@@ -30,6 +30,7 @@ library xmlUtil ${xmlUtil_headers} -no_share \
      id/IdOpTruncate.cxx     \
      id/IdOperation.cxx       \
      id/NamedId.cxx          \
+     id/IdKey.cxx            \
      docMan/GDDDocMan.cxx    \
      ${xmlUtil_xmlfiles} 
 
