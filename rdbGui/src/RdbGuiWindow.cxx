@@ -85,13 +85,13 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   FXSplitter *uiVsplitter = new FXSplitter(uiHsplitter, (LAYOUT_FILL_X|LAYOUT_FILL_Y|
                                SPLITTER_TRACKING|SPLITTER_VERTICAL|PACK_UNIFORM_HEIGHT));
 
-  // Editor frame up
-  FXHorizontalFrame *uiEditorframe = new FXHorizontalFrame(uiVsplitter,
-                                        LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_THICK|FRAME_SUNKEN);
+
+  // Search Frame
+  QueryFrame *searchFrame = new QueryFrame(uiVsplitter);
 
 
   // Editor
-  uiEditor = new SQLBuffer(uiEditorframe, this, ID_SQLEDIT, LAYOUT_FILL_X|LAYOUT_FILL_Y);
+  //uiEditor = new SQLBuffer(uiEditorframe, this, ID_SQLEDIT, LAYOUT_FILL_X|LAYOUT_FILL_Y);
 
   // Log window frame
   FXHorizontalFrame *uiLogFrame = new FXHorizontalFrame(uiVsplitter,
@@ -124,17 +124,18 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
 
   // Force some reasonable sizes to the layout manager
   uiTblColframe->setWidth(150);
-  uiEditorframe->setHeight(300);
+  searchFrame->setHeight(200);
+  //uiEditorframe->setHeight(300);
 
   // Editor initialization
   //  @filename = 'untitled.sql'
   //  @filenameset = false
   //  @ui_log.editable = false
-  uiEditor->setHiliteMatchTime(1500);
-  uiEditor->setCursorColor(fxcolorfromname("DarkGray"));
-  uiEditor->setFocus();
-  uiEditor->initSyntaxHighlighting();
-  m_shactive = getApp()->reg().readStringEntry("SETTINGS", "HighLightSyntax", "Y") == "Y";
+  //uiEditor->setHiliteMatchTime(1500);
+  //uiEditor->setCursorColor(fxcolorfromname("DarkGray"));
+  //uiEditor->setFocus();
+  //uiEditor->initSyntaxHighlighting();
+  //m_shactive = getApp()->reg().readStringEntry("SETTINGS", "HighLightSyntax", "Y") == "Y";
   
   
   // Initialize connection dialog and mysql connection

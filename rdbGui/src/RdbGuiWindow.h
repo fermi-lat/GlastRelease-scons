@@ -4,6 +4,7 @@
 
 #include "fx.h"
 #include "TableColumnList.h"
+#include "QueryFrame.h"
 #include "SQLBuffer.h"
 #include "LogText.h"
 #include "ResultTable.h"
