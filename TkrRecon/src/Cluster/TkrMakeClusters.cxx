@@ -28,7 +28,6 @@ TkrMakeClusters::TkrMakeClusters(TkrClusterCol* pClus,
     // Dependencies: None
     // Restrictions and Caveats:  None
 
-    //Save some geometry information for the display routine
     m_pTkrGeo    = pTkrGeoSvc;
     
     m_pBadStrips = pBadStripsSvc;
