@@ -210,28 +210,28 @@
       </posXYZ>
       <posXYZ volume="TKRCloseoutRegLong"
               YREF="TKRCloseout_dtn">
-        <idField name="fBorderCmp" value="eBottom" />
+        <idField name="fBorderCmp" valueREF="eBottom" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutRegShort"
               zrot="90"
               XREF="TKRCloseout_dt">
-        <idField name="fBorderCmp" value="eRight" />
+        <idField name="fBorderCmp" valueREF="eRight" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutRegShort"
               zrot="90"
               XREF="TKRCloseout_dtn" >
-        <idField name="fBorderCmp" value="eLeft" />
+        <idField name="fBorderCmp" valueREF="eLeft" />
       </posXYZ>
 
       <posXYZ volume="TKRMCM"
               YREF="TKRMCM_dtn"
               ZREF="TKRMCMint_dzn" >
-        <idField name="fBorderCmp" value="efarBottom" />
+        <idField name="fBorderCmp" valueREF="eFarBottom" />
       </posXYZ>
       <posXYZ volume="TKRMCM"
               YREF="TKRMCM_dt"
               ZREF="TKRMCMint_dz">
-        <idField name="fBorderCmp" value="efarTop" />
+        <idField name="fBorderCmp" valueREF="eFarTop" />
       </posXYZ>
 
     </composition>
@@ -240,36 +240,36 @@
      they come out right after rotation of +90 -->
     <composition name="TKRCoreRegYMeas" envelope="TKRCoreRegEnv">
       <posXYZ volume="TKRCoreRegBox">
-        <idField name="fBorderCmp" value="eCenter" />
+        <idField name="fBorderCmp" valueREF="eCenter" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutRegLong"
               YREF="TKRCloseout_dt">
-        <idField name="fBorderCmp" value="eTop" />
+        <idField name="fBorderCmp" valueREF="eTop" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutRegLong"
               YREF="TKRCloseout_dtn">
-        <idField name="fBorderCmp" value="eBottom" />
+        <idField name="fBorderCmp" valueREF="eBottom" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutRegShort"
               zrot="90"
               XREF="TKRCloseout_dt">
-        <idField name="fBorderCmp" value="eRight" />
+        <idField name="fBorderCmp" valueREF="eRight" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutRegShort"
               zrot="90"
               XREF="TKRCloseout_dtn" >
-        <idField name="fBorderCmp" value="eLeft" />
+        <idField name="fBorderCmp" valueREF="eLeft" />
       </posXYZ>
 
       <posXYZ volume="TKRMCM"
               YREF="TKRMCM_dtn"
               ZREF="TKRMCMint_dz" >
-        <idField name="fBorderCmp" value="efarBottom" />
+        <idField name="fBorderCmp" valueREF="eFarBottom" />
       </posXYZ>
       <posXYZ volume="TKRMCM"
               YREF="TKRMCM_dt"
               ZREF="TKRMCMint_dzn">
-        <idField name="fBorderCmp" value="efarTop" />
+        <idField name="fBorderCmp" valueREF="eFarTop" />
       </posXYZ>
 
     </composition>
@@ -282,35 +282,35 @@
     above, but core box is a different material  -->
     <composition name="TKRCoreSup" envelope="TKRCoreRegEnv">
       <posXYZ volume="TKRCoreSupBox" >
-        <idField name="fBorderCmp" value="eCenter" />
+        <idField name="fBorderCmp" valueREF="eCenter" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutRegLong"
               YREF="TKRCloseout_dt" >
-        <idField name="fBorderCmp" value="eTop" />
+        <idField name="fBorderCmp" valueREF="eTop" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutRegLong"
               YREF="TKRCloseout_dtn" >
-        <idField name="fBorderCmp" value="eBottom" />
+        <idField name="fBorderCmp" valueREF="eBottom" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutRegShort"
               zrot="90"
               XREF="TKRCloseout_dt" >
-        <idField name="fBorderCmp" value="eRight" />
+        <idField name="fBorderCmp" valueREF="eRight" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutRegShort"
               zrot="90"
               XREF="TKRCloseout_dtn" >
-        <idField name="fBorderCmp" value="eLeft" />
+        <idField name="fBorderCmp" valueREF="eLeft" />
       </posXYZ>
       <posXYZ volume="TKRMCM"
               YREF="TKRMCM_dtn"
               ZREF="TKRMCMint_dzn" >
-        <idField name="fBorderCmp" value="efarBottom" />
+        <idField name="fBorderCmp" valueREF="eFarBottom" />
       </posXYZ>
       <posXYZ volume="TKRMCM"
               YREF="TKRMCM_dt"
               ZREF="TKRMCMint_dz">
-        <idField name="fBorderCmp" value="efarTop" />
+        <idField name="fBorderCmp" valueREF="eFarTop" />
       </posXYZ>
     </composition>
 
@@ -318,35 +318,35 @@
     "come out right" after rotation by +90 -->
     <composition name="TKRCoreSupYMeas" envelope="TKRCoreRegEnv">
       <posXYZ volume="TKRCoreSupBox" >
-        <idField name="fBorderCmp" value="eCenter" />
+        <idField name="fBorderCmp" valueREF="eCenter" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutRegLong"
               YREF="TKRCloseout_dt" >
-        <idField name="fBorderCmp" value="eTop" />
+        <idField name="fBorderCmp" valueREF="eTop" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutRegLong"
               YREF="TKRCloseout_dtn" >
-        <idField name="fBorderCmp" value="eBottom" />
+        <idField name="fBorderCmp" valueREF="eBottom" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutRegShort"
               zrot="90"
               XREF="TKRCloseout_dt" >
-        <idField name="fBorderCmp" value="eRight" />
+        <idField name="fBorderCmp" valueREF="eRight" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutRegShort"
               zrot="90"
               XREF="TKRCloseout_dtn" >
-        <idField name="fBorderCmp" value="eLeft" />
+        <idField name="fBorderCmp" valueREF="eLeft" />
       </posXYZ>
       <posXYZ volume="TKRMCM"
               YREF="TKRMCM_dtn"
               ZREF="TKRMCMint_dz" >
-        <idField name="fBorderCmp" value="efarBottom" />
+        <idField name="fBorderCmp" valueREF="eFarBottom" />
       </posXYZ>
       <posXYZ volume="TKRMCM"
               YREF="TKRMCM_dt"
               ZREF="TKRMCMint_dzn">
-        <idField name="fBorderCmp" value="efarTop" />
+        <idField name="fBorderCmp" valueREF="eFarTop" />
       </posXYZ>
     </composition>
 
@@ -358,61 +358,61 @@
      the same one!  -->
     <composition name="TKRCoreOuterTop" envelope="TKRCoreOuterEnv">
       <posXYZ volume="TKRCoreOuterBox" >
-        <idField name="fBorderCmp" value="eCenter" />
+        <idField name="fBorderCmp" valueREF="eCenter" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutOuterLong"
               YREF="TKRCloseout_dt" >
-        <idField name="fBorderCmp" value="eTop" />
+        <idField name="fBorderCmp" valueREF="eTop" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutOuterLong"
               YREF="TKRCloseout_dtn" >
-        <idField name="fBorderCmp" value="eBottom" />
+        <idField name="fBorderCmp" valueREF="eBottom" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutOuterShort"
               zrot="90"
               XREF="TKRCloseout_dt" >
-        <idField name="fBorderCmp" value="eRight" />
+        <idField name="fBorderCmp" valueREF="eRight" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutOuterShort"
               zrot="90"
               XREF="TKRCloseout_dtn" >
-        <idField name="fBorderCmp" value="eLeft" />
+        <idField name="fBorderCmp" valueREF="eLeft" />
       </posXYZ>
       <!-- top tray has Si on bottom only -->
       <posXYZ volume="TKRMCM"
               YREF="TKRMCM_dt"
               ZREF="TKRMCMext_dzn">
-        <idField name="fBorderCmp" value="efarTop" />
+        <idField name="fBorderCmp" valueREF="eFarTop" />
       </posXYZ>
     </composition>
 
     <composition name="TKRCoreOuterBottom" envelope="TKRCoreOuterEnv">
       <posXYZ volume="TKRCoreOuterBox" >
-        <idField name="fBorderCmp" value="eCenter" />
+        <idField name="fBorderCmp" valueREF="eCenter" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutOuterLong"
               YREF="TKRCloseout_dt" >
-        <idField name="fBorderCmp" value="eTop" />
+        <idField name="fBorderCmp" valueREF="eTop" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutOuterLong"
               YREF="TKRCloseout_dtn" >
-        <idField name="fBorderCmp" value="eBottom" />
+        <idField name="fBorderCmp" valueREF="eBottom" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutOuterShort"
               zrot="90"
               XREF="TKRCloseout_dt" >
-        <idField name="fBorderCmp" value="eRight" />
+        <idField name="fBorderCmp" valueREF="eRight" />
       </posXYZ>
       <posXYZ volume="TKRCloseoutOuterShort"
               zrot="90"
               XREF="TKRCloseout_dtn" >
-        <idField name="fBorderCmp" value="eLeft" />
+        <idField name="fBorderCmp" valueREF="eLeft" />
       </posXYZ>
       <!-- top tray has Si on bottom only -->
       <posXYZ volume="TKRMCM"
               YREF="TKRMCM_dtn"
               ZREF="TKRMCMext_dz">
-        <idField name="fBorderCmp" value="efarBottom" />
+        <idField name="fBorderCmp" valueREF="eFarBottom" />
       </posXYZ>
     </composition>
 

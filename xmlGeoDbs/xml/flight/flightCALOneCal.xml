@@ -222,42 +222,42 @@
      <composition name="CALTopFrame" envelope="CALTopFrameEnv">
        <posXYZ volume="CALTopFrameLongSide" 
                YREF="CALTopFrame_dt" >
-         <idField name="fBorderCmp" value="eTop" />
+         <idField name="fBorderCmp" valueREF="eTop" />
        </posXYZ>
        <posXYZ volume="CALTopFrameLongSide" 
                YREF="CALTopFrame_dtn" >
-         <idField name="fBorderCmp" value="eBottom" />
+         <idField name="fBorderCmp" valueREF="eBottom" />
        </posXYZ>
        <posXYZ volume="CALTopFrameShortSide" 
                zrot="90"
                XREF="CALTopFrame_dt" >
-         <idField name="fBorderCmp" value="eRight" />
+         <idField name="fBorderCmp" valueREF="eRight" />
        </posXYZ>
        <posXYZ volume="CALTopFrameShortSide" 
                zrot="90"
                XREF="CALTopFrame_dtn" >
-         <idField name="fBorderCmp" value="eLeft" />
+         <idField name="fBorderCmp" valueREF="eLeft" />
        </posXYZ>
      </composition>
 
      <composition name="CALBottomFrame" envelope="CALBottomFrameEnv">
        <posXYZ volume="CALBottomFrameLongSide" 
                YREF="CALBottomFrame_dt" >
-         <idField name="fBorderCmp" value="eTop" />
+         <idField name="fBorderCmp" valueREF="eTop" />
        </posXYZ>
        <posXYZ volume="CALBottomFrameLongSide" 
                YREF="CALBottomFrame_dtn" >
-         <idField name="fBorderCmp" value="eBottom" />
+         <idField name="fBorderCmp" valueREF="eBottom" />
        </posXYZ>
        <posXYZ volume="CALBottomFrameShortSide" 
                zrot="90"
                XREF="CALBottomFrame_dt" >
-         <idField name="fBorderCmp" value="eRight" />
+         <idField name="fBorderCmp" valueREF="eRight" />
        </posXYZ>
        <posXYZ volume="CALBottomFrameShortSide" 
                zrot="90"
                XREF="CALBottomFrame_dtn" >
-         <idField name="fBorderCmp" value="eLeft" />
+         <idField name="fBorderCmp" valueREF="eLeft" />
        </posXYZ>
      </composition>
 
