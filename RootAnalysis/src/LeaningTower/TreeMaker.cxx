@@ -194,6 +194,9 @@ void TreeMaker::CreateTree(Int_t numEvents) {
     UInt_t evtCounterMc    = 0;
     UInt_t evtCounterDigi  = 0;
     UInt_t evtCounterRecon = 0;
+    const Int_t rollOver = 131072;
+    Int_t digiEventIdOld, reconEventIdOld, mcEventIdOld;
+    digiEventIdOld = reconEventIdOld = mcEventIdOld = -1;
     for ( Int_t evtCounter=0; evtCounter<numEvents; ++evtCounter ) {
         if(DEBUG) std::cout << "event loop counter: " << evtCounter <<std::endl;
         // Reset some arrays and variables
@@ -225,20 +228,52 @@ void TreeMaker::CreateTree(Int_t numEvents) {
             rec->Clear();
       
         Int_t digiEventId, reconEventId, mcEventId;
-        UInt_t digiRunNum, reconRunNum, mcRunNum;
         digiEventId = reconEventId = mcEventId = 100000000;
+        UInt_t digiRunNum, reconRunNum, mcRunNum;
         digiRunNum = reconRunNum = mcRunNum = 0;
         GetEvent(evtCounterMc, evtCounterDigi, evtCounterRecon);
 
         // synchronizing the three trees
-        if (mc)
-            mcEventId    = mc->getEventId();
-        if (evt)
-            digiEventId  = evt->getEventId();
-        if (rec)
+        if (mc) {
+            mcEventId = mc->getEventId();
+            /*
+            if ( mcEventIdOld > mcEventId ) {
+                std::cout << "*********************** " << mcEventIdOld << ' ' << mcEventId << ' ' << rollOver;
+                //                mcEventId += rollOver;
+                std::cout << ' ' << mcEventId << std::endl;
+            }                
+            mcEventIdOld = mcEventId;
+            */
+        }
+        if (evt) {
+            digiEventId = evt->getEventId();
+            /*
+            if ( digiEventIdOld > digiEventId ) {
+                std::cout << "*********************** " << digiEventIdOld << ' ' << digiEventId << ' ' << rollOver;
+                //                digiEventId += rollOver;
+                std::cout << ' ' << digiEventId << std::endl;
+            }                
+            digiEventIdOld = digiEventId;
+            */
+        }
+            if (rec) {
             reconEventId = rec->getEventId();
+            /*
+            if ( reconEventIdOld > reconEventId ) {
+                std::cout << "*********************** " << reconEventIdOld << ' ' << reconEventId << ' ' << rollOver;
+                //                reconEventId += rollOver;
+                std::cout << ' ' << reconEventId << std::endl;
+            }                
+            reconEventIdOld = reconEventId;
+            */
+        }
         // agreeing on a common event id
         EventId = std::min(std::min(mcEventId, digiEventId), reconEventId);
+
+        /*
+        std::cout << "event ids: " << mcEventId << ' ' << digiEventId << ' ' << reconEventId << ' ' << EventId << std::endl;
+        std::cout << "old event ids: " << mcEventIdOld << ' ' << digiEventIdOld << ' ' << reconEventIdOld << std::endl;
+        */
 
         //////////////////////////////////////////////////
         // Monte Carlo tree
@@ -464,6 +499,16 @@ void TreeMaker::CreateTree(Int_t numEvents) {
 
         // now we are filling all trees
 
+        /*
+        static bool flag = false;
+        if ( digiEventId > 131060 )
+            flag = true;
+        if ( flag ) {
+            std::cout << "event ids: " << mcEventId << ' ' << digiEventId << ' ' << reconEventId << ' ' << EventId << std::endl;
+            std::cout << "old event ids: " << mcEventIdOld << ' ' << digiEventIdOld << ' ' << reconEventIdOld << std::endl;
+            std::cout << "run ids: " << mcRunNum << ' ' << digiRunNum << ' ' << reconRunNum << ' ' << RunId << std::endl;
+        }
+        */
         TIter TreeIter(TreeCollection);
         TTree* aTree = 0;
         int iLayer = 0;

@@ -78,7 +78,7 @@ public :
         TChain *digiChain, 
         TChain *recChain = 0, 
         TChain *mcChain = 0, 
-        char* TreeFileName="MyRootFile.root"); 
+        char* TreeFileName="MyRootFile.root");
 
     ~TreeMaker();  
 

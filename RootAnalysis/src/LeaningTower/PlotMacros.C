@@ -681,6 +681,7 @@ TCanvas *Report(TString LV,TString myCuts)
   pt->AddText(text2);
   
   middleUp->cd();
+  middleUp->SetLogy();
   HitMap(myCuts);
   
   TH1D *HM = HitMap(myCuts);

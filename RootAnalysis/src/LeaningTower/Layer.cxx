@@ -126,8 +126,13 @@ float Layer::activeAreaDist(const float x, const float y) const {
     const float SIWAFERACTIVEHALF = SIWAFERACTIVESIDE * 0.5;
     dx -= SIWAFERACTIVEHALF;
     dy -= SIWAFERACTIVEHALF;
-
-    return ( ( dx<0 && dy<0 ) ? -1. : 1. ) * std::sqrt(dx*dx + dy*dy);
+    //      |   
+    //      |  if both distances are positiv, the distance is the sqrt(dx^2+dy^2)
+    //      |  otherwise it's the maximum of both
+    //------+
+    //
+    //
+    return ( dx>0 && dy>0 ) ? std::sqrt(dx*dx+dy*dy) : std::max(dx, dy);
 }
 
 void Layer::DrawLayer() {

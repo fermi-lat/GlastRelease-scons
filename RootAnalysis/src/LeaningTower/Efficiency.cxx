@@ -29,12 +29,15 @@ public:
 
     void Go(int lastEntry=-1);
 
-    void Draw2D(TString plane="All", TCut="", float residualSize=0.228) const;
-    void GetEfficiency(TString plane="All", TCut="", float residualSize=0.228,
-                       bool draw=false) const;
+    void Draw2D(TString plane="All", TCut="", float residualDist=1,
+                float borderWidth=1) const;
+    void GetEfficiency(TString plane="All", TCut="", float residualDist=1,
+                       float borderWidth=1, bool draw=false) const;
+    void DrawEfficiency(TString plane, TCut="", float residualDist=1,
+                        float borderWidth=1, bool draw=true)
+        const;
+private:
     void PrintEfficiency(TString plane, float ineff, int missing) const;
-    void DrawEfficiency(TString plane, TCut="", float residualSize=0.228,
-                        bool draw=true) const;
 };
 
 Efficiency::Efficiency(TString filename, TString effFileName) {
@@ -153,7 +156,8 @@ void Efficiency::Go(int lastEntry) {
     f.Close();
 }
 
-void Efficiency::Draw2D(TString plane, TCut cut, float residualSize) const {
+void Efficiency::Draw2D(TString plane, TCut cut, float residualDist,
+                        float borderWidth) const {
     if ( plane != "All" ) {
         const TCut cutPlane("plane==\"" + plane + "\"");
         cut += cutPlane;
@@ -164,17 +168,21 @@ void Efficiency::Draw2D(TString plane, TCut cut, float residualSize) const {
     if ( !c )
         c = new TCanvas(canvasName, canvasName, 800, 800);
     gPad->SetTicks(1,1);
-    gStyle->SetOptTitle(0);
+    //    gStyle->SetOptTitle(0);
     gStyle->SetOptStat(0);
-    c->DrawFrame(-20, -20, 375, 375);
+    TH1F* hframe = c->DrawFrame(-20, -20, 375, 375);
+    hframe->GetXaxis()->SetTitle("x/mm");
+    hframe->GetYaxis()->SetTitle("y/mm");
+    hframe->SetTitle(plane);
 
-    TFile f(myEffFileName);
+    TFile f(myEffFileName, "READ");
     TTree* t = (TTree*)f.Get("efficiencyTree");
     t->SetMarkerStyle(1);
     t->SetMarkerColor(1);
 
     TCut inActiveArea("siDist<0");
-    TCut residualCut((TString("res>")+=residualSize).Data());
+    TCut inBorder(inActiveArea+(TString("siDist>-")+=borderWidth).Data());
+    TCut hitFound((TString("res<")+=residualDist).Data());
 
    // draw all interceptions which are not in an active area
     t->SetMarkerColor(2);
@@ -182,20 +190,28 @@ void Efficiency::Draw2D(TString plane, TCut cut, float residualSize) const {
 
     // draw all interceptions with the active area (should be hits)
     t->SetMarkerColor(8);
-    t->Draw("yExt:xExt", cut+inActiveArea, "same");
+    t->Draw("yExt:xExt", cut+inActiveArea+!inBorder, "same");
+
+    // draw all interceptions with the active area but close to the border
+    t->SetMarkerColor(6);
+    t->Draw("yExt:xExt", cut+inBorder, "same");
 
     // draw all missing hits in the active area
     t->SetMarkerColor(1);
     t->SetMarkerStyle(28);
-    t->Draw("yExt:xExt", cut+inActiveArea+residualCut, "same");
+    t->Draw("yExt:xExt", cut+inActiveArea+!inBorder+!hitFound, "same");
+
+    // draw all missing hits in the active area but close to the border
+    t->SetMarkerColor(16);
+    t->SetMarkerStyle(28);
+    t->Draw("yExt:xExt", cut+inBorder+!hitFound, "same");
 
     f.Close();
 }
 
-void Efficiency::GetEfficiency(TString planeName, TCut cut, float residualSize,
-                               bool draw) const {
+void Efficiency::GetEfficiency(TString planeName, TCut cut, float residualDist,
+                               float borderWidth, bool draw) const {
     cut.Print();
-    std::cout << "residual>" << residualSize << std::endl;
     std::cout << "Plane  Efficiency  Inefficiency  Missing hits" << std::endl;
 
     int totalHits = 0;
@@ -205,7 +221,7 @@ void Efficiency::GetEfficiency(TString planeName, TCut cut, float residualSize,
     while ( Layer* thePlane = (Layer*)next() ) {
         const TString thePlaneName = thePlane->GetName();
         if ( planeName == "All" || thePlaneName == planeName ) {
-            DrawEfficiency(thePlaneName, cut, residualSize, draw);
+            DrawEfficiency(thePlaneName, cut, residualDist, borderWidth, draw);
             PrintEfficiency(thePlaneName, 100.*thePlane->GetInefficiency(),
                             thePlane->GetMissingHits());
             totalHits += thePlane->GetHitsInActiveArea();
@@ -225,34 +241,42 @@ void Efficiency::PrintEfficiency(TString planeName, float ineff, int missing)
               << std::endl;
 }
 
-void Efficiency::DrawEfficiency(TString planeName, TCut cut, float residualSize,
-                                bool draw) const {
-    TFile f(myEffFileName);
+void Efficiency::DrawEfficiency(TString planeName, TCut cut, float residualDist,
+                                float borderWidth, bool draw) const {
+    TFile f(myEffFileName, "READ");
     TTree* t = (TTree*)f.Get("efficiencyTree");
     gROOT->cd();
 
     const TCut cutPlane("plane==\"" + planeName + "\"");
-    const TCut inActiveArea("siDist<0");
-    const TCut residualCut((TString("res>")+=residualSize).Data());
-    cut += cutPlane + inActiveArea;
+    cut += cutPlane;
 
     TString var;
     Layer* thePlane = (Layer*)myTracker->GetGeometry()->FindObject(planeName);
+    if ( !thePlane ) {
+        std::cerr << "plane " << planeName << " not found!" << std::endl;
+        return;
+    }
     if ( thePlane->GetView() )
         var = "yExt";
     else
         var = "xExt";
 
+    TCut inActiveArea("siDist<0");
+    TCut inBorder(inActiveArea+(TString("siDist>-")+=borderWidth).Data());
+    TCut hitFound((TString("res<")+=residualDist).Data());
+
     const Int_t nBins = 100;
     const Double_t xmin = -20.;
     const Double_t xmax = 380.;
     const TString goodName("activeHits"+planeName);
-    TH1F* hGood = (TH1F*)gROOT->FindObject(goodName);
-    if ( !hGood ) {
-        hGood = new TH1F(goodName, goodName, nBins, xmin, xmax);
-        hGood->Sumw2();
+    TH1F* hAll = (TH1F*)gROOT->FindObject(goodName);
+    if ( !hAll ) {
+        hAll = new TH1F(goodName, goodName, nBins, xmin, xmax);
+        hAll->Sumw2();
     }
-    t->Project(goodName, var, cut);
+    hAll->GetXaxis()->SetTitle("pos/mm");
+    hAll->GetYaxis()->SetTitle("num");
+    t->Project(goodName, var, cut+inActiveArea+!inBorder);
 
     const TString badName("missingHits"+planeName);
     TH1F* hBad = (TH1F*)gROOT->FindObject(badName);
@@ -260,17 +284,21 @@ void Efficiency::DrawEfficiency(TString planeName, TCut cut, float residualSize,
         hBad = new TH1F(badName, badName, nBins, xmin, xmax);
         hBad->Sumw2();
     }
-    t->Project(badName, var, cut+residualCut, "hist");
+    hBad->GetXaxis()->SetTitle("pos/mm");
+    hBad->GetYaxis()->SetTitle("num");
+    t->Project(badName, var, cut+inActiveArea+!inBorder+!hitFound, "hist");
 
     const TString ineffName("inefficiency"+planeName);
     TH1F* hIneff = (TH1F*)gROOT->FindObject(ineffName);
     if ( !hIneff )
         hIneff = new TH1F(ineffName, ineffName, nBins, xmin, xmax);
-    hIneff->Divide(hBad, hGood);
+    hIneff->GetXaxis()->SetTitle("pos/mm");
+    hIneff->GetYaxis()->SetTitle("inefficiency");
+    hIneff->Divide(hBad, hAll);
 
     f.Close();
 
-    thePlane->SetHitsInActiveArea(static_cast<int>(hGood->GetEntries()));
+    thePlane->SetHitsInActiveArea(static_cast<int>(hAll->GetEntries()));
     thePlane->SetMissingHits(static_cast<int>(hBad->GetEntries()));
 
     if ( !draw )
@@ -285,7 +313,7 @@ void Efficiency::DrawEfficiency(TString planeName, TCut cut, float residualSize,
 
     c->cd(1);
     gPad->SetTicks(1,1);
-    hGood->Draw("hist");
+    hAll->Draw("hist");
 
     c->cd(2);
     gPad->SetTicks(1,1);
