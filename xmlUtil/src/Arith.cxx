@@ -214,7 +214,7 @@ namespace xmlUtil {
       long int intValue = m_number;
       double   intified = intValue;
       if (intified != m_number) {
-        double fixup = 0.49;
+        double fixup = 0.5;
         if (m_number < 0.0) fixup = -fixup;
         long int  intValue = (m_number + fixup);  
         m_number = intValue;
