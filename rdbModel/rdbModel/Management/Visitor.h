@@ -29,8 +29,10 @@ namespace rdbModel {
     enum VisitorState {
       CONTINUE = 0,
       DONE = 1,         // visitor has had its fill of visiting
-      ERROR = 2,        // error during visit; perhaps can continue, though
-      ERRORABORT = 3    // error during visit; can't handle more
+      BRANCHDONE = 2,   // don't descend further into structure; go
+                        // to next sibling, if any
+      ERROR = 3,        // error during visit; perhaps can continue, though
+      ERRORABORT = 4    // error during visit; can't handle more
     };
 
   public:
