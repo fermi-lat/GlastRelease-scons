@@ -13,7 +13,7 @@
  *
  * @author Marco Frailis
  *    
- * \$Header\$
+ * $Header$
  */
 
 
@@ -24,10 +24,10 @@
 inline StreamBuffer& operator<< ( StreamBuffer& s, const idents::VolumeIdentifier& id)    
 {
 
-  idents::VolumeIdentifier::int64 value = id;
+  idents::VolumeIdentifier::int64 value = id.getValue();
   unsigned int sup, inf;
   
-  // The int64 value is divided into two unsigned int of 32 bits
+  // The int64 value is splitted into two unsigned int of 32 bits
   sup = value >> 32;
 
   // This is a 32 bits mask with all bits set to 1

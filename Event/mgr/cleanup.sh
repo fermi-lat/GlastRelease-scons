@@ -1,3 +1,5 @@
-tempfile=/tmp/setup$$
-${CMTROOT}/mgr/cmt -quiet cleanup -sh -pack=DOGlastHitsEvt -version=v0 -path=D:/code/packages/glast >$tempfile; . $tempfile; /bin/rm -f $tempfile
+tempfile=`${CMTROOT}/mgr/cmt build temporary_name -quiet`
+if test ! $? = 0 ; then tempfile=/tmp/cmt.$$; fi
+${CMTROOT}/mgr/cmt -quiet cleanup -sh -pack=GlastEvent -version=v7r2 -path=/scratch/users/frailis/GlastPack $* >${tempfile}; . ${tempfile}
+/bin/rm -f ${tempfile}
 
