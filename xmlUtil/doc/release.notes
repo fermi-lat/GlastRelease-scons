@@ -2,6 +2,7 @@
  * Package xmlUtil
  * Coordinator: J. Bogart
  *
+ * 13-Aug-2003  jrb for tk more  requirements updates
  * 07-Aug-2003  tk    update requirements for GlastRelease v5r2p4
  * 28-jun-2003: jrb - tag v2r10p0 Use ld_library_path pattern
  * 18-jun-2003: jrb - tag v2r10  Add support for new unary operator <half>
