@@ -32,7 +32,7 @@ bool floatInRange(Double_t actual, Double_t desired) {
         return true;
     }
     return false;
-    
+
 }
 
 int checkReconEvent(ReconEvent *evt, UInt_t ievent) {
@@ -44,14 +44,14 @@ int checkReconEvent(ReconEvent *evt, UInt_t ievent) {
         std::cout << "Event Id is wrong: " << evt->getEventId() << std::endl;
         return -1;
     }
-    
+
     return 0;
 }
 
 int checkCalCluster(const CalCluster* cluster, UInt_t ievent) {
     Float_t f = (Float_t)ievent;
     Float_t fr = f*randNum;
-    
+
     (*cluster).Print();
 
     if (!floatInRange((*cluster).getEnergySum(), f)) {
@@ -62,139 +62,139 @@ int checkCalCluster(const CalCluster* cluster, UInt_t ievent) {
         std::cout << "Energy Corrected is : " << (*cluster).getEnergyCorrected() << std::endl;
         return -1;
     }
-    
+
     TVector3 pos = (*cluster).getPosition();
     if ( (!floatInRange(pos.X(), f)) || (!floatInRange(pos.Y(), f))
         || (!floatInRange(pos.Z(), f) ) ){
-        std::cout << "Pos: ( " << pos.X() << "," << pos.Y() << "," 
-            << pos.Z() << ")" << std::endl;
-        return -1;
-    }
+            std::cout << "Pos: ( " << pos.X() << "," << pos.Y() << "," 
+                << pos.Z() << ")" << std::endl;
+            return -1;
+        }
 
-    if (!floatInRange((*cluster).getEnergyLeak(), randNum)) {
-        std::cout << "Energy Leak is : " << (*cluster).getEnergyLeak() << std::endl;
-        return -1;
-    }
-    if (!floatInRange((*cluster).getRmsLong(), randNum*f) ) {
-        std::cout << "RMS Long is: " << (*cluster).getRmsLong() << std::endl;
-        return -1;
-    }
-    if (!floatInRange((*cluster).getRmsTrans(), randNum*f*2.) ) {
-        std::cout << "RMS Trans is: " << (*cluster).getRmsTrans() << std::endl;
-        return -1;
-    }
-    if (!floatInRange((*cluster).getTransvOffset(), randNum*f*3.) ) {
-        std::cout << "TransvOffset is: " << (*cluster).getTransvOffset() << std::endl;
-        return -1;
-    }
-    TVector3 dir = (*cluster).getDirection();
-    if ( (!floatInRange(dir.X(), randNum)) || (!floatInRange(dir.Y(), randNum*3.))
-        || (!floatInRange(dir.Z(), randNum*5.) ) ){
-        std::cout << "Dir: ( " << dir.X() << "," << dir.Y() << "," 
-            << dir.Z() << ")" << std::endl;
-        return -1;
-    }
-    
-    std::vector<Double_t> eLayer = (*cluster).getEneLayer();
-    if (eLayer.size() != 2) {
-        std::cout << "E Layer vector is wrong size " 
-            << eLayer.size() << std::endl;
-        return -1;
-    }
-    if (!floatInRange(eLayer[0], 15.0)) {
-        std::cout << "1st energy Layer item: " << eLayer[0] << std::endl;
-        return -1;
-        
-    }
-    if (!floatInRange(eLayer[1], 22.0)) {
-        std::cout << "2nd energy Layer item: " << eLayer[1] << std::endl;
-        return -1;
-    }
-    
-    
-    std::vector<TVector3> pLayer = (*cluster).getPosLayer();
-    if (pLayer.size() != 2) {
-        std::cout << "POS Layer vector is wrong size " 
-            << pLayer.size() << std::endl;
-        return -1;
-    }
-    TVector3 pos0 = pLayer[0];
-    TVector3 pos1 = pLayer[1];
-    if ( (!floatInRange(pos0.X(), f)) || (!floatInRange(pos0.Y(), f))
-        || (!floatInRange(pos0.Z(), f) ) ){
-        std::cout << "1st pos Layer item: ( " << pos0.X() << ","
-            << pos0.Y() << "," << pos0.Z() << ")" << std::endl;
-        return -1;
-        
-    }
-    if ( (!floatInRange(pos1.X(), fr)) || (!floatInRange(pos1.Y(), fr*2.))
-        || (!floatInRange(pos1.Z(), fr*3.) ) ) {
-        std::cout << "2nd pos Layer item: ( " << pos1.X() << ","
-            << pos1.Y() << "," << pos1.Z() << ")" << std::endl;
-        return -1;
-    }
-    
-    std::vector<TVector3> rLayer = (*cluster).getRmsLayer();
-    if (rLayer.size() != 3) {
-        std::cout << "RMS Layer vector is wrong size " 
-            << rLayer.size() << std::endl;
-        return -1;
-    }
-    TVector3 rms0 = rLayer[0];
-    TVector3 rms1 = rLayer[1];
-    TVector3 rms2 = rLayer[2];
-    if ( (!floatInRange(rms0.X(), randNum)) || (!floatInRange(rms0.Y(), randNum*5.))
-        || (!floatInRange(rms0.Z(), randNum*10.) ) ) {
-        std::cout << "1st rms Layer item: ( " << rms0.X() << ","
-            << rms0.Y() << "," << rms0.Z() << ")" << std::endl;
-        return -1;
-        
-    }
-    if ( (!floatInRange(rms1.X(), f+1.)) || (!floatInRange(rms1.Y(), f+2.))
-        || (!floatInRange(rms1.Z(), f+3.) ) ) {
-        std::cout << "2nd rms Layer item: ( " << rms1.X() << ","
-            << rms1.Y() << "," << rms1.Z() << ")" << std::endl;
-        return -1;
-    }
-    if ( (!floatInRange(rms2.X(), 14.)) || (!floatInRange(rms2.Y(), 22.))
-        || (!floatInRange(rms2.Z(), 44.) ) ){
-        std::cout << "3rd rms Layer item: ( " << rms2.X() << ","
-            << rms2.Y() << "," << rms2.Z() << ")" << std::endl;
-        return -1;
-    }
-    
-    
-    if(!floatInRange((*cluster).getFitEnergy(), f) ){
-        std::cout << "Fit energy: " << (*cluster).getFitEnergy() << std::endl;
-        return -1;
-    }
-    if (!floatInRange((*cluster).getProfChisq(), fr) ) {
-        std::cout << "Chi2: " << (*cluster).getProfChisq() << std::endl;
-        return -1;
-    }
-    if( !floatInRange((*cluster).getCsiAlpha(), f*f)) {
-        std::cout << "CsiAlpha: " << (*cluster).getCsiAlpha() << std::endl;
-        return -1;
-    }
-    if( !floatInRange((*cluster).getCsiLambda(), f+f)){
-        std::cout << "CsiLambda: " << (*cluster).getCsiLambda() << std::endl;
-        return -1;
-    }
-    if( !floatInRange((*cluster).getCsiStart(), randNum*randNum)) {
-        std::cout << "CsiAlpha: " << (*cluster).getCsiStart() << std::endl;
-        return -1;
-    }
-    
-    return 0;
+        if (!floatInRange((*cluster).getEnergyLeak(), randNum)) {
+            std::cout << "Energy Leak is : " << (*cluster).getEnergyLeak() << std::endl;
+            return -1;
+        }
+        if (!floatInRange((*cluster).getRmsLong(), randNum*f) ) {
+            std::cout << "RMS Long is: " << (*cluster).getRmsLong() << std::endl;
+            return -1;
+        }
+        if (!floatInRange((*cluster).getRmsTrans(), randNum*f*2.) ) {
+            std::cout << "RMS Trans is: " << (*cluster).getRmsTrans() << std::endl;
+            return -1;
+        }
+        if (!floatInRange((*cluster).getTransvOffset(), randNum*f*3.) ) {
+            std::cout << "TransvOffset is: " << (*cluster).getTransvOffset() << std::endl;
+            return -1;
+        }
+        TVector3 dir = (*cluster).getDirection();
+        if ( (!floatInRange(dir.X(), randNum)) || (!floatInRange(dir.Y(), randNum*3.))
+            || (!floatInRange(dir.Z(), randNum*5.) ) ){
+                std::cout << "Dir: ( " << dir.X() << "," << dir.Y() << "," 
+                    << dir.Z() << ")" << std::endl;
+                return -1;
+            }
+
+            std::vector<Double_t> eLayer = (*cluster).getEneLayer();
+            if (eLayer.size() != 2) {
+                std::cout << "E Layer vector is wrong size " 
+                    << eLayer.size() << std::endl;
+                return -1;
+            }
+            if (!floatInRange(eLayer[0], 15.0)) {
+                std::cout << "1st energy Layer item: " << eLayer[0] << std::endl;
+                return -1;
+
+            }
+            if (!floatInRange(eLayer[1], 22.0)) {
+                std::cout << "2nd energy Layer item: " << eLayer[1] << std::endl;
+                return -1;
+            }
+
+
+            std::vector<TVector3> pLayer = (*cluster).getPosLayer();
+            if (pLayer.size() != 2) {
+                std::cout << "POS Layer vector is wrong size " 
+                    << pLayer.size() << std::endl;
+                return -1;
+            }
+            TVector3 pos0 = pLayer[0];
+            TVector3 pos1 = pLayer[1];
+            if ( (!floatInRange(pos0.X(), f)) || (!floatInRange(pos0.Y(), f))
+                || (!floatInRange(pos0.Z(), f) ) ){
+                    std::cout << "1st pos Layer item: ( " << pos0.X() << ","
+                        << pos0.Y() << "," << pos0.Z() << ")" << std::endl;
+                    return -1;
+
+                }
+                if ( (!floatInRange(pos1.X(), fr)) || (!floatInRange(pos1.Y(), fr*2.))
+                    || (!floatInRange(pos1.Z(), fr*3.) ) ) {
+                        std::cout << "2nd pos Layer item: ( " << pos1.X() << ","
+                            << pos1.Y() << "," << pos1.Z() << ")" << std::endl;
+                        return -1;
+                    }
+
+                    std::vector<TVector3> rLayer = (*cluster).getRmsLayer();
+                    if (rLayer.size() != 3) {
+                        std::cout << "RMS Layer vector is wrong size " 
+                            << rLayer.size() << std::endl;
+                        return -1;
+                    }
+                    TVector3 rms0 = rLayer[0];
+                    TVector3 rms1 = rLayer[1];
+                    TVector3 rms2 = rLayer[2];
+                    if ( (!floatInRange(rms0.X(), randNum)) || (!floatInRange(rms0.Y(), randNum*5.))
+                        || (!floatInRange(rms0.Z(), randNum*10.) ) ) {
+                            std::cout << "1st rms Layer item: ( " << rms0.X() << ","
+                                << rms0.Y() << "," << rms0.Z() << ")" << std::endl;
+                            return -1;
+
+                        }
+                        if ( (!floatInRange(rms1.X(), f+1.)) || (!floatInRange(rms1.Y(), f+2.))
+                            || (!floatInRange(rms1.Z(), f+3.) ) ) {
+                                std::cout << "2nd rms Layer item: ( " << rms1.X() << ","
+                                    << rms1.Y() << "," << rms1.Z() << ")" << std::endl;
+                                return -1;
+                            }
+                            if ( (!floatInRange(rms2.X(), 14.)) || (!floatInRange(rms2.Y(), 22.))
+                                || (!floatInRange(rms2.Z(), 44.) ) ){
+                                    std::cout << "3rd rms Layer item: ( " << rms2.X() << ","
+                                        << rms2.Y() << "," << rms2.Z() << ")" << std::endl;
+                                    return -1;
+                                }
+
+
+                                if(!floatInRange((*cluster).getFitEnergy(), f) ){
+                                    std::cout << "Fit energy: " << (*cluster).getFitEnergy() << std::endl;
+                                    return -1;
+                                }
+                                if (!floatInRange((*cluster).getProfChisq(), fr) ) {
+                                    std::cout << "Chi2: " << (*cluster).getProfChisq() << std::endl;
+                                    return -1;
+                                }
+                                if( !floatInRange((*cluster).getCsiAlpha(), f*f)) {
+                                    std::cout << "CsiAlpha: " << (*cluster).getCsiAlpha() << std::endl;
+                                    return -1;
+                                }
+                                if( !floatInRange((*cluster).getCsiLambda(), f+f)){
+                                    std::cout << "CsiLambda: " << (*cluster).getCsiLambda() << std::endl;
+                                    return -1;
+                                }
+                                if( !floatInRange((*cluster).getCsiStart(), randNum*randNum)) {
+                                    std::cout << "CsiAlpha: " << (*cluster).getCsiStart() << std::endl;
+                                    return -1;
+                                }
+
+                                return 0;
 }
 
 int checkCalXtalRec(const CalXtalRecData *rec, UInt_t ievent) {
-    
+
     Float_t f = Float_t(ievent);
     Float_t fr = f*randNum;
-    
+
     (*rec).Print();
-    
+
     if ((*rec).getMode() != CalXtalId::BESTRANGE) {
         std::cout << "Xtal mode is not BESTRANGE" << std::endl;
         return -1;
@@ -205,108 +205,108 @@ int checkCalXtalRec(const CalXtalRecData *rec, UInt_t ievent) {
             << "," << id.getLayer() << "," << id.getColumn() << ")" << std::endl;
         return -1;
     }
-    
+
     TVector3 pos = (*rec).getPosition();
     if ( (!floatInRange(pos.X(), 4.5) ) || (!floatInRange(pos.Y(), 7.5) )
         || (!floatInRange(pos.Z(), 8.5) ) ) {
-        std::cout << "Xtal pos is (" << pos.X() << "," << pos.Y()
-            << "," << pos.Z() << ")" << std::endl;
-        return -1;
-    }
-    
-    Char_t rangeP = (*rec).getRange(0, CalXtalId::POS);
-    Char_t rangeM = (*rec).getRange(0, CalXtalId::NEG);
-    
-    if (rangeP != CalXtalId::LEX8) {
-        std::cout << "POS range: " << rangeP << std::endl;
-        return -1;
-    }
-    if (rangeM != CalXtalId::HEX8) {
-        std::cout << "NEG range: " << rangeM << std::endl;
-        return -1;
-    }
-    Double_t energy = (*rec).getEnergy();
-    Double_t energyP = (*rec).getEnergy(0, CalXtalId::POS);
-    Double_t energyM = (*rec).getEnergy(0, CalXtalId::NEG);
-    if (!floatInRange(energyP, fr) ) {
-        std::cout << "Range POS energy: " << energyP << std::endl;
-        return -1;
-    }
-    if (!floatInRange(energyM, randNum*4.) ) {
-        std::cout << "Range NEG energy: " << energyM << std::endl;
-        return -1;
-    }
-    
-    if ( !floatInRange(energy, (energyP+energyM)/2.) ) {
-        std::cout << "energy of RangeRecData is not average: " << energy << std::endl;
-        return -1;
-    }
-    
-    const CalRangeRecData* rangeRecData = (*rec).getRangeRecData(0);
-    if (!floatInRange(energyP, rangeRecData->getEnergy(CalXtalId::POS)) ) {
-        std::cout << "CalRangeRecData POS energy differs " << std::endl;
-        return -1;
-    }
-    if (!floatInRange(energyM, rangeRecData->getEnergy(CalXtalId::NEG)) ) {
-        std::cout << "CalRangeRecData NEG energy differs " << std::endl;
-        return -1;
-    }
-    if (CalXtalId::LEX8 != rangeRecData->getRange(CalXtalId::POS)) {
-        std::cout << "CalRangeRecData POS range differs" << std::endl;
-        return -1;
-    }
-    if (CalXtalId::HEX8 != rangeRecData->getRange(CalXtalId::NEG)) {
-        std::cout << "CalRangeRecData NEG range differs" << std::endl;
-        return -1;
-    }
-    
-    Double_t energyRangeP = (*rec).getEnergySelectedRange(CalXtalId::LEX8, CalXtalId::POS);
-    if (!floatInRange(energyRangeP, energyP)) {
-        std::cout << "get selected POS range differs" << std::endl;
-        return -1;
-    }
-    Double_t energyRangeM = (*rec).getEnergySelectedRange(CalXtalId::HEX8, CalXtalId::NEG);
-    if (!floatInRange(energyRangeM, energyM) ) {
-        std::cout << "get selected NEG range differs" << std::endl;
-        return -1;
-    }
-    
-    // Check range and faces that should return -1, since they are undefined
-    if ( !floatInRange((*rec).getEnergySelectedRange(CalXtalId::LEX1, CalXtalId::POS), -1.) ) {
-        std::cout << "undefined range face pair does not return -1" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange((*rec).getEnergySelectedRange(CalXtalId::HEX1, CalXtalId::POS), -1.) ) {
-        std::cout << "undefined range face pair does not return -1" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange((*rec).getEnergySelectedRange(CalXtalId::HEX8, CalXtalId::POS), -1.) ) {
-        std::cout << "undefined range face pair does not return -1" << std::endl;
-        return -1;
-    }
-    
-    if ( !floatInRange((*rec).getEnergySelectedRange(CalXtalId::LEX1, CalXtalId::NEG), -1.) ) {
-        std::cout << "undefined range face pair does not return -1" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange((*rec).getEnergySelectedRange(CalXtalId::LEX8, CalXtalId::NEG), -1.) ) {
-        std::cout << "undefined range face pair does not return -1" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange((*rec).getEnergySelectedRange(CalXtalId::HEX1, CalXtalId::NEG), -1.) ) {
-        std::cout << "undefined range face pair does not return -1" << std::endl;
-        return -1;
-    }
-    
-    return 0;
+            std::cout << "Xtal pos is (" << pos.X() << "," << pos.Y()
+                << "," << pos.Z() << ")" << std::endl;
+            return -1;
+        }
+
+        Char_t rangeP = (*rec).getRange(0, CalXtalId::POS);
+        Char_t rangeM = (*rec).getRange(0, CalXtalId::NEG);
+
+        if (rangeP != CalXtalId::LEX8) {
+            std::cout << "POS range: " << rangeP << std::endl;
+            return -1;
+        }
+        if (rangeM != CalXtalId::HEX8) {
+            std::cout << "NEG range: " << rangeM << std::endl;
+            return -1;
+        }
+        Double_t energy = (*rec).getEnergy();
+        Double_t energyP = (*rec).getEnergy(0, CalXtalId::POS);
+        Double_t energyM = (*rec).getEnergy(0, CalXtalId::NEG);
+        if (!floatInRange(energyP, fr) ) {
+            std::cout << "Range POS energy: " << energyP << std::endl;
+            return -1;
+        }
+        if (!floatInRange(energyM, randNum*4.) ) {
+            std::cout << "Range NEG energy: " << energyM << std::endl;
+            return -1;
+        }
+
+        if ( !floatInRange(energy, (energyP+energyM)/2.) ) {
+            std::cout << "energy of RangeRecData is not average: " << energy << std::endl;
+            return -1;
+        }
+
+        const CalRangeRecData* rangeRecData = (*rec).getRangeRecData(0);
+        if (!floatInRange(energyP, rangeRecData->getEnergy(CalXtalId::POS)) ) {
+            std::cout << "CalRangeRecData POS energy differs " << std::endl;
+            return -1;
+        }
+        if (!floatInRange(energyM, rangeRecData->getEnergy(CalXtalId::NEG)) ) {
+            std::cout << "CalRangeRecData NEG energy differs " << std::endl;
+            return -1;
+        }
+        if (CalXtalId::LEX8 != rangeRecData->getRange(CalXtalId::POS)) {
+            std::cout << "CalRangeRecData POS range differs" << std::endl;
+            return -1;
+        }
+        if (CalXtalId::HEX8 != rangeRecData->getRange(CalXtalId::NEG)) {
+            std::cout << "CalRangeRecData NEG range differs" << std::endl;
+            return -1;
+        }
+
+        Double_t energyRangeP = (*rec).getEnergySelectedRange(CalXtalId::LEX8, CalXtalId::POS);
+        if (!floatInRange(energyRangeP, energyP)) {
+            std::cout << "get selected POS range differs" << std::endl;
+            return -1;
+        }
+        Double_t energyRangeM = (*rec).getEnergySelectedRange(CalXtalId::HEX8, CalXtalId::NEG);
+        if (!floatInRange(energyRangeM, energyM) ) {
+            std::cout << "get selected NEG range differs" << std::endl;
+            return -1;
+        }
+
+        // Check range and faces that should return -1, since they are undefined
+        if ( !floatInRange((*rec).getEnergySelectedRange(CalXtalId::LEX1, CalXtalId::POS), -1.) ) {
+            std::cout << "undefined range face pair does not return -1" << std::endl;
+            return -1;
+        }
+        if ( !floatInRange((*rec).getEnergySelectedRange(CalXtalId::HEX1, CalXtalId::POS), -1.) ) {
+            std::cout << "undefined range face pair does not return -1" << std::endl;
+            return -1;
+        }
+        if ( !floatInRange((*rec).getEnergySelectedRange(CalXtalId::HEX8, CalXtalId::POS), -1.) ) {
+            std::cout << "undefined range face pair does not return -1" << std::endl;
+            return -1;
+        }
+
+        if ( !floatInRange((*rec).getEnergySelectedRange(CalXtalId::LEX1, CalXtalId::NEG), -1.) ) {
+            std::cout << "undefined range face pair does not return -1" << std::endl;
+            return -1;
+        }
+        if ( !floatInRange((*rec).getEnergySelectedRange(CalXtalId::LEX8, CalXtalId::NEG), -1.) ) {
+            std::cout << "undefined range face pair does not return -1" << std::endl;
+            return -1;
+        }
+        if ( !floatInRange((*rec).getEnergySelectedRange(CalXtalId::HEX1, CalXtalId::NEG), -1.) ) {
+            std::cout << "undefined range face pair does not return -1" << std::endl;
+            return -1;
+        }
+
+        return 0;
 }
 
 int checkCalRecon(CalRecon *cal, UInt_t ievent) {
     // Checks the contents of one CalRecon object
-    
+
     Float_t f = (Float_t)ievent;
     Float_t fr = f*randNum;
-    
+
     TObjArray *clusterCol = cal->getCalClusterCol();
     if (clusterCol->GetEntries() != numClusters) {
         std::cout << "Number of clusters in collection is wrong" << std::endl;
@@ -317,19 +317,19 @@ int checkCalRecon(CalRecon *cal, UInt_t ievent) {
     while ( (cluster = (CalCluster*)clusterIt.Next()) ) {
         if (checkCalCluster(cluster, ievent) < 0) return -1;
     }
-    
+
     TObjArray *recCol = cal->getCalXtalRecCol();
     if (recCol->GetEntries() != numXtals) {
         std::cout << "Number of CalXtalRecData objects is wrong" << std::endl;
         return -1;
     }
-    
+
     TIter recIt(recCol);
     CalXtalRecData *rec;
     while ( (rec = (CalXtalRecData*) recIt.Next()) ) {
         if (checkCalXtalRec(rec, ievent) < 0) return -1;
     }
-    
+
     return 0;
 }
 
@@ -358,38 +358,38 @@ int checkTkrCluster(const TkrCluster *cluster, UInt_t ievent, UInt_t icluster) {
         return -1;
     }
 
-	if (tkrId.getTowerX() != icluster % 4) {
-		std::cout << "TkrCluster Tower X number is wrong: " << tkrId.getTowerX() << std::endl;
-		return -1;
-	}
+    if (tkrId.getTowerX() != icluster % 4) {
+        std::cout << "TkrCluster Tower X number is wrong: " << tkrId.getTowerX() << std::endl;
+        return -1;
+    }
 
-	if (tkrId.getTowerY() != (icluster / 4) % 4) {
-		std::cout << "TkrCluster Tower Y number is wrong: " << tkrId.getTowerY() << std::endl;
-		return -1;
-	}
+    if (tkrId.getTowerY() != (icluster / 4) % 4) {
+        std::cout << "TkrCluster Tower Y number is wrong: " << tkrId.getTowerY() << std::endl;
+        return -1;
+    }
 
     if (cluster->getRawToT() != 50) {
         std::cout << "TkrCluster rawToT is wrong: " << cluster->getRawToT() << std::endl;
         return -1;
     }
 
-	if ( !floatInRange(cluster->getMips(), f) ) {
-		std::cout << "TkrCluster ToT is wrong: " << cluster->getMips() << std::endl;
-		return -1;
-	}
-	TVector3 pos = cluster->getPosition();
-    if ( (!floatInRange(pos.X(), f)) || (!floatInRange(pos.Y(), f*2.)) 
-		|| (!floatInRange(pos.Z(), f*3.)) ) {
-        std::cout << "TkrCluster Position: (" << pos.X() << ", "
-			<< pos.Y() << ", " << pos.Z() << ")" << std::endl;
+    if ( !floatInRange(cluster->getMips(), f) ) {
+        std::cout << "TkrCluster ToT is wrong: " << cluster->getMips() << std::endl;
         return -1;
     }
-	if ( !cluster->hitFlagged() ) {
-		std::cout << "TkrCluster not flagged " << cluster->hitFlagged() << std::endl;
-		return -1;
-	}
+    TVector3 pos = cluster->getPosition();
+    if ( (!floatInRange(pos.X(), f)) || (!floatInRange(pos.Y(), f*2.)) 
+        || (!floatInRange(pos.Z(), f*3.)) ) {
+            std::cout << "TkrCluster Position: (" << pos.X() << ", "
+                << pos.Y() << ", " << pos.Z() << ")" << std::endl;
+            return -1;
+        }
+        if ( !cluster->hitFlagged() ) {
+            std::cout << "TkrCluster not flagged " << cluster->hitFlagged() << std::endl;
+            return -1;
+        }
 
-    return 0;
+        return 0;
 }
 
 int checkTrack(const TkrTrack *track,  UInt_t ievent, UInt_t itrack) {
@@ -473,86 +473,86 @@ int checkTkrVertex(const TkrVertex* vertex, UInt_t ievent, UInt_t ivertex) {
     TVector3 pos = vertex->getPosition();
     if ( (!floatInRange(pos.X(), f)) || (!floatInRange(pos.Y(), fr))
         || (!floatInRange(pos.Z(), fr*2.)) ) {
-        std::cout << "TkrCandTrack pos (x,y,z): (" << pos.X() << ","
-            << pos.Y() << "," << pos.Z() << ")" << std::endl;
-        return -1;
-    }
-    TVector3 dir = vertex->getDirection();
-    if ( (!floatInRange(dir.X(), randNum*2.)) || (!floatInRange(dir.Y(), randNum*3.))
-        || (!floatInRange(dir.Z(), randNum*4.)) ) {
-        std::cout << "TkrCandTrack dir (x,y,z): (" << dir.X() << ","
-            << dir.Y() << "," << dir.Z() << ")" << std::endl;
-        return -1;
-    }
+            std::cout << "TkrCandTrack pos (x,y,z): (" << pos.X() << ","
+                << pos.Y() << "," << pos.Z() << ")" << std::endl;
+            return -1;
+        }
+        TVector3 dir = vertex->getDirection();
+        if ( (!floatInRange(dir.X(), randNum*2.)) || (!floatInRange(dir.Y(), randNum*3.))
+            || (!floatInRange(dir.Z(), randNum*4.)) ) {
+                std::cout << "TkrCandTrack dir (x,y,z): (" << dir.X() << ","
+                    << dir.Y() << "," << dir.Z() << ")" << std::endl;
+                return -1;
+            }
 
-    TkrTrackParams params = vertex->getVertexParams();
-    if ( (!floatInRange(params.getxPosition(), f) ) ||
-        (!floatInRange(params.getxSlope(), f*f) ) ){
-        std::cout << "Vertex X Param wrong: (" << params.getxPosition() << ","
-            << params.getxSlope() << ")" << std::endl;
-        std::cout << "f = " << f << " f*f = " << f*f << std::endl;
-        return -1;
-    }
-    
-    if ( (!floatInRange(params.getyPosition(), fr) ) ||
-       (!floatInRange(params.getySlope(), randNum*randNum) ) ) {
-        std::cout << "Vertex Y Param wrong: (" << params.getyPosition() << ","
-            << params.getySlope() << ")" << std::endl;
-        return -1;
-    }
+            TkrTrackParams params = vertex->getVertexParams();
+            if ( (!floatInRange(params.getxPosition(), f) ) ||
+                (!floatInRange(params.getxSlope(), f*f) ) ){
+                    std::cout << "Vertex X Param wrong: (" << params.getxPosition() << ","
+                        << params.getxSlope() << ")" << std::endl;
+                    std::cout << "f = " << f << " f*f = " << f*f << std::endl;
+                    return -1;
+                }
 
-    if ( (!floatInRange(params.getxPosxPos(), f) ) ||
-         (!floatInRange(params.getxPosxSlp(), f*2.) ) ||
-         (!floatInRange(params.getxPosyPos(), f*3.) ) || 
-         (!floatInRange(params.getxPosySlp(), f*4.)) ) 
-    {
-        std::cout << "Vertex matrix row 0 vals are wrong: " << params.getxPosxPos() << " "
-            << params.getxPosxSlp() << " " << params.getxPosyPos() 
-            << " " << params.getxPosySlp() << std::endl;
-        return -1;
-    }
+                if ( (!floatInRange(params.getyPosition(), fr) ) ||
+                    (!floatInRange(params.getySlope(), randNum*randNum) ) ) {
+                        std::cout << "Vertex Y Param wrong: (" << params.getyPosition() << ","
+                            << params.getySlope() << ")" << std::endl;
+                        return -1;
+                    }
 
-    if ( (!floatInRange(params(2,2), f*5.) ) ||
-         (!floatInRange(params(2,3), f*6.) ) || 
-         (!floatInRange(params(2,4), f*7.)) ) 
-    {
-        std::cout << "Vertex matrix row 1 vals are wrong: " << params(2,1) << " "
-            << params(2,2) << " " << params(2,3) << " " << params(2,4) << std::endl;
-        return -1;
-    }
+                    if ( (!floatInRange(params.getxPosxPos(), f) ) ||
+                        (!floatInRange(params.getxPosxSlp(), f*2.) ) ||
+                        (!floatInRange(params.getxPosyPos(), f*3.) ) || 
+                        (!floatInRange(params.getxPosySlp(), f*4.)) ) 
+                    {
+                        std::cout << "Vertex matrix row 0 vals are wrong: " << params.getxPosxPos() << " "
+                            << params.getxPosxSlp() << " " << params.getxPosyPos() 
+                            << " " << params.getxPosySlp() << std::endl;
+                        return -1;
+                    }
 
-    if ( (!floatInRange(params(3,3), f*8.) ) || 
-         (!floatInRange(params(3,4), f*9.)) ) 
-    {
-        std::cout << "Vertex matrix row 2 vals are wrong: " << params(3,1) << " "
-            << params(3,2) << " " << params(3,3) << " " << params(3,4) << std::endl;
-        return -1;
-    }
+                    if ( (!floatInRange(params(2,2), f*5.) ) ||
+                        (!floatInRange(params(2,3), f*6.) ) || 
+                        (!floatInRange(params(2,4), f*7.)) ) 
+                    {
+                        std::cout << "Vertex matrix row 1 vals are wrong: " << params(2,1) << " "
+                            << params(2,2) << " " << params(2,3) << " " << params(2,4) << std::endl;
+                        return -1;
+                    }
 
-    if ( (!floatInRange(params(4,4), f*10.)) ) 
-    {
-        std::cout << "Vertex matrix row 3 vals are wrong: " << params(4,1) << " "
-            << params(4,2) << " " << params(4,3) << " " << params(4,4) << std::endl;
-        return -1;
-    }
+                    if ( (!floatInRange(params(3,3), f*8.) ) || 
+                        (!floatInRange(params(3,4), f*9.)) ) 
+                    {
+                        std::cout << "Vertex matrix row 2 vals are wrong: " << params(3,1) << " "
+                            << params(3,2) << " " << params(3,3) << " " << params(3,4) << std::endl;
+                        return -1;
+                    }
 
-    //if (vertex->getNumTracks() != 2) {
-    //    std::cout << "Vertex number of tracks is wrong: " << vertex->getNumTracks() << std::endl;
-    //    return -1;
-    //}
+                    if ( (!floatInRange(params(4,4), f*10.)) ) 
+                    {
+                        std::cout << "Vertex matrix row 3 vals are wrong: " << params(4,1) << " "
+                            << params(4,2) << " " << params(4,3) << " " << params(4,4) << std::endl;
+                        return -1;
+                    }
 
-    // Hmm... what to do here...
-    //if (vertex->getTrackId(0) != ivertex+1) {
-    //    std::cout << "Vertex Track id is wrong: " << vertex->getTrackId(0) << std::endl;
-    //    return -1;
-    //}
+                    //if (vertex->getNumTracks() != 2) {
+                    //    std::cout << "Vertex number of tracks is wrong: " << vertex->getNumTracks() << std::endl;
+                    //    return -1;
+                    //}
 
-    //if (vertex->getTrackId(1) != ivertex+2) {
-    //    std::cout << "Vertex Track id is wrong: " << vertex->getTrackId(1) << std::endl;
-    //    return -1;
-    //}
+                    // Hmm... what to do here...
+                    //if (vertex->getTrackId(0) != ivertex+1) {
+                    //    std::cout << "Vertex Track id is wrong: " << vertex->getTrackId(0) << std::endl;
+                    //    return -1;
+                    //}
 
-    return 0;
+                    //if (vertex->getTrackId(1) != ivertex+2) {
+                    //    std::cout << "Vertex Track id is wrong: " << vertex->getTrackId(1) << std::endl;
+                    //    return -1;
+                    //}
+
+                    return 0;
 }
 
 int checkTkrRecon(TkrRecon *tkr, UInt_t ievent) {
@@ -635,73 +635,73 @@ int checkAcdRecon(AcdRecon *acd, UInt_t ievent) {
     AcdId acdMinDocaId = acd->getMinDocaId();
     if ((acdMinDocaId.getLayer() != 0) || (acdMinDocaId.getFace() != 0) ||
         (acdMinDocaId.getRow() != 3) || (acdMinDocaId.getColumn() != 2) ) {
-        std::cout << "MinDoca AcdID is wrong: " << acdMinDocaId.getLayer() << " "
-            << acdMinDocaId.getFace() << " " << acdMinDocaId.getRow() << " "
-            << acdMinDocaId.getColumn() << std::endl;
-        return -1;
-    }
+            std::cout << "MinDoca AcdID is wrong: " << acdMinDocaId.getLayer() << " "
+                << acdMinDocaId.getFace() << " " << acdMinDocaId.getRow() << " "
+                << acdMinDocaId.getColumn() << std::endl;
+            return -1;
+        }
 
-    std::vector<Double_t> rowCol = acd->getRowDocaCol();
-    if (rowCol.size() != 2) {
-        std::cout << "AcdRecon number of row entries is wrong: " << rowCol.size() << std::endl;
-        return -1;
-    }
+        std::vector<Double_t> rowCol = acd->getRowDocaCol();
+        if (rowCol.size() != 2) {
+            std::cout << "AcdRecon number of row entries is wrong: " << rowCol.size() << std::endl;
+            return -1;
+        }
 
-    if (!floatInRange(rowCol[0], randNum) ) {
-        std::cout << "AcdRecon row doca 0 is wrong: " << rowCol[0] << std::endl;
-        return -1;
-    }
+        if (!floatInRange(rowCol[0], randNum) ) {
+            std::cout << "AcdRecon row doca 0 is wrong: " << rowCol[0] << std::endl;
+            return -1;
+        }
 
-    if (!floatInRange(rowCol[1], f) ) {
-        std::cout << "AcdRecon row doca 1 is wrong: " << rowCol[1] << std::endl;
-        return -1;
-    }
+        if (!floatInRange(rowCol[1], f) ) {
+            std::cout << "AcdRecon row doca 1 is wrong: " << rowCol[1] << std::endl;
+            return -1;
+        }
 
-    std::vector<Double_t> rowActDistCol = acd->getRowActDistCol();
-    if (rowActDistCol.size() != 2) {
-        std::cout << "AcdRecon number of row actDist entries is wrong: " << rowActDistCol.size() << std::endl;
-        return -1;
-    }
+        std::vector<Double_t> rowActDistCol = acd->getRowActDistCol();
+        if (rowActDistCol.size() != 2) {
+            std::cout << "AcdRecon number of row actDist entries is wrong: " << rowActDistCol.size() << std::endl;
+            return -1;
+        }
 
-    if (!floatInRange(rowActDistCol[0], randNum) ) {
-        std::cout << "AcdRecon row actdist 0 is wrong: " << rowActDistCol[0] << std::endl;
-        return -1;
-    }
+        if (!floatInRange(rowActDistCol[0], randNum) ) {
+            std::cout << "AcdRecon row actdist 0 is wrong: " << rowActDistCol[0] << std::endl;
+            return -1;
+        }
 
-    if (!floatInRange(rowActDistCol[1], f) ) {
-        std::cout << "AcdRecon row actdist 1 is wrong: " << rowActDistCol[1] << std::endl;
-        return -1;
-    }
+        if (!floatInRange(rowActDistCol[1], f) ) {
+            std::cout << "AcdRecon row actdist 1 is wrong: " << rowActDistCol[1] << std::endl;
+            return -1;
+        }
 
-	std::vector<AcdId> idCol = acd->getIdCol();
-	if (idCol.size() != 2) {
-		std::cout << "AcdRecon number of ids is wrong: " << acd->getIdCol().size() << std::endl;
-		return -1;
-	}
-	if ( !(idCol[0] == AcdId(0, 0, 3, 2)) ) {
+        std::vector<AcdId> idCol = acd->getIdCol();
+        if (idCol.size() != 2) {
+            std::cout << "AcdRecon number of ids is wrong: " << acd->getIdCol().size() << std::endl;
+            return -1;
+        }
+        if ( !(idCol[0] == AcdId(0, 0, 3, 2)) ) {
 
-	}
+        }
 
-	if ( !(idCol[1] == AcdId(0, 2, 2, 1))) {
+        if ( !(idCol[1] == AcdId(0, 2, 2, 1))) {
 
-	}
+        }
 
-	std::vector<Double_t> energyCol = acd->getEnergyCol();
-	if (energyCol.size() != 2) {
-		std::cout << "AcdRecon number of energies is wrong: " << acd->getEnergyCol().size() << std::endl;
-		return -1;
-	}
-	if (!floatInRange(energyCol[0], f) ) {
-		std::cout << "AcdRecon first energy is wrong: " << energyCol[0] << std::endl;
-		return -1;
-	}
+        std::vector<Double_t> energyCol = acd->getEnergyCol();
+        if (energyCol.size() != 2) {
+            std::cout << "AcdRecon number of energies is wrong: " << acd->getEnergyCol().size() << std::endl;
+            return -1;
+        }
+        if (!floatInRange(energyCol[0], f) ) {
+            std::cout << "AcdRecon first energy is wrong: " << energyCol[0] << std::endl;
+            return -1;
+        }
 
-	if (!floatInRange(energyCol[1], f*2.) ) {
-		std::cout << "AcdRecon 2nd energy is wrong: " << energyCol[1] << std::endl;
-		return -1;
-	}
+        if (!floatInRange(energyCol[1], f*2.) ) {
+            std::cout << "AcdRecon 2nd energy is wrong: " << energyCol[1] << std::endl;
+            return -1;
+        }
 
-    return 0;
+        return 0;
 }
 
 
@@ -711,9 +711,9 @@ int read(char* fileName, int numEvents) {
     TTree *t = (TTree*)f->Get("Recon");
     ReconEvent *evt = 0;
     t->SetBranchAddress("ReconEvent", &evt);
-    
+
     std::cout << "Opened the ROOT file for reading" << std::endl;
-    
+
     UInt_t ievent;
     for (ievent = 0; ievent < (UInt_t) numEvents; ievent++) {
         t->GetEvent(ievent);
@@ -734,10 +734,10 @@ int read(char* fileName, int numEvents) {
         if (checkTkrRecon(tkr, ievent) < 0) return -1;
         evt->Clear();
     }
-    
+
     f->Close();
     delete f;
-    
+
     return 0;
 }
 
@@ -745,19 +745,19 @@ int read(char* fileName, int numEvents) {
 int write(char* fileName, int numEvents) {
     Int_t buffer = 64000;
     Int_t splitLevel = 1;
-    
+
     TFile *f =  new TFile(fileName, "RECREATE");
     TTree *t = new TTree("Recon", "Recon");
     ReconEvent *ev = new ReconEvent();
     t->Branch("ReconEvent", "ReconEvent", &ev, buffer, splitLevel);
-    
+
     std::cout << "Created new ROOT file" << std::endl;
-    
+
     TRandom randGen;
     Int_t ievent, ixtal;
     randNum = randGen.Rndm();
     for (ievent = 0; ievent < numEvents; ievent++) {
-        
+
         Float_t f = Float_t(ievent);
 
         // Create AcdRecon object
@@ -781,8 +781,8 @@ int write(char* fileName, int numEvents) {
         energyCol.push_back(f);
         energyCol.push_back(2.*f);
         acdRec->initialize(energy, count, gDoca, doca, 
-          actDist, minDocaId, rowDocaCol, rowActDistCol,
-          idCol, energyCol);
+            actDist, minDocaId, rowDocaCol, rowActDistCol,
+            idCol, energyCol);
 
         // Create CalRecon object
         CalRecon *calRec = new CalRecon();
@@ -809,17 +809,17 @@ int write(char* fileName, int numEvents) {
             Double_t eCorrect = randNum*5.*f;
             cluster->initialize(eLeak, eCorrect, eLayer, pLayer, rmsLayer, rmsLong, 
                 rmsTrans, calDir, transOffset);
-            
+
             Double_t fitEnergy = f;
             Double_t chi2 = f*randNum;
             Double_t fStart = randNum*randNum;
             Double_t fitAlpha = f*f;
             Double_t fitLambda = f+f;
             cluster->initProfile(fitEnergy, chi2, fStart, fitAlpha, fitLambda);
-            
+
             calRec->addCalCluster(cluster);
         }
-        
+
         for (ixtal = 0; ixtal < numXtals; ixtal ++) {
             CalXtalRecData *xtal = new CalXtalRecData();
             CalXtalId id;
@@ -846,11 +846,11 @@ int write(char* fileName, int numEvents) {
             UInt_t stripf = 10;
             TVector3 pos(f, 2.*f, 3.*f);
             UInt_t rawTot = 50;
-			Double_t tot =  f;
-			UInt_t flag = 1;
-			UInt_t tower = 8;
+            Double_t tot =  f;
+            UInt_t flag = 1;
+            UInt_t tower = 8;
             UInt_t nBad  = 0;
-            TkrCluster *cluster = new TkrCluster(tkrId, strip0, stripf, pos, rawTot, tot, nBad, flag);
+            TkrCluster *cluster = new TkrCluster(tkrId, strip0, stripf, pos, rawTot, tot, flag, nBad);
             tkrRec->addCluster(cluster);
         }
 
@@ -880,7 +880,7 @@ int write(char* fileName, int numEvents) {
             track->setKalThetaMS(ms);
             tkrRec->addTrack(track);
         }
-        
+
         UInt_t ivertex;
         TkrVertex *vertex;
         for (ivertex=0; ivertex < numVertices; ivertex++) {
@@ -894,13 +894,13 @@ int write(char* fileName, int numEvents) {
             vertex->setQuality(qual);
             Double_t energy = f*randNum;
             vertex->setEnergy(energy);
-            
+
             TkrTrackParams vtxPar;
             vtxPar(1) = f;
             vtxPar(2) = f*f;
             vtxPar(3) = f*randNum;
             vtxPar(4) = randNum*randNum;
-            
+
             vtxPar(1,1) = f;
             vtxPar(1,2) = f*2.;
             vtxPar(1,3) = f*3.;
@@ -928,10 +928,10 @@ int write(char* fileName, int numEvents) {
         t->Fill();
         ev->Clear();
     }
-    
+
     std::cout << "Filled ROOT file with " << numEvents << " events" << std::endl;
     delete ev;
-    
+
     f->Write();
     f->Close();
     delete f;
@@ -952,17 +952,15 @@ int main(int argc, char **argv) {
     if (argc > 2) {
         numEvents = atoi(argv[n++]);
     } 
-    
+
     int sc = 0;
     sc = write(fileName, numEvents);    sc = read(fileName, numEvents);
-    
+
     if (sc == 0) {
         std::cout << "RECON ROOT file writing and reading succeeded!" << std::endl;
     } else {
         std::cout << "FAILED recon writing and reading" << std::endl;
     }
-    
+
     return(sc);
 }
-
-
