@@ -35,6 +35,8 @@
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/Event.h"
 #include "Event/Digi/TkrDigi.h"
+#include "Event/MonteCarlo/McTkrStrip.h"
+
 
 #include "SiStripList.h"
 #include "SiLayerList.h"
@@ -186,7 +188,17 @@ StatusCode TkrSimpleDigiAlg::execute()
             return sc;
         }
     }
+    // Create the collection of hit strip objects
+    McTkrStripCol* strips = new McTkrStripCol;
+    sc = eventSvc()->registerObject( EventModel::MC::McTkrStripCol, strips);
     
+    if (sc != StatusCode::SUCCESS){
+        log << MSG::INFO << "Failed to register TkrStrip vector" << endreq;
+        return sc;
+    }
+
+
+
     //Create the collection of digi objects - will be empty at this point
     TkrDigiCol*  pTkrDigi   = new TkrDigiCol;
     
@@ -202,7 +214,8 @@ StatusCode TkrSimpleDigiAlg::execute()
     // finally make digis from the hits
     for(SiPlaneMap::iterator si = m_SiMap.begin(); si != m_SiMap.end(); ++si){
         SiStripList& sidet = *si->second;
-        idents::VolumeIdentifier id = si->first;          
+        idents::VolumeIdentifier id = si->first;  
+        
        
         // unpack the id: the order is correct!
 #if 1 //  old way
@@ -238,7 +251,10 @@ StatusCode TkrSimpleDigiAlg::execute()
             
             //TODO: apply threshold, add strip to TkrDigi
             pDigi->addC0Hit(stripId);
-            
+
+            // save the hit here
+            strips->push_back(new Event::McTkrStrip(id, stripId, e));
+
         }
     }
     
