@@ -169,14 +169,9 @@ StatusCode GltValsTool::calculate()
 
     unsigned int word = pEvent->trigger();
 
-    // construct the bit mask, this should prob. be in the enums
-    unsigned bitMask = 0;
-    int ibit = enums::number_of_trigger_bits;
-    while(ibit--) { bitMask |= 1<<ibit; }
-
     // This is the same as the old GltWord
-    Trig_word = word & bitMask;
-    Trig_GemSummary = (word >> enums::GEM_offset) & bitMask;
+    Trig_word = word & enums::GEM_mask; // actually only 6 bits, but no harm (I think!)
+    Trig_GemSummary = (word >> enums::GEM_offset) & enums::GEM_mask;
 
     SmartDataPtr<LdfEvent::EventSummaryData> eventSummary(m_pEventSvc, "/Event/EventSummary"); 
 
