@@ -1,7 +1,9 @@
 /** @file release.notes
-    @brief package G4Generator <pre>
+    @brief package G4Generator 
+
     $Id$
-*
+*<br><pre>
+ *        19-feb-03     Start of physics list selection
  * v5r0   06-feb-03 THB Tagged Riccardo's fixes for G4 5.0.
  * v4r7   03-feb-03 THB apply tag to Tracy's G4Geoemtry mods.
  * v4r6   17-jan-03 LSR Add 2 new methods for separate edge distances in X and Y
