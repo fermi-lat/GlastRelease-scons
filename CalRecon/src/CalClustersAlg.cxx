@@ -503,7 +503,7 @@ StatusCode CalClustersAlg::retrieve()
 	    m_calClusterCol = new CalClusterCol();
      	sc = eventSvc()->registerObject(EventModel::CalRecon::CalClusterCol /*"/Event/CalRecon/CalClusterCol"*/,m_calClusterCol);
     } else {
-        m_calClusterCol->clear();
+        m_calClusterCol->delClusters();
     }
 
 	m_calXtalRecCol = SmartDataPtr<CalXtalRecCol>(eventSvc(),EventModel::CalRecon::CalXtalRecCol /*"/Event/CalRecon/CalXtalRecCol"*/); 

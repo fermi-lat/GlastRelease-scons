@@ -47,14 +47,14 @@ void CalCluster::ini()
 //----------------- CsIClusterList -----------------
 
 //################################################
-void CalClusterCol::clear()
+void CalClusterCol::delClusters()
 //################################################
 {
 	int nClusters = num();
 	for (int icl = 0; icl < nClusters; icl++) {
-		delete m_calClusterCol[icl];
+		delete operator[](icl);
 	}
-	m_calClusterCol.clear();
+        clear();
 }
 
 //------------ private ---------------------------
@@ -62,18 +62,18 @@ void CalClusterCol::clear()
 void CalClusterCol::ini()
 //################################################
 {
-	m_calClusterCol.clear();
+clear();
 }
 //################################################
 void CalClusterCol::writeOut(MsgStream& stream) const
 //################################################
 {
 #if 1 // fix this to write to the log file for debug purposes
-    if (m_calClusterCol.size()<=0) return;
+    if (size()<=0) return;
 	
-	stream << " --- CalClusterCol  --- " << m_calClusterCol.size() << endreq;
-	for (int i = 0; i < m_calClusterCol.size();i++) {
-		m_calClusterCol[i]->writeOut(stream);
+	stream << " --- CalClusterCol  --- " << size() << endreq;
+	for (int i = 0; i < size();i++) {
+		(operator[](i))->writeOut(stream);
 	}
 #endif
 }

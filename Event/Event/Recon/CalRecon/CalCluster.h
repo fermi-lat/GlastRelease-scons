@@ -157,13 +157,13 @@ private:
  */
 
 //#####################################
-class CalClusterCol : public DataObject
+class CalClusterCol : public DataObject, std::vector<CalCluster*>
 //#####################################
 {
 public:
 
-	CalClusterCol() { /* m_calDisp = 0; */	clear();}
-	~CalClusterCol() { /* if(m_calDisp) m_calDisp->clearClusterDisp();*/ clear();}
+	CalClusterCol() { clear();}
+	~CalClusterCol() { delClusters();}
 
 
 	// GAUDI members to be use by the converters
@@ -171,28 +171,21 @@ public:
 	virtual const CLID& clID() const {return classID();}
 	
 	
-	void add(CalCluster* cl) {m_calClusterCol.push_back(cl);}
+	void add(CalCluster* cl) {push_back(cl);}
 
 	// access
-	int num()                  const {return m_calClusterCol.size();}
-	CalCluster* getCluster(int i) const {return m_calClusterCol[i];}
+	int num()                  const {return size();}
+	CalCluster* getCluster(int i) const {return operator[](i);}
 
 	//operations
-	virtual void clear();
-	virtual void make() {}
+	void delClusters();
 
 	virtual void writeOut(MsgStream& stream) const;
-//    void setCalDisplay(CalDisplay* calDisp) {m_calDisp = calDisp;}
 
 protected:
 
 	virtual void ini();
 
-private:
-
-	std::vector<CalCluster*> m_calClusterCol;
-
-//    CalDisplay* m_calDisp;
 };
 
 }
