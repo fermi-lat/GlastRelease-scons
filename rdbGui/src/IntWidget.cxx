@@ -8,7 +8,7 @@ IntWidget::IntWidget(FXComposite* parent, rdbModel::Column *column)
 
   m_column = column;
 
-  m_widget = new FXSpinner(parent,20,
+  m_widget = new FXSpinner(parent,0,
                            NULL,0,
                            SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP|
                            LAYOUT_FILL_X);

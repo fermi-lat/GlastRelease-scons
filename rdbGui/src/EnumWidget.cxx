@@ -7,7 +7,7 @@ EnumWidget::EnumWidget(FXComposite* parent, rdbModel::Column *column)
   rdbModel::Enum* en = dt->getEnum();
 
   m_column = column;
-  m_widget = new FXComboBox(parent,19, NULL, 0,FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
+  m_widget = new FXComboBox(parent,0, NULL, 0,FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
   m_widget->setNumVisible(en->getChoices().size());
   m_widget->create();
   

@@ -3,14 +3,18 @@
 #include "FXCheckList.h"
 #include "ColWidgetFactory.h"
 
+#include "rdbModel/Tables/Assertion.h"
+
+#include <string>
+
 // Message Map TableColumnList class
 FXDEFMAP(QueryFrame) QueryFrameMap[]={
 
   //__Message_Type_____________ID________________________Message_Handler_____
   FXMAPFUNC(SEL_COMMAND,   QueryFrame::ID_MORE,          QueryFrame::onCmdMore),
   FXMAPFUNC(SEL_COMMAND,   QueryFrame::ID_FEWER,         QueryFrame::onCmdFewer),
-  FXMAPFUNC(SEL_COMMAND,   QueryFrame::ID_COLSELECT,     QueryFrame::onSelectCol)
-  
+  FXMAPFUNC(SEL_COMMAND,   QueryFrame::ID_COLSELECT,     QueryFrame::onSelectCol),
+  FXMAPFUNC(SEL_COMMAND,   QueryFrame::ID_QUERY,         QueryFrame::onQuery)
   };
 
 // Object implementation
@@ -42,6 +46,8 @@ QueryFrame::QueryFrame(FXComposite *owner):
   
   new FXButton(addRemovFrame,"&More\tAdd a new search condition", NULL, this, ID_MORE);
   new FXButton(addRemovFrame,"F&ewer\tRemove last search condition", NULL, this, ID_FEWER);
+  new FXButton(addRemovFrame,"&Send\tSend query to the database", NULL, this, 
+      ID_QUERY, BUTTON_NORMAL|LAYOUT_RIGHT);
   
   new FXHorizontalSeparator(this);
   
@@ -63,7 +69,8 @@ long QueryFrame::onCmdMore(FXObject*,FXSelector,void*)
   temp->setNumVisible(2);
   temp->create();
   
-  FXComboBox *colSelect = new FXComboBox(m_searchFrame, 0, this, ID_COLSELECT, FRAME_SUNKEN|FRAME_THICK|COMBOBOX_STATIC|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
+  FXComboBox *colSelect = new FXComboBox(m_searchFrame, 0, this, ID_COLSELECT, 
+      FRAME_SUNKEN|FRAME_THICK|COMBOBOX_STATIC|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
   int i;
   FXComboBox *firstColSel = (FXComboBox *) m_searchFrame->getFirst();
   for (i = 0; i < firstColSel->getNumItems(); i++)
@@ -83,7 +90,7 @@ long QueryFrame::onCmdMore(FXObject*,FXSelector,void*)
   tempFrame->create();
   if (rdbModel::Column* col = (rdbModel::Column *)colSelect->getItemData(colSelect->getCurrentItem()))
     {
-      m_factory->createColWidget(tempFrame, col);
+       m_widgets.push_back(m_factory->createColWidget(tempFrame, col));
     }
   else
     {
@@ -106,6 +113,9 @@ long QueryFrame::onCmdFewer(FXObject*,FXSelector,void*)
       temp->destroy();
       delete temp;
     }
+  delete m_widgets[m_widgets.size()-1];
+  m_widgets.pop_back();
+  
   temp = m_searchFrame->getLast();
   temp->destroy();
   delete temp;
@@ -116,16 +126,22 @@ long QueryFrame::onCmdFewer(FXObject*,FXSelector,void*)
 
 void QueryFrame::updateColumnSelection(const FXCheckList *colList)
 {
+  int i;
   FXWindow *temp; 
   while (m_searchFrame->getNumRows() > 1)
     {
       onCmdFewer(NULL,0,NULL);
     }
     
+  for (i = 0; i < m_widgets.size(); i++)
+    {
+      delete m_widgets[i];
+    }
+  m_widgets.clear();
+    
   FXComboBox *colSelect = (FXComboBox *) m_searchFrame->getFirst();
   colSelect->clearItems();
   
-  int i;
   for (i = 0; i < colList->getNumItems(); i++)
     colSelect->appendItem(colList->getItemText(i), colList->getItemData(i));
   colSelect->setNumVisible(10);
@@ -141,7 +157,7 @@ void QueryFrame::updateColumnSelection(const FXCheckList *colList)
       FXWindow *child = colWidgetFrame->getFirst();
       child->destroy();
       delete child;
-      m_factory->createColWidget(colWidgetFrame, col);
+      m_widgets.push_back(m_factory->createColWidget(colWidgetFrame, col));
       m_searchFrame->recalc();
     }
 }
@@ -158,9 +174,73 @@ long QueryFrame::onSelectCol(FXObject *sender, FXSelector, void*)
     FXWindow *child = colWidgetFrame->getFirst();
     child->destroy();
     delete child;
-    m_factory->createColWidget(colWidgetFrame, col);
+    delete m_widgets[row];
+    m_widgets[row] = m_factory->createColWidget(colWidgetFrame, col);
     m_searchFrame->recalc();
   }
   return 1;
 }
 
+
+long QueryFrame::onQuery(FXObject*,FXSelector,void*)
+{
+
+  rdbModel::Assertion::Operator *where = buildOperator(0);
+
+  return 1;
+}
+
+
+rdbModel::Assertion::Operator* QueryFrame::buildCompOperator(std::string col, 
+    std::string comp, std::string value)
+{
+  rdbModel::OPTYPE opType;
+  
+  if (comp == "<") 
+    opType = rdbModel::OPTYPElessThan;  
+  else if (comp == ">")
+    opType = rdbModel::OPTYPEgreaterThan;
+  else if  (comp ==  "=")
+    opType = rdbModel::OPTYPEequal;
+  else if (comp == "<>")
+    opType = rdbModel::OPTYPEnotEqual;
+  else if (comp == "<=")
+    opType = rdbModel::OPTYPElessOrEqual;
+  else if (comp == ">=")
+    opType = rdbModel::OPTYPEgreaterOrEqual;
+    
+  return new rdbModel::Assertion::Operator(opType, col, value, false, true);
+}
+
+rdbModel::Assertion::Operator* QueryFrame::buildOperator(int row)
+{
+  rdbModel::Assertion::Operator *leftOper;
+  FXComboBox *column, *compOp, *conjOp;
+  std::string leftArg, comp, rightArg;
+  
+
+  column = (FXComboBox *) m_searchFrame->childAtRowCol(row,0);
+  compOp = (FXComboBox *) m_searchFrame->childAtRowCol(row,1);
+  
+  leftArg = column->getText().text();
+  comp = compOp->getText().text();
+  rightArg = m_widgets[row]->getValue();
+  
+  leftOper = buildCompOperator(leftArg, comp, rightArg);
+  
+  if ((row + 1) < m_searchFrame->getNumRows())
+    {
+      std::vector<rdbModel::Assertion::Operator* > children;
+      children.push_back(leftOper);
+      children.push_back(buildOperator(row + 1));
+      rdbModel::OPTYPE opType;
+      conjOp = (FXComboBox *)m_searchFrame->childAtRowCol(row,3);
+      if (conjOp->getText()=="AND")
+        opType = rdbModel::OPTYPEand;
+      else  // "OR" case
+        opType = rdbModel::OPTYPEor;
+      return new rdbModel::Assertion::Operator(opType, children);
+    }
+  else
+    return leftOper;   
+}
