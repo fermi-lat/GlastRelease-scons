@@ -40,9 +40,9 @@
           extending a projection 2 layers.
                                                                           */
 /* ---------------------------------------------------------------------- */
-#define          FIND_TOLERANCE 32
-#define EXTEND_1LAYER_TOLERANCE 32
-#define EXTEND_2LAYER_TOLERANCE 64
+#define          FIND_TOLERANCE 192//ALTERED: was 32
+#define EXTEND_1LAYER_TOLERANCE 192//ALTERED: was 32
+#define EXTEND_2LAYER_TOLERANCE 384//ALTERED: was 64
 /* ---------------------------------------------------------------------- */
 
 
