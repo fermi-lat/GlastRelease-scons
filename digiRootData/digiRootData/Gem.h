@@ -125,6 +125,21 @@ class Gem: public TObject {
 
 public:
 
+        /// Defines the 8 bits in the Condition Summary word
+        /// Please see Section 1.7.2 The Condition Summary in the
+        /// "The GLT Electronics Module" available at:
+        /// http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/GEM.pdf
+        typedef enum {
+            ROI = 1,
+            TKR = 2,
+            CALLE = 4,
+            CALHE = 8,
+            CNO = 16,
+            PERIODIC = 32,
+            SOLICITED = 64,
+            EXTERNAL = 128
+        } Summary;
+
     Gem();
     Gem(const Gem& gem); 
     virtual ~Gem() { };
@@ -161,6 +176,16 @@ public:
     const GemOnePpsTime& getOnePpsTime() const { return m_onePpsTime; };
     UInt_t getDeltaEventTime() const { return m_deltaEventTime; };
 
+
+    /// Methods to query bits in the condition summary word
+    Bool_t getRoiSet() const { return (m_conditionSummary & ROI); };
+    Bool_t getTkrSet() const { return (m_conditionSummary & TKR); };
+    Bool_t getCalLeSet() const { return (m_conditionSummary & CALLE); };
+    Bool_t getCalHeSet() const { return (m_conditionSummary & CALHE); };
+    Bool_t getCnoSet() const { return (m_conditionSummary & CNO); };
+    Bool_t getPeriodicSet() const { return (m_conditionSummary & PERIODIC); };
+    Bool_t getSolicitedSet() const { return (m_conditionSummary & SOLICITED); };
+    Bool_t getExternalSet() const { return (m_conditionSummary & EXTERNAL); };
 
     private:
 
