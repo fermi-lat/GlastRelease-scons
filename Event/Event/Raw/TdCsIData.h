@@ -1,6 +1,6 @@
 
-#ifndef CSI_DATA_H
-#define CSI_DATA_H 1
+#ifndef TDCSI_DATA_H
+#define TDCSI_DATA_H 1
 
 #ifdef _MSC_VER
 # pragma warning(disable: 4786)
