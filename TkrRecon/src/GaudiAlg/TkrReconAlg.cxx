@@ -43,7 +43,7 @@ TkrReconAlg::TkrReconAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator) 
 {
     // Variable to switch propagators
-    declareProperty("PropagatorType", m_PropagatorType=0);
+    declareProperty("PropagatorType", m_PropagatorType=1);
 }
 
 StatusCode TkrReconAlg::initialize()
