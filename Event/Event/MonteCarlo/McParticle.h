@@ -111,8 +111,8 @@ class McParticle  : virtual public ContainedObject  {
     const HepPoint3D& initialPosition() const;
     const HepPoint3D& finalPosition() const;
 
-    const HepLorentzVector&  initialFourMomemtum()const;
-    const HepLorentzVector&  finalFourMomemtum()const;
+    const HepLorentzVector&  initialFourMomentum()const;
+    const HepLorentzVector&  finalFourMomentum()const;
 
     /// access to the mother particle
     const McParticle& mother()const; 

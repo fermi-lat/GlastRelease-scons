@@ -44,11 +44,11 @@ const HepPoint3D& McParticle::finalPosition()const
 {
     return m_finalPosition;
 }
-const HepLorentzVector&  McParticle::initialFourMomemtum()const
+const HepLorentzVector&  McParticle::initialFourMomentum()const
 {
     return m_initialFourMomentum;
 }
-const HepLorentzVector&  McParticle::finalFourMomemtum()const
+const HepLorentzVector&  McParticle::finalFourMomentum()const
 {
     return m_finalFourMomentum;
 }
