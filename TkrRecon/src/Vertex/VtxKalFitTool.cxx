@@ -579,7 +579,6 @@ VtxKalFitTool::computeWeightMatrix(const Event::TkrTrack& theTrack,
   //
   // Restrictions and Caveats: Energy error might need reviewing
   
-  int ifail;
   MsgStream log(msgSvc(), name());
 
   //first bring Cov(X,Sx,Y,Sy) close to current vertex
