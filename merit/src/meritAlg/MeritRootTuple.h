@@ -7,9 +7,10 @@
 class Tuple;
 class TNtuple;
 class TFile;
+class TTree;
 
 /* 
- * @brief Creates a ROOT Ntuple from the merit list
+ * @brief Creates a ROOT tree from the merit list
  *
  * @author T. Burnett
  *
@@ -20,7 +21,7 @@ class MeritRootTuple  {
 
 public:
     /// define the associated root tuple and a file to write it too
-    MeritRootTuple::MeritRootTuple(const Tuple* tuple, std::string filename);
+    MeritRootTuple::MeritRootTuple(Tuple* tuple, std::string filename);
     ~MeritRootTuple();
 
     /// fill it
@@ -30,10 +31,11 @@ public:
     int entries()const;
 
 private:
-    const Tuple* m_tuple;
+    Tuple* m_tuple;
 
     /// the ROOT stuff
-    TNtuple  * m_tnt;
+    //TNtuple  * m_tnt;
+    TTree * m_tree;
     TFile *  m_tf;
 
 };
