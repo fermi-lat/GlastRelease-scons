@@ -1,6 +1,7 @@
 /*
 package manager:T.Burnett 
 
+ * v2r12   11-Oct-04 hmk Add checkVolId method to AcdId
  * v2r11p2 23-Aug-04 jrb Add optional view argument to constructor
  * v2r11p1  4-Aug-04 jrb Mods to TkrId class
  * v2r11p0  4-Aug-04 jrb Eliminate unused class XtalId
