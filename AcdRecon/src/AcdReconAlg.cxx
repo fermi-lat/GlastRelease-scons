@@ -212,7 +212,7 @@ StatusCode AcdReconAlg::acdDoca() {
         double y = trackTds->getPosition().y();
         double z = trackTds->getPosition().z();
         Point pos(x,y,z);
-        Vector dir(trackTds->getDirection().x(),trackTds->getDirection().z(),trackTds->getDirection().z());
+        Vector dir(trackTds->getDirection().x(),trackTds->getDirection().y(),trackTds->getDirection().z());
            
         float testDoca = doca(pos, dir, m_rowDocaCol);
         if(testDoca < m_doca) m_doca = testDoca;

@@ -6,6 +6,11 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
+#include "Event/TopLevel/EventModel.h"
+#include "Event/Recon/AcdRecon.h"
+
+#include "geometry/Point.h"
+
 // gui, display includes
 #include "GuiSvc/IGuiSvc.h"
 #include "gui/DisplayControl.h"
@@ -46,32 +51,39 @@ Algorithm(name, pSvcLocator)
  */
 class AcdRep : public gui::DisplayRep {
 public:
-    AcdRep(){}
+    AcdRep(IDataProviderSvc* dps){}
     void update(){
+        SmartDataPtr<Event::AcdRecon> acdRec(m_dps, EventModel::AcdRecon::Event);
+        if (!acdRec) return;
+
 	// loop thru the tiles with DOCA's and show marker and value
-#if 0 // example code from old version
-	if( m_DOCA>100. ) return;
-	set_color("red");
-	markerAt(m_hit_tile.position());
-	move_to(m_hit_tile.position()); 
-	char text[10]; sprintf(text, "%5g", m_DOCA);
-	drawText(text);
-	set_color("black");
-#endif // of example code 
+	if( acdRec->getDoca()>1000. ) return;
+	//set_color("red");
+	//markerAt(Point(0,0,0));
+	//move_to(Point(0,0,0)); 
+	//char text[10]; sprintf(text, "%5g", acdRec->getDoca());
+	//drawText(text);
+	//set_color("black");
     }
+private:
+    IDataProviderSvc* m_dps;
 };
 
 StatusCode AcdDisplay::initialize()
 {
     //Look for the gui service
-    IGuiSvc* guiSvc = 0;
-    StatusCode sc = service("GuiSvc", guiSvc);
+    IGuiSvc*   guiSvc = 0;
+    StatusCode sc     = service("GuiSvc", guiSvc);
+    if( sc.isFailure() )  return sc;
 
     
     //Ok, see if we can set up the display
     if (sc.isSuccess())  {
-	//Set up the display rep for Clusters
-	guiSvc->guiMgr()->display().add(new AcdRep(), "ACD recon");
+        gui::DisplayControl& display = guiSvc->guiMgr()->display();
+        
+        gui::DisplayControl::DisplaySubMenu& acdmenu = display.subMenu("AcdRecon");
+
+	guiSvc->guiMgr()->display().add(new AcdRep(eventSvc()), "ACD recon");
     }
     
     return sc;
@@ -79,13 +91,7 @@ StatusCode AcdDisplay::initialize()
 
 StatusCode AcdDisplay::execute()
 {
-    StatusCode sc = StatusCode::SUCCESS;
-    MsgStream log(msgSvc(), name());
-
-    // set pointer to ACD data on TDS
-    //    m_SiClusters = SmartDataPtr<SiClusters>(eventSvc(),"/Event/AcdRecon/SiClusters");
-    
-    return sc;
+    return StatusCode::SUCCESS;
 }
 
 
