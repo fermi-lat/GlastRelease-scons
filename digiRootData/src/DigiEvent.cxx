@@ -15,7 +15,7 @@ TObjArray *DigiEvent::s_staticTkrDigiCol = 0;
 TClonesArray *DigiEvent::s_calDigiStaticCol = 0;
 
 DigiEvent::DigiEvent() {
-
+  printf (" my new DigiEvent constructor!!!\n");fflush(stdout);
     //if (!s_calDigiStaticCol) s_calDigiStaticCol = new TClonesArray("CalDigi",1536);
     if (!s_calDigiStaticCol) s_calDigiStaticCol = new TClonesArray("CalDigi",100);
     m_calDigiCloneCol = s_calDigiStaticCol;
@@ -36,6 +36,7 @@ DigiEvent::DigiEvent() {
 
 DigiEvent::~DigiEvent() {
   
+    printf("Destructor DigiEvent\n");fflush(stdout);
     if(m_acdDigiCol == s_acdDigiStaticCol) s_acdDigiStaticCol = 0;
     m_acdDigiCol->Delete();
     delete m_acdDigiCol;
@@ -69,6 +70,10 @@ void DigiEvent::initialize(UInt_t eventId, UInt_t runId, Double_t time,
 }
 
 void DigiEvent::Clear(Option_t *option) {
+    const Int_t nd = 10000;
+    static Int_t ind=0;
+    static TkrDigi* keep[nd];
+
     m_eventId = 0;
     m_runId = 0;
     m_timeStamp = 0.0;
@@ -79,10 +84,23 @@ void DigiEvent::Clear(Option_t *option) {
         delete m_calDigiCol;
         m_calDigiCol = 0;
     }
-    m_tkrDigiCol->Delete();
+    //    m_tkrDigiCol->Delete();
     m_acdDigiCol->Clear("C");
     m_numAcdDigis = -1;
     m_numCalDigis = -1;
+
+    //m_tkrDigiCol->Delete();  //<======THIS LINE COMMENTED
+   //we delete the objects in keep every nd TkrDigi objects
+    //these few lines emulates what TClonesArray is doing
+
+    Int_t n = m_tkrDigiCol->GetEntries();
+   for (Int_t i=0;i<n;i++) keep[ind+i] = (TkrDigi*)m_tkrDigiCol->At(i);
+   ind += n;
+   if (ind > nd-100) {
+      for (Int_t j=0;j<ind;j++) delete keep[j];
+      ind = 0;
+   }
+    m_tkrDigiCol->Clear();
 }
 
 void DigiEvent::Print(Option_t *option) const {
@@ -127,6 +145,7 @@ const AcdDigi* DigiEvent::getAcdDigi(const AcdId &id) const {
 }
 
 void DigiEvent::addTkrDigi(TkrDigi *digi) {
+    printf(" add TkrDigi, %d entries\n",m_tkrDigiCol->GetEntries());fflush(stdout);
     m_tkrDigiCol->Add(digi);
 }
 
