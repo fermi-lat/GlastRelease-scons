@@ -18,10 +18,8 @@ namespace detModel{
   std::string Choice::getVolumeNameByMode(std::string mode)
   {
     typedef std::map<std::string, std::string> M;
-    M::const_iterator i; 
-    
-    i = casesName.find(mode);
-    if(i == cases.end()) return defaultName;
+    M::const_iterator i = casesName.find(mode);
+    if(i == casesName.end()) return defaultName;
     else return i->second;
   }
 
