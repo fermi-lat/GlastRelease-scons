@@ -1,4 +1,5 @@
 /** @file release.notes  package reconRootData  package manager:H.Kelly @verbatim
+v5r1p1    26-Dec-04  : LSR fix for linux
 v5r1      26-Dec-04  : LSR synch with mods to TkrCluster
 v5r0p3    20-Dec-04  : TU  Fix test program, correct one small type on TkrRecon
 v5r0p2    17-Dec-04  : TU  Fix bugs, update patch

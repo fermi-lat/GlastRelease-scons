@@ -81,7 +81,7 @@ public:
     inline Double_t getStrip() const { return (0.5*(m_strip0+m_stripf)); };
     /// Returns the size of this cluster
     inline Double_t getSize()  const { return (TMath::Abs(Double_t(m_stripf-m_strip0)) + 1.); };
-    
+
     inline const TVector3& getPosition() const { return m_position; }
     /// construct plane from tray/face
     inline UInt_t getStatusWord() const { return m_status; }
@@ -89,11 +89,11 @@ public:
         return m_tkrId.getTray()*2 + m_tkrId.getBotTop() - getPlaneOffset(); 
     }
     // construct layer from Plane
-    inline getLayer()     const { return (getPlane() + getLayerOffset())/2; }
-    
+    inline int getLayer()     const { return (getPlane() + getLayerOffset())/2; }
+
     /// returns true if the cluster has been flagged
-        bool hitFlagged()     const { 
-            return ((maskVERSION&m_status)!=0 ? ((m_status&maskUSED)>0) : m_status!=0);}
+    bool hitFlagged()     const { 
+        return ((maskVERSION&m_status)!=0 ? ((m_status&maskUSED)>0) : m_status!=0);}
 	
 private:
         inline int getPlaneOffset() const { 
