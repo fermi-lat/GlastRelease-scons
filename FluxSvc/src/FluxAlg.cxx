@@ -87,6 +87,8 @@ private:
     IntegerProperty m_pointing_mode;
     DoubleProperty m_rocking_angle; // x-axis
     DoubleProperty m_rocking_angle_z; // z-axis
+
+    std::map<int, int> m_counts; //! for measuring the total number generated per code.
     
 };
 //------------------------------------------------------------------------
@@ -103,7 +105,7 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
     // declare properties with setProperties calls
     declareProperty("source_name",  m_source_name="default");
     declareProperty("MCrun",        m_run=100);
-    declareProperty("area",        m_area=5.0); // target area in m^2
+    declareProperty("area",        m_area=6.0); // target area in m^2
     declareProperty("pointing_mode", m_pointing_mode=0);
     declareProperty("rocking_angle", m_rocking_angle=0); // in degrees
     declareProperty("rocking_angle_z", m_rocking_angle_z=0); // in degrees
@@ -265,6 +267,7 @@ StatusCode FluxAlg::execute()
 
     int numEvents = ++m_sequence;
     m_currentRate=numEvents/(m_flux->time());
+    m_counts[m_flux->numSource()]++; // update count fo r
     return StatusCode::SUCCESS;
 }
 
@@ -273,7 +276,12 @@ StatusCode FluxAlg::execute()
 StatusCode FluxAlg::finalize(){
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "Computed Rate: "<< currentRate() << endreq;
+    log << MSG::INFO << "Computed Rate: "<< currentRate() << " Hz"
+        << "\n\t\t\tSource ID    counts";
+    for(std::map<int,int>::const_iterator im=m_counts.begin(); im !=m_counts.end(); ++im) {
+        log << "\n\t\t\t\t" << im->first << "\t" << im->second;
+    }
+    log  << endreq;
     
     return sc;
 }

@@ -3,6 +3,8 @@
 
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
+ * 15-may-03  v6r5   thb make 6 m^2 the FluxAlg.area default; output number of events per source id.
+ *                       lat/lon updates only every 30 sec.
  * 03-apr-03  v6r4p3 thb fix SimpleSpectrum label to reflect GeV or MeV
  * 21-mar-03  v6r4p2 jrb Modify Xerces include references for Xerces 1.7.0
  * 20-Mar-03  v6r4p1 THB bug fix for power law fluxes   
