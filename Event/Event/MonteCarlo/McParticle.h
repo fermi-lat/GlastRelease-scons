@@ -54,8 +54,8 @@ class McParticle  : virtual public ContainedObject  {
         INTSHDEP=1<<6,  //! Interacted, further decision depends on ! selection of shower deposition  
         PRIMARY =1<<7,  //! primary particle 
         SWERROR =1<<8,  //! Error occurred in swimming the track 
-        SW2MNYST=1<<9,  //! Swim aborted: too many steps (ISTOP=99)  
-        WOUTOFT =1<<10, //! Swim aborted: out of sensitive time of ! detector (ISTOP=4) 
+        BCKSPL=1<<9,    //! The particle is backsplashed from the CAL back in the TKR region
+        POSHIT =1<<10,     //! The particle released a hit a PositionHit detector
         NOTTRACK=1<<11, //! Not tracked by user request 
         Swum =   1<<12  //! this particle was produced by the swimmer
     };
@@ -101,6 +101,8 @@ class McParticle  : virtual public ContainedObject  {
     /// retrieve all of status flags for const object
     unsigned int statusFlags()const;
 
+    /// add a new flag to the status flags
+    void addStatusFlag(unsigned int flag){m_statusFlags |= flag;};
 
     /// Retrieve whether this is a primary particle: true if mother is itself
     bool primaryParticle() const;
@@ -114,6 +116,12 @@ class McParticle  : virtual public ContainedObject  {
 
     /// access to the mother particle
     const McParticle& mother()const; 
+
+    /// set the mother particle
+    void setMother(const SmartRef<McParticle> m);
+
+    /// add a daugther particle to this particle
+    void addDaughter(const SmartRef<McParticle> d){m_daughters.push_back(d);};
 
     /// access the process name
     const std::string getProcess()const{return m_process;};

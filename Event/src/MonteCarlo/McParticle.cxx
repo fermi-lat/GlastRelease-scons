@@ -56,6 +56,11 @@ void McParticle::finalize(const HepLorentzVector& finalMomentum,
 }
 
 
+void McParticle::setMother(const SmartRef<McParticle> m)
+{
+  m_mother = m;
+}
+
 const HepPoint3D& McParticle::initialPosition()const
 {
     return m_initialPosition;
