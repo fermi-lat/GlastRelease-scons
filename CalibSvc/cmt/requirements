@@ -1,8 +1,10 @@
+package CalibSvc
+
 # $Header$
 ### Might end up changing this name to have a prefix a bit more general
 ### than "Calib"; e.g., DetSvc or CondSvc
-package CalibSvc
-version v0r2p13
+
+version v0r2p14
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
@@ -11,11 +13,14 @@ use calibUtil v0r*
 
 use GaudiInterface * IExternal
 
-apply_pattern packageShr
+apply_pattern component_library
+
+
+private
+# _______________________________________________________
 
 apply_pattern package_include
 apply_pattern package_headers
-## apply_pattern package_linkopts
 
 library CalibSvc *.cxx  CalibDataSvc/*.cxx      \
                         CalibMySQLCnv/*.cxx     \
@@ -24,12 +29,10 @@ library CalibSvc *.cxx  CalibDataSvc/*.cxx      \
                         CalibXMLCnv/cnv/*.cxx   \
                         Dll/*.cxx ${CalibSvc_headers}
 
-apply_pattern package_Cshlibflags
 
-private
 macro WinInclude "" WIN32 "test/*.h test/*.txt"
-use GlastSvc v9r*
-use RootIo   v9r*
+# use GlastSvc v9r*    (not used)
+# use RootIo   v9r*    (not used)
 
 
 public
