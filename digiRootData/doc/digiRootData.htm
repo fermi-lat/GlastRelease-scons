@@ -12,7 +12,8 @@
 </B></FONT>
 <blockquote>
   <blockquote>
-    <P align="center"><A HREF="#Intro">Introduction</A> <A HREF="#Bugs">Known Bugs</A></P>
+    <P align="center"><A HREF="#Intro">Introduction</A>&nbsp;&nbsp;&nbsp; <A HREF="#Bugs">Known
+    Issues</A></P>
   </blockquote>
 </blockquote>
 
@@ -21,7 +22,22 @@
 </B><P ALIGN="JUSTIFY">This package contains the definition of our digitization
 Root classes.&nbsp; These classes were originally defined for the GLAST 1999
 beamtest.&nbsp; The package was originally called TBEvent at that time.</P>
-<P ALIGN="JUSTIFY"><B><A NAME="Bugs">Known Bugs:</A>
-</B></P>
+<p ALIGN="JUSTIFY"><B><A NAME="Bugs">Known Issues:</A>
+</B></p>
+<ul>
+  <li>
+    <p ALIGN="JUSTIFY">When compiling digiRootData on Windows, warning messages
+    are generated:<br>
+    <font size="2"><i>warning C4291: 'void *__cdecl TObject::operator
+    new(unsigned int,void *)' : no matching operator delete found; memory will
+    not be freed if initialization throws an exception d:\extlib/ROOT/3.00.06/include\TObject.h(159)
+    : see declaration of 'new'<br>
+    </i></font>This occurs due to our use of TClonesArray, which is filled via a
+    call to &quot;new with placement&quot;.&nbsp; This is a small bug in the
+    version of Root 3.00.06 that we are using.&nbsp; It should have no effect on
+    us, as this is only a problem if an exception is thrown during the call to
+    new..i.e. if this throws an exception...there are bigger problems roaming
+    about.&nbsp; The bug in Root has been fixed as of Root 3.01.02.</li>
+</ul>
 </BODY>
 </HTML>
