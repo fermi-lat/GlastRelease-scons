@@ -30,8 +30,8 @@ class IXtalPosTool : virtual public IAlgTool {
 
   /// calculate position of energy centroid in mm from xtal center, given the digital response for both faces 
   /// \param CalXtalId specify xtal log
-  /// \param adcP input adc value for Positive end
-  /// \param adcN input adc value for Negative end
+  /// \param adcP input adc val for Positive end
+  /// \param adcN input adc val for Negative end
   /// \param rngP input adc rng for Positive end
   /// \param rngN input adc rng for Negative end
   /// \param position output energy centroid position along xtal length in mm from center

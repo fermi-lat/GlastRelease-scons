@@ -34,25 +34,25 @@ class ICalCalibSvc : virtual public IInterface {
 
   /// retrieve MeVPerDac ratios for given xtal
   /// \param CalXtalId specify xtal log
-  /// \param large output MeVPerDac for large diode on both faces
-  /// \param small output MeVPerDac for small diode on both faces
+  /// \param mpdLrg output MeVPerDac for large diode on both faces
+  /// \param mpdSm output MeVPerDac for small diode on both faces
   virtual StatusCode getMeVPerDac(const CalXtalId &xtalId,
-                                  CalibData::ValSig &large,
-                                  CalibData::ValSig &small) = 0;
+                                  CalibData::ValSig &mpdLrg,
+                                  CalibData::ValSig &mpdSm) = 0;
 
-  /// retrieve integral non-linearity values for given xtal/face/rng
+  /// retrieve integral non-linearity vals for given xtal/face/rng
   /// \param CalXtalId specify xtal log
-  /// \param vals output const ref to vector of ADC values (y).
-  /// \param dacs output const ref to vector of associated DAC values (x).
-  /// \param error error values on ADC
+  /// \param vals output const ref to vector of ADC vals (y).
+  /// \param dacs output const ref to vector of associated DAC vals (x).
+  /// \param error error vals on ADC
   virtual StatusCode getIntNonlin(const CalXtalId &xtalId,
                                   const vector< float > *&adcs,
                                   const vector< unsigned > *&dacs,
                                   float &error) = 0;
 
-  /// retrieve pedestal values for given xtal/face/rng
+  /// retrieve pedestal vals for given xtal/face/rng
   /// \param CalXtalId specify xtal log
-  /// \param avr output pedestal (adc units)
+  /// \param avr output ped (adc units)
   /// \param sig output sigma on avr
   virtual StatusCode getPed(const CalXtalId &xtalId,
                             float &avr,
@@ -65,12 +65,12 @@ class ICalCalibSvc : virtual public IInterface {
   /// \param small asymmetry array over position for small diode on both faces
   /// \param MsmallPlrg asymmetry array over position for small diode on Minus face and lrg diode on Plus face
   /// \param PlrgMsmall asymmetry array over position for small diode on Plus face and lrg diode on Minus face
-  /// \param xVals corresponding xvalues for all of the accompanying asymmetry arrays
+  /// \param xVals corresponding xvals for all of the accompanying asymmetry arrays
   virtual StatusCode getAsym(const CalXtalId &xtalId,
-                             const vector<CalibData::ValSig> *&large,
-                             const vector<CalibData::ValSig> *&small,
-                             const vector<CalibData::ValSig> *&NSmPLrg,
-                             const vector<CalibData::ValSig> *&PSmNLrg,
+                             const vector<CalibData::ValSig> *&asymLrg,
+                             const vector<CalibData::ValSig> *&asymSm,
+                             const vector<CalibData::ValSig> *&asymNSPB,
+                             const vector<CalibData::ValSig> *&asymPSNB,
                              const vector<float>  *&xVals) = 0;
 
   /// retrieve threshold calibration constants as measured w/ charnge injection
@@ -92,7 +92,7 @@ class ICalCalibSvc : virtual public IInterface {
 
   /// retrieve pedestal calibration constants as measured during charge injection threshold testing.
   /// \param CalXtalId specify xtal log
-  /// \param ped output pedestal value (Adc units)
+  /// \param ped output ped val (Adc units)
   virtual StatusCode getPedCI(const CalXtalId &xtalId,
                               CalibData::ValSig &ped) = 0;
 
@@ -107,7 +107,7 @@ class ICalCalibSvc : virtual public IInterface {
 
   /// retrieve pedestal calibration constants as measured during muon calibration threshold testing.
   /// \param CalXtalId specify xtal log
-  /// \param ped output pedestal value (Adc units)
+  /// \param ped output ped val (Adc units)
   virtual StatusCode getPedMuon(const CalXtalId &xtalId,
                                 CalibData::ValSig &ped) = 0;
 

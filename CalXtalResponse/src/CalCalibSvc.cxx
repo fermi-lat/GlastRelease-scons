@@ -23,12 +23,23 @@ static SvcFactory< CalCalibSvc > a_factory;
 const ISvcFactory& CalCalibSvcFactory = a_factory; 
 
 CalCalibSvc::CalCalibSvc(const string& name, ISvcLocator* Svc) 
-  : Service(name,Svc)
+  : Service(name,Svc),
+    m_pedMgr(m_idealCalib),
+    m_intNonlinMgr(m_idealCalib),
+    m_asymMgr(m_idealCalib),
+    m_mpdMgr(m_idealCalib),
+    m_tholdCIMgr(m_idealCalib),
+    m_tholdMuonMgr(m_idealCalib)
 {
 
   // declare the properties
-  declareProperty("CalibDataSvc",    m_calibDataSvcName = "CalibDataSvc");
-  declareProperty("DefaultFlavor",   m_defaultFlavor    = "ideal");
+  declareProperty("CalibDataSvc",      m_calibDataSvcName = 
+                  "CalibDataSvc");
+  declareProperty("idealCalibXMLPath", m_idealCalibXMLPath = 
+                  "$(CALXTALRESPONSEROOT)/xml/idealCalib.xml");
+  declareProperty("DefaultFlavor", m_defaultFlavor    
+                  = "ideal");
+
   declareProperty("FlavorIntNonlin", m_flavorIntNonlin  = "");
   declareProperty("FlavorAsym",      m_flavorAsym       = "");
   declareProperty("FlavorPed",       m_flavorPed        = "");
@@ -44,14 +55,12 @@ StatusCode  CalCalibSvc::queryInterface (const IID& riid, void **ppvIF) {
   } else return Service::queryInterface (riid, ppvIF);
 }
 
-const IID&  CalCalibSvc::type () const {return IID_ICalCalibSvc;}
-
 StatusCode CalCalibSvc::initialize () 
 {
   // Call super-class
   Service::initialize ();
 
-  MsgStream msglog(msgSvc(), name());
+  MsgStream msglog(msgSvc(), name()); 
   msglog << MSG::INFO << "initialize" << endreq;
 
   StatusCode sc;
@@ -67,9 +76,9 @@ StatusCode CalCalibSvc::initialize ()
   if (!m_flavorIntNonlin.value().length())  m_flavorIntNonlin = m_defaultFlavor;
   if (!m_flavorAsym.value().length())       m_flavorAsym      = m_defaultFlavor;
   if (!m_flavorPed.value().length())        m_flavorPed       = m_defaultFlavor;
-  if (!m_flavorMPD.value().length())        m_flavorMPD = m_defaultFlavor;
+  if (!m_flavorMPD.value().length())        m_flavorMPD       = m_defaultFlavor;
   if (!m_flavorTholdCI.value().length())    m_flavorTholdCI   = m_defaultFlavor;
-  if (!m_flavorTholdMuon.value().length())  m_flavorTholdMuon  = m_defaultFlavor;
+  if (!m_flavorTholdMuon.value().length())  m_flavorTholdMuon = m_defaultFlavor;
 
   msglog << MSG::DEBUG << "Initializing..."     << endreq;
   msglog << MSG::DEBUG << "  CalibDavaSvc   : " << m_calibDataSvcName  << endreq;
@@ -88,6 +97,10 @@ StatusCode CalCalibSvc::initialize ()
     return sc;
   }
 
+  // Load ideal flavor values from xml file
+  sc = loadIdealCalib();
+  if (sc.isFailure()) return sc;
+
   // Initialize individual CalibItemMgr members.
   m_mpdMgr.initialize(*m_calibDataSvc,       m_flavorMPD,       msgSvc(), name());
   m_pedMgr.initialize(*m_calibDataSvc,       m_flavorPed,       msgSvc(), name());
@@ -96,14 +109,14 @@ StatusCode CalCalibSvc::initialize ()
   m_tholdMuonMgr.initialize(*m_calibDataSvc, m_flavorTholdMuon, msgSvc(), name());
   m_tholdCIMgr.initialize(*m_calibDataSvc,   m_flavorTholdCI,   msgSvc(), name());
 
+
   // Get ready to listen for BeginEvent
   IIncidentSvc* incSvc;
   sc = service("IncidentSvc", incSvc, true);
   if (sc.isSuccess() ) {
     int priority = 50;  // this should be lower priority (higher #?) than CalibDataSvc
     incSvc->addListener(this, "BeginEvent", priority);
-  }
-  else {
+  } else {
     msglog << MSG::ERROR << "Unable to find IncidentSvc" << endreq;
     return sc;
   }
@@ -123,6 +136,3 @@ void CalCalibSvc::handle ( const Incident& inc ) {
   }
   return; 
 }
-
-StatusCode CalCalibSvc::finalize () {return StatusCode::SUCCESS;}
-

@@ -14,14 +14,18 @@
 using namespace CalDefs;
 using namespace idents;
 
+using CalibData::ValSig;
+
 class MPDMgr : public CalibItemMgr {
  public:
-  MPDMgr() : CalibItemMgr(CalibData::CAL_MevPerDac) {};
+  MPDMgr(const IdealCalCalib &idealCalib) : 
+    CalibItemMgr(CalibData::CAL_MevPerDac,
+                 idealCalib) {};
 
   /// retrieve MeVPerDac ratios for given xtal
   StatusCode getMPD(const CalXtalId &xtalId,
-                    CalibData::ValSig &lrg,
-                    CalibData::ValSig &sm);
+                    ValSig &mpdLrg,
+                    ValSig &mpdSm);
 
  private:
   CalibData::CalMevPerDac *getRangeBase(const CalXtalId &xtalId) {
@@ -36,6 +40,11 @@ class MPDMgr : public CalibItemMgr {
   StatusCode fillRangeBases();
 
   bool checkXtalId(const CalXtalId&) {return true;}
+
+  StatusCode loadIdealVals();
+
+  ValSig m_idealMPDLrg;
+  ValSig m_idealMPDSm;
 };
 
 #endif

@@ -55,13 +55,13 @@ private:
   int m_nCsISeg;                         ///< number of geometric segments per Xtal
   int m_eXtal;
   double m_CsILength;                    ///< Xtal length
-  int m_eDiodeMSm;                    ///< detModel identifier for sm minus-side diode
-  int m_eDiodePSm;                    ///< detModel identifier for sm plus-side diode
+  int m_eDiodeMSm;                       ///< detModel identifier for sm minus-side diode
+  int m_eDiodePSm;                       ///< detModel identifier for sm plus-side diode
   int m_eDiodeMLarge;                    ///< detModel identifier for large minus-side diode
   int m_eDiodePLarge;                    ///< detModel identifier for large plus-side diode
   double m_ePerMeVInDiode;
   int m_ePerMeV[2];                      ///< gain - electrons/MeV 1=Sm, 0=Large
-  int m_maxAdc;                          ///< max value for ADC
+  int m_maxAdc;                          ///< max val for ADC
 };
 
 static ToolFactory<XtalADCTool> s_factory;
@@ -77,12 +77,12 @@ XtalADCTool::XtalADCTool( const string& type,
 }
 
 StatusCode XtalADCTool::initialize() {
-  MsgStream msglog(msgSvc(), name());
+  MsgStream msglog(msgSvc(), name()); 
   msglog << MSG::INFO << "initialize" << endreq;
 
   StatusCode sc;
 
-  double value;
+  double val;
   typedef map<int*,string> PARAMAP;
 
   // try to find the GlastDevSvc service
@@ -106,20 +106,17 @@ StatusCode XtalADCTool::initialize() {
   param[&m_maxAdc]       = string("cal.maxAdcValue");
 
   for(PARAMAP::iterator it=param.begin(); it!=param.end();it++)
-    if(!detSvc->getNumericConstByName((*it).second, &value)) {
+    if(!detSvc->getNumericConstByName((*it).second, &val)) {
       msglog << MSG::ERROR << " constant " <<(*it).second <<" not defined" << endreq;
       return StatusCode::FAILURE;
-    } else *((*it).first)=(int)value;
+    } else *((*it).first)=(int)val;
 
-  typedef map<double*,string> DPARAMAP;
-  DPARAMAP dparam;
-  dparam[&m_CsILength]  = string("CsILength");
-
-  for(DPARAMAP::iterator dit=dparam.begin(); dit!=dparam.end();dit++)
-    if(!detSvc->getNumericConstByName((*dit).second,(*dit).first)) {
-      msglog << MSG::ERROR << " constant " <<(*dit).second << " not defined" << endreq;
-      return StatusCode::FAILURE;
-    }
+  // doubles are done separately
+  sc = detSvc->getNumericConstByName("CsILength", &m_CsILength);
+  if (sc.isFailure()) {
+    msglog << MSG::ERROR << " constant CsILength not defined" << endreq;
+    return StatusCode::FAILURE;
+  }
   
   // eperMeVInDiode originally from CalDigi XML file
   // but i don't want dependency, so i'm hard coding it.  (just a testing tool anyway :)
@@ -146,7 +143,7 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
                                   bool &peggedP,
                                   bool &peggedN
                                   ) {
-  //MsgStream msglog(msgSvc(), name());
+
   StatusCode sc;
 
   CalVec<XtalDiode, double> diodeDAC(XtalDiode::N_VALS);
@@ -183,7 +180,7 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
     //msglog << MSG::DEBUG << "\tcell=" << volId[fCellCmp] << " ene=" << ene << endreq;
 
     ///////////////////////////////////////////////////////////////////////////
-    ///////////////////// SUM DAC VALUES FOR EACH HIT /////////////////////////
+    ///////////////////// SUM DAC VALS FOR EACH HIT /////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
     //--XTAL DEPOSIT--//
@@ -248,7 +245,7 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
       // convert e-in-diode to MeV-in-xtal-center
       double meVXtal = eDiode/m_ePerMeV[diode]; 
 
-      // convert MeV deposition to Dac value.
+      // convert MeV deposition to Dac val.
       // use asymmetry to determine how much of mean dac to apply to diode in question
       // remember we are treating mevXtal as at the xtal center (pos=0.0)
       double meanDAC;
@@ -268,7 +265,7 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
       dacP = sqrt(meanDAC*meanDAC*exp(asym));
       double dac = (face=POS_FACE) ? dacP : dacP/exp(asym);
 
-      // sum dac value to running total
+      // sum dac val to running total
       diodeDAC[XtalDiode(face,diode)] += dac;
     }
   }
@@ -301,7 +298,7 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
     }     // for xDiode
 
   
-  // Store pedestal values here
+  // Store ped vals here
   CalVec<XtalRng, float> pedVals(XtalRng::N_VALS);
   CalVec<XtalRng, float> pedSigs(XtalRng::N_VALS);
 
@@ -313,7 +310,7 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
       rngXtalId(RngIdx(xtalId,xRng).getCalXtalId());
     
 
-    // retrieve pedestals
+    // retrieve peds
     sc = m_calCalibSvc->getPed(rngXtalId,
                                pedVals[xRng],
                                pedSigs[xRng],
@@ -329,8 +326,8 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
 
   // STAGE 4: electronic noise
   // electronic noise is calculated on a per-diode basis
-  // uses sigmas from ADC pedestal data
-  // adc values need not include pedestals for this calculation
+  // uses sigmas from ADC ped data
+  // adc vals need not include peds for this calculation
   for (XtalDiode xDiode; xDiode.isValid(); xDiode++) {
     DiodeNum diode = xDiode.getDiode();
 
@@ -410,7 +407,7 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
       if (sc.isFailure()) return sc;
 
       // case of HEX1 range 
-      // adc values have a ceiling in HEX1
+      // adc vals have a ceiling in HEX1
       if (rng == RngNum::N_VALS-1) {
         if (tmpADC[xRng] > ULDThold.getVal()) {
           if (face == POS_FACE) peggedP = true;

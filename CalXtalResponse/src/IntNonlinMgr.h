@@ -12,15 +12,14 @@
 
 // STD
 
-
 using namespace CalDefs;
 using namespace idents;
 
 class IntNonlinMgr : public CalibItemMgr {
  public:
-  IntNonlinMgr();
+  IntNonlinMgr(const IdealCalCalib &idealCalib);
 
-  /// retrieve integral non-linearity values for given xtal/face/rng
+  /// retrieve integral non-linearity vals for given xtal/face/rng
   StatusCode getIntNonlin(const CalXtalId &xtalId,
                           const vector< float > *&adcs,
                           const vector< unsigned > *&dacs,
@@ -43,7 +42,8 @@ class IntNonlinMgr : public CalibItemMgr {
       (m_rngBases[RngIdx(xtalId)]);
   }
   
-  bool validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBase *rngBase);
+  bool validateRangeBase(const CalXtalId &xtalId, 
+                         CalibData::RangeBase *rngBase);
   
   StatusCode fillRangeBases();
   
@@ -51,7 +51,8 @@ class IntNonlinMgr : public CalibItemMgr {
   
   bool checkXtalId(const CalXtalId &xtalId) {
     if (!xtalId.validRange() || !xtalId.validFace())
-      throw invalid_argument("IntNonlin calib_type requires valid range & face info in CalXtalId");
+      throw invalid_argument("IntNonlin calib_type requires valid range "
+                             "& face info in CalXtalId");
     return true;
   }
 
@@ -60,6 +61,13 @@ class IntNonlinMgr : public CalibItemMgr {
     INV_INL_SPLINE,
     N_SPLINE_TYPES
   };
+
+  StatusCode loadIdealVals();
+
+  CalVec<RngNum, vector<float> >    m_idealADCs;
+  CalVec<RngNum, vector<unsigned> > m_idealDACs;
+  float                             m_idealErr;
+  
 };
 
 #endif

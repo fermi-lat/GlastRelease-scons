@@ -2,9 +2,10 @@
 //
 //  Job options file for CalXtalResponse test 
 
+
 // primary DLLs
 
-ApplicationMgr.DLLs+= {"CalXtalResponse","CalibSvc","CalUtil"};
+ApplicationMgr.DLLs+= {"CalibSvc","CalUtil","CalXtalResponse"};
 
 // ----------------------------
 // setup basic event loop stuff
@@ -44,15 +45,10 @@ DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 CalibDataSvc.CalibInstrumentName = "LAT";
 CalibDataSvc.CalibStorageType    = 14;
 CalibDataSvc.CalibRootName       = "Calib";
-CalibDataSvc.CalibFlavorList     = {"ideal", "zachtest"};
-CalibDataSvc.CalibTimeSource     = "clock";
-CalibDataSvc.startTime           = "2003-2-28 23:59:59";
-CalibDataSvc.delayTime           = 10000;
+CalibDataSvc.CalibFlavorList     = {"ideal"};
 
-// Start up a CalCalibSvc
-ApplicationMgr.ExtSvc += {"CalCalibSvc"};
-// CalCalibSvc properties
-CalCalibSvc.DefaultFlavor = "zachtest";
+// use modular default options (as gleam will, so's good to test!)
+#include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel = 1;

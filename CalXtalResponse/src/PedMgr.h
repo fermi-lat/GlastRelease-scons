@@ -16,9 +16,15 @@ using namespace idents;
 
 class PedMgr : public CalibItemMgr {
  public:
-  PedMgr() : CalibItemMgr(CalibData::CAL_Ped) {};
+  PedMgr(const IdealCalCalib &idealCalib) : 
+    CalibItemMgr(CalibData::CAL_Ped,
+                 idealCalib),
+    m_idealPeds(RngNum::N_VALS),
+    m_idealPedSig(RngNum::N_VALS),
+    m_idealCos(RngNum::N_VALS)
+    {};
 
-  /// retrieve pedestal values for given xtal/face/rng
+  /// retrieve pedestal vals for given xtal/face/rng
   StatusCode getPed(const CalXtalId &xtalId,
                     float &avr,
                     float &sig,
@@ -37,9 +43,15 @@ class PedMgr : public CalibItemMgr {
   
   bool checkXtalId(const CalXtalId &xtalId) {
     if (!xtalId.validRange() || !xtalId.validFace())
-      throw invalid_argument("Pedestal calib_type requires valid range & face info in CalXtalId");
+      throw invalid_argument("Ped calib_type requires valid range & face info in CalXtalId");
     return true;
   }
+
+  StatusCode loadIdealVals();
+
+  CalVec<RngNum,float> m_idealPeds;   ///< ped vals to use when calib db is down
+  CalVec<RngNum,float> m_idealPedSig; ///< ped sigma vals to use when calib db is down
+  CalVec<RngNum,float> m_idealCos;    ///< correlated ped cosine vals to use when calib db is down
 };
 
 #endif

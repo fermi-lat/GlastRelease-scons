@@ -23,6 +23,7 @@ template<typename T> const T& min_val(const vector<T> &vec) {
   return *(min_element(vec.begin(),vec.end()));
 }
 //////////////////////////////////////////////////////////////////////
+
 StatusCode CalibItemMgr::initialize(IService &calibDataSvc, 
                                     const string &flavor,
                                     IMessageSvc *msgSvc,
@@ -35,7 +36,7 @@ StatusCode CalibItemMgr::initialize(IService &calibDataSvc,
   m_flavor       = flavor;
   m_logName      = &logName;
 
-  MsgStream msglog(m_msgSvc, *m_logName);
+  MsgStream msglog(m_msgSvc, *m_logName); 
 
   // Query the IDataProvider interface of the CalibDataService
   sc = m_calibDataSvc->queryInterface(IID_IDataProviderSvc, 
@@ -49,41 +50,73 @@ StatusCode CalibItemMgr::initialize(IService &calibDataSvc,
 
   m_calibPath = m_calibRootPath + "/" + m_flavor;
 
+  sc = loadIdealVals();
+  if (sc.isFailure()) return sc;
+
+  //-- IDEAL MODE --//
+  if (m_flavor == "ideal") {
+     m_idealMode = true;
+
+     // splines will not be automatically 
+     // generated b/c we won't actually look
+     // up any data.
+     // it's a hack, but screw it.
+     sc = genSplines();
+     if (sc.isFailure()) return sc;
+  }
+
   return StatusCode::SUCCESS;
 }
 
 StatusCode CalibItemMgr::updateCache() {
   StatusCode sc;
 
-  // check if we have already validated this event.
-  if (m_isValid) return StatusCode::SUCCESS;
+  // if event is already validated return quickly
+  // also we don't need validation if we're in ideal mode
+  if (m_isValid || m_idealMode) return StatusCode::SUCCESS;
 
   // enable 'inUpdate' flag for duration of this function
   m_inUpdate = true;
 
-  // otherwise retrieve CalibBase
+  /////////////////////////////////
+  //-- CHECK TDS DATA VALIDITY --//
+  /////////////////////////////////
+
   // Retrieve pointer to Gain tree from TDS
+  // usually this f() should return immediately
+  // if it fails then we have no valid calib data
+  // for the current event.
   DataObject *pObject;
-  if((sc = m_dataProviderSvc->retrieveObject(m_calibPath, pObject)) == StatusCode::SUCCESS) {
+  sc = m_dataProviderSvc->retrieveObject(m_calibPath, pObject);
+  if (sc.isFailure())
     m_calibBase = (CalibData::CalCalibBase *)(pObject);
-  } else {
-    MsgStream msglog(m_msgSvc, *m_logName);
-    msglog << MSG::ERROR << "Unable to retrieve " << m_calibPath << " from calib database" << endreq;
+  else {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(m_msgSvc, *m_logName); 
+    
+    // else return error (can't find calib)
+    msglog << MSG::ERROR << "Unable to retrieve " 
+           << m_calibPath << " from calib db" << endreq;
     return sc;  
   }
+
+  ///////////////////////////////////////
+  //-- CHECK IF TDS DATA HAS CHANGED --//
+  ///////////////////////////////////////
 
   // check serial # to see if we're still valid.
   int curSerNo = m_calibBase->getSerNo();
   if (curSerNo != m_serNo) {
-    MsgStream msglog(m_msgSvc, *m_logName);
+    // create MsgStream only when needed for performance
+    MsgStream msglog(m_msgSvc, *m_logName); 
     msglog << MSG::INFO << "Updating " << m_calibPath << endreq;
     m_serNo = curSerNo;
     flushCache();
-
+        
     // load up all RangeBases for new calib set
     sc = fillRangeBases();
     if (sc.isFailure()) return sc;
-
+    
     // build all splines (if virtual f() is supplied)
     sc = genSplines();
     if (sc.isFailure()) return sc;
@@ -91,19 +124,20 @@ StatusCode CalibItemMgr::updateCache() {
 
   // reset 'in update' flag
   m_inUpdate = false;
-
   m_isValid = true;
+
   return StatusCode::SUCCESS;
 }
 
 StatusCode CalibItemMgr::evalSpline(int calibType, LATWideIndex idx, double x, double &y) {
   // make sure we have valid calib data for this event.
-   if (!m_inUpdate) {
+  if (!m_inUpdate) {
     StatusCode sc;
     if ((sc = updateCache()).isFailure()) return sc;
-   }
+  }
 
-  //MsgStream msglog(m_msgSvc, *m_logName);
+  // create MsgStream only when needed for performance
+  //MsgStream msglog(m_msgSvc, *m_logName); 
   //   msglog << "Evaluating spline nl=" << m_splineLists.size()
   //          << " t=" << calibType
   //          << " i=" << idx
@@ -118,7 +152,6 @@ StatusCode CalibItemMgr::evalSpline(int calibType, LATWideIndex idx, double x, d
 
 StatusCode CalibItemMgr::genSpline(int calibType, LATWideIndex idx, const string &name, 
                                    const vector<double> &x, const vector<double> &y) {
-  //MsgStream msglog(m_msgSvc, *m_logName);
   int n = min(x.size(),y.size());
 
   // create tmp arrays for TSpline ctor
@@ -142,6 +175,8 @@ StatusCode CalibItemMgr::genSpline(int calibType, LATWideIndex idx, const string
 
   // put spline in list
   m_splineLists[calibType][idx] = mySpline;
+  // create MsgStream only when needed for performance
+  //MsgStream msglog(m_msgSvc, *m_logName); 
   //   msglog << MSG::INFO << "Generated spline " << spl_name.str() 
   //                       << " t="  << calibType 
   //                       << " i="  << idx 

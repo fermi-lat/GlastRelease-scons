@@ -1,0 +1,9 @@
+// Standard options for CalXtalResponse clients
+//-------------------------------------
+// make sure you add desired flavor(s) to this list!
+
+
+//CalibDataSvc.CalibFlavorList += {"cal_gleam_default"};
+ApplicationMgr.ExtSvc += {"CalCalibSvc"};
+CalCalibSvc.DefaultFlavor     = "ideal";
+//-------------------------------------

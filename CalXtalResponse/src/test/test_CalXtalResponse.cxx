@@ -72,7 +72,7 @@ test_CalXtalResponse::test_CalXtalResponse(const string& name, ISvcLocator* pSvc
 //! set parameters and attach to various perhaps useful services.
 StatusCode test_CalXtalResponse::initialize(){
   StatusCode  sc;
-  MsgStream msglog(msgSvc(), name());
+  MsgStream msglog(msgSvc(), name()); 
   msglog << MSG::INFO << "initialize" << endreq;
 
   // get cal energy Tool
@@ -108,10 +108,10 @@ StatusCode test_CalXtalResponse::execute()
   StatusCode sc;
 
   // Run each individual test
-  if ((sc = test_calCalibSvc().isFailure()))     return sc;
-  if ((sc = test_xtalPosTool().isFailure()))     return sc;
-  if ((sc = test_xtalEneTool().isFailure()))     return sc;
-  if ((sc = test_xtalADCTool().isFailure()))     return sc;
+  if ((sc = test_calCalibSvc().isFailure())) return sc;
+  if ((sc = test_xtalPosTool().isFailure())) return sc;
+  if ((sc = test_xtalEneTool().isFailure())) return sc;
+  if ((sc = test_xtalADCTool().isFailure())) return sc;
 
   return StatusCode::SUCCESS;
 }
@@ -191,8 +191,8 @@ StatusCode test_CalXtalResponse::test_calCalibSvc() {
   msglog << MSG::DEBUG << "Asymmetry successfully retrieved" << endreq;
 
   // MeVPerDac
-  CalibData::ValSig lrg, sm;
-  if ((sc = pCalCalibSvc->getMeVPerDac(xtalId2, lrg, sm)).isFailure()) {
+  CalibData::ValSig mpdLrg, mpdSm;
+  if ((sc = pCalCalibSvc->getMeVPerDac(xtalId2, mpdLrg, mpdSm)).isFailure()) {
     msglog << MSG::ERROR << "Error retrieving MPD from CalCalibSvc" << endreq;
     return sc;
   }

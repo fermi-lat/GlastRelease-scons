@@ -81,15 +81,13 @@ StatusCode XtalPosTool::initialize() {
     msglog << MSG::ERROR << "  Unable to retrieve GlastDetSvc " << endreq;
     return sc;
   }
-  typedef map<double*,string> DPARAMAP;
-  DPARAMAP dparam;
-  dparam[&m_CsILength]  = string("CsILength");
 
-  for(DPARAMAP::iterator dit=dparam.begin(); dit!=dparam.end();dit++)
-    if(!detSvc->getNumericConstByName((*dit).second,(*dit).first)) {
-      msglog << MSG::ERROR << " constant " <<(*dit).second << " not defined" << endreq;
-      return StatusCode::FAILURE;
-    }
+  // doubles are done separately
+  sc = detSvc->getNumericConstByName("CsILength", &m_CsILength);
+  if (sc.isFailure()) {
+    msglog << MSG::ERROR << " constant CsILength not defined" << endreq;
+    return StatusCode::FAILURE;
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -101,7 +99,6 @@ StatusCode XtalPosTool::calculate(const CalXtalId &xtalId,
                                   int adcN, 
                                   float &position                // output
                                   ) {
-  MsgStream msglog(msgSvc(), name());
   StatusCode sc;
 
   position = 0;
@@ -109,14 +106,14 @@ StatusCode XtalPosTool::calculate(const CalXtalId &xtalId,
   // used for index manipulation
   XtalIdx xtalIdx(xtalId);
 
-    //-- RETRIEVE PEDESTAL (POS_FACE) --//
+  //-- RETRIEVE PED (POS_FACE) --//
   float pedP, pedN, sig, cos;
   RngIdx rngIdxP(xtalIdx, POS_FACE, rngP);
   sc = m_calCalibSvc->getPed(rngIdxP.getCalXtalId(), pedP, sig, cos);
   if (sc.isFailure()) return sc;
   float adcPedP = adcP - pedP;   // ped subtracted ADC
   
-  //-- RETRIEVE PEDESTAL (NEG_FACE) --//
+  //-- RETRIEVE PED (NEG_FACE) --//
   RngIdx rngIdxN(xtalIdx, NEG_FACE, rngN);
   sc = m_calCalibSvc->getPed(rngIdxN.getCalXtalId(), pedN, sig, cos);
   if (sc.isFailure()) return sc;
@@ -129,9 +126,11 @@ StatusCode XtalPosTool::calculate(const CalXtalId &xtalId,
   sc = m_calCalibSvc->evalDAC(rngIdxN.getCalXtalId(), adcPedN, dacN);
   if (sc.isFailure()) return sc;
 
-  // check for invalid dac values (i need to take the logarithm)
+  // check for invalid dac vals (i need to take the logarithm)
   if (dacP <= 0 || dacN <=0) {
-    msglog << MSG::WARNING << "DAC value <= 0, can't calculate position.  This shouldn't happen." << endl;
+    // create MsgStream only when needed for performance
+    MsgStream msglog(msgSvc(), name()); 
+    msglog << MSG::WARNING << "DAC val <= 0, can't calculate position.  This shouldn't happen." << endl;
     return StatusCode::FAILURE;
   }
   double asym = log(dacP/dacN);

@@ -12,8 +12,13 @@
 using namespace CalDefs;
 using namespace idents;
 
-IntNonlinMgr::IntNonlinMgr() : 
-  CalibItemMgr(CalibData::CAL_IntNonlin, N_SPLINE_TYPES) {
+IntNonlinMgr::IntNonlinMgr(const IdealCalCalib &idealCalib) : 
+  CalibItemMgr(CalibData::CAL_IntNonlin, 
+               idealCalib, 
+               N_SPLINE_TYPES),
+  m_idealDACs(RngNum::N_VALS), // one spline per range
+  m_idealADCs(RngNum::N_VALS)  // one spline per range
+{
 
   // set size of spline lists (1 per range)
   for (unsigned i = 0; i < m_splineLists.size(); i++)
@@ -21,14 +26,14 @@ IntNonlinMgr::IntNonlinMgr() :
 };
 
 bool IntNonlinMgr::validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBase *rngBase) {
-  MsgStream msglog(m_msgSvc, *m_logName);
-
   // recast for specific calibration type
   CalibData::IntNonlin* intNonlin = (CalibData::IntNonlin*)(rngBase);
 
-  //get vector of values
+  //get vector of vals
   const vector<float> *intNonlinVec = intNonlin->getValues();
   if (!intNonlinVec) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(m_msgSvc, *m_logName); 
     msglog << MSG::ERROR << "Unable to get vector for IntNonlin vals" << endreq;
     return false;
   }
@@ -39,12 +44,16 @@ bool IntNonlinMgr::validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBa
   if (intNonlinDacCol) {
     intNonlinDacVec = intNonlinDacCol->getDacs();
   } else {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(m_msgSvc, *m_logName); 
     msglog << MSG::ERROR << "No intNonlinDacCol found.\n" << endreq;
     return false;
   }
 
   // check that there are enough DAC vals for ADC vals in this rng
   if (intNonlinVec->size() > intNonlinDacVec->size()) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(m_msgSvc, *m_logName); 
     msglog << MSG::ERROR << "intNonlin nADC > nDAC" 
            << " CalXtalId=" << xtalId
            << " nADC="   << intNonlinVec->size()   << " " 
@@ -56,17 +65,25 @@ bool IntNonlinMgr::validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBa
   return true;
 }
 
-/// retrieve integral non-linearity values for given xtal/face/rng
+/// retrieve integral non-linearity vals for given xtal/face/rng
 StatusCode IntNonlinMgr::getIntNonlin(const CalXtalId &xtalId,
                                       const vector< float > *&adcs,
                                       const vector< unsigned > *&dacs,
                                       float &error) {
   if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
 
+  if (m_idealMode) {
+    RngNum rng = xtalId.getRange();
+    adcs = &m_idealADCs[rng];
+    dacs = &m_idealDACs[rng];
+    error = m_idealErr;
+    return StatusCode::SUCCESS;
+  }
+
   CalibData::IntNonlin *intNonlin = getRangeBase(xtalId);
   if (!intNonlin) return StatusCode::FAILURE;
 
-  //get vector of values
+  //get vector of vals
   const vector<float> *intNonlinVec = intNonlin->getValues();
 
   //get collection of associated DAC vals
@@ -123,6 +140,43 @@ StatusCode IntNonlinMgr::fillRangeBases() {
 
     m_rngBases[rngIdx] = rngBase;
   }
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode IntNonlinMgr::loadIdealVals() {
+  MsgStream msglog(m_msgSvc, *m_logName); 
+
+  //-- SANITY CHECKS --//
+  if (m_idealCalib.ciULD.size() != RngNum::N_VALS) {
+    msglog << MSG::ERROR << "Bad # of ULD vals in ideal CalCalib xml file" 
+           << endreq;
+    return StatusCode::FAILURE;
+  }
+  if (m_idealCalib.inlADCPerDAC.size() != RngNum::N_VALS) {
+    msglog << MSG::ERROR << "Bad # of ADCPerDAC vals in ideal CalCalib xml file" 
+           << endreq;
+    return StatusCode::FAILURE;
+  }
+  
+  for (RngNum rng; rng.isValid(); rng++) {
+    // ideal mode just uses straigt line so we only
+    // need 2 points per spline
+    m_idealDACs[rng].resize(2);
+    m_idealADCs[rng].resize(2);
+    
+    m_idealADCs[rng][0] = 0;
+    m_idealADCs[rng][1] = m_idealCalib.ciULD[rng];
+
+    m_idealDACs[rng][0] = 0;
+    m_idealDACs[rng][1] = 
+      m_idealCalib.ciULD[rng] /
+      m_idealCalib.inlADCPerDAC[rng];
+  }
+
+  // we don't have this info at this point
+  // so why fake it?
+  m_idealErr = 0;
 
   return StatusCode::SUCCESS;
 }

@@ -15,69 +15,72 @@
 using namespace CalDefs;
 using namespace idents;
 
+using CalibData::ValSig;
+
 class AsymMgr : public CalibItemMgr {
  public:
-  AsymMgr();
+  AsymMgr(const IdealCalCalib &idealCalib);
 
   /// retrieve Asymmetry calibration information for one xtal
   StatusCode getAsym(const CalXtalId &xtalId,
-                     const vector<CalibData::ValSig> *&lrg,
-                     const vector<CalibData::ValSig> *&sm,
-                     const vector<CalibData::ValSig> *&NSmPLrg,
-                     const vector<CalibData::ValSig> *&PSmNLrg,
+                     const vector<ValSig> *&asymLrg,
+                     const vector<ValSig> *&asymSm,
+                     const vector<ValSig> *&asymNSPB,
+                     const vector<ValSig> *&asymPSNB,
                      const vector<float>  *&xVals);
 
-  StatusCode evalAsymLrg(const CalXtalId &xtalId, double Xpos, double &lrg) {
+  StatusCode evalAsymLrg(const CalXtalId &xtalId, double Xpos, double &asymLrg) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(LRG_SPLINE, XtalIdx(xtalId), Xpos, lrg);
+    return evalSpline(ASYMLRG_SPLINE, XtalIdx(xtalId), Xpos, asymLrg);
   }
 
-  StatusCode evalPosLrg(const CalXtalId &xtalId, double lrg, double &Xpos) {
+  StatusCode evalPosLrg(const CalXtalId &xtalId, double asymLrg, double &Xpos) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(INV_LRG_SPLINE, XtalIdx(xtalId), lrg, Xpos);
+    return evalSpline(INV_ASYMLRG_SPLINE, XtalIdx(xtalId), asymLrg, Xpos);
   }
 
-  StatusCode evalAsymSm(const CalXtalId &xtalId, double Xpos, double &sm) {
+  StatusCode evalAsymSm(const CalXtalId &xtalId, double Xpos, double &asymSm) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(SM_SPLINE, XtalIdx(xtalId), Xpos, sm);
+    return evalSpline(ASYMSM_SPLINE, XtalIdx(xtalId), Xpos, asymSm);
   }
 
-  StatusCode evalPosSm(const CalXtalId &xtalId, double sm, double &Xpos) {
+  StatusCode evalPosSm(const CalXtalId &xtalId, double asymSm, double &Xpos) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(INV_SM_SPLINE, XtalIdx(xtalId), sm, Xpos);
+    return evalSpline(INV_ASYMSM_SPLINE, XtalIdx(xtalId), asymSm, Xpos);
   }
 
-  StatusCode evalAsymNSPB(const CalXtalId &xtalId, double Xpos, double &nspb) {
+  StatusCode evalAsymNSPB(const CalXtalId &xtalId, double Xpos, double &asymNSPB) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(NSPB_SPLINE, XtalIdx(xtalId), Xpos, nspb);
+    return evalSpline(ASYMNSPB_SPLINE, XtalIdx(xtalId), Xpos, asymNSPB);
   }
 
-  StatusCode evalPosNSPB(const CalXtalId &xtalId, double nspb, double &Xpos) {
+  StatusCode evalPosNSPB(const CalXtalId &xtalId, double asymNSPB, double &Xpos) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(INV_NSPB_SPLINE, XtalIdx(xtalId), nspb, Xpos);
+    return evalSpline(INV_ASYMNSPB_SPLINE, XtalIdx(xtalId), asymNSPB, Xpos);
   }
 
-  StatusCode evalAsymPSNB(const CalXtalId &xtalId, double Xpos, double &psnb) {
+  StatusCode evalAsymPSNB(const CalXtalId &xtalId, double Xpos, double &asymPSNB) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(PSNB_SPLINE, XtalIdx(xtalId), Xpos, psnb);
+    return evalSpline(ASYMPSNB_SPLINE, XtalIdx(xtalId), Xpos, asymPSNB);
   }
 
-  StatusCode evalPosPSNB(const CalXtalId &xtalId, double psnb, double &Xpos) {
+  StatusCode evalPosPSNB(const CalXtalId &xtalId, double asymPSNB, double &Xpos) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(INV_PSNB_SPLINE, XtalIdx(xtalId), psnb, Xpos);
+    return evalSpline(INV_ASYMPSNB_SPLINE, XtalIdx(xtalId), asymPSNB, Xpos);
   }
 
  private:
 
+  /// List of each type of spline for asym calib_type
   typedef enum {
-    LRG_SPLINE,
-    INV_LRG_SPLINE,
-    SM_SPLINE,
-    INV_SM_SPLINE,
-    NSPB_SPLINE,
-    INV_NSPB_SPLINE,
-    PSNB_SPLINE,
-    INV_PSNB_SPLINE,
+    ASYMLRG_SPLINE,
+    INV_ASYMLRG_SPLINE,
+    ASYMSM_SPLINE,
+    INV_ASYMSM_SPLINE,
+    ASYMNSPB_SPLINE,
+    INV_ASYMNSPB_SPLINE,
+    ASYMPSNB_SPLINE,
+    INV_ASYMPSNB_SPLINE,
     N_SPLINE_TYPES
   } SPLINE_TYPE;
 
@@ -95,5 +98,18 @@ class AsymMgr : public CalibItemMgr {
   StatusCode genSplines();
 
   bool checkXtalId(const CalXtalId&) {return true;}
+
+  StatusCode loadIdealVals();
+  /// Store ideal (fake) vals for large diode asym (used when db is down)
+  vector<ValSig> m_idealAsymLrg;
+  /// Store ideal (fake) vals for small diode asym (used when db is down)
+  vector<ValSig> m_idealAsymSm;
+  /// Store ideal (fake) vals for NegSmall diode PosBig diode asym (used when db is down)
+  vector<ValSig> m_idealAsymNSPB;
+  /// Store ideal (fake) vals for PosSmall diode NegBig diode asym (used when db is down)
+  vector<ValSig> m_idealAsymPSNB;
+  
+  vector<float> m_idealXVals;
+
 };
 #endif

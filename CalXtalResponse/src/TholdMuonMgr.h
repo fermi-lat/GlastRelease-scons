@@ -14,9 +14,14 @@
 using namespace CalDefs;
 using namespace idents;
 
+using CalibData::ValSig;
+
 class TholdMuonMgr : public CalibItemMgr {
  public:
-  TholdMuonMgr() : CalibItemMgr(CalibData::CAL_TholdMuon) {};
+  TholdMuonMgr(const IdealCalCalib &idealCalib) : 
+    CalibItemMgr(CalibData::CAL_TholdMuon, idealCalib),
+    m_idealPed(RngNum::N_VALS)
+    {};
 
   /// retrieve threshold calibration constants as measured w/ muon calibration
   StatusCode getTholds(const CalXtalId &xtalId,
@@ -40,10 +45,16 @@ class TholdMuonMgr : public CalibItemMgr {
   
   bool checkXtalId(const CalXtalId &xtalId) {
     if (!xtalId.validFace())
-      throw invalid_argument("TholdMuon calib_type requires valid face information."
+      throw invalid_argument("TholdMuon calib_type requires valid face info."
                              " Programmer error");
     return true;
   }
+
+  StatusCode loadIdealVals();
+
+  ValSig m_idealFLE;
+  ValSig m_idealFHE;
+  CalVec<RngNum, ValSig> m_idealPed;
 
 };
 

@@ -105,7 +105,7 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
   energy = 0;
   rngBelowThresh  = false;
  
-  //-- RETRIEVE PEDESTAL && LAC (POS_FACE) --//
+  //-- RETRIEVE PED && LAC (POS_FACE) --//
   float pedP, pedN, sigP, sigN, cos;
   RngIdx rngIdxP(xtalIdx, POS_FACE, rngP);
   sc = m_calCalibSvc->getPed(rngIdxP.getCalXtalId(), pedP, sigP, cos);
@@ -119,7 +119,7 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
                    POS_FACE);
   sc = m_calCalibSvc->getTholdCI(tmpIdP,fle,fhe,lacP);
   
-  //-- RETRIEVE PEDESTAL && LAC (NEG_FACE) --//
+  //-- RETRIEVE PED && LAC (NEG_FACE) --//
   RngIdx rngIdxN(xtalIdx, NEG_FACE, rngN);
   sc = m_calCalibSvc->getPed(rngIdxN.getCalXtalId(), pedN, sigN, cos);
   if (sc.isFailure()) return sc;
@@ -166,7 +166,7 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
   DiodeNum diodeP = RngNum(rngP).getDiode();
   DiodeNum diodeN = RngNum(rngN).getDiode();
   if (diodeP != diodeN) { 
-    // get small diode asymetry at center of xtal (used for both conversions)
+    // get small diode asymmetry at center of xtal (used for both conversions)
     // NOTE:
     // using center of xtal for position since the lrg/sm ratio is 
     // effectively constant throughout the xtal length and this keeps the
@@ -180,8 +180,8 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
       // convert PL 2 PS
       // AsymNSPB = log(PL / NS)
       // AsymSm = log(PS / NS)
-      // exp(sm)/exp(nspb) = (PS/NS)/(PL/NS) = PS/PL
-      // exp(nspb-sm) = PS/PL
+      // exp(sm)/exp(asymNSPB) = (PS/NS)/(PL/NS) = PS/PL
+      // exp(asymNSPB-sm) = PS/PL
       
       double asymNSPB;
       sc = m_calCalibSvc->evalAsymNSPB(xtalId, 0.0, asymNSPB);
@@ -194,8 +194,8 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
       // convert NL -> NS
       // asymPSNB = log(PS/NL)
       // asymSm = log(PS/NS)
-      // exp(psnb)/exp(sm) = (PS/NL)/(PS/NS)
-      // exp(psnb-sm) = NS/NL
+      // exp(asymPSNB)/exp(sm) = (PS/NL)/(PS/NS)
+      // exp(asymPSNB-sm) = NS/NL
 
       double asymPSNB;
       sc = m_calCalibSvc->evalAsymPSNB(xtalId, 0.0, asymPSNB);
@@ -205,7 +205,7 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
       diodeN = SM_DIODE;
     }
   }
-  // now both dac values are for the same diode size
+  // now both dac vals are for the same diode size
 
   //-- RETRIEVE MEVPERDAC --//
   CalibData::ValSig mpdLrg, mpdSm;
@@ -241,7 +241,7 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
 
   RngNum rng(xtalId.getRange());
   
-  // retrieve pedestal
+  // retrieve ped
   float ped, sig, cos;
   sc = m_calCalibSvc->getPed(xtalId, ped, sig, cos);
   if (sc.isFailure()) return sc;

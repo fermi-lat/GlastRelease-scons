@@ -20,4 +20,6 @@ DECLARE_FACTORY_ENTRIES(CalXtalResponse) {
   DLL_DECL_TOOL( XtalADCTool );
   DLL_DECL_TOOL( XtalEneTool );
   DLL_DECL_TOOL( XtalPosTool );
+  
+  DLL_DECL_TOOL( CalXtalRespRandom );
 } 

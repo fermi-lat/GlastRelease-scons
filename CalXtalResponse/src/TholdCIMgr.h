@@ -14,9 +14,15 @@
 using namespace CalDefs;
 using namespace idents;
 
+using CalibData::ValSig;
+
 class TholdCIMgr : public CalibItemMgr {
  public:
-  TholdCIMgr() : CalibItemMgr(CalibData::CAL_TholdCI) {};
+  TholdCIMgr(const IdealCalCalib &idealCalib) 
+    : CalibItemMgr(CalibData::CAL_TholdCI,
+                   idealCalib),
+    m_idealULD(RngNum::N_VALS),
+    m_idealPed(RngNum::N_VALS) {};
 
   /// retrieve threshold calibration constants as measured w/ charge injection
   StatusCode getTholds(const CalXtalId &xtalId,
@@ -50,6 +56,14 @@ class TholdCIMgr : public CalibItemMgr {
     return true;
   }
 
+  StatusCode loadIdealVals();
+
+  ValSig m_idealFLE;
+  ValSig m_idealFHE;
+  ValSig m_idealLAC;
+  CalVec<RngNum, ValSig> m_idealULD;
+  CalVec<RngNum, ValSig> m_idealPed;
+  
 };
 
 #endif

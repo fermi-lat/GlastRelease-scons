@@ -15,16 +15,23 @@ using namespace idents;
 
 /// retrieve MeVPerDac ratios for given xtal
 StatusCode MPDMgr::getMPD(const CalXtalId &xtalId,
-                          CalibData::ValSig &lrg,
-                          CalibData::ValSig &sm) {
+                          CalibData::ValSig &mpdLrg,
+                          CalibData::ValSig &mpdSm) {
+
   if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
+
+  if (m_idealMode) {
+    mpdLrg = m_idealMPDLrg;
+    mpdSm  = m_idealMPDSm;
+    return StatusCode::SUCCESS;
+  }
 
   // Retrieve generic pointer to rng specific data
   CalibData::CalMevPerDac *mpd = getRangeBase(xtalId);
   if (!mpd) return StatusCode::FAILURE;
 
-  lrg = *(mpd->getBig());
-  sm = *(mpd->getSmall());
+  mpdLrg = *(mpd->getBig());
+  mpdSm = *(mpd->getSmall());
 
   return StatusCode::SUCCESS;
 }
@@ -42,5 +49,15 @@ StatusCode MPDMgr::fillRangeBases() {
     m_rngBases[xtalIdx] = rngBase;
   }
 
+  return StatusCode::SUCCESS;
+}
+
+StatusCode MPDMgr::loadIdealVals() {
+  m_idealMPDLrg.m_val = m_idealCalib.mpdLrg;
+  m_idealMPDLrg.m_sig = m_idealCalib.mpdLrg * m_idealCalib.mpdSigPct;
+
+  m_idealMPDSm.m_val = m_idealCalib.mpdSm;
+  m_idealMPDSm.m_sig = m_idealCalib.mpdSm * m_idealCalib.mpdSigPct;
+  
   return StatusCode::SUCCESS;
 }

@@ -6,8 +6,10 @@ branches src cmt doc
 use GlastPolicy
 use GaudiInterface * IExternal
 use ROOT           * IExternal
+use CLHEP          * IExternal
 use CalUtil
 use CalibData
+use GlastSvc
 
 # Additional ROOT libraries Needed for TSpline3 object
 macro_append ROOT_linkopts " $(ROOT_GUI_libs)"
@@ -24,7 +26,6 @@ private
 
 #needed only for the test app
 use CalibSvc
-use GlastSvc
 
 # Needed for CalibData::CAL_TholdCI, Ped, etc... predefined strings
 # causes a linker warning, so i won't make it public

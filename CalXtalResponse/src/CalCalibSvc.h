@@ -1,15 +1,16 @@
 #ifndef CalCalibSvc_H
-#define CalCalibSvc_H 1
+#define CalCalibSvc_H
 
-// LOCAL
+// LOCAL 
 #include "AsymMgr.h"
 #include "IntNonlinMgr.h"
 #include "MPDMgr.h"
 #include "PedMgr.h"
 #include "TholdCIMgr.h"
 #include "TholdMuonMgr.h"
+#include "IdealCalCalib.h"
 
-// GLAST
+// GLAST 
 #include "CalXtalResponse/ICalCalibSvc.h"
 
 // EXTLIB
@@ -42,7 +43,9 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc, virtual public 
 
   StatusCode initialize();
   StatusCode execute();
-  StatusCode finalize();
+  StatusCode finalize () {return StatusCode::SUCCESS;}
+
+
 
   /// queryInterface - for implementing a Service this is necessary
   StatusCode queryInterface(const IID& riid, void** ppvUnknown);
@@ -50,16 +53,16 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc, virtual public 
   static const InterfaceID& interfaceID() {return ICalCalibSvc::interfaceID();}
 
   /// return the service type
-  const IID& type() const;
+  const IID&  CalCalibSvc::type () const {return IID_ICalCalibSvc;}
 
   /// retrieve MeVPerDac ratios for given xtal
   StatusCode getMeVPerDac(const CalXtalId &xtalId,
-                          CalibData::ValSig &lrg,
-                          CalibData::ValSig &sm) {
-    return m_mpdMgr.getMPD(xtalId, lrg, sm);
+                          CalibData::ValSig &asymLrg,
+                          CalibData::ValSig &asymSm) {
+    return m_mpdMgr.getMPD(xtalId, asymLrg, asymSm);
   }
 
-  /// retrieve integral non-linearity values for given xtal/face/rng
+  /// retrieve integral non-linearity vals for given xtal/face/rng
   StatusCode getIntNonlin(const CalXtalId &xtalId,
                           const vector< float > *&adcs,
                           const vector< unsigned > *&dacs,
@@ -67,7 +70,7 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc, virtual public 
     return m_intNonlinMgr.getIntNonlin(xtalId, adcs, dacs, error);
   }
 
-  /// retrieve pedestal values for given xtal/face/rng
+  /// retrieve pedestal vals for given xtal/face/rng
   StatusCode getPed(const CalXtalId &xtalId,
                     float &avr,
                     float &sig,
@@ -77,12 +80,12 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc, virtual public 
 
   /// retrieve Asymmetry calibration information for one xtal
   StatusCode getAsym(const CalXtalId &xtalId,
-                     const vector<CalibData::ValSig> *&lrg,
-                     const vector<CalibData::ValSig> *&sm,
-                     const vector<CalibData::ValSig> *&NSmPLrg,
-                     const vector<CalibData::ValSig> *&PSmNLrg,
+                     const vector<CalibData::ValSig> *&asymLrg,
+                     const vector<CalibData::ValSig> *&asymSm,
+                     const vector<CalibData::ValSig> *&AsymNSPB,
+                     const vector<CalibData::ValSig> *&asymPSNB,
                      const vector<float> *&xVals) {
-    return m_asymMgr.getAsym(xtalId, lrg, sm, NSmPLrg, PSmNLrg, xVals);
+    return m_asymMgr.getAsym(xtalId, asymLrg, asymSm, AsymNSPB, asymPSNB, xVals);
   }
 
   /// retrieve threshold calibration constants as measured w/ charnge injection
@@ -128,36 +131,36 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc, virtual public 
     return m_intNonlinMgr.evalADC(xtalId, dac, adc);
   }
   
-  StatusCode evalAsymLrg(const CalXtalId &xtalId, double pos, double &lrg) {
-    return m_asymMgr.evalAsymLrg(xtalId, pos, lrg);
+  StatusCode evalAsymLrg(const CalXtalId &xtalId, double pos, double &asymLrg) {
+    return m_asymMgr.evalAsymLrg(xtalId, pos, asymLrg);
   }
   
-  StatusCode evalPosLrg(const CalXtalId &xtalId, double lrg, double &pos) {
-    return m_asymMgr.evalPosLrg(xtalId, lrg, pos);
+  StatusCode evalPosLrg(const CalXtalId &xtalId, double asymLrg, double &pos) {
+    return m_asymMgr.evalPosLrg(xtalId, asymLrg, pos);
   }
   
-  StatusCode evalAsymSm(const CalXtalId &xtalId, double pos, double &sm) {
-    return m_asymMgr.evalAsymSm(xtalId, pos, sm);
+  StatusCode evalAsymSm(const CalXtalId &xtalId, double pos, double &asymSm) {
+    return m_asymMgr.evalAsymSm(xtalId, pos, asymSm);
   }
   
-  StatusCode evalPosSm(const CalXtalId &xtalId, double sm, double &pos) {
-    return m_asymMgr.evalPosSm(xtalId, sm, pos);
+  StatusCode evalPosSm(const CalXtalId &xtalId, double asymSm, double &pos) {
+    return m_asymMgr.evalPosSm(xtalId, asymSm, pos);
   }
   
-  StatusCode evalAsymNSPB(const CalXtalId &xtalId, double pos, double &nspb) {
-    return m_asymMgr.evalAsymNSPB(xtalId, pos, nspb);
+  StatusCode evalAsymNSPB(const CalXtalId &xtalId, double pos, double &asymNSPB) {
+    return m_asymMgr.evalAsymNSPB(xtalId, pos, asymNSPB);
   }
   
-  StatusCode evalPosNSPB(const CalXtalId &xtalId, double nspb, double &pos) {
-    return m_asymMgr.evalPosNSPB(xtalId, nspb, pos);
+  StatusCode evalPosNSPB(const CalXtalId &xtalId, double asymNSPB, double &pos) {
+    return m_asymMgr.evalPosNSPB(xtalId, asymNSPB, pos);
   }
   
-  StatusCode evalAsymPSNB(const CalXtalId &xtalId, double pos, double &psnb) {
-    return m_asymMgr.evalAsymPSNB(xtalId, pos, psnb);
+  StatusCode evalAsymPSNB(const CalXtalId &xtalId, double pos, double &asymPSNB) {
+    return m_asymMgr.evalAsymPSNB(xtalId, pos, asymPSNB);
   }
   
-  StatusCode evalPosPSNB(const CalXtalId &xtalId, double psnb, double &pos) {
-    return m_asymMgr.evalPosPSNB(xtalId, psnb, pos);
+  StatusCode evalPosPSNB(const CalXtalId &xtalId, double asymPSNB, double &pos) {
+    return m_asymMgr.evalPosPSNB(xtalId, asymPSNB, pos);
   }
 
  private:
@@ -166,31 +169,50 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc, virtual public 
   ////////////////////////////////////////////////
 
   // JobOptions PROPERTIES
-  StringProperty m_calibDataSvcName;     ///< name of CalibDataSvc, main data source
-  StringProperty m_defaultFlavor;        ///<  default flavor for all calib types, unless otherwise specified.
+  /// name of CalibDataSvc, main data source
+  StringProperty m_calibDataSvcName;     
 
-  // calib_item specific flavors override defaultFlavor
-  StringProperty m_flavorIntNonlin;      ///< calib flavor override for int-nonlin constants
-  StringProperty m_flavorAsym;           ///< calib flavor override for asymmetry constants
-  StringProperty m_flavorPed;            ///< calib flavor override for pedestal constants
-  StringProperty m_flavorMPD;            ///< calib flavor override for MeVPerDac constants
-  StringProperty m_flavorTholdCI;        ///< calib flavor override for CI measured thresholds
-  StringProperty m_flavorTholdMuon;      ///< calib flavor override for Muon measure thresholds
+  ///  default flavor for all calib types, unless otherwise specified.
+  StringProperty m_defaultFlavor;        
+
+  /// calib flavor override for int-nonlin constants
+  StringProperty m_flavorIntNonlin;      
+  /// calib flavor override for asymmetry constants
+  StringProperty m_flavorAsym;           
+  /// calib flavor override for ped constants
+  StringProperty m_flavorPed;            
+  /// calib flavor override for MeVPerDac constants
+  StringProperty m_flavorMPD;            
+  /// calib flavor override for CI measured thresholds
+  StringProperty m_flavorTholdCI;        
+  /// calib flavor override for Muon measure thresholds
+  StringProperty m_flavorTholdMuon;      
+
+  /// xml file contains 'ideal' flavor parameters
+  StringProperty m_idealCalibXMLPath;
 
   // GAUDI RESOURCES
   IService         *m_calibDataSvc;     ///< pointer to CalibDataSvc
-  IDataProviderSvc *m_dataProviderSvc;  ///< pointer to IDataProviderSvc interface of CalibDataSvc
+  /// pointer to IDataProviderSvc interface of CalibDataSvc
+  IDataProviderSvc *m_dataProviderSvc;  
 
-  MPDMgr       m_mpdMgr;
+  /// stores 'ideal' flavor generic calibration constants
+  IdealCalCalib m_idealCalib;
+
+  /// Load ideal calibration values from xml file
+  StatusCode CalCalibSvc::loadIdealCalib() {
+    return m_idealCalib.readCfgFile(m_idealCalibXMLPath);
+  }
+
   PedMgr       m_pedMgr;
-  AsymMgr      m_asymMgr;
   IntNonlinMgr m_intNonlinMgr;
-  TholdMuonMgr m_tholdMuonMgr;
+  AsymMgr      m_asymMgr;
+  MPDMgr       m_mpdMgr;
   TholdCIMgr   m_tholdCIMgr;
-
+  TholdMuonMgr m_tholdMuonMgr;
+  
   /// hook the BeginEvent so that we can check our validity once per event.
   void handle ( const Incident& inc );
 };
 
 #endif // CalCalibSvc_H
-
