@@ -3,7 +3,7 @@ version v0r7
 author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
 
 use GlastPolicy
-use OmniOrb
+use OmniOrb v0r4* IExternal 
 
 apply_pattern packageShr
 apply_pattern package_include
