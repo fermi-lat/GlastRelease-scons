@@ -5,10 +5,10 @@
 // Geant4
 #include "G4Generator.h"
 #include "G4UImanager.hh"
+#include "G4ParticleDefinition.hh"
 
 #include "RunManager.h"
 #include "PrimaryGeneratorAction.h"
-
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
@@ -22,6 +22,7 @@
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 #include "GlastEvent/MonteCarlo/McPositionHit.h"
+#include "GlastEvent/MonteCarlo/McParticle.h"
 
 //flux
 #include "FluxSvc/IFluxSvc.h"
@@ -149,9 +150,8 @@ StatusCode G4Generator::execute()
     log << MSG::DEBUG << "TDS ready" << endreq;
 
 
-
     // following model from previous version, allow property "UIcommands" to generate
-    // UI commands here. (but does not seem to work??)
+    // UI commands here. 
     //
     if( !m_UIcommands.value().empty() ) {
         for( std::vector<std::string>::const_iterator k = m_UIcommands.value().begin(); 
@@ -187,8 +187,24 @@ StatusCode G4Generator::execute()
     primaryGenerator->setParticle(name);
     primaryGenerator->setMomentum(dir);
     primaryGenerator->setPosition(p);
-    primaryGenerator->setEnergy(ke);
- 
+    primaryGenerator->setEnergy(ke);  // TODO: this shoule be full energy, but don't know mass yet
+
+    //
+    // create entry in McParticleCol for the primary generator.
+    //
+    G4ParticleDefinition * pdef = primaryGenerator->GetParticleDefinition();
+    HepLorentzVector pin= primaryGenerator->GetFourMomentum();
+
+    mc::McParticleCol* pcol = new mc::McParticleCol;
+
+    eventSvc()->registerObject("/Event/MC/McParticleCol", pcol);
+    mc::McParticle * parent= new mc::McParticle;
+    pcol->push_back(parent);
+    parent->init(parent, pdef->GetPDGEncoding(), 
+        mc::McParticle::PRIMARY,
+        pin, pin, p);
+    
+
     // Run geant4
     m_runManager->BeamOn(); 
     

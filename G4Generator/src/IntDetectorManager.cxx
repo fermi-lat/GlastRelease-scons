@@ -78,7 +78,7 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
     postPos = local * (HepVector3D)postPos;
 
     // fill the energy and position    
-    hit->addEnergyItem(edep,0,(prePos+postPos)/2);
+    hit->addEnergyItem(edep,(mc::McParticle*)0,(prePos+postPos)/2);
 
     return true;
     

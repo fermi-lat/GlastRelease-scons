@@ -1,5 +1,6 @@
 //$Header$
 /*
+v3r2   26-mar-02 THB fix facilities tag, add McParticle support
 v3r1p1 26-mar-02 THB reverse signs of rotation angles
 v3r1   21-Mar-02 THB All hits done, saving local coordinates
 v2r1             THB cleaned up colors, improved digi handling. (Still no integrating hits)
