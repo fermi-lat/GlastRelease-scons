@@ -83,6 +83,11 @@
         definitions.  Verification of conversions has to be done by
         application code (rather than parser), anyway, so nothing is 
         gained by using IDREF here.
+
+     26 Oct 2001 Put materials-related elements from AGDD in.
+        The materials description may be included in the
+        geometry description document or can be in a separate
+        document with document element <materials>
 -->
 
 <!--
@@ -112,6 +117,29 @@
         in the fixed coordinate system
         (NOT "passive" rotation when the axis are rotated and the object
          is fixed) 
+
+1.1) Materials
+===============
+
+  o Materials can be elements or composites.
+  o elements are identified using a long name. Attributes are
+
+       symbol      : the conventional symbol name
+       z           : mean number of protons
+       aweight     : atomic weight
+       density     : density (g/mole)
+  o composites are identified using a long name and provide a 
+  density (g/mole). They are made of a set of addmaterial elements, 
+  each providing
+
+       material     : an IDREF towards an already defined material or element
+       fractionmass : a percentage of this material in the composite 
+                      (use for both materials and elements).
+       natoms       : the number of atoms of this element in the composite.
+                           (use for elements only)
+
+
+
 
 1.2) Sections
 ==============
@@ -480,7 +508,8 @@
 <!-- See definition of constants and its children at the end of this file -->
 <!-- NOTE:  Include optional idConverter(s) here for testing.  Ultimately
             might require idConverter(s) to be in a separate document -->
-<!ELEMENT  gdd  (source*, constants?,  idDict?, section*, idConverter*) >
+<!ELEMENT  gdd  (source*, constants?,  materials?, idDict?, 
+                 section*, idConverter*) >
 
 
 <!ATTLIST  gdd
@@ -509,6 +538,44 @@
 <!ELEMENT  source  (#PCDATA) >
 <!ATTLIST  source  inputId          CDATA #IMPLIED
                    creatorId        CDATA #IMPLIED >
+
+<!ELEMENT  materials ( element | composite )+> 
+<!ATTLIST  materials
+           version      CDATA   #REQUIRED
+           date         CDATA   #REQUIRED
+           author       CDATA   #REQUIRED
+           %DTD_constraint;>
+
+
+<!ELEMENT  element  EMPTY>
+<!ATTLIST  element 
+           symbol    NMTOKEN  #IMPLIED
+           name      ID       #REQUIRED
+           z         NMTOKEN  #REQUIRED
+           aweight   NMTOKEN  #REQUIRED
+           density   NMTOKEN  #IMPLIED>
+
+<!ELEMENT  composite ( addmaterial )+>
+<!ATTLIST  composite
+           name     ID       #REQUIRED
+           density  NMTOKEN  #REQUIRED>
+
+<!ELEMENT  addmaterial  ( fractionmass | natoms ) >
+<!ATTLIST  addmaterial
+           material     IDREF  #REQUIRED
+>
+
+<!ELEMENT fractionmass EMPTY>
+<!ATTLIST fractionmass
+          fraction      NMTOKEN #REQUIRED
+>
+
+<!ELEMENT natoms EMPTY>
+<!ATTLIST natoms
+          n             NMTOKEN #REQUIRED
+>
+
+
 
 <!ELEMENT  section  ( box | tubs | cons |
                       union | intersection | subtraction |
