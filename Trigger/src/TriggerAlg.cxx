@@ -29,6 +29,7 @@
 #include "Event/Digi/AcdDigi.h"
 
 #include "LdfEvent/Gem.h"
+#include "enums/TriggerBits.h"
 
 
 #include "ThrottleAlg.h"
@@ -61,22 +62,6 @@ namespace { // local definitions of convenient inline functions
 class TriggerAlg : public Algorithm {
 
 public:
-    enum  {
-        //! definition of  trigger bits
-
-        b_ACDL =     1,  ///>  set if cover or side veto, low threshold
-        b_Track=     2,  ///>  3 consecutive x-y layers hit
-        b_LO_CAL=    4,  ///>  single log above low threshold
-        b_HI_CAL=    8,  ///> single log above high threshold
-        b_ACDH =    16,  ///>  cover or side veto, high threshold ("CNO")
-        b_THROTTLE= 32,  ///> Ritz throttle
-
-        number_of_trigger_bits = 6, ///> for size of table
-
-        GEM_offset = 8  ///> offset to the GEM bits
-
-    };
-
     //! Constructor of this form must be provided
     TriggerAlg(const std::string& name, ISvcLocator* pSvcLocator); 
 
@@ -332,10 +317,10 @@ unsigned int TriggerAlg::gemBits(unsigned int  trigger_bits)
     // kudos to Heather for creating a typedef
 
     return 
-        (( trigger_bits & b_Track) !=0 ? LdfEvent::Gem::TKR   : 0)
-        |((trigger_bits & b_LO_CAL)!=0 ? LdfEvent::Gem::CALLE : 0)
-        |((trigger_bits & b_HI_CAL)!=0 ? LdfEvent::Gem::CALHE : 0)
-        |((trigger_bits & b_ACDH)  !=0 ? LdfEvent::Gem::CNO   : 0) ;
+        (( trigger_bits & enums::b_Track) !=0 ? LdfEvent::Gem::TKR   : 0)
+        |((trigger_bits & enums::b_LO_CAL)!=0 ? LdfEvent::Gem::CALLE : 0)
+        |((trigger_bits & enums::b_HI_CAL)!=0 ? LdfEvent::Gem::CALHE : 0)
+        |((trigger_bits & enums::b_ACDH)  !=0 ? LdfEvent::Gem::CNO   : 0) ;
 
 }
 //------------------------------------------------------------------------------
@@ -391,7 +376,7 @@ unsigned int TriggerAlg::tracker(const Event::TkrDigiCol&  planes)
         }
     }
 
-       if(tkr_trig_flag) return b_Track;
+       if(tkr_trig_flag) return enums::b_Track;
             else return 0;
 }
 //------------------------------------------------------------------------------
@@ -437,7 +422,8 @@ unsigned int TriggerAlg::calorimeter(const Event::CalDigiCol& calDigi)
     }
 
 
-    return (m_local ? b_LO_CAL:0) | (m_hical ? b_HI_CAL:0);
+    return (m_local ? enums::b_LO_CAL:0) 
+        | (m_hical ? enums::b_HI_CAL:0);
 
 }
 //------------------------------------------------------------------------------
@@ -452,7 +438,7 @@ unsigned int TriggerAlg::anticoincidence(const Event::AcdDigiCol& tiles)
     log << MSG::DEBUG << tiles.size() << " tiles found with hits" << endreq;
     unsigned int ret=0;
     for( AcdDigiCol::const_iterator it = tiles.begin(); it !=tiles.end(); ++it){
-        ret |= b_ACDL; 
+        ret |= enums::b_ACDL; 
         //TODO: check threshold, set high bit
     } 
     return ret;
@@ -494,7 +480,7 @@ void TriggerAlg::bitSummary(std::ostream& out){
     // purpose and method: make a summary of the bit frequencies to the stream
 
     using namespace std;
-    int size= number_of_trigger_bits;  // bits to expect
+    int size= enums::number_of_trigger_bits;  // bits to expect
     static int col1=16; // width of first column
     out << endl << "             bit frequency table";
     out << endl << setw(col1) << "value"<< setw(6) << "count" ;
