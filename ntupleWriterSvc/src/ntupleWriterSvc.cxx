@@ -219,7 +219,7 @@ StatusCode ntupleWriterSvc::finalize ()
 {
     StatusCode  status = StatusCode::SUCCESS;
        
-    status = saveNTuples();
+    //status = saveNTuples();
     return status;
 }
 
