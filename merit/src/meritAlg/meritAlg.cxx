@@ -21,7 +21,7 @@
 #include "FigureOfMerit.h"
 #include "analysis/Tuple.h"
 
-#ifndef DEFECT_NO_STRINGSTEAM
+#ifndef DEFECT_NO_STRINGSTREAM
 # include <sstream>
 #else
 # include <strstream>
