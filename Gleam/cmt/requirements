@@ -29,7 +29,7 @@ use gui         v3r3
 use geomrep     v4r1
 
 # the geometry data base
-use idents              v2r8p4 
+use idents      v2r8p4 
 use detModel    v2r13
 use xmlGeoDbs   v1r6p0
 
@@ -45,19 +45,19 @@ use Geant4Runtime v1r0
 
 use GuiSvc      v3r1p3
 
-use Event       v8r15
-use GlastSvc    v8r2
+use Event               v9r0
+use GlastSvc            v9r0
 
 # simulation
 
-use FluxSvc     v5r10p4
-use FluxDisplay         v2r2
-use G4Generator         v4r3p2
+use FluxSvc             v5r10p5
+use FluxDisplay  v2r2
+use G4Generator         v4r3p3
 
 #digitization
 use CalDigi     v1r2p1
-use TkrDigi             v1r5p7
-use AcdDigi             v1r3p2
+use TkrDigi              v1r6
+use AcdDigi              v1r4
 
 
 
@@ -65,12 +65,12 @@ use AcdDigi             v1r3p2
 use Trigger     v3r3p3
 use Recon       v2r3p2
 
-use TkrRecon            v7r0
+use TkrRecon            v8r1
 use CalRecon    v5r7p2  
-use AcdRecon            v1r0       
+use AcdRecon            v1r2       
 
 #ROOT persistence: RootIo specifies the data packages
-use RootIo      v4r11
+use RootIo              v4r12
 
 #diagnostic and summary of bottom line
 use merit       v5r8p2
