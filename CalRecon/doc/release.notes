@@ -2,6 +2,7 @@ package CalRecon
 
 package manager: Alexandre Chekhtman
 
+  v5r4 22-may-2002 AC  CalClusterAlg modified to use tracker information from TkrVertexCol
   v5r3 21-may-2002 AC  test program jobOptions file modified to read digi root file
   v5r2 20-may-2002 AC  CalDisplay added and modified to work with new TDS classes,
                        bugs in direction calculation fixed.
