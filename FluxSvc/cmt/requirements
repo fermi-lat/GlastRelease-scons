@@ -1,9 +1,9 @@
 package FluxSvc
-version v2r1
+version v2r2
 
 branches FluxSvc mgr doc
 
-use flux v4
+use flux 
 use GaudiSvc
 
 include_dirs $(FLUXSVCROOT)
