@@ -1,7 +1,7 @@
 Package digiRootData
 Coordinator: H. Kelly
 
-
+v3r3      05-Jun-2002 HMK New AcdDigi\n
 v3r2      22-May-2002 HMK Add new Tkr Digi to DigiEvent \n
 v3r1      14-May-2002 HMK Fix Cal Digi classes, had set as transient \n
 v3r0      13-May-2002 HMK Start update for new version of digi classes for use with Gleam\n
