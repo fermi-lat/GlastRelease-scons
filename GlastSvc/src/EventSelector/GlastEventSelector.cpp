@@ -273,11 +273,9 @@ IOpaqueAddress* GlastEventSelector::reference(const IEvtSelector::Iterator& it) 
     recId++;
     
     ListName::const_iterator* inputDataIt = (ListName::const_iterator*)(&irfIt->m_inputDataIt);
-    log << MSG::DEBUG << "GlastEventSelector::reference: File name is " << fName << endreq;
     
     // finally create an opaque address to pass back
     IOpaqueAddress* addr = DummyAddressFactory.instantiate(CLID_Event, fName, "PASS", recId);
-    log << MSG::DEBUG << "GlastEventSelector::reference: Created address:" << (void*)addr << endreq;
     return addr;
 }
 

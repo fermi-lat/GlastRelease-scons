@@ -85,19 +85,6 @@ StatusCode EventCnvSvc::initialize()     {
       }
     }
 
-    // HMA commented this out....replaced with the above code from SicbEventCnvSvc
-    /*
-	IConverter* cnv = 0;
-    MsgStream log(messageService(), name());
-    log << MSG::DEBUG << "initializing: add event factory" << endreq;
-
-	// Event
-	cnv = EventCnvFactory.instantiate(svclocator);
-    status = addConverter( cnv );
-    if ( status.isFailure() ) return status;
-
-    log << MSG::DEBUG << "initializing: event factory added OK" << endreq;
-*/
   }
 
   return status;
@@ -129,7 +116,6 @@ StatusCode EventCnvSvc::updateServiceState(IOpaqueAddress* pAddress)    {
     // not sure about the use of recid or bank...
 
   MsgStream log(messageService(), name());
-  log << MSG::DEBUG << "inside EventCnvSvc::updateServiceState()" << endreq;
 
   // convert to an address of an Event
 	Address* addr = dynamic_cast<Address*>(pAddress); 
