@@ -36,7 +36,7 @@
 
 <!ELEMENT  generic  (inputSample) >
 <!ATTLIST generic  
-   instrument  (LAT | BFEM | BTEM | EM | CU) #REQUIRED
+   instrument  (LAT | BFEM | BTEM | EM | CU | TWR) #REQUIRED
    timestamp   NMTOKEN #REQUIRED
    calType     NMTOKEN #REQUIRED
    creator     NMTOKEN #IMPLIED
@@ -48,8 +48,8 @@
      latest events included in sample
 -->
 <!ELEMENT inputSample (#PCDATA) >
-<!ATTLIST inputSample  startTime NMTOKEN #REQUIRED
-                       stopTime  NMTOKEN #REQUIRED
+<!ATTLIST inputSample  startTime CDATA #REQUIRED
+                       stopTime  CDATA #REQUIRED
                        triggers  NMTOKENS #REQUIRED 
                        source    NMTOKENS #REQUIRED
                        mode      NMTOKEN  #REQUIRED>
