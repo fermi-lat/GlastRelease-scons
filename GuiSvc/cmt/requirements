@@ -21,7 +21,7 @@ macro GuiSvc_lib " "\
 
 private
 # note redefinition of the macro to *not* include any other dependent libs
-macro use_linkopts " $(Gaudi_linkopts) ${GuiSvc_lib) $(gui_linkopts)"
+macro use_linkopts " $(Gaudi_linkopts) $(GuiSvc_lib) $(gui_linkopts)"
 
 
 application GuiTest test/*.h test/*.cxx test/*.txt  $(GUIROOT)/src/test/Demo.cxx $(Win32Resource)
