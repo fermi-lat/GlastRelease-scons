@@ -1,5 +1,6 @@
 // LOCAL
 #include "TholdCIMgr.h"
+#include "CalCalibSvc.h"
 
 // GLAST
 // EXTLIB
@@ -88,38 +89,41 @@ StatusCode TholdCIMgr::fillRangeBases() {
 }
 
 StatusCode TholdCIMgr::loadIdealVals() {
-  MsgStream msglog(m_msgSvc, *m_logName); 
   
   //-- SANITY CHECKS --//
-  if (m_idealCalib.ciULD.size() != (unsigned)RngNum::N_VALS) {
+  if (owner->m_idealCalib.ciULD.size() != (unsigned)RngNum::N_VALS) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::ERROR << "Wrong # of ideal ULD vals." << endl;
     return StatusCode::FAILURE;;
   }
-  if (m_idealCalib.ciPeds.size() != (unsigned)RngNum::N_VALS) {
+  if (owner->m_idealCalib.ciPeds.size() != (unsigned)RngNum::N_VALS) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::ERROR << "Wrong # of ideal ci Pedestal vals." << endl;
     return StatusCode::FAILURE;;
   }
 
-  m_idealFLE.m_val = m_idealCalib.ciFLE;
-  m_idealFLE.m_sig = m_idealCalib.ciFLE *
-    m_idealCalib.ciSigPct;
+  m_idealFLE.m_val = owner->m_idealCalib.ciFLE;
+  m_idealFLE.m_sig = owner->m_idealCalib.ciFLE *
+    owner->m_idealCalib.ciSigPct;
 
-  m_idealFHE.m_val = m_idealCalib.ciFHE;
-  m_idealFHE.m_sig = m_idealCalib.ciFHE *
-    m_idealCalib.ciSigPct;
+  m_idealFHE.m_val = owner->m_idealCalib.ciFHE;
+  m_idealFHE.m_sig = owner->m_idealCalib.ciFHE *
+    owner->m_idealCalib.ciSigPct;
 
-  m_idealLAC.m_val = m_idealCalib.ciLAC;
-  m_idealLAC.m_sig = m_idealCalib.ciLAC *
-    m_idealCalib.ciSigPct;
+  m_idealLAC.m_val = owner->m_idealCalib.ciLAC;
+  m_idealLAC.m_sig = owner->m_idealCalib.ciLAC *
+    owner->m_idealCalib.ciSigPct;
   
   for (RngNum rng; rng.isValid(); rng++) {
-    m_idealULD[rng].m_val = m_idealCalib.ciULD[rng];
-    m_idealULD[rng].m_sig = m_idealCalib.ciULD[rng] *
-      m_idealCalib.ciSigPct;
+    m_idealULD[rng].m_val = owner->m_idealCalib.ciULD[rng];
+    m_idealULD[rng].m_sig = owner->m_idealCalib.ciULD[rng] *
+      owner->m_idealCalib.ciSigPct;
 
-    m_idealPed[rng].m_val = m_idealCalib.ciPeds[rng];
-    m_idealPed[rng].m_sig = m_idealCalib.ciPeds[rng] *
-      m_idealCalib.ciSigPct;
+    m_idealPed[rng].m_val = owner->m_idealCalib.ciPeds[rng];
+    m_idealPed[rng].m_sig = owner->m_idealCalib.ciPeds[rng] *
+      owner->m_idealCalib.ciSigPct;
   }
 
   return StatusCode::SUCCESS;

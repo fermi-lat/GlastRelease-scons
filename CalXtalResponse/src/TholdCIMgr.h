@@ -16,11 +16,12 @@ using namespace idents;
 
 using CalibData::ValSig;
 
+class CalCalibSvc;
+
 class TholdCIMgr : public CalibItemMgr {
  public:
-  TholdCIMgr(const IdealCalCalib &idealCalib) 
-    : CalibItemMgr(CalibData::CAL_TholdCI,
-                   idealCalib),
+  TholdCIMgr() 
+    : CalibItemMgr(CalibData::CAL_TholdCI),
     m_idealULD(RngNum::N_VALS),
     m_idealPed(RngNum::N_VALS) {};
 

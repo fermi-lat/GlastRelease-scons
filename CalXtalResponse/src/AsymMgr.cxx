@@ -1,5 +1,6 @@
 // LOCAL INCLUDES
 #include "AsymMgr.h"
+#include "CalCalibSvc.h"
 
 // GLAST INCLUDES
 #include "CalibData/Cal/Xpos.h"
@@ -15,15 +16,17 @@ using namespace std;
 using namespace CalDefs;
 using namespace idents;
 
-AsymMgr::AsymMgr(const IdealCalCalib &idealCalib) : 
+AsymMgr::AsymMgr() : 
   CalibItemMgr(CalibData::CAL_Asym, 
-               idealCalib,
                N_SPLINE_TYPES) {
 
   // set size of spline lists (1 per xtal)
-  for (unsigned i = 0; i < m_splineLists.size(); i++)
+  for (unsigned i = 0; i < m_splineLists.size(); i++) {
     m_splineLists[i].resize(XtalIdx::N_VALS);
-};
+    m_splineXMin[i].resize(XtalIdx::N_VALS);
+    m_splineXMax[i].resize(XtalIdx::N_VALS);
+  }
+}
 
 bool AsymMgr::validateRangeBase(const CalXtalId&, CalibData::RangeBase *rngBase) {
   const vector<CalibData::ValSig> *asymLrg;
@@ -35,25 +38,25 @@ bool AsymMgr::validateRangeBase(const CalXtalId&, CalibData::RangeBase *rngBase)
 
   if (!(asymLrg = asym->getBig())) {
     // create MsgStream only when needed for performance
-    MsgStream msglog(m_msgSvc, *m_logName); 
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::ERROR << "Unable to retrieve calib data for " << m_calibPath << endreq;
     return false;
   }
   if (!(asymSm = asym->getSmall())) {
     // create MsgStream only when needed for performance
-    MsgStream msglog(m_msgSvc, *m_logName); 
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::ERROR << "Unable to retrieve calib data for " << m_calibPath << endreq;
     return false;
   }
   if (!(asymNSPB = asym->getNSmallPBig())) {
     // create MsgStream only when needed for performance
-    MsgStream msglog(m_msgSvc, *m_logName); 
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::ERROR << "Unable to retrieve calib data for " << m_calibPath << endreq;
     return false;
   }
   if (!(asymPSNB = asym->getPSmallNBig())) {
     // create MsgStream only when needed for performance
-    MsgStream msglog(m_msgSvc, *m_logName); 
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::ERROR << "Unable to retrieve calib data for " << m_calibPath << endreq;
     return false;
   }
@@ -65,7 +68,7 @@ bool AsymMgr::validateRangeBase(const CalXtalId&, CalibData::RangeBase *rngBase)
       XposSize != asymNSPB->size() ||
       XposSize != asymPSNB->size()) {
     // create MsgStream only when needed for performance
-    MsgStream msglog(m_msgSvc, *m_logName); 
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::ERROR << "Invalid # of vals for " << m_calibPath << endreq;
     return false;
   }
@@ -104,6 +107,12 @@ StatusCode AsymMgr::getAsym(const CalXtalId &xtalId,
   return StatusCode::SUCCESS;
 }
 
+/** return p3 such that p3 - p2 = p2 - p1
+*/
+inline double lin_interp(double p1, double p2) {
+   return 2*p2 - p1;
+}
+
 StatusCode AsymMgr::genSplines() {
   StatusCode sc;
 
@@ -134,48 +143,80 @@ StatusCode AsymMgr::genSplines() {
     //-- LINEARLY EXTRAPOLATED END-POINTS --//
     //////////////////////////////////////////
 
-    // add one point to each end to ensure better
-    // behaved spline functions
+    // add two points to each end to ensure better
+    // good spline behavior past the edge of the
+    // xtal.  if you think this isn't such a good
+    // idea, then think about it for a while
+    // or ask zach to explain.
+    // 4 new points total
     
-    dblAsymLrg.resize(n+2);
-    dblAsymSm.resize(n+2);
-    dblAsymPSNB.resize(n+2);
-    dblAsymNSPB.resize(n+2);
-    dblXpos.resize(n+2);
+    dblAsymLrg.resize (n + 4);
+    dblAsymSm.resize  (n + 4);
+    dblAsymPSNB.resize(n + 4);
+    dblAsymNSPB.resize(n + 4);
+    dblXpos.resize    (n + 4);
 
+    // load original points into middle of new, 
+    // wider vector
     for (int i = 0; i < n; i++) {
-      dblAsymLrg[i+1]  = (*asymLrg)[i].getVal();
-      dblAsymSm[i+1]   = (*asymSm)[i].getVal();
-      dblAsymNSPB[i+1] = (*asymNSPB)[i].getVal();
-      dblAsymPSNB[i+1] = (*asymPSNB)[i].getVal();
+      dblAsymLrg [i + 2] = (*asymLrg) [i].getVal();
+      dblAsymSm  [i + 2] = (*asymSm)  [i].getVal();
+      dblAsymNSPB[i + 2] = (*asymNSPB)[i].getVal();
+      dblAsymPSNB[i + 2] = (*asymPSNB)[i].getVal();
 
-      dblXpos[i+1]     = (*Xpos)[i];
+      dblXpos    [i + 2] = (*Xpos)[i];
     }
 
     //-- LINEAR EXTRAPOLATION --//
-    dblAsymLrg[0]  = 2*dblAsymLrg[1]  - dblAsymLrg[2];
-    dblAsymSm[0]   = 2*dblAsymSm[1]   - dblAsymSm[2];
-    dblAsymNSPB[0] = 2*dblAsymNSPB[1] - dblAsymNSPB[2];
-    dblAsymPSNB[0] = 2*dblAsymPSNB[1] - dblAsymPSNB[2];
+    // point 1
+    dblAsymLrg [1] = lin_interp(dblAsymLrg [2], dblAsymLrg [3]);
+    dblAsymSm  [1] = lin_interp(dblAsymSm  [2], dblAsymSm  [3]);
+    dblAsymNSPB[1] = lin_interp(dblAsymNSPB[2], dblAsymNSPB[3]);
+    dblAsymPSNB[1] = lin_interp(dblAsymPSNB[2], dblAsymPSNB[3]);
+    dblXpos    [1] = lin_interp(dblXpos    [2], dblXpos    [3]);
 
-    dblXpos[0]     = 2*dblXpos[1] - dblXpos[2];
+    // point 0
+    dblAsymLrg [0] = lin_interp(dblAsymLrg [1], dblAsymLrg [2]);
+    dblAsymSm  [0] = lin_interp(dblAsymSm  [1], dblAsymSm  [2]);
+    dblAsymNSPB[0] = lin_interp(dblAsymNSPB[1], dblAsymNSPB[2]);
+    dblAsymPSNB[0] = lin_interp(dblAsymPSNB[1], dblAsymPSNB[2]);
+    dblXpos    [0] = lin_interp(dblXpos    [1], dblXpos    [2]);
 
-    dblAsymLrg[n+1]  = 2*dblAsymLrg[n]  - dblAsymLrg[n-1];
-    dblAsymSm[n+1]   = 2*dblAsymSm[n]   - dblAsymSm[n-1];
-    dblAsymNSPB[n+1] = 2*dblAsymNSPB[n] - dblAsymNSPB[n-1];
-    dblAsymPSNB[n+1] = 2*dblAsymPSNB[n] - dblAsymPSNB[n-1];
+    // 2nd last point
+    dblAsymLrg [n+2] = lin_interp(dblAsymLrg [n+1], dblAsymLrg [n]);
+    dblAsymSm  [n+2] = lin_interp(dblAsymSm  [n+1], dblAsymSm  [n]);
+    dblAsymNSPB[n+2] = lin_interp(dblAsymNSPB[n+1], dblAsymNSPB[n]);
+    dblAsymPSNB[n+2] = lin_interp(dblAsymPSNB[n+1], dblAsymPSNB[n]);
+    dblXpos    [n+2] = lin_interp(dblXpos    [n+1], dblXpos    [n]);
+    
+    // last point
+    dblAsymLrg [n+3] = lin_interp(dblAsymLrg [n+2], dblAsymLrg [n+1]);
+    dblAsymSm  [n+3] = lin_interp(dblAsymSm  [n+2], dblAsymSm  [n+1]);
+    dblAsymNSPB[n+3] = lin_interp(dblAsymNSPB[n+2], dblAsymNSPB[n+1]);
+    dblAsymPSNB[n+3] = lin_interp(dblAsymPSNB[n+2], dblAsymPSNB[n+1]);
+    dblXpos    [n+3] = lin_interp(dblXpos    [n+2], dblXpos    [n+1]);
 
-    dblXpos[n+1]     = 2*dblXpos[n] - dblXpos[n-1];
+    // put xtal id string into spline name
+    ostringstream xtalStr;
+    xtalStr << xtalIdx.getCalXtalId();
 
-    genSpline(ASYMLRG_SPLINE,   xtalIdx, "asymLrg",   dblXpos, dblAsymLrg);
-    genSpline(ASYMSM_SPLINE,    xtalIdx, "asymSm",    dblXpos, dblAsymSm);
-    genSpline(ASYMNSPB_SPLINE,  xtalIdx, "asymNSPB",  dblXpos, dblAsymNSPB);
-    genSpline(ASYMPSNB_SPLINE,  xtalIdx, "asymPSNB",  dblXpos, dblAsymPSNB);
+    genSpline(ASYMLRG_SPLINE,   xtalIdx, "asymLrg"     + xtalStr.str(),   
+              dblXpos, dblAsymLrg);
+    genSpline(ASYMSM_SPLINE,    xtalIdx, "asymSm"      + xtalStr.str(),    
+              dblXpos, dblAsymSm);
+    genSpline(ASYMNSPB_SPLINE,  xtalIdx, "asymNSPB"    + xtalStr.str(),  
+              dblXpos, dblAsymNSPB);
+    genSpline(ASYMPSNB_SPLINE,  xtalIdx, "asymPSNB"    + xtalStr.str(),  
+              dblXpos, dblAsymPSNB);
 
-    genSpline(INV_ASYMLRG_SPLINE,   xtalIdx, "invLrg",   dblAsymLrg,   dblXpos);
-    genSpline(INV_ASYMSM_SPLINE,    xtalIdx, "invSm",    dblAsymSm,    dblXpos);
-    genSpline(INV_ASYMNSPB_SPLINE,  xtalIdx, "invNSPB",  dblAsymNSPB,  dblXpos);
-    genSpline(INV_ASYMPSNB_SPLINE,  xtalIdx, "invPSNB",  dblAsymPSNB,  dblXpos);
+    genSpline(INV_ASYMLRG_SPLINE,   xtalIdx, "invLrg"  + xtalStr.str(),   
+              dblAsymLrg,   dblXpos);
+    genSpline(INV_ASYMSM_SPLINE,    xtalIdx, "invSm"   + xtalStr.str(),    
+              dblAsymSm,    dblXpos);
+    genSpline(INV_ASYMNSPB_SPLINE,  xtalIdx, "invNSPB" + xtalStr.str(),  
+              dblAsymNSPB,  dblXpos);
+    genSpline(INV_ASYMPSNB_SPLINE,  xtalIdx, "invPSNB" + xtalStr.str(),  
+              dblAsymPSNB,  dblXpos);
   }  
   
   return StatusCode::SUCCESS;
@@ -199,7 +240,6 @@ StatusCode AsymMgr::fillRangeBases() {
 }
 
 StatusCode AsymMgr::loadIdealVals() {
-  MsgStream msglog(m_msgSvc, *m_logName); 
   // linear 'fake' spline needs only 2 points
   m_idealAsymLrg.resize(2);
   m_idealAsymSm.resize(2);
@@ -207,33 +247,33 @@ StatusCode AsymMgr::loadIdealVals() {
   m_idealAsymPSNB.resize(2);
   m_idealXVals.resize(2);
 
-  m_idealAsymLrg[0].m_val = m_idealCalib.asymLrgNeg;
-  m_idealAsymLrg[0].m_sig = m_idealCalib.asymLrgNeg * 
-    m_idealCalib.asymSigPct;
-  m_idealAsymLrg[1].m_val = m_idealCalib.asymLrgPos;
-  m_idealAsymLrg[1].m_sig = m_idealCalib.asymLrgPos * 
-    m_idealCalib.asymSigPct;
+  m_idealAsymLrg[0].m_val = owner->m_idealCalib.asymLrgNeg;
+  m_idealAsymLrg[0].m_sig = owner->m_idealCalib.asymLrgNeg * 
+    owner->m_idealCalib.asymSigPct;
+  m_idealAsymLrg[1].m_val = owner->m_idealCalib.asymLrgPos;
+  m_idealAsymLrg[1].m_sig = owner->m_idealCalib.asymLrgPos * 
+    owner->m_idealCalib.asymSigPct;
 
-  m_idealAsymSm[0].m_val = m_idealCalib.asymSmNeg;
-  m_idealAsymSm[0].m_sig = m_idealCalib.asymSmNeg * 
-    m_idealCalib.asymSigPct;
-  m_idealAsymSm[1].m_val = m_idealCalib.asymSmPos;
-  m_idealAsymSm[1].m_sig = m_idealCalib.asymSmPos * 
-    m_idealCalib.asymSigPct;
+  m_idealAsymSm[0].m_val = owner->m_idealCalib.asymSmNeg;
+  m_idealAsymSm[0].m_sig = owner->m_idealCalib.asymSmNeg * 
+    owner->m_idealCalib.asymSigPct;
+  m_idealAsymSm[1].m_val = owner->m_idealCalib.asymSmPos;
+  m_idealAsymSm[1].m_sig = owner->m_idealCalib.asymSmPos * 
+    owner->m_idealCalib.asymSigPct;
 
-  m_idealAsymPSNB[0].m_val = m_idealCalib.asymPSNBNeg;
-  m_idealAsymPSNB[0].m_sig = m_idealCalib.asymPSNBNeg * 
-    m_idealCalib.asymSigPct;
-  m_idealAsymPSNB[1].m_val = m_idealCalib.asymPSNBPos;
-  m_idealAsymPSNB[1].m_sig = m_idealCalib.asymPSNBPos * 
-    m_idealCalib.asymSigPct;
+  m_idealAsymPSNB[0].m_val = owner->m_idealCalib.asymPSNBNeg;
+  m_idealAsymPSNB[0].m_sig = owner->m_idealCalib.asymPSNBNeg * 
+    owner->m_idealCalib.asymSigPct;
+  m_idealAsymPSNB[1].m_val = owner->m_idealCalib.asymPSNBPos;
+  m_idealAsymPSNB[1].m_sig = owner->m_idealCalib.asymPSNBPos * 
+    owner->m_idealCalib.asymSigPct;
 
-  m_idealAsymNSPB[0].m_val = m_idealCalib.asymNSPBNeg;
-  m_idealAsymNSPB[0].m_sig = m_idealCalib.asymNSPBNeg * 
-    m_idealCalib.asymSigPct;
-  m_idealAsymNSPB[1].m_val = m_idealCalib.asymNSPBPos;
-  m_idealAsymNSPB[1].m_sig = m_idealCalib.asymNSPBPos * 
-    m_idealCalib.asymSigPct;
+  m_idealAsymNSPB[0].m_val = owner->m_idealCalib.asymNSPBNeg;
+  m_idealAsymNSPB[0].m_sig = owner->m_idealCalib.asymNSPBNeg * 
+    owner->m_idealCalib.asymSigPct;
+  m_idealAsymNSPB[1].m_val = owner->m_idealCalib.asymNSPBPos;
+  m_idealAsymNSPB[1].m_sig = owner->m_idealCalib.asymNSPBPos * 
+    owner->m_idealCalib.asymSigPct;
 
   float csiLength = 326.0;
   

@@ -10,7 +10,7 @@
  * 
  * - Simple interface: requires only specification of unique Cal xtal and range as input.  
  * Values are returned for the most part as C primitives (float, int, etc..) C++ std::vectors are used where appropriate.
- * -  Gleam/Gaudi mechanics such as TDS access, validity checking, calibration data format, database access, and data storage are all transparent to the user.
+ * -  Gleam/Gaudi mechanics such as TDS access, validity checking, calibration data format, database access, and data storage are all transowner to the user.
  * - Some calibration types are vectors which represent the 'knots' on a spline curve.  
  * CalCalibSvc generates the spline objects for these types for the user.  CalCalibSvc handles storage/deallocation/validation for these objects.  
  * Once created, spline objects are retained in memory until their become invalid.  At this point, the cache is flushed and new objects are created.

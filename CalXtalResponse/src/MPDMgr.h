@@ -16,11 +16,12 @@ using namespace idents;
 
 using CalibData::ValSig;
 
+class CalCalibSvc;
+
 class MPDMgr : public CalibItemMgr {
  public:
-  MPDMgr(const IdealCalCalib &idealCalib) : 
-    CalibItemMgr(CalibData::CAL_MevPerDac,
-                 idealCalib) {};
+  MPDMgr() : 
+    CalibItemMgr(CalibData::CAL_MevPerDac) {};
 
   /// retrieve MeVPerDac ratios for given xtal
   StatusCode getMPD(const CalXtalId &xtalId,

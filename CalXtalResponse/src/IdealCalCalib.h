@@ -36,11 +36,11 @@ class IdealCalCalib {
   //////////////////
   //// ASYMMETRY ///
   //////////////////
-  double asymLrgNeg;          ///< val for Large Diode asym spline at neg face
-  double asymLrgPos;          ///< val for Large Diode asym spline at pos face
+  double asymLrgNeg;            ///< val for Large Diode asym spline at neg face
+  double asymLrgPos;            ///< val for Large Diode asym spline at pos face
         
-  double asymSmNeg;          ///< val for Small Diode asym spline at neg face
-  double asymSmPos;          ///< val for Small Diode asym spline at pos face
+  double asymSmNeg;             ///< val for Small Diode asym spline at neg face
+  double asymSmPos;             ///< val for Small Diode asym spline at pos face
         
   double asymPSNBNeg;           ///< val for PSNB asym spline at neg face
   double asymPSNBPos;           ///< val for PSNB asym spline at pos face

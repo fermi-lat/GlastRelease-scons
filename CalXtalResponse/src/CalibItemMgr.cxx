@@ -1,5 +1,6 @@
 // LOCAL
 #include "CalibItemMgr.h"
+#include "CalCalibSvc.h"
 
 // GLAST
 #include "CalibData/DacCol.h"
@@ -24,32 +25,15 @@ template<typename T> const T& min_val(const vector<T> &vec) {
 }
 //////////////////////////////////////////////////////////////////////
 
-StatusCode CalibItemMgr::initialize(IService &calibDataSvc, 
-                                    const string &flavor,
-                                    IMessageSvc *msgSvc,
-                                    const string &logName
-                                    ) {
+StatusCode CalibItemMgr::initialize(const string &flavor, const CalCalibSvc &ccs) {
   StatusCode sc;
 
-  m_calibDataSvc = &calibDataSvc;
-  m_msgSvc       = msgSvc;
-  m_flavor       = flavor;
-  m_logName      = &logName;
+  owner = &ccs;
+  
+  m_flavor = flavor;
 
-  MsgStream msglog(m_msgSvc, *m_logName); 
-
-  // Query the IDataProvider interface of the CalibDataService
-  sc = m_calibDataSvc->queryInterface(IID_IDataProviderSvc, 
-                                      (void**) &m_dataProviderSvc);
-  if ( !sc.isSuccess() ) {
-    msglog << MSG::ERROR 
-           << "Could not query IDataProviderSvc interface of CalibDataSvc" 
-           << endreq;
-    return sc;
-  }
-
-  m_calibPath = m_calibRootPath + "/" + m_flavor;
-
+  m_calibPath = m_calibTypePath + "/" + flavor;
+    
   sc = loadIdealVals();
   if (sc.isFailure()) return sc;
 
@@ -87,12 +71,12 @@ StatusCode CalibItemMgr::updateCache() {
   // if it fails then we have no valid calib data
   // for the current event.
   DataObject *pObject;
-  sc = m_dataProviderSvc->retrieveObject(m_calibPath, pObject);
+  sc = owner->m_dataProviderSvc->retrieveObject(m_calibPath, pObject);
   if (!sc.isFailure())
     m_calibBase = (CalibData::CalCalibBase *)(pObject);
   else {
     // create MsgStream only when needed for performance
-    MsgStream msglog(m_msgSvc, *m_logName); 
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
     
     // else return error (can't find calib)
     msglog << MSG::ERROR << "Unable to retrieve " 
@@ -108,7 +92,7 @@ StatusCode CalibItemMgr::updateCache() {
   int curSerNo = m_calibBase->getSerNo();
   if (curSerNo != m_serNo) {
     // create MsgStream only when needed for performance
-    MsgStream msglog(m_msgSvc, *m_logName); 
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::INFO << "Updating " << m_calibPath << endreq;
     m_serNo = curSerNo;
     flushCache();
@@ -129,24 +113,31 @@ StatusCode CalibItemMgr::updateCache() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode CalibItemMgr::evalSpline(int calibType, LATWideIndex idx, double x, double &y) {
+StatusCode CalibItemMgr::evalSpline(int calibType, LATWideIndex idx, 
+                                    double x, double &y) {
   // make sure we have valid calib data for this event.
   if (!m_inUpdate) {
     StatusCode sc;
     if ((sc = updateCache()).isFailure()) return sc;
   }
 
-  // create MsgStream only when needed for performance
-  MsgStream msglog(m_msgSvc, *m_logName); 
-  //   msglog << "Evaluating spline nl=" << m_splineLists.size()
-  //          << " t=" << calibType
-  //          << " i=" << idx
-  //          << " (n=" << m_splineLists[calibType].size()
-  //          << " ) X=" << m_splineLists[calibType][idx]
-  //          << " spl=" << m_splineLists[calibType][idx]->GetName()
-  //          << endreq;
+  // bounds check input to spline function to avoid
+  // weird behavior
+  x = max<double>(m_splineXMin[calibType][idx],x);
+  x = min<double>(m_splineXMax[calibType][idx],x);
 
   y = m_splineLists[calibType][idx]->Eval(x);
+  
+  if (owner->m_superVerbose) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    msglog << MSG::VERBOSE << "Evaluating spline: "
+           << m_splineLists[calibType][idx]->GetName()
+           << " X=" << x
+           << " Y=" << y
+           << endreq;
+  }
+  
   return StatusCode::SUCCESS;
 }
 
@@ -162,12 +153,9 @@ StatusCode CalibItemMgr::genSpline(int calibType, LATWideIndex idx, const string
   copy(x.begin(),x.begin()+n,xp);
   copy(y.begin(),y.begin()+n,yp);
 
-  ostringstream spl_name;
-  spl_name << name << idx.getInt();
-
-  TSpline3 *mySpline = new TSpline3(spl_name.str().c_str(),
+  TSpline3 *mySpline = new TSpline3(name.c_str(),
                                     xp,yp,n);
-  mySpline->SetName(spl_name.str().c_str());
+  mySpline->SetName(name.c_str());
 
   // clear heap variables
   delete xp;
@@ -175,28 +163,43 @@ StatusCode CalibItemMgr::genSpline(int calibType, LATWideIndex idx, const string
 
   // put spline in list
   m_splineLists[calibType][idx] = mySpline;
+  // populate x-axis boundaries
+  m_splineXMin[calibType][idx] = xp[0];
+  m_splineXMax[calibType][idx] = xp[n-1];
 
-#if 0 // DEBUG
-  // create MsgStream only when needed for performance
-  MsgStream msglog(m_msgSvc, *m_logName); 
-  msglog << MSG::VERBOSE << "Generated spline " << spl_name.str() 
-         << " t="  << calibType 
-         << " i="  << idx.getInt()
-         << " nx=" << x.size() 
-         << " ("   << min_val(x) << "->" << max_val(x) << ")"
-         << " ny=" << y.size() 
-         << " ("   << min_val(y) << "->" << max_val(y) << ")"
-         << endreq;
+#if 0
+  if (owner->m_superVerbose) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    msglog << MSG::VERBOSE << "Generated spline " << spl_name.str() 
+           << " t="  << calibType 
+           << " i="  << idx.getInt()
+           << " nx=" << x.size() 
+           << " ("   << min_val(xp) << "->" << max_val(xp) << ")"
+           << " ny=" << y.size() 
+           << " ("   << min_val(yp) << "->" << max_val(yp) << ")"
+           << endreq;
+  }
 #endif
 
   return StatusCode::SUCCESS;
 }
 
+/// Template function fills any STL type container with zero values
+template <class T> static void fill_zero(T &container) {
+  fill(container.begin(), container.end(), 0);
+}
+
 void CalibItemMgr::flushCache() {   
-  // Gaudikeeps track of RangeBase objects, so i only need to delete the pointers
+  // Gaudikeeps track of RangeBase objects, 
+  // so i only need to delete the pointers
   m_rngBases.clear();
 
   // m_splineLists is the 'owner' of the splines, so i need to delete
   // the objects themselves as well as the pointers.
-  for (unsigned i = 0; i < m_splineLists.size(); i++) del_all_ptrs(m_splineLists[i]);   
+  for (unsigned i = 0; i < m_splineLists.size(); i++) {
+    del_all_ptrs(m_splineLists[i]);
+    fill_zero(m_splineXMin[i]);
+    fill_zero(m_splineXMax[i]);
+  }
 }

@@ -79,6 +79,12 @@ StatusCode XtalEneTool::initialize() {
 
   StatusCode sc;
 
+  //-- jobOptions --//
+  if ((sc = setProperties()).isFailure()) {
+    msglog << MSG::ERROR << "Failed to set properties" << endreq;
+    return sc;
+  }
+
   // obtain CalCalibSvc
   sc = service(m_calCalibSvcName.value(), m_calCalibSvc);
   if (sc.isFailure()) {
@@ -152,9 +158,6 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
   }
 
   //-- CONVERT ADCs -> DAC --//
-  // shouldn't happen, but just in case
-  adcPedP = max(adcPedP, (float)0.0);
-  adcPedN = max(adcPedN, (float)0.0);
   double dacP, dacN;
   sc = m_calCalibSvc->evalDAC(rngIdxP.getCalXtalId(), adcPedP, dacP);
   if (sc.isFailure()) return sc;
@@ -177,25 +180,25 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
 
     if (diodeP == LRG_DIODE) {
       // STRATEGY:
-      // convert PL 2 PS
+      // convert PL -> PS
       // AsymNSPB = log(PL / NS)
-      // AsymSm = log(PS / NS)
+      // AsymSm   = log(PS / NS)
       // exp(sm)/exp(asymNSPB) = (PS/NS)/(PL/NS) = PS/PL
-      // exp(asymNSPB-sm) = PS/PL
+      //      exp(sm-asymNSPB) = PS/PL
       
       double asymNSPB;
       sc = m_calCalibSvc->evalAsymNSPB(xtalId, 0.0, asymNSPB);
       if (sc.isFailure()) return sc;
 
-      dacP /= exp(asymSm - asymNSPB);
+      dacP *= exp(asymSm - asymNSPB);
       diodeP = SM_DIODE;
     } else { // case: diodeN == LRG
       // STRATEGY:
       // convert NL -> NS
       // asymPSNB = log(PS/NL)
-      // asymSm = log(PS/NS)
+      // asymSm   = log(PS/NS)
       // exp(asymPSNB)/exp(sm) = (PS/NL)/(PS/NS)
-      // exp(asymPSNB-sm) = NS/NL
+      //      exp(asymPSNB-sm) = NS/NL
 
       double asymPSNB;
       sc = m_calCalibSvc->evalAsymPSNB(xtalId, 0.0, asymPSNB);
@@ -275,7 +278,6 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
 
   // convert adc->dac units
   double dac;
-  adcPed = max((float)0.0,adcPed);  // just in case
   sc = m_calCalibSvc->evalDAC(xtalId, adcPed, dac);
   if (sc.isFailure()) return sc;
 

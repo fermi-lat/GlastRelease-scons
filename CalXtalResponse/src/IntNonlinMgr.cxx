@@ -1,5 +1,6 @@
 // LOCAL
 #include "IntNonlinMgr.h"
+#include "CalCalibSvc.h"
 
 // GLAST
 #include "CalibData/DacCol.h"
@@ -12,18 +13,20 @@
 using namespace CalDefs;
 using namespace idents;
 
-IntNonlinMgr::IntNonlinMgr(const IdealCalCalib &idealCalib) : 
+IntNonlinMgr::IntNonlinMgr() : 
   CalibItemMgr(CalibData::CAL_IntNonlin, 
-               idealCalib, 
                N_SPLINE_TYPES),
   m_idealADCs(RngNum::N_VALS), // one spline per range
   m_idealDACs(RngNum::N_VALS)  // one spline per range
 {
 
   // set size of spline lists (1 per range)
-  for (unsigned i = 0; i < m_splineLists.size(); i++)
+  for (unsigned i = 0; i < m_splineLists.size(); i++) {
     m_splineLists[i].resize(RngIdx::N_VALS);
-};
+    m_splineXMin[i].resize (RngIdx::N_VALS);
+    m_splineXMax[i].resize (RngIdx::N_VALS);
+  }
+}
 
 bool IntNonlinMgr::validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBase *rngBase) {
   // recast for specific calibration type
@@ -33,7 +36,7 @@ bool IntNonlinMgr::validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBa
   const vector<float> *intNonlinVec = intNonlin->getValues();
   if (!intNonlinVec) {
     // create MsgStream only when needed for performance
-    MsgStream msglog(m_msgSvc, *m_logName); 
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::ERROR << "Unable to get vector for IntNonlin vals" << endreq;
     return false;
   }
@@ -45,7 +48,7 @@ bool IntNonlinMgr::validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBa
     intNonlinDacVec = intNonlinDacCol->getDacs();
   } else {
     // create MsgStream only when needed for performance
-    MsgStream msglog(m_msgSvc, *m_logName); 
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::ERROR << "No intNonlinDacCol found.\n" << endreq;
     return false;
   }
@@ -53,7 +56,7 @@ bool IntNonlinMgr::validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBa
   // check that there are enough DAC vals for ADC vals in this rng
   if (intNonlinVec->size() > intNonlinDacVec->size()) {
     // create MsgStream only when needed for performance
-    MsgStream msglog(m_msgSvc, *m_logName); 
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::ERROR << "intNonlin nADC > nDAC" 
            << " CalXtalId=" << xtalId
            << " nADC="   << intNonlinVec->size()   << " " 
@@ -121,8 +124,16 @@ StatusCode IntNonlinMgr::genSplines() {
     copy(adc->begin(), adc->begin() + n, dblAdc.begin());
     copy(dac->begin(), dac->begin() + n, dblDac.begin());
 
-    genSpline(INL_SPLINE,     rngIdx, "intNonlin",    dblAdc, dblDac);
-    genSpline(INV_INL_SPLINE, rngIdx, "invIntNonlin", dblDac, dblAdc);
+    // put rng id string into spline name
+    ostringstream rngStr;
+    rngStr << rngIdx.getCalXtalId() 
+           << " " << rngIdx.getFace()
+           << " " << rngIdx.getRng();
+
+    genSpline(INL_SPLINE,     rngIdx, "intNonlin"+rngStr.str(),    
+              dblAdc, dblDac);
+    genSpline(INV_INL_SPLINE, rngIdx, "invIntNonlin"+rngStr.str(), 
+              dblDac, dblAdc);
   }
 
   return StatusCode::SUCCESS;
@@ -145,15 +156,18 @@ StatusCode IntNonlinMgr::fillRangeBases() {
 }
 
 StatusCode IntNonlinMgr::loadIdealVals() {
-  MsgStream msglog(m_msgSvc, *m_logName); 
 
   //-- SANITY CHECKS --//
-  if (m_idealCalib.ciULD.size() != (unsigned)RngNum::N_VALS) {
+  if (owner->m_idealCalib.ciULD.size() != (unsigned)RngNum::N_VALS) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::ERROR << "Bad # of ULD vals in ideal CalCalib xml file" 
            << endreq;
     return StatusCode::FAILURE;
   }
-  if (m_idealCalib.inlADCPerDAC.size() != (unsigned)RngNum::N_VALS) {
+  if (owner->m_idealCalib.inlADCPerDAC.size() != (unsigned)RngNum::N_VALS) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::ERROR << "Bad # of ADCPerDAC vals in ideal CalCalib xml file" 
            << endreq;
     return StatusCode::FAILURE;
@@ -166,12 +180,12 @@ StatusCode IntNonlinMgr::loadIdealVals() {
     m_idealADCs[rng].resize(2);
     
     m_idealADCs[rng][0] = 0;
-    m_idealADCs[rng][1] = m_idealCalib.ciULD[rng];
+    m_idealADCs[rng][1] = owner->m_idealCalib.ciULD[rng];
 
     m_idealDACs[rng][0] = 0;
     m_idealDACs[rng][1] = 
-      (unsigned int)(m_idealCalib.ciULD[rng] /
-                     m_idealCalib.inlADCPerDAC[rng]);
+      (unsigned int)(owner->m_idealCalib.ciULD[rng] /
+                     owner->m_idealCalib.inlADCPerDAC[rng]);
   }
 
   // we don't have this info at this point

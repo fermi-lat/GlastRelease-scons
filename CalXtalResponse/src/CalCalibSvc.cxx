@@ -23,23 +23,17 @@ static SvcFactory< CalCalibSvc > a_factory;
 const ISvcFactory& CalCalibSvcFactory = a_factory; 
 
 CalCalibSvc::CalCalibSvc(const string& name, ISvcLocator* Svc) 
-  : Service(name,Svc),
-    m_pedMgr(m_idealCalib),
-    m_intNonlinMgr(m_idealCalib),
-    m_asymMgr(m_idealCalib),
-    m_mpdMgr(m_idealCalib),
-    m_tholdCIMgr(m_idealCalib),
-    m_tholdMuonMgr(m_idealCalib)
+  : Service(name,Svc)
 {
-
   // declare the properties
   declareProperty("CalibDataSvc",      m_calibDataSvcName = 
                   "CalibDataSvc");
   declareProperty("idealCalibXMLPath", m_idealCalibXMLPath = 
                   "$(CALXTALRESPONSEROOT)/xml/idealCalib.xml");
+  declareProperty("SuperVerbose", m_superVerbose    = false);
+  
   declareProperty("DefaultFlavor", m_defaultFlavor    
                   = "ideal");
-
   declareProperty("FlavorIntNonlin", m_flavorIntNonlin  = "");
   declareProperty("FlavorAsym",      m_flavorAsym       = "");
   declareProperty("FlavorPed",       m_flavorPed        = "");
@@ -65,7 +59,7 @@ StatusCode CalCalibSvc::initialize ()
 
   StatusCode sc;
 
-  // Bind all of the properties for this service
+  //-- jobOptions --//
   if ((sc = setProperties()).isFailure()) {
     msglog << MSG::ERROR << "Failed to set properties" << endreq;
     return sc;
@@ -102,12 +96,12 @@ StatusCode CalCalibSvc::initialize ()
   if (sc.isFailure()) return sc;
 
   // Initialize individual CalibItemMgr members.
-  m_mpdMgr.initialize(*m_calibDataSvc,       m_flavorMPD,       msgSvc(), name());
-  m_pedMgr.initialize(*m_calibDataSvc,       m_flavorPed,       msgSvc(), name());
-  m_asymMgr.initialize(*m_calibDataSvc,      m_flavorAsym,      msgSvc(), name());
-  m_intNonlinMgr.initialize(*m_calibDataSvc, m_flavorIntNonlin, msgSvc(), name());
-  m_tholdMuonMgr.initialize(*m_calibDataSvc, m_flavorTholdMuon, msgSvc(), name());
-  m_tholdCIMgr.initialize(*m_calibDataSvc,   m_flavorTholdCI,   msgSvc(), name());
+  m_mpdMgr.initialize(m_flavorMPD, *this);
+  m_pedMgr.initialize(m_flavorPed, *this);
+  m_asymMgr.initialize(m_flavorAsym, *this);
+  m_intNonlinMgr.initialize(m_flavorIntNonlin, *this);
+  m_tholdMuonMgr.initialize(m_flavorTholdMuon, *this);
+  m_tholdCIMgr.initialize(m_flavorTholdCI, *this);
 
 
   // Get ready to listen for BeginEvent

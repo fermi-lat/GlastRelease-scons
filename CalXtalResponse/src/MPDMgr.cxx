@@ -1,5 +1,6 @@
 // LOCAL
 #include "MPDMgr.h"
+#include "CalCalibSvc.h"
 
 // GLAST
 #include "CalibData/Cal/Xpos.h"
@@ -53,11 +54,13 @@ StatusCode MPDMgr::fillRangeBases() {
 }
 
 StatusCode MPDMgr::loadIdealVals() {
-  m_idealMPDLrg.m_val = m_idealCalib.mpdLrg;
-  m_idealMPDLrg.m_sig = m_idealCalib.mpdLrg * m_idealCalib.mpdSigPct;
+  m_idealMPDLrg.m_val = owner->m_idealCalib.mpdLrg;
+  m_idealMPDLrg.m_sig = owner->m_idealCalib.mpdLrg * 
+     owner->m_idealCalib.mpdSigPct;
 
-  m_idealMPDSm.m_val = m_idealCalib.mpdSm;
-  m_idealMPDSm.m_sig = m_idealCalib.mpdSm * m_idealCalib.mpdSigPct;
+  m_idealMPDSm.m_val = owner->m_idealCalib.mpdSm;
+  m_idealMPDSm.m_sig = owner->m_idealCalib.mpdSm * 
+     owner->m_idealCalib.mpdSigPct;
   
   return StatusCode::SUCCESS;
 }

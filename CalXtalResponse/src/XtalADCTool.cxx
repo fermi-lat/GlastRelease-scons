@@ -48,8 +48,26 @@ public:
                        bool &peggedN
                        );
 private:
-  StringProperty m_calCalibSvcName;      ///< name of CalCalibSvc to use for calib constants.
-  ICalCalibSvc *m_calCalibSvc;           ///< pointer to CalCalibSvc object.
+  StringProperty  m_calCalibSvcName;      ///< name of CalCalibSvc to use for calib constants.
+  
+  /// \brief
+  ///
+  /// skip randomly generated noise & signal fluctuations, makes certain debug & testing comparisons easier.
+  BooleanProperty m_noRandNoise;        
+  
+  /**
+     \brief Skips time-consuming MsgStream object creations in frequently called functions
+  
+     Basically we cannot be creating millions MsgStream objects which are never used
+     as would happen if the following code were in a frequently called function
+  
+     \code
+     MsgStream msglog; 
+     msglog << MSG::VERBOSE << "almost never used, but takes some time" << endreq;
+     \endcode
+  */
+  BooleanProperty m_superVerbose;
+  ICalCalibSvc   *m_calCalibSvc;          ///< pointer to CalCalibSvc object.
 
   //-- Gaudi supplId constants --//
   int m_nCsISeg;                         ///< number of geometric segments per Xtal
@@ -73,7 +91,9 @@ XtalADCTool::XtalADCTool( const string& type,
   : AlgTool(type,name,parent) {
   declareInterface<IXtalADCTool>(this);
 
-  declareProperty("CalCalibSvc", m_calCalibSvcName="CalCalibSvc");
+  declareProperty("CalCalibSvc",   m_calCalibSvcName = "CalCalibSvc");
+  declareProperty("NoRandomNoise", m_noRandNoise     = false);
+  declareProperty("SuperVerbose",  m_superVerbose    = false);
 }
 
 StatusCode XtalADCTool::initialize() {
@@ -84,6 +104,13 @@ StatusCode XtalADCTool::initialize() {
 
   double val;
   typedef map<int*,string> PARAMAP;
+
+  //-- jobOptions --//
+  if ((sc = setProperties()).isFailure()) {
+    msglog << MSG::ERROR << "Failed to set properties" << endreq;
+    return sc;
+  }
+
 
   // try to find the GlastDevSvc service
   IGlastDetSvc* detSvc;
@@ -149,6 +176,11 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
   CalVec<XtalDiode, double> diodeDAC(XtalDiode::N_VALS);
   CalVec<XtalRng, double> tmpADC(XtalRng::N_VALS);
 
+  // sum up all energy in CsI xtal proper
+  double sumEneCsI = 0;
+  // sum up all ene in xtal and diodes together
+  double sumEne = 0;
+
   // STAGE 1: fill signal energies /////////////////////////////////////////////////////
 
   //--MEV PER DAC--// - will be used throughout the algorithm
@@ -156,12 +188,13 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
   sc = m_calCalibSvc->getMeVPerDac(xtalId, mpdLrg, mpdSm);
   if (sc.isFailure()) return sc;
 
-#if 0 //DEBUG ONLY  
-  // create MsgStream only when needed for performance
-  MsgStream msglog(msgSvc(), name()); 
-  if (hitList.size())
-    msglog << MSG::DEBUG << "xtalId=" << xtalId << "\tnHits=" << hitList.size() << endreq;
-#endif
+  if (m_superVerbose) {
+    if (hitList.size()) {
+      // create MsgStream only when needed for performance
+      MsgStream msglog(msgSvc(), name()); 
+      msglog << MSG::VERBOSE << "xtalId=" << xtalId << "\tnHits=" << hitList.size() << endreq;
+    }
+  }
     
   // loop over hits.
   for (vector<const Event::McIntegratingHit*>::const_iterator it = hitList.begin();
@@ -181,9 +214,17 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
       throw invalid_argument("volume id does not match xtalId.  Programmer error.");
 
     double ene = hit.totalEnergy();
-#if 0 // DEBUG 
-    msglog << MSG::DEBUG << "\tcell=" << volId[fCellCmp] << " ene=" << ene << endreq;
-#endif
+    sumEne += ene;
+    if (m_superVerbose) {
+      // create MsgStream only when needed for performance
+      MsgStream msglog(msgSvc(), name());
+      msglog << MSG::DEBUG;
+      msglog.stream() << "id=" << xtalId
+                      << "\tcell=" << volId[fCellCmp] 
+                      << " ene=" << ene;
+      msglog << endreq;
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////// SUM DAC VALS FOR EACH HIT /////////////////////////
@@ -192,6 +233,7 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
     //--XTAL DEPOSIT--//
     
     if((int)volId[fCellCmp] ==  m_eXtal ) {
+      sumEneCsI += ene;
       //-- HIT POSITION--//
       HepPoint3D mom1 = hit.moment1();
       int segm = volId[fSegment]; // segment # (0-11)
@@ -278,7 +320,7 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
 
   // STAGE 2:  add poissonic noise to signals
   // -- poissonic noise is only added if we have hits.
-  if (hitList.size() > 0)
+  if (hitList.size() > 0 && !m_noRandNoise)
     for (XtalDiode xDiode; xDiode.isValid(); xDiode++) {
       DiodeNum diode = xDiode.getDiode();
 
@@ -334,25 +376,26 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
   // electronic noise is calculated on a per-diode basis
   // uses sigmas from ADC ped data
   // adc vals need not include peds for this calculation
-  for (XtalDiode xDiode; xDiode.isValid(); xDiode++) {
-    DiodeNum diode = xDiode.getDiode();
+  if (!m_noRandNoise)
+    for (XtalDiode xDiode; xDiode.isValid(); xDiode++) {
+      DiodeNum diode = xDiode.getDiode();
 
-    // only add electronic nose to sm diodes if we have
-    // hits, otherwise may cause false signals?
-    if (diode == SM_DIODE && !hitList.size()) continue;
+      // only add electronic nose to sm diodes if we have
+      // hits, otherwise may cause false signals?
+      if (diode == SM_DIODE && !hitList.size()) continue;
 
-    FaceNum face = xDiode.getFace();
+      FaceNum face = xDiode.getFace();
     
-    float sigX8 = pedSigs[XtalRng(face,diode.getX8Rng())];
-    float sigX1 = pedSigs[XtalRng(face,diode.getX1Rng())];
+      float sigX8 = pedSigs[XtalRng(face,diode.getX8Rng())];
+      float sigX1 = pedSigs[XtalRng(face,diode.getX1Rng())];
     
-    // use same rand for both since the X1 & X8 noise
-    // is strongly correlated
-    double rnd = RandGauss::shoot();
+      // use same rand for both since the X1 & X8 noise
+      // is strongly correlated
+      double rnd = RandGauss::shoot();
 
-    tmpADC[XtalRng(face,diode.getX1Rng())] += sigX1*rnd;
-    tmpADC[XtalRng(face,diode.getX8Rng())] += sigX8*rnd;    
-  }
+      tmpADC[XtalRng(face,diode.getX1Rng())] += sigX1*rnd;
+      tmpADC[XtalRng(face,diode.getX8Rng())] += sigX8*rnd;    
+    }
 
   //-- LAC TESTS --//
   // operate on ped_subtraced adc
@@ -370,9 +413,7 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
   // retreive thresholds for both faces
   sc = m_calCalibSvc->getTholdCI(tmpIdP,fle,fhe,lacThreshP);
   if (sc.isFailure()) return sc;
-#if 0 //DEBUG
-  msglog << "xtalId=" << (int)xtalId << "\ttmpIdP=" << (int)tmpIdP << "\ttmpIdN=" << (int)tmpIdN << endl;
-#endif 
+  
   sc = m_calCalibSvc->getTholdCI(tmpIdN,fle,fhe,lacThreshN);
   if (sc.isFailure()) return sc;
 
@@ -395,7 +436,7 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
     tmpADC[xRng] += pedVals[xRng];
     tmpADC[xRng] = max<double>(0,tmpADC[xRng]);
     tmpADC[xRng] = min<double>(m_maxAdc,tmpADC[xRng]);
-  }
+  }  // per range, add peds, check adc in range
     
   //-- BEST RANGE SELECTION --//
   // operates on adc + ped
@@ -439,13 +480,33 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
     // assign range selection
     if (face == POS_FACE) rngP = (CalXtalId::AdcRange)(int)rng;
     else rngN = (CalXtalId::AdcRange)(int)rng;
-  }
+  }  // per face, range selection
   
   //-- COPY ADCS TO OUTPUT --//
   // round to nearest integer.
   for (RngNum rng=0; rng.isValid(); rng++) {
     adcP[rng] = (int)floor(tmpADC[XtalRng(POS_FACE,rng)]+0.5);
     adcN[rng] = (int)floor(tmpADC[XtalRng(NEG_FACE,rng)]+0.5);
+  }
+
+  if (m_superVerbose) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(msgSvc(), name());
+    msglog << MSG::DEBUG;
+    msglog.stream() << "id=" << xtalId
+                    << "\teneCsI=" << sumEneCsI
+                    << " eneTotal=" << sumEne;
+    msglog << endreq;
+    msglog << MSG::VERBOSE;
+    msglog.stream() << "id=" << xtalId
+                    << "\tadcP:";
+    for (RngNum rng=0; rng.isValid(); rng++)
+      msglog.stream() << adcP[rng] << " ";
+    msglog.stream() << "id=" << xtalId
+                    << "\tadcN:";
+    for (RngNum rng=0; rng.isValid(); rng++)
+      msglog.stream() << adcN[rng] << " ";
+    msglog << endreq;
   }
 
   return StatusCode::SUCCESS;

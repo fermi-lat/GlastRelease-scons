@@ -1,5 +1,6 @@
 // LOCAL
 #include "PedMgr.h"
+#include "CalCalibSvc.h"
 
 // GLAST
 // EXTLIB
@@ -53,23 +54,26 @@ StatusCode PedMgr::fillRangeBases() {
 
 
 StatusCode PedMgr::loadIdealVals() {
-  MsgStream msglog(m_msgSvc, *m_logName);
 
   //-- SANITY CHECK --//
-  if (m_idealCalib.pedVals.size() != (unsigned)RngNum::N_VALS) {
+  if (owner->m_idealCalib.pedVals.size() != (unsigned)RngNum::N_VALS) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name());
     msglog << MSG::ERROR << "wrong # of ideal pedestal vals." << endl;
     return StatusCode::FAILURE;;
   }
-  if (m_idealCalib.pedCos.size() != (unsigned)RngNum::N_VALS) {
+  if (owner->m_idealCalib.pedCos.size() != (unsigned)RngNum::N_VALS) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name());
     msglog << MSG::ERROR << "wrong # of ideal ped cosine vals." << endl;
     return StatusCode::FAILURE;;
   }
 
   for (RngNum rng; rng.isValid(); rng++) {
-    m_idealPeds[rng]   = m_idealCalib.pedVals[rng];
-    m_idealPedSig[rng] = m_idealCalib.pedVals[rng] *
-      m_idealCalib.pedSigPct;
-    m_idealCos[rng] = m_idealCalib.pedCos[rng];
+    m_idealPeds[rng]   = owner->m_idealCalib.pedVals[rng];
+    m_idealPedSig[rng] = owner->m_idealCalib.pedVals[rng] *
+      owner->m_idealCalib.pedSigPct;
+    m_idealCos[rng] = owner->m_idealCalib.pedCos[rng];
   }
   
   return StatusCode::SUCCESS;

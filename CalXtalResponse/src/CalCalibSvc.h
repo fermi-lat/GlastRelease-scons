@@ -14,6 +14,7 @@
 #include "CalXtalResponse/ICalCalibSvc.h"
 
 // EXTLIB
+#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IIncidentListener.h"
 
@@ -35,7 +36,8 @@ using namespace CalDefs;
  *
  */
 
-class CalCalibSvc : public Service, virtual public ICalCalibSvc, virtual public IIncidentListener {
+class CalCalibSvc : public Service, virtual public ICalCalibSvc, 
+ virtual public IIncidentListener {
 
  public:
 
@@ -191,8 +193,22 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc, virtual public 
   /// xml file contains 'ideal' flavor parameters
   StringProperty m_idealCalibXMLPath;
 
+  /**
+     \brief Skips time-consuming MsgStream object creations in frequently called functions
+  
+     Basically we cannot be creating millions MsgStream objects which are never used
+     as would happen if the following code were in a frequently called function
+  
+     \code
+     MsgStream msglog; 
+     msglog << MSG::VERBOSE << "almost never used, but takes some time" << endreq;
+     \endcode
+  */
+  BooleanProperty m_superVerbose;
+
   // GAUDI RESOURCES
   IService         *m_calibDataSvc;     ///< pointer to CalibDataSvc
+
   /// pointer to IDataProviderSvc interface of CalibDataSvc
   IDataProviderSvc *m_dataProviderSvc;  
 
@@ -213,6 +229,18 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc, virtual public 
   
   /// hook the BeginEvent so that we can check our validity once per event.
   void handle ( const Incident& inc );
+
+  //-- FRIEND CLASSES --//
+  // following classes all share many properties w/ CalCalibSvc as they are
+  // sort of 'employees' of CalCalibSvc.  easiest way to do it is to make them
+  // friends
+  friend class CalibItemMgr;
+  friend class AsymMgr;
+  friend class PedMgr;
+  friend class IntNonlinMgr;
+  friend class MPDMgr;
+  friend class TholdCIMgr;
+  friend class TholdMuonMgr;
 };
 
 #endif // CalCalibSvc_H

@@ -14,11 +14,12 @@
 using namespace CalDefs;
 using namespace idents;
 
+class CalCalibSvc;
+
 class PedMgr : public CalibItemMgr {
  public:
-  PedMgr(const IdealCalCalib &idealCalib) : 
-    CalibItemMgr(CalibData::CAL_Ped,
-                 idealCalib),
+  PedMgr() : 
+    CalibItemMgr(CalibData::CAL_Ped),
     m_idealPeds(RngNum::N_VALS),
     m_idealPedSig(RngNum::N_VALS),
     m_idealCos(RngNum::N_VALS)

@@ -1,5 +1,6 @@
 // LOCAL
 #include "TholdMuonMgr.h"
+#include "CalCalibSvc.h"
 
 // GLAST
 // EXTLIB
@@ -65,26 +66,27 @@ StatusCode TholdMuonMgr::fillRangeBases() {
 }
 
 StatusCode TholdMuonMgr::loadIdealVals() {
-  MsgStream msglog(m_msgSvc, *m_logName); 
 
   //-- SANITY CHECKS --//
-  if (m_idealCalib.muonPeds.size() != (unsigned)RngNum::N_VALS) {
+  if (owner->m_idealCalib.muonPeds.size() != (unsigned)RngNum::N_VALS) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::ERROR << "Wrong # of ideal muon pedestal vals." << endl;
     return StatusCode::FAILURE;;
   }
 
-  m_idealFLE.m_val = m_idealCalib.muonFLE;
-  m_idealFLE.m_sig = m_idealCalib.muonFLE *
-    m_idealCalib.muonSigPct;
+  m_idealFLE.m_val = owner->m_idealCalib.muonFLE;
+  m_idealFLE.m_sig = owner->m_idealCalib.muonFLE *
+    owner->m_idealCalib.muonSigPct;
 
-  m_idealFHE.m_val = m_idealCalib.muonFHE;
-  m_idealFHE.m_sig = m_idealCalib.muonFHE *
-    m_idealCalib.muonSigPct;
+  m_idealFHE.m_val = owner->m_idealCalib.muonFHE;
+  m_idealFHE.m_sig = owner->m_idealCalib.muonFHE *
+    owner->m_idealCalib.muonSigPct;
   
   for (RngNum rng; rng.isValid(); rng++) {
-    m_idealPed[rng].m_val = m_idealCalib.muonPeds[rng];
-    m_idealPed[rng].m_sig = m_idealCalib.muonPeds[rng] *
-      m_idealCalib.muonSigPct;
+    m_idealPed[rng].m_val = owner->m_idealCalib.muonPeds[rng];
+    m_idealPed[rng].m_sig = owner->m_idealCalib.muonPeds[rng] *
+      owner->m_idealCalib.muonSigPct;
   }
 
   return StatusCode::SUCCESS;

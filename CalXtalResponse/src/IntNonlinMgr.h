@@ -15,9 +15,11 @@
 using namespace CalDefs;
 using namespace idents;
 
+class CalCalibSvc;
+
 class IntNonlinMgr : public CalibItemMgr {
  public:
-  IntNonlinMgr(const IdealCalCalib &idealCalib);
+  IntNonlinMgr();
 
   /// retrieve integral non-linearity vals for given xtal/face/rng
   StatusCode getIntNonlin(const CalXtalId &xtalId,
