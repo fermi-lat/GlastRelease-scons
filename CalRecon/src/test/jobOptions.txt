@@ -22,8 +22,8 @@ EventSelector.Input = "NONE";
 //
 ApplicationMgr.TopAlg = {
 	"digiRootReaderAlg",      
-    	"CalXtalRecAlg", 
-    	"CalClustersAlg",
+    "CalXtalRecAlg", 
+    "CalClustersAlg",
 	"test_CalRecon"
     };
 
@@ -31,8 +31,8 @@ ApplicationMgr.TopAlg = {
 // ----------------------------
 //  Geometry definition
 //
-ApplicationMgr.DLLs += {"GlastSvc"};
-ApplicationMgr.ExtSvc += { "GlastDetSvc"};
+ApplicationMgr.DLLs += {"GlastSvc", "G4Propagator", "G4Generator"};
+ApplicationMgr.ExtSvc += { "GlastDetSvc", "GlastPropagatorSvc", "G4GeometrySvc"};
 GlastDetSvc.topVolume="LAT"; 
 
 GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
@@ -40,9 +40,6 @@ GlastDetSvc.visitorMode="recon";
 
 // specific for this test
 ApplicationMgr.DLLs += {"AnalysisNtuple", "Recon"};
-ApplicationMgr.DLLs += {"TkrUtil"};
-ApplicationMgr.ExtSvc += {"TkrGeometrySvc"};
-
 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
