@@ -1,19 +1,18 @@
 package Event
-version v10r2p0
+version v10r0p0
 
 branches Event cmt doc src
 
-use GaudiInterface v*   IExternal 
+use geometry       v3r*
+use idents         v2r*
 use CLHEP          v2r* IExternal
+use GaudiInterface v*   IExternal 
 
-use geometry  v3r*
-use idents    v2r*
+apply_pattern shared_library
 
-apply_pattern package_include
+private
+
 apply_pattern package_headers
-
-apply_pattern package_Llinkopts
-apply_pattern package_Lshlibflags
 
 macro_append Event_headers "" WIN32 " \
         ../Event/*.h \ 
@@ -26,7 +25,7 @@ macro_append Event_headers "" WIN32 " \
         ../Event/Recon/CalRecon/*.h\
         ../Event/RelTable/*.h
 
-library EventLib Dll/*.cxx \
+library Event \
         MonteCarlo/*.cxx \
         Recon/TkrRecon/*.cxx \
         Recon/CalRecon/*.cxx \
@@ -35,7 +34,7 @@ library EventLib Dll/*.cxx \
         ${Event_headers}
 
 ###  non-standard definition -- why is it needed?
-macro GlastEvent_stamps   "${Event_root}/${BINDIR}/Event.stamp"
+#macro GlastEvent_stamps   "${Event_root}/${BINDIR}/Event.stamp"
 
 # simple test program
 # use this when we want to make a Gaudi test program apply_pattern package_test

@@ -12,14 +12,14 @@ TkrPatCandHit::TkrPatCandHit(TkrCluster* pCluster)
     m_position   = pCluster->position();
     m_hitIndex   = pCluster->id();
     m_towerIndex = pCluster->tower();
-    m_planeIndex = pCluster->plane();
-    m_view       = pCluster->v();
+    m_planeIndex = pCluster->getTkrId().getPlane();
+    m_view       = pCluster->getTkrId().getView();
 
     return;
 }
 
 TkrPatCandHit::TkrPatCandHit(unsigned int hitId, const Point& pos, unsigned int tower, 
-                             unsigned int layer, TkrCluster::view v) {
+                             unsigned int layer, int v) {
 
     m_position = pos;
     m_hitIndex = hitId;

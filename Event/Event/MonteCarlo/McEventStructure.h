@@ -19,14 +19,10 @@
 #ifndef McEventStructure_h
 #define McEventStructure_h
 
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ContainedObject.h"
+#include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartRefVector.h"
 #include "Event/MonteCarlo/McParticle.h"
 #include "Event/MonteCarlo/McPositionHit.h"
-#include "Event/RelTable/RelTable.h"
-#include "GaudiKernel/IInterface.h"
 
 static const CLID& CLID_McEventStructure = InterfaceID("McEventStructure", 1, 0);
 
@@ -35,7 +31,7 @@ namespace Event {
 typedef SmartRefVector<Event::McParticle> McParticleRefVec; 
 typedef SmartRef<Event::McParticle>       McParticleRef;
 
-class McEventStructure : public DataObject
+class McEventStructure : virtual public DataObject
 {
 public:
     //! Define bits to help classify the event
@@ -58,8 +54,19 @@ public:
     };
 
     //! Dataobject compliant constructor
-    McEventStructure(IDataProviderSvc* dataSvc, IParticlePropertySvc* partPropSvc);
-   ~McEventStructure();
+    McEventStructure() : DataObject()
+    {
+        m_classification = 0;
+        m_primary = 0;
+        m_secondaries.clear();
+        m_associated.clear();
+    }
+
+    //McEventStructure(Event::McParticle* mcPart, unsigned long classBits);
+   ~McEventStructure() {}
+
+    virtual const CLID& clID() const   { return McEventStructure::classID(); }
+    static const CLID& classID()       { return CLID_McEventStructure; }
 
     //! Retrieve classification bits (see above definitions)
     const unsigned long                     getClassificationBits() const {return m_classification;}
@@ -78,12 +85,15 @@ public:
     Event::McParticleRefVec::const_iterator endAssociated()         const {return m_associated.end();}
 
     //! Return an McParticle reference vector of all McParticles which leave hits in tracker
-    Event::McParticleRefVec                 getTrackVector();
+    inline Event::McParticleRefVec          getTrackVector();
+
+    //! For building 
+    void setPrimaryParticle(const Event::McParticleRef mcPart) {m_primary = mcPart;}
+    void addSecondary(const Event::McParticleRef mcPart)       {m_secondaries.push_back(mcPart);}
+    void addAssociated(const Event::McParticleRef mcPart)      {m_associated.push_back(mcPart);}
+    void setClassificationBits(const unsigned long bits)       {m_classification |= bits;}
 
 private:
-    bool isPrimaryDaughter(const Event::McParticle* mcPart);
-    void findAssociated(const Event::McParticle* mcPart);
-
     /// Bit-field for classification
     unsigned long             m_classification;
 
@@ -92,13 +102,23 @@ private:
     Event::McParticleRefVec   m_associated;
 };
 
-/*
-// typedefs for relating McParticles (above) to associated McPositionHits
-typedef Event::RelTable<Event::McParticle, Event::McPositionHit>   McPartToPosHitTab;
-typedef Event::Relation<Event::McParticle, Event::McPositionHit>   McPartToPosHitRel;
-typedef ObjectList<McPartToPosHitRel>                              McPartToPosHitTabList;
-typedef std::vector<Event::McPartToPosHitRel*>                     McPartToPosHitVec;
-*/
+
+Event::McParticleRefVec McEventStructure::getTrackVector()
+{
+    Event::McParticleRefVec trackVec;
+
+    trackVec.clear();
+
+    if (m_primary->statusFlags() & Event::McParticle::POSHIT) trackVec.push_back(m_primary);
+
+    Event::McParticleRefVec::const_iterator refIter;
+
+    for(refIter = m_secondaries.begin(); refIter != m_secondaries.end(); refIter++) trackVec.push_back(*refIter);
+    for(refIter = m_associated.begin();  refIter != m_associated.end();  refIter++) trackVec.push_back(*refIter);
+
+    return trackVec;
+}
+
 };
 
 #endif

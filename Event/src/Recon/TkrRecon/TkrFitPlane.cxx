@@ -184,7 +184,7 @@ double TkrFitPlane::getDeltaChiSq(TkrFitHit::TYPE type) const
 
     double delpar = 0.;
     double sigma2 = 0.; 
-    if(m_projection == TkrCluster::X ) {
+    if(m_projection == idents::TkrId::eMeasureX ) {
         delpar=m_hitmeas.getPar().getXPosition()-hit.getPar().getXPosition();
         sigma2=m_hitmeas.getCov().getcovX0X0() - hit.getCov().getcovX0X0();
     }
