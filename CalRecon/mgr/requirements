@@ -26,11 +26,14 @@ macro_append cppflags ""\
 
 # note that the debug versions of the used libraries are inserted below
 
-macro CalRecon_shlibflags   "$(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
+macro CalRecon_shlibflags   "$(componentshr_linkopts) $(use_linkopts)"\
+      VisualC               "$(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
 
 # build this for testing
 
-application test \
-        test/*.cxx test/*.h test/*.txt
+#application test \
+#        test/*.cxx test/*.h test/*.txt
 
+application test \
+        test/*.cxx
 
