@@ -16,6 +16,8 @@ macro 	gui_X_linkopts "-L${X11_DIR}/lib -lXm -lXt -lX11"
 macro gui_linkopts "-L ${GUIROOT}/${CMTCONFIG} -lgui ${gui_X_linkopts}"\
       VisualC "user32.lib gdi32.lib winspool.lib comdlg32.lib shell32.lib /subsystem:windows"
 
+# append this to use_linkopts to  undo the gui -- it will be after gui_linkopts
+macro console_linkopts "" VisualC " /subsystem:console"
 
 macro_append Win32Debug   " ${GUIROOT}/${DebugDir}/guilib.lib "
 macro_append Win32Release " ${GUIROOT}/${ReleaseDir}/guilib.lib "
