@@ -63,13 +63,13 @@ long QueryFrame::onCmdMore(FXObject*,FXSelector,void*)
   temp->setNumVisible(2);
   temp->create();
   
-  temp = new FXComboBox(m_searchFrame, 0, this, ID_COLSELECT, FRAME_SUNKEN|FRAME_THICK|COMBOBOX_STATIC|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
+  FXComboBox *colSelect = new FXComboBox(m_searchFrame, 0, this, ID_COLSELECT, FRAME_SUNKEN|FRAME_THICK|COMBOBOX_STATIC|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
   int i;
   FXComboBox *firstColSel = (FXComboBox *) m_searchFrame->getFirst();
   for (i = 0; i < firstColSel->getNumItems(); i++)
-    temp->appendItem(firstColSel->getItemText(i), firstColSel->getItemData(i));
-  temp->setNumVisible(10);
-  temp->create();
+    colSelect->appendItem(firstColSel->getItemText(i), firstColSel->getItemData(i));
+  colSelect->setNumVisible(10);
+  colSelect->create();
   
   temp = new FXComboBox(m_searchFrame, 0, NULL, 0, FRAME_SUNKEN|FRAME_THICK|COMBOBOX_STATIC|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);  
   for (i = 0; i < m_operators.size(); i++)
@@ -81,8 +81,15 @@ long QueryFrame::onCmdMore(FXObject*,FXSelector,void*)
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
   tempFrame->setBackColor(getApp()->getBackColor());
   tempFrame->create();
-  temp = new FXComboBox(tempFrame, 0, NULL, 0, FRAME_SUNKEN|FRAME_THICK|COMBOBOX_NORMAL|LAYOUT_FILL_X); 
-  temp->create();
+  if (rdbModel::Column* col = (rdbModel::Column *)colSelect->getItemData(colSelect->getCurrentItem()))
+    {
+      m_factory->createColWidget(tempFrame, col);
+    }
+  else
+    {
+      temp = new FXComboBox(tempFrame, 0, NULL, 0, FRAME_SUNKEN|FRAME_THICK|COMBOBOX_NORMAL|LAYOUT_FILL_X); 
+      temp->create();
+    }
   m_searchFrame->recalc();
   return 1;
 }
