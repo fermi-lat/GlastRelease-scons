@@ -113,8 +113,7 @@ StatusCode FluxAlg::execute()
     ParticleProperty* prop = m_partSvc->find(particleName);
 
     int partID = prop->type();
-    
-    
+      
     log << MSG::DEBUG << particleName
         << "(" << m_flux->energy()
         << " GeV), Launch: " 
@@ -126,11 +125,27 @@ StatusCode FluxAlg::execute()
     if( m_event%100 ==0 ) log << MSG::WARNING << "Event % " << m_event << endreq;
 
     mc::McParticleCol* pcol = new mc::McParticleCol;
-    eventSvc()->registerObject("/Event/MC/McParticleCol", pcol);
+
+    // Here the TDS is prepared to receive hits vectors
+    // Check for the MC branch - it will be created if it is not available
+    DataObject *mc;
+    eventSvc()->retrieveObject("/Event/MC", mc);
+
+    //log << MSG::DEBUG << "TDS ready" << endreq;
+
+
+    IDataProviderSvc* temp = eventSvc();
+    //log << MSG::DEBUG << "FluxAlg temp =" << temp << endreq;   
+    
+    StatusCode sc2 = temp->registerObject("/Event/McParticleCol", pcol);
+    if( sc2.isFailure()) {
+        log << MSG::ERROR << "Could not Register pcol" << endreq;
+        return sc2;
+    }
     mc::McParticle * parent= new mc::McParticle;
     pcol->push_back(parent);
 
-    HepLorentzVector pin;
+    HepLorentzVector pin(d*10.,ke);  //the 10 is so that d is in mm, instead of cm.
 
     // This parent particle decay at the start in the first particle, 
     // so initial momentum and final one are the same
@@ -175,3 +190,9 @@ mc::McParticleCol* pcol = new mc::McParticleCol;
         pin);
     parent->finalize(pin, p);
 */
+/*// Here the TDS is prepared to receive hits vectors
+    // Check for the MC branch - it will be created if it is not available
+    DataObject *mc;
+    eventSvc()->retrieveObject("/Event/MC", mc);
+
+    log << MSG::DEBUG << "TDS ready" << endreq;*/

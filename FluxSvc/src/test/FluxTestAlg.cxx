@@ -4,29 +4,48 @@
 #include "FluxSvc/IFluxSvc.h"
 #include "FluxSvc/IFlux.h"
 
+
+// GlastEvent for creating the McEvent stuff
+#include "GlastEvent/TopLevel/Event.h"
+#include "GlastEvent/TopLevel/MCEvent.h"
+#include "GlastEvent/MonteCarlo/McParticle.h"
+#include "GlastEvent/TopLevel/EventModel.h"
+
+// Gaudi system includes
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/SmartRefVector.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/Algorithm.h"
 #include <list>
 #include <string>
+#include <vector>
+#include "GaudiKernel/ParticleProperty.h"
+
+//#include "FluxAlg.h"
 /*! \class FluxTestAlg
 \brief 
 
-  */
+*/
+    //class ParticleProperty;
 
 class FluxTestAlg : public Algorithm {
-
+    
 public:
-  //! Constructor of this form must be provided
-  FluxTestAlg(const std::string& name, ISvcLocator* pSvcLocator); 
-
-  StatusCode initialize();
-  StatusCode execute();
-  StatusCode finalize();
+    //! Constructor of this form must be provided
+    FluxTestAlg(const std::string& name, ISvcLocator* pSvcLocator); 
+    
+    StatusCode initialize();
+    StatusCode execute();
+    StatusCode finalize();
+    
 
 private:
     IFlux* m_flux;
     std::string m_source_name;
+    IParticlePropertySvc * m_partSvc;
 };
 
 
@@ -41,7 +60,7 @@ void FATAL(const char* s){std::cerr << "\nERROR: "<< s;}
 //
 FluxTestAlg::FluxTestAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator){
- 
+    
     declareProperty("source_name", m_source_name="default");
 }
 
@@ -49,17 +68,17 @@ Algorithm(name, pSvcLocator){
 //------------------------------------------------------------------------------
 /*! */
 StatusCode FluxTestAlg::initialize() {
-        
-
+    
+    
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "initializing..." << endreq;
-   
+    
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
-
+    
     // get the pointer to the flux Service 
     IFluxSvc* fsvc;
-
+    
     // get the service
     StatusCode sc = service("FluxSvc", fsvc);
     
@@ -67,23 +86,25 @@ StatusCode FluxTestAlg::initialize() {
         log << MSG::ERROR << "Could not find FluxSvc" << endreq;
         return sc;
     }
-
-
+    
+    
     log << MSG::INFO << "loading source..." << endreq;
-
-
+    
+    
     sc =  fsvc->source(m_source_name, m_flux);
     if( sc.isFailure()) {
         log << MSG::ERROR << "Could not find flux " << m_source_name << endreq;
         return sc;
     }
-
+    
+    // then do the output here.
     log << MSG::INFO << "start of other loops" << endreq;
     log << MSG::INFO << "Source title: " << m_flux->title() << endreq;
     log << MSG::INFO << "       area: " << m_flux->targetArea() << endreq;
     log << MSG::INFO << "       rate: " << m_flux->rate() << endreq;
-
-
+    
+    
+    
     return sc;
 }
 
@@ -93,20 +114,48 @@ StatusCode FluxTestAlg::execute() {
     
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
-
-    m_flux->generate();
-    HepPoint3D p = m_flux->launchPoint();
-    HepPoint3D d = m_flux->launchDir();
     
-    log << MSG::INFO << m_flux->particleName()
-        << "(" << m_flux->energy()
+    
+    // TEST
+    
+    mc::McParticleCol* pcol = new mc::McParticleCol;
+    IDataProviderSvc* temp = eventSvc();
+    //log << MSG::DEBUG << "FluxTestAlg temp =" << temp << endreq;
+    temp->retrieveObject("/Event/McParticleCol",(DataObject *&)pcol);
+    
+    HepVector3D p,d;
+    double energy;
+    std::string partName;
+    //only make a new source if one does not already exist.
+    if(pcol==0){
+        m_flux->generate();
+        p = m_flux->launchPoint();
+        d = m_flux->launchDir();
+        energy = m_flux->energy();
+        partName = m_flux->particleName();
+    }else{
+        mc::McParticleCol::iterator elem = (*pcol).begin();
+        d = (*elem)->initialFourMomentum().v();
+        p = (*elem)->finalPosition();
+
+        energy = (*elem)->initialFourMomentum().e();
+        /*StdHepId*/int pID = (*elem)->particleProperty();
+        if ( service("ParticlePropertySvc", m_partSvc).isFailure() ){
+            log << MSG::ERROR << "Couldn't find the ParticlePropertySvc!" << endreq;
+            return StatusCode::FAILURE;
+        }
+        partName = m_partSvc->find(pID)->particle();
+    }   
+   
+    log << MSG::INFO << partName
+        << "(" << energy
         << " GeV), Launch: " 
         << "(" << p.x() <<", "<< p.y() <<", "<<p.z()<<")" 
         << " Dir " 
         << "(" << d.x() <<", "<< d.y() <<", "<<d.z()<<")"
-        << ",  Elapsed Time = " << m_flux->time()
+        // << ",  Elapsed Time = " << m_flux->time()
         << endreq;
-
+    
     //m_flux->pass(10.);
     return sc;
 }
