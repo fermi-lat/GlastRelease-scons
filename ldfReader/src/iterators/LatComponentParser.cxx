@@ -72,9 +72,13 @@ namespace ldfReader {
             contribution->calLEvector(), contribution->calHEvector(), 
             contribution->cnoVector(), contribution->conditionSummary(),
             tileList);
-        gem.initSummary(contribution->liveTime(), contribution->prescaled(),
-            contribution->discarded(), contribution->sent(), 
-            contribution->triggerTime(), time, contribution->deltaEventTime());
+        
+            GemDataCondArrivalTime condArrTime;
+            condArrTime.init(contribution->condArrTime().datum());
+            gem.initSummary(contribution->liveTime(), contribution->prescaled(),
+            contribution->discarded(), condArrTime,
+            contribution->triggerTime(), time, contribution->deltaEventTime(), contribution->deltaWindowOpenTime());
+        
 
         ldfReader::LatData::instance()->setGem(gem);
         return 0;
