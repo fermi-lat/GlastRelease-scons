@@ -3,7 +3,8 @@
  * Coordinator:  J. Bogart
                               EOH
 
-   v1r4   29-Dec-2004  jrb   More additions, bug fixes for ToT
+   v1r4p0  5-Jan-2005 jrb    Make a two-tower fake ToT file
+   v1r4   29-Dec-2004 jrb    More additions, bug fixes for ToT
  * 17-Dec-2004: jrb v1r3     Add classes for ToT charge injection calibration
  * 10-Aug-2004: hmk v1r2p0:  Move to new RootcintPolicy to fix Windows build
  * 26-Jul-2004: jrb v1r2:    Couple more small changes to make it usable
