@@ -1,5 +1,6 @@
 //$Header$
 /*
+ * v4r1p3 31-may-02 THB put display options under submenu
  * v4r1p2 26-may-02 THB fix global to local transformations
  * v4r1p1 16-may-02 THB small fix for new McParticle
  * v4r1   11-may-02 THB hide the G4 libs from clients only wanting the DLL
