@@ -13,7 +13,11 @@
 #include "detModel/Management/Manager.h"
 #include "detModel/Management/XercesBuilder.h"
 #include "detModel/Sections/Shape.h"
+#include "detModel/Sections/Volume.h"
+#include "detModel/Sections/Box.h"
 #include "detModel/Gdd.h"
+#include "detModel/Management/IDmapBUilder.h"
+#include "detModel/Utilities/PositionedVolume.h"
 
 #include "G4SectionsVisitor.h"
 #include "G4MaterialsVisitor.h"
@@ -35,12 +39,31 @@ DetectorConstruction::DetectorConstruction(std::string topvol, std::string visit
   gddManager->setMode(visitorMode);
 
   gddManager->build(detModel::Manager::all);
+
   // now create the GlastDetector manager, to pass in the id map
   m_glastdet = new GlastDetectorManager(this);
   
+  detModel::IDmapBuilder idmap(topvol);
+  
+  gddManager->startVisitor(&idmap);
+  idmap.summary(std::cout);
+
+  DisplayManager* dm = DisplayManager::instance();
+  if (dm !=0){
+      for( detModel::IDmapBuilder::PVmap::const_iterator id = idmap.begin(); id!=idmap.end(); ++id){
+          const detModel::PositionedVolume * pv = (*id).second;
+          const detModel::Volume* vol = pv->getVolume();
+          const detModel::Box* b = dynamic_cast<const detModel::Box*>(pv->getVolume());
+          if (b !=0) {
+              dm->addDetectorBox(HepTransform3D( pv->getRotation(),pv->getTranslation()), b->getX(), b->getY(), b->getZ());
+          }
+      }
+  }
+
 }
 
 DetectorConstruction::~DetectorConstruction()
+
 { 
   detModel::Manager* gddManager = detModel::Manager::getPointer();
   gddManager->cleanGdd(); 
