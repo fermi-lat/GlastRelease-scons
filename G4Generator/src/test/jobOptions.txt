@@ -1,7 +1,8 @@
 //##############################################################
 //
-// Job options file for GismoGenerator test
-//
+// Job options file for G4Generator test
+// 
+// $Header$
 
 ApplicationMgr.DLLs   = { "GaudiAlg", "FluxSvc", "GlastSvc"};
 
@@ -21,15 +22,18 @@ ApplicationMgr.TopAlg = {
 // make sure that this service does not try to instantatiate the (gismo) detector
 GlastDetSvc.PersistencyFile="(none)";
 
-FluxSvc.source_lib += {"$(FLUXROOT)/xml/user_library.xml"};  
-
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-MessageSvc.OutputLevel      = 6;
+MessageSvc.OutputLevel      = 2;
 
-G4Generator.source_name="vertical_muons";
+// Append to a list of source library documents
+FluxSvc.source_lib += {"$(G4GENERATORROOT)/src/test/test_sources08:32 11/30/2001.xml"};
+
+// ask for a source that is in the user_library
+G4Generator.source_name="muon_pencil";
 
 
-ApplicationMgr.EvtMax = 2;
+
+ApplicationMgr.EvtMax = 10;
 
 
 //==============================================================

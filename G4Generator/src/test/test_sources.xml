@@ -1,0 +1,24 @@
+
+<source_library>
+   <!--
+       $Header$
+       Some simple test flux definitions for debugging
+    -->
+
+    <source name="muon_pencil">
+       <spectrum> 
+         <particle name="mu+"><energy e="10"/> </particle>
+           <direction theta="0" phi="0" />
+           <launch_point x="5" y="5" z="60" />
+       </spectrum>
+     </source>
+
+    <source name="gamma_patch_for_G4">
+       <spectrum> 
+         <particle name="gamma"><energy e="0.1"/> </particle>
+           <direction theta="0" phi="0" />
+           <patch />
+       </spectrum>
+     </source>
+
+</source_library>
