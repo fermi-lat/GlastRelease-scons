@@ -108,6 +108,7 @@ StatusCode EventIntegrityAlg::execute()
 
 StatusCode EventIntegrityAlg::finalize() {
 
+    setFinalized();
     StatusCode  sc = StatusCode::SUCCESS;
 
     MsgStream log(msgSvc(), name());

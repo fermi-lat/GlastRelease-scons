@@ -2,6 +2,7 @@
  * @brief package EventIntegrity 
  * package manager:H.Kelly 
   <pre>
+ * v0r0p1 2004-Oct-18  HMK Add setFinalized to EventIntegrityAlg::finalize
  * v0r0p0 2004-Aug-27  HMK add print debug statement
  *  v0r0  2004-Aug-27  HMK Initial import of new package
  *
