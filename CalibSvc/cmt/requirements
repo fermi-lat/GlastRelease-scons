@@ -33,5 +33,12 @@ use RootIo   v6r*
 
 public
 set JOBOPTIONS "${CALIBSVCROOT}/src/test/jobOptions.txt"
-application simpletest ${GlastMain} test/*.cxx $(WinInclude)
+
+## Following definition of CalibSvcShr *should* be handled by the line 
+##   apply pattern packageShr 
+## above, but it isn't !
+set CalibSvcShr "${CALIBSVCROOT}/${CALIBSVCCONFIG}/libCalibSvc"
+application test_CalibSvc $(TestGlastMain) test/*.cxx $(WinInclude)
+
+apply_pattern package_test
 
