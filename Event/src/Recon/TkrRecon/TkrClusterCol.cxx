@@ -62,7 +62,7 @@ void TkrClusterCol::ini()
 	}
 }
 
-int TkrClusterCol::nHits(TkrCluster::view v, int iplane)
+int TkrClusterCol::nHits(TkrCluster::view v, int iplane) const
 {
     if ((v == TkrCluster::X || v == TkrCluster::Y) && iplane >= 0 && iplane < NPLANES)
     {

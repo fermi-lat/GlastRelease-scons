@@ -40,20 +40,21 @@ public:
     /// unflag ith TkrCluster
     void unflagHit(int i)  {getHit(i)->unflag();}
     /// returns true if the ith TkrCluster is flagged
-    bool hitFlagged(int i) {return getHit(i)->hitFlagged();}
+    bool hitFlagged(int i) const {return getHit(i)->hitFlagged();}
     /// returns size of the cluster with id "id"
-    double const size(int i)      {return getHit(i)->size();}     
+    double size(int i) const {return getHit(i)->size();}     
     /// returns  space position of the  ithTkrCluster
-    Point const position(int i)   {return getHit(i)->position();}
+    Point position(int i)  const {return getHit(i)->position();}
     /// returns pointer to the ith TkrCluster in simple cluster list
     TkrCluster* getHit(int i) const {return m_clustersList[i];}
           
     /// returns a reference the a cluster list of hits in a given layer
-    std::vector<TkrCluster*>& getHits(TkrCluster::view v, int iplane)
+    const std::vector<TkrCluster*>& getHits(TkrCluster::view v, int iplane)
+        const
     {return m_clustersByPlaneList[TkrCluster::viewToInt(v)][iplane];}
     
     /// returns the number of clusters in a given view and plane
-    int nHits(TkrCluster::view v, int iplane); 
+    int nHits(TkrCluster::view v, int iplane) const; 
     
     void addCluster(TkrCluster* cl);
 
