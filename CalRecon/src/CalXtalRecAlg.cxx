@@ -1,27 +1,30 @@
 // File and version Information:
 //   $Header$
-//
-// Description:
-//    CalXtalRecAlg is an algorithm to reconstruct calorimeter
-//    information in each individual crystal
-//
-// Author: A.Chekhtman
 
+
+// LOCAL INCLUDES
 #include "CalXtalRecAlg.h"
+
+// GLAST INCLUDES
+#include "CalUtil/CalDefs.h"
+#include "Event/Digi/CalDigi.h"
+#include "Event/TopLevel/EventModel.h"
+
+// EXTLIB INCLUDES
+#include "CLHEP/Geometry/Transform3D.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "Event/Digi/CalDigi.h"
-#include "Event/TopLevel/EventModel.h"
-#include "CLHEP/Geometry/Transform3D.h"
 
-static const AlgFactory<CalXtalRecAlg>  Factory;
-const IAlgFactory& CalXtalRecAlgFactory = Factory;
+// STD INCLUDES
+
 using namespace Event;
 using namespace idents;
 using namespace std;
 
-// constructor
+static const AlgFactory<CalXtalRecAlg>  Factory;
+const IAlgFactory& CalXtalRecAlgFactory = Factory;
+
 CalXtalRecAlg::CalXtalRecAlg(const string& name, ISvcLocator* pSvcLocator):
   Algorithm(name, pSvcLocator)
 {
@@ -29,84 +32,77 @@ CalXtalRecAlg::CalXtalRecAlg(const string& name, ISvcLocator* pSvcLocator):
   declareProperty("xtalPosToolName", m_posToolName="XtalPosTool");
 }
 
-
+/** 
+    This function sets values to private data members,
+    representing the calorimeter geometry and digitization
+    constants. Information  from xml files is obtained using 
+    GlastdetSvc::getNumericConstByName() function.
+    To make this constant extraction in a loop, the pairs
+    'constant pointer, constant name' are stored in
+    map container. <p>
+    Double and integer constants are extracted separatly,
+    because constants of both types are returned
+    by getNumericConstByName() as double.
+*/      
 StatusCode CalXtalRecAlg::initialize()
-
-  // Purpose and method:
-  //           This function sets values to private data members,
-  //           representing the calorimeter geometry and digitization
-  //           constants. Information  from xml files is obtained using 
-  //           GlastdetSvc::getNumericConstByName() function.
-  //           To make this constant extraction in a loop, the pairs
-  //           'constant pointer, constant name' are stored in
-  //           map container. 
-  //           Double and integer constants are extracted separatly,
-  //           because constants of both types are returned
-  //           by getNumericConstByName() as double.
-  //      
-        
-        
 {
   StatusCode sc;
 
-  // extracting int constants
-  double value;  // intermediate variable for reading constants from
-  // xml file as doubles and converting them to interger 
-  typedef map<int*,string> PARAMAP;
-  PARAMAP param; // map containing pointers to integer constants to be read
+  //-- EXTRACT INT CONSTANTS --//
+  double value;
+  // map containing pointers to integer constants to be read
   // with their symbolic names from xml file used as a key 
+  typedef map<int*,string> PARAMAP;
+  PARAMAP param;
 
   //     filling the map with information on constants to be read 
-    
   param[&m_xNum]         = string("xNum");
   param[&m_yNum]         = string("yNum");
   param[&m_eTowerCAL]    = string("eTowerCAL");
   param[&m_eLATTowers]   = string("eLATTowers");
-  param[&m_CALnLayer]    = string("CALnLayer");
-  param[&m_nCsIPerLayer] = string("nCsIPerLayer");
   param[&m_nCsISeg]      = string("nCsISeg");
   param[&m_eXtal]        = string("eXtal");
     
-  // now try to find the GlastDevSvc service
-    
-  //    IGlastDetSvc* detSvc;
+  //-- RETRIEVE GlastDevSvc --//
+
   sc = service("GlastDetSvc", m_detSvc);
   // loop over all constants information contained in the map
-  for(PARAMAP::iterator it=param.begin(); it!=param.end();it++){
-    //  attempt to get the constant value via the method of GlastDetSvc
-    if(!m_detSvc->getNumericConstByName((*it).second, &value)) {
-      // if not successful - give the error message and return
+  for(PARAMAP::iterator iter=param.begin(); iter!=param.end();iter++){
+    //  retrieve constant
+    if(!m_detSvc->getNumericConstByName((*iter).second, &value)) {
       MsgStream msglog(msgSvc(), name());
-      msglog << MSG::ERROR << " constant " <<(*it).second
+      msglog << MSG::ERROR << " constant " <<(*iter).second
              <<" not defined" << endreq;
       return StatusCode::FAILURE;
-      //  if successful - fill the constant using the pointer from the map
-    } else *((*it).first)= int(value);
+    } else *((*iter).first)= int(value); // store retrieved value 
   }
         
-  // extracting double constants
-  typedef map<double*,string> DPARAMAP;
-  DPARAMAP dparam; // map containing pointers to double constants to be read
+  //-- EXTRACT DOUBLE CONSTANTS --//
+
+  // map containing pointers to double constants to be read
   // with their symbolic names from xml file used as a key 
+  typedef map<double*,string> DPARAMAP;
+  DPARAMAP dparam; 
 
   dparam[&m_CsILength]  = string("CsILength");
     
-  for(DPARAMAP::iterator dit=dparam.begin(); dit!=dparam.end();dit++){
-    if(!m_detSvc->getNumericConstByName((*dit).second,(*dit).first)) {
+  for(DPARAMAP::iterator dIter=dparam.begin(); dIter!=dparam.end();dIter++){
+    if(!m_detSvc->getNumericConstByName((*dIter).second,(*dIter).first)) {
       MsgStream msglog(msgSvc(), name());
-      msglog << MSG::ERROR << " constant " <<(*dit).second << " not defined" << endreq;
+      msglog << MSG::ERROR << " constant " <<(*dIter).second << " not defined" << endreq;
       return StatusCode::FAILURE;
     } 
   }
 
-  // Get properties from the JobOptionsSvc
+  //-- JOB OPTIONS --//
   sc = setProperties();
-  if ( !sc.isSuccess() ) {
+  if (sc.isFailure()) {
     MsgStream msglog(msgSvc(), name());
     msglog << MSG::ERROR << "Could not set jobOptions properties" << endreq;
     return sc;
   }
 
+  //-- CalXtalResponse TOOLS --//
   sc = toolSvc()->retrieveTool(m_eneToolName,m_xtalEneTool);
   if (sc.isFailure() ) {
     MsgStream msglog(msgSvc(), name());
@@ -125,48 +121,46 @@ StatusCode CalXtalRecAlg::initialize()
 }
 
 
+/**
+   This function is called to do reconstruction
+   for all hitted crystals in one event.
+   It calls retrieve() method to get access to input and output TDS data.
+   It iterates over all elements in CalDigiCol and calls
+   computeEnergy() and computePosition() methods doing real reconstruction.
+*/
 StatusCode CalXtalRecAlg::execute()
-
-  //  Purpose and method:
-  //     This function is called to do reconstruction
-  //     for all hitted crystals in one event.
-  //     It calls retrive() method to get access to input and output TDS data.
-  //     It iterates over all elements in CalDigiCol and calls
-  //     computeEnergy() and computePosition() methods doing real reconstruction.
-  //
-  //   TDS input: 
-  //            CalDigiCol* m_calDigiCol - private class member containing
-  //            a pointer to the calorimeter digi callection 
-  //
-  //   TDS output: 
-  //            CalXtalRecCol* m_calXtalRecCol - private class member containing
-  //            a pointer to the calorimeter crystal reconstructed data collection 
-  //
-  //     
-
 {
   StatusCode sc = StatusCode::SUCCESS;
 
-  sc = retrieve(); //get access to TDS data collections
-
-        
+  //get access to TDS data collections
+  sc = retrieve(); 
+  // non-fatal error:
+  /// if there's no CalDigiCol then CalXtalRecAlg is not happening, go on w/ other algs
+  if (!m_calDigiCol) return StatusCode::SUCCESS;
+  // fatal error  if (sc.isFailure()) return sc;
+  
   // loop over all calorimeter digis in CalDigiCol
-  for (CalDigiCol::const_iterator it = m_calDigiCol->begin(); 
-       it != m_calDigiCol->end(); it++) {
-    CalXtalId xtalId = (*it)->getPackedId();
-                
+  for (CalDigiCol::const_iterator digiIter = m_calDigiCol->begin(); 
+       digiIter != m_calDigiCol->end(); digiIter++) {
+
+    // if there is no digi data, then move on w/ out creating
+    // recon TDS data for this xtal
+    if ((*digiIter)->getReadoutCol().size() < 1) continue;
+
+    CalXtalId xtalId = (*digiIter)->getPackedId();
+
     // create new object to store crystal reconstructed data     
     CalXtalRecData* recData = 
-      new CalXtalRecData((*it)->getMode(),xtalId);
+      new CalXtalRecData((*digiIter)->getMode(),xtalId);
            
     // calculate energy in the crystal
     bool below_thresh;
-    sc = computeEnergy(recData, *it, below_thresh);
+    sc = computeEnergy(*recData, **digiIter, below_thresh);
     if (sc.isFailure()) return sc;
 
     if(!below_thresh){      
       // calculate position in the crystal
-      sc = computePosition(recData, *it);   
+      sc = computePosition(*recData, **digiIter);   
       if (sc.isFailure()) return sc;
 
       // add new reconstructed data to the collection
@@ -176,24 +170,33 @@ StatusCode CalXtalRecAlg::execute()
     }
   }
 
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
-
+/** 
+    Purpose and method: 
+    This function provides access to the TDS input and output data
+    by setting the private data members m_calDigiCol            
+    and m_calXtalRecCol
+    
+    TDS input: CalDigiCol
+    TDS output: CalXtalrecCol
+*/
 StatusCode CalXtalRecAlg::retrieve()
-
-  // Purpose and method: 
-  //            This function provides access to the TDS input and output data
-  //            by setting the private data members m_calDigiCol            
-  //            and m_calXtalRecCol
-  //
-  //   TDS input: CalDigiCol
-  //   TDS output: CalXtalrecCol
-  //        
-  //        
-        
 {
   StatusCode sc = StatusCode::SUCCESS;
+
+  // get a pointer to the input TDS data collection
+  m_calDigiCol = SmartDataPtr<CalDigiCol>(eventSvc(),
+                                          EventModel::Digi::CalDigiCol);
+  if (!m_calDigiCol) {
+    if (msgSvc()->outputLevel(name()) <= MSG::VERBOSE) {
+      // create msglog only when needed for performance
+      MsgStream msglog(msgSvc(), name());
+      msglog << MSG::VERBOSE << "No CalDigi data found"
+             << endreq;
+    }
+  }
 
   m_calXtalRecCol = 0;
 
@@ -218,61 +221,40 @@ StatusCode CalXtalRecAlg::retrieve()
       return sc;
     }
   }
-
     
-  // get a pointer to the input TDS data collection
-  m_calDigiCol = SmartDataPtr<CalDigiCol>(eventSvc(),
-                                          EventModel::Digi::CalDigiCol); 
-
   //register output data collection as a TDS object
   sc = eventSvc()->registerObject(EventModel::CalRecon::CalXtalRecCol,
                                   m_calXtalRecCol);
-  return sc;
+  if (sc.isFailure()) return sc;
+  
+  return StatusCode::SUCCESS;
 }
 
-
-
-
-StatusCode CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const CalDigi* digi, bool &below_thresh)
-
-  //   Purpose and method:
-  //                 This function calculates the energy for one crystal.
-  //                 It makes a loop over all readout ranges (1 or 4, depending
-  //                 on readout mode), and converts adc values for both crystal
-  //                 faces into energy, using constants contained in private data
-  //
-  //  
-  //  Input: CalDigi* digi - pointer to digitized calorimeter data for
-  //                         one crystal
-  //                            
-  //  Output: CalXtalRecData* recData - pointer to reconstructed data for
-  //                                    this crystal
-                                      
-
-
-
+StatusCode CalXtalRecAlg::computeEnergy(CalXtalRecData &recData, 
+                                        const Event::CalDigi &digi,
+                                        bool &below_thresh)
 {
   StatusCode sc;
 
-  CalXtalId xtalId = digi->getPackedId();
+  CalXtalId xtalId = digi.getPackedId();
 
-  const CalDigi::CalXtalReadoutCol& roCol = digi->getReadoutCol();
+  const CalDigi::CalXtalReadoutCol& roCol = digi.getReadoutCol();
   
   // xtal wide threshold flag
   below_thresh = false;    
-  
+
   // currently allways using 1st readout
-  CalDigi::CalXtalReadoutCol::const_iterator it = roCol.begin();
+  CalDigi::CalXtalReadoutCol::const_iterator ro = roCol.begin();
 
   // get readout range number for both crystal faces
   CalXtalId::AdcRange rangeP = 
-    (CalXtalId::AdcRange)it->getRange(CalXtalId::POS); 
+    (CalXtalId::AdcRange)(*ro).getRange(CalXtalId::POS); 
   CalXtalId::AdcRange rangeM = 
-    (CalXtalId::AdcRange)it->getRange(CalXtalId::NEG); 
+    (CalXtalId::AdcRange)(*ro).getRange(CalXtalId::NEG); 
   
   // get adc values 
-  int adcP = it->getAdc(CalXtalId::POS);   
-  int adcM = it->getAdc(CalXtalId::NEG);   
+  int adcP = (*ro).getAdc(CalXtalId::POS);   
+  int adcM = (*ro).getAdc(CalXtalId::NEG);   
 
   float ene;
 
@@ -282,8 +264,8 @@ StatusCode CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const CalDigi* 
     MsgStream msglog(msgSvc(), name());
     msglog << MSG::VERBOSE;
     msglog.stream() << "id=" << xtalId // needed to support setw() manipulator
-                    << "\trangeP=" << int(rangeP) << " adcP=" << setw(4) << adcP 
-                    << "\trangeN=" << int(rangeM) << " adcM=" << setw(4) << adcM;
+                    << "\trangeP=" << int(rangeP) << " adcP=" << setw(4) <<adcP 
+                    << "\trangeN=" << int(rangeM) << " adcM=" << setw(4) <<adcM;
     msglog << endreq;
   } 
 
@@ -314,29 +296,22 @@ StatusCode CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const CalDigi* 
   }
   
   // add output object to output collection
-  recData->addRangeRecData(*rangeRec);
+  recData.addRangeRecData(*rangeRec);
   delete rangeRec;
   
   return StatusCode::SUCCESS;
 }
 
 
-StatusCode CalXtalRecAlg::computePosition(CalXtalRecData* recData, const CalDigi* digi)
 
-  // Purpose and method:
-  //              This function calculates the longitudinal position
-  //              for each crystal from light asymmetry.
-  //              
-  //  Input: CalXtalRecData* recData - pointer to the reconstructed crystal data
-  //  Output: the same object, the calculated position is stored using
-  //             public function SetPosition()  
-
+StatusCode CalXtalRecAlg::computePosition(CalXtalRecData &recData, 
+                                          const CalDigi &digi)
 {
   MsgStream msg(msgSvc(), name());
   StatusCode sc = StatusCode::SUCCESS;
 
   // get crystal identification 
-  CalXtalId xtalId = digi->getPackedId();
+  CalXtalId xtalId = digi.getPackedId();
 
   //-- CONSTRUCT GEOMETRY VECTORS FOR XTAL --//
   // unpack crystal identification into tower, layer and column number
@@ -365,7 +340,8 @@ StatusCode CalXtalRecAlg::computePosition(CalXtalRecData* recData, const CalDigi
   // create Volume Identifier for the last segment of this crystal
   idents::VolumeIdentifier segm11Id;
   // copy all fields from segm0Id, except segment number
-  for(int ifield = 0; ifield<fSegment; ifield++)segm11Id.append(segm0Id[ifield]);
+  for(int ifield = 0; ifield<CalDefs::fSegment; ifield++)
+    segm11Id.append(segm0Id[ifield]);
   segm11Id.append(m_nCsISeg-1); // set segment number for the last segment
   //get 3D transformation for the last segment of this crystal
   m_detSvc->getTransform3DByID(segm11Id,&transf);
@@ -383,7 +359,7 @@ StatusCode CalXtalRecAlg::computePosition(CalXtalRecData* recData, const CalDigi
   // and ALL-RANGE mode
   // theoretically it wont work in 4-range readout mode w/ out
   // range selection, but that mode is rarely used.
-  const CalDigi::CalXtalReadoutCol& roCol = digi->getReadoutCol();
+  const CalDigi::CalXtalReadoutCol& roCol = digi.getReadoutCol();
   const CalDigi::CalXtalReadout &ro = *roCol.begin();
 
   int adcP = ro.getAdc(CalXtalId::POS);
@@ -403,7 +379,6 @@ StatusCode CalXtalRecAlg::computePosition(CalXtalRecData* recData, const CalDigi
            << endreq;
   }
 
-
   // put 1D position info into 3D vector
   // 'pos' is in units of xtal Length, convert to rel units (-1->1)
   pos /= m_CsILength; 
@@ -411,7 +386,7 @@ StatusCode CalXtalRecAlg::computePosition(CalXtalRecData* recData, const CalDigi
 
   // store calculated position in the reconstructed data
   // for the best readout range
-  (recData->getRangeRecData(0))->setPosition(pXtal);
+  (recData.getRangeRecData(0))->setPosition(pXtal);
 
   return StatusCode::SUCCESS;
 }

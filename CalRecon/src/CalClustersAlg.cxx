@@ -151,8 +151,7 @@ StatusCode CalClustersAlg::retrieve()
     m_calXtalRecCol = SmartDataPtr<CalXtalRecCol>(eventSvc(),
         EventModel::CalRecon::CalXtalRecCol); 
     if (!m_calXtalRecCol) {
-            log<<MSG::ERROR<<"No CalXtalRecCol"<<endreq ;
-            return StatusCode::FAILURE ;
+        log<<MSG::VERBOSE<<"No CalXtalRecCol"<<endreq ;
     }
         
     return sc;
@@ -184,8 +183,15 @@ StatusCode CalClustersAlg::execute()
     
     // get pointers to the TDS data structures
     sc = retrieve() ;
-    
-    // update inputs
+    // non fatal errors
+    // if there's no CalXtalRec then CalClustersAlg is not happening
+  	if (!m_calXtalRecCol)
+      return StatusCode::SUCCESS;
+    // other retreive errors are fatal
+    if (sc.isFailure())
+      return StatusCode::FAILURE;
+         
+    // update otherinputs
     m_data->beginEvent() ;
             
     // call the Clustering tool to find clusters

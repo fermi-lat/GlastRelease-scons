@@ -18,7 +18,8 @@ ApplicationMgr.Runable = "FluxSvc" ;
 
 // generation
 ApplicationMgr.ExtSvc += { "GlastRandomSvc" } ;
-Simulation.Members += { "FluxAlg", "G4Generator", "ExposureAlg" } ;
+//Simulation.Members += { "FluxAlg", "G4Generator", "ExposureAlg" } ;
+Simulation.Members += { "FluxAlg", "G4Generator" } ;
 FluxAlg.source_name = "gamma_5_gev_normal" ;
 G4Generator.defaultCutValue = 0.7 ; 
 G4Generator.defaultTkrCutValue = 0.1 ;
