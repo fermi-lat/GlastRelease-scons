@@ -74,26 +74,33 @@ void  GeometryVisitor::visitEnsemble(detModel::Ensemble* ensemble)
 void  GeometryVisitor::visitBox(detModel::Box* b)
 {
     //IGeometry::DoubleVector params;
-    m_params.push_back(b->getX());
-    m_params.push_back(b->getY());
-    m_params.push_back(b->getZ());
-    m_geom.pushShape(IGeometry::Box, m_idvec, b->getName(), b->getMaterial(), m_params, 
-        b->getSensitive()? IGeometry::Sensitive : IGeometry::Simple);
-    m_params.clear();
-    m_idvec.clear();
+  IGeometry::VolumeType type;
+  m_params.push_back(b->getX());
+  m_params.push_back(b->getY());
+  m_params.push_back(b->getZ());
+  if (b->getSensitive() == 0) type = IGeometry::Simple;
+  else if (b->getSensitive() == 1) type = IGeometry::posSensitive;
+  else type = IGeometry::intSensitive;
+  m_geom.pushShape(IGeometry::Box, m_idvec, b->getName(), b->getMaterial(), m_params, 
+		   type);
+  m_params.clear();
+  m_idvec.clear();
 
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void  GeometryVisitor::visitTube(detModel::Tube* t)
 {
-    //IGeometry::DoubleVector params;
-    m_params.push_back(t->getZ());
-    m_params.push_back(t->getRin());
-    m_params.push_back(t->getRout());
-    m_geom.pushShape(IGeometry::Tube, m_idvec, t->getName(), t->getMaterial(), m_params,
-        t->getSensitive()? IGeometry::Sensitive : IGeometry::Simple);
-    m_params.clear();
-    m_idvec.clear();
+  IGeometry::VolumeType type;
+  m_params.push_back(t->getZ());
+  m_params.push_back(t->getRin());
+  m_params.push_back(t->getRout());
+  if (t->getSensitive() == 0) type = IGeometry::Simple;
+  else if (t->getSensitive() == 1) type = IGeometry::posSensitive;
+  else type = IGeometry::intSensitive;
+  m_geom.pushShape(IGeometry::Tube, m_idvec, t->getName(), t->getMaterial(), m_params,
+		   type);
+  m_params.clear();
+  m_idvec.clear();
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void  GeometryVisitor::visitPosXYZ(detModel::PosXYZ* pos)

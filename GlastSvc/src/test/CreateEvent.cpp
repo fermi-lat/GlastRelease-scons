@@ -96,7 +96,7 @@ StatusCode CreateEvent::finalize() {
 ;
 
 StatusCode CreateEvent::testMcClass(){
-    McIntegratingHit* integratingHit = new McIntegratingHit();
+  mc::McIntegratingHit* integratingHit = new mc::McIntegratingHit();
     McParticle* mcParticle =  new McParticle();
 
     

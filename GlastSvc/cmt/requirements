@@ -10,7 +10,7 @@ apply_pattern package_include
 #=============================================================
 private
 
-use detModel v2r6p1
+use detModel 
 use GaudiSvc 
 use GaudiAud 
 

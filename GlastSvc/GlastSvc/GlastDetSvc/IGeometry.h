@@ -12,7 +12,7 @@ public:
 
     typedef std::vector<double> DoubleVector;
     typedef std::vector<unsigned int>UintVector;
-    enum VolumeType{ Simple, Sensitive, Composite, Xstack, Ystack, Zstack };
+    enum VolumeType{ Simple, posSensitive, intSensitive, Composite, Xstack, Ystack, Zstack };
     enum ShapeType{ Box, Tube };
     /** Create a new shape
 
