@@ -170,7 +170,8 @@ public:
     TIMESOURCEnone = 0,
     TIMESOURCEdata,
     TIMESOURCEmc,
-    TIMESOURCEclock
+    TIMESOURCEclock,
+    TIMESOURCEdigi
   };
 
   TIMESOURCE m_timeSourceEnum;
@@ -178,8 +179,11 @@ public:
   /// Fetch time from real data, store in m_time
   StatusCode fetchDataTime();
 
-  /// Fetch time from mc data
+  /// Fetch time from mc data (no digis)
   StatusCode fetchMcTime();
+
+  /// Fetch time from simulated digis
+  StatusCode fetchDigiTime();
 
 
   /// Fetch time from fake clock, using parameters below

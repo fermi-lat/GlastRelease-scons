@@ -18,6 +18,8 @@
 #include "GaudiKernel/TimePoint.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "LdfEvent/LdfTime.h"
+#include "Event/TopLevel/MCEvent.h"
+#include "Event/TopLevel/Event.h"
 
 #include "CalibData/CalibModelSvc.h"
 
@@ -49,7 +51,7 @@ CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
   m_eventTime = 0;
   declareProperty("CalibInstrumentName", m_instrumentName = "LAT" );
 
-  // choices could be "data", "clock", "mc", "none"
+  // choices could be "data", "clock", "mc", "none", "digi"
   declareProperty("CalibTimeSource", m_timeSource = "none" );
   m_instrumentDefined = true;
 
@@ -128,15 +130,15 @@ StatusCode CalibDataSvc::initialize()   {
   // Get ready to listen for BeginEvent
   if (m_timeSource != "none") {
     if (m_timeSource == "data") {
-      //      m_fetcher = CalibDataSvc::fetchDataTime;
       m_timeSourceEnum = TIMESOURCEdata;
     }
     else if (m_timeSource == "mc") {
-      //  m_fetcher = &CalibDataSvc::fetchMcTime;
       m_timeSourceEnum = TIMESOURCEmc;
     }
+    else if (m_timeSource == "digi") {
+      m_timeSourceEnum = TIMESOURCEdigi;
+    }
     else if (m_timeSource == "clock") {
-      //      m_fetcher = &CalibDataSvc::fetchFakeClockTime;
       m_timeSourceEnum = TIMESOURCEclock;
 
       //  set start and increment parameters also
@@ -298,10 +300,13 @@ StatusCode CalibDataSvc::clearStore()   {
 void CalibDataSvc::setEventTime(const ITime& time) {
   m_eventTimeDefined = true;
   if (0 != m_eventTime ) delete m_eventTime; 
-  m_eventTime = new CalibData::CalibTime(time);   
+  CalibData::CalibTime *pTime = new CalibData::CalibTime(time);   
+  m_eventTime = pTime;
   MsgStream log(msgSvc(), name() );
   log << MSG::DEBUG 
-      << "Event Time set to " << eventTime().hours() << endreq;
+      << "Event Time set to " 
+      << pTime->getString() << endreq;
+  //      << "Event Time set to " << eventTime().hours() << endreq;
 }
 
 /// Check if the event time has been set
@@ -327,6 +332,7 @@ void CalibDataSvc::handle ( const Incident& inc ) {
   if ((inc.type() == "BeginEvent") && 
       ((m_timeSourceEnum == TIMESOURCEdata) ||
        (m_timeSourceEnum == TIMESOURCEmc) ||
+       (m_timeSourceEnum == TIMESOURCEdigi) ||
        (m_timeSourceEnum == TIMESOURCEclock) ) ) {
     log << MSG::DEBUG << "New incident received" << endreq;
     log << MSG::DEBUG << "Incident source: " << inc.source() << endreq;
@@ -439,7 +445,7 @@ StatusCode CalibDataSvc::loadObject(IConversionSvc* pLoader,
 
 }
 
-// For timeSource = "data", "mc" or "clock"
+// For timeSource = "data", "mc", "digi" or "clock"
 StatusCode  CalibDataSvc::updateTime() {
   using CalibData::CalibTime;
 
@@ -460,6 +466,10 @@ StatusCode  CalibDataSvc::updateTime() {
     }
     case TIMESOURCEmc: {
       sc = fetchMcTime();
+      break;
+    }
+    case TIMESOURCEdigi: {
+      sc = fetchDigiTime();
       break;
     }
     case TIMESOURCEclock: {
@@ -501,7 +511,53 @@ StatusCode CalibDataSvc::fetchDataTime() {
 
 StatusCode CalibDataSvc::fetchMcTime() {
 
-  return StatusCode::FAILURE;  // until we implement it
+  MsgStream log(msgSvc(), name());
+
+  static const facilities::Timestamp missionStart("2001-1-1 00:00");
+  static const unsigned missionSec = (unsigned) missionStart.getClibTime();
+  static const int missionNano = missionStart.getNano();
+
+  SmartDataPtr<Event::MCEvent> mcHeader(m_eventSvc, "/Event/MC");
+  if (!mcHeader) {
+    log << MSG::ERROR << "Unable to retrieve mc event timestamp " << endreq;
+
+    return StatusCode::FAILURE;
+  }
+  double fromMissionStart = (mcHeader->time()).time();
+  unsigned fromSec = (unsigned) fromMissionStart;
+  unsigned fromNano = (unsigned) ((fromMissionStart - fromSec) * 1000000);
+  log << MSG::DEBUG << "(mc) seconds/nano from mission start: " << fromSec 
+      << "/" << fromNano << endreq;
+  facilities::Timestamp absTime(missionSec + fromSec, missionNano + fromNano);
+  m_time = CalibData::CalibTime(absTime);
+
+  return StatusCode::SUCCESS; 
+}
+
+StatusCode CalibDataSvc::fetchDigiTime() {
+
+  MsgStream log(msgSvc(), name());
+
+  static const facilities::Timestamp missionStart("2001-1-1 00:00");
+  static const unsigned missionSec = (unsigned) missionStart.getClibTime();
+  static const int missionNano = missionStart.getNano();
+
+  SmartDataPtr<Event::EventHeader> eventHeader(m_eventSvc, "/Event");
+  
+  if (!eventHeader) {
+    log << MSG::ERROR << "Unable to retrieve event timestamp for digis" 
+        << endreq;
+    return StatusCode::FAILURE;
+  }
+  double fromMissionStart = (eventHeader->time()).time();
+  unsigned fromSec = (unsigned) fromMissionStart;
+  unsigned fromNano = (unsigned) ((fromMissionStart - fromSec) * 1000000);
+  log << MSG::DEBUG << "(digi) seconds/nano from mission start: " << fromSec 
+      << "/" << fromNano << endreq;
+  facilities::Timestamp absTime(missionSec + fromSec, missionNano + fromNano);
+  m_time = CalibData::CalibTime(absTime);
+
+  return StatusCode::SUCCESS; 
 }
 
 StatusCode CalibDataSvc::fetchFakeClockTime() {
@@ -515,8 +571,8 @@ StatusCode CalibDataSvc::fetchFakeClockTime() {
 
   // Set the event time
   double incr = eventNumber*m_delayTime;
-  long   seconds_incr = incr / 1000;
-  long   nano_incr = (incr - (1000*seconds_incr)) * 1000;
+  long   seconds_incr = (long) (incr / 1000);
+  long   nano_incr = (long) ((incr - (1000*seconds_incr)) * 1000);
   //  facilities::Timestamp time(m_startTime + (eventNumber)*m_delayTime, 0);
   facilities::Timestamp time(m_startTime + seconds_incr, nano_incr);
   //  facilities::Timestamp time = 
