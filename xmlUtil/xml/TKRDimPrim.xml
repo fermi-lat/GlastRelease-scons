@@ -1,0 +1,45 @@
+<primCategory name="TKRDimPrim">
+  <overview>Fundamental solid dimensions and offsets within the Tracker.</overview>
+<!-- Fundamental Z dimensions in tracker -->
+        <prim name= "SiThick" value= "0.4" >Si thickness</prim>
+        <prim name="coreThick" value="27.92">Thickness of core material
+            in all trays except the bottom</prim>
+        <prim name="coreThickBottom" value="33.909">Core thickness for
+            bottom tray</prim>
+        <prim name="glueSiThick" value="0.15">Thickness of glue
+            between Si and bias plane</prim>
+        <prim name="glueThick" value="0.075">Thickness of glue between
+            non-Si components</prim>
+        <prim name="convThickReg" value="0.105">Thickness of conversion 
+            material in "regular" layers in mm</prim>
+        <prim name="convThickSup" value="0.630">Thickness of conversion 
+            material in super-GLAST layers in mm</prim>
+        <prim name= "faceThick" value= "0.152">Face sheet thickness
+            for all but super-glast layers</prim>
+        <prim name= "faceThickSuper" value= "0.228">Face sheet thickness
+            for super-glast layers</prim>
+        <prim name="biasPlaneThick" value="0.239">Thickness of bias
+            plane</prim>
+        <prim name="intertrayGap" value="2.00">Gap between top of one tray
+         and bottom of the tray above</prim>
+        <prim name="TKRTotalZ" value="617.787">Height of a tracker tower</prim>
+
+<!-- inner structure of Si -->
+        <prim name="ssdGap" value="0.1">gap between Si dies (superseded/obsolete?)
+</prim>
+	<prim name="SiWaferSide" value="89.5">Length and width of Si wafer</prim>
+        <prim name="SiWaferActiveSide" value="87.552">Length and width of active
+area on a wafer</prim>
+<!-- widths -->           
+        <prim name= "TKRWidth" value= "371.5">**Is this just a replacement 
+           for wallWidth?</prim>  
+        <prim name="faceWidth" value="360.1">X and y width of face sheet</prim>
+        <prim name= "TKRElectGap" value= "4.2">**Insert comment here**</prim>
+        <prim name="ladderGap" value="0.20">gap between ladders</prim>
+	<prim name="traySpacing" value="32.0">Center-to-center distance
+         between trays.  Obsolete.  Now gap between trays is constant</prim>
+        <prim name= "panelThick" value= "28.8">Thickness of converter + core??
+           Probably obsolete</prim>
+        <prim name="guardRing" value="0.745">guard ring size. Probably 
+         irrelevant.</prim>
+</primCategory>

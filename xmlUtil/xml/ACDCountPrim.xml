@@ -1,0 +1,24 @@
+<primCategory name="ACDCountPrim" >
+  <overview>Counts of objects  and other quantities used to form identifiers
+   within the ACD.</overview>
+  <prim name="numXTopTiles" value="5" uType="count">Number of tiles
+across top in x direction</prim>
+  <prim name="numYTopTiles" value="5" uType="count">Number of tiles
+across top in y direction</prim>
+  <prim name="numSideTapes" value="4" uType="count">Number of
+gaps (long axis = Z) to be covered by scintillating tape on each side
+o the ACD.  Should this be derived from #tiles in some side row?</prim>
+  <prim name="numSideRows" value="4" uType="count">Number of rows of 
+tiles along the sides</prim>
+  <prim name="numPerSideRowShort" value="5" uType="count">Number of
+  tiles in some (currently upper two) side rows</prim>
+  <prim name="numPerSideRowLong" value="10" uType="count">Number of
+  tiles in some (currently lower two) side rows</prim>
+
+<!-- assign idfield values for sides and top of ACD -->
+  <prim name="ACDTopFace" value="0" uType="count">Top of ACD</prim>
+  <prim name="ACDXNegFace"  value="1" uType="count">Neg. x face</prim>
+  <prim name="ACDYNegFace"  value="2" uType="count">Neg. y face</prim>
+  <prim name="ACDXPosFace"  value="3" uType="count">Pos. x face</prim>
+  <prim name="ACDYPosFace"  value="4" uType="count">Pos. y face</prim>
+</primCategory>

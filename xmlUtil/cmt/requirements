@@ -1,0 +1,33 @@
+# $Header$
+package xmlUtil
+
+use glast_settings
+use XMLEXT
+use xml
+
+include_path "${XMLUTILROOT}"
+
+macro   xmlUtil_linkopts "-L${XMLUTILROOT}/${CMTCONFIG} -lxmlUtil"\
+        VisualC  ""
+
+macro_append Win32Debug   " ${XMLUTILROOT}/${DebugDir}/xmlUtillib.lib"
+macro_append Win32Release " ${XMLUTILROOT}/${ReleaseDir}/xmlUtillib.lib"
+
+library xmlUtil -no_share \
+     Arith.cxx            \
+     Substitute.cxx       \
+     Constants.cxx        \
+     Source.cxx           \
+     ../xml/*.xml         \
+     ../xmlUtil/*.h
+
+private
+application eval eval.cxx Arith.cxx Substitute.cxx  Constants.cxx Source.cxx
+
+application forProg makeXmlForProg.cxx Arith.cxx Substitute.cxx \
+     Constants.cxx Source.cxx
+
+application forDoc makeXmlForDoc.cxx Arith.cxx  Constants.cxx Source.cxx
+
+
+
