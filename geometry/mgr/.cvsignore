@@ -6,3 +6,4 @@ nt_settings.h
 cleanup
 *.dsp*
 *.dsw*
+nt_config.h
