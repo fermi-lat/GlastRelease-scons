@@ -10,7 +10,6 @@
 #include "Event/TopLevel/Definitions.h"
 
 #include <vector>
-#include <map>
 
 extern const CLID& CLID_AcdRecon;
 
@@ -45,7 +44,8 @@ namespace Event {
         AcdRecon(double e, int count, double gDoca, double doca, double actDist,
             const idents::AcdId &minDocaId, const std::vector<double> &rowDoca,
             const std::vector<double> &rowActDist,
-            const std::map<idents::AcdId,double> &energies)       
+			const std::vector<idents::AcdId>& idCol, 
+			const std::vector<double>& energyCol)
             : m_totEnergy(e),
             m_tileCount(count),
             m_gammaDoca(gDoca),
@@ -54,27 +54,13 @@ namespace Event {
             m_minDocaId(minDocaId),
             m_rowDocaCol(rowDoca),
             m_rowActDistCol(rowActDist),
-            m_energyCol(energies)
+			m_idCol(idCol),
+            m_energyCol(energyCol)
             
         {};
         
         virtual ~AcdRecon() { };
 
-        void initialize (double e, int count, double gDoca, double doca, double actDist,
-            const idents::AcdId minDocaId, const std::vector<double> &rowDoca,
-            const std::vector<double> &rowActDist,
-            const std::map<idents::AcdId, double> &energyCol) {
-            m_totEnergy = e;
-            m_tileCount = count;
-            m_gammaDoca = gDoca;
-            m_doca = doca;
-            m_actDist = actDist;
-            m_minDocaId = minDocaId;
-            m_rowDocaCol = rowDoca;
-            m_rowActDistCol = rowActDist;
-            m_energyCol = energyCol;
-        };
-        
         //! Retrieve reference to class definition structure
         virtual const CLID& clID() const   { return AcdRecon::classID(); }
         static const CLID& classID()       { return CLID_AcdRecon; }
@@ -87,8 +73,9 @@ namespace Event {
         inline const idents::AcdId& getMinDocaId() const { return m_minDocaId; };
         inline const std::vector<double>& getRowDocaCol() const { return m_rowDocaCol; };
         inline const std::vector<double>& getRowActDistCol() const { return m_rowActDistCol; };
-        inline const std::map<idents::AcdId, double>& getEnergyCol() const { return m_energyCol; };
-        
+		inline const std::vector<idents::AcdId>& getIdCol() const { return m_idCol; };
+        inline const std::vector<double>& getEnergyCol() const { return m_energyCol; };
+
         /// Serialize the object for writing
         virtual StreamBuffer& serialize( StreamBuffer& s ) const;
         /// Serialize the object for reading
@@ -129,7 +116,9 @@ namespace Event {
         std::vector<double> m_rowActDistCol;
         
         /// Stores reconstructed energy per ACD digi
-        std::map<idents::AcdId, double> m_energyCol;
+        //std::map<idents::AcdId, double> m_energyCol;
+		std::vector<idents::AcdId> m_idCol;
+		std::vector<double> m_energyCol;
         
     };
     
