@@ -9,7 +9,8 @@
 #include "rdbModel/Management/XercesBuilder.h"
 #include "rdbModel/Db/MysqlConnection.h"
 #include "rdbModel/Db/MysqlResults.h"
-
+#include "rdbModel/Tables/Column.h"
+#include "rdbModel/Tables/Datatype.h"
 
 int main(int, char**) {
   std::string infile("$(RDBMODELROOT)/xml/calibMetaDb.xml");
@@ -28,6 +29,34 @@ int main(int, char**) {
   }
   rdbModel::Rdb* rdb = man->getRdb();
 
+  std::string colMin;
+  std::string colMax;
+  
+  rdbModel::Column* serCol = rdb->getColumn("metadata_v2r1", "ser_no");
+  if (serCol) {
+    rdbModel::Datatype* serType = serCol->getDatatype();
+    
+    if (serType->getInterval(colMin, colMax) ) {
+      std::cout << "Min and max for ser_no are " << colMin 
+                << ", " << colMax << std::endl;
+    }  else {
+      std::cout << "ser_no has no min, max " << std::endl;
+    }
+  }
+  else std::cout << "no such column as 'ser_no' " << std::endl;
+
+  rdbModel::Column* vstartCol = rdb->getColumn("metadata_v2r1", "vstart");
+  if (vstartCol) {
+    rdbModel::Datatype* vstartType = vstartCol->getDatatype();
+
+    if (vstartType->getInterval(colMin, colMax) ) {
+      std::cout << "Min and max for vstart are " << colMin 
+                << ", " << colMax << std::endl;
+    }  else {
+      std::cout << "vstart has no min, max " << std::endl;
+    }
+  }
+  else std::cout << "no such column as 'vstart' " << std::endl;
 
   // Connect to real database
   rdbModel::MysqlConnection* con = new rdbModel::MysqlConnection();
