@@ -32,7 +32,7 @@ public:
     void open_input_file();
 
     /// divide a canvas
-    void IRF::divideCanvas(TCanvas & c, int nx, int ny, std::string top_title) ;
+    void divideCanvas(TCanvas & c, int nx, int ny, std::string top_title) ;
 
     const char* angle_cut(int i){
         static char buffer[256];
