@@ -361,9 +361,9 @@ namespace ldfReader {
                 if (eventSeqNum == maxEventSeqNum) eventSeqNum = -1;
             }
 
-            ldfReader::LatData::instance()->checkTemErrorInEventSummary();
+            ldfReader::LatData::instance()->checkTemError();
             ldfReader::LatData::instance()->checkPacketError();
-            ldfReader::LatData::instance()->checkTrgErrorInEventSummary();
+            ldfReader::LatData::instance()->checkTrgParityError();
 
          } catch (LdfException& e) {
             std::cerr << "Caught LdfException: " << e.what() << std::endl;
