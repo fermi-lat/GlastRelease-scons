@@ -24,7 +24,7 @@ macro reconRootData_shlibflags "" \
 private
 
 #define the list of header files to be used in rootcint
-macro root_headers "CalCluster.h CalLogEne.h CalRecon.h Recon.h ReconHeader.h TkrGamma.h TkrHit.h TkrLocator.h TkrRecon.h TkrSiCluster.h TkrTrack.h ReconLinkDef.h"
+macro root_headers "CalCluster.h CalLogEne.h CalRecon.h CalRangeRecData.h CalXtalRecData.h Recon.h ReconHeader.h TkrGamma.h TkrHit.h TkrLocator.h TkrRecon.h TkrSiCluster.h TkrTrack.h ReconLinkDef.h"
 
 # try to build this by adding to compilation for requirements
 macro reconRootData_custom_build ""\

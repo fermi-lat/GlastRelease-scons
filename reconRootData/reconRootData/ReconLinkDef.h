@@ -12,8 +12,9 @@
 #pragma link C++ class TkrGamma+;
 
 #pragma link C++ class CalRecon+;
-#pragma link C++ class CalLogEne+;
 #pragma link C++ class CalCluster+;
+#pragma link C++ class CalRangeRecData+;
+#pragma link C++ class CalXtalRecData+;
 
 #pragma link C++ class Recon+;
 #pragma link C++ class ReconHeader+;

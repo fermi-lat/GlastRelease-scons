@@ -4,67 +4,42 @@
 ClassImp(CalCluster)
 
 
-CalCluster::CalCluster (Int_t ind)
-:m_xposLayer(8),m_yposLayer(8),m_eneLayer(8)
+//################################################
+CalCluster::CalCluster(Double_t e,TVector3 p)
+//################################################
+{ 
+	int nl = 8;
+	m_eneLayer.resize(nl);	
+	m_pLayer.resize(nl);	
+	ini();
+	m_energySum = e;
+	m_energyCorrected = m_energySum;
+	m_position = p;
+};
+//################################################
+void CalCluster::writeOut() const
+//################################################
 {
-    m_position = new TVector3(0,0,0);
-    m_direction = new TVector3(0,0,0);
-    m_id = ind;
-    m_Esum = 0.0f;
-    m_Ecorr = 0.0f;
-    m_CsiAlpha=0.0f;
-    m_CsiLambda=0.0f;
-    m_start=0.0f;
-    m_ProfChisq=0.0f;
-    m_fitEnergy=0.0f;
-    m_xposLayer.Reset();
-    m_yposLayer.Reset();
-    m_eneLayer.Reset();
-    m_calLogs = 0;
-    Create();
-}
+#if 0 // THB: enable this after it is modified to write to the log object, and the values are all defined
+	std::cout << "Energy " << m_energySum << " Corrected " << m_energyCorrected;
+	std::cout << " " << position().x() << " " << position().y() << " " << position().z();
+	std::cout << " " << direction().x() << " " << direction().y() << " " << direction().z();
+	std::cout<<"\n";
+#endif
+};
+//------------- private --------------------------
+//################################################
+void CalCluster::ini()
+//################################################
+{
+	m_energySum       = 0.;
+	m_energyCorrected = 0.;
 
-CalCluster::~CalCluster() {
-    Clean();
-    if (m_calLogs) {
-        delete m_calLogs;
-        m_calLogs = 0;
-    }
-}
-
-void CalCluster::Clean() {
-    m_id = 0;
-    m_Esum = 0.0f;
-    m_Ecorr = 0.0f;
-    m_CsiAlpha=0.0f;
-    m_CsiLambda=0.0f;
-    m_start=0.0f;
-    m_ProfChisq=0.0f;
-    m_fitEnergy=0.0f;
-    m_xposLayer.Reset();
-    m_yposLayer.Reset();
-    m_eneLayer.Reset();
-    
-    if (m_position) {
-        delete m_position;
-        m_position = 0;
-    }
-    
-    if (m_direction) {
-        delete m_direction;
-        m_direction = 0;
-    }
-    
-    // Don't delete the logs, just
-    // clear out the TObjArray,
-    // since these logs are probably in 
-    // the "master" log list pointed to
-    // by CalRecon
-    if (m_calLogs) {
-        m_calLogs->Clear();
-    }
-}
-
-void CalCluster::Create() {
-    if (!m_calLogs) m_calLogs = new TObjArray();
-}
+	m_position = TVector3(0.,0.,0.);
+	m_direction = TVector3(0.,0.,0);
+	int nLayers = m_eneLayer.size();
+	for(int i = 0; i<nLayers; i++){
+		m_eneLayer[i]=0.;
+		m_pLayer[i]=TVector3(0.,0.,0.);
+	}
+};

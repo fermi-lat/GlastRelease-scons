@@ -3,139 +3,126 @@
 
 // Root Includes
 #include "TObject.h"
-#include "TObjArray.h"
 #include "TVector3.h"
-#include "TVector2.h"
-#include "TArrayF.h"
+
 //! Root object that stores a cluster of CsI detections
 /*! Provides access to the positions and energy depositions for a
 cluster of CsI logs */
+
+
+#include <vector>
+#ifdef WIN32
+using namespace std;
+#endif
+
+
 class CalCluster : public TObject
 {
     
 private:
-    //! sum of logs
-    Float_t  m_Esum;
     
-    //! corrected energy
-    Float_t  m_Ecorr;
+    //! Total measured energy in the calorimeter
+    Double_t m_energySum;
+    //! Leakage corrected energy using correlation method ( for E> several GeV)
+    Double_t m_leakEnergy;
+    //! corrected energy not used ( yet )
+    Double_t m_energyCorrected;
+    //! Energy per layer in MeV
+    std::vector<Double_t> m_eneLayer;
+    //! Barycenter position in each layer
+    std::vector<TVector3> m_pLayer;
+    //! RMS of energy deposition in each layer
+    std::vector<TVector3> m_rmsLayer;
+    //! RMS of longitudinal position measurement
+    Double_t m_rmslong;
+    //! RMS of transverse position measurement
+    Double_t m_rmstrans;
+    //! Transvers offset of calorimeter position measurement
+    Double_t m_transvOffset;
     
-    //! energy corrected for leakage ( valid at high energies)
-    Float_t m_Eleak;
+    //! fitted energy ( for E>10 GeV)
+    Double_t m_fitEnergy;
+    //! Chisquare of the fit ( not a real Chisquare)
+    Double_t m_ProfChisq;
+    //! Alpha parameter used in the fit
+    Double_t m_CsiAlpha;
+    //! Lambda parameter used in the fit 
+    Double_t m_CsiLambda;
+    //! Fitted starting point of the shower (physical meaning is not clear)
+    Double_t m_start;
     
-    // energy and position for each layer
-    //! energy per layer
-    TArrayF m_eneLayer;
-    //! x pos for each layer
-    TArrayF m_xposLayer;
-    //! y position for each layer
-    TArrayF m_yposLayer;
-    
-    //  profile fitting parameters
-    //! alpha parameter used for the fit
-    Float_t  m_CsiAlpha;
-    //! lambda parameter used for the fit
-    Float_t  m_CsiLambda;
-    
-    //! Fitted energy
-    Float_t  m_fitEnergy;
-    
-    //! Chi square of profile fitting
-    Float_t  m_ProfChisq;
-    
-    //! starting point of the shower
-    Float_t  m_start;
-    
-    Int_t m_id;                 // index in Object array?
-    
-    //! energy-weighted center of gravity of the cluster
-    TVector3  *m_position;   
-    //! direction of the cluster  (Px/P, Py/P, Pz/P)
-    TVector3  *m_direction;     
-    
-    //! list of CalLogEne used in this cluster
-    TObjArray *m_calLogs;       
+    TVector3 m_position;
+    TVector3 m_direction;
     
 public:
+ 
+  
+    //! constructor
+    CalCluster() {};
+    CalCluster(Double_t e, TVector3 p);
     
-    //! class constructor
-    CalCluster (Int_t index=0);
+    //! Destructor
+    ~CalCluster() {};
     
-    //! destructor
-    virtual ~CalCluster();
+    void setDirection(TVector3 v)   {m_direction = v;}
     
-    //! frees dynamically allocated memory
-    void Clean();
+    //! Set energy corrected
+    /*! not used for the moment
+    *  Energy sum is stored */
+    void setEnergyCorrected(Double_t e) {m_energyCorrected = e;}
+    //! Set energy per layer
+    void setEneLayer(std::vector<Double_t> v){m_eneLayer = v;}
+    //! Set barycenter position for each layer
+    void setPosLayer(std::vector<TVector3> v){m_pLayer = v;}
+    //! Set rms of energy deposition for each layer
+    void setRmsLayer(std::vector<TVector3> v){m_rmsLayer = v;}
+    //! Set Longitudinal RMS
+    void setRmsLong(Double_t r) {m_rmslong=r;}
+    //! Set transverse RMS
+    void setRmsTrans(Double_t r) {m_rmstrans=r;}
+    //! Set energy corrected via CalClustersAlg::Leak()
+    void setEneLeak(Double_t e) {m_leakEnergy = e;}
+    //! Set fitted energy form CalClustersAlg::Profile()
+    void setFitEnergy(Double_t e) { m_fitEnergy = e;}
+    //! Set chi square of profile fitting
+    void setProfChisq(Double_t k) { m_ProfChisq = k;}
+    //! Set alpha parameter used in the fit
+    void setCsiAlpha(Double_t a) { m_CsiAlpha =a;}
+    //! Set lambda parameter used in the fit
+    void setCsiLambda(Double_t l) { m_CsiLambda = l;}
+    //! Set the fitted starting point
+    void setCsiStart(Double_t s) { m_start = s;}
+    //! Set the transverse offset of calorimeter position measurement
+    void setTransvOffset (Double_t offset) {m_transvOffset = offset;}
     
-    //! allocates memory as necessary
-    void Create();
+    // access
+    Double_t energySum()        const {return m_energySum;}
+    Double_t energyLeak()       const {return m_leakEnergy;}
+    Double_t energyCorrected()  const {return m_energyCorrected;}
+    Double_t getEneLayer(int i) const {return m_eneLayer[i];}
+    const TVector3& getPosLayer(int i) const {return m_pLayer[i];}
+    const std::vector<Double_t>& getEneLayer() const {return m_eneLayer;}
+    const std::vector<TVector3>& getPosLayer() const {return m_pLayer;}
+    const std::vector<TVector3>& getRmsLayer() const {return m_rmsLayer;}
+    Double_t getRmsLong()		  const {return m_rmslong;}
+    Double_t getRmsTrans()	  const {return m_rmstrans;}
+    Double_t getTransvOffset()  const {return m_transvOffset;}
     
-    //! Access energy sum
-    void setEsum (Float_t ene) { m_Esum = ene; };
-    Float_t getEsum () { return m_Esum; };
+    TVector3 position()          const {return m_position;}
+    TVector3 direction()        const {return m_direction;}
+    Double_t getFitEnergy()	  const {return m_fitEnergy;}
+    Double_t getProfChisq()	  const {return m_ProfChisq;}
+    Double_t getCsiAlpha()	  const {return m_CsiAlpha;}
+    Double_t getCsiLambda()	  const {return m_CsiLambda;}
+    Double_t getCsiStart()	  const {return m_start;}
+    // operations
+    void writeOut() const;
     
-    //! Access corrected energy
-    void setEcorr (Float_t ene) { m_Ecorr = ene; };
-    Float_t getEcorr () { return m_Ecorr; };
+protected:
     
-    //! Access leaking energy
-    void setEleak (Float_t ene) { m_Eleak = ene; };
-    Float_t getEleak () { return m_Eleak; };
+    virtual void ini();
     
-    
-    
-    //! Access energy-weighted center of the cluster
-    TVector3* getPosition() { return m_position; };
-    inline void setPosition(TVector3 *p) { m_position = p; };
-    inline void setPosition(Double_t x, Double_t y, Double_t z) { m_position->SetXYZ(x,y,z); };
-    
-    //! Access the direction
-    TVector3* getDirection() { return m_direction; };
-    inline void setDirection(TVector3 *d) { m_direction = d; };
-    inline void setDirection(Double_t x, Double_t y, Double_t z) { m_direction->SetXYZ(x,y,z); };
-    
-    //!  Access to profile fitting parameters
-    Float_t getCsiAlpha() { return m_CsiAlpha;}
-    Float_t getCsiLambda() { return m_CsiLambda;}
-    Float_t getCsiStart(){ return m_start;}
-    Float_t getProfChisq(){ return m_ProfChisq;}
-    Float_t getFitEnergy(){ return m_fitEnergy;}
-    
-    void setCsiAlpha(Float_t a){m_CsiAlpha = a;}
-    void setCsiLambda(Float_t l){m_CsiLambda = l;}
-    void setCsiStart(Float_t s){m_start = s;}
-    void setFitEnergy(Float_t e){m_fitEnergy = e;}
-    void setProfChisq(Float_t c){m_ProfChisq = c;}
-    
-    // Access to energy and position in each layer
-    
-    //! Access all X positions within a layer
-    const TArrayF& getXLayer() const {return m_xposLayer;}
-    //! Access a specific X position within a layer
-    Float_t getXLayer(int i) {return m_xposLayer[i];}
-    //! Access all Y positions within a layer
-    const TArrayF& getYLayer() const {return m_xposLayer;}
-    //! Access a specific Y position within a layer
-    Float_t getYLayer(int i) {return m_yposLayer[i];}
-    
-    //! Access all energy depositions within a layer
-    const TArrayF& getEneLayer() const {return m_eneLayer;}
-    //! Access a specific energy within a layer
-    Float_t getEneLayer(int i) {return m_eneLayer[i];}
-    
-    void setEneLayer(int i,Float_t e) {m_eneLayer[i]=e;}
-    void setXLayer (int i,Float_t x) {m_xposLayer[i]=x;}
-    void setYLayer (int i,Float_t y) {m_yposLayer[i]=y;}
-    
-    //! Access the list of logs associated with this cluster
-    TObjArray* getCalLog () { return m_calLogs; };
-    
-    //! Access the ID of this cluster
-    Int_t getId() { return m_id; };
-    //! Set the ID of this cluster
-    void setId(Int_t id) { m_id = id; };
-    
-    ClassDef(CalCluster,2)
+    ClassDef(CalCluster,3)
 };
 
 
