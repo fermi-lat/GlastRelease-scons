@@ -11,6 +11,7 @@
 #include "CLHEP/Geometry/Transform3D.h"
 #include "CLHEP/Vector/ThreeVector.h"
 #include "globals.hh"
+#include "geomdefs.hh"
 
 #include <stdexcept>
 #include <string>
@@ -239,9 +240,9 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
 
     //Continue stepping until the track is no longer "alive"
     while(trackStatus)
-      {
-        double maxStep = 1000.;
-        double safeStep;
+    {
+        double maxStep  = 1000.;
+        double safeStep = 0.1;
 
         //Use the G4 navigator to locate the current point, then compute the distance
         //to the volume boundary
@@ -249,13 +250,37 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
         double             trackLen   = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
 
         //If we are right on the boundary then jump over and recalculate
-        if (trackLen == 0.)
+        if (trackLen <= fudge)
         {
-          fudge       = 0.01; // 10 um
-          fudgePoint += fudge*curDir;
+            // Two reasons for this: either on the boundary or travelling (close) to parallel
+            // Try to ascertain which here
+            G4bool temp = false;
+            const G4AffineTransform& globalToLocal = navigator->GetGlobalToLocalTransform();
+            const G4ThreeVector      localExitNrml = navigator->GetLocalExitNormal(&temp);
 
-          pCurVolume  = navigator->LocateGlobalPointAndSetup(fudgePoint, 0, true, true);
-          trackLen    = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
+            G4ThreeVector trackDir = curDir;
+            if (globalToLocal.IsRotated()) trackDir = globalToLocal.TransformAxis(curDir);
+
+            double trkToExitAng = trackDir.dot(localExitNrml);
+
+            // Parallel track case
+            if (fabs(trkToExitAng) < kCarTolerance)
+            {
+                if (fabs(curDir.x()) < kCarTolerance) curDir.setX(0.);
+                if (fabs(curDir.y()) < kCarTolerance) curDir.setY(0.);
+                if (fabs(curDir.z()) < kCarTolerance) curDir.setZ(0.);
+
+                curDir.setMag(1.);
+            }
+            // Surface tolerance case 
+            else if (trackLen == 0.)
+            {
+                fudge       = 10 * kCarTolerance; // 10 * minimum tolerance in G4
+                fudgePoint += fudge*curDir;
+
+                pCurVolume  = navigator->LocateGlobalPointAndSetup(fudgePoint, 0, true, true);
+                trackLen    = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
+            }
         }
 
         //If infinite trackLen then we have stepped outside of GLAST
