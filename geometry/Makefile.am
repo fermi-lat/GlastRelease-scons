@@ -8,6 +8,14 @@
 # The following set,  else would follow GNU conventions
 AUTOMAKE_OPTIONS = foreign
 
+EXTRA_DIST = config
+
 SUBDIRS = geometry src
 
-EXTRA_DIST = config
+lib_LTLIBRARIES = libgeometry.la
+
+libgeometry_la_SOURCES = version.cxx
+
+libgeometry_la_LIBADD = src/libgeometry.la
+
+libgeometry_la_LDFLAGS = -version-info 1
