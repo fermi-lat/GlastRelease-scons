@@ -13,6 +13,7 @@ namespace rdbModel{
   public:
     // Include MySQL-supported types we might conceivably use
     enum TYPES {
+      TYPEnotFound = -1,
       TYPEenum = 0,
       TYPEdatetime,
       TYPEtimestamp,

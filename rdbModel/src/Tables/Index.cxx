@@ -4,7 +4,7 @@
 
 namespace rdbModel {
 
-  Visitor::VisitorState  Index::accept(Visitor *) {
+  Visitor::VisitorState  Index::accept(Visitor * v) {
     return v->visitIndex(this);
   }
 

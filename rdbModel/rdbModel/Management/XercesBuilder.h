@@ -1,18 +1,22 @@
 // $Header$
 #ifndef RDBMODEL_XERCESBUILDER_H
 #define RDBMODEL_XERCESBUILDER_H
-// #include "detModel/Management/Builder.h"
+
 #include "rdbModel/Management/Builder.h"
 #include "xml/XmlParser.h"
 #include <xercesc/dom/DOM_Document.hpp>
 #include <xercesc/dom/DOM_Element.hpp>
-
+#include "rdbModel/Tables/Column.h"
+#include "rdbModel/Tables/Assertion.h"
 namespace rdbModel{
 
   class Table;    // single rdbms table
-  class Column;   // column description
+  //  class Column;   // column description
+  //  class Column::ColumnSource;
   class Index;    // index/key (may be primary or not)
-  class Assertion; // represents logic in some sort of validity check
+  //  class Assertion; // represents logic in some sort of validity check
+  //  class Assertion::Operator;
+  class Datatype;
 
   //  class DMDocClient;
   /**
