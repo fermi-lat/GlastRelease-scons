@@ -131,6 +131,15 @@ namespace rdbModel{
                                  const Assertion* where=0,
                                  int   rowLimit=0)=0;
 
+    /** 
+      Transmit raw request of any form to database.  If it is a request
+      that returns results, those results will be stored in a newly-
+      allocated ResultHandle and dbRequest will return a pointer to
+      it. Otherwise dbRequest will return a null pointer.
+      Throw an exception if request fails for any reason.
+    */
+    virtual ResultHandle* dbRequest(const std::string& request)=0;
+
     /**
       compile method for assertions.  Use it internally, but also make
       it publicly available so assertions belonging to a table
