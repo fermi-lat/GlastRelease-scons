@@ -5,15 +5,17 @@
 
 Recon::Recon(TFile* file) {
     reconTree = (TTree*)file->Get("Recon");
-    reconTree->SetBranchAddress("TkrNumClus",     &TkrNumClus);
-    reconTree->SetBranchAddress("TkrNumTracks",   &TkrNumTracks);
-    reconTree->SetBranchAddress("TkrTrk1NumClus", &TkrTrk1NumClus);
-    reconTree->SetBranchAddress("TkrClusX",        TkrClusX);
-    reconTree->SetBranchAddress("TkrClusY",        TkrClusY);
-    reconTree->SetBranchAddress("TkrClusZ",        TkrClusZ);
-    reconTree->SetBranchAddress("TkrClusLayer",    TkrClusLayer);
-    reconTree->SetBranchAddress("TkrClusView",     TkrClusView);
-    reconTree->SetBranchAddress("TkrTrk1Clusters", TkrTrk1Clusters);
+    if ( reconTree ) {
+        reconTree->SetBranchAddress("TkrNumClus",     &TkrNumClus);
+        reconTree->SetBranchAddress("TkrNumTracks",   &TkrNumTracks);
+        reconTree->SetBranchAddress("TkrTrk1NumClus", &TkrTrk1NumClus);
+        reconTree->SetBranchAddress("TkrClusX",        TkrClusX);
+        reconTree->SetBranchAddress("TkrClusY",        TkrClusY);
+        reconTree->SetBranchAddress("TkrClusZ",        TkrClusZ);
+        reconTree->SetBranchAddress("TkrClusLayer",    TkrClusLayer);
+        reconTree->SetBranchAddress("TkrClusView",     TkrClusView);
+        reconTree->SetBranchAddress("TkrTrk1Clusters", TkrTrk1Clusters);
+    }
 }
 
 void Recon::GetEvent(int event) {

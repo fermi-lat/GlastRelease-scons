@@ -61,7 +61,7 @@ EventDisplay::EventDisplay(TString filename) {
     else
         myTracker->loadGeometry(
               "$ROOTANALYSISROOT/src/LeaningTower/geometry/stack2geometry.txt");
-  
+
     myEvent = new Event(filename, myTracker->GetGeometry());
   
     myEventDisplay = new TCanvas("myEventDisplay", "myEventDisplay", 1100, 800);

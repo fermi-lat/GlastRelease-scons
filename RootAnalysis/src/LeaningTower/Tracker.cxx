@@ -138,12 +138,23 @@ void Tracker::Display(TCanvas* ed) {
     Border->GetXaxis()->SetTitle("position/mm");
     Border->GetYaxis()->SetTitle("position in stack/mm");
 
+    TText* xz = new TText();
+    xz->SetTextAlign(22);
+    xz->SetTextSize(0.1);
+    xz->SetText(178, 700, "xz");
+    TText* yz = new TText();
+    yz->SetTextAlign(22);
+    yz->SetTextSize(0.1);
+    yz->SetText(178, 700, "yz");
+
     ed->Divide(2,1);
     ed->cd(1);
     Border->Draw("AP");
+    xz->Draw();
     ed->cd(2);
     Border->Draw("AP");
-  
+    yz->Draw();
+
     TIter next(myGeometry);
     while ( Layer* aLayer = (Layer*)next() ) {
         if ( aLayer->IsX() ) {

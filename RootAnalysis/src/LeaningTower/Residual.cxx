@@ -48,9 +48,11 @@ public:
 Residual::Residual(TString filename, TString resFileName) {
     myTracker = new Tracker;
     myTracker->loadGeometry(gSystem->ExpandPathName(
-             "$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0Geometry.txt"));
-    myTracker->loadFitting(gSystem->ExpandPathName(
-        "$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0FittingPlanes.txt"));
+             "$ROOTANALYSISROOT/src/LeaningTower/geometry/TowerAGeometry.txt"
+//             "$ROOTANALYSISROOT/src/LeaningTowery/geometry/TowerGeometryGleamv5r8.txt"
+                 ));
+    //    myTracker->loadFitting(gSystem->ExpandPathName(
+    //        "$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0FittingPlanes.txt"));
     myTracker->SetTower(true);
     myEvent = new Event(filename, myTracker->GetGeometry());
     myResFileName = resFileName;
@@ -222,7 +224,8 @@ void Residual::DrawResidual(TString plane, TCut cut) {
 
     c->cd(1);
     gPad->SetTicks(1,1);
-    t->Draw("h_abs_ext-h_abs", cut);
+    gPad->SetLogy();
+    t->Draw("h_abs_ext-h_abs");
 
     c->cd(2);
     gPad->SetTicks(1,1);

@@ -390,8 +390,6 @@ void TreeMaker::CreateTree(Int_t numEvents) {
                 const TObjArray* clusCol = tkrRec->getClusterCol();
                 TkrNumClus = clusCol->GetEntries();
 
-                std::cout << "TkrNumClus " << TkrNumClus << std::endl;
-
                 TIter tkrClusIter(clusCol);
                 TkrCluster* pTkrClus = 0;
                 int clusIdx = 0;
@@ -416,8 +414,6 @@ void TreeMaker::CreateTree(Int_t numEvents) {
                 ////////////////// TKR TRACKS: ////////////////////////////////
                 const TObjArray *tkrCol = tkrRec->getTrackCol();
                 TkrNumTracks = tkrCol->GetEntries();
-
-                std::cout << "TkrNumTracks " << TkrNumTracks << std::endl;
 
                 if ( TkrNumTracks > 0 ) {
                     const TkrKalFitTrack* track1 =
