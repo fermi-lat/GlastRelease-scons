@@ -17,6 +17,9 @@
 
          @author  J. Bogart
 */
+
+class XmlBadStripsCnv;
+
 namespace CalibData {
 
   /** Visitor callbacks can indicate whether traversal should continue
@@ -94,6 +97,10 @@ namespace CalibData {
     inline virtual const CLID& clID() const { return classID(); }
     
     static inline const CLID& classID() { return CLID_Calib_TKR_BadChan; }
+
+    // Re-implemented from CalibBase
+    virtual void    update(CalibBase& other);
+
   private:
     class Uniplane {
     public:
@@ -136,8 +143,6 @@ namespace CalibData {
     };
 
 
-    // Re-implemented from CalibBase
-    virtual void    update(CalibBase& other);
 
     // Following are intended for converters to call
     StatusCode addBadTower(bool allbad, int howBad, 
