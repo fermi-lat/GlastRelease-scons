@@ -19,7 +19,7 @@ apply_pattern package_include
 # have a seperate library to export the calorimeter recon data classes 
 library CalReconData -no_share CalLogID.cpp CalGeometrySvc.cpp\
                      CalBase.cpp CalADCLogs.cpp CalRecLogs.cpp \
-                     CsIClusters.cpp
+                     CsIClusters.cpp CalDisplay.cxx
 
 macro CalRecon_linkopts   "$(CalReconDir)/libCalReconData.a  " \
       VisualC             "$(CalReconDir)/CalReconData.lib  " 
