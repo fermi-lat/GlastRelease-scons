@@ -14,13 +14,15 @@ use GaudiKernel v11r*
 use GaudiSvc    v7r*
 use GlastPolicy v4r*
 
-##apply_pattern package_include
+apply_pattern package_include
 apply_pattern package_headers
 ## apply_pattern package_linkopts
 apply_pattern packageShr
 apply_pattern packag_Cshlibflags
 
 ## uncomment following when ready
-library CalibSvc *.cxx Dll/*.cxx ${CalibSvc_headers}
+library CalibSvc *.cxx  CalibDataSvc/*.cxx \
+                        CalibMySQLCnv/*.cxx \
+                        Dll/*.cxx ${CalibSvc_headers}
 
 
