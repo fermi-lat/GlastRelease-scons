@@ -83,7 +83,9 @@ FluxSource* CompositeDiffuse::event (double time)
 
 
 void CompositeDiffuse::addNewSource(){
+    //here, set the flux in a random fashion, determined by the log N/ log S characteristic graph
     double flux=1.0;
+    flux = getRandomFlux();
     //Set up the spectrum with the appropriate power spectrum
     Spectrum * spec=new SimpleSpectrum("gamma", 100.0);
     
@@ -114,3 +116,40 @@ double CompositeDiffuse::remainingFluxInterval(){
     }
     
 }
+
+
+
+double CompositeDiffuse::getRandomFlux(){
+    long double prob=RandFlat::shoot(0.0, 1.0);
+    long double dx=0.0000001;
+
+    long double highthresholdofintensity = 0.0001; //for debugging and checking purposes
+
+    long double i=0.000000001;//lowthresholdofintensity;
+    
+    while(prob > 0 && i<highthresholdofintensity){
+        dx=0.01*pow(10.0,log10(i));
+        prob-=(dx)*pofi(i);
+        i+=dx;
+        //	printf("\nin the findandaddnew loop; i=%12.10e, prob=%12.10e, dx=%12.10e , logi=%lf\n",i,prob,dx,log10(i));
+    }
+    return i;
+}
+
+
+long double CompositeDiffuse::pofi(long double intensity){  //this function gives P(I).  see documentation.
+    long double p;
+    //printf("\nabout to calculate pofi...");
+    if(intensity>=pow(10.0,-7)){
+        p=2.49555*pow(10.0,-13)*pow(intensity,-2.5);//egret range value for pofi
+    }else{
+        p=2.49555*pow(10.0,-13)*pow(intensity,-2.5-0.05*(7.0+(log(intensity)/log(10.0))));	
+    }	//glast range value for pofi
+    //printf("\np=%12.10e, intensity=%12.10e",p,intensity);
+    return p;
+}
+
+
+
+
+

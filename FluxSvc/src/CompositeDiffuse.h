@@ -33,9 +33,12 @@ public:
       void addNewSource();
 
       double remainingFluxInterval();
-      
+
 private:
     double m_totalFlux; // The total flux from the entire sky
     double m_unclaimedFlux; // The amount of the flux "unaccounted for" by the known sources
+    double getRandomFlux();
+    long double pofi(long double intensity);
+      
     
 };
