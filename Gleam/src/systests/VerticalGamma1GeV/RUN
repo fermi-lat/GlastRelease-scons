@@ -1,9 +1,0 @@
-{
-  gROOT->Reset();
-  gROOT->LoadMacro("systest_Gleam.cxx");
-
-  RootTreeAnalysis* m= new RootTreeAnalysis("digi.root","recon.root","mc.root");
-
-  m->Go();
-  m->histFile->Write();
-}
