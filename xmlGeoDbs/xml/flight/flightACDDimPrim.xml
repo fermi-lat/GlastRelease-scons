@@ -70,7 +70,7 @@ of side tiles as simulated (no overlaps or gaps). True height from
 extend above topACD tile surface --- used for positioning.
 (7/28/03) 3-d model 6-23-03 essentially agrees with this.</prim>
 
-  <prim name="sideVerticalGap" value="0.0.">Vertical gap
+  <prim name="sideVerticalGap" value="0.0">Vertical gap
 between (rows of?) side tiles</prim>
   <prim name="sideHorizontalGap" value="2.0">Horizontal
 gap at the corners between adjacent sides of tiles  (July 03; revised
