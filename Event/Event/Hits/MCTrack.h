@@ -102,14 +102,14 @@ public:
   bool oscillationFlag() const                { return m_oscillationFlag; }
   /// Set oscillation flag
   void setOscillationFlag( bool value )       { m_oscillationFlag = value; }
-
+*/
   /// Serialize the object for writing
   virtual StreamBuffer& serialize( StreamBuffer& s ) const ;
   /// Serialize the object for reading
   virtual StreamBuffer& serialize( StreamBuffer& s );
   /// Fill the ASCII output stream
   virtual std::ostream& fillStream( std::ostream& s ) const;
-  */
+  
 
 private:
   /// 4-momentum vector
