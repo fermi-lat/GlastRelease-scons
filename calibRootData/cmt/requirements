@@ -14,7 +14,7 @@ apply_pattern root_package headers="\
  ../calibRootData/Cal/CalDimension.h \
  ../calibRootData/Cal/CalGain.h \
  ../calibRootData/Cal/CalGainCol.h" \
- includes="-I${COMMONROOTDATA}"
+ includes="-I${COMMONROOTDATAROOT} -ICal -IAcd -ITkr"
 
 # ..and all other include files, once I figure out what they are
 
