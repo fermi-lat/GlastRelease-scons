@@ -164,7 +164,7 @@ double SurfaceMuons::spectrum(double ecth)
 
     double 
         atmos = 1/(1+1.1*ecth/115.) + 0.054/(1+1.1*ecth/850.),
-        cutoff = ecth<30? exp(-sqr(::log(ecth/30.))/0.55) : 1.0;
+        cutoff = ecth<30? exp(-sqr(::log10(ecth/30.))/0.55) : 1.0;
 
 
     return pow(ecth, -2.71)*atmos*cutoff;
