@@ -38,19 +38,19 @@ public:
     typedef TkrCluster::view AXIS;
     
     TkrFitPlane() 
-        : m_IDHit (0), m_IDTower(0),  m_IDPlane(0), m_projection(TkrCluster::view::XY), 
-		  m_projPlus(TkrCluster::view::XY), m_zplane(0), m_eneplane(0), m_radLen(0),  
+        : m_IDHit (0), m_IDTower(0),  m_IDPlane(0), m_projection(TkrCluster::XY), 
+		  m_projPlus(TkrCluster::XY), m_zplane(0), m_eneplane(0), m_radLen(0),  
 		  m_activeDist(0)
     {}
 
     TkrFitPlane(unsigned id, int kplane, double ene, double z, const TkrFitHit& hit, AXIS prj)
-        : m_IDHit(id), m_IDPlane(kplane), m_projection(prj), m_projPlus(TkrCluster::view::XY), 
+        : m_IDHit(id), m_IDPlane(kplane), m_projection(prj), m_projPlus(TkrCluster::XY), 
 		  m_zplane(z), m_eneplane(ene), m_radLen(0), m_activeDist(0)   
     { 
 	    setHit(hit);
     }
     TkrFitPlane(unsigned id, int kplane, double ene, double z, AXIS prj)
-        : m_IDHit(id), m_IDPlane(kplane), m_projPlus(TkrCluster::view::XY), m_eneplane(ene),
+        : m_IDHit(id), m_IDPlane(kplane), m_projPlus(TkrCluster::XY), m_eneplane(ene),
           m_radLen(0), m_activeDist(0)
     {
         m_zplane = z;
