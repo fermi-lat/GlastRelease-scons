@@ -22,7 +22,6 @@ void McIntegratingHit::initialize(const VolumeIdentifier& id) {
 
 void McIntegratingHit::Clear(Option_t *option)
 {
-    m_energyItem.clear();
     m_mcPartArr.Clear();
     m_energies.clear();
     m_packedFlags = 0;
@@ -30,6 +29,7 @@ void McIntegratingHit::Clear(Option_t *option)
     m_moment1Seed = TVector3(0., 0., 0.);
     m_moment2Seed = TVector3(0., 0., 0.);
     m_volumeId.Clear();
+    m_mapEntry = 0;
 }
 
 void McIntegratingHit::Print(Option_t *option) const {
@@ -44,7 +44,6 @@ void McIntegratingHit::Print(Option_t *option) const {
         << m_moment1Seed.Z() << ")   ";
     cout << "Mom2: (" << m_moment2Seed.X() << "," << m_moment2Seed.Y() << ","
         << m_moment2Seed.Z() << ")" << endl;
-    cout << "Size of EnergyMap: " << m_energyItem.size() << endl;
     cout << "Energy Map:  Size of energy vector: " << m_energies.size();
     cout << "    Size of McParticle array: " << m_mcPartArr.GetEntries() 
         << endl;
@@ -61,35 +60,17 @@ void McIntegratingHit::Print(Option_t *option) const {
 } 
 
 
-const McIntegratingHit::energyDepositMap& McIntegratingHit::getItemizedEnergy()
-{
-    // Purpose and Method:  Return a vector of pairs of McParticle* and energies.  
-    //    We avoid storing a vector of pairs - due to the problems with storing 
-    //    STL containers which contain a STL container.  Instead we store the map 
-    //    as 2 separate arrays:  one contains the McParticles the other the 
-    //    energies.  We construct the vector of pairs from these 2 arrays.  Note 
-    //    that this vector of pairs is transient - it is never stored to a ROOT 
-    //    file - it is constructed when needed.
-    // Output:  An energyDepositMap - in this case a vector of pairs - where the
-    //    pair consists of an McParticle* and a Double_t for the energy.
-    if (m_energyItem.size() <= 0) {
-        m_energyItem.clear();
-        // TRefArray::Next does not seem to be implemented in 3.02 or 3.03.04
-        // Just iterating over the entries in the arrays for now, rather than
-        // using an iterator.
-        //TRefArrayIter mcPartIter(&m_mcPartArr);
-        McParticle *mcPart;
-        UInt_t iEnergy = 0;
-        //while( (mcPart = (McParticle*)mcPartIter.Next()) ) {
-        for (iEnergy = 0; iEnergy < m_mcPartArr.GetEntries(); iEnergy++) {
-            mcPart = (McParticle*) m_mcPartArr.At(iEnergy);
-            m_energyItem.push_back( 
-                std::pair<McParticle*, Double_t>(mcPart, m_energies[iEnergy]));
-            //++iEnergy;
-        }
+const McParticle* McIntegratingHit::mapNext(Double_t &energy) {
+    // Purpose and Method:  Access the next McParticle* and energy pair
+    //   The transient data member, m_mapEntry, is used to access a specific
+    //   pair.  If we have reached the end of the map, then a null McParticle*
+    //   is returned.
+    if ( m_mapEntry < m_mcPartArr.GetEntries() ) {
+        energy = m_energies[m_mapEntry];
+        return (McParticle*) m_mcPartArr.At(m_mapEntry++);
     }
-
-    return m_energyItem;
+    energy = 0;
+    return 0;
 }
 
 
