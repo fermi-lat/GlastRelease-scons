@@ -20,11 +20,7 @@
 #include "GlastEvent/data/TdGlastData.h"
 
 /// TkrRecon classes
-#include "TkrRecon/SiRecObjs.h"
-#include "TkrRecon/GFparticle.h"
-#include "TkrRecon/GFdata.h"
-#include "TkrRecon/GFgamma.h"
-
+#include "GlastEvent/Recon/ISiRecObjs.h"
 
 int nbins;  //!< Number of bins used for the fit
 std::vector<double> g_elayer;  //!< Energy per layer in GeV
@@ -502,7 +498,7 @@ StatusCode CalClustersAlg::execute()
         Point gammaVertex;
 		Vector gammaDirection;
 
-    SmartDataPtr<SiRecObjs> tkrRecData(eventSvc(),"/Event/TkrRecon/SiRecObjs");
+    SmartDataPtr<ISiRecObjs> tkrRecData(eventSvc(),"/Event/TkrRecon/SiRecObjs");
     if (tkrRecData == 0) {
         log << MSG::INFO << "No TKR Reconstruction available " << endreq;
        // return sc;
@@ -513,13 +509,11 @@ StatusCode CalClustersAlg::execute()
 		ngammas = tkrRecData->numGammas();
 		log << MSG::INFO << "number of gammas = " << ngammas << endreq;
 	
-		GFgamma* gamma;
   
 		 if (ngammas > 0) {
 			rectkr++;
-			gamma = tkrRecData->Gamma(0);
-            gammaVertex = gamma->vertex();
-            gammaDirection = gamma->direction();
+            gammaVertex = tkrRecData->getGammaVertex(0);
+            gammaDirection = tkrRecData->getGammaDirection(0);
 			slope = fabs(gammaDirection.z());
 	     	log << MSG::DEBUG << "gamma direction = " << slope << endreq;
 
