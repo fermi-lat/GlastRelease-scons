@@ -33,9 +33,8 @@ namespace calibUtil {
       LEVELSuper = 8
     };
       
-
-    /// Nothing to do in constructor since everything is static.
-    Metadata() {};
+    /// Constructor keeps track of table of interest
+    Metadata();
 
     ~Metadata() {};
 
@@ -64,38 +63,39 @@ namespace calibUtil {
            to current time)
 
     */
-    static eRet openRecord(const std::string& instr, 
-                             const std::string& calibType,
-                             const std::string& dataFormat, 
-                             const std::string& fmtVersion,
-                             const std::string& filename, 
-                             const std::string& calibStatus,
-                             const std::string& procLevel = "TEST");
+    eRet openRecord(const std::string& instr, 
+                    const std::string& calibType,
+                    const std::string& dataFmt, 
+                    const std::string& fmtVersion,
+                    const std::string& dataIdent, 
+                    const std::string& completion,
+                    const std::string& procLevel = "TEST");
 
     /** Write a record to the metadata database. Any required columns
      *  not specified by caller will be set to default values.
      */
-    static eRet insertRecord();
+    eRet insertRecord();
 
     /** Explicit clear of record.  Must have a call to either insertRecord
      *  (to actually write the record to the database) or clearRecord 
      *  (to abort) between successive calls to openRecord.
      */
-    static void clearRecord();
+    void clearRecord();
 
-    //    static void addField(const std::string& fieldName, 
-    //                         const std::string& fieldValue);
-
-    /** Routine for setting validity interval.
-     */
-    static eRet addValidInterval(Timestamp startTime,
+    /// Set validity interval: period over which calibration data
+    /// is applicable.
+    eRet addValidInterval(Timestamp startTime,
                                  Timestamp endTime);
 
-    static eRet addComment(std::string comment);
+    /// Add setting of creator column to row-in-progress
+    eRet addCreator(std::string creator);
 
-    static eRet addInputDesc(std::string desc);
+    /// Add notes column to row-in-progress
+    eRet addNotes(std::string notes);
 
-    static eRet addCreator(std::string creator);
+    /// Add description of input to cal procedure to row-in-progress
+    eRet addInputDesc(std::string desc);
+
 
     /** Return serial number for calibration which is best match to
         criteria
@@ -115,7 +115,7 @@ namespace calibUtil {
        If there are multiple calibrations which are not distinguished
        by the above, pick the one most recently written.
     */
-    static eRet findBest(unsigned int *ser,
+    eRet findBest(unsigned int *ser,
                          const std::string& calibType, 
                          Timestamp timestamp,
                          unsigned levelMask, 
@@ -136,10 +136,10 @@ namespace calibUtil {
           @return     true if serialNo exists in dbs and "filename" has
                       non-null value; else false.
     */
-    static bool getReadInfo(unsigned int serialNo, 
-                            std::string* dataFormat, 
-                            std::string* fmtVersion,
-                            std::string* filename);
+    bool getReadInfo(unsigned int serialNo, 
+                     std::string* dataFormat, 
+                     std::string* fmtVersion,
+                     std::string* filename);
                         
   /** 
     // Additional services will probably be needed to
@@ -167,13 +167,17 @@ namespace calibUtil {
   private:
     static MYSQL* readCxt;
     static MYSQL* writeCxt;
-    static std::string row;     // place to keep row as it's being built
     static bool connect(MYSQL* cxt, const std::string& group, eRet& err);
 
     //    static void makeQuery(std::string& query, unsigned int *levelMask);
-    static bool addLevel(std::string& q, unsigned int *levelMask);
-    static bool checkCalibStatusInput(const std::string& stat);
-    static bool checkProcLevelInput(const std::string& level);
+    bool addLevel(std::string& q, unsigned int *levelMask);
+    bool checkCompletionInput(const std::string& stat);
+    bool checkProcLevelInput(const std::string& level);
+
+    
+
+    /// Discover username and add to row-in-progress
+    eRet addUser();
 
     /** Keep track of which columns in row have been initialized 
         with bit mask */
@@ -183,8 +187,13 @@ namespace calibUtil {
       eInputDesc = 4,
       eComment = 8,
       eCreator = 0x10 };
+
+    /// Constant bit mask indicating all necessary fields have been set
     static const unsigned int rowReady;
-    static unsigned int rowStatus;
+
+    std::string row;     // place to keep row as it's being built
+    unsigned int rowStatus;
+    std::string  table;
   };
 }
 
