@@ -77,7 +77,7 @@ private:
 
 };
 
-void MCEvent::setSourceId(int s)
+inline void MCEvent::setSourceId(int s)
 {
 	m_sourceId = s;
 }
