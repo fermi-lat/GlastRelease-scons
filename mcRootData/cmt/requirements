@@ -1,5 +1,5 @@
 package mcRootData
-version v2r5p3
+version v2r5p4
 
 use GlastPolicy v4r*
 use ROOT v3r2p*
@@ -14,7 +14,7 @@ apply_pattern package_headers
 
 
 private
-use RootPolicy v0r*
+use RootPolicy v1r*
 
 macro root_headers "\
  ../mcRootData/VolumeIdentifier.h\
