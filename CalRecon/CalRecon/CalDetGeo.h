@@ -8,12 +8,12 @@
 #include "gui/DisplayRep.h"
 
 //##############################################
-class Geo
+class CalGeo
 //##############################################
 {
 public:
 	// construct
-	Geo(Point p = Point(0.,0.,0.), Point s=Point(0.,0.,0))
+	CalGeo(Point p = Point(0.,0.,0.), Point s=Point(0.,0.,0))
 		: m_position(p),m_size(s) {}
 	void setGeo(Point p, Point s);
 	void setPosition(Point p)   {m_position = p;};
@@ -30,16 +30,16 @@ private:
 };
 
 //##############################################
-class MatGeo : public Geo
+class CalMatGeo : public CalGeo
 //##############################################
 {
 public:
 
 	// construct
-	MatGeo(){}
-	MatGeo(Point p, Point s):m_material("vacuum"),m_X0(0), Geo(p,s){}
-	MatGeo(std::string name, double d, Point p, Point s):m_material("vacuum"),
-		m_X0(0), Geo(p,s){}
+	CalMatGeo(){}
+	CalMatGeo(Point p, Point s):m_material("vacuum"),m_X0(0), CalGeo(p,s){}
+	CalMatGeo(std::string name, double d, Point p, Point s):m_material("vacuum"),
+		m_X0(0), CalGeo(p,s){}
 	void setMaterial(std::string name, double d);
 
 	// access
@@ -53,7 +53,7 @@ private:
 	double        m_X0;
 };
 //##############################################
-class CalDetGeo : public MatGeo, public CalAxis
+class CalDetGeo : public CalMatGeo, public CalAxis
 //##############################################
 {
 public:
@@ -63,9 +63,9 @@ public:
 
 	// construct
 	CalDetGeo(int ilayer, axis a, int id, Point p, Point s):m_layer(ilayer),
-		m_axis(a), m_id(id), MatGeo(p,s) {}
+		m_axis(a), m_id(id), CalMatGeo(p,s) {}
 	CalDetGeo(int ilayer, axis a, int id): m_layer(ilayer),
-		m_axis(a), m_id(id), MatGeo() {}
+		m_axis(a), m_id(id), CalMatGeo() {}
 	~CalDetGeo() {};
 	void setName(std::string n)  {m_name = n;}
 

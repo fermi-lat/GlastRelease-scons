@@ -1,21 +1,21 @@
 #include "CalRecon/CalDetGeo.h"
 
 //#########################################################
-void Geo::setGeo(Point p, Point s) 
+void CalGeo::setGeo(Point p, Point s) 
 //#########################################################
 {
 	setPosition(p);
 	setSize(s);
 }
 //#########################################################
-void MatGeo::setMaterial(std::string name, double d) 
+void CalMatGeo::setMaterial(std::string name, double d) 
 //#########################################################
 {
 	m_material = name;
 	m_X0 = d;
 }
 //#########################################################
-double MatGeo::radLen() 
+double CalMatGeo::radLen() 
 //#########################################################
 {
 	return 2.*size().z()/X0();
