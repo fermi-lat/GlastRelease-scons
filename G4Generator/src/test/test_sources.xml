@@ -13,11 +13,27 @@
        </spectrum>
      </source>
 
+    <source name="muon_pencil_side_x">
+       <spectrum> 
+         <particle name="mu+"><energy e="2"/> </particle>
+           <direction theta="90" phi="90" />
+           <launch_point x="0" y="50" z="0" />
+       </spectrum>
+     </source>
+
+    <source name="muon_pencil_side_y">
+       <spectrum> 
+         <particle name="mu+"><energy e="2"/> </particle>
+           <direction theta="90" phi="0" />
+           <launch_point x="50" y="5" z="0" />
+       </spectrum>
+     </source>
+
     <source name="muon_pencil">
        <spectrum> 
          <particle name="mu+"><energy e="2"/> </particle>
-           <direction theta="22" phi="00" />
-           <launch_point x="21" y="3" z="80" />
+           <direction theta="0" phi="0" />
+           <launch_point x="2" y="2" z="80" />
        </spectrum>
      </source>
 
