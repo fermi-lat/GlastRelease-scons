@@ -41,7 +41,7 @@ void RootTreeAnalysis::McHistDefine() {
     TH1F *ENERGYMC = new TH1F("ENERGYMC", "MC Part Energy (MeV)",
         10001, -0.5, 10000.5);   
     
-    TProfile *PROFDEP = new TProfile("PROFDEP", "Total Energy Deposit in Tile 0022", 6, -7.5, 82.5, 0, 10);
+    TProfile *PROFDEP = new TProfile("PROFDEP", "Total Energy Deposit in Tile 0022", 15, -2.5, 77.5, 0, 10);
 }
 
 
