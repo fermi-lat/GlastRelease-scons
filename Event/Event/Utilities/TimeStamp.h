@@ -1,30 +1,27 @@
-// $Header$
 #ifndef EVENT_TIMESTAMP_H
 #define EVENT_TIMESTAMP_H 1
 
-
-// Include files
 #include <iostream>
 #include "GaudiKernel/StreamBuffer.h"
 #include "Event/TopLevel/Definitions.h"
 
-/*! \class TimeStamp
-\brief encapsulate the time.
-Elapsed? absolute? Currently a double, in units of seconds.
-one event. 
+/** @class TimeStamp
+* @brief encapsulate the time.
+*
+* Elapsed? absolute? Currently a double, in units of seconds.
+*
+* $Header$
 */
-
 
 class TimeStamp                                                                {
 
 public:
 
-  /// Constructors
   TimeStamp()
     : m_time(0)                                                              { }
   TimeStamp( double t )
     : m_time(t)                                                              { }
-  /// Destructor
+
   ~TimeStamp()                                                               { }
 
   /// Retrieve time

@@ -1,4 +1,5 @@
-// $Id$
+// File and Version Information:
+// $Header$
 
 #define _Event_EventModel_CPP_
 

@@ -2,8 +2,6 @@
 #ifndef LHCBEVENT_DEFINITIONS_H
 #define LHCBEVENT_DEFINITIONS_H 1
 
-
-// Include files
 #include <iostream>
 #include <iomanip>
 

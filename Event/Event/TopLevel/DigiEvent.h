@@ -14,8 +14,9 @@ extern const CLID& CLID_DigiEvent;
 * It can be identified by "/Event/Digi" on the TDS
 * 
 * It contains:
-* - flag, if coming from Monte Carlo
+* - m_fromMc, if coming from Monte Carlo
 * 
+* $Header$
 */
 namespace Event {  // NameSpace
 
