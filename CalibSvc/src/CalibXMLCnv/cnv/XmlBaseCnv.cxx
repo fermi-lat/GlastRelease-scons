@@ -16,6 +16,8 @@
 #include "CalibSvc/ICalibXmlSvc.h"
 #include "CalibSvc/ICalibMetaCnvSvc.h"
 #include "CalibData/CalibTime.h"
+#include "CalibData/CalibBase.h"
+#include "xml/Dom.h"
 
 #include "facilities/Util.h"
 
@@ -27,8 +29,9 @@ XmlBaseCnv::~XmlBaseCnv() {}
 // const ICnvFactory& XmlBaseCnvFactory = s_factory;
 XmlBaseCnv::XmlBaseCnv( ISvcLocator* svc, const CLID& clid) :
   Converter (XML_StorageType, clid, svc),
-  m_xmlSvc (0), m_metaSvc(0), m_vstart(0), m_vend(0) {
-}
+  m_xmlSvc (0), m_metaSvc(0), m_vstart(0), m_vend(0),
+  m_nRow(10000), m_nCol(10000), m_nLayer(10000), m_nXtal(10000),
+  m_nFace(10000), m_nRange(10000) {}
 
 StatusCode XmlBaseCnv::initialize() {
   StatusCode status = Converter::initialize();
@@ -112,7 +115,7 @@ StatusCode XmlBaseCnv::createObj(IOpaqueAddress* addr,
     @param  elt      Document elt from XML document   (input)
     @param  refpObject 
 */
-StatusCode XmlBaseCnv::internalCreateObj(const DOM_Element& elt,
+StatusCode XmlBaseCnv::internalCreateObj(const DOM_Element& docElt,
                                          DataObject*& refpObject,
                                          IOpaqueAddress* address) {
   // creates a msg stream for debug purposes
@@ -150,7 +153,7 @@ StatusCode XmlBaseCnv::internalCreateObj(const DOM_Element& elt,
 
 
   // creates an object for the node found
-  if (sc.isSuccess()) sc = converter->i_createObj (elt, refpObject);
+  if (sc.isSuccess()) sc = converter->i_createObj (docElt, refpObject);
   if (sc.isFailure()) {
     return sc;
   }
@@ -182,22 +185,8 @@ StatusCode XmlBaseCnv::updateObj(IOpaqueAddress* ,
   return StatusCode::FAILURE;
 }
 
-
-StatusCode XmlBaseCnv::createRep(DataObject *, // pObject,
-                                 IOpaqueAddress *&)  // refpAddress) 
-{ return StatusCode::FAILURE;}
-
-StatusCode XmlBaseCnv::updateRep(IOpaqueAddress *&,  // refpAddress, 
-                                 DataObject *)   // pObject)
-{ return StatusCode::FAILURE; }
-
-StatusCode XmlBaseCnv::fillRepRefs(IOpaqueAddress *&, DataObject *) {
-  return StatusCode::FAILURE;
-}
-
-StatusCode XmlBaseCnv::updateRepRefs(IOpaqueAddress *&, DataObject *) {
-  return StatusCode::FAILURE;
-}
+// Since we're not expecting to support writing back to persistent
+// store, don't implement the converter *Rep functions.
 */
 
 StatusCode XmlBaseCnv::readHeader(const DOM_Element&) {
@@ -208,4 +197,168 @@ const unsigned char XmlBaseCnv::storageType() {
   return XML_StorageType;
 }
 
+StatusCode XmlBaseCnv::readDimension(const DOM_Element& docElt, 
+                                     unsigned& nRow, unsigned& nCol, 
+                                     unsigned& nLayer,
+                                     unsigned& nXtal, unsigned& nFace,
+                                     unsigned& nRange) {
+  using xml::Dom;
 
+  DOM_Element dimElt = Dom::findFirstChildByName(docElt, "dimension");
+  if (dimElt == DOM_Element()) return StatusCode::FAILURE;
+
+  std::string att = Dom::getAttribute(dimElt, "nRow");
+  nRow = (unsigned) atoi(att.c_str());
+  att = Dom::getAttribute(dimElt, "nCol");
+  nCol = (unsigned) atoi(att.c_str());
+  att = Dom::getAttribute(dimElt, "nLayer");
+  nLayer = (unsigned) atoi(att.c_str());
+  att = Dom::getAttribute(dimElt, "nXtal");
+  nXtal = (unsigned) atoi(att.c_str());
+  att = Dom::getAttribute(dimElt, "nFace");
+  nFace = (unsigned) atoi(att.c_str());
+  att = Dom::getAttribute(dimElt, "nRange");
+  nRange = (unsigned) atoi(att.c_str());
+
+  return StatusCode::SUCCESS;
+}
+
+/// Another utility for derived classes to use
+void XmlBaseCnv::setBaseInfo(CalibData::CalibBase* pObj) {
+  pObj->setValidity(*m_vstart, *m_vend);
+  pObj->setSerNo(m_serNo);
+}
+
+DOM_Element XmlBaseCnv::findFirstRange(const DOM_Element& docElt) {
+  using xml::Dom;
+
+  DOM_Element elt = Dom::findFirstChildByName(docElt, "tower");
+  if (elt == DOM_Element()) return elt;
+
+  std::string att = Dom::getAttribute(elt, "nRow");
+  m_nRow = atoi(att.c_str());
+
+  att = Dom::getAttribute(elt, "nCol");
+  m_nCol = atoi(att.c_str());
+
+  // All child elements of a tower are layer elements
+  elt = Dom::getFirstChildElement(elt);
+  att = Dom::getAttribute(elt, "iLayer");
+  m_nLayer = atoi(att.c_str());
+
+  // All child elements of layers are xtal elements
+  elt = Dom::getFirstChildElement(elt);
+  att = Dom::getAttribute(elt, "iXtal");
+  m_nXtal = atoi(att.c_str());
+
+  // All child elements of xtal are face elements
+  elt = Dom::getFirstChildElement(elt);
+  att = Dom::getAttribute(elt, "end");
+  m_nFace = (att.compare(std::string("POS")) == 0) ? 1 : 0;
+
+  m_nRange = 0;
+  elt = Dom::getFirstChildElement(elt);
+  return elt;
+}
+
+/// Still another one to navigate XML file and find next set of range data
+DOM_Element XmlBaseCnv::findNextRange(const DOM_Element& rangeElt) {
+  using xml::Dom;
+
+  DOM_Element elt = Dom::getSiblingElement(rangeElt);
+  if (elt != DOM_Element()) {
+    m_nRange++;
+    return elt;
+  }
+
+  // Done with this xtal face; look for sibling
+  DOM_Node node = elt.getParentNode();
+  elt = static_cast<DOM_Element &>(node);   // current xtal face
+  elt = Dom::getSiblingElement(elt);          // next xtal face
+
+  if (elt != DOM_Element()) {
+    std::string att = Dom::getAttribute(elt, "end");
+    m_nFace = (att.compare(std::string("POS")) == 0) ? 1 : 0;
+
+    m_nRange = 0;
+    elt = Dom::getFirstChildElement(elt);
+    return elt;
+  }
+
+  // Done with this xtal
+  node = elt.getParentNode();  // current xtal
+  elt = static_cast<DOM_Element &>(node);
+  elt = Dom::getSiblingElement(elt);         // next xtal
+
+  if (elt != DOM_Element()) {
+    std::string att = Dom::getAttribute(elt, "iXtal");
+    m_nXtal = atoi(att.c_str());
+
+    // All child elements of xtal are face elements
+    elt = Dom::getFirstChildElement(elt);
+    att = Dom::getAttribute(elt, "end");
+    m_nFace = (att.compare(std::string("POS")) == 0) ? 1 : 0;
+
+    m_nRange = 0;
+    elt = Dom::getFirstChildElement(elt);
+    return elt;
+  }
+
+  // Done with this layer
+  node = elt.getParentNode();  // current layer
+  elt = static_cast<DOM_Element &>(node);
+  elt = Dom::getSiblingElement(elt);         // next layer
+
+  if (elt != DOM_Element()) {
+    std::string att = Dom::getAttribute(elt, "iLayer");
+    m_nLayer = atoi(att.c_str());
+
+    // All child elements of layers are xtal elements
+    elt = Dom::getFirstChildElement(elt);
+    att = Dom::getAttribute(elt, "iXtal");
+    m_nXtal = atoi(att.c_str());
+    
+    // All child elements of xtal are face elements
+    elt = Dom::getFirstChildElement(elt);
+    att = Dom::getAttribute(elt, "end");
+    m_nFace = (att.compare(std::string("POS")) == 0) ? 1 : 0;
+    
+    m_nRange = 0;
+    elt = Dom::getFirstChildElement(elt);
+    return elt;
+  }
+
+  // Done with this tower
+  node = elt.getParentNode();  // current tower
+  elt = static_cast<DOM_Element &>(node);
+  elt = Dom::getSiblingElement(elt);         // next tower
+
+  if (elt == DOM_Element()) return elt;
+
+  // otherwise we've got a new tower; go through the whole
+  // rigamarole
+  std::string att = Dom::getAttribute(elt, "nRow");
+  m_nRow = atoi(att.c_str());
+
+  att = Dom::getAttribute(elt, "nCol");
+  m_nCol = atoi(att.c_str());
+
+  // All child elements of a tower are layer elements
+  elt = Dom::getFirstChildElement(elt);
+  att = Dom::getAttribute(elt, "iLayer");
+  m_nLayer = atoi(att.c_str());
+
+  // All child elements of layers are xtal elements
+  elt = Dom::getFirstChildElement(elt);
+  att = Dom::getAttribute(elt, "iXtal");
+  m_nXtal = atoi(att.c_str());
+
+  // All child elements of xtal are face elements
+  elt = Dom::getFirstChildElement(elt);
+  att = Dom::getAttribute(elt, "end");
+  m_nFace = (att.compare(std::string("POS")) == 0) ? 1 : 0;
+
+  m_nRange = 0;
+  elt = Dom::getFirstChildElement(elt);
+  return elt;
+}

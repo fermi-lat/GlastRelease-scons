@@ -22,6 +22,7 @@ class ITime;
 
 namespace CalibData {
   class CalibTime;
+  class CalibBase;
 }
 
 class  XmlBaseCnv : public Converter {
@@ -97,14 +98,41 @@ protected:
   // the base converter.
   virtual StatusCode readHeader(const DOM_Element&);
 
+  /// Convenience routine used by most CAL calibration types, which
+  /// have a <dimension> element describing how the remainder of the
+  /// data is laid out.
+  StatusCode XmlBaseCnv::readDimension(const DOM_Element& docElt, 
+                                       unsigned& nRow, unsigned& nCol, 
+                                       unsigned& nLayer,
+                                       unsigned& nXtal, unsigned& nFace,
+                                       unsigned& nRange);
+
+  /// Another one to find first range element
+  DOM_Element findFirstRange(const DOM_Element& docElt);
+
+  /// Still another one to navigate XML file and find next set of range data
+  DOM_Element findNextRange(const DOM_Element& rangeElt);
+
+  /// Another convenience for derived classes: sets information belonging
+  /// to the calibration base class, namely validity interval and serial
+  /// number.
+  void setBaseInfo(CalibData::CalibBase* pObj);
+
   ICalibXmlSvc* m_xmlSvc;
   ICalibMetaCnvSvc* m_metaSvc;
 
   int m_serNo;
   ITime*  m_vstart;
   ITime*  m_vend;
-  //  CalibData::CalibTime*  m_vstart;
-  //  CalibData::CalibTime*  m_vend;
+
+  /// A place to keep track of where we are if we're handling CAL data
+  unsigned m_nRow;
+  unsigned m_nCol;
+  unsigned m_nLayer;
+  unsigned m_nXtal;
+  unsigned m_nFace;
+  unsigned m_nRange;
+
 };
 
 #endif
