@@ -501,7 +501,8 @@ double ParticleTransporter::distanceToEdge(const Vector& dir) const
       //**G4ThreeVector trackDir = navigator->ComputeLocalAxis(curDir);
       const G4AffineTransform& globalToLocal = navigator->GetGlobalToLocalTransform();
       G4ThreeVector trackPos = globalToLocal.TransformPoint(curPoint);
-      G4ThreeVector trackDir = globalToLocal.IsRotated() ? globalToLocal.TransformAxis(curDir) : curDir;
+      G4ThreeVector trackDir = curDir;
+      if (globalToLocal.IsRotated()) trackDir = globalToLocal.TransformAxis(curDir);
 
       //This calculates the distance along the direction of the track to the 
       //boundary of the current volume
