@@ -3,6 +3,9 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v1r6p1  19-Mar-2005 HMK use the number of CAL and TKR diagnostics to control
+        reading 
+v1r6p0  19-Mar-2005 AB  Fix Heather's mess
 v1r6    15-Mar-2005 HMK Handle all diagnostic and error lengths
 v1r5    21-Feb-2005 HMK Prepare for new GEM
 v1r4p0  09-Feb-2005 HMK Fix up catch in EventSelector
