@@ -150,6 +150,16 @@ namespace rdbModel {
     return ret;
   }
 
+  bool Datatype::getInterval(std::string& min, std::string& max) {
+    if (m_restrict == RESTRICTinterval) {
+      min = m_min;
+      max = m_max;
+      return true;
+    }
+    return false;
+  }
+
+
   bool Datatype::okValue(const std::string& val) const {
     using facilities::Util;
 

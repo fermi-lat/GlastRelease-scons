@@ -63,6 +63,13 @@ namespace rdbModel{
     /// null pointer).
     Enum* getEnum() const {return m_enum;}
 
+    /** User-supplied strings min and max will be set to min and max values,
+        if any, for the Datatype object.  
+        @ret  true if there is a min & max, false otherwise
+    */
+    bool getInterval(std::string& min, std::string& max);
+
+
   private:
     friend class rdbModel::XercesBuilder;
 
