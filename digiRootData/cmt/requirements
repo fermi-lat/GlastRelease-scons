@@ -19,20 +19,17 @@ macro digiRootData_shlibflags " -L${ROOT_PATH}/lib -lPhysics -lMatrix " \
 #-------------------------------------------------------
 private
 
-# Create the Root Cint classes
-macro root_headers "AcdHeader.h AcdId.h AcdTile.h CalHeader.h CalLog.h ESAPID.h Event.h L1T.h LogId.h StripId.h SubSystemHeader.h Tagger.h TkrHeader.h TkrLayer.h EventLinkDef.h"
+# For Windows, use a setup script to run rootcint automatically
+# Still using document generator for UNIX
+setup_script dorootcint
 
-# try to build this by adding to compilation for requirements
-macro digiRootData_customBuild ""\
-      VisualC "call $(DIGIROOTDATAROOT)/digiRootData/dorootcint.bat"
+# Create the Root Cint classes on UNIX
+macro root_headers "AcdHeader.h AcdId.h AcdTile.h CalHeader.h CalLog.h ESAPID.h DigiEvent.h L1T.h LiveTime.h LogId.h StripId.h SubSystemHeader.h Tagger.h TkrHeader.h TkrLayer.h EventLinkDef.h"
 
 # on unix use a document to make rootcint part of the build process
 make_fragment event_dorootcint_header
 make_fragment event_dorootcint -header=event_dorootcint_header
-#document event_dorootcint EventRootCint CINTFILE=../digiRootData/EventCint.cxx
-
-
-
+document event_dorootcint EventRootCint CINTFILE=../digiRootData/EventCint.cxx
 
 
 apply_pattern package_include

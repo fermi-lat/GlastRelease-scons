@@ -1,15 +1,2 @@
-# do rootcint for Digi ROOT classes
+# do nothing - using CMT document generator for rootcint on UNIX
 
-# Save the current directory, so we can return when finished
-echo "cd" `pwd` > ${DIGIROOTDATAROOT}\changeDir.sh
-
-cd ${DIGIROOTDATAROOT}\digiRootData
-# Remove old cint files
-rm EventCint.cxx
-rm EventCint.h
-
-${ROOT_PATH}\bin\rootcint -f EventCint.cxx -c AcdHeader.h AcdId.h AcdTile.h CalHeader.h CalLog.h ESAPID.h DigiEvent.h L1T.h LiveTime.h LogId.h StripId.h SubSystemHeader.h Tagger.h TkrHeader.h TkrLayer.h EventLinkDef.h
-
-# Return to the original directory
-source ${DIGIROOTDATAROOT}\changeDir.sh
-rm ${DIGIROOTDATAROOT}\changeDir.sh
