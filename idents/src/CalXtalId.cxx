@@ -1,13 +1,11 @@
-
-/*!
-//------------------------------------------------------------------------------
+// File and Version information
+// $Header$
 //
 // ClassName:   CalXtalId        
 //  
 // Description: ID class for CAL Xtals                                
-//		Supports both packed Xtal ID = (tower*8 + layer)*16 + column and
-//			unpacked ID, i.e. tower, layer, and column.
-//		Serialize methods give i/o for packed ID.
+//		Supports both packed Xtal ID = (tower*8 + layer)*16 + column
+//		 and	unpacked ID, i.e. tower, layer, and column.
 //		Extractor/inserter give i/o for unpacked ID.
 //
 //    Retrieve packed ID or unpacked tower, layer, and column 
@@ -21,8 +19,9 @@
 
 //              
 // Author:  J. Eric Grove	22 Mar 2001                      
-//------------------------------------------------------------------------------
- */
+
+
+
 // Include files
 #include "idents/CalXtalId.h"
 
@@ -30,7 +29,7 @@
 using namespace idents; 
 
 
-// overload the inserter to stream unpacked tower, layer and column
+// the inserter to stream unpacked tower, layer and column
 void CalXtalId::write(std::ostream &stream) const
 {
         stream << getTower() << " ";
@@ -44,11 +43,11 @@ void CalXtalId::read(std::istream &stream)
 {
 	int tower,layer,column;
 	stream >> tower >> layer >> column;
-	packId(tower, layer, column);		// ensure m_packedId is synced
+	packId(tower, layer, column);		
 }
 
 
-/// retrieve unpacked ID, tower, layer, and column
+// retrieve unpacked ID, tower, layer, and column
 void CalXtalId::getUnpackedId(short& tower, short& layer, short& column)
 {
 	tower  = getTower();

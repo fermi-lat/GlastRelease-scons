@@ -33,8 +33,21 @@ using namespace Event;
 /*! Uses the incomplete gamma function:
  *       gamma(double,double) implemented in gamma.cxx
 */ 
-
 static double gam_prof(double *par, int i)
+
+// Purpose and method:
+//        To find the integral of the shower profile over the layer i.
+//
+//        Takes into account the shower angle with vertical direction. 
+//
+//  Inputs:
+//           par - pointer to the array of 4 shower profile parameters,
+//                 only par[0] and par[2] are used, while 2 other parameters
+//                 are evaluated using predefined formulas;
+//           i   - layer number
+//
+//   returned: integral of shower profile over requested layer.
+//
 {
 	double result =0; 
 
@@ -74,7 +87,19 @@ static double gam_prof(double *par, int i)
 /*! Computes the chisquare ie:
 \f$ \chi^2= \sum_{i=1}^{8}\frac{(\bar{E}-E_i)^2}{\sigma_i}\f$
 */
+
 static void fcn(int &npar, double *gin, double &f, double *par, int iflag)
+
+// Purpose: calculates the weighted sum of quadratic deviations
+//          of energy depositioins in layers from predicted by shower
+//          profile function
+//          this function is called by Minuit package, which defines
+//          the set of parameters. Not all parameters are used by this
+//          function
+//
+// Input: par - array of parameters of fitted profile function
+//         
+// Output: f - the result of chi2 calculation
 {
         int i;
 	//calculate 'chisquare'
@@ -89,8 +114,20 @@ static void fcn(int &npar, double *gin, double &f, double *par, int iflag)
         f = chisq;
 }
 
-
 double CalClustersAlg::Leak(double eTotal,double elast)
+
+// Purpose and method:
+//              
+//              Calculates the energy leakage from calorimeter
+//              using the fitted correlation with last layer energy
+//               deposition
+//  
+//    Inputs:
+//             eTotal - total energy deposition in the calorimeter
+//             elast  - energy deposition in the last layer
+//
+//    Returned: energy leakage
+
 {
     if(eTotal<200.) return 0.;
     else
@@ -119,9 +156,16 @@ void CalClustersAlg::Profile(double eTotal, Event::CalCluster* cl)
 
 // Purpose and method:
 // 
-
-
-
+//               This function fits the parameters of shower profile using
+//               the Minuit minimization package and stores the fitted
+//               parameters in the CalCluster object
+//
+//  Inputs:    eTotal - total energy deposition in the calorimeter
+//             cl - pointer to the CalCluster object to store the fitted
+//                  parameters 
+//
+//  Output:   parameters fit_energy,ki2,fit_start,fit_alpha,fit_lambda,
+//            stored in CalCluster object using initProfile() method
 
 {
     

@@ -112,7 +112,7 @@ public:
 * the  correct value of \f$\alpha\f$.  
 *
 *\par The method takes 2 arguments:
-*\param sum Total energy measured in the calorimeter in MeV
+*\param eTotal Total energy measured in the calorimeter in MeV
 *\param elast  Total energy measured in the last layer in MeV
 *
 *\return Corrected energy in MeV
@@ -127,7 +127,7 @@ public:
 * - 08/20/00    RT    first implementation
 */
            
-    double Leak(double sum,double elast);
+    double Leak(double eTotal,double elast);
 
 
 //! Longitudinal profile fitting method
@@ -169,7 +169,7 @@ E_i = E_{tot}(\Gamma_{inc}
 *
 *
 * The input is:
-* \param sum total energy measured in the calorimeter in MeV
+* \param eTotal total energy measured in the calorimeter in MeV
 * \param cl     the CalCluster in which the results are saved
 *
 * The output ( the 4 fitting parameters and the chi square) of this method is
@@ -181,7 +181,7 @@ E_i = E_{tot}(\Gamma_{inc}
 * - 10/17/00    RT    comments added
 * - 05/00       RT    first implementation
 */
-    void Profile(double sum, Event::CalCluster* cl);
+    void Profile(double eTotal, Event::CalCluster* cl);
 
 
 //! Reconstruct the direction in the calorimeter
