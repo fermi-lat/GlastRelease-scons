@@ -4,6 +4,7 @@
 
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
+#include "geometry/Vector.h"
 
 /**   
 * @class ICluster
@@ -47,7 +48,10 @@ public:
 
     virtual StatusCode finalize()=0;
     
-
+protected:
+    virtual Vector Fit_Direction(std::vector<Vector> pos,
+                                     std::vector<Vector> sigma2,
+                                     int nlayers)=0;
     
     
     

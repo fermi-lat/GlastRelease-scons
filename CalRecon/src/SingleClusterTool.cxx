@@ -102,8 +102,7 @@ StatusCode SingleClusterTool::findClusters(Event::CalXtalRecCol* calXtalRecCol)
     //get pointers to the TDS data structures
 
     const Point p0(0.,0.,0.);  
-    Vector zero(0.,0.,0.);
-    
+     
     double ene = 0;                 // total energy in calorimeter
     Vector pCluster = p0;            // cluster position
     int nLayers = m_CalnLayers;     // number of layers
@@ -235,7 +234,9 @@ StatusCode SingleClusterTool::findClusters(Event::CalXtalRecCol* calXtalRecCol)
         }
     }
  
-
+    // Compute direction using the positions and rms per layer
+    Vector caldir = Fit_Direction(pLayer,rmsLayer,nLayers);
+ 
 	    // Fill CalCluster data
     Event::CalCluster* cl = new Event::CalCluster(ene,pCluster+p0);
 
@@ -245,7 +246,7 @@ StatusCode SingleClusterTool::findClusters(Event::CalXtalRecCol* calXtalRecCol)
 		   rmsLayer,
 		   rms_long,
 		   rms_trans,
-		   zero,
+		   caldir,
 		   0.);
 
     getClusterCol()->add(cl);
@@ -265,6 +266,152 @@ StatusCode SingleClusterTool::execute()
 	StatusCode sc = StatusCode::SUCCESS;
 
 	return sc;
+}
+
+Vector SingleClusterTool::Fit_Direction(std::vector<Vector> pos,
+                                     std::vector<Vector> sigma2,
+                                     int nlayers)
+//
+// Purpose and Method:
+//       find the particle direction from average positions in each
+//       layer and their quadratic errors. The fit is made independently
+//       in XZ and YZ planes for odd and even layers, respectively.
+//       Then the 3-vector of particle direction is calculated from these 
+//       2 projections.
+//       Only position information based on the transversal crystal position
+//       is used. The position along the crystal, calculated from signal
+//       asymmetry is not used.
+//
+// Inputs:
+//         pos      - average position for each calorimeter layer
+//         sigma2   - quadratic error of position measurement for each layer
+//                    in each direction  
+//         nlayers  - number of calorimeter layers
+//
+// Returned value:    3-Vector of reconstructred particle direction
+//
+                                     
+{
+    
+    MsgStream log(msgSvc(), name());
+    
+    // sigma2.z() is useless here no matter its value.
+    double cov_xz = 0;  // covariance x,z
+    double cov_yz = 0;  // covariance y,z
+    double mx=0;        // mean x
+    double my=0;        // mean y
+    double mz1=0;       // mean z for x pos
+    double mz2=0;       // mean z for y pos
+    double norm1=0;     // sum of weights for odd layers
+    double norm2=0;     // sum of weights for even layers
+    double var_z1=0;    // variance of z for odd layers	
+    double var_z2=0;    // variance of z for even layers
+    
+    // number of layers with non-zero energy deposition
+    // in X and Y direction, respectively
+    int nlx=0,nly=0;
+    
+    
+    // "non-physical vector of direction, which is returned
+    // if fit is imposible due to insufficient number of hitted layers
+    Vector nodir(-1000.,-1000.,-1000.);
+    
+    
+    // loop over calorimeter layers
+    for(int il=0;il<nlayers;il++)
+    {                
+        // For the moment forget about longitudinal position
+        
+        // odd layers used for XZ fit
+        if(il%2==1)
+        {
+            
+            // only if the spread in X direction is not zero,
+            // which is the case if there is non-zero energy
+            // deposition in this layer
+            if (sigma2[il].x()>0.)
+            {
+                nlx++; // counting layers used for the fit in XZ plane 
+                
+                // calculate weighting coefficient for this layer
+                double err = 1/sigma2[il].x(); 
+                
+                // calculate sums for least square linear fit in XZ plane
+                cov_xz += pos[il].x()*pos[il].z()*err;
+                var_z1 += pos[il].z()*pos[il].z()*err;
+                mx += pos[il].x()*err;
+                mz1 += pos[il].z()*err;
+                norm1 += err;
+            }
+        }
+        // even layers used for YZ fit
+        else
+        {
+            // only if the spread in Y direction is not zero,
+            // which is the case if there is non-zero energy
+            // deposition in this layer
+            if(sigma2[il].y()>0.)
+            {
+                
+                nly++; // counting layers used for the fit in YZ plane 
+                
+                // calculate weighting coefficient for this layer
+                double err = 1/sigma2[il].y();
+                
+                
+                // calculate sums for least square linear fit in YZ plane
+                cov_yz += pos[il].y()*pos[il].z()*err;
+                var_z2 += pos[il].z()*pos[il].z()*err;
+                my += pos[il].y()*err;
+                mz2 += pos[il].z()*err;
+                norm2 += err;
+            }
+        }
+    }		
+    
+    // linear fit requires at least 2 hitted layers in both XZ and YZ planes
+    // otherwise non-physical direction is returned
+    // which means that direction hasn't been found
+    if(nlx <2 || nly < 2 )return nodir;
+    
+    
+    
+    
+    mx /= norm1;
+    mz1 /= norm1;
+    cov_xz /= norm1;
+    cov_xz -= mx*mz1;
+    var_z1 /= norm1;
+    var_z1 -= mz1*mz1;
+    
+    // protection against dividing by 0 in the next statment
+    if(var_z1 == 0) return nodir;
+    
+    // Now we have cov(x,z) and var(z) we can
+    // deduce slope in XZ plane
+    double tgthx = cov_xz/var_z1;
+    
+    
+    my /= norm2;
+    mz2 /= norm2;
+    cov_yz /= norm2;
+    cov_yz -= my*mz2;
+    var_z2 /= norm2;
+    var_z2 -= mz2*mz2;
+    
+    // protection against dividing by 0 in the next statment
+    if(var_z2 == 0) return nodir;
+    
+    // Now we have cov(y,z) and var(z) we can
+    // deduce slope in YZ plane
+    double tgthy = cov_yz/var_z2;
+    
+    // combining slope in XZ and YZ planes to get normalized 3-vector
+    // of particle direction
+    double tgtheta_sqr = tgthx*tgthx+tgthy*tgthy;
+    double costheta = 1/sqrt(1+tgtheta_sqr);
+    Vector dir(costheta*tgthx,costheta*tgthy,costheta);
+    return dir;
 }
 
 

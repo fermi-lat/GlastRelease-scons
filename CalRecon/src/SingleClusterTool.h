@@ -43,6 +43,10 @@ public:
     
      StatusCode execute();
 
+protected:
+    Vector Fit_Direction(std::vector<Vector> pos,
+                                     std::vector<Vector> sigma2,
+                                     int nlayers);
     
     
     
