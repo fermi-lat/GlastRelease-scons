@@ -1,5 +1,5 @@
 package GuiSvc
-version v3r1p1
+version v3r1p3
 
 branches GuiSvc cmt doc src
 

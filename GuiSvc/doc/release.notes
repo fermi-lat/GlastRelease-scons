@@ -2,6 +2,7 @@
  * Package GuiSvc
  * Manager T. Burnett
  *
+ * v3r1p3 15-aug-2002  THB avoid toolsvc error messages when search tools
  * v3r1p2 27-jul-2002  THB get maxEvt from ApplicationMgr more reliable
  * v3r1p1 25-jul-2002  THB patch for Linux
  * v3r1   22-jul-2002  THB use the IRunable interface to control event loop 
