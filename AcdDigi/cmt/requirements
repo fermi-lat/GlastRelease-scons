@@ -1,5 +1,5 @@
 package AcdDigi
-version v1r4p0
+version v1r5
 # $Id$
 
 use GaudiSvc v7r*
