@@ -14,8 +14,8 @@ Output.Members={}; // turn off any root ouptut
 FluxAlg.sources={"default","timetick30s"};
 
 // Number of events to process
-ApplicationMgr.EvtMax = 100;
-MeritAlg.generated = 100; // for estima/ IM variable
+ApplicationMgr.EvtMax = 1000;
+MeritAlg.generated = 1000; // for estima/ IM variable
 MeritAlg.cuts="LnA";     // no test for tail suppression
 
 
