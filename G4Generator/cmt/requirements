@@ -66,6 +66,7 @@ macro G4Testlinkopts "$(GuiSvc_lib) ${guiapp_linkopts} -u GuiSvc_loadRef  -ldl "
               WIN32 " $(GaudiKernel_linkopts) $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) /include:_GuiSvc_loadRef "
 
 
+
 macro other_source "" WIN32 "test/*.txt test/*.xml *.h test/*.h" 
 application G4Test ${GlastMain} test/*.cxx *.cxx  Dll/*.cxx ${other_source} ${Win32Resource}
 
