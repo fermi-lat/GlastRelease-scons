@@ -1,6 +1,7 @@
 package GlastSvc
 version v9r5p1
 branches src cmt doc
+#$Id$
 
 use Event v9r*
 use xmlGeoDbs  v1r*

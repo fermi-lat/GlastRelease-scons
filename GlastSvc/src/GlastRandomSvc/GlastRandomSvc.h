@@ -1,15 +1,26 @@
 #ifndef _GlastRandomSvc_H
 #define _GlastRandomSvc_H 1
 
+
+
+#include <vector>
+#include <map>
+#include "GaudiKernel/Service.h"
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/Property.h"
+
+#include "CLHEP/Random/Random.h"
+#include "GlastRandomSeed.h"
+
 /** @class GlastRandomSvc
  *
 * @brief Gaudi Service for setting the random engines and seeds
 * for shared libraries that use random numbers (via CLHEP) 
 * 
 * This service, in its initialize() method, collects the adresses 
-* of all tools that inherit form the RandomAccess tool (one in each
+* of all tools that implement the  IRandomAccess interface (one in each
 * Dll that uses random numbers). The RandomAccess tool lives in 
-* GlastRandomAvc. The initialize() method also sets the random engine
+* GlastRandomSvc. The initialize() method also sets the random engine
 * for each of its Dll's either via the job options parameter
 * RandomEngine or the default which is currently TripleRand. The
 * handle() methods listens for BeginEvent events via the
@@ -21,31 +32,12 @@
 *
 * @authors Toby Burnett, Karl Young
 *
-* $Header
+* $Header$
 */
-
-#include <iostream>
-#include <vector>
-#include <map>
-#include "GaudiKernel/Service.h"
-#include "GaudiKernel/IEvtSelector.h"
-#include "GaudiKernel/IIncidentListener.h"
-#include "GaudiKernel/Property.h"
-
-#include "CLHEP/Random/Random.h"
-
-#include "GlastSvc/GlastRandomSvc/IGlastRandomSvc.h"
-
-#include "GlastRandomSeed.h"
-
 class GlastRandomSvc : public Service,
-virtual public IIncidentListener,
-virtual public IGlastRandomSvc
+virtual public IIncidentListener
 {
 public:
-  
-  /// Handles incidents, implementing IIncidentListener interface
-  void handle(const Incident& inc);
   
   //! Create the service
   //! @param name The name of the service
@@ -54,11 +46,8 @@ public:
   
   virtual ~GlastRandomSvc ();
   
-  /// queryInterface - for implementing a Service this is necessary
-  StatusCode queryInterface(const IID& riid, void** ppvUnknown);
-  
-  /// return the service type
-  const IID& type() const;
+  /// Handles incidents, implementing IIncidentListener interface
+  void handle(const Incident& inc);
   
   /// required for Gaudi service
   StatusCode initialize ();
@@ -67,9 +56,12 @@ public:
   StatusCode finalize ();
   
  private:  
+     HepRandomEngine* createEngine(std::string  engineName) ;
+
   /// Data members
   // store Engine names and addresses in a map
-  std::map< std::string, HepRandomEngine* > m_engineMap;
+     typedef   std::map< std::string, HepRandomEngine* > EngineMap;
+     EngineMap m_engineMap;
   StringProperty    m_randomEngine;
   IntegerProperty   m_RunNumber;
   IntegerProperty   m_InitialSequenceNumber;
@@ -77,12 +69,10 @@ public:
 
   // file name of seeds to be read in
   // if m_seedFile is empty, procceed to normal running of Gleam
-  std::string m_seedFile;
+  StringProperty m_seedFile;
 
   // seeds read from the file
   std::vector<GlastRandomSeed> m_seeds;
 };
 
 #endif // _GlastRandomSvc_H
-
-
