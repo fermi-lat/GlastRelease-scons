@@ -529,7 +529,7 @@ StatusCode TkrValsTool::calculate()
         Event::TkrTrackHitVecConItr pHit = track_1->begin();
         int gapId = -1;
         bool gapFound = false;
-        int plane = m_tkrGeom->getPlane((*pHit)->getTkrId());
+        //int plane = m_tkrGeom->getPlane((*pHit)->getTkrId());
         while(pHit != track_1->end()) {
             const Event::TkrTrackHit* hit = *pHit++;
             unsigned int bits = hit->getStatusBits();
@@ -538,12 +538,15 @@ StatusCode TkrValsTool::calculate()
                 Point  gapPos = hit->getPoint(Event::TkrTrackHit::PREDICTED);
                 Tkr_1_GapX = gapPos.x();
                 Tkr_1_GapY = gapPos.y();
-                //This doesn't work until there's a valid TkrId for every hit
-                //gapId = m_tkrGeom->getPlane(hit->getTkrId());
-                gapId = plane;
+                //TkrId is good!
+                gapId = m_tkrGeom->getPlane(hit->getTkrId());
+                //gapId1 = plane;
+                //if (gapId1!=gapId) {
+                //    std::cout << "GapId1/GapId " << gapId1 << " " << gapId << std::endl;
+                //}
                 gapFound = true;
             }
-            plane--;
+            //plane--;
             if (!(bits & Event::TkrTrackHit::HITONFIT)) continue;
             const Event::TkrCluster* cluster = hit->getClusterPtr();
             int size =  (int) (const_cast<Event::TkrCluster*>(cluster))->size();
