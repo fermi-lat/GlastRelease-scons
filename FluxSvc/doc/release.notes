@@ -3,6 +3,7 @@
 
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
+ * 24-nov-03  v6r12p1 smr INFO outputs for showing rocking/history file mode.
  * 02-oct-03  v6r9   thb adjust xdir to be perpendicular to zdir, clean up a bit
  * 28-sep-03  v6r8   thb always set the Exposure information in ExposureAlg.
  * 30-AUG-03  v6r7p5 thb DeltaTime propery initialize to zero (no effect)
