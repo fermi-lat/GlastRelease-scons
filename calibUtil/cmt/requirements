@@ -2,15 +2,15 @@ package calibUtil
 
 #  $Header$
 
-version v0r11p1
+version v1r0
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
 use facilities v2r*
-use xml        v4r* 
+use xml        v5r* 
 
 use MYSQLEXT * IExternal
-# use ROOT   -- someday, maybe
+
 
 set MYSQL_HOST       centaurusa.slac.stanford.edu
 set MYSQL_METATABLE  metadata_v2r1
