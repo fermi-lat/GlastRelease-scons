@@ -4,11 +4,13 @@ version v1
 branches src mgr doc
 
 use instrument v2r2
-use Gaudi
+use Gaudi v8
 use data 
 use GlastEvent v1r1
 
-use GaudiSvc v3r1
+use GaudiSvc v4
+use Auditors v1
+use RootHistCnv v1
 
 # this package is needed to write out to Root
 #use DbCnv v2r1
