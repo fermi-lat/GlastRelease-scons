@@ -29,13 +29,14 @@ private:
 void MiniClient::handleChild(DOM_Node node) {
   if (node.getNodeType() == DOM_Node::ELEMENT_NODE) {
     DOM_Element& elt = static_cast<DOM_Element&>(node);
-    DOMString eltName = node.getNodeName();
+    //    DOMString eltName = node.getNodeName();
+    std::string eltName = xml::Dom::getTagName(elt);
     std::cout << m_name 
-              << " found element <" << xml::Dom::transToChar(eltName) << ">" 
+              << " found element <" << eltName << ">" 
               << std::endl;
-    DOMString att = elt.getAttribute(DOMString("substituted"));
-    if (att != DOMString()) {
-      std::cout << "substituted = " << xml::Dom::transToChar(att) << std::endl;
+    std::string att = xml::Dom::getAttribute(elt,"substituted");
+    if (att.size() > 0) {
+      std::cout << "substituted = " << att << std::endl;
     }
   }
   else         {// tilt!  

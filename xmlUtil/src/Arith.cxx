@@ -1,9 +1,10 @@
 // $Header$
 
-#include <string>
+// #include <string>
 #include "xmlUtil/Arith.h"
 #include "xml/Dom.h"
 #include <xercesc/dom/DOM_Document.hpp>
+#include <string.h>  // for comparison of old-style c strings.
 
 namespace xmlUtil {
 
@@ -31,36 +32,38 @@ namespace xmlUtil {
   // Rather than continually creating and destroying DOMStrings
   // needed for comparison, initialize them once and for all in 
   // init()
-  Arith::ptrDOMString * Arith::typeNames;
-  Arith::ptrDOMString Arith::valString;   // a DOMString containing "value"
-  Arith::ptrDOMString Arith::refToString;
-  Arith::ptrDOMString Arith::constString;
-  Arith::ptrDOMString Arith::referString;
-  Arith::ptrDOMString Arith::addString;
-  Arith::ptrDOMString Arith::minusString;
-  Arith::ptrDOMString Arith::uminusString;
-  Arith::ptrDOMString Arith::mulString;
-  Arith::ptrDOMString Arith::quoString;
-  Arith::ptrDOMString Arith::maxString;
-  Arith::ptrDOMString Arith::notesString;
-  Arith::ptrDOMString Arith::lengthString;
-  Arith::ptrDOMString Arith::cmString;
-  Arith::ptrDOMString Arith::mString;
-  Arith::ptrDOMString Arith::halfString;
+  Arith::ptrString * Arith::typeNames;
+  Arith::ptrString Arith::valString = "value"; 
+  Arith::ptrString Arith::refToString = "refTo";
+  Arith::ptrString Arith::constString = "const";
+  Arith::ptrString Arith::referString = "refer";
+  Arith::ptrString Arith::addString = "add";
+  Arith::ptrString Arith::minusString = "minus";
+  Arith::ptrString Arith::uminusString = "uminus";
+  Arith::ptrString Arith::mulString = "mul";
+  Arith::ptrString Arith::quoString = "quo";
+  Arith::ptrString Arith::maxString = "max";
+  Arith::ptrString Arith::notesString = "notes";
+  Arith::ptrString Arith::lengthString = "length" ;
+  Arith::ptrString Arith::cmString = "cm";
+  Arith::ptrString Arith::mString = "m";
+  Arith::ptrString Arith::halfString = "half";
   
   Arith::Arith(const DOM_Element elt) {
     int i = 0;
     bool notFound = true;
-    DOMString tagName = elt.getTagName();
+    //    std::string tagName = xml::Dom::getTagName(elt);
+    const char* tagName = (xml::Dom::getTagName(elt)).c_str();
     m_elt = elt;
     m_evaluated = false;
     m_tag = -1;
     if (typeNames == 0) init();
 
     while ((notFound) && (i < ETAG_n)) {
-      DOMString *p = typeNames[i];
-      DOMString tmp = DOMString(*p);
-      if (tagName.equals(tmp) ) {
+      ptrString p = typeNames[i];
+      /*      std::string tmp = std::string(*p); */
+      /*      if (tagName.equals(tmp) ) { */
+      if (!strcmp(p, tagName)) {
         m_tag = i;
         notFound = false;
       }
@@ -73,17 +76,23 @@ namespace xmlUtil {
       DOM_Element curElt;
       switch(m_tag) {
       case ETAG_const: {
-        DOMString val = m_elt.getAttribute(*valString);
-        if (!(val.equals(DOMString()) ) ) { //got something 
-          // Had better convert properly to a double
-          m_number = atof(xml::Dom::transToChar(val));
+        if (xml::Dom::hasAttribute(m_elt, valString)) {
+          try {
+            m_number = 
+              xml::Dom::getDoubleAttribute(m_elt, std::string(valString) );
+          }
+          catch(xml::WrongAttributeType ex) {
+            std::cerr << std::endl << ex.getMsg() << std::endl;
+            throw ex;
+          }
           m_number *= getUnitsScale(m_elt);
         }
         else  { // must have a single operator child or refer child
           // either of which can be evaluated, optionally preceded
           // by a <notes> child, which we ignore
           curElt = firstEltChild(m_elt);
-          if (curElt.getTagName().equals(*notesString)) { // move on
+
+          if (std::string(notesString) == xml::Dom::getTagName(curElt)) {
             DOM_Node next = curElt.getNextSibling();
             curElt = static_cast <DOM_Element &>(next);
           }
@@ -93,11 +102,20 @@ namespace xmlUtil {
       }
       case ETAG_refer: {
         // Find the element pointed to and evaluate it
-        DOMString ref = m_elt.getAttribute(*refToString);
-        curElt = (m_elt.getOwnerDocument()).getElementById(ref);
-        if (curElt.getTagName().equals("prim")) {
-          m_number = 
-            atof(xml::Dom::transToChar(curElt.getAttribute(*valString)));
+        std::string ref = xml::Dom::getAttribute(m_elt, refToString);
+        curElt = (m_elt.getOwnerDocument()).getElementById(ref.c_str());
+
+        if (std::string("prim") == xml::Dom::getTagName(curElt) ) {
+
+          try {
+            m_number = 
+              xml::Dom::getDoubleAttribute(curElt, std::string(valString) );
+          }
+          catch(xml::WrongAttributeType ex) {
+            std::cerr << std::endl << ex.getMsg() << std::endl;
+            throw ex;
+          }
+
           m_number *= getUnitsScale(curElt);
         }
         else {
@@ -213,12 +231,12 @@ namespace xmlUtil {
 
     if (!m_evaluated) evaluate();
 
-    // Check if we're supposed to be an int.  If so, coerce
-    // m_number to be nearby int in case of round-off error 
-    if (DOMString("int").equals(m_elt.getAttribute("type"))) {
-      // If we're not already a perfect int, attempt to fix
-      // so that we round the right way.
-      // Otherwise, leave well enough alone
+    // Used to check if we were supposed to be an int and if so, coerce
+    // m_number to be nearby int in case of round-off error, but this
+    // shouldn't actually happen -- in no case do we do arithmetic
+    // and attempt to produce an int result.  Code has been excised.
+
+    if (xml::Dom::getAttribute(m_elt, "type") == std::string("int") ) {
       long int intValue = m_number;
       double   intified = intValue;
       if (intified != m_number) {
@@ -233,41 +251,25 @@ namespace xmlUtil {
     // set to "mm".  If we're not a length-type constant,
     // setting this attribute is harmless.
 
-    xml::Dom::addAttribute(m_elt, *valString, m_number);
+    xml::Dom::addAttribute(m_elt, std::string(valString), m_number);
     xml::Dom::addAttribute(m_elt, std::string("unitLength"), 
                            std::string("mm"));
   }
 
   double Arith::getUnitsScale(const DOM_Element& elt) {
-    if (!(elt.getAttribute("uType")).equals(*lengthString) ) {
+    if (xml::Dom::getAttribute(elt, "uType") != std::string(lengthString)) {
       return 1.0;
     }
 
-    DOMString unitLength = elt.getAttribute("unitLength");
-    if (unitLength.equals(*cmString)) return 10.0;
-    else if (unitLength.equals(*mString)) return 1000.0;
+    
+    std::string unitLength = xml::Dom::getAttribute(elt, "unitLength");
+    if (unitLength == std::string(cmString)) return 10.0;
+    else if (unitLength == std::string(mString)) return 1000.0;
     else return 1.0;
   }
 
   void Arith::init() {
-    constString = new DOMString("const");
-    referString = new DOMString("refer");
-    addString = new DOMString("add");
-    minusString = new DOMString("minus");
-    mulString = new DOMString("mul");
-    quoString = new DOMString("quo");
-    uminusString = new DOMString("uminus");
-    maxString = new DOMString("max");
-    notesString = new DOMString("notes");
-    lengthString = new DOMString("length");
-    cmString = new DOMString("cm");
-    mString = new DOMString("m");
-
-    valString = new DOMString("value");
-    refToString = new DOMString("refTo");
-    halfString = new DOMString("half");
-
-    typeNames = new ptrDOMString[ETAG_n];
+    typeNames = new ptrString[ETAG_n];
     typeNames[ETAG_const] = constString;
     typeNames[ETAG_refer] = referString;
     typeNames[ETAG_add] = addString;

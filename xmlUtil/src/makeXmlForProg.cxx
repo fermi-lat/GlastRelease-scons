@@ -36,8 +36,6 @@
 std::ostream *openOut(char * outfile);
 void outProlog(const DOM_DocumentType& doctype, std::ostream& out);
 
-const char chDoubleQ[2] = {0x22, 0x0};
-const std::string dquote(&chDoubleQ[0]);
 const std::string myId("$Id$");
 
 // Can't literally put in the string we want or CVS will mess it up.
@@ -61,7 +59,7 @@ int main(int argc, char* argv[]) {
   }
 
   xml::XmlParser* parser = new xml::XmlParser();
-  DOM_Document doc = parser->parse(argv[1]);
+  DOM_Document doc = parser->parse(argv[1], "gdd");
 
   if (doc == 0) {
     std::cout << "Document failed to parse correctly" << std::endl;
@@ -84,24 +82,28 @@ int main(int argc, char* argv[]) {
   // the file, Substitute would not cause that constant to be evaluated.
   constants->evalConstants();
 
-  // Search for all dimension and position references, substitute
-  // value of referenced element.
-  DOM_NodeList sections = docElt.getElementsByTagName(DOMString("section"));
-  int nSec = sections.getLength();
-  int iSec;
 
   xmlUtil::Substitute* sub = new xmlUtil::Substitute(doc);
 
-  DOM_Node dict = (docElt.getElementsByTagName(DOMString("idDict"))).item(0);
-  DOM_Element& dictElt = static_cast<DOM_Element &> (dict);
+  std::vector<DOM_Element> dicts;
+  xml::Dom::getDescendantsByTagName(docElt, "idDict", dicts);
+
+  //  There is only one dictionary
+  DOM_Element& dictElt = dicts[0];
   int nDictSub = sub->execute(dictElt);
     std::cout << "#elements substituted for id dictionary:  " << nDictSub
               << std::endl;
 
+  // Search for all dimension and position references, substitute
+  // value of referenced element.
+  std::vector<DOM_Element> sections;
+  xml::Dom::getDescendantsByTagName(docElt, "section", sections);
+
+  unsigned int nSec = sections.size();
+  unsigned int iSec;
   for (iSec = 0; iSec < nSec; iSec++) {
     int nSub;
-    DOM_Node  secNode = sections.item(iSec);
-    DOM_Element& secElt = static_cast<DOM_Element &> (secNode);
+    DOM_Element& secElt = sections[iSec];
     nSub = sub->execute(secElt);
     std::cout << "#elements substituted for in this section:  " << nSub
               << std::endl;
@@ -115,21 +117,32 @@ int main(int argc, char* argv[]) {
     derived = xml::Dom::findFirstChildByName(derived, "derived");
     
     if (derived != DOM_Element()) {
-      DOM_NodeList cats = derived.getElementsByTagName("derCategory");
-      int nCat = cats.getLength();
-      int iCat;
+
+      std::vector<DOM_Element> cats;
+      xml::Dom::getDescendantsByTagName(docElt, "derCategory", cats);
+
+      unsigned nCat = cats.size();
+
+      //      DOM_NodeList cats = derived.getElementsByTagName("derCategory");
+      //      int nCat = cats.getLength();
+      unsigned int iCat;
+      std::vector<DomElement> toRemove;
       for (iCat=0; iCat < nCat; iCat++) {
-        DOM_Node node = cats.item(iCat);
-        DOM_Node attNode = (node.getAttributes()).getNamedItem("save");
-        if ((attNode.getNodeValue()).equals(DOMString("false")) ) {  // remove
-          DOM_Element& toPrune = static_cast<DOM_Element &>(node);
-          xml::Dom::prune(toPrune);
-          (toPrune.getParentNode()).removeChild(toPrune);
-          // compensate for changing node list
-          iCat--;  nCat--;
+        DOM_Element elt = cats[iCat];
+        if (std::string("false") ==  xml::Dom::getAttribute(elt, "save") ) {
+          //remove
+        
+          xml::Dom::prune(elt);
+          toRemove.push_back(elt);
         }
       }
-
+      if (unsigned nRemove = toRemove.size() > 0) {
+        // all elements to be removed have the same parent
+        DOM_Node parent = (toRemove[0]).getParentNode();
+        for (unsigned iVictim= 0; iVictim < nRemove; iVictim++) {
+          parent.removeChild(toRemove[iVictim]);
+        }
+      }
       // Now just get rid of all content for <const> children 
       // in remaining derived categories
       constants->pruneConstants();
@@ -149,7 +162,8 @@ int main(int argc, char* argv[]) {
   if (docElt.getAttribute("CVSid") != DOMString() ) {
     std::string noId(idTemplate);
     noId.replace(0, 1, "$");
-    docElt.setAttribute("CVSid", noId.c_str());
+    xml::Dom::addAttribute(docElt, "CVSid", noId);
+    //    docElt.setAttribute("CVSid", noId.c_str());
   }
 
   // Finally output the elements
@@ -158,95 +172,4 @@ int main(int argc, char* argv[]) {
 
   delete parser;
   return(0);
-}
-
-/*! 
- *  Open specified output file (may be standard output if "-"
- *  is given as input argument)
- */
-std::ostream *openOut(char * outfile)
-{
-  char  *hyphen = "-";
-  std::ostream* out;
-  
-  if (*outfile == *hyphen) {
-    out = &std::cout;
-  }
-  else {   // try to open file as ostream
-    out = new std::ofstream(outfile);
-  }
-  return out;
-}
-
-/*!
- *  Write out an xml declaration and copy the input DOCTYPE declaration
- *  to the output
- */
-void outProlog(const DOM_DocumentType& doctype, std::ostream& out) {
-  // write the xml declaration: <?xml version="1.0" ?>
-
-  out << "<?xml version=" << dquote << "1.0" << dquote << "?>" << std::endl;
-  if (doctype != DOM_DocumentType()) {
-    char* transcoded = xml::Dom::transToChar(doctype.getName());
-    if (transcoded != 0) {
-      //    out << "<!DOCTYPE " << xml::Dom::transToChar(doctype.getName()) << " ";
-      out << "<!DOCTYPE " << transcoded << " ";
-    }
-    else 
-    {
-      std::cout << "Failed to transcode doctype " << std::endl;
-      return;
-    }
-
-    DOMString id = doctype.getPublicId();
-    if (id != 0)   {
-      transcoded = xml::Dom::transToChar(id);
-      //      out << " PUBLIC " << dquote << xml::Dom::transToChar(id) << dquote;
-      if (transcoded != 0) {
-        out << " PUBLIC " << dquote << transcoded << dquote;
-      }
-      else  {
-        std::cout << "Failed to transcode public id " << std::endl;
-        return;
-      }
-      id = doctype.getSystemId();
-      if (id != 0) {
-        transcoded = xml::Dom::transToChar(id);
-        if (transcoded != 0) {
-          out << " " << dquote << transcoded << dquote;
-        }
-        else  {
-          std::cout << "Failed to transcode system id " << std::endl;
-          return;
-        }
-      }
-    }
-    else {
-      id = doctype.getSystemId();
-      if (id != 0)   {
-        //        out << " SYSTEM " << dquote << xml::Dom::transToChar(id) << dquote;
-        transcoded = xml::Dom::transToChar(id);
-        if (transcoded != 0) {
-          out << " " << dquote << transcoded << dquote;
-        }
-        else  {
-          std::cout << "Failed to transcode system id " << std::endl;
-          return;
-        }
-      }
-    }
-    id = doctype.getInternalSubset(); 
-    if (id !=0) {
-      transcoded = xml::Dom::transToChar(id);
-      if (transcoded != 0) {
-        //        out << "[" << xml::Dom::transToChar(id) << "]";
-        out << "[" << transcoded << "]";
-      }
-      else {
-        std::cout << "Failed to transcode internal subset" << std::endl;
-        return;
-      }
-    }
-    out << ">" << std::endl;
-  }
 }

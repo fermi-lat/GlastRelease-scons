@@ -4,7 +4,7 @@
 #include "xml/Dom.h"
 
 namespace xmlUtil {
-  IdOpCompress::IdOpCompress(DOM_Element cmprss) {
+  IdOpCompress::IdOpCompress(DomElement cmprss) {
     from = xml::Dom::getAttribute(cmprss, "from");
     to = xml::Dom::getAttribute(cmprss, "to");
   }

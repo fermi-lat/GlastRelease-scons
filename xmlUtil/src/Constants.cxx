@@ -29,93 +29,109 @@ namespace {
 */
 
   int normPrim(DOM_Element elt, std::vector<DOM_Element>& save) {
+    using xml::Dom;
+
     int ret = 0;
-    //    if (!(elt.getNodeName()).equals(DOMString("prim"))) return ret;
-    if ((elt.getNodeName()).equals(DOMString("prim"))) {
+    if (Dom::checkTagName(elt, "prim") ) {
     
       ret += 1;
-      DOMString valueString = DOMString("value");
+      bool isInt = false;
 
-      // Check for int.  If we've got one, round it.
-      // Check if we're supposed to be an int.  If so, coerce
-      // m_number to be nearby int in case of round-off error 
-      if (DOMString("int").equals(elt.getAttribute("type"))) {
-        // If we're not already a perfect int, attempt to fix
-        // so that we round the right way.
-        // Otherwise, leave well enough alone
-        
-        double   origValueDbl =
-          atof(xml::Dom::transToChar(elt.getAttribute(valueString)));
-        int origValueInt = 
-          atoi(xml::Dom::transToChar(elt.getAttribute(valueString)));
-        double   intified = origValueInt;
-        if (intified != origValueDbl) { 
-          // put back properly rounded int
-          double fixup = 0.5;
-          if (origValueDbl < 0) fixup = -fixup;
-          origValueDbl += fixup;
-          int newValue = origValueDbl;
-          xml::Dom::addAttribute(elt, valueString, newValue);
+      // Used to check if we're supposed to be an int and  If so, coerce
+      // m_number to be nearby int in case of round-off error.  No
+      // longer do this.   
+      std::string typeAtt = Dom::getAttribute(elt, "type");
+      if (isInt = (typeAtt == std::string("int"))) {
+        // New style:  it had better be an int!  If not, it's an error
+        try {
+          int intVal = Dom::getIntAttribute(elt, "value");
+        }
+        catch (xml::DomException ex) {
+          std::cerr << "from xml::Constants::normPrim " << ex.getMsg() 
+                    << std::endl;
+          throw ex;
         }
       }
 
       // Found a prim, but we don't have to convert since it's not a length
       if (!(elt.getAttribute(DOMString("uType"))).equals("length")) return ret;
-    
-      //      ret += 1000;
-      DOMString uLength = DOMString("unitLength");
-    
-      DOMString units = elt.getAttribute(uLength);
-      if (units.equals(DOMString("mm"))) return ret;
+      if (isInt) {   // mistake.  Don't use type=int for length
+
+      }
+
+      std::string units = Dom::getAttribute(elt, "unitLength");
+      if (units == std::string("mm")) return ret;
     
       double scale, value;
-      if (units.equals(DOMString("cm"))) {
+      if (units == std::string("cm"))  {
         ret += 10000;
         scale = 10;
       }
-      else if (units.equals(DOMString("m"))) {
+
+      else if (units == std::string("m")) {
         ret += 10000;
         scale = 1000;
       }
       else return (100000 + ret);          // should never happen
     
-      value = atof(xml::Dom::transToChar(elt.getAttribute(valueString)));
+      try {
+        value = Dom::getDoubleAttribute(elt, "value");
+      }
+      catch (xml::DomException ex) {
+        std::cerr << "from xml::Constants::normPrim " << ex.getMsg() 
+                  << std::endl;
+        throw ex;
+      }
+
       value *= scale;
-      xml::Dom::addAttribute(elt, valueString, value);
-      elt.setAttribute(uLength, DOMString("mm"));
+      Dom::addAttribute(elt, std::string("value"), value);
+      Dom::addAttribute(elt, std::string("unitLength"), std::string("mm"));
     
       //      return ret;
     }
-    else if ((elt.getNodeName()).equals(DOMString("primEnergy"))) {
+    else if (Dom::checkTagName(elt, "primEnergy") ) {
       save.push_back(elt);
       ret += 1000;
     }
     return ret;
   }                 // end of utility normPrim
 
-  void handleEnergies(std::vector<DOM_Element> saved) {
+  void handleEnergies(std::vector<DomElement> saved) {
     // Make a new <prim> node to replace it; meanwhile convert
     // GeV to MeV if necessary
-    std::vector<DOM_Element>::const_iterator eltIt;
+    using xml::Dom;
+
+    std::vector<DomElement>::const_iterator eltIt;
     for (eltIt = saved.begin(); eltIt != saved.end(); eltIt++) {
-      DOM_Element elt = *eltIt;
+      DomElement elt = *eltIt;
       DOM_Document doc = elt.getOwnerDocument();
-      DOM_Element  prim = doc.createElement("prim");
-      prim.setAttribute("name", elt.getAttribute("name"));
-      prim.setAttribute("type", "double");
-      prim.setAttribute("uType", "energy");
-      prim.setAttribute("unitEnergy", "MeV");
-      double energy = atof(xml::Dom::transToChar(elt.getAttribute("value")));
-      if ((DOMString("GeV")).equals(elt.getAttribute("units")) ) {
+      DomElement  prim = doc.createElement("prim");
+      Dom::addAttribute(prim, "name", Dom::getAttribute(elt, "name"));
+      Dom::addAttribute(prim, "type", "double");
+      Dom::addAttribute(prim, "uType", "energy");
+      Dom::addAttribute(prim, "unitEnergy", "MeV");
+
+      double energy;
+      try {
+        energy = Dom::getDoubleAttribute(elt, "value");
+      }
+      catch (xml::DomException ex) {
+        std::cerr << "From Constants;handleEnergies " << ex.getMsg() 
+                  << std::endl;
+        throw ex;
+      }
+
+      if (std::string("GeV") == Dom::getAttribute(elt, "units") ) {
         energy *= 1000;
       }
-      xml::Dom::addAttribute(prim, std::string("value"), energy);
+
+      Dom::addAttribute(prim, std::string("value"), energy);
       elt.normalize();
-      DOM_Node textChild = elt.getFirstChild();
+      DomNode textChild = elt.getFirstChild();
       prim.appendChild(textChild);
       //      elt.removeChild(textChild);
-      DOM_Node parent = elt.getParentNode();
-      DOM_Node oldChild =  parent.replaceChild(prim, elt);
+      DomNode parent = elt.getParentNode();
+      DomNode oldChild =  parent.replaceChild(prim, elt);
     }
   }
 }   // end of anonymous namespace
@@ -123,81 +139,84 @@ namespace {
 namespace xmlUtil {
 
   Constants::Constants(DOM_Document doc) : m_doc(doc) {
-    DOM_NodeList list = m_doc.getElementsByTagName("constants");
 
-    m_constants = (list.getLength() > 0) ? 
-       static_cast<const DOM_Element &> (list.item(0)) : DOM_Element();
+    // There is at most 1 <constants> element
+    m_constants = 
+      xml::Dom::findFirstChildByName(doc.getDocumentElement(), "constants");
   }
 
   void Constants::normalizePrimary()
   {
-    // find <primary>
-    if (m_constants == DOM_Node()) return;
+    using xml::Dom;
 
-    DOM_NodeList primarys = m_constants.getElementsByTagName("primary");
+    if (m_constants == DomElement()) return;
 
-    // must be precisely one <primary> element
-    DOM_Node curNode = primarys.item(0);
-    DOM_Element primary = static_cast<DOM_Element &>(curNode);
-    if (primary.getAttribute("normalized").equals(DOMString("true"))) return;
+    DomElement primary = Dom::findFirstChildByName(m_constants, "primary");
+
+    DomNode curNode = primary;
+
+    if (std::string("true") == Dom::getAttribute(primary, "normalized"))
+      return;
 
     // Make a DOMTreeWalker which returns only elements
-    unsigned long whatToShow = 1 << (DOM_Node::ELEMENT_NODE -1);
+    unsigned long whatToShow = 1 << (DomNode::ELEMENT_NODE -1);
     
     DOM_TreeWalker walker = 
-      m_doc.createTreeWalker(curNode, whatToShow, 0, 0);
+      //      m_doc.createTreeWalker(curNode, whatToShow, 0, 0);
+      m_doc.createTreeWalker(primary, whatToShow, 0, 0);
     
     // Diagnostic -- number of <prim>s seen
     int count = 0;
-    std::vector<DOM_Element> energyElts;
-    while (curNode != DOM_Node() ) {
-      count += normPrim(static_cast<DOM_Element &> (curNode), energyElts);
+    std::vector<DomElement> energyElts;
+    while (curNode != DomNode() ) {
+      count += normPrim(static_cast<DomElement &> (curNode), energyElts);
       curNode = walker.nextNode();
     }
     handleEnergies(energyElts);
 
-    primary.setAttribute("normalized", "true");
-    //    std::cout << "Results of normalizePrim: " << count << std::endl;
-    //    return (count < 100000);
+    Dom::addAttribute(primary, "normalized", "true");
   }
  
   // Remove children of evaluated constants
   void Constants::pruneConstants(bool keepNotes) { 
+    using xml::Dom;
 
-    if (m_constants == DOM_Node()) return;
+    if (m_constants == DomNode()) return;
 
-    DOM_Element curConst;
+    DomElement curConst;
     
     // For each derCategory, prune each const child
-    DOM_NodeList cats = m_constants.getElementsByTagName("derCategory");
-    int nCats = cats.getLength();
+    std::vector<DomElement> cats;
+
+    Dom::getDescendantsByTagName(m_constants, "derCategory", cats);
+    int nCats = cats.size();
     int iCat;
     
     for (iCat = 0; iCat < nCats; iCat++) {
-      DOM_Node catNode = cats.item(iCat);
-      DOM_Element& curCat = static_cast<DOM_Element&> (catNode);
-      curConst = xml::Dom::findFirstChildByName(curCat, "const" );
+      DomElement& curCat = cats[iCat];
+      curConst = Dom::findFirstChildByName(curCat, "const" );
       
-      while (curConst != DOM_Element()) {
+      while (curConst != DomElement()) {
         if (keepNotes) { // tread more carefully
-          DOM_Element child = xml::Dom::getFirstChildElement(curConst);
-          if (child != DOM_Element() ) {
-            if ((child.getTagName()).equals(DOMString("notes"))) {
-              child = xml::Dom::getSiblingElement(child);
-              if (child != DOM_Element()) {
-                xml::Dom::prune(child);
+          DomElement child = Dom::getFirstChildElement(curConst);
+          if (child != DomElement() ) {
+
+            if (Dom::checkTagName(child, "notes") ) {
+              child = Dom::getSiblingElement(child);
+              if (child != DomElement()) {
+                Dom::prune(child);
                 (child.getParentNode()).removeChild(child);
               }
             }
             else {
-              xml::Dom::prune(curConst);  // remove all its children
+              Dom::prune(curConst);  // remove all its children
             }
           }
         }
         else {  // remove all its children
-          xml::Dom::prune(curConst);  
+          Dom::prune(curConst);  
         }
-        curConst = xml::Dom::getSiblingElement(curConst);
+        curConst = Dom::getSiblingElement(curConst);
       }
     }
   }
@@ -205,24 +224,28 @@ namespace xmlUtil {
   /*! For each derCategory, evaluate each const child, writing
       value back to "value" attribute in the DOM */
   void Constants::evalConstants() {
-    if (m_constants == DOM_Node()) return;
-    DOM_Element derived = 
-      xml::Dom::findFirstChildByName(m_constants, "derived"); 
-    if (derived == DOM_Element()) return; 
-    if ((derived.getAttribute("evaluated")).equals(DOMString("true"))) return;
+    using xml::Dom;
 
-    DOM_Element curConst;
+    if (m_constants == DomNode()) return;
+    DomElement derived = 
+      Dom::findFirstChildByName(m_constants, "derived"); 
+    if (derived == DomElement()) return; 
+    if (std::string("true") == Dom::getAttribute(derived, "evaluated")) return;
 
-    DOM_NodeList cats = m_doc.getElementsByTagName("derCategory");
-    int nCats = cats.getLength();
+    DomElement curConst;
+
+    std::vector<DomElement> cats;
+    
+    Dom::getDescendantsByTagName(m_doc.getDocumentElement(), "derCategory",
+                              cats);
+    int nCats = cats.size();
     int iCat;
     
     for (iCat = 0; iCat < nCats; iCat++) {
-      DOM_Node catNode = cats.item(iCat);
-      DOM_Element& curCat = static_cast<DOM_Element&> (catNode); 
-      curConst = xml::Dom::findFirstChildByName(curCat, "const" );
+      DomElement& curCat = cats[iCat];
+      curConst = Dom::findFirstChildByName(curCat, "const" );
       
-      while (curConst != DOM_Element()) {
+      while (curConst != DomElement()) {
         Arith curArith(curConst);
         double evalValue = curArith.evaluate();
         curArith.saveValue();
@@ -230,9 +253,7 @@ namespace xmlUtil {
         curConst = xml::Dom::getSiblingElement(curConst);
       }
     }
-    derived.setAttribute("evaluated", "true");
+    Dom::addAttribute(derived, "evaluated", "true");
   }
-
-
 }
 

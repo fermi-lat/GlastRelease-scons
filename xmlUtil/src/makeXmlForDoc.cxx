@@ -13,6 +13,7 @@
       - delete all <section> elements (for now.  Later may think of
         some useful information for doc. purposes to be extracted
         from them).
+      - delete all materials 
       - output the resulting xml document.
  */
 
@@ -33,10 +34,6 @@ std::ostream *openOut(char * outfile);
 
 void outProlog(const DOM_DocumentType& doctype, std::ostream& out);
 
-char * stripDollar(char *toStrip);
-
-const char chDoubleQ[2] = {0x22, 0x0};
-const std::string dquote(&chDoubleQ[0]);
 const std::string myId("$Id$");
 // Can't literally put in the string we want or CVS will mess it up.
 // Instead make a copy of this template, replacing the # with $
@@ -59,7 +56,7 @@ int main(int argc, char* argv[]) {
   }
 
   xml::XmlParser* parser = new xml::XmlParser();
-  DOM_Document doc = parser->parse(argv[1]);
+  DOM_Document doc = parser->parse(argv[1], "gdd");
 
   if (doc == 0) {
     std::cout << "Document failed to parse correctly" << std::endl;
@@ -80,29 +77,42 @@ int main(int argc, char* argv[]) {
   constants->pruneConstants(true);  
 
   // Delete any id dictionaries
-  DOM_NodeList dicts = docElt.getElementsByTagName(DOMString("idDict"));
-  //  DOM_Node dictNode = dicts.item(0);
 
-  unsigned nDict = dicts.getLength();
+  std::vector<DOM_Element> dicts;
+  xml::Dom::getDescendantsByTagName(docElt, "idDict", dicts);
+
+  unsigned nDict = dicts.size();
   for (unsigned iDict = 0; iDict < nDict; iDict++) {
-    DOM_Node dictNode = dicts.item(iDict);
-    DOM_Element& dictElt = static_cast<DOM_Element &> (dictNode);
+    DOM_Element& dictElt = dicts[iDict];
 
     xml::Dom::prune(dictElt);
     (dictElt.getParentNode()).removeChild(dictElt);
   }
 
   // Delete all sections
-  DOM_NodeList sections = docElt.getElementsByTagName(DOMString("section"));
-  unsigned nSec = sections.getLength();
+  std::vector<DOM_Element> sections;
+  xml::Dom::getDescendantsByTagName(docElt, "section", sections);
+
+  unsigned nSec = sections.size();
   for (unsigned iSec = 0; iSec < nSec; iSec++) {
-    DOM_Node secNode = sections.item(iSec);
-    DOM_Element& secElt = static_cast<DOM_Element &> (secNode);
+
+    DOM_Element& secElt = sections[iSec];
     xml::Dom::prune(secElt);
     (secElt.getParentNode()).removeChild(secElt);
-    //    secNode = toCome;
   }
 
+  // Delete materials
+  std::vector<DOM_Element> materials;
+  xml::Dom::getDescendantsByTagName(docElt, "materials", materials);
+
+  unsigned nM = materials.size();
+  for (unsigned iM = 0; iM < nM; iM++) {
+
+    DOM_Element& matElt = materials[iM];
+    xml::Dom::prune(matElt);
+    (matElt.getParentNode()).removeChild(matElt);
+    //    secNode = toCome;
+  }
 
   // Add a <source> child to the outer gdd element
   xmlUtil::Source * source = 
@@ -114,10 +124,11 @@ int main(int argc, char* argv[]) {
 
   // If have gdd element with CVSid attribute, null it out.  Don't have
   // a real CVS id until the file has been committed
-  if (docElt.getAttribute("CVSid") != DOMString() ) {
+  std::string cvsId = xml::Dom::getAttribute(docElt, "CVSid");
+  if (cvsId.size() > 0) {
     std::string noId(idTemplate);
     noId.replace(0, 1, "$");
-    docElt.setAttribute("CVSid", noId.c_str());
+    xml::Dom::addAttribute(docElt, "CVSid", noId);
   }
   // Finally output the elements
   // May want option to exclude comments here
@@ -125,56 +136,4 @@ int main(int argc, char* argv[]) {
 
   delete parser;
   return(0);
-}
-
-/*! 
- *  Open specified output file (may be standard output if "-"
- *  is given as input argument)
- */
-std::ostream *openOut(char * outfile)
-{
-  char  *hyphen = "-";
-  std::ostream* out;
-  
-  if (*outfile == *hyphen) {
-    out = &std::cout;
-  }
-  else {   // try to open file as ostream
-    out = new std::ofstream(outfile);
-  }
-  return out;
-}
-
-/*!
- *  Write out an xml declaration and copy the input DOCTYPE declaration
- *  to the output
- */
-void outProlog(const DOM_DocumentType& doctype, std::ostream& out) {
-  // write the xml declaration: <?xml version="1.0" ?>
-
-  out << "<?xml version=" << dquote << "1.0" << dquote << "?>" << std::endl;
-  if (doctype != DOM_DocumentType()) {
-
-    out << "<!DOCTYPE " << xml::Dom::transToChar(doctype.getName()) << " ";
-
-    DOMString id = doctype.getPublicId();
-    if (id != 0)   {
-      out << " PUBLIC " << dquote << xml::Dom::transToChar(id) << dquote;
-      id = doctype.getSystemId();
-      if (id != 0) {
-        out << " " << dquote << xml::Dom::transToChar(id) << dquote;
-      }
-    }
-    else {
-      id = doctype.getSystemId();
-      if (id != 0)   {
-        out << " SYSTEM " << dquote << xml::Dom::transToChar(id) << dquote;
-      }
-    }
-    id = doctype.getInternalSubset(); 
-    if (id !=0) {
-      out << "[" << xml::Dom::transToChar(id) << "]";
-    }
-    out << ">" << std::endl;
-  }
 }

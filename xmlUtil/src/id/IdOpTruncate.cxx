@@ -5,7 +5,7 @@
 
 namespace xmlUtil {
 
-  IdOpTruncate::IdOpTruncate(DOM_Element trunc) {
+  IdOpTruncate::IdOpTruncate(DomElement trunc) {
     // Get values of attributes "start" and "beyond", save
     start = xml::Dom::getAttribute(trunc, "start");
     std::string beyondVal = xml::Dom::getAttribute(trunc, "beyond");

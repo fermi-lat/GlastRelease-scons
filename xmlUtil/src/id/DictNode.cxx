@@ -8,31 +8,36 @@
 
 namespace xmlUtil {
   std::ostream* DictNode::m_err = &(std::cout);
-  DictNode::DictNode(DOM_Element elt, DictNode *parent,
+  DictNode::DictNode(DomElement elt, DictNode *parent,
                      DictFieldMan *fieldMan) : 
     m_children(0), m_parent(parent), m_parConstraints(0), 
     m_myConstraints(0)   {
+    using xml::Dom;
     // check element type is OK.  Shouldn't be a problem if
     // the xml file validates.  Note sense of assert is:
     //   abort program if assertion is *false*
-    assert( (elt.getTagName().equals("dictNode")) ||
-            (elt.getTagName().equals("dictRoot"))     ) ;
+    if (!( Dom::checkTagName(elt, "dictNode") ||
+           Dom::checkTagName(elt, "dictRoot") )  ) {
+      throw xml::DomException("Invalidly constructed id dictionary ");
+    }
 
     // Field name stuff:
-    std::string fName = 
-      std::string(xml::Dom::transToChar(elt.getAttribute("fieldName")));
+    std::string fName = Dom::getAttribute(elt, "fieldName");
     
     m_field = fieldMan->find(fName.c_str());
     assert(m_field != 0);
     // Do something if it doesn't exist?? Shouldn't be terribly
     // necessary by ID/IDREF mechanism
 
-    DOM_Element child = xml::Dom::getFirstChildElement(elt);
+    DomElement child = xml::Dom::getFirstChildElement(elt);
     // Could be a leaf with no children
-    if (child == DOM_Element()) return;
+    if (child == DomElement()) {
+      return;
+    }
 
-    if ((child.getTagName()).equals("pValues")) { // parent constraints
-      DOM_Element gChild = xml::Dom::getFirstChildElement(child);
+    if (Dom::getTagName(child) == std::string("pValues")) {
+      // parent constraints
+      DomElement gChild = xml::Dom::getFirstChildElement(child);
       m_parConstraints = new DictConstraints(gChild);
       
       // check for compatibility
@@ -48,25 +53,42 @@ namespace xmlUtil {
         }
       }
       child = xml::Dom::getSiblingElement(child);
-      if (child == DOM_Element()) return;    // new Dec. 4
+      if (child == DomElement()) {
+        return;    // new Dec. 4
+      }
     }
     
     // Next up we might have our own constraint
-    if (!(child.getTagName().equals("dictNode")) ) {
-      m_myConstraints = new DictConstraints(child);
+    //    if (!(child.getTagName().equals("dictNode")) ) {
+
+    if (Dom::getTagName(child) != std::string("dictNode") ) {
+      std::string childName = Dom::getTagName(child);
+      if ((childName == "vList") || (childName == "vMinMax") ||
+          (childName == "vEnumVal")                         ) {
+        m_myConstraints = new DictConstraints(child);
       
-      // Check it's consistent with constraints on our own field,
-      // if any
-      DictConstraints* fCon = m_field->getConstraints();
-      if (fCon != 0) {
-        assert(fCon->allowed(m_myConstraints));
+        // Check it's consistent with constraints on our own field,
+        // if any
+        DictConstraints* fCon = m_field->getConstraints();
+        if (fCon != 0) {
+          assert(fCon->allowed(m_myConstraints));
+        }
+        child = xml::Dom::getSiblingElement(child);
       }
-      child = xml::Dom::getSiblingElement(child);
+      else {
+        std::cerr << "Expecting constraints element; found  " << childName
+                  << std::endl;
+      }
     }
     
     // All that's left are child nodes, if any
     
-    while (child != DOM_Element()) {
+    while (child != DomElement()) {
+      std::string childName = xml::Dom::getTagName(child);
+      if (childName != std::string("dictNode")) {
+        std::cerr << "odd child:  " << childName << std::endl;
+      }
+      
       DictNode *nextChild = new DictNode(child, this, fieldMan);
       
       m_children.push_back(nextChild);
@@ -132,7 +154,7 @@ namespace xmlUtil {
     // Finally need to check that child values are disjoint
     // within subcollection of nodes with same parent constraints
     it = m_children.begin();
-    while (it  != m_children.end() ) {
+    while (it  <  m_children.end() ) {
       ConstNodeIterator follow = it + 1;
       unsigned   ourMin = (*it)->m_parConstraints->getMin();
       
@@ -150,6 +172,7 @@ namespace xmlUtil {
         
       }
       // If we got here, it's time to check out a collection of children
+      if (follow == m_children.end() ) --follow;
       bool ok = valuesDisjoint(it, follow);
       if (!ok) {
         (*m_err) << 
@@ -216,6 +239,8 @@ namespace xmlUtil {
   bool DictNode::valuesDisjoint(ConstNodeIterator start, 
                                 ConstNodeIterator last) {
     if (*start == *last) return true;
+    //    if (start == last) return true;
+    //    if (start + 1 == last) return true;
     
     ConstNodeIterator pCurrentNode = start;
     std::set<unsigned> values;
@@ -230,6 +255,7 @@ namespace xmlUtil {
     (*start)->m_myConstraints->insertValues(values);
 
     while (pCurrentNode != last) {
+    //    while ((pCurrentNode + 1) != last) {
 
       ++pCurrentNode;
       
@@ -247,6 +273,7 @@ namespace xmlUtil {
 
       // See if it intersects accumulated values from previous nodes
       std::vector<unsigned> intersect;
+      intersect.reserve(5);
       std::set_intersection(values.begin(), values.end(), curValues.begin(),
                             curValues.end(), intersect.begin());
       if (intersect.size() > 0) return false;

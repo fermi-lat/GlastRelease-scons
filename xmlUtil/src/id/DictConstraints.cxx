@@ -17,27 +17,30 @@ namespace xmlUtil {
   DictConstraints::DictConstraints(DOM_Element elt) : 
     m_style(ESTYLE_uninit), m_valList(0), m_minVal(0), m_maxVal(0)
   {
-    DOMString vType = elt.getTagName();
-    if (vType.equals("vEnumVal")) {
-      DOMString attVal = elt.getAttribute("value");
-      m_minVal = atoi(xml::Dom::transToChar(attVal));
-      m_maxVal = m_minVal;
+    using xml::Dom;
+    int   minVal, maxVal;
+
+    std::string vType = Dom::getTagName(elt);
+    if (vType == std::string("vEnumVal")) {
+      m_minVal = minVal = Dom::getIntAttribute(elt, "value");
+      m_maxVal = maxVal = minVal;
       m_style = ESTYLE_single;
     }
-    else if (vType.equals("vMinMax") ) {
-      DOMString minVal = elt.getAttribute("min");
-      m_minVal = atoi(xml::Dom::transToChar(minVal));
-      DOMString maxVal = elt.getAttribute("max");
-      m_maxVal = atoi(xml::Dom::transToChar(maxVal));
+    else if (vType == std::string("vMinMax") ) {
+      m_minVal = minVal = Dom::getIntAttribute(elt, "min");
+      m_maxVal = maxVal = Dom::getIntAttribute(elt, "max");
       m_style = (m_minVal == m_maxVal) ? ESTYLE_single : ESTYLE_interval;
     }
     // Probably should revise this to sort the list before storing
     // For now, just update min and max correctly
-    else if (vType.equals("vList")) { 
-      m_minVal = 0xffffffff;
+    else if (vType == std::string("vList")) { 
+      minVal = 0x7fffffff;
+      maxVal = -1;
 
-      DOM_NodeList children = elt.getChildNodes();
-      unsigned nChild = children.getLength();
+      std::vector<DomElement> children;
+      // a vList should have only vEnumVal children (according to dtd)
+      Dom::getChildrenByTagName(elt, "vEnumVal", children);
+      unsigned nChild = children.size();
       if (nChild == 0) {
         m_style = ESTYLE_uninit;
         return;
@@ -45,42 +48,60 @@ namespace xmlUtil {
       m_valList = new std::vector<unsigned>(nChild);
       for (unsigned ix = 0; ix < nChild; ix++) {
         int temp;
-        DOM_Node    childNode = children.item(ix);
-        DOM_Element child = static_cast<DOM_Element &>(childNode);
-        temp =
-          atoi(xml::Dom::transToChar(child.getAttribute("value")));
-        if (temp < 0) {
-          //complain
-        }
-        else {
-          unsigned newVal = temp;
-          m_valList->push_back(newVal);
-          if (newVal < m_minVal) m_minVal = newVal;
-          if (newVal > m_maxVal) m_maxVal = newVal;
-        }
-      }
-      //      if ((m_minVal < 0 ) || (m_maxVal < 0)) {
-        //complain
-      //      }
-      
-      // Check if it's really an interval after all.  Look for all
-      // inbetween elements
-      if (m_valList) {
-        for (unsigned iy = m_minVal + 1; iy < m_maxVal; iy++) {
-          // if there is anything we can't find, we really need a list
-          if (std::find(m_valList->begin(), m_valList->end(), iy) == 
-              m_valList->end()) {
-            m_style = ESTYLE_list;
-            return; 
+        DOM_Element    childElt = children[ix];
+        try {
+          temp = Dom::getIntAttribute(childElt, "value");
+          if (temp < 0) {
+            delete m_valList;
+            std::string msg =
+              "From xml::DictConstraints::DictConstraints. vEnumVal has value < 0";
+            throw xml::WrongAttributeType(msg);
+          }
+          else {
+            unsigned newVal = temp;
+            m_valList->push_back(newVal);
+            if (temp < minVal) minVal = temp;
+            if (temp > maxVal) maxVal = temp;
           }
         }
-        // Everything was there.  The bounds are sufficient.
-        delete m_valList;
-        m_style = (m_minVal == m_maxVal) ? ESTYLE_single : ESTYLE_interval;
-        m_valList = 0;
+        catch (xml::DomException ex) {
+          delete m_valList;
+          std::cerr << "From xml::DictConstraints::DictConstraints " <<
+            ex.getMsg();
+          throw ex;
+        }
+      }     // end for loop
+    }     // end val list case
+
+    if ((minVal < 0 ) || (maxVal < minVal)) {
+      if (m_valList) delete m_valList;
+      std::string msg = "From xml::DictConstraints::DictConstraints ";
+      msg += "illegal min and max ";
+      throw xml::WrongAttributeType(msg);
+    }
+    else {
+      m_minVal = minVal;
+      m_maxVal = maxVal;
+    }
+      
+    // Check if it's really an interval after all.  Look for all
+    // inbetween elements
+    if (m_valList) {
+      for (unsigned iy = m_minVal + 1; iy < m_maxVal; iy++) {
+        // if there is anything we can't find, we really need a list
+        if (std::find(m_valList->begin(), m_valList->end(), iy) == 
+            m_valList->end()) {
+          m_style = ESTYLE_list;
+          return; 
+        }
       }
+      // Everything was there.  The bounds are sufficient.
+      delete m_valList;
+      m_style = (m_minVal == m_maxVal) ? ESTYLE_single : ESTYLE_interval;
+      m_valList = 0;
     }
   }
+
 
   DictConstraints::DictConstraints(const unsigned soleValue) :
     m_style(ESTYLE_single), m_valList(0), m_minVal(soleValue), 
@@ -95,7 +116,7 @@ namespace xmlUtil {
     m_valList = new DictValList(*list);
     m_minVal = 0xffffffff;
     m_maxVal = 0;
-    //    for (DictValList::iterator it = (unsigned int *) list->begin(); 
+
     for (DictValList::const_iterator it = list->begin(); 
     it != list->end(); ++it) {
       const unsigned val = *it;

@@ -43,7 +43,6 @@ namespace xmlUtil {
     }
     else return 0;
       
-      // *(reg->find(name));
   }
 
   bool DictFieldMan::accept(DictVisitor *vis) {

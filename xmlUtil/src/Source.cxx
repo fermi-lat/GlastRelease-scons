@@ -46,28 +46,24 @@ namespace xmlUtil {
     DOM_Element source = m_doc.createElement("source");
 
     // Document element should have a CVSid attribute
-    DOMString idAtt = docElt.getAttribute("CVSid");
+    std::string idAtt = xml::Dom::getAttribute(docElt, "CVSid");
+
     char * strippedRaw;
     char * myRaw = 0;
 
-    if (idAtt != DOMString() ){
-      const char * raw   = xml::Dom::transToChar(idAtt);
-      unsigned   len = strlen(raw);
-      if (len) {
-        myRaw = new char[len+1];
-        strcpy(myRaw, raw);
-        strippedRaw = stripDollar(myRaw);
-      }
+    unsigned int len = idAtt.size();
+    if (len > 0 ) {
+      const char * raw = idAtt.c_str();
+      myRaw = new char[len + 1];
+      strcpy(myRaw, raw);
+      strippedRaw = stripDollar(myRaw);
     }
     else strippedRaw = unknownId;
 
-    DOMString newAtt = DOMString(strippedRaw);
-
-    source.setAttribute("inputId", newAtt);
+    xml::Dom::addAttribute(source, "inputId", std::string(strippedRaw));
 
     // Already have creator ID as std::string
-    source.setAttribute(DOMString("creatorId"),
-                        DOMString(m_myCVSID.c_str()));
+    xml::Dom::addAttribute(source, "creatorId", m_myCVSID);
     
     std::string theText = 
       std::string("Do not edit! This file automatically created by ");

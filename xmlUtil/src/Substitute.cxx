@@ -37,10 +37,13 @@ namespace xmlUtil {
     //   when it really should be "true", but never the other way around.
     //   
     DOM_Element docElt = m_doc.getDocumentElement();
-    if ((docElt.getAttribute("substituted")).equals(DOMString("true"))) 
+
+    if (std::string("true") == xml::Dom::getAttribute(docElt, "substituted"))
       return 0;
     
-    if ((top.getAttribute("substituted")).equals(DOMString("true"))) return 0;
+    if (std::string("true") == xml::Dom::getAttribute(top, "substituted"))
+      return 0;
+
     DOM_Node curNode = top;
 
     // This is not explained anywhere in the xerces doc. that I
@@ -63,65 +66,58 @@ namespace xmlUtil {
   }
 
   void Substitute::sub(DOM_Element elt) {
+    using xml::Dom;
+
     DOM_NamedNodeMap attMap = elt.getAttributes();
     int   nAtt = attMap.getLength();
     int   iAtt;
-    std::vector<DOMString> toProcess;
+    std::vector<std::string> toProcess;
     std::vector<unsigned> toProcessPos;
-    //    std::vector<DOM_Node> toDelete;
 
     for (iAtt = 0; iAtt <nAtt; iAtt++) {
       DOM_Node att = attMap.item(iAtt);
-      //      if (att != DOM_Node()) { // probably not necessary
-      DOMString  attString = att.getNodeName();
-      std::string attName = std::string(xml::Dom::transToChar(attString));
+      std::string attName = Dom::getNodeName(att);
       
-        // Look for suffix
+      // Look for suffix
       unsigned pos = attName.find(m_suffix, attName.size() - m_suffixLen);
       if  (pos < attName.size())  { // found
-        toProcess.push_back(attString);
+        toProcess.push_back(attName);
         toProcessPos.push_back(pos);
       }
     }
 
     // Now process by name
     while (toProcess.size() > 0) {
-      DOMString oldAttString = toProcess.back();
-      std::string oldAttName = 
-        std::string(xml::Dom::transToChar(oldAttString));
+      std::string oldAttName = toProcess.back();
       unsigned  pos = toProcessPos.back();
       toProcess.pop_back();
       toProcessPos.pop_back();
-      DOM_Element constElt =
-        m_doc.getElementById(elt.getAttribute(oldAttString));
-      if (constElt == DOM_Element() ) { // shouldn't happen
+      DomElement constElt = 
+        Dom::getElementById(m_doc, Dom::getAttribute(elt, oldAttName));
+
+      if (constElt == DomElement() ) { // shouldn't happen
         m_notFound++;
         continue;
       }
       // Build the new attribute
-      DOMString val = constElt.getAttribute(DOMString("value"));
+      std::string val = Dom::getAttribute(constElt, "value");
 
       // If the element referred to is a <prim>, we should be done
       // because it always has a value.  If it's a <const>
       // we may have to evaluate it.
-      if (val == DOMString()) { // try evaluating it
+      if (!val.size()) { // try evaluating it
         Arith curArith(constElt);
         double evalValue = curArith.evaluate();
         curArith.saveValue();
-        val = constElt.getAttribute(DOMString("value"));
+        val = Dom::getAttribute(constElt, "value");
       }
 
-      std::string newAttName = oldAttName.erase(pos, oldAttName.size()  );
-      elt.setAttribute(DOMString(newAttName.c_str()), val);
-      elt.removeAttribute(oldAttString);
+      std::string newAttName = std::string(oldAttName, 0, pos);
+
+      Dom::addAttribute(elt, newAttName, val);
+      elt.removeAttribute(oldAttName.c_str());
       m_count++;
     }
 
-    // Now delete each saved attribute node 
-    // while (toDelete.size() > 0) {
-    //      DOM_Node att = toDelete.back();
-    //      toDelete.pop_back();
-    //      elt.removeAttributeNode(static_cast <DOM_Attr &>(att));
-    //    }
   }
 }

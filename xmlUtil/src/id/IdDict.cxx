@@ -1,7 +1,7 @@
 // $Header$
 
-#include <xercesc/dom/DOMString.hpp>
-#include <xercesc/dom/DOM_NodeList.hpp>
+//#include <xercesc/dom/DOMString.hpp>
+//#include <xercesc/dom/DOM_NodeList.hpp>
 #include "xml/Dom.h"
 #include "xmlUtil/id/IdDict.h"
 #include "xmlUtil/id/DictFieldMan.h"
@@ -10,39 +10,46 @@
 #include "xmlUtil/id/DictValidVisitor.h"
 #include <assert.h>
 namespace xmlUtil {
-  IdDict::IdDict(DOM_Element elt)  {
+  IdDict::IdDict(DomElement elt)  {
     // Check that element has the right tag name: idDict
     // Caller probably will have done this already
-    assert(elt.getTagName().equals("idDict"));
+    if (!xml::Dom::checkTagName(elt, "idDict")) 
+      throw xml::DomException("Invalidly constructed id dictionary");
+
+    //    assert(elt.getTagName().equals("idDict"));
 
     // Store information from attributes
     m_name = std::string(xml::Dom::getAttribute(elt, "name"));
 
-    std::string intVal = xml::Dom::getAttribute(elt, "major");
-    m_major = atoi(intVal.c_str());
-
-    intVal = xml::Dom::getAttribute(elt, "minor");
-    m_minor = atoi(intVal.c_str());
-
-    intVal = xml::Dom::getAttribute(elt, "patch");
-    m_patch = atoi(intVal.c_str());
-
-    // Check number of children.  This is an upper bound
-    // on number of fields we have to store
-    int size = (elt.getChildNodes()).getLength();
-    m_fieldMan = new DictFieldMan(size);
-                
-    DOM_Element fieldElt = xml::Dom::getFirstChildElement(elt);
-
-    // Register all the fields
-    while ((fieldElt.getNodeName()).equals("field")) {
-      //      DOM_Element fieldElt = static_cast<DOM_Element&>(fieldNode);
-      DictField* field = new DictField(fieldElt);
-      m_fieldMan->signup(field);
-      fieldElt = xml::Dom::getSiblingElement(fieldElt);
+    try {
+      m_major = xml::Dom::getIntAttribute(elt, "major");
+      m_minor = xml::Dom::getIntAttribute(elt, "minor");
+      m_patch = xml::Dom::getIntAttribute(elt, "patch");
     }
+    catch (xml::WrongAttributeType ex) {
+      std::cerr << "From xml::IdDict::IdDict  bad version specifier " 
+                << std::endl << ex.getMsg() << std::endl;
+      throw ex;
+    }
+
+    // Check number of field children.
+    std::vector<DomElement> children;
+    xml::Dom::getChildrenByTagName(elt, "field", children);
+    int nField = children.size();
+    m_fieldMan = new DictFieldMan(nField);
+                
+    //    DomElement fieldElt = xml::Dom::getFirstChildElement(elt);
+    for (unsigned iField = 0; iField < nField; iField++) {
+      // Register all the fields
+      //    while ((fieldElt.getNodeName()).equals("field")) {
+      DictField* field = new DictField(children[iField]);
+      m_fieldMan->signup(field);
+      //      fieldElt = xml::Dom::getSiblingElement(fieldElt);
+    }
+    //DictRoot immediately follows last field element
+    DomElement dictRoot = xml::Dom::getSiblingElement(children.back());
     // Finally make the hierarchy of constraints on Identifiers
-    m_root = new DictNode(fieldElt, 0, m_fieldMan);
+    m_root = new DictNode(dictRoot, 0, m_fieldMan);
   }
 
   IdDict::~IdDict() {
