@@ -2,8 +2,8 @@
 #define __CALXTALRECALG_H 1
 
 #include "GaudiKernel/Algorithm.h"
-#include "GlastEvent/Digi/CalDigi.h"
-#include "GlastEvent/Recon/CalRecon/CalXtalRecData.h"
+#include "Event/Digi/CalDigi.h"
+#include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 
@@ -36,13 +36,13 @@ protected:
     
 private:
     
-    void computeEnergy(GlastEvent::CalXtalRecData* recLog, const cal::CalDigi* adcLog); 
-    void computePosition(GlastEvent::CalXtalRecData* recLog);
+    void computeEnergy(Event::CalXtalRecData* recLog, const cal::CalDigi* adcLog); 
+    void computePosition(Event::CalXtalRecData* recLog);
     
 private:
     
 	cal::CalDigiCol* m_CalDigiCol;
-    GlastEvent::CalXtalRecCol* m_CalXtalRecCol;
+    Event::CalXtalRecCol* m_CalXtalRecCol;
 
         enum {fLATObjects, fTowerY, fTowerX, fTowerObjects, fLayer,
             fMeasure, fCALXtal,fCellCmp, fSegment};

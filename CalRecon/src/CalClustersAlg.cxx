@@ -1,6 +1,6 @@
 
 #include "CalRecon/CalClustersAlg.h"
-#include "GlastEvent/Recon/CalRecon/CalCluster.h"
+#include "Event/Recon/CalRecon/CalCluster.h"
 #include "CalRecon/gamma.h"
 #include "CalRecon/Midnight.h"
 #include "GaudiKernel/MsgStream.h"
@@ -8,15 +8,15 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "GlastEvent/Recon/CalRecon/CalXtalRecData.h"
+#include "Event/Recon/CalRecon/CalXtalRecData.h"
 
 /// Glast specific includes
-#include "GlastEvent/TopLevel/EventModel.h"
-#include "GlastEvent/TopLevel/Event.h"
+#include "Event/TopLevel/EventModel.h"
+//#include "Event/TopLevel/Event.h"
 #include "GaudiKernel/ObjectVector.h"
 
 /// TkrRecon classes
-#include "GlastEvent/Recon/ISiRecObjs.h"
+#include "Event/Recon/ISiRecObjs.h"
 
 int nbins;  //!< Number of bins used for the fit
 std::vector<double> g_elayer;  //!< Energy per layer in GeV
@@ -27,7 +27,7 @@ double xtalWidth;  //!< xtal width  in cm
 //! function to compute the true energy deposited in a layer
 /*! Uses the incomplete gamma function: gamma(double,double) implemented in gamma.cxx
 */ 
-using namespace GlastEvent;
+using namespace Event;
 
 static const AlgFactory<CalClustersAlg>  Factory;
 const IAlgFactory& CalClustersAlgFactory = Factory;
@@ -192,7 +192,7 @@ E_i = E_{tot}(\Gamma_{inc}(z_i/\lambda,\alpha)-\Gamma_{inc}(z_{i+1}/\lambda,\alp
 * - 05/00       RT    first implementation
 */
 //################################################
-void CalClustersAlg::Profile(double eTotal, GlastEvent::CalCluster* cl)
+void CalClustersAlg::Profile(double eTotal, Event::CalCluster* cl)
 //################################################
 {
 

@@ -9,7 +9,7 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/ContainedObject.h"
 
-#include "GlastEvent/TopLevel/Definitions.h"
+#include "Event/TopLevel/Definitions.h"
 
 /*!
 //------------------------------------------------------------------------------
@@ -173,21 +173,21 @@ inline std::ostream& AcdDigi::fillStream( std::ostream& s ) const
   return s
     << "    base class AcdDigi :"
     << "\n        ID = ( "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << GlastEventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_ID << ", "
     << "\n        pulse height      = "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << GlastEventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_pulseHeight << ", "
     << "\n        veto              = "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << GlastEventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_veto   << " )"
     << "\n        Low Threshold     = "
     << m_lowThreshold << " )"
     << "\n        High Threshold     = "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << GlastEventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_highThreshold << " )"
     << "\n        packed PHA        = "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << GlastEventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_packedPHA << " )";
 }
 

@@ -1,5 +1,5 @@
-#ifndef GlastEvent_TkrDigi_H
-#define GlastEvent_TkrDigi_H 1
+#ifndef Event_TkrDigi_H
+#define Event_TkrDigi_H 1
 
 //include files
 
@@ -10,7 +10,7 @@
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/SmartRefVector.h"
 
-#include "GlastEvent/TopLevel/Definitions.h"
+#include "Event/TopLevel/Definitions.h"
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/ObjectList.h"
 

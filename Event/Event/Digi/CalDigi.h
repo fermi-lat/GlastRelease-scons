@@ -1,6 +1,6 @@
 
-#ifndef GlastEvent_CalDigi_H
-#define GlastEvent_CalDigi_H 1
+#ifndef Event_CalDigi_H
+#define Event_CalDigi_H 1
 
 
 // Include files
@@ -12,7 +12,7 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/ObjectVector.h"
-#include "GlastEvent/TopLevel/Definitions.h"
+#include "Event/TopLevel/Definitions.h"
 
 
 

@@ -13,7 +13,7 @@
 //#include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/ContainedObject.h"
-#include "GlastEvent/TopLevel/Definitions.h"
+#include "Event/TopLevel/Definitions.h"
 #include "geometry/Point.h"
 
 
@@ -33,7 +33,7 @@
 
 extern const CLID& CLID_CalXtalRecData;
 
-namespace GlastEvent 
+namespace Event 
 {
 
 class CalXtalRecData : virtual public ContainedObject { 
