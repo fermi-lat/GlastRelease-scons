@@ -6,8 +6,6 @@ branches GuiSvc mgr doc
 use gui 
 use GaudiSvc
 
-# need to use this to make the dll available.
-use RootHistCnv
 
 # library is not shareable since it is expected to be linked into the executable
 library GuiSvc -no_share\
