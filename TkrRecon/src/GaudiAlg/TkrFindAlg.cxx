@@ -105,7 +105,7 @@ StatusCode TkrFindAlg::execute()
 
 
 StatusCode TkrFindAlg::finalize()
-{	
+{   
     return StatusCode::SUCCESS;
 }
 

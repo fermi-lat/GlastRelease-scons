@@ -125,6 +125,6 @@ StatusCode TkrDisplayAlg::execute()
 StatusCode TkrDisplayAlg::finalize()
 //##############################################
 {
-    //	
+    //  
     return StatusCode::SUCCESS;
 }

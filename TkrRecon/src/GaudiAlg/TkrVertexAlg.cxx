@@ -121,7 +121,7 @@ StatusCode TkrVertexAlg::execute()
 
 
 StatusCode TkrVertexAlg::finalize()
-{	
+{   
     return StatusCode::SUCCESS;
 }
 

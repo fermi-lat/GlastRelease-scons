@@ -21,17 +21,17 @@ class TkrReconAlg : public Algorithm
 public:
 
     // Standard Gaudi Algorithm constructor format
-	TkrReconAlg(const std::string& name, ISvcLocator* pSvcLocator); 
-	virtual ~TkrReconAlg() {}
+    TkrReconAlg(const std::string& name, ISvcLocator* pSvcLocator); 
+    virtual ~TkrReconAlg() {}
 
     // The thee phases in the life of a Gaudi Algorithm
-	StatusCode initialize();
-	StatusCode execute();
-	StatusCode finalize();
-	
+    StatusCode initialize();
+    StatusCode execute();
+    StatusCode finalize();
+    
 private:
-	
-	// Input parameter which determines the type of reconstruction to run
+    
+    // Input parameter which determines the type of reconstruction to run
     std::string m_TrackerReconType;
 
     // Pointers to the four main TkrRecon Gaudi Algorithms

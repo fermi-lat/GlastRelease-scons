@@ -37,7 +37,7 @@ StatusCode TkrReconAlg::initialize()
 
     MsgStream log(msgSvc(), name());
 
-	log << MSG::INFO << "TkrReconAlg Initialization" << endreq;
+    log << MSG::INFO << "TkrReconAlg Initialization" << endreq;
 
     setProperties();
 
@@ -79,7 +79,7 @@ StatusCode TkrReconAlg::initialize()
     // Set the property controlling the type of track fitting to perform
     m_TkrVertexAlg->setProperty("VertexerType", "DEFAULT");
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 StatusCode TkrReconAlg::execute()
@@ -93,7 +93,7 @@ StatusCode TkrReconAlg::execute()
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
 
-	log << MSG::DEBUG << "------- Recon of new Event --------" << endreq;
+    log << MSG::DEBUG << "------- Recon of new Event --------" << endreq;
 
     // Call the four main algorithms in order
 
@@ -121,11 +121,11 @@ StatusCode TkrReconAlg::execute()
         return StatusCode::FAILURE;
     }
 
-	return sc;
+    return sc;
 }
 
 StatusCode TkrReconAlg::finalize()
-{	
-	return StatusCode::SUCCESS;
+{   
+    return StatusCode::SUCCESS;
 }
 

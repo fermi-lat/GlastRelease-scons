@@ -27,17 +27,17 @@ class TkrTrackFitAlg : public Algorithm
 {
 public:
     // Standard Gaudi Algorithm constructor format
-	TkrTrackFitAlg(const std::string& name, ISvcLocator* pSvcLocator); 
-	virtual ~TkrTrackFitAlg() {}
+    TkrTrackFitAlg(const std::string& name, ISvcLocator* pSvcLocator); 
+    virtual ~TkrTrackFitAlg() {}
 
     // The thee phases in the life of a Gaudi Algorithm
-	StatusCode initialize();
-	StatusCode execute();
-	StatusCode finalize();
+    StatusCode initialize();
+    StatusCode execute();
+    StatusCode finalize();
 
     // This maintains a pointer to the particular propagator needed by the track fit
     static IKalmanParticle* m_KalParticle;
-	
+    
 private:
 
     /// Type of fit to perform
