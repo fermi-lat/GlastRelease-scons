@@ -2,6 +2,9 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 23-feb-2004: jrb v1r15p3  Fix still more minor errors in em, minitower 
+ *                           directories, propagated from flight (but already
+ *                           fixed there)
  * 23-feb-2004: jrb v1r15p2  Fix a couple more minor errors in xml source, this
  *                           time for em model
  * 27-jan-2004: jrb v1r15p1  Fix a couple more minor errors in xml source
