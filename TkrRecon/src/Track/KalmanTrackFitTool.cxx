@@ -443,7 +443,8 @@ double KalmanTrackFitTool::doFilterStep(Event::TkrKalFitTrack& track, Event::Tkr
         Event::TkrFitMatrix fitCovMat(curCovMat);
         trackUtils.addNewHit(nextPlane, Event::TkrFitHit::FIT, fitFitPar, fitCovMat);
 
-        trackUtils.updateMaterials(nextPlane, Event::TkrFitMatrix(m_Qmat->getLastStepQ()), m_Qmat->getLastStepRadLen(), 
+        Event::TkrFitMatrix lastStepQ(m_Qmat->getLastStepQ());
+        trackUtils.updateMaterials(nextPlane, lastStepQ, m_Qmat->getLastStepRadLen(), 
                                    m_Qmat->getLastStepActDist(), currentPlane.getEnergy());
 
         double chiSqOld = nextPlane.getDeltaChiSq(Event::TkrFitHit::FIT);
