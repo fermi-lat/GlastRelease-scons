@@ -32,7 +32,26 @@ public:
         Y=1  /**< cluster measures Y */ 
     };
 
-	
+    enum {Version=1};
+
+    enum {
+        fieldRawToT  = 0xff,  // for the raw ToT < 256
+        fieldFlag    = 1,     // "used" flag
+        fieldEnd     = 3,     // end for this hit 2 = mixed
+        fieldVersion = 3      // 0 for old style
+    };
+    enum {
+        shiftRawToT  = 8,     
+        shiftFlag    = 0,  // to preserve compatibility with old form
+        shiftEnd     = 1,
+        shiftVersion = 30
+    };
+    enum {
+        maskRawToT  = fieldRawToT<<shiftRawToT, 
+        maskFlag    = fieldFlag<<shiftFlag,
+        maskEnd     = fieldEnd<<shiftEnd,
+        maskVersion = fieldVersion<<shiftVersion
+    };	
 	
 public:
     
@@ -56,7 +75,8 @@ public:
     inline view getView() const {return m_view;}
     inline UInt_t getFirstStrip() const { return m_strip0; }
     inline UInt_t getLastStrip() const { return m_stripf; }
-    inline UInt_t getToT() const { return m_ToT; }
+    /// retrieve ToT word (will be raw or corrected depending on the version)
+    inline Double_t getToT() const { return getRawToT(); }
 
     /// Returns the chip number calculated using the strip number
     inline Int_t getChip() const { return (m_strip0/64); };
@@ -68,11 +88,30 @@ public:
     inline const TVector3& getPosition() const { return m_position; }
     
     /// returns true if the cluster has been flagged
-    inline bool hitFlagged() const { return (m_flag!=0); }
+    inline bool hitFlagged() const { return ((m_flag&1)!=0); }
+
+    /// retrieves raw ToT
+    inline double getRawToT() const { 
+        return ( m_flag&maskVersion ? (m_flag&maskRawToT)>>shiftRawToT : m_ToT );
+    }
+    /// retrieve corrected ToT (zero for old-style records)
+    inline double getMips() const {
+        return ( m_flag&maskVersion ? m_ToT : 0.0 );
+    }
+    // retrieve full status word
+    inline int getStatusWord() const { return m_flag; }
+    /// retrieve end
+    inline int getEnd() const {
+        return ( m_flag&maskVersion ? m_flag&(maskEnd>>shiftEnd) : 2 );
+    }
+    /// retrieve version number (old-style is zero)
+    inline int getVersion() const {
+        return m_flag&maskVersion>>shiftVersion;
+    }
     
 	
 private:
-    /// ToT value of the cluster
+    /// ToT assigned to cluster, raw or corr. depending on version
     Double_t m_ToT;
 
 	/// id of the cluster, sequential in order of construction
@@ -80,10 +119,10 @@ private:
 
     UInt_t m_tower;
 
-    /// plane id: this is the bi-layer number, but ordered backwards (0 at front)
+    /// not the plane, but the recon layer!
     UInt_t m_plane;
 
-    /// flag of the cluster, used during pattern recognition
+    /// used flag, or status word, depending on version
     UInt_t m_flag;
 
     /// initial strip address of the cluster
