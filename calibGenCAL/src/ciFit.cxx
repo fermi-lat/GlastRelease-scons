@@ -326,7 +326,7 @@ int cfData::FitData() {
 			 // copy SKPLO points directly from beginning of array.
 			 int spl_idx = 0;
 			 for (int i = 0; i < skpLo; i++,spl_idx++) {
-				m_splineDac[range][spl_idx] = m_dacArr[i];
+				m_splineDac[range][spl_idx] = (int)m_dacArr[i];
 				m_splineADC[xtal][layer][face][range][spl_idx] = curADC[i];
 			 }
 
@@ -345,7 +345,7 @@ int cfData::FitData() {
 				float myPar2 = splineFunc.GetParameter(1);
 				float myPar3 = splineFunc.GetParameter(2);
 
-				int   fitDac = m_dacArr[cp];
+				int   fitDac = (int)m_dacArr[cp];
             float fitADC = myPar1 + fitDac*(myPar2 + fitDac*myPar3);
 
 				// output result
@@ -359,7 +359,7 @@ int cfData::FitData() {
 			 for (int i = (nPtsMin-skpLo-skpHi)*grpWid + skpLo;
 					i <= last_idx;
 					i++,spl_idx++) {
-				m_splineDac[range][spl_idx] = m_dacArr[i];
+				m_splineDac[range][spl_idx] = (int)m_dacArr[i];
 				m_splineADC[xtal][layer][face][range][spl_idx] = curADC[i];
 			 }
 
