@@ -57,3 +57,15 @@ use CalRecon         v4
 #ROOT persistence
 use mcRootData       v2r1
 use RootIo           v1r0
+
+
+### define a simple executable 
+
+set JOBOPTIONS "${GLEAMROOT}/src/jobOptions.txt"
+
+macro jobOptions "" WIN32 "jobOptions.txt"  
+application Gleam $(GlastMain) $(Win32Resource) $(jobOptions) 
+
+macro Gleamlinkopts  "  $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
+      WIN32 " ${guiapp_linkopts} $(GuiSvc_lib)  /include:_GuiSvc_loadRef "
+

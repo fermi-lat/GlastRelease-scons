@@ -1,0 +1,72 @@
+//##############################################################
+//
+// Job options file for Gleam test
+// $Header$
+
+ApplicationMgr.DLLs   = { 
+    "GlastSvc", 
+    "G4Generator",
+    "Recon",
+    "GlastDigi",
+    "TkrRecon",
+    "CalRecon",
+    "RootIo"};
+
+ApplicationMgr.ExtSvc = { 
+    "GlastEventSelector/EventSelector" , 
+    "EventCnvSvc", 
+    "GlastDetSvc"
+    };
+
+EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+EventSelector.Input = "NONE";
+
+
+ApplicationMgr.TopAlg = {
+    "FluxAlg", "FluxDisplay",
+    "G4Generator",
+    "HitDisplay"    
+    };
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel      = 2;
+
+
+ApplicationMgr.EvtMax = 100;
+
+// un comment following to enable display: must be before RecoSvc??
+ApplicationMgr.ExtSvc += {"GuiSvc"};
+GuiSvc.size=-2000;
+
+// select one of the following 
+GlastDetSvc.topVolume="LAT"; 
+//GlastDetSvc.topVolume="CsIElement";  // to look at a single full crystal
+//GlastDetSvc.topVolume="CALLayer";
+//GlastDetSvc.topVolume="CALLayers";
+//GlastDetSvc.topVolume="oneTower";
+//GlastDetSvc.topVolume="trayReg";
+//GlastDetSvc.topVolume="trayBot";
+
+
+GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.visitorMode="recon";
+
+ApplicationMgr.ExtSvc += {"RecoSvc"};
+RecoSvc.axisSize=1000;   // test turning off axes (default 1000)
+RecoSvc.showLevel=2;  // test high show level (default2)
+
+#include "$FLUXSVCROOT/src/defaultOptions.txt"
+G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
+// Append (no replace) the list of source library documents
+FluxSvc.source_lib = {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
+
+
+FluxAlg.source_name="muon_pencil_angle";
+
+
+//==============================================================
+//
+// End of job options file
+//
+//##############################################################
+

@@ -2,6 +2,20 @@
  * package Gleam
  * package manager:T.Burnett
 
+ * v1r1   02-may-02 THB
+    use idents           v2r6 
+    use Geant4           v1r1p0
+    use GlastEvent       v7r2
+    use GlastSvc         v7r2
+    use FluxSvc          v5r5
+    use G4Generator      v3r5
+    use GlastDigi        v2r6
+    use Recon            v1r2
+    use TkrRecon         v5r4
+    use CalRecon         v4       
+    use mcRootData       v2r1
+    use RootIo           v1r0
+
  * v1r0   21-apr-02 THB  started adding cal, tkr recons 
     use TkrRecon          v5r4
 
