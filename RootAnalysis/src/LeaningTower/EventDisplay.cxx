@@ -82,6 +82,9 @@ TLine Recon(TGraph *XY)
       Y2=70.0;
     }
   int N = XY->GetN();
+  if ( N < 2 )    
+      return TLine(0,0,0,0);
+
   double *X = XY->GetX();
   double *Y = XY->GetY();
   double *newX = new double[N-1];
@@ -90,9 +93,6 @@ TLine Recon(TGraph *XY)
   double A=0;
   double B=0;
   TLine bestFit;
-
-  if(N<2)    
-    return TLine(0,0,0,0);
 
   if(N<=3)
     {
@@ -128,7 +128,7 @@ TLine Recon(TGraph *XY)
 	    }
 	}
     }
-  std::cout<<MinChi2<<std::endl;
+  std::cout<<"chisqr " <<MinChi2<<std::endl;
   if(MinChi2>MaxChi2)
     return TLine(0,0,0,0);
   
@@ -277,9 +277,10 @@ void DisplayEvent(int NumEvent=0)
 	EventDisplayC->cd(1);      
       else
 	EventDisplayC->cd(2);
-      
-      TriggerReqText[i][0].SetText(-0.8, height, aLayer->GetTriggerReq(false) ? "x" : "");
-      TriggerReqText[i][1].SetText(36, height, aLayer->GetTriggerReq(true) ? "x" : "");
+
+      //      std::cout << "Diagnostics: " << aLayer->GetTriggerReq(false) << ' ' << aLayer->GetTriggerReq(true) << std::endl;
+      TriggerReqText[i][0].SetText(-0.8, height, aLayer->GetTriggerReq(false) ? "x" : ".");
+      TriggerReqText[i][1].SetText(36, height, aLayer->GetTriggerReq(true) ? "x" : ".");
       LabelNumHits[i].SetText(41.0, height, title);
       TriggerReqText[i][0].Draw();
       TriggerReqText[i][1].Draw();
@@ -364,23 +365,17 @@ void DisplayEvent(int NumEvent=0)
   // RECON
   
   EventDisplayC->cd(1);
-  XClusters->Draw("P");
-  
-  //  if(NumClusX>1)
-  //    {
-      anXtrack = Recon(XClusters);
-      anXtrack.Draw();
-      //    }
-  
+  if ( NumClusX > 0 )
+      XClusters->Draw("P");
+  anXtrack = Recon(XClusters);
+  anXtrack.Draw();
   
   EventDisplayC->cd(2);
-  YClusters->Draw("P");
+  if ( NumClusY > 0 )
+      YClusters->Draw("P");
+  anYtrack = Recon(YClusters);
+  anYtrack.Draw();
   
-  //  if(NumClusY>1)
-  //    {
-      anYtrack = Recon(YClusters);
-      anYtrack.Draw();
-      //    }
   EventDisplayC->cd();
   EventDisplayC->Update();
   

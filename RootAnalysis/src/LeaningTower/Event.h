@@ -41,6 +41,7 @@ class Event
   
   int GetLayerNumHits(TString LayerName);
   int *GetLayerHits(TString LayerName);
+  Bool_t Event::GetTriggerReq(TString LayerName, Bool_t side);
   std::vector<double> GetClusters(TString LayerName);
   
  private:
@@ -51,6 +52,7 @@ class Event
   Double_t EbfTime;
   //  int TkrNumHits;
   int *TkrHits;
+  
 
   TTree *myTree;
   TFile *myFile;

@@ -1,5 +1,6 @@
 #include <iomanip>
 #include <iostream>
+#include <fstream.h>
 #include "TF1.h"
 #include "TGraph.h"
 #include "TH1D.h"
@@ -10,7 +11,9 @@
 #include "TString.h"
 #include "TStyle.h"
 #include "TPaveText.h"
+#include <TSystem.h>
 
+ofstream StripStatus;
 const int NumGTCC = 8;
 const int NumGTRC = 9;
 
@@ -30,7 +33,7 @@ TString LayerId(TString VL);
 TH1D *ToT_0(TString myCuts="");
 TH1D *ToT_1(TString myCuts="");
 TH1D *HitMap(TString myCuts="");
-TH1D *ProjectHitMap(TString myCuts="");
+TH1D *ProjectHitMap(TString LV, TString myCuts="");
 TH1D *NumHitsLayer(TString myCuts="");
 TGraph *Correlation(TString var, TString VL1, TString VL2, TString myCuts="");
 TGraph *Graph(TString VL1,  TString varA, TString varB, TString myCuts="");
@@ -39,7 +42,7 @@ TGraph *TimeHistory(TString VL1);
 ////////// CANVASES ////////////
 void PlotToT(TString myCuts="");
 void PlotHitMap(TString myCuts="");
-void PlotProjectHitMap(TString myCuts="");
+void PlotProjectHitMap(TString LV, TString myCuts="");
 void PlotNumHitsLayer(TString myCuts="");
 
 void PlotCorrelation(TString var, TString VL1, TString VL2, TString myCuts="");
@@ -94,66 +97,68 @@ void Initialize(TString filename)
 
 void help()
 {
+  std::cout<<std::endl;
   std::cout<<" ******************** Analysis Program for Layer(s) data ********************"<<std::endl;
-  std::cout<<" ---------- DIGI ANALYSIS:     "<<std::endl;
-  std::cout<<" 1) Initialize(input filename, outFilename) : Initialize the analysis. "<<std::endl;
-  std::cout<<" 1.5) AddRecon()                            : Add the recon tree.  "<<std::endl;
+  std::cout<<std::endl;
+  std::cout<<" ================>>>>>>>>>DIGI ANALYSIS:     "<<std::endl;
+  std::cout<<" 1) Initialize(\"input filename\", \"output Filename\") : Initialize the analysis. "<<std::endl;
+  std::cout<<" 1.5) AddRecon()           : Add the recon tree.  "<<std::endl;
   std::cout<<" 2) AddLayer(TString LV)   : Add a layer to the stack of the layers to analyze and select it for plotting.  "<<std::endl;
-  std::cout<<"                    example: AddLayer(\"X1\") Add the LayerX1..."<<std::endl;
-  std::cout<<" 3) ------------------------------ Plot Macros: --------------------"<<std::endl;
+  std::cout<<"                    example: AddLayer(\"X1\") Add the LayerX1..."<<std::endl <<std::endl;
+  std::cout<<" ------------------  Plot Macros: ------------------"<<std::endl;
   std::cout<<" PlotToT(TString myCuts=\"\")  "<<std::endl;
   std::cout<<" PlotHitMap(TString myCuts=\"\") "<<std::endl;
-  std::cout<<" ProjectedHitMap(TString myCuts=\"\") "<<std::endl;
+  std::cout<<" ProjectedHitMap(TString VL, TString myCuts=\"\") "<<std::endl;
   std::cout<<" PlotNumHitsLayer(TString myCuts=\"\") "<<std::endl;
   std::cout<<" FindEvents(TString myCuts=\"\") "<<std::endl;
   std::cout<<" PlotCorrelation(TString var, TString VL1, TString VL2, TString myCuts=\"\");            "<<std::endl;  
   std::cout<<"                    Plot a scatter plot of var of the layer LV1 vs var of the Layer LV2  "<<std::endl;  
-  std::cout<<" PlotGraph(TString VL1,  TString varA, TString varB, TString myCuts=\"\")                "<<std::endl;  
+  std::cout<<" PlotGraph(TString VL,  TString varA, TString varB, TString myCuts=\"\")                "<<std::endl;  
   std::cout<<"                    Plot a scatter plot of varA of the layer VL1 vs varB of the Layer VL1"<<std::endl;  
-  std::cout<<" PlotHitsVsTime(TString VL1);                                               "<<std::endl;                       
+  std::cout<<" PlotHitsVsTime(TString VL);                                               "<<std::endl;                       
   std::cout<<"                    Plot Hits of the layer VL1 vs EventId                                 "<<std::endl;                          
-  std::cout<<" --------------------"<<std::endl;
-  std::cout<<" \"myCuts\" can be of the form:  "<<std::endl;
-  std::cout<<" \"ToT0>0\" ,\"ToT0>0 && TkrNumHits >10\", \"EventId == 265\"..."<<std::endl;
+  std::cout<<" ------->>> \"myCuts\" can be of the form:  \"ToT0>0\" ,\"ToT0>0 && TkrNumHits >10\", \"EventId == 265\"..." <<std::endl;
+  //std::cout<<" \"myCuts\" can be of the form:  "<<std::endl;
+  //std::cout<<"                      \"ToT0>0\" ,\"ToT0>0 && TkrNumHits >10\", \"EventId == 265\"..."<<std::endl << std::endl;
   std::cout<<" If more than one tray has been added to the stack,       "<<std::endl;
   std::cout<<" than it is possible to specify the tray used for cutting "<<std::endl;
   std::cout<<" (otherwise the selected tray for plotting is used)       "<<std::endl;
   std::cout<<""<<std::endl;
-  std::cout<<" READ THIS EXAMPLE OF ANALYSIS:"<<std::endl;
-  std::cout<<" Initialize(TString filename=\"MyRootFile.root\") Load the file (or reset the analysis)           "<<std::endl; 
+  std::cout<<" ================>>>>>>>>> READ THIS EXAMPLE OF ANALYSIS: <<<<<<<<<<<<================ " << std::endl << std::endl;;
+  std::cout<<" Initialize(TString filename=\"MyRootFile.root\") Load the file (or reset the analysis)           "<< std::endl; 
   std::cout<<" AddLayer(\"X0\")                    Select Layer  X0 "<<std::endl;
-  std::cout<<" PlotToT(\"ToT0>0\")                  Plot the ToT for the LayerX0 if its ToT0 is >0"<<std::endl;
+  std::cout<<" PlotToT(\"ToT0>0\")                 Plot the ToT for the LayerX0 if its ToT0 is >0"<<std::endl;
   std::cout<<" AddLayer(\"X1\")                    Add the Layer X1 to the stack of layers "<<std::endl;
-  std::cout<<" PlotToT(\"ToT0>0\")                  Plot the ToT for the LayerX1 if the ToT0 of the Layer X0 is >0"<<std::endl;
-  std::cout<<" PlotToT(\"LayerX0.ToT0>0\")          Plot the ToT for the LayerX1 if the ToT0 of the Layer X0 is >0"<<std::endl;
-  std::cout<<" PlotToT(\"LayerX1.ToT0>0\")          Plot the ToT for the LayerX1 if its ToT0 is >0"<<std::endl;
+  std::cout<<" PlotToT(\"ToT0>0\")                 Plot the ToT for the LayerX1 if the ToT0 of the Layer X0 is >0"<<std::endl;
+  std::cout<<" PlotToT(\"LayerX0.ToT0>0\")         Plot the ToT for the LayerX1 if the ToT0 of the Layer X0 is >0"<<std::endl;
+  std::cout<<" PlotToT(\"LayerX1.ToT0>0\")         Plot the ToT for the LayerX1 if its ToT0 is >0"<<std::endl;
   std::cout<<" AddLayer(\"X0\")                    Add (select) the Layer X0"<<std::endl;
-  std::cout<<" PlotToT(\"LayerX1.ToT0>0\")          Plot the ToT for the LayerX0 if the ToT of the LayerX1 is is >0"<<std::endl;
+  std::cout<<" PlotToT(\"LayerX1.ToT0>0\")         Plot the ToT for the LayerX0 if the ToT of the LayerX1 is is >0"<<std::endl;
   std::cout<<" Note that PlotToT(\"TkrHits[]==5\") Plot the ToTs for the events which hit the strip 5 !!"<<std::endl; 
   std::cout<<" --------------------------------------------------    "<<std::endl; 
   std::cout<<" Initialize(TString filename=\"MyRootFile.root\") Load the file (or reset the analysis)           "<<std::endl; 
   std::cout<<" AddLayer(\"X0\")                    Select Layer  X0 "<<std::endl;
-  std::cout<<" PlotToT(\"ToT0>0\")                  Plot the ToT for the LayerX0 if its ToT0 is >0"<<std::endl;
+  std::cout<<" PlotToT(\"ToT0>0\")                 Plot the ToT for the LayerX0 if its ToT0 is >0"<<std::endl;
   std::cout<<" Initialize(TString filename=\"MyRootFile.root\") Load the file (This reset the analysis!!)        "<<std::endl; 
   std::cout<<" AddLayer(\"X1\")                    Add the Layer X1 to the stack of layers "<<std::endl;
-  std::cout<<" PlotToT(\"ToT0>0\")                  Plot the ToT for the LayerX1 its ToT0 is >0 (different from above)"<<std::endl;
+  std::cout<<" PlotToT(\"ToT0>0\")                 Plot the ToT for the LayerX1 its ToT0 is >0 (different from above)"<<std::endl;
   std::cout<<" "<<std::endl;
   std::cout<<" ------------------------------ The available variables are:------------------------------"<<std::endl;
   std::cout<<" EventId,  RunId,  TkrTotalNumHits (Global variables)"<<std::endl;
   std::cout<<" TkrNumHits,  ToT0, ToT1, TkrHits[]  (These are for each layer)"<<std::endl;
-  std::cout<<" NOTE: Is alwais possible accessing directly to the tree : \"myTree->Draw(\"RunId\"), or myTree->Draw(\"LayerX1.ToT0\")"<<std::endl;
-  std::cout<<" -----------------------------------------------------------------------------------------"<<std::endl;  
-  std::cout<<" ---------- RECON ANALYSIS (only if available):     "<<std::endl;
+  std::cout<<" NOTE: Is alwais possible accessing directly to the tree : \"myTree->Draw(\"RunId\"), or myTree->Draw(\"LayerX1.ToT0\")"<<std::endl <<std::endl;
+   std::cout<<" ================>>>>>>>>>RECON ANALYSIS (only if available):     "<<std::endl;
   std::cout<<" PlotVtx(TString myCuts=\"\")"<<std::endl;
   std::cout<<" PlotClusHit(TString myCuts=\"\")"<<std::endl;
-  std::cout<<" PlotRecon(TString myCuts=\"\")"<<std::endl;
+  std::cout<<" PlotRecon(TString myCuts=\"\")"<<std::endl <<std::endl;
   std::cout<<" ====================    Macros    ===================="<<std::endl;
   std::cout<<" 1) Initialize(TString filename=\"MyRootFile.root\") Load the file"<<std::endl; 
   std::cout<<" 2) AddLayer(\"X0\") Add the layer 0X to the stak of layers... ready to be analyzed"<<std::endl; 
-  std::cout<<" 3) PlotAllDigi(TString myCuts=\"\") Execute all the Plot macros for digi root file..."<<std::endl;
-  std::cout<<" 4) Report(TString myCuts=\"\") Makes a report page with some plots and infos. "<<std::endl;
-  std::cout<<" 5) DumpReport(char *filename=\"MyRootFile.root\")   Execute different Report() with different set of cuts (see code)"<<std::endl;
-  std::cout<<"                                                     It saves all the plot in a ps file (Report_[layer].ps)"<<std::endl;
+  std::cout<<" 3) PlotAllDigi(TString LV=\"X0\", TString myCuts=\"\") Execute all the Plot macros for digi root file..."<<std::endl;
+  std::cout<<" 4) Report(TString LV=\"X0\", TString myCuts=\"\") Makes a report page with some plots and infos. "<<std::endl;
+  std::cout<<" 5) DumpReport(TString LV=\"X0\",char *filename=\"MyRootFile.root\")   Execute different Report() with different set of cuts (see code)"<<std::endl;
+  std::cout<<"                     It saves all the plot in a ps file (Report_[layer].ps)"<< std::endl;
+  std::cout<<" 6) ReportAll(TString myCuts=\"\", TString=\"gif\")" <<std::endl;
   
 }
 
@@ -250,7 +255,7 @@ void PlotHitMap(TString myCuts)
 }
 
 
-TH1D *ProjectHitMap(TString myCuts)
+TH1D *ProjectHitMap(TString LV, TString myCuts)
 {
   gDirectory->Delete("myCanvas");
   TCanvas *myCanvas;
@@ -298,19 +303,59 @@ TH1D *ProjectHitMap(TString myCuts)
       
       double sigma = Gaussian->GetParameter(2);
       double mean  = Gaussian->GetParameter(1);
-      
+      int strip_noisy = 0, strip_dead = 0;
+      int snoisy[1536], sdead[1536];
+      int cont;
+
       std::cout<<" Mean : "<<mean<<", Sigma "<<sigma<<std::endl;
       if(sigma>1) 
 	{ 
+	  if (!gSystem->AccessPathName( "StripStatus.dat", kFileExists )) 
+	    StripStatus.open("StripStatus.dat", std::ios::out|std::ios::app);
+	  else {
+	    StripStatus.open("StripStatus.dat", std::ios::out);
+	    StripStatus << "Layer ------- " << "Dead strips ------- " << "Noisy strips" << std::endl;
+	    StripStatus << std::endl;
+	  }
 	  for(int strip=1;strip<=1535;strip++)
-	    {
+	    {	  
+	      snoisy[strip] = sdead[strip] = 0;
 	      int numHits = (int) HitMap1->GetBinContent(strip);
-	      if(numHits==0)
+	      if(numHits==0){
+		sdead[strip_dead] = strip-1;
+		strip_dead++;
 		std::cout<<" WARNING!! Strip Number "<<strip-1<<" has 0 counts ****************************"<<std::endl;
+	      }
 	      
-	      if(numHits > mean + 10.0*sigma)
-		std::cout<<" WARNING!! Strip Number "<<strip-1<<" is above 10 sigma from the mean!! Counts : "<<numHits<<std::endl;
+	      if(numHits > mean + 10.0*sigma){
+		snoisy[strip_noisy] = strip-1;
+		strip_noisy++;		
+		std::cout<<" WARNING!! Strip Number "<<strip-1<<" is above 10 sigma from the mean!! Counts : "<< numHits<<std::endl;
+	      }
 	    }
+
+	  std::cout << "dead strips: "  << strip_dead << "  noisy strips: " << strip_noisy << std::endl;
+	  StripStatus <<  LV << " ------------ " <<  strip_dead << " ------------ " << strip_noisy << std::endl;
+	  
+	  for(int strip=1;strip<=strip_dead;strip++) {
+	    if ((strip_dead && sdead[strip]) || (strip_dead && sdead[1]==0 )) {
+	      if (strip == 1) StripStatus << " ==> strips with 0 counts :" << std::endl;
+	      StripStatus << sdead[strip] << "    " ;
+	      cont = strip%10;
+	      if (!cont) StripStatus << std::endl;
+	    }
+	  }
+	  if(strip_dead && cont) StripStatus << std::endl;
+	  for(int strip=1;strip<=strip_noisy;strip++) {
+	    if ((strip_noisy && snoisy[strip]) || (strip_noisy && snoisy[1]==0)) {
+	      if (strip == 1) StripStatus << " ==> strips noisy (> 10 sigma):" << std::endl;
+	      StripStatus << snoisy[strip] << "  " ;
+	      cont = strip%10;
+	      if (!cont) StripStatus << std::endl;
+	    }
+	  }
+	  if(strip_noisy && cont) StripStatus << std::endl;
+	  StripStatus.close();
 	}
     }
 
@@ -320,9 +365,9 @@ TH1D *ProjectHitMap(TString myCuts)
   
 }
 
-void PlotProjectHitMap(TString myCuts)
+void PlotProjectHitMap(TString LV, TString myCuts)
 {
-  TH1D *PHM = ProjectHitMap(myCuts);
+  TH1D *PHM = ProjectHitMap(LV, myCuts);
 
   gDirectory->Delete("prjHitCan");
   TCanvas *prjHitCan;
@@ -481,7 +526,7 @@ void PlotAllDigi(TString LV,TString myCuts)
   AddLayer(LV);
   PlotNumHitsLayer(myCuts);
   PlotHitMap(myCuts);
-  PlotProjectHitMap(myCuts);
+  PlotProjectHitMap(LV, myCuts);
   PlotToT(myCuts);
   PlotGraph(LV,"ToT0","ToT1",myCuts);
 }
@@ -653,7 +698,7 @@ TCanvas *Report(TString LV,TString myCuts)
   std::cout<<text3<<std::endl;  
   
   middleDown->cd(1);
-  //TH1D *PHM  = ProjectHitMap(myCuts);
+  //TH1D *PHM  = ProjectHitMap(LV, myCuts);
   //middleDown->cd(1);
   //PHM->Draw();
   TGraph *TIMEGraph = TimeHistory(LV);
@@ -1025,16 +1070,21 @@ void PrintTkrDiagnostics(TString myCuts="") {
     TH1I* h = new TH1I("h", "h", 2, -0.5, 1.5);
  
     std::cout << "GTRC\\GTCC";
-    for ( UInt_t GTCC=0; GTCC<NumGTCC; ++GTCC )
+    for ( Int_t GTCC=0; GTCC<NumGTCC; ++GTCC )
         std::cout << std::setw(width) << GTCC;
     std::cout << std::endl;
-    for ( UInt_t GTRC=0; GTRC<NumGTRC; ++GTRC ) {
+    for ( Int_t GTRC=0; GTRC<NumGTRC; ++GTRC ) {
         std::cout << std::setw(9) << GTRC;
-        for ( UInt_t GTCC=0; GTCC<NumGTCC; ++GTCC ) {
-            TString varexp = TString("TkrDiagnostics[")+(GTCC*NumGTRC+GTRC)+"]";
-            myTree->Project("h", varexp, myCuts);
-            Int_t value = (Int_t)h->GetBinContent(h->GetBin(2)); // underflow:0, false:1, true:2
-            std::cout << std::setw(width) << value;
+        for ( Int_t GTCC=0; GTCC<NumGTCC; ++GTCC ) {
+	  //TString varexp = TString("TkrDiagnostics[")+(GTCC*NumGTRC+GTRC)+"]";
+	  TString varex = "TkrDiagnostics[";
+	  varex += GTCC*NumGTRC+GTRC;
+	  varex+="]";
+	  //std::cout << std::endl;
+	  //std::cout <<  " ---" << varex << std::endl;
+	  myTree->Project("h", varex, myCuts);
+	  Int_t value = (Int_t)h->GetBinContent(h->GetBin(2)); // underflow:0, false:1, true:2
+	  std::cout << std::setw(width) << value;
         }
         std::cout << std::endl;
     }
@@ -1069,17 +1119,20 @@ void myGraph()
       
   TGraph *myGraph;
   
-  TString Name="frame";
+ 
   TCanvas *aCanvas = new TCanvas();      
   fakeGraph->Draw("ap");
   for(int i = 1;i<=N;i++)
     {
+      TString Name="frame";
       myGraph = new TGraph(i, NUMHITS, MeanV);
       myGraph->SetMarkerStyle(23);
       myGraph->SetMarkerSize(3);
       myGraph->SetMarkerColor(2);
       myGraph->Draw("p");
-      aCanvas->Print(Name+i+".gif");
+      Name += i;
+      Name += ".gif";
+      aCanvas->Print(Name);
     }
   
 }

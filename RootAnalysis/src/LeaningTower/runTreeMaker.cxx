@@ -21,7 +21,7 @@ int main(int argn, char** argc) {
     gSystem->Load("libTree.dll");
     gSystem->Load("reconRootData.dll");
 #endif
-    unsigned int numEvents = 1000000;
+    unsigned int numEvents = 10000000;
     const char* path = ::getenv("ROOTANALYSISROOT");
 
     std::string digiFileName(path);

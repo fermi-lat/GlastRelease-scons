@@ -293,7 +293,9 @@ void TreeMaker::CreateTree(Int_t numEvents)
                   if ( !tkrTrigger )
                       std::cerr << "Trigger primitive:  External trigger!" << std::endl;
                   std::cout << "LevelOneTrigger: " << LevelOneTrigger << std::endl;
+                  std::cout << "L1T doesn't seem to work, thus we record the TkrDiagnostics even if it may not make sense!" << std::endl;
               }
+              tkrTrigger = true;
               tkrTriggerWarning = false;
 
               // Ebf time
@@ -314,7 +316,7 @@ void TreeMaker::CreateTree(Int_t numEvents)
                   std::bitset<NumGTRC> word = 0;
                   if ( tkrTrigger )
                       word = evt->getTkrDiagnostic(indexToGTCC(GTCC))->getDataWord();
-                  if ( DEBUG ) std::cout << "TkrDiagnosticData[" << GTCC << "] " << word << ' ';
+                  if ( DEBUG ) std::cout << "TkrDiagnosticData[" << GTCC << "] word(" << word << ") ";
 		  for ( int GTRC=NumGTRC-1; GTRC>=0; --GTRC ) {
                       TkrDiagnostics[getIndex(GTCC,GTRC)] = word[GTRC];
                       if ( DEBUG ) std::cout << ( TkrDiagnostics[getIndex(GTCC,GTRC)] > 0 ) ? 1 : 0;
@@ -455,6 +457,7 @@ void TreeMaker::CreateTree(Int_t numEvents)
 	  TkrNumHits = TrueTkrNumHits[i];
 	  ToT0       = TrueToT0[i];
 	  ToT1       = TrueToT1[i];
+          //          ToT0 = ToT1 = 42.;
 	  //	  TkrHits    = TrueTkrHits[i];
 	  if(DIAGN)
 	    {
@@ -476,7 +479,7 @@ void TreeMaker::CreateTree(Int_t numEvents)
 	  i++;
 	  
 	}
-      //      if(nTkrDigi>0) myTree->Fill();
+      //if(nTkrDigi>0) myTree->Fill();
       if ( DEBUG ) std::cout << "...filled!" << nTkrDigi << std::endl;
     }  // end analysis code in event loop
   

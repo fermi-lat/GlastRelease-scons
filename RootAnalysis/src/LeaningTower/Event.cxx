@@ -46,6 +46,11 @@ int *Event::GetLayerHits(TString LayerName)
   return aLayer->TkrHits;
 }
 
+Bool_t Event::GetTriggerReq(TString LayerName, Bool_t side) {
+  Layer *aLayer = (Layer*)myGeometry->GetValue(LayerName);
+  aLayer->GetEvent(SelectedEvent);
+  return aLayer->GetTriggerReq(side);
+}    
 
 std::vector<double> Event::GetClusters(TString LayerName)
 {
