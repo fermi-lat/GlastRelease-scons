@@ -1,8 +1,8 @@
 package mcRootData
-version v0
+version v0r2p1
 
 use GlastPolicy
-use ROOT v3r0p7
+use ROOT
 
 
 ignore_pattern include_none
