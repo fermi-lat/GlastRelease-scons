@@ -136,11 +136,11 @@ StatusCode TestEnergyTool::initialize() {
 /*!
   Method:
   -# if(calibFlavor != none)
-   -# set event time for DetDataSvc
-   -# obtain pointers pedestal and elecgain data in TDS
-   -# use uniqe pedestal and gain information for each xtal/range
+  -# set event time for DetDataSvc
+  -# obtain pointers pedestal and elecgain data in TDS
+  -# use uniqe pedestal and gain information for each xtal/range
   -# else
-   -# use default pedesatl values for all xtal/range
+  -# use default pedesatl values for all xtal/range
   -# convert adc values into energy (e = gain*(adc-ped))
   -# return average of POS and NEG energy estimations
 
@@ -149,7 +149,7 @@ StatusCode TestEnergyTool::initialize() {
   need energy from both faces may want to call the overloaded version of the function which deals with each
   face individually.
 
- */
+*/
 StatusCode TestEnergyTool::calculate(const idents::CalXtalId &xtalId, 
                                      idents::CalXtalId::AdcRange rangeP,
                                      idents::CalXtalId::AdcRange rangeN,
@@ -243,7 +243,7 @@ StatusCode TestEnergyTool::calculate(const idents::CalXtalId &xtalId,
   double eneM = gainM*(adcN-pedN);
   
   log << MSG::INFO << " eneP " << eneP << " eneM " << eneM << endreq;
-  energy = eneP;
+  energy = (eneP+eneM)/2;
 
   return StatusCode::SUCCESS;
 }
@@ -251,13 +251,13 @@ StatusCode TestEnergyTool::calculate(const idents::CalXtalId &xtalId,
 /*!
   Method:
   -# if(calibFlavor != none)
-   -# set event time for DetDataSvc
-   -# obtain pointers pedestal and elecgain data in TDS
-   -# use uniqe pedestal and gain information for each xtal/range
+  -# set event time for DetDataSvc
+  -# obtain pointers pedestal and elecgain data in TDS
+  -# use uniqe pedestal and gain information for each xtal/range
   -# else
-   -# use default pedesatl values for all xtal/range
+  -# use default pedesatl values for all xtal/range
   -# convert adc values into energy (e = gain*(adc-ped))
- */
+*/
 StatusCode TestEnergyTool::calculate(const idents::CalXtalId &xtalId,
                                      idents::CalXtalId::AdcRange range,
                                      idents::CalXtalId::XtalFace face,
@@ -341,7 +341,6 @@ StatusCode TestEnergyTool::calculate(const idents::CalXtalId &xtalId,
   double ene = gain*(adc-ped);
     
   energy = ene;
-  //  }		
 
   return StatusCode::SUCCESS;
 }
