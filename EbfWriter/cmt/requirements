@@ -1,5 +1,5 @@
 package EbfWriter
-version v0r0p7
+version v0r0p8
 # $Header$
 
 author Navid Golpayegani <golpa@milkyway.gsfc.nasa.gov>
@@ -9,7 +9,6 @@ use GlastSvc       *
 
 # Use this pattern for shareable libraries that Gaudi must load
 apply_pattern packageShr
-apply_pattern package_include
 
 private
 #-------------------------------------------------------
