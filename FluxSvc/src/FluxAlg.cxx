@@ -30,9 +30,6 @@
 #include "FluxAlg.h"
 //------------------------------------------------------------------------
 
-// necessary to define a Factory for this algorithm
-// expect that the xxx_load.cxx file contains a call     
-//     DLL_DECL_ALGORITHM( FluxAlg );
 
 static const AlgFactory<FluxAlg>  Factory;
 const IAlgFactory& FluxAlgFactory = Factory;
@@ -108,13 +105,12 @@ StatusCode FluxAlg::execute()
       
     log << MSG::DEBUG << particleName
         << "(" << m_flux->energy()
-        << " GeV), Launch: " 
+        << " MeV), Launch: " 
         << "(" << p.x() <<", "<< p.y() <<", "<<p.z()<<")" 
         << "mm, Dir " 
         << "(" << d.x() <<", "<< d.y() <<", "<<d.z()<<")" 
         << endreq;
     
-    //mc::McParticleCol* pcol = new mc::McParticleCol;
 
     // Here the TDS is prepared to receive hits vectors
     // Check for the MC branch - it will be created if it is not available
@@ -130,8 +126,6 @@ StatusCode FluxAlg::execute()
     
 
 
-    //mc::McParticleCol*  pcol= SmartDataPtr<mc::McParticleCol>(eventSvc(), "/Event/MC/McParticleCol");
-    //if(pcol==0){
     mc::McParticleCol* pcol = new mc::McParticleCol;
     StatusCode sc2 = /*temp*/eventSvc()->registerObject("/Event/MC/McParticleCol", pcol);
     if( sc2.isFailure()) {
@@ -140,7 +134,6 @@ StatusCode FluxAlg::execute()
 
         return sc2;
     }
-    //}
     mc::McParticle * parent= new mc::McParticle;
     pcol->push_back(parent);
 
@@ -156,7 +149,6 @@ StatusCode FluxAlg::execute()
         pin);
     parent->finalize(pin, p);
 
-    // mcEvent->setSourceId(m_flux->numSource());
     return sc;
 }
 

@@ -1,5 +1,5 @@
 package FluxSvc
-version v5r4p1
+version v5r5
 
 branches FluxSvc mgr doc
 
@@ -11,7 +11,7 @@ use geometry   v3*
 use GaudiSvc
 use xml
 use CLHEP
-use BFEMflux v0
+
 
 apply_pattern packageShr
 apply_pattern package_include
@@ -38,13 +38,11 @@ application testMgr test/flux/testMgr.cxx \
  test/flux/rootplot.cxx test/flux/rootEnergyHist.cxx\
  test/flux/rootHist.cxx  test/flux/rootAngleHist.cxx\
  *.cxx \
- Dll/*.cxx\
- ${FluxSvc_headers}
+  ${FluxSvc_headers}
 
 application rootplots test/flux/roottest.cxx \
  test/flux/rootplot.cxx test/flux/rootEnergyHist.cxx\
  test/flux/rootHist.cxx test/flux/rootAngleHist.cxx\
- *.cxx Dll/*.cxx\
  ${FluxSvc_headers}
 
 macro_append FluxSvc_headers "" WIN32 "../xml/*.xml test/*.txt test/*.xml"
