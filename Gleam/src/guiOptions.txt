@@ -1,0 +1,12 @@
+// Options for Gleam that are specific to defining a display
+
+// this necessary (for now) to see the event
+G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
+
+ApplicationMgr.ExtSvc += {"GuiSvc"};
+GuiSvc.size=-3000;
+ApplicationMgr.DLLs   += {"FluxDisplay" };
+ApplicationMgr.ExtSvc += {"FluxMenuSvc", 
+        "DetectorDisplay" };
+
+// ----------end display-specific

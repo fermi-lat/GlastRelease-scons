@@ -46,7 +46,7 @@ G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
 
 // un comment following to enable display: must be before RecoSvc??
 ApplicationMgr.ExtSvc += {"GuiSvc"};
-GuiSvc.size=-2000;
+GuiSvc.size=-3000;
 ApplicationMgr.DLLs   += {"FluxDisplay" };
 ApplicationMgr.ExtSvc += {"FluxMenuSvc" };
 // ----------end display-specific
