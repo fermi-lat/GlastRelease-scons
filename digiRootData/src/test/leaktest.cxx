@@ -33,7 +33,7 @@
     Int_t ievent, ixtal;
     for (ievent = 0; ievent < numEvents; ievent++) {
 
-        ev->initialize(ievent, runNum);
+        ev->initialize(ievent, runNum, true);
 
         for (ixtal = 0; ixtal < numXtals; ixtal++) {
             CalDigi *cal = new CalDigi();

@@ -20,6 +20,7 @@
 */
 const UInt_t runNum = 1;
 const UInt_t numXtals = 10;
+const Bool_t fromMc = true;
 Float_t randNum;
 
 int checkDigiEvent(DigiEvent *evt, UInt_t ievent) {
@@ -29,6 +30,11 @@ int checkDigiEvent(DigiEvent *evt, UInt_t ievent) {
     }
     if (evt->getEventId() != ievent) {
         std::cout << "Event Id is wrong: " << evt->getEventId() << std::endl;
+        return -1;
+    }
+
+    if (evt->getFromMc() != fromMc) {
+        std::cout << "From MC flag is wrong" << std::endl;
         return -1;
     }
     return 0;
@@ -161,7 +167,7 @@ int write(char* fileName, int numEvents) {
     randNum = randGen.Rndm();
     for (ievent = 0; ievent < numEvents; ievent++) {
         
-        ev->initialize(ievent, runNum);
+        ev->initialize(ievent, runNum, fromMc);
         
         for (ixtal = 0; ixtal < numXtals; ixtal ++) {
             CalDigi *cal = new CalDigi();
@@ -210,7 +216,11 @@ int main(int argc, char **argv) {
     sc = write(fileName, numEvents);
     sc = read(fileName, numEvents);
     
-    if (sc == 0) std::cout << "DIGI ROOT file writing and reading suceeded!" << std::endl;
+    if (sc == 0) {
+        std::cout << "DIGI ROOT file writing and reading suceeded!" << std::endl;
+    } else {
+        std::cout << "FAILED digi writing and reading" << std::endl;
+    }
     
     return(sc);
 }
