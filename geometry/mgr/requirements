@@ -4,10 +4,10 @@ version v2
 use GlastPolicy
 use CLHEP
 
-ignore_pattern include_none
+
 apply_pattern package_include
 
-apply_pattern package_Llinkopts
+apply_pattern package_linkopts
 
 private
 library  geometry -no_share \
