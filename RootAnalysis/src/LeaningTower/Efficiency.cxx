@@ -36,6 +36,11 @@ public:
     };
 
     void Go(int lastEntry=-1);
+    // if Get_3_in_a_row would work on the array of TriggerDiagnostics in the
+    // Header tree, it would be faster.  But, currently, this array is in the
+    // order of GTCC/GTRC.  This stuff should get extracted from TreeMaker
+    // and here, and go into it's own class.
+    bool Get_3_in_a_row(const int layer) const;
 
     void Draw2D(TString plane="all", TCut="", float residualDist=1,
                 float borderWidth=1) const;
@@ -129,42 +134,42 @@ void Efficiency::Go(int lastEntry) {
         for ( int l=0; l<18; ++l )
             for ( int v=0; v<2; ++v )
                 ntuple[l][v].eventId = -1;
-        // now, loop over all planes
+        // now, extrapolate the fitted tracks in both views over all planes
         TIter next(myGeometry);
         while ( Layer* plane = (Layer*)next() ) {
             const TString planeName = plane->GetName();
-            const int ll = plane->GetLayer();
-            const int vv = plane->GetView();
-            ntuple[ll][vv].eventId = eventId;
-            strncpy(ntuple[ll][vv].charPlaneName, planeName.Data(), 4);
+            const int l = plane->GetLayer();
+            const int v = plane->GetView();
+            ntuple[l][v].eventId = eventId;
+            strncpy(ntuple[l][v].charPlaneName, planeName.Data(), 4);
             const float posZ = plane->GetHeight();
             // x and y here are absolute, not in the system of the plane
-            ntuple[ll][vv].xExt = ExtrapolateCoordinate(TLtracks[0], posZ);
-            ntuple[ll][vv].yExt = ExtrapolateCoordinate(TLtracks[1], posZ);
+            ntuple[l][v].xExt = ExtrapolateCoordinate(TLtracks[0], posZ);
+            ntuple[l][v].yExt = ExtrapolateCoordinate(TLtracks[1], posZ);
             float absExt, ordExt;
             if ( plane->GetView() ) { // Y
-                absExt = ntuple[ll][vv].yExt;
-                ordExt = ntuple[ll][vv].xExt;
+                absExt = ntuple[l][v].yExt;
+                ordExt = ntuple[l][v].xExt;
             }
             else { // X
-                absExt = ntuple[ll][vv].xExt;
-                ordExt = ntuple[ll][vv].yExt;
+                absExt = ntuple[l][v].xExt;
+                ordExt = ntuple[l][v].yExt;
             }
 
-            ntuple[ll][vv].siDist = plane->activeAreaDist(absExt, ordExt);
+            ntuple[l][v].siDist = plane->activeAreaDist(absExt, ordExt);
 
-            ntuple[ll][vv].res = 400;
+            ntuple[l][v].res = 400; // default if no clusters in this plane
             TGraph clusters = recon->GetClusterGraph(planeName);
             for ( int i=0; i<clusters.GetN(); ++i ) {
-                Double_t h, v;
-                clusters.GetPoint(i, h, v);
-                const float newRes = absExt - h;
-                if ( std::abs(newRes) < std::abs(ntuple[ll][vv].res) )
-                     ntuple[ll][vv].res = newRes;
+                Double_t hor, vert;
+                clusters.GetPoint(i, hor, vert);
+                const float newRes = absExt - hor;
+                if ( std::abs(newRes) < std::abs(ntuple[l][v].res) )
+                     ntuple[l][v].res = newRes;
             }
             //            effTree.Fill();
         }
-        // it shouldn't happen, so lets check first if all ntuple were filled
+        // it shouldn't happen, so first lets check if all ntuple were filled
         for ( int l=0; l<18; ++l )
             for ( int v=0; v<2; ++v )
                 if ( ntuple[l][v].eventId < 0 )
@@ -173,6 +178,10 @@ void Efficiency::Go(int lastEntry) {
                               << ntuple[l][v].eventId << std::endl;
         for ( int l=0; l<18; ++l )
             for ( int v=0; v<2; ++v ) {
+	        // don't fill the ntuple if, without this plane, we wouldn't
+	        // have a 3-in-a-row trigger
+  	        if ( !Get_3_in_a_row(l) )
+  		    continue;
                 ntuple0 = ntuple[l][v];
                 const int ov = v ? 0 : 1;
                 ntuple0.siDistOther = ntuple[l][ov].siDist;
@@ -189,6 +198,25 @@ void Efficiency::Go(int lastEntry) {
     f.Close();
 }
 
+bool Efficiency::Get_3_in_a_row(const int inThisLayer) const {
+    // let's first check if a single layer would have triggered
+    bool layer[18];
+    for ( int l=0; l<18; ++l ) {
+	const TString nameX = GetPlaneName(l, 0);
+	const TString nameY = GetPlaneName(l, 1);
+	// OR of left and right for each view, and AND of both views
+	layer[l] = ( myEvent->GetTriggerReq(nameX, 0) || myEvent->GetTriggerReq(nameX, 1) )
+	    && ( myEvent->GetTriggerReq(nameY, 0) || myEvent->GetTriggerReq(nameY, 1) );
+    }
+    layer[inThisLayer] = false;  // in this layer is the plane we want to study!
+
+    // do we still have a 3-in-a-row?
+    for ( int l=0; l<16; ++l )
+	if ( layer[l] && layer[l+1] && layer[l+2] )
+	    return true;
+    return false;
+}
+  
 void Efficiency::Draw2D(TString plane, TCut cut, float residualDist,
                         float borderWidth) const {
     if ( plane != "all" ) {
