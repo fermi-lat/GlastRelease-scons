@@ -5,7 +5,6 @@ use FluxSvc v5r*
 use CLHEP v2* IExternal
 
 apply_pattern packageShr
-apply_pattern package_include
 
 #=============================================================
 
