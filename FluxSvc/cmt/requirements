@@ -26,7 +26,7 @@ use GRB * celestialSources -no_auto_imports
 # _____________________________________________________________
 
 private
-use Event       v9r*
+use Event       v10*
 use GlastSvc    v9r*
 use astro       v1r*
 #use genericSources * celestialSources
