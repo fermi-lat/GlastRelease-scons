@@ -1,6 +1,6 @@
 // $Header$
-#ifndef CalibData_XmlTest1Cnv_h
-#define CalibData_XmlTest1Cnv_h
+#ifndef CalibSvc_XmlTest1Cnv_h
+#define CalibSvc_XmlTest1Cnv_h
 
 /** @class XmlTest1  
 

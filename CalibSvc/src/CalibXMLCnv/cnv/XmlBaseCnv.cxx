@@ -82,7 +82,8 @@ StatusCode XmlBaseCnv::createObj(IOpaqueAddress* addr,
   std::string par0 = par[0];
 
   // Just in case there are environment variables in the file specification
-  int nSub = facilities::Util::expandEnvVar(&par0);
+  //  int nSub = 
+  facilities::Util::expandEnvVar(&par0);
 
   //  DOM_Document doc = m_xmlSvc->parse(par[0].c_str());
   DOM_Document doc = m_xmlSvc->parse(par0.c_str());
@@ -106,8 +107,11 @@ StatusCode XmlBaseCnv::createObj(IOpaqueAddress* addr,
 }
 
 
-/// In a backhanded way, invoke the right specific converter
-/// for the type of the object to be created
+/** In a backhanded way, invoke the right specific converter
+    for the type of the object to be created
+    @param  elt      Document elt from XML document   (input)
+    @param  refpObject 
+*/
 StatusCode XmlBaseCnv::internalCreateObj(const DOM_Element& elt,
                                          DataObject*& refpObject,
                                          IOpaqueAddress* address) {
@@ -159,10 +163,9 @@ StatusCode XmlBaseCnv::internalCreateObj(const DOM_Element& elt,
   return sc;
 } 
 
-
 // Default is to do nothing.  Derived classes may override.
 StatusCode XmlBaseCnv::i_processObj(DataObject*, // pObject,
-                                    IOpaqueAddress*) /* address) */ {
+                                    IOpaqueAddress* ) /* address */  {
   return StatusCode::SUCCESS;
 }
  
