@@ -11,13 +11,16 @@
 #include "Event/TopLevel/Definitions.h"
 
 extern const CLID& CLID_McEvent;
+namespace Event {
 
 /** @class MCEvent
 * @brief Top level Monte Carlo data object
 * It can be identified by "/Event/MC" on the TDS
 * 
 * It contains:
-* - source ID
+* - run number
+* - sequence number for keying random number generator
+* - source ID 
 * 
 * $Header$
 */
@@ -25,8 +28,7 @@ extern const CLID& CLID_McEvent;
 class MCEvent : public DataObject                                              {
     
 public:
-    MCEvent( int sourceId=0)
-        : DataObject(), m_sourceId(sourceId) {}
+    MCEvent( ) {}
     
     virtual ~MCEvent()  { }
     
@@ -40,11 +42,13 @@ public:
     }
     
     /// Retrieve 
-    int sourceId () const                                                         {
-        return m_sourceId;
-    }
-    /// set
-    void setSourceId(int s);
+    int getSourceId() const { return m_sourceId; }
+    int getRunNumber() const      { return m_run; }
+    int getSequence() const { return m_sequence; }
+
+    /// initialize
+    void initialize(int run, int source, long int seq) {
+        m_run = run; m_sourceId = source; m_sequence = seq;}
     
     /// Serialize the object for writing
     virtual StreamBuffer& serialize( StreamBuffer& s ) const;
@@ -61,23 +65,21 @@ public:
 private:
     // identifier of the source
     int m_sourceId;
+    /// run number
+    unsigned int m_run;
+    /// sequence number
+    unsigned int m_sequence;
     
 };
 
-inline void MCEvent::setSourceId(int s)
-{
-    m_sourceId = s;
-}
 //
 // Inline code must be outside the class definition
-//
-//#include "GlastEvent/MonteCarlo/MCVertex.h"  HMA commented this out until we have MCVertex.h
 
 
 /// Serialize the object for writing
 inline StreamBuffer& MCEvent::serialize( StreamBuffer& s ) const               {
     DataObject::serialize(s);
-    s << m_sourceId;
+    s << m_sourceId << m_sequence << m_run;
     return s;
 }
 
@@ -85,7 +87,8 @@ inline StreamBuffer& MCEvent::serialize( StreamBuffer& s ) const               {
 /// Serialize the object for reading
 inline StreamBuffer& MCEvent::serialize( StreamBuffer& s )                     {
     DataObject::serialize(s);
-    s >> m_sourceId;
+    s >> m_run >> m_sequence >> m_sourceId;
+    
     return s;
 }
 
@@ -94,10 +97,14 @@ inline StreamBuffer& MCEvent::serialize( StreamBuffer& s )                     {
 inline std::ostream& MCEvent::fillStream( std::ostream& s ) const              {
     s << "class MCEvent :\n"
         << "    Source Id = "
-        << EventField( EventFormat::field12 )
-        << m_sourceId;
+        << EventField( EventFormat::field12 ) << m_sourceId
+        << "    Run number = "
+        << EventField( EventFormat::field12 )  << m_run
+        << "    Sequence = "
+        << EventField( EventFormat::field12 )  << m_sequence
+        ;
     return s;
 }
 
-
+} // namespace Event
 #endif    // GLASTEVENT_MCEVENT_H
