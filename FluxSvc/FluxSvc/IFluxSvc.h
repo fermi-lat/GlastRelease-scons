@@ -35,49 +35,49 @@ class HepRandomEngine;
 */
 class  IFluxSvc : virtual public IInterface {
 public:
-    
+
     /// just get an IFlux object by name
     virtual  StatusCode source(std::string name, IFlux*&)=0;
-    
+
     /// return a list of legal names
     virtual std::list<std::string> fluxNames()const=0;
-    
+
     /// add a new source
     virtual void addFactory(std::string name, const ISpectrumFactory* factory )=0;
-    
+
     /// return pointer to the random engine that FluxSvc uses
     virtual HepRandomEngine* getRandomEngine()=0;
 
     /// pass a specific amount of time
     virtual void pass (double t)=0;    
-    
+
     /// create a set of display windows using rootplot.
     virtual void rootDisplay(std::vector<const char*> arguments)=0;
 
     /// allow an external observer to attach to gps
     virtual void attachGpsObserver(Observer* anObserver)=0;
-    
+
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IFluxSvc; }
-    
+
     ///return the pointer to the current IFlux object
     virtual IFlux* currentFlux()=0;
-    
+
     /// name of the flux
     virtual std::string fluxName()const=0;
-    
+
     /// set the glast tilt angles - this means glast will ALWAYS rock to these angles.
     virtual void setExplicitRockingAngles(double ang1,double ang2)=0;
 
     /// get the angular values of the satellite
     virtual std::pair<double,double> getExplicitRockingAngles()=0;
 
-	/// set the desired pointing history file to use:
-	virtual void setPointingHistoryFile(std::string fileName)=0;
-    
+    /// set the desired pointing history file to use:
+    virtual void setPointingHistoryFile(std::string fileName)=0;
+
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
     virtual HepRotation transformGlastToGalactic(double time)const=0;
-    
+
     /// get the current satellite location
     virtual std::pair<double,double> location()=0;
 
@@ -87,13 +87,13 @@ public:
     ///2 = SLEWING : (experimental) like UPDOWN, except that rotation at equator happens gradually.
     ///3 = ONEPERORBIT : (needs work) LAT rocked northward for one orbit, southward for the next.
     ///4 = EXPLICIT :  Explicit angles given - this should be used with the setExplicit... function.
-	///5 = POINT:  Explicit pointing direction given - setExplicitRockingAngles are (l,b).
-	///6 = HISTORY - Filename given to stand for a pre-recorded pointing history.  Use the setPointingHistoryFile function.
+    ///5 = POINT:  Explicit pointing direction given - setExplicitRockingAngles are (l,b).
+    ///6 = HISTORY - Filename given to stand for a pre-recorded pointing history.  Use the setPointingHistoryFile function.
     virtual std::vector<double> setRockType(int rockType, double rockAngle)=0;
 
     ///this should return the source file names, along with the contained sources.
     virtual std::vector<std::pair< std::string ,std::list<std::string> > > sourceOriginList() const=0;
-        
+
 };
 
 #endif  // _H_IFluxSvc

@@ -179,7 +179,7 @@ StatusCode FluxAlg::execute()
     
     if(m_fluxSvc->currentFlux() == m_flux){
         m_flux->generate();
-    }else{
+            }else{
         m_flux = m_fluxSvc->currentFlux();
         m_flux->generate();
     }
