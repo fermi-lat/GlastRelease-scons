@@ -147,7 +147,8 @@ void  G4SectionsVisitor::visitSection(detModel::Section* section)
 	    }
       }
     }
-    std::cout<< "Geometry constructed: " << g4Physicals.size() << " physical volumes" << std::endl;
+    std::cout<< "Geometry constructed starting at topvol "<< actualVolume << 
+        ": " << g4Physicals.size() << " physical volumes" << std::endl;
   
   
 }
@@ -242,7 +243,6 @@ void  G4SectionsVisitor::visitPosXYZ(detModel::PosXYZ* pos)
 {
   unsigned int i;
   int  ind = -1;
-  char temp[10];  std::string tmp = "";
   typedef std::map<G4VPhysicalVolume*,std::string>M;
   std::string volName;
 
@@ -281,25 +281,14 @@ void  G4SectionsVisitor::visitPosXYZ(detModel::PosXYZ* pos)
 					    actualMother,false,0));
   
     m_physicalsPerLogical[volName]++;
-
-  for(i=0;i<(pos->getIdFields()).size();i++)
-    { 
-      sprintf(temp, "/%d", (int) pos->getIdFields()[i]->getValue()); 
-      tmp = tmp+temp;
-    }
-
-  if(pos->getIdFields().size() != 0)
-    g4Identifiers.insert(M::value_type(g4Physicals.back(),tmp));  
-
+    processIds(pos);
 }
 
 
 void  G4SectionsVisitor::visitAxisMPos(detModel::AxisMPos* pos)
 {
-  unsigned int i, ncopy, j;
+  unsigned int i, ncopy;
   int  ind = -1;
-  std::string tmp = "";
-  char temp[10];
   typedef std::map<G4VPhysicalVolume*,std::string>M;
   detModel::Volume* volume;
 
@@ -329,11 +318,10 @@ void  G4SectionsVisitor::visitAxisMPos(detModel::AxisMPos* pos)
       ind = g4Logicals.size();
       pos->getVolume()->AcceptNotRec(this);
     }
-#if 1 //THB: replacement code to construct the physical volumes in the stack
 
   double   rot=pos->getRotation()*GDDPI/180;
 
-  // rotation matrix to apply to everything in the stack. Must be on stack if nonzero
+  // rotation matrix to apply to everything in the stack. Must be on heap if nonzero
   G4RotationMatrix* rm = rot==0? 0: new G4RotationMatrix(); 
 
   Hep3Vector stackDir; // unit vector to set 
@@ -360,69 +348,34 @@ void  G4SectionsVisitor::visitAxisMPos(detModel::AxisMPos* pos)
       actualMother,false,0)
       );	
     m_physicalsPerLogical[volName]++;
+    processIds(pos,i);
   }//endfor
-
-#else // original version. Seems wrong, in that rm  is constantly rotated
-
- G4RotationMatrix* rm = new G4RotationMatrix();
-
-  for(i=0;i<ncopy;i++)
-    {
-  
-      switch(pos->getAxisDir()){
-      case (detModel::Stack::xDir):
-	{
-	  rm->rotateX((pos->getRotation()*GDDPI)/180.0);
-	  g4Physicals.push_back(
-				new G4PVPlacement(rm, G4ThreeVector((pos->getDx()+pos->getDisp(i))*mm, 
-								    (pos->getDy())*mm, 
-								    (pos->getDz())*mm),
-						  getLogicalByName(volName),
-						  volName,
-						  actualMother,false,0)
-				);	
-	}
-	break;
-      case (detModel::Stack::yDir):
-	{
-	  rm->rotateY(pos->getRotation()*GDDPI/180.0);
-	  g4Physicals.push_back(
-				new G4PVPlacement(rm, G4ThreeVector((pos->getDx())*mm, 
-								    (pos->getDy()+pos->getDisp(i))*mm, 
-								    (pos->getDz())*mm),
-						  getLogicalByName(volName),
-						  volName,
-						  actualMother,false,0)
-				);
-	}	
-	break;
-      case (detModel::Stack::zDir):
-	{
-	  rm->rotateZ(pos->getRotation()*GDDPI/180.0);
-	  g4Physicals.push_back(
-				new G4PVPlacement(rm, G4ThreeVector((pos->getDx())*mm, 
-								    (pos->getDy())*mm, 
-								    (pos->getDz()+pos->getDisp(i))*mm),
-						  getLogicalByName(volName),
-						  volName,
-						  actualMother,false,0)
-				);
-	}	
-	break;
-      }//endSwitch
-    m_physicals[volName]++;
-    }//endfor
-
-#endif //  of THB replacement
-  for(j=0;j<pos->getIdFields().size();j++)
-    {	
-      sprintf(temp, "/%d", 
-	      (int)(pos->getIdFields()[j]->getValue())+(int)(pos->getIdFields()[j]->getStep()*i)); 
-      tmp = tmp+temp;
-    }
-  if(pos->getIdFields().size() != 0)
-    g4Identifiers.insert(M::value_type(g4Physicals.back(),tmp));  
 }
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//   private routine that manages the identifiers
+void G4SectionsVisitor::processIds(/*const*/ detModel::Position * pos, unsigned int i)
+{    
+
+  // note: this thing returns a vector on the stack! do it only here
+  std::vector <detModel::IdField*> ids = pos->getIdFields();
+  if( ids.empty()) return;
+  
+  std::string idstring = "";
+  for(std::vector <detModel::IdField*>::const_iterator j = ids.begin(); j!=ids.end(); ++j) {
+    
+    char temp[10];
+    unsigned int idvalue = (*j)->getValue();
+    if( i>0) idvalue += (*j)->getStep()*i;
+    
+    sprintf(temp, "/%d", idvalue); 
+    idstring += temp;
+  }
+  typedef std::map<G4VPhysicalVolume*,std::string>M;
+  g4Identifiers.insert(M::value_type(g4Physicals.back(),idstring));  
+  
+  
+}
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 void  G4SectionsVisitor::visitIdField(detModel::IdField*)
 {
