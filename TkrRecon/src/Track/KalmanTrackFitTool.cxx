@@ -170,7 +170,7 @@ m_KalmanFit(0), m_nMeasPerPlane(0), m_nParams(0), m_fitErrs(0)
 
     //Declare the fit track property
     declareProperty("HitEnergyType",     m_HitEnergyType="eRadLoss");
-    declareProperty("ParticleName",      m_ParticleName="electron");
+    declareProperty("ParticleName",      m_ParticleName="e-");
     declareProperty("DoMultScatMat",     m_MultScatMat=true);
     declareProperty("FitMeasHitOnly",    m_FitMeasOnly=true);
     declareProperty("MeasHitErrorType",  m_HitErrorType="SlopeCorrected");
