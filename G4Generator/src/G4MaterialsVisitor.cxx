@@ -1,9 +1,15 @@
+#include <vector>
+
 #include "G4MaterialsVisitor.h"
 
 #include "G4Material.hh"
 #include "globals.hh"
 
 #include "detModel/Utilities/Global.h"
+#include "detModel/Gdd.h"
+#include "detModel/Materials/MatCollection.h"
+#include "detModel/Materials/Element.h"
+#include "detModel/Materials/Composite.h"
 
 
 G4MaterialsVisitor::G4MaterialsVisitor()
@@ -11,9 +17,12 @@ G4MaterialsVisitor::G4MaterialsVisitor()
   setRecursive(1);
 }
 
+void G4MaterialsVisitor::visitGdd(detModel::Gdd*)
+{
+}
+
 void G4MaterialsVisitor::visitMatCollection(detModel::MatCollection*)
 {
-
 }
 
 void G4MaterialsVisitor::visitElement(detModel::Element* element)
@@ -24,9 +33,14 @@ void G4MaterialsVisitor::visitElement(detModel::Element* element)
   name = (G4String) element->getName();
   symbol = (G4String) element->getSymbol();
   z = (G4double) element->getZ();
+  a = (G4double) element->getAweight();
   density = (G4double) element->getDensity();
-  
-  G4Element* el = new G4Element(name, symbol, z, a);
+
+  std::cout << name << " " << z << " " << a << " " << density << std::endl;
+  if (symbol != "")
+    G4Element* el = new G4Element(name, symbol, z, a*g/mole);
+  else
+    G4Material* el = new G4Material(name, z, a*g/mole, density*g/cm3);
 }
 
 
@@ -37,7 +51,7 @@ void G4MaterialsVisitor::visitComposite(detModel::Composite* composite)
   G4int ncomponents;
   
   name = (G4String) composite->getName();
-  density = (G4double) composite->getDensity();
+  density = (G4double) composite->getDensity()*g/cm3;
   ncomponents = (G4int) composite->getNComponents();
 
   G4Material* mat = new G4Material(name, density, ncomponents);
@@ -73,7 +87,7 @@ void G4MaterialsVisitor::visitComposite(detModel::Composite* composite)
 	    }
 	  else
 	    {
-	      detAbort("Error: material not defined");
+	      detModel::detAbort("Error: material not defined");
 	    }
 	}
       else
@@ -92,7 +106,7 @@ void G4MaterialsVisitor::visitComposite(detModel::Composite* composite)
 	    }
 	  else
 	    {
-	      detAbort("Error: material not defined");
+	      detModel::detAbort("Error: material not defined");
 	    }
 	}
     }

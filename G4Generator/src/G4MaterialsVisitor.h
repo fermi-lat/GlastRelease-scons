@@ -1,19 +1,16 @@
 #ifndef G4MATERIALSVISITOR_H
 #define G4MATERIALSVISITOR_H
 #include "detModel/Management/MaterialsVisitor.h"
-#include "detModel/Gdd.h"
-#include "detModel/Materials/MatCollection.h"
-#include "detModel/Materials/Element.h"
-#include "detModel/Materials/Composite.h"
-
-
-
+#include <fstream>
+#include <vector>
+#include <map>
 
 class G4MaterialsVisitor: public detModel::MaterialsVisitor {
 
  public:
 
   G4MaterialsVisitor();
+  virtual ~G4MaterialsVisitor(){};
   
   /**
    * This is the visitor for the Gdd
