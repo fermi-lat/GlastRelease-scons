@@ -23,17 +23,18 @@ X_EXTRA_LIBS = @X_EXTRA_LIBS@
 INCLUDES = -I$(top_srcdir) \
 	-I$(top_srcdir)/../geometry \
 	-I$(top_srcdir)/../graphics \
-	-I$(top_srcdir)/../CLHEP
+	-I$(top_srcdir)/../CLHEP \
+	-I$(glast_prefix)/include
 
-
-test_LDADDS = \
-	$(top_builddir)/src/libgeomrep.la              \
-	$(top_builddir)/../graphics/motif/libmotif.la  \
-	$(top_builddir)/../graphics/batch/libbatch.la  \
-	$(top_builddir)/../graphics/src/libgraphics.la \
-	$(top_builddir)/../geometry/src/libgeometry.la \
-	$(top_builddir)/../CLHEP/CLHEP/libCLHEP.a      \
-	$(X_LIBS)
+test_LDADDS =						\
+	$(top_builddir)/src/libgeomrep.la		\
+	$(top_builddir)/../graphics/motif/libmotif.la	\
+	$(top_builddir)/../graphics/batch/libbatch.la	\
+	$(top_builddir)/../graphics/src/libgraphics.la	\
+	-L$(top_builddir)/../geometry/src		\
+	-L$(top_builddir)/../CLHEP/CLHEP		\
+	-L$(glast_prefix)/lib \
+	-lgeometry -lCLHEP $(X_LIBS)
 
 testgeom_LDADD = $(test_LDADDS)
 
