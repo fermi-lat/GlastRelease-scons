@@ -1,48 +1,20 @@
-// $Header$
-//====================================================================
-//  GlastSvc_load.cpp
-//--------------------------------------------------------------------
-//
-//  Package    : Gaudi/System
-//
-//  Description: Implementation of <Package>_load routine.
-//               This routine is needed for forcing the linker
-//               to load all the components of the library. 
-//
-//====================================================================
+/** 
+* @file GlastSvc_load.cpp
+* @brief This is needed for forcing the linker to load all components
+* of the library.
+*
+*  $Header$
+*/
 
-#include "GaudiKernel/ICnvFactory.h"
-#include "GaudiKernel/ISvcFactory.h"
-#include "GaudiKernel/IAlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
-
-#define DLL_DECL_SERVICE(x)    extern const ISvcFactory& x##Factory; x##Factory.addRef();
-#define DLL_DECL_CONVERTER(x)  extern const ICnvFactory& x##Factory; x##Factory.addRef();
-#define DLL_DECL_ALGORITHM(x)  extern const IAlgFactory& x##Factory; x##Factory.addRef();
-#define DLL_DECL_OBJECT(x)     extern const IFactory& x##Factory; x##Factory.addRef();
-
-//! Load all GlastSvc services: 
-void GlastSvc_load() {
-    // GlastSvc services
-    DLL_DECL_SERVICE( GlastDetSvc );
-    DLL_DECL_SERVICE( GlastEventSelector );
-    DLL_DECL_SERVICE( EventCnvSvc );
-    //DLL_DECL_CONVERTER( MCACDHitCnv );
-    DLL_DECL_CONVERTER( EventCnv );
-    DLL_DECL_CONVERTER( MCEventCnv );
-
-    DLL_DECL_CONVERTER( McVertexCnv );
-   
-    DLL_DECL_CONVERTER( DigiEventCnv );
-
-    // DLL_DECL_CONVERTER( MCSiLayerCnv );
-    //DLL_DECL_CONVERTER( MCCalorimeterHitCnv );
-
- //   DLL_DECL_CONVERTER( LdGlastDataCnv );
-
+DECLARE_FACTORY_ENTRIES(GlastSvc) {
+    DECLARE_SERVICE( GlastDetSvc);
+    DECLARE_SERVICE( GlastEventSelector );
+    DECLARE_SERVICE( EventCnvSvc );
+    
+    DECLARE_CONVERTER( EventCnv );
+    DECLARE_CONVERTER( MCEventCnv );
+    DECLARE_CONVERTER( McVertexCnv );   
+    DECLARE_CONVERTER( DigiEventCnv );
 } 
-
-extern "C" void GlastSvc_loadRef()    {
-  GlastSvc_load();
-}
-
