@@ -47,7 +47,7 @@ DisplayManager::DisplayManager( gui::DisplayControl* d)
     m.add(m_detmap["integrating_boxes"] = new EmptyRep("blue"), 
            "hit Int detectors");
  
-    m.add((m_detmap["primary"] = new EmptyRep()), "primary track");
+    m.add((m_detmap["primary"] = new EmptyRep("black")), "primary track");
     m.add((m_detmap["tracks"]= new EmptyRep("black")), "charged tracks");
     m.add((m_detmap["neutrals"] = new EmptyRep("white")), "neutral tracks");
     m.add((m_detmap["ids"] = new EmptyRep("black")), 
