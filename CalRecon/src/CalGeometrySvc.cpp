@@ -84,10 +84,18 @@ StatusCode CalGeometrySvc::initialize()
 		m_nmodx   = 4;
 		m_nmody   = 4;
 
-		m_modWidth    = 37.35;
+//		m_modWidth    = 37.35;
+
+//      after grid design modification m_modWidth became                
+                m_modWidth    = 37.45;
+
 //		m_Z0          = -32.1425;        
 //     after tracker geometry modification m_Z0 became
-		m_Z0          = -32.7756;   
+//		m_Z0          = -32.7756;   
+
+//      after grid design modification m_Z0 became                
+                
+                m_Z0          = -30.9176;   
 
 		m_layerWidth  =   33.3;
 		m_layerHeight =    2.139;

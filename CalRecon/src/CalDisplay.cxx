@@ -137,7 +137,7 @@ public:
             double dirY = (cl->direction()).y();
             double dirZ = (cl->direction()).z();
         
-            if(dirZ != 0.){
+            if(dirZ >= -1. && dirZ != 0.){
 
                 double xTop = x+dirX*(m_calZtop-z)/dirZ;
                 double yTop = y+dirY*(m_calZtop-z)/dirZ;
