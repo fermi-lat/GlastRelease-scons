@@ -41,7 +41,7 @@ public
 
 use GuiSvc                v3r1p2
 
-use Event                 v8r13p2
+use Event                 v8r14
 use GlastSvc    v8r1p2
 
 # simulation
@@ -62,7 +62,7 @@ use Trigger     v3r3p3
 use Recon       v2r3
 
 use TkrRecon              v6r4p4
-use CalRecon    v5r7p1  
+use CalRecon              v5r7p2  
 use AcdRecon    v0r4p1       
 
 #ROOT persistence: RootIo specifies the data packages
