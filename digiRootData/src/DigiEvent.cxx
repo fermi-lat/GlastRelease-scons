@@ -5,6 +5,7 @@
 
 #include "digiRootData/DigiEvent.h"
 #include <iostream>
+#include "TCollection.h"  // Declares TIter
 
 ClassImp(DigiEvent)
 
@@ -17,8 +18,10 @@ DigiEvent::DigiEvent() {
 
     //if (!s_calDigiStaticCol) s_calDigiStaticCol = new TClonesArray("CalDigi",1536);
     if (!s_calDigiStaticCol) s_calDigiStaticCol = new TClonesArray("CalDigi",100);
-    m_calDigiCol = s_calDigiStaticCol;
+    m_calDigiCloneCol = s_calDigiStaticCol;
     m_numCalDigis = -1;
+
+    m_calDigiCol = 0;
 
     if (!s_staticTkrDigiCol) s_staticTkrDigiCol = new TObjArray();
     m_tkrDigiCol = s_staticTkrDigiCol;
@@ -43,10 +46,17 @@ DigiEvent::~DigiEvent() {
     delete m_tkrDigiCol;
     m_tkrDigiCol = 0;
     
-    if (m_calDigiCol == s_calDigiStaticCol) s_calDigiStaticCol = 0;
-    m_calDigiCol->Delete();
-    delete m_calDigiCol;
-    m_calDigiCol = 0;
+    if (m_calDigiCloneCol == s_calDigiStaticCol) s_calDigiStaticCol = 0;
+    m_calDigiCloneCol->Delete();
+    delete m_calDigiCloneCol;
+    m_calDigiCloneCol = 0;
+
+    if (m_calDigiCol) {
+        m_calDigiCol->Delete();
+        delete m_calDigiCol;
+        m_calDigiCol = 0;
+    }
+
 }
 
 void DigiEvent::initialize(UInt_t eventId, UInt_t runId, Double_t time, 
@@ -63,7 +73,12 @@ void DigiEvent::Clear(Option_t *option) {
     m_runId = 0;
     m_timeStamp = 0.0;
     m_levelOneTrigger.Clear();
-    m_calDigiCol->Clear("C");
+    m_calDigiCloneCol->Clear("C");
+    if (m_calDigiCol) {
+        m_calDigiCol->Delete();
+        delete m_calDigiCol;
+        m_calDigiCol = 0;
+    }
     m_tkrDigiCol->Delete();
     m_acdDigiCol->Clear("C");
     m_numAcdDigis = -1;
@@ -125,12 +140,53 @@ CalDigi* DigiEvent::addCalDigi() {
     // TClonesArrays can only be filled via
     // a new with placement call
     ++m_numCalDigis;
-    TClonesArray &calDigis = *m_calDigiCol;
+    TClonesArray &calDigis = *m_calDigiCloneCol;
     new(calDigis[m_numCalDigis]) CalDigi();
     return ((CalDigi*)(calDigis[m_numCalDigis]));
 }
 
 const CalDigi* DigiEvent::getCalDigi(UInt_t i) const {
+    if (m_calDigiCol) return (CalDigi*)m_calDigiCol->At(i);
     if (i > m_numCalDigis) return 0;
-    return (CalDigi*)m_calDigiCol->At(i);
+    return (CalDigi*)m_calDigiCloneCol->At(i);
+}
+
+const TClonesArray* DigiEvent::getCalDigiCol() { 
+    // Purpose and Method:  Provide access to the collection of CalDigis.
+    // For backward compatibilty, we must handle the case where the m_calDigiCol
+    // (a TObjArray*) exists - in that case, we fill up the TClonesArray to allow the
+    // user to reap the benefits of the TClonesArray, and to provide a reasonable 
+    // method for calling this routine and receiving a non-null return value.
+    // This conversion to a TClonesArray will only happen the first time this method is
+    // called for a particular event.
+
+    // Maintain Backward compatibility
+    if ((m_calDigiCol) && (m_calDigiCloneCol->GetEntries()==0)) {
+        TIter objIter(m_calDigiCol);
+        CalDigi *calDigiObj = 0;
+        while (calDigiObj = (CalDigi*)objIter.Next()) {
+            CalDigi *newObj = addCalDigi();
+            newObj->initialize(calDigiObj->getMode(), calDigiObj->getPackedId());
+            if (calDigiObj->getMode() == CalXtalId::BESTRANGE) {
+                const CalXtalReadout *readout = calDigiObj->getXtalReadout(0);
+                Char_t rangePlus = readout->getRange(CalXtalId::POS);
+                UInt_t adcPlus = readout->getAdc(CalXtalId::POS);
+                Char_t rangeMin = readout->getRange(CalXtalId::NEG);
+                UInt_t adcMin = readout->getAdc(CalXtalId::NEG);
+                newObj->addReadout(rangePlus, adcPlus, rangeMin, adcMin);
+            } else { // Handle AllRange
+                Int_t range;
+                for (range = CalXtalId::LEX8; range <= CalXtalId::HEX1; range++) {
+                    const CalXtalReadout *readout = calDigiObj->getXtalReadout(range);
+                    Char_t rangePlus = readout->getRange(CalXtalId::POS);
+                    UInt_t adcPlus = readout->getAdc(CalXtalId::POS);
+                    Char_t rangeMin = readout->getRange(CalXtalId::NEG);
+                    UInt_t adcMin = readout->getAdc(CalXtalId::NEG);
+                    newObj->addReadout(rangePlus, adcPlus, rangeMin, adcMin);
+                }
+            }
+        }
+    }
+    // Now return the TClonesArray*
+    return m_calDigiCloneCol; 
 }
