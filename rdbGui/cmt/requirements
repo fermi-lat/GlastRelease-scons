@@ -6,7 +6,7 @@ author Marco Frailis <frailis@fisica.uniud.it>
 author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
 
 use GlastPolicy  v5r*
-use FOX v0r*  IExternal
+use FOX v0r125p*  IExternal
 use rdbModel v0r*
 
 private
