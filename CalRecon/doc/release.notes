@@ -2,6 +2,7 @@ package CalRecon
 
 package manager: Alexandre Chekhtman
 
+  v5r7p5 24-sep-2002 AC  cal response constants from xml file are now expressed in MeV
   v5r7p4 13-sep-2002 AC  warnings in linux compilation corrected
   v5r7p3 11-sep-2002 AC  Required version numbers for Event and GlastSvc set to *. Profile fitting now uses TMinut from ROOT.
   v5r7p2 22-jul-2002 AC  unphysical longitudinal positions fixed
