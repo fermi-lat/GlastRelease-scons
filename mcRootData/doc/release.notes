@@ -2,6 +2,10 @@
  package mcRootData
  package manager: H. Kelly
 
+v2r1      01-May-2002 HMK Modify McIntegratingHit to store 2 arrays \n
+          One for McParticle* and the other for energies - produce \n
+          a vector of pairs to mimic the TDS class on the fly.  The \n
+          vector of pairs is only transient.
 v2r0      26-Apr-2002 HMK Simplify VolumeIdentifier and add Print methods \n
 v2        22-Apr-2002 HMK Update classes for new TDS MC classes and
           new version of ROOT 3.02.07\n
