@@ -1,12 +1,12 @@
 package AcdRecon
-version v1r2
+version v1r2p1
 
 branches src doc
 
 use GlastSvc v9r*
 use Event v9r*
 use AcdDigi v1r*
-use TkrRecon v7r*
+use TkrRecon v8r*
 use GlastPolicy v4r*
 
 apply_pattern package_headers
