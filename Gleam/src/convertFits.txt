@@ -1,0 +1,76 @@
+ApplicationMgr.DLLs+= { "GaudiAlg", "GaudiAud"};
+ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
+AuditorSvc.Auditors = {"ChronoAuditor"};
+ApplicationMgr.DLLs += {"EbfConverter"};
+
+EventSelector.Instrument = "EM";
+
+// ----------------------------
+// setup basic event loop stuff
+//
+// JobOptions file to convert a fits or ebf file into a digi file
+//
+// User should change the path of EventSelector.InputList to the correct file
+// or list of files to convert, and can modify suitably the path to the 
+// output file in digiRootWriterAlg.digiRootFile
+//
+// Run this file with Gleam.exe, the same way you would run 
+// jobOptions.txt with Gleam
+//
+// Refer to readEMDigi.txt in order to read back the digi root file 
+// created here within Gleam
+//
+// all credits go to Xin Chen, Heather and Joanne.
+// Johann Cohen-Tanugi, johann.cohen@pi.infn.it
+// Xin Chen, xchen@slac.stanford.edu
+
+ApplicationMgr.ExtSvc += { 
+    "EbfEventSelector/EventSelector" , 
+    "EbfCnvSvc/EventCnvSvc"
+    };
+
+EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+
+// Choose "EBFFILE" or "EBFFITS depending on online output format used
+EventSelector.StorageType = "EBFFITS";
+
+//PUT HERE THE NAME OF YOUR INPUT FILE:
+EventSelector.InputList = {"/home/cohen/Xin/ebf030507023417.fits"};
+
+EventSelector.OutputLevel = 4;
+
+// ----------------------------
+//  a structure for the topalg, using sequencer steps
+
+
+ApplicationMgr.TopAlg = { "Sequencer/Top" };
+
+
+//the top sequence loop
+Top.Members={ "Sequencer/Output" };
+
+
+// ----------------------------
+//  Geometry definition
+//
+ApplicationMgr.DLLs += {"GlastSvc"};
+ApplicationMgr.ExtSvc += { "GlastDetSvc"};
+
+//This line builds the EM geometry:
+//
+GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/em/emSegVols.xml";
+GlastDetSvc.visitorMode="recon";
+
+
+ApplicationMgr.DLLs +={ "RootIo" }; 
+
+Output.Members = { "digiRootWriterAlg" };
+
+//PUT THE NAME OF THE OUTPUT FILE HERE:*********************
+digiRootWriterAlg.digiRootFile = "ebf_digi.root";
+
+digiRootWriterAlg.OutputLevel=3;
+
+//Output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel = 3;
+ApplicationMgr.EvtMax  = 1000000000;
