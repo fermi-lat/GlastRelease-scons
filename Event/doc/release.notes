@@ -1,15 +1,13 @@
-/*
-package GlastEvent
-
-package manager:T.Burnett (original author: H. Gillespie)
-
-v5r1  THB: remove dependence on data
-v4r2  THB: Tag following addition of TkrVertexCol
-
-26-aug-01: tag v2r5
-
-20000826  THB many things copied from LHCbEvent, all of the TopLevel directory!
-          Start fixing source comments to be picked up by doxygen. Put in reference to 
-          Traudl's Raw data definition.
-
+/** @file release.notes
+ * package GlastEvent
+ * package manager:T.Burnett (original author: H. Gillespie)
+ *
+ * v5r2 15-Mar-2002 HMK update for Gaudi v9 and remove IRF classes\n
+ * v5r1  THB: remove dependence on data\n
+ * v4r2  THB: Tag following addition of TkrVertexCol\n
+ * v2r5 \n
+ *       08-Aug-2000 THB many things copied from LHCbEvent, all of \n
+ *       the TopLevel directory!\n
+ *       Start fixing source comments to be picked up by doxygen. \n
+ *       Put in reference to Traudl's Raw data definition.\n
 */
