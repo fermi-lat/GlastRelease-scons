@@ -17,4 +17,10 @@ v3r0p1    23-may-2002: HMK Patch for linux \n
 v3r0      22-may-2002: HMK Fix up TKR & CAL classes for Gleam\n
           20-may-2002: HMK new TKR and CAL classes \n
 v1r3      28-jun-2001: HMK renamed LogID to LogId \n
+v1        First version to use ROOT v3r0p6\n
+          There were no changes to the reconRootData code to use Root v3r0p6, however, \n
+          TBEvent did change, and this version of reconRootData links to the TBEvent library.\n
+          Starting with this version of reconRootData, one should not use a version of TBEvent < v2r1.\n
+v0r1      Last version to explicitly use ROOT v2r25\n
+v0        initial import of new package\n
 */
