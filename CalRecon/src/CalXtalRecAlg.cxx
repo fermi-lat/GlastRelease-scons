@@ -132,7 +132,10 @@ StatusCode CalXtalRecAlg::initialize()
     // conversion from GeV to MeV
 //    for (int r=0; r<4;r++) m_maxEnergy[r] *= 1000.; 
 	
-	
+        m_pedMap = new CALPEDMAP();
+        unsigned int nranges = 4, ntowers=16,nlayers=8,ncols=12;
+        m_pedMap->generateCalib(ntowers,nlayers,ncols,nranges);
+    
 	return sc;
 }
 
@@ -272,6 +275,9 @@ void CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi*
         MsgStream log(msgSvc(), name());
 
 
+        idents::CalXtalId xtalId = digi->getPackedId();
+        const XTALCALIB *xtalCalib = m_pedMap->getXtalCalib(xtalId);
+
         const Event::CalDigi::CalXtalReadoutCol& readoutCol = digi->getReadoutCol();
 		
         // loop over readout ranges
@@ -282,13 +288,20 @@ void CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi*
             int rangeP = it->getRange(idents::CalXtalId::POS); 
             int rangeM = it->getRange(idents::CalXtalId::NEG); 
 
+
+            const CalPedCalib* pedCalibP = xtalCalib->getRangeCalib(rangeP,idents::CalXtalId::POS);
+                float pedPos=pedCalibP->getAvr();
+            const CalPedCalib* pedCalibM = xtalCalib->getRangeCalib(rangeM,idents::CalXtalId::NEG);
+                float pedNeg =    pedCalibM   ->getAvr();
+
+
             // get adc values 
             double adcP = it->getAdc(idents::CalXtalId::POS);	
             double adcM = it->getAdc(idents::CalXtalId::NEG);	
 
             // convert adc values into energy
-            double eneP = m_maxEnergy[rangeP]*(adcP-m_pedestal)/(m_maxAdc-m_pedestal);
-            double eneM = m_maxEnergy[rangeM]*(adcM-m_pedestal)/(m_maxAdc-m_pedestal);
+            double eneP = m_maxEnergy[rangeP]*(adcP-pedPos)/(m_maxAdc-pedPos);
+            double eneM = m_maxEnergy[rangeM]*(adcM-pedNeg)/(m_maxAdc-pedNeg);
 				
 
             // create output object

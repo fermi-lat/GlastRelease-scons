@@ -6,7 +6,8 @@
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
-
+#include "CalCalibMap.h"
+#include "CalPedCalib.h"
 
 
 
@@ -25,7 +26,11 @@
 class CalXtalRecAlg : public Algorithm
 {
 public:
-    
+
+//    typedef CalCalibMap<CalPedCalib> CALPEDMAP;
+    typedef CalCalibMap<CalPedCalib,CalPedElement,2> CALPEDMAP;
+    typedef CalXtalCalib<CalPedCalib,CalPedElement,2> XTALCALIB;
+
     /// constructor
     CalXtalRecAlg(const std::string& name, ISvcLocator* pSvcLocator);
     virtual ~CalXtalRecAlg() {}
@@ -128,6 +133,8 @@ private:
     double m_CsIWidth;  ///< Xtal width
     double m_CsIHeight;  ///< Xtal height
     IGlastDetSvc* detSvc; ///< pointer to the Glast Detector Service
+
+    CALPEDMAP* m_pedMap;    
 
 };
 
