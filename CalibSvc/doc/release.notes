@@ -2,6 +2,7 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
+ * 17-Feb-2004: jrb v0r5:    Support cosAngle field for cal. pedestals calib.
  * 30-Jan-2004: jrb v0r4p0:  Eliminate Xerces calls in favor of xml::Dom 
  *                           methods when possible.
  * 12-Dec-2003: jrb v0r4:    Allow arbitrary sequence of stripList, stripSpan
