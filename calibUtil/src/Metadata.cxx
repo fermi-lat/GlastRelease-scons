@@ -4,24 +4,27 @@
 #include "calibUtil/Metadata.h"
 #include "facilities/Util.h"
 #include "mysql.h"
+#include <strstream>
+
 
 namespace calibUtil {
+  // Initialize static members
+  // Consider changing all this staticness to avoid chance of difficulty
+  // when building calibUtil shareable (for now it's just a static library).
   MYSQL* Metadata::readCxt = 0;
   MYSQL* Metadata::writeCxt = 0;
   std::string Metadata::row("");
   const unsigned int Metadata::rowReady = Metadata::eOpened | Metadata::eValid 
   | Metadata::eInputDesc | Metadata::eComment;
 
+
+  // The next 5 methods concern connection to the server
   bool Metadata::connectRead(eRet& err) {
-
     return connect(readCxt, std::string("reader"), err);
-
   }
 
   bool Metadata::connectWrite(eRet& err) {
-
     return connect(writeCxt, std::string("calibrator"), err);
-
   }
 
 
@@ -73,6 +76,37 @@ namespace calibUtil {
     writeCxt = 0;
   }
 
+
+  /*
+    The following collection of methods all have to do with writing
+    a record to the database.  The table below lists all columns
+    and indicates how they get their values.
+
+| Field               | Type           | Null | Key | Default | How set       |
++---------------------+----------------+------+-----+---------+---------------+
+| serial_num          | int(11)        |      | PRI | NULL    | auto_increment|
+| instrument          | varchar(20)    | YES  |     | NULL    |  [open]       |
+| calib_type          | varchar(40)    | YES  |     | NULL    |  [open]       |
+| calib_type_num      | int(11)        | YES  |     | NULL    |  [unused]     |
+| data_format         | varchar(20)    |      |     |         |  [open]       |
+| format_version      | varchar(20)    | YES  |     | NULL    |  [open]       |
+| data_id             | varchar(40)    | YES  |     | NULL    |  [optional]   |
+| data_size           | int(11)        | YES  |     | NULL    |  [optional]   |
+| validity_start_time | datetime       | YES  |     | NULL    | [addValid]    |
+| validity_end_time   | datetime       | YES  |     | NULL    | [addValid]    |
+| proc_time           | datetime       | YES  |     | NULL    | [auto]        |
+| proc_level          | enum('TEST','DEVELOPMENT','PRODUCTION','SUPERSEDED')
+                                       | YES  |     | NULL    |  [open]       |
+| calib_status        | enum('OK','INCOMPLETE','ABORTED')        [open]
+                                       | YES  |     | NULL    |               |
+| creator             | varchar(40)    | YES  |     | NULL    | [defaults]    |
+| input_desc          | varchar(255)   | YES  |     | NULL    | [addInDesc]   |
+| calib_file_name     | varchar(255)   |      |     |         |  [open]       |
+| comments            | varchar(255)   | YES  |     | NULL    |  [addComment] |
++---------------------+----------------+------+-----+---------+---------------+
+
+  */
+
   Metadata::eRet Metadata::openRecord(const std::string& instr, 
                                       const std::string& calibType,
                                       const std::string& dataFormat, 
@@ -110,32 +144,6 @@ namespace calibUtil {
     return RETOk;
   }
 
-  /*
-
-| Field               | Type           | Null | Key | Default | Extra         |
-+---------------------+----------------+------+-----+---------+---------------+
-| serial_num          | int(11)        |      | PRI | NULL    | auto_increment|
-| instrument          | varchar(20)    | YES  |     | NULL    |  [open]       |
-| calib_type          | varchar(40)    | YES  |     | NULL    |  [open]       |
-| calib_type_num      | int(11)        | YES  |     | NULL    |  [unused]     |
-| data_format         | varchar(20)    |      |     |         |  [open]       |
-| format_version      | varchar(20)    | YES  |     | NULL    |  [open]       |
-| data_id             | varchar(40)    | YES  |     | NULL    |  [optional]   |
-| data_size           | int(11)        | YES  |     | NULL    |  [optional]   |
-| validity_start_time | datetime       | YES  |     | NULL    | [addValid]    |
-| validity_end_time   | datetime       | YES  |     | NULL    | [addValid]    |
-| proc_time           | datetime       | YES  |     | NULL    | [auto]        |
-| proc_level          | enum('TEST','DEVELOPMENT','PRODUCTION','SUPERSEDED')
-                                       | YES  |     | NULL    |  [open]       |
-| calib_status        | enum('OK','INCOMPLETE','ABORTED')        [open]
-                                       | YES  |     | NULL    |               |
-| creator             | varchar(40)    | YES  |     | NULL    | [defaults]    |
-| input_desc          | varchar(255)   | YES  |     | NULL    | [addInDesc]   |
-| calib_file_name     | varchar(255)   |      |     |         |  [open]       |
-| comments            | varchar(255)   | YES  |     | NULL    |  [addComment] |
-+---------------------+----------------+------+-----+---------+---------------+
-
-  */
 
 
   Metadata::eRet Metadata::insertRecord() {
@@ -236,7 +244,9 @@ namespace calibUtil {
     std::string query("select serial_num, validity_start_time, validity_end_time, proc_time,");
     query += "calib_status from metadata order by proc_time desc where ";
     query += "(calib_status = 'OK') and instrument ="; query += instrument;
-    query += "and ";
+    query += "and calib_type =";
+    query += calibType;
+    query += " and ";
     query += timestamp.timeString();
     query += "'> validity_start_time) and (validity_end_time > '";
     query += timestamp.timeString();
@@ -282,12 +292,35 @@ namespace calibUtil {
   }
 
   bool Metadata::getReadInfo(unsigned int serialNo, 
-                             const std::string* dataFormat, 
-                             const std::string* fmtVersion,
-                             const std::string* filename) {
-    // To be written
-    return true;
+                             std::string* dataFmt, 
+                             std::string* fmtVersion,
+                             std::string* filename) {
+
+    std::string q("select data_format, format_version, calib_file_name ");
+    q += "from metadata where serial_num=";
+    std::strstream s;
+    s << serialNo;
+    q += s.str();
+
+    int ret = mysql_query(readCxt, q.c_str());
+    if (ret) {
+      std::cerr << "MySQL error during SELECT, code " << ret << std::endl;
+      return RETMySQLError;
+    }
+      
+    MYSQL_RES *myres = mysql_store_result(readCxt);
+    
+    if (mysql_num_rows(myres) ) {  // must have been a good serial number
+      MYSQL_ROW myRow = mysql_fetch_row(myres);
+      *dataFmt = std::string(myRow[0]);
+      *fmtVersion = std::string(myRow[1]);
+      *filename = std::string(myRow[2]);
+      return true;
+    }
+    else return false;
   }
+
+  /*               Private utilities                           */
 
   // Internal utility. Sticks on the last part of the "where" clause
   // -- the part for dev/prod/..etc.
@@ -319,6 +352,10 @@ namespace calibUtil {
     return ret;
   }
 
+  // Internal utilities to do validation of certain fields.  On the
+  // whole it's better to do this ourselves rather than depending on
+  // MySQL to do it.  The latter is possible in some cases, but 
+  // handling and reporting errors is difficult.
   bool Metadata::checkCalibStatusInput(const std::string& stat) {
     return ((stat.compare("OK") == 0 ) || (stat.compare("INCOMPLETE") == 0) 
             || (stat.compare("ABORTED") == 0) );
