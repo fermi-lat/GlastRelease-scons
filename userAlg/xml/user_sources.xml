@@ -1,5 +1,5 @@
 <!--- example entry to be added to FluxSvc -->
-<source_library>
+<source_library title="userAlg sources">
 
     <!-- an entry to declare a user-implemented source of particles -->
     <source name="userspectrum" >
