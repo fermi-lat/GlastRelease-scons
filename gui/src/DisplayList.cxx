@@ -412,7 +412,7 @@ void DisplayList::indexedLineSet(const int* a, int n)
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void DisplayList::move_to(const GraphicsVector& pt)
+void DisplayList::moveTo(const GraphicsVector& pt)
 //------------------------------------------
 {
         addDisp( new PolyLine(pt) );
@@ -420,7 +420,7 @@ void DisplayList::move_to(const GraphicsVector& pt)
         checkScale(pt);
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void DisplayList::line_to(const GraphicsVector& pt)
+void DisplayList::lineTo(const GraphicsVector& pt)
 //------------------------------------------
 {
     if( status != POLYLINE )

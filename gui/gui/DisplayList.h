@@ -71,15 +71,15 @@ class DisplayList {
 
     // Following functions save instructions for the default draw
 
-    void move_to(const GraphicsVector&);
+    void moveTo(const GraphicsVector&);
     // move current point to location
 
-    void line_to(const GraphicsVector&);
+    void lineTo(const GraphicsVector&);
     // draw a line to the specified point
 
     // following are for convenience of those not in a vector world.
-    void line_to(double x, double y, double z){line_to(gui::GraphicsVector(x,y,z));}
-    void move_to(double x, double y, double z){move_to(gui::GraphicsVector(x,y,z));}
+    void lineTo(double x, double y, double z){lineTo(gui::GraphicsVector(x,y,z));}
+    void moveTo(double x, double y, double z){moveTo(gui::GraphicsVector(x,y,z));}
 
     void drawText(const std::string&);
     // draw the text at the current point

@@ -46,7 +46,7 @@ DisplayRep::append(const DisplayRep& other)
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void
-DisplayRep::set_color(const std::string& color_name)
+DisplayRep::setColor(const std::string& color_name)
 {
     int i=0;
     while(pallete[i].name ) {
