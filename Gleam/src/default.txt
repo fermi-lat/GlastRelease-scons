@@ -15,8 +15,8 @@ FluxSvc.source_lib = {"$(FLUXSVCROOT)/xml/source_library.xml"};
 FluxAlg.source_name="default";
 
 
-//Output.Members += {"mcRootWriterAlg", "digiRootWriterAlg", "reconRootWriterAlg"};
-Output.Members = {}; // turn off root for this
+Output.Members += {"mcRootWriterAlg", "digiRootWriterAlg", "reconRootWriterAlg"};
+//Output.Members = {}; // turn off root for this
 
 // setup up merit to monitor the output
 ApplicationMgr.DLLs   += {"merit"};

@@ -73,7 +73,7 @@ use CalRecon               v5r5p1
 
 
 #diagnostic and summary of bottom line
-use merit                  v5r2p1
+use merit                  v5r3
 
 ### define a simple executable with GUI
 
