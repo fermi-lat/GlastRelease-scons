@@ -30,15 +30,26 @@ class SiPlaneMapContainer : public DataObject {
     typedef std::map<idents::VolumeIdentifier, SiStripList*> SiPlaneMap;
 
     /// Initializes the container with a SiPlaneMap
-    SiPlaneMapContainer(const SiPlaneMap m): m_SiPlaneMap(m) {}
+    SiPlaneMapContainer(const SiPlaneMap m): m_siPlaneMap(m) {}
+
+    /// Deletes the contained SiStripLists
+    SiPlaneMapContainer::~SiPlaneMapContainer() {
+        for ( SiPlaneMap::iterator it=m_siPlaneMap.begin();
+              it!=m_siPlaneMap.end(); ++it ) {
+            delete (*it).second;
+            (*it).second = 0;
+        }
+        m_siPlaneMap.clear();
+    }
 
     /// Returns the SiPlaneMap
-    SiPlaneMap& getSiPlaneMap() { return m_SiPlaneMap; }
+    SiPlaneMap& getSiPlaneMap() { return m_siPlaneMap; }
 
  private:
 
-    SiPlaneMap m_SiPlaneMap;
+    SiPlaneMap m_siPlaneMap;
 
 };
 
 #endif
+
