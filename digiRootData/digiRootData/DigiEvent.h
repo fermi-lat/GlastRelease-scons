@@ -35,7 +35,7 @@ public:
     DigiEvent();
     virtual ~DigiEvent();
 
-    void initialize(UInt_t eventId, UInt_t runId, Bool_t fromMc);
+    void initialize(UInt_t eventId, UInt_t runId, Bool_t fromMc=true);
 
     void Clear(Option_t *option="");
 
