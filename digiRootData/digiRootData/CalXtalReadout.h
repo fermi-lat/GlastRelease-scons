@@ -3,7 +3,6 @@
 #define digiRootData_CalXtalReadout_H 1
 
 #include <iostream>
-#include <vector>
 #include "TObject.h"
 
 #include "CalXtalId.h"

@@ -13,6 +13,7 @@
 
 #include "AcdTile.h"
 #include "CalDigi.h"
+#include "TkrDigi.h"
 #include "TkrLayer.h"
 
 #include "LiveTime.h"
@@ -39,7 +40,7 @@ public:
 
     void Clear(Option_t *option="");
 
-    void Print(Option_t *option="");
+    void Print(Option_t *option="") const;
 
     /// Access the DigiEvent number
     inline UInt_t getEventId() { return m_eventId; };
@@ -68,15 +69,16 @@ public:
     /// retrieve the CalDigi object
     const TObjArray* getCalDigiCol() { return m_calDigiCol; };
     void addCalDigi(CalDigi *cal);
+    const CalDigi* getCalDigi(UInt_t i) const;
 
     /// Access TKR data
     //TkrHeader* getTkrHeader() { return &m_TkrHeader; };
     /// retrieve the whole TObjArray of Tkr Digi Data
-    //TObjArray* getTkrDigi() { return m_TkrDigiVec; };
-    /// Add a TkrLayer entry into the TKR data array
-    //void addTkrLayer(TkrLayer *layer);
-    /// retrieve a specific layer of data, identified by Layer Number
-    //const TkrLayer* getTkrLayer(unsigned int layerNum);
+    TObjArray* getTkrDigiCol() { return m_tkrDigiCol; };
+    /// Add a TkrDigi into the TKR data collection
+    void addTkrDigi(TkrDigi *digi);
+    /// retrieve a TkrDigi from the collection, using the index into the array
+    const TkrDigi* getTkrDigi(UInt_t i) const;
 
     /// Access Level 1 Trigger data
     //inline L1T* getL1T() { return &m_L1T; };
@@ -108,8 +110,8 @@ private:
     //CalHeader m_CalHeader;
 
     /// data members to store TKR data
-    //static TObjArray *m_staticTkrDigiVec;
-    //TObjArray* m_TkrDigiVec;       //-> List of Tracker layers
+    static TObjArray *s_staticTkrDigiCol;
+    TObjArray* m_tkrDigiCol; //-> List of Tracker layers
     //Int_t m_numLayers;
     //TkrHeader m_TkrHeader;
 

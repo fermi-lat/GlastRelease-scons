@@ -9,14 +9,16 @@ ClassImp(DigiEvent)
 
 // Allocate the TClonesArrays and TObjArray just once
 //TClonesArray *DigiEvent::m_staticAcdDigiVec = 0;
-//TObjArray *DigiEvent::m_staticTkrDigiVec = 0;
-
+TObjArray *DigiEvent::s_staticTkrDigiCol = 0;
 TObjArray *DigiEvent::s_calDigiStaticCol = 0;
 
 DigiEvent::DigiEvent() {
 
     if (!s_calDigiStaticCol) s_calDigiStaticCol = new TObjArray();
     m_calDigiCol = s_calDigiStaticCol;
+
+    if (!s_staticTkrDigiCol) s_staticTkrDigiCol = new TObjArray();
+    m_tkrDigiCol = s_staticTkrDigiCol;
 
     Clear();
 
@@ -38,13 +40,12 @@ DigiEvent::~DigiEvent() {
     m_AcdDigiVec->Delete();
     delete m_AcdDigiVec;
     m_AcdDigiVec = 0;
-  
-    if(m_TkrDigiVec == m_staticTkrDigiVec) m_staticTkrDigiVec = 0;
-    m_TkrDigiVec->Delete();
-    delete m_TkrDigiVec;
-    m_TkrDigiVec = 0;
-    */
-
+  */
+    if(m_tkrDigiCol == s_staticTkrDigiCol) s_staticTkrDigiCol = 0;
+    m_tkrDigiCol->Delete();
+    delete m_tkrDigiCol;
+    m_tkrDigiCol = 0;
+    
     if (m_calDigiCol == s_calDigiStaticCol) s_calDigiStaticCol = 0;
     m_calDigiCol->Delete();
     delete m_calDigiCol;
@@ -61,6 +62,7 @@ void DigiEvent::Clear(Option_t *option) {
     m_eventId = 0;
     m_runId = 0;
     m_calDigiCol->Delete();
+    m_tkrDigiCol->Delete();
 
     /*
     m_AcdHeader.Clean();
@@ -70,8 +72,6 @@ void DigiEvent::Clear(Option_t *option) {
     m_CalHeader.Clean();
 
     m_TkrHeader.Clean();
-    m_TkrDigiVec->Delete();
-    m_numLayers = -1;
 
     m_L1T.Clean();
 
@@ -79,7 +79,7 @@ void DigiEvent::Clear(Option_t *option) {
     */
 }
 
-void DigiEvent::Print(Option_t *option) {
+void DigiEvent::Print(Option_t *option) const {
 
 }
 
@@ -124,10 +124,6 @@ const AcdTile* DigiEvent::getAcdTile(AcdId &id) {
 }
 
 
-void DigiEvent::addTkrLayer(TkrLayer *layer) {
-    m_TkrDigiVec->Add(layer);
-    ++m_numLayers;
-}
 
 const TkrLayer* DigiEvent::getTkrLayer(unsigned int layerNum) {
     TkrLayer tempLayer = TkrLayer();
@@ -144,6 +140,20 @@ const TkrLayer* DigiEvent::getTkrLayer(unsigned int layerNum) {
 }
 */
 
+void DigiEvent::addTkrDigi(TkrDigi *digi) {
+    m_tkrDigiCol->Add(digi);
+}
+
+const TkrDigi* DigiEvent::getTkrDigi(UInt_t i) const {
+    if (i >= m_tkrDigiCol->GetEntries()) return 0;
+    return (TkrDigi*)m_tkrDigiCol->At(i);
+}
+
 void DigiEvent::addCalDigi(CalDigi *cal) {
     m_calDigiCol->Add(cal);
+}
+
+const CalDigi* DigiEvent::getCalDigi(UInt_t i) const {
+    if (i >= m_calDigiCol->GetEntries()) return 0;
+    return (CalDigi*)m_calDigiCol->At(i);
 }

@@ -1,0 +1,77 @@
+#include "digiRootData/TkrDigi.h"
+
+ClassImp(TkrDigi)
+
+TkrDigi::TkrDigi() {
+    Clear();
+}
+
+TkrDigi::~TkrDigi (){
+    Clear();
+}
+
+void TkrDigi::Clear(Option_t *option) {
+    m_bilayer = 0;
+    m_tower = 0;
+    m_tot[0] = 0;
+    m_tot[1] = 0;
+    m_lastController0Strip = -1;
+    m_hitCol.clear();
+}
+
+void TkrDigi::Print(Option_t *option) const {
+
+}
+
+void TkrDigi::initialize(Int_t l, GlastAxis::axis v, TowerId t, Int_t* tot)
+{
+    m_bilayer = l;
+    m_tower = t;
+    m_view = v;
+    m_tot[0] = tot[0];
+    m_tot[1] = tot[1];
+    
+    m_lastController0Strip =  -1;    
+}
+
+Int_t TkrDigi::getHit(UInt_t i) const
+{
+    return (i < m_hitCol.size() ? m_hitCol[i] : -1);
+}
+
+Int_t TkrDigi::getStrip(UInt_t i) const
+{
+    return (i < m_hitCol.size() ? m_hitCol[i] : -1);
+}
+
+Int_t TkrDigi::getToT(UInt_t i) const {
+    if (i < 2) return m_tot[i];
+    return -1;
+}
+
+//! Get ToT for a given strip
+Int_t TkrDigi::getToTForStrip(UInt_t strip) const
+{ 
+    // Purpose and Method:  Returns the ToT for a given strip by
+    //  determining which controller this strip is associated with.
+    //  We then return the ToT corresponding to that controller.
+    if (m_lastController0Strip == -1) return -1;
+    return m_tot[(strip<=m_lastController0Strip ? 0 : 1 )]; 
+}
+
+
+void TkrDigi::addC0Hit( UInt_t strip ) 
+{
+    // Purpose and Method:  Add a controller 0 strip to the hit list
+    //   and keeps track of highest strip associated with controller 0
+    m_hitCol.push_back(strip);  
+    if (m_lastController0Strip < strip) m_lastController0Strip = strip;
+}
+
+//! Add a controller 1 hit to the hit list
+void TkrDigi::addC1Hit( UInt_t strip ) 
+{
+    m_hitCol.push_back(strip);
+}
+
+

@@ -6,6 +6,9 @@
 
 //#pragma link C++ class AcdTile+;
 #pragma link C++ class DigiEvent+;
+#pragma link C++ class GlastAxis+;
+#pragma link C++ class TowerId+;
+#pragma link C++ class TkrDigi+;
 //#pragma link C++ class L1T+;
 //#pragma link C++ class StripId+;
 //#pragma link C++ class AcdId+;

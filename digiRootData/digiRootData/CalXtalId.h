@@ -59,7 +59,7 @@ public:
     
     CalXtalId(Short_t tower, Short_t layer, Short_t column); 
     
-    virtual ~CalXtalId();
+    ~CalXtalId();
     
     void Clear(Option_t *option ="");
 
