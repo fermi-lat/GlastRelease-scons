@@ -9,7 +9,7 @@ use GlastEvent
 
 use GaudiSvc 
 use GaudiAud 
-use RootHistCnv 
+
 
 apply_pattern package_headers
 
@@ -26,7 +26,7 @@ library GlastSvc GlastDetSvc/*.cpp \
 		 Dll/*.cpp \
                  ${GlastSvc_headers}
             
-ignore_pattern include_none
+
 apply_pattern package_include
 
 # define link options
