@@ -72,23 +72,19 @@ namespace CalibData
     unsigned getNStrips() const {return m_nStrips;}
     unsigned getNObjs() const {return m_nObjs;}
     bool     perStrip() const {return m_perStrip;}
-    const TkrScaleObj* getStripData(unsigned i) const {
-      if (i > m_nStrips) return 0;
-      if (m_perStrip) {
-          return &m_objs[i]; 
-      }
-      else {
-        unsigned ix = i / (m_nObjs);
-        return &m_objs[ix];
-      }
-    }
+
+    /** Callers note: object returned is passed by value.  Since "real"
+        information may be kept only per gtfe, object for strip must
+         be manufactured
+    */
+    TkrScaleObj getStripData(unsigned i) const;
 
     // Is there a possibility that calibration files
     // will have "holes":  No data for stripId x but data for x+1 ? 
     void clearObjs();  
 
     /// Resize array of objects, or just clear if sizes match
-    void resize(unsigned n);
+    void resize(unsigned n, bool perStrip);
     /**
        Use strip id field to decide where to put strip. Success iff
        the id is in range
@@ -122,9 +118,9 @@ namespace CalibData
 
     /// The one routine of interest to applications: fetch constants for
     /// a particular strip
-    const TkrScaleObj* getStripInfo(const idents::TkrId& id, unsigned iStrip) {
+    TkrScaleObj getStripInfo(const idents::TkrId& id, unsigned iStrip) {
       TkrScaleUni* uni = dynamic_cast<TkrScaleUni*>(getUni(id));
-      if (!uni) return 0;
+      if (!uni) return TkrScaleObj();
       return uni->getStripData(iStrip);
     }
 

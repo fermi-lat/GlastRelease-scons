@@ -39,6 +39,11 @@ namespace CalibData {
     m_chi2 = other.m_chi2;
     m_df = other.m_df;
   }
+
+  TkrScaleObj::TkrScaleObj(const TkrScaleObj& other) {
+    copy(other);
+  }
+
   void TkrScaleObj::init(int id, float scale, float error,
                          float chi2, float df) {
     m_id = id;
@@ -57,6 +62,24 @@ namespace CalibData {
     UniBase(id), m_nObjs(nObjs), m_perStrip(perStrip) {
     m_objs = new TkrScaleObj[nObjs];
     m_nStrips = (perStrip) ? nObjs : nObjs * N_STRIPS_PER_GTFE;
+  }
+
+
+  TkrScaleObj TkrScaleUni::getStripData(unsigned i) const {
+    if (i > m_nStrips) return TkrScaleObj();
+    if (m_perStrip) {
+      return m_objs[i]; 
+    }
+    else {
+      // find corresponding gtfe object
+      unsigned ix = i / (m_stripPer);
+      TkrScaleObj* pGtfe = &m_objs[ix];
+      // manuafacture strip object by copying everything but id
+      TkrScaleObj stripObj(i, pGtfe->getScale(), pGtfe->getError(),
+                           pGtfe->getChi2(), pGtfe->getDf());
+      //      return &m_objs[ix];
+      return stripObj;
+    }
   }
 
   void TkrScaleUni::update(UniBase* other) {
@@ -92,13 +115,14 @@ namespace CalibData {
     }
   }
 
-  void TkrScaleUni::resize(unsigned n) {
+  void TkrScaleUni::resize(unsigned n, bool perStrip) {
     if (n == m_nObjs) clearObjs();
     else {
       delete [] m_objs;
       m_objs = new TkrScaleObj[n];
       m_nObjs = n;
     }
+    m_perStrip = perStrip;
   }
 
   //  TkrScaleCol
