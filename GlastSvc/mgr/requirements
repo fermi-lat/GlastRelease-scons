@@ -3,8 +3,9 @@ version v1
 
 branches src mgr doc
 
-use instrument v1r2
-use Gaudi 
+use instrument v2
+use Gaudi
+use data 
 
 # these only needed for the test executable: comment out otherwise
 use GlastEvent v1
