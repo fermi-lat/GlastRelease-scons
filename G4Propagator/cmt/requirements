@@ -4,7 +4,7 @@ author Tracy Usher   <usher@slac.stanford.edu>
 
 #$Id$
 
-use GlastPolicy v5*
+use GlastPolicy *
 
 # this is only a shareable package
 apply_pattern packageShr
