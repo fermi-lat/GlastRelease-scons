@@ -10,7 +10,7 @@ $Header$
 
 #include <iostream>
 
-#include "ldfReader/EbfParser.h"
+#include "ldfReader/LdfParser.h"
 #include "facilities/Util.h"
 #include "../../src/EbfDebug.h" 
 #include "ldfReader/data/LatData.h"
@@ -29,7 +29,7 @@ int main(int argn, char** argc) {
 
     EbfDebug::setDebug(true);
 
-    EbfParser *ebfP = new EbfParser(filename);
+    LdfParser *ebfP = new LdfParser(filename);
 
     int status = 0;
     do {
