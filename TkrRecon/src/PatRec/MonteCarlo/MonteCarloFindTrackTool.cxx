@@ -247,6 +247,9 @@ void MonteCarloFindTrackTool::buildTrackFromMcPart(const Event::McParticle* mcPa
         // Get the particle properties
         ParticleProperty* partProp = m_partPropSvc->findByStdHepID(mcPart->particleProperty());
 
+        // If we can't identify the particle then no use continuing (for our purposes)
+        if (partProp == 0) return;
+
         // Ok, now add the clusters on the downward part of the track
         int numGaps      =  0;
         int gapSize      =  0;
