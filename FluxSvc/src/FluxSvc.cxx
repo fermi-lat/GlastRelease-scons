@@ -151,19 +151,14 @@ StatusCode FluxSvc::initialize ()
         if( status.isSuccess() ) {
 
             IAlgTool* itool;
-            status = tsvc->retrieveTool(tooltype, itool);
-            if( status.isSuccess()) { 
-                status =itool->queryInterface( IRegisterSource::interfaceID(), (void**)&itool);
-                if( status.isSuccess() ){
-                    log << MSG::INFO << "Registering sources in " << tooltype << endreq;
-                    dynamic_cast<IRegisterSource*>(itool)->registerMe(this);
-                }else{
-                    itool->release();
-                    tsvc->releaseTool(itool);
-		}
-
-            }
-            
+			std::string fullname = "ToolSvc."+tooltype;
+			itool = toolfactory->instantiate(fullname,  tsvc );
+			status =itool->queryInterface( IRegisterSource::interfaceID(), (void**)&itool);
+			if( status.isSuccess() ){
+				log << MSG::INFO << "Registering sources in " << tooltype << endreq;
+				dynamic_cast<IRegisterSource*>(itool)->registerMe(this);
+			}
+			itool->release();
         }
         
     }
