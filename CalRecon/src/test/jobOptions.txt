@@ -48,8 +48,8 @@ ApplicationMgr.TopAlg = {
 // ----------------------------
 //  Geometry definition
 //
-ApplicationMgr.DLLs += {"GlastSvc", "G4Propagator", "G4Generator"};
-ApplicationMgr.ExtSvc += { "GlastDetSvc", "GlastPropagatorSvc", "G4GeometrySvc"};
+ApplicationMgr.DLLs += {"GlastSvc", "G4Propagator", "G4Generator","TkrUtil"};
+ApplicationMgr.ExtSvc += { "GlastDetSvc" };
 GlastDetSvc.topVolume="LAT"; 
 
 GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
