@@ -176,9 +176,6 @@
 </addmaterial>
 </composite>
 
-
-<!--   not any more...
-
 <composite name="FOAM05" density = "0.050">
 <addmaterial material="Carbon">
 <natoms n="1" />
