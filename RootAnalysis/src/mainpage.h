@@ -102,8 +102,9 @@
   <hr>
   @section notes release notes
   release.notes
+  <hr>
   @section requirements requirements
-  @include requirements
+  @verbinclude requirements
 
 */
 

@@ -3,6 +3,9 @@
 #include <iostream>
 #include <string>
 
+/** @file runTreeAnalysis
+@brief Simple test program to exercise RootTreeAnalysis
+*/
 int main(int argn, char** argc) {
     
 #ifdef WIN32
