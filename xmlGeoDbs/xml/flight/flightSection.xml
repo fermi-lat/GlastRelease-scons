@@ -1,7 +1,7 @@
 <!-- $Header$  -->
   <section name="LATsection"
            version="1.0" date="2001/3/9" author="J.Bogart"
-           topVolume="LAT" >
+           topVolume="LAT"  fineChoice="recon">
     <!-- (will) include the 16 towers, grid, and ACD
          Each "tower" has a tracker, a calorimeter, and a mechanical
          piece inbetween. (what about electronics?)
