@@ -1,6 +1,6 @@
 i686
-Win32Debug
-Win32
+Win32*
+VisualC
 msdev
 Linux
 aclocal.m4
