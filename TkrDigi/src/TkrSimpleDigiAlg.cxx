@@ -117,9 +117,9 @@ TkrSimpleDigiAlg::TkrSimpleDigiAlg(const std::string& name, ISvcLocator* pSvcLoc
     declareProperty("threshold",      m_threshold     = 0.030 );  
     declareProperty("noiseSigma",     m_noiseSigma    = 0.010 );
     declareProperty("noiseOccupancy", m_noiseOccupancy= 1.e-5 );
-    declareProperty("totAt1Mip"     , m_totAt1Mip     = 15.0  );
+    declareProperty("totAt1Mip"     , m_totAt1Mip     = 52.5  );
     declareProperty("mevPerMip"     , m_mevPerMip     = 0.155 );
-    declareProperty("totThreshold"  , m_totThreshold  = 0.2   );
+    declareProperty("totThreshold"  , m_totThreshold  = 0.1   );
 }
 
 StatusCode TkrSimpleDigiAlg::initialize(){
