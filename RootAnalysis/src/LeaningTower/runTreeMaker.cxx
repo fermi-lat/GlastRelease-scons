@@ -40,12 +40,12 @@ int main(int argn, char** argc) {
     }
     
     if ( reconFileName != "" && gSystem->AccessPathName(reconFileName.c_str(), kFileExists) ) {
-        std::cout << " ===>>> Reconfile not existing!!!" << std::endl;
+        std::cout << " ===>>> Reconfile " << reconFileName << " not existing!!!" << std::endl;
         return 2;
     }
 
     if ( mcFileName != "" && gSystem->AccessPathName(mcFileName.c_str(), kFileExists) ) {
-        std::cout << " ===>>> MCfile not existing!!!" << std::endl;
+        std::cout << " ===>>> MCfile " << mcFileName << " not existing!!!" << std::endl;
         return 3;
     }
     if ( treeFileName == "" )
