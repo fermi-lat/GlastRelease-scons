@@ -14,11 +14,9 @@ ApplicationMgr.DLLs   += {"CalibSvc"};
 ApplicationMgr.ExtSvc += { "RootIoSvc" };
 ApplicationMgr.Runable= "RootIoSvc"; 
 
-// ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock", "UseCalib",
 // ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock", 
 //		      "UseBadStrips" };
-ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock",
-		      "UsePeds" };
+ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UsePeds" };
 digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
 
 
@@ -37,18 +35,13 @@ GlastDetSvc.topVolume="LAT";
 
 ApplicationMgr.EvtMax = 10000;
 
-// Model for immediately following lines is LHCb example.  See
-// http://lhcbsoft.web.cern.ch/LHCbSoft/Ex/DetConExamples/v2r0/options/
-//   in particular, files contDB.opts and common.opts
-
 // Start up a CalibDataSvc 
 ApplicationMgr.ExtSvc += {"CalibDataSvc"};
 
-ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc", "CalibRootCnvSvc" };
+ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
 
 DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
-DetectorPersistencySvc.CnvServices += {"CalibRootCnvSvc"};
 
 CalibDataSvc.CalibFlavorList = {"ideal"};
 // not used yet
@@ -64,6 +57,27 @@ CalibDataSvc.CalibInstrumentName = "LAT";
 CalibDataSvc.CalibStorageType = 14;
 CalibDataSvc.CalibRootName = "Calib";
 
+
+//   New style for fake clock
+// CalibDataSvc.CalibTimeSource = "clock";
+// CalibDataSvc.fakeStartTime = "2003-2-25_00:20";
+// CalibDataSvc.fakeDelayTime = 3;
+//   Old style
+// CalibEvtClock.startTime = "2003-2-25_00:20";
+// CalibEvtClock.delayTime = 3;
+
+// In order to circumvent normal calibration-fetching mechanism, which
+// relies on event timestamp, you *must* include the first two lines
+// below.  The third and fourth lines have defaults of 
+//   "2003-09-01" (calibration must have been entered sept. 1 2003 or later)
+//          and 
+//   forever
+CalibDataSvc.UseEventTime = false;
+CalibMySQLCnvSvc.UseEventTime = false;
+
+CalibMySQLCnvSvc.EnterTimeStart = "2003-01-01";
+CalibMySQLCnvSvc.EnterTimeEnd = "2004-03-01";
+
 // Value of "*" means 'use default MySQL host', so currently (May, 2003)
 // equivalent to value of "centaurusa.slac.stanford.edu".
 // For local MySQL server, use value "localhost"
@@ -74,20 +88,7 @@ CalibMySQLCnvSvc.Host = "*";
 //  algorithm developers
 // CalibMySQLCnvSvc.DbName = "calib_user";
 
-CalibEvtClock.startTime = "2003-2-25_00:20";
-CalibEvtClock.delayTime = 3;
 
-// In order to circumvent normal calibration-fetching mechanism, which
-// relies on event timestamp, you *must* include the first two lines
-// below.  The third and fourth lines have defaults of 
-//   "2003-09-01" (calibration must have been entered sept. 1 2003 or later)
-//          and 
-//   forever
-// CalibDataSvc.UseEventTime = false;
-// CalibMySQLCnvSvc.UseEventTime = false;
-
-// CalibMySQLCnvSvc.EnterTimeStart = "2003-01-01";
-// CalibMySQLCnvSvc.EnterTimeEnd = "2004-03-01";
 
 
 //==============================================================

@@ -17,8 +17,13 @@ ApplicationMgr.Runable= "RootIoSvc";
 // ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock", "UseCalib",
 // ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock", 
 //		      "UseBadStrips" };
+
+// comment out temporarily for testing acd
+//ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock",
+//		      "UsePeds" };
 ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock",
-		      "UsePeds" };
+		      "UseAcd" };
+
 digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
 
 
@@ -44,11 +49,10 @@ ApplicationMgr.EvtMax = 10000;
 // Start up a CalibDataSvc 
 ApplicationMgr.ExtSvc += {"CalibDataSvc"};
 
-ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc", "CalibRootCnvSvc" };
+ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
 
 DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
-DetectorPersistencySvc.CnvServices += {"CalibRootCnvSvc"};
 
 CalibDataSvc.CalibFlavorList = {"ideal"};
 // not used yet
@@ -60,7 +64,8 @@ CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
 // They're listed below in order of likelihood of need to override, 
 // from most to least likely.
 // Storage type of 14 corresponds to MYSQL
-CalibDataSvc.CalibInstrumentName = "LAT";
+// CalibDataSvc.CalibInstrumentName = "LAT";
+CalibDataSvc.CalibInstrumentName = "EM2";
 CalibDataSvc.CalibStorageType = 14;
 CalibDataSvc.CalibRootName = "Calib";
 
@@ -68,11 +73,6 @@ CalibDataSvc.CalibRootName = "Calib";
 // equivalent to value of "centaurusa.slac.stanford.edu".
 // For local MySQL server, use value "localhost"
 CalibMySQLCnvSvc.Host = "*";
-
-// By default, use production database "calib", but user may override.
-//  calib_user is a development database for use of, e.g., calibration
-//  algorithm developers
-// CalibMySQLCnvSvc.DbName = "calib_user";
 
 CalibEvtClock.startTime = "2003-2-25_00:20";
 CalibEvtClock.delayTime = 3;
