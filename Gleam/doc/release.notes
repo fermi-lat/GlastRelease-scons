@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v5r5p1 THB 15-nov-03   put stopping alg into the gui options 
 * v5r4   THB 20-oct-03   move merit and OnboardFilter into default 
 * v5r4   THB 28-sep-03   new merit, ExposureAlg 
 * v5r3p2 THB 02-sep-03   explicit G4 cut value sets 
