@@ -35,14 +35,19 @@ TkrId::TkrId(const VolumeIdentifier& vId) : m_packedId(0) {
 
 /** 
  Simple alternate constructor when all we care about is the plane. 
- Designed for use with calibration data.
+ Designed for use with calibration data or, with optional view
+ argument, analysis code.
 */
-TkrId::TkrId(unsigned towerX, unsigned towerY, unsigned tray, bool top) {
+TkrId::TkrId(unsigned towerX, unsigned towerY, unsigned tray, bool top,
+             int view) {
   m_packedId = (towerX << SHIFTTowerX) + (towerY << SHIFTTowerY) +
     (tray << SHIFTTray);
   if (top) m_packedId |= (1 << SHIFTBotTop);
   m_packedId |=   (VALIDTowerY + VALIDTowerX + 
                    VALIDTray + VALIDBotTop);
+  if ((view == eMeasureX) || (view == eMeasureY) ) {
+    m_packedId |= ( (view << SHIFTMeas) | VALIDMeas);
+  }
 }
 
 // the inserter; expect at most diagnostic use

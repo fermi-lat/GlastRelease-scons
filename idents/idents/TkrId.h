@@ -29,7 +29,11 @@ namespace idents {
         and nesting of volumes in xml geometry description
     */
     TkrId(const VolumeIdentifier& vId);
-    TkrId(unsigned towerX, unsigned towerY, unsigned tray, bool top);
+    /** constructor including just enough information to identify 
+        silicon plane (view optional)
+    */
+    TkrId(unsigned towerX, unsigned towerY, unsigned tray, bool top, 
+          int view=eMeasureNone);
             
     ~TkrId() {};
 
@@ -54,7 +58,8 @@ namespace idents {
     enum
       {
         eMeasureX = 0,
-        eMeasureY = 1
+        eMeasureY = 1,
+        eMeasureNone = 2
       };
         
   private:
