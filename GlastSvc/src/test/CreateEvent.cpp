@@ -2,11 +2,12 @@
 #define GlastApps_CreateEvent_CPP 
 
 
-#define GlastApps_CreateEvent_CPP 
+//#define GlastApps_CreateEvent_CPP 
 
 
 // Include files
 #include "CreateEvent.h"
+
 #include "Gaudi/MessageSvc/MsgStream.h"
 #include "Gaudi/Kernel/AlgFactory.h"
 #include "Gaudi/Interfaces/IDataProviderSvc.h"
@@ -20,18 +21,7 @@
 #include "GlastEvent/MonteCarlo/MCSiLayer.h"
 #include "GlastEvent/TopLevel/ObjectVector.h"
 
-//--------------------------------------------------------------------
-//
-//  CreateEvent : Standard 'Hello World' applications
-//
-//  Author :   SawyerGillespie
-//
-//--------------------------------------------------------------------
 
-// define the class-id (unique) for the GlastDetSvc
-// const IID&  IID_IGlastDetSvc  =  401;   // Unique to GLAST 
-// define the class-id (unique) for the GlastIRFSvc
-// const IID&  IID_IGlastIRFLoadSvc  =  402;   // Unique to GLAST
 
 
 static const AlgFactory<CreateEvent>  Factory;
@@ -91,7 +81,7 @@ StatusCode CreateEvent::execute() {
     DataObject* pObject;
 
 
-    /*! Causes the data store to be searched, if the data is unavailable, the appropriate
+    /*! Causes the TDS to be searched, if the data is unavailable, the appropriate
     converter is called to retrieve the data. */
     sc = eventSvc()->retrieveObject("/Event/MC/MCACDHits", pObject);
 
@@ -107,11 +97,15 @@ StatusCode CreateEvent::execute() {
         return StatusCode::FAILURE;
     }
     
-    //! print out the contents of the data
+    //! print out the ACD data
     for (ObjectVector<MCACDHit>::const_iterator it = acdList->begin(); it != acdList->end(); it++) {
-        log << MSG::INFO << " tile Energy = " << (*it)->energy() << " Id = " << (*it)->id() << endreq;
+        log << MSG::INFO << " ACD Tile Hit " 
+            << (*it)->id() << " "
+            << (*it)->energy() << endreq;
     }
 
+    /*! Causes the TDS to be searched, if the data is unavailable, the appropriate
+    converter is called to retrieve the data.  */
     sc = eventSvc()->retrieveObject("/Event/MC/MCCalorimeterHits", pObject);
     if( sc.isFailure() ) {
         log << MSG::INFO << "Failed to get MCCalorimeterHits" << endreq;
@@ -127,11 +121,9 @@ StatusCode CreateEvent::execute() {
         log << MSG::INFO << "Failed to convert object to MCCalorimeterHitVector" << endreq;
         return StatusCode::FAILURE;
     }
+    //! print out the CAL data
     for (ObjectVector<MCCalorimeterHit>::const_iterator xtal = calList->begin(); xtal != calList->end(); xtal++) {
         log << MSG::INFO << "Csi Log Hit: " << endreq;
-//        log << MSG::INFO << "    cal xtal Energy    = " << (*xtal)->energy() << endreq;
-//        log << MSG::INFO << "    cal Left Response  = " << (*xtal)->leftResponse() << endreq;
- //       log << MSG::INFO << "    cal Right Response = " << (*xtal)->rightResponse() << endreq;
         log <<MSG::INFO << "       " 
                         << (*xtal)->leftResponse() << " " 
                         << (*xtal)->rightResponse() << " "
@@ -139,8 +131,8 @@ StatusCode CreateEvent::execute() {
     }
 
 
-    /*! this method causes the TDS to be seached, if the TKR data is unavailable, then the
-    converter is called to retrive the data */
+    /*! Causes the TDS to be seached, if the TKR data is unavailable, then the
+        converter is called to retrieve the data */
     sc = eventSvc()->retrieveObject("/Event/MC/MCTKRHits", pObject);
     if( sc.isFailure() ) return sc;                                                             
     
@@ -156,10 +148,14 @@ StatusCode CreateEvent::execute() {
     
     //! print out the TKR data
     for (ObjectVector<MCSiLayer>::const_iterator silayer = tkrList->begin(); silayer != tkrList->end(); silayer++) {
-        log << MSG::INFO << "SiLayer Id = " << (*silayer)->id() << " max Energy = " << (*silayer)->MaxEnergy() << endreq;
+        log << MSG::INFO << "SiLayer " << (*silayer)->id() << " "
+            << (*silayer)->MaxEnergy() << endreq;
 
         for (ObjectVector<MCTKRHit>::const_iterator hit = ((*silayer)->getHits())->begin(); hit != ((*silayer)->getHits())->end(); hit++) {
-            log << MSG::INFO << " strip id = " << (*hit)->id() << " energy = " << (*hit)->energy() << " noise = " << (*hit)->noise() << endreq;
+            log << MSG::INFO << "Hit SSD Strip " 
+                << (*hit)->id() << " "
+                << (*hit)->energy() << " "
+                << (*hit)->noise() << endreq;
         }
       }
 

@@ -7,21 +7,28 @@
 #include "Gaudi/Algorithm/Algorithm.h"
 
 
-//--------------------------------------------------------------------
-//
-//  CreateEvent: attempts to create a GlastEvent tree in Gaudi
-//
-//  Author :   Sawyer Gillespie
-//
-//--------------------------------------------------------------------
-
-
 // forward declarations
 class IGlastDetSvc;
 class IGlastIRFLoadSvc;
 
-/*! Short test algorithm to test the functionality of MCACDHit, MCCalorimeterHit, and MCTRKHit
-*/
+/*! \class CreateEvent.cpp
+\brief Test algorithm to insure that the TDS is filled appropriately with MCACDHit, 
+MCCalorimeterHit and MCTKRHit data.
+
+  Original Author:  Sawyer Gillespie
+
+  To Run:
+  - From VCMT
+    -# Choose GlastSvc as the active package
+    -# Choose test to be the active project
+    -# Under "app parameters" type CreatEvent
+    -# Click on the run button
+  - From VC++
+    -# Open the GlastSvc workspace
+    -# Make test the active project and compile if necessary
+    -# Update the project settings for test, setting the working directory under Debug to ".."
+    -# Hit "F5" or click on the Build menu and choose Debug
+  */
 
 class CreateEvent : public Algorithm {
 
