@@ -152,7 +152,7 @@ int TkrSplitsSvc::getLastC0Strip(int tower, int layer, int view) const
         idents::TkrId thisPlane(towerY, towerX, tray, isTop);
         CalibData::RangeBase* pPlane = m_pSplits->getChannel(thisPlane);
         CalibData::TkrSplit* pSplit = dynamic_cast<CalibData::TkrSplit*>(pPlane);
-        int highChip = pSplit->getHigh();
+        //int highChip = pSplit->getHigh();
         /*
         log << MSG::INFO 
             << "Tower " << tower << " Tray " << tray << " botTop " << botTop 

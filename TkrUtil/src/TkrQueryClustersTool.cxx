@@ -253,7 +253,7 @@ const Event::TkrClusterVec TkrQueryClustersTool::getClustersX(int view, int laye
 
     std::pair<TkrViewLayerIdMap::const_iterator,TkrViewLayerIdMap::const_iterator> 
         clusIdRange = m_ViewLayerIdMap.equal_range(viewLayerPair);
-    int numIds  = m_ViewLayerIdMap.count(viewLayerPair);
+    //int numIds  = m_ViewLayerIdMap.count(viewLayerPair);
 
     for(TkrViewLayerIdMap::const_iterator clusIdIter = clusIdRange.first; clusIdIter != clusIdRange.second; clusIdIter++)
     {
@@ -574,7 +574,7 @@ int TkrQueryClustersTool::numberOfHitsNear( int view, int layer,
 
 double TkrQueryClustersTool::clusterWidth(Event::TkrCluster* cluster) const
 {
-    int size = cluster->size();
+    double size = cluster->size();
     int stripsPerLadder = m_tkrGeom->ladderNStrips();
     int nGaps = cluster->lastStrip()/stripsPerLadder
         - cluster->firstStrip()/stripsPerLadder;
