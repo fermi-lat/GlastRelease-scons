@@ -10,10 +10,11 @@ ApplicationMgr.DLLs   += {"FluxDisplay" };
 ApplicationMgr.ExtSvc += {"FluxMenuSvc", 
         "DetectorDisplay" };
 
-
+// these are algorithms, but are for initialize only
 EventDisplay.Members = {
    "TkrDisplayAlg",
-   "CalDisplay", 
+   "CalDisplay",
+   "AcdDisplay", 
    "HitDisplay" 
    };
 
