@@ -122,7 +122,7 @@ bool getUserInput(MetaInput* inp) {
   std::cout << std::endl;
 
   std::cout << 
-    "Path to XML file, e.g. $CALIBUTILROOT/xml/test/gen1_1.xml (required): ";
+    "Path to XML file, e.g. $(CALIBUTILROOT)/xml/test/gen1_1.xml (required): ";
   std::cin >> inp->path;
   std::string ascTime;
   std::cout << 
