@@ -65,7 +65,8 @@ namespace detModel{
     currentGdd = man->getGdd();
   
     /// Set some info on the parsed file
-    //    currentGdd->setCVSid(xml::Dom::getAttribute(docElt, "CVSid"));
+    currentGdd->setCVSid(pGDDMan->getCVSid());
+    currentGdd->setDTDversion(pGDDMan->getDTDversion());
     // currentGdd->setDTDversion(xml::Dom::getAttribute(docElt, "DTDversion"));
   }  
 
