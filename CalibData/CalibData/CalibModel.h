@@ -25,6 +25,8 @@
 //     6400 - 6499        this space intentionally left blank in case
 //                        we have calibrations spanning subsystems
 //     6500 - 6599        test 
+//     6600 - 6699        NAS: anything not associated with a single subsystem
+//                        
 
 const CLID CLID_Calib_CalibCLIDNode     = 6000;
 const CLID CLID_Calib_CalibBase         = 6001;
@@ -36,6 +38,10 @@ const CLID CLID_Calib_TKR_TOTSignal      = 6103;
 const CLID CLID_Calib_TKR_TOTDist      = 6104;
 const CLID CLID_Calib_TKR_MIPEff       = 6105;
 const CLID CLID_Calib_TKR_Splits       = 6106;
+const CLID CLID_Calib_TKR_ChargeScale  = 6107;
+const CLID CLID_Calib_TKR_TrgThresh    = 6108;
+const CLID CLID_Calib_TKR_DataThresh   = 6109;
+
 
 const CLID CLID_Calib_CAL_LightAtt   = 6200;
 const CLID CLID_Calib_CAL_LightAsym  = 6201;
@@ -65,6 +71,9 @@ const CLID CLID_Calib_ACD_ElecGain   = 6305;
 
 const CLID CLID_Calib_CalibTest1       = 6500;
 
+const CLID CLID_Calib_NAS_TowerCfg     = 6600;
+
+
 
 // For everybody except the CalibModel class implementation file,
 // the variables are extern.  CalibModel.cxx actually defines them.
@@ -91,6 +100,11 @@ const CLID CLID_Calib_CalibTest1       = 6500;
       _EXTERN_ std::string   TKR_TOTDist;
       _EXTERN_ std::string   TKR_MIPEff;
       _EXTERN_ std::string   TKR_Splits;
+
+      _EXTERN_ std::string   TKR_ChargeScale;
+      _EXTERN_ std::string   TKR_TrgThresh;
+      _EXTERN_ std::string   TKR_DataThresh;
+    
 
       _EXTERN_ std::string   CAL_LightAtt;
       _EXTERN_ std::string   CAL_LightAsym;
@@ -121,6 +135,8 @@ const CLID CLID_Calib_CalibTest1       = 6500;
       // Simple xml test type
       _EXTERN_ std::string   Test_1;
 
+      // cross-subsystem types
+      _EXTERN_ std::string   NAS_TowerCfg;
       typedef  std::vector<std::pair <std::string, CLID> > CalibPairCol;
       typedef  CalibPairCol::const_iterator PairIt;
       _EXTERN_    CalibPairCol pairs;
