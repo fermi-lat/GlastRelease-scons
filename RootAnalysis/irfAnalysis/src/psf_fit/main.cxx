@@ -74,40 +74,62 @@ int main(){
     delete myfit;
     psf_thick.addCutInfo("psf_fit_thick_parameters.root", "fitParams");
 
-    //-------test GenericFitter and setEnergyScaling--------------
+    //-------test thin--------------
     std::string myFunction 
        = "x*( [0]*exp(-0.5*x*x/([1]*[1])) + [2]*exp(-pow((x*[3]), [4])) )";
     double pinit[] = {0.01, 1.0, 0.2, 1.0, 1.0};
     std::vector<double> fitParams(pinit, pinit+sizeof(pinit)/sizeof(double));
-    myfit = new GenericFitter(myFunction, fitParams, 
-                              "psf_test_parameters.root");
+    Fitter * myfit = new GenericFitter(myFunction, fitParams, 
+                                       "psf_test_thin_parameters.root");
     double lower[] = {0., 0.5, 0., 0.1, 0.};
     std::vector<double> lowerLims(lower, lower+sizeof(lower)/sizeof(double));
     double upper[] = {1., 5., 5., 1., 3.};
     std::vector<double> upperLims(upper, upper+sizeof(upper)/sizeof(double));
     myfit->setBounds(lowerLims, upperLims);
 
-    MakeDists psf_test("psf_test.root");
-    psf_test.set_user_cut(TCut("Tkr1FirstLayer<12"));
-    std::vector<double> params;
-    params.push_back(0.05);
-    params.push_back(-0.66);
-    psf_test.setEnergyScaling("[0]*pow(McEnergy/100, [1])", params);
-    if ( !psf_test.fileExists() )
-       psf_test.project("BestDirErr", 0, 10, 100 );
-    psf_test.set_ymax(0.5); psf_test.set_ymin(1e-4);
-    psf_test.draw("psf_test.ps", true , myfit);
+    MakeDists psf_test_thin("psf_test_thin.root");
+    psf_test_thin.set_user_cut(TCut("Tkr1FirstLayer<12"));
+    params[0] = 0.075;
+    params[1] = -0.85;
+    params[2] = 5e-4;
+    std::string energyScaling("[0]*pow(1e-2/(1./McEnergy + [2]), [1])");
+    psf_test_thin.setEnergyScaling(energyScaling, params);
+    if ( !psf_test_thin.fileExists() ) 
+       psf_test_thin.project("BestDirErr", 0, 10, 100 );
+    psf_test_thin.set_ymax(0.5); psf_test_thin.set_ymin(1e-4);
+    psf_test_thin.draw("psf_test_thin.ps", true , myfit);
     delete myfit;
-    psf_test.addCutInfo("psf_test_parameters.root", "fitParams");
-    psf_test.addEnergyScaling("psf_test_parameters.root", "energyScaling");
+    psf_test_thin.addCutInfo("psf_test_thin_parameters.root", "fitParams");
+    psf_test_thin.addEnergyScaling("psf_test_thin_parameters.root", 
+                                   "energyScaling");
+
+    //-------test thick-------------
+    myfit = new GenericFitter(myFunction, fitParams, 
+                              "psf_test_thick_parameters.root");
+    myfit->setBounds(lowerLims, upperLims);
+
+    MakeDists psf_test_thick("psf_test_thick.root");
+    psf_test_thick.set_user_cut(TCut("Tkr1FirstLayer>11"));
+    params[0] = 0.15;
+    params[1] = -0.85;
+    params[2] = 1e-4;
+    psf_test_thick.setEnergyScaling(energyScaling, params);
+    if ( !psf_test_thick.fileExists() ) 
+       psf_test_thick.project("BestDirErr", 0, 10, 100 );
+    psf_test_thick.set_ymax(0.5); psf_test_thick.set_ymin(1e-4);
+    psf_test_thick.draw("psf_test_thick.ps", true , myfit);
+    delete myfit;
+    psf_test_thick.addCutInfo("psf_test_thick_parameters.root", "fitParams");
+    psf_test_thick.addEnergyScaling("psf_test_thick_parameters.root", 
+                                    "energyScaling");
 
     //-------energy dispersion-------
     std::string gaussian("[0]/[2]*exp(-0.5*pow((x - [1])/[2], 2.))");
     double gauss_params[] = {1., 1., 0.2};
 
     std::vector<double> gaussParams(gauss_params, gauss_params+3);
-    myfit = new GenericFitter(gaussian, gaussParams, 
-                              "edisp_thin_parameters.root");
+    Fitter * myfit = new GenericFitter(gaussian, gaussParams, 
+                                       "edisp_thin_parameters.root");
     MakeDists edisp_thin("edisp_thin.root");
     edisp_thin.set_user_cut(TCut("Tkr1FirstLayer<12"));
     if (!edisp_thin.fileExists()) 
