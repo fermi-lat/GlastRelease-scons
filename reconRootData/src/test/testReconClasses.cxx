@@ -529,15 +529,15 @@ int checkTkrVertex(const TkrVertex* vertex, UInt_t ievent, UInt_t ivertex) {
         (!floatInRange(mat.getCovX0Sx(), f*3.) ) ) {
         std::cout << "Vertex matrix x vals are wrong: " << mat.getCovX0X0() << " "
             << mat.getCovSxSx() << " " << mat.getCovX0Sx() << std::endl;
-        //return -1;
+        return -1;
     }
 
     if ( (!floatInRange(mat.getCovY0Y0(), f*4.) ) ||
-        (!floatInRange(mat.getCovY0Sy(), f*5.) ) ||
-        (!floatInRange(mat.getCovSySy(), f*6.) ) ) {
+        (!floatInRange(mat.getCovSySy(), f*5.) ) ||
+        (!floatInRange(mat.getCovY0Sy(), f*6.) ) ) {
         std::cout << "Vertex matrix y vals are wrong: " << mat.getCovY0Y0() << " "
             << mat.getCovY0Sy() << " " << mat.getCovSySy() << std::endl;
-        //return -1;
+        return -1;
 
     }
 
