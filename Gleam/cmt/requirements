@@ -15,7 +15,7 @@ use RootHistCnv v5r0p1
 # basic Glast packages
 
 use XMLEXT      v2r2 
-use GlastPolicy v4r5p1 
+use GlastPolicy            v4r6 
 use facilities  v2r4p1
 use xml         v4r1p4 
 use xmlUtil     v2r8p1
@@ -39,7 +39,7 @@ use Geant4      v1r1p0
 public
 # Gaudi component packages follow
 
-use GuiSvc      v3
+use GuiSvc                v3r1
 
 use Event                 v8r13
 use GlastSvc    v8r1p2
@@ -47,19 +47,19 @@ use GlastSvc    v8r1p2
 # simulation
 
 use FluxSvc     v5r8
-use FluxDisplay v2r0p2
+use FluxDisplay           v2r1
 use G4Generator           v4r2
 
 #digitization
 use CalDigi               v1r1p2 
-use TkrDigi               v1r3
+use TkrDigi               v1r4
 use AcdDigi     v1r2
 
 
 
 #reconstruction
 use Trigger     v3r3p3
-use Recon       v2r2p4
+use Recon                 v2r3
 
 use TkrRecon    v6r4p2
 use CalRecon    v5r7p1  

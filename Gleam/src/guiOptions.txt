@@ -4,11 +4,10 @@
 G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
 
 ApplicationMgr.ExtSvc += {"GuiSvc"};
+ApplicationMgr.Runable = "GuiSvc";
 GuiSvc.size=-3000;
 
 ApplicationMgr.DLLs   += {"FluxDisplay" };
-ApplicationMgr.ExtSvc += {"FluxMenuSvc", 
-        "DetectorDisplay" };
 
 // these are algorithms, but are for initialize only
 EventDisplay.Members = {
