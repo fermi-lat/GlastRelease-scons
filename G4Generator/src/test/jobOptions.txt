@@ -10,14 +10,15 @@ ApplicationMgr.DLLs   = { "GaudiAlg",  "GlastSvc"};
 ApplicationMgr.ExtSvc = { 
     "GlastEventSelector/EventSelector" , 
     "EventCnvSvc", 
-    "GlastDetSvc" 
-    };
+    "GlastDetSvc"};
 
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "NONE";
 
 // Stuff for detModel
 GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.visitorMode="recon";
+
 // select one of the following for a top volume 
 GlastDetSvc.topVolume="LAT";         // the whole schebang 
 //GlastDetSvc.topVolume="CsIElement";  // to look at a single full crystal
@@ -46,10 +47,10 @@ MessageSvc.OutputLevel      = 2;
 
 // ask for a source that is in the library
 //FluxAlg.source_name="gamma_patch_for_G4";
-FluxAlg.source_name="muon_pencil";
+//FluxAlg.source_name="muon_pencil";
 //FluxAlg.source_name="muon_patch";
 //FluxAlg.source_name="gamma_test";
-//FluxAlg.source_name="muon_pencil";
+FluxAlg.source_name="muon_pencil";
 
 // commands to run before each event. 
 //G4Generator.UIcommands+={"/run/verbose 3"};

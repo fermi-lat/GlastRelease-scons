@@ -214,17 +214,7 @@ StatusCode G4Generator::execute()
   HepLorentzVector pin= primaryGenerator->GetFourMomentum();
 
 
-  Event::McParticle * parent= new Event::McParticle;
-  // This parent particle decay at the start in the first particle, 
-  // so initial momentum and final one are the same
-  parent->initialize(parent, pdef->GetPDGEncoding(), 
-                     Event::McParticle::PRIMARY,
-                     pin,p);
-  parent->finalize(pin, p);
-    
-  McParticleManager::getPointer()->addMcParticle(0,parent);
-    
-
+  McParticleManager::getPointer()->addMcParticle(0,primary);   
   // Run geant4
   m_runManager->BeamOn(); 
     

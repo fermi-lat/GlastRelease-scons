@@ -128,11 +128,13 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
       m_replica = 1;
     }
 
-  // Set the rotation: note conversion to radians
+  // Set the rotation: note conversion to radians and change of sign
+  // The sign is changed for different conventions between our XML
+  // geometry database and G4 ones.
   G4RotationMatrix* rm = new G4RotationMatrix(); 
-  rm->rotateX(rx*M_PI/180);
-  rm->rotateY(ry*M_PI/180);
-  rm->rotateZ(rz*M_PI/180);
+  rm->rotateX(-rx*M_PI/180);
+  rm->rotateY(-ry*M_PI/180);
+  rm->rotateZ(-rz*M_PI/180);
 
   // Create the positioned physical volume
   phys = new G4PVPlacement(rm,G4ThreeVector(x*mm,y*mm,z*mm),
