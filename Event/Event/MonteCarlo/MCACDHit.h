@@ -1,8 +1,8 @@
 // $Header$
 // Author: H. Arrighi
 
-#ifndef ACDhit_H
-#define ACDhit_H 1
+#ifndef MCACDHit_H
+#define MCACDHit_H 1
 
 // Include files
 #include <iostream>
@@ -12,14 +12,14 @@
 #include "GlastEvent/TopLevel/Definitions.h"
 
 // Externals 
-extern const CLID& CLID_ACDhit;
+extern const CLID& CLID_MCACDHit;
 
 
 //------------------------------------------------------------------------------
 //
-// ClassName:   ACDhit
+// ClassName:   MCACDHit
 //  
-// Description: Essential information of the ACDhit
+// Description: Essential information of the MCACDHit
 //
 //              It contains:
 //                  - id
@@ -29,7 +29,7 @@ extern const CLID& CLID_ACDhit;
 //------------------------------------------------------------------------------
 
 /*!
-Essential information of the ACDhit.
+Essential information of the MCACDHit.
 
   It contains:
   - id
@@ -37,21 +37,21 @@ Essential information of the ACDhit.
 */
 
 // declare the GAUDI class-id for this class
-//const static CLID   CLID_ACDhit = 205;
+//const static CLID   CLID_MCACDHit = 205;
 
 
-class ACDhit : virtual public ContainedObject  {  
+class MCACDHit : virtual public ContainedObject  {  
     
 public:
     /// Constructors
-    ACDhit() { }
+    MCACDHit() { }
     
     /// Destructor
-    virtual ~ACDhit() { }
+    virtual ~MCACDHit() { }
     
     /// Retrieve reference to class definition structure
-    virtual const CLID& clID() const   { return ACDhit::classID(); }
-    static const CLID& classID()       { return CLID_ACDhit; }
+    virtual const CLID& clID() const   { return MCACDHit::classID(); }
+    static const CLID& classID()       { return CLID_MCACDHit; }
     
     /// Tile id number
     unsigned int id () const           { return m_id; }
@@ -71,7 +71,7 @@ private:
     float                m_energy;
 };
 
-inline StreamBuffer& ACDhit::serialize( StreamBuffer& s ) const                 {
+inline StreamBuffer& MCACDHit::serialize( StreamBuffer& s ) const                 {
     ContainedObject::serialize(s);
     return s
 	<< m_id
@@ -80,7 +80,7 @@ inline StreamBuffer& ACDhit::serialize( StreamBuffer& s ) const                 
 }
 
 
-inline StreamBuffer& ACDhit::serialize( StreamBuffer& s )                       {
+inline StreamBuffer& MCACDHit::serialize( StreamBuffer& s )                       {
     ContainedObject::serialize(s);
     return s
 	>> m_id
@@ -89,9 +89,9 @@ inline StreamBuffer& ACDhit::serialize( StreamBuffer& s )                       
 }
 
 
-inline std::ostream& ACDhit::fillStream( std::ostream& s ) const                {
+inline std::ostream& MCACDHit::fillStream( std::ostream& s ) const                {
     return s
-	<< "class ACDhit :"
+	<< "class MCACDHit :"
 	<< "\n    Energy    = "
 	//  << LHCbEventFloatFormat( LHCbEvent::width, LHCbEvent::precision )
 	<< m_energy
@@ -99,11 +99,11 @@ inline std::ostream& ACDhit::fillStream( std::ostream& s ) const                
 }
 
 
-// Definition of all container types of ACDhit
+// Definition of all container types of MCACDHit
 template <class TYPE> class ObjectVector;
-typedef ObjectVector<ACDhit>     ACDhitVector;
+typedef ObjectVector<MCACDHit>     MCACDHitVector;
 template <class TYPE> class ObjectList;
-typedef ObjectList<ACDhit>       ACDhitList;
+typedef ObjectList<MCACDHit>       MCACDHitList;
 
 
-#endif    // ACDhit_H
+#endif    // MCACDHit_H

@@ -10,7 +10,7 @@
 #include "Gaudi/Kernel/SmartRefVector.h"
 #include "GlastEvent/TopLevel/Definitions.h"
 #include "GlastEvent/Utilities/CellID.h"
-#include "GlastEvent/Hits/MCTrack.h"
+#include "GlastEvent/MonteCarlo/MCTrack.h"
 // Include all LHCb container types here
 //   to simplify inlude statements in algorithms
 #include "GlastEvent/TopLevel/ObjectVector.h"
@@ -135,7 +135,7 @@ private:
 //
 // Inline code must be outside the class definition
 //
-#include "GlastEvent/Hits/MCTrack.h"
+#include "GlastEvent/MonteCarlo/MCTrack.h"
 
 
 /// Retrieve pointer to vector of MCParticles (const or non-const)
