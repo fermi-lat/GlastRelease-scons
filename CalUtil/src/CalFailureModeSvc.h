@@ -39,7 +39,9 @@ public:
     }
 
     /// return the service type
-    const IID& type() const;
+    const IID&  type () const {
+      return IID_ICalFailureModeSvc;
+    }
 
 protected:
 

@@ -56,5 +56,4 @@ namespace CalDefs {
     strm << "R" << setw(1) << idx.getRng();
     return strm;
   }
-
 }

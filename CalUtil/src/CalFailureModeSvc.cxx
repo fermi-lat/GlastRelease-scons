@@ -56,12 +56,6 @@ StatusCode  CalFailureModeSvc::queryInterface (const IID& riid, void **ppvIF) {
 
 
 
-const IID&  CalFailureModeSvc::type () const {
-    return IID_ICalFailureModeSvc;
-}
-
-
-
 StatusCode CalFailureModeSvc::initialize () 
 {
     // Purpose and Method: Initialize the lists of dead units
