@@ -356,13 +356,15 @@ Vector CalClustersAlg::Fit_Direction(std::vector<Vector> pos,std::vector<Vector>
 	double var_z2=0;
 	for(int il=0;il<nlayers;il++)
 	{
-		// For the moment forget about longitudinal position
-		if(il%2==0)
+
+        
+        // For the moment forget about longitudinal position
+		if(il%2==1)
 		{
 			if (sigma2[il].x()>0.)
 			{
 				double err = 1/sigma2[il].x();
-				cov_xz += pos[il].x()*pos[il].z()*err;
+                cov_xz += pos[il].x()*pos[il].z()*err;
 				var_z1 += pos[il].z()*pos[il].z()*err;
 				mx += pos[il].x()*err;
 				mz1 += pos[il].z()*err;
@@ -373,8 +375,8 @@ Vector CalClustersAlg::Fit_Direction(std::vector<Vector> pos,std::vector<Vector>
 		{
 			if(sigma2[il].y()>0.)
 			{
-				double err = 1/sigma2[il].y();
-				cov_yz += pos[il].x()*pos[il].z()*err;
+                double err = 1/sigma2[il].y();
+                cov_yz += pos[il].y()*pos[il].z()*err;
 				var_z2 += pos[il].z()*pos[il].z()*err;
 				my += pos[il].y()*err;
 				mz2 += pos[il].z()*err;
@@ -382,6 +384,8 @@ Vector CalClustersAlg::Fit_Direction(std::vector<Vector> pos,std::vector<Vector>
 			}
 		}
 	}		
+
+    
 
 	mx /= norm1;
 	my /= norm2;
@@ -396,9 +400,10 @@ Vector CalClustersAlg::Fit_Direction(std::vector<Vector> pos,std::vector<Vector>
 	var_z2 /= norm2;
 	var_z2 -= mz2*mz2;
 
-	// Now we have cov(x,z) and var(z) we can deduce slope
-	double tgthx = 1/(cov_xz/var_z1);
-	double tgthy = 1/(cov_yz/var_z2);
+// Now we have cov(x,z) and var(z) we can deduce slope
+	double tgthx = cov_xz/var_z1;
+	double tgthy = cov_yz/var_z2;
+    
 
 	double tgtheta_sqr = tgthx*tgthx+tgthy*tgthy;
 	double costheta = 1/sqrt(1+tgtheta_sqr);
@@ -490,8 +495,12 @@ StatusCode CalClustersAlg::execute()
     MsgStream log(msgSvc(), name());
 	StatusCode sc = StatusCode::SUCCESS;
 	sc = retrieve();
+	const Point p0(0.,0.,0.);
 
 	int rectkr=0;  //is tracker recon OK?
+        int ngammas;
+        Point gammaVertex;
+		Vector gammaDirection;
 
     SmartDataPtr<SiRecObjs> tkrRecData(eventSvc(),"/Event/TkrRecon/SiRecObjs");
     if (tkrRecData == 0) {
@@ -501,12 +510,10 @@ StatusCode CalClustersAlg::execute()
 	else
 	{
 		// First get reconstructed direction from tracker
-		int ngammas = tkrRecData->numGammas();
+		ngammas = tkrRecData->numGammas();
 		log << MSG::INFO << "number of gammas = " << ngammas << endreq;
 	
 		GFgamma* gamma;
-		Point gammaVertex;
-		Vector gammaDirection;
   
 		 if (ngammas > 0) {
 			rectkr++;
@@ -522,7 +529,6 @@ StatusCode CalClustersAlg::execute()
 	}
 	int nLogs = m_CalRecLogs->num();
 	double ene = 0;
-	const Point p0(0.,0.,0.);
 	Vector pCluster(p0);
 	int nLayers = m_CalGeo->numLayers() * m_CalGeo->numViews();
 	
@@ -575,9 +581,13 @@ StatusCode CalClustersAlg::execute()
 	// Now sum the different rms to have one transverse and one longitudinal rms
 	double rms_trans=0;
 	double rms_long=0;
-	for(int ilayer=0;ilayer<nLayers;ilayer++)
+	std::vector<Vector> posrel(nLayers);
+
+    
+    for(int ilayer=0;ilayer<nLayers;ilayer++)
 	{
 
+    posrel[ilayer]=pLayer[ilayer]-pCluster;
 		// Sum alternatively the rms
 		if(ilayer%2)
 		{
@@ -591,8 +601,10 @@ StatusCode CalClustersAlg::execute()
 		}
 	}
 
+
 	// Compute direction using the positions and rms per layer
-	Vector caldir = Fit_Direction(pLayer,rmsLayer,nLayers);
+	Vector caldir = Fit_Direction(posrel,rmsLayer,nLayers);
+
 
 	// if no tracker rec then fill slope
 	if(!rectkr) slope = caldir.z();
@@ -634,6 +646,16 @@ StatusCode CalClustersAlg::execute()
 
 	// Do profile fitting
 	Profile(ene,cl);
+
+    if(ngammas>0){
+        Vector calOffset = (p0+pCluster) - gammaVertex;
+        double calLongOffset = gammaDirection*calOffset;
+        double calTransvOffset =sqrt(calOffset.mag2() - calLongOffset*calLongOffset);
+        cl->setTransvOffset(calTransvOffset);
+        
+
+
+    }
 
 	m_CsIClusterList->writeOut();
 
