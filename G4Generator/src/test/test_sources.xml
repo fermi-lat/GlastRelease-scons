@@ -56,7 +56,7 @@
 
     <source name="alpha_test">
        <spectrum escale="GeV"> 
-         <particle name="alpha"><energy e="20"/> </particle>
+         <particle name="He"><energy e="20"/> </particle>
            <direction theta="0" phi="0" />
            <patch xmin="-700" xmax="700" ymin="-700" ymax="700" />
        </spectrum>
