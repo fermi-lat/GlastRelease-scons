@@ -10,6 +10,8 @@
 #include "Event/TopLevel/MCEvent.h"
 #include "Event/MonteCarlo/McParticle.h"
 #include "Event/TopLevel/EventModel.h"
+#include "Event/TopLevel/Event.h"
+
 
 // Gaudi system includes
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -79,7 +81,13 @@ StatusCode FluxTestAlg::initialize() {
     
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
-    
+
+    if ( service("ParticlePropertySvc", m_partSvc).isFailure() ){
+            log << MSG::ERROR << "Couldn't find the ParticlePropertySvc!" << endreq;
+            return StatusCode::FAILURE;
+    }
+
+#if 0 // this does not make sense for testing FluxAlg
     //set the output file.
     m_out = new std::ofstream("TestOutputData.out");
 
@@ -112,9 +120,9 @@ StatusCode FluxTestAlg::initialize() {
     log << MSG::INFO << "       area: " << m_flux->targetArea() << endreq;
     log << MSG::INFO << "       rate: " << m_flux->rate() << endreq;
     
+#endif   
     
-    
-    return sc;
+    return StatusCode::SUCCESS;
 }
 
 
@@ -124,34 +132,30 @@ StatusCode FluxTestAlg::execute() {
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );    
     
-    //Event::McParticleCol*  pcol2= SmartDataPtr<Event::McParticleCol>(eventSvc(), "/Event/MC/McParticleCol");
     
-    Event::McParticleCol* pcol = new Event::McParticleCol;
-    eventSvc()->retrieveObject("/Event/MC/McParticleCol",(DataObject *&)pcol);
+    Event::McParticleCol* pcol = 0;
+    eventSvc()->retrieveObject(EventModel::MC::McParticleCol, (DataObject *&)pcol);
     
-    HepVector3D p,d;
-    double energy;
-    std::string partName;
-    //only make a new source if one does not already exist.
-    if(pcol==0){
-        m_flux->generate();
-        p = m_flux->launchPoint()*10.;
-        d = m_flux->launchDir();
-        energy = m_flux->energy();
-        partName = m_flux->particleName();
-    }else{
-        Event::McParticleCol::iterator elem = (*pcol).begin();
-        d = (*elem)->initialFourMomentum().v()*10;
-        p = (*elem)->finalPosition();
-        
-        energy = (*elem)->initialFourMomentum().e();
-        /*StdHepId*/int pID = (*elem)->particleProperty();
-        if ( service("ParticlePropertySvc", m_partSvc).isFailure() ){
-            log << MSG::ERROR << "Couldn't find the ParticlePropertySvc!" << endreq;
+    if(pcol==0){ 
+        log << MSG::ERROR << " Could not find "<< EventModel::MC::McParticleCol << endreq;
             return StatusCode::FAILURE;
-        }
-        partName = m_partSvc->findByStdHepID(pID)->particle();
-    }   
+    }
+
+    SmartDataPtr<Event::EventHeader> header(eventSvc(), EventModel::EventHeader);
+    if( 0==header) {  
+        log << MSG::ERROR << " Could not find "<< EventModel::EventHeader << endreq;
+            return StatusCode::FAILURE;
+    }
+
+
+
+    Event::McParticleCol::iterator elem = (*pcol).begin();
+    HepVector3D d = (*elem)->initialFourMomentum().v().unit();
+    HepVector3D p = (*elem)->finalPosition();
+    
+    double energy = (*elem)->initialFourMomentum().e();
+    /*StdHepId*/int pID = (*elem)->particleProperty();
+    std::string partName = m_partSvc->findByStdHepID(pID)->particle();
     
     log << MSG::INFO << partName
         << "(" << energy
@@ -159,9 +163,9 @@ StatusCode FluxTestAlg::execute() {
         << "(" << p.x() <<", "<< p.y() <<", "<<p.z()<<")" 
         << " Dir " 
         << "(" << d.x() <<", "<< d.y() <<", "<<d.z()<<")"
-         << ",  Elapsed Time = " << m_flux->time()
+         << ",  Elapsed Time = " << header->time()
         << endreq;
-    
+#if 0 // enable for tests: see above
     double theta = acos(d.z()/(d.mag()));
     double phi = atan2(d.y(),d.x());
 
@@ -173,7 +177,7 @@ StatusCode FluxTestAlg::execute() {
         out<< d.z()<<'\t';
         out<< theta<<'\t';
         out<< phi<<'\t' << std::endl;
-
+#endif
     return sc;
 }
 

@@ -1,7 +1,7 @@
 package FluxSvc
-version v5r12
+version v5r13
 
-branches FluxSvc mgr doc
+branches FluxSvc cmt doc
 
 use GlastPolicy v4*
 
@@ -21,7 +21,7 @@ apply_pattern package_include
 #=============================================================
 use facilities v2*
 
-# private
+private
 
 
 # get flags to build shared library

@@ -126,26 +126,28 @@ StatusCode FluxAlg::execute()
         << "(" << m_flux->energy()
         << " MeV), Launch: " 
         << "(" << p.x() <<", "<< p.y() <<", "<<p.z()<<")" 
-        << "mm, Dir " 
+        << " mm, Dir " 
         << "(" << d.x() <<", "<< d.y() <<", "<<d.z()<<")" 
         << endreq;
     
     
     // Here the TDS is prepared to receive hits vectors
     // Check for the MC branch - it will be created if it is not available
-#if 0    
-    DataObject *mc = new Event::MCEvent;
-    sc=eventSvc()->registerObject(EventModel::MC::Event , mc);
-    if(sc.isFailure()) {
-        log << MSG::WARNING << EventModel::MC::Event  <<" could not be registered on data store" << endreq;
-        return sc;
-    }
-    SmartDataPtr<Event::MCEvent> mc(eventSvc, EventModel::MC::Event);
-    if (mcevt == 0) {
-        log << MSG::ERROR << "Error accessing MCEvent" << endreq;
-        return StatusCode::FAILURE;
-    }
-#endif
+    Event::MCEvent* mch = 0;
+
+    SmartDataPtr<Event::MCEvent> mcheader(eventSvc(), EventModel::MC::Event);
+    if (mcheader == 0) {
+        sc=eventSvc()->registerObject(EventModel::MC::Event , mch= new Event::MCEvent);
+        if(sc.isFailure()) {
+            log << MSG::WARNING << EventModel::MC::Event  <<" could not be registered on data store" << endreq;
+            return sc;
+        }
+        
+    }else mch = mcheader;
+
+
+    mch->initialize(mch->getRunNumber(), m_flux->numSource(), mch->getSequence());
+
 
     
     Event::McParticleCol* pcol = new Event::McParticleCol;
@@ -171,25 +173,20 @@ StatusCode FluxAlg::execute()
         pin,p);
     parent->finalize(pin, p);
     
+    // get the event header to set the time
+    Event::EventHeader* h = 0; 
+
     SmartDataPtr<Event::EventHeader> header(eventSvc(), EventModel::EventHeader);
-    if(header) {
-        Event::EventHeader& h = header;
-        h.setTime(m_flux->time());
-        
-    } else { 
-        log << MSG::WARNING << " could not find the event header" << endreq;
-    }
+    if(0==header) {
+        // not already there: try to register instead
+        sc = eventSvc()->registerObject(EventModel::EventHeader, h=new Event::EventHeader);
+        if( sc.isFailure()) {
+            log << MSG::WARNING << " could not find or register the event header" << endreq;
+        }
+    } else  h = header;
 
-    SmartDataPtr<Event::MCEvent> mcheader(eventSvc(), EventModel::MC::Event);
-    if(mcheader) {
-        Event::MCEvent& h = mcheader;
-
-        h.initialize(h.getRunNumber(), m_flux->numSource(), h.getSequence());
-        
-    } else { 
-        log << MSG::WARNING << " could not find the mc event header" << endreq;
-    }
-    return sc;
+    h->setTime(m_flux->time());
+    return StatusCode::SUCCESS;
 }
 
 //------------------------------------------------------------------------
