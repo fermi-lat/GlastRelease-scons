@@ -2,6 +2,9 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 30-oct-2002: jrb - tag v1r8   - (jrb)slightly modify a couple ACD primary
+ *                                 constants; (Xin Chen) add em subdirectory 
+ *                                 containing description of EM instrument
  * 25-sep-2002: jrb - tag v1r7p3 - use <primEnergy> for trigger thresholds
  * 19-sep-2002: jrb - tag v1r7p2 - Fix comment for cal.zeroSuppressEnergy
  * 19-sep-2002: jrb - tag v1r7p1 - Pick up new better name for ACD threshold
