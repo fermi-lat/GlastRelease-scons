@@ -1,0 +1,9 @@
+# $Header$
+
+package xmlGeoDbs
+
+use GlastPolicy
+
+apply_pattern package_xmlfiles
+
+

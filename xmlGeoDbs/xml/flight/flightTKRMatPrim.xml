@@ -1,0 +1,32 @@
+<!-- $Header$ -->
+<primCategory name="TKRMatPrim" >
+  <overview>Materials used in the TKR description</overview>
+  <prim name="convMat" value="W" type="string" uType="mat">material 
+     used in tracker conversion for regular trays</prim>
+  <prim name="convSupMat" value="W" type="string" uType="mat">material 
+     used in tracker conversion for super-GLAST trays, really an
+     alloy of tungsten.  When information
+     is available, value should change from "W" to the alloy name</prim>
+  <prim name="TKRDetMat" value="Si" type="string" uType="mat">Material 
+        of tracker detector elements</prim>
+  <prim name="coreRegMat" value="Al_1lb" type="string" uType="mat">
+        material used in tracker tray core for non superGLAST trays</prim>
+  <prim name="coreSupMat" value="Al_3lb" type="string" uType="mat">
+        material used in tracker tray core for superGLAST trays</prim>
+  <prim name="TKRCloseoutMat" value="C_closeout" type="string" uType="mat">
+     material for closeout pieces</prim>
+  <prim name="TKRTopFaceMat" value="Tray_top_face" type="string"
+     uType="mat">Composite representing top face sheet,  bias board,
+     and surrouding glue</prim>
+  <prim name="TKRBotFaceMat" value="Tray_bot_face" type="string"
+     uType="mat">Composite representing bottom face sheet + glue</prim>
+  <prim name="TKRBotBiasMat" value="Tray_bot_bias" type="string" 
+        uType="mat">Composite for bias board + surrounding glue </prim>
+
+  <prim name="TKRFaceMat" value="C" type="string" uType="mat">
+        Material of tracker face sheet  **OBSOLETE** </prim>
+  <prim name="coreMat" value="FOAM05" type="string" uType="mat">material 
+        used in tracker tray core **OBSOLETE**</prim>
+
+
+</primCategory>

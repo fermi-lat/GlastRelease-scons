@@ -1,0 +1,49 @@
+<!-- $Header$ -->
+<primCategory name="ACDDimPrim">
+  <overview>Fundamental solid dimensions and offsets within the ACD.</overview>
+  <prim name="tileThickness" value="10.0">Thickness of ACD tiles</prim>
+
+  <prim name="ACDSupportThickness" value="20.0">This is just a figment
+of my imagination.  I have no real number yet. Should be unused</prim>
+  <prim name="ACDSideStandoff" value="35.75">This one is right if
+side_standoff is another name for side_tile_standoff, the distance
+between the side of the tracker and the ACD tiles.  [Deprecated.  ]</prim>
+  <prim name="ACDSideSupToTile" value = "35.75"> Distance from inside edge of
+side support structure to inside edge of side tiles.  This is temporary, to
+be replaced probably with a derived ACD constant which is the sum of the
+support thickness and gap between support and side tile.</prim>
+  <prim name="totalTopAvail" value="91.9">This is the total amount of space
+    available to top section of the ACD, includes tiles and support structure
+(Heather).</prim>
+  <prim name="topTileGap" value="3.0">Worst-case (most thermal expansion)
+gap between tiles on the top</prim>
+  <prim name="topStandoff" value="10.0"> distance between
+ACD top and top of TKR</prim>
+  <prim name="topOverlap" value="10.0">Width of overlap
+of overlapped top tiles</prim>
+
+  <prim name="totalSideAvail" value="52.0">Total amount of
+space available for side section of ACD, including both tiles and
+support structure</prim>
+  <prim name="sideTileHeight0" value="250.0">Height of top row 
+of side tiles.  Really should be 260, but we're forgoing overlap.</prim>
+  <prim name="sideTileHeight1" value="200.0">Height of 2nd row 
+of side tiles.  Real value is 210, but we're forgoing overlap.</prim>
+  <prim name="sideTileHeight2" value="151.0">Height of 3rd row 
+of side tiles.  Real value is 160, but we're forgoing overlap.</prim>
+  <prim name="sideTileHeight3" value="150.0">Height of 4th row 
+of side tiles</prim>
+  <prim name="sideOverlap" value="30.0">Distance side tiles
+extend above topACD tile surface --- used for positioning</prim>
+  <prim name="sideVerticalGap" value="0.0.">Vertical gap
+between (rows of?) side tiles</prim>
+  <prim name="sideHorizontalGap" value="3.0">Horizontal
+gap at the corners between adjacent sides of tiles</prim>
+
+  <prim name="tapeThickness" value="2.0">Thickness of scintillating tape</prim>
+  <prim name="tapeWidth" value="10.0">Width of scintillating tape</prim>
+  <prim name="tapeTopExt" value="15.0">Distance tape should extend
+beyond the end of a top tile (see Heather's first diagram)</prim>
+  <prim name="tapeGap" value= "1.0" >Distance between the tape and the adjacent
+ACD tile</prim>
+</primCategory>
