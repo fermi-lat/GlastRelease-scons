@@ -1,7 +1,6 @@
 // $Header$
 /// Test client program for strip services.  
 
-#include "calibUtil/StripSrv.h"
 #include "calibUtil/MyObject.h"
 
 #include <string>
