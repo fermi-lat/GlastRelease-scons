@@ -42,7 +42,7 @@
    instrument  (LAT | BFEM | BTEM | EM | CU) #REQUIRED
    timestamp   NMTOKEN #REQUIRED
    calType     NMTOKEN #REQUIRED
-   DTDVersion  NMTOKEN "v2r0"       
+   DTDVersion  NMTOKEN "v3r0"       
    fmtVersion  NMTOKEN #REQUIRED >
 
 <!-- Description of events used as input to the procedure 
@@ -77,14 +77,23 @@
      Only include towers for which there is at least one
      tray with bad strips
 
-     Convention for howBad attribute both here and in uniplane
-     element is that higher number ==> worse strip
+     To mark all strips in a tower as bad in the same way, set
+     one or more of the attributes nECalib, nTrig, nData to "true".
+
+     See also <uniplane>, which has the same collection of attributes
+
+     Meanings are:
+           nECalib   - not usable for charge injection calibration
+           nTrig     - not usable by trigger
+           nData     - not usable for recon, data analysis 
+
 -->
 <!ELEMENT tower (uniplane*) >
 <!ATTLIST tower row NMTOKEN #REQUIRED 
                 col NMTOKEN #REQUIRED 
-                allBad (true | false) "false"
-                howBad (1 | 2 | 3 |4 ) #IMPLIED >
+                nECalib  (true | false) "false"
+                nTrig    (true | false) "false"
+                nData    (true | false) "false"  >
 
 <!-- Each uniplane is identified by a tray # (zero based, back-most tray
       is tray 0, according to Steve Ritz convention) and top/bottom
@@ -96,7 +105,9 @@
 <!ELEMENT uniplane (stripList?, stripSpan*) >
 <!ATTLIST uniplane tray      NMTOKEN #REQUIRED
                    which    (top | bot) #REQUIRED
-                   howBad   (1 | 2 | 3 | 4) #REQUIRED
+                   nECalib  (true | false) "false"
+                   nTrig    (true | false) "false"
+                   nData    (true | false) "false"  
                    allBad   (true | false) "false" >
 
 
@@ -114,20 +125,20 @@
 ] >
 
 <badStrips badType= "hot">
-   <generic instrument="EM" timestamp="2003-2-5-15:58" calType="hotStrips" fmtVersion="v2r0" >
+   <generic instrument="EM" timestamp="2003-2-5-15:58" calType="hotStrips" fmtVersion="v3r0" >
       <inputSample startTime="0" stopTime="0" triggers="physics" mode="normal" source="stuff" >
          Output from LSR bad strips alg, running on MC data
       </inputSample>
    </generic>
    <tower row="0" col="0">
-      <uniplane tray="1" which="top" howBad="1" >
+      <uniplane tray="1" which="top" nData="true" >
          <stripList strips= " 1473 1474 1475 1476 1477 1478 1479 1480 1481 1482 
                     1483 1484 1485 1486 1487 1489 1490 1491 1492 1493 
                     1494 1495 1496 1500 1501 1502 1505 1506 1507 1508 
                     1509 1510 1516 1517 1518 1519 1520 1521 1522 1523 
                     1524 1526 1527 1528 1530 1531 1532 1533 1534 " />
       </uniplane>
-      <uniplane tray="3" which="bot" howBad="1" >
+      <uniplane tray="3" which="bot" nData="true" >
          <stripList strips= " 60 " />
       </uniplane>
    </tower>

@@ -19,17 +19,17 @@
   </generic>
 
   <tower row="0" col="0">
-    <uniplane tray="2" which="top" howBad="1">
+    <uniplane tray="2" which="top" nTrig="true">
       <stripList strips="8 17 401" />
     </uniplane>
-    <uniplane tray="2" which="top" howBad="2" allBad="true" />
+    <uniplane tray="2" which="top" nData="true" allBad="true" />
 
-    <uniplane tray="7" which="bot" howBad="1">
+    <uniplane tray="7" which="bot" nTrig="true" nData="true">
       <stripList strips="1 2 3 9" />
       <stripSpan first="100" last="123" />
     </uniplane>
   </tower>
 
-  <tower row="2" col="3" allBad="true" howBad="1" />
+  <tower row="2" col="3" nTrig="true" />
 
 </badStrips>

@@ -9,7 +9,7 @@
 
 <badStrips badType="hot">
   <generic instrument="LAT" timestamp="2003-1-2-12:56" 
-           calType="hotStrips" fmtVersion="v2r0">
+           calType="hotStrips" fmtVersion="v3r0">
 
     <inputSample startTime="2002-10-1-00:00" stopTime="2002-11-1-00:00" 
                  triggers="random" mode="normal" source="stuff" >
@@ -18,20 +18,20 @@
     </inputSample>
   </generic>
 
-  <tower row="0" col="0" allBad="true" howBad="2" />
+  <tower row="0" col="0"  nTrig="true" nData="true" />
 
   <tower row="0" col="1">
-    <uniplane tray="3" which="top" howBad="1">
+    <uniplane tray="3" which="top" nTrig="true">
       <stripList strips="8 17 401" />
     </uniplane>
-    <uniplane tray="5" which="top" howBad="2" allBad="true" />
+    <uniplane tray="5" which="top" nData="true" allBad="true" />
 
-    <uniplane tray="15" which="bot" howBad="1">
+    <uniplane tray="15" which="bot" nTrig="true">
       <stripList strips="1 2 3 9" />
       <stripSpan first="100" last="123" />
     </uniplane>
   </tower>
 
-  <tower row="2" col="3" allBad="true" howBad="1" />
+  <tower row="2" col="3" nECalib="true" />
 
 </badStrips>
