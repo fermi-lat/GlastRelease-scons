@@ -64,12 +64,30 @@ void DumpReport(TString LV="X0",char *filename="MyRootFile.root");
 void AddLayer(TString VL)
 {
   std::cout<<LayerId(VL)<<" add to the stack of tree data "<<std::endl;
-  myTree->AddFriend(LayerId(VL),myFile);
+  myTree->AddFriend(LayerId(VL), myFile->GetName());
+
+  /*
+    v3.10/02 seems to have some problems with friends.  Try the following example:
+
+    1) TFile* myFile = new TFile("DAC40_20k.root")
+
+    2) TTree* myTree = (TTree*)myFile->Get("Header")
+
+    3) now choose one of the AddFriend statements
+      a) myTree->AddFriend("LayerX2");
+      b) myTree->AddFriend("LayerX2", myFile);
+      c) myTree->AddFriend("LayerX2", myFile->GetName());
+      d) myTree->AddFriend("LayerX2", "DAC40_20k.root");
+
+      4) .q;
+
+    a) and b) will cause a seg fault, c) and d) not
+  */
 }
 
 void AddRecon()
 {
-  myTree->AddFriend("Recon",myFile);
+  myTree->AddFriend("Recon", myFile->GetName());
   std::cout<<" ... if everithing is ok, now you have also the following variables:"<<std::endl;
   std::cout<<" Phi, Theta, ThetaXZ, ThetaYZ, TkrClusPlane, TkrClusView"<<std::endl;
   std::cout<<"  TkrClusX, TkrClusY, TkrClusZ"<<std::endl;
@@ -87,7 +105,7 @@ void Initialize(TString filename)
   
   myTree = (TTree*) myFile->Get("Header");
   NumberOfEvents = (long) myTree->GetEntries();
-  //  myTree->AddFriend("Recon",myFile);
+  //  myTree->AddFriend("Recon",myFile->GetName());
   //  AddLayer("X0");
   //  TFile myOutFile(f, "recreate");
 

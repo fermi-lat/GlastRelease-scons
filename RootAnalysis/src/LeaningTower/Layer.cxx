@@ -5,50 +5,41 @@
 #include <fstream>
 #include <string>
 
+Layer::Layer(TString name, double height) {
+    ShiftX=0;
+    ShiftY=0;
+    EDGE_WIDTH        =  1.000;
+    STRIP_PITCH       =  0.228;
+    LADDER_SEPARATION =  0.200; 
+    WAFER_WIDTH       = 89.500;
+    MissedHits=0;
+    HitsInActiveArea=0;
 
+    Name = name;
+    Z = height;
 
-//////////////////////////////////////////////////
-Layer::Layer()
-{
-  ShiftX=0;
-  ShiftY=0;
- 
-  EDGE_WIDTH        = 0.1000;
-  STRIP_PITCH       = 0.0228;
-  LADDER_SEPARATION = 0.0200; 
-  WAFER_WIDTH       = 8.9500;
-
-  MissedHits=0;
-  HitsInActiveArea=0;
-}
-//////////////////////////////////////////////////
-Layer::~Layer()
-{
-  std::cout<<"~Layer()"<<std::endl;
-  delete LayerLine;
-  delete LayerLabel;
-  for(int i=0;i<4;i++)
-    {
-      delete LadderLine[i];
+    for ( int i=0; i<4; i++ ) {
+        double xcoord1 = GetCoordinate(i*384);
+        double xcoord2 = GetCoordinate((i+1)*384-1);
+        LadderLine[i] = new TLine(xcoord1, Z, xcoord2, Z);
     }
+    LayerLine  = new TLine(GetCoordinate(0), Z, GetCoordinate(1535), Z);
+    LayerLabel = new TText(380, Z, Name);
+    LayerLabel->SetTextAlign(02);
+    LayerLabel->SetTextSize(0.02);
 }
-//////////////////////////////////////////////////
-void Layer::SetHeight(double height)
-{
-  Z=height;
-  for(int i=0;i<4;i++)
-    {
-      double xcoord1 = GetCoordinate(i*384);
-      double xcoord2 = GetCoordinate((i+1)*384-1);
-      
-      
-      LadderLine[i] = new TLine(xcoord1, height, xcoord2, height);
-    }
-  LayerLine = new TLine(GetCoordinate(0), height, GetCoordinate(1535),height);
-  
-}
-//////////////////////////////////////////////////
 
+//////////////////////////////////////////////////
+Layer::~Layer() {
+    //    std::cout<<"~Layer()"<<std::endl;
+    delete LayerLine;
+    delete LayerLabel;
+    for ( int i=0; i<4; i++ )
+        delete LadderLine[i];
+
+}
+
+//////////////////////////////////////////////////
 double Layer::GetCoordinate(int StripNumber)
 {
   bool DEBUG = false;
@@ -97,18 +88,12 @@ bool Layer::checkActiveArea(double ParallelCoordinate, double NormalCoordinate, 
   return 0;
 }
 
-void Layer::DrawLayer()
-{
-  for(int i=0;i<4;i++)
-    {
-      //      LadderLine[i]->SetLineStyle(0);
-      LadderLine[i]->Draw();
+void Layer::DrawLayer() {
+    for ( int i=0; i<4; i++ ) {
+        //      LadderLine[i]->SetLineStyle(0);
+        LadderLine[i]->Draw();
     }
-  LayerLabel = new TText(38, Z, Name);
-  LayerLabel->SetTextAlign(02);
-  LayerLabel->SetTextSize(0.02);
-  LayerLabel->Draw();
-  
+    LayerLabel->Draw();
 }
 
 void Layer::DrawGhostLayer()
@@ -116,6 +101,7 @@ void Layer::DrawGhostLayer()
   LayerLine->SetLineColor(17);
   LayerLine->Draw();
 }
+
 void Layer::SetTree(TFile *file)
 {
   TString LayerTreeName = "Layer";
@@ -132,3 +118,4 @@ void Layer::GetEvent(int event)
   LayerTree->GetEntry(event);
 }
 
+ClassImp(Layer)

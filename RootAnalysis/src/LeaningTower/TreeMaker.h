@@ -80,12 +80,8 @@ public :
         TChain *mcChain = 0, 
         char* TreeFileName="MyRootFile.root"); 
 
-
     ~TreeMaker();  
-    /// start next Go with this event
-    void StartWithEvent(Int_t event) { m_StartEvent = event; };  
-    /// reset for next Go to start at beginning of file 
-    void Rewind() { m_StartEvent = 0; }; 
+
     /// allow the user to specify their own file name for the output ROOT file
     void SetTreeFileName(const char *TreeFileName) { m_TreeFileName = const_cast<char*>(TreeFileName); }
     /// re-init with these input Root files
@@ -99,13 +95,10 @@ public :
     
     /// returns number of events in all open files
     UInt_t GetEntries() const;
-    /// retrieve a pointer to event number.
-    UInt_t GetEvent(UInt_t ievt);
+    /// retrieve a pointer to event
+    UInt_t GetEvent(UInt_t, UInt_t, UInt_t);
     
 private:
-    /// starting event number
-    Int_t m_StartEvent;
-        
     /// reset all member variables
     void Clear(); 
 
@@ -246,10 +239,10 @@ inline void TreeMaker::Init(const char* digiFileName, const char* reconFileName,
         delete evt; 
         evt = 0;
         digiTree = 0;
-        delete digiFile; 
+        delete digiFile;
         digiFile = 0;
     }
-    
+
     if ( strlen(digiFileName) ) {
         digiFile = new TFile(digiFileName);
         if (digiFile->IsOpen() == kTRUE) {
@@ -285,33 +278,48 @@ inline void TreeMaker::Init(const char* digiFileName, const char* reconFileName,
             std::cout << "recon data file could not be opened!!" << std::endl;
         }
     }
-    std::cout<<"---------** evt = "<<evt<<" ,rec = "<<rec<<" ,mc = "<<mc<<std::endl;
-    
-    m_StartEvent = 0;
-    
+    //    std::cout<<"---------** evt = "<<evt<<" ,rec = "<<rec<<" ,mc = "<<mc<<std::endl;
 }
 
 
-inline UInt_t TreeMaker::GetEvent(UInt_t ievt) {
-    // Purpose and Method:  Get the event, ievt, for all trees
+inline UInt_t TreeMaker::GetEvent(UInt_t mc, UInt_t digi, UInt_t recon) {
+    // Purpose and Method:  Get the event, iEvt, for all trees
     //    We could be processing single files or chains, 
-	//    This routine handles both casees.
+    //    This routine handles both casees.
 
     // if using regular trees - we check the array of open trees and
     // move the event pointer to the requested event
     UInt_t nb = 0;
+    UInt_t iEvt = 0;
     if (treeArr) {
-        for (Int_t i = 0; i < treeArr->GetEntries(); i++) {
-            nb += ((TTree*)treeArr->At(i))->GetEvent(ievt);
+        for ( Int_t i=0; i<treeArr->GetEntries(); i++ ) {
+            TTree* t = (TTree*)treeArr->At(i);
+            // I am sure this could be done more elegant!
+            TString name = t->GetName();
+            if ( name == "Digi" )
+                iEvt = digi;
+            else if ( name == "Recon" )
+                iEvt = recon;
+            else if ( name == "Mc" )
+                iEvt = mc;
+            else {
+                std::cerr << "TreeMaker::GetEvent: don't know what to do with tree " << name << std::endl;
+                std::exit(42);
+            }
+            nb += ((TTree*)treeArr->At(i))->GetEvent(iEvt);
         }
         return nb;
     }
+
+    // the code for chains has to get modified too!
+    std::cerr << "TreeMaker::GetEvent: don't know what to do with chains!" << std::endl;
+    std::exit(42);
     
     // if using chains, check the array of chains and move
     // the event pointer to the requested event
     if (chainArr) {
         for (Int_t i = 0; i < chainArr->GetEntries(); i++) {
-            nb += ((TChain*)chainArr->At(i))->GetEvent(ievt);
+            nb += ((TChain*)chainArr->At(i))->GetEvent(iEvt);
         }
         return nb;
     }
@@ -327,7 +335,7 @@ inline UInt_t TreeMaker::GetEntries() const {
 
     UInt_t nentries = 0;
     if (treeArr) {
-        nentries = ((TTree*)treeArr->At(0))->GetEntries();
+        nentries = (UInt_t)((TTree*)treeArr->At(0))->GetEntries();
         for (Int_t i = 1; i < treeArr->GetEntries(); i++) {
             nentries = TMath::Min(nentries, (UInt_t)((TTree*)treeArr->At(i))->GetEntries());
         }
@@ -335,7 +343,7 @@ inline UInt_t TreeMaker::GetEntries() const {
     }
     
     if (chainArr) {
-        nentries = ((TChain*)chainArr->At(0))->GetEntries();
+        nentries = (UInt_t)((TChain*)chainArr->At(0))->GetEntries();
         for (Int_t i = 1; i < chainArr->GetEntries(); i++) {
             nentries = TMath::Min(nentries, (UInt_t)((TChain*)chainArr->At(i))->GetEntries());
         }

@@ -1,3 +1,9 @@
+#ifndef __LEANINGTOWER_EVENT__
+#define __LEANINGTOWER_EVENT__
+
+#include "Recon.h"
+#include "Layer.h"
+
 #include "TFile.h"
 #include "TTree.h"
 #include "TMap.h"
@@ -9,54 +15,57 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 
-
-class Event
-{
+class Event {
  public:
-  Event(TString filename, TMap *geometry);
-  inline void Go(int event)
-    {
-      SelectedEvent=event;
-    }
-  
-  inline  int GetTkrTotalNumHits() 
-    {
-      myTree->GetEntry(SelectedEvent);
-      return TkrTotalNumHits;
+    Event(TString filename, TMap *geometry);
+    virtual ~Event();
+
+    void Go(int event) {
+        SelectedEvent = event;
+        myTree->GetEntry(SelectedEvent);
     }
 
-  inline  int GetRunId() 
-    {
-      myTree->GetEntry(SelectedEvent);
-      return RunId;
+    int GetEntries()           const { return (int)myTree->GetEntries(); }
+    Int_t GetEventId()         const { return EventId; }
+    Int_t GetRunId()           const { return RunId; }
+    Int_t GetTkrTotalNumHits() const { return TkrTotalNumHits; }
+    Double_t GetEbfTime()      const { return EbfTime; }
+
+    int GetLayerNumHits(TString LayerName);
+    int *GetLayerHits(TString LayerName);
+    Bool_t GetTriggerReq(TString LayerName, Bool_t side);
+
+    // hits and clusters
+    TGraph GetTGraphHits(TString view);
+    TGraph GetTGraphHits(int view);
+    std::vector<double> GetClusters(TString LayerName);
+    TGraph GetTGraphClusters(TString view);
+    TGraph GetTGraphClusters(int view);
+
+    // Recon
+
+    Recon* GetRecon() {
+        myRecon->GetEvent(SelectedEvent);
+        return myRecon;
     }
-  
-  inline  int GetEventId()
-    {
-      myTree->GetEntry(SelectedEvent);
-      return EventId;
-    }
-  Double_t GetEbfTime() { return EbfTime; }
-  
-  int GetLayerNumHits(TString LayerName);
-  int *GetLayerHits(TString LayerName);
-  Bool_t Event::GetTriggerReq(TString LayerName, Bool_t side);
-  std::vector<double> GetClusters(TString LayerName);
-  
+
  private:
-  int NumberOfEvents;
-  static const int GAP=10;
-  int SelectedEvent;
-  int TkrTotalNumHits, RunId, EventId;
-  Double_t EbfTime;
-  //  int TkrNumHits;
-  int *TkrHits;
-  
+    int NumberOfEvents;
+    static const int GAP = 10;
+    int SelectedEvent;
+    Int_t TkrTotalNumHits, RunId, EventId;
+    Double_t EbfTime;
+    int* TkrHits;
 
-  TTree *myTree;
-  TFile *myFile;
-  TMap * myGeometry;
+    TTree* myTree;
+    TFile* myFile;
+    TMap*  myGeometry;
+    Recon* myRecon;
   
-  
+    // last line
+    ClassDef(Event, 1)
 };
+
+#endif
