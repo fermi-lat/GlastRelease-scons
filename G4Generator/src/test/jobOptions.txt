@@ -5,7 +5,7 @@
 // $Header$
 
 //  -------------- basic Glast/Gaudi run enviornment -----------
-ApplicationMgr.DLLs   = {  "GlastSvc"};
+ApplicationMgr.DLLs   = {  "GlastSvc", "HepRepSvc", "CorbaSvc"};
 
 ApplicationMgr.ExtSvc = { 
     "GlastEventSelector/EventSelector" , 
@@ -52,9 +52,9 @@ MessageSvc.OutputLevel      = 2;
 FluxAlg.source_name="muon_pencil";
 
 // do you want trajectories in the TDS? (default is 0)
-G4Generator.saveTrajectories = 0;
+G4Generator.saveTrajectories = 1;
 // do you want the full or minimal tree of particles? (default is minimal)
-G4Generator.mcTreeMode = "minimal";
+G4Generator.mcTreeMode = "pruneCal";
 
 // commands to run before each event. 
 //G4Generator.UIcommands+={"/run/verbose 3"};
@@ -66,7 +66,13 @@ G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
 ApplicationMgr.EvtMax =100;
 
 // needed to have the gui available
-//ApplicationMgr.ExtSvc +={"GuiSvc"};
+ApplicationMgr.ExtSvc +={"HepRepSvc", "CorbaSvc"};
+
+HepRepSvc.saveXml = 1;
+HepRepSvc.xmlPath = "c:\\riccardo\\temp\\";
+HepRepSvc.geometryDepth = 4;
+
+ApplicationMgr.Runable= "CorbaSvc";
 //  GuiSvc.size = -2000; 
 
 //==============================================================
