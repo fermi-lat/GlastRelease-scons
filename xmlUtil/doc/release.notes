@@ -2,6 +2,8 @@
  * Package xmlUtil
  * Coordinator: J. Bogart
  *
+ * 02-Oct-2003  jrb v2r11 Add support to recover field names from 
+ *              (integer list) id
  * 13-Aug-2003  jrb for tk more  requirements updates
  * 07-Aug-2003  tk    update requirements for GlastRelease v5r2p4
  * 28-jun-2003: jrb - tag v2r10p0 Use ld_library_path pattern
