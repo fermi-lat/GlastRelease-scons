@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v5r1p2 AC  03-apr-03   Add CalibSvc to basicOptions for CalRecon   
 * v5r1p1 LSR 10-mar-03   Add GlastPropagatorSvc to basicOptions for new TkrRecon, AnalysisNtuple
 * v5r1 THB   03-mar-03   Provide AnalysisNtuple   
 * v5r0p6 THB 03-feb-03   Add G4GeometrySvc.
