@@ -4,7 +4,7 @@ package calibRootData
 version v0r0
 
 use RootPolicy v4r*
-use commonRootData v0r*
+use commonRootData v1r*
 
 # See RootPolicy for discussion of this pattern
 apply_pattern root_package headers="\
