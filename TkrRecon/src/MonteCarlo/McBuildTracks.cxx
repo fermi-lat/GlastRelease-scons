@@ -18,16 +18,16 @@
 Event::McBuildTracks::McBuildTracks(IDataProviderSvc* dataSvc)
 {
     //Take care of insuring that data area has been created
-    DataObject* pNode = 0;
+    //DataObject* pNode = 0;
     StatusCode  sc;
-    sc = dataSvc->retrieveObject(TkrEventModel::MC::Event, pNode);
-    if ( sc.isFailure() ) {
-        sc = dataSvc->registerObject(TkrEventModel::MC::Event, new DataObject);
-        if( sc.isFailure() ) {
-         //   log << MSG::ERROR << "could not register /Event/tmp" << endreq;
-            return;
-        }
-    }
+    //sc = dataSvc->retrieveObject(TkrEventModel::MC::Event, pNode);
+    //if ( sc.isFailure() ) {
+    //    sc = dataSvc->registerObject(TkrEventModel::MC::Event, new DataObject);
+    //    if( sc.isFailure() ) {
+    //     //   log << MSG::ERROR << "could not register /Event/tmp" << endreq;
+    //        return;
+    //    }
+    //}
 
     //Define the tables needed for the MC tracks
     Event::McPartToHitTab  mcPartToHitTab;

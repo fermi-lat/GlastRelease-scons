@@ -30,6 +30,10 @@ public:
         TkrEventModel::MC::McClusToLyrHitTab = TkrEventModel::MC::Event  + "/McClusToLyrHitTab";
         TkrEventModel::MC::McLyrToHitTab     = TkrEventModel::MC::Event  + "/McLyrToHitTab";
         TkrEventModel::MC::McLayerHitCol     = TkrEventModel::MC::Event  + "/McLayerHitCol";
+
+        TkrEventModel::MC::PatHitToLyrHit    = TkrEventModel::MC::Event  + "/PatHitToLyrHit";
+        TkrEventModel::MC::PatCandToMcCand   = TkrEventModel::MC::Event  + "/PatCandToMcCand";
+        TkrEventModel::MC::McPatCandCol      = TkrEventModel::MC::Event  + "/McPatCandCol";
     }
 };
     
