@@ -327,11 +327,11 @@ StatusCode ntupleWriterSvc::addItem(const std::string & tupleName, const std::st
 }
 
 int ntupleWriterSvc::isFinite(float val) {
-
+    using namespace std; // should allow either std::isfinite or ::isfinite
 #ifdef WIN32 
     return (_finite(val));  // Win32 call available in float.h
 #else
-    return (std::isfinite(val)); // gcc call available in math.h
+    return (isfinite(val)); // gcc call available in math.h 
 #endif
 
 }
