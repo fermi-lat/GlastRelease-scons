@@ -2,6 +2,8 @@
  package reconRootData
  package manager: H. Kelly
 
+v3r2p1    03-jul-2002: HMK add access mtds to CalCluster and fix
+          capitalization of ctor in TkrCandHit\n
 v3r2      11-jun-2002: HMK Add AcdRecon class\n
 v3r1      11-jun-2002: TU  Add in active distance in TkrHitPlane \n
 v3r0p2    24-may-2002: HMK Patch CalCluster to include ctor for energySum\n
