@@ -102,7 +102,8 @@ StatusCode writeJunkAlg::execute() {
     // Test the ability to turn off a row
     if (callCount == 5) m_ntupleWriteSvc->storeRowFlag(false);
     // test call to store ntuples to disk during execution
-    if (callCount == 6) m_ntupleWriteSvc->saveNTuples();
+    if (callCount%10 == 0) 
+        m_ntupleWriteSvc->saveNTuples();
 
     ++callCount;
 
