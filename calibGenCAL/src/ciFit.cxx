@@ -559,7 +559,7 @@ int main(int argc, char **argv) {
   try {
     cfg.readCfgFile(cfgPath);
 
-    cfg.ostr << "CVS Tag: " << CGCUtil::CVS_TAG << endl << endl;
+    cfg.ostr << "calibGenCAL CVS Tag: " << CGCUtil::CVS_TAG << endl << endl;
     
     // insert quoted config file into log stream //
     { 
