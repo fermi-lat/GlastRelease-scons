@@ -1,5 +1,6 @@
 // $Header$
-
+#ifndef CalibData_RangeBase_h
+#define CalibData_RangeBase_h
 namespace CalibData {
 
   /** Base class for per crystal-face-range Calorimeter calibration data.
@@ -17,3 +18,4 @@ namespace CalibData {
   };
 
 }
+#endif
