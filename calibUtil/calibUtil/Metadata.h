@@ -25,11 +25,11 @@ namespace calibUtil {
       RETMySQLError = 5
     };
     /// Used to form bit masks for dbs queries
-    enum eDisposition {
-      DISPprod = 1,
-      DISPdev  = 2,
-      DISPtest = 4,
-      DISPsuper = 8
+    enum eLevel {
+      LEVELProd = 1,
+      LEVELDev  = 2,
+      LEVELTest = 4,
+      LEVELSuper = 8
     };
       
 
@@ -98,21 +98,33 @@ namespace calibUtil {
 
     /** Return serial number for calibration which is best match to
         criteria
+                 @param ser          serial number of best match 
+                                     as integer or zero if no matches
+                                     (output)
                  @param calibType    type of data, must match
-                 @param dispMask     acceptable dispositions ("production"
-                                     better than "dev" better than "test"
-                                     better than "superseded")
                  @param timestamp    must be within validity interval; 
                                      closer to center is better
-                 @return serial number of best match as integer or 
-                                       zero if no matches.
+                 @param levelMask    acceptable levels ("production"
+                                     better than "dev" better than "test"
+                                     better than "superseded")
+                 @param instrument   e.g. LAT, EM, CU,...
+                 @return             status. Should be RETOk.
+                                     
 
        If there are multiple calibrations which are not distinguished
        by the above, pick the one most recently written.
     */
-    static unsigned int findBest(const std::string& calibType, 
-                                 unsigned dispMask, 
-                                 unsigned int timestamp);
+    static eRet findBest(unsigned int *ser,
+                         const std::string& calibType, 
+                         Timestamp timestamp,
+                         unsigned levelMask, 
+                         const std::string& instrument);
+
+
+    // Might also want a "findAll" which would just return a list
+    // of serial numbers, and a "getRecord" which would either
+    // just return the full row as a string or parse it into 
+    // its separate columns
 
     /** Given a calibration serial number, return information needed for 
         caller to read in the data.  
@@ -128,6 +140,22 @@ namespace calibUtil {
                             const std::string* fmtVersion,
                             const std::string* filename);
                         
+  /** 
+    // Additional services will probably be needed to
+    //   1 change proc_level of a given calibration, e.g. from
+    //     PRODUCTION to SUPERSEDED
+    //   2 "split" a calibration.  That is, make two new calibration
+    //     metadata records, both pointing to the same actual data
+    //     file, with validity periods whose union = validity period
+    //     of an existing metadata record pointing to that file.  Then
+    //     (perhaps) mark the original metadata record as superseded
+    //
+    //  Why would one want #2?  If some reprocessing were done, but
+    //  just on some sub(time)interval, then the old calibration would
+    //  no longer be preferred for the full interval; want to be able
+    //  to mark it as superseded for the subinterval, still usable
+    //  for the remainder.  
+  */
 
     // Might make these private
     static bool connectRead(eRet& err);
@@ -140,6 +168,10 @@ namespace calibUtil {
     static MYSQL* writeCxt;
     static std::string row;     // place to keep row as it's being built
     static bool connect(MYSQL* cxt, const std::string& group, eRet& err);
+
+    //    static void makeQuery(std::string& query, unsigned int *levelMask);
+    static bool addLevel(std::string& q, unsigned int *levelMask);
+
     /** Keep track of which columns in row have been initialized 
         with bit mask */
     enum eRow {
