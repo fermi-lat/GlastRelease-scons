@@ -6,5 +6,6 @@ package RootAnalysis
 #use these to get the env vars defined
 use digiRootData 
 use reconRootData 
+use mcRootData
 
 set ROOTANALYSIS ${ROOTANALYSISROOT}
