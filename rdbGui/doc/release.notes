@@ -4,6 +4,8 @@
 
    Coordinators: M. Frailis and R. Giannitrapani
 
+   v1r5    06-Apr-2005  rg       Now the result table from a query is ordered with
+                                 respect to the primary key
    v1r4    30-Dec-2004  frailis  Minor change to trim column and attribute
                                  values before they are inserted into the
                                  database 
