@@ -64,7 +64,7 @@ class Event {
     TMap*  myGeometry;
     Recon* myRecon;
   
-    // last line
+    // last line of class def
     ClassDef(Event, 1)
 };
 

@@ -1,6 +1,12 @@
 This directory contains several files used by the LeaningTower scripts:
 
-geometry:
+geometry files:
+
+A geometry file has up to 7 columns: name posZ shiftY shiftX rotZ rotY rotX
+
+The first versions had only name and posZ.  For backward compatibility, I kept
+the order this way.  If there are less than 7 entries in a column, the values
+are assumed to be 0.
 
 stack2geometry.txt:  describes the geometry of "stack2".
         http://glastserver.pi.infn.it/TrackerElectricalTests/Stacks/stack2.html
@@ -14,10 +20,11 @@ TowerGeometryGleamv5r8.txt:  cluster positions extracted from Gleam v5r8.
 TowerGeometrySaggini.txt:  numbers were extracted by Nicola Saggini (engineer
                            at Pisa) from the drawings of the tower.
 
-Tower0Geometry.txt:  should contain the plane positions (center of material) of
-                     Tower0 after alignment.
+Tower0Geometry.txt:  contains the plane positions (center of material) of Tower0
+ after alignment.
 
-fitting:
+
+fitting files:
 
 Tower0FittingPlanes.txt:  contains a setup where the residuals of a particular
                           plane is being determined by hits in the trays (with

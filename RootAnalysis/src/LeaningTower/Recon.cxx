@@ -18,7 +18,7 @@ Recon::Recon(TFile* file) {
 void Recon::GetEvent(int event) {
     int bytes = reconTree->GetEntry(event);
     if ( bytes == 0 )
-        std::cerr << "Recon::GetEvent: couldn't read the Recon part!" << std::endl;
+        std::cerr <<"Recon::GetEvent: couldn't read the Recon part!"<<std::endl;
     // the data are nominally tower 0, which is located at about -700, -700.
     // We would like to have to origin at 0,0 (equivalent to tower 10).
     // There is also a non-understood not-cared-for shift in z.
@@ -37,14 +37,15 @@ void Recon::TkrAlignmentSvc(const TMap *myGeometry) {
     // subtracted from the cluster positions.
   
     for ( int i=0; i<TkrNumClus; ++i ) {
-        Layer* plane = (Layer*)myGeometry->GetValue(GetPlaneNameFromRecon(TkrClusLayer[i], TkrClusView[i]));
-        TkrClusX[i] -= plane->GetX();
-        TkrClusY[i] -= plane->GetY();
+        Layer* plane = (Layer*)myGeometry->GetValue(
+                        GetPlaneNameFromRecon(TkrClusLayer[i], TkrClusView[i]));
+        TkrClusX[i] += plane->GetX();
+        TkrClusY[i] += plane->GetY();
         TkrClusZ[i]  = plane->GetZ();
     }
 }
 
-TGraph Recon::GetAllClustersGraph(const TString view, const int notLayer) const {
+TGraph Recon::GetAllClustersGraph(const TString view, const int notLayer) const{
     if ( view == "X" )
         return GetAllClustersGraph(0, notLayer);
     else if ( view == "Y" )
@@ -70,7 +71,8 @@ TGraph Recon::GetAllClustersGraph(const int view, const int notLayer) const {
                 break;
             default:
                 pos = 0;
-                std::cerr << "Recon::GetAllClustersGraph: view = " << view << std::endl;
+                std::cerr << "Recon::GetAllClustersGraph: view = " << view
+                          << std::endl;
                 std::exit(42);
             }
             clusters.SetPoint(clusters.GetN(), pos, TkrClusZ[i] );
@@ -79,26 +81,28 @@ TGraph Recon::GetAllClustersGraph(const int view, const int notLayer) const {
     return clusters;
 }
 
-TGraph Recon::GetClusterGraph(const std::vector<TString> planeCol, bool* exactlyOne) const {
+TGraph Recon::GetClusterGraph(const std::vector<TString> planeCol,
+                              bool* exactlyOne) const {
     TGraph tg;
     if ( planeCol.size() == 0 )  // this is a bad plane
         return tg;
 
     *exactlyOne = true;
-    for ( std::vector<TString>::const_iterator it=planeCol.begin(); it<planeCol.end(); ++it ) {
-        // loop over the names of reference planes selected for fitting
+    for ( std::vector<TString>::const_iterator it=planeCol.begin();
+          it<planeCol.end(); ++it ) {
+        // loop over the planes
         int count = 0;
-        const int refView = GetView(*it);
-        const int refReconLayer = GetReconLayer(*it);
+        const int thisView = GetView(*it);
+        const int thisReconLayer = GetReconLayer(*it);
         for ( int j=0; j<GetTkrNumClus(); ++j ) {
-            // a second loop over all clusters, to select those on ref planes
-            if (  refReconLayer != TkrClusLayer[j] || refView != TkrClusView[j] )
-                continue; // cluster is not on this ref plane
+            // a second loop over all clusters, to select those on the plane
+            if ( thisReconLayer!=TkrClusLayer[j] || thisView!=TkrClusView[j] )
+                continue; // cluster is not on this plane
             ++count;
             double pos = 0;
-            if ( refView == 0 )
+            if ( thisView == 0 )
                 pos = TkrClusX[j];
-            else if ( refView == 1 )
+            else if ( thisView == 1 )
                 pos = TkrClusY[j];
             tg.SetPoint(tg.GetN(), pos, TkrClusZ[j] );
         }
@@ -108,13 +112,13 @@ TGraph Recon::GetClusterGraph(const std::vector<TString> planeCol, bool* exactly
     return tg;
 }
 
-TGraph Recon::GetTrk1ClustersGraph(const TString view, const int notLayer) const {
+TGraph Recon::GetTrk1ClustersGraph(const TString view, const int notLayer)const{
     if ( view == "X" )
         return GetTrk1ClustersGraph(0, notLayer);
     else if ( view == "Y" )
         return GetTrk1ClustersGraph(1, notLayer);
     else
-        std::cerr << "Recon::GetTrk1ClustersGraph: view = " << view << std::endl;
+        std::cerr << "Recon::GetTrk1ClustersGraph: view = " << view <<std::endl;
 
     std::exit(42);
     return TGraph();
@@ -135,7 +139,8 @@ TGraph Recon::GetTrk1ClustersGraph(const int view, const int notLayer) const {
                 break;
             default:
                 pos = 0;
-                std::cerr << "Recon::GetTrk1ClustersGraph: view = " << view << std::endl;
+                std::cerr << "Recon::GetTrk1ClustersGraph: view = " << view
+                          << std::endl;
                 std::exit(42);
             }
             clusters.SetPoint(clusters.GetN(), pos, TkrClusZ[i] );
@@ -216,8 +221,7 @@ double ExtrapolateCoordinate(const TLine& track, const double z) {
     const double x2 = track.GetX2();
     const double y1 = track.GetY1();
     const double y2 = track.GetY2();
-    
-    const double newX = ( x2 == x1 )  ?  x1  :  x1 + ( z - y1 ) / ( y2 - y1 ) * ( x2 - x1 );
+    const double newX = ( x2 == x1 )  ?  x1  :  x1 + (z-y1) / (y2-y1) * (x2-x1);
     return newX;
 }
 

@@ -23,7 +23,7 @@ class Tracker {
     bool TOWER;
     TMap* myGeometry;
 
-    // last line
+    // last line of class def
     ClassDef(Tracker, 1)
 };
 

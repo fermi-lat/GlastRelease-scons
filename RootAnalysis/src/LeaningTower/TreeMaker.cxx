@@ -17,19 +17,19 @@ const Int_t MaxNumTkrClusters = 128;
  * http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/TEM.pdf):
  * 6, 3, 7, 2, 5, 0, 4, 1
  */
-const int positionOfGTCC[8] /* in the TCloneArray */ = { 5, 7, 3, 1, 6, 4, 0, 2 };
+const int positionOfGTCC[8] /*in the TCloneArray*/ = { 5, 7, 3, 1, 6, 4, 0, 2 };
 
 const bool DEBUG = 0;
 
 #define DIAGN
 
-// returns the position of GTCC i in the TCloneArray m_TkrDiagnostics of the digi file
+// returns position of GTCC i in the TCloneArray m_TkrDiagnostics of the digi
 int indexToGTCC ( int i ) { return positionOfGTCC[i]; }
 
 // returns the index of a GTCC/GTRC pair in the TkrDiagnostics array
 int getIndex ( int GTCC, int GTRC ) { return GTCC*NumGTRC+GTRC; }
 
-// returns the index of a plane/ROC pair in the TkrDiagnostics array. Left is 0, right is 1.
+// returns index of a plane/ROC pair in TkrDiagnostics. Left is 0, right is 1.
 int getIndex ( const TString planeName, const bool side ) {
     // assume e.g. "LayerX12"
     static const int first = 5;
@@ -48,8 +48,6 @@ int getIndex ( const TString planeName, const bool side ) {
         else                      // even
             GTCC = 0 + side;
     
-    //    std::cout << std::setw(8) << planeName << ' ' << view << num << " side=" << side << ' ' << GTCC << ' ' << GTRC << std::endl;
-
     return getIndex(GTCC, GTRC);
 }
 
@@ -60,7 +58,7 @@ void TreeMaker::CreateTree(Int_t numEvents) {
     Int_t TkrTotalNumHits;
     Double_t EbfTime;  // here double might be needed
     Int_t LevelOneTrigger;
-    Int_t TkrDiagnostics[NumGTCC*NumGTRC]; // this should be sorted into the planes, but right now we don't know the order
+    Int_t TkrDiagnostics[NumGTCC*NumGTRC]; // this could be sorted into planes
 
     // variables to be stored in every "Layer"
     Int_t ToT0;
@@ -167,7 +165,8 @@ void TreeMaker::CreateTree(Int_t numEvents) {
         /////////// Tracks: ////////////////////////////////////////
         Recon->Branch("TkrNumTracks",&TkrNumTracks,"TkrNumTracks/I");
         Recon->Branch("TkrTrk1NumClus",&TkrTrk1NumClus,"TkrTrk1NumClus/I");
-        Recon->Branch("TkrTrk1Clusters",TkrTrk1Clusters,"TkrTrk1Clusters[TkrNumClus]/I");
+        Recon->Branch("TkrTrk1Clusters",TkrTrk1Clusters,
+                      "TkrTrk1Clusters[TkrNumClus]/I");
         /////////// Vertex: ////////////////////////////////////////
         Recon->Branch("TkrNumVtx",&TkrNumVtx,"TkrNumVtx/I");
         Recon->Branch("TkrVtx1X",&TkrVtx1X,"TkrVtx1X/F");
@@ -196,7 +195,7 @@ void TreeMaker::CreateTree(Int_t numEvents) {
     UInt_t evtCounterDigi  = 0;
     UInt_t evtCounterRecon = 0;
     for ( Int_t evtCounter=0; evtCounter<numEvents; ++evtCounter ) {
-        if ( DEBUG ) std::cout << "event loop counter: " << evtCounter << std::endl;
+        if(DEBUG) std::cout << "event loop counter: " << evtCounter <<std::endl;
         // Reset some arrays and variables
         int nTkrDigi = 0;
         TkrTotalNumHits = 0;
@@ -215,7 +214,7 @@ void TreeMaker::CreateTree(Int_t numEvents) {
             target_fraction = fraction;
             if ( fraction >= 10 )
                 target_fraction = target_fraction/10*10 + 9;
-            std::cout << fraction << "% complete: event "<< evtCounter << std::endl;
+            std::cout << fraction <<"% complete: event "<<evtCounter<<std::endl;
         }
       
         if (mc)
@@ -244,26 +243,33 @@ void TreeMaker::CreateTree(Int_t numEvents) {
         //////////////////////////////////////////////////
         // Monte Carlo tree
         if ( mc && mcEventId != EventId )
-            std::cout << "skipping mc tree: " << EventId << ' ' << mcEventId << ' ' << digiEventId << ' ' << reconEventId << std::endl;
+            std::cout << "skipping mc tree: " << EventId << ' ' << mcEventId
+                      << ' ' << digiEventId << ' ' << reconEventId << std::endl;
         else if ( mc ) {  // if we have mc data process it
             ++evtCounterMc;
             mcRunNum  = mc->getRunId();
-            if ( DEBUG ) std::cout << "MC: run number: " << mcRunNum << "  event id: " << mcEventId << std::endl;
+            if ( DEBUG ) std::cout << "MC: run number: " << mcRunNum
+                                   << "  event id: " << mcEventId << std::endl;
         }
 
         // Digi tree
         if ( evt && digiEventId != EventId )
-            std::cout << "skipping digi tree: " << EventId << ' ' << mcEventId << ' ' << digiEventId << ' ' << reconEventId << std::endl;
+            std::cout << "skipping digi tree: " << EventId << ' ' << mcEventId
+                      << ' ' << digiEventId << ' ' << reconEventId << std::endl;
         else if ( evt ) {  // if we have digi data process it
             ++evtCounterDigi;
             digiRunNum = evt->getRunId();
-            if ( DEBUG ) std::cout << "DIGI: run number: " << digiRunNum << "  event id: " << digiEventId <<std::endl;
+            if ( DEBUG ) std::cout << "DIGI: run number: " << digiRunNum
+                                   << "  event id: " << digiEventId <<std::endl;
             RunId = digiRunNum;
 #ifdef DIAGN
             // we shouldn't do this if the digi is generated from mc
             L1T l1t = evt->getL1T();
-            LevelOneTrigger = l1t.getTriggerWord() & 0x1f; // there are more bits set, but why?
-            bool tkrTrigger = l1t.getTkr3InARow(); // indicates that 3-in-a-row occurred in the TKR
+            LevelOneTrigger = l1t.getTriggerWord() & 0x1f;
+            // there are more bits set, but why?
+            bool tkrTrigger = l1t.getTkr3InARow();
+            // indicates that 3-in-a-row occurred in the TKR
+
             // ***************************************************************
             // it is not clear if the files taken at Pisa in August and
             // September 2004 contain a correct L1T.  E.g., 040826180009.ldf
@@ -274,16 +280,20 @@ void TreeMaker::CreateTree(Int_t numEvents) {
             static bool tkrTriggerWarning = true;
             if ( DEBUG || tkrTriggerWarning ) { // print at least once
                 if ( !tkrTrigger )
-                    std::cerr << "Trigger primitive:  External trigger!" << std::endl;
-                std::cout << "LevelOneTrigger: " << LevelOneTrigger << std::endl;
-                std::cout << "L1T doesn't seem to work, thus we record the TkrDiagnostics even if it may not make sense!" << std::endl;
+                    std::cerr << "Trigger primitive:  External trigger!"
+                              << std::endl;
+                std::cout << "LevelOneTrigger: " << LevelOneTrigger <<std::endl;
+                std::cout << "L1T doesn't seem to work, thus we record the "
+                          << "TkrDiagnostics even if it may not make sense!"
+                          << std::endl;
             }
             tkrTrigger = true;
             tkrTriggerWarning = false;
 
             // Ebf time
             static Double_t EbfTimeStart = evt->getEbfTimeSec();
-            EbfTime = ( evt->getEbfTimeSec() - EbfTimeStart ) + evt->getEbfTimeNanoSec() * 1E-9;
+            EbfTime = ( evt->getEbfTimeSec() - EbfTimeStart )
+                + evt->getEbfTimeNanoSec() * 1E-9;
             if ( DEBUG ) std::cout << "EbfTime: " << EbfTime << std::endl;
 
             // and now, for the TkrDiagnostics
@@ -293,17 +303,21 @@ void TreeMaker::CreateTree(Int_t numEvents) {
                 if ( DEBUG || NumGTCCwarning ) // print at least once
                     // e.g., for Monte Carlo data
                     std::cerr << "NumGTCC=" << NumGTCC
-                              << " != evt->getTkrDiagnosticCol()->GetEntries()=" << numGTCCentries << std::endl;
+                              << " != evt->getTkrDiagnosticCol()->GetEntries()="
+                              << numGTCCentries << std::endl;
                 NumGTCCwarning = false;
             }
             for ( int GTCC=0; GTCC<NumGTCC; ++GTCC ) { 
                 std::bitset<NumGTRC> word = 0;
                 if ( tkrTrigger && GTCC < numGTCCentries )
-                    word = evt->getTkrDiagnostic(indexToGTCC(GTCC))->getDataWord();
-                if ( DEBUG ) std::cout << "TkrDiagnosticData[" << GTCC << "] word(" << word << ") ";
+                    word =
+                        evt->getTkrDiagnostic(indexToGTCC(GTCC))->getDataWord();
+                if ( DEBUG ) std::cout << "TkrDiagnosticData[" << GTCC
+                                       << "] word(" << word << ") ";
                 for ( int GTRC=NumGTRC-1; GTRC>=0; --GTRC ) {
                     TkrDiagnostics[getIndex(GTCC,GTRC)] = word[GTRC];
-                    if ( DEBUG ) std::cout << ( TkrDiagnostics[getIndex(GTCC,GTRC)] > 0 ) ? 1 : 0;
+                    if ( DEBUG ) std::cout
+                        << ( TkrDiagnostics[getIndex(GTCC,GTRC)] > 0 ) ? 1 : 0;
                 }
                 if ( DEBUG ) std::cout << std::endl;
             }
@@ -314,7 +328,7 @@ void TreeMaker::CreateTree(Int_t numEvents) {
             //////////////////////////////////////////////////
             if ( tkrDigiCol ) {
                 nTkrDigi = tkrDigiCol->GetEntries();
-                if ( DEBUG ) std::cout << "num tkrDigi " << nTkrDigi << std::endl;
+                if (DEBUG) std::cout << "num tkrDigi " << nTkrDigi << std::endl;
 
                 TIter tkrDigiIter(tkrDigiCol);
                 TkrDigi* pTkrDigi = 0;
@@ -324,30 +338,37 @@ void TreeMaker::CreateTree(Int_t numEvents) {
                     int View  = pTkrDigi->getView();
                     // this is not a "Ritz" plane, so I call it Nicolas plane
                     int NicolasPlane = 2*Layer+View;
-                    if ( DEBUG ) std::cout << "tower, bilayer, view, plane: " <<Tower<<" "<<Layer<<" "<<View<<" "<<NicolasPlane<<std::endl;
+                    if ( DEBUG ) std::cout << "tower, bilayer, view, plane: "
+                                           <<Tower<<" "<<Layer<<" "<<View<<" "
+                                           <<NicolasPlane<<std::endl;
                     ToT0Array[NicolasPlane] = pTkrDigi->getToT(0);
                     ToT1Array[NicolasPlane] = pTkrDigi->getToT(1);
-                    if ( DEBUG ) std::cout << "ToT0 = " << ToT0Array[NicolasPlane] << " ToT1 = " << ToT1Array[NicolasPlane] << std::endl;
+                    if ( DEBUG ) std::cout << "ToT0 = "<<ToT0Array[NicolasPlane]
+                          << " ToT1 = " << ToT1Array[NicolasPlane] << std::endl;
                     //last0strip = pTkrDigi->getLastController0Strip();
-                    //		if ( DEBUG ) std::cout << "last strip of controller 0: " << last0strip << std::endl;
 
                     TkrNumHitsArray[NicolasPlane] = pTkrDigi->getNumHits();
-                    if ( DEBUG ) std::cout << "num hits: " << TkrNumHitsArray[NicolasPlane] << std::endl;
+                    if ( DEBUG ) std::cout << "num hits: "
+                                  << TkrNumHitsArray[NicolasPlane] << std::endl;
                     TkrTotalNumHits += TkrNumHitsArray[NicolasPlane];
 		
                     if ( TkrNumHitsArray[NicolasPlane] > 0 ) {
-                        // filling the array of TkrHits.  Don't fill more than MaxNumTkrHits!                        
+                        // filling the array of TkrHits.
+                        // Don't fill more than MaxNumTkrHits!
                         for ( int h=0; h<TkrNumHitsArray[NicolasPlane]; h++ ) {
                             if ( h >= MaxNumTkrHits ) {
-                                std::cerr << "Event " << EventId << " has " << TkrNumHitsArray[NicolasPlane]
-                                          << " hits in layer " << Layer << " view " << View << std::endl;
+                                std::cerr << "Event " << EventId << " has "
+                                          << TkrNumHitsArray[NicolasPlane]
+                                          << " hits in layer " << Layer
+                                          << " view " << View << std::endl;
                                 break;
                             }
                             TkrHitsArray[NicolasPlane][h] = pTkrDigi->getHit(h);
                         }
                         if ( DEBUG ) { 
                             std::cout << "list of hits:";
-                            for ( int h=0; h<TkrNumHitsArray[NicolasPlane]; h++ ) std::cout << ' ' << TkrHitsArray[NicolasPlane][h];
+                            for ( int h=0; h<TkrNumHitsArray[NicolasPlane]; h++)
+                                std::cout<<' '<<TkrHitsArray[NicolasPlane][h];
                             std::cout << std::endl;
                         }
                     }
@@ -358,7 +379,8 @@ void TreeMaker::CreateTree(Int_t numEvents) {
         //////////////////////////////////////////////////
         // RECON tree
         if ( rec && reconEventId != EventId )
-            std::cout << "skipping recon tree: " << EventId << ' ' << mcEventId << ' ' << digiEventId << ' ' << reconEventId << std::endl;
+            std::cout << "skipping recon tree: " << EventId << ' ' << mcEventId
+                      << ' ' << digiEventId << ' ' << reconEventId << std::endl;
         else if ( rec ) {  // if we have recon data proccess it
             ++evtCounterRecon;
             reconRunNum = rec->getRunId();
@@ -367,20 +389,26 @@ void TreeMaker::CreateTree(Int_t numEvents) {
                 ////////////////// TKR CLUSTER: ////////////////////////////////
                 const TObjArray* clusCol = tkrRec->getClusterCol();
                 TkrNumClus = clusCol->GetEntries();
+
+                std::cout << "TkrNumClus " << TkrNumClus << std::endl;
+
                 TIter tkrClusIter(clusCol);
                 TkrCluster* pTkrClus = 0;
                 int clusIdx = 0;
                 while ( ( pTkrClus = (TkrCluster*)tkrClusIter.Next() ) ) {
-                    // filling the arrays of TkrClus.  Don't fill more than MaxNumTkrClusters!                        
+                    // filling the arrays of TkrClus.
+                    // Don't fill more than MaxNumTkrClusters!
                     if ( clusIdx >= MaxNumTkrClusters ) {
-                        std::cerr << "Event " << EventId << " has " << TkrNumClus << " clusters" << std::endl;
+                        std::cerr << "Event " << EventId << " has "
+                                  << TkrNumClus << " clusters" << std::endl;
                         TkrNumClus = MaxNumTkrClusters;
                         break;
                     }
                     TkrClusX[clusIdx]     = pTkrClus->getPosition().X();
                     TkrClusY[clusIdx]     = pTkrClus->getPosition().Y();
                     TkrClusZ[clusIdx]     = pTkrClus->getPosition().Z();
-                    // getPlane()! doesn't return the plane but the layer index (number 0 - 17)
+                    // getPlane()! doesn't return the plane but the
+                    // layer index (number 0 - 17)
                     TkrClusLayer[clusIdx] = pTkrClus->getPlane();
                     TkrClusView[clusIdx]  = pTkrClus->getView();
                     ++clusIdx;
@@ -388,15 +416,21 @@ void TreeMaker::CreateTree(Int_t numEvents) {
                 ////////////////// TKR TRACKS: ////////////////////////////////
                 const TObjArray *tkrCol = tkrRec->getTrackCol();
                 TkrNumTracks = tkrCol->GetEntries();
-	    
+
+                std::cout << "TkrNumTracks " << TkrNumTracks << std::endl;
+
                 if ( TkrNumTracks > 0 ) {
-                    const TkrKalFitTrack* track1 = (TkrKalFitTrack*)tkrCol->First();
+                    const TkrKalFitTrack* track1 =
+                        (TkrKalFitTrack*)tkrCol->First();
                     TkrTrk1NumClus = track1->getNumHits();
                     for ( int i=0; i<TkrTrk1NumClus; ++i ) {
-                        // filling the TkrTrk1Clusters array.  Don't fill more than MaxNumTkrClusters!
+                        // filling the TkrTrk1Clusters array.
+                        //Don't fill more than MaxNumTkrClusters!
                         // Should a track have always <=36 clusters?
                         if ( i >= MaxNumTkrClusters ) {
-                            std::cerr << "Event " << EventId << " has a first track with " << TkrTrk1NumClus << " clusters" << std::endl;
+                            std::cerr << "Event " << EventId
+                                      << " has a first track with "
+                                      << TkrTrk1NumClus<<" clusters"<<std::endl;
                             break;
                         }
                         TkrTrk1Clusters[i] = track1->getHitPlane(i)->getIdHit();
@@ -423,15 +457,14 @@ void TreeMaker::CreateTree(Int_t numEvents) {
                         TkrVtx1ThetaXZ = dir.X()/dir.Z();
                         TkrVtx1ThetaYZ = dir.Y()/dir.Z();
                     }
-                    if ( DEBUG ) std::cout<<TkrVtx1X<<" "<<TkrVtx1Y<<" "<<TkrVtx1Z<<std::endl;
+                    if ( DEBUG ) std::cout<<TkrVtx1X<<" "<<TkrVtx1Y<<" "
+                                          <<TkrVtx1Z<<std::endl;
                 }// vertex
             } // tkrrecon
         } //recon data
 
-        //      std::cout << "our/mc/digi/recon Event Id: " << EventId << ' ' << mcEventId << ' ' << digiEventId << ' ' << reconEventId << std::endl;
-        //      std::cout << "mc/digi/recon run Id: " << mcRunNum << ' ' << digiRunNum << ' ' << reconRunNum << std::endl;
-
-        if ( DEBUG ) std::cout << "num tkrDigi before filling..." << nTkrDigi << std::endl;
+        if ( DEBUG ) std::cout << "num tkrDigi before filling..." << nTkrDigi
+                               << std::endl;
 
         // now we are filling all trees
 
@@ -439,7 +472,8 @@ void TreeMaker::CreateTree(Int_t numEvents) {
         TTree* aTree = 0;
         int iLayer = 0;
         while ( ( aTree=(TTree*)TreeIter.Next() ) ) {
-            // it would be saver to use std::map.   If nothing changes, the sequence of planes is:
+            // it would be saver to use std::map.
+            // If nothing changes, the sequence of planes is:
             // 0-35: LayerX0 - LayerY17
             // 36:   Header
             // 37:   Recon
@@ -448,12 +482,13 @@ void TreeMaker::CreateTree(Int_t numEvents) {
                 ToT0       = ToT0Array[iLayer];
                 ToT1       = ToT1Array[iLayer];
                 //	  TkrHits    = TkrHitsArray[iLayer];
-                //                if (TkrNumHits > 0 || iLayer==0 ) { // what serves the iLayer==0?
+                // if (TkrNumHits>0 || iLayer==0 ) {//what serves the iLayer==0?
                 if ( TkrNumHits > 0 ) {
                     // copying up to MaxNumTkrHits TkrHits
                     for ( int h=0; h<std::min(MaxNumTkrHits,TkrNumHits); h++ ) 
                         TkrHits[h] = TkrHitsArray[iLayer][h];
-                    if ( DEBUG ) std::cout << "fill " << iLayer << ' ' << TkrNumHits << std::endl;
+                    if ( DEBUG ) std::cout << "fill " << iLayer << ' '
+                                           << TkrNumHits << std::endl;
                 }
 #ifdef DIAGN
                 const char* name = aTree->GetName();
@@ -461,8 +496,11 @@ void TreeMaker::CreateTree(Int_t numEvents) {
                 const int index1 = getIndex(name, true);
                 TriggerReq0 = TkrDiagnostics[index0];
                 TriggerReq1 = TkrDiagnostics[index1];
-                if ( DEBUG ) std::cout << "loop " << std::setw(8) << name << std::setw(3) << index0 << std::setw(3) << index1 << ' '
-                                       << TriggerReq0 << ' ' << TriggerReq1 << ' ' << TkrNumHits << std::endl;
+                if ( DEBUG ) std::cout << "loop " << std::setw(8) << name
+                                       << std::setw(3) << index0
+                                       << std::setw(3) << index1 << ' '
+                                       << TriggerReq0 << ' ' << TriggerReq1
+                                       << ' ' << TkrNumHits << std::endl;
 #endif
             }
             aTree->Fill();

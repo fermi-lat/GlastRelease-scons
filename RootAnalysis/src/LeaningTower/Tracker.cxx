@@ -25,7 +25,8 @@ Tracker::~Tracker() {
 
 void Tracker::loadGeometry(TString filename) {
   if ( !myGeometry->IsEmpty() ) {
-    std::cout << "WARNING: Geometry not empty!  Maybe you filled it before?" << std::endl;
+    std::cout << "WARNING: Geometry not empty!  Maybe you filled it before?"
+              << std::endl;
     return;
   }
   std::ifstream fin(filename);
@@ -45,6 +46,7 @@ void Tracker::loadGeometry(TString filename) {
           continue;
       Layer* aLayer = new Layer(layer, z, y, x);
       myGeometry->Add(new TObjString(layer), aLayer);
+      std::cout << "layer " << layer << std::endl;
   }
 
   fin.close();
@@ -78,7 +80,8 @@ void Tracker::loadFitting(TString filename) {
   fin.close();
 }
 
-std::vector<TString> Tracker::GetPlaneNameCol(const TString view, const bool onlyTheGood) const {
+std::vector<TString> Tracker::GetPlaneNameCol(const TString view,
+                                              const bool onlyTheGood) const {
     if ( view == "X" )
         return GetPlaneNameCol(0, onlyTheGood);
     else if ( view == "Y" )
@@ -90,7 +93,8 @@ std::vector<TString> Tracker::GetPlaneNameCol(const TString view, const bool onl
     return std::vector<TString>();
 }
 
-std::vector<TString> Tracker::GetPlaneNameCol(const int view, const bool onlyTheGood) const {
+std::vector<TString> Tracker::GetPlaneNameCol(const int view,
+                                              const bool onlyTheGood) const {
     TMapIter ti(myGeometry);
     TObjString* key;
     std::vector<TString> v;
@@ -153,9 +157,6 @@ void Tracker::Display(TCanvas* ed) {
 	  ed->cd(1);
 	  aLayer->DrawGhostLayer();
 	}
-
-      
-      //      std::cout<<((Layer*) myGeometry->GetValue(key))->GetLayerName()<<std::endl;
     }
   if(!TOWER)
     {

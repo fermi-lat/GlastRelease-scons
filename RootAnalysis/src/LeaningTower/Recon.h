@@ -31,16 +31,19 @@ class Recon : public TObject {
     const Int_t* GetTkrTrk1Clus()  const { return TkrTrk1Clusters; }
     TGraph GetAllClustersGraph(const TString view, const int notLayer=-1) const;
     TGraph GetAllClustersGraph(const int view, const int notLayer=-1) const;
-    TGraph GetClusterGraph(const std::vector<TString> planeCol, bool* exactlyOne) const;
-    TGraph GetTrk1ClustersGraph(const TString view, const int notLayer=-1) const;
+    TGraph GetClusterGraph(const std::vector<TString> planeCol,
+                           bool* exactlyOne) const;
+    TGraph GetClusterGraph(const std::vector<TString> planeCol) {
+        bool dummy;
+        return GetClusterGraph(planeCol, &dummy);
+    }
+    TGraph GetTrk1ClustersGraph(const TString view, const int notLayer=-1)const;
     TGraph GetTrk1ClustersGraph(const int view, const int notLayer=-1) const;
 
     void PrintTkrCluster(int i) const {
-        std::cout << std::setw(3) << i
-                  << std::setw(3) << TkrClusLayer[i]
-                  << std::setw(2) << TkrClusView[i]
-                  << ' ' << TkrClusX[i] << ' ' << TkrClusY[i] << ' ' << TkrClusZ[i]
-                  << std::endl;
+        std::cout << std::setw(3) << i << std::setw(3) << TkrClusLayer[i]
+                  << std::setw(2) << TkrClusView[i] << ' ' << TkrClusX[i] << ' '
+                  << TkrClusY[i] << ' ' << TkrClusZ[i] << std::endl;
     }
     void PrintTkrClusters() const {
         for ( int i=0; i<GetTkrNumClus(); ++i )
@@ -69,13 +72,14 @@ class Recon : public TObject {
     Int_t TkrTrk1NumClus;
     Int_t TkrTrk1Clusters[128];
 
-    // last line
+    // last line of class def
     ClassDef(Recon, 1)
 };
 
 TLine Reconstruct(const TGraph*, const bool verbose=true);
 bool IsValid(const TLine& l) { return l.GetLineStyle(); }
-//bool IsInvalid(const TLine& l) { return l.GetX1() == 0.0 && l.GetX2() == 0.0 && l.GetY1() == 0.0 && l.GetY2() == 0.0; }
+//bool IsInvalid(const TLine& l) { return l.GetX1() == 0.0 && l.GetX2() == 0.0
+//                                    && l.GetY1() == 0.0 && l.GetY2() == 0.0; }
 double ExtrapolateCoordinate(const TLine&, const double z);
 
 #endif
