@@ -557,8 +557,8 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
 /// - this will dispatch to appropriate converter according to CLID
 ///   (the CalibMySQLCnvSvc has no converters of its own).
 StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
-                                          const std::string& calibType,
-                                          const std::string& flavor,
+                                          const std::string& rootedCalibType,
+                                          const std::string& slashFlavor,
                                           const ITime&       time,
                                           const std::string& instr,
                                           const CLID&        classID,
@@ -568,6 +568,22 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
 
   MsgStream log(msgSvc(), "CalibMySQLCnvSvc" );
   StatusCode status;
+
+  // Look up calib object in the Metadata database
+  // flavor string starts with an unwanted "/", so extract what we want
+  std::string flavor = slashFlavor.substr(1);
+
+  // similarly have to munge first string arg a bit to get calib type
+  // For now do it here, but probably should make it a service of
+  // CalibDataSvc to avoid loading this service with knowledge of how 
+  // paths are put together
+  unsigned prefixLen = std::string("/Calib/").size();
+  std::string cType = rootedCalibType.substr(prefixLen);
+
+  // ..and extra special munging for test
+  if (std::string("Test") == cType.substr(0, 4)) {
+    cType = std::string("Test_Gen");
+  }
 
   if (0 == pObject) {
     log << MSG::ERROR << "There is no DataObject to update" << endreq;
@@ -598,7 +614,7 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
   // should be calling common utility since much of what they do is identical.
   unsigned int ser;
   calibUtil::Metadata::eRet ret = 
-    m_meta->findBest(&ser, calibType, CalibData::CalibTime(time),
+    m_meta->findBest(&ser, cType, CalibData::CalibTime(time),
                      m_calibLevelMask, instr, flavor);
   if (ret != calibUtil::Metadata::RETOk) {
     // complain
@@ -607,7 +623,7 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
   else if (ser == 0) {  // no error, but no appropriate calib was found
     log << MSG::ERROR
         << "No appropriate calibration of (type, flavor) ("
-        << calibType << ", " << flavor << ")" << endreq;
+        << cType << ", " << flavor << ")" << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -637,7 +653,8 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
 
 
   IOpaqueAddress* tmpAddress;
-  std::string fullpath = "/Calib/" + calibType + "/" + flavor;
+  //  std::string fullpath = "/Calib/" + calibType + "/" + flavor;
+  std::string fullpath = rootedCalibType + slashFlavor;
   const std::string par[3] = {dataIdent, fullpath, fmtVersion};
   const unsigned long ipar[1] = {ser};
   
