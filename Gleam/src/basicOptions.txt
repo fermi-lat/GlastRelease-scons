@@ -116,6 +116,7 @@ Reconstruction.Members={
       "Sequencer/Cal1", 
       "Sequencer/Tkr",
       "Sequencer/Cal2",
+      "Sequencer/TkrIter",
       "Sequencer/Acd"
       };
          
@@ -147,10 +148,13 @@ Cal1.Members = {
       "CalClustersAlg/first"
       };
 Tkr.Members = {
-      "TkrReconAlg"
+      "TkrReconAlg/FirstPass"
       };
 Cal2.Members = {
       "CalClustersAlg/second"
+      };
+TkrIter.Members = {
+      "TkrReconAlg/Iteration"
       };
 second.OutputLevel=5;  // since this guy generates INFO lines
 // ----------------------------
