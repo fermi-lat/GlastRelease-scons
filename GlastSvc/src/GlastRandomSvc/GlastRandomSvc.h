@@ -6,6 +6,8 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IEvtSelector.h"
 #include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/Property.h"
+
 #include "CLHEP/Random/Random.h"
 
 #include "GlastSvc/GlastRandomSvc/IGlastRandomSvc.h"
@@ -56,7 +58,9 @@ public:
   /// Data members
   // store Engine names and addresses in a map
   std::map< std::string, HepRandomEngine* > m_engineMap;
-  std::string     m_randomEngine;
+  StringProperty    m_randomEngine;
+  IntegerProperty   m_RunNumber;
+  IntegerProperty   m_SequenceNumber;
 };
 
 #endif // _GlastRandomSvc_H
