@@ -19,12 +19,12 @@
          cvs_Revision="$Revision$">
 
     <section name="lastlayer">  CAL properties
-	<item name="c0"     value="0.543764"> MeV </item>
-	<item name="c1"     value="1.08021"> MeV </item>
-	<item name="c2"     value="0.481973"> MeV </item>
-	<item name="c3"     value="-2.09624"> MeV </item>
-	<item name="b0"     value="0.808793"> MeV </item>
-	<item name="b1"     value="0.0486306"> MeV </item>
+	<item name="c0"     value="0.378372"> MeV </item>
+	<item name="c1"     value="0.96903"> MeV </item>
+	<item name="c2"     value="-20.3494"> MeV </item>
+	<item name="c3"     value="19.3494"> MeV </item>
+	<item name="b0"     value="0.80154"> MeV </item>
+	<item name="b1"     value="0.0448195"> MeV </item>
 
     </section>
 
