@@ -111,6 +111,72 @@ private:
   ClassDef(GemOnePpsTime,1) // Storage for GEM OnePPSTime
 };
 
+class GemCondArrivalTime : public TObject
+{
+public:
+
+  GemCondArrivalTime() : TObject() { Clear(); };
+  ~GemCondArrivalTime() { } ;
+
+  void Clear() { m_condArr = 0; }
+
+  void init(unsigned val) { m_condArr = val; };
+/*!
+* \brief  Return the condition arrival time in 50 ns ticks of the external trigg
+er bit
+* \return The condition arrival time in 50 ns ticks of the external trigger bit
+*/
+  UShort_t external()  const { return (m_condArr >> 25) & ((1 << 5) -1); }
+
+/*!
+* \brief  Return the condition arrival time in 50 ns ticks of the cno trigger bi
+t
+* \return The condition arrival time in 50 ns ticks of the cno trigger bit
+*/
+  UShort_t cno()       const { return (m_condArr >> 20) & ((1 << 5) -1); };
+
+
+/*!
+* \brief  Return the condition arrival time in 50 ns ticks of the calLE trigger
+bit
+* \return The condition arrival time in 50 ns ticks of the calLE trigger bit
+*/
+  UShort_t calLE()     const {  return (m_condArr >> 10) & ((1 << 5) -1); };
+
+
+/*!
+* \brief  Return the condition arrival time in 50 ns ticks of the calHE trigger
+bit
+* \return The condition arrival time in 50 ns ticks of the calHE trigger bit
+*/
+  UShort_t calHE()     const { return (m_condArr >> 15) & ((1 << 5) -1); }
+
+/*!
+* \brief  Return the condition arrival time in 50 ns ticks of the tkr trigger bi
+t
+* \return The condition arrival time in 50 ns ticks of the tkr trigger bit
+*/
+  UShort_t tkr()       const { return (m_condArr >>  5) & ((1 << 5) -1); }
+
+
+/*!
+* \brief  Return the condition arrival time in 50 ns ticks of the roi trigger bi
+t
+* \return The condition arrival time in 50 ns ticks of the roi trigger bit
+*/
+  UShort_t roi()       const { return (m_condArr     ) & ((1 << 5) -1); }
+
+
+  /// Return fill packed word;
+  UInt_t condArr() const { return m_condArr; };
+
+
+private:
+  UInt_t m_condArr;
+
+  ClassDef(GemCondArrivalTime,1) // Storage for GEM Conditional Arrival Time 
+};
+
 
 
 /** @class Gem
@@ -122,7 +188,7 @@ private:
  * - Condition Summary
  * - LiveTime
  * - prescaled
- * - sent bit
+ * - Conditional Arrival Time
  *
  * For additional details concerning the GEM contribution, please refer to:
  * http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/GEM.pdf
@@ -149,10 +215,11 @@ public:
                      UShort_t conditionSummary, 
                      const GemTileList &tileList);
 
+
     void initSummary(UInt_t liveTime, UInt_t prescaled, 
-                     UInt_t discarded, UInt_t sent, 
+                     UInt_t discarded, UInt_t condArrTime, 
                      UInt_t triggerTime, const GemOnePpsTime &time, 
-                     UInt_t deltaEvtTime);
+                     UShort_t deltaEvtTime, UShort_t deltaWindOpenTime);
 
 
 	/** @ingroup GemGroup */
@@ -167,10 +234,12 @@ public:
     UInt_t getLiveTime() const {return m_liveTime; };
     UInt_t getPrescaled() const { return m_prescaled;};
     UInt_t getDiscarded() const { return m_discarded;};
-    UInt_t getSent() const { return m_sent; };
+//    UInt_t getSent() const { return m_sent; };
+    const GemCondArrivalTime& getCondArrTime()   const { return m_condArr; };
     UInt_t getTriggerTime() const { return m_triggerTime; };
     const GemOnePpsTime& getOnePpsTime() const { return m_onePpsTime; };
-    UInt_t getDeltaEventTime() const { return m_deltaEventTime; };
+    UShort_t getDeltaEventTime() const { return m_deltaEventTime; };
+    UShort_t getDeltaWindowOpenTime() const { return m_deltaWindOpenTime; };
 
 
     /// Method to query ROI bit in the condition summary word
@@ -207,8 +276,10 @@ public:
     UInt_t m_triggerTime;
     GemOnePpsTime m_onePpsTime;
     UInt_t  m_deltaEventTime;
+    GemCondArrivalTime m_condArr;
+    UShort_t m_deltaWindOpenTime;
 
-    ClassDef(Gem,1) // Storage for GEM 
+    ClassDef(Gem,2) // Storage for GEM 
 }; 
  
 #endif

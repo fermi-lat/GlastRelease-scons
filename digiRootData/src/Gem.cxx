@@ -8,6 +8,7 @@
 
 ClassImp(GemTileList)
 ClassImp(GemOnePpsTime)
+ClassImp(GemCondArrivalTime)
 ClassImp(Gem)
 
 void GemTileList::Print(Option_t *option) const{
@@ -38,10 +39,12 @@ Gem::Gem(const Gem& gem) :TObject(gem) {
     m_liveTime = gem.m_liveTime;
     m_prescaled = gem.m_prescaled;
     m_sent = gem.m_sent;
+    m_condArr.init(gem.m_condArr.condArr());
     m_discarded = gem.m_discarded;
     m_onePpsTime = gem.m_onePpsTime;
     m_triggerTime = gem.m_triggerTime;
     m_deltaEventTime = gem.m_deltaEventTime;
+    m_deltaWindOpenTime = gem.m_deltaWindOpenTime;
 }
 
 void Gem::initTrigger(UShort_t tkr, UShort_t roi,
@@ -60,17 +63,19 @@ void Gem::initTrigger(UShort_t tkr, UShort_t roi,
 }
 
 void Gem::initSummary(UInt_t liveTime, UInt_t prescaled,
-                     UInt_t discarded, UInt_t sent,
+                     UInt_t discarded, UInt_t condArrTime,
                      UInt_t triggerTime, const GemOnePpsTime &time,
-                     UInt_t deltaEventTime)
+                     UShort_t deltaEventTime, UShort_t deltaWindOpenTime)
 {
     m_liveTime = liveTime;
     m_prescaled = prescaled;
     m_discarded = discarded;
-    m_sent = sent;
+    m_sent = 0;
+    m_condArr.init(condArrTime);
     m_triggerTime = triggerTime;
     m_onePpsTime = time;
     m_deltaEventTime = deltaEventTime;
+    m_deltaWindOpenTime = deltaWindOpenTime;
 
 }
 
@@ -87,9 +92,11 @@ void Gem::Clear(Option_t *option) {
     m_prescaled = 0;
     m_discarded = 0;
     m_sent = 0;
+    m_condArr.init(0);
     m_triggerTime = 0;
     m_onePpsTime.Clear(option);
     m_deltaEventTime = 0;
+    m_deltaWindOpenTime = 0;
 }
 
 void Gem::Print(Option_t *option) const {

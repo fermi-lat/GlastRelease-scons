@@ -317,9 +317,10 @@ int checkGem(const Gem &gem) {
    if (gem.getLiveTime() != 7) return -1;
    if (gem.getPrescaled() != 8) return -1;
    if (gem.getDiscarded() != 9) return -1;
-   if (gem.getSent() != 10) return -1;
+   if (gem.getCondArrTime().condArr() != 10) return -1;
    if (gem.getTriggerTime() != 11) return -1;
    if (gem.getDeltaEventTime() != 12) return -1;
+   if (gem.getDeltaWindowOpenTime() != 13) return -1;
 
    return 0; 
 }
@@ -516,7 +517,7 @@ int write(char* fileName, int numEvents) {
         GemTileList tileList(20, 21, 22, 23, 24, 25, 26);
         myGem.initTrigger(1, 2, 3, 4, 5, 6, tileList);
         GemOnePpsTime ppsTime(50, 100);
-        myGem.initSummary(7, 8, 9, 10, 11, ppsTime, 12);
+        myGem.initSummary(7, 8, 9, 10, 11, ppsTime, 12, 13);
         ev->initGem(myGem);
         
         for (ixtal = 0; ixtal < numXtals; ixtal ++) {

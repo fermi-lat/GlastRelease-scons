@@ -25,6 +25,7 @@
 #pragma link C++ class EventSummaryData+;
 #pragma link C++ class GemTileList+;
 #pragma link C++ class GemOnePpsTime+;
+#pragma link C++ class GemCondArrivalTime+;
 #pragma link C++ class Gem+;
 
 #endif
