@@ -59,7 +59,7 @@ long  CalDialog::onCmdAccept(FXObject* sender,FXSelector sel,void* ptr)
 
 
 
-class DateField : public FXFrame
+class DateField : public FXHorizontalFrame
 {
 	FXDECLARE(DateField)
 
@@ -87,13 +87,13 @@ FXDEFMAP(DateField) DateFieldMap[]={
 		FXMAPFUNC(SEL_COMMAND, DateField::ID_SET, DateField::onCmdSet)		
 };
 
-FXIMPLEMENT(DateField, FXFrame, DateFieldMap,ARRAYNUMBER(DateFieldMap))
+FXIMPLEMENT(DateField, FXHorizontalFrame, DateFieldMap,ARRAYNUMBER(DateFieldMap))
 
 DateField::DateField(FXComposite* owner)
-: FXFrame(owner, FRAME_NORMAL, LAYOUT_FILL_X, LAYOUT_FILL_Y)
+: FXHorizontalFrame(owner, LAYOUT_FILL_X, LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0)
 {
-  m_dateField = new FXTextField(owner,20,NULL,0,TEXTFIELD_NORMAL|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
-  m_startCal = new FXButton(owner, "...", NULL, this, ID_SET);
+  m_dateField = new FXTextField((FXComposite*)this,20,NULL,0,TEXTFIELD_NORMAL|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
+  m_startCal = new FXButton((FXComposite*)this, "...", NULL, this, ID_SET);
   
   m_dateField->setText("");
 }
@@ -131,11 +131,11 @@ DateWidget::DateWidget(FXComposite* parent, rdbModel::Column *column)
   m_column = column;
   m_widget = new FXHorizontalFrame(parent,LAYOUT_FILL_X|LAYOUT_FILL_COLUMN,
       0, 0, 0, 0, 0, 0, 0, 0);
-  m_widget->setVSpacing(0);
-  m_widget->setHSpacing(0);
-  m_widget->setBackColor(parent->getBackColor());
  
   m_dateField = new DateField(m_widget);
+  m_dateField->setVSpacing(0);
+  m_dateField->setHSpacing(0);
+  m_dateField->setBackColor(parent->getBackColor());
       
   m_widget->create();
 }
