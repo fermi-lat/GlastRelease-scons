@@ -445,8 +445,9 @@ StatusCode FluxSvc::run(){
         log << MSG::WARNING << "No end condition specified: will not process any events!" << endreq; 
     }
     }
-    while( m_evtMax>0 && eventNumber < m_evtMax
-        || m_endTime>0 && currentTime< m_endTime ) {
+    // loop: will quit if either limit is set, and exceeded
+    while( (m_evtMax==0  || m_evtMax>0 && eventNumber < m_evtMax)
+        && (m_endTime==0 ||m_endTime>0 && currentTime< m_endTime) ) {
         
         status =  m_appMgrUI->nextEvent(1); // currently, always success
         
@@ -470,6 +471,7 @@ StatusCode FluxSvc::run(){
     }else {
         log << MSG::INFO << "Processing loop terminated by event count" << endreq;
     }
+    log << MSG::INFO << "End after "<< eventNumber << " events, time = " << currentTime << endreq;
     return status;
 }
 
