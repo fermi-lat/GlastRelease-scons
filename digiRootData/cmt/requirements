@@ -3,15 +3,10 @@ version v7r0
 
 use mcRootData v2r*
 use GlastPolicy v*
-
+# $Id$
 
 apply_pattern package_include
-
-apply_pattern package_headers
-
-apply_pattern  package_linkopts
-
-apply_pattern ld_library_path
+apply_pattern package_linkopts
 
 #-------------------------------------------------------
 private
@@ -20,43 +15,30 @@ use RootPolicy v2r*
 use ldfExt  v0r*  IExternal
 
 apply_pattern root_package
-apply_pattern root_package2
- 
-apply_pattern vsnet_rootcint
-
-
 
 macro root_headers "\
  ../digiRootData/AcdDigi.h\
+ ../digiRootData/AcdHeader.h\
  ../digiRootData/AcdId.h\
  ../digiRootData/CalDiagnosticData.h\
  ../digiRootData/CalDigi.h\
+ ../digiRootData/CalHeader.h\
  ../digiRootData/CalXtalId.h\
  ../digiRootData/CalXtalReadout.h\
  ../digiRootData/DigiEvent.h\
  ../digiRootData/GlastAxis.h\
  ../digiRootData/L1T.h\
+ ../digiRootData/LiveTime.h\
+ ../digiRootData/SubSystemHeader.h\
  ../digiRootData/TkrDiagnosticData.h\
  ../digiRootData/TkrDigi.h\
+ ../digiRootData/TkrHeader.h\
  ../digiRootData/TowerId.h\
- ../digiRootData/EventSummaryData.h\
- ../digiRootData/EventLinkDef.h"
+ ../digiRootData/EventSummaryData.h"
 
-macro root_linkdef "../digiRootData/EventLinkDef.h"
+# override the default macro
+
 macro root_includes "-I${MCROOTDATAROOT}"
 
-
-library  digiRootData \
-      DigiEvent.cxx \
-      TkrDigi.cxx TowerId.cxx \
-      CalDigi.cxx CalXtalReadout.cxx CalXtalId.cxx \
-      AcdDigi.cxx AcdId.cxx \
-      L1T.cxx \
-      CalDiagnosticData.cxx TkrDiagnosticData.cxx \
-      EventSummaryData.cxx \
-      ../digiRootData/*.cxx \
-      ${digiRootData_headers}
-
-
-macro test_digiRootDatalinkopts ${digiRootData_shlibflags} $(ROOT_libs)
+macro test_digiRootDatalinkopts ${digiRootData_shlibflags} 
 application test_digiRootData test/testDigiClasses.cxx

@@ -5,38 +5,23 @@ use GlastPolicy v*
 
 
 apply_pattern package_include
-
 apply_pattern package_linkopts
-
-apply_pattern ld_library_path
-apply_pattern package_headers
 
 
 private
 
 use RootPolicy v2r*
-apply_pattern root_package
-apply_pattern root_package2
-
-apply_pattern vsnet_rootcint
 
 macro root_headers "\
  ../mcRootData/VolumeIdentifier.h\
  ../mcRootData/McIntegratingHit.h\
  ../mcRootData/McParticle.h\
  ../mcRootData/McPositionHit.h\
- ../mcRootData/McEvent.h\
- ../mcRootData/mcRootDataLinkDef.h"
+ ../mcRootData/McEvent.h"
 
-macro root_linkdef "../mcRootData/mcRootDataLinkDef.h"
+apply_pattern root_package
 
-
-library  mcRootData *.cxx ../mcRootData/*.cxx\
-     ${mcRootData_headers}
-
-macro_append mcRootData_shlibflags $(ROOT_libs)
-macro test_mcRootDatalinkopts ${mcRootData_shlibflags} $(ROOT_libs)
+macro test_mcRootDatalinkopts ${mcRootData_shlibflags}
 
 application test_mcRootData test/testMcClasses.cxx
 
-apply_pattern vsnet_rootcint

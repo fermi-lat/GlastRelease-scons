@@ -5,24 +5,12 @@ use GlastPolicy v*
 use digiRootData v7r*
 
 apply_pattern package_include
-
-apply_pattern package_headers
-
 apply_pattern ld_library_path
-
-apply_pattern package_linkopts
-
-ignore_pattern RuleChecker
-
-
-
 
 #--------------------------------------------------------------
 private
 use RootPolicy v2r*
 apply_pattern root_package
-apply_pattern root_package2
-apply_pattern vsnet_rootcint
 
 #define the list of header files to be used in rootcint
 
@@ -43,23 +31,9 @@ macro root_headers "\
  ../reconRootData/TkrParams.h\
  ../reconRootData/TkrRecon.h\
  ../reconRootData/TkrTrack.h\
- ../reconRootData/TkrVertex.h\
- ../reconRootData/ReconLinkDef.h"
+ ../reconRootData/TkrVertex.h"
 
 macro root_includes "-I$(DIGIROOTDATAROOT)" 
-macro root_linkdef "../reconRootData/ReconLinkDef.h"
-
-
-
-library  reconRootData \
-      ReconEvent.cxx \
-      TkrRecon.cxx TkrCandHit.cxx TkrCandTrack.cxx TkrFitHit.cxx \
-      TkrCovMat.cxx TkrHitPlane.cxx TkrCluster.cxx TkrKalFitTrack.cxx \
-      TkrParams.cxx TkrTrack.cxx TkrVertex.cxx \
-      CalRecon.cxx CalRangeRecData.cxx CalCluster.cxx CalXtalRecData.cxx \
-      AcdRecon.cxx \
-      ../reconRootData/*.cxx \
-       ${reconRootData_headers}
 
 macro test_reconRootDatalinkopts ${reconRootData_shlibflags}
 application test_reconRootData test/testReconClasses.cxx

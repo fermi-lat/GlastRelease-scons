@@ -4,35 +4,21 @@ version v0r2p6
 use GlastPolicy v*
 
 apply_pattern package_include
-apply_pattern package_linkopts
-
 apply_pattern ld_library_path
-apply_pattern package_headers
 
 
 private
 
 use RootPolicy v2r*
-apply_pattern root_package
-apply_pattern root_package2
-
-apply_pattern vsnet_rootcint
 
 
 macro root_headers "\
  ../commonRootData/RelTable.h\
  ../commonRootData/Relation.h\
  ../commonRootData/RootDataUtil.h\
- ../commonRootData/Exception.h\
- ../commonRootData/commonRootDataLinkDef.h"
+ ../commonRootData/Exception.h"
 
-macro root_linkdef "../commonRootData/commonRootDataLinkDef.h"
-
-
-library  commonRootData *.cxx ../commonRootData/*.cxx\
-     ${commonRootData_headers}
-
-apply_pattern vsnet_rootcint
+apply_pattern root_package
 
 macro test_commonRootDatalinkopts ${commonRootData_shlibflags}
 #application test_commonRootData test/testCommonClasses.cxx
