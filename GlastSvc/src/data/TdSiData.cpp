@@ -80,10 +80,13 @@ void TdSiData::load (const SiDetector& plane, idents::ModuleId moduleId)
 {
 //    static double tray_max=48.10, tray_spacing=3.20, tray_nummax = 17;
 //    static double z_offset = -6.64, tray_spacing = 3.20, tray_nummax = 17;
-    
+#if 1 // NEW WAY layer() function is packed tray #, top/bottom, 1..36
+    int tray = (plane.layer()-1)/2;  // 0..17, actually the layer number
+    Axis axis = (plane.layer()/2)%2 == 1? X : Y; //depends on tray number   
     CoordTransform T 
         = plane.localToGlobal(); // for converting the coords following
     
+#else // OLD dumb way
     // figure out which tray this is from the transform
     Vector a(1,0,0),b(1,0,0); a.transform(T);
     double rot = a*b; 
@@ -101,7 +104,7 @@ void TdSiData::load (const SiDetector& plane, idents::ModuleId moduleId)
     int tray = tray_nummax - layer;
     if (axis == X) {xLayers[tray] = layer;}
     else           {yLayers[tray] = layer;}
-    
+#endif    
     // final loop over hits
     for( SiDetector::const_iterator it3=plane.begin(); 
     it3!=plane.end(); ++it3)                      {
