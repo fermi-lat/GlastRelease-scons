@@ -237,7 +237,7 @@ StatusCode GltValsTool::calculate()
                     (x_hits[tower][layer+2] > 0 && y_hits[tower][layer+2] > 0 )) 
                 {
                     nTrigsThis++;
-                    if(layer < iTrig_layer) {
+                    if(layer > iTrig_layer) {
                         iTrig_layer = layer;
                         iTrig_tower = tower;
                     }
