@@ -39,7 +39,7 @@ private:
     static SpectrumFactoryTable* s_instance;
     SpectrumFactoryTable(){s_instance=this;}
     
-        
+    
 };
 
 

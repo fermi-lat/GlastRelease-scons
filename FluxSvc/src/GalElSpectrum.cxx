@@ -21,12 +21,12 @@ const float GalElSpectrum::m_rearth = 6371.f;
 const float GalElSpectrum::m_altitude = 600.f;
 
 GalElSpectrum::GalElSpectrum(const std::string& paramstring):m_pspec(paramstring) {
-   std::vector<float> params;
-
-   parseParamList(paramstring,params);
-
-	float lat = params.size()>0? params[0] : 0;
-	float lon = params.size()>1? params[1] : 0;
+    std::vector<float> params;
+    
+    parseParamList(paramstring,params);
+    
+    float lat = params.size()>0? params[0] : 0;
+    float lon = params.size()>1? params[1] : 0;
     init(lat, lon); 
 }
 
@@ -95,7 +95,7 @@ float GalElSpectrum::findCutoff(std::pair<double,double> coords) const {
 std::pair<float,float> GalElSpectrum::dir(float energy) const {
     float earthazi = 2.*M_PI* HepRandom::getTheGenerator()->flat();
     float coszenith = m_coscutoff + (1.-m_coscutoff)*
-	HepRandom::getTheGenerator()->flat();
+        HepRandom::getTheGenerator()->flat();
     return std::make_pair<float,float>(coszenith, earthazi);
 }
 
@@ -113,7 +113,7 @@ void GalElSpectrum::setParticleName(std::string name) {
 
 void GalElSpectrum::init(float lat, float lon) {
     m_normfact = .5*(1.+sqrt(m_altitude*(m_altitude+2.*m_rearth)) /
-                     (m_rearth+m_altitude));
+        (m_rearth+m_altitude));
     m_expo = static_cast<float>(-3.086 + 1.);
     m_norm = 227.f;
     setPosition(lat, lon);

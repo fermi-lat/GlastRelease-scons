@@ -37,7 +37,7 @@ std::pair<float,float> Spectrum::dir(float energy)const
     return std::make_pair(((RandFlat::shoot(1.0))*1.4)-0.4,(RandFlat::shoot(1.0))*2*M_PI);
     
 }
-    
+
 
 const char * Spectrum::particleName()const{
     static const char x='p';

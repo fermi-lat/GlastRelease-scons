@@ -62,7 +62,7 @@ FluxSource* CompositeSource::event (double time)
     }else {
         
         // more than one:: choose on basis of relative rates
-      // NOT used? THB  double  x = RandFlat::shoot(mr), y = 0;
+        // NOT used? THB  double  x = RandFlat::shoot(mr), y = 0;
         std::vector<EventSource*>::iterator  now = m_sourceList.begin();
         std::vector<EventSource*>::iterator  it = now;
         

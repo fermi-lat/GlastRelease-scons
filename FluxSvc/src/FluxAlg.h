@@ -14,8 +14,8 @@ class McVertex;
 //------------------------------------------------------------------------------
 /** 
 
-
-
+  
+    
 */
 class FluxAlg : public Algorithm {
 public:
@@ -39,8 +39,8 @@ private:
     McVertex*       m_root; // 
     
     IDataProviderSvc* m_eds;
-//    mc::McParticleCol* m_plist;
-
+    //    mc::McParticleCol* m_plist;
+    
     IParticlePropertySvc * m_partSvc;
     
 };

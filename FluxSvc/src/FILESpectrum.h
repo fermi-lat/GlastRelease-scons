@@ -14,36 +14,36 @@
 class FILESpectrum : public Spectrum
 {
 public:
-   /// params is the filename to read
-   FILESpectrum(const std::string& params);
-
-   
-   /// return total flux 
-   virtual double flux() const;
-   
-   
-   /// sample a single particle energy from the spectrum
-   virtual float operator() (float)const;
-   
-   
-   virtual std::string title() const;
-   virtual const char * particleName() const;
-   inline  const char * nameOf() const {return "FILESpectrum";}
-   //   use default destructor, copy constructor, and assignment op.
-   
-   
+    /// params is the filename to read
+    FILESpectrum(const std::string& params);
+    
+    
+    /// return total flux 
+    virtual double flux() const;
+    
+    
+    /// sample a single particle energy from the spectrum
+    virtual float operator() (float)const;
+    
+    
+    virtual std::string title() const;
+    virtual const char * particleName() const;
+    inline  const char * nameOf() const {return "FILESpectrum";}
+    //   use default destructor, copy constructor, and assignment op.
+    
+    
 private:
-   
-
-   float m_flux;   // current flux (set when cutoff changes)
-
-   
-   typedef std::pair<double,double> efpair;
-   std::vector<efpair> integ_flux;
-   
-
-   std::string initialization_document;
-   std::string m_particle_name;
+    
+    
+    float m_flux;   // current flux (set when cutoff changes)
+    
+    
+    typedef std::pair<double,double> efpair;
+    std::vector<efpair> integ_flux;
+    
+    
+    std::string initialization_document;
+    std::string m_particle_name;
 };
 
 

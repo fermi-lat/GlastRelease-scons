@@ -58,27 +58,27 @@ public:
     
     /// a randomized interval to the next event - default is 1/rate()
     virtual double interval (double time);
-
+    
     virtual std::pair<float,float> dir(float energy)const;
     
     /// new interface for Hirosima classes
     virtual double energySrc(HepRandomEngine* engine, double time=0);
     virtual std::pair<double,double> dir(double energy, HepRandomEngine* engine);
     
-
-  
+    
+    
     
 protected:
     Spectrum(const std::vector<float>& /*params*/){};
     Spectrum(/* double lat = 0, double lon = 0, double time=0*/) 
         /*: m_lat(0), m_lon(0), m_time(0)*/{}
-    // all constructors protected to ensure an abstract class
-    
-    virtual void parseParamList(std::string input, std::vector<float>& output) const;
+        // all constructors protected to ensure an abstract class
+        
+        virtual void parseParamList(std::string input, std::vector<float>& output) const;
     
     double    m_lat, m_lon;   // latitude and longitudinal coordinates
     double m_currentInterval; // so we only find the interval for each particle once.
-
+    
 };
 
 #endif    

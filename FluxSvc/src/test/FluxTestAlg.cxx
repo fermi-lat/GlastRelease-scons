@@ -29,7 +29,7 @@
 \brief 
 
 */
-    //class ParticleProperty;
+//class ParticleProperty;
 
 class FluxTestAlg : public Algorithm {
     
@@ -41,7 +41,7 @@ public:
     StatusCode execute();
     StatusCode finalize();
     
-
+    
 private:
     IFlux* m_flux;
     std::string m_source_name;
@@ -134,7 +134,7 @@ StatusCode FluxTestAlg::execute() {
         Event::McParticleCol::iterator elem = (*pcol).begin();
         d = (*elem)->initialFourMomentum().v()*10;
         p = (*elem)->finalPosition();
-
+        
         energy = (*elem)->initialFourMomentum().e();
         /*StdHepId*/int pID = (*elem)->particleProperty();
         if ( service("ParticlePropertySvc", m_partSvc).isFailure() ){
@@ -143,7 +143,7 @@ StatusCode FluxTestAlg::execute() {
         }
         partName = m_partSvc->findByStdHepID(pID)->particle();
     }   
-   
+    
     log << MSG::INFO << partName
         << "(" << energy
         << " GeV), Launch: " 

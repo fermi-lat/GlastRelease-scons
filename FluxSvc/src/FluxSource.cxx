@@ -388,7 +388,7 @@ void FluxSource::computeLaunch (double time)
             std::pair<float,float> direction = spectrum()->dir(kinetic_energy,HepRandom::getTheEngine());
             double l = direction.first;
             double b = direction.second;
-  
+            
             //then set up this direction:
             getGalacticDir(l,b);
             break;
@@ -952,41 +952,21 @@ void FluxSource::getSurfacePosDir() {
 void FluxSource::getGalacticDir(double l,double b){
     
     //here is the new mechanism:
-    //double theta=sqrt(pow(b,2)*pow(l,2));
     double theta=sqrt(pow(b,2)+pow(l,2))*M_2PI/360.;
-    
-    //std::cout << "theta is" << theta << std::endl;
-    //if (theta==0.){theta+=0.000000000001;}  //to fix divide-by-zero errors
-    //double phi=acos(l/theta);
     
     if (l==0.){l+=0.000000000001;}  //to fix divide-by-zero errors
     double phi = atan(b/l);
     
     //here we construct the cartesian galactic vector
-    //Vector gamgal(sin(theta)*cos(phi) , sin(theta)*sin(phi) , cos(theta));
-    
-    //THIS IS EXPERIMENTAL - SEE ABOVE LINE
-    //Vector gamgal(sin(l*M_2PI/360.) , cos(l*M_2PI/360.)*sin(b*M_2PI/360.) , cos(l*M_2PI/360.)*cos(b*M_2PI/360.));
     Vector gamgal(sin(l*M_2PI/360.)*cos(b*M_2PI/360.) , sin(b*M_2PI/360.) , cos(l*M_2PI/360.)*cos(b*M_2PI/360.));
     
     
     //get the transformation matrix..
-    Rotation galtoglast=GPS::instance()->orbit()->CELtransform(GPS::instance()->time() + m_interval);
-    
+    Rotation galtoglast=GPS::instance()->orbit()->CELTransform(GPS::instance()->time() + m_interval);
     
     //and do the transform:
     setLaunch(galtoglast*gamgal);
     
-    
-    /*  old way to do it - the galToGlast function is depreciated
-    std::pair<double,double> v;
-    v=GPS::instance()->galToGlast(std::make_pair<double,double>(l,b));
-    
-      double theta=v.first;
-      double phi=v.second;
-      //std::cout << "getting galactic direction..." << std::endl;
-      setLaunch(theta,phi);
-    */
     m_launch = GALACTIC;
     correctForTiltAngle();
 }
@@ -1030,29 +1010,11 @@ std::string FluxSource::title () const
     return s;
 }
 
-/*
-void FluxSource::transformDirection(){
-
-  switch (m_frametype) {
-  case GLAST:
-  m_transformDir=m_launchDir;
-  break;
-  case EARTH:
-  m_transformDir=GPS::instance()->earthToGlast(m_launchDir);
-  break;
-  case GALAXY:
-  m_transformDir=GPS::instance()->galaxyToGlast(m_launchDir);
-  break;
-  }
-  
-}*/
 
 void FluxSource::refLaunch(LaunchType launch) {m_launch=launch;}
 void FluxSource::refPoint(PointType point) {m_pointtype=point;}
 
-double FluxSource::calculateInterval (double time){
-    //return m_spectrum->interval(time);
-    
+double FluxSource::calculateInterval (double time){   
     //return std::max(m_spectrum->interval(time),/*0.*/ EventSource::interval(time));
     double intrval=m_spectrum->interval(time + m_extime);
     if(intrval!=-1){m_interval = intrval + m_extime;

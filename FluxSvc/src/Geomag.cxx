@@ -40,7 +40,7 @@ double Geomag::geoInterp(double lat, double lon, const double * array) {
     double a = fmod(lat+30., 5.)/5.;
     double b = fmod(lon, 5.)/5.;
     return array[ilat   + 13*ilon    ] * (1.-a) * (1.-b) +
-           array[ilat   + 13*(ilon+1)] * (1.-a) * b      +
-           array[ilat+1 + 13*ilon    ] * a      * (1.-b) +
-           array[ilat+1 + 13*(ilon+1)] * a      * b      ;
+        array[ilat   + 13*(ilon+1)] * (1.-a) * b      +
+        array[ilat+1 + 13*ilon    ] * a      * (1.-b) +
+        array[ilat+1 + 13*(ilon+1)] * a      * b      ;
 }

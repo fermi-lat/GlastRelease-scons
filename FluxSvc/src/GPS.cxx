@@ -146,27 +146,27 @@ void GPS::expansion ( double e )
 
 void GPS::pitch ( double p )
 {
-    m_orbit->setpitch(p);
+    m_orbit->setPitch(p);
 }
 
 void GPS::yaw ( double y )
 {
-    m_orbit->setyaw(y);
+    m_orbit->setYaw(y);
 }
 
 void GPS::roll ( double r )
 {
-    m_orbit->setroll(r);
+    m_orbit->setRoll(r);
 }
 
 void GPS::lat ( double l )
 {
-    m_orbit->setlatitude(l);
+    m_orbit->setLatitude(l);
 }
 
 void GPS::lon ( double l )
 {
-    m_orbit->setlongitude(l);
+    m_orbit->setLongitude(l);
 }
 
 void GPS::time ( GPStime t )
@@ -210,11 +210,11 @@ GPStime  GPS::sampleintvl () const
 
 void    GPS::setState ( const GPS::Coords& c )
 {
-    m_orbit->setlatitude(c.lat());
-    m_orbit->setlongitude(c.lon());
-    m_orbit->setpitch(c.pitch());
-    m_orbit->setyaw(c.yaw());
-    m_orbit->setroll(c.roll());
+    m_orbit->setLatitude(c.lat());
+    m_orbit->setLongitude(c.lon());
+    m_orbit->setPitch(c.pitch());
+    m_orbit->setYaw(c.yaw());
+    m_orbit->setRoll(c.roll());
     if (c.time() > 0.) time(c.time());  // if the time is relevant, use that time
 }
 void GPS::ascendingLon(double lon)
@@ -300,7 +300,7 @@ std::pair<double,double> GPS::galPositionOfGlast(){
     //if(l - otherl >= 0.001) std::cout << "unequal stuff! " << std::endl;
     b=b/radperdeg;
     l=l/radperdeg;
-
+    
     //return the galactic-pointing coordinates of glast: (b,l)
     return std::make_pair<double,double>(b,l);
 }
@@ -329,11 +329,11 @@ Rotation GPS::rockingAngleTransform(double time){
     double offZenith = m_rotangles.second;
     //gal.rotateZ(zenithPhase).rotateX(offZenith);
     gal.rotateX(offZenith).rotateZ(zenithPhase);
-
+    
     return gal;
 }
 
 Rotation GPS::transformGlastToGalactic(double time){
-    return (m_orbit->CELtransform(time).inverse())*(rockingAngleTransform(time).inverse());
+    return (m_orbit->CELTransform(time).inverse())*(rockingAngleTransform(time).inverse());
 }
 

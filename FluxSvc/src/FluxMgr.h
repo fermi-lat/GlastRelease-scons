@@ -19,9 +19,9 @@
 
 //! The point of entry for interfacing with the flux package.
 /*! holds methods for creating sources and sending new particles, 
-    and methods for interfacing with the satellite position, and 
-    setting the position variables. It is instantiated with
-    the names of the xml files to be used as input to the xml parser.
+and methods for interfacing with the satellite position, and 
+setting the position variables. It is instantiated with
+the names of the xml files to be used as input to the xml parser.
 */
 class FluxMgr 
 {
@@ -58,7 +58,7 @@ public:
     
     /// pass a specific amount of time
     void pass ( double t);
-
+    
     /// Get the time as held by GPS
     GPStime time () const;
     
@@ -70,12 +70,12 @@ public:
     
     /// get the current satellite location
     std::pair<double,double> location();
-
-
+    
+    
     ///get the transformation matrix due to orientation of the Galaxy
     Rotation CELTransform(double time);
-
-     ///get the transformation matrix due to orientation of the spacecraft.
+    
+    ///get the transformation matrix due to orientation of the spacecraft.
     Rotation orientTransform(double time);
     
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors

@@ -80,7 +80,7 @@ std::pair<double,double> Orbit::coords(double time) const {
     return std::make_pair(latitude(time), longitude(time));
 }
 
-Rotation Orbit::CELtransform(double time){
+Rotation Orbit::CELTransform(double time){
     
     //THIS IS THE PART WHERE WE MAKE THE MATRIX CEL INTO SOMETHING WE CAN USE
     Rotation gal,cel,cel1,cel2,cel3,cel4;
@@ -88,9 +88,9 @@ Rotation Orbit::CELtransform(double time){
     //the x axis must eventually be rotated so that it points east, instead of along
     //the direction of orbital travel
     double makeXeast = (m_inclination/m_degsPerRad)*cos(phase(time));
-
+    
     //and here we construct the rotation matrices
-
+    
     //gal is the matrix which rotates (cartesian)celestial coordiantes into (cartesian)galactic ones
     gal.rotateZ(-282.25/m_degsPerRad).rotateX(-62.6/m_degsPerRad).rotateZ(33./m_degsPerRad);
     
@@ -100,14 +100,13 @@ Rotation Orbit::CELtransform(double time){
     cel2.rotateY(phase(time));
     cel3.rotateZ(-m_inclination*M_2PI/360.);
     cel4.rotateY((time/m_precessPeriod)*M_2PI);
-
+    
     //so gal*cel should be the matrix that makes local coordiates into galactic ones.
     //Rotation glstToGal = gal*cel1*cel2*cel3*cel4;
-      Rotation glstToGal = gal*cel4*cel3*cel2*cel1;
-
-
+    Rotation glstToGal = gal*cel4*cel3*cel2*cel1;
+    
     //displayRotation(glstToGal);
-
+    
     //we want the rotation from galactic to local.
     return glstToGal.inverse();
 }
@@ -129,17 +128,17 @@ void Orbit::computeAttitudes(double time){
 }
 
 
-//NEEDS FIXING, since CELtransform has changed.
+//NEEDS TO BE CHECKED, since CELTransform has changed.
 Rotation Orbit::latLonTransform(double time) const {
     Rotation CELtoLOC;  
     
     CELtoLOC.rotateZ(phase(time)).rotateX(m_inclination*M_2PI/360.).rotateZ((time/m_precessPeriod)*M_2PI);
     Rotation getLatLon=(CELtoLOC).rotateZ(((m_ascendingLon/360.)+((time)/1440.))*M_2PI*-1.);
-   
+    
     return getLatLon;
 }
 
-//NEEDS FIXING
+//NEEDS TO BE CHECKED
 double Orbit::testLongitude(double time) const {
     // longitude as a function of time (in minutes)
     Vector v(1.,0,0);
@@ -161,7 +160,7 @@ double Orbit::testLatitude(double time) const {
 
 
 void Orbit::displayRotation(Rotation rot){
-
+    
     std::cout << "{" << rot.xx() << ' ' << rot.xy() << ' ' << rot.xz() << std::endl
         << rot.yx() << ' ' << rot.yy() << ' ' << rot.yz() << std::endl
         << rot.zx() << ' ' << rot.zy() << ' ' << rot.zz() << "}" << std::endl;

@@ -18,13 +18,13 @@
 class ISpectrumFactory
 {
 public:
-
-	/// the only thing this does: make an associated Spectrum object
-	virtual ISpectrum* instantiate(const std::string& params)const=0;
-
-	/// a dummy to force creation of the spectrum object.
-	virtual void addRef()const=0;
-
+    
+    /// the only thing this does: make an associated Spectrum object
+    virtual ISpectrum* instantiate(const std::string& params)const=0;
+    
+    /// a dummy to force creation of the spectrum object.
+    virtual void addRef()const=0;
+    
 };
 
 

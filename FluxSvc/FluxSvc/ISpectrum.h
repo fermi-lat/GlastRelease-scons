@@ -24,10 +24,10 @@ class HepRandomEngine;
 
 class ISpectrum  
 {
-
-
-//!  Class for holding function definitions of Spectrums...
-//!  an abstract base class
+    
+    
+    //!  Class for holding function definitions of Spectrums...
+    //!  an abstract base class
 public:
     
     
@@ -48,13 +48,13 @@ public:
     
     /// a randomized interval to the next event - default is 1/rate()
     virtual double interval (double time)=0;
-
+    
     virtual std::pair<float,float> dir(float energy)const = 0;
     
     /// new interface for Hirosima classes
     virtual double energySrc(HepRandomEngine* engine, double time=0)=0;
     virtual std::pair<double,double> dir(double energy, HepRandomEngine* engine)=0;
-
+    
 };
 
 

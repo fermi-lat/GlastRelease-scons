@@ -5,10 +5,10 @@
 
 void CompositeDiffuse::addSource (EventSource* aSource)
 {
-m_sourceList.push_back(aSource);
-double flux = aSource->flux(EventSource::time());
-//EventSource::setFlux( flux );
-m_unclaimedFlux-=flux;
+    m_sourceList.push_back(aSource);
+    double flux = aSource->flux(EventSource::time());
+    //EventSource::setFlux( flux );
+    m_unclaimedFlux-=flux;
 }
 
 FluxSource* CompositeDiffuse::event (double time)
@@ -16,7 +16,7 @@ FluxSource* CompositeDiffuse::event (double time)
     EventSource::setTime(time);
     
     int m_numofiters=0;
-
+    
     // here we should be setting the total rate as the maximum sum rate of everything - FIX!
     //double mr = rate(EventSource::time());
     double mr = m_totalFlux;
@@ -86,12 +86,12 @@ void CompositeDiffuse::addNewSource(){
     
     //double l = RandFlat::shoot(-180.,180.);
     //double b = RandFlat::shoot(-90.,90.);
-
+    
     //std::cout << "z was " << costh <<std::endl;
     //Then call the FluxSource Constructor to use the galactic direction specified by launchDir.
-//    EventSource* aSource=new FluxSource(flux,spec,&launchDir);
+    //    EventSource* aSource=new FluxSource(flux,spec,&launchDir);
     EventSource* aSource=new FluxSource(flux,spec,l,b);
-
+    
     //std::cout << "l = " << l << ",b = " << b << std::endl;
     FluxSource* abc = (FluxSource*)aSource;
     //std::cout << "z is " << abc->launchDir().z() << std::endl;
@@ -119,9 +119,9 @@ double CompositeDiffuse::remainingFluxInterval(){
 double CompositeDiffuse::getRandomFlux(){
     long double prob=RandFlat::shoot(0.0, 1.0);
     long double dx=0.0000001;
-
+    
     long double highthresholdofintensity = 0.0001; //for debugging and checking purposes
-
+    
     long double i=0.000000001;//lowthresholdofintensity;
     
     while(prob > 0 && i<highthresholdofintensity){
@@ -147,8 +147,8 @@ long double CompositeDiffuse::pofi(long double intensity){  //this function give
 }
 
 long double CompositeDiffuse::logNlogS(long double flux){
-
-return 0.;
+    
+    return 0.;
 }
 
 

@@ -43,7 +43,7 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
     
     declareProperty("source_lib" , m_source_lib); 
     declareProperty("dtd_file"   , m_dtd_file=default_dtd_file);
-  
+    
     HepRandom::setTheEngine(new RanluxEngine);
 }
 
@@ -85,14 +85,14 @@ StatusCode FluxSvc::initialize ()
     
     // open the message log
     MsgStream log( msgSvc(), name() );
-
+    
     //If source library was not set, put in default
     if( m_source_lib.empty() ){
         m_source_lib.push_back(default_source_library);
         log << MSG::INFO << "Set source library list to " << default_source_library << endreq;
     }
-
-     
+    
+    
     // create a FluxMgr object which will then be available.
     m_fluxMgr = new FluxMgr(m_source_lib, m_dtd_file);
     
@@ -103,12 +103,12 @@ StatusCode FluxSvc::initialize ()
         log << MSG::ERROR  << "Did not initialize properly: no sources detected" << endreq;
         status = StatusCode::FAILURE;
     }
-        
+    
     if ( service("ParticlePropertySvc", m_partSvc).isFailure() ){
         log << MSG::ERROR << "Couldn't find the ParticlePropertySvc!" << endreq;
         return StatusCode::FAILURE;
     }
-
+    
     
     return status;
 }
@@ -148,16 +148,16 @@ HepRandomEngine* FluxSvc::getEngine()
 
 /// pass a specific amount of time
 void FluxSvc::pass ( double t){
-m_fluxMgr->pass(t);
+    m_fluxMgr->pass(t);
 }
 
 void FluxSvc::rootDisplay(std::vector<char*> arguments){
-rootplot abc(arguments);
+    rootplot abc(arguments);
 }
 
 ///return the pointer to the current IFlux object
 IFlux* FluxSvc::currentFlux(){
-return m_currentFlux;
+    return m_currentFlux;
 }
 
 /// name of the flux

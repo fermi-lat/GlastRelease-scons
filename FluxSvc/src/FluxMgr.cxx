@@ -45,7 +45,7 @@ void FluxMgr::init(const std::vector<std::string>& fileList){
     std::string fileName;
     
     xml::XmlParser parser;
-
+    
     //DOES THIS NEED TO BE HERE AT ALL?
     //std::vector<std::string>::const_iterator iter = fileList.begin();
     
@@ -95,8 +95,8 @@ void FluxMgr::init(const std::vector<std::string>& fileList){
     DLL_DECL_SPECTRUM( AlbedoPSpectrum);
     DLL_DECL_SPECTRUM( HeSpectrum);
     DLL_DECL_SPECTRUM( GalElSpectrum);
-//    DLL_DECL_SPECTRUM( CrElectron);
-//    DLL_DECL_SPECTRUM( CrProton);
+    //    DLL_DECL_SPECTRUM( CrElectron);
+    //    DLL_DECL_SPECTRUM( CrProton);
     DLL_DECL_SPECTRUM( FILESpectrum);
     DLL_DECL_SPECTRUM( MapSpectrum);
     
@@ -153,7 +153,7 @@ EventSource*  FluxMgr::getSourceFromXML(const DOM_Element& src)
         
         CompositeSource* cs;
         if(flux == 1.0){
-        cs = new CompositeSource();
+            cs = new CompositeSource();
         }else{ cs = new CompositeDiffuse(flux);
         }
         do { 
@@ -207,17 +207,17 @@ void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
     EventSource* e = source(source_name);
     setExpansion(1.);
     double time=0.;
-
+    
     const int howMany = e->howManySources();
     //int counts[howMany] = 0;
     std::vector<int> counts;
-
+    
     //std::vector<int>::const_iterator countIter = counts.begin();
-
+    
     int q;
     for(q=0 ; q<=howMany+2 ; q++){
         counts.push_back(0);
-      //  countIter++;
+        //  countIter++;
     }
     
     cout << "running source: " << e->fullTitle() << std::endl;
@@ -245,7 +245,7 @@ void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
         //cout << std::endl << "testlat=" << GPS::instance()->orbit()->testLatitude(curTime) << ' ' << "testlon=" << GPS::instance()->orbit()->testLongitude(curTime) << std::endl;
         
         double interval=e->interval(time);
-
+        
         //here we increment the "elapsed" time and the "orbital" time,
         //just as is done in flux.  NOTE: this is important for the operation 
         //of fluxsource, and is expected.
@@ -254,7 +254,7 @@ void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
         int sourceNumber = e->numSource();
         if(sourceNumber==-1){counts[0]++;
         }else{counts[sourceNumber]++;}
-
+        
         totalinterval+=interval;
         cout << "LaunchType = " << f->refLaunch() << " , Pointtype = " << f->refPoint() <<std::endl;
         cout << f->spectrum()->particleName();
@@ -269,11 +269,11 @@ void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
     
     cout << std::endl << "Average Interval=" << totalinterval/count <<" , "
         << "Average rate = " << count/totalinterval <<std::endl;
-
+    
     cout << "Source Statistics: " << std::endl;
     for(q=0 ; q<howMany ; q++){
         cout << "source #" << q+1 << ": " << counts[q] << " events counted." << std::endl;
-      //  countIter++;
+        //  countIter++;
     }
     
     delete e;
@@ -325,7 +325,7 @@ std::pair<double,double> FluxMgr::location(){
 
 //get the transformation matrix.
 Rotation FluxMgr::CELTransform(double time){
-    return GPS::instance()->orbit()->CELtransform(time);
+    return GPS::instance()->orbit()->CELTransform(time);
 }
 
 //get the transformation matrix.

@@ -17,19 +17,19 @@ const ISpectrumFactory& AlbedoPSpectrumFactory = factory;
 
 ///Initializes parameters during construction
 void AlbedoPSpectrum::init(const std::vector<float>& params) {
-
-	float lat =  params.size()>0? params[0]: 0.0f;
-	float lon =  params.size()>1? params[1]: 0.0f;
+    
+    float lat =  params.size()>0? params[0]: 0.0f;
+    float lon =  params.size()>1? params[1]: 0.0f;
     setPosition(lat, lon);
-
+    
     m_particle_name = "p";
-
+    
     // set callback to be notified when the position changes
     m_observer.setAdapter( new ActionAdapter<AlbedoPSpectrum>
-			   (this, &AlbedoPSpectrum::askGPS) );
-
+        (this, &AlbedoPSpectrum::askGPS) );
+    
     GPS::instance()->notification().attach( &m_observer );
-
+    
 }
 
 
@@ -37,10 +37,10 @@ void AlbedoPSpectrum::init(const std::vector<float>& params) {
 
 ///Constructor.  Initial geographic lat and lon in degrees.
 AlbedoPSpectrum::AlbedoPSpectrum(const std::string& paramstring) {
-   std::vector<float> params;
-
-   parseParamList(paramstring,params);
-
+    std::vector<float> params;
+    
+    parseParamList(paramstring,params);
+    
     init(params);
 }
 
@@ -89,7 +89,7 @@ double AlbedoPSpectrum::solidAngle() const
 ///A simple formula that's consistent with the AMS data.
 float AlbedoPSpectrum::flux(float lat, float lon) const {
     double v1,v2, alf1, alf2, emin, emax, Ejoin;
-    FitParams(lat, lon, alf1, alf2, emin, emax, v1, v2, Ejoin);
+    fitParams(lat, lon, alf1, alf2, emin, emax, v1, v2, Ejoin);
     // The factor 1.47 is induced by the assumed angular dependence.
     return 1.47 * (v1+v2);
 }
@@ -108,14 +108,14 @@ float AlbedoPSpectrum::flux( std::pair<double,double> coords) const {
 /// measured by AMS.
 float AlbedoPSpectrum::operator() (float x) const{
     double v1,v2, alf1, alf2, emin, emax, Ejoin;
-    FitParams(m_lat, m_lon, alf1, alf2, emin, emax, v1, v2, Ejoin);
+    fitParams(m_lat, m_lon, alf1, alf2, emin, emax, v1, v2, Ejoin);
     double split = v1/(v1+v2);
     if (x > split) {
-	return pow((pow(Ejoin,1.-alf2)+((1.-x)/(1.-split))*(pow(emax,1.-alf2)
-          -pow(Ejoin,1.-alf2))), 1./(1.-alf2));
+        return pow((pow(Ejoin,1.-alf2)+((1.-x)/(1.-split))*(pow(emax,1.-alf2)
+            -pow(Ejoin,1.-alf2))), 1./(1.-alf2));
     } else {
-	return pow((pow(emin,1.-alf1)+(x/split)*(pow(Ejoin,1.-alf1)
-	  -pow(emin,1.-alf1))), 1./(1.-alf1));
+        return pow((pow(emin,1.-alf1)+(x/split)*(pow(Ejoin,1.-alf1)
+            -pow(emin,1.-alf1))), 1./(1.-alf1));
     }
 }
 
@@ -155,7 +155,7 @@ double AlbedoPSpectrum::calculate_rate(double old_rate)
 std::pair<float,float> AlbedoPSpectrum::dir(float energy)const
 {
     // Random particle direction
-
+    
     float coszenith, earthazi,dens,v;
     const int try_max = 1000;
     static int max_tried = 0;
@@ -163,31 +163,31 @@ std::pair<float,float> AlbedoPSpectrum::dir(float energy)const
     earthazi = 2. * M_PI * HepRandom::getTheGenerator()->flat();
     do {
         coszenith = 2. * HepRandom::getTheGenerator()->flat() - 1.;
-	dens = 1. + 0.6 * sqrt(1.-coszenith*coszenith);
-	v = 1.6 * HepRandom::getTheGenerator()->flat();
+        dens = 1. + 0.6 * sqrt(1.-coszenith*coszenith);
+        v = 1.6 * HepRandom::getTheGenerator()->flat();
     } while (v > dens && trial++ < try_max);
-
+    
     max_tried = std::max(trial, max_tried);
-
+    
     return std::make_pair<float,float>(coszenith, earthazi);
 }
 
-//------------------------- FitParams()
+//------------------------- fitParams()
 /** Evaluate the coefficients of the broken power law albedo proton model.
 Input: lat  Magnetic latitude in degrees
 Output: alf1,alf2   Slopes of the two power laws
-        emin,emax  Artificial upper and lower cutoff energies
-	v1,v2   Integrated fluxes of the two power laws
-        Ejoin   Energy at which the two power laws meet
+emin,emax  Artificial upper and lower cutoff energies
+v1,v2   Integrated fluxes of the two power laws
+Ejoin   Energy at which the two power laws meet
 
-flux (protons / m^s sec ster MeV) = 
-   a1 * (e/e1)^(-alf1)    if emin < e < Ejoin
-   a2 * (e/e2)^(-alf2>    if Ejoin < e < emax
-when e is measured in GeV  (following the AMS convention)
+  flux (protons / m^s sec ster MeV) = 
+  a1 * (e/e1)^(-alf1)    if emin < e < Ejoin
+  a2 * (e/e2)^(-alf2>    if Ejoin < e < emax
+  when e is measured in GeV  (following the AMS convention)
 */
-void AlbedoPSpectrum::FitParams(const double lat, const double lon, 
-	 double& alf1, double& alf2, double& emin, double& emax, 
-         double& v1, double &v2, double& Ejoin) const
+void AlbedoPSpectrum::fitParams(const double lat, const double lon, 
+                                double& alf1, double& alf2, double& emin, double& emax, 
+                                double& v1, double &v2, double& Ejoin) const
 {
     double theta = abs(Geomag::geolat(lat,lon)) * M_PI / 180.;
     double e1 = .2;  // pivot point of lower power law
@@ -197,12 +197,12 @@ void AlbedoPSpectrum::FitParams(const double lat, const double lon,
     // normalization values of the two power laws
     double a1 = 0.142 + theta * (-.4809 + theta * .5517);
     double a2 = .0499 + theta * (-.3239 + theta * (.8077 + theta * (-.8800 + 
-						      theta * .3607)));
+        theta * .3607)));
     alf1 = .4913 + theta * (2.017 + theta * (-.6941 - 1.49 * theta));
     alf2 = 2.85 - .875 * theta;
     Ejoin = pow(a1*pow(e1,alf1) / (a2*pow(e2,alf2)), 1./(alf1-alf2));
     v1 = 1000.*a1*pow(e1,alf1)*(pow(Ejoin,1.-alf1)-pow(emin,1.-alf1))
-	/(1.-alf1);  // integral of lower power law
+        /(1.-alf1);  // integral of lower power law
     v2 = 1000.*a2*pow(e2,alf2)*(pow(emax,1.-alf2)-pow(Ejoin,1.-alf2)) 
-	/(1.-alf2);  // integral of upper power law
+        /(1.-alf2);  // integral of upper power law
 }

@@ -8,8 +8,8 @@
 
 
 #define FATAL_MACRO(output)\
-do{std::ostrstream message; \
-   message <<__FILE__<<":"<<__LINE__<<": "<<output<<'\0';\
+    do{std::ostrstream message; \
+    message <<__FILE__<<":"<<__LINE__<<": "<<output<<'\0';\
 throw(message.str());}while(0)
 
 #define WARNING_MACRO(output)\

@@ -23,8 +23,8 @@ public:
     SimpleSpectrum(const char* name,float E0, float index=0.0);
     SimpleSpectrum(const char* name,float Emin, float Emax, float index);
     SimpleSpectrum(const DOM_Element& xelem);
-	SimpleSpectrum(const std::string& params);
-
+    SimpleSpectrum(const std::string& params);
+    
     SimpleSpectrum();
     void setPosition ( float /*lat*/, float /*lon*/ ){}
     virtual double calculate_rate(double old_rate);

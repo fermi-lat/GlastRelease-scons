@@ -17,7 +17,7 @@ MapSpectrum::MapSpectrum(const std::string& params)
 :m_E0(parseParamList(params,0))
 {
     //let's set the map to zero right off the bat:
-        for(int l=-180 ; l<=180 ; l++){
+    for(int l=-180 ; l<=180 ; l++){
         //double sizeof1by1 = 1.;
         for(int b=-90 ; b<=90 ; b++){
             m_catalog[std::make_pair<int,int>(l,b)].intensity = 0;
@@ -55,12 +55,12 @@ MapSpectrum::MapSpectrum(const std::string& params)
         double curl,curb,curint,curind;
         
         while (!input_file.eof()){
-           input_file >> curl;
-           input_file >> curb;
-           input_file >> curint;
-           input_file >> curind;
-           m_catalog[std::make_pair<int,int>(curl,curb)].intensity = curint;
-           m_catalog[std::make_pair<int,int>(curl,curb)].index = curind;
+            input_file >> curl;
+            input_file >> curb;
+            input_file >> curint;
+            input_file >> curind;
+            m_catalog[std::make_pair<int,int>(curl,curb)].intensity = curint;
+            m_catalog[std::make_pair<int,int>(curl,curb)].index = curind;
         }
         setNetFlux();
     }
@@ -81,13 +81,13 @@ std::pair<double,double> MapSpectrum::dir(double energy, HepRandomEngine* engine
     double l=-180;
     double b=-90;
     //while(remainingFlux>=0){
-        while(remainingFlux>=0){
-                            //std::cout << remainingFlux << std::endl;
-            remainingFlux -= m_catalog[std::make_pair<int,int>(l,b)].intensity*sizeof1by1;
-                            //std::cout << "l=" << l << ",b=" << b << std::endl;
-            b++;
-            if(b==90){b=-90; l++;}
-        }
+    while(remainingFlux>=0){
+        //std::cout << remainingFlux << std::endl;
+        remainingFlux -= m_catalog[std::make_pair<int,int>(l,b)].intensity*sizeof1by1;
+        //std::cout << "l=" << l << ",b=" << b << std::endl;
+        b++;
+        if(b==90){b=-90; l++;}
+    }
     //}
     
     //now set the flux:
@@ -131,7 +131,7 @@ void MapSpectrum::setNetFlux(){
             m_netFlux+=m_catalog[std::make_pair<int,int>(l,b)].intensity*sizeof1by1;
         }
     }
-        //std::cout << m_netFlux << std::endl;
+    //std::cout << m_netFlux << std::endl;
     return;
 }
 

@@ -136,7 +136,7 @@ StatusCode FluxAlg::execute()
         log << MSG::ERROR << EventModel::MC::Event  <<" could not be registered on data store" << endreq;
         return sc;
     }
-        
+    
     
     Event::McParticleCol* pcol = new Event::McParticleCol;
     sc = eventSvc()->registerObject(EventModel::MC::McParticleCol, pcol);

@@ -50,10 +50,10 @@ std::string Flux::particleName()const{
 }
 /*
 ParticleProperty* property()const {
-    ParticleProperty* prop = m_propSvc->find(particleName());
-    return prop;
+ParticleProperty* prop = m_propSvc->find(particleName());
+return prop;
 
-}
+  }
 */
 // its kinetic energy
 double Flux::energy()const
@@ -80,7 +80,7 @@ void Flux::pass ( double t){
 
 /// Get the time as held by GPS    
 /*GPStime*//*int*/double Flux::gpsTime () const{
-    return s_mgr->time();
+return s_mgr->time();
 }
 
 
@@ -133,14 +133,14 @@ void Flux::addFactory(std::string name, const ISpectrumFactory* factory ) {
 
 
 Rotation Flux::CELTransform(double time)const{
-return s_mgr->CELTransform(time);
+    return s_mgr->CELTransform(time);
 }
 
 Rotation Flux::orientTransform(double time)const{
-return s_mgr->orientTransform(time);
+    return s_mgr->orientTransform(time);
 }
 
 Rotation Flux::transformGlastToGalactic(double time)const{
-
+    
     return s_mgr->transformGlastToGalactic(time);
 }

@@ -88,11 +88,11 @@ public:
     inline double ascendingLon() const;
     
     //transformations for the current position (to the zenith-pointing coordinate system)
-    Rotation CELtransform(double time);
+    Rotation CELTransform(double time);
     
     
     Rotation Orbit::latLonTransform(double time) const;
-
+    
     double Orbit::testLongitude(double time) const;
     double Orbit::testLatitude(double time) const; 
     
@@ -101,11 +101,11 @@ protected:
     // subclasses may overload depending upon which orbital parameters they 
     // specify
     
-    virtual void setlatitude ( double ) {}
-    virtual void setlongitude ( double ) {}
-    virtual void setpitch ( double ) {}
-    virtual void setyaw ( double ) {}
-    virtual void setroll ( double ) {}
+    virtual void setLatitude ( double ) {}
+    virtual void setLongitude ( double ) {}
+    virtual void setPitch ( double ) {}
+    virtual void setYaw ( double ) {}
+    virtual void setRoll ( double ) {}
     
     
     // computation of pointing characteristics of GLAST - assumed, here, to be zenith-pointing
@@ -123,10 +123,10 @@ private:
     double m_cosi;           // cosine of inclination angle
     double m_startphase;     // starting phase offset of the orbit
     double m_precessPeriod;   // Period of orbital precession
-
+    
     double m_degsPerRad;
     double m_secsperday;
-
+    
     
     //RA, DEC of GLAST X and Y axes:
     double m_rax;
