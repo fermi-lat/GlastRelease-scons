@@ -103,12 +103,9 @@ TriggerAlg.mask = -1; // all bits on by default
 //
 
 ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" };
-// the following sets the Gismo Propagator
-//GlastPropagatorSvc.PropagatorType = "gismo";
 
 ApplicationMgr.DLLs +={ 
-	"CalibSvc",
-    "Recon",
+    "CalibSvc",
     "CalRecon", "CalUtil", "TkrUtil",
     "TkrRecon"
     };

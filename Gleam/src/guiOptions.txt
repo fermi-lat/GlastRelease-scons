@@ -2,20 +2,20 @@
 
 // this necessary (for now) to see the event
 G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
+G4Generator.saveTrajectories=true;
 
 ApplicationMgr.ExtSvc += {"GuiSvc"};
 ApplicationMgr.Runable = "GuiSvc";
 GuiSvc.size=-3000;
 
-ApplicationMgr.DLLs   += {"FluxDisplay" };
+ApplicationMgr.DLLs   += {"FluxDisplay", "DetDisplay" };    
 
 // these are algorithms 
 EventDisplay.Members = {
     "FluxDisplay",
    "TkrDisplayAlg",
    "CalDisplay",
-   "AcdDisplay", 
-   "HitDisplay" 
+   "AcdDisplay"  
    };
 
 // ----------end display-specific

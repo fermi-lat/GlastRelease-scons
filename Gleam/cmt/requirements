@@ -1,6 +1,6 @@
 package Gleam
 
-version  v5r1p3
+version  v5r2
 
 # $Id$
 
@@ -23,8 +23,7 @@ use AcdDigi     v*
 
 #reconstruction
 use Trigger     v*
-use Recon       v*
-
+use DetDisplay  v*
 use TkrRecon    v*
 use CalRecon    v* 
 use AcdRecon    v*       

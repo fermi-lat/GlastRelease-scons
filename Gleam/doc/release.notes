@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v5r2   THB 04-jul-03   Remove Recon (with gismo remnant); add DetDisplay
 * v5r1p3 THB 15-jun-03   Have merit write out tuple in test_Gleam   
 * v5r1p2 AC  03-apr-03   Add CalibSvc to basicOptions for CalRecon   
 * v5r1p1 LSR 10-mar-03   Add GlastPropagatorSvc to basicOptions for new TkrRecon, AnalysisNtuple
