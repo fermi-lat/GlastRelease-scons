@@ -58,12 +58,27 @@
 * The CLHEP Random engine to use - same for all Dll's that use random
 * numbers.
 * Default:TripleRand
+* @param GlastRandomSvc.SeedFile
+* An ASCII file containing a set of lines containing
+* space separated run and sequence numbers to use. If this
+* file is not in the same directory as Gleam.exe it's full
+* path must be specified. Note that specification of this
+* file overrides individual run and initial sequence numbers
+* set via GlastRandomSvc.RunNumber and 
+* GlastRandomSvc.InitialSequenceNumber.  
 * @param GlastRandomSvc.RunNumber
-* Run number - set via GlastRandomSvc.
+* Run number. Note that if a file of run and sequence numbers is 
+* specified via the job options parameter GlastRandomSvc.SeedFile 
+* that overrides individually set run and initial sequence 
+* numbers.
 * Default:10
 * @param GlastRandomSvc.InitialSequenceNumber
 * Incident particle sequence number to begin run with - is not
-* event number as not all events trigger - set via GlastRandomSvc.
+* event number as not all events trigger.
+* Note that if a file of run and sequence numbers is specified 
+* via the job options parameter GlastRandomSvc.SeedFile 
+* that overrides individually set run and initial sequence 
+* numbers.
 * Default:0
 *
 * @section Testing test_GlastSvc
