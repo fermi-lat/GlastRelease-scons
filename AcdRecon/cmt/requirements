@@ -1,36 +1,28 @@
 package AcdRecon
-version v1r7p3
+version v1r7p4
 
 branches src doc
 
-use GlastSvc v9r*
-use Event v9r*
-use GuiSvc v3*
 use GlastPolicy v*
+use GlastSvc v9r*
+use Event    v9r*
+use GuiSvc   v3*
 
-apply_pattern package_headers
+# no use of default_include_path (no public headers)
 
-library AcdRecon  *.cxx  Dll/*.cxx ${AcdRecon_headers}
+apply_pattern  package_headers
 
-ignore_pattern package_stamps
+library AcdRecon  *.cxx  -s=Dll *.cxx ${AcdRecon_headers}
 
-apply_pattern packageShr
-
-
-
+apply_pattern component_library library=AcdRecon
 
 #=============================================================
 private
-use RootIo v*
+use RootIo  v*
 
 public
+apply_pattern declare_joboptions files="-s=../src/test  *.txt"
 apply_pattern package_test
 
-apply_pattern package_Cshlibflags
-private
-
-macro test_AcdReconlinkopts "  $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
+macro_append test_AcdReconlinkopts "  $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
       WIN32 " ${guiapp_linkopts} $(GuiSvc_lib)  /include:_GuiSvc_loadRef "
-
-
-
