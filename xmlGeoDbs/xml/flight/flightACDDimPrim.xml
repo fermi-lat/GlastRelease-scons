@@ -7,6 +7,8 @@
    of ACD (from LAT-DS-00038)</prim>
   <prim name="ACDTransInnerSC" value="1515.5">Minimum transverse inner
    envelope for ACD sides (from LAT-DS-00038)</prim>
+  <prim name="ACDTransInnerSCflange" value="1574">Minimum transverse inner
+   envelope for lower part of ACD sides (from LAT-DS-00038)</prim>
   <prim name="ACDVertSC" value="1015">Max. delta Z from top to bottom of
      ACD (from LAT-DS-00038)</prim>
   
@@ -106,9 +108,11 @@ Thickness of scintillating ribbon</prim>
 
  <!-- old number with new name (was "topStandoff"  
     No guarantee it's correct. -->
-  <prim name="TKRACDSupportGap" value="45.0"> distance between bottom of
+  <prim name="TKRACDSupportGap" value="10.0"> distance between bottom of
 ACD support and top of TKR.  **NOTE** increased from 10.0 to 45.0
-to keep ACD supports from colliding with grid (4 nov 2002)</prim>
+to keep ACD supports from colliding with grid (4 nov 2002)
+30 April 2003: see what happens when I change it back to 10.0
+</prim>
 
 <!-- following is probably obsolete -->
   <prim name="tapeTopExt" value="15.0">Distance tape should extend

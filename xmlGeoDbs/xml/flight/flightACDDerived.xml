@@ -837,19 +837,22 @@
         <const name="ACDSideSupport_dt">
           <notes>Transverse (x or y) distance of support side from 
                  Ritz origin.  Move in from tile displ.</notes>
-          <minus>
-            <refer refTo="tileXSide_dx" />
-            <add>
-              <refer refTo="PMTFiberGap" />
-              <quo>
-                <add>
-                  <refer refTo="tileThickness" />
-                  <refer refTo="ACDSideSupportThick" />
-                </add>
-                <const value="2" uType="count" />
-              </quo>
-            </add>
-          </minus>
+          <max>
+            <minus>
+              <refer refTo="tileXSide_dx" />
+              <add>
+                <refer refTo="PMTFiberGap" />
+                <quo>
+                  <add>
+                    <refer refTo="tileThickness" />
+                    <refer refTo="ACDSideSupportThick" />
+                  </add>
+                  <const value="2" uType="count" />
+                </quo>
+              </add>
+            </minus>
+            <refer refTo="ACDTransInnerSCflange" />
+          </max>
         </const>
           
         <const name="ACDSideSupport_dtn">
