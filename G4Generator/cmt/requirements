@@ -1,17 +1,37 @@
 package G4Generator
+version v1
 #$Header$
 
-use Geant4
 use GaudiSvc
 use GaudiAlg
 
-use detModel 
-use FluxSvc
-use GlastSvc
+# specific dependencies while developing: this is temporarily a checkout package
+# that should need only the Gaudi system stuff
+use GlastPolicy v4
+use Geant4   v1
+
+use facilities v2r1
+use XMLEXT   v2r2
+use xml      v4
+use xmlUtil  v2r5
+
+use idents   v2r3
+use detModel v2r5
+use instrument v4r1
+use data     v4r1
+
+use GlastEvent v4r1
+use GlastSvc v3
+
+use flux     v6
+use FluxSvc  v4
+
 
 #to make standard display available
-use GuiSvc
-use geomrep
+use gui      v2r6p1
+use GuiSvc   v2r4
+use geometry v3
+use geomrep  v4
 
 # this is only a shareable package
 apply_pattern packageShr
