@@ -24,6 +24,9 @@ class RdbGUIWindow : public FXMainWindow {
   FXDECLARE(RdbGUIWindow)
 private:
   FXMenuBar                      *uiMenuBar;               // The menubar
+  FXMenuPane                     *uiFilemenu;
+  FXMenuPane                     *uiSessmenu;
+  FXMenuPane                     *uiActionmenu;
   FXComboBox                     *m_uiDBSelection;         // Showing current connection
   TableColumnList                *uiTblColList;            // List of tables and columns
   SQLBuffer                      *uiEditor;                // SQL editor

@@ -107,7 +107,7 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
 //                             LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 2,2,2,2);
                             
   // File menu
-  FXMenuPane *uiFilemenu = new FXMenuPane(this);
+  uiFilemenu = new FXMenuPane(this);
   new FXMenuTitle(uiMenuBar, "&File", NULL, uiFilemenu);
   new FXMenuCommand(uiFilemenu, "&Open XML ...\tCtl-O\tLoad the xml database description",
     NULL, this, ID_OPENXML);
@@ -116,7 +116,7 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
     this, ID_QUIT);
     
   // Session menu
-  FXMenuPane *uiSessmenu = new FXMenuPane(this);
+  uiSessmenu = new FXMenuPane(this);
   new FXMenuTitle(uiMenuBar, "&Session", NULL, uiSessmenu);
   new FXMenuCommand(uiSessmenu, "&Open connection\tCtl-[\tOpen new database connection...",
       NULL, this, ID_OPENCONNECTION);
@@ -124,7 +124,7 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
       NULL, this, ID_CLOSECONNECTION);
 
   // Action menu
-  FXMenuPane *uiActionmenu = new FXMenuPane(this);
+  uiActionmenu = new FXMenuPane(this);
   new FXMenuTitle(uiMenuBar, "&Action", NULL, uiActionmenu);
   new FXMenuCommand(uiActionmenu, "&Insert\tCtl-I\tInsert a new row\tInsert a new row",
     NULL, this, ID_INSERT);
@@ -165,6 +165,9 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
 RdbGUIWindow::~RdbGUIWindow()
 {
   delete uiMenuBar;
+  delete uiFilemenu;
+  delete uiSessmenu;
+  delete uiActionmenu;
   delete m_uiDBSelection;
 }
 
