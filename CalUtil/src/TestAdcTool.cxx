@@ -201,8 +201,8 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
 
       // set up a XtalMap to act as key for the map - if there is no entry, add
       // add one, otherwise add signal to existing map element.
-      signal[idents::CalXtalId::POS] += signals.first;
-      signal[idents::CalXtalId::NEG] += signals.second;
+      signal[CalXtalId::POS] += signals.first;
+      signal[CalXtalId::NEG] += signals.second;
     }
   }
 
@@ -212,32 +212,44 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
   // response. The diodeEnergy becomes the readout source.
 
   // loop through all 4 diodes
-  for (int face = 0; face < 2; face++)
-    for (int diode = 0; diode < 2; diode++) {
-      diodeId diode_id(face,diode);
+  if (hitList.size()) {
+    for (int face = 0; face < 2; face++) {
+      // vary energy hits by random noise amount
+      for (int diode = 0; diode < 2; diode++) {    
+        diodeId diode_id(face,diode);
+        
+        // convert energy deposition in a diode to
+        // the equivalent energy in a crystal
+        diodeEnergy[diode_id] *= m_ePerMeVinDiode/m_ePerMeV[diode];
+        
+        // add crystal signal - now diode energy contains
+        // the signal at given diode in energy units
+        // (equivalent energy deposition at the crystal center)
+        diodeEnergy[diode_id] += signal[face];
+        
+        // add poissonic fluctuations in the number of electrons in a diode
+        if (m_doFluctuations) { //only add if we have hits in this xtal
+          float numberElectrons = diodeEnergy[diode_id] * m_ePerMeV[diode];
+          
+          // approximate Poisson distribution by gaussian for numberElectrons >> 1
+          float electronFluctuation = sqrt(numberElectrons) *RandGauss::shoot();      
+          diodeEnergy[diode_id] += electronFluctuation /m_ePerMeV[diode];
 
-      // convert energy deposition in a diode to
-      // the equivalent energy in a crystal
-      diodeEnergy[diode_id] *= m_ePerMeVinDiode/m_ePerMeV[diode];
-
-      // add crystal signal - now diode energy contains
-      // the signal at given diode in energy units
-      // (equivalent energy deposition at the crystal center)
-      diodeEnergy[diode_id] += signal[face];
-
-      // add poissonic fluctuations in the number of electrons in a diode
-      if (m_doFluctuations) {
-        float numberElectrons = diodeEnergy[diode_id] * m_ePerMeV[diode];
-
-        // approximate Poisson distribution by gaussian for numberElectrons >> 1
-        float electronFluctuation = sqrt(numberElectrons) * RandGauss::shoot();
-
-        diodeEnergy[diode_id] += electronFluctuation /m_ePerMeV[diode];
+        }
       }
-
-      // add electronic noise
-      diodeEnergy[diode_id] += RandGauss::shoot()*m_noise[diode]/m_ePerMeV[diode];
     }
+  }
+  
+  // add electronic nose.
+  for (int face = 0; face < 2; face++) {
+    // add electronic noise to all xtals LARGE DIODE
+    diodeEnergy[diodeId(face,CalXtalId::LARGE)] += RandGauss::shoot()*m_noise[CalXtalId::LARGE]/m_ePerMeV[CalXtalId::LARGE];
+
+    // add noise to SMALL DIODE if hit
+    if (hitList.size()) {
+      diodeEnergy[diodeId(face,CalXtalId::SMALL)] += RandGauss::shoot()*m_noise[CalXtalId::SMALL]/m_ePerMeV[CalXtalId::SMALL];
+    }
+  }
 
   // STAGE 3 Clone CalDigiAlg::createDigis
 
@@ -267,7 +279,7 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
   }
 
   // log-accept POS - hardware only tests large diode for zero suppression
-  if (diodeEnergy[diodeId(xtalface,idents::CalXtalId::LARGE)] > m_thresh) 
+  if (diodeEnergy[diodeId(xtalface,CalXtalId::LARGE)] > m_thresh) 
     lacP = true;
   else lacP = false;
 
@@ -282,7 +294,7 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
 
   // log-accept NEG - hardware only tests large diode fro zero suppression
   lacN = false;
-  if (diodeEnergy[diodeId(xtalface,idents::CalXtalId::LARGE)] > m_thresh) 
+  if (diodeEnergy[diodeId(xtalface,CalXtalId::LARGE)] > m_thresh) 
     lacN = true;
   else lacN = false;
 
