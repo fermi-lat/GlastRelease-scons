@@ -3,8 +3,8 @@
 // Job options file for FluxSvc test program
 //
 
-ApplicationMgr.ExtSvc += { "BFEMfluxSvc" };
-ApplicationMgr.DLLs   += { "BFEMflux" };
+//ApplicationMgr.ExtSvc += { "BFEMfluxSvc" };
+//ApplicationMgr.DLLs   += { "BFEMflux" };
 ApplicationMgr.ExtSvc += { "FluxSvc" };
 ApplicationMgr.DLLs   += { "FluxSvc" }; 
  

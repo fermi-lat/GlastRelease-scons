@@ -289,12 +289,12 @@ FluxSource* FluxSource::event(double time)
     //the particles originate close to GLAST, and can still be incident.
     // loop through until you get a particle which is not occluded by the earth.
 computeLaunch(time);
-    m_extime+=5;
-    while(occluded()){
+    m_extime+=1;
+    while(occluded() || interval(time-1.) == -1){
         computeLaunch(time);
-        m_extime+=5;
+        m_extime+=1;
     }
-m_extime-=5; // to make up for doing this once too many.
+m_extime-=1; // to make up for doing this once too many.
 EventSource::setTime(time+m_extime);
 return this;
 // could be a call-back
@@ -1032,9 +1032,9 @@ double FluxSource::interval (double time){
     
     //return std::max(m_spectrum->interval(time),/*0.*/ EventSource::interval(time));
     double intrval=m_spectrum->interval(time + m_extime);
-    if(intrval!=-1){return intrval;
+    if(intrval!=-1){return intrval + m_extime;
     }else{
-        return explicitInterval(time) + m_extime;
+        return explicitInterval(time+m_extime);
     }
 }
 
@@ -1043,10 +1043,10 @@ double FluxSource::explicitInterval (double time)
 {
     double  r = (solidAngle()*flux(time)*6.);
     
-    if (r == 0){ return -1.;
+    if (r == 0){ return -1.;// - m_extime; //the minus is for ensuring that interval() returns a -1 flag.
     }else{  
         double p = RandFlat::shoot(1.);
-        return (-1.)*(log(1.-p))/r;
+        return ((-1.)*(log(1.-p))/r)+m_extime;
     }
 }
 

@@ -21,7 +21,7 @@ class FluxSource : public EventSource
 {
   public:      
       ///  constructor
-      FluxSource ( ISpectrum* aSpec = 0, double aFlux = 1 );
+      FluxSource ( ISpectrum* aSpec = 0, double aFlux = /*1*/0 );
       FluxSource ( const DOM_Element& xelem );
       FluxSource::FluxSource(double aFlux, ISpectrum* aSpec,  Vector* direction);
 
