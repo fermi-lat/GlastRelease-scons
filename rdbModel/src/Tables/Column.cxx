@@ -5,7 +5,7 @@
 
 namespace rdbModel {
 
-  Column::~Column {
+  Column::~Column() {
     delete m_type;
     delete m_source;
   }
@@ -13,15 +13,20 @@ namespace rdbModel {
   bool Column::okValue(const std::string& val, bool set) const {
     // auto increment and datetime values are established by rdbms
     if (set) {
-      if ((m_from == FROMautoIncrement) || (m_from == FROMnow)) return false;
+      if ((m_source->m_from == ColumnSource::FROMautoIncrement) || 
+          (m_source->m_from == ColumnSource::FROMnow)) return false;
     }
 
     return m_type->okValue(val);
   }
 
+  bool Column::isCompatible(const Column* otherCol) const {
+    return m_type->isCompatible(otherCol->m_type);
+  }
+
   Visitor::VisitorState Column::accept(Visitor* v) {
 
-    return = v->visitColumn(this);
+    return v->visitColumn(this);
   }
 
 }
