@@ -142,11 +142,11 @@ void G4Geometry::pushShape(ShapeType s, const UintVector& idvec, std::string nam
   m_logicals[name] = logical; 
 
 #endif  
-  // Set the rotation
+  // Set the rotation: note reversal of angles wich conversion to radians
   G4RotationMatrix* rm = new G4RotationMatrix(); 
-  rm->rotateX(rx*M_PI/180);
-  rm->rotateY(ry*M_PI/180);
-  rm->rotateZ(rz*M_PI/180);
+  rm->rotateX(-rx*M_PI/180);
+  rm->rotateY(-ry*M_PI/180);
+  rm->rotateZ(-rz*M_PI/180);
 
   // Create the positioned physical volume
   phys = new G4PVPlacement(rm,G4ThreeVector(x*mm,y*mm,z*mm),
