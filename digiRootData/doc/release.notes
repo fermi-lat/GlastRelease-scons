@@ -3,6 +3,7 @@ Package digiRootData
 Coordinator:H.Kelly
 @verbatim
 
+v4r2      09-Oct-2003 HMK Update AcdId to handle ribbons
 v4r1p2    27-Jun-2003 HMK Comment out another debug statement
 v4r1p1    26-Jun-2003 LSR fix i/o for TkrDigi lastController0Strip
 v4r1p0    12-Jun-2003 HMK Comment out debug statements
