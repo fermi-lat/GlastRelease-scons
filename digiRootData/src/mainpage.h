@@ -2,7 +2,11 @@
 
   @section intro Introduction
   This package defines the ROOT classes used to store GLAST digitization data.
-  The main branch is defined as the DigiEvent class.  This class contains:
+  The main branch is defined as the DigiEvent class.  
+  
+  @image html digiTree.gif
+
+  This class contains:
   - Run Id
   - Event Id
   - Time Stamp in seconds
@@ -17,13 +21,13 @@
     -# AcdId
     -# 2 PMTs each contains: PHA and 3 discriminators:  low, veto, high (CNO)
     -# MC energy (MeV) deposited as a check on PHA values
-       
 
   <hr>
   @section notes release notes
-  @include release.notes
+  release.notes
+  <hr>
   @section requirements requirements
-  @include requirements
+  @verbinclude requirements
 
   @authors Dan Flath and Heather Kelly
 */

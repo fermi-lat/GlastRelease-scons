@@ -1,6 +1,8 @@
+/** @file release.notes
 Package digiRootData
-Coordinator: H. Kelly
+Coordinator:H.Kelly
 
+v3r5p6      24-Sep-2002 HMK Update documentation\n
 v3r5p2    26-Aug-2002 THB Use new RootPolicy to produce rootcint file\n
 v3r5      10-Jun-2002 HMK Add VolId to AcdDigi \n
 v3r4      06-Jun-2002 HMK Add in time stamp and trigger bits \n
@@ -14,3 +16,4 @@ v2r8      28-aug-2001 HMK update requirements file \n
 v2r7      21-aug-2001 HMK  add in CNO bit for AcdTile class \n
           20-june-2001 HMK update classes for the BFEM \n
 v1r1      april-2001 HMK \n
+*/

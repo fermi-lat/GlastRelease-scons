@@ -1,7 +1,7 @@
+# This file describes special Doxygen settings for this package
 
-# The EXCLUDE tag can be used to specify files and/or directories that should 
-# excluded from the INPUT source files. This way you can easily exclude a 
-# subdirectory from a directory tree whose root is specified with the INPUT tag. 
+# If the value of the INPUT tag contains directories, you can use the 
+# EXCLUDE_PATTERNS tag to specify one or more wildcard patterns to exclude 
+# certain files from those directories. 
 
-EXCLUDE                = "../digiRootData/EventCint.cxx" "../digiRootData/EventCint.h" "../digiRootData/EventLinkDef.h" "../digiRootData/stuff.h" "../digiRootData/dorootcint.bat"
-
+EXCLUDE_PATTERNS       = "*rootcint*" "*Header*" "LiveTime.*"
