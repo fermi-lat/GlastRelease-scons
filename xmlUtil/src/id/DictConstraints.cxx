@@ -180,7 +180,7 @@ namespace xmlUtil {
       }
     } 
     else {  // other is interval-type constraint
-      for (unsigned iy = other.m_minVal; iy < other.m_maxVal; iy++) {
+      for (unsigned iy = other.m_minVal; iy <= other.m_maxVal; iy++) {
         if (!allowed(iy)) return false;
       }
     }
