@@ -2,6 +2,7 @@
  * package Event
  * package manager:T.Burnett (original author: H. Gillespie)
  *
+ * v8r10 27-jun-02 THB TkrRecon additions
  * v8r9  12-jun-02 THB  AcdRecon added.
  * v8r8  10-jun-02 THB  track direction reversed; acddigi inteface now changed.
  * v8r7p2 10-jun-02 THB  initialize event header
