@@ -3,14 +3,17 @@
 // Job options file for FluxSvc test program
 //
 
-
+ApplicationMgr.ExtSvc += { "BFEMfluxSvc" };
+ApplicationMgr.DLLs   += { "BFEMflux" };
 ApplicationMgr.ExtSvc += { "FluxSvc" };
 ApplicationMgr.DLLs   += { "FluxSvc" }; 
+ 
 FluxSvc.source_lib = {"$(FLUXSVCROOT)/xml/source_library.xml"};
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
 
-ApplicationMgr.TopAlg = {"FluxAlg","FluxTestAlg"};
-//ApplicationMgr.TopAlg = {"FluxTestAlg"};
+//ApplicationMgr.TopAlg = {"FluxAlg","FluxTestAlg"};
+//ApplicationMgr.TopAlg = {"BFEMTestAlg"};
+ApplicationMgr.TopAlg = {"FluxTestAlg"};
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
@@ -23,7 +26,7 @@ FluxSvc.source_lib += {"$(FLUXSVCROOT)/xml/user_library.xml"};
 
 // ask for a source that is in the user_library
 FluxTestAlg.source_name="default";
-//FluxTestAlg.source_name="GRBSpectrum";
+//FluxTestAlg.source_name="CrProton";
 //FluxAlg.source_name="chime";
 
 ApplicationMgr.EvtSel = "NONE";

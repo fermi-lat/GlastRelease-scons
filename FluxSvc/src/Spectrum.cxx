@@ -17,31 +17,6 @@
 
 Spectrum::~Spectrum(){}
 
-//float Spectrum::fraction(float e)
-//{
-//    // this is essentially rtbis of numerical recipies
-//    static int JMAX=40;
-//    static double xacc = e*1e-3;
-//    static double zero = 1e-4;
-
-//    double dx,xmid, x1=0,x2=1;
-//    double f = (*this)(x1)-e;
-//    double fmid = (*this)(x2)-e;
-
-//    // Check to see if the x2 contains the root
-//    if(abs(fmid) < zero) return x2;
-//
-//    if (f*fmid >0.0) return 0.5; // fail?
-//
-//    double rtb = f < 0.0 ? (dx=x2-x1, x1) : (dx = x1-x2,x2);
-//
-//    for(int j=0; j< JMAX; j++) {
-//	fmid = (*this)(xmid=rtb+ (dx*=0.5))-e;
-//	if( fmid <0.0 ) rtb = xmid;
-//	if( abs(dx) < xacc || fmid ==0) return rtb;
-//    }
-//    return rtb; // fail
-//}
 
 double Spectrum::flux (double time ) const {
     return 0.; // flag that we don't have a flux
@@ -54,18 +29,15 @@ double Spectrum::solidAngle( )const
 
 std::pair<float,float> Spectrum::dir(float energy)const
 {
-    
     // return solid angle pair (costh, phi) for the given energy
     // default: random except for Earth occultation
     //return std::make_pair(static_cast<float>(RandFlat::shoot(-0.4,1.0)),
     //static_cast<float>(RandFlat::shoot(0.0, 2*M_PI)) );
     //here's an attempt at random default distributions as above:
-    //return std::make_pair(((rand()/32767.0)*1.4)-0.4,(rand()/32767.0)*2*M_PI);
     return std::make_pair(((RandFlat::shoot(1.0))*1.4)-0.4,(RandFlat::shoot(1.0))*2*M_PI);
     
 }
-
-
+    
 
 const char * Spectrum::particleName()const{
     static const char x='p';
@@ -100,27 +72,11 @@ void Spectrum::parseParamList(std::string input, std::vector<float>& output) con
 
 double Spectrum::interval (double time)
 {
-    //if we have already calculated an interval for this
-    //particle, don't do it again!
-    //if(!m_currentInterval){
-        
-        double  r = (solidAngle()*flux(time)*6.);
-        
-        if (r == 0){ return -1.;
-        }else{  
-            double p = RandFlat::shoot(1.);
-            return (-1.)*(log(1.-p))/r;
-        }
-    //}
+    double  r = (solidAngle()*flux(time)*6.);
     
-    //return m_currentInterval;
-    
-    /* //FIX THIS - MAKE IT AN EXPONENTIAL!
-    
-      double  r = (solidAngle()*flux(time)*6.);
-      if (r > 0) {
-      return  RandExponential::shoot(1./r);
-      } else if (r < 0) {
-      return 1./r;
-} else return -1.;*/
+    if (r == 0){ return -1.;
+    }else{  
+        double p = RandFlat::shoot(1.);
+        return (-1.)*(log(1.-p))/r;
+    }
 }
