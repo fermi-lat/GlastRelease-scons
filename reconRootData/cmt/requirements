@@ -1,4 +1,5 @@
 package reconRootData
+# $Id$
 version v4r6
 
 use GlastPolicy v*
@@ -10,11 +11,9 @@ apply_pattern ld_library_path
 #--------------------------------------------------------------
 private
 use RootPolicy v2r*
-apply_pattern root_package
 
-#define the list of header files to be used in rootcint
-
-macro root_headers "\
+# See RootPolicy for discussion of this pattern
+apply_pattern root_package headers="\
  ../reconRootData/AcdRecon.h\
  ../reconRootData/CalCluster.h\
  ../reconRootData/CalRecon.h\
@@ -31,9 +30,8 @@ macro root_headers "\
  ../reconRootData/TkrParams.h\
  ../reconRootData/TkrRecon.h\
  ../reconRootData/TkrTrack.h\
- ../reconRootData/TkrVertex.h"
-
-macro root_includes "-I$(DIGIROOTDATAROOT)" 
+ ../reconRootData/TkrVertex.h"\
+ includes="-I$(DIGIROOTDATAROOT)"
 
 macro test_reconRootDatalinkopts ${reconRootData_shlibflags}
 application test_reconRootData test/testReconClasses.cxx

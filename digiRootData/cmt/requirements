@@ -1,9 +1,9 @@
 package digiRootData
 version v7r1
+# $Id$
 
 use mcRootData v2r*
 use GlastPolicy v*
-# $Id$
 
 apply_pattern package_include
 apply_pattern package_linkopts
@@ -14,9 +14,8 @@ private
 use RootPolicy v2r*
 use ldfExt  v0r*  IExternal
 
-apply_pattern root_package
-
-macro root_headers "\
+# See RootPolicy for discussion of this pattern
+apply_pattern root_package headers="\
  ../digiRootData/AcdDigi.h\
  ../digiRootData/AcdId.h\
  ../digiRootData/CalDiagnosticData.h\
@@ -29,11 +28,8 @@ macro root_headers "\
  ../digiRootData/TkrDiagnosticData.h\
  ../digiRootData/TkrDigi.h\
  ../digiRootData/TowerId.h\
- ../digiRootData/EventSummaryData.h"
-
-# override the default macro
-
-macro root_includes "-I${MCROOTDATAROOT}"
+ ../digiRootData/EventSummaryData.h"\
+ includes="-I${MCROOTDATAROOT}"
 
 macro test_digiRootDatalinkopts ${digiRootData_shlibflags} 
 application test_digiRootData test/testDigiClasses.cxx
