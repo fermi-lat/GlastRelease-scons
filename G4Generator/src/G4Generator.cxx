@@ -138,7 +138,7 @@ StatusCode G4Generator::initialize()
   }
   if (zOffset!=0.0) {
       log << MSG::INFO << "Particles will be offset in z by " 
-          << zOffset << " mm" << std::endl;
+          << zOffset << " mm" << endreq;
   }
 
   // Init the McParticle hierarchy 
