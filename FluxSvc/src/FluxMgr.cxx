@@ -11,8 +11,8 @@
 #include "FluxException.h" // defines FATAL_MACRO
 #include "CompositeSource.h"
 
-#include "dom/DOM_Document.hpp"
-#include "dom/DOM_Element.hpp"
+#include <xercesc/dom/DOM_Document.hpp>
+#include <xercesc/dom/DOM_Element.hpp>
 #include "xml/Dom.h"
 #include "xml/IFile.h"
 

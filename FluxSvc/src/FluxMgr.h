@@ -23,8 +23,8 @@
 
 #include "FluxSource.h"
 
-#include "dom/DOM_Document.hpp"
-#include "dom/DOM_Element.hpp"
+#include <xercesc/dom/DOM_Document.hpp>
+#include <xercesc/dom/DOM_Element.hpp>
 #include "xml/XmlParser.h"
 #include "FluxSvc/ISpectrumFactory.h"
 #include <map>

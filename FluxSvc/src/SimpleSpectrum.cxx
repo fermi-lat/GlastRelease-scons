@@ -7,7 +7,7 @@
 
 #include "SimpleSpectrum.h"
 
-#include "dom/DOM_Element.hpp"
+#include <xercesc/dom/DOM_Element.hpp>
 #include "xml/Dom.h"
 
 #include "FluxException.h" // for FATAL_MACRO
