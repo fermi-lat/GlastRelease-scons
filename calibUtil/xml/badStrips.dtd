@@ -31,11 +31,11 @@
                             it in the MySQL metadata table]
  -->
 
-<!ELEMENT badStrips (meta, inputSample, cuts, tower*) >
+<!ELEMENT badStrips (generic, cuts, tower*) >
 <!ATTLIST badStrips badType (hot | dead) #REQUIRED >
 
-<!ELEMENT  meta  EMPTY >
-<!ATTLIST meta  
+<!ELEMENT  generic  (inputSample) >
+<!ATTLIST generic  
    instrument  (flight | BFEM | BTEM | EM | CU) #REQUIRED
    timestamp   NMTOKEN #REQUIRED
    calType     NMTOKEN #REQUIRED
@@ -48,7 +48,9 @@
 <!ELEMENT inputSample (#PCDATA) >
 <!ATTLIST inputSample  startTime NMTOKEN #REQUIRED
                        stopTime  NMTOKEN #REQUIRED
-                       triggers  NMTOKENS #REQUIRED >
+                       triggers  NMTOKENS #REQUIRED 
+                       source    NMTOKENS #REQUIRED
+                       mode      NMTOKEN  #REQUIRED>
 
 <!-- "tight", "loose" and "expected" are all expressed as percentage
      of events for which a strip is hit, and all are affected by the
