@@ -1,7 +1,6 @@
 
 #include "CalRecon/CsIClusters.h"
 // #include "Event/messageManager.h"
-#include "CalRecon/calorimeterGeo.h"
 
 //----------------- CsICluster ------------------
 
@@ -9,7 +8,7 @@
 CsICluster::CsICluster(double e,Point p)
 //################################################
 { 
-	int nl = calorimeterGeo::numLayers() * calorimeterGeo::numViews();
+	int nl = 8;
 	m_eneLayer.resize(nl);	
 	m_pLayer.resize(nl);	
 	ini();

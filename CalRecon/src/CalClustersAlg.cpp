@@ -11,7 +11,6 @@
 #include "Gaudi/Interfaces/IDataProviderSvc.h"
 #include "Gaudi/DataSvc/SmartDataPtr.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "CalRecon/calorimeterGeo.h"
 
 static const AlgFactory<CalClustersAlg>  Factory;
 const IAlgFactory& CalClustersFactory = Factory;
@@ -321,6 +320,7 @@ StatusCode CalClustersAlg::initialize()
 //################################################
 {
 	StatusCode sc = StatusCode::SUCCESS;
+     sc = service("CalGeometrySvc", m_CalGeo);
 	
 //	m_CsIClusterList = dataManager::instance()->getData("CsIClusterList",m_CsIClusterList);
 //	m_CalRecLogs  = dataManager::instance()->getData("CalRecLogs",m_CalRecLogs);
@@ -388,7 +388,7 @@ StatusCode CalClustersAlg::execute()
 	double ene = 0;
 	const Point p0(0.,0.,0.);
 	Vector pCluster(p0);
-	int nLayers = calorimeterGeo::numLayers() * calorimeterGeo::numViews();
+	int nLayers = m_CalGeo->numLayers() * m_CalGeo->numViews();
 	
 	std::vector<double> eneLayer(nLayers,0.);
 	std::vector<Vector> pLayer(nLayers);

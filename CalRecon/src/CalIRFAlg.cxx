@@ -11,19 +11,12 @@
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
-#include "xml/IFile.h"
-
-#include "reconstruction/GlastTuple.h"
-#include "reconstruction/PrintReconData.h"
-#include "reconstruction/SummaryData.h"
-#include "reconstruction/GlastTuple.h"
 
 #include "GlastEvent/data/TdGlastData.h"
 #include "data/CsIData.h"
 #include "gui/DisplayControl.h"
 #include "GuiSvc/IGuiSvc.h"
 #include "gui/GuiMgr.h"
-#include "CalRecon/calorimeterGeo.h"
 // #define TUPLE 1
 
 static const AlgFactory<CalIRFAlg>  Factory;
@@ -48,34 +41,27 @@ StatusCode CalIRFAlg::initialize() {
     
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "initialize" << endreq;
+
+
     
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
+
+    //Look for the geometry service
+    StatusCode sc = service("CalGeometrySvc", m_CalGeo);
+    if (!sc.isSuccess ()){
+        log << MSG::ERROR << "Couldn't find the CalGeometrySvc!" << endreq;
+    }
     
     // now try to find the GlastDevSvc service
-    StatusCode sc = service("GlastDetSvc", m_detSvc);
+     sc = service("GlastDetSvc", m_detSvc);
     
     
     if (!sc.isSuccess ()){
         log << MSG::ERROR << "Couldn't find the GlastDetSvc!" << endreq;
     }
     
-    // test: get a constant from the ini file
-    m_ini = const_cast<xml::IFile*>(m_detSvc->iniFile()); //OOPS!
-    int nx = m_ini->getInt("glast", "xNum");
     
-    
-    // get the Gui service
-    IGuiSvc* guiSvc=0;
-    sc = service("GuiSvc", guiSvc);
-
-    if (!sc.isSuccess ()){
-        log << MSG::WARNING << "Couldn't find the GuiSvc!" << endreq;
-        sc =StatusCode::SUCCESS; 
-    }else
-    {
-       guiSvc->guiMgr()->display().add(m_recon->displayRep(), "Cal reco");
-    }
 
     return sc;
 }
@@ -88,8 +74,12 @@ StatusCode CalIRFAlg::execute() {
     MsgStream   log( msgSvc(), name() );
     log << MSG::INFO << "execute" << endreq;
 
-    
-    CalRecLogs* crl = new CalRecLogs;
+	int nModX = m_CalGeo->numModulesX();   
+	int nModY = m_CalGeo->numModulesY();   
+	int nLogs = m_CalGeo->numLogs();
+	int nLayers = m_CalGeo->numLayers();
+	int nViews = m_CalGeo->numViews();
+    CalRecLogs* crl = new CalRecLogs(nModX,nModY,nLogs,nLayers,nViews);
 	DataObject* pnode=0;
 
     sc = eventSvc()->retrieveObject( "/Event/CalRecon", pnode );
@@ -124,10 +114,10 @@ StatusCode CalIRFAlg::execute() {
 //    csi->printOn(std::cout);
 
 	double ene = 0.0;
-	for (int l=0; l < calorimeterGeo::numLayers();l++){
-		for (int v=0; v< calorimeterGeo::numViews(); v++){
+	for (int l=0; l < m_CalGeo->numLayers();l++){
+		for (int v=0; v< m_CalGeo->numViews(); v++){
 			detGeo::axis view = detGeo::makeAxis(v);
-			int ilayer = l*(calorimeterGeo::numViews())+v;
+			int ilayer = l*(m_CalGeo->numViews())+v;
 			int nhits = csi->nHits(ilayer);
 			if(nhits == 0)continue;
 			for ( int ihit = 0; ihit < nhits; ihit++){
@@ -136,15 +126,15 @@ StatusCode CalIRFAlg::execute() {
 				int icol = xtalid.xtal()-1;
 
 //  to fix  incorrect log numbering for X layers (with view==Y, numbers should increase with Y)  
-				if(v == 1) icol = calorimeterGeo::numLogs()-1 - icol;
+				if(v == 1) icol = m_CalGeo->numLogs()-1 - icol;
 
-				float enePos = csi->Rresp(ilayer,ihit);
-				float eneNeg = csi->Lresp(ilayer,ihit);
+				float enePos = csi->Rresp(ilayer,ihit)*1000.;
+				float eneNeg = csi->Lresp(ilayer,ihit)*1000.;
 				ene += (enePos+eneNeg)/2;
 				CalRecLog* recLog = crl->getLogID(CalLogID::ID(l,view,icol,mod));
 				recLog->setNegEnergy(eneNeg);
 				recLog->setPosEnergy(enePos);
-				detGeo geoLog = calorimeterGeo::getLog(l,view,icol,mod);
+				detGeo geoLog = m_CalGeo->getLog(l,view,icol,mod);
 
 				Point pCenter = geoLog.position();
 				Point pSize   = geoLog.size();
@@ -178,37 +168,8 @@ StatusCode CalIRFAlg::finalize() {
     
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "finalize" << endreq;
-    delete m_recon;
-    //    delete m_summary;
     
     return StatusCode::SUCCESS;
-}
-
-/*! Can be used to check to see if the newstyle NTuple was written properly.
-*/
-StatusCode CalIRFAlg::printNewNTuple() {
-    StatusCode status;
-    MsgStream log(msgSvc(), name());
-    
-    NTuplePtr nt = m_gsummary->tuple()->getNTuple();
-    if(nt)
-    {
-        NTuple::Item<float> data;
-        status = nt->item("CsI_eLayer1" ,data);
-        
-        if(status.isSuccess())
-        {
-            log << MSG::INFO << "Test Value of New Ntuple :\n"  
-                << "CsI_eLayer1: " << data << "\n" << endreq;
-            return StatusCode::SUCCESS;
-        } else {
-            log << MSG::ERROR << "Didn't load the Item!" << endreq;
-            return StatusCode::FAILURE;
-        }
-    } else {
-        log << MSG::ERROR << "Dead NTuple !" << endreq;
-        return StatusCode::FAILURE;
-    }
 }
 
 

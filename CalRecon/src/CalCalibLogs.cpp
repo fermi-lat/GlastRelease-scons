@@ -1,5 +1,4 @@
 #include "CalRecon/CalCalibLogs.h"
-#include "CalRecon/calorimeterGeo.h"
 // #include "Event/messageManager.h"
 #include <fstream>
 
@@ -20,11 +19,9 @@ CalCalibLog* CalCalibLogs::getLogID(int logID) const
 	return m_List[jlog];
 }
 
-void CalCalibLogs::ini()
+void CalCalibLogs::ini(int nLogs, int nLayers)
 {
 	
-	int nLayers = calorimeterGeo::numLayers();
-	int nLogs   = calorimeterGeo::numLogs();
 	for (int ilayer = 0; ilayer < nLayers; ilayer++) {
 		for (int ilog = 0; ilog < nLogs; ilog++) {
 			m_List.push_back(new CalCalibLog(ilayer,detGeo::X,ilog));

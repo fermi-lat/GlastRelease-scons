@@ -1,7 +1,5 @@
 
 #include "CalRecon/CalADCLogs.h"
-#include "CalRecon/calorimeterGeo.h"
-// #include "Event/messageManager.h"
 //######################################
 CalADCLog::CalADCLog(int ilayer, int iview, int icolumn)
 :CalLogID(ilayer,iview,icolumn)
@@ -41,13 +39,9 @@ void CalADCLog::writeOut() const
 }
 //--------------------------------------------------
 //######################################
-void CalADCLogs::ini()
+void CalADCLogs::ini(int nModX, int nModY, int nLogs, int nLayers)
 //######################################
 {
-	int nModX = calorimeterGeo::numModulesX();
-	int nModY = calorimeterGeo::numModulesY();
-	int nLayers = calorimeterGeo::numLayers();
-	int nLogs   = calorimeterGeo::numLogs();
 	for (int iy = 1; iy <= nModY; iy++){		
 		for (int ix = 1; ix <= nModX; ix++){
 			idents::ModuleId mod(ix,iy);

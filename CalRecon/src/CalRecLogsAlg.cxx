@@ -2,7 +2,6 @@
 //#include "Event/dataManager.h"
 //#include "Event/messageManager.h"
 #include "CalRecon/CalBase.h"
-#include "CalRecon/calorimeterGeo.h"
 #include "CalRecon/CalPedCalib.h"
 #include "CalRecon/CalCalibLogs.h"
 #include "CalRecon/CalRecLogsAlg.h"
@@ -43,6 +42,7 @@ StatusCode CalRecLogsAlg::initialize()
 	m_CalRawLogs   = dataManager::instance()->getData("CalRawLogs",m_CalRawLogs);
 	m_CalRecLogs   = dataManager::instance()->getData("CalRecLogs",m_CalRecLogs);
 */
+     sc = service("CalGeometrySvc", m_CalGeo);
   
 
 	m_CalPedLogs  = new CalPedCalib(); 
@@ -74,7 +74,7 @@ StatusCode CalRecLogsAlg::execute()
 	    int icol            = ADCLog->column();
 
 //		detGeo*    geoLog = m_CalGeoLogs->getLog(ilayer,view,icol);
-		detGeo geoLog = calorimeterGeo::getLog(ilayer,view,icol);
+		detGeo geoLog = m_CalGeo->getLog(ilayer,view,icol);
 
 		
 		CalADCLog* pedLog = m_CalPedLogs->getLogID(CalLogID::ID(ilayer,view,icol));
@@ -83,6 +83,7 @@ StatusCode CalRecLogsAlg::execute()
 		CalRecLog* recLog = m_CalRecLogs->getLogID(CalLogID::ID(ilayer,view,icol));
 		computeEnergy(recLog, ADCLog, pedLog, calibLog);
 		computePosition(recLog,&geoLog, calibLog);
+//		std::cout << " ilayer = " << ilayer << " view=" << view << " icol=" << icol << std::endl;
 	}
 //	m_CalRecLogs->writeOut();
 

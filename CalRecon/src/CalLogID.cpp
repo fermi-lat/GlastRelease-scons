@@ -1,6 +1,5 @@
 
 #include "CalRecon/CalLogID.h"
-#include "CalRecon/calorimeterGeo.h"
 //#######################################
 CalLogID::CalLogID(int ilayer, detGeo::axis v, int icolumn, idents::ModuleId mod)
 //#######################################

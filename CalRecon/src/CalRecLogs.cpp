@@ -1,9 +1,6 @@
 
 #include "CalRecon/CalRecLogs.h"
-// #include "Event/messageManager.h"
-#include "CalRecon/calorimeterGeo.h"
-// #include "Event/dataManager.h"
-// #include "reconstruction/CsIClusters.h"
+#define LOGWIDTH 3.05
 
 //----------------- CalRecLog ------------------
 //################################################
@@ -49,7 +46,8 @@ void CalRecLog::draw(gui::DisplayRep& v) const
 {
 	double MINENE = 10.;
 	double FACTOR = 0.1;
-	double delta = 0.2*calorimeterGeo::logWidth();
+//	double delta = 0.2*calorimeterGeo::logWidth();
+	double delta = 0.2*LOGWIDTH;
 	double x = position().x();
 	double y = position().y();
 	double z = position().z();
@@ -84,17 +82,11 @@ void CalRecLog::clear()
 
 //------------ private ---------------------------
 //######################################
-void CalRecLogs::ini()
+void CalRecLogs::ini(int nModX, int nModY, int nLogs, int nLayers, int nViews)
 //######################################
 {
-	int nModX = calorimeterGeo::numModulesX();
-	int nModY = calorimeterGeo::numModulesY();
-	
-	int nLayers = calorimeterGeo::numLayers();
-	int nLogs   = calorimeterGeo::numLogs();
-	int nViews  = calorimeterGeo::numViews();
-	for (int iy = 0; iy < nModY; iy++){		
-		for (int ix = 0; ix < nModX; ix++){
+	for (int iy = 1; iy <= nModY; iy++){		
+		for (int ix = 1; ix <= nModX; ix++){
 			idents::ModuleId mod(ix,iy);
 			
 			for (int ilayer = 0; ilayer < nLayers; ilayer++) {
