@@ -165,8 +165,8 @@ std::string FluxSvc::fluxName()const{
     return m_currentFlux->name();
 }
 
-void FluxSvc::setGlastAngles(std::pair<double,double> ang){
-    m_fluxMgr->setGlastAngles(ang);
+void FluxSvc::setOrientation(std::pair<double,double> ang){
+    m_fluxMgr->setOrientation(ang);
 }
 
 void WARNING (const char * text ){  std::cerr << "WARNING: " << text << '\n';}

@@ -284,7 +284,7 @@ void FluxMgr::addFactory(std::string name, const ISpectrumFactory* factory ) {
     SpectrumFactoryTable::instance()->addFactory(name,factory);
 }
 
-void FluxMgr::setGlastAngles(std::pair<double,double> ang){
+void FluxMgr::setOrientation(std::pair<double,double> ang){
     GPS::instance()->rotateAngles(ang);
 }
 
@@ -327,6 +327,10 @@ Rotation FluxMgr::CELTransform(double time){
     return GPS::instance()->orbit()->CELtransform(time);
 }
 
+//get the transformation matrix.
+Rotation FluxMgr::OrientTransform(double time){
+    return GPS::instance()->rockingAngleTransform(time);
+}
 
 
 /** creates a document of the form

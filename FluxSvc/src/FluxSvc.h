@@ -48,7 +48,7 @@ public:
     std::string fluxName()const;
 
     /// set the glast tilt angles.
-    void setGlastAngles(std::pair<double,double> ang);
+    void setOrientation(std::pair<double,double> ang);
 
     
     //------------------------------------------------------------------

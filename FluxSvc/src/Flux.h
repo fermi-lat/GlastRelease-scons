@@ -77,7 +77,11 @@ public:
     
     virtual void addFactory(std::string name, const ISpectrumFactory* factory );
     
+    ///get the transformation matrix due to orientation of the Galaxy 
     virtual Rotation CELTransform(double time)const;
+
+    ///get the transformation matrix due to orientation of the spacecraft.
+    virtual Rotation OrientTransform(double time)const;
                                                                                   
 //    insert(std::make_pair<std::string, const ISpectrumFactory*>(name, factory));
 

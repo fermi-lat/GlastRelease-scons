@@ -67,8 +67,11 @@ public:
     /// pass a specific amount of time
     virtual void pass ( double t)=0;
 
-    /// get the transformation matrix
+    ///get the transformation matrix due to orientation of the Galaxy 
     virtual Rotation CELTransform(double time)const=0;
+
+    ///get the transformation matrix due to orientation of the spacecraft.
+    virtual Rotation OrientTransform(double time)const=0;
        
     virtual void addFactory(std::string name, const ISpectrumFactory* factory )=0;
 

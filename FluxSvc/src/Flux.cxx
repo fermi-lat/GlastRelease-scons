@@ -136,3 +136,6 @@ Rotation Flux::CELTransform(double time)const{
 return s_mgr->CELTransform(time);
 }
 
+Rotation Flux::OrientTransform(double time)const{
+return s_mgr->OrientTransform(time);
+}
