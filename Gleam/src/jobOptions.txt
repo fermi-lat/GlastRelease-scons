@@ -1,14 +1,14 @@
 //##############################################################
 //
-// Job options file for Gleam job
+// Job options file for GUI (gui or FRED) Gleam job
 // $Header$
 
 #include "$GLEAMROOT/src/basicOptions.txt"
 
 // choose one or the other below for standard Gui or FRED
 // for FRED, it must be running, and you must open the file hepeventserver.ior, in the default directory
-#include "$GLEAMROOT/src/guiOptions.txt"
-//#include "$GLEAMROOT/src/fredOptions.txt"
+//#include "$GLEAMROOT/src/guiOptions.txt"
+#include "$GLEAMROOT/src/fredOptions.txt"
 
 FluxAlg.source_name="muon_pencil_angle";
 ApplicationMgr.EvtMax  = 1000;
