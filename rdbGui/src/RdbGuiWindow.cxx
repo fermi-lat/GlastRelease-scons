@@ -357,6 +357,9 @@ long RdbGUIWindow::onSendQuery(FXObject*,FXSelector, void*)
         }
     }
   uiTable->format();
+  
+  for (i = 0; i < columns->getNumItems(); i++)
+    onUpdResTableCols(NULL, 0, (void *) i);
   return 1;
 }
 
