@@ -32,7 +32,7 @@ glast_CHECK_LIB(LIB_ANALYSIS, libanalysis.la, analysis)
 AC_OUTPUT(Makefile src/Makefile)
 
 
-AC_MSG_RESULT([]
+AC_MSG_RESULT([
 	Merit program now configured.
 ])
 
