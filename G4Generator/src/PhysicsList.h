@@ -1,38 +1,35 @@
 #ifndef PhysicsList_h
 #define PhysicsList_h 1
 
-#include "G4VUserPhysicsList.hh"
+#include "G4VModularPhysicsList.hh"
 #include "globals.hh"
 
-class PhysicsList: public G4VUserPhysicsList
+/** 
+ * @class PhysicsList
+ *
+ * @brief Physics list class for G4Generator
+ *
+ * This class defines and activates all the physics processes used by
+ * G4Generator: in particular it sets
+ * 
+ * - the particles to be used in the simulation
+ * - the range cuts for each particle
+ * - the physics processes to be simulated
+ *  
+ * @author F.Longo
+ *    
+ * \$Header\$
+ */
+class PhysicsList: public G4VModularPhysicsList
 {
-  public:
-    PhysicsList();
-    ~PhysicsList();
-
-  protected:
-    // Construct particle and physics process
-    void ConstructParticle();
-    void ConstructProcess();
-    void SetCuts();
-
- protected:
-    // these methods Construct particles 
-    void ConstructBosons();
-    void ConstructLeptons();
-    void ConstructMesons();
-    void ConstructBaryons();
-    
- protected:
-    // these methods Construct physics processes and register them
-    void ConstructGeneral();
-    void ConstructEM();
-    
- private:
-    // Data members to store the cuts
-    G4double cutForGamma;
-    G4double cutForElectron; 
-    G4double cutForProton;
+ public:
+  PhysicsList();
+  ~PhysicsList();
+  
+ public:
+  
+  /// This method set all the physics cuts for the simulation
+  virtual void SetCuts();
 };
 
 #endif

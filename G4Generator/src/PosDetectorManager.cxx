@@ -68,7 +68,6 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
 
     display(theTouchable, id, prePos, postPos);
 
-
     return true;
     
 }

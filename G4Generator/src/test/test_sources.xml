@@ -29,6 +29,30 @@
        </spectrum>
      </source>
 
+    <source name="alpha_test">
+       <spectrum> 
+         <particle name="alpha"><energy e="20"/> </particle>
+           <direction theta="0" phi="0" />
+           <patch xmin="-70" xmax="70" ymin="-70" ymax="70" />
+       </spectrum>
+     </source>
+
+    <source name="pi0_test">
+       <spectrum> 
+         <particle name="pi0"><energy e="20"/> </particle>
+           <direction theta="0" phi="0" />
+           <patch xmin="-70" xmax="70" ymin="-70" ymax="70" />
+       </spectrum>
+     </source>
+
+    <source name="lambda_test">
+       <spectrum> 
+         <particle name="lambda"><energy e="20"/> </particle>
+           <direction theta="0" phi="0" />
+           <patch xmin="-70" xmax="70" ymin="-70" ymax="70" />
+       </spectrum>
+     </source>
+
     <source name="gamma_test">
        <spectrum> 
          <particle name="gamma"><energy e="1.0"/> </particle>

@@ -6,12 +6,15 @@
 #include "UIsession.h"
 #include "PhysicsList.h"
 #include "PrimaryGeneratorAction.h"
+#include "TrackingAction.h"
 
 #include "Randomize.hh"
 #include "G4Run.hh"
 #include "G4RunMessenger.hh"
 #include "G4VUserDetectorConstruction.hh"
 #include "G4VUserPhysicsList.hh"
+#include "G4VModularPhysicsList.hh"
+
 #include "G4UserRunAction.hh"
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4GeometryManager.hh"
@@ -64,12 +67,16 @@ RunManager::RunManager(IGlastDetSvc* gds, IDataProviderSvc* esv)
   /// The timer of G4
   timer = new G4Timer();
 
+  // Set the TrackingAction to track the McParticle
+  eventManager->SetUserAction(new TrackingAction);
+
   /// Various G4 messenger needed
   G4ParticleTable::GetParticleTable()->CreateMessenger();
   G4ProcessTable::GetProcessTable()->CreateMessenger();
   randomNumberStatusDir = "./";
 
   /// The user stuff
+
   userDetector = new DetectorConstruction(gds,esv);
   physicsList = new PhysicsList;
   userPrimaryGeneratorAction = new PrimaryGeneratorAction;
@@ -409,6 +416,9 @@ std::auto_ptr<std::vector<Hep3Vector> > RunManager::getTrajectoryPoints(unsigned
   else  return std::auto_ptr<std::vector<Hep3Vector> >(0);
 
 }
+
+
+
 
 
 

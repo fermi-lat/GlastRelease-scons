@@ -8,6 +8,7 @@ class UIsession;
 
 class G4VUserDetectorConstruction;
 class G4VUserPhysicsList;
+class G4VModularPhysicsList;
 class G4VUserPrimaryGeneratorAction;
 
 class G4VPhysicalVolume;
@@ -104,7 +105,11 @@ class RunManager
   /// The detector construction class
   G4VUserDetectorConstruction * userDetector;
   /// The physics list class
-  G4VUserPhysicsList * physicsList;
+
+  //  G4VUserPhysicsList * physicsList;
+
+  G4VModularPhysicsList * physicsList;
+
   /// The primary generator class
   G4VUserPrimaryGeneratorAction * userPrimaryGeneratorAction;
 
@@ -140,7 +145,8 @@ class RunManager
   /// Return methods for the 3 user classes
   inline const G4VUserDetectorConstruction* GetUserDetectorConstruction() const
     { return userDetector; }
-  inline const G4VUserPhysicsList* GetUserPhysicsList() const
+  //  inline const G4VUserPhysicsList* GetUserPhysicsList() const
+  inline const G4VModularPhysicsList* GetUserPhysicsList() const
     { return physicsList; }
   inline const G4VUserPrimaryGeneratorAction* GetUserPrimaryGeneratorAction() const
     { return userPrimaryGeneratorAction; }
