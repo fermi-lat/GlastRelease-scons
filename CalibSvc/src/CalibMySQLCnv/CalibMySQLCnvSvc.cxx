@@ -513,7 +513,8 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
         << cType << ", " << flavor << ")" << endreq;
     return StatusCode::FAILURE;
   }
-  calibUtil::Metadata::eDataFmt physFmt = calibUtil::Metadata::FMTUnknown;
+  //  calibUtil::Metadata::eDataFmt physFmt = calibUtil::Metadata::FMTUnknown;
+  std::string physFmt = "UNK";
   std::string fmtVersion;
   std::string dataIdent;
 
@@ -656,7 +657,8 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
     return StatusCode::FAILURE;
   }
 
-  calibUtil::Metadata::eDataFmt physFmt = calibUtil::Metadata::FMTUnknown;
+  //  calibUtil::Metadata::eDataFmt physFmt = calibUtil::Metadata::FMTUnknown;
+  std::string physFmt = "UNK";
   std::string fmtVersion;
   std::string dataIdent;
 
@@ -730,7 +732,25 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
   return StatusCode::SUCCESS;
 }
 
+StatusCode  CalibMySQLCnvSvc::decodeDescription(const std::string& description,
+                                                unsigned char& type )
+{
+  MsgStream log(msgSvc(), "CalibMySQLCnvSvc");
 
+  if (description == std::string("XML")) {
+    type = XML_StorageType;
+  }
+  else if (description == std::string("ROOT")) {
+    type = CALIBROOT_StorageType;
+  }
+  else {       // unsupported
+    log << MSG::ERROR << "unsupported storage type " << description << endreq;
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
+}
+
+/*
 StatusCode  CalibMySQLCnvSvc::decodeDescription(unsigned int description,
                                                 unsigned char& type )
 {
@@ -748,7 +768,7 @@ StatusCode  CalibMySQLCnvSvc::decodeDescription(unsigned int description,
   }
   return StatusCode::SUCCESS;
 }
-
+*/
 /// Handle to the MySQL metadata database
 calibUtil::Metadata* CalibMySQLCnvSvc::getMeta( ) {
   return m_meta;
