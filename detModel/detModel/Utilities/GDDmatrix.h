@@ -8,6 +8,14 @@ class GDDvector{
 
   GDDvector(double px, double py, double pz):x(px), y(py), z(pz){};
 
+  double getX(){return x;}
+  double getY(){return y;}
+  double getZ(){return z;}
+
+  void setX(float a){x = a;}
+  void setY(float a){y = a;}
+  void setZ(float a){z = a;}
+
   double x;
   double y;
   double z;
