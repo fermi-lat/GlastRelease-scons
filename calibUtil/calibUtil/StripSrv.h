@@ -9,22 +9,59 @@
 
 namespace calibUtil {
 
-
-  class ClientObject;
   class GenericSrv;
+
+  /** Visitor callbacks can indicate whether traversal should continue
+       or not.
+         CONT        normal return: continue processing
+         USER_DONE   client has all information desired; no more traversal
+         ERROR       client has serious error; abort
+         DONE        not used by client.  Will be returned by 
+                     BadStrips::traverse   in case processing was normal.
+  */
+  enum eVisitorRet {CONT, USER_DONE, ERROR, DONE};
+
+  typedef std::vector<unsigned short int> StripCol;
+
+  /** Visitor class interface definition, required for invoking 
+      StripSrv::traverse
+  */
+  class ClientObject {
+  public:    
+    /**  Handle bad tower
+        @param row         zero-based row of tower
+        @param col         zero-based column of tower
+        @param badness     if gradations of badness have been recorded,
+                           larger number here corresponds to worse failure
+    */
+    virtual eVisitorRet badTower(unsigned int row, unsigned int col, 
+                                 int badness)=0;
+
+    /**  Handle bad uniplane with some or all bad strips
+        @param row         zero-based row of tower
+        @param col         zero-based column of tower
+        @param badness     if gradations of badness have been recorded,
+                           larger number here corresponds to worse failure
+        @param allBad      if true all strips are bad. @arg strips should
+                           be ignored
+        @param strips      vector of strips of badness @arg badness.  If
+                           empty, entire plane is bad.
+    */
+    virtual eVisitorRet badPlane(unsigned int row, unsigned int col, 
+                                 unsigned int tray, bool top,
+                                 int badness, bool allBad,
+                                 const StripCol& strips)=0;
+
+  };    // end pure virtual visitor class definition
+
 
   class StripSrv {
 
 
   public:
 
-    enum eUnilayer {UNKNOWN_UNI, TOP, BOT};
     enum eBadType  {UNKNOWN_BADTYPE, DEAD, HOT};
-    enum eBadness {VERYBAD=0, BAD, NBADNESS};
-    enum eRet     {CONT, USER_DONE, ERROR, DONE};
-
-    /// Clients shoud use as return values for readData
-
+    /// Clients should use as return values for readData
 
     typedef struct stowerRC { 
       unsigned short int row; 
@@ -39,57 +76,15 @@ namespace calibUtil {
     /// Constructor to be used when creating new calibrations
     StripSrv(eBadType badType, const GenericSrv& gen);
 
-    /** Add additional strips to the collection.  They must all come from
-        the same (uni)layer of Si and must all be of the same "badness"
-        @return  number of strips added
-    */
-    bool addBad(eBadness howBad, towerRC& t, int tray, eUnilayer uni,
-                const StripCol& list);
-
     /// destructor. Deallocates memory
     ~StripSrv();
   
     /// returns the status (Hot or Dead) of the strip
-    //    std::string getBadType();
     eBadType getBadType() const;
 
     /// lists all towers with bad strips 
     void getBadTowers(std::vector<towerRC>& towerIds) const;
 
-    /// counts very bad strips for the tower specified 
-    unsigned int nVeryBad(const towerRC& towerId) const;
-    
-    /// counts bad strips (including very bad) for the tower specified 
-    unsigned int nBad(const towerRC& towerId) const;
-    
-    /// counts very bad strips for the tower and tray specified 
-    unsigned int nVeryBad(const towerRC& towerId, unsigned int trayNum) const;
-    
-    /// counts bad strips (including very bad) for the tower and trayspecified 
-    unsigned int nBad(const towerRC& towerId, unsigned int trayNum) const;
-    
-    /// counts very bad strips for the tower,tray and unilayer  specified 
-    unsigned int nVeryBad(const towerRC& towerId, unsigned int trayNum, 
-                          eUnilayer uni) const;
-    
-    /// counts bad strips (including very bad) for the tower, tray 
-    /// and unilayer specified 
-    unsigned int nBad(const towerRC& towerId, unsigned int trayNum, 
-                      eUnilayer uni) const;
-
-    /// lists all very bad strips for a particular tower,tray and unilayer  
-    //    std::vector<unsigned int> getVeryBad(towerRC towerId, unsigned int trayNum,
-    //                                   eUnilayer uni);
-    void getVeryBad(const towerRC& towerId, unsigned int trayNum, eUnilayer uni,
-                    StripCol& strips) const;
-
-    /// lists  bad strips (including very bad) with the tower, tray 
-    /// and unilayer specified 
-    void getBad(const towerRC& towerId, unsigned int trayNum, eUnilayer uni,
-                StripCol& strips) const; 
-
-    // std::vector<unsigned int> getBad(towerRC towerId, unsigned int trayNum,
-    //                                 eUnilayer uniLayer);
     
     
     /// methods giving access to generic data
@@ -107,25 +102,31 @@ namespace calibUtil {
     std::string getFmtVer() const;
 
     /// call back method for client to access large data
-    StripSrv::eRet StripSrv::traverseInfo(ClientObject *client) const;
+    eVisitorRet StripSrv::traverseInfo(ClientObject *client) const;
 
-    eRet writeXml(std::ostream* out);
+    eVisitorRet writeXml(std::ostream* out);
 
   private:
-    // A unilayer can have one or both badnesses ("bad" and "veryBad")
-    typedef struct sUnilayer {
-      StripCol badLists[NBADNESS];
-    } Unilayer;
-  
-    typedef struct sTray {
-      unsigned int id;
-      Unilayer *top;  //    Unilayer *topLayer;
-      Unilayer *bot;  // Unilayer *botLayer;
-    } Tray;
+
+    // A tower just has a collection of uniplanes, 
+    // each identified by tray number, top or bottom, and badness
+    //
+
+    typedef struct sUniplane {
+      bool m_allBad;                 // if true, StripCol may be ignored
+      int  m_howBad;
+      int  m_tray;
+      bool m_top;
+      StripCol m_strips;
+    }  Uniplane;
 
     typedef struct sTower {
-      towerRC id;
-      std::vector<Tray> trays;
+      //      towerRC id;
+      unsigned short m_row;
+      unsigned short m_col;
+      bool    m_allBad;         // if true, uniplanes may be ignored
+      int     m_howBad;
+      std::vector<Uniplane> m_uniplanes;
     } Tower;
    
     std::vector<Tower> m_towers;
@@ -141,15 +142,6 @@ namespace calibUtil {
     // object to store generic data
     GenericSrv *m_genSrv;   
 
-    // A some point need to define a "cuts" object or just add three
-    // new fields
-    // float  expected;  // expected percentage of hits for a "normal"
-                         //  channel for this input sample
-    // float  tight;     // max (min) % of hits for a channel to be
-                         // considered not hot (not dead)
-    // float  loose;     // max (min) % of hits for a channel to be
-                         // considered not very hot (not very dead)
-
     
     /// this function takes in a stripList in string format and 
     /// fills a vector with corresponding strip numbers
@@ -157,7 +149,8 @@ namespace calibUtil {
 
     ///  Handles all the messy of details of extracting information
     ///  about a single unilayer from the XML representation
-    void fillUni(const DOM_Element& uniElt, Unilayer* uni);
+    //    void fillUni(const DOM_Element& uniElt, Unilayer* uni);
+    void fillUni(const DOM_Element& uniElt, Uniplane* uni);
 
     void fillStrips(const DOM_Element& badElt, StripCol& list);
     
@@ -165,20 +158,6 @@ namespace calibUtil {
     Tower* findTower(towerRC& towerId);
     /// const version of findTower, used by const public methods
     const Tower* findTower(const towerRC& towerId) const;
-
-    /// Internal utility, used when this object must be mutable 
-    Tray* findTray(Tower& tower, unsigned int trayNum);
-
-    /// const version of findTray, used by const public methods
-    const Tray* findTray(const Tower& tower, unsigned int trayNum) const;
-
-    bool addBad(eBadness howBad,  Tower* tow, int tray,
-                eUnilayer uni, const StripCol& list);
-
-
-    //    ----> TO BE WRITTEN           <---
-    bool addBad(eBadness howBad,  Tray* tr, eUnilayer uni, 
-                const StripCol& list);
 
   };
 
