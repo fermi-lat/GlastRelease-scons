@@ -23,5 +23,5 @@ library ntupleWriterSvc  *.cxx ../ntupleWriterSvc/*.h Dll/*.cxx
 
 macro WinJobOptions  "" VisualC "test/jobOptions.txt"
 
-application test \
+application test_ntupleWriterSvc \
     test/*.cxx ${WinJobOptions}
