@@ -6,8 +6,8 @@ apply_pattern packageShr
 branches src cmt doc
 
 use GuiSvc v3*
-use Event v8*
-use GlastSvc v8*
+use Event *
+use GlastSvc *
 
 use geometry v3*
 
