@@ -29,7 +29,7 @@ class EventHeader : public DataObject                                           
 public:
     
     EventHeader()
-        : DataObject() { }
+        : DataObject(), m_event(-1), m_run(-1) { }
     
     virtual ~EventHeader() { }
     
