@@ -6,17 +6,17 @@
 #include <list>
 #include <vector>
 
-#include "detModel/Management/GDDmanager.h"
-#include "detModel/Management/GDDVRMLSectionsVisitor.h"
-#include "detModel/Management/GDDprinterSectionsVisitor.h"
-#include "detModel/Management/GDDHTMLConstantsVisitor.h"
-#include "detModel/Management/GDDXercesBuilder.h"
-// #include "detModel/Management/GDDFakeBuilder.h"
+#include "detModel/Management/Manager.h"
+#include "detModel/Management/VrmlSectionsVisitor.h"
+#include "detModel/Management/PrinterSectionsVisitor.h"
+#include "detModel/Management/HtmlConstantsVisitor.h"
+#include "detModel/Management/XercesBuilder.h"
+// #include "detModel/Management/FakeBuilder.h"
 
-#include "detModel/Sections/GDDvolume.h"
-#include "detModel/Sections/GDDshape.h"
-#include "detModel/Sections/GDDbox.h"
-#include "detModel/GDD.h"
+#include "detModel/Sections/Volume.h"
+#include "detModel/Sections/Shape.h"
+#include "detModel/Sections/Box.h"
+#include "detModel/Gdd.h"
 
 
 /* This basic test needs two argument; the xml file to use and the volume 
@@ -38,15 +38,15 @@ int main(int argc, char* argv[]) {
 
   // We retrive the manager pointer (it is a singleton, so it is not possible
   // to create it in the usual way)
-  GDDmanager* manager = GDDmanager::getPointer();
+  detModel::Manager* manager = detModel::Manager::getPointer();
 
  
   // We set the builder; the XercesBuilder needs the name of the XML file
   // in the constructor
 
   // manager->setBuilder(new GDDFakeBuilder);
-
-  manager->setBuilder(new GDDXercesBuilder);
+  
+  manager->setBuilder(new detModel::XercesBuilder);
   manager->setNameFile(argv[1]);
   
 
@@ -58,18 +58,18 @@ int main(int argc, char* argv[]) {
 
   // We build the hierarchy; in that case we build all, i.e. both the constants
   // and the sections
-  manager->build(GDDmanager::all);
+  manager->build(detModel::Manager::all);
 
   // We start the VRMLSectionsVisitor to build the vrml file
   // If we don't specify a string in the constructor, it will build the
   // vrml file for all the volumes placed in the topVolume, otherwise it
   // will build the vrml file for the specified volume. The output is
   // placed in sections.vrml
-  GDDVRMLSectionsVisitor* visitor;
+  detModel::VrmlSectionsVisitor* visitor;
   if (argc == 2)
-    visitor = new GDDVRMLSectionsVisitor("");  
+    visitor = new detModel::VrmlSectionsVisitor("");  
   else
-    visitor = new GDDVRMLSectionsVisitor(argv[2]);  
+    visitor = new detModel::VrmlSectionsVisitor(argv[2]);  
 
   //  visitor->setOpacity("FOAM05",0.5);
 
@@ -87,12 +87,12 @@ int main(int argc, char* argv[]) {
   
   // We start the HTMLConstantsVisitor to build the html file with the
   // constants tables. Colors and layout are stolen from Joanne ones.
-  manager->startVisitor(new GDDHTMLConstantsVisitor());
+  manager->startVisitor(new detModel::HtmlConstantsVisitor());
 
   // We retrive the hierarchy entry point, i.e. the GDD object. It
   // contains all the relevant information
-  GDD* g = manager->getGDD();
-
+  detModel::Gdd* g = manager->getGdd();
+  
   // An example; we retrive the total number of volumes contained in the xml file
   std::cout << "XML file contains " << g->getVolumesNumber() << " volumes." << std::endl;
   delete manager;

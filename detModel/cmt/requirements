@@ -17,16 +17,16 @@ macro headers "" WIN32 "\
      ../detModel/Utilities/*.h ../detModel/GDD.h"
 
 library detModel -no_share $(headers) \
-     Management/*.cpp \
-     Sections/*.cpp \
-     Constants/*.cpp \
-     Utilities/*.cpp \
-     GDD.cpp
+      Management/*.cxx \
+      Sections/*.cxx \
+      Constants/*.cxx \
+      Utilities/*.cxx \
+      Gdd.cxx
 	
     
 
 
-application test main.cxx 
+ application test main.cxx 
 
 
 
