@@ -61,11 +61,6 @@ namespace xmlUtil {
     return status;
   }
 
-  /* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-     A bunch of functions whose dummy implementations need to be
-     replaced with something real.
-  */
 
   bool IdDict::isValid()  {
     DictValidVisitor visitor;
@@ -75,12 +70,18 @@ namespace xmlUtil {
   }
 
   bool IdDict::idOk(const Identifier& id) const {
-    return true;
+    return m_root->allowIdentifier(id);
   }
 
   bool IdDict::idOk(const NamedId& id) const {
-    return true;
+    return m_root->allowNamedId(id);
   }
+
+  /* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+     A bunch of functions whose dummy implementations need to be
+     replaced with something real.
+  */
 
   bool IdDict::nameSeqOk(const NameSeq& seq) const {
     return true;

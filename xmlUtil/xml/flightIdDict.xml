@@ -65,6 +65,7 @@
     <field name="fTKRTrayCmp" >
       <vList>
         <vEnumVal valueREF="eTKRSiBottom" />
+        <vEnumVal valueREF="eTKRSiTop" />
         <vEnumVal valueREF="eTKRCnv" />
       </vList>
     </field>

@@ -1,0 +1,184 @@
+<!-- $Header$ -->
+<!-- Definition of one tower's worth of calorimeter, to be included
+     in flight.xml as external entity  -->
+
+    <!-- According to conventions above, an unrotated CsIDetector would
+    be an X-log -->
+    <box name="CsIDetector" 
+         sensitive="true"
+         XREF="CsILength" YREF="CsIWidth" ZREF="CsIHeight"
+         materialREF="crystalMat"  >
+      <seg axis="X" nSeg="10" reason="energyAcct" />
+    </box>
+
+<!-- there are two kinds of diodes: large and small. See diode section of
+     instrument.xml.   These
+     diode boxes or oriented the same way as the unrotated CsIDetector
+     above.  Old names for x,y,z dimensions were respectively
+     thickness,x_width,y_width   -->
+    <box name="diodeL"
+         sensitive="true"
+         XREF="diodeX"     
+         YREF="diodeLY"
+         ZREF="diodeZ"          
+         materialREF="diodeMat" />
+    <box name="diodeS"
+         sensitive="true"
+         XREF="diodeX"     
+         YREF="diodeSY"
+         ZREF="diodeZ"          
+         materialREF="diodeMat" />
+<!--
+    <box name="CsIElementEnv"
+         materialREF="CALWrapMat"
+         XREF="CsIEnvX"
+         YREF="CsIEnvY"
+         ZREF="CsIEnvZ"/>
+-->
+<!--         materialREF="CALCellMat" -->
+<!-- The (new) idea here will be to make a composition with vacuum
+     envelope whose dimensions are such that it contains the CsI,
+     the diodes, and all the vacuum gaps up to the inner surface of
+     the composite material on the long sides and up to the side wall
+     (or whatever non-vacuum surface comes first) on the ends.
+     Then embed this volume in another one whose material is CALCellMat.
+     Such a volume will be called a cell.  Then stack up the cells
+     into a layer, then stack the layers. Finally add the support
+     stuff: side walls, frame pieces, mount tabs, etc.
+ --> 
+
+
+     <box name="CsIElementEnv"
+         materialREF="vacuumMat"
+         XREF="CsIEnvX"
+         YREF="cellHorPitch"
+         ZREF="cellVertPitch" />
+
+     <box name="cellVertWall"
+          materialREF="CALCellMat"
+          XREF="CsIEnvX"
+          YREF="cellVertWallHalfThick"
+          ZREF="cellIntWallZ"
+          />
+
+     <box name="cellHorWall"
+          materialREF="CALCellMat"
+          XREF="CsIEnvX"
+          YREF="CsIEnvY"
+          ZREF="cellHorWallHalfThick"
+          />
+
+
+    <!-- This name comes from GlastSim code. -->
+    <composition name="CsIElement"  envelope="CsIElementEnv">
+      <posXYZ volume="CsIDetector">  <!-- centered in envelope -->
+        <idField name="fCALLogCmp" value="eLogXtal" />
+      </posXYZ>
+      <posXYZ volume="diodeS" 
+              XREF="diodeNegXOffset"
+              YREF="diodeSYOffset"
+              ZREF="diodeZOffset"
+        >
+        <idField name="fCALLogCmp" valueREF="eDiodeMSmall" />
+      </posXYZ>
+      <posXYZ volume="diodeS" 
+              XREF="diodePosXOffset"
+              YREF="diodeSYOffset"
+              ZREF="diodeZOffset"
+        >
+        <idField name="fCALLogCmp" valueREF="eDiodePSmall" />
+      </posXYZ>
+      <posXYZ volume="diodeL" 
+              XREF="diodeNegXOffset"
+              YREF="diodeLYOffset"
+              ZREF="diodeZOffset"
+        >
+        <idField name="fCALLogCmp" valueREF="eDiodeMLarge" />
+      </posXYZ>
+      <posXYZ volume="diodeL" 
+              XREF="diodePosXOffset"
+              YREF="diodeLYOffset"
+              ZREF="diodeZOffset"
+        >
+        <idField name="fCALLogCmp" valueREF="eDiodePLarge" />
+      </posXYZ>
+
+<!-- Also need to position cell walls (of half wall width; the other
+     half goes with adjacent cell)
+ -->
+    </composition>
+
+    <!-- make a layer out of some evenly-spaced CsIElements -->
+    <stackY name="CALLayer" >
+      <axisMPos volume="CsIElement" ncopyREF="nCsIPerLayer"
+                shiftREF="cellHorPitch" >
+        <idField name="fCALLog" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+<!-- Need to define spacer box between layers -->
+    <box name="CALSpace"
+         XREF="CALLayerTrans"
+         YREF="CALLayerTrans"
+         ZREF="CALInterLayer"
+         materialREF="CALSpaceMat"
+         />
+
+<!-- intersperse log layers with calSpace boxes.  Volumes get
+     added with increasing Z, so we're starting at the back
+     with layer 7 (a Y-layer) and working our way forward to
+     layer 0, an X layer.  The Y-layers must be rotated -->
+    <stackZ name="CALLayers"  >
+      <axisPos volume="CALLayer" rotation="90" >
+        <idField name="fLayer" value="7" />
+        <idField name="fMeasure" valueREF="eMeasureY" />
+      </axisPos>
+      <axisPos volume="CALSpace" />
+      <axisPos volume="CALLayer"  >
+        <idField name="fLayer" value="6" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+      </axisPos>
+      <axisPos volume="CALSpace" />
+      <axisPos volume="CALLayer" rotation="90" >
+        <idField name="fLayer" value="5" />
+        <idField name="fMeasure" valueREF="eMeasureY" />
+      </axisPos>
+      <axisPos volume="CALSpace" />
+      <axisPos volume="CALLayer"  >
+        <idField name="fLayer" value="4" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+      </axisPos>
+      <axisPos volume="CALSpace" />
+      <axisPos volume="CALLayer" rotation="90" >
+        <idField name="fLayer" value="3" />
+        <idField name="fMeasure" valueREF="eMeasureY" />
+      </axisPos>
+      <axisPos volume="CALSpace" />
+      <axisPos volume="CALLayer"  >
+        <idField name="fLayer" value="2" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+      </axisPos>
+      <axisPos volume="CALSpace" />
+      <axisPos volume="CALLayer" rotation="90" >
+        <idField name="fLayer" value="1" />
+        <idField name="fMeasure" valueREF="eMeasureY" />
+      </axisPos>
+      <axisPos volume="CALSpace" />
+      <axisPos volume="CALLayer"  >
+        <idField name="fLayer" value="0" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+      </axisPos>
+    </stackZ>
+
+    <!-- Calorimeter for a tower consists of layers plus frame pieces -->
+    <!-- Can just embed layers stack into box of frame material -->
+    <box name="oneCALEnv"
+         XREF="CALFrameWidth"
+         YREF="CALFrameWidth"
+         ZREF="CALFrameHeight"
+         materialREF="CALFrameMat"
+         />
+    <composition name="oneCAL" envelope="oneCALEnv" >
+      <posXYZ volume="CALLayers" />  <!-- centered in envelope -->
+    </composition>
+

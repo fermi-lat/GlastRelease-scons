@@ -196,26 +196,14 @@ namespace xmlUtil {
   }
   
   bool DictNode::allowed(const unsigned value) const {
-    if (!m_myConstraints) return true;
-    
-    return m_myConstraints->allowed(value);
-  }
-  /*
-  void DictNode::insertValues(std::set<unsigned>& aSet) const {
-    if (!m_myConstraints->isList()) {
-      for (unsigned i = m_myConstraints->getMin(); 
-           i <= m_myConstraints->getMax();
-           i++) {
-        aSet.insert(i);
-      }
+    if (!m_myConstraints) {
+      return m_field->allowed(value);
     }
     else {
-      DictValList *valList = m_myConstraints->m_valList;
-      aSet.insert(valList->begin(), valList->end());
+      return m_myConstraints->allowed(value);
     }
-    return;
   }
-  */
+
   bool  DictNode::allowedChild(std::string childField, unsigned childValue, 
                                unsigned myValue) const {
     if (!allowed(myValue)) return false;
@@ -248,8 +236,63 @@ namespace xmlUtil {
     }
     return child->allowed(childValue);
   }
-  //             -----------------------
+  bool DictNode::allowIdentifier(Identifier::iterator idIt, 
+                                 Identifier::const_iterator end) {
+    if (!allowed(*idIt)) return false;
+    Identifier::iterator tmp = idIt;
+    ++tmp;
+    if (tmp == end) return true;
+
+    //look for children allowing our value for parent node
+    for (ConstNodeIterator it = m_children.begin(); it != m_children.end();
+         it++) {
+      DictNode *child = *it;
+      if ( (child->m_parConstraints == 0) ||
+           (child->m_parConstraints->allowed(*idIt)) ) {
+        if (child->allowIdentifier(++idIt, end)) return true;
+      }
+    }
+    return false;
+  }
     
+
+  bool DictNode::allowIdentifier(const Identifier& id) {
+    Identifier::iterator idIt = id.begin();
+    return allowIdentifier(idIt, id.end());
+  }
+
+  bool DictNode::allowNamedId(const NamedId& nId) {
+    NamedId::FieldIt nIdIt = nId.m_fields->begin();
+    return allowNamedId(nIdIt, nId.m_fields->end());
+  }
+
+  bool DictNode::allowNamedId(NamedId::FieldIt nIdIt,
+                              NamedId::FieldIt end) {
+    // Check information for first field matches
+
+    // These aren't supposed to happen
+    if (nIdIt == end) return true;
+    if (!(*nIdIt)) return false; 
+
+    if ((*nIdIt)->name != m_field->getName()) return false;
+    if (!allowed((*nIdIt)->value) ) return false;
+
+    NamedId::FieldIt tmp = nIdIt;
+    ++tmp;
+    if (tmp == end) return true; //done
+
+    // Now search children for match of next field
+    for (ConstNodeIterator it = m_children.begin(); it != m_children.end();
+         it++) {
+      DictNode *child = *it;
+      if ( (child->m_parConstraints == 0) ||
+           (child->m_parConstraints->allowed((*nIdIt)->value) ) ) {
+        if (child->allowNamedId(++nIdIt, end) ) return true;
+      }
+    }
+    return false;
+  }
+
   bool  DictNode::addChild(DictNode* child) {
     if ((m_myConstraints != 0) & (child->m_parConstraints != 0)) {
       if (!(m_myConstraints->allowed(child->m_parConstraints))) return false;
@@ -257,9 +300,6 @@ namespace xmlUtil {
     m_children.push_back(child);
     return true;
   }
-
-
-  //             -----------------------
 
 
   // Support visitors.
