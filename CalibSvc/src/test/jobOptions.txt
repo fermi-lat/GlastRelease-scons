@@ -10,6 +10,9 @@ ApplicationMgr.DLLs   += {"CalibSvc"};
 // List of required services
  ApplicationMgr.ExtSvc   = {"GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
 
+// Use the new RootIoSvc, implementing IRunable
+ApplicationMgr.ExtSvc += { "RootIoSvc" };
+ApplicationMgr.Runable= "RootIoSvc"; 
 
 // ApplicationMgr.TopAlg = {"digiRootReaderAlg", "EvtClock", "UseCalib",
 //		      "UseBadStrips" };
@@ -31,7 +34,7 @@ EventSelector.Input = "NONE";
 GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
 GlastDetSvc.topVolume="LAT";
 
-ApplicationMgr.EvtMax = 10;
+ApplicationMgr.EvtMax = 10000;
 
 // Model for immediately following lines is LHCb example.  See
 // http://lhcbsoft.web.cern.ch/LHCbSoft/Ex/DetConExamples/v2r0/options/
