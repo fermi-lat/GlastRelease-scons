@@ -9,7 +9,7 @@ int main(int argn, char** argc) {
     gSystem->Load("libTree.dll");
     gSystem->Load("reconRootData.dll");
 #endif
-    unsigned int numEvents = 10;
+    unsigned int numEvents = 100;
     const char* path = ::getenv("ROOTANALYSISROOT");
     std::string digiFileName(path);
     digiFileName += "/src/test/digi.root";
@@ -23,7 +23,7 @@ int main(int argn, char** argc) {
     std::cout << "Setup for Processing" << std::endl;
     RootTreeAnalysis r(digiFileName.c_str(), reconFileName.c_str(), mcFileName.c_str());
     r.Go(numEvents);
-    std::cout << "Done Processing" << std::endl;
+    std::cout << "Done Processing " << numEvents << " Events" << std::endl;
     r.WriteHist();
 
     return 0;
