@@ -4,7 +4,8 @@
 
  package manager:T.Burnett
 
-
+ 24-aug-03  THB tag v9r10  New algorithm sets seeds instead of at begin event
+                           (Xin) seed files   
  24-jul-03  LSR tag v9r9   Add getTopVolume(); time stamp in GlastRandomSvc
  17-jul-03  THB tag v9r8p2 set timestamp in Random svc
  15-jun-03  THB tag v9r8p1 clear trigger bits as flag for TriggerAlg
