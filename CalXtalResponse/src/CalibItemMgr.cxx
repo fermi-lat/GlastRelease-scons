@@ -53,7 +53,6 @@ StatusCode CalibItemMgr::initialize(IService &calibDataSvc,
 }
 
 StatusCode CalibItemMgr::updateCache() {
-  MsgStream msglog(m_msgSvc, *m_logName);
   StatusCode sc;
 
   // check if we have already validated this event.
@@ -68,6 +67,7 @@ StatusCode CalibItemMgr::updateCache() {
   if((sc = m_dataProviderSvc->retrieveObject(m_calibPath, pObject)) == StatusCode::SUCCESS) {
     m_calibBase = (CalibData::CalCalibBase *)(pObject);
   } else {
+    MsgStream msglog(m_msgSvc, *m_logName);
     msglog << MSG::ERROR << "Unable to retrieve " << m_calibPath << " from calib database" << endreq;
     return sc;  
   }
@@ -75,6 +75,7 @@ StatusCode CalibItemMgr::updateCache() {
   // check serial # to see if we're still valid.
   int curSerNo = m_calibBase->getSerNo();
   if (curSerNo != m_serNo) {
+    MsgStream msglog(m_msgSvc, *m_logName);
     msglog << MSG::INFO << "Updating " << m_calibPath << endreq;
     m_serNo = curSerNo;
     flushCache();
@@ -96,7 +97,7 @@ StatusCode CalibItemMgr::updateCache() {
 }
 
 StatusCode CalibItemMgr::evalSpline(int calibType, LATWideIndex idx, double x, double &y) {
-  MsgStream msglog(m_msgSvc, *m_logName);
+  //MsgStream msglog(m_msgSvc, *m_logName);
   StatusCode sc;
 
   // make sure we have valid calib data for this event.
@@ -117,7 +118,7 @@ StatusCode CalibItemMgr::evalSpline(int calibType, LATWideIndex idx, double x, d
 
 StatusCode CalibItemMgr::genSpline(int calibType, LATWideIndex idx, const string &name, 
                                    const vector<double> &x, const vector<double> &y) {
-  MsgStream msglog(m_msgSvc, *m_logName);
+  //MsgStream msglog(m_msgSvc, *m_logName);
   int n = min(x.size(),y.size());
 
   // create tmp arrays for TSpline ctor

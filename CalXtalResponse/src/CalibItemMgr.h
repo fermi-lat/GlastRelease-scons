@@ -10,7 +10,7 @@
 #include "CalUtil/CalDefs.h"
 
 // EXTLIB
-#include "GaudiKernel/MsgStream.h"
+//#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IService.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 
