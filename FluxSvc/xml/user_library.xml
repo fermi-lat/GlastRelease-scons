@@ -236,7 +236,7 @@
         </spectrum>
     </source>
 
-    <source name="truediffusebackground" flux="10.">
+    <source name="truediffusebackground" flux="1.0">
         <spectrum>
             <particle name="gamma" >
                 <power_law emin="0.010" emax="0.1" gamma="1.0"/>

@@ -102,7 +102,9 @@ Rotation Orbit::CELtransform(double time){
     cel4.rotateY((time/m_precessPeriod)*M_2PI);
 
     //so gal*cel should be the matrix that makes local coordiates into galactic ones.
-    Rotation glstToGal = gal*cel1*cel2*cel3*cel4;
+    //Rotation glstToGal = gal*cel1*cel2*cel3*cel4;
+      Rotation glstToGal = gal*cel4*cel3*cel2*cel1;
+
 
     //displayRotation(glstToGal);
 

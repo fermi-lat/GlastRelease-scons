@@ -30,7 +30,7 @@ FluxTestAlg.source_name="TimeCandle";
 //FluxTestAlg.source_name="default";
 
 //the angular size of GLAST's exposure, if needed (see below)
-FluxTestAlg.glastExposureAngle = 2.;
+FluxTestAlg.glastExposureAngle = 20.;
 
 //selecting the kind of exposure GLAST gets,
 //to be appropriate for exposure maps or sky maps.
@@ -41,11 +41,12 @@ FluxTestAlg.glastExposureAngle = 2.;
 //3: cutoff "radius" is equal-area, that is,
 // representing an azimuthal angle from glast.
 //4: output run through a hammer-aitoff equal area projection.
+//5: point-spread function "smears" data in histogram.
 FluxTestAlg.ExposureMode = 0;
 
 
 ApplicationMgr.EvtSel = "NONE";
-ApplicationMgr.EvtMax = 1000;
+ApplicationMgr.EvtMax = 30000;
 
 //==============================================================
 //

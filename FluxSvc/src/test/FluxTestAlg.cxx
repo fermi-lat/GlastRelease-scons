@@ -22,6 +22,7 @@
 #include <list>
 #include <string>
 #include <vector>
+#include <math.h>
 #include "GaudiKernel/ParticleProperty.h"
 
 #include "FluxSvc/ISpectrum.h"
@@ -129,7 +130,7 @@ StatusCode FluxTestAlg::initialize() {
         log << MSG::ERROR << "Could not find flux " << m_source_name << endreq;
         return sc;
     }
-    
+    m_flux->pass(/*1000*/0.);
     // then do the output here.
     log << MSG::INFO << "start of other loops" << endreq;
     log << MSG::INFO << "Source title: " << m_flux->title() << endreq;
@@ -173,7 +174,7 @@ public:
     
     double interval (double time)
     {        
-       return 20;
+       return 5.;
     }
     
 };
@@ -235,8 +236,9 @@ StatusCode FluxTestAlg::execute() {
         return sc;
     }
     
-    HepVector3D pointingin = d;//(0,0,1);
-    pointingin = (fsvc->transformGlastToGalactic(m_flux->time()))*pointingin;
+    //HepVector3D pointingin = d;
+    HepVector3D pointingin(0,0,1);
+    pointingin = (fsvc->transformGlastToGalactic(m_flux->gpsTime()))*pointingin;
     
     //log << MSG::INFO
     //        << "(" << pointingin.x() <<", "<< pointingin.y() <<", "<<pointingin.z()<<")" 
@@ -409,6 +411,26 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
                 }
             }
         }
+    }
+   //     long double x,y,theta,phi;
+   // 
+   // theta=log(1.0/random());
+   // phi=random()*2.0*3.141592653589793238;
+   // 
+   // x=theta*sin(phi);
+   // y=theta*cos(phi);
+       else if(m_exposureMode == 5){
+        exposureSet point;
+        double lshift,bshift,theta,phi;
+        theta=5.*log10(10.0/(RandFlat::shoot(1.0)));
+        phi=RandFlat::shoot(1.0)*M_2PI;
+        lshift=theta*sin(phi);
+        bshift=theta*cos(phi);
+
+        point.x = l+lshift; //yes, this is doing an implicit cast.
+        point.y = b+bshift;
+        point.amount = deltat;
+        returned.push_back(point);
     }
 
     else{
