@@ -9,7 +9,6 @@
 #include <cmath>
 
 static float scale;
-static int lastx, lasty;
 
 // specific brushes should be done more generally
 static HBRUSH hbrBlack=0, hbrRed=0, hbrGreen=0, 
@@ -26,17 +25,62 @@ static RECT quadrant[4];
 static RECT selectedQuad;
 static bool flSingle=true;
 
-inline int xscale(float x){return lastx=(int)((x+1.0)*scale)+currentQuad.left;}
-inline int yscale(float y){return lasty=(int)((1.0-y)*scale)+currentQuad.top;}
+inline int xscale(float x){ return (int)((x+1.0)*scale)+currentQuad.left;}
+inline int yscale(float y){ return (int)((1.0-y)*scale)+currentQuad.top;}
+
+static bool inline inside(float x, float y){return fabs(x)<1.01 && fabs(y)<1.01;}
+// Special clipping routine to fix high magnification
+bool WinDraw::clip(float x, float y,
+		 int& ix1, int& iy1, int& ix2, int& iy2)
+{
+  bool b1=inside(x,y), b2=inside(m_lastx,m_lasty);
+  if( b1 && b2) {
+    ix2 = xscale(x);
+    iy2 = yscale(y);
+    ix1 = xscale(m_lastx);
+    iy1 = yscale(m_lasty);
+    return true; // both endpoints are inside: done
+  }
+  // either or both is outside
+  float dx=m_lastx-x, dy=m_lasty-y;
+  // find parametric values for intersections with scene boundaries at +-1
+  float s[]={-1,-1,-1,-1};
+  int k=0; // count of intersections
+  if( dx!=0){s[k++]=(1-x)/dx; s[k++] = (-1-x)/dx;}
+  if( dy!=0){s[k++]=(1-y)/dy; s[k++] = (-1-y)/dy;}
+
+  float t[4];
+  int j=0;
+  if( b1) t[j++]=0;
+  if( b2) t[j++]=1;
+  
+  // if endpoint in region, already have it. now find 1 or 2 others
+  for( int i=0; i<k; ++i){
+    if(s[i]>0 && s[i]<1 && inside(x+s[i]*dx,y+s[i]*dy)) t[j++]=s[i];
+  }
+  if( j<2 )return false;
+  ix1 = xscale(x+t[0]*dx);
+  iy1 = yscale(y+t[0]*dy);
+  ix2 = xscale(x+t[1]*dx);
+  iy2 = yscale(y+t[1]*dy);
+  return true;
+} 
 
 void WinDraw::move_to(float x, float y)
 {
-    ::MoveToEx(m_hdc, xscale(x),yscale(y), NULL);
+  m_lastx=x; m_lasty=y;
 }
 
 void WinDraw::line_to(float x, float y)
 {
-    ::LineTo(m_hdc,xscale(x),yscale(y));
+  int x1,y1,x2,y2;
+  if( clip(x,y, x1,y1,x2,y2) ) {
+      ::MoveToEx(m_hdc, x1,y1, NULL);
+      ::LineTo(m_hdc, x2,y2);
+  }   
+  m_lastx = x;
+  m_lasty = y;
+
 }
 
 float WinDraw::xnorm(int ix)
@@ -182,8 +226,7 @@ void WinDraw::draw_string(const char* s, int)
     COLORREF hOldbk = (COLORREF)::SetBkColor(m_hdc, RGB(192,192,192) );
 
     //uncomment for center ::SetTextAlign(m_hdc,TA_CENTER ); 
-    ::TextOut(m_hdc,lastx,lasty+vertOffset,s,strlen(s));
-    
+    ::TextOut(m_hdc,xscale(m_lastx), yscale(m_lasty)+vertOffset,s,strlen(s));
     SelectObject(m_hdc, hOldFont); 
     
 }

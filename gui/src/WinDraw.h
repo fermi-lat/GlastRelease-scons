@@ -81,7 +81,9 @@ public:
 
 private:
     int maxx, maxy;         // coords of viewport
-   
+    bool clip(float x, float y,
+		 int& ix1, int& iy1, int& ix2, int& iy2);
+    float m_lastx, m_lasty;
     HDC m_hdc;
     HWND m_win;
 };
