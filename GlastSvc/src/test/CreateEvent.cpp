@@ -9,6 +9,10 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/AlgTool.h"
+#include "GaudiKernel/ToolFactory.h"
+
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "Event/TopLevel/EventModel.h"
@@ -17,6 +21,46 @@
 #include "GaudiKernel/ObjectVector.h"
 
 #include "Event/MonteCarlo/McIntegratingHit.h"
+#include "GlastSvc/Reco/IReconTool.h"
+
+class MyRecon : public AlgTool, virtual public IReconTool {
+ public:
+     
+   MyRecon( const std::string& type, const std::string& name, const IInterface* parent);
+    virtual ~MyRecon() { }
+    
+    /// implement to get something
+    StatusCode get(const std::string& name, double&);
+    
+};
+
+
+// Static factory for instantiation of algtool objects
+static ToolFactory<MyRecon> afactory;
+
+// Standard Constructor
+MyRecon::MyRecon(const std::string& type, 
+                         const std::string& name, 
+                         const IInterface* parent)
+                         : AlgTool( type, name, parent ) {
+    
+    // Declare additional interface
+    declareInterface<IReconTool>(this);
+        
+}
+
+
+StatusCode MyRecon::get(const std::string& name, double& x)
+{
+    if(name=="test"){
+        x = 99;
+        return StatusCode::SUCCESS;
+    }
+    return StatusCode::FAILURE;
+} 
+
+
+
 
 static const AlgFactory<CreateEvent>  Factory;
 const IAlgFactory& CreateEventFactory = Factory;
@@ -70,8 +114,27 @@ StatusCode CreateEvent::initialize() {
         return StatusCode::FAILURE;
     }
     
-    
-    return StatusCode::SUCCESS;
+    // find the alg tool
+    IToolSvc* tsvc  =0;
+    sc = service( "ToolSvc", tsvc, true );
+    if( sc.isFailure() ) {
+        log << MSG::ERROR << "Unable to locate Tool Service" << endreq;
+        return sc;
+    }
+
+    IReconTool* itool;
+    sc = tsvc->retrieveTool("MyRecon", itool);
+    if( sc.isFailure() ) {
+        log << MSG::ERROR << "Unable to find a test tool" << endreq;
+        return sc;
+    }
+
+    double x=0;
+    sc = itool->get("test",x);
+    if( sc.isFailure() || x != 99) {
+        log << MSG::ERROR << "Failed ReconTool test" << endreq;
+    }
+    return sc;
 };
 
 StatusCode CreateEvent::execute() {
