@@ -301,19 +301,46 @@ void RootTreeAnalysis::DigiAcd() {
 void RootTreeAnalysis::ReconTkr() {
     // Purpose and Method:  Process one TkrRecon event
     
-    TkrRecon *tkrRec = rec->getTkrRecon();
+    TkrRecon *tkrRecon = rec->getTkrRecon();
     
     // If no TRKRECON data is available then return
-    if (!tkrRec)  return;
+    if (!tkrRecon)  return;
 
-    ((TH1F*)GetObjectPtr("TKRNUMFITTRACKS"))->Fill(tkrRec->getTrackCol()->GetEntries());
+    // here is the list of pointers to the clusters
+    TObjArray* clusterCol = tkrRecon->getClusterCol();
 
-    const TObjArray *trackCol = tkrRec->getTrackCol();
+    // and to the tracks    
+    TObjArray* trackCol = tkrRecon->getTrackCol();
+
+    ((TH1F*)GetObjectPtr("TKRNUMFITTRACKS"))->Fill(trackCol->GetEntries());
+
     TIter trackIter(trackCol);
     TkrTrack *track = 0;
     
     while (track = (TkrTrack*)trackIter.Next()) {
         ((TH1F*)GetObjectPtr("TKRNUMHITSPERTRACK"))->Fill(track->Size());
+
+        TVector3 dir = track->getInitialDirection();
+        Double_t costh = -dir.Z();
+
+        TIter hitIter(track);
+        TkrTrackHit *hit = 0;
+        while (hit = (TkrTrackHit*)hitIter.Next()) {
+            const TkrCluster *cluster = ((*hit).getClusterPtr());
+            if (!cluster) continue;
+
+            Int_t layer = cluster->getLayer();
+
+            commonRootData::TkrId id = cluster->getTkrId();
+            Int_t plane  = cluster->getPlane();
+            Int_t view   = id.getView();
+
+            // get the tower from the TkrId
+            Int_t towerX = id.getTowerX();
+            Int_t towerY = id.getTowerY();
+
+        }
+
     }
 }
 
