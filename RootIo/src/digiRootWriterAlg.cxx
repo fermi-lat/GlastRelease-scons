@@ -275,9 +275,9 @@ StatusCode digiRootWriterAlg::writeCalDigi() {
     if (!calDigiColTds) return sc;
     Event::CalDigiCol::const_iterator calDigiTds;
 
-    for (calDigiTds = calDigiColTds->begin(); calDigiTds != calDigiColTds->end(); calDigiTds++) {
+    for (calDigiTds = calDigiColTds->begin(); calDigiTds != calDigiColTds->end(); calDigiTds++) {      
         log << MSG::DEBUG;
-        (*calDigiTds)->fillStream(log.stream());
+        if( log.isActive()) (*calDigiTds)->fillStream(log.stream());
         log << endreq;
         
         CalDigi *calDigiRoot = new CalDigi();
