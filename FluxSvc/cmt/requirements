@@ -12,9 +12,8 @@ use Event   *
 use GlastSvc *
 use astro v0r*
 
-# turn this on for now
-#use flux * -no_auto_imports 
-use flux *
+# prevent clients from automatically seeing flux.lib, includes
+use flux * -no_auto_imports 
 
 use ntupleWriterSvc *
 
@@ -37,6 +36,9 @@ macro headers      "" WIN32 "*.h"
 macro source "*.cxx" WIN32 "*.h *.cxx *.txt"
 
 macro interface_headers "" WIN32 "-s=../FluxSvc/ *.h"
+
+# for includes from flux (for now)
+macro FluxSvc_cppflags '$(ppcmd)"$(FLUXROOT)"'
 
 library FluxSvc -import=flux\
  $(interface_headers)\
