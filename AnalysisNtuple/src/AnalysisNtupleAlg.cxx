@@ -133,7 +133,7 @@ StatusCode AnalysisNtupleAlg::initialize(){
         m_toolvec.push_back(0);
         sc = pToolSvc->retrieveTool(toolnames[i], m_toolvec.back());
         if( sc.isFailure() ) {
-            log << MSG::ERROR << "Unable to find a  tool" << toolnames[i] << endreq;
+            log << MSG::ERROR << "Unable to find tool: " << toolnames[i] << endreq;
             return sc;
         }
     }
