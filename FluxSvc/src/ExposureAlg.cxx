@@ -103,7 +103,7 @@ StatusCode ExposureAlg::initialize(){
 
 	//set the input file to be used as the pointing database
 	if(! m_pointing_history_input_file.value().empty() ){
-		m_fluxSvc->setPointingHistoryFile(m_pointing_history_output_file.value().c_str());
+		m_fluxSvc->setPointingHistoryFile(m_pointing_history_input_file.value().c_str());
     }
 
 	//set the output file (pointing information) to be written.
