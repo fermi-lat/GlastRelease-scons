@@ -74,7 +74,7 @@ private:
     /// this should be fairly static
     int         m_maxEvtSize;
     std::string m_filename;
-    ofstream m_ebfOutput;
+    std::ofstream m_ebfOutput;
     EbfCalConstants m_calConstants;
 };
 
