@@ -3,6 +3,8 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v1r8   23-Sep-2003 HMK Fix up AcdDigiAlg to check thresholds for low, veto, and cno
+                        Also continues processing even if there are no McPositionHits - in case there is noise
  v1r7p4 14-Jul-2003 HMK Use OR for low threshold
  v1r7p3 13-Jul-2003 HMK Patch to EdgeEffect method - to fix dist for Y tiles
  v1r7p2 18-Mar-2003 HMK Small patch to avoid seg fault if there are no ACD tiles in the
