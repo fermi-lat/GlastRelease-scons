@@ -69,16 +69,8 @@ void Spectrum::parseParamList(std::string input, std::vector<float>& output) con
     } 
 }
 
-
 double Spectrum::interval (double time)
 {
-    double  r = (solidAngle()*flux(time)* /*6.*/ EventSource::totalArea());
-    
-    if (r == 0){ return -1.;
-    }else{  
-        double p = RandFlat::shoot(1.);
-        return (-1.)*(log(1.-p))/r;
-    }
-    //the above should be not needed - only the next line?
-    //return -1.; //if this gets called, FluxSource will use the spectrum's flux.
+    return -1.; //if this gets called, FluxSource will use the spectrum's flux.
+                //to determine the interval.
 }

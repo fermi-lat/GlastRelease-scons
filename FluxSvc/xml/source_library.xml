@@ -157,6 +157,11 @@
         <spectrum escale="GeV"> <SpectrumClass name="CHIMESpectrum" params="13.8, 24.9"/> <use_spectrum/> </spectrum>
     </source>
 
+	<!-- the CHIME spectrum at minimum flux. angular dependence and rate are from the CHIME spectrum object -->
+    <source name="chimemin" >
+        <spectrum escale="GeV"> <SpectrumClass name="CHIMESpectrum" params="10.0, 144.37"/> <use_spectrum/> </spectrum>
+    </source>
+
     <!-- default creme is the orbit average -->   
     <source name="cremeavg" >
         <spectrum escale="GeV"> <SpectrumClass name="FILESpectrum" params="sources/glast_smin_flx.txt"/> 

@@ -182,7 +182,7 @@ void rootplot::init(std::vector<const char*> argv)
         if(longterm){
             fm.pass(2.);
             time+=2.;
-        }
+        }else{time=0;}
         
         std::pair<double,double> loc=fm.location();
         std::cout << loc.first << "   " << loc.second << std::endl;
@@ -244,9 +244,11 @@ void rootplot::init(std::vector<const char*> argv)
         {
             FluxSource *f = e->event(time);
             //increment the time
-            time += e->interval(time);
-            double energy = f->energy();
+            double timeadd = e->interval(time);
+            time += timeadd;
+            fm.pass(timeadd);
             Vector dir = f->launchDir();
+            double energy = f->energy();
             double cos_theta = dir.z();
             
             double phi = atan2(dir.y(),dir.x());
@@ -261,6 +263,13 @@ void rootplot::init(std::vector<const char*> argv)
         }
         
         std::cerr << "\n";
+
+        double flux2=(loop/time)/e->totalArea();
+        std::cout << "FLUX IS: " << flux2 << " (p/s*m^2)"<< std::endl;
+        //should this be set by the time also, like so?
+        //scale_factor = flux2/loop*num_bins/log(energy_max/energy_min);
+
+
         // Scale factor must be applied before the draw member function can be called
         energy_hist.apply(scale_factor);
         angle_hist.apply(scale_factor);

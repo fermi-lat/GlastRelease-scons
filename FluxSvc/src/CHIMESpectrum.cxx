@@ -206,7 +206,7 @@ void CHIMESpectrum::setPosition(double lat, double lon) {
     // Do the initialization necessary when moving to a new position:
     // look up cutoff energy, build a new table of integral proton
     // fluxes
-    
+
     m_lat = lat;
     m_lon = lon;
     

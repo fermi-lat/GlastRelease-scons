@@ -1086,7 +1086,6 @@ double FluxSource::calculateInterval (double time){
 double FluxSource::explicitInterval (double time)
 {
     double  r = (solidAngle()*flux(time)* /*6.*/ totalArea());
-    
     if (r == 0){ return -1.;// - m_extime; //the minus is for ensuring that interval() returns a -1 flag.
     }else{  
         double p = RandFlat::shoot(1.);
