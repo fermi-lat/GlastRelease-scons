@@ -140,7 +140,7 @@ StatusCode OnboardFilter::finalize(){
 OnboardFilter::OnboardFilter(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator), m_rejected(0){
 
-    declareProperty("mask"     ,  m_mask=0xffffffff); // trigger mask: select bits for rejection
+    declareProperty("mask"     ,  m_mask=0); // trigger mask: select bits for rejection
     declareProperty("PassThrough", m_passThrough=1);
 }
 
