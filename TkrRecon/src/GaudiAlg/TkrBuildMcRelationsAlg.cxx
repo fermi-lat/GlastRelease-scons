@@ -123,15 +123,6 @@ StatusCode TkrBuildMcRelationsAlg::execute()
 
     //Have the Monte Carlo base info, now relate to the recon info
     buildPatCandRelations();
-
-    //Quick test of our new tool
-    ITkrMcTracksTool* mcPatTool = 0;
-    sc = toolSvc()->retrieveTool("TkrMcTracksTool", mcPatTool);
-
-    int numMcTracks = mcPatTool->getNumMcTracks();
-    const unsigned long classBits = mcPatTool->getClassificationBits();
-    int nn=0;
-
         
     return sc;
 }
@@ -227,6 +218,7 @@ void TkrBuildMcRelationsAlg::buildPatCandRelations()
     }
 
     //Quick cross check
+    /*
     for(Event::TkrPatCandColPtr cands = pTkrCands->begin(); cands != pTkrCands->end(); cands++)
     {
         Event::TkrPatCand*        patCand         = *cands;
@@ -256,5 +248,6 @@ void TkrBuildMcRelationsAlg::buildPatCandRelations()
 
         }
     }
+    */
 }
 

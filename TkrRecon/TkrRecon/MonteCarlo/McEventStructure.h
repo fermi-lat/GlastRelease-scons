@@ -55,6 +55,8 @@ public:
     Event::McParticleRefVec::const_iterator beginAssociated()       const {return m_associated.begin();}
     Event::McParticleRefVec::const_iterator endAssociated()         const {return m_associated.end();}
 
+    Event::McParticleRefVec                 getTrackVector();
+
 private:
     bool isPrimaryDaughter(const Event::McParticle* mcPart);
 
