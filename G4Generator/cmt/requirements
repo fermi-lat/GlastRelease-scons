@@ -24,7 +24,7 @@ use idents   v2r3
 use detModel v2r6
 
 use instrument v5
-use data     v4r1
+use data     v4r2
 use GlastEvent v4
 use GlastSvc v3
 
