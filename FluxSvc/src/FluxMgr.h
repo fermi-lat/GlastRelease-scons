@@ -1,5 +1,6 @@
 /** @file FluxMgr.h
     @brief declaration of FluxMgr
+
  $Header$
 
   */

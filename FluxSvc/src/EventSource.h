@@ -1,5 +1,6 @@
 /** @file EventSource.h
    @brief Declaration of EventSource
+
    $Header$
 */
 

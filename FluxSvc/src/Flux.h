@@ -1,4 +1,10 @@
-// $Header$
+/** @file Flux.h
+    @brief Declaration of Flux
+
+   $Header$
+
+  Original author: T. Burnett
+*/
 
 #ifndef FLUXSVC_FLUX_H
 #define FLUXSVC_FLUX_H

@@ -1,5 +1,6 @@
 /** @file FluxAlg.cxx
 @brief declaration and definition of the class FluxAlg
+
 $Header$
 
 */

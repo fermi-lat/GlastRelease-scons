@@ -1,5 +1,6 @@
 /** @file EventSource.cxx
     @brief Implementation of class EventSource
+
    $Header$
 */
 

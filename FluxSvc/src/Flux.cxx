@@ -1,5 +1,6 @@
 /** @file Flux.cxx
     @brief Implementation of Flux
+
    $Header$
 
   Original author: T. Burnett
