@@ -81,6 +81,8 @@ StatusCode writeJunkAlg::initialize() {
 //------------------------------------------------------------------------------
 StatusCode writeJunkAlg::execute() {
      
+    static int callCount = 0;
+
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
     
@@ -91,6 +93,11 @@ StatusCode writeJunkAlg::execute() {
     // Let's try to add an undefined float
     float bad = 100.0/zero;
     sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "BadValue", bad);
+
+    // Test the ability to turn off a row
+    if (callCount == 5) m_ntupleWriteSvc->storeRowFlag(false);
+
+    ++callCount;
 
     return sc;
 }
