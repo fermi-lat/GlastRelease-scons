@@ -110,7 +110,7 @@ void CalFailureModeSvc::processTowerAfeeList() {
 	
     m_failureModes = m_failureModes || 1 << TOWERAFEE;
 	
-    log << MSG::DEBUG << "Towers and AFEEs to kill " << endreq;
+    log << MSG::INFO << "Towers and AFEEs to kill " << endreq;
 	
 	
     std::vector<std::string>::const_iterator it;
@@ -122,7 +122,7 @@ void CalFailureModeSvc::processTowerAfeeList() {
         int tower = atoi((*it).substr(0, delimPos).c_str());
         int layer = atoi((*it).substr(delimPos+1, len-delimPos-1).c_str());
 		
-        log << MSG::DEBUG << "Tower " << tower << " AFEE " << layer << endreq;
+        log << MSG::INFO << "Tower " << tower << " AFEE " << layer << endreq;
 		
         std::vector<int>& curList = m_towerAfeeList[tower];
         curList.push_back(layer);                
@@ -140,7 +140,7 @@ void CalFailureModeSvc::processTowerControllerList() {
 	
     m_failureModes = m_failureModes || 1 << TOWERCONTROL;
 	
-    log << MSG::DEBUG << "Towers and Controllers to kill " << endreq;
+    log << MSG::INFO << "Towers and Controllers to kill " << endreq;
 	
 	
     std::vector<std::string>::const_iterator it;
@@ -152,7 +152,7 @@ void CalFailureModeSvc::processTowerControllerList() {
         int tower = atoi((*it).substr(0, delimPos).c_str());
         int layer = atoi((*it).substr(delimPos+1, len-delimPos-1).c_str());
 		
-        log << MSG::DEBUG << "Tower " << tower << " Controller " << layer << endreq;
+        log << MSG::INFO << "Tower " << tower << " Controller " << layer << endreq;
 		
         std::vector<int>& curList = m_towerControllerList[tower];
         curList.push_back(layer);                
@@ -173,7 +173,7 @@ void CalFailureModeSvc::processTowerList() {
 	
     if (theTowers.size() == 0) return;
 	
-    log << MSG::DEBUG << "Towers to kill " << endreq;
+    log << MSG::INFO << "Towers to kill " << endreq;
 	
     m_failureModes = m_failureModes || 1 << TOWER;
 	
@@ -183,7 +183,7 @@ void CalFailureModeSvc::processTowerList() {
     for (it = theTowers.begin(); it != itend; it++) {
         int tower = atoi((*it).c_str());
 		
-        log << MSG::DEBUG << "Tower " << tower << endreq;
+        log << MSG::INFO << "Tower " << tower << endreq;
 		
         m_towerList.push_back(tower);
     }
@@ -205,8 +205,8 @@ bool CalFailureModeSvc::matchTower(idents::CalXtalId id) {
 	
     // Search to see if this event id is among the list of ids we want to pause on
 	
-    int *loc = std::find(m_towerList.begin(), m_towerList.end(), tower);                
-	
+    std::vector<int>::iterator loc = std::find(m_towerList.begin(), 
+						m_towerList.end(), tower);
     return (loc != m_towerList.end());
 }
 
@@ -221,14 +221,14 @@ bool CalFailureModeSvc::matchTowerAfee(idents::CalXtalId id, idents::CalXtalId::
     if (m_towerAfeeList.size() == 0) return false;
 	
     int tower = id.getTower();
-    int layer = id.getLayer();
     int afee = 2*face + (!id.isX());
 	
     std::vector<int> &afeeList = m_towerAfeeList[tower];
 	
     // Search to see if this (tower,AFEE) is among the list
 	
-    int *loc = std::find(afeeList.begin(), afeeList.end(), afee);                
+    std::vector<int>::iterator loc = std::find(afeeList.begin(), 
+						afeeList.end(), afee);
 	
     return (loc != afeeList.end());
 	
@@ -263,8 +263,10 @@ bool CalFailureModeSvc::matchTowerController(idents::CalXtalId id, idents::CalXt
     
 	// Search to see if this (tower,controller) is among the list
 	
-    int *loc1 = std::find(controllerList.begin(), controllerList.end(), controller1);                
-	int *loc2 = controllerList.end();
+    std::vector<int>::iterator loc1 = std::find(controllerList.begin(), 
+						 controllerList.end(), 
+						 controller1);                
+    std::vector<int>::iterator loc2 = controllerList.end();
     if (offController2P || offController2N) loc2 = std::find(controllerList.begin(), 
 		controllerList.end(), controller2);                
 	
