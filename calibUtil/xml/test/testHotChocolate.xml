@@ -2,7 +2,7 @@
 
 <!-- $Header$ -->
 
-<!-- Bad strips  XML file according to (new version, as of Jan 2003) 
+<!-- Bad strips  XML file according to (new version, as of Jul 2003) 
      badStrips.dtd -->
 
 <!DOCTYPE badStrips SYSTEM "../badStrips.dtd" [] >

@@ -2,14 +2,14 @@
 
 <!-- $Header$ -->
 
-<!-- Bad strips  XML file according to (new version, as of Jan 2003) 
+<!-- Bad strips  XML file according to (new version, as of Jul 2003) 
      badStrips.dtd -->
 
 <!DOCTYPE badStrips SYSTEM "../badStrips.dtd" [] >
 
 <badStrips badType="dead">
   <generic instrument="LAT" timestamp="2002-11-2-12:56" 
-           calType="deadStrips" fmtVersion="v2r0">
+           calType="deadStrips" fmtVersion="v3r0">
 
     <inputSample startTime="2002-1-1-00:00" stopTime="2002-6-1-00:00" 
                  triggers="random" mode="normal" source="stuff" >
