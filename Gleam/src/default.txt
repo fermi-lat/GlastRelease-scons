@@ -9,8 +9,11 @@
 
 // following, if uncommented, will run the GUI
 //#include "$GLEAMROOT/src/guiOptions.txt"
+//#include "$GLEAMROOT/src/fredOptions.txt"
 
 FluxAlg.source_name="default";
+// DC2 start
+FluxSvc.StartDate = "2005-05-01 12:00:00";
 
 // set root output from merit with following
 MeritAlg.EventTreeName="MeritTuple";
