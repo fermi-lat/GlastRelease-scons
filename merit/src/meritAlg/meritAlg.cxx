@@ -14,6 +14,8 @@
 #include "Event/MonteCarlo/McParticle.h"
 #include "Event/TopLevel/Event.h"
 #include "Event/TopLevel/EventModel.h"
+#include "Event/TopLevel/MCEvent.h"
+
 
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
@@ -64,6 +66,7 @@ private:
     void clusterReco(const Event::CalClusterCol& clusters, const Event::CalXtalRecCol&);
 
     void tileReco(const Event::AcdRecon& );
+    void processMCheader(const Event::MCEvent&);
     
     
     FigureOfMerit* m_fm;
@@ -258,6 +261,7 @@ StatusCode meritAlg::execute() {
     StatusCode  sc = StatusCode::SUCCESS;
     
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
+    SmartDataPtr<Event::MCEvent>     mcheader(eventSvc(),    EventModel::MC::Event);
     SmartDataPtr<Event::McParticleCol> particles(eventSvc(), EventModel::MC::McParticleCol);
     SmartDataPtr<Event::TkrVertexCol>  tracks(eventSvc(),    EventModel::TkrRecon::TkrVertexCol);
     SmartDataPtr<Event::CalClusterCol> clusters(eventSvc(),  EventModel::CalRecon::CalClusterCol);
@@ -266,6 +270,7 @@ StatusCode meritAlg::execute() {
     
     if( particles!=0 )particleReco(particles);
 
+    processMCheader( mcheader);
     processTDS( header,  tracks);
     clusterReco(clusters, xtalrecs);
 
@@ -276,6 +281,12 @@ StatusCode meritAlg::execute() {
     m_fm->execute();
     
     return sc;
+}
+//------------------------------------------------------------------------------
+void meritAlg::processMCheader(const Event::MCEvent& header){
+
+    m_mc_src_id = header.getSourceId();
+    m_event = header.getSequence();
 }
 //------------------------------------------------------------------------------
 void meritAlg::particleReco(const Event::McParticleCol& particles)

@@ -2,6 +2,7 @@
 /*   Package merit
  *
  *
+ *  v5r9   13-sep-02 fill event number and source id
  *  v5r8p3 10-sep-02 adjust for new versions of Event and GlastSvc
  *  v5r8p2 02-sep-02 linux fix; test program; obsolete analysis removed
  *  v5r8p1 30-aug-02 more done; fix to new TRK code
