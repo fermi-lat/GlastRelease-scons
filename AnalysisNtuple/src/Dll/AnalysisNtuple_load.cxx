@@ -23,6 +23,3 @@ DECLARE_FACTORY_ENTRIES(AnalysisNtuple) {
     DECLARE_TOOL(      EvtValsTool      );
 
 } 
-
-
-

@@ -20,10 +20,6 @@ $Header$
 
 #include "TkrUtil/ITkrGeometrySvc.h"
 
-//#include "Event/Recon/TkrRecon/TkrVertex.h"
-//#include "Event/Recon/TkrRecon/TkrFitTrack.h"
-//#include "Event/Recon/AcdRecon/AcdRecon.h"
-
 #include <algorithm>
 /** @class EvtValsTool
 @brief Calculates Event Values from the other ntuple variables

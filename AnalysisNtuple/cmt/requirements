@@ -10,10 +10,8 @@ use GlastPolicy v*
 # these really belong below the "private" line, but apparently linux can't handle it...
 use TkrUtil     v*
 use G4Propagator v*
-use Trigger     v*
 
 use ntupleWriterSvc v*
-
 
 apply_pattern packageShr
 
@@ -23,11 +21,7 @@ apply_pattern package_include
 private
 use GlastSvc        v*
 use facilities      v*
-
 use RootIo          v*
-# use merit           v*
-
-
 
 set JOBOPTIONS ${ANALYSISNTUPLEROOT}/src/test/jobOptions.txt
 

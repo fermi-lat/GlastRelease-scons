@@ -19,16 +19,15 @@ $Header$
 #include "Event/TopLevel/Event.h"
 
 #include "Event/Recon/TkrRecon/TkrVertex.h"
-#include "Event/Recon/TkrRecon/TkrFitTrack.h"
-#include "Event/Recon/TkrRecon/TkrClusterCol.h"
+//#include "Event/Recon/TkrRecon/TkrFitTrack.h"
 #include "Event/Recon/AcdRecon/AcdRecon.h"
 #include "Event/Digi/AcdDigi.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 // Point used by AcdDigi
-#include "CLHEP/Geometry/Point3D.h"
+//#include "CLHEP/Geometry/Point3D.h"  <=== check this
 // Point used by TKR
-#include "geometry/Point.h"
+//#include "geometry/Point.h"  <=== check this
 
 #include <algorithm>
 #include <numeric>
