@@ -122,20 +122,33 @@ int main(int argc, char* argv[])
 
 
         (*outstream) << "Tuple title: \""<< tuple->title() << "\"\n" ;
-
+#ifdef CLASSIF
         // create the ct: pass in the tuple.
-        ClassificationTree ct(*tuple);
+        ClassificationTree* pct;
+        try {
+           pct = new ClassificationTree(*tuple);
+        }catch ( std::exception &e ) {
+            std::cerr << "Caught: " << e.what( ) << std::endl;
+            std::cerr << "Type: " << typeid( e ).name( ) << std::endl;
+        }catch(...) {
+            std::cerr << "Unknown exception from classification " << std::endl;
+        }
+#endif
         FigureOfMerit fm(*tuple, cutstr);
 
         ::ftime(&t_init);
 
         while ( tuple->nextEvent() ) { 
-            ct.execute();   // fill in the classification (testing here)
+#ifdef CLASSIF
+            pct->execute();   // fill in the classification (testing here)
+#endif
             fm.execute(); // run the rest.
         }
         ::ftime(&t_final);
         fm.report(*outstream);
-
+#ifdef CLASSIF
+        delete pct;
+#endif
         std::cerr << "\nElapsed time: "<< t_final.time-t_init.time << " sec" << std::endl;
         return 0;
 }
