@@ -1,0 +1,22 @@
+package HepRepCorba
+version v0r1
+author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
+
+use GlastPolicy
+
+apply_pattern packageShr
+apply_pattern package_include
+
+private
+
+use ACETAO
+use HepRepSvc
+
+
+apply_pattern package_headers
+apply_pattern package_Cshlibflags
+
+library HepRepCorba *.cxx *.cpp \
+ ${HepRepCorba_headers}
+
+
