@@ -1,5 +1,5 @@
 package Event
-version v8r13
+version v8r13p2
 
 branches Event cmt doc src
 use idents v2r*
@@ -20,7 +20,6 @@ macro_append Event_headers "" WIN32 " \
         ../Event/TopLevel/*.h \
         ../Event/Utilities/*.h \
         ../Event/MonteCarlo/*.h \
-        ../Event/Hits/*.h \
         ../Event/Digi/*.h \
         ../Event/Recon/*.h \
         ../Event/Recon/TkrRecon/*.h\
@@ -29,7 +28,6 @@ macro_append Event_headers "" WIN32 " \
 
 library Event -no_share\
         MonteCarlo/*.cxx \
-        Hits/*.cpp \
         Recon/TkrRecon/*.cxx \
         Recon/CalRecon/*.cxx \
         TopLevel/*.cpp \

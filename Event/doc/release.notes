@@ -2,6 +2,8 @@
  * package Event
  * package manager:T.Burnett (original author: H. Gillespie)
  *
+ * v8r13p2 26-jul-02 THB  restore DigiEvent, used by digiRootData.
+ * v8r13p1 25-jul-02 THB  remove many obsolete or unused files.
  * v8r13 22-jul-02 THB  New McTkrStrip.
  * v8r12 15-jul-02 THB  Brian's new Tkr classes (at W.Atwood request)
  * v8r11 03-jul-02 MF  Add RelTable template classes
