@@ -283,8 +283,7 @@ StatusCode digiRootWriterAlg::writeDigiEvent() {
     if( log.isActive()) evtTds->fillStream(log.stream());
     log << endreq;
 
-    SmartDataPtr<TriRowBitsTds::TriRowBits> triRowBitsTds(eventSvc(), "/Event/
-Digi/TriRowBits");
+    SmartDataPtr<TriRowBitsTds::TriRowBits> triRowBitsTds(eventSvc(), "/Event/Digi/TriRowBits");
     UInt_t rowBits[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     if (triRowBitsTds) {
         unsigned int iTower;
