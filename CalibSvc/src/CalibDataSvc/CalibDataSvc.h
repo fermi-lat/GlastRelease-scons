@@ -137,7 +137,7 @@ public:
   /// Set to true by handle( ) at BeginEvent; cleared after timestamp acquired
   bool m_newEvent;
 
-  /// Just for diagnostic purposes, save last timestamp written
+  /// Dumping place for various time-fetching methods to save the timestamp
   CalibData::CalibTime m_time;
 
   IDataProviderSvc* m_eventSvc;
@@ -146,7 +146,8 @@ public:
       for CalibMySQLCnvSvc, but no easy way for one service to tell the 
       other about it.
   */
-  bool             m_useEventTime;
+  bool  m_useEventTime;
+
 
   /// Private utility, called from initialize()
   StatusCode makeFlavorNodes(IAddressCreator*  calibCreator, 
@@ -155,6 +156,45 @@ public:
   /// Private utility to check if internal timestamp has been updated for
   /// the event; if not do it.
   StatusCode updateTime();
+
+  /*
+  /// Typedef for ptr to function which will attempt to fetch 
+  /// "current time" and store in CalibTime arg.
+  typedef StatusCode (*FetchTime)(CalibData::CalibTime& ourTime,
+                                  MsgStream& log);
+
+  FetchTime m_fetcher;
+  */
+
+  enum TIMESOURCE {
+    TIMESOURCEnone = 0,
+    TIMESOURCEdata,
+    TIMESOURCEmc,
+    TIMESOURCEclock
+  };
+
+  TIMESOURCE m_timeSourceEnum;
+
+  /// Fetch time from real data, store in m_time
+  StatusCode fetchDataTime();
+
+  /// Fetch time from mc data
+  StatusCode fetchMcTime();
+
+
+  /// Fetch time from fake clock, using parameters below
+  StatusCode fetchFakeClockTime();
+
+  /// Absolute time of first event (yyyy-mm-dd_hh:mm, trailing fields
+  /// optional)
+  std::string m_startTimeAsc;
+
+  /// Absolute time of first event (seconds)
+  long m_startTime;
+
+  /// Absolute time spacing between events
+  long m_delayTime;
+  
 };
 
 #endif //  CalibDataSvc_h

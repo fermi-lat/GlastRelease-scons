@@ -28,7 +28,7 @@ const ISvcFactory& CalibDataSvcFactory = s_factory;
 
 /// Standard Constructor
 CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
-  DataSvc(name,svc), m_useEventTime(true)   {
+  DataSvc(name,svc), m_useEventTime(true), m_timeSourceEnum(TIMESOURCEnone) {
   // might also support alternative for no-network case
   declareProperty("CalibStorageType",  
                   m_calibStorageType = MYSQL_StorageType );
@@ -52,6 +52,15 @@ CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
   // choices could be "data", "clock", "mc", "none"
   declareProperty("CalibTimeSource", m_timeSource = "none" );
   m_instrumentDefined = true;
+
+  // Still more properties.  Used only by fake clock, if active
+  /*  declareProperty( "startTime",  
+      m_startTimeAsc = "2003-1-10_00:20");   */
+  declareProperty( "startTime",  
+                   m_startTimeAsc = "2003-1-10 00:20");
+
+  declareProperty( "delayTime",  m_delayTime = 2000);
+
 }
 
 /// Standard Destructor
@@ -117,7 +126,33 @@ StatusCode CalibDataSvc::initialize()   {
   }
 
   // Get ready to listen for BeginEvent
-  if (m_timeSource == "data") {
+  if (m_timeSource != "none") {
+    if (m_timeSource == "data") {
+      //      m_fetcher = CalibDataSvc::fetchDataTime;
+      m_timeSourceEnum = TIMESOURCEdata;
+    }
+    else if (m_timeSource == "mc") {
+      //  m_fetcher = &CalibDataSvc::fetchMcTime;
+      m_timeSourceEnum = TIMESOURCEmc;
+    }
+    else if (m_timeSource == "clock") {
+      //      m_fetcher = &CalibDataSvc::fetchFakeClockTime;
+      m_timeSourceEnum = TIMESOURCEclock;
+
+      //  set start and increment parameters also
+      unsigned int underpos = m_startTimeAsc.find("_");
+      if (underpos < m_startTimeAsc.size()) {
+        m_startTimeAsc.replace(underpos, 1, " ");
+      }
+      m_startTime = facilities::Timestamp(m_startTimeAsc).getClibTime();
+
+    }
+    else {
+      log << MSG::WARNING << "Unsupported time source " << m_timeSource 
+          << " will be set to  'none' " << endreq;
+      m_timeSource = std::string("none");
+    }
+
     IIncidentSvc* incSvc;
     StatusCode sc = service("IncidentSvc", incSvc, true);
     if (sc.isSuccess() ) {
@@ -132,7 +167,6 @@ StatusCode CalibDataSvc::initialize()   {
   // Make flavor nodes in the calibration TDS
   return makeFlavorNodes(calibCreator, &log);
 }
-
 
 // Create and register the next level of nodes.
 // Have one per calibration type. They are of a class trivially 
@@ -290,7 +324,10 @@ const ITime& CalibDataSvc::eventTime ( )  const {
 void CalibDataSvc::handle ( const Incident& inc ) { 
   MsgStream log( msgSvc(), name() );
 
-  if ((inc.type() == "BeginEvent") && (m_timeSource == "data")) {
+  if ((inc.type() == "BeginEvent") && 
+      ((m_timeSourceEnum == TIMESOURCEdata) ||
+       (m_timeSourceEnum == TIMESOURCEmc) ||
+       (m_timeSourceEnum == TIMESOURCEclock) ) ) {
     log << MSG::DEBUG << "New incident received" << endreq;
     log << MSG::DEBUG << "Incident source: " << inc.source() << endreq;
     log << MSG::DEBUG << "Incident type: " << inc.type() << endreq;
@@ -392,39 +429,6 @@ StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
   return StatusCode::SUCCESS;
 }
 
-
-// For now applies only in case we're reading event time from tds
-StatusCode  CalibDataSvc::updateTime() {
-  using CalibData::CalibTime;
-
-  MsgStream log( msgSvc(), name() );
-
-  if (!m_useEventTime) return StatusCode::SUCCESS;
-  if (m_timeSource != "data") return StatusCode::SUCCESS;
-
-  if (m_newEvent) {
-    // Fetch the time
-    SmartDataPtr<LdfEvent::LdfTime> timeTds(m_eventSvc, "/Event/Time");
-    if (!timeTds) {
-      log << MSG::ERROR << "Unable to retrieve ldf time " << endreq;
-
-      return StatusCode::FAILURE;
-    }
-    int secs = (int) timeTds->timeSec();
-    int  nano = (int) timeTds->timeNanoSec();
-
-    m_time = CalibTime(facilities::Timestamp(secs,nano));
-    
-    log << MSG::DEBUG << "Processing event " << m_nEvent 
-        << " found time " << m_time.getString() << endreq;
-    
-    setEventTime(m_time);
-
-    m_newEvent = false;
-  }
-  return StatusCode::SUCCESS;
-}
-
 StatusCode CalibDataSvc::loadObject(IConversionSvc* pLoader, 
                                     IRegistry* pRegistry) {
   if (m_newEvent) {
@@ -433,4 +437,100 @@ StatusCode CalibDataSvc::loadObject(IConversionSvc* pLoader,
   }
   return DataSvc::loadObject(pLoader, pRegistry);
 
+}
+
+// For timeSource = "data", "mc" or "clock"
+StatusCode  CalibDataSvc::updateTime() {
+  using CalibData::CalibTime;
+
+  MsgStream log( msgSvc(), name() );
+
+
+  if (!m_useEventTime) return StatusCode::SUCCESS;
+  if (m_timeSource == "none") return StatusCode::SUCCESS;
+
+  StatusCode sc = StatusCode::FAILURE;
+
+  if (m_newEvent) {
+    // Fetch the time using requested fetch mechanism
+    switch (m_timeSourceEnum) {
+    case TIMESOURCEdata: {
+      sc = fetchDataTime();
+      break;
+    }
+    case TIMESOURCEmc: {
+      sc = fetchMcTime();
+      break;
+    }
+    case TIMESOURCEclock: {
+      sc = fetchFakeClockTime();
+      break;
+    }
+    default: {
+      sc = StatusCode::FAILURE;
+    }
+
+    }             // end of switch
+
+    if (sc.isSuccess()) setEventTime(m_time);
+
+    m_newEvent = false;
+    return sc;
+  }
+  return StatusCode::SUCCESS;
+}
+
+StatusCode CalibDataSvc::fetchDataTime() {
+  MsgStream log(msgSvc(), name());
+
+  SmartDataPtr<LdfEvent::LdfTime> timeTds(m_eventSvc, "/Event/Time");
+  if (!timeTds) {
+    log << MSG::ERROR << "Unable to retrieve ldf time " << endreq;
+
+    return StatusCode::FAILURE;
+  }
+  int secs = (int) timeTds->timeSec();
+  int  nano = (int) timeTds->timeNanoSec();
+  
+  m_time = CalibData::CalibTime(facilities::Timestamp(secs,nano));
+  
+  log << MSG::DEBUG << "Processing event " << m_nEvent 
+      << " found time " << m_time.getString() << endreq;
+  return StatusCode::SUCCESS;
+}
+
+StatusCode CalibDataSvc::fetchMcTime() {
+
+  return StatusCode::FAILURE;  // until we implement it
+}
+
+StatusCode CalibDataSvc::fetchFakeClockTime() {
+  MsgStream log(msgSvc(), name());
+
+  static unsigned int eventNumber = 0;
+
+  log << MSG::INFO << "Fake Clock Event number: " 
+      << eventNumber << endreq;
+
+
+  // Set the event time
+  double incr = eventNumber*m_delayTime;
+  long   seconds_incr = incr / 1000;
+  long   nano_incr = (incr - (1000*seconds_incr)) * 1000;
+  //  facilities::Timestamp time(m_startTime + (eventNumber)*m_delayTime, 0);
+  facilities::Timestamp time(m_startTime + seconds_incr, nano_incr);
+  //  facilities::Timestamp time = 
+  //    facilities::Timestamp(m_startTime + (eventNumber)*m_delayTime);
+  log << MSG::INFO << "Event time: "
+      << time.getString()
+      << endreq; 
+    //      << " Julian day number "
+    //      << time.getJulian()
+  m_time = CalibData::CalibTime(time);
+
+  log << MSG::DEBUG << "Event time (hours) " << m_time.hours() << endreq;
+
+  eventNumber++;
+
+  return StatusCode::SUCCESS; 
 }
