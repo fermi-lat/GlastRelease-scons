@@ -1,22 +1,24 @@
 #ifndef _H_INTupleWriterSvc_
 #define _H_INTupleWriterSvc_
 
-// includes
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/NTuple.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
 static const InterfaceID IID_INTupleWriterSvc(1400, 1 , 0); 
 
-/*! Proper Gaudi abstract interface class for the ntupleWriterSvc 
+/*! @class INTupleWriterSvc
+ @brief Proper Gaudi abstract interface class for the ntupleWriterSvc 
 */
 class INTupleWriterSvc : virtual public IInterface
 {  
 
 public:
 
+    /// setup before event processing - required for Gaudi services
     virtual StatusCode initialize ()=0;
     
+    /// cleanup after event processing - required for all Gaudi services
     virtual StatusCode finalize ()=0;
 
     virtual SmartDataPtr<NTuple::Tuple> getNTuple(const char *tupleName)=0;

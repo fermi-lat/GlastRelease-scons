@@ -2,8 +2,6 @@
 #ifndef _H_ntupleWriterSvc_
 #define _H_ntupleWriterSvc_
 
-
-// includes
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
@@ -15,29 +13,28 @@
 //forward declarations
 template <class TYPE> class SvcFactory;
 
-/*!  \class ntupleWriterSvc
-\brief A service that handles the ins and outs of writing to a ROOT ntuple
-*/
+/** 
+ * @class ntupleWriterSvc
+ * @brief A service that handles the ins and outs of writing to a ROOT ntuple
+ * 
+ * $Header$
+ */
 class ntupleWriterSvc :  public Service, virtual public IIncidentListener,
                         virtual public INTupleWriterSvc
 {  
 
-
 public:
-
-    //------------------------------------------------------------------
-    //  stuff required by a Service
     
-    /// perform initializations for this service. 
+    /// perform initializations for this service - required by Gaudi
     virtual StatusCode initialize ();
     
-    /// 
+    /// clean up after processing all events - required by Gaudi
     virtual StatusCode finalize ();
-    //------------------------------------------------------------------
+
     /// Handles incidents, implementing IIncidentListener interface
     virtual void handle(const Incident& inc);    
  
-   /// Query interface
+   /// Query interface - required of all Gaudi services
    virtual StatusCode queryInterface( const IID& riid, void** ppvUnknown );
 
    /// Provide the named ntuple Ptr from the data store
@@ -49,9 +46,9 @@ public:
    /// force writing of the ntuple to disk
    virtual StatusCode saveNTuples();
 
-   // Set a flag to denote whether or not to store a row
+   /// Set a flag to denote whether or not to store a row
    virtual void storeRowFlag(bool flag) { m_storeFlag = flag; };
-   // retrieve the flag that denotes whether or not to store a row
+   /// retrieve the flag that denotes whether or not to store a row
    virtual bool storeRowFlag() { return m_storeFlag; };
 
    /// check for NaN and infinity
@@ -59,15 +56,13 @@ public:
 
 protected: 
 
-    /// Standard Constructor
-    ntupleWriterSvc ( const std::string& name, ISvcLocator* al );
-    
+    ntupleWriterSvc ( const std::string& name, ISvcLocator* al );    
 
 private:
 
     INTupleSvc *ntupleSvc;
 
-    // Allow SvcFactory to instantiate the service.
+    /// Allow SvcFactory to instantiate the service.
     friend class SvcFactory<ntupleWriterSvc>;
     /// routine to be called at the beginning of an event
     void beginEvent();
