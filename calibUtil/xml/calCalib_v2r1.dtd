@@ -73,15 +73,21 @@
 
 <!-- In many cases calibration is done per range: LEX8 is low-energy 
    (= large) diode, x8 amplification; LEX1 is low-energy, low amplification.
-   Similarly have HEX8, HEX1 for high-energy (small) diode  -->
+   Similarly have HEX8, HEX1 for high-energy (small) diode.
+   Unfortunately can't use parameter entities since they aren't allowed
+   when the dtd is literally included in an xml file, something
+   we'd like to support.
+  -->
+<!--
 <!ENTITY  % ranges  'range (LEX8 | LEX1 | HEX8 | HEX1) #REQUIRED ' >
-
+ -->
 <!-- For light asymmetry may lump together amplifications (and by
   definition one set of constants applies to both crystal ends, since
   constants quantify *asymmetry*), so have a set of constants per
   diode-type -->
+<!--
 <!ENTITY  % diodes  'diode (LE | HE) #REQUIRED ' >
-
+-->
 <!-- Describe how the data is dimensioned:
         number of tower rows
         number of tower columns
@@ -129,8 +135,9 @@
     settings.  Expect one set per range where used; else 0. Number 
     should match value of dimension attribute nDacCol  -->
 <!ELEMENT dac EMPTY>
-<!ATTLIST dac %ranges;
-          values NMTOKENS #REQUIRED >
+<!ATTLIST dac range (LEX8 | LEX1 | HEX8 | HEX1) #REQUIRED
+          values NMTOKENS #REQUIRED
+          error  NMTOKEN  #REQUIRED >   <!-- for now.  May want default -->
 
 <!ELEMENT tower (layer*) >
 <!ATTLIST tower iRow NMTOKEN #REQUIRED
@@ -148,27 +155,27 @@
 
 
 <!ELEMENT calPed  EMPTY>
-<!ATTLIST calPed  %ranges;
+<!ATTLIST calPed  range (LEX8 | LEX1 | HEX8 | HEX1) #REQUIRED
                   avg NMTOKEN #REQUIRED
                   sig NMTOKEN #REQUIRED
                   cos NMTOKEN "2" >
 
 <!ELEMENT calGain EMPTY>
-<!ATTLIST calGain %ranges;
+<!ATTLIST calGain range (LEX8 | LEX1 | HEX8 | HEX1) #REQUIRED
                   avg NMTOKEN #REQUIRED
                   sig NMTOKEN #REQUIRED>
 
 <!ELEMENT muSlope EMPTY>
-<!ATTLIST muSlope %ranges;
+<!ATTLIST muSlope range (LEX8 | LEX1 | HEX8 | HEX1) #REQUIRED
                   slope NMTOKEN #REQUIRED
                   error NMTOKEN "0.0" >
 
 <!ELEMENT lightAsym EMPTY>
-<!ATTLIST lightAsym %diodes;
+<!ATTLIST lightAsym diode (LE | HE) #REQUIRED
                     values NMTOKENS #REQUIRED
                     error NMTOKEN #REQUIRED >
 
 <!ELEMENT intNonlin EMPTY>
-<!ATTLIST intNonlin %ranges;
+<!ATTLIST intNonlin range (LEX8 | LEX1 | HEX8 | HEX1) #REQUIRED
                     values NMTOKENS #REQUIRED
                     error NMTOKEN   #REQUIRED >
