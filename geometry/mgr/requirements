@@ -1,18 +1,13 @@
 package geometry
-version v1r1
+version v2
 
-use glast_settings 
+use GlastPolicy
 use CLHEP
 
-include_path "${GEOMETRYROOT}"
+ignore_pattern include_none
+apply_pattern package_include
 
-macro   geometry_linkopts "-L ${GEOMETRYROOT}/${CMTCONFIG} -lgeometry"\
-        VisualC         ""
-
-macro_append Win32Debug   " ${GEOMETRYROOT}/${DebugDir}/geometrylib.lib"
-macro_append Win32Release " ${GEOMETRYROOT}/${ReleaseDir}/geometrylib.lib"
-
-path_append LD_LIBRARY_PATH "${GEOMETRYROOT}/${CMTCONFIG}"
+apply_pattern package_Llinkopts
 
 private
 library  geometry -no_share \

@@ -7,6 +7,7 @@
 #include "geometry/Conic.h"
 #include "geometry/Plane.h"
 #include <algorithm>
+#include <cmath>
 inline static double sqr(double x){return x*x;}
 
 static Vector zhat(0,0,1);

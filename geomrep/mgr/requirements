@@ -5,24 +5,18 @@ version v2
 use geometry 
 use gui
 
-include_path "${GEOMREPROOT}"
+use GlastPolicy
 
-macro   geomrep_linkopts "-L ${GEOMREPROOT}/${CMTCONFIG} -lgeomrep"\
-        VisualC ""
-
-
-macro_append Win32Debug   " ${GEOMREPROOT}/${DebugDir}/geomreplib.lib"
-macro_append Win32Release " ${GEOMREPROOT}/${ReleaseDir}/geomreplib.lib"
-
-path_append LD_LIBRARY_PATH "${GEOMREPROOT}/${CMTCONFIG}"
-
+ignore_pattern include_none
+apply_pattern package_include
+apply_pattern package_Llinkopts
 private
 
 library geomrep -no_share *.cxx   ../geomrep/*.h
 
 # set up application link-options for test program. Note also the resource
 
-macro_append graphics_linkopts ${graphics_gui_linkopts}
+#macro_append graphics_linkopts ${graphics_gui_linkopts}
 
 
 application testgeom test/testgeom.cxx ${Win32Resource}
