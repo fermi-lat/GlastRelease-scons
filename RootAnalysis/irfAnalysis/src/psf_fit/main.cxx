@@ -11,38 +11,102 @@ $Header$
 class PsfModel : public Fitter {
 public:
 
-   PsfModel(const std::string &outputFile, int maxTrys=5) 
-      : Fitter(outputFile), m_maxTrys(maxTrys) {
-      std::string psfFunc
-         = "x*( [0]*exp(-0.5*x*x/[1]/[1]) + [2]*exp(-pow(x*[3], [4])) )";
-      m_func = new TF1("myModel", psfFunc.c_str());
+	//Perugia method to retreive the Xvalue of an histogram giving to it a y value
 
-// Set up the branches in the output tree.
-      const char* names[]={"p0", "p1", "p2", "p3", "p4"};;
-      int npars=sizeof(names)/sizeof(void*);
-      m_params.resize(npars);
-      for (int i=0; i<npars; ++i) {
-         m_tree->Branch(names[i], &m_params[i], 
-                        (std::string(names[i])+"/D").c_str());
-      }
-      m_func->SetParLimits(0, 1e-3, 3);  // minimum for the gaussian component
-      m_func->SetParLimits(1, 0.01, 5);
-      m_func->SetParLimits(2, 0, 10);;
-      m_func->SetParLimits(3, 0, 10);;
-      m_func->SetParLimits(4, 0.5, 1.5);;
+		Double_t GetXValue(TH1 *h,Double_t x_min,Double_t x_max)
+{
 
+  Int_t bin_min=h->GetXaxis()->FindBin(x_min);
+  Int_t bin_max=h->GetXaxis()->FindBin(x_max);
+  //cout<<"bins "<<bin_min<<' '<<bin_max<<endl; 
+  Double_t Ymax=h->GetMaximum();
+  Double_t diff=99999.,x_good=0.;
+  for(int i=bin_min;i<=bin_max;i++){
+   Double_t y_temp= h->GetBinContent(i);
+   if(fabs(y_temp - (Ymax*0.33)) < diff){
+     diff=fabs(y_temp - (Ymax*0.33));
+     x_good= h->GetBinCenter(i);
    }
-   ~PsfModel(){delete m_func;}
+  }
+   return x_good;
 
-   void applyFit(TH1 * h) {
-      // These initial parameters were obtained interactively
-      double pinit[] = {0.01, 1.0, 1.0, 0.5, 1.};
-      std::copy(pinit, pinit+sizeof(pinit)/sizeof(double), m_params.begin());
-      m_func->SetParameters(&m_params[0]);
-      int fitTrys = 0;
-      while (h->Fit("myModel") && fitTrys++ < m_maxTrys);
-   }
+}
 
+PsfModel(const std::string &outputFile, int maxTrys=5) 
+        : Fitter(outputFile), m_maxTrys(maxTrys) 
+    {
+
+        m_func 
+            = new TF1("myModel", 
+                "x * ([0] * exp (- 0.5  * x * x /( [1] * [1]))  + [2] * exp (- (x * [3])^[4])   )"
+            );
+            
+		m_gauss 
+            = new TF1("myGaussModel", 
+			"x * ([0] * exp (- 0.5  * x * x /( [1] * [1])) ) "
+            );
+			
+		m_expo 
+            = new TF1("myExpoModel", 
+                "x * ( [2] * exp (- (x * [3])^[4])   )"
+            );
+
+		m_stgaus  
+            = new TF1("myStdGauss", 
+                "gaus"
+            );
+	
+		//"x*( [0]*exp(-0.5*x*x/([1]*[1]))/[1] + [2]*exp(-x/[3]) )");  //+ [4]*exp(-x/[5]) )");
+
+        // Set up the branches in the output tree.
+        const char* names[]={"p0", "p1", "p2", "p3", "p4"};
+        int npars=sizeof(names)/sizeof(void*);
+        m_params.resize(npars);
+        for( int i=0; i<npars; ++i){
+            m_tree->Branch(names[i], &m_params[i], (std::string(names[i])+"/D").c_str());
+        }
+		
+
+    }
+    void applyFit(TH1 * h) 
+    {
+		// New fit from Perugia group with the pre-fit applied 
+
+      Double_t histo_max=h->GetMaximum();
+	  Double_t Xmax = h->GetXaxis()->GetXmax();
+      Double_t Fitmax = Xmax*0.7; 
+      Double_t Xgaus2 =0.;
+      Double_t Xgaus1 =0.;
+      Xgaus2= GetXValue(h,0.5,1.5);
+      Double_t Xexpo1 =Xgaus2; 
+      Double_t Xexpo2 =Xmax/2.;  
+      Double_t par0gaus[3];
+      Double_t par00gaus[3];
+      Double_t parout[5];
+ 
+//pre-fit of tails with an (x*exponential) function   
+      Double_t par0expo[3]={histo_max*10.,40.,0.7}; 
+      m_expo->SetParameters(par0expo[0],par0expo[1],par0expo[2]);
+      m_expo->SetParLimits(0,histo_max,histo_max*100.);
+      m_expo->SetParLimits(2,0.5,0.9);
+      h->Fit("myExpoModel","","",Xexpo1,Xexpo2);
+      m_expo->GetParameters(par0expo);
+
+//pre-fit of peak with an (x*gaussian) function   
+      h->Fit("myStdGauss","","",0.,Xgaus2);
+      m_stgaus->GetParameters(par00gaus);
+      m_gauss->SetParameters(histo_max,par00gaus[2]);
+      m_gauss->SetParLimits(1,0.001,Xmax); //forced to be positive
+      h->Fit("myGaussModel","","",Xgaus1,Xgaus2);
+      m_gauss->GetParameters(par0gaus);
+  
+//Total fit
+      m_func->SetParameters(par0gaus[0],par0gaus[1]*2.,par0expo[0],par0expo[1],par0expo[2]);
+      m_func->SetParLimits(0,0.001,histo_max*10.);  //forced to be positive
+      m_func->SetParLimits(4,0.,1.5); 
+
+	  h->Fit("myModel","","",0.,Fitmax);
+    }
 private:
     int m_maxTrys;
 };
