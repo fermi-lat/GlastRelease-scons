@@ -1122,7 +1122,7 @@ row of side tiles</notes>
           </minus>
         </const>
 
-        <const name="topTapesPerRow">
+        <const name="topTapesPerRow" uType="count">
           <notes> Tapes on top come in columns, similar to tiles, except there
      is one less piece of tape than there are tiles in a row</notes>
           <minus>
