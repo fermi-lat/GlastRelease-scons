@@ -1,7 +1,7 @@
 //$Header$
 // (Special "header" just for doxygen)
 
-/*! @mainpage  package trigger
+/*! @mainpage  package Trigger
 
 
 
