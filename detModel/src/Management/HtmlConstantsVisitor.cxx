@@ -117,6 +117,8 @@ namespace detModel{
     
       if(c->getConstMeaning() == Const::length)
 	out <<  " " << c->getUnitLength();
+      else if (c->getConstMeaning() == Const::energy)
+        out << " " << c->getUnitEnergy();
 
       out << "</td>" << std::endl;
       out << "<td>" << c->getNote() << "</td>" << std::endl;     
