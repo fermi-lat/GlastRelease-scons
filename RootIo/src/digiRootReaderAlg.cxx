@@ -278,9 +278,11 @@ StatusCode digiRootReaderAlg::readAcdDigi() {
         idents::AcdId idTds(idRoot.getLayer(), idRoot.getFace(), 
             idRoot.getRow(), idRoot.getColumn());
 
-        const VolumeIdentifier volIdRoot = acdDigiRoot->getVolId();
-        idents::VolumeIdentifier volIdTds;
-        convertVolumeId(volIdRoot, volIdTds);
+        //const VolumeIdentifier volIdRoot = acdDigiRoot->getVolId();
+        //convertVolumeId(volIdRoot, volIdTds);
+        // Rather than using the volId stored in the ROOT file - recompute using the 
+        // routine in the idents package.
+        idents::VolumeIdentifier volIdTds = idTds.volId();
 
         unsigned short phaTds[2] = { acdDigiRoot->getPulseHeight(AcdDigi::A),
             acdDigiRoot->getPulseHeight(AcdDigi::B) };
