@@ -1,5 +1,5 @@
 package mcRootData
-version v2r1
+version v2r1p2
 
 use GlastPolicy v4r*
 use ROOT v3r2p*
@@ -27,16 +27,12 @@ make_fragment mcrootdata_dorootcint_header
 make_fragment mcrootdata_dorootcint -header=mcrootdata_dorootcint_header
 document mcrootdata_dorootcint mcRootDataRootCint CINTFILE=../mcRootData/mcRootDataCint.cxx
 
-macro_append ROOT_linkopts " ${ROOT_PATH}/lib/libPhysics.so " \ 
-      VisualC              " ${ROOT_PATH}/lib/libPhysics.lib " 
-
 # For some reason, I was getting errors when loading the mcRootData shareable
 # in root.  Linking the Root Physics library in avoids this.
 macro mcRootData_shlibflags " -L${ROOT_PATH}/lib -lPhysics -lMatrix " \
       VisualC            " ${use_linkopts} "
 
 
-# I think this is still ok?
 library  mcRootData *.cxx \
      ../mcRootData/*.cxx \
      ${mcRootData_headers}
