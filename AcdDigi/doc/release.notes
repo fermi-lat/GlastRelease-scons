@@ -2,6 +2,8 @@
  Package AcdDigi\n
  Coordinator:H.Kelly
 
+ v1r4p0 27-Sep-2002 HMK Use double rather than float consistently\n
+        add diagram to documentation\n
  v1r4   09-Sep-2002 HMK Update version of Event and GlastSvc\n
  v1r3p4 09-Sep-2002 HMK Fix up documentation\n
  v1r3p3 05-Sep-2002 HMK Fix some gcc warnings\n
