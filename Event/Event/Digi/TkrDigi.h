@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <functional>
+#include <algorithm>
 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ContainedObject.h"
@@ -78,16 +79,17 @@ namespace Event {
         int getHit( int i ) const { return m_hits[i];}
         
         //! Add a controller 0 hit to the hit list (keeps track of highest strip)
-        void addC0Hit( int strip ) {
+        void addC0Hit( int strip, int ToT=0 ) {
             m_hits.push_back(strip);
-            if (m_lastController0Strip < strip) m_lastController0Strip = strip;
+            m_lastController0Strip = std::max(strip, m_lastController0Strip);
+            m_tot[0] = std::max(m_tot[0], ToT);
         }
         
         //! Add a controller 1 hit to the hit list
-        void addC1Hit( int strip ) {
+        void addC1Hit( int strip, int ToT=0 ) {
             m_hits.push_back(strip);
+            m_tot[1] = std::max(m_tot[1], ToT);
         }
-
         //! returns integer for sorting order
         operator int() const {
             return m_view + 2*m_bilayer + 64*m_tower.id();
