@@ -276,6 +276,7 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
   const {
     MsgStream log(msgSvc(), name());
     
+    unsigned marker;
     try {
     if  ((m_criteriaType == LDFFILE) ||
          (m_criteriaType == LDFFITS) )
@@ -285,9 +286,10 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
         log << MSG::DEBUG << "Processing Event " <<  irfIt->m_evtCount << endreq;
         
         irfIt->m_evtCount++;
+        static bool findFirstMarkerFive = false;
         
         bool DONE=false;
-        while (!DONE) {
+        while ((!DONE) || (!findFirstMarkerFive)) {
           int status = m_ebfParser->loadData();
           if (status < 0) {
             log << MSG::INFO << "Failed to get Event" << endreq;
@@ -298,10 +300,24 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
           } else {
             // Check marker to see if this is a data event
             unsigned int summary = ldfReader::LatData::instance()->summaryData().summary();
-            unsigned marker = EventSummary::marker(summary);
+            marker = EventSummary::marker(summary);
             log << MSG::DEBUG << "Marker = " << marker << endreq;
-            if (marker == 0) DONE = true;
-            if (marker != 0) {
+            static unsigned int skippedEvents = 0;
+            if (!findFirstMarkerFive) {
+                if (marker == 5) { 
+                    log << MSG::WARNING << "Skipped " << skippedEvents 
+                        << " Events before finding first sweep event" << endreq;
+                    findFirstMarkerFive = true; 
+                } else {
+                    if (!skippedEvents)
+                        log << MSG::WARNING << "First Event is not sweep event" 
+                        << " marker != 5, skipping events until first "
+                        << "sweep event is found" << endreq;
+                    ++skippedEvents;
+                }
+            }
+
+            if ((marker != 0) || (!findFirstMarkerFive)) {
               // Move file pointer for the next event
               int ret = m_ebfParser->nextEvent();
               if (ret != 0) {
@@ -310,6 +326,7 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
                 return *irfIt;
               }
              }
+            if ( (marker == 0) && (findFirstMarkerFive)) DONE = true;
           }
         }
         
@@ -317,11 +334,17 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
             *(irfIt) = m_evtEnd;
             log << MSG::INFO << "Stopping loop at user maxEvent Request" 
                 << endreq;
+            if (marker != 5) 
+                log << MSG::WARNING << "Last Event was not a sweep event with"
+                    << " marker == 5" << endreq;
         }
         // Move file pointer for the next event
         int ret = m_ebfParser->nextEvent();
         if (ret != 0) {
           log << MSG::INFO << "Input event source exhausted" << endreq;
+          if (marker != 5) 
+              log << MSG::WARNING << "Last Event was not a sweep event with"
+                  << " marker == 5" << endreq;
           *(irfIt) = m_evtEnd;
         }
         return *irfIt;
