@@ -6,6 +6,8 @@ use GlastPolicy v5*
 
 # this is only a shareable package
 apply_pattern packageShr
+apply_pattern package_headers
+apply_pattern package_include
 
 use Event *
 
@@ -31,12 +33,12 @@ use Geant4   v2r* IExternal
 
 apply_pattern package_Cshlibflags
 
-apply_pattern package_headers
+##apply_pattern package_headers
 
 # this to allow includes of internal "package" 
-macro_prepend includes "-I ../src " WIN32 "/I ..\src "
+##macro_prepend includes "-I ../src " WIN32 "/I ..\src "
 
-library G4Generator ${G4Generator_headers} *.cxx   Dll/*.cxx
+library G4Generator *.cxx Dll/*.cxx ${G4Generator_headers} 
 
 # test program 
 public 
