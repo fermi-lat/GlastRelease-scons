@@ -55,6 +55,7 @@ long TableColumnList::onSelectTable(FXObject*,FXSelector,void*)
   rdbModel::Table *table = (rdbModel::Table*)(m_tblList->getItemData(m_tblList->getCurrentItem()));
   table->accept(this);
   m_tableSelected = false;
+  return 1;
 }
 
 long TableColumnList::onSelectColumn(FXObject*,FXSelector,void*)
