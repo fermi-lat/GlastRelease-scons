@@ -35,6 +35,30 @@ int main(int, char**) {
   }
   else std::cout << "Failed to register new metadata record" << std::endl;
 
+  ser = 
+    meta.registerCalib("cello","rocky road", "Test_Gen", "notAFile.xml",
+                       "XML", facilities::Timestamp("1990-1-5"),
+                       facilities::Timestamp("1995-6-11"), "", 
+                       "From add_meta test program in calibUtil package",
+                       "TEST", "SLAC", "", "OK", "", "");
+  if (ser) {
+    std::cout << "Successfully added metadata record; returned serial no. is " 
+              << ser << std::endl;
+  }
+  else std::cout << "Failed to register new metadata record" << std::endl;
+
+
+  ser = 
+    meta.registerCalib("cello","rocky road", "Test_Gen", "notAnotherFile.root",
+                       "ROOT", facilities::Timestamp("1993-1-5"),
+                       facilities::Timestamp("2035-6-11"), "", 
+                       "From add_meta test program in calibUtil package",
+                       "TEST", "SLAC", "", "OK", "", "");
+  if (ser) {
+    std::cout << "Successfully added metadata record; returned serial no. is " 
+              << ser << std::endl;
+  }
+  else std::cout << "Failed to register new metadata record" << std::endl;
 
   ser = meta.registerCalib("banjo","rocky road", "Test_Gen", 
                            "notAnotherFile.xml",
