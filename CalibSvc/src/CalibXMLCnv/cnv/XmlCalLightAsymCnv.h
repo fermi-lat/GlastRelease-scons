@@ -8,12 +8,12 @@
 
   @author J. Bogart
 */
-#include "XmlBaseCnv.h"
+#include "XmlCalBaseCnv.h"
 #include <xercesc/dom/DOM_Element.hpp>
 
 template <class TYPE> class CnvFactory;
 
-class XmlCalLightAsymCnv : public XmlBaseCnv {
+class XmlCalLightAsymCnv : public XmlCalBaseCnv {
 
   /// Friend needed for instantiation
   friend class CnvFactory<XmlCalLightAsymCnv>;

@@ -32,7 +32,7 @@ const  ICnvFactory& XmlCalIntNonlinCnvFactory = s_factory;
 
 
 XmlCalIntNonlinCnv::XmlCalIntNonlinCnv( ISvcLocator* svc) :
-  XmlBaseCnv(svc, CLID_Calib_CAL_IntNonlin) { 
+  XmlCalBaseCnv(svc, CLID_Calib_CAL_IntNonlin) { 
 }
 
 

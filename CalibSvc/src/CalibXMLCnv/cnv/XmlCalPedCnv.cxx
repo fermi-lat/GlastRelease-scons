@@ -28,7 +28,7 @@ const  ICnvFactory& XmlCalPedCnvFactory = s_factory;
 
 
 XmlCalPedCnv::XmlCalPedCnv( ISvcLocator* svc) :
-  XmlBaseCnv(svc, CLID_Calib_CAL_Ped) { 
+  XmlCalBaseCnv(svc, CLID_Calib_CAL_Ped) { 
 }
 
 

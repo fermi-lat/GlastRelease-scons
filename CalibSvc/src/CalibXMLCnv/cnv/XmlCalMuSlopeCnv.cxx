@@ -28,7 +28,7 @@ const  ICnvFactory& XmlCalMuSlopeCnvFactory = s_factory;
 
 
 XmlCalMuSlopeCnv::XmlCalMuSlopeCnv( ISvcLocator* svc) :
-  XmlBaseCnv(svc, CLID_Calib_CAL_MuSlope) { 
+  XmlCalBaseCnv(svc, CLID_Calib_CAL_MuSlope) { 
 }
 
 

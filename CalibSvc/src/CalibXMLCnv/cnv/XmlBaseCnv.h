@@ -99,21 +99,17 @@ protected:
   // the base converter.
   virtual StatusCode readHeader(const DOM_Element&);
 
-  /// Convenience routine used by most CAL calibration types, which
-  /// have a <dimension> element describing how the remainder of the
-  /// data is laid out.
-  StatusCode readDimension(const DOM_Element& docElt, 
-                           unsigned& nRow, unsigned& nCol, 
-                           unsigned& nLayer,
-                           unsigned& nXtal, unsigned& nFace,
-                           unsigned& nRange,
-                           unsigned* nDacCol=0);
 
-  /// Another one to find first range element
-  DOM_Element findFirstRange(const DOM_Element& docElt);
+  /// Find first range element.  Derived classes which need it
+  /// must define their own implementation.
+  DOM_Element findFirstRange(const DOM_Element& docElt) {
+    return DOM_Element();}
+  //  DOM_Element findFirstRange(const DOM_Element& docElt);
 
   /// Still another one to navigate XML file and find next set of range data
-  DOM_Element findNextRange(const DOM_Element& rangeElt);
+  DOM_Element findNextRange(const DOM_Element& rangeElt) {
+    return DOM_Element();}
+  //  DOM_Element findNextRange(const DOM_Element& rangeElt);
 
   /// Another one to find first dac collection element
   DOM_Element findFirstDacCol(const DOM_Element& docElt);
@@ -135,13 +131,6 @@ protected:
   ITime*  m_vstart;
   ITime*  m_vend;
 
-  /// A place to keep track of where we are if we're handling CAL data
-  unsigned m_nRow;
-  unsigned m_nCol;
-  unsigned m_nLayer;
-  unsigned m_nXtal;
-  unsigned m_nFace;
-  unsigned m_nRange;
 
 };
 

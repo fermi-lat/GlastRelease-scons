@@ -28,7 +28,7 @@ const  ICnvFactory& XmlCalLightAttCnvFactory = s_factory;
 
 
 XmlCalLightAttCnv::XmlCalLightAttCnv( ISvcLocator* svc) :
-  XmlBaseCnv(svc, CLID_Calib_CAL_LightAtt) { 
+  XmlCalBaseCnv(svc, CLID_Calib_CAL_LightAtt) { 
 }
 
 

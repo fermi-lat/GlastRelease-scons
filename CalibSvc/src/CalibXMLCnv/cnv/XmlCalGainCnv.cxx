@@ -28,7 +28,7 @@ const  ICnvFactory& XmlCalGainCnvFactory = s_factory;
 
 
 XmlCalGainCnv::XmlCalGainCnv( ISvcLocator* svc) :
-  XmlBaseCnv(svc, CLID_Calib_CAL_ElecGain) { 
+  XmlCalBaseCnv(svc, CLID_Calib_CAL_ElecGain) { 
 }
 
 
