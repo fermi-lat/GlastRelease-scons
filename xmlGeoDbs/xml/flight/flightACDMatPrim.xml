@@ -3,9 +3,10 @@
   <overview>Materials used in the ACD description</overview>
   <prim name="tileMat" value="Polystyrene" type="string" uType="mat">material used for tiles
 </prim>
-  <prim name="ACDSupportCoreMat" value="Vacuum" type="string" uType="mat">
+<!-- Set ACD core to FOAM05, face to Be pending updated information -->
+  <prim name="ACDSupportCoreMat" value="FOAM05" type="string" uType="mat">
 Material used in support.  Still need input from engineers about this.</prim>
-  <prim name="ACDSupportFaceMat" value="Vacuum" type="string" uType="mat">
+  <prim name="ACDSupportFaceMat" value="Be" type="string" uType="mat">
 Material used in ACD support.  Still need input from engineers about this.
   </prim>
   <prim name="ribbonMat" value="Polystyrene" type="string" uType="mat">
