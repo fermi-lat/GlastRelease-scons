@@ -134,8 +134,8 @@ int read(char* fileName, int numEvents) {
         std::cout << "DigiEvent ievent = " << ievent << std::endl;
         evt->Print();
         if (checkDigiEvent(evt, ievent) < 0) return -1;
-        UInt_t numCalDigi = evt->getCalDigi()->GetEntries();
-        const TObjArray *calDigiCol = evt->getCalDigi();
+        UInt_t numCalDigi = evt->getCalDigiCol()->GetEntries();
+        const TObjArray *calDigiCol = evt->getCalDigiCol();
         TIter calDigiIt(calDigiCol);
         CalDigi *digi = 0;
         while(digi = (CalDigi*)calDigiIt.Next()) {
@@ -177,12 +177,12 @@ int write(char* fileName, int numEvents) {
             Short_t col = 3;
             CalXtalId xtalId(tower, layer, col);
             cal->initialize(mode, xtalId);
-            ev->addCalDigi(cal);
             Char_t rangeM = CalXtalId::LEX8;
             Char_t rangeP = CalXtalId::HEX8;
             UShort_t adcM = 4095;
             UShort_t adcP = 4095;
             cal->addReadout(rangeP, adcP, rangeM, adcM);
+            ev->addCalDigi(cal);
         }
         t->Fill();
         ev->Clear();
@@ -202,7 +202,7 @@ int write(char* fileName, int numEvents) {
 /// Return 0 for success.
 /// Returns -1 for failure.
 int main(int argc, char **argv) {
-    char *fileName = "mc.root";
+    char *fileName = "digi.root";
     int n = 1;
     int numEvents = 10;
     if (argc > 1) {
