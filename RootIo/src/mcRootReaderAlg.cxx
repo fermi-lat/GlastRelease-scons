@@ -185,7 +185,7 @@ StatusCode mcRootReaderAlg::initialize()
 
 	if (m_rootIoSvc) {
 		m_rootIoSvc->setRootEvtMax(m_numEvents);
-		//m_mcTree->BuildIndex("m_runId", "m_eventId");
+		m_mcTree->BuildIndex("m_runId", "m_eventId");
 	}
      
     saveDir->cd();
@@ -219,7 +219,7 @@ StatusCode mcRootReaderAlg::execute()
 	} else if ((m_rootIoSvc) && (runEventPair.first != -1) && (runEventPair.second != -1)) {
 		int run = runEventPair.first;
 		int evt = runEventPair.second;
-		readInd = m_mcTree->GetEntryWithIndex(run, evt);
+		readInd = m_mcTree->GetEntryNumberWithIndex(run, evt);
 	} else {
 		readInd = evtId;
 	}

@@ -441,6 +441,7 @@ void relationRootWriterAlg::close()
     TFile *f = m_relTree->GetCurrentFile();
     f->cd();
     //m_relFile->cd();
+    m_relTree->BuildIndex("m_runId", "m_eventId");
     f->Write(0, TObject::kWriteDelete);
     f->Close();
     saveDir->cd();

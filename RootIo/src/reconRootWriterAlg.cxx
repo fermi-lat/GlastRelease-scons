@@ -809,6 +809,7 @@ void reconRootWriterAlg::close()
     TFile *f = m_reconTree->GetCurrentFile();
     f->cd();
     //m_reconFile->cd();
+    m_reconTree->BuildIndex("m_runId", "m_eventId");
     f->Write(0, TObject::kWriteDelete);
     f->Close();
     saveDir->cd();

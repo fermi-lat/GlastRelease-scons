@@ -555,6 +555,7 @@ void mcRootWriterAlg::close()
     TFile *f = m_mcTree->GetCurrentFile();
     f->cd();
     //m_mcFile->cd();
+    m_mcTree->BuildIndex("m_runId", "m_eventId");
     f->Write(0, TObject::kWriteDelete);
     f->Close();
     saveDir->cd();

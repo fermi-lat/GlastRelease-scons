@@ -199,7 +199,7 @@ StatusCode relationRootReaderAlg::initialize()
     m_numEvents = m_relTree->GetEntries();
 	if (m_rootIoSvc) {
 		m_rootIoSvc->setRootEvtMax(m_numEvents);
-		//m_relTree->BuildIndex("m_runId", "m_eventId");
+		m_relTree->BuildIndex("m_runId", "m_eventId");
 	}
 
     saveDir->cd();
@@ -226,7 +226,7 @@ StatusCode relationRootReaderAlg::execute()
 	} else if ((m_rootIoSvc) && (runEventPair.first != -1) && (runEventPair.second != -1)) {
 		int run = runEventPair.first;
 		int evt = runEventPair.second;
-		readInd = m_relTree->GetEntryWithIndex(run, evt);
+		readInd = m_relTree->GetEntryNumberWithIndex(run, evt);
 	} else {
 		readInd = evtId;
 	}

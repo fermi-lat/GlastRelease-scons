@@ -479,6 +479,7 @@ void digiRootWriterAlg::close()
     TFile *f = m_digiTree->GetCurrentFile();
     //m_digiFile->cd();
     f->cd();
+    m_digiTree->BuildIndex("m_runId", "m_eventId");
     f->Write(0, TObject::kWriteDelete);
     f->Close();
     saveDir->cd();
