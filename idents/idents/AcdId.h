@@ -105,13 +105,21 @@ inline AcdId::AcdId (const idents::VolumeIdentifier &volId) {
     m_id = 0;
     layer(0);
     face(volId[1]);
-    if (face() == 0) {
+    /*    if (face() == 0) {
         column(volId[2]);
         row(volId[3]);
     } else {
         column(volId[3]);
         row(volId[2]);
     }
+    */
+    /* as of revised ACD geometry (nov ?? 2002) row and column
+       are always in the right order, but there is an intervening
+       field which has to be thrown away. For now it should always
+       have value 40 (tile).  When ribbons are sensitive, will also see
+       41 if volume refers to a ribbon.  */
+    row(volId[3]);
+    column(volId[4]);
 }
 inline AcdId::AcdId (short l, short f, short r, short c)  {
     m_id = 0;
