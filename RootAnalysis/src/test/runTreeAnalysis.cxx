@@ -21,15 +21,15 @@ int main(int argn, char** argc) {
     gSystem->Load("libTree.dll");
     gSystem->Load("reconRootData.dll");
 #endif
-    unsigned int numEvents = 100;
+    unsigned int numEvents = 25;
+    const char* path = ::getenv("ROOTTESTDATAROOT");
     if ( argn > 5) numEvents = atoi(argc[5]);
-    const char* path = ::getenv("ROOTANALYSISROOT");
     std::string digiFileName(path);
-    digiFileName += "/src/test/digi.root";
+    digiFileName += "/data/default/digi.root";
     std::string mcFileName(path);
-    mcFileName += "/src/test/mc.root";
+    mcFileName += "/data/default/mc.root";
     std::string reconFileName(path);
-    reconFileName += "/src/test/recon.root";
+    reconFileName += "/data/default/recon.root";
     if (argn > 1) mcFileName = argc[1];
     if (argn > 2) digiFileName = argc[2];
     if (argn > 3) reconFileName = argc[3];
