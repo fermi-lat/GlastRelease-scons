@@ -22,7 +22,6 @@
  * @author   T. H.-Kozanecka
  */ 
 
-// Include files
 #include <string>
 
 #if defined(_GlastEvent_EventModel_CPP_)
@@ -51,13 +50,6 @@
             _EXTERN_ std::string Event;
             _EXTERN_ std::string AcdDigis;
             _EXTERN_ std::string TkrDigis;
-        }
-
-        namespace Irf {
-            _EXTERN_ std::string Event;
-            _EXTERN_ std::string IrfTkrHits;
-            _EXTERN_ std::string IrfCalHits;
-            _EXTERN_ std::string IrfAcdHits;
         }
 
         namespace Data {
