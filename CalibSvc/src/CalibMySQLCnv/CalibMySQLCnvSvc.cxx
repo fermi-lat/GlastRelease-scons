@@ -483,7 +483,7 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
 
   IOpaqueAddress* tmpAddress;
   std::string fullpath = "/Calib/" + calibType + "/" + flavor;
-  const std::string par[3] = {fmtVersion, dataIdent, fullpath};
+  const std::string par[3] = {dataIdent, fullpath, fmtVersion};
   const unsigned long ipar[1] = {ser};
   
   sc = addressCreator()->createAddress(storageType, classID, 
@@ -623,7 +623,7 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
 
   IOpaqueAddress* tmpAddress;
   std::string fullpath = "/Calib/" + calibType + "/" + flavor;
-  const std::string par[3] = {fmtVersion, dataIdent, fullpath};
+  const std::string par[3] = {dataIdent, fullpath, fmtVersion};
   const unsigned long ipar[1] = {ser};
   
   status = addressCreator()->createAddress(storageType, classID, 
@@ -708,3 +708,5 @@ StatusCode  CalibMySQLCnvSvc::decodeDescription(unsigned int description,
 calibUtil::Metadata* CalibMySQLCnvSvc::getMeta( ) {
   return m_meta;
 }
+
+

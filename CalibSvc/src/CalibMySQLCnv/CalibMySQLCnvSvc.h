@@ -128,6 +128,7 @@ class CalibMySQLCnvSvc : public ConversionSvc,
   //  StatusCode encodeDescription     ( const unsigned char& type,
   //			     std::string&         description);
 
+
   calibUtil::Metadata* getMeta();
 
  private:
