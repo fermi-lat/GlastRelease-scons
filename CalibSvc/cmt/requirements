@@ -48,7 +48,7 @@ library CalibSvc -import=calibUtil -import=calibRootData *.cxx\
 ## macro WinInclude "" WIN32 "test/*.h test/*.txt"
 use GlastSvc v9r* 
 use RootIo v* -no_auto_imports
-use LdfEvent v0r*
+use LdfEvent v1*
 
 public
 set JOBOPTIONS "${CALIBSVCROOT}/src/test/jobOptions.txt"
