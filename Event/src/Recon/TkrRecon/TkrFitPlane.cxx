@@ -12,6 +12,30 @@
 #include "Event/Recon/TkrRecon/TkrFitPlane.h"
 
 using namespace Event;
+    
+void TkrFitPlane::initializeInfo(unsigned int hit, unsigned int tower, unsigned int plane, 
+                                 AXIS proj, AXIS nextProj, double z, double energy, 
+                                 double radLen, double activeDist) {
+    m_IDHit = hit;
+    m_IDTower = tower;
+    m_IDPlane = plane;
+    m_zplane = z;
+    m_eneplane = energy;
+    m_radLen = radLen;
+    m_activeDist = activeDist;
+}
+    
+void TkrFitPlane::initializeHits(const TkrFitHit& meas, const TkrFitHit& pred, const TkrFitHit& fit,
+                                 const TkrFitHit& smooth, const TkrFitMatrix& material) {
+
+    m_hitmeas = meas;
+    m_hitpred = pred;
+    m_hitfit = fit;
+    m_hitsmooth = smooth;
+    m_Qmaterial = material;
+}
+
+
 
 void TkrFitPlane::removeHit()
 {

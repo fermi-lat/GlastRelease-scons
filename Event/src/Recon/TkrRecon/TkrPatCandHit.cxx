@@ -18,6 +18,18 @@ TkrPatCandHit::TkrPatCandHit(TkrCluster* pCluster)
     return;
 }
 
+TkrPatCandHit::TkrPatCandHit(unsigned int hitId, const Point& pos, unsigned int tower, 
+                             unsigned int layer, TkrCluster::view v) {
+
+    m_position = pos;
+    m_hitIndex = hitId;
+    m_towerIndex = tower;
+    m_planeIndex = layer;
+    m_view = v;
+    return;
+}
+
+
 void TkrPatCandHit::writeOut(MsgStream& log) const
 {
     log << MSG::DEBUG << " --- TkrPatCandHit::writeOut --- " << endreq;

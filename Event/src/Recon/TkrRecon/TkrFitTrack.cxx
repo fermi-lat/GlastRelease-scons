@@ -25,6 +25,27 @@ TkrFitTrack::TkrFitTrack()
     m_hits.clear();
 }
 
+
+void TkrFitTrack::initializeInfo(unsigned int xgaps, unsigned int ygaps, 
+                                 unsigned int x1st, unsigned int y1st) {
+    m_Xgaps    = xgaps;
+    m_Ygaps    = ygaps;
+    m_XistGaps = x1st;
+    m_YistGaps = y1st;
+
+}
+
+void TkrFitTrack::initializeQual(double chiSq, double ChiSqSmooth, double rms, double quality, double e, double ms)
+{
+    m_chisq       = chiSq;
+    m_chisqSmooth = ChiSqSmooth;
+    m_rmsResid    = rms;
+    m_Q           = quality;
+    m_KalEnergy   = e;
+    m_KalThetaMS  = ms;
+}
+
+
 TkrFitTrack::~TkrFitTrack()
 {
     clear();
