@@ -16,7 +16,7 @@
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/DataSvc.h"
 #include "TkrRecon/PatRec/ITkrFindTrackTool.h"
-#include "TkrRecon/Services/TkrGeometrySvc.h"
+#include "TkrUtil/ITkrGeometrySvc.h"
 
 class ComboFindTrackTool : public AlgTool, virtual public ITkrFindTrackTool
 {
@@ -33,7 +33,7 @@ public:
 
 private:
     /// Pointer to the local Tracker geometry service
-    TkrGeometrySvc* m_tkrGeo;
+    ITkrGeometrySvc* m_tkrGeo;
 
     /// Pointer to the Gaudi data provider service (interface to the TDS)
     DataSvc*        m_dataSvc;

@@ -3,7 +3,7 @@
 #define __TKRINITSVC_H 1
 
 #include "GaudiKernel/Service.h"
-#include "TkrRecon/ITkrGeometrySvc.h"
+#include "TkrUtil/ITkrGeometrySvc.h"
 
 /** 
  * @class TkrInitSvc

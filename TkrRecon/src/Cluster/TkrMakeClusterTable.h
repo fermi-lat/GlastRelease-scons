@@ -19,7 +19,7 @@
 #include "Event/RelTable/RelTable.h"
 #include "Event/RelTable/Relation.h"
 #include "Event/MonteCarlo/McPositionHit.h"
-#include "TkrRecon/ITkrGeometrySvc.h"
+#include "TkrUtil/ITkrGeometrySvc.h"
 
 class TkrMakeClusterTable
 {

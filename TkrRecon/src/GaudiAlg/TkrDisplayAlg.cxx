@@ -32,7 +32,7 @@
 #include "src/Vertex/Combo/TkrComboVtxRep.h"
 
 #include "TkrRecon/Services/TkrInitSvc.h"
-#include "TkrRecon/ITkrGeometrySvc.h"
+#include "TkrUtil/ITkrGeometrySvc.h"
 
 
 static const AlgFactory<TkrDisplayAlg>  Factory;

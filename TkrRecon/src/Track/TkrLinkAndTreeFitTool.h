@@ -16,7 +16,7 @@
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/DataSvc.h"
 #include "TkrRecon/Track/ITkrFitTool.h"
-#include "TkrRecon/Services/TkrGeometrySvc.h"
+#include "TkrUtil/ITkrGeometrySvc.h"
 
 class TkrLinkAndTreeFitTool : public AlgTool, virtual public ITkrFitTool
 {
@@ -33,7 +33,7 @@ public:
 
 private:
     /// Pointer to the local Tracker geometry service
-    TkrGeometrySvc* pTkrGeoSvc;
+    ITkrGeometrySvc* pTkrGeoSvc;
 
     /// Pointer to the Gaudi data provider service
     DataSvc*        pDataSvc;

@@ -36,7 +36,7 @@ NeuralNetFindTrackTool::NeuralNetFindTrackTool(const std::string& type, const st
     IService*   iService = 0;
     StatusCode  sc       = serviceLocator()->getService("TkrGeometrySvc", iService, true);
 
-    m_tkrGeo  = dynamic_cast<TkrGeometrySvc*>(iService);
+    m_tkrGeo  = dynamic_cast<ITkrGeometrySvc*>(iService);
 
     //Locate and store a pointer to the data service
     sc        = serviceLocator()->getService("EventDataSvc", iService);

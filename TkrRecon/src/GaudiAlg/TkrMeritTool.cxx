@@ -21,7 +21,7 @@
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/AcdRecon/AcdRecon.h"
 
-#include "TkrRecon/ITkrGeometrySvc.h"
+#include "TkrUtil/ITkrGeometrySvc.h"
 #include "TkrRecon/Cluster/TkrQueryClusters.h"
 #include "GlastSvc/Reco/IReconTool.h"
 

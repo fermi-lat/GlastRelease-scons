@@ -34,7 +34,7 @@ TkrNeuralNetFitTool::TkrNeuralNetFitTool(const std::string& type, const std::str
     IService*   iService = 0;
     StatusCode  sc       = serviceLocator()->getService("TkrGeometrySvc", iService, true);
 
-    pTkrGeoSvc = dynamic_cast<TkrGeometrySvc*>(iService);
+    pTkrGeoSvc = dynamic_cast<ITkrGeometrySvc*>(iService);
 
     //Locate and store a pointer to the data service
     sc         = serviceLocator()->getService("EventDataSvc", iService);
