@@ -1,6 +1,8 @@
 /** @file release.notes
  * Package CalibData
  * Coordinator:  J. Bogart
+ * 15-Oct-2004 jrb - v0r10    Enhanced putRange, getRange involving
+ *                            changes to CalFinder, CalCalibBase
  *  9-Oct-2004 thb - v0r9p3   Add a few spaces for WIN32 pattern 
  *  7-Oct-2004 jrb - v0r9p2   Implement and use better checking of channel 
  *                            specification
