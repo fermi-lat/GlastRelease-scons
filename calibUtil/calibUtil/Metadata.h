@@ -2,18 +2,25 @@
 #ifndef CALIBUTIL_METADATA_H
 #define CALIBUTIL_METADATA_H
 
-#include <my_global.h>
-#include <mysql.h>
-#include <string>
+#include "calibUtil/Timestamp.h"
+//#include <my_global.h>
+//#include <mysql.h>
+
+typedef struct st_mysql MYSQL;
 
 namespace calibUtil {
   /** Provide interface between calibration clients and the
-   MySQL database for calibration metadata.
+   MySQL database for calibration metadata.  There is no need for
+   anything other than a bunch of static routines and a little
+   bit of private static data to keep track of connections, etc.
   */
   class Metadata {
   public:
     enum eError {
-      
+      ERRok = 0,
+      ERRbadCnfFile = 1,
+      ERRbadHost = 2,
+      ERRnoConnect = 3
     };
     /// Used to form bit masks for dbs queries
     enum eDisposition {
@@ -24,11 +31,10 @@ namespace calibUtil {
     };
       
 
-    /// Constructor initializes connection pointers to "not connected"
-    /// value.
-    Metadata();
+    /// Nothing to do in constructor since everything is static.
+    Metadata() {};
 
-    ~Metadata();
+    ~Metadata() {};
 
 
     /** Start a new metadata record by supplying all absolutely
@@ -61,10 +67,28 @@ namespace calibUtil {
                            const std::string& fmtVersion,
                            const std::string& filename, 
                            const std::string& calibStatus);
-    static bool writeRecord(eError& err);
+
+    /** Write a record to the metadata database. Any required columns
+     *  not specified by caller will be set to default values.
+     */
+    static bool insertRecord(eError& err);
+
+    /** Explicit clear of record.  Must have a call to either insertRecord
+     *  (to actually write the record to the database) or clearRecord 
+     *  (to abort) between successive calls to openRecord.
+     */
     static void clearRecord();
-    static void addField(cosnt std::string& fieldName, 
+
+    static void addField(const std::string& fieldName, 
                          const std::string& fieldValue);
+
+    /** Convenience routines for setting validity interval.
+     */
+    static void addValidInterval(Timestamp startTime,
+                                 Timestamp endTime);
+
+    static void addValidInterval(std::string startTime,
+                                 std::string endTIme);
 
     /** Return serial number for calibration which is best match to
         criteria
@@ -102,13 +126,14 @@ namespace calibUtil {
     // Might make these private
     static bool connectRead(eError& err);
     static bool connectWrite(eError& err);
-    static bool disconnectRead();
-    static bool disconnectWrite();
+    static void disconnectRead();
+    static void disconnectWrite();
 
   private:
     static MYSQL* readCxt;
     static MYSQL* writeCxt;
     static std::string row;     // place to keep row as it's being built
+    static bool connect(MYSQL* cxt, std::string group, eError& err);
   };
 }
 
