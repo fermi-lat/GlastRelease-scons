@@ -31,7 +31,7 @@ McParticle::McParticle(const McParticle &p) {
     // or ROOT 3.03.04 - just iterating over the entries for now.
     //TRefArrayIter daughterIter(&p.m_daughters);
     McParticle *curRef;
-    UInt_t iPart;
+    Int_t iPart;
     for (iPart = 0; iPart < p.m_daughters.GetEntries(); iPart++) {
     //while ( (curRef = (McParticle*)daughterIter.Next()) ){
         curRef = (McParticle*)p.m_daughters.At(iPart);
