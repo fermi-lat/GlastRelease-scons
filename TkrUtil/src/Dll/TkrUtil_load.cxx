@@ -12,6 +12,7 @@ DECLARE_FACTORY_ENTRIES(TkrUtil) {
     DECLARE_SERVICE( TkrFailureModeSvc   );
     DECLARE_SERVICE( TkrBadStripsSvc     );
     DECLARE_SERVICE( TkrGeometrySvc      );
+    DECLARE_SERVICE( TkrAlignmentSvc     );
 
     DECLARE_TOOL(    TkrQueryClustersTool);
     DECLARE_TOOL(    TkrMeritTool        );

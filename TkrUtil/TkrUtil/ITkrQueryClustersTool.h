@@ -9,7 +9,7 @@
 // Declaration of the interface ID ( interface id, major version, minor version) 
 static const InterfaceID IID_ITkrQueryClustersTool("ITkrQueryClustersTool", 1 , 0); 
 
-/** @class IReconTool
+/** @class ITkrQueryClustersTool
 * @brief Abstract interface for methods to query TkrClusters
 *
 * @author Leon Rochester
@@ -17,34 +17,35 @@ static const InterfaceID IID_ITkrQueryClustersTool("ITkrQueryClustersTool", 1 , 
 *
 * Example of usage:
 *
-* #include "GaudiKernel/IToolSvc.h"
-* #include "GaudiKernel/AlgTool.h"
-* #include "TkrUtil/ITkrQueryClustersTool.h"
+* <pre>
+*  #include "GaudiKernel/IToolSvc.h"
+*  #include "GaudiKernel/AlgTool.h"
+*  #include "TkrUtil/ITkrQueryClustersTool.h"
 *
 *...
 *
-* // private data member of Algorithm or Service
-* IToolSvc* m_pToolSvc;
+*  // private data member of Algorithm or Service
+*  IToolSvc* m_pToolSvc;
 *
-* // in initialize
-* m_pToolSvc = 0;
-* sc = service("ToolSvc", m_pToolSvc, true);
-* if (!sc.isSuccess ()){
-*     log << MSG::INFO << "Can't find ToolSvc, will quit now" << endreq;
-*     return StatusCode::FAILURE;
-* }
+*  // in initialize
+*  m_pToolSvc = 0;
+*  sc = service("ToolSvc", m_pToolSvc, true);
+*  if (!sc.isSuccess ()){
+*      log << MSG::INFO << "Can't find ToolSvc, will quit now" << endreq;
+*      return StatusCode::FAILURE;
+*  }
 *
-* // in execute
+*  // in execute
 *
-* ITkrQueryClustersTool* pQuery;
-*       StatusCode sc = m_pToolSvc->retrieveTool("TkrMeritTool", pQuery);
-*        if( sc.isFailure() ) {
-*            log << MSG::ERROR << "Unable to find a TkrQueryClustersTool" << endreq;
-*        }
-*...
+*  ITkrQueryClustersTool* pQuery;
+*  StatusCode sc = m_pToolSvc->retrieveTool("TkrMeritTool", pQuery);
+*      if( sc.isFailure() ) {
+*          log << MSG::ERROR << "Unable to find a TkrQueryClustersTool" << endreq;
+*      }
+*  ...
 *
-* int nHits = pQuery->numberOfHitsNear(view, layer, inDistance, x0);
-*
+*  int nHits = pQuery->numberOfHitsNear(view, layer, inDistance, x0);
+* </pre>
 */
 
 class   ITkrQueryClustersTool : virtual public IAlgTool {
