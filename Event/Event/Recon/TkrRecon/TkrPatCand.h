@@ -26,7 +26,8 @@ public:
     ~TkrPatCand();
 
     /// Define the TkrRecInfo routines
-    double        getQuality()                       const ;
+
+    double        getQuality()                       const {return m_quality;};
     double        getEnergy(TrackEnd end = Start)    const ;
     int           getLayer(TrackEnd end = Start)     const ;
     int           getTower(TrackEnd end = Start)     const ;
