@@ -64,13 +64,9 @@ public:
         // no, only show the closest one for now
 	if( acdRec->getDoca()>1000. ) return;
 
-        // get the VolumeIdentifier of the closest doca (TODO: move this to idents::AcdId)
+        // get the VolumeIdentifier of the closest doca
         idents::AcdId id = acdRec->getMinDocaId();
-        idents::VolumeIdentifier volid;
-        volid.append(1); 
-        volid.append(id.face()); 
-        volid.append(id.column()); 
-        volid.append(id.row());
+        const idents::VolumeIdentifier volid = id.volId();
 
         HepPoint3D tilecenter;
         HepTransform3D transform;
