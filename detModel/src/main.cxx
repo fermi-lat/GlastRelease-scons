@@ -109,7 +109,7 @@ int main(int argc, char* argv[]) {
   //       std::cout << ((*id).first).name() << " named "
   //                << vol->getName() << std::endl;
   //    }
-  }
+  //  }
 
   delete visitor;
   delete manager;
