@@ -1,5 +1,5 @@
 package CalRecon
-version v5r1p2
+version v5r7
 
 apply_pattern packageShr
 
