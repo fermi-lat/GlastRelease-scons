@@ -8,7 +8,7 @@ use GuiSvc
 use GlastEvent
 
 
-library CalRecon  *.cxx *.cpp *.h ../CalRecon/*.h  Dll/*.cpp
+library CalRecon  *.cxx *.cpp ../CalRecon/*.h  Dll/*.cpp
 
 macro CalReconDir  "$(CALRECONROOT)/$(DEBUGDIR)"
 
