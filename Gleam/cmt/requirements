@@ -67,7 +67,7 @@ use mcRootData     v2r2
 use digiRootData   v3r2
 use reconRootData  v3r0p2
 
-use RootIo         v4r1p1
+use RootIo                v4r1p2
 
 #diagnostic and summary of bottom line
 use merit                 v5p1
