@@ -305,9 +305,9 @@ Event::TkrTrackParams G4PropagationTool::getTrackParams(double arcLen,
     double relDeltaZ = arcLen * getStartDir().z();
 
     // Look for exceeding limits
-    if (arcLen < 0. || arcLen > getLastStep().GetArcLen())
+    if (arcLen < 0. || arcLen > getTotalArcLen())
     {
-        relDeltaZ = getLastStep().GetArcLen() * getStartDir().z();
+        relDeltaZ = getTotalArcLen() * getStartDir().z();
     }
 
     // Build a transport matrix
