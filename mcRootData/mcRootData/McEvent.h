@@ -34,12 +34,14 @@ public:
     virtual ~McEvent();
     
     /// clear lists, free pointers, etc., after read from / write to file
-    virtual void Clear(Option_t *option ="");
+    void Clear(Option_t *option ="");
+
+    void Print(Option_t *option="") const;
     
     void initialize(UInt_t nEvent, UInt_t nRun);
     
     inline UInt_t getEventId() const { return m_eventId; };
-    inline UInt_t getRunId() const { return m_eventId; };
+    inline UInt_t getRunId() const { return m_runId; };
 
     
     /// add a McParticle to list

@@ -46,7 +46,9 @@ public:
     virtual ~McParticle();
 
     /// clear lists, free pointers, etc., after read from / write to file
-    virtual void Clear(Option_t *option ="");
+    void Clear(Option_t *option ="");
+
+    void Print(Option_t *option="") const;
 
     //! completely initialize a newed object. No other way to set most attributes.
     void initialize( McParticle* mother, 
@@ -59,7 +61,7 @@ public:
     Int_t getParticleId() const { return m_particleId;};    
     
     /// return an McParticle pointer to the mother particle
-    McParticle* getMother();
+    const McParticle* getMother();
 
     /// return a daughter McParticle corresponding to index
     const McParticle* getDaughter(Int_t index) const;

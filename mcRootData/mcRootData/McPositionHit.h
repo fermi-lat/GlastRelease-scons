@@ -24,8 +24,10 @@ public:
     
     virtual ~McPositionHit();
 
-    void  Clear(Option_t *option ="");
-    
+    void Clear(Option_t *option ="");
+
+    void Print(Option_t *option="") const;
+
     void initialize(Double_t edep, const VolumeIdentifier& id, const TVector3& entry,
         const TVector3& exit, McParticle *mc, McParticle *origin, Double_t pE,
         Double_t tof, UInt_t flags = 0);
@@ -52,15 +54,14 @@ public:
     Bool_t needDigi() const;
 
 private:
-    
-    /// Packed flags for the internal use.
-    UInt_t m_statusFlags;
-    
+
     Double_t m_depositedEnergy;
     Double_t m_particleEnergy;
-    
     Double_t m_timeOfFlight;
-    
+   
+    /// Packed flags for the internal use.
+    UInt_t m_statusFlags;
+   
     TVector3 m_entry;
     TVector3 m_exit;
     

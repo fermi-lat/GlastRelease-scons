@@ -49,9 +49,11 @@ public:
     
     virtual ~McIntegratingHit();
 
-    void  Clear(Option_t *option ="");
+    void Clear(Option_t *option ="");
 
-    void initialize(const VolumeIdentifier& id, Double_t e, const TVector3& moment1, const TVector3& moment2);
+    void Print(Option_t *option="") const;
+
+    void initialize(const VolumeIdentifier& id);
     
     const VolumeIdentifier getVolumeId() const { return m_volumeId; };
     
@@ -60,27 +62,27 @@ public:
     /// Retrieve itemized energy
     const energyDepositMap& getItemizedEnergy() const;
     /// Add single energyInfo to energyDepositMap
-    void addEnergyItem( const double& energy, McParticle* t );
+    void addEnergyItem( const double& energy, McParticle* t, const TVector3& pos );
     
     /// Retrieve the energy-weighted first moments of the position
-    const TVector3 getMoment1 () const;
+    const TVector3& getMoment1 () const;
     /// Retrieve the energy-weighted second moments of the position
-    const TVector3 getMoment2 () const;
+    const TVector3& getMoment2 () const;
     
 private:
-        /// Packed flags for particle property
-    UInt_t m_packedFlags;
     /// total deposited energy: set automatically when m_energyInfo is modified.
     Double_t m_totalEnergy;
+    /// Packed flags for particle property
+    UInt_t m_packedFlags;
     /// identifies what volume this integrating hit occurred in
     VolumeIdentifier m_volumeId;
-    /// Vector of Energy information that consists of deposited energy and the mother McParticle
-    energyDepositMap m_energyItem;
     /// Energy-weighted_first_moments_of_the_position * number_of_energy_deposition
     TVector3 m_moment1Seed;
     /// Energy-weighted_second_moments_of_the_position * number_of_energy_deposition
     TVector3 m_moment2Seed;
-    
+    /// Vector of Energy information that consists of deposited energy and the mother McParticle
+    energyDepositMap m_energyItem;
+
     ClassDef(McIntegratingHit,1)  // Monte Carlo Integrating Hit Class
 };
 

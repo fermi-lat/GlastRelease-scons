@@ -26,8 +26,10 @@ public:
     
     virtual ~VolumeIdentifier() { };
 
-    virtual void Clear(Option_t *option ="");
+    void Clear(Option_t *option ="");
     
+    void Print(Option_t *option="") const;
+
     /** 
     * This method initialize the VolumeIdentifier with a 64 bit integer and a size
     * and is used by the overloaded operator<< to build an identifier reading from
@@ -50,7 +52,7 @@ public:
     UInt_t getBits32to63()const{ return m_bits32to63;};
     
     /// access single ids which constitute the volume identifier
-    UInt_t operator[](unsigned int);
+    UInt_t operator[](unsigned int) const;
     
 private:
     
