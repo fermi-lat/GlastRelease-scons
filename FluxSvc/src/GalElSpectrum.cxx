@@ -66,10 +66,10 @@ float GalElSpectrum::operator() (float x) const{
 }
 
 void GalElSpectrum::setPosition(float lat, float lon) {
-    m_pspec.setPosition(lat, lon);
-    //m_lat = lat;
-    //m_lon = lon;
-    m_cutoff = findCutoff(lat,lon);
+    m_lat = lat;
+    m_lon = lon>0? lon : lon+360.;
+    m_pspec.setPosition(m_lat, m_lon);
+    m_cutoff = findCutoff(m_lat,m_lon);
     m_flux = flux(m_cutoff);
 }
 

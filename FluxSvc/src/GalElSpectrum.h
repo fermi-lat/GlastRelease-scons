@@ -100,6 +100,7 @@ private:
     float m_cutoff; // current cutoff energy
     float m_coscutoff;  // zenith angle of horizon
     float m_flux;   // current flux (set when cutoff changes)
+    float m_lat, m_lon;  //current lat, lon.
     
     static const float m_rearth;    // radius of earth in km
     static const float m_altitude;  // altitude of circular orbit
