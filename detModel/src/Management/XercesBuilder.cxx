@@ -744,6 +744,8 @@ namespace detModel{
                 << std::endl << ex.getMsg() << std::endl;
       throw ex;
     }
+    // Handle id field children, if any
+    setIdFields(pos, e);
 
   }     // end setAttributeRelativePosition
 
