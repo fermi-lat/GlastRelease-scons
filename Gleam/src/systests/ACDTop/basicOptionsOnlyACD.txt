@@ -99,12 +99,8 @@ Reconstruction.Members={
       "Sequencer/Tkr"
       };
          
-ApplicationMgr.ExtSvc += {"RecoSvc"};
-
 //          tracker
 // -------------------------------------------
-ApplicationMgr.ExtSvc   += { "TkrGeometrySvc"};
-ApplicationMgr.ExtSvc   += { "TkrInitSvc"};
 
 Cal1.Members = { 
       "CalXtalRecAlg", 
