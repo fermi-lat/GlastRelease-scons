@@ -20,7 +20,17 @@
 
 
 /* This basic test needs two argument; the xml file to use and the volume 
-   name to use as the mother volume */
+   name to use as the mother volume (for example oneCAL). If only the filename
+   is specified, the topVolume specified in the section is used as the mother
+   volume.
+
+   Ex.
+   ./test.exe ../../../xmlUtil/v2r1/xml/flight.xml oneTKR
+   
+   The test program produce a sections.wrl file with the VRML representation 
+   of the geometry (be careful, if you have a big geometry the file can be
+   huge) and a file constants.html with the constants tables in html format. 
+*/
 int main(int argc, char* argv[]) {
 
   // We need the XML flight as input to the test executable
@@ -73,6 +83,8 @@ int main(int argc, char* argv[]) {
   // contains all the relevant information
   GDD* g = manager->getGDD();
 
+  // An example; we retrive the total number of volumes contained in the xml file
+  std::cout << "XML file contains " << g->getVolumesNumber() << " volumes." << std::endl;
   delete manager;
   return(0);
 }
