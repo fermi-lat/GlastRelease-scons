@@ -10,6 +10,13 @@
  * @class GeneralPhysics
  *
  * @brief Generic physics processes setup
+ * 
+ * This class is an implementation of a standard G4VPhysicsConstructor of
+ * Geant4. Its main purpouse is to setup a set of particles and physics
+ * processes. 
+ *
+ * In particular, this one activate the dummy geantino particle and the general
+ * decay processes
  *
  *  
  * @author F.Longo 

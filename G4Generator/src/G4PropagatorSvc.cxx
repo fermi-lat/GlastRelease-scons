@@ -1,3 +1,11 @@
+// File and Version Information:
+// $Header$
+//
+// Description: Service for particle transport management
+//
+// Author(s):
+//      T.Usher
+
 #include "GlastSvc/Reco/IPropagatorSvc.h"
 #include "G4ParticlePropagator.h"
 

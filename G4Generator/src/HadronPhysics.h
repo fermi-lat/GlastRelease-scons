@@ -111,6 +111,23 @@
 #include "G4KaonMinusAbsorptionAtRest.hh"
 #endif
 
+/** 
+ * @class HadronPhysics 
+ *
+ * @brief Hadronic physics processes setup
+ *
+ *  
+ * This class is an implementation of a standard G4VPhysicsConstructor of
+ * Geant4. Its main purpouse is to setup a set of particles and physics
+ * processes. 
+ *
+ * In particular, this one activate some hadrons and some relevant hadronic
+ * processes
+ *  
+ * @author F.Longo 
+ *    
+ * \$Header\$
+ */
 class HadronPhysics : public G4VPhysicsConstructor
 {
   public: 

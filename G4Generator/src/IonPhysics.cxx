@@ -1,19 +1,16 @@
+// File and Version Information:
+// $Header$
+//
+// Description: This class manages the building of ions and their processes
+//
+// Author(s):
+//      F.Longo
+
 #include "IonPhysics.h"
 
 #include "globals.hh"
 #include "G4ios.hh"
 #include "g4std/iomanip"   
-
-/** 
- * @class IonPhysics 
- *
- * @brief Ions physics processes setup
- *
- *  
- * @author F.Longo 
- *    
- * \$Header\$
- */
 
 IonPhysics::IonPhysics(const G4String& name)
                  :  G4VPhysicsConstructor(name)
@@ -32,6 +29,9 @@ IonPhysics::~IonPhysics()
 
 void IonPhysics::ConstructParticle()
 {
+  // Purpose and Method: this method is invoked by G4 to build the particles
+  //                     classes
+
   //  Construct light ions
   G4IonConstructor pConstructor;
   pConstructor.ConstructParticle();  
@@ -43,6 +43,9 @@ void IonPhysics::ConstructParticle()
 
 void IonPhysics::ConstructProcess()
 {
+  // Purpose and Method: this method is invoked by G4 to build the physics
+  //                     processes table
+
   G4ProcessManager * pManager = 0;
   
   // Elastic Process

@@ -7,16 +7,16 @@
  *
  * @section description Description
  *
- * This package is the GLAST interface to the Montecarlo simulations toolkit
+ * This package is the GLAST interface to the Monte Carlo simulations toolkit
  * Geant4 (see <a href="http://geant4.web.cern.ch/geant4/">here</a> 
  * for more information on this C++ toolkit). 
- * The steering is done with the main Algorithm, G4Generator.<br>
+ * The steering is done with the Gaudi algorithm G4Generator.<br>
  * 
  * The main simulation is controlled by RunManager, a customized and stripped
  * version of the Geant4 standard G4RunManager singleton. Since GLAST main event
  * loop is driven by GAUDI and it will not use any graphics or data persistency
- * feature of Geant4, we have included in the RunManager only the real necessary
- * part for setup and run the generator. RunManager itself uses the following
+ * features of Geant4, we have included in the RunManager only the real necessary
+ * parts for setup and run the generator. RunManager itself uses the following
  * classes 
  *
  * - DetectorConstruction: this class, derived by a standard
@@ -36,15 +36,18 @@
  * IonPhysics) to setup particular physics processes. This part is quite recent
  * and has to be yet fully validated. Since the Geant4 toolkit is open to new
  * physics processes (along with new description of already present processes),
- * this will the access point for further development in the physics selection
- * (and thanks to good OO architecture of Geant4 this should be decoupled by
+ * this will be the access point for further development in the physics selection
+ * (and thanks to good OO architecture of Geant4 this should be decoupled 
  * from the other part of the code)
  * - PrimaryGeneratorAction: this class, derived by a standard
  * G4VUserPrimaryGeneratorAction class, is in charge of production and iniection
  * of primary particles in the detector simulation. In our cases it is linked,
  * via its public interface, to the GAUDI service FulxSvc that is responsable to
  * generate the incoming fluxes of particles in an abstract and customizable
- * way. 
+ * way. A new design is on the way by which the primary particle will be created
+ * by an algorithm (FluxAlg) using FluxSvc and stored in the TDS as the root of
+ * an McParticle tree; G4Generator will than retrive this primary particle from
+ * the TDS and initialize the PrimaryGeneratorAction with that.
  * - DetectorManager: this class, that derives from a standard
  * G4VSensitiveDetector, manages the setup and working of the sensitive
  * detectors of the simulation and their interaction with the Transient Data
@@ -54,7 +57,7 @@
  * McPositionHit of GlastEvent (silicon planes in the TKR), while the second one
  * is used for detectors using the McIntegratingHit (ACD tiles and CAL cells).
  *
- * A special class DisplayManager uses the GuiSvc to display: 
+ * A special class DisplayManager uses the GuiSvc to display (optionally): 
  *          - All sensitive detectors, ACD tiles, TKR planes, CAL logs , 
  *            CAL diodes.  
  *          - Ids of sensitive detectors 
@@ -66,11 +69,13 @@
  * or supplemented by HepRep/WIRED.  <br>
  *
  * Few other classes are used to help in the filling of the McParticle tree (the
- * TrackingAction and McParticleManager) and to deal with some oddity in the
- * output of Geant4 (UIsession)<br>
+ * TrackingAction and McParticleManager), to manage the Geant4 transport of
+ * particles for reconstruction uses (G4PropagatorSvc, TransportStepInfo,
+ * ParticleTransporter and G4ParticlePropagator) and to deal with some oddity in
+ * the output of Geant4 (UIsession)<br>
  *
  * The algorithm has three properties, source_name, geometryMode and UIcommands,
- * that can be setted in the jobOptions file
+ * that can be set in the jobOptions file
  *
  * A test program, under src/test, exercises everything.
  *

@@ -1,7 +1,9 @@
 // File and Version Information:
 // $Header$
 //
-// Description:
+// Description: This class manages the building of particles definitions and
+// physics processes setup by creating a set of specialized classes and
+// registering them
 //      
 //
 // Author(s):

@@ -1,19 +1,17 @@
+// File and Version Information:
+// $Header$
+//
+// Description: This class manages the building of muon/tau and their processes
+//
+// Author(s):
+//      F.Longo
+
 #include "MuonPhysics.h"
 
 #include "globals.hh"
 #include "G4ios.hh"
 #include "g4std/iomanip"   
 
-/** 
- * @class MuonPhysics 
- *
- * @brief Muons physics processes setup
- *
- *  
- * @author F.Longo 
- *    
- * \$Header\$
- */
 MuonPhysics::MuonPhysics(const G4String& name)
                    :  G4VPhysicsConstructor(name)
 {
@@ -37,6 +35,9 @@ MuonPhysics::~MuonPhysics()
 
 void MuonPhysics::ConstructParticle()
 {
+  // Purpose and Method: this method is invoked by G4 to build the particles
+  //                     classes
+
   // Mu
   G4MuonPlus::MuonPlusDefinition();
   G4MuonMinus::MuonMinusDefinition();
@@ -56,6 +57,9 @@ void MuonPhysics::ConstructParticle()
 
 void MuonPhysics::ConstructProcess()
 {
+  // Purpose and Method: this method is invoked by G4 to build the physics
+  //                     processes table
+
   G4ProcessManager * pManager = 0;
 
   // Muon Plus Physics

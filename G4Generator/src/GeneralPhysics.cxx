@@ -1,3 +1,12 @@
+// File and Version Information:
+// $Header$
+//
+// Description: This class manages the building of the geantino and the generic
+// decay process
+//
+// Author(s):
+//      F.Longo
+
 #include "GeneralPhysics.h"
 
 #include "globals.hh"
@@ -21,6 +30,8 @@ GeneralPhysics::~GeneralPhysics()
 
 void GeneralPhysics::ConstructParticle()
 {
+
+
   // pseudo-particles
   G4Geantino::GeantinoDefinition();
   G4ChargedGeantino::ChargedGeantinoDefinition();  
@@ -28,6 +39,9 @@ void GeneralPhysics::ConstructParticle()
 
 void GeneralPhysics::ConstructProcess()
 {
+  // Purpose and Method: this method is invoked by G4 to build the physics
+  //                     processes table
+
   // Add Decay Process
   theParticleIterator->reset();
   while( (*theParticleIterator)() ){

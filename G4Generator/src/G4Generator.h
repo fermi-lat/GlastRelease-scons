@@ -39,11 +39,11 @@ class G4Generator : public Algorithm {
   IParticlePropertySvc* m_ppsvc;
 
   /// source name to get from the Flux service; this is a property of the
-  /// algorithm and can be setted in the jobOptions file
+  /// algorithm and can be set in the jobOptions file
   std::string m_source_name;
 
   /// set of UI commands for setup; this is a property of the algorithm and can
-  /// be setted in the jobOptions file
+  /// be set in the jobOptions file
   StringArrayProperty m_uiCommands;
   
   /// This is the G4 manager that handles the simulation

@@ -1,3 +1,10 @@
+// File and Version Information:
+// $Header$
+//
+// Description: Geant4 class for particle transport management
+//
+// Author(s):
+//      T.Usher
 
 #include "ParticleTransporter.h"
 #include "G4Geantino.hh"

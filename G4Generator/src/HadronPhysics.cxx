@@ -1,19 +1,16 @@
+// File and Version Information:
+// $Header$
+//
+// Description: This class manages the building of hadrons and their processes
+//
+// Author(s):
+//      F.Longo
+
 #include "HadronPhysics.h"
 
 #include "globals.hh"
 #include "G4ios.hh"
 #include "g4std/iomanip"   
-
-/** 
- * @class HadronicPhysics 
- *
- * @brief Hadronic physics processes setup
- *
- *  
- * @author F.Longo 
- *    
- * \$Header\$
- */
 
 HadronPhysics::HadronPhysics(const G4String& name)
                     :  G4VPhysicsConstructor(name)
@@ -34,6 +31,9 @@ HadronPhysics::~HadronPhysics()
 
 void HadronPhysics::ConstructParticle()
 {
+  // Purpose and Method: this method is invoked by G4 to build the particles
+  //                     classes
+
   //  Construct all mesons
   G4MesonConstructor pMesonConstructor;
   pMesonConstructor.ConstructParticle();
@@ -54,6 +54,9 @@ void HadronPhysics::ConstructParticle()
 
 void HadronPhysics::ConstructProcess()
 {
+  // Purpose and Method: this method is invoked by G4 to build the physics
+  //                     processes table
+
   G4ProcessManager * pManager = 0;
   
   // Elastic Process

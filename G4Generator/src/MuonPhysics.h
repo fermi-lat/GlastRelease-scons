@@ -12,7 +12,22 @@
 #include "G4hIonisation.hh"
 
 #include "G4MuonMinusCaptureAtRest.hh"
-
+/** 
+ * @class MuonPhysics 
+ *
+ * @brief Muons physics processes setup
+ *
+ * This class is an implementation of a standard G4VPhysicsConstructor of
+ * Geant4. Its main purpouse is to setup a set of particles and physics
+ * processes. 
+ *
+ * In particular, this one activate the muon and tau particles and their
+ * processes
+ *  
+ * @author F.Longo 
+ *    
+ * \$Header\$
+ */
 class MuonPhysics : public G4VPhysicsConstructor
 {
   public: 

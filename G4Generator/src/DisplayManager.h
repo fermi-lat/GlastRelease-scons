@@ -15,9 +15,9 @@ class Hep3Vector;
 #include <string>
 
 /** 
- * @class DetectorManager
+ * @class DisplayManager
  *
- * @brief An abstract class for sensitive detectors definition
+ * @brief A singleton for GUI interaction
  * 
  * A simple class to manage a GuiSvc display of G4 objects. It is a singleton
  * 

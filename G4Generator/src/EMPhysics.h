@@ -19,6 +19,12 @@
  *
  * @brief Electromagnetic physics processes setup
  *
+ * This class is an implementation of a standard G4VPhysicsConstructor of
+ * Geant4. Its main purpouse is to setup a set of particles and physics
+ * processes. 
+ *
+ * In particular, this one activate the gamma, the electron, the positron and
+ * the electromagnetic processes related to them
  *  
  * @author F.Longo 
  *    

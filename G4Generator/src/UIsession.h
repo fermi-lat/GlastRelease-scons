@@ -7,10 +7,10 @@
  *
  * @brief A dummy Geant4 user interface 
  *
- * Geant4 has some strange beahvior with respect to information output on the
+ * Geant4 has some strange behavior with respect to information streaming on the
  * standard output during initialization phase. Most information can be silenced
  * by choosing proper values for verbosity levels; netherless Geant4 print on
- * the std output a lot of information that can annoing (and not very
+ * the std output a lot of information that can be annoing (and not very
  * useful). To avoid this information to interfere with the standard output of
  * the Gaudi initialization phase this small class shut up the Geant4
  * output. Note that this has been set in such a way that only the
