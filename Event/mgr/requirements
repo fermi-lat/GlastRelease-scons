@@ -24,12 +24,11 @@ library GlastEvent -no_share\
 
 # library tkrTest ../GlastEvent/Digi/TkrTest.cxx ../GlastEvent/Digi/TkrDigi.h ../GlastEvent/Digi/TkrDigiCol.h 
 
-ignore_pattern include_none
 apply_pattern package_include
 
 macro GlastEvent_stamps   "$(GlastEventDir)/GlastEvent.stamp"
 
-apply_pattern package_Llinkopts
+apply_pattern package_linkopts
 
 # Macro to define shared libraries
 #
