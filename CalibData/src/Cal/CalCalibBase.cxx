@@ -4,6 +4,7 @@
 #include "CalibData/RangeBase.h" 
 #include "CalibData/Cal/CalCalibBase.h"
 #include "CalibData/DacCol.h"
+#include "CalibData/Cal/Xpos.h"
 #include "GaudiKernel/MsgStream.h"
 
 namespace CalibData {
@@ -12,9 +13,10 @@ namespace CalibData {
   const CLID& CalCalibBase::classID() {return noCLID;}
   CalCalibBase::CalCalibBase(unsigned nTowerRow, unsigned nTowerCol, 
                              unsigned nLayer, unsigned nXtal, unsigned nFace, 
-                             unsigned nRange, unsigned nDacCol) : m_finder(0) {
+                             unsigned nRange, unsigned nDacCol,
+                             unsigned nXpos) : m_finder(0), m_xpos(0) {
 
-    cGuts(nTowerRow, nTowerCol, nLayer, nXtal, nFace, nRange, nDacCol);
+    cGuts(nTowerRow, nTowerCol, nLayer, nXtal, nFace, nRange, nDacCol, nXpos);
   }
 
   CalCalibBase::~CalCalibBase() {
@@ -71,11 +73,17 @@ namespace CalibData {
   }
 
 
-  DacCol* CalCalibBase::getDacCol(unsigned range) {
+  DacCol* CalCalibBase::getDacCol(unsigned range) const {
     if (range >= m_dacCols.size()) return 0;
     return m_dacCols[range];
   }
 
+  bool CalCalibBase::putXpos(Xpos* pos) {
+    if (!m_xpos) return false;
+    m_xpos->update(pos);
+    return true;
+  }
+  
 
   StatusCode CalCalibBase::update(CalibBase& other, MsgStream* log) {
     CalCalibBase& other1 = dynamic_cast<CalCalibBase& >(other);
@@ -98,16 +106,24 @@ namespace CalibData {
       RangeBase* dest = m_ranges[i];
       dest->update(other1.m_ranges[i]);
     }
+
+    unsigned nDacCol = m_finder->getNDacCol();
+    if (nDacCol) {
+      for (unsigned iDacCol = 0; iDacCol < nDacCol; iDacCol++) {
+        m_dacCols[iDacCol]->update(other1.m_dacCols[iDacCol]);
+      }
+    }
+    if (m_xpos) m_xpos->update(other1.m_xpos);
     return StatusCode::SUCCESS;
   }
 
   void CalCalibBase::cGuts(unsigned nTowerRow, unsigned nTowerCol, 
                            unsigned nLayer, unsigned nXtal, 
                            unsigned nFace, unsigned nRange, 
-                           unsigned nDacCol) {
+                           unsigned nDacCol, unsigned nXpos) {
 
     m_finder = new CalFinder(nTowerRow, nTowerCol, nLayer, nXtal, nFace, 
-                             nRange, nDacCol);
+                             nRange, nDacCol, nXpos);
     unsigned n = m_finder->getSize();
 
     //    m_pR = new vector<RangeBase*>(n, 0);

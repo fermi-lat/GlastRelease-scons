@@ -33,7 +33,7 @@ namespace CalibData {
   public: 
     CalFinder(unsigned nTowerRow, unsigned nTowerCol, unsigned nLayer, 
               unsigned nXtal, unsigned nFace=2, unsigned nRange=4,
-              unsigned nDacCol=0);
+              unsigned nDacCol=0, unsigned nXpos=0);
 
 
     ~CalFinder() {}
@@ -58,6 +58,7 @@ namespace CalibData {
     unsigned getNFace() const {return m_face;}
     unsigned getNRange() const {return m_range;}
     unsigned getNDacCol() const {return m_dacCol;}
+    unsigned getNXpos() const {return m_xpos;}
 
     bool equals(const CalFinder& other) const;
 
@@ -70,6 +71,7 @@ namespace CalibData {
     unsigned m_face;
     unsigned m_range;
     unsigned m_dacCol;
+    unsigned m_xpos;
 
     unsigned m_c0;
     unsigned m_c1;

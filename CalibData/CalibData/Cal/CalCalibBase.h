@@ -13,6 +13,7 @@
 namespace CalibData {
   class RangeBase;
   class DacCol;
+  class Xpos;
 
   /**
        Base class for calorimeter calibration data, at least for those
@@ -26,7 +27,7 @@ namespace CalibData {
 
   public:
     CalCalibBase(unsigned nTowerRow=4, unsigned nTowerCol=4, unsigned nLayer=8,                  unsigned nXtal=12, unsigned nFace=2, unsigned nRange=4,
-                 unsigned nDacCol=0);
+                 unsigned nDacCol=0, unsigned nXpos = 0);
     virtual ~CalCalibBase();
 
     /** 
@@ -51,7 +52,11 @@ namespace CalibData {
 
     bool putDacCol(unsigned range, DacCol* dacs);
 
-    DacCol* getDacCol(unsigned range);
+    DacCol* getDacCol(unsigned range) const;
+
+    bool putXpos(Xpos* pos);
+
+    Xpos* getXpos() const {return m_xpos;}
 
     // Get dimensioning information; needed when transforming to 
     // permanent storage
@@ -76,6 +81,8 @@ namespace CalibData {
     /// Get # dac setting collections
     unsigned getNDacCol() const {return m_finder->getNDacCol();}
 
+    // Get # xpos collections 
+    unsigned getNXpos() const {return m_finder->getNXpos();}
 
     virtual const CLID& clID() const = 0;     // must be overridden
     static const CLID& classID();   // shouldn't get called
@@ -88,6 +95,7 @@ namespace CalibData {
     //    std::vector<RangeBase* >* m_pR;
     std::vector<RangeBase* > m_ranges;
     std::vector<DacCol*> m_dacCols;              // often there aren't any
+    Xpos* m_xpos;                                // usually 0
   private:
     static const CLID noCLID;
 
@@ -96,7 +104,7 @@ namespace CalibData {
     */
     void cGuts(unsigned nTowerRow, unsigned nTowerCol, 
                unsigned nLayer, unsigned nXtal, unsigned nFace, 
-               unsigned nRange, unsigned nDacCol);
+               unsigned nRange, unsigned nDacCol, unsigned nXpos);
 
   };
 
