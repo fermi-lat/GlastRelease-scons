@@ -1,0 +1,15 @@
+<!--- example entry to be added to FluxSvc -->
+<source_library>
+
+    <!-- an entry to declare a user-implemented source of particles -->
+    <source name="userspectrum" >
+        <spectrum escale="GeV"> 
+            <!-- the name below is the name of the C++ class in the code -->
+            <SpectrumClass name="UserSource" /> 
+                <!-- this enables the angular dependence; 
+                     frame can be "earth" or "galaxy"-->
+		<use_spectrum frame="earth"/>  
+	</spectrum>
+    </source>
+
+</source_library>
