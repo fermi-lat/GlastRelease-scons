@@ -2,6 +2,7 @@
  * Package detModel
  * Coordinator: T.Burnett, S. Robinson
  *
+ * v5r6p2 THB  * fix units for default soruce
  * v5r6p1 THB  * patch for changed McParticle
  * v5r6   THB  * convert to Event
  * v5r4p1 THB  * remove cm and GeV factors from FluxAlg
