@@ -14,7 +14,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/GenericAddress.h"
 #include "CalibXmlCnvSvc.h"
-#include "xml/XmlParser.h"
+#include "xmlBase/XmlParser.h"
 
 // Make instances only via static factory class
 static SvcFactory<CalibXmlCnvSvc> calibXmlCnvSvc_factory;
@@ -111,7 +111,7 @@ StatusCode CalibXmlCnvSvc::initialize() {
   // end of second pasted piece
 
 
-  m_parser = new xml::XmlParser();
+  m_parser = new xmlBase::XmlParser();
 
   if (m_parser == 0) {
     log << MSG::FATAL << "Unable to create XML parser instance \n"

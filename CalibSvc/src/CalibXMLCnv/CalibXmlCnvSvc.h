@@ -15,7 +15,7 @@ template <class TYPE> class SvcFactory;
 
 class IDetDataSvc;
 class IOpaqueAddress;
-namespace xml {
+namespace xmlBase {
   class XmlParser;
 }
 
@@ -131,7 +131,7 @@ class CalibXmlCnvSvc : public ConversionSvc, virtual public ICalibXmlSvc
   /// Handle to the IDetDataSvc interface of the CalibDataSvc
   IDetDataSvc*         m_detDataSvc;
 
-  xml::XmlParser*       m_parser;
+  xmlBase::XmlParser*       m_parser;
 };
 #endif   
 
