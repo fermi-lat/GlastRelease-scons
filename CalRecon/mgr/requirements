@@ -8,7 +8,7 @@ use GlastEvent
 use GlastSvc
 use ntupleWriterSvc
 use GlastDigi
-
+use geometry
 
 
 apply_pattern package_include
