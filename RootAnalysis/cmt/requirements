@@ -1,11 +1,11 @@
 package RootAnalysis
-version v4r0
+version v4r1
 # This package contains useful Root scripts.
 
 #use these to get the env vars defined
-use mcRootData v2r9p0
-use digiRootData v3r7
-use reconRootData v4r1p1
+use mcRootData v2r10p0
+use digiRootData v4r1p0
+use reconRootData v4r3p0
 use ROOT v2r* IExternal
 
 set ROOTANALYSIS ${ROOTANALYSISROOT}
@@ -19,6 +19,9 @@ macro_append RootAnalysis_headers "" \
 
 macro_append ROOT_libs " -lHist " \
              WIN32 " ${ROOT_PATH}/lib/libHist.lib "
+
+
+application pruneTrees pruneTrees/*.cxx
 
 # Define a test program that will run RootTreeAnalysis in batch mode
 # on 3 ROOT files included with this package
