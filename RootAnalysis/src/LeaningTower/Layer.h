@@ -18,7 +18,8 @@
 
 class Layer : public TNamed {
  public:
-    Layer(TString name, float zz, float yy=0, float xx=0);
+    Layer(TString name, float pz, float py=0, float px=0,
+          float rz=0, float ry=0, float rx=0);
     ~Layer();
     void SetPlanesForFittingCol(std::vector<TString> v) {planesForFittingCol=v;}
 
@@ -26,6 +27,11 @@ class Layer : public TNamed {
     double GetZ()      const { return Z; }
     double GetY()      const { return Y; }
     double GetX()      const { return X; }
+    double GetRotZ()   const { return rotZ; }
+    double GetRotY()   const { return rotY; }
+    double GetRotX()   const { return rotX; }
+    std::string GetGeometry(float dz=0, float dy=0, float dx=0,
+                            float az=0, float ay=0, float ax=0) const;
 
     double GetCoordinate(int stripId);
     bool checkActiveArea(double ParallelCoordinate, double NormalCoordinate,
@@ -58,9 +64,8 @@ class Layer : public TNamed {
         return planesForFittingCol; }
   
  private:
-    float X;
-    float Y;
-    float Z;
+    float X, Y, Z;
+    float rotX, rotY, rotZ;
     TLine *LayerLine;
     TLine *LadderLine[4];
     TTree *LayerTree;

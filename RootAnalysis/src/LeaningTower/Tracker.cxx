@@ -51,13 +51,13 @@ void Tracker::loadGeometry(TString filename) {
     while ( !fin.eof() ) {
         std::getline(fin, line);
         TString layer;
-        double z, y, x;
-        z = y = x = 0;
+        double z, y, x, rz, ry, rx;
+        z = y = x = rz = ry = rx = 0;
         std::istringstream ist(line);
-        ist >> layer >> z >> y >> x;
+        ist >> layer >> z >> y >> x >> rz >> ry >> rx;
         if ( layer == "" )
             continue;
-        Layer* aLayer = new Layer(layer, z, y, x);
+        Layer* aLayer = new Layer(layer, z, y, x, rz, ry, rx);
         myGeometry->AddLast(aLayer);
     }
 

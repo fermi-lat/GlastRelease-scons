@@ -2,14 +2,18 @@
 
 #include <iomanip>
 #include <iostream>
-#include <fstream>
+#include <sstream>
 #include <string>
 
-Layer::Layer(TString name, float zz, float yy, float xx) {
+Layer::Layer(TString name, float pz, float py, float px,
+             float rz, float ry, float rx) {
     SetName(name);
-    Z = zz;
-    Y = yy;
-    X = xx;
+    Z = pz;
+    Y = py;
+    X = px;
+    rotZ = rz;
+    rotY = ry;
+    rotX = rx;
 
     EDGE_WIDTH        =  1.000;
     STRIP_PITCH       =  0.228;
@@ -36,7 +40,6 @@ Layer::~Layer() {
     delete LayerLabel;
     for ( int i=0; i<4; i++ )
         delete LadderLine[i];
-
 }
 
 //////////////////////////////////////////////////
@@ -112,6 +115,16 @@ void Layer::SetTree(TFile *file) {
     LayerTree->SetBranchAddress("TkrHits",TkrHits);
     LayerTree->SetBranchAddress("TriggerReq0",&TriggerReq0);
     LayerTree->SetBranchAddress("TriggerReq1",&TriggerReq1);
+}
+
+std::string Layer::GetGeometry(float dz, float dy, float dx,
+                               float az, float ay, float ax) const {
+    std::stringstream s;
+    s.setf(std::ios_base::fixed);
+    s.precision(3);
+    s << fName << ' ' << Z+dz << ' ' << Y+dy << ' ' << X+dx
+      << ' ' << rotZ+az << ' ' << rotY+ay << ' ' << rotX+ax;
+    return s.str();
 }
 
 ClassImp(Layer)

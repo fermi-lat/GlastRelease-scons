@@ -1,6 +1,7 @@
 #include "Recon.h"
 
 #include "TF1.h"
+#include "TVector3.h"
 
 Recon::Recon(TFile* file) {
     reconTree = (TTree*)file->Get("Recon");
@@ -30,18 +31,33 @@ void Recon::GetEvent(int event) {
 }
 
 void Recon::TkrAlignmentSvc(const TList *myGeometry) {
-    // this is the real alignment.  Z is replaced by the Z of the geometry file.
-    // This seems to be awkward, but the alternative would be to rerun recon
-    // every time the position changes.
-    // X and Y are taken as corrections, i.e. X and Y of the geo file are
-    // subtracted from the cluster positions.
+    // this is the "real" alignment.  Z is replaced by the Z of the geometry
+    // file.  This seems to be awkward, but the alternative would be to rerun
+    // recon every time the position changes.
+    // X and Y are taken as corrections, i.e. X and Y of the geometry file are
+    // added to the cluster positions.
   
     for ( int i=0; i<TkrNumClus; ++i ) {
         Layer* plane = (Layer*)myGeometry->FindObject(
                         GetPlaneNameFromRecon(TkrClusLayer[i], TkrClusView[i]));
-        TkrClusX[i] += plane->GetX();
-        TkrClusY[i] += plane->GetY();
-        TkrClusZ[i]  = plane->GetZ();
+        // translation
+        TVector3 v(TkrClusX[i]+plane->GetX(), TkrClusY[i]+plane->GetY(),
+                   plane->GetZ());
+        /* I had to realize that to make a correction of the rotation I would
+           need to know the real 2d in-plane position of the cluster.  However,
+           we know the position perpendicular to the strips (i.e. the strip)
+           only.  The 2nd coordinate is just the center of the tray.
+        // rotation in Z is done with respect to the center of the
+        // tower (178.25, 178.25)
+        const TVector3 origin(178.25, 178.25, 0);
+        v -= origin;
+        v.RotateZ(plane->GetRotZ()/1000);
+        v += origin;
+        */
+        // refilling the clusters
+        TkrClusX[i] = v.X();
+        TkrClusY[i] = v.Y();
+        TkrClusZ[i] = v.Z();
     }
 }
 

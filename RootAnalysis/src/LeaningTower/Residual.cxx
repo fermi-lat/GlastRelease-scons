@@ -28,11 +28,21 @@ public:
     }
 
     void Go(int lastEntry=-1);
-    void DrawResidual(TCut="");
-    void DrawResSlope(TCut="");
+    // general for DrawXxx: residual is h_abs - h_abs_ext
+    // draws the residual, top without fitting, bottom with gauss fit
+    void DrawResidual(TString plane, TCut="");
+    // draws top the slope vs. residual, bottom the profile with pol1 fit
+    void DrawResSlope(TString plane, TCut="");
+    // draws top the other coordinate vs. residual, bottom profile with pol1 fit
+    void DrawResOrd(TString plane, TCut="");
+    // draws the slope profiles for all planes
     void DrawResSlopeAll(TCut="abs(h_abs_ext-h_abs)<1");
-    void DrawResOrd(TCut="");
+    // draws the ordinate profiles for all planes
     void DrawResOrdAll(TCut="abs(h_abs_ext-h_abs)<1");
+    // attempt to do a "statistical" (not event be event) correction of rotZ of
+    // planes.  2x3 histograms.  Left uncorrected, right rotZ corrected.  Top
+    // ordinate vs. residual, middle profile of that, bottom residual.
+    void DrawResOrdCorr(TString plane, TCut="");
 };
 
 Residual::Residual(TString filename, TString resFileName) {
@@ -87,6 +97,10 @@ void Residual::Go(int lastEntry) {
     Recon* recon = myEvent->GetRecon();
     Progress progress;
 
+    // some counters for the statistics
+    int usedTrack[2] = { 0, 0 };
+    int usedEvent = 0;
+
     for ( int entry=0; entry<lastEntry; ++entry ) { 
         myEvent->Go(entry);
 
@@ -124,6 +138,10 @@ void Residual::Go(int lastEntry) {
             const TGraph TGclus = recon->GetClusterGraph(planeCol);
             refTrack[i] = Reconstruct(&TGclus, false);
         }
+
+        // helper for the statistics
+        bool trackUsed[2] = { false, false };
+        bool eventUsed = false;
 
         // now, loop over all clusters
         for ( int i=0; i<TkrNumClus; ++i ) {
@@ -167,14 +185,28 @@ void Residual::Go(int lastEntry) {
             hRes[iView][iLayer].Fill(res);
             hResiduals[iView].Fill(res);
             resTree.Fill();
+            trackUsed[iView] = eventUsed = true;
         } // end of loop over all clusters
+        if ( trackUsed[0] )
+            ++usedTrack[0];
+        if ( trackUsed[1] )
+            ++usedTrack[1];
+        if ( eventUsed )
+            ++usedEvent;
     } // end of loop over all events
+
+    std::cout << "used " << usedEvent << " of " << lastEntry << std::endl;
+    std::cout << "found " << ++usedTrack[0] << " good tracks in X and "
+              << ++usedTrack[1] << " in Y" << std::endl;
 
     f.Write();
     f.Close();
 }
 
-void Residual::DrawResidual(TCut cut) {
+void Residual::DrawResidual(TString plane, TCut cut) {
+    const TCut cutPlane("name==\"" + plane + "\"");
+    cut += cutPlane;
+
     TString canvasName = "DrawResidual";
     TCanvas* c = (TCanvas*)gROOT->GetListOfCanvases()->FindObject(canvasName);
     if ( !c ) {
@@ -204,7 +236,10 @@ void Residual::DrawResidual(TCut cut) {
     f.Close();
 }
 
-void Residual::DrawResSlope(TCut cut) {
+void Residual::DrawResSlope(TString plane, TCut cut) {
+    const TCut cutPlane("name==\"" + plane + "\"");
+    cut += cutPlane;
+
     TString canvasName = "DrawResSlope";
     TCanvas* c = (TCanvas*)gROOT->GetListOfCanvases()->FindObject(canvasName);
     if ( !c ) {
@@ -234,70 +269,10 @@ void Residual::DrawResSlope(TCut cut) {
     f.Close();
 }
 
-void Residual::DrawResSlopeAll(TCut cut) {
-    TString canvasName = "DrawResSlopeAll";
-    TCanvas* c = (TCanvas*)gROOT->GetListOfCanvases()->FindObject(canvasName);
-    if ( !c ) {
-        c = new TCanvas(canvasName, canvasName, 1100, 800);
-        c->Divide(6,6);
-    }
-
-    TFile f(myResFileName);
-    TTree* t = (TTree*)f.Get("residualTree");
-
-    gStyle->SetTitleFontSize(0.1);
-    gStyle->SetOptStat(0);
-    gStyle->SetOptFit(11);
-    //    gStyle->SetStatFontSize(0.1);
-    gStyle->SetStatBorderSize(1);
-    gStyle->SetStatH(0.25);
-    gStyle->SetStatW(0.35);
-    gStyle->SetFitFormat(".3f");
-    int i=0;
-    std::ofstream fout("newGeometry.txt");
-    fout.setf(std::ios_base::fixed);
-    fout.precision(3);
-
-    TList* myGeometry = myTracker->GetGeometry();
-    TIter next(myGeometry);
-    while ( Layer* plane = (Layer*)next() ) {
-        TString planeName = plane->GetName();
-        c->cd(++i);
-        gPad->SetTicks(1,1);
-        TString onPlane = "name==\"" + planeName + "\"";
-        TCut cutOnPlane = onPlane.Data();
-        TCut myCut = cut && cutOnPlane;
-        t->Draw("h_abs_ext-h_abs:invSlope", myCut, "prof");
-        TH1F* htemp = (TH1F*)gPad->GetPrimitive("htemp");
-        float dx, dy, dz;
-        dx = dy = dz = 0.;
-        if ( htemp ) { // histogram might be empty
-            htemp->SetTitle(planeName);
-            htemp->Fit("pol1", "q", "", -0.6, 0.6);
-            gPad->Update();
-            TF1* f = htemp->GetFunction("pol1");
-            dz = -f->GetParameter(1);
-            float dh = f->GetParameter(0);
-            if ( plane->GetView() )
-                dy = dh;
-            else
-                dx = dh;
-            std::cout << planeName << " shifts: horizonal = " << std::fixed
-                      << std::setprecision(3) << dh << " vertical = " << dz
-                      << std::endl;
-        }
-        fout << planeName << ' ' << plane->GetZ() + dz << ' '
-             << plane->GetY() + dy << ' ' << plane->GetX() + dx << std::endl;
-    }
-
-    fout.close();
-    c->cd();
-    f.Close();
-}
-
-void Residual::DrawResOrd(TCut cut) {
+void Residual::DrawResOrd(TString plane, TCut cut) {
     const TCut cutOrd("h_ord>=0");
-    cut += cutOrd;
+    const TCut cutPlane("name==\"" + plane + "\"");
+    cut += cutOrd + cutPlane;
 
     TString canvasName = "DrawResOrd";
     TCanvas* c = (TCanvas*)gROOT->GetListOfCanvases()->FindObject(canvasName);
@@ -327,11 +302,8 @@ void Residual::DrawResOrd(TCut cut) {
     f.Close();
 }
 
-void Residual::DrawResOrdAll(TCut cut) {
-    const TCut cutOrd("h_ord>=0");
-    cut += cutOrd;
-
-    TString canvasName = "DrawResOrdAll";
+void Residual::DrawResSlopeAll(TCut cut) {
+    TString canvasName = "DrawResSlopeAll";
     TCanvas* c = (TCanvas*)gROOT->GetListOfCanvases()->FindObject(canvasName);
     if ( !c ) {
         c = new TCanvas(canvasName, canvasName, 1100, 800);
@@ -348,11 +320,65 @@ void Residual::DrawResOrdAll(TCut cut) {
     gStyle->SetStatBorderSize(1);
     gStyle->SetStatH(0.25);
     gStyle->SetStatW(0.35);
+    gStyle->SetFitFormat(".3f");
+    int i=0;
+    std::ofstream fout("newGeometry.txt");
+    TList* myGeometry = myTracker->GetGeometry();
+    TIter next(myGeometry);
+    while ( Layer* plane = (Layer*)next() ) {
+        TString planeName = plane->GetName();
+        c->cd(++i);
+        gPad->SetTicks(1,1);
+        TString onPlane = "name==\"" + planeName + "\"";
+        TCut cutOnPlane = onPlane.Data();
+        TCut myCut = cut && cutOnPlane;
+        t->Draw("h_abs_ext-h_abs:invSlope", myCut, "prof");
+        TH1F* htemp = (TH1F*)gPad->GetPrimitive("htemp");
+        float dx, dy, dz;
+        dx = dy = dz = 0.;
+        if ( htemp ) { // histogram might be empty
+            htemp->SetTitle(planeName);
+            htemp->Fit("pol1", "q", "", -0.6, 0.6);
+            gPad->Update();
+            TF1* f = htemp->GetFunction("pol1");
+            // if I define the residual as h_abs_ext-h_abs, the horizontal shift
+            // is p0, but the vertical is -p1
+            dz = -f->GetParameter(1);
+            float dh = f->GetParameter(0);
+            if ( plane->GetView() )
+                dy = dh;
+            else
+                dx = dh;
+            std::cout << planeName << " shifts: horizonal = " << std::fixed
+                      << std::setprecision(3) << dh << " vertical = " << dz
+                      << std::endl;
+        }
+        fout << plane->GetGeometry(dz, dy, dx) <<std::endl;
+    }
+
+    fout.close();
+    c->cd();
+    f.Close();
+}
+
+void Residual::DrawResOrdAll(TCut cut) {
+    const TCut cutOrd("h_ord>=0");
+    cut += cutOrd;
+
+    TString canvasName = "DrawResOrdAll";
+    TCanvas* c = (TCanvas*)gROOT->GetListOfCanvases()->FindObject(canvasName);
+    if ( !c ) {
+        c = new TCanvas(canvasName, canvasName, 1100, 800);
+        c->Divide(6,6);
+    }
+
+    TFile f(myResFileName);
+    TTree* t = (TTree*)f.Get("residualTree");
+
+    gStyle->SetTitleFontSize(0.1);
     gStyle->SetFitFormat(".3g");
     int i=0;
-    //    std::ofstream fout("newGeometry.txt");
-    //    fout.setf(std::ios_base::fixed);
-    //    fout.precision(3);
+    std::ofstream fout("newGeometry.txt");
 
     TList* myGeometry = myTracker->GetGeometry();
     TIter next(myGeometry);
@@ -366,14 +392,14 @@ void Residual::DrawResOrdAll(TCut cut) {
         t->Draw("h_abs_ext-h_abs:h_ord", myCut, "prof");
         TH1F* htemp = (TH1F*)gPad->GetPrimitive("htemp");
         float dx, dy, dz, dangZ;
-        dx = dy = dz = 0.;
+        dx = dy = dz = dangZ = 0.;
         if ( htemp ) { // histogram might be empty
             htemp->SetTitle(planeName);
             htemp->Fit("pol1", "q");
             gPad->Update();
             TF1* f = htemp->GetFunction("pol1");
             // dangZ is the rotation around z (check the sign)
-            dangZ = f->GetParameter(1);
+            dangZ = 1000. * f->GetParameter(1);  // mrad
             // dh is the horizontal shift.  This should have been alredy fitted
             // before.  Most likely, it's 0 or close to 0.
             float dh = f->GetParameter(0);
@@ -381,15 +407,101 @@ void Residual::DrawResOrdAll(TCut cut) {
                 dy = dh;
             else
                 dx = dh;
-            //   std::cout << planeName << " shifts: horizonal = " << std::fixed
-            //             << std::setprecision(3) << dh << " vertical = " << dz
-            //                      << std::endl;
+            std::cout << planeName << " dh = " << std::setprecision(3)
+                      << std::fixed << dh << " rotZ = " << dangZ << std::endl;
         }
-        //        fout << planeName << ' ' << plane->GetZ() + dz << ' '
-        //      << plane->GetY() + dy << ' ' << plane->GetX() + dx << std::endl;
+        fout << plane->GetGeometry(dz, dy, dx, dangZ) <<std::endl;
     }
 
-    //    fout.close();
+    fout.close();
+    c->cd();
+    f.Close();
+}
+
+void Residual::DrawResOrdCorr(TString plane, TCut cut) {
+    const TCut cutOrd("h_ord>=0");
+    const TCut cutPlane("name==\"" + plane + "\"");
+    cut += cutOrd + cutPlane;
+
+    TString canvasName = "DrawResOrdCorr";
+    TCanvas* c = (TCanvas*)gROOT->GetListOfCanvases()->FindObject(canvasName);
+    if ( !c ) {
+        c = new TCanvas(canvasName, canvasName, 600, 800);
+        c->Divide(2, 3);
+    }
+
+    TFile f(myResFileName);
+    TTree* t = (TTree*)f.Get("residualTree");
+    t->SetMarkerStyle(20);
+    t->SetMarkerSize(0.3);
+
+    TH1F* htemp;
+
+    TString residual;
+    TCut cutRes;
+    TCut myCut;
+
+    residual = TString("h_abs_ext-h_abs");
+    cutRes = TCut("abs(" + residual + ")<0.5");
+    myCut = cut + cutRes;
+    myCut.Print();
+
+    gStyle->SetOptStat(0);
+    gStyle->SetOptFit(11);
+    gStyle->SetStatBorderSize(1);
+    gStyle->SetStatH(0.25);
+    gStyle->SetStatW(0.35);
+
+    c->cd(1);
+    gPad->SetTicks(1,1);
+    t->Draw(residual+":h_ord", myCut);
+    gPad->Update();
+
+    c->cd(3);
+    gPad->SetTicks(1,1);
+    t->Draw(residual+":h_ord", myCut, "prof");
+    htemp = (TH1F*)gPad->GetPrimitive("htemp");
+    htemp->Fit("pol1", "q");
+    gPad->Update();
+    TF1* fun = htemp->GetFunction("pol1");
+    float p0 = fun->GetParameter(0);
+    float p1 = fun->GetParameter(1);
+
+    c->cd(5);
+    gPad->SetTicks(1,1);
+    t->Draw(residual, myCut);
+    htemp = (TH1F*)gPad->GetPrimitive("htemp");
+    htemp->Fit("gaus", "", "", -0.15, 0.15);
+    gPad->Update();
+
+    residual += "-(";
+    residual += p0;
+    residual += ")-h_ord*";
+    residual += p1;
+
+    cutRes = TCut("abs(" + residual + ")<0.5");
+    myCut = cut + cutRes;
+    myCut.Print();
+
+    c->cd(2);
+    gPad->SetTicks(1,1);
+    t->Draw(residual+":h_ord", myCut);
+    gPad->Update();
+
+    c->cd(4);
+    gPad->SetTicks(1,1);
+    t->Draw(residual+":h_ord", myCut, "prof");
+    htemp = (TH1F*)gPad->GetPrimitive("htemp");
+    htemp->Fit("pol1", "q", "", 10, 350);
+    gPad->Update();
+
+    c->cd(6);
+    gPad->SetTicks(1,1);
+    t->Draw(residual, myCut);
+    htemp = (TH1F*)gPad->GetPrimitive("htemp");
+    htemp->Fit("gaus", "q", "", -0.15, 0.15);
+    gPad->Update();
+
     c->cd();
     f.Close();
 }
