@@ -4,7 +4,7 @@
 
 <!-- mini test CAL ped  XML file according to calCalib.dtd -->
 
-<!DOCTYPE calCalib SYSTEM "../calCalib_v2.dtd" [] >
+<!DOCTYPE calCalib SYSTEM "../calCalib_v3.dtd" [] >
 
 <calCalib>
   <generic instrument="LAT" timestamp="2002-11-2-12:56" 
@@ -32,61 +32,61 @@
     <layer iLayer="0">
       <xtal iXtal="0">
         <face end="NEG">
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
+          <calPed avg="8" sig="0.4" range="LEX8" />
+          <calPed avg="8" sig="0.4" range="LEX1" />
+          <calPed avg="8" sig="0.4" range="HEX8" />
+          <calPed avg="8" sig="0.4" range="HEX1" />
         </face>
         <face end="POS">
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
+          <calPed avg="8" sig="0.4" range="LEX8" />
+          <calPed avg="8" sig="0.4" range="LEX1" />
+          <calPed avg="8" sig="0.4" range="HEX8" />
+          <calPed avg="8" sig="0.4" range="HEX1" />
         </face>
       </xtal>
 
       <xtal iXtal="1">
         <face end="NEG">
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
+          <calPed avg="8" sig="0.4" range="LEX8" />
+          <calPed avg="8" sig="0.4" range="LEX1" />
+          <calPed avg="8" sig="0.4" range="HEX8" />
+          <calPed avg="8" sig="0.4" range="HEX1" />
         </face>
         <face end="POS">
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
+          <calPed avg="8" sig="0.4" range="LEX8" />
+          <calPed avg="8" sig="0.4" range="LEX1" />
+          <calPed avg="8" sig="0.4" range="HEX8" />
+          <calPed avg="8" sig="0.4" range="HEX1" />
         </face>
       </xtal>
       
       <xtal iXtal="2">
         <face end="NEG">
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
+          <calPed avg="8" sig="0.4" range="LEX8" />
+          <calPed avg="8" sig="0.4" range="LEX1" />
+          <calPed avg="8" sig="0.4" range="HEX8" />
+          <calPed avg="8" sig="0.4" range="HEX1" />
         </face>
         <face end="POS">
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
+          <calPed avg="8" sig="0.4" range="LEX8" />
+          <calPed avg="8" sig="0.4" range="LEX1" />
+          <calPed avg="8" sig="0.4" range="HEX8" />
+          <calPed avg="8" sig="0.4" range="HEX1" />
         </face>
       </xtal>
 
       <xtal iXtal="3">
         <face end="NEG">
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
+          <calPed avg="8" sig="0.4" range="LEX8" />
+          <calPed avg="8" sig="0.4" range="LEX1" />
+          <calPed avg="8" sig="0.4" range="HEX8" />
+          <calPed avg="8" sig="0.4" range="HEX1" />
         </face>
         <face end="POS">
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
-          <calPed avg="8" sig="0.4" />
+          <calPed avg="8" sig="0.4" range="LEX8" />
+          <calPed avg="8" sig="0.4" range="LEX1" />
+          <calPed avg="8" sig="0.4" range="HEX8" />
+          <calPed avg="8" sig="0.4" range="HEX1" />
         </face>
       </xtal>
     </layer>
