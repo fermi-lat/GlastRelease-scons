@@ -2,6 +2,7 @@
  * Coordinator:H.Kelly
  *
  @verbatim
+ * v3r4p0 15-nov-2003 HMK : Remove default "1" TTree and write once in RootTupleSvc::finalize
  * v3r4   21-oct-2003 THB : add feature to interface to allow RootTupleSvc client to selectively write
                             TTree's
  * v3r3p0 10-oct-2003 HMK : make sure to switch ROOT TDirectory when creating a new TTree
