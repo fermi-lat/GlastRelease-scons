@@ -571,6 +571,7 @@ double ParticleTransporter::distanceToEdge(const Vector& dir) const
         G4Navigator*  navigator = m_TransportationManager->GetNavigatorForTracking();
         G4ThreeVector curPoint  = stepInfo.back().GetEndPoint();
         G4ThreeVector curDir    = dir;
+        double        maxStep   = 4000.;
 
         // This needed to insure the volume hierarchy is setup correctly for steps below
         const G4VPhysicalVolume* pCurVolume = stepInfo.back().GetVolume();
@@ -591,6 +592,11 @@ double ParticleTransporter::distanceToEdge(const Vector& dir) const
             //boundary of the current volume
             distToActArea = arcLen;
         }
+        //Check for a pathological case
+        else if (arcLen > maxStep)
+        {
+            distToActArea = -arcLen;
+        }
         //Otherwise, we need to step until we find the next sensitive volume
         else
         {
@@ -598,7 +604,6 @@ double ParticleTransporter::distanceToEdge(const Vector& dir) const
 
             while(trackStatus)
             {
-                double maxStep      = 1000.;    // Variables used by G4
                 double safeStep     = 0.1;      // 
                 double stepOverDist = 1000. * kCarTolerance;
 
@@ -608,6 +613,9 @@ double ParticleTransporter::distanceToEdge(const Vector& dir) const
                 //Use the G4 navigator to locate the current point, then compute the distance
                 //to the current volume boundary
                 pCurVolume = navigator->LocateGlobalPointAndSetup(overPoint, &curDir, true, true);
+
+                // Make sure we have not stepped out of GLAST (how can this happen?)
+                if (pCurVolume == 0) break;
 
                 // If we have entered an active volume, then we are done
                 if (pCurVolume->GetLogicalVolume()->GetSensitiveDetector())
