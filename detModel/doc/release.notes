@@ -2,18 +2,19 @@
  * Package detModel
  * Coordinator: R.Giannitrapani
  *
- * v2r13 jrb 15 Aug 2002
- *       1. Changes to IDMapBuilder to build entire map even when
- *          top volume != full detector; new services to get 
- *          volume identifier prefix, transform prefix
- *       2. add getNumericConstByName service for integer constants
- * v2r12 jrb 10 June 2002  
- *       1. Pass DOM_* objects by value; eliminate gcc warnings
- *       2. Improved HtmlConstantsVisitor
- * v2r11 THB new map builder featurs
- * v2r10 THB new features for visitor mode
- * v2r9 RG  fixed a rotation bug in idMapBuilder
- * v2r8 THB new sensitive flags, idMapBuilder access 
+ * v2r13p0 jrb 19 Sep 2002 Support for energy units for constants
+ * v2r13   jrb 15 Aug 2002
+ *         1. Changes to IDMapBuilder to build entire map even when
+ *            top volume != full detector; new services to get 
+ *            volume identifier prefix, transform prefix
+ *         2. add getNumericConstByName service for integer constants
+ * v2r12   jrb 10 June 2002  
+ *         1. Pass DOM_* objects by value; eliminate gcc warnings
+ *         2. Improved HtmlConstantsVisitor
+ * v2r11   THB new map builder featurs
+ * v2r10   THB new features for visitor mode
+ * v2r9    RG  fixed a rotation bug in idMapBuilder
+ * v2r8    THB new sensitive flags, idMapBuilder access 
  * 
  */
 
