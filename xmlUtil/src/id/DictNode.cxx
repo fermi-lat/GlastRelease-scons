@@ -219,6 +219,14 @@ namespace xmlUtil {
     
     ConstNodeIterator pCurrentNode = start;
     std::set<unsigned> values;
+
+    if (!(*start)->m_myConstraints) { // There had better be some
+      //associated with the field name;  copy them
+      DictConstraints* fieldCon = (*start)->m_myConstraints = 
+        new DictConstraints(*((*start)->m_field->getConstraints()));
+      assert(fieldCon != 0);
+    }
+
     (*start)->m_myConstraints->insertValues(values);
 
     while (pCurrentNode != last) {
@@ -227,6 +235,14 @@ namespace xmlUtil {
       
       // Make a new set containing values for current node
       std::set<unsigned> curValues;
+
+      if (!(*pCurrentNode)->m_myConstraints) { // There had better be some
+      //associated with the field name;  copy them
+        DictConstraints*  fieldCon = (*pCurrentNode)->m_myConstraints = 
+        new DictConstraints(*((*pCurrentNode)->m_field->getConstraints()));
+        assert(fieldCon != 0);
+      }
+
       (*pCurrentNode)->m_myConstraints->insertValues(curValues);
 
       // See if it intersects accumulated values from previous nodes
