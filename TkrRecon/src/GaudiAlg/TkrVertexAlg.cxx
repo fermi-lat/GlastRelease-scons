@@ -123,13 +123,15 @@ StatusCode TkrVertexAlg::execute()
         Event::TkrVertexTabList::iterator vtxRelIter = vtxTable->begin();
 
         // Loop over TDS relational table
-        int tabSize = vtxTable->size();
+        Event::TkrVertex* lastVertex = 0;
+        int               tabSize    = vtxTable->size();
         for (int idx = 0; idx < tabSize; idx++) 
         {
             Event::TkrVertexRel*  relation  = *vtxRelIter;
             Event::TkrVertex*     tkrVertex = relation->getFirst();
 
-            delete tkrVertex;
+            if (tkrVertex != lastVertex) delete tkrVertex;
+            lastVertex = tkrVertex;
             vtxTable->erase(vtxRelIter++);
         }
     }

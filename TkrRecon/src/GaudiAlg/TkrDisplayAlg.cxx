@@ -30,6 +30,7 @@
 #include "TkrRecon/Display/TkrDispActiveNet.h"
 
 #include "src/Vertex/Combo/TkrComboVtxRep.h"
+#include "src/Vertex/TkrGammaRep.h"
 
 #include "TkrRecon/Services/TkrInitSvc.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
@@ -109,7 +110,8 @@ StatusCode TkrDisplayAlg::initialize()
         tkrmenu.add(new TkrTracksRep(eventSvc()), "Tracks");
     
         //Vertex display routines
-        tkrmenu.add(new TkrComboVtxRep(eventSvc(), pTkrGeo), "Gamma Vertex");
+        tkrmenu.add(new TkrGammaRep(eventSvc(), pTkrGeo), "Gamma Vertex");
+        tkrmenu.add(new TkrComboVtxRep(eventSvc(), pTkrGeo), "All Vertices");
     }
     
     return sc;
