@@ -1,6 +1,10 @@
 /** @file release.notes
  * Package CalibData
  * Coordinator:  J. Bogart
+ *  9-Aug-2004 jrb - v0r8  -  Add classes for TKR splits calibration type.
+ *                            Define pattern use_CalibData_symbols so Windows
+ *                            clients may use symbolic definitions in TDS path
+ *                            (it's a no-op for Linux)
  *  2-Aug-2004 jrb - v0r7p0-  Bug fix in little-used CalibTime access methods
  * 24-Jul-2004 jrb - v0r7  -  Small additions needed for calib ROOT conversion
  * 12-Jul-2004 jrb - v0r6  -  Add nicer access functions for vstart, vend
