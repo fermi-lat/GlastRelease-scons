@@ -104,7 +104,7 @@ StatusCode CalXtalRecAlg::initialize()
             return StatusCode::FAILURE;
 
         //  if successful - fill the constant using the pointer from the map
-        } else *((*it).first)=value;
+        } else *((*it).first)= int(value);
     }
         
     // extracting double constants

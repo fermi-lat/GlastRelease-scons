@@ -27,7 +27,7 @@
 //  Description: Test Main Program
 //
 //------------------------------------------------------------------------------
-int main( int argn, char** argc) {
+int main( int , char** ) {
 
     // get the path to this package from its root environment variable: if not there,
     // assume that we are in the root
