@@ -19,6 +19,7 @@ apply_pattern package_headers
 library CalibSvc *.cxx  CalibDataSvc/*.cxx      \
                         CalibMySQLCnv/*.cxx     \
                         CalibXMLCnv/*.cxx       \
+                        CalibROOTCnv/*.cxx      \
                         CalibXMLCnv/cnv/*.cxx   \
                         Dll/*.cxx ${CalibSvc_headers}
 
