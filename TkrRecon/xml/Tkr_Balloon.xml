@@ -29,11 +29,11 @@
         <item name="nSuperGLayers"   value="3">       Number of layers with thick converter (obsolete) </item>
         -->
 
-        <item name="Z0"              value="2.91">    Z coordinate at the center of the lowest Si layer</item>
+        <item name="Z0"              value="3.455">    Z coordinate at the center of the lowest Si layer</item>
         <item name="towerPitch"      value="32.08">   Tower pitch, meaningless, but needed for code to work properly </item>
         <item name="trayWidth"       value="32.08">   Width of a tray </item>
         <item name="trayHeight"      value="3.2066">  Height of one tray </item>
-        <item name="footHeight"      value="0.0">     Height of foot under bottom tray </item>
+        <item name="footHeight"      value="0.54">     Height of foot under bottom tray </item>
         <item name="ladderWidth"     value="6.4">     Width of one ladder </item>
         <!--    Below uses the value for the 5-wafer ladder -->
         <item name="ladderLength"    value="32.012">  Length of one ladder </item>
