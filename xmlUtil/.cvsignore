@@ -1,5 +1,6 @@
 sun4x_*
 i386_linux*
+rh*gcc*
 Linux-i686
 Win32*
 Visual
