@@ -243,6 +243,9 @@ StatusCode TkrTrackEnergyTool::SetTrackEnergies()
                     double           kalEnergy = track->getKalEnergy();
                     double           trkEnergy = std::min(kalEnergy, 2.*m_control->getMinEnergy());
 
+                    track->clearEnergyStatusBits();
+                    track->setStatusBit(Event::TkrTrack::USERENERGY);
+
                     (*track)[0]->setEnergy(trkEnergy);
                 }
             }
