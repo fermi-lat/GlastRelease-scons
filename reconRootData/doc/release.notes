@@ -2,6 +2,7 @@
  package reconRootData
  package manager:H.Kelly
 @verbatim
+v4r5      27-may-04  : HMK Pick up latest digiRootData tag v7r0
 v4r4p0    27-apr-04  : HMK Update to new GlastPolicy version
 v4r4      15-mar-04  : HMK Use latest digiRootData - merged with EM
 v4r3p5    16-jan-04  : HMK re-introduce std::vector for linux
