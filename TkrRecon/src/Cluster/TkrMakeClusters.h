@@ -45,11 +45,13 @@ public:
 	* If so, the cluster is added, if not, it is dropped. 
 	* There may be other criteria for dropping a cluster, such as too many hits.      
 	*/
+
+	/// This constructor actually makes the clusters
 	/// the pointers to services and data are passed through the constructor
     TkrMakeClusters(TkrClusters* pClus, 
 		ITkrGeometrySvc* pTkrGeo, ITkrBadStripsSvc* pBadStrips, 
 		TkrDigiCol* pTkrDigiCol);
-	/// destructor: also deletes the clusters in the list
+
 	~TkrMakeClusters() { }
     
     /// gets the position of a cluster
