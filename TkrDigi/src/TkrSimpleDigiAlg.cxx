@@ -348,7 +348,7 @@ StatusCode TkrSimpleDigiAlg::execute()
             // and do the ToT
             double dToT = (e/m_mevPerMip - m_totThreshold)*totFactor ;
             // apply saturation and threshold
-            dToT = std::max(std::min(dToT, m_totMax), 0);
+            dToT = std::max(std::min(dToT, m_totMax), 0.);
             int thisToT = static_cast<int>( dToT);
             int breakPoint = SiStripList::n_si_strips()/2;
             if (stripId<breakPoint) {
