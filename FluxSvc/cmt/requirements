@@ -12,9 +12,8 @@ use Event   *
 use GlastSvc *
 use astro v0r*
 
-# turn this off for now
-#use flux * -no_auto_imports 
-use flux *
+# turn this on for now
+use flux * -no_auto_imports 
 
 use ntupleWriterSvc *
 
