@@ -97,14 +97,18 @@ void McIntegratingHit::addEnergyItem(const Double_t& energy, McParticle* t,
     m_moment2Seed += energy * pos2;
 }
 
-void McIntegratingHit::addEnergyItem(Double_t energy, McIntegratingHit::Particle p, const TVector3& pos) 
-{
 
-    m_energyArray[p] += energy;
-    TVector3 pos2(pos.X() * pos.X(), pos.Y()*pos.Y(), pos.Z()*pos.Z());
-    m_totalEnergy += energy;
-    m_moment1Seed += energy * pos;
-    m_moment2Seed += energy * pos2;
+void McIntegratingHit::setEnergyItems(const Double_t& totE, const Double_t *energyArr,
+                                      const TVector3& moment1, const TVector3& moment2) {
+
+    // Purpose and Method:  Set all energy member variables
+
+    m_totalEnergy = totE;
+    m_energyArray[McIntegratingHit::PRIMARY] = energyArr[McIntegratingHit::PRIMARY];
+    m_energyArray[McIntegratingHit::ELECTRON] = energyArr[McIntegratingHit::ELECTRON];
+    m_energyArray[McIntegratingHit::POSITRON] = energyArr[McIntegratingHit::POSITRON];
+    m_moment1Seed = moment1 * totE;
+    m_moment2Seed = moment2 * totE;
 }
 
 const TVector3 McIntegratingHit::getMoment1 () const

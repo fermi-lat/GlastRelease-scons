@@ -72,8 +72,9 @@ public:
     
     /// Add single energyInfo to McParticle*, energy map
     void addEnergyItem( const Double_t& energy, McParticle* t, const TVector3& pos );
-    /// Add single energyInfo to McParticleId, energy map
-    void addEnergyItem( Double_t energy, Particle particleId, const TVector3& pos);
+
+    void setEnergyItems( const Double_t &totE, const Double_t *energyArr, 
+        const TVector3& moment1, const TVector3& moment2);
 
     /// Retrieve the next McParticle, energy pair
     /// Returns the pair corresponding to m_mapPtr
