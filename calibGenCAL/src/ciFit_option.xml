@@ -52,9 +52,9 @@
   </section>
   
   <section name="GENERAL"> General program options
-    <item name="GENERATE_XML" value="true"> (boolean) generate xml output</item>
-    <item name="GENERATE_TXT" value="true"> (boolean) generate text output</item>
-    <item name="GENERATE_LOGFILE"         value="true"> (boolean) generate logfile which duplicates stdout </item>
+    <item name="GENERATE_XML"      value="true"> (boolean) generate xml output</item>
+    <item name="GENERATE_TXT"      value="true"> (boolean) generate text output</item>
+    <item name="GENERATE_LOGFILE"  value="true"> (boolean) generate logfile which duplicates stdout </item>
   </section>  
 </ifile>
 

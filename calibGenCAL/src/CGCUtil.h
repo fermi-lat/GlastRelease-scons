@@ -73,5 +73,10 @@ namespace CGCUtil {
   
       streamvector& getostreams() { return ((multiplexor_streambuf*)rdbuf())->_streams; }
     };
+
+  /// Output string w/ username, hostname, time, relevant CMT package versions & paths
+  /// to ostream
+  /// output is in multi line text format
+  void output_env_banner(ostream &ostr);
 };
 #endif // CGCUtil_H
