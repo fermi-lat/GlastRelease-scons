@@ -20,7 +20,8 @@
     </tr>
     <tr>
       <td valign="top" width="20%"><font size="2"><strong><a href="#Introduction">Introduction</a></strong></font>
-        <p><font size="2"><strong><a href="#Setup">Setup</a></strong></font></p>
+        <p><font size="2"><strong><a href="#Setup">Setup</a>&nbsp;<br>
+        <a href="#CMT">Using CMT</a></strong></font></p>
         <p><font size="2"><strong><a href="#Ancillary Data files">Ancillary Data
         files</a><br>
         </strong><a href="#Calibration">Calibration</a></font>
@@ -60,14 +61,14 @@
         <p><font size="3"> First, setup a <b> <i> ROOTANALYSIS</i></b> environment variable that is
         set to the directory path, where you have the RootAnalysis package
         installed.&nbsp;</font></p>
-        <p><font size="3">On UNIX:&nbsp; <i><b>setenv ROOTANALYSIS $HOME/RootAnalysis</b></i></font></p>
+        <p><font size="3">On UNIX:&nbsp; <i><b>setenv ROOTANALYSIS $HOME/RootAnalysis/v<sub>n</sub>r<sub>m</sub></b></i></font></p>
         <p><font size="3">On Windows:&nbsp;</font></p>
         <ol>
           <li><font size="3">In Control Panel, Click on System,&nbsp;</font></li>
           <li><font size="3">Then Click on the Environment tab</font></li>
           <li><font size="3">Then define a new variable called <i><b> ROOTANALYSIS</b></i><br>
             Set its value equal to the RootAnalysis directory on your system,
-            i.e. D:/glast/RootAnalysis</font></li>
+            i.e. D:/glast/RootAnalysis/v2r2</font></li>
         </ol>
         <p><font size="3">To be use the RootAnalysis package, <b> the .rootrc file must be in the directory
         from where you launch ROOT.</b></font>&nbsp; <font size="3">Next do one of
@@ -94,6 +95,14 @@
             Windows - you can change this by editing the RootAnalysis/setup/rootalias.C
             macro.</font></li>
         </ol>
+        <h3><a name="CMT">Using RootAnalysis as a regular CMT package</a></h3>
+        <p>It is also possible to download RootAnalysis directly from the CVS
+        repository.&nbsp; In this case, you must make sure to also install the
+        digiRootData and reconRootData packages on your system, as the compiled
+        libraries will not be downloaded when using CVS.&nbsp; In this case, the
+        RootAnalysis environment variable will be set up for you.&nbsp; Follow
+        the typical directions for setup using CMT:<br>
+        <a href="http://www-glast.slac.stanford.edu/software/CodeHowTo/">http://www-glast.slac.stanford.edu/software/CodeHowTo/</a></p>
         <h3><a name="Ancillary Data files">Ancillary Data files</a></h3>
         <p><font size="3"><b><a name="Calibration">Calibration</a></b></font></p>
         <p>This directory contains pedestal files from both the 1999-2000 SLAC
