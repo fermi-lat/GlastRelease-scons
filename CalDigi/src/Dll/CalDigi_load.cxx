@@ -14,8 +14,5 @@
 
 DECLARE_FACTORY_ENTRIES(CalDigi) {
     DECLARE_ALGORITHM( CalDigiAlg );
-    DLL_DECL_TOOL( LinearTaper   );
-    DLL_DECL_TOOL( OnePlusExpTaper   );
-    DLL_DECL_TOOL( CalDigiRandom   );
 } 
 

@@ -8,8 +8,10 @@ branches src mgr doc
 use GlastPolicy
 use GaudiInterface * IExternal
 use CalXtalResponse
-use xmlBase
 use GlastSvc
+use CalUtil
+use Event
+
 
 apply_pattern packageShr
 
