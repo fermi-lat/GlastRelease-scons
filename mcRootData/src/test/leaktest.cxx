@@ -21,7 +21,11 @@
 
     gObjectTable->Print();
     
-    gSystem->Load("mcRootData.dll");
+    if (!strcmp(gSystem->GetName(), "WinNT")) {
+      gSystem->Load("mcRootData.dll");
+    } else {
+      gSystem->Load("libmcRootData.so");
+    }
     TFile *f =  new TFile("mc.root", "RECREATE");
     TTree *t = new TTree("Mc", "Mc");
     McEvent *ev = new McEvent();
