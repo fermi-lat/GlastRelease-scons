@@ -47,7 +47,6 @@ StatusCode CalXtalRecAlg::initialize()
         
         
 {
-  MsgStream log(msgSvc(), name());
   StatusCode sc;
 
   // extracting int constants
@@ -77,8 +76,9 @@ StatusCode CalXtalRecAlg::initialize()
     //  attempt to get the constant value via the method of GlastDetSvc
     if(!m_detSvc->getNumericConstByName((*it).second, &value)) {
       // if not successful - give the error message and return
-      log << MSG::ERROR << " constant " <<(*it).second
-          <<" not defined" << endreq;
+      MsgStream msglog(msgSvc(), name());
+      msglog << MSG::ERROR << " constant " <<(*it).second
+             <<" not defined" << endreq;
       return StatusCode::FAILURE;
       //  if successful - fill the constant using the pointer from the map
     } else *((*it).first)= int(value);
@@ -93,7 +93,8 @@ StatusCode CalXtalRecAlg::initialize()
     
   for(DPARAMAP::iterator dit=dparam.begin(); dit!=dparam.end();dit++){
     if(!m_detSvc->getNumericConstByName((*dit).second,(*dit).first)) {
-      log << MSG::ERROR << " constant " <<(*dit).second << " not defined" << endreq;
+      MsgStream msglog(msgSvc(), name());
+      msglog << MSG::ERROR << " constant " <<(*dit).second << " not defined" << endreq;
       return StatusCode::FAILURE;
     } 
   }
@@ -101,19 +102,22 @@ StatusCode CalXtalRecAlg::initialize()
   // Get properties from the JobOptionsSvc
   sc = setProperties();
   if ( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Could not set jobOptions properties" << endreq;
+    MsgStream msglog(msgSvc(), name());
+    msglog << MSG::ERROR << "Could not set jobOptions properties" << endreq;
     return sc;
   }
 
   sc = toolSvc()->retrieveTool(m_eneToolName,m_xtalEneTool);
   if (sc.isFailure() ) {
-    log << MSG::ERROR << "  Unable to create " << m_eneToolName << endreq;
+    MsgStream msglog(msgSvc(), name());
+    msglog << MSG::ERROR << "  Unable to create " << m_eneToolName << endreq;
     return sc;
   }
 
   sc = toolSvc()->retrieveTool(m_posToolName,m_xtalPosTool);
   if (sc.isFailure() ) {
-    log << MSG::ERROR << "  Unable to create " << m_posToolName << endreq;
+    MsgStream msglog(msgSvc(), name());
+    msglog << MSG::ERROR << "  Unable to create " << m_posToolName << endreq;
     return sc;
   }
 
@@ -142,7 +146,6 @@ StatusCode CalXtalRecAlg::execute()
 
 {
   StatusCode sc = StatusCode::SUCCESS;
-  MsgStream log(msgSvc(), name());
 
   sc = retrieve(); //get access to TDS data collections
 
@@ -190,8 +193,6 @@ StatusCode CalXtalRecAlg::retrieve()
   //        
         
 {
-        
-  MsgStream log(msgSvc(), name());
   StatusCode sc = StatusCode::SUCCESS;
 
   m_calXtalRecCol = 0;
@@ -209,10 +210,11 @@ StatusCode CalXtalRecAlg::retrieve()
     sc = eventSvc()->registerObject( EventModel::CalRecon::Event,
                                      new DataObject);
     if( sc.isFailure() ) {
-       
       // if cannot create the directory - write an error message
-      log << MSG::ERROR << "Could not create CalRecon directory"
-          << endreq;
+      // create msglog only when needed for performance
+      MsgStream msglog(msgSvc(), name());
+      msglog << MSG::ERROR << "Could not create CalRecon directory"
+             << endreq;
       return sc;
     }
   }
@@ -250,7 +252,6 @@ StatusCode CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const CalDigi* 
 
 
 {
-  MsgStream log(msgSvc(), name());
   StatusCode sc;
 
   CalXtalId xtalId = digi->getPackedId();
@@ -277,10 +278,18 @@ StatusCode CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const CalDigi* 
 
   // used for current range only
   bool range_below_thresh = false;
+  if (msgSvc()->outputLevel(name()) <= MSG::VERBOSE) {
+    MsgStream msglog(msgSvc(), name());
+    msglog << MSG::VERBOSE;
+    msglog.stream() << "id=" << xtalId // needed to support setw() manipulator
+                    << "\trangeP=" << int(rangeP) << " adcP=" << setw(4) << adcP 
+                    << "\trangeN=" << int(rangeM) << " adcM=" << setw(4) << adcM;
+    msglog << endreq;
+  } 
 
   // convert adc values into energy
   sc = m_xtalEneTool->calculate(xtalId,
-                                rangeP,rangeM,
+                                rangeP, rangeM,
                                 adcP,  adcM,
                                 ene, 
                                 range_below_thresh,
@@ -295,7 +304,16 @@ StatusCode CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const CalDigi* 
   // create output object
   CalXtalRecData::CalRangeRecData* rangeRec =
     new CalXtalRecData::CalRangeRecData(rangeP,ene,rangeM,ene);
-    
+
+  if (msgSvc()->outputLevel(name()) <= MSG::DEBUG) {
+    MsgStream msglog(msgSvc(), name());
+    msglog << MSG::DEBUG
+           << "XtalRangeRec created:"
+           << " id=" << xtalId
+           << " ene=" << ene
+           << endreq;
+  }
+  
   // add output object to output collection
   recData->addRangeRecData(*rangeRec);
   delete rangeRec;
