@@ -92,7 +92,13 @@ void GuiMgr::begin_event() // should be called at the beginning of an event
 }
 
 void GuiMgr::end_event()  // must be called at the end of an event to update, allow pause
-{        
+{      
+    if( m_state==SKIPPING){
+//         gui().processMessages();
+         return;
+    }
+    if(m_state==INTERRUPT)m_state=SKIPPING;
+
     display().update();
     printer().printAll();
     gui().processMessages();
@@ -115,7 +121,8 @@ void GuiMgr::pause() // called by GUI message (space bar or button)
     switch  (m_state) {
     case RUNNING: m_state=PAUSED;  stop_loop(); break;
     case PAUSED:  stop_loop(); break;
-    case INITIAL: case DONE: break;
+    case INITIAL: case DONE: case INTERRUPT: break;
+     case SKIPPING: stop_loop(); break;
     }
 }
 
@@ -124,7 +131,8 @@ void GuiMgr::resume() // called by GUI message (CR key or button )
     switch  (m_state) {
     case RUNNING: m_state=PAUSED;  stop_loop(); break;
     case PAUSED:  m_state=RUNNING; stop_loop(); break;
-    case INITIAL: case DONE: break;
+     case SKIPPING: stop_loop(); break;
+    case INITIAL: case DONE:  case INTERRUPT: break;
     }
 }
 void GuiMgr::stop_loop() // stop the loop in the end_event method

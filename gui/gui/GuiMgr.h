@@ -77,7 +77,7 @@ public:
     void resume(); // set status to skip next loop (or resume if paused)
     void stop_loop();
     void queryPause();
-    enum State {INITIAL, RUNNING, PAUSED, DONE};
+    enum State {INITIAL, RUNNING, PAUSED, DONE, SKIPPING, INTERRUPT};
     State state()const;
     void setState(State s);
 
