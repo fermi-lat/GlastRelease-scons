@@ -222,7 +222,7 @@ void  G4SectionsVisitor::visitTube(detModel::Tube* tube)
 			       tube->getRin()*mm,
 			       tube->getRout()*mm,
 			       tube->getZ()*mm*0.5,
-			       2*M_PI,0);
+			       0,2*M_PI);
   
   g4Logicals.push_back(
 		       new G4LogicalVolume(
