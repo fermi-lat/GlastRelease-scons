@@ -39,6 +39,7 @@
    instrument  (LAT | BFEM | BTEM | EM | CU) #REQUIRED
    timestamp   NMTOKEN #REQUIRED
    calType     NMTOKEN #REQUIRED
+   creator     NMTOKEN #IMPLIED
    DTDVersion  NMTOKEN "v3r1"       
    fmtVersion  NMTOKEN #REQUIRED >
 
@@ -90,6 +91,7 @@
 <!ELEMENT tower (uniplane*) >
 <!ATTLIST tower row NMTOKEN #REQUIRED 
                 col NMTOKEN #REQUIRED 
+                hwserial NMTOKEN "-1"
                 nOnbdCalib  (true | false) "false"
                 nOnbdTrig    (true | false) "false"
                 nOnbdData    (true | false) "false"  >
