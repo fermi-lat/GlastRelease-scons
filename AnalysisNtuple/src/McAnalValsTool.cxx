@@ -28,6 +28,9 @@
 
 #include <algorithm>
 
+// to activate debug vars
+// #define DEBUG
+
 /*! @class McAnalValsTool
 @brief calculates Monte Carlo values
 
@@ -436,8 +439,10 @@ StatusCode McAnalValsTool::calculate()
             const Event::TkrPatCand* patCand = m_mcTracks->getBestTkrPatCand(mcMain);
             if (patCand)
             {
+#ifdef DEBUG
                 int numHits = m_mcTracks->getNumMcHits(patCand,mcMain);
                 int jjj=0;
+#endif
             }
 
             // If there are two gamma conversion tracks then do this part

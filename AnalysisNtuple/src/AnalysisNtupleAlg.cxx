@@ -35,6 +35,7 @@ public:
         : m_ntupleSvc(ntupleSvc), m_ntupleName(ntupleName) {}
     virtual IValsTool::Visitor::eVisitorRet 
         analysisValue(std::string varName, const double& value) const;
+    virtual ~NtupleVisitor() {}
     
 private:
     /// pointer to the ntuple servic
