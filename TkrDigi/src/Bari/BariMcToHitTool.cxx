@@ -62,8 +62,11 @@ StatusCode BariMcToHitTool::initialize()
     log << MSG::INFO << "initialize " << endreq;
 
     // Set a default current file
+    // new file currents is more compact
     declareProperty("CurrentsFile",
-        m_CurrentsFile="$(TKRDIGIROOT)/src/Bari/correnti");
+		    m_CurrentsFile="$(TKRDIGIROOT)/src/Bari/currents");
+		    //    		            m_CurrentsFile="$(TKRDIGIROOT)/src/Bari/correnti");
+
 
     // Do the currents file (once) - LSR
     // OpenCurrent now returns a status code - LSR    
