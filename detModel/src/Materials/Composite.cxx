@@ -75,11 +75,6 @@ namespace detModel{
     
     if(components.size() < nComponents)
       {
-	if((d<0.0) || (d>1.0))
-	  {
-	    detAbort("Attention:  fractions in composite materials must be comprised between 0.0 and 1.0");
-	  }
-
 	components.push_back(m);
 	fractions.push_back(d);
 	
@@ -89,6 +84,7 @@ namespace detModel{
 	detAbort("Attention: you are adding too many components to a composite");
       }
 
+    /*
     if(components.size() == nComponents)
       {
 	double temp = 0.0;
@@ -100,7 +96,8 @@ namespace detModel{
 	if (temp != 1.0)
 	  detAbort("Attention:  the fractions of a composite material does not add to 1.0");
       }
-
+      
+    */
   }
 
 }

@@ -23,7 +23,7 @@ namespace detModel{
 
     /// Set and get methods for the Volume pointer
     void setVolume(Volume* vol){m_volume = vol;};
-    const Volume* getVolume(){return m_volume;};
+    Volume* getVolume()const{return m_volume;};
 
     /// Set and get methods for the translation vector
     void setTranslation(Hep3Vector t){m_translation = t;};
