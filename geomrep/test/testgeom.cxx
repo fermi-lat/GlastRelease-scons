@@ -3,6 +3,7 @@
 #include <string> // make sure gets loaded first
 #include "control/EventLoop.h"
 #include "control/CompoundCommand.h"
+#include "control/GUI.h"
 #include "control/SimpleCommand.h"
 #include "control/PrintControl.h"
 
@@ -10,7 +11,6 @@
 #include "geometry/Cone.h"
 #include "geometry/Ray.h"
 
-#include "graphics/GUI.h"
 #include "graphics/DisplayControl.h"
 #include "geomrep/ConeRep.h"
 
