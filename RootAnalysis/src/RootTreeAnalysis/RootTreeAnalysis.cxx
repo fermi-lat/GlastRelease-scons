@@ -202,8 +202,38 @@ void RootTreeAnalysis::McData() {
 void RootTreeAnalysis::DigiTkr() {
     // Purpose and Method: Process on TKR digi event
     
+    // The full collection of TkrDigis for this event
     const TObjArray* tkrDigiCol = evt->getTkrDigiCol();
     if (!tkrDigiCol) return;
+
+    // Total number of TkrDigis for this event
+    Int_t numTkrDigi = tkrDigiCol->GetEntries();
+
+    // Loop over all TkrDigis
+    TIter tkrIter(tkrDigiCol);
+    TkrDigi *tkr = 0;
+    while (tkr = (TkrDigi*)tkrIter.Next()) {
+      // Identify the tower and layer
+      Int_t tower = tkr->getTower().id();
+      Int_t layer = tkr->getBilayer();
+
+      // get to ToT
+      Int_t tot0 = tkr->getToT(0);
+      Int_t tot1 = tkr->getToT(1);
+     
+      Int_t lastController0 = tkr->getLastController0Strip();
+
+      // Returns the orientation of the strips
+      GlastAxis::axis view = tkr->getView();
+
+      UInt_t numHits = tkr->getNumHits();
+      // Loop through collection of hit strips for this TkrDigi
+      UInt_t ihit;
+      for (ihit = 0; ihit < numHits; ihit++) {
+        // Retrieve the strip number
+        Int_t stripNum = tkr->getStrip(ihit);
+      }
+    }
 
     return;
 }
@@ -214,28 +244,43 @@ void RootTreeAnalysis::DigiCal() {
     const TObjArray* calDigiCol = evt->getCalDigiCol();
     if (!calDigiCol) return;
 
-    int nCalDigi = calDigiCol->GetEntries();
+    Int_t nCalDigi = calDigiCol->GetEntries();
     ((TH1F*)GetObjectPtr("CALDIGICOUNT"))->Fill((Float_t)nCalDigi);
     
-    int nLayer[8]={0,0,0,0,0,0,0,0};
-    float eLayer[8]={0.,0.,0.,0.,0.,0.,0.,0.};
-    float eTotal = 0.;
+    Int_t nLayer[8]={0,0,0,0,0,0,0,0};
+    Float_t eLayer[8]={0.,0.,0.,0.,0.,0.,0.,0.};
+    Float_t eTotal = 0.;
 
     TIter calDigiIter(calDigiCol);
     CalDigi *c = 0;
     
     while (c = (CalDigi*)calDigiIter.Next()) {
+
+        // Assuming Best Range and checking only the first readout
         const CalXtalReadout* cRo=c->getXtalReadout(0);
-        float eAve = (cRo->getAdc(CalXtalId::POS)+cRo->getAdc(CalXtalId::NEG))/2.;
+        Float_t adcP = cRo->getAdc(CalXtalId::POS);
+        Float_t adcN = cRo->getAdc(CalXtalId::NEG);
+
+        // ligh asymmetry
+        Float_t asy = 1.;
+        if (adcP + adcN == 200.)
+          asy = 1.;
+        else 
+          asy = (adcP-adcN)/(adcP+adcN-200.);
+
+        Float_t eAve = (adcP + adcN)/2.;
+
         ((TH1F*)GetObjectPtr("CALEAVE"))->Fill(eAve);
         ((TH1F*)GetObjectPtr("CALADC"))->Fill((float)cRo->getAdc(CalXtalId::POS));
         ((TH1F*)GetObjectPtr("CALADC"))->Fill((float)cRo->getAdc(CalXtalId::NEG));
         ((TH1F*)GetObjectPtr("CALRANGE"))->Fill(cRo->getRange(CalXtalId::POS));
         ((TH1F*)GetObjectPtr("CALRANGE"))->Fill(cRo->getRange(CalXtalId::NEG));
+
+        // Retrieve the identifer for this crystal
         CalXtalId id = c->getPackedId();
-        int layer = id.getLayer();
-        int tower = id.getTower();
-        int column = id.getColumn();
+        Int_t layer = id.getLayer();
+        Int_t tower = id.getTower();
+        Int_t column = id.getColumn();
         ((TH1F*)GetObjectPtr("CALLAYER"))->Fill(layer);
         ((TH1F*)GetObjectPtr("CALTOWER"))->Fill(tower);
         ((TH1F*)GetObjectPtr("CALCOLUMN"))->Fill(column);
@@ -306,26 +351,36 @@ void RootTreeAnalysis::ReconTkr() {
     // If no TRKRECON data is available then return
     if (!tkrRecon)  return;
 
-    // here is the list of pointers to the clusters
+    // Retrieve collection of clusters
     TObjArray* clusterCol = tkrRecon->getClusterCol();
 
-    // and to the tracks    
+    // Retreive collection of vertices
+    TObjArray* vertexCol = tkrRecon->getVertexCol();
+
+    // Retrieve collection of tracks    
     TObjArray* trackCol = tkrRecon->getTrackCol();
 
     ((TH1F*)GetObjectPtr("TKRNUMFITTRACKS"))->Fill(trackCol->GetEntries());
 
+    // loop over all tracks
     TIter trackIter(trackCol);
     TkrTrack *track = 0;
-    
     while (track = (TkrTrack*)trackIter.Next()) {
         ((TH1F*)GetObjectPtr("TKRNUMHITSPERTRACK"))->Fill(track->Size());
 
+        TVector3 initPos = track->getInitialPosition();
         TVector3 dir = track->getInitialDirection();
         Double_t costh = -dir.Z();
 
+        Double_t quality = track->getQuality();
+        Double_t kalEnergy = track->getKalEnergy();
+
+        // loop over hits in this track
         TIter hitIter(track);
         TkrTrackHit *hit = 0;
         while (hit = (TkrTrackHit*)hitIter.Next()) {
+            Double_t planeZ = hit->getZPlane();
+
             const TkrCluster *cluster = ((*hit).getClusterPtr());
             if (!cluster) continue;
 
@@ -348,9 +403,25 @@ void RootTreeAnalysis::ReconCal() {
     // Purpose and Method:  Process on CalRecon event
     
     CalRecon *calRec = rec->getCalRecon();
-    
     if (!calRec) return;
+
+    TObjArray *clusterCol = calRec->getCalClusterCol();
+
+    // loop over all clusters
+    TIter clusterIter(clusterCol);
+    CalCluster *cluster = 0;
+    while (cluster = (CalCluster*)clusterIter.Next()) {
+
+    }
     
+    TObjArray *xtalRecCol = calRec->getCalXtalRecCol();
+    TIter xtalIter(xtalRecCol);
+    CalXtalRecData *xtal = 0;
+    while (xtal = (CalXtalRecData*)xtalIter.Next()) {
+        const CalXtalId id = xtal->getPackedId();
+        Double_t avgEngBestRange = xtal->getEnergy();
+
+    }
     
     return;
 }

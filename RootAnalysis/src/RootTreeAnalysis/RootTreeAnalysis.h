@@ -70,8 +70,6 @@ class McEvent;
 class RootTreeAnalysis {
 public :
     /// Histogram file
-    //TH1F        phaArr_A[500];
-    //TH1F        phaArr_B[500];
     TFile       *histFile;
     /// Input digitization file
     TFile       *digiFile;   
@@ -192,9 +190,9 @@ inline RootTreeAnalysis::RootTreeAnalysis(const char* digiFileName,
                                    const char* mcFileName, 
                                    char* histFileName)
 {
-	// Purpose and Method:  Standard constructor where the user provides the 
-	//  names of input ROOT files and optionally the name of the output ROOT
-	//  histogram file.
+    // Purpose and Method:  Standard constructor where the user provides the 
+    //  names of input ROOT files and optionally the name of the output ROOT
+    //  histogram file.
     printf(" opening files:\n\tdigi:\t%s\n\trecon:\t%s\n\tmc:\t%s\n",
 		digiFileName, reconFileName, mcFileName);
     
@@ -304,6 +302,7 @@ inline void RootTreeAnalysis::Init(const char* digiFileName, const char* reconFi
         mcFile = new TFile(mcFileName,"READ");
         if (mcFile->IsOpen() == kTRUE) {
             mcTree = (TTree*)gDirectory->Get("Mc");
+                  
             mc = 0;
             mcTree->SetBranchAddress("McEvent",&mc);
             fileArr->Add(mcFile);
