@@ -2,7 +2,10 @@
  * package Gleam
  * package manager:T.Burnett
 
- * v1r1p1 03-may-02 ALS new versions
+ * v1r1p1 07-may-02 ALS new versions
+    use Root		v3r2p9
+ 
+* v1r1p1 03-may-02 ALS new versions
     use FluxSvc		v5r5p1 
     use mcRootData	v2r1p1 
     use GaudiSys	v9r0p6 

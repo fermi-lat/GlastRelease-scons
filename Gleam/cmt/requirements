@@ -6,10 +6,10 @@ version v1r1
 # $Id$
 
 # gaudi system files: this would checkout all of the Gaudi packages
-use GaudiSys    	v9r0p6
+use GaudiSys    v9r0p6
 
 # ROOT add-on
-use ROOT        v3r2p8
+use ROOT        	v3r2p8
 use RootHistCnv v5r0p1
 
 # basic Glast packages
@@ -42,7 +42,7 @@ use GlastEvent  v7r2
 use GlastSvc    v7r2
 
 # simulation
-use FluxSvc          v5r5p1
+use FluxSvc     v5r5p1
 use G4Generator v3r5
 
 #digitization
@@ -55,7 +55,7 @@ use CalRecon    v4
 
 
 #ROOT persistence
-use mcRootData       v2r1p1
+use mcRootData  v2r1p1
 use RootIo      v1r0
 
 
