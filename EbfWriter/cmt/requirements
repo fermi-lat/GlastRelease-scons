@@ -1,40 +1,40 @@
 package EbfWriter
 version v0r0p0
 
-use GlastPolicy    *
+#use GlastPolicy    *
 use Event          *
-use ebfReader      *
-use IExternal      *
-use TkrRecon       *
+#use IExternal      *
+#use TkrRecon       *
 use GlastSvc       *
-use FluxSvc        *
-use reconRootData  *
-use commonRootData *
-use GuiSvc         *
-use AcdRecon       *
-use AnalysisNtuple *
-use TkrDigi        *
-use AcdDigi        *
-use CalDigi        *
-use Trigger        *
-use CalUtil        *
-use CalRecon       *
+#use FluxSvc        *
+#use reconRootData  *
+#use commonRootData *
+#use GuiSvc         *
+#use AcdRecon       *
+#use AnalysisNtuple *
+#use TkrDigi        *
+#use AcdDigi        *
+#use CalDigi        *
+#use Trigger        *
+#use CalUtil        *
+#use CalRecon       *
 
 # Use this pattern for shareable libraries that Gaudi must load
 apply_pattern packageShr
 apply_pattern package_include
-apply_pattern library_Llinkopts library="EbfWriterTds"
+#apply_pattern library_Llinkopts library="EbfWriterTds"
 
 apply_pattern package_header
 
-library EbfWriterTds -no_share Ebf.cxx
+#library EbfWriterTds -no_share Ebf.cxx
 
 library EbfWriter *.cxx Dll/*.cxx
 
 # Flags for building shared libraries
 apply_pattern package_Cshlibflags
 
-use FluxSvc 		*
+private
+use FluxSvc      *
 
 apply_pattern package_test
 set TESTJOBOPTIONS ${EBFWRITERROOT}/src/test/jobOptions.txt
