@@ -308,13 +308,14 @@ void TreeMaker::CreateTree(Int_t numEvents)
               if ( NumGTCC != numGTCCentries ) {
                   static bool NumGTCCwarning = true;
 		  if ( DEBUG || NumGTCCwarning ) // print at least once
+                      // e.g., for Monte Carlo data
                       std::cerr << "NumGTCC=" << NumGTCC
                                 << " != evt->getTkrDiagnosticCol()->GetEntries()=" << numGTCCentries << std::endl;
                   NumGTCCwarning = false;
               }
 	      for ( int GTCC=0; GTCC<NumGTCC; ++GTCC ) { 
                   std::bitset<NumGTRC> word = 0;
-                  if ( tkrTrigger )
+                  if ( tkrTrigger && GTCC < numGTCCentries )
                       word = evt->getTkrDiagnostic(indexToGTCC(GTCC))->getDataWord();
                   if ( DEBUG ) std::cout << "TkrDiagnosticData[" << GTCC << "] word(" << word << ") ";
 		  for ( int GTRC=NumGTRC-1; GTRC>=0; --GTRC ) {
@@ -484,9 +485,8 @@ void TreeMaker::CreateTree(Int_t numEvents)
     }  // end analysis code in event loop
   
   m_StartEvent = curI;
-  if (m_TreeFileName=="") m_TreeFileName="MyRootFile.root";
   
-  TFile myFile("MyRootFile.root","RECREATE","TreeFile",1);
+  TFile myFile(m_TreeFileName,"RECREATE","TreeFile",1);
   TreeCollection->Write();
   myFile.Close();
   std::cout<<m_TreeFileName<<std::endl;

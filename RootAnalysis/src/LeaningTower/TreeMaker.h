@@ -71,7 +71,7 @@ public :
         const char* digiFileName, 
         const char* reconFileName="", 
         const char* mcFileName="", 
-        char* TreeFileName="MyRootFile.root"); 
+        const char* TreeFileName=""); 
 
 	/// Special ctor which accepts TChains for input files
     TreeMaker( 
@@ -87,7 +87,7 @@ public :
     /// reset for next Go to start at beginning of file 
     void Rewind() { m_StartEvent = 0; }; 
     /// allow the user to specify their own file name for the output ROOT file
-    void SetTreeFileName(char *TreeFileName) { m_TreeFileName = TreeFileName; }
+    void SetTreeFileName(const char *TreeFileName) { m_TreeFileName = const_cast<char*>(TreeFileName); }
     /// re-init with these input Root files
     void Init(  const char* digiFileName="", 
 		const char* reconFileName="", 
@@ -123,7 +123,7 @@ inline TreeMaker::TreeMaker()
 inline TreeMaker::TreeMaker(const char* digiFileName, 
 			    const char* reconFileName, 
 			    const char* mcFileName, 
-			    char* TreeFileName)
+			    const char* TreeFileName)
 {
   // Purpose and Method:  Standard constructor where the user provides the 
   //  names of input ROOT files and optionally the name of the output ROOT
