@@ -138,6 +138,8 @@ void AcdReconAlg::clear() {
     m_doca = maxDoca;
     m_rowDocaCol.clear();
     m_rowDocaCol.resize(s_numSideRows+1, maxDoca);  // one for each side, plus one for the top
+    m_rowActDistCol.clear();
+    m_rowActDistCol.resize(s_numSideRows+1, maxDoca);
     m_energyCol.clear();
     m_act_dist = -2000.0;
 }
@@ -187,7 +189,7 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol)
         << "ActDist: " << m_act_dist << endreq;
 
     m_acdRecon->initialize(m_totEnergy, m_tileCount, m_gammaDoca, m_doca, 
-        m_act_dist, m_minDocaId, m_rowDocaCol, m_energyCol);
+        m_act_dist, m_minDocaId, m_rowDocaCol, m_rowActDistCol, m_energyCol);
 
     return sc;
 }
@@ -209,7 +211,7 @@ StatusCode AcdReconAlg::acdDoca() {
         const Event::TkrFitTrack* trackTds  = *trkPtr++;       // The TDS track
         float testDoca = doca(trackTds->getPosition(), trackTds->getDirection(), m_rowDocaCol);
         if(testDoca < m_doca) m_doca = testDoca;
-        float test_dist= hitTileDist(trackTds->getPosition(), -(trackTds->getDirection()));
+        float test_dist= hitTileDist(trackTds->getPosition(), -(trackTds->getDirection()), m_rowActDistCol);
         if(test_dist > m_act_dist) m_act_dist = test_dist;
 
     }
@@ -276,15 +278,12 @@ double AcdReconAlg::doca (const Point &x0, const Vector &t0, std::vector<double>
             if (dist < doca_values[acdId.row()+1]) doca_values[acdId.row()+1] = dist;
         }
 
-        return minDoca;
-
-
     }
 
-    return 0;
+    return minDoca;
 }
 
-double AcdReconAlg::hitTileDist(const Point &x0, const Vector &t0)
+double AcdReconAlg::hitTileDist(const Point &x0, const Vector &t0, std::vector<double> &row_values)
 {
     // Purpose and Method:  Bill Atwood's new edge DOCA algorithm
     //       Determines minimum distance between a track and the edges of ACD
@@ -346,25 +345,36 @@ double AcdReconAlg::hitTileDist(const Point &x0, const Vector &t0)
         Point x_isec = x0 + arc_dist*t0;
         
         Vector local_x0 = xT - x_isec; 
+        double test_dist;
         if(iFace == 0) {// Top Tile
             double dist_x = dX/2. - fabs(local_x0.x());
             double dist_y = dY/2. - fabs(local_x0.y());	                
-            double test_dist = (dist_x < dist_y) ? dist_x : dist_y;
+            test_dist = (dist_x < dist_y) ? dist_x : dist_y;
             if(test_dist > return_dist) return_dist = test_dist;
         }
         else if(iFace == 1 || iFace == 3) {// X Side Tile
             double dist_z = dZ/2. - fabs(local_x0.z());
             double dist_y = dY/2. - fabs(local_x0.y());	                
-            double test_dist = (dist_z < dist_y) ? dist_z : dist_y;
+            test_dist = (dist_z < dist_y) ? dist_z : dist_y;
             if(test_dist > return_dist) return_dist = test_dist;
         }
         else if(iFace == 2 || iFace == 4) {// Y Side Tile
             double dist_z = dZ/2. - fabs(local_x0.z());
             double dist_x = dY/2. - fabs(local_x0.x());	                
-            double test_dist = (dist_z < dist_x) ? dist_z : dist_x;
+            test_dist = (dist_z < dist_x) ? dist_z : dist_x;
             if(test_dist > return_dist) return_dist = test_dist;
         }
+
+
+        // Pick up the min. distance from each type of tile
+        // i.e. top, and each type of side row tile
+        if (acdId.top() && test_dist < row_values[0]) row_values[0] = test_dist;
+        if (acdId.side()) {
+            if (test_dist < row_values[acdId.row()+1]) row_values[acdId.row()+1] = test_dist;
+        }
+
     }
+
     return return_dist;
     
 }

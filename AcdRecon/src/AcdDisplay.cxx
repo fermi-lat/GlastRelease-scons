@@ -7,7 +7,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 #include "Event/TopLevel/EventModel.h"
-#include "Event/Recon/AcdRecon.h"
+#include "Event/Recon/AcdRecon/AcdRecon.h"
 #include "idents/VolumeIdentifier.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
