@@ -9,19 +9,13 @@ apply_pattern packageShr
 use CalibData v0r*
 use calibUtil v0r*
 
-use GaudiPolicy v5r4p*
-use GaudiAlg    v5r*
-use GaudiAud    v5r*
-use GaudiKernel v11r*
-use GaudiSvc    v7r*
-use GlastPolicy v4r*
+
+use GaudiInterface * IExternal
 
 apply_pattern package_include
 apply_pattern package_headers
 ## apply_pattern package_linkopts
 
-
-## uncomment following when ready
 library CalibSvc *.cxx  CalibDataSvc/*.cxx      \
                         CalibMySQLCnv/*.cxx     \
                         CalibXMLCnv/*.cxx       \
@@ -33,7 +27,7 @@ apply_pattern package_Cshlibflags
 private
 macro WinInclude "" WIN32 "test/*.h test/*.txt"
 use GlastSvc v9r*
-use RootIo   v4r*
+use RootIo   v6r*
 
 
 public
