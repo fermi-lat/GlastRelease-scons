@@ -22,13 +22,14 @@ DisplayControl* g_display;
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class Lines : public ArvePlottableRep {
 public:
+
     Lines( const Hep3Vector& p, const Volume& v )
 	: m_p(p), m_v(v){
 		
 	// make a key update the display
 	CompoundCommand* cmd = 
-	    new CompoundCommand(new SimpleCommand<DisplayControl>(g_display, DisplayControl::clear));
-	cmd->append(new SimpleCommand<DisplayControl>(g_display,DisplayControl::update));
+	    new CompoundCommand(new SimpleCommand<DisplayControl>(g_display, &DisplayControl::clear));
+	cmd->append(new SimpleCommand<DisplayControl>(g_display,&DisplayControl::update));
 	Menu::instance()->register_key('c',cmd);
     }
     
@@ -106,11 +107,7 @@ int main(int argc, char* argv[])
     DisplayControl display(menu, theGUI->graphicsWindow());
     
     g_display = & display; // global
-    
-    
-    // test a key-stroke command
-    menu.register_key('q', new SimpleCommand<GUI>(theGUI, GUI::quit));
-    
+        
     
     
     // create object to test
