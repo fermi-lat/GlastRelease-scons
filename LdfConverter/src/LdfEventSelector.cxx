@@ -115,7 +115,7 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
       try {
           m_ebfParser = new ldfReader::LdfParser(m_fileName, false, m_instrument);
       } catch(...) {
-        log << MSG::ERROR << "failed to setup EbfParser" << endreq;
+        log << MSG::ERROR << "failed to setup LdfParser" << endreq;
         return(StatusCode::FAILURE);
       }
       m_ebfParser->setDebug((m_ebfDebugLevel != 0) );
@@ -134,7 +134,7 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
       try {
           m_ebfParser = new ldfReader::LdfParser(m_fileName, true, m_instrument);
       } catch(...){
-        log << MSG::ERROR << "failed to setup EbfParser" << endreq;
+        log << MSG::ERROR << "failed to setup LdfParser" << endreq;
         return(StatusCode::FAILURE);
       }
       m_ebfParser->setDebug((m_ebfDebugLevel != 0));
