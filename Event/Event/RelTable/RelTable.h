@@ -53,8 +53,11 @@ public:
   * The following method add a Relation to the table if it doesn't contain
   * a relation between the same two objects, otherwise it appends the info
   * vector to the exsisting relation
+  * @param rel is a pointer to a relation between two objects
+  * @return true if the relation has been added and false if it is a duplicate
+  * and has not been added (in this case the user has to delete it)
   */
-  void addRelation(Relation<T1,T2>* rel);
+  bool addRelation(Relation<T1,T2>* rel);
   
   /**
   * This method search for all relations having obj in the first
@@ -142,17 +145,22 @@ private:
   
   
   template <class T1,class T2>
-    void RelTable<T1,T2>::addRelation(Relation<T1,T2>* rel) {
+    bool RelTable<T1,T2>::addRelation(Relation<T1,T2>* rel) {
     // Purpose and Method:  This routine add a relation to the table if it doesn't 
     // contain a relation between the same two objects, otherwise it appends the info
     // vector to the exsisting relation
     // Inputs:  rel is a pointer to the relation to be added.
+    // Outputs: a boolean value which is true if the realtion has been added to the
+    //          table and false it it is a duplicate and thus has not been added.
+    //          In the latter case the user has to delete the relation
     
     if (bindRelationNoDup(rel))
       {
 	bindRelationSecond(rel);
 	m_relations->push_back(rel);
+        return true;
       }
+    return false;
   }
 
 
