@@ -25,8 +25,8 @@ Triggered.Members += {"meritAlg"};
 CalClustersAlg.OutputLevel=4; // too much info
 
 // Number of events to process
-MeritAlg.generated = 100000; // for estimation of Aeff
-ApplicationMgr.EvtMax = 100000;
+MeritAlg.generated = 1000; // for estimation of Aeff
+ApplicationMgr.EvtMax = 1000;
 
 MessageSvc.OutputLevel      =3;
 
