@@ -1,10 +1,9 @@
 /**
  * @class McEventStructure
  *
- * @brief Implements a Gaudi Tool for setting the candidate track energies before 
- *        the track fit
+ * @brief Implements the methods described in McEventStructure.h
  *
- * @author The Tracking Software Group
+ * @author Tracy Usher
  *
  * $Header$
  */

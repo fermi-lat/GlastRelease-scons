@@ -20,57 +20,58 @@ public:
     
     EvModel() {
         // Access to GLAST event
-        EventModel::EventHeader              = "/Event";
+        EventModel::EventHeader               = "/Event";
             
         // Monte Carlo 
-        EventModel::MC::Event                = EventModel::EventHeader + "/MC";
-        EventModel::MC::McParticleCol        = EventModel::MC::Event  + "/McParticleCol";
+        EventModel::MC::Event                 = EventModel::EventHeader + "/MC";
+        EventModel::MC::McParticleCol         = EventModel::MC::Event  + "/McParticleCol";
 
-        EventModel::MC::McPositionHitCol     = EventModel::MC::Event  + "/PositionHitsCol";
-        EventModel::MC::McIntegratingHitCol  = EventModel::MC::Event  + "/IntegratingHitsCol";
-        EventModel::MC::McTkrStripCol        = EventModel::MC::Event  + "/StripCol";
-        EventModel::MC::D2EntryCol           = EventModel::MC::Event  + "/D2EntryCol";
-        EventModel::MC::ExposureCol          = EventModel::MC::Event  + "/ExposureCol";
+        EventModel::MC::McPositionHitCol      = EventModel::MC::Event  + "/PositionHitsCol";
+        EventModel::MC::McIntegratingHitCol   = EventModel::MC::Event  + "/IntegratingHitsCol";
+        EventModel::MC::McTkrStripCol         = EventModel::MC::Event  + "/StripCol";
+        EventModel::MC::D2EntryCol            = EventModel::MC::Event  + "/D2EntryCol";
+        EventModel::MC::ExposureCol           = EventModel::MC::Event  + "/ExposureCol";
 
-        EventModel::MC::McEventStructure     = EventModel::MC::Event  + "/McEventStructure";
+        EventModel::MC::McEventStructure      = EventModel::MC::Event  + "/McEventStructure";
+        EventModel::MC::McPartToPosHitTab     = EventModel::MC::Event  + "/McPartToPosHitTab";
+        EventModel::MC::McPartToClusTab       = EventModel::MC::Event  + "/McPartToClusTab";
+        EventModel::MC::McPartToClusHitTab    = EventModel::MC::Event  + "/McPartToClusHitTab";
 
-        EventModel::MC::McPartToHitTab       = EventModel::MC::Event  + "/McPartToHitTab";
-        EventModel::MC::McClusToLyrHitTab    = EventModel::MC::Event  + "/McClusToLyrHitTab";
-        EventModel::MC::McLyrToHitTab        = EventModel::MC::Event  + "/McLyrToHitTab";
-        EventModel::MC::McSiLayerHitCol      = EventModel::MC::Event  + "/McSiLayerHitCol";
+        EventModel::MC::McPartToTkrCandHitTab = EventModel::MC::Event  + "/McPartToTkrCandHitTab";
+        EventModel::MC::McPartToTkrPatCandTab = EventModel::MC::Event  + "/McPartToTkrPatCandTab";
 
         // Digi event
-        EventModel::Digi::Event              = EventModel::EventHeader + "/Digi";
-        EventModel::Digi::AcdDigiCol         = EventModel::Digi::Event + "/AcdDigiCol";
-        EventModel::Digi::TkrDigiCol         = EventModel::Digi::Event + "/TkrDigiCol";
-        EventModel::Digi::CalDigiCol         = EventModel::Digi::Event + "/CalDigiCol";
-        EventModel::Digi::CalDigiHitTab      = EventModel::Digi::Event + "/CalDigiHitTab";
-        EventModel::Digi::TkrDigiHitTab      = EventModel::Digi::Event + "/TkrDigiHitTab";
-        EventModel::Digi::TkrClusterHitTab   = EventModel::Digi::Event + "/TkrClusterHitTab";
+        EventModel::Digi::Event               = EventModel::EventHeader + "/Digi";
+        EventModel::Digi::AcdDigiCol          = EventModel::Digi::Event + "/AcdDigiCol";
+        EventModel::Digi::TkrDigiCol          = EventModel::Digi::Event + "/TkrDigiCol";
+        EventModel::Digi::CalDigiCol          = EventModel::Digi::Event + "/CalDigiCol";
+        EventModel::Digi::CalDigiHitTab       = EventModel::Digi::Event + "/CalDigiHitTab";
+        EventModel::Digi::TkrDigiHitTab       = EventModel::Digi::Event + "/TkrDigiHitTab";
+        EventModel::Digi::TkrClusterHitTab    = EventModel::Digi::Event + "/TkrClusterHitTab";
         
 
         // reconstructed data (Tracker)
-        EventModel::TkrRecon::Event          = EventModel::EventHeader + "/TkrRecon";
-        EventModel::TkrRecon::SiLayers       = EventModel::TkrRecon::Event + "/SiLayers";
-        EventModel::TkrRecon::TkrClusterCol  = EventModel::TkrRecon::Event + "/TkrClusterCol";
-        EventModel::TkrRecon::TkrPatCandCol  = EventModel::TkrRecon::Event + "/TkrPatCandCol";
-        EventModel::TkrRecon::SiRecObjs      = EventModel::TkrRecon::Event + "/SiRecObjs";
-        EventModel::TkrRecon::TkrFitTrackCol = EventModel::TkrRecon::Event + "/TkrFitTrackCol";
-        EventModel::TkrRecon::TkrTrackTab    = EventModel::TkrRecon::Event + "/TkrTrackTab";
-        EventModel::TkrRecon::TkrVertexCol   = EventModel::TkrRecon::Event + "/TkrVertexCol";
-        EventModel::TkrRecon::TkrVertexTab   = EventModel::TkrRecon::Event + "/TkrVertexTab";
+        EventModel::TkrRecon::Event           = EventModel::EventHeader + "/TkrRecon";
+        EventModel::TkrRecon::SiLayers        = EventModel::TkrRecon::Event + "/SiLayers";
+        EventModel::TkrRecon::TkrClusterCol   = EventModel::TkrRecon::Event + "/TkrClusterCol";
+        EventModel::TkrRecon::TkrPatCandCol   = EventModel::TkrRecon::Event + "/TkrPatCandCol";
+        EventModel::TkrRecon::SiRecObjs       = EventModel::TkrRecon::Event + "/SiRecObjs";
+        EventModel::TkrRecon::TkrFitTrackCol  = EventModel::TkrRecon::Event + "/TkrFitTrackCol";
+        EventModel::TkrRecon::TkrTrackTab     = EventModel::TkrRecon::Event + "/TkrTrackTab";
+        EventModel::TkrRecon::TkrVertexCol    = EventModel::TkrRecon::Event + "/TkrVertexCol";
+        EventModel::TkrRecon::TkrVertexTab    = EventModel::TkrRecon::Event + "/TkrVertexTab";
 
 
         //reconstructed Cal data
 
-		EventModel::CalRecon::Event          = EventModel::EventHeader + "/CalRecon";
-		EventModel::CalRecon::CalXtalRecCol  = EventModel::CalRecon::Event + "/CalXtalRecCol";
-		EventModel::CalRecon::CalClusterCol  = EventModel::CalRecon::Event + "/CalClusterCol";
+        EventModel::CalRecon::Event           = EventModel::EventHeader + "/CalRecon";
+        EventModel::CalRecon::CalXtalRecCol   = EventModel::CalRecon::Event + "/CalXtalRecCol";
+        EventModel::CalRecon::CalClusterCol   = EventModel::CalRecon::Event + "/CalClusterCol";
 
 		
 		
-		// reconstructed ACD data
-        EventModel::AcdRecon::Event          = EventModel::EventHeader + "/AcdRecon";
+        // reconstructed ACD data
+        EventModel::AcdRecon::Event           = EventModel::EventHeader + "/AcdRecon";
     }
 };
     
