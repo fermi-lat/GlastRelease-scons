@@ -15,6 +15,7 @@
 
 // forward declarations
 class Instrument;
+namespace xml { class IFile; }
 
 /*!  This Gaudi service provides access to a tree of GlastDetector objects.
 */
@@ -48,6 +49,11 @@ public:
     /// return the root detector for this service (implements IGlastDetSvc)
     GlastDetector*  getRootDetector ();
     
+
+    //! access to the IFile containing detector constants (implements IGlastDetSvc)
+    virtual const xml::IFile* iniFile()const;
+
+    
     /// open the IRF file
     StatusCode  openIRF(std::string filename);
     
@@ -62,7 +68,7 @@ public:
     //! accept a visitor to traverse the structure 
     void accept(DetectorConverter&)const;
 
-    
+
     
 private:
     
