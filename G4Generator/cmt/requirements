@@ -20,7 +20,7 @@ use XMLEXT   v2r2
 use xml      v4
 use xmlUtil  v2r6
 
-use idents   v2r3
+use idents   v2r3p1
 use detModel v2r6
 
 use instrument v5
@@ -58,7 +58,9 @@ library G4Generator ${G4Generator_headers} *.cxx   Dll/*.cxx
 
 # stuff for test
 public
-apply_pattern package_test
+# THB: fails in linux apply_pattern package_test
+# then need the following instead
+set JOBOPTIONS ${G4GENERATORROOT}/src/test/jobOptions.txt
 
 # alternative test program that links stuff into the exe
 
