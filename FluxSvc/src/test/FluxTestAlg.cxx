@@ -198,18 +198,20 @@ StatusCode FluxTestAlg::execute() {
     b = atan(pointingin.y()/pointingin.z());
     //std::cout << "pointingin z is " << pointingin.z() <<std::endl;
     
-    l = asin(pointingin.x());
+    //l = asin(pointingin.x());
+    b = asin(pointingin.y());
 
     l *= 360./M_2PI;
     b *= 360./M_2PI;
 
      //a serious kluge - this part needs further examination
-    if((pointingin.z())<0){
-        if(l>=0){
-            l=180.-l;
-        }else if(l<=0){
-            l=-180.-l;
+    if(pointingin.z()<0){
+        if(pointingin.x()>=0){
+            l=180.+l;
+        }else if(pointingin.x()<=0){
+            l=-180.+l;
         }
+       // l *= -1.;
     }
 
     l+= 180;
@@ -260,7 +262,7 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
                 
                 if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
                     //set up the point, and stick it into the vector
-                    exposureSet point;
+                    exposureSet point;// = new exposureSet;
 //                    float correctedl = fmod(i, 360);   // Fold into the range [0, 360)
 //                    float correctedb = fmod(j, 180);   // Fold into the range [0, 360)
 //                    if(correctedl < 0)correctedl+=360;
@@ -283,8 +285,8 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
         }
     }
     else if(m_exposureMode == 2){
-        for(int i= 0 ; i<=360 ; i++){
-            for(int j= 0 ; j<=180 ; j++){
+      for(int i= l-angularRadius ; i<=l+angularRadius ; i++){
+            for(int j= b-angularRadius ; j<=b+angularRadius ; j++){
                 
                 if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
                     //set up the point, and stick it into the vector
@@ -296,7 +298,10 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
 
                     point.x = correctedl; //yes, this is doing an implicit cast.
                     point.y = correctedb;
-                    point.amount = deltat;
+
+                    //here, the amount depends on the time, and a gaussian in azimuth
+                    double gaussian = pow(2.71828, -(pow(l-i,2)+pow(b-j,2))/(2*pow(angularRadius,2)));
+                    point.amount = deltat*gaussian;
                     returned.push_back(point);
                 }
             }
@@ -314,10 +319,11 @@ void FluxTestAlg::addToTotalExposure(std::vector<FluxTestAlg::exposureSet> toBeA
     double amount;
     if(toBeAdded.size()){
         for( ; iter!=toBeAdded.end() ; iter++){
+            
             x = (*iter).x;
             y = (*iter).y;
             amount = (*iter).amount;
-            m_exposedArea[x][y] += amount;
+            if(x >=0 && y>=0 && x<360 && y<180) m_exposedArea[x][y] += amount;
             
         }
     }else{
@@ -390,10 +396,8 @@ void FluxTestAlg::rootDisplay(){
         //<< ");\n"
         
         "  hist1.Draw("
-        << '"' << "CONT" << '"' 
+        << '"' << "COLZ" << '"' 
         << ");\n"
-        
-        //<<");\n"
         
         "}\n";
     

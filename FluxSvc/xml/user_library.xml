@@ -42,6 +42,13 @@
           </spectrum>
      </source>
 
+<!-- Test source at some other galactic origin -->
+     <source name="gal10020" flux="1.0">
+          <spectrum>
+              <particle name="gamma"> <energy e="0.1"/> </particle>
+               <galactic_dir l="100" b="20"/>
+          </spectrum>
+     </source>
 
     <source name="gamma_pencil">
        <spectrum> 

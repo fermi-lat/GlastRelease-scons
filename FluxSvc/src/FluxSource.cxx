@@ -951,7 +951,8 @@ void FluxSource::getGalacticDir(double l,double b){
     //Vector gamgal(sin(theta)*cos(phi) , sin(theta)*sin(phi) , cos(theta));
 
     //THIS IS EXPERIMENTAL - SEE ABOVE LINE
-    Vector gamgal(sin(l*M_2PI/360.) , cos(l*M_2PI/360.)*sin(b*M_2PI/360.) , cos(l*M_2PI/360.)*cos(b*M_2PI/360.));
+    //Vector gamgal(sin(l*M_2PI/360.) , cos(l*M_2PI/360.)*sin(b*M_2PI/360.) , cos(l*M_2PI/360.)*cos(b*M_2PI/360.));
+    Vector gamgal(sin(l*M_2PI/360.)*cos(b*M_2PI/360.) , sin(b*M_2PI/360.) , cos(l*M_2PI/360.)*cos(b*M_2PI/360.));
   
 
     //get the transformation matrix..
