@@ -18,7 +18,6 @@ use XMLEXT      v2r2
 use GlastPolicy v4r8 
 use facilities  v2r6
 use xml         v4r1p4 
-use xmlUtil     v2r8p3
 
 use geometry    v3
 
@@ -31,8 +30,9 @@ use geomrep     v4r1
 
 # the geometry data base
 use idents      v2r8p4 
-use detModel    v2r13p0
 use xmlGeoDbs              v1r7p3
+use detModel    v2r13p0
+use xmlUtil     v2r8p3
 
 # interface to G4 - make private to avoid so many libs
 private 
@@ -46,7 +46,7 @@ use Geant4Runtime v1r0
 
 use GuiSvc      v3r1p3
 
-use Event       v9r2
+use Event                  v9r3
 use GlastSvc    v9r2p1
 
 # simulation
@@ -68,10 +68,10 @@ use Recon       v2r3p5
 
 use TkrRecon             v8r2
 use CalRecon    v5r7p5 
-use AcdRecon             v1r3       
+use AcdRecon             v1r4       
 
 #ROOT persistence: RootIo specifies the data packages
-use RootIo               v4r16
+use RootIo               v4r17
 
 #diagnostic and summary of bottom line
 use merit                v5r10
