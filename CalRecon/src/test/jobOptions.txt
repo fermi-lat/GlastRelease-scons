@@ -7,9 +7,10 @@
 ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc"};
 
 // List of DLLs required
-ApplicationMgr.DLLs   = { "GlastSvc",  "RootHistCnv"};
+// ApplicationMgr.DLLs   = { "GlastSvc", "CalRecon", "RootHistCnv"};
+ApplicationMgr.DLLs   = { "GlastSvc", "CalRecon", "TkrRecon", "RootHistCnv" };
 
-ApplicationMgr.TopAlg = { "CalRecLogsAlg" };
+ApplicationMgr.TopAlg = { "CalIRFAlg", "CalClustersAlg"};
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
@@ -21,14 +22,15 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 
 
 // Input IRF file
-EventSelector.Input = "IRFFILE $(INSTRUMENTROOT)/src/test/muontest.irf";
+// EventSelector.Input = "IRFFILE $(INSTRUMENTROOT)/src/test/muontest.irf";
+EventSelector.Input = "IRFFILE  $(CALRECONROOT)/src/test/vertical_electrons_X20_Y20_Z_19.irf";
 
 // Output root ntuple file
 NTupleSvc.Output = {"CALRECON DATAFILE='/NTUPLES/CalRecon.root' OPT='NEW'"};
 
     
 // Number of Events to Process
-ApplicationMgr.EvtMax = 20;
+ApplicationMgr.EvtMax = 10;
 
 
 //==============================================================
