@@ -89,6 +89,21 @@ const McParticle& McParticle::mother()const
     return *m_mother;
 }
 
+/// Remove daughters when in prune mode
+void McParticle::removeDaughter(const SmartRef<McParticle> mcPart)
+{
+    SmartRefVector<Event::McParticle>::iterator daughtIter;
+    for(daughtIter = m_daughters.begin();daughtIter != m_daughters.end();daughtIter++)
+    {
+        if (mcPart == *daughtIter)
+        {
+            m_daughters.erase(daughtIter);
+            break;
+        }
+    }
+    return;
+}
+
 
 /// access to the list of daughters: null if none
 const SmartRefVector<McParticle>& McParticle::daughterList()const

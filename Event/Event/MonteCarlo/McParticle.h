@@ -125,6 +125,9 @@ class McParticle  : virtual public ContainedObject  {
     /// add a daugther particle to this particle
     void addDaughter(const SmartRef<McParticle> d){m_daughters.push_back(d);};
 
+    /// Used for pruning
+    void removeDaughter(const SmartRef<McParticle> mcPart);
+
     /// access the process name
     const std::string getProcess()const{return m_process;};
 
