@@ -1,10 +1,10 @@
 package geometry
 
 use glast_settings v0
-use CLHEP v1
+use CLHEP v1r4
 
 macro   geometry_linkopts "-L ${GEOMETRYROOT}/${CMTCONFIG} -lgeometry"\
-        VisualC         "geometrylib.lib"
+        VisualC         "geometry.lib"
 
 
 private
@@ -13,9 +13,8 @@ library  geometry -no_share \
     GeomObject.cxx      Helix.cxx           Hexahedron.cxx\
     Hype.cxx            Hyperbolic.cxx      Intersection.cxx\
     Plane.cxx           Point.cxx           Ray.cxx\
-    RootFinder.cxx      Shape.cxx           Sphe.cxx\
+    Shape.cxx           Sphe.cxx\
     Sphere.cxx          Surface.cxx         Track.cxx\
     Tube.cxx            Vector.cxx \
     Volume.cxx          Wedge.cxx \
     ../geometry/*.h
-
