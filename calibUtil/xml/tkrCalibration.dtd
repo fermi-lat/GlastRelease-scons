@@ -43,9 +43,9 @@
    maxGtfeId NMTOKEN  "23"
 >
 
-<!ELEMENT uniplane ((stripTot+) | (stripCharge+) | 
+<!ELEMENT uniplane ((stripTot+) | (stripScale+) | 
                     (stripTrgThresh+)  | (stripDataThresh+) |
-                    (gtfeCharge+)   | 
+                    (gtfeScale+)   | 
                     (gtfeTrgThresh+)  | (gtfeDataThresh+) ) 
 >
 <!ATTLIST uniplane
