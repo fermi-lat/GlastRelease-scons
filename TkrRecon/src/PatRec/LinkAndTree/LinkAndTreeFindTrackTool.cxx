@@ -12,7 +12,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 #include "Event/Recon/TkrRecon/TkrClusterCol.h"
-#include "Event/Recon/TkrRecon/TkrPatCandCol.h"
+#include "Event/Recon/TkrRecon/TkrPatCand.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
 #include "Event/TopLevel/EventModel.h"
 

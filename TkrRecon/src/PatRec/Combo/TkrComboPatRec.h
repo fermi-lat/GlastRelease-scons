@@ -21,7 +21,7 @@
 #ifndef __TKRCOMBOPATREC_H
 #define __TKRCOMBOPATREC_H
 
-#include "Event/Recon/TkrRecon/TkrPatCandCol.h"
+#include "Event/Recon/TkrRecon/TkrPatCand.h"
 #include "Event/Recon/TkrRecon/TkrClusterCol.h"
 #include "src/Track/TkrControl.h"
 #include "TkrRecon/ITkrGeometrySvc.h"

@@ -19,7 +19,7 @@
 #ifndef __TKR_NEURALNET_H
 #define __TKR_NEURALNET_H
 
-#include "Event/Recon/TkrRecon/TkrPatCandCol.h"
+#include "Event/Recon/TkrRecon/TkrPatCand.h"
 #include "src/TrackFit/KalFitTrack/KalFitTrack.h"
 #include "src/PatRec/NeuralNet/TkrNeuron.h"
 #include "src/Utilities/TkrBase.h"
