@@ -354,6 +354,62 @@ double ParticleTransporter::minStepSize(const Point& start, const Vector& dir) c
   return minStep;
 }
 
+//Method to return distance to nearest active edge in local X direction
+double ParticleTransporter::insideActiveLocalX() const
+{
+  // Purpose and Method: Finds the distance to the edge of 
+  //           of the nearest active area in the X (measurement) direction.
+  //           Computes the distance to the nearest edge in pos/neg X direction 
+  //           and then returns the shortest distance.
+  // Inputs:  None
+  // Outputs:  double, the distance to the edge of the nearest active area. If the
+  //           last tracked point is inside an active area in that coordinate, 
+  //           then the value returned is positive, otherwise it is negative
+  // Dependencies: Must have been set up with at least a call to setInitStep.
+  // Restrictions and Caveats: None
+
+    Vector unitX(1.,0.,0.);
+    return distanceToClosestEdge(unitX);
+}
+
+//Finds the distance to the closest active edge in a given direction and its opposite
+double ParticleTransporter::distanceToClosestEdge(const Vector& dir) const
+{
+  // Purpose and Method: Finds the distance to the edge of 
+  //           of the nearest active area in both directions along dir and
+  //           returns the shortest distance.
+  // Inputs:  Direction along which to find distance
+  // Outputs:  double, the distance to the edge of the nearest active area. If the
+  //           last tracked point is inside an active area in that coordinate, 
+  //           then the value returned is positive, otherwise it is negative
+  // Dependencies: Must have been set up with at least a call to setInitStep.
+  // Restrictions and Caveats: None
+
+    
+    double distInPos = distanceToEdge(dir);
+    double distInNeg = distanceToEdge(-dir);
+    return fabs(distInPos) < fabs(distInNeg) ? distInPos : distInNeg;
+}
+
+//Method to return distance to nearest active edge in local Y direction
+double ParticleTransporter::insideActiveLocalY() const
+{
+  // Purpose and Method: Finds the distance to the edge of 
+  //           of the nearest active area in the Y (measurement) direction.
+  //           Computes the distance to the nearest edge in pos/neg Y direction 
+  //           and then returns the shortest distance.
+  // Inputs:  None
+  // Outputs:  double, the distance to the edge of the nearest active area. If the
+  //           last tracked point is inside an active area in that coordinate, 
+  //           then the value returned is positive, otherwise it is negative
+  // Dependencies: Must have been set up with at least a call to setInitStep.
+  // Restrictions and Caveats: None
+
+    Vector unitY(0.,1.,0.);
+    return distanceToClosestEdge(unitY);
+}
+
+
 //Method to drive the determination of the distance to the edge of the 
 //nearest active area. 
 double ParticleTransporter::insideActiveArea() const
@@ -361,27 +417,19 @@ double ParticleTransporter::insideActiveArea() const
   // Purpose and Method: Drives the calculation of the distance to the edge of 
   //                     of the nearest active area. Computes the distance to 
   //                     the nearest edge in pos/neg x and y directions and then
-  //                     returns the shortest distance.
+  //                     returns the shortest distance. For a point outside the 
+  //                     active area in both X and Y, the (negative) distance to the nearest
+  //                     corner is returned.
   // Inputs:  None
   // Outputs:  double, the distance to the edge of the nearest active area. If the
   //           last tracked point is inside an active area, then the value returned
   //           is positive, otherwise it is negative
   // Dependencies: Must have been set up with at least a call to setInitStep.
   // Restrictions and Caveats: None
-    Vector unitX(1.,0.,0.);
-    Vector unitY(0.,1.,0.);
-
-    double distInPosX = distanceToEdge( unitX);
-    double distInNegX = distanceToEdge(-unitX);
-    double distInPosY = distanceToEdge( unitY);
-    double distInNegY = distanceToEdge(-unitY);
-
-    double distInX    = fabs(distInPosX) < fabs(distInNegX) ? distInPosX : distInNegX;
-    double distInY    = fabs(distInPosY) < fabs(distInNegY) ? distInPosY : distInNegY;
 
 
-    //if (fabs(distInX) < fabs(distInY)) return distInX;
-    //else                               return distInY;
+    double distInX    = insideActiveLocalX();
+    double distInY    = insideActiveLocalY();
 
     if(distInX>0 || distInY>0) {return std::min(distInX, distInY);}
     else                       {return -sqrt(distInX*distInX + distInY*distInY);}

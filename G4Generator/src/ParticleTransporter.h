@@ -64,6 +64,8 @@ public:
     Vector             getStartDir()      const {return startDir;}
     double             getMaxArcLen()     const {return maxArcLen;}
     double             insideActiveArea() const;
+    double             insideActiveLocalX() const;
+    double             insideActiveLocalY() const;
 
     void               printStepInfo(std::ostream& str=std::cout ) const;    
 private:
@@ -82,6 +84,8 @@ private:
     G4VPhysicalVolume* findSiLadders(const G4TouchableHistory* pHistory) const;
     //This used to find the distance to nearest edge in a given direction
     double             distanceToEdge(const Vector& dir) const;
+    //Gives the distance to the closest edge in a given and opposite direction
+    double             distanceToClosestEdge(const Vector& dir) const;
 
 
     //Private Data
