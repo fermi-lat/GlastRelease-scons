@@ -18,6 +18,8 @@ use RootPolicy v2r*
 apply_pattern root_package
 apply_pattern root_package2
 
+apply_pattern vsnet_rootcint
+
 macro root_headers "\
  ../mcRootData/VolumeIdentifier.h\
  ../mcRootData/McIntegratingHit.h\
