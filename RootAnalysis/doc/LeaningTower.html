@@ -26,8 +26,8 @@ Thus, our proposal is to always to use the one-full-tower geometry, i.e. in job 
 GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/latAssembly/1TowerSegVols.xml";
 </pre>
 E.g., digi and clusters could be correlated.
-Digi are counted from back, clusters from front.
-E.g., a digi in layer <em>q</em> has corresponding clusters in <em>numLayers - 1 - q</em>.
+Digis are counted from back, clusters from front.
+E.g., a digi in layer <em>q</em> has corresponding clusters in layer <em>numLayers - 1 - q</em>.
 </p>
 
 <p>
@@ -110,8 +110,8 @@ For the moment, it collects two types of functions:
 <ul>
   <li><a href="http://glast.stanford.edu/cgi-bin/cvsweb/RootAnalysis/src/LeaningTower/PlotMacros.C?cvsroot=CVS_SLAC&f=h">macros</a>
     <ul>
-      <li>plot predefined histograms.  Cuts can be specified as parameters</li>
-      <li>plots a list of events surviving a condition</li>
+      <li>several functions to plot predefined histograms.  Cuts can be specified as parameters.</li>
+      <li><code>FindEvents</code> plots a list of events surviving a given condition</li>
     </ul>
   </li>
   <li>a function
@@ -123,6 +123,7 @@ For the moment, it collects two types of functions:
       <li>analyzes the hit maps and flags strips as dead or hot based on certain criteria</li>
       <li>does a linear regression of the cluster positions of the first track and prints the residuals</li>
     </ul>
+    The histograms are being written into MyAnalysisFile.root.
   </li>
 </ul>
 
