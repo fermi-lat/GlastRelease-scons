@@ -52,11 +52,12 @@ McEvent::~McEvent() {
 }
 
 void McEvent::initialize(UInt_t nEvent, UInt_t nRun, 
-						 Int_t sourceId, UInt_t sequence) {
+						 Int_t sourceId, UInt_t sequence, Double_t timestamp) {
     m_eventId = nEvent;
     m_runId = nRun;
 	m_sourceId = sourceId;
 	m_sequence = sequence;
+        m_timeStamp = timestamp;
     return;
 }
 

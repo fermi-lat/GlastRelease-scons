@@ -38,7 +38,7 @@ public:
 
     void Print(Option_t *option="") const;
     
-    void initialize(UInt_t nEvent, UInt_t nRun, Int_t sourceId, UInt_t sequence);
+    void initialize(UInt_t nEvent, UInt_t nRun, Int_t sourceId, UInt_t sequence, Double_t timeStamp);
     
     inline UInt_t getEventId() const { return m_eventId; };
     inline UInt_t getRunId() const { return m_runId; };
@@ -78,7 +78,10 @@ public:
     };
     /// return the full TObjArray containing McIntegratingHits
     const TObjArray* getMcIntegratingHitCol() const { return m_integratingHitCol; };
-    
+
+/// time stamp stuff here
+    inline Double_t getTimeStamp() { return m_timeStamp; };
+
 private:
     /// unique event id for this run
     UInt_t m_eventId;
@@ -92,6 +95,11 @@ private:
 	/// Sequence number
 	UInt_t m_sequence;
     
+            /// Time in seconds
+    Double_t m_timeStamp; /// this is supposed to coresponed to the following in MCEvent 
+        /// Time stamp: use special class to encapsulate type
+        ///TimeStamp           m_time;
+
     /// Collection of McParticles
     /// Must be TObjArray due to TRefArray which grows dynamically
     TObjArray *m_particleCol; //->

@@ -1,5 +1,5 @@
 package mcRootData
-version v2r10p0
+version v2r11
 
 use GlastPolicy v5*
 
