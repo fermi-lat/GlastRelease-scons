@@ -26,7 +26,7 @@ use xmlUtil  v2*
 
 use idents   v2*
 
-use GlastEvent v6*
+use GlastEvent v7*
 
 use GlastSvc  v6*
 
