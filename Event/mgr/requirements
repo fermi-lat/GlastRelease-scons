@@ -5,6 +5,7 @@ branches GlastEvent mgr doc src
 use idents
 
 use GaudiKernel 
+use CLHEP
 
 apply_pattern package_headers
 
