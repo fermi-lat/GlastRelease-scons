@@ -7,8 +7,6 @@
 #include "xml/Dom.h"
 #include <xercesc/dom/DOM_Element.hpp>
 #include <xercesc/dom/DOM_Node.hpp>
-#include <xercesc/dom/DOM_NodeList.hpp>
-#include <xercesc/dom/DOM_NamedNodeMap.hpp>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -75,235 +73,204 @@ namespace detModel{
   /*
    *  This method build a constant
    */
-  Const* XercesBuilder::buildConst(DOM_Node e){
+  Const* XercesBuilder::buildConst(DomElement e){
+    using xml::Dom;
+
     std::string name;
     std::string typeOfConst;
     std::string ut;
-  
-    DOM_NamedNodeMap attr = e.getAttributes();
 
-    name=std::string(xml::Dom::transToChar
-                     (attr.getNamedItem(DOMString("name")).getNodeValue() ));
-    ut=std::string(xml::Dom::transToChar
-                   (attr.getNamedItem(DOMString("uType")).getNodeValue() ));
+    //    DOM_NamedNodeMap attr = e.getAttributes();
 
-    std::string elementName=std::string(xml::Dom::transToChar
-                                        (e.getNodeName()));
+    name = Dom::getAttribute(e, "name");
+    ut = Dom::getAttribute(e, "uType");
+    std::string elementName = Dom::getTagName(e);
+
     if (elementName=="prim"){
-      typeOfConst=
-        std::string(xml::Dom::transToChar
-                    (attr.getNamedItem(DOMString("type")).getNodeValue()));
+      typeOfConst=Dom::getAttribute(e,"type");
+
       Const* c;
-      if (typeOfConst=="int"){
-	c=new IntConst;
-	int val=atoi(xml::Dom::transToChar
-                     (attr.getNamedItem(DOMString("value")).getNodeValue()));
-	((IntConst*)c)->setValue(val);
+      try {
+        if (typeOfConst=="int"){
+          c=new IntConst;
+          int val= Dom::getIntAttribute(e, "value");
+          ((IntConst*)c)->setValue(val);
+        }
+        else if (typeOfConst=="float"){
+          c=new FloatConst;
+          double val = Dom::getDoubleAttribute(e, "value");
+          float  valFloat = val;
+          ((FloatConst*)c)->setValue(valFloat);
+        }
+        else if (typeOfConst=="double"){
+          c=new DoubleConst;
+          double val=
+            Dom::getDoubleAttribute(e, "value");
+          ((DoubleConst*)c)->setValue(val);
+        }
+        else if (typeOfConst=="string"){
+          c=new StringConst;
+          std::string val=Dom::getAttribute(e, "value");
+          ((StringConst*)c)->setValue(val);
+        }
+        else return 0;
+      }  // end try
+      catch (xml::DomException ex) {
+        std::cerr << "from detModel::XercesBuild::BuildConst" << std::endl
+                  << ex.getMsg() << std::endl;
+        throw (ex);
       }
-      else if (typeOfConst=="float"){
-	c=new FloatConst;
-	float val=atof(xml::Dom::transToChar
-                       (attr.getNamedItem(DOMString("value")).getNodeValue()));
-	((FloatConst*)c)->setValue(val);
-      }
-      else if (typeOfConst=="double"){
-	c=new DoubleConst;
-	double val=
-          atof(xml::Dom::transToChar
-               (attr.getNamedItem(DOMString("value")).getNodeValue()));
-	((DoubleConst*)c)->setValue(val);
-      }
-      else if (typeOfConst=="string"){
-	c=new StringConst;
-	std::string val=
-          std::string(xml::Dom::transToChar
-                      (attr.getNamedItem(DOMString("value")).getNodeValue()));
-	((StringConst*)c)->setValue(val);
-      }
-      else return 0;
+
       c->setName(name);
       c->setConstMeaning(ut);
-      c->setNote(std::string(xml::Dom::transToChar
-                             (e.getFirstChild().getNodeValue())));
+      try {
+        c->setNote(Dom::getText(e.getFirstChild()));
+      }
+      catch (xml::DomException ex) {
+        // this isn't terribly fatal, so don't rethrow
+        std::cerr << "From detModel::XercesBuilder::getConst " << std::endl
+                  << ex.getMsg() << std::endl;
+      }
       return c;
-    }//end if
-    else{
+    }//end if prim
+    else {
       //e is a const element.  Can be any of the numeric types
       // For backward compatibility, if no "type" attribute, treat
       // it as a double
-      if (attr.getNamedItem(DOMString("type")) == DOM_Node() ) {
-        typeOfConst = "double";
-      }  else {
-        typeOfConst=
-        std::string(xml::Dom::transToChar
-                    (attr.getNamedItem(DOMString("type")).getNodeValue()));
-      }
+      std::string valType;
       Const* c;
-      if (typeOfConst=="int"){
-	c=new IntConst;
-	int val=atoi(xml::Dom::transToChar
-                     (attr.getNamedItem(DOMString("value")).getNodeValue()));
-	((IntConst*)c)->setValue(val);
+
+      try {
+        if (!Dom::hasAttribute(e, "type")) valType = std::string("double");
+        else valType = Dom::getAttribute(e, "type");
+        if (valType == "int") {
+          c = new IntConst;
+          int val = Dom::getIntAttribute(e, "value");
+          ((IntConst*)c)->setValue(val);
+        }
+        else if (valType == "float") {
+          c = new FloatConst;
+          double valDouble = Dom::getDoubleAttribute(e, "value");
+          float val = valDouble;
+          ((FloatConst*)c)->setValue(val);
+        }
+        else if (valType == "double") {  
+          c = new DoubleConst;
+          double val = Dom::getDoubleAttribute(e, "value");
+          ((DoubleConst*)c)->setValue(val);
+        }  
+        else return 0;  // or, better, maybe throw exception?
+      }                     // end try
+      catch (xml::DomException ex) {
+        std::cerr << "From detModel::XercesBuilder::buildConst" << std::endl
+                  << ex.getMsg() << std::endl;
+        throw ex;
       }
-      else if (typeOfConst=="float"){
-	c=new FloatConst;
-	float val=atof(xml::Dom::transToChar
-                       (attr.getNamedItem(DOMString("value")).getNodeValue()));
-	((FloatConst*)c)->setValue(val);
-      }
-      else if (typeOfConst=="double"){
-	c=new DoubleConst;
-	double val=
-          atof(xml::Dom::transToChar
-               (attr.getNamedItem(DOMString("value")).getNodeValue()));
-	((DoubleConst*)c)->setValue(val);
-      }
-      else return 0;
 
       c->setName(name);
       c->setConstMeaning(ut);
     
-      DOM_Element n = static_cast<DOM_Element&>(e);
-      DOM_NodeList nodelist = n.getElementsByTagName(DOMString("notes"));
-
-      if (nodelist.getLength()) {
-	c->setNote(std::string
-                   (xml::Dom::transToChar
-                    (nodelist.item(0).getFirstChild().getNodeValue())));
+      DomElement notes = Dom::findFirstChildByName(e, "notes");
+      if (notes != DomElement()) {
+        c->setNote(Dom::getText(notes.getFirstChild()));
       }
       return c;
-    }//end else
+    }//end else (const, not prim)
   }
 
   /// This methods build the constants part of detModel
   void XercesBuilder::buildConstants(){
-    unsigned int i,j;
+    using xml::Dom;
 
     if (m_docClient->getConstants() != DOM_Node()){
-      Constants* ConstantsBranch = new Constants();
+      Constants* constantsBranch = new Constants();
+
+      DomElement const constants = 
+        static_cast<const DomElement&>(m_docClient->getConstants());
+      // Content model for <constants> is (version, primary, derived?)
+
+      {
+        DomElement version = Dom::findFirstChildByName(constants, "version");
+        std::string majorVersion = Dom::getAttribute(version, "major");
+        std::string minorVersion = Dom::getAttribute(version, "minor");
+        constantsBranch->setVersion(majorVersion, minorVersion);
+      }
       
-      DOM_NodeList childs = m_docClient->getConstants().getChildNodes();
-      // version primary ?derived 
-      for(i=0;i<childs.getLength();i++){
-	if(childs.item(i).getNodeType() != Comment)
-	  {
-	    std::string str = 
-              std::string(xml::Dom::transToChar(childs.item(i).getNodeName()));
-	    if(str == "version"){
-	      std::string s1,s2;
-	      DOM_NamedNodeMap attr=childs.item(i).getAttributes ();
-	      s1=
-                std::string
-                (xml::Dom::transToChar
-                 (attr.getNamedItem(DOMString("major")).getNodeValue()));
+      buildCategories(constantsBranch, 
+                      Dom::findFirstChildByName(constants, "primary"), true);
+      buildCategories(constantsBranch, 
+                      Dom::findFirstChildByName(constants, "derived"), false);
 
-	      s2=
-                std::string
-                (xml::Dom::transToChar
-                 (attr.getNamedItem(DOMString("minor")).getNodeValue()));
-
-	      ConstantsBranch->setVersion(s1,s2);
-	    }
-	    else if(str == "primary" || str == "derived"){
-	      DOM_NodeList child = childs.item(i).getChildNodes();
-	      if (child.getLength()!=0){
-		for(j=0;j<child.getLength();j++){
-                  if (child.item(j).getNodeType() != Comment) {
-                    ConstCategory* cat= new ConstCategory;
-                    std::string s1;
-                    DOM_NamedNodeMap attrCat=child.item(j).getAttributes();
-
-                    s1=
-                      std::string
-                      (xml::Dom::transToChar
-                       (attrCat.getNamedItem
-                        (DOMString("name")).getNodeValue()));
-
-                    cat->setName(s1);
-                    // if the actual category has more than one attribute 
-                    // it is derived
-                    if(attrCat.getLength()>1){ 
-
-                      std::string s2 =
-                        std::string(xml::Dom::transToChar
-                                    (attrCat.getNamedItem
-                                     (DOMString("save")).getNodeValue()));
-
-                      if (s2=="true") {
-                        cat->setSave(true);
-                      }
-                      cat->setPrimary(false);
-                    }
-                    DOM_Node over =
-                      child.item(j).getFirstChild().getFirstChild();
-                    s1 =
-                      std::string(xml::Dom::transToChar( over.getNodeValue()));
-                    cat->setOverview(s1);
-                    child.item(j).removeChild(child.item(j).getFirstChild());
-                    //elt is the list of prim/const
-                    DOM_NodeList elt=child.item(j).getChildNodes();
-                    unsigned int k;
-                    for(k=0;k<elt.getLength();k++){
-                      if (elt.item(k).getNodeType()!=Comment){
-                        cat->addConstant(buildConst(elt.item(k)));
-                      }//end if 
-                    }//end for iterating over k
-                    //Insert a new category in Constast object
-                    ConstantsBranch->addConstantCategory(cat);
-                  } // end if != Comment
-		}//end for prim and derived cateory 
-	      }
-	    }  
-	  }
-      }//end for                                           
-      currentGdd->setConstants(ConstantsBranch);
+      currentGdd->setConstants(constantsBranch);
       MatCollection* materials = new MatCollection();
       currentGdd->setMaterials(materials);
       currentGdd->buildConstantsMap();
     }//end if
   }
 
+  void XercesBuilder::buildCategories(Constants* constantsBranch, 
+                                      DomElement parent, bool primary) {
+    std::vector<DomElement> cats;
+
+    using xml::Dom;
+
+    // Could be called with null arg if no derived
+    if (parent == DomElement()) return;  
+    
+    Dom::getChildrenByTagName(parent, "*", cats);
+    unsigned nCat = cats.size();
+
+    for (unsigned iCat = 0; iCat < nCat; iCat++) {  // loop over categories
+      ConstCategory* cat = new ConstCategory;
+      cat->setName(Dom::getAttribute(cats[iCat], "name"));
+      cat->setPrimary(primary);
+
+      if (!primary) {
+        std::string save = Dom::getAttribute(cats[iCat], "save");
+        cat->setSave(save == "true");
+      }
+
+      DomElement overview = Dom::findFirstChildByName(cats[iCat], "overview");
+      cat->setOverview(Dom::getText(overview.getFirstChild()));
+
+      // loop over remaining children, the constants
+      DomElement constElt = Dom::getSiblingElement(overview);
+      while (constElt != DomElement()) {
+        cat->addConstant(buildConst(constElt));
+        constElt = Dom::getSiblingElement(constElt);
+      }
+
+      constantsBranch->addConstantCategory(cat);
+    }
+  } 
 
   void XercesBuilder::buildMaterials(){
+    using xml::Dom;
 
-    if (m_docClient->getMaterials() != DOM_Node()){
-      MatCollection* materials = currentGdd->getMaterials();
+    if (m_docClient->getMaterials() == DomNode()) return;
 
-      DOM_NamedNodeMap attrCol=(m_docClient->getMaterials()).getAttributes();
-
-      materials->setVersion(std::string
-                            (xml::Dom::transToChar
-                             (attrCol.getNamedItem
-                              (DOMString("version")).getNodeValue())));
-
-      materials->setDate(std::string
-                         (xml::Dom::transToChar
-                          (attrCol.getNamedItem
-                           (DOMString("date")).getNodeValue())));
-
-      materials->setAuthor(std::string
-                           (xml::Dom::transToChar
-                            (attrCol.getNamedItem
-                             (DOMString("author")).getNodeValue())));
-
-      DOM_NodeList childs = m_docClient->getMaterials().getChildNodes();
-      for(unsigned int i=0;i<childs.getLength();i++){
-	if(childs.item(i).getNodeType() != Comment)
-	  {
-	    std::string str = 
-              std::string(xml::Dom::transToChar(childs.item(i).getNodeName()));
-	    if(str == "element")
-	      {
-		materials->addMaterial(buildElement((childs.item(i))));
-	      }
-	    if(str == "composite")
-	      {
-		materials->addMaterial(buildComposite((childs.item(i))));
-	      }
-	  }
-      }
+    MatCollection* materials = currentGdd->getMaterials();
+    const DomElement matsElt = 
+      static_cast<const DomElement&>(m_docClient->getMaterials());
       
-    }//end if
+    materials->setVersion(Dom::getAttribute(matsElt, "version"));
+    materials->setDate(Dom::getAttribute(matsElt, "date"));
+    materials->setAuthor(Dom::getAttribute(matsElt, "author"));
+
+
+    std::vector<DomElement> children;
+    Dom::getChildrenByTagName(matsElt, "*", children);
+
+    unsigned nChild = children.size();
+    for (unsigned iChild = 0; iChild < nChild; iChild++) {
+      std::string tagName = Dom::getTagName(children[iChild]);
+      if (tagName == "element") {
+        materials->addMaterial(buildElement(children[iChild]) );
+      }
+      else if (tagName == "composite") {
+        materials->addMaterial(buildComposite(children[iChild]) );
+      }
+    }
   }
 
   void XercesBuilder::buildIdDictionary() {
@@ -320,253 +287,234 @@ namespace detModel{
     }
   }
 
-  Element* XercesBuilder::buildElement(DOM_Node e)
+  Element* XercesBuilder::buildElement(DomElement e)
   {
+    using xml::Dom;
+
     Element* element = new Element();
-    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
     
-    element->setName(std::string
-                     (xml::Dom::transToChar(el.getAttribute("name"))));
+    element->setName(Dom::getAttribute(e, "name"));
 
-    if(el.getAttribute("symbol") != "")
-      element->setSymbol
-        (std::string(xml::Dom::transToChar(el.getAttribute("symbol"))));
-
-
-    if(el.getAttribute("RGB") != "")
-      {
-	std::string temp = 
-          std::string(xml::Dom::transToChar(el.getAttribute("RGB")));
-	
+    std::string symbol = Dom::getAttribute(e, "symbol");
+    if (symbol.size() > 0) element->setSymbol(symbol);
+    try {
+      element->setZ(Dom::getDoubleAttribute(e, ("z")));
+      element->setAweight(Dom::getDoubleAttribute(e, ("aweight")));
+      if (Dom::hasAttribute(e, "density")) {
+        element->setDensity(Dom::getDoubleAttribute(e, ("density")));
       }
-
-    element->setZ(atof(xml::Dom::transToChar(el.getAttribute("z"))));
-    element->setAweight(atof(xml::Dom::transToChar
-                             (el.getAttribute("aweight"))));
-
-    if(el.getAttribute("density") != "") {
-      element->setDensity(atof(xml::Dom::transToChar
-                               (el.getAttribute("density"))));
     }
-
+    catch (xml::DomException ex) {
+      std::cerr << "From detModel::XercesBuilder::buildElement" << std::endl
+                << ex.getMsg() << std::endl;
+      throw ex;
+    }
     return element;
   }
 
 
   /// Method that build a composite from the relative DOM node
-  Composite* XercesBuilder::buildComposite(DOM_Node e){
-    unsigned int i, n = 0;
+  Composite* XercesBuilder::buildComposite(DomElement e){
+    using xml::Dom;
 
-    /// The childs of the node
-    DOM_NodeList childs = e.getChildNodes();
+    std::vector<DomElement> addMats;
 
-    /// Counts the number of addmaterial; we need this loop to avoid comments
-    for(i=0;i<childs.getLength();i++)
-      {
-	if (childs.item(i).getNodeType()!=Comment)
-	  n++;
-      }
+    Dom::getChildrenByTagName(e, "addmaterial", addMats);
+    unsigned int n = addMats.size();
 
     /// Create a new composite material with n components
     Composite* comp = new Composite(n);
 
-    /// Cast to an element the node
-    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
-    
-
     /// Set the name of the composite
-    comp->setName(std::string(xml::Dom::transToChar(el.getAttribute("name"))));
+    comp->setName(Dom::getAttribute(e, "name"));
+
     /// Set its desnsity
-    comp->setDensity(atof(xml::Dom::transToChar(el.getAttribute("density"))));
+    try {
+      comp->setDensity(Dom::getDoubleAttribute(e, "density"));
+    }
+    catch (xml::DomException ex) {
+      std::cerr << "From detModel::XercesBuilder::buildComposite" 
+                << std::endl << ex.getMsg() << std::endl;
+      throw ex;
+    }
 
-    /// Start to cylce on the addmaterial elements
-    for(i=0;i<childs.getLength();i++)
-      {
-	/// Avoid comments
-	if (childs.item(i).getNodeType()!=Comment)
-	  {
-	    const DOM_Element elCh = 
-              DOM_Element(static_cast<const DOM_Element &>(childs.item(i)));
-	    
-	    /// Get the name of the material to add to the compostite
-	    std::string name = 
-              std::string(xml::Dom::transToChar
-                          (elCh.getAttribute("material")));
-	    
-	    /// Prepare a material	    
-	    Material* mat;
-	    
-	    /// Search the material in the MatCollection
-	    MatCollection* mats = currentGdd->getMaterials();
-	    std::map<std::string, Material*> matMap;
-	    typedef std::map<std::string, Material*> M;
-	    M::iterator mIt;
-	    matMap = mats->getMaterials();
+    // Start to cylce on the addmaterial elements
+    for (unsigned int i = 0; i < n; i++) {
+      std::string name = Dom::getAttribute(addMats[i], "material");
+      Material* mat;
 
-	    /// If the material is not yet defined issue an error and abort
-	    mIt = matMap.find(name);
-	    if(mIt == matMap.end())
-	      detAbort("Error in materials: composite uses a not defined material");
-	    else mat = mIt->second; 
-	    
-	    /// Get the child of addmaterial, i.e. a fractionmass or an natoms
-	    DOM_Node chi = elCh.getFirstChild();
-	    DOM_Element elChi = DOM_Element(static_cast<DOM_Element &>(chi));
+      // Search the material in the MatCollection
+      MatCollection* mats = currentGdd->getMaterials();
+      std::map<std::string, Material*> matMap;
+      typedef std::map<std::string, Material*> M;
+      M::iterator mIt;
+      matMap = mats->getMaterials();
+      
+      // If the material is not yet defined issue an error and abort
+      mIt = matMap.find(name);
+      if(mIt == matMap.end())
+        detAbort("Error in materials: composite uses an undefined material");
+      else mat = mIt->second; 
 
-	    std::string type = 
-              std::string(xml::Dom::transToChar(chi.getNodeName()));
-	    /// Add component using the overloaded addComponent of composite
-	    if(type == "fractionmass") {
-	      comp->addComponent(mat,atof
-                                 (xml::Dom::transToChar
-                                  (elChi.getAttribute("fraction"))));
-            }
-	    else if(type == "natoms") {
-	      comp->addComponent
-                (mat,
-                 (unsigned int)atoi(xml::Dom::transToChar
-                                    (elChi.getAttribute("n"))));
-	    }
-	  }
+      DomElement child = Dom::getFirstChildElement(addMats[i]);
+      std::string type = Dom::getTagName(child);
+      
+      try {
+        if (type == "fractionmass") {
+          comp->addComponent(mat, 
+                             Dom::getDoubleAttribute(child, "fraction"));
+        }
+        else if (type == "natoms") {
+          comp->addComponent(mat, 
+                             (unsigned int) Dom::getIntAttribute(child, "n"));
+        }
       }
+      catch (xml::DomException ex) {
+        std::cerr << "From detModel::XercesBuilder::buildComposite" 
+                  << std::endl << ex.getMsg() << std::endl;
+        throw ex;
+      }
+
+    }
     return comp;
   }
+  
 
 
-
-  void XercesBuilder::buildSections()
-  {
+  void XercesBuilder::buildSections()   {
     if (m_docClient->getSections() != DOM_Node()){
-      //      currentGdd->addSection(buildSection(const_cast<DOM_Node*>(m_docClient->getSections())));
       currentGdd->addSection
         (buildSection((m_docClient->getSections())));
     }
     
     currentGdd->buildVolumeMap();
-
+    
     currentGdd->ResolveReferences();
-
+    
     currentGdd->buildBoundingBoxes();
-
+    
   }
-
-
-
-  Section* XercesBuilder::buildSection(DOM_Node e)
+  
+  Section* XercesBuilder::buildSection(DomNode e)
   {
-    unsigned int i;
+    using xml::Dom;
 
-    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
+    DomElement el = DomElement(static_cast<DomElement &>(e));
     Section* s = new Section(
-			     xml::Dom::getAttribute(el, "name"),
-			     xml::Dom::getAttribute(el, "version"),
-			     xml::Dom::getAttribute(el, "date"),
-			     xml::Dom::getAttribute(el, "author"),
-			     xml::Dom::getAttribute(el, "fineChoice"),
-			     xml::Dom::getAttribute(el, "topVolume")
+			     Dom::getAttribute(el, "name"),
+			     Dom::getAttribute(el, "version"),
+			     Dom::getAttribute(el, "date"),
+			     Dom::getAttribute(el, "author"),
+			     Dom::getAttribute(el, "fineChoice"),
+			     Dom::getAttribute(el, "topVolume")
 			     );
-    DOM_NodeList childs = e.getChildNodes();
-    for(i=0;i<childs.getLength();i++)
-      {
-	if (childs.item(i).getNodeType()!=Comment){
-	  std::string str = 
-            std::string(xml::Dom::transToChar(childs.item(i).getNodeName()));
-	  if(str == "box")
-	    s->addVolume(buildBox(childs.item(i)));
-	  if(str == "tubs")
-	    s->addVolume(buildTube(childs.item(i)));
-	  else if(str == "choice")
-	    {
-	      Choice* t = buildChoice(childs.item(i));
-	      // s->addChoice(t); 
-	      s->addVolume(t);
-	    }
-	  else if(str == "composition")
-	    s->addVolume(buildComposition(childs.item(i) ));
-	  else if(str=="stackX"||str=="stackY"||str=="stackZ")
-	    s->addVolume(buildStack(childs.item(i) ));
-	}
+    std::vector<DomElement> children;
+
+    Dom::getChildrenByTagName(el, "*", children);
+    
+    unsigned int n = children.size();
+
+    for (unsigned int i=0; i < n; i++) {
+      std::string tagName = Dom::getTagName(children[i]);
+
+      if (tagName == "box") s->addVolume(buildBox(children[i]));
+      else if (tagName == "tubs") s->addVolume(buildTube(children[i]));
+      else if (tagName == "choice") s->addVolume(buildChoice(children[i]));
+      else if (tagName == "composition") {
+        s->addVolume(buildComposition(children[i]));
       }
+      else if ((tagName == "stackX")  ||
+               (tagName == "stackY")  ||
+               (tagName == "stackZ")   ) {
+        s->addVolume(buildStack(children[i]));
+      }
+    }
     return s;
   }
 
 
-  Choice* XercesBuilder::buildChoice(DOM_Node e)
+  Choice* XercesBuilder::buildChoice(DOM_Element e)
   {
-    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
-    Choice* b = new Choice(xml::Dom::getAttribute(el, "name"),
-			   xml::Dom::getAttribute(el, "default"));
+    using xml::Dom;
+
+    //    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
+    Choice* b = new Choice(Dom::getAttribute(e, "name"),
+			   Dom::getAttribute(e, "default"));
 
     //    Manager* Manager = Manager::getPointer();
 
-    DOM_NodeList childs = e.getChildNodes();
-  
-    for(unsigned int i=0;i<childs.getLength();i++){
-      if (childs.item(i).getNodeType()!=Comment)
-	{
-	  DOM_NamedNodeMap attributelist=childs.item(i).getAttributes();
-	  
-	  std::string Mode = 
-	    std::string(
-			xml::Dom::transToChar(
-					      attributelist.getNamedItem(DOMString("mode")).getNodeValue()));
+    //    DOM_NodeList childs = e.getChildNodes();
+    std::vector<DomElement> children;
+    Dom::getChildrenByTagName(e, "*", children);
+    unsigned int n = children.size();
 
-	  std::string Volume = 
-	    std::string(
-			xml::Dom::transToChar(
-					      attributelist.getNamedItem(DOMString("volume")).getNodeValue()));
-	  b->addCaseName(Mode, Volume);
-	}
+    for (unsigned int i=0; i < n; i++) {
+	  
+      std::string Mode = Dom::getAttribute(children[i], "mode");
+
+      std::string Volume = Dom::getAttribute(children[i], "volume");
+
+      b->addCaseName(Mode, Volume);
     }
     return b;
   }
 
 
   /// \doit Add parameters
-  Box* XercesBuilder::buildBox(DOM_Node e)
+  Box* XercesBuilder::buildBox(DOM_Element e)
   {
+    using xml::Dom;
+    Box* b = new Box(Dom::getAttribute(e, "name"));
 
-    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
-    Box* b = new Box(xml::Dom::getAttribute(el, "name"));
+    std::string Xatt = Dom::getAttribute(e, "X"); 
+    std::string Yatt = Dom::getAttribute(e, "Y"); 
+    std::string Zatt = Dom::getAttribute(e, "Z"); 
+    try {
+      if (Dom::hasAttribute(e, "X") ) {
+        b->setX(Dom::getDoubleAttribute(e, "X"));
+      }
+      if (Dom::hasAttribute(e, "Y") ) {
+        b->setY(Dom::getDoubleAttribute(e, "Y"));
+      }
+      if (Dom::hasAttribute(e, "Z") ) {
+        b->setZ(Dom::getDoubleAttribute(e, "Z"));
+      }
+    }
+    catch (xml::DomException ex) {
+      std::cerr << "From detModel::XercesBuilder::buildBox  " << std::endl
+                  << ex.getMsg() << std::endl;
+        throw ex;
+    }
 
-    // b->setUnitLength(xml::Dom::transToChar(el.getAttribute("unitLength")));
-    // b->setUnitAngle(xml::Dom::transToChar(el.getAttribute("unitAngle")));
-    if(el.getAttribute("X") != "0")
-      b->setX(atof(xml::Dom::transToChar(el.getAttribute("X"))));
-    if(el.getAttribute("Y") != "0")
-      b->setY(atof(xml::Dom::transToChar(el.getAttribute("Y"))));
-    if(el.getAttribute("Z") != "0")
-      b->setZ(atof(xml::Dom::transToChar(el.getAttribute("Z"))));
-    b->setMaterial(xml::Dom::transToChar(el.getAttribute("material")));
-    b->setDetectorType(atoi(xml::Dom::transToChar
-                            (el.getAttribute("detectorType"))));
 
-    if (std::string((xml::Dom::transToChar
-                     (el.getAttribute("sensitive")))) == "posHit")
-      b->setSensitive(1);
-    else if (std::string((xml::Dom::transToChar
-                          (el.getAttribute("sensitive")))) == "intHit")
-      b->setSensitive(2);
-    else
-      b->setSensitive(0);
+    b->setMaterial(Dom::getAttribute(e, "material"));
+    b->setDetectorType(Dom::getIntAttribute(e, "detectorType"));
 
-    if (e.hasChildNodes()){
-      DOM_Node child=e.getFirstChild();
+    std::string sensAtt = Dom::getAttribute(e, "sensitive");
+    if (sensAtt == "posHit") b->setSensitive(1);
+    else if (sensAtt == "intHit") b->setSensitive(2);
+    else b->setSensitive(0);
+
+    // A box may be segmented
+    DomElement segElt = Dom::getFirstChildElement(e);
+    if (segElt != DomElement()) {
       Seg* s = new Seg;
 
-      DOM_NamedNodeMap attributelist = child.getAttributes();
-      for(unsigned int k=0;k<attributelist.getLength();k++){
-	std::string NameAttr=
-	  std::string(xml::Dom::transToChar
-                      (attributelist.item(k).getNodeName()) );
+      // axis and reason attributes are required by dtd
+      s->setAxis(Dom::getAttribute(segElt, "axis"));
+      s->setReason(Dom::getAttribute(segElt, "reason"));
 
-	char* ValueAttr=xml::Dom::transToChar
-          (attributelist.item(k).getNodeValue() );
-
-	if(NameAttr=="axis")s->setAxis(ValueAttr);
-	else if(NameAttr=="reason")s->setReason(ValueAttr);
-	else if(NameAttr=="nSeg" && "1")s->setnSeg(atoi(ValueAttr));
-      }//end for
+      // nSeg is defaulted; nSegREF shouldn't be present
+      // by the time this code gets to the xml source
+      try {
+        s->setnSeg(Dom::getIntAttribute(segElt, "nSeg"));
+      }
+      catch (xml::DomException ex) {
+        std::cerr << "From detModel::XercesBuilder::buildBox  " << std::endl
+                  << ex.getMsg() << std::endl;
+        throw ex;
+      }
+                 
       b->setSeg(s); 
     }
     return b;
@@ -575,137 +523,128 @@ namespace detModel{
 
 
   /// \doit Add parameters
-  Tube* XercesBuilder::buildTube(DOM_Node e)
+  Tube* XercesBuilder::buildTube(DomElement e)
   {
+    using xml::Dom;
 
-    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
-    Tube* t = new Tube(xml::Dom::getAttribute(el, "name"));
+    Tube* t = new Tube(Dom::getAttribute(e, "name"));
 
 
-    // t->setUnitLength(xml::Dom::transToChar(el.getAttribute("unitLength")));
-    // t->setUnitAngle(xml::Dom::transToChar(el.getAttribute("unitAngle")));
-    if(el.getAttribute("RIn") != "0")
-      t->setRin(atof(xml::Dom::transToChar(el.getAttribute("RIn"))));
-    if(el.getAttribute("ROut") != "0")
-      t->setRout(atof(xml::Dom::transToChar(el.getAttribute("ROut"))));
-    if(el.getAttribute("Z") != "0")
-      t->setZ(atof(xml::Dom::transToChar(el.getAttribute("Z"))));
-    t->setMaterial(xml::Dom::transToChar(el.getAttribute("material")));
+    try {
+      double attVal = Dom::getDoubleAttribute(e, "RIn");
+      if (attVal != 0) t->setRin(attVal);
+      attVal = Dom::getDoubleAttribute(e, "ROut");
+      if (attVal != 0) t->setRout(attVal);
+      attVal = Dom::getDoubleAttribute(e, "Z");
+      if (attVal != 0) t->setZ(attVal);
+    }
+    catch (xml::DomException ex) {
+      std::cerr << "From detModel::XercesBuilder::buildTube" << std::endl
+                << ex.getMsg() << std::endl;
+      throw ex;
+    }
 
-    if (std::string((xml::Dom::transToChar
-                     (el.getAttribute("sensitive")))) == "true")
-      t->setSensitive(1);
-    else 
-      t->setSensitive(0);
-    
+    t->setMaterial(Dom::getAttribute(e, "material"));
+
+    std::string sensAtt = Dom::getAttribute(e, "sensitive");
+    if (sensAtt == "posHit") t->setSensitive(1);
+    else if (sensAtt == "intHit") t->setSensitive(2);
+    else t->setSensitive(0);
     return t;
   }
 
 
-
-  Composition* XercesBuilder::buildComposition(DOM_Node e){
-    unsigned int i;
+    
+  Composition* XercesBuilder::buildComposition(DomElement e)  {
+    using xml::Dom;
 
     Composition* b = new Composition();
-    DOM_NamedNodeMap attributelist=e.getAttributes();
 
-    for (i=0;i<attributelist.getLength();i++){
-      if (attributelist.item(i).getNodeType()!=Comment){
-	DOM_Node currentAttribute=attributelist.item(i);
-	std::string value = 
-          std::string(xml::Dom::transToChar(currentAttribute.getNodeValue() ));
-	std::string attributeName = 
-	  std::string(xml::Dom::transToChar( currentAttribute.getNodeName() ));
-      
-	if( attributeName=="name") b->setName(value);
-	else if (attributeName=="envelope"){
-	  if ( value !="" )
-	    b->setEnvelopeRef(value);
-	}
-	else if (attributeName== "parameters"){
-	  if ( value !="" )
-	    b->setParameters(value);
-	}
-      }
-    };
-
-    DOM_NodeList childs = e.getChildNodes();
+    // Deal with the attributes
+    b->setName(Dom::getAttribute(e, "name"));
+    b->setEnvelopeRef(Dom::getAttribute(e, "envelope"));
+    if (Dom::hasAttribute(e, "parameters")) {
+      b->setParameters(Dom::getAttribute(e, "parameters"));
+    }
+     
+    std::vector<DomElement> posElts;
+    Dom::getChildrenByTagName(e, "*", posElts);
+    unsigned int n = posElts.size();
+    
+    for (unsigned int i = 0; i < n; i++) {
+      b->addPosition(buildPosition(posElts[i]));
+    }
   
-    for(i=0;i<childs.getLength();i++){
-      if (childs.item(i).getNodeType()!=Comment)
-	b->addPosition(buildPosition( childs.item(i) ));
-      
-    };
-
     return b;
   }
 
 
-  Stack* XercesBuilder::buildStack(DOM_Node e){
+  Stack* XercesBuilder::buildStack(DomElement e) {
+
+    using xml::Dom;
 
     Stack::axisDir st;
-    unsigned int i;
 
-    std::string StackDir = 
-      std::string(xml::Dom::transToChar( e.getNodeName() ));
-    if(StackDir=="stackX")st=Stack::xDir;
-    else if(StackDir=="stackY")st=Stack::yDir;
+    std::string StackDir = Dom::getTagName(e);
+
+    if (StackDir=="stackX") st=Stack::xDir;
+    else if (StackDir=="stackY") st=Stack::yDir;
     else st=Stack::zDir;
     
     Stack* s = new Stack(st);
-    
-    DOM_NamedNodeMap attributelist=e.getAttributes();
-    for (i=0;i<attributelist.getLength();i++){
-      if (attributelist.item(i).getNodeType()!=Comment){
-	DOM_Node currentAttribute=attributelist.item(i);
-   
-	std::string value = 
-          std::string(xml::Dom::transToChar(currentAttribute.getNodeValue() ));
-	std::string attributeName = 
-	  std::string(xml::Dom::transToChar( currentAttribute.getNodeName() ));
-	
-	if( attributeName=="name") s->setName(value);
-	else if (attributeName=="origin"){
-	  if (value=="atStart")s->setOrigin(Stack::atStart);
-	  else s->setOrigin(Stack::atCentre);
-	}
-	else if (attributeName== "parameters")s->setParameters(value);
-      }
+
+    // name and origin attributes are always there
+    s->setName(Dom::getAttribute(e, "name"));
+    std::string origin = Dom::getAttribute(e, "origin");
+    if (origin == "atStart") s->setOrigin(Stack::atStart);
+    else s->setOrigin(Stack::atCentre);
+
+    if (Dom::hasAttribute(e, "parameters")) {
+      s->setParameters(Dom::getAttribute(e, "parameters"));
     }
 
-    DOM_NodeList childs = e.getChildNodes();
-  
-  
-    for(i=0;i<childs.getLength();i++){
-      if ( (childs.item(i)).getNodeType()!=Comment){
-	StackedPos* p = buildRelativePosition( childs.item(i));
-	p->setAxisDir((Stack::axisDir)st);
-	s->addPosition(p);
-      }
-    };
-  
+    std::vector<DomElement> posElts;
+    
+    Dom::getChildrenByTagName(e, "*", posElts);
+
+    unsigned int n = posElts.size();
+
+    for (unsigned int i = 0; i < n; i++) {
+      StackedPos* p = buildRelativePosition(posElts[i]);
+      p->setAxisDir((Stack::axisDir)st);
+      s->addPosition(p);
+    }
     return s;
   }
 
 
 
-  SinglePos* XercesBuilder::buildPosition(DOM_Node e){
+  SinglePos* XercesBuilder::buildPosition(DomElement e) {
+    using xml::Dom;
 
-    std::string posType = std::string(xml::Dom::transToChar(e.getNodeName()));
+    std::string posType =  Dom::getTagName(e);
   
     if (posType=="posXYZ"){
     
       PosXYZ* pos=new PosXYZ();
-      setAttributePosition(pos, e);
-       
-      DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
+      setAttributePosition(pos, e); 
 
-      if(el.getAttribute("X") != "0")
-	pos->setX(atof(xml::Dom::transToChar(el.getAttribute("X"))));
-      if(el.getAttribute("Y") != "0")
-	pos->setY(atof(xml::Dom::transToChar(el.getAttribute("Y"))));
-      if(el.getAttribute("Z") != "0")
-	pos->setZ(atof(xml::Dom::transToChar(el.getAttribute("Z"))));
+      try {
+        if (Dom::hasAttribute(e, "X")) {
+          pos->setX(Dom::getDoubleAttribute(e, "X"));
+        }
+        if (Dom::hasAttribute(e, "Y")) {
+          pos->setY(Dom::getDoubleAttribute(e, "Y"));
+        }
+        if (Dom::hasAttribute(e, "Z")) {
+          pos->setZ(Dom::getDoubleAttribute(e, "Z"));
+        }
+      }
+      catch (xml::DomException ex) {
+        std::cerr << "From detModel::XercesBuilder::buildPosition" << std::endl
+                  << ex.getMsg() << std::endl;
+        throw ex;
+      }
 
       return pos;
     }
@@ -716,33 +655,28 @@ namespace detModel{
     else  return 0; // default
   }
 
+  StackedPos* XercesBuilder::buildRelativePosition(DomElement e) {
 
+    using xml::Dom;
+    std::string posType = Dom::getTagName(e);
 
-
-  StackedPos* XercesBuilder::buildRelativePosition(DOM_Node e){
-
-    std::string posType = std::string(xml::Dom::transToChar(e.getNodeName()));
     //AxisPos,AxisMpos
     if (posType=="axisPos"){
-      //   GddaxisPos* pos=new GddaxisPos();
-      //   setAttributeRelativePosition(pos, e);
        
       AxisMPos* pos=new AxisMPos();
 
       setAttributeRelativePosition(pos, e);
-       
-      DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
 
-      if(el.getAttribute("shift") != "0")
-	pos->setShift0(atof(xml::Dom::transToChar(el.getAttribute("shift"))));
-      if(el.getAttribute("gap") != "0")
-	pos->setGap0(atof(xml::Dom::transToChar(el.getAttribute("gap"))));
+      if (Dom::hasAttribute(e, "shift")) {
+        pos->setShift0(Dom::getDoubleAttribute(e, "shift"));
+      }
+      if (Dom::hasAttribute(e, "gap")) {
+        pos->setGap0(Dom::getDoubleAttribute(e, "gap"));
+      }
 
       pos->setNcopy(1);
     
-
       return pos;
-      
     }
   
     else{
@@ -750,138 +684,96 @@ namespace detModel{
 
       setAttributeRelativePosition(pos, e);
        
-      DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
-
-      if(el.getAttribute("shift0") != "0")
-	pos->setShift0(atof(xml::Dom::transToChar(el.getAttribute("shift0"))));
-      if(el.getAttribute("gap0") != "0")
-	pos->setGap0(atof(xml::Dom::transToChar(el.getAttribute("gap0"))));
-      if(el.getAttribute("ncopy") != "0")
-	pos->setNcopy(atof(xml::Dom::transToChar(el.getAttribute("ncopy"))));
-    
+      try {
+        if (Dom::hasAttribute(e, "shift0")) {
+          pos->setShift0(Dom::getDoubleAttribute(e, "shift0"));
+        }
+        if (Dom::hasAttribute(e, "gap0")) {
+          pos->setGap0(Dom::getDoubleAttribute(e, "gap0"));
+        }
+        if (Dom::hasAttribute(e, "ncopy")) {
+          pos->setNcopy(Dom::getDoubleAttribute(e, "ncopy"));
+        }
+      }
+      catch (xml::DomException ex) {
+        std::cerr << "From detModel::XercesBuilder::buildRelativePosition"
+                  << std::endl << ex.getMsg() << std::endl;
+      }
       return pos;
-    
     }
   }
 
 
-  void XercesBuilder::setAttributePosition(SinglePos* pos, DOM_Node e)
+  void XercesBuilder::setAttributePosition(SinglePos* pos, DomElement e)
   {
-    DOM_NamedNodeMap attributelistPos=e.getAttributes();
+    using xml::Dom;
 
-    DOM_Node node;
+    pos->setVolumeRef(Dom::getAttribute(e, "volume"));
 
-    node = attributelistPos.getNamedItem(DOMString("volume"));
-    pos->setVolumeRef(xml::Dom::transToChar(node.getNodeValue()));
-
-    node = attributelistPos.getNamedItem(DOMString("xrot"));
-    pos->setXRot(atof(xml::Dom::transToChar(node.getNodeValue())));
-
-    node = attributelistPos.getNamedItem(DOMString("yrot"));
-    pos->setYRot(atof(xml::Dom::transToChar(node.getNodeValue())));
-
-    node = attributelistPos.getNamedItem(DOMString("zrot"));
-    pos->setZRot(atof(xml::Dom::transToChar(node.getNodeValue())));
-
-    //    node = attributelistPos.getNamedItem(DOMString("S"));
-    //    pos->setS(atof(xml::Dom::transToChar(node.getNodeValue())));
-
-    //  node = attributelistPos.getNamedItem(DOMString("unitLength"));
-    // pos->setUnitLength(xml::Dom::transToChar(node.getNodeValue()));
-
-    // node = attributelistPos.getNamedItem(DOMString("unitAngle"));
-    // pos->setUnitAngle(xml::Dom::transToChar(node.getNodeValue()));
-
-
-    if (e.hasChildNodes()){
-      DOM_NodeList child=e.getChildNodes();
-      for(unsigned int k=0; k<child.getLength() ; k++)
-	{
-	  if(child.item(k).getNodeType() != Comment) 
-	    {
-	      IdField* field = new IdField;
-
-	      DOM_NamedNodeMap attributelist = child.item(k).getAttributes();
-	      for(unsigned int i=0;i<attributelist.getLength();i++){
-	      
-		std::string NameAttr=
-		  std::string(xml::Dom::transToChar
-                              (attributelist.item(i).getNodeName()) );
-
-		char* ValueAttr=xml::Dom::transToChar
-                  (attributelist.item(i).getNodeValue() );
-		if(NameAttr=="name")field->setName(ValueAttr);
-		else if(NameAttr=="step")field->setStep(atof(ValueAttr));
-		else if(NameAttr=="value")field->setValue(atof(ValueAttr));
-	      }//end for
-	      pos->addIdField(field);
-	    }//end if
-	}
+    try {
+      pos->setXRot(Dom::getDoubleAttribute(e, "xrot"));
+      pos->setYRot(Dom::getDoubleAttribute(e, "yrot"));
+      pos->setZRot(Dom::getDoubleAttribute(e, "zrot"));
     }
+    catch (xml::DomException ex) {
+      std::cerr << "From detModel::XercesBuilder::setAttributePosition"
+                << std::endl << ex.getMsg() << std::endl;
+    }
+                      
+
+    // Handle id field children, if any
+    setIdFields(pos, e);
+
   }
 
-  void XercesBuilder::setAttributeRelativePosition(StackedPos* pos, DOM_Node e)
-  {
-    DOM_NamedNodeMap attributelistPos=e.getAttributes();
+  void XercesBuilder::setAttributeRelativePosition(StackedPos* pos, 
+                                                   DomElement e)  {
+    using xml::Dom;
+    pos->setVolumeRef(Dom::getAttribute(e, "volume"));
 
-    DOM_Node node;
-
-    node = attributelistPos.getNamedItem(DOMString("volume"));
-    pos->setVolumeRef(xml::Dom::transToChar(node.getNodeValue()));
-
-    node = attributelistPos.getNamedItem(DOMString("dX"));
-    pos->setDx(atof(xml::Dom::transToChar(node.getNodeValue())));
-
-    node = attributelistPos.getNamedItem(DOMString("dY"));
-    pos->setDy(atof(xml::Dom::transToChar(node.getNodeValue())));
-
-    node = attributelistPos.getNamedItem(DOMString("dZ"));
-    pos->setDz(atof(xml::Dom::transToChar(node.getNodeValue())));
-
-    node = attributelistPos.getNamedItem(DOMString("rotation"));
-    pos->setRotation(atof(xml::Dom::transToChar(node.getNodeValue())));
-
-    // node = attributelistPos.getNamedItem(DOMString("unitLength"));
-    // pos->setUnitLength(xml::Dom::transToChar(node.getNodeValue()));
-
-    // node = attributelistPos.getNamedItem(DOMString("unitAngle"));
-    // pos->setUnitAngle(xml::Dom::transToChar(node.getNodeValue()));
-
-    node = attributelistPos.getNamedItem(DOMString("gap"));
-    pos->setGap(atof(xml::Dom::transToChar(node.getNodeValue())));
-
-    node = attributelistPos.getNamedItem(DOMString("shift"));
-    pos->setShift(atof(xml::Dom::transToChar(node.getNodeValue())));
-
-    if (e.hasChildNodes()){
-      DOM_NodeList child=e.getChildNodes();
-      for(unsigned int k=0; k<child.getLength() ; k++)
-	{
-	  if(child.item(k).getNodeType() != Comment) 
-	    {
-	      IdField* field = new IdField;
-
-	      DOM_NamedNodeMap attributelist = child.item(k).getAttributes();
-	      for(unsigned int i=0;i<attributelist.getLength();i++){
-	      
-		std::string NameAttr=
-		  std::string(xml::Dom::transToChar
-                              (attributelist.item(i).getNodeName()) );
-
-		char* ValueAttr=xml::Dom::transToChar
-                  ( attributelist.item(i).getNodeValue() );
-
-		if(NameAttr=="name")field->setName(ValueAttr);
-		else if(NameAttr=="step")field->setStep(atof(ValueAttr));
-		else if(NameAttr=="value")field->setValue(atof(ValueAttr));
-	      }//end for
-	      pos->addIdField(field);
-	    }//end if
-	}
+    try {
+      pos->setDx(Dom::getDoubleAttribute(e, "dX"));
+      pos->setDy(Dom::getDoubleAttribute(e, "dY"));
+      pos->setDz(Dom::getDoubleAttribute(e, "dZ"));
+      pos->setRotation(Dom::getDoubleAttribute(e, "rotation"));
+      pos->setGap(Dom::getDoubleAttribute(e, "gap"));
+      pos->setShift(Dom::getDoubleAttribute(e, "shift"));
     }
- 
-  }
+    catch (xml::DomException ex) {
+      std::cerr << "From detModel::XercesBuild::setAttributeRelativePosition"
+                << std::endl << ex.getMsg() << std::endl;
+      throw ex;
+    }
 
-}
+  }     // end setAttributeRelativePosition
+
+  void XercesBuilder::setIdFields(Position* pos, DomElement e) {
+    using xml::Dom;
+
+    std::vector<DomElement> fields;
+    Dom::getChildrenByTagName(e, "idField", fields);
+
+    unsigned int n = fields.size();
+
+    for (unsigned int i = 0; i < n; i++) {
+      IdField* field = new IdField;
+      
+      DomElement curField = fields[i];
+      field->setName(Dom::getAttribute(curField, "name"));
+      try {
+        field->setStep(Dom::getIntAttribute(curField, "step"));
+        field->setValue(Dom::getIntAttribute(curField, "value"));
+      }
+      catch (xml::DomException ex) {
+        std::cerr << "From detModel::XercesBuild::setIdFields: " 
+                  << std::endl << ex.getMsg() << std::endl;
+        throw ex;
+      }
+      pos->addIdField(field);
+    }
+
+  }
+} // end namespace detModel
+
 
 
