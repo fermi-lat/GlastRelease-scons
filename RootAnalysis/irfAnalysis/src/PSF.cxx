@@ -306,7 +306,10 @@ void PSF::drawAeff(std::string ps, std::string page_title, std::string hist_titl
 
     // determine normalization factor to Aeff
     int ngen=4.66e6; 
-    double anglebin=0.2, logebin=0.125, target_area=6., emax=160., emin=0.016;
+    double anglebin=0.2, 
+        logebin=0.125,  // this must correspond to the binning
+        target_area=6., 
+        emax=160., emin=0.016;
     double norm_factor=target_area/ngen/anglebin/(logebin/log10(emax/emin));;
     std::cout << "Applying normailzation factor assuming " << ngen 
         << " generated uniformly over:"
@@ -321,6 +324,7 @@ void PSF::drawAeff(std::string ps, std::string page_title, std::string hist_titl
             return;
         }
         printf("Drawing %s\n", h->GetTitle());
+        h->Sumw2(); // needed to preserve errors
         h->Scale(norm_factor);
         h->SetMaximum(1.0);
         h->SetLineColor(i+1);
