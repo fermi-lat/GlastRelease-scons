@@ -149,7 +149,8 @@ namespace Event { //Namespace
     //operator overload for TkrFitMatrix*TkrFitPar
     const TkrFitPar operator *(const TkrFitPar& A) const;
     
-	   
+    //operator overload for TkrFitMatrix*double
+    const TkrFitMatrix operator *(const double& A) const;	   
   };
 
 }; //Namespace
