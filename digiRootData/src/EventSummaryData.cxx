@@ -40,6 +40,15 @@ void EventSummaryData::Print(Option_t *option) const {
     using namespace std;
     TObject::Print(option);
     cout.precision(2);
+    cout << "Tem Lengths: " << endl;
+    UInt_t i;
+    for (i = 0; i<16; i++)
+        cout << "Tem: " << i << " Len: " << m_temLen[i] << endl;
+    cout << "GEM Len: " << m_otherContribLen[GEM] << " AEM Len: " << 
+         m_otherContribLen[AEM] << endl;
+    cout << "OSW Len: " << m_otherContribLen[OSW] << " ERR Len: " <<
+         m_otherContribLen[ERR] << " Diag Len: " << m_otherContribLen[DIAG] 
+         << endl;
 }
 
 UInt_t EventSummaryData::calStrobe() {return EventSummary::calStrobe(m_summary); }

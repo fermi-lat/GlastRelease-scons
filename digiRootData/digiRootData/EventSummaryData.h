@@ -49,11 +49,11 @@ public:
 
     void initEventFlags(UInt_t flags) { m_flags = flags; };
 
-    void initTemContribLen(unsigned long *len) {
+    void initTemContribLen(unsigned int *len) {
         unsigned int i;
         for (i = 0; i < 16; i++) { m_temLen[i] = len[i]; }
     }
-    void initContribLen(unsigned long *tem, unsigned long gemLen, unsigned long oswLen, unsigned long errLen, unsigned long diagLen, unsigned long aemLen) {
+    void initContribLen(unsigned int *tem, unsigned int gemLen, unsigned int oswLen, unsigned int errLen, unsigned int diagLen, unsigned int aemLen) {
 
         m_otherContribLen[GEM] = gemLen;
         m_otherContribLen[OSW] = oswLen;
@@ -88,7 +88,7 @@ public:
     Bool_t badEvent() const { return (m_flags != 0); };
     Bool_t badEventSequence() const { return (m_flags & EVTSEQ); };
     
-    UInt_t temLength(unsigned int tem) { m_temLen[tem]; }
+    UInt_t temLength(unsigned int tem) { return m_temLen[tem]; }
     UInt_t gemLength() const { return m_otherContribLen[GEM]; }
     UInt_t oswLength() const { return m_otherContribLen[OSW]; }
     UInt_t aemLength() const { return m_otherContribLen[AEM]; }
