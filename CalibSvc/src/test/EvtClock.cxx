@@ -91,10 +91,13 @@ StatusCode EvtClock::execute( ) {
   facilities::Timestamp time = i_evtTime();
   log << MSG::INFO << "Event time: "
       << time.getString()
-      << " Julian day number "
-      << time.getJulian()
       << endreq; 
-  m_detDataSvc->setEventTime(CalibData::CalibTime(time));
+    //      << " Julian day number "
+    //      << time.getJulian()
+  CalibData::CalibTime ctime(time);
+  log << MSG::INFO << "Event time (hours) " << ctime.hours() << endreq;
+  //  m_detDataSvc->setEventTime(CalibData::CalibTime(time));
+  m_detDataSvc->setEventTime(ctime);
 
   return StatusCode::SUCCESS;
 }

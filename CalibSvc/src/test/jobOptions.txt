@@ -42,7 +42,11 @@ ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
 DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 
-CalibDataSvc.CalibNameList = {"Tkr.BadStrips/chocolate"};
+// not used yet
+CalibDataSvc.CalibNameList = {"TKR_DeadChan/chocolate",
+			   "Test_1/mocha"};
+
+EvtClock.delayTime = 36000;
 
 //==============================================================
 //

@@ -119,9 +119,29 @@ StatusCode UseCalib::execute( ) {
     return StatusCode::FAILURE;
   }
   log << MSG::INFO 
-      << "Test_1 object, serial #" <<  test1Copy->getSerNo() 
-      << " has value name of "  << test1Copy->getValueName() 
-      << " and value = " << test1Copy->getValue() << endreq;
+      << "Test_1 obj, serial #" <<  test1Copy->getSerNo() 
+      << "  value = " << test1Copy->getValue() << endreq;
+  log << MSG::INFO << "Vstart: " <<  (test1Copy->validSince()).hours()
+      << "  Vend: " << (test1Copy->validTill()).hours() << endreq;
+
+  m_pCalibDataSvc->updateObject(pObject);
+
+  test1Copy = 0;
+  try {
+    test1Copy = dynamic_cast<CalibData::CalibTest1 *> (pObject);
+  }
+  catch (...) {
+    log << MSG::ERROR 
+        << "Dynamic cast to CalibTest1 after upate failed" << endreq;
+    return StatusCode::FAILURE;
+  }
+  log << MSG::INFO 
+      << "After update Test_1 object, serial #" <<  test1Copy->getSerNo() 
+      << " has value = " << test1Copy->getValue() << endreq;
+  log << MSG::INFO << "Vstart: " <<  (test1Copy->validSince()).hours()
+      << "  Vend: " << (test1Copy->validTill()).hours() << endreq;
+
+  //      << " has value name of "  << test1Copy->getValueName() 
 
   return StatusCode::SUCCESS;
 }
