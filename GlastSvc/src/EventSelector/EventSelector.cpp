@@ -24,8 +24,6 @@
 #include "instrument/Scintillator.h"
 
 #include "GlastEvent/TopLevel/ObjectVector.h"
-#include "GlastEvent/MonteCarlo/MCACDHit.h"
-#include "GlastEvent/MonteCarlo/MCCalorimeterHit.h" //TODO: remove this declaration
 
 extern const CLID& CLID_Event;
 
