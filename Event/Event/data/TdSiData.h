@@ -28,7 +28,13 @@ class TdSiData : virtual public SiData , virtual public DataObject {
     class Strip {
         private:
             friend class TdSiData;
-        
+
+	    /* For some reson we are required to make LdSiData a 
+	       friend class of Strip. This is only true for Unix.
+	       A better work around should be found at some point
+	    */
+            friend class LdSiData;        
+
         public:
             Strip () {}
         
