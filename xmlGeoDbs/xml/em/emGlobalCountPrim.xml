@@ -69,7 +69,7 @@ crystal detector type</prim>
 CAL diode detector type</prim>
   <prim name="eDTypeACDTile" value="4" uType="count" type="int">
 ACD tile detector type</prim>
-  <prim name="eDTypeACDTape" value="5" uType="count" type="int">
-ACD tape detector type </prim>
+  <prim name="eDTypeACDRibbon" value="5" uType="count" type="int">
+ACD ribbon detector type </prim>
  
 </primCategory>
