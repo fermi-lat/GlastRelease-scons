@@ -5,6 +5,9 @@
 #include "GlastEvent/MonteCarlo/McIntegratingHit.h"
 #include "idents/VolumeIdentifier.h"
 
+#include "CLHEP/Geometry/Transform3D.h"
+#include "CLHEP/Vector/ThreeVector.h"
+
 // Geant4 interface
 #include "G4Step.hh"
 #include "G4VSolid.hh"
@@ -44,39 +47,39 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
     G4String material = logVol->GetMaterial()->GetName();
     G4String nameVolume = physVol->GetName();
     
-    G4ThreeVector InitPos = aStep->GetPreStepPoint()->GetPosition();
-    G4ThreeVector FinPos = aStep->GetPostStepPoint()->GetPosition();
+    G4ThreeVector prePos = aStep->GetPreStepPoint()->GetPosition();
+    G4ThreeVector postPos = aStep->GetPostStepPoint()->GetPosition();
     
     // determine the ID by studying the history, then call appropriate 
     idents::VolumeIdentifier id = constructId(aStep);
 
-    //**** interface to display *************
-    
-    //    DisplayManager::instance()->addHit(InitPos, FinPos);
-    
-    if( !m_detectorList[id]) {
-        makeIntegratingBox( theTouchable );        
-    }
-
-    
     // We fill an integrating hit
     mc::McIntegratingHit *hit; 
     // If the hit has already been created we use it, otherwise we
     // create a new one
     if( !(hit = m_detectorList[id]))
       {
-	// Filling of the hits container
-	hit = new mc::McIntegratingHit;
-	m_intHit->push_back(hit);
-	m_detectorList[id] = hit;
+        // This draw the volume
+        makeIntegratingBox( theTouchable );        
+        // Filling of the hits container
+    	hit = new mc::McIntegratingHit;
+        hit->setVolumeID(id);
+        m_intHit->push_back(hit);
+    	m_detectorList[id] = hit;
       }
-	
-    //    hit->setDepositedEnergy(edep);
-    //	hit->setVolumeID(id);
-    //	hit->setEntryPoint(InitPos);
-    //	hit->setExitPoint(FinPos);
 
+#if 1 // this transforms it to local coordinates
+    HepTransform3D 
+        global(*(theTouchable->GetRotation()), 
+        theTouchable->GetTranslation());
 
+    HepTransform3D local = global.inverse();
+    prePos = local * (HepVector3D)prePos;
+    postPos = local * (HepVector3D)postPos;
+#endif
+
+    // fill the energy and position    
+    hit->addEnergyItem(edep,0,(prePos+postPos)/2);
 
     return true;
     
