@@ -2,6 +2,9 @@
  * Package detModel
  * Coordinator: R.Giannitrapani
  *
+ * v2r12 jrb 10 June 2002  
+ *       1. Pass DOM_* objects by value; eliminate gcc warnings
+ *       2. Improved HtmlConstantsVisitor
  * v2r11 THB new map builder featurs
  * v2r10 THB new features for visitor mode
  * v2r9 RG  fixed a rotation bug in idMapBuilder
