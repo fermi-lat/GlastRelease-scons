@@ -6,6 +6,7 @@
  * @author David Wren - dnwren@milkyway.gsfc.nasa.gov
 */
 #include "ThrottleAlg.h"
+#include "enums/TriggerBits.h"
 #include <cmath>
 #include <map>
 #include <cassert>
@@ -52,7 +53,7 @@ unsigned int ThrottleAlg::calculate(const Event::EventHeader& header,
 	}
 	if (m_throttle){
         m_throttle=false;
-		return THROTTLE_SET;
+		return enums::b_THROTTLE;
 	}
 	
 	return 0;
