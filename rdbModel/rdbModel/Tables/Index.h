@@ -18,20 +18,24 @@ namespace rdbModel{
    */
   class Index {
   public:
-    Index() {};
-    ~Index();
+    Index(Table* myTable=0) : m_myTable(myTable) {};
+    ~Index() {};
 
     const std::string& getName() const {return m_name; };
+    bool isPrimary() const {return m_primary;}
+    const std::vector<std::string>& getColumnNames();
 
     Visitor::VisitorState accept(Visitor* v);
     //    Visitor::VisitorState acceptNotRec(Visitor* v);
 
-  private:
+  private: 
+    friend class rdbModel::XercesBuilder;
+
     /// Is it a primary key?
     bool m_primary;
 
     /// Names of  columns it's indexing
-    std::vector<std::string&> m_indexCols;
+    std::vector<std::string> m_indexCols;
 
     /// Point back to owning table
     Table* m_myTable;

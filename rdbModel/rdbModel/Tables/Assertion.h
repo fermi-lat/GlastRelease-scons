@@ -19,15 +19,19 @@ namespace rdbModel{
       WHENglobalCheck = 1,
       WHENchangeRow
     };
-    Assertion();
+    Assertion(Table* myTable=0) : m_op(0), m_myTable(myTable) 
+    { m_sqlEquivalent.clear();};
     ~Assertion();
+    WHEN getWhen() const {return m_when;}
     Visitor::VisitorState accept(Visitor* v);
+
+    const std::string& getSql() const {return m_sqlEquivalent;}
+    
     //    Visitor::VisitorState acceptNotRec(Visitor* v);
 
-    bool execute();
 
   private:
-    friend XercesBuilder;
+    friend class rdbModel::XercesBuilder;
 
     WHEN m_when;
     Operator* m_op;
@@ -54,8 +58,12 @@ namespace rdbModel{
     // Other operators take 1 or more other operators as arguments
     class Operator {
     public:
-      Operator();
+      Operator() {};
       ~Operator();
+
+      /// Check whether columns or column and literal to be compared
+      /// have compatible types
+      bool validCompareOp(Table* table) const;
 
       OPTYPE m_opType;
 
