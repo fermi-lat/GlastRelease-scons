@@ -2,36 +2,6 @@
     @brief package G4Generator <pre>
     $Id$
 *
- * v4r4p2 02-dec-02 THB Display primary track independently
- * v4r4p1 06-nov-02 THB Refactoring of primary particle generation; support for ions
- * v4r4   10-oct-02 THB Fix to prune; random control
- * v4r3p4 20-sep-02 THB xml change required by new energy policy
- * v4r3p3 10-sep-02 THB GlastSvc and Event version change
- * v4r3p2 04-sep-02 THB Add property to set defaultCutValue
- * v4r3p1 01-sep-02 THB Geant4Runtime used for clients
- * v4r3   15-aug-02 THB various: see changelog
- * v4r2   25-jul-02 THB 
- * v4r1p6 20-jun-02 THB remove arbitrary cut on number of mcparticles
- * v4r1p5 18-jun-02 THB put neutrals on separate display button
- * v4r1p4 07-jun-02 THB clean out uses; remove test dependence on GlastDigi
- * v4r1p3 31-may-02 THB put display options under submenu
- * v4r1p2 26-may-02 THB fix global to local transformations
- * v4r1p1 16-may-02 THB small fix for new McParticle
- * v4r1   11-may-02 THB hide the G4 libs from clients only wanting the DLL
- * v4r0   10-may-02 THB convert from GlastEvent to Event
- * v3r5   02-may-02 THB No longer uses FluxSvc: gets incoming particle from TDS
- * v3r4p1 28-Apr-02 THB remove cm and GeV factors when using FluxSvc
- * v3r4   20-Apr-02 RG  code review tag (new documentation and comments)
- * v3r3p2 11-Apr-02 THB patch in DisplayManager.cxx to satisfy egcs 
- * v3r3   08-Apr-02 RG  fix rotation and add McParticle tree filling
- * v3r2   26-Mar-02 THB fix facilities tag, add McParticle support
- * v3r1p1 26-Mar-02 THB reverse signs of rotation angles
- * v3r1   21-Mar-02 THB All hits done, saving local coordinates
- * v2r1   15-Mar-02 THB cleaned up colors, improved digi handling. 
- *                      (Still no integrating hits)
- * v2r0   08-Mar-02 THB removed dependence on instrument and converted to use 
- *                      GlastDetSvc for geometry and materials
- * v1     05-Jan-02 THB 
- * v0     19-Nov-01 THB Inital version  
+ * v0r0   23-Jan-03 TU  Inital version  
 </pre>
 */
