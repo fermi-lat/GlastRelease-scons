@@ -95,6 +95,7 @@ void FluxMgr::init(const std::vector<std::string>& fileList){
     // these are the localally defined spectra that we want to make available
     DLL_DECL_SPECTRUM( FILESpectrum);
     DLL_DECL_SPECTRUM( TimeCandle);
+    DLL_DECL_SPECTRUM( AlbedoPSpectrum);
     
 }
 
