@@ -2,6 +2,7 @@
  * package GlastSvc
  * package manager:T.Burnett
  *
+ * 20-apr-02  THB Tag v7r1 new features in GlastDetSvc for Tkr
  * 17-apr-02  THB Tag v7r0 incompatible interface for IRecoSvc
  * 05-apr-02  THB Tag v6r0 incompatible interface for IGeometry
  * 02-apr-02  LSR Tag v5r2p1 allow non-integer strips (for clusters)
