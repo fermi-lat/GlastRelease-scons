@@ -67,7 +67,7 @@
     </field>
 
     <field name="fCALSeg" >
-      <vMinMax min="0" maxREF="nCsISeg" />
+      <vMinMax min="0" maxREF="nCsISegM1" />
     </field>
 
     <field name="fLadder" >

@@ -12,6 +12,15 @@
           </quo>
         </const>
 
+        <const name="nCsISegM1" uType="count" >
+          <notes>upper limit for id field keeping track of segment number
+          </notes>
+          <minus>
+            <refer refTo="nCsISeg" />
+            <const value="1" uType="count" />
+          </minus>
+        </const>
+
         <const name="CALMaxLayer" uType="count" >
           <notes>upper limit on Cal layer idfield value</notes>
           <minus>
