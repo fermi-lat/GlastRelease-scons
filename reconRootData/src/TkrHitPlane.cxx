@@ -7,7 +7,7 @@ TkrHitPlane::TkrHitPlane() {
 }
 
 void TkrHitPlane::initializeInfo(UInt_t hit, UInt_t tower, UInt_t plane, AXIS proj,
-                                 AXIS nextProj, Double_t z, Double_t energy, Double_t radLen)
+                                 AXIS nextProj, Double_t z, Double_t energy, Double_t radLen, Double_t activeDist)
 {
     m_IdHit      = hit;
     m_IdTower    = tower;
@@ -17,6 +17,7 @@ void TkrHitPlane::initializeInfo(UInt_t hit, UInt_t tower, UInt_t plane, AXIS pr
     m_Zplane     = z;
     m_EnePlane   = energy;
     m_RadLen     = radLen;
+    m_activeDist = activeDist;
 }
 
 void TkrHitPlane::initializeHits(const TkrFitHit& meas, const TkrFitHit& pred, const TkrFitHit& fit,
@@ -40,6 +41,7 @@ void TkrHitPlane::Clear(Option_t *option) {
     m_Zplane     = 0.;
     m_EnePlane   = 0.;
     m_RadLen     = 0.;
+    m_activeDist = 0.;
 }
 
 void TkrHitPlane::Print(Option_t *option) const {

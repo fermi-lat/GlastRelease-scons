@@ -40,7 +40,7 @@ public:
 
     //! Two initialize methods needed for this class
     void     initializeInfo(UInt_t hit, UInt_t tower, UInt_t plane, AXIS proj,
-                            AXIS nextProj, Double_t z, Double_t energy, Double_t radLen);
+                            AXIS nextProj, Double_t z, Double_t energy, Double_t radLen, Double_t activeDist);
     void     initializeHits(const TkrFitHit& meas, const TkrFitHit& pred, const TkrFitHit& fit,
                             const TkrFitHit& smooth, const TkrCovMat& material);
 
@@ -53,6 +53,7 @@ public:
     Double_t         getZplane()             const {return m_Zplane;        }
     Double_t         getEnePlane()           const {return m_EnePlane;      }
     Double_t         getRadLen()             const {return m_RadLen;        }
+    Double_t         getActiveDist()         const {return m_activeDist;    }
 
     const TkrFitHit& getHitMeas()            const {return m_HitMeas;       }
     const TkrFitHit& getHitPred()            const {return m_HitPred;       }
@@ -64,6 +65,7 @@ private:
     Double_t   m_Zplane;      // Z coordinate of this plane
     Double_t   m_EnePlane;    // Fitter energy at this plane
     Double_t   m_RadLen;      // Radiation lengths to this plane
+    Double_t   m_activeDist;  // Distance to edge of nearest active volume
 
     UInt_t     m_IdHit;       // Index of cluster hit in the TkrSiClusters 
     UInt_t     m_IdTower;     // Tower ID
