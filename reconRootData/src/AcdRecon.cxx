@@ -12,7 +12,8 @@ AcdRecon::~AcdRecon() {
 }
 
 void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist,
-                          const AcdId &minDocaId, const std::vector<Double_t> &rowDoca) {
+                          const AcdId &minDocaId, const std::vector<Double_t> &rowDoca,
+                          const std::vector<Double_t> &rowActDist) {
     Clear();
     m_totEnergy = e;
     m_tileCount = count;
@@ -21,6 +22,7 @@ void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca
     m_actDist = actDist;
     m_minDocaId = minDocaId;
     m_rowDocaCol = rowDoca;
+    m_rowActDistCol = rowActDist;
 }
 
 void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist,
@@ -41,6 +43,7 @@ void AcdRecon::Clear(Option_t *option) {
     m_doca = -200.;
     m_actDist = -200.0;
     m_rowDocaCol.clear();
+    m_rowActDistCol.clear();
 }
 
 void AcdRecon::Print(Option_t *option) const {
@@ -51,9 +54,13 @@ void AcdRecon::Print(Option_t *option) const {
     m_minDocaId.Print();
     cout << " Act_Dist: " << m_actDist << endl;
     cout << "GammeDoca: " << m_gammaDoca << endl;
-    cout << "RowDoca: " << endl;;
+    cout << "RowDoca: " << endl;
     std::vector<Double_t>::const_iterator rowDocaIt;
     for (rowDocaIt = m_rowDocaCol.begin(); rowDocaIt != m_rowDocaCol.end(); rowDocaIt++) 
         cout << (*rowDocaIt) << endl;
+    cout << "RowActDist: " << endl;
+    std::vector<Double_t>::const_iterator rowActDistIt;
+    for (rowActDistIt = m_rowActDistCol.begin(); rowActDistIt != m_rowActDistCol.end(); rowActDistIt++) 
+        cout << (*rowActDistIt) << endl;
 
 }

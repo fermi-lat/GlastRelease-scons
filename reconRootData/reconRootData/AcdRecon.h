@@ -26,20 +26,23 @@ public:
     AcdRecon();
  
     AcdRecon(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist,
-            const AcdId &minDocaId, const std::vector<Double_t> &rowDoca)       
+            const AcdId &minDocaId, const std::vector<Double_t> &rowDoca,
+            const std::vector<Double_t> &rowActDist)       
             : m_totEnergy(e),
             m_tileCount(count),
             m_gammaDoca(gDoca),
             m_doca(doca),
             m_actDist(actDist),
             m_minDocaId(minDocaId),
-            m_rowDocaCol(rowDoca)
+            m_rowDocaCol(rowDoca),
+            m_rowActDistCol(rowActDist)
         {};
      
     virtual ~AcdRecon();
     
     void initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist,
-            const AcdId &minDocaId, const std::vector<Double_t> &rowDoca);
+        const AcdId &minDocaId, const std::vector<Double_t> &rowDoca, 
+        const std::vector<Double_t> &rowActDist);
 
     /// overload initialize for interactive root where we cannot use std::vector
     void initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist,
@@ -59,6 +62,10 @@ public:
     inline const Double_t getRowDoca(UInt_t i) const { 
         return ((i < m_rowDocaCol.size()) ? m_rowDocaCol[i] : -1.); };
     inline void addRowDoca(Double_t val) { m_rowDocaCol.push_back(val); };
+    inline const std::vector<Double_t>& getRowActDistCol() const { return m_rowActDistCol; };
+    inline const Double_t getRowActDist(UInt_t i) const {
+        return ( (i < m_rowActDistCol.size()) ? m_rowActDistCol[i] : -1.); };
+    inline void addRowActDist(Double_t val) { m_rowActDistCol.push_back(val); };
     //inline const std::map<AcdId, Double_t>& getEnergyCol() const { return m_energyCol; };
     
 private:
@@ -76,14 +83,16 @@ private:
     /// Collection of distance of closest approach calculations
     /// for each side row of the ACD
     std::vector<Double_t> m_rowDocaCol;
-    
+    /// Collection of Active Distance calc for each side row of ACD
+    std::vector<Double_t> m_rowActDistCol;
+
     // record of the tile with the minimum Distance of Closest Approach
     AcdId m_minDocaId;
     
     /// Stores reconstructed energy per ACD digi
     //std::map<AcdId, Double_t> m_energyCol;
     
-    ClassDef(AcdRecon,1) // Acd Reconstruction data
+    ClassDef(AcdRecon,2) // Acd Reconstruction data
 };
 
 #endif
