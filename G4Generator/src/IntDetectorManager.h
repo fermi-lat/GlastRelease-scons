@@ -6,7 +6,7 @@
 
 #include "idents/VolumeIdentifier.h"
 
-#include "GlastEvent/MonteCarlo/McIntegratingHit.h"
+#include "Event/MonteCarlo/McIntegratingHit.h"
 
 #include "DetectorManager.h"
 #include <map>
@@ -49,10 +49,10 @@ public:
   
  private:
   /// The collection of McIntegratingHit to be saved in the TDS
-  McIntegratingHitVector *m_intHit;  
+  Event::McIntegratingHitVector *m_intHit;  
   
   /// A map of McIntegratingHit indicized by volume id to pile up energy
   /// deposited
-  std::map<idents::VolumeIdentifier,mc::McIntegratingHit*> m_detectorList;
+  std::map<idents::VolumeIdentifier,Event::McIntegratingHit*> m_detectorList;
 };
 #endif

@@ -13,7 +13,7 @@
 #include "McParticleManager.h"
 #include "TrackingAction.h"
 
-#include "GlastEvent/MonteCarlo/McParticle.h"
+#include "Event/MonteCarlo/McParticle.h"
 
 //geant4
 #include "G4TrackingManager.hh"
@@ -35,8 +35,8 @@ void TrackingAction::PreUserTrackingAction(const G4Track* aTrack)
   // Inputs: the G4Track pointer aTrack that gives access to the actual created
   // track object
 
-  mc::McParticle* parent;
-  mc::McParticle* particle;
+  Event::McParticle* parent;
+  Event::McParticle* particle;
   
   // we get the pointer to the McParticleManager singleton
   McParticleManager* man = McParticleManager::getPointer();
@@ -49,14 +49,14 @@ void TrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 
   // lets create a new particle (we don't need to destroy this since it will go
   // in the TDS
-  particle = new mc::McParticle();
+  particle = new Event::McParticle();
   
   // get the 4-momentum  
   HepLorentzVector pin(aTrack->GetTotalEnergy(), aTrack->GetMomentum());  
   // we initialize the particle by giving the parent, the PDG encoding, a flag
   // (in that case Swum, and the initial momentum of the particle
   particle->initialize(parent, aTrack->GetDefinition()->GetPDGEncoding(),
-                       mc::McParticle::Swum,pin);
+                       Event::McParticle::Swum,pin);
   
   // we add this particle to our collection for subsequent saving in the TDS
   man->addMcParticle(aTrack->GetTrackID(),particle);  
@@ -69,7 +69,7 @@ void TrackingAction::PostUserTrackingAction(const G4Track* aTrack)
   // Inputs: the G4Track pointer aTrack that gives access to the actual track
   // object
   
-  mc::McParticle* particle;
+  Event::McParticle* particle;
 
   // we get the pointer to the McParticleManager singleton
   McParticleManager* man = McParticleManager::getPointer();

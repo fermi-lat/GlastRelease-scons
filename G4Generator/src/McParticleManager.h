@@ -6,7 +6,7 @@
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/MsgStream.h"
 
-#include "GlastEvent/MonteCarlo/McParticle.h"
+#include "Event/MonteCarlo/McParticle.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 
 #include <map>
@@ -36,16 +36,16 @@ class McParticleManager {
   /// This method add an McParticle to the map with id as an index
   /// @param id The Geant4 id (a progressive integer)
   /// @param particle The pointer to the McParticle to be added
-  void addMcParticle(unsigned int id, mc::McParticle *particle);
+  void addMcParticle(unsigned int id, Event::McParticle *particle);
 
   /// Retrive an McParticle giving an id
   /// @param id the Geant4 id (a progressive integer)
   /// @return The McParticle corresponding to the id
-  mc::McParticle* getMcParticle(unsigned int id){return m_particles[id];}
+  Event::McParticle* getMcParticle(unsigned int id){return m_particles[id];}
 
   /// Retrive the last particle added to the map
   /// @return The last McParticle added to the map
-  mc::McParticle* getLastParticle(){return m_lastParticle;};
+  Event::McParticle* getLastParticle(){return m_lastParticle;};
 
   /// initialize the class, passing the event selector pointer for TDS
   /// operations
@@ -66,12 +66,12 @@ class McParticleManager {
   static McParticleManager* m_pointer;
   
   /// The map of McParticle pointers indicized by g4 ids 
-  std::map <unsigned int, mc::McParticle*> m_particles;
+  std::map <unsigned int, Event::McParticle*> m_particles;
 
   /// The pointer to the IdataProviderSvc
   IDataProviderSvc* m_esv;
 
   /// A pointer to the last particle added to the map
-  mc::McParticle* m_lastParticle;
+  Event::McParticle* m_lastParticle;
 };
 #endif //McParticleManager_H

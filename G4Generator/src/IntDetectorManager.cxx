@@ -12,7 +12,7 @@
 #include "McParticleManager.h"
 
 #include <iostream>
-#include "GlastEvent/MonteCarlo/McIntegratingHit.h"
+#include "Event/MonteCarlo/McIntegratingHit.h"
 #include "idents/VolumeIdentifier.h"
 
 #include "CLHEP/Geometry/Transform3D.h"
@@ -43,7 +43,7 @@ void IntDetectorManager::Initialize(G4HCofThisEvent*)
   // clear the list of hited detectors
   m_detectorList.clear();
   // At the start of the event we create a new container for the TDS
-  m_intHit = new McIntegratingHitVector;    
+  m_intHit = new Event::McIntegratingHitVector;    
 }
 
 G4bool IntDetectorManager::ProcessHits(G4Step* aStep,
@@ -76,7 +76,7 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,
   idents::VolumeIdentifier id = constructId(aStep);
 
   // We want to fill an integrating hit
-  mc::McIntegratingHit *hit; 
+  Event::McIntegratingHit *hit; 
 
   // If the hit has already been created we use it, otherwise we
   // create a new one
@@ -85,7 +85,7 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,
       // This draw the volume
       makeDisplayBox( theTouchable, id );        
       // A new object is needed
-      hit = new mc::McIntegratingHit;
+      hit = new Event::McIntegratingHit;
       // Set its volume identifier
       hit->setVolumeID(id);
       // Put it in the collection of hits
@@ -119,7 +119,7 @@ void IntDetectorManager::EndOfEvent(G4HCofThisEvent*)
   // /Event/MC/IntegratingHitsCol folder
   
   // Let's sort the hits by volume identifier
-  std::sort(m_intHit->begin(),m_intHit->end(), CompareIntHits());
+  std::sort(m_intHit->begin(),m_intHit->end(), Event::CompareIntHits());
 
   // store the hits in the TDS
   m_esv->registerObject("/Event/MC/IntegratingHitsCol", m_intHit);    

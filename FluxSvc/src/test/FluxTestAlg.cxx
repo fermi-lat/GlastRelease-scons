@@ -6,7 +6,7 @@
 
 
 // Event for creating the McEvent stuff
-#include "Event/TopLevel/Event.h"
+//#include "Event/TopLevel/Event.h"
 #include "Event/TopLevel/MCEvent.h"
 #include "Event/MonteCarlo/McParticle.h"
 #include "Event/TopLevel/EventModel.h"

@@ -18,7 +18,7 @@
 McParticleManager* McParticleManager::m_pointer = 0;
 
 void McParticleManager::addMcParticle(unsigned int id, 
-                                      mc::McParticle *particle){
+                                      Event::McParticle *particle){
   // Purpose and Method: with that method we add a new McParticle to the map of
   // particles, using as the index an unsigned integer (that is the Geant4 id)
 
@@ -43,17 +43,17 @@ void McParticleManager::save()
   // /Event/MC/McParticleCol folder of the TDS
 
   // if running FluxAlg, collection will already have parent 
-  mc::McParticleCol*  pcol=  
-    SmartDataPtr<mc::McParticleCol>(m_esv, "/Event/MC/McParticleCol");
+  Event::McParticleCol*  pcol=  
+    SmartDataPtr<Event::McParticleCol>(m_esv, "/Event/MC/McParticleCol");
 
   if( pcol==0) {
     // create the TDS stuff
-    pcol = new mc::McParticleCol;
+    pcol = new Event::McParticleCol;
     m_esv->registerObject("/Event/MC/McParticleCol", pcol);
   }
   
   // fill the McParticleCol with McParticles
-  std::map <unsigned int, mc::McParticle*>::iterator it;
+  std::map <unsigned int, Event::McParticle*>::iterator it;
   
   for(it=m_particles.begin();it != m_particles.end(); it++)
     pcol->push_back(it->second);

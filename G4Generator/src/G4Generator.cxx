@@ -40,7 +40,7 @@
 
 
 //montecarlo data structures 
-#include "GlastEvent/MonteCarlo/McParticle.h"
+#include "Event/MonteCarlo/McParticle.h"
 
 
 //gui
@@ -174,8 +174,8 @@ StatusCode G4Generator::execute()
     }
   }  
 
-  mc::McParticleCol*  pcol=  
-    SmartDataPtr<mc::McParticleCol>(eventSvc(), "/Event/MC/McParticleCol");
+  Event::McParticleCol*  pcol=  
+    SmartDataPtr<Event::McParticleCol>(eventSvc(), "/Event/MC/McParticleCol");
 
   if( pcol==0){ 
       log<< MSG::ERROR << "No source of particles!" << endreq;
@@ -184,8 +184,8 @@ StatusCode G4Generator::execute()
   }  
 
   assert(pcol->size()==1); // something wrong: must be only one
-  mc::McParticle* primary = pcol->front();
-  mc::McParticle::StdHepId hepid= primary->particleProperty();
+  Event::McParticle* primary = pcol->front();
+  Event::McParticle::StdHepId hepid= primary->particleProperty();
   ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
   std::string name = ppty->particle(); 
   const HepLorentzVector& pfinal = primary->finalFourMomentum();
@@ -215,11 +215,11 @@ StatusCode G4Generator::execute()
   HepLorentzVector pin= primaryGenerator->GetFourMomentum();
 
 
-  mc::McParticle * parent= new mc::McParticle;
+  Event::McParticle * parent= new Event::McParticle;
   // This parent particle decay at the start in the first particle, 
   // so initial momentum and final one are the same
   parent->initialize(parent, pdef->GetPDGEncoding(), 
-                     mc::McParticle::PRIMARY,
+                     Event::McParticle::PRIMARY,
                      pin);
   parent->finalize(pin, p);
     

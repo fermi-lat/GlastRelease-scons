@@ -5,8 +5,8 @@
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/DataObject.h"
-#include "GlastEvent/Utilities/TriggerPattern.h"
-#include "GlastEvent/TopLevel/Definitions.h"
+#include "Event/Utilities/TriggerPattern.h"
+#include "Event/TopLevel/Definitions.h"
 
 extern const CLID& CLID_DigiEvent;
 

@@ -11,7 +11,7 @@
 #include "DetectorManager.h"
 
 #include "CLHEP/Geometry/Transform3D.h"
-#include "GlastEvent/MonteCarlo/McPositionHit.h"
+#include "Event/MonteCarlo/McPositionHit.h"
 #include "idents/VolumeIdentifier.h"
 
 // Geant4 interface

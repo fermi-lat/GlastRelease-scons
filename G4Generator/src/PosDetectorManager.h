@@ -1,7 +1,7 @@
 #ifndef POSITIONDETECTORMANAGER_H
 #define POSITIONDETECTORMANAGER_H
 
-#include "GlastEvent/MonteCarlo/McPositionHit.h"
+#include "Event/MonteCarlo/McPositionHit.h"
 
 #include "DetectorManager.h"
 
@@ -43,6 +43,6 @@ public:
   
  private:
   /// The collection of McPositionHit to save in the TDS
-  McPositionHitVector *m_posHit;  
+  Event::McPositionHitVector *m_posHit;  
 };
 #endif
