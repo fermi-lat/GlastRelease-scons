@@ -65,6 +65,42 @@ void McPositionHit::setExitPoint( const HepPoint3D& value )
 }
 
 
+/// Retrieve entry member in global coordinates
+const HepPoint3D& McPositionHit::globalEntryPoint() const
+{
+    return m_globalEntry;
+}
+HepPoint3D& McPositionHit::globalEntryPoint()
+{
+    return m_globalEntry;
+}
+
+
+/// Update Entry member in global coordinates
+void McPositionHit::setGlobalEntryPoint( const HepPoint3D& value )
+{
+    m_globalEntry = value;
+}
+
+
+/// Retrieve exit point in global coordinates
+const HepPoint3D& McPositionHit::globalExitPoint() const
+{
+    return m_globalExit;
+}
+HepPoint3D& McPositionHit::globalExitPoint()
+{
+    return m_globalExit;
+}
+
+
+/// Update exit point in global coordinates
+void McPositionHit::setGlobalExitPoint( const HepPoint3D& value )
+{
+    m_globalExit = value;
+}
+
+
 /// Retrieve deposited energy
 double McPositionHit::depositedEnergy() const
 {

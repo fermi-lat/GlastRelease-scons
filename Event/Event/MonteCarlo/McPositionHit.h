@@ -71,6 +71,11 @@ class McPositionHit : virtual public ContainedObject {
     /// special set
     void init(double edep, idents::VolumeIdentifier id, const HepPoint3D& entry, const HepPoint3D& exit);
 
+    /// init methods with both local and global coordinates
+    void init(double edep, idents::VolumeIdentifier id, 
+              const HepPoint3D& entry, const HepPoint3D& exit,
+              const HepPoint3D& gEntry, const HepPoint3D& gExit);
+
     /// Retrieve cell identifier
     idents::VolumeIdentifier volumeID() const;
     /// Update cell identifier
@@ -87,6 +92,18 @@ class McPositionHit : virtual public ContainedObject {
           HepPoint3D& exitPoint();
     /// Update exit point
     void setExitPoint( const HepPoint3D& value );
+
+    /// Retrieve entry member in global coordinates
+    const HepPoint3D& globalEntryPoint() const;
+          HepPoint3D& globalEntryPoint();
+    /// Update Entry member in global coordinates
+    void setGlobalEntryPoint( const HepPoint3D& value );
+
+    /// Retrieve exit point  in global coordinates
+    const HepPoint3D& globalExitPoint() const;
+          HepPoint3D& globalExitPoint();
+    /// Update exit point in global coordinates
+    void setGlobalExitPoint( const HepPoint3D& value );
 
     /// Retrieve deposited energy
     double depositedEnergy() const;
@@ -153,10 +170,14 @@ class McPositionHit : virtual public ContainedObject {
   private:
     /// Volume ID
     idents::VolumeIdentifier m_volumeID;
-    /// Entry point
+    /// Local coordinates entry point
     HepPoint3D              m_entry;
-    /// Exit point
+    /// Local coordinates exit point
     HepPoint3D              m_exit;
+    /// Global coordinates entry point
+    HepPoint3D              m_globalEntry;
+    /// Global coordinates exit point
+    HepPoint3D              m_globalExit;
     /// Deposited energy
     double                  m_depositedEnergy;
     /// Depositing particle's energy
@@ -181,6 +202,18 @@ inline void McPositionHit::init(double edep, idents::VolumeIdentifier id, const 
     m_volumeID=id;
     m_entry = entry;
     m_exit = exit;
+}
+
+inline void McPositionHit::init(double edep, idents::VolumeIdentifier id, 
+                                const HepPoint3D& entry, const HepPoint3D& exit,
+                                const HepPoint3D& gEntry, const HepPoint3D& gExit)
+{
+    m_depositedEnergy = edep;
+    m_volumeID=id;
+    m_entry = entry;
+    m_exit = exit;
+    m_globalEntry = gEntry;
+    m_globalExit = gExit;
 }
 
 /// Serialize the object for writing
