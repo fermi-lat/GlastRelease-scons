@@ -1,0 +1,28 @@
+package AcdRecon
+version v0r1
+
+branches src doc
+
+use GlastSvc v8r*
+use Event v8r*
+use AcdDigi v1r*
+use TkrRecon v6r*
+use xml v4r*
+
+apply_pattern package_headers
+
+library AcdRecon  *.cxx  Dll/*.cxx ${AcdRecon_headers}
+
+ignore_pattern package_stamps
+
+apply_pattern packageShr
+
+
+#=============================================================
+private
+
+apply_pattern package_Cshlibflags
+
+apply_pattern package_test
+
+
