@@ -45,7 +45,7 @@ macro test_merit_linkopts $(merit_linkopts)
 macro libs ""   WIN32   "$(meritDir)/merit_lib.lib
 
 set MERIT_OUTPUT_FILE "$(MERITROOT)/cmt/merit.txt"
-set IM_FILE "$(CLASSIFICATIONROOT)/xml/PSF_Analysis_14a.imw"
+set IM_FILE "$(CLASSIFICATIONROOT)/xml/PSF_Analysis.xml"
 application merit_app app/*.cxx $(libs)
 
 public
