@@ -38,7 +38,8 @@ public:
     /// pass a specific amount of time
     virtual void pass ( double t);
 
-    
+    /// create a set of display windows using rootplot.
+    void rootDisplay(std::vector<char*> arguments);
 
     
     //------------------------------------------------------------------
@@ -49,7 +50,6 @@ public:
     
     /// perform the finalization, as required for a service.
     virtual StatusCode finalize ();
-    
     
     /// Query interface
     virtual StatusCode queryInterface( const IID& riid, void** ppvUnknown );

@@ -5,6 +5,8 @@
 
 #include "FluxSvc.h"
 
+#include "./test/flux/rootplot.h"
+
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 
@@ -17,7 +19,6 @@
 
 #include "CLHEP/Random/Random.h"
 #include "CLHEP/Random/RanluxEngine.h"
-
 
 #include "Flux.h"
 
@@ -148,6 +149,12 @@ HepRandomEngine* FluxSvc::getEngine()
 void FluxSvc::pass ( double t){
 m_fluxMgr->pass(t);
 }
+
+void rootDisplay(std::vector<char*> arguments){
+rootplot abc(arguments);
+}
+
+
 
 void WARNING (const char * text ){  std::cerr << "WARNING: " << text << '\n';}
 void FATAL(const char* s){std::cerr << "\nERROR: "<< s;}

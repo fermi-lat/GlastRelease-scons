@@ -2,12 +2,12 @@
 #define TimeDepSpectrum_H
 // $Heading:$
 //
-#include "FluxSvc/Spectrum.h"
+#include "../../Spectrum.h"
 #include "facilities/Observer.h"
 #include <vector>
 #include <string>
 #include <map>
-#include "../GPS.h"
+#include "../../GPS.h"
 
 //!  Spectrum that reads its differential spectrum from a table
 class TimeDepSpectrum : public Spectrum
