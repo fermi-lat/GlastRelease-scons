@@ -3,6 +3,7 @@
 
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
+ * 17-jul=03  v6r5p3 thb extend allgamma source to 56 GeV
  * 15-may-03  v6r5p2 thb various fixes required by vc8.
  * 15-may-03  v6r5   thb make 6 m^2 the FluxAlg.area default; output number of events per source id.
  *                       lat/lon updates only every 30 sec.
