@@ -8,7 +8,6 @@ namespace gui {class DisplayControl; class DisplayRep; }
 
 class HepTransform3D;
 class Hep3Vector;
-class Box;
 #include <vector>
 
 
@@ -27,7 +26,7 @@ public:
     void addBox(const HepTransform3D& T, double x, double y, double z);
 
     //! add to a the static display of all detector boxes
-    void addDetectorBox(const Box* box);
+    void addDetectorBox(const HepTransform3D& T, double x, double y, double z);
 
     //! add a hit to the display 
     //! @param a,b initial, final points for the step
