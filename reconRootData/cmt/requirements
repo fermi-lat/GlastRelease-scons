@@ -14,8 +14,6 @@ macro   reconRoot_linkopts "-L${RECONROOTDATAROOT}/${CMTCONFIG} -lreconRootData"
 macro_append Win32Debug " ${RECONROOTDATAROOT}/${DebugDir}/reconRootDatalib.lib"
 macro_append Win32Release " ${RECONROOTDATAROOT}/${ReleaseDir}/reconRootDatalib.lib"
 
-macro_append cppflags " -I${TBEVENTROOT}/TBEvent"
-
 path_append LD_LIBRARY_PATH "${RECONROOTDATAROOT}/${CMTCONFIG}"
 
 private
