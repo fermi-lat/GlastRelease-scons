@@ -22,7 +22,7 @@ namespace rdbModel {
   }
 
   Column* Rdb::getColumn(const std::string& tableName, 
-                         const std::string colName&) const {
+                         const std::string& colName) const {
     Table* table = getTable(tableName);
     if (!table) return 0;
 
@@ -31,7 +31,7 @@ namespace rdbModel {
   }
 
   Index* Rdb::getIndex(const std::string& tableName, 
-                       const std::string indexName&) const {
+                       const std::string& indexName) const {
     Table* table = getTable(tableName);
     if (!table) return 0;
 
@@ -39,8 +39,8 @@ namespace rdbModel {
 
   }
 
-  Visitor::VisitorState Rdb::accept(Visitor* v) {
-    VisitorState state = v->visitRdb(this);
+  unsigned int Rdb::accept(Visitor* v) {
+    Visitor::VisitorState state = v->visitRdb(this);
     if (state != Visitor::CONTINUE) return state;
 
     unsigned nTable = m_tables.size();

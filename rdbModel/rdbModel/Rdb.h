@@ -4,7 +4,8 @@
 #include <vector>
 #include <string>
 // #include "detModel/Sections/Section.h"
-#include "rdbModel/Manager/Visitor.h"
+
+#include "rdbModel/Management/Visitor.h"
 
 namespace rdbModel {
   
@@ -44,10 +45,10 @@ namespace rdbModel {
 
     Table* getTable(const std::string& name) const;
     Column* getColumn(const std::string& tableName, 
-                      const std::string colName&) const;
+                      const std::string& colName) const;
 
     Index* getIndex(const std::string& tableName, 
-                      const std::string indexName&) const;
+                      const std::string& indexName) const;
 
     // There is no good way to look up assertions; they don't
     // have names.  For now assertions may only refer to a single
@@ -55,7 +56,7 @@ namespace rdbModel {
 
 
     /// This is the recursive accept for the visitor pattern
-    Visitor::VisitorState  accept(Visitor* v);
+    unsigned int  accept(Visitor* v);
     // This is the non recursive accept for the visitor pattern
     // Not yet sure we need it
     //    Visitor::VisitorState acceptNotRec(Visitor* v);
@@ -68,12 +69,12 @@ namespace rdbModel {
   private:
     // Must make each concrete implementation of Builder a friend since
     // derived classes don't inherit friendliness.
-    friend XercesBuilder;
+    friend class rdbModel::XercesBuilder;
 
     void setDTDversion(std::string pdtd){m_DTDversion = pdtd;};
     void setCVSid(std::string pcvs){m_CVSid = pcvs;};
 
-    void addTable(Table* t){tables.push_back(t);};
+    void addTable(Table* t){m_tables.push_back(t);};
 
     // Maybe have private table map to support look-up by name?
     // Or maybe don't bother.  The target application will have
