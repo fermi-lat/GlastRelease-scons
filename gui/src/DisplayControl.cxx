@@ -420,7 +420,7 @@ void DisplayControl::postScript()
 //--------------------------------
 // ask the scene to draw itself to a file in postscript
 {
-    static filenumber=0;
+    static int filenumber=0;
 #ifdef DEFECT_NO_STRINGSTREAM
     std::strstream filename;
     filename << "display" << (filenumber++) << ".ps";
