@@ -1,7 +1,7 @@
 
 #include "TableColumnList.h"
 #include "Icons.h"
-#include "RdbGUIWindow.h"
+#include "RdbGuiWindow.h"
 
 // Message Map TableColumnList class
 FXDEFMAP(TableColumnList) TableColumnListMap[]={

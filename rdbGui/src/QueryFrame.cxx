@@ -2,7 +2,7 @@
 #include "QueryFrame.h"
 #include "FXCheckList.h"
 #include "ColWidgetFactory.h"
-#include "RdbGUIWindow.h"
+#include "RdbGuiWindow.h"
 
 #include "rdbModel/Tables/Assertion.h"
 
