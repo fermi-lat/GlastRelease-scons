@@ -102,14 +102,9 @@ StatusCode GlastEventSelector::setCriteria( const std::string& criteria ) {
     
 
     if( type == "IRFFILE" ) {
+        log << MSG::ERROR << "IRFFILE is not supported" << endreq;
+        return StatusCode::FAILURE;
         rest      = rest.substr(lpos, -1);
-        m_criteriaType = IRFFILE;
-        sc = parseStringInList(rest, m_inputDataList);
-
-        //We need the method below because the m_it is created in the
-        //constructor and we need to move the data string iterator to
-        //point to the new first string
-        m_it->setFileNameIterator(m_inputDataList->begin());
     }else if( type == "NONE"){
         m_criteriaType = NONE;
         log << MSG::INFO << "GlastEventSelector input has been set to NONE" << endreq;
