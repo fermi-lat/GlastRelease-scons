@@ -1,6 +1,7 @@
 /** @file release.notes
  package reconRootData
  package manager:H.Kelly
+v4r3      26-feb-03  : HMK Update to CalCluster for energyCorrected\n
 v4r2      11-feb-03  : TU  Update to Tkr classes for vsnet \n
 v4r1p1    15-jan-03  : THB vsnet enable \n
 v4r1   --------------------- GlastRelease--------------------------   \n
