@@ -114,7 +114,7 @@ void AcdReconAlg::getParameters () {
     MsgStream   log( msgSvc(), name() );
     StatusCode sc;
 	
-    sc = m_glastDetSvc->getNumericConstByName("vetoThreshold", &s_vetoThresholdMeV);
+    sc = m_glastDetSvc->getNumericConstByName("acd.vetoThreshold", &s_vetoThresholdMeV);
     if (sc.isFailure()) {
         log << MSG::INFO << "Unable to retrieve threshold, setting the value to 0.4 MeV" << endreq;
         s_vetoThresholdMeV = 0.4;
@@ -189,17 +189,24 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     log << MSG::DEBUG << "DOCA: " << m_doca << " "
         << "ActDist: " << m_act_dist << endreq;
 	
-	
-	// create the TDS location for the AcdRecon
-    m_acdRecon = new Event::AcdRecon(m_totEnergy, m_tileCount, m_gammaDoca, m_doca, 
-        m_act_dist, m_minDocaId, m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol);
-	
-    sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, m_acdRecon);
-    if (sc.isFailure()) {
-        log << "Failed to register AcdRecon" << endreq;
-        return StatusCode::FAILURE;
+    SmartDataPtr<Event::AcdRecon> checkAcdRecTds(eventSvc(), EventModel::AcdRecon::Event);  
+    if (checkAcdRecTds) {
+        log << MSG::DEBUG << "AcdRecon data already on TDS!" << endreq;
+        checkAcdRecTds->clear();
+        checkAcdRecTds->init(m_totEnergy, m_tileCount, m_gammaDoca, m_doca, 
+            m_act_dist, m_minDocaId, m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol);
+    } else {
+        // create the TDS location for the AcdRecon
+        m_acdRecon = new Event::AcdRecon(m_totEnergy, m_tileCount, m_gammaDoca, m_doca, 
+            m_act_dist, m_minDocaId, m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol);
+        
+        sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, m_acdRecon);
+        if (sc.isFailure()) {
+            log << "Failed to register AcdRecon" << endreq;
+            return StatusCode::FAILURE;
+        }
     }
-	
+    
     return sc;
 }
 
