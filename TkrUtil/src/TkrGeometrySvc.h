@@ -207,6 +207,14 @@ public:
     int getBottomTrayFlag() const { return (m_bottomTrayNumber>-1 ? 1 : 0); }
     int getTopTrayFlag()    const { return (m_topTrayNumber>-1    ? 1 : 0); }
 
+    unsigned int getDefaultClusterStatus() const;
+
+    double truncateCoord( double x, double pitch, 
+        int numElements, int& elementNumber, bool reverse = false) const;
+
+    bool inTower(int view, const Point p, int& iXTower, int& iYTower,
+        double& xActiveDist, double& yActiveDist, double& xGap, double &yGap) const;
+
 private:
     
     /// number of Towers in X

@@ -130,6 +130,13 @@ public:
 
     bool empty() const;
 
+    // for bad clusters
+    void  setBadClusterCol(Event::TkrClusterCol* pClus)    { m_pBadClus = pClus; }
+    void  setBadIdClusterMap(Event::TkrIdClusterMap* pMap) { m_pBadMap = pMap; }
+    Event::TkrClusterCol*  getBadClusterCol() const    { return m_pBadClus; }
+    Event::TkrIdClusterMap* getBadIdClusterMap() const { return m_pBadMap; }
+    Event::TkrDigiCol* getBadDigiCol() const           { return m_pBadDigi; }
+    
     /// called by TrkCalibAlg to cause an update of the strip lists
     StatusCode update(CalibData::BadStrips* pDead, CalibData::BadStrips* pHot);
 
@@ -153,6 +160,8 @@ private:
 	
     StatusCode doInit();
 	
+    StatusCode makeBadDigiCol();
+	
     /// File name for constants
     std::string m_badStripsFile;  
     
@@ -166,9 +175,11 @@ private:
 
     ITkrGeometrySvc* m_tkrGeom;
 	
-    //bool m_killDigi;
     bool m_empty;
 
+    Event::TkrDigiCol*      m_pBadDigi;
+    Event::TkrClusterCol*   m_pBadClus;
+    Event::TkrIdClusterMap* m_pBadMap;
 };
 
 //! Fill the ASCII output stream
