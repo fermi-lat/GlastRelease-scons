@@ -95,7 +95,7 @@ public:
 
     
 protected:
-    StatusCode getTypedPointer(std::string varName, TypedPointer* ptr, int check);
+    StatusCode getTypedPointer(std::string varName, TypedPointer*& ptr, int check);
 
 
     /// some static methods
