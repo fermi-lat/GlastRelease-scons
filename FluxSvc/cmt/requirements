@@ -6,7 +6,7 @@ branches FluxSvc cmt doc
 use GlastPolicy v4*
 
 use Event   *
-use geometry   v3*
+#use geometry   v3*
 
 use GlastSvc *
 use GaudiSvc
