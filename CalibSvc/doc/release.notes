@@ -2,6 +2,10 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
+ * 26-May-2004: jrb v0r7:    1. Support for new Cal calibration types (light
+ *                           asym., integral nonlinearity)
+ *                           2. Handle old-style ped files with no "cos"
+ *                           field as well as new
  * 15-Apr-2004: jrb v0r6:    Support for new mode of calibration-fetching,
  *                           based on enter_time field in metadata.
  * 17-Feb-2004: jrb v0r5:    Support cosAngle field for cal. pedestals calib.
