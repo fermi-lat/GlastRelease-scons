@@ -23,7 +23,11 @@
 
     gObjectTable->Print();
     
+    // HMK Linux seems to need both libraries loaded explicitly (starting with ROOT 3.04.02)
+    // Not sure if this is a problem in our compilation or setup
+    gSystem->Load("mcRootData.dll");
     gSystem->Load("digiRootData.dll");
+
     TFile *f =  new TFile("digi.root", "RECREATE");
     TTree *t = new TTree("Digi", "Digi");
     DigiEvent *ev = new DigiEvent();
@@ -76,9 +80,19 @@
         for (idigi = 0; idigi < numAcd; idigi++) {
             AcdId acd_id(0, 2, 5, 4);
             Float_t energy = ievent;
-            Bool_t veto[2] = {kFALSE, kTRUE};
-            Bool_t low[2] = {kTRUE, kTRUE};
-            Bool_t high[2] = {kFALSE, kTRUE};
+            Bool_t veto[2];
+            veto[0]= kFALSE;
+            veto[1] = kTRUE;
+            // HMK initialization of Bool_t arrays does not work at command
+            // line in ROOT 3.04.02
+            //Bool_t low[2] = {kTRUE, kTRUE};
+            Bool_t low[2];
+            low[0] = kTRUE;
+            low[1] = kTRUE;
+            //Bool_t high[2] = {kFALSE, kTRUE};
+            Bool_t high[2];
+            high[0] = kFALSE;
+            high[1] = kTRUE;
             UShort_t pha[2] = {4095, 1};
             volId.Clear();
             volId.append(1);
@@ -88,7 +102,11 @@
         t->Fill();
         ev->Clear();
     }
-    
+
+    printf("object table before deleteing\n");
+    gObjectTable->Print();
+
+
     delete ev;
     
     printf("Here is the object table after creating events, storing them to file and deleting the objects\n");
