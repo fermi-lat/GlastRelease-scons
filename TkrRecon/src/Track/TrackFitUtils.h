@@ -62,7 +62,7 @@ public:
     void   flagAllHits(Event::TkrTrack& track, int iflag=1);
     void   unFlagAllHits(Event::TkrTrack& track);
     void   unFlagHit(Event::TkrTrack& track,int num);
-    void   setSharedHitsStatus(Event::TkrTrack& track);
+    void   setSharedHitsStatus(Event::TkrTrack& track, int maxShare);
 
 private:    
     /// Pointers to clusters, geoemtry, and control parameters

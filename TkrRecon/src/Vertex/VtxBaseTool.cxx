@@ -70,3 +70,11 @@ StatusCode VtxBaseTool::retrieveVtxCol(Event::TkrVertexCol& VtxCol)
     }
   return sc;
 }
+
+StatusCode VtxBaseTool::findVtxs()
+{
+	// Put in this placehold to make things compatable with the past
+  MsgStream log(msgSvc(), name());
+  StatusCode sc=StatusCode::SUCCESS;
+  return sc;
+}

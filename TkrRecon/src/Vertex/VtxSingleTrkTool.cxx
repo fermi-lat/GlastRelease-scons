@@ -31,7 +31,7 @@ StatusCode VtxSingleTrkTool::doVtxFit(Event::TkrVertexCol& theVtxCol)
 //                           I kept a "list" syntax in order to allow for 
 //                           broader use, for instance assignment of single 
 //                           track vertices to unused tracks.
-
+/*
   Event::TkrFitTrackCol* m_theTracks = 
     SmartDataPtr<Event::TkrFitTrackCol>
     (m_evtSvc,EventModel::TkrRecon::TkrFitTrackCol);
@@ -52,5 +52,6 @@ StatusCode VtxSingleTrkTool::doVtxFit(Event::TkrVertexCol& theVtxCol)
       
       theVtxCol.push_back(vertex); 
     }
+	*/
   return StatusCode::SUCCESS;
 }

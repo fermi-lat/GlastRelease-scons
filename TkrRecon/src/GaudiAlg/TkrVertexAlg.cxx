@@ -187,7 +187,7 @@ StatusCode TkrVertexAlg::execute()
         sc = toolSvc()->retrieveTool(VtxToolName.c_str(), m_VtxTool, this);
 
         // This tells the tool to perform the vertexing
-        sc = m_VtxTool->retrieveVtxCol(*pVtxCol);
+        sc = m_VtxTool->findVtxs();
 		log << MSG::DEBUG;
 		if (log.isActive()) log << pVtxCol->size() << " vertices found ";
 	    log << endreq;

@@ -27,6 +27,7 @@ class VtxBaseTool : public AlgTool, virtual public IVtxBaseTool
 
   ///@brief Implement the pure virtual method of IVtxBaseTool
   virtual StatusCode retrieveVtxCol(Event::TkrVertexCol&);
+  virtual StatusCode findVtxs(); 
 
   /// @brief Main method to be implemented by concrete classes.
   /// It should contain the actual vertexing procedure, and is called

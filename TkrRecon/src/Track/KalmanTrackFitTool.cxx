@@ -424,10 +424,10 @@ void KalmanTrackFitTool::doFinalFitCalculations(Event::TkrTrack& track)
 		if(!pFitTracks) return;
 
         //Flag the hits
-        trackUtils.flagAllHits(track);
+  //      trackUtils.flagAllHits(track);
 
         //Check if this is the first track in the TDS collection
-        if(pFitTracks->front() == &track) trackUtils.setSharedHitsStatus(track);
+  //      if(pFitTracks->front() == &track) trackUtils.setSharedHitsStatus(track);
     } 
 
     return;

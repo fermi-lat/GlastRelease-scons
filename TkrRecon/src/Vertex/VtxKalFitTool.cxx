@@ -41,7 +41,7 @@ StatusCode VtxKalFitTool::initialize()
 
 
 StatusCode VtxKalFitTool::doVtxFit(Event::TkrVertexCol& VtxCol)
-{
+{/*
   m_VtxCovEstimates.erase(m_VtxCovEstimates.begin(),m_VtxCovEstimates.end());
   m_VtxEstimates.erase(m_VtxEstimates.begin(),m_VtxEstimates.end());
 
@@ -314,7 +314,7 @@ StatusCode VtxKalFitTool::doVtxFit(Event::TkrVertexCol& VtxCol)
   vertex->writeOut(log);
 
   VtxCol.push_back(vertex); 
-
+*/
   return StatusCode::SUCCESS;
 }
 
