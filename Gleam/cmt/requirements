@@ -54,8 +54,10 @@ use GlastDigi            v4r0
 #reconstruction
 use Trigger              v3r0
 use Recon                v2r1
-use TkrRecon    v6r0
-use CalRecon    v5r0       
+
+# commented out temporarily
+#use TkrRecon    v6r0
+#use CalRecon    v5r0       
 
 
 #ROOT persistence
