@@ -125,6 +125,11 @@ StatusCode GltValsTool::calculate()
     //SmartDataPtr<Event::TkrFitTrackCol>    
     //    pTracks(m_pEventSvc,EventModel::TkrRecon::TkrFitTrackCol);
 
+    Trig_tower  = -1;
+    Trig_layer  = 18;
+    Trig_xTower = -1;
+    Trig_yTower = -1; 
+   
     if(!pEvent || !pClusters) return StatusCode::FAILURE;
     
     unsigned int word = pEvent->trigger();
