@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  *
  *
+ * v10r3p1  2-Mar-05 TU  add new line to end of McEventStructure for linux warnings
  * v10r3p0 27-Feb-05 LSR add some bits to TkrTrackHit status word
                             should be transparent
  * v10r3   07-Feb-05 LSR redo TkrCluster.h (again) + get rid of some tabs
