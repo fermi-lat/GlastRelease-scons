@@ -64,6 +64,7 @@ void McEvent::initialize(UInt_t nEvent, UInt_t nRun,
 
 void McEvent::Clear(Option_t *option) {
     
+
     m_eventId = 0;
     m_runId = 0;
     const Int_t ndpos = 30000;
