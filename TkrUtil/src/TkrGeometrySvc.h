@@ -85,7 +85,7 @@ public:
     convType getReconLayerType(int layer) const;
 
     /// return number of layers of each type
-    int getNumType(TkrGeometrySvc::convType type) const { return m_numLayers[(int)type];}
+    int getNumType(convType type) const { return m_numLayers[(int)type];}
     /// get average radlen of converter for each type
     double getAveConv(convType type) const { return m_aveRadLenConv[(int)type];}
     /// get average radlen of rest for each type)
