@@ -13,8 +13,8 @@
 #include <cstdlib>
 #include <memory>
 
-#include "calibUtil/ClientObject.h"
 #include "calibUtil/GenericSrv.h"
+#include "calibUtil/StripSrv.h"
 
 namespace calibUtil {
   
@@ -29,6 +29,8 @@ namespace calibUtil {
                                                 m_state(FROM_PERS), 
                                                 m_genSrv(0)            
   {
+    using xml::Dom;
+
     xml::XmlParser* parser = new xml::XmlParser();
     DOM_Document doc = parser->parse(xmlFileName.c_str());
 
@@ -45,51 +47,44 @@ namespace calibUtil {
 
     m_towers.reserve(nTower);
 
-    std::string bString = xml::Dom::getAttribute(docElt,"badType");
+    std::string bString = Dom::getAttribute(docElt,"badType");
     if (!bString.compare("hot")) m_badType = HOT;
     else if (!bString.compare("dead")) m_badType = DEAD;
     else m_badType = UNKNOWN_BADTYPE;
 
-    DOM_Element towerElt = xml::Dom::findFirstChildByName(docElt, "tower");
+    DOM_Element towerElt = Dom::findFirstChildByName(docElt, "tower");
 
     while (towerElt != DOM_Element() ) {
       Tower tower;
-      tower.id.row = atoi((xml::Dom::getAttribute(towerElt,"row")).c_str());
-      tower.id.col = atoi((xml::Dom::getAttribute(towerElt,"col")).c_str());
+      tower.m_uniplanes.clear();
+      tower.m_row = atoi((Dom::getAttribute(towerElt,"row")).c_str());
+      tower.m_col = atoi((Dom::getAttribute(towerElt,"col")).c_str());
+      std::string attValue = Dom::getAttribute(towerElt,"allBad");
+      
+      tower.m_allBad = (attValue.compare("true") == 0);
 
-      DOM_Element trayElt = xml::Dom::getFirstChildElement(towerElt);
+      tower.m_howBad = 0;
+      if (tower.m_allBad) {
+        attValue = Dom::getAttribute(towerElt, "howBad");
+        tower.m_howBad = atoi(attValue.c_str());
+        goto NEXT;
+      }    // otherwise have to process individual uniplane elements
 
-      while (trayElt != DOM_Element()) {
-        Tray tray;
-        tray.top = tray.bot = 0;
+      {
+        DOM_Element uniElt = Dom::getFirstChildElement(towerElt);
 
-        tray.id = atoi((xml::Dom::getAttribute(trayElt, "trayNum")).c_str());
-        
-        Unilayer *uni = new Unilayer;
-        DOM_Element uniElt = xml::Dom::getFirstChildElement(trayElt);
-        std::string which = xml::Dom::getAttribute(uniElt, "which");
+        while (uniElt != DOM_Element()) {
+          Uniplane uni;
+          fillUni(uniElt, &uni);
+          // if bad status, complain and return
 
-        if (which == std::string("top")) tray.top = uni;
-        else                             tray.bot = uni;
-        fillUni(uniElt, uni);
-
-        // Might or might not have additional unilayer child
-        DOM_Element nextUniElt = xml::Dom::getSiblingElement(uniElt);
-        
-        if (nextUniElt != DOM_Element()) {
-          Unilayer *nextUni = new Unilayer;
-
-          if (tray.top) tray.bot = nextUni;
-          else tray.top = nextUni;
-          fillUni(nextUniElt, nextUni);
+          tower.m_uniplanes.push_back(uni);
+          uniElt = Dom::getSiblingElement(uniElt);
         }
-
-        tower.trays.push_back(tray);
-        
-        trayElt = xml::Dom::getSiblingElement(trayElt);
       }
+    NEXT:
       m_towers.push_back(tower);
-      towerElt = xml::Dom::getSiblingElement(towerElt);
+      towerElt = Dom::getSiblingElement(towerElt);
     }
   }
 
@@ -98,7 +93,7 @@ namespace calibUtil {
     delete m_genSrv;
   }
   
-  /// returns the status (Hot or Dead) of the strip
+  /// returns the status (Hot or Dead) of the strips
   StripSrv::eBadType  StripSrv::getBadType() const {
     return m_badType;
   }
@@ -111,224 +106,11 @@ namespace calibUtil {
 
       towerRC trc;
       towerRCs.reserve(m_towers.size());
-      trc.row = it->id.row;
-      trc.col = it->id.col;
-      // cout << trc.row;
-      // cout << trc.col;
+      trc.row = it->m_row;
+      trc.col = it->m_col;
       towerRCs.push_back(trc);
       it++;
     }
-  }
-  
-  /// counts very bad strips for the tower specified 
-  unsigned int  StripSrv::nVeryBad(const towerRC& towerId) const {
-    unsigned nStrip = 0;
-
-    const Tower* tower = findTower(towerId);
-    if (!tower) return 0;
-
-    const std::vector<Tray>& trays = tower->trays;
-
-    for (unsigned int i = 0; i < trays.size(); i++) {
-      Unilayer *uni = trays[i].top;
-      if (uni != NULL){
-        nStrip += uni->badLists[VERYBAD].size();
-      }
-      uni = trays[i].bot;
-      if (uni != NULL){
-        nStrip += uni->badLists[VERYBAD].size();
-      }
-    }
-    return nStrip;
-  }
-  
-  /// counts bad strips (including very bad) for the tower specified 
-  unsigned int  StripSrv::nBad(const towerRC& towerId) const {
-    unsigned nStrip = 0;
-    const Tower* tower = findTower(towerId);
-
-    if (!tower) return 0;
-
-    const std::vector<Tray>& trays = tower->trays;
-
-    for (unsigned int i = 0; i < trays.size(); i++) {
-      Unilayer *uni = trays[i].top;
-      if (uni != NULL){
-        nStrip += uni->badLists[BAD].size();
-        nStrip += uni->badLists[VERYBAD].size();
-      }
-      uni = trays[i].bot;
-      if (uni != NULL){
-        nStrip += uni->badLists[BAD].size();
-        nStrip += uni->badLists[VERYBAD].size();
-      }
-    }
-    return nStrip;
-  }
-  
-  /// counts very bad strips for the tower and tray specified 
-  unsigned int StripSrv::nVeryBad(const towerRC& towerId, 
-                                  unsigned int trayNum) const {
-
-    const Tower* tower = findTower(towerId);
-    if (!tower) return 0;
-
-    const Tray* tray = findTray(*tower, trayNum);
-    if (!tray) return 0;
-
-    unsigned nStrip = 0;
-    
-    Unilayer *uni = tray->top;
-    if (uni != NULL){
-      nStrip += uni->badLists[VERYBAD].size();
-    }
-    uni = tray->bot;
-    if (uni != NULL){
-      nStrip += uni->badLists[VERYBAD].size();
-    }
-    return nStrip;
-  }
-  
-  /// counts bad strips (including very bad) for the tower and tray specified 
-  unsigned int  StripSrv::nBad(const towerRC& towerId, 
-                               unsigned int trayNum) const {
-
-    const Tower* tower = findTower(towerId);
-    if (!tower) return 0;
-
-    const Tray* tray = findTray(*tower, trayNum);
-    if (!tray) return 0;
-
-    unsigned nStrip = 0;
-    
-    Unilayer *uni = tray->top;
-    if (uni != NULL){
-      nStrip += uni->badLists[VERYBAD].size();
-      nStrip += uni->badLists[BAD].size();
-    }
-    uni = tray->bot;
-    if (uni != NULL){
-      nStrip += uni->badLists[VERYBAD].size();
-      nStrip += uni->badLists[BAD].size();
-    }
-    return nStrip;
-  }
-    
-  /// counts very bad strips for the tower,tray and unilayer  specified 
-  unsigned int  StripSrv::nVeryBad(const towerRC& towerId, 
-                                   unsigned int trayNum, 
-                                   eUnilayer uni) const {
-
-    const Tower* tower = findTower(towerId);
-    if (!tower) return 0;
-
-    const Tray* tray = findTray(*tower, trayNum);
-    if (!tray) return 0;
-
-    unsigned nStrip = 0;
-
-    if (uni == TOP) {
-      Unilayer *pUni = tray->top;
-      if  (  (pUni != NULL)  ){
-        nStrip += pUni->badLists[VERYBAD].size();
-      }
-    }
-    else if (uni == BOT) {
-      Unilayer *pUni = tray->bot;
-      if (pUni != NULL) {
-        nStrip += pUni->badLists[VERYBAD].size();
-      }
-    }
-    return nStrip;
-  }
-  
-  /// counts bad strips (including very bad) for the tower, tray 
-  /// and unilayer specified 
-  unsigned int  StripSrv::nBad(const towerRC& towerId, unsigned int trayNum, 
-                               eUnilayer uni) const {
-
-    const Tower* tower = findTower(towerId);
-    if (!tower) return 0;
-
-    const Tray* tray = findTray(*tower, trayNum);
-    if (!tray) return 0;
-
-    unsigned nStrip = 0;
-    if (uni == TOP) {
-      Unilayer *pUni = tray->top;
-      if  (  (pUni != NULL)  ){
-        nStrip += pUni->badLists[BAD].size();
-        nStrip += pUni->badLists[VERYBAD].size();
-      }
-    }
-    else if (uni == BOT) {
-      Unilayer *pUni = tray->bot;
-      if (pUni != NULL) {
-        nStrip += pUni->badLists[BAD].size();
-        nStrip += pUni->badLists[VERYBAD].size();
-      }
-    }
-    return nStrip;
-  }
-  
-  /// Lists all very bad strips with the tower,tray and unilayer  
-  
-  void StripSrv::getVeryBad(const towerRC& towerId, unsigned int trayNum, 
-                            eUnilayer uni,
-                            StripCol& strips) const {
-    const Tower *tower = findTower(towerId);
-    if (!tower) return;
-
-    const Tray *tray = findTray(*tower, trayNum);
-    if (!tray) return;
-
-    Unilayer *pUni = 0;
-    switch(uni) {
-    case TOP:
-      pUni = tray->top;
-      break;
-    case BOT:
-      pUni = tray->bot;
-      break;
-    default:
-      return;
-    }
-    
-    strips.insert(strips.end(), pUni->badLists[VERYBAD].begin(),
-                  pUni->badLists[VERYBAD].end());
-    return;
-  }
-
-  
-  /// Lists  bad strips (including very bad) with the tower, tray 
-  /// and unilayer specified 
-
-  void StripSrv::getBad(const towerRC& towerId, unsigned int trayNum, 
-                        eUnilayer uni,
-                        StripCol&  strips)  const {
-    const Tower *tower = findTower(towerId);
-    if (!tower) return;
-
-    const Tray *tray = findTray(*tower, trayNum);
-    if (!tray) return;
-
-    Unilayer *pUni = 0;
-    switch(uni) {
-    case TOP:
-      pUni = tray->top;
-      break;
-    case BOT:
-      pUni = tray->bot;
-      break;
-    default:
-      return;
-    }
-    
-    strips.insert(strips.end(), pUni->badLists[VERYBAD].begin(),
-                  pUni->badLists[VERYBAD].end());
-    strips.insert(strips.end(), pUni->badLists[BAD].begin(),
-                  pUni->badLists[BAD].end());
-    return;
   }
 
  /// methods giving access to generic data
@@ -355,77 +137,85 @@ namespace calibUtil {
   
   
   /// call back method for client to access large data
-  StripSrv::eRet StripSrv::traverseInfo(ClientObject *client) const {
+  eVisitorRet StripSrv::traverseInfo(ClientObject *client) const {
 
     /* NOTE:  could also check for empty badLists and only
        call back client if nonempty.
     */
-    std::vector<Tower>::const_iterator it = m_towers.begin();
-    eRet userRet;
+    std::vector<Tower>::const_iterator iTower = m_towers.begin();
     
-    while (it != m_towers.end() ){
-      for (unsigned int i = 0; i < it->trays.size(); i++){
-        const Tray& tray = it->trays[i];
-        if (tray.top != NULL){
-          StripCol* veryBad = &(tray.top->badLists[VERYBAD]);
-          if (veryBad->size() > 0) {
-            userRet = client->readData(it->id, tray.id, TOP, VERYBAD, veryBad);
-            if (userRet != CONT) return userRet;
-          }
-          StripCol* bad = &(tray.top->badLists[BAD]);
-          if (bad->size() > 0) {
-            userRet = client->readData(it->id, tray.id, TOP, BAD, bad);
-            if (userRet != CONT) return userRet;
-          }
-
+    eVisitorRet ret = DONE;
+    while (iTower != m_towers.end() ) {
+      if (iTower->m_allBad) {
+        ret = client->badTower(iTower->m_row, iTower->m_col, iTower->m_howBad);
+        if (ret != CONT) return ret;
+      }
+      //   If tower not all bad, loop over planes within towers
+      else {
+        std::vector<Uniplane>::const_iterator iUni = 
+          (iTower->m_uniplanes).begin();
+        while (iUni != (iTower->m_uniplanes).end() ) {
+          ret = client->badPlane(iTower->m_row, iTower->m_col,
+                                 iUni->m_tray, iUni->m_top,
+                                 iUni->m_howBad, iUni->m_allBad,
+                                 (iUni->m_strips));
+          if (ret != CONT) return ret;
+          iUni++;
         }
-        if(tray.bot != NULL){
-          StripCol* veryBad = &(tray.bot->badLists[VERYBAD]);
-          if (veryBad->size() > 0) {
-            userRet = client->readData(it->id, tray.id, BOT, VERYBAD, veryBad);
-            if (userRet != CONT) return userRet;
-          }
-          StripCol* bad = &(tray.bot->badLists[BAD]);
-          if (bad->size() > 0) {
-            userRet = client->readData(it->id, tray.id, BOT, BAD, bad);
-            if (userRet != CONT) return userRet;
-          }
-        }
-      }    
-      it++;
+      }
+      ++iTower;
     }
+    // If got to here, traversed the entire data structure without
+    // a murmur from client
     return DONE;
   }
 
   // Private utilities
-  void StripSrv::fillUni(const DOM_Element& uniElt, Unilayer* uni) {
-    DOM_Element badElt = xml::Dom::findFirstChildByName(uniElt, "bad");
-    if (badElt != DOM_Element() ) {
-      fillStrips(badElt, uni->badLists[BAD]);
-    }
-    DOM_Element veryBadElt = xml::Dom::findFirstChildByName(uniElt, "veryBad");
-    if (veryBadElt != DOM_Element() ) {
-      fillStrips(veryBadElt, uni->badLists[VERYBAD]);
+
+  void StripSrv::fillUni(const DOM_Element& uniElt, Uniplane *uni) {
+    using xml::Dom;
+
+    std::string attValue;
+
+    attValue = Dom::getAttribute(uniElt, "allBad");
+    uni->m_allBad = (attValue.compare("true") == 0);
+    
+    attValue = Dom::getAttribute(uniElt, "howBad");
+    uni->m_howBad = atoi(attValue.c_str());
+    
+    attValue = Dom::getAttribute(uniElt, "tray");
+    uni->m_tray = atoi(attValue.c_str());
+    
+    attValue = Dom::getAttribute(uniElt, "which");
+    if (attValue.compare("top") == 0) uni->m_top = true;
+    else if (attValue.compare("bot") == 0) uni->m_top = false;
+    // if anything else happens, xml file is bad
+    
+    if (!uni->m_allBad) {   // process strip lists, spans
+      fillStrips(uniElt, uni->m_strips);
     }
   }
 
+
   void StripSrv::fillStrips(const DOM_Element& badElt, StripCol& list) {
     // Handle stripList elt first, if any
-    DOM_Element listElt = xml::Dom::findFirstChildByName(badElt, "stripList");
+    DOM_Element listElt = 
+      xml::Dom::findFirstChildByName(badElt, "stripList");
     if (listElt != DOM_Element()) {
       std::string xmlList = xml::Dom::getAttribute(listElt, "strips");
       strToNum(xmlList, list);
     }
-
+    
     // Then one or more stripSpan elements
-    DOM_Element spanElt = xml::Dom::findFirstChildByName(badElt, "stripSpan");
+    DOM_Element 
+      spanElt = xml::Dom::findFirstChildByName(badElt, "stripSpan");
     while (spanElt != DOM_Element() ) {
       std::string firstStr = xml::Dom::getAttribute(spanElt, "first");
       unsigned short first = (unsigned short) atoi(firstStr.c_str());
       std::string lastStr = xml::Dom::getAttribute(spanElt, "last");
       unsigned short last = (unsigned short) atoi(lastStr.c_str());
       
-      if ((first >= 0) && (last >= first)) {
+      if (last >= first) {
         // Might as well reserve memory all at once
         list.reserve(list.size() + last + 1 - first);  
         for (unsigned short int i = first; i <= last; i++) {
@@ -442,7 +232,7 @@ namespace calibUtil {
     
     // Maybe add something to be sure all we've got are digits
     // and blanks??
-
+    
     // Skip over leading blanks, if any
     while((it != s.end()) && (*it == ' ')) it++;
 
@@ -459,7 +249,7 @@ namespace calibUtil {
 
       // No more contiguous digits; skip over blanks
       while((it != s.end()) && (*it == ' ')) it++;
-
+      
       // Save the converted integer
       v.push_back(atoi(tempStr.c_str()));
     }
@@ -469,7 +259,7 @@ namespace calibUtil {
   StripSrv::Tower* StripSrv::findTower(towerRC& towerId) {
     std::vector<Tower>::iterator it = m_towers.begin();
     while(it != m_towers.end() ) {
-      if ((it->id.row == towerId.row) && (it->id.col == towerId.col)) {
+      if ((it->m_row == towerId.row) && (it->m_col == towerId.col)) {
         return (it);
       }
       ++it;
@@ -480,93 +270,15 @@ namespace calibUtil {
   const StripSrv::Tower* StripSrv::findTower(const towerRC& towerId) const {
     std::vector<Tower>::const_iterator it = m_towers.begin();
     while(it != m_towers.end() ) {
-      if ((it->id.row == towerId.row) && (it->id.col == towerId.col)) {
+      if ((it->m_row == towerId.row) && (it->m_col == towerId.col)) {
         return (it);
       }
       ++it;
     }
     return 0;
   }
-
-
-  StripSrv::Tray* StripSrv::findTray(Tower& tower, 
-                                     unsigned int trayNum) {
-    std::vector<Tray>& trays = tower.trays;
-    for (unsigned int i = 0; i < trays.size(); i++) {
-      if (trays[i].id == trayNum) return &trays[i];
-    }
-
-    return 0;
-  }
-
-  const StripSrv::Tray* StripSrv::findTray(const Tower& tower, 
-                                           unsigned int trayNum) const {
-    const std::vector<Tray>& trays = tower.trays;
-    for (unsigned int i = 0; i < trays.size(); i++) {
-      if (trays[i].id == trayNum) return &trays[i];
-    }
-
-    return 0;
-  }
-    
-
-  bool StripSrv::addBad(eBadness howBad, towerRC& t, int iTray, 
-                        eUnilayer uni, const StripCol& list) {
-    if (m_state != BUILDING) return false;
-
-    bool ret;
-
-    Tower* tow = findTower(t);
-
-    if (!tow) {
-      Tower newTow;
-      newTow.id = t;
-      ret = addBad(howBad, &newTow, iTray, uni, list);
-      if (ret) m_towers.push_back(newTow);
-    }
-    ret = addBad(howBad, tow, iTray, uni, list);
-    return ret;
-  }
-
-  bool StripSrv::addBad(eBadness howBad,  Tower* tow, int iTray,
-                        eUnilayer uni, const StripCol& list) {
-
-    Tray* tr = findTray(*tow, iTray);
-    bool ret;
-    if (tr) return addBad(howBad, tr, uni, list);
-
-    Tray newTray;
-    newTray.id = iTray;
-    newTray.top = newTray.bot = 0;
-    ret = addBad(howBad, &newTray, uni, list);
-    if (ret) tow->trays.push_back(newTray);
-    return ret;
-  }
-
-
-  bool StripSrv::addBad(eBadness howBad, Tray* tr, eUnilayer uni,
-                        const StripCol& list) {
-    Unilayer* pUni;
-    switch (uni) {
-    case TOP:
-      if (!tr->top) tr->top = new Unilayer();
-      pUni = tr->top;
-      break;
-    case BOT:
-      if (!tr->bot) tr->bot = new Unilayer();
-      pUni = tr->bot;
-      break;
-    default:    // bad argument
-      return false;
-    }
-    pUni->badLists[howBad].insert(pUni->badLists[howBad].end(), 
-                                  list.begin(), list.end());
-    // sort??  remove duplicates??
-    return true;
-
-  }
-
-  StripSrv::eRet StripSrv::writeXml(std::ostream* ) {
+  
+  eVisitorRet StripSrv::writeXml(std::ostream* ) {
     return DONE;
   }
 
