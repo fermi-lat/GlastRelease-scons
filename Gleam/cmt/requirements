@@ -59,7 +59,7 @@ use AcdDigi     v0r1
 use Trigger              v3r2
 use Recon                v2r2p2
 
-use TkrRecon             v6r2
+use TkrRecon             v6r2p1
 use CalRecon    v5r2       
 
 

@@ -2,6 +2,20 @@
  * package Gleam
  * package manager:T.Burnett
  *
+ * v2r1p4 26-may-02 THB fixed geometry
+      use xml                  v4r1p4 		 
+      use detModel             v2r11
+      use xmlGeoDbs            v1r5p2
+      use GlastSvc             v8r1
+      use G4Generator          v4r1p2
+      use TkrDigi              v1r0
+      use Trigger              v3r2
+      use Recon                v2r2p2
+      use TkrRecon             v6r2p1
+      use reconRootData        v3r0p2
+      use RootIo               v4r1p1
+      use merit                v5
+
  * v2r1p3 23-may-02 THB AcdDigi split; have reconRootData!
       use Event                 v8r5p1
       use GlastDigi             v4r2
