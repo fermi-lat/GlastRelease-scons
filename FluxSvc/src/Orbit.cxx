@@ -83,8 +83,12 @@ std::pair<double,double> Orbit::coords(double time) const {
 Rotation Orbit::CELtransform(double time){
     
     //THIS IS THE PART WHERE WE MAKE THE MATRIX CEL INTO SOMETHING WE CAN USE
-    Rotation gal,cel,cel1,cel2,cel3;
+    Rotation gal,cel,cel1,cel2,cel3,cel4;
     
+    //the x axis must eventually be rotated so that it points east, instead of along
+    //the direction of orbital travel
+    double makeXeast = (m_inclination/m_degsPerRad)*cos(phase(time));
+
     //and here we construct the rotation matrices
 
     //gal is the matrix which rotates (cartesian)celestial coordiantes into (cartesian)galactic ones
@@ -92,12 +96,13 @@ Rotation Orbit::CELtransform(double time){
     
     //cel is the matrix which rotates (cartesian)local coordinates into (cartesian)celestial ones
     //cel.rotateY((time/m_precessPeriod)*M_2PI).rotateZ(m_inclination*M_2PI/360.).rotateY(phase(time));
-    cel1.rotateY(phase(time));
-    cel2.rotateZ(m_inclination*M_2PI/360.);
-    cel3.rotateY((time/m_precessPeriod)*M_2PI);
+    cel1.rotateZ(makeXeast);
+    cel2.rotateY(phase(time));
+    cel3.rotateZ(-m_inclination*M_2PI/360.);
+    cel4.rotateY((time/m_precessPeriod)*M_2PI);
 
     //so gal*cel should be the matrix that makes local coordiates into galactic ones.
-    Rotation glstToGal = gal*cel1*cel2*cel3;
+    Rotation glstToGal = gal*cel1*cel2*cel3*cel4;
 
     //displayRotation(glstToGal);
 
