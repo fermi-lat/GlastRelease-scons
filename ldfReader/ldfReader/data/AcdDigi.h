@@ -58,7 +58,7 @@ namespace ldfReader {
         ~AcdDigi();
 
         void clear();
-        void init(const char *name, int number = 0, int id =0);
+        void init(const char *name, int tileNumber = 0, int id =0);
         void print() const ;
 
         /// add readout to CalXtalReadout collection
