@@ -2,7 +2,10 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *                  EOH
- *
+
+   v0r16   16-Dec-2004  jrb  1. New job options to select "quality" of calibs
+                             2. Minor rearrangements in Root converters
+                             3. Use new Event (v10r* )
  * 10-Nov-2004: jrb v0r15    Upgrade for Xerces 2.6.0
  *  3-Nov-2004: jrb v0r14p3: Trim trailing white space from data_ident 
  *                           (calib. filename)
