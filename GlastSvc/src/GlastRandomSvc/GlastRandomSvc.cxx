@@ -80,6 +80,7 @@ GlastRandomSvc::~GlastRandomSvc()
 */
 class RanGenFactoryBase {
 public:
+  virtual ~RanGenFactoryBase(){}
     virtual HepRandomEngine * create() =0;
     virtual std::string name()const =0;
 };
@@ -124,7 +125,7 @@ HepRandomEngine* GlastRandomSvc::createEngine(std::string  engineName)
         {new RanGenFactory<Ranlux64Engine>("Ranlux64Engine") }
     };
 
-    for( int i=0; i< sizeof(factories)/sizeof(void*); ++i){
+    for(unsigned int i=0; i< sizeof(factories)/sizeof(void*); ++i){
         if( engineName==factories[i]->name()) return factories[i]->create();
     }
     return 0;
@@ -220,9 +221,9 @@ StatusCode GlastRandomSvc::initialize ()
             if( status.isSuccess() ) {
                 std::string fullname = this->name()+"."+tooltype;
                 IAlgTool* itool = toolfactory->instantiate(fullname,  this );
-
+		IRandomAccess* ranacc ;
                 status =itool->queryInterface(IRandomAccess::interfaceID(),  
-                    (void**)&itool);
+                    (void**)&ranacc);
                 if( status.isSuccess() ){
                     // Set the Random engine by name
                     HepRandomEngine* hr =createEngine(m_randomEngine);
@@ -233,11 +234,12 @@ StatusCode GlastRandomSvc::initialize ()
                     }
                     log << MSG::INFO << "Setting CLHEP Engine "<< m_randomEngine
                         << " for " << tooltype << " at " << hr << endreq;
-                    dynamic_cast<IRandomAccess*>(itool)->setTheEngine(hr);
+                    ranacc->setTheEngine(hr);
                     // Store its name and address in a map
                     m_engineMap[tooltype] = hr;
-                }
-                itool->release(); // always release the tool
+		    
+		  itool->release();
+		}
             }
         }
         return StatusCode::SUCCESS;
