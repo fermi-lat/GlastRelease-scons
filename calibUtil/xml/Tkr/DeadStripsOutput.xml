@@ -42,7 +42,7 @@
    instrument  (LAT | BFEM | BTEM | EM | CU) #REQUIRED
    timestamp   NMTOKEN #REQUIRED
    calType     NMTOKEN #REQUIRED
-   DTDVersion  NMTOKEN "v3r0"       
+   DTDVersion  NMTOKEN "v3r1"       
    fmtVersion  NMTOKEN #REQUIRED >
 
 <!-- Description of events used as input to the procedure 
@@ -105,7 +105,7 @@
       instance of a particular uniplane whose strips are a particular
       "badness", but dtd can't enforce this constraint.
   -->
-<!ELEMENT uniplane (stripList?, stripSpan*) >
+<!ELEMENT uniplane (stripList?, stripSpan?)* >
 <!ATTLIST uniplane tray      NMTOKEN #REQUIRED
                    which       (top | bot) #REQUIRED
                    nOnbdCalib  (true | false) "false"
@@ -132,7 +132,7 @@
 
 <badStrips badType= "dead">
    
-   <generic instrument="EM" timestamp="2003-2-5-16:00" calType="deadStrips" fmtVersion="v3r0" >
+   <generic instrument="EM" timestamp="2003-2-5-16:00" calType="deadStrips" fmtVersion="v3r1" >
       <inputSample startTime="0" stopTime="0" triggers="physics" mode="normal" source="stuff" >
          Output from LSR bad strips alg, running on MC data
       </inputSample>
@@ -140,6 +140,8 @@
    <tower row="0" col="0">
       <uniplane tray="0" which="top" nOnbdData="true" >
          <stripList strips= " 31 32 " />
+         <stripSpan first="2" last="5" />
+         <stripList strips="3 43" />
       </uniplane>
       <uniplane tray="3" which="bot" nOnbdData="true" >
          <stripList strips= " 50 " />
