@@ -913,16 +913,16 @@ grid, etc. (may be superseded by info from Eric)</notes>
         </const>
 
 
-        <const name="ACDLongRowMin" uType="count" >
-          <notes>row number of first long ACD side row</notes>
+        <const name="ACDShortRowMin" uType="count" >
+          <notes>row number of first short ACD side row</notes>
           <add>
-            <refer refTo="ACDShortRowMax" />
+            <refer refTo="ACDLongRowMax" />
             <const value="1" uType="count" />
           </add>
         </const>
 
-        <const name="ACDLongRowMax" uType="count" >
-          <notes>row number of last long ACD side row</notes>
+        <const name="ACDShortRowMax" uType="count" >
+          <notes>row number of last short ACD side row</notes>
           <minus>
             <refer refTo="numSideRows" />
             <const value="1" uType="count" />
@@ -987,6 +987,8 @@ grid, etc. (may be superseded by info from Eric)</notes>
      May have to do this over for a box containing support as well,
      but so far have no information for support                   -->
         <const name="ACDTopZwidth" >
+          <notes>Z for smallest box containing top tiles + tape (does
+            not currently include support)</notes>
           <add>
             <mul>
               <const value="3" uType="count" /> <!-- (nRow+1)/2 -->
@@ -1221,7 +1223,8 @@ grid, etc. (may be superseded by info from Eric)</notes>
 <!-- Now some stuff involving the ACD tape -->
         <const name="tapeSideLength">
           <notes>length of scintillating tape on a side (assume a single 
-          piece going from top to bottom for now</notes>
+          piece going from top to bottom for now.  May want to shorten
+          now that bottom tile "row" is just a single tile.</notes>
           <minus>
             <refer refTo="ACDSideHeight" />
             <refer refTo="sideOverlapToTopTape" />

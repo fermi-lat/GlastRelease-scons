@@ -26,11 +26,11 @@ of overlapped top tiles</prim>
 space available for side section of ACD, including both tiles and
 support structure</prim>
   <prim name="sideTileHeight0" value="250.0">Height of top row 
-of side tiles</prim>
+of side tiles.  Really should be 260, but we're forgoing overlap.</prim>
   <prim name="sideTileHeight1" value="200.0">Height of 2nd row 
-of side tiles</prim>
-  <prim name="sideTileHeight2" value="150.0">Height of 3rd row 
-of side tiles</prim>
+of side tiles.  Real value is 210, but we're forgoing overlap.</prim>
+  <prim name="sideTileHeight2" value="151.0">Height of 3rd row 
+of side tiles.  Real value is 160, but we're forgoing overlap.</prim>
   <prim name="sideTileHeight3" value="150.0">Height of 4th row 
 of side tiles</prim>
   <prim name="sideOverlap" value="30.0">Distance side tiles
