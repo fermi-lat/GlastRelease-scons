@@ -31,7 +31,7 @@ const std::string TEST_STOPTIME("2004-04-08-11:18:00");
 const std::string TEST_INSTRUMENT("EM");
 
 const std::string DEFAULT_XMLPATH("CalIntNonlin_EM1_040804.xml");
-const std::string DTD_PATH("../calCalib_v2r1.dtd");
+const std::string DTD_PATH("$(CALIBUTILROOT)/xml/calCalib_v2r1.dtd");
 const std::string DTD_VERSION("v2r1");
 
 ////////// FIT PROPERTIES //////////////////////////////////////////////////////
