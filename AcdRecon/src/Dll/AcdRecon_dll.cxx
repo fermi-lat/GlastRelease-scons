@@ -1,4 +1,4 @@
-/** @file AcdRecon_dll.cpp
+/** @file AcdRecon_dll.cxx
 
 @brief Implementation of the DllMain routine.  
 The DLL initialization must be done seperately for each DLL. 
