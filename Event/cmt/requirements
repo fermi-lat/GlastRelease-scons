@@ -1,5 +1,5 @@
 package Event
-version v8v6p1
+version v8r7
 
 branches Event mgr doc src
 use idents v2r*
