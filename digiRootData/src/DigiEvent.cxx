@@ -51,9 +51,10 @@ DigiEvent::~DigiEvent() {
     m_calDigiCol = 0;
 }
 
-void DigiEvent::initialize(UInt_t eventId, UInt_t runId) {
+void DigiEvent::initialize(UInt_t eventId, UInt_t runId, Bool_t fromMc) {
     m_eventId = eventId;
     m_runId = runId;
+    m_fromMc = fromMc;
 }
 
 void DigiEvent::Clear(Option_t *option) {

@@ -35,7 +35,7 @@ public:
     DigiEvent();
     virtual ~DigiEvent();
 
-    void initialize(UInt_t eventId, UInt_t runId);
+    void initialize(UInt_t eventId, UInt_t runId, Bool_t fromMc);
 
     void Clear(Option_t *option="");
 
@@ -46,6 +46,8 @@ public:
 
     /// Access the run number
     inline UInt_t getRunId() { return m_runId; };
+
+    inline Bool_t getFromMc() { return m_fromMc; };
 
     /// Access ACD data
     //AcdHeader* getAcdHeader() { return &m_AcdHeader; };
@@ -88,6 +90,9 @@ private:
     /// Event Number 
     UInt_t m_eventId;  
     
+    /// Denote whether or not this data was simulated
+    Bool_t m_fromMc;
+
     /// Store Level 1 trigger
     //L1T m_L1T;
 
