@@ -6,9 +6,9 @@ branches src cmt doc
 
 use GlastSvc 
 use facilities
-#use GuiSvc          v3*
 use ntupleWriterSvc v*
 use TkrUtil
+use Recon
 
 apply_pattern packageShr
 
