@@ -139,9 +139,25 @@ void TkrFitPlane::setDeltaEne(double ene)
 
 {       
     double radlen = getRadLen();
+ //    Code for e+ & e-: average radiative loss
     double factor = exp(-1.*radlen);
+    setEnergy(ene*factor);   
 
-    setEnergy(ene*factor);
+/*
+ //  Code for muon testing ~ Bethe-Block dE/dx 
+#define MUMASS 105.7
+    double mu_sq     = MUMASS*MUMASS; 
+    double pb_sq     = ene*ene; //Note: for fitting ene = p*Beta
+    double p_sq      = pb_sq*(1.+sqrt(1.+ 4.*mu_sq/pb_sq))/2.;
+    double ke        = sqrt(mu_sq+p_sq) - MUMASS; 
+    double beta_sq   = pb_sq/p_sq; 
+    double d_ke      = radlen*18.3/beta_sq;// const. from wallet card est. 
+    double ke_next   = ke - d_ke;
+    double e_next    = ke_next + MUMASS;
+    double p_next_sq = e_next*e_next - mu_sq; 
+    double pB_next   = p_next_sq/e_next;
+    setEnergy(pB_next);
+  */  
 }
 
 double TkrFitPlane::getSigma(TkrFitHit::TYPE type) const
@@ -163,7 +179,7 @@ double TkrFitPlane::getSigma(TkrFitHit::TYPE type) const
 double TkrFitPlane::getDeltaChiSq(TkrFitHit::TYPE type) const
 {  
     TkrFitHit hit=getHit(type);
-/*
+
     double delpar = 0.;
     double sigma2 = 0.; 
     if(m_projection == TkrCluster::X ) {
@@ -177,7 +193,7 @@ double TkrFitPlane::getDeltaChiSq(TkrFitHit::TYPE type) const
 
     double chi2 = 1e6;
     if(sigma2 > 0) chi2=(delpar*delpar)/sigma2;
-*/
+/*
     // Try the full 3D version (see Data Analysis Tech. in HEP by Fruthwirth et al) 
     double rx = m_hitmeas.getPar().getXPosition()-hit.getPar().getXPosition();
     double ry = m_hitmeas.getPar().getYPosition()-hit.getPar().getYPosition();
@@ -197,6 +213,6 @@ double TkrFitPlane::getDeltaChiSq(TkrFitHit::TYPE type) const
 
     // Form Chisq. Note: when R13 = 0 (then r13 = 0) this resduce to previous 
     double chi2 = rx*rx*r11 + ry*ry*r33 + 2.*r13*rx*ry;
-
+*/
     return chi2;
 }
