@@ -87,7 +87,10 @@ class G4Geometry : public IGeometry
   G4LogicalVolume* actualMother()const;
   
   /// Returns the number of physical volumes created
-  unsigned int getPhysicalNumber(){return m_physicals.size();};
+  unsigned int getPhysicalNumber()const{return m_physicals.size();};
+
+  /// Returns the number of logical volumes created
+  unsigned int getLogicalNumber()const{return m_logicals.size();};
 
   /// Need a setMode in order to implement getMode for IGeometry interface
   virtual void setMode(std::string pmode) {m_mode = pmode;}

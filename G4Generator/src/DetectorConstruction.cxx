@@ -72,7 +72,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   // summary log output
   m_log << "\tDetectorConstruction created "
-      << geom.getPhysicalNumber() <<  " physical volumes, using ";
+      << geom.getPhysicalNumber() << ", "<< geom.getLogicalNumber()<< " physical, logical volumes, using ";
   if (m_geometryMode=="" ) {
       m_log <<  "default mode from GlastDetSvc"  << std::endl;
   }else {
