@@ -1,8 +1,8 @@
 package digiRootData
-version v7r4
+version v7r4p1
 # $Id$
 
-use RootPolicy v4r*
+use RootcintPolicy v4r* GlastPolicy
 use commonRootData v1r*
 use ldfExt  v0r*  IExternal
 

@@ -1,19 +1,38 @@
 /** @file release.notes
+
 Package commonRootData
+
 Coordinator:H.Kelly
+
 @verbatim
 
+
+v1r0p1  10-aug-2004 THB moved RootPolicy to GlastPolicy/RootcintPolicy
 v1r0p0  26-jul-2004 HMK Decrement version of CalXtalId - no need to increment,
+
         we made no changes to the data members 
+
 v1r0    28-jun-2004 HMK Moving all idents classes from mcRootData and digiRootData to this package:  VolumeIdentifer, AcdId, CalXtalId, TowerId
+
 v0r4    20-jun-2004 THB update to inclusive pattern
+
 v0r3    16-jun-2004 THB Use new RootPolicy pattern for building rootcint files
+
 v0r2p6  15-jun-2004 HMK Use any GlastPolicy
+
 v0r2p4  27-apr-2004 HMK update to new GlastPolicy version
+
 v0r2p3  15-jan-2004 HMK reorder headers - seems to affect rootcint processing
+
 v0r2p2  05-feb-2003 HMK Apply vsnet_rootcint pattern
+
 v0r2p1  15-jan-2003 THB vsnet implementation, header file fix
+
 v0r2    new GlastRelease
+
 v0      april-2001 HMK initial import 
+
 @endverbatim
+
 */
+
