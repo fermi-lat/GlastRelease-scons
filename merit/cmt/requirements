@@ -1,5 +1,5 @@
 package merit
-version v5r12p2
+version v5r12p3
 # $Id$
 
 branches doc
@@ -9,10 +9,9 @@ use Event *
 use GuiSvc v3*
 
 # read/ write ROOT trees (any old ROOT will do)
-use ROOT *
+use RootPolicy *
 
 apply_pattern packageShr
-ignore_pattern RuleChecker
 
 private
 
