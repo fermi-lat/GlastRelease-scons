@@ -1,6 +1,6 @@
 package Gleam
 
-version  v2r1p6
+version  v2r1p7
 # This is a checkout package
 # $Id$
 
@@ -14,7 +14,7 @@ use RootHistCnv v5r0p1
 # basic Glast packages
 
 use XMLEXT      v2r2 
-use GlastPolicy v4r4 
+use GlastPolicy            v4r5 
 use facilities  v2r4p1
 use xml         v4r1p4 
 use xmlUtil     v2r8p1
@@ -40,7 +40,7 @@ public
 
 use GuiSvc      v3
 
-use Event                  v8r6
+use Event                  v8r7
 use GlastSvc    v8r1
 
 # simulation
@@ -61,14 +61,14 @@ use mcRootData     v2r2
 use digiRootData   v3r2
 use reconRootData  v3r0p2
 
-use RootIo                 v4r1p3
+use RootIo                 v4r1p4
 
 
 #reconstruction
 use Trigger                v3r3
 use Recon       v2r2p3
 
-use TkrRecon               v6r3
+use TkrRecon               v6r3p2
 use CalRecon               v5r5p1       
 
 
