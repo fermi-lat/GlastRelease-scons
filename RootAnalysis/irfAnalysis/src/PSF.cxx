@@ -54,6 +54,7 @@ void PSF::open_input_file()
         double Tkr1FirstLayer, Tkr1PhiErr, Tkr1ThetaErr, IMvertexProb, VtxAngle,McTkr1DirErr,McDirErr;
         double TkrNumTracks, GltWord, IMcoreProb, EvtEnergySumOpt, AcdTotalEnergy, EvtTkrComptonRatio;
         double CalMIPDiff, CalLRmsRatio, IMgammaProb, AcdTileCount, EvtTkrEComptonRatio;
+	double Tkr1ToTFirst, Tkr1ToTAve, AcdRibbonActDist, FilterStatus_HI;
         m_tree->SetBranchAddress("Tkr1FirstLayer",&Tkr1FirstLayer);
         m_tree->SetBranchAddress("Tkr1ThetaErr",  &Tkr1ThetaErr);
         m_tree->SetBranchAddress("Tkr1PhiErr",    &Tkr1PhiErr);
@@ -72,6 +73,10 @@ void PSF::open_input_file()
         m_tree->SetBranchAddress("IMgammaProb", &IMgammaProb);
         m_tree->SetBranchAddress("AcdTileCount", &AcdTileCount);
         m_tree->SetBranchAddress("EvtTkrEComptonRatio", &EvtTkrEComptonRatio);
+	m_tree->SetBranchAddress("Tkr1ToTFirst", &Tkr1ToTFirst);
+	m_tree->SetBranchAddress("Tkr1ToTAve", &Tkr1ToTAve);
+	m_tree->SetBranchAddress("AcdRibbonActDist", &AcdRibbonActDist);
+	m_tree->SetBranchAddress("FilterStatus_HI", &FilterStatus_HI);
         double mc_energy, mc_zdir;
         m_tree->SetBranchAddress("McEnergy", &mc_energy);
         m_tree->SetBranchAddress("McZDir",    &mc_zdir);
@@ -96,18 +101,30 @@ void PSF::open_input_file()
             veto=1.0;
             if(TkrNumTracks>0.0&&GltWord>3.0&&IMcoreProb>0.2){
                 if(VtxAngle>0.0){
-		  if(EvtEnergySumOpt>350.0&&EvtTkrEComptonRatio>0.6&&CalMIPDiff>60.0&&IMgammaProb>0.5)
+		  if(EvtEnergySumOpt>3500.0)
                         veto=0.0;
-                  if(EvtEnergySumOpt<=350.0&&AcdTileCount==0.0&&CalMIPDiff>-125.0&&EvtTkrEComptonRatio>0.8&&IMgammaProb>0.9)
-                        veto=0.0;
+	          if(EvtEnergySumOpt>350.0&&EvtEnergySumOpt<=3500.0)
+		        veto=0.0;
+                  if(EvtEnergySumOpt<=350.0)
+		       if(Tkr1ToTFirst>4.5||Tkr1ToTAve>3.5||AcdTotalEnergy>0.25||VtxAngle>0.4)
+		            veto=1.0;
+			    else
+                               veto=0.0;
                   }
                 else{
-                    if(EvtEnergySumOpt>450.0&&EvtTkrComptonRatio>0.7&&CalMIPDiff>80.0&&CalLRmsRatio<20.0&&IMgammaProb>0.5)
-                        veto=0.0;
-                    if(EvtEnergySumOpt<=450.0&&AcdTileCount==0.0&&EvtTkrComptonRatio>1.0&&CalLRmsRatio>5.0&&Tkr1FirstLayer!=0.0&&Tkr1FirstLayer<15.0&&IMgammaProb>0.9)
-                        veto=0.0;
-
-                }
+                    if(EvtEnergySumOpt>3500.0)
+                         veto=0.0;
+	            if(EvtEnergySumOpt>350.0&&EvtEnergySumOpt<=3500.0)
+		         if(Tkr1ToTAve>3.0||AcdTotalEnergy>5.0||EvtTkrComptonRatio<1.0)
+			     veto=1.0;
+			     else
+		               veto=0.0;
+                    if(EvtEnergySumOpt<=350.0)
+		       if(Tkr1ToTAve>3.0||AcdTileCount>0.0||AcdRibbonActDist>-300.0||EvtTkrComptonRatio<1.05||FilterStatus_HI>3.0)
+		            veto=1.0;
+			    else
+                               veto=0.0;
+                  }
             }
             friend_tree->Fill();
         }
