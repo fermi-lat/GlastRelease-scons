@@ -15,7 +15,7 @@ namespace detModel{
   class Stack;
   class Choice;
   class Const;
-  class xml::XmlParser;
+  class DMDocClient;
   /**
    * This class is a concrete Builder that use the Xerces parser and the
    * DOM functionalities to parse the xml file and build the generic model
@@ -33,7 +33,7 @@ namespace detModel{
     XercesBuilder();
 
 
-    virtual ~XercesBuilder(){delete parser;};
+    virtual ~XercesBuilder();
   
     /** This method initialize the parser 
      */
@@ -95,11 +95,7 @@ namespace detModel{
     void setAttributeRelativePosition(StackedPos* pos, DOM_Node* e);
 
   private:
-    /**
-     * This private variable is the root element of the DOM hiearchy
-     */
-    xml::XmlParser *parser;
-    DOM_Document domfile;
+    DMDocClient* m_docClient;
     /**  used to verify if a DOM_Node is a comment */
     enum{Comment=8}; 
   };

@@ -1,5 +1,7 @@
 #include "xmlUtil/Substitute.h"
 #include "xmlUtil/Arith.h"
+#include "xmlUtil/docMan/GDDDocMan.h"
+
 #include "xml/XmlParser.h"
 #include "xml/Dom.h"
 #include "dom/DOM_Element.hpp"
@@ -13,6 +15,7 @@
 
 #include "detModel/Management/Manager.h"
 #include "detModel/Management/XercesBuilder.h"
+#include "detModel/Management/DMDocClient.h"
 #include "detModel/Sections/Section.h"
 #include "detModel/Sections/Box.h"
 #include "detModel/Sections/Composition.h"
@@ -33,63 +36,32 @@
 
 namespace detModel{
 
-  XercesBuilder::XercesBuilder() : parser(0)
+  XercesBuilder::XercesBuilder()
   {
+    m_docClient = new DMDocClient();
+    
+    xmlUtil::GDDDocMan* pGDDMan = xmlUtil::GDDDocMan::getPointer();
+    pGDDMan->regClient("constants", m_docClient);
+    pGDDMan->regClient("section", m_docClient);    
+    pGDDMan->regClient("materials", m_docClient);    
+  }
+  
+  XercesBuilder::~XercesBuilder()
+  {
+    //xmlUtil::GDDDocMan* pGDDMan = xmlUtil::GDDDocMan::getPointer();
+    //pGDDMan->remove(m_docClient);
+
+    delete m_docClient;
   }
 
   void XercesBuilder::parseFile(char* nameFile){
     unsigned int iSec;
-
-    /// The parser is created
-    if (!parser) {
-      parser = new xml::XmlParser();
-    }
-    else {
-      parser->reset();
-    }
-
-    /// The DOM hierarchy is parsed
-    domfile = parser->parse(nameFile);
-
-    /// We use xmlUtil to substitute all the sections
-    xmlUtil::Substitute* sub = new xmlUtil::Substitute(domfile);
-    DOM_Element docElt = domfile.getDocumentElement();
-    DOM_Element tmp;
-    DOM_Element curConst;
-  
-    DOM_NodeList sections = docElt.getElementsByTagName(DOMString("section"));
-  
-    for (iSec = 0; iSec < sections.getLength(); iSec++) {
-      DOM_Node  secNode = sections.item(iSec);
-      DOM_Element& secElt = static_cast<DOM_Element &> (secNode);
-      sub->execute(secElt);
-    }
-  
-    /// We use xmlUtil to calculated all the derived constants
-  
-    tmp = xml::Dom::findFirstChildByName(docElt, "constants" );
-
-    tmp = xml::Dom::findFirstChildByName(tmp, "derived" );
-
-    if (tmp != DOM_Element())
-      {
-	tmp = xml::Dom::findFirstChildByName(tmp, "derCategory" );
-      
-	while(tmp != DOM_Element())
-	  {
-	    curConst = xml::Dom::findFirstChildByName(tmp, "const" );
-	  
-	    while (curConst != DOM_Element()) {
-	      xmlUtil::Arith curArith(curConst);
-	      double evalValue = curArith.evaluate();
-	      curArith.saveValue();
-	      curConst = xml::Dom::getSiblingElement(curConst);
-	    }
-	    tmp = xml::Dom::getSiblingElement(tmp);
-	  }
-      }
-      
-  
+    xmlUtil::GDDDocMan* pGDDMan = xmlUtil::GDDDocMan::getPointer();
+    
+    if( nameFile == "" ) 
+      pGDDMan->parse(std::string(::getenv("XMLUTILROOT"))+"/xml/flight.xml");
+    else
+      pGDDMan->parse(nameFile);
 
     /// We start detModel stuff retriving the manager
     Manager* man = Manager::getPointer();
@@ -98,12 +70,8 @@ namespace detModel{
     currentGdd = man->getGdd();
   
     /// Set some info on the parsed file
-    currentGdd->setCVSid(xml::Dom::getAttribute(docElt, "CVSid"));
-    currentGdd->setDTDversion(xml::Dom::getAttribute(docElt, "DTDversion"));
-
-    /// Delete some stuff
-    //    delete parser;
-    delete sub;
+    //    currentGdd->setCVSid(xml::Dom::getAttribute(docElt, "CVSid"));
+    // currentGdd->setDTDversion(xml::Dom::getAttribute(docElt, "DTDversion"));
   }  
 
 
@@ -174,12 +142,11 @@ namespace detModel{
   /// This methods build the constants part of detModel
   void XercesBuilder::buildConstants(){
     unsigned int i,j;
-    DOM_Element docElt = domfile.getDocumentElement();
-    DOM_NodeList child = docElt.getElementsByTagName(DOMString("constants"));
-    if (child.getLength()){
+
+    if (m_docClient->getConstants()){
       Constants* ConstantsBranch = new Constants();
-    
-      DOM_NodeList childs = child.item(0).getChildNodes();
+      
+      DOM_NodeList childs = m_docClient->getConstants()->getChildNodes();
       // version primary ?derived 
       for(i=0;i<childs.getLength();i++){
 	if(childs.item(i).getNodeType() != Comment)
@@ -238,18 +205,17 @@ namespace detModel{
 
   void XercesBuilder::buildMaterials(){
     unsigned int i,j;
-    DOM_Element docElt = domfile.getDocumentElement();
-    DOM_NodeList child = docElt.getElementsByTagName(DOMString("materials"));
-    if (child.getLength()){
+
+    if (m_docClient->getMaterials()){
       MatCollection* materials = currentGdd->getMaterials();
 
-      DOM_NamedNodeMap attrCol=child.item(0).getAttributes();
+      DOM_NamedNodeMap attrCol=(m_docClient->getMaterials())->getAttributes();
 
       materials->setVersion(std::string(xml::Dom::transToChar(attrCol.getNamedItem(DOMString("version")).getNodeValue())));
       materials->setDate(std::string(xml::Dom::transToChar(attrCol.getNamedItem(DOMString("date")).getNodeValue())));
       materials->setAuthor(std::string(xml::Dom::transToChar(attrCol.getNamedItem(DOMString("author")).getNodeValue())));
 
-      DOM_NodeList childs = child.item(0).getChildNodes();
+      DOM_NodeList childs = m_docClient->getMaterials()->getChildNodes();
       for(i=0;i<childs.getLength();i++){
 	if(childs.item(i).getNodeType() != Comment)
 	  {
@@ -371,17 +337,10 @@ namespace detModel{
 
   void XercesBuilder::buildSections()
   {
-    unsigned int i;
-    DOM_Element docElt = domfile.getDocumentElement();
-    DOM_NodeList childs = docElt.getChildNodes();
-  
-    for(i=0;i<childs.getLength();i++)
-      {
-	std::string str = std::string(xml::Dom::transToChar(childs.item(i).getNodeName()));
-	if(str == "section"){
-	  currentGdd->addSection(buildSection(&(childs.item(i))));
-	}
-      }
+    if (m_docClient->getSections()){
+      currentGdd->addSection(buildSection(m_docClient->getSections()));
+    }
+    
     currentGdd->buildVolumeMap();
 
     currentGdd->ResolveReferences();
