@@ -3,6 +3,9 @@ package detCheck
 
 use detModel v2r*
 use xmlGeoDbs v1r*
+use CLHEP v2r* IExternal
+use xmlUtil v2r*
+use idents  v2r*
 
 include_dirs "${DETCHECKROOT}"
 
