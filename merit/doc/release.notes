@@ -4,6 +4,9 @@
  * package manager:T.Burnett
  * $Id$
  *
+ *  v6r12p1 THB  21-oct-03 Fix background classification tree cuts (again)
+                           simplify calculation of earth -based angles for FT1.
+
  *  v6r12   THB  21-oct-03 Fix background classification tree cuts 
  *  v6r11p2 THB  16-oct-03 Fix background classification tree cuts 
  *          Johann         FT1 elaboration   
