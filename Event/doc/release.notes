@@ -2,6 +2,8 @@
  * @brief package Event<pre>
  * package manager:T.Burnett
  *
+ * v9r7p2  28-feb-03 LSR add access method to TkrCluster; fix unix warning in McIntegratingHit
+ * v9r7p1  23-feb-03 RD  add access method to CalCluster
  * v9r7    03-feb-03 LSR Add alignment info to McTkrStrips
  * ...
  *         04-dec-02 HMK add ObjectVector.h to AcdDigi explictly\n
