@@ -1,6 +1,7 @@
 // $Header$
 
 #include <string>
+#include <ios>
 #include "TTree.h"
 #include "TFile.h"
 #include "TBranch.h"
@@ -100,20 +101,10 @@ StatusCode RootTkrTotCnv::readUnis(TTree* tree, int iTow,
       log << MSG::ERROR << "Failed to read ToT unilayer object" << endreq;
       return ret;
     }
-    //    if (!rootUni->consistent() ) {
-    //      log << MSG::DEBUG
-    //          << "private data m_nStrips != size of strip array: " 
-    //          <<  rootUni->getNStrips() << endreq;
-      //      return StatusCode::FAILURE;
-    //    }
-    //    else {
-    //      log << MSG::DEBUG << "Unilayer has " << rootUni->getNStrips() 
-    //                    << " strips" << endreq;
-    //    }
-
     idents::TkrId id;
   
     const commonRootData::TkrId& rootId = rootUni->getId();
+
     ret = convertId(rootId, &id);
     if (ret != StatusCode::SUCCESS) {
       log << MSG::ERROR << "Illegal TkrId in ToT root calib. object" << endreq;

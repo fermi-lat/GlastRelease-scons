@@ -245,8 +245,8 @@ StatusCode RootBaseCnv::readRootObj(TTree* pTree,
                                     TObject*& pObj, unsigned ix){
   TBranch* pBranch=pTree->GetBranch(branch.c_str());
   pBranch->SetAddress(&pObj);
-  pBranch->GetEntry(ix);
-  return StatusCode::SUCCESS;
+  int nBytes = pBranch->GetEntry(ix);
+  return (nBytes > 0) ? StatusCode::SUCCESS : StatusCode::FAILURE;
  }
 
 bool RootBaseCnv::doClean() {
