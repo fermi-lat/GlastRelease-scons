@@ -1,6 +1,6 @@
 package Gleam
 
-version  v2r1p5
+version  v2r1p6
 # This is a checkout package
 # $Id$
 
@@ -40,26 +40,27 @@ public
 
 use GuiSvc      v3
 
-use Event       v8r5p1
+use Event                  v8r6
 use GlastSvc    v8r1
 
 # simulation
 
-use FluxSvc     v5r6p2
+use FluxSvc                v5r7
 use FluxDisplay v2r0p1
 use G4Generator v4r1p2
 
 #digitization
+use GlastDigi   v4r0p1
 use CalDigi     v1r0p1
 use TkrDigi     v1r0
 use AcdDigi     v0r1
 
 #reconstruction
-use Trigger     v3r2
-use Recon                 v2r2p3
+use Trigger                v3r3
+use Recon       v2r2p3
 
-use TkrRecon              v6r2p2
-use CalRecon    v5r2       
+use TkrRecon               v6r3
+use CalRecon               v5r5p1       
 
 
 #ROOT persistence
@@ -67,10 +68,10 @@ use mcRootData     v2r2
 use digiRootData   v3r2
 use reconRootData  v3r0p2
 
-use RootIo                v4r1p2
+use RootIo         v4r1p2
 
 #diagnostic and summary of bottom line
-use merit                 v5p1
+use merit                  v5r2
 
 ### define a simple executable with GUI
 
@@ -83,4 +84,4 @@ macro Gleamlinkopts  "  $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiS
       WIN32 " ${guiapp_linkopts} $(GuiSvc_lib)  /include:_GuiSvc_loadRef "
 
 # define a standard test executable, if desired
-#apply_pattern package_test
+apply_pattern package_test
