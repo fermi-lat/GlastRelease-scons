@@ -35,6 +35,7 @@ public:
 
         EventModel::Raw::Event = EventModel::Event + "/Raw";
         EventModel::Raw::TdCsIDatas = EventModel::Raw::Event + "/TdCsIDatas";
+        EventModel::Raw::TdSiDatas = EventModel::Raw::Event + "/TdSiDatas";
     }
 };
     
@@ -69,4 +70,6 @@ public:
     const CLID& CLID_TdCsIData            = 2014;
     const CLID& CLID_Xtal               = 2015;
     const CLID& CLID_TdCsIDataCnv         = 2016;
+    const CLID& CLID_TdSiData           =  2017;
+    const CLID& CLID_TdSiDataCnv        =   2018;
         
