@@ -196,7 +196,7 @@ static const AlgFactory<meritAlg>  Factory;
 const IAlgFactory& meritAlgFactory = Factory;
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 meritAlg::meritAlg(const std::string& name, ISvcLocator* pSvcLocator) :
-Algorithm(name, pSvcLocator), m_tuple(0), m_rootTupleSvc(0)
+Algorithm(name, pSvcLocator), m_tuple(0), m_rootTupleSvc(0), m_ctree(0)
 {
 
     declareProperty("cuts" , m_cuts=default_cuts);
@@ -316,12 +316,16 @@ StatusCode meritAlg::initialize() {
     // add some of the AnalysisNTuple items
     if( setupTools().isFailure()) return StatusCode::FAILURE;
 
-    // the tuple is made: create the classification object 
+    // the tuple is made: create the classification object if requested
     try { 
-        //        const char * pkgpath = ::getenv("CLASSIFICATIONROOT");
         std::string path =  m_IM_filename.value(); 
-        facilities::Util::expandEnvVar(&path);
-        m_ctree = new  ClassificationTree(*m_tuple, log.stream(), path);
+        if(! path.empty() ){
+            facilities::Util::expandEnvVar(&path);
+            m_ctree = new  ClassificationTree(*m_tuple, log.stream(), path);
+            log << MSG::INFO << "Loading classification trees from " << path << endreq;
+        } else {
+            log << MSG::INFO << "No classification trees loaded" << endreq;
+        }
         //TODO: finish setup.
     }catch ( std::exception& e){
         log << MSG::ERROR << "Exception caught, class  "<< typeid( e ).name( ) << ", message:"
@@ -446,7 +450,7 @@ void meritAlg::copyFT1Info(){
     }
     else if(m_primaryType.value() == "RECO")
     {
-        if(m_ctree->useVertex())
+        if(m_ctree==0 || m_ctree->useVertex())
         {
             // Retrieve Vertex to get summary info from reco
             //	  m_ft1energy    = m_tuple->tupleItem("TkrSumConEne")->value();
@@ -559,7 +563,7 @@ StatusCode meritAlg::execute() {
         m_filterAlgStatus=(double)filterAlgStatus->getVetoWord();
     }
  
-    m_ctree->execute();
+    if( m_ctree!=0) m_ctree->execute();
     m_fm->execute();
 
     // always write the event tuple
