@@ -80,7 +80,6 @@ m_frametype(EARTH), illumBox(0), m_energyscale(GeV)
     
     DOM_Element   spec = xml::Dom::findFirstChildByName(xelem, "spectrum");
     
-    
     if (spec == DOM_Element()) {
         
         // source has no imbedded spectrum element: expect a name
@@ -201,8 +200,7 @@ m_frametype(EARTH), illumBox(0), m_energyscale(GeV)
                 FATAL_MACRO("Unknown launch specification in Flux::Flux \""
                     << launchTag.transcode() << "\"" );
             }
-        }
-        
+        } 
         
     }
     if( s==0) {

@@ -98,6 +98,7 @@ void FluxMgr::init(const std::vector<std::string>& fileList){
 //    DLL_DECL_SPECTRUM( CrElectron);
 //    DLL_DECL_SPECTRUM( CrProton);
     DLL_DECL_SPECTRUM( FILESpectrum);
+    DLL_DECL_SPECTRUM( MapSpectrum);
     
 }
 

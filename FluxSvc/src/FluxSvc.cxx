@@ -60,7 +60,6 @@ StatusCode FluxSvc::source(std::string name, IFlux*& flux) {
         &&(std::find(source_list2.begin(), source_list2.end(), name) == source_list2.end()))
         //flux =  new Flux(name);
         return StatusCode::FAILURE;
-    
     flux =  new Flux(name);
     m_currentFlux = flux;
     //std::cout << "currentFluxPointer = " << flux << std::endl;
