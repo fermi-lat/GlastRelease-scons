@@ -1,6 +1,6 @@
 # $Header$
 package xmlUtil
-version v2r8p3
+version v2r8p4
 
 use facilities v2r*
 use xml        v4r*
