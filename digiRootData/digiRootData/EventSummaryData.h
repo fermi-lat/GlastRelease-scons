@@ -46,9 +46,7 @@ public:
         unsigned int i;
         for (i = 0; i < 16; i++) { m_temLen[i] = len[i]; }
     }
-    void initContribLen(unsigned long *tem, unsigned long gemLen, unsigned l
-ong oswLen,
-        unsigned long errLen, unsigned long diagLen, unsigned long aemLen) {
+    void initContribLen(unsigned long *tem, unsigned long gemLen, unsigned long oswLen, unsigned long errLen, unsigned long diagLen, unsigned long aemLen) {
 
         m_otherContribLen[GEM] = gemLen;
         m_otherContribLen[OSW] = oswLen;
