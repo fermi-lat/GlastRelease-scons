@@ -173,12 +173,11 @@ form a square array of this dimension</prim>
       </primCategory>
 
       <primCategory name="ACDprim" >
-<overview><![CDATA[ACD people need to put something real here. 
-The constants in here currently come from Heather, unfortunately
-filtered through me (Joanne).
+<overview><![CDATA[ACD people should review this to make sure 
+constants from Heather's note have been transcribed correctly.
 Note <font color="#ff0000">some of these values are invented and
 need to be replaced with something real</font>, in particular we're missing
-a sensible number for ACDSupportThickness (and also a real  support material).
+a sensible number for ACDSupportThickness and a real  support material.
  ]]></overview> 
         <prim name="tileMat" value="Polystyrene" type="string" uType="mat">material used for tiles
 </prim>
@@ -195,15 +194,17 @@ between the side of the tracker and the ACD tiles</prim>
 (Heather).</prim>
         <prim name="topTileGap" value="3.0">Worst-case (most thermal expansion)
 gap between tiles on the top</prim>
-        <prim name="numXtopTiles" value="5" uType="count">Number of tiles
+        <prim name="numXTopTiles" value="5" uType="count">Number of tiles
 across top in x direction</prim>
-        <prim name="numYtopTiles" value="5" uType="count">Number of tiles
+        <prim name="numYTopTiles" value="5" uType="count">Number of tiles
 across top in y direction</prim>
          <prim name="topStandoff" value="10.0"> distance between
 ACD top and top of TKR</prim>
        <prim name="topOverlap" value="10.0">Width of overlap
 of overlapped top tiles</prim>
-
+        <prim name="numSideTapes" value="4" uType="count">Number of
+gaps (long axis = Z) to be covered by scintillating tape on each side
+o the ACD.  Should this be derived from #tiles in some side row?</prim>
 
 <!-- side stuff -->
         <prim name="totalSideAvail" value="52.0">Total amount of
@@ -517,17 +518,36 @@ too, but not required.</overview>
         </const>
 
 <!-- start ACD stuff -->
-        <const name="ACDTopXwidth">
+<!-- Total X, Y widths to be covered by top tiles -->
+        <const name="ACDTopTotalX">
+          <add>
+            <refer refTo="totalX" />
+            <mul>
+              <const value="2.0" />
+              <refer refTo="ACDSideStandoff" />
+            </mul>
+          </add>
+        </const>
+
+        <const name="ACDTopTotalY">
+          <add>
+            <refer refTo="totalY" />
+            <mul>
+              <const value="2.0" />
+              <refer refTo="ACDSideStandoff" />
+            </mul>
+          </add>
+        </const>
+
+<!-- X dimension for a top tile. Must be derived from total width top
+      and other things  -->
+        <const name="ACDTopXWidth">
           <quo>
             <add>
-              <refer refTo="totalX"/>
-              <mul>
-                <const value="2.0" />
-                <refer refTo="ACDSideStandoff" />
-              </mul>
+              <refer refTo="ACDTopTotalX"/>
               <mul>
                 <minus>
-                  <refer refTo="numXtopTiles" />
+                  <refer refTo="numXTopTiles" />
                   <const value="1.0" />
                 </minus>
                 <refer refTo="topOverlap" />
@@ -540,39 +560,72 @@ too, but not required.</overview>
                 </minus>
               </mul>
             </add>
-            <refer refTo="numXtopTiles" />
+            <refer refTo="numXTopTiles" />
           </quo>
         </const>
 
 <!-- and similarly for y but no overlap to contend with, more gaps -->
-        <const name="ACDTopYwidth">
+        <const name="ACDTopYWidth">
           <quo>
             <add>
-              <refer refTo="totalY"/>
-              <mul>
-                <const value="2.0" />
-                <add>
-                  <refer refTo="ACDSideStandoff" />
-                  <refer refTo="ACDSupportThickness" />
-                </add>
-              </mul>
-
+              <refer refTo="ACDTopTotalY"/>
               <uminus>
                 <mul>
                   <add>
                     <const value="1.0" />
-                    <refer refTo="numYtopTiles" />
+                    <refer refTo="numYTopTiles" />
                   </add>
                   <refer refTo="topTileGap" />
                 </mul>
               </uminus>
 
             </add>
-            <refer refTo="numYtopTiles" />
+            <refer refTo="numYTopTiles" />
           </quo>
         </const>
 
-<!-- total length (in x direction) to be covered by a row of tiles -->
+<!-- Compute Z for the smallest box containing the top tiles + tape.
+     From Heather's first diagram, this is
+
+      3*tileThickness + tapeGap + tapeThickness
+
+     May have to do this over for a box containing support as well,
+     but so far have no information for support                   -->
+        <const name="ACDTopZwidth" >
+          <add>
+            <mul>
+              <const value="3" />
+              <refer refTo="tileThickness" />
+            </mul>
+            <refer refTo="tapeGap" />
+            <refer refTo="tapeThickness" />
+          </add>
+        </const>
+
+<!-- following are convenient to have.. -->
+        <const name="ACDTopZHalfWidth" >
+          <quo>
+            <refer refTo="ACDTopZwidth" />
+            <const value="2.0" />
+          </quo>
+        </const>
+
+        <const name="tapeHalfThickness" >
+          <quo>
+            <refer refTo="tapeThickness" />
+            <const value="2.0" />
+          </quo>
+        </const>
+<!-- thickness of side tiles + tape -->
+        <const name="ACDSideThick">
+          <add>
+            <refer refTo="tileThickness" />
+            <refer refTo="tapeThickness" />
+            <refer refTo="tapeGap" />
+          </add>
+        </const>
+
+<!-- total length (in x direction) to be covered by a row of side tiles -->
         <const name="ACDTotalXSide" >
           <add>
             <refer refTo="totalX" />
@@ -630,6 +683,22 @@ too, but not required.</overview>
           </add>
         </const>
 
+        <const name="ACDSideHeight" >
+          <add>
+            <refer refTo="sideTileHeight0" />
+            <refer refTo="sideTileHeight1" />
+            <refer refTo="sideTileHeight2" />
+            <refer refTo="sideTileHeight3" />
+            <mul>
+              <minus>
+                <refer refTo="numSideRows" />
+                <const value="1.0" />
+              </minus>
+              <refer refTo="sideVerticalGap" />
+            </mul>
+          </add>
+        </const>
+
         <!-- to get width of an individual tile, take account of
               number of tiles in a row (and number of gaps) -->
         <const name="sideTileWidthShortYRow">
@@ -657,24 +726,71 @@ too, but not required.</overview>
             <refer refTo="numPerSideRowLong" />
           </quo>
         </const>
+<!-- end Y side tile calculations -->
+
+<!-- heights of tiles on both X and Y sides are the same: -->
+        <const name="sideTileRow0_d">
+          <quo>
+            <minus>
+              <refer refTo="ACDSideHeight" />
+              <refer refTo="sideTileHeight0" />
+            </minus>
+            <const value="2" />
+          </quo>
+        </const>
+
+        <const name="sideTileRow1_d">
+          <minus>
+            <refer refTo="sideTileRow0_d" />
+            <add>
+              <refer refTo="sideVerticalGap" />
+              <quo>
+                <add>
+                  <refer refTo="sideTileHeight1" />
+                  <refer refTo="sideTileHeight0" />
+                </add>
+                <const value="2" />
+              </quo>
+            </add>
+          </minus>
+        </const>
+
+        <const name="sideTileRow2_d">
+          <minus>
+            <refer refTo="sideTileRow1_d" />
+            <add>
+              <refer refTo="sideVerticalGap" />
+              <quo>
+                <add>
+                  <refer refTo="sideTileHeight2" />
+                  <refer refTo="sideTileHeight1" />
+                </add>
+                <const value="2" />
+              </quo>
+            </add>
+          </minus>
+        </const>
+
+        <const name="sideTileRow3_d">
+          <minus>
+            <refer refTo="sideTileRow2_d" />
+            <add>
+              <refer refTo="sideVerticalGap" />
+              <quo>
+                <add>
+                  <refer refTo="sideTileHeight3" />
+                  <refer refTo="sideTileHeight2" />
+                </add>
+                <const value="2" />
+              </quo>
+            </add>
+          </minus>
+        </const>
 
 <!-- Now some stuff involving the ACD tape -->
         <const name="tapeSideLength">
-          <add>
-            <refer refTo="sideTileHeight0" />
-            <refer refTo="sideTileHeight1" />
-            <refer refTo="sideTileHeight2" />
-            <refer refTo="sideTileHeight3" />
-            <mul>
-              <minus>
-                <refer refTo="numSideRows" />
-                <const value="1.0" />
-              </minus>
-              <refer refTo="sideVerticalGap" />
-            </mul>
-          </add>
+          <refer refTo="ACDSideHeight" />
         </const>
-<!-- end Y side tile calculations -->
 
 <!-- lengths of tape convering gaps in the top.  There are 3 different
      lengths to deal with the fact that tiles in different top
@@ -682,25 +798,169 @@ too, but not required.</overview>
      tape goes over the outermost tiles, the shortest across the
      central row.  See Heather's first diagram
      -->
-        <const name="topTapeLen1" >
+        <const name="topTapeLenLong" >
           <add>
-            <refer refTo="ACDTopXwidth" />
+            <refer refTo="ACDTopXWidth" />
             <refer refTo="tapeTopExt" />
           </add>
         </const>
-        <const name="topTapeLen2" >
+        <const name="topTapeLenMedium" >
           <minus>
-            <refer refTo="topTapeLen1" />
+            <refer refTo="topTapeLenLong" />
             <refer refTo="topOverlap" />
           </minus>
         </const>
-        <const name="topTapeLen3">
+        <const name="topTapeLenShort">
           <minus>
-            <refer refTo="ACDTopXwidth" />
+            <refer refTo="ACDTopXWidth" />
             <mul>
               <const value="2.0" />
               <refer refTo="topOverlap" />
             </mul>
+          </minus>
+        </const>
+
+<!-- Tapes on top come in rows, similar to rows of tiles, except there
+     is one less piece of tape than there are tiles in a row -->
+        <const name="topTapesPerRow">
+          <minus>
+            <refer refTo="numYTopTiles" />
+            <const value="1" />
+          </minus>
+        </const>
+
+        <const name="topTapeGap" >
+          <add>
+            <refer refTo="ACDTopYWidth" />
+            <refer refTo="topTileGap" />
+            <uminus>
+              <refer refTo="tapeWidth" />
+            </uminus>
+          </add>
+        </const>
+
+<!-- Need to compute a bunch of displacements of top tapes relative to
+     the "top ACD" envelope.  First do X, then Z.  Y displacements are
+     all zero.  -->
+        <const name="topTapeX4_d">
+          <mul>
+            <const value="0.5" />
+            <minus>
+              <refer refTo="ACDTopTotalX" />
+              <refer refTo="topTapeLenLong" />
+            </minus>
+          </mul>
+        </const>
+        <const name="topTapeX3_d" >
+          <mul>
+            <const value="0.5" />
+            <add>
+              <refer refTo="topTapeLenShort" />
+              <refer refTo="topTapeLenMedium" />
+            </add>
+          </mul>
+        </const>
+        <const name="topTapeX2_d" value="0.0" />
+        <const name="topTapeX1_d">
+          <uminus>
+            <refer refTo="topTapeX3_d" />
+          </uminus>
+        </const>
+        <const name="topTapeX0_d">
+          <uminus>
+            <refer refTo="topTapeX4_d" />
+          </uminus>
+        </const>
+
+        <const name="topTapeZLong_d" >
+          <minus>
+            <refer refTo="ACDTopZHalfWidth" />
+            <refer refTo="tapeHalfThickness" />
+          </minus>
+        </const>
+
+        <const name="topTapeZMedium_d" >
+          <minus>
+            <refer refTo="topTapeZLong_d" />
+            <refer refTo="tileThickness" />
+          </minus>
+        </const>
+
+        <const name="topTapeZShort_d" >
+          <minus>
+            <refer refTo="topTapeZMedium_d" />
+            <refer refTo="tileThickness" />
+          </minus>
+        </const>
+
+        <!-- z-displacement for top tiles 
+                 edge == rows 0 and 4, on the edge of the top
+                 medium == rows 1 and 3
+                 center == row 2   -->
+        <const name="topTileZEdge_d" >
+          <minus>
+            <mul>
+              <const value="2.5" />
+              <refer refTo="tileThickness" />
+            </mul>
+            <refer refTo="ACDTopZHalfWidth" />
+          </minus>
+        </const>
+
+        <const name="topTileZMedium_d" >
+          <minus>
+            <refer refTo="topTileZEdge_d" />
+            <refer refTo="tileThickness" />
+          </minus>
+        </const>
+
+        <const name="topTileZCenter_d" >
+          <minus>
+            <refer refTo="topTileZMedium_d" />
+            <refer refTo="tileThickness" />
+          </minus>
+        </const>
+
+        <!-- middle row is centered in X -->
+        <const name="topTileX2_d"  value="0" />
+
+        <const name="topTileX3_d" >
+          <minus>
+            <refer refTo="ACDTopXWidth" />
+            <refer refTo="topOverlap" />
+          </minus>
+        </const>
+
+        <const name="topTileX4_d" >
+          <mul>
+            <const value="2" />
+            <refer refTo="topTileX3_d" />
+          </mul>
+        </const>
+
+        <const name="topTileX0_d" >
+          <uminus>
+            <refer refTo="topTileX4_d" />
+          </uminus>
+        </const>
+
+        <const name="topTileX1_d" >
+          <uminus>
+            <refer refTo="topTileX3_d" />
+          </uminus>
+        </const>
+
+        <const name="betweenSideTapesX" >
+          <minus>
+            <refer refTo="sideTileWidthShortXRow" />
+            <refer refTo="tapeWidth" />
+          </minus>
+        </const>
+
+        <const name="betweenSideTapesY" >
+          <minus>
+            <refer refTo="sideTileWidthShortYRow" />
+            <refer refTo="tapeWidth" />
           </minus>
         </const>
 
@@ -710,7 +970,7 @@ too, but not required.</overview>
 
   <section name="towers"
            version="1.0" date="2001/1/4" author="J.Bogart"
-           topVolume="towers" >
+           topVolume="towers16" >
     <!-- "towers" is made up of 16 "tower" s.
          Each "tower" has a tracker, a calorimeter, and a mechanical
          piece inbetween. (what about electronics?)
@@ -742,16 +1002,16 @@ too, but not required.</overview>
      element
     -->
     
-    <box name="towers" 
+    <box name="towers16" 
          XREF="totalX" YREF="totalY" ZREF="totalZ"
-         material = "vacuumMat" />
+         materialREF = "vacuumMat" />
     
     <!-- According to conventions above, an unrotated CsIDetector would
     be an X-log -->
     <box name="CsIDetector" 
          sensitive="true"
          XREF="CsILength" YREF="CsITrans" ZREF="CsIZ"
-         material="crystalMat"  >
+         materialREF="crystalMat"  >
       <seg axis="X" nSeg="10" reason="energyAcct" />
     </box>
 
@@ -765,16 +1025,16 @@ too, but not required.</overview>
          XREF="diodeX"     
          YREF="diodeY"
          ZREF="diodeLZ"          
-         material="diodeMat" />
+         materialREF="diodeMat" />
     <box name="diodeS"
          sensitive="true"
          XREF="diodeX"     
          YREF="diodeY"
          ZREF="diodeSZ"          
-         material="diodeMat" />
+         materialREF="diodeMat" />
 
     <box name="CsIElementEnv"
-         material="CALWrapMat"
+         materialREF="CALWrapMat"
          XREF="CsIEnvX"
          YREF="CsIEnvY"
          ZREF="CsIEnvZ"/>
@@ -825,7 +1085,7 @@ too, but not required.</overview>
          XREF="CALLayerTrans"
          YREF="CALLayerTrans"
          ZREF="CALInterLayer"
-         material="CALSpaceMat"
+         materialREF="CALSpaceMat"
          />
 
 <!-- intersperse log layers with calSpace boxes.  Volumes get
@@ -872,7 +1132,7 @@ too, but not required.</overview>
          XREF="CALFrameWidth"
          YREF="CALFrameWidth"
          ZREF="CALFrameHeight"
-         material="CALFrameMat"
+         materialREF="CALFrameMat"
          />
     <composition name="oneCAL" envelope="oneCALEnv" >
       <posXYZ volume="CALLayers" />  <!-- centered in envelope -->
@@ -893,25 +1153,25 @@ too, but not required.</overview>
 	 XREF="TKRTrayWidth" 
 	 YREF="TKRTrayWidth" 
 	 ZREF="convThickReg"
-	 material="convMat" />
+	 materialREF="convMat" />
     <box name="convSuper" 
 	 XREF="TKRTrayWidth" 
 	 YREF="TKRTrayWidth"
 	 ZREF="convThickSup" 
-	 material="convMat" />
+	 materialREF="convMat" />
     <box name="TKRCoreReg"
 	 XREF="TKRTrayWidth" 
 	 YREF="TKRTrayWidth" 
 	 ZREF="coreThickReg" 
-	 material="coreMat" />
+	 materialREF="coreMat" />
     <box name="TKRCoreSuper" 
 	 XREF="TKRTrayWidth" 
 	 YREF="TKRTrayWidth"
-	 ZREF="coreThickSuper" material="coreMat" />
+	 ZREF="coreThickSuper" materialREF="coreMat" />
     <box name="TKRCoreNoConv" 
 	 XREF="TKRTrayWidth" 
 	 YREF="TKRTrayWidth"
-	 ZREF="panelThick" material="coreMat" />
+	 ZREF="panelThick" materialREF="coreMat" />
 
 <!-- Instead of defining a silicon box, should perhaps make
      a composition or stack(s) defining internal structure
@@ -921,7 +1181,7 @@ too, but not required.</overview>
          sensitive="true"  
 	 XREF="TKRTrayWidth" 
 	 YREF="TKRTrayWidth"
-	 ZREF="SiThick" material="TKRDetMat" />
+	 ZREF="SiThick" materialREF="TKRDetMat" />
 
     <choice name="SiLayer" >  
       <case mode="propagate" volume="SiLayerBox" />
@@ -933,7 +1193,7 @@ too, but not required.</overview>
       XREF="TKRTrayWidth"
       YREF="TKRTrayWidth"
       ZREF="SiThick" 
-      material="vacuumMat"/>
+      materialREF="vacuumMat"/>
 
 <!-- The unrotated wafer is segmented along the x axis, hence measures X,
      hence is an X layer -->
@@ -942,7 +1202,7 @@ too, but not required.</overview>
 	 XREF="SiWaferActiveSide"
 	 YREF="SiWaferActiveSide"
 	 ZREF="SiThick"
-	 material="TKRDetMat">
+	 materialREF="TKRDetMat">
       <seg axis="X" reason="readout" nSegREF="stripPerWafer" />
     </box>
 
@@ -950,7 +1210,7 @@ too, but not required.</overview>
 	 XREF="SiWaferSide"
 	 YREF="SiWaferSide"
 	 ZREF="SiThick"
-	 material="TKRDetMat">
+	 materialREF="TKRDetMat">
     </box>
 
     <composition name="SiWaferNest" envelope="SiWafer">
@@ -980,7 +1240,7 @@ too, but not required.</overview>
     <box name="TKRFaceSheet"  
 	 XREF="TKRTrayWidth" 
 	 YREF="TKRTrayWidth" 
-	 ZREF="faceThick" material="TKRFaceMat" />
+	 ZREF="faceThick" materialREF="TKRFaceMat" />
 
     <!-- Make a stack for the bottom tray -->
     <stackZ name="trayBot" >
@@ -1109,6 +1369,475 @@ too, but not required.</overview>
 <!-- next need to put together oneCAL and oneTKR with necessary
      structural stuff to make a tower.  Front plane of grid
      defines Z = 0 (Steve Ritz memo) -->
+
+  </section>
+
+  <section name="ACDsect"
+           version="1.0" date="2001/3/2" author="J.Bogart"
+           topVolume="ACDTop" >     <!-- Temporary!! -->
+    <box name="topTile" 
+         XREF="ACDTopXWidth"
+         YREF="ACDTopYWidth"
+         ZREF="tileThickness"
+         materialREF="tileMat"
+         sensitive="true" />
+
+<!-- different box needed for each of the 4 rows of side tiles on X sides 
+     and Y sides (X and Y sides happen to have same dimensions now,
+      but allow for difference -->
+    <box name="sideTileX0" 
+         XREF="sideTileWidthShortXRow"
+         YREF="tileThickness"
+         ZREF="sideTileHeight0"
+         materialREF="tileMat"
+         sensitive="true" />
+    <box name="sideTileX1" 
+         XREF="sideTileWidthShortXRow"
+         YREF="tileThickness"
+         ZREF="sideTileHeight1"
+         materialREF="tileMat"
+         sensitive="true" />
+    <box name="sideTileX2" 
+         XREF="sideTileWidthLongXRow"
+         YREF="tileThickness"
+         ZREF="sideTileHeight2"
+         materialREF="tileMat"
+         sensitive="true" />
+    <box name="sideTileX3" 
+         XREF="sideTileWidthLongXRow"
+         YREF="tileThickness"
+         ZREF="sideTileHeight3"
+         materialREF="tileMat"
+         sensitive="true" />
+
+   <!--   ..and Y sides (X and Y sides happen to have same dimensions now,
+      but allow for difference -->
+    <box name="sideTileY0" 
+         XREF="sideTileWidthShortYRow"
+         YREF="tileThickness"
+         ZREF="sideTileHeight0"
+         materialREF="tileMat"
+         sensitive="true" />
+    <box name="sideTileY1" 
+         XREF="sideTileWidthShortYRow"
+         YREF="tileThickness"
+         ZREF="sideTileHeight1"
+         materialREF="tileMat"
+         sensitive="true" />
+    <box name="sideTileY2" 
+         XREF="sideTileWidthLongYRow"
+         YREF="tileThickness"
+         ZREF="sideTileHeight2"
+         materialREF="tileMat"
+         sensitive="true" />
+    <box name="sideTileY3" 
+         XREF="sideTileWidthLongYRow"
+         YREF="tileThickness"
+         ZREF="sideTileHeight3"
+         materialREF="tileMat"
+         sensitive="true" />
+
+<!-- boxes for tape on the top.  Long dimension of tape is 
+     parallel to X-axis -->
+    <box name="topTapeLong"
+         XREF="topTapeLenLong"
+         YREF="tapeWidth"
+         ZREF="tapeThickness"
+         materialREF="tapeMat"
+         sensitive="true" />
+    <box name="topTapeMedium"
+         XREF="topTapeLenMedium"
+         YREF="tapeWidth"
+         ZREF="tapeThickness"
+         materialREF="tapeMat"
+         sensitive="true" />
+    <box name="topTapeShort"
+         XREF="topTapeLenShort"
+         YREF="tapeWidth"
+         ZREF="tapeThickness"
+         materialREF="tapeMat"
+         sensitive="true" />
+
+<!-- Boxes for tape on sides.  Definition is for a side parallel to
+     X-axis.  Rotate 90 deg. about Z for Y-side  -->
+    <box name="sideTape"
+         XREF="tapeWidth"
+         YREF="tapeThickness"
+         ZREF="tapeSideLength"
+         materialREF="tapeMat"
+         sensitive="true" />
+
+<!-- Make a row of top tiles.  They're all the same.  Since this
+     represents a row of tiles, ids of individual tiles in the row
+     differ by which column they're in; hence we have idField "col"
+     set here.
+     The long axis of the top rows (tape or tiles) is || to the
+     Y axis -->
+    <stackY name="topTileRow" >
+      <axisMPos volume="topTile"
+                ncopyREF="numYTopTiles"
+                gapREF="topTileGap" >
+        <idField name="col" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+<!-- Make rows for X sides -->
+    <stackX name="sideTileRowX0" >
+      <axisMPos volume="sideTileX0"
+                ncopyREF="numPerSideRowShort"
+                gapREF="sideHorizontalGap" >
+        <idField name="col" value="0" step="1" />
+      </axisMPos>
+    </stackX>
+
+    <stackX name="sideTileRowX1" >
+      <axisMPos volume="sideTileX1"
+                ncopyREF="numPerSideRowShort"
+                gapREF="sideHorizontalGap" >
+        <idField name="col" value="0" step="1" />
+      </axisMPos>
+    </stackX>
+
+<!-- have to do bottom side rows tile by tile since gaps are not uniform -->
+    <stackX name="sideTileRowX2" >
+      <axisPos volume="sideTileX2">
+        <idField name="col" value="0" />
+      </axisPos>
+      <axisPos volume="sideTileX2">
+        <idField name="col" value="1" />
+      </axisPos>
+      <axisPos volume="sideTileX2"
+               gapREF="sideHorizontalGap">
+        <idField name="col" value="2" />
+      </axisPos>
+      <axisPos volume="sideTileX2">
+        <idField name="col" value="3" />
+      </axisPos>
+      <axisPos volume="sideTileX2"
+               gapREF="sideHorizontalGap">
+        <idField name="col" value="4" />
+      </axisPos>
+      <axisPos volume="sideTileX2">
+        <idField name="col" value="5" />
+      </axisPos>
+      <axisPos volume="sideTileX2"
+               gapREF="sideHorizontalGap">
+        <idField name="col" value="6" />
+      </axisPos>
+      <axisPos volume="sideTileX2">
+        <idField name="col" value="7" />
+      </axisPos>
+      <axisPos volume="sideTileX2"
+               gapREF="sideHorizontalGap">
+        <idField name="col" value="8" />
+      </axisPos>
+      <axisPos volume="sideTileX2">
+        <idField name="col" value="9" />
+      </axisPos>
+    </stackX>
+
+    <stackX name="sideTileRowX3" >
+      <axisPos volume="sideTileX3">
+        <idField name="col" value="0" />
+      </axisPos>
+      <axisPos volume="sideTileX3">
+        <idField name="col" value="1" />
+      </axisPos>
+      <axisPos volume="sideTileX3"
+               gapREF="sideHorizontalGap">
+        <idField name="col" value="2" />
+      </axisPos>
+      <axisPos volume="sideTileX3">
+        <idField name="col" value="3" />
+      </axisPos>
+      <axisPos volume="sideTileX3"
+               gapREF="sideHorizontalGap">
+        <idField name="col" value="4" />
+      </axisPos>
+      <axisPos volume="sideTileX3">
+        <idField name="col" value="5" />
+      </axisPos>
+      <axisPos volume="sideTileX3"
+               gapREF="sideHorizontalGap">
+        <idField name="col" value="6" />
+      </axisPos>
+      <axisPos volume="sideTileX3">
+        <idField name="col" value="7" />
+      </axisPos>
+      <axisPos volume="sideTileX3"
+               gapREF="sideHorizontalGap">
+        <idField name="col" value="8" />
+      </axisPos>
+      <axisPos volume="sideTileX3">
+        <idField name="col" value="9" />
+      </axisPos>
+    </stackX>
+
+<!-- Do same for Y sides -->
+    <stackY name="sideTileRowY0" >
+      <axisMPos volume="sideTileY0"
+                ncopyREF="numPerSideRowShort"
+                gapREF="sideHorizontalGap" >
+        <idField name="col" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+    <stackY name="sideTileRowY1" >
+      <axisMPos volume="sideTileY1"
+                ncopyREF="numPerSideRowShort"
+                gapREF="sideHorizontalGap" >
+        <idField name="col" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+<!-- have to do bottom side rows tile by tile since gaps are not uniform -->
+    <stackY name="sideTileRowY2" >
+      <axisPos volume="sideTileY2">
+        <idField name="col" value="0" />
+      </axisPos>
+      <axisPos volume="sideTileY2">
+        <idField name="col" value="1" />
+      </axisPos>
+      <axisPos volume="sideTileY2"
+               gapREF="sideHorizontalGap">
+        <idField name="col" value="2" />
+      </axisPos>
+      <axisPos volume="sideTileY2">
+        <idField name="col" value="3" />
+      </axisPos>
+      <axisPos volume="sideTileY2"
+               gapREF="sideHorizontalGap">
+        <idField name="col" value="4" />
+      </axisPos>
+      <axisPos volume="sideTileY2">
+        <idField name="col" value="5" />
+      </axisPos>
+      <axisPos volume="sideTileY2"
+               gapREF="sideHorizontalGap">
+        <idField name="col" value="6" />
+      </axisPos>
+      <axisPos volume="sideTileY2">
+        <idField name="col" value="7" />
+      </axisPos>
+      <axisPos volume="sideTileY2"
+               gapREF="sideHorizontalGap">
+        <idField name="col" value="8" />
+      </axisPos>
+      <axisPos volume="sideTileY2">
+        <idField name="col" value="9" />
+      </axisPos>
+    </stackY>
+
+    <stackY name="sideTileRowY3" >
+      <axisPos volume="sideTileY3">
+        <idField name="col" value="0" />
+      </axisPos>
+      <axisPos volume="sideTileY3">
+        <idField name="col" value="1" />
+      </axisPos>
+      <axisPos volume="sideTileY3"
+               gapREF="sideHorizontalGap">
+        <idField name="col" value="2" />
+      </axisPos>
+      <axisPos volume="sideTileY3">
+        <idField name="col" value="3" />
+      </axisPos>
+      <axisPos volume="sideTileY3"
+               gapREF="sideHorizontalGap">
+        <idField name="col" value="4" />
+      </axisPos>
+      <axisPos volume="sideTileY3">
+        <idField name="col" value="5" />
+      </axisPos>
+      <axisPos volume="sideTileY3"
+               gapREF="sideHorizontalGap">
+        <idField name="col" value="6" />
+      </axisPos>
+      <axisPos volume="sideTileY3">
+        <idField name="col" value="7" />
+      </axisPos>
+      <axisPos volume="sideTileY3"
+               gapREF="sideHorizontalGap">
+        <idField name="col" value="8" />
+      </axisPos>
+      <axisPos volume="sideTileY3">
+        <idField name="col" value="9" />
+      </axisPos>
+    </stackY>    <!-- stop sub here!! -->
+
+
+<!-- we have a row of (widely separated) pieces of tape for each
+     row of top tiles.  There are three flavors of such rows, made
+     of the 3 different lengths of top tapes.              -->
+
+    <stackY name="topTapeRowLong" >
+      <axisMPos volume="topTapeLong"
+                ncopyREF="topTapesPerRow"
+                gapREF="topTapeGap" >
+        <idField name="col" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+    <stackY name="topTapeRowMedium" >
+      <axisMPos volume="topTapeMedium"
+                ncopyREF="topTapesPerRow"
+                gapREF="topTapeGap" >
+        <idField name="col" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+    <stackY name="topTapeRowShort" >
+      <axisMPos volume="topTapeShort"
+                ncopyREF="topTapesPerRow"
+                gapREF="topTapeGap" >
+        <idField name="col" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+    <!-- next assemble these pieces (five rows of top tiles,
+         two long-tape rows, two medium-tape rows and one
+         short-tape row) into the acd top, but first make
+         an envelope volume for it                       -->
+    <box name="ACDTopEnv" 
+         XREF="ACDTopTotalX"
+         YREF="ACDTopTotalY"
+         ZREF="ACDTopZwidth"
+         materialREF="vacuumMat"
+         />
+
+<!-- all components are centered w.r.t. Y, so only supply X and Z -->
+    <composition name="ACDTop" 
+                 envelope="ACDTopEnv">
+      <posXYZ volume="topTapeRowLong"
+              XREF="topTapeX0_d"
+              ZREF="topTapeZLong_d">
+        <idField name="row" value="0" />
+      </posXYZ>
+      <posXYZ volume="topTapeRowMedium"
+              XREF="topTapeX1_d "
+              ZREF="topTapeZMedium_d">
+        <idField name="row" value="1" />
+      </posXYZ>
+      <posXYZ volume="topTapeRowShort"
+              XREF="topTapeX2_d "
+              ZREF="topTapeZShort_d">
+        <idField name="row" value="2" />
+      </posXYZ>
+
+      <posXYZ volume="topTapeRowMedium"
+              XREF="topTapeX3_d "
+              ZREF="topTapeZMedium_d">
+        <idField name="row" value="3" />
+      </posXYZ>
+
+      <posXYZ volume="topTapeRowLong"
+              XREF="topTapeX4_d"
+              ZREF="topTapeZLong_d">
+        <idField name="row" value="4" />
+      </posXYZ>
+
+      <posXYZ volume="topTileRow"
+              XREF="topTileX0_d"
+              ZREF="topTileZEdge_d" >
+        <idField name="row" value="0" />
+      </posXYZ>
+
+      <posXYZ volume="topTileRow"
+              XREF="topTileX1_d"
+              ZREF="topTileZMedium_d" >
+        <idField name="row" value="1" />
+      </posXYZ>
+      <posXYZ volume="topTileRow"
+              XREF="topTileX2_d"
+              ZREF="topTileZCenter_d" >
+        <idField name="row" value="2" />
+      </posXYZ>
+      <posXYZ volume="topTileRow"
+              XREF="topTileX3_d"
+              ZREF="topTileZMedium_d" >
+        <idField name="row" value="3" />
+      </posXYZ>
+      <posXYZ volume="topTileRow"
+              XREF="topTileX4_d"
+              ZREF="topTileZEdge_d" >
+        <idField name="row" value="4" />
+      </posXYZ>
+
+    </composition>
+
+    <!-- Make the envelope for an X side of tiles -->
+    <box name="TileXSideEnv"
+         XREF="ACDTotalXSide"
+         YREF="tileThickness"
+         ZREF="ACDSideHeight" 
+         materialREF="vacuumMat"
+         />
+
+    <composition name="TileXSide" 
+                 envelope="TileXSideEnv" >
+      <!-- consists of 4 rows of tiles (long dimension of rows in X) 
+         The positioning in Y will be done at the next stage. -->
+      <posXYZ volume="sideTileRowX0"
+              ZREF="sideTileRow0_d" >
+        <idField name="row" value="0" />
+      </posXYZ>
+      <posXYZ volume="sideTileRowX1"
+              ZREF="sideTileRow1_d">
+        <idField name="row" value="1" />
+      </posXYZ>
+      <posXYZ volume="sideTileRowX2"
+              ZREF="sideTileRow2_d">
+        <idField name="row" value="2" />
+      </posXYZ>
+      <posXYZ volume="sideTileRowX3"
+              ZREF="sideTileRow3_d">
+        <idField name="row" value="3" />
+      </posXYZ>
+    </composition>
+
+    <!-- do the same for Y-side rows of tiles -->
+    <box name="TileYSideEnv"
+         XREF="tileThickness"
+         YREF="ACDTotalYSide"
+         ZREF="ACDSideHeight" 
+         />
+
+    <composition name="TileYSide" 
+                 envelope="TileYSideEnv" >
+      <!-- consists of 4 rows of tiles (long dimension of rows in Y) 
+         The positioning in X will be done at the next stage. -->
+      <posXYZ volume="sideTileRowY0"
+              ZREF="sideTileRow0_d">
+        <idField name="row" value="0" />
+      </posXYZ>
+      <posXYZ volume="sideTileRowY1"
+              ZREF="sideTileRow1_d">
+        <idField name="row" value="1" />
+      </posXYZ>
+      <posXYZ volume="sideTileRowY2"
+              ZREF="sideTileRow2_d">
+        <idField name="row" value="2" />
+      </posXYZ>
+      <posXYZ volume="sideTileRowY3"
+              ZREF="sideTileRow3_d">
+        <idField name="row" value="3" />
+      </posXYZ>
+    </composition>
+
+    <!-- stack up tape for X and Y sides -->
+    <stackX name="sideTapeRowX" >
+      <axisMPos volume="sideTape" ncopyREF="numSideTapes"
+                gapREF="betweenSideTapesX">
+        <idField name="col" value="0" step="1" />
+      </axisMPos>
+    </stackX>
+
+    <stackY name="sideTapeRowY" >
+      <axisMPos volume="sideTape" ncopyREF="numSideTapes"
+                gapREF="betweenSideTapesY">
+        <idField name="col" value="0" step="1" />
+      </axisMPos>
+    </stackY>
 
   </section>
 </gdd>

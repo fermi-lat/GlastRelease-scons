@@ -494,7 +494,8 @@
 <!-- change material attribute from IDREF to NMTOKEN -->
 <!--  As of Jan 17, change it back! -->
 <!ENTITY % solidProperties '%volumeProperties;
-                             material    IDREF            #REQUIRED
+                             materialREF  IDREF            #IMPLIED
+                             material     NMTOKEN          "Vacuum"
                              sensitive   ( true | false ) "false"'>
 
 <!ELEMENT  box    (seg?) >
@@ -816,13 +817,16 @@
                 uType (length | angle | count | mat | none) "length"
                %units; >
 
+<!-- "save" attribute can be used by transforming programs to determine
+     which derived constants may be of independent interest.      --> 
 <!ELEMENT derived (derCategory*) >
 <!ELEMENT derCategory (overview,const*) >
-<!ATTLIST derCategory name ID #REQUIRED>
+<!ATTLIST derCategory name ID #REQUIRED
+          save        (true | false) "false" >
 
 <!ENTITY  % operator "mul | quo | add | minus | uminus | max" >
 
-<!ELEMENT const ((%operator;)? ) >
+<!ELEMENT const (refer | (%operator;)? ) >
 <!ATTLIST const name ID #IMPLIED
                 value NMTOKEN #IMPLIED
                 uType (length | angle | count | none) "length"
