@@ -96,7 +96,7 @@ public:
 		if(cls){
 			double s=0.1*m_logheight;
 			setColor("blue");
-			CsICluster* cl = cls->Cluster(0);
+			ICsICluster* cl = cls->Cluster(0);
 			double energy_sum = cl->energySum();
 			const std::vector<double>& eneLayer = cl->getEneLayer();
 			const std::vector<Vector>& posLayer = cl->getPosLayer();

@@ -105,7 +105,7 @@ StatusCode CalNtupleAlg::execute() {
 	int nClust = m_cls->num();
 	//cout << nClust << endl;
 	for ( int icl = 0; icl<nClust;icl++){
-		CsICluster* cl = m_cls->Cluster(icl);
+		ICsICluster* cl = m_cls->Cluster(icl);
 		energy_sum = cl->energySum();
 
 		//stop writing NANs to the tuple
