@@ -19,9 +19,12 @@
 
 //------------------------------------------------------------------------------
 /*! \class writeJunkAlg
-\brief  alg to control writing of ntuples
+\brief test algorithm for the ntupleWriterSvc
 
-  */
+This algorithm tests the creation and writing of ntuples via
+the ntupleWriterSvc.  The output from this routine is a
+ROOT ntuple, containing 19 entries.
+*/
 
 class writeJunkAlg : public Algorithm {
     
@@ -85,7 +88,9 @@ StatusCode writeJunkAlg::execute() {
 
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
-    
+
+    sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "CallCount", callCount);
+
     m_float = 700.05f;
     sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "MyFirstItem", m_float);
 
@@ -96,6 +101,8 @@ StatusCode writeJunkAlg::execute() {
 
     // Test the ability to turn off a row
     if (callCount == 5) m_ntupleWriteSvc->storeRowFlag(false);
+    // test call to store ntuples to disk during execution
+    if (callCount == 6) m_ntupleWriteSvc->saveNTuples();
 
     ++callCount;
 

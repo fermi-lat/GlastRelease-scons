@@ -18,7 +18,6 @@ MessageSvc.OutputLevel      = 2;
 //--------------------------------------------------------------
 // Event related parameters
 //--------------------------------------------------------------
-ApplicationMgr.EvtMax   = 10;
 ApplicationMgr.EvtSel  = "NONE";
 
 ApplicationMgr.HistogramPersistency = "ROOT";

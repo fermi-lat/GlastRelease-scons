@@ -46,6 +46,9 @@ public:
    /// add a new item to an ntuple
    virtual StatusCode addItem(const char *tupleName, const char *item, double val);
 
+   /// force writing of the ntuple to disk
+   virtual StatusCode saveNTuples();
+
    // Set a flag to denote whether or not to store a row
    virtual void storeRowFlag(bool flag) { m_storeFlag = flag; };
    // retrieve the flag that denotes whether or not to store a row

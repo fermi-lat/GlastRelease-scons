@@ -23,6 +23,8 @@ public:
 
     virtual StatusCode addItem(const char *tupleName, const char *item, double val)=0;
 
+    virtual StatusCode saveNTuples()=0;
+
     virtual void storeRowFlag(bool flag)=0;
 
     virtual bool storeRowFlag()=0;

@@ -84,7 +84,7 @@ StatusCode ntupleWriterSvc::initialize ()
 
     // Storing the number of events to be generated in the TNtuple title
     IProperty* glastPropMgr=0;
-    status = serviceLocator()->getService("EventSelector", IID_IProperty,
+    status = serviceLocator()->getService("ApplicationMgr", IID_IProperty,
                          reinterpret_cast<IInterface*&>( glastPropMgr ));
     if( status.isFailure() ) return status;
       
@@ -196,11 +196,25 @@ StatusCode ntupleWriterSvc::writeNTuple(int index) {
     return sc;
 }
 
+StatusCode ntupleWriterSvc::saveNTuples() {
+
+    MsgStream log(msgSvc(), name());
+    StatusCode sc;
+
+    unsigned int index = 0;
+    for (index = 0; index < m_tuple_name.size(); index++) {
+        sc = ntupleSvc->save(m_fileName[index]+m_TDS_tuple_name[index]);
+    }
+    log << MSG::INFO << "Saving ntuples to disk" << endreq;
+    return sc;
+}
+
 // finalize
 StatusCode ntupleWriterSvc::finalize ()
 {
     StatusCode  status = StatusCode::SUCCESS;
        
+    status = saveNTuples();
     return status;
 }
 /// Query interface
