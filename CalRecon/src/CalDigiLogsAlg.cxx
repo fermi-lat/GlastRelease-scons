@@ -179,7 +179,8 @@ void CalDigiLogsAlg::computeEnergy(CalRecLog* recLog, const CalDigi* ADCLog,
 		double adcPos = 0.;
 
 		for (int iside = 0; iside < CALNSIDES; iside++) {
-			CalLogReadout::LogFace s = (iside == 0? CalLogReadout::NEG : CalLogReadout::POS);
+            CalDigi::CalLogReadout::LogFace s = (iside == 0? CalDigi::CalLogReadout::NEG : 
+                CalDigi::CalLogReadout::POS);
 			double adc = ADCLog->getAdc(0,s);	
 			int irange = ADCLog->getRange(0,s); 
 			CalBase::RANGE r = (irange == 0? CalBase::LEX : CalBase::LE);
@@ -190,7 +191,7 @@ void CalDigiLogsAlg::computeEnergy(CalRecLog* recLog, const CalDigi* ADCLog,
 				<< " iside=" << iside << endreq;
 			
 			double adc_ped = adc - ped;
-			if (s== CalLogReadout::NEG) recLog->setNegADC(r,adc_ped);
+            if (s== CalDigi::CalLogReadout::NEG) recLog->setNegADC(r,adc_ped);
 			else recLog->setPosADC(r,adc_ped);
 
 //			double adcSat = 0.6*(calibLog->getRail(iside,irange));
