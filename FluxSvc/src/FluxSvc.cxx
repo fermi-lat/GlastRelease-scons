@@ -28,10 +28,9 @@
 static SvcFactory<FluxSvc> a_factory;
 const ISvcFactory& FluxSvcFactory = a_factory;
 
-//void FATAL(const char* text){std::cerr << text << std::endl;}
-//void WARNING(const char* text){std::cerr << text << std::endl;}
 
-static std::string default_source_library("$(FLUXROOT)/xml/source_library.xml");
+static std::string default_source_library("$(FLUXSVCROOT)/xml/source_library.xml");
+static std::string default_dtd_file("$(FLUXSVCROOT)/xml/source.dtd");
 
 // ------------------------------------------------
 // Implementation of the FluxSvc class
@@ -41,7 +40,8 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
 : Service(name,svc)
 {
     
-    declareProperty("source_lib" , m_source_lib);   
+    declareProperty("source_lib" , m_source_lib); 
+    declareProperty("dtd_file"   , m_dtd_file=default_dtd_file);
   
     HepRandom::setTheEngine(new RanluxEngine);
 }
@@ -92,7 +92,7 @@ StatusCode FluxSvc::initialize ()
 
      
     // create a FluxMgr object which will then be available.
-    m_fluxMgr = new FluxMgr(m_source_lib);
+    m_fluxMgr = new FluxMgr(m_source_lib, m_dtd_file);
     
     Flux::mgr(m_fluxMgr); // tell our Flux object
     

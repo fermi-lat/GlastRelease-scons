@@ -75,6 +75,8 @@ private:
     std::vector<std::string> m_source_lib;
     /// the default XML file name (from JobOptions.txt)
     std::string m_source_lib_default;
+    /// set dtd to use.
+    std::string m_dtd_file;
     
 };
 

@@ -3,17 +3,20 @@ version v4
 
 branches FluxSvc mgr doc
 
-use flux 
-use GaudiSvc
-use GlastEvent
-
-include_dirs $(FLUXSVCROOT)
-
+use GlastPolicy
 apply_pattern packageShr
+apply_pattern package_include
 
+use flux 
 
 #=============================================================
 private
+
+
+use GaudiSvc
+use GlastEvent
+
+
 
 # get flags to build shared library
 apply_pattern package_Cshlibflags
@@ -24,7 +27,7 @@ library FluxSvc  *.cxx \
  ${FluxSvc_headers}
 
 
-macro_append FluxSvc_headers "" WIN32 "test/*.txt test/*.xml"
+macro_append FluxSvc_headers "" WIN32 "../xml/*.xml test/*.txt test/*.xml"
 # test program, using local joboptions
 
 apply_pattern package_test
