@@ -3,6 +3,7 @@ Package LdfEvent
 Coordinator:H.Kelly
 @verbatim
 
+v2r8    15-Mar-2005 HMK store all diagnostic and error lengths
 v2r7    13-Mar-2005 HMK Add method for trgParityError
 v2r6    21-Feb-2005 HMK Prepare for new GEM
 v2r5p2  20-Jan-2005 HMK missing include in EventSummaryData
