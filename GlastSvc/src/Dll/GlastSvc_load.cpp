@@ -14,6 +14,7 @@
 #include "Gaudi/Interfaces/ICnvFactory.h"
 #include "Gaudi/Interfaces/ISvcFactory.h"
 #include "Gaudi/Interfaces/IAlgFactory.h"
+#include "src/EventSelector/MCCalorimeterHitCnv.h"
 
 
 #define DLL_DECL_SERVICE(x)    extern const ISvcFactory& x##Factory; x##Factory.addRef();
@@ -27,14 +28,15 @@ void GlastSvc_load() {
     DLL_DECL_SERVICE( GlastDetSvc );
     DLL_DECL_SERVICE( GlastEventSelector );
     DLL_DECL_SERVICE( EventCnvSvc );
-    DLL_DECL_CONVERTER( ACDhitCnv );
+    DLL_DECL_CONVERTER( MCACDHitCnv );
     DLL_DECL_CONVERTER( MCEventCnv );
+
 //	extern ICnvFactory& MCCalorimeterHitCnvFactory;
 //	MCCalorimeterHitCnvFactory.addRef();
 
 //  Still having the linking problem here which is 
 //  Why the line below is comented out.
-//	DLL_DECL_CONVERTER( MCCalorimeterHitCnv ); // TODO: Take this out if causes problems
+	DLL_DECL_CONVERTER( MCCalorimeterHitCnv ); // TODO: Take this out if causes problems
 //    DLL_DECL_SERVICE( EventCnv );
 //    DLL_DECL_SERVICE( GlastIRFLoadSvc );
 } 

@@ -24,7 +24,8 @@
 #include "instrument/Scintillator.h"
 
 #include "GlastEvent/TopLevel/ObjectVector.h"
-#include "GlastEvent/Hits/ACDhit.h"
+#include "GlastEvent/MonteCarlo/MCACDhit.h"
+#include "GlastEvent/MonteCarlo/MCCalorimeterHit.h" //TODO: remove this declaration
 
 extern const CLID& CLID_Event;
 
@@ -154,7 +155,7 @@ StatusCode EventSelector::setCriteria( const SelectionCriteria& criteria ) {
 IEvtSelector::Iterator* EventSelector::begin() const {
     MsgStream log(messageService(), name());
     StatusCode sc;
-    
+    // Ian Note Here is the problem I need to step through right here
     GlastEvtIterator* it = new GlastEvtIterator(this, -1, m_inputDataList->begin());
     
     if( (it->m_inputDataIt) ==  m_inputDataList->end()) { 
@@ -168,9 +169,10 @@ IEvtSelector::Iterator* EventSelector::begin() const {
         
     // assumes GlastDetectors have been init. Open for read
     //it->m_inputFile = new ResponseFile (fName.c_str(), true);
+//	fName = "D:\\Gaudi2\\GlastSvc\\v1\\src\\test\\muontest.irf";//Ian Note
     sc = m_detSvc->openIRF(fName);
     if(sc.isFailure()){
-        *(it) = m_evtEnd;
+        *(it) = m_evtEnd; 
         return it;
     }
 
@@ -213,7 +215,7 @@ IEvtSelector::Iterator& EventSelector::next(IEvtSelector::Iterator& it) const {
     
     // causes data from the current event in the IRF file to be loaded into the GlastDetector
     // objects
-    StatusCode sc = m_detSvc->readIRF();
+    StatusCode sc = m_detSvc->readIRF();// Ian Note: This is where the events are read in.
 
     if (sc.isFailure()){
         log << MSG::ERROR << " Failed to get Event " << irfIt->m_recId << endreq;
