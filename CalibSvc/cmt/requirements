@@ -27,6 +27,7 @@ library CalibSvc *.cxx  CalibDataSvc/*.cxx      \
                         CalibXMLCnv/*.cxx       \
                         CalibROOTCnv/*.cxx      \
                         CalibXMLCnv/cnv/*.cxx   \
+                        util/*.cxx              \
                         Dll/*.cxx ${CalibSvc_headers}
 
 
