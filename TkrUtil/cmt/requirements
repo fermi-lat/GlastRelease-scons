@@ -1,6 +1,6 @@
 package TkrUtil
 
-version v1r12p5
+version v1r12p6
 
 author Leon Rochester <lsrea@slac.stanford.edu>
 
@@ -32,6 +32,8 @@ private
 use ROOT * IExternal
 
 apply_pattern package_Cshlibflags 
+
+private # Traudl says we need this
 
 # build this for testing, console only. Load all objects directly. 
 
