@@ -91,10 +91,11 @@ StatusCode GlastDetSvc::initialize ()
     MsgStream log( msgSvc(), name() );
     s_log = & log;  // make available globally while executing the following
     
+    log << MSG::DEBUG << "Loading instrument ...";
     // now create and initialize the instruemtn
     m_instrument = new Instrument;
     if (m_instrument->initialize(m_iniFile, m_xmlFile) ) status=StatusCode::FAILURE;
-    
+    log << MSG::DEBUG << "done. Loaded "<< m_instrument->detector_count() << " detectors." << endreq;
     return status;
 }
 

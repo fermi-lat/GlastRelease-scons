@@ -20,9 +20,8 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 
 
 // Input IRF file
-EventSelector.Input = "IRFFILE src/test/muontest.irf";
+EventSelector.Input = "IRFFILE $(INSTRUMENTROOT)/src/test/muontest.irf";
 
-// Selection file - must be included - or else Gaudi will search for its file by default
 ApplicationMgr.EvtMax = 20;
 
 //==============================================================
