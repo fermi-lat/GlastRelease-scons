@@ -34,6 +34,7 @@ namespace ldfReader {
         OSWcontribution* contribution)
     {
         const char* prefix = "  ";
+        ldfReader::LatData::instance()->setSummary(event->summary());
         printf("\nOSW:\n");
         //((MyEBFcontribution*)contribution)->dump(event, prefix);
         //printf("%sOSW:\n", prefix);
