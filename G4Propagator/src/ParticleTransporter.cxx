@@ -330,8 +330,13 @@ double ParticleTransporter::minStepSize(const Point& start, const Vector& dir) c
       {
           const G4AffineTransform& transform = pNavHis->GetTransform(depth);
           G4ThreeVector            trackPos = transform.TransformPoint(start);
-          G4ThreeVector            trackDir = transform.IsRotated() 
-                                            ? transform.TransformAxis(dir) : dir ;
+	  //          G4ThreeVector            trackDir = transform.IsRotated() 
+	  //  ? transform.TransformAxis(dir) : dir ;
+	  G4ThreeVector trackDir;
+	  if(transform.IsRotated())
+	    trackDir = transform.TransformAxis(dir);
+	  else
+	    trackDir = dir;
 
           minStep = pCurVolume->GetLogicalVolume()->GetSolid()->DistanceToOut(trackPos,trackDir);
 
