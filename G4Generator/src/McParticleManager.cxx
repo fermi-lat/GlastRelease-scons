@@ -57,9 +57,9 @@ void McParticleManager::save()
   // fill the McParticleCol with McParticles
   std::map <unsigned int, Event::McParticle*>::iterator it;
   
-  // note limit on size, temporarily wired in
-  for(it=m_particles.begin();it != m_particles.end() && pcol->size()<10 ; it++)
+  for(it=m_particles.begin();it != m_particles.end() ; it++){
     pcol->push_back(it->second);
+  }
 }
 
 
