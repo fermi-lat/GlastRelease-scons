@@ -1,8 +1,8 @@
-#include "detModel/GDDpurge.h"
+#include "detModel/Utilities/GDDpurge.h"
+#include "detModel/Utilities/GDDmatrix.h"
 #include "detModel/Management/GDDsectionsVisitor.h"
 #include "detModel/Sections/GDDstack.h"
 #include "detModel/Sections/GDDanyRelativePosition.h"
-#include "detModel/GDDmatrix.h"
 
 GDDstack::~GDDstack(){
   purge(anyRelativePosition);

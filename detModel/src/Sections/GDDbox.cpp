@@ -1,5 +1,3 @@
-#include "detModel/GDDpurge.h"
-
 #include "detModel/Management/GDDsectionsVisitor.h"
 #include "detModel/Sections/GDDbox.h"
 

@@ -2,7 +2,7 @@
 #define GDDANYRELATIVEPOSITION_H
 #include "detModel/Sections/GDDvolume.h"
 #include "detModel/Sections/GDDidField.h"
-#include "detModel/GDDpurge.h"
+#include "detModel/Utilities/GDDpurge.h"
 #include <vector>
 
 class GDDsectionsVisitor;

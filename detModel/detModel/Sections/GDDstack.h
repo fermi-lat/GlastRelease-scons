@@ -5,6 +5,7 @@
 #include "detModel/Sections/GDDvolume.h"
 #include "detModel/Sections/GDDanyRelativePosition.h"
 
+enum stackorigin{atStart,atCentre};
 
 class GDDsectionsVisitor;
 

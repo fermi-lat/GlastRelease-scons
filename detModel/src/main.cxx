@@ -10,7 +10,7 @@
 #include "detModel/Management/GDDVRMLSectionsVisitor.h"
 #include "detModel/Management/GDDprinterSectionsVisitor.h"
 #include "detModel/Management/GDDHTMLConstantsVisitor.h"
-#include "detModel/Management/GDDXercesBuilder.h"
+#include "detModel/Management/GDDFakeBuilder.h"
 #include "detModel/Sections/GDDvolume.h"
 #include "detModel/Sections/GDDshape.h"
 #include "detModel/Sections/GDDbox.h"
@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
  
   // We set the builder; the XercesBuilder needs the name of the XML file
   // in the constructor
-  manager->setBuilder(new GDDXercesBuilder);
+  manager->setBuilder(new GDDFakeBuilder);
 
   manager->setNameFile(argv[1]);
   
@@ -65,15 +65,6 @@ int main(int argc, char* argv[]) {
   // contains all the relevant information
   GDD* g = manager->getGDD();
 
-  // We can use some methods of the GDD object to retrive relevant information,
-  // for example the value for a constant or the dimension for a volume.
-  // In this example we extract the value for the char constant convMat
-  // and the material and X dimension for the volume (a box) CsIElementEnv
-  std::cout << "The convMat value is " << g->getCharConstByName("convMat") << std::endl;
-  std::cout << "The material of the CsIElementEnv is " 
-	    << (static_cast<GDDshape*>(g->getVolumeByName("CsIElementEnv")))->getMaterial() << std::endl;
-  std::cout << "and its X dimension (in mm) is " 
-	    << (static_cast<GDDbox*>(g->getVolumeByName("CsIElementEnv")))->getX() << std::endl;
   delete manager;
   return(0);
 }

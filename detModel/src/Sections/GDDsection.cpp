@@ -1,4 +1,4 @@
-#include "detModel/GDDpurge.h"
+#include "detModel/Utilities/GDDpurge.h"
 #include "detModel/Management/GDDsectionsVisitor.h"
 #include "detModel/Sections/GDDvolume.h"
 #include "detModel/Sections/GDDchoice.h"

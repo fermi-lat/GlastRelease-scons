@@ -1,10 +1,9 @@
-#include "detModel/GDDpurge.h"
-
+#include "detModel/Utilities/GDDpurge.h"
+#include "detModel/Utilities/GDDmatrix.h"
 #include "detModel/Management/GDDsectionsVisitor.h"
 #include "detModel/Sections/GDDcomposition.h"
 #include "detModel/Sections/GDDanyPosition.h"
 #include "detModel/Sections/GDDposXYZ.h"
-#include "detModel/GDDmatrix.h"
 
 GDDcomposition::~GDDcomposition(){
   purge(anyPosition);

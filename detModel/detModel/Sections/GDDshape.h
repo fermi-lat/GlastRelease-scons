@@ -9,17 +9,20 @@ enum shapeType{box, tube, cone};
 
 /**
  * This class contains all the common properties and 
- * functionalities of shape. Concrete shapes must 
+ * functionalities of shapes. Concrete shapes must 
  * hinerith from it.
  * @author D.Favretto & R.Giannitrapani 
  */
 class GDDshape : public GDDvolume {
  public:
-
-  /** 
-   * This is the standard Accept method for the visitor mechanism
+  /** Some constructors; since this is an abstract class, these
+   * constructors are useful only in its concrete subclass
    */
-  virtual void Accept(GDDsectionsVisitor*){};
+  GDDshape(string pname, shapeType pstype):GDDvolume(pname,shape),stype(pstype){;}
+  GDDshape(){};
+  virtual ~GDDshape(){};
+
+
 
   /**
    * With this method it is possible to set the shape
@@ -74,11 +77,6 @@ class GDDshape : public GDDvolume {
    * This method gives the type of the shape
    */  
   shapeType getShapeType(){return stype;};
-
- protected:
-  GDDshape(string pname, shapeType pstype):GDDvolume(pname,shape),stype(pstype){;}
-  GDDshape(){};
-  virtual ~GDDshape(){};
 
  private:
   shapeType stype;

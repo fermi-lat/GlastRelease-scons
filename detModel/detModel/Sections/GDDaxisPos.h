@@ -35,5 +35,18 @@ class GDDaxisPos :public GDDanyRelativePosition {
   virtual double getBBZ();  
 
 
+  // The get and set methods for disp.
+  double getDisp(){return disp;};
+  void setDisp(double d){disp = d;};
+
+ private:
+  
+  // This is the displacement along the axis of the stack of the
+  // center of mass of the positioned volume. It is up of the builder
+  // to calculate this displacement during the construction phase and
+  // set it; the visitors can use this quantity to pose in the right
+  // way the volume.
+  double disp;
+
 };
 #endif //GDDAXISPOS_H

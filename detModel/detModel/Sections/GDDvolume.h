@@ -7,9 +7,8 @@ class GDDsectionsVisitor;
 /// All the enumeratives that are needed in the volumes hierarchy
 enum unitLengthtype{GDDmm,GDDcm,GDDm};
 enum unitAngletype{GDDdeg,GDDmrad};
-enum stacktype{sx,sy,sz};
-enum stackorigin{atStart,atCentre};
 enum typeVolume{shape,composition,stack,logical};
+enum stacktype{sx,sy,sz};
 
 
 /**
@@ -20,6 +19,12 @@ enum typeVolume{shape,composition,stack,logical};
  * @author D.Favretto & R.Giannitrapani */
 class GDDvolume {
  public:
+  /// Some constructors
+  GDDvolume(){};
+  GDDvolume(string pname,typeVolume ptype):
+    name(pname),vtype(ptype),parameters(""),bbx(0),bby(0),bbz(0){;}
+  GDDvolume(typeVolume ptype):vtype(ptype),parameters(""){;}
+
   /**
    * This method sets the parameters associated with the volume
    */
@@ -43,14 +48,15 @@ class GDDvolume {
 
   
   /// This method is the recursive Accept for the visitor pattern
-  virtual void Accept(GDDsectionsVisitor*){};
+  virtual void Accept(GDDsectionsVisitor*) = 0;
   /// This method is the non recursive Accept for the visitor pattern
-  virtual void AcceptNotRec(GDDsectionsVisitor*){};
+  virtual void AcceptNotRec(GDDsectionsVisitor*) = 0;
   
   /**
-   *
+   * This method build the bounding box of the volume.
+   * It is concretely implemented in subclasses of GDDvolume
    */
-  virtual void constructBB(){};
+  virtual void constructBB() = 0;
 
   /** This method return the x dimension of the bounding box it has to
       be redefined concretely in the subclasses of GDDvolume */
@@ -90,13 +96,6 @@ class GDDvolume {
 
   
   virtual ~GDDvolume(){}
-
- protected:
-  /// Some constructors
-  GDDvolume(){};
-  GDDvolume(string pname,typeVolume ptype):
-    name(pname),vtype(ptype),parameters(""),bbx(0),bby(0),bbz(0){;}
-  GDDvolume(typeVolume ptype):vtype(ptype),parameters(""){;}
 
  private:
 

@@ -4,7 +4,7 @@
 #include<vector.h>
 #include<string.h>
 
-#include "detModel/GDDpurge.h"
+#include "detModel/Utilities/GDDpurge.h"
 #include "detModel/Constants/GDDconst.h"
 
 class GDDconstantsVisitor;

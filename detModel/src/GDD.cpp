@@ -1,7 +1,7 @@
 #include <string>
 
-#include "detModel/GDDpurge.h"
 #include "detModel/GDD.h"
+#include "detModel/Utilities/GDDpurge.h"
 #include "detModel/Sections/GDDshape.h"
 #include "detModel/Sections/GDDsection.h"
 #include "detModel/Sections/GDDchoice.h"
