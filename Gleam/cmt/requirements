@@ -1,6 +1,6 @@
 package Gleam
 
-version  v2r3p3
+version  v2r4
 # This is a checkout package
 # $Id$
 
@@ -44,19 +44,19 @@ use Geant4Runtime v1r0
 
 # Gaudi component packages follow
 
-use GuiSvc      v3r1p3
+use GuiSvc                 v3r2
 
 use Event       v9r3
-use GlastSvc    v9r2p1
+use GlastSvc               v9r3
 
 # simulation
 
-use FluxSvc      v5r12
-use FluxDisplay  v2r2
+use FluxSvc                v5r13
+use FluxDisplay            v2r3
 use G4Generator  v4r3p4
 
 #digitization
-use CalDigi     v1r2p6
+use CalDigi                v1r2p7
 use TkrDigi     v1r6
 use AcdDigi     v1r4p0
 
