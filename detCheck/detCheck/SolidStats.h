@@ -118,6 +118,7 @@ namespace detCheck {
 
     LogVolMap m_logVols;
 
+    std::string m_choiceMode;
     /// Utility to find our data structure for a logical volume, given 
     /// its name.
     LogVol *findLogVol(std::string name);
