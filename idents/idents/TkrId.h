@@ -40,6 +40,8 @@ namespace idents {
     bool isEqual(const TkrId& other) {
       return ((m_packedId == other.m_packedId));
     }
+
+    const bool operator<(const TkrId& right) const {return m_packedId < right.m_packedId;}
     
     /** Identify top or bottom Silicon layer.
         Should have same values as identically-named constants in xml 
@@ -162,6 +164,9 @@ namespace idents {
       return (m_packedId & SHMASKWafer) >> SHIFTWafer;
     }
 
+    //Access Methods for Tkr reconstruction semantics:
+    unsigned int getLayer() const {return ( getPlane())/2;}
+    unsigned int getPlane() const {return 2*getTray() + getBotTop() - 1;}
 
     /// Number of valid fields, never more than 7
     //    unsigned int getSize();
