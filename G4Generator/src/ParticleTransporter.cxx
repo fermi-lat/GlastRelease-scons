@@ -13,6 +13,7 @@
 #include "G4TransportationManager.hh"
 
 #include <string>
+#include <algorithm>
 
 //Constructor for the propagator class
 ParticleTransporter::ParticleTransporter() 
@@ -379,8 +380,12 @@ double ParticleTransporter::insideActiveArea() const
     double distInY    = fabs(distInPosY) < fabs(distInNegY) ? distInPosY : distInNegY;
 
 
-    if (fabs(distInX) < fabs(distInY)) return distInX;
-    else                               return distInY;
+    //if (fabs(distInX) < fabs(distInY)) return distInX;
+    //else                               return distInY;
+
+    if(distInX>0 || distInY>0) {return std::min(distInX, distInY);}
+    else                       {return -sqrt(distInX*distInX + distInY*distInY);}
+
 }
 
 
