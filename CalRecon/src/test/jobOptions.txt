@@ -4,15 +4,18 @@
 //
 
 // List of Services that are required for this run
-ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" ,
-							 "EventCnvSvc","CalGeometrySvc","ntupleWriterSvc"};
+// ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" ,
+//				"EventCnvSvc","CalGeometrySvc","TkrGeometrySvc","ntupleWriterSvc"};
+ ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" ,
+				"EventCnvSvc","CalGeometrySvc","TkrGeometrySvc","ntupleWriterSvc"};
 
 // List of DLLs required
-// ApplicationMgr.DLLs   = { "GlastSvc", "CalRecon", "RootHistCnv"};
-ApplicationMgr.DLLs   = { "GlastSvc", "CalRecon", "RootHistCnv","ntupleWriterSvc"};
+// ApplicationMgr.DLLs   = { "GlastSvc", "CalRecon", "RootHistCnv","ntupleWriterSvc"};
+ApplicationMgr.DLLs   = { "GlastSvc", "RootHistCnv","ntupleWriterSvc", "GlastDigi", "TkrRecon", "CalRecon" };
                           
 
-ApplicationMgr.TopAlg = { "CalIRFAlg", "CalClustersAlg","CalNtupleAlg"};
+ApplicationMgr.TopAlg = { "TkrDigiAlg" , "SiClustersAlg", "SiRecObjsAlg", "CalIRFAlg", "CalClustersAlg","CalNtupleAlg" };
+//ApplicationMgr.TopAlg = { "CalIRFAlg", "CalClustersAlg","CalNtupleAlg"};
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
@@ -22,6 +25,7 @@ MessageSvc.OutputLevel      = 2;
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 
 CalGeometrySvc.geometryType = 2;
+TkrGeometrySvc.xmlFile = "$(TKRRECONROOT)/xml/Tkr_Flight.xml";
 
 // Input IRF file
 EventSelector.Input = "IRFFILE $(CALRECONROOT)/src/test/vertical_photons.irf";
@@ -33,7 +37,7 @@ ntupleWriterSvc.tuple_name = { "RECONTUPLE" };
 CalNtupleAlg.tupleName = "RECONTUPLE";
 
 // Output root ntuple file, specify by logical variable
-NTupleSvc.Output = {"RECONTUPLE DATAFILE='$(CALRECONROOT)/src/test/vertical_photons.root' OPT='NEW'"};
+NTupleSvc.Output = {"RECONTUPLE DATAFILE='/NTUPLES/vertical_photons.root' OPT='NEW'"};
 
     
 // Number of Events to Process
