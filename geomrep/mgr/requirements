@@ -25,4 +25,4 @@ library geomrep -no_share *.cxx   ../geomrep/*.h
 macro_append graphics_linkopts ${graphics_gui_linkopts}
 
 
-application testgeom  -windows test/testgeom.cxx ${Win32Resource}
+application testgeom test/testgeom.cxx ${Win32Resource}
