@@ -90,7 +90,6 @@ StatusCode test_TkrDigi::execute()
                 log << endreq;
             }
         }
-
     }
     
     
