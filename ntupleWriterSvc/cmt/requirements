@@ -4,6 +4,7 @@ version v1r1
 branches src mgr doc
 
 use GlastPolicy
+use facilities
 use GaudiSvc
 use RootHistCnv
 
