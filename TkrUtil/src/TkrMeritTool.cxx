@@ -2,12 +2,13 @@
 
 // Include files
 
-#include "GaudiKernel/Algorithm.h"
+//#include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/AlgTool.h"
+#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/ToolFactory.h"
 
 #include "Event/MonteCarlo/McParticle.h"
@@ -22,12 +23,13 @@
 #include "Event/Recon/AcdRecon/AcdRecon.h"
 
 #include "TkrUtil/ITkrGeometrySvc.h"
-#include "TkrRecon/Cluster/TkrQueryClusters.h"
+#include "TkrUtil/ITkrQueryClustersTool.h"
 #include "GlastSvc/Reco/IReconTool.h"
 
 #include <algorithm>
-#include <numeric>
-#include <string>
+//#include <numeric>
+//include <cmath>
+//#include <string>
 
 class TkrMeritTool : public AlgTool, virtual public IReconTool 
 {
@@ -50,7 +52,7 @@ private:
     /// Finds the two best tracks associated with this vertex
     void doTracks(Event::TkrVertex& vertex);
     /// Calculates the suplus hit ratio
-    void doExtraHits(
+    StatusCode doExtraHits(
         const Event::TkrVertex& vertex,
         const Event::TkrClusterCol& clusters, double energy);
     /// Calculates the x and y intercepts with the plane of the skirt
@@ -84,6 +86,8 @@ private:
     ITkrGeometrySvc*  m_pGeom;
     /// pointer to event data service
     IDataProviderSvc* m_pEventSvc;
+    /// pointer to tool service
+    IToolSvc* m_pToolSvc;
 };
 
 // Static factory for instantiation of algtool objects
@@ -118,6 +122,11 @@ StatusCode TkrMeritTool::initialize()
         sc = serviceLocator()->service( "EventDataSvc", m_pEventSvc, true );
         if(sc.isFailure()){
             log << MSG::ERROR << "Could not find EventSvc" << endreq;
+            return sc;
+        }
+        sc = serviceLocator()->service( "ToolSvc", m_pToolSvc, true );
+        if(sc.isFailure()){
+            log << MSG::ERROR << "Could not find ToolSvc" << endreq;
             return sc;
         }
     }
@@ -178,7 +187,7 @@ StatusCode TkrMeritTool::calculate()
 {   
     double _minEnergy = 30.0;
     
-    MsgStream log(msgSvc(), name());
+    //MsgStream log(msgSvc(), name());
     
     
     // We do all the calculations the first time we're called for each event
@@ -235,7 +244,7 @@ StatusCode TkrMeritTool::calculate()
     doTracks(vertex);
     if (m_thePair[0]==0) return m_lastSc;
     
-    doExtraHits(vertex, tkrClusters, energy);
+    if (doExtraHits(vertex, tkrClusters, energy).isFailure()) return m_lastSc;
     
     doSkirt();
     
@@ -286,7 +295,7 @@ double TkrMeritTool::radLen(int layer) const {
     return radLenEff;
 }
 
-void TkrMeritTool::doExtraHits(const Event::TkrVertex& vertex,
+StatusCode TkrMeritTool::doExtraHits(const Event::TkrVertex& vertex,
                                const Event::TkrClusterCol& clusters,
                                double energy)
 {    
@@ -303,10 +312,11 @@ void TkrMeritTool::doExtraHits(const Event::TkrVertex& vertex,
     const double _llConstCoeff  = 4.0;
     const double _llLogCoeff    = 2.0;
     
-    TkrQueryClusters query(&clusters);
-    // just to be on the safe side, in case TkrReconAlg hasn't been called
-    query.setTowerPitch(m_pGeom->towerPitch()); 
-    query.setNumLayers(m_pGeom->numLayers());
+    ITkrQueryClustersTool* pQuery;
+    StatusCode sc = m_pToolSvc->retrieveTool("TkrQueryClustersTool", pQuery);
+    if( sc.isFailure() ) {
+        return StatusCode::FAILURE;
+    }
     
     double CsICorrEnergy = energy;
     
@@ -367,7 +377,7 @@ void TkrMeritTool::doExtraHits(const Event::TkrVertex& vertex,
     // get the hits int the first layer
     // dltX and dltY are too large  The hits in the first layer
     // have very small lever arm for separating!
-    double Rec_Sum_Hits = query.numberOfHitsNear(firstLayer, 
+    double Rec_Sum_Hits = pQuery->numberOfHitsNear(firstLayer, 
         .5*dltX, .5*dltY, firstHit);
     //double RSH1= Rec_Sum_Hits;
     
@@ -382,7 +392,7 @@ void TkrMeritTool::doExtraHits(const Event::TkrVertex& vertex,
     
     int    lastLayer 
         = (int)(_llConstCoeff 
-        + _llLogCoeff*log(CsICorrEnergy/_llEnergyCoeff) 
+        + _llLogCoeff*log(CsICorrEnergy/_llEnergyCoeff)  
         + firstLayer);
     lastLayer = std::min(m_pGeom->numLayers()-1, lastLayer);
     if(lastLayer - firstLayer < 5 
@@ -408,7 +418,7 @@ void TkrMeritTool::doExtraHits(const Event::TkrVertex& vertex,
         double xSprd = std::min(thetaMS * disp * xFact * _sigSprd, _maxSprd); 
         double ySprd = std::min(thetaMS * disp * yFact * _sigSprd, _maxSprd);
         Point trkHit((Point)(disp*t0 + x0));
-        double nearHits = query.numberOfHitsNear(layer, xSprd, 
+        double nearHits = pQuery->numberOfHitsNear(layer, xSprd, 
             ySprd, trkHit);
             /*
             std::cout << "lyr " << layer << " nhits " << nearHits << std::endl
@@ -420,7 +430,7 @@ void TkrMeritTool::doExtraHits(const Event::TkrVertex& vertex,
         
         if( layer <= lastLayer) {
             Rec_Sum_Hits +=     nearHits;
-            outHits +=  query.numberOfHitsNear(layer, _maxSprd, _maxSprd,   
+            outHits +=  pQuery->numberOfHitsNear(layer, _maxSprd, _maxSprd,   
                 trkHit) - nearHits;
         }
         disp += deltaS;
@@ -444,7 +454,7 @@ void TkrMeritTool::doExtraHits(const Event::TkrVertex& vertex,
     << std::endl;
     */
     
-    return;   
+    return StatusCode::SUCCESS;  
 }
 
 void TkrMeritTool::doSkirt() 
