@@ -1,6 +1,10 @@
 <primCategory name="CALDimPrim" >
   <overview>Fundamental dimensions of solids and offsets for the Calorimeter
 </overview>
+  <prim name="CALTransverseStayClear" value="364.0">Transverse dimension of
+CAL Stay Clear envelope from LAT-DS-00038-2</prim>
+  <prim name="CALVertStayClear" value="224.3.">Z-dimension of CAL
+ Stay Clear envelope from LAT-DS-00038-2</prim>
   <prim name="diodeX" value="0.30"> **NEW** Depletion depth of diode Si
 </prim>
   <prim name= "diodeLY" value= "14.5"> **NEW** Width of large diode Si
@@ -75,17 +79,17 @@ cells between adjacent (in the same layer) cylindrical supports</prim>
      if this changes.  -->
   <prim name= "CALFrameTBThick" value= "16.0">Thickness of top and bottom of 
 CAL frame [partially obsolete] </prim>
-  <prim name= "CALTopFrameThick" value= "16.0">Thickness of top of
+  <prim name= "CALTopFrameZ" value= "16.0">Thickness of top of
 CAL frame (Al) </prim>
-  <prim name= "CALBottomFrameThick" value= "16.0">Thickness of bottom of 
+  <prim name= "CALBottomFrameZ" value= "16.0">Thickness of bottom of 
 CAL frame (Al) </prim>
   <prim name="CALTopFrameWidth" value="22.0">Width of top picture
 frame (Al)</prim>
   <prim name="CALBottomFrameWidth" value="35.0">Width of bottom picture
 frame (Al)</prim>
-<prim name="CALTopPlateThick" value="2.0">Vertical thickness of CAL
+<prim name="CALTopPlateZ" value="2.0">Vertical thickness of CAL
 top plate composite</prim>
-<prim name="CALBottomPlateThick" value="4.0">Vertical thickness of CAL
+<prim name="CALBottomPlateZ" value="4.0">Vertical thickness of CAL
 bottom plate composite</prim>
 <prim name="CALBottomRibPitch" value="73.0">Pitch of bottom plate
 ribs (Al) </prim>
@@ -100,12 +104,4 @@ tabs, CAL to grid (Al)</prim>
 tabs</prim>
 
 
-    <!-- Cal grid stuff.  Should be replaced with information 
-         from Eduardo's document -->
-  <prim name= "CALGridInner" value= "3.0">Thickness of CAL grid between towers
-</prim>
-  <prim name= "CALGridOuter" value= "12.0">Thickness of CAL grid on outside 
-towers</prim>
-  <prim name= "CALFlange" value= "26.0">** Need meaningful comment here**
-</prim>
 </primCategory>

@@ -20,13 +20,21 @@
     <!ENTITY ACDDimPrim SYSTEM "flightACDDimPrim.xml">
     <!ENTITY ACDAcd SYSTEM "flightACDAcd.xml">
 
+    <!ENTITY NADDimPrim SYSTEM "flightNADDimPrim.xml">
+
+    <!ENTITY Derived SYSTEM "flightDerivedConstants.xml">
+    <!ENTITY Primary SYSTEM "flightPrimaryConstants.xml">
+
     <!ENTITY idDict SYSTEM "flightIdDict.xml">
   ]>
 <gdd CVSid="$Id$" DTDversion="2.0" substituted="false">
-  <source inputId="Id: flight.xml,v 1.10 2001/07/12 21:25:22 jrb Exp " creatorId="Id: makeXmlForDoc.cxx,v 1.2 2001/04/23 23:26:02 jrb Exp ">
+  <source inputId="Id: test 9/28/2001 10:55 " creatorId="Id: makeXmlForDoc.cxx,v 1.3 2001/07/03 22:40:24 jrb Exp ">
     Do not edit! This file automatically created by xmlUtil/v1/src/forDoc.exe  </source>
   <constants>
     <version major="0" minor="0" />
+    <!--  $Header$ -->
+    <!--  Entities for individual primary constants files must be
+     defined in the top-level xml file -->
     <primary normalized="false">
       <primCategory name="globalMatPrim">
         <overview>
@@ -51,6 +59,9 @@
         <prim name="eTowerTKR" type="double" uType="count" value="1" unitAngle="deg" unitLength="mm">
           Id field value for TKR 
 (within towers)        </prim>
+        <prim name="eTowerGrid" type="double" uType="count" value="2" unitAngle="deg" unitLength="mm">
+          Id field value for
+grid (within towers)        </prim>
         <prim name="eRootLAT" type="double" uType="count" value="0" unitAngle="deg" unitLength="mm">
           Id field value for LAT        </prim>
         <prim name="eRootPanels" type="double" uType="count" value="1" unitAngle="deg" unitLength="mm">
@@ -63,6 +74,9 @@
         <prim name="eLATACD" type="double" uType="count" value="1" unitAngle="deg" unitLength="mm">
           id field for ACD
 (within LAT)        </prim>
+        <prim name="eLATGrid" type="double" uType="count" value="2" unitAngle="deg" unitLength="mm">
+          id field for pieces of grid
+not within tower envelopes        </prim>
         <prim name="eMeasureX" type="double" uType="count" value="0" unitAngle="deg" unitLength="mm">
           id field used for TKR
 Si and CAL layers        </prim>
@@ -76,19 +90,19 @@ Si and CAL layers        </prim>
 associated with any single subsystem.        </overview>
         <!--  <prim name="modWidth" value="389.7">Width of a single CAL-TKR module.
 THIS IS TOO BIG.  NEED NEW CAL NUMBERS</prim>  -->
-        <prim name="calTrackerGap" type="double" uType="length" value="42.8" unitAngle="deg" unitLength="mm">
+        <prim name="calTrackerGap" type="double" uType="length" value="26.9" unitAngle="deg" unitLength="mm">
           Spacing between tracker 
-           and calorimeter        </prim>
+           and calorimeter stay-clear envelopes        </prim>
         <prim name="wallGap" type="double" uType="length" value="1.5" unitAngle="deg" unitLength="mm">
           gap between modules        </prim>
         <prim name="wallThickness" type="double" uType="length" value="1.5" unitAngle="deg" unitLength="mm">
              Wall thickness        </prim>
         <prim name="wallWidth" type="double" uType="length" value="371.5" unitAngle="deg" unitLength="mm">
           width of tower, including
-  walls.        </prim>
-        <prim name="towerPitch" type="double" uType="length" value="373.5" unitAngle="deg" unitLength="mm">
+  walls.   [obsolete?? use CAL and TKR stay-clears instead]        </prim>
+        <prim name="towerPitch" type="double" uType="length" value="374.5" unitAngle="deg" unitLength="mm">
           Distance between centers of 
-    towers (X or Y)        </prim>
+    towers (X or Y) [from LAT-DS-00123-2]        </prim>
       </primCategory>
       <primCategory name="CALMatPrim">
         <overview>
@@ -101,7 +115,7 @@ THIS IS TOO BIG.  NEED NEW CAL NUMBERS</prim>  -->
         </prim>
         <prim name="CALCellMat" type="string" uType="mat" value="CarbonFiber" unitAngle="deg" unitLength="mm">
           **NEW** 
-CAL composite cell material        </prim>
+CAL composite cell material, also used for top and bottom plates        </prim>
         <prim name="PCBMat" type="string" uType="mat" value="Fiberglass" unitAngle="deg" unitLength="mm">
           **NEW** 
 Material for printed circuit boards        </prim>
@@ -171,6 +185,12 @@ cell component for cell wall.         </prim>
         <overview>
           Fundamental dimensions of solids and offsets for the Calorimeter
         </overview>
+        <prim name="CALTransverseStayClear" type="double" uType="length" value="364.0" unitAngle="deg" unitLength="mm">
+          Transverse dimension of
+CAL Stay Clear envelope from LAT-DS-00038-2        </prim>
+        <prim name="CALVertStayClear" type="double" uType="length" value="224.3." unitAngle="deg" unitLength="mm">
+          Z-dimension of CAL
+ Stay Clear envelope from LAT-DS-00038-2        </prim>
         <prim name="diodeX" type="double" uType="length" value="0.30" unitAngle="deg" unitLength="mm">
            **NEW** Depletion depth of diode Si
         </prim>
@@ -261,10 +281,10 @@ cells between adjacent (in the same layer) cylindrical supports        </prim>
         <prim name="CALFrameTBThick" type="double" uType="length" value="16.0" unitAngle="deg" unitLength="mm">
           Thickness of top and bottom of 
 CAL frame [partially obsolete]         </prim>
-        <prim name="CALTopFrameThick" type="double" uType="length" value="16.0" unitAngle="deg" unitLength="mm">
+        <prim name="CALTopFrameZ" type="double" uType="length" value="16.0" unitAngle="deg" unitLength="mm">
           Thickness of top of
 CAL frame (Al)         </prim>
-        <prim name="CALBottomFrameThick" type="double" uType="length" value="16.0" unitAngle="deg" unitLength="mm">
+        <prim name="CALBottomFrameZ" type="double" uType="length" value="16.0" unitAngle="deg" unitLength="mm">
           Thickness of bottom of 
 CAL frame (Al)         </prim>
         <prim name="CALTopFrameWidth" type="double" uType="length" value="22.0" unitAngle="deg" unitLength="mm">
@@ -273,10 +293,10 @@ frame (Al)        </prim>
         <prim name="CALBottomFrameWidth" type="double" uType="length" value="35.0" unitAngle="deg" unitLength="mm">
           Width of bottom picture
 frame (Al)        </prim>
-        <prim name="CALTopPlateThick" type="double" uType="length" value="2.0" unitAngle="deg" unitLength="mm">
+        <prim name="CALTopPlateZ" type="double" uType="length" value="2.0" unitAngle="deg" unitLength="mm">
           Vertical thickness of CAL
 top plate composite        </prim>
-        <prim name="CALBottomPlateThick" type="double" uType="length" value="4.0" unitAngle="deg" unitLength="mm">
+        <prim name="CALBottomPlateZ" type="double" uType="length" value="4.0" unitAngle="deg" unitLength="mm">
           Vertical thickness of CAL
 bottom plate composite        </prim>
         <prim name="CALBottomRibPitch" type="double" uType="length" value="73.0" unitAngle="deg" unitLength="mm">
@@ -294,17 +314,6 @@ tabs, CAL to grid (Al)        </prim>
         <prim name="CALMountTabWidth" type="double" uType="length" value="12.0" unitAngle="deg" unitLength="mm">
           Width of CAL mounting
 tabs        </prim>
-        <!--  Cal grid stuff.  Should be replaced with information 
-         from Eduardo's document -->
-        <prim name="CALGridInner" type="double" uType="length" value="3.0" unitAngle="deg" unitLength="mm">
-          Thickness of CAL grid between towers
-        </prim>
-        <prim name="CALGridOuter" type="double" uType="length" value="12.0" unitAngle="deg" unitLength="mm">
-          Thickness of CAL grid on outside 
-towers        </prim>
-        <prim name="CALFlange" type="double" uType="length" value="26.0" unitAngle="deg" unitLength="mm">
-          ** Need meaningful comment here**
-        </prim>
       </primCategory>
       <primCategory name="TKRMatPrim">
         <overview>
@@ -367,6 +376,12 @@ towers        </prim>
         <overview>
           Fundamental solid dimensions and offsets within the Tracker.        </overview>
         <!--  Fundamental Z dimensions in tracker -->
+        <prim name="TKRTransverseStayClear" type="double" uType="length" value="372.0" unitAngle="deg" unitLength="mm">
+          Tranverse dimension of
+TKR Stay Clear envelope from LAT-DS-00038-2        </prim>
+        <prim name="TKRVertStayClear" type="double" uType="length" value="640.0" unitAngle="deg" unitLength="mm">
+          Z dimension of
+TKR Stay Clear envelope from LAT-DS-00038-2        </prim>
         <prim name="SiThick" type="double" uType="length" value="0.4" unitAngle="deg" unitLength="mm">
           Si thickness        </prim>
         <prim name="coreThick" type="double" uType="length" value="27.92" unitAngle="deg" unitLength="mm">
@@ -545,7 +560,35 @@ beyond the end of a top tile (see Heather's first diagram)        </prim>
           Distance between the tape and the adjacent
 ACD tile        </prim>
       </primCategory>
+      <primCategory name="NADDimPrim">
+        <overview>
+          Fundametal dimensions of solids and offset for NAD 
+(Not A Detector) components, like the grid.        </overview>
+        <!--  Cal grid stuff, as of 27 Sep 2001, from LAT-DS-00123-2
+  -->
+        <prim name="NADGridWebInner" type="double" uType="length" value="8.0" unitAngle="deg" unitLength="mm">
+          Full thickness of grid between towers (not half-width)
+        </prim>
+        <prim name="NADGridWebOuter" type="double" uType="length" value="13.0" unitAngle="deg" unitLength="mm">
+          Thickness of grid on outside 
+towers        </prim>
+        <prim name="NADGridWebZ" type="double" uType="length" value="210.800" unitAngle="deg" unitLength="mm">
+          Height of grid web        </prim>
+        <prim name="NADGridWebCutout" type="double" uType="length" value="366.5" unitAngle="deg" unitLength="mm">
+          Cut-outs for calorimeters        </prim>
+        <prim name="NADGridFlangeZ" type="double" uType="length" value="25.400" unitAngle="deg" unitLength="mm">
+          Height of grid flange        </prim>
+        <prim name="NADGridFlangeCutout" type="double" uType="length" value="346.600" unitAngle="deg" unitLength="mm">
+          Cutouts in the flange
+        </prim>
+        <prim name="NADGridFlangeInner" type="double" uType="length" value="27.9" unitAngle="deg" unitLength="mm">
+          Thickness of inner parts of
+grid flange        </prim>
+        <prim name="NADGridFlangeOverhang" type="double" uType="length" value="25.0" unitAngle="deg" unitLength="mm">
+          Flange overhangs web        </prim>
+      </primCategory>
     </primary>
+    <!--  $Header$ -->
     <derived evaluated="true">
       <derCategory name="derCAL" save="true">
         <overview>
@@ -700,6 +743,31 @@ grid, etc. (may be superseded by info from Eric)          </notes>
             Neg of displacement of top and bottom of frame, relative to 
                 the whole.          </notes>
         </const>
+        <const name="CALTopFrameCutoutWidth" uType="length" value="319" unitAngle="deg" unitLength="mm">
+          <notes>
+            Dimension of cutout in CAL top frame pieces          </notes>
+        </const>
+        <const name="CALBottomFrameCutoutWidth" uType="length" value="293" unitAngle="deg" unitLength="mm">
+          <notes>
+            Dimension of cutout in CAL bottom frame pieces          </notes>
+        </const>
+        <!--  Make sure values for CALStructural field are distinct from layer #'s -->
+        <const name="eBottomFrame" uType="count" value="18" unitAngle="deg" unitLength="mm">
+          <notes>
+            For use in identifiers          </notes>
+        </const>
+        <const name="eTopFrame" uType="count" value="19" unitAngle="deg" unitLength="mm">
+          <notes>
+            For use in identifiers          </notes>
+        </const>
+        <const name="eBottomPlate" uType="count" value="20" unitAngle="deg" unitLength="mm">
+          <notes>
+            For use in identifiers          </notes>
+        </const>
+        <const name="eTopPlate" uType="count" value="21" unitAngle="deg" unitLength="mm">
+          <notes>
+            For use in identifiers          </notes>
+        </const>
       </derCategory>
       <derCategory name="derTKR" save="true">
         <overview>
@@ -792,14 +860,14 @@ grid, etc. (may be superseded by info from Eric)          </notes>
         </const>
         <!--  These might not be quite right.  Check that frame is
      accounted for. -->
-        <const name="towersTotalX" uType="length" value="1494" unitAngle="deg" unitLength="mm">
+        <const name="towersTotalX" uType="length" value="1498" unitAngle="deg" unitLength="mm">
           <notes>
             Meant to be X width of the array of towers, but doesn't 
 (yet) include grid          </notes>
         </const>
-        <const name="towersTotalY" uType="length" value="1494" unitAngle="deg" unitLength="mm">
+        <const name="towersTotalY" uType="length" value="1498" unitAngle="deg" unitLength="mm">
           <notes>
-            Meant to be X width of the array of towers, but doesn't 
+            Meant to be Y width of the array of towers, but doesn't 
 (yet) include grid          </notes>
         </const>
         <!--  Compute total Z by adding up
@@ -809,27 +877,81 @@ grid, etc. (may be superseded by info from Eric)          </notes>
             Z of top half of top tray, bottom half of bottom tray
               (which is the same as Z of a single outer tray)
 -->
-        <const name="towersTotalZ" uType="length" value="863.387" unitAngle="deg" unitLength="mm">
+        <const name="towersTotalZ" uType="length" value="891.2" unitAngle="deg" unitLength="mm">
           <notes>
-            Height of cal + height of tracker + gap between          </notes>
+            Height of cal (stay clear) + height of tracker (S-C) + gap between
+          </notes>
+        </const>
+        <const name="towersTotalHalfZ" uType="length" value="445.6" unitAngle="deg" unitLength="mm">
+          <notes>
+            Convenience          </notes>
+        </const>
+        <const name="CAL_dz" uType="length" value="-333.45" unitAngle="deg" unitLength="mm">
+          <notes>
+            Offset of CAL within single-tower volume          </notes>
+        </const>
+        <const name="TKR_dz" uType="length" value="125.6" unitAngle="deg" unitLength="mm">
+          <notes>
+            Offset of TKR within single-tower volume          </notes>
+        </const>
+        <const name="gridFlange_dz" uType="length" value="-207.1" unitAngle="deg" unitLength="mm">
+          <notes>
+            Z-Offset of grid flange pieces within single-tower volume
+                       </notes>
+        </const>
+        <const name="gridWeb_dz" uType="length" value="-325.2" unitAngle="deg" unitLength="mm">
+          <notes>
+            Z-Offset of grid web pieces within single-tower volume          </notes>
+        </const>
+        <const name="gridFlange_dt" uType="length" value="180.275" unitAngle="deg" unitLength="mm">
+          <notes>
+            Transverse offset of per-tower grid flange pieces          </notes>
+        </const>
+        <const name="gridFlange_dtn" uType="length" value="-180.275" unitAngle="deg" unitLength="mm">
+          <notes>
+            Negative transverse offset of per-tower grid flange pieces          </notes>
+        </const>
+        <const name="gridWeb_dt" uType="length" value="185.25" unitAngle="deg" unitLength="mm">
+          <notes>
+            Transverse offset of per-tower grid web pieces          </notes>
+        </const>
+        <const name="gridWeb_dtn" uType="length" value="-185.25" unitAngle="deg" unitLength="mm">
+          <notes>
+            Negative transverse offset of per-tower grid web pieces          </notes>
+        </const>
+        <const name="LATGridFlange_dt" uType="length" value="766" unitAngle="deg" unitLength="mm">
+          <notes>
+            Transverse offset of LAT-wide grid flange pieces          </notes>
+        </const>
+        <const name="LATGridFlange_dtn" uType="length" value="-766" unitAngle="deg" unitLength="mm">
+          <notes>
+            Neg. transverse offset of LAT-wide grid flange pieces          </notes>
+        </const>
+        <const name="LATGridWeb_dt" uType="length" value="753.5" unitAngle="deg" unitLength="mm">
+          <notes>
+            Transverse offset of LAT-wide grid web pieces          </notes>
+        </const>
+        <const name="LATGridWeb_dtn" uType="length" value="-753.5" unitAngle="deg" unitLength="mm">
+          <notes>
+            Neg. transverse offset of LAT-wide grid web pieces          </notes>
         </const>
       </derCategory>
       <derCategory name="derACD" save="true">
         <overview>
           Derived constants specific to the ACD        </overview>
-        <const name="ACDTopTotalX" uType="length" value="1565.5" unitAngle="deg" unitLength="mm">
+        <const name="ACDTopTotalX" uType="length" value="1569.5" unitAngle="deg" unitLength="mm">
           <notes>
             Total X width to be covered by top tiles          </notes>
         </const>
-        <const name="ACDTotalX" uType="length" value="1591.5" unitAngle="deg" unitLength="mm">
+        <const name="ACDTotalX" uType="length" value="1595.5" unitAngle="deg" unitLength="mm">
           <notes>
             max extent in x of all of ACD          </notes>
         </const>
-        <const name="ACDTopTotalY" uType="length" value="1565.5" unitAngle="deg" unitLength="mm">
+        <const name="ACDTopTotalY" uType="length" value="1569.5" unitAngle="deg" unitLength="mm">
           <notes>
             Total Y width to be covered by top tiles          </notes>
         </const>
-        <const name="ACDTotalY" uType="length" value="1591.5" unitAngle="deg" unitLength="mm">
+        <const name="ACDTotalY" uType="length" value="1595.5" unitAngle="deg" unitLength="mm">
           <notes>
             max extent in y of all of ACD          </notes>
         </const>
@@ -857,11 +979,11 @@ grid, etc. (may be superseded by info from Eric)          </notes>
           <notes>
             Column number of last tile in a long row          </notes>
         </const>
-        <const name="ACDTopXWidth" uType="length" value="327.9" unitAngle="deg" unitLength="mm">
+        <const name="ACDTopXWidth" uType="length" value="328.7" unitAngle="deg" unitLength="mm">
           <notes>
             X dimension for a top tile. Must be derived from total width top and other things.  Tiles overlap in X.          </notes>
         </const>
-        <const name="ACDTopYWidth" uType="length" value="309.5" unitAngle="deg" unitLength="mm">
+        <const name="ACDTopYWidth" uType="length" value="310.3" unitAngle="deg" unitLength="mm">
           <notes>
             Y dimension for a top tile.  Derived from total width, size of gaps.          </notes>
         </const>
@@ -891,23 +1013,23 @@ grid, etc. (may be superseded by info from Eric)          </notes>
           <notes>
             Tile thickness + tape thickness + gap (ACD sides)          </notes>
         </const>
-        <const name="ACDTotalXSide" uType="length" value="1615.5" unitAngle="deg" unitLength="mm">
+        <const name="ACDTotalXSide" uType="length" value="1619.5" unitAngle="deg" unitLength="mm">
           <notes>
             total length (in x direction) to be covered by a 
 row of side tiles          </notes>
         </const>
-        <const name="sideTileWidthShortXRow" uType="length" value="320.1" unitAngle="deg" unitLength="mm">
+        <const name="sideTileWidthShortXRow" uType="length" value="320.9" unitAngle="deg" unitLength="mm">
           <notes>
             to get width of an individual tile, take account of
               number of tiles in a row (and number of gaps)."Short"
               refers to the fact that the row has only 5 tiles          </notes>
         </const>
-        <const name="sideTileWidthLongXRow" uType="length" value="158.55" unitAngle="deg" unitLength="mm">
+        <const name="sideTileWidthLongXRow" uType="length" value="158.95" unitAngle="deg" unitLength="mm">
           <notes>
             Same as above for a long (10-tile) row          </notes>
         </const>
         <!--  Now do same for Y-direction -->
-        <const name="ACDTotalYSide" uType="length" value="1615.5" unitAngle="deg" unitLength="mm">
+        <const name="ACDTotalYSide" uType="length" value="1619.5" unitAngle="deg" unitLength="mm">
           <notes>
             Same as above but for Y sides          </notes>
         </const>
@@ -915,11 +1037,11 @@ row of side tiles          </notes>
           <notes>
             Total height of an ACD side: tiles plus gaps          </notes>
         </const>
-        <const name="sideTileWidthShortYRow" uType="length" value="320.1" unitAngle="deg" unitLength="mm">
+        <const name="sideTileWidthShortYRow" uType="length" value="320.9" unitAngle="deg" unitLength="mm">
           <notes>
             Same idea as for ACD X-side tiles          </notes>
         </const>
-        <const name="sideTileWidthLongYRow" uType="length" value="158.55" unitAngle="deg" unitLength="mm">
+        <const name="sideTileWidthLongYRow" uType="length" value="158.95" unitAngle="deg" unitLength="mm">
           <notes>
             Same idea as for ACD X-side tiles          </notes>
         </const>
@@ -948,7 +1070,7 @@ row of side tiles          </notes>
             length of scintillating tape on a side (assume a single 
           piece going from top to bottom for now          </notes>
         </const>
-        <const name="topTapeLenLong" uType="length" value="342.9" unitAngle="deg" unitLength="mm">
+        <const name="topTapeLenLong" uType="length" value="343.7" unitAngle="deg" unitLength="mm">
           <notes>
             lengths of tape convering gaps in the top.  There are
             3 different lengths to deal with the fact that tiles in
@@ -957,11 +1079,11 @@ row of side tiles          </notes>
             the shortest across the central row.  See Heather's 
             first diagram          </notes>
         </const>
-        <const name="topTapeLenMedium" uType="length" value="332.9" unitAngle="deg" unitLength="mm">
+        <const name="topTapeLenMedium" uType="length" value="333.7" unitAngle="deg" unitLength="mm">
           <notes>
             Length of top tapes for rows 1 and 3          </notes>
         </const>
-        <const name="topTapeLenShort" uType="length" value="307.9" unitAngle="deg" unitLength="mm">
+        <const name="topTapeLenShort" uType="length" value="308.7" unitAngle="deg" unitLength="mm">
           <notes>
             Length of top tape for central row: row 2          </notes>
         </const>
@@ -970,7 +1092,7 @@ row of side tiles          </notes>
              Tapes on top come in columns, similar to tiles, except there
      is one less piece of tape than there are tiles in a row          </notes>
         </const>
-        <const name="topTapeGap" uType="length" value="302.5" unitAngle="deg" unitLength="mm">
+        <const name="topTapeGap" uType="length" value="303.3" unitAngle="deg" unitLength="mm">
           <notes>
             gap between adjacent pieces of (top)tape in the 
           same row          </notes>
@@ -978,12 +1100,12 @@ row of side tiles          </notes>
         <!--  Need to compute a bunch of displacements of top tapes relative to
      the "top ACD" envelope.  First do X, then Z.  Y displacements are
      all zero.  -->
-        <const name="topTapeX4_d" uType="length" value="611.3" unitAngle="deg" unitLength="mm">
+        <const name="topTapeX4_d" uType="length" value="612.9" unitAngle="deg" unitLength="mm">
           <notes>
             x-displacement for a top tape in row 4
           relative to the "top ACD" envelope          </notes>
         </const>
-        <const name="topTapeX3_d" uType="length" value="320.4" unitAngle="deg" unitLength="mm">
+        <const name="topTapeX3_d" uType="length" value="321.2" unitAngle="deg" unitLength="mm">
           <notes>
             x-displacement for a top tape in  row 3          </notes>
         </const>
@@ -991,11 +1113,11 @@ row of side tiles          </notes>
           <notes>
             x-displacement for a top tape in  row 2          </notes>
         </const>
-        <const name="topTapeX1_d" uType="length" value="-320.4" unitAngle="deg" unitLength="mm">
+        <const name="topTapeX1_d" uType="length" value="-321.2" unitAngle="deg" unitLength="mm">
           <notes>
             x-displacement for a top tape in  row 1          </notes>
         </const>
-        <const name="topTapeX0_d" uType="length" value="-611.3" unitAngle="deg" unitLength="mm">
+        <const name="topTapeX0_d" uType="length" value="-612.9" unitAngle="deg" unitLength="mm">
           <notes>
             x-displacement for a top tape in  row 0          </notes>
         </const>
@@ -1027,27 +1149,27 @@ row of side tiles          </notes>
           <notes>
              middle row is centered in X          </notes>
         </const>
-        <const name="topTileX3_d" uType="length" value="317.9" unitAngle="deg" unitLength="mm">
+        <const name="topTileX3_d" uType="length" value="318.7" unitAngle="deg" unitLength="mm">
           <notes>
             X-displacement for a top tile in row 3          </notes>
         </const>
-        <const name="topTileX4_d" uType="length" value="635.8" unitAngle="deg" unitLength="mm">
+        <const name="topTileX4_d" uType="length" value="637.4" unitAngle="deg" unitLength="mm">
           <notes>
             X-displacement for a top tile in row 4          </notes>
         </const>
-        <const name="topTileX0_d" uType="length" value="-635.8" unitAngle="deg" unitLength="mm">
+        <const name="topTileX0_d" uType="length" value="-637.4" unitAngle="deg" unitLength="mm">
           <notes>
             X-displacement for a top tile in row 0          </notes>
         </const>
-        <const name="topTileX1_d" uType="length" value="-317.9" unitAngle="deg" unitLength="mm">
+        <const name="topTileX1_d" uType="length" value="-318.7" unitAngle="deg" unitLength="mm">
           <notes>
             X-displacement for a top tile in row 1          </notes>
         </const>
-        <const name="betweenSideTapesX" uType="length" value="310.1" unitAngle="deg" unitLength="mm">
+        <const name="betweenSideTapesX" uType="length" value="310.9" unitAngle="deg" unitLength="mm">
           <notes>
             gap between two tapes on an ACD X-side          </notes>
         </const>
-        <const name="betweenSideTapesY" uType="length" value="310.1" unitAngle="deg" unitLength="mm">
+        <const name="betweenSideTapesY" uType="length" value="310.9" unitAngle="deg" unitLength="mm">
           <notes>
             gap between two tapes on an ACD Y-side          </notes>
         </const>
@@ -1061,81 +1183,143 @@ row of side tiles          </notes>
       <derCategory name="derGlobal" save="true">
         <overview>
           A few more constants needed for the outermost 
-                 LAT composition        </overview>
-        <const name="LATX" uType="length" value="1591.5" unitAngle="deg" unitLength="mm">
+                 LAT compositions        </overview>
+        <const name="LATX" uType="length" value="1595.5" unitAngle="deg" unitLength="mm">
           <notes>
             X-dimension of an envelope for the LAT          </notes>
         </const>
-        <const name="LATY" uType="length" value="1591.5" unitAngle="deg" unitLength="mm">
+        <const name="LATY" uType="length" value="1595.5" unitAngle="deg" unitLength="mm">
           <notes>
             Y-dimension of an envelope for the LAT          </notes>
         </const>
-        <const name="LATZ" uType="length" value="923.387" unitAngle="deg" unitLength="mm">
+        <const name="LATZ" uType="length" value="951.2" unitAngle="deg" unitLength="mm">
           <notes>
             Z-dimension of an envelope for the LAT          </notes>
         </const>
-        <const name="LATZHalf" uType="length" value="461.693" unitAngle="deg" unitLength="mm">
+        <const name="LATZHalf" uType="length" value="475.6" unitAngle="deg" unitLength="mm">
           <notes>
             convenience          </notes>
         </const>
-        <const name="ACDTop_d" uType="length" value="418.193" unitAngle="deg" unitLength="mm">
+        <const name="ACDTop_d" uType="length" value="432.1" unitAngle="deg" unitLength="mm">
           <notes>
             Z displacement of top ACD relative to LATenv, the envelope
                  volume containing them + ACD          </notes>
         </const>
-        <const name="allTowers_d" uType="length" value="-30.0005" unitAngle="deg" unitLength="mm">
+        <const name="allTowers_d" uType="length" value="-30" unitAngle="deg" unitLength="mm">
           <notes>
             Z displacement of towers relative to LATenv          </notes>
         </const>
         <!--  have to do analogous 5 constants for side tile locations -->
-        <const name="tileSide_dz" uType="length" value="86.693" unitAngle="deg" unitLength="mm">
+        <const name="tileSide_dz" uType="length" value="100.6" unitAngle="deg" unitLength="mm">
           <notes>
             displacement in z of side tiles rel. to LATenv          </notes>
         </const>
-        <const name="tileXSide_dy" uType="length" value="790.75" unitAngle="deg" unitLength="mm">
+        <const name="tileXSide_dy" uType="length" value="792.75" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement in y of tiles along a side || to X axis,
                 relative to center of LATenv          </notes>
         </const>
-        <const name="tileXSide_dyN" uType="length" value="-790.75" unitAngle="deg" unitLength="mm">
+        <const name="tileXSide_dyN" uType="length" value="-792.75" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement in y of tiles along a side || to X axis,
                 neg direction, relative to center of LATenv          </notes>
         </const>
-        <const name="tileYSide_dx" uType="length" value="790.75" unitAngle="deg" unitLength="mm">
+        <const name="tileYSide_dx" uType="length" value="792.75" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement in x of tiles along a side || to Y axis,
                 relative to center of LATenv          </notes>
         </const>
-        <const name="tileYSide_dxN" uType="length" value="-790.75" unitAngle="deg" unitLength="mm">
+        <const name="tileYSide_dxN" uType="length" value="-792.75" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement in x of tiles along a side || to Y axis,
                 neg direction, relative to center of LATenv          </notes>
         </const>
         <!--     edit above -->
-        <const name="tapeSide_dz" uType="length" value="73.193" unitAngle="deg" unitLength="mm">
+        <const name="tapeSide_dz" uType="length" value="87.1" unitAngle="deg" unitLength="mm">
           <notes>
             displacement in z of side tapes rel. to LATenv          </notes>
         </const>
-        <const name="tapeXSide_dy" uType="length" value="783.75" unitAngle="deg" unitLength="mm">
+        <const name="tapeXSide_dy" uType="length" value="785.75" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement in y of tapes along a side || to X axis,
                 relative to center of LATenv          </notes>
         </const>
-        <const name="tapeXSide_dyN" uType="length" value="-783.75" unitAngle="deg" unitLength="mm">
+        <const name="tapeXSide_dyN" uType="length" value="-785.75" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement in y of tapes along a side || to X axis,
                 neg direction, relative to center of LATenv          </notes>
         </const>
-        <const name="tapeYSide_dx" uType="length" value="783.75" unitAngle="deg" unitLength="mm">
+        <const name="tapeYSide_dx" uType="length" value="785.75" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement in x of tapes along a side || to Y axis,
                 relative to center of LATenv          </notes>
         </const>
-        <const name="tapeYSide_dxN" uType="length" value="-783.75" unitAngle="deg" unitLength="mm">
+        <const name="tapeYSide_dxN" uType="length" value="-785.75" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement in x of tapes along a side || to Y axis,
                 neg direction, relative to center of LATenv          </notes>
+        </const>
+      </derCategory>
+      <derCategory name="NADderived" save="true">
+        <overview>
+          Derived not-a-detector constants        </overview>
+        <const name="NADGridWebWidth" uType="length" value="1516" unitAngle="deg" unitLength="mm">
+          <notes>
+            Full width of grid web in X or Y          </notes>
+        </const>
+        <const name="NADGridFlangeWidth" uType="length" value="1566" unitAngle="deg" unitLength="mm">
+          <notes>
+            Full width of grid flange in X or Y          </notes>
+        </const>
+        <const name="NADGridFlangeOuter" uType="length" value="47.95" unitAngle="deg" unitLength="mm">
+          <notes>
+            Width of outer piece of flange (wider than web)          </notes>
+        </const>
+        <const name="NADGridFlangeInnerHalf" uType="length" value="13.95" unitAngle="deg" unitLength="mm">
+          <notes>
+             convenience          </notes>
+        </const>
+        <const name="NADGridWebInnerHalf" uType="length" value="4" unitAngle="deg" unitLength="mm">
+          <notes>
+             convenience          </notes>
+        </const>
+        <!--  The per-tower web (flange) is picture-frame shaped.
+             Break it into 4 boxes. Height of each is web (flange)
+             height.  Width of each is NADGridWebInnerHalf
+             (NADGridFlangeInnerHalf).  Two have length = towerPitch;
+             the others are shorter by NADGridWebInner (NADGridFlangeInner)
+        -->
+        <const name="NADGridLenLong" uType="length" value="374.5" unitAngle="deg" unitLength="mm">
+          <notes>
+            Length of longer outer (not per-tower) grid pieces          </notes>
+        </const>
+        <const name="NADGridWebLenShort" uType="length" value="366.5" unitAngle="deg" unitLength="mm">
+          <notes>
+            Length of shorter outer (not per-tower) 
+     grid web pieces          </notes>
+        </const>
+        <const name="NADGridFlangeLenShort" uType="length" value="346.6" unitAngle="deg" unitLength="mm">
+          <notes>
+            Length of shorter outer (not per-tower) 
+     grid flange pieces          </notes>
+        </const>
+        <!--  Define some constants for the outside "picture frames" for
+     grid web and grid flange -->
+        <const name="NADGridWebOutsideWidth" uType="length" value="9" unitAngle="deg" unitLength="mm">
+          <notes>
+            Width of web outside towers (i.e., 4 * towerPitch)          </notes>
+        </const>
+        <const name="NADGridFlangeOutsideWidth" uType="length" value="34" unitAngle="deg" unitLength="mm">
+          <notes>
+            Width of flange outside towers (i.e., 4 * towerPitch)          </notes>
+        </const>
+        <const name="NADGridWebOutsideLenShort" uType="length" value="1498" unitAngle="deg" unitLength="mm">
+          <notes>
+            Length of short outside piece of grid web          </notes>
+        </const>
+        <const name="NADGridFlangeOutsideLenShort" uType="length" value="1498" unitAngle="deg" unitLength="mm">
+          <notes>
+            Length of short outside piece of grid web          </notes>
         </const>
       </derCategory>
     </derived>

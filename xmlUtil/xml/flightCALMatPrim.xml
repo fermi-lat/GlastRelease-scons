@@ -5,7 +5,7 @@
   <prim name="diodeMat" value="Si" type="string" uType="mat">Diode Material
 </prim>
 <prim name="CALCellMat" value="CarbonFiber" type="string" uType="mat">**NEW** 
-CAL composite cell material</prim>
+CAL composite cell material, also used for top and bottom plates</prim>
 <prim name="PCBMat" value="Fiberglass" type="string" uType="mat">**NEW** 
 Material for printed circuit boards</prim>
   <prim name= "CALFrameMat" value= "Al" type="string" uType="mat">

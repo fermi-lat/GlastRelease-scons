@@ -5,6 +5,14 @@
      are rotated by 90 degrees with just vacuum inbetween.  But
      the rotation is not apparent to the simulator since it
      doesn't know about individual strips  -->
+<!-- Stay-clear envelope -->
+    <box name="TKRStayClearBox"
+       XREF="TKRTransverseStayClear"
+       YREF="TKRTransverseStayClear"
+       ZREF="TKRVertStayClear"
+       materialREF="vacuumMat" />
+
+
 <!-- Trays come in 3 flavors: top tray, bottom tray and middle tray.
      These are further subdivided by thickness of converter layer which
      may be any of 
@@ -205,7 +213,7 @@
     </stackZ>
 
     <!-- make a tracker by stacking up the trays -->
-    <stackZ name="oneTKR" >
+    <stackZ name="oneTKRStack" >
       <axisPos volume="trayBot" rotation="90" >
 	<idField name="fTKRTray" value="0" />
         <idField name="fMeasure" valueREF="eMeasureY" />
@@ -284,3 +292,7 @@
       </axisPos>
 
     </stackZ>
+
+    <composition name="oneTKR" envelope="TKRStayClearBox">
+      <posXYZ volume="oneTKRStack" />
+    </composition>

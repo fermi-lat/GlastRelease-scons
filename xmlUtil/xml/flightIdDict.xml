@@ -5,6 +5,7 @@
       <vList>
         <vEnumVal valueREF="eLATTowers" />
         <vEnumVal valueREF="eLATACD" />
+        <vEnumVal valueREF="eLATGrid" />
       </vList>
     </field>
 
@@ -16,11 +17,18 @@
       <vMinMax min="0" maxREF="xNumM1" />
     </field>
 
+<!-- Tower objects include CAL, TKR, 4 each grid web & grid flange pieces -->
     <field name="fTowerObjects" >
       <vList>
-        <vEnumVal valueREF="eTowerTKR" />
         <vEnumVal valueREF="eTowerCAL" />
+        <vEnumVal valueREF="eTowerTKR" />
+        <vEnumVal valueREF="eTowerGrid" />
       </vList>
+    </field>
+
+<!-- Field for grid subcomponents, typically will be 4 each flange & web -->
+    <field name="fGridObjects" >
+      <vMinMax min="0" max="7" />
     </field>
 
     <field name="fMeasure" >
@@ -31,6 +39,15 @@
     </field>
 
     <field name="fLayer" />
+
+    <field name="fCALStructural" >
+      <vList>
+        <vEnumVal valueREF="eBottomFrame" />
+        <vEnumVal valueREF="eBottomPlate" />
+        <vEnumVal valueREF="eTopFrame" />
+        <vEnumVal valueREF="eTopPlate" />
+      </vList>
+    </field>
 
     <field name="fCALLog" >
       <vMinMax min="0" maxREF="maxLog" />
@@ -91,6 +108,11 @@
           </pValues>
           <dictNode fieldName="fTowerX" >
             <dictNode fieldName="fTowerObjects" >
+              <dictNode fieldName="fCALStructural" >
+                <pValues>
+                  <vEnumVal valueREF="eTowerCAL" />
+                </pValues>
+              </dictNode>
               <dictNode fieldName="fLayer" >
                 <pValues>
                   <vEnumVal valueREF="eTowerCAL" />
@@ -151,6 +173,11 @@
                   </dictNode>
                 </dictNode>
               </dictNode>         <!-- end tray field -->
+              <dictNode fieldName="fGridObjects" >
+                <pValues>
+                  <vEnumVal valueREF="eTowerGrid" />
+                </pValues>
+              </dictNode>
             </dictNode>           <!-- end towerObjects -->
           </dictNode>             <!-- end towerX -->
         </dictNode>               <!-- end towerY -->
@@ -195,6 +222,13 @@
           </dictNode>          <!-- end of defs for side faces -->
 
         </dictNode>            <!-- end of fACDFace -->
+
+        <dictNode fieldName="fGridObjects" >
+          <pValues>
+            <vEnumVal valueREF="eLATGrid" />
+          </pValues>
+        </dictNode>
+
       </dictNode>
     </dictRoot>
   </idDict>

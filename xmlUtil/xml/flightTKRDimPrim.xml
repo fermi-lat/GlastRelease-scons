@@ -1,6 +1,10 @@
 <primCategory name="TKRDimPrim">
   <overview>Fundamental solid dimensions and offsets within the Tracker.</overview>
 <!-- Fundamental Z dimensions in tracker -->
+  <prim name="TKRTransverseStayClear" value="372.0">Tranverse dimension of
+TKR Stay Clear envelope from LAT-DS-00038-2</prim>
+  <prim name="TKRVertStayClear" value="640.0">Z dimension of
+TKR Stay Clear envelope from LAT-DS-00038-2</prim>
         <prim name= "SiThick" value= "0.4" >Si thickness</prim>
         <prim name="coreThick" value="27.92">Thickness of core material
             in all trays except the bottom</prim>

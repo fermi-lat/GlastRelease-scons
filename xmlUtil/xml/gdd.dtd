@@ -590,7 +590,7 @@
 <!ELEMENT  composition     ( %anyPosition; )+ >
 <!ATTLIST  composition    
            %volumeProperties;
-           envelope   IDREF   #IMPLIED>
+           envelope   IDREF   #REQUIRED>
 
 <!ELEMENT  choice (case)+ >
 <!ATTLIST  choice name ID #REQUIRED>
