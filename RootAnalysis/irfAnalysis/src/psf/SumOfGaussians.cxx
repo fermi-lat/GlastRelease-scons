@@ -46,19 +46,19 @@ void SumOfGaussians::applyFit(TH1 * h) {
 // Unfortunately, this initialization must be fairly context-specific
 // to work well, here fitting the log10(Tkr1[Theta,Phi]Err)
 // distributions.
-   Double_t scale = h->Integral();
+   Double_t scale = h->Integral()*h->GetBinWidth(0);
    Double_t mean = h->GetMean();
    Double_t rms = h->GetRMS();
 
    std::vector<Double_t> params;
-   params.push_back(scale);
-   params.push_back(mean);
-   params.push_back(rms);
-   params.push_back(scale/2.);
-   params.push_back(-1.8);
-   params.push_back(rms);
+   m_params[0] = scale;
+   m_params[1] = mean;
+   m_params[2] = rms;
+   m_params[3] = scale/2.;
+   m_params[4] = -1.8;
+   m_params[5] = rms;
 
-   m_func->SetParameters(&params[0]);
+   m_func->SetParameters(&m_params[0]);
 
    int fitTrys = 0;
 // Do the fit in quiet mode.

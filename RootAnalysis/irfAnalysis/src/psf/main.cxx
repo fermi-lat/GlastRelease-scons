@@ -6,6 +6,7 @@
 #include "MakeDists.h"
 #include "SumOfGaussians.h"
 #include "LinearModel.h"
+#include "PsfModel.h"
 
 namespace {
    void setBounds(Fitter * fitter) {
@@ -66,6 +67,15 @@ int main(){
                               -3.5, -0.5, 100, linearModel);
     tkr1ErrProfile.draw("Tkr1ErrProfiles.ps", -0.5);
     delete linearModel;
+
+// Fit the scaled PSF distributions using the function proposed by
+// Luis Reyes and Steve Ritz.
+    Fitter * psfModel = new PsfModel("scaledPsfFits.root");
+    MakeDists scaledPsf("scaledPsf.root");
+    if ( !scaledPsf.fileExists() )
+       scaledPsf.project("BestDirErr/PSFscaleFactor", 0, 5, 100, psfModel);
+    scaledPsf.draw("scaledPsf.ps", 0.1);
+    delete psfModel;
 
     std::cout << "done" << std::endl;
     return 0;
