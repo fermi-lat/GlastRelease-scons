@@ -99,7 +99,7 @@ StatusCode ntupleWriterSvc::initialize ()
     // setup the title
 
     char buf[20];
-    sprintf(buf, "gen(%d)", evtMax);
+    sprintf(buf, "gen(%d)", evtMax.value());
 
     std::string title(buf);
     // Setup the ntuples asked for in the job options file
