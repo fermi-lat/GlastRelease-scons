@@ -97,7 +97,9 @@ StatusCode test_LdfConverterAlg::execute()
     if (!gem) {
         log << MSG::INFO << "No GEM available" << endreq;
     } else {
-        gem->fillStream(log.stream());
+       log << MSG::INFO << "GEM";
+       (*gem).fillStream(log.stream());
+	   log << endreq;
     }
   
 

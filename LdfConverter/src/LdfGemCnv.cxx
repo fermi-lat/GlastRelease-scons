@@ -31,7 +31,7 @@ LdfGemCnv::LdfGemCnv(ISvcLocator* svc)
 StatusCode LdfGemCnv::createObj(IOpaqueAddress* , 
                                DataObject*& refpObject) {
     // Purpose and Method:  This converter will store Ebf time on the TDS.
-    LdfEvent::LdfGem *gem = new LdfEvent::Gem();
+    LdfEvent::Gem *gem = new LdfEvent::Gem();
     refpObject = gem;
     // Retrieve the LAT data for this event 
     ldfReader::GemData ldfGem = ldfReader::LatData::instance()->getGem();
