@@ -2,6 +2,7 @@
 /*   Package merit
  *
  *
+ *  v5r6  15-jun-02  add acd quantities, a few fixes
  *  v5r4  06-jun-02  fix to direction: grabbed some code for cal analyis.
  *  v5r2  31-may-02  Really use vertex.
  *  v5r1  28-may-02  use vertex for layer number.
