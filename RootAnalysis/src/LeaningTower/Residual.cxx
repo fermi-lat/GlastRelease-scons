@@ -4,6 +4,7 @@
 #include "TGraph.h"
 #include "TLine.h"
 #include "TList.h"
+#include "TPaveStats.h"
 #include "TString.h"
 #include "TStyle.h"
 #include "TSystem.h"
@@ -209,6 +210,10 @@ void Residual::DrawResidual(TString plane, TCut cut) {
         c = new TCanvas(canvasName, canvasName, 600, 800);
         c->Divide(1,2);
     }
+ 
+    gStyle->Reset();
+    gStyle->SetOptStat("oeu");
+    gStyle->SetOptFit(1111);
 
     TFile f(myResFileName);
     TTree* t = (TTree*)f.Get("residualTree");
@@ -219,14 +224,21 @@ void Residual::DrawResidual(TString plane, TCut cut) {
     gPad->SetTicks(1,1);
     gPad->SetLogy();
     t->Draw("h_abs_ext-h_abs");
+    TH1F* htemp = (TH1F*)gPad->GetPrimitive("htemp");
+    htemp->GetXaxis()->SetTitle("residual/mm");
 
     c->cd(2);
     gPad->SetTicks(1,1);
-    gStyle->SetOptStat(0);
-    gStyle->SetOptFit(1111);
     t->Draw("h_abs_ext-h_abs", cut);
-    TH1F* htemp = (TH1F*)gPad->GetPrimitive("htemp");
+    htemp = (TH1F*)gPad->GetPrimitive("htemp");
+    htemp->GetXaxis()->SetTitle("residual/mm");
     htemp->Fit("gaus", "", "", -0.2, 0.2);
+    gPad->Update();
+    TPaveStats* pStats = (TPaveStats*)htemp->GetListOfFunctions()->FindObject("stats");
+    pStats->SetOptStat(0);
+    pStats->SetX1NDC(0.71);
+    pStats->SetY1NDC(0.8);
+    gPad->Modified();
 
     c->cd();
     f.Close();

@@ -92,6 +92,7 @@ void TreeMaker::CreateTree(Int_t numEvents) {
 
     UInt_t Tkr3RowBits;
 
+    TFile myFile(m_TreeFileName, "RECREATE", "TreeFile", 1);
     TreeCollection = new TObjArray();
   
     // mc branches:
@@ -242,7 +243,8 @@ void TreeMaker::CreateTree(Int_t numEvents) {
             mcEventId = mc->getEventId();
             /*
             if ( mcEventIdOld > mcEventId ) {
-                std::cout << "*********************** " << mcEventIdOld << ' ' << mcEventId << ' ' << rollOver;
+                std::cout << "*********************** " << mcEventIdOld << ' '
+                << mcEventId << ' ' << rollOver;
                 //                mcEventId += rollOver;
                 std::cout << ' ' << mcEventId << std::endl;
             }                
@@ -253,7 +255,8 @@ void TreeMaker::CreateTree(Int_t numEvents) {
             digiEventId = evt->getEventId();
             /*
             if ( digiEventIdOld > digiEventId ) {
-                std::cout << "*********************** " << digiEventIdOld << ' ' << digiEventId << ' ' << rollOver;
+                std::cout << "*********************** " << digiEventIdOld << ' '
+                << digiEventId << ' ' << rollOver;
                 //                digiEventId += rollOver;
                 std::cout << ' ' << digiEventId << std::endl;
             }                
@@ -264,7 +267,8 @@ void TreeMaker::CreateTree(Int_t numEvents) {
             reconEventId = rec->getEventId();
             /*
             if ( reconEventIdOld > reconEventId ) {
-                std::cout << "*********************** " << reconEventIdOld << ' ' << reconEventId << ' ' << rollOver;
+                std::cout << "*********************** " << reconEventIdOld
+                << ' '<< reconEventId << ' ' << rollOver;
                 //                reconEventId += rollOver;
                 std::cout << ' ' << reconEventId << std::endl;
             }                
@@ -275,8 +279,10 @@ void TreeMaker::CreateTree(Int_t numEvents) {
         EventId = std::min(std::min(mcEventId, digiEventId), reconEventId);
 
         /*
-        std::cout << "event ids: " << mcEventId << ' ' << digiEventId << ' ' << reconEventId << ' ' << EventId << std::endl;
-        std::cout << "old event ids: " << mcEventIdOld << ' ' << digiEventIdOld << ' ' << reconEventIdOld << std::endl;
+        std::cout << "event ids: " << mcEventId << ' ' << digiEventId << ' '
+                  << reconEventId << ' ' << EventId << std::endl;
+        std::cout << "old event ids: " << mcEventIdOld << ' ' << digiEventIdOld
+                  << ' ' << reconEventIdOld << std::endl;
         */
 
         //////////////////////////////////////////////////
@@ -304,13 +310,19 @@ void TreeMaker::CreateTree(Int_t numEvents) {
 #ifdef DIAGN
             // we shouldn't do this if the digi is generated from mc
             L1T l1t = evt->getL1T();
-	    l1t.Print();
+	    if ( DEBUG )
+                l1t.Print();
             LevelOneTrigger = l1t.getTriggerWord() & 0x1f;
             // there are more bits set, but why?
             bool tkrTrigger = l1t.getTkr3InARow();
 	    Tkr3RowBits = l1t.getTriRowBits(0);
 
-	    std::cout << "bool 3in a row: "<< tkrTrigger <<" and tower 0 3 in a row " <<Tkr3RowBits <<std::endl;
+            if ( DEBUG )
+                std::cout << "bool 3-in-a-row: " << tkrTrigger
+                          << "  Tkr3RowBits: " << std::setw(6) << Tkr3RowBits
+                          << ' '
+                          << static_cast<std::bitset<sizeof(UInt_t)*8> >
+                    (Tkr3RowBits) <<std::endl;
 
             // indicates that 3-in-a-row occurred in the TKR
 
@@ -351,20 +363,21 @@ void TreeMaker::CreateTree(Int_t numEvents) {
                               << numGTCCentries << std::endl;
                 NumGTCCwarning = false;
             }
-            for ( int GTCC=0; GTCC<NumGTCC; ++GTCC ) { 
-                std::bitset<NumGTRC> word = 0;
-                if ( tkrTrigger && GTCC < numGTCCentries )
-                    word =
+            else
+                for ( int GTCC=0; GTCC<NumGTCC; ++GTCC ) { 
+                    std::bitset<NumGTRC> word = 0;
+                    if ( tkrTrigger && GTCC < numGTCCentries )
+                        word =
                         evt->getTkrDiagnostic(indexToGTCC(GTCC))->getDataWord();
-                if ( DEBUG ) std::cout << "TkrDiagnosticData[" << GTCC
-                                       << "] word(" << word << ") ";
-                for ( int GTRC=NumGTRC-1; GTRC>=0; --GTRC ) {
-                    TkrDiagnostics[getIndex(GTCC,GTRC)] = word[GTRC];
-                    if ( DEBUG ) std::cout
-                        << ( TkrDiagnostics[getIndex(GTCC,GTRC)] > 0 ) ? 1 : 0;
+                    if ( DEBUG ) std::cout << "TkrDiagnosticData[" << GTCC
+                                           << "] word(" << word << ") ";
+                    for ( int GTRC=NumGTRC-1; GTRC>=0; --GTRC ) {
+                        TkrDiagnostics[getIndex(GTCC,GTRC)] = word[GTRC];
+                        if ( DEBUG )
+                         std::cout<<(TkrDiagnostics[getIndex(GTCC,GTRC)]>0)?1:0;
+                    }
+                    if ( DEBUG ) std::cout << std::endl;
                 }
-                if ( DEBUG ) std::cout << std::endl;
-            }
 #endif
             // TkrDigi
             const TObjArray* tkrDigiCol = 0;
@@ -439,12 +452,12 @@ void TreeMaker::CreateTree(Int_t numEvents) {
                 if ( TkrNumTracks > 0 ) {
 		  track1 = (TkrTrack*)tkrCol->First();
 		  TkrTrk1NumClus = track1->GetEntries();
-		  std::cout<<"track1 with  " << TkrTrk1NumClus <<"hits"<<std::endl;
+		  std::cout<<"track1 with  "<<TkrTrk1NumClus<<"hits"<<std::endl;
  		}
 		////////////////// TKR CLUSTER: ////////////////////////////////
                 const TObjArray* clusCol = tkrRec->getClusterCol();
                 TkrNumClus = clusCol->GetEntries();
-		std::cout<<"event with  " << TkrNumClus <<" clusters"<<std::endl;
+		std::cout<<"event with  "<<TkrNumClus<<" clusters"<<std::endl;
                 TIter tkrClusIter(clusCol);
                 TkrCluster* pTkrClus = 0;
                 int clusIdx = 0;
@@ -623,7 +636,6 @@ void TreeMaker::CreateTree(Int_t numEvents) {
         if ( DEBUG ) std::cout << "...filled!" << nTkrDigi << std::endl;
     }  // end analysis code in event loop
 
-    TFile myFile(m_TreeFileName, "RECREATE", "TreeFile", 1);
     TreeCollection->Write();
     myFile.Close();
     std::cout << "m_TreeFileName " << m_TreeFileName << std::endl;
