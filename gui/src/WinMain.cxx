@@ -107,9 +107,12 @@ LRESULT CALLBACK   WndProc (HWND hWnd, unsigned Message,
             break;
         }
     case WM_DESTROY:
+        Menu::instance()->quit();
+#if 0
         ::PostQuitMessage(0);
         WinGUI::s_quitting=true;
         GUI::running=false;
+#endif
         break;
     case WM_SETCURSOR:  // mouse comes over window--make it the normal arrow
         {

@@ -73,6 +73,9 @@ public:
     
     static Menu* instance(Menu* m=0); 
 	// deprecated method
+
+    void quit();
+
 private:
 
     class Node{
@@ -86,7 +89,6 @@ private:
     void setMenu(Node* m);
     void endMenu();
     void addSeparator();
-    void quit();
 
     static Menu* s_instance;
 

@@ -2,6 +2,7 @@
  * Package gui 
  * Coordinator: T.Burnett
  *<pre>
+ * v3r3p2 THB 01-nov-2002: wire up exit button.
  * v3r3p1 THB 27-oct-2002: gcc 3.x fixes
  * v3r3  THB 28-aug-2002: remove statics from PrintControl.
  * v3r2  THB 01-jul-2002: make unique filenames.
