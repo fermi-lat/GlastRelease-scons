@@ -52,7 +52,7 @@ inline StreamBuffer& operator>> ( StreamBuffer& s, idents::VolumeIdentifier& id 
   idents::VolumeIdentifier::int64 sup64 = sup;
   
   idents::VolumeIdentifier::int64 value = inf; 
-  value |= (sup << 32); 
+  value |= (sup64 << 32); 
   id.init(value, size);
 
   return s;
