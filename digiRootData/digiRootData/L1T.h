@@ -5,6 +5,7 @@
 
 /** @class L1T
  * @brief Store the Level One Trigger information
+ *
  * $Header$
 */
 

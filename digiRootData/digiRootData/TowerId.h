@@ -5,6 +5,7 @@
 
 /** @class TowerId
  * @brief ROOT version of the Tower identifier following Ritz specs.
+ *
  * $Header$
 */
 class TowerId: public TObject

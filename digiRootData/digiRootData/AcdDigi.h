@@ -7,9 +7,10 @@
 #include "mcRootData/VolumeIdentifier.h"
 
 /** @class AcdDigi
- * @brief 
- * The digitization for a single ACD entity.  This could be a 
- * tile or a fiber.  Each ACD entity has 2 PMTs associated with 
+ * @brief The digitization for a single ACD entity.  
+ * 
+ * This digitization could represent a 
+ * tile or a ribbon.  Each ACD entity has 2 PMTs associated with 
  * it.  Each PMT produces a pulse height and 3 discriminator
  * bits:  low, veto, high.  The PMT values are stored in a packed
  * word.

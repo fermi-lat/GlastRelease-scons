@@ -3,12 +3,13 @@
 
 #include "TObject.h"
 
-/*! \class LiveTime
-\brief data class to store live time packet data
-The times in this class are actually 48 bit values.  There is no guarantee that this the machine
-this class is run on supports 64 bit values...hence we define overflow bits in a separate
-UShort_t.
- */
+/** @class LiveTime
+* @brief data class to store live time packet data
+* 
+* The times in this class are actually 48 bit values.  There is no guarantee that 
+* this the machine this class is run on supports 64 bit values...hence we define 
+* overflow bits in a separate UShort_t.
+*/
 
 
 class LiveTime: public TObject {

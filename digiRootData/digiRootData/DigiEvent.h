@@ -11,7 +11,17 @@
 #include "TkrDigi.h"
 
 /** @class DigiEvent
- * @brief This is the top-level event class to store the raw (digi) data.
+ * @brief This is the top-level event class to store the Digi data.
+ *
+ * The DigiEvent branch contains:
+ * - Run Id
+ * - Event Id
+ * - Time stamp
+ * - Flag denoting if this data was simulated or not
+ * - Level One Trigger
+ * - Collection of AcdDigi objects
+ * - Collection of CalDigi objects
+ * - Collection of TkrDigi objects
  *
  * @li Jun 2001 Heather Kelly - revised to use TClonesArray
  * @li Jan 2000 Daniel Flath - ROOT HTML comments added

@@ -9,6 +9,7 @@
 
 /** @class CalDigi
  * @brief Digitizations for CAL
+ *
  * Based on the CalDigi TDS class in GlastEvent written by J. Eric Grove.
  *
  * @author Heather Kelly

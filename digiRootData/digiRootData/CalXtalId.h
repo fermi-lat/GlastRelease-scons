@@ -4,7 +4,8 @@
 #include "TObject.h"
 
 /* @class CalXtalId        
-* @brief ID class for CAL logs                                
+* @brief ID class for CAL logs   
+*                             
 * Based on CalXtalId in the idents package.
 * Stores xtal id as a packed word (UInt_t) of 32 bits.
 * Supports both packed log ID = (tower*8 + layer)*16 + column and
@@ -21,6 +22,7 @@
 *      Tower   Layer  Column
 * BITS: 7-10    4-6    0-3
 * @endverbatim
+*
 * @author  Heather Kelly
 * $Header$
 */
