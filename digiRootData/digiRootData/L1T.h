@@ -15,13 +15,15 @@ class L1T : public TObject {
 public:
     
     L1T();
-    L1T(UInt_t trigger, UInt_t *triRowBits);
+    L1T(UInt_t trigger, UInt_t *digiTriRowBits, UInt_t *trgReqTriRowBits);
     L1T(const L1T& level1);
     virtual ~L1T();
 
-    void initialize(UInt_t trigger, UInt_t *triRowBits);
-    void setTriRowBits(UInt_t tower, UInt_t bits);
-    void setTriRowBits(UInt_t *triRowBits);
+    void initialize(UInt_t trigger, UInt_t *digiTriRowBits, UInt_t *trgReqTriRowBits);
+    void setDigiTriRowBits(UInt_t tower, UInt_t bits);
+    void setDigiTriRowBits(UInt_t *triRowBits);
+    void setTrgReqTriRowBits(UInt_t tower, UInt_t bits);
+    void setTrgReqTriRowBits(UInt_t *triRowBits);
 
     void Clear(Option_t *option ="");
 
@@ -45,7 +47,8 @@ public:
     bool getThrottle() const { return m_trigger & enums::b_THROTTLE; };
 	/*@}*/
 
-    UInt_t getTriRowBits(const Int_t tower) const;
+     UInt_t getDigiTriRowBits(const Int_t tower) const;
+     UInt_t getTrgReqTriRowBits(const Int_t tower) const;
 
     /// for system tests
     static Int_t number_of_trigger_bits; //!
@@ -54,10 +57,11 @@ private:
     /// packed word containing trigger bits
     UInt_t    m_trigger;    
 
-    UInt_t m_triRowBits[16];
+    UInt_t m_digiTriRowBits[16];
+    UInt_t m_trgReqTriRowBits[16];
 
 
-    ClassDef(L1T,5) // Level 1 Trigger information
+    ClassDef(L1T,6) // Level 1 Trigger information
 };
 
 #endif
