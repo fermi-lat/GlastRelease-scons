@@ -3,6 +3,7 @@ package geomrep
 use geometry v1
 use graphics v1
 
+include_path "${GEOMREPROOT}"
 
 macro   geomrep_linkopts "-L ${GEOMREPROOT}/${CMTCONFIG} -lgeomrep"\
         VisualC ""

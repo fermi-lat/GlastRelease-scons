@@ -3,6 +3,8 @@ package geometry
 use glast_settings v1
 use CLHEP v1r4
 
+include_path "${GEOMETRYROOT}"
+
 macro   geometry_linkopts "-L ${GEOMETRYROOT}/${CMTCONFIG} -lgeometry"\
         VisualC         ""
 
