@@ -718,15 +718,20 @@ StatusCode reconRootReaderAlg::readAcdRecon() {
     }
 
     // create the TDS location for the AcdRecon
-    Event::AcdRecon* acdRecTds = new Event::AcdRecon;
     const AcdId acdIdRoot = acdRecRoot->getMinDocaId();
     const idents::AcdId acdIdTds(acdIdRoot.getLayer(), acdIdRoot.getFace(), 
         acdIdRoot.getRow(), acdIdRoot.getColumn());
-    std::map<idents::AcdId, double> energyColTds;
-    acdRecTds->initialize(acdRecRoot->getEnergy(), acdRecRoot->getTileCount(),
+	std::vector<idents::AcdId> idColTds;
+	std::vector<AcdId>::const_iterator idRootIt;
+	for (idRootIt = acdRecRoot->getIdCol().begin(); idRootIt != acdRecRoot->getIdCol().end(); idRootIt++) {
+		idColTds.push_back(idents::AcdId(idRootIt->getLayer(), idRootIt->getFace(),
+			idRootIt->getRow(), idRootIt->getColumn()));
+	}
+    std::vector<double> energyColTds = acdRecRoot->getEnergyCol();
+	Event::AcdRecon *acdRecTds = new Event::AcdRecon(acdRecRoot->getEnergy(), acdRecRoot->getTileCount(),
         acdRecRoot->getGammaDoca(), acdRecRoot->getDoca(), 
         acdRecRoot->getActiveDist(), acdIdTds, 
-        acdRecRoot->getRowDocaCol(), acdRecRoot->getRowActDistCol(), energyColTds);
+        acdRecRoot->getRowDocaCol(), acdRecRoot->getRowActDistCol(), idColTds, energyColTds);
     
     sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, acdRecTds);
     if (sc.isFailure()) {

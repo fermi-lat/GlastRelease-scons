@@ -666,10 +666,17 @@ StatusCode reconRootWriterAlg::writeAcdRecon() {
     SmartDataPtr<Event::AcdRecon> acdRecTds(eventSvc(), EventModel::AcdRecon::Event);  
     if (!acdRecTds) return StatusCode::SUCCESS;
     idents::AcdId acdIdTds = acdRecTds->getMinDocaId();
+	std::vector<AcdId> idRootCol;
+	std::vector<idents::AcdId>::const_iterator idTdsIt;
+	for (idTdsIt = acdRecTds->getIdCol().begin(); idTdsIt != acdRecTds->getIdCol().end(); idTdsIt++) {
+		idRootCol.push_back(AcdId(idTdsIt->layer(), idTdsIt->face(), 
+			idTdsIt->row(), idTdsIt->column()));
+	}
     AcdId acdIdRoot(acdIdTds.layer(), acdIdTds.face(), acdIdTds.row(), acdIdTds.column());
     acdRec->initialize(acdRecTds->getEnergy(), acdRecTds->getTileCount(),
         acdRecTds->getGammaDoca(), acdRecTds->getDoca(), acdRecTds->getActiveDist(), acdIdRoot, 
-        acdRecTds->getRowDocaCol(), acdRecTds->getRowActDistCol());
+        acdRecTds->getRowDocaCol(), acdRecTds->getRowActDistCol(),
+		idRootCol, acdRecTds->getEnergyCol());
 
     return sc;
 }
