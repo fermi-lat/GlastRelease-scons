@@ -3,6 +3,7 @@
     $Id$
  @verbatim
 
+ v1r2p3 19-feb-04 THB   gcc code compliance fix
  v1r2p2 16-Jun-03 TU   Add test for transportation manager to fix init problems
  v1r2p1 22-Apr-03 TU   fix unix error (works fine on windows)
  v1r2   21-Apr-03 TU   Modifications for new G4PropagationTool

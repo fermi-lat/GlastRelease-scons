@@ -1,5 +1,5 @@
 package G4Propagator
-version v1r2p1
+version v1r2p3
 author Tracy Usher   <usher@slac.stanford.edu>
 
 #$Id$
@@ -11,23 +11,11 @@ apply_pattern packageShr
 
 use G4Generator *
 
-##use Event *
-
-##use GlastSvc  *
-
-##use GuiSvc   v3*
-##use geometry v3*
-##use geomrep  v4r*
-
-#for linux execution clients to get the LD_LIBRARY_PATH set.
-##use Geant4Runtime v2r* IExternal
 #=============================================================
 private
 
 #this is private to avoid passing on build info to clients
 use Geant4   v2r* IExternal
-
-
 
 # get flags to build shared library
 
