@@ -46,17 +46,15 @@ std::string VolumeIdentifier::name(const char* delimiter) const
 #endif
     
     unsigned int bufIds = 0;
-    
-    // this is a 64 bit mask with 6 bits (positions 54-59) set to 1 and the others to 0
-    static int64 mask =0x3f << 54; // 0x0fc0000000000000;
-    
+    static unsigned int mask = 0x3f; // 6 bits for final mask
+   
     int64 copyValue = m_value;
     
     int i;
     s << delimiter;
     for (i = 0; i < m_size; i++)
     {
-        bufIds = (copyValue & mask) >> 54;
+        bufIds = (copyValue ) >> 54 & mask;
         s << bufIds << delimiter;
         copyValue = copyValue << 6;
     }
