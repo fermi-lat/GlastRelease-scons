@@ -239,7 +239,7 @@ void MakeDists::replaceVariables() {
 
 void MakeDists::modifyBranchName() {
    std::ostringstream newBranchName;
-   newBranchName << m_branchName 
+   newBranchName << "(" << m_branchName << ")" 
                  << "/(" << m_scalingFunction << ")";
    m_branchName = newBranchName.str();
 }
