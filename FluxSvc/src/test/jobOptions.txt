@@ -3,17 +3,13 @@
 // Job options file for FluxSvc test program
 //
 
-//ApplicationMgr.ExtSvc += { "BFEMfluxSvc" };
-//ApplicationMgr.DLLs   += { "BFEMflux" };
 ApplicationMgr.ExtSvc += { "FluxSvc" };
 ApplicationMgr.DLLs   += { "FluxSvc" }; 
  
 FluxSvc.source_lib = {"$(FLUXSVCROOT)/xml/source_library.xml"};
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
 
-ApplicationMgr.TopAlg = {"FluxAlg","ExposureAlg","FluxTestAlg"};
-//ApplicationMgr.TopAlg = {"FluxAlg","FluxTestAlg"};
-//ApplicationMgr.TopAlg = {"ExposureAlg"};
+ApplicationMgr.TopAlg = {"FluxAlg","FluxTestAlg"};
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
@@ -25,17 +21,13 @@ FluxSvc.source_lib ={"$(FLUXSVCROOT)/xml/source_library.xml"};
 FluxSvc.source_lib += {"$(FLUXSVCROOT)/xml/user_library.xml"};
 FluxSvc.source_lib += {"$(FLUXSVCROOT)/xml/composite_library.xml"};
 
-//std::vector<long>& seed;
+
 // ask for a source that is in the user_library
-//FluxTestAlg.source_name="center";
+
 FluxTestAlg.source_name="timetick15s";
-//ExposureAlg.source_name="d2tester";
-//FluxAlg.source_name="d2tester";
-
-
 
 ApplicationMgr.EvtSel = "NONE";
-ApplicationMgr.EvtMax = 100;
+ApplicationMgr.EvtMax = 10;
 
 //==============================================================
 //
