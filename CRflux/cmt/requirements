@@ -18,6 +18,9 @@ private
 apply_pattern package_Cshlibflags
 apply_pattern package_headers
 
+# for includes from flux (for now)
+macro CRflux_cppflags '$(ppcmd)"$(FLUXROOT)"'
+
 library CRflux *.cxx \
  Dll/*.cxx\
 $(CRflux_headers)
