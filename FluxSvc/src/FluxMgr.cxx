@@ -35,9 +35,9 @@ FluxMgr::FluxMgr(const std::vector<std::string>& fileList, std::string dtdname)
 void FluxMgr::defaultFile(){
     //Purpose: to set the default xml file and initialize the package to use it.
     std::vector<std::string> input;
+
     // must find the source_library.xml file.
     // set up the xml document to use for initialization parameters
-    static const char* initialization_document="source_library.xml";
     const char* flux_root = ::getenv("FLUXSVCROOT");
     std::string doc_path= (flux_root? std::string(flux_root)+"/xml/" : "");
     input.push_back(/*doc_path+initialization_document*/"$(FLUXSVCROOT)/xml/source_library.xml");	
@@ -118,13 +118,7 @@ EventSource* FluxMgr::source(std::string name)
     //Input: the name of the desired source.
     // first check that it is in the library
     if( m_sources.find(name)==m_sources.end() ) {
-        // nope. Maybe a Spectrum object
-        ISpectrum* s = SpectrumFactoryTable::instance()->instantiate(name);
-#if 0 //TODO: reenable     
-        return s? new FluxSource(s) : (EventSource*)0;
-#else
         return 0;
-#endif
     }
     return getSourceFromXML(m_sources[name].first);
 }
@@ -156,7 +150,6 @@ EventSource*  FluxMgr::getSourceFromXML(const DOM_Element& src)
     }
     else if ((sname.getTagName()).equals("nestedSource")) {
         
-        double flux = atof (xml::Dom::getAttribute(src, "flux").c_str());
         // Search for and process immediate child elements.  All must
         // be of type "nestedSource".  There may be more than one.
         // Content model for nestedSource is EMPTY, so can omit check

@@ -35,7 +35,7 @@ public:
     const HepPoint3D& operator()()const{return point();}
 
     /// execute the strategy, perhaps depending on direction
-    virtual void execute(const HepVector3D& dir){};
+    virtual void execute(const HepVector3D& ){};
 
     /// set the point
     void setPoint(const HepPoint3D& pt){ m_pt = pt;}
@@ -184,6 +184,7 @@ class FluxSource::LaunchDirection  {
 public:
     LaunchDirection():m_skydir(false){}
 
+    virtual ~LaunchDirection(){}
 
     LaunchDirection(double theta, double phi)
         :m_skydir(false)

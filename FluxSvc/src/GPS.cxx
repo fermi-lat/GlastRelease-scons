@@ -16,13 +16,13 @@
 GPS*	GPS::s_instance = 0;
 
 GPS::GPS() 
-:m_rockDegrees(35.),
-m_rockType(NONE),
+:m_rotangles(std::make_pair<double,double>(0.,0.)),
 m_earthOrbit(new astro::EarthOrbit),
 m_expansion(1.),    // default expansion:regular orbit for now
 m_time(0.), 
 m_sampleintvl(0.001),
-m_rotangles(std::make_pair<double,double>(0.,0.))
+m_rockDegrees(35.),
+m_rockType(NONE)
 {}
 
 GPS::Coords::Coords( double alat, double alon, double apitch
