@@ -97,7 +97,7 @@ namespace xmlUtil {
     m_maxVal = 0;
     for (DictValList::iterator it = list->begin(); 
          it != list->end(); ++it) {
-      unsigned val = *it;
+      const unsigned val = *it;
       if (val > m_maxVal) m_maxVal = val;
       if (val < m_minVal) m_minVal = val;
     }
@@ -205,4 +205,17 @@ namespace xmlUtil {
   bool DictConstraints::disjoint(DictConstraints *other) const {
     return disjoint(*other);
   }
+
+  void DictConstraints::insertValues(std::set<unsigned>& aSet) const {
+    if (m_valList == 0) {
+      for (unsigned i = m_minVal; i <= m_maxVal; i++) {
+        aSet.insert(i);
+      }
+    }
+    else {
+      aSet.insert(m_valList->begin(), m_valList->end());
+    }
+    return;
+  }
+
 }

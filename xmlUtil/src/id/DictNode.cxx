@@ -4,22 +4,32 @@
 #include "xml/Dom.h"
 #include "xmlUtil/id/DictNode.h"
 #include "xmlUtil/id/DictFieldMan.h"
+#include <assert.h>
 
 namespace xmlUtil {
   DictNode::DictNode(DOM_Element elt, DictNode *parent,
-                     DictFieldMan *fieldMan) : m_parent(parent) {
-    // check it's a dictNode element
-    if (!(elt.getTagName().equals("dictNode"))) {;} // big trouble
-    
+                     DictFieldMan *fieldMan) : 
+    m_children(0), m_parent(parent), m_parConstraints(0), 
+    m_myConstraints(0)   {
+    // check element type is OK.  Shouldn't be a problem if
+    // the xml file validates.  Note sense of assert is:
+    //   abort program if assertion is *false*
+    assert( (elt.getTagName().equals("dictNode")) ||
+            (elt.getTagName().equals("dictRoot"))     ) ;
+
     // Field name stuff:
     std::string fName = 
       std::string(xml::Dom::transToChar(elt.getAttribute("fieldName")));
     
-    m_field = fieldMan->find(fName);
+    m_field = fieldMan->find(fName.c_str());
+    assert(m_field != 0);
     // Do something if it doesn't exist?? Shouldn't be terribly
     // necessary by ID/IDREF mechanism
-    
+
     DOM_Element child = xml::Dom::getFirstChildElement(elt);
+    // Could be a leaf with no children
+    if (child == DOM_Element()) return;
+
     if ((child.getTagName()).equals("pValues")) { // parent constraints
       DOM_Element gChild = xml::Dom::getFirstChildElement(child);
       m_parConstraints = new DictConstraints(gChild);
@@ -31,8 +41,9 @@ namespace xmlUtil {
         fromParent = parent->m_field->getConstraints();
       }
       if (fromParent) {
-        if (!fromParent->allowed(m_parConstraints)) {
-          // make a fuss
+        bool allowed = (fromParent->allowed(m_parConstraints));
+        if (!allowed) {
+          assert(allowed);
         }
       }
       child = xml::Dom::getSiblingElement(child);
@@ -44,8 +55,9 @@ namespace xmlUtil {
       
       // Check it's consistent with constraints on our own field,
       // if any
-      if (!(m_field->getConstraints())->allowed(m_myConstraints)) {
-        // make a fuss
+      DictConstraints* fCon = m_field->getConstraints();
+      if (fCon != 0) {
+        assert(fCon->allowed(m_myConstraints));
       }
       child = xml::Dom::getSiblingElement(child);
     }
@@ -59,7 +71,7 @@ namespace xmlUtil {
       child = xml::Dom::getSiblingElement(child);
     }
     // Finally, how about checking for consistency among children?
-    if (!consistent()) {
+    if (!consistentChildren()) {
       // make a fuss
     }
   }
@@ -73,7 +85,7 @@ namespace xmlUtil {
   // they are identical.  Now collect all nodes with identical
   // parent constraints and check their "personal" value constraints.
   // They must be disjoint.
-  bool DictNode::consistent() {
+  bool DictNode::consistentChildren() {
     if (m_children.size() < 2) return true; // most common case
     
     // Either all children must have parent-value constraints or
@@ -108,6 +120,9 @@ namespace xmlUtil {
       ConstNodeIterator follow = it + 1;
       unsigned   ourMin = (*it)->m_parConstraints->getMin();
       
+      // If we're ever starting a new collection to check at the
+      // last child, we're done
+      if (follow == m_children.end()) return true;
       while (follow != m_children.end()) {
         DictConstraints *par2 = (*follow)->m_parConstraints;
         
@@ -127,6 +142,28 @@ namespace xmlUtil {
     return true;
   }
 
+  bool DictNode::consistentParent() {
+    if (!m_parConstraints) return true;
+
+    if (DictConstraints *parConstraints = m_parent->m_myConstraints) {
+      return parConstraints->allowed(*m_parConstraints);
+    }
+    else if (DictConstraints *parConstraints = 
+             m_parent->m_field->getConstraints()) {
+      return parConstraints->allowed(*m_parConstraints);
+    }
+    else return true;
+  }
+
+  bool DictNode::consistentValues() {
+    if (!m_myConstraints) return true;
+
+    DictConstraints *fieldConstraints = m_field->getConstraints();
+    
+    if (!fieldConstraints) return true;
+
+    return fieldConstraints->allowed(*m_myConstraints);
+  }
   
   bool DictNode::valuesDisjoint(ConstNodeIterator start, 
                                 ConstNodeIterator last) {
@@ -134,7 +171,7 @@ namespace xmlUtil {
     
     ConstNodeIterator pCurrentNode = start;
     std::set<unsigned> values;
-    (*start)->insertValues(values);
+    (*start)->m_myConstraints->insertValues(values);
 
     while (pCurrentNode != last) {
 
@@ -142,7 +179,7 @@ namespace xmlUtil {
       
       // Make a new set containing values for current node
       std::set<unsigned> curValues;
-      (*pCurrentNode)->insertValues(curValues);
+      (*pCurrentNode)->m_myConstraints->insertValues(curValues);
 
       // See if it intersects accumulated values from previous nodes
       std::vector<unsigned> intersect;
@@ -151,7 +188,7 @@ namespace xmlUtil {
       if (intersect.size() > 0) return false;
       
       // If not, continue to accumulate
-      (*pCurrentNode)->insertValues(values);
+      (*pCurrentNode)->m_myConstraints->insertValues(values);
 
     } 
     return true;
@@ -163,11 +200,11 @@ namespace xmlUtil {
     
     return m_myConstraints->allowed(value);
   }
-  
+  /*
   void DictNode::insertValues(std::set<unsigned>& aSet) const {
-    if (!m_myConstraints->m_valList) {
-      for (unsigned i = m_myConstraints->m_minVal; 
-           i <= m_myConstraints->m_maxVal;
+    if (!m_myConstraints->isList()) {
+      for (unsigned i = m_myConstraints->getMin(); 
+           i <= m_myConstraints->getMax();
            i++) {
         aSet.insert(i);
       }
@@ -178,7 +215,7 @@ namespace xmlUtil {
     }
     return;
   }
-
+  */
   bool  DictNode::allowedChild(std::string childField, unsigned childValue, 
                                unsigned myValue) const {
     if (!allowed(myValue)) return false;
@@ -214,11 +251,70 @@ namespace xmlUtil {
   //             -----------------------
     
   bool  DictNode::addChild(DictNode* child) {
-    return true;}            /* TO DO */
+    if ((m_myConstraints != 0) & (child->m_parConstraints != 0)) {
+      if (!(m_myConstraints->allowed(child->m_parConstraints))) return false;
+    }
+    m_children.push_back(child);
+    return true;
+  }
 
 
   //             -----------------------
 
+
+  // Support visitors.
+  // Should there be a non-recursive version?
+  // Should there be an option to visit associated field, constraints?
+  bool DictNode::accept(DictVisitor* vis) {
+    // Call back visitor for child nodes, then self
+
+    for (ConstNodeIterator it = m_children.begin(); it != m_children.end();
+         it++) {
+      bool keepGoing = (*it)->accept(vis);
+      if (!keepGoing) return false;
+    } 
+
+    return  vis->visitNode(this);
+  }
+
+  DictNode::DictNode(const DictNode& toCopy) : DictObject(toCopy) {
+    deepCopy(toCopy);
+  }
+
+  DictNode& DictNode::operator=(const DictNode& d) {
+    throw No_Assignment();
+  }
+
+  void DictNode::deepCopy(const DictNode& d) {
+    // Don't copy parent.  Nodes created with copy constructor
+    // are parentless.  Use addChild after creation.
+    // Also have to get parent constraints some other way
+    m_parent = 0;
+    m_parConstraints = 0;
+    if (d.m_field) {
+      m_field = new DictField(*(d.m_field));
+    }
+    else m_field = 0;
+
+    if (d.m_myConstraints) {
+      m_myConstraints = new DictConstraints(*(d.m_myConstraints));
+    }
+    else m_myConstraints = 0;
+
+    // Now for child nodes
+    for (ConstNodeIterator it = d.m_children.begin(); 
+         it != d.m_children.end(); ++it) {
+      DictNode *newChild = new DictNode(**it);
+      DictConstraints *oldParConstraints = (*it)->m_parConstraints;
+
+      newChild->m_parConstraints = (oldParConstraints) ? 
+        new DictConstraints(*oldParConstraints) : 0;
+      // Need some exception handling here.  addChild returns 
+      // true or false, depending on whether child actually was
+      // added or not.
+      addChild(newChild);
+    }
+  }
 
   DictNode::~DictNode() {
     if (m_parConstraints != 0) {

@@ -7,12 +7,12 @@
 #include "xmlUtil/id/DictFieldMan.h"
 #include "xmlUtil/id/DictField.h"
 #include "xmlUtil/id/DictNode.h"
-
+#include "xmlUtil/id/DictValidVisitor.h"
 namespace xmlUtil {
-  IdDict::IdDict(DOM_Element elt) {
+  IdDict::IdDict(DOM_Element elt)  {
     // Check that element has the right tag name: idDict
     // Caller probably will have done this already
-    if (!(elt.getTagName().equals("idDict"))){ ;} // big trouble
+    assert(elt.getTagName().equals("idDict"));
 
     // Check number of children.  This is an upper bound
     // on number of fields we have to store
@@ -41,6 +41,26 @@ namespace xmlUtil {
     delete m_fieldMan;
   }
 
+  bool IdDict::accept(DictVisitor *vis) {
+    return accept(vis, 0xffffffff);
+  }
+
+
+  bool IdDict::accept(DictVisitor *vis, unsigned mask) {
+    unsigned status = 1;
+
+    if (!vis->visitDict(this)) return false;
+
+    if (mask & nodeHierarchy) 
+      status = m_root->accept(vis);
+
+    if (status && (mask & fieldManager)) {
+      status &= m_fieldMan->accept(vis);
+    }
+
+    return false;
+  }
+
   /* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      A bunch of functions whose dummy implementations need to be
@@ -48,7 +68,10 @@ namespace xmlUtil {
   */
 
   bool IdDict::isValid() const {
-    return true;
+    DictValidVisitor visitor;
+
+    accept(&visitor);
+    return visitor.wasValid();
   }
 
   bool IdDict::idOk(const Identifier& id) const {
