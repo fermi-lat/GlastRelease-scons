@@ -2,10 +2,14 @@
 <primCategory name="Trigger" >
 <overview>Fundamental parameters concerning trigger (so far appears 
 to be just parameters for CAL)</overview>
-<prim name='trigger.crystalThreshold' value='0.1' uType='none'>
-Not used but expected by Calorimeter (let's get rid of it!! ed.)</prim>
-<prim name='trigger.LOCALthreshold' value='0.1' uType='none'>
-single crystal threshold for low cal trigger [units?? ed.]</prim>
-<prim name='trigger.HICALthreshold' value='1.0' uType='none'>
-single crystal threshold for hi cal trigger [units?? ed.]</prim>
+
+<primEnergy name='trigger.crystalThreshold' value='0.1' units='GeV'>
+Not used but expected by Calorimeter (let's get rid of it!! ed.)</primEnergy>
+
+<primEnergy name='trigger.LOCALthreshold' value='0.1' units='GeV'>
+single crystal threshold for low cal trigger</primEnergy>
+<primEnergy name='trigger.HICALthreshold' value='1.0' units='GeV'>
+single crystal threshold for hi cal trigger</primEnergy>
+
+
 </primCategory>
