@@ -62,6 +62,7 @@ CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
 CalibDataSvc.CalibInstrumentName = "LAT";
 CalibDataSvc.CalibStorageType = 14;
 CalibDataSvc.CalibRootName = "Calib";
+CalibDataSvc.CalibTimeSource = "clock";
 
 // Value of "*" means 'use default MySQL host', so currently (May, 2003)
 // equivalent to value of "centaurusa.slac.stanford.edu".
