@@ -407,19 +407,63 @@ bool CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi*
             float pedM = m_pedestal;
             
             if(pPeds){
-                CalibData::RangeBase* pRangeP = pPeds->getRange(xtalId, rangeP,idents::CalXtalId::POS);
-                CalibData::RangeBase* pRangeM = pPeds->getRange(xtalId, rangeM,idents::CalXtalId::NEG);
+              CalibData::RangeBase* pRangeP = 
+                pPeds->getRange(xtalId, rangeP,idents::CalXtalId::POS);
+              CalibData::RangeBase* pRangeM = 
+                pPeds->getRange(xtalId, rangeM,idents::CalXtalId::NEG);
     
-                CalibData::Ped* pPedP = dynamic_cast<CalibData::Ped * >(pRangeP);
-                CalibData::Ped* pPedM = dynamic_cast<CalibData::Ped * >(pRangeM);
-                pedP = pPedP->getAvr();
-                pedM = pPedM->getAvr();
-            }
+              CalibData::Ped* pPedP = 
+                dynamic_cast<CalibData::Ped * >(pRangeP);
+              CalibData::Ped* pPedM = 
+                dynamic_cast<CalibData::Ped * >(pRangeM);
+              pedP = pPedP->getAvr();
+              pedM = pPedM->getAvr();
+
+              if( pPedM->getCosAngle()!= 2. ){
+                if( rangeM%2==0 ){
+                  double cosAngle= pPedM->getCosAngle();
+                  CalibData::RangeBase* pRangeM = 
+                    pPeds->getRange(xtalId, rangeM+1,idents::CalXtalId::NEG);
+                  CalibData::Ped* pPedM = 
+                    dynamic_cast<CalibData::Ped * >(pRangeM);
+
+                  pedM *= cosAngle;
+                  pedM += pPedM->getAvr()*sqrt(1-cosAngle*cosAngle);
+               } else {
+                  CalibData::RangeBase* pRangeM = 
+                    pPeds->getRange(xtalId, rangeM-1,idents::CalXtalId::NEG);
+                  CalibData::Ped* pPedM = 
+                    dynamic_cast<CalibData::Ped * >(pRangeM);
+                  double cosAngle= pPedM->getCosAngle();
+
+                  pedM *= sqrt(1- cosAngle*cosAngle);
+                  pedM += pPedM->getAvr()*cosAngle;
+               }
+               if( rangeP%2==0 ){
+                  double cosAngle= pPedP->getCosAngle();
+                  CalibData::RangeBase* pRangeP = 
+                    pPeds->getRange(xtalId, rangeP+1,idents::CalXtalId::POS);
+                  CalibData::Ped* pPedP = 
+                    dynamic_cast<CalibData::Ped * >(pRangeP);
+
+                  pedP *= cosAngle;
+                  pedP += pPedP->getAvr()*sqrt(1-cosAngle*cosAngle);
+               } else {
+                 CalibData::RangeBase* pRangeP = 
+                   pPeds->getRange(xtalId, rangeP-1,idents::CalXtalId::POS);
+                 CalibData::Ped* pPedP = 
+                   dynamic_cast<CalibData::Ped * >(pRangeP);
+                 double cosAngle= pPedP->getCosAngle();
+
+                 pedP *= sqrt(1- cosAngle*cosAngle);
+                 pedP += pPedP->getAvr()*cosAngle;
+               }
+             }
+           }
 
             
             // extraction of gains
-
-            // default values of gains - if calibration database isn't accessible
+            // default values of gains -if calibration database isn't accessible
             float gainP = m_maxEnergy[rangeP]/(m_maxAdc-m_pedestal);
             float gainM = m_maxEnergy[rangeM]/(m_maxAdc-m_pedestal);
 
