@@ -19,6 +19,7 @@ $Header$
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 #include "Event/Recon/TkrRecon/TkrFitTrack.h"
 #include "LdfEvent/Gem.h"
+#include "LdfEvent/EventSummaryData.h"
 
 #include "AnalysisNtuple/IValsTool.h"
 
@@ -178,6 +179,8 @@ private:
 
     // Gem summary (only 8 bits set)
     float m_gemCondition;
+    // So far only one bit set
+    float m_eventFlags;
 
     /// Common interface to analysis tools
     std::vector<IValsTool*> m_toolvec;
@@ -309,6 +312,8 @@ StatusCode meritAlg::initialize() {
 
     // Gem stuff
     addItem( "GemConditionSummary", &m_gemCondition);
+    // bad event flag
+    addItem( "EventFlags", &m_eventFlags);
 
     // add some of the AnalysisNTuple items
     if( setupTools().isFailure()) return StatusCode::FAILURE;
@@ -527,6 +532,7 @@ StatusCode meritAlg::execute() {
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
     SmartDataPtr<Event::MCEvent>     mcheader(eventSvc(),    EventModel::MC::Event);
     SmartDataPtr<LdfEvent::Gem> gem(eventSvc(), "/Event/Gem"); 
+    SmartDataPtr<LdfEvent::EventSummaryData> eventSummary(eventSvc(), "/Event/Gem"); 
  
     m_run = header->run();
     m_mc_src_id = mcheader->getSourceId();
@@ -557,6 +563,7 @@ StatusCode meritAlg::execute() {
     }
  
     m_gemCondition = gem==0? -1 : gem->conditionSummary();
+    m_eventFlags = eventSummary==0 ? 0 : eventSummary->eventFlags();
 
     m_ctree->execute();
     m_fm->execute();
