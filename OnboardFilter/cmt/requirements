@@ -1,6 +1,6 @@
 package OnboardFilter
 
-version v1r1
+version v1r1p0
 # $Header$
 
 author Navid Golpayegani <golpa@milkyway.gsfc.nasa.gov>
@@ -31,6 +31,7 @@ library OnboardFilter $(headers) *.cxx *.c Dll/*.cxx
 
 # use this only for the test. TODO: make it cleaner
 apply_pattern package_Cshlibflags
+private
 use TkrRecon       * -no_auto_imports
 use FluxSvc        * -no_auto_imports
 use TkrDigi        * -no_auto_imports

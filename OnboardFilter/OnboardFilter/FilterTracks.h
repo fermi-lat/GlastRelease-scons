@@ -21,10 +21,14 @@
 
 #include "Event/TopLevel/EventModel.h"
 #include "Event/MonteCarlo/McParticle.h"
+#include "Event/TopLevel/MCEvent.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+
+#include "facilities/Util.h" // for expandEnvVar
 
 #include <string>
 #include <vector>
+#include <fstream>
 
 class FilterTracks : public Algorithm{
 public:
@@ -32,6 +36,7 @@ public:
     StatusCode initialize();
     StatusCode execute();
     StatusCode finalize();
+
 private:
     /**
      * Compute Angles for a given track
@@ -53,6 +58,15 @@ private:
     HepPoint3D findStripPosition(ITkrGeometrySvc *tkrGeoSvc, int tower, 
                                  int layer, int view, double stripId);
 
+    /**
+	 * Compute the multiple scattering angles
+	 */
+	StatusCode MultipleScattering();
+    /**
+	 * Write out the OnboardFilter hits
+	 */
+	StatusCode WriteHits();
+
     std::vector<double> m_x;
     std::vector<double> m_y;
     std::vector<double> m_xz;
@@ -67,6 +81,13 @@ private:
     double m_pi;
 
 	int m_usenumhits;
+	int m_writehits;
+	int m_scattering;
+
+	std::ofstream m_outfile;
+	
+	//StringProperty m_hitsfilename;
+	//const char *m_hitsfilename;
 };
 
 #endif
