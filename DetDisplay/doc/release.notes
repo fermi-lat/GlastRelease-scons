@@ -5,7 +5,8 @@
 @verbatim
  * package manager:T.Burnett
 
- 25-jul-2003: v3r1p3 LSR gcc 3.2 adjust for extra level in the new LAT geometry
+ 26-jul-2003: v3r1p4 LSR Detector Display: adjust for extra level in the new LAT geometry
+                         StripDisplay: recode a couple of lines to satisfy compiler
  20-jul-2003: v3r1p2 THB gcc 3.2 requirement on the exception class
  10-jul-2003: v3r1p1 LSR remove SiliconPlaneGeometry, attach standard GlastDetSvc, TkrGeometrySvc
  07-jul-2003: v3r1   THB display by material enabled (attempt to pick detail level not quite right)

@@ -161,7 +161,9 @@ public:
                 // also draw a line perpendicular to the strips, to show the pitch
                 HepVector3D pitchvec(0.49*_tkrGeoSvc->siStripPitch(), 0,0);
                 pitchvec.transform(T_plane);
-                moveTo(from+pitchvec); lineTo(from-pitchvec);
+                HepPoint3D leftEnd(from-pitchvec), rightEnd(from+pitchvec);
+                moveTo(leftEnd); lineTo(rightEnd);
+                std::cout << "News from StripRep: leftEnd = " << leftEnd << std::endl;
             }
         }
 
