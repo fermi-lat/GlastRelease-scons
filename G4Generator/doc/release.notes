@@ -1,5 +1,6 @@
 //$Header$
 /*
+ * v3r3p2 11-apr-02 THB patch in DisplayManager.cxx to satisfy egcs 
  * v3r3   08-Apr-02 RG  fix rotation and add McParticle tree filling
  * v3r2   26-mar-02 THB fix facilities tag, add McParticle support
  * v3r1p1 26-mar-02 THB reverse signs of rotation angles
