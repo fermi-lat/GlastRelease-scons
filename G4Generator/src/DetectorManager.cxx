@@ -47,7 +47,7 @@ void DetectorManager::process(G4LogicalVolume* lvol)
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void DetectorManager::makeHitBox(G4TouchableHistory* touched)
+void DetectorManager::makeDisplayBox(G4TouchableHistory* touched, bool hitBox)
 {
     G4VPhysicalVolume* pvol = touched->GetVolume(); 
     
@@ -65,30 +65,9 @@ void DetectorManager::makeHitBox(G4TouchableHistory* touched)
             y = 2*box->GetYHalfLength(), 
             z = 2*box->GetZHalfLength();
         
-        DisplayManager::instance()->addHitBox(global, x,y,z);
-    }
-    
-}
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void DetectorManager::makeIntegratingBox(G4TouchableHistory* touched)
-{
-    G4VPhysicalVolume* pvol = touched->GetVolume(); 
-    
-    HepTransform3D 
-        global(*(touched->GetRotation()), 
-        touched->GetTranslation());
-    
-    
-    const G4LogicalVolume* lvol = pvol->GetLogicalVolume();
-    const G4VSolid * solid = lvol->GetSolid();
-    const G4Box* box = dynamic_cast<const G4Box*>(solid);
-    if( box !=0){
-        double 
-            x = 2*box->GetXHalfLength(), 
-            y = 2*box->GetYHalfLength(), 
-            z = 2*box->GetZHalfLength();
-        
-        DisplayManager::instance()->addIntegratingBox(global, x,y,z);
+        if( hitBox)  DisplayManager::instance()->addHitBox(global, x,y,z);
+        else        DisplayManager::instance()->addIntegratingBox(global, x,y,z);
+
     }
     
 }
@@ -101,7 +80,7 @@ void DetectorManager::display(G4TouchableHistory* touched,
     DisplayManager::instance()->addHit(entry, exit);
 
     if( m_detectorList[id]==0) {
-        makeHitBox( touched );        
+        makeDisplayBox( touched ,true);        
     }
     ++ m_detectorList[id]; 
 

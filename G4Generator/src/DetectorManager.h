@@ -38,18 +38,19 @@ public:
     DetectorManager( DetectorConstruction::IdMap* idMap, IDataProviderSvc* , std::string name);
     
     ~DetectorManager();
-    //! Called from DetectorConstruction to set the sensitive detector propery
+    //! Called from DetectorConstruction to set the sensitive detector property
     void process(G4LogicalVolume*);
 protected:
 
     idents::VolumeIdentifier constructId(G4Step * aStep);
 
-    void makeHitBox(G4TouchableHistory* touched);
-    void makeIntegratingBox(G4TouchableHistory* touched);
+    /// generate the box parameters to display
+    void makeDisplayBox(G4TouchableHistory* touched, bool hitBox=false);
 
     /// The pointer to the IdataProviderSvc
     IDataProviderSvc* m_esv;
     
+    /// display a G4Step, showing the enclosing volume (if a box).
     void display(G4TouchableHistory* touched, idents::VolumeIdentifier id, 
         const HepPoint3D& entry, const HepPoint3D& exit);
 

@@ -1,5 +1,5 @@
 package G4Generator
-version v3
+version v3r1
 #$Header$
 
 use GlastPolicy v4r3
@@ -17,9 +17,6 @@ private
 # this version has Geant4 library path
 use EXTLIB v2r4p2
 
-
-#  this is a checkout package
-# that should need only the Gaudi system stuff
 use Geant4   v1r1
 
 use facilities v2r1
@@ -35,12 +32,10 @@ use GlastSvc  v5*
 # flux determination
 use FluxSvc  v5*
 
-# digi
-use GlastDigi 
 
 #to make standard display available
 use gui      v2r6p2
-use GuiSvc   v3
+use GuiSvc   v3*
 use geometry v3
 use geomrep  v4r1
 

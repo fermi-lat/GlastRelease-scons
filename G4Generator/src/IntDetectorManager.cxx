@@ -60,7 +60,7 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
     if( !(hit = m_detectorList[id]))
       {
         // This draw the volume
-        makeIntegratingBox( theTouchable );        
+        makeDisplayBox( theTouchable );        
         // Filling of the hits container
     	hit = new mc::McIntegratingHit;
         hit->setVolumeID(id);
