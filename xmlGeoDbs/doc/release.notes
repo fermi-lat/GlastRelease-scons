@@ -2,6 +2,10 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 19-jun-2003: jrb - tag v1r11    1. Many changes to EM description
+ *                                 2. Use of <half> arithmetic element
+ *                                 3. start revising CAL geometry: add
+ *                                    crystal wrap
  *  1-may-2003: jrb - tag v1r10p3  1. Move origin to top of grid, where it
  *                                    belongs
  *                                 2. Move CAL to top of its stay-clear
