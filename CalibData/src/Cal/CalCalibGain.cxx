@@ -13,9 +13,16 @@ namespace CalibData {
     unsigned ix = 0;
     unsigned size = m_finder->getSize();
 
+    Gain* pGains = new Gain[size];
     for (ix = 0; ix < size; ix++) {
-      (*m_pR)[ix] = new Gain(0.0);
+      m_ranges[ix] = pGains; 
+      ++pGains;
     }
+  }
+
+  CalCalibGain::~CalCalibGain() {
+    Gain* pGains = dynamic_cast<Gain* >(m_ranges[0]);
+    if (pGains) delete [] pGains;
   }
 
   const CLID& CalCalibGain::classID()   {return CLID_Calib_CAL_ElecGain;}

@@ -13,11 +13,17 @@ namespace CalibData {
     unsigned ix = 0;
     unsigned size = m_finder->getSize();
 
+    Ped* pPeds = new Ped[size];
     for (ix = 0; ix < size; ix++) {
-      (*m_pR)[ix] = new Ped(0.0, 0.0);
+      m_ranges[ix] = pPeds; 
+      ++pPeds;
     }
   }
 
+  CalCalibPed::~CalCalibPed() {
+    Ped* pPeds = dynamic_cast<Ped*>(m_ranges[0]);
+    if (pPeds) delete [] pPeds;
+  }
 
   const CLID& CalCalibPed::classID()   {return CLID_Calib_CAL_Ped;}
 
