@@ -22,7 +22,7 @@ namespace CalibData {
     CalCalibPed(unsigned nTowerRow=4, unsigned nTowerCol=4, unsigned nLayer=8, 
                 unsigned nXtal=12, unsigned nFace=2, unsigned nRange=4);
 
-    ~CalCalibPed() {}
+    ~CalCalibPed();
 
     /// Override putRange implementations in order to add consistency
     /// check

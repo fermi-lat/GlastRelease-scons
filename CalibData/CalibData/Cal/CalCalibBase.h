@@ -45,7 +45,8 @@ namespace CalibData {
     
   protected:
     CalFinder* m_finder;
-    std::vector<RangeBase* >* m_pR;
+    //    std::vector<RangeBase* >* m_pR;
+    std::vector<RangeBase* > m_ranges;
   private:
     static const CLID noCLID;
   };

@@ -15,7 +15,7 @@ namespace CalibData {
                  unsigned nLayer=8, 
                  unsigned nXtal=12, unsigned nFace=2, unsigned nRange=4);
 
-    ~CalCalibGain() {}
+    ~CalCalibGain();
 
     /// Override putRange implementation in order to add consistency
     /// check
