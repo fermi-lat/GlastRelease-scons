@@ -82,7 +82,9 @@ void FluxMgr::init(const std::vector<std::string>& fileList){
             
             while (child != DOM_Element()) {
                 std::string name = xml::Dom::transToChar(child.getAttribute("name"));
-                m_sources[name]=child;
+                //std::cout << name << std::endl;
+                std::string parentfilename = xml::Dom::transToChar(toplevel.getAttribute("title"));
+                m_sources[name]=std::make_pair<DOM_Element,std::string>(child,parentfilename);
                 child = xml::Dom::getSiblingElement(child);
             }
             
@@ -116,7 +118,7 @@ EventSource* FluxMgr::source(std::string name)
         
         return s? new FluxSource(s) : (EventSource*)0;
     }
-    return getSourceFromXML(m_sources[name]);
+    return getSourceFromXML(m_sources[name].first);
 }
 
 
@@ -196,13 +198,38 @@ DOM_Element    FluxMgr::getLibrarySource(const DOMString& id)
 std::list<std::string> FluxMgr::sourceList() const
 {
     std::list<std::string> s;
-    for( std::map<std::string, DOM_Element>::const_iterator it = m_sources.begin();
+    for( std::map<std::string, std::pair<DOM_Element,std::string> >::const_iterator it = m_sources.begin();
     it != m_sources.end();
     ++it){
         s.push_back((*it).first);
     }
     return s;
 }
+
+std::vector<std::pair< std::string ,std::list<std::string> > > FluxMgr::sourceOriginList() const
+{
+    std::vector<std::pair< std::string ,std::list<std::string> > > originList;
+    for( std::map<std::string, std::pair<DOM_Element,std::string> >::const_iterator it = m_sources.begin();
+    it != m_sources.end();
+    ++it){
+        //now see if we can find the filename already used in the vector:
+        std::vector<std::pair< std::string ,std::list<std::string> > >::iterator topiter;
+        for(topiter = originList.begin() ; topiter != originList.end() ; topiter++){
+            if( (*topiter).first==(*it).second.second) break;
+        }
+
+        if( topiter != originList.end() ){ (*topiter).second.push_back((*it).first);
+        }else{
+            std::list<std::string> abc;
+            abc.push_back((*it).first);
+            originList.push_back(std::make_pair< std::string ,std::list<std::string> >((*it).second.second,abc) );
+        }
+
+    }
+
+    return originList;
+}
+
 /// generate some test output
 void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
 {   

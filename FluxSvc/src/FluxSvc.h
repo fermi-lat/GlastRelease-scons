@@ -70,6 +70,9 @@ public:
     void setRockType(GPS::RockType rockType);
     ///0=NONE, 1=UPDOWN, 2=SLEWING, 3=ONEPERORBIT
     void setRockType(int rockType);
+
+    ///this should return the source file names, along with the contained sources.
+    std::vector<std::pair< std::string ,std::list<std::string> > > sourceOriginList() const;
     
     //------------------------------------------------------------------
     //  stuff required by a Service

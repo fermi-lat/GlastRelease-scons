@@ -2,7 +2,7 @@
   DTD file for flux source definitions
   -->
 <!ELEMENT source_library ((source)+ | (source_library)*) >
-
+<!ATTLIST source_library title CDATA "user" >
 
 <!-- a source has a spectrum (generated) or a list of sources  -->
 

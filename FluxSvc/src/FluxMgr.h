@@ -55,6 +55,9 @@ public:
 
     /// get the angular values of the satellite
     std::pair<double,double> getOrientation();
+
+    ///this should return the source file names, along with the contained sources.
+    std::vector<std::pair< std::string ,std::list<std::string> > > sourceOriginList() const;
     
     /// set the orbital (position) values of the GLAST satellite
     void setGlastPosition(std::pair<double,double> pos);
@@ -114,8 +117,9 @@ private:
     std::vector<DOM_Element>     s_librarylist;
     
     /// list of sources for easy lookup
-    std::map<std::string, DOM_Element > m_sources;
-    
+    //std::map<std::string, DOM_Element > m_sources;
+    std::map<std::string, std::pair<DOM_Element,std::string> > m_sources;
+
     /// internal routine that creates the document
     std::string  writeXmlFile( const std::vector<std::string>& fileList);
     

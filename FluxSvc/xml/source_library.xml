@@ -5,7 +5,7 @@
    (overriding any specified in the xml).
    Finally, it is used to generate a drop-down menu of sources to add.
 -->
-<source_library>
+<source_library title="source_library">
     
 
 	<!-- standard particle generater used as a default -->

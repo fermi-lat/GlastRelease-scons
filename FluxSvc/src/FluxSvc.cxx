@@ -252,3 +252,7 @@ void FluxSvc::setRockType(GPS::RockType rockType){
 void FluxSvc::setRockType(int rockType){
    m_fluxMgr->setRockType(rockType);
 }
+
+std::vector<std::pair< std::string ,std::list<std::string> > > FluxSvc::sourceOriginList() const{
+    return m_fluxMgr->sourceOriginList();
+}

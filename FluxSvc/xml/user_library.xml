@@ -1,5 +1,5 @@
 
-<source_library>
+<source_library title="user_library">
 
 
     <source name="gamma_pencil_test">
@@ -245,7 +245,7 @@
         </spectrum>
     </source>
 
-    <source name="truediffusebackground" flux="0.001">
+    <source name="truediffusebackground" flux="0.000000001">
         <spectrum escale="GeV">
             <particle name="gamma" >
                 <power_law emin="0.010" emax="0.1" gamma="1.0"/>
@@ -255,7 +255,12 @@
     </source>
 
 	<!-- The constructed diffuse source-->
-    <source name="totaldiffuse" flux = "3000000.0">
+    <source name="totaldiffuse" flux = "0.000001">
+        <nestedSource sourceRef="truediffusebackground"/>
+    </source>
+
+	<!-- a mostly "point-sources-only" diffuse source-->
+    <source name="bigdiffuse" flux = "30000000.">
         <nestedSource sourceRef="truediffusebackground"/>
     </source>
 
