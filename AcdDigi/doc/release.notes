@@ -2,6 +2,8 @@
  Package AcdDigi
  Coordinator: H. Kelly
 
+ v1r3   09-Aug-2002 HMK Use McPositionHits - rather than McIntegratingHits
+        Introduce code for edge effects.\n
  v1r2   26-Jul-2002 HMK Add new algorithm for digitization\n
  v1r2   12-Jun-2002 HMK Fix up volId interpretation - switching row
         and column \n
