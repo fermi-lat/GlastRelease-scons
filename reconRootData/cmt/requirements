@@ -1,10 +1,10 @@
 package reconRootData
 # $Id$
-version v4r8
+version v4r8p2
 
 use commonRootData v1r*
 
-use RootPolicy v4r*
+use RootcintPolicy v4r* GlastPolicy
 
 # See RootPolicy for discussion of this pattern
 apply_pattern root_package headers="\
