@@ -94,7 +94,7 @@ StatusCode GlastRandomSvc::initialize ()
     SmartDataPtr<Event::EventHeader> header(eventSvc, EventModel::EventHeader);
     if (header == 0) {
       log << MSG::ERROR << "Error accessing Event Header" << endreq;
-      return;
+      return StatusCode::FAILURE;
     }    
     header->setRun(m_RunNumber);
 
