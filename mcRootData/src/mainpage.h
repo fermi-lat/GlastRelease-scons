@@ -12,7 +12,7 @@
   - Collection of McParticles
     -# particle id
     -# status flags
-    -# initial position - calculated at run time
+    -# initial position
     -# final position
     -# initial momentum
     -# final momentum
