@@ -76,6 +76,7 @@ public:
      typedef   std::map< std::string, HepRandomEngine* > EngineMap;
      EngineMap m_engineMap;
   StringProperty    m_randomEngine;
+  std::string    m_RunNumberString;
   IntegerProperty   m_RunNumber;
   IntegerProperty   m_InitialSequenceNumber;
   int m_SequenceNumber;

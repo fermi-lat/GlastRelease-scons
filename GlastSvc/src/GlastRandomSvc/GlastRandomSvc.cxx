@@ -9,6 +9,7 @@
 
 
 #include "GlastRandomSvc.h"
+#include "facilities/Util.h"
 
 #include <iterator>
 #include <fstream>
@@ -66,6 +67,7 @@ GlastRandomSvc::GlastRandomSvc(const std::string& name,ISvcLocator* svc) : Servi
     // declare the properties
     declareProperty("RandomEngine",  m_randomEngine="TripleRand");
     declareProperty("RunNumber",      m_RunNumber=10);
+    declareProperty("RunNumberString",      m_RunNumberString="");
     declareProperty("InitialSequenceNumber", m_InitialSequenceNumber=0);
     declareProperty("SeedFile", m_seedFile="");
     declareProperty("EndSeedFile", m_endSeedFile="");
@@ -300,7 +302,9 @@ void GlastRandomSvc::handle(const Incident &inc)
         int runNo, seqNo;
 
         if(m_seedFile.value() == "") {
-            runNo = m_RunNumber;
+	  if (m_RunNumberString != "") runNo = 
+		       facilities::Util::expandEnvVar(&m_RunNumberString);
+	  else runNo = m_RunNumber;
             seqNo = m_SequenceNumber;
             ++m_SequenceNumber;
         }
