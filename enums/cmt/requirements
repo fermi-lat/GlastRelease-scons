@@ -1,7 +1,8 @@
 package enums
-version v0r1
+version v0r1p1
 
 use GlastPolicy v*
+# $Id$
 
 apply_pattern package_include
 apply_pattern package_headers
