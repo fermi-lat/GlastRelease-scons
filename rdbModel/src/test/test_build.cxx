@@ -6,6 +6,8 @@
 #include "rdbModel/Rdb.h"
 #include "rdbModel/Management/Manager.h"
 #include "rdbModel/Management/XercesBuilder.h"
+#include "rdbModel/Db/MysqlConnection.h"
+#include "rdbModel/Db/MysqlResults.h"
 
 
 int main(int, char**) {
@@ -19,10 +21,43 @@ int main(int, char**) {
   // good errcode is 0
   int errcode = man->build();
 
-  if (!errcode) {
-    rdbModel::Rdb* rdb = man->getRdb();
+  if (errcode) {
+    std::cerr << "Build failed with error code " << errcode << std::endl;
+    return errcode;
   }
+  rdbModel::Rdb* rdb = man->getRdb();
+
+
+  // Connect to real database
+  rdbModel::MysqlConnection* con = new rdbModel::MysqlConnection();
+
+  if (!(con->open(std::string("centaurusa.slac.stanford.edu"),
+                  std::string("glastreader"),
+                 std::string("glastreader"), std::string("calib") ) ) ){
+    std::cerr << "Unable to connect to MySQL database" << std::endl;
+    return -1;
+  }
+
+  rdbModel::MATCH match = con->matchSchema(rdb);
+
+  switch (match) {
+  case rdbModel::MATCHequivalent:
+    std::cout << "XML schema and MySQL database are equivalent!" << std::endl;
+    break;
+  case rdbModel::MATCHcompatible:
+    std::cout << "XML schema and MySQL database are compatible" << std::endl;
+    break;
+  case rdbModel::MATCHfail:
+    std::cout << "XML schema and MySQL database are NOT compatible" 
+              << std::endl;
+    return -2;
+  case rdbModel::MATCHnoConnection:
+    std::cout << "Connection failed while attempting match" << std::endl;
+    return -1;
+  }
+
   return 0;
 }
   
   
+
