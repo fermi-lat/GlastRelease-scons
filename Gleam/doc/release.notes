@@ -2,7 +2,15 @@
  * package Gleam
  * package manager:T.Burnett
  *
- * v0r7   09-apr-02 THB followinjg new versions: 
+ * v0r8   12-apr-02 THB following new versions:
+     use facilities        v2r3 
+     use xmlGeoDbs         v1r4
+     use GlastEvent        v7r0
+     use G4Generator       v3r3p2
+     use GlastDigi         v2r4
+     use Recon             v0r8p2
+ 
+ * v0r7   09-apr-02 THB following new versions: 
      use xml             v4r1p3 
      use xmlUtil         v2r8p1
      use gui             v3 
