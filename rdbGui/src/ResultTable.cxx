@@ -8,9 +8,11 @@
 // Message Map ResultTable class
 FXDEFMAP(ResultTable) ResultTableMap[]={
 
-  //__Message_Type____________________ID_______________________________________Message_Handler_____
-  FXMAPFUNC(SEL_KEYPRESS,             0,                                   ResultTable::onKeyPress),
-  FXMAPFUNC(SEL_COMMAND,        FXTable::ID_COPY_SEL,                      ResultTable::onCmdCopySel),
+  //__Message_Type___________________________ID_______________________________________Message_Handler_____
+  FXMAPFUNC(SEL_KEYPRESS,            0,                                    ResultTable::onKeyPress),
+  FXMAPFUNC(SEL_COMMAND,             FXTable::ID_COPY_SEL,                 ResultTable::onCmdCopySel),
+  FXMAPFUNC(SEL_RIGHTBUTTONRELEASE,  0,                                    ResultTable::onCmdMenuPane),
+  FXMAPFUNC(SEL_COMMAND,             ResultTable::ID_UPDATEROW,            ResultTable::onUpdRow)
 };
 
 
@@ -26,7 +28,8 @@ ResultTable::ResultTable(FXComposite *p, FXObject* tgt,
                          FXint h,FXint pl,FXint pr,FXint pt,FXint pb):
   FXTable(p, tgt, sel, opts, x, y, w, h, pl, pr, pt, pb)
 {
-
+  m_recordActions = new FXMenuPane(this);
+  m_updRow = new FXMenuCommand(m_recordActions,"Update Row",NULL, this, ResultTable::ID_UPDATEROW);
 }
 
  
@@ -201,3 +204,31 @@ long ResultTable::onCmdCopySel(FXObject*,FXSelector,void*){
     }
   return 1;
   }
+
+  
+long ResultTable::onCmdMenuPane(FXObject* sender,FXSelector sel,void* ptr)
+{
+  FXTable::onRightBtnRelease(sender,sel,ptr);
+  FXEvent *event = (FXEvent*) ptr;
+  m_recordActions->popup(NULL,event->root_x,event->root_y);
+  FXint x,y;
+  FXuint buttons;
+  getCursorPosition(x,y,buttons);
+  m_selRow = rowAtY(y);
+  if (m_selRow >=0 && m_selRow < nrows && getItemText(0, 0) != "No data")
+    {
+      selectRow(m_selRow);
+      m_updRow->enable();
+    }
+  else
+    {
+      m_updRow->disable();
+    }
+  return 1;
+}
+
+
+long ResultTable::onUpdRow(FXObject*,FXSelector,void*)
+{
+  return target && target->handle(NULL,FXSEL(SEL_COMMAND,ID_UPDATEROW),(void *)m_selRow);
+}

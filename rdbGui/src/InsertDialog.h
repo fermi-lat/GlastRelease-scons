@@ -40,6 +40,7 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
   bool getInsertMode(){return m_insertMode;};
   void setInsertMode(bool m){m_insertMode = m;};
 
+  void fillWithRowByKey(std::string ser);
   void fillWithLastRow();
 
  protected:
@@ -72,7 +73,9 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
   /// The ui log text, to be updated after insertion
   LogText *m_uiLog;
   /// The last row id inserted
-  int m_lastRow;                
+  int m_lastRow;
+  /// Key of the selected row
+  std::string m_selRow;                
   /// The mode of this dialog; 1 is insert mode, 0 is update mode
   bool m_insertMode;
   /// The result of the query for the last row inserted 

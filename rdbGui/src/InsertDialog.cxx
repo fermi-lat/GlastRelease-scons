@@ -9,7 +9,6 @@
 #include "LogText.h"
 #include "Icons.h"
 #include "fxkeys.h"
-#include "facilities/Util.h"
 #include "rdbModel/Tables/Datatype.h"
 #include "ColWidgetFactory.h"
 #include <iostream>
@@ -50,8 +49,7 @@ InsertDialog::InsertDialog(FXApp *owner):
 
 }
 
-// Get the last row from the database and fill the dialog form
-void InsertDialog::fillWithLastRow()
+void InsertDialog::fillWithRowByKey(std::string serialStr)
 {
   unsigned int i;
   
@@ -69,8 +67,6 @@ void InsertDialog::fillWithLastRow()
   }
 
   // Set up WHERE clause, always the same
-  std::string serialStr;
-  facilities::Util::itoa(m_lastRow, serialStr);
   rdbModel::Assertion::Operator* serEquals = 
     new rdbModel::Assertion::Operator(rdbModel::OPTYPEequal, "ser_no",
                                       serialStr, false, true);
@@ -88,7 +84,16 @@ void InsertDialog::fillWithLastRow()
     ColWidget* temp = m_widgets[i]; 
     temp->setValue(colValues[i].c_str());
   }
+  m_selRow = serialStr;
+}
 
+// Get the last row from the database and fill the dialog form
+void InsertDialog::fillWithLastRow()
+{
+  std::string serialStr;
+  serialStr = FXStringVal(m_lastRow).text();
+  fillWithRowByKey(serialStr);
+  m_selRow = serialStr;
 }
 
 // Try to insert the new row
@@ -126,10 +131,9 @@ long InsertDialog::onGoPress(FXObject *,FXSelector, void*)
     else //Otherwise we are in the Update Last Row mode
     {
       std::string serialStr;
-      facilities::Util::itoa(m_lastRow, serialStr);
       rdbModel::Assertion::Operator* serEquals = 
        new rdbModel::Assertion::Operator(rdbModel::OPTYPEequal, "ser_no",
-                                      serialStr, false, true);
+                                      m_selRow, false, true);
       rdbModel::Assertion* whereSer = new rdbModel::Assertion(rdbModel::Assertion::WHENwhere, serEquals);
 
       m_connection->update(m_tableName, colNames, values, whereSer, &nullValues);  

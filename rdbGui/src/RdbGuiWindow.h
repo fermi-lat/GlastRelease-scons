@@ -67,7 +67,8 @@ public:
     ID_PASTEFROMTABLE,
     ID_ABOUT,
     ID_INSERT,
-    ID_UPDATELAST
+    ID_UPDATELAST,
+    ID_UPDATEBYKEY
     };
 
   // Message handlers
@@ -83,6 +84,7 @@ public:
   long onSendQuery(FXObject*,FXSelector, void*);
   long onInsert(FXObject*,FXSelector, void*);
   long onUpdateLastRow(FXObject*,FXSelector, void*);
+  long onUpdateRowByKey(FXObject*,FXSelector, void*);
   // ..eccetera
   
 public:
