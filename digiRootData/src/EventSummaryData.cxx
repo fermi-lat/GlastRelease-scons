@@ -26,6 +26,7 @@ void EventSummaryData::initialize(UInt_t summary) {
 void EventSummaryData::Clear(Option_t *option) {
 
     m_summary = 0;
+    m_flags = 0;
 }
 
 void EventSummaryData::Print(Option_t *option) const {
@@ -53,4 +54,10 @@ UInt_t EventSummaryData::diagnostic() { return EventSummary::diagnostic(m_summar
 UInt_t EventSummaryData::eventNumber() { return EventSummary::eventNumber(m_summary); }
 
 UInt_t EventSummaryData::trgParityError() { return EventSummary::trgParityError(m_summary); }
+
+UInt_t EventSummaryData::eventSequence() const {
+    UInt_t eventNumber = EventSummary::eventNumber(m_summary);
+    UInt_t tag = EventSummary::tag(m_summary);
+    return ((eventNumber << 2) | tag);
+}
 

@@ -15,11 +15,23 @@ class EventSummaryData: public TObject {
 
 public:
 
+    typedef enum {
+        GOOD = 0,
+        EVTSEQ = 1
+    } EventFlags;
+
     EventSummaryData();
-    EventSummaryData(UInt_t summary) { m_summary = summary; };
+    EventSummaryData(UInt_t summary) { m_summary = summary; m_flags = 0; };
+    EventSummaryData(const EventSummaryData &summary):TObject(summary) {
+        m_summary = summary.m_summary;
+        m_flags = summary.m_flags;
+    }
+
     virtual ~EventSummaryData();
 
     void initialize(UInt_t summary);
+
+    void initEventFlags(UInt_t flags) { m_flags = flags; };
 
     void Clear(Option_t *option="");
 
@@ -38,10 +50,20 @@ public:
     UInt_t trgParityError();
 
 
+    /// Some methods we have added
+    UInt_t eventSequence() const;
+    UInt_t eventFlags() const { return m_flags; };
+    Bool_t goodEvent() const { return (m_flags == 0); };
+    Bool_t badEvent() const { return (m_flags != 0); };
+    Bool_t badEventSequence() const { return (m_flags & EVTSEQ); };
+    
+
 private:
     UInt_t m_summary;
 
-    ClassDef(EventSummaryData,1) // Storage for Event Summary Data 
+    UInt_t m_flags;
+
+    ClassDef(EventSummaryData,2) // Storage for Event Summary Data 
 }; 
 
 #endif

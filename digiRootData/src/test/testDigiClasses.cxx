@@ -478,6 +478,7 @@ int write(char* fileName, int numEvents) {
         
         L1T level1(13);
         EventSummaryData summary(0);
+        summary.initEventFlags(1);
         ev->initialize(ievent, runNum, randNum*ievent, level1, summary, fromMc);
         Gem myGem;
         GemTileList tileList(20, 21, 22, 23, 24, 25, 26);
