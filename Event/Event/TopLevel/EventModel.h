@@ -42,10 +42,11 @@
             _EXTERN_ std::string D2EntryCol;
             _EXTERN_ std::string ExposureCol;
             _EXTERN_ std::string McEventStructure;
-            _EXTERN_ std::string McPartToHitTab;
-            _EXTERN_ std::string McClusToLyrHitTab;
-            _EXTERN_ std::string McLyrToHitTab;
-            _EXTERN_ std::string McSiLayerHitCol;
+            _EXTERN_ std::string McPartToPosHitTab;
+            _EXTERN_ std::string McPartToClusTab;
+            _EXTERN_ std::string McPartToClusHitTab;
+            _EXTERN_ std::string McPartToTkrCandHitTab;
+            _EXTERN_ std::string McPartToTkrPatCandTab;
         }
 
         namespace Digi {
