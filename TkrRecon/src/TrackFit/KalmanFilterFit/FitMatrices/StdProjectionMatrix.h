@@ -25,15 +25,21 @@ public:
     StdProjectionMatrix();
     virtual ~StdProjectionMatrix() {};
 
-    void     trackInit(const std::vector<int> projection);
-    void     accept(const KalmanFilterInit& initObj);
+    // Implement the actual projection method defined in the abstract interface 
+    KFmatrix& operator()(const idents::TkrId &id);
 
-    KFmatrix operator()(const  KFvector& stateVec, const int &i, const int &j);
-    KFmatrix operator()(const int &i, const int &j);
-    KFmatrix operator()(const int &i);
+    // For the remaining methods return "none" 
+    KFmatrix& operator()(const double &deltaZ)  {return m_none;}
+    KFmatrix& operator()(const KFvector& stateVec, const double& zStart, 
+                         const double& eStart, const double& zStop, bool forward = true)
+                                                {return m_none;}
 
 private:
-    std::vector<int> m_projection;
+    //std::vector<int> m_projection;
+
+    KFmatrix m_none;
+    KFmatrix m_projX;
+    KFmatrix m_projY;
 };
 
 

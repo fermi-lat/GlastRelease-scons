@@ -12,26 +12,10 @@
 #include "ThreeDProjectionMatrix.h"
 #include "src/TrackFit/KalmanFilterFit/KalmanFilterInit.h"
 
-ThreeDProjectionMatrix::ThreeDProjectionMatrix() : m_H(2,4)
+ThreeDProjectionMatrix::ThreeDProjectionMatrix() : m_H(2,4), m_none(2,4)
 {
     m_H(1,1) = 1;
     m_H(2,3) = 1;
 
     return;
 }
-
-void ThreeDProjectionMatrix::trackInit(const std::vector<int> projection)
-{
-    return;
-}
-
-void ThreeDProjectionMatrix::accept(const KalmanFilterInit& initObj)
-{
-    initObj.init(*this);
-
-    return;
-}
-
-KFmatrix ThreeDProjectionMatrix::operator()(const KFvector& stateVec, const int &i, const int &j) {return m_H;}
-KFmatrix ThreeDProjectionMatrix::operator()(const int &i, const int &j) {return m_H;}
-KFmatrix ThreeDProjectionMatrix::operator ()(const int &i) {return m_H;}

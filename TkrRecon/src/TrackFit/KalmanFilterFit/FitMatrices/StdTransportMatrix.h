@@ -20,18 +20,21 @@ class StdTransportMatrix : public IKalmanFilterMatrix
 public:
 
     // Constructor 
-    StdTransportMatrix();
+    StdTransportMatrix(): m_F(4,4,1), m_I(4,4,1) {}
     virtual ~StdTransportMatrix() {};
 
-    void    trackInit(const std::vector<double>& zCoords);
-    void    accept(const KalmanFilterInit& initObj);
+    // Transport matrix depends only on deltaZ, implement the method here
+    KFmatrix& operator()(const double &deltaZ);
 
-    KFmatrix operator()(const KFvector& stateVec, const int &i, const int &j);
-    KFmatrix operator()(const int &i, const int &j);
-    KFmatrix operator()(const int &i);
+    // Other two methods return identity matrix (no transport)
+    KFmatrix& operator()(const idents::TkrId &id) {return m_I;}
+    KFmatrix& operator()(const KFvector& stateVec, const double& zStart, 
+                         const double& eStart, const double& zStop, bool forward = true)
+                                                  {return m_I;}
 
 private:
-    std::vector<double> m_zCoords;
+    KFmatrix m_F;
+    KFmatrix m_I;
 };
 
 

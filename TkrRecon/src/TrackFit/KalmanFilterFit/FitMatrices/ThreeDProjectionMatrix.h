@@ -23,15 +23,18 @@ public:
     ThreeDProjectionMatrix();
     virtual ~ThreeDProjectionMatrix() {};
 
-    void     trackInit(const std::vector<int> projection);
-    void     accept(const KalmanFilterInit& initObj);
+    // Implements the projection method
+    KFmatrix& operator()(const idents::TkrId &id)  {return m_H;}
 
-    KFmatrix operator()(const  KFvector& stateVec, const int &i, const int &j);
-    KFmatrix operator()(const int &i, const int &j);
-    KFmatrix operator()(const int &i);
+    // These methods do nothing here
+    KFmatrix& operator()(const double &deltaZ)     {return m_none;}
+    KFmatrix& operator()(const KFvector& stateVec, const double& zStart, 
+                         const double& eStart, const double& zStop, bool forward = true)
+                                                   {return m_none;}
 
 private:
     KFmatrix m_H;
+    KFmatrix m_none;
 };
 
 

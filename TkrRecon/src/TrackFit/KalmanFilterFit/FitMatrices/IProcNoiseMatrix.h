@@ -18,9 +18,9 @@ class IProcNoiseMatrix : public IKalmanFilterMatrix
 {
 public:
 
-    virtual void   setEnergy(double energy, int i) = 0;
+    //virtual void   setEnergy(double energy, int i) = 0;
 
-    virtual const double    getEnergy(int i) = 0;
+    //virtual const double    getEnergy(int i) = 0;
     virtual const double    getLastStepRadLen() = 0;
     virtual const double    getLastStepActDist()= 0;
     virtual const KFmatrix& getLastStepQ()= 0;

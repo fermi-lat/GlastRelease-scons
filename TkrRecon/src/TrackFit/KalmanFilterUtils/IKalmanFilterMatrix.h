@@ -1,7 +1,9 @@
 /**
  * @class IKalmanFilterMatrix
  *
- * @brief Implementation Process Noise matrix for the Kalman Filter
+ * @brief Defines an interface for matrices used in the Kalman Filter fit
+ *        This interface allows for different implementations of the main fit matrices 
+ *        (Transport, Projection, Process Noise) allowing the fit to change when needed
  *
  * @author Tracy Usher
  *
@@ -14,15 +16,16 @@
 #include "KalmanFilterDefs.h"
 
 class KalmanFilterInit;
+namespace idents {class TkrId;};
 
 class IKalmanFilterMatrix 
 {
 public:
-    virtual void     accept(const KalmanFilterInit& init) = 0;
-
-    virtual KFmatrix operator()(const int &i) = 0;
-    virtual KFmatrix operator()(const int &i, const int &j) = 0;
-    virtual KFmatrix operator()(const KFvector& stateVec, const int &i, const int &j) = 0;
+    // Define virtual methods for returning a matrix used in the Kalman Filter Fit
+    virtual KFmatrix& operator()(const double &deltaZ) = 0;
+    virtual KFmatrix& operator()(const idents::TkrId &id) = 0;
+    virtual KFmatrix& operator()(const KFvector& stateVec, const double& zStart, 
+                                 const double& eStart, const double& zStop, bool forward = true) = 0;
 };
 
 
