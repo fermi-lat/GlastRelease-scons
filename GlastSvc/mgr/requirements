@@ -3,21 +3,26 @@ version v1
 
 branches src mgr doc
 
-use instrument v2
+use instrument v2r1
 use Gaudi
 use data 
 
 # these only needed for the test executable: comment out otherwise
-use GlastEvent v1
+use GlastEvent v1r1
 use GaudiSvc v3r1
+
+# this package is needed to write out to Root
+use DbCnv v2r1
 
 
 library GlastSvc ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
                  GlastDetSvc/*.h  GlastDetSvc/*.cpp \
                  EventSelector/*.h  EventSelector/*.cpp \
                  ../GlastSvc/MonteCarlo/*.h MonteCarlo/*.cpp \
-                 ../GlastSvc/Raw/*.h Raw/*.cpp \
-                 Dll/*.cpp
+		../GlastSvc/Raw/*.h Raw/*.cpp \
+		DbConverters/*.cpp DbConverters/*.h \
+                 Dll/*.cpp 
+            
 
 macro GlastSvcDir  "$(GLASTSVCROOT)/$(DEBUGDIR)"
 
@@ -52,8 +57,9 @@ application test ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
                  GlastDetSvc/*.h  GlastDetSvc/*.cpp \
                  EventSelector/*.h  EventSelector/*.cpp \
                  ../GlastSvc/MonteCarlo/*.h MonteCarlo/*.cpp \
+                 DbConverters/*.h DbConverters/*.cpp \
                  ../GlastSvc/Raw/*.h Raw/*.cpp \
                  Dll/*.cpp \
                  test/*.cpp test/*.h test/*.txt
 
-
+		
