@@ -98,6 +98,7 @@ StatusCode EventIntegrityAlg::execute()
     // If the Event Flags do exist on the TDS - check them
     // dump the event if any bit in the mask is set
     if( (m_mask!=0) && ( flags & m_mask) ) {
+        // Ignoring TkrRecon Error bit
         if ( (summary->packetError()) || (summary->summaryError()) ) {
             setFilterPassed( false );
             log << MSG::INFO << "Event Flag contains Error bits - skipping " 
@@ -107,6 +108,11 @@ StatusCode EventIntegrityAlg::execute()
             setFilterPassed(false);
             log << MSG::INFO << "Event Flag contains Bad Event Seq - skipping " 
                              << summary->eventSequence() << endreq;
+        }
+        if (summary->trgParityError()) {
+            setFilterPassed(false);
+            log << MSG::INFO << "Trigger Parity Error bit set - skipping "
+                             << summary->trgParityError() << endreq;
         }
     } 
 
