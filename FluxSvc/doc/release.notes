@@ -1,8 +1,9 @@
 /** @file release.notes
  * @brief Package FluxSvc notes 
 
-<pre>
+@verbatim
  * Coordinator: T.Burnett, S. Robinson
+ * 06-Mar-03  v6r3p1 THB   get the rocking transformation correct
  * 01-Mar-03  v6r3   THB   Fix up doxygen, bug in SurfaceMuons
  * 27-Feb-03  v6r2   THB   *  Added surface muon 
  * 24-Feb-03  v6r0   THB   *  Major version change since IFluxSvc and ISpectrum interfaces changed 
@@ -34,5 +35,5 @@
  * v5r4   THB  * new baseline
  * 9-Aug-01: Add CREMESpectrum to list to instantiate, tag v2r9
  * 1-Aug-01: Update with simplifed requirements
-</PRE> 
+@endverbatim 
 */

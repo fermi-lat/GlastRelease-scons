@@ -30,8 +30,8 @@ FluxSvc.source_lib +={"$(FLUXSVCROOT)/src/test/test_source.xml"};
 
 // test the various FluxAlg properties
 Top.area= 0.1;
-Top.pointing_mode=4;
-Top.rocking_angle=90;
+Top.pointing_mode=4;  // this is the fixed angle 
+Top.rocking_angle=90; // degrees about x-axis   
 Top.source_name="vertical_surface_muons";
 
 ApplicationMgr.EvtMax = 10;

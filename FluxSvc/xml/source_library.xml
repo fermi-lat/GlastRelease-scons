@@ -133,7 +133,7 @@
     -->
     <source name="vertical_surface_muons">
         <spectrum escale="GeV">
-            <SpectrumClass name="SurfaceMuons" params="0.95,1.0"/> 
+            <SpectrumClass name="SurfaceMuons" params="0.99,1.0"/> 
             <use_spectrum/>
         </spectrum>
     </source>
