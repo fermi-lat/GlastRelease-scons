@@ -1,5 +1,5 @@
 package FluxSvc
-version v6r8
+version v6r11
 
 # $Id$
 
@@ -11,7 +11,12 @@ use Event   *
 
 use GlastSvc *
 use astro v0r*
-use flux * -no_auto_imports
+
+# turn this off for now
+#use flux * -no_auto_imports 
+use flux *
+
+use ntupleWriterSvc *
 
 apply_pattern packageShr
 apply_pattern package_include
