@@ -932,7 +932,7 @@
     </stackZ>
 
     <stackZ name="emTrayTop" >
-      <axisPos volume="SiLayerYMeas" >
+      <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" />
       </axisPos>
       <axisPos volume="TKRBiasBox" >
