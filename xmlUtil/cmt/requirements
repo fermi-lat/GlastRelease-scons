@@ -1,17 +1,21 @@
 # $Header$
 package xmlUtil
 
-use glast_settings
-use XMLEXT
-use xml
+## use glast_settings
+## use XMLEXT
+##  do we want to specify a version of xml?  Would be v3 if we do.
+use xml 
 
-include_path "${XMLUTILROOT}"
+# include_path "${XMLUTILROOT}"
+include_dirs "${XMLUTILROOT}"
 
-macro   xmlUtil_linkopts "-L${XMLUTILROOT}/${CMTCONFIG} -lxmlUtil"\
-        VisualC  ""
+apply_pattern package_linkopts
 
-macro_append Win32Debug   " ${XMLUTILROOT}/${DebugDir}/xmlUtillib.lib"
-macro_append Win32Release " ${XMLUTILROOT}/${ReleaseDir}/xmlUtillib.lib"
+##macro   xmlUtil_linkopts "-L${XMLUTILROOT}/${CMTCONFIG} -lxmlUtil"\
+##        VisualC  ""
+
+##macro_append Win32Debug   " ${XMLUTILROOT}/${DebugDir}/xmlUtillib.lib"
+##macro_append Win32Release " ${XMLUTILROOT}/${ReleaseDir}/xmlUtillib.lib"
 
 library xmlUtil -no_share \
      Arith.cxx            \
