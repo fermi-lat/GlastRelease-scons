@@ -15,6 +15,7 @@ namespace rdbModel {
   class Index;
   //  class Assertion;
   class XercesBuilder;
+  class Connection;
 
   /**
    * This is the main container of all the rdb description.
@@ -54,6 +55,9 @@ namespace rdbModel {
     // have names.  For now assertions may only refer to a single
     // table, so access will be via Table object.
 
+    // Do we want an unset as well?  Or just call this with arg == 0 ?
+    void setConnection(Connection* connection) {m_connection = connection;}
+
 
     /// This is the recursive accept for the visitor pattern
     unsigned int  accept(Visitor* v);
@@ -83,12 +87,14 @@ namespace rdbModel {
 
     std::vector<Table* > m_tables;  
   
-    /// SQL database name (e.g., "calib")
+    /// SQL database name (e.g., "calib") 
     std::string m_dbsname;
     /// The DTDversion from the input xml description
     std::string m_DTDversion;
     /// The CVSid from the input xml description
     std::string m_CVSid;
+    Connection* m_connection;
+
   };
 }
 
