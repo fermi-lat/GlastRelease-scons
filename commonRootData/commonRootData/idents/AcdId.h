@@ -1,6 +1,6 @@
 
-#ifndef AcdId_H
-#define AcdId_H
+#ifndef commonRootData_AcdId_H
+#define commonRootData_AcdId_H
 
 #include "TObject.h"
 

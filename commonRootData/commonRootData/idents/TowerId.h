@@ -1,5 +1,5 @@
-#ifndef digiRootData_GLAST_TOWERID_H
-#define digiRootData_GLAST_TOWERID_H 1
+#ifndef commonRootData_GLAST_TOWERID_H
+#define commonRootData_GLAST_TOWERID_H 1
 
 #include "TObject.h"
 

@@ -1,6 +1,6 @@
 
-#ifndef VOLUMEIDENTIFIER_H
-#define VOLUMEIDENTIFIER_H
+#ifndef commonRootData_VOLUMEIDENTIFIER_H
+#define commonRootData_VOLUMEIDENTIFIER_H
 
 #include "TObject.h"
 
