@@ -14,7 +14,7 @@
 #include "Event/Recon/TkrRecon/TkrClusterCol.h"
 #include "Event/Recon/TkrRecon/TkrPatCand.h"
 
-#include "TkrRecon/MonteCarlo/McLayerHit.h"
+#include "Event/MonteCarlo/McSiLayerHit.h"
 #include "TkrRecon/MonteCarlo/McPatCand.h"
 
 Event::McBuildPatCandTab::McBuildPatCandTab(DataSvc* dataSvc)
@@ -76,7 +76,7 @@ Event::McBuildPatCandTab::McBuildPatCandTab(DataSvc* dataSvc)
             for(Event::ClusToLyrHitVec::iterator lyrHitIter = lyrHits.begin(); lyrHitIter != lyrHits.end(); lyrHitIter++)
             {
                 Event::ClusToLyrHitRel*  lyrHitRel = *lyrHitIter;
-                Event::McLayerHit*       lyrHit    = lyrHitRel->getSecond();
+                Event::McSiLayerHit*     lyrHit    = lyrHitRel->getSecond();
                 const Event::McParticle* mcPart    = lyrHit->getMcParticle();
 
                 Event::PatHitToLyrHitRel* patHitRel = new Event::PatHitToLyrHitRel(candHit, lyrHit);

@@ -24,12 +24,12 @@ public:
             
         // Monte Carlo 
         TkrEventModel::MC::Event             = TkrEventModel::EventHeader + "/tmp";
-        TkrEventModel::MC::McEventStructure  = TkrEventModel::MC::Event  + "/McEventStructure";
+//        TkrEventModel::MC::McEventStructure  = TkrEventModel::MC::Event  + "/McEventStructure";
 
-        TkrEventModel::MC::McPartToHitTab    = TkrEventModel::MC::Event  + "/McPartToHitTab";
-        TkrEventModel::MC::McClusToLyrHitTab = TkrEventModel::MC::Event  + "/McClusToLyrHitTab";
-        TkrEventModel::MC::McLyrToHitTab     = TkrEventModel::MC::Event  + "/McLyrToHitTab";
-        TkrEventModel::MC::McLayerHitCol     = TkrEventModel::MC::Event  + "/McLayerHitCol";
+//        TkrEventModel::MC::McPartToHitTab    = TkrEventModel::MC::Event  + "/McPartToHitTab";
+//        TkrEventModel::MC::McClusToLyrHitTab = TkrEventModel::MC::Event  + "/McClusToLyrHitTab";
+//        TkrEventModel::MC::McLyrToHitTab     = TkrEventModel::MC::Event  + "/McLyrToHitTab";
+//        TkrEventModel::MC::McSiLayerHitCol   = TkrEventModel::MC::Event  + "/McSiLayerHitCol";
 
         TkrEventModel::MC::PatHitToLyrHit    = TkrEventModel::MC::Event  + "/PatHitToLyrHit";
         TkrEventModel::MC::PatCandToMcCand   = TkrEventModel::MC::Event  + "/PatCandToMcCand";
