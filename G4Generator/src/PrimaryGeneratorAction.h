@@ -43,8 +43,19 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     /// @param ppsvc The pointer to the ParticlePropertySvc of GAUDI
     void init(Event::McParticle* part, IParticlePropertySvc* ppsvc);
 
+    /// This method is used to set a normal Geant4 particle
     /// @param pname The name of the particle
     void setParticle(std::string pname);
+    /// This method is used to set a generic ion in Geant4 
+    /// @param pNatomic The atomic number of the ion
+    /// @param pMatomic The atomi mass of the ion
+    /// @param pElevel The excitation level of the ion
+    void setIon(int pNatomic, int pMatomic, double pElevel =0.0);
+
+    /// This method see if the id correspond to an ion or to a normal particle
+    /// @param id The id number
+    bool isIon(int id);
+
     /// @param pmom The 3d momentum of the particle
     void setMomentum(G4ThreeVector pmom){
       particleGun->SetParticleMomentumDirection(pmom);}

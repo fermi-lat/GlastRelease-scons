@@ -50,13 +50,13 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 void PrimaryGeneratorAction::init(Event::McParticle* part, IParticlePropertySvc* ppsvc)
 {
   // Purpose and Method: this method set the particle by passing an
-  // Event::McParticle pointer; 
+  // Event::McParticle pointer and the ParticlePropertySvc; 
   // Inputs: part is the pointer to the Event::McParticle
   // Inputs: ppsvc is the pointer to the IParticlePropertySvc
 
   Event::McParticle::StdHepId hepid= part->particleProperty();
   ParticleProperty* ppty = ppsvc->findByStdHepID( hepid );
-  std::string name = ppty->particle(); 
+
   const HepLorentzVector& pfinal = part->finalFourMomentum();
   Hep3Vector dir=    pfinal.vect().unit();
   HepPoint3D p =   part->finalPosition();
@@ -66,11 +66,43 @@ void PrimaryGeneratorAction::init(Event::McParticle* part, IParticlePropertySvc*
   // Set the G4 primary generator
   // the position has to be expressed in mm
   // while the energy in MeV
-  setParticle(name);
+
+  if (isIon(hepid))
+    setIon((int)ppty->charge() , (int)ppty->mass());
+  else
+    setParticle(ppty->particle());
+  
   setMomentum(dir);
   setPosition(p);
   setEnergy(ke);  
 }
+
+bool PrimaryGeneratorAction::isIon(int id)
+{
+  // Purpose and Method: this method return true if the id correspond to an ion
+  // Inputs: id is the IDHEP identifier
+  
+  if ((id>=80000) && (id<90000))
+    return 1;
+  else return 0;
+}
+
+void PrimaryGeneratorAction::setIon(int pNatomic, int pMatomic, double pElevel)
+{
+  // Purpose and Method: this method set the ion by extracting it from the
+  // particle table by using the atomic mass and number
+  // Inputs: pNatomic is the atomic number
+  // Inputs: pMatomic is the atomic mass
+  // Inputs: pElevel is the excitation level of the ion (by default the ground state)
+
+  G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+
+  G4ParticleDefinition* ion
+    = particleTable->GetIon(pNatomic, pMatomic, pElevel);
+  
+  particleGun->SetParticleDefinition(ion);
+}
+
 
 void PrimaryGeneratorAction::setParticle(std::string pname)
 {
