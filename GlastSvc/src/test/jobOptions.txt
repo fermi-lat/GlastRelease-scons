@@ -3,11 +3,12 @@
 // Job options file for CreateEvent
 //
 
-
-ApplicationMgr.ExtSvc   = { "GlastDetSvc", "EventSelector" , "EventCnvSvc" };
+// Add an instance of the DbEventCnvSvc named RootDbEvtCnvSvc
+ApplicationMgr.ExtSvc   = { "GlastDetSvc", "EventSelector" , "EventCnvSvc", "DbEventCnvSvc/RootDbEvtCnvSvc" };
 
 // do not need the following for debug
 //ApplicationMgr.DLLs   = { "GlastSvc" };
+ApplicationMgr.DLLs   = { "RootDb" };
 
 //--------------------------------------------------------------
 // Private Application Configuration options
@@ -17,13 +18,23 @@ GlastDetSvc.PersistencyFile = "src/test/detector.xml";
 
 ApplicationMgr.TopAlg = { "CreateEvent" };
 
+// Define name for output writer
+ApplicationMgr.OutStream   = { "RootDst" };
+
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 
 MessageSvc.OutputLevel      = 2;
 
 //=========================================================================
 // Persistency service setup:
-EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+// Add Root as a potential persistency converter service
+EventPersistencySvc.CnvServices = {"EventCnvSvc", "RootDbEvtCnvSvc"};
+
+// RootEvtCnvSvc setup for Gaudi v6
+//RootDbEvtCnvSvc.DbType = "ROOT";
+// This seems to be a specific objectFactory within RootDb.cpp in Gaudi v5
+RootDbEvtCnvSvc.DbTypeName    = "RootDb::OODataBase";
+RootDbEvtCnvSvc.FddbName      = "RootFederation";
 
 //--------------------------------------------------------------
 // Algorithms Private Options
@@ -40,6 +51,17 @@ ApplicationMgr.EvtSel = "IRFFILE src/test/muontest.irf";
 //ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 20;
 
+
+// Setup options for Root output
+// The value #9999 denotes how many directory levels below to go
+RootDst.ItemList = {"/Event/MC/MCACDHits#9999"};
+//RootDst.ItemList = {"/Event#9999"};
+// set the transient data store to search for output objects
+RootDst.EvtDataSvc = "EventDataSvc";
+// which converter service to use
+RootDst.EvtConversionSvc = "RootDbEvtCnvSvc";
+// name of output file
+RootDst.OutputFile = "output.root";
 
 
 //==============================================================

@@ -24,19 +24,19 @@
 #include "GlastEvent/Raw/TdCsIData.h"
 
 
-
-
-
 static const AlgFactory<CreateEvent>  Factory;
 const IAlgFactory& CreateEventFactory = Factory;
 
 extern void GlastSvc_load();
+extern void DbConverters_load();
+
 //------------------------------------------------------------------------------
 /// Algorithm parameters which can be set at run time must be declared.
 /// This should be done in the constructor.
 CreateEvent::CreateEvent(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator), m_detSvc(0), m_irfLoadSvc(0) {
     GlastSvc_load();
+    DbConverters_load();
 }
 
 
@@ -83,11 +83,6 @@ StatusCode CreateEvent::execute() {
 
     DataObject* pObject;
 
-// commented out so that the output for the new TdCsIData can be seen
-// Turning this on will simply increse the output.
-#if 0
-
-
     /*! Causes the TDS to be searched, if the data is unavailable, the appropriate
     converter is called to retrieve the data. */
     sc = eventSvc()->retrieveObject("/Event/MC/MCACDHits", pObject);
@@ -104,12 +99,15 @@ StatusCode CreateEvent::execute() {
         return StatusCode::FAILURE;
     }
     
+	// Decrease the amount of output
+#if 0
     //! print out the ACD data
     for (ObjectVector<MCACDHit>::const_iterator it = acdList->begin(); it != acdList->end(); it++) {
         log << MSG::INFO << " ACD Tile Hit " 
             << (*it)->id() << " "
             << (*it)->energy() << endreq;
     }
+#endif
 
     /*! Causes the TDS to be searched, if the data is unavailable, the appropriate
     converter is called to retrieve the data.  */
@@ -128,6 +126,9 @@ StatusCode CreateEvent::execute() {
         log << MSG::INFO << "Failed to convert object to MCCalorimeterHitVector" << endreq;
         return StatusCode::FAILURE;
     }
+
+	// Decrease amount of output
+#if 0
     //! print out the CAL data
     for (ObjectVector<MCCalorimeterHit>::const_iterator xtal = calList->begin(); xtal != calList->end(); xtal++) {
         log << MSG::INFO << "Csi Log Hit: " << endreq;
@@ -136,7 +137,7 @@ StatusCode CreateEvent::execute() {
                         << (*xtal)->rightResponse() << " "
                         << (*xtal)->energy() << " " << endreq;
     }
-
+#endif
 
     /*! Causes the TDS to be seached, if the TKR data is unavailable, then the
         converter is called to retrieve the data */
@@ -153,6 +154,8 @@ StatusCode CreateEvent::execute() {
         return StatusCode::FAILURE;
     }
     
+	// Decrease amount of output
+#if 0
     //! print out the TKR data
     for (ObjectVector<MCSiLayer>::const_iterator silayer = tkrList->begin(); silayer != tkrList->end(); silayer++) {
         log << MSG::INFO << "SiLayer " << (*silayer)->id() << " "
