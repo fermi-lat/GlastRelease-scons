@@ -3,6 +3,7 @@
 #include "TTree.h"
 #include "TRandom.h"
 #include "TCollection.h"
+#include "TVector3.h"
 #include "reconRootData/ReconEvent.h"
 #include <iostream>
 
@@ -21,6 +22,8 @@
 const UInt_t runNum = 1;
 const UInt_t numXtals = 10;
 const UInt_t numClusters = 20;
+const UInt_t numTracks = 15;
+const UInt_t numVertices = 11;
 Float_t randNum;
 
 bool floatInRange(Double_t actual, Double_t desired) {
@@ -181,7 +184,7 @@ int checkCalXtalRec(const CalXtalRecData *rec, UInt_t ievent) {
     }
     CalXtalId id = (*rec).getPackedId();
     if ( (id.getTower() != 1) || (id.getLayer() != 2) || (id.getColumn() != 3) ) {
-        std::cout << "Xtal Id is wrong (tower, Layer, Col): (" << id.getTower
+        std::cout << "Xtal Id is wrong (tower, Layer, Col): (" << id.getTower()
             << "," << id.getLayer() << "," << id.getColumn() << ")" << std::endl;
         return -1;
     }
@@ -312,10 +315,292 @@ int checkCalRecon(CalRecon *cal, UInt_t ievent) {
     return 0;
 }
 
-//int checkTkrRecon(TkrRecon *tkr, UInt_t ievent) {
+int checkTkrSiCluster(const TkrSiCluster *cluster, UInt_t ievent, UInt_t icluster) {
+    Float_t f = Float_t (ievent);
+    Float_t fr = f*randNum;
+    if ( cluster->getId() != icluster)  {
+        std::cout << "SiCluster id is wrong: " << cluster->getId() << std::endl;
+        return -1;
+    }
+    if ( cluster->getLayer() != 5 ) {
+        std::cout << "SiCluster layer is wrong: " << cluster->getLayer() << std::endl;
+        return -1;
+    }
+    if ( cluster->getXY() != TkrSiCluster::X) {
+        std::cout << "SiCluster axes is wrong: " << cluster->getXY() << std::endl;
+        return -1;
+    }
+    if ( cluster->getCenterStrip() != 7)  {
+        std::cout << "SiCluster center is wrong: " << cluster->getCenterStrip() << std::endl;
+        return -1;
+    }
+    if ( cluster->getNumStrips() != 6) {
+        std::cout << "SiCluster numStrips is wrong: " << cluster->getNumStrips() << std::endl;
+        return -1;
+    }
+    if ( !floatInRange((*cluster).getPosition(), f)) {
+        std::cout << "SiCluster Position: " << cluster->getPosition() << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(cluster->getZPosition(), fr)) {
+        std::cout << "SiCluster Z Position: " << cluster->getZPosition() << std::endl;
+        return -1;
+    }
 
-//    return 0;
-//}
+    return 0;
+}
+
+int checkCandTrack(const TkrCandTrack *track, UInt_t ievent, UInt_t iHit) {
+
+    Float_t f = Float_t (ievent);
+    Float_t fr = f*randNum;
+
+    if ((*track).getId() != iHit) {
+        std::cout << "TkrCandTrack id is: " << track->getId() << std::endl;
+        return -1;
+    }
+    if (track->getLayer() != 3) {
+        std::cout << "TkrCandTrack Layer: " << track->getLayer() << std::endl;
+        return -1;
+    }
+    if (track->getTower() != 1) {
+        std::cout << "TkrCandTrack Tower: " << track->getTower() << std::endl;
+        return -1;
+    }
+
+    if (!floatInRange(track->getQuality(), f)) {
+        std::cout << "TkrCandTrack Quality: " << track->getQuality() << std::endl;
+        return -1;
+    }
+
+    if (!floatInRange(track->getEnergy(), fr)) {
+        std::cout << "TkrCandTrack energy: " << track->getEnergy() << std::endl;
+        return -1;
+    }
+
+    TVector3 pos = track->getPosition();
+    if ( (!floatInRange(pos.X(), f)) || (!floatInRange(pos.Y(), fr))
+        || (!floatInRange(pos.Z(), f)) ) {
+        std::cout << "TkrCandTrack pos (x,y,z): (" << pos.X() << ","
+            << pos.Y() << "," << pos.Z() << ")" << std::endl;
+        return -1;
+    }
+    TVector3 dir = track->getDirection();
+    if ( (!floatInRange(dir.X(), fr)) || (!floatInRange(dir.Y(), f))
+        || (!floatInRange(dir.Z(), fr)) ) {
+        std::cout << "TkrCandTrack dir (x,y,z): (" << dir.X() << ","
+            << dir.Y() << "," << dir.Z() << ")" << std::endl;
+        return -1;
+    }
+
+    return 0;
+}
+
+int checkTrack(const TkrTrack *track,  UInt_t ievent, UInt_t itrack) {
+
+    Float_t f = Float_t (ievent);
+    Float_t fr = f*randNum;
+    if (track->getId() != itrack) {
+        std::cout << "Track Id: " << track->getId() << std::endl;
+        return -1;
+    }
+    if (track->getXgaps() != itrack*itrack) {
+        std::cout << "Track xgaps: " << track->getXgaps() << std::endl;
+        return -1;
+    }
+    if (track->getYgaps() != 2*itrack) {
+        std::cout << "Track ygaps: " << track->getYgaps() << std::endl;
+        return -1;
+    }
+    if (track->getXistGaps() != ievent+itrack) {
+        std::cout << "Track xistgaps: " << track->getYistGaps() << std::endl;
+        return -1;
+    }
+    if (track->getYistGaps() != 2*ievent) {
+        std::cout << "Track yistgaps: " << track->getYistGaps() << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(track->getChiSq(), f) ) {
+        std::cout << "Track chisq is wrong: " << track->getChiSq() << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(track->getChiSqSmooth(), fr) ) {
+        std::cout << "Track chisq smooth is wrong: " << track->getChiSqSmooth() << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(track->getKalEnergy(), f*2.0) ) {
+        std::cout << "Track KalEnergy is wrong: " << track->getKalEnergy() << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(track->getKalThetaMS(), f*6.0) ) {
+        std::cout << "Track kalThetaMs is wrong: " << track->getKalThetaMS() << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(track->getQuality(), f*f) ) {
+        std::cout << "Track quality is wrong: " << track->getQuality() << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(track->getRmsResid(), randNum*randNum) ) {
+        std::cout << "Track rms is wrong: " << track->getRmsResid() << std::endl;
+        return -1;
+    }
+    return 0;
+}
+
+int checkTkrVertex(const TkrVertex* vertex, UInt_t ievent, UInt_t ivertex) {
+    Float_t f = Float_t (ievent);
+    Float_t fr = f*randNum;
+
+    if (vertex->getId() != ivertex) {
+        std::cout << "Vertex Id is wrong: " << vertex->getId() << std::endl;
+        return -1;
+    }
+    if (!floatInRange(vertex->getEnergy(), fr) ) {
+        std::cout << "Vertex energy is wrong: " << vertex->getEnergy() << std::endl;
+        return -1;
+    }
+    if (!floatInRange(vertex->getQuality(), f) ) {
+        std::cout << "Vertex quality is wrong: " << vertex->getQuality() << std::endl;
+        return -1;
+    }
+
+    if (vertex->getLayer() != 2) {
+        std::cout << "Vertex layer is wrong: " << vertex->getLayer() << std::endl;
+        return -1;
+    }
+
+    if (vertex->getTower() != 4) {
+        std::cout << "Vertex tower is wrong: " << vertex->getTower() << std::endl;
+        return -1;
+    }
+
+    TVector3 pos = vertex->getPosition();
+    if ( (!floatInRange(pos.X(), f)) || (!floatInRange(pos.Y(), fr))
+        || (!floatInRange(pos.Z(), fr*2.)) ) {
+        std::cout << "TkrCandTrack pos (x,y,z): (" << pos.X() << ","
+            << pos.Y() << "," << pos.Z() << ")" << std::endl;
+        return -1;
+    }
+    TVector3 dir = vertex->getDirection();
+    if ( (!floatInRange(dir.X(), randNum*2.)) || (!floatInRange(dir.Y(), randNum*3.))
+        || (!floatInRange(dir.Z(), randNum*4.)) ) {
+        std::cout << "TkrCandTrack dir (x,y,z): (" << dir.X() << ","
+            << dir.Y() << "," << dir.Z() << ")" << std::endl;
+        return -1;
+    }
+
+    TkrParams params = vertex->getTrackPar();
+    if ( (!floatInRange(params.getXPos(), f) ) ||
+    (!floatInRange(params.getXSlope(), f*f) ) ){
+        std::cout << "Vertex X Param wrong: (" << params.getXPos() << ","
+            << params.getXSlope() << ")" << std::endl;
+        return -1;
+    }
+    
+    if ( (!floatInRange(params.getYPos(), fr) ) ||
+    (!floatInRange(params.getYSlope(), randNum*randNum) ) ) {
+        std::cout << "Vertex Y Param wrong: (" << params.getYPos() << ","
+            << params.getYSlope() << ")" << std::endl;
+        return -1;
+    }
+
+
+    TkrCovMat mat = vertex->getTrackCov();
+    if ( (!floatInRange(mat.getCovX0X0(), f) )||
+        (!floatInRange(mat.getCovSxSx(), f*2.) )||
+        (!floatInRange(mat.getCovX0Sx(), f*3.) ) ) {
+        std::cout << "Vertex matrix x vals are wrong: " << mat.getCovX0X0() << " "
+            << mat.getCovSxSx() << " " << mat.getCovX0Sx() << std::endl;
+        //return -1;
+    }
+
+    if ( (!floatInRange(mat.getCovY0Y0(), f*4.) ) ||
+        (!floatInRange(mat.getCovY0Sy(), f*5.) ) ||
+        (!floatInRange(mat.getCovSySy(), f*6.) ) ) {
+        std::cout << "Vertex matrix y vals are wrong: " << mat.getCovY0Y0() << " "
+            << mat.getCovY0Sy() << " " << mat.getCovSySy() << std::endl;
+        //return -1;
+
+    }
+
+
+    if (vertex->getNumTracks() != 2) {
+        std::cout << "Vertex number of tracks is wrong: " << vertex->getNumTracks() << std::endl;
+        return -1;
+    }
+    if (vertex->getTrackId(0) != ivertex+1) {
+        std::cout << "Vertex Track id is wrong: " << vertex->getTrackId(0) << std::endl;
+        return -1;
+    }
+
+    if (vertex->getTrackId(1) != ivertex+2) {
+        std::cout << "Vertex Track id is wrong: " << vertex->getTrackId(1) << std::endl;
+        return -1;
+    }
+
+    return 0;
+}
+
+int checkTkrRecon(TkrRecon *tkr, UInt_t ievent) {
+
+    TObjArray *siClusterCol = tkr->getSiClusterCol();
+    if (siClusterCol->GetEntries() != numClusters) {
+        std::cout << "Number of TkrRecon clusters is wrong: " << siClusterCol->GetEntries() << std::endl;
+        return -1;
+    }
+    UInt_t icluster = 0;
+    TIter siClusIt(siClusterCol);
+    TkrSiCluster *cluster;
+    while ( (cluster = (TkrSiCluster*)(siClusIt.Next()) ) ){
+        if (checkTkrSiCluster(cluster, ievent, icluster) < 0) return -1;
+        icluster++;
+    }
+
+    TObjArray *candTrackCol = tkr->getTrackCandCol();
+    if (candTrackCol->GetEntries() != numTracks) {
+        std::cout << "Number of TkrRecon cand tracks is wrong: " << candTrackCol->GetEntries() << std::endl;
+        return -1;
+    }
+    TIter candTrackIt(candTrackCol);
+    UInt_t iHit = 0;
+    TkrCandTrack *candTrack;
+    while ( (candTrack = (TkrCandTrack*)(candTrackIt.Next()) ) ) {
+        if (checkCandTrack(candTrack, ievent, iHit) < 0)
+            return -1;
+        iHit++;
+    }
+
+    UInt_t iTrack = 0;
+    TObjArray* trackCol = tkr->getTrackCol();
+    if (trackCol->GetEntries() != numTracks) {
+        std::cout << "Number of TkrRecon tracks is wrong: " << trackCol->GetEntries() << std::endl;
+        return -1;
+    }
+    TIter trackIt(trackCol);
+    TkrTrack *track;
+    while ((track = (TkrTrack*)(trackIt.Next()) )) {
+        if (checkTrack(track, ievent, iTrack) < 0) 
+            return -1;
+        iTrack++;
+    }
+
+    TObjArray* vertexCol = tkr->getVertexCol();
+    if (vertexCol->GetEntries() != numVertices) {
+        std::cout << "Number of TkrRecon vertices is wrong: " << vertexCol->GetEntries() << std::endl;
+        return -1;
+    }
+    TIter vertexIt(vertexCol);
+    TkrVertex *vertex;
+    UInt_t ivertex = 0;
+    while ((vertex = (TkrVertex*)(vertexIt.Next()) )){
+        vertex->Print();
+        if (checkTkrVertex(vertex, ievent, ivertex) < 0) 
+            return -1;
+        ivertex++;
+    }
+
+    return 0;
+}
 
 
 /// Read in the ROOT file just generated via the write method
@@ -334,10 +619,13 @@ int read(char* fileName, int numEvents) {
         evt->Print();
         if (checkReconEvent(evt, ievent) < 0) return -1;
         CalRecon *cal = evt->getCalRecon();
+        if (!cal) return -1;
         cal->Print();
         if (checkCalRecon(cal, ievent) < 0) return -1;
-        //TkrRecon *tkr = evt->getTkrRecon();
-        //if (checkTkrRecon(tkr, ievent) < 0) return -1;
+        TkrRecon *tkr = evt->getTkrRecon();
+        if (!tkr) return -1;
+        tkr->Print();
+        if (checkTkrRecon(tkr, ievent) < 0) return -1;
         evt->Clear();
     }
     
@@ -365,8 +653,9 @@ int write(char* fileName, int numEvents) {
     for (ievent = 0; ievent < numEvents; ievent++) {
         
         Float_t f = Float_t(ievent);
+
+        // Create CalRecon object
         CalRecon *calRec = new CalRecon();
-        
         UInt_t icluster;
         for (icluster = 0; icluster < numClusters; icluster++ ) {
             CalCluster cluster;
@@ -410,7 +699,88 @@ int write(char* fileName, int numEvents) {
             calRec->addXtalRecData(xtal);
         }
 
+        // Create TkrRecon object
         TkrRecon *tkrRec = new TkrRecon();
+        tkrRec->initialize();
+
+        TkrSiCluster *siCluster;
+        for (icluster = 0; icluster < numClusters; icluster++ ) {
+            siCluster = new TkrSiCluster();
+            UInt_t layer = 5;
+            TkrSiCluster::TKRAxes xy = TkrSiCluster::X;
+            UShort_t center = 7;
+            UShort_t nStrips = 6;
+            Float_t pos = f;
+            Float_t zpos = f*randNum;
+            siCluster->initialize(icluster, layer, xy, center, nStrips, pos, zpos);
+            tkrRec->addSiCluster(siCluster);
+        }
+        UInt_t itrack;
+        TkrCandTrack *candTrack;
+        for (itrack = 0; itrack < numTracks; itrack++) {
+            candTrack = new TkrCandTrack();
+            UInt_t lay = 3;
+            UInt_t tow = 1;
+            TVector3 pos(f, f*randNum, f);
+            TVector3 dir(f*randNum, f, f*randNum);
+            Double_t quality = f;
+            Double_t e = f*randNum;
+            candTrack->initialize(itrack, lay, tow, quality, e, pos, dir);
+            tkrRec->addTrackCand(candTrack);
+        }
+        TkrTrack *track;
+        for (itrack=0; itrack < numTracks; itrack++) {
+            track = new TkrTrack();
+            UInt_t xgaps = itrack * itrack;
+            UInt_t ygaps = itrack+itrack;
+            UInt_t x1st = ievent+itrack;
+            UInt_t y1st = ievent+ievent;
+            track->initializeInfo(itrack, xgaps, ygaps, x1st, y1st);
+            Double_t chiSq = f;
+            Double_t chiSqSmooth = f*randNum;
+            Double_t rms = randNum*randNum;
+            Double_t qual = f*f;
+            Double_t e = f*2.0;
+            Double_t ms = f*6.0;
+            track->initializeQual(chiSq, chiSqSmooth, rms, qual, e, ms);
+            tkrRec->addTrack(track);
+        }
+        
+        UInt_t ivertex;
+        TkrVertex *vertex;
+        for (ivertex=0; ivertex < numVertices; ivertex++) {
+            vertex = new TkrVertex();
+            UInt_t layer = 2;
+            UInt_t tower = 4;
+            Double_t qual = f;
+            Double_t energy = f*randNum;
+            vertex->initializeInfo(ivertex, layer, tower, qual, energy);
+            
+            TkrParams vtxPar;
+            Double_t ax = f;
+            Double_t sx = f*f;
+            Double_t ay = f*randNum;
+            Double_t sy = randNum*randNum;
+            vtxPar.initialize(ax, sx, ay, sy);
+            
+            TkrCovMat vtxCov;
+            Double_t a = f;
+            Double_t b = f*2.;
+            Double_t c = f*3.;
+            Double_t d = f*4.;
+            Double_t e = f*5.;
+            Double_t g = f*6.;
+            vtxCov.initialize(a, b, c, d, e, g);
+
+            TVector3 pos(f, f*randNum, f*randNum*2.);
+            TVector3 dir(randNum*2., randNum*3., randNum*4.);
+            vertex->addTrackId(ivertex+1);
+            vertex->addTrackId(ivertex+2);
+            vertex->initializeVals(vtxPar, vtxCov, pos, dir);
+            tkrRec->addVertex(vertex);
+        }
+
+
         ev->initialize(ievent, runNum, tkrRec, calRec);
         t->Fill();
         ev->Clear();
