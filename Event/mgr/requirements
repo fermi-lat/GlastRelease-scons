@@ -1,9 +1,9 @@
 package GlastEvent
-version v1r1
+version v1r2
 
 branches GlastEvent mgr doc src
 use idents
-use instrument v2r2
+use instrument v2r3
 use data 
 use Gaudi 
 
