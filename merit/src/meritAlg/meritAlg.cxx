@@ -41,6 +41,7 @@
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
 
 #include "OnboardFilter/FilterStatus.h"
+#include "OnboardFilter/FilterAlgTds.h"
 #include "astro/PointingTransform.h"
 
 #include <sstream>
@@ -150,7 +151,8 @@ private:
   // places to put stuff found in the TDS
   double m_run, m_event, m_mc_src_id;
   double m_time;
-  double m_statusHi, m_statusLo;
+  double m_statusHi, m_statusLo,m_separation;
+  double m_filterAlgStatus;
 
   int m_generated;
   int m_warnNoFilterStatus;   // count WARNINGs: no FilterStatus found
@@ -290,6 +292,8 @@ StatusCode meritAlg::initialize() {
   new TupleItem("FilterStatus_HI", &m_statusHi);
   //  new TupleItem("GltFilterStatusLO", &m_statusLo);
   new TupleItem("FilterStatus_LO", &m_statusLo);
+  new TupleItem("FilterAlgStatus",&m_filterAlgStatus);
+  new TupleItem("FilterAngularSeparation", &m_separation);
 
   //FT1 INFO:
   new TupleItem("FT1EventId",           &m_ft1eventid);
@@ -536,6 +540,7 @@ StatusCode meritAlg::execute() {
   if( filterStatus ){
     m_statusHi=filterStatus->getHigh();
     m_statusLo=filterStatus->getLow();
+    m_separation=filterStatus->getSeparation();
   }else {
     m_statusHi = m_statusLo = 0;
 
@@ -546,6 +551,10 @@ StatusCode meritAlg::execute() {
 	log << " -- Further WARNINGs on missing FilterStatus are suppressed"; }
       log  << endreq;
     }
+  }
+  SmartDataPtr<FilterAlgTds::FilterAlgData> filterAlgStatus(eventSvc(),"/Event/Filter/FilterAlgData");
+  if(filterAlgStatus){
+    m_filterAlgStatus=(double)filterAlgStatus->getVetoWord();
   }
   m_ctree->execute();
   m_fm->execute();
