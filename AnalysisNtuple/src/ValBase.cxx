@@ -67,6 +67,8 @@ ValBase::~ValBase()
 {
     mapIter it = m_ntupleMap.begin();
     for ( ; it!=m_ntupleMap.end(); ++it) {
+        TypedPointer* ptr = (*it)->second;
+        delete ptr;
         delete (*it);
     }
 }

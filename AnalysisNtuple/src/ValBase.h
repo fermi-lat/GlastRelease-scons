@@ -26,24 +26,25 @@ class IDataProviderSvc;
 @author Leon Rochester
 
 */
+namespace {
+    class TypedPointer 
+    {
+    public:  
+        TypedPointer(std::string type, void* pointer) : m_type(type), m_pointer(pointer)
+        {}
+        ~TypedPointer() {}
 
-class TypedPointer 
-{
-public:  
-    TypedPointer(std::string type, void* pointer) : m_type(type), m_pointer(pointer)
-    {}
-    ~TypedPointer() {}
+        std::string getType()   { return    m_type; }
+        void* getPointer()      { return    m_pointer; }
+        void setVal(int val)    { *(reinterpret_cast<int*>(getPointer())) = val; }
+        void setVal(float val)  { *(reinterpret_cast<float*>(getPointer())) = val; }
+        void setVal(double val) { *(reinterpret_cast<double*>(getPointer())) = val; }
 
-    std::string getType()   { return    m_type; }
-    void* getPointer()      { return    m_pointer; }
-    void setVal(int val)    { *(reinterpret_cast<int*>(getPointer())) = val; }
-    void setVal(float val)  { *(reinterpret_cast<float*>(getPointer())) = val; }
-    void setVal(double val) { *(reinterpret_cast<double*>(getPointer())) = val; }
-
-private:
-    std::string m_type;
-    void*       m_pointer;
-};
+    private:
+        std::string m_type;
+        void*       m_pointer;
+    };
+}
 
 class ValBase : public IValsTool,  public AlgTool,  virtual public IIncidentListener
 {
