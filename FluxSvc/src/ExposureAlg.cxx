@@ -40,7 +40,6 @@
 #include "ExposureAlg.h"
 //------------------------------------------------------------------------
 
-
 static const AlgFactory<ExposureAlg>  Factory;
 const IAlgFactory& ExposureAlgFactory = Factory;
 
@@ -53,42 +52,7 @@ ExposureAlg::ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("source_name",  m_source_name="default");
     
 }
-//-------------------------------------------------------------------------
-//! simple prototype of a spectrum class definition - this implememts all of the necessary methods in an ISpectrum
-/*class TimeCandle : public ISpectrum {
-public:
-    TimeCandle(const std::string& params){};
-    
-    virtual const char * particleName()const{return "gamma";}
-    
-    /// return a title describing the spectrum	
-    virtual std::string title()const{ return "standard time candle";}
-    
-    /// calculate flux 
-    //virtual double flux() const { return 1.0;}
-    
-    virtual double flux(double time) const {return 1.0;}
-    
-    /// return kinetic energy (in GeV) 
-    /// @param r Number between 0 and 1 for min to max energy
-    virtual float operator()(float r)const{
-        return r;
-    }
-    
-    virtual std::pair<float,float> dir(float)const{
-        return std::make_pair<float,float>(1.0,0.0);
-    }     
-    
-    virtual std::pair<double,double> dir(double energy, HepRandomEngine* engine){return std::make_pair<double,double>(1.0,0.0);}
-    
-    double energySrc(HepRandomEngine* engine, double time){  return (*this)(engine->flat());}
-    
-    double interval (double time)
-    {        
-        return 5.;
-    }
-    
-};*/
+
 //! set this spectrum up to be used.
 void ExposureAlg::makeTimeCandle(IFluxSvc* fsvc){
     //static RemoteSpectrumFactory<TimeCandle> timecandle(fsvc);
@@ -108,10 +72,6 @@ StatusCode ExposureAlg::initialize(){
         log << MSG::ERROR << "Couldn't find the FluxSvc!" << endreq;
         return StatusCode::FAILURE;
     }
-
-    //TODO: set the file name from a property
-    m_out = new std::ofstream("orbitFromAlg.out");
-    
     
     // set up the standard time candle spectrum
     makeTimeCandle(m_fluxSvc);
@@ -133,6 +93,11 @@ StatusCode ExposureAlg::initialize(){
         log << MSG::ERROR << "Couldn't find the ParticlePropertySvc!" << endreq;
         return StatusCode::FAILURE;
     }
+
+    //TODO: set the file name from a property
+    m_out = new std::ofstream("orbitFromAlg.out");
+    //m_fluxSvc->setRockType(GPS::UPDOWN);
+
     return sc;
 }
 
@@ -167,6 +132,9 @@ StatusCode ExposureAlg::execute()
         currentTime = m_fluxSvc->currentFlux()->time();
     }   
     
+    //a test line, only for comparing with perugia code
+    currentTime+=17107230.;
+
     //now, only do the rest of this algorithm if we have a timetick particle.
     std::string particleName = m_fluxSvc->currentFlux()->particleName();
     if(particleName != "TimeTick"){
@@ -188,9 +156,10 @@ StatusCode ExposureAlg::execute()
     double livetime = intrvalend - m_lasttime;
     //..and reset the time of this event to be the "last time" for next time.
     m_lasttime = intrvalend;
+
     
     //and here the pointing characteristics of the LAT.
-    GPS::instance()->getPointingCharacteristics(/*location,20*/currentTime/secondsperday);
+    GPS::instance()->getPointingCharacteristics(/*location,20*/currentTime/*/secondsperday*/);
     //EarthOrbit orbt;
     Hep3Vector location = GPS::instance()->position();//( orbt.position(currentTime/secondsperday) );
     
@@ -254,10 +223,8 @@ StatusCode ExposureAlg::execute()
     Event::D2EntryCol::iterator curEntry = (*elist).begin();
     //some test output - to show that the data got onto the TDS
     (*curEntry)->writeOut(log);
-//WRITEOUT------------------------------------------------------------------------------------------
-
      
-        //m_out.flags(ios::fixed);
+    //and here's the file output.
     std::ostream& out = *m_out;
         out<<intrvalstart <<'\t';
         out<<intrvalend <<'\t';
@@ -279,15 +246,12 @@ StatusCode ExposureAlg::execute()
         out<< rasun <<"\t"<<decsun  <<'\t';
         out<<ramoon <<"\t"<<decmoon   <<std::endl;
                                 
-                                
 
-//WRITEOUT------------------------------------------------------------------------------------------------
 
         setFilterPassed( false );
     log << MSG::DEBUG << "ExposureAlg found a TimeTick particle, ended this execution after making a record, filterpassed = " << filterPassed() << endreq;
 
-    
-    return sc/*return StatusCode::STOP*/;
+    return sc;
 }
 
 //------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 package FluxSvc
-version v5r10
+version v5r10p2
 
 branches FluxSvc mgr doc
 
@@ -11,7 +11,7 @@ use geometry   v3*
 use GaudiSvc
 use xml
 use CLHEP
-use astro v0r*
+use astro v0r1p2
 
 
 apply_pattern packageShr
@@ -29,22 +29,23 @@ private
 apply_pattern package_Cshlibflags
 apply_pattern package_headers
 
+#static library
+library hist_lib -no_share test/flux/rootplot.cxx \
+ test/flux/rootEnergyHist.cxx test/flux/rootHist.cxx \
+ test/flux/rootAngleHist.cxx
+
+macro libs ""   WIN32   "$(FluxSvcDir)/hist_lib.lib
+
 library FluxSvc  *.cxx \
- test/flux/rootplot.cxx test/flux/rootEnergyHist.cxx\
- test/flux/rootHist.cxx  test/flux/rootAngleHist.cxx\
- Dll/*.cxx\
+ Dll/*.cxx $(libs) \
  ${FluxSvc_headers}
 
 application testMgr test/flux/testMgr.cxx \
- test/flux/rootplot.cxx test/flux/rootEnergyHist.cxx\
- test/flux/rootHist.cxx  test/flux/rootAngleHist.cxx\
- *.cxx \
+ *.cxx $(libs) \
   ${FluxSvc_headers}
 
 application rootplots test/flux/roottest.cxx \
- test/flux/rootplot.cxx test/flux/rootEnergyHist.cxx\
- test/flux/rootHist.cxx test/flux/rootAngleHist.cxx\
- *.cxx \
+ *.cxx $(libs) \
  ${FluxSvc_headers}
 
 macro_append FluxSvc_headers "" WIN32 "../xml/*.xml test/*.txt test/*.xml"

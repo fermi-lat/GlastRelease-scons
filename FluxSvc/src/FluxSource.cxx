@@ -1,4 +1,4 @@
-//Header: /cvs/glastsim/flux/FluxSource.cxx,v 1.20 1998/12/18 23:42:02 hsg Exp $
+ //Header: /cvs/glastsim/flux/FluxSource.cxx,v 1.20 1998/12/18 23:42:02 hsg Exp $
 
 #include "FluxSvc/FluxSource.h"
 
@@ -17,6 +17,7 @@
 #include "geometry/Box.h"
 
 #include "Orbit.h"
+#include "astro/SkyDir.h"
 
 #include "FluxException.h" // for FATAL_MACRO
 
@@ -963,23 +964,24 @@ void FluxSource::getSurfacePosDir() {
 }
 
 void FluxSource::getGalacticDir(double l,double b){
+    using namespace astro;
+    SkyDir unrotated(l,b,SkyDir::GALACTIC);
+    //here is the old mechanism:
+    //double theta=sqrt(pow(b,2)+pow(l,2))*M_2PI/360.;
     
-    //here is the new mechanism:
-    double theta=sqrt(pow(b,2)+pow(l,2))*M_2PI/360.;
-    
-    if (l==0.){l+=0.000000000001;}  //to fix divide-by-zero errors
-    double phi = atan(b/l);
+    //if (l==0.){l+=0.000000000001;}  //to fix divide-by-zero errors
+    //double phi = atan(b/l);
     
     //here we construct the cartesian galactic vector
-    Vector gamgal(sin(l*M_2PI/360.)*cos(b*M_2PI/360.) , sin(b*M_2PI/360.) , cos(l*M_2PI/360.)*cos(b*M_2PI/360.));
-    
-    
+    //OLDVector gamgal(sin(l*M_2PI/360.)*cos(b*M_2PI/360.) , sin(b*M_2PI/360.) , cos(l*M_2PI/360.)*cos(b*M_2PI/360.));
+    //Vector gamgal(cos(l*M_2PI/360.)*cos(b*M_2PI/360.) , sin(l*M_2PI/360.)*cos(b*M_2PI/360.) , sin(b*M_2PI/360.) );
+
     //get the transformation matrix..
-    Rotation galtoglast=GPS::instance()->orbit()->CELTransform(GPS::instance()->time() + m_interval + m_extime);
+    Rotation celtoglast=GPS::instance()->transformCelToGlast(GPS::instance()->time() + m_interval + m_extime);
     
     //and do the transform:
-    setLaunch(galtoglast*gamgal);
-    
+    //setLaunch(galtoglast*gamgal);
+    setLaunch(celtoglast*unrotated());
     m_launch = GALACTIC;
     correctForTiltAngle();
 }

@@ -28,10 +28,18 @@
 
 
      <!-- Test source at the galactic origin -->
-     <source name="galcenter" flux="1.0">
+     <source name="galcenter" flux="0.05">
           <spectrum>
               <particle name="gamma"> <energy e="0.1"/> </particle>
                <galactic_dir l="0" b="0"/>
+          </spectrum>
+     </source>
+
+	 <!-- Test source at the galactic origin -->
+     <source name="celcenter" flux="0.05">
+          <spectrum>
+              <particle name="gamma"> <energy e="0.1"/> </particle>
+               <galactic_dir l="97.7422" b="-60.181"/>
           </spectrum>
      </source>
 

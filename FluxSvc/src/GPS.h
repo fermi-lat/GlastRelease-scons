@@ -44,6 +44,14 @@ of 2 would reduce the orbit period of the spacecraft by 1/2.
 class GPS  
 {
 public:
+
+    enum RockType { 
+            NONE,  //!  No rocking rotation done at all.
+            UPDOWN, //! Satellite will be rocked toward the north pole in the northern hemisphere, opposite in the south.
+            SLEWING, //! (experimental) like UPDOWN, except that rotation at equator happens gradually.
+            ONEPERORBIT //! LAT rocked northward for one orbit, southward for the next.
+        };
+
     class Coords {
     public:
         Coords( double alat, double alon, double apitch
@@ -94,8 +102,7 @@ public:
     // set data
     
     /// get the pointing characteristics of the satellite, given a location and rocking angle.
-    void getPointingCharacteristics(/*Hep3Vector location, double rockNorth*/double time);
-    
+    void getPointingCharacteristics(double seconds);
     
     /// set a specific Orbit object for lat/lon calculations
     void    orbit ( Orbit* );
@@ -125,20 +132,21 @@ public:
     static GPS*	instance();
     static void     kill ();
     
-    ///return galactic-pointing coordinates of the GLAST satellite
-    std::pair<double,double> GPS::galPositionOfGlast();
-    
-    /// transform functions using galPositionOfGlast.  This infrastructure is no longer used.
-    Vector earthToGlast(Vector launchDir);
-    Vector galaxyToGlast(Vector launchDir);
-    
     /// return the rotation for compensation for the rocking angles.
-    Rotation rockingAngleTransform(double time);
+    Rotation rockingAngleTransform(double seconds);
     
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
-    Rotation GPS::transformGlastToGalactic(double time);
+    Rotation transformGlastToGalactic(double seconds);
+
+    Rotation GPS::CELTransform(double seconds);
+
+    Rotation GPS::transformCelToGlast(double seconds);
+
+    void rockingDegrees(double rockDegrees){m_rockDegrees = rockDegrees;}
     
     Orbit*  orbit ();               // access the orbit (for manipulation)
+
+    void setRockType(RockType rockType){m_rockType = rockType;}
     
     double RAX()const{return m_RAX;}
     double RAZ()const{return m_RAZ;}
@@ -148,8 +156,7 @@ public:
     double DECZenith()const{return m_DECZenith;}
 
     Hep3Vector position(/*double time*/)const{
-        //std::cout << "in position, time = " << time << std::endl;
-        return m_position;/*m_earthOrbit->position(time);*/} //interface to EarthOrbit::position()
+        return m_position;} //interface to EarthOrbit::position()
     
     protected:
         // singleton - protect ctor/dtor
@@ -185,7 +192,8 @@ public:
         Hep3Vector m_position; //current vector position of the LAT.
         // notification
         Subject    m_notification; 
-        
+        double m_rockDegrees; //number of degrees to "rock" the spacecraft, along the local x axis.  
+        RockType m_rockType;//current rocking scheme
 };
 
 inline std::istream&    operator>>(std::istream& i, GPS::Coords& c) {

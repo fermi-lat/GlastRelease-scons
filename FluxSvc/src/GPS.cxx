@@ -16,6 +16,8 @@ GPS*	GPS::s_instance = 0;
 
 GPS::GPS() 
 : m_orbit(new Orbit),
+m_rockDegrees(25.),
+m_rockType(NONE),
 m_earthOrbit(new astro::EarthOrbit),
 m_expansion(1.),    // default expansion:regular orbit for now
 m_time(0.), 
@@ -235,83 +237,6 @@ void    GPS::printOn(std::ostream& out) const
 }
 
 
-Vector GPS::earthToGlast(Vector launchDir){
-    //Purpose:  rotate a vector from the earth-based frame to the GLAST-based frame.
-    Vector retlaunch=launchDir;
-    double theta=rotateAngles().first;
-    double phi=rotateAngles().second;
-    retlaunch.rotateX(theta).rotateZ(phi);
-    return retlaunch;
-}
-
-Vector GPS::galaxyToGlast(Vector launchDir){
-    //Purpose:  rotate a vector from the galactic frame to the GLAST-based frame.
-    
-    //code for changing vector into theta, phi (actually l,b, as these are the declared coordinates for the source)
-    double lpri = (-launchDir).theta();
-    double bpri = (-launchDir).phi();
-    
-    //then get galactic coordinates of source corresponding to these...
-    //double lpri=thetapri*cos(phipri);
-    //double bpri=thetapri*sin(phipri);
-    
-    //now we want the (l.g) coordinates of the GLAST satellite.
-    std::pair<double,double> glastpoint = galPositionOfGlast();
-    double lg=glastpoint.first;
-    double bg=glastpoint.second;
-    
-    //then get glast-relative theta and phi..
-    double thetat=sqrt(pow(lg-lpri,2)+pow(bg-bpri,2));
-    double phit=0.; ///FIX THIS!!!
-    
-    //then turn the relative theta, phi back into a vector...
-    
-    Vector transformDir(sin(thetat)*cos(phit),sin(thetat)*sin(phit),cos(thetat));
-    return transformDir;
-}
-
-
-
-std::pair<double,double> GPS::galPositionOfGlast(){
-    //Purpose:  return the galactic-pointing coordinates of the GALST satellite
-    //lat, lon, sidereal??? time becomes J2000.0 coordinates here:
-    double ra=((orbittime()/(24.0*60.0*60.0))*360.0)+lon();
-    if(ra > 360.0) ra-=360.0;
-    if(ra < 0.0 ) ra+=360.0;
-    double dec=lat();
-    
-    //can consider GLAST to be zenith-pointing here....m_rotangles takes care of the rest...
-    double pi = 3.141592653589793238;
-    //double ra=0;
-    //double dec=0;
-    double b,l,otherl,cosl,cosb,sinb,sinl,cosra,sinra,cosdec,sindec;
-    double radperdeg=(2.0*pi)/360.0;
-    cosra=cos(ra*radperdeg);
-    sinra=sin(ra*radperdeg);
-    
-    cosdec=cos(dec*radperdeg);
-    sindec=sin(dec*radperdeg);
-    double cosbcosl=(cosdec*cosra*-0.0548755)+(cosdec*sinra*-0.87343711)+(sindec*-0.4838349858);
-    double cosbsinl=(cosdec*cosra*0.49410945)+(cosdec*sinra*-0.444829589)+(sindec*0.7469822518);
-    sinb=(cosdec*cosra*-0.8676661358)+(cosdec*sinra*-0.198076386)+(sindec*0.4559837957);
-    b=asin(sinb); //BUT WHAT OF b < -90 or > 90?
-    cosb=cos(b);
-    cosl=cosbcosl/cosb;
-    sinl=cosbsinl/cosb;
-    otherl=acos(cosl);
-    l=asin(sinl);
-    //if(l - otherl >= 0.001) std::cout << "unequal stuff! " << std::endl;
-    b=b/radperdeg;
-    l=l/radperdeg;
-    
-    //return the galactic-pointing coordinates of glast: (b,l)
-    return std::make_pair<double,double>(b,l);
-}
-
-
-
-
-
 //access m_rotangles
 std::pair<double,double> GPS::rotateAngles(){
     return m_rotangles;
@@ -324,69 +249,179 @@ void GPS::rotateAngles(std::pair<double,double> coords){
 }
 
 
-Rotation GPS::rockingAngleTransform(double time){
+Rotation GPS::rockingAngleTransform(double seconds){
     //Purpose:  return the rotation to correct for satellite rocking.
     //Input:  Current time
     //Output:  3x3 rocking-angle transformation matrix.
-    Rotation gal;   
-    //and here we construct the rotation matrix
-    double zenithPhase = m_rotangles.first;
-    double offZenith = m_rotangles.second;
-    gal.rotateZ(zenithPhase).rotateX(offZenith);
-    //gal.rotateX(offZenith).rotateZ(zenithPhase);
-    
-    return gal;
-}
-
-Rotation GPS::transformGlastToGalactic(double time){
-    return (m_orbit->CELTransform(time).inverse())*(rockingAngleTransform(time).inverse());
-}
-
-void GPS::getPointingCharacteristics(/*Hep3Vector location, double rockNorth*/double time){
     using namespace astro;
-    //std::cout << "here" << std::endl;
-    double rockAmount = 15.0; //default - this needs to be changed.
-    double inclination = m_earthOrbit->inclination();//33.*M_PI/180.; //this should be set from astro.
-    double orbitPhase = m_earthOrbit->phase(time);//0.0; //this needs to be set from astro.
+    
+    double time = m_earthOrbit->dateFromSeconds(seconds);
+    
+    double inclination = m_earthOrbit->inclination();
+    double orbitPhase = m_earthOrbit->phase(time);
     m_position = m_earthOrbit->position(time);
-    //std::cout << "time = " << time << std::endl;
-    //Hep3Vector location = m_earthOrbit->position(time);
+    
+    SkyDir dirZ(m_position.unit());
+    SkyDir dirX(dirZ.ra()-90., 0.0);
+    
+    //rotate the x direction so that the x direction points along the orbital direction.
+    dirX().rotate(dirZ.dir() , inclination*cos(orbitPhase));
+    
+    //now set the zenith direction to do the rocking properly.
+    m_RAZenith = dirZ.ra();
+    m_DECZenith = dirZ.dec();
+
+    double rockNorth = m_rockDegrees*M_PI/180;
+    
+    //here's where we decide how much to rock about the x axis.  this depends on the 
+    //rocking mode.
+    if(m_rockType == NONE){
+        rockNorth = 0.;
+    }else if(m_rockType == UPDOWN){
+        if(m_DECZenith <= 0) rockNorth *= -1.;
+    }else if(m_rockType == SLEWING){
+        //slewing is experimental
+        if(m_DECZenith <= 0) rockNorth *= -1.;
+        if(m_DECZenith <= 10 || m_DECZenith <= 10){
+            rockNorth -= rockNorth*(m_DECZenith/10.);
+        }
+    }else if(m_rockType == ONEPERORBIT){
+        //this needs an implementation - it only rocks one way now!
+    }
+    // now, we want to find the proper transformation for the rocking angles:
+    //HepRotation rockRot(dirZ.dir() , -inclination*cos(orbitPhase));
+    //HepRotation rockRot2(dirX.dir() , rockNorth);
+    HepRotation rockRot;
+    rockRot/*.rotateZ(inclination*cos(orbitPhase))*/.rotateX(rockNorth);
+
+    return rockRot;
+}
+
+/*Rotation GPS::CELTransform(double seconds){
+    // Purpose:  Return the 3x3 matrix which transforms a vector from a local 
+    // coordinate system to a galactic coordinate system.
+    double time = m_earthOrbit->dateFromSeconds(seconds);
+    double degsPerRad = 180./M_PI;
+    Rotation gal;//,cel;
+    //gal is the matrix which rotates (cartesian)celestial coordiantes into (cartesian)galactic ones
+    gal.rotateZ(-282.25/degsPerRad).rotateX(-62.6/degsPerRad).rotateZ(33./degsPerRad);
+    
+    //cel is the rotation matrix from astro which rotates local coordinates to celestial ones.
+    Rotation cel = m_earthOrbit->CelestialToLocal(time).inverse();
+    
+    //std::cout << "time is " << seconds << std::endl;
+    //m_orbit->displayRotation(cel);
+
+    //so gal*cel should be the matrix that makes local coordiates into galactic ones.
+    Rotation glstToGal=gal*cel;
+    return glstToGal.inverse();
+
+}*/
+
+Rotation GPS::CELTransform(double seconds){
+    // Purpose:  Return the 3x3 matrix which transforms a vector from a galactic 
+    // coordinate system to a local coordinate system.
+    using namespace astro;
+    double degsPerRad = 180./M_PI;
+    Rotation gal;//,cel;
+    double time = m_earthOrbit->dateFromSeconds(seconds);
+    
+    //double inclination = m_earthOrbit->inclination();
+    //double orbitPhase = m_earthOrbit->phase(time);
+    m_position = m_earthOrbit->position(time);
+    
+    //first make the directions for the x and Z axes, as well as the zenith direction.
+    //before rotation, the z axis points along the zenith:
+    SkyDir dirZ(m_position.unit());
+    SkyDir dirX(dirZ.ra()-90., 0.0);
+    
+    //rotate the x direction so that the x direction points along the orbital direction.
+    //dirX().rotate(dirZ.dir() , inclination*cos(orbitPhase));
+
+    //so now we know where the x and z axes of the zenith-pointing frame point in the celestial frame.
+    //what we want now is to make cel, where
+    //cel is the matrix which rotates (cartesian)local coordinates into (cartesian)celestial ones
+    Rotation cel(dirX() , dirZ().cross(dirX()) , dirZ());
+
+    //std::cout << "time is " << seconds << std::endl;
+    //m_orbit->displayRotation(cel);
+
+    //gal is the matrix which rotates (cartesian)celestial coordiantes into (cartesian)galactic ones
+    gal.rotateZ(-282.25/degsPerRad).rotateX(-62.6/degsPerRad).rotateZ(33./degsPerRad);
+    //so gal*cel should be the matrix that makes local coordiates into galactic ones.
+    Rotation glstToGal=gal*cel;
+    return glstToGal.inverse();
+
+}
+
+Rotation GPS::transformCelToGlast(double seconds){
+    // Purpose:  Return the 3x3 matrix which transforms a vector from a celestial 
+    // coordinate system (like a SkyDir vector) to a local coordinate system (like the FluxSvc output).
+    using namespace astro;
+    double degsPerRad = 180./M_PI;
+
+    double time = m_earthOrbit->dateFromSeconds(seconds);
+    
+    //double inclination = m_earthOrbit->inclination();
+    //double orbitPhase = m_earthOrbit->phase(time);
+    m_position = m_earthOrbit->position(time);
+    
+    //first make the directions for the x and Z axes, as well as the zenith direction.
+    //before rotation, the z axis points along the zenith:
+    SkyDir dirZ(m_position.unit());
+    SkyDir dirX(dirZ.ra()-90., 0.0);
+    
+    //rotate the x direction so that the x direction points along the orbital direction.
+    //dirX().rotate(dirZ.dir() , inclination*cos(orbitPhase));
+
+    //so now we know where the x and z axes of the zenith-pointing frame point in the celestial frame.
+    //what we want now is to make cel, where
+    //cel is the matrix which rotates (cartesian)local coordinates into (cartesian)celestial ones
+    Rotation cel(dirX() , dirZ().cross(dirX()) , dirZ());
+    return cel.inverse();
+}
+
+Rotation GPS::transformGlastToGalactic(double seconds){
+    return (/*m_orbit->*/CELTransform(seconds).inverse())*(rockingAngleTransform(seconds).inverse());
+}
+
+void GPS::getPointingCharacteristics(double seconds){
+    //this is being used by exposureAlg right now, and should be reworked
+    //to use the rest of this class.
+    using namespace astro;
+    
+    double time = m_earthOrbit->dateFromSeconds(seconds);
+    
+    double inclination = m_earthOrbit->inclination();
+    double orbitPhase = m_earthOrbit->phase(time);
+    m_position = m_earthOrbit->position(time);
+    
     //first make the directions for the x and Z axes, as well as the zenith direction.
     SkyDir dirZenith(m_position.unit());
     //before rotation, the z axis points along the zenith:
     SkyDir dirZ(m_position.unit());
-    //SkyDir dirX(dirZ.ra()-90., 0.0);
     SkyDir dirX(dirZ.ra()-90., 0.0);
-
+    
     //rotate the x direction so that the x direction points along the orbital direction.
     dirX().rotate(dirZ.dir() , inclination*cos(orbitPhase));
-
+    
     //now set the zenith direction before the rocking.
     m_RAZenith = dirZ.ra();
     m_DECZenith = dirZ.dec();
     
     // now, we want to find the proper transformation for the rocking angles:
-    //HepRotation rockRot(Hep3Vector(0,0,1).cross(dirZ.dir()) , rockNorth);
-    
+    //HepRotation rockRot(Hep3Vector(0,0,1).cross(dirZ.dir()) , rockNorth);    
     //and apply the transformation to dirZ and dirX:
-    
-    //dirZ().rotate(Hep3Vector(0,0,1).cross(dirZ.dir()) , rockNorth*M_PI/180.);
-    //dirX().rotate(Hep3Vector(0,0,1).cross(dirZ.dir()) , rockNorth*M_PI/180.);
-    double rockNorth = rockAmount*M_PI/180;
+    double rockNorth = m_rockDegrees*M_PI/180;
     if(m_DECZenith <= 0) rockNorth *= -1.;
     
-    dirZ().rotate(dirX.dir() , rockNorth*M_PI/180.);
-    //dirX().rotate(dirX.dir() , rockNorth*M_PI/180.);//unnecessary?
-
+    dirZ().rotate(dirX.dir() , rockNorth);
+    //dirX().rotate(dirX.dir() , rockNorth*M_PI/180.);//unnecessary
+    
     m_RAX = dirX.ra();
     m_RAZ = dirZ.ra();
     m_DECX = dirX.dec();
     m_DECZ = dirZ.dec();
-    // some output showing the calculations done.
-    //std::cout << "Ra of z axis : " << dirZ.ra() << std::endl
-    //    << "Dec of z axis : " << dirZ.dec() << std::endl
-    //    << "Ra of x axis : " << dirX.ra() << std::endl
-    //    << "Dec of x axis : " << dirZ.dec() << std::endl;
     
     //a test - to ensure the rotation went properly
     //std::cout << " degrees between xhat and zhat directions: " <<

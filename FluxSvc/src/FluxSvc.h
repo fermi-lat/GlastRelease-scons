@@ -17,7 +17,6 @@
 #include "FluxSvc/IFluxSvc.h"
 #include <list>
 
-
 //forward declarations
 template <class TYPE> class SvcFactory;
 class IFlux;  // interface
@@ -66,7 +65,9 @@ public:
 
     /// return a string which uniquely identifies the source
     std::string uniqueIDString()const;
-    
+
+    /// this sets the rocking mode in GPS.
+    void setRockType(GPS::RockType rockType);
     
     //------------------------------------------------------------------
     //  stuff required by a Service

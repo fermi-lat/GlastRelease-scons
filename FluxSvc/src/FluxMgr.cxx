@@ -326,7 +326,7 @@ std::pair<double,double> FluxMgr::location(){
 
 //get the transformation matrix.
 Rotation FluxMgr::CELTransform(double time){
-    return GPS::instance()->orbit()->CELTransform(time);
+    return GPS::instance()->CELTransform(time);
 }
 
 //get the transformation matrix.
@@ -339,6 +339,10 @@ Rotation FluxMgr::transformGlastToGalactic(double time){
     return GPS::instance()->transformGlastToGalactic(time);
 }
 
+///this sets the rocking mode in GPS.
+void FluxMgr::setRockType(GPS::RockType rockType){
+   GPS::instance()->setRockType(rockType);
+}
 
 std::string FluxMgr::writeXmlFile(const std::vector<std::string>& fileList) {
 /** purpose: creates a document of the form

@@ -17,6 +17,7 @@
 #include <list>
 #include <vector>
 #include "geometry/CoordTransform.h"
+#include "src/GPS.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
 static const InterfaceID IID_IFluxSvc(910, 1 , 0); 
@@ -71,6 +72,9 @@ public:
     
     /// get the current satellite location
     virtual std::pair<double,double> location()=0;
+
+    /// this sets the rocking mode in GPS.
+    virtual void setRockType(GPS::RockType rockType)=0;
     
     
 };

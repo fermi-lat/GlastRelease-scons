@@ -10,6 +10,7 @@ FluxSvc.source_lib = {"$(FLUXSVCROOT)/xml/source_library.xml"};
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
 
 ApplicationMgr.TopAlg = {"FluxAlg","FluxTestAlg"};
+//ApplicationMgr.TopAlg = {"FluxAlg","ExposureAlg","FluxTestAlg"};
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
@@ -24,7 +25,7 @@ FluxSvc.source_lib += {"$(FLUXSVCROOT)/xml/composite_library.xml"};
 
 // ask for a source that is in the user_library
 
-FluxTestAlg.source_name="default";
+FluxTestAlg.source_name="timetick15s";
 
 ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 1000;

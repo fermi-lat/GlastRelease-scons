@@ -88,6 +88,10 @@ public:
     
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
     Rotation FluxMgr::transformGlastToGalactic(double time);
+
+    ///this sets the rocking mode in GPS.
+    void setRockType(GPS::RockType rockType);
+
 private:
     
     /// source library lookup.  Each source is uniquely identified

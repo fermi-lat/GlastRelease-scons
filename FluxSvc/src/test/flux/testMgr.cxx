@@ -7,7 +7,7 @@
 #include <iostream>
 #include <algorithm>
 #include "../../CHIMESpectrum.h"
-#include "../../Orbit.h"
+//#include "../../Orbit.h"
 
 
 static int default_count = 200 ;

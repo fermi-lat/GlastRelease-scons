@@ -48,6 +48,8 @@ private:
     IFlux* m_flux;
     std::string m_source_name;
     IParticlePropertySvc * m_partSvc;
+    //std::ostream* m_out;  //for output that looks like the stuff from the astro orbit model test.
+
 };
 
 
@@ -78,6 +80,9 @@ StatusCode FluxTestAlg::initialize() {
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
     
+    //set the output file.
+    //m_out = new std::ofstream("TestOutputData.out");
+
     // get the pointer to the flux Service 
     IFluxSvc* fsvc;
     
@@ -89,6 +94,8 @@ StatusCode FluxTestAlg::initialize() {
         return sc;
     }
     
+    //uncomment this to set the rocking method.
+    //fsvc->setRockType(GPS::UPDOWN);
     
     log << MSG::INFO << "loading source..." << endreq;
     
@@ -155,14 +162,25 @@ StatusCode FluxTestAlg::execute() {
          << ",  Elapsed Time = " << m_flux->time()
         << endreq;
     
-    //m_flux->pass(10.);
+    double theta = acos(d.z()/(d.mag()));
+    double phi = atan2(d.y(),d.x());
+
+    //and here's the file output.
+    //std::ostream& out = *m_out;
+    //    out<<m_flux->time() <<'\t';
+    //    out<<d.x() <<'\t';
+    //    out<< d.y()<<'\t';
+    //    out<< d.z()<<'\t';
+    //    out<< theta<<'\t';
+    //    out<< phi<<'\t' << std::endl;
+
     return sc;
 }
 
 
 //------------------------------------------------------------------------------
 StatusCode FluxTestAlg::finalize() {
-    
+    //delete m_out;
     return StatusCode::SUCCESS;
 }
 
