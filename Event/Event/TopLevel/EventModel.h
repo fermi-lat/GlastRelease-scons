@@ -74,6 +74,10 @@
             _EXTERN_ std::string SiClusters;
             _EXTERN_ std::string SiRecObjs;
         }
+
+        namespace AcdRecon {
+            _EXTERN_ std::string Event;
+        }
     }
 
 #undef _EXTERN_

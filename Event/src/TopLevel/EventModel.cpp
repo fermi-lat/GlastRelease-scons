@@ -54,6 +54,9 @@ public:
         EventModel::TkrRecon::SiLayers    = EventModel::TkrRecon::Event + "/SiLayers";
         EventModel::TkrRecon::SiClusters  = EventModel::TkrRecon::Event + "/SiClusters";
         EventModel::TkrRecon::SiRecObjs   = EventModel::TkrRecon::Event + "/SiRecObjs";
+
+        // reconstructed ACD data
+        EventModel::AcdRecon::Event       = EventModel::Event + "/AcdRecon";
     }
 };
     
