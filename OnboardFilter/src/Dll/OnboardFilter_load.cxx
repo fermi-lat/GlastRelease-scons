@@ -13,4 +13,5 @@
 DECLARE_FACTORY_ENTRIES(OnboardFilter) {
     DECLARE_ALGORITHM(OnboardFilter);
     DECLARE_ALGORITHM(FilterTracks);
+    DECLARE_TOOL(FilterDisplay);
 } 
