@@ -1,18 +1,19 @@
 //     $Header$
 //  author:  Toby Burnett
-#ifndef WIN32  // stupid to prevent compilation in windows 
+
+
+#ifndef WIN32
 
 #include "Xostream.h"
 
 
 #include <errno.h>
-# include <strstream>
-# include <iostream>
+#include <strstream>
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
 
-#include <string.h>
-#include <stdlib.h>
-
-# include <stdio.h>
+#include <cstdio>
 
 //////////////////////////////////////////////////////////////////////
 //	    private streambuf used by Xostream (from LAT)
@@ -25,13 +26,21 @@ public:
     logbuf (void);
     ~logbuf (void);
 
+#if  !defined(__GNUG__)
     virtual int_type            overflow (int_type c /* = traits::eof()*/);
     virtual std::streamsize     xsputn (const char_type *string,
                                         std::streamsize length);
+#else
+    virtual int                 overflow (int c /* = EOF */);
+    virtual int                 xsputn (const char *string, int length);
+#endif
 private:
     int                         m_pos;
+#if  !defined(__GNUG__)
     char_type                   m_buffer [SIZE];
-
+#else
+    char                        m_buffer [SIZE];
+#endif
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -73,7 +82,11 @@ logbuf::logbuf ()
 //<doc>         Flush the buffer.
 logbuf::~logbuf (void)
 {
+#if  !defined(__GNUG__)
     overflow (traits_type::eof ());
+#else
+    overflow (EOF);
+#endif
 }
 
 //<doc>         Handle buffer output.
@@ -89,12 +102,20 @@ logbuf::~logbuf (void)
 //                                      indicator to flush. 
 //
 //<return>      End of file indicator on failure, zero on success.
-
+#if  !defined(__GNUG__)
 std::streambuf::int_type
 logbuf::overflow (int_type ch)
+#else
+int
+logbuf::overflow (int ch)
+#endif
 {
     if (
+#if !defined(__GNUG__)
         ch != traits_type::eof ()
+#else
+        ch != EOF
+#endif
         )
     {
         m_buffer [m_pos++] = (char) ch;
@@ -129,9 +150,13 @@ logbuf::overflow (int_type ch)
 //
 //<return>      The number of characters delivered to output; the value is
 //              always equal to <<length>>.
-
+#if !defined(__GNUG__)
 std::streamsize
 logbuf::xsputn (const char_type *string, std::streamsize length)
+#else
+int
+logbuf::xsputn (const char *string, int length)
+#endif
 {
     for (int start = 0, end = 0; start < length; start = end) {
         // FIXME: should use: `&& string [end] != traits_type::newline ()'
@@ -171,4 +196,4 @@ logbuf::xsputn (const char_type *string, std::streamsize length)
     }
     return length;
 }
-#endif // NT_MSVCPP
+#endif

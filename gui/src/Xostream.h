@@ -1,4 +1,4 @@
-//   $Header$
+//   $Id$
 // Project:
 //  author: Toby Burnett
 //
@@ -9,10 +9,10 @@
 #define XOSTREAM_H
  
 
-#include "gui/GUI.h"
+#include "graphics/GUI.h"
 
 
-class Xostream : public std::ostream
+class Xostream :  public std::ostream
 {
 public:
     Xostream(const char* name);
