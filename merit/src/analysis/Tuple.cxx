@@ -231,10 +231,15 @@ Tuple::tupleItem(const std::string& name)const
 {
     Tuple::const_iterator it = find(name);
     if( it != end() ) return *it;
+#ifndef DEFECT_NO_STRINGSTREAM
     std::stringstream  errmsg;
     errmsg << "Sorry, did not find '" << name << "' in the tuple\n";
     std::cerr << errmsg << std::endl;
     throw (errmsg.str());
+#else
+    std::cerr << "Did not find a tuple item " << std::endl;
+    throw("Tuple::tupleItem -- no tuple item");
+#endif
     return *it;
 }
 
