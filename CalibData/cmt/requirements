@@ -4,7 +4,7 @@ package CalibData
 version v0r1
 
 use facilities v2r*
-
+use idents     v2r*
 use GaudiInterface * IExternal
 
 apply_pattern package_include
