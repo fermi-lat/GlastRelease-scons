@@ -12,6 +12,7 @@
 namespace CalibData {
   class CalFinder;
   class RangeBase;
+  class DacCol;
 
   /**
        Base class for calorimeter calibration data, at least for those
@@ -24,8 +25,8 @@ namespace CalibData {
   class CalCalibBase : public CalibBase {
 
   public:
-    CalCalibBase(unsigned nTowerRow=4, unsigned nTowerCol=4, unsigned nLayer=8, 
-                 unsigned nXtal=12, unsigned nFace=2, unsigned nRange=4);
+    CalCalibBase(unsigned nTowerRow=4, unsigned nTowerCol=4, unsigned nLayer=8,                  unsigned nXtal=12, unsigned nFace=2, unsigned nRange=4,
+                 unsigned nDacCol=0);
     virtual ~CalCalibBase();
 
     /** 
@@ -44,6 +45,10 @@ namespace CalibData {
                   unsigned layer, unsigned xtal, unsigned range,
                   unsigned face, RangeBase* data);
 
+    bool putDacCol(unsigned range, DacCol* dacs);
+
+    DacCol* getDacCol(unsigned range);
+
     virtual const CLID& clID() const = 0;     // must be overridden
     static const CLID& classID();   // shouldn't get called
 
@@ -54,8 +59,17 @@ namespace CalibData {
     CalFinder* m_finder;
     //    std::vector<RangeBase* >* m_pR;
     std::vector<RangeBase* > m_ranges;
+    std::vector<DacCol*> m_dacCols;              // often there aren't any
   private:
     static const CLID noCLID;
+
+    /** Due to bug in gcc, gdb can't find symbols in constructors.  This
+        method is called by the constructor and does most of the work
+    */
+    void cGuts(unsigned nTowerRow, unsigned nTowerCol, 
+               unsigned nLayer, unsigned nXtal, unsigned nFace, 
+               unsigned nRange, unsigned nDacCol);
+
   };
 
 }  
