@@ -123,8 +123,10 @@ StatusCode GlastEventSelector::setCriteria( const std::string& criteria ) {
 
 
 // Parse criteria string: Fill in the list of input files or Job Id's
+// Also parse out an environment variable and sustitute for it.
 StatusCode GlastEventSelector::parseStringInList( const std::string& namelist, ListName* inputDataList ) {
     std::string rest = namelist;
+    std::string substitute;
     while(true) {
         int ipos = rest.find_first_not_of(" ,");
         if (ipos == -1 ) break;
@@ -132,12 +134,27 @@ StatusCode GlastEventSelector::parseStringInList( const std::string& namelist, L
         int lpos  = rest.find_first_of(" ,");    // locate next blank
         if (lpos == -1 ) {
             rest = rest.substr(0,lpos );
-            inputDataList->push_back( rest);       // insert last item in list and
+
+            //now pull out and substitute for environment vaiables
+            int envStart = rest.find_first_of("$(");
+            int envEnd = rest.find_first_of(")");
+            
+            // add 2 characters to get rid of $(
+            int afterBracket = envStart + 2;
+            
+            if(!((envStart==-1)||(envEnd==-1)))
+            {
+                std::string envVariable = rest.substr(afterBracket,(envEnd-afterBracket));
+                const char * instruPath = ::getenv(envVariable.data());
+                substitute = rest.replace(envStart,(envEnd+1), instruPath);
+            }
+            inputDataList->push_back(substitute);       // insert last item in list and
             break;                                 // break
         }
         inputDataList->push_back( rest.substr(0,lpos ));   // insert in list
         rest = rest.substr(lpos, -1);                      // get the rest
     }
+
     return StatusCode::SUCCESS;
 }
 
