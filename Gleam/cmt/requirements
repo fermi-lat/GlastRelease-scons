@@ -67,7 +67,7 @@ use Recon               v2r3p2
 
 use TkrRecon    v6r4p4
 use CalRecon    v5r7p2  
-use AcdRecon            v0r5       
+use AcdRecon            v0r5p1       
 
 #ROOT persistence: RootIo specifies the data packages
 use RootIo              v4r11
