@@ -3,6 +3,7 @@ Package rootTestData
 Coordinator:H.Kelly
 @verbatim
 
+v1r0       1-dec-04  HMK Update default ROOT files - generated using GR v4r6
 v0r0p1     9-sep-04  THB fix to not add to include path 
 
 @endverbatim
