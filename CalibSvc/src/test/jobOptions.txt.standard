@@ -14,11 +14,9 @@ ApplicationMgr.DLLs   += {"CalibSvc"};
 ApplicationMgr.ExtSvc += { "RootIoSvc" };
 ApplicationMgr.Runable= "RootIoSvc"; 
 
-// ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock", "UseCalib",
-// ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock", 
-//		      "UseBadStrips" };
-ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock",
-		      "UsePeds" };
+// There are several other possibilities for test algroithm, including
+//  UseBadStrips, UseGains,...
+ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UsePeds" };
 digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
 
 
@@ -44,7 +42,8 @@ ApplicationMgr.EvtMax = 10000;
 // Start up a CalibDataSvc 
 ApplicationMgr.ExtSvc += {"CalibDataSvc"};
 
-ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc", "CalibRootCnvSvc" };
+ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc"};
+ApplicationMgr.ExtSvc += { "CalibRootCnvSvc" };
 
 DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
@@ -74,8 +73,9 @@ CalibMySQLCnvSvc.Host = "*";
 //  algorithm developers
 // CalibMySQLCnvSvc.DbName = "calib_user";
 
-CalibEvtClock.startTime = "2003-2-25_00:20";
-CalibEvtClock.delayTime = 3;
+CalibDataSvc.CalibTimeSource = "clock";
+CalibDataSvc.startTime = "2003-2-25 00:20";
+CalibDataSvc.delayTime = 900;
 
 // In order to circumvent normal calibration-fetching mechanism, which
 // relies on event timestamp, you *must* include the first two lines

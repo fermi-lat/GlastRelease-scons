@@ -14,15 +14,8 @@ ApplicationMgr.DLLs   += {"CalibSvc"};
 ApplicationMgr.ExtSvc += { "RootIoSvc" };
 ApplicationMgr.Runable= "RootIoSvc"; 
 
-// ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock", "UseCalib",
-// ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock", 
-//		      "UseBadStrips" };
 
-// comment out temporarily for testing acd
-//ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock",
-//		      "UsePeds" };
-ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock",
-		      "UseAcd" };
+ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UseAcd" };
 
 digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
 
@@ -41,10 +34,6 @@ GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
 GlastDetSvc.topVolume="LAT";
 
 ApplicationMgr.EvtMax = 10000;
-
-// Model for immediately following lines is LHCb example.  See
-// http://lhcbsoft.web.cern.ch/LHCbSoft/Ex/DetConExamples/v2r0/options/
-//   in particular, files contDB.opts and common.opts
 
 // Start up a CalibDataSvc 
 ApplicationMgr.ExtSvc += {"CalibDataSvc"};
@@ -71,13 +60,14 @@ CalibDataSvc.CalibInstrumentName = "EM2";
 CalibDataSvc.CalibStorageType = 14;
 CalibDataSvc.CalibRootName = "Calib";
 
-// Value of "*" means 'use default MySQL host', so currently (May, 2003)
+// Value of "*" means 'use default MySQL host', so currently (July, 2004)
 // equivalent to value of "centaurusa.slac.stanford.edu".
 // For local MySQL server, use value "localhost"
 CalibMySQLCnvSvc.Host = "*";
 
-CalibEvtClock.startTime = "2003-2-25_00:20";
-CalibEvtClock.delayTime = 3;
+CalibDataSvc.CalibTimeSource = "clock";
+CalibDataSvc.startTime = "2003-2-25 00:20";
+CalibDataSvc.delayTime = 3000;
 
 // In order to circumvent normal calibration-fetching mechanism, which
 // relies on event timestamp, you *must* include the first two lines

@@ -14,11 +14,7 @@ ApplicationMgr.DLLs   += {"CalibSvc"};
 ApplicationMgr.ExtSvc += { "RootIoSvc" };
 ApplicationMgr.Runable= "RootIoSvc"; 
 
-// ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock", "UseCalib",
-// ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock", 
-//		      "UseBadStrips" };
-ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock",
-		      "UseGains" };
+ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UseGains" };
 digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
 
 UseGains.DoWrite = "false";
@@ -39,14 +35,11 @@ GlastDetSvc.topVolume="LAT";
 
 ApplicationMgr.EvtMax = 10000;
 
-// Model for immediately following lines is LHCb example.  See
-// http://lhcbsoft.web.cern.ch/LHCbSoft/Ex/DetConExamples/v2r0/options/
-//   in particular, files contDB.opts and common.opts
-
 // Start up a CalibDataSvc 
 ApplicationMgr.ExtSvc += {"CalibDataSvc"};
 
-ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc", "CalibRootCnvSvc" };
+ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc"};
+ApplicationMgr.ExtSvc += { "CalibRootCnvSvc" };
 
 DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
@@ -77,8 +70,9 @@ CalibMySQLCnvSvc.Host = "*";
 //  algorithm developers
 CalibMySQLCnvSvc.DbName = "calib_test";
 
-CalibEvtClock.startTime = "2003-2-25_00:20";
-CalibEvtClock.delayTime = 3;
+CalibDataSvc.CalibTimeSource = "clock";
+CalibDataSvc.startTime = "2003-2-25 00:20";
+CalibDataSvc.delayTime = 3000;
 
 // In order to circumvent normal calibration-fetching mechanism, which
 // relies on event timestamp, you *must* include the first two lines

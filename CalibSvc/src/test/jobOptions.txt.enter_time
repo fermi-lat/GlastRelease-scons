@@ -59,15 +59,6 @@ CalibDataSvc.CalibInstrumentName = "LAT";
 CalibDataSvc.CalibStorageType = 14;
 CalibDataSvc.CalibRootName = "Calib";
 
-
-//   New style for fake clock
-// CalibDataSvc.CalibTimeSource = "clock";
-// CalibDataSvc.fakeStartTime = "2003-2-25_00:20";
-// CalibDataSvc.fakeDelayTime = 3;
-//   Old style
-// CalibEvtClock.startTime = "2003-2-25_00:20";
-// CalibEvtClock.delayTime = 3;
-
 // In order to circumvent normal calibration-fetching mechanism, which
 // relies on event timestamp, you *must* include the first two lines
 // below.  The third and fourth lines have defaults of 
