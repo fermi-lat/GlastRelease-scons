@@ -3,6 +3,7 @@ package AcdRecon\n
 package manager:H.Kelly
 @verbatim
 
+v1r6p3    30-Jul-2003 WBA Fix AcdActDist again..other sides using wrong dimension
 v1r6p2    13-Jul-2003 WBA Fix AcdActDist
 v1r6p1    25-Mar-2003 HMK Update use of RootIo to use any version
 v1r6p0    28-Feb-2003 HMK Make sure to check StatusCode from doca and hitTileDist methods
