@@ -1,0 +1,44 @@
+package CalRecon
+version v1
+
+branches src mgr doc
+
+use GlastSvc
+
+use reconstruction v3
+
+# don't make for now
+# library CalRecon  *.cxx ../CalRecon/*.h  
+
+macro CalRecon Dir  "$(CALRECONROOT)/$(DEBUGDIR)"
+
+macro CalRecon_linkopts   " " \
+      LinuxStatic         "$(CalReconDir)/libCalRecon.a -u CalRecon_loadRef" \
+      VisualCStatic       "$(CalReconDir)/libCalRecon.lib /include:_CalRecon_loadRef"
+
+macro CalRecon_stamps     ""                              \
+      LinuxStatic         "$(CalReconDir)/CalRecon.stamp" \
+      LinuxStaticdbx      "$(CalReconDir)/CalRecon.stamp" \
+      VisualCStatic       "$(CalReconDir)/CalRecon.stamp"
+
+
+set   CalReconShr           "${GLASTSVCROOT}/${DEBUGDIR}/libGlastSvc"
+
+private
+include_path $(CALRECONROOT)
+
+# this for MSVCC, to fix incompatibilities, turn off warnings
+macro_append cppflags ""\
+       VisualC " /FI$(ntconfigfile)" 
+
+# note that the debug versions of the used libraries are inserted below
+
+macro CalRecon_shlibflags   "$(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
+
+# build this for non-shareable testing
+
+application test \
+        *.cxx ../CalRecon/*.h  \
+        test/*.cxx test/*.h test/*.txt
+
+
