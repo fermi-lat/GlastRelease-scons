@@ -39,6 +39,7 @@ private:
     const TupleItem*  m_calEnergySum;
     const TupleItem*  m_acdTileCount;
     const TupleItem*  m_evtTkrEComptonRatio;
+    const TupleItem*  m_evtTkrComptonRatio;
     const TupleItem*  m_calMIPDiff;
     const TupleItem*  m_evtEnergySumOpt;
     const TupleItem*  m_calLRmsRatio;
