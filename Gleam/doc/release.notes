@@ -3,6 +3,10 @@
  * package manager:T.Burnett
  * $Id$
 
+* v2r5p2 THB 20-oct-02
+       use FluxSvc        v5r14p2
+       use FluxDisplay    v2r5
+
 * v2r5p2 THB 17-oct-02
       use FluxSvc         v5r14p1
       use TkrRecon        v8r4p4
