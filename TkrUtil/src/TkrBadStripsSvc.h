@@ -61,7 +61,7 @@ namespace {
 */
     class BadVisitor : public CalibData::BadStripsVisitor {
     public:
-        BadVisitor(MsgStream* log=0) : m_log(log) {}
+        BadVisitor(MsgStream* log=0) : m_log(log), m_nStrips(0) {}
         
         void setLog(MsgStream* log) {m_log = log;}
         
@@ -74,10 +74,13 @@ namespace {
             const CalibData::StripCol& strips);
         
         void setService(ITkrBadStripsSvcCalib* pBadStrips) {m_pBadStrips = pBadStrips;}
+
+        bool isEmpty() { return m_nStrips==0; }
         
     private:
         MsgStream* m_log;
         ITkrBadStripsSvcCalib* m_pBadStrips;
+        int m_nStrips;
     };
 }
 
