@@ -26,7 +26,7 @@ namespace CalibData {
                     virtual public IValidity {
   public:
     CalibBase();
-    CalibBase(const ITime& since, const ITime& till);
+    CalibBase(const ITime& since, const ITime& till, int serNo = -1);
     
     CalibBase(CalibBase& obj);
     
@@ -69,8 +69,13 @@ namespace CalibData {
     
     /// Update the validity range (foreseen for tree-like structures)
     virtual StatusCode updateValidity();
+
+    /// Get serial number of metadata row corresponding to calibration. 
+    /// Can be used by clients to determine if object has been updated
+    /// since last access.
+    virtual int getSerNo() {return m_serNo;}
     
-  private:
+  protected:
     
     // IValidity data
     
@@ -79,6 +84,9 @@ namespace CalibData {
     
     /// End of validity
     ITime* m_validTill;
+
+    /// Serial number of corresponding metadata row. 
+    int m_serNo;
     
   };
 

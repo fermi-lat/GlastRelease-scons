@@ -6,7 +6,7 @@
    @file CalibModelSvc.h
 
   A nearly-contentless class which only exists to make information
-  from CalibModel available to components other that CalibData.
+  from CalibModel available to components other than CalibData.
 
   For now just serve information needed by CalibDataSvc.
 */
