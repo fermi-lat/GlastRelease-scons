@@ -56,9 +56,9 @@ m_launch(NONE),m_frametype(EARTH), illumBox(0),m_gall(l),m_galb(b)
     spectrum(aSpec);
     //useSpectrumDirection();  // and will use its direction generation
     //setLaunch(*direction);
-
+    
     getGalacticDir(l,b);        
-
+    
     m_launch=GALACTIC;
     setAcceptance();
     //  transformDirection();
@@ -280,20 +280,20 @@ FluxSource* FluxSource::event(double time)
     //go through the "veto" loop only if galactic coordinates are given for the source - otherwise,
     //the particles originate close to GLAST, and can still be incident.
     // loop through until you get a particle which is not occluded by the earth.
-computeLaunch(time);
+    calculateInterval(time);
+    computeLaunch(time+m_interval);
     m_extime+=1;
-    while(occluded() || interval(time-1.) == -1){
-        computeLaunch(time);
+    while(occluded() || m_interval == -1){
+        calculateInterval(time-1.);
+        computeLaunch(time+m_interval);
         m_extime+=1;
     }
-m_extime-=1; // to make up for doing this once too many.
-EventSource::setTime(time+m_extime);
-correctForTiltAngle();
-return this;
-// could be a call-back
+    m_extime-=1; // to make up for doing this once too many.
+    EventSource::setTime(time+m_interval);
+    correctForTiltAngle();
+    return this;
+    // could be a call-back
 }
-
-
 
 
 
@@ -939,26 +939,26 @@ void FluxSource::getGalacticDir(double l,double b){
     //here is the new mechanism:
     //double theta=sqrt(pow(b,2)*pow(l,2));
     double theta=sqrt(pow(b,2)+pow(l,2))*M_2PI/360.;
-
+    
     //std::cout << "theta is" << theta << std::endl;
     //if (theta==0.){theta+=0.000000000001;}  //to fix divide-by-zero errors
     //double phi=acos(l/theta);
-
+    
     if (l==0.){l+=0.000000000001;}  //to fix divide-by-zero errors
     double phi = atan(b/l);
-
+    
     //here we construct the cartesian galactic vector
     //Vector gamgal(sin(theta)*cos(phi) , sin(theta)*sin(phi) , cos(theta));
-
+    
     //THIS IS EXPERIMENTAL - SEE ABOVE LINE
     //Vector gamgal(sin(l*M_2PI/360.) , cos(l*M_2PI/360.)*sin(b*M_2PI/360.) , cos(l*M_2PI/360.)*cos(b*M_2PI/360.));
     Vector gamgal(sin(l*M_2PI/360.)*cos(b*M_2PI/360.) , sin(b*M_2PI/360.) , cos(l*M_2PI/360.)*cos(b*M_2PI/360.));
-  
-
-    //get the transformation matrix..
-    Rotation galtoglast=GPS::instance()->orbit()->CELtransform(GPS::instance()->time() + m_extime);
     
-
+    
+    //get the transformation matrix..
+    Rotation galtoglast=GPS::instance()->orbit()->CELtransform(GPS::instance()->time() + m_interval);
+    
+    
     //and do the transform:
     setLaunch(galtoglast*gamgal);
     
@@ -1035,15 +1035,16 @@ void FluxSource::transformDirection(){
 void FluxSource::refLaunch(LaunchType launch) {m_launch=launch;}
 void FluxSource::refPoint(PointType point) {m_pointtype=point;}
 
-double FluxSource::interval (double time){
+double FluxSource::calculateInterval (double time){
     //return m_spectrum->interval(time);
     
     //return std::max(m_spectrum->interval(time),/*0.*/ EventSource::interval(time));
     double intrval=m_spectrum->interval(time + m_extime);
-    if(intrval!=-1){return intrval + m_extime;
+    if(intrval!=-1){m_interval = intrval + m_extime;
     }else{
-        return explicitInterval(time+m_extime);
+        m_interval = explicitInterval(time+m_extime);
     }
+    return m_interval;
 }
 
 
@@ -1060,7 +1061,7 @@ double FluxSource::explicitInterval (double time)
 
 bool FluxSource::occluded(){
     double current,max,z;
-
+    
     //REMEMBER:  the earth is directly below the satellite, so, to determine occlusion,
     // we must assume the frame to be checked against is zenith-pointing, and hence, we want 
     //the direction of the particle BEFORE it is compensated for tilt angles.
@@ -1075,7 +1076,7 @@ bool FluxSource::occluded(){
 }
 
 void FluxSource::correctForTiltAngle(){
-
+    
     //get the transformation matrix..
     m_correctForTilt =GPS::instance()->rockingAngleTransform(GPS::instance()->time());
     m_correctedDir = m_correctForTilt*m_launchDir;

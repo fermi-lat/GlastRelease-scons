@@ -91,7 +91,8 @@ class FluxSource : public EventSource
       ISpectrum* spectrum() const{ return m_spectrum; }
 
 
-      double interval (double time);
+      double calculateInterval (double time);
+      double interval(double time){return m_interval;}
 
       void FluxSource::getGalacticDir(double l,double b);
 
@@ -180,6 +181,7 @@ class FluxSource : public EventSource
       // fanBeam == false means polar beam
       bool sidePatch, fanBeam;
       Box* illumBox;
+      double m_interval; //the current value of the interval in time to the next particle.
       
 
       //! transform the current m_launchDir into GLAST-relative coordinates

@@ -68,7 +68,7 @@ private:
     int m_rockingMode;
     
     double m_exposedArea[360][180];
-    double m_angleExposure[180];
+    double m_angleExposure[100];
     double m_currentTime;
     double m_passedTime;  //time passed during this event
     void findExposed(double l,double b, double deltat, Rotation glastToGal);
@@ -272,7 +272,7 @@ StatusCode FluxTestAlg::execute() {
         }
     }else{
         //if we're not using rocking, it makes sense we may be sky mapping:
-        //pointingin = d;
+        pointingin = d;
     }
     
     Rotation glastToGal = fsvc->transformGlastToGalactic(m_flux->gpsTime());
@@ -315,7 +315,7 @@ StatusCode FluxTestAlg::execute() {
     m_passedTime = (m_flux->time())-m_currentTime;
     m_currentTime = m_flux->time();
     
-    if(0){
+    if(1){
     findExposed(l,b,m_passedTime,glastToGal);
     }else{
         collectZenithHist(l,b,m_passedTime);
@@ -326,7 +326,7 @@ StatusCode FluxTestAlg::execute() {
 
 //------------------------------------------------------------------------------
 StatusCode FluxTestAlg::finalize() {
-    if(0){displayExposure();
+    if(1){displayExposure();
     }else{
     zenithHistDisplay();
     }
@@ -335,11 +335,11 @@ StatusCode FluxTestAlg::finalize() {
 
 //------------------------------------------------------------------------------
 void FluxTestAlg::collectZenithHist(double l,double b, double deltat){
-    double watchedl = 70+180;    
-    double watchedb = -20+90.;  
+    double watchedl = -15+180;    
+    double watchedb = -0+90.;  
     double degToRad = M_PI/180;
     int angularDistance=acos(sin((watchedb-90.)*degToRad)*sin((b-90.)*degToRad)+cos((b-90.)*degToRad)*cos((watchedb-90.)*degToRad)*cos((l-watchedl)*degToRad))/degToRad;
-    m_angleExposure[angularDistance]++;
+    m_angleExposure[(int)(cos(angularDistance*degToRad)*100)]++;
     return;
 }
 
@@ -479,7 +479,7 @@ void FluxTestAlg::zenithHistDisplay(){
     std::ofstream out_file1("data2.dat", std::ios::ate);
     
     int i;
-    for(i=0 ; i<180 ; i++){
+    for(i=0 ; i<100 ; i++){
 
             out_file1 << i << "  " << m_angleExposure[i] << std::endl;
     }
@@ -496,12 +496,12 @@ void FluxTestAlg::zenithHistDisplay(){
         "  int i, iline=0;\n"; 
     
     out_file <<
-        "  TH1D *hist2 = new TH1D(" << '"' << "hist2" << '"' << "," << '"' << "Total Exposure" << '"' << ",180,0.,180.);\n";
+        "  TH1D *hist2 = new TH1D(" << '"' << "hist2" << '"' << "," << '"' << "Total Exposure" << '"' << ",100,0.,100.);\n";
     
     out_file <<
-        "  hist2->SetXTitle(" << '"' << "theta" << '"' <<");\n";
+        "  hist2->SetXTitle(" << '"' << "cos(theta)(x100)" << '"' <<");\n";
     out_file <<
-        "  hist2->SetYTitle(" << '"' << "dexposure/dtheta" << '"' <<");\n";
+        "  hist2->SetYTitle(" << '"' << "d(exposure)/d(cos(theta))" << '"' <<");\n";
     
     
     out_file <<
