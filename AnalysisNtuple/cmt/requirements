@@ -1,14 +1,17 @@
 package AnalysisNtuple
 
-version v0r2
+version v1r0
 
 branches src cmt doc
+use GlastSvc        v*
+use facilities      v*
 
-use GlastSvc 
-use facilities
 use ntupleWriterSvc v*
-use TkrUtil
-use Recon
+use TkrUtil         v*
+use G4Propagator    v*
+use Recon           v*
+use RootIo          v*
+
 
 apply_pattern packageShr
 

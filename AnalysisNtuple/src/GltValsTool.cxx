@@ -132,25 +132,25 @@ StatusCode GltValsTool::calculate()
     {
         // Make a hit count per plane, per tower.  
         //    X hits 0 - 999 and Y hits 1000 -...
-        int planeIdx = _nLayers;
-        while(planeIdx--)
+        layer = _nLayers;
+        while(layer--)
         {
-            int x_hitCount = pClusters->nHits(Event::TkrCluster::X, planeIdx); 
-            int y_hitCount = pClusters->nHits(Event::TkrCluster::Y, planeIdx);
+            int x_hitCount = pClusters->nHits(Event::TkrCluster::X, layer); 
+            int y_hitCount = pClusters->nHits(Event::TkrCluster::Y, layer);
             if(x_hitCount > 0 && y_hitCount > 0) {
                 std::vector<Event::TkrCluster*> xHitList;
                 std::vector<Event::TkrCluster*> yHitList;
-                xHitList = pClusters->getHits(Event::TkrCluster::X,planeIdx);
-                yHitList = pClusters->getHits(Event::TkrCluster::Y,planeIdx);
+                xHitList = pClusters->getHits(Event::TkrCluster::X,layer);
+                yHitList = pClusters->getHits(Event::TkrCluster::Y,layer);
                 
                 for(int ix=0; ix<x_hitCount; ix++){
                     int x_tower = xHitList[ix]->tower();
-                    lat_hits[x_tower][planeIdx] += 1; 
+                    lat_hits[x_tower][layer] += 1; 
                 }
                 
                 for(int iy=0; iy<y_hitCount; iy++){
                     int y_tower = yHitList[iy]->tower();
-                    lat_hits[y_tower][planeIdx] += 1000;
+                    lat_hits[y_tower][layer] += 1000;
                 }
             }
         }

@@ -9,12 +9,16 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 DECLARE_FACTORY_ENTRIES(AnalysisNtuple) {
-    DECLARE_TOOL(    TkrValsTool      );
-    DECLARE_TOOL(    CalValsTool      );
-    DECLARE_TOOL(    AcdValsTool      );
-    DECLARE_TOOL(    MCValsTool       );
-    DECLARE_TOOL(    GltValsTool      );
-    DECLARE_TOOL(    TkrHitValsTool   );
+
+    DECLARE_ALGORITHM( AnalysisNtupleAlg );
+
+    DECLARE_TOOL(      TkrValsTool      );
+    DECLARE_TOOL(      CalValsTool      );
+    DECLARE_TOOL(      AcdValsTool      );
+    DECLARE_TOOL(      McValsTool       );
+    DECLARE_TOOL(      GltValsTool      );
+    DECLARE_TOOL(      TkrHitValsTool   );
+    DECLARE_TOOL(      VtxValsTool      );
 
 
 } 
