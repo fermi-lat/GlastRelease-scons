@@ -205,7 +205,7 @@ StatusCode VtxValsTool::calculate()
             Vector t2 = track_2->getDirection();
             
             // Put in a re-calc. of vertex quantities left out 
-            Doca docaObj = Doca((const Ray(x1,t1)), (const Ray(x2,t2))); 
+            Doca docaObj = Doca(Ray(x1,t1), Ray(x2,t2)); 
             
             VTX_Head_Sep = (x1-x2).magnitude(); 
             

@@ -118,8 +118,8 @@ StatusCode test_AnalysisNtuple::execute()
     sc = m_toolvec[1]->getVal("TKR_Energy_Corr", answer);
     std::cout << "  compared to: " << answer << std::endl;
     
-    m_toolvec[4]->browse("VTX_DOCA");
-    sc = m_toolvec[4]->getVal("VTX_DOCA", answer);
+    m_toolvec[4]->browse("VTX_zdir");
+    sc = m_toolvec[4]->getVal("VTX_zdir", answer);
     std::cout << "  compared to: " << answer << std::endl;
     
     m_toolvec[6]->browse("ACD_TileCount");

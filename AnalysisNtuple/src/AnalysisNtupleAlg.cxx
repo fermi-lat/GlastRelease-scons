@@ -226,8 +226,8 @@ StatusCode AnalysisNtupleAlg::execute()
             sc = m_TkrVals->getVal("TKR_Energy_Corr", answer);
             log << MSG::DEBUG << "  compared to: " << answer << endreq;
             
-            m_VtxVals->browse("VTX_DOCA");
-            sc = m_VtxVals->getVal("VTX_DOCA", answer);
+            m_VtxVals->browse("VTX_zdir");
+            sc = m_VtxVals->getVal("VTX_zdir", answer);
             log << MSG::DEBUG << "  compared to: " << answer << endreq;
             
             m_AcdVals->browse("ACD_TileCount");
