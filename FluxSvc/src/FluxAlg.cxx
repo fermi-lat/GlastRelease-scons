@@ -53,8 +53,6 @@ $Header$
 * $Header$
 */
 
-ISpectrumFactory & GRBmanagerFactory();
-ISpectrumFactory & GRBobsFactory();
 
 class FluxAlg : public Algorithm {
 public:
@@ -172,14 +170,6 @@ StatusCode FluxAlg::initialize(){
 	if(!m_pointing_mode && m_pointing_history_input_file.value().empty()){
 		log << MSG::INFO << "no rocking mode called, rocking disabled for this run." << endreq;
 	}
-
-	//////////////////////////////////////////////////
-	// Adding GRB Factory!
-	log << MSG::INFO << "Register GRB models!" << endreq;
-	GRBmanagerFactory();
-	GRBobsFactory();
-	//////////////////////////////////////////////////
-
 	
 	if( !m_source_list.value().empty()){
 		log << MSG::INFO << "loading sources " << endreq;

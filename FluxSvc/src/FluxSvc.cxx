@@ -55,6 +55,8 @@ class FluxMgr;  // actual manager
 class IParticlePropertySvc; 
 class IAppMgrUI;
 
+ISpectrumFactory & GRBmanagerFactory();
+ISpectrumFactory & GRBobsFactory();
 
 class FluxSvc : 
     virtual public Service, 
@@ -289,8 +291,14 @@ StatusCode FluxSvc::initialize ()
     }
 
     IToolFactory* toolfactory = 0;
-
+    
     // search throught all objects (factories?)
+    //////////////////////////////////////////////////
+    // Adding GRB Factory!
+    log << MSG::INFO << "Register GRB models!" << endreq;
+    GRBmanagerFactory();
+    GRBobsFactory();
+    //////////////////////////////////////////////////
     for(IObjManager::ObjIterator it = objManager->objBegin(); it !=objManager->objEnd(); ++ it){
 
         std::string tooltype= (*it)->ident();
