@@ -40,14 +40,6 @@ const CLID& XmlCalGainCnv::classID() {
   return CLID_Calib_CAL_ElecGain;
 }
 
-// Don't need to override in this case
-/*
-StatusCode XmlBaseCnv::i_processObj(DataObject*, // pObject,
-                                    IOpaqueAddress*)  {  //pAddress
-  return StatusCode::SUCCESS;
-}
-*/
-
 namespace {
   /// Local utility which knows how to get the information out of a
   /// <calGain> element and make a CalibData::Gain with it
@@ -55,12 +47,6 @@ namespace {
     using xml::Dom;
 
     // Could check here to make sure it really is a <calGain>
-    /*
-    std::string att = Dom::getAttribute(gainElt, "avg");
-    float gain = atof(att.c_str());
-    att = Dom::getAttribute(gainElt, "sig");
-    float sig = atof(att.c_str());
-    */
     float gain, sig;
     try {
       gain = xml::Dom::getDoubleAttribute(gainElt, "avg");

@@ -59,7 +59,6 @@ namespace {
     try {
       avg = xml::Dom::getDoubleAttribute(pedElt, "avg");
       sig = xml::Dom::getDoubleAttribute(pedElt, "sig");
-      cos = xml::Dom::getDoubleAttribute(pedElt, "cos");
     }
     catch (xml::DomException ex) {
       std::cerr << "From CalibSvc::XmlCalPedCnv::processRange" << std::endl;
@@ -67,6 +66,19 @@ namespace {
       throw ex;
     }
 
+    // backward compatibility
+    try {
+      cos = xml::Dom::getDoubleAttribute(pedElt, "cos");
+    }
+    catch (xml::NullNode nullEx) {
+      cos=2.0;
+    }
+    catch (xml::DomException ex) {
+        std::cerr << "From CalibSvc::XmlCalPedCnv::processRange" << std::endl;
+        std::cerr << ex.getMsg() << std::endl;
+        throw ex;
+        //      }
+    }
     return new CalibData::Ped(avg, sig, cos);
   }
 }
