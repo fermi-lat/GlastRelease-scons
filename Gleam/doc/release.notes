@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v5r9p2 THB 19-FEB-05   support for the Cal calib stuff in test_Gleam
 * v5r9p1 THB 15-FEB-05   add CalCalibSvc *and* CalXtalResponse
 * v5r9   THB 15-FEB-05   add CalXtalResponse
 * v5r8p2 THB 31-jan-05   remove all systest files, clean up ^M problem
