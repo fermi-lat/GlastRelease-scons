@@ -1,5 +1,5 @@
 package FluxSvc
-version v4
+version v4r1
 
 branches FluxSvc mgr doc
 
@@ -7,12 +7,12 @@ use GlastPolicy
 apply_pattern packageShr
 apply_pattern package_include
 
-use flux 
+
 
 #=============================================================
 private
 
-
+use flux 
 use GaudiSvc
 use GlastEvent
 
@@ -29,5 +29,5 @@ library FluxSvc  *.cxx \
 
 macro_append FluxSvc_headers "" WIN32 "../xml/*.xml test/*.txt test/*.xml"
 # test program, using local joboptions
-
+public set JOBOPTIONS ${FLUXSVCROOT}/src/test/jobOptions.txt
 apply_pattern package_test
