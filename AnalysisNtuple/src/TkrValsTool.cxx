@@ -842,14 +842,7 @@ StatusCode TkrValsTool::calculate()
             rad_len_sum += radThin/2.;
         }
         Tkr_RadLength  = rad_len_sum;
-
-
     }          
-
-    std::cout << "Tkr_KalEne: " << Tkr_1_KalEne << " " << Tkr_2_KalEne << std::endl 
-                 <<" Tkr_KalThetaMS " <<  Tkr_1_KalThetaMS << " " << Tkr_2_KalThetaMS << std::endl;
-
-
     return sc;
 }
 
