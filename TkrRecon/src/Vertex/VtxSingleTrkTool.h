@@ -30,7 +30,8 @@ class VtxSingleTrkTool : public VtxBaseTool
   
   ///concrete implementation of VtxBaseTool: 
   ///take each track of TkrFitTrackCol and assign first hit as a vertex.
-  StatusCode doVtxFit(Event::TkrVertexCol& );
+  StatusCode doVtxFit(Event::TkrVertexCol& /*theVtxColToFill*/);
   
 };
 #endif
+
