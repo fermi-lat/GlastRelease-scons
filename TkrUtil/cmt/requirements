@@ -1,6 +1,6 @@
 package TkrUtil
 
-version v1r6
+version v1r7
 
 branches src cmt doc
 
@@ -9,6 +9,7 @@ use facilities
 use GuiSvc                v3*
 use CalibData    v*
 use CalibSvc     v*
+use G4Propagator v*
 
 apply_pattern packageShr
 

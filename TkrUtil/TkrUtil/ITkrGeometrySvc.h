@@ -26,7 +26,7 @@
  * @author Tracy Usher
  */
 
-static const InterfaceID IID_ITkrGeometrySvc("ITkrGeometrySvc", 2 , 0); 
+static const InterfaceID IID_ITkrGeometrySvc("ITkrGeometrySvc", 3 , 0); 
 
 class ITkrGeometrySvc : public virtual IInterface
 {
@@ -54,6 +54,7 @@ public:
     virtual double ladderGap()=0;
     virtual double ladderInnerGap()=0;
     virtual int    ladderNStrips()=0;
+    virtual int    nWaferAcross()=0;
     
     virtual double siStripPitch()=0;
     virtual double siResolution()=0;
@@ -82,6 +83,16 @@ public:
     virtual ITkrAlignmentSvc* getTkrAlignmentSvc() = 0;
     /// Provide access to the bad strips service
     virtual ITkrBadStripsSvc* getTkrBadStripsSvc() = 0;
+
+    /// calculate the tray number, botTop from layer, view
+    virtual void layerToTray (int layer, int view, int& tray, int& botTop) = 0;
+    /// calculate layer, view from tray, botTop
+    virtual void trayToLayer (int tray, int botTop, int& layer, int& view) = 0;    
+    /// calculate layer (digi format) and view from plane
+    virtual void planeToLayer (int plane, int& layer, int& view)=0;
+    
+
+
 };
 
 #endif
