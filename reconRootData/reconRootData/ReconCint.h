@@ -1,8 +1,8 @@
 /********************************************************************
-* ReconCint.h
+* ../reconRootData/ReconCint.h
 ********************************************************************/
 #ifdef __CINT__
-#error ReconCint.h/C is only for compilation. Abort cint.
+#error ../reconRootData/ReconCint.h/C is only for compilation. Abort cint.
 #endif
 #include <stddef.h>
 #include <stdio.h>
