@@ -32,10 +32,10 @@
   <!ELEMENT derCategory ((const*)) >
   <!ATTLIST derCategory name    ID #REQUIRED
                         save    (true | false) "false" >
-  <!ENTITY  % operator "mul | quo | add | minus | uminus | max" >
+  <!ENTITY  % operator "mul | quo | add | minus | uminus | half | max" >
 
 <!--  <!ELEMENT const ((%operator;)? ) > -->
-  <!ELEMENT const (refer | (mul | quo | add | minus | uminus | max)? ) >
+  <!ELEMENT const (refer | (mul | quo | add | minus | uminus | max | half)? ) >
   <!ATTLIST const name ID #IMPLIED
                  value NMTOKEN #IMPLIED 
                  uType (length | angle | count | mat | none) "length"
@@ -52,17 +52,25 @@
 
   <!ELEMENT refer EMPTY >
   <!ATTLIST refer refTo IDREF #REQUIRED>
-  <!ELEMENT add ( (mul | quo | add | minus | uminus | max | const | refer) , 
-                  (mul | quo | add | minus | uminus | max | const | refer)+ ) >
-  <!ELEMENT mul ((mul | quo | add | minus | uminus | max | const | refer),
-                 (mul | quo | add | minus | uminus | max | const | refer)+ ) >
-  <!ELEMENT max ((mul | quo | add | minus | uminus | max | const | refer), 
-                 (mul | quo | add | minus | uminus | max | const | refer)+ ) >
-  <!ELEMENT minus ((mul | quo | add | minus | uminus | max | const | refer), 
-                   (mul | quo | add | minus | uminus | max | const | refer) ) >
-  <!ELEMENT quo ((mul | quo | add | minus | uminus | max | const | refer), 
-                 (mul | quo | add | minus | uminus | max | const | refer) ) >
-  <!ELEMENT uminus (mul | quo | add | minus | uminus | max | const | refer)  >
+  <!ELEMENT add ( 
+     (mul | quo | add | minus | uminus | max | const | refer | half) , 
+     (mul | quo | add | minus | uminus | max | const | refer | half)+ ) >
+  <!ELEMENT mul (
+      (mul | quo | add | minus | uminus | max | const | refer | half),
+      (mul | quo | add | minus | uminus | max | const | refer | half)+ ) >
+  <!ELEMENT max (
+    (mul | quo | add | minus | uminus | max | const | refer | half), 
+    (mul | quo | add | minus | uminus | max | const | refer | half)+ ) >
+  <!ELEMENT minus (
+    (mul | quo | add | minus | uminus | max | const | refer | half), 
+    (mul | quo | add | minus | uminus | max | const | refer | half) ) >
+  <!ELEMENT quo (
+    (mul | quo | add | minus | uminus | max | const | refer | half), 
+    (mul | quo | add | minus | uminus | max | const | refer | half) ) >
+  <!ELEMENT uminus 
+        (mul | quo | add | minus | uminus | max | const | refer | half)  >
+  <!ELEMENT half 
+        (mul | quo | add | minus | uminus | max | const | refer | half)  >
  ]
 >
 
@@ -140,6 +148,20 @@
 
       <const name="der7">
         <refer refTo="der2" />
+      </const>
+      <const name="der8">
+          <half>
+            <const value="16" />
+          </half>
+      </const>
+
+      <const name="der9">
+          <half>
+            <add>
+               <refer refTo="der8" />
+               <refer refTo="der8" />
+            </add>
+          </half>
       </const>
 
     </derCategory>
