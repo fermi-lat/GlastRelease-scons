@@ -23,7 +23,6 @@
 #include "TDirectory.h"
 #include "TObjArray.h"
 #include "TCollection.h"  // Declares TIter
-#include "TEventList.h"
 
 #include "reconRootData/ReconEvent.h"
 
@@ -199,7 +198,10 @@ StatusCode reconRootReaderAlg::initialize()
 
     m_numEvents = m_reconTree->GetEntries();
       
-    if (m_rootIoSvc) m_rootIoSvc->setRootEvtMax(m_numEvents);
+	if (m_rootIoSvc) {
+		m_rootIoSvc->setRootEvtMax(m_numEvents);
+		//m_reconTree->BuildIndex("m_runId", "m_eventId");
+	}
 
     saveDir->cd();
     return sc;
@@ -228,16 +230,7 @@ StatusCode reconRootReaderAlg::execute()
 	} else if ((m_rootIoSvc) && (runEventPair.first != -1) && (runEventPair.second != -1)) {
 		int run = runEventPair.first;
 		int evt = runEventPair.second;
-		char cutStr[100];
-		sprintf(cutStr,"%s%d%s%d","m_runId == ",run,"&& m_eventId == ", evt);
-		m_reconTree->Draw(">>mylist", cutStr);
-		TEventList *elist = (TEventList*)gDirectory->Get("mylist"); 
-		if (elist->GetN() <= 0) {
-			log << MSG::WARNING << "Requested run, event pair not found " << run << " "
-				<< evt << endreq;
-			return sc;
-		}
-		readInd = elist->GetEntry(0);
+		readInd = m_reconTree->GetEntryWithIndex(run, evt);
 	} else {
 		readInd = evtId;
 	}
