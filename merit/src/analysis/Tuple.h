@@ -31,7 +31,6 @@ public:
 
     operator double()const{     return value();    }
 
-public:
     std::string name()const{return m_name;}
     // extract the value
 
@@ -89,9 +88,10 @@ private:
    */
    void add_alias(std::string name1, std::string name2);
 
+    /// allow ROOT subclass to specify float storage.
+    virtual bool isFloat()const{return false;}
 
 
-public:
    // make a list of the names of the tupleitems
 
    friend std::istream& operator >> (std::istream&, Tuple&);

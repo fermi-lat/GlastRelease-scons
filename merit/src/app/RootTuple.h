@@ -28,6 +28,9 @@ public:
     bool getEvent(int idx);
 
     int numEvents(){return m_numEvents;}
+
+    /// special for ROOT: pointers are to floats, not doubles
+    virtual bool isFloat()const{return true;}
 private:
     TTree * m_tree;
 
