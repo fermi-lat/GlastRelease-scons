@@ -21,6 +21,7 @@
 #include "Event/Recon/TkrRecon/TkrClusterCol.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
 #include "TkrUtil/ITkrBadStripsSvc.h"
+#include "TkrUtil/ITkrAlignmentSvc.h"
 
 #include "Event/Digi/TkrDigi.h"
 
@@ -45,6 +46,8 @@ private:
     ITkrGeometrySvc*         m_pTkrGeo;
     /// pointer to bad strips service
     ITkrBadStripsSvc*        m_pBadStrips;
+    /// pointer to AlignmentSvc
+    ITkrAlignmentSvc*        m_pAlignment;
     
     /// pointer to Tkr digis
     Event::TkrDigiCol*       m_TkrDigis;
