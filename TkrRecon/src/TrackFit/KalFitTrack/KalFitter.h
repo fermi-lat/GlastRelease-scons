@@ -28,6 +28,7 @@
 class ITkrGeometrySvc;
 class ITkrFailureModeSvc;
 class TkrControl;
+class ITkrAlignHitsTool;
 
 namespace Event {
 
@@ -35,9 +36,16 @@ class KalFitter
 {    
 public:
 
+    // version for alignment
+    KalFitter(TkrClusterCol* clusters, ITkrGeometrySvc* geo,
+        ITkrAlignHitsTool* alignHits,
+        TkrKalFitTrack* track, int layer, int tower, double sigmaCut, 
+        double energy, const Ray& testRay);
+    // standard version
     KalFitter(TkrClusterCol* clusters, ITkrGeometrySvc* geo,
         TkrKalFitTrack* track, int layer, int tower, double sigmaCut, 
         double energy, const Ray& testRay);
+    // I think this one is just for refitting
     KalFitter(TkrClusterCol* clusters, ITkrGeometrySvc* geo,
         TkrKalFitTrack* track, double sigmaCut, double energy);
    ~KalFitter() {}
@@ -116,6 +124,7 @@ private:
     ITkrGeometrySvc*      m_tkrGeo;
     ITkrFailureModeSvc*   m_tkrFail;
     TkrControl*           m_control;
+    ITkrAlignHitsTool*    m_alignHits;
 };
 
 };
