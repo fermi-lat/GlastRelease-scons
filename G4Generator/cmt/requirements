@@ -1,12 +1,12 @@
 package G4Generator
-version v5r7
+version v5r7p2
 author  T. Burnett <tburnett@u.washington.edu>
 author  R.Giannitrapani <riccardo@fisica.uniud.it>
 author  Francesco Longo <Francesco.Longo@ts.infn.it>
 
 #$Id$
 
-use GlastPolicy v5*
+use GlastPolicy v*
 
 # this is only a shareable package
 apply_pattern packageShr
