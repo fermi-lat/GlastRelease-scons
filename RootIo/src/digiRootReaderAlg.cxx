@@ -356,8 +356,8 @@ StatusCode digiRootReaderAlg::readDigiEvent() {
     }
     unsigned int iTower = 0;
     for (iTower = 0; iTower < 16; iTower++) {
-        rowbits->setTriRowBits(iTower, m_digiEvt->getL1T().getTriRowBits(iTowe
-r));
+        rowbits->setTriRowBits(iTower,
+            m_digiEvt->getL1T().getTriRowBits(iTower));
     }
 
     LdfEvent::LdfTime *ldfTimeTds = new LdfEvent::LdfTime();
