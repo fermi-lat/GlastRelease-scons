@@ -2,6 +2,8 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 16-sep-2002: jrb - tag v1r6p2 - Pick up fixed transverse dimensions for
+ *                                 SiLayerBox  
  * 16-sep-2002: jrb - tag v1r6p1 - Some minor, presumably innocuous changes:
  *          - move xml/flight/flightMaterials.xml to the attic
  *          - change organization of xml/materials.xml a bit to increase
