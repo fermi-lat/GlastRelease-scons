@@ -2,7 +2,7 @@
 #ifndef CalibData_LightAtt_h
 #define CalibData_LightAtt_h
 
-#include "CalibData/Cal/RangeBase.h"
+#include "CalibData/RangeBase.h"
 
 namespace CalibData {
 

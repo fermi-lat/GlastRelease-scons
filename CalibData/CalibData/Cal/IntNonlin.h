@@ -2,7 +2,7 @@
 #ifndef CalibData_IntNonlin_h
 #define CalibData_IntNonlin_h
 
-#include "CalibData/Cal/RangeBase.h"
+#include "CalibData/RangeBase.h"
 #include <vector>
 
 namespace CalibData {

@@ -2,7 +2,7 @@
 #ifndef CalibData_Gain_h
 #define CalibData_Gain_h
 
-#include "CalibData/Cal/RangeBase.h"
+#include "CalibData/RangeBase.h"
 
 namespace CalibData {
 

@@ -2,7 +2,7 @@
 #ifndef CalibData_MuSlope_h
 #define CalibData_MuSlope_h
 
-#include "CalibData/Cal/RangeBase.h"
+#include "CalibData/RangeBase.h"
 
 namespace CalibData {
 

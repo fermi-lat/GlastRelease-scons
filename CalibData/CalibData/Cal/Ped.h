@@ -2,7 +2,7 @@
 #ifndef CalibData_Ped_h
 #define CalibData_Ped_h
 
-#include "CalibData/Cal/RangeBase.h"
+#include "CalibData/RangeBase.h"
 
 namespace CalibData {
 
