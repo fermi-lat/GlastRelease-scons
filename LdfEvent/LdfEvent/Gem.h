@@ -136,6 +136,22 @@ private:
     */
     class Gem : public DataObject{
     public:
+
+        /// Defines the 8 bits in the Condition Summary word
+        /// Please see Section 1.7.2 The Condition Summary in the 
+        /// "The GLT Electronics Module" available at:
+        /// http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/GEM.pdf
+        typedef enum {
+            ROI = 1,
+            TKR = 2,
+            CALLE = 4,
+            CALHE = 8,
+            CNO = 16,
+            PERIODIC = 32,
+            SOLICITED = 64,
+            EXTERNAL = 128 
+        } Summary;
+
         Gem() { clear(); };
         virtual ~Gem() { clear(); };
         virtual std::ostream& fillStream(std::ostream &s) const;
@@ -170,6 +186,15 @@ private:
         const GemOnePpsTime& onePpsTime() const { return m_onePpsTime; };
         unsigned deltaEventTime() const { return m_deltaEventTime; };
 
+        /// Methods to query bits in the condition summary word
+        bool roiSet() const { return (m_conditionSummary & ROI); };
+        bool tkrSet() const { return (m_conditionSummary & TKR); };
+        bool calLeSet() const { return (m_conditionSummary & CALLE); };
+        bool calHeSet() const { return (m_conditionSummary & CALHE); };
+        bool cnoSet() const { return (m_conditionSummary & CNO); };
+        bool periodicSet() const { return (m_conditionSummary & PERIODIC); };
+        bool solicitedSet() const { return (m_conditionSummary & SOLICITED); };
+        bool externalSet() const { return (m_conditionSummary & EXTERNAL); };
 
     private:
 

@@ -3,6 +3,7 @@ Package LdfEvent
 Coordinator:H.Kelly
 @verbatim
 
+v2r1    14-Sep-2004 HMK Add enum to unpack the ConditionSummary in GEM
 v2r0p0  26-Aug-2004 HMK add eventsequence method to EventSummaryData
 v2r0    25-Aug-2004 HMK Store event flag in EventSummaryData
 v1r0p0  18-Aug-2004 HMK Clean up of GEM
