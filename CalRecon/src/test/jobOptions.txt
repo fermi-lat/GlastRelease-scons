@@ -1,48 +1,46 @@
 //##############################################################
 //
-// Job options file for non-GUI CalRecon test
+//  Job options file for CalRecon test 
+
+// primary DLLs
+
+ApplicationMgr.DLLs+= {"RootIo","CalRecon"};
+
+// ----------------------------
+// setup basic event loop stuff
 //
+ApplicationMgr.ExtSvc = { 
+    "GlastEventSelector/EventSelector" , 
+    "EventCnvSvc"
+    };
+EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+EventSelector.Input = "NONE";
 
-// List of Services that are required for this run
-// ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" ,
-//				"EventCnvSvc","CalGeometrySvc","TkrGeometrySvc","ntupleWriterSvc"};
- ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" ,
-				"EventCnvSvc","CalGeometrySvc","TkrGeometrySvc","ntupleWriterSvc"};
 
-// List of DLLs required
-// ApplicationMgr.DLLs   = { "GlastSvc", "CalRecon", "RootHistCnv","ntupleWriterSvc"};
-ApplicationMgr.DLLs   = { "GlastSvc", "RootHistCnv","ntupleWriterSvc", "GlastDigi", "TkrRecon", "CalRecon" };
-                          
+// ----------------------------
+//  topalg
+//
+ApplicationMgr.TopAlg = {
+	"digiRootReaderAlg",      
+    	"CalXtalRecAlg", 
+    	"CalClustersAlg"
+    };
 
-ApplicationMgr.TopAlg = { "TkrDigiAlg" , "SiClustersAlg", "SiRecObjsAlg", "CalIRFAlg", "CalClustersAlg","CalNtupleAlg" };
-//ApplicationMgr.TopAlg = { "CalIRFAlg", "CalClustersAlg","CalNtupleAlg"};
+
+// ----------------------------
+//  Geometry definition
+//
+ApplicationMgr.DLLs += {"GlastSvc"};
+ApplicationMgr.ExtSvc += { "GlastDetSvc"};
+GlastDetSvc.topVolume="LAT"; 
+
+GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.visitorMode="recon";
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-MessageSvc.OutputLevel      = 2;
-
-//=========================================================================
-// Persistency service setup:
-EventPersistencySvc.CnvServices = {"EventCnvSvc"};
-
-CalGeometrySvc.geometryType = 2;
-TkrGeometrySvc.xmlFile = "$(TKRRECONROOT)/xml/Tkr_Flight.xml";
-
-// Input IRF file
-EventSelector.Input = "IRFFILE $(CALRECONROOT)/src/test/vertical_photons.irf";
-
-ApplicationMgr.HistogramPersistency = "ROOT";
-
-ntupleWriterSvc.tuple_name = { "RECONTUPLE" };
-
-CalNtupleAlg.tupleName = "RECONTUPLE";
-
-// Output root ntuple file, specify by logical variable
-NTupleSvc.Output = {"RECONTUPLE DATAFILE='/NTUPLES/vertical_photons.root' OPT='NEW'"};
-
-    
-// Number of Events to Process
-ApplicationMgr.EvtMax = 200;
-
+MessageSvc.OutputLevel = 2;
+ApplicationMgr.EvtMax = 10;
+digiRootReaderAlg.digiRootFile="$(CALRECONROOT)/src/test/muon_digi.root";
 
 //==============================================================
 //
