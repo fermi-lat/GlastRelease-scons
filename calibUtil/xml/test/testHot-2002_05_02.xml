@@ -7,15 +7,15 @@
 <!DOCTYPE badStrips SYSTEM "../badStrips.dtd" [] >
 
 <badStrips badType="hot">
-  <meta instrument="flight" timestamp="2002-5-2-12:56" 
-        calType="badStrips" fmtVersion="1.0"            />
+  <generic instrument="flight" timestamp="2002-5-2-12:56" 
+           calType="badStrips" fmtVersion="1.0">
 
-  <inputSample startTime="2002-1-1-00:00" stopTime="2002-6-1-00:00" 
-               triggers="random" >
-   There is no input sample in fact.
-   Everything thing is just made up for code testing.
-  </inputSample>
-
+    <inputSample startTime="2002-1-1-00:00" stopTime="2002-6-1-00:00" 
+                 triggers="random" mode="normal" source="stuff" >
+     There is no input sample in fact.
+     Everything is just made up for code testing.
+    </inputSample>
+  </generic>
   <cuts  tight="0.5" loose="2.0" expected="0.1" />
 
   <tower row="0" col="1">
