@@ -102,7 +102,7 @@ StatusCode G4Generator::initialize()
 
   // Get the G4Geometry Service
   IG4GeometrySvc* geosv=0;
-  if( service( "G4GeometrySvc", geosv).isFailure() ) {
+  if( service( "G4GeometrySvc", geosv, true).isFailure() ) {
     log << MSG::ERROR << "Couldn't set up G4GeometrySvc!" << endreq;
     return StatusCode::FAILURE;
   }

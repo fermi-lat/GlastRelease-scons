@@ -72,7 +72,7 @@ class DetectorManager : public G4VSensitiveDetector {
                const HepPoint3D& entry, const HepPoint3D& exit);
   
   /// @return Return the display manager ponter
-  DisplayManager* displayMgr(){return m_display;} 
+  DisplayManager* displayMgr(){return DisplayManager::instance();} 
   
   typedef std::map<idents::VolumeIdentifier, unsigned int> DetectorList;
 
@@ -91,7 +91,6 @@ class DetectorManager : public G4VSensitiveDetector {
  private:
   /// The identifier indicized map of physical volume
   DetectorConstruction::IdMap* m_idMap;
-  DisplayManager* m_display;
 
 };
 #endif

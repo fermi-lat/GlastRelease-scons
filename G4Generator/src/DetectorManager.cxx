@@ -34,8 +34,6 @@ DetectorManager::DetectorManager(DetectorConstruction::IdMap *map,
   
   // tell G4 about us
   G4SDManager::GetSDMpointer()->AddNewDetector( this );
-  // this will be null if no GUI
-  m_display = DisplayManager::instance();
 }
 
 DetectorManager::~DetectorManager()

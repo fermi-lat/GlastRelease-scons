@@ -56,6 +56,9 @@ class G4GeometrySvc : public Service, virtual public IG4GeometrySvc
   G4TransportationManager* TransportationManager;
   IG4GeometrySvc::IdMap* idmap;
 
+  /// the geometry level of details
+  std::string m_geometryMode;
+
   // Allow SvcFactory to instantiate the service.
   friend class SvcFactory<G4GeometrySvc>;
 };
@@ -67,6 +70,8 @@ const ISvcFactory& G4GeometrySvcFactory = g4_factory;
 G4GeometrySvc::G4GeometrySvc(const std::string& name, ISvcLocator* pSvcLocator) :
   Service(name, pSvcLocator), UserDetector(0), TransportationManager(0), idmap(0)
 {
+  declareProperty("geometryMode", m_geometryMode="recon");
+
   return;
 }
 
@@ -89,20 +94,22 @@ StatusCode G4GeometrySvc::initialize()
   // Restrictions None 
 
   MsgStream log(msgSvc(), name());
-
+  
+  log << MSG::INFO << "G4GeometrySvc Initialization started" << endreq;
+  
   StatusCode sc = Service::initialize();
     
   sc = setProperties();
-
+    
   // Recover the pointer to the GLAST Geant run manager. If it does not already
   // exist, then instantiate one.
   // We need this for using Geant to do the tracking
   // Get the Glast detector service 
   IGlastDetSvc* gsv=0;
-  if( service( "GlastDetSvc", gsv).isFailure() ) 
+  if( service( "GlastDetSvc", gsv, true).isFailure() ) 
     {
       log << MSG::ERROR << "Couldn't set up GlastDetSvc!" << endreq;
-      return 0;
+      return StatusCode::FAILURE;
     }
 
   // Retrieve the event data service
@@ -110,18 +117,19 @@ StatusCode G4GeometrySvc::initialize()
   if (service( "EventDataSvc", eventSvc, true ).isFailure())
     {
       log << MSG::ERROR << "Couldn't set up EventDataSvc!" << endreq;
-      return 0;
+      return StatusCode::FAILURE;
     }
 
-  DetectorConstruction* UserDetectorConstruction = new DetectorConstruction(gsv, eventSvc, "recon", std::cout);
+  DetectorConstruction* UserDetectorConstruction = new DetectorConstruction(gsv, eventSvc, m_geometryMode, std::cout);
+
   TransportationManager = G4TransportationManager::GetTransportationManager();
+
   TransportationManager->GetNavigatorForTracking()->SetWorldVolume(UserDetectorConstruction->Construct());
 
-  UserDetector = UserDetectorConstruction;
-
-  log << MSG::DEBUG << "G4 Geometry ready" << endreq;
-
-  idmap = UserDetectorConstruction->idMap();
+  UserDetector          = UserDetectorConstruction;
+  idmap                 = UserDetectorConstruction->idMap();
+  
+  log << MSG::INFO << "G4GeometrySvc Initialization completed successfully" << endreq;
 
   return sc;
 }
