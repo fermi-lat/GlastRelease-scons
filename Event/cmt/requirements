@@ -1,5 +1,5 @@
 package Event
-version v8r14p1
+version v8r15
 
 branches Event cmt doc src
 use idents v2r*
@@ -21,7 +21,7 @@ macro_append Event_headers "" WIN32 " \
         ../Event/Utilities/*.h \
         ../Event/MonteCarlo/*.h \
         ../Event/Digi/*.h \
-        ../Event/Recon/*.h \
+        ../Event/Recon/AcdRecon/*.h \
         ../Event/Recon/TkrRecon/*.h\
         ../Event/Recon/CalRecon/*.h\
         ../Event/RelTable/*.h
