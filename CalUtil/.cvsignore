@@ -1,2 +1,8 @@
-Win32*
+Linux-i686
+i386_linux*
+sun4x_*
+
+msdev
+Win32
+Win32Debug
 Visual
