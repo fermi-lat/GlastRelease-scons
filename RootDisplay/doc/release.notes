@@ -6,6 +6,8 @@
  
 @verbatim
  
+ *   v0r2   05-jul-04 HMK use the bool returned by RootIoSvc's setRunEventPair
+ *          and setIndex - if the request was invalid, prompt the user again
  *   v0r1p0 18-jun-04 HMK Wildcard RootIo revision
  *   v0r1  10-jun-04 HMK Re-activated buildIndex, so run/event pair menu item is now available
  *   v0r0  20-aug-03 HMK initial tag
