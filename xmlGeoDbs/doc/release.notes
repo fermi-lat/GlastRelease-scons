@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+   v1r21   10-Nov-2004   Add copy of empty.xml to "right" directory
    v1r20   28-October-2004  jrb  (for Anders) Add ACD tiles to EM2 model; fix
                                   some old minor problems 
  * 16-sep-2004: lsr v1r19p1  remove obsolete and confusing flightTKRResponse.xml
