@@ -8,9 +8,9 @@
 # Paths are different for Unix and Windows. The example shows the defaults
 # for all ROOT applications for either Unix or Windows.
 Unix.*.Root.DynamicPath:    $(ROOTANALYSIS)/lib
-Unix.*.Root.MacroPath:      $(ROOTANALYSIS):$(ROOTANALYSIS)/src/utilityMacros:$(ROOTANALYSIS)/src/plotMacros:$(ROOTANALYSIS)/src/NtupleAnalysis:$(ROOTANALYSIS)/src/RootTreeAnalysis
+Unix.*.Root.MacroPath:      $(ROOTANALYSIS):$(ROOTANALYSIS)/src/utilityMacros:$(ROOTANALYSIS)/src/plotMacros:$(ROOTANALYSIS)/src/NtupleAnalysis:$(ROOTANALYSIS)/src/RootTreeAnalysis:$(ROOTANALYSIS)/src/LeaningTower
 #WinNT.*.Root.DynamicPath:   $(ROOTANALYSIS)/lib
-WinNT.*.Root.MacroPath:     $(ROOTANALYSIS);$(ROOTANALYSIS)/src/utilityMacros;$(ROOTANALYSIS)/src/plotMacros;$(ROOTANALYSIS)/src/NtupleAnalysis;$(ROOTANALYSIS)/src/RootTreeAnalysis
+WinNT.*.Root.MacroPath:     $(ROOTANALYSIS);$(ROOTANALYSIS)/src/utilityMacros;$(ROOTANALYSIS)/src/plotMacros;$(ROOTANALYSIS)/src/NtupleAnalysis;$(ROOTANALYSIS)/src/RootTreeAnalysis;$(ROOTANALYSIS)/src/LeaningTower
 
 # Activate memory statistics (size and cnt is used to trap allocation of
 # blocks of a certain size after cnt times)

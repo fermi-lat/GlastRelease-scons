@@ -14,7 +14,7 @@ set ROOTANALYSIS ${ROOTANALYSISROOT}
 
 apply_pattern package_include
 
-include_dirs ${ROOTANALYSISROOT}/src/RootTreeAnalysis ${ROOTANALYSISROOT}/src/SelectorAnalysis/mc ${ROOTANALYSIS}/src/SelectorAnalysis/digi ${ROOTANALYSISROOT}/src/SelectorAnalysis/recon ${ROOTANALYSISROOT}/src/SelectorAnalysis/friend
+include_dirs ${ROOTANALYSISROOT}/src/RootTreeAnalysis ${ROOTANALYSISROOT}/src ${ROOTANALYSISROOT}/src/SelectorAnalysis/mc ${ROOTANALYSIS}/src/SelectorAnalysis/digi ${ROOTANALYSISROOT}/src/SelectorAnalysis/recon ${ROOTANALYSISROOT}/src/SelectorAnalysis/friend
 
 apply_pattern package_headers
 
@@ -69,6 +69,9 @@ application test_RootAnalysis test/runTreeAnalysis.cxx \
             RootTreeAnalysis/RootTreeAnalysis.cxx \
             ${RootAnalysis_headers}
 
+application runTreeMaker LeaningTower/runTreeMaker.cxx \
+            LeaningTower/TreeMaker.cxx
+
 # Define the new Selector Library and Application
 library glastSelector SelectorAnalysis/mc/*.cxx SelectorAnalysis/digi/*.cxx SelectorAnalysis/recon/*.cxx ../RootAnalysis/*.cxx
 
@@ -77,4 +80,3 @@ application rootSelectorApp SelectorAnalysis/mc/*.cxx \
                             SelectorAnalysis/recon/*.cxx \
                      ../RootAnalysis/*.cxx SelectorAnalysis/test/*.cxx \
                      ${SelectorAnalysis_headers}
-
