@@ -2,13 +2,15 @@ package CalRecon
 
 package manager: Alexandre Chekhtman
 
+  v5r2 20-may-2002 AC  CalDisplay added and modified to work with new TDS classes,
+                       bugs in direction calculation fixed.
+                       
+  v5r1 13-may-2002 AC  namespace cal renamed to Event, TDS object names defined in EventModel
+                       CalCluster::writeOut now writes to MsgStream     
   v5r0 10-may-2002 THB after conversion to Event
-23-aug-2001: THB tag v2r4
-07-may-2001; THB tag v1r9
+  v4r1 08-may-2002 AC TDS classes moved to GlastEvent
+  v2r4 23-aug-2001 THB
+  v1r9 07-may-2001 THB
 
-08-may-2002; AC  tag v4r1 TDS classes moved to GlastEvent
-11-may-2002; AC  tag v5r0 GlastEvent renamed to Event
-13-may-2002; AC  tag v5r1 namespace cal renamed to Event, TDS object names defined in EventModel
-                          CalCluster::writeOut now writes to MsgStream.
 
 !======================================================================
