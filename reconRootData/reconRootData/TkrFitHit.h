@@ -24,15 +24,13 @@ public:
 
     TkrFitHit();
 
-    TkrFitHit(TYPE type, const TkrParams& params, const TkrCovMat& covMat) :
-              m_HitType(type),
-              m_Params(params),
-              m_CovMat(covMat)
-              {}
+    TkrFitHit(TYPE type, const TkrParams& params, const TkrCovMat& covMat);
 
     TkrFitHit(const TkrFitHit& hit);
 
     virtual ~TkrFitHit() {}
+
+    TkrFitHit& operator=(const TkrFitHit& old);
 
     //! Provide an initialize method (in the case of the default constructor)
     void     initialize(TYPE type, const TkrParams& params, const TkrCovMat& covMat);

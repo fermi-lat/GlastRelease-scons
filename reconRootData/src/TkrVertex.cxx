@@ -33,6 +33,8 @@ void TkrVertex::initializeVals(const TkrParams& vtxPar, const TkrCovMat& vtxCov,
 {
     m_vertexPar = vtxPar;
     m_vertexCov = vtxCov;
+    m_position.ResizeTo(pos);
     m_position  = pos;
+    m_direction.ResizeTo(dir);
     m_direction = dir;
 }

@@ -31,7 +31,9 @@ void TkrCandTrack::initialize(UInt_t id, UInt_t layer, UInt_t tower, Double_t q,
     m_firstLayer  = layer;
     m_itower      = tower;
 
+    m_position.ResizeTo(pos);
     m_position    = pos;
+    m_direction.ResizeTo(dir);
     m_direction   = dir;
 
     m_hits.clear();

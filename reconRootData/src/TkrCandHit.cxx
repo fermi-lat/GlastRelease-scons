@@ -18,6 +18,7 @@ TkrCandHit::TkrCandhit(const TVectorD& pos, UInt_t hitId, UInt_t tower, UInt_t l
 
 void TkrCandHit::initialize(const TVectorD& pos, UInt_t hitId, UInt_t tower, UInt_t layer, AXIS view)
 {
+    m_position.ResizeTo(pos);
     m_position = pos;
     m_hitIndex = hitId;
     m_tower    = tower;

@@ -20,16 +20,19 @@ public:
 
     TkrCovMat() {Zero();};
 
-    TkrCovMat(const TkrCovMat& covMat) : TMatrixD(covMat) {};
+    TkrCovMat(const TkrCovMat& covMat);
 
     TkrCovMat(Double_t sigXpos, Double_t sigXslp, Double_t sigXps, 
               Double_t sigYpos, Double_t sigYslp, Double_t sigYps); 
 
     virtual ~TkrCovMat() {}
 
+    TkrCovMat& operator=(const TkrCovMat& covMat);
+
     //! Provide an initialization method (in case of default constructor)
     void     initialize(Double_t sigXpos, Double_t sigXslp, Double_t sigXps, 
                         Double_t sigYpos, Double_t sigYslp, Double_t sigYps);
+    void     initialize(const TkrCovMat& covMat);
 
     //! Methods to return errors 
     //! (Are these redundant with the inheritance of TMatrixD?)

@@ -24,13 +24,16 @@ public:
     TkrParams(Double_t ax, Double_t sx, Double_t ay, Double_t sy) : TVectorD(0,3,ax,sx,ay,sy) 
     {}
 
-    TkrParams(const TkrParams& params) : TVectorD(params) {};
+    TkrParams(const TkrParams& params);
 
     //! destructor
     virtual ~TkrParams() {};
 
+    TkrParams& operator=(const TkrParams& old);
+
     //! Provide an initialization method (in case of default constructor)
     void     initialize(Double_t ax, Double_t sx, Double_t ay, Double_t sy);
+    void     initialize(const TkrParams& params);
 
     //! Get methods
     Double_t getXPos()   const {return GetNoElements() == 4 ? operator()(0) : -9999.;}
