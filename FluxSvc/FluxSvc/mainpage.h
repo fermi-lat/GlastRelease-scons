@@ -10,6 +10,10 @@
   it also holds the standard set of strings representing xml filenames, thus allowing multiple 
   xml files to be used. <a href="../FluxSvcDoc2.htm">More Documentation</a>
   <br>
+  <h2> Defining an external source </h2>
+    See the interface definition IRegisterSource.
+    
+
   <hr>
   \section notes release notes
   \include release.notes
