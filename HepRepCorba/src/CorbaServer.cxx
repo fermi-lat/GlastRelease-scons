@@ -37,12 +37,15 @@ void CorbaServer::run()
   std::string separator("/");
   #endif
   
+  // We get from the HepRepSvc adapter the fredStart option
+  std::string fredStart = m_svcAdapter->getStartFred();
+  
   // We build the name of the ior file; if FREDHOME env variable is defined, it
   // means we want to launch FRED automatically after the CORBA initialization;
   // the ior file is than saved in the TMP directory if defined; otherwise the
   // ior file is saved in the actual directory of execution
   std::string iorFileName;  
-  if ((::getenv("FREDHOME") != NULL) && (::getenv("TMP") != NULL))
+  if ((fredStart != "") && (::getenv("TMP") != NULL))
   {
     iorFileName = std::string(::getenv("TEMP")) + separator; 
   }
@@ -64,10 +67,10 @@ void CorbaServer::run()
 
   // If FREDHOME and TMP are defined, we will try to start FRED automatically
   // passing to it the ior file name
-  if ((::getenv("FREDHOME") != NULL) && (::getenv("TMP") != NULL))
+  if ((fredStart != "") && (::getenv("TMP") != NULL))
   {    
     std::string root("ruby ");
-    root = root + std::string(::getenv("FREDHOME"));
+    root = root + fredStart;
     root = root + separator + std::string("fred.rb -s ");
     system((root + iorFileName).c_str());
   }
