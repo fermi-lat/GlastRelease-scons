@@ -123,6 +123,11 @@ Cal2.Members = {
       "CalClustersAlg/second"
       };
 
+// ----------------------------
+//   ACD recon
+//
+ApplicationMgr.DLLs += {"AcdRecon"};
+Reconstruction.Members += {"AcdReconAlg"};
 
 // ----------------------------
 //   Output
