@@ -17,6 +17,7 @@
 #include "GaudiKernel/DataObject.h"
 
 #include "Event/Recon/ICsIClusters.h"
+#include "Event/TopLevel/EventModel.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
@@ -67,10 +68,10 @@ StatusCode TkrVertexAlg::execute()
     MsgStream log(msgSvc(), name());
 
     //Find the pattern recon tracks
-    TkrPatCandCol*  pTkrCands  = SmartDataPtr<TkrPatCandCol>(eventSvc(),"/Event/TkrRecon/TkrPatCandCol");
+    TkrPatCandCol*  pTkrCands  = SmartDataPtr<TkrPatCandCol>(eventSvc(),EventModel::TkrRecon::TkrPatCandCol);
 
     //Find the pattern recon tracks
-    TkrFitTrackCol* pTkrTracks = SmartDataPtr<TkrFitTrackCol>(eventSvc(),"/Event/TkrRecon/TkrFitTrackCol");
+    TkrFitTrackCol* pTkrTracks = SmartDataPtr<TkrFitTrackCol>(eventSvc(),EventModel::TkrRecon::TkrFitTrackCol);
 
     //Create the TkrCandidates TDS object
     TkrVertexCol*   pVtxCol    = pFindVertex->doVertexRecon(pTkrTracks, pTkrCands);
