@@ -396,8 +396,6 @@ namespace {
     double rm_soft   = 130;
     double gap       = 18.; 
     double hard_frac = .7; 
-    
-    double minHeight = 26.5;
 }
 
 StatusCode TkrValsTool::calculate()
@@ -579,7 +577,7 @@ StatusCode TkrValsTool::calculate()
         
         // Computation of the tracker contribution to the total energy 
         double costh = fabs(t1.z()); 
-        double arc_min = (x1.z() + minHeight)/costh; 
+        double arc_min = (x1.z() - pTkrGeoSvc->calZTop())/costh; 
         pKalParticle->setStepStart(x1, t1, arc_min);
         //double total_radlen = pKalParticle->radLength(); 
         
