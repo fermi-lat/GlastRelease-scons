@@ -45,6 +45,7 @@ public:
 	virtual double logHeight()=0;
 	virtual double logLength()=0;
 	virtual double logGap() =0;
+    virtual double light_att() =0;
 
 	virtual CalDetGeo getLayer(int ilayer, CalDetGeo::axis a) =0;
 	virtual CalDetGeo getLog(int ilayer, CalDetGeo::axis a, int ilog)=0; 

@@ -52,6 +52,7 @@ public:
 	 double logHeight()      {return m_logHeight;}
 	 double logLength()      {return m_logLength;}
 	 double logGap()         {return m_logGap;}
+     double light_att()      {return m_latt;}
 
 	 CalDetGeo getLayer(int ilayer, CalDetGeo::axis a);
 	 CalDetGeo getLog(int ilayer, CalDetGeo::axis a, int ilog); 
@@ -88,7 +89,7 @@ private:
 	 double m_logLength;
 	 double m_logHeight;
 	 double m_logGap;
-
+     double m_latt;
 };
 
 #endif
