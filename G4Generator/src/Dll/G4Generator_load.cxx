@@ -20,4 +20,7 @@ void G4Generator_load() {
 extern "C" void G4Generator_loadRef()    {
   G4Generator_load();
 }
-
+// these are needed by old geometry routines: remove when fixed.
+#include <iostream>
+void WARNING(const char * msg){ std::cout  << msg << std::endl;}
+void FATAL (const char* msg) {std::cerr << msg << std::endl; exit(-1);}
