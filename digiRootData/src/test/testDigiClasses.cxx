@@ -64,6 +64,14 @@ int checkCalDiagnostic(const CalDiagnosticData *calDiag) {
         std::cout << "CalDiagnostic data word is wrong" << std::endl;
         return -1;
     }
+    if (calDiag->tower() != 2) {
+        std::cout << "CalDiagnostic tower is wrong" << std::endl;
+        return -1;
+    }
+    if (calDiag->layer() != 1) {
+        std::cout << "CalDiagnostic layer is wrong" << std::endl;
+        return -1;
+    }
 
     return 0;
 }
@@ -73,6 +81,15 @@ int checkTkrDiagnostic(const TkrDiagnosticData *tkrDiag) {
         std::cout << "TkrDiagnostic datum is wrong" << std::endl;
         return -1;
     }
+    if (tkrDiag->tower() != 4) {
+        std::cout << "TkrDiagnostic tower is wrong" << std::endl;
+        return -1;
+    }
+    if (tkrDiag->gtcc() != 2) {
+        std::cout << "TkrDiagnostic gtcc is wrong" << std::endl;
+        return -1;
+    }
+   
 
     return 0;
 }
@@ -545,12 +562,16 @@ int write(char* fileName, int numEvents) {
         for (idiag = 0; idiag < numCalDiag; idiag++) {
             CalDiagnosticData *calDiag = ev->addCalDiagnostic();
             UInt_t dataWord = 10101;
-            calDiag->initialize(dataWord);
+            UInt_t tower = 2;
+            UInt_t layer = 1;
+            calDiag->initialize(dataWord,tower,layer);
         }
         for (idiag=0; idiag<numTkrDiag; idiag++) {
             TkrDiagnosticData *tkrDiag = ev->addTkrDiagnostic();
             UInt_t dataWord = 20301;
-            tkrDiag->initialize(dataWord);
+            UInt_t tower = 4;
+            UShort_t gtcc = 2;
+            tkrDiag->initialize(dataWord,tower,gtcc);
         }
 
         t->Fill();

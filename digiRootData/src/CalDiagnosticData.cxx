@@ -9,12 +9,12 @@
 
 ClassImp(CalDiagnosticData)
 
-CalDiagnosticData::CalDiagnosticData() : m_datum(0)
+CalDiagnosticData::CalDiagnosticData() : m_datum(0),m_tower(0),m_layer(0)
 {
 }
 
-CalDiagnosticData::CalDiagnosticData(UInt_t datum)
-: m_datum(datum)
+CalDiagnosticData::CalDiagnosticData(UInt_t datum,UShort_t tower, UShort_t layer)
+: m_datum(datum), m_tower(tower), m_layer(layer)
 {
 }
 
@@ -22,20 +22,26 @@ CalDiagnosticData::~CalDiagnosticData() {
 
 }
 
-void CalDiagnosticData::initialize(UInt_t datum)
+void CalDiagnosticData::initialize(UInt_t datum, UShort_t tower, UShort_t layer)
 {
     m_datum=datum;
+    m_tower = tower;
+    m_layer = layer;
 }
+
+    
 
 void CalDiagnosticData::Clear(Option_t *option) {
     m_datum = 0;
+    m_tower = 0;
+    m_layer = 0;
 }
 
 void CalDiagnosticData::Print(Option_t *option) const {
     using namespace std;
     TObject::Print(option);
     cout.precision(2);
-    cout << " Data Word: " << m_datum << endl;
+    cout << "Tower: " << m_tower << " layer: " << m_layer << " Data Word: " << m_datum << endl;
 }
 
 UInt_t CalDiagnosticData::high(UInt_t sign) const {

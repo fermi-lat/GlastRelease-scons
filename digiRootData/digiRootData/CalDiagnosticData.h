@@ -15,10 +15,10 @@ class CalDiagnosticData : public TObject {
 public:
             
     CalDiagnosticData();
-    CalDiagnosticData(UInt_t datum);
+    CalDiagnosticData(UInt_t datum, UShort_t tower, UShort_t layer);
     virtual ~CalDiagnosticData();
 
-    void initialize(UInt_t datum);
+    void initialize(UInt_t datum, UShort_t tower, UShort_t layer);
 
     void Clear(Option_t *option ="");
 
@@ -31,13 +31,17 @@ public:
     UInt_t high(UInt_t sign) const;
     UInt_t low(UInt_t sign) const;
     UInt_t logAccepts(UInt_t sign) const;
+    UShort_t tower() const { return m_tower; };
+    UShort_t layer() const { return m_layer; };
 	/*@}*/
 
 private:
     /// packed word containing trigger primitives for this set of logs
     UInt_t m_datum;
+    UShort_t m_tower;
+    UShort_t m_layer;
 
-    ClassDef(CalDiagnosticData,1) // EM CalDiagnosticData information
+    ClassDef(CalDiagnosticData,2) // EM CalDiagnosticData information
 };
 
 #endif

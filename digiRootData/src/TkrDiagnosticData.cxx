@@ -10,20 +10,24 @@
 
 ClassImp(TkrDiagnosticData)
 
-void TkrDiagnosticData::initialize(UInt_t datum)
+void TkrDiagnosticData::initialize(UInt_t datum, UShort_t tower, UShort_t gtcc)
 {
     m_datum = datum;
+    m_tower = tower;  
+    m_gtcc = gtcc;
 }
 
 void TkrDiagnosticData::Clear(Option_t *option) {
     m_datum = 0;
+    m_tower = 0;
+    m_gtcc = 0;
 }
 
 void TkrDiagnosticData::Print(Option_t *option) const {
     using namespace std;
     TObject::Print(option);
     cout.precision(2);
-    cout << "Full data word " << m_datum << endl;
+    cout << "Tower: " << m_tower << " GTCC: " << m_gtcc << " Full data word " << m_datum << endl;
 }
 
 UInt_t TkrDiagnosticData::GTRC(Int_t gtrc) const {
