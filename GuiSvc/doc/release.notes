@@ -3,6 +3,7 @@
  * Manager T Burnett
  * @verbatim
  *
+ * v3r5   07-nov-2003  THB add new alg to control when to update display
  * v3r4p4 20-jul-2003  THB req change needed by CMT v1r14; guard against multiple initialize
  * v3r4p3 20-jan-2003  THB fix to tool release
  * v3r4p1 20-jan-2003  THB release tools
