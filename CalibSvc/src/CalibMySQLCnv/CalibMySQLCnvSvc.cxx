@@ -214,7 +214,7 @@ StatusCode CalibMySQLCnvSvc::createObj (IOpaqueAddress* pAddress,
   MsgStream log(msgSvc(), "CalibMySQLCnvSvc" );
   // log << MSG::DEBUG << "Method createObj starting" << endreq;
 
-  if (( !m_detDataSvc->validEventTime() ) ||
+  if (( (!m_detDataSvc->validEventTime()) && m_useEventTime ) ||
       ( !m_instrSvc->validInstrumentName())  )   {
     log << MSG::ERROR
 	<< "Cannot create DataObject: event time or instrument undefined"
@@ -240,7 +240,7 @@ StatusCode CalibMySQLCnvSvc::createObj (IOpaqueAddress* pAddress,
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR << "Could not create calib DataObject" << endreq;
   }
-  log << MSG::DEBUG << "Method createCalib exiting" << endreq;
+  log << MSG::DEBUG << "Method createObj exiting" << endreq;
   return sc;
 }
 
@@ -263,6 +263,9 @@ StatusCode CalibMySQLCnvSvc::updateObj(IOpaqueAddress* pAddress,
 
   using facilities::Timestamp;
 
+  // Don't update when we're using enter time
+  if (!m_useEventTime) return StatusCode::SUCCESS;
+
   MsgStream log(msgSvc(), "CalibMySQLCnvSvc" );
   //  log << MSG::DEBUG << "Method updateObj starting" << endreq;
 
@@ -274,11 +277,13 @@ StatusCode CalibMySQLCnvSvc::updateObj(IOpaqueAddress* pAddress,
 	<< endreq; 
     return StatusCode::FAILURE;
   } else {
-    std::string tString  = 
-      CalibData::CalibTime(m_detDataSvc->eventTime()).getString();
-    log << MSG::DEBUG
-	<< "Event time: ";
-    log <<  tString << endreq;
+    if (m_useEventTime) {
+      std::string tString  = 
+        CalibData::CalibTime(m_detDataSvc->eventTime()).getString();
+      log << MSG::DEBUG
+          << "Event time: ";
+      log <<  tString << endreq;
+    }
   }
   if ( !m_instrSvc->validInstrumentName() ) {
     log << MSG::ERROR
