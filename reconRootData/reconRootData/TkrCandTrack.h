@@ -45,14 +45,10 @@ public:
     UInt_t        getTower()            const {return m_itower;    }
     TVector3      getPosition()         const {return m_position;  }
     TVector3      getDirection()        const {return m_direction; }
-//    TkrParams     getTrackPar()    const;
-//    double        getTrackParZ()   const {return m_position.z();}
-//    TkrFitMatrix  getTrackCov()    const; 
 
     //! Provide info to any hit on the track
-    UInt_t             getNumHits()           {return m_hits.size();   }
-    TkrCandHitIter     getHitIterBegin()      {return m_hits.begin();  }
-    TkrCandHitIter     getHitIterEnd()        {return m_hits.end();    }
+    UInt_t            getNumHits()               {return m_hits.size();   }
+    const TkrCandHit* getHitPlane(int idx) const {return &m_hits[idx];}
 
 private:
     Double_t   m_energy;

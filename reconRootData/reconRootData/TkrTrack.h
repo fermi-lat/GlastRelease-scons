@@ -64,9 +64,8 @@ public:
     const TkrHitPlane* getEndHit(TKREND end) const;
 
     //! Provide info to any hit on the track
-    UInt_t             getNumHits() const     {return m_hits.size();}
-    TkrHitPlaneIter    getHitIterBegin() const {return m_hits.begin();  }
-    TkrHitPlaneIter    getHitIterEnd() const   {return m_hits.end();    }
+    UInt_t             getNumHits() const         {return m_hits.size();}
+    const TkrHitPlane* getHitPlane(int idx) const {return &m_hits[idx];}
 
 private:
     //! Summary track quality information

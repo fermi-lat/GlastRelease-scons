@@ -44,7 +44,6 @@ public:
         UInt_t nyHits, Double_t radlen);
 
     //! Allow hits to be added to the list
-//    void     addHit(const TkrHitPlane& hit) {m_hits->Add((TObject*)&hit);}
     void     addHit(const TkrHitPlane& hit) {m_hits.push_back(hit);}
 
     //! Implement methods parallel to Event::TkrKalFitTrackBase here
@@ -84,10 +83,8 @@ public:
     const TkrHitPlane* getEndHit(TKREND end) const;
 
     //! Provide info to any hit on the track
-//    UInt_t             getNumHits() const         {return m_hits->GetEntries();}
-//    TkrHitPlane*       getHitPlane(int idx) const {return (TkrHitPlane*)m_hits->At(idx);}
     UInt_t             getNumHits() const         {return m_hits.size();}
-    const TkrHitPlane*       getHitPlane(int idx) const {return &m_hits[idx];}
+    const TkrHitPlane* getHitPlane(int idx) const {return &m_hits[idx];}
 
 private:
     /// Status
@@ -127,8 +124,6 @@ private:
     Double_t   m_TkrCal_radlen; 
 
     //! Object array of hit planes
-    //TkrHitPlaneVector m_hits;
-//    TObjArray* m_hits;
     std::vector<TkrHitPlane> m_hits;
 
     ClassDef(TkrKalFitTrack,1)
