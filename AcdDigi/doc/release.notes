@@ -2,6 +2,7 @@
  Package AcdDigi\n
  Coordinator:H.Kelly
 
+ v1r5   21-Oct-2002 HMK Set Edge Effect function via XML file\n
  v1r4p0 27-Sep-2002 HMK Use double rather than float consistently\n
         add diagram to documentation\n
  v1r4   09-Sep-2002 HMK Update version of Event and GlastSvc\n
