@@ -47,7 +47,9 @@ void DetectorManager::process(G4LogicalVolume* lvol)
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void DetectorManager::makeDisplayBox(G4TouchableHistory* touched, bool hitBox)
+void DetectorManager::makeDisplayBox(G4TouchableHistory* touched,
+                                     idents::VolumeIdentifier id,
+                                     bool hitBox)
 {
     G4VPhysicalVolume* pvol = touched->GetVolume(); 
     
@@ -68,7 +70,9 @@ void DetectorManager::makeDisplayBox(G4TouchableHistory* touched, bool hitBox)
         if( hitBox)  DisplayManager::instance()->addHitBox(global, x,y,z);
         else        DisplayManager::instance()->addIntegratingBox(global, x,y,z);
 
+
     }
+    DisplayManager::instance()->addIdDisplay(global, id);
     
 }
 
@@ -80,7 +84,7 @@ void DetectorManager::display(G4TouchableHistory* touched,
     DisplayManager::instance()->addHit(entry, exit);
 
     if( m_detectorList[id]==0) {
-        makeDisplayBox( touched ,true);        
+        makeDisplayBox( touched , id, true);        
     }
     ++ m_detectorList[id]; 
 

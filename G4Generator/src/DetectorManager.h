@@ -56,7 +56,9 @@ class DetectorManager : public G4VSensitiveDetector {
   idents::VolumeIdentifier constructId(G4Step * aStep);
   
   /// generate the box parameters to display
-  void makeDisplayBox(G4TouchableHistory* touched, bool hitBox=false);
+  void makeDisplayBox(G4TouchableHistory* touched,
+                                     idents::VolumeIdentifier id,
+                                     bool hitBox=true);
   
   /// The pointer to the IdataProviderSvc
   IDataProviderSvc* m_esv;

@@ -2,7 +2,6 @@ package G4Generator
 version v3r2
 #$Header$
 
-# Following line is temporary; was originally v4r3
 use GlastPolicy v4r*
 
 # expect these to be already in the CMTPATH!
@@ -29,7 +28,6 @@ use idents   v2*
 
 use GlastEvent v6*
 
-# New GlastSvc interface is incompatible with old
 use GlastSvc  v6*
 
 # flux determination
@@ -37,7 +35,7 @@ use FluxSvc  v5*
 
 
 #to make standard display available
-use gui      v2r*
+use gui      v3*
 use GuiSvc   v3*
 use geometry v3*
 use geomrep  v4r*

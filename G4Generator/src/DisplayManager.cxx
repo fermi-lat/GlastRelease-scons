@@ -15,6 +15,7 @@
 
 
 DisplayManager* DisplayManager::s_instance=0;
+static drawId=true;
 
 DisplayManager::DisplayManager( gui::DisplayControl* d)
 :m_display(d)
@@ -22,35 +23,24 @@ DisplayManager::DisplayManager( gui::DisplayControl* d)
     s_instance = this;
     
 
-    class Boxes : public gui::DisplayRep {
+    //! minimal rep just to append stuff to. Allows default color
+    class EmptyRep : public gui::DisplayRep {
     public:
-        Boxes(std::string color="blue"):m_color(color){}
+        EmptyRep(std::string color="black"):m_color(color){}
         void update(){}
         void clear(){DisplayRep::clear(); setColor(m_color);}
     private: 
         std::string m_color;
     };
-    class HitsRep : public gui::DisplayRep {
-    public:
-        HitsRep(){}
-        void update(){}
-        void clear(){DisplayRep::clear(); setColor("red");}
-    private:
-    };
-    
-    class TracksRep : public gui::DisplayRep {
-    public:
-        TracksRep(){}
-        void update(){}
-        void clear(){DisplayRep::clear(); setColor("black"); }
-    };
-    d->add(m_detmap["steps"] = new HitsRep, "hits", false);
-    
-    d->add(m_detmap["hit_boxes"] = new Boxes("orange"), "hit Pos detectors");
 
-    d->add(m_detmap["integrating_boxes"] = new Boxes("blue"), "hit Int detectors");
+    d->add(m_detmap["steps"] = new EmptyRep, "hits", false);
+    
+    d->add(m_detmap["hit_boxes"] = new EmptyRep("orange"), "hit Pos detectors");
 
-    d->add(m_detmap["tracks"]= new TracksRep, "tracks");
+    d->add(m_detmap["integrating_boxes"] = new EmptyRep("blue"), "hit Int detectors");
+
+    d->add(m_detmap["tracks"]= new EmptyRep, "tracks");
+    d->add(m_detmap["ids"] = new EmptyRep, "volume identifiers", false);
 }
 void DisplayManager::addDetectorBox(std::string detName, 
                                     const HepTransform3D& T, 
@@ -77,7 +67,6 @@ void DisplayManager::addIntegratingBox(const HepTransform3D& T,
 {
     Box b(x,y,z);
     b.transform(CoordTransform(T.getRotation(), T.getTranslation()));
-    //b.transform(T); 
     m_detmap["integrating_boxes"]->append(BoxRep(b));
     
 }
@@ -110,4 +99,17 @@ void DisplayManager::addTrack(const PointList & track, int charge)
     };
 
     m_detmap["tracks"]->append(TrackRep(track,charge));
+}
+void DisplayManager::addIdDisplay(const HepTransform3D& T, idents::VolumeIdentifier id)
+{
+    class IdRep : public gui::DisplayRep {
+    public:
+        IdRep(HepPoint3D center, std::string idname){
+            moveTo( center);
+            drawText(idname);
+        }
+        void update(){};
+    };
+
+    m_detmap["ids"]->append(IdRep(T.getTranslation(), id.name()) );
 }

@@ -3,8 +3,10 @@
 #ifndef DisplayManager_h
 #define DisplayManager_h
 
+#include "idents/VolumeIdentifier.h"
+
 // forward declarations
-namespace gui {class DisplayControl; class DisplayRep; }
+namespace gui {class DisplayControl; class DisplayRep;}
 
 class HepTransform3D;
 class Hep3Vector;
@@ -45,6 +47,9 @@ public:
     //! Add rep to display the tracks
     typedef std::vector<Hep3Vector> PointList;
     void addTrack(const PointList& track,  int charge);
+    
+    //! Add to rep that displays ID's
+    void addIdDisplay(const HepTransform3D& T, idents::VolumeIdentifier id);
 
     //! this is a singleton: access to the instance in this memory space
     static DisplayManager * instance(){return s_instance; }
