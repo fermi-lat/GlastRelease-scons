@@ -18,6 +18,8 @@
 #include <sstream>
 #include <algorithm>
 
+#include <iostream>
+
 //Constructor for the propagator class
 ParticleTransporter::ParticleTransporter(const G4TransportationManager* TransportationManager,
                                                IG4GeometrySvc* geoSvc) 
@@ -228,31 +230,38 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
   G4ThreeVector curDir      = startDir;
   G4double      arcLen      = 0.;
 
+  int           maxTries    = 3;
+
   //If we have already taken a step, start at the last point
   if (stepInfo.size() > 0) curPoint = stepInfo.back().GetCoords();
 
   //If maxArcLen is zero then we are done, otherwise we need to track the particle
   if (maxArcLen > 0.)
   {
-    bool          trackStatus = true;
-    double        fudge       = 0.0;
-    G4ThreeVector fudgePoint  = curPoint;
+    bool trackStatus = true;
 
     //Continue stepping until the track is no longer "alive"
     while(trackStatus)
     {
-        double maxStep  = 1000.;
-        double safeStep = 0.1;
+        double maxStep      = 1000.;    // Variables used by G4
+        double safeStep     = 0.1;      // 
+        double stepOverDist = 1000. * kCarTolerance;
+        int    numTries     = 0;
+
+        // Create a point which we hope is "just over the boundary"
+        G4ThreeVector overPoint = curPoint + stepOverDist * curDir;
 
         //Use the G4 navigator to locate the current point, then compute the distance
         //to the volume boundary
-        G4VPhysicalVolume* pCurVolume = navigator->LocateGlobalPointAndSetup(fudgePoint, 0, true, true);
-        double             trackLen   = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
+        G4VPhysicalVolume* pCurVolume = navigator->LocateGlobalPointAndSetup(overPoint, 0, true, true);
+        double             trackLen   = navigator->ComputeStep(overPoint, curDir, maxStep, safeStep) + stepOverDist;
 
         //If we are right on the boundary then jump over and recalculate
-        if (trackLen <= fudge)
+        while(trackLen <= stepOverDist)
         {
-            // Two reasons for this: either on the boundary or travelling (close) to parallel
+            // We are here because we are "on" the boundary (within the tolerance for that)
+            // Two reasons for the problem: 1) travelling almost exactly parallel to the boundary
+            // or, 2) not parallel
             // Try to ascertain which here
             G4bool temp = false;
             const G4AffineTransform& globalToLocal = navigator->GetGlobalToLocalTransform();
@@ -262,6 +271,16 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
             if (globalToLocal.IsRotated()) trackDir = globalToLocal.TransformAxis(curDir);
 
             double trkToExitAng = trackDir.dot(localExitNrml);
+
+            if (numTries++ > maxTries)
+            {
+                int checkitout = 0;
+
+                if (numTries > maxTries + 4)
+                {
+                    std::cout << "G4Propagator: in danger of stuck particle" << std::endl;
+                }
+            }
 
             // Parallel track case
             if (fabs(trkToExitAng) < kCarTolerance)
@@ -273,14 +292,15 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
                 curDir.setMag(1.);
             }
             // Surface tolerance case 
-            else if (trackLen == 0.)
+            else 
             {
-                fudge       = 10 * kCarTolerance; // 10 * minimum tolerance in G4
-                fudgePoint += fudge*curDir;
-
-                pCurVolume  = navigator->LocateGlobalPointAndSetup(fudgePoint, 0, true, true);
-                trackLen    = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
+                stepOverDist += 1000. * kCarTolerance / fabs(trkToExitAng); // 10 * minimum tolerance in G4
+                overPoint     = curPoint + stepOverDist*curDir;
             }
+
+            // Re-step with new points
+            pCurVolume  = navigator->LocateGlobalPointAndSetup(overPoint, 0, true, true);
+            trackLen    = navigator->ComputeStep(overPoint, curDir, maxStep, safeStep) + stepOverDist;
         }
 
         //If infinite trackLen then we have stepped outside of GLAST
@@ -289,7 +309,6 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
         //Update arc length, point and volume
         arcLen     += trackLen;
         curPoint   += trackLen * curDir;
-        fudgePoint  = curPoint + fudge * curDir;
         
         //Stop condition is that we have reached or overrun our arclength
         if (arcLen >= maxArcLen)
