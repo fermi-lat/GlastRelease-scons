@@ -53,13 +53,14 @@ use GlastSvc    v9r3p1
 
 use FluxSvc               v5r15p2
 use FluxDisplay v2r6
-use G4Generator v4r4
+use G4Generator           v4r4p1
 
 #digitization
 use CalDigi     v1r2p11
 use TkrDigi     v1r7p1
 use AcdDigi     v1r6
-
+# 
+use GlastDigi             v4r5p2
 
 
 #reconstruction
