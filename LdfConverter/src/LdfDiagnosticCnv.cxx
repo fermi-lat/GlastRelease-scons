@@ -46,13 +46,29 @@ StatusCode LdfDiagnosticCnv::createObj(IOpaqueAddress* ,
 
             if (!diagnostic->exist()) continue;
 
-            ldfReader::CalDiagnosticData ldfCalDiag = diagnostic->getCalDiagnostic();
-            LdfEvent::CalDiagnosticData cal(ldfCalDiag.dataWord(), ldfCalDiag.tower(), ldfCalDiag.layer());
-            diag->addCalDiagnostic(cal);
+	    // Added 03.18.2005 by awb to get all Tkr and Cal diagnostics contributions. 
+            // Had to hardcode '8' - this should be fixed later.  
+	    unsigned int ind;
+	    for (ind = 0; ind < 8; ind++) {
+	      ldfReader::CalDiagnosticData ldfCalDiag = diagnostic->getCalDiagnosticByIndex(ind);
+	      //LdfEvent::CalDiagnosticData cal(diagnostic->getCalDiagnosticByIndex(ind).dataWord());
+	      LdfEvent::CalDiagnosticData cal(ldfCalDiag.dataWord(), ldfCalDiag.tower(), ldfCalDiag.layer());
+	      diag->addCalDiagnostic(cal);
+	    }
+	    for (ind = 0; ind < 8; ind++) {
+	      ldfReader::TkrDiagnosticData ldfTkrDiag = diagnostic->getTkrDiagnosticByIndex(ind);
+	      LdfEvent::TkrDiagnosticData tkr(ldfTkrDiag.dataWord(), ldfTkrDiag.tower(), ldfTkrDiag.gtcc());
+	      diag->addTkrDiagnostic(tkr);
+	    }
 
-            ldfReader::TkrDiagnosticData ldfTkrDiag = diagnostic->getTkrDiagnostic();
-             LdfEvent::TkrDiagnosticData tkr(ldfTkrDiag.dataWord(), ldfTkrDiag.tower(), ldfTkrDiag.gtcc());
-             diag->addTkrDiagnostic(tkr);
+	    // Taken out 03.18.2005 by awb:
+            //ldfReader::CalDiagnosticData ldfCalDiag = diagnostic->getCalDiagnostic();
+            //LdfEvent::CalDiagnosticData cal(ldfCalDiag.dataWord(), ldfCalDiag.tower(), ldfCalDiag.layer());
+            //diag->addCalDiagnostic(cal);
+
+            //ldfReader::TkrDiagnosticData ldfTkrDiag = diagnostic->getTkrDiagnostic();
+            // LdfEvent::TkrDiagnosticData tkr(ldfTkrDiag.dataWord(), ldfTkrDiag.tower(), ldfTkrDiag.gtcc());
+            // diag->addTkrDiagnostic(tkr);
         }
     }
     return StatusCode::SUCCESS;
