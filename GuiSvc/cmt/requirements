@@ -35,8 +35,8 @@ private
 
 # don't know why we need the dl library - TL
 pattern guiapp \
-  macro use_linkopts " $(GuiSvc_lib) -u GuiSvc_loadRef  $(gui_linkopts) $(GaudiKernel_linkopts) -ldl "\
-               WIN32 " $(GaudiKernel_linkopts) $(GuiSvc_lib) $(gui_linkopts) /include:_GuiSvc_loadRef "
+  macro use_linkopts " $(GuiSvc_lib) -u GuiSvc_loadRef  $(guiapp_linkopts) $(GaudiKernel_linkopts) -ldl "\
+               WIN32 " $(GaudiKernel_linkopts) $(GuiSvc_lib) $(guiapp_linkopts) /include:_GuiSvc_loadRef "
 
 apply_pattern guiapp
 
