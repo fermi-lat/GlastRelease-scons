@@ -15,6 +15,8 @@
 
 #include "eventSummary.h" // from EBF library
 
+#include "enums/EventFlags.h"
+
 /**
 * @class EventSummaryData
 * @brief TDS for storing the event summary data 
@@ -27,27 +29,11 @@ namespace LdfEvent{
 
     class EventSummaryData : public DataObject {
     public:
-        /// EVTSEQ set means that the event sequence number
-        /// constructed from the eventNumber and tag in the EventSummary
-        /// are either inconsistent across contributions in the evnet
-        /// or the event sequence across events is not monotonically increasing
-       /// TKRRECON set means there was some error condition during TkrRecon
-        typedef enum {
-            GOOD = 0,
-            EVTSEQ = 1,
-            TKRRECON = 2,
-            PACKETERROR = 4,
-            SUMMARYERROR = 8,
-            TRGPARITYERROR =16
-        } EventFlags ;
-
 
         typedef enum {
             GEM = 0,
             OSW = 1,
-            ERR = 2, 
-            DIAG = 3,
-            AEM = 4
+            AEM = 2 
         }Contribution;
 
         virtual ~EventSummaryData();
@@ -65,12 +51,14 @@ namespace LdfEvent{
         void clear() { 
             m_summary = 0; m_flags = 0;
             unsigned int i;
-            for (i = 0; i<16; i++) m_temLen[i] = 0;
+            for (i = 0; i<16; i++) {
+                m_temLen[i] = 0;
+                m_diagLen[i] =0;
+                m_errLen[i] = 0;
+            }
             m_otherContribLen[GEM] = 0;
             m_otherContribLen[AEM] = 0;
             m_otherContribLen[OSW] = 0;
-            m_otherContribLen[ERR] = 0;
-            m_otherContribLen[DIAG] = 0;
         }
 
         void initialize(unsigned int summary){m_summary=summary;};
@@ -79,34 +67,46 @@ namespace LdfEvent{
             unsigned int i;
             for (i = 0; i < 16; i++) { m_temLen[i] = len[i]; }
         }
+        void initDiagContribLen(unsigned int *len) {
+            unsigned int i;
+            for (i = 0; i < 16; i++) { m_diagLen[i] = len[i]; }
+        }
+        void initErrContribLen(unsigned int *len) {
+            unsigned int i;
+            for (i = 0; i < 16; i++) { m_errLen[i] = len[i]; }
+        }
         void initContribLen(unsigned int *tem, unsigned int gemLen, unsigned int oswLen,
-            unsigned int errLen, unsigned int diagLen, unsigned int aemLen) {
+            unsigned int *errLen, unsigned int *diagLen, unsigned int aemLen) {
 
             m_otherContribLen[GEM] = gemLen;
             m_otherContribLen[OSW] = oswLen;
-            m_otherContribLen[ERR] = errLen;
-            m_otherContribLen[DIAG] = diagLen;
             m_otherContribLen[AEM] = aemLen;
             initTemContribLen(tem);
+            initDiagContribLen(diagLen);
+            initErrContribLen(errLen);
         }
         
-        unsigned int temLength(unsigned int tem) { return m_temLen[tem]; }
+        unsigned int temLength(unsigned int tem) const { return m_temLen[tem]; }
+        unsigned int diagnosticLength(unsigned int tem) const { return m_diagLen[tem]; }
+        unsigned int errorLength(unsigned int tem) const { return m_errLen[tem]; }
         unsigned int gemLength() const { return m_otherContribLen[GEM]; }
         unsigned int oswLength() const { return m_otherContribLen[OSW]; }
         unsigned int aemLength() const { return m_otherContribLen[AEM]; }
-        unsigned int errLength() const { return m_otherContribLen[ERR]; }
-        unsigned int diagLength() const { return m_otherContribLen[DIAG]; }
 
-        void setEvtSeqBit()  { m_flags |= EVTSEQ; };
-        void setTkrReconBit() { m_flags |= TKRRECON; };
+        const unsigned int* temLength() const { return m_temLen; };
+        const unsigned int* diagnosticLength() const { return m_diagLen; };
+        const unsigned int* errorLength() const { return m_errLen; };
+
+        void setEvtSeqBit()  { m_flags |= enums::EVTSEQ; };
+        void setTkrReconBit() { m_flags |= enums::TKRRECON; };
         unsigned int eventFlags() const { return m_flags; };
         bool goodEvent() const { return (m_flags == 0); };
-        bool badEventSeq() const { return (m_flags & EVTSEQ); };
-        bool badTkrRecon() const { return (m_flags & TKRRECON); };
+        bool badEventSeq() const { return (m_flags & enums::EVTSEQ); };
+        bool badTkrRecon() const { return (m_flags & enums::TKRRECON); };
         bool badEvent() const { return (m_flags != 0); } ;
-        bool packetError() const { return (m_flags & PACKETERROR); };
-        bool summaryError() const { return (m_flags & SUMMARYERROR); };
-        bool trgParityErrorSummary() const { return (m_flags & TRGPARITYERROR); };
+        bool packetError() const { return (m_flags & enums::PACKETERROR); };
+        bool temError() const { return (m_flags & enums::SUMMARYERROR); };
+        bool trgParityErrorOr() const { return (m_flags & enums::TRGPARITYERROR); };
 
         unsigned long eventSequence() const {
             unsigned eventNumber = EventSummary::eventNumber(m_summary);
@@ -133,7 +133,9 @@ namespace LdfEvent{
     /// flags = 0 is "good"
     unsigned int m_flags;
     unsigned int m_temLen[16];
-    unsigned int m_otherContribLen[5];
+    unsigned int m_diagLen[16];
+    unsigned int m_errLen[16];
+    unsigned int m_otherContribLen[3];
     };
 
     inline EventSummaryData::~EventSummaryData(){
@@ -152,12 +154,13 @@ namespace LdfEvent{
           << "GEM Length: " << m_otherContribLen[GEM] << "\n"
           << "OSW Length: " << m_otherContribLen[OSW] << "\n"
           << "AEM Length: " << m_otherContribLen[AEM] << "\n"
-          << "Diagnostic Length: " << m_otherContribLen[DIAG] << "\n"
-          << "Error Length: " << m_otherContribLen[ERR] << "\n"
           << "TEM Lengths: \n";
         unsigned int i;
-        for (i = 0; i < 16; i++) 
+        for (i = 0; i < 16; i++) {
             s << "TEM " << i << " Length: " << m_temLen[i] << "\n";
+            s << "Diagnostic " << i << " Length: " << m_diagLen[i] << "\n";
+            s << "Error " << i << " Length: " << m_errLen[i] << "\n";
+        }
            
         return s;
     }
