@@ -57,7 +57,7 @@ void RootTreeAnalysis::ReconTkrHistDefine() {};
 void RootTreeAnalysis::ReconAcdHistDefine() {};
 
 #include "ReconCalFragment.cxx"
-
+#include "ReconTkrFragment.cxx"
 
 void RootTreeAnalysis::DigiAcd() {};
 
