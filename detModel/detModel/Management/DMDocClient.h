@@ -30,6 +30,7 @@ namespace detModel{
     const DOM_Node getConstants() {return m_constants;}
     const DOM_Node getSections() {return m_sections;}
     const DOM_Node getMaterials() {return m_materials;}
+    const DOM_Node getIdDictionary() {return m_idDict;}
 
     ~DMDocClient() {};
 
@@ -42,6 +43,8 @@ namespace detModel{
     DOM_Node m_sections;
     /// This is the DOM_Node for materials
     DOM_Node m_materials;
+    /// This is the DOM_Node for id dictionary
+    DOM_Node m_idDict;
   };
   
 }

@@ -62,17 +62,17 @@ int main(int argc, char* argv[]) {
   // will build the vrml file for the specified volume. The output is
   // placed in sections.vrml
   detModel::VrmlSectionsVisitor* visitor;
-  if (argc == 2)
-    visitor = new detModel::VrmlSectionsVisitor("");  
-  else
-    visitor = new detModel::VrmlSectionsVisitor(argv[2]);  
+
+  std::string volName("");
+  if (argc > 2) volName = std::string(argv[2]);
+  visitor = new detModel::VrmlSectionsVisitor(volName);
 
   visitor->setMode("digi");
-  // We retrive the hierarchy entry point, i.e. the GDD object. It
+  // We retrieve the hierarchy entry point, i.e. the GDD object. It
   // contains all the relevant information
   detModel::Gdd* g = manager->getGdd();
   
-  // An example; we retrive some info from the xml file
+  // An example; we retrieve some info from the xml file
   std::cout << "XML file contains " << g->getVolumesNumber() << " volumes." << std::endl;
   std::cout << "XML file contains " << g->getMaterialsNumber() << " materials." << std::endl;
   std::cout << "XML file contains " << g->getConstantsNumber() << " constants." << std::endl;
@@ -81,7 +81,8 @@ int main(int argc, char* argv[]) {
   manager->getNumericConstByName("maxLog", &maxLogVal);
   std::cout << "value for maxLog is " << maxLogVal << std::endl;
 
-  // Retrive the materials, generate the colors and set some transparency values
+  // Retrieve the materials, generate the colors and set some 
+  // transparency values
   detModel::MatCollection* mats = g->getMaterials();  
   mats->generateColor();
   mats->setMaterialTransparency("Vacuum",0.7);
@@ -94,10 +95,9 @@ int main(int argc, char* argv[]) {
   // We start the vrml visitor
   manager->startVisitor(visitor);
 
-  manager->startVisitor(new detModel::CountMaterial(argv[2]));
+  manager->startVisitor(new detModel::CountMaterial(volName));
 
-  detModel::IDmapBuilder idMap(argv[2]);
-  //idMap.setMode("digi");
+  detModel::IDmapBuilder idMap(volName);
   manager->startVisitor(&idMap);
   idMap.summary(std::cout);
 

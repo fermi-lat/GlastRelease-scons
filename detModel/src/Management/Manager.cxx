@@ -54,6 +54,7 @@ namespace detModel{
 	manBuilder->buildSections(); 
 	manBuilder->buildConstants(); 
 	manBuilder->buildMaterials();
+	manBuilder->buildIdDictionary(); 
 	break;
       case constants:
 	manBuilder->buildConstants(); 
@@ -63,6 +64,9 @@ namespace detModel{
 	break;
       case materials:
 	manBuilder->buildMaterials();
+	break;
+      case idDictionary:
+	manBuilder->buildIdDictionary();
 	break;
 
       }

@@ -30,6 +30,12 @@ namespace detModel{
 	m_materials = node;
 	std::cout << "detModel Doc Client: registered the materials!" << std::endl; 
       }
+    else if (name == "idDict")
+      {
+	m_idDict = node;
+	std::cout << 
+       "detModel Doc Client: registered the id dictionary!" << std::endl; 
+      }
     else
       {
 	detAbort ("detModel Doc Client asked for an unknown DOM element!");

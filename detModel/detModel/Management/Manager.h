@@ -16,7 +16,7 @@ namespace detModel{
    */
   class Manager {
   public:
-    enum buildType{all,constants,sections,materials};
+    enum buildType{all,constants,sections,materials,idDictionary};
 
   public:
   

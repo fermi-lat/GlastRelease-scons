@@ -40,6 +40,11 @@ namespace detModel{
      * result in a private pointer */
     virtual void buildMaterials() = 0;
 
+    /**
+     * Build an in-memory id dictionary
+     */
+    virtual void buildIdDictionary() = 0;
+
     void setGdd(Gdd* pGdd){currentGdd = pGdd;}
 
     /** This method return a pointer to the internal

@@ -55,7 +55,10 @@ namespace detModel{
      */
     virtual void  buildMaterials();
 
-
+    /** 
+     *  Build the in-memory id dictionary so it may be queried
+     */
+    virtual void  buildIdDictionary();
 
   private:
     /**

@@ -1,6 +1,7 @@
-#include "xmlUtil/Substitute.h"
-#include "xmlUtil/Arith.h"
+// #include "xmlUtil/Substitute.h"
+// #include "xmlUtil/Arith.h"
 #include "xmlUtil/docMan/GDDDocMan.h"
+#include "xmlUtil/id/IdDict.h"
 
 #include "xml/XmlParser.h"
 #include "xml/Dom.h"
@@ -45,6 +46,7 @@ namespace detModel{
     pGDDMan->regClient("constants", m_docClient);
     pGDDMan->regClient("section", m_docClient);    
     pGDDMan->regClient("materials", m_docClient);    
+    pGDDMan->regClient("idDict", m_docClient);    
   }
   
   XercesBuilder::~XercesBuilder()
@@ -302,6 +304,20 @@ namespace detModel{
       }
       
     }//end if
+  }
+
+  void XercesBuilder::buildIdDictionary() {
+    if (m_docClient->getIdDictionary() != DOM_Node()){
+      DOM_Node    dictNode = m_docClient->getIdDictionary();
+      DOM_Element& idDictElt = 
+	static_cast<DOM_Element&>(dictNode);
+
+      xmlUtil::IdDict *dict = new xmlUtil::IdDict(idDictElt);
+
+      if (dict->isValid()) {
+	currentGdd->setIdDictionary(dict);
+      }
+    }
   }
 
   Element* XercesBuilder::buildElement(DOM_Node e)

@@ -6,8 +6,15 @@
 #include <list>
 #include "detModel/Sections/Section.h"
 
+namespace xmlUtil {
+  class IdDict;
+}
+
+
 namespace detModel{
   
+  using xmlUtil::IdDict;
+
   class Volume;
   class Constants;
   class Const;
@@ -18,6 +25,7 @@ namespace detModel{
   class MatCollection;
   class Material;
   class Color;
+
 
   /**
    * This is the main container of all the geometry.
@@ -56,6 +64,11 @@ namespace detModel{
     void setMaterials(MatCollection* m){materials=m;}
     ///This method gives back the materials collection
     MatCollection* getMaterials(){return materials;}
+
+    /// Keep pointer to id dictionary
+    void setIdDictionary(IdDict* d) {dict=d;}
+    /// Retrieve pointer to id dictionary
+    IdDict* getIdDictionary() {return dict;}
 
     ///This method gives back the Gddvolume map  
     std::map < std::string, Volume * > getVolumesMap(){return volumeMap;};
@@ -160,6 +173,9 @@ namespace detModel{
 
     /// This is the collection of materials
     MatCollection* materials;
+
+    /// Representation of Id dictionary 
+    IdDict* dict;
 
     /** This is a private Gddvolume map indicized by names */
     std::map < std::string, Volume * > volumeMap;
