@@ -83,7 +83,8 @@ TkrCluster* TkrClusterCol::getHit(int i) const
     if (i==m_clustersList[i]->id()) {
         ptr = m_clustersList[i];
     } else {
-        for (int j = 0; j< m_clustersList.size(); j++) {
+        int size = m_clustersList.size();
+        for (int j = 0; j<size; j++) {
             if (m_clustersList[j]->id()==i) ptr = m_clustersList[j];
         }
     }
