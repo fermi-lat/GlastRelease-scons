@@ -3,23 +3,20 @@ version v7r3
 # $Id$
 
 use RootPolicy v4r*
-use mcRootData v2r*
+use commonRootData v1r*
 use ldfExt  v0r*  IExternal
 
 # See RootPolicy for discussion of this pattern
 apply_pattern root_package headers="\
  ../digiRootData/AcdDigi.h\
- ../digiRootData/AcdId.h\
  ../digiRootData/CalDiagnosticData.h\
  ../digiRootData/CalDigi.h\
- ../digiRootData/CalXtalId.h\
  ../digiRootData/CalXtalReadout.h\
  ../digiRootData/DigiEvent.h\
  ../digiRootData/GlastAxis.h\
  ../digiRootData/L1T.h\
  ../digiRootData/TkrDiagnosticData.h\
  ../digiRootData/TkrDigi.h\
- ../digiRootData/TowerId.h\
  ../digiRootData/EventSummaryData.h"\
- includes="-I${MCROOTDATAROOT}"\
+ includes="-I${COMMONROOTDATAROOT}"\
  test_source="test/testDigiClasses.cxx"
