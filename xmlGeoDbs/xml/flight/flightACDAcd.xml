@@ -253,7 +253,7 @@
               ZREF="topTileEdge_dz" >
         <idField name="fACDCmp" valueREF="eACDTile"/> 
         <idField name="fRow" value="2"/>
-        <idField name="fCol" value="0"/>
+        <idField name="fCol" value="4"/>
       </posXYZ>
 
 <!-- row 3. Y displacement is topTileMid_dy -->
