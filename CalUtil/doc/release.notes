@@ -1,5 +1,6 @@
 /** @file release.notes
- * Package CalDigi
+ * Package CalUtil
+ * v1r2p2     03-Apr-2003 AC  calibration classes removed from CalUtil
  * v1r0       28-Oct-2002 RXD initial version
  *
  */
