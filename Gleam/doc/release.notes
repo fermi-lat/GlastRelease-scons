@@ -1,5 +1,5 @@
 /** @file release.notes
- * package Gleam
+ * @brief package Gleam <pre>
  * package manager:T.Burnett
  * $Id$
 
@@ -7,9 +7,10 @@
 
      use FluxSvc          v5r15
      use FluxDisplay      v2r6
-     use CalDigi          v1r2p10
+     use CalDigi          v1r2p11
      use AcdDigi          v1r6
      use merit            v5r12p2
+     use TkrRecon         v8r5
 
 * v2r5p2 THB 20-oct-02
        use FluxSvc        v5r14p2
@@ -359,4 +360,5 @@
  * v0r1   22-mar-02 THB new gui, recon, xmlgeodbs
  * v0r0p1 22-mar-02 THB unix fixes
  * v0     21-mar-02: THB Initial version
- * /
+ * </pre>
+ */
