@@ -9,6 +9,8 @@ support walls and towers</prim>
   <prim name="wallGap" value="1.5">gap between modules</prim>
   <prim name="towerPitch" value="374.5">Distance between centers of 
     towers (X or Y) [from LAT-DS-00123-2]</prim>
+  <prim name="globalOffset_dz" value="0.0"> as a test, 
+to move entire detector in z. Zero means no offset, of course!</prim>
 
  <!-- Most likely obsolete quantities: 
   <prim name="wallThickness"  value="1.5">   Wall thickness</prim>

@@ -263,6 +263,24 @@
             </max>
           </mul>
         </const>
+        
+        <const name="biggerZDim" >
+          <notes> this is to make room for moving the LAT around in z, to look for 
+            bad hardwired consts. The formula is:
+                    biggerZDim = bigXZDim + 2* abs(globalOffset_dz)</notes>
+          <add>
+            <refer refTo = "bigXZDim" />
+            <mul>
+              <max>
+                <refer refTo = "globalOffset_dz" />
+                <uminus>
+                  <refer refTo = "globalOffset_dz" /> 
+                </uminus>
+              </max>
+              <const value="2" uType="count" />
+            </mul>
+          </add>
+        </const>
 
         <const name="NADTotalPanelLen" >
           <notes>Length of panel proper plus connecting rod</notes>

@@ -28,9 +28,21 @@
     trays have Y-strips and odd-numbered trays have X-strips.
 
     -->
-
+    <!--
+    The two volumes below require some explanation. LATenv is the usual envelope
+    containing the LAT. It is now used to construct the composition called
+    LATInner, which is exactly what the LAT used to be.
+    
+    LATShiftedEnv is a new envelope that contains LATInner. The purpose of this
+    envelope is to allow for a vertical displacement of the *entire* LAT, by an
+    amount globalOffset_dz. This is used to test the translational invariance of
+    the Gleam code
+    -->
     <box name="LATenv" 
          XREF="bigXZDim" YREF="bigYDim" ZREF="bigXZDim" />
+         
+    <box name="LATShiftedEnv"
+         XREF="bigXZDim" YREF="bigYDim" ZREF="biggerZDim" />
 
 
 &CALOneCal;
@@ -60,10 +72,10 @@
 &ACDAcd;
 
 
-<!-- Make a LAT. 
+<!-- Make a LATInner. This is just the usual LAT
      Missing id fields for various non-sensitive components.  
      Do we care? -->
-    <composition name="LAT" envelope="LATenv" >
+    <composition name="LATInner" envelope="LATenv" >
       <posXYZ volume="ACDTop"
               ZREF="ACDTop_d" >
         <idField name="fLATObjects" valueREF="eLATACD" />
@@ -288,4 +300,15 @@
       </posXYZ>
 
     </composition>
+    
+    <!-- position LATInner in the envelope LATShiftedEnv,
+    to produce the actual LAT, possibly offset in z.
+    -->
+    <composition name="LAT" envelope="LATShiftedEnv" >
+      <posXYZ volume="LATInner"
+              ZREF="globalOffset_dz" >
+      </posXYZ>
+    </composition>
+
+   
   </section>
