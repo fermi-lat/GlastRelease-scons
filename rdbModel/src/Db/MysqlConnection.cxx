@@ -13,6 +13,9 @@
 #include "rdbModel/RdbException.h"
 #include "facilities/Util.h"
 
+#include "xml/XmlParser.h"
+#include "xml/Dom.h"
+
 // #include "rdbModel/Management/Manager.h"
 
 #include "mysql.h"
@@ -114,6 +117,29 @@ namespace rdbModel {
     }
     return m_connected;
   }
+
+  bool MysqlConnection::open(const std::string& parms) {
+
+    xml::XmlParser parser;
+    DOM_Document doc = parser.parse(parms.c_str(), "mysqlConnection");
+    if (doc == DOM_Document()) {
+      std::cerr << "parse of connection parameters failed" << std::endl;
+      return false;
+    }
+    DOM_Element  conn = doc.getDocumentElement();
+    
+    std::string host = xml::Dom::getAttribute(conn, "host");
+    std::string user = xml::Dom::getAttribute(conn, "user");
+    std::string password = xml::Dom::getAttribute(conn, "password");
+    std::string dbname = xml::Dom::getAttribute(conn, "dbname");
+    int port = xml::Dom::getIntAttribute(conn, "port");
+    if (password.size() == 0 ) { // prompt for password?
+      std::cout << "interactive login NYI " << std::endl;
+      return false;
+    }
+    return this->open(host, user, password, dbname, port);
+  }
+
 
 
   MATCH MysqlConnection::matchSchema(Rdb *rdb) {
