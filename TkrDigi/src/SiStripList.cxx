@@ -119,6 +119,7 @@ void SiStripList::score(const HepPoint3D& o, const HepPoint3D& p,
     
     float    in = o.x();     // entry point -- x
     float    ex = p.x();     // exit point -- x
+
     int ins = stripId(in), exs = stripId(ex); // enter/exit strips (if valid)
     float len = dTot;  // path length through a strip
     if(fabs(xDir) > si_strip_pitch()) len *= si_strip_pitch()/fabs(xDir);
