@@ -40,14 +40,14 @@ public
 
 use GuiSvc      v3
 
-use Event                  v8r6
+use Event                  v8r6p1
 use GlastSvc    v8r1
 
 # simulation
 
 use FluxSvc                v5r7
 use FluxDisplay v2r0p1
-use G4Generator v4r1p2
+use G4Generator            v4r1p3
 
 #digitization
 use GlastDigi   v4r0p1
@@ -68,10 +68,10 @@ use mcRootData     v2r2
 use digiRootData   v3r2
 use reconRootData  v3r0p2
 
-use RootIo         v4r1p2
+use RootIo                 v4r1p3
 
 #diagnostic and summary of bottom line
-use merit                  v5r2
+use merit                  v5r2p1
 
 ### define a simple executable with GUI
 

@@ -86,33 +86,39 @@ TriggerAlg.mask = -1; // all bits on by default
 //
 ApplicationMgr.DLLs +={ 
     "Recon",
-    "CalRecon"
+    "CalRecon",
+    "TkrRecon"
     };
+Reconstruction.Members={ 
+      "Sequencer/Cal1", 
+      "Sequencer/Tkr",
+      "Sequencer/Cal2"
+      };
+         
 ApplicationMgr.ExtSvc += {"RecoSvc"};
 
 //          tracker
 // -------------------------------------------
-Reconstruction.Members += { "Sequencer/TkrReco"};
-ApplicationMgr.DLLs     += { "TkrRecon" };
 ApplicationMgr.ExtSvc   += { "TkrGeometrySvc"};
 ApplicationMgr.ExtSvc   += { "TkrInitSvc"};
 
 //TkrReconAlg.PropagatorType=1; // for gismo propagator
 TkrReconAlg.PropagatorType=0; // for G4 propagator (current default)
 TkrInitSvc.TrackerReconType = 0;    // = 0 for Link and Tree, = 1 for Combo
-TkrReco.Members = { 
+
+Cal1.Members = { 
+      "CalXtalRecAlg", 
+      "CalClustersAlg/first",
+      };
+Tkr.Members = {
       "TkrClusterAlg", 
       "TkrFindAlg", 
       "TkrReconAlg", 
       "TkrVertexAlg"
       };
-
-//         cal (currently after the tracker)
-// -------------------------------------------
-Reconstruction.Members += {"Sequencer/CalReco"};
-CalReco.Members = {
-    "CalXtalRecAlg", 
-    "CalClustersAlg"};
+Cal2.Members = {
+      "CalClustersAlg/second"
+      };
 
 
 // ----------------------------
