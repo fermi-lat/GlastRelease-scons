@@ -96,7 +96,7 @@ class McParticle  : virtual public ContainedObject  {
         const HepLorentzVector& finalMomentum,
         const HepPoint3D& initialPosition,
         const HepPoint3D& finalPosition,
-        const std::string process);
+        const std::string process = "");
 
     //! Set the initial attributes of the McParticle
     void initialize( McParticle* mother, 
@@ -104,7 +104,7 @@ class McParticle  : virtual public ContainedObject  {
         unsigned int statusBits,
         const HepLorentzVector& initialMomentum,
         const HepPoint3D& initialPosition,
-        const std::string process);
+        const std::string process = "");
 
     //! Set the final attributes of the McParticle
     void finalize( const HepLorentzVector& finalMomentum,
