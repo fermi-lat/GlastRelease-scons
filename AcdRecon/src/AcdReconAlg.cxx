@@ -284,7 +284,7 @@ double AcdReconAlg::doca (const Point &x0, const Vector &t0, std::vector<double>
     return 0;
 }
 
-double AcdReconAlg::hitTileDist(const Point &x0, const Vector &t0)
+double AcdReconAlg::hitTileDist(const Point &x0, Vector &t0)
 {
     // Purpose and Method:  Bill Atwood's new edge DOCA algorithm
     //       Determines minimum distance between a track and the edges of ACD
@@ -297,6 +297,8 @@ double AcdReconAlg::hitTileDist(const Point &x0, const Vector &t0)
     MsgStream   log( msgSvc(), name() );
 
     double return_dist = -200.;
+
+    t0 = -t0;
         
     // iterate over all tiles
     Event::AcdDigiCol::const_iterator acdDigiIt;

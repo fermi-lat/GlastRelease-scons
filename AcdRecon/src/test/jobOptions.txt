@@ -5,9 +5,7 @@
 // $Header$
 
 //  -------------- basic Glast/Gaudi run enviornment -----------
-ApplicationMgr.DLLs   = { "GlastSvc", "G4Generator",
-                          "AcdDigi", "AcdRecon", 
-                          "TkrDigi", "TkrRecon"};
+ApplicationMgr.DLLs   = { "GlastSvc", "AcdRecon", "TkrRecon", "RootIo", "G4Generator"};
 
 ApplicationMgr.ExtSvc = { 
     "GlastEventSelector/EventSelector" , 
@@ -24,17 +22,15 @@ GlastDetSvc.topVolume="LAT";         // the whole schebang
 GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
-#include "$FLUXSVCROOT/src/defaultOptions.txt"
+//#include "$FLUXSVCROOT/src/defaultOptions.txt"
 // Append (no replace) the list of source library documents
-FluxSvc.source_lib += {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
+//FluxSvc.source_lib += {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
 
 //----------------- local algorithms to run -------------------
-ApplicationMgr.TopAlg = { "FluxAlg", "G4Generator", "AcdDigiAlg",
-                          "TkrSimpleDigiAlg", 
-                          "TkrClusterAlg", "TkrFindAlg", "TkrReconAlg", "TkrVertexAlg",
+ApplicationMgr.TopAlg = {  "digiRootReaderAlg", "TkrClusterAlg", "TkrFindAlg", "TkrReconAlg", "TkrVertexAlg",
                            "AcdReconAlg"};
 
-//ApplicationMgr.ExtSvc += {"RecoSvc"};
+digiRootReaderAlg.digiRootFile = "$ACDRECONROOT/src/test/digi.root";
 
 ApplicationMgr.ExtSvc   += { "TkrGeometrySvc"};
 ApplicationMgr.ExtSvc   += { "TkrInitSvc"};
@@ -46,18 +42,16 @@ TkrInitSvc.TrackerReconType = 0;    // = 0 for Link and Tree, = 1 for Combo
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
 
-FluxAlg.source_name="muon_pencil_angle";
-G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
+//FluxAlg.source_name="muon_pencil_angle";
+//G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
 
 ApplicationMgr.EvtMax =100;
 
-ApplicationMgr.ExtSvc += {"GuiSvc"};
-GuiSvc.size=-3000;
+//ApplicationMgr.ExtSvc += {"GuiSvc"};
+//GuiSvc.size=-3000;
 
 
-ApplicationMgr.TopAlg += {
-   "TkrDisplayAlg"
-   };
+
 //==============================================================
 //
 // End of job options file

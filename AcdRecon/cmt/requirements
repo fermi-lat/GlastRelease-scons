@@ -1,5 +1,5 @@
 package AcdRecon
-version v0r2
+version v0r3
 
 branches src doc
 
@@ -7,14 +7,14 @@ use GlastSvc v8r*
 use Event v8r*
 use AcdDigi v1r*
 use TkrRecon v6r*
-use xml v4r*
+#use xml v4r*
+use GlastPolicy v4r*
 
 # uses for test program
-use TkrDigi v1r*
-use G4Generator v4r*
-use FluxSvc v5r*
-use GuiSvc v*
-
+#use TkrDigi v1r*
+#use G4Generator v4r*
+#use FluxSvc v5r*
+#use GuiSvc v*
 apply_pattern package_headers
 
 library AcdRecon  *.cxx  Dll/*.cxx ${AcdRecon_headers}
@@ -23,17 +23,22 @@ ignore_pattern package_stamps
 
 apply_pattern packageShr
 
-apply_pattern package_test
+
 
 
 #=============================================================
 private
+use G4Generator v4r*
+use RootIo v4r*
+# for TkrRecon??
+
+public
+apply_pattern package_test
 
 apply_pattern package_Cshlibflags
 
-macro test_AcdReconlinkopts "  $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
-      WIN32 " ${guiapp_linkopts} $(GuiSvc_lib)  /include:_GuiSvc_loadRef "
-
+#macro test_AcdReconlinkopts "  $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
+#      WIN32 " ${guiapp_linkopts} $(GuiSvc_lib)  /include:_GuiSvc_loadRef "
 
 
 
