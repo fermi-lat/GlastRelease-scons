@@ -66,6 +66,6 @@ private:
     TdSiData* m_siData;
     // Note that TdVetoData will need to be added here at 
     // some point.
-}
+};
 
 #endif
