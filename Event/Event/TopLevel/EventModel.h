@@ -94,18 +94,12 @@ public:
        ~TkrRecon() {}
 
         static std::string Event;
-        static std::string SiLayers;
         static std::string TkrIdClusterMMap;
         static std::string TkrIdClusterMap;
         static std::string TkrClusterCol;
-        static std::string TkrPatCandCol;
-        static std::string TkrFitTrackCol;
         static std::string TkrTrackCol;
         static std::string TkrTrackHitCol;
-        static std::string TkrTrackTab;
         static std::string TkrVertexCol;
-        static std::string TkrVertexTab;
-        static std::string TkrVertexTrackTab;
     };
 
 

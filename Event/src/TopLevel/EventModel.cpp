@@ -45,18 +45,12 @@ std::string EventModel::Digi::TkrClusterHitTab      = EventModel::Digi::Event + 
       
 // reconstructed data (Tracker)
 std::string EventModel::TkrRecon::Event             = EventModel::EventHeader + "/TkrRecon";
-std::string EventModel::TkrRecon::SiLayers          = EventModel::TkrRecon::Event + "/SiLayers";
 std::string EventModel::TkrRecon::TkrClusterCol     = EventModel::TkrRecon::Event + "/TkrClusterCol";
 std::string EventModel::TkrRecon::TkrIdClusterMMap  = EventModel::TkrRecon::Event + "/TkrIdClusterMMap";
 std::string EventModel::TkrRecon::TkrIdClusterMap   = EventModel::TkrRecon::Event + "/TkrIdClusterMap";
-std::string EventModel::TkrRecon::TkrPatCandCol     = EventModel::TkrRecon::Event + "/TkrPatCandCol";
-std::string EventModel::TkrRecon::TkrFitTrackCol    = EventModel::TkrRecon::Event + "/TkrFitTrackCol";
 std::string EventModel::TkrRecon::TkrTrackCol       = EventModel::TkrRecon::Event + "/TkrTrackCol";
 std::string EventModel::TkrRecon::TkrTrackHitCol    = EventModel::TkrRecon::Event + "/TkrTrackHitCol";
-std::string EventModel::TkrRecon::TkrTrackTab       = EventModel::TkrRecon::Event + "/TkrTrackTab";
 std::string EventModel::TkrRecon::TkrVertexCol      = EventModel::TkrRecon::Event + "/TkrVertexCol";
-std::string EventModel::TkrRecon::TkrVertexTab      = EventModel::TkrRecon::Event + "/TkrVertexTab";
-std::string EventModel::TkrRecon::TkrVertexTrackTab = EventModel::TkrRecon::Event + "/TkrVertexTrackTab";
 
 //reconstructed Cal data
 std::string EventModel::CalRecon::Event             = EventModel::EventHeader + "/CalRecon";
