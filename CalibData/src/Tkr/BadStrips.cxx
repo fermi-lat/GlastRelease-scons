@@ -95,7 +95,6 @@ namespace CalibData {
       if (iTower->m_allBad) {
         ret = v->badTower(iTower->m_row, iTower->m_col, iTower->m_howBad);
         if (ret != CONT) return ret;
-        iTower++;
       }
       //   If tower not all bad, loop over planes within towers
       else {
@@ -104,12 +103,13 @@ namespace CalibData {
         while (iUni != (iTower->m_uniplanes)->end() ) {
           ret = v->badPlane(iTower->m_row, iTower->m_col,
                             iUni->m_tray, iUni->m_top,
-                            iUni->m_howBad,
+                            iUni->m_howBad, iUni->m_allBad,
                             *(iUni->m_badStrips));
           if (ret != CONT) return ret;
           iUni++;
         }
       }
+      ++iTower;
     }
     // If got to here, traversed the entire data structure without
     // a murmur from client
@@ -138,8 +138,8 @@ namespace CalibData {
   }
 
   StatusCode BadStrips::addBadPlane(unsigned short row, unsigned short col,
-                                unsigned int tray, bool top, int howBad,
-                                StripCol& badStrips) {
+                                    unsigned int tray, bool top, int howBad,
+                                    bool allBad, StripCol& badStrips) {
     // First check to see that
     //   we have specified tower in our list
     //   it's not marked as all bad
@@ -167,7 +167,6 @@ namespace CalibData {
     }
 
     // No conflict.  Go ahead and add the new uniplane
-    bool allBad = (badStrips.size() == 0);
     Uniplane newUni(allBad, howBad, tray, top, badStrips);
     pTower->m_uniplanes->push_back(newUni);
     return StatusCode::SUCCESS;
