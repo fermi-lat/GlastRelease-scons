@@ -60,7 +60,7 @@ use mcRootData     v2r2
 use digiRootData   v3r2
 use reconRootData  v3r0p2
 
-use RootIo      v4r1p5
+use RootIo               v4r2
 
 
 #reconstruction
