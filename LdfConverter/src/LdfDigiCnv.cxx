@@ -12,7 +12,7 @@
 #include "LdfDigiCnv.h"
 #include "GaudiKernel/MsgStream.h"
 
-#include "Event/TopLevel/DigiEvent.h"
+//#include "Event/TopLevel/DigiEvent.h"
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
