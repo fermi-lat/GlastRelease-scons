@@ -47,18 +47,25 @@ public:
    virtual const CLID& clID() const   { return TkrTrack::classID(); }
    static const CLID& classID()       { return CLID_TkrTrack; }
 
-   /** The StatusBits enum has the following 5 elements:
-    *  - Found    : Set if track has been "found" by pat rec
-    *  - Filtered : Set if track fit filter stage has been run
-    *  - Smoothed : Set if track fit smoother has been run
-    *  - OnePass  : Set if the full first pass track fit finished
-    *  - TwoPass  : Set if an iteration of the first fit finished
-    */
-    enum StatusBits {Found    = 0x0001,  
-                     Filtered = 0x0002,  
-                     Smoothed = 0x0004,  
-                     OnePass  = 0x0100,  
-                     TwoPass  = 0x0200}; 
+    /// Status word bits organized like:
+    ///        |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
+    ///         < Pat Rec Info  > <Pass > < E-Loss> < Track Energy >  <Track Fit Status>
+    enum StatusBits {FOUND    = 0x0001,  //Set if track has been "found" by pat rec
+                     FILTERED = 0x0002,  //Set if track fit filter stage has been run
+                     SMOOTHED = 0x0004,  //Set if track fit smoother has been run
+					 REVFILTR = 0x0008,  //Set if track has been reverse-filtered
+					 CALENERGY= 0x0010,  //Set if track energy from raw calorimeter info
+					 LATENERGY= 0x0020,  //Set if track energy from TKR+CAL constrained
+					 USERENERGY= 0x0040, //Set if track energy set by user
+					 MCENERGY = 0x0080,  //Set if energy from users or from MC truth
+					 RADELOSS = 0x0100,  //Set if radiative energy loss used (e+/e- fitting)
+					 MIPELOSS = 0x0200,  //Set if Bethe-Block energy loss used (not e+/e-)
+                     ONEPASS  = 0x0400,  //Set if the full first pass track fit finished
+                     TWOPASS  = 0x0800,  //Set if an iteration of the first fit finished
+					 PRCALSRCH= 0x1000,  //Set if Pat. Rec. used Cal Energy Centroid
+					 PRBLNSRCH= 0x2000,  //Set if Pat. Rec. used only Track info.
+					 TOP      = 0x4000,  //Set if track traj. intercepts top tracker plane
+					 BOTTOM   = 0x8000}; //Set if track traj. intercepts first Cal layer
     
     /// Utility 
     std::ostream& fillStream( std::ostream& s ) const;
@@ -123,6 +130,7 @@ public:
     inline void   setTkrCalRadLen(double x)           {m_TkrCal_radlen     = x;}
     inline void   setStatusBit(unsigned int status)   {m_statusBits       |= status;}
 	inline void   clearStatusBits()                   {m_statusBits        = 0;}
+    inline void   clearEnergyStatusBits()             {m_statusBits       &= 0xff0f;}
 
 private:	
     /// Status
