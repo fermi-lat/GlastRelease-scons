@@ -67,8 +67,6 @@ namespace rdbModel{
  
     Assertion::Operator* buildOperator(DOM_Element e, Table* t);
 
-    Column::ColumnSource* buildColumnSource(DOM_Element e);
-
     Datatype* buildDatatype(DOM_Element e);
 
     DOM_Document m_doc;
