@@ -37,6 +37,8 @@
     <!ENTITY Primary        SYSTEM "flightPrimaryConstants.xml">
 
     <!ENTITY idDict         SYSTEM "flightIdDict.xml">
+
+    <!ENTITY Materials         SYSTEM "flightMaterials.xml">
   ]
 >
 <gdd CVSid="$Id$" 
@@ -47,6 +49,10 @@
      &Derived;
   </constants>
  
+  <materials version="0.1" date="071101" author="M.Frailis">
+    &Materials;
+  </materials>
+
   &idDict;
 
   <section name="LATsection"
