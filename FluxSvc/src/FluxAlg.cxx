@@ -14,7 +14,6 @@
 #include "GlastEvent/TopLevel/Event.h"
 #include "GlastEvent/TopLevel/MCEvent.h"
 #include "GlastEvent/MonteCarlo/McParticle.h"
-#include "GlastEvent/MonteCarlo/McVertex.h"
 #include "GlastEvent/TopLevel/EventModel.h"
 
 //flux
@@ -75,6 +74,10 @@ StatusCode FluxAlg::initialize(){
     log << MSG::INFO << "        area: " << m_flux->targetArea() << endreq;
     log << MSG::INFO << "        rate: " << m_flux->rate() << endreq;
     
+    if ( service("ParticlePropertySvc", m_partSvc).isFailure() ){
+        log << MSG::ERROR << "Couldn't find the ParticlePropertySvc!" << endreq;
+        return StatusCode::FAILURE;
+    }
     return sc;
 }
 
@@ -93,8 +96,6 @@ StatusCode FluxAlg::execute()
 {
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
-#if 1 // TODO: make this work
-    
     //
     // have the flux service create parameters of an incoming particle 
     //
@@ -123,88 +124,32 @@ StatusCode FluxAlg::execute()
         << endreq;
     
     if( m_event%100 ==0 ) log << MSG::WARNING << "Event % " << m_event << endreq;
-    
+
+    mc::McParticleCol* pcol = new mc::McParticleCol;
+    eventSvc()->registerObject("/Event/MC/McParticleCol", pcol);
+    mc::McParticle * parent= new mc::McParticle;
+    pcol->push_back(parent);
+
+    HepLorentzVector pin;
+
+    // This parent particle decay at the start in the first particle, 
+    // so initial momentum and final one are the same
+    parent->initialize(parent, partID, //pdef->GetPDGEncoding(), 
+        mc::McParticle::PRIMARY,
+        pin);
+    parent->finalize(pin, p);
+#if 0
     SmartDataPtr<MCEvent> mcEvent(eventSvc(),"/Event/MC");
     if( 0==mcEvent) { 
         log << MSG::ERROR << "could not find the McEvent header" << endreq;
         return StatusCode::FAILURE;
     }
-    mcEvent->setSourceId(m_flux->numSource());
-    
-    // set the time (in micro seconds?)
-    //event->setTime(static_cast<long>( m_flux->time()*1e6+0.5));
-    
-    
-    // first expect to have converter create this (but empty)
-    SmartDataPtr<McVertexCol/*std::string*/> m_vlist(eventSvc(), "/Event/MC/McVertexCol");
-    //m_vlist = SmartDataPtr<McVertexCol>(eventSvc(), "/Event/MC/McVertexCol");
-    if(m_vlist==0) return StatusCode::FAILURE;
-    
-    // the converter will make this (also empty)
-    DataObject* plist;
-    McParticleCol* m_plist;
-    if( (eventSvc()->retrieveObject( "/Event/MC/McParticleCol", plist)).isFailure() ){ 
-        return StatusCode::FAILURE;
-    }
-    try{
-        //m_plist = dynamic_cast<McParticleCol*>(plist);
-        m_plist = dynamic_cast<McParticleCol*>(plist);
-    }catch(...) { 
-        return StatusCode::FAILURE;
-    }
-    
-    // create the starting node in the Vertex/Particle tree
-    McParticle* p1 = new McParticle;
-    McVertex*   v1 = new McVertex;
-    m_vlist->add(v1);
-    m_plist->add(p1);
-    
-    // a McVertex is really a track segment
-    v1->setInitialPosition(p);
-    v1->setMcParticle(p1); // associated particle will be set up below
+#endif
+   // mcEvent->setSourceId(m_flux->numSource());
     
     double mass = massOf(particleName), 
         energy = mass+ke, 
         momentum= sqrt(energy*energy+mass*mass);
-    v1->setInitialFourMomentum( HepLorentzVector( momentum*d.unit(),energy ) );
-    
-    
-    // choose among primaryOrigin, daughterOrigin, decayProduct, showerContents, showerBacksplash
-    v1->setVertexType(McVertex::primaryOrigin); 
-    
-    v1->setMotherMcParticle( 0);
-
-    p1->setParticleID(partID);
-   // p1->setParticleID(p->idCode()); //TODO: is this right?
-    p1->setParticleProperty(partID);//TODO: is this right?
-    p1->setPrimaryParticleFlag(true);
-    p1->setMcVertex(v1);
-    
-    
-    p1->setParticleID(partID); //TODO: is this right?
-    p1->setParticleProperty(partID);//TODO: is this right?
-    //we want to set the particle as primary, IF 
-    p1->setPrimaryParticleFlag(p1->primaryParticle()/*status()==McParticle::PRIMARY*/);
-    p1->setMcVertex(v1);
-    //if( mother !=0) {
-    //    mother->addDaughterMcParticle(p1);
-    if( v1->parent !=0) {
-        v1->addDaughterMcParticle(p1);
-    } else  m_root = v1;  // make root available for display, etc.
-    
-    
-    HepLorentzVector final;
-    const SmartRefVector<McParticle>& daughters = v1->daughterMcParticles();
-    int numchildren = daughters.size();
-    for( int i=0; i< numchildren/*p1->numChildren()*/; ++i){
-        //addParticle(v1, p1->child(i));//p1 does not know what it's children are!
-        //final += daughters[i]/* *(p1->child(i))*/;
-
-        //final.push_back(daughters[i]);
-    }
-    v1->setFinalFourMomentum(final);
-    
-#endif
     return sc;
 }
 
