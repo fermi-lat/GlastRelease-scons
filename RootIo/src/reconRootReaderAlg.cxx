@@ -155,7 +155,7 @@ StatusCode reconRootReaderAlg::initialize()
     setProperties();
     
     if ( service("RootIoSvc", m_rootIoSvc).isFailure() ){
-        log << MSG::ERROR << "Couldn't find the RootIoSvc!" << endreq;
+        log << MSG::INFO << "Couldn't find the RootIoSvc!" << endreq;
         log << MSG::DEBUG << "Event loop will not terminate gracefully" << endreq;
         m_rootIoSvc = 0;
         //return StatusCode::FAILURE;
@@ -401,7 +401,7 @@ StatusCode reconRootReaderAlg::storeTkrClusterCol(TkrRecon *tkrRecRoot) {
         
         Event::TkrCluster *clusterTds = new Event::TkrCluster(clusterRoot->getId(),
             clusterRoot->getPlane(), viewTds, clusterRoot->getFirstStrip(),
-            clusterRoot->getLastStrip(), posTds, 0.0, clusterRoot->getTower());
+            clusterRoot->getLastStrip(), posTds, clusterRoot->getToT(), clusterRoot->getTower());
         
         clusterTdsCol->addCluster(clusterTds);
     }

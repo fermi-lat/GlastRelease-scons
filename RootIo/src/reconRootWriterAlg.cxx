@@ -295,11 +295,10 @@ void reconRootWriterAlg::fillTkrClusterCol(TkrRecon* recon, Event::TkrClusterCol
         else viewRoot = TkrCluster::Y;
         Point posTds = clusterTds->position();
         TVector3 posRoot(posTds.x(), posTds.y(), posTds.z());
-        
-        // HMK no access to Event::TkrCluster::ToT - setting to zero
+       
         TkrCluster *clusterRoot = new TkrCluster(clusterTds->id(), 
             clusterTds->plane(), viewRoot, clusterTds->firstStrip(), 
-            clusterTds->lastStrip(), posRoot, 0.0, 
+            clusterTds->lastStrip(), posRoot, clusterTds->ToT(), 
             clusterTds->hitFlagged(), clusterTds->tower());
         
         recon->addCluster(clusterRoot);
