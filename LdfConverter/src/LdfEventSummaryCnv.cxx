@@ -36,6 +36,8 @@ StatusCode LdfEventSummaryCnv::createObj(IOpaqueAddress* ,
     // Retrieve the LAT data for this event 
     unsigned int ebfSummary = ldfReader::LatData::instance()->summaryData().summary();
     LdfEvent::EventSummaryData *summary = new LdfEvent::EventSummaryData(ebfSummary);
+    summary->initEventFlags(ldfReader::LatData::instance()->getEventFlags());
+
     refpObject = summary;
 
     return StatusCode::SUCCESS;
