@@ -3,6 +3,7 @@
 @verbastim
  * Coordinator: T. Burnett, T. Usher
  *
+ * v0r2  7-Dec-2004 TU  Tag with factory for energy loss
  * v0   15-jan-2004 THB Copy from Geant4 package
 @endverbatim
  */
