@@ -3,6 +3,7 @@
 #define RESULTTABLE_H
 
 #include "fx.h"
+#include <string>
 
 class ResultTable: public FXTable
 {
@@ -27,6 +28,9 @@ class ResultTable: public FXTable
     void enableColumn(FXint);
     void disableColumn(FXint);
     
+    void setTableName(std::string tbName){m_tableName = tbName;}
+    std::string getTableName(){return m_tableName;}
+    
     /// Extract cells from given range as text.
     void extractText(FXchar*& text,FXint& size,FXint startrow,FXint endrow,FXint startcol,FXint endcol,FXString cs="\t",FXchar rs='\n') const;
     
@@ -40,6 +44,7 @@ class ResultTable: public FXTable
     ResultTable(const ResultTable&);
     
   private:
+    std::string m_tableName;
     FXMenuPane *m_recordActions;
     FXMenuCommand *m_updRow;
     FXint m_selRow;

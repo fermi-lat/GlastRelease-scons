@@ -44,6 +44,7 @@ InsertDialog::InsertDialog(FXApp *owner):
   m_connection = 0;
   m_factory = new ColWidgetFactory();
 
+  m_lastTblName = "";
   // -1 means no row has yet been inserted in this session
   m_lastRow = -1;
 
@@ -52,7 +53,7 @@ InsertDialog::InsertDialog(FXApp *owner):
 
 }
 
-void InsertDialog::fillWithRowByKey(std::string serialStr)
+void InsertDialog::fillWithRowByKey(std::string primKeyVal)
 {
   unsigned int i;
   
@@ -71,8 +72,8 @@ void InsertDialog::fillWithRowByKey(std::string serialStr)
 
   // Set up WHERE clause, always the same
   rdbModel::Assertion::Operator* serEquals = 
-    new rdbModel::Assertion::Operator(rdbModel::OPTYPEequal, "ser_no",
-                                      serialStr, false, true);
+    new rdbModel::Assertion::Operator(rdbModel::OPTYPEequal, m_primKey,
+                                      primKeyVal, false, true);
   rdbModel::Assertion* whereSer = new rdbModel::Assertion(rdbModel::Assertion::WHENwhere, serEquals);
 
 
@@ -87,16 +88,16 @@ void InsertDialog::fillWithRowByKey(std::string serialStr)
     ColWidget* temp = m_widgets[i]; 
     temp->setValue(colValues[i].c_str());
   }
-  m_selRow = serialStr;
+  m_selRow = primKeyVal;
 }
 
 // Get the last row from the database and fill the dialog form
 void InsertDialog::fillWithLastRow()
 {
-  std::string serialStr;
-  serialStr = FXStringVal(m_lastRow).text();
-  fillWithRowByKey(serialStr);
-  m_selRow = serialStr;
+  std::string primKeyVal;
+  primKeyVal = FXStringVal(m_lastRow).text();
+  fillWithRowByKey(primKeyVal);
+  m_selRow = primKeyVal;
 }
 
 // Try to insert the new row
@@ -147,12 +148,15 @@ long InsertDialog::onGoPress(FXObject *,FXSelector, void*)
   if (m_connection)
   {
     if(m_insertMode) //If in insert mode
-      m_connection->insertRow(m_tableName, colNames, values, &m_lastRow, &nullValues);  
+      {
+        m_connection->insertRow(m_tableName, colNames, values, &m_lastRow, &nullValues);
+        m_lastTblName = m_tableName;
+      }  
     else //Otherwise we are in the Update Last Row mode
     {
       std::string serialStr;
       rdbModel::Assertion::Operator* serEquals = 
-       new rdbModel::Assertion::Operator(rdbModel::OPTYPEequal, "ser_no",
+       new rdbModel::Assertion::Operator(rdbModel::OPTYPEequal, m_primKey,
                                       m_selRow, false, true);
       rdbModel::Assertion* whereSer = new rdbModel::Assertion(rdbModel::Assertion::WHENwhere, serEquals);
 
@@ -193,16 +197,22 @@ rdbModel::Visitor::VisitorState InsertDialog::visitRdb(rdbModel::Rdb *)
   return rdbModel::Visitor::VCONTINUE;
 }
 
-rdbModel::Visitor::VisitorState InsertDialog::visitTable(rdbModel::Table *)
+rdbModel::Visitor::VisitorState InsertDialog::visitTable(rdbModel::Table *tab)
 {
-  return rdbModel::Visitor::VCONTINUE;
+  if (tab->getName()!=m_tableName)
+    return rdbModel::Visitor::VBRANCHDONE;
+  else
+    return rdbModel::Visitor::VCONTINUE;
 }
 
 rdbModel::Visitor::VisitorState InsertDialog::visitColumn(rdbModel::Column *column)
 {
   rdbModel::Datatype* dt = column->getDatatype();
   rdbModel::Column::FROM source = column->getSourceType();
-
+  
+  if (column->isPrimaryKey())
+    m_primKey = column->getName();
+  
   std::string min;
   std::string max;
 

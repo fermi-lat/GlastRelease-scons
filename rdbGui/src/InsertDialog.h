@@ -33,6 +33,10 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
   void setUiLog(LogText* log){m_uiLog = log;};
   long onGoPress(FXObject*,FXSelector,void*);
 
+  /// Setter and getter for the last table to which a record has been inserted
+  std::string getLastTblName(){return m_lastTblName;}
+  void setLastTblName(std::string tbName){m_lastTblName=tbName;}
+  
   /// Setter and getter for the last row inserted
   int getLastRow(){return m_lastRow;};
   void setLastRow(int l){m_lastRow = l;};
@@ -66,12 +70,16 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
   
   /// The name of the current table
   std::string m_tableName;
+  /// Primary key name (for now compound keys are not considered)
+  std::string m_primKey;
   /// The pointer to the database connection class
   rdbModel::Connection* m_connection;
   /// The vector of widgets for the insert operation
   std::vector<ColWidget*> m_widgets;
   /// The ui log text, to be updated after insertion
   LogText *m_uiLog;
+  /// Last table increased with a new row
+  std::string m_lastTblName;
   /// The last row id inserted
   int m_lastRow;
   /// Key of the selected row

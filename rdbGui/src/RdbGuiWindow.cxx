@@ -365,6 +365,9 @@ long RdbGUIWindow::onSendQuery(FXObject*,FXSelector, void*)
   rdbModel::ResultHandle *queryResult = searchFrame->getQueryResult();
   uiLog->update();
 
+  int index = uiTblColList->getTableList()->getCurrentItem(); 
+  uiTable->setTableName((uiTblColList->getTableList()->getItemText(index)).text());
+  
   if (queryResult->getNRows() < 1)
     {
       uiTable->setTableSize(1, 1);
@@ -410,8 +413,7 @@ long RdbGUIWindow::onInsert(FXObject*,FXSelector, void*)
       || (m_connect == 0) || !(m_connect->isConnected()))
     return 1;
 
-  int index = uiTblColList->getTableList()->getCurrentItem(); 
-  m_dgInsert->setTableName((uiTblColList->getTableList()->getItemText(index)).text());
+  m_dgInsert->setTableName(m_dgInsert->getLastTblName());
   // Fill the form
   m_rdbManager->startVisitor(m_dgInsert);
   // Set the mode of the dialog to Insert
@@ -467,8 +469,7 @@ long RdbGUIWindow::onUpdateRowByKey(FXObject*,FXSelector, void* ptr)
       || (m_connect == 0) || !(m_connect->isConnected()))
     return 1;
 
-  int index = uiTblColList->getTableList()->getCurrentItem(); 
-  m_dgInsert->setTableName((uiTblColList->getTableList()->getItemText(index)).text());
+  m_dgInsert->setTableName(uiTable->getTableName());
   // Build the form
   m_rdbManager->startVisitor(m_dgInsert);
   // Fill the form with the last row inserted in the DB
@@ -497,6 +498,7 @@ void RdbGUIWindow::closeConnection()
   uiTable->clearItems();
   uiTable->setTableSize(1, 1);
   uiTable->setItemText(0, 0, "No data");
+  uiTable->setTableName("");
 }
 
 long RdbGUIWindow::onQueryFrameUpdate(FXObject *, FXSelector, void*)
