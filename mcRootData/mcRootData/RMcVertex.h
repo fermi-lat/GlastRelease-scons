@@ -34,9 +34,10 @@ class RMcVertex: public TObject {
 private:
     //! momentum/energy 4-vector
     TLorentzVector *m_pMomI, *m_pMomF;
-	
+	//!momentum/time 4-vector
     TLorentzVector *m_pPosI, *m_pPosF;
 	
+    //! Time of Flight
 	Double_t m_timeOfFlight;
 	//!Array of Daughter particles
 	TObjArray* m_mcDaughterParticles;
@@ -93,6 +94,7 @@ public:
 	
     /// Retrieve pointer to the pair particle 
 	RMcParticle* mcParticle();
+
     /// Update pointer to the pair particle (by a C++ pointer)
     void setMcParticle( RMcParticle* value );
 	
@@ -107,7 +109,6 @@ public:
 	
     /// add Paticles to the TObjArray
     void addDaughterMcParticle( RMcParticle* particle );
-	
 	
 	
     ClassDef(RMcVertex,1)

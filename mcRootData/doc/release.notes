@@ -2,6 +2,9 @@ package mcRootData
 
 package manager:D.Flath
 
-!20010816 Modify the package to be more compatible with TDS classes.
-!20010816 Add release notes. 
+!20010824 IG Tag v1r1
+!20010824 IG Fix constructor realted bugs that would cause blow up 
+             when doing tree->Fill().
+!20010816 IG Modify the package to be more compatible with TDS classes.
+!20010816 IG Add release notes. 
 !======================================================================

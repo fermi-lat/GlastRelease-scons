@@ -17,6 +17,7 @@ ClassImp(RMcVertex)
 RMcVertex::RMcVertex() :
 m_pPosI(0), m_pPosF(0), m_pMomI(0), m_pMomF(0)
 {
+    m_mcDaughterParticles =0;
 }
 //________________________________________________________________________
 RMcVertex::RMcVertex(TLorentzVector *pPosI, TLorentzVector *pPosF, 
@@ -24,6 +25,9 @@ RMcVertex::RMcVertex(TLorentzVector *pPosI, TLorentzVector *pPosF,
 m_pPosI(pPosI), m_pPosF(pPosF), m_pMomI(pMomI), m_pMomF(pMomF)
 {
 	m_mcDaughterParticles = new TObjArray();
+    m_mainParticle = 0;
+    m_motherParticle = 0;
+    m_timeOfFlight =0;
 }
 //________________________________________________________________________
 RMcVertex::~RMcVertex() {

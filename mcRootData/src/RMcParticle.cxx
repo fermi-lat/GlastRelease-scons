@@ -22,6 +22,7 @@ RMcParticle::RMcParticle() :
 RMcParticle::RMcParticle(Int_t id, RMcVertex *pVertex) :
   m_particleId(id), m_mcVertex(pVertex)    
 {
+      m_primary =0;
 }
 //________________________________________________________________________
 RMcParticle::~RMcParticle() {

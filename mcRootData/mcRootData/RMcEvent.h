@@ -24,6 +24,7 @@
  *  - 30 May 2001   Daniel Flath    Creation
  *  - 06 Jun 2001   Daniel Flath    Final rewrite for integration with ROOTWriter
  *  - 14 Jun 2001   Daniel Flath    DOxygen style comments updated for checkin with ROOTWriter
+ *  - 24 Aug 2001   Ian Gable       Rehacked to work with TDS classes
  */
 
 class RMcEvent : public TObject  

@@ -60,7 +60,7 @@ RMcVertex *RMcEvent::getVert(Int_t index) const {
  */
 Int_t RMcEvent::addVert(RMcVertex *pVert) {
     if (pVert) {
-        m_pVertList->AddLast(pVert);
+        m_pVertList->Add(pVert);
         return (m_nVertCount++);
     } else
         return -1;
