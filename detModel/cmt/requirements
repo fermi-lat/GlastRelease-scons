@@ -1,6 +1,6 @@
 package detModel
 # $Header$
-version v2r13
+version v2r13p0
 
 use CLHEP
 use xmlUtil
