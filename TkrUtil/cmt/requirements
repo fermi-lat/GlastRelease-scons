@@ -7,6 +7,8 @@ branches src cmt doc
 use GlastSvc 
 use facilities
 use GuiSvc                v3*
+use CalibData    v*
+use CalibSvc     v*
 
 apply_pattern packageShr
 

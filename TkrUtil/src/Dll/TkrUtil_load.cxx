@@ -16,6 +16,10 @@ DECLARE_FACTORY_ENTRIES(TkrUtil) {
 
     DECLARE_TOOL(    TkrQueryClustersTool);
     DECLARE_TOOL(    TkrMeritTool        );
+
+    DECLARE_ALGORITHM ( TkrCalibAlg      );
+    //This is for test only, not part of TkrUtil package...
+    //DECLARE_ALGORITHM ( EvtClock         );
 } 
 
 
