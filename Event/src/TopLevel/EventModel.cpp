@@ -33,7 +33,7 @@ public:
         EventModel::MC::MCTKRHits = EventModel::MC::Event + "/MCTKRHits";
 
         EventModel::Raw::Event = EventModel::Event + "/Raw";
-        EventModel::Raw::CsIDatas = EventModel::Raw::Event + "/CsIDatas";
+        EventModel::Raw::TdCsIDatas = EventModel::Raw::Event + "/TdCsIDatas";
     }
 };
     
@@ -58,7 +58,7 @@ public:
 
     //! Raw event definitions
     const CLID& CLID_RawEvent           = 2017;
-    const CLID& CLID_CsIData            = 2014;
+    const CLID& CLID_TdCsIData            = 2014;
     const CLID& CLID_Xtal               = 2015;
-    const CLID& CLID_CsIDataCnv         = 2016;
+    const CLID& CLID_TdCsIDataCnv         = 2016;
         
