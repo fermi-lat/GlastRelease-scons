@@ -61,8 +61,6 @@ int main(int argc, char* argv[]) {
   // vrml file for all the volumes placed in the topVolume, otherwise it
   // will build the vrml file for the specified volume. The output is
   // placed in sections.vrml
-
-  /*
   detModel::VrmlSectionsVisitor* visitor;
   if (argc == 2)
     visitor = new detModel::VrmlSectionsVisitor("");  
@@ -70,9 +68,6 @@ int main(int argc, char* argv[]) {
     visitor = new detModel::VrmlSectionsVisitor(argv[2]);  
 
   visitor->setMode("digi");
-  */
-
-
   // We retrive the hierarchy entry point, i.e. the GDD object. It
   // contains all the relevant information
   detModel::Gdd* g = manager->getGdd();
@@ -83,62 +78,9 @@ int main(int argc, char* argv[]) {
   std::cout << "XML file contains " << g->getConstantsNumber() << " constants." << std::endl;
 
   double maxLogVal;
-  bool getOk;
-  getOk = manager->getNumericConstByName("maxLog", &maxLogVal);
-  if (getOk)
-    std::cout << "(Float) value for maxLog is " << maxLogVal << std::endl;
-  else std::cout << "getNumericConstByName failed" << std::endl;
+  manager->getNumericConstByName("maxLog", &maxLogVal);
+  std::cout << "value for maxLog is " << maxLogVal << std::endl;
 
-  int maxLogInt;
-  getOk = manager->getNumericConstByName("maxLog", &maxLogInt);
-  if (getOk)
-    std::cout << "(int) value for maxLog is " << maxLogInt << std::endl;
-  else std::cout << "getNumericConstByName (int) failed" << std::endl;
-
-  // -------
-  double nCsISeg;
-  getOk = manager->getNumericConstByName("nCsISeg", &nCsISeg);
-  if (getOk)
-    std::cout << "(Float) value for nCsISeg is " << nCsISeg << std::endl;
-  else std::cout << "getNumericConstByName failed" << std::endl;
-
-  int nCsISegInt;
-  getOk = manager->getNumericConstByName("nCsISeg", &nCsISegInt);
-  if (getOk)
-    std::cout << "(int) value for nCsISeg is " << nCsISegInt << std::endl;
-  else std::cout << "getNumericConstByName (int) failed" << std::endl;
-
-  double xNum;
-  getOk = manager->getNumericConstByName("xNum", &xNum);
-  if (getOk)
-    std::cout << "(Float) value for xNum is " << xNum << std::endl;
-  else std::cout << "getNumericConstByName failed" << std::endl;
-
-  int xNumInt;
-  getOk = manager->getNumericConstByName("xNum", &xNumInt);
-  if (getOk)
-    std::cout << "(int) value for xNum is " << xNumInt << std::endl;
-  else std::cout << "getNumericConstByName (int) failed" << std::endl;
-
-
-
-
-
-  // -------
-
-  double diodeX;
-  getOk = manager->getNumericConstByName("diodeX", &diodeX);
-  if (getOk)
-    std::cout << "(Float) value for diodeX is " << diodeX << std::endl;
-  else std::cout << "getNumericConstByName failed" << std::endl;
-
-  int diodeXInt;
-  getOk = manager->getNumericConstByName("diodeX", &diodeXInt);
-  if (getOk)
-    std::cout << "(int) value for diodeX is " << diodeXInt << std::endl;
-  else std::cout << "getNumericConstByName (int) failed" << std::endl;
-
-  
   // Retrive the materials, generate the colors and set some transparency values
   detModel::MatCollection* mats = g->getMaterials();  
   mats->generateColor();
@@ -147,13 +89,11 @@ int main(int argc, char* argv[]) {
   // We start the HTMLConstantsVisitor to build the html file with the
   // constants tables. Colors and layout are stolen from Joanne ones.
   manager->startVisitor(new detModel::HtmlConstantsVisitor());
-
   // We set a mode for choices
   //  manager->setMode("propagate");
   // We start the vrml visitor
-  /*
   manager->startVisitor(visitor);
-  */
+
   manager->startVisitor(new detModel::CountMaterial(argv[2]));
 
   detModel::IDmapBuilder idMap(argv[2]);
@@ -161,61 +101,6 @@ int main(int argc, char* argv[]) {
   manager->startVisitor(&idMap);
   idMap.summary(std::cout);
 
-  // Try out new IDmapBuilder methods
-
-  std::cout << "Top volume is " << std::string(argv[2]) << std::endl;
-  idents::VolumeIdentifier worldId;
-  idents::VolumeIdentifier relId;
-
-  relId.append(1);     // fTowerObjects field
-  relId.append(1);     // tray number
-  relId.append(0);     // fmeas = x
-  relId.append(1);     // Si top
-
-  idents::VolumeIdentifier prefix = idMap.getIDPrefix();
-
-  std::cout << "ID prefix is " << prefix.name() << std::endl;
-
-  worldId = prefix;
-  worldId.append(relId);
-
-  std::string  s;
-  std::vector<double> params;
-  bool ret = idMap.getShapeByID(worldId, &s, &params);
-  if (ret) {
-    std::cout << "String from getShapeByID(worldId..) is " << s << std::endl;
-  }
-  else std::cout << "getShapeByID call failed" << std::endl;
-
-  ret = idMap.getShapeByID(relId, &s, &params);
-  if (ret) {
-    std::cout << "String from getShapeByID(relId..) is " << s << std::endl;
-  }
-  else std::cout << "getShapeByID call failed" << std::endl;
-
-
-
-  ret = idMap.getShapeByTopID(worldId, &s, &params);
-
-  if (ret) {
-    std::cout << "String from getShapeByTopID(worldId..) is " 
-              << s << std::endl;
-  }
-  else std::cout << "getShapeByTopID call failed" << std::endl;
-
-  ret = idMap.getShapeByTopID(relId, &s, &params);
-
-  if (ret) {
-    std::cout << "String from getShapeByTopID(relId..) is " 
-              << s << std::endl;
-  }
-  else std::cout << "getShapeByTopID call failed" << std::endl;
-
-
-  HepTransform3D   trans;
-  ret = idMap.getTransform3DByID(worldId, &trans);
-
-  ret = idMap.getTopTransform3DByID(relId, &trans);
   /* Diagnostic */
   //  for( detModel::IDmapBuilder::PVmap::const_iterator id = idMap.begin(); 
   //       id!=idMap.end(); ++id){
@@ -230,9 +115,7 @@ int main(int argc, char* argv[]) {
   //    }
   //  }
 
-  /*
   delete visitor;
-  */
   delete manager;
   return(0);
 }
