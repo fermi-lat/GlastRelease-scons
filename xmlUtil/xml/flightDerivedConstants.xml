@@ -1413,7 +1413,7 @@ grid, etc. (may be superseded by info from Eric)</notes>
         <const name="betweenSideTapesX" >
           <notes>gap between two tapes on an ACD X-side</notes>
           <minus>
-            <refer refTo="sideTileWidthShortXRow" />
+            <refer refTo="sideTileWidthLongXRow" />
             <refer refTo="tapeWidth" />
           </minus>
         </const>
@@ -1421,7 +1421,7 @@ grid, etc. (may be superseded by info from Eric)</notes>
         <const name="betweenSideTapesY" >
           <notes>gap between two tapes on an ACD Y-side</notes>
           <minus>
-            <refer refTo="sideTileWidthShortYRow" />
+            <refer refTo="sideTileWidthLongYRow" />
             <refer refTo="tapeWidth" />
           </minus>
         </const>
