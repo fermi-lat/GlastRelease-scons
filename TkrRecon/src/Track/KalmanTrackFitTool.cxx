@@ -390,7 +390,7 @@ StatusCode KalmanTrackFitTool::doTrackFit(Event::TkrTrack* track)
     trackUtils.finish(*track);
 
     // Kalman Energy determination (why not part of Kalman Filter itself?)
-    trackUtils.eneDetermination(*track);
+    trackUtils.computeMSEnergy(*track);
 
     // Set the bit to confirm completion
     track->setStatusBit(Event::TkrTrack::ONEPASS);
@@ -434,7 +434,7 @@ StatusCode KalmanTrackFitTool::doTrackReFit(Event::TkrTrack* track)
 
     // No Kalman Filter energy re-determination on the second pass? 
     //if (track->getStatusBits() & Event::TkrTrack::LATENERGY) trackUtils.eneDetermination(*track);
-    trackUtils.eneDetermination(*track);
+    trackUtils.computeMSEnergy(*track);
 
     // Set the bit to confirm completion
     track->setStatusBit(Event::TkrTrack::TWOPASS);
