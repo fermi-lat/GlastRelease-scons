@@ -2,6 +2,11 @@
  * Package detModel
  * Coordinator: R.Giannitrapani
  *
+ * v2r13 jrb 15 Aug 2002
+ *       1. Changes to IDMapBuilder to build entire map even when
+ *          top volume != full detector; new services to get 
+ *          volume identifier prefix, transform prefix
+ *       2. add getNumericConstByName service for integer constants
  * v2r12 jrb 10 June 2002  
  *       1. Pass DOM_* objects by value; eliminate gcc warnings
  *       2. Improved HtmlConstantsVisitor
