@@ -86,18 +86,18 @@ private:
     
     /// Collection of McParticles
     /// Must be TObjArray due to TRefArray which grows dynamically
-    TObjArray *m_particleCol;
+    TObjArray *m_particleCol; //->
     /// static array to allow one-time array creation
     static TObjArray *m_staticParticleCol; //!
     
     /// Collection of McIntegratingHits
     /// must be a TObjArray due to map in McIntegratingHit
-    TObjArray *m_integratingHitCol;
+    TObjArray *m_integratingHitCol; //->
     /// static array to allow one-time array creation
     static TObjArray *m_staticIntegratingHitCol; //!
     
     /// Collection of McPositionHits
-    TObjArray *m_positionHitCol;
+    TObjArray *m_positionHitCol; //->
     /// static array to allow one-time array creation
     static TObjArray *m_staticPositionHitCol; //!
     
