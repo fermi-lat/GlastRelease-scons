@@ -2,6 +2,7 @@
  * package GlastSvc
  * package manager:T.Burnett
  *
+ * 25-mar-02: LSR Tag v5r1p2 to fix tower in SiliconPlaneGeometry
  * 21-mar-02: THB Tag v5r1 with new GlastDetSvc functionality
  * 15-mar-02: HMK tag v4r2 Updated for Gaudi v9.
  * 15-mar-02: THB tag v4r1
