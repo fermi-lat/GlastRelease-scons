@@ -16,19 +16,17 @@
 
 
 
-
-
-/*!
-//------------------------------------------------------------------------------
-//
-// \class   CalDigi        
-//  
-// \brief Digitizations for Cal                                
-//              
-// Author:  J. Eric Grove, 23 Feb 2001
-//
-//------------------------------------------------------------------------------
+/** @class CalDigi
+ * @brief Transient Data Store class for CAL Digitizations.Actual readout data
+ * is contained in nested class CalXtalReadout, holding ACD values and gain ranges
+ * from the two crystal ends. A vector of CalXtalReadouts is contained in CalDigi,
+ * via the typedef CalXtalReadoutCol. This allows up to 4 readouts per end. A collection of 
+ * CalDigis is typedefed as CalDigiCol
+ *
+ * Author:  E.Grove
+ *
 */
+
 
 extern const CLID& CLID_CalDigi;
 
@@ -38,17 +36,14 @@ class CalDigi : virtual public ContainedObject {
     
 public:
     
-/*!
-//------------------------------------------------------------------------------
-//
-// \class   CalXtalReadout        
-//  
-// \brief   Pulse heights and energy range for both faces of Xtal for Cal                                
-//              
-// Author:  J. Eric Grove, 23 Feb 2001
-//
-//------------------------------------------------------------------------------
-    */
+/** @class CalXtalReadout
+ * @brief Nested class in CalDigi for holding ACD values and gain ranges
+ * from the two crystal ends.
+ *
+ * Author:  E.Grove
+ *
+*/
+
     class CalXtalReadout {  // : virtual public ContainedObject  { 
         
     public:
@@ -59,21 +54,26 @@ public:
               m_adcM(adcM)
           {};
           
-          /// Destructor
           ~CalXtalReadout() {};
           
           
-          // retrieve pulse height from specified face
+          /// retrieve pulse height from specified face
           inline unsigned short getAdc(idents::CalXtalId::XtalFace face) const {return face == idents::CalXtalId::POS ? m_adcP : m_adcM;};
           
-          // retrieve energy range from specified face
+          /// retrieve energy range from specified face
           inline char getRange(idents::CalXtalId::XtalFace face) const {return face == idents::CalXtalId::POS ? m_rangeP : m_rangeM;};
           
           
     private:
         
-        unsigned short m_adcP, m_adcM;
-        char  m_rangeP, m_rangeM;
+        /// ADC value from POSitive face
+        unsigned short m_adcP;
+        /// ADC value from NEGative face
+        unsigned short m_adcM;
+        /// gain range from POSitive face
+        char m_rangeP;
+        /// gain range from NEGative face
+        char m_rangeM;
         
     };
 
@@ -89,7 +89,6 @@ public:
     CalDigi(idents::CalXtalId::CalTrigMode mode, idents::CalXtalId xtalId) : 
         m_mode(mode), m_xtalId(xtalId) {};
     
-    /// Destructor
     virtual ~CalDigi() { };
     
     /// Retrieve readout mode
@@ -98,9 +97,11 @@ public:
     /// Retrieve Xtal identifier
     inline const idents::CalXtalId getPackedId() const { return m_xtalId; }
 
+    /// initialize object all at once
     inline void initialize(idents::CalXtalId::CalTrigMode m, idents::CalXtalId id)
 	{ m_mode = m;  m_xtalId = id;}
 
+    /// add readout to CalXtalReadout collection
     inline void addReadout(CalXtalReadout r) { m_readout.push_back(r); } 
 	const CalXtalReadoutCol& getReadoutCol() const { return m_readout;}	
     
@@ -119,7 +120,6 @@ public:
     /// Retrieve ranges and pulse heights from both ends of selected readout
     inline const CalXtalReadout* getXtalReadout(short readoutIndex)
     {
-        //return ((readoutIndex < m_readout.size()) ? m_readout[readoutIndex] : 0);
         if ( readoutIndex < m_readout.size() )
             return &(m_readout[readoutIndex]);
         else
