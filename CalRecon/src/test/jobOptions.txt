@@ -62,7 +62,7 @@ ApplicationMgr.DLLs += {"GlastSvc", "G4Propagator", "G4Generator","TkrUtil"};
 ApplicationMgr.ExtSvc += { "GlastDetSvc" };
 GlastDetSvc.topVolume="LAT"; 
 
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/EM/emSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/em/emSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
 
