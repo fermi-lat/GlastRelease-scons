@@ -63,8 +63,8 @@ public:
 	m_rmsLayer = rmsLayer;	
 	m_rmslong = rms_long;
 	m_rmstrans= rms_trans;
+	m_direction = caldir;
 	m_transvOffset = calTransvOffset;
-	
 	}
 
     void initProfile(double fit_energy, double ki2, double fit_start,
@@ -72,11 +72,10 @@ public:
 	{
 	m_fitEnergy = fit_energy;
 	m_ProfChisq = ki2;
-	m_CsiAlpha = fit_start;
-	m_CsiLambda = fit_alpha;
-	m_start  = fit_lambda;
+	m_CsiAlpha = fit_alpha;
+	m_CsiLambda = fit_lambda;
+	m_start  = fit_start;
 	}
-	void setDirection(Vector v)   {m_direction = v;}
 
 
 	// access
