@@ -21,6 +21,8 @@ McParticle::McParticle(const McParticle &p) {
 
     m_particleId = p.m_particleId;
     m_statusFlags = p.m_statusFlags;
+    m_initialPosition = TVector3(p.m_initialPosition.X(), p.m_initialPosition.Y(),
+        p.m_initialPosition.Z());
     m_finalPosition = TVector3(p.m_finalPosition.X(), p.m_finalPosition.Y(),
         p.m_finalPosition.Z());
     m_initialFourMomentum = TLorentzVector(p.m_initialFourMomentum.X(),
@@ -49,6 +51,7 @@ McParticle::~McParticle() {
 void McParticle::Clear(Option_t *option) {
     m_particleId = 0;
     m_statusFlags = 0;
+    m_initialPosition = TVector3(0., 0., 0.);
     m_finalPosition = TVector3(0., 0., 0.);
     m_initialFourMomentum = TLorentzVector(0., 0., 0., 0.);
     m_finalFourMomentum = TLorentzVector(0., 0., 0., 0.);
@@ -61,8 +64,10 @@ void McParticle::Print(Option_t *option) const {
     cout.precision(2);
     cout << "ParticleId: " << m_particleId;
     cout << " StatusFlag: " << m_statusFlags << endl;
-    cout << "FinalPos: (" << m_finalPosition.x() << "," << m_finalPosition.y()
-        << "," << m_finalPosition.z() << ")  ";
+    cout << "InitialPos: (" << m_initialPosition.X() << "," << m_initialPosition.Y()
+        << "," << m_initialPosition.Z() << ") ";
+    cout << "FinalPos: (" << m_finalPosition.X() << "," << m_finalPosition.Y()
+        << "," << m_finalPosition.Z() << ")" << endl;
     cout << "InitMom: (" << m_initialFourMomentum.X() << "," << m_initialFourMomentum.Y() << ","
         << m_initialFourMomentum.Z() << "," << m_initialFourMomentum.T() << ")    ";
     cout << "FinalMom: (" << m_finalFourMomentum.X() << "," << m_finalFourMomentum.Y() << ","
@@ -76,6 +81,7 @@ void McParticle::Print(Option_t *option) const {
 void McParticle::initialize( McParticle* mother, Int_t id, UInt_t statusBits,
                       const TLorentzVector& initMom,
                       const TLorentzVector& finalMom,
+                      const TVector3& initPos,
                       const TVector3& finalPos)
 {
     m_mother = mother;
@@ -83,6 +89,7 @@ void McParticle::initialize( McParticle* mother, Int_t id, UInt_t statusBits,
     m_statusFlags = statusBits;
     m_initialFourMomentum.SetXYZT(initMom.X(), initMom.Y(), initMom.Z(), initMom.T());
     m_finalFourMomentum.SetXYZT(finalMom.X(), finalMom.Y(), finalMom.Z(), finalMom.T());
+    m_initialPosition.SetXYZ(initPos.X(), initPos.Y(), initPos.Z());
     m_finalPosition.SetXYZ(finalPos.X(), finalPos.Y(), finalPos.Z());
     if ( mother == 0 ) return;
     if( mother != this) mother->m_daughters.Add(this);
@@ -110,7 +117,7 @@ Bool_t McParticle::primaryParticle() const
 
 const TVector3& McParticle::getInitialPosition()const
 {
-    return ((McParticle*)m_mother.GetObject())->m_finalPosition;
+    return m_initialPosition;
 }
 
 
