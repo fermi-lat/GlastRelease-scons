@@ -3,9 +3,10 @@
 #define __CALCLUSTERSALG_H 1
 
 #include "GaudiKernel/Algorithm.h"
-#include "ICalGeometrySvc.h"
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+#include "geometry/Vector.h"
+#include "CalRecon/CalXtalRecData.h"
 
-class CalRecLogs;
 class CsIClusterList;
 class CsICluster;
 class Midnight;
@@ -22,9 +23,9 @@ class Midnight;
 
 //! Performs high level energy corrections
 
-/*! The reconstruction here uses CalRecLogs to produce a CsIClusterList.
+/*! The reconstruction here uses CalXtalRecCol to produce a CsIClusterList.
 *  It evaluates the barycenter for each layer using the coordinates stored in
-*  the CalRecLogs, and tries to correct for energy leakage using two different
+*  the CalXtalRecCol, and tries to correct for energy leakage using two different
 *  methods:
 *  -  Profile performs profile fitting
 *  -  Leak performs a correction using the last layer correlation
@@ -81,14 +82,21 @@ protected:
     
 private:
     
-    ICalGeometrySvc* m_CalGeo; 
-    //! the log list, the input of the reconstruction
-    CalRecLogs* m_CalRecLogs;
+    //! reconstructed data for crystals, the input of the reconstruction
+    CalXtalRecCol* m_CalXtalRecCol;
     //! the clusters list, the output of the reconstruction
     CsIClusterList* m_CsIClusterList;
     //! the minimizer for Profile()
     Midnight* minuit;
     int m_callNumber;
+
+	double m_CsIWidth;
+    double m_CsIHeight;
+
+	int m_CalnLayers;
+
+	IGlastDetSvc* detSvc;
+
 };
 
 #endif
