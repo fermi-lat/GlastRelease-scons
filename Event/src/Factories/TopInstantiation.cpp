@@ -1,6 +1,6 @@
 /*! \file TopInstanciation.cpp
 \brief based upon topInstanciation.cpp by Markus Frank available within the LHCbEvent package
-This file instanciates concretely the implementation of all of these
+This file instantiates concretely the implementation of all of these
 classes so that they may be included within factories in the DLL.
 
 */
@@ -32,14 +32,20 @@ classes so that they may be included within factories in the DLL.
 // ====================================================================
 // Object factory implementation for objects of class Event
 // ===================================================================
-//#include "GlastEvent/TopLevel/Event.h"
-//_ImplementDataObjectFactory(Event);
+#include "GlastEvent/TopLevel/Event.h"
+_ImplementDataObjectFactory(Event);
 
 // ====================================================================
 // Object factory implementation for objects of class MCEvent
 // ===================================================================
 #include "GlastEvent/TopLevel/MCEvent.h"
 _ImplementDataObjectFactory(MCEvent)
+
+// ====================================================================
+// Object factory implementation for objects of class IrfEvent
+// ===================================================================
+#include "GlastEvent/TopLevel/IrfEvent.h"
+_ImplementDataObjectFactory(IrfEvent)
 
 /*
 // ====================================================================
@@ -62,8 +68,9 @@ _ImplementDataObjectFactory(AnalEvent)
 */
 void TopInstantiation()  {
   //DLL_DECL_OBJECTFACTORY( Run );
-  //DLL_DECL_OBJECTFACTORY( Event );
+  DLL_DECL_OBJECTFACTORY( Event );
   DLL_DECL_OBJECTFACTORY( MCEvent );
+  DLL_DECL_OBJECTFACTORY( IrfEvent );
   //DLL_DECL_OBJECTFACTORY( RawEvent );
   //DLL_DECL_OBJECTFACTORY( RecEvent );
   //DLL_DECL_OBJECTFACTORY( AnalEvent );
