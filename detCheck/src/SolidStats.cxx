@@ -125,7 +125,7 @@ namespace detCheck {
                  << "  #Log = " << mat->logCount
                  << "  #Phys = " << mat->physCount 
                  << "  Total volume = " << intVol << " cu cm" 
-                 << "  Mass = " <<  intMass << " kg " << std::endl;
+                 << "  Mass = " <<  intMass << " gm " << std::endl;
       }
     }
 
