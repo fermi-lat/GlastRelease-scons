@@ -111,9 +111,9 @@ Material for CAL flange
 </prim>
 	<prim name="traySpacing" value="32.0">Center-to-center distance between trays
 </prim>
-        <prim name="guardRing" value="0.8">guard ring size
+        <prim name="guardRing" value="0.8">guard ring size (superseded/obsolete?)
 </prim>
-        <prim name="ssdGap" value="0.1">gap between Si dies
+        <prim name="ssdGap" value="0.1">gap between Si dies (superseded/obsolete?)
 </prim>
 	<prim name="SiWaferSide" value="89.5">Length and width of Si wafer</prim>
         <prim name="SiWaferActiveSide" value="87.552">Length and width of active
@@ -401,6 +401,7 @@ form a square array of this dimension</prim>
     <!-- According to conventions above, an unrotated CsIDetector would
     be an X-log -->
     <box name="CsIDetector" 
+         sensitive="true"
          XREF="CsILength" YREF="CsITrans" ZREF="CsIZ"
          material="crystalMat"  >
       <seg axis="X" nSeg="10" reason="energyAcct" />
@@ -412,11 +413,13 @@ form a square array of this dimension</prim>
      above.  Old names for x,y,z dimensions were respectively
      thickness,x_width,y_width   -->
     <box name="diodeL"
+         sensitive="true"
          XREF="diodeX"     
          YREF="diodeY"
          ZREF="diodeLZ"          
          material="diodeMat" />
     <box name="diodeS"
+         sensitive="true"
          XREF="diodeX"     
          YREF="diodeY"
          ZREF="diodeSZ"          
@@ -527,52 +530,17 @@ form a square array of this dimension</prim>
       </axisPos>
     </stackZ>
 
-    <!-- pieces of Calorimeter frame 
-           but we can maybe do without pieces, just use envelope -->
-<!--
-    <box name="CALTBFrame"
-         XREF="CALFrameWidth"
-         YREF="CALFrameWidth"
-         ZREF="CALframeTBThick"
-         material="CALFrameMat"
-         />
-    <box name="calSideFrame"
-         XREF="CALFrameWidth"
-         YREF="CALFrameSideThick"
-         ZREF="CALTotalZ"
-         material="CALFrameMat;"
-         />
- -->
+    <!-- Calorimeter for a tower consists of layers plus frame pieces -->
+    <!-- Can just embed layers stack into box of frame material -->
     <box name="oneCALEnv"
          XREF="CALFrameWidth"
          YREF="CALFrameWidth"
          ZREF="CALFrameHeight"
          material="CALFrameMat"
          />
-    <!-- Calorimeter for a tower consists of layers plus frame pieces -->
-    <!-- Alternatively, just embed layers stack into box of frame
-         material -->
     <composition name="oneCAL" envelope="oneCALEnv" >
       <posXYZ volume="CALLayers" />  <!-- centered in envelope -->
     </composition>
-
-<!--
-    <posXYZ volume="CALTBFrame" ZREF="CALFrameTBDsp" />  
-    <posXYZ volume="CALTBFrame" ZREF="CALFrameTBDspN" /> 
-
-       Sides parallel to x-axis 
-    <posXYZ volume="CALSideFrame" YREF="CALFrameSideDsp" />
-    <posXYZ volume="CALSideFrame" YREF="CALFrameSideDspN" />
-
-     Sides parallel to y-axis (rotate logical side volume) 
-    <posXYZ volume="CALSideFrame" 
-	    zrot="90"
-	    XREF="CALFrameSideDsp"           />
-    <posXYZ volume="CALSideFrame"
-	    zrot="90"
-              XREF="CALFrameSideDspN" />
-  </composition>
- -->
 
 
 <!-- Tracker stuff.  The tracker consists of trays.  Alternate trays
@@ -613,7 +581,8 @@ form a square array of this dimension</prim>
      a composition or stack(s) defining internal structure
      of ladders and strips.
   -->
-    <box name="SiLayerBox"  
+    <box name="SiLayerBox"
+         sensitive="true"  
 	 XREF="TKRTrayWidth" 
 	 YREF="TKRTrayWidth"
 	 ZREF="SiThick" material="TKRDetMat" />
@@ -632,6 +601,7 @@ form a square array of this dimension</prim>
 <!-- The unrotated wafer is segmented along the x axis, hence measures X,
      hence is an X layer -->
     <box name="SiWaferActive"
+         sensitive="true"
 	 XREF="SiWaferActiveSide"
 	 YREF="SiWaferActiveSide"
 	 ZREF="SiThick"
@@ -650,8 +620,15 @@ form a square array of this dimension</prim>
       <posXYZ volume="SiWaferActive" />
     </composition>
     
+<!-- identify wafers by their position along stack in direction
+     of measurement.                                          
+     strip id in glastsim style is then 
+           local(in wafer)-strip# + strips-per-wafer * wafer-id
+ -->
     <stackX name="waferRow" origin="atCentre" >
-      <axisMPos volume="SiWaferNest" ncopyREF="nWaferAcross" /> <!-- ident? -->
+      <axisMPos volume="SiWaferNest" ncopyREF="nWaferAcross">
+        <identifier field="wafer" value="0" step="1" />
+      </axisMPos>
     </stackX>
 
     <stackY name="towerLayerWafers" origin="atCentre" >
@@ -731,7 +708,7 @@ form a square array of this dimension</prim>
     </stackZ>
 
     <!-- make a tracker by stacking up the trays -->
-    <stackZ name="tracker" >
+    <stackZ name="oneTKR" >
       <axisPos volume="trayBot" zrot="90" >
 	<identifier field="tray" value="0" />
         <identifier field="orient" value="1" /> <!-- 0 is X, 1 is Y -->
@@ -810,6 +787,9 @@ form a square array of this dimension</prim>
       </axisPos>
 
     </stackZ>
+
+<!-- next need to put together oneCAL and oneTKR with necessary
+     structural stuff to make a tower -->
 
   </section>
 </gdd>
