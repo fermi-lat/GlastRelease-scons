@@ -152,7 +152,7 @@ class KalPlane
 public:
     
     KalPlane() 
-        : m_IDHit (0), m_IDTower(0), m_IDPlane(0), m_zplane(0), m_eneplane(0)
+        : m_IDHit (-1), m_IDTower(-1), m_IDPlane(-1), m_zplane(0), m_eneplane(0)
     {}
     KalPlane(unsigned id, int kplane, double ene, double z, const KalPar& OrthPar, const KalHit& hit)
         : m_IDPlane(kplane), m_zplane(z), m_eneplane(ene), m_OrthPar(OrthPar) 
@@ -174,6 +174,10 @@ public:
     inline void setIDHit(unsigned id) {
 		m_IDHit = id;
 		m_IDTower = (int) id/1000000;
+    }
+    inline void setIDHit(int id, int tower) {
+        m_IDHit   = id;
+        m_IDTower = tower;
     }
 	inline void setIDPlane(int id)  {m_IDPlane = id;}
     inline void setZPlane(double z) {m_zplane = z;}
