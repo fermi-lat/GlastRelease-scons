@@ -4,6 +4,7 @@
 #define MERITROOTTUPLE_H
 
 #include <string>
+#include <vector>
 class Tuple;
 class TFile;
 class TTree;
@@ -35,6 +36,8 @@ private:
     /// the ROOT stuff: a file and a tree to put into it
     TTree * m_tree;
     TFile *  m_tf;
+
+	std::vector<float> m_floats; // needed for communication with ROOT's float branches.
 
 };
 

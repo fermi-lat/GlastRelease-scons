@@ -180,7 +180,7 @@ StatusCode meritAlg::initialize() {
 
      //now make the parallel ROOT tuple
     if(!m_root_filename.value().empty() ){
-        log << MSG::INFO << "OPening " << m_root_filename << " to write ROOT tuple" << endreq;
+        log << MSG::INFO << "Opening " << m_root_filename << " to write ROOT tuple" << endreq;
         m_root_tuple=new MeritRootTuple(m_tuple, m_root_filename);
     }
 
