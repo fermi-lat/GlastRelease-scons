@@ -2,6 +2,8 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
+ * 13-Mar-2003: jrb v0r2p1: Don't forget to declare CAL converters in 
+ *                          CalibSvc_load.cxx
  *  3-Mar-2003: jrb v0r2p0: Add consistency checks when reading CAL XML data
  * 26-Feb-2003: jrb v0r2:   Handle CAL peds and gains (XML format --> TCDS)  
  * 18-Feb-2003: jrb v0r1p1: Use packageShr correctly in requirements; add
