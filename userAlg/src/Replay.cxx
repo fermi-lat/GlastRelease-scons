@@ -21,7 +21,7 @@
  * <br> Following is example of how to select multiple algs:
 <pre>
   ApplicationMgr.TopAlg += {"Replay"};
-  Replay.Members = {"TkrReconAlg", "TkrFindAlg"};
+  Replay.Algorithms = {"TkrReconAlg", "TkrFindAlg"};
  </pre>
 
 */
@@ -57,7 +57,7 @@ Replay::Replay(const std::string& name, ISvcLocator* pSvcLocator)
 {
     // declare properties with setProperties calls
     declareProperty("algname", m_algname); // for backward compatibility
-    declareProperty("Members",  m_algnameList);
+    declareProperty("Algorithms",  m_algnameList);
     
 }
 
