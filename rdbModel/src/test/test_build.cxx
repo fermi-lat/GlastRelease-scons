@@ -41,7 +41,10 @@ int main(int, char**) {
   rdbModel::Column* serCol = rdb->getColumn("metadata_v2r1", "ser_no");
   if (serCol) {
     rdbModel::Datatype* serType = serCol->getDatatype();
-    
+
+    std::cout << "Value of isPrimaryKey() for column ser_no is: " 
+              << serCol->isPrimaryKey() << std::endl;
+
     if (serType->getInterval(colMin, colMax) ) {
       std::cout << "Min and max for ser_no are " << colMin 
                 << ", " << colMax << std::endl;
