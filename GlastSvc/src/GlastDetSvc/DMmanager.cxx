@@ -15,8 +15,7 @@
 #include "idents/VolumeIdentifier.h"
 
 #include "CLHEP/Geometry/Transform3D.h"
-
-#include "xml/IFile.h" //for extractEnvVar
+#include "facilities/Util.h" // for expandEnvVar
 #include <string>
 #include <cassert>
 #include <iomanip>
@@ -41,7 +40,7 @@ void DMmanager::init(std::string filename, std::string mode, std::string topvol)
 {
     m_dm->setBuilder(new detModel::XercesBuilder);
     if( filename.empty() || filename == "-" ) filename = "$(XMLGEODBSROOT)/xml/flight/flight.xml" ;
-    xml::IFile::extractEnvVar(&filename);
+    facilities::Util::expandEnvVar(&filename);
     m_dm->setNameFile( filename);
     m_dm->build(detModel::Manager::all);
     m_vol = m_dm->getGdd()->getVolumeByName(topvol);
