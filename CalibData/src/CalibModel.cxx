@@ -90,15 +90,18 @@ public:
     CalibData::CAL_DiscrHI = cal + "_DiscrHI";
 
     CalibData::Test_Gen = test + "_Gen";
+    CalibData::Test_1   = test + "_1";
 
 
     // Use same class for hot strips, dead strips or (merged) bad strips,
     // but different path in TDDS
 
     CalibData::pairs.push_back(std::make_pair(CalibData::TKR_HotChan,
-                                                CLID_Calib_TKR_HotChan));
+                                              CLID_Calib_TKR_HotChan));
     CalibData::pairs.push_back(std::make_pair(CalibData::TKR_DeadChan,
-                                                CLID_Calib_TKR_DeadChan));
+                                              CLID_Calib_TKR_DeadChan));
+    CalibData::pairs.push_back(std::make_pair(CalibData::Test_1,
+                                              CLID_Calib_CalibTest1));
 
 
   }

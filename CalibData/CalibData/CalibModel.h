@@ -103,6 +103,9 @@ const CLID CLID_Calib_CalibTest1       = 6500;
       //       for testing
       _EXTERN_ std::string   Test_Gen;
 
+      // Simple xml test type
+      _EXTERN_ std::string   Test_1;
+
       typedef  std::vector<std::pair <std::string, CLID> > CalibPairCol;
       typedef  CalibPairCol::const_iterator PairIt;
       _EXTERN_    CalibPairCol pairs;
