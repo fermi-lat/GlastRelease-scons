@@ -264,6 +264,35 @@ int checkTkrDigi(TkrDigi *digi, UInt_t ievent, Int_t idigi) {
     return 0;
 }
 
+int checkGem(const Gem &gem) {
+   GemTileList list = gem.tileList();
+   if (list.getXzm() != 20) return -1;
+   if (list.getXzp() != 21) return -1;
+   if (list.getYzm() != 22) return -1;
+   if (list.getYzp() != 23) return -1;
+   if (list.getXy() != 24) return -1; 
+   if (list.getRbn() != 25) return -1;
+   if (list.getNa() != 26) return -1;
+   GemOnePpsTime time = gem.getOnePpsTime();
+   if (time.getTimebase() != 50) return -1;
+   if (time.getSeconds() != 100) return -1;
+
+   if (gem.getTkrVector() != 1) return -1;
+   if (gem.getRoiVector() != 2) return -1;
+   if (gem.getCalLeVector() != 3) return -1;
+   if(gem.getCalHeVector() != 4) return -1;
+   if (gem.getCnoVector() != 5) return -1;
+   if (gem.getConditionSummary() != 6) return -1;
+   if (gem.getLiveTime() != 7) return -1;
+   if (gem.getPrescaled() != 8) return -1;
+   if (gem.getDiscarded() != 9) return -1;
+   if (gem.getSent() != 10) return -1;
+   if (gem.getTriggerTime() != 11) return -1;
+   if (gem.getDeltaEventTime() != 12) return -1;
+
+   return 0; 
+}
+
 int checkAcdDigi(AcdDigi *digi, UInt_t ievent, UInt_t idigi) {
 
     Float_t f = ievent;
@@ -371,6 +400,9 @@ int read(char* fileName, int numEvents) {
         L1T level1Trigger = evt->getL1T();
         if (checkL1T(level1Trigger) < 0) return -1;
 
+        Gem gemData = evt->getGem();
+        if (checkGem(gemData) < 0) return -1;
+
         UInt_t numCalDigi = evt->getCalDigiCol()->GetEntries();
         const TObjArray *calDigiCol = evt->getCalDigiCol();
         TIter calDigiIt(calDigiCol);
@@ -447,6 +479,12 @@ int write(char* fileName, int numEvents) {
         L1T level1(13);
         EventSummaryData summary(0);
         ev->initialize(ievent, runNum, randNum*ievent, level1, summary, fromMc);
+        Gem myGem;
+        GemTileList tileList(20, 21, 22, 23, 24, 25, 26);
+        myGem.initTrigger(1, 2, 3, 4, 5, 6, tileList);
+        GemOnePpsTime ppsTime(50, 100);
+        myGem.initSummary(7, 8, 9, 10, 11, ppsTime, 12);
+        ev->initGem(myGem);
         
         for (ixtal = 0; ixtal < numXtals; ixtal ++) {
             CalDigi *cal = ev->addCalDigi();
