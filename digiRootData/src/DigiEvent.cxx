@@ -68,6 +68,7 @@ void DigiEvent::initialize(UInt_t eventId, UInt_t runId, Double_t time,
 }
 
 void DigiEvent::Clear(Option_t *option) {
+
     const Int_t nd = 10000;
     static Int_t ind=0;
     static TkrDigi* keep[nd];
@@ -82,22 +83,21 @@ void DigiEvent::Clear(Option_t *option) {
         delete m_calDigiCol;
         m_calDigiCol = 0;
     }
-    //    m_tkrDigiCol->Delete();
     m_acdDigiCol->Clear("C");
     m_numAcdDigis = -1;
     m_numCalDigis = -1;
 
-    //m_tkrDigiCol->Delete();  //<======THIS LINE COMMENTED
+   //m_tkrDigiCol->Delete();  //<======THIS LINE COMMENTED
    //we delete the objects in keep every nd TkrDigi objects
-    //these few lines emulates what TClonesArray is doing
+   //these few lines emulates what TClonesArray is doing
 
     Int_t n = m_tkrDigiCol->GetEntries();
-   for (Int_t i=0;i<n;i++) keep[ind+i] = (TkrDigi*)m_tkrDigiCol->At(i);
-   ind += n;
-   if (ind > nd-100) {
+    for (Int_t i=0;i<n;i++) keep[ind+i] = (TkrDigi*)m_tkrDigiCol->At(i);
+    ind += n;
+    if (ind > nd-100) {
       for (Int_t j=0;j<ind;j++) delete keep[j];
       ind = 0;
-   }
+    }
     m_tkrDigiCol->Clear();
 }
 
