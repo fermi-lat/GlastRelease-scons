@@ -114,8 +114,8 @@ void RootMenu::finishSetup()
 		new SimpleCommand<RootMenu>(this, &RootMenu::setEventIndex));
 
 	// save this for later...once BuildIndex trouble is sorted out
-    //filemenu.addButton("set Root Run and Event...", 
-	//	new SimpleCommand<RootMenu>(this, &RootMenu::setRunEventPair));
+    filemenu.addButton("set Root Run and Event...", 
+		new SimpleCommand<RootMenu>(this, &RootMenu::setRunEventPair));
 
 }
 
