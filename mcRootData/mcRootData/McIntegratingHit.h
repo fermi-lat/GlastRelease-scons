@@ -111,7 +111,7 @@ private:
     /// Actually store McParticles as a TRefArray
     TRefArray m_mcPartArr;
     /// Store energies from McParticle* pair in a vector
-    std::vector<Double_t> m_energyPtrArr;
+    vector<Double_t> m_energyPtrArr;
    
     /// Store a vector of McParticle Ids
     //std::vector<Int_t> m_mcIdArr;
