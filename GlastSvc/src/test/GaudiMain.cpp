@@ -18,6 +18,9 @@
 //  Description: Main Program
 //
 //------------------------------------------------------------------------------
+#ifndef WIN32
+void FATAL(const char* text){std::cerr << text << std::endl;}
+#endif // WIN32 
 
 
 //--- Example main program
