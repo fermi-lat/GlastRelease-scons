@@ -160,3 +160,8 @@ void AcdId::base10ToAcdId(UInt_t val, Short_t &lay, Short_t &face,
     val -= row*10;
     col = val;
 }
+
+bool AcdId::operator== (const AcdId& i) const {
+	if (m_id == i.m_id) return true;
+	return false;
+}

@@ -94,6 +94,8 @@ public:
     /// convert a value in base 10, to the appropriate layer, face, row, column
     void base10ToAcdId(UInt_t val, Short_t &lay, Short_t &face, 
         Short_t &row, Short_t &col);
+
+	bool operator==(const AcdId& i) const;
     
     /// Special id value to denote an improper id number
     static UShort_t badId;
