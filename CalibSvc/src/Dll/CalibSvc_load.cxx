@@ -19,6 +19,7 @@ DECLARE_FACTORY_ENTRIES(CalibSvc) {
   DECLARE_CONVERTER(XmlBadStripsCnv);
   DECLARE_CONVERTER(XmlCalPedCnv);
   DECLARE_CONVERTER(XmlCalGainCnv);
+  DECLARE_CONVERTER(XmlCalMuSlopeCnv);
 
   // Following doesn't exist yet.
   //  DECLARE_SERVICE(CalibRootCnvSvc);
