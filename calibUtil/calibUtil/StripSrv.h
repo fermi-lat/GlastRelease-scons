@@ -5,13 +5,19 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include "calibUtil/GenericSrv.h"
 
 namespace calibUtil {
 
-  typedef unsigned int towerRC [2]; 
+  typedef struct stowerRC { unsigned int row; unsigned int col;} towerRC; 
 
   class StripSrv {
+
   public: 
+
+    /// this function takes in a stripList in string format and 
+    /// fills a vector with corresponding strip numbers
+    strToNum(std::string strips, std::vector<unsigned int> &v);
 
     /// constructor. Initializes strip service by creating a DOM structure 
     /// out the XML file and filling in the internal data structures 
@@ -21,7 +27,7 @@ namespace calibUtil {
     std::string getBadType();
 
     /// List all towers with bad strips 
-    std::vector<towerRC> getBadTowers();
+    const std::vector<towerRC> getBadTowers();
 
     /// count for very bad strips for the tower specified 
     unsigned int countVeryBad(towerRC towerId);
@@ -51,25 +57,45 @@ namespace calibUtil {
     std::vector<unsigned int> getBad(towerRC towerId, unsigned int trayNum, std::string uniLayer);
     
     
+    /// methods giving access to generic data
+
+    /// Get instrument name
+    std::string getInst();
+    
+    /// Get timestamp
+    std::string getTimestamp();
+
+    /// Get calibration type
+    std::string getCalType();
+    
+    /// Get format Version
+    std::string getFmtVer();
+
   private:
 
-    typedef struct UniLayer {
+    typedef struct sUniLayer {
       std::string  stripType;
-      std::vector<unsigned int> stripList;
-    };
+      std::vector<unsigned int> stripCol;
+    }UniLayer;
   
-    typedef struct Tray {
-      unsigned int trayId;
-      UniLayer* topLayer;
-      UniLayer* botLayer;
-    };
-  
-    typedef struct Tower {
-      towerRC towerId;
-      std::vector<Tray> trayList;
-    };
+    typedef struct sTray {
+      unsigned int id;
+      UniLayer *topLayer;
+      UniLayer *botLayer;
+    }Tray;
+
+    typedef struct sTower {
+      towerRC id;
+      std::vector<Tray> trayCol;
+    }Tower;
    
-    std::vector<Tower> towerList;
+    std::vector<Tower> towerCol;
+    std::string badType;
+
+    /// Contained object to store generic data
+    GenericSrv genSrv;   
+    
+
   };
 
 }/// end of namespace calibUtil
