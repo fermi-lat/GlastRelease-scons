@@ -62,6 +62,7 @@ private:
     
     FluxMgr * m_fluxMgr;
     /// the user-defined list of acceptable XML sources (from JobOptions.txt)
+    //std::string m_source_lib;
     std::vector<std::string> m_source_lib;
     /// the default XML file name (from JobOptions.txt)
     std::string m_source_lib_default;
