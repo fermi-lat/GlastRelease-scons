@@ -3,6 +3,9 @@
  * Coordinator: J. Bogart
  *       *  EOH *
 
+   v1r3   25-Feb-2005 jrb Metadata class revamping: Use rdbModel as wrapper 
+                          for MySQL stuff; also change call interface to
+                          register calib.  Old version was never really used.
    v1r2p0 25-Jan-2005 jrb A couple of small changes to tracker calib. dtds
    v1r2   3-Jan-2005  jrb Use xmlBase package rather than xml
  * v1r1   15-Dec-2004 jrb Add TkrCalibration dtd for new types; add optional
