@@ -34,10 +34,12 @@
 
     Int_t ievent, ixtal;
     CalXtalId xtalId;
+    Float_t rand = gRandom->Rndm();
 
     for (ievent = 0; ievent < numEvents; ievent++) {
 
-        ev->initialize(ievent, runNum, true);
+        L1T level1(13);
+        ev->initialize(ievent, runNum, rand*ievent, level1, true);
 
         for (ixtal = 0; ixtal < numXtals; ixtal++) {
             CalDigi *cal = new CalDigi();

@@ -44,10 +44,51 @@ int checkDigiEvent(DigiEvent *evt, UInt_t ievent) {
         return -1;
     }
 
+    if (!floatInRange(evt->getTimeStamp(), randNum*ievent) ) {
+        std::cout << "Time Stamp is wrong: " << evt->getTimeStamp() << std::endl;
+        return -1;
+    }
+
     if (evt->getFromMc() != fromMc) {
         std::cout << "From MC flag is wrong" << std::endl;
         return -1;
     }
+    return 0;
+}
+
+int checkL1T(const L1T &level1) {
+
+    if (level1.getTriggerWord() != 13) {
+        std::cout << "Trigger Word is wrong: " << level1.getTriggerWord() 
+            << std::endl;
+        return -1;
+    }
+
+    if (level1.getAcdLow() != true) {
+        std::cout << "Acd Low is False when it should be True" << std::endl;
+        return -1;
+    }
+
+    if (level1.getAcdHigh() != false) {
+        std::cout << "Acd High is True when it should be False" << std::endl;
+        return -1;
+    }
+
+    if (level1.getTkr3InARow() != true) {
+        std::cout << "Tkr 3-in-a-row is False when it should be True" << std::endl;
+        return -1;
+    }
+
+    if (level1.getCalLow() != true) {
+        std::cout << "Cal Low is False when it should be True" << std::endl;
+        return -1;
+    }
+
+    if (level1.getCalHigh() != false) {
+        std::cout << "Cal High is True when it shoule be False" << std::endl;
+        return -1;
+    }
+
     return 0;
 }
 
@@ -295,6 +336,10 @@ int read(char* fileName, int numEvents) {
         std::cout << "DigiEvent ievent = " << ievent << std::endl;
         evt->Print();
         if (checkDigiEvent(evt, ievent) < 0) return -1;
+        
+        L1T level1Trigger = evt->getL1T();
+        if (checkL1T(level1Trigger) < 0) return -1;
+
         UInt_t numCalDigi = evt->getCalDigiCol()->GetEntries();
         const TObjArray *calDigiCol = evt->getCalDigiCol();
         TIter calDigiIt(calDigiCol);
@@ -349,7 +394,8 @@ int write(char* fileName, int numEvents) {
 
     for (ievent = 0; ievent < numEvents; ievent++) {
         
-        ev->initialize(ievent, runNum, fromMc);
+        L1T level1(13);
+        ev->initialize(ievent, runNum, randNum*ievent, level1, fromMc);
         
         for (ixtal = 0; ixtal < numXtals; ixtal ++) {
             CalDigi *cal = new CalDigi();
