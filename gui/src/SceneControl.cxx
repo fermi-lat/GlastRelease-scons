@@ -7,7 +7,7 @@
 #include "gui/ViewPort.h"
 #include "gui/Scene.h"
 
-
+#include <cmath>
 #include <ctype.h>      // for tolower
 
 namespace gui {
