@@ -71,8 +71,11 @@ void Cut::parse(const Tuple&t, std::string::const_iterator& it, std::string::con
     }
     m_cut = atof(value.c_str());
     set_tuple_item(t,name);
-    set_name(std::string(begin,it-begin));
-
+#if defined(__GNUC__) && ( __GNUC__ >= 3 ) // think the followingis right: need to test it
+    set_name(std::string(begin,--it));
+#else // this should be ok??? 
+    set_name(std::string(begin,it-begin));  
+#endif
 }
 
 bool Cut::apply()
