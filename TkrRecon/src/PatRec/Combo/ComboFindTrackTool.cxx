@@ -569,6 +569,7 @@ void ComboFindTrackTool::findBlindCandidates()
                     (localBestHitCount > (jlayer+2)*2)) break;
 
                 TkrPoints secondPoints(jlayer, m_clusTool);
+                if (secondPoints.empty()) continue;
                 TkrPointListConItr itSecond = secondPoints.begin();
                 for (; itSecond!=secondPoints.end(); ++itSecond) {
                     if(trials > m_maxTrials) break; 
