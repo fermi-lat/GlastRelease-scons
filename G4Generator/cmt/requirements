@@ -22,11 +22,15 @@ use geomrep  v4r*
 
 #for linux execution clients to get the LD_LIBRARY_PATH set.
 use Geant4Runtime v2r* IExternal
+
 #=============================================================
 private
-
 #this is private to avoid passing on build info to clients
 use Geant4   v2r5* IExternal
+
+
+# special code to replace the standared multiple scattering 
+use GlastMS
 
 # only needed by test program
 use FluxSvc *
@@ -35,8 +39,8 @@ use FluxSvc *
 
 apply_pattern package_Cshlibflags
 
-
-library G4Generator *.cxx Dll/*.cxx ${G4Generator_headers} 
+macro source "" WIN32 "*.h *.cxx"
+library G4Generator -s=../src $(source) -s=Dll *.cxx  
 
 # test program 
 public 
