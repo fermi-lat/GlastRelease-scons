@@ -1,0 +1,1047 @@
+<?xml version="1.0"?>
+<!DOCTYPE calCalib [<!--
+   $Header$
+
+   /**  @file       calCalib_v2r2.dtd
+        @authors    J. Bogart
+
+        dtd for CAL calibration data types
+
+    */
+
+ -->
+
+<!-- 
+   Overall structure is some header information followed by
+   a sequence of tower data.  Tower data is made up
+   of layer data, in turn made up of data for individual
+   crystals, which consists of data for (1 or 2, depending
+   on calibration type) faces.  
+
+   The header information comes in two parts:
+     "generic" is relevant to any sort of calibration data,
+               not just that from the CAL, such as the
+               name of the instrument being calibrated.
+               See further comments above the generic element
+               declaration
+     "dimension" contains all the parameters necessary to figure 
+               out which data goes with which hardware entity.
+               See further comments above the dimension element
+               declaration
+  -->  
+
+<!ELEMENT calCalib (generic, dimension, dac*, xpos?, tower* ) >
+       
+<!-- Container for all the header/metadata type information to be
+     included here.  Complete metadata will be found in the calibration
+     MySQL database. 
+
+     Description of attributes:
+
+            instrument    - one of "flight", "EM", etc.  Could also
+                            be implemented as enumeration rather than
+                            NMTOKEN
+            timestamp     - when the file was written (date and time)
+            calType       - one of "TKRBadStrips", "CALLightAttenuation",
+                            etc.
+            formatVersion - sufficient versioning information so that
+                            software attempting to read the file can
+                            determine if it supports this version. 
+                            [Might get rid of this here and just keep
+                            it in the MySQL metadata table]
+            creator       - script or program creating calibration data
+ -->
+<!ELEMENT  generic  (inputSample?) >
+<!ATTLIST generic  
+   instrument  (LAT | BFEM | BTEM | EM | EM2 | CU) #REQUIRED
+   timestamp   NMTOKEN #REQUIRED
+   calibType (CAL_LightAtt | CAL_LightAsym | CAL_LightYield |
+              CAL_Ped | CAL_ElecGain | CAL_IntNonlin | CAL_DiffNonlin |
+              CAL_MuSlope | CAL_Asym | CAL_MevPerDac | CAL_TholdCI |
+              CAL_TholdMuon)    #REQUIRED
+   DTDVersion  NMTOKEN "v2r2p1"       
+   fmtVersion  NMTOKEN #REQUIRED
+   creator     NMTOKEN #IMPLIED >
+
+<!-- Description of events used as input to the procedure 
+     Start- and stop-times should be timestamps of earliest and
+     latest events included in sample.
+     inputSample is (for now) optional.
+-->
+<!ELEMENT inputSample (#PCDATA) >
+<!ATTLIST inputSample  startTime NMTOKEN #REQUIRED
+                       stopTime  NMTOKEN #REQUIRED
+                       triggers  NMTOKENS #REQUIRED 
+                       source    NMTOKENS #REQUIRED
+                       mode      NMTOKEN  #REQUIRED>
+
+<!-- In many cases calibration is done per range: LEX8 is low-energy 
+   (= large) diode, x8 amplification; LEX1 is low-energy, low amplification.
+   Similarly have HEX8, HEX1 for high-energy (small) diode.
+   Unfortunately can't use parameter entities since they aren't allowed
+   when the dtd is literally included in an xml file, something
+   we'd like to support.
+  -->
+
+<!-- For light asymmetry may lump together amplifications (and by
+  definition one set of constants applies to both crystal ends, since
+  constants quantify *asymmetry*), so have a set of constants per
+  diode-type -->
+
+<!-- Describe how the data is dimensioned:
+        number of tower rows
+        number of tower columns
+        number of calorimeter layers
+        number of crystals in a layer ("columns")
+        number of faces      (mostly 2; 1 for light asymmetry data)
+        number of ranges     (fixed at 4? for now just default to 4) 
+        number of sets of dac settings (mostly 0)
+        number of xpos elements.  Can only be 0 or 1
+        exact    may be "true" or "false".  If "true", above information
+                 may be mutliplied to compute total number of innermost
+                 elements (e.g., calPed)
+
+   Use the following conventions to determine which data element 
+   corresponds to a particular physical crystal, optional face and
+   gain range:
+       * Tower number is computed from row and column as
+                 tower = column + (nCol)*row
+       * The data can be viewed as a 5-dimensional array where
+         the indices from most- to least-significant are
+              tower
+              layer
+              xtal   (often called "column" in calorimeter code)
+              face
+              range
+         So the first two data elements will correspond to 
+           (tower=0,layer=0, xtal=0, face=0, range=0)
+           (tower=0,layer=0, xtal=0, face=0, range=1)
+ 
+         The total number of data elements (for the default
+         case, with exact = "true") is just
+                nRow*nCol*nLayer*nXtal*nFace*nRange
+
+ -->
+<!ELEMENT dimension EMPTY>
+<!ATTLIST dimension nRow NMTOKEN  #REQUIRED
+                    nCol NMTOKEN  #REQUIRED
+                    nLayer NMTOKEN #REQUIRED
+                    nXtal  NMTOKEN #REQUIRED
+                    nFace  NMTOKEN #REQUIRED
+                    nRange NMTOKEN "4"      
+                    nDacCol NMTOKEN "0" 
+                    nXpos  (0 | 1) "0"
+                    exact  (true | false) "true" >
+
+<!-- For those calibrations involving setting a dac, keep track of
+    settings.  Expect one set per range where used; else 0. Number 
+    should match value of dimension attribute nDacCol  -->
+<!ELEMENT dac EMPTY>
+<!ATTLIST dac range (LEX8 | LEX1 | HEX8 | HEX1) #REQUIRED
+          values NMTOKENS #REQUIRED
+          error  NMTOKEN  #IMPLIED >   <!-- for now.  May want default -->
+
+<!ELEMENT xpos EMPTY>
+<!ATTLIST xpos values NMTOKENS #REQUIRED>
+
+<!ELEMENT tower (layer*) >
+<!ATTLIST tower iRow NMTOKEN #REQUIRED
+                iCol NMTOKEN #REQUIRED 
+                hwserial NMTOKEN "-1" >
+
+<!ELEMENT layer (xtal*) >
+<!ATTLIST layer iLayer NMTOKEN #REQUIRED>
+
+<!ELEMENT xtal (face, face?) >
+<!ATTLIST xtal iXtal NMTOKEN #REQUIRED>
+
+<!-- each face has data for all four ranges, ordered by range number -->
+<!ELEMENT face (calPed* | calGain* | muSlope* | lightAsym* | intNonlin*
+                        | mevPerDac* | tholdCI* | tholdMuon*
+                        | asym* ) >
+<!ATTLIST face end (NEG | POS | NA) #REQUIRED >
+
+
+<!ELEMENT calPed  EMPTY>
+<!ATTLIST calPed  range (LEX8 | LEX1 | HEX8 | HEX1) #REQUIRED
+                  avg NMTOKEN #REQUIRED
+                  sig NMTOKEN #REQUIRED
+                  cos NMTOKEN "2" >
+
+<!ELEMENT calGain EMPTY>
+<!ATTLIST calGain range (LEX8 | LEX1 | HEX8 | HEX1) #REQUIRED
+                  avg NMTOKEN #REQUIRED
+                  sig NMTOKEN #REQUIRED>
+
+<!ELEMENT muSlope EMPTY>
+<!ATTLIST muSlope range (LEX8 | LEX1 | HEX8 | HEX1) #REQUIRED
+                  slope NMTOKEN #REQUIRED
+                  error NMTOKEN "0.0" >
+
+<!ELEMENT lightAsym EMPTY>
+<!ATTLIST lightAsym diode (LE | HE) #REQUIRED
+                    values NMTOKENS #REQUIRED
+                    error NMTOKEN #REQUIRED >
+
+<!ELEMENT intNonlin EMPTY>
+<!ATTLIST intNonlin range (LEX8 | LEX1 | HEX8 | HEX1) #REQUIRED
+                    values NMTOKENS #REQUIRED
+                    error NMTOKEN   #REQUIRED >
+
+<!-- Some of mevPerDac information is per-crystal, some is per face.  So
+     <mevPerDac> is identified by tower/layer/crystal and contains two
+     <bigSmall> elements for the per-face information. 
+ -->
+<!ELEMENT mevPerDac (bigSmall, bigSmall) >
+<!ATTLIST mevPerDac bigVal NMTOKEN #REQUIRED
+                    bigSig NMTOKEN #REQUIRED
+                    smallVal NMTOKEN #REQUIRED
+                    smallSig NMTOKEN #REQUIRED
+>
+<!ELEMENT bigSmall EMPTY>
+<!ATTLIST bigSmall  end (NEG | POS) #REQUIRED
+                    bigSmallRatioVals NMTOKENS #REQUIRED
+                    bigSmallRatioSigs NMTOKENS #REQUIRED
+>
+
+<!ELEMENT asym EMPTY>
+<!ATTLIST asym bigVals NMTOKENS #REQUIRED
+               bigSigs NMTOKENS #REQUIRED
+               smallVals  NMTOKENS #REQUIRED
+               smallSigs  NMTOKENS #REQUIRED
+               NsmallPbigVals NMTOKENS #REQUIRED
+               NsmallPbigSigs NMTOKENS #REQUIRED
+               PsmallNbigVals NMTOKENS #REQUIRED
+               PsmallNbigSigs NMTOKENS #REQUIRED
+>
+
+<!-- Some of tholdCI information is per-crystal-face, some is per range.  So
+     <tholdCI> is identified by tower/layer/crystal/face and contains up
+       to 4 tholdCIRange elements for per-range information
+ -->
+<!ELEMENT tholdCI (tholdCIRange, tholdCIRange?, tholdCIRange?, tholdCIRange?) >
+<!ATTLIST tholdCI FLEVal NMTOKEN #REQUIRED
+                  FLESig NMTOKEN #REQUIRED
+                  FHEVal NMTOKEN #REQUIRED
+                  FHESig NMTOKEN #REQUIRED
+                  LACVal NMTOKEN #REQUIRED
+                  LACSig NMTOKEN #REQUIRED
+>
+
+<!ELEMENT tholdCIRange EMPTY>
+<!ATTLIST tholdCIRange range (LEX8 | LEX1 | HEX8 | HEX1) #REQUIRED
+                       pedVal NMTOKEN #REQUIRED
+                       pedSig NMTOKEN #REQUIRED
+                       ULDVal NMTOKEN #REQUIRED
+                       ULDSig NMTOKEN #REQUIRED
+>
+
+<!-- Some of tholdMuon information is per-crystal-face, some is per range.  So
+     <tholdMuon> is identified by tower/layer/crystal/face and contains up
+       to 4 tholdMuonRange elements for per-range information
+ -->
+<!ELEMENT tholdMuon (tholdMuonRange, tholdMuonRange?, tholdMuonRange?, 
+                     tholdMuonRange?) >
+<!ATTLIST tholdMuon FLEVal NMTOKEN #REQUIRED
+                    FLESig NMTOKEN #REQUIRED
+                    FHEVal NMTOKEN #REQUIRED
+                    FHESig NMTOKEN #REQUIRED >
+
+<!ELEMENT tholdMuonRange EMPTY>
+<!ATTLIST tholdMuonRange range (LEX8 | LEX1 | HEX8 | HEX1) #REQUIRED
+                         pedVal NMTOKEN #REQUIRED
+                         pedSig NMTOKEN #REQUIRED
+>
+
+]>
+<calCalib>
+ <generic instrument="LAT" timestamp="2004-07-31-06:50" calibType="CAL_MevPerDac" fmtVersion="v2r2" creator="Name:_HEAD_">
+ </generic>
+ <dimension nRow="1" nCol="1" nLayer="8" nXtal="12" nFace="1" nRange="1" nXpos="1"/>
+ <tower iRow="0" iCol="0">
+  <layer iLayer="0">
+   <xtal iXtal="0">
+    <face end="NA">
+     <mevPerDac bigVal="0.377375" bigSig="0.0262001" smallVal="2.08504" smallSig="0.144817">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="1">
+    <face end="NA">
+     <mevPerDac bigVal="0.371902" bigSig="0.0258209" smallVal="2.02296" smallSig="0.140695">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="2">
+    <face end="NA">
+     <mevPerDac bigVal="0.379524" bigSig="0.0263316" smallVal="2.07564" smallSig="0.144153">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="3">
+    <face end="NA">
+     <mevPerDac bigVal="0.363225" bigSig="0.0243082" smallVal="1.97869" smallSig="0.132563">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="4">
+    <face end="NA">
+     <mevPerDac bigVal="0.364215" bigSig="0.0241331" smallVal="2.03381" smallSig="0.134939">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="5">
+    <face end="NA">
+     <mevPerDac bigVal="0.353737" bigSig="0.0248912" smallVal="1.90752" smallSig="0.134423">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="6">
+    <face end="NA">
+     <mevPerDac bigVal="0.349226" bigSig="0.0235154" smallVal="1.93104" smallSig="0.130214">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="7">
+    <face end="NA">
+     <mevPerDac bigVal="0.350705" bigSig="0.0243014" smallVal="1.94303" smallSig="0.134791">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="8">
+    <face end="NA">
+     <mevPerDac bigVal="0.347673" bigSig="0.0238509" smallVal="1.94483" smallSig="0.133525">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="9">
+    <face end="NA">
+     <mevPerDac bigVal="0.348992" bigSig="0.0234714" smallVal="1.89131" smallSig="0.12729">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="10">
+    <face end="NA">
+     <mevPerDac bigVal="0.352669" bigSig="0.0244677" smallVal="1.90275" smallSig="0.13228">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="11">
+    <face end="NA">
+     <mevPerDac bigVal="0.351373" bigSig="0.0253191" smallVal="1.92553" smallSig="0.138921">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+  </layer>
+  <layer iLayer="1">
+   <xtal iXtal="0">
+    <face end="NA">
+     <mevPerDac bigVal="0.354634" bigSig="0.0247594" smallVal="1.94749" smallSig="0.13609">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="1">
+    <face end="NA">
+     <mevPerDac bigVal="0.359076" bigSig="0.024515" smallVal="2.00145" smallSig="0.136848">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="2">
+    <face end="NA">
+     <mevPerDac bigVal="0.364247" bigSig="0.0251415" smallVal="1.99308" smallSig="0.137685">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="3">
+    <face end="NA">
+     <mevPerDac bigVal="0.384606" bigSig="0.0272602" smallVal="2.11485" smallSig="0.150032">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="4">
+    <face end="NA">
+     <mevPerDac bigVal="0.352225" bigSig="0.0238863" smallVal="1.92363" smallSig="0.130585">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="5">
+    <face end="NA">
+     <mevPerDac bigVal="0.361836" bigSig="0.0251626" smallVal="1.95197" smallSig="0.135925">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="6">
+    <face end="NA">
+     <mevPerDac bigVal="0.378878" bigSig="0.0264689" smallVal="2.09189" smallSig="0.146277">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="7">
+    <face end="NA">
+     <mevPerDac bigVal="0.355461" bigSig="0.0251499" smallVal="1.94707" smallSig="0.138">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="8">
+    <face end="NA">
+     <mevPerDac bigVal="0.3509" bigSig="0.0245703" smallVal="1.91553" smallSig="0.134613">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="9">
+    <face end="NA">
+     <mevPerDac bigVal="0.359015" bigSig="0.0251451" smallVal="2.01036" smallSig="0.140964">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="10">
+    <face end="NA">
+     <mevPerDac bigVal="0.363827" bigSig="0.0253983" smallVal="2.00841" smallSig="0.140338">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="11">
+    <face end="NA">
+     <mevPerDac bigVal="0.371018" bigSig="0.0262651" smallVal="2.06588" smallSig="0.146374">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+  </layer>
+  <layer iLayer="2">
+   <xtal iXtal="0">
+    <face end="NA">
+     <mevPerDac bigVal="0.348906" bigSig="0.0251384" smallVal="1.89114" smallSig="0.137686">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="1">
+    <face end="NA">
+     <mevPerDac bigVal="0.362987" bigSig="0.0249594" smallVal="2.02262" smallSig="0.139679">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="2">
+    <face end="NA">
+     <mevPerDac bigVal="0.349493" bigSig="0.0248488" smallVal="1.93459" smallSig="0.138753">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="3">
+    <face end="NA">
+     <mevPerDac bigVal="0.343928" bigSig="0.023948" smallVal="1.90576" smallSig="0.133225">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="4">
+    <face end="NA">
+     <mevPerDac bigVal="0.371564" bigSig="0.0261791" smallVal="2.09364" smallSig="0.149678">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="5">
+    <face end="NA">
+     <mevPerDac bigVal="0.370112" bigSig="0.025587" smallVal="1.99176" smallSig="0.139201">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="6">
+    <face end="NA">
+     <mevPerDac bigVal="0.37295" bigSig="0.0257062" smallVal="2.12301" smallSig="0.150724">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="7">
+    <face end="NA">
+     <mevPerDac bigVal="0.360744" bigSig="0.0248508" smallVal="1.98214" smallSig="0.138623">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="8">
+    <face end="NA">
+     <mevPerDac bigVal="0.350862" bigSig="0.0241937" smallVal="1.88342" smallSig="0.130366">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="9">
+    <face end="NA">
+     <mevPerDac bigVal="0.357024" bigSig="0.0244129" smallVal="1.95839" smallSig="0.134667">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="10">
+    <face end="NA">
+     <mevPerDac bigVal="0.379333" bigSig="0.02671" smallVal="2.09465" smallSig="0.150419">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="11">
+    <face end="NA">
+     <mevPerDac bigVal="0.376342" bigSig="0.0274549" smallVal="2.04737" smallSig="0.150941">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+  </layer>
+  <layer iLayer="3">
+   <xtal iXtal="0">
+    <face end="NA">
+     <mevPerDac bigVal="0.356751" bigSig="0.0251957" smallVal="2.00188" smallSig="0.145344">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="1">
+    <face end="NA">
+     <mevPerDac bigVal="0.347018" bigSig="0.0238865" smallVal="1.92045" smallSig="0.133946">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="2">
+    <face end="NA">
+     <mevPerDac bigVal="0.363104" bigSig="0.0256861" smallVal="2.05914" smallSig="0.147066">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="3">
+    <face end="NA">
+     <mevPerDac bigVal="0.349003" bigSig="0.0239176" smallVal="1.98321" smallSig="0.137667">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="4">
+    <face end="NA">
+     <mevPerDac bigVal="0.345732" bigSig="0.0240391" smallVal="2.02064" smallSig="0.144096">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="5">
+    <face end="NA">
+     <mevPerDac bigVal="0.353526" bigSig="0.0239502" smallVal="1.93499" smallSig="0.135911">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="6">
+    <face end="NA">
+     <mevPerDac bigVal="0.354194" bigSig="0.0236845" smallVal="2.05743" smallSig="0.139769">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="7">
+    <face end="NA">
+     <mevPerDac bigVal="0.36378" bigSig="0.0253497" smallVal="1.96442" smallSig="0.137999">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="8">
+    <face end="NA">
+     <mevPerDac bigVal="0.362857" bigSig="0.0250303" smallVal="1.99078" smallSig="0.138591">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="9">
+    <face end="NA">
+     <mevPerDac bigVal="0.355247" bigSig="0.0239544" smallVal="1.97852" smallSig="0.135004">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="10">
+    <face end="NA">
+     <mevPerDac bigVal="0.350525" bigSig="0.02386" smallVal="1.91013" smallSig="0.135082">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="11">
+    <face end="NA">
+     <mevPerDac bigVal="0.354673" bigSig="0.0251585" smallVal="1.95871" smallSig="0.139814">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+  </layer>
+  <layer iLayer="4">
+   <xtal iXtal="0">
+    <face end="NA">
+     <mevPerDac bigVal="0.365344" bigSig="0.0257643" smallVal="1.94762" smallSig="0.139507">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="1">
+    <face end="NA">
+     <mevPerDac bigVal="0.363729" bigSig="0.0261553" smallVal="2.02781" smallSig="0.149189">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="2">
+    <face end="NA">
+     <mevPerDac bigVal="0.357994" bigSig="0.0254168" smallVal="1.92623" smallSig="0.141413">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="3">
+    <face end="NA">
+     <mevPerDac bigVal="0.37172" bigSig="0.0259771" smallVal="2.04712" smallSig="0.145075">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="4">
+    <face end="NA">
+     <mevPerDac bigVal="0.359531" bigSig="0.0254614" smallVal="1.99485" smallSig="0.141697">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="5">
+    <face end="NA">
+     <mevPerDac bigVal="0.35815" bigSig="0.0251859" smallVal="1.91867" smallSig="0.138089">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="6">
+    <face end="NA">
+     <mevPerDac bigVal="0.355439" bigSig="0.0249737" smallVal="1.92992" smallSig="0.138229">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="7">
+    <face end="NA">
+     <mevPerDac bigVal="0.35614" bigSig="0.0252945" smallVal="1.9361" smallSig="0.139662">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="8">
+    <face end="NA">
+     <mevPerDac bigVal="0.364348" bigSig="0.0261528" smallVal="1.9295" smallSig="0.14782">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="9">
+    <face end="NA">
+     <mevPerDac bigVal="0.356578" bigSig="0.0248444" smallVal="1.93319" smallSig="0.136487">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="10">
+    <face end="NA">
+     <mevPerDac bigVal="0.378822" bigSig="0.0272061" smallVal="2.06623" smallSig="0.14883">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="11">
+    <face end="NA">
+     <mevPerDac bigVal="0.37336" bigSig="0.0262675" smallVal="2.08114" smallSig="0.147595">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+  </layer>
+  <layer iLayer="5">
+   <xtal iXtal="0">
+    <face end="NA">
+     <mevPerDac bigVal="0.361454" bigSig="0.0254938" smallVal="1.92598" smallSig="0.137753">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="1">
+    <face end="NA">
+     <mevPerDac bigVal="0.35596" bigSig="0.025235" smallVal="1.94313" smallSig="0.138986">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="2">
+    <face end="NA">
+     <mevPerDac bigVal="0.361824" bigSig="0.0256497" smallVal="2.04925" smallSig="0.147831">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="3">
+    <face end="NA">
+     <mevPerDac bigVal="0.364411" bigSig="0.0258511" smallVal="2.07569" smallSig="0.147652">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="4">
+    <face end="NA">
+     <mevPerDac bigVal="0.363006" bigSig="0.0254393" smallVal="2.0389" smallSig="0.143206">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="5">
+    <face end="NA">
+     <mevPerDac bigVal="0.3495" bigSig="0.0240981" smallVal="1.92812" smallSig="0.139555">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="6">
+    <face end="NA">
+     <mevPerDac bigVal="0.355117" bigSig="0.0244577" smallVal="2.01552" smallSig="0.139061">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="7">
+    <face end="NA">
+     <mevPerDac bigVal="0.36247" bigSig="0.0255547" smallVal="2.00986" smallSig="0.142992">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="8">
+    <face end="NA">
+     <mevPerDac bigVal="0.370739" bigSig="0.025904" smallVal="2.086" smallSig="0.147373">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="9">
+    <face end="NA">
+     <mevPerDac bigVal="0.35967" bigSig="0.0257307" smallVal="1.91137" smallSig="0.139641">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="10">
+    <face end="NA">
+     <mevPerDac bigVal="0.346209" bigSig="0.0244966" smallVal="1.95363" smallSig="0.140079">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="11">
+    <face end="NA">
+     <mevPerDac bigVal="0.37502" bigSig="0.0259619" smallVal="2.08206" smallSig="0.144808">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+  </layer>
+  <layer iLayer="6">
+   <xtal iXtal="0">
+    <face end="NA">
+     <mevPerDac bigVal="0.362115" bigSig="0.0262014" smallVal="2.00916" smallSig="0.1456">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="1">
+    <face end="NA">
+     <mevPerDac bigVal="0.363902" bigSig="0.0265834" smallVal="2.0086" smallSig="0.146824">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="2">
+    <face end="NA">
+     <mevPerDac bigVal="0.36695" bigSig="0.0262964" smallVal="2.03791" smallSig="0.146177">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="3">
+    <face end="NA">
+     <mevPerDac bigVal="0.364742" bigSig="0.0254374" smallVal="2.01402" smallSig="0.140583">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="4">
+    <face end="NA">
+     <mevPerDac bigVal="0.375444" bigSig="0.0269808" smallVal="2.02713" smallSig="0.145835">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="5">
+    <face end="NA">
+     <mevPerDac bigVal="0.37028" bigSig="0.0266224" smallVal="2.00816" smallSig="0.14448">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="6">
+    <face end="NA">
+     <mevPerDac bigVal="0.381928" bigSig="0.02663" smallVal="2.09569" smallSig="0.146295">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="7">
+    <face end="NA">
+     <mevPerDac bigVal="0.379755" bigSig="0.0278196" smallVal="2.06423" smallSig="0.151345">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="8">
+    <face end="NA">
+     <mevPerDac bigVal="0.351989" bigSig="0.0244903" smallVal="1.9361" smallSig="0.13494">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="9">
+    <face end="NA">
+     <mevPerDac bigVal="0.359937" bigSig="0.0263137" smallVal="1.97348" smallSig="0.144511">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="10">
+    <face end="NA">
+     <mevPerDac bigVal="0.379031" bigSig="0.0270635" smallVal="2.11635" smallSig="0.151376">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="11">
+    <face end="NA">
+     <mevPerDac bigVal="0.345048" bigSig="0.0245853" smallVal="1.8863" smallSig="0.134626">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+  </layer>
+  <layer iLayer="7">
+   <xtal iXtal="0">
+    <face end="NA">
+     <mevPerDac bigVal="0.360914" bigSig="0.027459" smallVal="1.95327" smallSig="0.14875">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="1">
+    <face end="NA">
+     <mevPerDac bigVal="0.36816" bigSig="0.0265039" smallVal="1.99468" smallSig="0.143717">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="2">
+    <face end="NA">
+     <mevPerDac bigVal="0.363774" bigSig="0.0261062" smallVal="1.99337" smallSig="0.143215">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="3">
+    <face end="NA">
+     <mevPerDac bigVal="0.374229" bigSig="0.0261995" smallVal="2.05297" smallSig="0.143881">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="4">
+    <face end="NA">
+     <mevPerDac bigVal="0.366719" bigSig="0.0269301" smallVal="2.01332" smallSig="0.147952">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="5">
+    <face end="NA">
+     <mevPerDac bigVal="0.356962" bigSig="0.0253121" smallVal="1.96685" smallSig="0.139588">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="6">
+    <face end="NA">
+     <mevPerDac bigVal="0.359499" bigSig="0.0261208" smallVal="2.0044" smallSig="0.145952">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="7">
+    <face end="NA">
+     <mevPerDac bigVal="0.363789" bigSig="0.0263882" smallVal="2.00686" smallSig="0.145832">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="8">
+    <face end="NA">
+     <mevPerDac bigVal="0.376979" bigSig="0.0267573" smallVal="2.07977" smallSig="0.147697">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="9">
+    <face end="NA">
+     <mevPerDac bigVal="0.368345" bigSig="0.0268449" smallVal="2.03032" smallSig="0.148053">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="10">
+    <face end="NA">
+     <mevPerDac bigVal="0.35289" bigSig="0.0256174" smallVal="1.92139" smallSig="0.139872">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+   <xtal iXtal="11">
+    <face end="NA">
+     <mevPerDac bigVal="0.360934" bigSig="0.0255927" smallVal="1.97139" smallSig="0.139939">
+      <bigSmall end="POS" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+      <bigSmall end="NEG" bigSmallRatioVals="0" bigSmallRatioSigs="0"/>
+     </mevPerDac>
+    </face>
+   </xtal>
+  </layer>
+ </tower>
+</calCalib>
