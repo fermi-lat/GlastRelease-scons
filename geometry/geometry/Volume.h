@@ -2,12 +2,11 @@
 //
 //
 
-#ifndef __VOLUME_H
-#define __VOLUME_H
+#ifndef GEOMETRY_VOLUME_H
+#define GEOMETRY_VOLUME_H
 
 #include "geometry/Shape.h"
 #include "geometry/Surface.h"
-#include <string> //gcc bug: shield vector by string
 #include <vector>
 typedef std::vector<Surface*> SurfaceList;
 

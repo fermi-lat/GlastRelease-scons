@@ -1,6 +1,6 @@
 // $Header$
 #ifndef GEOMETRY_RAY_H
-#define __RAY_H
+#define GEOMETRY_RAY_H
 
 #include "geometry/Point.h"
 #include <cfloat> // needed on NT for FLT_MAX
