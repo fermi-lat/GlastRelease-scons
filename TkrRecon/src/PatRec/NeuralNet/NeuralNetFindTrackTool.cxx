@@ -203,12 +203,14 @@ void NeuralNetFindTrackTool::buildCand(Event::TkrPatCandCol& TkrCands,
 	    //Add the Hits
 	    Event::TkrFitPlaneConPtr hitPtr = _track->getHitIterBegin();
 	    while(hitPtr != _track->getHitIterEnd())
-	      {
-		Event::TkrFitPlane hitplane = *hitPtr++;
-		unsigned hit_ID = hitplane.getIDHit();
-		Event::TkrCluster * pClus = pTkrClusters->getHit(hit_ID);
-		newTrack->addCandHit(pClus);
-	      }
+	    {
+		    Event::TkrFitPlane hitplane = *hitPtr++;
+		    unsigned hit_ID = hitplane.getIDHit();
+		    Event::TkrCluster * pClus = pTkrClusters->getHit(hit_ID);
+		    newTrack->addCandHit(pClus);
+	    }
+
+        newTrack->sortHits();
 	    
 	    TkrCands.push_back(newTrack);
 	    
