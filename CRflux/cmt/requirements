@@ -1,6 +1,6 @@
 package CRflux
 
-version v1r1p13
+version v1r1p1
 
 author Tsunefumi Mizuno <suhonen@slac.stanford.edu>
 
@@ -13,6 +13,8 @@ apply_pattern packageShr
 #=============================================================
 
 private
+use astro *
+use Event *
 
 # get flags to build shared library
 apply_pattern package_Cshlibflags
