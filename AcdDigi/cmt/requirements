@@ -3,7 +3,7 @@ version v1r10p1
 # $Id$
 
 use GlastSvc v9r*
-use Event v9r*
+use Event v10r*
 
 use facilities v2r*
 
