@@ -7,7 +7,9 @@ use GuiSvc
 use GlastEvent
 use GlastSvc
 use ntupleWriterSvc
+use GlastDigi
 use TkrRecon v1r6
+use RootHistCnv
 
 include_dirs $(CALRECONROOT)
 
