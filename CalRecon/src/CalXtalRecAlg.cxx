@@ -102,7 +102,7 @@ StatusCode CalXtalRecAlg::execute()
 	sc = retrieve();
 
 
-	for (CalDigiCol::const_iterator it = m_CalDigiCol->begin(); 
+	for (cal::CalDigiCol::const_iterator it = m_CalDigiCol->begin(); 
            it != m_CalDigiCol->end(); it++) {
                idents::CalXtalId xtalId = (*it)->getPackedId();
 	   int lyr = xtalId.getLayer();
@@ -112,11 +112,8 @@ StatusCode CalXtalRecAlg::execute()
 	   log << MSG::DEBUG << " tower=" << towid << " layer=" << lyr
 		   << " col=" << icol  << endreq;
 
-//	   CalDetGeo geoLog = m_CalGeo->getLog(ilayer,view,icol,mod);
 
-	   CalXtalRecData* recData = new CalXtalRecData();
-	   recData->setMode((*it)->getMode());
-	   recData->setPackedId(xtalId);
+	   CalXtalRecData* recData = new CalXtalRecData((*it)->getMode(),xtalId);
 	   
 	   computeEnergy(recData, *it);
 	   computePosition(recData);
@@ -165,7 +162,7 @@ DataObject* pnode=0;
 
     
 
-	m_CalDigiCol = SmartDataPtr<CalDigiCol>(eventSvc(),"/Event/Digi/CalDigis"); 
+	m_CalDigiCol = SmartDataPtr<cal::CalDigiCol>(eventSvc(),"/Event/Digi/CalDigis"); 
 
 
 	 sc = eventSvc()->registerObject("/Event/CalRecon/CalXtalRecCol",m_CalXtalRecCol);
@@ -174,7 +171,7 @@ DataObject* pnode=0;
 
 //----------------- private ----------------------
 //################################################
-void CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const CalDigi* digi)
+void CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const cal::CalDigi* digi)
 //################################################
 {
 	MsgStream log(msgSvc(), name());
@@ -184,10 +181,10 @@ void CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const CalDigi* digi)
 //		double maxEnergy[]={200.,1600.,12800.,102400.};
 
 
-		const CalDigi::CalXtalReadoutVector& readoutVector = digi->getReadoutVector();
+	const cal::CalDigi::CalXtalReadoutCol& readoutCol = digi->getReadoutCol();
 		
-		for ( CalDigi::CalXtalReadoutVector::const_iterator it = readoutVector.begin();
-		      it !=readoutVector.end(); it++){
+	for ( cal::CalDigi::CalXtalReadoutCol::const_iterator it = readoutCol.begin();
+		      it !=readoutCol.end(); it++){
 				int rangeP = it->getRange(idents::CalXtalId::POS); 
 				int rangeM = it->getRange(idents::CalXtalId::NEG); 
 

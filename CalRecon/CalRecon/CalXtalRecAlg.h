@@ -38,13 +38,13 @@ protected:
     
 private:
     
-    void computeEnergy(CalXtalRecData* recLog, const CalDigi* adcLog); 
+    void computeEnergy(CalXtalRecData* recLog, const cal::CalDigi* adcLog); 
     void computePosition(CalXtalRecData* recLog);
     
 private:
     
 //    ICalGeometrySvc* m_CalGeo;
-    CalDigiCol* m_CalDigiCol;
+	cal::CalDigiCol* m_CalDigiCol;
     CalXtalRecCol* m_CalXtalRecCol;
 
         enum {fLATObjects, fTowerY, fTowerX, fTowerObjects, fLayer,

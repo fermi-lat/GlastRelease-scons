@@ -83,22 +83,20 @@ public:
     
     CalXtalRecData() {};
     
-    //CalDigi(CalTrigMode mode, idents::CalXtalId CalXtalId, ObjectVector<CalXtalReadout> readout) : 
-    //    m_mode(mode),
-    //        m_XtalId(CalXtalId),
-    //        m_readout(readout)
-    //{};
+    CalXtalRecData(idents::CalXtalId::CalTrigMode mode, idents::CalXtalId CalXtalId) : 
+        m_mode(mode), m_xtalId(CalXtalId){};
     
     /// Destructor
     virtual ~CalXtalRecData() { };
-    
+
+    void initialize (idents::CalXtalId::CalTrigMode m, idents::CalXtalId id)
+	{m_mode = m; m_xtalId = id; }
+
     /// Retrieve readout mode
     inline const idents::CalXtalId::CalTrigMode getMode() const { return m_mode; };
-    inline void setMode(idents::CalXtalId::CalTrigMode m) { m_mode = m; };
     
     /// Retrieve Xtal identifier
-    inline const idents::CalXtalId getPackedId() const { return m_XtalId; };
-    inline void setPackedId(idents::CalXtalId id) { m_XtalId = id; };
+    inline const idents::CalXtalId getPackedId() const { return m_xtalId; };
     
     inline void addRangeRecData(CalRangeRecData r) { m_RecData.push_back(r); } ;
     
@@ -162,7 +160,7 @@ private:
     /// Cal readout mode is based on trigger type
     idents::CalXtalId::CalTrigMode m_mode;
     /// Cal ID
-    idents::CalXtalId m_XtalId;
+    idents::CalXtalId m_xtalId;
     /// ranges and pulse heights
     std::vector<CalRangeRecData> m_RecData;
     
