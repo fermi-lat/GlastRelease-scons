@@ -1,6 +1,6 @@
 //##############################################################
 //
-// Job options file for G4Generator
+// Job options file to run simulation using Geant4 as generator
 // 
 // $Header$
 
@@ -28,18 +28,14 @@ GlastDetSvc.topVolume="LAT";
 FluxSvc.source_lib = {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
 
 //----------------- local algorithms to run -------------------
-ApplicationMgr.TopAlg = { 
-    "G4Generator"};
+ApplicationMgr.TopAlg = { "FluxAlg", "G4Generator"};
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
 
 
 // ask for a source that is in the library
-//G4Generator.source_name="gamma_patch_for_G4";
-G4Generator.source_name="muon_pencil";
-//G4Generator.source_name="muon_patch";
-//G4Generator.source_name="gamma_test";
+FluxAlg.source_name="default";
 
 // commands to run before each event. 
 //G4Generator.UIcommands+={"/run/verbose 3"};
