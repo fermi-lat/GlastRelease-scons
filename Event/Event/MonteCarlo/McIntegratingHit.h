@@ -61,8 +61,8 @@ class McIntegratingHit : virtual public ContainedObject {
     typedef std::map<McParticle*,double>  energyDepositMap;
 
     /// Constructors
-    McIntegratingHit() : m_packedFlags(0)
-    {}
+    McIntegratingHit() : m_packedFlags(0),m_totalEnergy(0),m_moment1seed(0),
+        m_moment2seed(0){}
     /// Destructor
     ~McIntegratingHit(){}
 
