@@ -5,13 +5,16 @@
 #include "WinGUI.h"
 #include "winGUIostream.h"
 #include "resource.h"
-#define USECONSOLE  // rather than create a window, that doesn't work now
 #include <errno.h>
 #include <iostream>
 #include <strstream>
+#include <fstream>
 
 static std::streambuf* sbout=0;
 static std::streambuf* sberr=0;
+
+// special place to put output
+static ofstream* tempfile=0;
 
 //////////////////////////////////////////////////////////////////////
 //          private streambuf used by WinGUIostream
@@ -36,17 +39,17 @@ WinGUIostream::WinGUIostream(const char* name, HWND owner, HINSTANCE hInstance)
 //: ostream(_buf = new logbuf(owner))
 : basic_ostream<char>(_buf = new logbuf(owner))
 {
+    AllocConsole();
+
  // direct cout and cerr to the console window
     std::streambuf* sbout = std::cout.rdbuf(); 
     std::streambuf* sberr = std::cerr.rdbuf(); 
     std::cout.rdbuf(_buf);
     std::cerr.rdbuf(_buf);
 
-#ifdef USECONSOLE
-    AllocConsole();
-#else
-    _win =  ::CreateDialog( hInstance,MAKEINTRESOURCE(IDD_output), owner, NULL);
-#endif
+    const char * stdout_filename;
+    if( (stdout_filename=::getenv("stdout"))!=0 )
+        tempfile = new ofstream(stdout_filename);
  }
 //------------------------------------------------------------------------
 WinGUIostream::~WinGUIostream()
@@ -54,6 +57,8 @@ WinGUIostream::~WinGUIostream()
     std::cout.rdbuf(sbout);
     std::cerr.rdbuf(sberr);
     delete _buf;
+    
+    delete tempfile;
 }
 //------------------------------------------------------------------------
 //                           clear
@@ -97,14 +102,11 @@ int logbuf::overflow (int c)
 	    string [1] = '\n';
 	    ++length;
 	}
-#ifndef USECONSOLE
-	::SendMessage(GetDlgItem(_win,IDC_EDIT1), WM_SETTEXT,0,(LPARAM)string);
-	::SetDlgItemText(_win, IDC_EDIT1,string);
-	::ShowWindow(_win, SW_RESTORE);
-#else
-	unsigned long numwritten;
+       	unsigned long numwritten;
 	::WriteConsole(GetStdHandle(STD_OUTPUT_HANDLE), string, length, &numwritten, NULL);
-#endif
+
+        // write the character(s) to the stdout temporary file
+        if(tempfile)  (*tempfile) << string[0]; //string;;
     }
     return 0;
 }
