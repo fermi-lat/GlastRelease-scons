@@ -88,6 +88,7 @@ public:
     CalibData::CAL_DeadChan = cal + "_DeadChan";
     CalibData::CAL_DiscrLO = cal + "_DiscrLO";
     CalibData::CAL_DiscrHI = cal + "_DiscrHI";
+    CalibData::CAL_MuSlope = cal + "_MuSlope";
 
     CalibData::Test_Gen = test + "_Gen";
     CalibData::Test_1   = test + "_1";
@@ -134,6 +135,7 @@ const CLID& CLID_Calib_CAL_HotChan    = 6207;
 const CLID& CLID_Calib_CAL_DeadChan   = 6208;
 const CLID& CLID_Calib_CAL_DiscrLO    = 6209;
 const CLID& CLID_Calib_CAL_DiscrHI    = 6210;
+const CLID& CLID_Calib_CAL_MuSlope    = 6211;
 
 const CLID& CLID_Calib_ACD_Eff        = 6300;
 const CLID& CLID_Calib_ACD_ThreshHigh = 6301;
