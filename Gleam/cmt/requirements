@@ -1,6 +1,6 @@
 package Gleam
 
-version  v2r2p9
+version  v2r2p10
 # This is a checkout package
 # $Id$
 
@@ -29,8 +29,8 @@ use geomrep     v4r1
 
 # the geometry data base
 use idents      v2r8p2  
-use detModel            v2r13
-use xmlGeoDbs           v1r6p0
+use detModel    v2r13
+use xmlGeoDbs   v1r6p0
 
 # interface to G4 - make private to avoid so many libs
 private 
@@ -42,18 +42,18 @@ public
 use GuiSvc      v3r1p3
 
 use Event       v8r14
-use GlastSvc            v8r2
+use GlastSvc    v8r2
 
 # simulation
 
 use FluxSvc     v5r10
 use FluxDisplay v2r1
-use G4Generator          v4r3
+use G4Generator v4r3
 
 #digitization
 use CalDigi     v1r1p2 
-use TkrDigi     v1r5p5
-use AcdDigi              v1r3
+use TkrDigi             v1r5p6
+use AcdDigi     v1r3
 
 
 
