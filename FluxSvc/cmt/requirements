@@ -1,5 +1,5 @@
 package FluxSvc
-version v5r16
+version v5r17
 
 # $Id$
 
@@ -12,7 +12,7 @@ use Event   *
 use GlastSvc *
 
 use xml
-use CLHEP
+use CLHEP v2* IExternal
 use astro v0r*
 
 
