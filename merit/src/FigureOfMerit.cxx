@@ -38,7 +38,7 @@ private:
 //=============================================================================
 class FOMelapsed : public Analyze {
 public:
-    FOMelapsed(const Tuple&t ): Analyze(t, "Triage_Time", "Elapsed time (sec):"), m_total(0),m_last(0) {};
+    FOMelapsed(const Tuple&t ): Analyze(t, "Elapsed_time", "Elapsed time (sec):"), m_total(0),m_last(0) {};
     void FOMelapsed::report(std::ostream& out)
     {
 	out << endl << make_label(name());
