@@ -8,9 +8,9 @@
 # Paths are different for Unix and Windows. The example shows the defaults
 # for all ROOT applications for either Unix or Windows.
 Unix.*.Root.DynamicPath:    $(ROOTANALYSIS)/lib
-Unix.*.Root.MacroPath:      $(ROOTANALYSIS)/common:$(ROOTANALYSIS)/utilityMacros:$(ROOTANALYSIS)/plotMacros:$(ROOTANALYSIS)/NtupleAnalysis
+Unix.*.Root.MacroPath:      $(ROOTANALYSIS)/common:$(ROOTANALYSIS)/utilityMacros:$(ROOTANALYSIS)/plotMacros:$(ROOTANALYSIS)/NtupleAnalysis:$(ROOTANALYSIS)/RootTreeAnalysis
 #WinNT.*.Root.DynamicPath:   $(ROOTANALYSIS)/lib
-WinNT.*.Root.MacroPath:     $(ROOTANALYSIS)/common;$(ROOTANALYSIS)/utilityMacros;$(ROOTANALYSIS)/plotMacros;$(ROOTANALYSIS)/NtupleAnalysis
+WinNT.*.Root.MacroPath:     $(ROOTANALYSIS)/common;$(ROOTANALYSIS)/utilityMacros;$(ROOTANALYSIS)/plotMacros;$(ROOTANALYSIS)/NtupleAnalysis;$(ROOTANALYSIS)/RootTreeAnalysis
 
 # Activate memory statistics (size and cnt is used to trap allocation of
 # blocks of a certain size after cnt times)
