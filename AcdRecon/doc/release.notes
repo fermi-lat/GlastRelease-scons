@@ -2,7 +2,8 @@
 package AcdRecon\n
 package manager:H.Kelly
 
-v2r0      31-Dec-2002 HMK Clean up test uses and read in recon.root file for TkrRecon data\n
+v2r0      31-Dec-2002 HMK Remove member variables for m_acdDigi and m_acdRecon\n
+      	  31-Dec-2002 HMK Clean up test uses and read in recon.root file for TkrRecon data\n
           30-Dec-2002 HMK release local pointers to acdDigiCol\n
 v1r5      20-Dec-2002 HMK Update to use TkrFitTrackBase\n
 v1r4p2    17-Oct-2002 HMK Make use Recon public to avoid nightly build errors\n
