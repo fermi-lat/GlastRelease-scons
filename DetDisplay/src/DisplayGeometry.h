@@ -93,7 +93,7 @@ private:
 
     // this accounts for total volume associated with each material: index by material name,
     // save count and total volume
-    typedef std::map<std::string, std::pair<int,double> > MaterialSummary;
+
     MaterialSummary m_matSum;
     /// choice mode for traversing geometry
     std::string m_mode;

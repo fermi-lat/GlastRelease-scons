@@ -11,6 +11,7 @@
 
 namespace gui {class DisplayRep; }
 class Shape;
+#include <string>
 
 /**
 */
