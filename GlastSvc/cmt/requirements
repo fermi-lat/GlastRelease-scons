@@ -34,5 +34,5 @@ macro WinInclude "" WIN32 "test/*.h  test/*.txt test/*.xml"
 
 # build this for non-shareable testing
 set TESTJOBOPTIONS  "${GLASTSVCROOT}/src/test/jobOptions.txt"
-application test_GlastSvc  ${GlastMain} test/*.cpp   $(WinInclude) 
+application test_GlastSvc  ${TestGlastMain} test/*.cpp   $(WinInclude) 
 
