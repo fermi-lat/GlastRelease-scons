@@ -1,15 +1,16 @@
 package reconRootData
-version v3r1
+version v3r0
 
-use GlastPolicy
-use digiRootData
-use ROOT
+use GlastPolicy v4r*
+use digiRootData v3r*
+use ROOT v3r2p*
 
-apply_pattern packageShr
+apply_pattern package_include
 
-# temporarily re-introduce this pattern to be sure bfemApp runs on linux
+apply_pattern package_headers
+
 apply_pattern ld_library_path
-# put this back in for glastRootIO
+
 apply_pattern package_linkopts
 
 # add the ROOT Physics library to the list for linking
@@ -23,21 +24,26 @@ macro reconRootData_shlibflags "" \
 #--------------------------------------------------------------
 private
 
-#define the list of header files to be used in rootcint
-macro root_headers "CalCluster.h CalLogEne.h CalRecon.h CalRangeRecData.h CalXtalRecData.h Recon.h ReconHeader.h TkrGamma.h TkrHit.h TkrLocator.h TkrRecon.h TkrSiCluster.h TkrTrack.h ReconLinkDef.h"
+# For Windows, use a setup script to run rootcint automatically
+# Still using document generator for UNIX
+setup_script dorootcint
 
-# try to build this by adding to compilation for requirements
-macro reconRootData_custom_build ""\
-      VisualC "call $(RECONROOTDATAROOT)/reconRootData/dorootcint.bat"
+#define the list of header files to be used in rootcint
+macro root_headers "CalCluster.h CalRecon.h CalRangeRecData.h CalXtalRecData.h ReconEvent.h TkrCandHit.h TkrCandTrack.h TkrCovMat.h TkrFitHit.h TkrHitPlane.h TkrParams.h TkrRecon.h TkrTrack.h TkrVertex.h ReconLinkDef.h"
 
 # on unix use a document to make rootcint part of the build process
 make_fragment recon_dorootcint_header
 make_fragment recon_dorootcint -header=recon_dorootcint_header
-document recon_dorootcint ReconRootDataCint CINTFILE=../reconRootData/ReconCint.cxx
+document recon_dorootcint ReconRootDataCint CINTFILE=../reconRootData/reconRootDataCint.cxx
 
-apply_pattern package_headers
-apply_pattern package_include
+library  reconRootData \
+      ReconEvent.cxx \
+      TkrRecon.cxx TkrCandHit.cxx TkrCandTrack.cxx TkrFitHit.cxx \
+      TkrCovMat.cxx TkrHitPlane.cxx \
+      TkrParams.cxx TkrTrack.cxx TkrVertex.cxx \
+      CalRecon.cxx CalRangeRecData.cxx CalCluster.cxx CalXtalRecData.cxx \
+      ../reconRootData/*.cxx \
+      ${reconRootData_headers}
 
-library  reconRootData *.cxx \
-     ../reconRootData/ReconCint.cxx\
-     ${reconRootData_headers}
+macro test_reconRootDatalinkopts ${reconRootData_shlibflags}
+application test_reconRootData test/testReconClasses.cxx
