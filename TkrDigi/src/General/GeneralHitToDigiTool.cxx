@@ -306,6 +306,7 @@ StatusCode GeneralHitToDigiTool::execute()
             HepPoint3D point(0);
             double deltaX = 0;
             double deltaY = 0;
+            /*
             if ( m_taSvc && m_taSvc->alignSim() ) {
                 HepPoint3D entry(0., 0., 0.);
                 HepPoint3D  exit(0., 0., 1.);
@@ -313,6 +314,7 @@ StatusCode GeneralHitToDigiTool::execute()
                 deltaX = -entry.x();
                 deltaY = -entry.y();
             }
+            */
 
             const SiStripList::hitList& hits = itStrip->getHits();
 
@@ -320,7 +322,7 @@ StatusCode GeneralHitToDigiTool::execute()
             Event::McTkrStrip* pStrip =
                 new Event::McTkrStrip(volId, stripId,
                                       itStrip->energy(),
-                                      itStrip->noise(), hits, deltaX, deltaY);
+                                      itStrip->noise(), hits);
             strips->push_back(pStrip);
             
             // and add the relation

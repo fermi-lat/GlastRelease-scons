@@ -198,7 +198,7 @@ SiPlaneMapContainer::SiPlaneMap SimpleMcToHitTool::createSiHits(
 
         // move hit by alignment constants
         // the wafer constants are applied to the wafer coordinates
-        if ( m_taSvc && m_taSvc->alignSim() )
+        if ( m_taSvc && m_taSvc->alignSim() ) 
             m_taSvc->moveMCHit(volId, localEntry, localExit);
         
         const TkrVolumeIdentifier planeId = volId.getPlaneId();
