@@ -739,7 +739,12 @@ int FindTrackHitsTool::addLeadingHits(TkrTrack* track)
 		planes_crossed++;
 
 		// If this is the second plane, it must have a valid cluster
-		if(planes_crossed > 1 && !trackHit->validCluster()) break;
+		if(planes_crossed > 1 && !trackHit->validCluster()) 
+        {
+            // delete the track hit given us
+            delete trackHit;
+            break;
+        }
 	
 		trackHit->setEnergy(cur_energy);
 
