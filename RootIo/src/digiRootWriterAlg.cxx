@@ -212,7 +212,7 @@ StatusCode digiRootWriterAlg::execute()
   
     sc = writeDiagnostic();
     if (sc.isFailure()) { 
-        log << MSG::INFO << "Failed to write diagnostic data" << endreq;
+        log << MSG::DEBUG << "Failed to write diagnostic data" << endreq;
         //return sc;
     }
 
@@ -272,7 +272,7 @@ StatusCode digiRootWriterAlg::writeEventSummary() {
     SmartDataPtr<EbfConverterTds::EventSummaryData> summaryTds(eventSvc(), "/Event/EventSummary");
 
     if (!summaryTds) {
-      log << MSG::INFO << "No Event Summary Data found on TDS" << endreq;
+      log << MSG::DEBUG << "No Event Summary Data found on TDS" << endreq;
       return sc;
     }
     m_digiEvt->getEventSummaryData().initialize(summaryTds->summary());
