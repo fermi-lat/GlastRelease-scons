@@ -480,6 +480,14 @@ StatusCode digiRootReaderAlg::readAcdDigi() {
         Event::AcdDigi *acdDigiTds = new Event::AcdDigi(idTds, volIdTds, 
             energyTds,phaTds, vetoTds, lowTds, highTds);
 
+        Event::AcdDigi::Range range[2];
+        range[0] = (acdDigiRoot->getRange(AcdDigi::A) == AcdDigi::LOW) ? Event::AcdDigi::LOW : Event::AcdDigi::HIGH;
+        range[1] = (acdDigiRoot->getRange(AcdDigi::B) == AcdDigi::LOW) ? Event::AcdDigi::LOW : Event::AcdDigi::HIGH;
+        Event::AcdDigi::ParityError err[2];
+        err[0] = (acdDigiRoot->getParityError(AcdDigi::A) == AcdDigi::NOERROR) ? Event::AcdDigi::NOERROR : Event::AcdDigi::ERROR;
+        err[1] = (acdDigiRoot->getParityError(AcdDigi::B) == AcdDigi::NOERROR) ? Event::AcdDigi::NOERROR : Event::AcdDigi::ERROR;
+        acdDigiTds->initLdfParameters(acdDigiRoot->getTileName(), acdDigiRoot->getTileNumber(),
+                    range, err);
         acdDigiTdsCol->push_back(acdDigiTds);
     }
 

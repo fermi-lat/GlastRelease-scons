@@ -409,8 +409,15 @@ StatusCode digiRootWriterAlg::writeAcdDigi() {
         VolumeIdentifier volIdRoot;
         convertVolumeId(volIdTds, volIdRoot);
 
-        m_digiEvt->addAcdDigi(idRoot, volIdRoot, energyRoot, phaRoot, 
+        AcdDigi *digi = m_digiEvt->addAcdDigi(idRoot, volIdRoot, energyRoot, phaRoot, 
             vetoRoot, lowRoot, highRoot);
+        AcdDigi::Range range[2];
+        range[0] = ( (*acdDigiTds)->getRange(Event::AcdDigi::A) == Event::AcdDigi::LOW) ? AcdDigi::LOW : AcdDigi::HIGH;
+        range[1] = ( (*acdDigiTds)->getRange(Event::AcdDigi::B) == Event::AcdDigi::LOW) ? AcdDigi::LOW : AcdDigi::HIGH;
+        AcdDigi::ParityError err[2];
+        err[0] = ( (*acdDigiTds)->getParityError(Event::AcdDigi::A) == Event::AcdDigi::NOERROR ) ? AcdDigi::NOERROR : AcdDigi::ERROR;
+        err[1] = ( (*acdDigiTds)->getParityError(Event::AcdDigi::B) == Event::AcdDigi::NOERROR ) ? AcdDigi::NOERROR : AcdDigi::ERROR;
+        digi->initLdfParameters((*acdDigiTds)->getTileName(), (*acdDigiTds)->getTileNumber(), range, err);
     }
 
     return sc;
