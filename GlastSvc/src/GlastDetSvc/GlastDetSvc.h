@@ -99,17 +99,7 @@ public:
     
     /// return the global position of a strip in the plane, will accept int or double
     virtual HepPoint3D getStripPosition(idents::VolumeIdentifier id, double stripid);
-    
-    /// calculate the tray number, botTop from layer, view
-    virtual void layerToTray (int layer, int view, int& tray, int& botTop);
-    
-    /// calculate layer, view from tray, botTop
-    virtual void trayToLayer (int tray, int botTop, int& layer, int& view);
-    
-    /// calculate layer (digi format) and view from plane number
-    virtual void planeToLayer (int plane, int& layer, int& view);
-    
-    
+
 private:
     
     /// Data Members

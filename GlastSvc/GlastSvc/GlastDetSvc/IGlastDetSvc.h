@@ -1,3 +1,12 @@
+/** @file IGlastDetSvc.h
+* @brief Interface to the GlastDetSvc (q.v.)
+*
+* @author Sawyer Gillespie
+* @author Leon Rochester
+*
+* $Header$
+*/
+
 
 #ifndef _H_IGlastDetSvc_
 #define _H_IGlastDetSvc_
@@ -18,15 +27,11 @@ class IDmapBuilder;
 namespace idents{class VolumeIdentifier;}
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_IGlastDetSvc(901, 1 , 0); 
-//!  Access to the Glast detector geometry and IRF I/O
+static const InterfaceID IID_IGlastDetSvc(901, 2 , 0); 
+///  Access to the Glast detector geometry
 
 /** @class IGlastDetSvc
-* @brief 
-*
-* @author Sawyer Gillespie
-*
-* $Header$
+* @brief Interface to GlastDetSvc
 */
 
 class   IGlastDetSvc : virtual public IInterface {
@@ -44,11 +49,10 @@ public:
     /// Return Volume identifer of top volume relative to world
     virtual idents::VolumeIdentifier getIDPrefix()=0;
 
-
-    //! new detModel interface, will call back. 
+    /// new detModel interface, will call back. 
     virtual void accept(IGeometry& geom)=0;
 
-    //! new detModel interface, will call back. 
+    /// new detModel interface, will call back. 
     virtual void accept(IMedia& media)=0;
 
     /// retrieve the 3D transformation of a volume given a valid ID
@@ -61,7 +65,6 @@ public:
     virtual StatusCode  getShapeByID(idents::VolumeIdentifier id,
                                      std::string*, 
                                      std::vector<double>*) = 0;
-
 
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IGlastDetSvc; }
@@ -82,27 +85,15 @@ public:
     /// (-) if non-active or gap (P is in local system)    
     virtual double insideActiveArea (const HepPoint3D& p)=0; 
 
-    /// methods to return separate x and y values for insideActive
+    // methods to return separate x and y values for insideActive
+    /// returns distance to x boundary, same convention as InsideActiveArea()
     virtual double insideActiveLocalX( const HepPoint3D& p)=0;
+    /// returns distance to y boundary, same convention as InsideActiveArea()
     virtual double insideActiveLocalY( const HepPoint3D& p)=0;
 
     
     /// return the global position of a strip in the plane, will accept int or double
     virtual HepPoint3D getStripPosition(idents::VolumeIdentifier volId, double stripid)=0;
-
-    /// calculate the tray number, botTop from layer, view
-    virtual void layerToTray (int layer, int view, int& tray, int& botTop)=0;
-
-    /// calculate layer, view from tray, botTop
-    virtual void trayToLayer (int tray, int botTop, int& layer, int& view)=0;
-    
-    /// calculate layer (digi format) and view from plane
-    virtual void planeToLayer (int plane, int& layer, int& view)=0;
-    
-
-
 };
-
-
 
 #endif  // _H_IGlastDetSvc_

@@ -35,15 +35,6 @@ public:
     /// return the local position of a strip in the plane, will accept int or double
     static HepPoint3D getLocalStripPosition( idents::VolumeIdentifier &volId, double stripid);
 
-    /// calculate the tray number, botTop from layer, view
-    static void layerToTray (int layer, int view, int& tray, int& botTop);
-
-    /// calculate layer, view from tray, botTop
-    static void trayToLayer (int tray, int botTop, int& layer, int& view);
-    
-    /// calculate layer (digi format) and view from plane
-    static void planeToLayer (int plane, int& layer, int& view);
-    
     /// number of silicon dies across a single layer
     static unsigned int n_si_dies ();
     

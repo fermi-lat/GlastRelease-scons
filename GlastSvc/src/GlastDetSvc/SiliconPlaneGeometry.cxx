@@ -169,40 +169,6 @@ SiliconPlaneGeometry::getLocalStripPosition(idents::VolumeIdentifier &volId,
     return p;
 }
 
-void SiliconPlaneGeometry::trayToLayer(int tray, int botTop, 
-                                       int& layer, int& view)
-{
-    // Purpose: calculate layer and view from tray and botTop
-    // Method: use knowledge of the structure of the Tracker
-    
-    int plane = 2*tray + botTop - 1;
-    layer = plane/2;
-    view = ((layer%2==0) ? botTop : (1 - botTop));
-    return;
-}
-
-void SiliconPlaneGeometry::layerToTray(int layer, int view, 
-                                       int& tray, int& botTop) 
-{   
-    // Purpose: calculate tray and botTop from layer and view.
-    // Method:  use knowledge of the structure of the Tracker
-    
-    int plane = (2*layer) + (((layer % 2) == 0) ? (1 - view) : (view));
-    tray = (plane+1)/2;
-    botTop = (1 - (plane % 2));
-}
-
-
-void SiliconPlaneGeometry::planeToLayer(int plane, 
-                                       int& layer, int& view)
-{
-    // Purpose: calculate tray and botTop from plane
-    // Method:  use knowledge of the structure of the Tracker
-        layer = plane/2;
-        int element = (plane+3)%4;
-        view = element/2;
-}
-
 unsigned int SiliconPlaneGeometry::n_si_strips ()  {
     // Purpose and Method:  return the number of Si strips in a single layer
     return (n_si_dies() * strips_per_die());
