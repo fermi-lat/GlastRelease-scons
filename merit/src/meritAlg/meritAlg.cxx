@@ -514,9 +514,9 @@ StatusCode meritAlg::execute() {
 
         m_warnNoFilterStatus++;
         if (   m_warnNoFilterStatus <= 10 ) {
-          log << MSG::WARNING << "FilterStatus not found" << endl;
+            log << MSG::WARNING << "FilterStatus not found" ;
           if ( m_warnNoFilterStatus == 10 ) {
-            log << "  Further WARNINGs on missing FilterStatus are suppressed"; }
+            log << " -- Further WARNINGs on missing FilterStatus are suppressed"; }
           log  << endreq;
         }
     }
