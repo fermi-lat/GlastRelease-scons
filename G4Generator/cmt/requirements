@@ -1,5 +1,5 @@
 package G4Generator
-version v4r3p4
+version v4r4
 #$Id$
 
 use GlastPolicy v4r*

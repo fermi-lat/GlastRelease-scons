@@ -1,5 +1,6 @@
 //$Id$
 /*
+ * v4r4   10-oct-02 THB Fix to prune; random control
  * v4r3p4 20-sep-02 THB xml change required by new energy policy
  * v4r3p3 10-sep-02 THB GlastSvc and Event version change
  * v4r3p2 04-sep-02 THB Add property to set defaultCutValue
