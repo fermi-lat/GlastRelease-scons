@@ -9,7 +9,7 @@ author Joanne Bogart <jrb@slac.stanford.edu>
 use GlastPolicy  v*
 
 use facilities   v2r*
-use xml          v5r*
+use xmlBase          v5r*
 use xmlGeoDbs    v1r*
 
 apply_pattern shared_library

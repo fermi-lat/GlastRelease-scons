@@ -13,10 +13,12 @@ apply_pattern package_linkopts
 apply_pattern package_stamps
 apply_pattern package_include
 
-private
+#private
 #__________________________________________________________
 use CLHEP   v2r* IExternal
 use xmlUtil v3r*
+use xmlBase v5r*
+use XMLEXT  v5r* IExternal
 use idents  v2r*
 
 macro headers "" WIN32 "\
