@@ -6,8 +6,8 @@
 */
 
 // DllMain entry point
-#include "Gaudi/System/DllMain.icpp"
-#include "Gaudi/Kernel/FactoryTable.h"
+#include "GaudiKernel/DllMain.icpp"
+#include "GaudiKernel/FactoryTable.h"
 #include <iostream>
 extern void GlastEventFactories_load();
 

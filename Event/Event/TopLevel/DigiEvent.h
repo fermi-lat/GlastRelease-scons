@@ -4,9 +4,9 @@
 
 // Include files
 #include <iostream>
-#include "Gaudi/Kernel/Kernel.h"
-#include "Gaudi/Kernel/StreamBuffer.h"
-#include "Gaudi/Kernel/DataObject.h"
+#include "GaudiKernel/Kernel.h"
+#include "GaudiKernel/StreamBuffer.h"
+#include "GaudiKernel/DataObject.h"
 #include "GlastEvent/Utilities/TriggerPattern.h"
 #include "GlastEvent/TopLevel/Definitions.h"
 

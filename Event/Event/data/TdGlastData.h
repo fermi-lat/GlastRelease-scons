@@ -13,9 +13,9 @@
 #include "geometry/Point.h"
 #include "idents/ModuleId.h"
 
-#include "Gaudi/Kernel/Kernel.h"
-#include "Gaudi/Kernel/DataObject.h"
-#include "Gaudi/Kernel/SmartRefVector.h"
+#include "GaudiKernel/Kernel.h"
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/SmartRefVector.h"
 #include "GlastEvent/TopLevel/Definitions.h"
 #include "data/GlastData.h"
 

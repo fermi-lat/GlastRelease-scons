@@ -5,7 +5,7 @@
 
 // Include files
 #include <iostream>
-#include "Gaudi/Kernel/StreamBuffer.h"
+#include "GaudiKernel/StreamBuffer.h"
 #include "GlastEvent/TopLevel/Definitions.h"
 
 

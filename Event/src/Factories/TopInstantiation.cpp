@@ -8,9 +8,9 @@ classes so that they may be included within factories in the DLL.
 #define EVENT_FACTORIES_TOPINSTANTIATION_CPP  1
 
 // Include files
-#include "Gaudi/Kernel/ObjectFactory.h"
-#include "GlastEvent/TopLevel/ObjectVector.h"
-#include "GlastEvent/TopLevel/ObjectList.h"
+#include "GaudiKernel/ObjectFactory.h"
+#include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/ObjectList.h"
 
 #define _ImplementTopContainedFactories(x)  \
   _ImplementContainedObjectFactory( x )    \

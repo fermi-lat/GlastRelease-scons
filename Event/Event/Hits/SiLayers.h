@@ -5,7 +5,7 @@
 // #include <stdlib.h>
 #include <iostream>
 #include <vector>
-#include "Gaudi/Kernel/DataObject.h"
+#include "GaudiKernel/DataObject.h"
 
 extern const CLID& CLID_SiLayers;
 

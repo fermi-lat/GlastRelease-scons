@@ -8,7 +8,7 @@
 #define _H_GlastEvent_EventHits
 
 // includes
-#include "Gaudi/Kernel/DataObject.h"
+#include "GaudiKernel/DataObject.h"
 #include "GlastEvent/Hits/GlastHits.h"
 
 namespace GlastEvent { // declare the namespace for the glast raw event

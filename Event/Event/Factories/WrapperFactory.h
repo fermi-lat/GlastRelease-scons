@@ -8,7 +8,7 @@
 #define _H_GlastEvent_WrapperFactory_
 
 // includes
-#include "Gaudi/Kernel/ObjectFactory.h"
+#include "GaudiKernel/ObjectFactory.h"
 
 /** Templated factory to create concrete instances of a given contained object
 */

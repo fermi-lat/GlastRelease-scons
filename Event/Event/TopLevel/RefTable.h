@@ -4,12 +4,12 @@
 
 
 // Include files
-#include "Gaudi/Kernel/Kernel.h"
-#include "Gaudi/Kernel/DataObject.h"
-#include "Gaudi/Kernel/StreamBuffer.h"
-#include "Gaudi/Kernel/SmartRefVector.h"
-#include "Gaudi/Kernel/SmartRef.h"
-#include "Gaudi/Kernel/HashTable.h" // Cannot use maps through sharable images....
+#include "GaudiKernel/Kernel.h"
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/StreamBuffer.h"
+#include "GaudiKernel/SmartRefVector.h"
+#include "GaudiKernel/SmartRef.h"
+#include "GaudiKernel/HashTable.h" // Cannot use maps through sharable images....
 
 
 // Externals 

@@ -6,8 +6,8 @@
 // Include files
 #include <iostream>
 #include <vector>
-#include "Gaudi/Kernel/Kernel.h"
-#include "Gaudi/Kernel/StreamBuffer.h"
+#include "GaudiKernel/Kernel.h"
+#include "GaudiKernel/StreamBuffer.h"
 #include "GlastEvent/Utilities/RandomNumberSeed.h"
 #include "GlastEvent/Utilities/ProcessingVersion.h"
 #include "CLHEP/Geometry/Point3D.h"

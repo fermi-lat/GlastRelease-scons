@@ -1,7 +1,7 @@
 
 #include "GlastEvent/Hits/SiLayers.h"
 
-#include "Gaudi/MessageSvc/MsgStream.h"
+#include "GaudiKernel/MsgStream.h"
 //#include "Event/messageManager.h"
 //#include "instrument/trackerGeo.h"
 

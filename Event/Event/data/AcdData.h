@@ -3,7 +3,7 @@
 #define ACDDATA_H 1
 
 #include "data/IVetoData.h"
-#include "Gaudi/Kernel/DataObject.h"
+#include "GaudiKernel/DataObject.h"
 
 /// Just to make IVetoData a DataObject
 

@@ -5,7 +5,8 @@
 
 // Include files
 #include "GlastEvent/TopLevel/EventModel.h"
-#include "Gaudi/Kernel/Kernel.h"
+#include "GaudiKernel/Kernel.h"
+#include "GaudiKernel/ClassID.h"
 
     
 /*! \class EvModel

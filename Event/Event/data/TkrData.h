@@ -5,7 +5,7 @@
 
 #include "data/SiData.h"
 
-#include "Gaudi/Kernel/DataObject.h"
+#include "GaudiKernel/DataObject.h"
 
 
 class TkrData : virtual public SiData , virtual public DataObject {

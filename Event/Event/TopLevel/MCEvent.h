@@ -7,9 +7,9 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include "Gaudi/Kernel/Kernel.h"
-#include "Gaudi/Kernel/DataObject.h"
-#include "Gaudi/Kernel/StreamBuffer.h"
+#include "GaudiKernel/Kernel.h"
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/StreamBuffer.h"
 #include "GlastEvent/TopLevel/SubMCEvent.h"
 #include "GlastEvent/TopLevel/Definitions.h"
 

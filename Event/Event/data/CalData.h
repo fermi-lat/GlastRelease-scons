@@ -3,7 +3,7 @@
 #define CALDATA_H 1
 
 
-#include "Gaudi/Kernel/DataObject.h"
+#include "GaudiKernel/DataObject.h"
 
 #include "data/CsIData.h"
 

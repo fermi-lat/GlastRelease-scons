@@ -5,10 +5,10 @@
 
 // Include files
 #include <iostream>
-#include "Gaudi/Kernel/Kernel.h"
-#include "Gaudi/Kernel/DataObject.h"
-#include "Gaudi/Kernel/StreamBuffer.h"
-#include "Gaudi/Kernel/SmartRef.h"
+#include "GaudiKernel/Kernel.h"
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/StreamBuffer.h"
+#include "GaudiKernel/SmartRef.h"
 #include "GlastEvent/Utilities/TriggerPattern.h"
 #include "GlastEvent/Utilities/Classification.h"
 #include "GlastEvent/TopLevel/Definitions.h"

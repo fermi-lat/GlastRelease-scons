@@ -4,7 +4,7 @@ version v1r6
 branches GlastEvent mgr doc src
 use idents
 use data 
-#use Gaudi 
+use GaudiKernel 
 
 library GlastEvent -no_share\
         ../GlastEvent/*.h \ 
@@ -27,15 +27,10 @@ library GlastEvent -no_share\
 ignore_pattern include_none
 apply_pattern package_include
 
-macro GlastEventDir     "$(GLASTEVENTROOT)/$(DEBUGDIR)"
-
 macro GlastEvent_stamps   "$(GlastEventDir)/GlastEvent.stamp"
 
-macro GlastEvent_linkopts "$(GlastEventDir)/libGlastEvent.a" \
- LinuxStatic             "$(GlastEventDir)/libGlastEventFactories.a $(GlastEventDir)/libGlastEvent.a -u GlastEventFactories_loadRef" \
- VisualC                 "$(GlastEventDir)/libGlastEvent.lib" \
- VisualCStatic           "$(GlastEventDir)/libGlastEventFactories.lib $(GlastEventDir)/libGlastEvent.lib /include:GlastEventFactories_loadRef"
-#
+apply_pattern package_Llinkopts
+
 # Macro to define shared libraries
 #
 set GlastEventFactoriesShr "${GLASTEVENTROOT}/${DEBUGDIR}/libGlastEventFactories"
