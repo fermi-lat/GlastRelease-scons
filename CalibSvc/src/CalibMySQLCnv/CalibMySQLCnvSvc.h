@@ -149,6 +149,8 @@ class CalibMySQLCnvSvc : public ConversionSvc,
   std::string m_enterTimeStartString;
   std::string m_enterTimeEndString;
 
+  std::string m_dbName;
+
   /// Interval in seconds
 
   /// Handle to the IConversionSvc interface of the DetectorPersistencySvc

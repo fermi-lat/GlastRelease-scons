@@ -32,6 +32,7 @@ CalibMySQLCnvSvc::CalibMySQLCnvSvc( const std::string& name, ISvcLocator* svc)
   declareProperty("UseEventTime", m_useEventTime = true);
   declareProperty("EnterTimeEnd", m_enterTimeEndString = std::string("") );
   declareProperty("EnterTimeStart", m_enterTimeStartString = std::string("") );
+  declareProperty("DbName", m_dbName = std::string("calib") );
 }
 
 CalibMySQLCnvSvc::~CalibMySQLCnvSvc(){ }
@@ -164,7 +165,7 @@ StatusCode CalibMySQLCnvSvc::initialize()
   // Conceivably, could start up a different conversion service, depending 
   // on job options parameters, which would look very much like this one
   // except for having a different way to access metadata.
-  m_meta = new calibUtil::Metadata(m_host);
+  m_meta = new calibUtil::Metadata(m_host, "*", m_dbName);
 
   if (!m_meta) {
     log << MSG::ERROR << "Could not open connection to metadata dbs" << endreq;
