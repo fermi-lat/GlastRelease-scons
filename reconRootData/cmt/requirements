@@ -14,16 +14,11 @@ apply_pattern root_package headers="\
  ../reconRootData/CalRangeRecData.h\
  ../reconRootData/CalXtalRecData.h\
  ../reconRootData/ReconEvent.h\
- ../reconRootData/TkrCandHit.h\
- ../reconRootData/TkrCandTrack.h\
  ../reconRootData/TkrCluster.h\
- ../reconRootData/TkrCovMat.h\
- ../reconRootData/TkrFitHit.h\
- ../reconRootData/TkrHitPlane.h\
- ../reconRootData/TkrKalFitTrack.h\
- ../reconRootData/TkrParams.h\
- ../reconRootData/TkrRecon.h\
  ../reconRootData/TkrTrack.h\
+ ../reconRootData/TkrTrackHit.h\
+ ../reconRootData/TkrTrackParams.h\
+ ../reconRootData/TkrRecon.h\
  ../reconRootData/TkrVertex.h"\
  includes="-I$(COMMONROOTDATAROOT)"\
  test_source="test/testReconClasses.cxx"

@@ -18,13 +18,8 @@
 #pragma link C++ class TkrRecon+;
 #pragma link C++ class TkrCluster+;
 #pragma link C++ class TkrTrack+;
-#pragma link C++ class TkrKalFitTrack+;
-#pragma link C++ class TkrFitHit+;
-#pragma link C++ class TkrCandHit+;
-#pragma link C++ class TkrCandTrack+;
+#pragma link C++ class TkrTrackHit+;
+#pragma link C++ class TkrTrackParams+;
 #pragma link C++ class TkrVertex+;
-#pragma link C++ class TkrCovMat+;
-#pragma link C++ class TkrHitPlane+;
-#pragma link C++ class TkrParams+;
 
 #endif

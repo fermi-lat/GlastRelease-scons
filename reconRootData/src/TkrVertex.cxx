@@ -8,48 +8,37 @@ TkrVertex::TkrVertex()
     Clear();
 }
     
-TkrVertex::~TkrVertex() {
+TkrVertex::~TkrVertex() 
+{
     Clear();
 }
 
-void TkrVertex::initializeInfo(UInt_t id, UInt_t layer, UInt_t tower, 
-                               Double_t quality, Double_t energy)
+void TkrVertex::Clear(Option_t *option) 
 {
-    m_id         = id;
-    m_energy     = energy;
-    m_quality    = quality;
-    m_itower     = tower;
-    m_firstLayer = layer;
-}
+    m_statusBits =  0;
+
+    m_energy     =  0.;                     // energy associated with vertex
+    m_position   = TVector3(0.,0.,0.);      // position of vertex
+    m_direction  = TVector3(0.,0.,0.);      // direction of gamma causing pair conversion vertex
+
+    m_chiSquare  =  0.;                     // Spacial chi-square for combining tracks
+    m_quality    =  0.;                     // Vertex "Quality" derived from topology & chisq.
+    m_arcLen1    =  0.;                     // Signed distance from head of track 1 to VTX
+    m_arcLen2    =  0.;                     // Signed distance from head of track 1 to VTX
+    m_doca       =  0.;                     // Distance between tracks at VTX location
+    m_radlen     =  0.;                     // Integrated radiation lengths from end of track 1
     
-void TkrVertex::initializeVals(const TkrParams& vtxPar, 
-                               const TkrCovMat& vtxCov, const TVector3& pos, const TVector3& dir)
-{
-    m_vertexPar = vtxPar;
-    m_vertexCov = vtxCov;
-    m_position  = pos;
-    m_direction = dir;
-}
+    m_vtxID      = commonRootData::TkrId(); // Complete TkrId identifying the details of this vertex
+		                                    // (This is the TkrId of the first hit after the vertex)
+    m_params     = TkrTrackParams();        // Parameter structure for vertex (includes cov. matrix)
 
-void TkrVertex::Clear(Option_t *option) {
-    m_id          = -9999;
-    m_energy      = 0.;
-    m_quality     = -9999.;
-    m_firstLayer  = -1;
-    m_itower      = -1;
-
-    m_vertexPar.Clear();
-    //m_vertexCov.Clear();
-    m_position = TVector3(0.,0.,0.);
-    m_direction = TVector3(0., 0., 0.);
-
-    m_trackIds.clear();
+    m_tracks.Clear();
 }
 
 void TkrVertex::Print(Option_t *option) const {
     TObject::Print(option);
     using namespace std;
-    cout << "Id: " << m_id << endl;
+    cout << "Id: " << m_vtxID << endl;
     cout << "Pos: (" << m_position.X() << "," << m_position.Y()
         << "," << m_position.Z() << ")  Dir: (" 
         << m_direction.X() << "," << m_direction.Y() << ","

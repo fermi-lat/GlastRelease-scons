@@ -5,9 +5,7 @@
 #include "TObjArray.h"
 
 #include "TkrCluster.h"
-#include "TkrCandTrack.h"
 #include "TkrTrack.h"
-#include "TkrKalFitTrack.h"
 #include "TkrVertex.h"
 /** 
  * @class TkrRecon
@@ -42,9 +40,6 @@ public:
     TObjArray *getClusterCol() { return m_clusterCol; };
     void addCluster(TkrCluster *cluster) { m_clusterCol->Add(cluster); };
 
-    TObjArray *getTrackCandCol() { return m_trackCandCol; };
-    void addTrackCand(TkrCandTrack *track) { m_trackCandCol->Add(track); };
-
     TObjArray *getTrackCol() { return m_trackCol; };
     void addTrack(TObject* track) { m_trackCol->Add(track); };
 
@@ -54,8 +49,6 @@ public:
 private:
     /// collection of TkrSiCluster
     TObjArray *m_clusterCol;
-    /// collection of TkrCandTrack
-    TObjArray *m_trackCandCol;
     /// collection of TkrTrack
     TObjArray *m_trackCol;
     /// collection of TkrVertex

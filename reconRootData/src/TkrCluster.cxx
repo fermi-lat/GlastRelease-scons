@@ -8,26 +8,21 @@ TkrCluster::TkrCluster() {
     Clear();
 }
 
-TkrCluster::TkrCluster(UInt_t id, UInt_t iplane, TkrCluster::view v,
-                       UInt_t istrip0, UInt_t istripf, const TVector3& position, 
-					   Double_t ToT, UInt_t flag, UInt_t tower)
+TkrCluster::TkrCluster(commonRootData::TkrId tkrId, UInt_t istrip0, UInt_t istripf, const TVector3& position, 
+		       Double_t ToT, UInt_t flag, UInt_t id)
 {
 	// Purpose and method: makes a cluster with attributes
-	// Input:  id is the sequential cluster number
-	//         v  is the measured view (0->X, 1->Y)
-	//         iplane is the bilayer number (0 at the front)
-	//         istrip0 is the first strip in the cluster
-	//         istripf is the last strip in the cluster
-	//         ToT is the time-over-threshold for this cluster
-	//         flag is
-	//         tower is the tower number
+	// Input:  tkrId is a valid TkrId which identifies where the cluster is
+    //         strip0 is the first strip in the cluster
+    //         stripf is the last strip in the cluster
+    //         position is the position of the cluster
+    //         ToT is the time-over-threshold for this cluster
+	//         flag tells if the cluster is "in use" or not
+    //         id is the sequential cluster number
 
 	Clear();
 	
-    m_id     = id;
-	m_view   = v;
-	
-	m_plane  = iplane;
+    m_tkrId  = tkrId;
 	
 	m_strip0 = istrip0;
 	m_stripf = istripf;
@@ -35,38 +30,38 @@ TkrCluster::TkrCluster(UInt_t id, UInt_t iplane, TkrCluster::view v,
 	m_position = position;
 	
 	m_ToT    = ToT;
-    m_tower  = tower;
 	
     m_flag   = flag;
+    m_id     = id;
 }
 
 
-TkrCluster::~TkrCluster() {
+TkrCluster::~TkrCluster() 
+{
     Clear();
 }
 
 
 
-void TkrCluster::Clear(Option_t *option) {
-	m_id = 0;
-	m_tower = 0;
-	m_plane=0;
-    m_flag = 0;
-	m_strip0 = 0;
-    m_stripf = 0;
-    m_view = TkrCluster::X;
-    m_ToT = 0.0;
+void TkrCluster::Clear(Option_t *option) 
+{
+    m_tkrId    = commonRootData::TkrId();
+    m_id       = 0;
+    m_flag     = 0;
+	m_strip0   = 0;
+    m_stripf   = 0;
+    m_ToT      = 0.0;
     m_position = TVector3(0.0, 0.0, 0.0);
 }
 
-void TkrCluster::Print(Option_t *option) const {
+void TkrCluster::Print(Option_t *option) const 
+{
     TObject::Print(option);
     using namespace std;
 
-	cout << "(Id, Tower, Plane): (" << m_id << ", " << m_tower 
-		<< ", " << m_plane << ")" << endl;
+	cout << "(TkrId): (" << m_tkrId << endl;
 	cout << "First Strip, Last Strip " << m_strip0 << ", " << m_stripf << endl;
-	cout << "ToT, view, position(x, y, z) " << m_ToT << " " << m_view << " ("
+	cout << "ToT, position(x, y, z) " << m_ToT  << " ("
 		<< m_position.X() << ", " << m_position.Y() << ", " << m_position.Z() 
 		<< ")" << endl;
 }
