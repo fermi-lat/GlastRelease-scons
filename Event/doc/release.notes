@@ -1,8 +1,9 @@
+/*
 package GlastEvent
 
 package manager:T.Burnett (original author: H. Gillespie)
 
-
+v5r1  THB: remove dependence on data
 v4r2  THB: Tag following addition of TkrVertexCol
 
 26-aug-01: tag v2r5
@@ -10,3 +11,5 @@ v4r2  THB: Tag following addition of TkrVertexCol
 20000826  THB many things copied from LHCbEvent, all of the TopLevel directory!
           Start fixing source comments to be picked up by doxygen. Put in reference to 
           Traudl's Raw data definition.
+
+*/
