@@ -152,8 +152,6 @@ StatusCode mcRootWriterAlg::initialize()
     m_mcEvt = new McEvent();
     m_mcTree->Branch("McEvent","McEvent", &m_mcEvt, m_bufSize, m_splitMode);
     
-    //m_common.m_mcFile = m_mcFile;
-    //m_common.m_mcTree = m_mcTree;
     m_common.m_mcEvt = m_mcEvt;
 
     saveDir->cd();

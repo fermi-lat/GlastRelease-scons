@@ -24,6 +24,7 @@
 
 #include "facilities/Util.h"
 
+#include "commonData.h"
 
 /** @class digiRootReaderAlg
  * @brief Reads Digitization data from a persistent ROOT file and stores the
@@ -81,6 +82,8 @@ private:
     std::string m_treeName;
     /// Stores number of events available in the input ROOT TTree
     int m_numEvents;
+  
+    commonData m_common;
 
 };
 
@@ -130,6 +133,7 @@ StatusCode digiRootReaderAlg::initialize()
     }
     m_digiEvt = 0;
     m_digiTree->SetBranchAddress("DigiEvent", &m_digiEvt);
+    m_common.m_digiEvt = m_digiEvt;
 
     m_numEvents = m_digiTree->GetEntries();
     
@@ -162,6 +166,8 @@ StatusCode digiRootReaderAlg::execute()
 
     StatusCode sc = StatusCode::SUCCESS;
     
+    if (m_digiEvt) m_digiEvt->Clear();
+
     if (!m_digiFile->IsOpen()) {
         log << MSG::ERROR << "ROOT file " << m_fileName 
             << " could not be opened for reading." << endreq;
@@ -201,7 +207,7 @@ StatusCode digiRootReaderAlg::execute()
         return sc;
     }
 
-    m_digiEvt->Clear();
+//    m_digiEvt->Clear();
     evtId++;
     
     return sc;
