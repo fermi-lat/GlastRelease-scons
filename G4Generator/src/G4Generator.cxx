@@ -1,9 +1,17 @@
 // $Header$
 
+// Include files
+
+// Geant4
+#include "G4UImanager.hh"
 
 #include "G4Generator.h"
+#include "G4RunManager.hh"
+#include "DetectorConstruction.h"
+#include "PhysicsList.h"
+#include "PrimaryGeneratorAction.h"
 
-// Include files
+// Gaudi
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
@@ -11,6 +19,7 @@
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/ISvcLocator.h"
+
 //flux
 #include "FluxSvc/FluxSvc.h"
 #include "FluxSvc/IFlux.h"
@@ -51,9 +60,20 @@ StatusCode G4Generator::initialize()
         return StatusCode::FAILURE;
     }
     log << MSG::INFO << "Source: "<< m_flux->title() << endreq;
-    
 
-    
+    // Set the geant4 classes needed for the simulation
+    // The manager
+    m_runManager = new G4RunManager;
+    // The detector construction
+    m_runManager->SetUserInitialization(new DetectorConstruction); 
+    // The physics list
+    m_runManager->SetUserInitialization(new PhysicsList);
+    // The primary generator
+    m_primaryGenerator = new PrimaryGeneratorAction;
+    m_runManager->SetUserAction(m_primaryGenerator);    
+    // Initialize Geant4
+    m_runManager->Initialize();
+
     return StatusCode::SUCCESS;
 }
 //------------------------------------------------------------------------------
@@ -66,11 +86,30 @@ StatusCode G4Generator::execute()
     //
     m_flux->generate();
 
-    // these are the 
-    std::string(m_flux->particleName());
+    // these are the particle properties
+    std::string name(m_flux->particleName());
     HepVector3D dir(m_flux->launchDir());
     double ke= m_flux->energy() ;
     HepPoint3D p(m_flux->launchPoint());
+    
+    p = 10*p;
+    ke = ke*1000;
+    std::cout << p << std::endl;
+    
+    // Set a verbose level for geant4 just to see something ...
+    G4UImanager* UI = G4UImanager::GetUIpointer();
+    UI->ApplyCommand("/event/verbose 1");
+    UI->ApplyCommand("/run/verbose 1");
+    UI->ApplyCommand("/tracking/verbose 1");
+
+    // Set the G4 primary generator
+    m_primaryGenerator->setParticle(name);
+    m_primaryGenerator->setMomentum(dir);
+    m_primaryGenerator->setPosition(p);
+    m_primaryGenerator->setEnergy(ke);
+ 
+    // Run geant4
+    m_runManager->BeamOn(1);  
 
     return StatusCode::SUCCESS;
 }
@@ -80,7 +119,12 @@ StatusCode G4Generator::finalize()
 {
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "finalize: " << endreq;
+
+    // delete the runManager of geant4
+    delete m_runManager;
     
     return StatusCode::SUCCESS;
 }
+
+
 

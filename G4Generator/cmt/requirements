@@ -6,7 +6,7 @@ use Geant4
 use GaudiSvc
 use GaudiAlg
 
-use detModel
+use detModel HEAD
 use FluxSvc
 use GlastSvc
 

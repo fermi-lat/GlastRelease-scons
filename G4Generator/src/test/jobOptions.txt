@@ -21,14 +21,15 @@ ApplicationMgr.TopAlg = {
 // make sure that this service does not try to instantatiate the (gismo) detector
 GlastDetSvc.PersistencyFile="(none)";
 
+FluxSvc.source_lib += {"$(FLUXROOT)/xml/user_library.xml"};  
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-MessageSvc.OutputLevel      = 2;
+MessageSvc.OutputLevel      = 6;
 
-G4Generator.source_name="vertical_muons";
+G4Generator.source_name="default";
 
 
-ApplicationMgr.EvtMax = 20;
+ApplicationMgr.EvtMax = 2;
 
 
 //==============================================================
