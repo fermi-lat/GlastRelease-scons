@@ -44,6 +44,25 @@ m_launch(NONE),m_frametype(EARTH), illumBox(0), m_energyscale(GeV)
     //  transformDirection();
 }
 
+
+FluxSource::FluxSource(double aFlux, ISpectrum* aSpec,  Vector* direction)
+: EventSource(aFlux),  m_spectrum(0),
+m_maxEnergy(100.),  // note defualt maximum kinetic energy
+_minCos(-0.4f), _maxCos(1.0f), _minPhi(0.0f), _maxPhi(2*M_PI),
+m_rmin(0), m_rmax(1), _phi(0.0f), _theta(0.0f), m_pointtype(NOPOINT),
+m_launch(NONE),m_frametype(EARTH), illumBox(0)
+{
+    s_backoff = 0.;
+    spectrum(aSpec);
+    //useSpectrumDirection();  // and will use its direction generation
+    setLaunch(*direction);
+
+    m_launch=GALACTIC;
+    setAcceptance();
+    //  transformDirection();
+}
+
+
 FluxSource::FluxSource(const DOM_Element& xelem )
 : EventSource (xelem), m_spectrum(0),
 m_maxEnergy(100.),  // note defualt maximum kinetic energy

@@ -6,6 +6,7 @@
 #include "SpectrumFactoryTable.h"
 #include "GPS.h"
 #include "FluxException.h" // defines FATAL_MACRO
+#include "CompositeDiffuse.h"
 
 #include "dom/DOM_Document.hpp"
 #include "dom/DOM_Element.hpp"
@@ -143,12 +144,17 @@ EventSource*  FluxMgr::getSourceFromXML(const DOM_Element& src)
     }
     else if ((sname.getTagName()).equals("nestedSource")) {
         
+        double flux = atof (xml::Dom::getAttribute(src, "flux").c_str());
         // Search for and process immediate child elements.  All must
         // be of type "nestedSource".  There may be more than one.
         // Content model for nestedSource is EMPTY, so can omit check
         // for that in the code
         
-        CompositeSource* cs = new CompositeSource();
+        CompositeSource* cs;
+        if(flux == 1.0){
+        cs = new CompositeSource();
+        }else{ cs = new CompositeDiffuse(flux);
+        }
         do { 
             //        DOM_Element sourceChild = (DOM_Element &) childNode;
             DOM_Element selem = 

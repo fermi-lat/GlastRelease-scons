@@ -74,7 +74,7 @@ protected:
     int m_numofiters;
 
     
-private: 
+//private: 
     std::vector< EventSource* > m_sourceList;
     EventSource*  m_recent;
 };

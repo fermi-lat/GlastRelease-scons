@@ -23,7 +23,8 @@ class FluxSource : public EventSource
       ///  constructor
       FluxSource ( ISpectrum* aSpec = 0, double aFlux = 1 );
       FluxSource ( const DOM_Element& xelem );
-      
+      FluxSource::FluxSource(double aFlux, ISpectrum* aSpec,  Vector* direction);
+
       ///    destructor
       virtual ~FluxSource();
           
@@ -92,7 +93,7 @@ class FluxSource : public EventSource
 
       double interval (double time);
 
-	  void FluxSource::getGalacticDir(double l,double b);
+      void FluxSource::getGalacticDir(double l,double b);
 
       /// acess to the maximum energy (kinetic)
       double maxEnergy()const { return m_maxEnergy;}
