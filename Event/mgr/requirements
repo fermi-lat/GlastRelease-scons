@@ -5,6 +5,7 @@ branches GlastEvent mgr doc src
 use idents v2r*
 
 use GaudiKernel v11r0p*
+use geometry
 use CLHEP v1r7p*
 
 apply_pattern package_headers
@@ -16,11 +17,13 @@ macro_append GlastEvent_headers "" WIN32 " \
         ../GlastEvent/data/*.h  \
         ../GlastEvent/Hits/*.h \
         ../GlastEvent/Digi/*.h \
-        ../GlastEvent/Recon/*.h 
+        ../GlastEvent/Recon/*.h \
+        ../GlastEvent/Recon/TkrRecon/*.h
 
 library GlastEvent -no_share\
         MonteCarlo/*.cxx \
         Hits/*.cpp \
+        Recon/TkrRecon/*.cxx \
         TopLevel/*.cpp \
         ${GlastEvent_headers}
 

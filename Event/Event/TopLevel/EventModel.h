@@ -64,9 +64,9 @@
             _EXTERN_ std::string Event;
             _EXTERN_ std::string SiLayers;
             _EXTERN_ std::string TkrClusters;
-            _EXTERN_ std::string TkrCandidates;
+            _EXTERN_ std::string TkrPatCandCol;
             _EXTERN_ std::string SiRecObjs;
-            _EXTERN_ std::string TkrTracks;
+            _EXTERN_ std::string TkrFitTrackCol;
             _EXTERN_ std::string TkrVertexCol;
         }
 

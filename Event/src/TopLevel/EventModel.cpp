@@ -19,41 +19,41 @@ public:
     
     EvModel() {
         // Access to GLAST event
-        EventModel::Event                   = "/Event";
+        EventModel::Event                    = "/Event";
             
         // Monte Carlo 
-        EventModel::MC::Event               = EventModel::Event + "/MC";
-        EventModel::MC::McVertexCol         = EventModel::MC::Event  + "/McVertexCol";
-        EventModel::MC::McParticleCol       = EventModel::MC::Event  + "/McParticleCol";
+        EventModel::MC::Event                = EventModel::Event + "/MC";
+        EventModel::MC::McVertexCol          = EventModel::MC::Event  + "/McVertexCol";
+        EventModel::MC::McParticleCol        = EventModel::MC::Event  + "/McParticleCol";
 
         EventModel::MC::McPositionHitCol      = EventModel::MC::Event  + "/PositionHitsCol";
         EventModel::MC::McIntegratingHitCol   = EventModel::MC::Event  + "/IntegratingHitsCol";
 
         // Digi event
-        EventModel::Digi::Event             = EventModel::Event + "/Digi";
-        EventModel::Digi::AcdDigis          = EventModel::Digi::Event + "/AcdDigis";
-        EventModel::Digi::TkrDigis          = EventModel::Digi::Event + "/TkrDigis";
+        EventModel::Digi::Event              = EventModel::Event + "/Digi";
+        EventModel::Digi::AcdDigis           = EventModel::Digi::Event + "/AcdDigis";
+        EventModel::Digi::TkrDigis           = EventModel::Digi::Event + "/TkrDigis";
 
 
         // Data Data
-        EventModel::Data::Event             = EventModel::Event + "/Data";
-        EventModel::Data::TdGlastData       = EventModel::Data::Event + "/TdGlastData";
-        EventModel::Data::TdSiData          = EventModel::Data::Event + "/TdSiData";
-        EventModel::Data::TdCsIData         = EventModel::Data::Event + "/TdCsIData";
-        EventModel::Data::TdVetoData        = EventModel::Data::Event + "/TdVetoData";
+        EventModel::Data::Event              = EventModel::Event + "/Data";
+        EventModel::Data::TdGlastData        = EventModel::Data::Event + "/TdGlastData";
+        EventModel::Data::TdSiData           = EventModel::Data::Event + "/TdSiData";
+        EventModel::Data::TdCsIData          = EventModel::Data::Event + "/TdCsIData";
+        EventModel::Data::TdVetoData         = EventModel::Data::Event + "/TdVetoData";
         
 
         // reconstructed data (Tracker)
-        EventModel::TkrRecon::Event         = EventModel::Event + "/TkrRecon";
-        EventModel::TkrRecon::SiLayers      = EventModel::TkrRecon::Event + "/SiLayers";
-        EventModel::TkrRecon::TkrClusters   = EventModel::TkrRecon::Event + "/TkrClusters";
-        EventModel::TkrRecon::TkrCandidates = EventModel::TkrRecon::Event + "/TkrCandidates";
-        EventModel::TkrRecon::SiRecObjs     = EventModel::TkrRecon::Event + "/SiRecObjs";
-        EventModel::TkrRecon::TkrTracks     = EventModel::TkrRecon::Event + "/TkrTracks";
-        EventModel::TkrRecon::TkrVertexCol  = EventModel::TkrRecon::Event + "/TkrVertexCol";
+        EventModel::TkrRecon::Event          = EventModel::Event + "/TkrRecon";
+        EventModel::TkrRecon::SiLayers       = EventModel::TkrRecon::Event + "/SiLayers";
+        EventModel::TkrRecon::TkrClusters    = EventModel::TkrRecon::Event + "/TkrClusters";
+        EventModel::TkrRecon::TkrPatCandCol  = EventModel::TkrRecon::Event + "/TkrPatCandCol";
+        EventModel::TkrRecon::SiRecObjs      = EventModel::TkrRecon::Event + "/SiRecObjs";
+        EventModel::TkrRecon::TkrFitTrackCol = EventModel::TkrRecon::Event + "/TkrFitTrackCol";
+        EventModel::TkrRecon::TkrVertexCol   = EventModel::TkrRecon::Event + "/TkrVertexCol";
 
         // reconstructed ACD data
-        EventModel::AcdRecon::Event         = EventModel::Event + "/AcdRecon";
+        EventModel::AcdRecon::Event          = EventModel::Event + "/AcdRecon";
     }
 };
     
