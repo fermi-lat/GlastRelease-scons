@@ -6,7 +6,7 @@ version v2r13
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
-use GlastPolicy  v5r*
+use GlastPolicy  v6r*
 
 use facilities   v2r*
 use xml          v4r*
