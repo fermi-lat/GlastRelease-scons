@@ -181,7 +181,7 @@ private:
        unsigned short calHEvector() const { return m_cal_HE_Vector;};
        unsigned short cnoVector() const { return m_cno_Vector;};
        unsigned short conditionSummary() const { return m_conditionSummary;};
-       unsigned short missed() const { return (_conditionSummary >> 8) & (( 1 << 8 ) - 1 ); };
+       unsigned short missed() const { return (m_conditionSummary >> 8) & (( 1 << 8 ) - 1 ); };
        const GemDataTileList& tileList() const { return m_tileList; };
        unsigned liveTime() const {return m_liveTime; };
        unsigned prescaled() const { return m_prescaled;};
