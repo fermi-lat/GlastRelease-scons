@@ -28,10 +28,6 @@ TKR Stay Clear envelope from LAT-DS-00038-2</prim>
             for super-glast layers (15oct01)</prim>
         <prim name="biasPlaneThick" value="0.100">Thickness of bias
             plane (15oct01)</prim>
-        <prim name="intertrayGap" value="2.00">Gap between top of one tray
-         and bottom of the tray above  **obsolete by 19oct01! 
-        gaps now vary **</prim>
-
         <prim name="tray0Gap" value="2.005">Gap above bottom tray</prim>
         <prim name="trayNoCnvGap" value="2.130">Gap above non-bottom
         no-converter trays</prim>

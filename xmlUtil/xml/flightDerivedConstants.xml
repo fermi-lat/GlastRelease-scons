@@ -431,12 +431,68 @@ grid, etc. (may be superseded by info from Eric)</notes>
           <add>
             <refer refTo="glueSiThick" />
             <refer refTo="biasPlaneThick" />
+            <refer refTo="glueDefThick" />
           </add>
         </const>
 
+        <const name="TKRTopFaceRegZ" >
+           <notes>Thickness of combined glue+ face-sheet + glue +
+                  bias-board + glue for non-superGLAST trays</notes>
+          <add>
+            <refer refTo="glueCoreThick" />
+            <refer refTo="faceThick" />
+            <refer refTo="glueDefThick" />
+            <refer refTo="biasPlaneThick" />
+            <refer refTo="glueSiThick" />
+          </add>
+        </const>
+
+        <const name="TKRTopFaceSupZ" >
+           <notes>Thickness of combined glue+ face-sheet + glue +
+                  bias-board + glue for superGLAST trays</notes>
+          <add>
+            <refer refTo="glueCoreThick" />
+            <refer refTo="faceSupThick" />
+            <refer refTo="glueDefThick" />
+            <refer refTo="biasPlaneThick" />
+            <refer refTo="glueSiThick" />
+          </add>
+        </const>
+
+        <const name="TKRBotFaceRegZ" >
+          <notes>Thickness of bottom face sheet and surrounding glue
+                 for non-superGLAST trays</notes>
+          <add>
+            <refer refTo="glueCoreThick" />
+            <refer refTo="faceThick" />
+            <refer refTo="glueDefThick" />
+          </add>
+        </const>
+
+        <const name="TKRBotFaceSupZ" >
+          <notes>Thickness of bottom face sheet and surrounding glue
+                 for superGLAST trays</notes>
+          <add>
+            <refer refTo="glueCoreThick" />
+            <refer refTo="faceSupThick" />
+            <refer refTo="glueDefThick" />
+          </add>
+        </const>
+
+        <const name="TKRFaceMinZ" >
+          <notes>Thickness of regular face sheet and glue attaching
+                 it to core/closeout</notes>
+          <add>
+            <refer refTo="glueCoreThick" />
+            <refer refTo="faceThick" />
+          </add>
+        </const>
+
+
+<!--
         <const name="faceGlueRegThick" >
           <notes>Thickness of face sheet and glue attaching it to
-                 core/closeout for regular layers</notes>
+                 core/closeout for regular layers  **OBSOLETE** </notes>
           <add>
             <refer refTo="faceThick" />
             <refer refTo="glueCoreThick" />
@@ -445,13 +501,13 @@ grid, etc. (may be superseded by info from Eric)</notes>
 
         <const name="faceGlueSupThick" >
           <notes>Thickness of face sheet and glue attaching it to
-                 core/closeout for superGLAST layers</notes>
+                 core/closeout for superGLAST layers  **OBSOLETE** </notes>
           <add>
             <refer refTo="faceSupThick" />
             <refer refTo="glueCoreThick" />
           </add>
         </const>
-
+ -->
 
 
         <const name="TKRMaxNoCnv" uType="count">
