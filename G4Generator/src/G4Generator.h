@@ -9,8 +9,7 @@
 #include <string>
 class IFluxSvc;
 class IFlux;
-class G4RunManager;
-class PrimaryGeneratorAction;
+class RunManager;
 
 /**
   Geant4 interface
@@ -30,9 +29,10 @@ private:
     std::string m_source_name;
 
     /// This is the G4 manager that handles the simulation
-    G4RunManager* m_runManager;
-    /// This is the primaries generator class 
-    PrimaryGeneratorAction* m_primaryGenerator;
+    RunManager* m_runManager;
 };
 
 #endif
+
+
+

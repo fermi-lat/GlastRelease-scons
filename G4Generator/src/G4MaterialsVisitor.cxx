@@ -1,3 +1,4 @@
+// $Header$
 #include <vector>
 
 #include "G4MaterialsVisitor.h"
@@ -43,16 +44,16 @@ void G4MaterialsVisitor::visitElement(detModel::Element* element)
   density = (G4double) element->getDensity()*g/cm3;
 
   if (symbol != "") {
-    G4Element* el = new G4Element(name, symbol, z, a);
+    new G4Element(name, symbol, z, a);
   }
   else {// This is temporary waiting for a new material category with pressure and temp
     if(name==std::string("Vacuum"))
       {
-	G4Material* el = new G4Material(name, z, a, density,kStateGas,
-					2.73*kelvin,3.e-18*pascal);
+	new G4Material(name, z, a, density,kStateGas,
+		       2.73*kelvin,3.e-18*pascal);
       }
     else
-      G4Material* el = new G4Material(name, z, a, density);
+      new G4Material(name, z, a, density);
   }
 }
 

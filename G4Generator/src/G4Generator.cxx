@@ -3,12 +3,8 @@
 // Include files
 
 // Geant4
-#include "G4UImanager.hh"
-
 #include "G4Generator.h"
-#include "G4RunManager.hh"
-#include "DetectorConstruction.h"
-#include "PhysicsList.h"
+#include "RunManager.h"
 #include "PrimaryGeneratorAction.h"
 
 // Gaudi
@@ -38,7 +34,6 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
      declareProperty("source_name",  m_source_name="default");
 
 }
-
     
 ////////////////////////////////////////////////////////////////////////////
 StatusCode G4Generator::initialize()
@@ -63,14 +58,7 @@ StatusCode G4Generator::initialize()
 
     // Set the geant4 classes needed for the simulation
     // The manager
-    m_runManager = new G4RunManager;
-    // The detector construction
-    m_runManager->SetUserInitialization(new DetectorConstruction); 
-    // The physics list
-    m_runManager->SetUserInitialization(new PhysicsList);
-    // The primary generator
-    m_primaryGenerator = new PrimaryGeneratorAction;
-    m_runManager->SetUserAction(m_primaryGenerator);    
+    m_runManager = new RunManager;
     // Initialize Geant4
     m_runManager->Initialize();
 
@@ -92,23 +80,20 @@ StatusCode G4Generator::execute()
     double ke= m_flux->energy() ;
     HepPoint3D p(m_flux->launchPoint());
     
-    p = 10*p;
-    ke = ke*1000;
+    p = 10*p*mm;
+    ke = ke*1000*MeV;
     
-    // Set a verbose level for geant4 just to see something ...
-    // G4UImanager* UI = G4UImanager::GetUIpointer();
-    // UI->ApplyCommand("/event/verbose 3");
-    // UI->ApplyCommand("/run/verbose 3");
-    // UI->ApplyCommand("/tracking/verbose 3");
-
+    PrimaryGeneratorAction* primaryGenerator = 
+      (PrimaryGeneratorAction*)m_runManager->GetUserPrimaryGeneratorAction();
+    
     // Set the G4 primary generator
-    m_primaryGenerator->setParticle(name);
-    m_primaryGenerator->setMomentum(dir);
-    m_primaryGenerator->setPosition(p);
-    m_primaryGenerator->setEnergy(ke);
+    primaryGenerator->setParticle(name);
+    primaryGenerator->setMomentum(dir);
+    primaryGenerator->setPosition(p);
+    primaryGenerator->setEnergy(ke);
  
     // Run geant4
-    m_runManager->BeamOn(1);  
+    m_runManager->BeamOn();  
 
     return StatusCode::SUCCESS;
 }
@@ -124,6 +109,7 @@ StatusCode G4Generator::finalize()
     
     return StatusCode::SUCCESS;
 }
+
 
 
 

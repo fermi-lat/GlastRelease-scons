@@ -1,3 +1,4 @@
+// $Header$
 #ifndef G4MATERIALSVISITOR_H
 #define G4MATERIALSVISITOR_H
 #include "detModel/Management/MaterialsVisitor.h"
