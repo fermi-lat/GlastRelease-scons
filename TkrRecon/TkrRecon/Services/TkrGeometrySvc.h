@@ -68,7 +68,10 @@ public:
     /// return the position of a strip, will accept int or double
     HepPoint3D getStripPosition(int tower, int layer, int view, double stripid);
 
-    double getReconLayerZ(int layer, int view = -1);
+    /// return the z position for a reconLayer and view
+    double getReconLayerZ(int layer, int view);
+    /// return the average z position for a reconLayer
+    double getReconLayerZ(int layer);
 
     /// calculate the tray number, botTop from layer, view
     void layerToTray (int layer, int view, int& tray, int& botTop);
