@@ -1,0 +1,13 @@
+package geomrep
+
+use geometry dev glast
+use graphics dev glast
+
+
+macro geomrep_linkopts "-L ${GEOMREPROOT}/${CMTCONFIG} -lgeomrep"\
+    VisualC: "/LibPath:${GEOMREPROOT}/Win32Debug geomreplib.lib"
+
+
+private
+
+library geomrep -no_share *.cxx

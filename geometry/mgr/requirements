@@ -1,0 +1,13 @@
+package geometry
+
+use glast_settings dev glast
+use CLHEP prod
+
+macro geometry_linkopts "-L ${GEOMETRYROOT}/${CMTCONFIG} -lgeometry"\
+    VisualC: "/LibPath:${GEOMETRYROOT}/Win32Debug geometrylib.lib"
+
+
+private
+
+library  geometry -no_share *.cxx
+
