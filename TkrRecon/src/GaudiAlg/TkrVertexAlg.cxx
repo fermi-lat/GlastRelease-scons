@@ -27,6 +27,8 @@
 #include "TkrRecon/GaudiAlg/TkrVertexAlg.h"
 #include "TkrRecon/Services/TkrInitSvc.h"
 
+using namespace TkrRecon;
+
 static const AlgFactory<TkrVertexAlg>  Factory;
 const IAlgFactory& TkrVertexAlgFactory = Factory;
 
@@ -65,13 +67,13 @@ StatusCode TkrVertexAlg::execute()
     MsgStream log(msgSvc(), name());
 
     //Find the pattern recon tracks
-    TkrCandidates* pTkrCands  = SmartDataPtr<TkrCandidates>(eventSvc(),"/Event/TkrRecon/TkrCandidates");
+    TkrPatCandCol*  pTkrCands  = SmartDataPtr<TkrPatCandCol>(eventSvc(),"/Event/TkrRecon/TkrPatCandCol");
 
     //Find the pattern recon tracks
-    TkrTracks*     pTkrTracks = SmartDataPtr<TkrTracks>(eventSvc(),"/Event/TkrRecon/TkrTracks");
+    TkrFitTrackCol* pTkrTracks = SmartDataPtr<TkrFitTrackCol>(eventSvc(),"/Event/TkrRecon/TkrFitTrackCol");
 
     //Create the TkrCandidates TDS object
-    TkrVertexCol*  pVtxCol    = pFindVertex->doVertexRecon(pTkrTracks, pTkrCands);
+    TkrVertexCol*   pVtxCol    = pFindVertex->doVertexRecon(pTkrTracks, pTkrCands);
 
     //Register this object in the TDS
     sc = eventSvc()->registerObject("/Event/TkrRecon/TkrVertexCol",pVtxCol);
