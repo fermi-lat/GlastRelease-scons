@@ -32,6 +32,20 @@ namespace Event{
     }
 }
 
+void McIntegratingHit::setEnergyItems( double totEnergy, const double *energyArr,
+                                      const HepPoint3D &moment1, const HepPoint3D &moment2) {
+    // Purpose and Method:  Provide a mechanism to set the total energy and moments when
+    //  reading from a persistent form, where we may not have the McParticles and their
+    //  associated positions.
+
+    m_totalEnergy = totEnergy;
+    m_moment1seed = moment1 * m_totalEnergy;
+    m_moment2seed = moment2 * m_totalEnergy;
+
+    m_energyArray[0] = energyArr[0];
+    m_energyArray[1] = energyArr[1];
+    m_energyArray[2] = energyArr[2];
+}
 
 void McIntegratingHit::clearEnergyItems()
 {
@@ -103,6 +117,10 @@ McIntegratingHit::energyDepositMapId& McIntegratingHit::itemizedEnergyId()
   return m_energyItemId;
 }
 
+double McIntegratingHit::energyArray(Particle p) const { 
+    return m_energyArray[p];
+}
+
 void McIntegratingHit::addEnergyItem(double energy, Particle p, const HepPoint3D& position)
 {
     // Purpose and Method:  Add a McParticleId, energy pair to the collection.
@@ -115,6 +133,7 @@ void McIntegratingHit::addEnergyItem(double energy, Particle p, const HepPoint3D
     m_moment1seed += energy * position;
     m_moment2seed += energy * position2;
 }
+
 
 void McIntegratingHit::addEnergyItem(const double& energy, Event::McParticle* t, const HepPoint3D& position)
 {
