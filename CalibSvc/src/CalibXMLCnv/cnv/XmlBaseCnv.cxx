@@ -139,7 +139,7 @@ StatusCode XmlBaseCnv::internalCreateObj(const DOM_Element& elt,
   }
 
   unsigned int serNo = *(address->ipar());
-
+  m_serNo = serNo;
   StatusCode sc = m_metaSvc->getValidInterval(serNo, 
                                               &m_vstart, 
                                               &m_vend );
