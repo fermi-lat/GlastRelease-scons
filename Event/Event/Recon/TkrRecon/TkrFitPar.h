@@ -61,7 +61,7 @@ namespace Event { // Namespace
     TkrFitPar (const Ray &); 
     TkrFitPar (const Ray *); 
 
-#endif TIMETRIAL
+#endif // TIMETRIAL
     // Create with explicit values
     TkrFitPar(double ax, double sx, double ay,double sy);
 
@@ -106,5 +106,5 @@ namespace Event { // Namespace
 
 }; //Namespace
 
-#endif _TkrFitPar_H
+#endif // _TkrFitPar_H
 

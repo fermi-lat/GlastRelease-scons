@@ -155,7 +155,7 @@ namespace Event { //Namespace
 
 }; //Namespace
 
-#endif _TkrFitMatrix_H
+#endif // _TkrFitMatrix_H
 
 
 
