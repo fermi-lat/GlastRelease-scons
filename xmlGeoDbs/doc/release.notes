@@ -2,6 +2,9 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 12-Aug-2003: jrb - tag v1r13p0  Add remaining ACD ribbons back into model.
+ *   Tiles, ribbons and support structure parameters are derived from
+ *   3-d model, somewhat simplied.
  * 11-Aug-2003: jrb - tag v1r13    1. (Xin) revised em and miniTower files
  *                                 to be consistent with recent CAL and TKR
  *                                 changes
