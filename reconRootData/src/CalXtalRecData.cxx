@@ -19,11 +19,15 @@ void CalXtalRecData::Clear(Option_t *option) {
     m_recData.clear();
 }
 
-void CalXtalRecData::Print(Option_t *option) {
+void CalXtalRecData::Print(Option_t *option) const {
     using namespace std;
     TObject::Print();
     cout << "XtalId (tower, layer, column): " << m_xtalId.getTower() << "," 
         << m_xtalId.getLayer() << ", " << m_xtalId.getColumn() << endl;
+    cout << "BESTRANGE POS(range, energy): (" << Int_t(getRange(0, CalXtalId::POS))
+        << "," << getEnergy(0, CalXtalId::POS) << ")"
+        << "  NEG (range, energy): (" << Int_t(getRange(0, CalXtalId::NEG))
+        << "," << getEnergy(0, CalXtalId::NEG) << ")" << std::endl;
 
 }
 
@@ -40,14 +44,14 @@ Double_t CalXtalRecData::getEnergy(Short_t readoutIndex, CalXtalId::XtalFace fac
 };
 
 
-Double_t CalXtalRecData::getEnergy()
+Double_t CalXtalRecData::getEnergy() const
 {
     return (getEnergy(0,CalXtalId::POS)
         +getEnergy(0,CalXtalId::NEG))/2;
 };
 
 
-CalRangeRecData* CalXtalRecData::getRangeRecData(Short_t readoutIndex)
+const CalRangeRecData* CalXtalRecData::getRangeRecData(Short_t readoutIndex) const
 {
     if ( readoutIndex < m_recData.size() )
         return &(m_recData[readoutIndex]);

@@ -26,9 +26,9 @@ void CalRangeRecData::Clear(Option_t *option) {
     m_rangeM = 0;
 }
 
-void CalRangeRecData::Print(Option_t *option) {
+void CalRangeRecData::Print(Option_t *option) const {
     using namespace std;
     TObject::Print(option);
-    cout << "POS (range, energy): (" << m_rangeP << "," << m_eneP << ")" << endl;
-    cout << "NEG (range, energy): (" << m_rangeM << "," << m_eneM << ")" << endl;
+    cout << "POS (range, energy): (" << Int_t(m_rangeP) << "," << m_eneP << ")" << endl;
+    cout << "NEG (range, energy): (" << Int_t(m_rangeM) << "," << m_eneM << ")" << endl;
 }
