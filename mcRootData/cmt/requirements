@@ -27,9 +27,7 @@ make_fragment mcrootdata_dorootcint_header
 make_fragment mcrootdata_dorootcint -header=mcrootdata_dorootcint_header
 document mcrootdata_dorootcint mcRootDataRootCint CINTFILE=../mcRootData/mcRootDataCint.cxx
 
-# For some reason, I was getting errors when loading the mcRootData shareable
-# in root.  Linking the Root Physics library in avoids this.
-macro mcRootData_shlibflags " -L${ROOT_PATH}/lib -lPhysics -lMatrix " \
+macro mcRootData_shlibflags " " \
       VisualC            " ${use_linkopts} "
 
 
