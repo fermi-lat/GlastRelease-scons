@@ -234,47 +234,51 @@ StatusCode GlastRandomSvc::initialize ()
 
     // Search through all objects (factories?)
     for(IObjManager::ObjIterator it = objManager->objBegin(); it
-        !=objManager->objEnd(); ++ it){
-            std::string tooltype= (*it)->ident();
-            // is it a tool factory?
-            const IFactory* factory = objManager->objFactory( tooltype );
-            IFactory* fact = const_cast<IFactory*>(factory);
-            status = fact->queryInterface( IID_IToolFactory,
-                (void**)&toolfactory );
-            if( status.isSuccess() ) {
-                std::string fullname = this->name()+"."+tooltype;
-                IAlgTool* itool = toolfactory->instantiate(fullname,  this );
-		IRandomAccess* ranacc ;
-                status =itool->queryInterface(IRandomAccess::interfaceID(),  
-                    (void**)&ranacc);
-                if( status.isSuccess() ){
-                    // Set the Random engine by name
-                    HepRandomEngine* hr =createEngine(m_randomEngine);
-                    if( hr==0) {
-                        log << MSG::ERROR << "Could not set up the random engine " 
+        !=objManager->objEnd(); ++ it)
+    {
+        std::string tooltype= (*it)->ident();
+        // is it a tool factory?
+        const IFactory* factory = objManager->objFactory( tooltype );
+        IFactory* fact = const_cast<IFactory*>(factory);
+        status = fact->queryInterface( IID_IToolFactory, (void**)&toolfactory );
+        if( status.isSuccess() ) 
+        {
+            std::string fullname = this->name()+"."+tooltype;
+            IAlgTool* itool = toolfactory->instantiate(fullname,  this );
+            IRandomAccess* ranacc ;
+            status =itool->queryInterface(IRandomAccess::interfaceID(), (void**)&ranacc);
+            if( status.isSuccess() )
+            {
+                // Set the Random engine by name
+                HepRandomEngine* hr =createEngine(m_randomEngine);
+                if( hr==0) 
+                {
+                    log << MSG::ERROR << "Could not set up the random engine " 
                             << m_randomEngine << endreq;
-                        return StatusCode::FAILURE;
-                    }
-                    log << MSG::INFO << "Setting CLHEP Engine "<< m_randomEngine
+                    return StatusCode::FAILURE;
+                }
+                log << MSG::INFO << "Setting CLHEP Engine "<< m_randomEngine
                         << " for " << tooltype << " at " << hr << endreq;
-                    HepRandomEngine* old = ranacc->setTheEngine(hr);
-                    // make sure that the old one was not already stored
-                    for( EngineMap::iterator eit = m_engineMap.begin(); eit != m_engineMap.end(); ++eit){
-                        if( eit->second != old) continue;
-                        log << MSG::WARNING 
+                HepRandomEngine* old = ranacc->setTheEngine(hr);
+                // make sure that the old one was not already stored
+                for( EngineMap::iterator eit = m_engineMap.begin(); eit != m_engineMap.end(); ++eit)
+                {
+                    if( eit->second != old) continue;
+                    log << MSG::WARNING 
                             << " Previous engine ("<< old << ") for " 
                             << tooltype << " was also set for "<< eit->first << endreq;
-                        break;
-                    }
-                    // Store its name and address in a map
-                    m_engineMap[tooltype] = hr;
-		    
-		  itool->release();
-		}
+                    break;
+                }
+                // Store its name and address in a map
+                m_engineMap[tooltype] = hr;
             }
+
+            // Release the tool just allocated
+            itool->release();
         }
-        return StatusCode::SUCCESS;
     }
+    return StatusCode::SUCCESS;
+}
 
 
 
@@ -304,10 +308,10 @@ void GlastRandomSvc::handle(const Incident &inc)
         if(m_seedFile.value() == "") {
         // allow user to put in a run number by string (allowing environment variables)
             if (m_RunNumberString != "") {
- 	        facilities::Util::expandEnvVar(&m_RunNumberString);
+            facilities::Util::expandEnvVar(&m_RunNumberString);
                 runNo = facilities::Util::atoi(m_RunNumberString);
             }
-	  else runNo = m_RunNumber;
+      else runNo = m_RunNumber;
             seqNo = m_SequenceNumber;
             ++m_SequenceNumber;
         }
@@ -351,7 +355,7 @@ void GlastRandomSvc::handle(const Incident &inc)
       EngineMap::const_iterator dllEngine;
       for (dllEngine = m_engineMap.begin(); dllEngine != m_engineMap.end(); ++dllEngine ) {
 
-	m_output << dllEngine->second->getSeed() << " ";
+    m_output << dllEngine->second->getSeed() << " ";
       }
 
       m_output << std::endl;
