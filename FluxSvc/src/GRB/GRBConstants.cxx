@@ -42,11 +42,6 @@ void GRBConstants::ReadParam(char filen){
   f1.getline(buf,100);
   sscanf(buf,"%lf",&t0);
   setT0(t0);
-  /*
-    fgets(buf,100,f1);
-    sscanf(buf,"%lf",&gamma0);
-    setGamma0(gamma0);
-  */
   f1.close();
 }
 

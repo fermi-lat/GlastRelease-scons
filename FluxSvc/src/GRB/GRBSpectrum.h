@@ -1,17 +1,16 @@
-/**
- * GRBSpectrum: Spectrum Class for GRB Source Simulation
+/*!
+ *\class  GRBSpectrum
  *
- * /author Nicola Omodei nicola.omodei@pi.infn.it 
- * /author Johann Cohen Tanugi johann.cohen@pi.infn.it
+ * Spectrum class for GRB Source Simulation.
+ * Inherits from the Spectrum class.
  *
- * \b revision:
- *   02/15/2002
+ * \author Nicola Omodei       nicola.omodei@pi.infn.it 
+ * \author Johann Cohen-Tanugi johann.cohen@pi.infn.it
+ *
  */
 
 #ifndef GRBSpectrum_H
 #define GRBSpectrum_H
-// $Heading:$
-//
 
 #include <vector>
 #include <string>
@@ -24,35 +23,65 @@
 #include "CLHEP/Random/RandomEngine.h"
 #include "GRBSim.h"
 
-///  Spectrum that reads its differential spectrum from a table
+//! Class interfacing the framework with the GRB generation.
 class GRBSpectrum : public Spectrum
 {
  public:
-  /// params is the filename to read
+
+  //! Constructor: takes a file with some parameters as argument.
+  /*! \param params file of parameters 
+   */
   GRBSpectrum(const std::string& /*params*/);
+
+  //! Destructor
   ~GRBSpectrum();
   
-  /// calculate the flux, particles/m^2/s, given a time
+  //! Computes the flux, in \b photons/m^2/s, for a given time
   double flux(double time)const;
-  /// return rate,given time;
+
+  //! returns rate, for a given time;
   double rate(double time)const;
   
+  //! returns the solid angle spanned by the source: set to 1.0 for GRBs.
   double solidAngle() const;
   
+  //! Galactic direction 
   std::pair<float,float> dir(float energy) const;
   
-  /// sample a single particle energy from the spectrum
-  float operator() (float) const ;
+  /*! \brief Draws from the current spectrum the energy of a sampled photon. 
+   *  \param u uniform random number drawn in the method \c energySrc .  
+   */ 
+  float operator() (float /*u */ ) const ;
   
+  /*! \brief returns the energy of a sampled photon.
+   *
+   *  Method called by \c FluxSource::event(). 
+   *  It returns the energy of a sampled photon, by calling 
+   *  the \c operator() method. 
+   *  \param engine  random engine for uniform sampling;
+   *  \param time    current time. 
+   */
   double energySrc(HepRandomEngine*, double /*time*/ );
   
+  //! inherited from Spectrum
   inline std::string title() const {return "GRBSpectrum";}
-  inline const char * particleName() const {return "GRBgamma";}
+  
+  //! inherited from Spectrum
+  inline const char * particleName() const {return "gamma";}
+  
+  //! inherited from Spectrum
   inline  const char * nameOf() const {return "GRBSpectrum";}
   
   
  private:
+  
+  //! GRBSim is responsible for the instantiation of the GRB model.
   GRBSim*              m_grbsim;
+  
+  /*! Binned Spectrum obtained by the GRB model. 
+   *  The energy binning is defined in \c GRBConstants.
+   *  It is recomputed by \c GRBSim at each time step.
+   */ 
   std::vector<double>  m_spectrum;
 };
 #endif

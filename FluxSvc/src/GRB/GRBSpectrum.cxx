@@ -6,7 +6,7 @@
 #include "CLHEP/Random/RandFlat.h"
 #include <math.h>
 
-// define a factory for anonomous instantiation
+// define a factory for anonymous instantiation
 #include "FluxSvc/SpectrumFactory.h"
 
 static SpectrumFactory<GRBSpectrum> factory;
@@ -22,6 +22,8 @@ GRBSpectrum::~GRBSpectrum()
 {
   delete m_grbsim;
 }
+
+// Must be set to 1.0 for a point source.
 double GRBSpectrum::solidAngle() const
 {
   return 1.0;
@@ -55,7 +57,6 @@ double GRBSpectrum::energySrc(HepRandomEngine* engine, double time)
 float GRBSpectrum::operator() (float u) const
 {
   float energy = m_grbsim->DrawPhotonFromSpectrum(m_spectrum, u);
-  //  cout<<energy<<endl;
   return (float) energy;
 }
 

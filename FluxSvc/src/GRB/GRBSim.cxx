@@ -10,6 +10,11 @@
 /*------------------------------------------------------*/
 using namespace cst;
 /*------------------------------------------------------*/
+
+/*!
+ *  Utility class for the sort() algorithm of Schock vector: sort in 
+ *  decreasing order with respect to the observer time of arrival.
+ */
 class ShockCmp{
 public:
   bool operator()(GRBShock* Sho1, GRBShock* Sho2)
@@ -25,20 +30,13 @@ GRBSim::GRBSim(char ParameterFile)
   cout<<"******Staring The GRB Simulation******"<<endl;
   myParam=new GRBConstants(ParameterFile);
   
-  _grbdir=std::make_pair(((RandFlat::shoot(1.0))*1.4)-0.4,(RandFlat::shoot(1.0))*2*M_PI);
+  m_grbdir=std::make_pair(((RandFlat::shoot(1.0))*1.4)-0.4,(RandFlat::shoot(1.0))*2*M_PI);
   
   double qo=(1.0+3.0*cst::wzel)/2.0;
   double Dist=(cst::c/(Hubble*1.0e+5)/pow(qo,2.0))*
     (myParam->Redshift()*qo+(qo-1.0)*
      (-1.0+sqrt(2.0*qo*myParam->Redshift()+1.0)))*cst::mpc2cm;
   m_Area=(4.*cst::pi)*pow(Dist,2); // [cm^2]
-  /*
-  cout <<myParam->Nshell()<<endl;
-  cout <<myParam->Redshift()<<endl;
-  cout <<myParam->Etot()<<endl;
-  cout <<myParam->R0()<<endl;
-  cout <<myParam->T0()<<endl;
-  */
 
   cout<<"Dist  of the source = "<<Dist<<endl;
   double temp1=(enmax/enmin);
@@ -54,15 +52,17 @@ GRBSim::GRBSim(char ParameterFile)
       m_de.push_back(m_energy[en+1]-m_energy[en]);
     }
 }
+
 /*------------------------------------------------------*/
 GRBSim::~GRBSim()
 {
   cout<<"*******Exiting The GRB Simulation ******"<<endl;
 }
 /*------------------------------------------------------*/
+
 void GRBSim::Start() 
 {
-   /// Step 1: Creation of the shells:
+   //! Step 1: Creation of the shells
   double ei = myParam->Etot()/myParam->Nshell(); //erg
   
   for(int i=myParam->Nshell();i>0;i--) {
@@ -78,12 +78,12 @@ void GRBSim::Start()
   double time = 0.0;
   int nshock=0;
 
-  /// Step 2: Calculation of the evolution:
+  //! Step 2: Calculation of the evolution
   while(time<tmax)
     {
       for(int i=1;i<myParam->Nshell()-nshock;i++)
 	{
-	  theShells[i]->evolve(time);      
+	  theShells[i]->evolve(dt1);      
 	}
       for(int i=2;i<myParam->Nshell()-nshock;i++) 
 	{
@@ -117,9 +117,10 @@ void GRBSim::Start()
       theShocks[i]->setTobs(temp-t0);
       cout<<"Shock num " << i << " @ time obs = " << theShocks[i]->tobs()<<endl;
     }
-  // attention tmax redeclared here!!
+
+  // Warning: tmax redeclared here!!
   m_tmax=1.2*theShocks[nshock-1]->tobs()+0.1;
-  m_dt=m_tmax/nstep;
+  double dt=m_tmax/nstep;
   for(int i=0;i<nshock;i++)
     {
       ssum=0.0;
@@ -128,8 +129,8 @@ void GRBSim::Start()
 	  for (int en=0;en<enstep;en++)
 	    {
 	      // Fsyn & Fic are in erg/s/eV ; sum is in ergs
-	      ssum += (theShocks[i]->Fsyn(m_energy[en],tt*m_dt)+flagIC
-		       *theShocks[i]->Fic(m_energy[en],tt*m_dt))*m_de[en]*m_dt;
+	      ssum += (theShocks[i]->Fsyn(m_energy[en],tt*dt)+flagIC
+		       *theShocks[i]->Fic(m_energy[en],tt*dt))*m_de[en]*dt;
 	    }
 	}
       theShocks[i]->setSum(ssum);
@@ -206,13 +207,14 @@ double GRBSim::IRate(double enmin)
 double GRBSim::IEnergy(double enmin)
 {
   // Integrated flux of energy for energy > enmin
-  // that flows in 1 m_dt .
+  // that flows in a time step dt .
   double flux=0.0;
+  double dt=m_tmax/nstep;
   for (int en=0;en<enstep;en++)
     {
       if(m_energy[en]>=enmin)
 	{  
-	  flux +=m_energy[en]*m_spectrum[en]*(m_de[en])*(1.0e-6)*m_dt;
+	  flux +=m_energy[en]*m_spectrum[en]*(m_de[en])*(1.0e-6)*dt;
 	  //eV/m^2
 	}
     }

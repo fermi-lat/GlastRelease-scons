@@ -1,7 +1,8 @@
-///
-///    GRBShock: Class that describes the a Shock between 2 Shells
-///    Authors: Nicola Omodei & Johann Cohen Tanugi 
-///
+//
+//    GRBShock: Class that describes the a Shock between 2 Shells
+//    Authors: Nicola Omodei & Johann Cohen Tanugi 
+//
+
 #include <math.h>
 #include "GRBShock.h"
 
@@ -24,8 +25,12 @@ GRBShock::GRBShock(GRBShell* Sh1, GRBShell* Sh2)
   double eb=cst::alphab/0.01;
     
   //Calculated by Nich
-  m_Eint=cst::c2*(sqrt(m11+m22+2*m12*(g1*g2)*(1-b1*b2))-(m1+m2));
-  m_gf=(m1*g1+m2*g2)/sqrt(m11+m22+2*m12*(g1*g2)*(1-b1*b2));
+  //  m_Eint=cst::c2*(sqrt(m11+m22+2*m12*(g1*g2)*(1-b1*b2))-(m1+m2));
+  //  m_gf=(m1*g1+m2*g2)/sqrt(m11+m22+2*m12*(g1*g2)*(1-b1*b2));
+
+  // See Piran 1999
+  m_gf=sqrt((m1*g1+m2*g2)/(m1/g1+m2/g2));
+  m_Eint=m1*cst::c2*(g1-m_gf)+m2*cst::c2*(g2-m_gf);
 
   //Gamma Shock
   m_gsh =1.0+(m_Eint/((m1+m2)*cst::c2));
@@ -40,11 +45,14 @@ GRBShock::GRBShock(GRBShell* Sh1, GRBShell* Sh2)
   m_mass= Sh1->Mass();
   
   //Comoving Volume [cm^3]
-  m_VolCom = Sh1->VolCom()*cst::c;
+  m_VolCom = Sh1->VolCom();
 
   //Number and density of protons:
-  // m_npart =m_Eint*cst::erg2MeV/(cst::mpc2);
-  m_npart=(m1+m2)*cst::c2*cst::erg2MeV/(cst::mpc2);
+  // Piran
+  m_npart =m_Eint*cst::erg2MeV/(m_gf*cst::mpc2);
+  // Omodei
+  // m_npart=(m1+m2)*cst::c2*cst::erg2MeV/(cst::mpc2);
+
   double E52=m_Eint/1e+52;
   double np=m_npart/m_VolCom;
   double X=0.0;

@@ -1,7 +1,7 @@
-///
-///    GRBShell: Class that describes the a Shell
-///    Authors: Nicola Omodei & Johann Cohen Tanugi 
-///
+//
+//    GRBShell: Class that describes the a Shell
+//    Authors: Nicola Omodei & Johann Cohen Tanugi 
+//
 
 #include "GRBShell.h"
 #include <iostream>
@@ -13,10 +13,10 @@
 #include "CLHEP/Random/RandFlat.h"
 #include "CLHEP/Random/RanluxEngine.h"
 
-GRBShell::GRBShell(double ei) 
+GRBShell::GRBShell(double E) 
 { 
-  _gamma = generateGamma(cst::gamma0,cst::dgamma);
-  _mass = ei/(_gamma*cst::c2);
+  m_gamma = generateGamma(cst::gamma0,cst::dgamma);
+  m_mass = E/(m_gamma*cst::c2);
 }
 
 
@@ -24,14 +24,13 @@ double GRBShell::generateGamma(double gamma0,double dgamma)
 {
   HepRandom::setTheEngine(new RanluxEngine);
   double gamma = gamma0 + (double (RandFlat::shoot(1.0)))*dgamma;
-  //  double gamma = gamma0 + (double (rand())/RAND_MAX)*dgamma;
   return gamma;
 }
 
 
 double GRBShell::beta(const double gamma) 
 {
-  if(gamma<1)
+  if(gamma<1.0)
     {
       cout << "warning: gamma undefined, returning beta=0" << endl;
       return 0;
@@ -44,5 +43,5 @@ double GRBShell::beta(const double gamma)
 
 void GRBShell::evolve(double time) 
 {
-  _radius += beta(_gamma)*cst::c*cst::dt1;
+  m_radius += beta(m_gamma)*cst::c*time;
 }

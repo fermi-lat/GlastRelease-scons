@@ -1,6 +1,13 @@
+/*! 
+ * \class GRBConstants
+ * \brief Class instantiated to access general parameters and constants.
+ *  This should be a temporary solution: we need to find a better way to deal
+ *  with it!
+ * \autor Nicola Omodei nicola.omodei@pi.infn.it
+ * \author Johann Cohen-Tanugi johann.cohen@pi.infn.it
+ */
 #include <iostream.h>
 #include <fstream.h>
-#include "FluxSvc/mainpage.h"
 
 #ifndef GRBCONSTANTS_HH
 #define GRBCONSTANTS_HH 1
@@ -8,53 +15,59 @@
 namespace cst
 {
   /// Universal constants :
-  const double mpc2 = 938.2;
-  const double erg2MeV =624151.0;
-  const double mpc2cm=3.0857e+24;
+  const double mpc2      = 938.2;
+  const double erg2MeV   = 624151.0;
+  const double mpc2cm    = 3.0857e+24;
   //1Gauss = G2Mev * sqrt(Mev)
-  const double G2MeV=815.78;
-  const double st = 6.65225e-25;
-  const double mec2 = 0.510999;
-  const double c = 2.98e+10;
-  const double c2 = c*c;
-  const double hplanck=4.13567e-15; //eV*sec  
-  const double pi = 3.1415926535897932385;
-  const double Hubble=6.5e+1; 
-  const double wzel=0.0;
-  const double gamma0 = 100.;
-  const double dgamma = 200.;
-  const double csi = 0.1;
-  const double alphae = .33;
-  const double alphab = .33;
-  const double p = 2.5;
+  const double G2MeV     = 815.78;
+  const double st        = 6.65225e-25;
+  const double mec2      = 0.510999;
+  //! light speed in cm/sec.
+  const double c         = 2.98e+10;
+  const double c2        = c*c;
+  //! Planck constant in eV*sec.
+  const double hplanck   = 4.13567e-15;
+  const double pi        = 3.1415926535897932385;
+  const double Hubble    = 6.5e+1; 
+  const double wzel      = 0.0;
+  const double gamma0    = 100.;
+  const double dgamma    = 200.;
+  const double csi       = 0.1;
+  const double alphae    = .33;
+  const double alphab    = .33;
+  const double p         = 2.5;
   const double viscosity = 0.;
   /// Internal Parameters
-  const double enmax = 1.0e+12;
-  const double enph = 1.0e+7; /* Minimum photon energy detectable by GLAST */
-  const double enmin = 1.0e+3;
-  const double dt1=10000.;
-  const int nstep=100;
-  const int enstep=100;
-  const double ch1L=2.0e+3;
-  const double ch1H=5.0e+3;
-  const double ch2L=5.0e+4;
-  const double ch2H=3.0e+5;
-  const double ch3L=2.5e+5;
-  const double ch3H=1.8e+6;
-  const double ch4L=2.0e+7;
-  const double ch4H=3.0e+11;
-  const float flagIC=0.1; // flag =[0,1], if ==0, No inverse compton;
+  const double enmax     = 1.0e+12;
+  //! Min. photon energy detectable by GLAST: set to 10 MeV
+  const double enph      = 1.0e+7; 
+  const double enmin     = 1.0e+3;
+  const double dt1       = 10000.;
+  const int nstep        = 200;
+  const int enstep       = 100;
+  const double ch1L      = 2.0e+3;
+  const double ch1H      = 5.0e+3;
+  const double ch2L      = 5.0e+4;
+  const double ch2H      = 3.0e+5;
+  const double ch3L      = 2.5e+5;
+  const double ch3H      = 1.8e+6;
+  const double ch4L      = 2.0e+7;
+  const double ch4H      = 3.0e+11;
+  //! flag =[0,1], if ==0, No inverse compton;
+  const float flagIC     = 0.1; 
 }
 
 class GRBConstants 
 { 
   
  public:
+  //! \brief Constructor calls method readParam with the file as argument
   GRBConstants(char filen);
+
   ~GRBConstants() { }
   
+  //! A parameter file to be read is a temporary solution for changing parameters without recompiling.
   void ReadParam(char filen);
-  //  void GRBUniverse(double redshift);
   
   inline int Nshell() {return nshell;}
   inline void setNshell(int value=10){nshell=value;}
