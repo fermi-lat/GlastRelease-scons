@@ -16,20 +16,20 @@ private:
   Bool_t	m_Clean;      // 1 if clean beam (no halo), else 0
   Float_t	m_XBeam;      // x of primary beam in mm
   Float_t	m_YBeam;      // y of primary beam in mm
-  Int_t	        m_NPart;      // Number particles found by tagger
+  Int_t 	m_NPart;      // Number particles found by tagger
   UChar_t	m_ID[10];     // id 1=e, 2=gamma, 3=proton, 4=pion, 5=kaon
-  Float_t       m_Mom[10];    // momentum each particle
-  Float_t       m_BeamPb[5];  // Energy in GeV for lead glass
-  Float_t       m_CADC;       
-  Float_t       m_TOF[4];
-  Float_t       m_TOFC;
+  Float_t	m_Mom[10];    // momentum each particle
+  Float_t	m_BeamPb[5];  // Energy in GeV for lead glass
+  Float_t	m_CADC;       
+  Float_t	m_TOF[4];
+  Float_t	m_TOFC;
 
-  Bool_t        m_OneGoodP;
-  Bool_t        m_OneGoodG;
-  Bool_t        m_OneGoodE;
-  Bool_t        m_OneGoodK;
-  Bool_t        m_OneGoodPi;
-  Bool_t        m_OneGoodH;
+  Bool_t	m_OneGoodP;
+  Bool_t	m_OneGoodG;
+  Bool_t	m_OneGoodE;
+  Bool_t	m_OneGoodK;
+  Bool_t	m_OneGoodPi;
+  Bool_t	m_OneGoodH;
   
     void Clean();
 
@@ -71,7 +71,7 @@ public:
     inline void setOneGoodH(Bool_t newVal) { m_OneGoodH = newVal; };
     
 
-    ClassDef(ESAPID,3)      // ESA Particle Identification information
+    ClassDef(ESAPID,3)	    // ESA Particle Identification information
 };
 
 #endif

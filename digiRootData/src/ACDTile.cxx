@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////
-//                                                                       
+//									 
 // The ACDTile class contains the information about a single ACD tile.
 // This includes the PHA value, and above thresh information.  
-//                                                                       
+//									 
 ///////////////////////////////////////////////////////////////////////////
 
 #include "digiRootData/ACDTile.h"
@@ -26,8 +26,8 @@ ACDTile::ACDTile(UShort_t i) : m_tag(0){//, m_tileId(i) {
 ACDTile::~ACDTile(){
     // Destructor 
    // if (m_tileID) {
-   //     delete m_tileID;
-   //     m_tileID = 0;
+   //	  delete m_tileID;
+   //	  m_tileID = 0;
     //}
 }
 //_________________________________________________________________________
@@ -37,9 +37,9 @@ Int_t ACDTile::Compare(const TObject *obj) const {
     UInt_t id_this = m_tileID.getID();
     UInt_t id_tile = ((ACDTile*)obj)->getID()->getID();
     if (id_this == id_tile)
-        return 0;
+	return 0;
     else
-        return (id_this > id_tile) ? 1 : -1; 
+	return (id_this > id_tile) ? 1 : -1; 
 }
 //_________________________________________________________________________
 Bool_t ACDTile::IsSortable() const {
@@ -61,11 +61,11 @@ Bool_t ACDTile::setPHA(UShort_t pmtVal)
     // Set the PMT/PHA value for this tile
     // Valid PMT/PHA values are in the range of [0,2047]
     if (pmtVal & ~ACD_M_PMT)
-        return kFALSE;
+	return kFALSE;
     else {
-        m_tag &= ~(ACD_M_PMT << ACD_V_PMT);
-        m_tag |= pmtVal;
-        return kTRUE;
+	m_tag &= ~(ACD_M_PMT << ACD_V_PMT);
+	m_tag |= pmtVal;
+	return kTRUE;
     }
 }
 //_________________________________________________________________________
@@ -74,10 +74,10 @@ Bool_t ACDTile::setHit(UChar_t hitVal)
     // Set the 'hit' status of this tile
     // 1 == above thresh, 0 == below
     if (hitVal & ~ACD_M_HIT) 
-        return kFALSE;
+	return kFALSE;
     else {
-        m_tag &= ~(ACD_M_HIT << ACD_V_HIT);
-        m_tag |= hitVal;
-        return kTRUE;
+	m_tag &= ~(ACD_M_HIT << ACD_V_HIT);
+	m_tag |= hitVal;
+	return kTRUE;
     }
 }

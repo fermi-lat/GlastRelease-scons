@@ -25,7 +25,7 @@ class TileID : public TObject {
   
   void setID(UShort_t newVal);
   
-  ClassDef(TileID,3)      // ACD Tile identification information
+  ClassDef(TileID,3)	  // ACD Tile identification information
 };
 
 #endif

@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////
-//                                                                       
+//									 
 // The ESAPID class contains the information about particle identification
 // and beam status.
-//                                                                       
+//									 
 ///////////////////////////////////////////////////////////////////////////
 
 #include "digiRootData/ESAPID.h"
@@ -27,8 +27,8 @@ void ESAPID::Clean() {
     m_NPart = 0;
     int i;
     for (i=0; i<10; i++) {
-        m_ID[i] = 0;
-        m_Mom[i] = 0;
+	m_ID[i] = 0;
+	m_Mom[i] = 0;
     }
     
     for (i=0; i<5; i++) {

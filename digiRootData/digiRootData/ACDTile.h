@@ -9,7 +9,7 @@
 \brief 
  Jun 2001 Heather Kelly - Remove pointer to TileID
  Feb 2000 Daniel Flath - Rewrite to facilitate standardization of
-                         code & interface across all classes.
+			 code & interface across all classes.
  Jan 2000 Daniel Flath - ROOT HTML comments added
  Dec 1999 Daniel Flath - Rewritten for GLAST
  Oct 25,1999 Richard Dubois Clone from LCD version
@@ -21,22 +21,22 @@ private:
     ACDTile tag word layout
     (defined in following enum):
      _______________________________________________
-    |15|  |  |12|11|  |  |  |  |  |  |  |  |  |  |00|
+    |15|  |  |12|11|  |  |  |  |  |  |	|  |  |  |00|
     |__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|
-    |Hit Status |             PHA Value             |
+    |Hit Status |	      PHA Value 	    |
     |___________|___________________________________| 
 
     */
 
     enum {
-        ACD_K_PMT = 12,
-        ACD_V_PMT = 0,
-        ACD_M_PMT = ((1 << ACD_K_PMT) - 1),
-        ACD_K_HIT = 4,
-        ACD_V_HIT = (ACD_K_PMT + ACD_V_PMT),
-        ACD_M_HIT = ((1 << ACD_K_HIT) - 1)
+	ACD_K_PMT = 12,
+	ACD_V_PMT = 0,
+	ACD_M_PMT = ((1 << ACD_K_PMT) - 1),
+	ACD_K_HIT = 4,
+	ACD_V_HIT = (ACD_K_PMT + ACD_V_PMT),
+	ACD_M_HIT = ((1 << ACD_K_HIT) - 1)
     };
-    UShort_t m_tag;     // Packed word containing tile data
+    UShort_t m_tag;	// Packed word containing tile data
     TileID m_tileID;   // Tile identity info class
 public:
     ACDTile();
@@ -53,7 +53,7 @@ public:
     Int_t Compare(const TObject *obj) const; 
     Bool_t IsSortable() const;
 
-    ClassDef(ACDTile,3)         // Information on a single ACD Tile
+    ClassDef(ACDTile,3) 	// Information on a single ACD Tile
 };
 
 #endif

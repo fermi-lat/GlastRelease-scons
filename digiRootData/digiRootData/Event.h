@@ -40,20 +40,20 @@ private:
 
     /// data members to store ACD data
     TClonesArray *m_AcdData;  //-> 
-    UInt_t m_numTiles;
+    Int_t m_numTiles;
     static TClonesArray *m_staticAcdData;
     AcdHeader m_AcdHeader;
 
     /// data members to store CAL data
     TClonesArray *m_CalData;  //->
-    UInt_t m_numLogs;
+    Int_t m_numLogs;
     static TClonesArray *m_staticCalData;
     CalHeader m_CalHeader;
 
     /// data members to store TKR data
     static TObjArray *m_staticTkrData;
     TObjArray* m_TkrData;       //-> List of Tracker layers
-    UInt_t m_numLayers;
+    Int_t m_numLayers;
     TkrHeader m_TkrHeader;
 
 

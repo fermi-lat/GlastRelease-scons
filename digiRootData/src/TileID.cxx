@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////
-//                                                                        
-// The TileID class contains a tile ID number.  
+//									  
+// The TileID class contains a tile ID number.	
 // TileID is used in the AcdTile class.
-//                                                                        
+//									  
 ///////////////////////////////////////////////////////////////////////////
 
 // Apr 2000 Daniel Flath - Minor changes to function names, etc.

@@ -16,7 +16,7 @@ CalHeader::~CalHeader() {
 }
 
 void CalHeader::setHeader(UInt_t id, UInt_t time, UInt_t stat, 
-                          UInt_t deadTime, UInt_t cause) {
+			  UInt_t deadTime, UInt_t cause) {
     m_eventId = id;
     m_timerWord = time;
     m_TREQ_VETO_status = stat;
