@@ -30,7 +30,7 @@ namespace detModel{
      * root volume in GDD to represent along with all the volumes
      * contained in it. If it is the empty string the root volume is the
      * topVolume of the section.  */
-    IDmapBuilder(std::string);     
+    IDmapBuilder(std::string="");     
       
     virtual ~IDmapBuilder();
   
@@ -46,12 +46,20 @@ namespace detModel{
     virtual void insertVolume(Volume*);
 
     /// This method return the full map of positioned volume pointers
-    std::map<idents::VolumeIdentifier, const PositionedVolume*>* getVolMap() const;
+    const std::map<idents::VolumeIdentifier, const PositionedVolume*>* getVolMap() const;
     /** 
 	This method return a PositionedVolume pointer from an ID (a null pointer if
 	the ID does not exist
     */
-    const PositionedVolume* getPositionedVolumeByID(idents::VolumeIdentifier) const;
+    const PositionedVolume* getPositionedVolumeByID(idents::VolumeIdentifier) ;
+    typedef std::map<idents::VolumeIdentifier, const PositionedVolume*> PVmap;
+
+    //! make a summary on the stream
+    void summary(std::ostream& );
+    //! access to the container
+    PVmap::const_iterator begin()const{return m_volMap.begin();}
+    PVmap::const_iterator end()const{return m_volMap.end();}
+    size_t size()const{return m_volMap.size();}
 
   private:
     /// This string contains the topVolume used for the visit
@@ -63,7 +71,7 @@ namespace detModel{
     /// This is the actual rotation of the volume
     HepRotation m_actualRot;
     /// This is the map of PositionedVolume pointers indicized by ids
-    std::map<idents::VolumeIdentifier, const PositionedVolume*> m_volMap;
+    PVmap m_volMap;
   };
 
 }

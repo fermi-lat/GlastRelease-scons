@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 #include <cstdio>
+#include <iomanip>
 
 #include "detModel/Management/Manager.h"
 #include "detModel/Sections/Section.h"
@@ -226,14 +227,34 @@ void IDmapBuilder::insertVolume(Volume* vol)
     }
 }  
 
-std::map<idents::VolumeIdentifier, const PositionedVolume*>* IDmapBuilder::getVolMap() const
+const std::map<idents::VolumeIdentifier, const PositionedVolume*>* IDmapBuilder::getVolMap() const
 {
   return &m_volMap;
 }
 
-const PositionedVolume* IDmapBuilder::getPositionedVolumeByID(idents::VolumeIdentifier id) const
+const PositionedVolume* IDmapBuilder::getPositionedVolumeByID(idents::VolumeIdentifier id) 
 {
-  return m_volMap[id];
+  const  PositionedVolume * ret = m_volMap[id];
+    return ret;
 }
 
+void IDmapBuilder::summary(std::ostream & out) 
+{
+    std::map<std::string, unsigned int> names;
+
+    for( PVmap::const_iterator it = begin(); it !=end(); ++it){
+        const detModel::PositionedVolume * pv = (*it).second;
+        const detModel::Volume* vol = pv->getVolume();
+        std::string name = vol->getName();
+        names[name]++;
+    }
+    out << "Summary of IDmap contents:" << std::endl
+        << std::setw(20) << "Detector name" << std::setw(10) << "count" << std::endl
+        << std::setw(20) << "-------------" << std::setw(10) << "-----" << std::endl;
+    
+    for( std::map<std::string, unsigned int>::iterator j=names.begin(); j!=names.end(); ++j){
+        out << std::setw(20) << (*j).first << std::setw(10) << (*j).second << std::endl;
+    }
+    out << std::setw(20) << "total:" << std::setw(10) << size() << std::endl;
 }
+}//namespace
