@@ -1,6 +1,6 @@
 package Gleam
 
-version  v4
+version  v4r1
 
 # This is a checkout package
 # $Id$
@@ -47,7 +47,7 @@ use Geant4Runtime v1r1
 
 use GuiSvc      v3r3
 
-use Event                v9r5
+use Event                v9r5p1
 use GlastSvc    v9r3p1
 
 # simulation
