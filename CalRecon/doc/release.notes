@@ -1,7 +1,13 @@
+/** @file release.notes
+ 
+ @brief Package CalRecon
+ @verbatim
+
 package CalRecon
 
 package manager: Alexandre Chekhtman
 
+  v5r11p4 04-mar-2003 RXD patches for AnalysisNtuple
   v5r11   20-feb-2003 RXD move clustering and energy corrections to Tools
   v5r10p3 07-jan-2003 RXD change test_app to Algorithm.
   v5r7p6 06-nov-2002 AC INFO messages in CalClusterAlg changed to DEBUG
@@ -29,3 +35,6 @@ package manager: Alexandre Chekhtman
 
 
 !======================================================================
+
+ @endverbatim
+ */
