@@ -67,7 +67,9 @@ public:
 
     /// get the angular values of the satellite
     virtual std::pair<double,double> getExplicitRockingAngles()=0;
-    
+
+	/// set the desired pointing history file to use:
+	virtual void setPointingHistoryFile(std::string fileName)=0;
     
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
     virtual HepRotation transformGlastToGalactic(double time)const=0;
@@ -80,7 +82,9 @@ public:
     ///1 = UPDOWN : Satellite will be rocked toward the north pole in the northern hemisphere, opposite in the south.
     ///2 = SLEWING : (experimental) like UPDOWN, except that rotation at equator happens gradually.
     ///3 = ONEPERORBIT : (needs work) LAT rocked northward for one orbit, southward for the next.
-    ///4 = EXPLICIT :  Explicit angles given - this should be used only through the setExplicit... function.
+    ///4 = EXPLICIT :  Explicit angles given - this should be used with the setExplicit... function.
+	///5 = POINT:  Explicit pointing direction given - setExplicitRockingAngles are (l,b).
+	///6 = HISTORY - Filename given to stand for a pre-recorded pointing history.  Use the setPointingHistoryFile function.
     virtual std::vector<double> setRockType(int rockType, double rockAngle)=0;
 
     ///this should return the source file names, along with the contained sources.

@@ -99,7 +99,9 @@ StatusCode FluxTestAlg::initialize() {
         log << MSG::ERROR << "Could not find FluxSvc" << endreq;
         return sc;
     }
-    
+	//uncomment this to set an explicit pointing/livetime history file
+	fsvc->setPointingHistoryFile("exposdata.txt");
+
     //uncomment this to set the rocking method.
     //fsvc->setRockType(GPS::UPDOWN);
     
