@@ -3,9 +3,7 @@
 //
 // Job options file for user algorithm development
 //
-// expect this to be defined in pdrApp, as basic set.
-#include "$PDRAPPROOT/src/jobOptions.txt"
-
+#include "$USERALGROOT/src/g4Options.txt"
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
@@ -13,11 +11,11 @@ MessageSvc.OutputLevel      = 2;
 // include algorithms in this package to append to GismoGenerator, and pdr recon
 ApplicationMgr.TopAlg += { "UserAlg"};
 
+// DISABLE NTUPLE FOR NOW
 // add this guy the the general n-tuple
-UserAlg.tupleName="PDR";
-
+//UserAlg.tupleName="G4";
 // and redefine the tuple output file.
-NTupleSvc.Output = {"PDR DATAFILE='userAlg.root' OPT='NEW'"};
+//NTupleSvc.Output = {"G4 DATAFILE='userAlg.root' OPT='NEW'"};
 
 // source name from flux/xml/source_library.xml, and number of events.
 //GismoGenerator.source_name="default"; 
