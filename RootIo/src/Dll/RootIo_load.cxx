@@ -15,6 +15,8 @@ DECLARE_FACTORY_ENTRIES(RootIo) {
     DECLARE_ALGORITHM( digiRootReaderAlg );
     DECLARE_ALGORITHM( reconRootWriterAlg );
     DECLARE_ALGORITHM( reconRootReaderAlg );
+    DECLARE_ALGORITHM( relationRootWriterAlg );
+    DECLARE_ALGORITHM( relationRootReaderAlg );
     DECLARE_TOOL( RootIoRandom );
 
 }
