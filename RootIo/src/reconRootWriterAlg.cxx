@@ -418,7 +418,7 @@ void reconRootWriterAlg::fillVertices(TkrRecon* recon, Event::TkrVertexCol* vert
         Event::TkrVertex*   vtxTds = *vtxPtr++;
         TkrVertex*          vtx    = new TkrVertex();
         TVector3            pos(vtxTds->getPosition().x(), vtxTds->getPosition().y(), vtxTds->getPosition().z());
-        TVector3            dir(vtxTds->getDirection().x(),vtxTds->getDirection().z(),vtxTds->getDirection().z());
+        TVector3            dir(vtxTds->getDirection().x(),vtxTds->getDirection().y(),vtxTds->getDirection().z());
         Event::TkrFitPar    parTds = vtxTds->getTrackPar();
         Event::TkrFitMatrix covTds = vtxTds->getTrackCov();
 
