@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v5r7p1 NG  08-aug-04   Added FilterAlg
 * v5r7   THB 12-may-04   GRB not loaded by Gaudi anymore -- finish the job 
 * v5r6p2 JCT 29-apr-04   GRB not loaded by Gaudi anymore 
 * v5r6p1 THB 28-feb-04   Switch to TrkDigiAlg
