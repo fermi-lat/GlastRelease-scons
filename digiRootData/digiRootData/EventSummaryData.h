@@ -20,7 +20,9 @@ public:
 	typedef enum {
         GOOD = 0,
         EVTSEQ = 1,
-        TKRRECON = 2
+        TKRRECON = 2,
+        PACKETERROR = 4,
+        SUMMARYERROR = 8
     } EventFlags;
 
     typedef enum {
@@ -97,6 +99,8 @@ public:
     Bool_t badEventSequence() const { return (m_flags & EVTSEQ); };
     /// Checks the TkrRecon bit, if set an error occurred during TkrRecon
     Bool_t badTkrRecon() const { return (m_flags & TKRRECON); };
+    Bool_t packetError() const { return (m_flags & PACKETERROR); };
+    Bool_t errorEventSummary() const { return (m_flags & SUMMARYERROR); };
     
     /// Returns the length in bytes of the TEM contribution identified by a value in [0,15]
     UInt_t temLength(unsigned int tem) { return m_temLen[tem]; }
