@@ -79,7 +79,7 @@
  * @param G4Generator.UICommands  
  *   default value ""
  * @param G4Generator.geometryMode [""] Blank means use default from GlastDetSvc
- * @param G4Generator.saveTrajectories [0] Set non-zero to allow trajectorie objects (Event::McTrajectory) to be saved on the TDS
+ * @param G4Generator.saveTrajectories [0] Set non-zero to allow trajectory objects (Event::McTrajectory) to be saved on the TDS
  * @param G4Generator.mcTreeMode ["minimal"]
  * @param G4Generator.defaultCutValue [0.1*mm] The cut to be applied to all physics processes, all materials
  *

@@ -1,5 +1,6 @@
 //$Id$
 /*
+ * v4r4p1 06-nov-02 THB Refactoring of primary particle generation; support for ions
  * v4r4   10-oct-02 THB Fix to prune; random control
  * v4r3p4 20-sep-02 THB xml change required by new energy policy
  * v4r3p3 10-sep-02 THB GlastSvc and Event version change
