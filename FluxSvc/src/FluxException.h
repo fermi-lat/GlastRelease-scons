@@ -10,11 +10,11 @@
 * $Header$
 */
 
-#include <strstream>
+#include <sstream>
 
 
 #define FATAL_MACRO(output)\
-    do{std::ostrstream message; \
+    do{std::stringstream message; \
     message <<__FILE__<<":"<<__LINE__<<": "<<output<<'\0';\
     std::cerr << message.str() << std::endl; \
     throw(message.str());}while(0)

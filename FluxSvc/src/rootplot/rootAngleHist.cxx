@@ -7,7 +7,7 @@
 
 
 #include "rootAngleHist.h"
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <iomanip>
 #include <fstream>

@@ -200,7 +200,7 @@ public:
     }
     /** @brief choose a direction
         @param KE kinetic energy
-        @parem time mission time
+        @param time mission time
         */
     virtual void execute(double KE, double time){
         //TODO: account for transformation?
@@ -236,6 +236,8 @@ private:
     Rotation m_celtoglast;
     HepVector3D m_dir;
     bool  m_skydir;
+    HepVector3D m_t;
+
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /** @class RandomDirection
@@ -602,7 +604,6 @@ void FluxSource::computeLaunch (double time)
     m_launchPoint = (*m_launch_pt)();
     m_launchDir  = (*m_launch_dir)();
 
-    //correctForTiltAngle();
 }
 
 std::string FluxSource::fullTitle () const
@@ -612,12 +613,10 @@ std::string FluxSource::fullTitle () const
 
 std::string FluxSource::displayTitle () const
 {
-    std::strstream s;
+    std::stringstream s;
     s << EventSource::displayTitle() << '(' << m_spectrum->title() ;
     s << ')' << '\0';
-    std::string t(s.str());
-    s.freeze(false);
-    return t;
+    return s.str();
 }
 
 int FluxSource::eventNumber()const

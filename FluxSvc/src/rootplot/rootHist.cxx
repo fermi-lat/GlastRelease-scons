@@ -5,16 +5,15 @@
 
 #include <iostream>
 #include "rootHist.h"
+#include "../FluxException.h"
 
 // Specify the number of bins for the histogram
 rootHist::rootHist(int bins) : num_bins(bins)
 {
     if(bins <= 0)
     {
-        std::cerr << "ERROR in constructor for roothist:\n" 
-            "   The total number of bins must be greater than zero."
-            << std::endl;
-        exit(0);
+        FATAL_MACRO( "ERROR in constructor for roothist:\n" 
+            "   The total number of bins must be greater than zero.");
     }
     
     hist = new double[num_bins];

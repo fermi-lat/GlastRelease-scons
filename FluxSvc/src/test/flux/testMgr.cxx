@@ -59,6 +59,7 @@ void flux_load() {
     DLL_DECL_SPECTRUM( AlbedoPSpectrum);
     DLL_DECL_SPECTRUM( FILESpectrum);
     DLL_DECL_SPECTRUM( GalElSpectrum);
+    DLL_DECL_SPECTRUM( SurfaceMuons);
     //  DLL_DECL_SPECTRUM( CrElectron);
     //  DLL_DECL_SPECTRUM( CrProton);
     //  DLL_DECL_SPECTRUM( GRBSpectrum);

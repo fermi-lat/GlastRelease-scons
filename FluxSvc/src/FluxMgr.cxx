@@ -12,6 +12,7 @@
 #include "xml/Dom.h"
 #include "xml/IFile.h"
 
+#include <sstream>
 
 #define DLL_DECL_SPECTRUM(x)   extern const ISpectrumFactory& x##Factory; x##Factory.addRef();
 
@@ -93,6 +94,8 @@ void FluxMgr::init(const std::vector<std::string>& fileList){
     // these are the locally defined spectra that we want to make available
     DLL_DECL_SPECTRUM( FILESpectrum);
     DLL_DECL_SPECTRUM( TimeCandle);
+
+    DLL_DECL_SPECTRUM( SurfaceMuons);
 
     // these are deprecated, will be replaced by Hiroshima group
     DLL_DECL_SPECTRUM( AlbedoPSpectrum);
@@ -381,7 +384,7 @@ std::string FluxMgr::writeXmlFile(const std::vector<std::string>& fileList) {
   </source_library>
   
     */
-    std::strstream fileString;
+    std::stringstream fileString;
     // Unique tag to add to ENTITY elements in the DTD.
     char libchar = 'a';
     std::string inFileName;
