@@ -2,7 +2,6 @@
 #define __ACD_RECON_H 1
 #include "GaudiKernel/Algorithm.h"
 
-// Glast specific includes
 #include "Event/TopLevel/Event.h"
 #include "Event/Digi/AcdDigi.h"
 #include "Event/TopLevel/EventModel.h"
@@ -12,11 +11,10 @@
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "idents/AcdId.h"
-#include "geometry/Vector.h"
-#include <map>
+#include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Geometry/Vector3D.h"
 
-class Point;
-class Ray;
+#include <map>
 
 /** @class AcdReconAlg
  * @brief ACD reconstruction
@@ -53,10 +51,10 @@ class AcdReconAlg : public Algorithm
 
       /// Old style - distance of closest approach calculation
       /// Finds minimum perpendicular distance from tracks to the center of the tiles
-      double doca (const Point &x0, const Vector &dir, std::vector<double> &doca_values);
+      double doca (const HepPoint3D &x0, const HepVector3D &dir, std::vector<double> &doca_values);
 
       /// Bill Atwood's new calculation for Active Distance
-      double hitTileDist(const Point &x0, const Vector &dir, std::vector<double> &row_values);
+      double hitTileDist(const HepPoint3D &x0, const HepVector3D &dir, std::vector<double> &row_values);
 
       /// variables to store instrument parameters
       static double s_thresholdEnergy;
@@ -72,14 +70,20 @@ class AcdReconAlg : public Algorithm
 
       Event::AcdRecon *m_acdRecon;
 
-      /// Items that will be output to the ntuple
+      /// Number of Acd Tiles above threshold
       unsigned int m_tileCount;
-      double m_totEnergy, m_gammaDoca, m_doca, m_act_dist;
+      /// Total Energy deposited in the ACD system
+      double m_totEnergy, m_gammaDoca;
+      /// Minimun Distance of Closest Approach
+      double m_doca;
+      /// Minimum Active Distance
+      double m_act_dist;
+      /// list of DOCA values for top and each side row
       std::vector<double> m_rowDocaCol;
+      /// list of active distance values for top and each side row
       std::vector<double> m_rowActDistCol;
+      /// map of AcdId and their corresponding energies
       std::map<idents::AcdId, double> m_energyCol;
-
-
 };
 
 #endif

@@ -9,27 +9,18 @@
 
 #include "AcdReconAlg.h"
 
-// Gaudi specific include files
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/StatusCode.h"
 
-
-// TkrRecon classes
 #include "Event/Recon/TkrRecon/TkrFitTrack.h"
 #include "Event/Recon/TkrRecon/TkrPatCandCol.h"
 
-
-#include "geometry/Point.h"
-#include "geometry/Vector.h"
-#include "geometry/Box.h"
 #include "CLHEP/Geometry/Transform3D.h"
 
 #include "xml/IFile.h"
-
-#include "idents/AcdId.h"
 
 #include <algorithm>
 #include <cstdio>
@@ -52,9 +43,7 @@ Algorithm(name, pSvcLocator) {
 
 }
 
-StatusCode AcdReconAlg::initialize ( )
-{
-
+StatusCode AcdReconAlg::initialize ( ) {
     StatusCode sc = StatusCode::SUCCESS;
 
     MsgStream log(msgSvc(), name());
@@ -84,73 +73,79 @@ StatusCode AcdReconAlg::initialize ( )
 StatusCode AcdReconAlg::execute() {
     // Purpose and Method:  Called once per event.  This routine calls the functions
     //        that do the ACD reconstruction.
-    // Inputs:  None
+    // TDS Inputs:  EventModel::Digi::AcdDigiCol
     // Outputs:  Gaudi StatusCode
-    // Dependencies: None
-    // Restrictions and Caveats:  None
+    // Dependencies:  The DOCA and active calculations rely upon the existance of the 
+    //   reconstructed tracks on the TDS.  AcdReconAlg will not fail if the tracks are
+    //   not available, however, it is recommended that AcdReconAlg be executed after
+    //   some other routine can create the tracks on the TDS, if possible.
     
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
-    log << MSG::DEBUG << "execute" << endreq;
 
     SmartDataPtr<Event::AcdDigiCol> acdDigiCol(eventSvc(), EventModel::Digi::AcdDigiCol);
-    if (!acdDigiCol) return sc;
+    if (!acdDigiCol) {
+        log << MSG::INFO << "No AcdDigiCol found on the TDS" << endreq;
+        return sc;
+    }
 
     m_acdDigiCol = acdDigiCol;
 
-
     // run the reconstruction
     reconstruct(m_acdDigiCol);
-
-    // We are now ready to end the routine.
-    // Do not delete any allocated memory that has been registered with the TDS - that memory now
-    // belongs to the TDS and will be cleaned up automatically at the end of the event.
 
     return sc;
 }
 
 
-StatusCode AcdReconAlg::finalize() {
-    
-    MsgStream log(msgSvc(), name());
-    
+StatusCode AcdReconAlg::finalize() {    
     return StatusCode::SUCCESS;
 }
 
 
-void AcdReconAlg::getParameters ()
-{
+void AcdReconAlg::getParameters () {
     MsgStream   log( msgSvc(), name() );
     StatusCode sc;
 
     sc = m_glastDetSvc->getNumericConstByName("threshold", &s_thresholdEnergy);
+    if (sc.isFailure()) {
+        log << MSG::INFO << "Unable to retrieve threshold, setting the value to 0.0004" << endreq;
+        s_thresholdEnergy = 0.0004;
+    }
 
     double temp;
     sc = m_glastDetSvc->getNumericConstByName("numSideRows", &temp);
+    if (sc.isFailure()) {
+        log << MSG::INFO << "Unable to retrieve numSideRows, setting the value to 4" << endreq;
+        temp = 4.0;
+    }
     s_numSideRows = temp;        
 }
 
 void AcdReconAlg::clear() {
+    // Purpose and Method:  Initializes all member variables
     m_acdRecon = 0;
     m_totEnergy = 0.0;
     m_tileCount = 0;
     m_gammaDoca = maxDoca;
     m_doca = maxDoca;
     m_rowDocaCol.clear();
-    m_rowDocaCol.resize(s_numSideRows+1, maxDoca);  // one for each side, plus one for the top
+    // one for each side, plus one for the top
+    m_rowDocaCol.resize(s_numSideRows+1, maxDoca);  
     m_rowActDistCol.clear();
+    // one for each side, plus one for the top
     m_rowActDistCol.resize(s_numSideRows+1, maxDoca);
     m_energyCol.clear();
     m_act_dist = -2000.0;
 }
 
-StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol)
-{
+StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     // Purpose and Method:  Actually performs the ACD reconstruction.
     //        Counts the number of hit tiles and determines the total energy deposited
     //        in the ACD.
-    // Inputs:  v is a pointer to the TDS ACD detector data.
+    // Inputs:  digiCol is a pointer to the TDS ACD detector data.
     // Outputs:  Gaudi StatusCode:  returns StatusCode::FAILURE if an error occurs
+    // TDS Output:  EventModel::AcdRecon
     // Dependencies: None
     // Restrictions and Caveats:  None
 
@@ -203,7 +198,10 @@ StatusCode AcdReconAlg::acdDoca() {
     // Retrieve the information on fit tracks
     SmartDataPtr<Event::TkrFitTrackCol> tracksTds(eventSvc(), EventModel::TkrRecon::TkrFitTrackCol);
 
-    if (!tracksTds) return StatusCode::SUCCESS;
+    if (!tracksTds) {
+        log << MSG::INFO << "No reconstructed tracks found on the TDS" << endreq;
+        return StatusCode::SUCCESS;
+    }
 
     Event::TkrFitColPtr trkPtr = tracksTds->begin();
     while(trkPtr != tracksTds->end())
@@ -213,17 +211,15 @@ StatusCode AcdReconAlg::acdDoca() {
         if(testDoca < m_doca) m_doca = testDoca;
         float test_dist= hitTileDist(trackTds->getPosition(), -(trackTds->getDirection()), m_rowActDistCol);
         if(test_dist > m_act_dist) m_act_dist = test_dist;
-
     }
-
 
     return sc;
 
 }
 
-double AcdReconAlg::doca (const Point &x0, const Vector &t0, std::vector<double> &doca_values)
-{
-    // Purpose and Method:  This section looks for close-by hits to the ACD tiles
+double AcdReconAlg::doca (const HepPoint3D &x0, const HepVector3D &t0, 
+                          std::vector<double> &doca_values) {
+    // Purpose and Method:  This method looks for close-by hits to the ACD tiles
     //        Calculates the minimum distance between the track and the center
     //        of all ACD tiles above veto threshold.
     // Inputs:  (x0, t0) defines a track
@@ -255,14 +251,14 @@ double AcdReconAlg::doca (const Point &x0, const Vector &t0, std::vector<double>
         HepTransform3D transform;
         sc = m_glastDetSvc->getTransform3DByID(volId, &transform);
         if (sc.isFailure() ) {
-            log << MSG::DEBUG << "Failed to get trasnformation" << endreq;
+            log << MSG::DEBUG << "Failed to get transformation" << endreq;
             return sc;
         }
 
         HepPoint3D center(0., 0., 0.);
         HepPoint3D acdCenter = transform * center;
 
-        Vector dX = acdCenter - x0;
+        HepVector3D dX = acdCenter - x0;
 
         float prod = dX * t0;
         dist = sqrt(dX.mag2() - prod*prod);
@@ -287,9 +283,9 @@ double AcdReconAlg::doca (const Point &x0, const Vector &t0, std::vector<double>
     return minDoca;
 }
 
-double AcdReconAlg::hitTileDist(const Point &x0, const Vector &t0, std::vector<double> &row_values)
-{
-    // Purpose and Method:  Bill Atwood's new edge DOCA algorithm
+double AcdReconAlg::hitTileDist(const HepPoint3D &x0, const HepVector3D &t0, 
+                                std::vector<double> &row_values) {
+    // Purpose and Method:  Bill Atwood's edge DOCA algorithm called active distance
     //       Determines minimum distance between a track and the edges of ACD
     //       tiles above veto threshold.
     // Inputs:  (x0, t0) defines a track
@@ -303,7 +299,6 @@ double AcdReconAlg::hitTileDist(const Point &x0, const Vector &t0, std::vector<d
         
     // iterate over all tiles
     Event::AcdDigiCol::const_iterator acdDigiIt;
-    
     for (acdDigiIt = m_acdDigiCol.begin(); acdDigiIt != m_acdDigiCol.end(); acdDigiIt++) {
         
         if ((*acdDigiIt)->getEnergy() < s_thresholdEnergy) continue; // toss out hits below threshold
@@ -346,9 +341,9 @@ double AcdReconAlg::hitTileDist(const Point &x0, const Vector &t0, std::vector<d
         // If arc_dist is negative... had to go backwards to hit plane... 
         if(arc_dist < 0.) continue;
         
-        Point x_isec = x0 + arc_dist*t0;
+        HepPoint3D x_isec = x0 + arc_dist*t0;
         
-        Vector local_x0 = xT - x_isec; 
+        HepVector3D local_x0 = xT - x_isec; 
         double test_dist;
         if(iFace == 0) {// Top Tile
             double dist_x = dX/2. - fabs(local_x0.x());
@@ -368,7 +363,6 @@ double AcdReconAlg::hitTileDist(const Point &x0, const Vector &t0, std::vector<d
             test_dist = (dist_z < dist_x) ? dist_z : dist_x;
             if(test_dist > return_dist) return_dist = test_dist;
         }
-
 
         // Pick up the min. distance from each type of tile
         // i.e. top, and each type of side row tile

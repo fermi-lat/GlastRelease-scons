@@ -1,25 +1,24 @@
-// Mainpage for doxygen
-
-/** @mainpage package acdRecon
+/** @mainpage package AcdRecon
  * @author Heather Kelly
+ *
  * @section intro Introduction
  * This package contains the ACD (Anti-Coincidence Detector) reconstruction
  * algorithms.
  * The algorithms are implemented as Gaudi algorithms.
- * The primary output from the ACD reconstruction is the quantities reported
- * in the standard ntuple output.
- * Included among these value are the minimum distance between the reconstructed 
- * tracks and ACD tiles above veto threshold.
- * The ntuple output includes:
- * - ACD_TotEnergy - total energy deposited in all tiles above veto threshold
- * - ACD_TileCount - number of tiles above veto threshold
- *
+ * The primary output from the ACD reconstruction is the EventModel::AcdRecon object
+ * stored on the TDS.
+ * AcdReconAlg computes the following:
+ * - Total number of ACD tiles above veto threshold
+ * - Minimum Distance of Closest Approach
+ * - A list of DOCA values for the top and side rows
+ * - Minimum Active Distance
+ * - A list of Active Distance values for the top and side rows
+ * 
  * @section requirements requirements
  * @include requirements
  * <hr>
  * @section notes release.notes
  * release.notes
  * <hr> 
- * @todo  Upgrade Active_Distance ntuple output to consider the location of the tiles
  */
 

@@ -1,5 +1,4 @@
 
-// Gaudi specific include files
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
@@ -27,7 +26,6 @@
 class AcdDisplay : public Algorithm
 {
 public:
-    // Constructor of this form must be provided
     AcdDisplay(const std::string& name, ISvcLocator* pSvcLocator); 
     virtual ~AcdDisplay() {}
 
