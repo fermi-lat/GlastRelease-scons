@@ -12,9 +12,8 @@ $Header$
 #include "Event/TopLevel/EventModel.h"
 
 #include "Event/Recon/TkrRecon/TkrCluster.h"
-#include "Event/Recon/TkrRecon/TkrClusterCol.h"
-#include "Event/Recon/TkrRecon/TkrFitTrack.h"
-#include "Event/Recon/TkrRecon/TkrKalFitTrack.h"
+#include "Event/Recon/TkrRecon/TkrCluster.h"
+#include "Event/Recon/TkrRecon/TkrTrack.h"
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 
 #include "Event/Recon/CalRecon/CalCluster.h"
@@ -24,7 +23,7 @@ $Header$
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 #include "TkrUtil/ITkrGeometrySvc.h"
-
+#include "geometry/Ray.h"
 
 static const ToolFactory<CalValsCorrTool>  s_factory;
 const IToolFactory& CalValsCorrToolFactory = s_factory;
@@ -191,12 +190,10 @@ StatusCode CalValsCorrTool::calculate()
     //MsgStream logstream(msgSvc(), name());
 
     // Recover Track associated info. 
-    SmartDataPtr<Event::TkrFitTrackCol>  
-        pTracks(m_pEventSvc,EventModel::TkrRecon::TkrFitTrackCol);
+    SmartDataPtr<Event::TkrTrackCol>  
+        pTracks(m_pEventSvc,EventModel::TkrRecon::TkrTrackCol);
     SmartDataPtr<Event::TkrVertexCol>     
         pVerts(m_pEventSvc,EventModel::TkrRecon::TkrVertexCol);
-    //SmartDataPtr<Event::TkrClusterCol> 
-    //    pClusters(m_pEventSvc,EventModel::TkrRecon::TkrClusterCol);
     SmartDataPtr<Event::CalClusterCol>     
         pCals(m_pEventSvc,EventModel::CalRecon::CalClusterCol);
     SmartDataPtr<Event::CalXtalRecCol> 
@@ -273,12 +270,12 @@ StatusCode CalValsCorrTool::calculate()
     if(num_tracks <= 0 ) return sc;
 
     // Get the first track
-    Event::TkrFitConPtr pTrack1 = pTracks->begin();
-    Event::TkrKalFitTrack* track_1 = dynamic_cast<Event::TkrKalFitTrack*>(*pTrack1);
+    Event::TkrTrackColConPtr pTrack1 = pTracks->begin();
+    Event::TkrTrack* track_1 = dynamic_cast<Event::TkrTrack*>(*pTrack1);
 
     // Get the start and direction 
-    Point  x0 = track_1->getPosition();
-    Vector t0 = track_1->getDirection();
+    Point  x0 = track_1->getInitialPosition();
+    Vector t0 = track_1->getInitialDirection();
 
     // If vertexed - use first vertex
     if(pVerts) {
@@ -334,8 +331,8 @@ StatusCode CalValsCorrTool::calculate()
     double gap       = 36.;
 
     // Find the distance from the LAT edge for the leading track
-    Event::TkrFitTrackBase::TrackEnd end = Event::TkrFitTrackBase::End;
-    Ray trj_1 = Ray(track_1->getPosition(end), track_1->getDirection(end));
+    Ray trj_1 = Ray(track_1->back()->getPoint(Event::TkrTrackHit::SMOOTHED), 
+                    track_1->back()->getDirection(Event::TkrTrackHit::SMOOTHED));
     double delta_z = trj_1.position().z() - m_calZTop;
     arc_len = delta_z/fabs(trj_1.direction().z());
 
@@ -394,7 +391,7 @@ StatusCode CalValsCorrTool::calculate()
     // First: get the rad.lens. in the tracker 
     double t_tracker = track_1->getTkrCalRadlen();
     // Patch for error in KalFitTrack: 1/2 of first radiator left out
-    int layer = track_1->getLayer();
+    int layer = m_geoSvc->getLayer(track_1->front()->getTkrId());
     t_tracker += 0.5*m_geoSvc->getReconRadLenConv(layer)/costh;
     // Need to fix a problem here.  There can be large fluctuations on single
     // trajectories.  This should be fixed in TkrValsTool probably by averaging
