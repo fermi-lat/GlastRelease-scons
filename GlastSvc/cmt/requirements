@@ -1,5 +1,5 @@
 package GlastSvc
-version v4r2
+version v5
 branches src cmt doc
 
 use GlastEvent
