@@ -30,17 +30,11 @@
 #define  _EXTERN_ extern
 #endif
 
-/*  The following names will be corrected in next releases
- *    McParticle    becomes   McParticles
- *    McVertex      becomes   McVertices
- *    AcdDigi       becomes   AcdDigis
- */  
     namespace EventModel {
         _EXTERN_ std::string   EventHeader;
 
         namespace MC {
             _EXTERN_ std::string Event;
-            _EXTERN_ std::string McVertexCol;
             _EXTERN_ std::string McParticleCol;
             _EXTERN_ std::string McPositionHitCol;
             _EXTERN_ std::string McIntegratingHitCol;
@@ -48,17 +42,9 @@
 
         namespace Digi {
             _EXTERN_ std::string Event;
-            _EXTERN_ std::string AcdDigis;
-            _EXTERN_ std::string TkrDigis;
+            _EXTERN_ std::string AcdDigiCol;
+            _EXTERN_ std::string TkrDigiCol;
             _EXTERN_ std::string CalDigiCol;
-        }
-
-        namespace Data {
-            _EXTERN_ std::string Event;
-            _EXTERN_ std::string TdSiData;
-            _EXTERN_ std::string TdCsIData;
-            _EXTERN_ std::string TdGlastData;
-            _EXTERN_ std::string TdVetoData;
         }
 
         namespace TkrRecon {
