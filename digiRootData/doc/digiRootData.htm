@@ -12,7 +12,10 @@
 </B></FONT>
 <blockquote>
   <blockquote>
-    <P align="center"><A HREF="#Intro">Introduction</A>&nbsp;&nbsp;&nbsp; <A HREF="#Bugs">Known
+    <P align="center"><A HREF="#Intro">Introduction</A>&nbsp;&nbsp;&nbsp;<a href="#Class Overview">Class
+    Overview</a>&nbsp;&nbsp;&nbsp; <a href="#Event">Event</a>&nbsp;&nbsp;&nbsp; <a href="#ACD/XGT">ACD</a>&nbsp;&nbsp;&nbsp;
+    <a href="#CAL">CAL</a>&nbsp;&nbsp;&nbsp; <a href="#TKR">TKR</a>&nbsp;&nbsp;&nbsp;
+    <A HREF="#Bugs">Known
     Issues</A></P>
   </blockquote>
 </blockquote>
@@ -21,7 +24,415 @@
 </A>
 </B><P ALIGN="JUSTIFY">This package contains the definition of our digitization
 Root classes.&nbsp; These classes were originally defined for the GLAST 1999
-beamtest.&nbsp; The package was originally called TBEvent at that time.</P>
+beamtest.&nbsp; The package was called TBEvent at that time.</P>
+<P ALIGN="JUSTIFY"><b><a name="Class Overview">Class Overview</a></b></P>
+<P ALIGN="JUSTIFY">The top-level class is called <i>Event </i>this class
+contains the data for one event.&nbsp; Each subsystem's subpacket in the real
+data stream is comprised of a &quot;header&quot; followed by detector
+data.&nbsp; The header classes are named:&nbsp; <i>AcdHeader, CalHeader,
+TkrHeader.&nbsp; </i>The detector data for each subsystems is stored in a
+separate data array.&nbsp; The ACD data is stored in an array of <i>AcdTile</i>
+objects, as is the XGT data.&nbsp; The CAL data is stored as an array of <i>CalLog</i>
+objects.&nbsp; The TKR data is stored as an array of <i>TkrLayer</i> objects -
+where each <i>TkrLayer</i> contains a list of hit <i>StripId</i>s.&nbsp; The
+Level One Trigger data is stored in a class called <i>L1T</i>.</P>
+<P ALIGN="JUSTIFY"><b><a name="Event">Event</a></b></P>
+<table border="1" width="100%" height="123">
+  <tr>
+    <td width="16%" height="19">
+      <p align="center"><b><i>Event</i> Method</b></td>
+    <td width="36%" height="19">
+      <p align="center"><b>Description</b></td>
+    <td width="8%" height="19">
+      <p align="center"><b>Returns</b></td>
+  </tr>
+  <tr>
+    <td width="35%" height="19"><i>getAcdHeader( )</i></td>
+    <td width="37%" height="19">returns the ACD Header data</td>
+    <td width="28%" height="19">AcdHeader*</td>
+  </tr>
+  <tr>
+    <td width="35%" height="17"><i>getCalHeader( )</i></td>
+    <td width="37%" height="17">returns the CAL Header data</td>
+    <td width="28%" height="17">CalHeader*</td>
+  </tr>
+  <tr>
+    <td width="35%" height="19"><i>getTkrHeader( )</i></td>
+    <td width="37%" height="19">returns the TKR Header data</td>
+    <td width="28%" height="19">TkrHeader*</td>
+  </tr>
+  <tr>
+    <td width="35%" height="19"><i>getAcdDigi( )</i></td>
+    <td width="37%" height="19">returns the whole TClonesArray of ACD data<br>
+      <font size="2" color="#FF0000">Note:&nbsp; One may use getAcdTile( ) to
+      retrieve data for one specific AcdTile.</font></td>
+    <td width="28%" height="19">TClonesArray*</td>
+  </tr>
+  <tr>
+    <td width="35%" height="19"><i>getCalDigi( )</i></td>
+    <td width="37%" height="19">returns the whole TClonesArray of CalLogs&nbsp;<br>
+      <font size="2" color="#FF0000">Note:&nbsp; One may use getCalLog( ) to
+      retrieve data for one specific CalLog</font></td>
+    <td width="28%" height="19">TClonesArray*</td>
+  </tr>
+  <tr>
+    <td width="35%" height="19"><i>getTkrDigi( )</i></td>
+    <td width="37%" height="19">returns the TObjArray of TkrLayers<br>
+      <font size="2" color="#FF0000">Note:&nbsp; One may use getTkrLayer( ) to
+      retrieve data for one specific TkrLayer</font></td>
+    <td width="28%" height="19">TObjArray*</td>
+  </tr>
+  <tr>
+    <td width="35%" height="19">getXgtDigi( )</td>
+    <td width="37%" height="19">returns the TClonesArray of XGT data<br>
+      <font size="2" color="#FF0000">Note:&nbsp; One may use getXgt( ) to
+      retrieve data for one specific XGT</font></td>
+    <td width="28%" height="19">TClonesArray*</td>
+  </tr>
+  <tr>
+    <td width="35%" height="19"><i>getAcdTile(<font size="2">int id</font> )</i></td>
+    <td width="37%" height="19">User provides an ACD id in base 10, and the
+      AcdTile object is returned if it exists in the data array</td>
+    <td width="28%" height="19"><i>AcdTile</i>* or null, if not found</td>
+  </tr>
+  <tr>
+    <td width="35%" height="19"><i>getAcdTile(<font size="2">int l, int f, int
+      r, int c </font>)</i></td>
+    <td width="37%" height="19">User provides the layer, face, row, column to
+      identify the ACD/XGT, and the <i>AcdTile</i> object is returned, if it
+      exists in the data array</td>
+    <td width="28%" height="19"><i>AcdTile</i>* or null, if not found</td>
+  </tr>
+  <tr>
+    <td width="35%" height="19"><i>getAcdTile(<font size="2">AcdId id</font> )</i></td>
+    <td width="37%" height="19">User provides an <i>AcdId</i>, and the method
+      returns the <i>AcdTile</i> object, if it exists in the data array</td>
+    <td width="28%" height="19"><i>AcdTile</i>* or null, if not found</td>
+  </tr>
+  <tr>
+    <td width="35%" height="19"><i>getCalLog(<font size="2">LogId id</font> )</i></td>
+    <td width="37%" height="19">User provides a LogId, and the corresponding <i>CalLog</i>
+      object is returned if it exists in the data array.</td>
+    <td width="28%" height="19"><i>CalLog</i>* or null, if not found</td>
+  </tr>
+  <tr>
+    <td width="35%" height="19"><i>getCalLog(<font size="2">int t, int l, int c</font>)</i></td>
+    <td width="37%" height="19">User provides the tower, layer, and column
+      numbers, and the corresponding <i>CalLog </i>object is returned if it
+      exists in the data array</td>
+    <td width="28%" height="19"><i>CalLog</i>* or null, if not found</td>
+  </tr>
+  <tr>
+    <td width="35%" height="19"><i>getTkrLayer( <font size="2">int layerNum</font>
+      )</i></td>
+    <td width="37%" height="19">User provides a layer number, and the
+      corresponding <i>TkrLayer</i> object is returned if it exists in the data
+      array.</td>
+    <td width="28%" height="19"><i>TkrLayer</i>* or null, if not found</td>
+  </tr>
+  <tr>
+    <td width="35%" height="19"><i>getXgt(<font size="2">int id </font>)</i></td>
+    <td width="37%" height="19">User provides an XGT id (2000,2001,2010,2011) in
+      base 10, and the <i>AcdTile</i> object is returned if it exists in the
+      data array</td>
+    <td width="28%" height="19"><i>AcdTile</i>* or null, if not found</td>
+  </tr>
+  <tr>
+    <td width="35%" height="19"><i>getL1T( )</i></td>
+    <td width="37%" height="19">returns the Level One Trigger data</td>
+    <td width="28%" height="19"><i>L1T</i>*</td>
+  </tr>
+</table>
+<P ALIGN="JUSTIFY"><b><a name="ACD/XGT">ACD/XGT</a></b></P>
+<table border="1" width="100%">
+  <tr>
+    <td width="14%">
+      <p align="center"><b><i>AcdTile</i> Method</b></td>
+    <td width="32%">
+      <p align="center"><b>Description</b></td>
+    <td width="14%">
+      <p align="center"><b>Returns</b></td>
+  </tr>
+  <tr>
+    <td width="14%"><i>getId( )</i></td>
+    <td width="32%">returns the AcdId object for this ACD/XGT</td>
+    <td width="14%" align="center"><i>AcdId*</i></td>
+  </tr>
+  <tr>
+    <td width="14%"><i>getPulseHeight( )</i></td>
+    <td width="32%">returns the PHA value for this ACD/XGT</td>
+    <td width="14%" align="center">0 -&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="14%"><i>getVeto( )</i></td>
+    <td width="32%">returns whether or not the ACD/XGT was over threshold</td>
+    <td width="14%" align="center">0 (not over threshold)<br>
+      1 (over threshold)</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<table border="1" width="100%">
+  <tr>
+    <td width="6%">
+      <p align="center"><b><i>AcdId</i> Method</b></td>
+    <td width="51%">
+      <p align="center"><b>Description</b></td>
+    <td width="3%">
+      <p align="center"><b>Range</b></td>
+  </tr>
+  <tr>
+    <td width="25%"><i>getId(<font size="2">short base=10 </font>)</i></td>
+    <td width="52%">returns the Id of this AcdId, either in base 10 or base 2,
+      the default is base 10.</td>
+    <td width="23%" align="center">0 - 2011 (base 10)</td>
+  </tr>
+  <tr>
+    <td width="25%"><i>getLayer( )</i></td>
+    <td width="52%">returns the layer number for this AcdId, based on the Ritz
+      numbering convention.</td>
+    <td width="23%" align="center">0-2</td>
+  </tr>
+  <tr>
+    <td width="25%"><i>getFace( )</i></td>
+    <td width="52%">returns the face number for this AcdId, based on the Ritz
+      numbering convention.</td>
+    <td width="23%" align="center">0-4</td>
+  </tr>
+  <tr>
+    <td width="25%"><i>getRow( )</i></td>
+    <td width="52%">returns the row number for this AcdId, based on the Ritz
+      numbering convention.</td>
+    <td width="23%" align="center">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="25%"><i>getColumn( )</i></td>
+    <td width="52%">returns the column number for this AcdId, based on the Ritz
+      numbering convention.</td>
+    <td width="23%" align="center">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="25%"><i>isTop( )</i></td>
+    <td width="52%">returns true if this ACD/XGT is located at the top of the
+      instrument</td>
+    <td width="23%" align="center">true/false</td>
+  </tr>
+  <tr>
+    <td width="25%"><i>isSide( )</i></td>
+    <td width="52%">returns true if this ACD is located on the side</td>
+    <td width="23%" align="center">true/false</td>
+  </tr>
+</table>
+<P ALIGN="JUSTIFY"><b><a name="CAL">CAL</a></b></P>
+<table border="1" width="100%" height="125">
+  <tr>
+    <td width="22%" height="19">
+      <p align="center"><b><i>CalLog</i> Method</b></td>
+    <td width="32%" height="19">
+      <p align="center"><b>Description</b></td>
+    <td width="6%" height="19">
+      <p align="center"><b>Returns</b></td>
+  </tr>
+  <tr>
+    <td width="41%" height="19"><i>getLogId( )</i></td>
+    <td width="33%" height="19">returns the LogId</td>
+    <td width="26%" height="19">LogId*</td>
+  </tr>
+  <tr>
+    <td width="41%" height="19"><i>getAdc(<font size="2">LogFace face, int index</font>
+      )</i></td>
+    <td width="33%" height="19">returns the ADC value for a specific LogFace
+      (POS = 0, NEG = 1) and index (for the BFEM index = [0,3]</td>
+    <td width="26%" height="19">0 - 4095</td>
+  </tr>
+  <tr>
+    <td width="41%" height="19"><i>getAdcSelectedRange(<font size="2">LogFace
+      face, AdcRange range</font> )</i></td>
+    <td width="33%" height="19">returns the ADC value for a LogFace (POS = 0,
+      NEG=1, and AdcRange (</td>
+    <td width="26%" height="19">0 - 4095</td>
+  </tr>
+  <tr>
+    <td width="41%" height="19"><i>getRange(<font size="2">LogFace face, int
+      index </font>)</i></td>
+    <td width="33%" height="19">returns the range for a given LogFace (POS = 0,
+      NEG = 1) and index=[0,3] for BFEM</td>
+    <td width="26%" height="19">LowEnX4 = 0<br>
+      LowEnX1 = 1<br>
+      HiEnX8 = 2<br>
+            HiEnX1 = 3</td>
+  </tr>
+  <tr>
+    <td width="41%" height="19"><i>getMode( )</i></td>
+    <td width="33%" height="19">returns the readout mode for this CalLog</td>
+    <td width="26%" height="19">       BESTRANGE = 0<br>
+            ALLRANGE = 2<br>
+      <font color="#FF0000" size="2">NOTE:&nbsp; BFEM uses ALLRANGE</font></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<table border="1" width="100%">
+  <tr>
+    <td width="14%" height="19">
+      <p align="center"><b><i>LogId</i> Method</b></td>
+    <td width="32%" height="19">
+      <p align="center"><b>Description</b></td>
+    <td width="14%" height="19">
+      <p align="center"><b>Returns</b></td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getId( )</i></td>
+    <td width="33%">returns the unique id, constructed using the Tower, Layer,
+      and Column.</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getTower( )</i></td>
+    <td width="33%">returns the tower number</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getLayer( )</i></td>
+    <td width="33%">returns the layer number of this <i>LogId</i></td>
+    <td width="34%">0 - 7, assigned according to the standard Ritz numbering
+      convention, where layer 0 is closest to the TKR.</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getColumn( )</i></td>
+    <td width="33%">returns the column number of this <i>LogId</i></td>
+    <td width="34%">0 - 9 for the BFEM, assigned according to the standard
+      numbering convention, where&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getXY( )</i></td>
+    <td width="33%">returns the orientation of the layer, where X = 0, denotes a
+      layer that is oriented along the x-axis, measures Y and Y = 1 denotes a
+      layer that is oriented along the y-axis, measures X.</td>
+    <td width="34%">0 - measures Y
+      <p>1 - measures X</td>
+  </tr>
+</table>
+<P ALIGN="JUSTIFY"><b><a name="TKR">TKR</a></b></P>
+<table border="1" width="100%">
+  <tr>
+    <td width="14%">
+      <p align="center"><b><i>TkrLayer</i> Method</b></td>
+    <td width="32%">
+      <p align="center"><b>Description</b></td>
+    <td width="14%">
+      <p align="center"><b>Returns</b></td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getLayerNum( )</i></td>
+    <td width="33%">returns the layer number of this TkrLayer - num</td>
+    <td width="34%">0 -<br>
+      0th layer is the back-most layer, closest to the CAL.</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getPlaneNum( )</i></td>
+    <td width="33%">returns the plane number, where plane refers to an XY pair.</td>
+    <td width="34%">0 -&nbsp;<br>
+      0th plane is the back-most plane, closest to the CAL.</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getXY( )</i></td>
+    <td width="33%">returns the orientation of the layer</td>
+    <td width="34%">X=0, measures X<br>
+      Y=1, measures Y</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getStrips( )</i></td>
+    <td width="33%">returns the TObjArray of StripIds</td>
+    <td width="34%">TObjArray*</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getHit( int i )</i></td>
+    <td width="33%">returns the ith StripId</td>
+    <td width="34%">StripId</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getNumHits( )</i></td>
+    <td width="33%">returns the number of hit strips in this TkrLayer</td>
+    <td width="34%">0 - 1600</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getTot(int cntrlNum )</i></td>
+    <td width="33%">return the Time Over Threshold for either the left(0) or
+      right(1) controller</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getErrf( )</i></td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<table border="1" width="100%">
+  <tr>
+    <td width="14%">
+      <p align="center"><b><i>StripId</i> Method</b></td>
+    <td width="32%">
+      <p align="center"><b>Description</b></td>
+    <td width="14%">
+      <p align="center"><b>Returns</b></td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getId( )</i></td>
+    <td width="33%">id for this Silicon Strip&nbsp;</td>
+    <td width="34%">0 - 1599</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getController( )</i></td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getTag( )</i></td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+</table>
+<P ALIGN="JUSTIFY"><b><a name="L1T">L1T</a></b></P>
+<table border="1" width="100%">
+  <tr>
+    <td width="14%">
+      <p align="center"><b><i>L1T</i> Method</b></td>
+    <td width="32%">
+      <p align="center"><b>Description</b></td>
+    <td width="14%">
+      <p align="center"><b>Returns</b></td>
+  </tr>
+  <tr>
+    <td width="33%">getTrigCount( )</td>
+    <td width="33%">basically the event number</td>
+    <td width="34%">a number, 0 -&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%">getTrigTime( )</td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%">getXCapture( )</td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%">getYCapture( )</td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%">getDeadTime( )</td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%">getDeadTimeCause( )</td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+</table>
 <p ALIGN="JUSTIFY"><B><A NAME="Bugs">Known Issues:</A>
 </B></p>
 <ul>
