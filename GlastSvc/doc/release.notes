@@ -2,6 +2,7 @@ package GlastSvc
 
 package manager:T.Burnett
 
+26-aug-01: tag v2r3
 ! 20001208 Tag v1
 ! 20000829 THB: use new class instrument/Instrument for GlastDetector stuff.
 ! 20000701  Created by HSG.
