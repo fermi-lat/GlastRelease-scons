@@ -19,7 +19,8 @@ public:
 	/*@{*/
 	typedef enum {
         GOOD = 0,
-        EVTSEQ = 1
+        EVTSEQ = 1,
+        TKRRECON = 2
     } EventFlags;
 
     typedef enum {
@@ -88,26 +89,28 @@ public:
 
     UInt_t eventSequence() const;
     UInt_t eventFlags() const { return m_flags; };
-	/// Returns true if the flags member is zero
+    /// Returns true if the flags member is zero
     Bool_t goodEvent() const { return (m_flags == 0); };
-	/// Returns true if the flag member is non-zero
+    /// Returns true if the flag member is non-zero
     Bool_t badEvent() const { return (m_flags != 0); };
-	/// Checks of event sequence bit is set in the event flags
+    /// Checks of event sequence bit is set in the event flags
     Bool_t badEventSequence() const { return (m_flags & EVTSEQ); };
+    /// Checks the TkrRecon bit, if set an error occurred during TkrRecon
+    Bool_t badTkrRecon() const { return (m_flags & TKRRECON); };
     
-	/// Returns the length in bytes of the TEM contribution identified by a value in [0,15]
+    /// Returns the length in bytes of the TEM contribution identified by a value in [0,15]
     UInt_t temLength(unsigned int tem) { return m_temLen[tem]; }
-	/// Returns the length in bytes of the GEM contribution
+    /// Returns the length in bytes of the GEM contribution
     UInt_t gemLength() const { return m_otherContribLen[GEM]; }
-	/// Returns the length in bytes of the OSW contribution
+    /// Returns the length in bytes of the OSW contribution
     UInt_t oswLength() const { return m_otherContribLen[OSW]; }
-	/// Returns the length in bytes of the AEM contribution
+    /// Returns the length in bytes of the AEM contribution
     UInt_t aemLength() const { return m_otherContribLen[AEM]; }
-	/// Returns the length in bytes of the ERROR contribution
+    /// Returns the length in bytes of the ERROR contribution
     UInt_t errLength() const { return m_otherContribLen[ERR]; }
-	/// Returns the length in bytes of the DIAGNOSTIC contribution
+    /// Returns the length in bytes of the DIAGNOSTIC contribution
     UInt_t diagLength() const { return m_otherContribLen[DIAG]; }
-	/*@}*/
+    /*@}*/
 
 private:
     UInt_t m_summary;
