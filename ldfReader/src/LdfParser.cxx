@@ -251,6 +251,11 @@ namespace ldfReader {
             return -1;
         }
 
+        // Only do this check on the event sequence if we have a recent
+        // enough file..  I believe we want one where they started to store the
+        // event summary in each contribution separately
+        if (ldfReader::LatData::instance()->getFormatIdentity() >= ID_WITH_OSW) {
+
         if (!ldfReader::LatData::instance()->eventSeqConsistent()) {
             printf("Event Sequence numbers are not consistent within all contributions\n");
             printf("Setting bad event flag\n");
@@ -270,6 +275,7 @@ namespace ldfReader {
        // reset the stored event sequence number when we hit the LDF's rollover
        // value
        if (eventSeqNum == maxEventSeqNum) eventSeqNum = -1;
+       }
 
      
         return 0;
