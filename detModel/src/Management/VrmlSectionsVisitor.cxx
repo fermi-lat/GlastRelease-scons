@@ -61,7 +61,6 @@ namespace detModel{
   VrmlSectionsVisitor::~VrmlSectionsVisitor()
   {
     out.close();
-    std::cout << "Total positioned volume = " << numVol << std::endl;
   }
 
   void VrmlSectionsVisitor::visitGdd(Gdd* gdd)

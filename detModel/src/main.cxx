@@ -8,6 +8,7 @@
 
 #include "detModel/Management/Manager.h"
 #include "detModel/Management/VrmlSectionsVisitor.h"
+#include "detModel/Management/CountMaterial.h"
 #include "detModel/Management/IDmapBuilder.h"
 #include "detModel/Management/PrinterSectionsVisitor.h"
 #include "detModel/Management/HtmlConstantsVisitor.h"
@@ -88,6 +89,7 @@ int main(int argc, char* argv[]) {
   // We start the vrml visitor
   manager->startVisitor(visitor);
 
+  manager->startVisitor(new detModel::CountMaterial(argv[2]));
 
   delete visitor;
 
