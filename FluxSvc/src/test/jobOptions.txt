@@ -30,7 +30,7 @@ FluxTestAlg.source_name="TimeCandle";
 //FluxTestAlg.source_name="default";
 
 //the angular size of GLAST's exposure, if needed (see below)
-FluxTestAlg.glastExposureAngle = 2.;
+FluxTestAlg.glastExposureAngle = 4.;
 
 //selecting the kind of exposure GLAST gets,
 //to be appropriate for exposure maps or sky maps.
@@ -40,13 +40,33 @@ FluxTestAlg.glastExposureAngle = 2.;
 // but also falls off with a gaussian profile.
 //3: cutoff "radius" is equal-area, that is,
 // representing an azimuthal angle from glast.
-//4: output run through a hammer-aitoff equal area projection.
-//5: point-spread function "smears" data in histogram.
-FluxTestAlg.ExposureMode = 0;
+//4:use hammer-aitoff
+//5:point spread used.
+//6: other options used, "mix and match" (see below)
+FluxTestAlg.ExposureMode = 4;
 
+
+//selecting the kind of exposure GLAST gets,
+//to be appropriate for exposure maps or sky maps.
+//0: sources only expose EXACTLY where they are
+//1: exposure of GLAST has an angular size to the aperture, given above
+//2: exposure is not only cut at an angular radius,
+// but also falls off with a gaussian profile.
+//3: cutoff "radius" is equal-area, that is,
+// representing an azimuthal angle from glast.
+FluxTestAlg.exposureFunction = 3;
+
+// point spread characteristic size (in degrees) to
+//approximate uncertainty from GLAST. (0 = none)
+FluxTestAlg.pointSpread = 0;
+
+// type of map projection to use
+//0: none - l and b are cartesian
+//1: hammer-aitoff equal-area projection
+FluxTestAlg.projectionType = 0;
 
 ApplicationMgr.EvtSel = "NONE";
-ApplicationMgr.EvtMax = 10000;
+ApplicationMgr.EvtMax = 30000;
 
 //==============================================================
 //

@@ -61,6 +61,10 @@ private:
     std::string m_source_name;
     IParticlePropertySvc * m_partSvc;
     double m_glastExposureAngle;
+    int m_exposureFunction;
+    double m_pointSpread;
+    int m_projectionType;
+    
     int m_exposureMode;
     double m_exposedArea[360][180];
     double m_currentTime;
@@ -70,10 +74,10 @@ private:
     void displayExposure();
     void rootDisplay();
     void makeTimeCandle(IFluxSvc* fsvc);
-
+    
     /// transform linear l,b coordinates into transformed equal-area coords.
     std::pair<double,double> hammerAitoff(double l,double b);
-
+    
 };
 
 
@@ -92,6 +96,10 @@ Algorithm(name, pSvcLocator){
     declareProperty("source_name", m_source_name="default");
     declareProperty("glastExposureAngle", m_glastExposureAngle=10.);
     declareProperty("exposureMode", m_exposureMode=1.);
+    declareProperty("exposureFunction", m_exposureFunction=0);
+    declareProperty("pointSpread", m_pointSpread=0.);
+    declareProperty("projectionType", m_projectionType=0);
+    
 }
 
 
@@ -116,10 +124,10 @@ StatusCode FluxTestAlg::initialize() {
         log << MSG::ERROR << "Could not find FluxSvc" << endreq;
         return sc;
     }
-
+    
     // set up the standard time candle spectrum
     makeTimeCandle(fsvc);
-//    static RemoteSpectrumFactory<TimeCandle> timecandle(fsvc);  
+    //    static RemoteSpectrumFactory<TimeCandle> timecandle(fsvc);  
     
     
     log << MSG::INFO << "loading source..." << endreq;
@@ -174,7 +182,7 @@ public:
     
     double interval (double time)
     {        
-       return 5.;
+        return 5.;
     }
     
 };
@@ -192,7 +200,7 @@ StatusCode FluxTestAlg::execute() {
     
     Event::McParticleCol* pcol = new Event::McParticleCol;
     eventSvc()->retrieveObject("/Event/MC/McParticleCol",(DataObject *&)pcol);
-
+    
     
     HepVector3D p,d;
     double energy;
@@ -236,14 +244,14 @@ StatusCode FluxTestAlg::execute() {
         log << MSG::ERROR << "Could not find FluxSvc" << endreq;
         return sc;
     }
-
+    
     /// FOR ROCKING UP AND DOWN ON EACH ORBIT.
-    if((int)m_flux->gpsTime()%180 <= 97){
-    // Set Rocking angles (zenith rotation, off-zenith)
-        fsvc->setOrientation(std::make_pair<double,double>(0.0,30.*M_PI/180.));
-    }else{
-        fsvc->setOrientation(std::make_pair<double,double>(0.0,-30.*M_PI/180.));
-    }
+    //if((int)m_flux->gpsTime()%180 <= 97){
+    //    // Set Rocking angles (zenith rotation, off-zenith)
+    //    fsvc->setOrientation(std::make_pair<double,double>(0.0,30.*M_PI/180.));
+    //}else{
+    //    fsvc->setOrientation(std::make_pair<double,double>(0.0,-30.*M_PI/180.));
+    //}
     
     HepVector3D pointingin = d;
     //HepVector3D pointingin(0,0,1);
@@ -261,20 +269,20 @@ StatusCode FluxTestAlg::execute() {
     
     //l = asin(pointingin.x());
     b = asin(pointingin.y());
-
+    
     l *= 360./M_2PI;
     b *= 360./M_2PI;
-
-     //a serious kluge - this part needs further examination
+    
+    //a serious kluge - this part needs further examination
     if(pointingin.z()<0){
         if(pointingin.x()>=0){
             l=180.+l;
         }else if(pointingin.x()<=0){
             l=-180.+l;
         }
-       // l *= -1.;
+        // l *= -1.;
     }
-
+    
     l+= 180;
     b+= 90;
     
@@ -324,19 +332,19 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
                 if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
                     //set up the point, and stick it into the vector
                     exposureSet point;// = new exposureSet;
-//                    float correctedl = fmod(i, 360);   // Fold into the range [0, 360)
-//                    float correctedb = fmod(j, 180);   // Fold into the range [0, 360)
-//                    if(correctedl < 0)correctedl+=360;
-//                    if(correctedb < 0)correctedb+=180;
-                      float correctedl = i;   // Fold into the range [0, 360)
-                      float correctedb = j;   // Fold into the range [0, 360)
-                   
-                      if(correctedl < 0)correctedl+=360;
-                      if(correctedb < /*-90*/0)correctedb+=180;
-                      if(correctedl > 360)correctedl-=360;
-                      if(correctedb > /*90*/180)correctedb-=180;
-
-
+                    //                    float correctedl = fmod(i, 360);   // Fold into the range [0, 360)
+                    //                    float correctedb = fmod(j, 180);   // Fold into the range [0, 360)
+                    //                    if(correctedl < 0)correctedl+=360;
+                    //                    if(correctedb < 0)correctedb+=180;
+                    float correctedl = i;   // Fold into the range [0, 360)
+                    float correctedb = j;   // Fold into the range [0, 360)
+                    
+                    if(correctedl < 0)correctedl+=360;
+                    if(correctedb < /*-90*/0)correctedb+=180;
+                    if(correctedl > 360)correctedl-=360;
+                    if(correctedb > /*90*/180)correctedb-=180;
+                    
+                    
                     point.x = correctedl; //yes, this is doing an implicit cast.
                     point.y = correctedb;
                     point.amount = deltat;
@@ -346,7 +354,7 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
         }
     }
     else if(m_exposureMode == 2){
-      for(int i= l-angularRadius ; i<=l+angularRadius ; i++){
+        for(int i= l-angularRadius ; i<=l+angularRadius ; i++){
             for(int j= b-angularRadius ; j<=b+angularRadius ; j++){
                 
                 if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
@@ -356,10 +364,10 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
                     float correctedb = fmod(j, 180);   // Fold into the range [0, 360)
                     if(correctedl < 0)correctedl+=360;
                     if(correctedb < 0)correctedb+=180;
-
+                    
                     point.x = correctedl; //yes, this is doing an implicit cast.
                     point.y = correctedb;
-
+                    
                     //here, the amount depends on the time, and a gaussian in azimuth
                     double gaussian = pow(2.71828, -(pow(l-i,2)+pow(b-j,2))/(2*pow(angularRadius,2)));
                     point.amount = deltat*gaussian;
@@ -376,15 +384,15 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
                 if(1.5*acos(sin((j-90.)*degToRad)*sin((b-90.)*degToRad)+cos((b-90.)*degToRad)*cos((j-90.)*degToRad)*cos((l-i)*degToRad))/degToRad  <= pow(angularRadius,1)){
                     //set up the point, and stick it into the vector
                     exposureSet point;// = new exposureSet;
-                      float correctedl = i;   // Fold into the range [0, 360)
-                      float correctedb = j;   // Fold into the range [0, 360)
-                   
-                      if(correctedl < 0)correctedl+=360;
-                      if(correctedb < /*-90*/0)correctedb+=180;
-                      if(correctedl > 360)correctedl-=360;
-                      if(correctedb > /*90*/180)correctedb-=180;
-
-
+                    float correctedl = i;   // Fold into the range [0, 360)
+                    float correctedb = j;   // Fold into the range [0, 360)
+                    
+                    if(correctedl < 0)correctedl+=360;
+                    if(correctedb < /*-90*/0)correctedb+=180;
+                    if(correctedl > 360)correctedl-=360;
+                    if(correctedb > /*90*/180)correctedb-=180;
+                    
+                    
                     point.x = correctedl; //yes, this is doing an implicit cast.
                     point.y = correctedb;
                     point.amount = deltat;
@@ -393,26 +401,26 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
             }
         }
     }
-        else if(m_exposureMode == 4){
+    else if(m_exposureMode == 4){
         for(int i= l-angularRadius ; i<=l+angularRadius ; i++){
             for(int j= b-angularRadius ; j<=b+angularRadius ; j++){
                 
                 if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
                     //set up the point, and stick it into the vector
                     exposureSet point;// = new exposureSet;
-//                    float correctedl = fmod(i, 360);   // Fold into the range [0, 360)
-//                    float correctedb = fmod(j, 180);   // Fold into the range [0, 360)
-//                    if(correctedl < 0)correctedl+=360;
-//                    if(correctedb < 0)correctedb+=180;
-                      float correctedl = i;   // Fold into the range [0, 360)
-                      float correctedb = j;   // Fold into the range [0, 360)
-                   
-                      if(correctedl < 0)correctedl+=360;
-                      if(correctedb < /*-90*/0)correctedb+=180;
-                      if(correctedl > 360)correctedl-=360;
-                      if(correctedb > /*90*/180)correctedb-=180;
-
-                      std::pair<double,double> abc = hammerAitoff(correctedl,correctedb);
+                    //                    float correctedl = fmod(i, 360);   // Fold into the range [0, 360)
+                    //                    float correctedb = fmod(j, 180);   // Fold into the range [0, 360)
+                    //                    if(correctedl < 0)correctedl+=360;
+                    //                    if(correctedb < 0)correctedb+=180;
+                    float correctedl = i;   // Fold into the range [0, 360)
+                    float correctedb = j;   // Fold into the range [0, 360)
+                    
+                    if(correctedl < 0)correctedl+=360;
+                    if(correctedb < /*-90*/0)correctedb+=180;
+                    if(correctedl > 360)correctedl-=360;
+                    if(correctedb > /*90*/180)correctedb-=180;
+                    
+                    std::pair<double,double> abc = hammerAitoff(correctedl,correctedb);
                     point.x = abc.first; //yes, this is doing an implicit cast.
                     point.y = abc.second;
                     point.amount = deltat*pow(cos((point.y-90.)*M_PI/180.),2);;
@@ -421,169 +429,248 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
             }
         }
     }
-   //     long double x,y,theta,phi;
-   // 
-   // theta=log(1.0/random());
-   // phi=random()*2.0*3.141592653589793238;
-   // 
-   // x=theta*sin(phi);
-   // y=theta*cos(phi);
-       else if(m_exposureMode == 5){
+    //     long double x,y,theta,phi;
+    // 
+    // theta=log(1.0/random());
+    // phi=random()*2.0*3.141592653589793238;
+    // 
+    // x=theta*sin(phi);
+    // y=theta*cos(phi);
+    else if(m_exposureMode == 5){
         exposureSet point;
         double lshift,bshift,theta,phi;
         theta=5.*log10(10.0/(RandFlat::shoot(1.0)));
         phi=RandFlat::shoot(1.0)*M_2PI;
         lshift=theta*sin(phi);
         bshift=theta*cos(phi);
-
+        
         point.x = l+lshift; //yes, this is doing an implicit cast.
         point.y = b+bshift;
         point.amount = deltat;//*pow(cos((point.y-90.)*M_PI/180.),2);
         returned.push_back(point);
     }
-
+    
+    else if(m_exposureMode == 6){
+        for(int i= 0; i<360 ; i++){
+            for(int j= 0 ; j<180 ; j++){
+                
+                //if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
+                    //set up the point, and stick it into the vector
+                    exposureSet point;// = new exposureSet;
+                    float correctedl = i;   // Fold into the range [0, 360)
+                    float correctedb = j;   // Fold into the range [0, 360)                   
+                    if(correctedl < 0)correctedl+=360;
+                    if(correctedb < /*-90*/0)correctedb+=180;
+                    if(correctedl > 360)correctedl-=360;
+                    if(correctedb > /*90*/180)correctedb-=180;
+                    
+                    // determine if the current area is within the exposed area, 
+                    // and increment it by a number to be multiplied by the integrated time.
+                    int validpoint=0;
+                    double exposure;
+                    if(m_exposureFunction == 0){
+                        point.x = i; //yes, this is doing an implicit cast.
+                        point.y = j;
+                        exposure = 1.;
+                        validpoint++;
+                    }else if(m_exposureFunction == 1){
+                        if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
+                            point.x=correctedl;
+                            point.y=correctedb;
+                            exposure=1.;
+                            validpoint++;
+                        }
+                    }else if(m_exposureFunction == 2){
+                        if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
+                            
+                            point.x = correctedl; //yes, this is doing an implicit cast.
+                            point.y = correctedb;
+                            
+                            //here, the amount depends on the time, and a gaussian in azimuth
+                            exposure = pow(2.71828, -(pow(l-i,2)+pow(b-j,2))/(2*pow(angularRadius,2)));
+                            //point.amount = gaussian;
+                            validpoint++;
+                        }
+                    }else if(m_exposureFunction == 3){
+                        double degToRad = M_PI/180;
+                        
+                        if(1.5*acos(sin((j-90.)*degToRad)*sin((b-90.)*degToRad)+cos((b-90.)*degToRad)*cos((j-90.)*degToRad)*cos((l-i)*degToRad))/degToRad  <= pow(angularRadius,1)){
+                            point.x=i;
+                            point.y=j;
+                            exposure=1;
+                            validpoint++;
+                        }
+                    }
+                    
+                    // Calculate the shift from the point spread function
+                    double lshift=0,bshift=0,theta,phi;
+                    if(m_pointSpread){
+                        theta=m_pointSpread*log10(10.0/(RandFlat::shoot(1.0)));
+                        phi=RandFlat::shoot(1.0)*M_2PI;
+                        lshift=theta*sin(phi);
+                        bshift=theta*cos(phi);
+                    }
+                    
+                    
+                    /// apply a projection, if desired.
+                    if(m_projectionType){
+                        std::pair<double,double> abc = hammerAitoff(correctedl,correctedb);
+                        point.x = abc.first+lshift; //yes, this is doing an implicit cast.
+                        point.y = abc.second+bshift;
+                        point.amount = exposure*deltat*pow(cos((point.y-90.)*M_PI/180.),2);
+                    }else{
+                        point.x = correctedl+lshift; //yes, this is doing an implicit cast.
+                        point.y = correctedb+bshift;
+                        point.amount = exposure*deltat;
+                    }
+                    if(validpoint) returned.push_back(point);
+                }
+            }
+        //}
+    }
+       
     else{
         log << MSG::ERROR << "Invalid Exposure Mode " << endreq;
     }
     return returned;
-}
-
-void FluxTestAlg::addToTotalExposure(std::vector<FluxTestAlg::exposureSet> toBeAdded){
-    std::vector<exposureSet>::iterator iter = toBeAdded.begin();
-    int x,y;
-    double amount;
-    if(toBeAdded.size()){
-        for( ; iter!=toBeAdded.end() ; iter++){
-            
-            x = (*iter).x;
-            y = (*iter).y;
-            amount = (*iter).amount;
-            if(x >=0 && y>=0 && x<360 && y<180) m_exposedArea[x][y] += amount;
-            
-        }
-    }else{
-        
-        std::cout << "error in addToTotalExposure - null vector input" <<std::endl;
     }
-}
-
-void FluxTestAlg::displayExposure(){
-    //make the file
-    std::ofstream out_file("data.dat", std::ios::ate);
     
-    int i,j;
-    for(i=0 ; i<360 ; i++){
-        //std::strstream out;
-        for(j=0 ; j<180 ; j++){
-            //out << m_exposedArea[i][j] << " ";
-            out_file << i << "  " << j-90 << "  " << m_exposedArea[i][j] << std::endl;
+    void FluxTestAlg::addToTotalExposure(std::vector<FluxTestAlg::exposureSet> toBeAdded){
+        std::vector<exposureSet>::iterator iter = toBeAdded.begin();
+        int x,y;
+        double amount;
+        if(toBeAdded.size()){
+            for( ; iter!=toBeAdded.end() ; iter++){
+                
+                x = (*iter).x;
+                y = (*iter).y;
+                amount = (*iter).amount;
+                if(x >=0 && y>=0 && x<360 && y<180) m_exposedArea[x][y] += amount;
+                
+            }
+        }else{
+            
+            std::cout << "error in addToTotalExposure - null vector input" <<std::endl;
         }
-        //out << std::endl;
-        //std::cout << out.str();
     }
-    out_file.close();
-    //then use rootDisplay to display the stuff in the file
-    rootDisplay();
-}
-
-void FluxTestAlg::rootDisplay(){
     
-    std::ofstream out_file("graph.cxx", std::ios::app);
-    
-    out_file.clear();
-    
-    out_file << 
-        "{\n"
+    void FluxTestAlg::displayExposure(){
+        //make the file
+        std::ofstream out_file("data.dat", std::ios::ate);
         
-        "  FILE *fp;\n"
-        "  float ptmp,p[20];\n"
-        "  int i, iline=0;\n";
-    out_file << 
-        "  ntuple = new TNtuple(" << '"' << "ntuple" << '"' << "," << '"' << "NTUPLE" << '"' << "," << '"' <<"x:y:z" << '"' << ");\n";
+        int i,j;
+        for(i=0 ; i<360 ; i++){
+            //std::strstream out;
+            for(j=0 ; j<180 ; j++){
+                //out << m_exposedArea[i][j] << " ";
+                out_file << i << "  " << j-90 << "  " << m_exposedArea[i][j] << std::endl;
+            }
+            //out << std::endl;
+            //std::cout << out.str();
+        }
+        out_file.close();
+        //then use rootDisplay to display the stuff in the file
+        rootDisplay();
+    }
     
-    
-    out_file <<
-        "  TH2D *hist1 = new TH2D(" << '"' << "hist1" << '"' << "," << '"' << "Total Exposure" << '"' << ",360,0.,360.,180,-90.,90.);\n";
-    
-    out_file <<
-        "  hist1->SetXTitle(" << '"' << "l" << '"' <<");\n";
-    out_file <<
-        "  hist1->SetYTitle(" << '"' << "b" << '"' <<");\n";
-    
-    
-    out_file <<
-        "  fp = fopen(" << '"' << "./data.dat" << '"' << "," << '"' << "r" << '"' << ");\n"
+    void FluxTestAlg::rootDisplay(){
         
-        "  while ( fscanf(fp," << '"' << "%f" << '"' << ",&ptmp) != EOF ){\n"
-        "    p[i++]=ptmp;\n"
-        "    if (i==3){\n"
-        "      i=0; \n"
-        "      iline++;\n"
-        "      ntuple->Fill(p[0],p[1],p[2]); \n"
-        "      hist1->Fill(p[0],p[1],p[2]); \n"
-        "    }\n"
-        "  }\n"
+        std::ofstream out_file("graph.cxx", std::ios::app);
+        
+        out_file.clear();
+        
+        out_file << 
+            "{\n"
+            
+            "  FILE *fp;\n"
+            "  float ptmp,p[20];\n"
+            "  int i, iline=0;\n";
+        out_file << 
+            "  ntuple = new TNtuple(" << '"' << "ntuple" << '"' << "," << '"' << "NTUPLE" << '"' << "," << '"' <<"x:y:z" << '"' << ");\n";
         
         
-        //"  ntuple.Draw(" << '"' << "z:y:x" << '"' 
-        //<< "," << '"' << '"'
-        //<< "," << '"' << "HIST" << '"' 
-        //<< ");\n"
+        out_file <<
+            "  TH2D *hist1 = new TH2D(" << '"' << "hist1" << '"' << "," << '"' << "Total Exposure" << '"' << ",360,0.,360.,180,-90.,90.);\n";
         
-        "  hist1.Draw("
-        << '"' << "COLZ" << '"' 
-        << ");\n"
+        out_file <<
+            "  hist1->SetXTitle(" << '"' << "l" << '"' <<");\n";
+        out_file <<
+            "  hist1->SetYTitle(" << '"' << "b" << '"' <<");\n";
         
-        "}\n";
+        
+        out_file <<
+            "  fp = fopen(" << '"' << "./data.dat" << '"' << "," << '"' << "r" << '"' << ");\n"
+            
+            "  while ( fscanf(fp," << '"' << "%f" << '"' << ",&ptmp) != EOF ){\n"
+            "    p[i++]=ptmp;\n"
+            "    if (i==3){\n"
+            "      i=0; \n"
+            "      iline++;\n"
+            "      ntuple->Fill(p[0],p[1],p[2]); \n"
+            "      hist1->Fill(p[0],p[1],p[2]); \n"
+            "    }\n"
+            "  }\n"
+            
+            
+            //"  ntuple.Draw(" << '"' << "z:y:x" << '"' 
+            //<< "," << '"' << '"'
+            //<< "," << '"' << "HIST" << '"' 
+            //<< ");\n"
+            
+            "  hist1.Draw("
+            << '"' << "COLZ" << '"' 
+            << ");\n"
+            
+            "}\n";
+        
+        out_file.close();
+        
+        system("root -l graph.cxx");
+        
+    }
     
-    out_file.close();
     
-    system("root -l graph.cxx");
     
-}
-
-
-
-
-
-/*
- *  This routine will convert longitude and latitude values ("l" and "b")
- *  into equivalent cartesian coordinates "x" and "y".  The return values
- *  will be in internal Aitoff units where "*x" is in the range [-2, 2]
- *  and "*y" is in the range [-1, 1].
- */
-std::pair<double,double> FluxTestAlg::hammerAitoff(double l,double b){
-
-    double x, y;
-    float lover2, den;
-    float radl, radb;
-
-   /*
-    *  Force "l" to be in the range (-180 <= l <= +180) and
-    *  "b" to be in the range (-90 <= b <= +90).
+    
+    
+    /*
+    *  This routine will convert longitude and latitude values ("l" and "b")
+    *  into equivalent cartesian coordinates "x" and "y".  The return values
+    *  will be in internal Aitoff units where "*x" is in the range [-2, 2]
+    *  and "*y" is in the range [-1, 1].
     */
-
-    while (l < -180.0) l += 360;
-    while (l >  180.0) l -= 360;
-    while (b <  -90.0) b += 180;
-    while (b >   90.0) b -= 180;
-
-    /*  Convert l and b to radians. */
-
-    double RadPerDeg = M_PI/180.;
-    radl = l * RadPerDeg;
-    radb = b * RadPerDeg;
-
-    lover2 = radl / 2.0;
-    den = sqrt(1.0 + (cos(radb) * cos(lover2)));
-    x = 2.0 * cos(radb) * sin(lover2) / den;
-    y = sin(radb) / den;
-
-    /* "x" is now in the range [-2, 2] and "y" in the range [-1, 1]. */
-
-    x +=2;
-    y +=1;
-    x*=90;
-    y*=90;
-    return std::make_pair<double,double>(x,y);
-}
+    std::pair<double,double> FluxTestAlg::hammerAitoff(double l,double b){
+        
+        double x, y;
+        float lover2, den;
+        float radl, radb;
+        
+        /*
+        *  Force "l" to be in the range (-180 <= l <= +180) and
+        *  "b" to be in the range (-90 <= b <= +90).
+        */
+        
+        while (l < -180.0) l += 360;
+        while (l >  180.0) l -= 360;
+        while (b <  -90.0) b += 180;
+        while (b >   90.0) b -= 180;
+        
+        /*  Convert l and b to radians. */
+        
+        double RadPerDeg = M_PI/180.;
+        radl = l * RadPerDeg;
+        radb = b * RadPerDeg;
+        
+        lover2 = radl / 2.0;
+        den = sqrt(1.0 + (cos(radb) * cos(lover2)));
+        x = 2.0 * cos(radb) * sin(lover2) / den;
+        y = sin(radb) / den;
+        
+        /* "x" is now in the range [-2, 2] and "y" in the range [-1, 1]. */
+        
+        x +=2;
+        y +=1;
+        x*=90;
+        y*=90;
+        return std::make_pair<double,double>(x,y);
+    }
