@@ -28,6 +28,7 @@
 //clhep
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
+#include <typeinfo.h>
 
 
 TrackingAction::TrackingAction(IG4GeometrySvc* gsv):m_geoSvc(gsv)
@@ -80,7 +81,11 @@ void TrackingAction::PreUserTrackingAction(const G4Track* aTrack)
       
       // we initialize the particle by giving the parent, the PDG encoding, a flag
       // (in that case Swum, and the initial momentum of the particle
-      particle->initialize(parent, aTrack->GetDefinition()->GetPDGEncoding(),
+      // note that for ions, the stored pdg value: we recreate it from the baryon number 
+      G4ParticleDefinition* def = aTrack->GetDefinition();
+      int pdgid = def->GetPDGEncoding();
+      if ( pdgid==0 ) pdgid = 80000+def->GetBaryonNumber();
+      particle->initialize(parent, pdgid,
                            Event::McParticle::Swum,pin,aTrack->GetPosition(),
                            process);
       
