@@ -639,7 +639,7 @@
 <!ENTITY % solidProperties '%volumeProperties;
                              materialREF  IDREF            #IMPLIED
                              material     NMTOKEN          "Vacuum"
-                             sensitive   ( true | false ) "false"
+                             sensitive   ( posHit | intHit | false ) "false"
                              detectorType NMTOKEN         "0"
                              detectorTypeREF IDREF        #IMPLIED '>
 

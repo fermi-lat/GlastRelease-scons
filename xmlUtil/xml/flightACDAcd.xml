@@ -6,7 +6,7 @@
          YREF="ACDTopYWidth"
          ZREF="tileThickness"
          materialREF="tileMat"
-         sensitive="true" 
+         sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
 <!-- different box needed for each of the 4 rows of side tiles on X sides 
@@ -17,28 +17,28 @@
          YREF="tileThickness"
          ZREF="sideTileHeight0"
          materialREF="tileMat"
-         sensitive="true" 
+         sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
     <box name="sideTileX1" 
          XREF="sideTileWidthLongXRow"
          YREF="tileThickness"
          ZREF="sideTileHeight1"
          materialREF="tileMat"
-         sensitive="true" 
+         sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
     <box name="sideTileX2" 
          XREF="sideTileWidthLongXRow"
          YREF="tileThickness"
          ZREF="sideTileHeight2"
          materialREF="tileMat"
-         sensitive="true" 
+         sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
     <box name="sideTileX3" 
          XREF="sideTileWidthShortXRow"
          YREF="tileThickness"
          ZREF="sideTileHeight3"
          materialREF="tileMat"
-         sensitive="true" 
+         sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
    <!--   ..and Y sides (X and Y sides happen to have same dimensions now,
@@ -49,28 +49,28 @@
          YREF="sideTileWidthLongYRow"
          ZREF="sideTileHeight0"
          materialREF="tileMat"
-         sensitive="true"
+         sensitive="posHit"
          detectorTypeREF="eDTypeACDTile"/>
     <box name="sideTileY1" 
          XREF="tileThickness"
          YREF="sideTileWidthLongYRow"
          ZREF="sideTileHeight1"
          materialREF="tileMat"
-         sensitive="true" 
+         sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
     <box name="sideTileY2" 
          XREF="tileThickness"
          YREF="sideTileWidthLongYRow"
          ZREF="sideTileHeight2"
          materialREF="tileMat"
-         sensitive="true" 
+         sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
     <box name="sideTileY3" 
          XREF="tileThickness"
          YREF="sideTileWidthShortYRow"
          ZREF="sideTileHeight3"
          materialREF="tileMat"
-         sensitive="true" 
+         sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
 <!-- boxes for tape on the top.  Long dimension of tape is 

@@ -5,7 +5,7 @@
     <!-- According to conventions above, an unrotated CsIDetector would
     be an X-log -->
     <box name="CsIDetector" 
-         sensitive="true"  detectorTypeREF="eDTypeCALXtal"
+         sensitive="intHit"  detectorTypeREF="eDTypeCALXtal"
          XREF="CsILength" YREF="CsIWidth" ZREF="CsIHeight"
          materialREF="crystalMat"  >
       <seg axis="X" nSeg="10" reason="energyAcct" />
@@ -17,13 +17,13 @@
      above.  Old names for x,y,z dimensions were respectively
      thickness,x_width,y_width   -->
     <box name="diodeL"
-         sensitive="true"  detectorTypeREF="eDTypeCALDiode"
+         sensitive="posHit"  detectorTypeREF="eDTypeCALDiode"
          XREF="diodeX"     
          YREF="diodeLY"
          ZREF="diodeZ"          
          materialREF="diodeMat" />
     <box name="diodeS"
-         sensitive="true" detectorTypeREF="eDTypeCALDiode"
+         sensitive="posHit" detectorTypeREF="eDTypeCALDiode"
 
          XREF="diodeX"     
          YREF="diodeSY"

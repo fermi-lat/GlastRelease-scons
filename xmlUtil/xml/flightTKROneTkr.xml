@@ -221,7 +221,7 @@
 <!--    ***   -->  
      
     <box name="SiLayerBox"
-         sensitive="true"  detectorTypeREF="eDTypeTKRSi"
+         sensitive="posHit"  detectorTypeREF="eDTypeTKRSi"
 	 XREF="TKRTrayWidth" 
 	 YREF="TKRTrayWidth"
 	 ZREF="SiThick" materialREF="TKRDetMat" />
@@ -274,7 +274,7 @@
      use the shorter dimension for both.
 -->
     <box name="SiWaferActive"
-         sensitive="true"  detectorTypeREF="eDTypeTKRSi"
+         sensitive="posHit"  detectorTypeREF="eDTypeTKRSi"
 	 XREF="SiWaferActiveSide"
 	 YREF="SiWaferActiveSide"
 	 ZREF="SiThick"
