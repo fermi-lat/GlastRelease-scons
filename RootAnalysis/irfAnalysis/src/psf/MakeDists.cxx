@@ -49,13 +49,10 @@ void MakeDists::project(const std::string &branchName,
          TCut energy(energy_cut(j));
          TH1F * h = new TH1F(hist_name(i, j), title.str().c_str(), 
                              nbins, xmin, xmax);
-         h->SetLineColor(i+1);
          h->GetXaxis()->SetTitle(branchName.c_str());
          std::cout << "\t" << title.str() << "... ";
          m_tree->Project(h->GetName(), branchName.c_str(),
                          goodEvent && energy && angle);
-                      
-         h->SetStats(false);
 
          double scale = h->Integral();
          if (scale > 0) { 
@@ -83,6 +80,5 @@ void MakeDists::draw(const std::string &ps_filename, double ymax) {
 // Delegate to PSF::draw(...) method.
    PSF psf;
    psf.m_summary_filename = m_summary_filename;
-   psf.ymax = ymax;
-   psf.draw(ps_filename);
+   psf.draw(ps_filename,ymax);
 }

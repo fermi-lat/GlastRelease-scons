@@ -19,10 +19,10 @@ namespace {
 
 int main(){
 
-    PSF p;
-    if(!p.fileExists())  p.project();
+    PSF p("psf.root");
+    if(!p.fileExists())  p.project( 0, 5.0, 50);
     std::string ps = "psf.ps";
-    p.draw(ps+"(");
+    p.draw(ps+"(", 0.2);
     p.drawAeff(ps);
     p.drawError(ps);
     p.drawAsymmetry(ps+")");
@@ -33,7 +33,8 @@ int main(){
 
 // Create the distributions.
     MakeDists thetaErrDist("Tkr1ThetaErr.root");
-    thetaErrDist.project("log10(Tkr1ThetaErr)", -3.5, -0.5, 50, twoGauss);
+    if(! thetaErrDist.fileExists() )
+        thetaErrDist.project("log10(Tkr1ThetaErr)", -3.5, -0.5, 50, twoGauss);
     thetaErrDist.draw( "Tkr1ThetaErr.ps", 0.3 );
     delete twoGauss;
 
@@ -41,7 +42,8 @@ int main(){
     ::setBounds(twoGauss);
 
     MakeDists phiErrDist("Tkr1PhiErr.root");
-    phiErrDist.project("log10(Tkr1PhiErr)", -3.5, -0.5, 50, twoGauss);
+    if(! phiErrDist.fileExists() )
+        phiErrDist.project("log10(Tkr1PhiErr)", -3.5, -0.5, 50, twoGauss);
     phiErrDist.draw("Tkr1PhiErr.ps", 0.3);
     delete twoGauss;
 

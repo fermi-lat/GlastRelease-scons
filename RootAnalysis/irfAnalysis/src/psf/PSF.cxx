@@ -17,7 +17,6 @@ static inline double sqr(double x){return x*x;}
 
 PSF::PSF(std::string summary_root_filename) 
 : IRF(summary_root_filename)
-, nbins(50), xmin(0), xmax(5.0), ymax(0.16)
 {
 }
 
@@ -60,7 +59,7 @@ void PSF::makeFriend()
     friend_tree->Write();
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void PSF::project() 
+void PSF::project(double xmin, double xmax, int nbins) 
 {
     TFile fr( friend_file().c_str() );
     if( ! fr.IsOpen() ) {
@@ -128,14 +127,14 @@ void PSF::project()
 
  
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void PSF::draw(std::string ps_filename)
+void PSF::draw(std::string ps_filename, double ymax, std::string title)
 {
 
     TFile psf_file(summary_filename().c_str() ); // for the histograms
     if( ! psf_file.IsOpen()) throw "could not open psf root file";
 
-    TCanvas c("psf","psf"); //, 4,2);
-    divideCanvas(c,4,2, std::string("Scaled PSF  plots from ")+summary_filename());
+    TCanvas c;
+    divideCanvas(c,4,2, title + "plots from "+summary_filename());
 
     for(int j=0; j<energy_bins; ++j){
         c.cd(j+1);
@@ -155,6 +154,7 @@ void PSF::draw(std::string ps_filename)
                 return;
             }
             // now add overflow to last bin
+            int nbins=h->GetNbinsX();
             h->SetBinContent(nbins, h->GetBinContent(nbins)+h->GetBinContent(nbins+1));
             double quant[2];
 
