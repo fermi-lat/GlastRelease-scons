@@ -118,8 +118,9 @@ StatusCode FluxAlg::execute()
 
     // Here the TDS is prepared to receive hits vectors
     // Check for the MC branch - it will be created if it is not available
-    DataObject *mc;
+    DataObject *mc=0;
     eventSvc()->retrieveObject("/Event/MC", mc);
+    if( mc==0) sc=eventSvc()->registerObject("/Event/MC", mc);
 
     //log << MSG::DEBUG << "TDS ready" << endreq;
 

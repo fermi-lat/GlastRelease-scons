@@ -17,7 +17,7 @@ apply_pattern packageShr
 apply_pattern package_include
 
 #=============================================================
-use facilities
+use facilities v2*
 
 private
 
