@@ -6,7 +6,6 @@
 
 ApplicationMgr.ExtSvc   = { "GuiSvc" };
 
-ApplicationMgr.DLLs   = { "RootHistCnv" }; 
 
 //--------------------------------------------------------------
 // Private Application Configuration options
@@ -19,13 +18,11 @@ ApplicationMgr.TopAlg = { "GuiTestAlg" };
 MessageSvc.OutputLevel      = 2;
 
 
-//--------------------------------------------------------------
-// Algorithms Private Options
-//--------------------------------------------------------------
+ApplicationMgr.Runable= "GuiSvc";
 
 ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 100;
-GuiSvc.size = 500;
+GuiSvc.size = 1000;
 
 //==============================================================
 //

@@ -1,8 +1,9 @@
 package GuiSvc
-version v1r2
+version v3r1
 
-branches GuiSvc mgr doc
+branches GuiSvc cmt doc src
 
+use GlastPolicy v4*
 use gui 
 use GaudiSvc
 
@@ -19,8 +20,8 @@ macro GuiSvc_lib " -L ${GUISVCROOT}/${CMTCONFIG} -lGuiSvc "\
 
 # *No* linkopts.
 
-# make this available to build (identical) GUi client applications
-macro GuiMain "${GUISVCROOT}/src/GuiMain.cxx ${GUISVCROOT}/src/setPriority.cxx"
+# Gui main is the same as non-gui: this for backwards compatibility
+macro GuiMain "$(GlastMain)"
 
 
 private
@@ -41,7 +42,7 @@ apply_pattern guiapp
 macro WinJobOptions ""  WIN32  test/jobOptions.txt
 
 
-application GuiTest test/*.cxx ${WinJobOptions} ${Win32Resource}
+application GuiTest test/*.cxx ${GlastMain} ${WinJobOptions} ${Win32Resource}
 
 # this has to be public, even for the local test app. could mess up clients
 public

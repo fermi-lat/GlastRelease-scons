@@ -11,6 +11,13 @@
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/Property.h"
+#include "GaudiKernel/IAppMgrUI.h"
+#include "GaudiKernel/SmartIF.h"
+#include "GaudiKernel/IObjmanager.h"
+#include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/IToolFactory.h"
+
+#include "GuiSvc/IGuiTool.h"
 
 // includes for implementing GuiMgr stuff
 #include "gui/GuiMgr.h"
@@ -28,7 +35,7 @@ const ISvcFactory& GuiSvcFactory = a_factory;
 // ------------------------------------------------
 /// Standard Constructor
 GuiSvc::GuiSvc(const std::string& name,ISvcLocator* svc)
-: Service(name,svc)
+: Service(name,svc), m_guiMgr(0)
 {
     
     // declare the properties and set defaults
@@ -36,6 +43,9 @@ GuiSvc::GuiSvc(const std::string& name,ISvcLocator* svc)
     declareProperty ("size", m_size=-300);
     declareProperty( "pause_interval", m_pause_interval=0);
     declareProperty( "paused", m_paused=true);
+
+    declareProperty("EvtMax", m_evtMax=0xFEEDBABE);
+
 
 }
 
@@ -78,13 +88,72 @@ StatusCode GuiSvc::initialize ()
     sub_menu.addButton("set max event...",
         new SimpleCommand<GuiSvc>(this, &GuiSvc::queryEvtMax));
 
+    m_guiMgr->menu().file_menu().addButton("set OutputLevel...",
+        new SimpleCommand<GuiSvc>(this, &GuiSvc::queryOutputLevel));
+
     sub_menu.addButton("Quit Loop",
         new SimpleCommand<GuiSvc>(this, &GuiSvc::quit));
 
     m_guiMgr->menu().add(new MenuClient<GuiSvc>(this)); // schedule callback if exit button pressed
 
-    //TODO: make sure it will get to the first event
-    return status;
+
+
+    sc = serviceLocator()->queryInterface(IID_IAppMgrUI, (void**)&m_appMgrUI);
+    // get property from application manager
+    if ( m_evtMax == (int)0xFEEDBABE )   {
+      SmartIF<IProperty> props(IID_IProperty, serviceLocator());
+      setProperty(props->getProperty("EvtMax"));
+    }
+
+    //----------------------------------------------------------------
+    // most of  the following cribbed from ToolSvc and ObjManager
+
+    // look for a factory of an AlgTool that implements the IGuiTool interface:
+    // if found, make one and call the special method 
+
+    // Manager of the AlgTool Objects
+    IObjManager* objManager=0;             
+
+    // locate Object Manager to locate later the tools 
+    status = serviceLocator()->service("ApplicationMgr", objManager );
+    if( status.isFailure()) {
+        log << MSG::ERROR << "Unable to locate ObjectManager Service" << endreq;
+        return status;
+    }
+
+    
+    IToolSvc* tsvc  =0;
+    status = service( "ToolSvc", tsvc, true );
+    if( status.isFailure() ) {
+         log << MSG::ERROR << "Unable to locate Tool Service" << endreq;
+        return status;
+    }
+
+    IToolFactory* toolfactory = 0;
+    
+    // search throught all objects (factories?)
+    for(IObjManager::ObjIterator it = objManager->objBegin(); it !=objManager->objEnd(); ++ it){
+        
+        std::string tooltype= (*it)->ident();
+        // is it a tool factory?
+        const IFactory* factory = objManager->objFactory( tooltype );
+        IFactory* fact = const_cast<IFactory*>(factory);
+        status = fact->queryInterface( IID_IToolFactory, (void**)&toolfactory );
+        if( status.isSuccess() ) {
+
+            // yes: now see if the tool implements the IGuiTool interface
+            IGuiTool* ireg;
+            status = tsvc->retrieveTool(tooltype, ireg);
+            if( status.isSuccess() ){
+                log << MSG::DEBUG << "Initializing gui stuff in " << tooltype << endreq;
+                ireg->initialize(m_guiMgr);
+            }
+            
+        }
+
+    }
+
+    return Status::SUCCESS;
 }
 
 
@@ -95,45 +164,41 @@ void GuiSvc::queryPause()
 }
 void GuiSvc::queryEvtMax()
 {
+    m_guiMgr->menu().query("Enter new max event",& m_evtMax);
+}
+
+void GuiSvc::queryOutputLevel()
+{
     IProperty* glastPropMgr=0;
-    StatusCode status = service("EventSelector", glastPropMgr, true);
+    StatusCode status = service("MessageSvc", glastPropMgr, true);
     if( status.isFailure() ) return;
       
-    IntegerProperty evtMax("EvtMax",0);
-    status = glastPropMgr->getProperty( &evtMax );
+    IntegerProperty levelProp("OutputLevel",0);
+    status = glastPropMgr->getProperty( &levelProp );
     if (status.isFailure()) return;
 
-    int max_event = evtMax.value();
-    m_guiMgr->menu().query("Enter new max_event",& max_event);
+    int level = levelProp.value();
+    m_guiMgr->menu().query("Enter new outputlevel(2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )",& level);
 
-    evtMax = max_event; 
-    status = glastPropMgr->setProperty( evtMax );
+    levelProp =level;
+    status = glastPropMgr->setProperty( levelProp );
     glastPropMgr->release();
 
 }
 
 
 void GuiSvc::quit() {
-    IProperty* glastPropMgr=0;
-    StatusCode status = service("EventSelector", glastPropMgr, true);
-    if( status.isFailure() ) return;
-      
-    IntegerProperty evtMax("EvtMax",0);
-    status = glastPropMgr->getProperty( &evtMax );
-    if (status.isFailure()) return;
-
-    evtMax = -1; 
-    status = glastPropMgr->setProperty( evtMax );
-    glastPropMgr->release();
+    m_evtMax=0;
     m_guiMgr->resume();
 }
 
 // handle "incidents"
 void GuiSvc::handle(const Incident &inc)
 {
+#if 0 // don't need now that implementing Runable interface
     if( inc.type()=="BeginEvent")beginEvent();
     else if(inc.type()=="EndEvent")endEvent();
-
+#endif
 }
 
 
@@ -159,6 +224,20 @@ void GuiSvc::endEvent()  // must be called at the end of an event to update, all
     m_guiMgr->end_event();
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+StatusCode GuiSvc::run(){
+    if ( 0 != m_appMgrUI )    {
+        // loop over the events
+        int event= 0;
+        while(event++ < m_evtMax) {
+            beginEvent();
+            if( m_appMgrUI->nextEvent(1).isFailure()) return StatusCode::FAILURE;
+            endEvent();
+        }
+    }
+    return StatusCode::SUCCESS;
+    
+}
 
 // finalize
 StatusCode GuiSvc::finalize ()
@@ -172,6 +251,9 @@ StatusCode GuiSvc::finalize ()
 StatusCode GuiSvc::queryInterface(const IID& riid, void** ppvInterface)  {
   if ( IID_IGuiSvc.versionMatch(riid) )  {
     *ppvInterface = (IGuiSvc*)this;
+  }
+  else if (IID_IRunable.versionMatch(riid) ) {
+      *ppvInterface = (IRunable*)this;
   }
   else  {
     return Service::queryInterface(riid, ppvInterface);

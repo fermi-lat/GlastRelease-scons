@@ -1,4 +1,10 @@
-package manager:T.Burnett 
+/** @file release.notes
+ * Package GuiSvc
+ * Manager T. Burnett
+ *
+ * v3r1   22-jul-2002  THB use the IRunable interface to control event loop 
+ * v1r2   20-Mar-01 THB: tag v1r2
+ */package manager:T.Burnett 
 
  
- 20-Mar-01 THB: tag v1r2
+ 
