@@ -29,7 +29,7 @@ fi
 AC_OUTPUT(Makefile geometry/Makefile src/Makefile)
 
 
-AC_MSG_RESULT([]
+AC_MSG_RESULT([
 	geometry package now configured.
 ])
 
