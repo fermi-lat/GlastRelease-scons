@@ -69,7 +69,6 @@ StatusCode TkrFailureModeSvc::initialize ()
 
     // Open the message log
     MsgStream log( msgSvc(), name() );
-    std::cout << "pointer to log file " << &log << std::endl;
 
     if(m_visitor==0) {
         m_visitor = new BadVisitorFM;
