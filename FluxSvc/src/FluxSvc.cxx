@@ -223,6 +223,7 @@ StatusCode FluxSvc::source(std::string name, IFlux*& flux) {
 
 StatusCode FluxSvc::compositeSource(std::vector<std::string> names, IFlux*& flux) {
     flux =  new Flux(names);
+    if( flux->currentEvent()==0) return StatusCode::FAILURE;
     m_currentFlux = flux;    
     return StatusCode::SUCCESS;
 }
