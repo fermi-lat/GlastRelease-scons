@@ -9,7 +9,7 @@
 #define XOSTREAM_H
  
 
-#include "graphics/GUI.h"
+#include "gui/GUI.h"
 
 
 class Xostream :  public std::ostream
