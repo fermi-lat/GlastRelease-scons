@@ -4,8 +4,8 @@
 #include <iostream>
 
 #include "xml/docMan/DocClient.h"
-#include "dom/DOM_Node.hpp"
-#include "dom/DOMString.hpp"
+#include <dom/DOM_Node.hpp>
+#include <dom/DOMString.hpp>
 #include "xml/Dom.h"
 
 namespace detModel{

@@ -2,7 +2,6 @@
 #define MANAGER_H
 #include <map>
 
-#include "detModel/Management/Manager.h"
 #include "detModel/Management/Visitor.h"
 #include "detModel/Gdd.h"
 
