@@ -159,7 +159,7 @@ StatusCode GltValsTool::calculate()
     int nTowers  = nXTowers*nYTowers;
 
     int iTrig_tower  = -1;
-    int iTrig_layer  = nLayers;
+    int iTrig_layer  = -1;
     int xTower = -1;
     int yTower = -1; 
     int iTrig_type = 0;
