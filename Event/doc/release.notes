@@ -2,6 +2,7 @@
  * package Event\n
  * package manager:T.Burnett
  *
+ * v9r4    09-oct-02 LSR mods to RelTable, TkrPatCand, other Tkr stuff for new reltables 
  * v9r3    01-Oct-02 HMK Update AcdRecon to store energy collection in vectors\n
  * v9r2    25-sep-02 THB "Small changes to the McParticle interface"\n
  * v9r1    13-sep-02 THB MCEvent now has sequence and run numbers
