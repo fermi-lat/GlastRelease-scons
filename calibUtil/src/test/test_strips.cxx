@@ -9,7 +9,7 @@
 #include <fstream>
 
 
-int main(int argc, char* argv[]) {
+int main(int, char* argv[]) {
   using calibUtil::StripSrv;
 
   std::string name(argv[1]);
@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
   ssObj.getBad(trc[0], trayNum ,StripSrv::TOP, strips);
 
 
-  std::cout<< "BAD TYPE IS" << ssObj.getBadType() << std::endl;
+  std::cout<< "BAD TYPE IS" << (int) ssObj.getBadType() << std::endl;
 
   std::cout << "instrument name is" << ssObj.getCalType() << endl;
 

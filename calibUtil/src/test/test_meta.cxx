@@ -15,7 +15,7 @@ calibUtil::Metadata::eRet lookup(calibUtil::Metadata::eCalibType ctype,
                                  unsigned int levelMask,
                                  calibUtil::Metadata::eInstrument inst);
 
-int main(int argc, char* argv[]) {
+int main(int, char**) {
   using calibUtil::Metadata;
   using facilities::Timestamp;
 
@@ -41,29 +41,31 @@ int main(int argc, char* argv[]) {
                    "$CALIBUTILROOT/xml/test/testHot-2002-05-02.xml",
                    Metadata::CMPLOk);
   if (ret) {
-    std::cerr << "openRecord failed with return value " << ret << std::endl;
+    std::cerr << "openRecord failed with return value " << (int) ret 
+              << std::endl;
     return ret;
   }
   ret = 
     meta.addInputDesc("This is the standard invented hot strips file");
   if (ret) {
-    std::cerr << "Bad return from addInputDesc: " << ret << std::endl;
+    std::cerr << "Bad return from addInputDesc: " << (int) ret << std::endl;
     return ret;
   }
   ret = meta.addNotes("Fake record, added from test_meta");
   if (ret) {
-    std::cerr << "Bad return from addNotes: " << ret << std::endl;
+    std::cerr << "Bad return from addNotes: " << (int) ret << std::endl;
     return ret;
   }
   ret = meta.addValidInterval(Timestamp(2000, 8, 2), Timestamp());
   if (ret) {
-    std::cerr << "Bad return from addValidInterval: " << ret << std::endl;
+    std::cerr << "Bad return from addValidInterval: " << (int) ret 
+              << std::endl;
     return ret;
   }
   unsigned int newSerial;
   ret = meta.insertRecord(&newSerial);
   if (ret) {
-    std::cerr << "Bad return from insertRecord: " << ret << std::endl;
+    std::cerr << "Bad return from insertRecord: " << (int) ret << std::endl;
   }
   else {
     std::cout << "Successfully inserted new record, serial number " 
@@ -79,7 +81,7 @@ void gotIt(unsigned int ser, calibUtil::Metadata::eDataFmt dataFmt,
 
   std::cout << "Success reading info for record #" << ser << std::endl;
   
-  std::cout << "Data format = " << dataFmt << std::endl;
+  std::cout << "Data format = " << (int) dataFmt << std::endl;
   std::cout << "Format version = " << fmtVersion << std::endl;
   std::cout << "Data ident = " << dataIdent << std::endl;
 }
@@ -94,16 +96,16 @@ calibUtil::Metadata::eRet lookup(calibUtil::Metadata::eCalibType ctype,
   
   std::cout << std::endl;
   std::cout << "lookup called with input " << std::endl;
-  std::cout << "   calibType = " << ctype <<std::endl;
+  std::cout << "   calibType = " << (int) ctype <<std::endl;
   std::cout << "   timestamp = " << ts.getString() << std::endl;
   std::cout << "   levelMask = " << levelMask << std::endl;
-  std::cout << "   instrument = " << inst << std::endl;
+  std::cout << "   instrument = " << (int) inst << std::endl;
 
   Metadata       meta;
   Metadata::eRet ret = meta.findBest(&ser, ctype, ts, levelMask, inst);
 
   if (ret != Metadata::RETOk) {
-    std::cout << "findBest failed with status" << ret << std::endl;
+    std::cout << "findBest failed with status" << (int) ret << std::endl;
   }
   else if (!ser) {
     std::cout << "Query succeeded; no rows found." << std::endl;
@@ -121,7 +123,7 @@ calibUtil::Metadata::eRet lookup(calibUtil::Metadata::eCalibType ctype,
 
     else {
       std::cout << "Failed reading info for record #" << ser;
-      std::cout << " with code " << ret << std::endl;
+      std::cout << " with code " << (int) ret << std::endl;
     }
   }
 
