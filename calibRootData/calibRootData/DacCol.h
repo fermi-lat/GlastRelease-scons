@@ -25,9 +25,9 @@ namespace calibRootData {
 
     // Also need copy constructor
 
-    virtual ~DacCol() {m_dacs.clear() };
+    virtual ~DacCol() {m_dacs.clear(); };
 
-    std::vector<Ushort_t>& getDacs() const {return m_dacs;}
+    std::vector<UShort_t>& getDacs() const {return m_dacs;}
 
     void append(UShort_t value) {m_dacs.push_back(value);}
 
