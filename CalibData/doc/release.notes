@@ -4,6 +4,7 @@
 
                     EOH
 
+   v0r12     31-Mar-2005  jrb Support for TKR charge scale calibration
    v0r11p1   02-Jan-2005  jrb Use idents::TkrId::getTray() rather than 
                               obsolete getPlane()
    v0r11p0   29-Dec-2004  jrb More stuff for ToT..maybe ok now
