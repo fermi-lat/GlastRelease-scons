@@ -1,6 +1,6 @@
 /**
  * @file LinearModel.cxx
- * @brief Implementation for fitting x2 = x1 +[0] to a Root profile.
+ * @brief Implementation for fitting y = [0]*x +[1] to a Root profile.
  * @author J. Chiang
  *
  * $Header$

@@ -36,6 +36,9 @@ public:
 
    void draw(const std::string &ps_filename, double ymax);
 
+   void addCutInfo(const std::string &rootFile,
+                   const std::string &treeName);
+
 private:
 
    bool m_makeProfile;
