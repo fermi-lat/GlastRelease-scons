@@ -105,8 +105,12 @@
          ZREF="envZ" materialREF="vacuumMat" />
 
     <!-- Define the slab -->
+    <!-- the "sensitive" attribute may be removed or its value
+         may be changed to "posHit" for position rather than integrating
+         hits. -->
     <box name="Slab" 
          XREF="slabX" YREF="slabY" ZREF="slabZ" 
+         sensitive="intHit"
          materialREF="slabMat" >
     </box>
 
