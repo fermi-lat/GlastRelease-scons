@@ -1,6 +1,6 @@
 <?xml version="1.0"  ?>
 
-<!--  $HEADER$        -->
+<!--  $Header$        -->
 <!-- 1 Feb 2001   Default length unit is now mm.  Change constants
                    accordingly.                             (jrb) 
     22 Feb 2001   Add CVS macros, CVSid attribute for gdd        -->
@@ -14,7 +14,7 @@
     <!ENTITY dlarge    "1" >
   ]
 >
-<gdd CVSid="$ID$" >
+<gdd CVSid="$Id$" >
   <constants>
     <version major="0" minor="0" />
     <primary>
