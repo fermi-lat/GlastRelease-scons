@@ -1,3 +1,4 @@
+<!-- $Header$ -->
 <primCategory name="CALMatPrim" >
   <overview>Materials used in the calorimeter</overview>
   <prim name="crystalMat" value="CsI" type="string" uType="mat">Crystal Material

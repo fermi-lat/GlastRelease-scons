@@ -1,3 +1,4 @@
+<!-- $Header$ -->
 <primCategory name="ACDDimPrim">
   <overview>Fundamental solid dimensions and offsets within the ACD.</overview>
   <prim name="tileThickness" value="10.0">Thickness of ACD tiles</prim>

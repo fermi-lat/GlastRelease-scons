@@ -1,3 +1,4 @@
+<!-- $Header$ -->
 <primCategory name="globalCountPrim">
   <overview>Counts of objects more inclusive than a single subsystem;
   also other integer constants used in identifiers.</overview>

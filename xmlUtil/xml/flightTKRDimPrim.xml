@@ -1,3 +1,4 @@
+<!-- $Header$ -->
 <primCategory name="TKRDimPrim">
   <overview>Fundamental solid dimensions and offsets within the Tracker.</overview>
 <!-- Fundamental Z dimensions in tracker -->
