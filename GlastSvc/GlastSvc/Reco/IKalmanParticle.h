@@ -1,6 +1,3 @@
-// $Header$
-//
-//
 #ifndef GismoGenerator_IKalmanParticle_H
 #define GismoGenerator_IKalmanParticle_H
 
@@ -9,14 +6,17 @@
 #include "geometry/Vector.h"
 #include <iostream>
 
-/// Abstract class used to provide an interface to Bill Atwoods's KalParticle.
-/** Initial version by T Burnett, who takes full responsibility to the design of this 
-   class, and necessary modifications to Bill's code to allow it to implement 
-   this interface.
-   <br>
-   Note that the initial parameters are set by the IGismoSvc interface, which instantiates
-   the subclass KalParticle.
- */
+/** @class IKalmanParticle
+* @brief Initial version by T Burnett, who takes full responsibility to the 
+* design of this class, and necessary modifications to Bill's code to allow 
+* it to implement this interface.
+*
+* Note that the initial parameters are set by the IGismoSvc interface, 
+* which instantiates the subclass KalParticle.
+*
+* @author Toby Burnett
+* $Header$
+*/
 class  IKalmanParticle
 {
 public:

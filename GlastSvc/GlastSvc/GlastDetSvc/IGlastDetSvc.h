@@ -1,16 +1,11 @@
-// $Id$
-// 
-//!  \author: Sawyer Gillespie  hgillesp@u.washington.edu
-//
 
 #ifndef _H_IGlastDetSvc_
 #define _H_IGlastDetSvc_
 
-// includes
 #include "GaudiKernel/IInterface.h"
 #include <vector>
 #include <string>
-//forward declarations
+
 class DMmanager;
 class DetectorConverter;
 class GlastDetector;
@@ -25,6 +20,14 @@ namespace idents{class VolumeIdentifier;}
 // Declaration of the interface ID ( interface id, major version, minor version) 
 static const InterfaceID IID_IGlastDetSvc(901, 1 , 0); 
 //!  Access to the Glast detector geometry and IRF I/O
+
+/** @class IGlastDetSvc
+* @brief 
+*
+* @author Sawyer Gillespie
+*
+* $Header$
+*/
 
 class   IGlastDetSvc : virtual public IInterface {
 public:

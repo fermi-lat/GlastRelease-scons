@@ -1,27 +1,23 @@
-// $Id$
-// 
-//!  \author: Toby Burnett tburnett@u.washington.edu
-//
 
 #ifndef _H_IRecoSvc_
 #define _H_IRecoSvc_
 
-// includes
 #include "GaudiKernel/IInterface.h"
 #include "geometry/Point.h"
 
 #include <memory> // for auto_ptr
 
-//forward declarations
 class IKalmanParticle;
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
 static const InterfaceID IID_IRecoSvc(905, 1 , 0); 
 
-//!  \author: T Burnett
-/** Abstract interface for GLAST reconstruction service, giving access to  
-   to a IKalmanParticle object.
-
+/** @class IRecoSvc
+* @brief Abstract interface for GLAST reconstruction service, giving access to  
+* to a IKalmanParticle object.
+*
+* @author Toby Burnett
+* $Header$
 */
 
 class   IRecoSvc : virtual public IInterface {

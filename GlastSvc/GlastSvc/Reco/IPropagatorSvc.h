@@ -2,27 +2,24 @@
 #ifndef _H_IPropagatorSvc_
 #define _H_IPropagatorSvc_
 
-// includes
-//#include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/Service.h"
 #include "geometry/Ray.h"
 
 #include <memory> // for auto_ptr
 
-//forward declarations
-//class IParticlePropagator;
 class IKalmanParticle;
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
 static const InterfaceID IID_IPropagatorSvc(908, 1 , 0); 
 
-//!  \author: T Burnett
-/** Abstract interface for GLAST reconstruction service, giving access to  
-   to a IKalmanParticle object.
-
+/** @class IPropagatorSvc
+* @brief Abstract interface for GLAST reconstruction service, giving access to  
+* to a IKalmanParticle object.
+*
+* @author Toby Burnett
+* $Header$
 */
 
-//class IPropagatorSvc : virtual public IInterface
 class IPropagatorSvc 
 {
 public:

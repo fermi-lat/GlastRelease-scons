@@ -1,12 +1,13 @@
-//$Header$
-
 
 #ifndef IMEDIA_H
 #define IMEDIA_H
 
-/** Abstract class that defines callbacks from a traversal of the
-    detector materials
-      */
+/** @class IMedia
+* @brief Abstract class that defines callbacks from a traversal of the
+* detector materials
+*
+* $Header$
+*/
 class IMedia {
 public:
 
