@@ -33,7 +33,7 @@ class PruneTree {
     public:
 
     /** Set up the selection
-     *  @param t           The input ROOT tuple
+     *  @param t           The Tuple ( = vector of TupleItems)
      *  @param xml_file    IM file containing descriptions of the predict nodes 
      */
     PruneTree( Tuple& t,  std::string xml_file = "");
