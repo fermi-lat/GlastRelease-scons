@@ -725,7 +725,7 @@ static int evaluateCal1 (const EBF_directory               *dir,
                                       10,  DFC_M_STATUS_EL0_ETOT_01,
                                       900, DFC_M_STATUS_EL0_ETOT_90);
 #ifdef GLEAM
-           if (isVetoed (status) && passThrough!=0)
+           if (isVetoed (status) && passThrough==0)
 #else
            if (isVetoed (status))
 #endif
@@ -1061,7 +1061,7 @@ int DFC_filter (struct _DFC_ctl         *dfc,
            /* Little energy and struck tiles... */
            status = status | DFC_M_STATUS_NOCALLO_FILTER_TILE;
 #ifdef GLEAM
-           if (isVetoed (status) && passThrough!=0)
+           if (isVetoed (status) && passThrough==0)
 #else
            if (isVetoed (status))
 #endif
@@ -1084,7 +1084,7 @@ int DFC_filter (struct _DFC_ctl         *dfc,
                    << DFC_V_STATUS_SPLASH_0;
        
 #ifdef GLEAM
-       if (isVetoed (status) && passThrough!=0)
+       if (isVetoed (status) && passThrough==0)
 #else
        if (isVetoed (status))
 #endif
@@ -1124,7 +1124,7 @@ int DFC_filter (struct _DFC_ctl         *dfc,
                              acd_xz,
                              acd_yz) | DFC_M_STATUS_ACD;
 #ifdef GLEAM   
-       if (isVetoed (status) && passThrough!=0)
+       if (isVetoed (status) && passThrough==0)
 #else
        if (isVetoed (status))
 #endif
@@ -1187,7 +1187,7 @@ int DFC_filter (struct _DFC_ctl         *dfc,
                               tkr_trg);
 #ifdef GLEAM   
        if ((isVetoed (status) ||
-           isVetoed (status |= evaluateZbottom (&dlr->dir, energy))) && passThrough!=0)
+           isVetoed (status |= evaluateZbottom (&dlr->dir, energy))) && passThrough==0)
 #else
        if (isVetoed (status) ||
 	   isVetoed (status |= evaluateZbottom (&dlr->dir, energy)))
@@ -1223,7 +1223,7 @@ int DFC_filter (struct _DFC_ctl         *dfc,
        status |= evaluateCal1 (&dlr->dir, &dlr->cal) |  DFC_M_STATUS_CAL1;
 
 #ifdef GLEAM
-       if (isVetoed (status) && passThrough!=0)
+       if (isVetoed (status) && passThrough==0)
 #else
        if (isVetoed (status))
 #endif
