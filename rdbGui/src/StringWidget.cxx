@@ -8,7 +8,7 @@ StringWidget::StringWidget(FXComposite* parent, rdbModel::Column *column)
 
 std::string StringWidget::getValue()
 {
-  std::string res(m_widget->getText().text());
+  std::string res((m_widget->getText()).text());
   return res;
 }
 

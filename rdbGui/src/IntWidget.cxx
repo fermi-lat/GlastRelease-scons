@@ -1,5 +1,6 @@
 #include "IntWidget.h"
 #include "rdbModel/Tables/Datatype.h"
+#include <limits.h>
 
 IntWidget::IntWidget(FXComposite* parent, rdbModel::Column *column)
 {
@@ -10,7 +11,34 @@ IntWidget::IntWidget(FXComposite* parent, rdbModel::Column *column)
   m_widget = new FXSpinner(parent,20,
                            NULL,0,
                            SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP);
-//spinner->setRange(1,20);
+
+
+  /// Lets now set some possible numeric restrictions
+  switch(dt->getRestrict()){  
+    case rdbModel::Datatype::RESTRICTnonneg :
+      {
+        //XXX to change with a more proper limit
+        m_widget->setRange(0,INT_MAX);
+        break;
+      };
+    case rdbModel::Datatype::RESTRICTpos :
+      {
+        //XXX to change with a more proper limit
+        m_widget->setRange(1,INT_MAX);
+        break;
+      };
+    case rdbModel::Datatype::RESTRICTinterval :
+      {
+        //XXX to change with a more proper limit
+        std::string min, max;
+        int mi, ma;
+        dt->getInterval(min, max);
+        sscanf(min.c_str(),"%d", &mi);     
+        sscanf(max.c_str(),"%d", &ma);     
+        m_widget->setRange(mi,ma);
+        break;
+      };
+  }
 
 }
 
