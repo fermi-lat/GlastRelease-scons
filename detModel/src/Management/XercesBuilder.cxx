@@ -33,7 +33,7 @@
 
 namespace detModel{
 
-  XercesBuilder::XercesBuilder()
+  XercesBuilder::XercesBuilder() : parser(0)
   {
   }
 
@@ -41,7 +41,12 @@ namespace detModel{
     unsigned int iSec;
 
     /// The parser is created
-    xml::XmlParser* parser = new xml::XmlParser();
+    if (!parser) {
+      parser = new xml::XmlParser();
+    }
+    else {
+      parser->reset();
+    }
 
     /// The DOM hierarchy is parsed
     domfile = parser->parse(nameFile);
@@ -97,7 +102,7 @@ namespace detModel{
     currentGdd->setDTDversion(xml::Dom::getAttribute(docElt, "DTDversion"));
 
     /// Delete some stuff
-    delete parser;
+    //    delete parser;
     delete sub;
   }  
 
