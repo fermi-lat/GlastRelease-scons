@@ -112,6 +112,3 @@ StatusCode test_CalUtil::finalize(){
     
     return sc;
 }
-
-
-
