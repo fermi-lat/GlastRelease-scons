@@ -17,6 +17,13 @@
 * - Low Discriminator enables the PHA value
 * - Veto Discriminator nominal ACD veto signal
 * - High Discriminator is for CAL calibration - CNO
+* So the AcdDigi is comprised of:
+* - AcdId
+* - Energy in MeV - as a check on the pha values
+* - 2 Pulse Height values
+* - 2 Low discriminators
+* - 2 Veto discriminators
+* - 2 High discriminators
 *             
 * There are no set methods in this class, users are expected to fill
 * the data members through the constructor.
@@ -35,8 +42,9 @@ namespace Event {
             B = 1
         } PmtId;
                 
-        AcdDigi(const idents::AcdId &id, unsigned short *pha, bool *veto, 
-            bool *lowThresh, bool *highThresh) : m_id(id) 
+        AcdDigi(const idents::AcdId &id, double energy, unsigned short *pha, 
+            bool *veto, bool *lowThresh, bool *highThresh) 
+            : m_id(id), m_energy(energy)
         {  
             m_pulseHeight[0] = pha[0]; m_pulseHeight[1] = pha[1];
             m_veto[0] = veto[0]; m_veto[1] = veto[1];
@@ -53,6 +61,8 @@ namespace Event {
         /// Retrieve ACD identifier
         inline const idents::AcdId getId() const { return m_id; };
         
+        inline double getEnergy() const { return m_energy; };
+
         /// Retrieve pulse height from one PMT
         inline unsigned short getPulseHeight(PmtId id) const { return m_pulseHeight[id]; };
         
@@ -68,9 +78,10 @@ namespace Event {
         /// Serialize the object for reading
         virtual StreamBuffer& serialize( StreamBuffer& s );
         
-        friend std::ostream& operator << ( std::ostream& s, const AcdDigi& obj ) {
+        friend std::ostream& operator << (std::ostream& s, const AcdDigi& obj)
+        {
             return obj.fillStream(s);
-        }
+        };
         
         /// Fill the ASCII output stream
         virtual std::ostream& fillStream( std::ostream& s ) const;
@@ -80,6 +91,8 @@ namespace Event {
         
         /// Acd ID
         idents::AcdId        m_id;
+        /// energy MeV - storing as a check on pulseHeight
+        double               m_energy;
         /// pulse height
         unsigned short       m_pulseHeight[2];
         /// nominal Acd veto signal
