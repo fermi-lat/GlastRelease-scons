@@ -24,6 +24,9 @@
 namespace CalibData {
   class CalibBase : public DataObject,
                     virtual public IValidity {
+
+    friend class XmlBaseCnv;
+    
   public:
     CalibBase();
     CalibBase(const ITime& since, const ITime& till, int serNo = -1);
@@ -86,6 +89,8 @@ namespace CalibData {
 
     /// Serial number of corresponding metadata row. 
     int m_serNo;
+
+    void setSerNo(int ser) { m_serNo = ser;}
 
     // Other possible things to keep here:  flavor, calibration type
     
