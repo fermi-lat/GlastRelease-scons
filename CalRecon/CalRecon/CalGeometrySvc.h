@@ -71,6 +71,7 @@ public:
 private:
 
 	 int m_geoType;	 
+     int m_balloonFlight;
 
 	 int m_nmodx;
 	 int m_nmody;
