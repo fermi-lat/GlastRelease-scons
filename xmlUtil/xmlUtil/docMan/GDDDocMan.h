@@ -1,3 +1,4 @@
+
 // $Header$
 #ifndef XMLUTIL_GDDDOCMAN_H
 #define XMLUTIL_GDDDOCMAN_H
@@ -20,6 +21,8 @@ namespace xmlUtil {
     virtual bool parse(const std::string& filename, 
                        bool saveNotes = true,
                        const std::string& docType=std::string("gdd"));
+    const std::string& getCVSid() const;
+    const std::string& getDTDversion() const;
 
     virtual ~GDDDocMan() {delete m_constsClient;}
 
@@ -32,18 +35,27 @@ namespace xmlUtil {
       virtual const std::string& getName() {
         return name;
       }
-      ConstsClient(GDDDocMan *owner) : m_owner(owner), m_sub(0) {
+      ConstsClient(GDDDocMan *owner) : m_owner(owner), m_sub(0),
+                                       CVSid(std::string("")),
+                                       DTDversion(std::string(""))
+      {
         name=std::string("ConstsEvalSub");
-        m_doc = 0;}
+        m_doc = 0;
+      }
+
       virtual ~ConstsClient() {}
 
-      void handleChild(DOM_Node elt);       /* TO BE WRITTEN */
+      void handleChild(DOM_Node elt); 
       bool m_saveNotes;
+      const std::string& getCVSid() const {return CVSid;}
+      const std::string& getDTDversion() const {return DTDversion;}
     private:
       std::string name;
       GDDDocMan* m_owner;
       DOM_Document m_doc;
       Substitute* m_sub;
+      std::string CVSid;
+      std::string DTDversion;
     };
     static GDDDocMan* m_me;
     ConstsClient* m_constsClient;

@@ -2,6 +2,7 @@
 #include "xmlUtil/docMan/GDDDocMan.h"
 #include <xercesc/dom/DOM_Element.hpp>
 #include "xmlUtil/Constants.h"
+#include "xml/Dom.h"
 
 namespace xmlUtil {
   GDDDocMan* GDDDocMan::m_me = 0;
@@ -26,6 +27,13 @@ namespace xmlUtil {
     regMeFirst(m_constsClient);
   }
 
+  const std::string& GDDDocMan::getCVSid() const {
+    return m_constsClient->getCVSid();
+  }
+  const std::string& GDDDocMan::getDTDversion() const {
+    return m_constsClient->getDTDversion();
+  }
+
   void GDDDocMan::ConstsClient::handleChild(DOM_Node node) {
     if (node == DOM_Node()) { //clean up call
       m_doc = 0;
@@ -36,8 +44,13 @@ namespace xmlUtil {
       return;
     }
     if (node.getNodeType() == DOM_Node::DOCUMENT_NODE) { 
-      // Evaluate constants
       DOM_Document& doc = static_cast<DOM_Document&>(node);
+
+      // Save CVSid and DTDversion attributes
+      CVSid = xml::Dom::getAttribute(doc.getDocumentElement(), "CVSid");
+      DTDversion = xml::Dom::getAttribute(doc.getDocumentElement(), 
+                                          "DTDversion");
+      // Evaluate constants
       Constants constants(doc);
       constants.normalizePrimary();
       constants.evalConstants();
