@@ -174,7 +174,7 @@ bool TkrFailureModeSvc::layerFailed(int tower, int layer, int view) {
     std::vector<int> &layerList = m_layerList[tower];
     
     // Search to see if this (tower,layer) is among the list
-    int *loc = std::find(layerList.begin(), layerList.end(), plane);                
+    std::vector<int>::iterator loc = std::find(layerList.begin(), layerList.end(), plane);                
     
     return (loc != layerList.end());
 }
