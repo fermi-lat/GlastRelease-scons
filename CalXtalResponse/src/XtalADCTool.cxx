@@ -376,6 +376,7 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
   sc = m_calCalibSvc->getTholdCI(tmpIdN,fle,fhe,lacThreshN);
   if (sc.isFailure()) return sc;
 
+  // test LACs
 #if 1 // currently set so that noise CAN set lac trigger even if not hits.
   // set log-accept flags
   lacN = tmpADC[XtalRng(NEG_FACE,LEX8)] >= lacThreshN.getVal();
