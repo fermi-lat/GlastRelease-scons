@@ -14,6 +14,10 @@
 #include "idents/VolumeIdentifier.h"
 #include "DetectorConstruction.h"
 
+// detModel
+#include "detModel/Management/IDmapBuilder.h"
+
+
 #include <map>
 
 class Instrument;
@@ -22,6 +26,7 @@ class CsIDetector;
 class Scintillator;
 class DiodeDetector;
 class GenericDet;
+namespace detModel { class IDmapBuilder; }
 
 /**
 A single class that manages the GlastDetector hierarchy in the G4 environment:
@@ -36,7 +41,10 @@ public:
     
     //! constructor called with pointer to DetectorConstruction, for map of (partial) ids
     //! needed for constructing the from the list of physical volumes in the touchable history
-    GlastDetectorManager( DetectorConstruction* det);
+    //! @param idmap map of volume ids for all sensitive detectors
+    GlastDetectorManager( DetectorConstruction* det, const detModel::IDmapBuilder& idmap );
+    
+    ~GlastDetectorManager();
     
     //! initialize clears things 
     virtual void Initialize(G4HCofThisEvent*);
@@ -60,9 +68,15 @@ public:
 private:
     Instrument* m_instrument;
     DetectorConstruction::IdMap* m_idMap;
-    
+    idents::VolumeIdentifier checkId(idents::VolumeIdentifier::int64 newid, const char * name);
+    // this map is used to connect the GlastDetector object with the volume ids
     typedef std::map<idents::VolumeIdentifier::int64, GenericDet*> DetectorMap;
     DetectorMap m_detMap;
+
+    // vector of volume ids used to correlate with GlastDetector list
+    detModel::IDmapBuilder::IdVector::const_iterator m_id_it;
+    detModel::IDmapBuilder::IdVector::const_iterator m_id_end;
+
     // for debugging: summary of energy per logical volume
     std::map<std::string, double> m_energySummary;
     

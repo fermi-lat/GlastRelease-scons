@@ -71,7 +71,7 @@ namespace {
                 y = 2*box->GetYHalfLength(), 
                 z = 2*box->GetZHalfLength();
             
-            DisplayManager::instance()->addBox(global, x,y,z);
+            DisplayManager::instance()->addHitBox(global, x,y,z);
         }
         
     }
@@ -87,12 +87,26 @@ public:
     GenericDet(){}
     //! pure virtual to be implemented by subclasses.
     virtual void score(G4Step * aStep)=0;
+    //! utillity to extract and convert energy
+    double depositedEnergy(G4Step * aStep){
+        return aStep->GetTotalEnergyDeposit()*(MeV/GeV);
+    }
 };
 //------------------------------
 class TkrPlane : public GenericDet {
 public:
     TkrPlane(SiDetector& si): m_si(si){};
     void score(G4Step * aStep){
+
+        Hep3Vector beginpt = aStep->GetPreStepPoint()->GetPosition()*(mm/cm),
+                   endpt =aStep->GetPostStepPoint()->GetPosition()*(mm/cm);
+
+        Point p(beginpt.x(),beginpt.y(), beginpt.z()),
+              q( endpt.x(),  endpt.y(),   endpt.z() );
+        p.transform(m_si.globalToLocal());
+        q.transform(m_si.globalToLocal());
+        // NOTE conversion to "fC" units, just like before
+        m_si.score(p,q, depositedEnergy(aStep)/ 3.4875E-5);
     }
 private:
     SiDetector& m_si;
@@ -101,7 +115,17 @@ private:
 class CalLog : public GenericDet {
 public:
     CalLog(CsIDetector& csi): m_csi(csi){}
+
     void score(G4Step * aStep){
+        // get begin and endpoints in cm units.
+        Hep3Vector beginpt = aStep->GetPreStepPoint()->GetPosition()*(mm/cm),
+                   endpt =aStep->GetPostStepPoint()->GetPosition()*(mm/cm),
+                   midpt = 0.5*(beginpt+endpt);
+
+        Point p(midpt.x(),midpt.y(),midpt.z()); // stupid way to make it a Point
+        p.transform(m_csi.globalToLocal());
+
+        m_csi.scoreDetector (depositedEnergy(aStep),  p);
     }
 private:
     CsIDetector& m_csi;
@@ -111,6 +135,8 @@ class Diode : public GenericDet {
 public:
     Diode(DiodeDetector& diode):m_diode(diode){}
     void score(G4Step * aStep){
+        double deltaE = aStep->GetTotalEnergyDeposit()*(MeV/GeV);
+        m_diode.addEnergy(depositedEnergy(aStep)); 
     }
 private:
     DiodeDetector& m_diode;
@@ -120,18 +146,30 @@ class ACDtile : public GenericDet {
 public:
     ACDtile(Scintillator& acd):m_acd(acd){}
     void score(G4Step * aStep){
+        m_acd.addEnergy(depositedEnergy(aStep));
     }
 private:
     Scintillator& m_acd;
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-GlastDetectorManager::GlastDetectorManager(DetectorConstruction *det)
+GlastDetectorManager::GlastDetectorManager(DetectorConstruction *det, const detModel::IDmapBuilder& idmap)
 :G4VSensitiveDetector("GlastDetectorManager")
 {
+
+    // set up iterators over the map if VolumeId's of all detectors.
+    m_id_it = idmap.getIdVector()->begin(); // will be incremented
+    m_id_end = idmap.getIdVector()->end();  // used to prevent too many: must equal m_id_it at end.
+
     m_idMap = det->idMap();
-#if 0
-    static std::string detfile("$(INSTRUMENTROOT)/xml/GlastDetector.xml");
+#if 1
+    // construct file name for xml file with detector stuff
+    std::string detfile("$(INSTRUMENTROOT)/xml/");
+    detfile += det->topVolumeName()+".xml";
+
+//    static std::string detfile("$(INSTRUMENTROOT)/xml/LAT.xml");
+    //static std::string detfile("$(INSTRUMENTROOT)/xml/CALLayer.xml");
+//    static std::string detfile("$(INSTRUMENTROOT)/xml/CsIElement.xml");
     std::cout << "Loading glastdetectors from " << detfile << "... ";
     m_instrument = new Instrument;
     m_instrument->initialize("",detfile );
@@ -140,7 +178,7 @@ GlastDetectorManager::GlastDetectorManager(DetectorConstruction *det)
     
     // now use the local visitor to make a list
     m_instrument->rootDetector()->accept(Visitor(this));
-    //std::cout << "actually found " << count << " detectors " << std::endl;
+    std::cout << "actually found " << m_detMap.size() << " detectors " << std::endl;
 #endif
     // and tell G4 about us
     G4SDManager::GetSDMpointer()->AddNewDetector( this );
@@ -148,18 +186,27 @@ GlastDetectorManager::GlastDetectorManager(DetectorConstruction *det)
     
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+GlastDetectorManager::~GlastDetectorManager()
+{
+    delete m_instrument;
+}
+    
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void GlastDetectorManager::Initialize(G4HCofThisEvent*HCE)
 {
     m_energySummary.clear();
     m_detectorList.clear();
     m_detectorEnergy.clear();
+    // clear all glast detectors
+    GlastDetector::clear_all();
+
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 G4bool GlastDetectorManager::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
 {
     
-    // Energy Deposition & Step Lenght
+    // Energy Deposition & Step Length
     
     G4double edep = aStep->GetTotalEnergyDeposit()/MeV;
     G4double stepl = aStep->GetStepLength()/mm;
@@ -178,11 +225,15 @@ G4bool GlastDetectorManager::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhis
     G4ThreeVector InitPos = aStep->GetPreStepPoint()->GetPosition();
     G4ThreeVector FinPos = aStep->GetPostStepPoint()->GetPosition();
     
+    // determine the ID by studying the history, then call appropriate 
+    idents::VolumeIdentifier id = constructId(aStep);
+    assert(m_detMap[id]);
+    m_detMap[id]->score(aStep);
+    
     //**** interface to display *************
     
     DisplayManager::instance()->addHit(InitPos, FinPos);
     
-    idents::VolumeIdentifier id = constructId(aStep);
     if( m_detectorList[id]==0) {
         makeBox( theTouchable );
         
@@ -224,6 +275,8 @@ idents::VolumeIdentifier GlastDetectorManager::constructId(G4Step * aStep)
 void GlastDetectorManager::EndOfEvent(G4HCofThisEvent* HCE)
 {
     
+    m_instrument->rootDetector()->generateResponse(true);
+
     std::cout << "Detector list:" << std::endl;
     
     for( DetectorList::const_iterator itd = m_detectorList.begin(); itd!=m_detectorList.end(); ++ itd){
@@ -249,22 +302,30 @@ void GlastDetectorManager::process(G4LogicalVolume* lvol)
 {
     lvol->SetSensitiveDetector(this);
 }
+idents::VolumeIdentifier GlastDetectorManager::checkId(idents::VolumeIdentifier::int64 gid, const char * name)
+{
+    assert(m_id_it != m_id_end);
+    idents::VolumeIdentifier id = *m_id_it++;
+    std::cout << "associate VolumeIdentifier " << id.name() << " with " << (int)gid << " "<< name << std::endl;
+    return id;
+}
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void GlastDetectorManager::addSiDetector(SiDetector* det)
 {
-    m_detMap[det->id()]=new TkrPlane(*det);
+
+    m_detMap[checkId(det->id(),"Si")]=new TkrPlane(*det);
 
 }
 void GlastDetectorManager::addCsIDetector(CsIDetector* det)
 {
-    m_detMap[det->id()]=new CalLog(*det);
+    m_detMap[checkId(det->id(),"CsI")]=new CalLog(*det);
     
 }
 void GlastDetectorManager::addDiodeDetector(DiodeDetector* det)
 {
-    m_detMap[det->id()] = new Diode(*det);
+    m_detMap[checkId(det->id(),"diode")] = new Diode(*det);
 }
 void GlastDetectorManager::addACDtile(Scintillator* det)
 {
-    m_detMap[det->id()] = new ACDtile(*det);
+    m_detMap[checkId(det->id(),"ACD")] = new ACDtile(*det);
 }
