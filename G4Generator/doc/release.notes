@@ -3,6 +3,7 @@
 
     $Id$
 *<br><pre>
+ * v5r2    6-Mar-03 TU  Modify interface to G4GeometrySvc to solve std::map problem
  * v5r1p1 27-feb-03 THB had to add a use FluxSvc for the test.
  * v5r1   26-feb-03 THB Tag Francesco's changes; remove FluxSvc dependency   
  *        19-feb-03     Start of physics list selection

@@ -26,7 +26,7 @@ class G4VPhysicalVolume;
  */
 
 // Declaration of the interface ID
-static const InterfaceID IID_IG4GeometrySvc("IG4GeometrySvc", 1 , 0); 
+static const InterfaceID IID_IG4GeometrySvc("IG4GeometrySvc", 2 , 0); 
 
 class IG4GeometrySvc : virtual public IInterface
 {
