@@ -153,6 +153,7 @@ public:
     //! Reconstruction: Cal class IDs
     const CLID& CLID_CalRecon           = 3200;
     const CLID& CLID_CalXtalRecData     = 3201;
+    const CLID& CLID_CalClusterCol      = 3202;
 
     //! Reconstruction: Acd class IDs
     const CLID& CLID_AcdRecon           = 3300;
@@ -164,7 +165,6 @@ public:
     //! Classes adapted by Sasha Chekhtman from tb calorimeter reconstruction    
     const CLID& CLID_CalADCLogs         = 2601;
     const CLID& CLID_CalRecLogs         = 2602;
-    const CLID& CLID_CalClusterList     = 2603;
 
     //! Utilities
     const CLID& CLID_RefTable1to1       =  321;
