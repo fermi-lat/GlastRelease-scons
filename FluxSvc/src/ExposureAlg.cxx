@@ -119,6 +119,7 @@ StatusCode ExposureAlg::initialize(){
     //set the input file to be used as the pointing database
     if(! m_pointing_history_input_file.value().empty() ){
         std::string fileName(m_pointing_history_input_file.value());
+        facilities::Util::expandEnvVar(&fileName);
         m_fluxSvc->setPointingHistoryFile(fileName.c_str());
     }
 
@@ -203,6 +204,7 @@ StatusCode ExposureAlg::execute()
         rax =   gps->RAX(),        decx =  gps->DECX(),
         raz =   gps->RAZ(),        decz =  gps->DECZ(),
         razenith = gps->RAZenith(),deczenith = gps->DECZenith();
+    double check=astro::SkyDir(rax, decx)().dot(astro::SkyDir(raz, decz)());
 
     EarthOrbit orb; //for the following line - this should have a better implementation.
     double julianDate = orb.dateFromSeconds(m_lasttime);
@@ -236,7 +238,7 @@ StatusCode ExposureAlg::execute()
 
     Event::Exposure* entry = new Event::Exposure;
     exposureDBase->push_back(entry);
-    entry->init(intrvalstart,lat,lon,alt,posx,posy,posz,rax,decx,raz,decz);
+    entry->init(tick?intrvalstart:currentTime,lat,lon,alt,posx,posy,posz,rax,decx,raz,decz);
 
     //now, only do the rest of this algorithm if we have a timetick particle.
 
@@ -262,9 +264,9 @@ StatusCode ExposureAlg::execute()
     //and here's the file output.
     if( m_out !=0) {
         std::ostream& out = *m_out;
-        out << std::setw(14) << std::setprecision(14) 
+        out <<  std::setprecision(14) 
             <<intrvalstart <<'\t';
-        out << std::setw(9) << std::setprecision(7)
+        out << std::setw(10) << std::setprecision(10)
             << posx<<'\t';
         out<< posy<<'\t';
         out<< posz<<'\t';

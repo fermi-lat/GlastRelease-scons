@@ -11,7 +11,7 @@ use Event   *
 
 use GlastSvc *
 use astro v0r*
-use flux v7*
+use flux * -no_auto_imports
 
 apply_pattern packageShr
 apply_pattern package_include
@@ -33,7 +33,7 @@ macro source "*.cxx" WIN32 "*.h *.cxx *.txt"
 
 macro interface_headers "" WIN32 "-s=../FluxSvc/ *.h"
 
-library FluxSvc \
+library FluxSvc -import=flux\
  $(interface_headers)\
  -s=Dll *.cxx\
  -s=../src $(source)
