@@ -23,7 +23,7 @@
 // Glast specific includes
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
-#include "xml/IFile.h"
+#include "facilities/Util.h"
 
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/Event.h"
@@ -69,7 +69,7 @@ StatusCode BariMcToHitTool::initialize()
 
     // Do the currents file (once) - LSR
     // OpenCurrent now returns a status code - LSR    
-    xml::IFile::extractEnvVar(&m_CurrentsFile);
+    facilities::Util::expandEnvVar(&m_CurrentsFile);
     // trying to eliminate memory leak candidates
     //    m_openCurr = new InitCurrent();
     sc = m_openCurr.OpenCurrent(m_CurrentsFile); 
