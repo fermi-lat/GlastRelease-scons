@@ -1,0 +1,47 @@
+package G4Propagator
+version v0r0
+#$Id$
+
+use GlastPolicy v5*
+
+# this is only a shareable package
+apply_pattern packageShr
+
+use G4Generator *
+
+##use Event *
+
+##use GlastSvc  *
+# following for test
+##use FluxSvc  v5r*
+
+
+##use GuiSvc   v3*
+##use geometry v3*
+##use geomrep  v4r*
+
+#for linux execution clients to get the LD_LIBRARY_PATH set.
+##use Geant4Runtime v2r* IExternal
+#=============================================================
+private
+
+#this is private to avoid passing on build info to clients
+use Geant4   v2r* IExternal
+
+
+# get flags to build shared library
+
+apply_pattern package_Cshlibflags
+
+apply_pattern package_headers
+
+# this to allow includes of internal "package" 
+macro_prepend includes "-I ../src " WIN32 "/I ..\src "
+
+library G4Propagator ${G4Propagator_headers} *.cxx   Dll/*.cxx
+
+# test program 
+public 
+apply_pattern package_test
+
+
