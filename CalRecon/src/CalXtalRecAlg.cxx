@@ -419,7 +419,9 @@ bool CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi*
               pedP = pPedP->getAvr();
               pedM = pPedM->getAvr();
 
-              if( pPedM->getCosAngle()!= 2. ){
+              // this is for backward compatibility with pedestal xml files 
+              // without correlations 
+              if( pPedM->getCosAngle()!= 2. ){ 
                 if( rangeM%2==0 ){
                   double cosAngle= pPedM->getCosAngle();
                   CalibData::RangeBase* pRangeM = 
