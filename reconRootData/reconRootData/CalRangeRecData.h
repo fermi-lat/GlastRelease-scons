@@ -10,6 +10,8 @@
 * @brief Position and reconstructed energies for both faces of Xtal for Cal                                
 *
 * @author  A.Chekhtman
+*
+* $Header$
 */
 class CalRangeRecData : public TObject {  
     
@@ -45,9 +47,16 @@ public:
     
 private:
     
-    Double_t m_eneP, m_eneM;
+	/// Energy associated with the plus end of the crystal
+    Double_t m_eneP;
+	/// Energy associated with the minus end of the crystal
+	Double_t m_eneM;
+	/// Position of the crystal
     TVector3 m_pos;
-    Char_t  m_rangeP, m_rangeM;
+	/// Range associated with the plus end of the crystal
+    Char_t  m_rangeP;
+	/// Range associated with the minus end of the crystal
+	Char_t m_rangeM;
     
     ClassDef(CalRangeRecData,1)  // Reconstructed CAL xtals
 };

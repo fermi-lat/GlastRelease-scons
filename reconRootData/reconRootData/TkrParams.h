@@ -5,14 +5,13 @@
 #include "TVectorD.h"
 /** 
  * @class TkrParams
- *
  * @brief Root object containing fit track parameters for a given plane
- *        This class should be a duplicate of Event::TkrFitPar
  * 
- * Created 13-May-2002
+ * This class should be a duplicate of Event::TkrFitPar
  * 
  * @author Tracy Usher
  *
+ * $Header$
  */
 
 class TkrParams : public TVectorD

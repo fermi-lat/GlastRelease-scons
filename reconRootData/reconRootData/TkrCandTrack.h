@@ -7,16 +7,15 @@
 
 /** 
  * @class TkrCandTrack
- *
  * @brief Root object representing a pattern recognition candidate track
- *        Includes base summary information about the track
- *        and a vector of objects containing information for each hit plane
- *        This class should exactly duplicate TkrPatCand
  * 
- * Created 15-May-2002
+ * Includes base summary information about the track
+ * and a vector of objects containing information for each hit plane
+ * This class should exactly duplicate Event::TkrPatCand TDS class.
  * 
  * @author Tracy Usher
  *
+ * $Header$
  */
 
 class TkrCandTrack : public TObject

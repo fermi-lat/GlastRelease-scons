@@ -12,7 +12,7 @@
 #pragma link C++ class CalRangeRecData+;
 #pragma link C++ class CalXtalRecData+;
 #pragma link C++ class TkrRecon+;
-#pragma link C++ class TkrSiCluster+;
+#pragma link C++ class TkrCluster+;
 #pragma link C++ class TkrTrack+;
 #pragma link C++ class TkrFitHit+;
 #pragma link C++ class TkrCandHit+;

@@ -11,14 +11,12 @@ using namespace std;
 
 /** 
  * @class TkrHitPlane
- *
  * @brief Root object containing fit track information for one plane
- *        It contains summary information for the layer plus track parameters
- *        and covariance matrix for each type of hit - measured, predicted, fit (filtered),
- *        and smoothed. It also keeps the scattering matrix between planes.
- *        This class should duplicate Event::TkrFitPlane
  * 
- * Created 13-May-2002
+ * It contains summary information for the layer plus track parameters
+ * and covariance matrix for each type of hit - measured, predicted, fit (filtered),
+ * and smoothed. It also keeps the scattering matrix between planes.
+ * This class should duplicate Event::TkrFitPlane TDS class.
  * 
  * @author Tracy Usher
  *

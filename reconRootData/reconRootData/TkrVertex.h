@@ -9,16 +9,15 @@
 
 /** 
  * @class TkrVertex
- *
  * @brief Root object representing a reconstructed vertex
- *        Includes base summary information about the vertex
- *        and an array of track ids associated with the vertex
- *        This class should duplicate Event::TkrVertex
- * 
- * Created 13-May-2002
+ *
+ * Includes base summary information about the vertex
+ * and an array of track ids associated with the vertex
+ * This class should duplicate Event::TkrVertex TDS class
  * 
  * @author Tracy Usher
  *
+ * $Header$
  */
 
 class TkrVertex : public TObject

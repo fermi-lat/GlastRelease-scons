@@ -5,16 +5,15 @@
 #include "TkrHitPlane.h"
 /** 
  * @class TkrTrack
- *
  * @brief Root object representing a reconstructed track
- *        Includes base summary information about the track
- *        and an object array of information for each hit plane
- *        This class should duplicate TkrFitTrack
- * 
- * Created 13-May-2002
+ *
+ * Includes base summary information about the track
+ * and an object array of information for each hit plane
+ * This class should duplicate Event::TkrFitTrack TDS class
  * 
  * @author Tracy Usher
- *
+ * 
+ * $Header$
  */
 
 class TkrTrack : public TObject

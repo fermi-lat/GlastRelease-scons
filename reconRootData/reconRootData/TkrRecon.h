@@ -4,24 +4,23 @@
 #include "TObject.h"
 #include "TObjArray.h"
 
-#include "TkrSiCluster.h"
+#include "TkrCluster.h"
 #include "TkrCandTrack.h"
 #include "TkrTrack.h"
 #include "TkrVertex.h"
 /** 
  * @class TkrRecon
- *
  * @brief Root container for the reconstructed Tracker information 
- *        Reconstructed information includes:
- *           1) Silicon Clusters
- *           2) Pattern Recognized Tracks
- *           3) Reconstructed Tracks
- *           4) Vertices
  * 
- * Created 13-May-2002
+ * This class contains:
+ * -# Collection of Clusters
+ * -# Collection of 
+ * -# Collectoin of Reconstructed Tracks
+ * -# Collection Vertices
  * 
  * @author Tracy Usher
  *
+ * $Header$
  */
 
 class TkrRecon : public TObject
@@ -39,8 +38,8 @@ public:
     void Print(Option_t *option="") const;
 
     /// provide access to the list of clusters
-    TObjArray *getSiClusterCol() { return m_siClusterCol; };
-    void addSiCluster(TkrSiCluster *cluster) { m_siClusterCol->Add(cluster); };
+    TObjArray *getClusterCol() { return m_clusterCol; };
+    void addCluster(TkrCluster *cluster) { m_clusterCol->Add(cluster); };
 
     TObjArray *getTrackCandCol() { return m_trackCandCol; };
     void addTrackCand(TkrCandTrack *track) { m_trackCandCol->Add(track); };
@@ -53,7 +52,7 @@ public:
 
 private:
     /// collection of TkrSiCluster
-    TObjArray *m_siClusterCol;
+    TObjArray *m_clusterCol;
     /// collection of TkrCandTrack
     TObjArray *m_trackCandCol;
     /// collection of TkrTrack
@@ -61,7 +60,7 @@ private:
     /// collection of TkrVertex
     TObjArray *m_vertexCol;
 
-    ClassDef(TkrRecon,3)
+    ClassDef(TkrRecon,4)
 };
 
 #endif

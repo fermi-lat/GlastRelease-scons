@@ -4,14 +4,13 @@
 #include "TMatrixD.h"
 /** 
  * @class TkrCovMat
- *
  * @brief Root object containing track covariance matrix at a point
- *        This class should duplicate TkrFitMatrix
- * 
- * Created 14-May-2002
+ *
+ * This class should duplicate Event::TkrFitMatrix TDS class
  * 
  * @author Tracy Usher
  *
+ * $Header$
  */
 
 class TkrCovMat : public TMatrixD

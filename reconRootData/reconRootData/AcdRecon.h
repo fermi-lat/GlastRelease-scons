@@ -10,10 +10,20 @@ using namespace std;
 
 /** 
 * @class AcdRecon
-*
 * @brief Root container for the reconstructed ACD information 
 * 
-* 
+* This class contains:
+* -# Total reconstructed energy detected in ACD detector elements.
+* -# Minimum DOCA (Distance of Closest Approach) computed using all tracks and
+*    ACD detectors.  DOCA is computed using the center of the ACD tiles.
+* -# AcdId of the tile associated with the minimum DOCA.
+* -# Minimum Active Distance computed using all tracks and ACD detectors.
+*    Computed using the edge of ACD tiles.
+* -# Tile Count the number of ACD tiles which were above veto threshold.
+* -# Collection of minimum DOCA values organized by geometry:  top, side rows
+* -# Collection of minimum Active Distance values organized by geometry:  top
+*    and side rows.
+*
 * @author Heather Kelly
 *
 * $Header$
@@ -71,7 +81,7 @@ public:
 private:
     /// Total energy in MeV deposited in the whole ACD system
     Double_t m_totEnergy;
-    /// Distance of Closest Approach for the reconstructed gamme, 
+    /// Distance of Closest Approach for the reconstructed gamma, 
     /// if there is one
     Double_t m_gammaDoca;
     /// Minimum Distance of Closest Approach for all tracks and all ACD tiles
@@ -86,10 +96,10 @@ private:
     /// Collection of Active Distance calc for each side row of ACD
     std::vector<Double_t> m_rowActDistCol;
 
-    // record of the tile with the minimum Distance of Closest Approach
+    /// record of the tile with the minimum Distance of Closest Approach
     AcdId m_minDocaId;
     
-    /// Stores reconstructed energy per ACD digi
+    // Stores reconstructed energy per ACD digi
     //std::map<AcdId, Double_t> m_energyCol;
     
     ClassDef(AcdRecon,2) // Acd Reconstruction data

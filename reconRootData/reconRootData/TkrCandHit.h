@@ -7,14 +7,13 @@
 
 /** 
  * @class TkrCandHit
- *
  * @brief Root object containing track candidate hit information
- *        This class should exactly duplicate the TkrPatCandHit class
- * 
- * Created 15-May-2002
+ *
+ * This class should exactly duplicate the Event::TkrPatCandHit TDS class.
  * 
  * @author Tracy Usher
  *
+ * $Header$
  */
 
 class TkrCandHit : public TObject

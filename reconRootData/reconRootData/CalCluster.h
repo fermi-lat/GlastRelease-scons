@@ -9,12 +9,14 @@
 using namespace std;
 #endif
 
-
 /** @class CalCluster
  * @brief Root object that stores a cluster of CsI detections
+ *
  * Provides access to the positions and energy depositions for a
  * cluster of CsI logs 
+ *
  * @author A. Chekhtman
+ *
  * $Header$
  */
 class CalCluster : public TObject
@@ -68,9 +70,7 @@ public:
     Double_t getProfChisq()	  const {return m_profChisq;}
     Double_t getCsiAlpha()	  const {return m_csiAlpha;}
     Double_t getCsiLambda()	  const {return m_csiLambda;}
-    Double_t getCsiStart()	  const {return m_start;}
-
-        
+    Double_t getCsiStart()	  const {return m_start;}        
     
 private:
     

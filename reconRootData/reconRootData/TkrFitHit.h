@@ -6,14 +6,14 @@
 #include "TkrCovMat.h"
 /** 
  * @class TkrFitHit
+ * @brief Root object containing fit track parameters and covariance matrix at 
+ * one point
  *
- * @brief Root object containing fit track parameters and covariance matrix at one point
- *        This class should duplicate Event::TkrFitHit
- * 
- * Created 14-May-2002
+ * This class should duplicate Event::TkrFitHit TDS class
  * 
  * @author Tracy Usher
  *
+ * $Header$
  */
 
 class TkrFitHit : public TObject

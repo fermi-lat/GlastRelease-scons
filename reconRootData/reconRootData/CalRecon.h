@@ -14,10 +14,13 @@
 
 /** @class CalRecon
  * @brief Primary Root object containing CAL reconstruction data.
-   portal through which one gains access to the CAL recon data. 
-   Currently there are 2 lists available:
-   - A collection of reconstruction CAL crystals (CalXtalRecData)
-   - A collection of CAL clusters (CalCluster)
+ *
+ * Portal through which one gains access to the CAL recon data. 
+ * Currently there are 2 lists available:
+ * - A collection of reconstructed CAL crystals (CalXtalRecData)
+ * - A collection of CAL clusters (CalCluster)
+ *
+ * $Header$
 */
 
 class CalRecon : public TObject

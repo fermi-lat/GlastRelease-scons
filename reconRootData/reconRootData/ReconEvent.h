@@ -1,19 +1,23 @@
-#ifndef RECON_H
-#define RECON_H
+#ifndef RECONEVENT_H
+#define RECONEVENT_H
 
 #include "TObject.h"
 #include "CalRecon.h"
 #include "TkrRecon.h"
 #include "AcdRecon.h"
 
-/** @class Recon
- * @brief Primary Root Recon Object - top level object in Root Tree
- * Top level Root Recon object - portal through which all recon data is
-   accessed.  
-   A Recon object contains 3 pointers:
-   1) A pointer to a TkrRecon object
-   2) A pointer to a CalRecon object
-   3) A pointer to a ReconHeader object 
+/** @class ReconEvent
+ * @brief Primary Root Recon Object - top level object in Root Tree.
+ *
+ * Portal through which all recon data is accessed.  
+ * A ReconEvent object contains:
+ * -# Run Number
+ * -# Event Id
+ * -# A pointer to a TkrRecon object
+ * -# A pointer to a CalRecon object
+ * -# A pointer to a AcdRecon object 
+ *
+ * $Header$
 */
 
 class ReconEvent : public TObject
@@ -49,7 +53,9 @@ public:
     //inline void setReconFlags(ReconHeader *r) { m_recFlags = r; };
 
 private:
+	/// Event Id
     UInt_t m_eventId;
+	/// Run number
     UInt_t m_runId;
     /// ACD reconstruction data
     AcdRecon *m_acd;

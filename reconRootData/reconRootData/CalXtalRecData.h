@@ -18,6 +18,7 @@ using namespace std;
 * @brief Reconstructed data for one calorimeter crystal                                
 *             
 * @author A.Chekhtman
+* 
 * $Header$
 */
 
