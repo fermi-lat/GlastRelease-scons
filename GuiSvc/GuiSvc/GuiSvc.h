@@ -45,8 +45,6 @@ protected:
     /// Standard Constructor
     GuiSvc ( const std::string& name, ISvcLocator* al );
     
-    /// destructor
-    virtual ~GuiSvc ();
 
 private:
     // Allow SvcFactory to instantiate the service.

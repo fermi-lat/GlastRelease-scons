@@ -33,15 +33,10 @@ GuiSvc::GuiSvc(const std::string& name,ISvcLocator* svc)
     
     // declare the properties and set defaults
 
-    declareProperty ("size", m_size=-200);
+    declareProperty ("size", m_size=-300);
     declareProperty( "pause_interval", m_pause_interval=0);
     declareProperty( "paused", m_paused=true);
 
-}
-
-/// Standard Destructor
-GuiSvc::~GuiSvc()  
-{
 }
 
 
