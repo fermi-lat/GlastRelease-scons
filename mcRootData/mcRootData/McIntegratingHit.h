@@ -9,10 +9,12 @@
 #include "McParticle.h"
 
 #include <vector>
+#ifndef R__GLOBALSTL
 #ifndef WIN32
 using std::vector;
 #else
 using namespace std;
+#endif
 #endif
 
 
