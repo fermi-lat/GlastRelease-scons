@@ -1,5 +1,6 @@
 //$Header$
 /*
+ * v4r2   25-jul-02 THB 
  * v4r1p6 20-jun-02 THB remove arbitrary cut on number of mcparticles
  * v4r1p5 18-jun-02 THB put neutrals on separate display button
  * v4r1p4 07-jun-02 THB clean out uses; remove test dependence on GlastDigi
