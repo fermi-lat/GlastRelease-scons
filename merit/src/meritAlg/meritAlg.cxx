@@ -536,8 +536,13 @@ StatusCode meritAlg::finalize() {
     
     MsgStream log(msgSvc(), name());
     log << MSG::INFO ;
-    
-    m_fm->report(log.stream());
+    if(log.isActive()) {
+        try {
+            m_fm->report(log.stream());
+        } catch (...){
+            log << "Failure to generate full output due to unknown exception";
+        }
+    }
     log << endreq;
     delete m_tuple;
     if(m_root_tuple !=0) {
