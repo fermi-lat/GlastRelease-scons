@@ -1,9 +1,9 @@
 package digiRootData
-version v5r0p3
+version v6r0
 
 use mcRootData v2r*
 use GlastPolicy v5*
-
+use ebfExt  v2r*  IExternal
 
 apply_pattern package_include
 
@@ -18,7 +18,7 @@ private
 use RootPolicy v2r*
 apply_pattern root_package
 apply_pattern root_package2
-
+ 
 apply_pattern vsnet_rootcint
 
 
@@ -26,14 +26,17 @@ apply_pattern vsnet_rootcint
 macro root_headers "\
  ../digiRootData/AcdDigi.h\
  ../digiRootData/AcdId.h\
+ ../digiRootData/CalDiagnostic.h\
  ../digiRootData/CalDigi.h\
  ../digiRootData/CalXtalId.h\
  ../digiRootData/CalXtalReadout.h\
  ../digiRootData/DigiEvent.h\
  ../digiRootData/GlastAxis.h\
  ../digiRootData/L1T.h\
+ ../digiRootData/TkrDiagnostic.h\
  ../digiRootData/TkrDigi.h\
  ../digiRootData/TowerId.h\
+ ../digiRootData/EventSummaryData.h\
  ../digiRootData/EventLinkDef.h"
 
 macro root_linkdef "../digiRootData/EventLinkDef.h"
@@ -46,6 +49,8 @@ library  digiRootData \
       CalDigi.cxx CalXtalReadout.cxx CalXtalId.cxx \
       AcdDigi.cxx AcdId.cxx \
       L1T.cxx \
+      CalDiagnostic.cxx TkrDiagnostic.cxx \
+      EventSummaryData.cxx \
       ../digiRootData/*.cxx \
       ${digiRootData_headers}
 
