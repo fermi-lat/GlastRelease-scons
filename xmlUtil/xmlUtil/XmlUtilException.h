@@ -13,7 +13,7 @@ namespace xmlUtil {
       m_name=std::string("XmlUtilException");
     }
     
-    virtual ~XmlUtilException() {}
+    virtual ~XmlUtilException() throw() {}
     virtual std::string getMsg() {return m_msg;}
     virtual const char * what() {return m_msg.c_str();}
   private:

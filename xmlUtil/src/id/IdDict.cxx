@@ -35,7 +35,7 @@ namespace xmlUtil {
     // Check number of field children.
     std::vector<DomElement> children;
     xml::Dom::getChildrenByTagName(elt, "field", children);
-    int nField = children.size();
+    unsigned int nField = children.size();
     m_fieldMan = new DictFieldMan(nField);
                 
     //    DomElement fieldElt = xml::Dom::getFirstChildElement(elt);

@@ -9,7 +9,7 @@
 #include  <vector>
 #include  <map>
 
-int main(int, char** argv) {
+int main(int, char** ) {
 
   xmlUtil::Identifier a, b, c, d, e;
 
