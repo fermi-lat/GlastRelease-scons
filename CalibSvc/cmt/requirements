@@ -4,13 +4,12 @@
 package CalibSvc
 version v0r1p0
 
-apply_pattern packageShr
-
 use CalibData v0r*
 use calibUtil v0r*
 
-
 use GaudiInterface * IExternal
+
+apply_pattern packageShr
 
 apply_pattern package_include
 apply_pattern package_headers
@@ -33,11 +32,6 @@ use RootIo   v6r*
 
 public
 set JOBOPTIONS "${CALIBSVCROOT}/src/test/jobOptions.txt"
-
-## Following definition of CalibSvcShr *should* be handled by the line 
-##   apply pattern packageShr 
-## above, but it isn't !
-set CalibSvcShr "${CALIBSVCROOT}/$(BINDIR)/libCalibSvc"
 
 
 ## application test_CalibSvc $(TestGlastMain) test/*.cxx $(WinInclude)
