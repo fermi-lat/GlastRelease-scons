@@ -24,6 +24,9 @@ static const InterfaceID IID_IGlastDetSvc(901, 1 , 0);
 class   IGlastDetSvc : virtual public IInterface {
 public:
   
+    //! detModel interface to retrive numeric constants
+    virtual StatusCode getNumericConstByName(std::string, double*)=0;
+
     //! new detModel interface, will call back. 
     virtual void accept(IGeometry& geom)=0;
 

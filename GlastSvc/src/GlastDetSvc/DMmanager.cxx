@@ -45,6 +45,11 @@ void DMmanager::init(std::string filename, std::string mode, std::string topvol)
     
 }
 
+bool DMmanager::getNumericConstByName(std::string name, double* res)
+{
+  return m_dm->getNumericConstByName(name,res);
+}
+
 void DMmanager::accept( detModel::SectionsVisitor* v){ m_vol->AcceptNotRec(v);  }
 
 void DMmanager::accept( detModel::MaterialsVisitor* v){ m_dm->startVisitor(v);  }

@@ -140,3 +140,11 @@ void GlastDetSvc::accept(IMedia& media)
 {
     m_dm->accept(&MediaVisitor(media));
 }
+
+StatusCode GlastDetSvc::getNumericConstByName(std::string name, double* res)
+{
+    if (m_dm->getNumericConstByName(name, res))
+      return StatusCode::SUCCESS;
+    else return StatusCode::FAILURE;
+}
+

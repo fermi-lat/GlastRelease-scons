@@ -31,6 +31,9 @@ public:
     //! start a materials visitor
     void accept( detModel::MaterialsVisitor* v);
 
+    //! retrive a numeric constant
+    bool getNumericConstByName(std::string, double*);
+
     //! summarize setup.
     void printSetup(std::ostream& out);
 
