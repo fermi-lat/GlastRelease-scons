@@ -38,7 +38,7 @@
 #ifndef CHIME_SPECTRUM_H
 #define CHIME_SPECTRUM_H
 
-#include "FluxSvc/Spectrum.h"
+#include "Spectrum.h"
 #include "facilities/Observer.h"
 #include <vector>
 #include <string>

@@ -8,7 +8,7 @@
 #include <math.h>
 
 // define a factory for anonymous instantiation
-#include "FluxSvc/SpectrumFactory.h"
+#include "../SpectrumFactory.h"
 
 static SpectrumFactory<GRBSpectrum> factory;
 const ISpectrumFactory& GRBSpectrumFactory = factory;

@@ -3,7 +3,7 @@
 
 #include "FluxMgr.h"
 #include "FluxSvc/FluxSource.h"
-#include "FluxSvc/SpectrumFactoryTable.h"
+#include "SpectrumFactoryTable.h"
 #include "GPS.h"
 #include "FluxException.h" // defines FATAL_MACRO
 
@@ -109,7 +109,7 @@ EventSource* FluxMgr::source(std::string name)
     // first check that it is in the library
     if( m_sources.find(name)==m_sources.end() ) {
         // nope. Maybe a Spectrum object
-        Spectrum* s = SpectrumFactoryTable::instance()->instantiate(name);
+        ISpectrum* s = SpectrumFactoryTable::instance()->instantiate(name);
         
         return s? new FluxSource(s) : (EventSource*)0;
     }

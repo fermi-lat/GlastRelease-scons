@@ -1,20 +1,20 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "FluxSvc/SpectrumFactoryTable.h"
+#include "SpectrumFactoryTable.h"
 
 #include <list>
 #include <string>
 
 SpectrumFactoryTable* SpectrumFactoryTable::s_instance = 0;
 
-Spectrum* SpectrumFactoryTable::instantiate(const std::string& name, 
+ISpectrum* SpectrumFactoryTable::instantiate(const std::string& name, 
 											const std::string& params) const 
 {
     const_iterator returnloc = find(name);
     return returnloc==end() ? 0: (*returnloc).second->instantiate(params);
 }
-Spectrum* SpectrumFactoryTable::instantiate(const std::string& name) const 
+ISpectrum* SpectrumFactoryTable::instantiate(const std::string& name) const 
 {
     const_iterator returnloc = find(name);
 	std::string params; // dummy 

@@ -13,7 +13,7 @@
 #include "../../FluxMgr.h"
 #include "FluxSvc/EventSource.h"
 #include "FluxSvc/ISpectrumFactory.h"
-#include "FluxSvc/SpectrumFactoryTable.h"
+#include "../../SpectrumFactoryTable.h"
 #include "rootEnergyHist.h"
 #include "rootAngleHist.h"
 
@@ -193,7 +193,7 @@ int main(int argc, char** argv)
       }
       else if("-time" == arg_name) {
 	time = atof(argv[++current_arg]);
-	cout<<" TIME = "<<time<<endl;
+        std::cout<<" TIME = "<< time << std::endl;
       }
       else if('-' == arg_name[0]) {std::cerr << "Unrecognized option "<< arg_name << ", -help for help" << std::endl;}
       else

@@ -3,7 +3,7 @@
 #include "../../FluxMgr.h"
 #include "FluxSvc/EventSource.h"
 #include "FluxSvc/ISpectrumFactory.h"
-#include "FluxSvc/SpectrumFactoryTable.h"
+#include "../../SpectrumFactoryTable.h"
 #include <iostream>
 #include <algorithm>
 #include "../../CHIMESpectrum.h"

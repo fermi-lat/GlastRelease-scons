@@ -35,7 +35,7 @@
 #ifndef HE_SPECTRUM_H
 #define HE_SPECTRUM_H
 
-#include "FluxSvc/Spectrum.h"
+#include "Spectrum.h"
 #include "facilities/Observer.h"
 #include <vector>
 #include <string>

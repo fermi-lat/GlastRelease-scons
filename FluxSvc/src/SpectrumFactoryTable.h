@@ -25,8 +25,8 @@ public:
     }
     
     //! get a new Spectrum object by name with optional parameter list
-    Spectrum* instantiate(const std::string& name, const std::string& params) const ;
-    Spectrum* instantiate(const std::string& name) const ;
+    ISpectrum* instantiate(const std::string& name, const std::string& params) const ;
+    ISpectrum* instantiate(const std::string& name) const ;
     
     static SpectrumFactoryTable* instance(){
         return (s_instance==0)? new SpectrumFactoryTable : s_instance;

@@ -18,8 +18,8 @@
 //flux
 #include "FluxSvc.h"
 #include "FluxSvc/IFlux.h"
-#include "FluxSvc/Spectrum.h"
-#include "FluxSvc/SpectrumFactory.h"
+#include "Spectrum.h"
+#include "SpectrumFactory.h"
 
 #include "CLHEP/Vector/LorentzVector.h"
 

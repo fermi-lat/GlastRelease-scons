@@ -11,7 +11,7 @@
 #endif // _MSC_VER > 1000
 
 #include "FluxSvc/ISpectrumFactory.h"
-#include "FluxSvc/SpectrumFactoryTable.h"
+#include "SpectrumFactoryTable.h"
 #include <typeinfo>
 #include <vector>
 
@@ -32,10 +32,12 @@ public:
         SpectrumFactoryTable::instance()->addFactory(classname, this); 
     }
     //! return a new Spectrum object
-    virtual Spectrum* instantiate(const std::string& params) const{return new T(params);}
+    virtual ISpectrum* instantiate(const std::string& params) const{return new T(params);}
     
     //! dummy to follow Gaudi model
     virtual void addRef()const{}
 };
+
+
 
 #endif // !defined(AFX_SPECTRUMFACTORY_H__211C2F25_9111_44B9_B357_0762789222AF__INCLUDED_)

@@ -7,7 +7,7 @@
 
 #ifndef SIMPLESPECTRUM_H
 #define SIMPLESPECTRUM_H
-#include "FluxSvc/Spectrum.h"
+#include "Spectrum.h"
 #include <string>
 
 class DOM_Element;

@@ -10,7 +10,7 @@
 #include "CLHEP/Random/Random.h"
 #include "GPS.h"
 
-#include "FluxSvc/SpectrumFactory.h"
+#include "SpectrumFactory.h"
 
 static SpectrumFactory<HeSpectrum> factory;
 const ISpectrumFactory& HeSpectrumFactory = factory;

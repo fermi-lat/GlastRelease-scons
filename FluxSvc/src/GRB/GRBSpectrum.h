@@ -17,7 +17,7 @@
 #include <map>
 #include <cmath>
 #include "FluxSvc/mainpage.h"
-#include "FluxSvc/Spectrum.h"
+#include "../Spectrum.h"
 #include "facilities/Observer.h"
 #include "src/GPS.h"
 #include "CLHEP/Random/RandomEngine.h"

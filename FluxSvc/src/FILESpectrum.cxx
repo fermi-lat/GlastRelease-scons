@@ -7,7 +7,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "FluxSvc/SpectrumFactory.h"
+#include "SpectrumFactory.h"
 
 static SpectrumFactory<FILESpectrum> factory;
 const ISpectrumFactory& FILESpectrumFactory = factory;

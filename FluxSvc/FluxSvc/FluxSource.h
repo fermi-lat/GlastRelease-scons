@@ -6,7 +6,7 @@
 #define FluxSource_h 1
 
 #include "FluxSvc/EventSource.h"
-#include "FluxSvc/Spectrum.h"
+#include "Spectrum.h"
 #include "geometry/Point.h"
 
 // forward declarations
@@ -21,7 +21,7 @@ class FluxSource : public EventSource
 {
   public:      
       ///  constructor
-      FluxSource ( Spectrum* aSpec = 0, double aFlux = 1 );
+      FluxSource ( ISpectrum* aSpec = 0, double aFlux = 1 );
       FluxSource ( const DOM_Element& xelem );
       
       ///    destructor
@@ -86,8 +86,8 @@ class FluxSource : public EventSource
       void  printOn ( std::ostream& out ) {}
       
       /// set spectrum, with optional parameter to set the maximum energy?
-      void spectrum(Spectrum* s, double emax=-1);
-      Spectrum* spectrum() const{ return m_spectrum; }
+      void spectrum(ISpectrum* s, double emax=-1);
+      ISpectrum* spectrum() const{ return m_spectrum; }
 
 
       double interval (double time);
@@ -142,7 +142,7 @@ class FluxSource : public EventSource
 
       static	double	s_radius, s_backoff;
 
-      Spectrum*         m_spectrum;	    // spectrum to generate
+      ISpectrum*         m_spectrum;	    // spectrum to generate
 
       double m_maxEnergy; // max kinetic energy allowed when running a spectrum
       

@@ -6,7 +6,7 @@
 #include "dom/DOM_NodeList.hpp"
 #include "xml/Dom.h"
 
-#include "FluxSvc/SpectrumFactoryTable.h"
+#include "SpectrumFactoryTable.h"
 
 #include "SimpleSpectrum.h"
 
@@ -30,7 +30,7 @@ using std::min;
 using std::max;
 
 
-FluxSource::FluxSource(Spectrum* aSpec, double aFlux)
+FluxSource::FluxSource(ISpectrum* aSpec, double aFlux)
 : EventSource(aFlux),  m_spectrum(0),
 m_maxEnergy(100.),  // note defualt maximum kinetic energy
 _minCos(-0.4f), _maxCos(1.0f), _minPhi(0.0f), _maxPhi(2*M_PI),
@@ -52,7 +52,7 @@ m_rmin(0), m_rmax(1), _phi(0.0f), _theta(0.0f), m_pointtype(NOPOINT), m_launch(N
 {
     static double d2r = M_PI/180.;
     
-    Spectrum*   s = 0;
+    ISpectrum*   s = 0;
     std::string class_name;
     std::string source_params; 
     
@@ -233,7 +233,7 @@ void FluxSource::setAcceptance()
     }
 }
 
-void FluxSource::spectrum(Spectrum* s, double emax)
+void FluxSource::spectrum(ISpectrum* s, double emax)
 {
     if (emax > 0) {
         setMaxEnergy(emax);

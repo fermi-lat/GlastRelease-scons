@@ -11,7 +11,7 @@
 #include <cmath>
 #include "CLHEP/Random/Random.h"
 
-#include "FluxSvc/SpectrumFactory.h"
+#include "SpectrumFactory.h"
 
 static SpectrumFactory<GalElSpectrum> factory;
 const ISpectrumFactory& GalElSpectrumFactory = factory;
