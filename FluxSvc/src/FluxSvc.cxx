@@ -267,6 +267,7 @@ StatusCode FluxSvc::initialize ()
     setProperties ();
     // set the starting time from date if set
     m_startTime = startTime();
+    GPS::instance()->time(m_startTime.value());
 //    if(! m_startDate.value().empty() && m_endTime>0) m_endTime += m_startTime; 
 
     // open the message log

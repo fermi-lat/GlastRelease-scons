@@ -3,6 +3,8 @@
 ApplicationMgr.ExtSvc += { "FluxSvc" };
 ApplicationMgr.DLLs   += { "FluxSvc" }; 
 FluxSvc.source_lib  = {"$(FLUXROOT)/xml/source_library.xml"};
+// DC2 launch 
+FluxSvc.StartDate = "2005-05-01 12:00:00";
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
 // controls the event loop
 ApplicationMgr.Runable= "FluxSvc";
