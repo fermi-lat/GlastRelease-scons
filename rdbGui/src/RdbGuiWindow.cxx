@@ -1,0 +1,302 @@
+
+#include "RdbGuiWindow.h"
+#include <vector>
+
+// Message Map RdbGUIWindow class
+FXDEFMAP(RdbGUIWindow) RdbGUIWindowMap[]={
+
+  //__Message_Type_____________ID________________________Message_Handler_____
+  FXMAPFUNC(SEL_UPDATE,   RdbGUIWindow::ID_TITLE,              RdbGUIWindow::onUpdTitle),
+  FXMAPFUNC(SEL_UPDATE,   RdbGUIWindow::ID_OVERSTRIKE,         RdbGUIWindow::onUpdOverstrike),
+  FXMAPFUNC(SEL_CHANGED,  RdbGUIWindow::ID_SQLEDIT,            RdbGUIWindow::onSQLEdit),
+  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_OPENXML,            RdbGUIWindow::onOpenXMLFile),
+  FXMAPFUNC(SEL_CLOSE,    RdbGUIWindow::ID_TITLE,              RdbGUIWindow::onQuit),
+  FXMAPFUNC(SEL_SIGNAL,   RdbGUIWindow::ID_QUIT,               RdbGUIWindow::onQuit),
+  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_QUIT,               RdbGUIWindow::onQuit),
+  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_OPENCONNECTION,     RdbGUIWindow::onOpenConnection),
+  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_CLOSECONNECTION,    RdbGUIWindow::onCloseConnection) 
+  };
+
+
+
+// Macro for the GLViewWindow class hierarchy implementation
+FXIMPLEMENT(RdbGUIWindow,FXMainWindow,RdbGUIWindowMap,ARRAYNUMBER(RdbGUIWindowMap))
+
+
+/*******************************************************************************/
+
+// Construct a RdbGUIWindow
+RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL,0,0,800,600)
+{
+
+  // Main window set itself as the target
+  setTarget(this);
+  setSelector(ID_TITLE);
+
+  // Menubar
+  FXMenuBar *uiMenuBar = new FXMenuBar(this, LAYOUT_SIDE_TOP|LAYOUT_FILL_X);
+
+  // Statusbar
+  FXStatusBar *uiStatusBar = new FXStatusBar(this,
+    LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|STATUSBAR_WITH_DRAGCORNER);
+
+  // Tooltip
+  new FXToolTip(getApp());
+
+  // Content frame
+  FXVerticalFrame *uiContent = new FXVerticalFrame(this, LAYOUT_FILL_X|LAYOUT_FILL_Y);
+
+  // Toolbar
+  new FXHorizontalSeparator(uiContent, SEPARATOR_RIDGE|LAYOUT_FILL_X);
+  FXHorizontalFrame *uiToolbar = new FXHorizontalFrame(uiContent,LAYOUT_FILL_X);
+
+  // DB selection
+  new FXLabel(uiToolbar, "Database:");
+  m_uiDBSelection = new FXComboBox(uiToolbar, 35, NULL, 0, COMBOBOX_INSERT_LAST|
+      FRAME_SUNKEN|FRAME_THICK);
+
+  // Toolbar buttons
+  new FXVerticalSeparator(uiToolbar, SEPARATOR_GROOVE|LAYOUT_FILL_Y);
+  new FXToggleButton(uiToolbar, "&Tab", "&Txt\tToggle output",
+                     NULL, NULL, this, ID_TOGGLERESULT, FRAME_RAISED|FRAME_THICK);
+  new FXButton(uiToolbar, "&Paste result\tPaste from result table",
+               NULL, this, ID_PASTEFROMTABLE, FRAME_RAISED|FRAME_THICK);
+  new FXVerticalSeparator(uiToolbar, SEPARATOR_GROOVE|LAYOUT_FILL_Y);
+  new FXToggleButton(uiToolbar, "&Auto", "M&an\tToggle autocommit",
+                     NULL, NULL, this, ID_TOGGLEAUTOCOMMIT, FRAME_RAISED|FRAME_THICK);
+  new FXButton(uiToolbar, "&Commit\tCommit current transaction",
+               NULL, this, ID_COMMIT, FRAME_RAISED|FRAME_THICK);
+  new FXButton(uiToolbar, "&Rollback\tRollback current transaction",
+               NULL, this, ID_ROLLBACK, FRAME_RAISED|FRAME_THICK);
+
+  // Horizontal splitter
+  FXSplitter *uiHsplitter = new FXSplitter(uiContent, LAYOUT_FILL_X|
+                                           LAYOUT_FILL_Y|SPLITTER_TRACKING|SPLITTER_HORIZONTAL);
+
+  // Treelist frame left
+  FXHorizontalFrame *uiTreeframe = new FXHorizontalFrame(uiHsplitter,
+                                      LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_THICK);
+
+
+  // Treelist
+  uiTree = new DbTreeList(uiTreeframe, this, ID_TREE,
+                           TREELIST_SHOWS_LINES|TREELIST_SHOWS_BOXES|FRAME_SUNKEN|FRAME_THICK|
+                           LAYOUT_FILL_X|LAYOUT_FILL_Y, 0, 0, 0, 0);
+
+  // Vertical splitter right
+  FXSplitter *uiVsplitter = new FXSplitter(uiHsplitter, (LAYOUT_FILL_X|LAYOUT_FILL_Y|
+                               SPLITTER_TRACKING|SPLITTER_VERTICAL|PACK_UNIFORM_HEIGHT));
+
+  // Editor frame up
+  FXHorizontalFrame *uiEditorframe = new FXHorizontalFrame(uiVsplitter,
+                                        LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_THICK|FRAME_SUNKEN);
+
+
+  // Editor
+  uiEditor = new SQLBuffer(uiEditorframe, this, ID_SQLEDIT, LAYOUT_FILL_X|LAYOUT_FILL_Y);
+
+  // Log window frame
+  FXHorizontalFrame *uiLogFrame = new FXHorizontalFrame(uiVsplitter,
+      LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_THICK|FRAME_SUNKEN);
+
+  // Result log
+  uiLog = new LogText(uiLogFrame, NULL, 0, LAYOUT_FILL_X|LAYOUT_FILL_Y);
+  
+  // Result table
+//   uiTable = new ResultTable(uiResultswitch, NULL, 0, TABLE_COL_SIZABLE|
+//                             LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 2,2,2,2);
+                            
+  // File menu
+  FXMenuPane *uiFilemenu = new FXMenuPane(this);
+  new FXMenuTitle(uiMenuBar, "&File", NULL, uiFilemenu);
+  new FXMenuCommand(uiFilemenu, "&Open XML ...\tCtl-O\tLoad the xml database description",
+    NULL, this, ID_OPENXML);
+  new FXMenuSeparator(uiFilemenu);
+  new FXMenuCommand(uiFilemenu, "&Quit\tCtl-Q\tQuit DbGui", NULL,
+    this, ID_QUIT);
+    
+  // Session menu
+  FXMenuPane *uiSessmenu = new FXMenuPane(this);
+  new FXMenuTitle(uiMenuBar, "&Session", NULL, uiSessmenu);
+  new FXMenuCommand(uiSessmenu, "&Open connection\tCtl-[\tOpen new database connection...",
+      NULL, this, ID_OPENCONNECTION);
+  new FXMenuCommand(uiSessmenu, "&Close connection\tCtl-]\tClose current database connection",
+      NULL, this, ID_CLOSECONNECTION);
+
+
+  // Force some reasonable sizes to the layout manager
+  uiTreeframe->setWidth(150);
+  uiEditorframe->setHeight(300);
+
+  // Editor initialization
+  //  @filename = 'untitled.sql'
+  //  @filenameset = false
+  //  @ui_log.editable = false
+  uiEditor->setHiliteMatchTime(1500);
+  uiEditor->setCursorColor(fxcolorfromname("DarkGray"));
+  uiEditor->setFocus();
+  uiEditor->initSyntaxHighlighting();
+  m_shactive = getApp()->reg().readStringEntry("SETTINGS", "HighLightSyntax", "Y") == "Y";
+  
+  m_rdbBuilder = new rdbModel::XercesBuilder();
+  m_rdbManager = rdbModel::Manager::getManager();
+  m_rdbManager->setBuilder(m_rdbBuilder);
+
+}
+
+
+// Destructor
+RdbGUIWindow::~RdbGUIWindow()
+{
+  delete m_uiDBSelection;
+}
+
+
+
+// Create and initialize
+void RdbGUIWindow::create()
+{
+  FXMainWindow::create();
+  show(PLACEMENT_SCREEN);
+}
+
+
+// Update title
+long  RdbGUIWindow::onUpdTitle(FXObject* sender,FXSelector sel, void* ptr)
+{
+//   FXString title = "RdbGUI - [" + filename + "]";
+//   if (uiEditor.isModified())
+//     title << "*";
+//   sender.handle(this, MKUINT(FXWindow::ID_SETSTRINGVALUE, SEL_COMMAND), title);
+  return 1;
+}
+
+// Update box for overstrike mode display
+long  RdbGUIWindow::onUpdOverstrike(FXObject* sender,FXSelector sel, void* ptr)
+{
+//   mode = ((@ui_editor.textStyle & TEXT_OVERSTRIKE) != 0) ? "OVR" : "INS";
+//   sender.handle(self, MKUINT(ID_SETSTRINGVALUE, SEL_COMMAND), mode);
+  return 1;
+}
+
+long RdbGUIWindow::onSQLEdit(FXObject* sender,FXSelector sel, void* ptr)
+{
+  if (m_shactive)
+    uiEditor->highlightSyntax();
+  return 1;
+}
+
+long RdbGUIWindow::onOpenXMLFile(FXObject* sender,FXSelector sel, void* ptr)
+{
+  // Open file
+  onCloseConnection(NULL,0,NULL);
+  if (m_rdbManager->getRdb())
+    m_rdbManager->cleanRdb();
+  uiTree->init();
+  FXFileDialog *opendialog = new FXFileDialog(this, "Open File");
+  opendialog->setSelectMode(SELECTFILE_EXISTING);
+  opendialog->setPatternList("XML files (*.xml)\nAll files (*)");
+  if (opendialog->execute() != 0)
+    loadXMLFile(opendialog->getFilename());
+  return 1;
+}
+
+
+void RdbGUIWindow::loadXMLFile(FXString fileName)
+{
+  if (FXFile::exists(fileName))
+    {
+      m_rdbManager->setInputSource(fileName.text());
+      if (m_rdbManager->build())
+        FXMessageBox::error(this, MBOX_OK, "Error: rdbModel building", 
+                            "an error as occurred during the construction of the rdb model");
+      m_rdbManager->startVisitor(uiTree);
+    }  
+}
+
+
+long RdbGUIWindow::onQuit(FXObject* sender,FXSelector sel, void* ptr)
+{
+  getApp()->exit(0);
+  return 1;
+}
+
+long RdbGUIWindow::onOpenConnection(FXObject*,FXSelector, void*)
+{
+  m_dgNewCon = new ConnectionDialog(this);
+  m_connect = new rdbModel::MysqlConnection();
+  if (m_dgNewCon->execute(PLACEMENT_OWNER) != 0)
+    {
+      getApp()->beginWaitCursor();
+      std::vector<FXString> data = m_dgNewCon->getConnectionData();      
+      if (!(m_connect->open(data[1].text(), data[2].text(), data[3].text(), data[0].text()))) 
+        {
+          uiLog->logText("Unable to connect to MySQL database\n");
+        }
+      else
+        {
+          m_uiDBSelection->appendItem(data[0]+" ("+data[2]+"@"+data[1]+")");
+          m_uiDBSelection->setCurrentItem(0);   // this line will have to be changed
+          
+          rdbModel::MATCH match = m_connect->matchSchema(m_rdbManager->getRdb());
+        
+          switch (match) {
+          case rdbModel::MATCHequivalent:
+            uiLog->logText("XML schema and MySQL database are equivalent!\n");
+            break;
+          case rdbModel::MATCHcompatible:
+            uiLog->logText("XML schema and MySQL database are compatible\n");
+            break;
+          case rdbModel::MATCHfail:
+            uiLog->logText("XML schema and MySQL database are NOT compatible\n");
+            break;
+          case rdbModel::MATCHnoConnection:
+            uiLog->logText("Connection failed while attempting match\n");
+            break;
+          }
+        }
+      getApp()->endWaitCursor();
+    }
+  delete m_dgNewCon;
+  return 1;
+}
+
+
+long RdbGUIWindow::onCloseConnection(FXObject*,FXSelector, void*)
+{
+  if (m_uiDBSelection->getNumItems() == 0)
+    return 1;
+
+  FXString message = "Close connection to " + m_uiDBSelection->getText()+"?\n";
+  if (MBOX_CLICKED_OK == FXMessageBox::question(this, MBOX_OK_CANCEL, "Close Connection",
+      message.text()))
+    {
+      m_connect->close();
+      delete m_connect;
+      m_uiDBSelection->removeItem(m_uiDBSelection->getCurrentItem());
+    }
+  return 1;  
+}
+
+// Here we begin
+int main(int argc,char *argv[])
+{
+
+  // Make application
+  FXApp application("RdbGUI","Calibration");
+
+  // Open the display
+  application.init(argc,argv);
+
+  // Make window
+  new RdbGUIWindow(&application);
+
+  // Create the application's windows
+  application.create();
+
+  // Run the application
+  return application.run();
+}
+
+
+
