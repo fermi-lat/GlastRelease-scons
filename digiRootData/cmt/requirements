@@ -11,7 +11,7 @@ apply_pattern package_include
 apply_pattern package_linkopts
 
 apply_pattern ld_library_path
-
+apply_pattern package_headers
 
 
 private
@@ -26,7 +26,7 @@ macro digiRootData_customBuild ""\
 # on unix use a document to make rootcint part of the build process
 make_fragment event_dorootcint_header
 make_fragment event_dorootcint -header=event_dorootcint_header
-document event_dorootcint EventRootCint CINTFILE=../digiRootData/EventCint.cxx
+#document event_dorootcint EventRootCint CINTFILE=../digiRootData/EventCint.cxx
 
 
 
