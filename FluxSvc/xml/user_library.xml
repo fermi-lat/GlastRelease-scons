@@ -259,9 +259,4 @@
           </spectrum>
      </source>
 
-<!-- the Map spectrum -->
-    <source name="showmap" >
-        <spectrum> <SpectrumClass name="MapSpectrum" params="10.0,doc/test.txt"/> <use_spectrum frame="galaxy"/> </spectrum>
-    </source>
-
 </source_library>
