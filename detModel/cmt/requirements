@@ -7,7 +7,7 @@ author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
 author Joanne Bogart <jrb@slac.stanford.edu>
 
 use CLHEP   v2* IExternal
-use xmlUtil
+use xmlUtil v2*
 use idents
 
 apply_pattern shared_library
