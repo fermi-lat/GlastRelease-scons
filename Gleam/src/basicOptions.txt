@@ -83,7 +83,7 @@ FluxAlg.source_name="muon_pencil_angle";
 ApplicationMgr.DLLs +={ "CRflux", "GRB" };
 FluxSvc.source_lib += {
    "$(CRFLUXROOT)/xml/source_library.xml",
-   "$(GRBROOT)/xml/grb_user_library.xml"};
+   "$(GRBROOT)/xml/GRB_user_library.xml"};
 
 // ----------------------------
 //  Digitization
