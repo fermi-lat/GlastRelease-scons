@@ -4,6 +4,7 @@
 
 
 #include "fx.h"
+#include <vector>
 
 class QueryFrame: public FXVerticalFrame
 {
@@ -28,6 +29,7 @@ class QueryFrame: public FXVerticalFrame
   
  private:
   FXMatrix *m_searchFrame;                  // Martix of FXComboBox containing search conditions
+  std::vector<FXString> m_operators;     // vector of comparison operators
 
 
 };

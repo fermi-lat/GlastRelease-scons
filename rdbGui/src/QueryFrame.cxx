@@ -38,6 +38,11 @@ QueryFrame::QueryFrame(FXComposite *owner):
   new FXButton(addRemovFrame,"F&ewer\tRemove last search condition", NULL, this, ID_FEWER);
   
   new FXHorizontalSeparator(this);
+  
+  int  numOper= 6;
+  FXString relOper[] = {"<",">","=","<>","<=",">="};
+  m_operators.assign(relOper, &relOper[numOper-1]);
+  
 }
 
 

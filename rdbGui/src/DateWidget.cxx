@@ -48,16 +48,10 @@ std::string DateWidget::getValue()
 void DateWidget::setValue(std::string val)
 {
   int year, month, day;
-  char years[4];
-  char months[2];
-  char days[2];
 
   sscanf(val.c_str(),"%d-%d-%d", &year, &month, &day);  
-  itoa(year, years, 10);
-  itoa(month, months, 10);
-  itoa(day, days, 10);
 
-  m_year->setText(years);
-  m_month->setText(months);
-  m_day->setText(days);
+  m_year->setText(FXStringVal(year));
+  m_month->setText(FXStringVal(month));
+  m_day->setText(FXStringVal(day));
 }  
