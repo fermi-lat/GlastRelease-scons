@@ -3,23 +3,16 @@
 
 #include "TObject.h"
 
-
 /* @class CalXtalId        
 * @brief ID class for CAL logs                                
+* Based on CalXtalId in the idents package.
+* Stores xtal id as a packed word (UInt_t) of 32 bits.
 * Supports both packed log ID = (tower*8 + layer)*16 + column and
 * unpacked ID, i.e. tower, layer, and column.
-* Serialize methods give i/o for packed ID.
-* Extractor/inserter give i/o for unpacked ID.
-* Input methods ensure that packed and unpacked IDs stay in sync.
 * 
 * Retrieve packed ID or unpacked tower, layer, and column 
 * inline int getPackedId() const 
 * void getUnpackedId(short& tower, short& layer, short& column); 
-*
-* Retrieve tower, layer, and column numbers individually from packed ID 
-* inline short getTower() const 
-* inline short getLayer() const 
-* inline short getColumn() const 
 *             
 * The packedId looks like:
 * @verbatim
@@ -28,37 +21,41 @@
 *      Tower   Layer  Column
 * BITS: 7-10    4-6    0-3
 * @endverbatim
-* @author  J. Eric Grove
+* @author  Heather Kelly
 * $Header$
 */
 class CalXtalId : public TObject {
 
 public:
  
-    /// Xtal ends are labeled by POSitive or NEGative face
+    /// @enum XtalFace Xtal ends are labeled by POSitive or NEGative face
     typedef enum
     {
         POS = 0,
-        NEG
+        NEG = 1
     } XtalFace;
 
-    /// each Xtal end can report four energy ranges
+    /// @enum AdcRange Each Xtal end can report four energy ranges
     typedef enum
     {
         LEX8 = 0,
-            LEX1,
-            HEX8,
-            HEX1
+        LEX1 = 1,
+        HEX8 = 2,
+        HEX1 = 3
     } AdcRange;
     
-    /// readout can be either best-of-four energy ranges or all energy ranges
+    /// @enum CalTrigMode Readout can be either best-of-four energy ranges or all energy ranges
     typedef enum
     {
         BESTRANGE = 0,
-            ALLRANGE = 2
+        ALLRANGE = 2
     } CalTrigMode;
 
-    CalXtalId(UInt_t packedId=0);
+    CalXtalId();
+
+    CalXtalId(const CalXtalId& id) { m_packedId = id.m_packedId; };
+
+    CalXtalId(UInt_t packedId);
     
     CalXtalId(Short_t tower, Short_t layer, Short_t column); 
     
@@ -71,8 +68,9 @@ public:
     void init(Short_t tower, Short_t layer, Short_t column);
     void init(UInt_t packedId);
     
-    /// get packed ID or unpacked tower, layer, and column
+    /// Returns the packed Id
     UInt_t getPackedId() const;
+    /// Returns the unpacked tower, layer, and column
     void getUnpackedId(Short_t& tower, Short_t& layer, Short_t& column);
     
     /// get tower, layer, and column numbers individually from packed ID
