@@ -17,7 +17,7 @@
 #include "GaudiKernel/DataSvc.h"
 #include "TkrRecon/Track/ITkrFitTool.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
-#include "TkrUtil/ItkrFailureModeSvc.h"
+#include "TkrUtil/ITkrFailureModeSvc.h"
 
 class TkrNeuralNetFitTool : public AlgTool, virtual public ITkrFitTool
 {
