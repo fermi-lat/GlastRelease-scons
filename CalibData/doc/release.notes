@@ -1,6 +1,8 @@
 /** @file release.notes
  * Package CalibData
  * Coordinator:  J. Bogart
+ *  7-Oct-2004 jrb - v0r9p2   Implement and use better checking of channel 
+ *                            specification
  *  6-Oct-2004 jrb - v0r9p1   Make const what should be const
  *  4-Oct-2004 jrb - v0r9p0   Pick up additional little changes needed for 
 *                             new CAL types
