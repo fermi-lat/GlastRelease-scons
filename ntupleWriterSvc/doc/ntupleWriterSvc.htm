@@ -94,7 +94,7 @@
             <li>
               <p align="left">Finally, for the algorithm you wish to use to
               write to an ntuple, setup a new input parmeter to specify the
-              ntuple tag name.&nbsp; Here is an example for the acdReconAlg:<br>
+              ntuple logical name.&nbsp; Here is an example for the acdReconAlg:<br>
               <i>acdReconAlg.tuple_name = &quot;ACD&quot;;</i></li>
           </ol>
         </li>
@@ -109,13 +109,18 @@
               ntupleWriterSvc:<br>
               <i>      INTupleWriterSvc *ntupleWriteSvc;</i></li>
             <li>
-              <p align="left">Add a member variable to store the ntuple tag
-              parameter that we just added to the job options file.<br>
+              <p align="left">Add a member variable to store the ntuple logical
+              name parameter that we just added to the job options file.<br>
               <i>      std::string m_tupleName;</i></li>
             <li>
               <p align="left">In your algorithm's constructor, add a
-              declareProperty call for the tag parameter:<br>
+              declareProperty call for the logical name parameter:<br>
               <i>declareProperty(&quot;tupleName&quot;, m_tupleName=&quot;&quot;);</i></li>
+            <li>
+              <p align="left">In your algorithm's initialize routine, make sure
+              there is a call to &quot;setProperties( )&quot;.&nbsp; This is a
+              call to the Gaudi routine that will extract your parameters from
+              the job options file.</li>
             <li>
               <p align="left">In your algorithms's initialize routine, access
               the ntupleWriterSvc:<br>
@@ -129,7 +134,7 @@
             <li>
               <p align="left">Lastly, during your algorithm's execute method,
               call a routine to fill quantities in an ntuple.&nbsp; For example,
-              the acdReconAlg has a method called writeNTuple().&nbsp; This
+              the acdReconAlg has a method called writeNTuple( ).&nbsp; This
               routine, uses the ntupleWriterSvc to add items and their values to
               a named ntuple.&nbsp; This example, adds 2 entries to the ntuple,
               &quot;ACD_TotEnergy&quot; and &quot;ACD_TileCount&quot;.<br>
@@ -141,6 +146,17 @@
               m_tileCount);<br>
               &nbsp;&nbsp;&nbsp; return sc;<br>
               }</i></li>
+            <li>
+              <p align="left">NOTE:&nbsp; It is imperative that all items that
+              you expect to fill during the course of a run are setup via an
+              &quot;addItem&quot; call for the first and every event.&nbsp; An
+              ntuple will contain entries for all columns for every event.&nbsp;
+              We cannot add new columns during the course of a run.&nbsp;
+              So...if your addItem calls are dependent upon certain variables
+              being defined - provide alternate calls to addItem to fill in
+              dummy values for the columns in the ntuple.&nbsp; These dummy
+              values may be zero, or some outlandish value to flag this event as
+              one that does not have certain variables defined.</li>
           </ol>
           <p align="left">The only method users of ntupleWriterSvc need to be
           concerned with is the addItem routine.&nbsp; The method is defined as
