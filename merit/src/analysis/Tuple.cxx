@@ -285,10 +285,9 @@ Tuple::tupleItem(const std::string& name)const
     
     
     // here if not found
-    //    std::stringstream  errmsg;
-    //    errmsg << "Sorry, did not find '" << name << "' in the tuple\n";
-    //    std::cerr << errmsg.str() << std::endl;
-    //    throw (errmsg.str());
+    std::stringstream  errmsg;
+    errmsg << "Did not find '" << name << "' in the tuple\n";
+    throw (errmsg.str());
     return *it;
 }
 

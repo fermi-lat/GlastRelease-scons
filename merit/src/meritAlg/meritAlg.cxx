@@ -206,7 +206,7 @@ meritAlg::meritAlg(const std::string& name, ISvcLocator* pSvcLocator) :
   declareProperty("generated" , m_generated=10000);
   declareProperty("EventTreeName",     m_eventTreeName="MeritTuple");
   declareProperty("PointingTreeName", m_pointingTreeName="Exposure");
-  declareProperty("IM_filename", m_IM_filename="$(CLASSIFICATIONROOT)/xml/PSF_Analysis.xml");
+  declareProperty("IM_filename", m_IM_filename="$(MERITROOT)/xml/classification.imw");
   declareProperty("PrimaryType", m_primaryType="RECO"); // or "MC" (why not a bool?)
   declareProperty("NbOfEvtsInFile", m_nbOfEvtsInFile=100000);
 
