@@ -38,8 +38,8 @@
 * \class ExposureAlg
 *
 * \brief This is an Algorithm designed to get information about LAT
-* position, exposure and livetime from FluxSvc and use it to put information onto the TDS about
-* LAT pointing and location characteristics, effectively generating the D2 database.  The "TimeCandle" 
+* position,  from FluxSvc and use it to put information onto the TDS about
+* LAT pointing and location characteristics, effectively generating the D2 database.  The "TimeTick" 
 * Spectrum is included (and can be used in jobOptions with this algorithm) in order to provide a constant time reference.
 *
 * \author Sean Robinson
@@ -78,7 +78,7 @@ const IAlgFactory& ExposureAlgFactory = Factory;
 //------------------------------------------------------------------------
 //! ctor
 ExposureAlg::ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator)
-:Algorithm(name, pSvcLocator), m_out(0), m_tickCount(0)
+:Algorithm(name, pSvcLocator), m_out(0), m_tickCount(0), m_lasttime(0)
 {
     // declare properties with setProperties calls
     declareProperty("source_name",  m_source_name="default");
@@ -101,6 +101,20 @@ StatusCode ExposureAlg::initialize(){
         log << MSG::ERROR << "Couldn't find the FluxSvc!" << endreq;
         return StatusCode::FAILURE;
     }
+
+    // access the properties of FluxSvc
+    IProperty* propMgr=0;
+    sc = serviceLocator()->service("FluxSvc", propMgr );
+    if( sc.isFailure()) {
+        log << MSG::ERROR << "Unable to locate PropertyManager Service" << endreq;
+        return sc;
+    }
+
+    DoubleProperty startTime("StartTime",0);
+    sc = propMgr->getProperty( &startTime );
+    if (sc.isFailure()) return sc;
+
+    m_lasttime = startTime.value();
 
     //set the input file to be used as the pointing database
     if(! m_pointing_history_input_file.value().empty() ){
@@ -154,6 +168,8 @@ StatusCode ExposureAlg::execute()
                currentTime= mcheader->time();
         }
     }   
+    // is this a special "particle" designed to save the information?
+    bool tick =    m_fluxSvc->currentFlux()!=0 && m_fluxSvc->currentFlux()->particleName() == "TimeTick" ;
 
     //by now, we should know that we have the appropriate particle to make a Exposure with.
     // here we get the time characteristics
@@ -165,17 +181,17 @@ StatusCode ExposureAlg::execute()
     double intrvalstart = m_lasttime;
     //then get the end of the interval (this can be made into whatever).
     double intrvalend = currentTime;
-    //get the livetime from the source itself.
-    double livetime = intrvalend - m_lasttime;
     //..and reset the time of this event to be the "last time" for next time.
-    m_lasttime = intrvalend;
+    if(tick) m_lasttime = intrvalend;
 
 
     // The GPS singleton has current time and orientation
     GPS* gps = GPS::instance();
 
-    gps->getPointingCharacteristics(intrvalstart);
-    Hep3Vector location = gps->position(intrvalstart);
+    // evaluating pointing stuff for previous tick, or current time if not a tick
+    double time = tick? intrvalstart : currentTime;
+    gps->getPointingCharacteristics(time); // sets time for other functions
+    Hep3Vector location = gps->position(time); // special, needs its own time
 
     // hold onto the cartesian location of the LAT
     double posx = location.x(), 
@@ -224,9 +240,7 @@ StatusCode ExposureAlg::execute()
 
     //now, only do the rest of this algorithm if we have a timetick particle.
 
-    if(    m_fluxSvc->currentFlux()==0 
-        || m_fluxSvc->currentFlux()->particleName() != "TimeTick" ) 
-        return StatusCode::SUCCESS;
+    if(    !tick ) return StatusCode::SUCCESS;
 
     log << MSG::DEBUG ;
     if(log.isActive()){
