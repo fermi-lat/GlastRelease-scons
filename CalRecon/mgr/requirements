@@ -1,5 +1,5 @@
 package CalRecon
-version v1r1
+version v2r4
 
 branches src mgr doc
 
@@ -9,8 +9,6 @@ use GlastSvc
 use ntupleWriterSvc
 use GlastDigi
 
-# this only for SiRecObjs
-use TkrRecon 
 
 
 apply_pattern package_include
