@@ -340,10 +340,10 @@ int checkTkrCluster(const TkrCluster *cluster, UInt_t ievent, UInt_t icluster) {
     commonRootData::TkrId tkrId = cluster->getTkrId();
 
     // This may go away in a future release
-    if ( cluster->getId() != icluster)  {
-        std::cout << "TkrCluster id is wrong: " << cluster->getId() << std::endl;
-        return -1;
-    }
+    //if ( cluster->getId() != icluster)  {
+    //    std::cout << "TkrCluster id is wrong: " << cluster->getId() << std::endl;
+    //    return -1;
+    //}
 
     if ( tkrId.getView() != commonRootData::TkrId::eMeasureX) {
         std::cout << "TkrCluster axes is wrong: " << tkrId.getView() << std::endl;
@@ -842,7 +842,7 @@ int write(char* fileName, int numEvents) {
 			Double_t tot = f;
 			UInt_t flag = 1;
 			UInt_t tower = 8;
-            TkrCluster *cluster = new TkrCluster(tkrId, strip0, stripf, pos, tot, flag, icluster);
+            TkrCluster *cluster = new TkrCluster(tkrId, strip0, stripf, pos, tot, flag);
             tkrRec->addCluster(cluster);
         }
 
