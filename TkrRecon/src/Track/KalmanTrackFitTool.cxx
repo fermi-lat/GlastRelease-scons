@@ -499,7 +499,7 @@ double KalmanTrackFitTool::doSmoothStep(Event::TkrKalFitTrack& track, Event::Tra
         // Update the smoothed hit at this plane
 	    Event::TkrFitPar    curPar = Event::TkrFitPar(curStateVec);
 	    Event::TkrFitMatrix curCov = Event::TkrFitMatrix(curCovMat);
-        trackUtils.addNewHit(curPlane, Event::TkrFitHit::FIT,curPar,curCov);
+        trackUtils.addNewHit(curPlane, Event::TkrFitHit::SMOOTH, curPar, curCov);
 
         // Extract the measured state vector from the TDS version
         // There must be a better way to do this...
