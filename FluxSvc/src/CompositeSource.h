@@ -26,7 +26,7 @@ public:
     
     
     ///    add a source to the list
-    void addSource (EventSource* aSource);
+    virtual void addSource (EventSource* aSource);
     void rmvSource (EventSource* aSource);
     
     /// generate an event from from one of the sources 

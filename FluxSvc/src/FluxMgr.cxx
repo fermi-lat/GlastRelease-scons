@@ -31,7 +31,7 @@ FluxMgr::FluxMgr(const std::vector<std::string>& fileList, std::string dtdname)
 }
 
 void FluxMgr::defaultFile(){
-    //Purpose: to se the default xml file and initialize the package to use it.
+    //Purpose: to set the default xml file and initialize the package to use it.
     std::vector<std::string> input;
     // must find the source_library.xml file.
     // set up the xml document to use for initialization parameters
@@ -50,7 +50,7 @@ void FluxMgr::init(const std::vector<std::string>& fileList){
     
     xml::XmlParser parser;
     
-    std::string xmlFileIn = writeXmlFile( fileList);
+    std::string xmlFileIn = writeXmlFile(fileList);
     
     // a quick way of displaying what goes to the parser
     //std::cout << xmlFileIn <<std::endl;
@@ -166,8 +166,7 @@ EventSource*  FluxMgr::getSourceFromXML(const DOM_Element& src)
                     xml::Dom::transToChar(sname.getAttribute("sourceRef")) << 
                     "' not in source library");
             }
-            cs->addSource(getSourceFromXML(selem));
-            
+            cs->addSource(getSourceFromXML(selem));           
             sname = xml::Dom::getSiblingElement(sname);
         } 
         while (sname != DOM_Element() );

@@ -339,7 +339,10 @@ void FluxSource::randomLaunchPoint()
 
 double FluxSource::flux(double time) const
 {
-    return enabled() ? std::max(m_spectrum->flux(time),/*0.*/ EventSource::flux(time)) : 0;
+    //return enabled() ? std::max(m_spectrum->flux(time),/*0.*/ EventSource::flux(time)) : 0;
+    if(!enabled()){ return 0;}
+    if(m_spectrum->flux(time)){ return m_spectrum->flux(time);}
+    else{return EventSource::flux(time);}
 }
 
 #if 1

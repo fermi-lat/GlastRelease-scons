@@ -63,6 +63,9 @@ public:
     
     /// get the current satellite location
     std::pair<double,double> location();
+
+    /// return a string which uniquely identifies the source
+    std::string uniqueIDString()const;
     
     
     //------------------------------------------------------------------

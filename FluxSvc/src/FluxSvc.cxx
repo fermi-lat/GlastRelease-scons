@@ -215,6 +215,14 @@ std::string FluxSvc::fluxName()const{
     return m_currentFlux->name();
 }
 
+/// return a string which uniquely identifies the source
+std::string FluxSvc::uniqueIDString()const{
+    std::strstream t;
+    t << m_currentFlux->numSource();
+    return m_currentFlux->name() + t.str();
+}
+
+
 void FluxSvc::setOrientation(std::pair<double,double> ang){
     m_fluxMgr->setOrientation(ang);
 }

@@ -2,6 +2,7 @@
 #include "CLHEP/Random/RandFlat.h"
 #include "FluxSvc/FluxSource.h"
 #include "SimpleSpectrum.h"
+#include <strstream>
 
 void CompositeDiffuse::addSource (EventSource* aSource)
 {
@@ -9,6 +10,7 @@ void CompositeDiffuse::addSource (EventSource* aSource)
     //flux should ensure proper units.
     // want EVERYTHING in particles/sec/m^2/steradian.
     double flux = aSource->flux(EventSource::time());
+    //std::cout << "adding source of flux " << flux << std::endl;
     //EventSource::setFlux( flux );
     m_unclaimedFlux-=flux;
 }
@@ -97,6 +99,7 @@ void CompositeDiffuse::addNewSource(){
 
 
 double CompositeDiffuse::remainingFluxInterval(){
+    //std::cout << "unclaimed flux is " << m_unclaimedFlux << std::endl;
     
     double  r = (solidAngle()*(m_unclaimedFlux)*6.);
     
@@ -108,35 +111,6 @@ double CompositeDiffuse::remainingFluxInterval(){
     
 }
 
-
-/*double CompositeDiffuse::getRandomFlux(){
-long double prob=RandFlat::shoot(0.0, 1.0);
-long double dx=0.0000001;
-
-  long double highthresholdofintensity = 0.0001; //for debugging and checking purposes
-  
-    long double i=0.000000001;//lowthresholdofintensity;
-    
-      while(prob > 0 && i<highthresholdofintensity){
-      dx=0.01*pow(10.0,log10(i));
-      prob-=(dx)*pofi(i);
-      i+=dx;
-      //	printf("\nin the findandaddnew loop; i=%12.10e, prob=%12.10e, dx=%12.10e , logi=%lf\n",i,prob,dx,log10(i));
-      }
-      return i*10000000.;
-      }
-      
-        
-          long double CompositeDiffuse::pofi(long double intensity){  //this function gives P(I).  see documentation.
-          long double p;
-          if(intensity>=pow(10.0,-7)){
-          p=2.49555*pow(10.0,-13)*pow(intensity,-2.5);//egret range value for pofi
-          }else{
-          p=2.49555*pow(10.0,-13)*pow(intensity,-2.5-0.05*(7.0+(log(intensity)/log(10.0))));	
-          }	//glast range value for pofi
-          return p;
-}*/
-
 long double CompositeDiffuse::logNlogS(long double flux){
     //READ MY LIPS - THIS NEEDS TO DO A PROPER INTERPOLATION!!!
     //Purpose:  this is designed to interpolate over the logN/logS characteristic.
@@ -145,6 +119,7 @@ long double CompositeDiffuse::logNlogS(long double flux){
     //Caveats: the vector should be sorted - right now the file needs to be in order of ascending flux
     int i = 0;
     double logHighFlux,logLowFlux;
+    i++; //there needs to be at least a space of 1 data point for measurement.
     while( (log10(flux) - m_logNLogS[i].first >= 0) && (m_logNLogS[i].first!=m_maxFlux) ){
         i++;
     }
@@ -154,6 +129,8 @@ long double CompositeDiffuse::logNlogS(long double flux){
     double logLowSources = m_logNLogS[i-1].second;
     
     double logNumSources = logLowSources + ((logHighSources-logLowSources)*(log10(flux)-logLowFlux));
+    //std::cout << "loglowsources = " << logLowSources << std::endl;
+    
     return pow(10,logNumSources);
 }
 
@@ -164,7 +141,7 @@ double sizeOfFifthDecade(double currentFlux){
 double CompositeDiffuse::getRandomFlux(){
     //NEED TO SET TOTAL INTEGRATED FLUX!!!!
     long double prob=RandFlat::shoot(m_totalIntegratedFlux);
-    long double dx=0.001;
+    long double dx=0.0000000000001;
     
     double currentFlux = m_minFlux;
     while(prob > 0 && currentFlux<m_maxFlux){
@@ -174,19 +151,160 @@ double CompositeDiffuse::getRandomFlux(){
         currentFlux+=sourcesPerFlux*dx;
         //	printf("\nin the findandaddnew loop; i=%12.10e, prob=%12.10e, dx=%12.10e , logi=%lf\n",i,prob,dx,log10(i));
     }
-    std::cout << "New Source, with flux = " << currentFlux << std::endl;
+    std::cout << "New Source created in CompositeDiffuse, with flux = " << currentFlux << std::endl;
     return currentFlux;
 }
 
 void CompositeDiffuse::setFileFlux(){
     double  currentFlux = m_minFlux ;
     m_totalIntegratedFlux = 0.;  //to initialize
-    long double dx=0.001; 
+    long double dx=0.0000000000001; 
     while(currentFlux < m_maxFlux){
         double sourcesPerFlux = logNlogS(currentFlux)/sizeOfFifthDecade(currentFlux);
         m_totalIntegratedFlux+=(dx)* sourcesPerFlux;
         currentFlux+=sourcesPerFlux*dx;
+        //std::cout << "m_currentFlux = " << currentFlux << std::endl;
         
     }
     
+}
+
+std::string CompositeDiffuse::writeXmlFile(const std::vector<std::string>& fileList) {
+/** purpose: creates a document of the form
+
+  <?xml version='1.0' ?>
+  <!DOCTYPE data_library SYSTEM "d:\users\burnett\pdr_v7r1c\flux\v5r3/xml/source.dtd" [
+  <!ENTITY librarya SYSTEM "d:\users\burnett\pdr_v7r1c\flux\v5r3/xml/user_library.xml" >
+  <!ENTITY libraryb SYSTEM "d:\users\burnett\pdr_v7r1c\flux\v5r3/xml/source_library.xml" >
+  ]>
+  <data_library>
+  &librarya;
+  &libraryb;
+  </data_library>
+  
+    */
+    std::strstream fileString;
+    // Unique tag to add to ENTITY elements in the DTD.
+    char libchar = 'a';
+    std::string inFileName;
+    
+    std::vector<std::string>::const_iterator iter = fileList.begin();
+    
+    //the default DTD file
+    inFileName=m_dtd;
+    //replace $(FLUXROOT) by its system variable
+    xml::IFile::extractEnvVar(&inFileName);
+    
+    //this stuff goes in the beginnning of the XML file to be read into the parser
+    fileString << "<?xml version='1.0' ?>" << std::endl << "<!DOCTYPE data_library" 
+        << " SYSTEM " << '"' << inFileName << '"' << " [" << std::endl;
+    
+    //as long as there are files in the file list...
+    for (;iter != fileList.end(); iter++) {
+        
+        // get the file name, and evaluate any system variables in it
+        inFileName=(*iter).c_str();
+        xml::IFile::extractEnvVar(&inFileName);
+        
+        //then make an ENTITY entry specifying where the file is
+        fileString << "<!ENTITY " << "library" << libchar << " SYSTEM " << '"' 
+            << inFileName << "\" >" << std::endl;      
+        libchar++;
+    }
+    
+    fileString << "]>" << std::endl << "<data_library>" << std::endl;
+    iter = fileList.begin();
+    libchar = 'a';
+    
+    //as long as there are files in the file list...
+    for (;iter != fileList.end(); iter++) {
+        // add a reference to the file name
+        fileString << "&library" << libchar << ";" << std::endl;       
+        libchar++;
+    }
+    
+    fileString << "</data_library>" << '\0';
+    return fileString.str();
+    
+}
+
+void CompositeDiffuse::fillTable(){
+    
+    m_dtd = "$(FLUXSVCROOT)/xml/FluxSvcParams.dtd";
+    std::string xmlFile = "$(FLUXSVCROOT)/xml/FluxSvcParams.xml";
+    
+    xml::XmlParser parser;
+    
+    //prepare the XML file
+    std::vector<std::string> fileList;
+    fileList.push_back(xmlFile);
+    
+    //then create the parser input.
+    std::string xmlFileIn = writeXmlFile( fileList);
+    
+    // a quick way of displaying what goes to the parser
+    //std::cout << xmlFileIn <<std::endl;
+    
+    DOM_Document m_library_doc = parser.parse(xmlFileIn);
+    
+    if (m_library_doc == DOM_Document()) {
+        std::cout << "Parse error: processing the document" << std::endl
+            << xmlFileIn << std::endl;
+        return;
+    }
+    
+    // Root element is of type data_library.  Content is
+    // one or more datatable elements.
+    
+    DOM_Element s_library = m_library_doc.getDocumentElement();
+    
+    // loop through the data elements to create a map of names, DOM_Elements
+    if (s_library != DOM_Element()) {
+        
+        DOM_Element child = xml::Dom::getFirstChildElement(s_library);
+        DOM_Element toplevel = xml::Dom::getFirstChildElement(s_library);
+        
+        while (child != DOM_Element()) {
+            while (child.getAttribute("name") == DOMString()) {
+                s_library = child;
+                child = xml::Dom::getFirstChildElement(s_library);
+            }
+            
+            while (child != DOM_Element()) {
+                std::string name = xml::Dom::transToChar(child.getAttribute("name"));
+                m_sources[name]=child;
+                child = xml::Dom::getSiblingElement(child);
+            }
+            
+            child = xml::Dom::getSiblingElement(toplevel);
+            toplevel=child;
+        }
+        
+    }
+    
+    DOM_Element characteristic = m_sources["logNlogScharacteristic"];
+    
+    
+    DOM_Element sname = xml::Dom::getFirstChildElement(characteristic);
+    if (sname == DOM_Element() ) {
+        std::cout << "Improperly formed XML event source" << std::endl;
+        return;
+    }
+    
+    DOM_Element toplevel=sname;
+    // If we got here, should have legit child element
+    while (/*(sname.getTagName()).equals("logNlogSdata")*/sname != DOM_Element()) {
+        double logflux = atof(xml::Dom::transToChar(sname.getAttribute("logflux")));
+        double lognumsources = atof(xml::Dom::transToChar(sname.getAttribute("lognumsources")));
+        m_logNLogS.push_back(std::make_pair<double,double>(logflux, lognumsources));
+        
+        //std::cout << logflux << " , " << lognumsources << std::endl;
+        sname = xml::Dom::getSiblingElement(toplevel);
+        toplevel=sname;
+    }
+    //now figure out the maximum and minimum fluxes.
+    m_minFlux = pow(10,(*m_logNLogS.begin()).first);
+    m_maxFlux = pow(10,(m_logNLogS.back()).first);
+    //std::cout << m_minFlux << "   " << m_maxFlux<<std::endl;
+    return;          
 }

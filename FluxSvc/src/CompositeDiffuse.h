@@ -15,6 +15,14 @@
 #include "CompositeSource.h"
 #include <vector>
 
+#include "dom/DOM_Document.hpp"
+#include "dom/DOM_Element.hpp"
+#include "xml/Dom.h"
+#include "xml/IFile.h"
+#include "xml/XmlParser.h"
+#include <string>
+#include <typeinfo>
+
 //#include <cmath>
 //#include <algorithm>
 //#include <functional>
@@ -30,67 +38,35 @@ public:
     CompositeDiffuse(double totalFlux):
       m_totalFlux(totalFlux),m_unclaimedFlux(totalFlux)
       {
-          double logIntensity; // log of source intensity, in units of particles/sec/m^2/steradian.
-          double logSourcesPerFifthDecade; //log of number of sources at an intensity, integrated over 1/5 decade.
-          //double intensity; //source intensity, in units of particles/sec/m^2/steradian.
-          //double sourcesPerFifthDecade; //number of sources at an intensity, integrated over 1/5 decade.
-          
-          std::string initialization_document = "src/lognlogs.txt";
-          int fitsflag = 1; //1 if we have a FITS file, 0 if not
-          const char* flux_root = ::getenv("FLUXSVCROOT");
-          //define the file
-          std::string doc_path2= (flux_root? std::string(flux_root)+"/" : "");
-          std::string fileName = doc_path2+initialization_document;//"doc/bremss_skymap_41p_222111";
-          
-          // get the input file name, and open it to read the logN/logS plot.
-          std::ifstream input_file;
-          input_file.open(fileName.c_str());
-          
-          if(false == input_file.is_open())
-          {
-              std::cerr << "ERROR:  Unable to open:  " << fileName.c_str() << std::endl;
-              exit(0);
-          }
-          else
-          {
-              //double curl,curb,curint,curind;
-              
-              while (!input_file.eof()){
-                  //get the info in the file and plug it into 
-                  input_file >> logIntensity;
-                  input_file >> logSourcesPerFifthDecade;
-                  std::cout << logIntensity << "   " << logSourcesPerFifthDecade<<std::endl;
-                  //intensity = pow(10,logIntensity);
-                  //sourcesPerFifthDecade = pow(10,logSourcesPerFifthDecade);
-                  m_logNLogS.push_back(std::make_pair<double,double>(logIntensity, logSourcesPerFifthDecade));
-              }
-              //now figure out the maximum and minimum fluxes.
-              m_minFlux = pow(10,(*m_logNLogS.begin()).first);
-              m_maxFlux = pow(10,(m_logNLogS.back()).first);
-              //std::cout << (*m_logNLogS.begin()).first << "   " << (m_logNLogS.back()).first <<std::endl;
-              setFileFlux();
-
-          }
-          }
-          
-          ~CompositeDiffuse(){}
-          
-          
-          /// generate an event from from one of the sources 
-          /// which make up the composite, and return a pointer to it
-          FluxSource* event (double time);
-          
-          /// Same as from CompositeSource, but allowing for total flux adjustment.
-          void CompositeDiffuse::addSource (EventSource* aSource);
-          
-          ///Randomly determines a new source, and adds it.
-          void addNewSource();
-          
-          double remainingFluxInterval();
-          
-          //sets the total flux integrated over the input file, for later use
-          void setFileFlux();
-          
+          fillTable();
+          setFileFlux();
+      }
+      
+      ~CompositeDiffuse(){}
+      
+      
+      /// generate an event from from one of the sources 
+      /// which make up the composite, and return a pointer to it
+      FluxSource* event (double time);
+      
+      /// Same as from CompositeSource, but allowing for total flux adjustment.
+      void CompositeDiffuse::addSource (EventSource* aSource);
+      
+      ///Randomly determines a new source, and adds it.
+      void addNewSource();
+      
+      double remainingFluxInterval();
+      
+      //sets the total flux integrated over the input file, for later use
+      void setFileFlux();
+      
+      ///fills the log N/log S characteristic table with data from the XML file
+      void fillTable();
+      
+      //stolen from FluxMgr, this collects xml and dtd and prepares an input
+      //file for parsing by the DOM parser.
+      std::string writeXmlFile(const std::vector<std::string>& fileList);
+      
 private:
     double m_totalFlux; // The total flux from the entire sky, particles/sec/m^2/steradian.
     double m_unclaimedFlux; // The amount of the flux "unaccounted for" by the known sources
@@ -101,4 +77,7 @@ private:
     double m_minFlux; //the minimum flux to be considered in the spectrum
     double m_maxFlux; //the maximum flux to be considered.
     double m_totalIntegratedFlux; //integrated flux, using input file.
-      };
+    std::string m_dtd; //the DTD document for the XML data to be read in.
+    /// list of sources for easy lookup
+    std::map<std::string, DOM_Element > m_sources;
+};

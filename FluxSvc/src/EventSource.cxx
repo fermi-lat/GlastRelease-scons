@@ -26,7 +26,7 @@ EventSource::EventSource (double aFlux, unsigned acode)
 }
 
 EventSource::EventSource (const DOM_Element& xelem)
-:  m_enabled(true), m_flux(1.), m_solid_angle(1.), m_code(0)
+:  m_enabled(true), m_flux(1.0), m_solid_angle(1.), m_code(0)
 {
     m_name = xml::Dom::getAttribute(xelem, "name");
     m_flux = atof (xml::Dom::getAttribute(xelem, "flux").c_str());
