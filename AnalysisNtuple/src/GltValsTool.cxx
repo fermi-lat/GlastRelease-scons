@@ -182,7 +182,7 @@ StatusCode GltValsTool::calculate()
 
     Trig_evtFlags = eventSummary==0 ? 0 : eventSummary->eventFlags();
 
-    bool three_in_a_row = ((word & (1<<enums::b_Track))!=0);
+    bool three_in_a_row = ((word & enums::b_Track)!=0);
 
     int tower, layer;
     // needs to be recast into an indexed vector maybe
