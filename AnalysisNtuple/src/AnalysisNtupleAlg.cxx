@@ -25,7 +25,8 @@ public:
     /// constructor can set ntuple service and ntupleName
     NtupleVisitor(INTupleWriterSvc* ntupleSvc=0, std::string ntupleName="") 
         : m_ntupleSvc(ntupleSvc), m_ntupleName(ntupleName) {}
-    virtual IValsTool::Visitor::eVisitorRet analysisValue(std::string varName, double& value) const;
+    virtual IValsTool::Visitor::eVisitorRet 
+        analysisValue(std::string varName, const double& value) const;
     
 private:
     /// pointer to the ntuple servic
@@ -34,7 +35,8 @@ private:
     std::string m_ntupleName;
 };
 
-IValsTool::Visitor::eVisitorRet NtupleVisitor::analysisValue(std::string varName, double& value) const
+IValsTool::Visitor::eVisitorRet NtupleVisitor::analysisValue(std::string varName, 
+                                                             const double& value) const
 { 
     StatusCode sc;
     if (m_ntupleSvc) {
@@ -193,8 +195,8 @@ StatusCode AnalysisNtupleAlg::execute()
         //do a browse
         m_toolvec[0]->browse();
                 
-        std::string varnames[nTools] = {"MC_x_err", "TRG_Type", "TKR_Energy_Corr", 
-            "VTX_zdir", "CAL_EneSum_Corr", "ACD_TileCount"};
+        std::string varnames[nTools] = {"McXErr", "GltType", "TkrEnergyCorr", 
+            "VtxZDir", "CalEneSumCorr", "AcdTileCount"};
                
         // check browse() against getVal() for each tool
                 
