@@ -292,9 +292,12 @@ const unsigned LdfParser::BufferSize = 64*1024;
             //m_datagram = m_datagram->next();
             char buffer[BufferSize];
             unsigned size = from_file(m_ebf, buffer);
-            if (size <= 0) return -1;
+            if (size <= 0) {
+              return -1;
+            }
             m_start = (LATdatagram*)buffer;
             m_end = (LATdatagram*)(&buffer[size]);
+            m_datagram = m_start;
           
             return 0;
         }
