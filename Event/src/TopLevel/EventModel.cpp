@@ -32,6 +32,13 @@ public:
         EventModel::MC::D2EntryCol           = EventModel::MC::Event  + "/D2EntryCol";
         EventModel::MC::ExposureCol          = EventModel::MC::Event  + "/ExposureCol";
 
+        EventModel::MC::McEventStructure     = EventModel::MC::Event  + "/McEventStructure";
+
+        EventModel::MC::McPartToHitTab       = EventModel::MC::Event  + "/McPartToHitTab";
+        EventModel::MC::McClusToLyrHitTab    = EventModel::MC::Event  + "/McClusToLyrHitTab";
+        EventModel::MC::McLyrToHitTab        = EventModel::MC::Event  + "/McLyrToHitTab";
+        EventModel::MC::McSiLayerHitCol      = EventModel::MC::Event  + "/McSiLayerHitCol";
+
         // Digi event
         EventModel::Digi::Event              = EventModel::EventHeader + "/Digi";
         EventModel::Digi::AcdDigiCol         = EventModel::Digi::Event + "/AcdDigiCol";
