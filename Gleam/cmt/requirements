@@ -61,7 +61,7 @@ use TkrRecon             v6r1
 
 
 #ROOT persistence
-use mcRootData  v2r1p1
+use mcRootData          v2r1p3
 use RootIo      v2r0
 
 
