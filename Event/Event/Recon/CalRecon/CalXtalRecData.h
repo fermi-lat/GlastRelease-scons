@@ -21,24 +21,57 @@ extern const CLID& CLID_CalXtalRecData;
 namespace Event 
 {
 
-/** @class   CalXtalRecData        
- * @brief reconstructed data for a calorimeter crystal                                            
- * @author  A.Chekhtman
- * $Header$
+/**
+* @class   CalXtalRecData        
+*
+* @brief TDS class containing reconstructed data for
+* one calorimeter crystal
+*
+* This class stores the reconstructed data  in the vector
+* of CalRangeRecData objects (data member m_recData).
+* This vector contains 1 or 4 elements,
+* depending on  readout mode defined by private data member 
+* m_mode (BESTRANGE or ALLRANGE).
+* The first element of the vector always contains information
+* for the best range, as it was defined during readout process.
+*
+* Data member m_xtalId contains crystal identification.
+* 
+* ObjectVector of CalXtalRecData is typedefed as CalXtalRecCol
+* and used to store crystal reconstructed data for whole calorimeter. 
+* 
+* @author  A.Chekhtman
+*
+* $Header$
 */
     class CalXtalRecData : virtual public ContainedObject { 
         
     public:
         
-    /** @class   CalRangeRecdata        
-     * @brief   position, reconstructed energies for both faces of Xtal for Cal            
-     * @author  A.Chekhtman
-     */
+    /** @class   CalRangeRecData        
+    * 
+    * @brief   This is teh nested class in CalXtalRecData,
+    *          holding reconstructed data for one readout range.
+    *
+    *          The class contains reconstructed position
+    *          and for both POSitive and NEGative faces of a crystal
+    *          the reconstructed energy and the range number used
+    *          to obtain this energy.           
+    *
+    *
+    * @author  A.Chekhtman
+    */
         class CalRangeRecData {  
             
         public:
-            CalRangeRecData(char rangeP, double eneP, char rangeM, double eneM) :
-              m_rangeP(rangeP), 
+
+            /// constructor initializing energies and ranges
+            /// and setting position to zero.
+            CalRangeRecData(char rangeP,
+                            double eneP,
+                            char rangeM,
+                            double eneM) :
+                  m_rangeP(rangeP), 
                   m_eneP(eneP), 
                   m_rangeM(rangeM), 
                   m_eneM(eneM),
@@ -47,53 +80,87 @@ namespace Event
               
               ~CalRangeRecData() {};
               
+              /// The separate setting function for reconstructed position
+              /// is needed, because position reconstruction is performed              
+              /// later, than energy reconstruction and is based
+              /// on reconstructed energies
               void setPosition (Point pos) { m_pos = pos;}
+              
+              /// retrieve position value
               Point getPosition() const { return m_pos;}
               
-              // retrieve energy from specified face
-              inline double getEnergy(idents::CalXtalId::XtalFace face) const {return face == idents::CalXtalId::POS ? m_eneP : m_eneM;};
+              /// retrieve energy from specified face
+              inline double getEnergy(idents::CalXtalId::XtalFace face) const
+              {return face == idents::CalXtalId::POS ? m_eneP : m_eneM;}
               
-              // retrieve energy range from specified face
-              inline char getRange(idents::CalXtalId::XtalFace face) const {return face == idents::CalXtalId::POS ? m_rangeP : m_rangeM;};
+              /// retrieve energy range from specified face
+              inline char getRange(idents::CalXtalId::XtalFace face) const 
+              {return face == idents::CalXtalId::POS ? m_rangeP : m_rangeM;}
               
               
         private:
             
-            double m_eneP, m_eneM;
+
+            /// reconstructed energy for POSitive face
+            double m_eneP;
+
+            /// reconstructed energy for NEGative face
+            double m_eneM;
+
+            /// reconstructed position
             Point m_pos;
-            char  m_rangeP, m_rangeM;
+
+            /// energy range for POSitive face
+            char m_rangeP;
+            
+            /// energy range for NEGative face
+            char m_rangeM;
             
         };
         
-        
+        /// default constructor
         CalXtalRecData() {};
         
-        CalXtalRecData(idents::CalXtalId::CalTrigMode mode, idents::CalXtalId CalXtalId) : 
-        m_mode(mode), m_xtalId(CalXtalId){};
+        /// constructor with parameters initializing crystal
+        /// identification and readout mode
+        CalXtalRecData(idents::CalXtalId::CalTrigMode mode,
+                       idents::CalXtalId CalXtalId) : 
+                       m_mode(mode), m_xtalId(CalXtalId){};
         
         virtual ~CalXtalRecData() { };
         
-        void initialize (idents::CalXtalId::CalTrigMode m, idents::CalXtalId id)
+        /// function initializing crystal identification and readout mode
+        void initialize (idents::CalXtalId::CalTrigMode m,
+                         idents::CalXtalId id)
         {m_mode = m; m_xtalId = id; }
         
         /// Retrieve readout mode
-        inline const idents::CalXtalId::CalTrigMode getMode() const { return m_mode; };
+        inline const idents::CalXtalId::CalTrigMode getMode() const
+        { return m_mode; };
         
-        /// Retrieve Xtal identifier
-        inline const idents::CalXtalId getPackedId() const { return m_xtalId; };
+        /// Retrieve crystal identifier
+        inline const idents::CalXtalId getPackedId() const
+        { return m_xtalId; };
         
-        inline void addRangeRecData(CalRangeRecData r) { m_RecData.push_back(r); } ;
+        /// Add one more readout range to the reconstructed data vector
+        inline void addRangeRecData(CalRangeRecData r) { m_recData.push_back(r); } 
         
         /// Retrieve energy range for selected face and readout
-        inline char getRange(short readoutIndex, idents::CalXtalId::XtalFace face) const
+        /// returns -1 if readout with requested index doesn't exist
+        inline char getRange(short readoutIndex,
+                             idents::CalXtalId::XtalFace face) const
         {
-            return (readoutIndex < m_RecData.size()) ? ((m_RecData[readoutIndex])).getRange(face) : (char)-1;
+            return (readoutIndex < m_recData.size()) ? 
+                   ((m_recData[readoutIndex])).getRange(face) : (char)-1;
         }
         
         /// Retrieve energy for selected face and readout
-        inline double getEnergy(short readoutIndex, idents::CalXtalId::XtalFace face) const
+        /// returns -1 if readout with requested index doesn't exist
+        inline double getEnergy(short readoutIndex,
+                                idents::CalXtalId::XtalFace face) const
         {
-            return (readoutIndex < m_RecData.size()) ? ((m_RecData[readoutIndex])).getEnergy(face) : (short)-1;
+            return (readoutIndex < m_recData.size()) ? 
+                   ((m_recData[readoutIndex])).getEnergy(face) : (short)-1;
         }
         
         
@@ -101,14 +168,15 @@ namespace Event
         inline double getEnergy()
         {
             return (getEnergy(0,idents::CalXtalId::POS)
-                +getEnergy(0,idents::CalXtalId::NEG))/2;
+                   +getEnergy(0,idents::CalXtalId::NEG))/2;
         }
         
-        /// Retrieve average energy of two faces for the best range (for const objects)
+        /// Retrieve average energy of two faces for the best range
+        /// (for const objects)
         inline double getEnergy() const
         {
             return (getEnergy(0,idents::CalXtalId::POS)
-                +getEnergy(0,idents::CalXtalId::NEG))/2;
+                   +getEnergy(0,idents::CalXtalId::NEG))/2;
         }
 
         /// Retrieve the position for the best range
@@ -126,52 +194,62 @@ namespace Event
         /// Retrieve reconstructed data from both ends of selected readout
         inline CalRangeRecData* getRangeRecData(short readoutIndex)
         {
-            //return ((readoutIndex < m_readout.size()) ? m_readout[readoutIndex] : 0);
-            if ( readoutIndex < m_RecData.size() )
-                return &(m_RecData[readoutIndex]);
+            if ( readoutIndex < m_recData.size() )
+                return &(m_recData[readoutIndex]);
             else
                 return 0;
             
         }
-        /// Retrieve reconstructed data from both ends of selected readout (for const objects)
+        /// Retrieve reconstructed data from both ends of selected readout
+        /// (for const objects)
         inline const CalRangeRecData* getRangeRecData(short readoutIndex) const
         {
-            //return ((readoutIndex < m_readout.size()) ? m_readout[readoutIndex] : 0);
-            if ( readoutIndex < m_RecData.size() )
-                return &(m_RecData[readoutIndex]);
+            if ( readoutIndex < m_recData.size() )
+                return &(m_recData[readoutIndex]);
             else
                 return 0;
             
         }
         
-        /// Retrieve pulse height from selected range
-        inline double getEnergySelectedRange(char range, idents::CalXtalId::XtalFace face) const
+        /// Retrieve energy from selected range and face
+        inline double getEnergySelectedRange(char range,
+                       idents::CalXtalId::XtalFace face) const
         {
-            char nRanges = (char)m_RecData.size();
+            
+            // get number of ranges as the size of m_recData vector
+            char nRanges = (char)m_recData.size();
+
+            // if there is only one range
             if (nRanges == 1)
-                return (range == ((m_RecData[0])).getRange(face)) ? ((m_RecData[0])).getEnergy(face) : -1.0;
+                
+                // and the range number corresponds to what is requested
+                // return energy,
+                // otherwise return -1
+                return (range == ((m_recData[0])).getRange(face)) ?
+                       ((m_recData[0])).getEnergy(face) : -1.0;
+            
+            // if there are 4 ranges - they are stored in increasing order,
+            // starting with best range and returning to 0 after 3
             else
-                return ((m_RecData[(nRanges + range - ((m_RecData[0])).getRange(face)) % nRanges])).getEnergy(face);
+                // calculate the index for requested range and return the energy
+                return ((m_recData[(nRanges + range -
+                ((m_recData[0])).getRange(face)) % nRanges])).getEnergy(face);
         }
-        
-        /// Serialize the object for writing
-        //    virtual StreamBuffer& serialize( StreamBuffer& s ) const;
-        /// Serialize the object for reading
-        //    virtual StreamBuffer& serialize( StreamBuffer& s );
-        /// Fill the ASCII output stream
-        //    virtual std::ostream& fillStream( std::ostream& s ) const;
-        
+                
         
 private:
     
     /// Cal readout mode is based on trigger type
     idents::CalXtalId::CalTrigMode m_mode;
-    /// Cal ID
+
+    /// crystal ID
     idents::CalXtalId m_xtalId;
+
     /// ranges and pulse heights
-    std::vector<CalRangeRecData> m_RecData;
+    std::vector<CalRangeRecData> m_recData;
     
 };
+
 typedef ObjectVector<CalXtalRecData> CalXtalRecCol;    
 
 }
