@@ -20,7 +20,7 @@ namespace calibUtil {
 
     /// this function takes in a stripList in string format and 
     /// fills a vector with corresponding strip numbers
-    strToNum(std::string strips, std::vector<unsigned int> &v);
+    void strToNum(std::string strips, std::vector<unsigned int> &v);
 
   public:
 

@@ -44,24 +44,18 @@ namespace calibUtil {
         @param instr  Instrument name, such as "flight", "EM",etc.
         @param calibType   One of the recognized calibration types,
                            such as "hotStrips"
-        @param dataFormat  For now, one of "XML" or "ROOT"
+        @param dataFmt  For now, one of "XML" or "ROOT"
         @param fmtVersion  Something to further identify data format
                            in case it evolves with time, e.g., "f1v0"
-        @param filename    Full file spec of file containing the data
-        @param calibStatus Completion status of calibration; has nothing
+        @param dataIdent   Identifies the data being described in the
+                           record; typically the full file spec of 
+                           the file containing the data
+        @param completion  Completion status of calibration; has nothing
                            to do with health of the detector being 
                            calibrated.  Possible values are "OK", 
-                           "INCOMPLETE" or "ABORTED"
-        @return     false if there is already an open record; else
-                    true
-        The rest is optional or has a sensible default. Other fields include
-           serial_num (index automatically incremented by MySQL)
-           calib_type_num (maintained by calibUtil)
-           data_size      (optional; to be set by client if used)
-           proc_time      (defaults to current time)
-           validity_start_time, validity_end_time  (optional; default
-           to current time)
-
+                           "INC" or "ABORT"
+        @return            See the eRet enumerated type for possible
+                           values
     */
     eRet openRecord(const std::string& instr, 
                     const std::string& calibType,
@@ -84,8 +78,7 @@ namespace calibUtil {
 
     /// Set validity interval: period over which calibration data
     /// is applicable.
-    eRet addValidInterval(Timestamp startTime,
-                                 Timestamp endTime);
+    eRet addValidInterval(Timestamp startTime, Timestamp endTime);
 
     /// Add setting of creator column to row-in-progress
     eRet addCreator(std::string creator);
@@ -116,10 +109,10 @@ namespace calibUtil {
        by the above, pick the one most recently written.
     */
     eRet findBest(unsigned int *ser,
-                         const std::string& calibType, 
-                         Timestamp timestamp,
-                         unsigned levelMask, 
-                         const std::string& instrument);
+                  const std::string& calibType, 
+                  Timestamp timestamp,
+                  unsigned levelMask, 
+                  const std::string& instrument);
 
 
     // Might also want a "findAll" which would just return a list
@@ -136,10 +129,10 @@ namespace calibUtil {
           @return     true if serialNo exists in dbs and "filename" has
                       non-null value; else false.
     */
-    bool getReadInfo(unsigned int serialNo, 
-                     std::string* dataFormat, 
+    eRet getReadInfo(unsigned int serialNo, 
+                     std::string* dataFmt, 
                      std::string* fmtVersion,
-                     std::string* filename);
+                     std::string* dataIdent);
                         
   /** 
     // Additional services will probably be needed to
@@ -165,9 +158,14 @@ namespace calibUtil {
     static void disconnectWrite();
 
   private:
-    static MYSQL* readCxt;
-    static MYSQL* writeCxt;
-    static bool connect(MYSQL* cxt, const std::string& group, eRet& err);
+    // may change MYSQL structures to not be static
+    static MYSQL readCxt;
+    static MYSQL writeCxt;
+    static bool writeConnect;
+    static bool readConnect;
+    //    static bool connect(MYSQL* cxt, const std::string& group, eRet& err);
+    static bool connect(MYSQL * cxt, const std::string& user, 
+                        const std::string& pw, eRet& err);
 
     //    static void makeQuery(std::string& query, unsigned int *levelMask);
     bool addLevel(std::string& q, unsigned int *levelMask);
