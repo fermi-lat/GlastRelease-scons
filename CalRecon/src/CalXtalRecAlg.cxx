@@ -419,48 +419,6 @@ bool CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi*
               pedP = pPedP->getAvr();
               pedM = pPedM->getAvr();
 
-              // this is for backward compatibility with pedestal xml files 
-              // without correlations 
-              if( pPedM->getCosAngle()!= 2. ){ 
-                if( rangeM%2==0 ){
-                  double cosAngle= pPedM->getCosAngle();
-                  CalibData::RangeBase* pRangeM = 
-                    pPeds->getRange(xtalId, rangeM+1,idents::CalXtalId::NEG);
-                  CalibData::Ped* pPedM = 
-                    dynamic_cast<CalibData::Ped * >(pRangeM);
-
-                  pedM *= cosAngle;
-                  pedM += pPedM->getAvr()*sqrt(1-cosAngle*cosAngle);
-               } else {
-                  CalibData::RangeBase* pRangeM = 
-                    pPeds->getRange(xtalId, rangeM-1,idents::CalXtalId::NEG);
-                  CalibData::Ped* pPedM = 
-                    dynamic_cast<CalibData::Ped * >(pRangeM);
-                  double cosAngle= pPedM->getCosAngle();
-
-                  pedM *= sqrt(1- cosAngle*cosAngle);
-                  pedM += pPedM->getAvr()*cosAngle;
-               }
-               if( rangeP%2==0 ){
-                  double cosAngle= pPedP->getCosAngle();
-                  CalibData::RangeBase* pRangeP = 
-                    pPeds->getRange(xtalId, rangeP+1,idents::CalXtalId::POS);
-                  CalibData::Ped* pPedP = 
-                    dynamic_cast<CalibData::Ped * >(pRangeP);
-
-                  pedP *= cosAngle;
-                  pedP += pPedP->getAvr()*sqrt(1-cosAngle*cosAngle);
-               } else {
-                 CalibData::RangeBase* pRangeP = 
-                   pPeds->getRange(xtalId, rangeP-1,idents::CalXtalId::POS);
-                 CalibData::Ped* pPedP = 
-                   dynamic_cast<CalibData::Ped * >(pRangeP);
-                 double cosAngle= pPedP->getCosAngle();
-
-                 pedP *= sqrt(1- cosAngle*cosAngle);
-                 pedP += pPedP->getAvr()*cosAngle;
-               }
-             }
            }
 
             
