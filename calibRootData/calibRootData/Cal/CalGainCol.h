@@ -1,35 +1,23 @@
 #ifndef calibRootData_CalGainCol_h
 #define calibRootData_CalGainCol_h
 
-#include "TObject.h"
-#include "TString.h"
-#include "../Cal/CalBase.h"
 #include "../Cal/CalGain.h"
-/*  Might need some more ROOT includes
-#include "TRef.h"
-#include "TRefArray.h"
-*/
+#include "../Cal/CalDimension.h"
 
-/** @class calibRootData::CalBase
-* @brief Base class for (almost) all Cal calibration ROOT classes.  
-* 
-* Those representing hot/dead channels probably won't use this base.
+/** @class calibRootData::CalGainCol
+* @brief Calorimeter gains calibration
 *
 * @author Joanne Bogart
 *  
 * $Header$
 */
 namespace calibRootData {
-  class CalGainCol : public CalBase  {
+  class CalGainCol : public TObject  {
     
   public:
 
 
-    CalGainCol(TString instr = TString(), TString t = TString(),
-               unsigned nRow=0, unsigned nCol=0, unsigned nLayer=0, 
-               unsigned nXtal=0, unsigned nFace=0, unsigned nRange=0) : 
-      CalBase(instr, t, nRow, nCol, nLayer, nXtal, nFace, nRange)
-       {m_gains.clear(); };
+    CalGainCol(){}
     virtual ~CalGainCol() {m_gains.clear(); };
 
     // Will this work as it stands or do I need to make a (non-const) copy?
@@ -39,11 +27,17 @@ namespace calibRootData {
                     Float_t sig) {
       m_gains.push_back(CalGain(id.getPackedId(), gain, sig));
     }
+
+    ///  Transparent access to CalDimension part of class.  
+    CalDimension* getDimension() {return &m_dim;}
     
   private:
 
     std::vector<CalGain> m_gains;
 
+    // Should this be a TRef pointing to an independent CalDimension instead?
+    CalDimension         m_dim;
+   
     ClassDef(calibRootData::CalGainCol, 1)
   };
 }

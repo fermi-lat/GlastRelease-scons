@@ -2,17 +2,10 @@
 #define calibRootData_CalGain_h
 
 #include "TObject.h"
-#include "TString.h"
 #include "commonRootData/idents/CalXtalId.h"
-/*  Might need some more ROOT includes
-#include "TRef.h"
-#include "TRefArray.h"
-*/
 
-/** @class calibRootData::CalBase
-* @brief Base class for (almost) all Cal calibration ROOT classes.  
-* 
-* Those representing hot/dead channels probably won't use this base.
+/** @class calibRootData::CalGain
+* @brief  Gain information for a single channel (includes channel identifier)
 *
 * @author Joanne Bogart
 *  

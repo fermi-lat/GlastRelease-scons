@@ -3,15 +3,10 @@
 
 #include "TObject.h"
 #include "TString.h"
-/*  Might need some more ROOT includes
-#include "TRef.h"
-#include "TRefArray.h"
-*/
 
 /** @class calibRootData::CalDimension
-* @brief Base class for (almost) all Cal calibration ROOT classes.  
-* 
-* Those representing hot/dead channels probably won't use this base.
+* @brief Dimension information needed by TDS to index Calorimeter
+* calibration data.  Also includes instrument name.
 *
 * @author Joanne Bogart
 *  
@@ -21,10 +16,10 @@ namespace calibRootData {
   class CalDimension : public TObject {
   public:
     
-    CalDimension(unsigned nRow=0, unsigned nCol=0, 
+    CalDimension(TString instr= TString(), unsigned nRow=0, unsigned nCol=0, 
                  unsigned nLayer=0, unsigned nXtal=0, unsigned nFace=0, 
                  unsigned nRange=0, unsigned nDacCol=0, bool exact=false) : 
-      m_nRow(nRow), m_nCol(nCol), m_nLayer(nLayer),
+      m_instrument(instr), m_nRow(nRow), m_nCol(nCol), m_nLayer(nLayer),
       m_nXtal(nXtal), m_nFace(nFace), m_nRange(nRange), m_nDacCol(nDacCol),
       m_exact(exact) { };
 
@@ -39,8 +34,22 @@ namespace calibRootData {
     unsigned getNDacCol() const {return m_nDacCol;}
     bool     isExact() const {return m_exact;}
 
- protected:
+    /// return true if arg. matches internal instrument name
+    bool isInstrument(const TString instrument) const {
+      return (instrument == m_instrument);
+    }
 
+    /// Set all dimension variables (but not instrument name)
+    void initialize(unsigned nRow, unsigned nCol, unsigned nLayer, 
+                    unsigned nXtal, unsigned nFace, unsigned nRange, 
+                    unsigned nDacCol) {
+      m_nRow = nRow;    m_nCol = nCol;  m_nLayer = nLayer;   m_nXtal = nXtal;
+      m_nFace = nFace;  m_nRange = nRange;      m_nDacCol = nDacCol;
+    }
+    void setInstrument(TString i) {m_instrument = i;}
+ private:
+
+    TString m_instrument;
     UChar_t m_nRow;
     UChar_t m_nCol;
     UChar_t m_nLayer;
@@ -50,16 +59,6 @@ namespace calibRootData {
     UChar_t m_nDacCol;
     Bool_t  m_exact;    
 
-  private:
-    friend class CalBase;  // so it can call initialize
-
-    void initialize(unsigned nRow, unsigned nCol, unsigned nLayer, 
-                    unsigned nXtal, unsigned nFace, unsigned nRange, 
-                    unsigned nDacCol) {
-      m_nRow = nRow;    m_nCol = nCol;  m_nLayer = nLayer;   m_nXtal = nXtal;
-      m_nFace = nFace;  m_nRange = nRange;      m_nDacCol = nDacCol;
-    }
-  
     ClassDef(calibRootData::CalDimension, 1)
   };
 }
