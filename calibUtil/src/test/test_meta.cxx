@@ -19,7 +19,7 @@ int main(int, char**) {
   using calibUtil::Metadata;
   using facilities::Timestamp;
 
-  Metadata  meta;
+  Metadata  meta("*", "*", "calib_test");
   Timestamp t_ok("2001-11-10 08:00");
   Timestamp t_none("2000-09-08 10:00");
 
@@ -102,7 +102,7 @@ calibUtil::Metadata::eRet lookup(calibUtil::Metadata::eCalibType ctype,
   std::cout << "   levelMask = " << levelMask << std::endl;
   std::cout << "   instrument = " << (int) inst << std::endl;
 
-  Metadata       meta;
+  Metadata       meta("*", "*", "calib_test");
   Metadata::eRet ret = meta.findBest(&ser, ctype, ts, levelMask, inst);
 
   if (ret != Metadata::RETOk) {
