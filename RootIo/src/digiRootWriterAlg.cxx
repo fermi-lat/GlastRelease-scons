@@ -205,7 +205,7 @@ StatusCode digiRootWriterAlg::execute()
 
     StatusCode sc = StatusCode::SUCCESS;
     
-    if (!m_digiFile->IsOpen()) {
+    if (!m_digiTree->GetCurrentFile()->IsOpen()) {
         log << MSG::ERROR << "ROOT file " << m_fileName 
             << " could not be opened for writing." << endreq;
         return StatusCode::FAILURE;
@@ -546,11 +546,11 @@ void digiRootWriterAlg::writeEvent()
     //m_digiFile->cd();
     m_digiTree->Fill();
     //m_digiEvt->Clear();
-    saveDir->cd();
     ++eventCounter;
     if (m_rootIoSvc)
         if (eventCounter % m_rootIoSvc->getAutoSaveInterval() == 0) m_digiTree->AutoSave();
 
+    saveDir->cd();
     return;
 }
 

@@ -171,7 +171,7 @@ StatusCode relationRootWriterAlg::execute()
 
     StatusCode sc = StatusCode::SUCCESS;
     
-    if (!m_relFile->IsOpen()) {
+    if (!m_relTree->GetCurrentFile()->IsOpen()) {
         log << MSG::ERROR << "ROOT file " << m_fileName 
             << " could not be opened for writing." << endreq;
         return StatusCode::FAILURE;
@@ -419,11 +419,11 @@ void relationRootWriterAlg::writeEvent()
     //m_relFile->cd();
     m_relTree->Fill();
     m_relTable->Clear();
-    saveDir->cd();
     m_common.clear();
     ++eventCounter;
     if (m_rootIoSvc)
         if (eventCounter % m_rootIoSvc->getAutoSaveInterval() == 0) m_relTree->AutoSave();
+    saveDir->cd();
 
     return;
 }

@@ -199,7 +199,7 @@ StatusCode mcRootWriterAlg::execute()
 
     StatusCode sc = StatusCode::SUCCESS;
     
-    if (!m_mcFile->IsOpen()) {
+    if (!m_mcTree->GetCurrentFile()->IsOpen()) {
         log << MSG::ERROR << "ROOT file " << m_fileName 
             << " could not be opened for writing." << endreq;
         return StatusCode::FAILURE;
@@ -556,10 +556,10 @@ void mcRootWriterAlg::writeEvent()
     //m_mcFile->cd();
     m_mcTree->Fill();
     //m_mcEvt->Clear();
-    saveDir->cd();
     ++eventCounter;
     if (m_rootIoSvc)
         if (eventCounter % m_rootIoSvc->getAutoSaveInterval()== 0) m_mcTree->AutoSave();
+    saveDir->cd();
     return;
 }
 

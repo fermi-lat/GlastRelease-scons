@@ -205,7 +205,7 @@ StatusCode reconRootWriterAlg::execute()
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
     
-    if (!m_reconFile->IsOpen()) {
+    if(!m_reconTree->GetCurrentFile()->IsOpen()) {
         log << MSG::ERROR << "ROOT file " << m_fileName 
             << " could not be opened for writing." << endreq;
         return StatusCode::FAILURE;
@@ -817,10 +817,10 @@ void reconRootWriterAlg::writeEvent()
     m_reconTree->GetCurrentFile()->cd();
     //m_reconFile->cd();
     m_reconTree->Fill();
-    saveDir->cd();
     ++eventCounter;
     if (m_rootIoSvc)
         if (eventCounter % m_rootIoSvc->getAutoSaveInterval() == 0) m_reconTree->AutoSave();
+    saveDir->cd();
 
     return;
 }
