@@ -13,7 +13,7 @@ ApplicationMgr.DLLs   += {"CalibSvc"};
 
 // ApplicationMgr.TopAlg = {"digiRootReaderAlg", "EvtClock", "UseCalib",
 //		      "UseBadStrips" };
-ApplicationMgr.TopAlg = {"digiRootReaderAlg", "EvtClock", "UseCalib",
+ApplicationMgr.TopAlg = {"digiRootReaderAlg", "EvtClock",
 		      "UsePeds" };
 digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
 
@@ -54,12 +54,12 @@ CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
 // They're listed below in order of likelihood of need to override, 
 // from most to least likely.
 // Storage type of 14 corresponds to MYSQL
-CalibDataSvc.CalibInstrumentName = "LAT";
+CalibDataSvc.CalibInstrumentName = "EM";
 CalibDataSvc.CalibStorageType = 14;
 CalibDataSvc.CalibRootName = "Calib";
 
-EvtClock.startTime = "2003-1-10_00:20";
-EvtClock.delayTime = 36000;
+EvtClock.startTime = "2003-2-25_00:20";
+EvtClock.delayTime = 3;
 
 //==============================================================
 //
