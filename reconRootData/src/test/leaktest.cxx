@@ -107,128 +107,95 @@
         // Create TkrRecon object
         TkrRecon *tkrRec = new TkrRecon();
         tkrRec->initialize();
-        for (icluster = 0; icluster < numClusters; icluster++ ) {
-            UInt_t iplane = 5;
+
+        for (icluster = 0; icluster < numClusters; icluster++ ) 
+        {
+            UInt_t towerX = icluster % 4;
+            UInt_t towerY = (icluster / 4) % 4;
+            UInt_t tray   = icluster % 15;
+            commonRootData::TkrId tkrId(towerX, towerY, tray, true, commonRootData::TkrId::eMeasureX);
             UInt_t strip0 = 4;
             UInt_t stripf = 10;
             TVector3 pos(f, 2.*f, 3.*f);
-			Double_t tot = f;
-			UInt_t flag = 1;
-			UInt_t tower = 8;
-            TkrCluster *tkr_cluster = new TkrCluster(icluster, iplane, TkrCluster::X, strip0, stripf,
-				pos, tot, flag, tower);
-            tkrRec->addCluster(tkr_cluster);
+            UInt_t rawTot = 50;
+            Double_t tot =  f;
+            UInt_t flag = 1;
+            UInt_t tower = 8;
+            UInt_t nBad  = 0;
+            TkrCluster *cluster = new TkrCluster(tkrId, strip0, stripf, pos, rawTot, tot, flag, nBad);
+            tkrRec->addCluster(cluster);
         }
-        UInt_t itrack;
-        for (itrack = 0; itrack < numTracks; itrack++) {
-            candTrack = new TkrCandTrack();
-            UInt_t lay = 3;
-            UInt_t tow = 1;
-            TVector3 pos(f, f*randNum, f);
-            TVector3 dir(f*randNum, f, f*randNum);
-            Double_t quality = f;
-            Double_t e = f*randNum;
-            candTrack->initialize(itrack, lay, tow, quality, e, pos, dir);
-            tkrRec->addTrackCand(candTrack);
-        }
-        for (itrack=0; itrack < numTracks; itrack++) {
+
+        TkrTrack *track;
+        for (int itrack=0; itrack < numTracks; itrack++) 
+        {
             track = new TkrTrack();
             UInt_t xgaps = itrack * itrack;
             UInt_t ygaps = itrack+itrack;
             UInt_t x1st = ievent+itrack;
             UInt_t y1st = ievent+ievent;
-            track.initializeInfo(itrack, xgaps, ygaps, x1st, y1st);
+            track->setNumXGaps(xgaps);
+            track->setNumYGaps(ygaps);
+            track->setNumXFirstGaps(x1st);
+            track->setNumYFirstGaps(y1st);
             Double_t chiSq = f;
             Double_t chiSqSmooth = f*randNum;
             Double_t rms = randNum*randNum;
             Double_t qual = f*f;
             Double_t e = f*2.0;
             Double_t ms = f*6.0;
-            track->initializeQual(chiSq, chiSqSmooth, rms, qual, e, ms);
+            track->setChiSquareFilter(chiSq);
+            track->setChiSquareSmooth(chiSqSmooth);
+            track->setScatter(rms);
+            track->setQuality(qual);
+            track->setKalEnergy(e);
+            track->setKalThetaMS(ms);
             tkrRec->addTrack(track);
-        }
-        
-        TkrKalFitTrack *kalTrack;
-        for (itrack = 0; itrack < numTracks; itrack++) {
-            kalTrack = new TkrKalFitTrack();
-            TkrKalFitTrack::Status status   = TkrKalFitTrack::FOUND;
-            TVector3 iniPos   = TVector3(f, 2.*f, 3.*f);
-            TVector3 iniDir   = TVector3(4.*f, 5.*f, 6.*f);
-            Float_t startEnergy = f*randNum;
-            Int_t trkId = numTracks+itrack;
-            // Initialize the track
-            kalTrack->initializeBase(status, 
-                1,
-                trkId,
-                startEnergy,
-                iniPos,
-                iniDir);
-            
-            kalTrack->initializeQual(randNum,
-                f*randNum,
-                2.*randNum,
-                3.*randNum,
-                4.*randNum,
-                5.*randNum,
-                6.*randNum );
-            
-            kalTrack->initializeGaps(0,
-                1,
-                2,
-                3);
-            
-            kalTrack->initializeKal( 7,
-                f,
-                5,
-                6,
-                f);
-            
-            tkrRec->addTrack(kalTrack);
         }
 
         UInt_t ivertex;
+        TkrVertex *vertex;
         for (ivertex=0; ivertex < numVertices; ivertex++) {
             vertex = new TkrVertex();
-            UInt_t layer = 2;
-            UInt_t tower = 4;
+            UInt_t towerX = ivertex % 4;
+            UInt_t towerY = ivertex / 4;
+            UInt_t tray   = ivertex % 15;
+            commonRootData::TkrId tkrId(towerX, towerY, tray, true, commonRootData::TkrId::eMeasureX);
+            vertex->setTkrID(tkrId);
             Double_t qual = f;
+            vertex->setQuality(qual);
             Double_t energy = f*randNum;
-            vertex->initializeInfo(ivertex, layer, tower, qual, energy);
-            
-            TkrParams vtxPar;
-            Double_t ax = f;
-            Double_t sx = f*f;
-            Double_t ay = f*randNum;
-            Double_t sy = randNum*randNum;
-            vtxPar.initialize(ax, sx, ay, sy);
-            
-            TkrCovMat vtxCov;
-            Double_t a_00 = f;
-            Double_t a_01 = f*2.;
-            Double_t a_02 = f*3.;
-            Double_t a_03 = f*4.;
-            Double_t a_10 = f*5.;
-            Double_t a_11 = f*6.;
-            Double_t a_12 = f*7.;
-            Double_t a_13 = f*8.;
-            Double_t a_20 = f*9.;
-            Double_t a_21 = f*10.;
-            Double_t a_22 = f*11.;
-            Double_t a_23 = f*12.;
-            Double_t a_30 = f*13.;
-            Double_t a_31 = f*14.;
-            Double_t a_32 = f*15.;
-            Double_t a_33 = f*16.;
-            vtxCov.initialize(a_00, a_01, a_02, a_03, a_10, a_11, a_12, a_13,
-                a_20, a_21, a_22, a_23, a_30, a_31, a_32, a_33);
+            vertex->setEnergy(energy);
+
+            TkrTrackParams vtxPar;
+            vtxPar(1) = f;
+            vtxPar(2) = f*f;
+            vtxPar(3) = f*randNum;
+            vtxPar(4) = randNum*randNum;
+
+            vtxPar(1,1) = f;
+            vtxPar(1,2) = f*2.;
+            vtxPar(1,3) = f*3.;
+            vtxPar(1,4) = f*4.;
+            vtxPar(2,2) = f*5.;
+            vtxPar(2,3) = f*6.;
+            vtxPar(2,4) = f*7.;
+            vtxPar(3,3) = f*8.;
+            vtxPar(3,4) = f*9.;
+            vtxPar(4,4) = f*10.;
+            vertex->setParams(vtxPar);
 
             TVector3 pos(f, f*randNum, f*randNum*2.);
+            vertex->setPosition(pos);
             TVector3 dir(randNum*2., randNum*3., randNum*4.);
-            vertex.addTrackId(ivertex+1);
-            vertex.addTrackId(ivertex+2);
-            vertex->initializeVals(vtxPar, vtxCov, pos, dir);
+            vertex->setDirection(dir);
+            //vertex->addTrackId(ivertex+1);
+            //vertex->addTrackId(ivertex+2);
             tkrRec->addVertex(vertex);
         }
+
+
+
         ev->initialize(ievent, runNum, tkrRec, calRec, acdRec);
         t->Fill();
         ev->Clear();
