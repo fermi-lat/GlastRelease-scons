@@ -217,6 +217,7 @@ StatusCode TriggerAlg::execute() {
             Event::EventHeader& h = header;
             h.setRun(m_run);
             h.setEvent(++m_event);
+            h.setTrigger(trigger_bits);
             
             log << MSG::INFO << "Begin event " << m_event  << " trigger bits "  
                 << std::setbase(16) << (m_mask==0?trigger_bits:trigger_bits& m_mask) << endreq;
