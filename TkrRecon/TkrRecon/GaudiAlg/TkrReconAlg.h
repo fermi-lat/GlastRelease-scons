@@ -1,14 +1,15 @@
 #ifndef __TKRRECONALG_H
 #define __TKRRECONALG_H 1
 
-#include "geometry/Point.h"
 #include "GaudiKernel/Algorithm.h"
 
 /** 
  * @class TkrReconAlg
  *
- * @brief Controls the track fitting
- * 
+ * @brief Top level TkrRecon Gaudi Algorithm for controlling the tracker reconstruction. 
+ *        This algorithm works by using the four main TkrRecon Gaudi Algorithms as Gaudi 
+ *        Sub-Algorithms. At initilization it will create and setup up TkrClusterAlg, 
+ *        TkrFindAlg, TkrTrackFitAlg and TkrVertexAlg. 
  * 
  * @author Tracy Usher
  *
@@ -19,18 +20,21 @@ class TkrReconAlg : public Algorithm
 {
 public:
 
+    // Standard Gaudi Algorithm constructor format
 	TkrReconAlg(const std::string& name, ISvcLocator* pSvcLocator); 
 	virtual ~TkrReconAlg() {}
 
+    // The thee phases in the life of a Gaudi Algorithm
 	StatusCode initialize();
 	StatusCode execute();
 	StatusCode finalize();
 	
 private:
 	
-	/// which patrec algorithm: 0 -> Link&Tree, 1 -> Combo, 2 -> NeuralNet
+	// Input parameter which determines the type of reconstruction to run
     std::string m_TrackerReconType;
-    
+
+    // Pointers to the four main TkrRecon Gaudi Algorithms
     Algorithm*  m_TkrClusterAlg;
     Algorithm*  m_TkrFindAlg;
     Algorithm*  m_TkrTrackFitAlg;
