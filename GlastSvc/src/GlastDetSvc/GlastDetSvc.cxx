@@ -236,7 +236,7 @@ void GlastDetSvc::layerToTray (int layer, int view, int& tray, int& botTop)
 
 void GlastDetSvc::trayToLayer(int tray, int botTop, int& layer, int& view)
 {
-    SiliconPlaneGeometry::trayToLayer (layer, view, tray, botTop);
+    SiliconPlaneGeometry::trayToLayer (tray, botTop, layer, view);
 }
 
 void GlastDetSvc::planeToLayer(int plane, int& layer, int& view)
