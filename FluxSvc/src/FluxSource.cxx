@@ -93,8 +93,8 @@ m_frametype(EARTH), illumBox(0), m_energyscale(GeV)
         if(spectrum_energyscale == "GeV"){ m_energyscale=GeV;
         }else if(spectrum_energyscale == "MeV"){ m_energyscale=MeV;
         }else{m_energyscale=MeV;} //this line "just in case"
-
-
+        
+        
         if (typeTagName.equals("particle")) s = new SimpleSpectrum(specType);
         else if (typeTagName.equals("SpectrumClass")) {
             // attribute "name" is the class name
@@ -252,13 +252,41 @@ void FluxSource::spectrum(ISpectrum* s, double emax)
     //const char* name = s->particleName();
 }
 
-FluxSource* FluxSource::event(double time) 
+// old event.
+//FluxSource* FluxSource::event(double time) 
+//{
+//    computeLaunch(time);
+//    EventSource::setTime(time);
+//    return this;
+// could be a call-back
+//}
+
+
+FluxSource* FluxSource::event(double time)
 {
+    m_extime = 0;
+    //go through the "veto" loop only if galactic coordinates are given for the source - otherwise,
+    //the particles originate close to GLAST, and can still be incident.
+    // loop through until you get a particle which is not occluded by the earth.
+    if(occluded()){
+    do{
+        computeLaunch(time);
+        m_extime+=5;
+    }while(occluded());
+}else{
+    //just do this once, source is not occluded
     computeLaunch(time);
-    EventSource::setTime(time);
-    return this;
-    // could be a call-back
+    m_extime+=5;
 }
+m_extime-=5; // to make up for doing this once too many.
+EventSource::setTime(time+m_extime);
+return this;
+// could be a call-back
+}
+
+
+
+
 
 void FluxSource::randomLaunchPoint()
 {
@@ -313,7 +341,7 @@ void FluxSource::computeLaunch (double time)
     do {
         // kinetic_energy= (*spectrum())(RandFlat::shoot(m_rmin, m_rmax));
         //FIXME: make this a class variable
-        kinetic_energy = spectrum()->energySrc( HepRandom::getTheEngine(), time );
+        kinetic_energy = spectrum()->energySrc( HepRandom::getTheEngine(), time + m_extime );
     }    while (kinetic_energy > m_maxEnergy* fudge);
     
     // get the launch point and direction, according to the various strategies
@@ -336,7 +364,7 @@ void FluxSource::computeLaunch (double time)
             if (_theta != 0.0) m_launchDir.rotateX(_theta).rotateZ(_phi);
             //WARNING UNCOMMENTED
             if(m_pointtype==NOPOINT){
-            randomLaunchPoint();
+                randomLaunchPoint();
             }
             break;
         }
@@ -906,7 +934,7 @@ void FluxSource::getGalacticDir(double l,double b){
     Vector gamgal(sin(theta)*cos(phi) , sin(theta)*sin(phi) , cos(theta));
     
     //get the transformation matrix..
-    Rotation galtoglast=GPS::instance()->orbit()->CELtransform(GPS::instance()->time());
+    Rotation galtoglast=GPS::instance()->orbit()->CELtransform(GPS::instance()->time() + m_extime);
     
     //and do the transform:
     setLaunch(galtoglast*gamgal);
@@ -986,10 +1014,10 @@ double FluxSource::interval (double time){
     //return m_spectrum->interval(time);
     
     //return std::max(m_spectrum->interval(time),/*0.*/ EventSource::interval(time));
-    double intrval=m_spectrum->interval(time);
+    double intrval=m_spectrum->interval(time + m_extime);
     if(intrval!=-1){return intrval;
     }else{
-        return explicitInterval(time);
+        return explicitInterval(time + m_extime);
     }
 }
 
@@ -1003,4 +1031,15 @@ double FluxSource::explicitInterval (double time)
         double p = RandFlat::shoot(1.);
         return (-1.)*(log(1.-p))/r;
     }
+}
+
+bool FluxSource::occluded(){
+    double current,max,z;
+    
+    z=this->launchDir().z();
+    current=asin( fabs(this->launchDir().z()) / 1.);//(this->launchDir().magnitude()) is always 1. 
+    max = acos(-0.4)-(M_PI/2.);
+    
+    return (m_launch == GALACTIC || m_frametype == GALAXY) && ( (current > max) && (z > 0) );
+    
 }

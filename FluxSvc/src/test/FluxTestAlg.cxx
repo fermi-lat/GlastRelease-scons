@@ -113,15 +113,12 @@ StatusCode FluxTestAlg::initialize() {
 StatusCode FluxTestAlg::execute() {
     
     StatusCode  sc = StatusCode::SUCCESS;
-    MsgStream   log( msgSvc(), name() );
+    MsgStream   log( msgSvc(), name() );    
     
-    
-    // TEST
+    //mc::McParticleCol*  pcol2= SmartDataPtr<mc::McParticleCol>(eventSvc(), "/Event/MC/McParticleCol");
     
     mc::McParticleCol* pcol = new mc::McParticleCol;
-    IDataProviderSvc* temp = eventSvc();
-    //log << MSG::DEBUG << "FluxTestAlg temp =" << temp << endreq;
-    temp->retrieveObject("/Event/McParticleCol",(DataObject *&)pcol);
+    eventSvc()->retrieveObject("/Event/MC/McParticleCol",(DataObject *&)pcol);
     
     HepVector3D p,d;
     double energy;

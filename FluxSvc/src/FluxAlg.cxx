@@ -114,30 +114,33 @@ StatusCode FluxAlg::execute()
         << "(" << d.x() <<", "<< d.y() <<", "<<d.z()<<")" 
         << endreq;
     
-    mc::McParticleCol* pcol = new mc::McParticleCol;
+    //mc::McParticleCol* pcol = new mc::McParticleCol;
 
     // Here the TDS is prepared to receive hits vectors
     // Check for the MC branch - it will be created if it is not available
-    DataObject *mc=0;
-    eventSvc()->retrieveObject("/Event/MC", mc);
-    if( mc==0){
-        mc=new DataObject; sc=eventSvc()->registerObject("/Event/MC", mc);
-        if( sc.isFailure()){
-        log << MSG::ERROR << "Coule not register /Event/MC" << endreq;
-        return sc;
-    }}
 
-    //log << MSG::DEBUG << "TDS ready" << endreq;
-
-
-    IDataProviderSvc* temp = eventSvc();
-    //log << MSG::DEBUG << "FluxAlg temp =" << temp << endreq;   
+    DataObject *mc = new mc::McParticleCol;
+    //eventSvc()->retrieveObject("/Event/MC", mc);
+        sc=eventSvc()->registerObject("/Event/MC", mc);
+        if(sc.isFailure()) log << MSG::ERROR << "/Event/MC could not be registered on data store" << endreq;
     
-    StatusCode sc2 = temp->registerObject("/Event/MC/McParticleCol", pcol);
+        DataObject *mc2;
+        sc=eventSvc()->findObject("/Event/MC", mc2);
+        if(sc.isFailure()) log << MSG::ERROR << "/Event/MC does not exist on data store" << endreq;
+    
+
+
+    //mc::McParticleCol*  pcol= SmartDataPtr<mc::McParticleCol>(eventSvc(), "/Event/MC/McParticleCol");
+    //if(pcol==0){
+    mc::McParticleCol* pcol = new mc::McParticleCol;
+    StatusCode sc2 = /*temp*/eventSvc()->registerObject("/Event/MC/McParticleCol", pcol);
     if( sc2.isFailure()) {
+
         log << MSG::ERROR << "Could not Register /Event/MC/McParticleCol" << endreq;
+
         return sc2;
     }
+    //}
     mc::McParticle * parent= new mc::McParticle;
     pcol->push_back(parent);
 

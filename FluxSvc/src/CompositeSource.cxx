@@ -68,6 +68,7 @@ FluxSource* CompositeSource::event (double time)
         
         double intrval=0.,intrmin=100000.;
         for (int q=0 ; now != m_sourceList.end(); ++now) {
+            (*now)->event(time); // to initialize particles, so that the real interval for the particle is gotten.
             intrval=(*now)->interval(EventSource::time());
             
             if(intrval < intrmin){
@@ -89,7 +90,7 @@ FluxSource* CompositeSource::event (double time)
     //update the time
     //m_time += interval(m_time);
     // now ask the chosen one to generate the event, if there is a rate
-    return m_recent->event(time);
+    return (FluxSource*)m_recent;//->event(time);
 }
 
 std::string CompositeSource::fullTitle () const
