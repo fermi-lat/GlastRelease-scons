@@ -93,14 +93,10 @@ E_i = E_{tot}(\Gamma_{inc}
     
      StatusCode execute();
 
-     static void setTrackSlope(double slope) {m_slope=slope;};
-
-
 protected:
 
     static void fcn(int & , double *, double &f, double *par, int );
     static double gam_prof(double *par, int i);
-    static double getTrackSlope() {return m_slope;};
 
 private:
 
@@ -110,7 +106,6 @@ private:
     static double m_xtalWidth;  //!< xtal width  in cm
     static int m_nbins;  //!< Number of bins used for the fit
     static std::vector<double> m_g_elayer;  //!< Energy per layer in GeV
-    static double m_slope; // local static copy of slope for fcn function
 
 };
 

@@ -30,7 +30,7 @@ double ProfileTool::gam_prof(double *par, int i)
 {
     double result =0; 
     
-    double length = ((m_xtalHeight*i+par[2])/1.85)/getTrackSlope();
+    double length = ((m_xtalHeight*i+par[2])/1.85)/getStaticSlope();
     
     // Evaluation of the parameters of CsI at this energy	
     //	double alpha = par[1];
@@ -41,7 +41,7 @@ double ProfileTool::gam_prof(double *par, int i)
     
     
     double x=length/lambda;
-    double dx = m_xtalHeight / (1.85 *lambda)/getTrackSlope();
+    double dx = m_xtalHeight / (1.85 *lambda)/getStaticSlope();
     
     double gamma1 =0;
     double gamma2 = 0;
@@ -359,4 +359,3 @@ StatusCode ProfileTool::execute()
      double ProfileTool::m_xtalWidth=0.;  //!< xtal width  in cm
      int ProfileTool::m_nbins=0;  //!< Number of bins used for the fit
      std::vector<double> ProfileTool::m_g_elayer;  //!< Energy per layer in GeV
-     double ProfileTool::m_slope=0.; // local static copy of slope for fcn function

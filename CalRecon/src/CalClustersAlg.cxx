@@ -293,7 +293,7 @@ StatusCode CalClustersAlg::execute()
         
         // Do profile fitting
 
-        m_profileTool->setTrackSlope(slope);
+        m_profileTool->setStaticSlope(slope);
         m_profileTool->doEnergyCorr((*it)->getEnergySum(),(*it));
         
         // calculating the transverse offset of average position in the calorimeter
