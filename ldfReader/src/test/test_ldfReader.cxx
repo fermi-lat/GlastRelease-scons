@@ -18,7 +18,7 @@ $Header$
 
 int main(int argn, char** argc) {
     using namespace ldfReader;
-    std::string filename = "$(LDF_DIR)/test/muon-5.arch";
+    std::string filename = "$(LDFROOT)/test/muon-5.arch";
 
     if( argn>1 ) filename = argc[1];
 
