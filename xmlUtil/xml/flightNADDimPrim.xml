@@ -1,0 +1,19 @@
+<primCategory name="NADDimPrim">
+  <overview>Fundametal dimensions of solids and offset for NAD 
+(Not A Detector) components, like the grid.</overview>
+
+  <!-- Cal grid stuff, as of 27 Sep 2001, from LAT-DS-00123-2
+  -->
+  <prim name= "NADGridWebInner" value= "8.0">Full thickness of grid between towers (not half-width)
+</prim>
+  <prim name= "NADGridWebOuter" value= "13.0">Thickness of grid on outside 
+towers</prim>
+  <prim name="NADGridWebZ" value= "210.800">Height of grid web</prim>
+  <prim name="NADGridWebCutout" value= "366.5">Cut-outs for calorimeters</prim>
+  <prim name="NADGridFlangeZ" value = "25.400">Height of grid flange</prim>
+  <prim name="NADGridFlangeCutout" value="346.600">Cutouts in the flange
+</prim>  
+  <prim name="NADGridFlangeInner" value="27.9">Thickness of inner parts of
+grid flange</prim>
+  <prim name="NADGridFlangeOverhang" value="25.0">Flange overhangs web</prim>
+</primCategory>
