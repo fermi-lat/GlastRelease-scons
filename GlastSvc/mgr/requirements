@@ -40,11 +40,12 @@ include_path $(GLASTSVCROOT)
 macro GlastSvc_shlibflags   "$(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
 
 # build this for non-shareable testing
-
+# note the addition of Raw. Take out shortly.
 application test ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
                  GlastDetSvc/*.h  GlastDetSvc/*.cpp \
                  EventSelector/*.h  EventSelector/*.cpp \
                  ../GlastSvc/MonteCarlo/*.h MonteCarlo/*.cpp \
+                 ../GlastSvc/Raw/*.h Raw/*.cpp \
                  Dll/*.cpp \
                  test/*.cpp test/*.h test/*.txt
 
