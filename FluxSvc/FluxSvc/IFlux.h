@@ -71,7 +71,7 @@ public:
     virtual Rotation CELTransform(double time)const=0;
 
     ///get the transformation matrix due to orientation of the spacecraft.
-    virtual Rotation OrientTransform(double time)const=0;
+    virtual Rotation orientTransform(double time)const=0;
        
     virtual void addFactory(std::string name, const ISpectrumFactory* factory )=0;
 

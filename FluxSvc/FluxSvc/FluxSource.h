@@ -144,7 +144,7 @@ class FluxSource : public EventSource
       virtual int eventNumber()const;
 
       double energy()const { return m_energy;}
-       //const Vector& rawDir()const {return m_launchDir;}
+      const Vector& rawDir()const {return m_launchDir;}
       const Vector& launchDir()const {return m_correctedDir;}//m_correctForTilt*m_launchDir;}
       const Point&  launchPoint()const { return m_launchPoint;}
 

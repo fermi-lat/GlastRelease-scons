@@ -286,6 +286,7 @@ computeLaunch(time);
     }
 m_extime-=1; // to make up for doing this once too many.
 EventSource::setTime(time+m_extime);
+correctForTiltAngle();
 return this;
 // could be a call-back
 }
@@ -484,7 +485,7 @@ void FluxSource::computeLaunch (double time)
         }
     }
     //   transformDirection(); 
-    correctForTiltAngle();
+    //correctForTiltAngle();
 }
 
 std::string FluxSource::fullTitle () const
@@ -1042,9 +1043,14 @@ double FluxSource::explicitInterval (double time)
 
 bool FluxSource::occluded(){
     double current,max,z;
+
+    //REMEMBER:  the earth is directly below the satellite, so, to determine occlusion,
+    // we must assume the frame to be checked against is zenith-pointing, and hence, we want 
+    //the direction of the particle BEFORE it is compensated for tilt angles.
     
-    z=this->launchDir().z();
-    current=asin( fabs(this->launchDir().z()) / 1.);//(this->launchDir().magnitude()) is always 1. 
+    z=this->rawDir().z();
+    //std::cout << "z = " << z << std::endl;
+    current=asin( fabs(this->/*launchDir*/rawDir().z()) / 1.);//(this->launchDir().magnitude()) is always 1. 
     max = acos(-0.4)-(M_PI/2.);
     
     return (m_launch == GALACTIC || m_frametype == GALAXY) && ( (current > max) && (z > 0) );

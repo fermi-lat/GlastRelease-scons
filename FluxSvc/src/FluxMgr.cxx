@@ -328,7 +328,7 @@ Rotation FluxMgr::CELTransform(double time){
 }
 
 //get the transformation matrix.
-Rotation FluxMgr::OrientTransform(double time){
+Rotation FluxMgr::orientTransform(double time){
     return GPS::instance()->rockingAngleTransform(time);
 }
 

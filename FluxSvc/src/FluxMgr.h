@@ -76,7 +76,7 @@ public:
     Rotation CELTransform(double time);
 
      ///get the transformation matrix due to orientation of the spacecraft.
-    Rotation OrientTransform(double time);
+    Rotation orientTransform(double time);
     
 private:
     
