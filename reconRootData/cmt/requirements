@@ -22,7 +22,7 @@ private
 use RootPolicy v2r*
 apply_pattern root_package
 apply_pattern root_package2
-
+apply_pattern vsnet_rootcint
 
 #define the list of header files to be used in rootcint
 
