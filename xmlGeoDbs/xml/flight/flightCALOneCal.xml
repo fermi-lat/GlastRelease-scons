@@ -102,7 +102,7 @@
     <!-- This name comes from GlastSim code. -->
     <composition name="CsIElement"  envelope="CsIElementEnv">
       <posXYZ volume="CsIDetector">  <!-- centered in envelope -->
-        <idField name="fCALCellCmp" value="eXtal" />
+        <idField name="fCALCellCmp" valueREF="eXtal" />
       </posXYZ>
       <posXYZ volume="diodeS" 
               XREF="diodeNegXOffset"
