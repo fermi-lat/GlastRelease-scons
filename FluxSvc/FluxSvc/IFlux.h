@@ -2,28 +2,28 @@
 
 #ifndef _H_IFlux_
 #define _H_IFlux_
-/** 
-* \class IFlux
-*
-* \brief The virtual interface for Flux-type objects.
-*
-* \author Toby Burnett tburnett@u.washington.edu
-* 
-* $Header $
-*/
 
 // includes
 #include <string>
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
-#include "../src/SpectrumFactoryTable.h"
-#include "geometry/CoordTransform.h"
+#include "CLHEP/Vector/Rotation.h"
 
 class ParticleProperty;
 class EventSource;
 class FluxSource;
+class ISpectrumFactory;
 
-//!  Abstract interface for an object that generates particles, Flux
+/** 
+* \class IFlux
+* \brief The virtual interface for Flux-type objects.
+*
+* \author Toby Burnett tburnett@u.washington.edu
+* 
+  Abstract interface for an object that generates particles, Flux
+
+  * $Header$
+*/
 class IFlux {
 public:
     /// ctor, select the name
@@ -76,17 +76,17 @@ public:
     virtual void pass ( double t)=0;
     
     ///get the transformation matrix due to orientation of the Galaxy 
-    virtual Rotation CELTransform(double time)const=0;
+    virtual HepRotation CELTransform(double time)const=0;
     
     ///get the transformation matrix due to orientation of the spacecraft.
-    virtual Rotation orientTransform(double time)const=0;
+    virtual HepRotation orientTransform(double time)const=0;
     
     virtual void addFactory(std::string name, const ISpectrumFactory* factory )=0;
     
     virtual /*int*/double gpsTime()const=0;
     
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
-    virtual Rotation transformGlastToGalactic(double time)const=0;
+    virtual HepRotation transformGlastToGalactic(double time)const=0;
     
     virtual EventSource* currentEvent()=0;
     

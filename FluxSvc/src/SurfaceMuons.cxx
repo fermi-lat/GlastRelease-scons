@@ -10,6 +10,7 @@
 #include "CLHEP/Random/RandFlat.h"
 #include <string>
 #include <utility>
+#include <algorithm>
 #include <map>
 
 /** 
@@ -36,11 +37,10 @@ public:
     double solidAngle()const{return 1.0;}
     
     /** @brief sample a single particle energy from the spectrum
-    @param number between 0 and 1, probably generated randomely to sample spectum
+    @param current time (ignored)
     @return the energy in GeV, or MeV if the source was specified as such
     */
-
-    virtual float operator() (float r)const;
+    double energy( double time);
 
     
     /** @brief return solid angle pair (costh, phi) for the given energy
@@ -59,11 +59,16 @@ private:
     // local function that approximates the spectrum as a function of E*cos(theta)
     double spectrum(double e);
 
+    /**
+    This is the integral spectrum as a map where the key is the integral spectrum and the
+    value the associated energy. This makes is easy to invert it by using the STL algorithm lower_bound.
+
+  */
     std::map<double,double> m_ispec; // integral spectrum, for sampling
     double m_flux;
     double m_index;
     double m_E0, m_emax;
-    mutable double m_costh;
+    double m_costh;
     double m_total;
     bool m_vertical;
     
@@ -92,7 +97,7 @@ SurfaceMuons::SurfaceMuons(const std::string& paramstring)
 
     // create integral table of the flux function, as a map of
     // energy and e*flux(e), with logarithmic energies
-    int n=120;
+    int n=100;
     double  emin=1;
         
     for( int i=0; i< n; ++i){
@@ -100,7 +105,7 @@ SurfaceMuons::SurfaceMuons(const std::string& paramstring)
             e = pow(10, 0.025*i),
             f= e*spectrum(e);
         
-        m_ispec[e]= (m_total +=f);
+        m_ispec[m_total +=f] =e;
     }
 }
 
@@ -116,31 +121,37 @@ const char* SurfaceMuons::particleName()const
 }
   
 /// sample a single particle energy from the spectrum: assume called first
-float SurfaceMuons::operator() (float r)const
+double SurfaceMuons::energy( double )
 {
+    using namespace std;
     // first choose the angle for the dir function
     // if doing vertical, don't!
     static double third=1.0/3.0;
-    m_costh = m_vertical? 1 : pow(r, third); // const is a pain
+    m_costh = m_vertical? 1 : pow(RandFlat::shoot(), third);
 
     // select an energy*costh from the distribution
 
-    for( std::map<double,double>::const_iterator it = m_ispec.begin(); 
-    it!= m_ispec.end(); ++it) {
-
-        double part=it->second;
-        if(r*m_total > it->second) continue;
-            
-        // reached the level: return corresponding energy (TODO: adjust)
-        return it->first/m_costh; 
+    double fraction = RandFlat::shoot();
+     map<double,double>::const_iterator 
+         element  = m_ispec.lower_bound(fraction*m_total),
+         prev = element;
+         prev--;
+     if( element!=m_ispec.end() ){
+         double energy = prev->second;
+         // interpolate if not last one
+         double 
+             deltaI = fraction-prev->first/m_total,
+             deltaE = element->second -energy,
+             correct = deltaE*deltaI;
+         return (energy+deltaI)/m_costh; 
     }
-    return m_emax;
+    return m_emax/m_costh;
 }
 
   
-    /// return solid angle pair (costh, phi) 
 std::pair<double,double> SurfaceMuons::dir(double)
 {
+    // purpose: return the pair; note uses the previous value for cos(theta)
     return std::make_pair(m_costh, RandFlat::shoot(2*M_PI));
 }
 

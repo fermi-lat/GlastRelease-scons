@@ -6,15 +6,6 @@
 */
 #ifndef _H_IFluxSvc
 #define _H_IFluxSvc
-/** 
-* \class IFluxSvc
-*
-* \brief The virtual interface for FluxSvc-type objects.
-*
-* \author Toby Burnett tburnett@u.washington.edu
-* 
-* $Header $
-*/
 
 // includes
 #include "GaudiKernel/IInterface.h"
@@ -25,7 +16,7 @@
 #include <vector>
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_IFluxSvc("FluxSvc", 2 , 0); 
+static const InterfaceID IID_IFluxSvc("FluxSvc", 3 , 0); 
 
 // forward declarations
 class IFlux;
@@ -33,7 +24,14 @@ class IParticlePropertySvc;
 class ISpectrumFactory;
 class HepRandomEngine;
 
-//! Abstract interface for the flux service, FluxSvc.
+/** 
+* \class IFluxSvc
+* \brief The FluxSvc gaudi service interface
+*
+* \author Toby Burnett tburnett@u.washington.edu
+* 
+* $Header$
+*/
 class  IFluxSvc : virtual public IInterface {
 public:
     
