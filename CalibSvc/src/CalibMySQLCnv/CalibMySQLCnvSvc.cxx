@@ -171,7 +171,8 @@ StatusCode CalibMySQLCnvSvc::initialize()
     return MSG::ERROR;
   }
   // Probably should get this value from job options. 
-  m_calibLevelMask = calibUtil::Metadata::LEVELProd;
+  m_calibLevelMask = calibUtil::Metadata::LEVELProd + 
+    calibUtil::Metadata::LEVELDev;
 
   log << MSG::INFO << "Specific initialization completed" << endreq;
   return sc;
