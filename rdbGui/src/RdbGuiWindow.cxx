@@ -127,9 +127,9 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   // Session menu
   uiSessmenu = new FXMenuPane(this);
   new FXMenuTitle(uiMenuBar, "&Session", NULL, uiSessmenu);
-  new FXMenuCommand(uiSessmenu, "&Open connection\tCtl-[\tOpen new database connection...",
+  m_cmdOpenConn = new FXMenuCommand(uiSessmenu, "&Open connection\tCtl-[\tOpen new database connection...",
       NULL, this, ID_OPENCONNECTION);
-  new FXMenuCommand(uiSessmenu, "&Close connection\tCtl-]\tClose current database connection",
+  m_cmdCloseConn = new FXMenuCommand(uiSessmenu, "&Close connection\tCtl-]\tClose current database connection",
       NULL, this, ID_CLOSECONNECTION);
 
   // Action menu
@@ -160,6 +160,9 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   uiTable->setTableSize(1, 1);
   uiTable->setItemText(0, 0, "No data");
   
+  // Disable some menù items
+  m_cmdOpenConn->disable();
+  m_cmdCloseConn->disable();
   
   // Initialize connection dialog and mysql connection
   m_dgNewCon = new ConnectionDialog(this);
@@ -227,7 +230,10 @@ long RdbGUIWindow::onOpenXMLFile(FXObject*, FXSelector, void*)
   // Open file
   onCloseConnection(NULL,0,NULL);
   if (m_rdbManager->getRdb())
-    m_rdbManager->cleanRdb();
+    {    
+      m_rdbManager->cleanRdb();
+      uiTblColList->reset();
+    }
   FXFileDialog *opendialog = new FXFileDialog(this, "Open File");
   opendialog->setSelectMode(SELECTFILE_EXISTING);
   opendialog->setPatternList("XML files (*.xml)\nAll files (*)");
@@ -243,9 +249,17 @@ void RdbGUIWindow::loadXMLFile(FXString fileName)
     {
       m_rdbManager->setInputSource(fileName.text());
       if (m_rdbManager->build())
-        FXMessageBox::error(this, MBOX_OK, "Error: rdbModel building", 
-                            "an error as occurred during the construction of the rdb model");
-      m_rdbManager->startVisitor(uiTblColList);
+        {
+          FXMessageBox::error(this, MBOX_OK, "Error: rdbModel building", 
+              "an error as occurred during the construction of the rdb model");
+          m_cmdOpenConn->disable();
+        }
+      else
+        {
+          m_rdbManager->startVisitor(uiTblColList);
+          m_cmdOpenConn->enable();
+        }
+        
     }  
 }
 
@@ -279,16 +293,20 @@ long RdbGUIWindow::onOpenConnection(FXObject*,FXSelector, void*)
           case rdbModel::MATCHequivalent:
             uiLog->logText("XML schema and MySQL database are equivalent!\n");
             searchFrame->setConnection(m_connect);
+            m_cmdCloseConn->enable();
             break;
           case rdbModel::MATCHcompatible:
             uiLog->logText("XML schema and MySQL database are compatible\n");
             searchFrame->setConnection(m_connect);
+            m_cmdCloseConn->enable();
             break;
           case rdbModel::MATCHfail:
             uiLog->logText("XML schema and MySQL database are NOT compatible\n");
+            m_connect->close();
             break;
           case rdbModel::MATCHnoConnection:
             uiLog->logText("Connection failed while attempting match\n");
+            m_connect->close();
             break;
           }
           
@@ -308,8 +326,7 @@ long RdbGUIWindow::onCloseConnection(FXObject*,FXSelector, void*)
   if (MBOX_CLICKED_OK == FXMessageBox::question(this, MBOX_OK_CANCEL, "Close Connection",
       message.text()))
     {
-      m_connect->close();
-      m_uiDBSelection->removeItem(m_uiDBSelection->getCurrentItem());
+      closeConnection();
     }
   return 1;  
 }
@@ -387,7 +404,10 @@ void RdbGUIWindow::closeConnection()
 {
   m_connect->close();
   m_uiDBSelection->removeItem(m_uiDBSelection->getCurrentItem());
-  
+  searchFrame->reset();
+  uiTable->clearItems();
+  uiTable->setTableSize(1, 1);
+  uiTable->setItemText(0, 0, "No data");
 }
 
 long RdbGUIWindow::onQueryFrameUpdate(FXObject *, FXSelector, void*)

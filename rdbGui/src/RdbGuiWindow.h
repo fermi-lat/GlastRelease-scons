@@ -25,6 +25,8 @@ class RdbGUIWindow : public FXMainWindow {
 private:
   FXMenuBar                      *uiMenuBar;               // The menubar
   FXMenuPane                     *uiFilemenu;
+  FXMenuCommand                  *m_cmdOpenConn;           // Menù item to open a connection
+  FXMenuCommand                  *m_cmdCloseConn;          // Menù item to close a connection
   FXMenuPane                     *uiSessmenu;
   FXMenuPane                     *uiActionmenu;
   FXToolTip                      *m_toolTip;               // controls tooltip behaviour

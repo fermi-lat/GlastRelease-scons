@@ -298,3 +298,9 @@ rdbModel::Assertion::Operator* QueryFrame::buildOperator(int row)
     
   return leftOper;
 }
+
+
+void QueryFrame::reset()
+{
+  m_connect = NULL;
+}

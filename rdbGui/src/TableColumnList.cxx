@@ -87,6 +87,12 @@ long TableColumnList::onCmdMenuPane(FXObject*, FXSelector, void* ptr)
   return 1;
 }
 
+void TableColumnList::reset()
+{
+  m_tblList->clearItems();
+  m_colList->clearItems(); 
+}
+
 rdbModel::Visitor::VisitorState TableColumnList::visitRdb(rdbModel::Rdb *rdb)
 {
   m_tblList->clearItems();

@@ -40,6 +40,7 @@ class QueryFrame: public FXVerticalFrame
   void updateColumnSelection(const FXList *tableList, const FXCheckList *colList);
   void setConnection(rdbModel::Connection* con){m_connect = con;}
   rdbModel::ResultHandle* getQueryResult() const {return m_queryResult;}
+  void reset();
 
   
  protected:

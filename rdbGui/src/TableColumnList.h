@@ -32,6 +32,8 @@ class TableColumnList: public FXVerticalFrame, public rdbModel::Visitor
   const FXCheckList* getColList() const {return m_colList;}
   const FXList* getTableList() const {return m_tblList;}
   
+  void reset();
+  
  protected:
   TableColumnList(){}
   TableColumnList(TableColumnList&){} 
