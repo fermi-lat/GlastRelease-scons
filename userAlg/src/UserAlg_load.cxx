@@ -20,6 +20,7 @@
 //! Load all  services: 
 void UserAlg_load() {
     DLL_DECL_ALGORITHM( UserAlg );
+    DLL_DECL_ALGORITHM( PauseEvent );
 } 
 
 extern "C" void userAlg_loadRef()    {
