@@ -9,7 +9,7 @@ TkrCluster::TkrCluster() {
 }
 
 TkrCluster::TkrCluster(commonRootData::TkrId tkrId, UInt_t istrip0, UInt_t istripf, const TVector3& position, 
-		       Double_t ToT, UInt_t flag, UInt_t id)
+		       Double_t ToT, UInt_t status)
 {
 	// Purpose and method: makes a cluster with attributes
 	// Input:  tkrId is a valid TkrId which identifies where the cluster is
@@ -24,15 +24,13 @@ TkrCluster::TkrCluster(commonRootData::TkrId tkrId, UInt_t istrip0, UInt_t istri
 	
     m_tkrId  = tkrId;
 	
-	m_strip0 = istrip0;
-	m_stripf = istripf;
-	
-	m_position = position;
-	
-	m_ToT    = ToT;
-	
-    m_flag   = flag;
-    m_id     = id;
+    m_strip0 = istrip0;
+    m_stripf = istripf;	
+    m_position = position;	
+    m_ToT    = ToT;	
+    m_status   = status;
+
+    m_id     = -1;
 }
 
 
@@ -47,8 +45,8 @@ void TkrCluster::Clear(Option_t *option)
 {
     m_tkrId    = commonRootData::TkrId();
     m_id       = 0;
-    m_flag     = 0;
-	m_strip0   = 0;
+    m_status   = 0;
+    m_strip0   = 0;
     m_stripf   = 0;
     m_ToT      = 0.0;
     m_position = TVector3(0.0, 0.0, 0.0);
