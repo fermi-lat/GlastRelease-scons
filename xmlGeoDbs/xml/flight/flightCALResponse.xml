@@ -23,7 +23,7 @@ readout channel 1</primEnergy>
 <prim name='cal.maxAdcValue' value='4095' type='int' uType='none'>
   Max possible adc value</prim>
 <primEnergy name='cal.zeroSuppressEnergy' value='0.002' units='GeV'>Zero 
-suppression threshold in GeV</primEnergy>
+suppression threshold</primEnergy>
 <prim name='cal.lightAtt' value="0.65" uType='none'>Light attenuation
 in CsI crystal (= far/near )</prim>
 
