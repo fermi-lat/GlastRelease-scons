@@ -56,7 +56,7 @@
    calibType (CAL_LightAtt | CAL_LightAsym | CAL_LightYield |
               CAL_Ped | CAL_ElecGain | CAL_IntNonlin | CALDiffNonlin |
               CAL_DiscrLO | CAL_DiscrHI | CAL_MuSlope)    #REQUIRED
-   DTDVersion  NMTOKEN "v2r0"       
+   DTDVersion  NMTOKEN "v2r1"       
    fmtVersion  NMTOKEN #REQUIRED >
 
 <!-- Description of events used as input to the procedure 
