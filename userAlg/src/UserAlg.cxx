@@ -221,14 +221,13 @@ StatusCode UserAlg::execute()
         for ( int i=0; i<m_prop->getNumberSteps(); ++i ) {
             idents::VolumeIdentifier volId = m_prop->getStepVolumeId(i);
             Point pp = m_prop->getStepPosition(i);            
-            if ( !volId.isAcd() ) // not yet ACD
-                continue;
+            // Use new method to check that this is an ACD detector, 
+            // rather than support structure
+            if (!idents::AcdId::checkVolId(volId)) continue;
             idents::AcdId acd(volId);
             if ( !acd.tile() )  // not yet ACD
                 continue;
             // fine, it's a tile
-            // Actually, I'm not convinced.  I think a tile should have id 40,
-            // but the first "tiles" I find have 42.  Anyway, it's an exercise!
             log << MSG::DEBUG;
             if ( log.isActive() ) {
                 std::ostringstream ost;
