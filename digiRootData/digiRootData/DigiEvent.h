@@ -78,6 +78,8 @@ public:
     void addTkrDigi(TkrDigi *digi);
     /// retrieve a TkrDigi from the collection, using the index into the array
     const TkrDigi* getTkrDigi(UInt_t i) const;
+    /// clear the whole array (necessary because of the consts-s)
+    void clearTkrDigiCol() { m_tkrDigiCol->Clear(); }
 
     /// Access Level 1 Trigger data
     inline const L1T& getL1T() const { return m_levelOneTrigger; };    
