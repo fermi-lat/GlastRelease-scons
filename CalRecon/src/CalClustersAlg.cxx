@@ -664,7 +664,7 @@ StatusCode CalClustersAlg::execute()
     {
         // First get reconstructed direction from tracker
         ntracks = tkrRecData->size();
-        log << MSG::INFO << "number of tracks = " << ntracks << endreq;
+        log << MSG::DEBUG << "number of tracks = " << ntracks << endreq;
         
         
         if (ntracks > 0) {
@@ -675,7 +675,7 @@ StatusCode CalClustersAlg::execute()
             log << MSG::DEBUG << "track direction = " << slope << endreq;
             
         } else {
-            log << MSG::INFO << "No reconstructed tracks " << endreq;
+            log << MSG::DEBUG << "No reconstructed tracks " << endreq;
         }	
     }
 
