@@ -11,7 +11,7 @@
 #include "gui/GUI.h"
 
 #include <vector>
-#include <ostream>
+#include <iostream>
 
 namespace gui {
         
