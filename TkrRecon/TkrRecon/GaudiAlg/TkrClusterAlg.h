@@ -32,7 +32,6 @@ class TkrClusterAlg : public Algorithm
 
 {
 public:
-    /// constructor for algorithm
     TkrClusterAlg(const std::string& name, ISvcLocator* pSvcLocator); 
     virtual ~TkrClusterAlg() {}
     /// Looks for the geometry service (required) and the bad strips service (optional)
