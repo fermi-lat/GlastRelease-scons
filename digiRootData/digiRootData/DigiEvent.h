@@ -10,8 +10,8 @@
 #include "CalDigi.h"
 #include "TkrDigi.h"
 
-#include "TkrDiagnostic.h"
-#include "CalDiagnostic.h"
+#include "TkrDiagnosticData.h"
+#include "CalDiagnosticData.h"
 #include "EventSummaryData.h"
 
 /** @class DigiEvent

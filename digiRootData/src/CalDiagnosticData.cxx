@@ -2,7 +2,7 @@
 // The CalDiagnosticData class contains the EM diagnostic CAL trigger primitives 
 //                                                                       
 
-#include "digiRootData/CalDiagnostic.h"
+#include "digiRootData/CalDiagnosticData.h"
 #include <iostream>
 // From Online EBF library
 #include "CALdiagnostic.h"

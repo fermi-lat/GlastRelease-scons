@@ -3,7 +3,7 @@
 // for an event.  
 //                                                                       
 
-#include "digiRootData/TkrDiagnostic.h"
+#include "digiRootData/TkrDiagnosticData.h"
 #include <iostream>
 // Online EBF Library
 #include "TKRdiagnostic.h"
