@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v1r1p1  15-Dec-2004 TU  Add a "const" to an argument in TkrId, patch tag
 v1r1    21-sep-2004 HMK Merge with new file headers from David Chamont
 v1r0p2  16-aug-2004 HMK Fix up use of rootcint pattern..can't supply Win32 option
 v1r0p1  10-aug-2004 THB moved RootPolicy to GlastPolicy/RootcintPolicy
