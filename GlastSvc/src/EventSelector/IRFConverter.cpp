@@ -10,6 +10,7 @@
 
 
 #include "GlastEvent/Raw/TdCsIData.h"
+#include "GlastEvent/Raw/TdSiData.h"
 
 
 //! constructor - create all object containers
@@ -17,6 +18,7 @@ IRFConverter::IRFConverter() {
     // Added because not sure as of yet how to make the
     // converter without using object vectors
     allcsiData =  new TdCsIData(9);
+    allsiData = new TdSiData(18); //TODO: Change hardcode.
 
     IrfAcdHitContainer = new IrfAcdHitVector;
     IrfCalHitContainer = new IrfCalHitVector;
@@ -109,11 +111,15 @@ void IRFConverter::forward ( const SiDetector& si) {
         }
         
         IrfTkrLayerContainer->push_back(tkrLayer);
+
+        allsiData->load(si,m_towerId);
     }
 }
 
 //! provide access to the Raw CsI  Data geometry included as well
 TdCsIData* IRFConverter::getTdCsIData() { return allcsiData; }
+
+TdSiData* IRFConverter::getTdSiData() { return allsiData; }
 //! Provide access to the IRF ACD data
 IrfAcdHitVector* IRFConverter::getIrfAcdHits() {return IrfAcdHitContainer; }
 //! Provide access to the IRF Cal data

@@ -19,6 +19,7 @@
 #include "GlastEvent/TopLevel/ObjectVector.h"
 
 #include "GlastEvent/Raw/TdCsIData.h"
+#include "GlastEvent/Raw/TdSiData.h"
 
 #include "GlastEvent/TopLevel/IrfEvent.h"
 #include "GlastEvent/Irf/IrfAcdHit.h"
@@ -87,9 +88,13 @@ StatusCode CreateEvent::execute() {
 
     /*! Causes the TDS to be searched, if the data is unavailable, the appropriate
     converter is called to retrieve the data. */
+
     sc = eventSvc()->retrieveObject("/Event/Irf/IrfAcdHits", pObject);
 
-    if( sc.isFailure() ) return sc;                                                             
+    if( sc.isFailure() ){
+        log << MSG::INFO << "Failed to get IrfAcdHits from TDS!" << endreq;
+        return sc; 
+    }
     
         log << MSG::INFO << "Successfully retrieved ACD Container!!!" << endreq;
 
@@ -100,6 +105,7 @@ StatusCode CreateEvent::execute() {
         log << MSG::INFO << "Failed to convert object to IrfAcdHitVector" << endreq;
         return StatusCode::FAILURE;
     }
+
     
 	// Decrease the amount of output
 #if 0
@@ -185,7 +191,7 @@ StatusCode CreateEvent::execute() {
         log << MSG::INFO << "Failed to convert object to TdCsIData" << endreq;
         return StatusCode::FAILURE;
     }
-    
+#if 0    
     log << MSG::INFO << "Printing all hit crystal information:" << endreq;
     for(int i = 0; i < 9; i++)
     {
@@ -197,8 +203,44 @@ StatusCode CreateEvent::execute() {
             log << MSG::INFO << "   Position X: " << csiList->xtalPos(i,j).x() << endreq;
         }
     }
+#endif
 
+//    return sc;
+
+    sc = eventSvc()->retrieveObject("/Event/Raw/TdSiDatas", pObject);
+    if( sc.isFailure() ) return sc;                                                             
+    
+        log << MSG::INFO << "Successfully retrieved SiContainer Container!!!" << endreq;
+
+    TdSiData* siList;
+    try {
+        siList  = dynamic_cast<TdSiData*>(pObject);
+    } catch(...) {
+        log << MSG::INFO << "Failed to convert object to TdSiData" << endreq;
+        return StatusCode::FAILURE;
+    }
+    
+    TdSiData::Axis a = TdSiData::Axis(0);
+
+#if 1 
+    /*! This not a comprehensive or intelligent check of the data members.
+        It's simply a quick check to see if they are dead or alive.
+    */
+    log << MSG::INFO << "\n\nPrinting TRK information:" << endreq;
+    for(int i = 0; i < 16; i++)
+    {
+        for(int j = 0; j < siList->nHits(a = TdSiData::Axis(0),i); j++)
+        {
+            log << MSG::INFO << "       Layer: "<< i << " Crystal: " << j << ":" << endreq;
+            log << MSG::INFO << "       X Hit: "  << siList->hit(a = TdSiData::Axis(0),i,j).x() << endreq;
+            log << MSG::INFO << "       Y Hit: "  << siList->hit(a = TdSiData::Axis(0),i,j).y() << endreq;
+        }
+    }
+#endif
     return sc;
+
+
+    //
 }
 
 

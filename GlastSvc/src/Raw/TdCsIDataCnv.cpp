@@ -24,34 +24,36 @@ const ICnvFactory& TdCsIDataCnvFactory = s_factory;
 
 //! Create the transient representation of an object.
 StatusCode TdCsIDataCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObject)   {
-  refpObject = new TdCsIData(9);//change to actual number
-  StatusCode status = updateObj(pAddress, refpObject);
-  if ( !status.isSuccess() )   {
-    delete refpObject;
-    refpObject = 0;
+
+  IRFConverter* myConverter = new IRFConverter();
+  m_detSvc->accept(*myConverter);
+
+  refpObject = myConverter->getTdCsIData();
+
+  if ( refpObject == NULL )   {
+    StatusCode::FAILURE;
   }
-  return status;
+  return StatusCode::SUCCESS;
 }
 
 //! Update object from scratch
 StatusCode TdCsIDataCnv::updateObj(IOpaqueAddress* pAddress, DataObject* pObject)   {
-    TdCsIData* allData;
-
-    // Try to dynamic_cast pObject into a TdCsIData
-    try {
-        allData  = dynamic_cast<TdCsIData*>(pObject);
-    } catch(...) {
-       return StatusCode::FAILURE;
-    }
 
     // read in the ACD data via the GlastDetector::accept method
-    IRFConverter myConverter;
-      m_detSvc->accept(myConverter);
+    // Done dynamically so we can keep it alive for the TDS.
+    IRFConverter* myConverter = new IRFConverter();
+    
+    m_detSvc->accept(*myConverter);
 
-    // use the copyUp method to load all the crystals into the new object
-    allData->copyUp(myConverter.getTdCsIData(), 9);
+    pObject = myConverter->getTdCsIData();
 
-    if(allData != NULL)
+    // Avoid the memory leak
+    if(myConverter) {
+        delete myConverter;
+        myConverter = 0;
+    }
+
+    if(pObject != NULL)
     {
         return StatusCode::SUCCESS;
     }

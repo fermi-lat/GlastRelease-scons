@@ -15,6 +15,7 @@ class TdCsIData;
 #include "GlastEvent/Irf/IrfAcdHit.h"
 #include "GlastEvent/Irf/IrfCalHit.h"
 #include "GlastEvent/Irf/IrfTkrLayer.h"
+#include "GlastEvent/Raw/TdSiData.h"
 /*! 
 Derived from DetectorConverter, this class
 provides a forward method to handle reading in of GlastDetector data 
@@ -51,6 +52,8 @@ public:
     //! provide access to the Raw CsI  Data geometry included as well
     TdCsIData* getTdCsIData() ;
 
+    TdSiData* getTdSiData();
+
     //! provide access to the list of Acd hits
     IrfAcdHitVector* getIrfAcdHits();
     //! provide access to the list of Cal hits
@@ -63,6 +66,7 @@ private:
 
     // one of Gaudi's ObjectContainers
         TdCsIData* allcsiData;
+        TdSiData* allsiData;
 
 	MCTrackVector* MCTrackContainer;
 
