@@ -22,7 +22,13 @@
 * Member functions:
 * latitude(time) and longitude(time) give the position of the
 * satellite (in degrees) when "time" minutes have elapsed since 
-* the ascending node passage.  longitude is between 0 and 360.
+* the ascending node passage.
+* An update on time:  Since the rest of the FluxSvc package uses seconds as a unit of time, the
+* Orbit methods should expect to take seconds input, but the internals were written to use minutes as 
+* the used time format, so the methods were re-made to take "timeInSeconds" for input and calculate minutes internally.
+* - July 28,2002
+*  
+* longitude is between 0 and 360.
 * coords(time) returns the latitude and longitude as a pair<double,double>.
 * period() returns the period of the orbit (in minutes).
 * inclination(), altitude(), and ascendingLon() return the parameters
@@ -44,38 +50,38 @@ public:
         double apitch = 0., double ayaw = 0., double aroll = 0.);
     
     /// phase of the orbit as a proportion of a single period
-    double get_phase (double time) const;
+    double get_phase (double timeInSeconds) const;
     
     ///returns position as a pair using  specified time
-    std::pair<double,double> coords(double time) const;
+    std::pair<double,double> coords(double timeInSeconds) const;
     
     /*! 
     \param latitude Latitude is in the range (-180,180)
     */
     /// latitude as a function of time (in minutes)    
-    virtual double latitude(double time) const;
+    virtual double latitude(double timeInSeconds) const;
     
     /*! 
     \param longitude Longitude is in the range (0,360)
     */
     /// longitude as a function of time, taking into account the starting
     /// longitude and the eastward rotation of the earth
-    virtual double longitude(double time) const;
+    virtual double longitude(double timeInSeconds) const;
     
     /// pitch of the spacecraft (rotation around E-W axis)
     /// zenith pointing is pitch == 0
-    virtual double pitch (double time) const;
+    virtual double pitch (double timeInSeconds) const;
     
     /// yaw of the spacecraft (rotation around zenith)
     /// square to E-W and N-S axis represents yaw == 0
-    virtual double yaw (double time) const;
+    virtual double yaw (double timeInSeconds) const;
     
     /// roll of the spacecraft (rotation around N-S axis)
     /// zenith pointing is roll == 0
-    virtual double roll (double time) const;
+    virtual double roll (double timeInSeconds) const;
     
     /// phase of the orbit at a given time
-    virtual double phase (double time) const;
+    virtual double phase (double timeInSeconds) const;
     
     /// set the inclination of the orbit
     void    inclination ( double inc );
@@ -97,13 +103,13 @@ public:
     inline double ascendingLon() const;
     
     //transformations for the current position (to the zenith-pointing coordinate system)
-    Rotation CELTransform(double time);
+    Rotation CELTransform(double timeInSeconds);
     
     
-    Rotation Orbit::latLonTransform(double time) const;
+    Rotation Orbit::latLonTransform(double timeInSeconds) const;
     
-    double Orbit::testLongitude(double time) const;
-    double Orbit::testLatitude(double time) const; 
+    double Orbit::testLongitude(double timeInSeconds) const;
+    double Orbit::testLatitude(double timeInSeconds) const; 
     
 protected:
     // manipulation of the orbital parameters - defaults do nothing, however
@@ -118,7 +124,7 @@ protected:
     
     
     // computation of pointing characteristics of GLAST - assumed, here, to be zenith-pointing
-    void computeAttitudes(double time);
+    void computeAttitudes(double timeInSeconds);
     
     // friends - so that only the boss can manipulate this class
     friend class GPS;

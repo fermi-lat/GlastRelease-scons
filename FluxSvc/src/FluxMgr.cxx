@@ -288,6 +288,9 @@ void FluxMgr::setOrientation(std::pair<double,double> ang){
     GPS::instance()->rotateAngles(ang);
 }
 
+std::pair<double,double> FluxMgr::getOrientation(){
+    return GPS::instance()->rotateAngles();
+}
 
 void FluxMgr::setGlastPosition(std::pair<double,double> pos){
     GPS::instance()->ascendingLon(pos.first);

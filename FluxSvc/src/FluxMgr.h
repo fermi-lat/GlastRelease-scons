@@ -52,6 +52,9 @@ public:
     
     /// set the angular (off-zenith) values of the GLAST satellite
     void setOrientation(std::pair<double,double> ang);
+
+    /// get the angular values of the satellite
+    std::pair<double,double> getOrientation();
     
     /// set the orbital (position) values of the GLAST satellite
     void setGlastPosition(std::pair<double,double> pos);

@@ -61,6 +61,10 @@ public:
     
     /// set the glast tilt angles.
     virtual void setOrientation(std::pair<double,double> ang)=0;
+
+    /// get the angular values of the satellite
+    virtual std::pair<double,double> getOrientation()=0;
+    
     
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
     virtual Rotation transformGlastToGalactic(double time)const=0;

@@ -219,6 +219,11 @@ void FluxSvc::setOrientation(std::pair<double,double> ang){
     m_fluxMgr->setOrientation(ang);
 }
 
+/// get the angular values of the satellite
+std::pair<double,double> FluxSvc::getOrientation(){
+    return m_fluxMgr->getOrientation();
+}
+
 Rotation FluxSvc::transformGlastToGalactic(double time)const{
     return m_fluxMgr->transformGlastToGalactic(time);
 }
