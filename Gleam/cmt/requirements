@@ -1,6 +1,6 @@
 package Gleam
 
-version v0r9
+version v0r8
 
 # This is a G4 development check-out package, that does not yet define an executable 
 # $Id$
@@ -43,7 +43,7 @@ use FluxSvc     v5r2
 
 use GlastSvc    v6r0
 use G4Generator v3r3p1
-use GlastDigi   v2r3
+use GlastDigi         v2r3p1
 
 use Recon       v0r8
 
