@@ -81,7 +81,8 @@ private:
     float m_flux;   
 
     double m_lat,m_lon; // latitude, longitude
-    
+    bool m_allowMove;   //whether or not the flux will be allowed to change position.
+
     std::string m_particle_name;
     ObserverAdapter< AlbedoPSpectrum > m_observer; //obsever tag
     void fitParams(const double lat, const double lon, double& alf1, 

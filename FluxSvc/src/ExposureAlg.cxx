@@ -242,9 +242,11 @@ StatusCode ExposureAlg::execute()
     //and here's the file output.
     if( m_out !=0) {
         std::ostream& out = *m_out;
-        out<<intrvalstart <<'\t';
-        out<<intrvalend <<'\t';
-        out<< posx<<'\t';
+        out << std::setw(14) << std::setprecision(14) 
+        <<intrvalstart <<'\t'
+        <<intrvalend <<'\t';
+        out << std::setw(9) << std::setprecision(7)
+        << posx<<'\t';
         out<< posy<<'\t';
         out<< posz<<'\t';
         out<<raz<<'\t';

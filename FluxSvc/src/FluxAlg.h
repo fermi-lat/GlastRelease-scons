@@ -26,6 +26,7 @@ class IparticlePropertySvc;
 class FluxAlg : public Algorithm {
 public:
     FluxAlg(const std::string& name, ISvcLocator* pSvcLocator);
+    double currentRate(){return m_currentRate;}
     
     StatusCode initialize();
     StatusCode execute();
@@ -33,7 +34,7 @@ public:
     
     
 private: 
-    
+    double m_currentRate;
     StringProperty m_source_name;
 
     IFluxSvc*   m_fluxSvc;

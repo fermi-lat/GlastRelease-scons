@@ -17,7 +17,8 @@ const ISpectrumFactory& AlbedoPSpectrumFactory = factory;
 
 ///Initializes parameters during construction
 void AlbedoPSpectrum::init(const std::vector<float>& params) {
-    
+    // if there are parameters passed to chime, it shouuldn't move.
+    m_allowMove = params.size()>1? false: true;
     float lat =  params.size()>0? params[0]: 0.0f;
     float lon =  params.size()>1? params[1]: 0.0f;
     setPosition(lat, lon);
@@ -124,7 +125,7 @@ float AlbedoPSpectrum::operator() (float x) const{
 ///Ask the GPS where we are located.
 int AlbedoPSpectrum::askGPS()
 {
-    setPosition(GPS::instance()->lat(), GPS::instance()->lon());
+    if(m_allowMove)setPosition(GPS::instance()->lat(), GPS::instance()->lon());
     return 0; // can't be void in observer pattern
 }
 

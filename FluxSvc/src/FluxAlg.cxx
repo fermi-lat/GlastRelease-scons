@@ -146,7 +146,7 @@ StatusCode FluxAlg::execute()
     }else mch = mcheader;
 
 
-    mch->initialize(mch->getRunNumber(), m_flux->numSource(), mch->getSequence());
+    mch->initialize(mch->getRunNumber(), m_flux->numSource(), mch->getSequence()+1);
 
 
     
@@ -183,9 +183,13 @@ StatusCode FluxAlg::execute()
         if( sc.isFailure()) {
             log << MSG::WARNING << " could not find or register the event header" << endreq;
         }
-    } else  h = header;
+    } else{  h = header;
+    }
 
     h->setTime(m_flux->time());
+
+    int numEvents = mch->getSequence();
+    m_currentRate=numEvents/(m_flux->time());
     return StatusCode::SUCCESS;
 }
 
@@ -194,6 +198,7 @@ StatusCode FluxAlg::execute()
 StatusCode FluxAlg::finalize(){
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
+    log << MSG::INFO << "Computed Rate: "<< currentRate() << endreq;
     
     return sc;
 }
