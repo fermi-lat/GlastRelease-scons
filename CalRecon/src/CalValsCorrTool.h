@@ -63,7 +63,7 @@ private:
     /// GlastDetSvc used for access to detector info
     IGlastDetSvc*    m_detSvc; 
     /// TkrGeometrySvc used for access to tracker geometry info
-    ITkrGeometrySvc* m_geoSvc;
+    ITkrGeometrySvc* m_tkrGeom;
 
     /// some Geometry
     double m_towerPitch;
