@@ -32,7 +32,8 @@ class TkrClusterAlg : public Algorithm
 public:
     TkrClusterAlg(const std::string& name, ISvcLocator* pSvcLocator); 
     virtual ~TkrClusterAlg() {}
-    /// Looks for the geometry service (required) and the bad strips service (optional)
+    /// Looks for the geometry service (required) and the bad strips service 
+    /// (optional)
     StatusCode initialize();
     /// Recovers pointer to Tkr digis, makes TkrClusterCol/TkrCluster
     StatusCode execute();
@@ -40,14 +41,14 @@ public:
     
 private:
     
-	/// pointer to geometry service
-    ITkrGeometrySvc*         pTkrGeo;
-	/// pointer to bad strips service
-    ITkrBadStripsSvc*        pBadStrips;
+    /// pointer to geometry service
+    ITkrGeometrySvc*         m_pTkrGeo;
+    /// pointer to bad strips service
+    ITkrBadStripsSvc*        m_pBadStrips;
     
-	/// pointer to Tkr digis
+    /// pointer to Tkr digis
     Event::TkrDigiCol*       m_TkrDigis;
-	/// pointer to generated TkrClusterCol
+    /// pointer to generated TkrClusterCol
     Event::TkrClusterCol*    m_TkrClusterCol;
 };
 
