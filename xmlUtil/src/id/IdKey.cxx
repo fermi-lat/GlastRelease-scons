@@ -14,7 +14,7 @@ namespace xmlUtil {
   }
 
   IdKey::IdKey(const std::deque<unsigned int> id) {
-    fillFrom<std::deque<unsigned int> >(id);
+    fillFrom(id);
   }
 
   // Compress each field to a byte.  Use the range 1-255 because
