@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE rdbms SYSTEM "./rdbmsDescrip.dtd" >
+<!DOCTYPE rdbms SYSTEM "../rdbmsDescrip.dtd" >
 <rdbms dbs="calib_test"
        DTDversion="1.0"
        DTDexpected="1.0"
