@@ -42,15 +42,19 @@ public:
   /// Initialize the internal pointer to an ObjectList of relations
   void init() { m_relations = new ObjectList< Relation<T1,T2> >;}
   
-  /// The following method add a new Relation to the list of relations.
-  void addRelation(Relation<T1,T2>* rel);
+  /**
+  * The following method add a new Relation to the table, even if there is
+  * already a relation with the same two objects (they could have different
+  * infos vector)
+  */
+  void addDupRel(Relation<T1,T2>* rel);
 
   /**
   * The following method add a Relation to the table if it doesn't contain
   * a relation between the same two objects, otherwise it appends the info
   * vector to the exsisting relation
   */
-  void addNoDupRel(Relation<T1,T2>* rel);
+  void addRelation(Relation<T1,T2>* rel);
   
   /**
   * This method search for all relations having obj in the first
@@ -126,8 +130,9 @@ private:
   }
   
   template <class T1,class T2>
-    void RelTable<T1,T2>::addRelation(Relation<T1,T2>* rel) {
-    // Purpose and Method:  This routine add a new relation to the collection.
+    void RelTable<T1,T2>::addDupRel(Relation<T1,T2>* rel) {
+    // Purpose and Method:  This routine add a new relation to the collection, even
+    // if there is a already a relation between the same two objects
     // Inputs:  rel is a pointer to the relation to be added.
     
     bindRelationFirst(rel);
@@ -137,7 +142,7 @@ private:
   
   
   template <class T1,class T2>
-    void RelTable<T1,T2>::addNoDupRel(Relation<T1,T2>* rel) {
+    void RelTable<T1,T2>::addRelation(Relation<T1,T2>* rel) {
     // Purpose and Method:  This routine add a relation to the table if it doesn't 
     // contain a relation between the same two objects, otherwise it appends the info
     // vector to the exsisting relation
