@@ -202,7 +202,8 @@ StatusCode ValBase::getValCheck(std::string varName, int& value)
     return getVal(varName, value, CHECK);
 }
 
-StatusCode ValBase::getVal(std::string varName, int& value, int check)
+
+StatusCode ValBase::getTypedPointer(std::string varName, TypedPointer* ptr, int check)
 {
     // optional check flag
 
@@ -225,67 +226,40 @@ StatusCode ValBase::getVal(std::string varName, int& value, int check)
             return StatusCode::FAILURE;
         }
         TypedPointer* ptr = (*it)->second;
-        value = *(reinterpret_cast<int*>(ptr->getPointer()));
     }
     m_check = CHECK;
+    return sc;
+}
+
+
+
+StatusCode ValBase::getVal(std::string varName, int& value, int check)
+{
+    TypedPointer* ptr;
+    StatusCode sc = getTypedPointer(varName, ptr, check);
+    if(sc.isSuccess()) {
+        value = *(reinterpret_cast<int*>(ptr->getPointer()));
+    }
     return sc;
 }
 
 StatusCode ValBase::getVal(std::string varName, double& value, int check)
 {
-    // optional check flag
-
-    StatusCode sc = StatusCode::SUCCESS;
-
-    m_check = check;
-    
-    constMapIter it = m_ntupleMap.begin();
-    for ( ; it!=m_ntupleMap.end(); ++it) {
-        if ((*it)->first == varName) break;
-    }
-    
-    if (it==m_ntupleMap.end()) { 
-        announceBadName(varName); 
-        m_check = CHECK;
-        return StatusCode::FAILURE;
-    } else {
-        if(doCalcIfNotDone().isFailure()) {
-            m_check = CHECK;
-            return StatusCode::FAILURE;
-        }
-        TypedPointer* ptr = (*it)->second;
+    TypedPointer* ptr;
+    StatusCode sc = getTypedPointer(varName, ptr, check);
+    if(sc.isSuccess()) {
         value = *(reinterpret_cast<double*>(ptr->getPointer()));
     }
-    m_check = CHECK;
     return sc;
 }
 
 StatusCode ValBase::getVal(std::string varName, float& value, int check)
 {
-    // optional check flag
-
-    StatusCode sc = StatusCode::SUCCESS;
-
-    m_check = check;
-    
-    constMapIter it = m_ntupleMap.begin();
-    for ( ; it!=m_ntupleMap.end(); ++it) {
-        if ((*it)->first == varName) break;
-    }
-    
-    if (it==m_ntupleMap.end()) { 
-        announceBadName(varName); 
-        m_check = CHECK;
-        return StatusCode::FAILURE;
-    } else {
-        if(doCalcIfNotDone().isFailure()) {
-            m_check = CHECK;
-            return StatusCode::FAILURE;
-        }
-        TypedPointer* ptr = (*it)->second;
+    TypedPointer* ptr;
+    StatusCode sc = getTypedPointer(varName, ptr, check);
+    if(sc.isSuccess()) {
         value = *(reinterpret_cast<float*>(ptr->getPointer()));
     }
-    m_check = CHECK;
     return sc;
 }
 
