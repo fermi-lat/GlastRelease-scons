@@ -98,9 +98,16 @@ StatusCode EventIntegrityAlg::execute()
     // If the Event Flags do exist on the TDS - check them
     // dump the event if any bit in the mask is set
     if( (m_mask!=0) && ( flags & m_mask) ) {
-        setFilterPassed( false );
-        log << MSG::DEBUG << "Event Flag is Bad for event: " 
-                           << summary->eventSequence() << endreq;
+        if ( (summary->packetError()) || (summary->summaryError()) ) {
+            setFilterPassed( false );
+            log << MSG::INFO << "Event Flag contains Error bits - skipping " 
+                             << summary->eventSequence() << endreq;
+        }
+        if (summary->badEventSeq()) {
+            setFilterPassed(false);
+            log << MSG::INFO << "Event Flag contains Bad Event Seq - skipping " 
+                             << summary->eventSequence() << endreq;
+        }
     } 
 
     return sc;
