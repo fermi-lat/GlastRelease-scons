@@ -31,7 +31,7 @@ use ROOT   * IExternal
 use XMLEXT * IExternal 
 use GlastSvc v9r* -no_auto_imports
 use RootIo v* -no_auto_imports
-use LdfEvent v1* -no_auto_imports
+use LdfEvent v2r* -no_auto_imports
 
 
 apply_pattern package_include
