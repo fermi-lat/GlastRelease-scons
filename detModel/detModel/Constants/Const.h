@@ -13,9 +13,10 @@ namespace detModel{
 
   class Const {
   public:
-    enum constMeaning{length,angle,coun,mat,none};
+    enum constMeaning{length,angle,coun,mat,energy,none};
 
-    Const():name(""),note(""),unitLength("mm"),unitAngle("deg"){;}
+    Const():name(""),note(""),unitLength("mm"),unitAngle("deg"),
+            unitEnergy("MeV"){;}
 
     virtual ~Const(){}
 
@@ -37,6 +38,7 @@ namespace detModel{
     std::string getNote()const{return note;}
     std::string getUnitLength()const{return unitLength;}
     std::string getUnitAngle()const{return unitAngle;}
+    std::string getUnitEnergy()const {return unitEnergy;}
 
   private:
     std::string name;
@@ -44,7 +46,7 @@ namespace detModel{
     std::string note;
     std::string unitLength;
     std::string unitAngle;
-
+    std::string unitEnergy;
   };
 }
 #endif //CONST_H

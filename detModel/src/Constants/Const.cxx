@@ -8,6 +8,7 @@ namespace detModel{
     else if (puType=="angle")uType=angle;
     else if (puType=="count")uType=coun;
     else if (puType=="mat")uType=mat;
+    else if (puType=="energy")uType=energy;
     else if (puType=="none")uType=none;
   }
 
