@@ -192,7 +192,7 @@ SmartDataPtr<NTuple::Tuple> ntupleWriterSvc::getNTuple(const char *tupleName) {
     return m_nt;
 }
 
-StatusCode ntupleWriterSvc::addValue(const char *tupleName, const char *item, const float val) {
+StatusCode ntupleWriterSvc::addValue(const char *tupleName, const char *item, double val) {
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
 
@@ -216,7 +216,7 @@ StatusCode ntupleWriterSvc::addValue(const char *tupleName, const char *item, co
 }
 
 
-StatusCode ntupleWriterSvc::addItem(const char *tupleName, const char *item, const float val) {
+StatusCode ntupleWriterSvc::addItem(const char *tupleName, const char *item, double val) {
 
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());

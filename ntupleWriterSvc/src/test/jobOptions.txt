@@ -4,11 +4,10 @@
 //
 
 // List of Services that are required for this run
-ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" , 
-                            "EventCnvSvc", "ntupleWriterSvc"};
+ApplicationMgr.ExtSvc   = {"ntupleWriterSvc"};
 
 // List of DLLs required
-ApplicationMgr.DLLs   = { "ntupleWriterSvc", "GlastSvc",  "RootHistCnv"};
+ApplicationMgr.DLLs   = { "ntupleWriterSvc",  "RootHistCnv"};
 
 ApplicationMgr.TopAlg = { "writeJunkAlg" };
 
@@ -16,11 +15,11 @@ ApplicationMgr.TopAlg = { "writeJunkAlg" };
 MessageSvc.OutputLevel      = 2;
 
 //=========================================================================
-// Persistency service setup:
-EventPersistencySvc.CnvServices = {"EventCnvSvc"};
-
-// Input IRF file
-EventSelector.Input = "IRFFILE $(INSTRUMENTROOT)/src/test/muontest.irf";
+//--------------------------------------------------------------
+// Event related parameters
+//--------------------------------------------------------------
+ApplicationMgr.EvtMax   = 10;
+ApplicationMgr.EvtSel  = "NONE";
 
 ApplicationMgr.HistogramPersistency = "ROOT";
 

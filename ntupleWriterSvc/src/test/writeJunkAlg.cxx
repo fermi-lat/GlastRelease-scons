@@ -37,7 +37,7 @@ private:
     std::string m_tupleName;
     float m_float;
 
-    INTupleWriterSvc *ntupleWriteSvc;
+    INTupleWriterSvc *m_ntupleWriteSvc;
 
 };
 
@@ -66,8 +66,7 @@ StatusCode writeJunkAlg::initialize() {
     setProperties();
 
     // get a pointer to our ntupleWriterSvc
-    sc = serviceLocator()->getService("ntupleWriterSvc", 
-        IID_INTupleWriterSvc, reinterpret_cast<IInterface*&>( ntupleWriteSvc));
+    sc = service("ntupleWriterSvc", m_ntupleWriteSvc);
 
     if( sc.isFailure() ) {
         log << MSG::ERROR << "writeJunkAlg failed to get the ntupleWriterSvc" << endreq;
@@ -85,13 +84,13 @@ StatusCode writeJunkAlg::execute() {
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
     
-    m_float = 700.05;
-    sc = ntupleWriteSvc->addItem(m_tupleName.c_str(), "MyFirstItem", m_float);
+    m_float = 700.05f;
+    sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "MyFirstItem", m_float);
 
     float zero = 0.0;
     // Let's try to add an undefined float
     float bad = 100.0/zero;
-    sc = ntupleWriteSvc->addItem(m_tupleName.c_str(), "BadValue", bad);
+    sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "BadValue", bad);
 
     return sc;
 }

@@ -44,7 +44,7 @@ public:
    virtual SmartDataPtr<NTuple::Tuple> getNTuple(const char *tupleName);
 
    /// add a new item to an ntuple
-   virtual StatusCode addItem(const char *tupleName, const char *item, const float val);
+   virtual StatusCode addItem(const char *tupleName, const char *item, double val);
 
    /// check for NaN and infinity
    int isFinite(float val);
@@ -68,7 +68,7 @@ private:
     /// write an event's data into the ntuple
     StatusCode writeNTuple(int index);
     /// add an entry into an ntuple, where the item has already been declared 
-    StatusCode addValue(const char *tupleName, const char *item, const float val);
+    StatusCode addValue(const char *tupleName, const char *item, double val);
 
 
     ///Maintain a list of each item so that this algorithm could handle multiple ntuples

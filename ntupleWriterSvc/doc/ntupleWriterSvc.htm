@@ -118,8 +118,7 @@
               <p align="left">In your algorithms's initialize routine, access
               the ntupleWriterSvc:<br>
               <i>    // get a pointer to our ntupleWriterSvc<br>
-    sc = serviceLocator()->getService("ntupleWriterSvc",&nbsp;<br>
-        IID_INTupleWriterSvc, reinterpret_cast&lt;IInterface*&amp;>( ntupleWriteSvc));<br>
+    sc = service("ntupleWriterSvc", ntupleWriteSvc);<br>
               <br>
     if( sc.isFailure() ) {<br>
               &nbsp;&nbsp;&nbsp; log &lt;&lt; MSG::ERROR &lt;&lt; "acdReconAlg failed to get the ntupleWriterSvc" &lt;&lt; endreq;<br>
