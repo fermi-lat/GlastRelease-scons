@@ -171,6 +171,76 @@ form a square array of this dimension</prim>
 </prim>
 
       </primCategory>
+
+      <primCategory name="ACDprim" >
+<overview><![CDATA[ACD people need to put something real here. 
+The constants in here currently come from Heather, unfortunately
+filtered through me (Joanne).
+Note <font color="#ff0000">some of these values are invented and
+need to be replaced with something real</font>, in particular we're missing
+a sensible number for ACDSupportThickness (and also a real  support material).
+ ]]></overview> 
+        <prim name="tileMat" value="Polystyrene" type="string" uType="mat">material used for tiles
+</prim>
+        <prim name="tileThickness" value="10.0">Thickness of ACD tiles</prim>
+<prim name="ACDSupportMat" value="someStuff" type="string" uType="mat">
+Material of ACD support.  Still need input from engineers about this.</prim>
+        <prim name="ACDSupportThickness" value="20.0">This is just a figment
+of my imagination.  I have no real number yet.</prim>
+        <prim name="ACDSideStandoff" value="35.75">This one is right if
+side_standoff is another name for side_tile_standoff, the distance
+between the side of the tracker and the ACD tiles</prim>
+        <prim name="totalTopAvail" value="91.9">This is the total amount of space
+    available to top section of the ACD, includes tiles and support structure
+(Heather).</prim>
+        <prim name="topTileGap" value="3.0">Worst-case (most thermal expansion)
+gap between tiles on the top</prim>
+        <prim name="numXtopTiles" value="5" uType="count">Number of tiles
+across top in x direction</prim>
+        <prim name="numYtopTiles" value="5" uType="count">Number of tiles
+across top in y direction</prim>
+         <prim name="topStandoff" value="10.0"> distance between
+ACD top and top of TKR</prim>
+       <prim name="topOverlap" value="10.0">Width of overlap
+of overlapped top tiles</prim>
+
+
+<!-- side stuff -->
+        <prim name="totalSideAvail" value="52.0">Total amount of
+space available for side section of ACD, including both tiles and
+support structure</prim>
+        <prim name="numSideRows" value="4" uType="count">Number of rows of 
+tiles along the sides</prim>
+        <prim name="numPerSideRowShort" value="5" uType="count">Number of
+  tiles in some (currently upper two) side rows</prim>
+        <prim name="numPerSideRowLong" value="10" uType="count">Number of
+  tiles in some (currently lower two) side rows</prim>
+        <prim name="sideTileHeight0" value="250.0">Height of top row 
+of side tiles</prim>
+        <prim name="sideTileHeight1" value="200.0">Height of 2nd row 
+of side tiles</prim>
+        <prim name="sideTileHeight2" value="150.0">Height of 3rd row 
+of side tiles</prim>
+        <prim name="sideTileHeight3" value="150.0">Height of 4th row 
+of side tiles</prim>
+        <prim name="sideOverlap" value="30.0">Distance side tiles
+extend above topACD tile surface --- used for positioning</prim>
+        <prim name="sideVerticalGap" value="0.0.">Vertical gap
+between (rows of?) side tiles</prim>
+        <prim name="sideHorizontalGap" value="3.0">Horizontal
+gap at the corners between adjacent sides of tiles</prim>
+
+<!-- tape stuff -->
+        <prim name="tapeMat" value="Polystyrene" type="string" uType="mat">
+Material for scintillating tape</prim>
+        <prim name="tapeThickness" value="2.0">Thickness of scintillating
+tape</prim>
+        <prim name="tapeWidth" value="10.0">Width of scintillating tape</prim>
+        <prim name="tapeTopExt" value="15.0">Distance tape should extend
+beyond the end of a top tile (see Heather's first diagram)</prim>
+        <prim name="tapeGap" value= "1.0" >Distance between the tape and the adjacent
+ACD tile</prim>
+      </primCategory>
     </primary>
 
     <derived>
@@ -376,21 +446,52 @@ too, but not required.</overview>
 	    <refer refTo="middleTrayZ" />
 	  </minus>
 	</const>
+<!-- a couple convenience numbers -->
+        <const name="xNumM1">
+          <minus>
+            <refer refTo="xNum" />
+            <const value="1.0" />
+          </minus>
+        </const>
+        <const name="yNumM1">
+          <minus>
+            <refer refTo="yNum" />
+            <const value="1.0" />
+          </minus>
+        </const>
 
 <!-- These might not be quite right.  Check that frame is
      accounted for. -->
 	<const name="totalX">
-          <mul>
-            <refer refTo="xNum" />
-            <refer refTo="modWidth" />
-          </mul>
+          <add>
+            <mul>
+              <refer refTo="xNum" />
+              <refer refTo="modWidth" />
+            </mul>
+            <mul>
+              <refer refTo="xNumM1" />
+              <add>
+                <refer refTo="wallThickness" />
+                <refer refTo="wallGap" />
+              </add>
+            </mul>
+          </add>
         </const>
 
 	<const name="totalY">
-          <mul>
-            <refer refTo="yNum" />
-            <refer refTo="modWidth" />
-          </mul>
+          <add>
+            <mul>
+              <refer refTo="yNum" />
+              <refer refTo="modWidth" />
+            </mul>
+            <mul>
+              <refer refTo="xNumM1" />
+              <add>
+                <refer refTo="wallThickness" />
+                <refer refTo="wallGap" />
+              </add>
+            </mul>
+          </add>
         </const>
 
 <!-- Compute total Z by adding up
@@ -413,6 +514,194 @@ too, but not required.</overview>
             </mul>
             <refer refTo="outsideTrayZ" />  
           </add>                               
+        </const>
+
+<!-- start ACD stuff -->
+        <const name="ACDTopXwidth">
+          <quo>
+            <add>
+              <refer refTo="totalX"/>
+              <mul>
+                <const value="2.0" />
+                <refer refTo="ACDSideStandoff" />
+              </mul>
+              <mul>
+                <minus>
+                  <refer refTo="numXtopTiles" />
+                  <const value="1.0" />
+                </minus>
+                <refer refTo="topOverlap" />
+              </mul>
+              <mul>
+                <const value="2.0" />
+                <minus>
+                  <refer refTo="ACDSupportThickness" />
+                  <refer refTo="topTileGap" />
+                </minus>
+              </mul>
+            </add>
+            <refer refTo="numXtopTiles" />
+          </quo>
+        </const>
+
+<!-- and similarly for y but no overlap to contend with, more gaps -->
+        <const name="ACDTopYwidth">
+          <quo>
+            <add>
+              <refer refTo="totalY"/>
+              <mul>
+                <const value="2.0" />
+                <add>
+                  <refer refTo="ACDSideStandoff" />
+                  <refer refTo="ACDSupportThickness" />
+                </add>
+              </mul>
+
+              <uminus>
+                <mul>
+                  <add>
+                    <const value="1.0" />
+                    <refer refTo="numYtopTiles" />
+                  </add>
+                  <refer refTo="topTileGap" />
+                </mul>
+              </uminus>
+
+            </add>
+            <refer refTo="numYtopTiles" />
+          </quo>
+        </const>
+
+<!-- total length (in x direction) to be covered by a row of tiles -->
+        <const name="ACDTotalXSide" >
+          <add>
+            <refer refTo="totalX" />
+            <mul>
+              <const value="2.0" />
+              <add>
+                <refer refTo="ACDSideStandoff" />
+                <refer refTo="ACDSupportThickness" />
+              </add>
+            </mul>
+            <refer refTo="tileThickness" />
+          </add>
+        </const>
+
+        <!-- to get width of an individual tile, take account of
+              number of tiles in a row (and number of gaps) -->
+        <const name="sideTileWidthShortXRow">
+          <quo>
+            <minus>
+              <refer refTo="ACDTotalXSide" />
+              <mul>
+                <refer refTo="numPerSideRowShort" />
+                <refer refTo="sideHorizontalGap" />
+              </mul>
+            </minus>
+            <refer refTo="numPerSideRowShort" />
+          </quo>
+        </const>
+
+        <const name="sideTileWidthLongXRow">
+          <quo>
+            <minus>
+              <refer refTo="ACDTotalXSide" />
+              <mul>
+                <refer refTo="numPerSideRowLong" />
+                <refer refTo="sideHorizontalGap" />
+              </mul>
+            </minus>
+            <refer refTo="numPerSideRowLong" />
+          </quo>
+        </const>
+
+<!-- Now do same for Y-direction -->
+        <const name="ACDTotalYSide" >
+          <add>
+            <refer refTo="totalY" />
+            <mul>
+              <const value="2.0" />
+              <add>
+                <refer refTo="ACDSideStandoff" />
+                <refer refTo="ACDSupportThickness" />
+              </add>
+            </mul>
+            <refer refTo="tileThickness" />
+          </add>
+        </const>
+
+        <!-- to get width of an individual tile, take account of
+              number of tiles in a row (and number of gaps) -->
+        <const name="sideTileWidthShortYRow">
+          <quo>
+            <minus>
+              <refer refTo="ACDTotalYSide" />
+              <mul>
+                <refer refTo="numPerSideRowShort" />
+                <refer refTo="sideHorizontalGap" />
+              </mul>
+            </minus>
+            <refer refTo="numPerSideRowShort" />
+          </quo>
+        </const>
+
+        <const name="sideTileWidthLongYRow">
+          <quo>
+            <minus>
+              <refer refTo="ACDTotalYSide" />
+              <mul>
+                <refer refTo="numPerSideRowLong" />
+                <refer refTo="sideHorizontalGap" />
+              </mul>
+            </minus>
+            <refer refTo="numPerSideRowLong" />
+          </quo>
+        </const>
+
+<!-- Now some stuff involving the ACD tape -->
+        <const name="tapeSideLength">
+          <add>
+            <refer refTo="sideTileHeight0" />
+            <refer refTo="sideTileHeight1" />
+            <refer refTo="sideTileHeight2" />
+            <refer refTo="sideTileHeight3" />
+            <mul>
+              <minus>
+                <refer refTo="numSideRows" />
+                <const value="1.0" />
+              </minus>
+              <refer refTo="sideVerticalGap" />
+            </mul>
+          </add>
+        </const>
+<!-- end Y side tile calculations -->
+
+<!-- lengths of tape convering gaps in the top.  There are 3 different
+     lengths to deal with the fact that tiles in different top
+     rows are obsucured differeng amounts by overlap.  The longest
+     tape goes over the outermost tiles, the shortest across the
+     central row.  See Heather's first diagram
+     -->
+        <const name="topTapeLen1" >
+          <add>
+            <refer refTo="ACDTopXwidth" />
+            <refer refTo="tapeTopExt" />
+          </add>
+        </const>
+        <const name="topTapeLen2" >
+          <minus>
+            <refer refTo="topTapeLen1" />
+            <refer refTo="topOverlap" />
+          </minus>
+        </const>
+        <const name="topTapeLen3">
+          <minus>
+            <refer refTo="ACDTopXwidth" />
+            <mul>
+              <const value="2.0" />
+              <refer refTo="topOverlap" />
+            </mul>
+          </minus>
         </const>
 
       </derCategory>
