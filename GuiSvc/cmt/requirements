@@ -10,18 +10,20 @@ use RootHistCnv
 
 # library is not shareable since it is expected to be linked into the executable
 library GuiSvc -no_share\
- *.cxx *.h\
- dll/*.cxx\
+ *.cxx \
+ Dll/*.cxx\
  ../GuiSvc/*.h 
 
 include_path $(GUISVCROOT)
 
-macro GuiSvc_lib " "\
+macro GuiSvc_lib " -L ${GUISVCROOT}/${CMTCONFIG} -lGuiSvc "\
     VisualC "Service.obj ${GUISVCROOT}/${BINDIR}/libGuiSvc.lib "
 
 private
 # note redefinition of the macro to *not* include any other dependent libs
 macro use_linkopts " $(Gaudi_linkopts) $(GuiSvc_lib) $(gui_linkopts)"
 
+macro WinJobOptions "" \
+      VisualC       test/*.txt
 
-application GuiTest test/*.h test/*.cxx test/*.txt  $(GUIROOT)/src/test/Demo.cxx $(Win32Resource)
+application GuiTest test/*.cxx ${WinJobOptions} ${Win32Resource}
