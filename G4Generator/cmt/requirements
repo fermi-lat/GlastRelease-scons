@@ -39,11 +39,11 @@ use FluxSvc *
 
 apply_pattern package_Cshlibflags
 
-macro source "" WIN32 "*.h *.cxx"
+macro source "*.cxx" WIN32 "*.h *.cxx"
 library G4Generator -s=../src $(source) -s=Dll *.cxx  
 
 # test program 
-public 
+public
 apply_pattern package_test
 
 
