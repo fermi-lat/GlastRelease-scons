@@ -2,13 +2,20 @@
 //
 // Job options file for CreateEvent
 //
+// #include "$GLEAMROOT/src/default.txt"
+
 // List of required services
 ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastRandomSvc",
  "GlastEventSelector/EventSelector" , "EventCnvSvc" };
 
+// For Event loop
+EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+EventSelector.Input = "NONE";
+
 // List of Dlls
 ApplicationMgr.DLLs   = { "GlastSvc" };
 
+//--------------------------------------------------------------------------
 
 ApplicationMgr.TopAlg = { "CreateEvent" };
 
@@ -23,7 +30,15 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 // GlastDetSvc.topVolume = "oneTKR";    
 // GlastDetSvc.topVolume = "trayTop";    
 
-ApplicationMgr.EvtMax = 20;
+
+// Get run and event numbers from file
+// (comment this out if you want to just test
+//  the basic seed setting mechanism)
+// NOTE: make sure ApplicationMgr.EvtMax corresponds
+//       to the number of entries in the file if you 
+//       in fact use a file of run and event numbers
+GlastRandomSvc.SeedFile = "$GLASTSVCROOT/src/test/run_event_nos.dat";
+ApplicationMgr.EvtMax = 10;
 
 //==============================================================
 //
