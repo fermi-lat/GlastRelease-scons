@@ -15,7 +15,7 @@ using namespace std;
 #endif
 #endif
 
-#include "digiRootData/CalXtalId.h"
+#include "commonRootData/idents/CalXtalId.h"
 
 
 /** @class   CalXtalRecData        

@@ -2,7 +2,7 @@
 #define ROOT_ACDRECON_H
 
 #include "TObject.h"
-#include "digiRootData/AcdId.h"
+#include "commonRootData/idents/AcdId.h"
 #include <vector>
 #ifndef R__GLOBALSTL
 #ifndef WIN32

@@ -4,7 +4,7 @@
 
 #include "TObject.h"
 #include "TVector3.h"
-#include "digiRootData/CalXtalId.h"
+#include "commonRootData/idents/CalXtalId.h"
 
 /** @class CalRangeRecData  
 * @brief Position and reconstructed energies for both faces of Xtal for Cal                                
