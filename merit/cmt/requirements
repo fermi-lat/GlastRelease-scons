@@ -6,7 +6,7 @@ branches doc
 
 use GlastPolicy v*
 apply_pattern packageShr
-
+use classification *
 
 private
 #--------------------------------------------------------------
@@ -14,7 +14,7 @@ use AnalysisNtuple v*
 use GlastSvc *
 use Event *
 use GuiSvc v3*
-use classification *
+
 use facilities *
 
 # read/ write ROOT trees (any old ROOT will do)
