@@ -42,7 +42,7 @@ protected:
 
   virtual ~XmlTkrSplitsCnv() {}       // most likely nothing to do 
 
-  virtual StatusCode i_createObj(const DOM_Element& element,
+  virtual StatusCode i_createObj(const DOMElement* element,
                                  DataObject*& refpObject);
 
 };
@@ -63,7 +63,7 @@ const CLID& XmlTkrSplitsCnv::classID() {
 }
 
 
-StatusCode XmlTkrSplitsCnv::i_createObj(const DOM_Element& docElt, 
+StatusCode XmlTkrSplitsCnv::i_createObj(const DOMElement* docElt, 
                                         DataObject*& refpObject)
 {
   using xml::Dom;
@@ -81,14 +81,14 @@ StatusCode XmlTkrSplitsCnv::i_createObj(const DOM_Element& docElt,
 
   setBaseInfo(pObj);
 
-  std::vector<DomElement> splitsElts;
+  std::vector<DOMElement*> splitsElts;
 
   Dom::getDescendantsByTagName(docElt, "split", splitsElts);
   
   unsigned nElt = splitsElts.size();
 
   for (unsigned iElt = 0; iElt < nElt; iElt++) {
-    DOM_Element elt = splitsElts[iElt];
+    DOMElement* elt = splitsElts[iElt];
     try {
       unsigned iTowerRow = Dom::getIntAttribute(elt, "iBayRow");
       unsigned iTowerCol = Dom::getIntAttribute(elt, "iBayCol");

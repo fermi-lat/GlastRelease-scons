@@ -9,7 +9,6 @@
   @author J. Bogart
 */
 #include "XmlBaseCnv.h"
-#include <xercesc/dom/DOM_Element.hpp>
 #include "CalibData/Tkr/BadStrips.h"
 
 
@@ -32,12 +31,12 @@ protected:
       @param  element     Document element of XML document (input)
       @param  refpObject  Pointer to newly-created object goes here (output)
   */
-  virtual StatusCode i_createObj(const DOM_Element& element,
+  virtual StatusCode i_createObj(const DOMElement* element,
                                  DataObject*& refpObject);
 
 
   /// Internal helper; handles xml for a tower
-  StatusCode processTower(const DOM_Element& towerElt, 
+  StatusCode processTower(const DOMElement* towerElt, 
                           CalibData::BadStrips* pBad);
 
   /** Internal helper; handles xml for a uniplane
@@ -46,11 +45,11 @@ protected:
       @param col     column of tower containing the uniplane (input)
       @param pBad    Pointer to BadStrips object to be updated
    */
-  StatusCode processUni(const DOM_Element& uniElt,
+  StatusCode processUni(const DOMElement* uniElt,
                         unsigned row, unsigned col,
                         CalibData::BadStrips* pBad);
 
-  StatusCode addStrips(const DOM_Element& uniElt, CalibData::StripCol* strips);
+  StatusCode addStrips(const DOMElement* uniElt, CalibData::StripCol* strips);
 
 
 };

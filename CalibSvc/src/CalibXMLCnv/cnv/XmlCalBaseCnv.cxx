@@ -6,7 +6,9 @@
 
 // Local utilities to interpret attributes 
 namespace {
-  unsigned findRangeAtt(const DOM_Element& rangeElt) {
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
+
+  unsigned findRangeAtt(const DOMElement* rangeElt) {
     using xml::Dom;
     using idents::CalXtalId;
 
@@ -30,7 +32,7 @@ namespace {
     return 0;
   }
 
-  unsigned findFace(const DOM_Element& faceElt) {
+  unsigned findFace(const DOMElement* faceElt) {
     using xml::Dom;
     using idents::CalXtalId;
 
@@ -41,13 +43,15 @@ namespace {
   }
 }
 
+// redundant since this is already in XmlBaseCnv.h
+using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
 
 XmlCalBaseCnv::XmlCalBaseCnv(ISvcLocator* svc, const CLID& clid) :
   XmlBaseCnv(svc, clid), m_nRow(10000), m_nCol(10000), 
   m_nLayer(10000), m_nXtal(10000),
   m_nFace(10000), m_nRange(10000) {}
 
-StatusCode XmlCalBaseCnv::readDimension(const DOM_Element& docElt, 
+StatusCode XmlCalBaseCnv::readDimension(const DOMElement* docElt, 
                                         unsigned& nRow, unsigned& nCol, 
                                         unsigned& nLayer,
                                         unsigned& nXtal, unsigned& nFace,
@@ -57,8 +61,8 @@ StatusCode XmlCalBaseCnv::readDimension(const DOM_Element& docElt,
   using xml::Dom;
 
   MsgStream log(msgSvc(), "XmlCalBaseCnv" );
-  DOM_Element dimElt = Dom::findFirstChildByName(docElt, "dimension");
-  if (dimElt == DOM_Element()) return StatusCode::FAILURE;
+  DOMElement* dimElt = Dom::findFirstChildByName(docElt, "dimension");
+  if (dimElt == 0) return StatusCode::FAILURE;
 
   try {
     nRow = Dom::getIntAttribute(dimElt, "nRow");
@@ -84,8 +88,7 @@ StatusCode XmlCalBaseCnv::readDimension(const DOM_Element& docElt,
   unsigned expected = nRow * nCol;
   // Make some consistency checks.  # tower elements should be nRow*nCol
   // # layer elements should be nRow*nCol*nLayer, etc.
-  //  DOM_NodeList nlist = docElt.getElementsByTagName("tower");
-  std::vector<DOM_Element> nlist;
+  std::vector<DOMElement*> nlist;
 
   Dom::getDescendantsByTagName(docElt, "tower", nlist);
   
@@ -124,7 +127,7 @@ StatusCode XmlCalBaseCnv::readDimension(const DOM_Element& docElt,
   // this is.  However they all have the same name, so just find first
   // child of a face element, then count all similarly-named elements
 
-  DOM_Element child = Dom::getFirstChildElement(nlist[0]);
+  DOMElement* child = Dom::getFirstChildElement(nlist[0]);
   std::string tagName = Dom::getTagName(child);
   Dom::getDescendantsByTagName(docElt, tagName, nlist);
   //  nlist = docElt.getElementsByTagName(child.getTagName());
@@ -137,12 +140,12 @@ StatusCode XmlCalBaseCnv::readDimension(const DOM_Element& docElt,
   return StatusCode::SUCCESS;
 }
 
-DOM_Element XmlCalBaseCnv::findFirstRange(const DOM_Element& docElt) {
+DOMElement* XmlCalBaseCnv::findFirstRange(const DOMElement* docElt) {
   using xml::Dom;
   using idents::CalXtalId;
 
-  DOM_Element elt = Dom::findFirstChildByName(docElt, "tower");
-  if (elt == DOM_Element()) return elt;
+  DOMElement* elt = Dom::findFirstChildByName(docElt, "tower");
+  if (elt == 0) return elt;
 
   //  std::string att = Dom::getAttribute(elt, "nRow");
   //  m_nRow = atoi(att.c_str());
@@ -175,21 +178,22 @@ DOM_Element XmlCalBaseCnv::findFirstRange(const DOM_Element& docElt) {
 }
 
 /// Still another one to navigate XML file and find next set of range data
-DOM_Element XmlCalBaseCnv::findNextRange(const DOM_Element& rangeElt) {
+DOMElement* XmlCalBaseCnv::findNextRange(const DOMElement* rangeElt) {
   using xml::Dom;
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMNode;
 
-  DOM_Element elt = Dom::getSiblingElement(rangeElt);
-  if (elt != DOM_Element()) {
+  DOMElement* elt = Dom::getSiblingElement(rangeElt);
+  if (elt != 0) {
     m_nRange = findRangeAtt(elt);
     return elt;
   }
 
   // Done with this xtal face; look for sibling
-  DOM_Node node = rangeElt.getParentNode();
-  elt = static_cast<DOM_Element &>(node);   // current xtal face
+  DOMNode* node = rangeElt->getParentNode();
+  elt = static_cast<DOMElement* >(node);   // current xtal face
   elt = Dom::getSiblingElement(elt);          // next xtal face
 
-  if (elt != DOM_Element()) {
+  if (elt != 0) {
     m_nFace = findFace(elt);
 
     elt = Dom::getFirstChildElement(elt);
@@ -198,11 +202,11 @@ DOM_Element XmlCalBaseCnv::findNextRange(const DOM_Element& rangeElt) {
   }
 
   // Done with this xtal
-  node = node.getParentNode();  // current xtal
-  elt = static_cast<DOM_Element &>(node);
+  node = node->getParentNode();  // current xtal
+  elt = static_cast<DOMElement* >(node);
   elt = Dom::getSiblingElement(elt);         // next xtal
 
-  if (elt != DOM_Element()) {
+  if (elt != 0) {
     try {
       m_nXtal = Dom::getIntAttribute(elt, "iXtal");
     }
@@ -225,11 +229,11 @@ DOM_Element XmlCalBaseCnv::findNextRange(const DOM_Element& rangeElt) {
   }
 
   // Done with this layer
-  node = node.getParentNode();  // current layer
-  elt = static_cast<DOM_Element &>(node);
+  node = node->getParentNode();  // current layer
+  elt = static_cast<DOMElement* >(node);
   elt = Dom::getSiblingElement(elt);         // next layer
 
-  if (elt != DOM_Element()) {
+  if (elt != 0) {
     try {
       m_nLayer = Dom::getIntAttribute(elt, "iLayer");
     }
@@ -262,11 +266,11 @@ DOM_Element XmlCalBaseCnv::findNextRange(const DOM_Element& rangeElt) {
   }
 
   // Done with this tower
-  node = node.getParentNode();  // current tower
-  elt = static_cast<DOM_Element &>(node);
+  node = node->getParentNode();  // current tower
+  elt = static_cast<DOMElement* >(node);
   elt = Dom::getSiblingElement(elt);         // next tower
 
-  if (elt == DOM_Element()) return elt;
+  if (elt == 0) return elt;
 
   // otherwise we've got a new tower; go through the whole
   // rigamarole

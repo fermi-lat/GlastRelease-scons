@@ -14,8 +14,8 @@ apply_pattern component_library library=CalibSvc
 
 # the runtime public interface to this package must expose sharables from 
 # calibUtil, CalibData, calibRootData and astro
-use calibUtil v0r* -no_auto_imports
-use CalibData v0r* -no_auto_imports
+use calibUtil v1r* -no_auto_imports
+use CalibData v0r* 
 use calibRootData v1r* -no_auto_imports
 use astro         v1r* -no_auto_imports
 
@@ -26,13 +26,17 @@ macro rootcint_end   "" vsnet "-->"
 
 private
 # _______________________________________________________
-#  use astro       v1r*
 use GaudiInterface * IExternal
 use ROOT   * IExternal 
-use XMLEXT * IExternal 
+use XMLEXT * IExternal v5r2*
+
+## Following line doesn't appear in real requirements, though maybe it should,
+## because GlastSvc and RootIo already drag in Event
+
 use GlastSvc v9r* -no_auto_imports
 use RootIo v* -no_auto_imports
 use LdfEvent v2r* -no_auto_imports
+use Event v9r* -no_auto_imports
 
 
 apply_pattern package_include
@@ -61,7 +65,7 @@ public
 set JOBOPTIONS "${CALIBSVCROOT}/src/test/jobOptions.txt"
 
 
-## application test_CalibSvc $(TestGlastMain) test/*.cxx $(WinInclude)
+##application test_CalibSvc $(TestGlastMain) test/*.cxx $(WinInclude)
 
 apply_pattern package_test import=CalibData
 

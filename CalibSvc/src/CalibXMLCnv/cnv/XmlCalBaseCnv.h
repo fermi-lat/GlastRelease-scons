@@ -19,7 +19,6 @@ class XmlCalBaseCnv : public XmlBaseCnv {
 public:
 
   XmlCalBaseCnv(ISvcLocator* svc, const CLID& clid);
-
   virtual ~XmlCalBaseCnv() {};
 
 
@@ -42,7 +41,7 @@ public:
   /// Convenience routine used by most CAL calibration types, which
   /// have a <dimension> element describing how the remainder of the
   /// data is laid out.
-  StatusCode readDimension(const DOM_Element& docElt, 
+  StatusCode readDimension(const DOMElement* docElt, 
                            unsigned& nRow, unsigned& nCol, 
                            unsigned& nLayer,
                            unsigned& nXtal, unsigned& nFace,
@@ -51,10 +50,10 @@ public:
                            unsigned* nXpos=0);
 
   /// Another one to find first range element
-  DOM_Element findFirstRange(const DOM_Element& docElt);
+  DOMElement* findFirstRange(const DOMElement* docElt);
 
   /// Still another one to navigate XML file and find next set of range data
-  DOM_Element findNextRange(const DOM_Element& rangeElt);
+  DOMElement* findNextRange(const DOMElement* rangeElt);
 
 protected:
   /// A place to keep track of where we are if we're handling CAL data

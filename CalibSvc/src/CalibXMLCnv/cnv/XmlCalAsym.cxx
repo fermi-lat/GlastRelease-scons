@@ -7,7 +7,7 @@
   @author J. Bogart
 */
 #include "XmlCalBaseCnv.h"
-#include <xercesc/dom/DOM_Element.hpp>
+// #include <xercesc/dom/DOMElement.hpp>
 
 // Following only needed for implementation, not class definition
 #include <string>
@@ -47,13 +47,13 @@ protected:
 
   virtual ~XmlCalAsymCnv() {}       // most likely nothing to do 
 
-  virtual StatusCode i_createObj(const DOM_Element& element,
+  virtual StatusCode i_createObj(const DOMElement* element,
                                  DataObject*& refpObject);
 
 private:
   /// Utility which knows how to get the information out of an
   /// <asym> element and make a CalibData::CalAsym with it
-  CalibData::CalAsym* processRange(DOM_Element mevPerDacElt);
+  CalibData::CalAsym* processRange(DOMElement* mevPerDacElt);
 
 };
 
@@ -76,7 +76,7 @@ const CLID& XmlCalAsymCnv::classID() {
   return CLID_Calib_CAL_Asym;
 }
 
-CalibData::CalAsym* XmlCalAsymCnv::processRange(DOM_Element asymElt) {
+CalibData::CalAsym* XmlCalAsymCnv::processRange(DOMElement* asymElt) {
   using xml::Dom;
   using CalibData::ValSig;
   using CalibData::CalAsym;
@@ -116,7 +116,7 @@ CalibData::CalAsym* XmlCalAsymCnv::processRange(DOM_Element asymElt) {
 }
 
 // Create our specific object
-StatusCode XmlCalAsymCnv::i_createObj(const DOM_Element& docElt, 
+StatusCode XmlCalAsymCnv::i_createObj(const DOMElement* docElt, 
                                            DataObject*& refpObject)
 {
   using xml::Dom;
@@ -139,9 +139,9 @@ StatusCode XmlCalAsymCnv::i_createObj(const DOM_Element& docElt,
 
   setBaseInfo(pObj);
 
-  DOM_Element rangeElt = findFirstRange(docElt);
+  DOMElement* rangeElt = findFirstRange(docElt);
 
-  while (rangeElt != DOM_Element() ) {
+  while (rangeElt != 0 ) {
     CalAsym* pAsym = processRange(rangeElt);
     pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, 
                    m_nFace, pAsym);
@@ -149,9 +149,9 @@ StatusCode XmlCalAsymCnv::i_createObj(const DOM_Element& docElt,
   }
 
   // Also have to handle xpos if present
-  DOM_Element xposElt = findXpos(docElt);
+  DOMElement* xposElt = findXpos(docElt);
 
-  if (xposElt != DOM_Element() ) {
+  if (xposElt != 0 ) {
     Xpos* pXpos = processXpos(xposElt);
     pObj->putXpos(pXpos);
     delete pXpos;

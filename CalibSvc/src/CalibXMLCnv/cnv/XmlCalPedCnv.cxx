@@ -51,7 +51,7 @@ StatusCode XmlBaseCnv::i_processObj(DataObject*, // pObject,
 namespace {
   /// Local utility which knows how to get the information out of a
   /// <calPed> element and make a CalibData::Ped with it
-  CalibData::Ped* processRange(DOM_Element pedElt) {
+  CalibData::Ped* processRange(DOMElement* pedElt) {
     using xml::Dom;
 
     // Could check here to make sure it really is a <calPed>
@@ -84,7 +84,7 @@ namespace {
 }
 
 // Create our specific object
-StatusCode XmlCalPedCnv::i_createObj(const DOM_Element& docElt, 
+StatusCode XmlCalPedCnv::i_createObj(const DOMElement* docElt, 
                                      DataObject*& refpObject)
 {
   using xml::Dom;
@@ -104,9 +104,9 @@ StatusCode XmlCalPedCnv::i_createObj(const DOM_Element& docElt,
 
   setBaseInfo(pObj);
 
-  DOM_Element rangeElt = findFirstRange(docElt);
+  DOMElement* rangeElt = findFirstRange(docElt);
 
-  while (rangeElt != DOM_Element() ) {
+  while (rangeElt != 0 ) {
     Ped* ped = processRange(rangeElt);
     pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, m_nFace, ped);
     rangeElt = findNextRange(rangeElt);

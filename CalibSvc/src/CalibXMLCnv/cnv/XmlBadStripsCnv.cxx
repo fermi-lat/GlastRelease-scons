@@ -80,7 +80,7 @@ namespace {
 
 
 // Create our specific object, given
-StatusCode XmlBadStripsCnv::i_createObj(const DOM_Element& element,
+StatusCode XmlBadStripsCnv::i_createObj(const DOMElement* element,
                                         DataObject*& refpObject)
 {
   using xml::Dom;
@@ -106,8 +106,8 @@ StatusCode XmlBadStripsCnv::i_createObj(const DOM_Element& element,
   
   // const 
   StatusCode sc = StatusCode::SUCCESS;   // it's OK to have no bad towers
-  DOM_Element child = Dom::findFirstChildByName(element, "tower");
-  while (child != DOM_Element()) {
+  DOMElement* child = Dom::findFirstChildByName(element, "tower");
+  while (child != 0) {
     sc = processTower(child, pBad);
 
     // if bad return do something
@@ -118,7 +118,7 @@ StatusCode XmlBadStripsCnv::i_createObj(const DOM_Element& element,
   return sc;
 }
 
-StatusCode XmlBadStripsCnv::processTower(const DOM_Element& towerElt,
+StatusCode XmlBadStripsCnv::processTower(const DOMElement* towerElt,
                                          CalibData::BadStrips *pBad) {
   using xml::Dom;
 
@@ -158,9 +158,9 @@ StatusCode XmlBadStripsCnv::processTower(const DOM_Element& towerElt,
   if (allBad) return sc;
 
   // Process each uniplane element
-  DOM_Element uniElt = Dom::getFirstChildElement(towerElt);
+  DOMElement* uniElt = Dom::getFirstChildElement(towerElt);
 
-  while (uniElt != DOM_Element()) {
+  while (uniElt != 0) {
     sc = processUni(uniElt, row, col, pBad);
     // if bad status, complain and return
     uniElt = Dom::getSiblingElement(uniElt);
@@ -169,7 +169,7 @@ StatusCode XmlBadStripsCnv::processTower(const DOM_Element& towerElt,
                                   
 }
 
-StatusCode XmlBadStripsCnv::processUni(const DOM_Element& uniElt, 
+StatusCode XmlBadStripsCnv::processUni(const DOMElement* uniElt, 
                                        unsigned row, unsigned col,
                                        CalibData::BadStrips* pBad)
 {
@@ -226,15 +226,15 @@ StatusCode XmlBadStripsCnv::processUni(const DOM_Element& uniElt,
   return StatusCode::SUCCESS;
 }
 
-StatusCode XmlBadStripsCnv::addStrips(const DOM_Element& uniElt,
+StatusCode XmlBadStripsCnv::addStrips(const DOMElement* uniElt,
                                       CalibData::StripCol* strips) {
   using xml::Dom;
 
   // Children of uniElt are an arbitrary collection of stripList
   // and stripSpan elements
-  DOM_Element childElt = Dom::getFirstChildElement(uniElt);
+  DOMElement* childElt = Dom::getFirstChildElement(uniElt);
 
-  while (childElt != DOM_Element() ) {
+  while (childElt != 0 ) {
     // must be list or span
     //    if ((childElt.getTagName()).equals("stripList") ) {
     if (Dom::checkTagName(childElt, "stripList")) {

@@ -30,8 +30,10 @@
 
 #include "facilities/Util.h"
 
-#include <xercesc/dom/DOM_Document.hpp>
-#include <xercesc/dom/DOM_NodeList.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+// #include <xercesc/dom/DOM_NodeList.hpp>
+
+XERCES_CPP_NAMESPACE_USE
 
     
 XmlBaseCnv::~XmlBaseCnv() {}
@@ -102,10 +104,11 @@ StatusCode XmlBaseCnv::createObj(IOpaqueAddress* addr,
   //  int nSub = 
   facilities::Util::expandEnvVar(&par0);
 
-  //  DOM_Document doc = m_xmlSvc->parse(par[0].c_str());
-  DOM_Document doc = m_xmlSvc->parse(par0.c_str());
+  //  XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc = 
+  DOMDocument* doc = 
+    m_xmlSvc->parse(par0.c_str());
 
-  if (doc == DOM_Document() ) {
+  if (doc == 0 ) {
     log << MSG::FATAL 
         << "Unable to parse document " << par[0] << " aka " 
         << par0 << endreq;
@@ -125,7 +128,7 @@ StatusCode XmlBaseCnv::createObj(IOpaqueAddress* addr,
   // appropriate specific converter invoked to interpret the DOM 
   // correctly and make a new object of the correct kind.
 
-  return internalCreateObj(doc.getDocumentElement(), refpObject, addr);
+  return internalCreateObj(doc->getDocumentElement(), refpObject, addr);
 }
 
 
@@ -134,7 +137,7 @@ StatusCode XmlBaseCnv::createObj(IOpaqueAddress* addr,
     @param  elt      Document elt from XML document   (input)
     @param  refpObject 
 */
-StatusCode XmlBaseCnv::internalCreateObj(const DOM_Element& docElt,
+StatusCode XmlBaseCnv::internalCreateObj(const DOMElement* docElt,
                                          DataObject*& refpObject,
                                          IOpaqueAddress* address) {
   // creates a msg stream for debug purposes
@@ -193,7 +196,7 @@ StatusCode XmlBaseCnv::i_processObj(DataObject*, // pObject,
  
 
 // Shouldn't ever really get here 
-StatusCode XmlBaseCnv::i_createObj(const DOM_Element&, DataObject*&) {
+StatusCode XmlBaseCnv::i_createObj(const DOMElement*, DataObject*&) {
   return StatusCode::FAILURE;
 }
 
@@ -208,7 +211,7 @@ StatusCode XmlBaseCnv::updateObj(IOpaqueAddress* ,
 // store, don't implement the converter *Rep functions.
 */
 
-StatusCode XmlBaseCnv::readHeader(const DOM_Element&) {
+StatusCode XmlBaseCnv::readHeader(const DOMElement*) {
   return StatusCode::SUCCESS;
 }
 
@@ -226,17 +229,17 @@ void XmlBaseCnv::setBaseInfo(CalibData::CalibBase* pObj) {
 }
 
 
-DOM_Element XmlBaseCnv::findFirstDacCol(const DOM_Element& docElt) {
+DOMElement* XmlBaseCnv::findFirstDacCol(const DOMElement* docElt) {
   return  xml::Dom::findFirstChildByName(docElt, "dac");
 }
 
-DOM_Element XmlBaseCnv::findNextDacCol(const DOM_Element& dacElt) {
-  DOM_Element next = xml::Dom::getSiblingElement(dacElt);
+DOMElement* XmlBaseCnv::findNextDacCol(const DOMElement* dacElt) {
+  DOMElement* next = xml::Dom::getSiblingElement(dacElt);
   if (xml::Dom::checkTagName(next, "dac")) return next;
-  else return DOM_Element();
+  else return 0;
 }
 
-CalibData::DacCol* XmlBaseCnv::processDacCol(DOM_Element dacColElt,
+CalibData::DacCol* XmlBaseCnv::processDacCol(DOMElement* dacColElt,
                                              unsigned* range) {
 
   using xml::Dom;
@@ -259,11 +262,11 @@ CalibData::DacCol* XmlBaseCnv::processDacCol(DOM_Element dacColElt,
 
 }
 
-DOM_Element XmlBaseCnv::findXpos(const DOM_Element& docElt) {
+DOMElement* XmlBaseCnv::findXpos(const DOMElement* docElt) {
   return  xml::Dom::findFirstChildByName(docElt, "xpos");
 }
 
-CalibData::Xpos* XmlBaseCnv::processXpos(DOM_Element xposElt) {
+CalibData::Xpos* XmlBaseCnv::processXpos(DOMElement* xposElt) {
   using xml::Dom;
 
   std::vector<float> vals;
@@ -275,10 +278,10 @@ CalibData::Xpos* XmlBaseCnv::processXpos(DOM_Element xposElt) {
 }
 
 /// Read in what will become a CalibData::ValSig
-CalibData::ValSig* XmlBaseCnv::processValSig(DOM_Element elt, 
+CalibData::ValSig* XmlBaseCnv::processValSig(DOMElement* elt, 
                                              std::string valName, 
                                              std::string sigName) {
-  if (elt == DOM_Element() ) return 0;
+  if (elt == 0 ) return 0;
   CalibData::ValSig *pValSig = new CalibData::ValSig;
   pValSig->m_val = xml::Dom::getDoubleAttribute(elt, valName);
   pValSig->m_sig = xml::Dom::getDoubleAttribute(elt, sigName);
@@ -286,13 +289,13 @@ CalibData::ValSig* XmlBaseCnv::processValSig(DOM_Element elt,
 }
 
 std::vector<CalibData::ValSig>* 
-XmlBaseCnv::processValSigs(DOM_Element elt, std::string valName, 
+XmlBaseCnv::processValSigs(DOMElement* elt, std::string valName, 
                            std::string sigName) {
 
   // creates a msg stream for debug purposes
   MsgStream log( msgSvc(), "XmlBaseCnv" );
 
-  if (elt == DOM_Element() ) return 0;
+  if (elt == 0 ) return 0;
   std::vector<float> vals;
   std::vector<float> sigs;
 

@@ -51,7 +51,7 @@ StatusCode XmlBaseCnv::i_processObj(DataObject*, // pObject,
 namespace {
   /// Local utility which knows how to get the information out of a
   /// <calLightAsym> element and make a CalibData::LightAsym with it
-  CalibData::LightAsym* processRange(DOM_Element lightAsymElt) {
+  CalibData::LightAsym* processRange(DOMElement* lightAsymElt) {
     using xml::Dom;
 
     // Could check here to make sure it really is a <lightAsym>
@@ -73,7 +73,7 @@ namespace {
 }
 
 // Create our specific object
-StatusCode XmlCalLightAsymCnv::i_createObj(const DOM_Element& docElt, 
+StatusCode XmlCalLightAsymCnv::i_createObj(const DOMElement* docElt, 
                                      DataObject*& refpObject)
 {
   using xml::Dom;
@@ -93,9 +93,9 @@ StatusCode XmlCalLightAsymCnv::i_createObj(const DOM_Element& docElt,
 
   setBaseInfo(pObj);
 
-  DOM_Element rangeElt = findFirstRange(docElt);
+  DOMElement* rangeElt = findFirstRange(docElt);
 
-  while (rangeElt != DOM_Element() ) {
+  while (rangeElt != 0 ) {
     LightAsym* pLightAsym = processRange(rangeElt);
     pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, 
                    m_nFace, pLightAsym);

@@ -26,17 +26,17 @@ public:
   /// Convenience routine used by most ACD calibration types, which
   /// have a <dimension> element describing how the remainder of the
   /// data is laid out.
-  StatusCode readAcdDimension(const DOM_Element& docElt,
+  StatusCode readAcdDimension(const DOMElement* docElt,
                               unsigned& nFace, unsigned& nRow,
                               unsigned& nCol, unsigned& nPmt,
                               unsigned& nRange);
 
 
   /// Another one to find first range element
-  DOM_Element findFirstRange(const DOM_Element& docElt);
+  DOMElement* findFirstRange(const DOMElement* docElt);
 
   /// Still another one to navigate XML file and find next set of range data
-  DOM_Element findNextRange(const DOM_Element& rangeElt);
+  DOMElement* findNextRange(const DOMElement* rangeElt);
 
 protected:
   /// A place to keep track of where we are within ACD data

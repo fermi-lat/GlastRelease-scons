@@ -7,7 +7,6 @@
   @author J. Bogart
 */
 #include "XmlCalBaseCnv.h"
-#include <xercesc/dom/DOM_Element.hpp>
 
 // Following only needed for implementation, not class definition
 #include <string>
@@ -49,13 +48,13 @@ protected:
 
   virtual ~XmlCalMevPerDacCnv() {}       // most likely nothing to do 
 
-  virtual StatusCode i_createObj(const DOM_Element& element,
+  virtual StatusCode i_createObj(const DOMElement* element,
                                  DataObject*& refpObject);
 
 private:
   /// Private utility which knows how to get the information out of a
   /// <mevPerDac> element and make a CalibData::CalMevPerDac with it
-  CalibData::CalMevPerDac* processRange(DOM_Element mevPerDacElt);
+  CalibData::CalMevPerDac* processRange(DOMElement* mevPerDacElt);
 
 };
 
@@ -79,7 +78,7 @@ const CLID& XmlCalMevPerDacCnv::classID() {
 }
 
 CalibData::CalMevPerDac* 
-XmlCalMevPerDacCnv::processRange(DOM_Element mevPerDacElt) {
+XmlCalMevPerDacCnv::processRange(DOMElement* mevPerDacElt) {
   using xml::Dom;
   using CalibData::ValSig;
   using CalibData::CalMevPerDac;
@@ -97,7 +96,7 @@ XmlCalMevPerDacCnv::processRange(DOM_Element mevPerDacElt) {
     big = processValSig(mevPerDacElt, "bigVal", "bigSig");
     small = processValSig(mevPerDacElt, "smallVal", "smallSig");
     
-    DOM_Element bigSmall = Dom::getFirstChildElement(mevPerDacElt);
+    DOMElement* bigSmall = Dom::getFirstChildElement(mevPerDacElt);
     std::string face = Dom::getAttribute(bigSmall, "end");
     bool posEnd1 = (face == "POS");
     
@@ -151,7 +150,7 @@ XmlCalMevPerDacCnv::processRange(DOM_Element mevPerDacElt) {
 }
 
 // Create our specific object
-StatusCode XmlCalMevPerDacCnv::i_createObj(const DOM_Element& docElt, 
+StatusCode XmlCalMevPerDacCnv::i_createObj(const DOMElement* docElt, 
                                            DataObject*& refpObject)
 {
   using xml::Dom;
@@ -174,9 +173,9 @@ StatusCode XmlCalMevPerDacCnv::i_createObj(const DOM_Element& docElt,
 
   setBaseInfo(pObj);
 
-  DOM_Element rangeElt = findFirstRange(docElt);
+  DOMElement* rangeElt = findFirstRange(docElt);
 
-  while (rangeElt != DOM_Element() ) {
+  while (rangeElt != 0 ) {
     CalMevPerDac* pMevPerDac = processRange(rangeElt);
     pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, 
                    m_nFace, pMevPerDac);
@@ -184,9 +183,9 @@ StatusCode XmlCalMevPerDacCnv::i_createObj(const DOM_Element& docElt,
   }
 
   // Also have to handle xpos if present
-  DOM_Element xposElt = findXpos(docElt);
+  DOMElement* xposElt = findXpos(docElt);
 
-  if (xposElt != DOM_Element() ) {
+  if (xposElt != 0 ) {
     Xpos* pXpos = processXpos(xposElt);
     pObj->putXpos(pXpos);
     delete pXpos;

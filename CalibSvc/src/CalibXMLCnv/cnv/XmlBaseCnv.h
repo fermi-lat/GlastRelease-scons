@@ -14,7 +14,7 @@
 #include <vector>
 #include "GaudiKernel/Converter.h"
 #include "GaudiKernel/CnvFactory.h"
-#include <xercesc/dom/DOM_Element.hpp>
+#include <xercesc/dom/DOMElement.hpp>
 
 class ISvcLocator;
 class GenericAddress;
@@ -29,6 +29,9 @@ namespace CalibData {
   class Xpos;   // only of interest for some calorimeter calibrations
   class ValSig;
 }
+
+using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
+
 
 class  XmlBaseCnv : public Converter {
 
@@ -64,19 +67,19 @@ public:
 
 protected:
   /** This creates the transient representation of an object from the
-   *  DOM_Element representing it, then fills it and process it.
+   *  DOMElement representing it, then fills it and process it.
    *  This implementation actually only calls the i_* methods of the
    *  "right" converter to do the job; so the very first thing it
    *  does is get a pointer to the appropriate derived converter.
    *  Converters typically don't need to override this method
    *  but only to  override/implement some of the i_* methods.
-   *  @param element the DOM_Element (typically the root element of the
+   *  @param element the DOMElement (typically the root element of the
    *   document) to be used to build the object
    *  @param refpObject the object to be built
    *  @param address the opaque address for this object
    *  @return status depending on the completion of the call
    */
-  virtual StatusCode internalCreateObj (const DOM_Element& element,
+  virtual StatusCode internalCreateObj (const DOMElement* element,
                                         DataObject*& refpObject,
                                         IOpaqueAddress* address);
   
@@ -91,7 +94,7 @@ protected:
    *  @param refpObject the object to be built
    *  @return status depending on the completion of the call
    */
-  virtual StatusCode i_createObj (const DOM_Element& element,
+  virtual StatusCode i_createObj (const DOMElement* element,
                                   DataObject*& refpObject);
 
   /// In case there is additional work to do on the created object
@@ -101,38 +104,37 @@ protected:
   // Might want to verify that instrument, calType are correct,
   // for example.  If so, might as well provide the service in
   // the base converter.
-  virtual StatusCode readHeader(const DOM_Element&);
+  virtual StatusCode readHeader(const DOMElement*);
 
 
   /// Find first range element.  Derived classes which need it
   /// must define their own implementation.
-  DOM_Element findFirstRange(const DOM_Element& docElt) {
-    return DOM_Element();}
-  //  DOM_Element findFirstRange(const DOM_Element& docElt);
+  DOMElement* findFirstRange(const DOMElement* docElt) {
+    return 0;}
+
 
   /// Still another one to navigate XML file and find next set of range data
-  DOM_Element findNextRange(const DOM_Element& rangeElt) {
-    return DOM_Element();}
-  //  DOM_Element findNextRange(const DOM_Element& rangeElt);
+  DOMElement* findNextRange(const DOMElement* rangeElt) {
+    return 0;}
 
   /// Another one to find first dac collection element
-  DOM_Element findFirstDacCol(const DOM_Element& docElt);
+  DOMElement* findFirstDacCol(const DOMElement* docElt);
 
   /// Still another one to navigate XML file and find next dac collection
-  DOM_Element findNextDacCol(const DOM_Element& rangeElt);
+  DOMElement* findNextDacCol(const DOMElement* rangeElt);
 
-  CalibData::DacCol* processDacCol(DOM_Element dacColElt, unsigned* range);
+  CalibData::DacCol* processDacCol(DOMElement* dacColElt, unsigned* range);
 
-  DOM_Element findXpos(const DOM_Element& docElt);
+  DOMElement* findXpos(const DOMElement* docElt);
 
-  CalibData::Xpos* processXpos(DOM_Element xposElt);
+  CalibData::Xpos* processXpos(DOMElement* xposElt);
 
   /// Read in what will become a CalibData::ValSig
-  CalibData::ValSig* processValSig(DOM_Element elt, 
+  CalibData::ValSig* processValSig(DOMElement* elt, 
                                    std::string valName, std::string sigName);
 
   /// Read in what will become a vector of CalibData::ValSig
-  std::vector<CalibData::ValSig>*  processValSigs(DOM_Element elt, 
+  std::vector<CalibData::ValSig>*  processValSigs(DOMElement* elt, 
                                                   std::string valName, 
                                                   std::string sigName);
 

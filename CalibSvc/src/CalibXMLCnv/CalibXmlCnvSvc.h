@@ -8,7 +8,7 @@
 #include "GaudiKernel/ConversionSvc.h"
 #include "CalibSvc/ICalibXmlSvc.h"
 
-#include <xercesc/dom/DOM_Document.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
 
 /// Forward and external declarations
 template <class TYPE> class SvcFactory;
@@ -70,7 +70,8 @@ class CalibXmlCnvSvc : public ConversionSvc, virtual public ICalibXmlSvc
                                    IOpaqueAddress*& refpAddress);
 
   // from ICalibXmlSvc interface
-  virtual DOM_Document parse(const char* filename);
+  virtual XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* 
+  parse(const char* filename);
 
   
   /*  

@@ -165,6 +165,7 @@ StatusCode CalibXmlCnvSvc::createAddress(unsigned char svc_type,
 
 
 
-DOM_Document CalibXmlCnvSvc::parse(const char* filename) {
+XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* 
+CalibXmlCnvSvc::parse(const char* filename) {
   return m_parser->parse(filename);
 }

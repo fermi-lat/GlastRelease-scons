@@ -7,7 +7,6 @@
   @author J. Bogart
 */
 #include "XmlCalBaseCnv.h"
-#include <xercesc/dom/DOM_Element.hpp>
 
 // Following only needed for implementation, not class definition
 #include <string>
@@ -49,13 +48,13 @@ protected:
 
   virtual ~XmlCalTholdMuonCnv() {}       // most likely nothing to do 
 
-  virtual StatusCode i_createObj(const DOM_Element& element,
+  virtual StatusCode i_createObj(const DOMElement* element,
                                  DataObject*& refpObject);
 
 private:
   /// Private utility which knows how to get the information out of a
   /// <tholdMuon> element and make a CalibData::CalTholdMuon with it
-  CalibData::CalTholdMuon* processRange(DOM_Element tholdMuonElt);
+  CalibData::CalTholdMuon* processRange(DOMElement* tholdMuonElt);
 
 };
 
@@ -79,7 +78,7 @@ const CLID& XmlCalTholdMuonCnv::classID() {
 }
 
 CalibData::CalTholdMuon* 
-XmlCalTholdMuonCnv::processRange(DOM_Element tholdMuonElt) {
+XmlCalTholdMuonCnv::processRange(DOMElement* tholdMuonElt) {
   using xml::Dom;
   using CalibData::ValSig;
   using CalibData::CalTholdMuon;
@@ -105,12 +104,12 @@ XmlCalTholdMuonCnv::processRange(DOM_Element tholdMuonElt) {
   }
 
   // Now for up to 4 tholdMuonRange child elements
-  DOM_Element rangeElt = Dom::getFirstChildElement(tholdMuonElt);
+  DOMElement* rangeElt = Dom::getFirstChildElement(tholdMuonElt);
   unsigned mask = 0;
   bool problem = false;
   std::string errMsg("");
 
-  while (rangeElt != DOM_Element() ) {
+  while (rangeElt != 0 ) {
 
     // check we don't already have this one
     std::string range = Dom::getAttribute(rangeElt, "range");
@@ -158,7 +157,7 @@ XmlCalTholdMuonCnv::processRange(DOM_Element tholdMuonElt) {
 }
 
 // Create our specific object
-StatusCode XmlCalTholdMuonCnv::i_createObj(const DOM_Element& docElt, 
+StatusCode XmlCalTholdMuonCnv::i_createObj(const DOMElement* docElt, 
                                            DataObject*& refpObject)
 {
   using xml::Dom;
@@ -179,9 +178,9 @@ StatusCode XmlCalTholdMuonCnv::i_createObj(const DOM_Element& docElt,
 
   setBaseInfo(pObj);
 
-  DOM_Element rangeElt = findFirstRange(docElt);
+  DOMElement* rangeElt = findFirstRange(docElt);
 
-  while (rangeElt != DOM_Element() ) {
+  while (rangeElt != 0 ) {
     CalTholdMuon* pTholdMuon = processRange(rangeElt);
     pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, 
                    m_nFace, pTholdMuon);

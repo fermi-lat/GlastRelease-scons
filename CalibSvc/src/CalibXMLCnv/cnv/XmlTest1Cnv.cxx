@@ -49,16 +49,16 @@ StatusCode XmlBaseCnv::i_processObj(DataObject*, // pObject,
  
 
 // Create our specific object
-StatusCode XmlTest1Cnv::i_createObj(const DOM_Element& element, 
+StatusCode XmlTest1Cnv::i_createObj(const DOMElement* element, 
                                     DataObject*& refpObject)
 {
   using xml::Dom;
 
   // Fetch quantities we need: name, value
-  DOM_Element child = Dom::findFirstChildByName(element, "data");
-  if (child == DOM_Element()) return StatusCode::FAILURE;
+  DOMElement* child = Dom::findFirstChildByName(element, "data");
+  if (child == 0) return StatusCode::FAILURE;
   child = Dom::findFirstChildByName(child, "leaf");
-  if (child == DOM_Element()) return StatusCode::FAILURE;
+  if (child == 0) return StatusCode::FAILURE;
 
   std::string name = Dom::getAttribute(child, "name");
 

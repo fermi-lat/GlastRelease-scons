@@ -2,22 +2,25 @@
 #include "GaudiKernel/MsgStream.h"
 #include "XmlAcdBaseCnv.h"
 #include "xml/Dom.h"
+#include <xercesc/dom/DOMNode.hpp>
+
 // #include "idents/AcdId.h"
 
+using XERCES_CPP_NAMESPACE_QUALIFIER DOMNode;
 
 XmlAcdBaseCnv::XmlAcdBaseCnv(ISvcLocator* svc, const CLID& clid) :
   XmlBaseCnv(svc, clid), m_nFace(10000), m_nRow(10000), m_nCol(10000), 
   m_nPmt(10000), m_nRange(10000) {}
 
-StatusCode XmlAcdBaseCnv::readAcdDimension(const DOM_Element& docElt, 
+StatusCode XmlAcdBaseCnv::readAcdDimension(const DOMElement* docElt, 
                                         unsigned& nFace,
                                         unsigned& nRow, unsigned& nCol, 
                                         unsigned& nPmt, unsigned& nRange) {
   using xml::Dom;
 
   MsgStream log(msgSvc(), "XmlBaseCnv" );
-  DOM_Element dimElt = Dom::findFirstChildByName(docElt, "dimension");
-  if (dimElt == DOM_Element()) return StatusCode::FAILURE;
+  DOMElement* dimElt = Dom::findFirstChildByName(docElt, "dimension");
+  if (dimElt == 0) return StatusCode::FAILURE;
 
   try {
     nFace = Dom::getIntAttribute(dimElt, "nFace");
@@ -34,23 +37,23 @@ StatusCode XmlAcdBaseCnv::readAcdDimension(const DOM_Element& docElt,
   return StatusCode::SUCCESS;
 }
 
-DOM_Element XmlAcdBaseCnv::findFirstRange(const DOM_Element& docElt) {
+DOMElement* XmlAcdBaseCnv::findFirstRange(const DOMElement* docElt) {
   using xml::Dom;
   //  using idents::CalXtalId;
 
   /*  Rewrite for ACD */
-  DOM_Element faceElt = Dom::findFirstChildByName(docElt, "face");
+  DOMElement* faceElt = Dom::findFirstChildByName(docElt, "face");
   // If no <face> elements, this file is useless
-  if (faceElt == DOM_Element()) return faceElt;
-  DOM_Element rowElt = Dom::getFirstChildElement(faceElt);
-  if (rowElt == DOM_Element()) return rowElt;
-  DOM_Element colElt = Dom::getFirstChildElement(rowElt);
-  if (colElt == DOM_Element()) return colElt;
-  DOM_Element pmtElt = Dom::getFirstChildElement(colElt);
-  if (pmtElt == DOM_Element()) return pmtElt;
+  if (faceElt == 0) return faceElt;
+  DOMElement* rowElt = Dom::getFirstChildElement(faceElt);
+  if (rowElt == 0) return rowElt;
+  DOMElement* colElt = Dom::getFirstChildElement(rowElt);
+  if (colElt == 0) return colElt;
+  DOMElement* pmtElt = Dom::getFirstChildElement(colElt);
+  if (pmtElt == 0) return pmtElt;
 
-  DOM_Element rangeElt = Dom::getFirstChildElement(pmtElt);
-  if (rangeElt == DOM_Element()) return rangeElt;
+  DOMElement* rangeElt = Dom::getFirstChildElement(pmtElt);
+  if (rangeElt == 0) return rangeElt;
   
   try {
     m_nFace = Dom::getIntAttribute(faceElt, "iFace");
@@ -69,24 +72,24 @@ DOM_Element XmlAcdBaseCnv::findFirstRange(const DOM_Element& docElt) {
 }
 
 /// Still another one to navigate XML file and find next set of range data
-DOM_Element XmlAcdBaseCnv::findNextRange(const DOM_Element& rangeElt) {
+DOMElement* XmlAcdBaseCnv::findNextRange(const DOMElement* rangeElt) {
   using xml::Dom;
 
 
-  DOM_Element elt = Dom::getSiblingElement(rangeElt);
+  DOMElement* elt = Dom::getSiblingElement(rangeElt);
 
-  if (elt != DOM_Element()) {
+  if (elt != 0) {
     m_nRange = Dom::getIntAttribute(elt, "range");
     return elt;
   }
 
 
   // Done with this pmt; look for sibling
-  DOM_Node node = rangeElt.getParentNode();
-  elt = static_cast<DOM_Element &>(node);   // current pmt
+  DOMNode* node = rangeElt->getParentNode();
+  elt = static_cast<DOMElement* >(node);   // current pmt
   elt = Dom::getSiblingElement(elt);          // next pmt
 
-  if (elt != DOM_Element()) {
+  if (elt != 0) {
     m_nPmt = Dom::getIntAttribute(elt, "iPmt");
 
     elt = Dom::getFirstChildElement(elt);
@@ -96,11 +99,11 @@ DOM_Element XmlAcdBaseCnv::findNextRange(const DOM_Element& rangeElt) {
 
 
   // Done with this <col>
-  node = node.getParentNode();  // current <col> element
-  elt = static_cast<DOM_Element &>(node);
+  node = node->getParentNode();  // current <col> element
+  elt = static_cast<DOMElement* >(node);
   elt = Dom::getSiblingElement(elt);         // next <col>
 
-  if (elt != DOM_Element()) {
+  if (elt != 0) {
     try {
       m_nCol = Dom::getIntAttribute(elt, "iCol");
     }
@@ -120,11 +123,11 @@ DOM_Element XmlAcdBaseCnv::findNextRange(const DOM_Element& rangeElt) {
   }
 
   // Done with this row
-  node = node.getParentNode();  // current row
-  elt = static_cast<DOM_Element &>(node);
+  node = node->getParentNode();  // current row
+  elt = static_cast<DOMElement* >(node);
   elt = Dom::getSiblingElement(elt);         // next row
 
-  if (elt != DOM_Element()) {              // find first range in row
+  if (elt != 0) {              // find first range in row
     try {
       m_nRow = Dom::getIntAttribute(elt, "iRow");
     }
@@ -157,11 +160,11 @@ DOM_Element XmlAcdBaseCnv::findNextRange(const DOM_Element& rangeElt) {
   }
 
   // Done with this face
-  node = node.getParentNode();  // current face
-  elt = static_cast<DOM_Element &>(node);
+  node = node->getParentNode();  // current face
+  elt = static_cast<DOMElement*>(node);
   elt = Dom::getSiblingElement(elt);         // next face
 
-  if (elt == DOM_Element()) return elt;
+  if (elt == 0) return elt;
 
   // otherwise we've got a new face; go through the whole
   // rigamarole

@@ -7,7 +7,6 @@
   @author J. Bogart
 */
 #include "XmlCalBaseCnv.h"
-#include <xercesc/dom/DOM_Element.hpp>
 
 // Following only needed for implementation, not class definition
 #include <string>
@@ -49,13 +48,13 @@ protected:
 
   virtual ~XmlCalTholdCICnv() {}       // most likely nothing to do 
 
-  virtual StatusCode i_createObj(const DOM_Element& element,
+  virtual StatusCode i_createObj(const DOMElement* element,
                                  DataObject*& refpObject);
 
 private:
   /// Private utility which knows how to get the information out of a
   /// <tholdCI> element and make a CalibData::CalTholdCI with it
-  CalibData::CalTholdCI* processRange(DOM_Element tholdCIElt);
+  CalibData::CalTholdCI* processRange(DOMElement* tholdCIElt);
 
 };
 
@@ -79,7 +78,7 @@ const CLID& XmlCalTholdCICnv::classID() {
 }
 
 CalibData::CalTholdCI* 
-XmlCalTholdCICnv::processRange(DOM_Element tholdCIElt) {
+XmlCalTholdCICnv::processRange(DOMElement* tholdCIElt) {
   using xml::Dom;
   using CalibData::ValSig;
   using CalibData::CalTholdCI;
@@ -108,12 +107,12 @@ XmlCalTholdCICnv::processRange(DOM_Element tholdCIElt) {
   }
 
   // Now for up to 4 tholdCIRange child elements
-  DOM_Element rangeElt = Dom::getFirstChildElement(tholdCIElt);
+  DOMElement* rangeElt = Dom::getFirstChildElement(tholdCIElt);
   unsigned mask = 0;
   bool problem = false;
   std::string errMsg("");
 
-  while (rangeElt != DOM_Element() ) {
+  while (rangeElt != 0 ) {
 
     // check we don't already have this one
     std::string range = Dom::getAttribute(rangeElt, "range");
@@ -164,7 +163,7 @@ XmlCalTholdCICnv::processRange(DOM_Element tholdCIElt) {
 }
 
 // Create our specific object
-StatusCode XmlCalTholdCICnv::i_createObj(const DOM_Element& docElt, 
+StatusCode XmlCalTholdCICnv::i_createObj(const DOMElement* docElt, 
                                            DataObject*& refpObject)
 {
   using xml::Dom;
@@ -185,9 +184,9 @@ StatusCode XmlCalTholdCICnv::i_createObj(const DOM_Element& docElt,
 
   setBaseInfo(pObj);
 
-  DOM_Element rangeElt = findFirstRange(docElt);
+  DOMElement* rangeElt = findFirstRange(docElt);
 
-  while (rangeElt != DOM_Element() ) {
+  while (rangeElt != 0 ) {
     CalTholdCI* pTholdCI = processRange(rangeElt);
     pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, 
                    m_nFace, pTholdCI);

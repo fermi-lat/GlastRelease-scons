@@ -43,7 +43,7 @@ const CLID& XmlAcdGainCnv::classID() {
 namespace {
   /// Local utility which knows how to get the information out of a
   /// <acdGain> element and make a CalibData::AcdGain with it
-  CalibData::AcdGain* processRange(DOM_Element gainElt) {
+  CalibData::AcdGain* processRange(DOMElement* gainElt) {
     using xml::Dom;
 
     // Could check here to make sure it really is an <acdGain>
@@ -63,7 +63,7 @@ namespace {
 }
 
 // Create our specific object
-StatusCode XmlAcdGainCnv::i_createObj(const DOM_Element& docElt, 
+StatusCode XmlAcdGainCnv::i_createObj(const DOMElement* docElt, 
                                      DataObject*& refpObject)
 {
   using xml::Dom;
@@ -83,9 +83,9 @@ StatusCode XmlAcdGainCnv::i_createObj(const DOM_Element& docElt,
 
   setBaseInfo(pObj);
 
-  DOM_Element rangeElt = findFirstRange(docElt);
+  DOMElement* rangeElt = findFirstRange(docElt);
 
-  while (rangeElt != DOM_Element() ) {
+  while (rangeElt != 0 ) {
     AcdGain* pGain = processRange(rangeElt);
     pObj->putRange(m_nFace, m_nRow, m_nCol, m_nPmt, m_nRange, 
                    pGain);

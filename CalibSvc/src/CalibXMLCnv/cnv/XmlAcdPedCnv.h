@@ -9,7 +9,6 @@
   @author J. Bogart
 */
 #include "XmlAcdBaseCnv.h"
-#include <xercesc/dom/DOM_Element.hpp>
 
 template <class TYPE> class CnvFactory;
 
@@ -26,7 +25,7 @@ protected:
 
   virtual ~XmlAcdPedCnv() {}       // most likely nothing to do 
 
-  virtual StatusCode i_createObj(const DOM_Element& element,
+  virtual StatusCode i_createObj(const DOMElement* element,
                                  DataObject*& refpObject);
 
 };

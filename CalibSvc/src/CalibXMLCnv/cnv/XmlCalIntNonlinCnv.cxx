@@ -47,7 +47,7 @@ const CLID& XmlCalIntNonlinCnv::classID() {
 namespace {
   /// Local utility which knows how to get the information out of a
   /// <calLightAsym> element and make a CalibData::IntNonlin with it
-  CalibData::IntNonlin* processRange(DOM_Element intNonlinElt) {
+  CalibData::IntNonlin* processRange(DOMElement* intNonlinElt) {
     using xml::Dom;
 
     // Could check here to make sure it really is a <intNonlin>
@@ -69,7 +69,7 @@ namespace {
 }
 
 // Create our specific object
-StatusCode XmlCalIntNonlinCnv::i_createObj(const DOM_Element& docElt, 
+StatusCode XmlCalIntNonlinCnv::i_createObj(const DOMElement* docElt, 
                                      DataObject*& refpObject)
 {
   using xml::Dom;
@@ -92,9 +92,9 @@ StatusCode XmlCalIntNonlinCnv::i_createObj(const DOM_Element& docElt,
 
   setBaseInfo(pObj);
 
-  DOM_Element rangeElt = findFirstRange(docElt);
+  DOMElement* rangeElt = findFirstRange(docElt);
 
-  while (rangeElt != DOM_Element() ) {
+  while (rangeElt != 0 ) {
     IntNonlin* pIntNonlin = processRange(rangeElt);
     pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, 
                    m_nFace, pIntNonlin);
@@ -102,9 +102,9 @@ StatusCode XmlCalIntNonlinCnv::i_createObj(const DOM_Element& docElt,
   }
 
   // Also have to handle dac collections        <<<<-------
-  DOM_Element dacColElt = findFirstDacCol(docElt);
+  DOMElement* dacColElt = findFirstDacCol(docElt);
 
-  while (dacColElt != DOM_Element() ) {
+  while (dacColElt != 0 ) {
     unsigned range;
     DacCol* pDacCol = processDacCol(dacColElt, &range);
     pObj->putDacCol(range, pDacCol);
