@@ -95,10 +95,8 @@ StatusCode UseCalib::execute( ) {
   m_pCalibDataSvc->retrieveObject(fullPath, pObject);
 
   CalibData::CalibTest1* test1Copy = 0;
-  try {
-    test1Copy = dynamic_cast<CalibData::CalibTest1 *> (pObject);
-  }
-  catch (...) {
+  test1Copy = dynamic_cast<CalibData::CalibTest1 *> (pObject);
+  if (!test1Copy) {
     log << MSG::ERROR << "Dynamic cast to CalibTest1 failed" << endreq;
     return StatusCode::FAILURE;
   }
