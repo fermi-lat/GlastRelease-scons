@@ -2,6 +2,7 @@
  * package GlastSvc
  * package manager:T.Burnett
  *
+ * 09-jun-02  THB Tag v8r1p2 after fix to const in GeometryVisitor 
  * 26-may-02  THB Tag v8r1p1 geometry changes+ a little more output 
  * 10-may-02  THB          GlastEvent to Evnet 
  * 08-may-02  HMK          update DigiEventCnv to use Event namespace 
