@@ -14,10 +14,10 @@
 
 namespace detModel{
 
-  HtmlConstantsVisitor::HtmlConstantsVisitor()
+  HtmlConstantsVisitor::HtmlConstantsVisitor(std::string outname)
   {
     setRecursive(0);
-    out.open("constants.html");
+    out.open(outname.c_str());
   }
 
   HtmlConstantsVisitor::~HtmlConstantsVisitor()
@@ -97,9 +97,11 @@ namespace detModel{
     out << " <table cellpadding=\"3\" border=\"1\">" << std::endl;
     if (category->getPrimary()) 
       out << "<tr bgcolor=\"#c0ffc0\" align=\"left\">" << std::endl;
-    else
+    else {
       out << "<tr bgcolor=\"#c0coff\" align=\"left\">" << std::endl;
-    out << "<th>Name</th><th>Value</th><th>Description</th> </tr>" << std::endl;
+    }
+    out << "<th>Name</th><th>Value</th><th>Description</th> </tr>" 
+        << std::endl;
 
     for(i=0; i<category->getConsts().size();i++){
       Const* c = (category->getConsts() )[i];
