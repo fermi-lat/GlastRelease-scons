@@ -2,6 +2,8 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
+ * 17-Nov-2003: jrb v0r2p14: Various requirements file changes.  Latest
+ *                           loosens use of RootIo to just v*
  * 11-Jul-2003: jrb v0r2p13: Keep up with new bad strips xml format
  *  6-Jun-2003: jrb v0r2p12: Move to RootIo v9r0
  *  2-Jun-2003: jrb v0r2p11: Changes for new RootIo v8r0, use of RootIoSvc
