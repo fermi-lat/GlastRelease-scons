@@ -2,8 +2,6 @@
 #ifndef __TKRVERTEXALG_H
 #define __TKRVERTEXALG_H 1
 
-#include "TkrRecon/Vertex/TkrFindVertex.h"
-
 #include "GaudiKernel/Algorithm.h"
 #include "src/Vertex/IVtxBaseTool.h"
 
@@ -34,7 +32,6 @@ public:
 private:
     std::string m_VertexerType;
     IVtxBaseTool* m_VtxTool;
-    Event::TkrFindVertex* pFindVertex;
 };
 
 #endif // __TKRVERTEXALG_H

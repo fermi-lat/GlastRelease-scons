@@ -2,9 +2,8 @@
 #ifndef __TKRFINDALG_H
 #define __TKRFINDALG_H 1
 
-#include "TkrRecon/PatRec/TkrPatRecon.h"
-
 #include "GaudiKernel/Algorithm.h"
+#include "TkrRecon/PatRec/ITkrFindTrackTool.h"
 
 /** 
  * @class TkrFindAlg
@@ -28,8 +27,12 @@ public:
     StatusCode finalize();
     
 private:
-    /// pointer to the patrec algorithm
-    Event::TkrPatRecon* pPatRecon;
+
+    /// Type of fit to perform
+    std::string        m_TrackFindType;
+
+    /// The right tool for the job
+    ITkrFindTrackTool* m_findTool;
 };
 
 #endif  // __TKRFINDALG_H
