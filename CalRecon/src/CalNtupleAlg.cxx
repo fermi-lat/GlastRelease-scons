@@ -108,9 +108,14 @@ StatusCode CalNtupleAlg::execute() {
 		CsICluster* cl = m_cls->Cluster(icl);
 		energy_sum = cl->energySum();
 
-		float zpos = (cl->position()).z();
-		float xpos = (cl->position()).x();
-		float ypos = (cl->position()).y();
+		//stop writing NANs to the tuple
+		float zpos = -1000.0;
+		float xpos = -1000.0;
+		float ypos = -1000.0;
+
+		zpos = (cl->position()).z();
+		xpos = (cl->position()).x();
+		ypos = (cl->position()).y();
 
 		const std::vector<double>& eneLayer = cl->getEneLayer();
 		const std::vector<Vector>& posLayer = cl->getPosLayer();
@@ -119,7 +124,8 @@ StatusCode CalNtupleAlg::execute() {
 		float long_rms = cl->getRmsLong();
 
 		Vector caldir = cl->direction();
-		float caltheta=acos(caldir.z());
+		float caltheta = -1000.0;
+		caltheta=acos(caldir.z());
 		float calphi = 1.570796326794897;
 		if(caldir.x()!=0) calphi = atan(caldir.y()/caldir.x());
 		
