@@ -75,8 +75,6 @@ TkrMakeClusterTable::TkrMakeClusterTable(const TkrClusterCol* pClus,
             }
         }
 
-        std::cout << "Cluster pointer " << p_clu << std::endl;
-        std::cout << "Hit pointers " ;
         // make a relation with the current cluster and each McHit
         std::vector<McPositionHit*>::const_iterator itH;
         for(itH=mcHits.begin(); itH!=mcHits.end();itH++) {
