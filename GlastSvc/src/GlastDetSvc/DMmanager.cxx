@@ -40,16 +40,20 @@ void DMmanager::init(std::string filename, std::string mode, std::string topvol)
     if( filename.empty() || filename == "-" ) filename = "$(XMLGEODBSROOT)/xml/flight/flight.xml" ;
     xml::IFile::extractEnvVar(&filename);
     m_dm->setNameFile( filename);
-    m_dm->setMode(m_mode=mode);
     m_dm->build(detModel::Manager::all);
     m_vol = m_dm->getGdd()->getVolumeByName(topvol);
     if( m_vol==0) {
         std::cerr << "Could not find a topvol " << topvol << std::endl;
         exit(-1);
     }
+
     // We setup the IDmap 
+    std::string temp = m_dm->getFineChoice();
+    if (temp!="0")
+      m_dm->setMode(temp);
     m_idMap = new detModel::IDmapBuilder(topvol);
     m_dm->startVisitor(m_idMap);    
+    m_dm->setMode(m_mode=mode);
 }
 
 bool DMmanager::getNumericConstByName(std::string name, double* res)
