@@ -8,11 +8,13 @@
 #include "VolumeIdentifier.h"
 #include "McParticle.h"
 
-#ifdef WIN32
+#include <vector>
+#ifndef WIN32
+using std::vector;
+#else
 using namespace std;
 #endif
 
-#include <vector>
 
 /** @class McIntegratingHit
 * @brief Stores a single McIntegratingHit.  This class mirrors the TDS
