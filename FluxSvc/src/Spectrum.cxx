@@ -8,6 +8,7 @@
 // CLHEP
 #include "CLHEP/Random/RandomEngine.h"
 #include "CLHEP/Random/RandGeneral.h"
+#include "CLHEP/Random/RandExponential.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -42,7 +43,7 @@ Spectrum::~Spectrum(){}
 //}
 
 double Spectrum::flux (double time ) const {
-  return 0.; // flag that we don't have a flux
+    return 0.; // flag that we don't have a flux
 }
 
 double Spectrum::solidAngle( )const
@@ -50,45 +51,67 @@ double Spectrum::solidAngle( )const
     return 1.0; // flag that doesn't calculate
 }
 
- std::pair<float,float> Spectrum::dir(float energy)const
+std::pair<float,float> Spectrum::dir(float energy)const
 {
-
+    
     // return solid angle pair (costh, phi) for the given energy
     // default: random except for Earth occultation
     //return std::make_pair(static_cast<float>(RandFlat::shoot(-0.4,1.0)),
-        //static_cast<float>(RandFlat::shoot(0.0, 2*M_PI)) );
-	 //here's an attempt at random default distributions as above:
-	 return std::make_pair(((rand()/32767.0)*1.4)-0.4,(rand()/32767.0)*2*M_PI);
+    //static_cast<float>(RandFlat::shoot(0.0, 2*M_PI)) );
+    //here's an attempt at random default distributions as above:
+    return std::make_pair(((rand()/32767.0)*1.4)-0.4,(rand()/32767.0)*2*M_PI);
     
 }
 
 
 
- const char * Spectrum::particleName()const{
-	 static const char x='p';
-	 return &x;
- }
+const char * Spectrum::particleName()const{
+    static const char x='p';
+    return &x;
+}
 
 double Spectrum::energySrc(HepRandomEngine* engine)
 {
-   // default implementation, which works for other Spectrum objects
-	return (*this)(engine->flat());
+    // default implementation, which works for other Spectrum objects
+    return (*this)(engine->flat());
 }
 
 std::pair<double,double> Spectrum::dir(double energy, HepRandomEngine* engine)
 {
-	// default that needs fixing!
-	return dir(energy);
+    // default that needs fixing!
+    return dir(energy);
 }
 
 void Spectrum::parseParamList(std::string input, std::vector<float>& output) const
 {
+    
+    int i=0;
+    for(;!input.empty() && i!=std::string::npos;){
+        float f = ::atof( input.c_str() );
+        output.push_back(f);
+        i=input.find_first_of(",");
+        input= input.substr(i+1);
+    } 
+}
 
-	int i=0;
-	for(;!input.empty() && i!=std::string::npos;){
-		float f = ::atof( input.c_str() );
-		output.push_back(f);
-		i=input.find_first_of(",");
-		input= input.substr(i+1);
-	} 
+
+double Spectrum::interval (double time)
+{
+    double  r = (solidAngle()*flux(time)*6.);
+    if (r == 0){ return -1.;
+    }else{
+        
+        double p = RandExponential::shoot(1.);
+        return (-1.)*(log(1.-p))/r;
+    }
+
+
+   /* //FIX THIS - MAKE IT AN EXPONENTIAL!
+
+    double  r = (solidAngle()*flux(time)*6.);
+    if (r > 0) {
+      return  RandExponential::shoot(1./r);
+    } else if (r < 0) {
+      return 1./r;
+    } else return -1.;*/
 }

@@ -245,7 +245,7 @@ void FluxSource::spectrum(Spectrum* s, double emax)
     //const char* name = s->particleName();
 }
 
-FluxSource* FluxSource::event() 
+FluxSource* FluxSource::event(double) 
 {
     computeLaunch();
     return this;
@@ -970,4 +970,6 @@ void FluxSource::transformDirection(){
 void FluxSource::refLaunch(LaunchType launch) {m_launch=launch;}
 void FluxSource::refPoint(PointType point) {m_pointtype=point;}
 
-
+double FluxSource::interval (double time){
+return m_spectrum->interval(time);
+}

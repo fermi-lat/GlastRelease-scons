@@ -54,10 +54,11 @@ public:
     /// for choosing limits
     float fraction(float energy);
     
-    
     virtual ~Spectrum();
     
-    
+    /// a randomized interval to the next event - default is 1/rate()
+    virtual double interval (double time);
+
     virtual std::pair<float,float> dir(float energy)const;
     
     /// new interface for Hirosima classes

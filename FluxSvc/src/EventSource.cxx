@@ -58,27 +58,21 @@ EventSource::EventSource (const DOM_Element& xelem)
 EventSource::~EventSource()
 {}
 
-double EventSource::flux () const
+double EventSource::flux (double time) const
 {
   return m_flux;  // default if not overridden
 }
 
-void   EventSource::flux (double value) {
+void   EventSource::setFlux (double value) {
   m_flux = value;
 }
 
-GPStime EventSource::interval ()
+double EventSource::interval (double)
 {
-  double  r = rate();
-
-  if (r > 0) {
-    return  RandExponential::shoot(1./r);
-  } else if (r < 0) {
-    return 1./r;
-  } else return -1.;
+  return -1.; //flag that there is no proper function working
 }
 
-double  EventSource::rate ( double solid_angle, double fluxval )
+/*double  EventSource::rate ( double solid_angle, double fluxval )
 {
   double  r = solid_angle*fluxval*s_total_area;   
   // integral of the flux*cross-sectional-area over
@@ -86,16 +80,16 @@ double  EventSource::rate ( double solid_angle, double fluxval )
   m_solid_angle = solid_angle;
   flux( fluxval );
   return  r;
+}*/
+
+double  EventSource::rate (double time )const
+{
+  return enabled()? (solidAngle()*flux(time)*s_total_area) :0;
 }
 
-double  EventSource::rate ( )const
+void    EventSource::setRate ( double rate )
 {
-  return enabled()? (solidAngle()*flux()*s_total_area) :0;
-}
-
-void    EventSource::rate ( double rate )
-{
-  flux(  rate/(m_solid_angle*s_total_area) );
+  setFlux(  rate/(m_solid_angle*s_total_area) );
 }
 
 Orbit*  EventSource::makeOrbit () const

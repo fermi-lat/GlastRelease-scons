@@ -22,14 +22,16 @@ public:
     
     /// generate an event from from one of the sources 
     /// which make up the composite, and return a pointer to it
-    virtual FluxSource* event ();
+    virtual FluxSource* event (double time);
     
     /// rate - compute overall rate...
-    virtual double rate ()const;
-    virtual void   rate ( double );
+    virtual double rate (double time)const;
+    virtual void   setRate ( double );
 
     /// flux into 1 m^2 integrated over angles
-    virtual double flux()const{return rate()/totalArea();}
+    virtual double flux(double time)const{
+        //m_time=time; 
+        return rate(time)/totalArea();}
     
     ///    full-length title description of this EventSource.
     virtual std::string fullTitle () const;
@@ -54,6 +56,9 @@ public:
     std::vector< EventSource* >& sourceList ();
     const std::vector< EventSource* >& sourceList () const;
     void sourceList (const std::vector< EventSource* >& value);
+
+   // double m_time; 
+
 protected:
     virtual void setupXML (const DOM_Element&);
     

@@ -201,7 +201,7 @@ void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
     double time=0.;
 
     cout << "running source: " << e->fullTitle() << std::endl;
-    cout << " Total rate is: " << e->rate() << " Hz into " << e->totalArea() << " m^2" << std::endl;
+    cout << " Total rate is: " << e->rate(0.) << " Hz into " << e->totalArea() << " m^2" << std::endl;
     //cout << "LaunchType" << f->retLaunch() << "Pointtype" << f->retPoint() <<std::endl;
     cout << "    Generating " << count << " trials " << std::endl;
     cout << " --------------------------------" << std::endl;
@@ -211,12 +211,12 @@ void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
 
     FluxSource* f;
     for( int i = 0; i< count; ++i) {
-        f = e->event();
-
+        
         //testing - pass time
         pass(0.01);
         time+=0.01;
 
+        f = e->event(time);
         //TESTING THE lat, lon FUNCTIONS
         //cout << std::endl << "lat=" << GPS::instance()->lat() << ' ' <<"lon=" << GPS::instance()->lon() << std::endl;
         //double curTime=GPS::instance()->time();
@@ -226,8 +226,9 @@ void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
         cout << f->spectrum()->particleName();
         cout << "(" << f->energy();
         cout << " GeV), Launch: " << f->launchPoint() 
-            << " Dir " << f->launchDir() << "Flux="
-            << f->flux(time) << std::endl;
+            << " Dir " << f->launchDir() << " ,Flux="
+            << f->flux(time) << " ,Interval="
+            << f->interval(time) << std::endl;
     }
     cout << "------------------------------------------------------" << std::endl;
     

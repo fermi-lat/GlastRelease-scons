@@ -28,7 +28,7 @@ class FluxSource : public EventSource
       virtual ~FluxSource();
           
       ///    generate an event from a Flux object ??//.
-      virtual FluxSource* event();
+      virtual FluxSource* event(double);
       
       ///    full-length title description of this EventSource.
       virtual std::string fullTitle () const;
@@ -90,6 +90,7 @@ class FluxSource : public EventSource
       Spectrum* spectrum() const{ return m_spectrum; }
 
 
+      double interval (double time);
 
 	  void FluxSource::getGalacticDir(double l,double b);
 

@@ -21,7 +21,7 @@
 #include <iomanip>
 
 CompositeSource::CompositeSource (double aRate)
-: EventSource(aRate), m_recent(0),m_numofiters(0)
+: EventSource(aRate), m_recent(0),m_numofiters(0)//,m_time(0)
 {
 }
 
@@ -35,7 +35,7 @@ CompositeSource::~CompositeSource()
 void CompositeSource::addSource (EventSource* aSource)
 {
     m_sourceList.push_back(aSource);
-    EventSource::flux( flux() );
+    EventSource::setFlux( flux(m_time) );
 }
 
 void CompositeSource::rmvSource (EventSource* aSource)
@@ -46,14 +46,15 @@ void CompositeSource::rmvSource (EventSource* aSource)
     }
     if (it != m_sourceList.end()) {
         m_sourceList.erase(it);
-        EventSource::flux( flux() );
+        EventSource::setFlux( flux(m_time) );
     }
 }
 
-FluxSource* CompositeSource::event ()
+FluxSource* CompositeSource::event (double time)
 {
+    m_time=time;
 	m_numofiters=0;
-    double mr = rate();
+    double mr = rate(m_time);
 
     if( m_sourceList.size()==1 || mr ==0) {
 	m_recent = m_sourceList.front();
@@ -63,7 +64,7 @@ FluxSource* CompositeSource::event ()
         double  x = RandFlat::shoot(mr), y = 0;
         std::vector<EventSource*>::iterator  it = m_sourceList.begin();
         for (; it != m_sourceList.end(); ++it) {
-            y += fabs((*it)->rate());
+            y += fabs((*it)->rate(m_time));
             if (x <= y) {
                 m_recent = (*it);
                 break;
@@ -71,8 +72,10 @@ FluxSource* CompositeSource::event ()
             m_numofiters++;
         }
     }
+    //update the time
+    //m_time += interval(m_time);
     // now ask the chosen one to generate the event, if there is a rate
-    return m_recent->event();
+    return m_recent->event(time);
 }
 
 std::string CompositeSource::fullTitle () const
@@ -97,20 +100,21 @@ std::string CompositeSource::displayTitle () const
     return (m_recent == 0) ? "" : m_recent->displayTitle();
 }
 
-double CompositeSource::rate() const
+double CompositeSource::rate(double time) const
 {
+    //m_time += m_time-time;
     std::vector<EventSource*>::const_iterator it = m_sourceList.begin();
     double	total_rate = 0.;
     for(;it != m_sourceList.end();++it) {
-        double rr = fabs((*it)->rate());
+        double rr = fabs((*it)->rate(time));
         total_rate += rr;
     }
     return total_rate;
 }
 
-void	CompositeSource::rate ( double value )
+void	CompositeSource::setRate ( double value )
 {
-    double  f = rate();
+    double  f = rate(m_time);
     if (f == 0.)    return;
 
     std::vector<float>	fvec;
@@ -118,10 +122,10 @@ void	CompositeSource::rate ( double value )
 
     while (it != m_sourceList.end())	{
 
-	(*it)->rate( value * (*it)->rate()/f );
+	(*it)->setRate( value * (*it)->rate(m_time)/f );
 	++it;
     }
-    EventSource::rate( value );
+    EventSource::setRate( value );
 }
 
 // implement virtual function
@@ -129,11 +133,11 @@ void CompositeSource::setupXML (const DOM_Element&) {}
 
 void CompositeSource::printOn(std::ostream& out)const
 {
-    out << "Source(s), total rate="<< rate() << std::endl;
+    out << "Source(s), total rate="<< rate(m_time) << std::endl;
 
     for( std::vector<EventSource*>::const_iterator it = m_sourceList.begin();
         it != m_sourceList.end();++it)	{
-        out <<  std::setw(8) << std::setprecision(4) << (*it)->rate() <<" Hz, "
+        out <<  std::setw(8) << std::setprecision(4) << (*it)->rate(m_time) <<" Hz, "
             << '#' << std::setw(6) << (*it)->eventNumber() <<' '
             << (*it)->name() << ' '<< (*it)->fullTitle() << std::endl;
 
