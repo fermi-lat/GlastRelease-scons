@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v5r6p2 JCT 29-apr-04   GRB not loaded by Gaudi anymore 
 * v5r6p1 THB 28-feb-04   Switch to TrkDigiAlg
 * vrr6   THB 29-jan-04   Turning on the Tracker Iterative Recon (Tracy)
 * v5r5p1 THB 15-nov-03   put stopping alg into the gui options 

@@ -72,8 +72,10 @@ G4Generator.defaultCalCutValue=0.7;
 FluxSvc.source_lib += {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
 FluxAlg.source_name="muon_pencil_angle";
 
-// add in CRflux, GRB options
-ApplicationMgr.DLLs +={ "CRflux", "GRB" };
+// add in CRflux option
+// GRB is now meant to be loaded differently, 
+// for compatibility sith ScienceTools framework
+ApplicationMgr.DLLs +={ "CRflux" };
 FluxSvc.source_lib += {
    "$(CRFLUXROOT)/xml/source_library.xml",
    "$(GRBROOT)/xml/GRB_user_library.xml"};
