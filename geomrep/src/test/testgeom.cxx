@@ -118,12 +118,4 @@ int main(int , char* )
     
     return 0;
 }
-//===============================================================
-void WARNING(const char* s){
-    gui::GUI::instance()->inform(s);}
-void FATAL(const char* s){
-    gui::GUI::instance()->inform(s);}//cerr << s << endl; exit(-1);}
-//===============================================================
-
-
 
