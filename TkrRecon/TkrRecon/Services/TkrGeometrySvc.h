@@ -113,6 +113,7 @@ private:
 	/// width of the dead region around the edge of a wafer
     double m_siDeadDistance;
 
+    double m_siWaferSide;
 	/// kludge to reverse the position of the local y coordinate
 	bool   m_reverseY;      
 
