@@ -45,7 +45,7 @@ static const AlgFactory<G4Generator>  Factory;
 const IAlgFactory& G4GeneratorFactory = Factory;
 
 G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator) 
-:Algorithm(name, pSvcLocator) 
+:Algorithm(name, pSvcLocator) , m_guiMgr(0)
 {
 // set defined properties
      declareProperty("source_name",  m_source_name="default");
@@ -245,11 +245,12 @@ StatusCode G4Generator::execute()
     
     // set up display of trajectories
     DisplayManager* dm = DisplayManager::instance();
-    for( int i = 0; i< m_runManager->getNumberOfTrajectories(); ++i){
-        std::auto_ptr<std::vector<Hep3Vector> > points = m_runManager->getTrajectoryPoints(i);
-        dm->addTrack(*(points.get()), m_runManager->getTrajectoryCharge(i));
+    if(dm !=0) {   
+        for( int i = 0; i< m_runManager->getNumberOfTrajectories(); ++i){
+            std::auto_ptr<std::vector<Hep3Vector> > points = m_runManager->getTrajectoryPoints(i);
+            dm->addTrack(*(points.get()), m_runManager->getTrajectoryCharge(i));
+        }
     }
-
     return StatusCode::SUCCESS;
 }
 

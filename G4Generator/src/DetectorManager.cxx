@@ -18,7 +18,8 @@ DetectorManager::DetectorManager(DetectorConstruction::IdMap *map,
 {
     // and tell G4 about us
     G4SDManager::GetSDMpointer()->AddNewDetector( this );
-
+    // this will be null if no GUI
+    m_display = DisplayManager::instance();
 }
 
 DetectorManager::~DetectorManager()
@@ -51,6 +52,7 @@ void DetectorManager::makeDisplayBox(G4TouchableHistory* touched,
                                      idents::VolumeIdentifier id,
                                      bool hitBox)
 {
+    if(displayMgr()==0)return;
     G4VPhysicalVolume* pvol = touched->GetVolume(); 
     
     HepTransform3D 
@@ -72,7 +74,7 @@ void DetectorManager::makeDisplayBox(G4TouchableHistory* touched,
 
 
     }
-    DisplayManager::instance()->addIdDisplay(global, id);
+    displayMgr()->addIdDisplay(global, id);
     
 }
 
@@ -80,8 +82,8 @@ void DetectorManager::display(G4TouchableHistory* touched,
                               idents::VolumeIdentifier id, 
                               const HepPoint3D& entry, const HepPoint3D& exit)
 {
-    
-    DisplayManager::instance()->addHit(entry, exit);
+    if( displayMgr()==0) return;
+    displayMgr()->addHit(entry, exit);
 
     if( m_detectorList[id]==0) {
         makeDisplayBox( touched , id, true);        

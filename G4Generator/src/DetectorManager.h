@@ -17,6 +17,7 @@
 
 #include <map>
 class G4TouchableHistory;
+class DisplayManager;
 namespace mc {class McPositionHit;}
 
 /** 
@@ -72,9 +73,12 @@ class DetectorManager : public G4VSensitiveDetector {
 
   //! A map to keep track of hit detectors for display
   DetectorList m_detectorList;
+
+  DisplayManager* displayMgr(){return m_display;}
   
  private:
   /// The identifier indicized map of physical volume
   DetectorConstruction::IdMap* m_idMap;
+  DisplayManager* m_display;
 };
 #endif
