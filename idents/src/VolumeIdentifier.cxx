@@ -22,6 +22,9 @@ std::string VolumeIdentifier::name(const char* delimiter) const
 #endif
     s << delimiter;
     std::copy(begin(),end(), std::ostream_iterator<unsigned int>(s,delimiter));
+#ifndef WIN32
+    s << '\0';
+#endif
     std::string tmp=s.str();
     return tmp.substr(0,tmp.size()-1);
 }
