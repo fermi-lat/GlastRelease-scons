@@ -1,11 +1,10 @@
 // $Header$
-/*! \file Standalone program to transform source xml file into a 
+/*! \file Standalone program to transform source xml file into a
     preprocessed version suitable for most clients programs (such
     as Simulation and Reconstruction).     Clients needing to
     extract documentation from the xml file will go a different
     route (see makeXmlForDoc.cxx.)
 
-  
     In particular this program will
       - add a <source> element to the output, indicating how and
         from what the output was generated
@@ -35,12 +34,10 @@
 #include <fstream>
 
 std::ostream *openOut(char * outfile);
-// void addSourceElt(DOM_Document doc);
 void outProlog(const DOM_DocumentType& doctype, std::ostream& out);
-// char * stripDollar(char *toStrip);
 
-const char chDoubleQuote = 0x22;
-const std::string dquote(&chDoubleQuote);
+const char chDoubleQ = 0x22;
+const std::string dquote(&chDoubleQ);
 const std::string myId("$Id$");
 
 // Can't literally put in the string we want or CVS will mess it up.

@@ -35,8 +35,8 @@ void outProlog(const DOM_DocumentType& doctype, std::ostream& out);
 
 char * stripDollar(char *toStrip);
 
-const char chDoubleQuote = 0x22;
-const std::string dquote(&chDoubleQuote);
+const char chDoubleQ = 0x22;
+const std::string dquote(&chDoubleQ);
 const std::string myId("$Id$");
 // Can't literally put in the string we want or CVS will mess it up.
 // Instead make a copy of this template, replacing the # with $
