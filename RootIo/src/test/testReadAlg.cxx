@@ -6,6 +6,7 @@
 
 #include "Event/TopLevel/Event.h"
 #include "Event/TopLevel/EventModel.h"
+#include "Event/TopLevel/MCEvent.h"
 #include "Event/MonteCarlo/McParticle.h"
 #include "Event/MonteCarlo/McIntegratingHit.h"
 #include "Event/MonteCarlo/McPositionHit.h"
@@ -42,6 +43,8 @@ public:
     StatusCode finalize();   
         
 private:
+	StatusCode readEvtHeader();
+
 
     StatusCode readMcData();
 
@@ -76,6 +79,7 @@ StatusCode testReadAlg::execute()
 
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
+	sc = readEvtHeader();
 
     sc = readMcData();
 
@@ -84,6 +88,24 @@ StatusCode testReadAlg::execute()
     sc = readReconData();
 
     return sc;
+}
+StatusCode testReadAlg::readEvtHeader() {
+    StatusCode sc = StatusCode::SUCCESS;
+    SmartDataPtr<Event::EventHeader> evtTds(eventSvc(), EventModel::EventHeader);
+
+    if (!evtTds) return sc;
+
+    int evtId = evtTds->event();
+    int runId = evtTds->run();
+
+    SmartDataPtr<Event::MCEvent> mcEvt(eventSvc(), EventModel::MC::Event);
+    if (!mcEvt) return sc;
+
+	int sourceid = mcEvt->getSourceId();
+	int seq = mcEvt->getSequence();
+	double t = mcEvt->time();
+
+	return sc;
 }
 
 StatusCode testReadAlg::readMcData() {
