@@ -119,7 +119,7 @@ void AcdReconAlg::getParameters () {
         log << MSG::INFO << "Unable to retrieve numSideRows, setting the value to 4" << endreq;
         temp = 4.0;
     }
-    s_numSideRows = temp;        
+    s_numSideRows = (unsigned int) temp;        
 }
 
 void AcdReconAlg::clear() {
@@ -271,7 +271,7 @@ double AcdReconAlg::doca (const HepPoint3D &x0, const HepVector3D &t0,
         // i.e. top, and each type of side row tile
         if (acdId.top() && dist < doca_values[0]) doca_values[0] = dist;
         if (acdId.side()) {
-	  int k = acdId.row()+1;
+	  unsigned int k = acdId.row()+1;
 	  if( k >= doca_values.size()){
 	    log << MSG::WARNING << "rejecting bad ACD id, row = " << k-1 << endreq;
 	  }else
@@ -368,7 +368,7 @@ double AcdReconAlg::hitTileDist(const HepPoint3D &x0, const HepVector3D &t0,
         // i.e. top, and each type of side row tile
         if (acdId.top() && test_dist < row_values[0]) row_values[0] = test_dist;
         if (acdId.side()) {
-	  int k = acdId.row()+1;
+	  unsigned int k = acdId.row()+1;
 	  if( k >= row_values.size()){
 	    log << MSG::WARNING << "rejecting bad ACD id, row = " << k-1 << endreq;
 	  }else
