@@ -14,7 +14,6 @@
 #pragma link C++ class CalRecon;
 #pragma link C++ class CalLogEne;
 #pragma link C++ class CalCluster;
-#pragma link C++ class LogID;
 
 #pragma link C++ class Recon;
 #pragma link C++ class ReconHeader;
