@@ -16,7 +16,7 @@ GPS*	GPS::s_instance = 0;
 
 GPS::GPS() 
 : m_orbit(new Orbit),
-m_rockDegrees(15.),
+m_rockDegrees(35.),
 m_rockType(NONE),
 m_earthOrbit(new astro::EarthOrbit),
 m_expansion(1.),    // default expansion:regular orbit for now
