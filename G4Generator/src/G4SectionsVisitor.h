@@ -75,6 +75,22 @@ class G4SectionsVisitor : public detModel::SectionsVisitor {
    */
   virtual void visitSeg(detModel::Seg*);
 
+  typedef std::vector< G4LogicalVolume*> Logicals;
+  const Logicals & getLogicals()const { return g4Logicals; }
+
+  /// return iterators for the logicals list
+  Logicals::const_iterator begin()const{ return g4Logicals.begin(); }
+  Logicals::const_iterator end()  const{ return g4Logicals.end(); }
+ 
+
+  /// make a summary  of the volumes on the stream
+  void summary(std::ostream out)const;
+  
+  ///  return pointer to the World physical volume
+  G4VPhysicalVolume* getWorld()const { return m_worldphys; }
+
+ private:
+
   /// This method build the colors for the VRML file
   void makeColor();
 
@@ -87,48 +103,29 @@ class G4SectionsVisitor : public detModel::SectionsVisitor {
 
   G4LogicalVolume* getLogicalByName(std::string name);
 
-  /// make a summary  of the volumes on the stream
-  void summary(std::ostream out)const;
 
   /// This map holds the opacity information of the material colors
   std::map <std::string, float> opacityMap;
 
-  double compX;
-  double compY;
-  double compZ;
-  double trans;
-  double halfPrec;
 
-  /** Todo: there is no sense in having the following two vector,
-      it is sufficient to have a vector of G4VShape*
-   */
-  std::vector <G4Box*> g4Boxes;
-  std::vector <G4Tubs*> g4Tubes;
   std::vector <G4LogicalVolume*> g4Logicals;  
   std::vector <G4VPhysicalVolume*> g4Physicals;  
   std::map <std::string, G4VisAttributes*> g4VisAttributes;  
 
-  //std::map <G4VPhysicalVolume*, std::string> g4Identifiers;  
-
   std::string actualVolume;
 
-  G4VSensitiveDetector* sensibleDet;
   G4LogicalVolume* actualMother;
-  G4VPhysicalVolume* worldphys;
-  G4LogicalVolume* worldlog;
-  //-------------------------------------------------------------------
-  //          THB additions below here
-
-
-
- private:
+  G4VPhysicalVolume* m_worldphys;
 
    //! private function to manage the identifiers
    //! @param pos a Position object, in practice either a PosXYZ or an AxisMpos.
    //! @param i the index for an element of a stack (only needed for AxixMpos)
-   void processIds(/*const*/ detModel::Position* pos, unsigned int i=0); 
-  //! a little map to count the number of physical volumes for each logical one
+   void processIds(/*const*/  detModel::Position* pos, unsigned int i=0); 
+
+   //! a little map to count the number of physical volumes for each logical one
   std::map<std::string, int> m_physicalsPerLogical;
+
+  // pointer to the clients map that we fill
   IdMap* m_idMap;
 
 };

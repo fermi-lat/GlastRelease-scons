@@ -63,12 +63,8 @@ G4SectionsVisitor::G4SectionsVisitor(std::string topvol, IdMap* map)
   for(k=mat.begin();k!=mat.end();k++) 
     opacityMap.insert(M1::value_type(k->first,0.0));  
 
-  compX = 0;
-  compY = 0;
-  compZ = 0;
-  
   makeColor();
-  halfPrec=0;
+
 };
 
 G4SectionsVisitor::~G4SectionsVisitor()
@@ -93,16 +89,15 @@ void  G4SectionsVisitor::visitSection(detModel::Section* section)
 		2*topVolume->getBBox()->getYDim()*mm,
 		2*topVolume->getBBox()->getZDim()*mm);
   
-  worldlog = new G4LogicalVolume(world,ptMaterial,"motherVolume",0,0,0);
+  G4LogicalVolume* worldlog = new G4LogicalVolume(world,ptMaterial,"motherVolume",0,0,0);
 
   /// We set the mother invisible
 #ifndef WIN32 //THB
   worldlog->SetVisAttributes (G4VisAttributes::Invisible);  
 #endif
-  worldphys
+  m_worldphys
     = new G4PVPlacement(0,G4ThreeVector(),"motherVolume",
 			worldlog,0,false,0);
-
 
   if(actualVolume != "")
     {
@@ -214,8 +209,6 @@ void  G4SectionsVisitor::visitBox(detModel::Box* box)
 
 void  G4SectionsVisitor::visitTube(detModel::Tube* tube)
 {
-  typedef std::map<std::string, G4VisAttributes*> M;
-  M::const_iterator i; 
 
   G4Material* ptMaterial = G4Material::GetMaterial(tube->getMaterial());
   G4Tubs* newTubs = new G4Tubs(tube->getName(),
@@ -231,8 +224,8 @@ void  G4SectionsVisitor::visitTube(detModel::Tube* tube)
 		       );
 
 
-
-  i = g4VisAttributes.find(tube->getMaterial());
+  typedef std::map<std::string, G4VisAttributes*> M;
+  M::const_iterator i = g4VisAttributes.find(tube->getMaterial());
   if(i != g4VisAttributes.end()) 
     g4Logicals.back()->SetVisAttributes(i->second);
   
@@ -287,7 +280,6 @@ void  G4SectionsVisitor::visitPosXYZ(detModel::PosXYZ* pos)
 
 void  G4SectionsVisitor::visitAxisMPos(detModel::AxisMPos* pos)
 {
-  unsigned int i, ncopy;
   int  ind = -1;
   typedef std::map<G4VPhysicalVolume*,std::string>M;
   detModel::Volume* volume;
@@ -303,9 +295,7 @@ void  G4SectionsVisitor::visitAxisMPos(detModel::AxisMPos* pos)
 
   std::string volName = volume->getName();
  
-
-  ncopy = pos->getNcopy();
-
+  unsigned int i;
   for(i=0;i<g4Logicals.size();i++)
     if (g4Logicals[i]->GetName() == volName) 
       {
@@ -336,7 +326,7 @@ void  G4SectionsVisitor::visitAxisMPos(detModel::AxisMPos* pos)
   G4LogicalVolume * motherLogicalVolume = getLogicalByName(volName);
 
   // loop over the stack contents, creating physical volumes for each.
-  
+  unsigned int ncopy = pos->getNcopy();
   for(i=0;i<ncopy;i++)
   {
     double disp = pos->getDisp(i)*mm; // displacement for this phys. vol.
@@ -353,27 +343,20 @@ void  G4SectionsVisitor::visitAxisMPos(detModel::AxisMPos* pos)
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //   private routine that manages the identifiers
-void G4SectionsVisitor::processIds(/*const*/ detModel::Position * pos, unsigned int i)
+void G4SectionsVisitor::processIds(/* const*/ detModel::Position * pos, unsigned int i)
 {    
 
-  // note: this thing returns a vector on the stack! do it only here
   std::vector <detModel::IdField*> ids = pos->getIdFields();
   if( ids.empty()) return; // should not happen
   
-  std::string idstring = "";
   idents::VolumeIdentifier idvec;
   for(std::vector <detModel::IdField*>::const_iterator j = ids.begin(); j!=ids.end(); ++j) {
     
-    unsigned int idvalue = (*j)->getValue();
-    idvec.append(idvalue);
+    idvec.append( (*j)->getValue() );
     
   }
-//  g4Identifiers[g4Physicals.back()] = idstring;
   (*m_idMap)[g4Physicals.back()] = idvec;
 
-  //typedef std::map<G4VPhysicalVolume*,std::string>M;
-  //g4Identifiers.insert(M::value_type(g4Physicals.back(),idstring));  
-  
   
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -391,9 +374,7 @@ void  G4SectionsVisitor::visitSeg(detModel::Seg*)
 void G4SectionsVisitor::setOpacity(std::string name, float op)
 {
     typedef std::map<std::string, float> M;
-  M::const_iterator j; 
-  
-  j = opacityMap.find(name);
+  M::const_iterator j = opacityMap.find(name);
   if (j == opacityMap.end()) return;
   else 
     {

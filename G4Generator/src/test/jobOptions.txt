@@ -46,7 +46,6 @@ G4Generator.source_name="muon_patch";
 //G4Generator.topVolume="trayReg";
 
 // commands to run before each event. 
-G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
 //G4Generator.UIcommands+={"/run/verbose 3"};
 //G4Generator.UIcommands+={"/event/verbose 3"};
 G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};

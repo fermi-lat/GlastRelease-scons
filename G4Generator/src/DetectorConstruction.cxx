@@ -55,18 +55,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   gddManager->startVisitor(&G4MaterialsVisitor());
   
   //  build the geometry with a visitor
- 
-  
   // create the visitor as with the topvolume, with a pointer to the map to fill
   G4SectionsVisitor visitor (m_topvol, &m_idMap);
   
-
   gddManager->startVisitor(&visitor);
 
   detModel::Gdd* gdd = gddManager->getGdd();
 
-  for( std::vector<G4LogicalVolume*>::iterator it = visitor.g4Logicals.begin(); 
-  it != visitor.g4Logicals.end(); ++it){
+  for( G4SectionsVisitor::Logicals::const_iterator it = visitor.begin(); it !=visitor.end(); ++it){
       G4LogicalVolume * lv = *it;
       detModel::Shape* sh = gdd->getShapeByName(lv->GetName());
       if( sh  && sh->getSensitive() ){
@@ -76,10 +72,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //----------------------------------------
 
 
-   G4VPhysicalVolume* res = visitor.worldphys;
   visitor.summary(std::cout);
   
-  return res;
+  return visitor.getWorld();
 }
 
 
