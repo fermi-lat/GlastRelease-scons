@@ -679,106 +679,16 @@
    <!-- now rotate them all 90 degrees for X tiles (flip x and y dimensions) 
         Do the rotation on individual tiles rather than assembling a side,
         then rotating because the latter screws up ids -->
-<!--
-    <box name="sideTileX0Edge" 
-         XREF="tileThickness"
-         YREF="sideTileTransOuter"
-         ZREF="sideTileHeight0"
-         materialREF="tileMat"
-         sensitive="posHit" 
-         detectorTypeREF="eDTypeACDTile"/>
+<!-- Side ribbons are all congruent.  Define one with width in x,
+     thickness in y.  Rotate for the opposite. -->
 
-    <box name="sideTileX0Mid" 
-         XREF="tileThickness"
-         YREF="sideTileTransMid"
-         ZREF="sideTileHeight0"
-         materialREF="tileMat"
-         sensitive="posHit" 
-         detectorTypeREF="eDTypeACDTile"/>
-
-    <box name="sideTileX0Central" 
-         XREF="tileThickness"
-         YREF="sideTileTransCentral"
-         ZREF="sideTileHeight0"
-         materialREF="tileMat"
-         sensitive="posHit" 
-         detectorTypeREF="eDTypeACDTile"/>
-
-    <box name="sideTileX1Edge" 
-         XREF="tileThickness"
-         YREF="sideTileTransOuter"
-         ZREF="sideTileHeight1"
-         materialREF="tileMat"
-         sensitive="posHit" 
-         detectorTypeREF="eDTypeACDTile"/>
-
-    <box name="sideTileX1Mid" 
-         XREF="tileThickness"
-         YREF="sideTileTransMid"
-         ZREF="sideTileHeight1"
-         materialREF="tileMat"
-         sensitive="posHit" 
-         detectorTypeREF="eDTypeACDTile"/>
-
-    <box name="sideTileX1Central" 
-         XREF="tileThickness"
-         YREF="sideTileTransCentral"
-         ZREF="sideTileHeight1"
-         materialREF="tileMat"
-         sensitive="posHit" 
-         detectorTypeREF="eDTypeACDTile"/>
-
-    <box name="sideTileX2Edge" 
-         XREF="tileThickness"
-         YREF="sideTileTransOuter"
-         ZREF="sideTileHeight2"
-         materialREF="tileMat"
-         sensitive="posHit" 
-         detectorTypeREF="eDTypeACDTile"/>
-
-    <box name="sideTileX2Mid" 
-         XREF="tileThickness"
-         YREF="sideTileTransMid"
-         ZREF="sideTileHeight2"
-         materialREF="tileMat"
-         sensitive="posHit" 
-         detectorTypeREF="eDTypeACDTile"/>
-
-    <box name="sideTileX2Central" 
-         XREF="tileThickness"
-         YREF="sideTileTransCentral"
-         ZREF="sideTileHeight2"
-         materialREF="tileMat"
-         sensitive="posHit" 
-         detectorTypeREF="eDTypeACDTile"/>
-
-
-    <box name="sideTileX3" 
-         XREF="tileThickness"
-         YREF="ACDTotalTransSide"
-         ZREF="sideTileHeight3"
-         materialREF="tileMat"
-         sensitive="posHit" 
-         detectorTypeREF="eDTypeACDTile"/>
--->
-<!-- Side ribbons are all congruent, but define two versions to avoid
-     having to rotate.
-     xSideRibbon is used on an "X-side", one at more or less constant x -->
-<!--
-    <box name="xSideRibbon"
-         XREF="ribbonThickness"
-         YREF="ribbonWidth"
-         ZREF="sideRibbon_l"
-         materialREF="ribbonMat"
-         detectorTypeREF="eDTypeACDRibbon" />
-
-    <box name="ySideRibbon"
+    <box name="sideRibbon"
          XREF="ribbonWidth"
          YREF="ribbonThickness"
-         ZREF="sideRibbon_l"
+         ZREF="ribbonsSideZ"
          materialREF="ribbonMat"
          detectorTypeREF="eDTypeACDRibbon" />
--->
+
 
 <!-- Make rows for faces (2 & 3) with lesser trans. dimension first.
      Side 2 rotated +90 about Z is isomorphic to side 3.
@@ -947,46 +857,38 @@
          />
 
 
+    <!-- Make envelope for side of ribbons.  Has X as long dimension
+         so will contain ribbons measuring X.  Can rotate for Y-ribbons -->
+    <box name="xRibbonsEnv"
+         XREF="ribbonsSideWidth"
+         YREF="ribbonThickness"
+         ZREF="ribbonsSideZ"
+         materialREF="vacuumMat"
+     />
+
+    <!-- Make a composition for one side's worth of ribbons -->
+    <composition name="sideRibbons" envelope="xRibbonsEnv" >
+      <posXYZ volume="sideRibbon"
+              XREF="xRibbonOuter_dxn" >
+        <idField name="fRibbon" value="0" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbon"
+              XREF="xRibbonInner_dxn" >
+        <idField name="fRibbon" value="1" />
+      </posXYZ>
+      <posXYZ volume="sideRibbon"
+              XREF="xRibbonInner_dx" >
+        <idField name="fRibbon" value="2" />
+      </posXYZ>
+      <posXYZ volume="sideRibbon"
+              XREF="xRibbonOuter_dx" >
+        <idField name="fRibbon" value="3" />
+      </posXYZ>
+    </composition>
+
+
     <!-- stack up ribbons for X and Y sides -->
-<!--
-    <stackY name="sideRibbonsX" >
-      <axisPos volume="xSideRibbon">
-        <idField name="fRibbon" value="0"  />  
-      </axisPos>
-      <axisPos volume="xSideRibbon"
-                gapREF="ribbonSideOuterGap">
-        <idField name="fRibbon" value="1" />   
-      </axisPos>
-      <axisPos volume="xSideRibbon"
-                gapREF="ribbonSideCentralGap">
-        <idField name="fRibbon" value="2"  /> 
-      </axisPos>
-      <axisPos volume="xSideRibbon"
-                gapREF="ribbonSideOuterGap">
-        <idField name="fRibbon" value="3"  /> 
-      </axisPos>
-
-    </stackY>
-
-    <stackX name="sideRibbonsY" >
-      <axisPos volume="ySideRibbon">
-        <idField name="fRibbon" value="0"  />  
-      </axisPos>
-      <axisPos volume="ySideRibbon"
-                gapREF="ribbonSideOuterGap">
-        <idField name="fRibbon" value="1" />   
-      </axisPos>
-      <axisPos volume="ySideRibbon"
-                gapREF="ribbonSideCentralGap">
-        <idField name="fRibbon" value="2"  />
-      </axisPos>
-      <axisPos volume="ySideRibbon"
-                gapREF="ribbonSideOuterGap">
-        <idField name="fRibbon" value="3"  />
-      </axisPos>
-
-    </stackX>
- -->
 <!-- Make boxes for ACD supports.  Old scheme treated X- and Y- sides
      differently.  Now (July '03) we follow 3-d model and dovetail
      side supports. However we simplify by just defining two face sheet

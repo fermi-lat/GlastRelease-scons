@@ -166,7 +166,8 @@
         </const>
 
         <const name="gridFlange_dtn" >
-          <notes>Negative transverse offset of per-tower grid flange pieces</notes>
+          <notes>Negative transverse offset of per-tower grid flange 
+                 pieces</notes>
           <uminus>
             <refer refTo="gridFlange_dt" />
           </uminus>
@@ -184,7 +185,8 @@
         </const>
         
         <const name="gridWeb_dtn" >
-          <notes>Negative transverse offset of per-tower grid web pieces</notes>
+          <notes>Negative transverse offset of per-tower grid web pieces
+          </notes>
           <uminus>
             <refer refTo="gridWeb_dt" />
           </uminus>
@@ -278,8 +280,8 @@
         </const>
         
         <const name="biggerZDim" >
-          <notes> this is to make room for moving the LAT around in z, to look for 
-            bad hardwired consts. The formula is:
+          <notes> this is to make room for moving the LAT around in z, 
+            to look for  bad hardwired consts. The formula is:
                     biggerZDim = bigXZDim + 2* abs(globalOffset_dz)</notes>
           <add>
             <refer refTo = "bigXZDim" />
@@ -455,106 +457,44 @@
           </minus>
         </const>
 
-<!-- July 03   obsolete??
-        <const name="tileXSide_dx" >
-          <notes>Displacement in x of tiles along a side || to Y axis
-               (so of constant X), relative to center of LATenv</notes>
-          <add>
-            <refer refTo="ribbonThickness" />
-            <refer refTo="ribbonGap" />
-            <quo>
-              <add> 
-                <refer refTo="tileThickness" />
-                <refer refTo="ACDTopTransverse" />
-              </add>
-              <const value="2" uType="count" />
-            </quo>
-          </add>
-        </const>
 
-        <const name="tileXSide_dxn" >
-          <notes>Displacement in x of tiles along a side at fixed -x
-                relative to center of LATenv</notes>
-          <uminus>
-            <refer refTo="tileXSide_dx" />
-          </uminus>
-        </const>
-
-        <const name="tileYSide_dy" >
-          <notes>Displacement in y of tiles at fixed +y
-                relative to center of LATenv</notes>
-          <refer refTo="tileXSide_dx" />
-        </const>
-
-        <const name="tileYSide_dyn" >
-          <notes>Displacement in y of tiles at fixed -y
-                relative to center of LATenv</notes>
-          <uminus>
-            <refer refTo="tileYSide_dy" />
-          </uminus>
-        </const>
--->
-<!--
-        <const name="ribbonSide_dz">
+        <const name="ribbonsSide_dz">
           <notes>displacement in z of side ribbons rel. to Ritz origin.
            Ribbons go down as far as tile sides but don't go up quite as
            high.</notes>
           <minus>
             <refer refTo="tileSide_dz" />
-            <quo>
-              <add>
-                <refer refTo="sideOverlap" />
-                <refer refTo="tileThickness" />
-                <refer refTo="ribbonGap" />
-              </add>
-              <const value="2" uType="count" />
-            </quo>
+            <half>
+              <minus>
+                <refer refTo="ACDSide_z" />
+                <refer refTo="ribbonsSideZ" />
+              </minus>
+            </half>
           </minus>
         </const>
 
-
-        <const name="ribbonYSide_dy" >
-          <notes>Displacement in y of tapes along a side at fixed +y
-                relative to center of LATenv.  Compute from displacement
-                of tile sides (as 4 Nov 2002)</notes>
+        <const name="ribbonsSide_dt">
+          <notes>Transverse displacement from origin of a side's worth
+               of ribbons.  Place them in an idealized position right
+               next to side tiles </notes>
           <minus>
-            <refer refTo="tileYSide_dy" />
-            <add>
-              <refer refTo="ribbonGap" />
-              <quo>
-                <add>
-                  <refer refTo="ribbonThickness" />
-                  <refer refTo="tileThickness" />
-                </add>
-                <const value="2" uType="count" />
-              </quo>
-            </add>
+            <refer refTo="tileSide_dt" />
+            <half>
+              <add>
+                <refer refTo="tileThickness" />
+                <refer refTo="ribbonThickness" />
+              </add>
+            </half>
           </minus>
         </const>
 
-        <const name="ribbonYSide_dyn" >
-          <notes>Displacement in y of ribbons along a side at fixed -y
-                 relative to center of LATenv</notes>
+        <const name="ribbonsSide_dtn">
+          <notes>Transverse displacement from origin of a side's worth
+              of ribbons on a negative side </notes>
           <uminus>
-            <refer refTo="ribbonYSide_dy" />
+            <refer refTo="ribbonsSide_dt" />
           </uminus>
         </const>
-
-        <const name="ribbonXSide_dx" >
-          <notes>Displacement in x of ribbons at fixed +x
-                relative to center of LATenv.  Same as for perp. sides
-                (Nove 4 2002)</notes>
-          <refer refTo="ribbonYSide_dy" />
-        </const>
-
-        <const name="ribbonXSide_dxn" >
-          <notes>Displacement in x of ribbons at fixed -x
-                relative to center of LATenv</notes>
-          <uminus>
-            <refer refTo="ribbonXSide_dx" />
-          </uminus>
-        </const>
--->
 
       </derCategory>
 

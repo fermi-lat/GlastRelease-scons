@@ -242,18 +242,47 @@
         <idField name="fACDCmp" valueREF="eACDTile" />
       </posXYZ>
 
-<!--
-      <posXYZ volume="sideRibbonsY" 
-              XREF="ACDSideDovetail_d"
-              YREF="ribbonYSide_dy"
-              ZREF="ribbonSide_dz">
+
+      <posXYZ volume="sideRibbons" 
+              YREF="ribbonsSide_dtn"
+              ZREF="ribbonsSide_dz">
+         <idField name="fLATObjects" valueREF="eLATACD" />
+         <idField name="fACDFace" valueREF="eACDYNegFace" />
+         <idField name="fACDCmp" valueREF="eACDRibbon" />
+         <idField name="fMeasure" valueREF="eMeasureX" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbons" 
+              YREF="ribbonsSide_dt"
+              ZREF="ribbonsSide_dz">
          <idField name="fLATObjects" valueREF="eLATACD" />
          <idField name="fACDFace" valueREF="eACDYPosFace" />
          <idField name="fACDCmp" valueREF="eACDRibbon" />
-         <idField name="fMeasure" valueREF="eMeasureY" />
-
+         <idField name="fMeasure" valueREF="eMeasureX" />
       </posXYZ>
 
+      <posXYZ volume="sideRibbons" 
+              zrot="90"
+              XREF="ribbonsSide_dtn"
+              ZREF="ribbonsSide_dz">
+         <idField name="fLATObjects" valueREF="eLATACD" />
+         <idField name="fACDFace" valueREF="eACDXNegFace" />
+         <idField name="fACDCmp" valueREF="eACDRibbon" />
+         <idField name="fMeasure" valueREF="eMeasureY" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbons" 
+              zrot="90"
+              XREF="ribbonsSide_dt"
+              ZREF="ribbonsSide_dz">
+         <idField name="fLATObjects" valueREF="eLATACD" />
+         <idField name="fACDFace" valueREF="eACDXPosFace" />
+         <idField name="fACDCmp" valueREF="eACDRibbon" />
+         <idField name="fMeasure" valueREF="eMeasureY" />
+      </posXYZ>
+
+
+<!--
       <posXYZ volume="sideRibbonsY"
               XREF="ACDSideDovetail_dn"
               YREF="ribbonYSide_dyn"

@@ -267,21 +267,6 @@
           </add>
         </const>
 
-<!--
-        <const name="sideRibbon_l">
-          <notes>Length of side piece of ribbon</notes>
-          <minus>
-            <refer refTo="ACDSide_z" />
-            <add>
-              <refer refTo="sideOverlap" />
-              <refer refTo="tileThickness" />
-              <refer refTo="ribbonGap" />
-            </add>
-          </minus>
-        </const> 
--->
-
-
         <const name="ribbonHalfThickness" >
           <notes>for convenience</notes>
           <half>
@@ -562,6 +547,34 @@
            </uminus>
          </const>
 
+         <const name="ribbonsSideWidth">
+           <notes>Width of envelope volume to contain 4 side
+                  ribbons</notes>
+           <add>
+             <refer refTo="xRibbonOuter_dx" />
+             <refer refTo="xRibbonOuter_dx" />
+             <refer refTo="ribbonWidth" />
+           </add>
+         </const>
+
+         <const name="ribbonsSideZ">
+           <notes>Height of envelope volume to contain 4 side
+                  ribbons. The envelope extends from bottom of 
+                  ACDTop volume to back edge of side tiles.</notes>
+           <minus>
+              <minus>
+                <refer refTo="ACDTop_d" />
+                <refer refTo="ACDTopZHalf" />
+              </minus>
+              <minus>
+                <refer refTo="tileSide_dz" />
+                <half>
+                  <refer refTo="ACDSide_z" />
+                </half>
+              </minus>
+            </minus>
+          </const>
+                
 <!--
      For the 20 X ribbon segments
           3 Z displacements
@@ -725,27 +738,6 @@
           </uminus>
         </const>
 
-<!-- Define two different side-ribbon gaps: one between central-most
-     ribbons, one between central and outer ribbon -->
-<!-- Needs to be redone for new 3-d model
-        <const name="ribbonSideCentralGap" >
-          <notes>Gap between two central-most ribbon segments running along
-            an ACD side.</notes>
-          <add>
-            <refer refTo="sideTileTransCentral" />
-            <refer refTo="sideHorizontalGap" />
-          </add>
-        </const>
-
-        <const name="ribbonSideOuterGap" >
-          <notes>Gap between central-most and outer ribbon segments 
-             running along an ACD side.</notes>
-          <add>
-            <refer refTo="sideTileTransMid" />
-            <refer refTo="sideHorizontalGap" />
-          </add>
-        </const>
- -->
 
 <!-- displacements for ACD support pieces in their negative incarnations -->
 <!-- constants used for strucutural pieces -->
