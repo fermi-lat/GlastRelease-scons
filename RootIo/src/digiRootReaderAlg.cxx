@@ -104,7 +104,7 @@ private:
     /// name of the Monte Carlo TTree stored in the ROOT file
     std::string m_treeName;
     /// Stores number of events available in the input ROOT TTree
-    int m_numEvents;
+    Long64_t m_numEvents;
   
     commonData m_common;
     IRootIoSvc* m_rootIoSvc;
@@ -227,9 +227,10 @@ StatusCode digiRootReaderAlg::execute()
     
     if (m_digiEvt) m_digiEvt->Clear();
 
-    static Int_t evtId = 0;
-	int readInd, numBytes;
-	std::pair<int,int> runEventPair = (m_rootIoSvc) ? m_rootIoSvc->runEventPair() : std::pair<int,int>(-1,-1);
+    static Long64_t evtId = 0;
+    Long64_t readInd;
+    int numBytes;
+    std::pair<int,int> runEventPair = (m_rootIoSvc) ? m_rootIoSvc->runEventPair() : std::pair<int,int>(-1,-1);
 	
 	if ((m_rootIoSvc) && (m_rootIoSvc->index() >= 0)) {
 		readInd = m_rootIoSvc->index();
@@ -252,7 +253,7 @@ StatusCode digiRootReaderAlg::execute()
     
     numBytes = m_digiTree->GetEvent(readInd);
 	
-	if ((numBytes <= 0) || (!m_digiEvt)) {
+    if ((numBytes <= 0) || (!m_digiEvt)) {
             log << MSG::WARNING << "Failed to load digi event" << endreq;
             return StatusCode::SUCCESS;
 	}
