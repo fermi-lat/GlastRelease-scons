@@ -3,6 +3,7 @@
 
     $Id$
 *<br><pre>
+ * v5r1p1 27-feb-03 THB had to add a use FluxSvc for the test.
  * v5r1   26-feb-03 THB Tag Francesco's changes; remove FluxSvc dependency   
  *        19-feb-03     Start of physics list selection
  * v5r0   06-feb-03 THB Tagged Riccardo's fixes for G4 5.0.
