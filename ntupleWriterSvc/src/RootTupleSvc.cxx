@@ -12,7 +12,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
-
+#include "facilities/Util.h"
 #include <map>
 
 // root includes
@@ -122,6 +122,8 @@ StatusCode RootTupleSvc::initialize ()
 
     // bind all of the properties for this service
     setProperties ();
+    std::string filename(m_filename);
+    facilities::Util::expandEnvVar(&filename);
 
     // open the message log
     MsgStream log( msgSvc(), name() );
@@ -136,7 +138,7 @@ StatusCode RootTupleSvc::initialize ()
     incsvc->addListener(this, "EndEvent", 0);
 
     // -- set up the tuple ---
-    m_tf = new TFile(m_filename.value().c_str(),"RECREATE");
+    m_tf = new TFile(filename.c_str(),"RECREATE");
     m_tree = new TTree( m_treename.value().c_str(),  m_title.value().c_str() );
 
     m_floats.reserve(250); // a little weakness: if larger than this, trouble
