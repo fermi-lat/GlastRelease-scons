@@ -848,6 +848,8 @@ void reconRootWriterAlg::close()
 
 StatusCode reconRootWriterAlg::finalize()
 {
+    MsgStream log(msgSvc(), name());
+    
     // ADDED FOR THE FILE HEADERS DEMO
     m_headersTool->writeReconHeader(m_reconTree->GetCurrentFile()) ;
     
@@ -855,6 +857,9 @@ StatusCode reconRootWriterAlg::finalize()
     
     StatusCode sc = StatusCode::SUCCESS;
     setFinalized();
+
+    log << MSG::DEBUG << "Finalized" << endreq;
+
     return sc;
 }
 
