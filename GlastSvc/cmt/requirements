@@ -1,10 +1,10 @@
 package GlastSvc
-version v7r1
+version v7r2
 branches src cmt doc
 
-use GlastEvent v7*
-use xmlGeoDbs   
-use detModel 
+use GlastEvent v7r*
+use xmlGeoDbs  v1r* 
+use detModel   v2r*
 
 apply_pattern packageShr
 apply_pattern package_include
