@@ -14,13 +14,14 @@ macro headers "" WIN32\
      ../detModel/Management/*.h \
      ../detModel/Sections/*.h \
      ../detModel/Constants/*.h \
-     ../detModel/Utilities/*.h 
+     ../detModel/Utilities/*.h ../detModel/GDD.h
 
 library detModel -no_share $(headers) \
      Management/*.cpp \
      Sections/*.cpp \
      Constants/*.cpp \
-     Utilities/*.cpp 
+     Utilities/*.cpp \
+     GDD.cpp
 	
     
 
