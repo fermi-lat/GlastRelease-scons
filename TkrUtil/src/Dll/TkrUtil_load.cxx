@@ -13,6 +13,7 @@
 
 DECLARE_FACTORY_ENTRIES(TkrUtil) {
     DECLARE_SERVICE( TkrFailureModeSvc);
+    DECLARE_SERVICE( TkrBadStripsSvc);
 } 
 
 

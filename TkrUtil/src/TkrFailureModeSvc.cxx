@@ -7,7 +7,7 @@
 // Author: L. Rochester (after Richard Dubois)
 
 
-#include "TkrUtil/TkrFailureModeSvc.h"
+#include "src/TkrFailureModeSvc.h"
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
