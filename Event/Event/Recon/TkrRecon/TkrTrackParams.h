@@ -67,7 +67,8 @@ public:
     inline const double getyPosySlp()   const {return m_yPos_ySlp; }
     inline const double getySlpySlp()   const {return m_ySlp_ySlp; }
 
-    /// Define indices for look up with the array operators
+    /// Define track parameter types and indices for look up with the array operators
+    enum ParamType  {Position, Slope};
     enum ParamIndex {xPosIdx = 1, xSlpIdx = 2, yPosIdx = 3, ySlpIdx = 4};
 
     /// Define an ( ) operator (allows read/write - indexing from 1!!)

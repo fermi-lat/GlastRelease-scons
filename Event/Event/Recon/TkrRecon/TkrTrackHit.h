@@ -124,13 +124,16 @@ public:
     inline const idents::TkrId getTkrId()           const {return m_hitID;          }
 
     /// Allow rudimentary access to the hit information here 
-    /// For full access use a "helper" class
+    /// Method to return index to give TkrTrackParams for returning specifc parameter
+    enum SSDDirection  {SSDMEASURED, SSDNONMEASURED};
+
+    const int getParamIndex(TkrTrackHit::SSDDirection meas, TkrTrackParams::ParamType type) const; 
+    int       getParamIndex(TkrTrackHit::SSDDirection meas, TkrTrackParams::ParamType type); 
+
     const Point                getPoint(TkrTrackHit::ParamType type)      const;
     Point                      getPoint(TkrTrackHit::ParamType type);
     const Vector               getDirection(TkrTrackHit::ParamType type)  const;
     Vector                     getDirection(TkrTrackHit::ParamType type);
-    const int                  getParamIndex(bool meas, bool slope)       const; 
-    int                        getParamIndex(bool meas, bool slope); 
     const double               getMeasuredPosition(TkrTrackHit::ParamType type) const;
     const double               getMeasuredSlope(TkrTrackHit::ParamType type) const;
     const double               getNonMeasuredPosition(TkrTrackHit::ParamType type) const;

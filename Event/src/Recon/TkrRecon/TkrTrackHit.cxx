@@ -165,54 +165,54 @@ void Event::TkrTrackHit::setTrackParams(ITkrTrackParamsAccess& access, TkrTrackH
     return;
 }
 
-const int Event::TkrTrackHit::getParamIndex(bool meas, bool slope) const
+const int Event::TkrTrackHit::getParamIndex(TkrTrackHit::SSDDirection meas, TkrTrackParams::ParamType type) const
 {
     int posIdx = Event::TkrTrackParams::xPosIdx;
     int slpIdx = Event::TkrTrackParams::xSlpIdx;
 
-    if (   ( meas && m_hitID.getView() == idents::TkrId::eMeasureY) 
-        || (!meas && m_hitID.getView() == idents::TkrId::eMeasureX) )
+    if (   ( meas == TkrTrackHit::SSDMEASURED && m_hitID.getView() == idents::TkrId::eMeasureY) 
+        || (!meas == TkrTrackHit::SSDMEASURED && m_hitID.getView() == idents::TkrId::eMeasureX) )
     {
         posIdx = Event::TkrTrackParams::yPosIdx;
         slpIdx = Event::TkrTrackParams::ySlpIdx;
     }
 
-    return slope ? slpIdx : posIdx;
+    return type == TkrTrackParams::Slope ? slpIdx : posIdx;
 }
 
-int Event::TkrTrackHit::getParamIndex(bool meas, bool slope)
+int Event::TkrTrackHit::getParamIndex(TkrTrackHit::SSDDirection meas, TkrTrackParams::ParamType type)
 {
     int posIdx = Event::TkrTrackParams::xPosIdx;
     int slpIdx = Event::TkrTrackParams::xSlpIdx;
 
-    if (   ( meas && m_hitID.getView() == idents::TkrId::eMeasureY) 
-        || (!meas && m_hitID.getView() == idents::TkrId::eMeasureX) )
+    if (   ( meas == TkrTrackHit::SSDMEASURED && m_hitID.getView() == idents::TkrId::eMeasureY) 
+        || (!meas == TkrTrackHit::SSDMEASURED && m_hitID.getView() == idents::TkrId::eMeasureX) )
     {
         posIdx = Event::TkrTrackParams::yPosIdx;
         slpIdx = Event::TkrTrackParams::ySlpIdx;
     }
 
-    return slope ? slpIdx : posIdx;
+    return type == TkrTrackParams::Slope ? slpIdx : posIdx;
 }
 
 const double Event::TkrTrackHit::getMeasuredPosition(Event::TkrTrackHit::ParamType type) const
 {
-    return getCoordinate(getTrackParams(type), getParamIndex(true, false));
+    return getCoordinate(getTrackParams(type), getParamIndex(SSDMEASURED, TkrTrackParams::Position));
 }
 
 const double Event::TkrTrackHit::getMeasuredSlope(Event::TkrTrackHit::ParamType type) const
 {
-    return getCoordinate(getTrackParams(type), getParamIndex(true, true));
+    return getCoordinate(getTrackParams(type), getParamIndex(SSDMEASURED, TkrTrackParams::Slope));
 }
 
 const double Event::TkrTrackHit::getNonMeasuredPosition(Event::TkrTrackHit::ParamType type) const
 {
-    return getCoordinate(getTrackParams(type), getParamIndex(false, true));
+    return getCoordinate(getTrackParams(type), getParamIndex(SSDNONMEASURED, TkrTrackParams::Position));
 }
 
 const double Event::TkrTrackHit::getNonMeasuredSlope(Event::TkrTrackHit::ParamType type) const
 {
-    return getCoordinate(getTrackParams(type), getParamIndex(false, false));
+    return getCoordinate(getTrackParams(type), getParamIndex(SSDNONMEASURED, TkrTrackParams::Slope));
 }
 
 std::ostream& Event::TkrTrackHit::fillStream( std::ostream& s ) const 
