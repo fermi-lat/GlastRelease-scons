@@ -16,7 +16,7 @@
 #include "detModel/Sections/Volume.h"
 #include "detModel/Sections/Box.h"
 #include "detModel/Gdd.h"
-#include "detModel/Management/IDmapBUilder.h"
+#include "detModel/Management/IDmapBuilder.h"
 #include "detModel/Utilities/PositionedVolume.h"
 
 #include "G4SectionsVisitor.h"

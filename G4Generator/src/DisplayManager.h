@@ -10,7 +10,7 @@ class HepTransform3D;
 class Hep3Vector;
 #include <vector>
 #include <map>
-
+#include <string>
 
 /**
     A simple class to manage a GuiSvc display of G4 objects. It is a singleton
