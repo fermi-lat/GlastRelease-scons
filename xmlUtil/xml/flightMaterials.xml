@@ -95,28 +95,28 @@
 
 
 <element name="Vacuum" 
-	 z="0" 
-	 aweight="0" 
+	 z="1" 
+	 aweight="1.01" 
 	 density="0.0"
 	 />
 
 <!-- ATTENTION .. THIS MATERIAL MUST BE SPECIFIED -->
 <element name="CarbonFiber" 
-	 z="0" 
-	 aweight="0" 
+	 z="1" 
+	 aweight="1.01" 
 	 density="0.0"
 	 />
 <!-- ATTENTION .. THIS MATERIAL MUST BE SPECIFIED -->
 <element name="Fiberglass" 
-	 z="0" 
-	 aweight="0" 
+	 z="1" 
+	 aweight="1.01" 
 	 density="0.0"
 	 />
 
 <!-- ATTENTION .. THIS MATERIAL MUST BE SPECIFIED -->
 <element name="someStuff" 
-	 z="0" 
-	 aweight="0" 
+	 z="1" 
+	 aweight="1.01" 
 	 density="0.0"
 	 />
 
