@@ -210,7 +210,7 @@ StatusCode EbfWriter::execute()
     // Put the contributor's data into EBF format and write it out 
     //
     m_output.format (&acd, &cal, &tkr, &glt);
-    if (level <= MSG::INFO) m_output.print  ();
+    if (level <= MSG::DEBUG) m_output.print  ();
     unsigned int length;
     char *data=m_output.write  (length);
     newEbf->set(data,length);
