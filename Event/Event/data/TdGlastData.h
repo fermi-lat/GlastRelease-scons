@@ -21,49 +21,26 @@
 
 
 // forward declarations
-#include "GlastEvent/data/TdSiData.h"
-#include "GlastEvent/data/TdCsIData.h"
 
 #include <iostream>
 #include <vector>
 
 extern const CLID& CLID_TdGlastData;
 
-//! Quick wrapper for the TdSiData and TdCsIData objects
 /*! \class TdGlastData
-    The TDS version of GlastData set up as a wrapped for the TDS objects.
-    Only really needed as a quick fix for the tracker recon. The 
-    Implementation of TdVetoData is still left, therefore take note
-    of the fact that this only returns a null pointer for the Veto
-    data object.
+    
+      This class is present simply to introduce DataObject into the LdGlastData.
+      This modifocation was done mainly for the purpose of aoRecon however it
+      also simplifies the loading of TdSiData and TdCsIData objects.
 
-    Note that there is no path for this object in the event model and
-    no converter available.
 */
 
 
 class TdGlastData : virtual public GlastData , virtual public DataObject {
 
 public:
-    TdGlastData ( TdCsIData* csi, TdSiData* si) {
-        m_csiData = csi;
-        m_siData =si;
-    }
-
-    virtual const CLID& clID() const   { return TdGlastData::classID(); }
-    static const CLID& classID()       { return CLID_TdGlastData; }
 
 
-    const CsIData*   getCsIData() const    { return m_csiData; }
-    const SiData*    getSiData() const{ return  m_siData; }
-    const IVetoData*  getVetoData() const  { return NULL; }
-
-
-private:
-    TdCsIData* m_csiData;
-    TdSiData* m_siData;
-    // Note that TdVetoData will need to be added here at 
-    // some point.
 };
 
 #endif

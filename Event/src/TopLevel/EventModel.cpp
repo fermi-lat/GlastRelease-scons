@@ -39,10 +39,13 @@ public:
         EventModel::Irf::IrfCalHits       = EventModel::Irf::Event + "/IrfCalHits";
         EventModel::Irf::IrfAcdHits       = EventModel::Irf::Event + "/IrfAcdHits";
 
-        // Raw Data
-        EventModel::Raw::Event            = EventModel::Event + "/Raw";
-        EventModel::Raw::TdSiDatas        = EventModel::Raw::Event + "/TdSiDatas";
-        EventModel::Raw::TdCsIDatas       = EventModel::Raw::Event + "/TdCsIDatas";
+        // Data Data
+        EventModel::Data::Event           = EventModel::Event + "/Data";
+        EventModel::Data::TdGlastData     = EventModel::Data::Event + "/TdGlastData";
+        EventModel::Data::TdSiData        = EventModel::Data::Event + "/TdSiData";
+        EventModel::Data::TdCsIData       = EventModel::Data::Event + "/TdCsIData";
+        EventModel::Data::TdVetoData      = EventModel::Data::Event + "/TdVetoData";
+        
 
         // reconstructed data (Tracker)
         EventModel::TkrRecon::Event       = EventModel::Event + "/TkrRecon";
@@ -135,7 +138,9 @@ public:
     const CLID& CLID_TdCsIData          = 1421;
     const CLID& CLID_TdCsIDataCnv       = 1422;
     const CLID& CLID_Xtal               = 1423;
-
+    const CLID& CLID_TdVetoData         = 1424;
+    const CLID& CLID_LdGlastData        = 1425;
+    const CLID& CLID_LdGlastDataCnv     = 1426;
    
     //! Reconstruction
     const CLID& CLID_RecEvent           = 3000;

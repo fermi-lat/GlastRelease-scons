@@ -60,10 +60,12 @@
             _EXTERN_ std::string IrfAcdHits;
         }
 
-        namespace Raw {
+        namespace Data {
             _EXTERN_ std::string Event;
-            _EXTERN_ std::string TdSiDatas;
-            _EXTERN_ std::string TdCsIDatas;
+            _EXTERN_ std::string TdSiData;
+            _EXTERN_ std::string TdCsIData;
+            _EXTERN_ std::string TdGlastData;
+            _EXTERN_ std::string TdVetoData;
         }
 
         namespace TkrRecon {
