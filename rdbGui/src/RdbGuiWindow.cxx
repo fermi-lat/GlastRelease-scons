@@ -16,6 +16,7 @@ FXDEFMAP(RdbGUIWindow) RdbGUIWindowMap[]={
   FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_QUIT,               RdbGUIWindow::onQuit),
   FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_OPENCONNECTION,     RdbGUIWindow::onOpenConnection),
   FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_CLOSECONNECTION,    RdbGUIWindow::onCloseConnection), 
+  FXMAPFUNC(SEL_COMMAND,  TableColumnList::ID_TBLLIST,         RdbGUIWindow::onQueryFrameUpdate), 
   FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_INSERT,             RdbGUIWindow::onInsert)
 };
 
@@ -81,7 +82,7 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
 
 
   // Treelist
-  uiTblColList = new TableColumnList(uiTblColframe);
+  uiTblColList = new TableColumnList(uiTblColframe, this);
 
   // Vertical splitter right
   FXSplitter *uiVsplitter = new FXSplitter(uiHsplitter, (LAYOUT_FILL_X|LAYOUT_FILL_Y|
@@ -89,7 +90,7 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
 
 
   // Search Frame
-  QueryFrame *searchFrame = new QueryFrame(uiVsplitter);
+  searchFrame = new QueryFrame(uiVsplitter);
 
 
   // Editor
@@ -182,7 +183,7 @@ void RdbGUIWindow::create()
 
 
 // Update title
-long  RdbGUIWindow::onUpdTitle(FXObject* sender,FXSelector sel, void* ptr)
+long  RdbGUIWindow::onUpdTitle(FXObject*, FXSelector , void*)
 {
 //   FXString title = "RdbGUI - [" + filename + "]";
 //   if (uiEditor.isModified())
@@ -192,21 +193,21 @@ long  RdbGUIWindow::onUpdTitle(FXObject* sender,FXSelector sel, void* ptr)
 }
 
 // Update box for overstrike mode display
-long  RdbGUIWindow::onUpdOverstrike(FXObject* sender,FXSelector sel, void* ptr)
+long  RdbGUIWindow::onUpdOverstrike(FXObject*, FXSelector, void*)
 {
 //   mode = ((@ui_editor.textStyle & TEXT_OVERSTRIKE) != 0) ? "OVR" : "INS";
 //   sender.handle(self, MKUINT(ID_SETSTRINGVALUE, SEL_COMMAND), mode);
   return 1;
 }
 
-long RdbGUIWindow::onSQLEdit(FXObject* sender,FXSelector sel, void* ptr)
+long RdbGUIWindow::onSQLEdit(FXObject*, FXSelector, void*)
 {
   if (m_shactive)
     uiEditor->highlightSyntax();
   return 1;
 }
 
-long RdbGUIWindow::onOpenXMLFile(FXObject* sender,FXSelector sel, void* ptr)
+long RdbGUIWindow::onOpenXMLFile(FXObject*, FXSelector, void*)
 {
   // Open file
   onCloseConnection(NULL,0,NULL);
@@ -234,7 +235,7 @@ void RdbGUIWindow::loadXMLFile(FXString fileName)
 }
 
 
-long RdbGUIWindow::onQuit(FXObject* sender,FXSelector sel, void* ptr)
+long RdbGUIWindow::onQuit(FXObject*, FXSelector, void*)
 {
   getApp()->exit(0);
   return 1;
@@ -315,6 +316,12 @@ void RdbGUIWindow::closeConnection()
   m_uiDBSelection->removeItem(m_uiDBSelection->getCurrentItem());
   
 }
+
+long RdbGUIWindow::onQueryFrameUpdate(FXObject *, FXSelector, void*)
+{
+  searchFrame->updateColumnSelection(uiTblColList->getColList());
+}
+
 
 // Here we begin
 int main(int argc,char *argv[])

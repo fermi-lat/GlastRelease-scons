@@ -4,6 +4,7 @@ StringWidget::StringWidget(FXComposite* parent, rdbModel::Column *column)
 {
   m_column = column;
   m_widget = new FXTextField((FXComposite*)parent,3,NULL,0,TEXTFIELD_NORMAL|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
+  m_widget->create();
 }
 
 std::string StringWidget::getValue()

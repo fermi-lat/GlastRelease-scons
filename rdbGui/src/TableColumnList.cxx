@@ -6,7 +6,7 @@
 FXDEFMAP(TableColumnList) TableColumnListMap[]={
 
   //__Message_Type_____________ID________________________Message_Handler_____
-  FXMAPFUNC(SEL_CLICKED,   TableColumnList::ID_TBLLIST,          TableColumnList::onSelectTable),
+  FXMAPFUNC(SEL_COMMAND,   TableColumnList::ID_TBLLIST,          TableColumnList::onSelectTable),
   FXMAPFUNC(SEL_CLICKED,   TableColumnList::ID_COLLIST,          TableColumnList::onSelectColumn)
   };
 
@@ -14,8 +14,10 @@ FXDEFMAP(TableColumnList) TableColumnListMap[]={
 FXIMPLEMENT(TableColumnList,FXVerticalFrame,TableColumnListMap,ARRAYNUMBER(TableColumnListMap))
 
 
-TableColumnList::TableColumnList(FXComposite *owner):
-  FXVerticalFrame(owner, LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_SUNKEN, 0, 0, 0, 0, 0, 0, 0, 0)
+TableColumnList::TableColumnList(FXComposite *owner, FXObject *target, FXSelector sel):
+  FXVerticalFrame(owner, LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_SUNKEN, 0, 0, 0, 0, 0, 0, 0, 0), 
+  m_target(target), 
+  m_selector(sel)
 {
 
  // Vertical splitter right
@@ -48,15 +50,16 @@ TableColumnList::TableColumnList(FXComposite *owner):
 //   m_uncheckIcon->create();
 }
 
-long TableColumnList::onSelectTable(FXObject*,FXSelector,void*)
+long TableColumnList::onSelectTable(FXObject*,FXSelector sel,void*)
 {
   m_tableSelected = true;
   m_colList->clearItems();
   rdbModel::Table *table = (rdbModel::Table*)(m_tblList->getItemData(m_tblList->getCurrentItem()));
   table->accept(this);
   m_tableSelected = false;
-  return 1;
+  return m_target && m_target->handle(NULL,FXSEL(SEL_COMMAND,ID_TBLLIST),NULL);
 }
+
 
 long TableColumnList::onSelectColumn(FXObject*,FXSelector,void*)
 {

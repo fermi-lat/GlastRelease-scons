@@ -3,7 +3,9 @@
 DateWidget::DateWidget(FXComposite* parent, rdbModel::Column *column)
 {
   m_column = column;
-  m_widget = new FXHorizontalFrame(parent,LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
+  m_widget = new FXHorizontalFrame(parent,LAYOUT_FILL_X|LAYOUT_FILL_COLUMN,
+      0, 0, 0, 0, 0, 0, 0, 0);
+  m_widget->setBackColor(parent->getBackColor());
 
   m_year = new FXComboBox(m_widget,4,NULL,0,
 			  COMBOBOX_STATIC|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP);
@@ -32,6 +34,7 @@ DateWidget::DateWidget(FXComposite* parent, rdbModel::Column *column)
     sprintf(name,"%02d",i+1);
     m_day->appendItem(name);
   }
+  m_widget->create();
 }
 
 std::string DateWidget::getValue()

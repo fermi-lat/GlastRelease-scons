@@ -29,6 +29,7 @@ private:
   FXMenuPane                     *uiActionmenu;
   FXComboBox                     *m_uiDBSelection;         // Showing current connection
   TableColumnList                *uiTblColList;            // List of tables and columns
+  QueryFrame                     *searchFrame;             // Frame to perform queries
   SQLBuffer                      *uiEditor;                // SQL editor
   FXbool                          m_shactive;              // Syntax Highlighting set or not
   LogText                        *uiLog;                   // Result log
@@ -72,6 +73,7 @@ public:
   long onQuit(FXObject*,FXSelector,void*);
   long onOpenConnection(FXObject*,FXSelector, void*);  
   long onCloseConnection(FXObject*,FXSelector, void*);
+  long onQueryFrameUpdate(FXObject *, FXSelector, void*);
   long onInsert(FXObject*,FXSelector, void*);
   // ..eccetera
   
