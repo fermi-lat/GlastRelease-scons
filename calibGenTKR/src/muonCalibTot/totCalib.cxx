@@ -1064,6 +1064,7 @@ void totCalib::fillXml()//takuya
 	 << "\" hwserial=\"" << m_tower_serial << "\">" << endl;
 
   output.precision(3);
+  char cvw[] = "XY";
 
   for(int layer = 0; layer != g_nLayer; ++layer) {
     for(int iView = 0; iView != g_nView; ++iView) {
@@ -1079,12 +1080,11 @@ void totCalib::fillXml()//takuya
 	if(layer%2==0) which = "top";
 	else which = "bot";
       }
-      if( iView == 0 )
-	output << "   <!-- **** layer X" << layer << " **** -->" << std::endl;
-      else
-	output << "   <!-- **** layer Y" << layer << " **** -->" << std::endl;
-      output << "   <uniplane tray=\"" << tray << "\" which=\""
-	     << which << "\">" << endl;
+      output << std::endl
+	     << "   <!-- **** layer " << cvw[iView]  << layer 
+	     << " **** -->" << std::endl
+	     << "   <uniplane tray=\"" << tray << "\" which=\""
+	     << which << "\">" << std::endl;
       for(int iDiv = 0; iDiv != g_nDiv; ++iDiv) {
 	output << "    <gtfeScale id=\"" << iDiv << "\" chargeScale=\"" 
                <<  m_chargeScale[layer][iView][iDiv] << "\"/>" << endl;
