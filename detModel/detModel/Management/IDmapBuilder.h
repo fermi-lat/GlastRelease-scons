@@ -47,23 +47,57 @@ namespace detModel{
     virtual void visitSeg(Seg*);
     virtual void insertVolume(Volume*);
 
-    /// This method return the full map of positioned volume pointers
-    const std::map<idents::VolumeIdentifier, const PositionedVolume*>* getVolMap() const;
+    /// This method returns the full map of positioned volume pointers
+    const std::map<idents::VolumeIdentifier, const PositionedVolume*>* 
+    getVolMap() const;
 
-    /// Retrive the HepTransform3D from an ID 
+    /// Retrieve the HepTransform3D from an ID.  ID should be global
+    /// (using all fields, from world volume on down) and transform
+    /// will also be relative to world volume
     /// Returns false if fails to find the id
     bool getTransform3DByID(idents::VolumeIdentifier, HepTransform3D*);
+
+    /// Retrieve the HepTransform3D from an ID.  ID should be relative
+    /// to top volume.  However transform will be relative to world volume. 
+    /// See getTopTransformById to retrieve transform relative to top volume
+    /// Returns false if fails to find the id
+    bool getTransform3DByTopID(idents::VolumeIdentifier, HepTransform3D*);
+
+    /// Retrieve the HepTransform3D from an ID.  ID should be relative
+    /// to top volume.  Transform will also be relative to top volume.
+    /// Returns false if fails to find the id
+    bool getTopTransform3DByTopID(idents::VolumeIdentifier, HepTransform3D*);
+
+    /// Retrieve the HepTransform3D from an ID.  ID should be complete,
+    /// but transform will be relative to top volume.
+    /// Returns false if fails to find the id
+    bool getTopTransform3DByID(idents::VolumeIdentifier, HepTransform3D*);
 
     /// Retrieve the shape parameters and type from an ID
     /// Returns false if fails to find the id
     bool getShapeByID(idents::VolumeIdentifier, 
                       std::string* s, std::vector<double>* params);
 
+    /// Retrieve the shape parameters and type from an ID where ID
+    /// is relative to top volume ID.
+    /// Returns false if fails to find the id
+    bool getShapeByTopID(idents::VolumeIdentifier, 
+                      std::string* s, std::vector<double>* params);
+
+    /// Return ID of top volume relative to world
+    const idents::VolumeIdentifier& getIDPrefix() const {return m_IDPrefix;}
+
+    /// Return transform of top volume relative to world
+    const HepTransform3D& getTransform3DPrefix() const 
+    {return m_transformPrefix;}
+
     /** 
-	This method return a PositionedVolume pointer from an ID (a null pointer
-	if the ID does not exist
+	This method returns a PositionedVolume pointer from an ID (a null 
+        pointer	if the ID does not exist.  ID must be full ID (all fields
+        starting with world volume)
     */
-    const PositionedVolume* getPositionedVolumeByID(idents::VolumeIdentifier) const ;
+    const PositionedVolume* getPositionedVolumeByID(idents::VolumeIdentifier) 
+      const;
     typedef std::map<idents::VolumeIdentifier, const PositionedVolume*> PVmap;
 
     //! make a summary on the stream
@@ -86,11 +120,22 @@ namespace detModel{
     Hep3Vector m_actualPos;
     /// This is the actual rotation of the volume
     HepRotation m_actualRot;
-    /// This is the map of PositionedVolume pointers indicized by ids
+    /// This is the map of PositionedVolume pointers indexed by ids
     PVmap m_volMap;
 
     /// a secondary vector to preserve the order
     IdVector m_idvec;
+
+    /// Set to true when our top volume is encountered
+    bool m_topSeen;
+
+    /// Prefix needed to convert from identifier for a volume relative
+    /// to topVolume and identifier for the same volume relative to
+    /// the full geometry (using top volume specified by section element)
+    idents::VolumeIdentifier m_IDPrefix;
+
+    HepTransform3D m_transformPrefix;
+    HepTransform3D m_inverseTransformPrefix; // avoid recomputing
 
     Gdd*  m_gdd;
   };

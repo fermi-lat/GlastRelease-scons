@@ -59,7 +59,17 @@ namespace detModel{
     void setNameFile(std::string pname){nameFile = pname;};
     std::string getNameFile(){return nameFile;};
 
+    /** Get value for any numeric constant, whether integer or floating 
+        point; integers will be converted. Return false if no such
+        numeric constant is declared.
+    */
     bool getNumericConstByName(std::string, double*);
+
+    /** Get value for integer constant.  If no such constant has 
+        been declared, return false.
+    */
+    bool getNumericConstByName(std::string, int*);
+
 
   protected:
     /** The constructor is protected; in such a way it is forbidden to *
