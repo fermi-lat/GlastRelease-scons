@@ -70,7 +70,17 @@ class RandomAccess : public AlgTool, virtual public IRandomAccess
     }
 
   void setTheEngine(std::string  engineName) 
-    {  
+    {
+   // Purpose and Method: Given a string containing a valid CLHEP
+   //                     random engine type sets the CLHEP random
+   //                     engine type associated with the RandomAccess
+   //                     class
+   //
+   // Inputs:  Name of CLHEP random engine to set
+   // Outputs: None
+   // Dependencies: None
+   // Restrictions and Caveats:  None
+
       // Open the message log
       MsgStream log( msgSvc(), name() );
       int foundAnEngine = 0;
