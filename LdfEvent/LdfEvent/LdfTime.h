@@ -26,6 +26,11 @@ namespace LdfEvent {
 
         LdfTime();
         LdfTime(unsigned timeSec, unsigned timeNanoSec, unsigned upperPpcTimeBase, unsigned lowerPpcTimeBase);
+
+        /// Retrieve reference to class definition structure
+        virtual const CLID& clID() const   { return LdfTime::classID(); }
+        static const CLID& classID()       { return CLID_LdfTime; }
+
         void initialize(unsigned timeSec, unsigned timeNanoSec, unsigned upperPpcTimeBase, unsigned lowerPpcTimeBase);
 
         unsigned timeSec() const { return m_timeSec; }

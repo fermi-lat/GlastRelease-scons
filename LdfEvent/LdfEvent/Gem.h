@@ -157,6 +157,10 @@ private:
         virtual std::ostream& fillStream(std::ostream &s) const;
         friend std::ostream& operator << (std::ostream &s, const Gem &obj);
 
+        /// Retrieve reference to class definition structure
+        virtual const CLID& clID() const   { return Gem::classID(); }
+        static const CLID& classID()       { return CLID_LdfGem; }
+
         void clear();
 
         void initTrigger(unsigned short tkr, unsigned short roi, 

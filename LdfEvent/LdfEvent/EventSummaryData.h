@@ -47,6 +47,12 @@ namespace LdfEvent{
 
         EventSummaryData() { clear(); };
         EventSummaryData(unsigned int summary) {clear(); m_summary=summary; };
+
+        /// Retrieve reference to class definition structure
+        virtual const CLID& clID() const   { return EventSummaryData::classID(); }
+        static const CLID& classID()       { return CLID_LdfEventSummaryData; }
+
+
         void clear() { 
             m_summary = 0; m_flags = 0;
             unsigned int i;

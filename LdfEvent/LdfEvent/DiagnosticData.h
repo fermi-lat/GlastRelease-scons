@@ -62,6 +62,10 @@ namespace LdfEvent {
 
         DiagnosticData();
 
+        /// Retrieve reference to class definition structure
+        virtual const CLID& clID() const   { return DiagnosticData::classID(); }
+        static const CLID& classID()       { return CLID_LdfDiagnosticData; };
+
         inline void addCalDiagnostic(const CalDiagnosticData& cal) { m_cal.push_back(cal); };
         inline int getNumCalDiagnostic() const { return m_cal.size(); };
         const CalDiagnosticData& getCalDiagnosticByIndex(unsigned int ind)const { return m_cal[ind]; };
