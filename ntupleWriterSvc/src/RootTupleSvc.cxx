@@ -95,9 +95,6 @@ private:
     int m_trials; /// total number of calls
     bool m_defaultStoreFlag;
 
-    std::vector<float> m_floats; // needed for communication with ROOT's float branch.
-    std::vector<const double*> m_pdoubles; // ordered  list of pointers to user variables
-
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // declare the service factories for the ntupleWriterSvc
@@ -143,7 +140,6 @@ StatusCode RootTupleSvc::initialize ()
     // with the default treename, and default title
     m_tree[m_treename.value().c_str()] = new TTree( m_treename.value().c_str(),  m_title.value().c_str() );
 
-    m_floats.reserve(250); // a little weakness: if larger than this, trouble
     return status;
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -152,15 +148,13 @@ StatusCode RootTupleSvc::addItem(const std::string & tupleName,
 {
      MsgStream log(msgSvc(),name());
     StatusCode status = StatusCode::SUCCESS;
-    m_floats.push_back(0);
     std::string treename=tupleName.empty()? m_treename.value() : tupleName;
     if( m_tree.find(treename)==m_tree.end()){
         // create new tree
         m_tree[treename]=new TTree(treename.c_str(), m_title.value().c_str());
         log << MSG::INFO << "Creating new tree " << treename << endreq;
     }
-    m_tree[treename]->Branch(itemName.c_str(), &m_floats.back(), itemName.c_str());
-    m_pdoubles.push_back(val);
+    m_tree[treename]->Branch(itemName.c_str(), (void*)val, (itemName+"/D").c_str());
     return status;
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -185,16 +179,11 @@ void RootTupleSvc::endEvent()  // must be called at the end of an event to updat
 {         
     ++m_trials;
     if (m_storeFlag == false) return;
-    std::vector<float>::iterator fit = m_floats.begin();
-    for( std::vector<const double*>::const_iterator pit = m_pdoubles.begin(); pit!=m_pdoubles.end(); ++pit){
-        double t = static_cast<float>(**pit);
-        *fit++ = static_cast<float>(**pit);
-    }
-
     for( std::map<std::string, TTree*>::iterator it = m_tree.begin(); it!=m_tree.end(); ++it){
         TTree* t = it->second;
         t->Fill();
     }
+
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::queryInterface(const IID& riid, void** ppvInterface)  {
