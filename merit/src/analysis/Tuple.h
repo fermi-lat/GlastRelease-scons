@@ -39,7 +39,9 @@ public:
     // print "name=value" for the tupleitem
     friend std::istream& operator >> (std::istream&,  Tuple& );
 
-   private:
+    bool isFloat() const {return m_isFloat;}
+
+private:
 
     //double& operator()();
     std::string m_name;

@@ -45,12 +45,12 @@ private:
     const TupleItem*  m_calLRmsRatio;
     const TupleItem*  m_vtxAngle;
 
-
-    double m_goodCalProb;
-    double m_coreProb; 
-    double m_vtxProb ;
-    double m_psfErrPred; 
-    double m_gammaProb ;
+    // output quantities: pointers to corresponding tuple items
+    double* m_goodCalProb;
+    double* m_coreProb; 
+    double* m_vtxProb ;
+    double* m_psfErrPred; 
+    double* m_gammaProb ;
     
 
     std::ostream& m_log;

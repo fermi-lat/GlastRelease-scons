@@ -18,6 +18,9 @@ public:
     RootTuple::RootTuple(std::string title, std::string file, std::string treeName);
     ~RootTuple(){};
 
+    //! actually create TupleItem's from the entire tree
+    void loadBranches();
+
     //! override this to create from the Gaudi-style n-tuple
     const TupleItem* tupleItem(const std::string& name)const;
 
@@ -33,6 +36,7 @@ public:
     virtual bool isFloat()const{return true;}
 private:
     TTree * m_tree;
+    TFile * m_file;
 
     int m_numEvents;
     int m_event;
