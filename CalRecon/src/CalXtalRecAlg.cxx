@@ -44,7 +44,7 @@ CalXtalRecAlg::CalXtalRecAlg(const std::string& name, ISvcLocator* pSvcLocator):
 
   declareProperty( "startTime",  
                    m_startTimeAsc = "2003-1-10_00:20");
-  declareProperty( "calibFlavor", m_calibFlavor = "ideal");
+  declareProperty( "calibFlavor", m_calibFlavor = "none");
 
 
 }
@@ -217,6 +217,11 @@ StatusCode CalXtalRecAlg::execute()
 
         sc = retrieve(); //get access to TDS data collections
 
+        pPeds = 0;
+        pGains = 0;
+        pMuSlopes = 0;
+
+        if(m_calibFlavor != "none") {
 
         // Set the event time
         facilities::Timestamp time = facilities::Timestamp(m_startTime);
@@ -237,34 +242,39 @@ StatusCode CalXtalRecAlg::execute()
         DataObject *pObject;
         
         //getting pointers to the calibration data of each type
-        m_pCalibDataSvc->retrieveObject(fullPedPath, pObject);
+        if(m_pCalibDataSvc->retrieveObject(fullPedPath, pObject) == StatusCode::SUCCESS) {
 
-        pPeds = 0;
-        pPeds = dynamic_cast<CalibData::CalCalibPed *> (pObject);
-        if (!pPeds) {
-            log << MSG::ERROR << "Dynamic cast to CalCalibPed failed" << endreq;
-            return StatusCode::FAILURE;
+            pPeds = dynamic_cast<CalibData::CalCalibPed *> (pObject);
+            if (!pPeds) {
+                log << MSG::ERROR << "Dynamic cast to CalCalibPed failed" << endreq;
+                return StatusCode::FAILURE;
+            }
+        } else{
+            log << MSG::INFO << "Enable to retrieve pedestals from calib database" << endreq;
+        }
+        if(m_pCalibDataSvc->retrieveObject(fullGainPath, pObject) == StatusCode::SUCCESS) {
+
+            pGains = dynamic_cast<CalibData::CalCalibGain *> (pObject);
+            if (!pGains) {
+                log << MSG::ERROR << "Dynamic cast to CalCalibGain failed" << endreq;
+                return StatusCode::FAILURE;
+            }
+        }else{            
+            log << MSG::INFO << "Enable to retrieve gains from calib database" << endreq;
         }
 
-        m_pCalibDataSvc->retrieveObject(fullGainPath, pObject);
-
-        pGains = 0;
-        pGains = dynamic_cast<CalibData::CalCalibGain *> (pObject);
-        if (!pGains) {
-            log << MSG::ERROR << "Dynamic cast to CalCalibGain failed" << endreq;
-            return StatusCode::FAILURE;
+        if (m_pCalibDataSvc->retrieveObject(fullMuSlopePath, pObject) == StatusCode::SUCCESS) {
+            pMuSlopes = dynamic_cast<CalibData::CalCalibMuSlope *> (pObject);
+            if (!pMuSlopes) {
+                log << MSG::ERROR << "Dynamic cast to CalCalibMuSlope failed" << endreq;
+                return StatusCode::FAILURE;
+            }
+        } else {
+            log << MSG::INFO << "Enable to retrieve mu slopes from calib database" << endreq;            
         }
 
-
-        m_pCalibDataSvc->retrieveObject(fullMuSlopePath, pObject);
-
-        pMuSlopes = 0;
-        pMuSlopes = dynamic_cast<CalibData::CalCalibMuSlope *> (pObject);
-        if (!pMuSlopes) {
-            log << MSG::ERROR << "Dynamic cast to CalCalibMuSlope failed" << endreq;
-            return StatusCode::FAILURE;
         }
-
+        
         // loop over all calorimeter digis in CalDigiCol
 	for (Event::CalDigiCol::const_iterator it = m_CalDigiCol->begin(); 
            it != m_CalDigiCol->end(); it++) {
@@ -388,26 +398,38 @@ void CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi*
             int rangeM = it->getRange(idents::CalXtalId::NEG); 
 
             //extraction of pedestals
-            CalibData::RangeBase* pRangeP = pPeds->getRange(xtalId, rangeP,idents::CalXtalId::POS);
-            CalibData::RangeBase* pRangeM = pPeds->getRange(xtalId, rangeM,idents::CalXtalId::NEG);
-    
-            CalibData::Ped* pPedP = dynamic_cast<CalibData::Ped * >(pRangeP);
-            CalibData::Ped* pPedM = dynamic_cast<CalibData::Ped * >(pRangeM);
-            float pedP = pPedP->getAvr();
-            float pedM = pPedM->getAvr();
 
+            // default value of pedestal - if calibration database isn't accessible
+            float pedP = m_pedestal;
+            float pedM = m_pedestal;
+            
+            if(pPeds){
+                CalibData::RangeBase* pRangeP = pPeds->getRange(xtalId, rangeP,idents::CalXtalId::POS);
+                CalibData::RangeBase* pRangeM = pPeds->getRange(xtalId, rangeM,idents::CalXtalId::NEG);
+    
+                CalibData::Ped* pPedP = dynamic_cast<CalibData::Ped * >(pRangeP);
+                CalibData::Ped* pPedM = dynamic_cast<CalibData::Ped * >(pRangeM);
+                pedP = pPedP->getAvr();
+                pedM = pPedM->getAvr();
+            }
 
             
             // extraction of gains
-            pRangeP = pGains->getRange(xtalId, rangeP,idents::CalXtalId::POS);
-            pRangeM = pGains->getRange(xtalId, rangeM,idents::CalXtalId::NEG);
 
-            CalibData::Gain* pGainP = dynamic_cast<CalibData::Gain * >(pRangeP);
-            CalibData::Gain* pGainM = dynamic_cast<CalibData::Gain * >(pRangeM);
+            // default values of gains - if calibration database isn't accessible
+            float gainP = m_maxEnergy[rangeP]/(m_maxAdc-m_pedestal);
+            float gainM = m_maxEnergy[rangeM]/(m_maxAdc-m_pedestal);
 
-            float gainP = pGainP->getGain();
-            float gainM = pGainM->getGain();
+            if(pGains){
+                CalibData::RangeBase* pRangeP = pGains->getRange(xtalId, rangeP,idents::CalXtalId::POS);
+                CalibData::RangeBase* pRangeM = pGains->getRange(xtalId, rangeM,idents::CalXtalId::NEG);
 
+                CalibData::Gain* pGainP = dynamic_cast<CalibData::Gain * >(pRangeP);
+                CalibData::Gain* pGainM = dynamic_cast<CalibData::Gain * >(pRangeM);
+
+                gainP = pGainP->getGain();
+                gainM = pGainM->getGain();
+            }
 
             // get adc values 
             double adcP = it->getAdc(idents::CalXtalId::POS);	
@@ -502,19 +524,26 @@ void CalXtalRecAlg::computePosition(CalXtalRecData* recData)
 	int rangeM = recData->getRange(0,idents::CalXtalId::NEG);
 	int rangeP = recData->getRange(0,idents::CalXtalId::POS);
 
+        // calculate slope - coefficient to convert light asymmetry into the 
+        // deviation from crystal center
+	
+        // default value of slope - if calibration data base isn't accessible
+        double slope = (1+m_lightAtt)/(1-m_lightAtt)*0.5;
     
         // extract mu slopes for selected ranges from calibration objects
-        CalibData::RangeBase* pRangeP = pMuSlopes->getRange(xtalId, rangeP,idents::CalXtalId::POS);
-        CalibData::RangeBase* pRangeM = pMuSlopes->getRange(xtalId, rangeM,idents::CalXtalId::NEG);
+ 
+        if(pMuSlopes){
+            CalibData::RangeBase* pRangeP = pMuSlopes->getRange(xtalId, rangeP,idents::CalXtalId::POS);
+            CalibData::RangeBase* pRangeM = pMuSlopes->getRange(xtalId, rangeM,idents::CalXtalId::NEG);
     
-        CalibData::MuSlope* pMuSlopeP = dynamic_cast<CalibData::MuSlope * >(pRangeP);
-        CalibData::MuSlope* pMuSlopeM = dynamic_cast<CalibData::MuSlope * >(pRangeM);
+            CalibData::MuSlope* pMuSlopeP = dynamic_cast<CalibData::MuSlope * >(pRangeP);
+            CalibData::MuSlope* pMuSlopeM = dynamic_cast<CalibData::MuSlope * >(pRangeM);
 
-        float slopeP = pMuSlopeP->getSlope();
-        float slopeM = pMuSlopeM->getSlope();
-
-        float slope = 0.5*(slopeP+slopeM)/m_CsILength;
-
+            double slopeP = pMuSlopeP->getSlope();
+            double slopeM = pMuSlopeM->getSlope();
+        
+            slope = 0.5*(slopeP+slopeM)/m_CsILength;
+        }
         double asym=0;
 
         //calculate light asymmetry
@@ -523,9 +552,6 @@ void CalXtalRecAlg::computePosition(CalXtalRecData* recData)
               asym =  log(enePos/eneNeg);
 //            asym = (enePos-eneNeg)/(enePos+eneNeg);
 
-        // calculate slope - coefficient to convert light asymmetry into the 
-        // deviation from crystal center
-//	double slope = (1+m_lightAtt)/(1-m_lightAtt);
 
         // longitudinal position in relative units (this value equal to +1 or -1
         // at the end of a crystal
