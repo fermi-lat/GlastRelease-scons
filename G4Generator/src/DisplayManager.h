@@ -9,10 +9,12 @@ namespace gui {class DisplayControl; class DisplayRep; }
 class HepTransform3D;
 class Hep3Vector;
 #include <vector>
+#include <map>
 
 
 /**
     A simple class to manage a GuiSvc display of G4 objects. It is a singleton
+    @author T. Burnett
   */
 class DisplayManager {
 
@@ -23,10 +25,13 @@ public:
     //! add a hit detector box to the display
     //! @param T global to local transformation
     //! @param x,y,z dimensions of the box
-    void addBox(const HepTransform3D& T, double x, double y, double z);
+    void addHitBox(const HepTransform3D& T, double x, double y, double z);
 
-    //! add to a the static display of all detector boxes
-    void addDetectorBox(const HepTransform3D& T, double x, double y, double z);
+    //! add to the static display of all detector boxes
+    //! @param detname The name of the logical volume
+    //! @param T global to local transformation
+    //! @param x,y,z dimensions of the box
+    void addDetectorBox(std::string detname, const HepTransform3D& T, double x, double y, double z);
 
     //! add a hit to the display 
     //! @param a,b initial, final points for the step
@@ -42,10 +47,8 @@ public:
 private:
     gui::DisplayControl* m_display;
 
-    gui::DisplayRep* m_boxes;
-    gui::DisplayRep* m_hits;
-    gui::DisplayRep* m_tracks;
-    gui::DisplayRep* m_all_boxes;
+    //! access all DisplayRep pointers by name in this map
+    std::map<std::string, gui::DisplayRep*> m_detmap;
 
     static DisplayManager* s_instance;
 };
