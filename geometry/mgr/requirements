@@ -1,7 +1,7 @@
 package geometry
 
 use glast_settings v1
-use CLHEP v1r4
+use CLHEP
 
 include_path "${GEOMETRYROOT}"
 
