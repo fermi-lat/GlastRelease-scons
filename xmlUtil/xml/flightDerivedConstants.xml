@@ -668,8 +668,8 @@ grid, etc. (may be superseded by info from Eric)</notes>
         </const>
 
         <const name="gridFlange_dz">
-          <notes>Z-Offset of grid flange pieces within single-tower volume
-             </notes>
+          <notes>Z-Offset of grid flange pieces within single-tower volume.
+          </notes>
           <minus>
             <refer refTo="towersTotalHalfZ" /> <!-- start at top -->
             <add>
@@ -1417,9 +1417,12 @@ grid, etc. (may be superseded by info from Eric)</notes>
                  with origin where it should be, at the very front
                  of the grid.</notes>
           <mul>
-            <const value="3" uType="count" />
+            <const value="2" uType="count" />
             <max>
-              <refer refTo = "towersTotalZ" />
+              <add>
+                <refer refTo = "towersTotalZ" />
+                <refer refTo = "NADSpacecraftZ" />
+              </add>
               <refer refTo = "ACDTotalXSide" />
             </max>
           </mul>
@@ -1450,6 +1453,22 @@ grid, etc. (may be superseded by info from Eric)</notes>
             <refer refTo="topStandoff" />
             <refer refTo="ACDTopZHalfWidth" />
           </add>
+        </const>
+
+        <const name="spacecraft_dz">
+          <notes>Z displacement of spacecraft relative to Ritz origin.
+                It goes immediately under the LAT</notes>
+          <uminus>
+            <add>
+              <refer refTo="NADGridFlangeZ" />
+              <refer refTo="CALVertStayClear" />
+              <refer refTo="NADSpacecraftGap" />
+              <quo> 
+                 <refer refTo="NADSpacecraftZ" />
+                 <const value="2" uType="count" />
+              </quo>
+            </add>
+          </uminus>
         </const>
 
 <!-- have to do analogous 5 constants for side tile locations -->
@@ -1709,10 +1728,12 @@ grid, etc. (may be superseded by info from Eric)</notes>
         <const name = "NADGridFlange_dz" >
           <notes>Displacement of flange w.r.t. Ritz origin, which is
                  at its top face</notes>
-          <quo>
-            <refer refTo="NADGridFlangeZ" />
-            <const value="2" uType="count" />
-          </quo>
+          <uminus>
+            <quo>
+              <refer refTo="NADGridFlangeZ" />
+              <const value="2" uType="count" />
+            </quo>
+          </uminus>
         </const>
 
         <const name = "NADGridWeb_dz" >          

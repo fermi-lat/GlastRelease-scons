@@ -108,7 +108,9 @@
          XREF="NADBlanketThick" YREF="NADBlanketSideY" 
          ZREF="NADBlanketSideZ" materialREF="blanketMat" />
       
-
+<!-- define cylinder for spacecraft -->
+    <tubs name="spacecraft" ROutREF="NADSpacecraftR" ZREF="NADSpacecraftZ"
+          materialREF="spacecraftMat" />
 <!-- next need to put together oneCAL and oneTKR with necessary
      structural stuff to make a tower.  Front plane of grid
      defines Z = 0 (Steve Ritz memo) -->
@@ -440,6 +442,12 @@
         <idField name="fLATObjects" valueREF="eLATBlanket" />
         <idField name="fBorderCmp" valueREF="eBottom" />
       </posXYZ>
+
+      <posXYZ volume="spacecraft"
+              ZREF="spacecraft_dz">
+        <idField name="fLATObjects" valueREF="eLATSpacecraft" />
+      </posXYZ>
+
 
     </composition>
   </section>
