@@ -36,12 +36,12 @@ StatusCode LdfGemCnv::createObj(IOpaqueAddress* ,
     // Retrieve the GEM data for this event 
     ldfReader::GemData ldfGem = ldfReader::LatData::instance()->getGem();
     ldfReader::GemDataTileList ldfTileList = ldfGem.tileList();
-    LdfEvent::GemDataTileList tdsTileList(ldfTileList.XZM(), ldfTileList.XZP(),
+    LdfEvent::GemTileList tdsTileList(ldfTileList.XZM(), ldfTileList.XZP(),
             ldfTileList.YZM(), ldfTileList.YZP(), ldfTileList.XY(), 
             ldfTileList.RBN(), ldfTileList.NA());
     gem->initTrigger(ldfGem.tkrVector(), ldfGem.roiVector(), ldfGem.calLEvector(),
         ldfGem.calHEvector(), ldfGem.cnoVector(), ldfGem.conditionSummary(), tdsTileList);
-    LdfEvent::GemDataOnePpsTime ppsTime(ldfGem.onePpsTime().timebase(),
+    LdfEvent::GemOnePpsTime ppsTime(ldfGem.onePpsTime().timebase(),
         ldfGem.onePpsTime().seconds());
     gem->initSummary(ldfGem.liveTime(), ldfGem.prescaled(), ldfGem.discarded(),
         ldfGem.sent(), ldfGem.triggerTime(), ppsTime, ldfGem.deltaEventTime());

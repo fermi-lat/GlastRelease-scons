@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v0r4p0  18-Aug-2004 hmk final cleanup for GEM
 v0r4    02-Aug-2004 hmk Prepare to handle GEM data
 v0r3p0  22-Jul-2004 hmk Address JIRA CMT-25, bug in CMT, with extra private statement
 v0r3    22-Jul-2004 hmk Activating ACD digi conversion
