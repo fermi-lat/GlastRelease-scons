@@ -84,20 +84,20 @@ private:
 };
 
 inline StreamBuffer& IrfTkrLayer::serialize( StreamBuffer& s ) const                 {
-    ContainedObject::serialize(s);
+    s = ContainedObject::serialize(s);
     s
         << m_id
 	<< m_energy
         << m_hitVector.size();
     for (IrfTkrHitVector::const_iterator hit = m_hitVector.begin(); hit != m_hitVector.end(); hit++) {
-        static_cast<const IrfTkrHit*>(*hit)->serialize(s);
+         s = (*hit)->serialize(s);
     }
     return s;
 }
 
 
 inline StreamBuffer& IrfTkrLayer::serialize( StreamBuffer& s )                       {
-    ContainedObject::serialize(s);
+    s = ContainedObject::serialize(s);
     int nSize;
     s
 	>> m_id
@@ -105,7 +105,7 @@ inline StreamBuffer& IrfTkrLayer::serialize( StreamBuffer& s )                  
         >> nSize;
     for (int iHit = 0; iHit < nSize; iHit++){
         IrfTkrHit* curHit = new IrfTkrHit();
-        curHit->serialize(s);
+        s = curHit->serialize(s);
         this->addHit(curHit);
     }
 
