@@ -104,7 +104,7 @@
     }
 
     printf("object table before deleting\n");
-    gObjectTable->Print();
+    //gObjectTable->Print();
 
     delete ev;
     
