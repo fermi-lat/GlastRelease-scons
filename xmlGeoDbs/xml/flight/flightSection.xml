@@ -50,24 +50,93 @@
 &NADGeo;
 &oneTower;
 
+    <box name="allTowersEnv"
+         XREF="towersTrans" YREF="towersTrans" ZREF="towersTotalZ" />
+
+    <composition name="allTowers" envelope="allTowersEnv" > 
+      <posXYZ volume="oneTower" XREF="outerTowers_dtn" YREF="outerTowers_dtn">
+        <idField name="fTowerY" value="0" />
+        <idField name="fTowerX" value="0" />
+      </posXYZ>
+
+      <posXYZ volume="oneTower" XREF="innerTowers_dtn" YREF="outerTowers_dtn">
+        <idField name="fTowerY" value="0" />
+        <idField name="fTowerX" value="1" />
+      </posXYZ>
+
+      <posXYZ volume="oneTower" XREF="innerTowers_dt" YREF="outerTowers_dtn">
+        <idField name="fTowerY" value="0" />
+        <idField name="fTowerX" value="2" />
+      </posXYZ>
+
+      <posXYZ volume="oneTower" XREF="outerTowers_dt" YREF="outerTowers_dtn">
+        <idField name="fTowerY" value="0" />
+        <idField name="fTowerX" value="3" />
+      </posXYZ>
+
+      <posXYZ volume="oneTower" XREF="outerTowers_dtn" YREF="innerTowers_dtn">
+        <idField name="fTowerY" value="1" />
+        <idField name="fTowerX" value="0" />
+      </posXYZ>
+
+      <posXYZ volume="oneTower" XREF="innerTowers_dtn" YREF="innerTowers_dtn">
+        <idField name="fTowerY" value="1" />
+        <idField name="fTowerX" value="1" />
+      </posXYZ>
+
+      <posXYZ volume="oneTower" XREF="innerTowers_dt" YREF="innerTowers_dtn">
+        <idField name="fTowerY" value="1" />
+        <idField name="fTowerX" value="2" />
+      </posXYZ>
+
+      <posXYZ volume="oneTower" XREF="outerTowers_dt" YREF="innerTowers_dtn">
+        <idField name="fTowerY" value="1" />
+        <idField name="fTowerX" value="3" />
+      </posXYZ>
+
+      <posXYZ volume="oneTower" XREF="outerTowers_dtn" YREF="innerTowers_dt">
+        <idField name="fTowerY" value="2" />
+        <idField name="fTowerX" value="0" />
+      </posXYZ>
+
+      <posXYZ volume="oneTower" XREF="innerTowers_dtn" YREF="innerTowers_dt">
+        <idField name="fTowerY" value="2" />
+        <idField name="fTowerX" value="1" />
+      </posXYZ>
+
+      <posXYZ volume="oneTower" XREF="innerTowers_dt" YREF="innerTowers_dt">
+        <idField name="fTowerY" value="2" />
+        <idField name="fTowerX" value="2" />
+      </posXYZ>
+
+      <posXYZ volume="oneTower" XREF="outerTowers_dt" YREF="innerTowers_dt">
+        <idField name="fTowerY" value="2" />
+        <idField name="fTowerX" value="3" />
+      </posXYZ>
 
 
-<!-- This doesn't behave well w.r.t. ids, but just ignore that for
-     now to get a full LAT assembled.  In reality once structural
-     entities are properly dealt with, probably won't be able to use
-     stacks to put the towers together. -->
-  
-    <stackX name="towerRow" >
-      <axisMPos volume="oneTower" ncopyREF="xNum" shiftREF="towerPitch"> 
-        <idField name="fTowerX" value="0" step="1" />
-      </axisMPos>
-    </stackX>
 
-    <stackY name="allTowers" >
-      <axisMPos volume="towerRow" ncopyREF="yNum"  shiftREF="towerPitch">
-        <idField name="fTowerY" value="0" step="1" />
-      </axisMPos>
-    </stackY>
+
+      <posXYZ volume="oneTower" XREF="outerTowers_dtn" YREF="outerTowers_dt">
+        <idField name="fTowerY" value="3" />
+        <idField name="fTowerX" value="0" />
+      </posXYZ>
+
+      <posXYZ volume="oneTower" XREF="innerTowers_dtn" YREF="outerTowers_dt">
+        <idField name="fTowerY" value="3" />
+        <idField name="fTowerX" value="1" />
+      </posXYZ>
+
+      <posXYZ volume="oneTower" XREF="innerTowers_dt" YREF="outerTowers_dt">
+        <idField name="fTowerY" value="3" />
+        <idField name="fTowerX" value="2" />
+      </posXYZ>
+
+      <posXYZ volume="oneTower" XREF="outerTowers_dt" YREF="outerTowers_dt">
+        <idField name="fTowerY" value="3" />
+        <idField name="fTowerX" value="3" />
+      </posXYZ>
+    </composition>
 
 &ACDAcd;
 
