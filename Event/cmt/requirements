@@ -31,6 +31,7 @@ library Event -no_share\
         Recon/TkrRecon/*.cxx \
         Recon/CalRecon/*.cxx \
         TopLevel/*.cpp \
+        Utilities/*.cxx\
         ${Event_headers}
 
 
