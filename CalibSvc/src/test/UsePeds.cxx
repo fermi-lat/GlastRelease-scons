@@ -8,6 +8,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "CalibData/CalibModel.h"
 #include "CalibData/Cal/CalCalibPed.h"
+#include "CalibData/CalibTime.h"
 #include "idents/CalXtalId.h"                // shouldn't be necessary
 
 /**
@@ -146,6 +147,13 @@ void UsePeds::processNew(CalibData::CalCalibPed* pNew,
       << "Serial #" <<  pNew->getSerNo() << endreq; 
   log << MSG::INFO << "Vstart: " <<  (pNew->validSince()).hours()
       << "  Vend: " << (pNew->validTill()).hours() << endreq;
+
+  std::string vStart = pNew->getValidStart()->getString();
+  std::string vEnd = pNew->getValidEnd()->getString();
+  log << MSG::INFO << "(Vstart, Vend) as ascii from CalibTime objects: " 
+      << endreq;
+  log << MSG::INFO << "(" << vStart << ", " << vEnd << ")" << endreq;
+
   
   if (!done) {
     done = true;
