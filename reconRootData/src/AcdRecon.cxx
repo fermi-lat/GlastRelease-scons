@@ -12,7 +12,7 @@ AcdRecon::~AcdRecon() {
 }
 
 void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist,
-                          const AcdId &minDocaId, std::vector<Double_t> &rowDoca) {
+                          const AcdId &minDocaId, const std::vector<Double_t> &rowDoca) {
     Clear();
     m_totEnergy = e;
     m_tileCount = count;
