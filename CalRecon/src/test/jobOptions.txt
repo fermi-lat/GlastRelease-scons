@@ -56,7 +56,7 @@ GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
 // specific for this test
-ApplicationMgr.DLLs += {"AnalysisNtuple", "Recon"};
+ApplicationMgr.DLLs += {"AnalysisNtuple"};
 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
