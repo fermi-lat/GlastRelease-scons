@@ -2,7 +2,20 @@
  * package Gleam
  * package manager:T.Burnett
 
- * v2r1
+ * v2r1 14-may-02 THB now serious.
+     use GlastPolicy          v4r4 
+     use idents               v2r8
+     use Event                v8r4
+     use G4Generator          v4r1
+     use FluxDisplay          v2r0
+     use GlastDigi            v4r0p1
+     use Trigger              v3r1
+     use Recon                v2r1p1
+     use TkrRecon             v6r2
+     use CalRecon             v5r1       
+     use mcRootData           v2r1p3
+     use RootIo               v2r0p1
+
  * v2r0  09-may-02 THB   conversion to Event
     use Event                v8r1
     use GlastSvc             v8r0
