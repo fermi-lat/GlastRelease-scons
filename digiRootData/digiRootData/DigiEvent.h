@@ -104,7 +104,7 @@ private:
 
     /// data members to store CAL data
     // Avoid re-use of m_calDigiCol name that used to be a TObjArray*
-    TObjArray *m_calDigiCol; //->
+    TObjArray *m_calDigiCol; 
     TClonesArray *m_calDigiCloneCol; //->
     Int_t m_numCalDigis;
     static TClonesArray *s_calDigiStaticCol; //! Collection of Cal Digi objects

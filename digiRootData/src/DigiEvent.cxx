@@ -119,6 +119,15 @@ void DigiEvent::Print(Option_t *option) const {
     cout << "Run, Event: " << m_runId << ", " << m_eventId
         << " Time: " << m_timeStamp << endl;
     m_levelOneTrigger.Print();
+    if ( (m_calDigiCol) && (m_calDigiCol->GetEntries() > 0)) {
+      cout << "Number of CalDigis " << m_calDigiCol->GetEntries() << endl;
+    } else 
+      cout << "Number of CalDigis " << m_numCalDigis << endl;
+    if (m_tkrDigiCol) 
+      cout << "Number of TkrDigis " << m_tkrDigiCol->GetEntries() << endl;
+    else 
+      cout << "Number of TkrDigis 0" << endl;
+    cout << "Number of AcdDigis " << m_numAcdDigis << endl;
 }
 
 AcdDigi* DigiEvent::addAcdDigi(const AcdId& id, const VolumeIdentifier& volId,
@@ -174,7 +183,7 @@ CalDigi* DigiEvent::addCalDigi() {
 }
 
 const CalDigi* DigiEvent::getCalDigi(UInt_t i) const {
-    if (m_calDigiCol) return (CalDigi*)m_calDigiCol->At(i);
+    if ((m_calDigiCol) && (m_calDigiCol->GetEntries()>0)) return (CalDigi*)m_calDigiCol->At(i);
     if (Int_t(i) > m_numCalDigis) return 0;
     return (CalDigi*)m_calDigiCloneCol->At(i);
 }
