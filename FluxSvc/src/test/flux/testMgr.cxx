@@ -117,5 +117,3 @@ int main(int argn, char * argc[]) {
     
 }
 
-void WARNING (const char * text ){  std::cerr << "WARNING: " << text << '\n';}
-void FATAL(const char* s){std::cerr << "\nERROR: "<< s;}

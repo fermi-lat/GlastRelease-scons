@@ -8,7 +8,11 @@ apply_pattern packageShr
 apply_pattern package_include
 
 
-#use flux 
+
+#=============================================================
+private
+
+
 use GaudiSvc
 use GlastEvent
 
@@ -18,10 +22,6 @@ use geometry
 use facilities
 
 
-#=============================================================
-private
-
-
 
 # get flags to build shared library
 apply_pattern package_Cshlibflags
@@ -29,11 +29,11 @@ apply_pattern package_headers
 
 library FluxSvc  *.cxx \
  Dll/*.cxx\
-# ./flux/*.h\
-# ./flux/src/*.cxx\
  ${FluxSvc_headers}
 
-application testMgr  test/flux/testMgr.cxx
+application testMgr  test/flux/testMgr.cxx *.cxx \
+ Dll/*.cxx\
+ ${FluxSvc_headers}
 
 macro_append FluxSvc_headers "" WIN32 "../xml/*.xml test/*.txt test/*.xml"
 # test program, using local joboptions
