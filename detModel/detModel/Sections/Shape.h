@@ -25,8 +25,8 @@ namespace detModel{
      * With this method it is possible to set and get the shape
      * sensitive for simulations purpouses
      */
-    void setSensitive(bool psensitive){m_sensitive = psensitive;};
-    bool getSensitive()const{return m_sensitive;};
+    void setSensitive(unsigned int psensitive){m_sensitive = psensitive;};
+    unsigned int getSensitive()const{return m_sensitive;};
 
     /**
      * With this method it is possible to set and get the 
@@ -50,7 +50,8 @@ namespace detModel{
   private:
     unsigned int m_detectorType;
     std::string m_material;
-    bool m_sensitive;          
+    /// 0=non sensitive, 1 = posHit, 2 = intHit
+    unsigned int m_sensitive;          
     Units* m_units;
   };
 }

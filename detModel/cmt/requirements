@@ -10,7 +10,7 @@ include_dirs "${DETMODELROOT}"
 path_append LD_LIBRARY_PATH "${detModelDir}"
 
 apply_pattern package_linkopts
-apply_pattern packageShr
+#apply_pattern packageShr
 
 
 macro headers "" WIN32 "\
@@ -20,7 +20,7 @@ macro headers "" WIN32 "\
      ../detModel/Materials/*.h \
      ../detModel/Utilities/*.h ../detModel/GDD.h"
 
-library detModel $(headers) \
+library detModel -no_share  $(headers) \
       Management/*.cxx \
       Sections/*.cxx \
       Constants/*.cxx \
@@ -30,7 +30,7 @@ library detModel $(headers) \
 	
 private
 
-apply_pattern package_shlibflags
+# apply_pattern package_shlibflags
 
     
 application test main.cxx 

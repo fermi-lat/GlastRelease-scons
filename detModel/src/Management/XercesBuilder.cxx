@@ -432,9 +432,11 @@ namespace detModel{
     b->setMaterial(xml::Dom::transToChar(el.getAttribute("material")));
     b->setDetectorType(atoi(xml::Dom::transToChar(el.getAttribute("detectorType"))));
 
-    if (std::string((xml::Dom::transToChar(el.getAttribute("sensitive")))) == "true")
+    if (std::string((xml::Dom::transToChar(el.getAttribute("sensitive")))) == "posHit")
       b->setSensitive(1);
-    else 
+    else if (std::string((xml::Dom::transToChar(el.getAttribute("sensitive")))) == "intHit")
+      b->setSensitive(2);
+    else
       b->setSensitive(0);
 
     if (e->hasChildNodes()){
