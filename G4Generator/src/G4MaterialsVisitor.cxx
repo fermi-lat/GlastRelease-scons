@@ -64,7 +64,8 @@ void G4MaterialsVisitor::visitComposite(detModel::Composite* composite)
   G4double density;
   G4int ncomponents;
   G4Material* ptMaterial = 0;
-  
+  double tot = 0;
+
   if ((ptMaterial = G4Material::GetMaterial((G4String) composite->getName())))  
     return;  
 
@@ -79,6 +80,11 @@ void G4MaterialsVisitor::visitComposite(detModel::Composite* composite)
 
   std::vector <int> natoms = composite->getAtoms();
   std::vector <double> fractions = composite->getFractions();
+  
+  for(unsigned int j = 0;j<fractions.size();j++)
+    tot = tot + fractions[j];
+  
+
   int i = 0;    //index of the natoms and fractions vectors
  
   for (m = matComponents.begin(); m != matComponents.end(); m++)
@@ -98,7 +104,7 @@ void G4MaterialsVisitor::visitComposite(detModel::Composite* composite)
 	    {
 	      if (composite->isFractions())
 		{
-		  mat->AddElement(ptElement, (G4double) fractions[i]);
+		  mat->AddElement(ptElement, (G4double) fractions[i]/tot);
 		}
 	      else
 		{
@@ -110,7 +116,7 @@ void G4MaterialsVisitor::visitComposite(detModel::Composite* composite)
 	    {
 	      if (composite->isFractions())
 		{
-		  mat->AddMaterial(ptMaterial, (G4double) fractions[i]);
+		  mat->AddMaterial(ptMaterial, (G4double) fractions[i]/tot);
 		}
 	      else
 		{
@@ -134,7 +140,7 @@ void G4MaterialsVisitor::visitComposite(detModel::Composite* composite)
 	    }
 	  if (ptMaterial)
 	    {
-	      mat->AddMaterial(ptMaterial, (G4double) fractions[i]);
+	      mat->AddMaterial(ptMaterial, (G4double) fractions[i]/tot);
 	      i++;
 	    }
 	  else
