@@ -81,6 +81,7 @@ namespace ldfReader {
         {
             if (EbfDebug::getDebug()) 
                 printf("%sTKR: no data - empty contribution\n", m_prefix);
+            endTots((unsigned)(m_contribution->accepts(m_event) + 3*sizeof(unsigned) - (char*)contribution()));
             return;
         }
 

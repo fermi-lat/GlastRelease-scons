@@ -20,9 +20,9 @@ namespace ldfReader {
     {
     public:
         EbfDatagramParser(LATdatagram* start, LATdatagram* end) : LATdatagramIterator(start, end) {}
-        ~EbfDatagramParser() {}
+        virtual ~EbfDatagramParser() {}
 
-        int process(LATdatagram*);
+        virtual int process(LATdatagram*);
     private:
         LatContributionParser m_lci;
     };
