@@ -154,19 +154,19 @@ void  IDmapBuilder::visitAxisMPos(AxisMPos* pos)
   switch(pos->getAxisDir()){
   case (detModel::Stack::xDir):
     {    
-      m_actualRot.rotateX(-pos->getRotation()*GDDPI/180); 
+      m_actualRot.rotateX(pos->getRotation()*GDDPI/180); 
       stackDir=Hep3Vector(1,0,0); 
     }
       break;
   case (detModel::Stack::yDir):
     {
-      m_actualRot.rotateY(-pos->getRotation()*GDDPI/180); 
+      m_actualRot.rotateY(pos->getRotation()*GDDPI/180); 
       stackDir=Hep3Vector(0,1,0); 
     }
     break;
   case (detModel::Stack::zDir):
     {
-      m_actualRot.rotateZ(-pos->getRotation()*GDDPI/180); 
+      m_actualRot.rotateZ(pos->getRotation()*GDDPI/180); 
       stackDir=Hep3Vector(0,0,1); 
     }
     break;
@@ -226,9 +226,9 @@ void IDmapBuilder::insertVolume(Volume* vol)
 	  pos->setVolume(volume);
 	  pos->setTranslation(m_actualPos);
 	  pos->setRotation(m_actualRot);
-	  m_volMap[m_actualID] = pos;
-          // also save a vector of id's
-          m_idvec.push_back(m_actualID);
+ 	  m_volMap[m_actualID] = pos;
+      // also save a vector of id's
+      m_idvec.push_back(m_actualID);
 	}
     }
 }  

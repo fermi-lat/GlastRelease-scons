@@ -93,7 +93,7 @@ int main(int argc, char* argv[]) {
   manager->startVisitor(new detModel::CountMaterial(argv[2]));
 
   detModel::IDmapBuilder idMap(argv[2]);
-  idMap.setMode("digi");
+  //idMap.setMode("digi");
   manager->startVisitor(&idMap);
   idMap.summary(std::cout);
 
