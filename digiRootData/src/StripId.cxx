@@ -15,7 +15,7 @@ ClassImp(StripId)
 //////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////
-StripId::StripId() : m_tag(0)
+StripId::StripId() : m_tag(0), m_cable(0)
 {
 
 }
@@ -80,4 +80,10 @@ Bool_t StripId::setTower(UShort_t towerVal) {
     }
     else
         return kFALSE;
+}
+
+
+Bool_t StripId::setCable(UChar_t cableVal, UChar_t cntrl) {
+    m_cable = cableVal;
+    return (setController(cntrl));
 }

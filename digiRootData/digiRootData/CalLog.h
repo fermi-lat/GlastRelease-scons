@@ -51,7 +51,7 @@ public:
     } CalTrigMode;
     
 private:
-/*
+/*!
 ADC word layout
 (defined in following enum):
 _____________________________________________________

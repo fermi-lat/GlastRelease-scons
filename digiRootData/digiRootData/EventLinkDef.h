@@ -18,6 +18,7 @@
 #pragma link C++ class CalHeader;
 #pragma link C++ class AcdHeader;
 #pragma link C++ class TkrHeader;
+#pragma link C++ class LiveTime;
 
 
 #endif

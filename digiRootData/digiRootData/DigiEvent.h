@@ -16,6 +16,8 @@
 #include "CalLog.h"
 #include "TkrLayer.h"
 
+#include "LiveTime.h"
+
 /*! \class DigiEvent
 \brief This is the top-level event class to store the
 raw (digi) data.
@@ -61,6 +63,9 @@ private:
     Int_t m_numLayers;
     TkrHeader m_TkrHeader;
 
+
+    /// store LiveTime counter data
+    LiveTime m_liveTime;
 
 public:
 
@@ -122,6 +127,8 @@ public:
 
     /// Access Level 1 Trigger data
     inline L1T* getL1T() { return &m_L1T; };
+
+    inline LiveTime* getLiveTime() { return &m_liveTime; };
 
     // inline void setTagger(Tagger *TaggerVal) { m_Tagger = TaggerVal; };
     //inline Tagger *getTagger() const { return m_Tagger; };

@@ -82,6 +82,8 @@ void DigiEvent::Clean(Option_t *option) {
     m_numLayers = -1;
 
     m_L1T.Clean();
+
+    m_liveTime.Clean();
 }
 
 

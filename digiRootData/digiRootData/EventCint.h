@@ -33,6 +33,7 @@ extern void G__set_cpp_environmentEventCint();
 #include "ESAPID.h"
 #include "DigiEvent.h"
 #include "L1T.h"
+#include "LiveTime.h"
 #include "LogId.h"
 #include "StripId.h"
 #include "SubSystemHeader.h"
@@ -75,6 +76,7 @@ extern G__linked_taginfo G__EventCintLN_StripId;
 extern G__linked_taginfo G__EventCintLN_StripIdcLcLdA;
 extern G__linked_taginfo G__EventCintLN_TkrLayer;
 extern G__linked_taginfo G__EventCintLN_TkrLayercLcLTKRAxes;
+extern G__linked_taginfo G__EventCintLN_LiveTime;
 extern G__linked_taginfo G__EventCintLN_DigiEvent;
 extern G__linked_taginfo G__EventCintLN_Tagger;
 
