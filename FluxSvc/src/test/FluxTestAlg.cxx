@@ -5,11 +5,11 @@
 #include "FluxSvc/IFlux.h"
 
 
-// GlastEvent for creating the McEvent stuff
-#include "GlastEvent/TopLevel/Event.h"
-#include "GlastEvent/TopLevel/MCEvent.h"
-#include "GlastEvent/MonteCarlo/McParticle.h"
-#include "GlastEvent/TopLevel/EventModel.h"
+// Event for creating the McEvent stuff
+#include "Event/TopLevel/Event.h"
+#include "Event/TopLevel/MCEvent.h"
+#include "Event/MonteCarlo/McParticle.h"
+#include "Event/TopLevel/EventModel.h"
 
 // Gaudi system includes
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -115,9 +115,9 @@ StatusCode FluxTestAlg::execute() {
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );    
     
-    //mc::McParticleCol*  pcol2= SmartDataPtr<mc::McParticleCol>(eventSvc(), "/Event/MC/McParticleCol");
+    //Event::McParticleCol*  pcol2= SmartDataPtr<Event::McParticleCol>(eventSvc(), "/Event/MC/McParticleCol");
     
-    mc::McParticleCol* pcol = new mc::McParticleCol;
+    Event::McParticleCol* pcol = new Event::McParticleCol;
     eventSvc()->retrieveObject("/Event/MC/McParticleCol",(DataObject *&)pcol);
     
     HepVector3D p,d;
@@ -131,7 +131,7 @@ StatusCode FluxTestAlg::execute() {
         energy = m_flux->energy();
         partName = m_flux->particleName();
     }else{
-        mc::McParticleCol::iterator elem = (*pcol).begin();
+        Event::McParticleCol::iterator elem = (*pcol).begin();
         d = (*elem)->initialFourMomentum().v()*10;
         p = (*elem)->finalPosition();
 
