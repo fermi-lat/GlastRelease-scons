@@ -31,7 +31,7 @@ public:
     //! typedefs
     typedef std::vector<int> HitList;
     typedef HitList::const_iterator const_iterator;
-
+    
     //! Constructors
     //! Null constructor
     TkrDigi() {};
@@ -87,14 +87,14 @@ public:
     const_iterator begin()const {return m_hits.begin();}
     //! end iterator
     const_iterator end()const {return m_hits.end();}
-
+    
 private:
     
     int m_layer;
     int m_view;
     int m_tower;
     int m_tot[2];
-	HitList m_hits;
+    HitList m_hits;
 };
 
 
@@ -107,7 +107,7 @@ inline StreamBuffer& TkrDigi::serialize( StreamBuffer& s ) const {
         << m_tot[0]
         << m_tot[1]
         << m_hits.size();
-	std::vector<int>::const_iterator ih;
+    const_iterator ih;
     for (ih = m_hits.begin(); ih!=m_hits.end(); ih++) {
         s << *ih;
     }
@@ -125,13 +125,13 @@ inline StreamBuffer& TkrDigi::serialize( StreamBuffer& s )       {
         >> m_tot[0]
         >> m_tot[1]
         >> size;
-
+    
     m_hits.resize( size, 0);
-	std::vector<int>::iterator ih;
+    std::vector<int>::iterator ih;
     for (ih = m_hits.begin(); ih!=m_hits.end(); ih++) {
         s >> *ih;
     }
-
+    
     return s;
 }
 
@@ -146,9 +146,9 @@ inline std::ostream& TkrDigi::fillStream( std::ostream& s ) const {
         << " tower: " << m_tower
         << " ToT: " << m_tot[0] << " " << m_tot[1] << std::endl
         << "Number of hits strips: " << size << std::endl;
-
-	std::vector<int>::const_iterator ih;
-	for(ih = m_hits.begin(), j=0; ih != m_hits.end();ih++,j++) {
+    
+    const_iterator ih;
+    for(ih = m_hits.begin(), j=0; ih != m_hits.end();ih++,j++) {
         if (j==10) {j = 0; s << std::endl;}
         s << *ih << " ";
     }
@@ -159,10 +159,10 @@ inline std::ostream& TkrDigi::fillStream( std::ostream& s ) const {
 //! Definition of all container types of TkrDigi
 /*! These are the containers that will go into the TDS.
 */
-    
-    template <class TYPE> class ObjectVector;
-    template <class TYPE> class ObjectList;
-     
-    typedef ObjectVector<TkrDigi> TkrDigiCol;
-    
+
+template <class TYPE> class ObjectVector;
+template <class TYPE> class ObjectList;
+
+typedef ObjectVector<TkrDigi> TkrDigiCol;
+
 #endif
