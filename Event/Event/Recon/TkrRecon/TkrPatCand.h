@@ -27,15 +27,15 @@ public:
 
     /// Define the TkrRecInfo routines
     double        getQuality()                      const {return m_quality;};
-    double        energy(TrackEnd end = Start)      const {return m_energy;}
-    int           layer(TrackEnd end = Start)       const {return m_firstLayer;}
-    int           tower(TrackEnd end = Start)       const {return m_itower;}
-    Point         position(TrackEnd end = Start)    const {return m_position;}
-    Vector        direction(TrackEnd end = Start)   const {return m_direction;}
-    Ray           ray(TrackEnd end = Start)         const {return Ray(position(),direction());}
-    TkrFitPar     TrackPar(TrackEnd end = Start)    const;
-    double        TrackParZ(TrackEnd end = Start)   const {return m_position.z();}
-    TkrFitMatrix  TrackCov(TrackEnd end = Start)    const; 
+    double        getEnergy(TrackEnd end = Start)      const {return m_energy;}
+    int           getLayer(TrackEnd end = Start)       const {return m_firstLayer;}
+    int           getTower(TrackEnd end = Start)       const {return m_itower;}
+    Point         getPosition(TrackEnd end = Start)    const {return m_position;}
+    Vector        getDirection(TrackEnd end = Start)   const {return m_direction;}
+    Ray           getRay(TrackEnd end = Start)         const {return Ray(getPosition(),getDirection());}
+    TkrFitPar     getTrackPar(TrackEnd end = Start)    const;
+    double        getTrackParZ(TrackEnd end = Start)   const {return m_position.z();}
+    TkrFitMatrix  getTrackCov(TrackEnd end = Start)    const; 
     bool          empty(int numHits)                const {return m_firstLayer >= 0;}
 
     //Provide a method to writeout the contents of the class
@@ -57,7 +57,7 @@ public:
     TkrPatCandHit*   getFoLPlane(TrackEnd end = Start);
 
     //Provide access to a vector iterator (do we want this?)
-    CandHitVectorPtr getCandHitPtr()     {return m_hits.begin();}
+    CandHitVectorPtr getHitIterBegin()     {return m_hits.begin();}
            
 private:
     //For sorting the hits

@@ -46,7 +46,7 @@ void TkrPatCand::addCandHit(TkrPatCandHit CandHit)
 
 int TkrPatCand::lastLayer()
 {
-    int finalLayer   = layer();
+    int finalLayer   = getLayer();
 
     if (m_hits.size() > 0)
     {
@@ -69,12 +69,12 @@ TkrPatCandHit* TkrPatCand::getFoLPlane(TrackEnd end)
     }
 }
 
-TkrFitPar TkrPatCand::TrackPar(TrackEnd end)    const
+TkrFitPar TkrPatCand::getTrackPar(TrackEnd end)    const
 {
     return TkrFitPar(m_position.x(),m_direction.x(),m_position.y(),m_direction.y());
 }
     
-TkrFitMatrix TkrPatCand::TrackCov(TrackEnd end)    const
+TkrFitMatrix TkrPatCand::getTrackCov(TrackEnd end)    const
 {
     TkrFitMatrix cov;
 
@@ -89,10 +89,10 @@ TkrFitMatrix TkrPatCand::TrackCov(TrackEnd end)    const
 void TkrPatCand::writeOut(MsgStream& log) const
 {
     log << MSG::DEBUG << " --- TkrPatCandHit::writeOut --- " << endreq;
-    log << MSG::DEBUG << " Position      = " << position().x() << " " <<position().y() << " " << position().z() << endreq;
-    log << MSG::DEBUG << " Direction     = " << direction().x() << " " << direction().y() << " " << direction().z() << endreq;
-    log << MSG::DEBUG << " Energy        = " << energy() << endreq;
-    log << MSG::DEBUG << " first Layer   = " << layer() << endreq;
-    log << MSG::DEBUG << " Tower         = " << tower() << endreq;
+    log << MSG::DEBUG << " Position      = " << getPosition().x()  << " " << getPosition().y()  << " " << getPosition().z()  << endreq;
+    log << MSG::DEBUG << " Direction     = " << getDirection().x() << " " << getDirection().y() << " " << getDirection().z() << endreq;
+    log << MSG::DEBUG << " Energy        = " << getEnergy() << endreq;
+    log << MSG::DEBUG << " first Layer   = " << getLayer() << endreq;
+    log << MSG::DEBUG << " Tower         = " << getTower() << endreq;
 }
 

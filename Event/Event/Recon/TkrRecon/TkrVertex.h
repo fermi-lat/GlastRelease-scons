@@ -38,17 +38,17 @@ public:
    ~TkrVertex() {}
 
     /// Define the TkrBase routines
-    double        getQuality()                      const {return m_quality;};
-    double        energy(TrackEnd end = Start)      const {return m_energy;}
-    int           layer(TrackEnd end = Start)       const {return m_firstLayer;}
-    int           tower(TrackEnd end = Start)       const {return m_itower;}
-    Point         position(TrackEnd end = Start)    const {return m_position;}
-    Vector        direction(TrackEnd end = Start)   const {return m_direction;}
-    Ray           ray(TrackEnd end = Start)         const {return Ray(position(),direction());}
-    TkrFitPar     TrackPar(TrackEnd end = Start)    const {return m_vertexPar;}
-    double        TrackParZ(TrackEnd end = Start)   const {return m_position.z();}
-    TkrFitMatrix  TrackCov(TrackEnd end = Start)    const {return m_vertexCov;}
-    bool          empty(int numHits)                const {return m_firstLayer >= 0;}
+    double        getQuality()                       const {return m_quality;};
+    double        getEnergy(TrackEnd end = Start)    const {return m_energy;}
+    int           getLayer(TrackEnd end = Start)     const {return m_firstLayer;}
+    int           getTower(TrackEnd end = Start)     const {return m_itower;}
+    Point         getPosition(TrackEnd end = Start)  const {return m_position;}
+    Vector        getDirection(TrackEnd end = Start) const {return m_direction;}
+    Ray           getRay(TrackEnd end = Start)       const {return Ray(getPosition(),getDirection());}
+    TkrFitPar     getTrackPar(TrackEnd end = Start)  const {return m_vertexPar;}
+    double        getTrackParZ(TrackEnd end = Start) const {return m_position.z();}
+    TkrFitMatrix  getTrackCov(TrackEnd end = Start)  const {return m_vertexCov;}
+    bool          empty(int numHits)                 const {return m_firstLayer >= 0;}
 
     // Add tracks to the list
     void addTrack(TkrFitTrack* pTrack) {m_tracks.push_back(pTrack);}
@@ -57,8 +57,8 @@ public:
     int  getNumTracks()                {return m_tracks.size();}
 
     // Pointers to track info
-    TkrFitColPtr getTrackPtr()         {return m_tracks.begin();}
-    TkrFitColPtr getTrackEnd()         {return m_tracks.end();}
+    TkrFitColPtr getTrackIterBegin()   {return m_tracks.begin();}
+    TkrFitColPtr getTrackIterEnd()     {return m_tracks.end();}
 
     /// Utilities 
     void writeOut(MsgStream& log) const; 

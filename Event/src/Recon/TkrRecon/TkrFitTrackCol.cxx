@@ -10,7 +10,7 @@ using namespace Event;
 TkrFitTrackCol::~TkrFitTrackCol()
 {
     int          numTracks = getNumTracks();
-    TkrFitColPtr trks      = getTrackPtr();
+    TkrFitColPtr trks      = getTrackIterBegin();
 
     while(numTracks--) delete *trks++;
 }

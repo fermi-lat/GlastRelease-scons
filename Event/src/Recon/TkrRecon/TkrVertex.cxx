@@ -28,9 +28,9 @@ void TkrVertex::writeOut(MsgStream& log) const
 {
     log << MSG::DEBUG << " --- TkrVertex::writeOut --- " << endreq;
 
-    log << MSG::DEBUG << " Position      = " << position().x() << " " <<position().y() << " " << position().z() << endreq;
-    log << MSG::DEBUG << " Direction     = " << direction().x() << " " << direction().y() << " " << direction().z() << endreq;
-    log << MSG::DEBUG << " Energy        = " << energy() << endreq;
-    log << MSG::DEBUG << " first Layer   = " << layer() << endreq;
-    log << MSG::DEBUG << " Tower         = " << tower() << endreq;
+    log << MSG::DEBUG << " Position      = " << getPosition().x()  << " " << getPosition().y()  << " " << getPosition().z() << endreq;
+    log << MSG::DEBUG << " Direction     = " << getDirection().x() << " " << getDirection().y() << " " << getDirection().z() << endreq;
+    log << MSG::DEBUG << " Energy        = " << getEnergy() << endreq;
+    log << MSG::DEBUG << " first Layer   = " << getLayer() << endreq;
+    log << MSG::DEBUG << " Tower         = " << getTower() << endreq;
 }

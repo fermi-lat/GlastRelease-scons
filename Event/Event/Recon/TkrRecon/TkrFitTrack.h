@@ -34,17 +34,17 @@ public:
 
     /// Define the TkrRecInfo access methods
     /// Provides access to the basic information needed by external users
-    double        getQuality()                      const {return m_Q;};
-    double        energy(TrackEnd end = Start)      const {return getFoLPlane(end).getEnergy();}
-    int           layer(TrackEnd end = Start)       const {return getFoLPlane(end).getIDPlane();}
-    int           tower(TrackEnd end = Start)       const {return getFoLPlane(end).getIDTower();}
-    Point         position(TrackEnd end = Start)    const {return getFoLPlane(end).getPoint(TkrFitHit::SMOOTH);}
-    Vector        direction(TrackEnd end = Start)   const;
-    Ray           ray(TrackEnd end = Start)         const {return Ray(position(),direction());}
-    TkrFitPar     TrackPar(TrackEnd end = Start)    const {return getFoLPlane(end).getHit(TkrFitHit::SMOOTH).getPar();}
-    double        TrackParZ(TrackEnd end = Start)   const {return getFoLPlane(end).getZPlane();}
-    TkrFitMatrix  TrackCov(TrackEnd end = Start)    const {return getFoLPlane(end).getHit(TkrFitHit::SMOOTH).getCov();}
-    bool          empty(int numHits)                const;
+    double        getQuality()                       const {return m_Q;};
+    double        getEnergy(TrackEnd end = Start)    const {return getFoLPlane(end).getEnergy();}
+    int           getLayer(TrackEnd end = Start)     const {return getFoLPlane(end).getIDPlane();}
+    int           getTower(TrackEnd end = Start)     const {return getFoLPlane(end).getIDTower();}
+    Point         getPosition(TrackEnd end = Start)  const {return getFoLPlane(end).getPoint(TkrFitHit::SMOOTH);}
+    Vector        getDirection(TrackEnd end = Start) const;
+    Ray           getRay(TrackEnd end = Start)       const {return Ray(getPosition(),getDirection());}
+    TkrFitPar     getTrackPar(TrackEnd end = Start)  const {return getFoLPlane(end).getHit(TkrFitHit::SMOOTH).getPar();}
+    double        getTrackParZ(TrackEnd end = Start) const {return getFoLPlane(end).getZPlane();}
+    TkrFitMatrix  getTrackCov(TrackEnd end = Start)  const {return getFoLPlane(end).getHit(TkrFitHit::SMOOTH).getCov();}
+    bool          empty(int numHits)                 const;
     
     /// Utilities 
     void   clear();
@@ -68,8 +68,8 @@ public:
     int           getNumHits()             const {return m_hits.size();}
     TkrFitPlane   getFoLPlane(TrackEnd end = Start) const;
 
-    TkrFitPlaneConPtr hitIterConst()  {return m_hits.begin();}
-    TkrFitPlaneConPtr hitIterEnd()    {return m_hits.end();}
+    TkrFitPlaneConPtr getHitIterBegin()          {return m_hits.begin();}
+    TkrFitPlaneConPtr getHitIterEnd()            {return m_hits.end();}
 
     /// Add hits to our track 
     void          addPlane(TkrFitPlane& newPlane) {m_hits.push_back(newPlane);}

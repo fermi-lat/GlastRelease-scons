@@ -33,15 +33,15 @@ public:
     void writeOut(MsgStream& log) const;
 
 	//! GAUDI members to be use by the converters
-	static const CLID&  classID()           {return CLID_TkrFitTrackCol;}
-	virtual const CLID& clID()        const {return classID();}
+	static const CLID&  classID()            {return CLID_TkrFitTrackCol;}
+	virtual const CLID& clID()         const {return classID();}
 
     //How many reconstructed tracks are there?
     int                 getNumTracks() const {return m_Tracks.size();}
 
     //Access to tracks through an iterator
-    TkrFitColPtr        getTrackPtr()        {return m_Tracks.begin();}
-    TkrFitColPtr        getTrackEnd()        {return m_Tracks.end();}
+    TkrFitColPtr        getTrackIterBegin()  {return m_Tracks.begin();}
+    TkrFitColPtr        getTrackIterEnd()    {return m_Tracks.end();}
 
     //Access to tracks by index
     TkrFitTrack*        getTrack(int idx)    {return m_Tracks[idx];}

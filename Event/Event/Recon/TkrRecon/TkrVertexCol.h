@@ -50,7 +50,7 @@ public:
     int                 getNumVertices() const {return m_Vertices.size();}
 
     //Access to tracks through an iterator
-    TkrVertexVecPtr     getVertexPtr()         {return m_Vertices.begin();}
+    TkrVertexVecPtr     getVertexIterBegin()   {return m_Vertices.begin();}
 
     //Access to tracks by index
     TkrVertex*          getVertex(int idx)     {return m_Vertices[idx];}

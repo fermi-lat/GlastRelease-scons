@@ -40,38 +40,38 @@ public:
     enum TrackEnd { Null, Start, End };
 
     /// The track quality
-    virtual double       getQuality()                      const = 0;
+    virtual double       getQuality()                       const = 0;
 
     /// Energy of the track
-    virtual double       energy(TrackEnd end = Start)      const = 0;
+    virtual double       getEnergy(TrackEnd end = Start)    const = 0;
 
     /// Layer at this end of the track
-    virtual int          layer(TrackEnd end = Start)       const = 0;
+    virtual int          getLayer(TrackEnd end = Start)     const = 0;
 
     /// Tower at this point on the track
-    virtual int          tower(TrackEnd end = Start)       const = 0;
+    virtual int          getTower(TrackEnd end = Start)     const = 0;
     
     /// Return position at this end of the track
-    virtual Point        position(TrackEnd end = Start)    const = 0;
+    virtual Point        getPosition(TrackEnd end = Start)  const = 0;
     
     /// Return the direction at this end of the track
-    virtual Vector       direction(TrackEnd end = Start)   const = 0;
+    virtual Vector       getDirection(TrackEnd end = Start) const = 0;
 
     /// Provide a Ray at this end
-    virtual Ray          ray(TrackEnd end = Start)         const = 0;
+    virtual Ray          getRay(TrackEnd end = Start)       const = 0;
 
     /// Return the track parameters at this end of the track
-    virtual TkrFitPar    TrackPar(TrackEnd end = Start)    const = 0;
+    virtual TkrFitPar    getTrackPar(TrackEnd end = Start)  const = 0;
 
     /// Return the Z coordinate of the track parameters
-    virtual double       TrackParZ(TrackEnd end = Start)   const = 0;
+    virtual double       getTrackParZ(TrackEnd end = Start) const = 0;
 
     /// Return the track covariance matrix at this end of the track
-    virtual TkrFitMatrix TrackCov(TrackEnd end = Start)    const = 0;
+    virtual TkrFitMatrix getTrackCov(TrackEnd end = Start)  const = 0;
 
     /// Utility function to tell us a valid track/vertex exists
-    virtual bool         empty(int numHits)                const = 0;
-};
+    virtual bool         empty(int numHits)                 const = 0;
+}; 
 
 }; // Namespace
 

@@ -10,7 +10,7 @@ using namespace Event;
 TkrVertexCol::~TkrVertexCol()
 {
     int             numVertices = getNumVertices();
-    TkrVertexVecPtr vtxs        = getVertexPtr();
+    TkrVertexVecPtr vtxs        = getVertexIterBegin();
 
     while(numVertices--) delete *vtxs++;
 }
