@@ -3,6 +3,7 @@
  * Manager T Burnett
  * @verbatim
  *
+ * v3r5p4 27-may-2004  THB change CMTCONFIG to BINDIR in library macro
  * v3r5p4 20-apr-2004  THB remove explicit dependence on GlastPolicy: let gui decide.
  * v3r5p3 19-feb-2004  THB restore pause setting
  * v3r5p2 01-nov-2003  TK  update properties to most common usage; rm duplicate button

@@ -1,7 +1,8 @@
 package GuiSvc
-version v3r5p4
+version v3r5p5
 
 branches GuiSvc cmt doc src
+#$Id$
 
 use gui 
 use GaudiInterface * IExternal
@@ -14,7 +15,7 @@ library GuiSvc -no_share  *.cxx ${GuiSvc_headers}
 
 apply_pattern package_include
 
-macro GuiSvc_lib " -L ${GUISVCROOT}/${CMTCONFIG} -lGuiSvc "\
+macro GuiSvc_lib " -L ${GUISVCROOT}/${BINDIR} -lGuiSvc "\
     WIN32 "${GUISVCROOT}/${BINDIR}/GuiSvc.lib "
 
 # *No* linkopts.
@@ -25,18 +26,6 @@ macro GuiMain "$(GlastMain)"
 
 private
 
-# This following is a pattern to use on any Gui application. A main is not necessary since the lib has 
-# a generic one that looks for $JOBOPTIONS.
-# note redefinition of the macro to *not* include any other dependent libs
-# and to force inclusion of the loadRef (Win32) or -u (linux)
-
-
-# don't know why we need the dl library - TL
-#pattern guiapp \
-#  macro use_linkopts " $(GaudiKernel_linkopts) $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
-#               WIN32 " $(GaudiKernel_linkopts) $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) /include:_GuiSvc_loadRef "
-
-#apply_pattern guiapp
 
 macro WinJobOptions ""  WIN32  test/jobOptions.txt
 
