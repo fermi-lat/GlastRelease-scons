@@ -11,6 +11,7 @@ use GlastPolicy v*
 # this is only a shareable package
 apply_pattern packageShr
 apply_pattern package_headers
+apply_pattern package_include
 
 use Event     v*
 use GlastSvc  v*
