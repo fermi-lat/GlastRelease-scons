@@ -15,7 +15,8 @@ TClonesArray *DigiEvent::s_calDigiStaticCol = 0;
 
 DigiEvent::DigiEvent() {
 
-    if (!s_calDigiStaticCol) s_calDigiStaticCol = new TClonesArray("CalDigi",1536);
+    //if (!s_calDigiStaticCol) s_calDigiStaticCol = new TClonesArray("CalDigi",1536);
+    if (!s_calDigiStaticCol) s_calDigiStaticCol = new TClonesArray("CalDigi",100);
     m_calDigiCol = s_calDigiStaticCol;
     m_numCalDigis = -1;
 

@@ -42,11 +42,9 @@ void CalDigi::Print(Option_t *option) const {
 
 const CalXtalReadout* CalDigi::addReadout(Char_t rangeP, UShort_t adcP, Char_t rangeM, UShort_t adcM) 
 { 
-    // Add a new CalXtalReadout entry, note that
-    // TClonesArrays can only be filled via
-    // a new with placement call
+    // Purpose and Method: Add a new CalXtalReadout entry
     //++m_numXtals;
-    m_readoutCol[m_numReadouts] =  CalXtalReadout(rangeP, adcP, rangeM, adcM);
+    m_readoutCol[m_numReadouts] = CalXtalReadout(rangeP, adcP, rangeM, adcM);
     return &(m_readoutCol[m_numReadouts++]);
 } 
 
