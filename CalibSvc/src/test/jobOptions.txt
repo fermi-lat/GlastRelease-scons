@@ -47,6 +47,15 @@ DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
 			   "Test_1/mocha"};
 
+// CalibDataSvc properties below are explicitly set to the
+// default values as established in CalibDataSvc.cxx.  
+// They're listed below in order of likelihood of need to override, 
+// from most to least likely.
+// Storage type of 14 corresponds to MYSQL
+CalibDataSvc.CalibInstrumentName = "LAT";
+CalibDataSvc.CalibStorageType = 14;
+CalibDataSvc.CalibRootName = "Calib";
+
 EvtClock.delayTime = 36000;
 
 //==============================================================
