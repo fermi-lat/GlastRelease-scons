@@ -15,19 +15,22 @@ public:
     {
         m_func 
             = new TF1("myModel", 
-            "x*( [0]*exp(-0.5*x*x/([1]*[1]))/[1] + [2]*exp(-x/[3]) )");  //+ [4]*exp(-x/[5]) )");
+                "x * ([0] * exp (- 0.5  * x * x /( [1] * [1]))  + [2] * exp (- (x * [3])^[4])   )"
+            );
+            //"x*( [0]*exp(-0.5*x*x/([1]*[1]))/[1] + [2]*exp(-x/[3]) )");  //+ [4]*exp(-x/[5]) )");
 
         // Set up the branches in the output tree.
-        const char* names[]={"a1", "b1", "a2", "b2"}; //, "a3", "b3"};
+        const char* names[]={"p0", "p1", "p2", "p3", "p4"};;
         int npars=sizeof(names)/sizeof(void*);
         m_params.resize(npars);
         for( int i=0; i<npars; ++i){
             m_tree->Branch(names[i], &m_params[i], (std::string(names[i])+"/D").c_str());
         }
-         m_func->SetParLimits(0, 0, 1);
-         m_func->SetParLimits(1, 0.5, 5);
-         m_func->SetParLimits(2, 0, 5);;
-         m_func->SetParLimits(3, 0.1, 1);;
+         m_func->SetParLimits(0, 0.1, 1);  // minimum for the gaussian component
+         m_func->SetParLimits(1, 0.2, 5);
+         m_func->SetParLimits(2, 0, 10);;
+         m_func->SetParLimits(3, 0, 10);;
+         m_func->SetParLimits(4, 0.5, 1.5);;
 
     }
     ~PsfModel(){delete m_func;}
@@ -35,7 +38,7 @@ public:
     void applyFit(TH1 * h) 
     {
         // These initial parameters were obtained interactively
-        double pinit[]={0.01,1.0, 0.2,1.0}; //, 4e-3,3};
+        double pinit[]={0.01,1.0, 1.0,1.0, 1.0}; //, 4e-3,3};
         std::copy(pinit, pinit+sizeof(pinit)/sizeof(double), m_params.begin());
         m_func->SetParameters(&m_params[0]);
        int fitTrys = 0;
