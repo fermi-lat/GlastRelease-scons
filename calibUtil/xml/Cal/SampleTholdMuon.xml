@@ -1,35 +1,22 @@
 <!--
    $Header$
 
-   /**  @file       calCalib_v2r2.dtd
+   /**  @file       SampleTholdMuon.xml
         @authors    J. Bogart
 
-       Sample Asym file.  
+        Sample TholdMuon file.  
 
     */
-
- -->
+-->
 
 <!-- First define doctype and literally insert correct dtd -->
-<!DOCTYPE calCalib [
-<!-- 
-   Overall structure is some header information followed by
-   a sequence of tower data.  Tower data is made up
-   of layer data, in turn made up of data for individual
-   crystals, which consists of data for (1 or 2, depending
-   on calibration type) faces.  
+<!--
+  Whatever creates this file should
+   just insert the contents of calibUtil/xml/CalcalCalib_v2r2.dtd
+   between the [    ]
+-->
 
-   The header information comes in two parts:
-     "generic" is relevant to any sort of calibration data,
-               not just that from the CAL, such as the
-               name of the instrument being calibrated.
-               See further comments above the generic element
-               declaration
-     "dimension" contains all the parameters necessary to figure 
-               out which data goes with which hardware entity.
-               See further comments above the dimension element
-               declaration
-  -->  
+<!DOCTYPE calCalib [
 
 <!ELEMENT calCalib (generic, dimension, dac*, xpos?, tower* ) >
        
@@ -251,15 +238,13 @@
                          pedSig NMTOKEN #REQUIRED
 >
 
-
 ] >
 
 <!-- Now comes the calibration data --> 
 
 <calCalib>
   <generic instrument="EM" timestamp="2003-9-2-12:56"
-           calibType="CAL_Asym" fmtVersion="v2r2">
-
+           calibType="CAL_TholdMuon" fmtVersion="v2r2">
 <!--
     inputSample element is option; comment it out here
     <inputSample>
@@ -272,187 +257,138 @@
   <!-- LAT instrument: 4x4 tower array, 8 layers, 12 columns.  
        Need not contain data for all towers.  If data is only partial, set
        exact="false"  -->
-  <!-- For Asym file, nFace and nRange are always 1.  nXpos should be 1 if
-       xpos data is present -->
-<!-- 
-    In this testing-only file, make nLayer and nXtal smaller than 
-    true values of 8, 12
- -->
-     
-  <dimension nRow="1" nCol="1" nLayer="3" nXtal="4" nFace="1" nRange="1"
-       nXpos="1" />
-
-<!-- new xpos element -->
-<!-- normally expect it (and other arrays further down) to have 12 values, 
-     but the calibration software doesn't care.  Just to check out
-    software, turn those 12's into 3's everywhere.
- -->
-  <xpos values="1.1 2.2 3.3 " />
-
+  <!-- For TholdMuon file,  nRange for this purpose is always 1.   The
+       per-range information is kept in child elements. 
+       There is no xpos data.
+    -->
+  <dimension nRow="1" nCol="1" nLayer="3" nXtal="2" nFace="2" nRange="1" />
 
   <tower iRow="0" iCol="0">
     <layer iLayer="0">
       <xtal iXtal="0">
-        <face end="NA">
-          <asym bigVals="8.0 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
+        <face end="NEG">
+          <tholdMuon FLEVal="8.0" FLESig="0.4" FHEVal="14.1" FHESig="0.8">
+<!-- Just leave out unused range -->
+            <tholdMuonRange range="LEX8" pedVal="6.2" pedSig="0.7" />
+            <tholdMuonRange range="LEX1" pedVal="5.9" pedSig="0.5" />
+            <tholdMuonRange range="HEX8" pedVal="8.2" pedSig="1.7" />
+          </tholdMuon>
+        </face>
+        <face end="POS">
+          <tholdMuon FLEVal="8.1" FLESig="0.5" FHEVal="14.2" FHESig="0.9">
+<!-- Just leave out unused range -->
+            <tholdMuonRange range="LEX8" pedVal="5.8" pedSig="0.6" />
+            <tholdMuonRange range="LEX1" pedVal="6.3" pedSig="0.6" />
+            <tholdMuonRange range="HEX8" pedVal="7.2" pedSig="0.6" />
+          </tholdMuon>
         </face>
       </xtal>
+
 <!-- on to next log -->
       <xtal iXtal="1">
-         <face end="NA">
-           <asym bigVals="8.1 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
+         <face end="NEG">
+           <tholdMuon FLEVal="7.0" FLESig="0.3" FHEVal="13.2" FHESig="0.7">
+<!-- Just leave out unused range -->
+             <tholdMuonRange range="LEX8" pedVal="6.1" pedSig="0.6" />
+             <tholdMuonRange range="LEX1" pedVal="5.8" pedSig="0.4" />
+             <tholdMuonRange range="HEX8" pedVal="8.1" pedSig="1.6" />
+          </tholdMuon>
+        </face>
+        <face end="POS">
+          <tholdMuon FLEVal="8.1" FLESig="0.5" FHEVal="14.2" FHESig="0.9">
+<!-- Just leave out unused range -->
+            <tholdMuonRange range="LEX8" pedVal="5.7" pedSig="0.5" />
+            <tholdMuonRange range="LEX1" pedVal="6.2" pedSig="0.5" />
+            <tholdMuonRange range="HEX8" pedVal="7.1" pedSig="0.5" />
+          </tholdMuon>
         </face>
       </xtal>
+    </layer>
 
-      <xtal iXtal="2">
-         <face end="NA">
-           <asym bigVals="8.2 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
-        </face>
-      </xtal>
-
-      <xtal iXtal="3">
-         <face end="NA">
-           <asym bigVals="8.3 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
-        </face>
-      </xtal>
-    </layer>          <!-- end layer 0 -->
-
+<!-- 2nd layer (layer 1) -->
     <layer iLayer="1">
       <xtal iXtal="0">
-        <face end="NA">
-          <asym bigVals="8.0 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
+        <face end="NEG">
+          <tholdMuon FLEVal="8.0" FLESig="0.4" FHEVal="14.1" FHESig="0.8">
+<!-- Just leave out unused range -->
+            <tholdMuonRange range="LEX8" pedVal="6.2" pedSig="0.7" />
+            <tholdMuonRange range="LEX1" pedVal="5.9" pedSig="0.5" />
+            <tholdMuonRange range="HEX8" pedVal="8.2" pedSig="1.7" />
+          </tholdMuon>
+        </face>
+        <face end="POS">
+          <tholdMuon FLEVal="8.1" FLESig="0.5" FHEVal="14.2" FHESig="0.9">
+<!-- Just leave out unused range -->
+            <tholdMuonRange range="LEX8" pedVal="5.8" pedSig="0.6" />
+            <tholdMuonRange range="LEX1" pedVal="6.3" pedSig="0.6" />
+            <tholdMuonRange range="HEX8" pedVal="7.2" pedSig="0.6" />
+          </tholdMuon>
         </face>
       </xtal>
+
 <!-- on to next log -->
       <xtal iXtal="1">
-         <face end="NA">
-           <asym bigVals="8.1 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
+         <face end="NEG">
+           <tholdMuon FLEVal="7.0" FLESig="0.3" FHEVal="13.2" FHESig="0.7">
+<!-- Just leave out unused range -->
+             <tholdMuonRange range="LEX8" pedVal="6.1" pedSig="0.6" />
+             <tholdMuonRange range="LEX1" pedVal="5.8" pedSig="0.4" />
+             <tholdMuonRange range="HEX8" pedVal="8.1" pedSig="1.6" />
+          </tholdMuon>
+        </face>
+        <face end="POS">
+          <tholdMuon FLEVal="8.1" FLESig="0.5" FHEVal="14.2" FHESig="0.9">
+<!-- Just leave out unused range -->
+            <tholdMuonRange range="LEX8" pedVal="5.7" pedSig="0.5" />
+            <tholdMuonRange range="LEX1" pedVal="6.2" pedSig="0.5" />
+            <tholdMuonRange range="HEX8" pedVal="7.1" pedSig="0.5" />
+          </tholdMuon>
         </face>
       </xtal>
+    </layer>
 
-      <xtal iXtal="2">
-         <face end="NA">
-           <asym bigVals="8.2 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
-        </face>
-      </xtal>
-
-      <xtal iXtal="3">
-         <face end="NA">
-           <asym bigVals="8.3 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
-        </face>
-      </xtal>
-    </layer>         <!-- end layer 1 -->
-
+<!-- 3rd layer (layer 2) -->
     <layer iLayer="2">
       <xtal iXtal="0">
-        <face end="NA">
-          <asym bigVals="8.0 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
+        <face end="NEG">
+          <tholdMuon FLEVal="8.0" FLESig="0.4" FHEVal="14.1" FHESig="0.8">
+<!-- Just leave out unused range -->
+            <tholdMuonRange range="LEX8" pedVal="6.2" pedSig="0.7" />
+            <tholdMuonRange range="LEX1" pedVal="5.9" pedSig="0.5" />
+            <tholdMuonRange range="HEX8" pedVal="8.2" pedSig="1.7" />
+          </tholdMuon>
+        </face>
+        <face end="POS">
+          <tholdMuon FLEVal="8.1" FLESig="0.5" FHEVal="14.2" FHESig="0.9">
+<!-- Just leave out unused range -->
+            <tholdMuonRange range="LEX8" pedVal="5.8" pedSig="0.6" />
+            <tholdMuonRange range="LEX1" pedVal="6.3" pedSig="0.6" />
+            <tholdMuonRange range="HEX8" pedVal="7.2" pedSig="0.6" />
+          </tholdMuon>
         </face>
       </xtal>
+
 <!-- on to next log -->
       <xtal iXtal="1">
-         <face end="NA">
-           <asym bigVals="8.1 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
+         <face end="NEG">
+           <tholdMuon FLEVal="7.0" FLESig="0.3" FHEVal="13.2" FHESig="0.7">
+<!-- Just leave out unused range -->
+             <tholdMuonRange range="LEX8" pedVal="6.1" pedSig="0.6" />
+             <tholdMuonRange range="LEX1" pedVal="5.8" pedSig="0.4" />
+             <tholdMuonRange range="HEX8" pedVal="8.1" pedSig="1.6" />
+          </tholdMuon>
         </face>
-      </xtal>
-
-      <xtal iXtal="2">
-         <face end="NA">
-           <asym bigVals="8.2 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
-        </face>
-      </xtal>
-
-      <xtal iXtal="3">
-         <face end="NA">
-           <asym bigVals="8.3 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
+        <face end="POS">
+          <tholdMuon FLEVal="8.1" FLESig="0.5" FHEVal="14.2" FHESig="0.9">
+<!-- Just leave out unused range -->
+            <tholdMuonRange range="LEX8" pedVal="5.7" pedSig="0.5" />
+            <tholdMuonRange range="LEX1" pedVal="6.2" pedSig="0.5" />
+            <tholdMuonRange range="HEX8" pedVal="7.1" pedSig="0.5" />
+          </tholdMuon>
         </face>
       </xtal>
     </layer>
 
   </tower>
-</calCalib>
 
+</calCalib>

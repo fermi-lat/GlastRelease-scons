@@ -1,17 +1,19 @@
 <!--
    $Header$
 
-   /**  @file       calCalib_v2r2.dtd
+<!--
+   /**  @file       SampleMevPerDac.xml
         @authors    J. Bogart
 
-       Sample Asym file.  
+        Sample MevPerDac file.  
 
     */
-
- -->
+-->
 
 <!-- First define doctype and literally insert correct dtd -->
+
 <!DOCTYPE calCalib [
+
 <!-- 
    Overall structure is some header information followed by
    a sequence of tower data.  Tower data is made up
@@ -258,12 +260,11 @@
 
 <calCalib>
   <generic instrument="EM" timestamp="2003-9-2-12:56"
-           calibType="CAL_Asym" fmtVersion="v2r2">
+           calibType="CAL_MevPerDac" fmtVersion="v2r2">
 
-<!--
-    inputSample element is option; comment it out here
-    <inputSample>
-            Bunch of stuff
+<!-- inputSample element is optional; comment out here
+    <inputSample startTime=..           >
+                The <inputSample> element is optional
     </inputSample>
 -->
   </generic>
@@ -272,187 +273,209 @@
   <!-- LAT instrument: 4x4 tower array, 8 layers, 12 columns.  
        Need not contain data for all towers.  If data is only partial, set
        exact="false"  -->
-  <!-- For Asym file, nFace and nRange are always 1.  nXpos should be 1 if
-       xpos data is present -->
+  <!-- For MevPerDac file, nFace and nRange are always 1.  
+       nXpos should be 1 if xpos data is present -->
 <!-- 
     In this testing-only file, make nLayer and nXtal smaller than 
     true values of 8, 12
  -->
-     
   <dimension nRow="1" nCol="1" nLayer="3" nXtal="4" nFace="1" nRange="1"
        nXpos="1" />
 
+
+
 <!-- new xpos element -->
-<!-- normally expect it (and other arrays further down) to have 12 values, 
-     but the calibration software doesn't care.  Just to check out
-    software, turn those 12's into 3's everywhere.
- -->
-  <xpos values="1.1 2.2 3.3 " />
+  <xpos values="1.1 2.2 3.3" />
 
 
   <tower iRow="0" iCol="0">
     <layer iLayer="0">
       <xtal iXtal="0">
         <face end="NA">
-          <asym bigVals="8.0 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
+          <mevPerDac bigVal="8.0" bigSig="1.1" smallVal="4.3" smallSig="0.8">
+            <bigSmall end="NEG" 
+                     bigSmallRatioVals="2.1 2.3 3.1"
+                     bigSmallRatioSigs="0.6 1.1 2.1"
+              />
+             <bigSmall end="POS" 
+                       bigSmallRatioVals="2.2 2.4 3.2"
+                       bigSmallRatioSigs="0.55 1.05 2.05"
+              />
+          </mevPerDac>
         </face>
       </xtal>
-<!-- on to next log -->
+
       <xtal iXtal="1">
          <face end="NA">
-           <asym bigVals="8.1 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
+           <mevPerDac bigVal="7.0" bigSig="1.0" smallVal="4.2" smallSig="0.7">
+            <bigSmall end="NEG" 
+                     bigSmallRatioVals="2.0 2.2 3.0"
+                     bigSmallRatioSigs="0.5 1.0 2.0"
+              />
+             <bigSmall end="POS" 
+                       bigSmallRatioVals="2.1 2.3 3.1"
+                       bigSmallRatioSigs="0.54 1.04 2.04"
+              />
+          </mevPerDac>
         </face>
       </xtal>
 
       <xtal iXtal="2">
-         <face end="NA">
-           <asym bigVals="8.2 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
-        </face>
-      </xtal>
-
-      <xtal iXtal="3">
-         <face end="NA">
-           <asym bigVals="8.3 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
-        </face>
-      </xtal>
-    </layer>          <!-- end layer 0 -->
-
-    <layer iLayer="1">
-      <xtal iXtal="0">
         <face end="NA">
-          <asym bigVals="8.0 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
-        </face>
-      </xtal>
-<!-- on to next log -->
-      <xtal iXtal="1">
-         <face end="NA">
-           <asym bigVals="8.1 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
-        </face>
-      </xtal>
-
-      <xtal iXtal="2">
-         <face end="NA">
-           <asym bigVals="8.2 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
+          <mevPerDac bigVal="8.0" bigSig="1.1" smallVal="4.3" smallSig="0.8">
+            <bigSmall end="NEG" 
+                     bigSmallRatioVals="2.1 2.3 3.1"
+                     bigSmallRatioSigs="0.6 1.1 2.1"
+              />
+             <bigSmall end="POS" 
+                       bigSmallRatioVals="2.2 2.4 3.2"
+                       bigSmallRatioSigs="0.55 1.05 2.05"
+              />
+          </mevPerDac>
         </face>
       </xtal>
 
       <xtal iXtal="3">
          <face end="NA">
-           <asym bigVals="8.3 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
-        </face>
-      </xtal>
-    </layer>         <!-- end layer 1 -->
-
-    <layer iLayer="2">
-      <xtal iXtal="0">
-        <face end="NA">
-          <asym bigVals="8.0 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
-        </face>
-      </xtal>
-<!-- on to next log -->
-      <xtal iXtal="1">
-         <face end="NA">
-           <asym bigVals="8.1 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
-        </face>
-      </xtal>
-
-      <xtal iXtal="2">
-         <face end="NA">
-           <asym bigVals="8.2 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
-        </face>
-      </xtal>
-
-      <xtal iXtal="3">
-         <face end="NA">
-           <asym bigVals="8.3 9.1 10.2" 
-                bigSigs="0.8 1.2  1.4"
-                smallVals="7.0 7.0 7.0"
-                smallSigs="0.7 0.6 0.7"
-                NsmallPbigVals="1.0 8.0 1.0"
-                NsmallPbigSigs="0.2  0.4  0.2"
-                PsmallNbigVals="1.5 8.5 1.5"
-                PsmallNbigSigs="0.1 0.2 0.3"   />
+           <mevPerDac bigVal="7.0" bigSig="1.0" smallVal="4.2" smallSig="0.7">
+            <bigSmall end="NEG" 
+                     bigSmallRatioVals="2.0 2.2 3.0"
+                     bigSmallRatioSigs="0.5 1.0 2.0"
+              />
+             <bigSmall end="POS" 
+                       bigSmallRatioVals="2.1 2.3 3.1"
+                       bigSmallRatioSigs="0.54 1.04 2.04"
+              />
+          </mevPerDac>
         </face>
       </xtal>
     </layer>
 
-  </tower>
-</calCalib>
+<!--    -->
 
+    <layer iLayer="1">
+      <xtal iXtal="0">
+        <face end="NA">
+          <mevPerDac bigVal="18.0" bigSig="1.1" smallVal="4.3" smallSig="0.8">
+            <bigSmall end="NEG" 
+                     bigSmallRatioVals="2.1 2.3 3.1"
+                     bigSmallRatioSigs="0.6 1.1 2.1"
+              />
+             <bigSmall end="POS" 
+                       bigSmallRatioVals="2.2 2.4 3.2"
+                       bigSmallRatioSigs="0.55 1.05 2.05"
+              />
+          </mevPerDac>
+        </face>
+      </xtal>
+
+      <xtal iXtal="1">
+         <face end="NA">
+           <mevPerDac bigVal="17.0" bigSig="1.0" smallVal="4.2" smallSig="0.7">
+            <bigSmall end="NEG" 
+                     bigSmallRatioVals="2.0 2.2 3.0"
+                     bigSmallRatioSigs="0.5 1.0 2.0"
+              />
+             <bigSmall end="POS" 
+                       bigSmallRatioVals="2.1 2.3 3.1"
+                       bigSmallRatioSigs="0.54 1.04 2.04"
+              />
+          </mevPerDac>
+        </face>
+      </xtal>
+
+      <xtal iXtal="2">
+        <face end="NA">
+          <mevPerDac bigVal="18.0" bigSig="1.1" smallVal="4.3" smallSig="0.8">
+            <bigSmall end="NEG" 
+                     bigSmallRatioVals="2.1 2.3 3.1"
+                     bigSmallRatioSigs="0.6 1.1 2.1"
+              />
+             <bigSmall end="POS" 
+                       bigSmallRatioVals="2.2 2.4 3.2"
+                       bigSmallRatioSigs="0.55 1.05 2.05"
+              />
+          </mevPerDac>
+        </face>
+      </xtal>
+
+      <xtal iXtal="3">
+         <face end="NA">
+           <mevPerDac bigVal="17.0" bigSig="1.0" smallVal="4.2" smallSig="0.7">
+            <bigSmall end="NEG" 
+                     bigSmallRatioVals="2.0 2.2 3.0"
+                     bigSmallRatioSigs="0.5 1.0 2.0"
+              />
+             <bigSmall end="POS" 
+                       bigSmallRatioVals="2.1 2.3 3.1"
+                       bigSmallRatioSigs="0.54 1.04 2.04"
+              />
+          </mevPerDac>
+        </face>
+      </xtal>
+    </layer>
+
+    <layer iLayer="2">
+      <xtal iXtal="0">
+        <face end="NA">
+          <mevPerDac bigVal="28.0" bigSig="1.1" smallVal="4.3" smallSig="0.8">
+            <bigSmall end="NEG" 
+                     bigSmallRatioVals="2.1 2.3 3.1"
+                     bigSmallRatioSigs="0.6 1.1 2.1"
+              />
+             <bigSmall end="POS" 
+                       bigSmallRatioVals="2.2 2.4 3.2"
+                       bigSmallRatioSigs="0.55 1.05 2.05"
+              />
+          </mevPerDac>
+        </face>
+      </xtal>
+
+      <xtal iXtal="1">
+         <face end="NA">
+           <mevPerDac bigVal="27.0" bigSig="1.0" smallVal="4.2" smallSig="0.7">
+            <bigSmall end="NEG" 
+                     bigSmallRatioVals="2.0 2.2 3.0"
+                     bigSmallRatioSigs="0.5 1.0 2.0"
+              />
+             <bigSmall end="POS" 
+                       bigSmallRatioVals="2.1 2.3 3.1"
+                       bigSmallRatioSigs="0.54 1.04 2.04"
+              />
+          </mevPerDac>
+        </face>
+      </xtal>
+
+      <xtal iXtal="2">
+        <face end="NA">
+          <mevPerDac bigVal="28.0" bigSig="1.1" smallVal="4.3" smallSig="0.8">
+            <bigSmall end="NEG" 
+                     bigSmallRatioVals="2.1 2.3 3.1"
+                     bigSmallRatioSigs="0.6 1.1 2.1"
+              />
+             <bigSmall end="POS" 
+                       bigSmallRatioVals="2.2 2.4 3.2"
+                       bigSmallRatioSigs="0.55 1.05 2.05"
+              />
+          </mevPerDac>
+        </face>
+      </xtal>
+
+      <xtal iXtal="3">
+         <face end="NA">
+           <mevPerDac bigVal="27.0" bigSig="1.0" smallVal="4.2" smallSig="0.7">
+            <bigSmall end="NEG" 
+                     bigSmallRatioVals="2.0 2.2 3.0"
+                     bigSmallRatioSigs="0.5 1.0 2.0"
+              />
+             <bigSmall end="POS" 
+                       bigSmallRatioVals="2.1 2.3 3.1"
+                       bigSmallRatioSigs="0.54 1.04 2.04"
+              />
+          </mevPerDac>
+        </face>
+      </xtal>
+    </layer>
+  </tower>
+
+</calCalib>
