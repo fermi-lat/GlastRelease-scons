@@ -187,14 +187,14 @@ private:
         unsigned deltaEventTime() const { return m_deltaEventTime; };
 
         /// Methods to query bits in the condition summary word
-        bool roiSet() const { return (m_conditionSummary & ROI); };
-        bool tkrSet() const { return (m_conditionSummary & TKR); };
-        bool calLeSet() const { return (m_conditionSummary & CALLE); };
-        bool calHeSet() const { return (m_conditionSummary & CALHE); };
-        bool cnoSet() const { return (m_conditionSummary & CNO); };
-        bool periodicSet() const { return (m_conditionSummary & PERIODIC); };
-        bool solicitedSet() const { return (m_conditionSummary & SOLICITED); };
-        bool externalSet() const { return (m_conditionSummary & EXTERNAL); };
+        bool roiSet() const { return( (m_conditionSummary & ROI) != 0); };
+        bool tkrSet() const { return( (m_conditionSummary & TKR) != 0); };
+        bool calLeSet() const { return( (m_conditionSummary & CALLE) != 0); };
+        bool calHeSet() const { return( (m_conditionSummary & CALHE) != 0); };
+        bool cnoSet() const { return( (m_conditionSummary & CNO) != 0); };
+        bool periodicSet() const { return( (m_conditionSummary & PERIODIC) != 0); };
+        bool solicitedSet() const { return( (m_conditionSummary & SOLICITED) != 0) ; };
+        bool externalSet() const { return( (m_conditionSummary & EXTERNAL) != 0); };
 
     private:
 
