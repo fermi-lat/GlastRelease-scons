@@ -17,12 +17,12 @@ apply_pattern package_headers
 
 library CRflux *.cxx test/CRTestAlg.cxx\
  Dll/*.cxx\
-$(BFEMflux_headers)
+$(CRflux_headers)
 
 
 macro_append CRflux_headers "" WIN32 "../xml/*.xml test/*.txt test/*.xml Dll/*.cxx"
 # test program, using local joboptions
-public set JOBOPTIONS ${BFEMFLUXROOT}/src/test/jobOptions.txt
+public set JOBOPTIONS ${CRFLUXROOT}/src/test/jobOptions.txt
 apply_pattern package_test
 
 #application CRfluxTest test/CRTestAlg.cxx *.cxx  ${FluxDisplay_headers} ${GlastMain} ${Win32Resource}
