@@ -413,7 +413,8 @@ long RdbGUIWindow::onInsert(FXObject*,FXSelector, void*)
       || (m_connect == 0) || !(m_connect->isConnected()))
     return 1;
 
-  m_dgInsert->setTableName(m_dgInsert->getLastTblName());
+  int index = uiTblColList->getTableList()->getCurrentItem(); 
+  m_dgInsert->setTableName((uiTblColList->getTableList()->getItemText(index)).text());
   // Fill the form
   m_rdbManager->startVisitor(m_dgInsert);
   // Set the mode of the dialog to Insert
@@ -439,8 +440,7 @@ long RdbGUIWindow::onUpdateLastRow(FXObject*,FXSelector, void*)
       || (m_dgInsert->getLastRow() < 0))
     return 1;
 
-  int index = uiTblColList->getTableList()->getCurrentItem(); 
-  m_dgInsert->setTableName((uiTblColList->getTableList()->getItemText(index)).text());
+  m_dgInsert->setTableName(m_dgInsert->getLastTblName());
   // Build the form
   m_rdbManager->startVisitor(m_dgInsert);
   // Fill the form with the last row inserted in the DB
