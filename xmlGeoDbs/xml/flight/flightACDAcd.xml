@@ -73,14 +73,14 @@
          sensitive="posHit"
 
   -->
-<!--
+
     <box name="xRibbonTop"
          XREF="ribbonWidth"
          YREF="xRibbonTop_l"
          ZREF="ribbonThickness"
          materialREF="ribbonMat"
          detectorTypeREF="eDTypeACDRibbon" />
-
+<!--
     <box name="yRibbonTopEdge"
          YREF="ribbonWidth"
          XREF="yRibbonTopEdge_l"
@@ -350,9 +350,8 @@
       </posXYZ>
 
 <!-- now for x-ribbons -->
-<!--
       <posXYZ volume="xRibbonTop"
-              XREF="topXRibbonOuter_dxn"
+              XREF="xRibbonOuter_dxn"
               ZREF="topXRibbon_dz" >
             <idField name="fACDCmp" valueREF="eACDRibbon" />
             <idField name="fMeasure" valueREF="eMeasureX" />
@@ -361,7 +360,7 @@
       </posXYZ>
 
       <posXYZ volume="xRibbonTop"
-              XREF="topXRibbonInner_dxn"
+              XREF="xRibbonInner_dxn"
               ZREF="topXRibbon_dz" >
             <idField name="fACDCmp" valueREF="eACDRibbon" />
             <idField name="fMeasure" valueREF="eMeasureX" />
@@ -370,7 +369,7 @@
       </posXYZ>
 
       <posXYZ volume="xRibbonTop"
-              XREF="topXRibbonInner_dx"
+              XREF="xRibbonInner_dx"
               ZREF="topXRibbon_dz" >
             <idField name="fACDCmp" valueREF="eACDRibbon" />
             <idField name="fMeasure" valueREF="eMeasureX" />
@@ -379,15 +378,15 @@
       </posXYZ>
 
       <posXYZ volume="xRibbonTop"
-              XREF="topXRibbonOuter_dx"
+              XREF="xRibbonOuter_dx"
               ZREF="topXRibbon_dz" >
             <idField name="fACDCmp" valueREF="eACDRibbon" />
             <idField name="fMeasure" valueREF="eMeasureX" />
             <idField name="fRibbon"  value="3" />
             <idField name="fRibbonSegment" value="1" />    
       </posXYZ>
--->
-<!-- X ribbon segments.  They're || X-axis, so "measure" y. Do them by
+
+<!-- Y ribbon segments.  They're || X-axis, so "measure" y. Do them by
      ribbon number (0 to 3, with 0 having most neg. Y displacment)
      and within ribbon by segment, in order of icreasing X-displ.
      There are 4 ribbons, each divided into 5 segements. -->

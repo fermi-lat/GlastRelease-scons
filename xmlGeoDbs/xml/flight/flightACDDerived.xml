@@ -38,14 +38,15 @@
 
         <const name="ACDTopTransverse" >
           <notes>Transverse dimension of envelope which will contain
-          ACD top tiles and ribbons (1 nov 2002)</notes>
+          ACD top tiles and ribbons.  As of July 2003, just set to 
+          value large enough to include all top tiles as positioned
+          from 3-d model.  From this model there is an approx. 3 mm
+          (actually 3.3)   gap between side tiles (top row) and top tiles 
+        </notes>
           <minus>
             <refer refTo="ACDSidesGap" />
             <mul>
-              <add>
-                <refer refTo="ribbonThickness" />
-                <refer refTo="ribbonGap" />
-              </add>
+              <refer refTo="ACDSideTopTileGap" />
               <const value="2" uType="count" />                  
             </mul>
           </minus>          
@@ -144,24 +145,14 @@
       a plane of constant x (perp. to x axis) and similarly for yRibbon. 
       In current (nov 2002) model yRibbons are divided into 5 segments
       along top; xRibbons have only a single top segment
--->
-<!--
+  -->
          
         <const name="xRibbonTop_l">
-          <notes>These ribbons run the full distance between
-          paralell sides except for ribbonGap and ribbonThickness
-                on either side</notes>
-          <minus>
-            <refer refTo="ACDSidesGap" />
-            <add>
-              <refer refTo="ribbonGap" />
-              <refer refTo="ribbonGap" />
-              <refer refTo="ribbonThickness" />
-              <refer refTo="ribbonThickness" />
-            </add>
-          </minus>
+          <notes>These ribbons run the full distance across ACDTop
+              (actually more, but that's all that will fit)</notes>
+          <refer refTo="ACDTopTransverse" />
         </const>
--->
+
         <!-- There are 3 different possible lengths for bits of X ribbon:
              one for ribbon segments under the central tiles, one for 
              ribbon segments under "mid" tiles (columns 1 and 3) and one
@@ -514,10 +505,16 @@
                topXRibbonInner_dx, _dxn
          The Z and X displacements aren't very important since the Y ribbons
          are only on top to connect the side pieces, not to detect 
-         anything.  For simplicity, and until we hear otherwise, 
-         put Y ribbons along bottom of envelope volume for now with
-         displacements in X equal to the ones used for top tiles. -->
-<!--
+         anything.  Originally, for simplicity,
+         put Y ribbons along bottom of envelope volume with
+         displacements in X equal to the ones used for top tiles. 
+
+         3-d model bears out the Z guess.  X displacements should
+         be the same for top segments as for the same ribbons
+         running down the sides; that is, they're governed by
+         spacing of side tiles.
+-->
+
          <const name="topXRibbon_dz" >
            <notes>Z displacement for long ribbon segments running || to
                  Y-axis along top.</notes>
@@ -527,26 +524,44 @@
            </minus>
          </const>
 
-         <const name="topXRibbonOuter_dxn" >
-           <notes> nominal x displacement of top Y ribbon #0 </notes>
-           <refer refTo="topTileEdge_dxn" />
+<!-- Note following displacements are relative to origin, not
+     relative to dovetailed ACD side.  This is OK since even
+     on sides ribbons don't partake of dovetailing.  Gaps between
+     tiles are still placed symmetrically w.r.t. origin. Dovetailing
+     is handled by different widths of tiles in columns 0 and 4. -->
+         <const name="xRibbonInner_dx" >
+           <notes> x displacement of  Y ribbon #2 </notes>
+           <half>
+             <add>
+               <refer refTo="ribbonThickness" />
+               <refer refTo="sideTileTransMid" />
+             </add>
+           </half>
          </const>
 
-         <const name="topXRibbonInner_dxn" >
-           <notes> nominal x displacement of top Y ribbon #1 </notes>
-           <refer refTo="topTileMid_dxn" />
+         <const name="xRibbonOuter_dx" >
+           <notes> x displacement of Y ribbon #3 </notes>
+           <add>
+             <refer refTo="xRibbonInner_dx" />
+             <refer refTo="sideTileTransMid" />
+             <refer refTo="ribbonThickness" />
+           </add>
          </const>
 
-         <const name="topXRibbonInner_dx" >
-           <notes> nominal x displacement of top Y ribbon #2 </notes>
-           <refer refTo="topTileMid_dx" />
+         <const name="xRibbonOuter_dxn" >
+           <notes>  x displacement of Y ribbon #0 </notes>
+           <uminus>
+             <refer refTo="xRibbonOuter_dx" />
+           </uminus>
          </const>
 
-         <const name="topXRibbonOuter_dx" >
-           <notes> nominal x displacement of top Y ribbon #3 </notes>
-           <refer refTo="topTileEdge_dx" />
+         <const name="xRibbonInner_dxn" >
+           <notes> x displacement of Y ribbon #1 </notes>
+           <uminus>
+             <refer refTo="xRibbonInner_dx" />
+           </uminus>
          </const>
--->
+
 <!--
      For the 20 X ribbon segments
           3 Z displacements

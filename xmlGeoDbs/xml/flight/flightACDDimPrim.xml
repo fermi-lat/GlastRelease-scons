@@ -167,6 +167,9 @@ for sides to dovetail around top support, from 3-d model 6-23-03</prim>
   of tiles  (one X-side and one Y-side).  Updated for 3-d model 6-23-03.
   Old value was 4.0.</prim>
 
+  <prim name="ACDSideTopTileGap" value="3.3">Transverse distance between
+   top edge tile and nearest side tile. From 3-d model 6-23-03.</prim>
+
   <prim name="ACDTileMaxZ" value="772.6">Very top of top tiles in 
   columns 0 and 4, from 3-d model 6-23-03</prim>
 
@@ -175,23 +178,25 @@ for sides to dovetail around top support, from 3-d model 6-23-03</prim>
   columns 0 and 4, from 3-d model 6-23-03</prim>
 
 <!-- ribbon stuff -->
-  <prim name="ribbonWidth" value="11.0">Width of scintillating ribbon</prim>
-  <prim name="ribbonThickness" value="2.5">
-Thickness of scintillating ribbon.  For 3-d model 6-23-03 old value of 4.5mm
-doesn't fit.  In lieu of real information, arbitrarily reduce it.</prim>
+  <prim name="ribbonWidth" value="14.0">Width of scintillating ribbon
+(from 3-d model 6-23-03)</prim>
+
+  <prim name="ribbonThickness" value="5">
+Thickness of scintillating ribbon, confirmed 30 July 2003</prim>
+
   <prim name="ribbonGap" value= ".5" >Distance between ribbon and the adjacent
  top tile, as of Oct. 2002.  
 As of new 3-d model 6-23-03 old value of 2.5 caused overlap.  With
-no official blessing, try something smaller</prim>
+no official blessing, try something smaller.  According to model there
+is no gap between ribbon and topmost tiles.</prim>
   <prim name="ribbonOverlap" value="15.0">Amount X ribbon segment overshoots
-     tile edge of tile it's under</prim>
+     tile edge of tile it's under. (This is a figment of the simulated
+model.  Real ribbons don't come in disconnected segments.)</prim>
 
  <!-- old number with new name (was "topStandoff"  
     No guarantee it's correct. -->
   <prim name="TKRACDSupportGap" value="10.0"> distance between bottom of
-ACD support and top of TKR.  **NOTE** increased from 10.0 to 45.0
-to keep ACD supports from colliding with grid (4 nov 2002)
-30 April 2003: see what happens when I change it back to 10.0
+ACD support and top of TKR.  
 </prim>
 
 <!-- following is probably obsolete -->
