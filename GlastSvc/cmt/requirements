@@ -1,5 +1,5 @@
 package GlastSvc
-version v4r1
+version v4r2
 branches src cmt doc
 
 use GlastEvent
@@ -41,5 +41,5 @@ macro WinInclude "" WIN32 "test/*.h  test/*.txt test/*.xml"
 public 
 # build this for non-shareable testing
 set JOBOPTIONS  "${GLASTSVCROOT}/src/test/jobOptions.txt"
-application test  ${GlastMain} test/*.cpp   $(WinInclude) 
+application test_GlastSvc  ${GlastMain} test/*.cpp   $(WinInclude) 
 
