@@ -1,5 +1,5 @@
 package RootIo
-version v12r5p2
+version v12r5p3
 
 # $Header$
 
@@ -37,6 +37,7 @@ library RootIo  $(root_packages_import) -s=../RootIo $(source) -s=../src $(sourc
 
 apply_pattern package_test
 apply_pattern package_Cshlibflags
+private
 
 public
 #specify these to disable rootcint portion of vcproj_library_header set by RootPolicy

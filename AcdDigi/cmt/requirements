@@ -1,5 +1,5 @@
 package AcdDigi
-version v1r10
+version v1r10p0
 # $Id$
 
 use GlastSvc v9r*
@@ -22,6 +22,7 @@ library AcdDigi *.cxx \
                 ${AcdDigi_headers}               
 
 apply_pattern package_Cshlibflags
+private
 
 
 application test_AcdUtil AcdDigiUtil.cxx test/util/*.cxx \

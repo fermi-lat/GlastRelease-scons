@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v0r3p0  22-Jul-2004 hmk Address JIRA CMT-25, bug in CMT, with extra private statement
 v0r3    22-Jul-2004 hmk Activating ACD digi conversion
 v0r2p0  23-Jun-2004 hmk Check EventSummary::marker in event selector
 v0r2    21-Jun-2004 hmk add in LDFFILE and LDFFITS as storage types

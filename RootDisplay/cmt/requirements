@@ -1,5 +1,5 @@
 package RootDisplay
-version v0r2p0
+version v0r2p1
 
 # $Header$
 
@@ -21,6 +21,7 @@ private
 # get flags to build shared library
 
 apply_pattern package_Cshlibflags
+private
 
 apply_pattern package_headers
 

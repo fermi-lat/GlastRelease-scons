@@ -1,5 +1,5 @@
 package ntupleWriterSvc
-version v3r5
+version v3r5p0
 
 #$Id$
 author H. Kelly <heather@heapop.gsfc.nasa.gov>
@@ -19,6 +19,7 @@ private
 # get flags to build shared library
 
 apply_pattern package_Cshlibflags
+private
 
 apply_pattern package_headers
 
