@@ -181,12 +181,12 @@ public:
     const CLID& CLID_TkrPatCandCol      = CLID_TkrPatCand + CLID_ObjectVector;  // Is this really Layers, Clusters, RecObjs
     const CLID& CLID_SiRecObjs          = 3104;  // or rather Layer, Cluster, RecObj objects?
     const CLID& CLID_TkrFitTrack        = 3105;
-    const CLID& CLID_TkrFitTrackCol     = CLID_TkrFitTrack + CLID_ObjectVector;  // or rather Layer, Cluster, RecObj objects?
+ // or rather Layer, Cluster, RecObj objects?
     const CLID& CLID_TkrVertex          = 3106;  
     const CLID& CLID_TkrVertexCol       = CLID_TkrVertex+CLID_ObjectVector;// CLID_TkrVertexCol is ObjectVector of TkrVertices
     const CLID& CLID_TkrFitTrackBase    = 3107;
     const CLID& CLID_TkrFitTrackBaseCol = CLID_TkrFitTrackBase + CLID_ObjectVector;
-    const CLID& CLID_TkrPatCandHit      = 3108;
+    const CLID& CLID_TkrFitTrackCol     = CLID_TkrFitTrackBaseCol; //for converters to correct inconsistency in class definitions
     const CLID& CLID_TkrPatCandHitCol   = CLID_TkrPatCandHit + CLID_ObjectVector;
 
     const CLID& CLID_TkrTrackTabCol   = 3109;
