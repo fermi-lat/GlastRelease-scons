@@ -4,26 +4,38 @@ package CalibSvc
 ### Might end up changing this name to have a prefix a bit more general
 ### than "Calib"; e.g., DetSvc or CondSvc
 
-version v0r13p1
+version v0r13p2
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
-use CalibData v0r*
-use calibUtil v0r*
-use calibRootData v1r*
-use astro       v1r*
-use GaudiInterface * IExternal
+use GlastPolicy v*
 
 apply_pattern component_library library=CalibSvc
 
+# the runtime public interface to this package must expose sharables from 
+# calibUtil and calibRootData
+use calibUtil v0r* -no_auto_imports
+use calibRootData v1r* -no_auto_imports
+
+#because the latter package unfortunately exposes RootcintPolicy, the following macros have to be defined
+# to protect windows builds. this really needs fixing!
+macro rootcint_begin "" vsnet "<!--"
+macro rootcint_end   "" vsnet "-->"
 
 private
 # _______________________________________________________
+use CalibData v0r*
+use astro       v1r*
+use GaudiInterface * IExternal
+use ROOT * IExternal
 
 apply_pattern package_include
 apply_pattern package_headers
 
-library CalibSvc *.cxx  CalibDataSvc/*.cxx      \
+macro_append includes ' $(ppcmd)"$(calibUtil_root)" $(ppcmd)"$(calibRootData_root)" $(ppcmd)"$(commonRootData_root)"  '
+
+library CalibSvc -import=calibUtil -import=calibRootData *.cxx\
+                        CalibDataSvc/*.cxx      \
                         CalibMySQLCnv/*.cxx     \
                         CalibXMLCnv/*.cxx       \
                         CalibXMLCnv/cnv/*.cxx   \
@@ -35,10 +47,8 @@ library CalibSvc *.cxx  CalibDataSvc/*.cxx      \
 
 ## macro WinInclude "" WIN32 "test/*.h test/*.txt"
 use GlastSvc v9r* 
-
-use RootIo   v* 
-
-use LdfEvent v1r*
+use RootIo v* -no_auto_imports
+use LdfEvent v0r*
 
 public
 set JOBOPTIONS "${CALIBSVCROOT}/src/test/jobOptions.txt"
