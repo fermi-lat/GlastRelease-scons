@@ -4,7 +4,7 @@
 <overview>Derived constants specific to CAL.
 </overview>
 
-        <const name="CALMaxLayer" uType="count" >
+        <const name="CALMaxLayer" uType="count"  type="int">
           <notes>upper limit on Cal layer idfield value</notes>
           <minus>
             <refer refTo="CALnLayer" />
@@ -364,7 +364,7 @@ grid, etc. (may be superseded by info from Eric)</notes>
         </const>
 
 <!-- Make sure values for CALStructural field are distinct from layer #'s -->
-        <const name="eBottomFrame" uType="count">
+        <const name="eBottomFrame" uType="count"  type="int">
           <notes>For use in identifiers</notes>
           <add>
             <refer refTo="CALnLayer" />
@@ -372,7 +372,7 @@ grid, etc. (may be superseded by info from Eric)</notes>
           </add>
         </const>
 
-        <const name="eTopFrame" uType="count">
+        <const name="eTopFrame" uType="count"  type="int">
           <notes>For use in identifiers</notes>
           <add>
             <refer refTo="eBottomFrame" />
@@ -380,7 +380,7 @@ grid, etc. (may be superseded by info from Eric)</notes>
           </add>
         </const>
 
-        <const name="eBottomPlate" uType="count">
+        <const name="eBottomPlate" uType="count" type="int">
           <notes>For use in identifiers</notes>
           <add>
             <refer refTo="eTopFrame" />
@@ -388,7 +388,7 @@ grid, etc. (may be superseded by info from Eric)</notes>
           </add>
         </const>
 
-        <const name="eTopPlate" uType="count">
+        <const name="eTopPlate" uType="count" type="int">
           <notes>For use in identifiers</notes>
           <add>
             <refer refTo="eBottomPlate" />

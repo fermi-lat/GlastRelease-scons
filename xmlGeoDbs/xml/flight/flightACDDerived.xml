@@ -64,7 +64,7 @@
         </const>
  -->
 
-        <const name="XTopTileMax" uType="count">
+        <const name="XTopTileMax" uType="count" type="int">
           <notes>Convenience for idField definitons</notes>
           <minus>
             <refer refTo="numXTopTiles" />
@@ -72,7 +72,7 @@
           </minus>
         </const>
 
-        <const name="YTopTileMax" uType="count">
+        <const name="YTopTileMax" uType="count" type="int">
           <notes>Convenience for idField definitons</notes>
           <minus>
             <refer refTo="numYTopTiles" />
@@ -81,7 +81,7 @@
         </const>
 
 
-        <const name="ACDShortRowMin" uType="count" >
+        <const name="ACDShortRowMin" uType="count"  type="int">
           <notes>row number of first short ACD side row</notes>
           <add>
             <refer refTo="ACDLongRowMax" />
@@ -89,7 +89,7 @@
           </add>
         </const>
 
-        <const name="ACDShortRowMax" uType="count" >
+        <const name="ACDShortRowMax" uType="count"  type="int">
           <notes>row number of last short ACD side row</notes>
           <minus>
             <refer refTo="numSideRows" />
@@ -97,7 +97,7 @@
           </minus>
         </const>
 
-        <const name="ACDShortMaxCol" uType="count">
+        <const name="ACDShortMaxCol" uType="count" type="int">
           <notes>Column number of last tile in a short row</notes>
           <minus>
             <refer refTo="numPerSideRowShort" />
@@ -105,7 +105,7 @@
           </minus>
         </const>
 
-        <const name="ACDLongMaxCol" uType="count">
+        <const name="ACDLongMaxCol" uType="count" type="int">
           <notes>Column number of last tile in a long row</notes>
           <minus>
             <refer refTo="numPerSideRowLong" />
@@ -432,7 +432,7 @@
           </minus>
         </const>
 
-        <const name="topTapesPerRow" uType="count">
+        <const name="topTapesPerRow" uType="count" type="int">
           <notes> Tapes on top come in columns, similar to tiles, except there
      is one less piece of tape than there are tiles in a row</notes>
           <minus>
