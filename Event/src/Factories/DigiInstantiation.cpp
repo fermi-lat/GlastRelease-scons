@@ -1,4 +1,4 @@
-/*! \file RawInstantiation.cpp
+/*! \file DigiInstantiation.cpp
 \brief based upon mcInstantiation.cpp by Markus Frank available within the LHCbEvent package
 
 This file instanciates concretely the implementation of all of these
@@ -26,20 +26,11 @@ Original author: Heather Kelly
 using namespace GlastEvent;
 
 // ====================================================================
-// Object factory implementation for objects of class TdCsIData
+// Object factory implementation for objects of class AcdDigi 
 // ====================================================================
-#include "GlastEvent/data/TdCsIData.h"
-_ImplementDataObjectFactory(TdCsIData)
+#include "GlastEvent/Digi/AcdDigi.h"
+_ImplementHitContainedFactories(AcdDigi)
 
-
-// ====================================================================
-// Object factory implementation for objects of class TdSiData
-// ====================================================================
-#include "GlastEvent/data/TdSiData.h"
-_ImplementDataObjectFactory(TdSiData)
-
-
-void RawInstantiation()  {
-    DLL_DECL_OBJECTFACTORY( TdCsIData );
-    DLL_DECL_OBJECTFACTORY( TdSiData );
+void DigiInstantiation()  {
+    DLL_DECL_CONTAINEDOBJECTFACTORY( AcdDigi );
 }

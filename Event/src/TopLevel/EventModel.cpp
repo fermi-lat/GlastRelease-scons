@@ -28,6 +28,10 @@ public:
         EventModel::MC::McPositionHits    = EventModel::MC::Event  + "/McPositionHits";
         EventModel::MC::McIntegratingHits = EventModel::MC::Event  + "/McIntegratingHits";
 
+        // Digi event
+        EventModel::Digi::Event           = EventModel::Event + "/Digi";
+        EventModel::Digi::AcdDigis        = EventModel::Digi::Event + "/AcdDigis";
+
         // Irf event
         EventModel::Irf::Event            = EventModel::Event + "/Irf";
         EventModel::Irf::IrfTkrHits       = EventModel::Irf::Event + "/IrfTkrHits";
@@ -38,7 +42,6 @@ public:
         EventModel::Raw::Event            = EventModel::Event + "/Raw";
         EventModel::Raw::TdSiDatas        = EventModel::Raw::Event + "/TdSiDatas";
         EventModel::Raw::TdCsIDatas       = EventModel::Raw::Event + "/TdCsIDatas";
-        EventModel::Raw::AcdDigis         = EventModel::Raw::Event + "/AcdDigis";
 
         // reconstructed data (Tracker)
         EventModel::TkrRecon::Event       = EventModel::Event + "/TkrRecon";
@@ -74,7 +77,9 @@ public:
       Kine+Hit         1100 - 1199   Kinematics, Hits and associations
       IrfHit           1200 - 1299   Special IRF Hits
 
-    Raw data           1300 - 1399   Raw data, Digi (and possible Hit/Digi associations)
+    Digi data          1300 - 1399   Digi (and possible Hit/Digi associations)
+
+    Raw data           1400 - 1499   Raw data (and possible Hit/Digi associations)
 
     Trigger (simulation)
       Trigger          2000 - 2099   Trigger summary 
@@ -115,18 +120,19 @@ public:
     const CLID& CLID_IrfAcdHit          = 1230;
 
     //! Raw event and Digi IDs
-    const CLID& CLID_RawEvent           = 1300; 
+    const CLID& CLID_DigiEvent          = 1300; 
     const CLID& CLID_TkrDigi            = 1310;  // indicative only, use 1310, 1311,.. for Tkr
     const CLID& CLID_CalDigi            = 1320;  // indicative only, use 1320, 1321,.. for Cal
     const CLID& CLID_AcdDigi            = 1330;
     
     // clarify where these are used 
-    const CLID& CLID_TdGlastData        = 1350;
-    const CLID& CLID_TdSiData           = 1351;
-    const CLID& CLID_TdSiDataCnv        = 1352;
-    const CLID& CLID_TdCsIData          = 1353;
-    const CLID& CLID_TdCsIDataCnv       = 1354;
-    const CLID& CLID_Xtal               = 1355;
+    const CLID& CLID_RawEvent           = 1400;  // temporary...will be replaced by DataEvent
+    const CLID& CLID_TdGlastData        = 1401;
+    const CLID& CLID_TdSiData           = 1411;
+    const CLID& CLID_TdSiDataCnv        = 1412;
+    const CLID& CLID_TdCsIData          = 1421;
+    const CLID& CLID_TdCsIDataCnv       = 1422;
+    const CLID& CLID_Xtal               = 1423;
 
    
     //! Reconstruction

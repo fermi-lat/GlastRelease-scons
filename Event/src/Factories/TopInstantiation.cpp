@@ -47,6 +47,11 @@ _ImplementDataObjectFactory(MCEvent)
 #include "GlastEvent/TopLevel/IrfEvent.h"
 _ImplementDataObjectFactory(IrfEvent)
 
+// ====================================================================
+// Object factory implementation for objects of class DigiEvent
+// ==================================================================
+#include "GlastEvent/TopLevel/DigiEvent.h"
+_ImplementDataObjectFactory(DigiEvent)
 
 // ====================================================================
 // Object factory implementation for objects of class RawEvent
@@ -72,6 +77,7 @@ void TopInstantiation()  {
   DLL_DECL_OBJECTFACTORY( Event );
   DLL_DECL_OBJECTFACTORY( MCEvent );
   DLL_DECL_OBJECTFACTORY( IrfEvent );
+  DLL_DECL_OBJECTFACTORY( DigiEvent );
   DLL_DECL_OBJECTFACTORY( RawEvent );
   //DLL_DECL_OBJECTFACTORY( RecEvent );
   //DLL_DECL_OBJECTFACTORY( AnalEvent );

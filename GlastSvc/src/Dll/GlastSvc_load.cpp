@@ -29,6 +29,7 @@ void GlastSvc_load() {
     DLL_DECL_SERVICE( EventCnvSvc );
     //DLL_DECL_CONVERTER( MCACDHitCnv );
     DLL_DECL_CONVERTER( MCEventCnv );
+    DLL_DECL_CONVERTER( DigiEventCnv );
     DLL_DECL_CONVERTER( RawEventCnv );
    // DLL_DECL_CONVERTER( MCSiLayerCnv );
     //DLL_DECL_CONVERTER( MCCalorimeterHitCnv );
