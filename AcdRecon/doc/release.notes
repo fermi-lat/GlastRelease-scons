@@ -1,7 +1,12 @@
 /** @file release.notes
 package AcdRecon\n
 package manager:H.Kelly
+
 @verbatim
+
+v1r7p4    24-Aug-2004 TK  Update requirements, install jobOptions
+                          Use in AcdRecon_load.cxx DECLARE_FACTORY_ENTRIES;
+                          temporarily also in AcdDisplay.cxx 
 
 v1r7p3    22-Jul-2004 HMK Address bug in CMT, JIRA CMT-25, add extra private statement
 v1r7p2    15-Jun-2004 HMK Use any GlastPolicy version

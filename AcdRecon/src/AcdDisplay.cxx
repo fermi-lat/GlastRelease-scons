@@ -8,6 +8,7 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"    //1  temp until .h and .cxx separated
 
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Recon/AcdRecon/AcdRecon.h"
@@ -27,6 +28,8 @@
  * @author Heather Kelly
  * $Header$
  */
+
+
 class AcdDisplay : public Algorithm
 {
 public:
@@ -39,8 +42,10 @@ public:
     class DocaRep;
 };
 
-static const AlgFactory<AcdDisplay>  Factory;
-const IAlgFactory& AcdDisplayFactory = Factory;
+
+DECLARE_ALGORITHM_FACTORY( AcdDisplay );
+
+// ____________________________________________________________________________
 
 AcdDisplay::AcdDisplay(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator) 
@@ -53,13 +58,17 @@ Algorithm(name, pSvcLocator)
  *
  * @author Heather Kelly
  */
+
+// ____________________________________________________________________________
+
 class AcdDisplay::DocaRep : public gui::DisplayRep {
 public:
     DocaRep(IDataProviderSvc* dps, IGlastDetSvc* detsvc):m_dps(dps), m_detsvc(detsvc){}
     void update(){
         SmartDataPtr<Event::AcdRecon> acdRec(m_dps, EventModel::AcdRecon::Event);
         if (!acdRec) return;
-/*
+
+/*  
         if (acdRec->getRibbonActiveDist() < 500 ) {
         idents::AcdId ribbonId = acdRec->getRibbonActiveDistId();
         const idents::VolumeIdentifier ribbonVolid = ribbonId.volId();
@@ -110,6 +119,8 @@ private:
     IGlastDetSvc* m_detsvc;
 };
 
+// ____________________________________________________________________________
+
 StatusCode AcdDisplay::initialize()
 {
     //Look for the gui service
@@ -130,4 +141,3 @@ StatusCode AcdDisplay::initialize()
     
     return StatusCode::SUCCESS;
 }
-

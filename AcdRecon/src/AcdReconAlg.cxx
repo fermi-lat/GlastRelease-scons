@@ -33,16 +33,16 @@ unsigned int AcdReconAlg::s_numSideRows;
 
 static double maxDoca = 2000.0;
 
-// Define the factory for this algorithm
-static const AlgFactory<AcdReconAlg>  Factory;
-const IAlgFactory& AcdReconAlgFactory = Factory;
+
 
 // Algorithm parameters which can be set at run time must be declared.
-// This should be done in the constructor.
+// This should be done in the constructor
 AcdReconAlg::AcdReconAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator) {
 	
 }
+
+// ____________________________________________________________________________
 
 StatusCode AcdReconAlg::initialize ( ) {
     StatusCode sc = StatusCode::SUCCESS;
@@ -70,6 +70,7 @@ StatusCode AcdReconAlg::initialize ( ) {
     return sc;
 }
 
+// ____________________________________________________________________________
 
 StatusCode AcdReconAlg::execute() {
     // Purpose and Method:  Called once per event.  This routine calls the functions
@@ -96,12 +97,14 @@ StatusCode AcdReconAlg::execute() {
     return sc;
 }
 
+// ____________________________________________________________________________
 
 StatusCode AcdReconAlg::finalize() {    
     clear();
     return StatusCode::SUCCESS;
 }
 
+// ____________________________________________________________________________
 
 void AcdReconAlg::getParameters () {
     // Purpose and Method:  Retrieves constans using the GlastDetSvc.
@@ -123,6 +126,8 @@ void AcdReconAlg::getParameters () {
     }
     s_numSideRows = (unsigned int) temp;        
 }
+
+// ____________________________________________________________________________
 
 void AcdReconAlg::clear() {
     // Purpose and Method:  Initializes all member variables
@@ -146,6 +151,8 @@ void AcdReconAlg::clear() {
     m_act_dist = -maxDoca;
     m_ribbon_act_dist = -maxDoca;
 }
+
+// ____________________________________________________________________________
 
 StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     // Purpose and Method:  Actually performs the ACD reconstruction.
@@ -230,6 +237,7 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     return sc;
 }
 
+// ____________________________________________________________________________
 
 StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol) {
     // Purpose and Method:  Retrieves the TkrFitTrackCol from the TDS and 
@@ -271,6 +279,8 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol) {
     return sc;
 	
 }
+
+// ____________________________________________________________________________
 
 StatusCode AcdReconAlg::doca(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, const HepVector3D &t0, 
 						 std::vector<double> &doca_values, double &minDoca) {
@@ -339,6 +349,8 @@ StatusCode AcdReconAlg::doca(const Event::AcdDigiCol& digiCol, const HepPoint3D 
 	
     return StatusCode::SUCCESS;
 }
+
+// ____________________________________________________________________________
 
 StatusCode AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, const HepVector3D &t0, 
                                 std::vector<double> &row_values, double &return_dist) {
@@ -443,6 +455,8 @@ StatusCode AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol, const HepP
     return StatusCode::SUCCESS;    
 }
 
+
+// ____________________________________________________________________________
 
 StatusCode AcdReconAlg::hitRibbonDist(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, const HepVector3D &t0, double &return_dist) {
     //Purpose and Method:  Calculate ActiveDistance for Ribbons
@@ -607,7 +621,6 @@ StatusCode AcdReconAlg::hitRibbonDist(const Event::AcdDigiCol& digiCol, const He
             double prod = delta * ribbonVec.unit();
             // check that the projection of the point to the ribbon occurs within the
             // length of the ribbon segment
-            double mag = ribbonVec.mag();
             if ((prod < 0) || (prod > ribbonVec.mag())) continue;
             double dist = sqrt(delta.mag2() - prod*prod);
             // Make this an Active Distance calculation
@@ -620,6 +633,8 @@ StatusCode AcdReconAlg::hitRibbonDist(const Event::AcdDigiCol& digiCol, const He
     }  // end loop over AcdDigis
     return StatusCode::SUCCESS;    
 }
+
+// ____________________________________________________________________________
 
 StatusCode AcdReconAlg::getDetectorDimensions(const idents::VolumeIdentifier &volId, std::vector<double> &dims, HepPoint3D &xT ) {
     MsgStream   log( msgSvc(), name() );
