@@ -79,4 +79,6 @@ double Spectrum::interval (double time)
         double p = RandFlat::shoot(1.);
         return (-1.)*(log(1.-p))/r;
     }
+    //the above should be not needed - only the next line?
+    //return -1.; //if this gets called, FluxSource will use the spectrum's flux.
 }
