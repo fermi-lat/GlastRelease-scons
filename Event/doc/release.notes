@@ -2,6 +2,8 @@
  * @brief package Event<pre>
  * package manager:T.Burnett
  *
+ * v9r7    03-feb-03 LSR Add alignment info to McTkrStrips
+ * ...
  *         04-dec-02 HMK add ObjectVector.h to AcdDigi explictly\n
  * v9r5p1  28-nov-02 THB fixe to TrkFitPlane 
  * v9r5    21-nov-02 THB fixes to TrkFitPlane and CalDigi
