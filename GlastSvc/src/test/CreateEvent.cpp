@@ -56,9 +56,17 @@ StatusCode CreateEvent::initialize() {
 
     StatusCode sc = service("GlastDetSvc", m_detSvc);
     
-    if (sc.isSuccess ())
+    if (sc.isSuccess ()) {
         log << MSG::INFO << "Succeeded in accessing the GlastDetSvc!" << endreq;
-    else {
+        log << MSG::INFO << "testing constant access..." << endreq;
+        double test;
+        sc = m_detSvc->getNumericConstByName("junk", &test);
+        if( sc.isFailure ()) log << MSG::INFO << "proper failure!" << endreq;
+        sc = m_detSvc->getNumericConstByName("diodeX", &test);
+        if( sc.isFailure ()) log << MSG::INFO << "diodeX not found!" << endreq;
+        else log << MSG::INFO << "found constant diodeX = " << test << endreq;
+            
+    }else {
         log << MSG::ERROR << "Couldn't find the GlastDetSvc!" << endreq;
         return StatusCode::FAILURE;
     }
