@@ -8,13 +8,11 @@
 #include "VolumeIdentifier.h"
 #include "McParticle.h"
 
-
 #ifdef WIN32
 using namespace std;
 #endif
 
 #include <vector>
-#include <utility>
 
 /** @class McIntegratingHit
 * @brief Stores a single McIntegratingHit.  This class mirrors the TDS
@@ -28,11 +26,9 @@ using namespace std;
 *
 * The map of McParticles and energies are actually stored to the ROOT file
 * as 2 separate arrays.  One TRefArray of McParticles and a vector of
-* energies.  At run time, when a user requests the map of McParticles and 
-* energies, the map is constructed (if it has not already been constructed) and
-* is returned to the user.  The map data member is actually transient, so as to
-* avoid the complexities to write out STL containers that contain STL
-* containers.
+* energies.  Access is provided through methods that retrieve the appropriate
+* McParticle*, energy pair.  Use the methods mapSize(), mapReset() and 
+* const* McParticle mapNext(Double_t& energy) to acces the data.
 *
 * @author Heather Kelly
 *  
@@ -41,7 +37,6 @@ using namespace std;
 class McIntegratingHit: public TObject {
     
 public:
-    typedef vector< pair<McParticle*, Double_t> > energyDepositMap;
     
     McIntegratingHit();
     
@@ -57,11 +52,17 @@ public:
     
     Double_t getTotalEnergy() const { return m_totalEnergy; };
     
-    /// Retrieve itemized energy
-    const energyDepositMap& getItemizedEnergy();
     /// Add single energyInfo to energyDepositMap
-    void addEnergyItem( const double& energy, McParticle* t, const TVector3& pos );
-    
+    void addEnergyItem( const Double_t& energy, McParticle* t, const TVector3& pos );
+    /// Retrieve the next McParticle, energy pair
+    /// Returns the pair corresponding to m_mapEntry - set via the mapReset()
+    /// If we have finished traversing the list - mapNext will return null (0).
+    const McParticle* mapNext(Double_t &energy);
+    /// Set the McParticle, energy map counter to zero - the beginning
+    void mapReset() { m_mapEntry = 0; };
+    /// Returns the size of the list of McParticle, energy pairs
+    UInt_t mapSize() const { return m_mcPartArr.GetEntries(); };
+
     /// Retrieve the energy-weighted first moments of the position
     const TVector3 getMoment1 () const;
     /// Retrieve the energy-weighted second moments of the position
@@ -84,7 +85,8 @@ private:
     std::vector<Double_t> m_energies;
     /// Vector of Energy information that consists of deposited energy and 
     /// the mother McParticle.  This data member is transient - not written!
-    energyDepositMap m_energyItem; //!
+    //energyDepositMap m_energyItem; //!
+    UInt_t m_mapEntry; //!
 
     ClassDef(McIntegratingHit,1)  // Monte Carlo Integrating Hit Class
 };
