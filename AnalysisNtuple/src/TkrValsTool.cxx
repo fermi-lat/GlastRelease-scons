@@ -189,14 +189,19 @@ StatusCode TkrValsTool::initialize()
     
     if( serviceLocator() ) {
 
-        // all the XxxValsTools must retrieve EventDataSvc and pass it 
-        // to ValBase
+        IIncidentSvc* incSvc;
+        sc = serviceLocator()->service( "IncidentSvc", incSvc, true );
+        if(sc.isFailure()){
+            log << MSG::ERROR << "Could not find IncidentSvc" << endreq;
+            return sc;
+        }
+        setIncSvc(incSvc);
+
         sc = serviceLocator()->service( "EventDataSvc", m_pEventSvc, true );
         if(sc.isFailure()){
             log << MSG::ERROR << "Could not find EventSvc" << endreq;
             return sc;
         }
-        setEventSvc(m_pEventSvc);
 
         sc = serviceLocator()->service( "TkrGeometrySvc", pTkrGeoSvc, true );
         if(sc.isFailure()) {
