@@ -102,11 +102,11 @@ public:
     int    getTower(position pos) const {
         return pos==top ? m_pnt0->getTower() : m_pnt1->getTower();}
 
-    int    getIdX(position pos)   const {
-        return pos==top ? m_pnt0->getIdX() : m_pnt1->getIdX();}
+    Event::TkrCluster*  getClusterX(position pos)   const {
+        return pos==top ? m_pnt0->getClusterX() : m_pnt1->getClusterX();}
 
-    int    getIdY(position pos)   const {
-        return pos==top ? m_pnt0->getIdY() : m_pnt1->getIdY();}
+    Event::TkrCluster*  getClusterY(position pos)   const {
+        return pos==top ? m_pnt0->getClusterY() : m_pnt1->getClusterY();}
 
     int    getLayerDiff()         const {return m_l;}
     Vector getDirection()         const {return m_direction;}
