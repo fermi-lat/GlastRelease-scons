@@ -2,6 +2,12 @@ PARTICLE
 #
 #            IDGEANT      IDHEP   TYPE     CHARGE    MASS           TLIFE
 #
+# 
+# special heavy ions for GLAST: need to make up better numbers
+#
+ He             47     80004        4       2.0   .3727E+01      .1000E+16
+ C             912     80012        4       6.0   12.0           .1000E+16  
+#
  gamma           1         22       1        .0   .0000E+00      .1000E+17
  e+              2        -11       2       1.0   .5110E-03      .1000E+17
  e-              3         11       2      -1.0   .5110E-03      .1000E+17
@@ -209,10 +215,4 @@ PARTICLE
  B_s1(H)~0     214     -20533       3        .0   .5838E+01      .2630E-23
  B_s1(L)~0     215     -10533       3        .0   .5834E+01      .2190E-21
  B*_s2~0       216       -535       3        .0   .5846E+01      .9400E-21
-# 
-# special heavy ions for GLAST: need to make up better numbers
-#
-He              47       904        4       2.0   .3727E+01      .1000E+16
-C              912       912        4       6.0   12.0           .1000E+16  
-# 
 END PARTICLE
