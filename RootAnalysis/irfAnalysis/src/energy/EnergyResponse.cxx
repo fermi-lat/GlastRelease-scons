@@ -16,7 +16,7 @@ public:
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 EnergyResponse::EnergyResponse()
 {
-    summary_filename=file_root+"root_files/1/energy.root";
+    summary_filename=file_root+"root_files/2/energy.root";
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void EnergyResponse::define() 
@@ -73,8 +73,7 @@ void EnergyResponse::draw(std::string ps)
     }
 
     TCanvas c("energy", "energy");
-    divideCanvas(c,4,2,"Energy Response plots v1");
-
+    divideCanvas(c,4,2, std::string("Energy response  plots from ")+summary_filename);
     for(int j=0; j<energy_bins; ++j){
 
         c.cd(j+1);
@@ -89,10 +88,11 @@ void EnergyResponse::draw(std::string ps)
                 return;
             }
             printf("Drawing ...%s\n", h->GetTitle());
-             char title[256]; // rewrite the title for the multiple plot
-               sprintf(title, "%6d MeV", (int)(eCenter(j)+0.5));
-                h->SetTitle( title); 
-                h->GetXaxis()->CenterTitle(true);
+            char title[256]; // rewrite the title for the multiple plot
+            sprintf(title, "%6d MeV", (int)(eCenter(j)+0.5));
+            h->SetTitle( title); 
+            h->GetXaxis()->CenterTitle(true);
+            h->SetLineColor(i+1);
 
             if(i==0)h->Draw(); else h->Draw("same");
             char entry[64]; sprintf(entry," %d - %d   %5.2f %5.2f", 
@@ -114,33 +114,46 @@ void EnergyResponse::drawEnergy(std::string ps)
 
     divideCanvas(c,1,1,"Effective Area");
 
-    TLegend* leg=new TLegend(0.13,0.7, 0.25,0.89);
-    leg->SetHeader("Angle ranges   integral");
+    TLegend* leg=new TLegend(0.13,0.7, 0.30,0.89);
+    leg->SetHeader("Angle ranges");
+    leg->SetFillColor(10);
+    leg->SetBorderSize(1);
+    leg->SetTextSize(0.04);
+
+    // determine normalization factor to Aeff
+    int ngen=4.66e6; 
+    double anglebin=0.2, logebin=0.125, target_area=6., emax=160., emin=0.016;
+    double norm_factor=target_area/ngen/anglebin/(logebin/log10(emax/emin));;
+    std::cout << "Applying normailzation factor assuming " << ngen 
+        << " generated uniformly over:"
+        << "\n\t cos theta from 0 to 1"
+        << "\n\t log E with E from "<< emin << " to " << emax << std::endl;
 
     for(int i=0; i<4; ++i){
 
         TH1F* h =(TH1F*)hist_file.Get(hist_name(i,8)) ; 
-            if(h==0){
-                std::cerr << "could not find "<< hist_name(i,8) << " in summary file " << hist_file.GetName() <<std::endl;
-                return;
-            }
+        if(h==0){
+            std::cerr << "could not find "<< hist_name(i,8) << " in summary file " << hist_file.GetName() <<std::endl;
+            return;
+        }
         printf("Drawing %s\n", h->GetTitle());
+        h->Scale(norm_factor);
         h->SetLineColor(i+1);
         h->SetStats(false);
-        h->SetTitle("Energy distribution for angular ranges");
+        h->SetTitle("Effective Area");
         h->GetXaxis()->SetTitle("log(Egen/ 1MeV)");
         h->GetXaxis()->CenterTitle(true);
+        h->GetYaxis()->SetTitle("Aeff (m^2)");
+        h->GetYaxis()->CenterTitle(true);
 
         h->SetLineWidth(2);
 
         if(i==0)h->Draw(); else h->Draw("same");
-        char entry[16]; sprintf(entry," %d - %d  %5.0f", angles[i], angles[i+1], h->Integral());
+        char entry[16]; sprintf(entry," %2d-%d ", angles[i], angles[i+1] );
         leg->AddEntry( h, entry, "l");
     }
-    leg->SetFillColor(10);
-    leg->SetBorderSize(1);
     leg->Draw();
-   c.Print(ps.c_str() );
+    c.Print(ps.c_str() );
 
 }
 
@@ -150,10 +163,10 @@ void main(){
 
     if( !er.fileExists() ) er.define();
     if( !er.fileExists() ) { std::cerr << "cound not open  root file " << er.summary_filename << std::endl;
-       exit (-1);
+    exit (-1);
     }
 
-    std::string psfile(er.file_root+"/canvas_files/1/energy.ps");
+    std::string psfile(er.file_root+"/canvas_files/2/energy.ps");
     er.draw(psfile+"(");
     er.drawEnergy(psfile+")");
 

@@ -31,7 +31,7 @@ double PSF::probSum[2]={0.68, 0.95}; // for defining quantiles
 PSF::PSF()
 : nbins(50), xmin(0), xmax(5.0), ymax(0.16)
 {
-    summary_filename=file_root+"root_files/1/psf_summary.root";
+    summary_filename=file_root+"root_files/2/psf_summary.root";
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -255,10 +255,11 @@ void main()
 {
     PSF p;
     if(!p.fileExists())  p.project();
-    p.draw(p.file_root+"canvas_files/1/psf.ps(");
-    p.drawAeff(p.file_root+"canvas_files/1/psf.ps");
-    p.drawError(p.file_root+"canvas_files/1/psf.ps");
-    p.drawAsymmetry(p.file_root+"canvas_files/1/psf.ps)");
+    std::string ps = p.file_root+ "canvas_files/2/psf.ps";
+    p.draw(ps+"(");
+    p.drawAeff(ps);
+    p.drawError(ps);
+    p.drawAsymmetry(ps+")");
 
     std::cout << "done" << std::endl;
 }
