@@ -5,18 +5,28 @@
 
   <!-- Cal grid stuff, as of 27 Sep 2001, from LAT-DS-00123-2
   -->
-  <prim name= "NADGridWebInner" value= "8.0">Full thickness of grid between towers (not half-width)
+  <prim name= "NADGridWebInner" value= "8.0">Full thickness of grid between 
+towers (not half-width) Verified against LAT-DS-01579 on 5 May 2004.
 </prim>
   <prim name= "NADGridWebOuter" value= "13.0">Thickness of grid on outside 
-towers</prim>
-  <prim name="NADGridWebZ" value= "210.800">Height of grid web</prim>
-  <prim name="NADGridWebCutout" value= "366.5">Cut-outs for calorimeters</prim>
-  <prim name="NADGridFlangeZ" value = "25.400">Height of grid flange</prim>
-  <prim name="NADGridFlangeCutout" value="346.600">Cutouts in the flange
+towers. 
+Verified against LAT-DS-01579 on 5 May 2004.  Correct for bulk of web;
+ lower bound for bottom. 
+Bottom of grid has variable thickness of up to 42.24 mm.
+</prim>
+  <prim name="NADGridWebZ" value= "210.800">Height of grid web. 
+Verified against LAT-DS-01579 on 5 May 2004.</prim>
+  <prim name="NADGridWebCutout" value= "366.5">Cut-outs for calorimeters.
+Verified against LAT-DS-01579 on 5 May 2004.</prim>
+  <prim name="NADGridFlangeZ" value = "25.400">Height of grid flange.
+Verified against LAT-DS-01579 on 5 May 2004.</prim>
+  <prim name="NADGridFlangeCutout" value="346.600">Cutouts in the flange.
+Verified against LAT-DS-01579 on 5 May 2004.
 </prim>  
   <prim name="NADGridFlangeInner" value="27.9">Thickness of inner parts of
-grid flange</prim>
-  <prim name="NADGridFlangeOverhang" value="25.0">Flange overhangs web</prim>
+grid flange. Verified against LAT-DS-01579 on 5 May 2004.</prim>
+  <prim name="NADGridFlangeOverhang" value="25.0">Flange overhangs web.
+Verified against LAT-DS-01579 on 5 May 2004.</prim>
   <prim name="NADBlanketThick" value="32.7">Blanket thickness (12/6/01)
   This is the PDR value.  </prim>
   <prim name="NADSpacecraftZ" value="1400.0">Height of spacecraft</prim>
