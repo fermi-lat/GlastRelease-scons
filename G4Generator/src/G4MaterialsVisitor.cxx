@@ -11,7 +11,7 @@
 #include "detModel/Materials/MatCollection.h"
 #include "detModel/Materials/Element.h"
 #include "detModel/Materials/Composite.h"
-
+#include <numeric> // for accumulate
 
 G4MaterialsVisitor::G4MaterialsVisitor()
 {
@@ -60,18 +60,14 @@ void G4MaterialsVisitor::visitElement(detModel::Element* element)
 
 void G4MaterialsVisitor::visitComposite(detModel::Composite* composite)
 {
-  G4String name;
-  G4double density;
-  G4int ncomponents;
   G4Material* ptMaterial = 0;
-  double tot = 0;
 
   if ((ptMaterial = G4Material::GetMaterial((G4String) composite->getName())))  
     return;  
 
-  name = (G4String) composite->getName();
-  density = (G4double) composite->getDensity()*g/cm3;
-  ncomponents = (G4int) composite->getNComponents();
+  G4String name = (G4String) composite->getName();
+  G4double density = (G4double) composite->getDensity()*g/cm3;
+  G4int ncomponents = (G4int) composite->getNComponents();
 
   G4Material* mat = new G4Material(name, density, ncomponents);
 
@@ -80,14 +76,13 @@ void G4MaterialsVisitor::visitComposite(detModel::Composite* composite)
 
   std::vector <int> natoms = composite->getAtoms();
   std::vector <double> fractions = composite->getFractions();
-  
-  for(unsigned int j = 0;j<fractions.size();j++)
-    tot = tot + fractions[j];
+
+  double tot = std::accumulate(fractions.begin(),fractions.end(), 0.0);
   
 
   int i = 0;    //index of the natoms and fractions vectors
  
-  for (m = matComponents.begin(); m != matComponents.end(); m++)
+  for (m = matComponents.begin(); m != matComponents.end(); m++, i++)
     {
       if ( detModel::Element* el = dynamic_cast<detModel::Element*>(*m))
 	{
@@ -110,7 +105,6 @@ void G4MaterialsVisitor::visitComposite(detModel::Composite* composite)
 		{
 		  mat->AddElement(ptElement, (G4int) natoms[i]);
 		}
-	      i++;
 	    }
 	  else if (ptMaterial)
 	    {
@@ -122,7 +116,6 @@ void G4MaterialsVisitor::visitComposite(detModel::Composite* composite)
 		{
 		  mat->AddMaterial(ptMaterial, (G4int) natoms[i]);
 		}
-	      i++;
 	    }
 	  else
 	    {
@@ -141,7 +134,6 @@ void G4MaterialsVisitor::visitComposite(detModel::Composite* composite)
 	  if (ptMaterial)
 	    {
 	      mat->AddMaterial(ptMaterial, (G4double) fractions[i]/tot);
-	      i++;
 	    }
 	  else
 	    {
