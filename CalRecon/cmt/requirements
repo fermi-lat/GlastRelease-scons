@@ -16,16 +16,15 @@ use TkrUtil
 use xml
 use xmlBase
 
-macro_append ROOT_linkopts " -L${ROOT_PATH}/lib -lMinuit " \ 
-                 VisualC " ${ROOT_PATH}/lib/libMinuit.lib " 
-
 apply_pattern packageShr
 
 #========================================================
 private
 
-# needed only for test app
-use RootIo   
+use RootIo
+
+macro_append ROOT_linkopts " -L${ROOT_PATH}/lib -lMinuit " \ 
+                 VisualC " ${ROOT_PATH}/lib/libMinuit.lib " 
 
 apply_pattern package_headers
 

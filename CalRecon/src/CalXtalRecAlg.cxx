@@ -17,7 +17,6 @@
 
 static const AlgFactory<CalXtalRecAlg>  Factory;
 const IAlgFactory& CalXtalRecAlgFactory = Factory;
-
 using namespace Event;
 using namespace idents;
 using namespace std;
