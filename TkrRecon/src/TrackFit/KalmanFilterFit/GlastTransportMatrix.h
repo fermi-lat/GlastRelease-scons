@@ -20,7 +20,7 @@ public:
 
     // Constructor 
     GlastTransportMatrix(std::vector<double> zCoords);
-   ~GlastTransportMatrix() {};
+    virtual ~GlastTransportMatrix() {};
 
     virtual KFmatrix F(int i, int j);
     virtual KFmatrix operator()(const int &i, const int &j);

@@ -24,7 +24,7 @@ public:
 
     // Constructor needs the matrices that transform state vector, covariance matrix
     NoProcNoiseMatrix(ITkrGeometrySvc* tkrGeo, std::vector<double> zCoords, std::vector<double> energy);
-    ~NoProcNoiseMatrix() {};
+    virtual ~NoProcNoiseMatrix() {};
 
     KFmatrix Q(const KFvector& stateVec, int i, int j);
     KFmatrix operator()(const KFvector& stateVec, const int &i, const int &j);

@@ -23,7 +23,7 @@ public:
 
     // Constructor needs the matrices that transform state vector, covariance matrix
     GlastProcNoiseMatrix(ITkrGeometrySvc* tkrGeo, std::vector<double> zCoords, std::vector<double> energy);
-    ~GlastProcNoiseMatrix() {};
+    virtual ~GlastProcNoiseMatrix() {};
 
     KFmatrix Q(const KFvector& stateVec, int i, int j);
     KFmatrix operator()(const KFvector& stateVec, const int &i, const int &j);

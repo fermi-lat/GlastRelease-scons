@@ -21,7 +21,7 @@ public:
 
     // Constructor 
     GlastProjectionMatrix(std::vector<int> projection);
-    ~GlastProjectionMatrix() {};
+    virtual ~GlastProjectionMatrix() {};
 
     KFmatrix H(int i);
     KFmatrix operator()(const int &i);
