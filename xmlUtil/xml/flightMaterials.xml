@@ -177,21 +177,7 @@
 </composite>
 
 
-
-<!-- ATTENTION .. THIS MATERIAL MUST BE SPECIFIED -->
-<element name="Fiberglass" 
-	 z="1" 
-	 aweight="1.01" 
-	 density="10e-26"
-	 />
-
-<!-- ATTENTION .. THIS MATERIAL MUST BE SPECIFIED -->
-<element name="someStuff" 
-	 z="1" 
-	 aweight="1.01" 
-	 density="10e-26"
-	 />
-
+<!--   not any more...
 
 <composite name="FOAM05" density = "0.050">
 <addmaterial material="Carbon">
