@@ -8,7 +8,7 @@ use Event v8*
 use GlastSvc v8*
 use GlastDigi v4*
 use geometry v3*
-use RootIo v3*
+use RootIo v4*
 
 
 #the following prepend makes the includes folder available locally only: avoid the package_include
