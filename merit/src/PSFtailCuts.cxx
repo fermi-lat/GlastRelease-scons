@@ -30,8 +30,9 @@ class AbsValueCut : public Analyze {
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-PSFtailCuts::PSFtailCuts(const Tuple& t): AnalysisList(" PSF tail cuts")
+PSFtailCuts::PSFtailCuts(const Tuple& t): AnalysisList("IM PSF tail cuts")
 {
     push_back( new Cut(t, "IMgoodCalProb>0.5") );
-    push_back( new Cut(t, "IMcoreProb>0.1") );
+    push_back( new Cut(t, "IMcoreProb>0.9") );
+    push_back( new Cut(t, "IMpsfErrPred<5.0") );
 }
