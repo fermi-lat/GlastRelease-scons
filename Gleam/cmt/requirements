@@ -39,7 +39,7 @@ use Geant4      v1r1p0
 
 use GuiSvc      v3
 
-use Event                v8r2
+use Event                v8r3
 use GlastSvc    v8r0
 
 # simulation
@@ -53,16 +53,15 @@ use GlastDigi            v4r0p1
 
 #reconstruction
 use Trigger              v3r1
-use Recon                v2r1
+use Recon                v2r1p1
 
-# commented out temporarily
-use TkrRecon             v6r1
+use TkrRecon             v6r2
 #use CalRecon    v5r0       
 
 
 #ROOT persistence
 use mcRootData          v2r1p3
-use RootIo      v2r0
+use RootIo              v2r0p1
 
 
 ### define a simple executable 
