@@ -9,6 +9,8 @@
 
   - Event Id
   - Run Number
+  - Source Id
+  - Sequence Number
   - Collection of McParticles
     -# particle id
     -# status flags

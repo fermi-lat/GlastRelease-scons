@@ -38,10 +38,12 @@ public:
 
     void Print(Option_t *option="") const;
     
-    void initialize(UInt_t nEvent, UInt_t nRun);
+    void initialize(UInt_t nEvent, UInt_t nRun, Int_t sourceId, UInt_t sequence);
     
     inline UInt_t getEventId() const { return m_eventId; };
     inline UInt_t getRunId() const { return m_runId; };
+	inline Int_t getSourceId() const { return m_sourceId; };
+	inline UInt_t getSequence() const { return m_sequence; };
 
     
     /// add a McParticle to list
@@ -83,6 +85,12 @@ private:
     
     /// Run number
     UInt_t m_runId;
+
+	// identifier of the source
+	Int_t m_sourceId;
+
+	/// Sequence number
+	UInt_t m_sequence;
     
     /// Collection of McParticles
     /// Must be TObjArray due to TRefArray which grows dynamically
@@ -101,7 +109,7 @@ private:
     /// static array to allow one-time array creation
     static TObjArray *m_staticPositionHitCol; //!
     
-    ClassDef(McEvent,3) // Monte Carlo Event Class
+    ClassDef(McEvent,4) // Monte Carlo Event Class
 };
 
 #endif

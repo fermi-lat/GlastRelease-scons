@@ -51,9 +51,12 @@ McEvent::~McEvent() {
 	Clear();
 }
 
-void McEvent::initialize(UInt_t nEvent, UInt_t nRun) {
+void McEvent::initialize(UInt_t nEvent, UInt_t nRun, 
+						 Int_t sourceId, UInt_t sequence) {
     m_eventId = nEvent;
     m_runId = nRun;
+	m_sourceId = sourceId;
+	m_sequence = sequence;
     return;
 }
 
