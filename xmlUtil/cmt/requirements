@@ -12,9 +12,8 @@ use xmlGeoDbs   v1r*
 
 include_dirs "${XMLUTILROOT}"
 
-path_append LD_LIBRARY_PATH "${xmlUtilDir}"
+##path_append LD_LIBRARY_PATH "${xmlUtilDir}"
 
-apply_pattern package_linkopts
 apply_pattern package_headers
 apply_pattern package_xmlfiles
 
@@ -40,6 +39,10 @@ library xmlUtil ${xmlUtil_headers}  \
      id/IdKey.cxx            \
      docMan/GDDDocMan.cxx    \
      ${xmlUtil_xmlfiles} 
+
+apply_pattern package_linkopts
+apply_pattern package_stamps
+apply_pattern ld_library_path
 
 private
 apply_pattern package_shlibflags
