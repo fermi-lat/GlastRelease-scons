@@ -11,7 +11,7 @@ apply_pattern package_linkopts
 #-------------------------------------------------------
 private
 
-use RootPolicy v2r*
+use RootPolicy v4r*
 
 # See RootPolicy for discussion of this pattern
 
