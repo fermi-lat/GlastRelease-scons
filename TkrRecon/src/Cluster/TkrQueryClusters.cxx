@@ -196,7 +196,7 @@ int TkrQueryClusters::numberOfHitsNear( int iPlane, double dX, double dY, Point&
 	
     // Look for hits in the Y view of desired layer
     clusterList = m_pClus->getHits(Event::TkrCluster::Y, iPlane);
-    nHitsInPlane = m_pClus->nHits();
+    nHitsInPlane = clusterList.size();
 	
     while(nHitsInPlane--)
     {
