@@ -144,6 +144,7 @@ void DigiEvent::Clear(Option_t *option) {
       ind = 0;
     }
     m_tkrDigiCol->Clear();
+    m_gem.Clear();
 }
 
 void DigiEvent::Print(Option_t *option) const {
