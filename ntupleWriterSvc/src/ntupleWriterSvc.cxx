@@ -331,7 +331,7 @@ int ntupleWriterSvc::isFinite(float val) {
 #ifdef WIN32 
     return (_finite(val));  // Win32 call available in float.h
 #else
-    return (isfinite(val)); // gcc call available in math.h
+    return (std::isfinite(val)); // gcc call available in math.h
 #endif
 
 }
