@@ -63,7 +63,6 @@ GlastDetSvc.visitorMode="recon";
 //
 ApplicationMgr.DLLs +={ "G4Generator"};
 Generator.Members = {"FluxAlg", "G4Generator"};
-Generator.BranchMembers = {"FluxAlg","ExposureAlg"};
 #include "$FLUXSVCROOT/src/defaultOptions.txt"
 
 // Append (or replace) the list of source library documents
