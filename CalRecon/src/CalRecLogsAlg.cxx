@@ -70,11 +70,11 @@ StatusCode CalRecLogsAlg::execute()
 		CalADCLog* ADCLog = m_CalRawLogs->Log(jlog);
 
 		int ilayer          = ADCLog->layer();
-		detGeo::axis view   = ADCLog->view();
+		CalDetGeo::axis view   = ADCLog->view();
 	    int icol            = ADCLog->column();
 
 //		detGeo*    geoLog = m_CalGeoLogs->getLog(ilayer,view,icol);
-		detGeo geoLog = m_CalGeo->getLog(ilayer,view,icol);
+		CalDetGeo geoLog = m_CalGeo->getLog(ilayer,view,icol);
 
 		
 		CalADCLog* pedLog = m_CalPedLogs->getLogID(CalLogID::ID(ilayer,view,icol));
@@ -181,18 +181,18 @@ void CalRecLogsAlg::computeEnergy(CalRecLog* recLog, const CalADCLog* ADCLog,
 	}
 }
 //################################################
-void CalRecLogsAlg::computePosition(CalRecLog* recLog, const detGeo* geoLog,
+void CalRecLogsAlg::computePosition(CalRecLog* recLog, const CalDetGeo* geoLog,
 									const CalCalibLog* calibLog)
 //################################################
 {
 	Point pCenter = geoLog->position();
 	Point pSize   = geoLog->size();
 	
-	detGeo::axis view = recLog->view();
+	CalDetGeo::axis view = recLog->view();
 	double xdir = 0.;
 	double ydir = 0.;
-	ydir = (view == detGeo::X? 1. : 0);
-	xdir = (view == detGeo::Y? 1. : 0);
+	ydir = (view == CalDetGeo::X? 1. : 0);
+	xdir = (view == CalDetGeo::Y? 1. : 0);
 
 	Vector dirLog(xdir,ydir,0.); 
 	

@@ -14,7 +14,7 @@ class CalRecLogs;
 
 class CalRecLog;
 class CalADCLog;
-class detGeo;
+class CalDetGeo;
 
 //----------------------------------------------
 //
@@ -45,7 +45,7 @@ private:
 
 	void computeEnergy(CalRecLog* recLog, const CalADCLog* adcLog, 
 		const CalADCLog* pedLog, const CalCalibLog* calibLog);
-	void computePosition(CalRecLog* recLog, const detGeo* geoLog,
+	void computePosition(CalRecLog* recLog, const CalDetGeo* geoLog,
 		const CalCalibLog* calibLog);
 
 private:

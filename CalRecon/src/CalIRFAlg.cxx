@@ -3,7 +3,7 @@
 // Include files
 #include "CalRecon/CalIRFAlg.h"
 #include "CalRecon/CalRecLogs.h"
-#include "TkrRecon/detGeo.h"
+#include "CalRecon/CalDetGeo.h"
 #include "Gaudi/MessageSvc/MsgStream.h"
 #include "Gaudi/Kernel/AlgFactory.h"
 #include "Gaudi/Interfaces/IDataProviderSvc.h"
@@ -116,7 +116,7 @@ StatusCode CalIRFAlg::execute() {
 	double ene = 0.0;
 	for (int l=0; l < m_CalGeo->numLayers();l++){
 		for (int v=0; v< m_CalGeo->numViews(); v++){
-			detGeo::axis view = detGeo::makeAxis(v);
+			CalDetGeo::axis view = CalDetGeo::makeAxis(v);
 			int ilayer = l*(m_CalGeo->numViews())+v;
 			int nhits = csi->nHits(ilayer);
 			if(nhits == 0)continue;
@@ -134,15 +134,15 @@ StatusCode CalIRFAlg::execute() {
 				CalRecLog* recLog = crl->getLogID(CalLogID::ID(l,view,icol,mod));
 				recLog->setNegEnergy(eneNeg);
 				recLog->setPosEnergy(enePos);
-				detGeo geoLog = m_CalGeo->getLog(l,view,icol,mod);
+				CalDetGeo geoLog = m_CalGeo->getLog(l,view,icol,mod);
 
 				Point pCenter = geoLog.position();
 				Point pSize   = geoLog.size();
 
 				double xdir = 0.;
 				double ydir = 0.;
-				ydir = (view == detGeo::X? pSize.y() : 0);
-				xdir = (view == detGeo::Y? pSize.x() : 0);
+				ydir = (view == CalDetGeo::X? pSize.y() : 0);
+				xdir = (view == CalDetGeo::Y? pSize.x() : 0);
 
 				Vector dirLog(xdir,ydir,0.); 
 				double asym = recLog->asymmetry();

@@ -4,7 +4,7 @@
 
 //----------------- CalRecLog ------------------
 //################################################
-CalRecLog::CalRecLog(int ilayer, detGeo::axis v, int icolumn,idents::ModuleId mod) : 
+CalRecLog::CalRecLog(int ilayer, CalDetGeo::axis v, int icolumn,idents::ModuleId mod) : 
 CalADCLog(ilayer,v,icolumn,mod)
 //################################################
 {
@@ -12,7 +12,7 @@ CalADCLog(ilayer,v,icolumn,mod)
 }
 
 //################################################
-CalRecLog::CalRecLog(int ilayer, detGeo::axis v, int icolumn) : 
+CalRecLog::CalRecLog(int ilayer, CalDetGeo::axis v, int icolumn) : 
 CalADCLog(ilayer,v,icolumn)
 //################################################
 {
@@ -91,7 +91,7 @@ void CalRecLogs::ini(int nModX, int nModY, int nLogs, int nLayers, int nViews)
 			
 			for (int ilayer = 0; ilayer < nLayers; ilayer++) {
 				for (int v=0; v < nViews; v++){
-					detGeo::axis view = detGeo::makeAxis(v);
+					CalDetGeo::axis view = CalDetGeo::makeAxis(v);
 					for (int ilog = 0; ilog < nLogs; ilog++) {
 						m_List.push_back(new CalRecLog(ilayer,view,ilog,mod));
 					}

@@ -1,7 +1,7 @@
 
 #include "CalRecon/CalLogID.h"
 //#######################################
-CalLogID::CalLogID(int ilayer, detGeo::axis v, int icolumn, idents::ModuleId mod)
+CalLogID::CalLogID(int ilayer, CalDetGeo::axis v, int icolumn, idents::ModuleId mod)
 //#######################################
 :m_modId(mod)
 {
@@ -20,7 +20,7 @@ CalLogID::CalLogID(int ilayer, int iview, int icolumn, idents::ModuleId mod)
 {
 	ini();
 	m_layer = ilayer;
-	m_view = detGeo::makeAxis(iview);
+	m_view = CalDetGeo::makeAxis(iview);
 	m_column = icolumn;
 
 	m_logID = CalLogID::ID(ilayer, m_view, icolumn, mod);
@@ -32,13 +32,13 @@ CalLogID::CalLogID(int ilayer, int iview, int icolumn):m_modId(0)
 {
 	ini();
 	m_layer = ilayer;
-	m_view = detGeo::makeAxis(iview);
+	m_view = CalDetGeo::makeAxis(iview);
 	m_column = icolumn;
 
 	m_logID = CalLogID::ID(ilayer, m_view, icolumn);
 }
 //#######################################
-CalLogID::CalLogID(int ilayer, detGeo::axis v, int icolumn):m_modId(0)
+CalLogID::CalLogID(int ilayer, CalDetGeo::axis v, int icolumn):m_modId(0)
 //#######################################
 {
 	ini();
@@ -49,14 +49,14 @@ CalLogID::CalLogID(int ilayer, detGeo::axis v, int icolumn):m_modId(0)
 	m_logID = CalLogID::ID(ilayer, m_view, icolumn);
 }
 //#######################################
-int CalLogID::ID(int ilayer, detGeo::axis v, int icolumn, idents::ModuleId mod)
+int CalLogID::ID(int ilayer, CalDetGeo::axis v, int icolumn, idents::ModuleId mod)
 //#######################################
 {
 	int id = ID(ilayer,v,icolumn)+10000*mod;
 	return id;
 }
 //#######################################
-int CalLogID::ID(int ilayer, detGeo::axis v, int icolumn)
+int CalLogID::ID(int ilayer, CalDetGeo::axis v, int icolumn)
 //#######################################
 {
 //	int ifactor = (v == detGeo::X? 1 : 0);
@@ -80,13 +80,13 @@ int CalLogID::layer(int logID)
 	return ilayer;
 }
 //#######################################
-detGeo::axis CalLogID::view(int logID)
+CalDetGeo::axis CalLogID::view(int logID)
 //#######################################
 {
 	int i = logID/1000;
 	int iview = (logID/100)-10*i;
-	detGeo::axis v = detGeo::X;
-	if (iview == 1) v = detGeo::Y;
+	CalDetGeo::axis v = CalDetGeo::X;
+	if (iview == 1) v = CalDetGeo::Y;
 	return v;
 }
 //#######################################
@@ -103,7 +103,7 @@ void CalLogID::ini()
 //#######################################
 {
 	m_layer = -1;
-	m_view = detGeo::PASSIVE;
+	m_view = CalDetGeo::PASSIVE;
 	m_column = -1;
 	m_logID = -1;
 }

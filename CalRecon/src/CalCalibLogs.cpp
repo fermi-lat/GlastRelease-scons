@@ -24,8 +24,8 @@ void CalCalibLogs::ini(int nLogs, int nLayers)
 	
 	for (int ilayer = 0; ilayer < nLayers; ilayer++) {
 		for (int ilog = 0; ilog < nLogs; ilog++) {
-			m_List.push_back(new CalCalibLog(ilayer,detGeo::X,ilog));
-			m_List.push_back(new CalCalibLog(ilayer,detGeo::Y,ilog));
+			m_List.push_back(new CalCalibLog(ilayer,CalDetGeo::X,ilog));
+			m_List.push_back(new CalCalibLog(ilayer,CalDetGeo::Y,ilog));
 		}
 	}
 	
@@ -84,7 +84,7 @@ void CalCalibLogs::readIntlin()
 		  side = 1-side; layer = 3-layer;
 
 		CalCalibLog* log = 
-		getLogID(CalLogID::ID(layer,detGeo::makeAxis(view),col));
+		getLogID(CalLogID::ID(layer,CalDetGeo::makeAxis(view),col));
 		log->readIntlin(file,side,range);
 	}
 	file.close();
@@ -111,7 +111,7 @@ void CalCalibLogs::readGain()
 		 side = 1-side; layer = 3-layer;
 
 		CalCalibLog* log = 
-		getLogID(CalLogID::ID(layer,detGeo::makeAxis(view),col));
+		getLogID(CalLogID::ID(layer,CalDetGeo::makeAxis(view),col));
 		log->readGain(file,side);
 	}
 	file.close();
@@ -137,7 +137,7 @@ void CalCalibLogs::readRail()
 		 side = 1-side; layer = 3-layer;
 
 		CalCalibLog* log = 
-		getLogID(CalLogID::ID(layer,detGeo::makeAxis(view),col));
+		getLogID(CalLogID::ID(layer,CalDetGeo::makeAxis(view),col));
 		log->readRail(file,side);
 	}
 	file.close();
@@ -160,7 +160,7 @@ void CalCalibLogs::readSlope()
 	    layer = 3-layer;
 
 		CalCalibLog* log = 
-		getLogID(CalLogID::ID(layer,detGeo::makeAxis(view),col));
+		getLogID(CalLogID::ID(layer,CalDetGeo::makeAxis(view),col));
 		log->readSlope(file);
 	}
 	file.close();

@@ -47,8 +47,8 @@ void CalADCLogs::ini(int nModX, int nModY, int nLogs, int nLayers)
 			idents::ModuleId mod(ix,iy);
 			for (int ilayer = 0; ilayer < nLayers; ilayer++) {
 				for (int ilog = 0; ilog < nLogs; ilog++) {
-					m_List.push_back(new CalADCLog(ilayer,detGeo::Y,ilog,mod));
-					m_List.push_back(new CalADCLog(ilayer,detGeo::X,ilog,mod));
+					m_List.push_back(new CalADCLog(ilayer,CalDetGeo::Y,ilog,mod));
+					m_List.push_back(new CalADCLog(ilayer,CalDetGeo::X,ilog,mod));
 				}
 			}
 		}

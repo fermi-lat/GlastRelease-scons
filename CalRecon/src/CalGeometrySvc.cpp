@@ -89,13 +89,13 @@ StatusCode CalGeometrySvc::finalize()
 
 //----------------------------------------------------
 //##############################################
-detGeo CalGeometrySvc::getLayer(int ilayer, detGeo::axis a)
+CalDetGeo CalGeometrySvc::getLayer(int ilayer, CalDetGeo::axis a)
 //##############################################
 {
 	double xpos = 0.;
 	double ypos = 0.;
 	double zfar = 0.;
-	if (a == detGeo::Y) zfar = layerHeight();
+	if (a == CalDetGeo::Y) zfar = layerHeight();
 	double zpos = Z0()+2.*ilayer*layerHeight()+zfar;
 
 	double xsize = layerWidth();
@@ -105,26 +105,26 @@ detGeo CalGeometrySvc::getLayer(int ilayer, detGeo::axis a)
 	Point P(xpos,ypos,zpos);
 	Point S(0.5*xsize,0.5*ysize,0.5*zsize);
 
-	detGeo layer(ilayer,a,ilayer,P,S);
+	CalDetGeo layer(ilayer,a,ilayer,P,S);
 	return layer;
 }
 //##############################################
-detGeo CalGeometrySvc::getLog(int ilayer, detGeo::axis a, int ilog, idents::ModuleId mod)
+CalDetGeo CalGeometrySvc::getLog(int ilayer, CalDetGeo::axis a, int ilog, idents::ModuleId mod)
 //##############################################
 {
 
 	double xmod = (mod.ix()-(m_nmodx+1)*0.5)*m_modWidth;
 	double ymod = (mod.iy()-(m_nmody+1)*0.5)*m_modWidth;
 	Vector modcenter(xmod,ymod,0);
-	detGeo log = getLog(ilayer, a, ilog);
+	CalDetGeo log = getLog(ilayer, a, ilog);
 	log.setPosition(log.position()+modcenter);
 	return log;
 }
 //##############################################
-detGeo CalGeometrySvc::getLog(int ilayer, detGeo::axis a, int ilog)
+CalDetGeo CalGeometrySvc::getLog(int ilayer, CalDetGeo::axis a, int ilog)
 //##############################################
 {
-	detGeo layer = getLayer(ilayer,a);
+	CalDetGeo layer = getLayer(ilayer,a);
 	double xpos = layer.position().x();
 	double ypos = layer.position().y();
 	double zpos = layer.position().z();
@@ -133,19 +133,19 @@ detGeo CalGeometrySvc::getLog(int ilayer, detGeo::axis a, int ilog)
 	double posRef = -0.5*(nlogs-1)*(logWidth()+logGap());
 	double pos = posRef+ilog*(logWidth()+logGap());
 	if (fabs(pos) < 1e-5) pos =0.; 
-	if (a == detGeo::X) xpos = pos;
+	if (a == CalDetGeo::X) xpos = pos;
 	else ypos = pos;
 
 	double xsize = logLength();
 	double ysize = logLength();
-	if (a == detGeo::X) xsize = logWidth();
+	if (a == CalDetGeo::X) xsize = logWidth();
 	else ysize = logWidth();
 	double zsize = logHeight();
 	
 	Point P(xpos,ypos,zpos);
 	Point S(0.5*xsize,0.5*ysize,0.5*zsize);
 
-	detGeo log(ilayer,a,ilog,P,S);
+	CalDetGeo log(ilayer,a,ilog,P,S);
 
 	return log;
 }

@@ -96,7 +96,7 @@ void CalPedCalib::readPedestal(std::istream& file)
 
 
 
-	CalADCLog* log = getLogID(CalLogID::ID(ilayer,detGeo::makeAxis(iview),icolumn));
+	CalADCLog* log = getLogID(CalLogID::ID(ilayer,CalDetGeo::makeAxis(iview),icolumn));
 
 	double pedLEX;
 	double pedLE;

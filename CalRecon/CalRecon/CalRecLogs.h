@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <vector>
-#include "TkrRecon/detGeo.h"
+#include "CalRecon/CalDetGeo.h"
 #include "CalRecon/CalADCLogs.h"
 #include "CalRecon/CalBase.h"
 #include "Gaudi/Kernel/DataObject.h"
@@ -34,8 +34,8 @@ class CalRecLog : public CalADCLog
 public:
 
 	//construct
-	CalRecLog(int ilayer, detGeo::axis iview, int ilog);
-	CalRecLog(int ilayer, detGeo::axis iview, int ilog, idents::ModuleId mod);
+	CalRecLog(int ilayer, CalDetGeo::axis iview, int ilog);
+	CalRecLog(int ilayer, CalDetGeo::axis iview, int ilog, idents::ModuleId mod);
 	void setNegEnergy(CalBase::RANGE r, double e)  {m_negEnergy[r] = e;}
 	void setPosEnergy(CalBase::RANGE r, double e)  {m_posEnergy[r] = e;}
 	void setNegEnergy(double e)                    {m_nEnergy = e;}

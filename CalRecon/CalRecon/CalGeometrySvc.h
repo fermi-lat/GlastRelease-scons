@@ -4,7 +4,7 @@
 
 #include "Gaudi/Kernel/Service.h"
 
-#include "TkrRecon/detGeo.h"
+#include "CalRecon/CalDetGeo.h"
 #include "idents/ModuleId.h"
 
 //----------------------------------------------
@@ -46,9 +46,9 @@ public:
 	 double logLength()      {return m_logLength;}
 	 double logGap()         {return m_logGap;}
 
-	 detGeo getLayer(int ilayer, detGeo::axis a);
-	 detGeo getLog(int ilayer, detGeo::axis a, int ilog); 
-	 detGeo getLog(int ilayer, detGeo::axis a, int ilog, idents::ModuleId mod); 
+	 CalDetGeo getLayer(int ilayer, CalDetGeo::axis a);
+	 CalDetGeo getLog(int ilayer, CalDetGeo::axis a, int ilog); 
+	 CalDetGeo getLog(int ilayer, CalDetGeo::axis a, int ilog, idents::ModuleId mod); 
 
 
 
