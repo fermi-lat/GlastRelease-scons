@@ -7,8 +7,8 @@
 #include "geometry/Point.h"
 #include "gui/DisplayRep.h"
 #include "GlastEvent/Digi/TkrDigi.h"
-#include "TkrRecon/Cluster/TkrCluster.h"
-#include "TkrRecon/Cluster/TkrClusters.h"
+#include "GlastEvent/Recon/TkrRecon/TkrCluster.h"
+#include "GlastEvent/Recon/TkrRecon/TkrClusterCol.h"
 #include "TkrRecon/ITkrGeometrySvc.h"
 #include "TkrRecon/ITkrBadStripsSvc.h"
 
@@ -25,6 +25,8 @@ enum {bigStripNum = 0x7FFFFF};
 *
 * $Header$
 */
+
+namespace TkrRecon { //Namespace
 
 class TkrMakeClusters
 {
@@ -48,7 +50,7 @@ public:
 
 	/// This constructor actually makes the clusters
 	/// the pointers to services and data are passed through the constructor
-    TkrMakeClusters(TkrClusters* pClus, 
+    TkrMakeClusters(TkrClusterCol* pClus, 
 		ITkrGeometrySvc* pTkrGeo, ITkrBadStripsSvc* pBadStrips, 
 		TkrDigiCol* pTkrDigiCol);
 
@@ -85,5 +87,7 @@ private:
 	int numPlanes;
 	/// cluster list
 };
+
+}; // Namespace
 
 #endif // TKRMAKECLUSTERS

@@ -12,7 +12,11 @@
 #include "src/Cluster/TkrMakeClusters.h"
 #include <algorithm>
 
-TkrMakeClusters::TkrMakeClusters(TkrClusters* pClus,
+using namespace TkrRecon;
+
+//using namespace TkrRecon;
+
+TkrMakeClusters::TkrMakeClusters(TkrClusterCol* pClus,
 								 ITkrGeometrySvc* pTkrGeoSvc, ITkrBadStripsSvc* pBadStripsSvc, 
 								 TkrDigiCol* pTkrDigiCol)
 {
