@@ -295,6 +295,11 @@ StatusCode FluxSvc::run(){
     
     // loop over the events
     IFlux* flux=currentFlux();
+    if( flux==0 ) {
+        log << MSG::WARNING 
+            << "FluxSvc is being used for the event loop, but there is no IFlux object for access to the elapsed time"
+            << endreq;
+    }
     int eventNumber= 0;
     double currentTime=m_startTime;
     
@@ -320,7 +325,9 @@ StatusCode FluxSvc::run(){
         }
         
         if( status.isFailure()) break;
-        currentTime = flux->gpsTime();
+        if(flux!=0){
+            currentTime = flux->gpsTime();
+        }
         eventNumber ++;
     }
     if( status.isFailure()){
