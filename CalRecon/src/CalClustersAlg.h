@@ -8,7 +8,7 @@
 
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/Property.h"
-#include "ICluster.h"
+#include "IClusteringTool.h"
 #include "IEnergyCorr.h"
 
 class IGlastDetSvc;
@@ -109,10 +109,10 @@ private:
     IGlastDetSvc* detSvc;
 
     /// name of Tool for finding clusters
-    StringProperty m_clusterToolName;
+    StringProperty m_clusteringToolName;
 
     /// pointer to actual tool for finding clusters
-    ICluster* m_clusterTool;
+    IClusteringTool* m_clusteringTool;
 
     /// name of Tool for finding last layer energy leakage
     StringProperty m_lastLayerToolName;

@@ -67,21 +67,27 @@ def build_application_test(package) :
 # help output analysis
 #=================================================
 
-def accumulate_energy(filename) :
+def key_values(filename) :
 
   # lines of interest
   regexp = re.compile('^(CalClustersAlg|second).*Energy')
 
-  # accumulate the log energy
-  energy = 0
+  # accumulate the values
+  raw_energy = 0
+  corrected_energy = 0
+  hashed_position = 0
+  hashed_direction = 0
   file = open(filename)
   for line in file.readlines() :
     if regexp.search(line) :
       words = line.split()
-      energy += string.atof(words[3])
+      raw_energy += string.atof(words[3])
+      corrected_energy += string.atof(words[5])
+      hashed_position += string.atof(words[6]) + string.atof(words[7]) + string.atof(words[8])
+      hashed_direction += string.atof(words[9]) + string.atof(words[9]) + string.atof(words[11])
       
   # result
-  return energy
+  return [ raw_energy, corrected_energy, hashed_position, hashed_direction ]
    
 
 #=================================================
@@ -125,15 +131,15 @@ def run_job(package,options,cmtbin_depend) :
     sys.exit(1)
 
   # compute energies
-  log_energy = accumulate_energy(log_name)
-  ref_energy = accumulate_energy(ref_name)
+  log_key_values = key_values(log_name)
+  ref_key_values = key_values(ref_name)
 
   # compare
-  if log_energy != ref_energy :
-    print 'VALIDATION ERROR: '+package+' '+options+' COMPARISON FAILED (',log_energy,'!=',ref_energy,')'
+  if log_key_values != ref_key_values :
+    print 'VALIDATION ERROR: '+package+' '+options+' COMPARISON FAILED',log_key_values,'!=',ref_key_values
     sys.exit(1)
   else :
-    print 'validation: '+package+' '+options+' ok (',log_energy,')'
+    print 'validation: '+package+' '+options+' ok',log_key_values
     
   # back to original dir
   os.chdir(original_dir)

@@ -1,80 +1,61 @@
 
-#include "SingleClusterTool.h"
+#include "ClusteringTool.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/ToolFactory.h"
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "Event/Recon/CalRecon/CalXtalRecData.h"
 
+ClusteringTool::ClusteringTool
+ ( const std::string & type, 
+   const std::string & name,
+   const IInterface * parent )
+ : AlgTool( type, name, parent )
+ { declareInterface<IClusteringTool>(this) ; }
 
-static const ToolFactory<SingleClusterTool>  s_factory;
-const IToolFactory& SingleClusterToolFactory = s_factory;
-
-
-SingleClusterTool::SingleClusterTool(
-                                     const std::string& type, 
-                                     const std::string& name, 
-                                     const IInterface* parent)
-                                     : Cluster( type, name, parent )
-{    
-    // Declare additional interface
-    declareInterface<ICluster>(this); 
-}
-
-
-
-StatusCode SingleClusterTool::initialize()
-
-// This function does following initialization actions:
-//    - extracts geometry constants from xml file using GlastDetSvc
-
-{
-    MsgStream log(msgSvc(), name());
-    StatusCode sc = StatusCode::SUCCESS;
-	log << MSG::INFO << "Initializing SingleClusterTool" <<endreq;
+ClusteringTool::~ClusteringTool()
+ {} 
     
-    
-    // get pointer to GlastDetSvc
-    sc = service("GlastDetSvc", detSvc);
-    
-    // if GlastDetSvc isn't available - put error message and return
-    if(sc.isFailure())
-    {
-        log << MSG::ERROR << "GlastDetSvc could not be found" <<endreq;
-        return sc;
-    }
-    
+// This function extracts geometry constants from xml
+// file using GlastDetSvc
+StatusCode ClusteringTool::initialize()
+ {
+  MsgStream log(msgSvc(), name());
+  StatusCode sc = StatusCode::SUCCESS;
+  log<<MSG::INFO<<"BEGIN initialize()"<<endreq ;
 
-    // extracting detector geometry constants from xml file
-
-    double value;
-    if(!detSvc->getNumericConstByName(std::string("CALnLayer"), &value)) 
-    {
-        log << MSG::ERROR << " constant " << " CALnLayer "
-            <<" not defined" << endreq;
-        return StatusCode::FAILURE;
-    } else m_CalnLayers = int(value);
+  // GlastDetSvc
+  IGlastDetSvc * detSvc ;
+  sc = service("GlastDetSvc", detSvc);
+  if (sc.isFailure())
+   {
+    log<< MSG::ERROR<<"GlastDetSvc not found"<<endreq ;
+    return StatusCode::FAILURE ;
+   }
+   
+  double value;
+  if (!detSvc->getNumericConstByName(std::string("CALnLayer"),&value)) 
+   {
+    log<<MSG::ERROR<<"CALnLayer not defined"<<endreq ;
+    return StatusCode::FAILURE;
+   }
+  else m_CalnLayers = int(value) ;
     
-    if(!detSvc->getNumericConstByName(std::string("CsIWidth"),&m_CsIWidth))
-    {
-        log << MSG::ERROR << " constant " << " CsIWidth "
-            <<" not defined" << endreq;
-        return StatusCode::FAILURE;
-    } 
+  if (!detSvc->getNumericConstByName(std::string("CsIWidth"),&m_CsIWidth))
+   {
+    log<<MSG::ERROR<<"CsIWidth not defined"<<endreq ;
+    return StatusCode::FAILURE ;
+   } 
     
-    if(!detSvc->getNumericConstByName(std::string("CsIHeight"),&m_CsIHeight))
-    {
-        log << MSG::ERROR << " constant " << " CsIHeight "
-            <<" not defined" << endreq;
-        return StatusCode::FAILURE;
-    } 
-    
-         
-    return sc;
-}
+  if (!detSvc->getNumericConstByName(std::string("CsIHeight"),&m_CsIHeight))
+   {
+    log<<MSG::ERROR<<"CsIHeight not defined"<<endreq ;
+    return StatusCode::FAILURE ;
+   } 
+      
+  log<<MSG::INFO<<"END initialize()"<<endreq ;
+  return StatusCode::SUCCESS ;
+ }
 
-
-StatusCode SingleClusterTool::findClusters(Event::CalXtalRecCol* calXtalRecCol)
-
+StatusCode ClusteringTool::findClusters(
+    Event::CalXtalRecCol * calXtalRecCol,
+    Event::CalClusterCol * calClusterCol )
 //Purpose and method:
 //
 //   This function performs the calorimeter cluster reconstruction.
@@ -84,7 +65,7 @@ StatusCode SingleClusterTool::findClusters(Event::CalXtalRecCol* calXtalRecCol)
 //                  average position per layer
 //                  quadratic spread per layer
 //      - fit the particle direction using Fit_Direction() function
-//      - store all calculated quantities in CalCluster object
+//      - store all calculated quantities in CalCluster objects
 // 
 // TDS input: CalXtalRecCol
 // TDS output: CalClustersCol
@@ -92,62 +73,81 @@ StatusCode SingleClusterTool::findClusters(Event::CalXtalRecCol* calXtalRecCol)
 
 {
     MsgStream log(msgSvc(), name());
-    StatusCode sc = StatusCode::SUCCESS;
 
-    //get pointers to the TDS data structures
+    //Copy pointers to crystal objects for local use
+    xTalDataVec xTalData;
+    xTalData.clear();
 
+    Event::CalXtalRecCol::const_iterator it;
+    for (it = calXtalRecCol->begin(); it != calXtalRecCol->end(); it++)
+    {
+        // get pointer to the reconstructed data for given crystal
+		Event::CalXtalRecData* recData = *it;
+        xTalData.push_back(recData);
+    }
+
+    //Make clusters
+    if (int numLeft  = xTalData.size() > 0)
+    {
+        while(numLeft > 0)
+        {
+            xTalDataVec cluster = nextXtalsSet(xTalData);
+
+            //int numXtals = cluster.size();
+
+            numLeft  = xTalData.size();
+
+            makeCluster(cluster,calClusterCol);
+        }
+    }
+  // Always store a zero cluster so downstream code runs ok
+  else
+   { makeCluster(xTalData,calClusterCol) ; }
+
+  return StatusCode::SUCCESS ;
+ }
+
+/// This makes a CalCluster out of associated CalXtalRecData pointers
+void ClusteringTool::makeCluster( xTalDataVec& xTalVec,
+    Event::CalClusterCol * calClusterCol)
+{
     const Point p0(0.,0.,0.);  
-     
-    double ene = 0;                 // total energy in calorimeter
-    Vector pCluster = p0;            // cluster position
-    int nLayers = m_CalnLayers;     // number of layers
-    
-    // energy per layer
-    std::vector<double> eneLayer(nLayers,0.);   
-    
-    // Vector of average position per layer
-    std::vector<Vector> pLayer(nLayers);    
-    
-    
-    // Vector of quadratic spread per layer
-    std::vector<Vector> rmsLayer(nLayers);  
-    
-    
-    
+
+    //Initialize variables
+    double ene = 0;                                 // Total energy in this cluster
+    Vector pCluster(0.,0.,0.);                      // Cluster position
+    std::vector<double> eneLayer(m_CalnLayers,0.);     // Energy by layer
+    std::vector<Vector> pLayer(m_CalnLayers);       // Position by layer
+    std::vector<Vector> rmsLayer(m_CalnLayers);     // rms by layer
+
     // Compute barycenter and various moments
     
-    
-    // loop over all hitted crystals in CalXtalRecCol
-    for (Event::CalXtalRecCol::const_iterator it = calXtalRecCol->begin();
-    it != calXtalRecCol->end(); it++){
-
-        // get pointer to teh reconstructed data for given crystal
-		Event::CalXtalRecData* recData = *it;
+    // loop over all crystals in the current cluster
+    xTalDataVec::iterator xTalIter;
+    for(xTalIter = xTalVec.begin(); xTalIter != xTalVec.end(); xTalIter++)
+    {
+        // get pointer to the reconstructed data for given crystal
+		Event::CalXtalRecData* recData = *xTalIter;
         
         // get reconstructed values
-        double eneXtal = recData->getEnergy(); // crystal energy
-        Vector pXtal = recData->getPosition() - p0; // Vector of crystal position
-        int layer = (recData->getPackedId()).getLayer(); // layer number
-        
+        double eneXtal = recData->getEnergy();                // crystal energy
+        Vector pXtal   = recData->getPosition() - p0;         // Vector of crystal position
+        int    layer   = (recData->getPackedId()).getLayer(); // layer number
+
         // update energy of corresponding layer
-        eneLayer[layer]+=eneXtal;
+        eneLayer[layer] += eneXtal;
         
         // update average position of corresponding layer
         Vector ptmp = eneXtal*pXtal;
         pLayer[layer] += ptmp;
         
         // Vector containing squared coordinates, weighted by crystal energy 
-        Vector ptmp_sqr(ptmp.x()*pXtal.x(),
-                        ptmp.y()*pXtal.y(),
-                        ptmp.z()*pXtal.z());
+        Vector ptmp_sqr(ptmp.x()*pXtal.x(), ptmp.y()*pXtal.y(), ptmp.z()*pXtal.z());
  
-        
-        
         // update quadratic spread, which is proportional to eneXtal;
         // this means, that position error in one crystal
         // is assumed to be 1/sqrt(eneXtal) 
         rmsLayer[layer] += ptmp_sqr;
-        
         
         // update energy sum
         ene  += eneXtal;
@@ -155,19 +155,18 @@ StatusCode SingleClusterTool::findClusters(Event::CalXtalRecCol* calXtalRecCol)
         // update cluster position
         pCluster += ptmp;
     }
-    
+
     // Now take the means
 
     // if energy sum is not zero - normalize cluster position
-    if(ene>0.)pCluster *= (1./ene); 
-
-    // if energy is zero - set cluster position to non-physical value
-    else pCluster=Vector(-1000., -1000., -1000.);
-    int i = 0;
+    if(ene > 0.) pCluster /= ene; 
+ 	// if energy is zero - set cluster position to non-physical value
+    else pCluster = Vector(-1000., -1000., -1000.);
     
     // loop over calorimeter layers
-    for( ;i<nLayers;i++){
-
+    int i ;
+    for( i = 0; i < m_CalnLayers; i++)
+    {
         // if energy in the layer is not zero - finalize calculations
         if(eneLayer[i]>0)
         {
@@ -177,12 +176,10 @@ StatusCode SingleClusterTool::findClusters(Event::CalXtalRecCol* calXtalRecCol)
             // normalize quadratic spread in the laye
             rmsLayer[i] *= (1./eneLayer[i]);
             
-            
             // Vector containing the squared average position in each component
             Vector sqrLayer(pLayer[i].x()*pLayer[i].x(),
                             pLayer[i].y()*pLayer[i].y(),
                             pLayer[i].z()*pLayer[i].z());
-            
             
             // the precision of transverse coordinate measurement
             // if there is no fluctuations: 1/sqrt(12) of crystal width
@@ -193,8 +190,8 @@ StatusCode SingleClusterTool::findClusters(Event::CalXtalRecCol* calXtalRecCol)
             // subtracting the  squared average position and adding
             // the square of crystal width, divided by 12
             rmsLayer[i] += d-sqrLayer;
-            
         }
+            
         
         // if energy in the layer is zero - reset position and spread Vectors
         else 
@@ -204,18 +201,15 @@ StatusCode SingleClusterTool::findClusters(Event::CalXtalRecCol* calXtalRecCol)
         }
     }
     
-    
     // Now sum the different rms to have one transverse and one longitudinal rms
-    double rms_trans=0;
-    double rms_long=0;
-    std::vector<Vector> posrel(nLayers);
+    double rms_trans = 0;
+    double rms_long = 0;
+    std::vector<Vector> posrel(m_CalnLayers);
     
-    
-    for(int ilayer=0;ilayer<nLayers;ilayer++)
+    for(int ilayer = 0; ilayer < m_CalnLayers; ilayer++)
     {
-        
         posrel[ilayer]=pLayer[ilayer]-pCluster;
-        
+       
         // Sum alternatively the rms
         if(ilayer%2)
         {
@@ -230,42 +224,21 @@ StatusCode SingleClusterTool::findClusters(Event::CalXtalRecCol* calXtalRecCol)
     }
  
     // Compute direction using the positions and rms per layer
-    Vector caldir = Fit_Direction(pLayer,rmsLayer,nLayers);
- 
-	    // Fill CalCluster data
-    Event::CalCluster* cl = new Event::CalCluster(ene,pCluster+p0);
+    Vector caldir = fitDirection(pLayer, rmsLayer);
 
-    cl->initialize(ene,
-		   eneLayer,
-		   pLayer,
-		   rmsLayer,
-		   rms_long,
-		   rms_trans,
-		   caldir,
-		   0.);
+    // Fill CalCluster data
+    Event::CalCluster* cl = new Event::CalCluster(ene, pCluster + p0);
 
-    getClusterCol()->add(cl);
+    cl->initialize(ene, eneLayer, pLayer, rmsLayer, rms_long, rms_trans, caldir, 0.);
 
-    return sc;
+    calClusterCol->add(cl);
+
+    return;
 }
 
-StatusCode SingleClusterTool::finalize()
-{
-	StatusCode sc = StatusCode::SUCCESS;
-
-	return sc;
-}
-
-StatusCode SingleClusterTool::execute()
-{
-	StatusCode sc = StatusCode::SUCCESS;
-
-	return sc;
-}
-
-Vector SingleClusterTool::Fit_Direction(std::vector<Vector> pos,
-                                     std::vector<Vector> sigma2,
-                                     int nlayers)
+Vector ClusteringTool::fitDirection
+ ( std::vector<Vector> pos,
+   std::vector<Vector> sigma2 )
 //
 // Purpose and Method:
 //       find the particle direction from average positions in each
@@ -285,8 +258,7 @@ Vector SingleClusterTool::Fit_Direction(std::vector<Vector> pos,
 //
 // Returned value:    3-Vector of reconstructred particle direction
 //
-                                     
-{
+ {
     
     MsgStream log(msgSvc(), name());
     
@@ -313,7 +285,7 @@ Vector SingleClusterTool::Fit_Direction(std::vector<Vector> pos,
     
     
     // loop over calorimeter layers
-    for(int il=0;il<nlayers;il++)
+    for(int il=0;il<m_CalnLayers;il++)
     {                
         // For the moment forget about longitudinal position
         
@@ -408,6 +380,4 @@ Vector SingleClusterTool::Fit_Direction(std::vector<Vector> pos,
     Vector dir(costheta*tgthx,costheta*tgthy,costheta);
     return dir;
 }
-
-
-
+	

@@ -16,7 +16,7 @@ use TkrUtil *
 use xml *
 
 # The following is needed so that ParticlePropertySvc,
-# which is needed by SimpleClusterTool, find out particle.cdf
+# which is needed by SimpleClusteringTool, find out particle.cdf
 use FluxSvc v*
 
 apply_pattern packageShr

@@ -32,7 +32,7 @@ Algorithm(name, pSvcLocator)
     // 1st - before TkrRecon and 2nd - after TkrRecon
     
     declareProperty("callNumber",m_callNumber=0);
-    declareProperty ("clusterToolName", m_clusterToolName="SingleClusterTool");
+    declareProperty ("clusterToolName", m_clusteringToolName="SingleClusteringTool");
     declareProperty ("lastLayerToolName", m_lastLayerToolName="LastLayerCorrTool");
     declareProperty ("profileToolName", m_profileToolName="ProfileTool");
     declareProperty ("calValsCorrToolName", m_calValsCorrToolName="CalValsCorrTool");
@@ -103,9 +103,9 @@ StatusCode CalClustersAlg::initialize()
     // set global constants with geometry parameters (in cm)
     // used by Profile() function
     
-    sc = toolSvc()->retrieveTool(m_clusterToolName,  m_clusterTool);
+    sc = toolSvc()->retrieveTool(m_clusteringToolName,  m_clusteringTool);
     if (sc.isFailure() ) {
-        log << MSG::ERROR << "  Unable to create " << m_clusterToolName << endreq;
+        log << MSG::ERROR << "  Unable to create " << m_clusteringToolName << endreq;
         return sc;
     }
     
@@ -136,7 +136,7 @@ StatusCode CalClustersAlg::retrieve()
 //    - to create new CalClusterCol and register it in TDS 
 //
 //  TDS input:   CalXtalRecCol
-//  TDS ourput  CalClusterCol
+//  TDS output:  CalClusterCol
 
 {
     
@@ -185,7 +185,7 @@ StatusCode CalClustersAlg::retrieve()
         m_calClusterCol->delClusters();
     }
     
-    m_clusterTool->setClusterCol(m_calClusterCol);
+    //m_clusteringTool->setClusterCol(m_calClusterCol);
     
     // get pointer to CalXtalRecCol
     m_calXtalRecCol = SmartDataPtr<CalXtalRecCol>(eventSvc(),
@@ -267,8 +267,8 @@ StatusCode CalClustersAlg::execute()
     }
     
     
-    // call the Cluster tool to find clusters
-    m_clusterTool->findClusters(m_calXtalRecCol);
+    // call the Clustering tool to find clusters
+    m_clusteringTool->findClusters(m_calXtalRecCol,m_calClusterCol);
     
     
     // loop over all found clusters
