@@ -91,11 +91,11 @@ StatusCode TholdCIMgr::loadIdealVals() {
   MsgStream msglog(m_msgSvc, *m_logName); 
   
   //-- SANITY CHECKS --//
-  if (m_idealCalib.ciULD.size() != RngNum::N_VALS) {
+  if (m_idealCalib.ciULD.size() != (unsigned)RngNum::N_VALS) {
     msglog << MSG::ERROR << "Wrong # of ideal ULD vals." << endl;
     return StatusCode::FAILURE;;
   }
-  if (m_idealCalib.ciPeds.size() != RngNum::N_VALS) {
+  if (m_idealCalib.ciPeds.size() != (unsigned)RngNum::N_VALS) {
     msglog << MSG::ERROR << "Wrong # of ideal ci Pedestal vals." << endl;
     return StatusCode::FAILURE;;
   }

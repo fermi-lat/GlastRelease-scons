@@ -38,10 +38,10 @@ class CalibItemMgr {
     m_logName(0),
     m_calibRootPath(calibRootPath),
     m_splineLists(nSplineTypes),
-    m_dataProviderSvc(0),
-    m_isValid(false),
     m_idealMode(false),
     m_idealCalib(idealCalib),
+    m_isValid(false),
+    m_dataProviderSvc(0),
     m_inUpdate(false) {}
 
   virtual ~CalibItemMgr() {};

@@ -68,7 +68,7 @@ StatusCode TholdMuonMgr::loadIdealVals() {
   MsgStream msglog(m_msgSvc, *m_logName); 
 
   //-- SANITY CHECKS --//
-  if (m_idealCalib.muonPeds.size() != RngNum::N_VALS) {
+  if (m_idealCalib.muonPeds.size() != (unsigned)RngNum::N_VALS) {
     msglog << MSG::ERROR << "Wrong # of ideal muon pedestal vals." << endl;
     return StatusCode::FAILURE;;
   }

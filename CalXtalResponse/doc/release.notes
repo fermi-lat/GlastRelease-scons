@@ -1,3 +1,4 @@
+v0r2p0 builds on linux w/out warning
 v0r2   ideal flavor skips mysql. defaultOptions.txt include file.  clhep random class see CVS log.  
 v0r1p2 performance improvements:  removed uneeded msglog construcotrs
 v0r1p1 fixed test_app to work w/ last update (whoops!)

@@ -16,8 +16,8 @@ IntNonlinMgr::IntNonlinMgr(const IdealCalCalib &idealCalib) :
   CalibItemMgr(CalibData::CAL_IntNonlin, 
                idealCalib, 
                N_SPLINE_TYPES),
-  m_idealDACs(RngNum::N_VALS), // one spline per range
-  m_idealADCs(RngNum::N_VALS)  // one spline per range
+  m_idealADCs(RngNum::N_VALS), // one spline per range
+  m_idealDACs(RngNum::N_VALS)  // one spline per range
 {
 
   // set size of spline lists (1 per range)
@@ -148,12 +148,12 @@ StatusCode IntNonlinMgr::loadIdealVals() {
   MsgStream msglog(m_msgSvc, *m_logName); 
 
   //-- SANITY CHECKS --//
-  if (m_idealCalib.ciULD.size() != RngNum::N_VALS) {
+  if (m_idealCalib.ciULD.size() != (unsigned)RngNum::N_VALS) {
     msglog << MSG::ERROR << "Bad # of ULD vals in ideal CalCalib xml file" 
            << endreq;
     return StatusCode::FAILURE;
   }
-  if (m_idealCalib.inlADCPerDAC.size() != RngNum::N_VALS) {
+  if (m_idealCalib.inlADCPerDAC.size() != (unsigned)RngNum::N_VALS) {
     msglog << MSG::ERROR << "Bad # of ADCPerDAC vals in ideal CalCalib xml file" 
            << endreq;
     return StatusCode::FAILURE;
@@ -170,8 +170,8 @@ StatusCode IntNonlinMgr::loadIdealVals() {
 
     m_idealDACs[rng][0] = 0;
     m_idealDACs[rng][1] = 
-      m_idealCalib.ciULD[rng] /
-      m_idealCalib.inlADCPerDAC[rng];
+      (unsigned int)(m_idealCalib.ciULD[rng] /
+                     m_idealCalib.inlADCPerDAC[rng]);
   }
 
   // we don't have this info at this point

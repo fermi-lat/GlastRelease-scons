@@ -56,11 +56,11 @@ StatusCode PedMgr::loadIdealVals() {
   MsgStream msglog(m_msgSvc, *m_logName);
 
   //-- SANITY CHECK --//
-  if (m_idealCalib.pedVals.size() != RngNum::N_VALS) {
+  if (m_idealCalib.pedVals.size() != (unsigned)RngNum::N_VALS) {
     msglog << MSG::ERROR << "wrong # of ideal pedestal vals." << endl;
     return StatusCode::FAILURE;;
   }
-  if (m_idealCalib.pedCos.size() != RngNum::N_VALS) {
+  if (m_idealCalib.pedCos.size() != (unsigned)RngNum::N_VALS) {
     msglog << MSG::ERROR << "wrong # of ideal ped cosine vals." << endl;
     return StatusCode::FAILURE;;
   }
