@@ -20,27 +20,70 @@
     </tr>
     <tr>
       <td valign="top" width="20%"><font size="2"><strong><a href="#Introduction">Introduction</a></strong></font>
+        <p><font size="2"><strong><a href="#Setup">Setup</a></strong></font></p>
         <p><font size="2"><strong><a href="#Low level macros">Low Level Utilties</a></strong></font><font size="4"><br>
-        </font><font size="2"><a href="#chainTrees">chainTrees</a><br>
-        <a href="#plotMacros">plotMacros</a></font></p>
+        </font><font size="2"><a href="#chainTrees">chainTrees.cxx<br>
+        </a><a href="#createEventList.cxx">createEventList.cxx</a><br>
+        <a href="#pruneTree.cxx">pruneTree.cxx</a></font></p>
+        <p><font size="2">
+        <a href="#plotMacros"><b>plotMacros<br>
+        </b></a><a href="#HistBatch.h">HistBatch</a></font></p>
         <p><font size="2"><strong><a href="#Event Loop processing">Event Loop
         Processing</a></strong></font><font size="3"><br>
         </font><font size="2"><a href="#RootTreeAnalysis">RootTreeAnalysis</a><br>
-        <a href="#RawValidate">RawValidate</a></font></p>
+        <a href="#RawValidate">RawValidate<br>
+        </a><a href="#NtupleAnalysis">NtupleAnalysis</a></font></p>
         <p><font size="2"><strong><a href="#Ancillary Data files">Ancillary Data
         files</a><br>
-        </strong><a href="#Calibration">Calibration</a></font><font size="3"><br>
-        <br>
-        </font></td>
+        </strong><a href="#Calibration">Calibration</a></font>
+        <p>&nbsp;</td>
       <td width="15"></td>
       <td valign="top" width="80%">
         <h3><a name="Introduction">Introduction</a></h3>
         <p><font size="3">This package contains all GLAST ROOT macros that are
-        supported by the GLAST ground software group.</font></p>
+        supported by the GLAST ground software group.&nbsp; The routines
+        provided, are meant to provide some basic, general, functions that most
+        GLAST ROOT users may find useful.&nbsp; To process an GLAST ROOT data,
+        it is not necessary to use this package, but it may make it easier.</font></p>
+        <h3><font size="3"><a name="Setup">Setup the ROOT environment for GLAST</a></font></h3>
+        <p><font size="3">RootAnalysis now comes with a simple .rootrc.&nbsp;
+        This is the file used by ROOT to setup your ROOT environment upon
+        startup.&nbsp; First, setup a ROOTANALYSIS environment variable that is
+        set to the directory path, where you have the RootAnalysis package
+        installed.&nbsp;</font></p>
+        <p><font size="3">To be used, the .rootrc file must be in the directory
+        from where you launch ROOT.</font>&nbsp; <font size="3">Next do one of
+        the following:</font></p>
+        <ol>
+          <li><font size="3">Startup ROOT from within the RootAnalysis directory<br>
+            OR</font></li>
+          <li><font size="3">Copy the .rootrc file to your local area, where you
+            will startup ROOT.</font></li>
+        </ol>
+        <p><font size="3">Currently, our .rootrc file, does 3 important things:</font></p>
+        <ol>
+          <li><font size="3">Loads our current digiRootData and reconRootData
+            libraries, using the rootlogon.C macro located in the RootAnalysis/setup
+            directory.&nbsp; By default, the macro expects that the libraries
+            are located in the RootAnalysis/lib directory.&nbsp; This behavior
+            can be changed by modify the rootlogon.C macro.</font></li>
+          <li><font size="3">Loads the macros defined in the RootAnalysis
+            package, using the rootlogon.C macro located in the RootAnalysis/setup
+            directory.</font></li>
+          <li><font size="3">Using the rootalias.C macro, some useful short
+            macros such as edit, ls, dir are made available within ROOT.&nbsp;
+            By default, edit uses &quot;vi&quot; for UNIX and Notepad for
+            Windows - you can change this by editing the RootAnalysis/setup/rootalias.C
+            macro.</font></li>
+        </ol>
         <h3><a name="Low level macros">Low level Utilities</a></h3>
-        <p><font size="3"><b><a name="chainTrees">chainTrees</a></b></font></p>
+        <p>Some low level utilities are made available in the RootAnalysis/utilityMacro
+        directory.&nbsp; Each macro file contains some description of the
+        macro's function and its usage.&nbsp; What follows is a summary for each
+        of the macros.</p>
+        <p><font size="3"><b><a name="chainTrees">chainTrees</a>.cxx</b></font></p>
         <p><font size="3">This small macro accepts a list of files names and
-        creates a TChain.</font></p>
+        returns a TChain.</font></p>
         <p><font size="3">All files must be of the same type i.e. all ntuple
         files, all raw files, all recon files, or all monte carlo files.</font></p>
         <p><font size="3">A TChain is useful if you want to analyze multiple
@@ -62,22 +105,99 @@
         &quot;PDR/t1&quot; or &quot;BFEM/t1&quot;, depending upon whether it is
         a PDR (full flight instrument) ntuple or a balloon ntuple.</font></p>
         <p><font size="3">Raw, Recon and Monte Carlo Root files have a tree
-        named &quot;T&quot;.<br>
+        named &quot;T&quot;.
         </font></p>
+        <p><font size="3"><b><a name="createEventList.cxx">createEventList.cxx</a></b>
+        </font></p>
+        <p>This macro provides a generic mechanism to create a TEventList.&nbsp;
+        Event lists are useful, in that they restrict the entries in a TTree
+        that will be processed.&nbsp;&nbsp; A TEventList is created, by applying
+        a cut on the data.&nbsp; There are 2 versions of this macro contained in
+        the same file, one for a regular TFile and the other for a TChain (a
+        chain of files):</p>
+        <p><font size="2"><i>TEventList* createEventList(char *fileName, char *treePath, char
+        *cutStr)&nbsp;<br>
+        </i><b>USAGE:</b><i><br>
+        </i></font><i><font size="2">    TEventList *elist =
+        createEventList(&quot;myFile.root&quot;, &quot;PDR/t1&quot;, &quot;Trig_Bits > 3.0");</font></i></p>
+        <p><font size="2"><i>TEventList* createEventList(TChain *chain, char *cutStr)&nbsp;<br>
+        </i></font><b><font size="2">USAGE:</font></b><br>
+        <i><font size="2">TEventList *elist = createEventList(myChain, "Trig_Bits > 3.0");</font></i></p>
+        <p><font size="3"><b><a name="pruneTree.cxx">pruneTree.cxx</a></b></font></p>
+        <p><font size="3">This macro creates a copy of a TTree containing a
+        truncated eventlist based upon user supplied cuts.</font></p>
+        <p><font size="2"><i>void pruneTree (char *orgFileName, char *treePath, TEventList *elist, char
+        *newFileName)&nbsp;<br>
+        </i><b>USAGE:</b><i><br>
+    pruneTree("myOrgFile.root", "PDR/t1", elist, "myNewFile.root");<br>
+        </i></font></p>
+        <p><i><font size="2">void pruneTree (int numFiles, char* list[], char* treePath. TCut cut, char
+        *newFileName)&nbsp;</font></i></p>
         <p><b><a name="plotMacros">plotMacros</a></b></p>
         <p>This directory contains a series of macros that create
         &quot;pretty&quot; plots from the histograms generated by the
-        RootTreeAnalysis macro.</p>
+        RootTreeAnalysis macro.&nbsp;</p>
+        <p><b><a name="HistBatch.h">HistBatch.h</a></b><br>
+        A very useful macro in this directory is HistBatch.h.&nbsp; This
+        contains a new class, created by Dan Flath, that can generate plots from
+        a Histogram ROOT file and print them to the screen and/or to a
+        Postscript file.&nbsp; The following describes the 3 main routines in
+        this class:</p>
+        <p><i><font size="2">//! Draw all histograms (if in memory) contained in
+        list<br>
+        static void drawAll(const TList *l, const char *szFileName, const Int_t
+        nCols = 1, const Int_t nRows = 1) const;</font></i></p>
+        <p><i><font size="2">//! Draw all histograms (if in memory) contained in
+        directory (does not recurse sub-TDirectories)<br>
+        static void drawAll(const TDirectory *d, const char *szFileName, const
+        Int_t nCols = 1, const Int_t nRows = 1) const;</font></i></p>
+        <p><i><font size="2">//! Draw all histograms (from disk) contained in
+        file (recurses sub-TDirectories)<br>
+        static void drawAll(const char *szInFileName, const char *szFileName,
+        const Int_t nCols = 1, const Int_t nRows = 1) const;</font></i></p>
+        <p><b>Usage</b></p>
+        <p>All methods are public static.&nbsp; No instance of the HistBatch
+        must be created in order to call the functions.&nbsp; Treat the
+        functions as if they belong to a namespace called HistBatch.&nbsp; ie:</p>
+        <p><i><font size="2">HistBatch::drawAll(myList, &quot;myPsFile.ps&quot;,
+        2, 2);&nbsp;&nbsp; // Draw all histos in myList to myPsFile.ps in 2x2
+        orientation</font></i></p>
+        <p>Here is a description of the other macros in the plotMacros
+        directory.</p>
+        <p><b>acdPlots.cxx </b>creates plots of PHA values for the ACD and XGTs,
+        using the histrogram ROOT file generated by the RootTreeAnalysis macro.</p>
+        <p><b>epsfilecreator</b> plots histograms one per pad and creates eps files for
+        every of them as selected or commented out by the user (Recon data) The sequence can be followed to create more histos as the user needs
+        them.</p>
+        <p><b><font size="3">hit4layers </font></b> plots 4 histograms of 4 different HIT Layers, selected by
+        the user, in one pad. It outputs a ps file with the result (Raw data).</p>
+        <p><b>hitlayers</b> loops over ALL Hit Layers pltting in one pad (Raw data).&nbsp;
+        It outputs a ps file with the result (Raw data).</p>
+        <p><b>hitstrips</b> loops over all layers plotting hits per strip
+        histogrmas. It creates a ps file with the result (Raw data).</p>
+        <p><b>reconhistograms</b> plots all recon histograms created in RootTreeAnalysis
+        and creates a single ps file in several pages</p>
+        <p><b>totmap</b> loops over all layers plotting tot and creating a ps file with
+        the result (Raw data).</p>
         <h3><a name="Event Loop processing">Event Loop processing</a></h3>
         <p><font size="3"><b><a name="RootTreeAnalysis">RootTreeAnalysis</a></b></font></p>
         <p><font size="3">Our generic event loop macro.&nbsp; Handles raw,
         reconstruction, and/or monte carlo ROOT files.&nbsp; Users can provide
         either file names, or TChains of files for multi-file processing.</font></p>
+        <p><font size="3">Example usage:<br>
+        </font><i><font size="2">RootTreeAnalysis* m = new RootTreeAnalysis("myRawFile.root", "myReconFile.root"); // create RootTreeAnalysis object<br>
+  m->Go(500);      // loop over 500 events. Go contains your analysis code</font></i></p>
         <p><font size="3"><b><a name="RawValidate">RawValidate</a></b></font></p>
         <p><font size="3">Handles only raw ROOT files.&nbsp; Behaves just as
         RootTreeAnalysis does, but it contains some additional default
         histograms that are useful for making sure that the raw data looks
         reasonable.</font></p>
+        <p><font size="2">Example usage:<i><br>
+        </i></font><i><font size="2">RawValidate* m = new RawValidate("MyRootFile.root"); // create RawValidate object<br>
+      m->Go(500);      // loop over 500 events. Go contains your analysis code</font></i></p>
+        <p><font size="3"><b><a name="NtupleAnalysis">NtupleAnalysis</a></b></font></p>
+        <p><font size="3">Please <a href="http://www-glast.slac.stanford.edu/software/root/howto/pdr.html">see
+        this page</a> for a description.</font></p>
         <h3><a name="Ancillary Data files">Ancillary Data files</a></h3>
         <p><font size="3"><b><a name="Calibration">Calibration</a></b></font></p>
         <p>This directory contains pedestal files from both the 1999-2000 SLAC
@@ -89,7 +209,7 @@
         bfem_peds_cal.dat, bfem_peds_acd.dat, bfem_peds_xgt.dat</p>
         <p>Currently by default, the RootTreeAnalysis and RawValidate macros
         will read in and use the Balloon pedestal files.</p>
-        <p>&nbsp;</td>
+      </td>
     </tr>
   </table>
   </center>
