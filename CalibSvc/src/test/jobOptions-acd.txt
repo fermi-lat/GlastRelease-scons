@@ -50,9 +50,11 @@ ApplicationMgr.EvtMax = 10000;
 ApplicationMgr.ExtSvc += {"CalibDataSvc"};
 
 ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
+ApplicationMgr.ExtSvc += {"CalibRootCnvSvc" };
 
 DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
+DetectorPersistencySvc.CnvServices += {"CalibRootCnvSvc"};
 
 CalibDataSvc.CalibFlavorList = {"ideal"};
 // not used yet

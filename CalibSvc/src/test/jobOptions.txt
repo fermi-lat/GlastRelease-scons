@@ -18,9 +18,11 @@ ApplicationMgr.Runable= "RootIoSvc";
 // ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock", 
 //		      "UseBadStrips" };
 ApplicationMgr.TopAlg = {"digiRootReaderAlg", "CalibEvtClock",
-		      "UsePeds" };
+		      "UseGains" };
 digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
 
+UseGains.DoWrite = "false";
+// UseGains.OutName = "$(CALIBUTILROOT)/root/CalGains.root"
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
@@ -50,10 +52,11 @@ DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibRootCnvSvc"};
 
-CalibDataSvc.CalibFlavorList = {"ideal"};
+
+CalibDataSvc.CalibFlavorList = {"ideal","RootBeer"};
 // not used yet
-CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
-			   "Test_1/mocha"};
+// CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
+//			   "Test_1/mocha"};
 
 // CalibDataSvc properties below are explicitly set to the
 // default values as established in CalibDataSvc.cxx.  
@@ -72,7 +75,7 @@ CalibMySQLCnvSvc.Host = "*";
 // By default, use production database "calib", but user may override.
 //  calib_user is a development database for use of, e.g., calibration
 //  algorithm developers
-// CalibMySQLCnvSvc.DbName = "calib_user";
+CalibMySQLCnvSvc.DbName = "calib_test";
 
 CalibEvtClock.startTime = "2003-2-25_00:20";
 CalibEvtClock.delayTime = 3;
