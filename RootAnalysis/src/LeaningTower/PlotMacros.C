@@ -78,7 +78,7 @@ void Initialize(char *filename)
   myFile = new TFile(filename);
   
   myTree = (TTree*) myFile->Get("Header");
-  NumberOfEvents=myTree->GetEntries();
+  NumberOfEvents = (long) myTree->GetEntries();
   //  myTree->AddFriend("Recon",myFile);
   //  AddLayer("X0");
   //  TFile myOutFile(f, "recreate");
@@ -339,7 +339,7 @@ TH1D *NumHitsLayer(TString myCuts)
     }
   //  gDirectory->Delete("TkrNumHits");
   var+=">>TkrNumHits";
-  TH1D *TkrNumHits = new TH1D("TkrNumHits",title,130,-0.5,128.5);
+  TH1D *TkrNumHits = new TH1D("TkrNumHits",title,129,-0.5,128.5);
 
   myTree->Draw(var,myCuts);
   //  TH1D *TkrNumHits = (TH1D*) gDirectory->Get("TkrNumHits");
@@ -581,7 +581,12 @@ TCanvas *Report(TString LV,TString myCuts)
   if ( nDead == 0 )
       sDead += " none";
   if ( sDead.Length() > 90 )
-      sDead = sDeadBase + " " + nDead + " strips";
+    {
+      sDead = sDeadBase;
+      sDead +=" ";
+      sDead += nDead;
+      sDead += " strips";
+    }
   pt->AddText(sDead);
 
   //HM->SetName("HM");
@@ -591,7 +596,7 @@ TCanvas *Report(TString LV,TString myCuts)
 
   TH1D *NHL = NumHitsLayer(myCuts);
   
-  long Sel_ToT1_ToT2_0_0 =  NHL->GetEntries();
+  long Sel_ToT1_ToT2_0_0 =  (long) NHL->GetEntries();
 
   TString text3 = " Number of selected events ( ";
   text3+=myCuts;
@@ -599,7 +604,7 @@ TCanvas *Report(TString LV,TString myCuts)
   text3+=Sel_ToT1_ToT2_0_0;
   double frac=1.0*Sel_ToT1_ToT2_0_0/(1.0*NumberOfEvents);
   char fractext[10];
-  sprintf(fractext," (%.2g\%) ",frac*100.);
+  sprintf(fractext," (%.2g \%) ",frac*100.);
   text3+=fractext;
 
   pt->AddText(text3);
@@ -627,14 +632,17 @@ TCanvas *Report(TString LV,TString myCuts)
 }
 
 void ReportAll(TString myCuts, TString opt) { 
-    TString axis[2] = { "X", "Y" };
-    for ( int i=0; i<18; ++i ) {
-        for ( int iaxis=0; iaxis<2; ++iaxis ) {
-            TString LV = axis[iaxis] + i;
-            TString fileName = LV + "." + opt;
-            Report(LV, myCuts)->Print(fileName);
-        }
+  TString axis[2] = { "X", "Y" };
+  for ( int i=0; i<18; ++i ) {
+    for ( int iaxis=0; iaxis<2; ++iaxis ) {
+      TString LV = axis[iaxis];
+      LV += i;
+      TString fileName = LV;
+      fileName += ".";
+      fileName += opt;
+      Report(LV, myCuts)->Print(fileName);
     }
+  }
 }
 
 void DumpReport(TString LV,char *filename)
@@ -777,3 +785,240 @@ void PlotRecon(TString myCuts)
   RecCan->cd(1);
 }
 
+
+void CoincidenceBigEvents(int NH)
+{
+  int NumXlayers = 11;
+  int NumYlayers = 0;  
+  int NumLayers = NumXlayers + NumYlayers;
+  std::cout<<NumLayers<<std::endl;
+  int *NumHits = new int[NumLayers];
+  
+  long EventId;
+  myTree->SetBranchAddress("EventId", &EventId);
+  for(int nx = 0; nx < NumXlayers; nx++)
+    {
+      TString anXLayer = "X";
+      anXLayer += nx;
+      AddLayer(anXLayer);
+      TString myVar = "Layer";
+      myVar+=anXLayer;
+      myVar+=".TkrNumHits";
+      myTree->SetBranchAddress(myVar,&NumHits[nx]);
+    }
+  
+  for(int ny = 0; ny < NumYlayers; ny++)
+    {  
+      TString anYLayer = "Y";
+      anYLayer += ny;
+      AddLayer(anYLayer);
+      TString myVar = "Layer";
+      myVar+=anYLayer;
+      myVar+=".TkrNumHits";
+      myTree->SetBranchAddress(myVar,&NumHits[NumXlayers+ny]);
+    }
+
+  int N = myTree->GetEntries();
+  
+  TString HistTitle="Fraction of events vs Coincidence layers (NumHits > ";
+  HistTitle += NH;
+  HistTitle +=")";
+  
+  TH1D *myHist = new TH1D("Events",HistTitle,NumLayers,.5,NumLayers+.5);
+
+  for(int i=0; i<N; i++)
+    {
+      myTree->GetEntry(i);
+      
+      int myLayers = 0;
+      for(int l = 0; l<NumLayers; l++)
+	{
+	  if(NumHits[l] > NH) myLayers++;
+	}
+      if(myLayers>0) 
+	{
+	  myHist->Fill(myLayers);
+	  std::cout<<EventId<<std::endl;
+	}
+    }
+  myHist->Scale(1./N);
+  myHist->Draw();
+  
+}
+
+
+void EventDisplay(long EventId)
+{
+  int NumXlayers = 11;
+  int NumYlayers = 8;  
+
+  int NumLayers = NumXlayers + NumYlayers;
+  
+  std::cout<<NumLayers<<std::endl;
+  
+  TString myCuts = "EventId==";
+  myCuts+=EventId;
+  
+  float XStripId[128*18];
+  float XZposition[128*18];
+
+  float YStripId[128*18];
+  float YZposition[128*18];
+  
+  float XLayersPositions[18] = {-16.8, -13.2, -23.3, -19.7, -29.8, -26.2, -36.2, -32.6, -42.7, -39.1, -55.7, -45.6, -55.7, -52.1, -62.2, -58.6, -68.7, -65.1};
+  float YLayersPositions[18] = {16.8, 13.2, 23.3, 19.7, 29.8, 26.2, 36.2, 32.6, 42.7, 39.1, 55.7, 45.6, 55.7, 52.1, 62.2, 58.6, 68.7, 65.1};
+  
+  
+  //  std::cout<<TotalNumHits<<std::endl;
+  int idx=0;
+
+  // X Layers:
+
+  for(int nx = 0; nx < NumXlayers; nx++)
+    {
+      TString anXLayer = "X";
+      anXLayer += nx;
+      AddLayer(anXLayer);
+
+      gDirectory->Delete("HitMap");
+      TH1D *HitMapHisto = HitMap(myCuts);
+      int NumHits = HitMapHisto->GetEntries();
+      if(NumHits>0)
+	{
+	  int strip=1;
+	  int hitperlayer=0;
+	  while(strip <= 1536 && hitperlayer <= NumHits)
+	    {
+	      if(HitMapHisto->GetBinContent(strip)>0)
+		{
+		  XStripId[idx]  = (float) HitMapHisto->GetBinCenter(strip);
+		  XZposition[idx]= (float) XLayersPositions[nx];
+		  idx++;
+		  hitperlayer++;
+		}
+	      strip++;
+	    }
+	}
+      
+      
+    }
+  TGraph *gX = new TGraph(idx,XStripId,XZposition);
+  gX->SetTitle("X Layers");
+  
+  // Y Layers:
+  int idy=0;
+  
+
+  for(int ny = 0; ny < NumYlayers; ny++)
+    {
+      TString anYLayer = "Y";
+      anYLayer += ny;
+      AddLayer(anYLayer);
+
+      gDirectory->Delete("HitMap");
+      TH1D *HitMapHisto = HitMap(myCuts);
+      
+      int NumHits = HitMapHisto->GetEntries();
+      
+      if(NumHits>0)
+	{
+	  int strip=1;
+	  int hitperlayer=0;
+	  while(strip <= 1536 && hitperlayer <= NumHits)
+	    {
+	      if(HitMapHisto->GetBinContent(strip)>0)
+		{
+		  YStripId[idy]  = (float) HitMapHisto->GetBinCenter(strip);
+		  YZposition[idy]= (float) YLayersPositions[ny];
+		  idy++;
+		  hitperlayer++;
+		}
+	      strip++;
+	    }
+	}
+      
+      
+    }
+  
+  TGraph *gY = new TGraph(idy,YStripId,YZposition);
+  gY->SetTitle("Y Layers");
+
+  //////////////////////////////////////////////////
+  //                     Dispaly
+  TCanvas *EventDisplayCanvas = new TCanvas("EventDisplayCanvas","EventDisplayCanvas",800,800);
+  EventDisplayCanvas->Divide(1,2);
+  EventDisplayCanvas->cd(2);
+  gX->Draw("ap*");
+  EventDisplayCanvas->cd(1);
+  gY->Draw("ap*");
+}
+
+void AllLayers(int cut=0)
+{
+  int nx=11;  
+  int ny=0;  
+  TString myCut="";    
+
+  for(int i=0; i<nx; i++)
+    {
+      TString anXlayer="X";
+      anXlayer+=i;
+      AddLayer(anXlayer);
+      TString layerstring="Layer";
+      layerstring +=anXlayer;
+      myCut+=layerstring;
+      myCut+=".TkrNumHits";
+      myCut+=" >= ";
+      myCut+= cut;
+      if (i!=nx+ny-1) myCut += " || ";
+    }
+
+
+  for(int i=0; i<ny; i++)
+    {
+      TString anYlayer="Y";
+      anYlayer+=i;
+      AddLayer(anYlayer);
+      TString layerstring="Layer";
+      layerstring +=anYlayer;
+      myCut+=layerstring;
+      myCut+=".TkrNumHits";
+      myCut+=" >= ";
+      myCut+= cut;
+      if (i!=ny-1) myCut += " || ";
+    }
+
+  std::cout<<myCut<<std::endl;
+
+  TH1D* h0;
+
+  for(int i=0; i < nx+ny; i++)
+    {
+      if(i<nx)
+	{
+	  TString anXlayer="X";
+	  anXlayer+=i;
+	  AddLayer(anXlayer);
+	  std::cout<<anXlayer<<std::endl;
+	}
+      else //if(i<ny)
+	{
+	  TString anYlayer="Y";
+	  int ii = (i-nx);
+	  anYlayer+=ii;
+	  AddLayer(anYlayer);
+	  std::cout<<anYlayer<<std::endl;
+	}
+      
+      if(i==0) h0 = NumHitsLayer(myCut);    
+      if(i>0) h0->Add(NumHitsLayer(myCut)); 
+    }
+  h0->Draw();
+}
+
+void PlotTotalTkrNumHits()
+{
+  TH1D *TotalNumHits = new TH1D("TotalNumHits","TotalNumHits",128,0,128);
+  myTree->Draw("TkrTotalNumHits>>TotalNumHits");
+  TotalNumHits->Draw();
+}
