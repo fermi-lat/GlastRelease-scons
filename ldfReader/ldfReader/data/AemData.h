@@ -33,14 +33,19 @@ namespace ldfReader {
        void setExist() { m_exist = true; };
        bool exist() const { return m_exist; };
 
-        void initLength(unsigned long length) { m_lenInBytes = length; };
-        unsigned long lenInBytes() const { return m_lenInBytes; };
+       void initLength(unsigned long length) { m_lenInBytes = length; };
+       unsigned long lenInBytes() const { return m_lenInBytes; };
+
+       void initPacketError(unsigned packetError) { m_packetError=packetError; };
+       unsigned packetError() const { return m_packetError; };
 
     private:
 
         // Store the event sequence number for this contribution
         EventSummaryCommon m_summary;
         bool m_exist;
+
+        unsigned m_packetError;
 
         unsigned long m_lenInBytes;
 
