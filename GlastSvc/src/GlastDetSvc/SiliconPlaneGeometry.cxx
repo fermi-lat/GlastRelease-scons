@@ -20,7 +20,7 @@ Will assume that
   guard ring = 0.5*(SiWaferSide-SiWaferActive) 
 */
 
-// static variable implementations
+// static variable implementations -- TODO: initialize from geometry
 unsigned int SiliconPlaneGeometry::s_n_si_dies=4; // # of Si dies across single SSD plane
 unsigned int SiliconPlaneGeometry::s_stripPerWafer =384;
 double       SiliconPlaneGeometry::s_dice_width     =89.500; // width of a single silicon die 

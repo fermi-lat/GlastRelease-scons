@@ -159,10 +159,27 @@ StatusCode GlastDetSvc::getTransform3DByID(idents::VolumeIdentifier id,HepTransf
   else return StatusCode::FAILURE;
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//            SiliconPlaneGeometry interface calls
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 unsigned int GlastDetSvc::stripId (double x)
 {
-    SiliconPlaneGeometry plane;
-    return plane.stripId(x);
+     return SiliconPlaneGeometry::stripId(x);
 }
 
+unsigned int GlastDetSvc::stripId (const HepPoint3D&  p)
+{
+     return SiliconPlaneGeometry::stripId(p.x());
+}
+/// (-) if non-active or gap (P is in local system)    
+double GlastDetSvc::insideActiveArea (const HepPoint3D& p)
+{
+    return SiliconPlaneGeometry::insideActiveArea(p);
+}
+
+    /// location of strip ix in local coords
+double GlastDetSvc::stripLocalX ( unsigned int ix)
+{
+    return SiliconPlaneGeometry::localX(ix);
+}

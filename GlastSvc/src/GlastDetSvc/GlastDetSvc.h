@@ -18,6 +18,7 @@ class GlastDetector;
 namespace xml { class IFile; }
 class DMmanager;
 class HepTransform3D;
+class HepPoint3D;
 namespace idents{class VolumeIdentifier;}
 
 /*!  This Gaudi service provides access to a tree of GlastDetector objects.
@@ -49,34 +50,6 @@ public:
     
     /// kill off the detector hierarchy if it exists
     StatusCode finalize ();
-#if 0
-    
-    /// return the root detector for this service (implements IGlastDetSvc)
-    GlastDetector*  getRootDetector ();
-    
-
-    //! access to the IFile containing detector constants (implements IGlastDetSvc)
-    virtual const xml::IFile* iniFile()const;
-
-    
-    /// open the IRF file
-    StatusCode  openIRF(std::string filename);
-    
-    /// load the next event from the IRF file (implements IGlastIRFLoadSvc)
-    StatusCode  readIRF ();
-
-    
-    //! return the number of detectors currently with data
-    int detectors_with_data() const;
-
-    
-    //! accept a visitor to traverse the structure 
-    void accept(DetectorConverter&)const;
-
-  
-    //! set new root detector
-    void setDetector(GlastDetector* d);
-#endif
     //! new detModel interface, will call back. 
     virtual void accept(IMedia& media);
 
@@ -91,6 +64,13 @@ public:
     
     /// compute strip id from local coordinate for a tkr plane
     virtual unsigned int stripId (double x);
+    virtual unsigned int stripId (const HepPoint3D&  x);
+    /// (-) if non-active or gap (P is in local system)    
+    virtual double insideActiveArea (const HepPoint3D& p);  
+
+    /// location of strip ix in local coords
+    virtual double stripLocalX ( unsigned int ix);    
+
 
 private:
     
