@@ -7,6 +7,7 @@
   */
 namespace idents {
 
+
 class TowerId
 {
   public:
