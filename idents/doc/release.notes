@@ -2,6 +2,7 @@
 package manager:T.Burnett 
 
 
+ * v2r10p2 20-Apr-04 THB  make compatible with new GlastPolicy
  * v2r10p1 24-Nov-03 JCT  tag a longstanding HEAD with gcc3.2 fix
  * v2r10p0 08-Aug-03 TK  move test under private in requirements
  *        31-dec-02  HMK add volId method to AcdId \n
