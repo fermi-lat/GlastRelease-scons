@@ -302,8 +302,11 @@ void GlastRandomSvc::handle(const Incident &inc)
         int runNo, seqNo;
 
         if(m_seedFile.value() == "") {
-	  if (m_RunNumberString != "") runNo = 
-		       facilities::Util::expandEnvVar(&m_RunNumberString);
+        // allow user to put in a run number by string (allowing environment variables)
+            if (m_RunNumberString != "") {
+ 	        facilities::Util::expandEnvVar(&m_RunNumberString);
+                runNo = facilities::Util::atoi(m_RunNumberString);
+            }
 	  else runNo = m_RunNumber;
             seqNo = m_SequenceNumber;
             ++m_SequenceNumber;
