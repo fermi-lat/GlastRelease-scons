@@ -29,7 +29,7 @@ public:
     
 private:
     /// pointer to the patrec algorithm
-    TkrPatRecon* pPatRecon;
+    TkrRecon::TkrPatRecon* pPatRecon;
 };
 
 #endif  // __TKRFINDALG_H
