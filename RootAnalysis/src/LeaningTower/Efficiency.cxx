@@ -36,9 +36,9 @@ public:
 
     void Go(int lastEntry=-1);
 
-    void Draw2D(TString plane="All", TCut="", float residualDist=1,
+    void Draw2D(TString plane="all", TCut="", float residualDist=1,
                 float borderWidth=1) const;
-    void GetEfficiency(const TString plane="All", const TCut="", const float residualDist=1,
+    void GetEfficiency(const TString plane="all", const TCut="", const float residualDist=1,
                        const float borderWidth=1, const bool draw=false) const;
     void DrawEfficiency(TString plane, TCut="", float residualDist=1,
                         float borderWidth=1, bool draw=true)
@@ -188,7 +188,7 @@ void Efficiency::Go(int lastEntry) {
 
 void Efficiency::Draw2D(TString plane, TCut cut, float residualDist,
                         float borderWidth) const {
-    if ( plane != "All" ) {
+    if ( plane != "all" ) {
         const TCut cutPlane("plane==\"" + plane + "\"");
         cut += cutPlane;
     }
@@ -205,6 +205,7 @@ void Efficiency::Draw2D(TString plane, TCut cut, float residualDist,
     hframe->GetXaxis()->SetTitle("x/mm");
     hframe->GetYaxis()->SetTitle("y/mm");
     hframe->SetTitle(plane);
+    c->Update();
 
     TFile f(myEffFileName, "READ");
     TTree* t = (TTree*)f.Get("efficiencyTree");
@@ -229,29 +230,35 @@ void Efficiency::Draw2D(TString plane, TCut cut, float residualDist,
     t->SetMarkerColor(2);
     t->SetMarkerStyle(1);
     t->Draw("yExt:xExt", cut&&!inActiveArea, "same");
+    c->Update();
 
     // draw all hits in the active area close to the edge
     t->SetMarkerColor(6);
     t->Draw("yExt:xExt", cut&&closeToEdge&&hitFound, "same");
+    c->Update();
 
     // draw all hits in the active area not close to the edge
     t->SetMarkerColor(8);
     t->Draw("yExt:xExt", cut&&inActiveArea&&!closeToEdge&&hitFound, "same");
-
-    // draw all interceptions with the active area which are not hits and not missing hits
-    t->SetMarkerColor(16);
-    t->SetMarkerStyle(5);
-    t->Draw("yExt:xExt", cut&&inActiveArea&&!hitFound&&!missingHit, "same");
+    c->Update();
 
     // draw all missing hits in the active area but close to the edge
     t->SetMarkerColor(16);
     t->SetMarkerStyle(28);
     t->Draw("yExt:xExt", cut&&closeToEdge&&missingHit, "same");
+    c->Update();
 
     // draw all missing hits in the active area not close to the edge
     t->SetMarkerColor(1);
     t->SetMarkerStyle(28);
     t->Draw("yExt:xExt", cut&&inActiveArea&&!closeToEdge&&missingHit, "same");
+    c->Update();
+
+    // draw all interceptions with the active area which are not hits and not missing hits
+    t->SetMarkerColor(1);
+    t->SetMarkerStyle(5);
+    t->Draw("yExt:xExt", cut&&inActiveArea&&!hitFound&&!missingHit, "same");
+    c->Update();
 
     f.Close();
 }
@@ -261,50 +268,56 @@ void Efficiency::GetEfficiency(const TString planeName, const TCut cut, const fl
     cut.Print();
     std::cout << " Object   Plane Ladder  Wafer  Efficiency  Inefficiency     Hits  Missing hits" << std::endl;
 
+    const bool makeSummary = planeName == "all" || planeName == "layer";
     int totalHits = 0;
     int totalMissing = 0;
     const TList* myGeometry = myTracker->GetGeometry();
     TIter next(myGeometry);
     while ( Layer* thePlane = (Layer*)next() ) {
         const TString thePlaneName = thePlane->GetName();
-        if ( planeName == "All" || thePlaneName == planeName ) {
+        if ( makeSummary || thePlaneName == planeName ) {
             TString name(thePlaneName);
             for ( ; name.Length()<7; )
                 name.Prepend(' ');
-            for ( int ladder=0; ladder<4; ++ladder ) {
-                TString ladderName(TString()+=ladder);
-                for ( ; ladderName.Length()<7; )
-                    ladderName.Prepend(' ');
-                // the cuts should come from geometry in class Layer
-                // dirty hack, as always preliminary
-                TCut xmin((TString("xExt>=")+=ladder*89.5).Data());
-                TCut xmax((TString("xExt<=")+=(ladder+1)*89.5).Data());
-                TCut ladderCut = cut && xmin && xmax;
-                for ( int wafer=0; wafer<4; ++wafer ) {
-                    TString waferName(TString()+=wafer);
-                    for ( ; waferName.Length()<7; )
-                        waferName.Prepend(' ');
-                    TCut ymin((TString("yExt>=")+=wafer*89.5).Data());
-                    TCut ymax((TString("yExt<=")+=(wafer+1)*89.5).Data());
-                    TCut waferCut = ladderCut && ymin && ymax;
-                    DrawEfficiency(thePlaneName, waferCut, residualDist, borderWidth, draw);
-                    PrintEfficiency(name+ladderName+waferName, 100.*thePlane->GetInefficiency(),
+            if ( planeName != "layer" ) {
+                TString ladderPar = thePlane->GetView() ? "yExt" : "xExt";
+                TString waferPar  = thePlane->GetView() ? "xExt" : "yExt";
+                for ( int ladder=0; ladder<4; ++ladder ) {
+                    TString ladderName(TString()+=ladder);
+                    for ( ; ladderName.Length()<7; )
+                        ladderName.Prepend(' ');
+                    // the cuts should come from geometry in class Layer
+                    // dirty hack, as always preliminary
+
+                    TCut xmin((TString(ladderPar+">=")+=ladder*89.5).Data());
+                    TCut xmax((TString(ladderPar+"<=")+=(ladder+1)*89.5).Data());
+                    TCut ladderCut = cut && xmin && xmax;
+                    for ( int wafer=0; wafer<4; ++wafer ) {
+                        TString waferName(TString()+=wafer);
+                        for ( ; waferName.Length()<7; )
+                            waferName.Prepend(' ');
+                        TCut ymin((TString(waferPar+">=")+=wafer*89.5).Data());
+                        TCut ymax((TString(waferPar+"<=")+=(wafer+1)*89.5).Data());
+                        TCut waferCut = ladderCut && ymin && ymax;
+                        DrawEfficiency(thePlaneName, waferCut, residualDist, borderWidth, draw);
+                        PrintEfficiency(name+ladderName+waferName, 100.*thePlane->GetInefficiency(),
+                                        thePlane->GetHitsInActiveArea(), thePlane->GetMissingHits());
+                    }
+                    DrawEfficiency(thePlaneName, ladderCut, residualDist, borderWidth, draw);
+                    PrintEfficiency(name+ladderName+"       ", 100.*thePlane->GetInefficiency(),
                                     thePlane->GetHitsInActiveArea(), thePlane->GetMissingHits());
                 }
-                DrawEfficiency(thePlaneName, ladderCut, residualDist, borderWidth, draw);
-                PrintEfficiency(name+ladderName+"       ", 100.*thePlane->GetInefficiency(),
-                                thePlane->GetHitsInActiveArea(), thePlane->GetMissingHits());
             }
             DrawEfficiency(thePlaneName, cut, residualDist, borderWidth, draw);
             PrintEfficiency(name+"              ", 100.*thePlane->GetInefficiency(),
                             thePlane->GetHitsInActiveArea(), thePlane->GetMissingHits());
-            if ( planeName == "All" ) {
+            if ( makeSummary ) {
                 totalHits += thePlane->GetHitsInActiveArea();
                 totalMissing += thePlane->GetMissingHits();
             }
         }
     }
-    if ( planeName == "All" )
+    if ( makeSummary )
         PrintEfficiency("                     ", 100.*totalMissing/totalHits, totalHits, totalMissing);
 }
 
