@@ -117,7 +117,7 @@ private:
     /// static array to allow one-time array creation
     static TObjArray *m_staticPositionHitCol; //!
     
-    ClassDef(McEvent,4) // Monte Carlo Event Class
+    ClassDef(McEvent,5) // Monte Carlo Event Class
 };
 
 #endif
