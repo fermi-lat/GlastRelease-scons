@@ -35,8 +35,9 @@ public:
   //* called to signal end of nesting */
   virtual void popShape()=0;
 
-  //* will allow underlying SectionVisitor to set its mode */
-  virtual std::string getMode()=0;
+  /** Default implementation of getMode() will cause GeometryVisitor to
+      use mode it gets from the visitorMode property.  */
+  virtual std::string getMode() {return std::string();}
   virtual ~IGeometry(){}
 
 protected:
