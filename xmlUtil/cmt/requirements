@@ -1,18 +1,16 @@
 # $Header$
 package xmlUtil
-version v2r10p0
+version v2r10p1
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
-use facilities v2r*
-use xml        v4r*
+use GlastPolicy  v5r*
 
-use GlastPolicy  v5*
-use xmlGeoDbs   v1r*
+use facilities   v2r*
+use xml          v4r*
+use xmlGeoDbs    v1r*
 
 include_dirs "${XMLUTILROOT}"
-
-##path_append LD_LIBRARY_PATH "${xmlUtilDir}"
 
 apply_pattern package_headers
 apply_pattern package_xmlfiles
@@ -45,7 +43,7 @@ apply_pattern package_stamps
 apply_pattern ld_library_path
 
 private
-apply_pattern package_shlibflags
+apply_pattern package_Lshlibflags
 
 
 application eval eval.cxx 

@@ -1,7 +1,7 @@
 #  $Header$
 
 package calibUtil
-version v0r3
+version v0r3p0
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
@@ -23,9 +23,10 @@ library calibUtil  $(calibUtil_headers) *.cxx *.c
 apply_pattern package_linkopts
 apply_pattern package_stamps
 apply_pattern ld_library_path
-#
+
+
 private
-apply_pattern package_shlibflags
+apply_pattern package_Lshlibflags
 
 application test_strips test/test_strips.cxx StripSrv.cxx GenericSrv.cxx
 ##application test_strips test/test_strips.cxx 
