@@ -68,6 +68,8 @@ public:
 
     /// access the id in matrix format LayerFaceRowColumn
     inline unsigned int id () const;
+    /// construct a VolumeIdentifier using the AcdId
+    inline const idents::VolumeIdentifier volId();
     /// is this a tile?
     inline bool tile() const;
     /// is this a ribbon?
@@ -86,7 +88,7 @@ public:
     inline short   column () const;  
     /// Number of the ribbon starting from 0 and increasing along increasing X or Y
     inline short ribbonNum() const;
-    /// Does this ribbon cover along the X or Y axis?
+    /// Does this ribbon extend along the X or Y axis?
     inline short ribbonOrientation() const;
 
 private:
@@ -114,8 +116,8 @@ private:
         maxAcdTileFace = 4,
         tileVolId = 40,
         ribbonVolId = 41,
-        coverX = 5,
-        coverY = 6
+        ribbonX = 5,  // ribbons that extend along x-axis
+        ribbonY = 6   // ribbons that extend along y-axis
     };
 
     /// internal representation of the id, 4 byte word
@@ -164,6 +166,24 @@ inline unsigned int AcdId::id() const
     if (tile()) 
         return (layer() * 1000 + face() * 100 + row() * 10 + column()); 
     return (layer() * 1000 + ribbonOrientation() * 100 + ribbonNum());
+}
+
+inline const idents::VolumeIdentifier AcdId::volId() {
+
+    idents::VolumeIdentifier vId;
+    vId.append(1); 
+    vId.append(face()); 
+    if (tile()) {
+        vId.append(tileVolId);
+        vId.append(row());
+        vId.append(column()); 
+    } else {
+        vId.append(ribbonVolId);
+        vId.append(6-ribbonOrientation());
+        vId.append(ribbonNum());
+    }
+
+    return vId;
 }
 
 inline bool AcdId::tile () const
