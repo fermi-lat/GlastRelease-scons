@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include "dom/DOM_Element.hpp"
 
 namespace calibUtil {
 
@@ -19,8 +20,14 @@ namespace calibUtil {
 
     enum eUnilayer {UNKNOWN_UNI, TOP, BOT};
     enum eBadType  {UNKNOWN_BADTYPE, DEAD, HOT};
+    enum eBadness {VERYBAD=0, BAD, NBADNESS};
+    enum eRet     {CONT, USER_DONE, ERROR, DONE};
+
+    /// Clients shoud use as return values for readData
+
 
     typedef struct stowerRC { unsigned int row; unsigned int col;} towerRC;
+    typedef std::vector<unsigned int> StripCol;  // may want short int
 
     /// constructor. Initializes strip service by creating a DOM structure 
     /// out of the XML file and filling in the internal data structures 
@@ -34,7 +41,6 @@ namespace calibUtil {
     eBadType getBadType() const;
 
     /// lists all towers with bad strips 
-    // const std::vector<towerRC> 
     void getBadTowers(std::vector<towerRC>& towerIds) const;
 
     /// counts very bad strips for the tower specified 
@@ -62,12 +68,12 @@ namespace calibUtil {
     //    std::vector<unsigned int> getVeryBad(towerRC towerId, unsigned int trayNum,
     //                                   eUnilayer uni);
     void getVeryBad(towerRC towerId, unsigned int trayNum, eUnilayer uni,
-                    std::vector<unsigned int>& strips) const;
+                    StripCol& strips) const;
 
     /// lists  bad strips (including very bad) with the tower, tray 
     /// and unilayer specified 
     void getBad(towerRC towerId, unsigned int trayNum, eUnilayer uni,
-                std::vector<unsigned int>& strips) const; 
+                StripCol& strips) const; 
 
     // std::vector<unsigned int> getBad(towerRC towerId, unsigned int trayNum,
     //                                 eUnilayer uniLayer);
@@ -88,24 +94,23 @@ namespace calibUtil {
     std::string getFmtVer() const;
 
     /// call back method for client to access large data
-    void StripSrv::traverseInfo(ClientObject *client) const;
+    StripSrv::eRet StripSrv::traverseInfo(ClientObject *client) const;
 
   private:
-
+    // A unilayer can have one or both badnesses ("bad" and "veryBad")
     typedef struct sUnilayer {
-      std::string  stripType;
-      std::vector<unsigned int> stripCol;
+      StripCol badLists[NBADNESS];
     } Unilayer;
   
     typedef struct sTray {
       unsigned int id;
-      Unilayer *topLayer;
-      Unilayer *botLayer;
+      Unilayer *top;  //    Unilayer *topLayer;
+      Unilayer *bot;  // Unilayer *botLayer;
     } Tray;
 
     typedef struct sTower {
       towerRC id;
-      std::vector<Tray> trayCol;
+      std::vector<Tray> trays;
     } Tower;
    
     std::vector<Tower> m_towers;
@@ -113,11 +118,29 @@ namespace calibUtil {
 
     // object to store generic data
     GenericSrv *m_genSrv;   
+
+    // A some point need to define a "cuts" object or just add three
+    // new fields
+    // float  expected;  // expected percentage of hits for a "normal"
+                         //  channel for this input sample
+    // float  tight;     // max (min) % of hits for a channel to be
+                         // considered not hot (not dead)
+    // float  loose;     // max (min) % of hits for a channel to be
+                         // considered not very hot (not very dead)
+
     
     /// this function takes in a stripList in string format and 
     /// fills a vector with corresponding strip numbers
     void strToNum(std::string strips, std::vector<unsigned int> &v);
 
+    ///  Handles all the messy of details of extracting information
+    ///  about a single unilayer from the XML representation
+    void fillUni(const DOM_Element& uniElt, Unilayer* uni);
+
+    void fillStrips(const DOM_Element& badElt, StripCol& list);
+
+    const Tower* findTower(const towerRC& towerId) const;
+    const Tray* findTray(const Tower& tower, unsigned int trayNum) const;
   };
 
 }// end of namespace calibUtil

@@ -11,10 +11,11 @@ namespace calibUtil {
   public: 
     
     /// Performs client specified function on data
-    virtual unsigned int readData(StripSrv::towerRC towerId, 
-                                  unsigned int trayNum, 
-                                  StripSrv::eUnilayer uni, 
-                                  std::vector<unsigned int> v) = 0;
+    virtual StripSrv::eRet readData(StripSrv::towerRC towerId, 
+                                    unsigned int trayNum, 
+                                    StripSrv::eUnilayer uni, 
+                                    StripSrv::eBadness  howBad,
+                                    const StripSrv::StripCol* const strips) = 0;
 
   };
 

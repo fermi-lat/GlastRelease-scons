@@ -6,13 +6,14 @@
 #include "xml/XmlParser.h"
 #include "xml/Dom.h"
 #include "dom/DOM_Element.hpp"
-#include "dom/DOM_NodeList.hpp"
 
 #include <string>
 #include <iostream>
 #include <vector>
 
 namespace calibUtil {
+
+  class InputSample;
 
   class GenericSrv {
   public: 
@@ -22,30 +23,34 @@ namespace calibUtil {
 
     /// Get instrument name
     std::string getInst(){
-      return instName;
+      return m_instName;
     }
-
+    
     /// Get timestamp
     std::string getTimestamp(){
-      return timestamp;
+      return m_timestamp;
     }
-
+    
     /// Get calibration type
     std::string getCalType(){
-      return calType;
+      return m_calType;
     }
     
     /// Get format Version
     std::string getFmtVer(){
-      return fmtVer;
+      return m_fmtVer;
     }
-
+    
   private:
     
-  std::string instName;
-  std::string timestamp;
-  std::string calType;
-  std::string fmtVer;
+    std::string m_instName;
+    std::string m_timestamp;
+    std::string m_calType;
+    std::string m_fmtVer;
+
+    // Corresponds to inputSample element in badStrips.dtd (except
+    // that the class doesn't actually exist yet.
+    InputSample *m_sample;
 
   };
 
