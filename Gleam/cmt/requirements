@@ -32,9 +32,11 @@ use idents      v2r8
 use detModel    v2r10
 use xmlGeoDbs   v1r4
 
-# interface to G4
+# interface to G4 - make private to avoid so many libs
+private 
 use Geant4      v1r1p0
 
+public
 # Gaudi component packages follow
 
 use GuiSvc      v3
@@ -68,6 +70,8 @@ use reconRootData        v3r0p2
 
 use RootIo               v4r1p1
 
+#diagnostic and summary of bottom line
+use merit                v5
 
 ### define a simple executable with GUI
 
