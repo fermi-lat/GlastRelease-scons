@@ -2,6 +2,8 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 12-may-2004: jrb v1r17    Make it easier to add extra definitions for
+ *                           non-flight instruments
  *  5-may-2004: jrb v1r16    New directory for lat assembly configurations;
  *                           2 tower configuration. 
  * 20-apr-2004: jrb v1r15p5  Use v6r* of GlastPolicy
