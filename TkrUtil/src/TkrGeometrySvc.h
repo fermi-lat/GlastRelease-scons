@@ -87,7 +87,7 @@ public:
     /// returns Z of *Layer* (average of x and y plane)
     /// TkrId of either plane will work
     double getLayerZ     (const idents::TkrId& tkrId) const {
-        return getLayerZ(tkrId.getLayer());
+        return getLayerZ(getLayer(tkrId));
     }
     /// new stuff, based on plane and TkrId;
     int    getPlane (const idents::TkrId& tkrId) const {
