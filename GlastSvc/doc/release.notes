@@ -4,6 +4,7 @@
 
  package manager:T.Burnett
 
+ 29-aug-03  THB tag v9r10p1 Set trigger bits to zero when creating event header
  24-aug-03  THB tag v9r10  New algorithm sets seeds instead of at begin event
                            (Xin) seed files   
  24-jul-03  LSR tag v9r9   Add getTopVolume(); time stamp in GlastRandomSvc
