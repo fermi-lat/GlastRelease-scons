@@ -50,7 +50,11 @@ public:
     Double_t getEnergyLeak() const {return m_leakEnergy;}
     Double_t getEnergyCorrected() const {return m_energyCorrected;}
     Double_t getEneLayer(int i) const {return m_eneLayer[i];}
+    UInt_t getNumEneLayer() const { return m_eneLayer.size();}
     const TVector3& getPosLayer(int i) const {return m_pLayer[i];}
+    UInt_t getNumPosLayer() const { return m_pLayer.size(); }
+    const TVector3& getRmsLayer(int i) const { return m_rmsLayer[i];}
+    UInt_t getNumRmsLayer() const { return m_rmsLayer.size(); }
     const std::vector<Double_t>& getEneLayer() const {return m_eneLayer;}
     const std::vector<TVector3>& getPosLayer() const {return m_pLayer;}
     const std::vector<TVector3>& getRmsLayer() const {return m_rmsLayer;}

@@ -25,7 +25,7 @@ public:
 
     TkrCandHit();
 
-    TkrCandhit(const TVector3& pos, UInt_t hitId, UInt_t tower, UInt_t layer, AXIS view);
+    TkrCandHit(const TVector3& pos, UInt_t hitId, UInt_t tower, UInt_t layer, AXIS view);
 
     virtual ~TkrCandHit() {}
 
