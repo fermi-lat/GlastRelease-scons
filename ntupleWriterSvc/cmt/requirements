@@ -1,5 +1,5 @@
 package ntupleWriterSvc
-version v3r4
+version v3r4p0
 
 author H. Kelly <heather@heapop.gsfc.nasa.gov>
 branches src mgr doc
