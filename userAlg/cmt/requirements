@@ -6,8 +6,8 @@ version v3r0
 # --------------------------
 
 # get everything we need from here
-use Gleam
-use ntupleWriterSvc v2
+use Gleam *
+use ntupleWriterSvc v2r*
 
 #apply_pattern userjobopts
 set JOBOPTIONS $(USERALGROOT)/src/jobOptions.txt
