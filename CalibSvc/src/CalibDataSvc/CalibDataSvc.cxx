@@ -15,20 +15,6 @@
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/TimePoint.h"
 
-
-
-
-// Need the following to discover paths and class ids of calibration
-// types.  However now CalibDataSvc depends on CalibData.  Might
-// cause some problems later.
-// Consider ways to
-//  * localize association  of path name with class ID, perhaps in
-//    CalibData (rather than CalibDataSvc)
-//  * Get CalibData to do the registerObjects, or at least nicely
-//    supply a vector of pairs (pathname, classID) to CalibDataSvc
-//    so it can do the registerObject(s) without having to know anything.
-//#include "CalibData/CalibModel.h"
-//Try this instead:
 #include "CalibData/CalibModelSvc.h"
 
 // Instantiation of a static factory class used by clients to create
@@ -52,15 +38,11 @@ CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
 
   m_rootName = "/Calib";
 
-  //  m_rootCLID = CLID_Catalog;
-  // Probably don't need this root to do anything.  It can just be 
-  // a garden variety data object.
   m_rootCLID = CLID_DataObject;  
   m_eventTimeDefined = false;
   m_eventTime = 0;
   declareProperty("CalibInstrumentName", m_instrumentName = "LAT" );
   m_instrumentDefined = true;
-  //  m_instrumentName = std::string("");
 }
 
 /// Standard Destructor
@@ -102,7 +84,7 @@ StatusCode CalibDataSvc::initialize()   {
   // Initialize the calibration data transient store
   log << MSG::DEBUG << "Storage type used is: " 
       << m_calibStorageType << endreq;
-  log << MSG::DEBUG << "Setting CalibDataSvc root node... " << endreq;
+  //  log << MSG::DEBUG << "Setting CalibDataSvc root node... " << endreq;
 
   IAddressCreator*     calibCreator = 0;
 
@@ -130,7 +112,6 @@ StatusCode CalibDataSvc::initialize()   {
   // derived from DataObject, CalibCLIDNode.  Only additional 
   // information is CLID of child nodes.  List comes from CalibData 
   // namespace
-  
   typedef std::vector<CalibData::CalibModelSvc::CalibPair>::const_iterator 
     PairIt;
   PairIt  pairIt;
@@ -160,13 +141,15 @@ StatusCode CalibDataSvc::initialize()   {
     //    Event time        validity period of constants must include this time
     //    Instrument        LAT, EM, etc.
     // We save the first two, or equivalent information, in the first
-    // two string parameters of a generic address
+    // string parameter of a generic address
+    // Consumers can use utilities in CalibData::CalibModelSvc to
+    // extract fields they need
     // Event time and Instrument will be discovered by conversion service
     // when constants are requested by invoking our (CalibDataSvc) time
     // and instrument name services, resp.
 
-    const std::string args[] = {calibTypePath, "/vanilla"};
-
+    calibTypePath += "/vanilla";
+    std::string args[] = {calibTypePath};
 
     sc = calibCreator->createAddress(m_calibStorageType, 
                                      pairIt->second,   // class id
@@ -180,7 +163,8 @@ StatusCode CalibDataSvc::initialize()   {
 
     // A node of a specific flavor is a child of the per-calibration type
     // node for which an object was registered above.
-    calibTypePath += "/vanilla";
+    //    calibTypePath += "/vanilla";
+    
     sc = registerAddress(calibTypePath, pAddress);
     if (!sc.isSuccess()) {
       log << MSG::ERROR << "Unable to register Calib address" 
@@ -244,7 +228,6 @@ StatusCode CalibDataSvc::clearStore()   {
   DataSvc::clearStore();
 
   return StatusCode::SUCCESS;
-
 }
 
 
@@ -255,7 +238,7 @@ void CalibDataSvc::setEventTime(const ITime& time) {
   m_eventTime = new CalibData::CalibTime(time);   
   MsgStream log(msgSvc(), name() );
   log << MSG::DEBUG 
-      << "Event Time set to " << eventTime().absoluteTime() << endreq;
+      << "Event Time set to " << eventTime().hours() << endreq;
 }
 
 /// Check if the event time has been set
@@ -290,13 +273,10 @@ void CalibDataSvc::setInstrumentName(const std::string& name) {
   m_instrumentName = name;
 }
 
-
-/// Update object
-/// TODO: update also its ancestors in the data store if necessary
 StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
 
   MsgStream log( msgSvc(), name() );
-  log << MSG::DEBUG << "Method updateObject starting" << endreq;
+  //  log << MSG::DEBUG << "Method updateObject starting" << endreq;
 
   // Check that object to update exists
   if ( 0 == toUpdate ) { 
@@ -332,11 +312,9 @@ StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
 	<< "DataObject is invalid: update it" << endreq;
   }
 
-  // TODO: before loading updated object, update HERE its parent in data store
-
   // Now delegate update to the conversion service by calling the base class
-  log << MSG::DEBUG 
-      << "Delegate update to relevant conversion service" << endreq;
+  //  log << MSG::DEBUG 
+  //      << "Delegate update to relevant conversion service" << endreq;
   StatusCode status = DataSvc::updateObject(toUpdate);
   if ( !status.isSuccess() ) {
     log << MSG::ERROR 
@@ -362,7 +340,6 @@ StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
   } 
 
   // DataObject was successfully updated
-  log << MSG::DEBUG << "Method updateObject exiting successfully" << endreq;
+  //  log << MSG::DEBUG << "Method updateObject exiting successfully" << endreq;
   return StatusCode::SUCCESS;
-
 }

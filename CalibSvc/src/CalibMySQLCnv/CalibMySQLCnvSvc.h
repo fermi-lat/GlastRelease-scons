@@ -91,29 +91,23 @@ class CalibMySQLCnvSvc : public ConversionSvc,
   
  public:
   // Implementation of ICalibMetaCnvSvc.
-  // Create/update condition DataObject not necessarily registered in the TDS.
+  // Create/update calib DataObject not necessarily registered in the TDS.
   
-  /// Create a condition DataObject by calib type name, flavor and time.
-  /// This method does not register DataObject in the transient data store,
-  /// but may register TDS addresses for its children if needed (e.g. Catalog).
+  /// Create a calib DataObject by calib type name, flavor and time.
+  /// This method does not register DataObject in the transient data store.
   /// The string storage type is discovered at runtime in the Metadata dbs.
-  /// The entry name identifies a condition amongst the many in the string.
   virtual StatusCode createCalib(DataObject*& refpObject,
-                                 const std::string& calibType,
-                                 const std::string& flavor,
+                                 const std::string& fullpath,
                                  const ITime&       time,
                                  const std::string& instrument,
                                  const CLID&        classID,
                                  IRegistry*         entry=0);
   
   /// Update a condition DataObject by 
-  /// This method does not register DataObject in the transient data store,
-  /// but may register TDS addresses for its children if needed (e.g. Catalog).
-  /// The string storage type is discovered at runtime in the CondDB.
-  /// The entry name identifies a condition amongst the many in the string.
+  /// This method does not register DataObject in the transient data store.
+  /// The string storage type is discovered at runtime in the metadata dbs.
   virtual StatusCode updateCalib(DataObject*        pObject,
-                                 const std::string& calibType,
-                                 const std::string& flavor,
+                                 const std::string& fullpath,
                                  const ITime&       time,
                                  const std::string& instName,
                                  const CLID&        classID,
@@ -122,12 +116,6 @@ class CalibMySQLCnvSvc : public ConversionSvc,
   /// Decode the string storage type to enumerated storage type
   virtual StatusCode decodeDescription(unsigned int   description,
                                        unsigned char&       type);
-
-  //  Only need this if we support TDDS --> PDS, which is so far
-  //  not the case
-  //  StatusCode encodeDescription     ( const unsigned char& type,
-  //			     std::string&         description);
-
 
   virtual calibUtil::Metadata* getMeta();
 
