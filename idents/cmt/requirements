@@ -5,4 +5,7 @@ use glast_settings
 
 include_path $(IDENTSROOT)
 
+#since this package has only inline code, no library is needed.
+# we define one for the convenience of Dev Studio users, to be able 
+# easily examine, edit the files. "black.cxx" is to fool unix.
 library idents -no_share ../idents/blank.cxx ../idents/*.h
