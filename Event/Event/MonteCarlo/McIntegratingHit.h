@@ -190,15 +190,15 @@ inline std::ostream& McIntegratingHit::fillStream( std::ostream& s ) const
 typedef ObjectVector<McIntegratingHit>     McIntegratingHitVector;
 //template <class TYPE> class ObjectList;
 typedef ObjectList<McIntegratingHit>       McIntegratingHitList;
-}
+
 
 /*! A small class to use the sort algorithm */
 class CompareIntHits {
   public:
-    bool operator()(Event::McIntegratingHit *left, Event::McIntegratingHit *right)
+    bool operator()(McIntegratingHit *left, McIntegratingHit *right)
     {return left->volumeID() < right->volumeID();}
 
     };
-
+}
 
 #endif // Event_McIntegratingHit_H
