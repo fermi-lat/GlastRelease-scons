@@ -1,6 +1,6 @@
 // $Header$
-#ifndef LHCBEVENT_EVENT_H
-#define LHCBEVENT_EVENT_H 1
+#ifndef GLASTEVENT_EVENT_H
+#define GLASTEVENT_EVENT_H 1
 
 
 // Include files
@@ -101,20 +101,22 @@ private:
 /// Serialize the object for writing
 inline StreamBuffer& Event::serialize( StreamBuffer& s ) const                 {
   DataObject::serialize(s);
-  return s
-    << m_event
-    << m_run
-    << m_time;
+  // HMK The member variables are not filled yet
+  return s;
+    //<< m_event
+    //<< m_run
+    //<< m_time;
 }
 
 
 /// Serialize the object for reading
 inline StreamBuffer& Event::serialize( StreamBuffer& s )                       {
   DataObject::serialize(s);
-  return s
-    >> m_event
-    >> m_run
-    >> m_time;
+  // HMK The member variables are not filled yet
+  return s;
+    //>> m_event
+    //>> m_run
+    //>> m_time;
 }
 
 
@@ -132,4 +134,4 @@ inline std::ostream& Event::fillStream( std::ostream& s ) const                {
 }
 
 
-#endif    // LHCBEVENT_EVENT_H
+#endif    // GLASTEVENT_EVENT_H

@@ -48,7 +48,7 @@ class MCEvent : public DataObject                                              {
 
 public:
   /// Constructors
-    // HMA removed 2nd parameter pileUp - not sure what it was doing...
+    // HMK removed 2nd parameter pileUp
   MCEvent( const char* name = "MCEvent" )
       : DataObject(name) {}
     //m_pileUp(pileUp)                                                         { }
@@ -66,7 +66,7 @@ public:
     return *this;
   }
 
-  /*
+  /* HMK 
   /// Retrieve pileUp
   long pileUp () const                                                         {
     return m_pileUp;
@@ -150,12 +150,14 @@ inline void MCEvent::removeSubMCEvent( SubMCEvent* value )                     {
 /// Serialize the object for writing
 inline StreamBuffer& MCEvent::serialize( StreamBuffer& s ) const               {
   DataObject::serialize(s);
+  /* HMK This class does not yet maintain its member variables
   s //<< m_pileUp
     << m_subMCEvents.size();
   std::vector<SubMCEvent*>::const_iterator iter;
   for( iter = m_subMCEvents.begin(); iter != m_subMCEvents.end(); iter++ ) {
     s << **iter;
   }
+  */
   return s;
 }
 
@@ -163,6 +165,7 @@ inline StreamBuffer& MCEvent::serialize( StreamBuffer& s ) const               {
 /// Serialize the object for reading
 inline StreamBuffer& MCEvent::serialize( StreamBuffer& s )                     {
   DataObject::serialize(s);
+  /* HMK This class does not maintain its members yet
   std::vector<SubMCEvent*>::size_type    siz;
   SubMCEvent*                            pSubMCEvent;
   s //>> m_pileUp
@@ -172,6 +175,7 @@ inline StreamBuffer& MCEvent::serialize( StreamBuffer& s )                     {
     s >> *pSubMCEvent;
     m_subMCEvents.push_back(pSubMCEvent);
   }
+  */
   return s;
 }
 
