@@ -24,10 +24,6 @@ macro guiapp_linkopts "${guiDir}/libguisystem.a ${gui_X_linkopts}"\
 macro Win32Resource ""\
       WIN32 "${GUIROOT}/src/wingui.rc"
 
-#pattern for library constituents that puts header files into Win32 version only
-pattern package_headers \
-  macro <package>_headers "" WIN32 "../<package>/*.h *.h"
-
 apply_pattern package_headers
 
 private
