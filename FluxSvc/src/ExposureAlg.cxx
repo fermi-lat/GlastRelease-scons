@@ -28,6 +28,7 @@
 #include "FluxSvc/IFluxSvc.h"
 #include "FluxSvc/IFlux.h"
 #include "flux/GPS.h"
+#include "facilities/Util.h"
 
 #include <cassert>
 #include <vector>
@@ -103,12 +104,15 @@ StatusCode ExposureAlg::initialize(){
 
     //set the input file to be used as the pointing database
     if(! m_pointing_history_input_file.value().empty() ){
-        m_fluxSvc->setPointingHistoryFile(m_pointing_history_input_file.value().c_str());
+        std::string fileName(m_pointing_history_input_file.value());
+        m_fluxSvc->setPointingHistoryFile(fileName.c_str());
     }
 
     //set the output file (pointing information) to be written.
     if(! m_pointing_history_output_file.value().empty() ){
-        m_out = new std::ofstream(m_pointing_history_output_file.value().c_str());
+        std::string fileName(m_pointing_history_output_file.value());
+        facilities::Util::expandEnvVar(&fileName);
+        m_out = new std::ofstream(fileName.c_str());
     }
 
     return sc;
