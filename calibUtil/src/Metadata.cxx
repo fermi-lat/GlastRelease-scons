@@ -11,8 +11,12 @@ namespace calibUtil {
   // Initialize static members
   // Consider changing all this staticness to avoid chance of difficulty
   // when building calibUtil shareable (for now it's just a static library).
-  MYSQL* Metadata::readCxt = 0;
-  MYSQL* Metadata::writeCxt = 0;
+  //  MYSQL* Metadata::readCxt = 0;
+  //  MYSQL* Metadata::writeCxt = 0;
+  bool Metadata::writeConnect = false;
+  bool Metadata::readConnect = false;
+  MYSQL     Metadata::readCxt;
+  MYSQL     Metadata::writeCxt;
 
   const unsigned int Metadata::rowReady = Metadata::eOpened | Metadata::eValid 
   | Metadata::eInputDesc | Metadata::eComment;
@@ -26,41 +30,33 @@ namespace calibUtil {
 
   // The next 5 methods concern connection to the server
   bool Metadata::connectRead(eRet& err) {
-    return connect(readCxt, std::string("reader"), err);
+    return (readConnect = 
+            connect(&readCxt, std::string("glastreader"), 
+                    std::string("glastreader"), err));
   }
 
   bool Metadata::connectWrite(eRet& err) {
-    return connect(writeCxt, std::string("calibrator"), err);
+    return (writeConnect = 
+            connect(&writeCxt, std::string("calibrator"), 
+                    std::string("calibr8or"), err));
   }
 
 
-  bool Metadata::connect(MYSQL* cxt, const std::string& grp, eRet& err)  {
-    std::string cnfFile("$(CALIBUTILROOT)/src/.mysqlopt.cnf");
-
-    // Translate environment variables
-    int nSub = facilities::Util::expandEnvVar(&cnfFile);
-
-    if (nSub != 1) {
-      err = RETBadCnfFile;
-      return false;
-    }
+  bool Metadata::connect(MYSQL* cxt, const std::string& user, 
+                         const std::string& pw, eRet& err)  {
 
     std::string host("$(MYSQL_HOST)");
 
-    nSub = facilities::Util::expandEnvVar(&host);
+    int nSub = facilities::Util::expandEnvVar(&host);
     if (!nSub) {
       err = RETBadHost;
       return false;
     }
 
-
     mysql_init(cxt);
-
-    mysql_options(cxt, MYSQL_READ_DEFAULT_FILE, cnfFile.c_str());
-    mysql_options(cxt, MYSQL_READ_DEFAULT_GROUP, grp.c_str());
-
-    MYSQL *connected = mysql_real_connect(cxt, host.c_str(), 0, 0, "calib",
-                                 0, (char *) NULL, 0);
+    MYSQL *connected;
+    connected = mysql_real_connect(cxt, host.c_str(), user.c_str(),
+                                   pw.c_str(), "calib", 0, NULL, 0);
     if (connected != 0) {
       cxt = connected;
       err = RETOk;
@@ -73,13 +69,13 @@ namespace calibUtil {
   }
 
   void Metadata::disconnectRead() {
-    mysql_close(readCxt);
-    readCxt = 0;
+    mysql_close(&readCxt);
+    readConnect = false;
   }
 
   void Metadata::disconnectWrite() {
-    mysql_close(writeCxt);
-    writeCxt = 0;
+    mysql_close(&writeCxt);
+    writeConnect = false;
   }
 
 
@@ -88,28 +84,28 @@ namespace calibUtil {
     a record to the database.  The table below lists all columns
     and indicates how they get their values.
 
-| Field               | Type           | Null | Key | Default | How set       |
-+---------------------+----------------+------+-----+---------+---------------+
-| serial_num          | int(11)        |      | PRI | NULL    | auto_increment|
-| instrument          | varchar(20)    | YES  |     | NULL    |  [open]       |
-| calib_type          | varchar(40)    | YES  |     | NULL    |  [open]       |
-| calib_type_num      | int(11)        | YES  |     | NULL    |  [unused]     |
-| data_format         | varchar(20)    |      |     |         |  [open]       |
-| format_version      | varchar(20)    | YES  |     | NULL    |  [open]       |
-| data_id             | varchar(40)    | YES  |     | NULL    |  [optional]   |
-| data_size           | int(11)        | YES  |     | NULL    |  [optional]   |
-| validity_start_time | datetime       | YES  |     | NULL    | [addValid]    |
-| validity_end_time   | datetime       | YES  |     | NULL    | [addValid]    |
-| proc_time           | datetime       | YES  |     | NULL    | [auto]        |
-| proc_level          | enum('TEST','DEVELOPMENT','PRODUCTION','SUPERSEDED')
-                                       | YES  |     | NULL    |  [open]       |
-| calib_status        | enum('OK','INCOMPLETE','ABORTED')        [open]
-                                       | YES  |     | NULL    |               |
-| creator             | varchar(40)    | YES  |     | NULL    | [defaults]    |
-| input_desc          | varchar(255)   | YES  |     | NULL    | [addInDesc]   |
-| calib_file_name     | varchar(255)   |      |     |         |  [open]       |
-| comments            | varchar(255)   | YES  |     | NULL    |  [addComment] |
-+---------------------+----------------+------+-----+---------+---------------+
+| Field       | Type               | Null | Key | Default | How set          |
++-------------+--------------------+------+-----+---------+------------------+
+| ser_no      | mediumint(9)       |      | PRI | NULL    | auto_increment   |
+| instrument  | varchar(16)        |      |     |         |   [openRecord]   |
+| calib_type  | varchar(20)        |      |     |         |   [openRecord    |
+| data_fmt    | varchar(10)        |      |     |         |   [openRecord]   |
+| data_size   | int(11)            | YES  |     | NULL    |   [optional]     |
+| vstart      | datetime           | YES  |     | NULL    |[addValidInterval]|
+| vend        | datetime           | YES  |     | NULL    |[addValidInterval]|
+| enter_time  | timestamp(14)      | YES  |     | NULL    | automatic        |
+| fmt_version | varchar(12)        | YES  |     | NULL    |   [openRecord]   |
+| completion  | enum('OK','INC','ABORT')           
+                                   | YES  | MUL | NULL    |   [openRecord]   |
+| proc_level  | enum('PROD','TEST','DEV', 'SUPSED')
+                                   |      |     | TEST    |   [openRecord]   |
+| creator     | varchar(255)       | YES  |     | NULL    |   [addCreator]   |
+| uid         | varchar(12)        |      |     |         |[insertRecord/
+                                                             addUser]        |
+| data_ident  | varchar(255)       |      |     |         |   [openRecord]   |
+| input_desc  | varchar(255)       | YES  |     | NULL    |[addInputDesc]    |
+| notes       | varchar(255)       | YES  |     | NULL    |   [addNotes]     |
++-------------+--------------------+------+-----+---------+------------------+
 
   */
 
@@ -122,7 +118,7 @@ namespace calibUtil {
                                       const std::string& procLevel){
     eRet ret;
 
-    if (!writeCxt) {
+    if (!writeConnect) {
       connectWrite(ret);
       if (ret != RETOk) return ret;
     }
@@ -163,7 +159,7 @@ namespace calibUtil {
     }
     addUser();
     // Actually write it...
-    int ret = mysql_query(writeCxt, row.c_str());
+    int ret = mysql_query(&writeCxt, row.c_str());
     clearRecord();
 
     if (ret) {
@@ -225,10 +221,15 @@ namespace calibUtil {
     return RETOk;
   }
 
-  // WARNING: Need to look into what's available on Windows.
-  // Might have to do something different to get user (or just punt)
+  // WARNING: Windows and Linux/Solaris use different standard variables
+  // for login name.  The test used below isn't quite right
+  // since one could conceivably compile with gcc on cygwin/Windows.
   Metadata::eRet Metadata::addUser() {
+#ifdef    __GNUG__ 
     std::string user("$(USER)");
+#else
+    std::string user("$(USERNAME)");
+#endif
     row +=",uid='"; 
 
     int nsub = facilities::Util::expandEnvVar(&user);
@@ -261,7 +262,7 @@ namespace calibUtil {
   
     eRet ret;
     *ser = 0;
-    if (!readCxt) {
+    if (!readConnect) {
       connectRead(ret);
       if (ret != RETOk) return ret;
     }
@@ -290,13 +291,13 @@ namespace calibUtil {
         return RETBadValue;
       }
 
-      int ret = mysql_query(readCxt, q.c_str());
+      int ret = mysql_query(&readCxt, q.c_str());
       if (ret) {
         std::cerr << "MySQL error during SELECT, code " << ret << std::endl;
         return RETMySQLError;
       }
       
-      MYSQL_RES *myres = mysql_store_result(readCxt);
+      MYSQL_RES *myres = mysql_store_result(&readCxt);
 
       // Since we're doing a query, a result set should be returned
       // even if there are no rows in the result.  A null pointer 
@@ -319,34 +320,39 @@ namespace calibUtil {
 
   }
 
-  bool Metadata::getReadInfo(unsigned int serialNo, 
+  Metadata::eRet Metadata::getReadInfo(unsigned int serialNo, 
                              std::string* dataFmt, 
                              std::string* fmtVersion,
                              std::string* filename) {
 
+    eRet ret;
+    if (!readConnect) {
+      connectRead(ret);
+      if (ret != RETOk) return ret;
+    }
     std::string q("select data_fmt, fmt_version, data_ident from ");
     q += table;
-    q += "where ser_no='";
+    q += " where ser_no='";
     std::strstream s;
     s << serialNo;
     q += s.str(); q+= "'";
 
-    int ret = mysql_query(readCxt, q.c_str());
-    if (ret) {
+    int myRet = mysql_query(&readCxt, q.c_str());
+    if (myRet) {
       std::cerr << "MySQL error during SELECT, code " << ret << std::endl;
       return RETMySQLError;
     }
       
-    MYSQL_RES *myres = mysql_store_result(readCxt);
+    MYSQL_RES *myres = mysql_store_result(&readCxt);
     
     if (mysql_num_rows(myres) ) {  // must have been a good serial number
       MYSQL_ROW myRow = mysql_fetch_row(myres);
       *dataFmt = std::string(myRow[0]);
       *fmtVersion = std::string(myRow[1]);
       *filename = std::string(myRow[2]);
-      return true;
+      return RETOk;
     }
-    else return false;
+    else return RETBadValue;
   }
 
   /*               Private utilities                           */
@@ -386,13 +392,13 @@ namespace calibUtil {
   // MySQL to do it.  The latter is possible in some cases, but 
   // handling and reporting errors is difficult.
   bool Metadata::checkCompletionInput(const std::string& stat) {
-    return ((stat.compare("OK") == 0 ) || (stat.compare("INCOMPLETE") == 0) 
-            || (stat.compare("ABORTED") == 0) );
+    return ((stat.compare("OK") == 0 ) || (stat.compare("INC") == 0) 
+            || (stat.compare("ABORT") == 0) );
   }
   bool Metadata::checkProcLevelInput(const std::string& level) {
     return ((level.compare("TEST") == 0) || 
-            (level.compare("DEVELOPMENT") == 0) ||
-            (level.compare("PRODUCTION") == 0) || 
-            (level.compare("SUPERSEDED") == 0 )    );
+            (level.compare("DEV") == 0) ||
+            (level.compare("PROD") == 0) || 
+            (level.compare("SUPERS") == 0 )    );
   }
 }

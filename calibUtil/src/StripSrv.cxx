@@ -19,7 +19,7 @@
 namespace calibUtil {
   
   /// convert stripList in string format to a vector of strip numbers
-  StripSrv::strToNum(std::string s,std::vector<unsigned int> &v){
+  void StripSrv::strToNum(std::string s,std::vector<unsigned int> &v){
 
     std::string::iterator it = s.begin();
     
