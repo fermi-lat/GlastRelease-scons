@@ -1,9 +1,9 @@
 package Event
-version v9r11p13
+version v9r12
 
 branches Event cmt doc src
 
-use GaudiInterface v0r* IExternal 
+use GaudiInterface v*   IExternal 
 use CLHEP          v2r* IExternal
 
 use geometry  v3r*
