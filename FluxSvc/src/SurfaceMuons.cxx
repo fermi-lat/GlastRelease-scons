@@ -27,14 +27,14 @@ class SurfaceMuons : public Spectrum
 {
 public:
     /** @brief ctot
-    @param paramstring string from xml
+    @param paramstring string from xml. If present, assume is the range of costheta to generate
     */
     SurfaceMuons(const std::string& paramstring);
 
     /// flux integrated over energy, will be multipled by solidAngle to get a rate/m^2
-    double flux (double time ) const { return m_flux;}
+    double flux (double time ) const { return m_flux/solidAngle();}
 
-    double solidAngle()const{return 1.0;}
+    double solidAngle()const{return 2*M_PI*fabs(m_cosmax-m_cosmin);}
     
     /** @brief sample a single particle energy from the spectrum
     @param current time (ignored)
@@ -44,7 +44,7 @@ public:
 
     
     /** @brief return solid angle pair (costh, phi) for the given energy
-    @param the energy previously generated
+    @param energy the energy previously generated
     */
     virtual std::pair<double,double> dir(double energy);
     
@@ -62,12 +62,12 @@ private:
     /**
     This is the integral spectrum as a map where the key is the integral spectrum and the
     value the associated energy. This makes is easy to invert it by using the STL algorithm lower_bound.
-
   */
     std::map<double,double> m_ispec; // integral spectrum, for sampling
     double m_flux;
     double m_index;
     double m_E0, m_emax;
+    double m_cosmin, m_cosmax;
     double m_costh;
     double m_total;
     bool m_vertical;
@@ -80,11 +80,8 @@ const ISpectrumFactory& SurfaceMuonsFactory = factory;
 
 SurfaceMuons::SurfaceMuons(const std::string& paramstring)
 : m_index(2.71)
-, m_flux(70.*2*M_PI/3) // 70 vertical, cos2theta after that
 , m_emax(1000)
 , m_E0(5) 
-, m_total(0)
-, m_vertical(false)
 {
     //Purpose: Initializes parameters during construction
     
@@ -92,8 +89,11 @@ SurfaceMuons::SurfaceMuons(const std::string& paramstring)
     
     parseParamList(paramstring,params);
 
+    // determine integral flux for specified costheta range
 
-    m_vertical = (params.size()>0) && params[0]==-1 ; 
+    m_cosmin = (params.size()>0)? params[0]: 0.0;
+    m_cosmax = (params.size()>1)? params[1]: 1.0;
+    m_flux = 70. * 2*M_PI * fabs(pow(m_cosmax,3) - pow(m_cosmin,3))/3;
 
     // create integral table of the flux function, as a map of
     // energy and e*flux(e), with logarithmic energies
@@ -120,6 +120,8 @@ const char* SurfaceMuons::particleName()const
     return RandFlat::shoot()>plus_fraction? pnames[0]:pnames[1];
 }
   
+static inline double cube(double x){return x*x*x;}
+
 /// sample a single particle energy from the spectrum: assume called first
 double SurfaceMuons::energy( double )
 {
@@ -127,7 +129,8 @@ double SurfaceMuons::energy( double )
     // first choose the angle for the dir function
     // if doing vertical, don't!
     static double third=1.0/3.0;
-    m_costh = m_vertical? 1 : pow(RandFlat::shoot(), third);
+    double r = RandFlat::shoot();
+    m_costh = pow(r*cube(m_cosmax)+(1-r)*cube(m_cosmin), third);
 
     // select an energy*costh from the distribution
 
