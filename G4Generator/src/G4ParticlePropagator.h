@@ -49,7 +49,9 @@ public:
     virtual bool      trackToNextPlane();
     virtual bool      trackToNextSamePlane();
     virtual int       numberPlanesCrossed() const;
-    virtual float     insideActArea() const;
+    virtual double    insideActArea() const;
+    virtual double    insideActLocalX() const;
+    virtual double    insideActLocalY() const;
     virtual bool      stripIsLive() const {return true;} //Not implemented
     virtual Point     position()  const;
     virtual double    arcLength() const;

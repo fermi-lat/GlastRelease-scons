@@ -218,7 +218,7 @@ double G4ParticlePropagator::radLength() const
 }
 
 //Are we inside the active area?
-float G4ParticlePropagator::insideActArea() const
+double G4ParticlePropagator::insideActArea() const
 {
   // Purpose and Method:  Returns the distance to the nearest boundary of the
   //                      nearest sensitive volume. 
@@ -227,12 +227,35 @@ float G4ParticlePropagator::insideActArea() const
   // Dependencies: None
   // Restrictions and Caveats: None
 
-//  G4VPhysicalVolume* pCurVolume = getLastStep()->GetVolume();
-
-  double dist = insideActiveArea();
-
-  return dist;
+  return insideActiveArea();
 }
+
+//Are we inside the active in the X (measurement) direction?
+double G4ParticlePropagator::insideActLocalX() const
+{
+  // Purpose and Method:  Returns the distance to the nearest X boundary of the
+  //                      nearest sensitive volume. 
+  // Inputs:  None
+  // Outputs:  distance to the edge, >=0 if inside, < 0 if outside
+  // Dependencies: None
+  // Restrictions and Caveats: None
+
+  return insideActiveLocalX();
+}
+
+//Are we inside the active in the Y (non-measurement) direction?
+double G4ParticlePropagator::insideActLocalY() const
+{
+  // Purpose and Method:  Returns the distance to the nearest X boundary of the
+  //                      nearest sensitive volume. 
+  // Inputs:  None
+  // Outputs:  distance to the edge, >=0 if inside, < 0 if outside
+  // Dependencies: None
+  // Restrictions and Caveats: None
+
+  return insideActiveLocalY();
+}
+
 
 // Is the current plane an X plane ** This should be replaced with a routine
 // which returns the volume identifier **
