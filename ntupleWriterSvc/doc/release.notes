@@ -7,3 +7,4 @@ package manager:H. Kelly
 		 Linux
  26-Jun-01 HMK : update ntuple title to include the number of generated events
  26-Jun-01 HMK : tagging v1r3
+ 27-Jun-01 HMK : create new interface routine to save all ntuples to disk
