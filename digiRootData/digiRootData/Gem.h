@@ -45,6 +45,8 @@ public:
 
   void Print(Option_t *option="") const;
 
+  /*@defgroup GemTileListGroup */
+  /*@{*/
   UShort_t getXzm()  const { return m_xzm; }
   UShort_t getXzp()  const { return m_xzp; }
   UShort_t getYzm()  const { return m_yzm; };
@@ -52,6 +54,7 @@ public:
   UInt_t getXy()     const { return m_xy; };
   UShort_t getRbn()  const { return m_rbn; };
   UShort_t getNa()   const { return m_na; };
+  /*@}*/
 
 private:
   UShort_t m_xzp;
@@ -95,8 +98,11 @@ public:
      m_seconds = 0; 
   };
 
+  /**@defgroup GemOnePpsTimeGroup GemOnePpsTime End-User Interface */
+  /*@{*/
   UInt_t getTimebase()  const { return m_timebase; };
   UInt_t getSeconds()   const { return m_seconds; };
+  /*@}*/
 
 private:
   UInt_t m_timebase;
@@ -117,6 +123,8 @@ private:
  * - prescaled
  * - sent bit
  *
+ * For additional details concerning the GEM contribution, please refer to:
+ * http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/GEM.pdf
  * $Header$
  */
 
@@ -125,6 +133,8 @@ class Gem: public TObject {
 
 public:
 
+	/** @defgroup GemGroup Gem End-User Interface */
+	/*@{*/
         /// Defines the 8 bits in the Condition Summary word
         /// Please see Section 1.7.2 The Condition Summary in the
         /// "The GLT Electronics Module" available at:
@@ -139,6 +149,7 @@ public:
             SOLICITED = 64,
             EXTERNAL = 128
         } Summary;
+		/*@}*/
 
     Gem();
     Gem(const Gem& gem); 
@@ -161,6 +172,8 @@ public:
                      UInt_t deltaEvtTime);
 
 
+	/** @ingroup GemGroup */
+	/*@{*/
     UShort_t getTkrVector() const { return m_tkrVector;};
     UShort_t getRoiVector() const { return m_roiVector;};
     UShort_t getCalLeVector() const { return m_cal_Le_Vector;};
@@ -177,15 +190,23 @@ public:
     UInt_t getDeltaEventTime() const { return m_deltaEventTime; };
 
 
-    /// Methods to query bits in the condition summary word
+    /// Method to query ROI bit in the condition summary word
     Bool_t getRoiSet() const { return( (m_conditionSummary & ROI) != 0); };
+	/// Method to query TKR bit in condition summary word
     Bool_t getTkrSet() const { return( (m_conditionSummary & TKR) != 0); };
+	/// Method to query Cal LE bit in condition summary word
     Bool_t getCalLeSet() const { return( (m_conditionSummary & CALLE) != 0); };
+	/// Method Cal HE bit in condition summary word
     Bool_t getCalHeSet() const { return( (m_conditionSummary & CALHE) != 0); };
+	/// Method to query CNO bit in condition summary word
     Bool_t getCnoSet() const { return( (m_conditionSummary & CNO) != 0); };
+	/// Method to query periodic bit in condition summary word
     Bool_t getPeriodicSet() const { return( (m_conditionSummary & PERIODIC) != 0); };
+	/// Query Solicited bit in condition summary word
     Bool_t getSolicitedSet() const { return( (m_conditionSummary & SOLICITED) != 0); };
+	/// Query External bit in condition summary word
     Bool_t getExternalSet() const { return( (m_conditionSummary & EXTERNAL) != 0); };
+	/*@}*/
 
     private:
 

@@ -12,6 +12,8 @@
 class L1T : public TObject {
 public:
     
+	/**@defgroup L1TGroup L1T End-User Interface */
+	/*@{*/
     enum  {
         // definition of  trigger bits        
         b_ACDL =     1,  //  set if cover or side veto, low threshold
@@ -21,6 +23,7 @@ public:
         b_HI_CAL=   16,   //  3 cal layers in a row above high threshold
         number_of_trigger_bits = 5
     };
+	/*@}*/
             
     L1T();
     L1T(UInt_t trigger);
@@ -33,6 +36,8 @@ public:
 
     void Print(Option_t *option="") const;
 
+	/** @ingroup L1TGroup */
+	/*@{*/
     UInt_t getTriggerWord() const { return m_trigger; };
 
     /// kTRUE indicates that ACD LOW occurred
@@ -45,6 +50,7 @@ public:
     bool getCalLow() const { return m_trigger & b_LO_CAL; };
     /// kTRUE indicates that CAL HIGH occurred
     bool getCalHigh() const { return m_trigger & b_HI_CAL; };
+	/*@}*/
 
 private:
     /// packed word containing trigger bits

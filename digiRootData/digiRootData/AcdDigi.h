@@ -66,7 +66,8 @@ private:
     };
 
 public:
-
+	/** @defgroup AcdDigiGroup AcdDigi End-User Interface */
+	/*@{*/
     typedef enum {
         A = 0,
         B = 1
@@ -81,7 +82,7 @@ public:
         NOERROR = 0,
         ERROR = 1
     } ParityError;
-
+	/*@}*/
 
     
     AcdDigi();
@@ -100,6 +101,9 @@ public:
 
     void Print(Option_t *option="") const;
 
+	/** @ingroup AcdDigiGroup */
+	/*@{*/
+	/// Returns the Monte Carlo energy deposited in this ACD detector
     Float_t getEnergy() { return m_energy; };
 
     const AcdId& getId() const { return m_id; };
@@ -107,17 +111,18 @@ public:
 
     /// Returns the PHA value for the PMT requested
     UShort_t getPulseHeight (AcdDigi::PmtId pmt) const;
-    /// Returns 1/0 denoting whether this ACD Tile's veto threshold bit is on.
+    /// Returns True/False denoting whether this ACD Tile's veto threshold bit is on.
     Bool_t getVeto(AcdDigi::PmtId pmt) const;
     /// Returns true/false denoting if this Acd PMT high discrim is on/off
     Bool_t getLowDiscrim(AcdDigi::PmtId pmt) const;
-    /// Returns 1/0 denoting if this ACD Tile's high discriminator bit is on (CNO).
+    /// Returns true/false denoting if this ACD Tile's high discriminator bit is on (CNO).
     Bool_t getHighDiscrim(AcdDigi::PmtId pmt) const;
 
     Int_t getTileNumber() const { return m_tileNumber; };
     const char* getTileName() const { return m_tileName.Data(); };
     Range getRange(AcdDigi::PmtId pmt) const;
     ParityError getParityError(AcdDigi::PmtId pmt) const;
+	/*@}*/
 
     /// Root >= 3.0 is now const correct for the Compare function
     Int_t Compare(const TObject *obj) const; 

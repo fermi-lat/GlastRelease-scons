@@ -49,19 +49,18 @@ public:
     void initialize(UInt_t eventId, UInt_t runId, Double_t time, 
         const L1T& level1, const EventSummaryData &summary, Bool_t fromMc=true);
 
-    void setEbfTime(UInt_t timeSec, UInt_t timeNanoSec, 
-                    UInt_t upperPpcTimeBase, UInt_t lowerPpcTimeBase) {
-        m_ebfTimeSec = timeSec;
-        m_ebfTimeNanoSec = timeNanoSec;
-        m_ebfUpperPpcTimeBase = upperPpcTimeBase;
-        m_ebfLowerPpcTimeBase = lowerPpcTimeBase;
-    }
-
     void Clear(Option_t *option="");
  
     void Print(Option_t *option="") const;
+	
+	/** @defgroup DigiEventGroup DigiEvent End-User Interface */
+    /*@{*/
+    /// Access the DigiEvent number
+    inline UInt_t getEventId() { return m_eventId; };
+    /// Access the run number
+    inline UInt_t getRunId() { return m_runId; };
 
-    inline Double_t getTimeStamp() { return m_timeStamp; };
+   inline Double_t getTimeStamp() { return m_timeStamp; };
 
     inline UInt_t getEbfTimeSec() const { return m_ebfTimeSec; };
     inline UInt_t getEbfTimeNanoSec() const { return m_ebfTimeNanoSec; };
@@ -80,58 +79,67 @@ public:
         return (upper + lower);
     };
 
-
-    /// Access the DigiEvent number
-    inline UInt_t getEventId() { return m_eventId; };
-
-    /// Access the run number
-    inline UInt_t getRunId() { return m_runId; };
-
+	/// Flag denoting if this event was generated from a Monte Carlo Simulation
     inline Bool_t getFromMc() { return m_fromMc; };
 
     /// retrieve the whole TClonesArray of Acd Digi data
     const TClonesArray* getAcdDigiCol() const { return m_acdDigiCol; };
-    /// Add a new AcdDigi entry into the ACD digi array
-    AcdDigi* addAcdDigi(const AcdId& id, const VolumeIdentifier& volId, 
-        Float_t energy, UShort_t *pha, Bool_t *veto, Bool_t *low, Bool_t *high);
-
     /// retrieve a specific AcdDigi, based upon the layer, face, row, col, if not found returns null
     const AcdDigi* getAcdDigi(UShort_t l, UShort_t f, UShort_t r, UShort_t c) const;
-
     /// retrieve a specific AcdTile, based upon a valid AcdId, if not found returns null
     const AcdDigi* getAcdDigi(const AcdId &id) const;
 
-    /// retrieve the CalDigi object
+    /// retrieve the whole CalDigi collection
     const TClonesArray* getCalDigiCol();
-    CalDigi* addCalDigi();
+	/// retrieve one CalDigi object from the collection, using the index into the array
     const CalDigi* getCalDigi(UInt_t i) const;
-
 
     /// retrieve the whole TObjArray of TkrDigi Data
     const TObjArray* getTkrDigiCol() const { return m_tkrDigiCol; };
-    /// Add a TkrDigi into the TKR data collection
-    void addTkrDigi(TkrDigi *digi);
     /// retrieve a TkrDigi from the collection, using the index into the array
     const TkrDigi* getTkrDigi(UInt_t i) const;
-    /// clear the whole array (necessary because of the consts-s)
-    void clearTkrDigiCol() { m_tkrDigiCol->Clear(); }
 
     /// Access Level 1 Trigger data
     inline const L1T& getL1T() const { return m_levelOneTrigger; };    
 
+	/// Returns a reference to the EventSummaryData
     inline const EventSummaryData& getEventSummaryData() const { return m_summary; };
     inline EventSummaryData& getEventSummaryData() { return m_summary; };
 
+	/// Returns the whole CalDiagnostic Collection
     const TClonesArray *getCalDiagnosticCol() { return m_calDiagnosticCloneCol;};
-    CalDiagnosticData* addCalDiagnostic();
     const CalDiagnosticData* getCalDiagnostic(UInt_t i) const;
 
     const TClonesArray *getTkrDiagnosticCol() { return m_tkrDiagnosticCloneCol;};
-    TkrDiagnosticData* addTkrDiagnostic();
     const TkrDiagnosticData* getTkrDiagnostic(UInt_t i) const;
 
-    void initGem(const Gem& gem) { m_gem = gem; };
     const Gem& getGem() const { return m_gem; };
+	/*@}*/
+
+
+	/// clear the whole array (necessary because of the consts-s)
+    void clearTkrDigiCol() { m_tkrDigiCol->Clear(); }
+    /// Add a TkrDigi into the TKR data collection
+    void addTkrDigi(TkrDigi *digi);
+
+    CalDigi* addCalDigi();
+	
+	/// Add a new AcdDigi entry into the ACD digi array
+    AcdDigi* addAcdDigi(const AcdId& id, const VolumeIdentifier& volId, 
+        Float_t energy, UShort_t *pha, Bool_t *veto, Bool_t *low, Bool_t *high);
+
+    void initGem(const Gem& gem) { m_gem = gem; };
+    TkrDiagnosticData* addTkrDiagnostic();
+    CalDiagnosticData* addCalDiagnostic();
+
+    void setEbfTime(UInt_t timeSec, UInt_t timeNanoSec, 
+                    UInt_t upperPpcTimeBase, UInt_t lowerPpcTimeBase) {
+        m_ebfTimeSec = timeSec;
+        m_ebfTimeNanoSec = timeNanoSec;
+        m_ebfUpperPpcTimeBase = upperPpcTimeBase;
+        m_ebfLowerPpcTimeBase = lowerPpcTimeBase;
+    }
+
 
 private:
     /// Time in seconds

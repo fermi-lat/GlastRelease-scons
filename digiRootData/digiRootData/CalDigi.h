@@ -20,6 +20,8 @@ class CalDigi : public TObject  {
     
 public:
     
+	/** @defgroup CalDigiGroup CalDigi End-User Interface
+	/*@{*/
     /// shifts and masks for packed readout of energy range and Adc value
     enum {
         POS_OFFSET = 14,     // shift for POSitive face
@@ -27,6 +29,7 @@ public:
         RANGE_MASK = 0x3000, // energy range bits
         ADC_VAL_MASK = 0xfff
     };
+	/*@}*/
     
     CalDigi();
     
@@ -38,13 +41,14 @@ public:
 
     void Print(Option_t *option="") const;
 
+	/** @ingroup CalDigiGroup */
+	/*@{*/
     /// Retrieve readout mode
     const CalXtalId::CalTrigMode getMode() const { return m_mode; };
     
     /// Retrieve log identifier
     const CalXtalId getPackedId() const { return m_xtalId; };
     
-    const CalXtalReadout* addReadout(Char_t rangeP, UShort_t adcP, Char_t rangeM, UShort_t adcM);
     const CalXtalReadout* getReadoutCol();
     const UInt_t getNumReadouts() const { 
         if (m_readoutCol) 
@@ -64,7 +68,10 @@ public:
     
     /// Retrieve pulse height from selected range
     Short_t getAdcSelectedRange(Char_t range, CalXtalId::XtalFace face) const;
-    
+    /*@}*/
+
+    const CalXtalReadout* addReadout(Char_t rangeP, UShort_t adcP, Char_t rangeM, UShort_t adcM);
+
 private:
     
     /// Cal readout mode is based on trigger type

@@ -38,6 +38,8 @@ public:
 
     void Print(Option_t *option="") const;
     
+	/**@defgroup TkrDigiGroup TkrDigi End-User Interface */
+	/*@{*/
     //! Retrieve tower info
     TowerId getTower() const { return m_tower; }
     //! Retrieve layer info
@@ -59,7 +61,8 @@ public:
 
     //! Get the pointer to the hit list
     const vector<UInt_t> getHitCol() const { return m_hitCol; };
-    
+    /*@}*/
+
     //! Add a controller 0 hit to the hit list (keeps track of highest strip)
     void addC0Hit( UInt_t strip );
     

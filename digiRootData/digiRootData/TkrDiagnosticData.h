@@ -6,6 +6,8 @@
 /** @class TkrDiagnosticData
  * @brief Store the EM TkrDiagnosticData trigger primitives
  *
+ * For details concering the DIAGNOSTIC contribution in the LDF please refer to:
+ * http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/TEM.pdf
  * $Header$
 */
 
@@ -16,15 +18,18 @@ public:
     TkrDiagnosticData(UInt_t datum) : m_datum(datum) {}
     virtual ~TkrDiagnosticData() {}
 
-    UInt_t getDataWord() const { return m_datum; };
-
     void initialize(UInt_t datum);
 
     void Clear(Option_t *option ="");
 
     void Print(Option_t *option="") const;
 
+	/**@defgroup TkrDiagnosticDataGroup TkrDiagnosticData End-User Interface */
+	/*@{*/
+	/// Returns the full packed data word for the TkrDiagnostic
+    UInt_t getDataWord() const { return m_datum; };
     UInt_t GTRC(Int_t gtrc) const;
+	/*@}*/
 
 private:
     /// packed word containing trigger primitive for these TKR layers

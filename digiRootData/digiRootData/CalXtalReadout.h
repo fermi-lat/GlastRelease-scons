@@ -31,12 +31,15 @@ public:
 
     void Print(Option_t *option="") const;
 
+	/** @defgroup CalXtalReadoutGroup CalXtalReadout End-User Interface */
+	/*@{*/
     /// retrieve pulse height from specified face
     UShort_t getAdc(CalXtalId::XtalFace face) const;
     
     /// retrieve energy range from specified face
     Char_t getRange(CalXtalId::XtalFace face) const;
-    
+    /*@*/
+
 private:
     
     UShort_t m_adcP;

@@ -15,7 +15,9 @@ class EventSummaryData: public TObject {
 
 public:
 
-    typedef enum {
+    /**@defgroup EventSummaryDataGroup EventSummaryData End-User Interface */
+	/*@{*/
+	typedef enum {
         GOOD = 0,
         EVTSEQ = 1
     } EventFlags;
@@ -27,7 +29,7 @@ public:
         DIAG = 3,
         AEM = 4
     }Contribution;
-
+	/*@}*/
 
     EventSummaryData();
     EventSummaryData(UInt_t summary) { Clear(); m_summary = summary; m_flags = 0; };
@@ -67,7 +69,10 @@ public:
     void Clear(Option_t *option="");
 
     void Print(Option_t *option="") const;
-    UInt_t summary() { return m_summary; };
+    
+	/** @ingroup EventSummaryDataGroup */
+	/*@{*/
+	UInt_t summary() { return m_summary; };
 
     UInt_t calStrobe();
     UInt_t tag();
@@ -81,19 +86,28 @@ public:
     UInt_t trgParityError();
 
 
-    /// Some methods we have added
     UInt_t eventSequence() const;
     UInt_t eventFlags() const { return m_flags; };
+	/// Returns true if the flags member is zero
     Bool_t goodEvent() const { return (m_flags == 0); };
+	/// Returns true if the flag member is non-zero
     Bool_t badEvent() const { return (m_flags != 0); };
+	/// Checks of event sequence bit is set in the event flags
     Bool_t badEventSequence() const { return (m_flags & EVTSEQ); };
     
+	/// Returns the length in bytes of the TEM contribution identified by a value in [0,15]
     UInt_t temLength(unsigned int tem) { return m_temLen[tem]; }
+	/// Returns the length in bytes of the GEM contribution
     UInt_t gemLength() const { return m_otherContribLen[GEM]; }
+	/// Returns the length in bytes of the OSW contribution
     UInt_t oswLength() const { return m_otherContribLen[OSW]; }
+	/// Returns the length in bytes of the AEM contribution
     UInt_t aemLength() const { return m_otherContribLen[AEM]; }
+	/// Returns the length in bytes of the ERROR contribution
     UInt_t errLength() const { return m_otherContribLen[ERR]; }
+	/// Returns the length in bytes of the DIAGNOSTIC contribution
     UInt_t diagLength() const { return m_otherContribLen[DIAG]; }
+	/*@}*/
 
 private:
     UInt_t m_summary;
