@@ -1,4 +1,5 @@
 #include "digiRootData/CalXtalReadout.h"
+#include <iostream>
 
 ClassImp(CalXtalReadout)
 
@@ -43,8 +44,8 @@ void CalXtalReadout::Print(Option_t *option) const {
     using namespace std;
     TObject::Print(option);
     cout.precision(2);
-    cout << "POS range, adc " << m_rangeP << " " << m_adcP << endl;
-    cout << "NEG range, adc " << m_rangeM << " " << m_adcM << endl;
+    cout << "POS range, adc " << Short_t(m_rangeP) << " " << m_adcP << endl;
+    cout << "NEG range, adc " << Short_t(m_rangeM) << " " << m_adcM << endl;
 }
 
 

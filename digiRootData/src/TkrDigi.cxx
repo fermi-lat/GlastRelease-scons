@@ -1,4 +1,5 @@
 #include "digiRootData/TkrDigi.h"
+#include <iostream>
 
 ClassImp(TkrDigi)
 
@@ -20,7 +21,14 @@ void TkrDigi::Clear(Option_t *option) {
 }
 
 void TkrDigi::Print(Option_t *option) const {
-
+    using namespace std;
+    TObject::Print(option);
+    cout.precision(2);
+    cout << "BiLayer: " << m_bilayer << endl;
+    m_tower.Print();
+    cout << "ToT: " << m_tot[0] << " " << m_tot[1]
+        << "  LastController0Strip: " << m_lastController0Strip << endl;
+    cout << "NumHits: " << getNumHits() << endl;
 }
 
 void TkrDigi::initialize(Int_t l, GlastAxis::axis v, TowerId t, Int_t* tot)

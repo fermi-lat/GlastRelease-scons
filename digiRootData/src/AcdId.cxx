@@ -1,9 +1,7 @@
-///////////////////////////////////////////////////////////////////////////
 //									  
 // The AcdId class contains a tile ID number.	
 // AcdId is used in the AcdTile class.
 //									  
-///////////////////////////////////////////////////////////////////////////
 
 // Apr 2000 Daniel Flath - Minor changes to function names, etc.
 // Jan 1999 Daniel Flath - ROOT HTML Documentation added
@@ -11,41 +9,54 @@
 // Version 1.1 25 Oct 1999 R.Dubois Clone from LCD towerID
 
 #include "digiRootData/AcdId.h"
+#include <iostream>
 
 ClassImp(AcdId)
 
 UShort_t AcdId::badId = 3799;
 
-///________________________________________________________________________
 AcdId::AcdId() : m_id(0), m_used(1) {
 }
 
 AcdId::AcdId(const AcdId& id) : m_id(id.m_id), m_used(id.m_used) 
 { 
-};
+}
 
-AcdId::AcdId(short l, short f, short r, short c) {
+AcdId::AcdId(UShort_t l, UShort_t f, UShort_t r, UShort_t c) {
     m_used = 1;
     m_id = 0;
     setLayer(l);
     setFace(f);
     setRow(r);
     setColumn(c);
-};
+}
 
-AcdId::AcdId(UInt_t i, short base, short used) {
+AcdId::AcdId(UInt_t i, Short_t base, Short_t used) {
     setId(i, used, base);
 }
 
-///________________________________________________________________________
-UInt_t AcdId::getId(short base) const { 
+void AcdId::Clear(Option_t *option) {
+    m_used = 1;
+    m_id = 0;
+}
+
+void AcdId::Print(Option_t *option) const {
+    using namespace std;
+    TObject::Print(option);
+    cout.precision(2);
+    cout << "Id: " << getId()
+        << "  (Layer, Face, Row, Column): (" << getLayer() << ", "
+        << getFace() << ", " << getRow() << ", " << getColumn()
+        << ")" << endl;
+}
+
+UInt_t AcdId::getId(Short_t base) const { 
     // Returns the tile ID number
     if (base == 2) return m_id; 
     return (getLayer() * 1000 + getFace() * 100 + getRow() * 10 + getColumn());
 }
 
-///________________________________________________________________________
-void AcdId::setId(UInt_t newVal, short used, short base) { 
+void AcdId::setId(UInt_t newVal, Short_t used, Short_t base) { 
 // Sets the ACD ID number to newVal
 // If this is an unused PMT, store that information
     if (used <= 0) {
@@ -81,27 +92,27 @@ bool AcdId::isSide () const
     return (getFace() != 0); 
 }
 
-short AcdId::getLayer () const 
+Short_t AcdId::getLayer () const 
 { 
     return ((m_id & _layermask) >> layerShift); 
 }
 
-short AcdId::getFace () const
+Short_t AcdId::getFace () const
 { 
     return (word(2, (m_id & _facemask))); 
 }
 
-short AcdId::getRow () const 
+Short_t AcdId::getRow () const 
 { 
     return(word (1, m_id)); 
 }
 
-short AcdId::getColumn () const 
+Short_t AcdId::getColumn () const 
 { 
     return(word (0, m_id)); 
 }
 
-void AcdId::setLayer( unsigned int val)
+void AcdId::setLayer( UInt_t val )
 { 
     m_id &= ~_layermask;
     m_id |= (val << layerShift);
@@ -111,20 +122,20 @@ void AcdId::setLayer( unsigned int val)
    //     ((val == 0) ? 0 : 8) | ((_facemask & m_id) >> 8) );
 }
 
-void AcdId::setFace( unsigned int f )
+void AcdId::setFace( UInt_t f )
 {
     short two = 2;
     set_word( two, m_id, 
         f | ((_layermask & m_id ) >> 8) );
 }
 
-void AcdId::setRow( unsigned int r ) 
+void AcdId::setRow( UInt_t r ) 
 { 
     short one = 1;
     set_word( one, m_id, r );
 }
 
-void AcdId::setColumn( unsigned int c ) 
+void AcdId::setColumn( UInt_t c ) 
 { 
     short zero = 0;
     set_word( zero, m_id, c ); 
@@ -139,7 +150,8 @@ void AcdId::setConnected(Char_t c) {
     m_used = c;
 }
 
-void AcdId::base10ToAcdId(UInt_t val, short &lay, short &face, short &row, short &col) {
+void AcdId::base10ToAcdId(UInt_t val, Short_t &lay, Short_t &face, 
+                          Short_t &row, Short_t &col) {
     lay = val / 1000;
     val -= lay*1000;
     face = val / 100;

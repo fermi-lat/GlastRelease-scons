@@ -8,7 +8,7 @@
 ClassImp(DigiEvent)
 
 // Allocate the TClonesArrays and TObjArray just once
-//TClonesArray *DigiEvent::m_staticAcdDigiVec = 0;
+TClonesArray *DigiEvent::s_acdDigiStaticCol = 0;
 TObjArray *DigiEvent::s_staticTkrDigiCol = 0;
 TObjArray *DigiEvent::s_calDigiStaticCol = 0;
 
@@ -20,27 +20,23 @@ DigiEvent::DigiEvent() {
     if (!s_staticTkrDigiCol) s_staticTkrDigiCol = new TObjArray();
     m_tkrDigiCol = s_staticTkrDigiCol;
 
+    // Assign default values to members
+    if (!s_acdDigiStaticCol) s_acdDigiStaticCol = new TClonesArray("AcdDigi", 1);
+    m_acdDigiCol = s_acdDigiStaticCol;
+    m_numAcdDigis = -1;
+
     Clear();
 
-    /*
-    // Assign default values to members
-    if (!m_staticAcdDigiVec) m_staticAcdDigiVec = new TClonesArray("AcdTile", 24);
-    m_AcdDigiVec = m_staticAcdDigiVec;
-    m_numTiles = -1;
 
-    if (!m_staticTkrDigiVec) m_staticTkrDigiVec = new TObjArray();
-    m_TkrDigiVec = m_staticTkrDigiVec;
-    m_numLayers = -1;
-*/
 }
 
 DigiEvent::~DigiEvent() {
-  /*
-    if(m_AcdDigiVec == m_staticAcdDigiVec) m_staticAcdDigiVec = 0;
-    m_AcdDigiVec->Delete();
-    delete m_AcdDigiVec;
-    m_AcdDigiVec = 0;
-  */
+  
+    if(m_acdDigiCol == s_acdDigiStaticCol) s_acdDigiStaticCol = 0;
+    m_acdDigiCol->Delete();
+    delete m_acdDigiCol;
+    m_acdDigiCol = 0;
+  
     if(m_tkrDigiCol == s_staticTkrDigiCol) s_staticTkrDigiCol = 0;
     m_tkrDigiCol->Delete();
     delete m_tkrDigiCol;
@@ -63,11 +59,11 @@ void DigiEvent::Clear(Option_t *option) {
     m_runId = 0;
     m_calDigiCol->Delete();
     m_tkrDigiCol->Delete();
+    m_acdDigiCol->Delete();
+    m_numAcdDigis = -1;
 
     /*
     m_AcdHeader.Clean();
-    m_AcdDigiVec->Clear();
-    m_numTiles = -1;
 
     m_CalHeader.Clean();
 
@@ -83,62 +79,36 @@ void DigiEvent::Print(Option_t *option) const {
 
 }
 
-/*
-AcdTile* DigiEvent::addAcdTile(UInt_t id, short base, short used) {
-    // Add a new AcdTile entry, note that
+AcdDigi* DigiEvent::addAcdDigi(const AcdId& id, Float_t energy, UShort_t *pha, 
+                               Bool_t *veto, Bool_t *low, Bool_t *high) {
+    // Add a new AcdDigi entry, note that
     // TClonesArrays can only be filled via
     // a new with placement call
-    ++m_numTiles;
-    TClonesArray &tiles = *m_AcdDigiVec;
-    new(tiles[m_numTiles]) AcdTile(id, base, used);
-    return ((AcdTile*)(tiles[m_numTiles]));
+    ++m_numAcdDigis;
+    TClonesArray &tiles = *m_acdDigiCol;
+    new(tiles[m_numAcdDigis]) AcdDigi(id, energy, pha, veto, low, high);
+    return ((AcdDigi*)(tiles[m_numAcdDigis]));
 }
 
-const AcdTile* DigiEvent::getAcdTile(UInt_t id) {
-    // Find a specific AcdTile in the TClonesArray
-    // User supplies a valid AcdTile id, in base 10 or base 2
-    // default is base 10
-    AcdTile tempTile = AcdTile(id);
-    int index = m_AcdDigiVec->BinarySearch(&tempTile);
-    if (index >= 0) return ((AcdTile*)m_AcdDigiVec->At(index));
-    return 0;
-}
-
-const AcdTile* DigiEvent::getAcdTile(short l, short f, short r, short c) {
-    // Find a specific AcdTile in the TClonesArray
-    // User supplies a valid AcdTile identified by layer, face, row, column
+const AcdDigi* DigiEvent::getAcdDigi(UShort_t l, UShort_t f, UShort_t r, 
+                                     UShort_t c) {
+    // Find a specific AcdDigi in the TClonesArray
+    // User supplies a valid AcdDigi identified by layer, face, row, column
     AcdId tempId(l, f, r, c);
-    AcdTile tempTile = AcdTile(tempId.getId());
-    int index = m_AcdDigiVec->BinarySearch(&tempTile);
-    if (index >= 0) return ((AcdTile*)m_AcdDigiVec->At(index));
+    AcdDigi tempDigi = AcdDigi(tempId.getId());
+    int index = m_acdDigiCol->BinarySearch(&tempDigi);
+    if (index >= 0) return ((AcdDigi*)m_acdDigiCol->At(index));
     return 0;
 }
 
-const AcdTile* DigiEvent::getAcdTile(AcdId &id) {
-    // Find a specific AcdTile in the TClonesArray
+const AcdDigi* DigiEvent::getAcdDigi(const AcdId &id) {
+    // Find a specific AcdDigi in the TClonesArray
     // User supplies a valid AcdId
-    AcdTile tempTile = AcdTile(id.getId());
-    int index = m_AcdDigiVec->BinarySearch(&tempTile);
-    if (index >= 0) return ((AcdTile*)m_AcdDigiVec->At(index));
+    AcdDigi tempDigi = AcdDigi(id.getId());
+    int index = m_acdDigiCol->BinarySearch(&tempDigi);
+    if (index >= 0) return ((AcdDigi*)m_acdDigiCol->At(index));
     return 0;
 }
-
-
-
-const TkrLayer* DigiEvent::getTkrLayer(unsigned int layerNum) {
-    TkrLayer tempLayer = TkrLayer();
-    unsigned int planeNum = layerNum >> 1;
-    tempLayer.setPlaneNum(planeNum);
-    if ( (planeNum % 2) == 0 ) {    // even plane
-        tempLayer.setXY((layerNum&1) ? TkrLayer::X : TkrLayer::Y);
-    } else {                        // odd plane
-        tempLayer.setXY((layerNum&1) ? TkrLayer::Y : TkrLayer::X);
-    }
-    int index = m_TkrDigiVec->BinarySearch(&tempLayer);
-    if (index >= 0) return ((TkrLayer*)m_TkrDigiVec->At(index));
-    return 0;
-}
-*/
 
 void DigiEvent::addTkrDigi(TkrDigi *digi) {
     m_tkrDigiCol->Add(digi);

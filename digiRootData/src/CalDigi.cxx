@@ -1,4 +1,6 @@
 #include "digiRootData/CalDigi.h"
+#include <iostream>
+
 ClassImp(CalDigi)
 
 //
