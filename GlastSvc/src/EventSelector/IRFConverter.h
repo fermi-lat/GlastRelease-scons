@@ -10,7 +10,7 @@
 class TdCsIData;
 #include "idents/ModuleId.h"
 #include "GlastEvent/TopLevel/ObjectVector.h"
-#include "GlastEvent/MonteCarlo/MCACDhit.h"
+#include "GlastEvent/MonteCarlo/MCACDHit.h"
 #include "GlastEvent/MonteCarlo/MCTrack.h"
 #include "GlastEvent/MonteCarlo/MCCalorimeterHit.h"
 #include "GlastEvent/MonteCarlo/MCSiLayer.h"
