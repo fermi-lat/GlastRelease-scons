@@ -185,8 +185,9 @@ namespace detModel{
     if (m_docClient->getConstants() != DOM_Node()){
       Constants* constantsBranch = new Constants();
 
+      DOM_Node node = m_docClient->getConstants();
       DomElement const constants = 
-        static_cast<const DomElement&>(m_docClient->getConstants());
+        static_cast<const DomElement&>(node);
       // Content model for <constants> is (version, primary, derived?)
 
       {
@@ -250,8 +251,10 @@ namespace detModel{
     if (m_docClient->getMaterials() == DomNode()) return;
 
     MatCollection* materials = currentGdd->getMaterials();
+
+    DOM_Node node = m_docClient->getMaterials();
     const DomElement matsElt = 
-      static_cast<const DomElement&>(m_docClient->getMaterials());
+      static_cast<const DomElement&>(node);
       
     materials->setVersion(Dom::getAttribute(matsElt, "version"));
     materials->setDate(Dom::getAttribute(matsElt, "date"));
