@@ -65,7 +65,7 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("UIcommands", m_uiCommands);
   declareProperty("geometryMode", m_geometryMode="");
   declareProperty("saveTrajectories", m_saveTrajectories=0);
-  declareProperty("mcTreeMode", m_mcTreeMode="full");
+  declareProperty("mcTreeMode", m_mcTreeMode="minimal");
 }
     
 ////////////////////////////////////////////////////////////////////////////

@@ -48,13 +48,13 @@ MessageSvc.OutputLevel      = 2;
 //FluxAlg.source_name="gamma_patch_for_G4";
 //FluxAlg.source_name="muon_pencil";
 //FluxAlg.source_name="muon_patch";
-FluxAlg.source_name="gamma_test";
-//FluxAlg.source_name="muon_pencil";
+//FluxAlg.source_name="gamma_test";
+FluxAlg.source_name="muon_pencil";
 
-// do you want trajectories in the TDS?
-G4Generator.saveTrajectories = 1;
-// do you want the full or minimal tree of particles?
-G4Generator.mcTreeMode = "full";
+// do you want trajectories in the TDS? (default is 0)
+G4Generator.saveTrajectories = 0;
+// do you want the full or minimal tree of particles? (default is minimal)
+G4Generator.mcTreeMode = "minimal";
 
 // commands to run before each event. 
 //G4Generator.UIcommands+={"/run/verbose 3"};
