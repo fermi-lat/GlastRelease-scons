@@ -65,6 +65,8 @@ private:
     double m_theta, m_theta_rad;
     double m_length;
     double m_pi;
+
+	int m_usenumhits;
 };
 
 #endif
