@@ -7,23 +7,18 @@ use glastmedia
 use GlastSvc
 use GuiSvc
 
-set   DetDisplayShr "${DETDISPLAYROOT}/${DEBUGDIR}/libDetDisplay"
+apply_pattern package_Clinkopts
+apply_pattern packageShr
 
-
+#=============================================================
 private
+
+# get flags to build shared library
+
+apply_pattern package_Cshlibflags
 
 library DetDisplay  *.cxx *.h  Dll/*.cxx
 
-macro DetDisplay_linkopts   " "\
-      VisualC " DataObject.obj "
- 
-
-
-include_path $(DETDISPLAYROOT)
-
-
-macro DetDisplay_shlibflags "$(libraryshr_linkopts) $(use_linkopts) "\
-       VisualC "$(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
 
 # build this for testing
 
@@ -33,4 +28,4 @@ macro_append use_linkopts " $(GuiSvc_lib)"
 macro jobOptions "" VisualC "jobOptions.txt"
 
 macro WinJobOptions  "" VisualC "test/jobOptions.txt"
-application test_DetDisplay test/*.cxx *.cxx *.h Dll/*.cxx ${WinJobOptions} ${Win32Resource}
+application test_DetDisplay ${GuiMain} *.cxx *.h Dll/*.cxx ${WinJobOptions} ${Win32Resource}
