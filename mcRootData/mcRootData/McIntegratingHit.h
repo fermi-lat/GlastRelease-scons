@@ -5,7 +5,7 @@
 #include "TVector.h"
 #include "TRefArray.h"
 
-#include "VolumeIdentifier.h"
+#include "commonRootData/idents/VolumeIdentifier.h"
 #include "McParticle.h"
 
 #include <vector>

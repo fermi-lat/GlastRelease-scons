@@ -9,7 +9,7 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ class VolumeIdentifier+;
+//#pragma link C++ class VolumeIdentifier+;
 #pragma link C++ class McParticle+;
 #pragma link C++ class McPositionHit+;
 #pragma link C++ class McIntegratingHit+;

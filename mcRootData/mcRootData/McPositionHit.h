@@ -6,7 +6,7 @@
 #include "TVector.h"
 #include "TRef.h"
 
-#include "VolumeIdentifier.h"
+#include "commonRootData/idents/VolumeIdentifier.h"
 #include "McParticle.h"
 
 /* @class McPositionHit
