@@ -110,6 +110,7 @@ StatusCode TkrVertexAlg::execute()
   
     // Recover the collection of Fit tracks
     Event::TkrTrackCol* pTkrTracks = SmartDataPtr<Event::TkrTrackCol>(eventSvc(),EventModel::TkrRecon::TkrTrackCol);
+    //std::cout << "TkrVertexAlg::execute: " << pTkrTracks->size() << " tracks to vertex" << std::endl;
     
     // Retrieve the information on vertices
     SmartDataPtr<Event::TkrVertexCol> pVtxCol(eventSvc(), EventModel::TkrRecon::TkrVertexCol);
@@ -187,6 +188,8 @@ StatusCode TkrVertexAlg::execute()
 
         // This tells the tool to perform the vertexing
         sc = m_VtxTool->retrieveVtxCol(*pVtxCol);
+        std::cout << "TkrVertexAlg::execute: " << pVtxCol->size() << " vertices found" << std::endl;
+
     }
   
     return sc;
