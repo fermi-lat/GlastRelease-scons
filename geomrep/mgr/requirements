@@ -10,6 +10,7 @@ macro   geomrep_linkopts "-L ${GEOMREPROOT}/${CMTCONFIG} -lgeomrep"\
 
 private
 
-library geomrep -no_share *.cxx
+library geomrep -no_share *.cxx\
+    ../geomrep/*.h
 
 application testgeom  -windows ../test/testgeom.cxx

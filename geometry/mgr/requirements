@@ -16,5 +16,6 @@ library  geometry -no_share \
     RootFinder.cxx      Shape.cxx           Sphe.cxx\
     Sphere.cxx          Surface.cxx         Track.cxx\
     Tube.cxx            Vector.cxx \
-    Volume.cxx          Wedge.cxx
+    Volume.cxx          Wedge.cxx \
+    ../geometry/*.h
 
