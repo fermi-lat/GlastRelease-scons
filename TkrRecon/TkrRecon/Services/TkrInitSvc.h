@@ -39,14 +39,14 @@ public:
     /// queryInterface - for implementing a Service this is necessary
     StatusCode       queryInterface(const IID& riid, void** ppvUnknown);
 
-	static const InterfaceID& interfaceID() { return IID_ITkrInitSvc; }
+    static const InterfaceID& interfaceID() { return IID_ITkrInitSvc; }
 
     /// return the service type
     const IID& type() const;
  
 private:
 
-	/// pointer to the geometry service
+    /// pointer to the geometry service
     ITkrGeometrySvc* pTkrGeo;
 
     /// Variables which can be changed in TkrControl
