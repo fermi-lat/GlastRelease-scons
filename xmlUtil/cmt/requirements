@@ -1,6 +1,7 @@
 # $Header$
 package xmlUtil
 
+use facilities
 use xml 
 use XMLEXT
 use GlastPolicy
@@ -12,7 +13,6 @@ path_append LD_LIBRARY_PATH "${xmlUtilDir}"
 apply_pattern package_linkopts
 apply_pattern package_headers
 apply_pattern package_xmlfiles
-apply_pattern packageShr
 
 # private 
 # macro xmlUtil_xmlfiles "" WIN32 "../xml/*.xml" 
