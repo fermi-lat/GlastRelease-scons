@@ -9,6 +9,8 @@
 
 #include "RunManager.h"
 #include "PrimaryGeneratorAction.h"
+#include "McParticleManager.h"
+
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
@@ -89,6 +91,9 @@ StatusCode G4Generator::initialize()
         return StatusCode::FAILURE;
     }
 
+    // Init the McParticle hierarchy 
+    McParticleManager::getPointer()->initialize(eventSvc());
+
     // The geant4 manager
     m_runManager = new RunManager(gsv,eventSvc());
 
@@ -149,6 +154,8 @@ StatusCode G4Generator::execute()
 
     log << MSG::DEBUG << "TDS ready" << endreq;
 
+    // Clean the McParticle hierarchy 
+    McParticleManager::getPointer()->clear();
 
     // following model from previous version, allow property "UIcommands" to generate
     // UI commands here. 
@@ -195,8 +202,8 @@ StatusCode G4Generator::execute()
     G4ParticleDefinition * pdef = primaryGenerator->GetParticleDefinition();
     HepLorentzVector pin= primaryGenerator->GetFourMomentum();
 
+#if 0
     mc::McParticleCol* pcol = new mc::McParticleCol;
-
     eventSvc()->registerObject("/Event/MC/McParticleCol", pcol);
     mc::McParticle * parent= new mc::McParticle;
     pcol->push_back(parent);
@@ -207,10 +214,25 @@ StatusCode G4Generator::execute()
         mc::McParticle::PRIMARY,
         pin);
     parent->finalize(pin, p);
+#else
+
+    mc::McParticle * parent= new mc::McParticle;
+    // This parent particle decay at the start in the first particle, 
+    // so initial momentum and final one are the same
+    parent->initialize(parent, pdef->GetPDGEncoding(), 
+        mc::McParticle::PRIMARY,
+        pin);
+    parent->finalize(pin, p);
     
+    McParticleManager::getPointer()->addMcParticle(0,parent);
+    
+#endif    
 
     // Run geant4
     m_runManager->BeamOn(); 
+    
+    // Save the McParticle hierarchy in the TDS
+    McParticleManager::getPointer()->save();
     
     // set up display of trajectories
     DisplayManager* dm = DisplayManager::instance();
@@ -218,12 +240,6 @@ StatusCode G4Generator::execute()
         std::auto_ptr<std::vector<Hep3Vector> > points = m_runManager->getTrajectoryPoints(i);
         dm->addTrack(*(points.get()), m_runManager->getTrajectoryCharge(i));
     }
-
-
-#if 0
-    SmartDataPtr<McPositionHitVector> hits(eventSvc(), "/Event/MC/PositionHitsCol");
-     if (hits) log << MSG::INFO << "Number of hits in the event = " << hits->size() << endreq;
-#endif
 
     return StatusCode::SUCCESS;
 }

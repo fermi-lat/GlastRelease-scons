@@ -1,6 +1,8 @@
 // $Header$
 
 #include "PosDetectorManager.h"
+#include "McParticleManager.h"
+
 #include <iostream>
 #include "GlastEvent/MonteCarlo/McPositionHit.h"
 #include "idents/VolumeIdentifier.h"
@@ -62,8 +64,9 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
         theTouchable->GetTranslation());
 
     HepTransform3D local = global.inverse();
-
+    
     hit->init(edep, id, local*prePos, local*postPos);
+    hit->setMcParticle(McParticleManager::getPointer()->getLastParticle());
     m_posHit->push_back(hit);
 
     display(theTouchable, id, prePos, postPos);
