@@ -44,7 +44,8 @@ int main(int argn, char** argc) {
         // Event Summary
         EventSummaryData summary = myLatData->summaryData();
         printf("event summary:\n");
-        printf("summary: %d time:  sec: %d, nanosec: %d \n", summary.summary(), summary.timeSec(), summary.timeNanoSec());
+        printf("summary: %u time:  sec: %d, nanosec: %d \n", summary.summary(), summary.timeSec(), summary.timeNanoSec());
+        printf("summary contd: marker: %d\n", EventSummary::marker(summary.summary()));
 
         // Check the ACD data
         printf("ACD Data\n");
