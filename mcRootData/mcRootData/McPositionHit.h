@@ -76,8 +76,10 @@ public:
     Double_t getDirectionCosine() const;
         
     const McParticle* getMcParticle() const { return (McParticle*)m_mcParticle.GetObject();};
+    void setMcParticle(TObject *o) { m_mcParticle=o;};
 
     const McParticle* getOriginMcParticle() const { return (McParticle*)m_originMcParticle.GetObject(); };
+    void setOriginMcParticle(TObject *o) { m_originMcParticle=o;};
     
     /// Retrieve whether this hit should be digitized
     Bool_t needDigi() const;
