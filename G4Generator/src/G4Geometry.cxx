@@ -195,7 +195,7 @@ G4VPhysicalVolume* G4Geometry::getPhysicalByName(std::string name){
   std::vector<G4VPhysicalVolume*>::const_iterator i;
   
   for(i=m_physicals.begin();i!=m_physicals.end();i++)
-    if ((*i)->GetName() == name) return (*i);
+    if ((std::string)(*i)->GetName() == name) return (*i);
 
   return 0;
 }
