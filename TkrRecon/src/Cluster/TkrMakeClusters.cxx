@@ -38,7 +38,7 @@ TkrMakeClusters::TkrMakeClusters(TkrClusterCol* pClus,
     TkrDigiCol::const_iterator ppDigi = pTkrDigiCol->begin();
     int nclusters = 0;  // for debugging
     
-    for (ppDigi; ppDigi!= pTkrDigiCol->end(); ppDigi++) {
+    for (; ppDigi!= pTkrDigiCol->end(); ppDigi++) {
         // each digi contains the digitized hits from one layer of one tower
         TkrDigi* pDigi = *ppDigi;
 

@@ -61,7 +61,8 @@ TkrMakeClusterTable::TkrMakeClusterTable(const TkrClusterCol* pClus,
         std::vector<Relation<TkrDigi, McPositionHit> *> relsByDigi = digiHitsTab.getRelByFirst(p_digi);
         // collect the corresponding hits
         std::vector<McPositionHit*> mcHits;
-        for(int irel=0;irel<relsByDigi.size();irel++) {
+        int relSize = relsByDigi.size();
+        for(int irel=0;irel<relSize;irel++) {
             McPositionHit* theHit = relsByDigi[irel]->getSecond();
             // is this hit already in the list?
             if(std::find(mcHits.begin(),mcHits.end(), theHit)==mcHits.end()) {
