@@ -23,13 +23,25 @@ namespace LdfEvent{
 
     class EventSummaryData : public DataObject {
     public:
+        typedef enum {
+            GOOD = 0,
+            EVTSEQ = 1
+        } EventFlags ;
+
         virtual ~EventSummaryData();
         virtual std::ostream& fillStream(std::ostream &s) const;
         friend std::ostream& operator << (std::ostream &s, const EventSummaryData &obj);
 
-        EventSummaryData() {m_summary=0;};
-        EventSummaryData(unsigned int summary) {m_summary=summary; };
+        EventSummaryData() {m_summary=0; m_flags = 0;};
+        EventSummaryData(unsigned int summary) {m_summary=summary; m_flags = 0;};
         void initialize(unsigned int summary){m_summary=summary;};
+        void initEventFlags(unsigned int flags) { m_flags = flags; };
+        
+        unsigned int eventFlags() const { return m_flags; };
+        bool goodEvent() const { return (m_flags == 0); };
+        bool badEventSeq() const { return (m_flags && EVTSEQ); };
+        bool badEvent() const { return (m_flags != 0); } ;
+ 
         unsigned int summary() { return m_summary; };
 
         unsigned int calStrobe() const {return EventSummary::calStrobe(m_summary);};
@@ -45,6 +57,9 @@ namespace LdfEvent{
 
     private:
     unsigned int m_summary;
+    /// Event Flags - used to denote bad events
+    /// flags = 0 is "good"
+    unsigned int m_flags;
     };
 
     inline EventSummaryData::~EventSummaryData(){
@@ -57,7 +72,8 @@ namespace LdfEvent{
          << "\nTACK: " << TACK() << " readout4: " << readout4()
           << "\nzeroSuppress: " << zeroSuppress() << " marker: " << marker()
           << "\nerror: " << error() << " diagnostic: " << diagnostic()
-          << "\neventNumber: " << eventNumber() << " trgParityError: " << trgParityError() << "\n";
+          << "\neventNumber: " << eventNumber() << " trgParityError: " << trgParityError() << "\n"
+          << "Event Flags: " << m_flags << "\n";
         return s;
     }
 

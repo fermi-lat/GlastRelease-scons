@@ -3,6 +3,7 @@ Package LdfEvent
 Coordinator:H.Kelly
 @verbatim
 
+v2r0    25-Aug-2004 HMK Store event flag in EventSummaryData
 v1r0p0  18-Aug-2004 HMK Clean up of GEM
 v1r0    01-Aug-2004 HMK Prepare to handle GEM data
 v0r0p0  01-Jun-2004 HMK Use ldfExt
