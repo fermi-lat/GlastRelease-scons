@@ -19,7 +19,7 @@
 #include <assert.h>
 
 const char* _MERIT_VERSION = "$Revision$";
-static std::string  cutstr("nAW");
+static std::string  cutstr("nA");
 static std::string  file_name("");
 
 
