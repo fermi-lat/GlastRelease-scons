@@ -89,11 +89,22 @@ class McParticle  : virtual public ContainedObject  {
     virtual ~McParticle() {}
 
     //! completely initialize a newed object. No other way to set most attributes.
+    //! it will be replaced by the following methods (left here just in the transition)
     void init( McParticle* mother, 
         StdHepId id, 
         unsigned int statusBits,
         const HepLorentzVector& initialMomentum,
         const HepLorentzVector& finalMomentum,
+        const HepPoint3D& finalPosition);
+
+    //! Set the initial attributes of the McParticle
+    void initialize( McParticle* mother, 
+        StdHepId id, 
+        unsigned int statusBits,
+        const HepLorentzVector& initialMomentum);
+
+    //! Set the final attributes of the McParticle
+    void finalize( const HepLorentzVector& finalMomentum,
         const HepPoint3D& finalPosition);
 
 
