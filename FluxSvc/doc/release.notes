@@ -3,6 +3,7 @@
 
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
+ * 30-AUG-03  v6r7p5 thb DeltaTime propery initialize to zero (no effect)
  * 29-AUG-03  v6r7p4 thb include DeltaTime propery
  * 27-AUG-03  v6r7p3 thb fix time management, mostly reporting. tag
  * 27-aug-03         sean pointing stuff?
