@@ -1,7 +1,16 @@
 /** @file release.notes
  * package Gleam
  * package manager:T.Burnett
- *
+ * v0r9   20-apr-02 THB new versions:
+    use detModel           v2r10
+    use GlastEvent         v7r1
+    use FluxSvc            v5r4
+    use GlastSvc           v7r1
+    use G4Generator        v3r4
+    use GlastDigi          v2r5
+    use Recon              v1r1
+
+
  * v0r8   12-apr-02 THB following new versions:
      use facilities        v2r3 
      use xmlGeoDbs         v1r4
