@@ -118,8 +118,9 @@ namespace calibUtil {
     };
       
     /// Constructor keeps track of table of interest
-    Metadata(std::string host="*",
-             std::string table="*");
+    Metadata(const std::string& host="*",
+             const std::string& table="*",
+             const std::string& dbName="calib");
 
     ~Metadata();
 
@@ -339,7 +340,8 @@ namespace calibUtil {
 
     static bool connect(MYSQL * cxt, std::string& host, 
                         const std::string& user, 
-                        const std::string& pw, eRet& err);
+                        const std::string& pw, eRet& err, 
+                        const std::string& dbName);
 
     bool connectRead(eRet& err);
     bool connectWrite(eRet& err);
@@ -371,6 +373,7 @@ namespace calibUtil {
     unsigned int m_rowStatus;
     std::string  m_host;
     std::string  m_table;
+    std::string  m_dbName;
   };
 }
 

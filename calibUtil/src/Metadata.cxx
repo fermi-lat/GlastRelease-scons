@@ -16,9 +16,10 @@ namespace calibUtil {
   | Metadata::eValid  | Metadata::eInputDesc | Metadata::eComment;
 
 
-  Metadata::Metadata(std::string host, std::string table)  : m_readCxt(0), 
-    m_writeCxt(0), m_row(""), 
-    m_rowStatus(0), m_host(host), m_table(table) {
+  Metadata::Metadata(const std::string& host, const std::string& table,
+                     const std::string& dbName)  
+    : m_readCxt(0), m_writeCxt(0), m_row(""), m_rowStatus(0), 
+      m_host(host), m_table(table), m_dbName(dbName) {
     if (table.compare("*") == 0) m_table = std::string("$(MYSQL_METATABLE)");
     if (host.compare("*") == 0) m_host = std::string("$(MYSQL_HOST)");
 
@@ -128,7 +129,8 @@ namespace calibUtil {
   // The next 5 methods concern connection to the server
   bool Metadata::connect(MYSQL* cxt, std::string& host,
                          const std::string& user, 
-                         const std::string& pw, eRet& err)  {
+                         const std::string& pw, eRet& err,
+                         const std::string& dbName)  {
 
 
     int nSub = facilities::Util::expandEnvVar(&host);
@@ -141,12 +143,12 @@ namespace calibUtil {
     mysql_init(cxt);
     MYSQL *connected;
     connected = mysql_real_connect(cxt, host.c_str(), user.c_str(),
-                                   pw.c_str(), "calib", 0, NULL, 0);
+                                   pw.c_str(), dbName.c_str(), 0, NULL, 0);
     if (connected != 0) {
       cxt = connected;
       err = RETOk;
       std::cout << "Successfully connected to MySQL host " << 
-        host << std::endl;
+        host << " database " << dbName << std::endl;
       return true;
     }
     else {
@@ -160,7 +162,7 @@ namespace calibUtil {
     if (m_readCxt == 0) {
       m_readCxt = new MYSQL;
       bool ok = connect(m_readCxt, m_host, std::string("glastreader"), 
-                        std::string("glastreader"), err);
+                        std::string("glastreader"), err, m_dbName);
       if (!ok) {
         delete m_readCxt;
         m_readCxt = 0;
@@ -174,7 +176,7 @@ namespace calibUtil {
     if (m_writeCxt == 0) {
       m_writeCxt = new MYSQL;
       bool ok = connect(m_writeCxt, m_host, std::string("calibrator"), 
-                      std::string("calibr8tor"), err);
+                        std::string("calibr8tor"), err, m_dbName);
       if (!ok) {
         delete m_readCxt;
         m_readCxt = 0;
