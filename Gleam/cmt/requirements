@@ -1,6 +1,6 @@
 package Gleam
 
-version  v2r1p13
+version  v2r1p14
 # This is a checkout package
 # $Id$
 
@@ -40,7 +40,7 @@ public
 
 use GuiSvc      v3
 
-use Event       v8r8
+use Event                 v8r9
 use GlastSvc    v8r1p2
 
 # simulation
@@ -60,11 +60,12 @@ use AcdDigi     v1r1
 use Trigger     v3r3p3
 use Recon       v2r2p3
 
-use TkrRecon              v6r3p4
-use CalRecon    v5r5p2       
+use TkrRecon    v6r3p4
+use CalRecon    v5r5p2  
+use AcdRecon              v0r2       
 
 #ROOT persistence: RootIo specifies the data packages
-use RootIo                v4r5
+use RootIo                v4r6
 
 #diagnostic and summary of bottom line
 use merit       v5r4
