@@ -36,24 +36,26 @@ namespace xmlUtil {
 
     void addField(const IdField& newField);
 
-    //! Return true if initial field names are compatible with \a path
-    bool hasPath(const NameSeq& path) const;
+    //! Delete field on the end. 
+    // Should it be returned rather than void?
+    void popField();
+
+    //! Return true if initial field names are compatible with \a subpath
+    bool hasSubpath(const NameSeq& subpath) const;
 
     //! Return index of first occurrence of specified field, or -1
     //! if no occurrences.
     int hasField(std::string name) const;
 
-    // Retrieve just the value of each field
-    // Identifier *extractIdentifier() const;
+    Identifier *stripNames();
 
     // Retrieve the sequence of names
     // So far this is just here for symmetry.  Can't think of a
     // good reason why anyone would want to do it.
-    // NameSeq *extractNameSeq() const;
+    // NameSeq *stripValues() const;
     /* Return subsequence from field with name \b name1 to field with
       name \b name2, inclusive.  If these fields don't exist or don't
-      occur in the proper order, return null.
-    */
+      occur in the proper order, return null.    */
     // NamedId *extract(const std::string& name1, const std::string& name2);
 
     /* Return a subsequence from field with name \b name1 until the
@@ -63,22 +65,15 @@ namespace xmlUtil {
     // Append fields in order from \a toAppend 
     //void append(const NamedId& toAppend);
 
-
     friend class DictNode;
     friend class IdOperation;
     friend class IdOpCompress;
 
   protected:
-
     typedef std::vector <IdField* > Fields;
-
     typedef Fields::iterator  FieldIt;
-    //    typedef std::vector<IdField *>::iterator  FieldIt;
-    
-    //    Fields *m_fields;
+   
     Fields *m_fields;
-
-    //    void addField(const IdField& newField);
   };
 }
 #endif

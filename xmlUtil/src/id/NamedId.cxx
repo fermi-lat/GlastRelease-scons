@@ -46,8 +46,12 @@ namespace xmlUtil {
     m_fields->push_back(field);
   }
 
-  bool NamedId::hasPath(const NameSeq& path) const {
-    unsigned int pathLen = path.size();
+  void NamedId::popField() { 
+    m_fields->pop_back();
+  }
+
+  bool NamedId::hasSubpath(const NameSeq& subpath) const {
+    unsigned int pathLen = subpath.size();
     if (pathLen > m_fields->size()) return false;
 
     // Else check one by one
@@ -55,7 +59,7 @@ namespace xmlUtil {
     //    NameSeq::iterator pathIt = path.begin();
 
     for (unsigned int ix = 0; ix < pathLen; ix++) {
-      if (path[ix]->compare(((*m_fields)[ix])->name) ) return false;
+      if (subpath[ix]->compare(((*m_fields)[ix])->name) ) return false;
     }
     return true;
   }
@@ -67,5 +71,13 @@ namespace xmlUtil {
     return -1;
   }
 
+  Identifier *NamedId::stripNames() {
+    Identifier *stripped = new Identifier();
+
+    for (unsigned int ix = 0; ix < m_fields->size(); ix++) {
+      stripped->push_back((*m_fields)[ix]->value);
+    }
+    return stripped;
+  }
 }
 

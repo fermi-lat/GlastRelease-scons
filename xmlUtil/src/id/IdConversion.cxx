@@ -23,16 +23,13 @@ namespace xmlUtil {
     child = xml::Dom::getSiblingElement(child);
     condition = new std::string(xml::Dom::getAttribute(child, "name"));
 
-    // Get next child; switch on element tag name; build new op component
-    // Could maybe do something more elegant than a switch, but it would
-    // take quite a bit of machinery and would only be worthwhile if
-    // the set of ops was expected to change often.
+    // Get next child;  build new op component.
     child = xml::Dom::getSiblingElement(child);
     buildOp(child);
   }
 
-  bool IdConversion::inDomain(NamedId& inputId) {
-    return inputId.hasPath(*path);
+  bool IdConversion::inDomain(const NamedId& inputId) {
+    return inputId.hasSubpath(*path);
   }
 
   bool IdConversion::satisfies(NamedId& inputId) {
@@ -41,12 +38,12 @@ namespace xmlUtil {
     return (inputId.hasField(*condition) >= 0);
   }
     
-  NamedId * IdConversion::convert(NamedId& inputId) {
+  NamedId * IdConversion::convert(const NamedId& inputId) {
     if (!inDomain(inputId)) return 0;
     return internalConvert(inputId);
   }
 
-  NamedId * IdConversion::internalConvert(NamedId& inputId) {
+  NamedId * IdConversion::internalConvert(const NamedId& inputId) {
     if (satisfies(inputId)) {  // let the operation do its thing
       return op->convert(inputId);
     }
@@ -69,6 +66,9 @@ namespace xmlUtil {
 
   }
 
+  // Could maybe do something more elegant than a switch, but it would
+  // take quite a bit of machinery and would only be worthwhile if
+  // the set of ops was expected to change often.
   void IdConversion::buildOp(const DOM_Element& opElt) {
     DOMString opType = opElt.getTagName();
 
@@ -87,4 +87,14 @@ namespace xmlUtil {
     }
   }
 
+  // return true if our path is subpath of given conversion's path
+  bool IdConversion::subpathOf(const IdConversion& other) const {
+    unsigned int ourLen = path->size();
+    if (ourLen > other.path->size() ) return false;
+
+    for (unsigned int ix = 0; ix < ourLen; ix++) {
+      if ((*(other.path))[ix]->compare((*(*path)[ix])) ) return false;
+    }
+    return true;
+  }
 }

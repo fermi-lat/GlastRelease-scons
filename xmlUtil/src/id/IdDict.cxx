@@ -77,22 +77,16 @@ namespace xmlUtil {
     return m_root->allowNamedId(id);
   }
 
-  /* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-     A bunch of functions whose dummy implementations need to be
-     replaced with something real.
-  */
-
   bool IdDict::nameSeqOk(const NameSeq& seq) const {
-    return true;
+    return m_root->allowNameSeq(seq);
   }
 
-  // No easy way to fake this one except to make it always fail
+  // all the work is in DictNode::allowIdentifier(const Identifier&, NamedId*)
   NamedId *  IdDict::getNamedId(const Identifier& id) const {
-    return 0;
+    NamedId *named = new NamedId;
+    m_root->allowIdentifier(id, named);
+    return named;
   }
-
-  /* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ */
 
   bool IdDict::addChild(DictNode* parent, DictNode* newNode) {
     /* Started to write something to add field if not already

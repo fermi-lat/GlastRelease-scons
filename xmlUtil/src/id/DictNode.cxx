@@ -236,9 +236,12 @@ namespace xmlUtil {
     }
     return child->allowed(childValue);
   }
+
   bool DictNode::allowIdentifier(Identifier::iterator idIt, 
-                                 Identifier::const_iterator end) {
+                                 Identifier::const_iterator end,
+                                 NamedId *named) {
     if (!allowed(*idIt)) return false;
+    if (named != 0) named->addField(m_field->getName(), *idIt);
     Identifier::iterator tmp = idIt;
     ++tmp;
     if (tmp == end) return true;
@@ -249,18 +252,19 @@ namespace xmlUtil {
       DictNode *child = *it;
       if ( (child->m_parConstraints == 0) ||
            (child->m_parConstraints->allowed(*idIt)) ) {
-        if (child->allowIdentifier(++idIt, end)) return true;
+        if (child->allowIdentifier(++idIt, end, named)) return true;
       }
     }
+    // Didn't work out so remove ourselves
+    if (named != 0) named->popField();
     return false;
   }
-    
 
-  bool DictNode::allowIdentifier(const Identifier& id) {
+  bool DictNode::allowIdentifier(Identifier& id, NamedId* named) {
     Identifier::iterator idIt = id.begin();
-    return allowIdentifier(idIt, id.end());
+    return allowIdentifier(idIt, id.end(), named);
   }
-
+    
   bool DictNode::allowNamedId(const NamedId& nId) {
     NamedId::FieldIt nIdIt = nId.m_fields->begin();
     return allowNamedId(nIdIt, nId.m_fields->end());
@@ -274,14 +278,14 @@ namespace xmlUtil {
     if (nIdIt == end) return true;
     if (!(*nIdIt)) return false; 
 
-    if ((*nIdIt)->name != m_field->getName()) return false;
+    if ( ((*nIdIt)->name).compare(m_field->getName()) ) return false;
     if (!allowed((*nIdIt)->value) ) return false;
 
     NamedId::FieldIt tmp = nIdIt;
     ++tmp;
     if (tmp == end) return true; //done
 
-    // Now search children for match of next field
+    // Now search children for match of remaining fields
     for (ConstNodeIterator it = m_children.begin(); it != m_children.end();
          it++) {
       DictNode *child = *it;
@@ -292,6 +296,32 @@ namespace xmlUtil {
     }
     return false;
   }
+
+  bool DictNode::allowNameSeq(const NameSeq& seq) const {
+    NameSeq::const_iterator seqIt = seq.begin();
+    return allowNameSeq(seqIt, seq.end());
+  }
+
+  bool DictNode::allowNameSeq(NameSeq::const_iterator seqIt,
+                              NameSeq::const_iterator end) const {
+    if (seqIt == end) return true;
+    if ( (*seqIt)->compare(m_field->getName())  ) return false;
+
+    NameSeq::const_iterator tmp = seqIt;
+    ++tmp;
+    if (tmp == end) return true; // done
+    
+    // Now search children for match of remaining fields
+    for (ConstNodeIterator it = m_children.begin(); it != m_children.end();
+         it++) {
+      DictNode *child = *it;
+      if (child->allowNameSeq(++seqIt, end) ) return true;
+    }
+    return false;
+
+    /* TO DO */
+  }
+
 
   bool  DictNode::addChild(DictNode* child) {
     if ((m_myConstraints != 0) & (child->m_parConstraints != 0)) {

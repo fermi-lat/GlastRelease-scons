@@ -6,6 +6,8 @@
 #include "xmlUtil/id/IdDict.h"
 #include "dom/DOM_Element.hpp"
 #include "xml/Dom.h"
+#include <algorithm>
+#include "xmlUtil/id/IdConverterLessThan.h"
 
 namespace xmlUtil {
 
@@ -51,41 +53,70 @@ namespace xmlUtil {
       convCol.push_back(conv);
       child = xml::Dom::getSiblingElement(child);
     }
-
   }
 
   IdConverter::~IdConverter() {
     convCol.clear();
   }
 
-  //   *** TO DO ****  Put in real code. Use std::sort algorithm  ??
+  // Sort by path length
   void IdConverter::sortConvs() {
     if (sorted != YES) {
-      ;  // sort them
+      ConversionIt start = convCol.begin(), last = convCol.end();
+      IdConverterLessThan weakOrder;
+      sort(start, last, weakOrder);  // sort them
       sorted = YES;
     }
   }
 
-  //   *** TO DO ****  Put in some real code!
   bool IdConverter::isConsistent() {
     if (consistent == UNKNOWN) {
       sortConvs();
-      // Check whether a path is a subsequence of some other path
+      // Check whether a path is a subsequence of some other path,
+      // unfortunately an o(n**2) procedure
+      unsigned int ix, jx;
+      for (ix = 0; ix < (convCol.size() - 1); ix++ ) {
+        for (jx = ix + 1; jx < (convCol.size()); jx++) {
+          // Since conversions are ordered by size, only need
+          // to check whether ix-th path is subpath of jx-th,
+          // not the reverse
+          if (convCol[ix]->subpathOf(*(convCol[jx]))) {
+            consistent = NO;
+            return consistent;
+          }
+        }
+      }
       consistent = YES;
     }
     return consistent;
   }
 
-  //   *** TO DO ***    (for now just make a copy)
   NamedId *IdConverter::convert(const NamedId *in) const {
+    unsigned int ix;
+
+    // Based on path, find appropriate conversion, if any
+    for (ix = 0; ix < convCol.size(); ix++) {
+      if ((convCol[ix])->inDomain(*in)) {  // convert
+        return (convCol[ix]->convert(*in));
+      }
+    }
+    //       else return copy of input  
     return new NamedId(*in);
   }
 
-  //   *** TO DO ***    (for now just check for inDict; make a copy)
 
   Identifier *IdConverter::convert(const Identifier *inIdent) const {
-    if (!inputDict) return 0;
-    return new Identifier(*inIdent);
+    if (!inputDict) return 0;  // can't get names without dictionary
+
+    NamedId *inNamed = inputDict->getNamedId(*inIdent);
+    if (inNamed == 0) return 0;
+
+    NamedId *outNamed = convert(inNamed);
+    
+    Identifier *converted = outNamed->stripNames();
+    delete inNamed;
+    delete outNamed;
+    return converted;
   }
 }
 

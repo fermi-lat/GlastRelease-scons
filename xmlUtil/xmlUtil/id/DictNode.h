@@ -67,6 +67,19 @@ namespace xmlUtil {
     //! with defn of node and children?
     bool  allowedChild(unsigned childValue, unsigned myValue) const;
 
+    //! Given an identifier, see if it is "allowed" by this node and
+    //! a sequence of its descendents.  If there is a non-null
+    //! NamedId argument, build up the associated NamedId
+    bool allowIdentifier(Identifier& id, NamedId* named = 0);
+
+    //! return true iff there is a path starting with current node
+    //! which could produce the NamedId \a nId
+    bool allowNamedId(const NamedId& nId);
+
+    //! return true iff there is a path starting with current node
+    //! such that node field names match those in \a seq 
+    bool allowNameSeq(const NameSeq& seq) const;
+
     //! Exception class
     class No_Assignment {};
 
@@ -106,15 +119,21 @@ namespace xmlUtil {
     bool  allowedChild(const DictNode* const thisChild, unsigned childValue,
                        unsigned myValue) const;
 
-    //! Given an identifier, see if it is "allowed" by this node and
-    //! a sequence of its descendents.
-    bool allowIdentifier(const Identifier& id);
-    bool allowIdentifier(Identifier::iterator idIt, 
-                         Identifier::const_iterator end);
 
-    bool allowNamedId(const NamedId& nId);
+    //! Called by version without iterators
+    bool allowIdentifier(Identifier::iterator idIt, 
+                         Identifier::const_iterator end,
+                         NamedId* named=0);
+
+    //! Called by version with simple NamedId rather than iterators
     bool allowNamedId(NamedId::FieldIt nIdIt,
                       NamedId::FieldIt end);
+
+
+    //! called by version with simple NameSeq arg rather than iterators
+    bool allowNameSeq(NameSeq::const_iterator seqIt,
+                      NameSeq::const_iterator end) const;
+
     bool  addChild(DictNode* child);
 
 
