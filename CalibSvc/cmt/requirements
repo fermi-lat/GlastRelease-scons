@@ -2,7 +2,7 @@
 ### Might end up changing this name to have a prefix a bit more general
 ### than "Calib"; e.g., DetSvc or CondSvc
 package CalibSvc
-version v0r1p0
+version v0r1p1
 
 use CalibData v0r*
 use calibUtil v0r*
