@@ -15,6 +15,7 @@
 
 #include <iostream>
 #include "Event/TopLevel/EventModel.h"
+#include "Event/MonteCarlo/McParticle.h"
 #include "Event/MonteCarlo/McPositionHit.h"
 #include "idents/VolumeIdentifier.h"
 
@@ -84,8 +85,15 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
   HepRotation local(*(theTouchable->GetRotation()));
   HepPoint3D center=theTouchable->GetTranslation();
 
+  McParticleManager* partMan =  McParticleManager::getPointer();
+  
   hit->init(edep, id, local*(prePos-center), local*(postPos-center) );
-  hit->setMcParticle(McParticleManager::getPointer()->getLastParticle());
+  // Retrieve the id of the particle causing the hit and set the corresponding
+  // attribute of the McPositionHit
+  hit->setMcParticleId(partMan->getLastParticle()->particleProperty());
+  // Retrieve the primary particle and set the corresponding pointer of the
+  // McPositionHit
+  hit->setOriginMcParticle(partMan->getMcParticle(1));
   m_posHit->push_back(hit);
 
   display(theTouchable, id, prePos, postPos);
