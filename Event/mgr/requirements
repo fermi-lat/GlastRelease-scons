@@ -13,7 +13,6 @@ library GlastEvent \
         ../GlastEvent/MonteCarlo/*.h \
         MonteCarlo/*.cxx \
         ../GlastEvent/Irf/*.h \
-        ../GlastEvent/Raw/*.h Raw/*.cpp \
         ../GlastEvent/data/*.h data/*.cpp \
         ../GlastEvent/Digi/*.h Digi/*.cpp \
         TopLevel/*.cpp
