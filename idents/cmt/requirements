@@ -1,14 +1,15 @@
 package idents
 # $Header$
-version v2r10
+version v2r10p0
 
 use GlastPolicy v5r*
-use facilities v2r*
+use facilities  v2r*
 
 apply_pattern  package_include
-apply_pattern package_headers
-apply_pattern package_linkopts
+apply_pattern  package_headers
+apply_pattern  package_linkopts
 
 library idents -no_share *.cxx ${idents_headers}
 
+private
 application test test/test_idents.cxx
