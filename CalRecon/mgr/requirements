@@ -25,11 +25,11 @@ macro CalRecon_stamps
 
 #apply_pattern ld_library_path 
 
+apply_pattern packageShr
 
 
 private
 
-apply_pattern packageShr
 
 
 apply_pattern package_Cshlibflags 
