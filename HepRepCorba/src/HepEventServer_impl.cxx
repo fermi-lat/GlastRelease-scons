@@ -110,6 +110,13 @@ char* HepEventServer_impl::setEvent(const char* command)
         nextEventMsg = "error";
       }
     }
+  else if (cmd =="back")
+  {
+    if (m_svcAdapter->previousEvent(1))
+      nextEventMsg = "ok: got the previous event";
+    else 
+      nextEventMsg = "Error:";
+  }
   else if (cmd == "getEventId")
   {
     nextEventMsg = m_svcAdapter->getEventId();

@@ -193,7 +193,7 @@ StringArray* HepRep_impl::getLayerOrder()
   StringArray* layerOrder = new StringArray;
   layerOrder->length(m_layers.size());
     
-  for (int iLayer=0; iLayer < m_layers.size(); iLayer++)
+  for (unsigned int iLayer=0; iLayer < m_layers.size(); iLayer++)
       (*layerOrder)[iLayer] = CORBA::string_dup(m_layers[iLayer].c_str());
 
   return layerOrder;
