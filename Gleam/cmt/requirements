@@ -41,7 +41,7 @@ public
 
 use GuiSvc      v3
 
-use Event       v8r11
+use Event                 v8r12
 use GlastSvc    v8r1p2
 
 # simulation
