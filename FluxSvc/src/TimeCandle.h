@@ -41,7 +41,7 @@ public:
     
     double interval (double time)
     {        
-        return /*m_T0*/5.0;
+        return m_T0;
     }
 private:
     float parseParamList(std::string input, int index);

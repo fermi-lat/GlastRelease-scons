@@ -44,6 +44,7 @@
 static const AlgFactory<ExposureAlg>  Factory;
 const IAlgFactory& ExposureAlgFactory = Factory;
 
+static std::ofstream m_out("orbitFromAlg.out");
 //------------------------------------------------------------------------
 //! ctor
 ExposureAlg::ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator)
@@ -100,6 +101,8 @@ StatusCode ExposureAlg::initialize(){
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "initialize" << endreq;
+
+    //m_out = new std::ofstream("orbitFromAlg.out");
     
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
@@ -250,6 +253,33 @@ StatusCode ExposureAlg::execute()
     Event::D2EntryCol::iterator curEntry = (*elist).begin();
     //some test output - to show that the data got onto the TDS
     (*curEntry)->writeOut(log);
+//WRITEOUT------------------------------------------------------------------------------------------
+
+     
+        //m_out.flags(ios::fixed);
+        m_out<<intrvalstart <<'\t';
+        m_out<<intrvalend <<'\t';
+        m_out<< posx<<'\t';
+        m_out<< posy<<'\t';
+        m_out<< posz<<'\t';
+        m_out<<raz<<'\t';
+        m_out<<decz<<'\t';
+        m_out<<rax<<'\t';
+        m_out<<decx<<'\t';
+        m_out<<razenith<<"\t";
+        m_out<<deczenith <<'\t';
+        m_out<<"1"<<'\t';
+        m_out<<livetime <<'\t';
+        m_out<<SAA<<'\t';
+        m_out<<lon <<'\t';
+        m_out<<lat <<'\t';
+        m_out<<alt <<'\t';
+        m_out<< rasun <<"\t"<<decsun  <<'\t';
+        m_out<<ramoon <<"\t"<<decmoon   <<std::endl;
+                                
+                                
+
+//WRITEOUT------------------------------------------------------------------------------------------------
 
     setFilterPassed( false );
     log << MSG::DEBUG << "ExposureAlg found a TimeTick particle, ended this execution after making a record, filterpassed = " << filterPassed() << endreq;
@@ -263,6 +293,7 @@ StatusCode ExposureAlg::execute()
 StatusCode ExposureAlg::finalize(){
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
+    m_out.close();
     
     return sc;
 }

@@ -3,7 +3,7 @@
 
     <!-- the TimeCandle spectrum  -->
     <source name="timetick15s">
-         <spectrum> <SpectrumClass name="TimeCandle" params="15."/>  
+         <spectrum> <SpectrumClass name="TimeCandle" params="30."/>  
 		 <use_spectrum/><launch_point />
          </spectrum>
     </source>
