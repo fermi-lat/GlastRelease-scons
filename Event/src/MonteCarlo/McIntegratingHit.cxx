@@ -13,7 +13,7 @@
 // function definition should have the namespace identifier.
 //using namespace Event;
 
-namespace mc{
+namespace Event{
 
     void McIntegratingHit::setEnergyItems( const energyDepositMap& value )
 {
@@ -93,12 +93,12 @@ McIntegratingHit::energyDepositMap& McIntegratingHit::itemizedEnergy()
 }
 
 
-void McIntegratingHit::addEnergyItem(const double& energy, mc::McParticle* t, const HepPoint3D& position)
+void McIntegratingHit::addEnergyItem(const double& energy, Event::McParticle* t, const HepPoint3D& position)
 {
     // Purpose and Method:  Add a McParticle*, energy pair to the collection.
     //    Update the total energy and moments.
 
-    m_energyItem.push_back( std::pair<mc::McParticle*, double>(t, energy));
+    m_energyItem.push_back( std::pair<Event::McParticle*, double>(t, energy));
 
     HepPoint3D        position2 = HepPoint3D(position.x()*position.x(), position.y()*position.y(), position.z()*position.z());
     m_totalEnergy      += energy;
@@ -107,12 +107,12 @@ void McIntegratingHit::addEnergyItem(const double& energy, mc::McParticle* t, co
 }
 
 
-void McIntegratingHit::addEnergyItem(const double& energy, SmartRef<mc::McParticle> t, const HepPoint3D& position)
+void McIntegratingHit::addEnergyItem(const double& energy, SmartRef<Event::McParticle> t, const HepPoint3D& position)
 {
     // Purpose and Method:  Add a McParticle*, energy pair to the collection.
     //    Update the total energy and moments.
 
-    m_energyItem.push_back( std::pair<mc::McParticle*, double>(t, energy));
+    m_energyItem.push_back( std::pair<Event::McParticle*, double>(t, energy));
     HepPoint3D        position2 = HepPoint3D(position.x()*position.x(), position.y()*position.y(), position.z()*position.z());
     m_totalEnergy      += energy;
     m_moment1seed += energy * position;

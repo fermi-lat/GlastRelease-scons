@@ -36,7 +36,7 @@
 
 extern const CLID& CLID_McIntegratingHit;
 
-namespace mc {  // NameSpace
+namespace Event {  // NameSpace
 
 class McIntegratingHit : virtual public ContainedObject {
   public:
@@ -75,8 +75,8 @@ class McIntegratingHit : virtual public ContainedObject {
     /// Remove all energyInfos
     void clearEnergyItems();
     /// Add single energyInfo to energyDepositMap
-    void addEnergyItem( const double& energy, mc::McParticle* t, const HepPoint3D& position );
-    void addEnergyItem( const double& energy, SmartRef<mc::McParticle> t, const HepPoint3D& position );
+    void addEnergyItem( const double& energy, Event::McParticle* t, const HepPoint3D& position );
+    void addEnergyItem( const double& energy, SmartRef<Event::McParticle> t, const HepPoint3D& position );
 
     /// Retrieve primary-origin flag
     bool primaryOrigin() const;
@@ -150,17 +150,17 @@ inline StreamBuffer& McIntegratingHit::serialize( StreamBuffer& s )
         double               second;
         s >> first(this)
           >> second;
-        m_energyItem.push_back(std::pair<mc::McParticle*, double>(first, second));
+        m_energyItem.push_back(std::pair<Event::McParticle*, double>(first, second));
     }
         return s
       >> m_packedFlags;
 }
 
-}
+
   
 
 /// Fill the ASCII output stream
-inline std::ostream& mc::McIntegratingHit::fillStream( std::ostream& s ) const
+inline std::ostream& McIntegratingHit::fillStream( std::ostream& s ) const
 {
     s << "class McCaloHitBase :"
       << "\n    Deposited Energy        = "
@@ -184,16 +184,18 @@ inline std::ostream& mc::McIntegratingHit::fillStream( std::ostream& s ) const
     return s;
 }
 
+
 // Definition of all container types of McIntegratingHit
 template <class TYPE> class ObjectVector;
-typedef ObjectVector<mc::McIntegratingHit>     McIntegratingHitVector;
+typedef ObjectVector<McIntegratingHit>     McIntegratingHitVector;
 template <class TYPE> class ObjectList;
-typedef ObjectList<mc::McIntegratingHit>       McIntegratingHitList;
+typedef ObjectList<McIntegratingHit>       McIntegratingHitList;
+}
 
 /*! A small class to use the sort algorithm */
 class CompareIntHits {
   public:
-    bool operator()(mc::McIntegratingHit *left, mc::McIntegratingHit *right)
+    bool operator()(Event::McIntegratingHit *left, Event::McIntegratingHit *right)
     {return left->volumeID() < right->volumeID();}
 
     };

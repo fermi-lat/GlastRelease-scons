@@ -6,7 +6,7 @@
 #include "Event/Utilities/CLHEPStreams.h"
 
 
-namespace mc{
+namespace Event{
 
 /// Retrieve hit's direction cosine
 double McPositionHit::directionCosine() const

@@ -52,7 +52,7 @@
 
 extern const CLID& CLID_McParticle;
 
-namespace mc {  // NameSpace
+namespace Event {  // NameSpace
 
 
 class McParticle  : virtual public ContainedObject  {
@@ -164,8 +164,8 @@ class McParticle  : virtual public ContainedObject  {
 //template <class TYPE> class ObjectVector;
 //typedef ObjectVector<McParticle>     McParticleVector;
 
-typedef ObjectList<mc::McParticle>       McParticleList;
-typedef ObjectList<mc::McParticle>       McParticleCol;
+typedef ObjectList<McParticle>       McParticleList;
+typedef ObjectList<McParticle>       McParticleCol;
 
 inline StreamBuffer& McParticle::serialize( StreamBuffer& s ) const
 {

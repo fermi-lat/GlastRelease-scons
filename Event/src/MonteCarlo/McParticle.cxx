@@ -5,7 +5,7 @@
 #include "Event/Utilities/CLHEPStreams.h"
 
 
-namespace mc {
+namespace Event {
 
 /// Retrieve particle property
 McParticle::StdHepId McParticle::particleProperty() const

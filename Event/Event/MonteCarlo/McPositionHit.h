@@ -53,7 +53,7 @@ class McParticle;
 
 extern const CLID& CLID_McPositionHit;
 
-namespace mc { // NameSpace
+namespace Event { // NameSpace
 
 class McPositionHit : virtual public ContainedObject {
   public:
@@ -203,10 +203,10 @@ inline StreamBuffer& McPositionHit::serialize( StreamBuffer& s )
 }
 
 
-}
+
 
 /// Fill the ASCII output stream
-inline std::ostream& mc::McPositionHit::fillStream( std::ostream& s ) const
+inline std::ostream& McPositionHit::fillStream( std::ostream& s ) const
 {
   return s
     << "    base class McPositionHit :"
@@ -236,20 +236,21 @@ inline std::ostream& mc::McPositionHit::fillStream( std::ostream& s ) const
     << m_exit.z() << " )"
     << "\n        McParticle            = " << m_mcParticle(this)
     << "\n        ancestor McParticle   = " << m_originMcParticle(this);
+
 }
 
+typedef ObjectVector<McPositionHit> McPositionHitVector;
+typedef ObjectList<McPositionHit>   McPositionHitList;
 
-typedef ObjectVector<mc::McPositionHit> McPositionHitVector;
-typedef ObjectList<mc::McPositionHit>   McPositionHitList;
+}
 
 /*! A small class to use the sort algorithm */
 class ComparePosHits {
   public:
-    bool operator()(mc::McPositionHit *left, mc::McPositionHit *right)
+    bool operator()(Event::McPositionHit *left, Event::McPositionHit *right)
     {return left->volumeID() < right->volumeID();}
 
     };
-
 
 #endif    // Event_McPositionHit_H
 
