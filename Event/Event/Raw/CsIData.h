@@ -15,7 +15,7 @@
 #include "instrument/ModuleId.h"
 
 #include "Gaudi/Kernel/Kernel.h"
-#include "Gaudi/Kernel/ContainedObject.h"
+#include "Gaudi/Kernel/DataObject.h"
 #include "Gaudi/Kernel/SmartRefVector.h"
 #include "GlastEvent/TopLevel/Definitions.h"
 #include "GlastEvent/Utilities/CellID.h"
@@ -26,7 +26,6 @@
 class CsIDetector;
 
 extern const CLID& CLID_CsIData;
-extern const CLID& CLID_Xtal;
 
 
 /*! \class CsIData
@@ -35,12 +34,12 @@ TDS object. Very preliminary and untested.
 
 */
 
-class CsIData : virtual public ContainedObject
+class CsIData : virtual public DataObject
 {
     public:
         /*! Inner class used to store data on the individual crystals
         */
-        class Xtal : virtual public ContainedObject
+        class Xtal 
         {
 
 
@@ -48,9 +47,6 @@ class CsIData : virtual public ContainedObject
 	        friend class CsIData;
             public:
 
-                //! Retrieve pointer to class defininition structure
-                virtual const CLID& clID() const   { return Xtal::classID(); }
-                static const CLID& classID()       { return CLID_Xtal; }            
                   Xtal (Point p, float e, ModuleId m, int i, float Left, float Right, std::vector<double> diodes_energy)
 	            : pos(p), energy(e), id(i), Lresp(Left), Rresp(Right), module(m), Diodes_Energy(diodes_energy)
                   {}
@@ -77,9 +73,6 @@ class CsIData : virtual public ContainedObject
   public:
       CsIData (int numLayers);
 
-      //! Retrieve pointer to class defininition structure
-      virtual const CLID& clID() const   { return CsIData::classID(); }
-      static const CLID& classID()       { return CLID_CsIData; }
 
       //	---(deprecated)-- access functions for data
       //	analysis------------------------
@@ -178,10 +171,4 @@ inline std::ostream& CsIData::fillStream( std::ostream& s ) const               
 }
 */
   
-//! Definition of all container types of MCCalorimeterHit
-template <class TYPE> class ObjectVector;
-typedef ObjectVector<CsIData>     CsIDataVector;
-template <class TYPE> class ObjectList;
-typedef ObjectList<CsIData>       CsIDataList;
-
 #endif
