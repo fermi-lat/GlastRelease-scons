@@ -18,6 +18,8 @@ DECLARE_FACTORY_ENTRIES(CalRecon) {
     DECLARE_ALGORITHM( CalClustersAlg);
     DECLARE_ALGORITHM( CalDisplay);
     DLL_DECL_TOOL( SingleClusterTool );
+    DLL_DECL_TOOL( LastLayerCorrTool );
+    DLL_DECL_TOOL( ProfileTool );
 } 
 
 
