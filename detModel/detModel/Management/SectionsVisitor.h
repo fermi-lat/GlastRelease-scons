@@ -71,10 +71,10 @@ namespace detModel{
     // Need virtual destructor since we have some virtual functions
     // which are not pure virutal
 
-    virtual SectionsVisitor::~SectionsVisitor() {};
+    virtual ~SectionsVisitor() {};
     
   protected:       
-    SectionsVisitor::SectionsVisitor() : m_mode(""){};
+    SectionsVisitor() : m_mode(""){};
     std::string m_mode;
   };
 

@@ -48,8 +48,8 @@ namespace detModel{
     double getFraction(std::string mName);
     
     /// These methods return true if the components are specified by fractions or atoms
-    bool isFractions(){return fractions.size();}
-    bool isAtoms(){return atoms.size();}
+    bool isFractions(){return (fractions.size() > 0);}
+    bool isAtoms(){return (atoms.size() > 0);}
 
     /// This overloaded method add a material to the list of components
     void addComponent(Material*, unsigned int);
