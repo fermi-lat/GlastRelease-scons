@@ -2,6 +2,9 @@
  Package AcdDigi\n
  Coordinator:H.Kelly
 
+ v1r7   09-Dec-2002 HMK Retrieve all ACD tiles in existance for a particular run\n
+        using the GlastSvc/detModel interface and modify the mechanism to apply  \n
+        Gaussian noise to the PMTs - to allow for non-hit tiles to fire as well\n
  v1r6   30-Oct-2002 HMK Fix usage of mean_pe_per_mip\n
  v1r5   21-Oct-2002 HMK Set Edge Effect function via XML file\n
  v1r4p0 27-Sep-2002 HMK Use double rather than float consistently\n
