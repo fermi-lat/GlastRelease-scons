@@ -96,6 +96,8 @@
 
      12 Sep 2002 Add new <prim>-like element called <primEnergy>
         to make units specification required.
+
+     18 Jun 2003 Add new unary operation <half> to arithmetic
         
 -->
 
@@ -887,7 +889,7 @@
 <!ATTLIST derCategory name ID #REQUIRED
           save        (true | false) "false" >
 
-<!ENTITY  % operator "mul | quo | add | minus | uminus | max" >
+<!ENTITY  % operator "mul | quo | add | minus | uminus | half | max" >
 
 <!ELEMENT const (notes?, (refer | (%operator;)? )) >
 <!ATTLIST const name ID #IMPLIED
@@ -913,6 +915,7 @@
 <!ELEMENT minus ((%operand;), (%operand;) ) >
 <!ELEMENT quo ((%operand;), (%operand;) ) >
 <!ELEMENT uminus (%operand;)  >
+<!ELEMENT half (%operand;)  >
 
 <!--    ID DICTIONARY DEFINITONS
 
