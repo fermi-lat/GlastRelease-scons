@@ -1,8 +1,10 @@
+#include "TCut.h"
 #include "TFile.h"
 #include "TGraph.h"
 #include "TLine.h"
 #include "TMap.h"
 #include "TString.h"
+#include "TStyle.h"
 #include "TSystem.h"
 #include "TTree.h"
 
@@ -16,22 +18,26 @@ class Residual {
 private:
     Event*   myEvent;
     Tracker* myTracker;
+    TString  myResFileName;
 public:
-    Residual(const TString="MyRootFile.root");
+    Residual(const TString="MyRootFile.root", const TString="residual.root");
     ~Residual() {
         delete myEvent;
         delete myTracker;
     }
 
     void Go(int lastEntry=-1);
+    void DrawResidual(TCut="");
+    void DrawResSlope(TCut="");
 };
 
-Residual::Residual(TString filename) {
+Residual::Residual(TString filename, TString resFileName) {
     myTracker = new Tracker;
     myTracker->loadGeometry(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0Geometry.txt"));
     myTracker->loadFitting(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/FittingPlanes.txt"));
     myTracker->IsTower(true);
     myEvent = new Event(filename, (TMap*)myTracker->GetGeometry());
+    myResFileName = resFileName;
 }
 
 void Residual::Go(int lastEntry) {
@@ -43,7 +49,7 @@ void Residual::Go(int lastEntry) {
     int bins = 80000;
     double xmin = -400;
     double xmax = 400;
-    TFile f("res.root", "recreate");
+    TFile f(myResFileName, "recreate");
 
     TTree resTree("residualTree", "residualTree");
     Char_t charPlaneName[4];
@@ -149,5 +155,65 @@ void Residual::Go(int lastEntry) {
     } // end of loop over all events
 
     f.Write();
+    f.Close();
+}
+
+void Residual::DrawResidual(TCut cut) {
+    TString canvasName = "drawResiduals";
+    TCanvas* c = (TCanvas*)gROOT->GetListOfCanvases()->FindObject(canvasName);
+    if ( !c ) {
+        //            std::cout << "creating new canvas" << std::endl;
+        c = new TCanvas(canvasName, canvasName, 600, 800);
+        c->Divide(1,2);
+    }
+
+    TFile f(myResFileName);
+    TTree* t = (TTree*)f.Get("residualTree");
+    t->SetMarkerStyle(20);
+    t->SetMarkerSize(0.3);
+
+    c->cd(1);
+    gPad->SetTicks(1,1);
+    t->Draw("hExt-h", cut);
+
+    c->cd(2);
+    gPad->SetTicks(1,1);
+    gStyle->SetOptStat(0);
+    gStyle->SetOptFit(1111);
+    t->Draw("hExt-h", cut);
+    TH1F* htemp = (TH1F*)gPad->GetPrimitive("htemp");
+    htemp->Fit("gaus", "", "", -0.2, 0.2);
+
+    c->cd();
+    f.Close();
+}
+
+void Residual::DrawResSlope(TCut cut) {
+    TString canvasName = "drawResiduals";
+    TCanvas* c = (TCanvas*)gROOT->GetListOfCanvases()->FindObject(canvasName);
+    if ( !c ) {
+        //            std::cout << "creating new canvas" << std::endl;
+        c = new TCanvas(canvasName, canvasName, 600, 800);
+        c->Divide(1,2);
+    }
+
+    TFile f(myResFileName);
+    TTree* t = (TTree*)f.Get("residualTree");
+    t->SetMarkerStyle(20);
+    t->SetMarkerSize(0.3);
+
+    c->cd(1);
+    gPad->SetTicks(1,1);
+    t->Draw("hExt-h:invSlope", cut);
+
+    c->cd(2);
+    gPad->SetTicks(1,1);
+    gStyle->SetOptStat(0);
+    gStyle->SetOptFit(1111);
+    t->Draw("hExt-h:invSlope", cut, "prof");
+    TH1F* htemp = (TH1F*)gPad->GetPrimitive("htemp");
+    htemp->Fit("pol1", "W");
+
+    c->cd();
     f.Close();
 }
