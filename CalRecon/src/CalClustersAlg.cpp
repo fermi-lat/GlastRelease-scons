@@ -1,9 +1,6 @@
 
 #include "CalRecon/CalClustersAlg.h"
-// #include "Event/dataManager.h"
-// #include "Event/messageManager.h"
 #include "CalRecon/CsIClusters.h"
-#include "CalRecon/CalRecLogs.h"
 #include "CalRecon/gamma.h"
 #include "CalRecon/Midnight.h"
 #include "GaudiKernel/MsgStream.h"
@@ -11,13 +8,12 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-
+#include "CalRecon/CalXtalRecData.h"
 
 /// Glast specific includes
 #include "GlastEvent/TopLevel/EventModel.h"
 #include "GlastEvent/TopLevel/Event.h"
 #include "GaudiKernel/ObjectVector.h"
-//#include "GlastEvent/data/TdGlastData.h"
 
 /// TkrRecon classes
 #include "GlastEvent/Recon/ISiRecObjs.h"
@@ -25,8 +21,8 @@
 int nbins;  //!< Number of bins used for the fit
 std::vector<double> g_elayer;  //!< Energy per layer in GeV
 double slope;   //!< slope of the shower direction
-double logheight; //!< log height
-double logwidth;  //!< log width
+double xtalHeight; //!< xtal height
+double xtalWidth;  //!< xtal width
 
 //! function to compute the true energy deposited in a layer
 /*! Uses the incomplete gamma function: gamma(double,double) implemented in gamma.cxx
@@ -39,7 +35,7 @@ static double gam_prof(double *par, int i)
 {
 	double result =0; 
 
-	double length = ((logheight*i+par[2])/1.85)/slope;
+	double length = ((xtalHeight*i+par[2])/1.85)/slope;
 
 	// Evaluation of the parameters of CsI at this energy	
 
@@ -52,7 +48,7 @@ static double gam_prof(double *par, int i)
 
 
 	double x=length/lambda;
-	double dx = logheight / (1.85 *lambda)/slope;
+	double dx = xtalHeight / (1.85 *lambda)/slope;
 	
 	double gamma1 =0;
 	double gamma2 = 0;
@@ -438,19 +434,39 @@ StatusCode CalClustersAlg::initialize()
 {
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
-    sc = service("CalGeometrySvc", m_CalGeo);
+    sc = service("GlastDetSvc", detSvc);
 
     if(sc.isFailure())
     {
-        log << MSG::ERROR << "CalGeometrySvc could not be found" <<endreq;
+        log << MSG::ERROR << "GlastDetSvc could not be found" <<endreq;
         return sc;
     }
+
+	double value;
+    if(!detSvc->getNumericConstByName(std::string("CALnLayer"), &value)) {
+       log << MSG::ERROR << " constant " << " CALnLayer "<<" not defined" << endreq;
+       return StatusCode::FAILURE;
+    } else m_CalnLayers = value;
+
+    if(!detSvc->getNumericConstByName(std::string("CsIWidth"), &m_CsIWidth)) {
+       log << MSG::ERROR << " constant " << " CsIWidth "<<" not defined" << endreq;
+       return StatusCode::FAILURE;
+    } 
+
+    if(!detSvc->getNumericConstByName(std::string("CsIHeight"), &m_CsIHeight)) {
+       log << MSG::ERROR << " constant " << " CsIHeight "<<" not defined" << endreq;
+       return StatusCode::FAILURE;
+    } 
+
+
+
+
 
     setProperties();
     log << MSG::INFO << "CalClustersAlg: callNumber = " << m_callNumber << endreq;
 
-    logheight = m_CalGeo->logHeight();
-	logwidth = m_CalGeo->logWidth();
+    xtalHeight = m_CsIHeight;
+	xtalWidth = m_CsIWidth;
     
     
     // Minuit object
@@ -487,7 +503,6 @@ StatusCode CalClustersAlg::retrieve()
         }
     }
     m_CsIClusterList = SmartDataPtr<CsIClusterList> (eventSvc(),"/Event/CalRecon/CsIClusterList");
- //   sc = eventSvc()->retrieveObject("/Event/CalRecon/CsIClusterList",m_CsIClusterList);
     if (!m_CsIClusterList ){
 	    m_CsIClusterList = 0;
 	    m_CsIClusterList = new CsIClusterList();
@@ -496,10 +511,9 @@ StatusCode CalClustersAlg::retrieve()
         m_CsIClusterList->clear();
     }
 
-	m_CalRecLogs = SmartDataPtr<CalRecLogs>(eventSvc(),"/Event/CalRecon/CalRecLogs"); 
+	m_CalXtalRecCol = SmartDataPtr<CalXtalRecCol>(eventSvc(),"/Event/CalRecon/CalXtalRecCol"); 
 
 
-//	sc = eventSvc()->retrieveObject("/Event/CalRecon/CalADCLogs",m_CalRawLogs);
 	return sc;
 }
 
@@ -545,10 +559,9 @@ StatusCode CalClustersAlg::execute()
 		  log << MSG::INFO << "No reconstructed gammas " << endreq;
 		 }	
 	}
-	int nLogs = m_CalRecLogs->num();
 	double ene = 0;
 	Vector pCluster(p0);
-	int nLayers = m_CalGeo->numLayers() * m_CalGeo->numViews();
+	int nLayers = m_CalnLayers;
 	
 	std::vector<double> eneLayer(nLayers,0.);
 	std::vector<Vector> pLayer(nLayers);
@@ -558,22 +571,29 @@ StatusCode CalClustersAlg::execute()
 	
 	// Compute barycenter and various moments
 
-	for (int jlog = 0; jlog < nLogs ; jlog++) {
-		CalRecLog* recLog = m_CalRecLogs->Log(jlog);
 
-		double eneLog = recLog->energy();
-		Vector pLog = recLog->position() - p0;
-		int layer = nLayers-1 - (recLog->layer() * 2 + recLog->view());
+	for (CalXtalRecCol::const_iterator it = m_CalXtalRecCol->begin();
+	it != m_CalXtalRecCol->end(); it++){
+		CalXtalRecData* recData = *it;
+
+		double eneXtal = recData->getEnergy();
+		Vector pXtal = recData->getPosition() - p0;
+		int layer = (recData->getPackedId()).getLayer();
+
 		
-		eneLayer[layer]+=eneLog;
+		log << MSG::DEBUG << " ene=" << eneXtal << " x=" << pXtal.x() 
+			<<" y=" << pXtal.y() << " z=" << pXtal.z()
+			<< " layer=" << layer << endreq;
 
-		Vector ptmp = eneLog*pLog;
+		eneLayer[layer]+=eneXtal;
+
+		Vector ptmp = eneXtal*pXtal;
 		pLayer[layer] += ptmp;
 	
-		Vector ptmp_sqr(ptmp.x()*pLog.x(),ptmp.y()*pLog.y(),ptmp.z()*pLog.z());
-		rmsLayer[layer] += ptmp_sqr;  // Position error is assumed to be 1/sqrt(eneLog)
+		Vector ptmp_sqr(ptmp.x()*pXtal.x(),ptmp.y()*pXtal.y(),ptmp.z()*pXtal.z());
+		rmsLayer[layer] += ptmp_sqr;  // Position error is assumed to be 1/sqrt(eneXtal)
 
-		ene  += eneLog;
+		ene  += eneXtal;
 		pCluster += ptmp;
         }
 
@@ -590,8 +610,8 @@ StatusCode CalClustersAlg::execute()
                                 
                                 
                                 Vector d; 
-                                if(i%2 == 1) d = Vector(logwidth*logwidth/12.,0.,0.);
-                                else d = Vector(0.,logwidth*logwidth/12.,0.);
+                                if(i%2 == 1) d = Vector(xtalWidth*xtalWidth/12.,0.,0.);
+                                else d = Vector(0.,xtalWidth*xtalWidth/12.,0.);
 
                                 rmsLayer[i] += d-sqrLayer;
                                 
