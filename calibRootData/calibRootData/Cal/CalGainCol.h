@@ -3,8 +3,8 @@
 
 #include "TObject.h"
 #include "TString.h"
-#include "calibRootData/Cal/CalBase.h"
-#include "calibRootData/Cal/CalGain.h"
+#include "../Cal/CalBase.h"
+#include "../Cal/CalGain.h"
 /*  Might need some more ROOT includes
 #include "TRef.h"
 #include "TRefArray.h"

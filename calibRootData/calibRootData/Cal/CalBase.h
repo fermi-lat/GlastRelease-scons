@@ -1,8 +1,8 @@
 #ifndef calibRootData_CalBase_h
 #define calibRootData_CalBase_h
 
-#include "calibRootData/Base.h"
-#include "calibRootData/Cal/CalDimension.h"
+#include "../Base.h"
+#include "../Cal/CalDimension.h"
 
 // Don't need these since they're already in Base
 // #include "TObject.h"
