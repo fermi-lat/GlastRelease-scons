@@ -235,7 +235,7 @@ StatusCode mcRootWriterAlg::writeMcParticles() {
     // Create map of TDS McParticles and ROOT McParticles
     for (p = particles->begin(); p != particles->end(); p++) {
         log << MSG::DEBUG;
-        (*p)->fillStream(log.stream());
+        if( log.isActive())(*p)->fillStream(log.stream());
         log << endreq;
         McParticle *mcPart = new McParticle();
         m_particleMap[(*p)] = mcPart;

@@ -206,7 +206,7 @@ StatusCode digiRootWriterAlg::writeDigiEvent() {
     Bool_t fromMc = true;
 
     log << MSG::DEBUG;
-    evtTds->fillStream(log.stream());
+    if( log.isActive()) evtTds->fillStream(log.stream());
     log << endreq;
 
     L1T levelOne(evtTds->trigger());

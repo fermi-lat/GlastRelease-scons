@@ -218,7 +218,7 @@ StatusCode reconRootWriterAlg::writeReconEvent() {
     UInt_t runId = evtTds->run();
 
     log << MSG::DEBUG;
-    evtTds->fillStream(log.stream());
+    if( log.isActive())evtTds->fillStream(log.stream());
     log << endreq;
 
     m_reconEvt->initialize(evtId, runId, new TkrRecon, new CalRecon, new AcdRecon);
