@@ -82,6 +82,7 @@ public:
     Status        status() const           {return m_status;}
 
     void          setEnergy(double energy) {m_energy0 = energy;}
+    void          setDeltaEnergy(TkrFitPlane& plane, double energy = 1.e10);
     
 private:    
     /// Utilities

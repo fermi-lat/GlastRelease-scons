@@ -17,6 +17,8 @@
 #ifndef TKRCONTROL_H
 #define TKRCONTROL_H
 
+#include <string>
+
 //############################################
 class TkrControl
 //############################################
@@ -32,6 +34,7 @@ public:
     const double getFEneParticle()       {return m_fEneParticle;      }
     const double getSigmaCut()           {return m_sigmaCut;          }
     const double getMinEnergy()          {return m_minEnergy;         }
+    const std::string getHitEnergyType() { return m_hitEnergyType;  }
     const int    getMaxConsecutiveGaps() {return m_maxConsecutiveGaps;}
     const int    getMinSegmentHits()     {return m_minSegmentHits;    }
     const double getMaxChisqCut()        {return m_maxChiSqCut;       }
@@ -48,6 +51,8 @@ public:
     void setFEneParticle(   double enePart)   {m_fEneParticle      = enePart; }
     void setSigmaCut(       double sigmaCut)  {m_sigmaCut          = sigmaCut;}
     void setMinEnergy(     double minEnergy) {m_minEnergy         = minEnergy;}
+    void setHitEnergyType( std::string hitEnergyType) 
+                                              {m_hitEnergyType = hitEnergyType; }
     void setMaxConsGaps(    int    maxGaps)   {m_maxConsecutiveGaps = maxGaps;}
     void setMinSegmentHits( int    minHits)   {m_minSegmentHits    = minHits; }
     void setMaxChisqCut(    double maxChi)    {m_maxChiSqCut       = maxChi;  }
@@ -73,6 +78,7 @@ private:
 
     double m_sigmaCut;           // PR search window (in  sigmas)
     double m_minEnergy;              // Min tracking energy (MeV)
+    std::string m_hitEnergyType;    // so far: electron, muon
 
     int    m_maxConsecutiveGaps; // Max consecutive Gaps - Stop
     int    m_minSegmentHits;     // Min number of hits for segment

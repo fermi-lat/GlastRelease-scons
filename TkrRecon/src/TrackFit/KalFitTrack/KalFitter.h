@@ -97,6 +97,7 @@ private:
 
     /// Energy Part
     void          eneDetermination();
+    void          setDeltaEnergy(TkrFitPlane& plane, double energy = 1.e10);
     
     /// Segment Part: First portion that influences direction
     double        computeChiSqSegment(int nhits, TkrFitHit::TYPE typ = TkrFitHit::SMOOTH);

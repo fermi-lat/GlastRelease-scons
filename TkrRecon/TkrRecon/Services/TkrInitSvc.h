@@ -57,6 +57,7 @@ private:
 
     double           m_sigmaCut;
     double           m_minEnergy;
+    std::string      m_hitEnergyType;
 
     int              m_maxConsecutiveGaps;
     int              m_minSegmentHits;
