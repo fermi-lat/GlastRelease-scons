@@ -10,11 +10,11 @@
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/SmartRefVector.h"
 
-// GlastEvent for creating the McEvent stuff
-#include "GlastEvent/TopLevel/Event.h"
-#include "GlastEvent/TopLevel/MCEvent.h"
-#include "GlastEvent/MonteCarlo/McParticle.h"
-#include "GlastEvent/TopLevel/EventModel.h"
+// Event for creating the McEvent stuff
+#include "Event/TopLevel/Event.h"
+#include "Event/TopLevel/MCEvent.h"
+#include "Event/MonteCarlo/McParticle.h"
+#include "Event/TopLevel/EventModel.h"
 
 //flux
 #include "FluxSvc.h"
@@ -115,7 +115,7 @@ StatusCode FluxAlg::execute()
     // Here the TDS is prepared to receive hits vectors
     // Check for the MC branch - it will be created if it is not available
 
-    DataObject *mc = new mc::McParticleCol;
+    DataObject *mc = new Event::McParticleCol;
     //eventSvc()->retrieveObject("/Event/MC", mc);
         sc=eventSvc()->registerObject("/Event/MC", mc);
         if(sc.isFailure()) log << MSG::ERROR << "/Event/MC could not be registered on data store" << endreq;
@@ -126,7 +126,7 @@ StatusCode FluxAlg::execute()
     
 
 
-    mc::McParticleCol* pcol = new mc::McParticleCol;
+    Event::McParticleCol* pcol = new Event::McParticleCol;
     StatusCode sc2 = /*temp*/eventSvc()->registerObject("/Event/MC/McParticleCol", pcol);
     if( sc2.isFailure()) {
 
@@ -134,7 +134,7 @@ StatusCode FluxAlg::execute()
 
         return sc2;
     }
-    mc::McParticle * parent= new mc::McParticle;
+    Event::McParticle * parent= new Event::McParticle;
     pcol->push_back(parent);
 
     double mass = prop->mass() , 
@@ -145,7 +145,7 @@ StatusCode FluxAlg::execute()
     // This parent particle decay at the start in the first particle, 
     // so initial momentum and final one are the same
     parent->initialize(parent, partID, 
-        mc::McParticle::PRIMARY,
+        Event::McParticle::PRIMARY,
         pin);
     parent->finalize(pin, p);
 

@@ -1,11 +1,11 @@
 package FluxSvc
-version v5r5
+version v5r6
 
 branches FluxSvc mgr doc
 
 use GlastPolicy v4*
 
-use GlastEvent v7r*
+use Event v8r*
 use geometry   v3*
 
 use GaudiSvc
