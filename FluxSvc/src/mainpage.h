@@ -71,7 +71,6 @@
 
   <hr>
   \todo Complete and recalibrate the CompositeDiffuse structure
-  \todo Overhaul time handling to use the TimeStamp class.
 
 */
 
