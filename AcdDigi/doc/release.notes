@@ -2,7 +2,7 @@
  Package AcdDigi\n
  Coordinator:H.Kelly
  @verbatim
-
+ v1r10p1 10-Nov-2004 jrb Change use of xml to v5r* 
  v1r10p0 22-Jul-2004 HMK add extra private statement due to bug in CMT
  v1r10  09-Jun-2004 HMK Allow lowthreshold to be set as jobOptions param as well as in XML
  v1r9   10-Oct-2003 HMK Handle noise for ribbons
