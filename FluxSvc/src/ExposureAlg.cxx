@@ -142,7 +142,13 @@ StatusCode ExposureAlg::execute()
         }
     }else{
         //FluxAlg is taking care of the particle, so do nothing but get the current time.
-        currentTime = m_fluxSvc->currentFlux()->time();
+        IFlux * f = m_fluxSvc->currentFlux();
+        if( f!=0)   currentTime =f->time();
+        else{
+            // get time from the McHeader 
+                SmartDataPtr<Event::MCEvent>     mcheader(eventSvc(),    EventModel::MC::Event);
+               currentTime= mcheader->time();
+        }
     }   
 
     //by now, we should know that we have the appropriate particle to make a Exposure with.
@@ -213,9 +219,10 @@ StatusCode ExposureAlg::execute()
     entry->init(intrvalstart,lat,lon,alt,posx,posy,posz,rax,decx,raz,decz);
 
     //now, only do the rest of this algorithm if we have a timetick particle.
-    std::string particleName = m_fluxSvc->currentFlux()->particleName();
-    if(particleName != "TimeTick"){ return StatusCode::SUCCESS;  }
 
+    if(    m_fluxSvc->currentFlux()==0 
+        || m_fluxSvc->currentFlux()->particleName() != "TimeTick" ) 
+        return StatusCode::SUCCESS;
 
     log << MSG::DEBUG ;
     if(log.isActive()){
