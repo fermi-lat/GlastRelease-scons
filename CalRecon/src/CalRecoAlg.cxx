@@ -20,7 +20,7 @@
 #include "GlastEvent/Raw/TdCsIData.h"
 
 #include "gui/DisplayControl.h"
-#include "GuiSvc/GuiSvc.h"
+#include "GuiSvc/IGuiSvc.h"
 #include "gui/GuiMgr.h"
 #define TUPLE 1
 
@@ -65,7 +65,7 @@ StatusCode CalRecoAlg::initialize() {
     m_recon=new CalRecon;
     
     // get the Gui service
-    GuiSvc* guiSvc=0;
+    IGuiSvc* guiSvc=0;
     sc = service("GuiSvc", guiSvc);
 
     if (!sc.isSuccess ()){
