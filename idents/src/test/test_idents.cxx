@@ -2,6 +2,7 @@
 
 
 #include "idents/VolumeIdentifier.h"
+#include "idents/AcdId.h"
 #include <map>
 #include <vector>
 #include <iostream>
@@ -41,6 +42,37 @@ int main()
       std::cout << "Id = " << (*m).first.name();
       std::cout << "   Value = " << (*m).second << std::endl;
     }
+
+  // Test the AcdIds
+  idents::VolumeIdentifier acdVolId;
+  acdVolId.append(1); acdVolId.append(0); acdVolId.append(41);
+  acdVolId.append(1); acdVolId.append(2);
+  idents::AcdId acdId(acdVolId);
+
+  std::cout << "AcdVolId = " << acdVolId.name() << std::endl;
+  std::cout << "AcdId = " << acdId.id() << std::endl;
+  std::cout << acdId.tile() << " " << acdId.ribbon() << " " << acdId.ribbonNum() 
+      << " " << acdId.ribbonOrientation() << std::endl;
   
+  idents::VolumeIdentifier acdVolId2;
+  acdVolId2.append(1); acdVolId2.append(0); acdVolId2.append(41);
+  acdVolId2.append(0); acdVolId2.append(3);
+  idents::AcdId acdId2(acdVolId2);
+
+  std::cout << "AcdVolId2 = " << acdVolId2.name() << std::endl;
+  std::cout << "AcdId2 = " << acdId2.id() << std::endl;
+  std::cout << acdId2.tile() << " " << acdId2.ribbon() << " " << acdId2.ribbonNum() 
+      << " " << acdId2.ribbonOrientation() << std::endl;
+
+  idents::VolumeIdentifier acdVolId3;
+  acdVolId3.append(1); acdVolId3.append(1); acdVolId3.append(40);
+  acdVolId3.append(0); acdVolId3.append(3);
+  idents::AcdId acdId3(acdVolId3);
+
+  std::cout << "AcdVolId3 = " << acdVolId3.name() << std::endl;
+  std::cout << "AcdId3 = " << acdId3.id() << std::endl;
+  std::cout << acdId3.tile() << " " << acdId3.ribbon() << " " << acdId3.face() 
+      << " " << acdId3.row() << " " << acdId3.column() << std::endl;
+
   return 0;
 }
