@@ -68,7 +68,7 @@ ApplicationMgr.ExtSvc += { "GlastRandomSvc"};
 // ----------------------------
 //  Generation or input
 //
-ApplicationMgr.DLLs +={ "G4Generator"};
+ApplicationMgr.DLLs +={ "G4Generator","G4Propagator"};
 ApplicationMgr.ExtSvc += {"G4GeometrySvc"};
 Generator.Members = {"FluxAlg", "G4Generator"};
 G4Generator.defaultCutValue=0.7; // instead of 0.1 default
