@@ -36,14 +36,12 @@ public:
     KFmatrix& operator()(const idents::TkrId& /* id */)     {return m_none;}
 
     const double    getLastStepRadLen()  {return m_LastStepRadLen;}
-    const double    getLastStepActDist() {return m_LastStepActDist;}
     const KFmatrix& getLastStepQ()       {return m_LastStepQ;}
 
 private:
     IPropagator*        m_propagator;
 
     double              m_LastStepRadLen;
-    double              m_LastStepActDist;
     KFmatrix            m_LastStepQ;
 
     KFmatrix            m_none;

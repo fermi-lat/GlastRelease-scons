@@ -12,7 +12,7 @@
 #include "src/TrackFit/KalmanFilterFit/KalmanFilterInit.h"
 
 NoProcNoiseMatrix::NoProcNoiseMatrix(IPropagator* propagator) : 
-                      m_propagator(propagator), m_LastStepRadLen(0.), m_LastStepActDist(0.), 
+                      m_propagator(propagator), m_LastStepRadLen(0.), 
                       m_LastStepQ(4,4), m_none(4,4)
 {
     return;
@@ -56,7 +56,6 @@ KFmatrix& NoProcNoiseMatrix::operator()(const KFvector& stateVec,
     m_LastStepQ = KFmatrix(4,4,0); 
 
     m_LastStepRadLen  = m_propagator->getRadLength();
-    m_LastStepActDist = m_propagator->isInsideActArea();
 
     return m_LastStepQ;
 }
