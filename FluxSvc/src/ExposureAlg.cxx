@@ -27,7 +27,7 @@
 //flux
 #include "FluxSvc/IFluxSvc.h"
 #include "FluxSvc/IFlux.h"
-#include "flux/GPS.h"
+#include "astro/GPS.h"
 
 // to write a Tree with entryosure info
 #include "ntupleWriterSvc/INTupleWriterSvc.h"

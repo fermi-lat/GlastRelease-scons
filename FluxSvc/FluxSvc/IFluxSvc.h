@@ -15,7 +15,7 @@
 #include <string>
 #include <list>
 #include <vector>
-#include "flux/GPS.h"
+#include "astro/GPS.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
 static const InterfaceID IID_IFluxSvc("FluxSvc", 4 , 0); 
