@@ -8,9 +8,11 @@ use GaudiSvc
 
 include_dirs $(FLUXSVCROOT)
 
-library FluxSvc  *.cxx *.h\
+apply_pattern package_headers
+
+library FluxSvc  *.cxx \
  Dll/*.cxx\
- ../FluxSvc/*.h 
+ ${FluxSvc_headers}
 
 
 apply_pattern packageShr
