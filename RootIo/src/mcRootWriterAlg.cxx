@@ -591,5 +591,6 @@ StatusCode mcRootWriterAlg::finalize()
     close();
     
     StatusCode sc = StatusCode::SUCCESS;
+    setFinalized();
     return sc;
 }
