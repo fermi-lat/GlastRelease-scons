@@ -23,7 +23,8 @@ EventSelector.Input = "NONE";
 ApplicationMgr.TopAlg = {
 	"digiRootReaderAlg",      
     	"CalXtalRecAlg", 
-    	"CalClustersAlg"
+    	"CalClustersAlg",
+	"test_CalRecon"
     };
 
 
