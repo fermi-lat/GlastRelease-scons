@@ -2,7 +2,10 @@
  * package GlastEvent
  * package manager:T.Burnett (original author: H. Gillespie)
  *
- * v7r1  20-apr-02 THB Changes to event
+ *       08-may-02 HMK Add namespace for DigiEvent and new CalDigiCol\n
+ *       string for the EventModel.\n
+ *       06-may-02 TU  Add TKR Recon TDS classes\n
+ * v7r1  20-apr-02 THB Changes to event\n
  * v7r0  10-apr-02 THB CalDigi revision--make it a major version change at Richard's suggestion
  * v6r4  10-apr-02 THB CalDigi revision
  * v6r3  06-apr-02 THB remove McConstants.h, bit field in McPositionHit, McIntegratingHit for now
