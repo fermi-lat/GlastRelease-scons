@@ -41,6 +41,12 @@ public:
     
     /// prepare the common attributes and set them in available headers
     StatusCode finalize();
+
+private:
+	/// provide a local popen method to handle both linux and windows
+	FILE* popen(const char* command, const char *mode);
+	/// provide a local pclose method to handle both linux and windows
+	int pclose(FILE* fp);
     
 } ;
 
