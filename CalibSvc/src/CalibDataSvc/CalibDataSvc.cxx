@@ -4,7 +4,6 @@
 #include "CalibDataSvc.h"
 #include "CalibCLIDNode.h"
 #include "CalibData/CalibTime.h"
-// #include "CalibData/CalibModel.h"
 #include "GaudiKernel/IAddressCreator.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/IOpaqueAddress.h"
@@ -525,7 +524,7 @@ StatusCode CalibDataSvc::fetchMcTime() {
   }
   double fromMissionStart = (mcHeader->time()).time();
   unsigned fromSec = (unsigned) fromMissionStart;
-  unsigned fromNano = (unsigned) ((fromMissionStart - fromSec) * 1000000);
+  unsigned fromNano = (unsigned) ((fromMissionStart - fromSec) * 1000000000);
   log << MSG::DEBUG << "(mc) seconds/nano from mission start: " << fromSec 
       << "/" << fromNano << endreq;
   facilities::Timestamp absTime(missionSec + fromSec, missionNano + fromNano);
@@ -551,7 +550,7 @@ StatusCode CalibDataSvc::fetchDigiTime() {
   }
   double fromMissionStart = (eventHeader->time()).time();
   unsigned fromSec = (unsigned) fromMissionStart;
-  unsigned fromNano = (unsigned) ((fromMissionStart - fromSec) * 1000000);
+  unsigned fromNano = (unsigned) ((fromMissionStart - fromSec) * 1000000000);
   log << MSG::DEBUG << "(digi) seconds/nano from mission start: " << fromSec 
       << "/" << fromNano << endreq;
   facilities::Timestamp absTime(missionSec + fromSec, missionNano + fromNano);
@@ -569,10 +568,10 @@ StatusCode CalibDataSvc::fetchFakeClockTime() {
       << eventNumber << endreq;
 
 
-  // Set the event time
+  // Set the event time.  m_delay has been specified in milliseconds
   double incr = eventNumber*m_delayTime;
   long   seconds_incr = (long) (incr / 1000);
-  long   nano_incr = (long) ((incr - (1000*seconds_incr)) * 1000);
+  long   nano_incr = (long) ((incr - (1000*seconds_incr)) * 1000000);
   //  facilities::Timestamp time(m_startTime + (eventNumber)*m_delayTime, 0);
   facilities::Timestamp time(m_startTime + seconds_incr, nano_incr);
   //  facilities::Timestamp time = 

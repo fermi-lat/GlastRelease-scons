@@ -196,7 +196,7 @@ public:
   /// Absolute time of first event (seconds)
   long m_startTime;
 
-  /// Absolute time spacing between events
+  /// Absolute time spacing between events (milliseconds)
   long m_delayTime;
   
 };
