@@ -28,15 +28,6 @@
           <uminus><refer refTo="diodePosXOffset" /> </uminus>
         </const>
 
-<!--
-        <const name= "CALHalfGap">
-          <notes>was convenience, now OBSOLETE</notes>
-          <mul> 
-            <refer refTo="CALGap" /> 
-            <const value="0.5" uType="count" /> 
-          </mul>
-        </const>
--->
         <const name="cellVertWallHalfThick">
           <notes>convenience</notes>
           <mul> 
@@ -70,25 +61,14 @@
 
         <const name="CsIEnvY">  
           <notes>Transverse dimension of envelope containing a CsI 
-crystal and its diodes</notes>
+                  crystal and its diodes</notes>
           <refer refTo="cellHorPitch" />
-<!--
-          <add>
-            <refer refTo="CsIWidth" />
-            <refer refTo="CALGap" />
-          </add>
- -->
         </const>
 
         <const name = "CsIEnvZ" >
-          <notes>Height of the envelope containing a CsI crystal and its diodes</notes>
+          <notes>Height of the envelope containing a CsI crystal and 
+                 its diodes</notes>
           <refer refTo="cellVertPitch" />
-<!--
-          <add>
-            <refer refTo="CsIHeight" />
-            <refer refTo="CALGap" />
-          </add>
- -->
         </const>
 
         <const name="cellIntWallZ">
@@ -144,7 +124,9 @@ crystal and its diodes</notes>
      collection of CsIElements in a layer, so
       max(CsIEnvX, nCsIPerLayer*CsIEnvY), which ends up being
       CsIEnvX in this case    --> 
-        <const name = "CALLayerTrans" ><notes>Transverse dimension of a CAL layer: max(CsiEnvX, nEltPerlayer*CsIEnvY)</notes>
+        <const name = "CALLayerTrans" >
+          <notes>Transverse dimension of a CAL layer: 
+                 max(CsiEnvX, nEltPerlayer*CsIEnvY)</notes>
           <max>
             <refer refTo="CsIEnvX" />
             <mul>
@@ -154,8 +136,9 @@ crystal and its diodes</notes>
           </max>
 	</const>
 
-        <const name="CALTransvGap"><notes>New from Eric/Sacha.  Gap between
-side of log + C-cell [composite cell??] and CAL side wall</notes>
+        <const name="CALTransvGap">
+          <notes>New from Eric/Sacha.  Gap between side of log + C-cell 
+                [composite cell??] and CAL side wall</notes>
           <mul>
             <const value="0.5" />
             <minus>
@@ -384,80 +367,39 @@ grid, etc. (may be superseded by info from Eric)</notes>
           </add>
         </const>
 
-        <const name="inactiveThickUpperReg" >
-          <notes>Inactive materials above core between Si and core
-                 for regular layers</notes>
+        <const name="TKRBiasWidth" >
+          <notes>Transverse dimension of bias board (for now assuming
+          it's a square</notes>
+          <refer refTo="faceWidth" />
+        </const>
+
+        <const name="biasGlueThick" >
+          <notes>Thickness of upper bias board and glue above it</notes>
           <add>
             <refer refTo="glueSiThick" />
             <refer refTo="biasPlaneThick" />
-            <refer refTo="glueDefThick" />
+          </add>
+        </const>
+
+        <const name="faceGlueRegThick" >
+          <notes>Thickness of face sheet and glue attaching it to
+                 core/closeout for regular layers</notes>
+          <add>
             <refer refTo="faceThick" />
             <refer refTo="glueCoreThick" />
           </add>
         </const>
 
-        <const name="inactiveThickUpperSuper">
-          <notes>Inactive materials above core between Si and core
-                 for superGlast layers</notes>
+        <const name="faceGlueSupThick" >
+          <notes>Thickness of face sheet and glue attaching it to
+                 core/closeout for superGLAST layers</notes>
           <add>
-            <refer refTo="glueSiThick" />
-            <refer refTo="biasPlaneThick" />
-            <refer refTo="glueDefThick" />
-            <refer refTo="faceThickSuper" />
-            <refer refTo="glueCoreThick" />
-          </add>
-        </const>
-
-        <const name="inactiveThickLowerNoCnv">
-          <notes>Inactive materials from core on down to Si for no cnv
-                 layers</notes>
-          <add>
-            <refer refTo="glueCoreThick" />
-            <refer refTo="faceThick" />
-            <refer refTo="glueDefThick" />
-            <refer refTo="biasPlaneThick" />
-            <refer refTo="glueSiThick" />
-          </add>
-        </const>
-
-        <const name="inactiveThickBelowCnv">
-          <notes>Inactive materials below converter, above bottom Si</notes>
-          <add>
-            <refer refTo="glueDefThick" />
-            <refer refTo="biasPlaneThick" />
-            <refer refTo="glueSiThick" />
-          </add>
-        </const>
-
-        <const name="inactiveThickToCnvReg">
-          <notes>Inactive materials from core to converter, exclusive,
-                 for regular layers</notes>
-          <add>
-            <refer refTo="glueDefThick" />
-            <refer refTo="faceThick" />
-            <refer refTo="glueCoreThick" />
-          </add>
-        </const>
-
-        <const name="inactiveThickToCnvSuper">
-          <notes>Inactive materials from core to converter, exclusive,
-                 for super-glast layers</notes>
-          <add>
-            <refer refTo="glueDefThick" />
-            <refer refTo="faceThickSuper" />
+            <refer refTo="faceSupThick" />
             <refer refTo="glueCoreThick" />
           </add>
         </const>
 
 
-        <const name="inactiveThickOutside">
-          <notes>Inactive materials from outside (top of top or bottom
-             of bottom layer) to core</notes>
-          <add>
-            <refer refTo="faceThick" />
-            <refer refTo="glueCoreThick" />
-          </add>
-        </const>
 
         <const name="TKRMaxNoCnv" uType="count">
           <notes>Tray number of most forward no-converter tray</notes>
@@ -484,33 +426,13 @@ grid, etc. (may be superseded by info from Eric)</notes>
           </minus>
         </const>
 
-<!-- probably obsolete (3/20/01) 
-	<const name = "outsideTrayZ">
-          <notes>Total Z dimension of top and bottom trays</notes>
-	  <add>
-	    <refer refTo = "panelThick" />
-            <refer refTo = "faceThick" />
-            <refer refTo = "faceThick" />
-	    <refer refTo = "SiThick" />
-	  </add>
-	</const>
-
-	<const name = "middleTrayZ">
-          <notes>Total Z dimension of interior trays</notes>
-	  <add>
-	    <refer refTo = "outsideTrayZ" />
-	    <refer refTo = "SiThick" />
-	  </add>
-	</const>
-
--->
-
 
       </derCategory>
 
       <derCategory name="misc">
         <overview>Stuff that doesn't fit elsewhere</overview>
-<!-- a couple convenience numbers -->
+
+    <!-- a couple convenience numbers -->
         <const name="xNumM1" uType="count">
           <notes>Convenience number</notes>
           <minus>

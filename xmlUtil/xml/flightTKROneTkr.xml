@@ -36,13 +36,12 @@
         <idField name="fLadder" value="0" step="1" />
       </axisMPos>
     </stackX>
-        
+
     <box name="convSuperSquare"
          XREF="SiWaferActiveSide"
          YREF="SiWaferActiveSide"
          ZREF="convThickSup"
          materialREF="convMat" />
-
 
     <stackY name="convSuperLadder" >
       <axisMPos volume="convSuperSquare" ncopyREF="nWaferAcross"
@@ -59,8 +58,20 @@
     </stackX>
 
 
-
-
+<!-- Now make all the other boxes we need for TKR:
+     * Core box for inner layers                     TKRCoreReg
+     * Core box for outer (top and bottom) layers    TKRCoreOuter
+     * bias board box (include glue to attach Si)    TKRBiasBox
+     * face sheet for regular layers, includes glue  TKRFaceReg
+       attaching to closeout/core
+     * face sheet for superGLAST layers, includes    TKRFaceSup
+       glue attaching to closeout/core
+     * glue box of "default" thickness (.100 mm);    TKRGlueDef
+       that is, glue not touching Si or core.
+     * SiLayer (Actually a choice element.  Most applications want
+       a detailed view with individual wafers, but someone might
+       be happy with just a slab of silicon.)
+ -->
 
     <box name="TKRCoreReg"
 	 XREF="TKRTrayWidth" 
@@ -79,13 +90,42 @@
 	 YREF="TKRTrayWidth"
 	 ZREF="SiThick" materialREF="TKRDetMat" />
 
+<!--  Just a single sheet. For convenience make a box the thickness of
+      bias board + glue adjacent to Si   -->
+
+    <box name="TKRBiasBox"
+         XREF="TKRBiasWidth"
+         YREF="TKRBiasWidth"
+         ZREF="biasGlueThick"
+         materialREF="TKRBiasBoardMat" />
+
+    <box name="TKRFaceReg"
+         XREF="faceWidth"
+         YREF="faceWidth"
+         ZREF="faceGlueRegThick"
+         materialREF="TKRFaceMat" />
+
+    <box name="TKRFaceSup"
+         XREF="faceWidth"
+         YREF="faceWidth"
+         ZREF="faceGlueSupThick"
+         materialREF="TKRFaceMat" />
+
+    <box name="TKRGlueDef"
+         XREF="faceWidth"
+         YREF="faceWidth"
+         ZREF="glueDefThick"
+         materialREF="TKRGlueMat" />
+    
 
   <!-- No explicit material, so vacuum -->
+<!-- probably not needed..
     <box name="SiLayerEnv"    
       XREF="TKRTrayWidth"
       YREF="TKRTrayWidth"
       ZREF="SiThick" 
       materialREF="vacuumMat"/>
+  -->
 
 <!-- The unrotated wafer is segmented along the x axis, hence measures X,
      hence is an X layer
@@ -113,6 +153,25 @@
     <composition name="SiWaferNest" envelope="SiWafer">
       <posXYZ volume="SiWaferActive" />
     </composition>
+
+   <!--       ************* new stuff (ladders) *************   -->
+
+    <stackY name="ladder" >
+      <axisMPos volume="SiWaferNest" ncopyREF="nWaferAcross"
+                                     shiftREF="waferPitch" >
+         <idField name="fWafer" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+    <stackX name="SiLadders" >
+      <axisMPos volume="ladder" ncopyREF="nWaferAcross" 
+                                shiftREF="ladderPitch" >
+        <idField name="fLadder" value="0" step="1" />
+      </axisMPos>
+    </stackX>
+
+   <!--       ************* end new stuff (ladders) *************   -->
+
     
 <!-- identify wafers by their position along stack in direction
      of measurement.                                          
@@ -120,37 +179,27 @@
            local(in wafer)-strip# + strips-per-wafer * wafer-id
  -->
 
-<!--       Try stacking in Y first to make a ladder.     -->
-    <stackY name="ladder" origin="atCentre" >
-      <axisMPos volume="SiWaferNest" ncopyREF="nWaferAcross"
-                                     shiftREF="waferPitch" >
-         <idField name="fWafer" value="0" step="1" />
-      </axisMPos>
-    </stackY>
+<!-- The collection of wafers is centered in the volume
 
-    <stackX name="towerLayerWafers" origin="atCentre" >
-      <axisMPos volume="ladder" ncopyREF="nWaferAcross"
-                                shiftREF="ladderPitch" >
-        <idField name="fLadder" value="0" step="1" />
-      </axisMPos>
-    </stackX>
-
-
-<!-- The collection of wafers is centered in the volume -->
-    <composition name="SiLayerComp" envelope="SiLayerEnv">
+          don't think this is needed
+    <composition name="SiLadders" envelope="SiLayerEnv">
       <posXYZ volume="towerLayerWafers" />
     </composition>
+ -->
 
 <!-- Should we even bother with a choice here?  All clients
      probably want the more detailed SiLayerComp structure -->
     <choice name="SiLayer" >  
       <case mode="fastmc" volume="SiLayerBox" />
-      <case mode="digi" volume="SiLayerComp" />
-      <case mode="recon" volume="SiLayerComp" />
-      <case mode="propagate" volume="SiLayerComp" />
+      <case mode="digi" volume="SiLadders" />
+      <case mode="recon" volume="SiLadders" />
+      <case mode="propagate" volume="SiLadders" />
     </choice>
 
 <!-- actually includes all inactive materials except core, conv -->
+<!-- I think all of the following included in this comment are
+     now defunct.
+
     <box name="TKRFaceUpperReg"  
 	 XREF="faceWidth" 
 	 YREF="faceWidth" 
@@ -183,7 +232,7 @@
 	 XREF="faceWidth" 
 	 YREF="faceWidth" 
 	 ZREF="inactiveThickOutside" materialREF="TKRFaceMat" />
-
+ -->
 
 <!-- Trays come in 3 flavors: top tray, bottom tray and middle tray.
      These are further subdivided by thickness of converter layer which
@@ -194,9 +243,11 @@
 
     <!-- Make a stack for the bottom tray -->
     <stackZ name="trayBot" >
-      <axisPos volume="TKRFaceOutside" />
+      <axisPos volume="TKRFaceReg" />
       <axisPos volume="TKRCoreOuter" />
-      <axisPos volume="TKRFaceUpperReg" />
+      <axisPos volume="TKRFaceReg" />
+      <axisPos volume="TKRGlueDef" />
+      <axisPos volume="TKRBiasBox" />
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" />
       </axisPos>
@@ -207,9 +258,13 @@
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" />
       </axisPos>
-      <axisPos volume="TKRFaceLowerNoCnv" />
+      <axisPos volume="TKRBiasBox" />
+      <axisPos volume="TKRGlueDef" />
+      <axisPos volume="TKRFaceReg" />
       <axisPos volume="TKRCoreReg" />
-      <axisPos volume="TKRFaceUpperReg" />
+      <axisPos volume="TKRFaceReg" />
+      <axisPos volume="TKRGlueDef" />
+      <axisPos volume="TKRBiasBox" />
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" /> 
       </axisPos>
@@ -220,13 +275,17 @@
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" />
       </axisPos>
-      <axisPos volume="TKRBelowCnv" />
+      <axisPos volume="TKRBiasBox" />
+      <axisPos volume="TKRGlueDef" />
       <axisPos volume="convSuperArray" >
         <idField name="fTKRTrayCmp" valueREF="eTKRCnv" />
       </axisPos>
-      <axisPos volume="TKRFaceToCnvSuper" />
+      <axisPos volume="TKRGlueDef" />
+      <axisPos volume="TKRFaceSup" />
       <axisPos volume="TKRCoreReg" />
-      <axisPos volume="TKRFaceUpperSuper" />
+      <axisPos volume="TKRFaceSup" />
+      <axisPos volume="TKRGlueDef" />
+      <axisPos volume="TKRBiasBox" />
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" />
       </axisPos>
@@ -237,13 +296,17 @@
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" />
       </axisPos>
-      <axisPos volume="TKRBelowCnv" />
+      <axisPos volume="TKRBiasBox" />
+      <axisPos volume="TKRGlueDef" />
       <axisPos volume="convRegArray"  >
         <idField name="fTKRTrayCmp" valueREF="eTKRCnv" />
       </axisPos>
-      <axisPos volume="TKRFaceToCnvReg" />
+      <axisPos volume="TKRGlueDef" />
+      <axisPos volume="TKRFaceReg" />
       <axisPos volume="TKRCoreReg" />
-      <axisPos volume="TKRFaceUpperReg" />
+      <axisPos volume="TKRFaceReg" />
+      <axisPos volume="TKRGlueDef" />
+      <axisPos volume="TKRBiasBox" />
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" />
       </axisPos>
@@ -254,13 +317,15 @@
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" /> 
       </axisPos>
-      <axisPos volume="TKRBelowCnv" />
+      <axisPos volume="TKRBiasBox" />
+      <axisPos volume="TKRGlueDef" />
       <axisPos volume="convRegArray" >
         <idField name="fTKRTrayCmp" valueREF="eTKRCnv" />
       </axisPos> 
-      <axisPos volume="TKRFaceToCnvReg" />
+      <axisPos volume="TKRGlueDef" />
+      <axisPos volume="TKRFaceReg" />
       <axisPos volume="TKRCoreOuter" />
-      <axisPos volume="TKRFaceOutside" />
+      <axisPos volume="TKRFaceReg" />
     </stackZ>
 
     <!-- make a tracker by stacking up the trays -->
@@ -347,3 +412,53 @@
     <composition name="oneTKR" envelope="TKRStayClearBox">
       <posXYZ volume="oneTKRStack" />
     </composition>
+
+<!--   Obsolete stuff.  Superseded by ladder definitions above because
+        only Si is in ladders. 
+    <stackZ name="topWafer" >
+      <axisPos volume="upperBiasBox" />
+      <axisPos volume="SiWaferNest" />
+    </stackZ>
+
+    <stackY name="topLadder" >
+      <axisMPos volume="topWafer" ncopyREF="nWaferAcross"
+                                       shiftREF="waferPitch" >
+        <idField name="fWafer" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+    <stackX name="topLadders" >
+      <axisMPos volume="topLadder" ncopyREF="nWaferAcross"
+                                   shiftREF="ladderPitch" >
+        <idField name="fLadder" value="0" step="1" />
+      </axisMPos>
+    </stackX>
+
+    <stackZ name="botWaferNoCnv" >
+      <axisPos volume="SiWaferNest" />
+      <axisPos volume="lowerBiasBox" />
+    </stackZ>
+
+    <stackY name="botLadderNoCnv" >
+      <axisMPos volume="botWaferNoCnv" ncopyREF="nWaferAcross"
+                                       shiftREF="waferPitch" >
+        <idField name="fWafer" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+    <stackX name="botLaddersNoCnv" >
+      <axisMPos volume="botLadderNoCnv" ncopyREF="nWaferAcross"
+                                   shiftREF="ladderPitch" >
+        <idField name="fLadder" value="0" step="1" />
+      </axisMPos>
+    </stackX>
+-->
+
+
+<!--
+    <box name="lowerBiasBox"
+         XREF="SiWaferSide"
+         YREF="SiWaferSide"
+         ZREF="lowerBiasGlueThick"
+         materialREF="TKRBiasBoardMat" />
+-->

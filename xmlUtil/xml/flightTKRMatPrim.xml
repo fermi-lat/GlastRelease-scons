@@ -8,4 +8,13 @@
         used in tracker tray core</prim>
   <prim name="TKRFaceMat" value="C" type="string" uType="mat">
         Material of tracker face sheet</prim>
+  <prim name="TKRBiasBoardMat" value="Vacuum" type="string" uType="mat">
+***Temporary until the correct value can be inserted *** </prim>
+  <prim name="TKRGlueMat" value="Vacuum" type="string" uType="mat">
+***Temporary until the correct value can be inserted *** </prim>
+  <prim name="TKRCloseoutMat" value="CarbonFiber" type="string" uType="mat">
+***Temporary until the correct value can be inserted.  For now
+there is only one sort of CarbonFiber which is the one
+used in CAL cell walls *** </prim>
+
 </primCategory>

@@ -330,6 +330,17 @@ tabs        </prim>
         <prim name="TKRFaceMat" type="string" uType="mat" value="C" unitAngle="deg" unitLength="mm">
           
         Material of tracker face sheet        </prim>
+        <prim name="TKRBiasBoardMat" type="string" uType="mat" value="Vacuum" unitAngle="deg" unitLength="mm">
+          
+***Temporary until the correct value can be inserted ***         </prim>
+        <prim name="TKRGlueMat" type="string" uType="mat" value="Vacuum" unitAngle="deg" unitLength="mm">
+          
+***Temporary until the correct value can be inserted ***         </prim>
+        <prim name="TKRCloseoutMat" type="string" uType="mat" value="CarbonFiber" unitAngle="deg" unitLength="mm">
+          
+***Temporary until the correct value can be inserted.  For now
+there is only one sort of CarbonFiber which is the one
+used in CAL cell walls ***         </prim>
       </primCategory>
       <primCategory name="TKRCountPrim">
         <overview>
@@ -408,7 +419,7 @@ TKR Stay Clear envelope from LAT-DS-00038-2        </prim>
         <prim name="faceThick" type="double" uType="length" value="0.200" unitAngle="deg" unitLength="mm">
           Face sheet thickness
             for all but super-glast layers (as of 15oct01)        </prim>
-        <prim name="faceThickSuper" type="double" uType="length" value="0.290" unitAngle="deg" unitLength="mm">
+        <prim name="faceSupThick" type="double" uType="length" value="0.290" unitAngle="deg" unitLength="mm">
           Face sheet thickness
             for super-glast layers (15oct01)        </prim>
         <prim name="biasPlaneThick" type="double" uType="length" value="0.100" unitAngle="deg" unitLength="mm">
@@ -617,15 +628,6 @@ grid flange        </prim>
           <notes>
             X-offset of diode on negative end of a crystal          </notes>
         </const>
-        <!-- 
-        <const name= "CALHalfGap">
-          <notes>was convenience, now OBSOLETE</notes>
-          <mul> 
-            <refer refTo="CALGap" /> 
-            <const value="0.5" uType="count" /> 
-          </mul>
-        </const>
--->
         <const name="cellVertWallHalfThick" uType="length" value="0.245" unitAngle="deg" unitLength="mm">
           <notes>
             convenience          </notes>
@@ -642,23 +644,12 @@ grid flange        </prim>
         <const name="CsIEnvY" uType="length" value="27.844" unitAngle="deg" unitLength="mm">
           <notes>
             Transverse dimension of envelope containing a CsI 
-crystal and its diodes          </notes>
-          <!-- 
-          <add>
-            <refer refTo="CsIWidth" />
-            <refer refTo="CALGap" />
-          </add>
- -->
+                  crystal and its diodes          </notes>
         </const>
         <const name="CsIEnvZ" uType="length" value="21.35" unitAngle="deg" unitLength="mm">
           <notes>
-            Height of the envelope containing a CsI crystal and its diodes          </notes>
-          <!-- 
-          <add>
-            <refer refTo="CsIHeight" />
-            <refer refTo="CALGap" />
-          </add>
- -->
+            Height of the envelope containing a CsI crystal and 
+                 its diodes          </notes>
         </const>
         <const name="cellIntWallZ" uType="length" value="20.5" unitAngle="deg" unitLength="mm">
           <notes>
@@ -691,12 +682,13 @@ crystal and its diodes          </notes>
       CsIEnvX in this case    -->
         <const name="CALLayerTrans" uType="length" value="334.128" unitAngle="deg" unitLength="mm">
           <notes>
-            Transverse dimension of a CAL layer: max(CsiEnvX, nEltPerlayer*CsIEnvY)          </notes>
+            Transverse dimension of a CAL layer: 
+                 max(CsiEnvX, nEltPerlayer*CsIEnvY)          </notes>
         </const>
         <const name="CALTransvGap" uType="length" value="1.436" unitAngle="deg" unitLength="mm">
           <notes>
-            New from Eric/Sacha.  Gap between
-side of log + C-cell [composite cell??] and CAL side wall          </notes>
+            New from Eric/Sacha.  Gap between side of log + C-cell 
+                [composite cell??] and CAL side wall          </notes>
         </const>
         <const name="cellHorGap" uType="length" value="0.32" unitAngle="deg" unitLength="mm">
           <notes>
@@ -793,39 +785,24 @@ grid, etc. (may be superseded by info from Eric)          </notes>
              Distance between centers of adjacent wafers in 
                   adjacent ladders          </notes>
         </const>
-        <const name="inactiveThickUpperReg" uType="length" value="0.625" unitAngle="deg" unitLength="mm">
+        <const name="TKRBiasWidth" uType="length" value="360.6" unitAngle="deg" unitLength="mm">
           <notes>
-            Inactive materials above core between Si and core
-                 for regular layers          </notes>
+            Transverse dimension of bias board (for now assuming
+          it's a square          </notes>
         </const>
-        <const name="inactiveThickUpperSuper" uType="length" value="0.715" unitAngle="deg" unitLength="mm">
+        <const name="biasGlueThick" uType="length" value="0.25" unitAngle="deg" unitLength="mm">
           <notes>
-            Inactive materials above core between Si and core
-                 for superGlast layers          </notes>
+            Thickness of upper bias board and glue above it          </notes>
         </const>
-        <const name="inactiveThickLowerNoCnv" uType="length" value="0.625" unitAngle="deg" unitLength="mm">
+        <const name="faceGlueRegThick" uType="length" value="0.275" unitAngle="deg" unitLength="mm">
           <notes>
-            Inactive materials from core on down to Si for no cnv
-                 layers          </notes>
+            Thickness of face sheet and glue attaching it to
+                 core/closeout for regular layers          </notes>
         </const>
-        <const name="inactiveThickBelowCnv" uType="length" value="0.35" unitAngle="deg" unitLength="mm">
+        <const name="faceGlueSupThick" uType="length" value="0.365" unitAngle="deg" unitLength="mm">
           <notes>
-            Inactive materials below converter, above bottom Si          </notes>
-        </const>
-        <const name="inactiveThickToCnvReg" uType="length" value="0.375" unitAngle="deg" unitLength="mm">
-          <notes>
-            Inactive materials from core to converter, exclusive,
-                 for regular layers          </notes>
-        </const>
-        <const name="inactiveThickToCnvSuper" uType="length" value="0.465" unitAngle="deg" unitLength="mm">
-          <notes>
-            Inactive materials from core to converter, exclusive,
-                 for super-glast layers          </notes>
-        </const>
-        <const name="inactiveThickOutside" uType="length" value="0.275" unitAngle="deg" unitLength="mm">
-          <notes>
-            Inactive materials from outside (top of top or bottom
-             of bottom layer) to core          </notes>
+            Thickness of face sheet and glue attaching it to
+                 core/closeout for superGLAST layers          </notes>
         </const>
         <const name="TKRMaxNoCnv" uType="count" value="2" unitAngle="deg" unitLength="mm">
           <notes>
@@ -840,26 +817,6 @@ grid, etc. (may be superseded by info from Eric)          </notes>
           <notes>
             Used as bound for possible idField values          </notes>
         </const>
-        <!--  probably obsolete (3/20/01) 
-	<const name = "outsideTrayZ">
-          <notes>Total Z dimension of top and bottom trays</notes>
-	  <add>
-	    <refer refTo = "panelThick" />
-            <refer refTo = "faceThick" />
-            <refer refTo = "faceThick" />
-	    <refer refTo = "SiThick" />
-	  </add>
-	</const>
-
-	<const name = "middleTrayZ">
-          <notes>Total Z dimension of interior trays</notes>
-	  <add>
-	    <refer refTo = "outsideTrayZ" />
-	    <refer refTo = "SiThick" />
-	  </add>
-	</const>
-
--->
       </derCategory>
       <derCategory name="misc" save="false">
         <overview>

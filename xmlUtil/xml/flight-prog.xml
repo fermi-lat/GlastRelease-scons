@@ -330,6 +330,17 @@ tabs        </prim>
         <prim name="TKRFaceMat" type="string" uType="mat" value="C" unitAngle="deg" unitLength="mm">
           
         Material of tracker face sheet        </prim>
+        <prim name="TKRBiasBoardMat" type="string" uType="mat" value="Vacuum" unitAngle="deg" unitLength="mm">
+          
+***Temporary until the correct value can be inserted ***         </prim>
+        <prim name="TKRGlueMat" type="string" uType="mat" value="Vacuum" unitAngle="deg" unitLength="mm">
+          
+***Temporary until the correct value can be inserted ***         </prim>
+        <prim name="TKRCloseoutMat" type="string" uType="mat" value="CarbonFiber" unitAngle="deg" unitLength="mm">
+          
+***Temporary until the correct value can be inserted.  For now
+there is only one sort of CarbonFiber which is the one
+used in CAL cell walls ***         </prim>
       </primCategory>
       <primCategory name="TKRCountPrim">
         <overview>
@@ -408,7 +419,7 @@ TKR Stay Clear envelope from LAT-DS-00038-2        </prim>
         <prim name="faceThick" type="double" uType="length" value="0.200" unitAngle="deg" unitLength="mm">
           Face sheet thickness
             for all but super-glast layers (as of 15oct01)        </prim>
-        <prim name="faceThickSuper" type="double" uType="length" value="0.290" unitAngle="deg" unitLength="mm">
+        <prim name="faceSupThick" type="double" uType="length" value="0.290" unitAngle="deg" unitLength="mm">
           Face sheet thickness
             for super-glast layers (15oct01)        </prim>
         <prim name="biasPlaneThick" type="double" uType="length" value="0.100" unitAngle="deg" unitLength="mm">
@@ -608,35 +619,12 @@ grid flange        </prim>
         <!--  diodePosXOffset  = (CsILength + diodeX)/2 -->
         <const name="diodePosXOffset" uType="length" value="166.65" unitAngle="deg" unitLength="mm" />
         <const name="diodeNegXOffset" uType="length" value="-166.65" unitAngle="deg" unitLength="mm" />
-        <!-- 
-        <const name= "CALHalfGap">
-          <notes>was convenience, now OBSOLETE</notes>
-          <mul> 
-            <refer refTo="CALGap" /> 
-            <const value="0.5" uType="count" /> 
-          </mul>
-        </const>
--->
         <const name="cellVertWallHalfThick" uType="length" value="0.245" unitAngle="deg" unitLength="mm" />
         <const name="cellHorWallHalfThick" uType="length" value="0.425" unitAngle="deg" unitLength="mm" />
         <!--  dimensions for log envelope volume -->
         <const name="CsIEnvX" uType="length" value="333.6" unitAngle="deg" unitLength="mm" />
-        <const name="CsIEnvY" uType="length" value="27.844" unitAngle="deg" unitLength="mm">
-          <!-- 
-          <add>
-            <refer refTo="CsIWidth" />
-            <refer refTo="CALGap" />
-          </add>
- -->
-        </const>
-        <const name="CsIEnvZ" uType="length" value="21.35" unitAngle="deg" unitLength="mm">
-          <!-- 
-          <add>
-            <refer refTo="CsIHeight" />
-            <refer refTo="CALGap" />
-          </add>
- -->
-        </const>
+        <const name="CsIEnvY" uType="length" value="27.844" unitAngle="deg" unitLength="mm" />
+        <const name="CsIEnvZ" uType="length" value="21.35" unitAngle="deg" unitLength="mm" />
         <const name="cellIntWallZ" uType="length" value="20.5" unitAngle="deg" unitLength="mm" />
         <!--  offsets for positioning cell walls inside the cel -->
         <const name="cellHorWall_dz" uType="length" value="10.4625" unitAngle="deg" unitLength="mm" />
@@ -684,36 +672,13 @@ grid flange        </prim>
         <const name="TKRTrayWidth" uType="length" value="363.1" unitAngle="deg" unitLength="mm" />
         <const name="waferPitch" uType="length" value="89.525" unitAngle="deg" unitLength="mm" />
         <const name="ladderPitch" uType="length" value="89.7" unitAngle="deg" unitLength="mm" />
-        <const name="inactiveThickUpperReg" uType="length" value="0.625" unitAngle="deg" unitLength="mm" />
-        <const name="inactiveThickUpperSuper" uType="length" value="0.715" unitAngle="deg" unitLength="mm" />
-        <const name="inactiveThickLowerNoCnv" uType="length" value="0.625" unitAngle="deg" unitLength="mm" />
-        <const name="inactiveThickBelowCnv" uType="length" value="0.35" unitAngle="deg" unitLength="mm" />
-        <const name="inactiveThickToCnvReg" uType="length" value="0.375" unitAngle="deg" unitLength="mm" />
-        <const name="inactiveThickToCnvSuper" uType="length" value="0.465" unitAngle="deg" unitLength="mm" />
-        <const name="inactiveThickOutside" uType="length" value="0.275" unitAngle="deg" unitLength="mm" />
+        <const name="TKRBiasWidth" uType="length" value="360.6" unitAngle="deg" unitLength="mm" />
+        <const name="biasGlueThick" uType="length" value="0.25" unitAngle="deg" unitLength="mm" />
+        <const name="faceGlueRegThick" uType="length" value="0.275" unitAngle="deg" unitLength="mm" />
+        <const name="faceGlueSupThick" uType="length" value="0.365" unitAngle="deg" unitLength="mm" />
         <const name="TKRMaxNoCnv" uType="count" value="2" unitAngle="deg" unitLength="mm" />
         <const name="TKRMaxReg" uType="count" value="17" unitAngle="deg" unitLength="mm" />
         <const name="nWaferAcrossM1" uType="count" value="3" unitAngle="deg" unitLength="mm" />
-        <!--  probably obsolete (3/20/01) 
-	<const name = "outsideTrayZ">
-          <notes>Total Z dimension of top and bottom trays</notes>
-	  <add>
-	    <refer refTo = "panelThick" />
-            <refer refTo = "faceThick" />
-            <refer refTo = "faceThick" />
-	    <refer refTo = "SiThick" />
-	  </add>
-	</const>
-
-	<const name = "middleTrayZ">
-          <notes>Total Z dimension of interior trays</notes>
-	  <add>
-	    <refer refTo = "outsideTrayZ" />
-	    <refer refTo = "SiThick" />
-	  </add>
-	</const>
-
--->
       </derCategory>
       <derCategory name="derACD" save="true">
         <overview>
@@ -1259,11 +1224,37 @@ grid flange        </prim>
         <idField name="fLadder" step="1" value="0" />
       </axisMPos>
     </stackX>
+    <!--  Now make all the other boxes we need for TKR:
+     * Core box for inner layers                     TKRCoreReg
+     * Core box for outer (top and bottom) layers    TKRCoreOuter
+     * bias board box (include glue to attach Si)    TKRBiasBox
+     * face sheet for regular layers, includes glue  TKRFaceReg
+       attaching to closeout/core
+     * face sheet for superGLAST layers, includes    TKRFaceSup
+       glue attaching to closeout/core
+     * glue box of "default" thickness (.100 mm);    TKRGlueDef
+       that is, glue not touching Si or core.
+     * SiLayer (Actually a choice element.  Most applications want
+       a detailed view with individual wafers, but someone might
+       be happy with just a slab of silicon.)
+ -->
     <box X="363.1" Y="363.1" Z="27.92" name="TKRCoreReg" material="FOAM05" sensitive="false" unitAngle="deg" unitLength="mm" />
     <box X="363.1" Y="363.1" Z="34.27" name="TKRCoreOuter" material="FOAM05" sensitive="false" unitAngle="deg" unitLength="mm" />
     <box X="363.1" Y="363.1" Z="0.4" name="SiLayerBox" material="Si" sensitive="true" unitAngle="deg" unitLength="mm" />
+    <!--   Just a single sheet. For convenience make a box the thickness of
+      bias board + glue adjacent to Si   -->
+    <box X="360.6" Y="360.6" Z="0.25" name="TKRBiasBox" material="Vacuum" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="360.6" Y="360.6" Z="0.275" name="TKRFaceReg" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="360.6" Y="360.6" Z="0.365" name="TKRFaceSup" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="360.6" Y="360.6" Z="0.100" name="TKRGlueDef" material="Vacuum" sensitive="false" unitAngle="deg" unitLength="mm" />
     <!--  No explicit material, so vacuum -->
-    <box X="363.1" Y="363.1" Z="0.4" name="SiLayerEnv" material="Vacuum" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <!--  probably not needed..
+    <box name="SiLayerEnv"    
+      XREF="TKRTrayWidth"
+      YREF="TKRTrayWidth"
+      ZREF="SiThick" 
+      materialREF="vacuumMat"/>
+  -->
     <!--  The unrotated wafer is segmented along the x axis, hence measures X,
      hence is an X layer
  
@@ -1278,42 +1269,75 @@ grid flange        </prim>
     <composition name="SiWaferNest" envelope="SiWafer">
       <posXYZ S="0" X="0" Y="0" Z="0" xrot="0" yrot="0" zrot="0" volume="SiWaferActive" unitAngle="deg" unitLength="mm" />
     </composition>
+    <!--        ************* new stuff (ladders) *************   -->
+    <stackY name="ladder" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="0" gap0="0" ncopy="4" shift="89.525" shift0="0" volume="SiWaferNest" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fWafer" step="1" value="0" />
+      </axisMPos>
+    </stackY>
+    <stackX name="SiLadders" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="0" gap0="0" ncopy="4" shift="89.7" shift0="0" volume="ladder" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fLadder" step="1" value="0" />
+      </axisMPos>
+    </stackX>
+    <!--        ************* end new stuff (ladders) *************   -->
     <!--  identify wafers by their position along stack in direction
      of measurement.                                          
      strip id in glastsim style is then 
            local(in wafer)-strip# + strips-per-wafer * wafer-id
  -->
-    <!--        Try stacking in Y first to make a ladder.     -->
-    <stackY name="ladder" origin="atCentre">
-      <axisMPos dX="0" dY="0" dZ="0" gap="0" gap0="0" ncopy="4" shift="89.525" shift0="0" volume="SiWaferNest" rotation="0" unitAngle="deg" unitLength="mm">
-        <idField name="fWafer" step="1" value="0" />
-      </axisMPos>
-    </stackY>
-    <stackX name="towerLayerWafers" origin="atCentre">
-      <axisMPos dX="0" dY="0" dZ="0" gap="0" gap0="0" ncopy="4" shift="89.7" shift0="0" volume="ladder" rotation="0" unitAngle="deg" unitLength="mm">
-        <idField name="fLadder" step="1" value="0" />
-      </axisMPos>
-    </stackX>
-    <!--  The collection of wafers is centered in the volume -->
-    <composition name="SiLayerComp" envelope="SiLayerEnv">
-      <posXYZ S="0" X="0" Y="0" Z="0" xrot="0" yrot="0" zrot="0" volume="towerLayerWafers" unitAngle="deg" unitLength="mm" />
+    <!--  The collection of wafers is centered in the volume
+
+          don't think this is needed
+    <composition name="SiLadders" envelope="SiLayerEnv">
+      <posXYZ volume="towerLayerWafers" />
     </composition>
+ -->
     <!--  Should we even bother with a choice here?  All clients
      probably want the more detailed SiLayerComp structure -->
     <choice name="SiLayer">
       <case mode="fastmc" volume="SiLayerBox" />
-      <case mode="digi" volume="SiLayerComp" />
-      <case mode="recon" volume="SiLayerComp" />
-      <case mode="propagate" volume="SiLayerComp" />
+      <case mode="digi" volume="SiLadders" />
+      <case mode="recon" volume="SiLadders" />
+      <case mode="propagate" volume="SiLadders" />
     </choice>
     <!--  actually includes all inactive materials except core, conv -->
-    <box X="360.6" Y="360.6" Z="0.625" name="TKRFaceUpperReg" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
-    <box X="360.6" Y="360.6" Z="0.715" name="TKRFaceUpperSuper" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
-    <box X="360.6" Y="360.6" Z="0.625" name="TKRFaceLowerNoCnv" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
-    <box X="360.6" Y="360.6" Z="0.35" name="TKRBelowCnv" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
-    <box X="360.6" Y="360.6" Z="0.465" name="TKRFaceToCnvSuper" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
-    <box X="360.6" Y="360.6" Z="0.375" name="TKRFaceToCnvReg" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
-    <box X="360.6" Y="360.6" Z="0.275" name="TKRFaceOutside" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <!--  I think all of the following included in this comment are
+     now defunct.
+
+    <box name="TKRFaceUpperReg"  
+	 XREF="faceWidth" 
+	 YREF="faceWidth" 
+	 ZREF="inactiveThickUpperReg" materialREF="TKRFaceMat" />
+    <box name="TKRFaceUpperSuper"  
+	 XREF="faceWidth" 
+	 YREF="faceWidth" 
+	 ZREF="inactiveThickUpperSuper" materialREF="TKRFaceMat" />
+
+    <box name="TKRFaceLowerNoCnv"  
+	 XREF="faceWidth" 
+	 YREF="faceWidth" 
+	 ZREF="inactiveThickLowerNoCnv" materialREF="TKRFaceMat" />
+
+    <box name="TKRBelowCnv"  
+	 XREF="faceWidth" 
+	 YREF="faceWidth" 
+	 ZREF="inactiveThickBelowCnv" materialREF="TKRFaceMat" />
+
+    <box name="TKRFaceToCnvSuper"  
+	 XREF="faceWidth" 
+	 YREF="faceWidth" 
+	 ZREF="inactiveThickToCnvSuper" materialREF="TKRFaceMat" />
+
+    <box name="TKRFaceToCnvReg"  
+	 XREF="faceWidth" 
+	 YREF="faceWidth" 
+	 ZREF="inactiveThickToCnvReg" materialREF="TKRFaceMat" />
+    <box name="TKRFaceOutside"  
+	 XREF="faceWidth" 
+	 YREF="faceWidth" 
+	 ZREF="inactiveThickOutside" materialREF="TKRFaceMat" />
+ -->
     <!--  Trays come in 3 flavors: top tray, bottom tray and middle tray.
      These are further subdivided by thickness of converter layer which
      may be any of 
@@ -1322,9 +1346,11 @@ grid flange        </prim>
           "normal" thickness (middle and top only)  -->
     <!--  Make a stack for the bottom tray -->
     <stackZ name="trayBot" origin="atStart">
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceOutside" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceReg" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRCoreOuter" rotation="0" unitAngle="deg" unitLength="mm" />
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceUpperReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRGlueDef" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBiasBox" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="SiLayer" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTrayCmp" step="0" value="1" />
       </axisPos>
@@ -1334,9 +1360,13 @@ grid flange        </prim>
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="SiLayer" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTrayCmp" step="0" value="0" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceLowerNoCnv" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBiasBox" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRGlueDef" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceReg" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRCoreReg" rotation="0" unitAngle="deg" unitLength="mm" />
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceUpperReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRGlueDef" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBiasBox" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="SiLayer" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTrayCmp" step="0" value="1" />
       </axisPos>
@@ -1346,13 +1376,17 @@ grid flange        </prim>
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="SiLayer" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTrayCmp" step="0" value="0" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBelowCnv" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBiasBox" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRGlueDef" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="convSuperArray" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTrayCmp" step="0" value="2" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceToCnvSuper" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRGlueDef" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceSup" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRCoreReg" rotation="0" unitAngle="deg" unitLength="mm" />
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceUpperSuper" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceSup" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRGlueDef" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBiasBox" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="SiLayer" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTrayCmp" step="0" value="1" />
       </axisPos>
@@ -1362,13 +1396,17 @@ grid flange        </prim>
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="SiLayer" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTrayCmp" step="0" value="0" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBelowCnv" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBiasBox" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRGlueDef" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="convRegArray" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTrayCmp" step="0" value="2" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceToCnvReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRGlueDef" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceReg" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRCoreReg" rotation="0" unitAngle="deg" unitLength="mm" />
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceUpperReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRGlueDef" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBiasBox" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="SiLayer" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTrayCmp" step="0" value="1" />
       </axisPos>
@@ -1378,13 +1416,15 @@ grid flange        </prim>
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="SiLayer" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTrayCmp" step="0" value="0" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBelowCnv" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBiasBox" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRGlueDef" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="convRegArray" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTrayCmp" step="0" value="2" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceToCnvReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRGlueDef" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceReg" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRCoreOuter" rotation="0" unitAngle="deg" unitLength="mm" />
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceOutside" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceReg" rotation="0" unitAngle="deg" unitLength="mm" />
     </stackZ>
     <!--  make a tracker by stacking up the trays -->
     <stackZ name="oneTKRStack" origin="atStart">
@@ -1468,6 +1508,53 @@ grid flange        </prim>
     <composition name="oneTKR" envelope="TKRStayClearBox">
       <posXYZ S="0" X="0" Y="0" Z="0" xrot="0" yrot="0" zrot="0" volume="oneTKRStack" unitAngle="deg" unitLength="mm" />
     </composition>
+    <!--    Obsolete stuff.  Superseded by ladder definitions above because
+        only Si is in ladders. 
+    <stackZ name="topWafer" >
+      <axisPos volume="upperBiasBox" />
+      <axisPos volume="SiWaferNest" />
+    </stackZ>
+
+    <stackY name="topLadder" >
+      <axisMPos volume="topWafer" ncopyREF="nWaferAcross"
+                                       shiftREF="waferPitch" >
+        <idField name="fWafer" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+    <stackX name="topLadders" >
+      <axisMPos volume="topLadder" ncopyREF="nWaferAcross"
+                                   shiftREF="ladderPitch" >
+        <idField name="fLadder" value="0" step="1" />
+      </axisMPos>
+    </stackX>
+
+    <stackZ name="botWaferNoCnv" >
+      <axisPos volume="SiWaferNest" />
+      <axisPos volume="lowerBiasBox" />
+    </stackZ>
+
+    <stackY name="botLadderNoCnv" >
+      <axisMPos volume="botWaferNoCnv" ncopyREF="nWaferAcross"
+                                       shiftREF="waferPitch" >
+        <idField name="fWafer" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+    <stackX name="botLaddersNoCnv" >
+      <axisMPos volume="botLadderNoCnv" ncopyREF="nWaferAcross"
+                                   shiftREF="ladderPitch" >
+        <idField name="fLadder" value="0" step="1" />
+      </axisMPos>
+    </stackX>
+-->
+    <!-- 
+    <box name="lowerBiasBox"
+         XREF="SiWaferSide"
+         YREF="SiWaferSide"
+         ZREF="lowerBiasGlueThick"
+         materialREF="TKRBiasBoardMat" />
+-->
     <!--  next need to put together oneCAL and oneTKR with necessary
      structural stuff to make a tower.  Front plane of grid
      defines Z = 0 (Steve Ritz memo) -->

@@ -22,7 +22,7 @@ TKR Stay Clear envelope from LAT-DS-00038-2</prim>
             material in super-GLAST layers in mm (as of 15 oct 2001)</prim>
         <prim name= "faceThick" value= "0.200">Face sheet thickness
             for all but super-glast layers (as of 15oct01)</prim>
-        <prim name= "faceThickSuper" value= "0.290">Face sheet thickness
+        <prim name= "faceSupThick" value= "0.290">Face sheet thickness
             for super-glast layers (15oct01)</prim>
         <prim name="biasPlaneThick" value="0.100">Thickness of bias
             plane (15oct01)</prim>
