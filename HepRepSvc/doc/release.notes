@@ -16,4 +16,5 @@
  * v0r12p1  18-01-05 LR Improved TrackFiller and VtxFiller
  * v0r12p2  26-01-05 LR Improved TrackFiller and ClusterFiller
  * v0r12p3  11-02-05 LR Add markers to clusters!
+ * v0r12p4  26-02-05 LR Changed markers to little x's; added info to Vertex
 */
