@@ -29,7 +29,7 @@ fi
 dnl The following should be a m4 macro when I learn how to write one.
 dnl -- Paul_Kunz@slac.stanford.edu
 if test -d $srcdir/../analysis ; then
-   LIBANALYSIS="\$(top_buildddir)/../analysis/src/libanalysis.la"
+   LIBANALYSIS="\$(top_builddir)/../analysis/src/libanalysis.la"
 else
    LIBANALYSIS=$glast_prefix/lib/libanalysis.la
 fi
