@@ -1,12 +1,12 @@
 package CalRecon
-version v3
+version v5r0
 
 branches src mgr doc
 
 use GuiSvc v3*
 use Event v8*
-use GlastSvc v7*
-use GlastDigi v2*
+use GlastSvc v8*
+use GlastDigi v3*
 use geometry v3*
 
 apply_pattern package_include
