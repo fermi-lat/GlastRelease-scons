@@ -8,6 +8,7 @@
 // includes
 #include "Gaudi/Kernel/Service.h"
 #include "Gaudi/Interfaces/IIncidentListener.h"
+#include "GuiSvc/IGuiSvc.h"
 
 //forward declarations
 namespace gui { class GuiMgr; }
@@ -15,8 +16,8 @@ template <class TYPE> class SvcFactory;
 
 /*!  
 */
-class GuiSvc :  public Service,
-     virtual public IIncidentListener
+class GuiSvc :  public Service, virtual public IIncidentListener, 
+                virtual public IGuiSvc
 {  
 
 
