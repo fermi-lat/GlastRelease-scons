@@ -1,10 +1,11 @@
+// 
+// @file ParticleTransporter.cxx
+// @brief Source code for the ParticleTransporter Class
+// @author Tracy Usher
+//
 // File and Version Information:
 // $Header$
 //
-// Description: Geant4 class for particle transport management
-//
-// Author(s):
-//      T.Usher
 
 #include "ParticleTransporter.h"
 #include "CLHEP/Geometry/Transform3D.h"
@@ -16,9 +17,16 @@
 #include <algorithm>
 
 //Constructor for the propagator class
-ParticleTransporter::ParticleTransporter(const G4TransportationManager* TransportationManager) 
+ParticleTransporter::ParticleTransporter(const G4TransportationManager* TransportationManager,
+                                               IG4GeometrySvc* geoSvc) 
 {
+  // Purpose and Method: Constructor for the ParticleTransporter class
+  // Inputs: Pointers to the G4TransportationManager and the G4GeometrySvc interface 
+  // Outputs:  None
+  // Dependencies: None
+  // Restrictions and Caveats: None
   m_TransportationManager = TransportationManager;
+  m_geometrySvc           = geoSvc;
 
   clearStepInfo();
 
@@ -27,6 +35,11 @@ ParticleTransporter::ParticleTransporter(const G4TransportationManager* Transpor
 
 ParticleTransporter::~ParticleTransporter()
 {
+  // Purpose and Method: Destructor for the ParticleTransporter class
+  // Inputs: None 
+  // Outputs:  None
+  // Dependencies: None
+  // Restrictions and Caveats: None
   clearStepInfo();
     
   return;
@@ -44,7 +57,7 @@ void ParticleTransporter::setInitStep(const Point& start,  const Vector& dir)
   //Clean out any previous step information
   clearStepInfo();
 
-  //Initialize our starting condtions
+  //Store the starting point and direction
   startPoint  = start;
   startDir    = dir;
 
@@ -53,7 +66,7 @@ void ParticleTransporter::setInitStep(const Point& start,  const Vector& dir)
   G4VPhysicalVolume* pVolume   = navigator->LocateGlobalPointAndSetup(startPoint, 0, false);
 
   //Record our starting point
-  stepInfo.push_back(TransportStepInfo(startPoint, 0., pVolume));
+  stepInfo.push_back(TransportStepInfo(startPoint, 0.));
 
   return;
 }
@@ -62,11 +75,12 @@ void ParticleTransporter::setInitStep(const Point& start,  const Vector& dir)
 //length
 bool ParticleTransporter::transport(const double step)
 {
-  // Purpose and Method: Uses Geant4 to do the transport of the particle from
-  //                     initial to final points
-  // Inputs:  None, requires initialization via SetInitStep
+  // Purpose and Method: Uses Geant4 to do the transport of the track from
+  //                     initial to final points. 
+  // Inputs:  step - arclength to step through. If step is negative, then will
+  //          attempt to step until reaching the next sensitive via StepToNextPlane.
   // Outputs:  bool, returns true if target stop point reached, false otherwise
-  // Dependencies: None
+  // Dependencies: Requires initialization via SetInitStep
   // Restrictions and Caveats: None
 
   if (step >= 0.) return StepAnArcLength(step);
@@ -74,15 +88,16 @@ bool ParticleTransporter::transport(const double step)
 }
 
 
-//This method does the track either to the next sensitive plane or to some arc
+//This method does the track either to the next sensitive plane or to some max arc
 //length
 bool ParticleTransporter::StepToNextPlane()
 {
   // Purpose and Method: Uses Geant4 to do the transport of the particle from
   //                     initial to final points
-  // Inputs:  None, requires initialization via SetInitStep
+  // ***** This method is no longer supported and remains for historical purposes *****
+  // Inputs:  None 
   // Outputs:  bool, returns true if target stop point reached, false otherwise
-  // Dependencies: None
+  // Dependencies: Requires initialization via SetInitStep
   // Restrictions and Caveats: None
 
   G4Navigator*  navigator      = m_TransportationManager->GetNavigatorForTracking();
@@ -145,7 +160,7 @@ bool ParticleTransporter::StepToNextPlane()
       //Where did we end up?
       G4ThreeVector newPoint = curPoint + trackLen * curDir;
 
-      stepInfo.push_back(TransportStepInfo(newPoint, trackLen, pCurVolume));
+      stepInfo.push_back(TransportStepInfo(newPoint, trackLen));
 
       arcLen     += trackLen;
       curPoint    = newPoint;
@@ -181,9 +196,9 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
 {
   // Purpose and Method: Uses Geant4 to do the transport of the particle from
   //                     initial to final points
-  // Inputs:  None, requires initialization via SetInitStep
+  // Inputs:  None 
   // Outputs:  bool, returns true if target stop point reached, false otherwise
-  // Dependencies: None
+  // Dependencies: Requires initialization via SetInitStep
   // Restrictions and Caveats: None
 
   G4Navigator*  navigator   = m_TransportationManager->GetNavigatorForTracking();
@@ -248,7 +263,7 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
         }
 
         //Store current step info
-        stepInfo.push_back(TransportStepInfo(curPoint, trackLen, pCurVolume));
+        stepInfo.push_back(TransportStepInfo(curPoint, trackLen));
       }
   }
 
@@ -258,6 +273,12 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
 
 G4VPhysicalVolume* ParticleTransporter::findSiLadders(G4VPhysicalVolume* pVolume) const
 {
+  // Purpose and Method: Search the volume tree to see if we are inside an "SiLadders" volume
+  // Inputs:  Pointer to the starting G4VPhysicalVolume 
+  // Outputs:  bool, returns true if target stop point reached, false otherwise
+  // Dependencies: Requires initialization via SetInitStep
+  // Restrictions and Caveats: None
+
     G4VPhysicalVolume* volume = pVolume;
 
     while(volume)
@@ -338,6 +359,25 @@ double ParticleTransporter::insideActiveLocalX() const
     Vector unitX(1.,0.,0.);
     return distanceToClosestEdge(unitX);
 }
+
+double ParticleTransporter::getTotalArcLen() const
+{
+  // Purpose and Method: Calculates the total arc length traversed through all steps
+  // Inputs:  None
+  // Outputs:  Total arc length traversed
+  // Dependencies: Must have first tracked a particle through some volumes...
+  // Restrictions and Caveats: None
+
+    double arcLen = 0;
+
+    //Set up iterator for stepping through all the layers
+    ConstStepPtr stepPtr = getStepStart();
+
+    while(stepPtr < getStepEnd()) arcLen += (*stepPtr++).GetArcLen();
+
+    return arcLen;
+}
+
 
 //Finds the distance to the closest active edge in a given direction and its opposite
 double ParticleTransporter::distanceToClosestEdge(const Vector& dir) const
@@ -497,6 +537,37 @@ double ParticleTransporter::distanceToEdge(const Vector& dir) const
   return distToActArea;
 }
 
+ParticleTransporter::ConstStepPtr ParticleTransporter::getStepAtArcLen(double arcLen) const
+{
+  // Purpose and Method: Goes through step list to find the step a distance arcLen from start
+  // Inputs:  None
+  // Outputs:  a constant iterator to the step
+  // Dependencies: None
+  // Restrictions and Caveats: None
+
+    ConstStepPtr stepPtr = stepInfo.begin();
+
+    // If arcLen is negative then want last step
+    if (arcLen < 0.) stepPtr = stepInfo.end();
+    // Otherwise, go through the steps until we pass the desired distance
+    else
+    {
+        double stepArcLen = 0.;
+
+        while(stepPtr < stepInfo.end())
+        {
+            double stepDist = (*stepPtr).GetArcLen();
+
+            if (stepArcLen + stepDist > arcLen) break;
+
+            stepArcLen += stepDist;
+            stepPtr++;
+        }
+    }
+
+    return stepPtr;
+}
+
 
 void ParticleTransporter::clearStepInfo()
 {
@@ -516,6 +587,38 @@ void ParticleTransporter::clearStepInfo()
   return;
 }
 
+
+//Starting the the current volume, this builds the complete volume identifier
+//string needed to specify where we are in the GLAST world
+idents::VolumeIdentifier ParticleTransporter::constructId(G4VPhysicalVolume* pVolume) const
+{
+    // Purpose and Method: Constructs the complete volume indentifier from current
+    //                     volume
+    // Inputs: A pointer to a G4VPhysicalVolume object giving the current
+    //         (starting) volume
+    // Outputs:  a VolumeIdentifier
+    // Dependencies: Requires that the volume - idents map has been found
+    // Restrictions and Caveats: None
+  
+    using  idents::VolumeIdentifier;
+    VolumeIdentifier ret;
+
+    // Loop through volumes until there is no longer a mother volume
+    while(pVolume->GetMother())
+    {
+        // Look up the identifier for this volume
+        //VolumeIdentifier id = (*m_IdMap)[pVolume];
+        VolumeIdentifier id = m_geometrySvc->getVolumeIdent(pVolume);
+
+        // Add this volume's identifier to our total id
+        ret.prepend(id);
+
+        // Get next higher volume
+        pVolume = pVolume->GetMother();
+    }
+
+    return ret;
+}
  
 void ParticleTransporter::printStepInfo(std::ostream& str) const
 {
@@ -530,26 +633,47 @@ void ParticleTransporter::printStepInfo(std::ostream& str) const
   ConstStepPtr iter    = getStepStart();
   double       arcLen  = 0.;
   int          stepCnt = 0;
+  double       x0sTot  = 0.;
 
   while(iter < getStepEnd())
   {
       TransportStepInfo  stepInfo   = *iter++;
-      G4VPhysicalVolume* pCurVolume = stepInfo.GetVolume();
       G4ThreeVector      position   = stepInfo.GetCoords();
+      G4ThreeVector      entryPoint = position;
+      G4VPhysicalVolume* pCurVolume = getVolume(position, true);
       G4Material*        pMaterial  = pCurVolume->GetLogicalVolume()->GetMaterial();
+      G4String           volName    = printVolName(pCurVolume);
       double             matRadLen  = pMaterial->GetRadlen();
       double             x0s        = 0.;
       double             stepDist   = stepInfo.GetArcLen();
 
       if (matRadLen > 0.) x0s = stepDist / matRadLen;
 
+      x0sTot += x0s;
+
       arcLen += stepDist;
 
-      G4String           volName = printVolName(pCurVolume);
+      entryPoint -= stepDist * startDir;
 
-      str << "   Step " << ++stepCnt << ", Volume: " << volName << "\n" 
-          << ", position: " << position << ", step: " << stepDist << ", radlens: " << x0s << "\n";
-                
+      //str << "   Step " << ++stepCnt << ", Volume: " << volName << "\n" 
+      //    << ", position: " << position << ", step: " << stepDist << ", radlens: " << x0s << "\n";
+
+      idents::VolumeIdentifier volId = constructId(pCurVolume);
+
+      str << "   Step " << ++stepCnt << ", Volume: " << pCurVolume->GetName() << ":" << volId.name() 
+          << ", entry position: " << entryPoint << "\n   step length: " << stepDist << ", radlens: " 
+          << x0s << ", total: " << x0sTot << "\n";
+
+      if (volId.size()!=9) continue;
+      // check that it's really a TKR hit (probably overkill)
+      if (!(volId[0]==0 && volId[3]==1 && volId[6] < 2)) continue; // !(LAT && TKR && Active)
+
+      int trayNum = volId[4];
+      int botTop  = volId[6];
+      int view    = volId[5];
+      int layer   = trayNum - 1 + botTop;
+
+      str << "   ---> Sense Layer: " << layer << ", view: " << view << ", Bot/Top: " << botTop << "\n";          
   }
   str <<"   Total Step length: "<< arcLen <<"\n";
 
@@ -558,9 +682,42 @@ void ParticleTransporter::printStepInfo(std::ostream& str) const
 
 G4String ParticleTransporter::printVolName(const G4VPhysicalVolume* pCurVolume) const
 {
+  // Purpose and Method: Builds a string containing the entire volume name, from top 
+  //                     mother volume to that specified by pCurVolume
+  // Inputs:  Pointer to the lowest level G4VPhysicalVolume 
+  // Outputs:  bool, returns true if target stop point reached, false otherwise
+  // Dependencies: None
+  // Restrictions and Caveats: None
+
     if (pCurVolume)
     {
         return "(" + pCurVolume->GetName() + printVolName(pCurVolume->GetMother()) + ")";
     }
     else return " ";
+}
+
+G4VPhysicalVolume* ParticleTransporter::getVolume(G4ThreeVector& position, bool fudge) const
+{
+  // Purpose and Method: Returns a pointer to the lowest level G4PhysicalVolume
+  //                     which contains the point given in the variable position
+  // Inputs:  The position and a bool to control use of a fudge to displace point
+  //          off of the surface if at the edge of a volume.
+  // Outputs:  bool, returns true if target stop point reached, false otherwise
+  // Dependencies: Requires initialization via SetInitStep
+  // Restrictions and Caveats: None
+
+  G4Navigator*  navigator = m_TransportationManager->GetNavigatorForTracking();
+  G4ThreeVector curPoint  = position;
+
+  // If known to be on a boundary then back up to be sure to be inside the volume
+  if (fudge)
+  {
+    G4ThreeVector displacement = -0.001 * startDir;
+    curPoint += displacement; 
+  }
+
+  // Look up current volume and set tree above it
+  G4VPhysicalVolume* pCurVolume = navigator->LocateGlobalPointAndSetup(curPoint, 0, true, true);
+
+  return pCurVolume;
 }

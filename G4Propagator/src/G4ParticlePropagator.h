@@ -8,6 +8,7 @@
 #include "idents/VolumeIdentifier.h"
 
 #include "GlastSvc/Reco/IKalmanParticle.h"
+#include "GlastSvc/Reco/IPropagator.h"
 #include "ParticleTransporter.h"
 
 #include <vector>
@@ -24,13 +25,17 @@
 * Geant4 tracking routines.  The interface is adapted from that used for
 * RCparticle, the gismo propagator.
 *
+* This version has now been turned into an interface to G4PropagationTool,
+* which is interfaced through the IPropagator interface class.
+* April 21, 2003 Tracy Usher
+*
 * @author Tracy Usher
 *
 */
 
 //Class definition for the Geant 4 particle propagator
 //class G4ParticlePropagator : public IParticlePropagator 
-class G4ParticlePropagator : public ParticleTransporter, public IKalmanParticle
+class G4ParticlePropagator : public IKalmanParticle
 {
 public: 
   /// Method to return pointer to the singleton object (and instantiate if not
@@ -41,7 +46,7 @@ public:
     virtual void      setStepStart(const Point& start, 
                                    const Vector& dir, 
                                    const double step) 
-      {setInitStep(start,dir);transport(step);}
+    {m_propagator->setStepStart(start,dir); m_propagator->step(step);}
     virtual bool      trackToNextPlane();
     virtual bool      trackToNextSamePlane();
     virtual int       numberPlanesCrossed() const;
@@ -49,8 +54,8 @@ public:
     virtual double    insideActLocalX() const;
     virtual double    insideActLocalY() const;
     virtual bool      stripIsLive() const {return true;} //Not implemented
-    virtual Point     position()  const;
-    virtual Point     position(double arcLen) const {return position() + s * getStartDir();}
+    virtual Point     position()  const             {return m_propagator->getPosition();}
+    virtual Point     position(double arcLen) const {return m_propagator->getPosition(arcLen);}
     virtual double    arcLength() const;
     virtual double    radLength() const;
     virtual double    radLength(double arcLen) const;
@@ -65,12 +70,11 @@ private:
     G4ParticlePropagator();
    ~G4ParticlePropagator();
 
-    /// Builds the volume identifier starting from the current volume
-    idents::VolumeIdentifier constructId(G4VPhysicalVolume* pVolume) const;
-
     /// Private data
     /// Pointer to the class to make it a singleton
     static G4ParticlePropagator* m_instance;
+
+    IPropagator* m_propagator;
 };
 
 #endif

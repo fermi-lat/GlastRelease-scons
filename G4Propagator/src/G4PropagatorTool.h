@@ -12,6 +12,7 @@
 */
 
 #include "GlastSvc/Reco/IPropagatorTool.h"
+#include "GlastSvc/Reco/IPropagator.h"
 #include "G4Generator/IG4GeometrySvc.h"
 #include "G4ParticlePropagator.h"
 
@@ -35,6 +36,9 @@ class G4PropagatorTool : public AlgTool, virtual public IPropagatorTool
 
   /// This is needed for associating Geant4 volumes to Glast identifiers
   static IG4GeometrySvc* geometrySvc;
+
+  /// This is needed for associating Geant4 volumes to Glast identifiers
+  static IPropagator* propagatorTool;
   
  private:
 };

@@ -10,4 +10,5 @@
 
 DECLARE_FACTORY_ENTRIES(G4Propagator) {
     DECLARE_TOOL( G4PropagatorTool );
+    DECLARE_TOOL( G4PropagationTool );
 } 
