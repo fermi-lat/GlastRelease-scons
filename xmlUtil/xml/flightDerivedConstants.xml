@@ -1412,8 +1412,9 @@ grid, etc. (may be superseded by info from Eric)</notes>
           </max>
         </const>
 
-        <const name="bigDim" >
-          <notes>Something big enough to position everything inside,
+        <const name="bigXZDim" >
+          <notes>Something big enough (for X and Z) to position 
+                 everything inside,
                  with origin where it should be, at the very front
                  of the grid.</notes>
           <mul>
@@ -1426,6 +1427,106 @@ grid, etc. (may be superseded by info from Eric)</notes>
               <refer refTo = "ACDTotalXSide" />
             </max>
           </mul>
+        </const>
+
+        <const name="NADTotalPanelLen" >
+          <notes>Length of panel proper plus connecting rod</notes>
+          <add>
+            <refer refTo="NADSolarRodLength" />
+            <refer refTo="NADSolarPLength" />
+          </add>
+        </const>
+
+
+        <const name="bigYDim" >
+          <notes>Something big enough to use as Y dimension of
+                 envelope (takes into account solar panels)
+                 </notes>
+          <mul>
+            <const value = "2" uType="count" />
+            <add>
+              <refer refTo="NADTotalPanelLen" />
+              <const value = "100" />          
+              <refer refTo="NADSpacecraftR" />
+            </add>
+          </mul>
+        </const>
+             
+
+        <const name="solarPanel_dy" >
+          <notes>y-displacement of panel-only part of solar panel w.r.t.
+                 envelope including panel and connecting rod</notes>
+          <quo>
+            <refer refTo="NADSolarRodLength" />
+            <const value="2" uType="count" />
+          </quo>
+        </const>
+
+        <const name="solarRod_dy" >
+          <notes>y-displacement of rod part of solar panel w.r.t.
+                 envelope including panel and connecting rod</notes>
+          <uminus>
+            <quo>
+              <refer refTo="NADSolarPLength" />
+              <const value="2" uType="count" />
+            </quo>
+          </uminus>
+        </const>
+
+        <const name="solarPanelEnv_dy" >
+          <notes>y-displacement of entire (+Y) solar panel envelope w.r.t.
+                 Ritz origin.</notes>
+          <add>
+            <refer refTo="NADSpacecraftR" />
+            <quo>
+              <refer refTo="NADTotalPanelLen" />
+              <const value="2" uType="count" />
+            </quo>
+          </add>
+        </const>
+        
+        <const name="solarPanelEnv_dyn" >
+          <notes>y-displacement of entire (-Y) solar panel envelope w.r.t.
+                 Ritz origin.</notes>
+          <uminus>
+            <refer refTo="solarPanelEnv_dy" />
+          </uminus>
+        </const>
+
+        <!-- Put solar panels just halfway down the spacecraft -->
+        <const name="solarPanelEnv_dz" >
+          <notes>z-displacement of entire solar panel envelope w.r.t.
+                 Ritz origin.</notes>
+          <refer refTo="spacecraft_dz" />
+        </const>
+
+        <const name="solarPanelSi_dz" >
+          <notes>z-displacement of Si part of solar panel w.r.t.
+                 envelope including panel and connecting rod</notes>
+          <quo>
+            <refer refTo="NADSolarCoreThick" />
+            <const value="2" uType="count" />
+          </quo>
+        </const>
+
+        <const name="solarPanelCore_dz" >
+          <notes>z-displacement of core part of solar panel w.r.t.
+                 envelope including panel and connecting rod</notes>
+          <uminus>
+            <quo>
+              <refer refTo="NADSolarSiThick" />
+              <const value="2" uType="count" />
+            </quo>
+          </uminus>
+        </const>
+          
+
+        <const name="NADSolarRodDiam" >
+          <notes>Diameter of rods connecting solar panels to spacecraft</notes>
+          <add>
+            <refer refTo="NADSolarRodR" />
+            <refer refTo="NADSolarRodR" />
+          </add>
         </const>
 
         <const name="LATZHalf" >

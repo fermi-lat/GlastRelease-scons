@@ -32,6 +32,7 @@
     <!ENTITY ACDAcd         SYSTEM "flightACDAcd.xml">
 
     <!ENTITY NADDimPrim     SYSTEM "flightNADDimPrim.xml">
+    <!ENTITY NADGeo         SYSTEM "flightNADGeo.xml">
 
     <!ENTITY Derived        SYSTEM "flightDerivedConstants.xml">
     <!ENTITY Primary        SYSTEM "flightPrimaryConstants.xml">
@@ -89,28 +90,13 @@
          XREF="LATX" YREF="LATY" ZREF="LATZ" />
  -->
     <box name="LATenv" 
-         XREF="bigDim" YREF="bigDim" ZREF="bigDim" />
+         XREF="bigXZDim" YREF="bigYDim" ZREF="bigXZDim" />
 
 
 &CALOneCal;
 &TKROneTkr;
+&NADGeo;
 
-<!-- Define boxes for blanket:  top, X-side and Y-side -->
-    <box name="blanketTop" 
-         XREF="NADBlanketTopX" YREF="NADBlanketTopY" 
-         ZREF="NADBlanketThick" materialREF="blanketMat" />
-      
-    <box name="blanketXSide" 
-         XREF="NADBlanketSideX" YREF="NADBlanketThick" 
-         ZREF="NADBlanketSideZ" materialREF="blanketMat" />
-      
-    <box name="blanketYSide" 
-         XREF="NADBlanketThick" YREF="NADBlanketSideY" 
-         ZREF="NADBlanketSideZ" materialREF="blanketMat" />
-      
-<!-- define cylinder for spacecraft -->
-    <tubs name="spacecraft" ROutREF="NADSpacecraftR" ZREF="NADSpacecraftZ"
-          materialREF="spacecraftMat" />
 <!-- next need to put together oneCAL and oneTKR with necessary
      structural stuff to make a tower.  Front plane of grid
      defines Z = 0 (Steve Ritz memo) -->
@@ -128,59 +114,6 @@
 
   -->
 
-<!-- Add grid pieces.  There will be 4 per-tower
-    grid web pieces and 4 per-tower grid flange pieces.  Then
-    when all 16 towers have been assembled, will need to add on
-    4 extra pieces of each type since width of grid around the
-    outside is greater than the internal half-widths -->
-    <box name="towerGridFlangeLong" 
-      XREF="NADGridLenLong" YREF="NADGridFlangeInnerHalf" 
-      ZREF="NADGridFlangeZ" 
-      materialREF="CALGridMat">
-    </box>
-
-    <box name="towerGridFlangeShort" 
-      XREF="NADGridFlangeLenShort" YREF="NADGridFlangeInnerHalf" 
-         ZREF="NADGridFlangeZ" 
-         materialREF="CALGridMat">
-    </box>
-    <box name="towerGridWebLong" 
-      XREF="NADGridLenLong" YREF="NADGridWebInnerHalf" 
-      ZREF="NADGridWebZ" 
-      materialREF="CALGridMat">
-    </box>
-
-    <box name="towerGridWebShort" 
-      XREF="NADGridWebLenShort" YREF="NADGridWebInnerHalf" 
-         ZREF="NADGridWebZ" 
-         materialREF="CALGridMat">
-    </box>
-
-<!-- Large grid flange boxes -->
-    <box name="LATGridFlangeShort" 
-         XREF="NADGridFlangeOutsideLenShort"
-         YREF="NADGridFlangeOutsideWidth"
-         ZREF="NADGridFlangeZ"
-         materialREF="CALGridMat" />
-
-    <box name="LATGridFlangeLong" 
-         XREF="NADGridFlangeWidth"
-         YREF="NADGridFlangeOutsideWidth"
-         ZREF="NADGridFlangeZ"
-         materialREF="CALGridMat" />
-
-<!-- Large grid web boxes -->
-    <box name="LATGridWebShort" 
-         XREF="NADGridWebOutsideLenShort"
-         YREF="NADGridWebOutsideWidth"
-         ZREF="NADGridWebZ"
-         materialREF="CALGridMat" />
-
-    <box name="LATGridWebLong" 
-         XREF="NADGridWebWidth"
-         YREF="NADGridWebOutsideWidth"
-         ZREF="NADGridWebZ"
-         materialREF="CALGridMat" />
 
 
 <!-- Note dimensions of oneTower envelope will (should) be
@@ -448,6 +381,19 @@
         <idField name="fLATObjects" valueREF="eLATSpacecraft" />
       </posXYZ>
 
+      <!-- "Attach" solar panels to spacecraft along Y axis -->
+      <posXYZ volume="solarPanel" 
+              YREF="solarPanelEnv_dy" 
+              ZREF="solarPanelEnv_dz" >
+        <idField name="fLATObjects" valueREF="eLATPanelYPos" />
+      </posXYZ>
+
+      <posXYZ volume="solarPanel" 
+              xrot="180.0"
+              YREF="solarPanelEnv_dyn" 
+              ZREF="solarPanelEnv_dz" >
+        <idField name="fLATObjects" valueREF="eLATPanelYNeg" />
+      </posXYZ>
 
     </composition>
   </section>

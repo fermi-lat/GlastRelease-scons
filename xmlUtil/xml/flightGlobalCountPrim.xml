@@ -9,9 +9,11 @@
 (within towers)</prim>
   <prim name="eTowerGrid" value="2" uType="count">Id field value for
 grid (within towers)</prim>
+<!--
   <prim name="eRootLAT" value="0" uType="count">Id field value for LAT</prim>
   <prim name="eRootPanels" value="1" uType="count">Id field value for solar panels</prim>
   <prim name="eRootSC" value="2" uType="count">Id field value for spacecraft</prim>
+ -->
   <prim name="eLATTowers" value="0" uType="count">id field for towers
 (within LAT)</prim>
   <prim name="eLATACD" value="1" uType="count">id field for ACD
@@ -22,6 +24,16 @@ not within tower envelopes</prim>
 pieces of blanket</prim>
   <prim name="eLATSpacecraft" value="4" uType="count">id field value for
 spacecraft</prim>
+  <prim name="eLATPanelYNeg" value="5" uType="count">id field value for
+solar panel on Y- side</prim>
+  <prim name="eLATPanelYPos" value="6" uType="count">id field value for
+solar panel on Y+ side</prim>
+  <prim name="eSolarPanelSi" value="0" uType="count">id field value
+for Si part of a solar panel</prim>
+  <prim name="eSolarPanelCore" value="1" uType="count">id field value
+for core part of a solar panel</prim>
+  <prim name="eSolarPanelRod" value="2" uType="count">id field value
+for rod part of a solar panel</prim>
   <prim name="eMeasureX" value="0" uType="count">id field used for TKR
 Si and CAL layers</prim>
   <prim name="eMeasureY" value="1" uType="count">id field used for TKR
