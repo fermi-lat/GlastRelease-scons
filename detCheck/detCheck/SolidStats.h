@@ -145,7 +145,10 @@ namespace detCheck {
     LogVol *findLogVol(std::string name);
 
     /// Utility routine to set up materials map
-    void initMaterials(detModel::Gdd* gdd);
+    void initMaterials();
+
+    /// Utility used by @b report to output xml file version, etc. 
+    void outputVersion();
 
     /** Add a solid volume to solids map if it's not already there,
         initialize or update entries, and update volume accumulator.
