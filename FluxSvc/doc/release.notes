@@ -4,6 +4,8 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   13-aug-04  v6r13p6 jrb this is a mistake; will make another correct tag
+                          shortly ("tags are cheap")
    13-aug-04  v6r16p1 thb fix captialization, warnings
    13-aug-04  v6r16  thb restore GRB, which is now available in celestialSources
    13-aug-04  v6r15  thb remove GRB, since it is included in celestialSources
