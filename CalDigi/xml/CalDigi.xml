@@ -22,8 +22,11 @@
 	<item name="ePerMeVinDiode"     value="2.77e5"> MeV 1e6/3.6</item>
     </section>
     <section name="onePlusExpDigi">  digi properties
-	<item name="scaleExponential"     value="0.075"> scale factor on exponential</item>
-	<item name="scaleExponent"     value="0.1"> scale factor on exponent</item>
+	<item name="offset"     value="0.88"> constant offset</item>
+	<item name="scaleExponential"     value="0.30"> scale factor on exponential</item>
+	<item name="scaleExponent"     value="1.818"> scale factor on exponent</item>
+	<item name="scaleTurnoverExponential"     value="0.05"> scale factor Turnover on exponential</item>
+	<item name="scaleTurnoverExponent"     value="-32.6"> scale factor Turnover on exponent</item>
     </section>
 
 </calDigi>
