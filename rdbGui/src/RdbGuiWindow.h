@@ -44,7 +44,7 @@ private:
   rdbModel::XercesBuilder        *m_rdbBuilder;            // Builder of the rdb from the xml file
   rdbModel::MysqlConnection      *m_connect;               // Object to connect to a mysql db
   FXString                        m_lastDbSchema;          // last DB schema opened
-  
+
   
 protected:
   RdbGUIWindow(){}
@@ -66,7 +66,8 @@ public:
     ID_TOGGLERESULT,
     ID_PASTEFROMTABLE,
     ID_ABOUT,
-    ID_INSERT
+    ID_INSERT,
+    ID_UPDATELAST
     };
 
   // Message handlers
@@ -81,6 +82,7 @@ public:
   long onUpdResTableCols(FXObject*,FXSelector, void*);
   long onSendQuery(FXObject*,FXSelector, void*);
   long onInsert(FXObject*,FXSelector, void*);
+  long onUpdateLastRow(FXObject*,FXSelector, void*);
   // ..eccetera
   
 public:
@@ -92,9 +94,8 @@ public:
   virtual void create();
   
   // RdbGUIWindow destructor
-  virtual ~RdbGUIWindow();
-  
-  
+  virtual ~RdbGUIWindow(); 
+
 private:
 
   void loadXMLFile(FXString);

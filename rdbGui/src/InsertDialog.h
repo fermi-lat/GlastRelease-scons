@@ -9,6 +9,7 @@
 #include "rdbModel/Tables/Assertion.h"
 #include "rdbModel/Tables/Column.h"
 #include "rdbModel/Db/Connection.h"
+#include "rdbModel/Db/ResultHandle.h"
 
 class ColWidgetFactory;
 class ColWidget;
@@ -31,17 +32,26 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
   void setTableName(std::string name){m_tableName = name;} 
   void setUiLog(LogText* log){m_uiLog = log;};
   long onGoPress(FXObject*,FXSelector,void*);
+
+  /// Setter and getter for the last row inserted
+  int getLastRow(){return m_lastRow;};
+  void setLastRow(int l){m_lastRow = l;};
   
+  bool getInsertMode(){return m_insertMode;};
+  void setInsertMode(bool m){m_insertMode = m;};
+
+  void fillWithLastRow();
+
  protected:
   InsertDialog(){}
   InsertDialog(const InsertDialog&){}
   
  private:
 
-  // This is the main vertical frame of the insert form
+  /// This is the main vertical frame of the insert form
   FXVerticalFrame *m_uiRpanel;
 
-  // This is the widget matrix with the insert fields
+  /// This is the widget matrix with the insert fields
   FXMatrix *m_matrix;
   ColWidgetFactory* m_factory;  
 
@@ -52,6 +62,7 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
   rdbModel::Visitor::VisitorState visitIndex(rdbModel::Index *index);
   rdbModel::Visitor::VisitorState visitAssertion(rdbModel::Assertion *assertion);
 
+  
   /// The name of the current table
   std::string m_tableName;
   /// The pointer to the database connection class
@@ -60,6 +71,12 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
   std::vector<ColWidget*> m_widgets;
   /// The ui log text, to be updated after insertion
   LogText *m_uiLog;
+  /// The last row id inserted
+  int m_lastRow;                
+  /// The mode of this dialog; 1 is insert mode, 0 is update mode
+  bool m_insertMode;
+  /// The result of the query for the last row inserted 
+  rdbModel::ResultHandle* m_result;
 };
 
 

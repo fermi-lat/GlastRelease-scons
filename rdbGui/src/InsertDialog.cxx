@@ -9,6 +9,7 @@
 #include "LogText.h"
 #include "Icons.h"
 #include "fxkeys.h"
+#include "facilities/Util.h"
 #include "rdbModel/Tables/Datatype.h"
 #include "ColWidgetFactory.h"
 #include <iostream>
@@ -28,7 +29,7 @@ InsertDialog::InsertDialog(FXApp *owner):
   FXDialogBox(owner, "Insert",DECOR_TITLE|DECOR_BORDER|DECOR_RESIZE)
 { 
   m_matrix = 0;
-  
+ 
   m_uiRpanel = new FXVerticalFrame(this, LAYOUT_FILL_X|LAYOUT_FILL_Y);
   // Bottom part
   FXHorizontalFrame *uiClosebox = new FXHorizontalFrame(m_uiRpanel,LAYOUT_BOTTOM|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH);
@@ -40,9 +41,57 @@ InsertDialog::InsertDialog(FXApp *owner):
 
   m_connection = 0;
   m_factory = new ColWidgetFactory();
+
+  // -1 means no row has yet been inserted in this session
+  m_lastRow = -1;
+
+  // Let start in insert mode
+  m_insertMode = 1;
+
 }
 
-// Quick finish if the return key was pressed, pass other keys
+// Get the last row from the database and fill the dialog form
+void InsertDialog::fillWithLastRow()
+{
+  unsigned int i;
+  
+  std::vector<std::string> colNames;
+  std::vector<std::string> colValues;
+
+  std::string name;
+   
+  for(i=0;i<m_widgets.size();i++)
+  {
+    ColWidget* temp = m_widgets[i]; 
+    
+    name = temp->getColumn()->getName();
+    colNames.push_back(name); 
+  }
+
+  // Set up WHERE clause, always the same
+  std::string serialStr;
+  facilities::Util::itoa(m_lastRow, serialStr);
+  rdbModel::Assertion::Operator* serEquals = 
+    new rdbModel::Assertion::Operator(rdbModel::OPTYPEequal, "ser_no",
+                                      serialStr, false, true);
+  rdbModel::Assertion* whereSer = new rdbModel::Assertion(rdbModel::Assertion::WHENwhere, serEquals);
+
+
+  if(m_connection)
+    m_result = m_connection->select(m_tableName, colNames, colNames, whereSer);
+
+
+  m_result->getRow(colValues, 0, 1);
+
+  for(i=0;i<m_widgets.size();i++)
+  {
+    ColWidget* temp = m_widgets[i]; 
+    temp->setValue(colValues[i].c_str());
+  }
+
+}
+
+// Try to insert the new row
 long InsertDialog::onGoPress(FXObject *sender,FXSelector sel, void* ptr)
 {     
   unsigned int i;
@@ -71,9 +120,24 @@ long InsertDialog::onGoPress(FXObject *sender,FXSelector sel, void* ptr)
    
 
   if (m_connection)
-    m_connection->insertRow(m_tableName, colNames, values, 0, &nullValues);  
-  
+  {
+    if(m_insertMode) //If in insert mode
+      m_connection->insertRow(m_tableName, colNames, values, &m_lastRow, &nullValues);  
+    else //Otherwise we are in the Update Last Row mode
+    {
+      std::string serialStr;
+      facilities::Util::itoa(m_lastRow, serialStr);
+      rdbModel::Assertion::Operator* serEquals = 
+       new rdbModel::Assertion::Operator(rdbModel::OPTYPEequal, "ser_no",
+                                      serialStr, false, true);
+      rdbModel::Assertion* whereSer = new rdbModel::Assertion(rdbModel::Assertion::WHENwhere, serEquals);
 
+      m_connection->update(m_tableName, colNames, values, whereSer, &nullValues);  
+    }
+  }
+    
+      
+    
   m_uiLog->update();
   this->handle(this, MKUINT(ID_ACCEPT, SEL_COMMAND),NULL);
   return 1;
