@@ -14,8 +14,6 @@
 #include "Event/TopLevel/Definitions.h"
 #include "geometry/Point.h"
 
-
-
 extern const CLID& CLID_CalXtalRecData;
 
 namespace Event 

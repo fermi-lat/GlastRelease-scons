@@ -27,15 +27,13 @@ namespace Event
 *  \author Regis Terrier
 *  \author Jose Angel Hernando
 *
+* $Header$
 */
-    
-    
     class CalCluster 
     {
         
     public:
         
-        /// constructor
         /// @param e total energy sum in the cluster
         /// @param p reconstructed cluster position
         CalCluster(double e, Point p);

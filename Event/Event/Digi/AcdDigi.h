@@ -28,6 +28,8 @@
 *             
 * There are no set methods in this class, users are expected to fill
 * the data members through the constructor.
+*
+* @author Heather Kelly
 * $Header$
 */
 

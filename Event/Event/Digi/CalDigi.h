@@ -2,8 +2,6 @@
 #ifndef Event_CalDigi_H
 #define Event_CalDigi_H 1
 
-
-// Include files
 #include <iostream>
 #include <vector>
 #include "idents/CalXtalId.h"
@@ -13,8 +11,6 @@
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/ObjectVector.h"
 #include "Event/TopLevel/Definitions.h"
-
-
 
 
 extern const CLID& CLID_CalDigi;
@@ -28,8 +24,9 @@ namespace Event {
  * via the typedef CalXtalReadoutCol. This allows up to 4 readouts per end. A collection of 
  * CalDigis is typedefed as CalDigiCol
  *
- * Author:  E.Grove
+ * @author E. Grove
  *
+ * $Header$
 */
 
 class CalDigi : virtual public ContainedObject { 

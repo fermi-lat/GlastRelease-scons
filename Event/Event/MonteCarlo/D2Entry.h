@@ -1,14 +1,5 @@
 #ifndef D2Entry_h
 #define D2Entry_h
-/** 
-* @class D2Entry
-*
-* @brief TDS Container class to hold the information in the D2 Database
-*
-* @author Sean Robinson
-*
-* $Header$
-*/
 
 #include <vector>
 #include "GaudiKernel/MsgStream.h"
@@ -21,24 +12,17 @@
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/ObjectList.h"
 
-/*!
-//------------------------------------------------------------------------------
-//
-// ClassName:   D2Entry
-//  
-// Description: The Monte Carlo D2 database (exposure/livetime) entry structure.
-//              
-// Author:      Sean Robinson
-//
-// Changes:     [put changes here]
-//------------------------------------------------------------------------------
-*/
-
-
 extern const CLID& CLID_D2Entry;
 
 namespace Event { //Namespace
     
+/** @class D2Entry
+* @brief TDS Container class to hold the information in the D2 Database
+*
+* @author Sean Robinson
+*
+* $Header$
+*/
     class D2Entry : virtual public ContainedObject//public DataObject
     {
     public:
