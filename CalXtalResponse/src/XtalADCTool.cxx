@@ -146,7 +146,7 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
                                   bool &peggedP,
                                   bool &peggedN
                                   ) {
-  MsgStream msglog(msgSvc(), name());
+  //MsgStream msglog(msgSvc(), name());
   StatusCode sc;
 
   CalVec<XtalDiode, double> diodeDAC(XtalDiode::N_VALS);
@@ -159,8 +159,8 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
   sc = m_calCalibSvc->getMeVPerDac(xtalId, mpdLrg, mpdSm);
   if (sc.isFailure()) return sc;
 
-  if (hitList.size())
-     msglog << MSG::DEBUG << "xtalId=" << xtalId << "\tnHits=" << hitList.size() << endreq;
+  //if (hitList.size())
+  //   msglog << MSG::DEBUG << "xtalId=" << xtalId << "\tnHits=" << hitList.size() << endreq;
     
   // loop over hits.
   for (vector<const Event::McIntegratingHit*>::const_iterator it = hitList.begin();
@@ -180,7 +180,7 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
       throw invalid_argument("volume id does not match xtalId.  Programmer error.");
 
     double ene = hit.totalEnergy();
-    msglog << MSG::DEBUG << "\tcell=" << volId[fCellCmp] << " ene=" << ene << endreq;
+    //msglog << MSG::DEBUG << "\tcell=" << volId[fCellCmp] << " ene=" << ene << endreq;
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////// SUM DAC VALUES FOR EACH HIT /////////////////////////

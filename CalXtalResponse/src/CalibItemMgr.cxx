@@ -97,13 +97,13 @@ StatusCode CalibItemMgr::updateCache() {
 }
 
 StatusCode CalibItemMgr::evalSpline(int calibType, LATWideIndex idx, double x, double &y) {
-  //MsgStream msglog(m_msgSvc, *m_logName);
-  StatusCode sc;
-
   // make sure we have valid calib data for this event.
-  if (!m_inUpdate)
+   if (!m_inUpdate) {
+    StatusCode sc;
     if ((sc = updateCache()).isFailure()) return sc;
+   }
 
+  //MsgStream msglog(m_msgSvc, *m_logName);
   //   msglog << "Evaluating spline nl=" << m_splineLists.size()
   //          << " t=" << calibType
   //          << " i=" << idx
