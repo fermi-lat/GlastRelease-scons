@@ -71,7 +71,7 @@ StatusCode LinkAndTreeFindTrackTool::findTracks()
     Event::TkrTrackCol* pTkrCands = new TkrLinkAndTree(m_tkrGeom, m_clusTool, CalEnergy);
 
     //Register this object in the TDS
-    sc = m_dataSvc->registerObject(EventModel::TkrRecon::TkrPatCandCol,pTkrCands);
+    sc = m_dataSvc->registerObject(EventModel::TkrRecon::TkrTrackCol,pTkrCands);
     
     if (pTkrClus == 0 || pTkrCands == 0) sc = StatusCode::FAILURE;
 
