@@ -29,6 +29,7 @@ void CalRecon_load() {
     DLL_DECL_ALGORITHM( CalRecLogsAlg );
 	DLL_DECL_ALGORITHM( CalIRFAlg );
 	DLL_DECL_ALGORITHM( CalClustersAlg );
+	DLL_DECL_ALGORITHM( CalNtupleAlg );
 } 
 
 extern "C" void CalRecon_loadRef()    {
