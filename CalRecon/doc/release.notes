@@ -7,6 +7,7 @@ package CalRecon
 
 package manager: Alexandre Chekhtman
 
+  v5r17   07-jan-05   THB Tag the previous change
           22-sep-04   THB Modify CalValsCorrTool to invoke a local copy of code from AnalysisNtuple::CalvalsTool
   v5r15               BG  Temporarily move Fuzzies to Attic
   v5r14               BG  Tag for Gabriel's clustering
