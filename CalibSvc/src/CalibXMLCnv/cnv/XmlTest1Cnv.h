@@ -10,7 +10,7 @@
   @author J. Bogart
 */
 #include "XmlBaseCnv.h"
-#include <dom/DOM_Element.hpp>
+#include <xercesc/dom/DOM_Element.hpp>
 
 template <class TYPE> class CnvFactory;
 

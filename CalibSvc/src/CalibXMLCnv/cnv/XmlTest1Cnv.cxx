@@ -2,10 +2,6 @@
 
 #include <string>
 #include "XmlTest1Cnv.h"
-
-// #include <util/XMLUni.hpp>
-// #include <util/XMLString.hpp>
-
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/DataObject.h"

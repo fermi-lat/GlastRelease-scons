@@ -9,7 +9,7 @@
   @author J. Bogart
 */
 #include "XmlBaseCnv.h"
-#include <dom/DOM_Element.hpp>
+#include <xercesc/dom/DOM_Element.hpp>
 #include "CalibData/Tkr/BadStrips.h"
 
 

@@ -2,9 +2,6 @@
 
 #include "XmlBaseCnv.h"
 
-// #include <util/XMLUni.hpp>
-// #include <util/XMLString.hpp>
-
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/DataObject.h"
@@ -25,8 +22,8 @@
 
 #include "facilities/Util.h"
 
-#include <dom/DOM_Document.hpp>
-#include <dom/DOM_NodeList.hpp>
+#include <xercesc/dom/DOM_Document.hpp>
+#include <xercesc/dom/DOM_NodeList.hpp>
 
 // Local utilities to interpret attributes 
 namespace {

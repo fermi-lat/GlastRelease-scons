@@ -15,7 +15,7 @@
 
 */
 #include "GaudiKernel/IInterface.h"
-#include <dom/DOM_Document.hpp>
+#include <xercesc/dom/DOM_Document.hpp>
 
 static const InterfaceID IID_ICalibXmlSvc("ICalibXmlSvc", 1, 0);
 

@@ -5,11 +5,10 @@
 #include <string>
 
 #include "CalibSvc/ICalibMetaCnvSvc.h"   // not sure if this is needed
-//   #include "CalibSvc/IInstrumentName.h"
 #include "GaudiKernel/ConversionSvc.h"
 #include "CalibSvc/ICalibXmlSvc.h"
 
-#include <dom/DOM_Document.hpp>
+#include <xercesc/dom/DOM_Document.hpp>
 
 /// Forward and external declarations
 template <class TYPE> class SvcFactory;
