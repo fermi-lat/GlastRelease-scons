@@ -11,7 +11,7 @@
 #include "GaudiKernel/SmartRefVector.h"
 
 // Event for creating the McEvent stuff
-//#include "Event/TopLevel/Event.h"
+#include "Event/TopLevel/Event.h"
 #include "Event/TopLevel/MCEvent.h"
 #include "Event/MonteCarlo/McParticle.h"
 #include "Event/TopLevel/EventModel.h"
@@ -92,7 +92,7 @@ StatusCode FluxAlg::execute()
     // if nothing has changed, then use the existing m_flux,
     //but if the "current" IFlux is not the same as the one we have now,
     //then change our m_flux pointer to be the new one.
-
+    
     if(m_fluxSvc->currentFlux() == m_flux){
         m_flux->generate();
     }else{
@@ -105,13 +105,13 @@ StatusCode FluxAlg::execute()
     double ke = m_flux->energy(); // kinetic energy in MeV
     std::string particleName = m_flux->particleName();
     
-
+    
     //here's where we get the particleID and mass for later.
     ParticleProperty* prop = m_partSvc->find(particleName);
-
+    
     assert(prop);
     int partID = prop->jetsetID(); // same as stdhep id
-      
+    
     log << MSG::DEBUG << particleName
         << "(" << m_flux->energy()
         << " MeV), Launch: " 
@@ -120,44 +120,51 @@ StatusCode FluxAlg::execute()
         << "(" << d.x() <<", "<< d.y() <<", "<<d.z()<<")" 
         << endreq;
     
-
+    
     // Here the TDS is prepared to receive hits vectors
     // Check for the MC branch - it will be created if it is not available
-
+    
     DataObject *mc = new Event::McParticleCol;
     //eventSvc()->retrieveObject("/Event/MC", mc);
-        sc=eventSvc()->registerObject("/Event/MC", mc);
-        if(sc.isFailure()) log << MSG::ERROR << "/Event/MC could not be registered on data store" << endreq;
+    sc=eventSvc()->registerObject(EventModel::MC::Event , mc);
+    if(sc.isFailure()) {
+        log << MSG::ERROR << EventModel::MC::Event  <<" could not be registered on data store" << endreq;
+        return sc;
+    }
+        
     
-        DataObject *mc2;
-        sc=eventSvc()->findObject("/Event/MC", mc2);
-        if(sc.isFailure()) log << MSG::ERROR << "/Event/MC does not exist on data store" << endreq;
-    
-
-
     Event::McParticleCol* pcol = new Event::McParticleCol;
-    StatusCode sc2 = /*temp*/eventSvc()->registerObject("/Event/MC/McParticleCol", pcol);
-    if( sc2.isFailure()) {
-
-        log << MSG::ERROR << "Could not Register /Event/MC/McParticleCol" << endreq;
-
-        return sc2;
+    sc = eventSvc()->registerObject(EventModel::MC::McParticleCol, pcol);
+    if( sc.isFailure()) {
+        
+        log << MSG::ERROR << "Could not Register "<< EventModel::MC::McParticleCol << endreq;
+        
+        return sc;
     }
     Event::McParticle * parent= new Event::McParticle;
     pcol->push_back(parent);
-
+    
     double mass = prop->mass() , 
         energy = (ke+mass),
         momentum=sqrt(energy*energy - mass*mass); 
     HepLorentzVector pin(d*momentum,energy);
-
+    
     // This parent particle decay at the start in the first particle, 
     // so initial momentum and final one are the same
     parent->initialize(parent, partID, 
         Event::McParticle::PRIMARY,
         pin,p);
     parent->finalize(pin, p);
-
+    
+    SmartDataPtr<Event::EventHeader> header(eventSvc(), EventModel::EventHeader);
+    if(header) {
+        Event::EventHeader& h = header;
+        h.setTime(m_flux->time());
+        
+    } else { 
+        log << MSG::WARNING << " could not find the event header" << endreq;
+        return StatusCode::FAILURE;
+    }
     return sc;
 }
 
