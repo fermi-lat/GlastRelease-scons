@@ -38,14 +38,16 @@ TkrCovMatrix SlopeCorrectedMeasErrs::computeMeasErrs(const Event::TkrTrackParams
     double clusWid = const_cast<Event::TkrCluster&>(cluster).size();
 
 
-    int measured = Event::TkrTrackParams::xPosIdx;
-    int other    = Event::TkrTrackParams::yPosIdx;
+    int    measured = Event::TkrTrackParams::xPosIdx;
+    int    other    = Event::TkrTrackParams::yPosIdx;
+    double slope    = newPars.getxSlope();
 
-    if(cluster.getTkrId().getView() == idents::TkrId::eMeasureY) {
+    if(cluster.getTkrId().getView() == idents::TkrId::eMeasureY) 
+    {
         std::swap(measured, other);
+        slope = newPars.getySlope();
     }
 
-    double slope = newPars(measured);
     double error = getError(clusWid, slope);
     
     newCov(measured, measured) = error*error;

@@ -30,13 +30,10 @@ TkrCovMatrix ClusWidMeasErrs::computeMeasErrs(const Event::TkrTrackParams& /*new
 
     double clusWid = const_cast<Event::TkrCluster&>(cluster).size();
 
-    int  measured = Event::TkrTrackParams::xPosIdx;
-    int  other    = Event::TkrTrackParams::yPosIdx;
+    int measured = Event::TkrTrackParams::xPosIdx;
+    int other    = Event::TkrTrackParams::yPosIdx;
 
-    if(cluster.getTkrId().getView() == idents::TkrId::eMeasureY) 
-    {
-        std::swap(measured, other);
-    } 
+    if(cluster.getTkrId().getView() == idents::TkrId::eMeasureY) std::swap(measured, other);
 
     double error = clusWid * m_tkrGeom->siResolution();
     
