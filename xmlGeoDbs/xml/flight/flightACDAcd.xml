@@ -1,0 +1,529 @@
+<!-- $Header$ -->
+<!--  ACD geometry for flight instrument -->
+
+    <box name="topTile" 
+         XREF="ACDTopXWidth"
+         YREF="ACDTopYWidth"
+         ZREF="tileThickness"
+         materialREF="tileMat"
+         sensitive="true" 
+         detectorTypeREF="eDTypeACDTile"/>
+
+<!-- different box needed for each of the 4 rows of side tiles on X sides 
+     and Y sides (X and Y sides happen to have same dimensions now,
+      but allow for difference -->
+    <box name="sideTileX0" 
+         XREF="sideTileWidthLongXRow"
+         YREF="tileThickness"
+         ZREF="sideTileHeight0"
+         materialREF="tileMat"
+         sensitive="true" 
+         detectorTypeREF="eDTypeACDTile"/>
+    <box name="sideTileX1" 
+         XREF="sideTileWidthLongXRow"
+         YREF="tileThickness"
+         ZREF="sideTileHeight1"
+         materialREF="tileMat"
+         sensitive="true" 
+         detectorTypeREF="eDTypeACDTile"/>
+    <box name="sideTileX2" 
+         XREF="sideTileWidthLongXRow"
+         YREF="tileThickness"
+         ZREF="sideTileHeight2"
+         materialREF="tileMat"
+         sensitive="true" 
+         detectorTypeREF="eDTypeACDTile"/>
+    <box name="sideTileX3" 
+         XREF="sideTileWidthShortXRow"
+         YREF="tileThickness"
+         ZREF="sideTileHeight3"
+         materialREF="tileMat"
+         sensitive="true" 
+         detectorTypeREF="eDTypeACDTile"/>
+
+   <!--   ..and Y sides (X and Y sides happen to have same dimensions now,
+      but allow for difference.  Also do "rotation" here by putting tile
+      thickness in X-dimension (it's in  Y  for sideTileX.. -->
+    <box name="sideTileY0" 
+         XREF="tileThickness"
+         YREF="sideTileWidthLongYRow"
+         ZREF="sideTileHeight0"
+         materialREF="tileMat"
+         sensitive="true"
+         detectorTypeREF="eDTypeACDTile"/>
+    <box name="sideTileY1" 
+         XREF="tileThickness"
+         YREF="sideTileWidthLongYRow"
+         ZREF="sideTileHeight1"
+         materialREF="tileMat"
+         sensitive="true" 
+         detectorTypeREF="eDTypeACDTile"/>
+    <box name="sideTileY2" 
+         XREF="tileThickness"
+         YREF="sideTileWidthLongYRow"
+         ZREF="sideTileHeight2"
+         materialREF="tileMat"
+         sensitive="true" 
+         detectorTypeREF="eDTypeACDTile"/>
+    <box name="sideTileY3" 
+         XREF="tileThickness"
+         YREF="sideTileWidthShortYRow"
+         ZREF="sideTileHeight3"
+         materialREF="tileMat"
+         sensitive="true" 
+         detectorTypeREF="eDTypeACDTile"/>
+
+<!-- boxes for tape on the top.  Long dimension of tape is 
+     parallel to X-axis -->
+    <box name="topTapeLong"
+         XREF="topTapeLenLong"
+         YREF="tapeWidth"
+         ZREF="tapeThickness"
+         materialREF="tapeMat" 
+         detectorTypeREF="eDTypeACDTape"/>
+ <!--         sensitive="true" />  -->
+    <box name="topTapeMedium"
+         XREF="topTapeLenMedium"
+         YREF="tapeWidth"
+         ZREF="tapeThickness"
+         materialREF="tapeMat"
+         detectorTypeREF="eDTypeACDTape"/>
+<!--         sensitive="true" />  -->
+    <box name="topTapeShort"
+         XREF="topTapeLenShort"
+         YREF="tapeWidth"
+         ZREF="tapeThickness"
+         materialREF="tapeMat"
+         detectorTypeREF="eDTypeACDTape"/>
+<!--         sensitive="true" /> -->
+
+<!-- Boxes for tape on sides.  Definition is for a side parallel to
+     X-axis.  Rotate 90 deg. about Z for Y-side  -->
+    <box name="sideTapeX"
+         XREF="tapeWidth"
+         YREF="tapeThickness"
+         ZREF="tapeSideLength"
+         materialREF="tapeMat" 
+         detectorTypeREF="eDTypeACDTape"/>
+<!--         sensitive="true" />  -->
+
+    <box name="sideTapeY"
+         XREF="tapeThickness"
+         YREF="tapeWidth"
+         ZREF="tapeSideLength"
+         materialREF="tapeMat"
+         detectorTypeREF="eDTypeACDTape"/>
+<!--         sensitive="true" />  -->
+
+<!-- Make a row of top tiles.  They're all the same.  Since this
+     represents a row of tiles, ids of individual tiles in the row
+     differ by which column they're in; hence we have idField "col"
+     set here.
+     The long axis of the top rows (tape or tiles) is || to the
+     Y axis -->
+    <stackY name="topTileRow" >
+      <axisMPos volume="topTile"
+                ncopyREF="numYTopTiles"
+                gapREF="topTileGap" >
+        <idField name="fCol" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+<!-- Make rows for X sides -->
+    <stackX name="sideTileRowX0" >
+      <axisMPos volume="sideTileX0"
+                ncopyREF="numPerSideRowLong"
+                gapREF="sideHorizontalGap" >
+        <idField name="fCol" value="0" step="1" />
+      </axisMPos>
+    </stackX>
+
+    <stackX name="sideTileRowX1" >
+      <axisMPos volume="sideTileX1"
+                ncopyREF="numPerSideRowLong"
+                gapREF="sideHorizontalGap" >
+        <idField name="fCol" value="0" step="1" />
+      </axisMPos>
+    </stackX>
+
+<!-- have to do bottom side rows tile by tile since gaps are not uniform -->
+<!--  Not with new design  <stackX name="sideTileRowX2" >
+      <axisPos volume="sideTileX2">
+        <idField name="fCol" value="0" />
+      </axisPos>
+      <axisPos volume="sideTileX2">
+        <idField name="fCol" value="1" />
+      </axisPos>
+      <axisPos volume="sideTileX2"
+               gapREF="sideHorizontalGap">
+        <idField name="fCol" value="2" />
+      </axisPos>
+      <axisPos volume="sideTileX2">
+        <idField name="fCol" value="3" />
+      </axisPos>
+      <axisPos volume="sideTileX2"
+               gapREF="sideHorizontalGap">
+        <idField name="fCol" value="4" />
+      </axisPos>
+      <axisPos volume="sideTileX2">
+        <idField name="fCol" value="5" />
+      </axisPos>
+      <axisPos volume="sideTileX2"
+               gapREF="sideHorizontalGap">
+        <idField name="fCol" value="6" />
+      </axisPos>
+      <axisPos volume="sideTileX2">
+        <idField name="fCol" value="7" />
+      </axisPos>
+      <axisPos volume="sideTileX2"
+               gapREF="sideHorizontalGap">
+        <idField name="fCol" value="8" />
+      </axisPos>
+      <axisPos volume="sideTileX2">
+        <idField name="fCol" value="9" />
+      </axisPos>
+    </stackX>
+ -->
+
+    <stackX name="sideTileRowX2" >
+      <axisMPos volume="sideTileX2"
+                ncopyREF="numPerSideRowLong"
+                gapREF="sideHorizontalGap" >
+        <idField name="fCol" value="0" step="1" />
+      </axisMPos>
+    </stackX>
+
+
+<!--    not for new design
+    <stackX name="sideTileRowX3" >
+      <axisPos volume="sideTileX3">
+        <idField name="fCol" value="0" />
+      </axisPos>
+      <axisPos volume="sideTileX3">
+        <idField name="fCol" value="1" />
+      </axisPos>
+      <axisPos volume="sideTileX3"
+               gapREF="sideHorizontalGap">
+        <idField name="fCol" value="2" />
+      </axisPos>
+      <axisPos volume="sideTileX3">
+        <idField name="fCol" value="3" />
+      </axisPos>
+      <axisPos volume="sideTileX3"
+               gapREF="sideHorizontalGap">
+        <idField name="fCol" value="4" />
+      </axisPos>
+      <axisPos volume="sideTileX3">
+        <idField name="fCol" value="5" />
+      </axisPos>
+      <axisPos volume="sideTileX3"
+               gapREF="sideHorizontalGap">
+        <idField name="fCol" value="6" />
+      </axisPos>
+      <axisPos volume="sideTileX3">
+        <idField name="fCol" value="7" />
+      </axisPos>
+      <axisPos volume="sideTileX3"
+               gapREF="sideHorizontalGap">
+        <idField name="fCol" value="8" />
+      </axisPos>
+      <axisPos volume="sideTileX3">
+        <idField name="fCol" value="9" />
+      </axisPos>
+    </stackX>
+-->
+
+    <stackX name="sideTileRowX3" >
+      <axisMPos volume="sideTileX3"
+                ncopyREF="numPerSideRowShort"
+                gapREF="sideHorizontalGap" >
+        <idField name="fCol" value="0" step="1" />
+      </axisMPos>
+    </stackX>
+
+
+<!-- Do same for Y sides -->
+    <stackY name="sideTileRowY0" >
+      <axisMPos volume="sideTileY0"
+                ncopyREF="numPerSideRowLong"
+                gapREF="sideHorizontalGap" >
+        <idField name="fCol" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+    <stackY name="sideTileRowY1" >
+      <axisMPos volume="sideTileY1"
+                ncopyREF="numPerSideRowLong"
+                gapREF="sideHorizontalGap" >
+        <idField name="fCol" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+<!-- have to do bottom side rows tile by tile since gaps are not uniform -->
+<!-- not for new design 
+    <stackY name="sideTileRowY2" >
+      <axisPos volume="sideTileY2">
+        <idField name="fCol" value="0" />
+      </axisPos>
+      <axisPos volume="sideTileY2">
+        <idField name="fCol" value="1" />
+      </axisPos>
+      <axisPos volume="sideTileY2"
+               gapREF="sideHorizontalGap">
+        <idField name="fCol" value="2" />
+      </axisPos>
+      <axisPos volume="sideTileY2">
+        <idField name="fCol" value="3" />
+      </axisPos>
+      <axisPos volume="sideTileY2"
+               gapREF="sideHorizontalGap">
+        <idField name="fCol" value="4" />
+      </axisPos>
+      <axisPos volume="sideTileY2">
+        <idField name="fCol" value="5" />
+      </axisPos>
+      <axisPos volume="sideTileY2"
+               gapREF="sideHorizontalGap">
+        <idField name="fCol" value="6" />
+      </axisPos>
+      <axisPos volume="sideTileY2">
+        <idField name="fCol" value="7" />
+      </axisPos>
+      <axisPos volume="sideTileY2"
+               gapREF="sideHorizontalGap">
+        <idField name="fCol" value="8" />
+      </axisPos>
+      <axisPos volume="sideTileY2">
+        <idField name="fCol" value="9" />
+      </axisPos>
+    </stackY>
+ -->
+
+    <stackY name="sideTileRowY2" >
+      <axisMPos volume="sideTileY2"
+                ncopyREF="numPerSideRowLong"
+                gapREF="sideHorizontalGap" >
+        <idField name="fCol" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+<!-- Not for new design
+    <stackY name="sideTileRowY3" >
+      <axisPos volume="sideTileY3">
+        <idField name="fCol" value="0" />
+      </axisPos>
+      <axisPos volume="sideTileY3">
+        <idField name="fCol" value="1" />
+      </axisPos>
+      <axisPos volume="sideTileY3"
+               gapREF="sideHorizontalGap">
+        <idField name="fCol" value="2" />
+      </axisPos>
+      <axisPos volume="sideTileY3">
+        <idField name="fCol" value="3" />
+      </axisPos>
+      <axisPos volume="sideTileY3"
+               gapREF="sideHorizontalGap">
+        <idField name="fCol" value="4" />
+      </axisPos>
+      <axisPos volume="sideTileY3">
+        <idField name="fCol" value="5" />
+      </axisPos>
+      <axisPos volume="sideTileY3"
+               gapREF="sideHorizontalGap">
+        <idField name="fCol" value="6" />
+      </axisPos>
+      <axisPos volume="sideTileY3">
+        <idField name="fCol" value="7" />
+      </axisPos>
+      <axisPos volume="sideTileY3"
+               gapREF="sideHorizontalGap">
+        <idField name="fCol" value="8" />
+      </axisPos>
+      <axisPos volume="sideTileY3">
+        <idField name="fCol" value="9" />
+      </axisPos>
+    </stackY>   -->   <!-- stop sub here!! -->
+
+    <stackY name="sideTileRowY3" >
+      <axisMPos volume="sideTileY3"
+                ncopyREF="numPerSideRowShort"
+                gapREF="sideHorizontalGap" >
+        <idField name="fCol" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+
+
+<!-- we have a row of (widely separated) pieces of tape for each
+     row of top tiles.  There are three flavors of such rows, made
+     of the 3 different lengths of top tapes.              -->
+
+    <stackY name="topTapeRowLong" >
+      <axisMPos volume="topTapeLong"
+                ncopyREF="topTapesPerRow"
+                gapREF="topTapeGap" >
+<!--        <idField name="fCol" value="0" step="1" /> -->
+      </axisMPos>
+    </stackY>
+
+    <stackY name="topTapeRowMedium" >
+      <axisMPos volume="topTapeMedium"
+                ncopyREF="topTapesPerRow"
+                gapREF="topTapeGap" >
+<!--        <idField name="fCol" value="0" step="1" />  -->
+      </axisMPos>
+    </stackY>
+
+    <stackY name="topTapeRowShort" >
+      <axisMPos volume="topTapeShort"
+                ncopyREF="topTapesPerRow"
+                gapREF="topTapeGap" >
+<!--        <idField name="fCol" value="0" step="1" />  -->
+      </axisMPos>
+    </stackY>
+
+    <!-- next assemble these pieces (five rows of top tiles,
+         two long-tape rows, two medium-tape rows and one
+         short-tape row) into the acd top, but first make
+         an envelope volume for it                       -->
+    <box name="ACDTopEnv" 
+         XREF="ACDTopTotalX"
+         YREF="ACDTopTotalY"
+         ZREF="ACDTopZwidth"
+         materialREF="vacuumMat"
+         />
+
+<!-- all components are centered w.r.t. Y, so only supply X and Z -->
+    <composition name="ACDTop" 
+                 envelope="ACDTopEnv">
+      <posXYZ volume="topTapeRowLong"
+              XREF="topTapeX0_d"
+              ZREF="topTapeZLong_d">
+<!--        <idField name="fRow" value="0" />   -->
+      </posXYZ>
+      <posXYZ volume="topTapeRowMedium"
+              XREF="topTapeX1_d "
+              ZREF="topTapeZMedium_d">
+        <idField name="fRow" value="1" />
+      </posXYZ>
+      <posXYZ volume="topTapeRowShort"
+              XREF="topTapeX2_d "
+              ZREF="topTapeZShort_d">
+<!--        <idField name="fRow" value="2" />   -->
+      </posXYZ>
+
+      <posXYZ volume="topTapeRowMedium"
+              XREF="topTapeX3_d "
+              ZREF="topTapeZMedium_d">
+<!--        <idField name="fRow" value="3" />   -->
+      </posXYZ>
+
+      <posXYZ volume="topTapeRowLong"
+              XREF="topTapeX4_d"
+              ZREF="topTapeZLong_d">
+<!--        <idField name="fRow" value="4" />  -->
+      </posXYZ>
+
+      <posXYZ volume="topTileRow"
+              XREF="topTileX0_d"
+              ZREF="topTileZEdge_d" >
+        <idField name="fRow" value="0" />
+      </posXYZ>
+
+      <posXYZ volume="topTileRow"
+              XREF="topTileX1_d"
+              ZREF="topTileZMedium_d" >
+        <idField name="fRow" value="1" />
+      </posXYZ>
+      <posXYZ volume="topTileRow"
+              XREF="topTileX2_d"
+              ZREF="topTileZCenter_d" >
+        <idField name="fRow" value="2" />
+      </posXYZ>
+      <posXYZ volume="topTileRow"
+              XREF="topTileX3_d"
+              ZREF="topTileZMedium_d" >
+        <idField name="fRow" value="3" />
+      </posXYZ>
+      <posXYZ volume="topTileRow"
+              XREF="topTileX4_d"
+              ZREF="topTileZEdge_d" >
+        <idField name="fRow" value="4" />
+      </posXYZ>
+
+    </composition>
+
+    <!-- Make the envelope for an X side of tiles -->
+    <box name="TileXSideEnv"
+         XREF="ACDTotalXSide"
+         YREF="tileThickness"
+         ZREF="ACDSideHeight" 
+         materialREF="vacuumMat"
+         />
+
+    <composition name="TileXSide" 
+                 envelope="TileXSideEnv" >
+      <!-- consists of 4 rows of tiles (long dimension of rows in X) 
+         The positioning in Y will be done at the next stage. -->
+      <posXYZ volume="sideTileRowX0"
+              ZREF="sideTileRow0_d" >
+        <idField name="fRow" value="0" />
+      </posXYZ>
+      <posXYZ volume="sideTileRowX1"
+              ZREF="sideTileRow1_d">
+        <idField name="fRow" value="1" />
+      </posXYZ>
+      <posXYZ volume="sideTileRowX2"
+              ZREF="sideTileRow2_d">
+        <idField name="fRow" value="2" />
+      </posXYZ>
+      <posXYZ volume="sideTileRowX3"
+              ZREF="sideTileRow3_d">
+        <idField name="fRow" value="3" />
+      </posXYZ>
+    </composition>
+
+    <!-- do the same for Y-side rows of tiles -->
+    <box name="TileYSideEnv"
+         XREF="tileThickness"
+         YREF="ACDTotalYSide"
+         ZREF="ACDSideHeight" 
+         />
+
+    <composition name="TileYSide" 
+                 envelope="TileYSideEnv" >
+      <!-- consists of 4 rows of tiles (long dimension of rows in Y) 
+         The positioning in X will be done at the next stage. -->
+      <posXYZ volume="sideTileRowY0"
+              ZREF="sideTileRow0_d">
+        <idField name="fRow" value="0" />
+      </posXYZ>
+      <posXYZ volume="sideTileRowY1"
+              ZREF="sideTileRow1_d">
+        <idField name="fRow" value="1" />
+      </posXYZ>
+      <posXYZ volume="sideTileRowY2"
+              ZREF="sideTileRow2_d">
+        <idField name="fRow" value="2" />
+      </posXYZ>
+      <posXYZ volume="sideTileRowY3"
+              ZREF="sideTileRow3_d">
+        <idField name="fRow" value="3" />
+      </posXYZ>
+    </composition>
+
+    <!-- stack up tape for X and Y sides -->
+    <stackX name="sideTapeRowX" >
+      <axisMPos volume="sideTapeX" ncopyREF="numSideTapes"
+                gapREF="betweenSideTapesX">
+<!--        <idField name="fCol" value="0" step="1" />   -->
+      </axisMPos>
+    </stackX>
+
+    <stackY name="sideTapeRowY" >
+      <axisMPos volume="sideTapeY" ncopyREF="numSideTapes"
+                gapREF="betweenSideTapesY">
+<!--        <idField name="fCol" value="0" step="1" />   -->
+      </axisMPos>
+    </stackY>

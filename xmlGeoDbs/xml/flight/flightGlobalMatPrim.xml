@@ -1,0 +1,18 @@
+<!-- $Header$ -->
+<primCategory name="globalMatPrim">
+  <overview>Materials not specific to a single subsystem.</overview>
+  <prim name="wallMaterial"   value="C" type="string" uType="mat"> Wall material</prim>
+  <prim name="vacuumMat" value="Vacuum" type="string" uType="mat">Need
+      vacuum for some 'solids'</prim>
+  <prim name="blanketMat" value="blanket" type="string" uType="mat">
+Material for thermal blanket</prim>
+  <prim name="spacecraftMat" value="Alsc" type="string" uType="mat">
+Material for spacecraft</prim>
+  <prim name="solarPanelMat" value="Si" type="string" uType="mat">
+Material for solar panels</prim>
+  <prim name="solarCoreMat" value="Al" type="string" uType="mat">
+Material for solar panel core</prim>
+  <prim name="solarRodMat" value="Al" type="string" uType="mat">
+Material for solar panel connecting rods</prim>
+
+</primCategory>

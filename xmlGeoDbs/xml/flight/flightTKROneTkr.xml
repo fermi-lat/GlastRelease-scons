@@ -1,0 +1,533 @@
+<!-- $Header$ -->
+<!-- Definition of one tower's worth of tracker for flight instrument -->
+
+<!-- Tracker stuff.  The tracker consists of trays.  Alternate trays
+     are rotated by 90 degrees with just vacuum inbetween.  But
+     the rotation is not apparent to the simulator since it
+     doesn't know about individual strips  -->
+<!-- Stay-clear envelope -->
+    <box name="TKRStayClearBox"
+       XREF="TKRTransverseStayClear"
+       YREF="TKRTransverseStayClear"
+       ZREF="TKRVertStayClear"
+       materialREF="vacuumMat" />
+
+
+
+<!-- make double stack (first Y, then X) of converter squares, each of
+     which is centered over a wafer.  Do it once for regular converter
+     thickness and once for superGLAST layers -->
+    <box name="convRegSquare"
+         XREF="SiWaferActiveSide"
+         YREF="SiWaferActiveSide"
+         ZREF="convThickReg"
+         materialREF="convMat" />
+
+    <stackY name="convRegLadder" >
+      <axisMPos volume="convRegSquare" ncopyREF="nWaferAcross"
+                                       shiftREF="waferPitch">
+        <idField name="fWafer" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+    <stackX name="convRegArray"  >
+      <axisMPos volume="convRegLadder" ncopyREF="nWaferAcross"
+                                       shiftREF="ladderPitch" >
+        <idField name="fLadder" value="0" step="1" />
+      </axisMPos>
+    </stackX>
+
+    <box name="convSuperSquare"
+         XREF="SiWaferActiveSide"
+         YREF="SiWaferActiveSide"
+         ZREF="convThickSup"
+         materialREF="convSupMat" />
+
+    <stackY name="convSuperLadder" >
+      <axisMPos volume="convSuperSquare" ncopyREF="nWaferAcross"
+                                         shiftREF="waferPitch">
+        <idField name="fWafer" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+    <stackX name="convSuperArray"  >
+      <axisMPos volume="convSuperLadder" ncopyREF="nWaferAcross"
+                                         shiftREF="ladderPitch" >
+        <idField name="fLadder" value="0" step="1" />
+      </axisMPos>
+    </stackX>
+
+
+<!-- Now make all the other elements we need for TKR:
+               OLD SCHEME
+     * Core composition for inner layers, including  TKRCoreReg
+       core and surrounding closeout              
+     * Core comp. for outer (top and bottom) layers  TKRCoreOuter
+     * bias board box (include glue to attach Si)    TKRBiasBox
+     * face sheet for regular layers, includes glue  TKRFaceReg
+       attaching to closeout/core
+     * face sheet for superGLAST layers, includes    TKRFaceSup
+       glue attaching to closeout/core
+     * glue box of "default" thickness (.100 mm);    TKRGlueDef
+       that is, glue not touching Si or core.
+     * SiLayer (Actually a choice element.  Most applications want
+       a detailed view with individual wafers, but someone might
+       be happy with just a slab of silicon.)
+                
+                   NEW SCHEME
+     * TKRCoreReg, TKRCoreOuter and SiLayer as above except materials
+            changed somewhat.  Core material depends on whether tray
+            is superGLAST or not.
+
+     * TKRTopFaceReg,     representing glue+bias+glue+face+glue,
+                          material="TKRTopFaceMat"
+     * TKRTopFaceSup,     also glue+bias+glue+face+glue, but for
+                          superGLAST layers which have a 
+                          thicker face sheet, material="TKRTopFaceMat"
+     * TKRBotFaceReg,     representing glue+face+glue, 
+                          material="TKRBotFaceMat"
+     * TKRBotFaceSup,     same as above but thicker for superGLAST
+                          material="TKRBotFaceMat"
+     * TKRFaceMin         Just glue+face,   material="TKRBotFaceMat"
+     * TKRBiasBox         glue+bias board + glue, material="TKRBotBiasMat"
+ -->
+    <box name="TKRCoreRegEnv"
+	 XREF="TKRTrayWidth" 
+	 YREF="TKRTrayWidth" 
+	 ZREF="coreThick" 
+         materialREF="vacuumMat" />        
+
+    <box name="TKRCoreOuterEnv"
+	 XREF="TKRTrayWidth" 
+	 YREF="TKRTrayWidth" 
+	 ZREF="coreThickOuter" 
+         materialREF="vacuumMat" />        
+
+    <box name="TKRCoreRegBox"
+	 XREF="TKRCoreWidth" 
+	 YREF="TKRCoreWidth" 
+	 ZREF="coreThick" 
+	 materialREF="coreRegMat" />
+
+<!-- Core in super-GLAST layers is a different material (dimensioned
+     the same, though -->
+    <box name="TKRCoreSupBox"
+	 XREF="TKRCoreWidth" 
+	 YREF="TKRCoreWidth" 
+	 ZREF="coreThick" 
+	 materialREF="coreSupMat" />
+
+<!-- core in top and bottom trays is thicker -->
+    <box name="TKRCoreOuterBox" 
+	 XREF="TKRCoreWidth" 
+	 YREF="TKRCoreWidth"
+	 ZREF="coreThickOuter" materialREF="coreRegMat" />
+
+<!-- Define boxes for short and long closeout pieces, both regular
+     and outer, so 4 boxes altogether. -->
+    <box name="TKRCloseoutRegLong"
+         XREF="TKRCloseoutLen"
+         YREF="TKRCloseoutWidth"
+         ZREF="TKRCloseoutThick"
+         materialREF="TKRCloseoutMat" />
+
+    <box name="TKRCloseoutRegShort"
+         XREF="TKRCloseoutLenShort"
+         YREF="TKRCloseoutWidth"
+         ZREF="TKRCloseoutThick"
+         materialREF="TKRCloseoutMat" />
+
+    <box name="TKRCloseoutOuterLong"
+         XREF="TKRCloseoutLen"
+         YREF="TKRCloseoutWidth"
+         ZREF="TKRCloseoutThickOuter"
+         materialREF="TKRCloseoutMat" />
+
+    <box name="TKRCloseoutOuterShort"
+         XREF="TKRCloseoutLenShort"
+         YREF="TKRCloseoutWidth"
+         ZREF="TKRCloseoutThickOuter"
+         materialREF="TKRCloseoutMat" />
+
+
+<!-- Now make the three compositions needed for core+closeout -->
+
+    <composition name="TKRCoreReg" envelope="TKRCoreRegEnv">
+      <posXYZ volume="TKRCoreRegBox" />
+      <posXYZ volume="TKRCloseoutRegLong"
+              YREF="TKRCloseout_dt" />
+      <posXYZ volume="TKRCloseoutRegLong"
+              YREF="TKRCloseout_dtn" />
+      <posXYZ volume="TKRCloseoutRegShort"
+              zrot="90"
+              XREF="TKRCloseout_dt" />
+      <posXYZ volume="TKRCloseoutRegShort"
+              zrot="90"
+              XREF="TKRCloseout_dtn" />
+    </composition>
+
+<!-- Dimensions of core+closeout for super-GLAST are the same as
+    above, but core box is a different material  -->
+    <composition name="TKRCoreSup" envelope="TKRCoreRegEnv">
+      <posXYZ volume="TKRCoreSupBox" >
+        <idField name="fBorderCmp" value="eCenter" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutRegLong"
+              YREF="TKRCloseout_dt" >
+        <idField name="fBorderCmp" value="eTop" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutRegLong"
+              YREF="TKRCloseout_dtn" >
+        <idField name="fBorderCmp" value="eBottom" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutRegShort"
+              zrot="90"
+              XREF="TKRCloseout_dt" >
+        <idField name="fBorderCmp" value="eRight" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutRegShort"
+              zrot="90"
+              XREF="TKRCloseout_dtn" >
+        <idField name="fBorderCmp" value="eLeft" />
+      </posXYZ>
+    </composition>
+
+<!-- Now same thing for outer tray cores (regular core material only) -->
+    <composition name="TKRCoreOuter" envelope="TKRCoreOuterEnv">
+      <posXYZ volume="TKRCoreOuterBox" >
+        <idField name="fBorderCmp" value="eCenter" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutOuterLong"
+              YREF="TKRCloseout_dt" >
+        <idField name="fBorderCmp" value="eTop" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutOuterLong"
+              YREF="TKRCloseout_dtn" >
+        <idField name="fBorderCmp" value="eBottom" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutOuterShort"
+              zrot="90"
+              XREF="TKRCloseout_dt" >
+        <idField name="fBorderCmp" value="eRight" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutOuterShort"
+              zrot="90"
+              XREF="TKRCloseout_dtn" >
+        <idField name="fBorderCmp" value="eLeft" />
+      </posXYZ>
+    </composition>
+
+
+<!--    ***   -->  
+     
+    <box name="SiLayerBox"
+         sensitive="true"  detectorTypeREF="eDTypeTKRSi"
+	 XREF="TKRTrayWidth" 
+	 YREF="TKRTrayWidth"
+	 ZREF="SiThick" materialREF="TKRDetMat" />
+
+<!--  Just a single sheet. For convenience make a box the thickness of
+      glue + bias board + glue    -->
+
+    <box name="TKRBiasBox"
+         XREF="TKRBiasWidth"
+         YREF="TKRBiasWidth"
+         ZREF="biasGlueThick"
+         materialREF="TKRBotBiasMat" />
+
+    <box name="TKRTopFaceReg"
+         XREF="faceWidth"
+         YREF="faceWidth"
+         ZREF="TKRTopFaceRegZ"   
+         materialREF="TKRTopFaceMat" />
+
+    <box name="TKRTopFaceSup"
+         XREF="faceWidth"
+         YREF="faceWidth"
+         ZREF="TKRTopFaceSupZ"   
+         materialREF="TKRTopFaceMat" />
+
+    <box name="TKRBotFaceReg"
+         XREF="faceWidth"
+         YREF="faceWidth"
+         ZREF="TKRBotFaceRegZ" 
+         materialREF="TKRBotFaceMat" />
+
+    <box name="TKRBotFaceSup"
+         XREF="faceWidth"
+         YREF="faceWidth"
+         ZREF="TKRBotFaceSupZ" 
+         materialREF="TKRBotFaceMat" />
+
+    <box name="TKRFaceMin"
+         XREF="faceWidth"
+         YREF="faceWidth"
+         ZREF="TKRFaceMinZ"
+         materialREF="TKRBotFaceMat" />
+
+
+<!-- The unrotated wafer is segmented along the x axis, hence measures X,
+     hence is an X layer
+ 
+     Active area is not quite a square, but very close.  For now,
+     ignore the .02 mm difference between length and width;
+     use the shorter dimension for both.
+-->
+    <box name="SiWaferActive"
+         sensitive="true"  detectorTypeREF="eDTypeTKRSi"
+	 XREF="SiWaferActiveSide"
+	 YREF="SiWaferActiveSide"
+	 ZREF="SiThick"
+	 materialREF="TKRDetMat">
+      <seg axis="X" reason="readout" nSegREF="stripPerWafer" />
+    </box>
+
+    <box name="SiWafer"
+	 XREF="SiWaferSide"
+	 YREF="SiWaferSide"
+	 ZREF="SiThick"
+	 materialREF="TKRDetMat">
+    </box>
+
+    <composition name="SiWaferNest" envelope="SiWafer">
+      <posXYZ volume="SiWaferActive" />
+    </composition>
+
+   <!--       ************* new stuff (ladders) *************   -->
+
+    <stackY name="ladder" >
+      <axisMPos volume="SiWaferNest" ncopyREF="nWaferAcross"
+                                     shiftREF="waferPitch" >
+         <idField name="fWafer" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+    <stackX name="SiLadders" >
+      <axisMPos volume="ladder" ncopyREF="nWaferAcross" 
+                                shiftREF="ladderPitch" >
+        <idField name="fLadder" value="0" step="1" />
+      </axisMPos>
+    </stackX>
+
+   <!--       ************* end new stuff (ladders) *************   -->
+
+    
+<!-- identify wafers by their position along stack in direction
+     of measurement.                                          
+     strip id in glastsim style is then 
+           local(in wafer)-strip# + strips-per-wafer * wafer-id
+ -->
+
+
+<!-- Propagation doesn't want to deal with fine structure
+     of Si -->
+    <choice name="SiLayer" default="SiLayerBox">  
+      <case mode="fastmc" volume="SiLayerBox" />
+      <case mode="digi" volume="SiLadders" />
+      <case mode="recon" volume="SiLadders" />
+      <case mode="propagate" volume="SiLayerBox" />
+    </choice>
+
+<!-- Trays come in 3 flavors: top tray, bottom tray and middle tray.
+     These are further subdivided by thickness of converter layer which
+     may be any of 
+          no converter (bottom and middle trays only)
+          super-GLAST thickness (middle only)
+          "normal" thickness (middle and top only)  -->
+
+    <!-- Make a stack for the bottom tray -->
+    <stackZ name="trayBot" >
+      <axisPos volume="TKRFaceMin" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
+      </axisPos>
+      <axisPos volume="TKRCoreOuter" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
+      </axisPos>
+      <axisPos volume="TKRTopFaceReg" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRTopFace" />
+      </axisPos>
+      <axisPos volume="SiLayer" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" />
+      </axisPos>
+    </stackZ>
+
+    <!-- Stack for middle no-lead trays -->
+    <stackZ name="trayNoConv" >
+      <axisPos volume="SiLayer" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" />
+      </axisPos>
+      <axisPos volume="TKRBiasBox" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBias" />
+      </axisPos>
+      <axisPos volume="TKRFaceMin" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
+      </axisPos>
+      <axisPos volume="TKRCoreReg" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
+      </axisPos>
+      <axisPos volume="TKRTopFaceReg" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRTopFace" />
+      </axisPos>
+      <axisPos volume="SiLayer" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" /> 
+      </axisPos>
+    </stackZ>
+
+    <!-- stack for super-GLAST layers -->
+    <stackZ name="traySuper" >
+      <axisPos volume="SiLayer" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" />
+      </axisPos>
+      <axisPos volume="TKRBiasBox" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBias" />
+      </axisPos>
+      <axisPos volume="convSuperArray" >
+        <idField name="fTKRTrayCmp" valueREF="eTKRCnv" />
+      </axisPos>
+      <axisPos volume="TKRBotFaceSup" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
+      </axisPos>
+      <axisPos volume="TKRCoreSup" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
+      </axisPos>
+      <axisPos volume="TKRTopFaceSup" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
+      </axisPos>
+      <axisPos volume="SiLayer" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" />
+      </axisPos>
+    </stackZ>
+
+    <!-- Regular trays other than top -->
+    <stackZ name="trayReg" >
+      <axisPos volume="SiLayer" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" />
+      </axisPos>
+      <axisPos volume="TKRBiasBox" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBias" />
+      </axisPos>
+      <axisPos volume="convRegArray"  >
+        <idField name="fTKRTrayCmp" valueREF="eTKRCnv" />
+      </axisPos>
+      <axisPos volume="TKRBotFaceReg" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
+      </axisPos>
+      <axisPos volume="TKRCoreReg" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
+      </axisPos>
+      <axisPos volume="TKRTopFaceReg" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRTopFace" />
+      </axisPos>
+      <axisPos volume="SiLayer" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" />
+      </axisPos>
+    </stackZ>
+
+    <!-- top tray -->
+    <stackZ name="trayTop" >
+      <axisPos volume="SiLayer" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" /> 
+      </axisPos>
+      <axisPos volume="TKRBiasBox" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBias" />
+      </axisPos>
+      <axisPos volume="convRegArray" >
+        <idField name="fTKRTrayCmp" valueREF="eTKRCnv" />
+      </axisPos> 
+      <axisPos volume="TKRBotFaceReg" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
+      </axisPos>
+      <axisPos volume="TKRCoreOuter" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
+      </axisPos>
+      <axisPos volume="TKRFaceMin" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRTopFace" />
+      </axisPos>
+
+    </stackZ>
+
+    <!-- make a tracker by stacking up the trays -->
+    <stackZ name="oneTKRStack" >
+      <axisPos volume="trayBot" rotation="90" >
+	<idField name="fTKRTray" value="0" />
+        <idField name="fMeasure" valueREF="eMeasureY" />
+      </axisPos>
+      <axisPos volume="trayNoConv" gapREF="tray0Gap" >
+	<idField name="fTKRTray" value="1" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+      </axisPos>
+      <axisPos volume="trayNoConv" rotation="90" gapREF="trayNoCnvGap" >
+	<idField name="fTKRTray" value="2" />
+        <idField name="fMeasure" valueREF="eMeasureY" />
+      </axisPos>
+      <axisPos volume="traySuper" gapREF="trayNoCnvGap" >
+	<idField name="fTKRTray" value="3" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+      </axisPos>
+      <axisPos volume="traySuper" rotation="90" gapREF="traySuperGap" >
+	<idField name="fTKRTray" value="4" />
+        <idField name="fMeasure" valueREF="eMeasureY" />
+      </axisPos>
+      <axisPos volume="traySuper" gapREF="traySuperGap" >
+	<idField name="fTKRTray" value="5" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+      </axisPos>
+      <axisPos volume="traySuper" rotation="90" gapREF="traySuperGap" >
+	<idField name="fTKRTray" value="6" />
+        <idField name="fMeasure" valueREF="eMeasureY" />
+      </axisPos>
+      <axisPos volume="trayReg" gapREF="traySuperGap" >
+	<idField name="fTKRTray" value="7" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+      </axisPos>
+      <axisPos volume="trayReg" rotation="90" gapREF="trayRegGap" >
+	<idField name="fTKRTray" value="8" />
+        <idField name="fMeasure" valueREF="eMeasureY" />
+      </axisPos>
+      <axisPos volume="trayReg" gapREF="trayRegGap" >
+	<idField name="fTKRTray" value="9" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+      </axisPos>
+      <axisPos volume="trayReg" rotation="90" gapREF="trayRegGap" >
+	<idField name="fTKRTray" value="10" />
+        <idField name="fMeasure" valueREF="eMeasureY" />
+      </axisPos>
+      <axisPos volume="trayReg" gapREF="trayRegGap" >
+	<idField name="fTKRTray" value="11" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+      </axisPos>
+      <axisPos volume="trayReg" rotation="90" gapREF="trayRegGap" >
+	<idField name="fTKRTray" value="12" />
+        <idField name="fMeasure" valueREF="eMeasureY" />
+      </axisPos>
+      <axisPos volume="trayReg" gapREF="trayRegGap" >
+	<idField name="fTKRTray" value="13" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+      </axisPos>
+      <axisPos volume="trayReg" rotation="90" gapREF="trayRegGap" >
+	<idField name="fTKRTray" value="14" />
+        <idField name="fMeasure" valueREF="eMeasureY" />
+      </axisPos>
+      <axisPos volume="trayReg" gapREF="trayRegGap" >
+	<idField name="fTKRTray" value="15" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+      </axisPos>
+      <axisPos volume="trayReg" rotation="90" gapREF="trayRegGap" >
+	<idField name="fTKRTray" value="16" />
+        <idField name="fMeasure" valueREF="eMeasureY" />
+      </axisPos>
+      <axisPos volume="trayReg" gapREF="trayRegGap" >
+	<idField name="fTKRTray" value="17" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+      </axisPos>
+      <axisPos volume="trayTop" rotation="90" gapREF="trayRegGap" >
+	<idField name="fTKRTray" value="18" />
+        <idField name="fMeasure" valueREF="eMeasureY" />
+      </axisPos>
+
+    </stackZ>
+
+    <composition name="oneTKR" envelope="TKRStayClearBox">
+      <posXYZ volume="oneTKRStack" />
+    </composition>
+
