@@ -11,11 +11,12 @@
                  cent (row 2) def (everything else)
 
      Note tiles in columns 0 and 4 will have artificially-extended
-     X-dimension (substituting for curved sections) which must be computed.
-     All other tile dimensions are primary constants.
+     X-dimension (substituting for curved sections).  It can be read
+     off of 3-d model as "x-extent", so all
+     tile dimensions are primary constants.
  -->
     <box name="topTileRdefCedge"
-         XREF="topTileXEdgeTotal_l"
+         XREF="topTileXEdge_l"
          YREF="topTileYEdge_l"
          ZREF="tileThickness"
          materialREF="tileMat"
@@ -23,7 +24,7 @@
          detectorTypeREF="eDTypeACDTile"/>
 
     <box name="topTileRcentCedge"
-         XREF="topTileXEdgeTotal_l"
+         XREF="topTileXEdge_l"
          YREF="topTileYCentral_l"
          ZREF="tileThickness"
          materialREF="tileMat"
@@ -72,6 +73,7 @@
          sensitive="posHit"
 
   -->
+<!--
     <box name="xRibbonTop"
          XREF="ribbonWidth"
          YREF="xRibbonTop_l"
@@ -99,7 +101,7 @@
          ZREF="ribbonThickness"
          materialREF="ribbonMat"
          detectorTypeREF="eDTypeACDRibbon" />
-
+-->
     <!-- next assemble these pieces (25 top tiles, 4 long ribbons
          running parallel to Y-axis and 4 ribbons, each broken into
          5 segments, running parallel to X-axis. First make
@@ -116,7 +118,8 @@
        tiles by increasing row number (<->increasing y-displacement) 
           within tile row order by increasing col. id (<-> increasing
           x displacement)
-       Then the 4 Y-ribbons in order of increasing X-displacement. 
+    Later will add ribbons:
+       The 4 Y-ribbons in order of increasing X-displacement. 
        Each extends across the entire top.  All have same Z-displacement.
        Then the 20 X-ribbons.
 
@@ -347,6 +350,7 @@
       </posXYZ>
 
 <!-- now for x-ribbons -->
+<!--
       <posXYZ volume="xRibbonTop"
               XREF="topXRibbonOuter_dxn"
               ZREF="topXRibbon_dz" >
@@ -382,12 +386,13 @@
             <idField name="fRibbon"  value="3" />
             <idField name="fRibbonSegment" value="1" />    
       </posXYZ>
-
+-->
 <!-- X ribbon segments.  They're || X-axis, so "measure" y. Do them by
      ribbon number (0 to 3, with 0 having most neg. Y displacment)
      and within ribbon by segment, in order of icreasing X-displ.
      There are 4 ribbons, each divided into 5 segements. -->
 <!-- Ribbon 0 -->
+<!--
       <posXYZ volume="yRibbonTopEdge"
               XREF="topYRibbonEdge_dxn"
               YREF="topYRibbonOuter_dyn"
@@ -432,8 +437,9 @@
             <idField name="fRibbon"  value="0" />
             <idField name="fRibbonSegment" value="5" />    
       </posXYZ>
-    
+-->    
 <!-- Ribbon 1 -->
+<!--
       <posXYZ volume="yRibbonTopEdge"
               XREF="topYRibbonEdge_dxn"
               YREF="topYRibbonInner_dyn"
@@ -478,8 +484,9 @@
             <idField name="fRibbon"  value="1" />
             <idField name="fRibbonSegment" value="5" />    
       </posXYZ>
-
+-->
 <!-- Ribbon 2 -->
+<!--
       <posXYZ volume="yRibbonTopEdge"
               XREF="topYRibbonEdge_dxn"
               YREF="topYRibbonInner_dy"
@@ -524,8 +531,9 @@
             <idField name="fRibbon"  value="2" />
             <idField name="fRibbonSegment" value="5" />    
       </posXYZ>
-
+-->
 <!-- Ribbon 3 -->    
+<!--
       <posXYZ volume="yRibbonTopEdge"
               XREF="topYRibbonEdge_dxn"
               YREF="topYRibbonOuter_dy"
@@ -570,7 +578,7 @@
             <idField name="fRibbon"  value="3" />
             <idField name="fRibbonSegment" value="5" />    
       </posXYZ>
-
+-->
 
      </composition>
 
@@ -578,22 +586,24 @@
 <!-- Now for ACD sides (tiles and ribbons) -->
 
 <!-- different box needed for each of the 4 rows of side tiles on X sides 
-     and Y sides (X and Y sides happen to have same dimensions now,
-      but allow for difference) and for each of 3 transverse position,
+     and Y sides (X and Y sides have same tile dimensions.  Unfortunately,
+     there are two different transverse-size/column mappings, one for
+     sides 1 and 4 and another for sides 2 and 3.)
+      and for each of 3 transverse positions
       except for bottom row which has just 1 long tile,
-      so 10 different box definitions altogether, just for tiles on 
-      "X sides": the ones with thickness in X dimension, width in Y dim,
-      and similarly for Y sides.!  -->
+      so 10 different box definitions altogether.  Define them
+      uniformly with tranverse dimension = x -->
+<!-- 3 boxes for side row 0 -->
 
-    <box name="sideTileY0Edge" 
-         XREF="sideTileTransOuter"
+    <box name="sideTileR0EdgeLesser" 
+         XREF="sideTileTransLesser"
          YREF="tileThickness"
          ZREF="sideTileHeight0"
          materialREF="tileMat"
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <box name="sideTileY0Mid" 
+    <box name="sideTileR0Mid" 
          XREF="sideTileTransMid"
          YREF="tileThickness"
          ZREF="sideTileHeight0"
@@ -601,23 +611,23 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <box name="sideTileY0Central" 
-         XREF="sideTileTransCentral"
+    <box name="sideTileR0EdgeGreater" 
+         XREF="sideTileTransGreater"
          YREF="tileThickness"
          ZREF="sideTileHeight0"
          materialREF="tileMat"
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
-
-    <box name="sideTileY1Edge" 
-         XREF="sideTileTransOuter"
+<!-- 3 boxes for side row 1 -->
+    <box name="sideTileR1EdgeLesser" 
+         XREF="sideTileTransLesser"
          YREF="tileThickness"
          ZREF="sideTileHeight1"
          materialREF="tileMat"
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <box name="sideTileY1Mid" 
+    <box name="sideTileR1Mid" 
          XREF="sideTileTransMid"
          YREF="tileThickness"
          ZREF="sideTileHeight1"
@@ -625,26 +635,24 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <box name="sideTileY1Central" 
-         XREF="sideTileTransCentral"
+    <box name="sideTileR1EdgeGreater" 
+         XREF="sideTileTransGreater"
          YREF="tileThickness"
          ZREF="sideTileHeight1"
          materialREF="tileMat"
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
-
 
 <!--       side row 2 -->
-
-    <box name="sideTileY2Edge" 
-         XREF="sideTileTransOuter"
+    <box name="sideTileR2EdgeLesser" 
+         XREF="sideTileTransLesser"
          YREF="tileThickness"
          ZREF="sideTileHeight2"
          materialREF="tileMat"
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <box name="sideTileY2Mid" 
+    <box name="sideTileR2Mid" 
          XREF="sideTileTransMid"
          YREF="tileThickness"
          ZREF="sideTileHeight2"
@@ -652,16 +660,16 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <box name="sideTileY2Central" 
-         XREF="sideTileTransCentral"
+    <box name="sideTileR2EdgeGreater" 
+         XREF="sideTileTransGreater"
          YREF="tileThickness"
          ZREF="sideTileHeight2"
          materialREF="tileMat"
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-
-    <box name="sideTileY3" 
+<!-- Single tile in row 3 -->
+    <box name="sideTileR3" 
          XREF="ACDTotalTransSide"
          YREF="tileThickness"
          ZREF="sideTileHeight3"
@@ -672,7 +680,7 @@
    <!-- now rotate them all 90 degrees for X tiles (flip x and y dimensions) 
         Do the rotation on individual tiles rather than assembling a side,
         then rotating because the latter screws up ids -->
-
+<!--
     <box name="sideTileX0Edge" 
          XREF="tileThickness"
          YREF="sideTileTransOuter"
@@ -721,9 +729,6 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-
-<!--       side row 2 -->
-
     <box name="sideTileX2Edge" 
          XREF="tileThickness"
          YREF="sideTileTransOuter"
@@ -756,10 +761,11 @@
          materialREF="tileMat"
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
-
+-->
 <!-- Side ribbons are all congruent, but define two versions to avoid
      having to rotate.
      xSideRibbon is used on an "X-side", one at more or less constant x -->
+<!--
     <box name="xSideRibbon"
          XREF="ribbonThickness"
          YREF="ribbonWidth"
@@ -773,162 +779,160 @@
          ZREF="sideRibbon_l"
          materialREF="ribbonMat"
          detectorTypeREF="eDTypeACDRibbon" />
+-->
 
-<!-- Make rows for Y sides -->
-    <stackX name="sideTileRowY0" >
-      <axisPos volume="sideTileY0Edge">
+<!-- Make rows for faces (2 & 3) with lesser trans. dimension first.
+     Side 2 rotated +90 about Z is isomorphic to side 3.
+ -->
+    <stackX name="sideTileRow0Face2" >
+      <axisPos volume="sideTileR0EdgeLesser">
         <idField name="fCol" value="0" />
       </axisPos>
-      <axisPos volume="sideTileY0Mid" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR0Mid" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="1" />
       </axisPos>
-      <axisPos volume="sideTileY0Central" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR0Mid" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="2" />
       </axisPos>
-      <axisPos volume="sideTileY0Mid" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR0Mid" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="3" />
       </axisPos>
-      <axisPos volume="sideTileY0Edge" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR0EdgeGreater" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="4" />
       </axisPos>
     </stackX>
 
-    <stackX name="sideTileRowY1" >
-      <axisPos volume="sideTileY1Edge">
+    <stackX name="sideTileRow1Face2" >
+      <axisPos volume="sideTileR1EdgeLesser">
         <idField name="fCol" value="0" />
       </axisPos>
-      <axisPos volume="sideTileY1Mid" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR1Mid" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="1" />
       </axisPos>
-      <axisPos volume="sideTileY1Central" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR1Mid" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="2" />
       </axisPos>
-      <axisPos volume="sideTileY1Mid" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR1Mid" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="3" />
       </axisPos>
-      <axisPos volume="sideTileY1Edge" gapREF="sideHorizontalGap" >
-        <idField name="fCol" value="4" />
-      </axisPos>
-    </stackX>
-
-
-    <stackX name="sideTileRowY2" >
-      <axisPos volume="sideTileY2Edge">
-        <idField name="fCol" value="0" />
-      </axisPos>
-      <axisPos volume="sideTileY2Mid" gapREF="sideHorizontalGap" >
-        <idField name="fCol" value="1" />
-      </axisPos>
-      <axisPos volume="sideTileY2Central" gapREF="sideHorizontalGap" >
-        <idField name="fCol" value="2" />
-      </axisPos>
-      <axisPos volume="sideTileY2Mid" gapREF="sideHorizontalGap" >
-        <idField name="fCol" value="3" />
-      </axisPos>
-      <axisPos volume="sideTileY2Edge" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR1EdgeGreater" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="4" />
       </axisPos>
     </stackX>
 
 
+    <stackX name="sideTileRow2Face2" >
+      <axisPos volume="sideTileR2EdgeLesser">
+        <idField name="fCol" value="0" />
+      </axisPos>
+      <axisPos volume="sideTileR2Mid" gapREF="sideHorizontalGap" >
+        <idField name="fCol" value="1" />
+      </axisPos>
+      <axisPos volume="sideTileR2Mid" gapREF="sideHorizontalGap" >
+        <idField name="fCol" value="2" />
+      </axisPos>
+      <axisPos volume="sideTileR2Mid" gapREF="sideHorizontalGap" >
+        <idField name="fCol" value="3" />
+      </axisPos>
+      <axisPos volume="sideTileR2EdgeGreater" gapREF="sideHorizontalGap" >
+        <idField name="fCol" value="4" />
+      </axisPos>
+    </stackX>
 
-    <stackX name="sideTileRowY3" >
-      <axisPos volume="sideTileY3">
+
+
+    <stackX name="sideTileRowR3" >
+      <axisPos volume="sideTileR3">
         <idField name="fCol" value="0" />
       </axisPos>
     </stackX>
 
 
-<!-- Do same for X sides -->
-    <stackY name="sideTileRowX0" >
-      <axisPos volume="sideTileX0Edge">
+<!-- Do same for sides 1 and 4 
+     Side 4 rotated +90 about Z is isomorphic to side 1. -->
+    <stackX name="sideTileRow0Face4" >
+      <axisPos volume="sideTileR0EdgeGreater">
         <idField name="fCol" value="0" />
       </axisPos>
-      <axisPos volume="sideTileX0Mid" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR0Mid" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="1" />
       </axisPos>
-      <axisPos volume="sideTileX0Central" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR0Mid" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="2" />
       </axisPos>
-      <axisPos volume="sideTileX0Mid" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR0Mid" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="3" />
       </axisPos>
-      <axisPos volume="sideTileX0Edge" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR0EdgeLesser" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="4" />
       </axisPos>
-    </stackY>
+    </stackX>
 
-    <stackY name="sideTileRowX1" >
-      <axisPos volume="sideTileX1Edge">
+    <stackX name="sideTileRow1Face4" >
+      <axisPos volume="sideTileR1EdgeGreater">
         <idField name="fCol" value="0" />
       </axisPos>
-      <axisPos volume="sideTileX1Mid" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR1Mid" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="1" />
       </axisPos>
-      <axisPos volume="sideTileX1Central" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR1Mid" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="2" />
       </axisPos>
-      <axisPos volume="sideTileX1Mid" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR1Mid" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="3" />
       </axisPos>
-      <axisPos volume="sideTileX1Edge" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR1EdgeLesser" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="4" />
       </axisPos>
-    </stackY>
+    </stackX>
 
 
-    <stackY name="sideTileRowX2" >
-      <axisPos volume="sideTileX2Edge">
+    <stackX name="sideTileRow2Face4" >
+      <axisPos volume="sideTileR2EdgeGreater">
         <idField name="fCol" value="0" />
       </axisPos>
-      <axisPos volume="sideTileX2Mid" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR2Mid" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="1" />
       </axisPos>
-      <axisPos volume="sideTileX2Central" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR2Mid" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="2" />
       </axisPos>
-      <axisPos volume="sideTileX2Mid" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR2Mid" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="3" />
       </axisPos>
-      <axisPos volume="sideTileX2Edge" gapREF="sideHorizontalGap" >
+      <axisPos volume="sideTileR2EdgeLesser" gapREF="sideHorizontalGap" >
         <idField name="fCol" value="4" />
       </axisPos>
-    </stackY>
+    </stackX>
 
 
-    <stackY name="sideTileRowX3" >
-      <axisPos volume="sideTileX3">
-        <idField name="fCol" value="0" />
-      </axisPos>
-    </stackY>
-
-<!-- Stack up the rows in Z for an X-side and a Y-side -->
-    <stackZ name="TileYSide" >
-      <axisPos volume="sideTileRowY3">
+<!-- Stack up the rows in Z for face 2 -->
+    <stackZ name="TileFace2or3" >
+      <axisPos volume="sideTileR3">
         <idField name="fRow" value="3" />
       </axisPos>
-      <axisPos volume="sideTileRowY2" gapREF="sideVerticalGap" >
+      <axisPos volume="sideTileRow2Face2" gapREF="sideVerticalGap" >
         <idField name="fRow" value="2" />
       </axisPos>
-      <axisPos volume="sideTileRowY1" gapREF="sideVerticalGap" >
+      <axisPos volume="sideTileRow1Face2" gapREF="sideVerticalGap" >
         <idField name="fRow" value="1" />
       </axisPos>
-      <axisPos volume="sideTileRowY0" gapREF="sideVerticalGap" >
+      <axisPos volume="sideTileRow0Face2" gapREF="sideVerticalGap" >
         <idField name="fRow" value="0" />
       </axisPos>
     </stackZ>
 
-    <stackZ name="TileXSide" >
-      <axisPos volume="sideTileRowX3">
+    <stackZ name="TileFace4or1" >
+      <axisPos volume="sideTileR3">
         <idField name="fRow" value="3" />
       </axisPos>
-      <axisPos volume="sideTileRowX2" gapREF="sideVerticalGap" >
+      <axisPos volume="sideTileRow2Face4" gapREF="sideVerticalGap" >
         <idField name="fRow" value="2" />
       </axisPos>
-      <axisPos volume="sideTileRowX1" gapREF="sideVerticalGap" >
+      <axisPos volume="sideTileRow1Face4" gapREF="sideVerticalGap" >
         <idField name="fRow" value="1" />
       </axisPos>
-      <axisPos volume="sideTileRowX0" gapREF="sideVerticalGap" >
+      <axisPos volume="sideTileRow0Face4" gapREF="sideVerticalGap" >
         <idField name="fRow" value="0" />
       </axisPos>
     </stackZ>
@@ -945,6 +949,7 @@
 
 
     <!-- stack up ribbons for X and Y sides -->
+<!--
     <stackY name="sideRibbonsX" >
       <axisPos volume="xSideRibbon">
         <idField name="fRibbon" value="0"  />  
@@ -982,63 +987,53 @@
       </axisPos>
 
     </stackX>
-
-<!-- Make boxes for ACD supports (need 2 each for top, X-sides and
-     Y-sides), then stack to form support volumes -->
+ -->
+<!-- Make boxes for ACD supports.  Old scheme treated X- and Y- sides
+     differently.  Now (July '03) we follow 3-d model and dovetail
+     side supports. However we simplify by just defining two face sheet
+     boxes: one for top and one for sides. -->
     <box name="ACDTopSupportCore" 
-      XREF="ACDTopSupportTran"
-      YREF="ACDTopSupportTran"
+      XREF="ACDTopCoreTrans"
+      YREF="ACDTopCoreTrans"
       ZREF="ACDTopCoreThickness"
       materialREF="ACDSupportCoreMat" />
 
     <box name="ACDTopSupportFace" 
-      XREF="ACDTopSupportTran"
-      YREF="ACDTopSupportTran"
+      XREF="ACDTopCoreTrans"
+      YREF="ACDTopCoreTrans"
       ZREF="ACDFaceThickness"
       materialREF="ACDSupportFaceMat" />
 
-    <box name="ACDYSideSupportCore" 
-      XREF="ACDYSideSupport_l"
-      YREF="ACDSideCoreThickness"
-      ZREF="ACDSideSupport_z"
-      materialREF="ACDSupportCoreMat" />
-
-    <box name="ACDYSideSupportFace" 
-      XREF="ACDTopSupportTran"
-      YREF="ACDFaceThickness"
-      ZREF="ACDSideSupport_z"
-      materialREF="ACDSupportFaceMat" />
-
-    <box name="ACDXSideSupportCore" 
+   <!-- the following side boxes have long dimension along Y-axis.  
+      When positioned as is (no rotation) requires large X-displacement -->
+    <box name="ACDSideSupportCore" 
       XREF="ACDSideCoreThickness"
-      YREF="ACDXSideSupport_l"
-      ZREF="ACDSideSupport_z"
+      YREF="ACDSideCoreTrans"
+      ZREF="ACDSideCoreZ"
       materialREF="ACDSupportCoreMat" />
 
-    <box name="ACDXSideSupportFace" 
+    <box name="ACDSideSupportFace" 
       XREF="ACDFaceThickness"
-      YREF="ACDXSideSupport_l"
-      ZREF="ACDSideSupport_z"
+      YREF="ACDSideCoreTrans"
+      ZREF="ACDSideCoreZ"
       materialREF="ACDSupportFaceMat" />
 
-<!-- Stack to form 3 support (logical) volumes. Each side logical
-     volume is positioned twice to make 5 physical support volumes -->
+
+<!-- Stack to form 2 support (logical) volumes.The side logical
+     volume is positioned 4 times (2 of them rotated by 90 degrees)
+     to make 5 physical support volumes -->
     <stackZ name="ACDTopSupport" >
       <axisPos volume="ACDTopSupportFace" />
       <axisPos volume="ACDTopSupportCore" />
       <axisPos volume="ACDTopSupportFace" />
     </stackZ>
 
-<!-- Stack in Y to make volume at more or less constant Y, call it a
-     it an Y side -->
-    <stackY name="ACDYSideSupport" >
-      <axisPos volume="ACDYSideSupportFace"  />
-      <axisPos volume="ACDYSideSupportCore"  />
-      <axisPos volume="ACDYSideSupportFace"  />
-    </stackY>
-
-    <stackX name="ACDXSideSupport" >
-      <axisPos volume="ACDXSideSupportFace"  />
-      <axisPos volume="ACDXSideSupportCore"  />
-      <axisPos volume="ACDXSideSupportFace"  />
+<!-- Stack in X to make volume at more or less constant X.  This
+     will be positioned with a large (+ and -) X displacement.  Then rotate
+     and position at large Y displacementse.  -->
+    <stackX name="ACDSideSupport" >
+      <axisPos volume="ACDSideSupportFace"  />
+      <axisPos volume="ACDSideSupportCore"  />
+      <axisPos volume="ACDSideSupportFace"  />
     </stackX>
+
