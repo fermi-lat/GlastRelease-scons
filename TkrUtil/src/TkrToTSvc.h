@@ -56,6 +56,17 @@ public:
             return -1.;
         }
     }
+    double getGain2(const int tower, const int layer, const int view, 
+        const int strip) const 
+    {
+        if (tower>-1 && tower <NTOWERS && layer>-1 && layer<NLAYERS
+            && view>-1 && view<NVIEWS && strip>-1 && strip<NSTRIPS) 
+        {
+            return (double) m_ToTGain2[tower][layer][view][strip];
+        }else {
+            return -1.;
+        }
+    }
     double getThreshold(const int tower, const int layer, const int view, 
         const int strip) const
     {
@@ -67,6 +78,18 @@ public:
             return -1.;
         }
     }
+    double getQuality(const int tower, const int layer, const int view, 
+        const int strip) const
+    {
+        if (tower>-1 && tower <NTOWERS && layer>-1 && layer<NLAYERS
+            && view>-1 && view<NVIEWS && strip>-1 && strip<NSTRIPS) 
+        {
+            return (double) m_ToTQuality[tower][layer][view][strip];
+        }else {
+            return -1.;
+        }
+    }
+    double getCountsPerMicrosecond() const { return m_countsPerMicrosecond;}
 
 private:
     /// internal init method
@@ -77,12 +100,22 @@ private:
     std::string m_ToTFile;
     /// default Gain
     double m_defaultGain;
+    /// default quadratic term;
+    double m_defaultGain2;
     /// default Threshold
     double m_defaultThreshold;
+    /// default quality factor
+    double m_defaultQuality;
+    /// ToT counts per microsecond
+    double m_countsPerMicrosecond;
     /// array of gains, in microseconds/fC
     float m_ToTGain      [NTOWERS][NLAYERS][NVIEWS][NSTRIPS];
+    /// array of quadratic terms, in microseconds/fC**2
+    float m_ToTGain2     [NTOWERS][NLAYERS][NVIEWS][NSTRIPS];
     /// array of Thresholds, in microseconds = extrapolation to zero charge
     float m_ToTThreshold [NTOWERS][NLAYERS][NVIEWS][NSTRIPS];
+    /// array of quality factors
+    float m_ToTQuality   [NTOWERS][NLAYERS][NVIEWS][NSTRIPS];
     /// pointer to geometry service
     ITkrGeometrySvc* m_geoSvc;
 };

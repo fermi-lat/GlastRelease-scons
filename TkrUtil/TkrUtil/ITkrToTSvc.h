@@ -15,7 +15,7 @@ $Header$
 // Declaration of the interface ID ( interface id, major version,
 // minor version)
 
-static const InterfaceID IID_ITkrToTSvc("ITkrToTSvc", 1 , 0);
+static const InterfaceID IID_ITkrToTSvc("ITkrToTSvc", 2 , 0);
 
 /** @class ITkrToTSvc
 * @brief Interface class for TkrSplitsSvc
@@ -34,6 +34,11 @@ public:
         const int strip) const = 0;
     virtual double getThreshold (const int tower, const int layer, const int view,
         const int strip) const = 0;
+    virtual double getGain2     (const int tower, const int layer, const int view,
+        const int strip) const = 0;
+    virtual double getQuality   (const int tower, const int layer, const int view,
+        const int strip) const = 0;
+    virtual double getCountsPerMicrosecond () const = 0;
 };
 
 #endif // ITkrToTSvc_H

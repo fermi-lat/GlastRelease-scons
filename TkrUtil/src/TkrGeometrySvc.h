@@ -190,7 +190,7 @@ private:
     double m_aveRadLenRest[NTYPES];
 
     /// Returns minimum trayHeight... I hope we can stop using this soon
-    StatusCode getMinTrayHeight(double trayHeight);
+    StatusCode getMinTrayHeight(double& trayHeight);
 
     /// returns z position of X, Y or average plane for each layer
     StatusCode fillLayerZ();
