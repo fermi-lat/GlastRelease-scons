@@ -37,8 +37,8 @@ RSC=rc.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "../../lib/Release"
-# PROP Intermediate_Dir "../../tmp/Release/geomrep"
+# PROP Output_Dir "../../msdev/lib"
+# PROP Intermediate_Dir "../../msdev/tmp/geomrep"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GR /GX /O2 /I "../" /I "../src" /D "WIN32" /D "_MBCS" /D "NDEBUG" /D "_LIB" /YX /FD /FI../mgr/nt_config.h @fincludes /c
 # ADD CPP /nologo /G6 /W3 /GR /GX /O2 /I "../" /I "../src" /D "WIN32" /D "_MBCS" /D "NDEBUG" /D "_LIB" /YX /FD /FI../mgr/nt_config.h /I../ @fincludes /c
@@ -49,7 +49,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"../../lib/Release/geomrep.lib"
+# ADD LIB32 /nologo /out:"../../msdev/lib/geomrep.lib"
 
 !ELSEIF  "$(CFG)" == "geomreplib - Win32 Debug"
 
@@ -60,8 +60,8 @@ LIB32=link.exe -lib
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "../../lib/Debug"
-# PROP Intermediate_Dir "../../tmp/Debug/geomrep"
+# PROP Output_Dir "../../msdev/Debug/lib"
+# PROP Intermediate_Dir "../../msdev/Debug/tmp/geomrep"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /I "../" /I "../src" /D "WIN32" /D "_MBCS" /D "_DEBUG" /D "_LIB" /YX /FD /FI../mgr/nt_config.h /GZ @fincludes /c
 # ADD CPP /nologo /G6 /W3 /Gm /GR /GX /ZI /Od /I "../" /I "../src" /D "WIN32" /D "_MBCS" /D "_DEBUG" /D "_LIB" /YX /FD /FI../mgr/nt_config.h /I../ /GZ @fincludes /c
@@ -72,7 +72,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"../../lib/Debug/geomrep.lib"
+# ADD LIB32 /nologo /out:"../../msdev/Debug/lib/geomrep.lib"
 
 !ENDIF 
 

@@ -30,10 +30,10 @@ RSC=rc.exe
 
 !IF  "$(CFG)" == "geometrylib - Win32 Release"
 
-OUTDIR=.\../../lib/Release
-INTDIR=.\../../tmp/Release/geometry
+OUTDIR=.\../../msdev/lib
+INTDIR=.\../../msdev/tmp/geometry
 # Begin Custom Macros
-OutDir=.\../../lib/Release
+OutDir=.\../../msdev/lib
 # End Custom Macros
 
 ALL : "$(OUTDIR)\geometry.lib"
@@ -111,10 +111,10 @@ LIB32_OBJS= \
 
 !ELSEIF  "$(CFG)" == "geometrylib - Win32 Debug"
 
-OUTDIR=.\../../lib/Debug
-INTDIR=.\../../tmp/Debug/geometry
+OUTDIR=.\../../msdev/Debug/lib
+INTDIR=.\../../msdev/Debug/tmp/geometry
 # Begin Custom Macros
-OutDir=.\../../lib/Debug
+OutDir=.\../../msdev/Debug/lib
 # End Custom Macros
 
 ALL : "$(OUTDIR)\geometry.lib"

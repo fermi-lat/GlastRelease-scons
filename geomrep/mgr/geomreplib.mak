@@ -30,10 +30,10 @@ RSC=rc.exe
 
 !IF  "$(CFG)" == "geomreplib - Win32 Release"
 
-OUTDIR=.\../../lib/Release
-INTDIR=.\../../tmp/Release/geomrep
+OUTDIR=.\../../msdev/lib
+INTDIR=.\../../msdev/tmp/geomrep
 # Begin Custom Macros
-OutDir=.\../../lib/Release
+OutDir=.\../../msdev/lib
 # End Custom Macros
 
 ALL : "$(OUTDIR)\geomrep.lib"
@@ -85,10 +85,10 @@ LIB32_OBJS= \
 
 !ELSEIF  "$(CFG)" == "geomreplib - Win32 Debug"
 
-OUTDIR=.\../../lib/Debug
-INTDIR=.\../../tmp/Debug/geomrep
+OUTDIR=.\../../msdev/Debug/lib
+INTDIR=.\../../msdev/Debug/tmp/geomrep
 # Begin Custom Macros
-OutDir=.\../../lib/Debug
+OutDir=.\../../msdev/Debug/lib
 # End Custom Macros
 
 ALL : "$(OUTDIR)\geomrep.lib"
