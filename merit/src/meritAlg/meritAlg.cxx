@@ -118,7 +118,7 @@ StatusCode meritAlg::initialize() {
     
     // setup defaults if no primary info
     m_incident_dir=Hep3Vector(0,0,-1);
-    m_mce = 0.1;
+    m_mce = 0.1f;
     return sc;
 }
 
@@ -178,8 +178,9 @@ void meritAlg::processTDS(const Event::EventHeader& header,
         Vector dir = track.getDirection();
         
         
-        // get difference from incident mc direction
-        m_angle_diff = acos( m_incident_dir * dir );
+        // get difference from incident mc direction: allow either convention on direction of 
+        // output.
+        m_angle_diff = acos( fabs( m_incident_dir * dir) );
         
         // conversion layer
         m_first_hit = track.getLayer();
