@@ -1,5 +1,5 @@
 package FluxSvc
-version v3
+version v3r1
 
 branches FluxSvc mgr doc
 
@@ -25,8 +25,4 @@ library FluxSvc  *.cxx \
 
 # test program, using local joboptions
 
-macro JobOptions  "src/test/jobOptions.txt"
-set JOBOPTIONS ${FLUXSVCROOT}/$(jobOptions)
-
-
-application testFluxSvc test/TestMain.cxx test/FluxTestAlg.cxx ${jobOptions} 
+apply_pattern package_test
