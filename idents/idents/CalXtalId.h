@@ -34,6 +34,8 @@ namespace idents {
 *
 * $Header$
 */
+    class VolumeIdentifier;
+
     class CalXtalId {
         
         
@@ -80,6 +82,17 @@ namespace idents {
         {
             packId(tower, layer, column);
         };
+
+        /** constructor from VolumeId.  Throws std::invalid_argument
+            if @vId is not a valid Cal identifier
+            @param vId  Volume identifier, containing complete geometry
+                        id of volume.  Precise form depends on description
+                        and nesting of volumes in xml geometry description
+            @param xNum number of towers in a row, needed to calculate
+                        single tower number from (row, column) representation
+                        in @a vid
+         */
+        CalXtalId(const VolumeIdentifier& vId, unsigned xNum=4);
             
         ~CalXtalId() {};
                         
