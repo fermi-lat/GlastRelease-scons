@@ -31,6 +31,15 @@ namespace xmlUtil {
     // Finally make the hierarchy of constraints on Identifiers
     m_root = new DictNode(fieldElt, 0, m_fieldMan);
   }
+
+  IdDict::~IdDict() {
+    /* First get rid of hierarchy of nodes, then get rid of
+       our DictFieldMan object. The latter will delete all the
+       fields
+    */
+    delete m_root;
+    delete m_fieldMan;
+  }
   
   bool IdDict::addChild(DictNode* parent, DictNode* newNode) {
     /* Started to write something to add field if not already

@@ -10,7 +10,10 @@
 
 
 namespace xmlUtil {
-  // One and only public constructor
+  /*! One and only public constructor.  Note that constraints specified
+      as a list in xml, but describable in terms of a min and max
+      bound will be represented in terms of the bounds.  The list
+      representation is only used when there is no other option. */
   DictConstraints::DictConstraints(DOM_Element elt) : 
     m_style(ESTYLE_uninit), m_valList(0), m_minVal(0), m_maxVal(0)
   {
@@ -87,6 +90,19 @@ namespace xmlUtil {
     m_style(ESTYLE_interval), m_valList(0),
     m_minVal(min), m_maxVal(max) {}
 
+  DictConstraints::DictConstraints(const DictValList * const list) :
+    m_style(ESTYLE_list) {
+    m_valList = new DictValList(*list);
+    m_minVal = 0xffffffff;
+    m_maxVal = 0;
+    for (DictValList::iterator it = list->begin(); 
+         it != list->end(); ++it) {
+      unsigned val = *it;
+      if (val > m_maxVal) m_maxVal = val;
+      if (val < m_minVal) m_minVal = val;
+    }
+  }
+
   DictConstraints::DictConstraints(const DictConstraints& toCopy) {
     deepCopy(toCopy);
   }
@@ -111,7 +127,7 @@ namespace xmlUtil {
     return *this;
   }
 
-  bool DictConstraints::allowed(const unsigned value) {
+  bool DictConstraints::allowed(const unsigned value) const {
     switch(m_style) {
     case ESTYLE_single: return (value == m_minVal);
     case ESTYLE_interval: 
@@ -127,24 +143,24 @@ namespace xmlUtil {
     return false;
   }
   
-  bool DictConstraints::allowed(DictConstraints *other) {
+  bool DictConstraints::allowed(DictConstraints *other) const {
     return allowed(*other);
   }
 
-  bool DictConstraints::allowed(const DictConstraints& other) {
+  bool DictConstraints::allowed(const DictConstraints& other) const {
 
     bool boundsOk = ((other.m_minVal >= m_minVal) && 
                      (other.m_maxVal <= m_maxVal) );
-    // for non-list case, this is all there is to check
-    if ((m_valList == 0) && (other.m_valList == 0)) return boundsOk;
+    // if this isn't a list, this is all there is to check
+    if (m_valList == 0) return boundsOk;
     // If either has a list of values, bounds must still be ok
     if (!(boundsOk)) return false;
                                                         
-    // All that's left to check is case where at least one is a
-    // list and bounds are ok.  Just do the brute force thing and
+    // All that's left to check is case where this has a list
+    // and  bounds are ok.  Just do the brute force thing and
     // check each possible value separately.  This would be horrible
     // if both were large enumerated sets, but it's very unlikely
-    // that large sets will be described as a list rather than an
+    // that large sets will be described as a list rather than as an
     // interval
 
     else if (other.m_valList) {
@@ -158,5 +174,24 @@ namespace xmlUtil {
       }
     }
     return true;
+  }
+
+  bool DictConstraints::disjoint(const DictConstraints& other) const {
+    if ((other.m_minVal > m_maxVal) ||
+        (other.m_maxVal < m_minVal))  return true;
+    // If either is an interval, we'll have an intersection
+    if ((!m_valList) || (!other.m_valList)) return false;
+
+    // Both are lists.  Check for duplicates one at a time
+    for (DictValList::iterator it = m_valList->begin(); 
+         it !=m_valList->end(); ++it) {
+      unsigned val = *it;
+      if (other.allowed(val)) return false;
+    }
+    return true;
+  }
+
+  bool DictConstraints::disjoint(DictConstraints *other) const {
+    return disjoint(*other);
   }
 }
