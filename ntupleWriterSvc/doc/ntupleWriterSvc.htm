@@ -1,0 +1,162 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>ntupleWriterSvc</title>
+</head>
+
+<body>
+
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="8" width="98%">
+    <tr>
+      <td align="right" valign="top" width="20%">&nbsp;</td>
+      <td width="15"></td>
+      <td valign="bottom" width="80%"><font size="5">ntupleWriterSvc</font></td>
+    </tr>
+    <tr>
+      <td valign="top" width="20%"><font size="2"><strong><a href="#Introduction">Introduction</a></strong></font>
+        <p><font size="2"><strong><a href="#Obtaining the Code">Obtaining the
+        code</a></strong></font></p>
+        <p><font size="2"><strong><a href="#Running the test program">Running
+        the test program</a></strong></font></p>
+        <p><font size="2"><strong><a href="#Using the service">Using the service</a></strong></font><font size="3"><br>
+        </font><font size="2"><a href="#jobOptions file">JobOptions<br>
+        </a></font><font size="3"><br>
+        </font></td>
+      <td width="15"></td>
+      <td valign="top" width="80%">
+        <h3 align="center"><a name="Introduction">Introduction</a></h3>
+        <p>Want to write out to a ROOT ntuple?&nbsp; Then ntupleWriterSvc is for
+        you!&nbsp; This Gaudi Service is designed to handle the ins and outs of
+        adding and updating an ntuple.&nbsp; User algorithms just provide a name
+        to identify the ntuple they desire to write to, the tag name for the
+        ntuple entry, and a value.&nbsp; ntupleWriterSvc does the rest!</p>
+      </center>
+      <h3 align="center"><a name="Obtaining the Code">Obtaining the Code</a></h3>
+      <p align="left">ntupleWriterSvc is available from your neighborhood SLAC
+      cvs repository.&nbsp; You can find the most recent tagged version by <a href="http://exp/glast/ground/software/LatestPackages/index.htm">checking
+      out this web page that lists the latest tags.</a></p>
+      <h3 align="center"><a name="Running the test program">Running the test
+      program</a></h3>
+      <p align="left">To become acquainted with the ntupleWriterSvc, try the
+      test application that is provided with the ntupleWriterSvc package.&nbsp;
+      Once ntupleWriterSvc has been set up using cmt, compile the test project
+      to generate the test application.&nbsp; Now check the jobOptions.txt file
+      in the src/test directory.&nbsp; You may need to update the following
+      entry, to point to a valid directory on your system:<br>
+      // Output root ntuple file, specify by logical variable<br>
+      NTupleSvc.Output = {"TESTALG DATAFILE='/NTUPLES/testAlg.root' OPT='NEW'"};<br>
+      Now you are ready to run the test application.&nbsp; When it is complete,
+      there will be a new Root ntuple in the directory name you provided in the
+      NTupleSvc.Output job options entry.&nbsp; The ntuple will contain one
+      column called &quot;MyFirstItem&quot;.</p>
+      <h3 align="center"><a name="Using the service">Using the service</a></h3>
+      <ol>
+        <li>
+          <p align="left">First, add &quot;use ntupleWriterSvc&quot; to the
+          requirements file for the application you wish to run.</li>
+        <li>
+          <p align="left">Next setup the package, so that the settings are reset
+          to include ntupleWriterSvc</li>
+        <li>
+          <p align="left">Update the<a name="jobOptions file"> jobOptions file</a>:
+          <ol>
+            <li>
+              <p align="left">Add <i>ntupleWriterSvc</i> to <i>ApplicationMgr.ExtSvc</i></li>
+            <li>
+              <p align="left">Add <i>ntupleWriterSvc</i> to <i>ApplicationMgr.DLLs</i></li>
+            <li>
+              <p align="left">Add <i>ApplicationMgr.HistogramPersistency = "ROOT";</i>
+              if it is not already in your jobOptions</li>
+            <li>
+              <p align="left">Provide a list of ntuple names to the service, for
+              example:&nbsp; <i>ntupleWriterSvc.tuple_name = { &quot;ACD&quot; };</i>
+              <ol>
+                <li>
+                  <p align="left">Here we will create one ntuple, identified by
+                  the tag &quot;ACD&quot;.</li>
+              </ol>
+            </li>
+            <li>
+              <p align="left">Setup the output parameters for the NTupleSvc,
+              using the tag name(s) provided in your ntupleWriterSvc.tuple_name
+              list.&nbsp; Note that the NTupleSvc as well as ntupleWriterSvc can
+              accomodate multiple ntuples in one run.&nbsp; Here is an example
+              for settiing up the &quot;ACD&quot; ntuple:<br>
+              <i>NTupleSvc.Output = {&quot;ACD DATAFILE='/NTUPLES/acdAlg.root' OPT='NEW'"};</i></li>
+            <li>
+              <p align="left">Finally, for the algorithm you wish to use to
+              write to an ntuple, setup a new input parmeter to specify the
+              ntuple tag name.&nbsp; Here is an example for the acdReconAlg:<br>
+              <i>acdReconAlg.tuple_name = &quot;ACD&quot;;</i></li>
+          </ol>
+        </li>
+        <li>
+          <p align="left">Next update your algorithm to use the ntupleWriterSvc
+          <ol>
+            <li>
+              <p align="left">Add the include file:&nbsp;&nbsp; <i>#include
+              &quot;ntupleWriterSvc/INTupleWriterSvc.h&quot;</i></li>
+            <li>
+              <p align="left">Setup a member variable to access the
+              ntupleWriterSvc:<br>
+              <i>      INTupleWriterSvc *ntupleWriteSvc;</i></li>
+            <li>
+              <p align="left">Add a member variable to store the ntuple tag
+              parameter that we just added to the job options file.<br>
+              <i>      std::string m_tupleName;</i></li>
+            <li>
+              <p align="left">In your algorithm's constructor, add a
+              declareProperty call for the tag parameter:<br>
+              <i>declareProperty(&quot;tupleName&quot;, m_tupleName=&quot;&quot;);</i></li>
+            <li>
+              <p align="left">In your algorithms's initialize routine, access
+              the ntupleWriterSvc:<br>
+              <i>    // get a pointer to our ntupleWriterSvc<br>
+    sc = serviceLocator()->getService("ntupleWriterSvc",&nbsp;<br>
+        IID_INTupleWriterSvc, reinterpret_cast&lt;IInterface*&amp;>( ntupleWriteSvc));<br>
+              <br>
+    if( sc.isFailure() ) {<br>
+              &nbsp;&nbsp;&nbsp; log &lt;&lt; MSG::ERROR &lt;&lt; "acdReconAlg failed to get the ntupleWriterSvc" &lt;&lt; endreq;<br>
+              &nbsp;&nbsp;&nbsp; return sc;<br>
+    }</i></li>
+            <li>
+              <p align="left">Lastly, during your algorithm's execute method,
+              call a routine to fill quantities in an ntuple.&nbsp; For example,
+              the acdReconAlg has a method called writeNTuple().&nbsp; This
+              routine, uses the ntupleWriterSvc to add items and their values to
+              a named ntuple.&nbsp; This example, adds 2 entries to the ntuple,
+              &quot;ACD_TotEnergy&quot; and &quot;ACD_TileCount&quot;.<br>
+              <i>StatusCode acdReconAlg::writeNTuple() {<br>
+              &nbsp;&nbsp;&nbsp; StatusCode sc = StatusCode::SUCCESS;<br>
+              &nbsp;&nbsp;&nbsp; /// we must add our ntuples items to the ntuple here:<br>
+              &nbsp;&nbsp;&nbsp; sc = ntupleWriteSvc->addItem(m_tupleName.c_str(), "ACD_TotEnergy", m_totEnergy);<br>
+              &nbsp;&nbsp;&nbsp; sc = ntupleWriteSvc->addItem(m_tupleName.c_str(), "ACD_TileCount",
+              m_tileCount);<br>
+              &nbsp;&nbsp;&nbsp; return sc;<br>
+              }</i></li>
+          </ol>
+          <p align="left">The only method users of ntupleWriterSvc need to be
+          concerned with is the addItem routine.&nbsp; The method is defined as
+          follows:&nbsp; <i>StatusCode addItem(const char *tupleName, const char
+          *itemName, const float value);</i>&nbsp; The first parameter is the
+          tag that identifies the ntuple that we wish to write to, such as
+          &quot;ACD&quot;.&nbsp; The second parameter is the column name for the
+          item we wish to update, such as &quot;ACD_TotEnergy&quot;, this will
+          be the name as it will appear in the Root ntuple.&nbsp; The third
+          parameter is a float, which contains the value to be stored in this
+          item for this event.</li>
+      </ol>
+    </td>
+  </tr>
+  </table>
+</div>
+
+</body>
+
+</html>
