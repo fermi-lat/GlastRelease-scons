@@ -112,12 +112,16 @@ TkrMakeClusters::TkrMakeClusters(TkrClusterCol* pClus,
                     int stripf = highStrip.getStripNumber();
                     Point pos = position(layer, TkrCluster::intToView(view), 
                         strip0, stripf, tower);
+                    /*
                     HepPoint3D hepPos(pos.x(), pos.y(), pos.z());
+                   
                     if (m_pAlignment && m_pAlignment->alignRec()) {
                         int ladder = strip0/m_pTkrGeo->ladderNStrips();
                         m_pAlignment->moveCluster(tower, digiLayer, view, ladder, hepPos);
                     }
+                   
                     pos = Point(hepPos.x(), hepPos.y(), hepPos.z());
+                    */
                     TkrCluster* cl = new TkrCluster(nclusters, layer, view, 
                         strip0, stripf, 
                         pos, pDigi->getToTForStrip(stripf), tower);
