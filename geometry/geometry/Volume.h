@@ -33,6 +33,9 @@ class Volume : public  Shape , protected SurfaceList
    /// is the point inside the volume?
    virtual int inside ( const Point& x ) const;
 
+   /// or how close to the surface
+   virtual double howNear( const Point& x ) const;
+
    /// rotate, translate
    GeomObject& transform(const CoordTransform&);
 

@@ -352,3 +352,12 @@ Volume::inside( const Point& x ) const
     return 1;
 }
 
+double Volume::howNear( const Point& x) const
+{
+   double r=FLT_MAX;
+    for(unsigned i=0; i<surfaceCount(); i++) {
+	double d =surface(i).how_near( x );
+        if (d < r) r=d;
+    }
+    return r;
+}

@@ -50,6 +50,9 @@ class Shape : public GeomObject
     /// should be calculated by a subclass which is meant to be the maximum distance  from the center
     virtual double getMaxDimension() const { return FLT_MAX; }
 
+    /// how near is it to the nearest surface
+    virtual double howNear( const Point& x) const=0;
+
  protected:
     Shape();
     // default constructor accessible to subclasses
