@@ -620,6 +620,64 @@ int checkTkrRecon(TkrRecon *tkr, UInt_t ievent) {
     return 0;
 }
 
+int checkAcdRecon(AcdRecon *acd, UInt_t ievent) {
+
+    Float_t f = Float_t (ievent);
+    Float_t fr = f*randNum;
+
+    if (!floatInRange(acd->getEnergy(), f)) {
+        std::cout << "AcdRecon energy is wrong: " << acd->getEnergy() << std::endl;
+        return -1;
+    }
+
+    if (acd->getTileCount() != 5) {
+        std::cout << "AcdRecon tile count is wrong: " << acd->getTileCount() << std::endl;
+        return -1;
+    }
+
+    if (!floatInRange(acd->getGammaDoca(), fr)) {
+        std::cout << "AcdRecon Gamma Doca is wrong: " << acd->getGammaDoca() << std::endl;
+        return -1;
+    }
+
+    if (!floatInRange(acd->getDoca(), randNum) ){
+        std::cout << "AcdRecon Doca is wrong: " << acd->getDoca() << std::endl;
+        return -1;
+    }
+
+    if (!floatInRange(acd->getActiveDist(), 2.*f) ) {
+        std::cout << "AcdRecon Active Dist is wrong: " << acd->getActiveDist() << std::endl;
+        return -1;
+    }
+
+    AcdId acdMinDocaId = acd->getMinDocaId();
+    if ((acdMinDocaId.getLayer() != 0) || (acdMinDocaId.getFace() != 0) ||
+        (acdMinDocaId.getRow() != 3) || (acdMinDocaId.getColumn() != 2) ) {
+        std::cout << "MinDoca AcdID is wrong: " << acdMinDocaId.getLayer() << " "
+            << acdMinDocaId.getFace() << " " << acdMinDocaId.getRow() << " "
+            << acdMinDocaId.getColumn() << std::endl;
+        return -1;
+    }
+
+    std::vector<Double_t> rowCol = acd->getRowDocaCol();
+    if (rowCol.size() != 2) {
+        std::cout << "AcdRecon number of row entries is wrong: " << rowCol.size() << std::endl;
+        return -1;
+    }
+
+    if (!floatInRange(rowCol[0], randNum) ) {
+        std::cout << "AcdRecon row doca 0 is wrong: " << rowCol[0] << std::endl;
+        return -1;
+    }
+
+    if (!floatInRange(rowCol[1], f) ) {
+        std::cout << "AcdRecon row doca 1 is wrong: " << rowCol[1] << std::endl;
+        return -1;
+    }
+
+    return 0;
+}
+
 
 /// Read in the ROOT file just generated via the write method
 int read(char* fileName, int numEvents) {
@@ -636,6 +694,10 @@ int read(char* fileName, int numEvents) {
         std::cout << "ReconEvent ievent = " << ievent << std::endl;
         evt->Print();
         if (checkReconEvent(evt, ievent) < 0) return -1;
+        AcdRecon *acd = evt->getAcdRecon();
+        if (!acd) return -1;
+        acd->Print();
+        if (checkAcdRecon(acd, ievent) < 0) return -1;
         CalRecon *cal = evt->getCalRecon();
         if (!cal) return -1;
         cal->Print();
@@ -671,6 +733,19 @@ int write(char* fileName, int numEvents) {
     for (ievent = 0; ievent < numEvents; ievent++) {
         
         Float_t f = Float_t(ievent);
+
+        // Create AcdRecon object
+        AcdRecon *acdRec = new AcdRecon();
+        Double_t energy = f;
+        Int_t count = 5;
+        Double_t gDoca = f*randNum;
+        Double_t doca = randNum;
+        Double_t actDist = 2.*f;
+        AcdId minDocaId(0, 0, 3, 2);
+        std::vector<Double_t> rowDocaCol;
+        rowDocaCol.push_back(randNum);
+        rowDocaCol.push_back(f);
+        acdRec->initialize(energy, count, gDoca, doca, actDist, minDocaId, rowDocaCol);
 
         // Create CalRecon object
         CalRecon *calRec = new CalRecon();
@@ -801,7 +876,7 @@ int write(char* fileName, int numEvents) {
         }
 
 
-        ev->initialize(ievent, runNum, tkrRec, calRec);
+        ev->initialize(ievent, runNum, tkrRec, calRec, acdRec);
         t->Fill();
         ev->Clear();
     }

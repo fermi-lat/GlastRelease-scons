@@ -43,6 +43,18 @@
         Float_t randNum = gRandom->Rndm();
         Float_t f = Float_t (ievent);
 
+        // Create AcdRecon object
+        AcdRecon *acdRec = new AcdRecon();
+        Double_t energy = f;
+        Int_t count = 5;
+        Double_t gDoca = f*randNum;
+        Double_t doca = randNum;
+        Double_t actDist = 2.*f;
+        AcdId minDocaId(0, 0, 3, 2);
+        acdRec->addRowDoca(randNum);
+        acdRec->addRowDoca(f);
+        acdRec->initialize(energy, count, gDoca, doca, actDist, minDocaId);
+
         CalRecon *calRec = new CalRecon();
         calRec->initialize();
 
@@ -160,7 +172,7 @@
             vertex->initializeVals(vtxPar, vtxCov, pos, dir);
             tkrRec->addVertex(vertex);
         }
-        ev->initialize(ievent, runNum, tkrRec, calRec);
+        ev->initialize(ievent, runNum, tkrRec, calRec, acdRec);
         t->Fill();
         ev->Clear();
     }
