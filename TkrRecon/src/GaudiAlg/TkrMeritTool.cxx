@@ -449,7 +449,8 @@ void TkrMeritTool::doExtraHits(const Event::TkrVertex& vertex,
 
 void TkrMeritTool::doSkirt() 
 {
-    const double _skirtZ = 0.0; // skirt z in mm
+    // top of CsI, as determined from Event Display
+    const double _skirtZ = -26.475; // skirt z in mm
     
     const Event::TkrFitTrack* track = m_thePair[0];
     Point endPoint = track->getPosition(Event::TkrRecInfo::End);
