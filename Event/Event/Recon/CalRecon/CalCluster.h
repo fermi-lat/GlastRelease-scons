@@ -93,7 +93,7 @@ namespace Event
             m_start  = fit_start;
         }
         
-            
+        void setEnergyCorrected(double energy) {m_energyCorrected = energy;}
         
         /// get energy sum
         double getEnergySum()        const {return m_energySum;}
