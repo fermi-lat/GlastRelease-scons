@@ -8,7 +8,6 @@
 ApplicationMgr.DLLs += {"GaudiAud"};
 AuditorSvc.Auditors = {"ChronoAuditor"};
 
-MeritAlg.generated = 1000; // for estimation of Aeff
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 second.OutputLevel=4; // too much info from second CalClustersAlg
@@ -18,7 +17,9 @@ Output.Members={}; // turn off any root ouptut
 
 // Number of events to process
 ApplicationMgr.EvtMax = 1000;
-
+MeritAlg.generated = 1000; // for estimation of Aeff--must be the same
+// set root output from merit with following
+MeritAlg.RootFilename="merit.root"; 
 //==============================================================
 //
 // End of job options file

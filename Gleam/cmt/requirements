@@ -38,6 +38,9 @@ private
 use Geant4      v1r1p0
 
 public
+# this is the minimal G4 runtime only stuff
+use Geant4Runtime       v1r0
+
 # Gaudi component packages follow
 
 use GuiSvc      v3r1p3
@@ -47,9 +50,9 @@ use GlastSvc    v8r2
 
 # simulation
 
-use FluxSvc             v5r10p2
+use FluxSvc             v5r10p3
 use FluxDisplay v2r1
-use G4Generator v4r3
+use G4Generator         v4r3p1
 
 #digitization
 use CalDigi             v1r2
@@ -70,7 +73,7 @@ use AcdRecon            v0r5
 use RootIo              v4r11
 
 #diagnostic and summary of bottom line
-use merit               v5r8p1
+use merit                v5r8p2
 
 ### define a simple executable with GUI
 
