@@ -24,7 +24,8 @@
 #include "McParticleManager.h"
 // GLAST Geant4
 
-#include "GlastMS/MultipleScatteringFactory.h"
+#include "GlastMS/MultipleScatteringFactory.h"  // For controlling multiple scattering versions
+#include "GlastMS/EnergyLossFactory.h"          // For controlling energy loss versions in EMPhysics
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
@@ -77,7 +78,8 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("physics_tables", m_physics_table="build");
   declareProperty("physics_dir", m_physics_dir="G4cuts/100micron/");
 
-  declareProperty("mscatOption", m_mscatOption=true); 
+  declareProperty("mscatOption",  m_mscatOption  = true); 
+  declareProperty("eLossCurrent", m_eLossCurrent = false); 
 }
     
 ////////////////////////////////////////////////////////////////////////////
@@ -151,8 +153,11 @@ StatusCode G4Generator::initialize()
 
   // create a factory for the multiplescattering to pass around to the physics guys
   GlastMS::MultipleScatteringFactory msFactory(
-      m_mscatOption? GlastMS::MultipleScatteringFactory::OLD32 
-                   : GlastMS::MultipleScatteringFactory::NATIVE);
+      m_mscatOption ? GlastMS::MultipleScatteringFactory::OLD32 
+                    : GlastMS::MultipleScatteringFactory::NATIVE);
+  GlastMS::EnergyLossFactory eLossFactory(
+      m_eLossCurrent ? GlastMS::EnergyLossFactory::CURRENT 
+                     : GlastMS::EnergyLossFactory::RELEASE52);
 
   log << MSG::WARNING << "Using the " << (m_mscatOption? "Old 3.2" : "current G4") 
       << " version of Multiple scattering" << endreq;
@@ -169,6 +174,7 @@ StatusCode G4Generator::initialize()
                                     m_physics_table, 
                                     m_physics_dir,
                                     msFactory,
+                                    eLossFactory,
 									geosv);
 
       log << "\n done." << endreq;

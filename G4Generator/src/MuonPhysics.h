@@ -6,6 +6,7 @@
 
 #include "G4VPhysicsConstructor.hh"
 #include "GlastMS/MultipleScatteringFactory.h"
+#include "GlastMS/EnergyLossFactory.h"
 
 /** 
  * @class MuonPhysics 
@@ -27,7 +28,8 @@ class MuonPhysics : public G4VPhysicsConstructor
 {
   public: 
     MuonPhysics(const G4String& name, 
-        GlastMS::MultipleScatteringFactory& msfactory);
+        GlastMS::MultipleScatteringFactory& msfactory,
+        GlastMS::EnergyLossFactory& eLossFactory);
     virtual ~MuonPhysics();
 
   public: 
@@ -41,7 +43,7 @@ class MuonPhysics : public G4VPhysicsConstructor
     virtual void ConstructProcess();
 private:
     GlastMS::MultipleScatteringFactory& m_msFactory;
-
+    GlastMS::EnergyLossFactory&         m_eLossFactory;
 };
 
 

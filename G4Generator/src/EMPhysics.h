@@ -6,6 +6,7 @@
 
 #include "G4VPhysicsConstructor.hh"
 #include "GlastMS/MultipleScatteringFactory.h"
+#include "GlastMS/EnergyLossFactory.h"
 
 
 /** 
@@ -27,7 +28,9 @@
 class EMPhysics : public G4VPhysicsConstructor
 {
   public: 
-      EMPhysics(const G4String& name , GlastMS::MultipleScatteringFactory& msfactory);
+      EMPhysics(const G4String& name , 
+                GlastMS::MultipleScatteringFactory& msfactory,
+                GlastMS::EnergyLossFactory& eLossFactory );
     virtual ~EMPhysics();
 
   public: 
@@ -42,6 +45,7 @@ class EMPhysics : public G4VPhysicsConstructor
 
 private:
     GlastMS::MultipleScatteringFactory& m_msFactory;
+    GlastMS::EnergyLossFactory&         m_eLossFactory;
 };
 
 

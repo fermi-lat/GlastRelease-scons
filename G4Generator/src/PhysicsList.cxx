@@ -30,7 +30,8 @@
 
 PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice, 
                          const std::string& physicsTable, const std::string& physicsDir,
-                         GlastMS::MultipleScatteringFactory& msFactory
+                         GlastMS::MultipleScatteringFactory& msFactory,
+                         GlastMS::EnergyLossFactory& eLossFactory
                          ):  G4VModularPhysicsList()
 {
   // The default cut value for all particles
@@ -51,11 +52,11 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
   
   // EM Physics 
 
-  RegisterPhysics( new EMPhysics("standard EM", msFactory));
+  RegisterPhysics( new EMPhysics("standard EM", msFactory, eLossFactory));
 
   // Muon Physics
 
-  RegisterPhysics(  new MuonPhysics("muon", msFactory));
+  RegisterPhysics(  new MuonPhysics("muon", msFactory, eLossFactory));
 
   // Full or EM Hadron Physics
 

@@ -14,8 +14,10 @@
 #include <iomanip>   
 
 
-EMPhysics::EMPhysics(const G4String& name, GlastMS::MultipleScatteringFactory& msFactory)
-               :  G4VPhysicsConstructor(name), m_msFactory(msFactory)
+EMPhysics::EMPhysics(const G4String& name, 
+                     GlastMS::MultipleScatteringFactory& msFactory,
+                     GlastMS::EnergyLossFactory& eLossFactory )
+               :  G4VPhysicsConstructor(name), m_msFactory(msFactory), m_eLossFactory(eLossFactory)
 {
 }
 
@@ -83,33 +85,30 @@ void EMPhysics::ConstructProcess()
   pManager = G4Electron::Electron()->GetProcessManager();
 
   G4VContinuousDiscreteProcess* theElectronMultipleScattering = m_msFactory();
-  G4eIonisation* theElectronIonisation = new G4eIonisation();
-  G4eBremsstrahlung* theElectronBremsStrahlung = new G4eBremsstrahlung();
-  pManager->AddDiscreteProcess(theElectronBremsStrahlung);  
-  pManager->AddProcess(theElectronIonisation, ordInActive,2, 2);
-  pManager->AddProcess(theElectronMultipleScattering);
-  pManager->SetProcessOrdering(theElectronMultipleScattering, 
-                               idxAlongStep,  1);
-  pManager->SetProcessOrdering(theElectronMultipleScattering, 
-                               idxPostStep,  1);
+  G4VContinuousDiscreteProcess* theElectronIonisation         = 
+      m_eLossFactory(GlastMS::EnergyLossFactory::ELECTRON, GlastMS::EnergyLossFactory::IONIZATION);
+  G4VContinuousDiscreteProcess* theElectronBremsStrahlung     = 
+      m_eLossFactory(GlastMS::EnergyLossFactory::ELECTRON, GlastMS::EnergyLossFactory::BREMSTRAHLUNG);
+  
+  pManager->AddProcess(theElectronMultipleScattering, -1, 1, 1);
+  pManager->AddProcess(theElectronIonisation,         -1, 2, 2);
+  pManager->AddProcess(theElectronBremsStrahlung,     -1, 3, 3);
 
   //Positron Physics
 
   pManager = G4Positron::Positron()->GetProcessManager();
 
-  G4VContinuousDiscreteProcess* thePositronMultipleScattering  =  m_msFactory();
-  G4eIonisation* thePositronIonisation = new  G4eIonisation(); 
-  G4eBremsstrahlung* thePositronBremsStrahlung = new G4eBremsstrahlung();  
-  G4eplusAnnihilation* theAnnihilation = new G4eplusAnnihilation();
-  pManager->AddDiscreteProcess(thePositronBremsStrahlung);
-  pManager->AddDiscreteProcess(theAnnihilation);
-  pManager->AddRestProcess(theAnnihilation);
-  pManager->AddProcess(thePositronIonisation, ordInActive,2, 2);
-  pManager->AddProcess(thePositronMultipleScattering);
-  pManager->SetProcessOrdering(thePositronMultipleScattering, 
-                               idxAlongStep,  1);
-  pManager->SetProcessOrdering(thePositronMultipleScattering, 
-                               idxPostStep,  1);
+  G4VContinuousDiscreteProcess* thePositronMultipleScattering = m_msFactory();
+  G4VContinuousDiscreteProcess* thePositronIonisation         = 
+      m_eLossFactory(GlastMS::EnergyLossFactory::POSITRON, GlastMS::EnergyLossFactory::IONIZATION);
+  G4VContinuousDiscreteProcess* thePositronBremsStrahlung     = 
+      m_eLossFactory(GlastMS::EnergyLossFactory::POSITRON, GlastMS::EnergyLossFactory::BREMSTRAHLUNG);
+  G4eplusAnnihilation*          theAnnihilation               = new G4eplusAnnihilation();
+  
+  pManager->AddProcess(theElectronMultipleScattering, -1,  1, 1);
+  pManager->AddProcess(theElectronIonisation,         -1,  2, 2);
+  pManager->AddProcess(theElectronBremsStrahlung,     -1,  3, 3);
+  pManager->AddProcess(theAnnihilation,                0, -1, 4);
 }
 
 

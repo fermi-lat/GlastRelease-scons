@@ -67,6 +67,7 @@ RunManager::RunManager(std::ostream& log,
                        std::string& physics_table,
                        std::string&  physics_dir,
                        GlastMS::MultipleScatteringFactory& msfactory,
+                       GlastMS::EnergyLossFactory& eLossFactory,
 					   IG4GeometrySvc* gsv)
 :m_log(log),
  physicsList(NULL),
@@ -108,7 +109,7 @@ RunManager::RunManager(std::ostream& log,
   randomNumberStatusDir = "./";
 
   // The user stuff
-  physicsList = new PhysicsList(defaultCutValue, physics_choice, physics_table, physics_dir, msfactory);
+  physicsList = new PhysicsList(defaultCutValue, physics_choice, physics_table, physics_dir, msfactory, eLossFactory);
   userPrimaryGeneratorAction = new PrimaryGeneratorAction;
 
 }

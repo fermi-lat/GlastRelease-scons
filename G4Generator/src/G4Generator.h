@@ -75,6 +75,7 @@ class G4Generator : public Algorithm {
 
   /// if true, use Glast special version
   BooleanProperty m_mscatOption;
+  BooleanProperty m_eLossCurrent;
 
 };
 

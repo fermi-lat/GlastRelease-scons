@@ -87,7 +87,7 @@ class IG4GeometrySvc;
 #include <vector>
 #include <memory>
 
-namespace GlastMS { class MultipleScatteringFactory; }
+namespace GlastMS { class MultipleScatteringFactory; class EnergyLossFactory;}
 
 class RunManager
 {
@@ -116,6 +116,7 @@ class RunManager
              std::string& physics_table,
              std::string&  physics_dir,
              GlastMS::MultipleScatteringFactory& msfactory,
+             GlastMS::EnergyLossFactory& eLossFactory,
 			 IG4GeometrySvc*);
 
     virtual ~RunManager();
