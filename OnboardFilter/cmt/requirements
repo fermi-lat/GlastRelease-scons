@@ -19,6 +19,8 @@ macro OnboardFilter_cflags $(OnboardFilter_cppflags)
 
 macro headers "" WIN32 "*.h"
 
+macro_prepend includes "-I ../src " WIN32 " /I ..\src  "
+
 library OnboardFilter $(headers) *.cxx *.c Dll/*.cxx
 
 # use this only for the test. TODO: make it cleaner
