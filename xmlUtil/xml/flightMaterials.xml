@@ -177,6 +177,22 @@
 </composite>
 
 
+
+<!-- ATTENTION .. THIS MATERIAL MUST BE SPECIFIED -->
+<element name="Fiberglass" 
+	 z="1" 
+	 aweight="1.01" 
+	 density="10e-26"
+	 />
+
+<!-- ATTENTION .. THIS MATERIAL MUST BE SPECIFIED -->
+<element name="someStuff" 
+	 z="1" 
+	 aweight="1.01" 
+	 density="10e-26"
+	 />
+
+
 <composite name="FOAM05" density = "0.050">
 <addmaterial material="Carbon">
 <natoms n="1" />
@@ -186,103 +202,71 @@
 </addmaterial>
 </composite>
 
-<composite name="Air" density = "1.290">
-<addmaterial material="Nitrogen">
-<fractionmass fraction="0.7" />
-</addmaterial>
-<addmaterial material ="Oxygen">
-<fractionmass fraction="0.3" />
-</addmaterial>
-</composite>
-
-<composite name="bot_bias_material" density = "1.087">
+<composite name="Tray_bot_bias" density = "1.087">
 <addmaterial material="Copper">
-<natoms n="1" />
+<fractionmass fraction="6.09" />
 </addmaterial>
 <addmaterial material ="Silicon">
-<natoms n="1" />
+<fractionmass fraction="2.61" />
 </addmaterial>
 <addmaterial material ="Oxygen">
-<natoms n="1" />
+<fractionmass fraction="10.62" />
 </addmaterial>
 <addmaterial material ="Carbon">
-<natoms n="1" />
+<fractionmass fraction="12.55" />
 </addmaterial>
 <addmaterial material ="Hydrogen">
-<natoms n="1" />
+<fractionmass fraction="1.71" />
 </addmaterial>
 </composite>
 
-<!-- names for consistency with pdrApp should not use natoms, these are composites -->
-<composite name="Tray_bot_face" density = "1.087">
-  <addmaterial material="Copper">   <natoms n="1" /> </addmaterial>
-  <addmaterial material ="Silicon"> <natoms n="1" /> </addmaterial>
-  <addmaterial material ="Oxygen">  <natoms n="1" /> </addmaterial>
-  <addmaterial material ="Carbon">  <natoms n="1" /> </addmaterial>
-  <addmaterial material ="Hydrogen"><natoms n="1" /> </addmaterial>
-</composite>
 
 <composite name="Tray_top_face" density = "1.264">
-  <addmaterial material="Copper">   <natoms n="1" /> </addmaterial>
-  <addmaterial material ="Silicon"> <natoms n="1" /> </addmaterial>
-  <addmaterial material ="Oxygen">  <natoms n="1" /> </addmaterial>
-  <addmaterial material ="Carbon">  <natoms n="1" /> </addmaterial>
-  <addmaterial material ="Hydrogen"><natoms n="1" /> </addmaterial>
-</composite>
-
-<composite name="Tray_bot_bias" density = "1.087">
-  <addmaterial material="Copper">   <natoms n="1" /> </addmaterial>
-  <addmaterial material ="Silicon"> <natoms n="1" /> </addmaterial>
-  <addmaterial material ="Oxygen">  <natoms n="1" /> </addmaterial>
-  <addmaterial material ="Carbon">  <natoms n="1" /> </addmaterial>
-  <addmaterial material ="Hydrogen"><natoms n="1" /> </addmaterial>
-</composite>
-
-<composite name="blanket" density = "0.081">
-  <addmaterial material ="Oxygen">  <natoms n="1" /></addmaterial>
-  <addmaterial material ="Carbon">  <natoms n="1" /></addmaterial>
-  <addmaterial material ="Hydrogen"><natoms n="1" /></addmaterial>
-</composite>
-
-<composite name="top_face_material" density = "1.264">
 <addmaterial material="Copper">
-<natoms n="1" />
+<fractionmass fraction="6.09" />
 </addmaterial>
 <addmaterial material ="Silicon">
-<natoms n="1" />
+<fractionmass fraction="2.61" />
 </addmaterial>
 <addmaterial material ="Oxygen">
-<natoms n="1" />
+<fractionmass fraction="12.05" />
 </addmaterial>
 <addmaterial material ="Carbon">
-<natoms n="1" />
+<fractionmass fraction="45.09" />
 </addmaterial>
 <addmaterial material ="Hydrogen">
-<natoms n="1" />
+<fractionmass fraction="1.89" />
 </addmaterial>
 </composite>
 
-<composite name="bot_face_material" density = "1.087">
+<composite name="Tray_bot_face" density = "1.264">
 <addmaterial material ="Oxygen">
-<natoms n="1" />
+<fractionmass fraction="1.42" />
 </addmaterial>
 <addmaterial material ="Carbon">
-<natoms n="1" />
+<fractionmass fraction="32.54" />
 </addmaterial>
 <addmaterial material ="Hydrogen">
-<natoms n="1" />
+<fractionmass fraction="0.18" />
 </addmaterial>
 </composite>
 
-<composite name="thermal_blanket" density = "0.081">
+
+<composite name="blanket" density = "0.081">
+<addmaterial material="Aluminum">
+<fractionmass fraction="27" />
+</addmaterial>
+<addmaterial material ="Silicon">
+<fractionmass fraction="144" />
+</addmaterial>
 <addmaterial material ="Oxygen">
-<natoms n="1" />
+<fractionmass fraction="70" />
 </addmaterial>
 <addmaterial material ="Carbon">
-<natoms n="1" />
+<fractionmass fraction="530" />
 </addmaterial>
 <addmaterial material ="Hydrogen">
-<natoms n="1" />
+<fractionmass fraction="26" />
 </addmaterial>
 </composite>
 
