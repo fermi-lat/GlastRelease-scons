@@ -2,6 +2,8 @@ package TkrUtil
 
 version v1r7p4
 
+author Leon Rochester <lsrea@slac.stanford.edu>
+
 branches src cmt doc
 
 use GlastSvc 
