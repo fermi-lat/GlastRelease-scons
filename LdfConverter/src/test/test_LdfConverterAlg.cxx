@@ -9,6 +9,7 @@
 #include "Event/TopLevel/DigiEvent.h"
 #include "Event/Digi/TkrDigi.h"
 #include "Event/Digi/CalDigi.h"
+#include "Event/Digi/AcdDigi.h"
 #include "LdfEvent/DiagnosticData.h"
 #include "LdfEvent/EventSummaryData.h"
 #include "idents/CalXtalId.h"
@@ -43,6 +44,7 @@ private:
     StatusCode readEventSummaryData();
     StatusCode readTkrDigiData();
     StatusCode readCalDigiData();
+    StatusCode readAcdDigiData();
 
     int m_count;
     
@@ -112,6 +114,8 @@ StatusCode test_LdfConverterAlg::execute()
     }
 
     sc = readCalDigiData();
+
+    sc = readAcdDigiData();
 
     return sc;
 }
@@ -206,35 +210,38 @@ StatusCode test_LdfConverterAlg::readCalDigiData() {
 
 }
 
-/*
-StatusCode test_LdfConverterAlg::readDigiData() {
-MsgStream log(msgSvc(), name());
-StatusCode sc = StatusCode::SUCCESS;
+StatusCode test_LdfConverterAlg::readAcdDigiData() {
 
-SmartDataPtr<Event::CalDigiCol> calDigiColTds(eventSvc(), EventModel::Digi::CalDigiCol);
-if (!calDigiColTds) return sc;
-Event::CalDigiCol::const_iterator calDigiTds;
+    MsgStream log(msgSvc(), name());
+    StatusCode sc = StatusCode::SUCCESS;
 
-for (calDigiTds = calDigiColTds->begin(); calDigiTds != calDigiColTds->end(); calDigiTds++) {
-log << MSG::DEBUG;
-(*calDigiTds)->fillStream(log.stream());
-log << endreq;
-idents::CalXtalId::CalTrigMode modeTds = (*calDigiTds)->getMode();
-idents::CalXtalId idTds = (*calDigiTds)->getPackedId();
-if (modeTds == idents::CalXtalId::BESTRANGE) {
-const Event::CalDigi::CalXtalReadout *readoutTds = (*calDigiTds)->getXtalReadout(0);
-} else {
-int range;
-for (range = idents::CalXtalId::LEX8; range <= idents::CalXtalId::HEX1; range++) {
-const Event::CalDigi::CalXtalReadout *readoutTds = (*calDigiTds)->getXtalReadout(range);
-}
-}
-}
+    SmartDataPtr<Event::DigiEvent> digiEvt(eventSvc(), EventModel::Digi::Event);
+    if (!digiEvt) {
+        log << MSG::ERROR << "Did not retrieve DigiEvent" << endreq;
+        return StatusCode::FAILURE;
+    } else {
+        log << MSG::INFO << "DigiEvent found!" << endreq;
+    }
+    
+    SmartDataPtr<Event::AcdDigiCol> digiCol(eventSvc(), EventModel::Digi::AcdDigiCol);
+    if (digiCol == 0) {
+        log << "no AcdDigiCol found" << endreq;
+        return sc;
+    } else {
+        log << " Event " << m_count << ", " << digiCol->size() << " ACD digis found " << endreq;
+        int ndigi = 0;
 
-return sc;
-}
-*/
+        Event::AcdDigiCol::const_iterator pAcdDigi = digiCol->begin();
+        for (pAcdDigi; pAcdDigi!= digiCol->end(); pAcdDigi++) {
+            log <<MSG::INFO << "Digi " << ndigi++ << " ";
+            (**pAcdDigi).fillStream(log.stream());
+            log << endreq;
+        }
 
+
+    }
+    return StatusCode::SUCCESS;
+}
 
 StatusCode test_LdfConverterAlg::finalize()
 {    
