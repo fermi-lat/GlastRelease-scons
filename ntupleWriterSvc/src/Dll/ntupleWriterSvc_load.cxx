@@ -23,6 +23,7 @@
 //! Load all  services: 
 void ntupleWriterSvc_load() {
     DLL_DECL_SERVICE( ntupleWriterSvc );
+    DLL_DECL_ALGORITHM( WriteTupleAlg );
 } 
 
 extern "C" void ntupleWriterSvc_loadRef()    {
