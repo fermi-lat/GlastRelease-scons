@@ -109,8 +109,16 @@ StatusCode CalIRFAlg::execute() {
 
 
     SmartDataPtr<TdGlastData> glastData(eventSvc(),"/Event/TdGlastData");
+    
+    if( 0==glastData) { 
+       log << MSG::ERROR << "could not find \""<< "/Event/TdGlastData" <<"\"" << endreq;
+       return StatusCode::FAILURE;
+    }
+    
 
     const CsIData* csi = glastData->getCsIData();
+
+
     
     // see what is there
 //    csi->printOn(std::cout);

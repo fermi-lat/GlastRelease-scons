@@ -22,8 +22,8 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 
 
 // Input IRF file
-// EventSelector.Input = "IRFFILE $(INSTRUMENTROOT)/src/test/muontest.irf";
-EventSelector.Input = "IRFFILE  $(CALRECONROOT)/src/test/vertical_electrons_X20_Y20_Z_19.irf";
+EventSelector.Input = "IRFFILE $(INSTRUMENTROOT)/src/test/muontest.irf";
+//EventSelector.Input = "IRFFILE  $(CALRECONROOT)/src/test/vertical_electrons_X20_Y20_Z_19.irf";
 
 // Output root ntuple file
 NTupleSvc.Output = {"CALRECON DATAFILE='/NTUPLES/CalRecon.root' OPT='NEW'"};
