@@ -26,14 +26,14 @@ apply_pattern vsnet_rootcint
 macro root_headers "\
  ../digiRootData/AcdDigi.h\
  ../digiRootData/AcdId.h\
- ../digiRootData/CalDiagnostic.h\
+ ../digiRootData/CalDiagnosticData.h\
  ../digiRootData/CalDigi.h\
  ../digiRootData/CalXtalId.h\
  ../digiRootData/CalXtalReadout.h\
  ../digiRootData/DigiEvent.h\
  ../digiRootData/GlastAxis.h\
  ../digiRootData/L1T.h\
- ../digiRootData/TkrDiagnostic.h\
+ ../digiRootData/TkrDiagnosticData.h\
  ../digiRootData/TkrDigi.h\
  ../digiRootData/TowerId.h\
  ../digiRootData/EventSummaryData.h\
@@ -49,7 +49,7 @@ library  digiRootData \
       CalDigi.cxx CalXtalReadout.cxx CalXtalId.cxx \
       AcdDigi.cxx AcdId.cxx \
       L1T.cxx \
-      CalDiagnostic.cxx TkrDiagnostic.cxx \
+      CalDiagnosticData.cxx TkrDiagnosticData.cxx \
       EventSummaryData.cxx \
       ../digiRootData/*.cxx \
       ${digiRootData_headers}
