@@ -7,15 +7,16 @@
 
 extern void   HitInstanciation();
 extern void   IrfInstantiation();
-extern void   MCInstanciation();
+extern void   MCInstantiation();
 extern void   TopInstantiation();
-//extern void   RawInstanciation();
+extern void   RawInstantiation();
 
 void GlastEventFactories_load()     {
     //HitInstanciation ();
     IrfInstantiation();
-    MCInstanciation ();
+    MCInstantiation ();
     TopInstantiation ();
+    RawInstantiation ();
 }
 
 extern "C" void GlastEventFactories_loadRef()  {

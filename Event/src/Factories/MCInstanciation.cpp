@@ -27,36 +27,36 @@ Original author: Sawyer Gillespie, hgillesp@u.washington.edu
 using namespace GlastEvent;
 
 // ====================================================================
-// Object factory implementation for objects of class MCACDHit 
+// Object factory implementation for objects of class McParticle 
 // ====================================================================
-//#include "GlastEvent/MonteCarlo/MCACDHit.h"
-//_ImplementHitContainedFactories(MCACDHit)
+#include "GlastEvent/MonteCarlo/McParticle.h"
+_ImplementHitContainedFactories(McParticle)
 
 // ====================================================================
-// Object factory implementation for objects of class MCCalorimeterHit
+// Object factory implementation for objects of class McPositionHit
 // ====================================================================
-//#include "GlastEvent/MonteCarlo/MCCalorimeterHit.h"
-//_ImplementHitContainedFactories(MCCalorimeterHit)
+#include "GlastEvent/MonteCarlo/McPositionHit.h"
+_ImplementHitContainedFactories(McPositionHit)
 
 
 // ====================================================================
-// Object factory implementation for objects of class MCTKRHit
+// Object factory implementation for objects of class McVertex
 // ====================================================================
-//#include "GlastEvent/MonteCarlo/MCTKRHit.h"
-//_ImplementHitContainedFactories(MCTKRHit)
+#include "GlastEvent/MonteCarlo/McVertex.h"
+_ImplementHitContainedFactories(McVertex)
 
 // ====================================================================
-// Object factory implementation for objects of class MCSiLayer
+// Object factory implementation for objects of class McIntegratingHit
 // ====================================================================
-//#include "GlastEvent/MonteCarlo/MCSiLayer.h"
-//_ImplementHitContainedFactories(MCSiLayer)
+#include "GlastEvent/MonteCarlo/McIntegratingHit.h"
+_ImplementHitContainedFactories(McIntegratingHit)
 
 // ====================================================================
 // Object factory implementation for objects of class CsIData 
 // ====================================================================
-void MCInstanciation()  {
-    //DLL_DECL_CONTAINEDOBJECTFACTORY( MCACDHit );
-    //DLL_DECL_CONTAINEDOBJECTFACTORY( MCCalorimeterHit );
-    //DLL_DECL_CONTAINEDOBJECTFACTORY( MCTKRHit );
-    //DLL_DECL_CONTAINEDOBJECTFACTORY( MCSiLayer );
+void MCInstantiation()  {
+    DLL_DECL_CONTAINEDOBJECTFACTORY( McParticle );
+    DLL_DECL_CONTAINEDOBJECTFACTORY( McPositionHit );
+    DLL_DECL_CONTAINEDOBJECTFACTORY( McVertex );
+    DLL_DECL_CONTAINEDOBJECTFACTORY( McIntegratingHit );
 }
