@@ -1,6 +1,6 @@
 package CRflux
 
-version v1r1p4
+version v1r2p5
 
 author Tsunefumi Mizuno <suhonen@slac.stanford.edu>
 # $Id$
@@ -30,7 +30,8 @@ $(CRflux_headers)
 
 macro CRflux_headers "" WIN32 " *.h *.hh ../xml/*.xml test/*.txt test/*.xml "
 # test program, using local joboptions
-# turn of for now, until crash is understood (THB)
-public set JOBOPTIONS ${CRFLUXROOT}/src/test/jobOptions.txt
-apply_pattern package_test
+# turn off for now, since test invokes ROOT interactively (THB)
+# public set JOBOPTIONS ${CRFLUXROOT}/src/test/jobOptions.txt
+# apply_pattern package_test
+
 
