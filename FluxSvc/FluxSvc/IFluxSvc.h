@@ -78,7 +78,7 @@ public:
     virtual void setRockType(int rockType)=0;
 
     ///this should return the source file names, along with the contained sources.
-    std::vector<std::pair< std::string ,std::list<std::string> > > sourceOriginList() const;
+    virtual std::vector<std::pair< std::string ,std::list<std::string> > > sourceOriginList() const=0;
     
     
 };
