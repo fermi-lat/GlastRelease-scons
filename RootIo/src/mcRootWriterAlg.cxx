@@ -500,7 +500,7 @@ void mcRootWriterAlg::convertVolumeId(idents::VolumeIdentifier tdsVolId,
     //     version of the idents::VolumeIdentifier and append each to the ROOT
     //     VolumeIdentifier
     
-    unsigned int index;
+    int index;
     rootVolId.Clear();
     for (index = 0; index < tdsVolId.size(); index++) {
         rootVolId.append(tdsVolId.operator [](index));

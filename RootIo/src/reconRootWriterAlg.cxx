@@ -280,7 +280,7 @@ void reconRootWriterAlg::fillTkrClusterCol(TkrRecon* recon, Event::TkrClusterCol
     
     int numClusters = clusterColTds->nHits();
     
-    unsigned int icluster;
+    int icluster;
     for (icluster = 0; icluster < numClusters; icluster++) {
         Event::TkrCluster *clusterTds = clusterColTds->getHit(icluster);
         Event::TkrCluster::view viewTds = clusterTds->v();
@@ -306,7 +306,7 @@ void reconRootWriterAlg::fillCandidateTracks(TkrRecon* recon, Event::TkrPatCandC
     //                      and adds them to the list kept in TkrRecon
     
     // Loop over the candidate tracks in the TDS
-    int                     candId  = 0;
+    unsigned int                     candId  = 0;
     Event::TkrPatCandColPtr cands   = candidatesTds->begin();
     while(candId < candidatesTds->size())
     {
