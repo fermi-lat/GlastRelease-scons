@@ -454,7 +454,7 @@ bool CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi*
 
                 // add output object to output collection
                 recData->addRangeRecData(*rangeRec);
-            
+                delete rangeRec;
         }		
 	return !below_thresh;
 }
