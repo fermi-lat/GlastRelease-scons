@@ -109,7 +109,7 @@ namespace {
       if ((DOMString("GeV")).equals(elt.getAttribute("units")) ) {
         energy *= 1000;
       }
-      xml::Dom::addAttribute(prim, "value", energy);
+      xml::Dom::addAttribute(prim, std::string("value"), energy);
       elt.normalize();
       DOM_Node textChild = elt.getFirstChild();
       prim.appendChild(textChild);
