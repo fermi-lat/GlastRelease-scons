@@ -2,6 +2,7 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 10-jul-2004: jrb v1r19p0  Minor fix to em2 geometry (for Anders)
  * 18-jun-2004: jrb v1r19    1. New em2 subdirectory to describe em2 (Anders)
  *                           2. Get rid of or comment out *all* references
  *                              to TKRResponse parameters
