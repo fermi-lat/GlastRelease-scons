@@ -22,6 +22,7 @@
 #include "gui/DisplayControl.h"
 #include "GuiSvc/GuiSvc.h"
 #include "gui/GuiMgr.h"
+#define TUPLE 1
 
 static const AlgFactory<CalRecoAlg>  Factory;
 const IAlgFactory& CalRecoAlgFactory = Factory;

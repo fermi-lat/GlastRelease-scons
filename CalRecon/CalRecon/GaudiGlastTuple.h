@@ -20,7 +20,6 @@
         template.
 
   */
-
 class GaudiGlastTuple : public Tuple {
 
 public:

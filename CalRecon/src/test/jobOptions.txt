@@ -23,7 +23,7 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 // Input IRF file
 EventSelector.Input = "IRFFILE $(INSTRUMENTROOT)/src/test/muontest.irf";
 
-NTupleSvc.Output = {"FILE1 DATAFILE='/NTUPLES/tuples.root'"};
+NTupleSvc.Output = {"FILE1 DATAFILE='/NTUPLES/tuples.root' OPT='NEW'"};
 
     
 // Number of Events to Process

@@ -18,7 +18,7 @@ GaudiGlastTuple::GaudiGlastTuple (const char* title, INTupleSvc* ntSvc) :Tuple(t
     if((*m_file1)){
         m_nt = new NTuplePtr(m_ntSvc, "/NTUPLES/FILE1/1");
         if(!(*m_nt)){
-            (*m_nt) = m_ntSvc->book("/NTUPLES/FILE1",1,CLID_ColumnWiseTuple, m_ntName);
+            (*m_nt) = m_ntSvc->book("/NTUPLES/FILE1",1,CLID_RowWiseTuple, m_ntName);
         }
     }
 
@@ -42,7 +42,6 @@ void GaudiGlastTuple::addItem (const char* name, const float *datum)
 
     if(*m_nt){
        status = (*m_nt)->addItem( name ,*m_ntupleItemList[m_ntupleItemList.size()-1]);
-       *m_ntupleItemList[m_ntupleItemList.size()-1] = *datum;
     }
     
 }
@@ -66,8 +65,8 @@ void GaudiGlastTuple::fill()
 	*m_ntupleItemList[i++] = **it;
     }
     
-    // This is not working here for reasons unknown.
-    //status = m_ntSvc->writeRecord("/NTUPLES/FILE1/1");
+    
+    status = m_ntSvc->writeRecord("/NTUPLES/FILE1/1");
     
 }
 
