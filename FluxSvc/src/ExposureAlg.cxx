@@ -59,7 +59,7 @@ private:
     double m_lasttime; //time value to hold time between events;
     StringProperty m_source_name;
     StringProperty m_pointing_history_output_file;
-	StringProperty m_pointing_history_input_file;
+    StringProperty m_pointing_history_input_file;
 
     IFluxSvc*   m_fluxSvc;
     IFlux *     m_flux;
@@ -82,7 +82,7 @@ ExposureAlg::ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator)
     // declare properties with setProperties calls
     declareProperty("source_name",  m_source_name="default");
     declareProperty("pointing_history_output_file",  m_pointing_history_output_file="");
-	declareProperty("pointing_history_input_file",  m_pointing_history_input_file="");
+    declareProperty("pointing_history_input_file",  m_pointing_history_input_file="");
 
 }
 
@@ -101,12 +101,12 @@ StatusCode ExposureAlg::initialize(){
         return StatusCode::FAILURE;
     }
 
-	//set the input file to be used as the pointing database
-	if(! m_pointing_history_input_file.value().empty() ){
-		m_fluxSvc->setPointingHistoryFile(m_pointing_history_input_file.value().c_str());
+    //set the input file to be used as the pointing database
+    if(! m_pointing_history_input_file.value().empty() ){
+        m_fluxSvc->setPointingHistoryFile(m_pointing_history_input_file.value().c_str());
     }
 
-	//set the output file (pointing information) to be written.
+    //set the output file (pointing information) to be written.
     if(! m_pointing_history_output_file.value().empty() ){
         m_out = new std::ofstream(m_pointing_history_output_file.value().c_str());
     }
@@ -125,7 +125,7 @@ StatusCode ExposureAlg::execute()
     double currentTime;
     //-----------------------------------------------------------------------
 
-    Event::McParticleCol* pcol = new Event::McParticleCol;
+    Event::McParticleCol* pcol = 0;
     eventSvc()->retrieveObject("/Event/MC/McParticleCol",(DataObject *&)pcol);
     //only make a new source if one does not already exist.
     if(pcol==0){
@@ -145,21 +145,10 @@ StatusCode ExposureAlg::execute()
         currentTime = m_fluxSvc->currentFlux()->time();
     }   
 
-    //now, only do the rest of this algorithm if we have a timetick particle.
-    std::string particleName = m_fluxSvc->currentFlux()->particleName();
-    if(particleName != "TimeTick"){
-        log << MSG::DEBUG << particleName << " Not a timetick particle, no D2Database entry created, continuing..." << endreq;
-        return StatusCode::SUCCESS;
-    }
-
     //by now, we should know that we have the appropriate particle to make a Exposure with.
-    double secondsperday = 60.*60.*24.;
-
     // here we get the time characteristics
 
 
-    EarthOrbit orb; //for the following line - this should have a better implementation.
-    double julianDate = orb.dateFromSeconds(m_lasttime);
 
     //NOTE: this gets an interval from the last time that a TimeTick particle came to this one.
     //in other words, the timeTick particles define the beginning and ends of intervals.
@@ -171,87 +160,79 @@ StatusCode ExposureAlg::execute()
     //..and reset the time of this event to be the "last time" for next time.
     m_lasttime = intrvalend;
 
-    //intrvalstart = orb.dateFromSeconds(intrvalstart);
-    //intrvalend = orb.dateFromSeconds(intrvalend);
 
-    //and here the pointing characteristics of the LAT.
-    GPS::instance()->getPointingCharacteristics(intrvalstart);
-    //EarthOrbit orbt;
-    Hep3Vector location = GPS::instance()->position(intrvalstart);
+    // The GPS singleton has current time and orientation
+    GPS* gps = GPS::instance();
+
+    gps->getPointingCharacteristics(intrvalstart);
+    Hep3Vector location = gps->position(intrvalstart);
 
     // hold onto the cartesian location of the LAT
-    double posx = location.x(); 
-    double posy = location.y(); 
-    double posz = location.z(); 
-    std::cout << std::endl;
-    double rax = GPS::instance()->RAX();
-    double raz = GPS::instance()->RAZ();
-    double decx = GPS::instance()->DECX();
-    double decz = GPS::instance()->DECZ();
-    double razenith = GPS::instance()->RAZenith();
-    double deczenith = GPS::instance()->DECZenith();
+    double posx = location.x(), 
+        posy = location.y(), 
+        posz = location.z(); 
 
+    // directions of the x and z axes, and the zenith
+    double 
+        rax =   gps->RAX(),        decx =  gps->DECX(),
+        raz =   gps->RAZ(),        decz =  gps->DECZ(),
+        razenith = gps->RAZenith(),deczenith = gps->DECZenith();
+
+    EarthOrbit orb; //for the following line - this should have a better implementation.
+    double julianDate = orb.dateFromSeconds(m_lasttime);
     EarthCoordinate earthpos(location,julianDate);
     double lat = earthpos.latitude();
     double lon = earthpos.longitude();
     double alt = earthpos.altitude();
-    bool SAA = earthpos.insideSAA();
 
+#if 0 // example code, not needed if we don't put sun and moon, SAA info in yet (which are redundant)
+    bool SAA = earthpos.insideSAA();
     SolarSystem sstm;
 
-    double ramoon = sstm.direction(astro::SolarSystem::Moon,julianDate).ra();
+    double ramoon =  sstm.direction(astro::SolarSystem::Moon,julianDate).ra();
     double decmoon = sstm.direction(astro::SolarSystem::Moon,julianDate).dec();
-    double rasun = sstm.direction(astro::SolarSystem::Sun,julianDate).ra();
-    double decsun = sstm.direction(astro::SolarSystem::Sun,julianDate).dec();
+    double rasun =   sstm.direction(astro::SolarSystem::Sun,julianDate).ra();
+    double decsun =  sstm.direction(astro::SolarSystem::Sun,julianDate).dec();
+    SkyDir sunDir(rasun,decsun);
+    //Rotation galtoglast(m_fluxSvc->transformGlastToGalactic(currentTime).inverse);
+    sunDir()=(m_fluxSvc->transformGlastToGalactic(intrvalstart).inverse())*sunDir();
 
-    // Here the TDS is prepared to receive hits vectors
-    // Check for the MC branch - it will be created if it is not available
-
-    DataObject *mc = new Event::ExposureCol;
-    sc=eventSvc()->registerObject(EventModel::MC::Event , mc);
-    // THB: why is this commented out?
-    //if(sc.isFailure()) {
-    //    log << MSG::ERROR << EventModel::MC::Event  <<" could not be registered on data store" << endreq;
-    //    return sc;
-    //}
+#endif
 
     // Here the TDS receives the exposure data
     Event::ExposureCol* exposureDBase = new Event::ExposureCol;
     sc=eventSvc()->registerObject(EventModel::MC::ExposureCol , exposureDBase);
     if(sc.isFailure()) {
-        log << MSG::ERROR << EventModel::MC::ExposureCol  <<" could not be entered into existing data store" << endreq;
+        log << MSG::ERROR << EventModel::MC::ExposureCol  
+            <<" could not be entered into existing data store" << endreq;
         return sc;
     }
 
     Event::Exposure* entry = new Event::Exposure;
-
     exposureDBase->push_back(entry);
-#if 0 // old version for D2Entry
-    entry->init(posx, posy, posz,rax,raz,decx,decz,razenith,deczenith,lat,
-        lon,alt,intrvalstart,intrvalend,
-        livetime,ramoon,decmoon,rasun,decsun,
-        SAA);
-#else // new version for Exposure
     entry->init(intrvalstart,lat,lon,alt,posx,posy,posz,rax,decx,raz,decz);
-#endif
-    // now we'll retreive the data from the TDS as a check.
-    Event::ExposureCol* elist = new Event::ExposureCol;
-    eventSvc()->retrieveObject("/Event/MC/ExposureCol",(DataObject *&)elist);
 
-    Event::ExposureCol::iterator curEntry = (*elist).begin();
-    //some test output - to show that the data got onto the TDS
+    //now, only do the rest of this algorithm if we have a timetick particle.
+    std::string particleName = m_fluxSvc->currentFlux()->particleName();
+    if(particleName != "TimeTick"){ return StatusCode::SUCCESS;  }
+
+
     log << MSG::DEBUG ;
     if(log.isActive()){
+
+        // now we'll retreive the data from the TDS as a check.
+        Event::ExposureCol* elist = 0;
+        eventSvc()->retrieveObject("/Event/MC/ExposureCol",(DataObject *&)elist);
+
+        Event::ExposureCol::iterator curEntry = (*elist).begin();
+        //some test output - to show that the data got onto the TDS
         (*curEntry)->fillStream(log.stream());
     }
     log << endreq;
-
+#if 0 // another example
     SkyDir curDir(raz,decz);
     SkyDir xDir(rax,decx);
-
-    SkyDir sunDir(rasun,decsun);
-    //Rotation galtoglast(m_fluxSvc->transformGlastToGalactic(currentTime).inverse);
-    sunDir()=(m_fluxSvc->transformGlastToGalactic(intrvalstart).inverse())*sunDir();
+#endif
 
     //and here's the file output.
     if( m_out !=0) {
@@ -270,7 +251,7 @@ StatusCode ExposureAlg::execute()
         out<<deczenith <<'\t';
         out<<lon <<'\t';
         out<<lat <<'\t';
-        out<<alt <<'\t' << std::endl;
+        out<<alt << std::endl;
 
     }
     setFilterPassed( false );
