@@ -46,7 +46,7 @@ private:
     typedef std::vector<detModel::IdField*> IdVector;
     typedef std::vector<float> FloatVector;
 
-    void cacheId( detModel::IdField* id, int step); // note: should be const pointer!
+    void cacheId(const detModel::IdField* id, int step);
     
     //! the object to call back, passed in with the constructor
     IGeometry& m_geom;
