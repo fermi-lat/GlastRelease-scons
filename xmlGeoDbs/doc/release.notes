@@ -2,6 +2,8 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 23-jul-2002: jrb - tag v1r6   - Add and use new "type" attribute
+ *                                 for derived constants to label integers
  * 27-jun-2002: jrb - tag v1r5p3 - New (shorter) CsI crystal length
  * 23-may-2002: jrb - tag v1r5p2 - Make core-closeout envelope bigger to
  *                                 accommodate MCM boards
