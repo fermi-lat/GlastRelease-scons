@@ -30,11 +30,12 @@ namespace idents {
     */
     TkrId(const VolumeIdentifier& vId);
     /** constructor including just enough information to identify 
-        silicon plane (view optional)
-    */
+        silicon plane (view optional)     */
     TkrId(unsigned towerX, unsigned towerY, unsigned tray, bool top, 
           int view=eMeasureNone);
             
+    TkrId() : m_packedId(0) {};
+
     ~TkrId() {};
 
     bool isEqual(const TkrId& other) {
@@ -193,8 +194,6 @@ namespace idents {
     void write(std::ostream &stream) const;
 
   private:
-    /// Unuseful default constructor
-    TkrId() : m_packedId(0) {};
 
     /// Does the actual work; extracted here since gcc doesn't let
     /// debugger see symbols
