@@ -145,7 +145,7 @@ StatusCode reconRootWriterAlg::initialize()
     // This will retrieve parameters set in the job options file
     setProperties();
     
-    if ( service("RootIoSvc", m_rootIoSvc).isFailure() ){
+    if ( service("RootIoSvc", m_rootIoSvc, true).isFailure() ){
         log << MSG::INFO << "Couldn't find the RootIoSvc!" << endreq;
         log << MSG::INFO << "No Auto Saving" << endreq;
         m_rootIoSvc = 0;
@@ -790,7 +790,8 @@ void reconRootWriterAlg::writeEvent()
     m_reconTree->Fill();
     saveDir->cd();
     ++eventCounter;
-    if (eventCounter % m_rootIoSvc->getAutoSaveInterval() == 0) m_reconTree->AutoSave();
+    if (m_rootIoSvc)
+        if (eventCounter % m_rootIoSvc->getAutoSaveInterval() == 0) m_reconTree->AutoSave();
 
     return;
 }
