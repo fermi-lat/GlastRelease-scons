@@ -5,7 +5,7 @@
 
 // List of Dlls
 ApplicationMgr.DLLs   = { "GlastSvc", "RootIo" };
-
+ApplicationMgr.DLLs   += {"CalibSvc"};
 
 // List of required services
  ApplicationMgr.ExtSvc   = {"GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
@@ -37,11 +37,7 @@ ApplicationMgr.EvtMax = 10;
 // Start up a CalibDataSvc 
 ApplicationMgr.ExtSvc += {"CalibDataSvc"};
 
-// Perhaps don't need to explicitly mention CalibSvc since it's not a component
-//ApplicationMgr.DLLs += {"CalibSvc", "CalibDataSvc"};
 
-//Don't attempt to load CalibDataSvc; it's not a componenet
-//ApplicationMgr.DLLs += {"CalibDataSvc"};
 ApplicationsMgr.ExtSvc += {"CalibDataSvc"};
 ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
 
