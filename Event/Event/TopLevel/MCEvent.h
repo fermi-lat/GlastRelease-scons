@@ -48,9 +48,10 @@ class MCEvent : public DataObject                                              {
 
 public:
   /// Constructors
-  MCEvent( const char* name = "MCEvent", long pileUp = 0 )
-    : DataObject(name),
-    m_pileUp(pileUp)                                                         { }
+    // HMA removed 2nd parameter pileUp - not sure what it was doing...
+  MCEvent( const char* name = "MCEvent" )
+      : DataObject(name) {}
+    //m_pileUp(pileUp)                                                         { }
   /// Destructor
   virtual ~MCEvent()                                                         { }
 
@@ -60,11 +61,12 @@ public:
 
   /// Clone operator
   MCEvent& operator=(const MCEvent& copy)                                      {
-    m_pileUp       = copy.pileUp();
+    //m_pileUp       = copy.pileUp();
     m_subMCEvents  = copy.subMCEvent();
     return *this;
   }
 
+  /*
   /// Retrieve pileUp
   long pileUp () const                                                         {
     return m_pileUp;
@@ -73,7 +75,7 @@ public:
   void setPileUp (long value)                                                  {
     m_pileUp = value;
   }
-
+*/
   /// Retrieve pointer to vector of MC sub event entries (const or non-const)
   const std::vector<SubMCEvent*>& subMCEvent() const;
         std::vector<SubMCEvent*>& subMCEvent();
@@ -111,7 +113,7 @@ private:
 //
 // Inline code must be outside the class definition
 //
-#include "GlastEvent/MonteCarlo/MCVertex.h"
+//#include "GlastEvent/MonteCarlo/MCVertex.h"  HMA commented this out until we have MCVertex.h
 
 
 /// Retrieve pointer to vector of MC sub event entries (const or non-const)
@@ -148,7 +150,7 @@ inline void MCEvent::removeSubMCEvent( SubMCEvent* value )                     {
 /// Serialize the object for writing
 inline StreamBuffer& MCEvent::serialize( StreamBuffer& s ) const               {
   DataObject::serialize(s);
-  s << m_pileUp
+  s //<< m_pileUp
     << m_subMCEvents.size();
   std::vector<SubMCEvent*>::const_iterator iter;
   for( iter = m_subMCEvents.begin(); iter != m_subMCEvents.end(); iter++ ) {
@@ -163,7 +165,7 @@ inline StreamBuffer& MCEvent::serialize( StreamBuffer& s )                     {
   DataObject::serialize(s);
   std::vector<SubMCEvent*>::size_type    siz;
   SubMCEvent*                            pSubMCEvent;
-  s >> m_pileUp
+  s //>> m_pileUp
     >> siz;
   for( long i = 0; i < (long)siz; i++ ) {
     pSubMCEvent = new SubMCEvent;
@@ -178,8 +180,8 @@ inline StreamBuffer& MCEvent::serialize( StreamBuffer& s )                     {
 inline std::ostream& MCEvent::fillStream( std::ostream& s ) const              {
   s << "class MCEvent :\n"
     << "    Pile-up = "
-    << GlastEventField( GlastEvent::field12 )
-    << m_pileUp;
+    << GlastEventField( GlastEvent::field12 );
+    //<< m_pileUp;
   std::vector<SubMCEvent*>::size_type    siz = m_subMCEvents.size();
   if( 0 != siz ) {
     s << "\nSize of the Monte Carlo sub event vector :"
@@ -200,4 +202,4 @@ inline std::ostream& MCEvent::fillStream( std::ostream& s ) const              {
 }
 
 
-#endif    // LHCBEVENT_MCEVENT_H
+#endif    // GLASTEVENT_MCEVENT_H

@@ -13,6 +13,7 @@
 #include "GlastEvent/TopLevel/EventModel.h"
 #include "GlastEvent/TopLevel/Event.h"
 #include "GlastEvent/Hits/ACDhit.h"
+#include "GlastEvent/Hits/MCCalorimeterHit.h"
 #include "GlastEvent/TopLevel/ObjectVector.h"
 
 //--------------------------------------------------------------------
@@ -86,7 +87,8 @@ StatusCode CreateEvent::execute() {
 
 //    sc = eventSvc()->retrieveObject("/Event/Hits/ACDTile", pObject);
     // simplifying this example, one less level of indirection!
-    sc = eventSvc()->retrieveObject("/Event/ACDTile", pObject);
+    //sc = eventSvc()->retrieveObject("/Event/ACDTile", pObject);
+    sc = eventSvc()->retrieveObject("/Event/MC/MCACDHits", pObject);
     if( sc.isFailure() ) return sc;                                                             
     
 	log << MSG::INFO << "Successfully retrieved ACD Container!!!" << endreq;
@@ -103,7 +105,24 @@ StatusCode CreateEvent::execute() {
         log << MSG::INFO << " tile Energy = " << (*it)->energy() << " Id = " << (*it)->id() << endreq;
       }
 
+    sc = eventSvc()->retrieveObject("/Event/MC/MCCalorimeterHits", pObject);
+    if( sc.isFailure() ) {
+        log << MSG::INFO << "Failed to get MCCalorimeterHits" << endreq;
+        return sc;                                                             
+    } 
+    
+    log << MSG::INFO << "Retrieved MCCalorimeterHit Vector!" << endreq;
 
+    ObjectVector<MCCalorimeterHit>* calList;
+    try {
+        calList  = dynamic_cast<ObjectVector<MCCalorimeterHit>*>(pObject);
+    } catch(...) {
+        log << MSG::INFO << "Failed to convert object to MCCalorimeterHitVector" << endreq;
+        return StatusCode::FAILURE;
+    }
+    for (ObjectVector<MCCalorimeterHit>::const_iterator xtal = calList->begin(); xtal != calList->end(); xtal++) {
+        log << MSG::INFO << " cal xtal Energy = " << (*xtal)->energy() << endreq;
+    }
 
     return sc;
 }

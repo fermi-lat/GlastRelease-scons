@@ -21,6 +21,12 @@
 
         _EXTERN_ std::string ACDTilesName;
 
+        namespace MC {
+            _EXTERN_ std::string Event;
+            _EXTERN_ std::string MCTrackerHits;
+            _EXTERN_ std::string MCCalorimeterHits;
+            _EXTERN_ std::string MCACDHits;
+        };
 
         namespace Hits  {
             _EXTERN_ std::string Event;
@@ -34,4 +40,4 @@
     };
 #undef _EXTERN_
 
-#endif // LHCBEVENT_EVENTMODEL_H
+#endif // GLASTEVENT_EVENTMODEL_H

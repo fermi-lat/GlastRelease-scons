@@ -30,6 +30,12 @@
             // The whole LHCb event
             EventModel::Event            = "/Event";
             
+            // set up the MC structure
+            EventModel::MC::Event = EventModel::Event + "/MC";
+            EventModel::MC::MCACDHits = EventModel::MC::Event + "/MCACDHits";
+            EventModel::MC::MCCalorimeterHits = EventModel::MC::Event + "/MCCalorimeterHits";
+            EventModel::MC::MCTrackerHits = EventModel::MC::Event + "/MCTrackerHits";
+
             // Hits event
             EventModel::Hits::Event
                 = EventModel::Event        + "/Hits";
@@ -77,4 +83,5 @@
     const CLID& CLID_ACDhit               = 2009;
     const CLID& CLID_MCTrack              = 2010; //Ian Mod
 	const CLID& CLID_MCCalorimeterHit     = 2011;
+    const CLID& CLID_MCEvent              = 2012;
         
