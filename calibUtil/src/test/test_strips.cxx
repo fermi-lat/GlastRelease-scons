@@ -28,10 +28,11 @@ int main(int argc, char* argv[]) {
 
   std::string name = "$(CALIBUTILROOT)/xml/test/testHot.xml";
   
-  facilities::Util::expandEnvVar(&name);
   if (argc > 1) {
     name = std::string((argv[1]));
   }
+  facilities::Util::expandEnvVar(&name);
+
   StripSrv ssObj(name);
 
   std::vector<StripSrv::towerRC> trc;
