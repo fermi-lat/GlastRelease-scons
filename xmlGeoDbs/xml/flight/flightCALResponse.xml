@@ -23,7 +23,7 @@ readout channel 1</prim>
   Pedestal in adc units</prim>
 <prim name='cal.maxAdcValue' value='4095' type='int' uType='none'>
   Max possible adc value</prim>
-<prim name='cal.zeroSupressEnergy' value='0.002' uType='none'>Zero supression
+<prim name='cal.zeroSuppressEnergy' value='0.002' uType='none'>Zero suppression
 threshold in GeV</prim>
 <prim name='cal.lightAtt' value="0.65" uType='none'>Light attenuation
 in CsI crystal (= far/near )</prim>
