@@ -46,6 +46,7 @@ namespace xmlUtil {
   Arith::ptrDOMString Arith::lengthString;
   Arith::ptrDOMString Arith::cmString;
   Arith::ptrDOMString Arith::mString;
+  Arith::ptrDOMString Arith::halfString;
   
   Arith::Arith(const DOM_Element elt) {
     int i = 0;
@@ -110,6 +111,13 @@ namespace xmlUtil {
         m_number = -(Arith(curElt).evaluate());
         break;
       }
+      case ETAG_half: {
+        // Have a single child
+        curElt = firstEltChild(m_elt);
+        m_number = 0.5 * (Arith(curElt).evaluate());
+        break;
+      }
+
       // Do the work elsewhere for the remaining operators
       case ETAG_add: {
         m_number = add();
@@ -257,7 +265,7 @@ namespace xmlUtil {
 
     valString = new DOMString("value");
     refToString = new DOMString("refTo");
-
+    halfString = new DOMString("half");
 
     typeNames = new ptrDOMString[ETAG_n];
     typeNames[ETAG_const] = constString;
@@ -268,5 +276,6 @@ namespace xmlUtil {
     typeNames[ETAG_quo] = quoString;
     typeNames[ETAG_uminus] = uminusString;
     typeNames[ETAG_max] = maxString;
+    typeNames[ETAG_half] = halfString;
   }
 }
