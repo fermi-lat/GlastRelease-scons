@@ -7,7 +7,7 @@
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 
-#include "CalibDataSvc/IInstrumentName.h"
+#include "CalibSvc/IInstrumentName.h"
 
 // Forward declarations
 class ITime;

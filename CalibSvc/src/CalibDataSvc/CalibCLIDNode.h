@@ -5,7 +5,9 @@
 
 #include <iostream>
 #include <string>
+#include "GaudiKernel/DataObject.h"
 //#include "CalibCnv/ICalibCnvSvc.h"
+
 
 /** @class CalibCLIDNode
 
@@ -21,27 +23,26 @@
 
 class CalibCLIDNode : virtual public DataObject {
 
-  public:
+public:
 
-    CalibCLIDNode(const CLID childClassID) :
-      DataObject(), m_childClassID(childClassID) {}
+  CalibCLIDNode(const CLID childClassID) :
+    DataObject(), m_childClassID(childClassID) {}
 
-    // Having these inline in include file could cause problems, in
-    // fact the static member could already be a problem.  Will code
-    // linked into different shareables have different copies of
-    // 
-    virtual const CLID& clID() const {return CalibCLIDNode::classID(); }
-    static const CLID& classID();
-
-    inline CLID getChildClassID() const {return m_childClassID;}
-
-    virtual std::ostream& fillStream(std::ostream& s) const;
-
-  private:
-    CLID  m_childClassID;
-  };
-}
-
+  // Having these inline in include file could cause problems, in
+  // fact the static member could already be a problem.  Will code
+  // linked into different shareables have different copies of
+  // 
+  virtual const CLID& clID() const {return CalibCLIDNode::classID(); }
+  static const CLID& classID();
+  
+  inline CLID getChildClassID() const {return m_childClassID;}
+  
+  virtual std::ostream& fillStream(std::ostream& s) const;
+  
+private:
+  CLID  m_childClassID;
+};
+#endif
 
 
 
