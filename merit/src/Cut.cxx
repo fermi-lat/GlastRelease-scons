@@ -71,7 +71,7 @@ void Cut::parse(const Tuple&t, std::string::const_iterator& it, std::string::con
     }
     m_cut = atof(value.c_str());
     set_tuple_item(t,name);
-    set_name(std::string(begin,--it));
+    set_name(std::string(begin, it));
 }
 
 bool Cut::apply()
