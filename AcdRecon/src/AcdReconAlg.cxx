@@ -135,8 +135,9 @@ void AcdReconAlg::clear() {
     m_rowDocaCol.resize(s_numSideRows+1, maxDoca);  
     m_rowActDistCol.clear();
     // one for each side, plus one for the top
-    m_rowActDistCol.resize(s_numSideRows+1, maxDoca);
-    m_energyCol.clear();
+    //m_rowActDistCol.resize(s_numSideRows+1, maxDoca); WRONG - Active Distance > 0 is a HIT!!!!!!
+    m_rowActDistCol.resize(s_numSideRows+1, -maxDoca);
+	m_energyCol.clear();
 	m_idCol.clear();
     m_act_dist = -maxDoca;
 }
@@ -377,13 +378,16 @@ StatusCode AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol, const HepP
         
         HepPoint3D x_isec = x0 + arc_dist*t0;
         
-        HepVector3D local_x0 = xT - x_isec; 
+       // HepVector3D local_x0 = xT - x_isec; 
+		HepVector3D local_x0 = x_isec - xT;
         double test_dist;
         if(iFace == 0) {// Top Tile
             double dist_x = dX/2. - fabs(local_x0.x());
-            double dist_y = dY/2. - fabs(local_x0.y());	                
+            double dist_y = dY/2. - fabs(local_x0.y());	 
+			// Choose which is furthest away from edge (edge @ 0.)
             test_dist = (dist_x < dist_y) ? dist_x : dist_y;
-            if(test_dist > return_dist) return_dist = test_dist;
+			// Choose closest to tile center
+			if(test_dist > return_dist) return_dist = test_dist;
         }
         else if(iFace == 1 || iFace == 3) {// X Side Tile
             double dist_z = dZ/2. - fabs(local_x0.z());
@@ -393,20 +397,21 @@ StatusCode AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol, const HepP
         }
         else if(iFace == 2 || iFace == 4) {// Y Side Tile
             double dist_z = dZ/2. - fabs(local_x0.z());
-            double dist_x = dY/2. - fabs(local_x0.x());	                
+         //   double dist_x = dY/2. - fabs(local_x0.x());	THIS IS THE MAIN ERROR!!!!  
+			double dist_x = dX/2. - fabs(local_x0.x());
             test_dist = (dist_z < dist_x) ? dist_z : dist_x;
             if(test_dist > return_dist) return_dist = test_dist;
         }
 		
-        // Pick up the min. distance from each type of tile
+        // Pick up the max. distance from each type of tile
         // i.e. top, and each type of side row tile
-        if (acdId.top() && test_dist < row_values[0]) row_values[0] = test_dist;
+        if (acdId.top() && test_dist > row_values[0]) row_values[0] = test_dist;
         if (acdId.side()) {
             unsigned int k = acdId.row()+1;
             if( k >= row_values.size()){
                 log << MSG::WARNING << "rejecting bad ACD id, row = " << k-1 << endreq;
             }else
-                if (test_dist < row_values[k]) row_values[k] = test_dist;
+                if (test_dist > row_values[k]) row_values[k] = test_dist;
         }
 		
     }
