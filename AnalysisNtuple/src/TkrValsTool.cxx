@@ -66,7 +66,7 @@ double circle_fracT(double r) {
 }    
 
 
-class TkrValsTool : public AlgTool, public ValBase {
+class TkrValsTool :  public ValBase {
 public:
     
     TkrValsTool( const std::string& type, 
@@ -173,7 +173,7 @@ const IToolFactory& TkrValsToolFactory = s_factory;
 TkrValsTool::TkrValsTool(const std::string& type, 
                          const std::string& name, 
                          const IInterface* parent)
-                         : AlgTool( type, name, parent )
+                         : ValBase( type, name, parent )
 {    
     // Declare additional interface
     declareInterface<IValsTool>(this); 
@@ -185,17 +185,12 @@ StatusCode TkrValsTool::initialize()
     
     MsgStream log(msgSvc(), name());
 
+    ValBase::initialize();
+    
     // get the services
     
     if( serviceLocator() ) {
 
-        IIncidentSvc* incSvc;
-        sc = serviceLocator()->service( "IncidentSvc", incSvc, true );
-        if(sc.isFailure()){
-            log << MSG::ERROR << "Could not find IncidentSvc" << endreq;
-            return sc;
-        }
-        setIncSvc(incSvc);
 
         sc = serviceLocator()->service( "EventDataSvc", m_pEventSvc, true );
         if(sc.isFailure()){

@@ -25,6 +25,6 @@ private
 
 apply_pattern package_Cshlibflags 
 
-# build this for testing, console only. Load all objects directly. 
+# build this for testing, console only. Load all objects directly.
 
-application test_AnalysisNtuple ${GuiMain} test/*.cxx  ${Win32Resource}
+application test_AnalysisNtuple ${GuiMain} test/*.cxx  ${Win32Resource} $(Joboptions)
