@@ -247,7 +247,8 @@ namespace rdbModel {
   unsigned int MysqlConnection::update(const std::string& tableName, 
                                        const StringVector& colNames, 
                                        const StringVector& values,
-                                       const Assertion* where) {
+                                       const Assertion* where,
+                                       const StringVector* nullCols) {
 
     unsigned int nCol = colNames.size();
     if (nCol != values.size()) {
@@ -256,10 +257,17 @@ namespace rdbModel {
       return 0;
     }
     std::string sqlString = "UPDATE " + tableName + " SET ";
-    sqlString += colNames[0] + "'" + values[0] + "'";
+    sqlString += colNames[0] + " = '" + values[0] + "'";
     for (unsigned int iCol = 1; iCol < nCol; iCol++) {
-      sqlString += "," + colNames[iCol] + "'" + values[iCol] + "'";
+      sqlString += "," + colNames[iCol] + " = '" + values[iCol] + "'";
     }
+    if (nullCols) {
+      unsigned nNull = nullCols->size();
+      for (unsigned iNull = 0; iNull < nNull; iNull++) {
+        sqlString += ", " + (*nullCols)[iNull] + "= NULL ";
+      }
+    }
+
     if (where) {
       sqlString += " WHERE ";
       bool ret = compileAssertion(where, sqlString);
