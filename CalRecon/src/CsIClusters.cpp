@@ -20,11 +20,12 @@ CsICluster::CsICluster(double e,Point p)
 void CsICluster::writeOut() const
 //################################################
 {
-
+#if 0 // THB: enable this after it is modified to write to the log object, and the values are all defined
 	std::cout << "Energy " << m_energySum << " Corrected " << m_energyCorrected;
 	std::cout << " " << position().x() << " " << position().y() << " " << position().z();
 	std::cout << " " << direction().x() << " " << direction().y() << " " << direction().z();
 	std::cout<<"\n";
+#endif
 }
 //------------- private --------------------------
 //################################################
@@ -66,10 +67,12 @@ void CsIClusterList::ini()
 void CsIClusterList::writeOut() const
 //################################################
 {
-	if (m_CsIClustersList.size()<=0) return;
+#if 0 // fix this to write to the log file for debug purposes
+    if (m_CsIClustersList.size()<=0) return;
 	
 	std::cout << " --- CsIClusterList  --- " << m_CsIClustersList.size() <<"\n";
 	for (int i = 0; i < m_CsIClustersList.size();i++) {
 		m_CsIClustersList[i]->writeOut();
 	}
+#endif
 }
