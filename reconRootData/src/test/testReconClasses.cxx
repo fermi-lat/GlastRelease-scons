@@ -53,7 +53,24 @@ int checkCalCluster(const CalCluster* cluster, UInt_t ievent) {
     Float_t fr = f*randNum;
     
     (*cluster).Print();
+
+    if (!floatInRange((*cluster).getEnergySum(), f)) {
+        std::cout << "Energy Sum is : " << (*cluster).getEnergySum() << std::endl;
+        return -1;
+    }
+    if (!floatInRange((*cluster).getEnergyCorrected(), f)) {
+        std::cout << "Energy Corrected is : " << (*cluster).getEnergyCorrected() << std::endl;
+        return -1;
+    }
     
+    TVector3 pos = (*cluster).getPosition();
+    if ( (!floatInRange(pos.X(), f)) || (!floatInRange(pos.Y(), f))
+        || (!floatInRange(pos.Z(), f) ) ){
+        std::cout << "Pos: ( " << pos.X() << "," << pos.Y() << "," 
+            << pos.Z() << ")" << std::endl;
+        return -1;
+    }
+
     if (!floatInRange((*cluster).getEnergyLeak(), randNum)) {
         std::cout << "Energy Leak is : " << (*cluster).getEnergyLeak() << std::endl;
         return -1;
@@ -660,7 +677,8 @@ int write(char* fileName, int numEvents) {
         calRec->initialize();
         UInt_t icluster;
         for (icluster = 0; icluster < numClusters; icluster++ ) {
-            CalCluster *cluster = new CalCluster();
+            TVector3 pos(f, f, f);
+            CalCluster *cluster = new CalCluster(f, pos);
             std::vector<Double_t> eLayer;
             eLayer.push_back(15.0);
             eLayer.push_back(22.0);

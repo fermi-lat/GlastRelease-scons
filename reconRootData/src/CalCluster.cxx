@@ -7,6 +7,14 @@ CalCluster::CalCluster() {
     Clear();
 }
 
+CalCluster::CalCluster(Double_t e, TVector3 p)
+{ 
+    Clear();
+    m_energySum = e;
+    m_energyCorrected = m_energySum;
+    m_position = p;
+}
+
 
 void CalCluster::initialize(Double_t eLeak, Double_t rmsLong, Double_t rmsTrans, 
         const TVector3 &caldir, Double_t calTransvOffset) {

@@ -23,6 +23,8 @@ public:
     
     CalCluster();
     
+    CalCluster(Double_t e, TVector3 p);
+
     virtual ~CalCluster() {};
 
     void Clear(Option_t *option="");
