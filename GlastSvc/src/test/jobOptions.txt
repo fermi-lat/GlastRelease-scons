@@ -2,10 +2,11 @@
 //
 // Job options file for CreateEvent
 //
-ApplicationMgr.ExtSvc   = { "GlastDetSvc", "EventSelector" , "EventCnvSvc" };
+// List of required services
+ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
 
-// do not need the following for debug
-ApplicationMgr.DLLs   = { "GlastSvc" };
+// List of Dlls
+ApplicationMgr.DLLs   = { "GlastSvc", "RootHistCnv" };
 
 //--------------------------------------------------------------
 // Private Application Configuration options
@@ -16,7 +17,6 @@ GlastDetSvc.PersistencyFile = "src/test/detector.xml";
 ApplicationMgr.TopAlg = { "CreateEvent" };
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-
 MessageSvc.OutputLevel      = 2;
 
 //=========================================================================
@@ -27,12 +27,14 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 // Algorithms Private Options
 //--------------------------------------------------------------
 // Number of events to be processed (default is 10)
+// This property is not available in our EventSelector - use ApplicationMgr.EvtMax instead
 //EventSelector.EvtMax = 20;
 
-// Print event number every event
-EventSelector.PrintFreq = 1;
+// Print event number every event, this property is not available in our EventSelector
+//EventSelector.PrintFreq = 1;
 
-ApplicationMgr.EvtSel = "IRFFILE src/test/muontest.irf";
+// Input IRF file
+EventSelector.Input = "IRFFILE src/test/muontest.irf";
 
 // Selection file - must be included - or else Gaudi will search for its file by default
 //ApplicationMgr.EvtSel = "NONE";
