@@ -102,7 +102,10 @@ public:
     void moveReconHit(int tower, int layer, int view, int ladder,
         HepPoint3D& point, HepVector3D dir) const;
 
-    
+    /// Get the volId and the local coordinates for the point to be aligned
+    virtual idents::VolumeIdentifier getGeometryInfo(int layer, int view, HepPoint3D globalPoint, 
+        HepPoint3D& alignmentPoint) const;
+   
     /// true means make alignment corrections at digi time
     bool alignSim() const {return ((m_fileFlag&(1<<SIM_SHIFT))>0); }
     /// true means make alignment corrections at recon time
