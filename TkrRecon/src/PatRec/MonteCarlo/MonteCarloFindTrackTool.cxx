@@ -290,4 +290,3 @@ Event::TkrPatCand* MonteCarloFindTrackTool::buildTrack(const Event::McParticle* 
     }
     return patCand;
 }
-

@@ -126,7 +126,7 @@ StatusCode TkrVertexAlg::execute()
         //do the same for all relations between the vertices and tracks
         //since we delete all of them, don't worry about "erase"ing properly
         SmartDataPtr<Event::TkrVertexTabList> vtxTable(eventSvc(),EventModel::TkrRecon::TkrVertexTab);
-        Event::TkrVertexTab                   tkrVertexTab(vtxTable);
+        //Event::TkrVertexTab                   tkrVertexTab(vtxTable);
         int                                   relTabSize = vtxTable->size();
 
         while(relTabSize--)

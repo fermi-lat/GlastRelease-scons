@@ -39,7 +39,7 @@ public:
     const double getIniErrPosition()     {return m_iniErrorPosition;  }
     const bool   getPlaneEnergies()      {return m_planeEnergies;     }
     const int    getErrorType()          {return m_errorType;         }
-    const int    trackAcrossTowers()     {return m_trackAcrossTowers; }
+    const bool   trackAcrossTowers()     {return m_trackAcrossTowers; }
 
 
     /// Allow for control variables to be set at initialization

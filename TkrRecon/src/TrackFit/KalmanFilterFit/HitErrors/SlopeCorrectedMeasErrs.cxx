@@ -92,7 +92,7 @@ double SlopeCorrectedMeasErrs::getError(double strips, double slope) const
     double minErr = m_tkrGeo->siResolution(); 
     double clusterWidth  = strips*m_tkrGeo->siStripPitch();
     double projectedWidth = fabs(slope)*m_tkrGeo->siThickness();
-    int    nStrips = floor(strips+.01);  // just to be safe
+    int    nStrips = (int) strips+.01;  // just to be safe
 
 
     double eps0 = -0.1; // use this to extent or restrict the valid range for 1-strip clusters

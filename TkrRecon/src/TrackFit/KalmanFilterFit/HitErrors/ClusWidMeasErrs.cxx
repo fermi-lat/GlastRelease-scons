@@ -20,7 +20,7 @@ ClusWidMeasErrs::ClusWidMeasErrs(ITkrGeometrySvc* tkrGeo) :
 
 const double oneOverSqrt12 = 1. / sqrt(12.);
 
-Event::TkrFitMatrix ClusWidMeasErrs::computeMeasErrs(const Event::TkrFitPar& newPars, 
+Event::TkrFitMatrix ClusWidMeasErrs::computeMeasErrs(const Event::TkrFitPar& /*newPars*/, 
                                                             const Event::TkrFitMatrix& oldCovMat, 
                                                             const Event::TkrCluster& cluster)
 {

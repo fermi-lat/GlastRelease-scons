@@ -97,7 +97,7 @@ double MonteCarloHitEnergy::initialHitEnergy(const Event::TkrPatCand& patCand,
     return energy;
 }
 
-double MonteCarloHitEnergy::updateHitEnergy(const double curEnergy, const double radLen)
+double MonteCarloHitEnergy::updateHitEnergy(const double /*curEnergy*/, const double /*radLen*/)
 {
     double energy = -1.;
     return energy;
