@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
  *
+ *          THB  10-aug-04 rename local tuple variables and clean up logic
  *  v6r14p9 NG   02-aug-04 Writes out Angular Separation and FilterAlg status code from
                            new OnboardFilter
  *  v6r14p8

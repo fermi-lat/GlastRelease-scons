@@ -26,6 +26,8 @@ public:
     
     // for making a root output tuple: must be  double?
     double & value() { return * m_pdatum;}
+    // root output
+    const float * pvalue() const{ return reinterpret_cast<const float*> (m_pdatum);}
 
     double operator()()const{      return value(); }
 
