@@ -14,17 +14,31 @@
 /*!
 //------------------------------------------------------------------------------
 //
-// \class   AcdDigi        
-//  
-// \brief Digitizations for ACD                                
-//              
-// Author:  Richard Dubois 
-//
-// Note the usage of ScintillatorId, this will be replaced by
-// the new AcdId class under development.
-//
-// There are no set methods in this class, users are expected to fill
-// the data members through the constructor.
+\class   AcdDigi        
+  
+\brief Digitizations for ACD                                
+              
+Initial Implementation by Richard Dubois
+Additions by Heather Kelly
+
+Note the usage of ScintillatorId, this will be replaced by
+the new AcdId class under development.
+
+There are no set methods in this class, users are expected to fill
+the data members through the constructor.
+
+ACDDigi represents the output from one phototube.  The bits are organized
+as follows:
+     __________________________________________________________
+    |15 | 14   | 13   | 12 |11|  |  |  |  |  |  |  |  |  |  |00|
+    |__ |_____ |__ ___|____|__|__|__|__|__|__|__|__|__|__|__|__|
+    |   |  HI  | LOW  |VETO|           PHA Value               |
+    |___|THRESH|THRESH|____|___________________________________| 
+
+  Low Threshold enables the PHA value
+  Veto Threshold nominal ACD veto signal
+  High Threshold is for CAL calibration - CNO
+
 //------------------------------------------------------------------------------
  */
 
@@ -42,8 +56,14 @@ public:
         m_pulseHeight(pulseHeight),
         m_veto(veto),
         m_lowThreshold(lowThresh),
-        m_highThreshold(highThresh)
-    {};
+        m_highThreshold(highThresh),
+        m_packedPHA(0)
+    {  
+        m_packedPHA = m_pulseHeight;  // set the lower 12 bits
+        m_packedPHA |= (m_lowThreshold << ADC_V_LOWTHRESH);
+        m_packedPHA |= (m_veto << ADC_V_VETO);
+        m_packedPHA |= (m_highThreshold << ADC_V_HIGHTHRESH);
+    };
 
     /// Destructor
     virtual ~AcdDigi() { };
@@ -79,15 +99,15 @@ private:
 
     enum {
         ADC_K_VETO = 1,
-        ADC_V_VETO = 12,
+        ADC_V_VETO = 12,    // determines location in packed byte
         ADC_M_VETO = ((1 << ADC_K_VETO) - 1),
 
         ADC_K_LOWTHRESH = 1,
-        ADC_V_LOWTHRESH = 13,
+        ADC_V_LOWTHRESH = 13, // determines location in packed byte
         ADC_M_LOWTHRESH = ((1 << ADC_K_LOWTHRESH) - 1),
 
         ADC_K_HIGHTHRESH = 1,
-        ADC_V_HIGHTHRESH = 14,
+        ADC_V_HIGHTHRESH = 14,  // determines location in packed byte
         ADC_M_HIGHTHRESH = ((1 << ADC_K_HIGHTHRESH) - 1)
     };
 
@@ -129,8 +149,14 @@ inline StreamBuffer& AcdDigi::serialize( StreamBuffer& s ) const
 inline StreamBuffer& AcdDigi::serialize( StreamBuffer& s )
 {
   ContainedObject::serialize(s);
- // s >> m_ID  need to add for ScintillatorId
-   s >> m_packedPHA;
+  
+  unsigned int id;
+
+  s >> id
+    >> m_packedPHA;
+
+   idents::ScintillatorId persId(id);
+   m_ID = persId;
 
   // unpack the bits from m_packedPHA
   m_veto =  (m_packedPHA >> ADC_V_VETO) & ADC_M_VETO;
