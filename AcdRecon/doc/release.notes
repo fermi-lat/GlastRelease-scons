@@ -2,6 +2,7 @@
 package AcdRecon\n
 package manager:H.Kelly
 
+v1r2p1    10-Sep-2002 HMK update TkrRecon version to 8\n
 v1r2      09-Sep-2002 HMK update GlastSvc version\n
 v1r1      09-Sep-2002 HMK update documentation for review\n
           rename acdDoca to trackDistances\n
