@@ -9,3 +9,5 @@
 AUTOMAKE_OPTIONS = foreign
 
 SUBDIRS = geometry src
+
+EXTRA_DIST = config
