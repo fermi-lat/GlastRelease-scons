@@ -39,8 +39,4 @@ namespace rdbModel {
     return v->visitAssertion(this);
   }
 
-  // no-op for now, till we figure out how the generated SQL will be used
-  // and hence what form it should take.
-  void makeSql() {}
-
 }
