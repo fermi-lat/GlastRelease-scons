@@ -70,8 +70,8 @@ class McEvent;
 class RootTreeAnalysis {
 public :
     /// Histogram file
-    TH1F        phaArr_A[500];
-    TH1F        phaArr_B[500];
+    //TH1F        phaArr_A[500];
+    //TH1F        phaArr_B[500];
     TFile       *histFile;
     /// Input digitization file
     TFile       *digiFile;   
