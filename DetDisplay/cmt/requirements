@@ -21,7 +21,7 @@ private
 
 apply_pattern package_Cshlibflags
 
-macro source "*,cxx" WIN32 "*.h *.cxx"
+macro source "*.cxx" WIN32 "*.h *.cxx"
 library DetDisplay $(source)  Dll/*.cxx
 
 
