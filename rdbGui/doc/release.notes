@@ -4,6 +4,9 @@
 
    Coordinators: M. Frailis and R. Giannitrapani
  
+   v1r3     4-Aug-2004  jrb      (for M & R) Fill in uid, creator automatically
+                                 for insert & update; more expressive insert
+                                 dialog
    v1r2    29-Jul-2004  frailis  Added update on single row and primary key
                                  icon
    v1r1p0   9-Jul-2004  frailis  Loosen dependency on GlastPolicy to just v*
