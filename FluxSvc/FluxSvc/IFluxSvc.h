@@ -38,7 +38,6 @@ public:
     /// access to the local HepRandomEngine, to allow synchronization
     virtual HepRandomEngine* getEngine()=0;
 
-
     
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IFluxSvc; }

@@ -45,9 +45,6 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
 {
     // declare the properties and set defaults
     
-    //declareProperty ("size", m_default_name);
-    //declareProperty("source_library" , m_source_library);
-	//declareProperty("user_library" , m_user_library);
     declareProperty("source_lib" , m_source_lib);
     declareProperty("source_lib_default" , m_source_lib_default);
     

@@ -12,7 +12,6 @@
 #include "CLHEP/Geometry/Vector3D.h"
 #include "GaudiKernel/FactoryTable.h"
 #include "flux/SpectrumFactoryTable.h"
-//#include "flux/TrappedProtonSpectrum.h"
 
 
 /*!  Abstract interface for an object that generates particles

@@ -53,8 +53,7 @@ StatusCode FluxTestAlg::initialize() {
 
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "initializing..." << endreq;
-  //  log << MSG::INFO << sean->instance()->particleName() << endreq;
-    
+   
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
 
