@@ -20,6 +20,8 @@ use RootIo v4*
 #the following prepend makes the includes folder available locally only: avoid the package_include
 #apply_pattern package_include
 macro_prepend includes "-I $(CALRECONROOT) " WIN32 "/I $(CALRECONROOT) "
+macro_append ROOT_linkopts "-L${ROOT_PATH}/lib -lMinuit " \ 
+                 VisualC " ${ROOT_PATH}/lib/libMinuit.lib " 
 
 #apply_pattern package_include
 
