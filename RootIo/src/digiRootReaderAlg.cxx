@@ -552,7 +552,10 @@ void digiRootReaderAlg::close()
     //m_digiFile->cd();
     //m_digiFile->Close();
     //saveDir->cd();
-    if (m_digiTree) delete m_digiTree;
+    if (m_digiTree) {
+        delete m_digiTree ;
+        m_digiTree = 0 ;
+    }
 }
 
 StatusCode digiRootReaderAlg::finalize()
