@@ -1,13 +1,9 @@
 // $Id$
 //
 //
-// Pure base class for all Geometric objects. Establishes the ability
-// to transform.
-//
-// Inherits from ArvePlottable to provide some default display capability
 
-#ifndef GEOMOBJECT_H
-#define GEOMOBJECT_H
+#ifndef GEOMETRY_GEOMOBJECT_H
+#define GEOMETRY_GEOMOBJECT_H
 
 
 #include <iostream>
@@ -19,9 +15,9 @@ extern void FATAL(const char *);
 class CoordTransform;
 class Vector;
 class Command;
-// just declare these, so the .cxx files need to include them
 
-class GeomObject //: public ArvePlottable
+/// Pure base class for all Geometric objects. Establishes the ability to transform.
+class GeomObject 
 {
  public:
    virtual ~GeomObject(){}
@@ -29,38 +25,33 @@ class GeomObject //: public ArvePlottable
    // Implicit copy constructor
    // Implicit assignment operator
 
+   /// virtual method to perform transformations that must be implemented by subclasses
    virtual GeomObject& transform(const CoordTransform&)=0;
-   // virtual method to perform transformations that must be
-   // implemented by subclasses
 
+   /// gives subclasses ability to just move
    GeomObject& move(const Vector&);
    GeomObject& moveX(double);
    GeomObject& moveY(double);
    GeomObject& moveZ(double);
-   // gives subclasses ability to just move
 
+   /// Rotation around the given axis: return pointer to self for convenience
    GeomObject & rotateX(double);
    GeomObject & rotateY(double);
    GeomObject & rotateZ(double);
-   // Rotation around the given axis: return pointer to self for convenience
 
+    /// Rotation around a specified vector.
     GeomObject & rotate(double angle, const Vector & axis);
-    // Rotation around a specified vector.
 
+    /// makes name available to subclasses using the type info facility
     virtual const char*  nameOf()const;
-    // makes name available to subclasses using the type info facility
 
+    /// print info about this object
     virtual void printOn(std::ostream& out=std::cout)const;
  
-    Command* printCommand(std::ostream* out);
-    // create a Command that will have this object print itself, 
-    // using the virtual printOn method
 
 
 protected:
     GeomObject(){}
-private:
-    class Print;
 
 };
 

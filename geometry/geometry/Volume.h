@@ -1,8 +1,6 @@
 // $Id$
 //
 //
-// Defines subclass of Shape that uses a list of Surfaces to define the
-// the volume. This class implements methods associated with the surfaces
 
 #ifndef __VOLUME_H
 #define __VOLUME_H
@@ -13,6 +11,9 @@
 #include <vector>
 typedef std::vector<Surface*> SurfaceList;
 
+/** Defines subclass of Shape that uses a list of Surfaces to define the
+ the volume. This class implements methods associated with the surfaces
+ */
 class Volume : public  Shape , protected SurfaceList
 {
  protected:
@@ -22,18 +23,19 @@ class Volume : public  Shape , protected SurfaceList
  public:
       ~Volume();
 
+   /** return the distance along the Ray to leave (if inside ), or
+       enter (if outside). Can be negative if the origin of the Ray is
+       close to the surface. testDist is the maxiumum distance required.
+       return MAX_FLT if no intersection between the Ray and the volume
+   */
    virtual double distanceToLeave( const Ray& r, double testDist)const;
    virtual double distanceToEnter( const Ray& r, double testDist)const;
-   // return the distance along the Ray to leave (if inside ), or
-   // enter (if outside). Can be negative if the origin of the Ray is
-   // close to the surface. testDist is the maxiumum distance required.
-   // return MAX_FLT if no intersection between the Ray and the volume
 
+   /// is the point inside the volume?
    virtual int inside ( const Point& x ) const;
-   // is the point inside the volume?
 
+   /// rotate, translate
    GeomObject& transform(const CoordTransform&);
-   // rotate, translate
 
    virtual void printOn( std::ostream& os = std::cout ) const;
 

@@ -1,11 +1,9 @@
 // $Heading: Track.h $
 //   Author: T. Burnett
 //
-// A Track is a list of Ray objects: it will document the complete trajectory of
-// a particle.
 
-#ifndef __TRACK_H
-#define __TRACK_H
+#ifndef GEOMETRY_TRACK_H
+#define GEOMETRY_TRACK_H
 
 #include "geometry/GeomObject.h"
 #include "geometry/Point.h"
@@ -13,23 +11,23 @@ class Ray;
 #include <string> // gcc bug
 #include <vector>
 
-
+/// A Track is a list of Ray objects: it will document the complete trajectory of a particle.
 class Track  : public GeomObject
 {
 public:
+    /// constructor: must specify first ray and if not charged
     Track( Ray* first, bool charged=true);
-    // constructor: must specify first ray and if not charged
+    /// destructor: deletes all rays in the list
     ~Track();
-    // destructor: deletes all rays in the list
 
     GeomObject& transform(const CoordTransform&);
 
+    /// add a new ray: assumes ownership
     void addSegment( Ray* next );
-    // add a new ray: assumes ownership
 
+    /// position and direction
     Point position( double s ) const;
     Vector direction( double s ) const;
-    // position and direction
 
     bool charged()const{return m_charged;}
 

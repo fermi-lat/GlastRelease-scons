@@ -1,14 +1,14 @@
 // $Id$
 //
-//
-//      A Trd2 is a list of 2 Rectangles and 4 Trapezoids which bound it.
-//      As with GEANT, the Rectangles are in the x-y plane.
 
 #ifndef __TRD2_H
 #define __TRD2_H
 
 #include "geometry/Hexahedron.h"
-
+/**
+      A Trd2 is a list of 2 Rectangles and 4 Trapezoids which bound it.
+      As with GEANT, the Rectangles are in the x-y plane.
+*/
 class Trd2: public Hexahedron
 {
 

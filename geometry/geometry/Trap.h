@@ -1,45 +1,48 @@
 // $Id$
 //
 
-//	Trap is the same as the GEANT volume of the same name, but note that
-//	GEANT uses half-lengths as parameters, whereas we use full
-//	lengths.
-//	A Trap is defined by the  6 planes which bound it.
-//	It is a generalized trapezoidal volume.
-//	The GEANT specification for this shape takes 11 parameters as
-//	described below, but, as noted by the authors, only 9 of them are 
-//	independent.
-//	Here, we use only the 9 independent parameters, eliminating the ones
-//	indicated below.  
-//	The 11 GEANT parameters are
-//	 1) the full length in z
-//	 2) the polar angle of the center of the -z face to the center of 
-//		the +z face
-//	 3) the azimuthal angle of the center of the -z face to the center
-//		of the +z face
-//		Since this parameter is not independent of overall rotations,
-//		THIS PARAMETER IS not used!
-//	 4) the full length in y of the -z face
-//	 5) the full length in x of the low y edge of the -z face
-//	 6) the full length in x of the high y edge of the -z face
-//	 7) the angle with respect to the y-axis from the center of the
-//		low y edge to the center of the high y edge of the -z face
-//	 8) the full length in y of the +z face
-//	 9) the full length in x of the low y edge of the +z face
-//	10) the full length in x of the high y edge of the +z face
-//	11) the angle with respect to the y-axis from the center of the
-//		low y edge to the center of the high y edge of the +z face
-//		Since this parameter must be equal to 7) in order for all
-//		faces to form planes,
-//		THIS PARAMETER IS not used!
-//
 
 #ifndef __TRAP_H
 #define __TRAP_H
 
 #include "geometry/Hexahedron.h"
  
+/**
+	Trap is the same as the GEANT volume of the same name, but note that
+	GEANT uses half-lengths as parameters, whereas we use full
+	lengths.<BR>
+	A Trap is defined by the  6 planes which bound it.
+	It is a generalized trapezoidal volume.
+	The GEANT specification for this shape takes 11 parameters as
+	described below, but, as noted by the authors, only 9 of them are 
+	independent.
+	Here, we use only the 9 independent parameters, eliminating the ones
+	indicated below.  <BR>
+	The 11 GEANT parameters are
+        <OL>
+	 <LI> the full length in z
+	 <LI> the polar angle of the center of the -z face to the center of 
+		the +z face
+	 <LI> the azimuthal angle of the center of the -z face to the center
+		of the +z face
+		Since this parameter is not independent of overall rotations,
+		THIS PARAMETER IS not used!
+	 <LI> the full length in y of the -z face
+	 <LI> the full length in x of the low y edge of the -z face
+	 <LI> the full length in x of the high y edge of the -z face
+	 <LI> the angle with respect to the y-axis from the center of the
+		low y edge to the center of the high y edge of the -z face
+	 <LI> the full length in y of the +z face
+	<LI> the full length in x of the low y edge of the +z face
+	<LI> the full length in x of the high y edge of the +z face
+	<LI> the angle with respect to the y-axis from the center of the
+		low y edge to the center of the high y edge of the +z face
+		Since this parameter must be equal to 7) in order for all
+		faces to form planes,
+		THIS PARAMETER IS not used!
+       </OL>
 
+*/
 class Trap: public Hexahedron
 {
 

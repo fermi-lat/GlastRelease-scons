@@ -1,16 +1,16 @@
-// $Heading: Point.h $
+// $Header$
 //   Author: T. Burnett
 //  Project: geometry
 //
-//  Defines a geometrical point, differing from  Vector only by
-//  its transformation properties, and the fact that it can be displayed.
 
-#ifndef POINT_H
-#define POINT_H
+#ifndef GEOMETRY_POINT_H
+#define GEOMETRY_POINT_H
 
 #include "geometry/Vector.h"
 
-
+/** Defines a geometrical point, differing from  Vector only by
+  its transformation properties, and the fact that it can be displayed.
+  */
 class Point: public Hep3Vector , public GeomObject
 {
 public:

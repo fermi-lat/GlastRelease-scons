@@ -1,13 +1,5 @@
 // $Id$
 //
-// CoordTransform.h
-//
-//  Define basic coordinate transformations 
-//
-//   Vector: v' = R * v
-//   Point:  p' = R * p + X
-//
-// where R is a 3x3 rotation matrix and X a Vector.
 
 #ifndef __COORDTRANSFORM_H
 #define __COORDTRANSFORM_H
@@ -18,6 +10,14 @@ class Point;
 
 typedef HepRotation Rotation;
 
+/**
+  Define basic coordinate transformations 
+<PRE>
+   Vector: v' = R * v
+   Point:  p' = R * p + X
+</PRE>
+ where R is a 3x3 rotation matrix and X a Vector.
+ */
 class CoordTransform
 {
   public:
@@ -27,17 +27,17 @@ class CoordTransform
    CoordTransform(const Rotation& _R, const Vector& t):X(t),R(_R){}
    // constructors: specify either or both rotation matrix, translation
 
+   /// return inverse transformation
    CoordTransform inverse()const;
-   // return inverse transformation
 
+   /// product of two transformations
    CoordTransform operator*(const CoordTransform& T) const;
-   // product of two transformations
 
    void transformVector(Vector& v)const{ v*=R;}
    void transformCoord(Point& p)const;
 
+   /// special default transform 
    static const CoordTransform identity;
-   // special default transform 
   private:
 
    Vector X;   // translation  vector

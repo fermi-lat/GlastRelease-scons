@@ -1,20 +1,20 @@
-//     $Id$
+//     $Header$
 //  Author: T. Burnett
 // Project: geometry
 //
-// Define a conic surface. Inherits origin point and axis direction from Surface
 
 #ifndef GEOMETRY_CONIC_H
 #define GEOMETRY_CONIC_H
 
 #include "geometry/Surface.h"
 
+/// Define a conic surface. Inherits origin point and axis direction from Surface
 class Conic: public Surface
 {
 public:
 
+    /// specify origin, axis, radius at origin, slope of radius 
     Conic( const Point& o, const Vector& a, double radius, double slope );
-    // specify origin, axis, radius at origin, slope of radius 
 
     // implicit destructor
     // implicit copy constructor
@@ -24,8 +24,8 @@ public:
     virtual double distance( const Point& x ,const Vector& v, int ) const;
     // specify geometry
 
+    /// returns normal-vector at Point x, gradient of howNear function
     virtual Vector normal( const Point& x )const;
-    // returns normal-vector at Point x, gradient of howNear function
 
     const Vector& axis()const{return Surface::direction();}
 

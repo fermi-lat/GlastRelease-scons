@@ -1,13 +1,11 @@
-// $Id$
+// $Header$
 //
-
-// Ray subclass that implements a helix
-//
-#ifndef __HELIX_H
-#define __HELIX_H
+#ifndef GEOMETRY_HELIX_H
+#define GEOMETRY_HELIX_H
 
 #include "geometry/Ray.h"
 
+/// Ray subclass that implements a helix
 class Helix : public Ray
 {
  public:
@@ -16,16 +14,17 @@ class Helix : public Ray
    Helix( const Helix& h );
 
 
+   /// position along the Helix
    Point position( double step ) const;
+   /// direction at the given distance along the Helix
    Vector direction( double step ) const;
-   // position and direction along the helix
 
+   /// return the local curvature, here just the const. inverse of the radius
    double curvature(double =0) const{ return rho? 1.0/rho : FLT_MAX; }
-   // return the local curvature, here just the const. inverse of the radius
 
+
+  /// used by Intersection::distance to step along rays searching for surface crossings
    double step() const { return rho? 2.* fabs(rho) : FLT_MAX; }
-  // used by Intersection::distance to step along rays 
-  // searching for surface crossings
 
    GeomObject& transform( const CoordTransform &);
 

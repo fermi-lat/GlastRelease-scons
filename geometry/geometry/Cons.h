@@ -6,7 +6,7 @@
 
 #include "geometry/Cone.h"
 
-
+/// A partial Cone
 class Cons: public Cone
 {
     

@@ -1,22 +1,22 @@
 //  $Id$
 //
 //
-// define a Tubular solid
 
 #ifndef TUBE_H
 #define TUBE_H
 
 #include "geometry/Volume.h"
 
+/// define a Tubular solid
 class Tube: public Volume
 {
 
 public:
+    /// constructor: length, inner, outer radii 
     Tube( double z, double ri, double ro );
-    // constructor: length, inner, outer radii 
 
+    /// resize the Tube with length, inner, outer radii 
     void resize( double z, double ri, double ro );
-    // resize the Tube with length, inner, outer radii 
 
     const char *nameOf() const { return "Tube"; }
     void printOn( std::ostream& os = std::cout ) const;

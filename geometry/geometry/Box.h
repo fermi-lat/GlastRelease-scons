@@ -2,25 +2,26 @@
 //   Author: Toby Burnett
 //  Project: geometry
 //
-//  Box is the same as the GEANT volume of the same name
-//  (except that full, rather than half, dimensions are specified)
-//  It is defined by six planes all perpendicular to axes
 
 #ifndef BOX_H
 #define BOX_H
 
 #include "geometry/Hexahedron.h"
 
-
+/**
+  Box is the same as the GEANT volume of the same name
+  (except that full, rather than half, dimensions are specified)
+  It is defined by six planes all perpendicular to axes
+*/
 class Box: public Hexahedron
 {
 
  public:
+   /// constructor: length along x, width along y, height along z
    Box( double length, double width, double height );
-   // constructor: length along x, width along y, height along z
 
+   /// resize Box: length along x, width along y, height along z
    void resize( double length, double width, double height );
-   // resize Box: length along x, width along y, height along z
 
    double length()const;
    double width() const;

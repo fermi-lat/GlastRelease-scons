@@ -1,14 +1,14 @@
 // $Header$
 //  Author: T. Burnett
 //
-// Define a Tube with a cut
 
-#ifndef __TUBS_H
-#define __TUBS_H
+#ifndef GEOMETRY_TUBS_H
+#define GEOMETRY_TUBS_H
 
 #include "geometry/Tube.h"
 #include "geometry/Wedge.h"
 
+/// Define a Tube with a cut
 class Tubs: public Tube
 {
 

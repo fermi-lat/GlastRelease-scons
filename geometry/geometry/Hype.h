@@ -1,22 +1,23 @@
 // $Header$
 //
 
-//	This volume is a hyperbolic tube designed to be used to describe
-//	stereo wires of a drift chamber, for example.
-//	The inner and outer surfaces are hyperbolas rotated about the
-//	z-axis, while the end surfaces are rings.
-//	The user specifies this shape by giving the inner and outer radii
-//	(at the center), half length, and stereo angle (in radians).
-//	Hype is the same as the GEANT volume of the same name, except that
-//	here the stereo angle is given in radians, whereas GEANT gives it
-//	in degrees.
-
 #ifndef __HYPE_H
 #define __HYPE_H
 
 #include "geometry/Volume.h"
 
+/**
 
+	This volume is a hyperbolic tube designed to be used to describe
+	stereo wires of a drift chamber, for example.
+	The inner and outer surfaces are hyperbolas rotated about the
+	z-axis, while the end surfaces are rings.
+	The user specifies this shape by giving the inner and outer radii
+	(at the center), half length, and stereo angle (in radians).
+	Hype is the same as the GEANT volume of the same name, except that
+	here the stereo angle is given in radians, whereas GEANT gives it
+	in degrees.
+*/
 class Hype: public Volume
 {
  

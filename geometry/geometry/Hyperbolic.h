@@ -6,6 +6,7 @@
 
 #include "geometry/Surface.h"
 
+/// Hyperbolic surface
 class Hyperbolic : public Surface
 {
   public:
@@ -14,8 +15,8 @@ class Hyperbolic : public Surface
 
     virtual double how_near( const Point& x ) const;
     virtual double distance( const Point& x ,const Vector& v,int) const;
+    /// returns normal-vector at Point x, assuming x to be "on" the surface
     virtual Vector normal( const Point& x )const;
-    // returns normal-vector at Point x, assuming x to be "on" the surface
 
     // specify geometry
 
@@ -26,8 +27,6 @@ class Hyperbolic : public Surface
 
     virtual const char *nameOf() const { return "Hyperbolic"; }
     virtual void printOn( std::ostream& os = std::cout ) const;
-
-
 
 
 };

@@ -2,21 +2,18 @@
 //   Author: T. Burnett
 //
 //
-// Define a right circular conical solid
 
-#ifndef CONE_H
-#define CONE_H
+#ifndef GEOMETRY_CONE_H
+#define GEOMETRY_CONE_H
 
 #include "geometry/Volume.h"
 
-
+/// Define a right circular conical solid
 class Cone: public Volume
 {
 public:
+    /// constructor: specify full length, inner and outer radii at -length/2 inner and outer radii at +length/2
     Cone( double length, double ri1, double ro1, double ri2, double ro2 );
-    // constructor: specify full length, 
-    // inner and outer radii at -length/2
-    // inner and outer radii at +length/2
 
     // Implicit destructor
     // Implicit copy constructor

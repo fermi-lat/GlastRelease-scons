@@ -1,11 +1,11 @@
-// $Id$
-// GeomObject that is a base for directed rays, implementing a straight line
-#ifndef __RAY_H
+// $Header$
+#ifndef GEOMETRY_RAY_H
 #define __RAY_H
 
 #include "geometry/Point.h"
-#include <float.h> // needed on NT for FLT_MAX
+#include <cfloat> // needed on NT for FLT_MAX
 
+/// GeomObject that is a base for directed rays, implementing a straight line
 class Ray : public GeomObject
 {
 public:
@@ -13,32 +13,33 @@ public:
   Ray( const Ray& r );
   // constructor
 
+  /// return position along ray
   virtual Point position( double s ) const ;
+  /// position at start of ray
   const Point& position() const {return pos;}
-  // return position at start, or along ray
 
+  /// return direction along ray
   virtual Vector direction( double  ) const{ return dir; }
+  /// direction at start of ray
   const Vector& direction() const {return dir;}
-  // return direction at start, or along ray
 
+  /// transform the Ray to a new system
   GeomObject& transform( const CoordTransform & );
-  // transform the Ray to a new system
 
+  /// allows polymorphic test to check local curvature
   virtual double curvature(double =0) const { return 0.0; }
-  // allows polymorphic test to check local curvature
 
+  /// used by Intersection::distance to step along rays searching for surface crossings
   virtual double step() const {return FLT_MAX;}
-  // used by Intersection::distance to step along rays 
-  // searching for surface crossings
 
   double getArcLength() const { return arclength; }
   void setArcLength( double s ) { arclength = s; }
   void addArcLength( double ds ) { arclength += ds; }
   // access to internal position
 
+  /// useful for vertexing between this Ray and another
   virtual double distanceOfClosestApproach(const Ray& r) const;
   virtual Vector vectorOfClosestApproach(const Ray& r) const;
-  // useful for vertexing between this Ray and another
 
   const char *nameOf() const { return "Ray"; }
   virtual void printOn( std::ostream& os = std::cout ) const;

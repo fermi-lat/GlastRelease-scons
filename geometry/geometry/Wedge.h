@@ -1,4 +1,4 @@
-// $Id$
+// $Header$
 //
 
 #ifndef __WEDGE_H
@@ -7,6 +7,7 @@
 #include "geometry/Surface.h"
 #include "geometry/Plane.h"
 
+/// Define wedge-like surface formed by two intesecting planes
 class Wedge : public Surface
 {
  public:
