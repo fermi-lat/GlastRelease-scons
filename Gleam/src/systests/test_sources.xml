@@ -178,31 +178,43 @@
        </spectrum>
      </source>
 
+     <source name="gamma_test_vertical_100MeV">
+       <spectrum> 
+         <particle name="gamma"><energy e="0.1"/> </particle>
+           <direction theta="0" phi="0" />
+           <launch_point x="45" y="45" z="1000" />
+       </spectrum>
+     </source>
+
    <source name="muon_test_vertical_1GeV">
         <spectrum>
-            <particle name="mu+"> <energy e="1."/> </particle>
+            <particle name="mu+"> <energy e="1.0"/> </particle>
             <direction theta="0" phi="0"/>
+            <launch_point x="45" y="45" z="1000" />
         </spectrum>
     </source>
 
     <source name="muon_test_vertical_10GeV">
         <spectrum>
-            <particle name="mu+"> <energy e="10."/> </particle>
+            <particle name="mu+"> <energy e="10.0"/> </particle>
             <direction theta="0" phi="0"/>
+            <launch_point x="45" y="45" z="1000" />
         </spectrum>
     </source>
 
     <source name="proton_test_vertical_1GeV">
         <spectrum>
-            <particle name="p"> <energy e="1."/> </particle>
+            <particle name="p"> <energy e="1.0"/> </particle>
             <direction theta="0" phi="0"/>
+            <launch_point x="45" y="45" z="1000" />
         </spectrum>
     </source>
 
     <source name="proton_test_vertical_10GeV">
         <spectrum>
-            <particle name="p"> <energy e="10."/> </particle>
+            <particle name="p"> <energy e="10.0"/> </particle>
             <direction theta="0" phi="0"/>
+            <launch_point x="45" y="45" z="1000" />
         </spectrum>
     </source>
 
@@ -223,3 +235,4 @@
      </source>
 
 </source_library>
+

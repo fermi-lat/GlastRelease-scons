@@ -71,7 +71,7 @@ void RootTreeAnalysis::ReconTkr()
 
     for (int idx = 0; idx < numTracks; idx++)
     {
-        TkrTrack* track = (TkrTrack*)trkCol->At(numTracks);
+        TkrTrack* track = (TkrTrack*)trkCol->At(idx);
 
         Int_t      numHits = track->getNumHits();
         Double_t   quality = track->getQuality();
@@ -114,9 +114,6 @@ void RootTreeAnalysis::ReconTkr()
             ((TH1F*)GetObjectPtr("TKRVTXQUALITY"))->Fill(vertex->getQuality());
             ((TH1F*)GetObjectPtr("TKRVTXSTARTZ"))->Fill(vtxPos.Z());
             ((TH1F*)GetObjectPtr("TKRVTXNUMTRK"))->Fill(vertex->getNumTracks());
-            pVtxQual->Fill(vertex->getQuality());
-            pVtxNtrks->Fill(vertex->getNumTracks());
-            pVtxZ->Fill(vtxPos.Z());
 
 /* Future expansion
             Double_t locQual = 0.;

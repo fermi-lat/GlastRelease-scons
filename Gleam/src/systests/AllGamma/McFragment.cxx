@@ -3,6 +3,8 @@
 void RootTreeAnalysis::McHistDefine() {
     
     histFile->cd();
+
+    float maxEnergy = 1000;
     
     TH1F *PARTCOUNTMC = new TH1F("PARTCOUNTMC", "McParticle Count",
         20, 0, 20);
@@ -25,7 +27,7 @@ void RootTreeAnalysis::McHistDefine() {
     INTENERGYDEPCAL->SetXTitle("Energy (MeV)");
 
     TH1F *INTENERGYTOT = new TH1F("INTENERGYTOT", "McIntegratingHit Total Energy",
-        100, 0, 1000);
+        100, 0, maxEnergy);
     INTENERGYTOT->SetXTitle("Energy (MeV)");
 
     TH1F *INTSEGMENT = new TH1F("INTSEGMENT", "MC Int Xtal Segment Number",

@@ -63,8 +63,6 @@ void RootTreeAnalysis::DigiAcd() {};
 
 void RootTreeAnalysis::DigiTkr() {};
 
-void RootTreeAnalysis::ReconTkr() {};
-
 void RootTreeAnalysis::ReconAcd() {};
 
 
