@@ -36,9 +36,9 @@ void ThrottleAlg::setup(){
     return;
 }
 
-unsigned int ThrottleAlg::calculate(const Event::EventHeader& header, 
-							const Event::TkrDigiCol& tkr, 
-							const Event::AcdDigiCol& acd,  double threshold)
+unsigned int ThrottleAlg::calculate( const Event::TkrDigiCol& tkr, 
+				     const Event::AcdDigiCol& acd,  
+				     double threshold)
 {
 
 	//Get the list of triggered towers, and set the lists of acd tiles hit

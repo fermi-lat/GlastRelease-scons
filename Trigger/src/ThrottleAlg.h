@@ -52,9 +52,9 @@ public:
     //! set parameters and attach to various perhaps useful services.
     void setup();
     //! process one event and return the value of bit enums::b_THROTTLE
-    unsigned int ThrottleAlg::calculate(const Event::EventHeader& header, 
-							            const Event::TkrDigiCol& tkr, 
-							            const Event::AcdDigiCol& acd,  double threshold);
+    unsigned int ThrottleAlg::calculate(const Event::TkrDigiCol& tkr, 
+					const Event::AcdDigiCol& acd,  
+					double threshold);
 private: 
     //! determine tracker trigger bits
     //! sets the triggered towers in the form of an unsigned short
