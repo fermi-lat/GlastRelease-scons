@@ -4,8 +4,7 @@
 #define __CALRECLOGSALG_H 1
 
 #include "Gaudi/Algorithm/Algorithm.h"
-
-class calorimeterDetGeo;
+#include "CalGeometrySvc.h"
 class CalPedCalib;
 class CalCalibLogs;
 class CalCalibLog;
@@ -51,7 +50,7 @@ private:
 
 private:
 
-//	const calorimeterDetGeo* m_CalGeoLogs;
+	CalGeometrySvc* m_CalGeo;
 	 CalPedCalib* m_CalPedLogs;
 	 CalCalibLogs* m_CalCalibLogs;
 	 CalADCLogs* m_CalRawLogs;

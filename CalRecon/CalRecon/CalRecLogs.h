@@ -1,10 +1,8 @@
 #ifndef __CALRECLOGS_H
 #define __CALRECLOGS_H 1
 
-//#include <stdlib.h>
 #include <iostream>
 #include <vector>
-// #include "Event/trsDataVI.h"
 #include "TkrRecon/detGeo.h"
 #include "CalRecon/CalADCLogs.h"
 #include "CalRecon/CalBase.h"
@@ -79,7 +77,8 @@ class CalRecLogs : public DataObject
 public:
 
 	// constructor
-	CalRecLogs()  {ini();}
+	CalRecLogs(int nmodX=1, int nmodY=1, int nlogs=10, int nlayers=4, int iviews=2)
+	{ini(nmodX,nmodY,nlogs,nlayers,iviews);}
 	~CalRecLogs();
 
 
@@ -106,7 +105,7 @@ public:
 
 private:
 
-	virtual void ini();
+	virtual void ini(int nmodX, int nmodY, int nlogs, int nlayers, int iviews);
 
 	void draw(gui::DisplayRep& v) const;
 

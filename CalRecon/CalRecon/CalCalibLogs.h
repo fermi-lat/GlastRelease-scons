@@ -41,7 +41,7 @@ class CalCalibLogs
 {
 public:
 
-	CalCalibLogs() { ini();}
+	CalCalibLogs(int nLogs = 10, int nLayers = 4) { ini(nLogs,nLayers);}
 	~CalCalibLogs();
 
 	void setFileNames(const std::string& IntlinFileName,
@@ -64,7 +64,7 @@ public:
 	void readSlope();
 	virtual void make();
 	virtual void clear() {}
-	virtual void ini();
+	virtual void ini(int nLogs, int nLayers);
 
 	// access
 	int num()                 const {return m_List.size();}

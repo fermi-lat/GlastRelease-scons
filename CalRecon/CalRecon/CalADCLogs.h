@@ -43,7 +43,8 @@ class CalADCLogs : public DataObject
 public:
 
 	// constructor
-	CalADCLogs() {ini();}
+	CalADCLogs(int nmodX=1, int nmodY=1, int nlogs=10, int nlayers=4)
+	{ini(nmodX,nmodY,nlogs,nlayers);}
 	virtual ~CalADCLogs();
 
 	// GAUDI members to be use by the converters
@@ -62,7 +63,7 @@ public:
 
 protected:
 
-	virtual void ini();
+	virtual void ini(int nmodX=1, int nmodY=1, int nlogs=10, int nlayers=4);
 
 private:
 

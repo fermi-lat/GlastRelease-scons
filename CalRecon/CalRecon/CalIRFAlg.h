@@ -4,15 +4,8 @@
 
 // Include files
 #include "Gaudi/Algorithm/Algorithm.h"
-
-#include "reconstruction/SummaryData.h"
-#include "CalRecon/GaudiGlastTuple.h"
-
-// forward declarations
+#include "CalGeometrySvc.h"
 class IGlastDetSvc;
-class CalRecon;
-class GlastTuple;
-namespace xml { class IFile; }
 
 
 /*! \class CalIRFAlg
@@ -33,21 +26,12 @@ public:
   //! mandatory
   StatusCode finalize();
 
-  StatusCode printNewNTuple();
 
 private:
     // the GlastDetSvc used for access to detector info
     IGlastDetSvc*    m_detSvc;
-    // ptr to the CalRecon object used to do the analysis
-    CalRecon*    m_recon;
 
-    // constants from the "instrument.xml" file.
-    xml::IFile * m_ini;
-    
-    // sumamry object from glastsim creates a n-tuple
-//    SummaryData<GlastTuple>* m_summary;
-    SummaryData<GaudiGlastTuple>* m_gsummary;
-
+	CalGeometrySvc* m_CalGeo;
 
 };
 
