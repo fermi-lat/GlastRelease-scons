@@ -34,7 +34,7 @@ void CompositeSource::addSource (EventSource* aSource)
     EventSource::setFlux( flux(EventSource::time()) );
     //here, set up the associated vectors by default.
     m_unusedSource.push_back(0);
-    m_sourceInterval.push_back(-1.);
+    m_sourceTime.push_back(-1);
     m_eventList.push_back(0);
 }
 
@@ -73,12 +73,12 @@ FluxSource* CompositeSource::event (double time)
 	int q;
         for (q=0 ; now != m_sourceList.end(); ++now) {
             if(m_unusedSource[i]==1){
-                intrval=m_sourceInterval[i];
+                intrval=m_sourceTime[i]-time;
             }else{
                 m_eventList[i] = (*now)->event(time); // to initialize particles, so that the real interval for the particle is gotten.
-                intrval=m_eventList[i]->interval(time);
+                intrval=m_sourceList[i]->interval(time);
                 m_unusedSource[i]=1;
-                m_sourceInterval[i]=intrval;
+                m_sourceTime[i]=time + intrval;
             }
             
             if(intrval < intrmin){
@@ -93,14 +93,8 @@ FluxSource* CompositeSource::event (double time)
             q++;
             i++;
         }
-        setInterval(intrmin);
-        now = m_sourceList.begin();
-        for (q=0 ; now != m_sourceList.end(); ++now) {
-            //this loop sets the intervals back in accordance with
-            //how far ahead time will move.
-            m_sourceInterval[q] = m_sourceInterval[q] - intrmin;
-            q++;
-        }
+        //note:the internal interval() function takes absolute time.
+        setInterval(time+intrmin);
     }
     m_unusedSource[winningsourcenum]=0; //the current "winning" source is getting used..
     // now ask the chosen one to return the event.

@@ -63,10 +63,10 @@ public:
     void sourceList (const std::vector< EventSource* >& value);
     
     /// interval to the next event
-    double interval (double){return m_interval;}
+    double interval (double time){return m_interval - time;}
     
-    /// set the interval to the next event
-    double setInterval (double interval){return (m_interval = interval);}
+    /// set the absolute time to the next event
+    double setInterval (double time){return (m_interval = time);}
     
     /// double m_time; 
     double m_interval;
@@ -86,8 +86,8 @@ protected:
     std::vector< FluxSource* > m_eventList;
     //vector of flags, holds whether or not the current source has a remaining unused particle.
     std::vector<int> m_unusedSource;
-    //vector of recorded intervals of held sources.
-    std::vector<double> m_sourceInterval;
+    //vector of recorded arrival times of held sources.
+    std::vector<double> m_sourceTime;
     EventSource*  m_recent;
 };
 
