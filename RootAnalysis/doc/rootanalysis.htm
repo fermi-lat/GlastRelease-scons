@@ -29,8 +29,8 @@
         </p>
         <p><font size="2"><strong><a href="#Event Loop processing">Event Loop
         Processing</a></strong></font><font size="3"><br>
-        </font><font size="2"><a href="#RootTreeAnalysis">RootTreeAnalysis</a><br>
-        <a href="#RawValidate">RawValidate<br>
+        </font><font size="2"><a href="#RootTreeAnalysis">RootTreeAnalysis</a>
+        <a href="#RawValidate"><br>
         </a><a href="#NtupleAnalysis">NtupleAnalysis</a></font></p>
         <p><font size="2"><strong><a href="#Low level macros">Low Level Utilties</a></strong></font><font size="4"><br>
         </font><font size="2"><a href="#chainTrees">chainTrees.cxx<br>
@@ -119,26 +119,32 @@
         that &quot;-recon&quot; appears in the file name.</p>
         <h3><a name="Event Loop processing">Event Loop processing</a></h3>
         <p><font size="3"><b><a name="RootTreeAnalysis">RootTreeAnalysis</a></b></font></p>
-        <p><font size="3">Our generic event loop macro.&nbsp; Handles raw,
+        <p><font size="3">Our generic event loop macro.&nbsp; Handles digi,
         reconstruction, and/or monte carlo ROOT files.&nbsp; Output is a new
         ROOT file, named Histograms.root, which contains a series of user
         defined histograms.&nbsp; Users can provide
         either file names, or TChains of files for multi-file processing.&nbsp;
         Here is a <a href="http://www-glast.slac.stanford.edu/software/root/RootTreeAnalysis/RootTreeAnalysis.htm">detailed
         description of the RootTreeAnalysis class</a>.</font></p>
-        <p><font size="3">Use the RootTreeAnalysis constructor to pass in file
-        names or a TChain of files.</font></p>
         <p><font size="3">Event Processing is done by calling <i>RootTreeAnalysis::Go(Int_t</i>
-        <i>numEvents);</i>&nbsp; This causes the next numEvents events to be
+        <i>numEvents);</i>&nbsp; This causes the next <i> numEvents</i> events to be
         processed - filling the defined histograms.&nbsp; Note:&nbsp; this does
         not cause the histograms to be saved!!!&nbsp; One must call <i>RootTreeAnalysis::WriteHist(
         )</i>.</font></p>
+        <p><font size="3">The actual analysis is performed in a series of
+        routines called by <i>Go( ).&nbsp; </i>The routines that handle the digi
+        data are named:&nbsp; <i>DigiTkr( ), DigiCal( ),</i> and <i>DigiAcd( )</i>.&nbsp;
+        Similarly, the reconstruction functions are:&nbsp; <i>ReconTkr( )</i>
+        and <i>ReconCal( )</i>.&nbsp; When adding your own analysis - you may
+        add it directly to the <i>Go( )</i> function - or you may prefer to
+        extend one of the existing analysis routines that specifically handles
+        the type of data you are accessing.</font></p>
         <p><font size="3">You may use the pre-defined histograms provided or
         modify/add/remove histograms.&nbsp; Users define their histograms in the <i>HistDefine</i>
         routine, located in the RootTreeAnalysis.cxx file.&nbsp; Note that there
-        are separate functions for Raw, Recon, and MC ntuples.</font></p>
+        are separate functions for Digi, Recon, and MC histograms.</font></p>
         <p><font size="3">Example usage:<br>
-        </font><i><font size="2">RootTreeAnalysis m(&quot;myRawFile.root&quot;,
+        </font><i><font size="2">RootTreeAnalysis m(&quot;myDigiFile.root&quot;,
         &quot;myReconFile.root&quot;); // opens our files<br>
         m.Go(500);      // loop over 500 events. Go contains your analysis code<br>
         m.StartWithEvent(1001); // set the file pointer to eventNum = 1001<br>
@@ -147,27 +153,6 @@
         m.Go(1000); // Process the next 1000 events, starting from eventNum
         1052<br>
         m.WriteHist(); // Write out all hisgtograms to the Histograms.root file</font></i></p>
-        <p><font size="3"><b><a name="RawValidate">RawValidate</a></b></font></p>
-        <p><font size="3">Handles only raw ROOT files.&nbsp; Behaves just as
-        RootTreeAnalysis does, but it contains some additional default
-        histograms that are useful for making sure that the raw data looks
-        reasonable.</font></p>
-        <p><font size="3">Event Processing is done by calling <i>RawValidate::Go(Int_t</i>
-        <i>numEvents);</i>&nbsp; This causes the next numEvents events to be
-        processed - filling the defined histograms.&nbsp; Note:&nbsp; this does
-        not cause the histograms to be saved!!!</font></p>
-        <p><font size="3">You may use the pre-defined histograms provided or
-        modify/add histograms.&nbsp; Users define their histograms in the <i>HistDefine</i>
-        routine, located in the RawValidate.cxx file.&nbsp;&nbsp;</font></p>
-        <p>Example usage:<font size="2"><i><br>
-        </i></font><i><font size="2">RawValidate m(&quot;MyRootFile.root&quot;); //
-        open our Raw root file<br>
-        m.Go(500);      // loop over 500 events. Go contains your analysis code<br>
-        m.StartWithEvent(2001); // set the file pointer to eventNum = 2001<br>
-        m.Go(50); // process the next 50 events<br>
-        m.HistClear(); // clear all histograms<br>
-        m.Go(1000);<br>
-        m.WriteHist(); // write out all histograms to the Histograms.root file</font></i></p>
         <p><font size="3"><b><a name="NtupleAnalysis">NtupleAnalysis</a></b></font></p>
         <p><font size="3">Please <a href="http://www-glast.slac.stanford.edu/software/root/howto/pdr.html">see
         this page</a> for a description... But here is a summary:</font></p>
@@ -278,9 +263,6 @@
         Usage:<br>
         <i><font size="2">.L acdPlots.cxx<br>
         acdPlots(&quot;Histograms.root&quot;, &quot;myNewPSfile.ps&quot;);</font></i></p>
-        <p><b>epsfilecreator</b> plots histograms one per pad and creates eps files for
-        every of them as selected or commented out by the user (Recon data) The sequence can be followed to create more histos as the user needs
-        them.</p>
         <p><b><font size="3">hit4layers </font></b> plots 4 histograms of 4 different HIT Layers, selected by
         the user, in one pad. It outputs a ps file with the result (Raw data).</p>
         <p><b>hitlayers</b> loops over ALL Hit Layers pltting in one pad (Raw data).&nbsp;
