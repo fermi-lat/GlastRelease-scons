@@ -47,10 +47,10 @@ public:
     void addRangeRecData(CalRangeRecData r) { m_recData.push_back(r); } ;
     
     /// Retrieve energy range for selected face and readout
-    Char_t getRange(Short_t readoutIndex, CalXtalId::XtalFace face) const;
+    Char_t getRange(UShort_t readoutIndex, CalXtalId::XtalFace face) const;
     
     /// Retrieve energy for selected face and readout
-    Double_t getEnergy(Short_t readoutIndex, CalXtalId::XtalFace face) const;
+    Double_t getEnergy(UShort_t readoutIndex, CalXtalId::XtalFace face) const;
     
     
     /// Retrieve average energy of two faces for the best range
@@ -63,7 +63,7 @@ public:
     }
     
     /// Retrieve reconstructed data from both ends of selected readout
-    const CalRangeRecData* getRangeRecData(Short_t readoutIndex) const;
+    const CalRangeRecData* getRangeRecData(UShort_t readoutIndex) const;
     
     /// Retrieve pulse height from selected range
     Double_t getEnergySelectedRange(CalXtalId::AdcRange range, CalXtalId::XtalFace face) const;

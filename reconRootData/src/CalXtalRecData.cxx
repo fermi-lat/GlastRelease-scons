@@ -32,13 +32,13 @@ void CalXtalRecData::Print(Option_t *option) const {
 }
 
 
-Char_t CalXtalRecData::getRange(Short_t readoutIndex, CalXtalId::XtalFace face) const 
+Char_t CalXtalRecData::getRange(UShort_t readoutIndex, CalXtalId::XtalFace face) const 
 {
     return (readoutIndex < m_recData.size()) ? ((m_recData[readoutIndex])).getRange(face) : (char)-1;
 }
 
 
-Double_t CalXtalRecData::getEnergy(Short_t readoutIndex, CalXtalId::XtalFace face) const
+Double_t CalXtalRecData::getEnergy(UShort_t readoutIndex, CalXtalId::XtalFace face) const
 {
     return (readoutIndex < m_recData.size()) ? ((m_recData[readoutIndex])).getEnergy(face) : -1.0;
 };
@@ -51,7 +51,7 @@ Double_t CalXtalRecData::getEnergy() const
 };
 
 
-const CalRangeRecData* CalXtalRecData::getRangeRecData(Short_t readoutIndex) const
+const CalRangeRecData* CalXtalRecData::getRangeRecData(UShort_t readoutIndex) const
 {
     if ( readoutIndex < m_recData.size() )
         return &(m_recData[readoutIndex]);
