@@ -539,7 +539,8 @@ StatusCode TkrValsTool::calculate()
         bool firstHit = true;
         bool gapFound = false;
         while(pln_pointer != track_1->end()) {
-            const Event::TkrTrackHit* plane = *pln_pointer;
+            const Event::TkrTrackHit* plane = *pln_pointer++;
+            if (!(plane->getStatusBits() & Event::TkrTrackHit::HITONFIT)) continue;
             idents::TkrId idPlane = plane->getTkrId();
             int thisPlane = idPlane.getPlane();
             if(firstHit) {
@@ -636,8 +637,6 @@ StatusCode TkrValsTool::calculate()
                 last_ToT += tot;
                 chisq_last += plane->getChiSquareSmooth();
             }
-            pln_pointer++;
-
         }
         Tkr_1_ToTTrAve = (Tkr_1_ToTAve - max_ToT - min_ToT)/(Tkr_1_Hits-2.);
         Tkr_1_ToTAve /= Tkr_1_Hits;
