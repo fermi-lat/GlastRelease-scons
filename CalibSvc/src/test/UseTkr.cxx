@@ -7,9 +7,9 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "CalibData/CalibModel.h"
-#include "CalibData/Cal/CalCalibPed.h"
+#include "CalibData/Tkr/TkrSplitsCalib.h"
 #include "CalibData/CalibTime.h"
-#include "idents/CalXtalId.h"                // shouldn't be necessary
+#include "idents/TkrId.h"
 
 /**
    @file UsePeds.cxx
@@ -21,13 +21,13 @@
   /** 
    @class UsePeds
 
-   Algorithm exemplifying retrieval and use of Calorimeter pedestal calibration
+   Algorithm exemplifying retrieval and use of Tkr calibration quantities
 */
-class UsePeds : public Algorithm {
+class UseTkr : public Algorithm {
 
 
 public:
-  UsePeds(const std::string& name, ISvcLocator* pSvcLocator); 
+  UseTkr(const std::string& name, ISvcLocator* pSvcLocator); 
 
   StatusCode initialize();
 
@@ -37,7 +37,7 @@ public:
 
 private:
   /// Helper function called by execute
-  void processNew(CalibData::CalCalibPed* pNew, const std::string& path);
+  void processNew(CalibData::TkrSplitsCalib* pNew, const std::string& path);
 
   IDataProviderSvc* m_pCalibDataSvc;
   int               m_ser;
@@ -45,12 +45,12 @@ private:
 
 
 /// Instantiation of a static factory to create instances of this algorithm
-static const AlgFactory<UsePeds> Factory;
-const IAlgFactory& UsePedsFactory = Factory;
+static const AlgFactory<UseTkr> Factory;
+const IAlgFactory& UseTkrFactory = Factory;
 
 
-UsePeds::UsePeds(const std::string&  name, 
-                 ISvcLocator*        pSvcLocator )
+UseTkr::UseTkr(const std::string&  name, 
+               ISvcLocator*        pSvcLocator )
   : Algorithm(name, pSvcLocator), m_pCalibDataSvc(0), 
   m_ser(-1)
 {
@@ -59,7 +59,7 @@ UsePeds::UsePeds(const std::string&  name,
 }
 
 
-StatusCode UsePeds::initialize() {
+StatusCode UseTkr::initialize() {
   StatusCode sc;
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Initialize()" << endreq;
@@ -84,7 +84,7 @@ StatusCode UsePeds::initialize() {
 }
 
 
-StatusCode UsePeds::execute( ) {
+StatusCode UseTkr::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
@@ -94,53 +94,53 @@ StatusCode UsePeds::execute( ) {
   //    SmartDataPtr<CalibData::CalibTest1>(m_pCalibDataSvc, CalibData::Test_Gen);
   
   //  std::string fullPath = "/Calib/CAL_Ped/ideal";
-  std::string fullPath = CalibData::CAL_Ped + "/ideal";
+  std::string fullPath = CalibData::TKR_Splits + "/test";
   DataObject *pObject;
   
 
   m_pCalibDataSvc->retrieveObject(fullPath, pObject);
 
-  CalibData::CalCalibPed* pPeds = 0;
-  pPeds = dynamic_cast<CalibData::CalCalibPed *> (pObject);
-  if (!pPeds) {
-    log << MSG::ERROR << "Dynamic cast to CalCalibPed failed" << endreq;
+  CalibData::TkrSplitsCalib* pSplits = 0;
+  pSplits = dynamic_cast<CalibData::TkrSplitsCalib *> (pObject);
+  if (!pSplits) {
+    log << MSG::ERROR << "Dynamic cast to TkrSplitsCalib failed" << endreq;
     return StatusCode::FAILURE;
   }
 
-  int newSerNo = pPeds->getSerNo();
+  int newSerNo = pSplits->getSerNo();
   if (newSerNo != m_ser) {
-    log << MSG::INFO << "Processing new pedestals after retrieveObject" 
+    log << MSG::INFO << "Processing new splitss after retrieveObject" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pPeds, fullPath);
+    processNew(pSplits, fullPath);
   }
   m_pCalibDataSvc->updateObject(pObject);
 
-  pPeds = 0;
+  pSplits = 0;
   try {
-    pPeds = dynamic_cast<CalibData::CalCalibPed *> (pObject);
+    pSplits = dynamic_cast<CalibData::TkrSplitsCalib *> (pObject);
   }
   catch (...) {
     log << MSG::ERROR 
-        << "Dynamic cast to CalCalibPed after update failed" << endreq;
+        << "Dynamic cast to TkrSplitsCalib after update failed" << endreq;
     return StatusCode::FAILURE;
   }
-  newSerNo = pPeds->getSerNo();
+  newSerNo = pSplits->getSerNo();
   if (newSerNo != m_ser) {
-    log << MSG::INFO << "Processing new pedestals after update" 
+    log << MSG::INFO << "Processing new splits after update" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pPeds, fullPath);
+    processNew(pSplits, fullPath);
   }
 
   return StatusCode::SUCCESS;
 }
 
 
-void UsePeds::processNew(CalibData::CalCalibPed* pNew, 
+void UseTkr::processNew(CalibData::TkrSplitsCalib* pNew, 
                               const std::string& path) {
-  using idents::CalXtalId;
-  using CalibData::Ped;
+  using idents::TkrId;
+  using CalibData::TkrSplit;
   bool  done = false;
 
   MsgStream log(msgSvc(), name());
@@ -158,49 +158,39 @@ void UsePeds::processNew(CalibData::CalCalibPed* pNew,
   
   if (!done) {
     done = true;
-    short iTower = 0;
-    short iLayer = 0;
-    short iXtal = 2;
-    unsigned range = 2;
-    unsigned face = 0;
-    CalXtalId id(iTower, iLayer, iXtal);
-    
-    CalibData::RangeBase* pRange = pNew->getRange(id, range, face);
-    
-    Ped* pPed = dynamic_cast<Ped * >(pRange);
-    log << MSG::INFO << "For tower = " << iTower << " layer = " << iLayer
-        << " xtal = " << iXtal << endreq;
-    log << MSG::INFO << "    range = " << range 
-        << " face = " << face << endreq;
-    
-    log << MSG::INFO << "Averaged ped = " << pPed->getAvr() << endreq;
-    log << MSG::INFO << "       sigma = " << pPed->getSig() << endreq;
-    log << MSG::INFO << "  cos angle = " << pPed->getCosAngle() << endreq;
+    unsigned iRow = 0;
+    unsigned iCol = 0;
+    unsigned iTray = 1;
 
-    /*      Try another tower */
-    iTower++;
-    id = CalXtalId(iTower, iLayer, iXtal);
+
+    TkrId idTop(iRow, iCol, iTray, true);
+    TkrId idBot(iRow, iCol, iTray, false);
     
-    pRange = pNew->getRange(id, range, face);
+    CalibData::RangeBase* pTop = pNew->getChannel(idTop);
+    CalibData::RangeBase* pBot = pNew->getChannel(idBot);
     
-    pPed = dynamic_cast<Ped * >(pRange);
-    log << MSG::INFO << "For tower = " << iTower << " layer = " << iLayer
-        << " xtal = " << iXtal << endreq;
-    log << MSG::INFO << "    range = " << range 
-        << " face = " << face << endreq;
-    
-    log << MSG::INFO << "Averaged ped = " << pPed->getAvr() << endreq;
-    log << MSG::INFO << "       sigma = " << pPed->getSig() << endreq;
-    log << MSG::INFO << "  cos angle = " << pPed->getCosAngle() << endreq;
+    TkrSplit* pSplitTop = dynamic_cast<TkrSplit * >(pTop);
+    TkrSplit* pSplitBot = dynamic_cast<TkrSplit * >(pBot);
+
+    log << MSG::INFO << "For tower row,col = (" << iRow 
+        << ", " << iCol << ") tray " << iTray << "top splits are:  "
+        << pSplitTop->getLow() << ", " << pSplitTop->getHigh() << endreq;
+
+    log << MSG::INFO << "For tower row,col = (" << iRow 
+        << ", " << iCol << ") tray " << iTray << "bot splits are:  "
+        << pSplitBot->getLow() << ", " << pSplitBot->getHigh() << endreq;
+
+
+    /*      Try another tower  -- someday. This file has only one*/
 
   }
 }
 
-StatusCode UsePeds::finalize( ) {
+StatusCode UseTkr::finalize( ) {
 
   MsgStream log(msgSvc(), name());
   log << MSG::INFO 
-      << "          Finalize UsePeds "
+      << "          Finalize UseTkr "
       << endreq;
   
   return StatusCode::SUCCESS;
