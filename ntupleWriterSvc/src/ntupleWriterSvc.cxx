@@ -69,6 +69,7 @@ StatusCode ntupleWriterSvc::initialize ()
     
     if( status.isFailure() ) return status;
 
+    incsvc->addListener(this, "BeginEvent", 100);
     incsvc->addListener(this, "EndEvent", 0);
 
     // get a pointer to the Gaudi NTupleSvc
@@ -101,6 +102,8 @@ StatusCode ntupleWriterSvc::initialize ()
             log << MSG::INFO << "No tuple name supplied, no ntuple created "<< endreq;
         }
     }
+
+    m_storeFlag = true;
 
     return status;
 }
@@ -137,16 +140,23 @@ StatusCode ntupleWriterSvc::bookNTuple(int index) {
 // handle "incidents"
 void ntupleWriterSvc::handle(const Incident &inc)
 {
+    if(inc.type()=="BeginEvent") beginEvent();
     if(inc.type()=="EndEvent") endEvent();
 }
 
-
+void ntupleWriterSvc::beginEvent()
+{
+    /// Assume that we will write out the row
+    storeRowFlag(true);
+}
 
 void ntupleWriterSvc::endEvent()  // must be called at the end of an event to update, allow pause
 {            
     
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
+
+    if (m_storeFlag == false) return;
     
     // fill and write out the Gaudi tuple   
     int index = 0;
