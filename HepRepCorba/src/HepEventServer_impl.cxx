@@ -90,8 +90,8 @@ char* HepEventServer_impl::setEvent(const char* command)
   static int temp = 0;
   std::string cmd(command);
   
-  std::cout << "I've received from " << _clientDesc << ", setEvent to " 
-            << cmd << std::endl;
+  // std::cout << "I've received from " << _clientDesc << ", setEvent to " 
+  //           << cmd << std::endl;
   
   static unsigned int i = 0;
   
@@ -122,8 +122,20 @@ char* HepEventServer_impl::setEvent(const char* command)
   {
     int run, event;
     sscanf(cmd.c_str(), "eventId:%d-%d", &run, &event);
-    m_svcAdapter->setEventId(run, event);
+    if (m_svcAdapter->setEventId(run, event))
+      nextEventMsg = "Event set to the requested ID";
+    else
+      nextEventMsg = "The requested Event ID seems to non exist";      
   }
+  else if (cmd.substr(0,9) == "eventIdx:")
+  {
+    int idx;
+    sscanf(cmd.c_str(), "eventIdx:%d-%d", &idx);
+    if (m_svcAdapter->setEventIndex(idx))
+      nextEventMsg = "Event set to the requested index";
+    else
+      nextEventMsg = "The requested Event index seems to non exist";      
+  }  
 	else if (cmd == "fluxes")
     {
       nextEventMsg = m_svcAdapter->getSources();
