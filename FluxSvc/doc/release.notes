@@ -1,6 +1,7 @@
 /** @file release.notes
  * Package detModel <pre>
  * Coordinator: T.Burnett, S. Robinson
+ * v5r19   THB  * massive refactoring of EventSource hierarchy
  * v5r18p1 THB  * simplify tool setup for external package sources
  * v5r18   THB  * fix fluxes
  * v5r17p2 THB  * release the tool
