@@ -182,7 +182,7 @@ void InitializeED(TString filename = "MyRootFile.root")
 
   if(TOWER)
     {  
-      tracker->loadGeometry(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/LatGeometry.txt"));
+      tracker->loadGeometry(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0Geometry.txt"));
       tracker->IsTower(TOWER);
     }
   else
