@@ -1,5 +1,5 @@
 package DetDisplay
-
+version v2r2
 
 branches src cmt doc
 
@@ -22,12 +22,10 @@ library DetDisplay  *.cxx *.h  Dll/*.cxx
 
 # build this for testing, or stand-alone use
 
-#this allows to build gui main.
-macro_append use_linkopts " $(GuiSvc_lib) /include:_GuiSvc_loadRef "
+# comment out for now - THB
+#macro jobOptions "" VisualC "jobOptions.txt"
 
-macro jobOptions "" VisualC "jobOptions.txt"
+#set JOBOPTIONS ${DETDISPLAYROOT}/src/test/jobOptions.txt
 
-set JOBOPTIONS ${DETDISPLAYROOT}/src/test/jobOptions.txt
-
-macro WinJobOptions  "" VisualC "test/jobOptions.txt"
-application test_DetDisplay ${GuiMain} *.cxx *.h Dll/*.cxx ${WinJobOptions} ${Win32Resource}
+#macro WinJobOptions  "" VisualC "test/jobOptions.txt"
+#application test_DetDisplay ${GuiMain} *.cxx *.h Dll/*.cxx ${WinJobOptions} ${Win32Resource}
