@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "../../tmp/Release/geomrep"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GR /GX /O2 /I "../" /I "../src" /D "WIN32" /D "_MBCS" /D "NDEBUG" /D "_LIB" /YX /FD /FI../mgr/nt_config.h @fincludes /c
-# ADD CPP /nologo /MD /W3 /GR /GX /O2 /I "../" /I "../src" /D "WIN32" /D "_MBCS" /D "NDEBUG" /D "_LIB" /YX /FD /FI../mgr/nt_config.h /I../ @fincludes /c
+# ADD CPP /nologo /G6 /W3 /GR /GX /O2 /I "../" /I "../src" /D "WIN32" /D "_MBCS" /D "NDEBUG" /D "_LIB" /YX /FD /FI../mgr/nt_config.h /I../ @fincludes /c
 # ADD BASE RSC /l 0x40c /d "NDEBUG"
 # ADD RSC /l 0x40c /d "NDEBUG"
 BSC32=bscmake.exe
