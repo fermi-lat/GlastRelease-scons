@@ -544,7 +544,7 @@
            version      CDATA   #REQUIRED
            date         CDATA   #REQUIRED
            author       CDATA   #REQUIRED
-           %DTD_constraint;>
+           %DTDconstraint;>
 
 
 <!ELEMENT  element  EMPTY>
