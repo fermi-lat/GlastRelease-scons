@@ -27,9 +27,10 @@ public:
             
         // set up the MC structure
         EventModel::MC::Event = EventModel::Event + "/MC";
-        EventModel::MC::Event = EventModel::Event + "/McPaticles";
-        EventModel::MC::Event = EventModel::Event + "/McIntegratingHit";
-        EventModel::MC::Event = EventModel::Event + "/McVertex";
+        EventModel::MC::McParticle        = EventModel::Event + "/McPaticles";
+        EventModel::MC::McIntegratingHits = EventModel::Event + "/McIntegratingHits";
+        EventModel::MC::McVertex          = EventModel::Event + "/McVertex";
+        EventModel::MC::McPositionHits    = EventModel::Event + "/McPositionHits";
 
         EventModel::Irf::Event = EventModel::Event + "/Irf";
         EventModel::Irf::IrfAcdHits = EventModel::Irf::Event + "/IrfAcdHits";
