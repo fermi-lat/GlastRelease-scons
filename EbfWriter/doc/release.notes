@@ -2,6 +2,7 @@
  * @file release.notes
  * @brief Package EbfWriter
  * @verbatim
+ * v0r0p4 06-Sep-2003  THB use -no_auto_imports to simplify building
  * v0r0p2 17-Aug-2003  THB move rest of Ebf to header to avoid need for additional lib 
  * v0r0p1 16-Aug-2003     Cleaned up requirements file. Ready to add to GR
  * v0r0p0 12-Aug-2003     Cleaned up code for code review
