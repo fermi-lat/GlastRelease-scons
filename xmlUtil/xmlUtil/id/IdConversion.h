@@ -6,9 +6,12 @@
 #include "dom/DOM_Element.hpp"
 #include "xmlUtil/id/NamedId.h"
 #include <functional>
+#include <iostream>
 
 namespace xmlUtil {
   class IdOperation;
+  class IdConversion;
+  ostream& operator<<(ostream& s, const IdConversion& convers);
 
   //! An \b IdConversion object (corresponding to an idConv element
   //! as defined in gdd.dtd) "has" 
@@ -28,6 +31,8 @@ namespace xmlUtil {
     IdConversion(const DOM_Element); 
 
     ~IdConversion();
+
+    friend ostream& operator<<(ostream& s, const IdConversion& convers);
 
     //! Check that start of inputId fieldnames match path
     bool inDomain(const NamedId& inputId);
@@ -63,13 +68,13 @@ namespace xmlUtil {
     //definition for Condition later
 
     //! Defines domain of conversion
-    NameSeq *path;
+    NameSeq *m_path;
 
     //! Given an identifier in domain, convert if \b condition is satisfied
-    Condition *condition;
+    Condition *m_condition;
 
     //! \b op knows how to do a conversion
-    IdOperation *op;
+    IdOperation *m_op;
   };  // end of class IdConversion
 }   // end of namespace
 #endif

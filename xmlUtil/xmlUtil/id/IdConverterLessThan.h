@@ -23,7 +23,7 @@ namespace xmlUtil {
     //! shorter path
     bool operator()(IdConversion* x, 
                     IdConversion* y) {
-      return ((x->path)->size() < ((y->path)->size() ) );
+      return ((x->m_path)->size() < ((y->m_path)->size() ) );
     }
   };
 }

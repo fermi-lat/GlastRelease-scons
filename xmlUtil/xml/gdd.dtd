@@ -55,7 +55,7 @@
         2. Change attribute type from CDATA to NMTOKEN whenever
            possible (e.g., whenever numeric values are expected)
         3. Bring so-far unused positioning elements like mposR
-           into compliace with REF scheme
+           into compliance with REF scheme
 
      1 Mar 2001
         1. <identifier> changed to <idField>
@@ -76,6 +76,13 @@
         be done in a separate document (separate from, e.g., flight.xml)
         but still using gdd.dtd.  Root element will be 
         <idConverter> rather than <gdd>
+
+     21 Sep 2001 Make attributes referring to field names for conversion 
+        operation elements just of type NMTOKEN rather than IDREF.  
+        This way conversions need not be in same document as field 
+        definitions.  Verification of conversions has to be done by
+        application code (rather than parser), anyway, so nothing is 
+        gained by using IDREF here.
 -->
 
 <!--
@@ -455,7 +462,9 @@
 <!ENTITY % didSub  ' substituted (true | false) "false"' >
 
 <!-- See definition of constants and its children at the end of this file -->
-<!ELEMENT  gdd  (source*, constants?,  idDict?, section*) >
+<!-- NOTE:  Include optional idConverter(s) here for testing.  Ultimately
+            might require idConverter(s) to be in a separate document -->
+<!ELEMENT  gdd  (source*, constants?,  idDict?, section*, idConverter*) >
 
 
 <!ATTLIST  gdd
@@ -913,7 +922,7 @@
                   name       NMTOKEN #REQUIRED
                   major      NMTOKEN #REQUIRED 
                   minor      NMTOKEN #REQUIRED
-                  patch      NMTOKEN #IMPLIED  >
+                  patch      NMTOKEN "0"     >
 
 <!-- Different ways to constrain values: a list, bounded interval,
      or just a single value
@@ -1014,7 +1023,7 @@ each specifying
 <!ATTLIST idConverter fromDict NMTOKEN #IMPLIED
                       toDict   NMTOKEN #IMPLIED >
 
-<!ENTITY % convOp "singleValue | truncate | disappear | compress" >
+<!ENTITY % convOp "truncate | disappear | compress" >
 
 <!-- Might want to change the "hasField" part of the content model
      to 
@@ -1030,34 +1039,45 @@ each specifying
      defined on identifiers.
  -->
 
-<!ELEMENT idConv (path, hasField, ((%convOp;)* | sameId) ) >
-<!ELEMENT hasField (EMPTY) >
-<!ATTLIST hasField name IDREF #REQUIRED>
+<!ELEMENT idConv (path, hasField, ((%convOp;) | sameId) ) >
 
-<!ELEMENT sameId (EMPTY) >
+<!-- Note that the name attribute of hasField, pathField as well as
+     other attributes whose value normally refers to a field is just 
+     an NMTOKEN, not an IDREF.  It need not resolve to anything in 
+     this document.
+     Client program will have to check, if it's interested, whether
+     or not the attribute value refers to a real field in the input 
+     dictionary (if any) -->
 
-<!-- Set value of field "name" to "val" -->
-<!ELEMENT singleValue (EMPTY) >
-<!ATTLIST singleValue name IDREF #REQUIRED
-                      val  NMTOKEN "0" 
-                      valREF IDREF #IMPLIED>
+<!ELEMENT hasField EMPTY >
+<!ATTLIST hasField name NMTOKEN #REQUIRED>
+
+<!ELEMENT sameId EMPTY >
+
+<!-- Set value of field "name" to "val".  Not yet supported -->
+<!-- 
+    <!ELEMENT singleValue EMPTY >
+    <!ATTLIST singleValue name NMTOKEN #REQUIRED
+                          val  NMTOKEN "0" 
+                          valREF IDREF #IMPLIED>
+ -->
 
 <!-- Eliminate all fields starting with "start" or just beyond "start" -->
-<!ELEMENT truncate (EMPTY) >
-<!ATTLIST truncate start IDREF #REQUIRED
-                   beyond NMTOKEN (true | false) "true" >
+<!ELEMENT truncate EMPTY >
+<!ATTLIST truncate start NMTOKEN #REQUIRED
+                   beyond (true | false) "true" >
 
 <!-- All identifiers in the domain, satisfying the condition have
      no counterpart in the image hierarchy. -->
-<!ELEMENT disappear (EMPTY) >
+<!ELEMENT disappear EMPTY >
 
 <!-- "compress" compresses from the field specified in its "from"
      attribute to the field specified in its "to" attribute, exclusive.
      That is, it leaves those fields alone and squeezes out everything
      in between. -->
-<!ELEMENT compress (EMPTY)>
-<!ATTLIST compress from IDREF #REQUIRED
-                   to   IDREF #REQUIRED >
+<!ELEMENT compress EMPTY>
+<!ATTLIST compress from NMTOKEN #REQUIRED
+                   to   NMTOKEN #REQUIRED >
 
 
 <!-- If fromDict has been specified, code will want to check that 
@@ -1066,4 +1086,7 @@ each specifying
      tree with that list of fields.  Assume here that "subTree" must
      start from root of full tree.
  -->
-<!ELEMENT path (field+) >
+<!ELEMENT path (pathField+) >
+
+<!ELEMENT pathField EMPTY >
+<!ATTLIST pathField name NMTOKEN #REQUIRED >

@@ -9,8 +9,8 @@
 #include "xmlUtil/id/IdOpCompress.h"
 
 namespace xmlUtil {
-  IdConversion::IdConversion() : path(0), condition(0) {
-    op = new IdOperation();
+  IdConversion::IdConversion() : m_path(0), m_condition(0) {
+    m_op = new IdOperation();
   }
 
   IdConversion::IdConversion(DOM_Element conversion) {
@@ -21,7 +21,7 @@ namespace xmlUtil {
 
     // Get next child; save field name in condition component
     child = xml::Dom::getSiblingElement(child);
-    condition = new std::string(xml::Dom::getAttribute(child, "name"));
+    m_condition = new std::string(xml::Dom::getAttribute(child, "name"));
 
     // Get next child;  build new op component.
     child = xml::Dom::getSiblingElement(child);
@@ -29,13 +29,13 @@ namespace xmlUtil {
   }
 
   bool IdConversion::inDomain(const NamedId& inputId) {
-    return inputId.hasSubpath(*path);
+    return inputId.hasSubpath(*m_path);
   }
 
   bool IdConversion::satisfies(const NamedId& inputId) {
-    if (condition == 0) return true;
+    if (m_condition == 0) return true;
 
-    return (inputId.hasField(*condition) >= 0);
+    return (inputId.hasField(*m_condition) >= 0);
   }
     
   NamedId * IdConversion::convert(const NamedId& inputId) {
@@ -45,7 +45,7 @@ namespace xmlUtil {
 
   NamedId * IdConversion::internalConvert(const NamedId& inputId) {
     if (satisfies(inputId)) {  // let the operation do its thing
-      return op->convert(inputId);
+      return m_op->convert(inputId);
     }
     else { // clone input and return
       return new NamedId(inputId);
@@ -56,11 +56,11 @@ namespace xmlUtil {
     
     // "path" consists of a list of fields.  Fields have 
     // a required attribute "name".  Save its value.
-    path = new NameSeq;
+    m_path = new NameSeq;
     DOM_Element child = xml::Dom::getFirstChildElement(pathElt);
 
     while (child != DOM_Element()) {
-      path->push_back(new std::string(xml::Dom::getAttribute(child, "name")));
+      m_path->push_back(new std::string(xml::Dom::getAttribute(child, "name")));
       child = xml::Dom::getSiblingElement(child);
     }
 
@@ -74,27 +74,34 @@ namespace xmlUtil {
 
     if (opType.equals("truncate"))
     {
-      op = new IdOpTruncate(opElt);
+      m_op = new IdOpTruncate(opElt);
     }
     else if (opType.equals("disappear")) {
-      op = new IdOpDisappear(opElt);
+      m_op = new IdOpDisappear(opElt);
     }
     else if (opType.equals(DOMString("compress"))) {
-      op = new IdOpCompress(opElt);
+      m_op = new IdOpCompress(opElt);
     }
     else { // default to identity operation, implemented by base class
-      op = new IdOperation(opElt);
+      m_op = new IdOperation(opElt);
     }
   }
 
   // return true if our path is subpath of given conversion's path
   bool IdConversion::subpathOf(const IdConversion& other) const {
-    unsigned int ourLen = path->size();
-    if (ourLen > other.path->size() ) return false;
+    unsigned int ourLen = m_path->size();
+    if (ourLen > other.m_path->size() ) return false;
 
     for (unsigned int ix = 0; ix < ourLen; ix++) {
-      if ((*(other.path))[ix]->compare((*(*path)[ix])) ) return false;
+      if ((*(other.m_path))[ix]->compare((*(*m_path)[ix])) ) return false;
     }
     return true;
   }
+
+  ostream& operator<<(ostream& s, const IdConversion& convers) {
+    s << (*(convers.m_op)) << std::endl << " Path: " << (*(convers.m_path)) << 
+      " Condition: hasField " << (*(convers.m_condition));
+    return s;
+  }
+
 }

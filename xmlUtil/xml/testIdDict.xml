@@ -46,7 +46,7 @@
 
     <field name="fCALLogCmp" >
       <vList>
-        <vEnumVal valueREF="eLogXtal" />
+        <vEnumVal valueREF="eXtal" />
         <vEnumVal valueREF="eDiodeMSmall" />
         <vEnumVal valueREF="eDiodePSmall" />
         <vEnumVal valueREF="eDiodeMLarge" />

@@ -29,7 +29,8 @@ namespace xmlUtil {
     m_fields = new Fields(0);
 
     for (ix = 0; ix < n; ix++) {
-      (*m_fields)[ix] = new IdField(*(*(toCopy.m_fields))[ix]);
+      //      (*m_fields)[ix] = new IdField(*(*(toCopy.m_fields))[ix]);
+      m_fields->push_back(new IdField(*(*(toCopy.m_fields))[ix]));
     }
 
   }
@@ -46,8 +47,11 @@ namespace xmlUtil {
     m_fields->push_back(field);
   }
 
-  void NamedId::popField() { 
-    m_fields->pop_back();
+  void NamedId::popField(unsigned int n) { 
+    while (n > 0) {
+      m_fields->pop_back();
+      --n;
+    }
   }
 
   bool NamedId::hasSubpath(const NameSeq& subpath) const {
@@ -79,5 +83,55 @@ namespace xmlUtil {
     }
     return stripped;
   }
+
+  //! Output to an ostream.  
+  ostream& operator<<(ostream& s, const NamedId& nId) {
+    if (nId.size() == 0) {
+      s << "()" << std::endl;
+      return s;
+    }
+    NamedId::Fields::const_iterator it = nId.m_fields->begin();
+    s << "(" << (*it)->name << "=" << (*it)->value;
+    ++it;
+    while (it != nId.m_fields->end()) {
+      s << ", " << std::endl << (*it)->name << "=" << (*it)->value;
+      ++it;
+    }
+    s << ")" << std::endl;
+    return s;
+  }
+
+  ostream& operator<<(ostream& s, const NameSeq& seq) {
+    if (seq.size() == 0) {
+      s << "()" << std::endl;
+      return s;
+    }
+    std::vector<std::string *>::const_iterator it = seq.begin();
+    s << "(" << (**it);
+    ++it;
+    while (it != seq.end()) {
+      s << ", " << (**it);
+      ++it;
+    }
+    s << ")" << std::endl;
+    return s;
+  }
+
+  ostream& operator<<(ostream& s, const Identifier& id) {
+    if (id.size() == 0) {
+      s << "()" << std::endl;
+      return s;
+    }
+    std::vector<unsigned>::const_iterator it = id.begin();
+    s << "(" << (*it);
+    ++it;
+    while (it != id.end()) {
+      s << ", " << (*it);
+      ++it;
+    }
+    s << ")" << std::endl;
+    return s;
+  }
+
 }
 

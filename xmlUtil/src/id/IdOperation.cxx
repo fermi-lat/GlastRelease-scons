@@ -12,4 +12,8 @@ namespace xmlUtil {
     return new NamedId(inputId);
   }
 
+  ostream& operator<<(ostream& s, const IdOperation& op) {
+    s << op.myOp();
+    return s;
+  }
 }

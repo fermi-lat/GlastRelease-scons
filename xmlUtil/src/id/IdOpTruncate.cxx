@@ -21,4 +21,5 @@ namespace xmlUtil {
     NamedId *newId = new NamedId(inputId, nToCopy);
     return newId;
   }
+
 }

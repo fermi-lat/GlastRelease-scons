@@ -15,6 +15,7 @@ namespace xmlUtil {
     ~IdOpTruncate() {}
 
     virtual NamedId * convert(const NamedId& inputId);
+    virtual std::string myOp() const {return std::string("TRUNCATE");}
   private:
     std::string start;
     bool       beyond;

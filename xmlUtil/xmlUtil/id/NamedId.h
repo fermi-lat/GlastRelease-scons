@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <string>
+#include <iostream>
 namespace xmlUtil {
 
   //! An \b Identifier is simply a finite list of non-neg. integers
@@ -13,8 +14,16 @@ namespace xmlUtil {
   //! id field names which may be extracted from a \b NamedId )
   typedef std::vector<std::string * > NameSeq;
 
+  class NamedId;
+
+  ostream& operator<<(ostream& s, const NameSeq& seq);
+  ostream& operator<<(ostream& s, const Identifier& seq);
+  ostream& operator<<(ostream& s, const NamedId& nId);
+
   class NamedId {
   public:
+    friend ostream& operator<<(ostream& s, const NamedId& nId);
+
     //! When length is known, best to allocate all at once at start
     NamedId(const int len = 0);
 
@@ -36,9 +45,10 @@ namespace xmlUtil {
 
     void addField(const IdField& newField);
 
+    unsigned int size() const {return m_fields->size();}
     //! Delete field on the end. 
     // Should it be returned rather than void?
-    void popField();
+    void popField(unsigned int n = 1);
 
     //! Return true if initial field names are compatible with \a subpath
     bool hasSubpath(const NameSeq& subpath) const;
@@ -75,6 +85,7 @@ namespace xmlUtil {
    
     Fields *m_fields;
   };
+
 }
 #endif
 

@@ -13,8 +13,8 @@ namespace xmlUtil {
 
   IdDictMan * IdConverter::dictMan = 0;
 
-  IdConverter::IdConverter(DOM_Element elt) : consistent(UNKNOWN),
-  sorted(NO) {
+  IdConverter::IdConverter(DOM_Element elt) : m_consistent(UNKNOWN),
+  m_sorted(NO) {
     if (!dictMan) dictMan = IdDictMan::getPointer();
 
     // An idConverter element may optionally have as first child
@@ -37,12 +37,12 @@ namespace xmlUtil {
     // Now that all id dictionaries we need should have been defined,
     // handle attributes
     std::string dictName = xml::Dom::getAttribute(elt, "fromDict");
-    if (!(dictName.compare("")) ) {
+    if (dictName.size() > 0 ) {  // then it's not just an empty string
       inputDictName = new std::string(dictName);
       inputDict = dictMan->findDict(dictName);
     }
     dictName = xml::Dom::getAttribute(elt, "toDict");
-    if (!(dictName.compare("")) ) {
+    if (dictName.size() > 0 ) {
       outputDictName = new std::string(dictName);
       outputDict = dictMan->findDict(dictName);
     }
@@ -50,54 +50,59 @@ namespace xmlUtil {
     // All remaining elements should be idConv
     while (child != DOM_Element() ) {
       IdConversion *conv = new IdConversion(child);
-      convCol.push_back(conv);
+      m_convCol.push_back(conv);
       child = xml::Dom::getSiblingElement(child);
     }
+
+    // check for consistency before unleashing this object
+    isConsistent();
   }
 
   IdConverter::~IdConverter() {
-    convCol.clear();
+    m_convCol.clear();
   }
 
   // Sort by path length
   void IdConverter::sortConvs() {
-    if (sorted != YES) {
-      ConversionIt start = convCol.begin(), last = convCol.end();
+    if (m_sorted != YES) {
+      ConversionIt start = m_convCol.begin(), last = m_convCol.end();
       IdConverterLessThan weakOrder;
       std::sort(start, last, weakOrder);  // sort them
-      sorted = YES;
+      m_sorted = YES;
     }
   }
 
   bool IdConverter::isConsistent() {
-    if (consistent == UNKNOWN) {
+    if (m_consistent == UNKNOWN) {
       sortConvs();
       // Check whether a path is a subsequence of some other path,
       // unfortunately an o(n**2) procedure
       unsigned int ix, jx;
-      for (ix = 0; ix < (convCol.size() - 1); ix++ ) {
-        for (jx = ix + 1; jx < (convCol.size()); jx++) {
+      for (ix = 0; ix < (m_convCol.size() - 1); ix++ ) {
+        for (jx = ix + 1; jx < (m_convCol.size()); jx++) {
           // Since conversions are ordered by size, only need
           // to check whether ix-th path is subpath of jx-th,
           // not the reverse
-          if (convCol[ix]->subpathOf(*(convCol[jx]))) {
-            consistent = NO;
-            return consistent;
+          if (m_convCol[ix]->subpathOf(*(m_convCol[jx]))) {
+            m_consistent = NO;
+            return m_consistent;
           }
         }
       }
-      consistent = YES;
+      m_consistent = YES;
     }
-    return consistent;
+    return m_consistent;
   }
 
   NamedId *IdConverter::convert(const NamedId *in) const {
     unsigned int ix;
 
+    if (m_consistent == NO) return 0;
+
     // Based on path, find appropriate conversion, if any
-    for (ix = 0; ix < convCol.size(); ix++) {
-      if ((convCol[ix])->inDomain(*in)) {  // convert
-        return (convCol[ix]->convert(*in));
+    for (ix = 0; ix < m_convCol.size(); ix++) {
+      if ((m_convCol[ix])->inDomain(*in)) {  // convert
+        return (m_convCol[ix]->convert(*in));
       }
     }
     //       else return copy of input  
@@ -108,6 +113,8 @@ namespace xmlUtil {
   Identifier *IdConverter::convert(const Identifier *inIdent) const {
     if (!inputDict) return 0;  // can't get names without dictionary
 
+    if (m_consistent == NO) return 0;
+
     NamedId *inNamed = inputDict->getNamedId(*inIdent);
     if (inNamed == 0) return 0;
 
@@ -117,6 +124,16 @@ namespace xmlUtil {
     delete inNamed;
     delete outNamed;
     return converted;
+  }
+
+  ostream& IdConverter::displayConversions(ostream& s) {
+    Conversions::const_iterator it = m_convCol.begin();
+
+    while (it != m_convCol.end() ) {
+      s << (**it) << std::endl;
+      ++it;
+    }
+    return s;
   }
 }
 

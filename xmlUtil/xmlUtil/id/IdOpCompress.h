@@ -16,6 +16,7 @@ namespace xmlUtil {
     ~IdOpCompress() {}
 
     virtual NamedId * convert(const NamedId& inputId);
+    virtual std::string myOp() const {return std::string("COMPRESS");}
   private:
     std::string from;
     std::string to;

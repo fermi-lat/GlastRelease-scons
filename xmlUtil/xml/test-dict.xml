@@ -13,6 +13,8 @@
     <!ENTITY ACDCountPrim   SYSTEM "flightACDCountPrim.xml">
 
     <!ENTITY idDict         SYSTEM "testIdDict.xml">
+
+    <!ENTITY idConvEnt      SYSTEM "testIdConv.xml">
   ]
 >
 
@@ -166,6 +168,8 @@
   </constants>
 
   &idDict;
+  &idConvEnt;
+  
 
 </gdd>
 

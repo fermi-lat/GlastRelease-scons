@@ -15,6 +15,18 @@ namespace xmlUtil {
     // Caller probably will have done this already
     assert(elt.getTagName().equals("idDict"));
 
+    // Store information from attributes
+    m_name = std::string(xml::Dom::getAttribute(elt, "name"));
+
+    std::string intVal = xml::Dom::getAttribute(elt, "major");
+    m_major = atoi(intVal.c_str());
+
+    intVal = xml::Dom::getAttribute(elt, "minor");
+    m_minor = atoi(intVal.c_str());
+
+    intVal = xml::Dom::getAttribute(elt, "patch");
+    m_patch = atoi(intVal.c_str());
+
     // Check number of children.  This is an upper bound
     // on number of fields we have to store
     int size = (elt.getChildNodes()).getLength();

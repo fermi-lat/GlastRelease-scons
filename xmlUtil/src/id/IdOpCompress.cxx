@@ -22,16 +22,15 @@ namespace xmlUtil {
     if (toIx < fromIx) return 0;
     if (fromIx < 0) return 0;
 
-    NamedId *newId = new NamedId(inputId, toIx + 1);
+    NamedId *newId = new NamedId(inputId, fromIx + 1);
 
     NamedId::Fields *newFields = newId->m_fields;
     NamedId::Fields *inFields = inputId.m_fields;
 
-    for (unsigned int ix = fromIx; ix < inFields->size(); ix++ ) {
+    for (unsigned int ix = toIx; ix < inFields->size(); ix++ ) {
       NamedId::IdField * aField = new NamedId::IdField( *((*inFields)[ix]) );
       newFields->push_back(aField);
     }
     return newId;
   }
-
 }
