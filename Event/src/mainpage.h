@@ -3,7 +3,9 @@
 *
 * @section Introduction Introduction
 * This package contains definitions for all GLAST event data to be stored on 
-* the TDS:
+* the Transient Data Store.  During each event, data is created and shared on
+* the TDS.  At the end of each event, this data is cleared from the data store.
+* The TDS data currently includes:
 * - Event
 * - MCEvent
 *   -# McParticle Collection
@@ -15,7 +17,7 @@
 *   -# TkrDigi Collection
 * - AcdRecon
 * - CalRecon
-*   -# CalXtalRec Collection
+*   -# CalXtalRecData Collection
 *   -# CalCluster Collection
 * - TkrRecon
 *   -# TkrCluster Collection
@@ -38,39 +40,58 @@
 * - Trigger Word
 *
 * @section MonteCarlo MonteCarlo
-* The Monte Carlo data is stored on the following path on the TDS:
+* The Monte Carlo data is stored on the TDS path:
 * /Event/MC/
 *
-* There are four Monte Carlo TDS classes:
-* - McParticle
-* - McPositionHit
-* - McIntegratingHit
-* - McTkrStrip
+* The top-level Monte Carlo header class is called MCEvent.  This class contains
+* data member, a source id.  
+*
+* Under the MC header, there are four Monte Carlo TDS classes:
+* - McParticle Collection
+* - McPositionHit Collection
+* - McIntegratingHit Collection
+* - McTkrStrip Collection
 *
 * @section DigiEvent DigiEvent
 * The digitization classes represent our detector data.  This data appears on the
 * TDS under /Event/Digi/
+* There is one data member in the Digi header, a flag denoting whether or not 
+* digitization data origined from Monte Carlo data or not.
 *
-* There are three Digi TDS classes:
-* - AcdDigi
-* - CalDigi
-* - TkrDigi
+* Under the Digi header, there are three Digi TDS classes:
+* - AcdDigi Collection
+* - CalDigi Collection
+* - TkrDigi Collection
 *
 * @section Reconstruction Reconstruction
 * The reconstruction data is available on the TDS.  This data appears under a 
 * variety of headings depending upon the subsystem:
-* /Event/AcdRecon
-* /Event/CalRecon
-* /Event/TkrRecon
+* - /Event/AcdRecon
+* - /Event/CalRecon
+*    -# CalXtalRecData Collection
+*    -# CalCluster Collection
+* - /Event/TkrRecon
+*    -# TkrCluster Collection
+*    -# TkrPatCand Collection
+*    -# TkrFitTrack Collection
+*    -# TkrVertex Collection
 *
 * @section reference Reference Document
 *  See the formal  
 *  <a href="http://www.slac.stanford.edu/~hansl/glast/note/rd.pdf">documentation</a>.
+*
+* @section jobOptions jobOptions
+* No jobOptions are used within this package.
+*
+* @section Tests Tests
+* There are two test routines in this package:
+* - test_Event
+* - test_Tables
 *
 *  <hr>
 * @section notes release notes
 * release.notes
 * <hr>
 * @section requirements requirements
-* @include requirements
+* @verbinclude requirements
 */

@@ -1,43 +1,43 @@
 /** @file release.notes
- * package Event
- * package manager:T.Burnett (original author: H. Gillespie)
+ * package Event\n
+ * package manager:T.Burnett
  *
- * v9r0    07-sep-02 LSR tag for removal of obsolete and confusing methods
+ * v9r0p0  09-sep-02 HMK update documentation for review \n
+ * v9r0    07-sep-02 LSR tag for removal of obsolete and confusing methods\n
  * v8r15   27-aug-02 HMK update and move AcdRecon to AcdRecon subdirectory\n
  *         Add in members for row Active Distance. \n
- * v8r14p1 ???
- * v8r14   ???
-
- * v8r13p2 26-jul-02 THB  restore DigiEvent, used by digiRootData.
- * v8r13p1 25-jul-02 THB  remove many obsolete or unused files.
- * v8r13 22-jul-02 THB  New McTkrStrip.
- * v8r12 15-jul-02 THB  Brian's new Tkr classes (at W.Atwood request)
- * v8r11 03-jul-02 MF  Add RelTable template classes
- *       03-jul-02 HMK Add init methods to some TkrRecon classes
- * v8r10 27-jun-02 THB TkrRecon additions
- * v8r9  12-jun-02 THB  AcdRecon added.
- * v8r8  10-jun-02 THB  track direction reversed; acddigi inteface now changed.
- * v8r7p2 10-jun-02 THB  initialize event header
- * v8r7p1 5-jun-02 THB  adding new const access functions to Cal
- * v8r7   4-jun-02 THB  lots of unexpected changes associated with collections, see ChangeLog 
- * v8r6p1 1-jun-02 THB Fix to TimeStamp  now double.
- * v8r6  31-may-02 THB EventHeader with time, trigger bits.
- * v8r5  14-may-02 THB McParticle update.
- * v8r4  13-may-02 THB CalRecon classes updated by Sasha
- * v8r3  13-may-02 THB TkrRecon classes updated by Tracy
- * v8r2  11-may-02 THB fixes to namespaces and EventModel
- * v8r1  10-may-02 THB First post-name chage release
- * v7r3  08-may-02 THB Ready for name change: new Tkr and Cal included
+ * v8r14p1 ???\n
+ * v8r14   ???\n
+ * v8r13p2 26-jul-02 THB  restore DigiEvent, used by digiRootData.\n
+ * v8r13p1 25-jul-02 THB  remove many obsolete or unused files.\n
+ * v8r13 22-jul-02 THB  New McTkrStrip.\n
+ * v8r12 15-jul-02 THB  Brian's new Tkr classes (at W.Atwood request)\n
+ * v8r11 03-jul-02 MF  Add RelTable template classes\n
+ *       03-jul-02 HMK Add init methods to some TkrRecon classes\n
+ * v8r10 27-jun-02 THB TkrRecon additions\n
+ * v8r9  12-jun-02 THB  AcdRecon added.\n
+ * v8r8  10-jun-02 THB  track direction reversed; acddigi inteface now changed.\n
+ * v8r7p2 10-jun-02 THB  initialize event header\n
+ * v8r7p1 5-jun-02 THB  adding new const access functions to Cal\n
+ * v8r7   4-jun-02 THB  lots of unexpected changes associated with collections, see ChangeLog \n
+ * v8r6p1 1-jun-02 THB Fix to TimeStamp  now double.\n
+ * v8r6  31-may-02 THB EventHeader with time, trigger bits.\n
+ * v8r5  14-may-02 THB McParticle update.\n
+ * v8r4  13-may-02 THB CalRecon classes updated by Sasha\n
+ * v8r3  13-may-02 THB TkrRecon classes updated by Tracy\n
+ * v8r2  11-may-02 THB fixes to namespaces and EventModel\n
+ * v8r1  10-may-02 THB First post-name chage release\n
+ * v7r3  08-may-02 THB Ready for name change: new Tkr and Cal included\n
  *       08-may-02 HMK Add namespace for DigiEvent and new CalDigiCol\n
  *       string for the EventModel.\n
  *       06-may-02 TU  Add TKR Recon TDS classes\n
  * v7r1  20-apr-02 THB Changes to event\n
- * v7r0  10-apr-02 THB CalDigi revision--make it a major version change at Richard's suggestion
- * v6r4  10-apr-02 THB CalDigi revision
- * v6r3  06-apr-02 THB remove McConstants.h, bit field in McPositionHit, McIntegratingHit for now
- *       05-apr-02 THB  more mods to  McParticle
- * v6r2  02-apr-02 THB  mods to  McParticle
- * v6r1  26-mar-02 THB  change McParticle, remvoe McVertex 
+ * v7r0  10-apr-02 THB CalDigi revision--make it a major version change at Richard's suggestion\n
+ * v6r4  10-apr-02 THB CalDigi revision\n
+ * v6r3  06-apr-02 THB remove McConstants.h, bit field in McPositionHit, McIntegratingHit for now\n
+ *       05-apr-02 THB  more mods to  McParticle\n
+ * v6r2  02-apr-02 THB  mods to  McParticle\n
+ * v6r1  26-mar-02 THB  change McParticle, remove McVertex \n
  * v5r2 15-Mar-2002 HMK update for Gaudi v9 and remove IRF classes\n
  * v5r1  THB: remove dependence on data\n
  * v4r2  THB: Tag following addition of TkrVertexCol\n

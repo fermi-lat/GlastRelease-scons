@@ -1,17 +1,9 @@
-/** 
-* @file McReconAlg.cxx
-* @brief Declaration and definition of the TDS object McParticle.
-*
-*  $Header$
-*/
 #ifndef Event_McParticle_H
 #define Event_McParticle_H 1
 
 // If you wish to introduce the namespace `Event', uncomment
 // the lines commented as `NameSpace'.
 
-
-// Include files
 #include <iostream>
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ContainedObject.h"
@@ -29,27 +21,19 @@
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/ObjectList.h"
 
-
-
-/*!
-//------------------------------------------------------------------------------
-//
-// ClassName:   McParticle
-//  
-// Description: The Monte Carlo particle kinematics information
-//              (Currently the information copied from the SICB ATMC bank)
-//
-// The class McParticle uses the Class Library for HEP (CLHEP).
-//              
-// Author:      OZAKI Masanobu
-//
-// Changes:     M.Ozaki 2000-12-05 : Based on LHCbEvent's MCParticle rev 1.1.1.2
-//              M.Ozaki 2001-01-05 : MCParticle -> McParticle
-//
-//------------------------------------------------------------------------------
+/** @class McParticle
+ * @brief The Monte Carlo particle kinematics information
+ * (Currently the information copied from the SICB ATMC bank)
+ *
+ *  The class McParticle uses the Class Library for HEP (CLHEP).
+ *            
+ * @author OZAKI Masanobu
+ *
+ * Changes:     M.Ozaki 2000-12-05 : Based on LHCbEvent's MCParticle rev 1.1.1.2
+ *              M.Ozaki 2001-01-05 : MCParticle -> McParticle
+ *
+ * $Header$
  */
-
-
 extern const CLID& CLID_McParticle;
 
 namespace Event {  // NameSpace

@@ -9,12 +9,6 @@
 
 extern const CLID& CLID_CalClusterCol;
 
-
-
-
-namespace Event 
-{
-
 /**
 *  @class CalCluster
 *
@@ -29,6 +23,9 @@ namespace Event
 *
 * $Header$
 */
+
+namespace Event 
+{
     class CalCluster 
     {
         

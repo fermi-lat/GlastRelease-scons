@@ -16,9 +16,6 @@
 
 extern const CLID& CLID_CalXtalRecData;
 
-namespace Event 
-{
-
 /**
 * @class   CalXtalRecData        
 *
@@ -42,6 +39,8 @@ namespace Event
 *
 * $Header$
 */
+namespace Event 
+{
     class CalXtalRecData : virtual public ContainedObject { 
         
     public:

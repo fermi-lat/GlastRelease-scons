@@ -2,8 +2,6 @@
 #ifndef Event_McPositionHit_H
 #define Event_McPositionHit_H 1
 
-
-// Include files
 #include <iostream>
 #include <math.h>
 #include "GaudiKernel/Kernel.h"
@@ -23,32 +21,26 @@
 
 #include "Event/MonteCarlo/McParticle.h"
 
-// Forward declarations
 class McParticle;
 
 
-/*!
-//------------------------------------------------------------------------------
-//
-// ClassName:   McPositionHit
-//  
-// Description: Monte Carlo class for a position hit such as tracker
-//
-// The class McPositionHit uses the Class Library for HEP (CLHEP).
-//              
-// Author:      OZAKI Masanobu
-// Changes:     M.Frank 04/10/1999 : Proper use of SmartRefs and SmartRefVectors
-//              P.Binko 19/10/1999 : Proper accessors of smart references
-//                                   Formating of ASCII output
-//              M.Ozaki 2000-12-05 : Modified for GLAST
-//              M.Ozaki 2001-01-05 : MCPositionHits -> McPositionHit
-//
-//            M.Frailis
-//      R.Giannitrapani
-//             C.Cecchi 2002-02-29 : Added namespace mc, changed the VolumeID with
-//                                   new VolumeIdentifier
-//
-//------------------------------------------------------------------------------
+/** @class McPositionHit
+ * @brief Monte Carlo class for a position hit such as tracker
+ *
+ * The class McPositionHit uses the Class Library for HEP (CLHEP).
+ *              
+ * @author OZAKI Masanobu
+ * Changes:     M.Frank 04/10/1999 : Proper use of SmartRefs and SmartRefVectors
+ *              P.Binko 19/10/1999 : Proper accessors of smart references
+ *                                   Formating of ASCII output
+ *              M.Ozaki 2000-12-05 : Modified for GLAST
+ *              M.Ozaki 2001-01-05 : MCPositionHits -> McPositionHit
+ * 
+ *           M.Frailis
+ *     R.Giannitrapani
+ *             C.Cecchi 2002-02-29 : Added namespace mc, changed the VolumeID with
+ *                                   new VolumeIdentifier
+ * $Header
  */
 
 extern const CLID& CLID_McPositionHit;
@@ -65,7 +57,7 @@ class McPositionHit : virtual public ContainedObject {
       : m_depositedEnergy(0.),
         m_timeOfFlight(0.)
     {}
-    /// Destructor
+
     virtual ~McPositionHit() { }
 
     /// special set

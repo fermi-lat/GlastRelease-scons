@@ -15,8 +15,6 @@
 
 extern const CLID& CLID_CalDigi;
 
-namespace Event {
-
 /** @class CalDigi
  * @brief Transient Data Store class for CAL Digitizations.Actual readout data
  * is contained in nested class CalXtalReadout, holding ACD values and gain ranges
@@ -28,6 +26,8 @@ namespace Event {
  *
  * $Header$
 */
+
+namespace Event {
 
 class CalDigi : virtual public ContainedObject { 
     

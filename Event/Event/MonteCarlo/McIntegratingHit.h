@@ -18,7 +18,6 @@
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/ObjectList.h"
 
-
 /** @class McIntegratingHit
  * @brief Monte Carlo integrating hits such as calorimeter
  *
