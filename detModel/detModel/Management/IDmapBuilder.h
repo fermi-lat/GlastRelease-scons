@@ -34,63 +34,36 @@ namespace detModel{
       
     virtual ~IDmapBuilder();
   
-    /**
-     * This is the visitor for the GDDsectionsContainer */
     virtual void visitGdd(Gdd*);
-  
-    /**
-     * This is the visitor for the Section 
-     */
     virtual void visitSection(Section*);
-
-    /**
-     * This is the visitor for the Ensemble 
-     */
     virtual void visitEnsemble(Ensemble*);
-
-    /**
-     * This is the visitor for the Box 
-     */
     virtual void visitBox(Box*);
-
-    /**
-     * This is the visitor for the Tube 
-     */
     virtual void visitTube(Tube*);
-
-    /**
-     * This is the visitor for the PosXYZ 
-     */
     virtual void visitPosXYZ(PosXYZ*);
-
-    /**
-     * This is the visitor for the AxisMPos 
-     */
     virtual void visitAxisMPos(AxisMPos*);
-
-    /**
-     * This is the visitor for the IdField 
-     */
     virtual void visitIdField(IdField*);
-
-    /**
-     * This is the visitor for the Seg 
-     */
     virtual void visitSeg(Seg*);
-
-
     virtual void insertVolume(Volume*);
 
-    std::map<idents::VolumeIdentifier, PositionedVolume*>* getVolMap()const{return &m_volMap;};
+    /// This method return the full map of positioned volume pointers
+    std::map<idents::VolumeIdentifier, const PositionedVolume*>* getVolMap() const;
+    /** 
+	This method return a PositionedVolume pointer from an ID (a null pointer if
+	the ID does not exist
+    */
+    const PositionedVolume* getPositionedVolumeByID(idents::VolumeIdentifier) const;
 
+  private:
+    /// This string contains the topVolume used for the visit
     std::string m_actualVolume;
-    idents::VolumeIdentifier m_actualID;
-    
+    /// This is the identifiers used during the m_volMap building
+    idents::VolumeIdentifier m_actualID;    
+    /// This is the actual position of the volume
     Hep3Vector m_actualPos;
+    /// This is the actual rotation of the volume
     HepRotation m_actualRot;
-
-    
-    std::map<idents::VolumeIdentifier, PositionedVolume*> m_volMap;
+    /// This is the map of PositionedVolume pointers indicized by ids
+    std::map<idents::VolumeIdentifier, const PositionedVolume*> m_volMap;
   };
 
 }

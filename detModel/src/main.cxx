@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
   detModel::MatCollection* mats = g->getMaterials();  
   mats->generateColor();
   mats->setMaterialTransparency("Vacuum",0.7);
-
+  
   // We start the HTMLConstantsVisitor to build the html file with the
   // constants tables. Colors and layout are stolen from Joanne ones.
   manager->startVisitor(new detModel::HtmlConstantsVisitor);
@@ -91,8 +91,10 @@ int main(int argc, char* argv[]) {
 
   manager->startVisitor(new detModel::CountMaterial(argv[2]));
 
+  detModel::IDmapBuilder idMap(argv[2]);
+  manager->startVisitor(&idMap);
+  
   delete visitor;
-
   delete manager;
   return(0);
 }

@@ -36,6 +36,13 @@ namespace detModel{
 
 IDmapBuilder::~IDmapBuilder()
 {
+  for(std::map<idents::VolumeIdentifier,const PositionedVolume*>::iterator i=m_volMap.begin();
+      i != m_volMap.end();i++)
+    {
+      delete (*i).second;
+      (*i).second = 0;
+    }
+	
   m_volMap.clear();
 }
 
@@ -110,7 +117,6 @@ void  IDmapBuilder::visitPosXYZ(PosXYZ* pos)
   Hep3Vector tempPos = m_actualPos;
   unsigned int i;
   idents::VolumeIdentifier tempID = m_actualID;
-  char tempChar[10];
 
   m_actualPos = m_actualPos + m_actualRot*Hep3Vector(pos->getX(), pos->getY(), pos->getZ());
 
@@ -219,5 +225,15 @@ void IDmapBuilder::insertVolume(Volume* vol)
 	}
     }
 }  
+
+std::map<idents::VolumeIdentifier, const PositionedVolume*>* IDmapBuilder::getVolMap() const
+{
+  return &m_volMap;
+}
+
+const PositionedVolume* IDmapBuilder::getPositionedVolumeByID(idents::VolumeIdentifier id) const
+{
+  return m_volMap[id];
+}
 
 }
