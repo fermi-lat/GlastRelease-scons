@@ -33,11 +33,13 @@ namespace idents {
         silicon plane (view optional)     */
     TkrId(unsigned towerX, unsigned towerY, unsigned tray, bool top, 
           int view=eMeasureNone);
-            
+
+    TkrId(const TkrId& id) : m_packedId(id.m_packedId) {}
     TkrId() : m_packedId(0) {};
 
     ~TkrId() {};
 
+    void copy(const TkrId& id) {m_packedId = id.m_packedId;}
     bool isEqual(const TkrId& other) {
       return ((m_packedId == other.m_packedId));
     }
