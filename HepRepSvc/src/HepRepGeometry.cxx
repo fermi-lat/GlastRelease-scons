@@ -53,10 +53,14 @@ HepRepGeometry::pushShape(ShapeType s, const UintVector& idvec,
           m_builder->addType(father,name,"","");
 
 
+					// The color is set only to the root of the geometry, so it will be possible
+					// to change the color of subtypes 
+					if (name == "LAT")
+						m_builder->addAttValue("Color","gray","");
+
           m_builder->addAttDef("Volume type","","Physics","");
           m_builder->addAttDef("Material","","Physics","");
           m_builder->addAttDef("Shape","","Physics","");
-          m_builder->addAttValue("Color","gray","");
           
           m_builder->addAttValue("Material",material,"");
           
