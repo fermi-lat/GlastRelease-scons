@@ -141,6 +141,7 @@ void GRBSim::Start()
 /*------------------------------------------------------*/
 void GRBSim::ComputeFlux(double time)
 {
+  time+=1.0e-6;
   double nshock=theShocks.size();
   double norma;
   double sum;
