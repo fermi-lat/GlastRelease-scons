@@ -36,6 +36,7 @@ use GlastSvc v9r*
 
 use RootIo   v* 
 
+use LdfEvent v0r*
 
 public
 set JOBOPTIONS "${CALIBSVCROOT}/src/test/jobOptions.txt"
