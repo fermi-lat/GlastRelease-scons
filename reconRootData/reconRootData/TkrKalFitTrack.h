@@ -124,7 +124,7 @@ private:
     Double_t   m_TkrCal_radlen; 
 
     //! Object array of hit planes
-    std::vector<TkrHitPlane> m_hits;
+    vector<TkrHitPlane> m_hits;
 
     ClassDef(TkrKalFitTrack,1)
 };

@@ -103,16 +103,16 @@ private:
     Int_t m_tileCount;
     /// Collection of distance of closest approach calculations
     /// for each side row of the ACD
-    std::vector<Double_t> m_rowDocaCol;
+    vector<Double_t> m_rowDocaCol;
     /// Collection of Active Distance calc for each side row of ACD
-    std::vector<Double_t> m_rowActDistCol;
+    vector<Double_t> m_rowActDistCol;
 
     /// record of the tile with the minimum Distance of Closest Approach
     AcdId m_minDocaId;
     
     // Stores reconstructed energy per ACD digi
-	std::vector<AcdId> m_idCol;
-	std::vector<Double_t> m_energyCol;
+	vector<AcdId> m_idCol;
+	vector<Double_t> m_energyCol;
     
     ClassDef(AcdRecon,3) // Acd Reconstruction data
 };

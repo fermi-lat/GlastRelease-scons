@@ -102,11 +102,11 @@ private:
     TVector3 m_direction;
     
     /// Energy per layer in MeV
-    std::vector<Double_t> m_eneLayer;
+    vector<Double_t> m_eneLayer;
     /// Barycenter position in each layer
-    std::vector<TVector3> m_pLayer;
+    vector<TVector3> m_pLayer;
     /// RMS of energy deposition in each layer
-    std::vector<TVector3> m_rmsLayer;
+    vector<TVector3> m_rmsLayer;
 
     ClassDef(CalCluster,3)
 };

@@ -6,6 +6,10 @@
 #include "TkrCovMat.h"
 #include "TVector3.h"
 #include <vector>
+#ifdef WIN32
+using namespace std;
+#endif
+
 
 /** 
  * @class TkrVertex
@@ -77,7 +81,7 @@ private:
     TkrCovMat  m_vertexCov;
 
     //! List of track IDs used by this vertex
-    std::vector<UInt_t> m_trackIds;
+    vector<UInt_t> m_trackIds;
 
     ClassDef(TkrVertex,1)
 };

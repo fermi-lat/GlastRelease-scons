@@ -4,6 +4,10 @@
 #include "TObject.h"
 #include "TkrCandHit.h"
 #include "TVector3.h"
+#ifdef WIN32
+using namespace std;
+#endif
+
 
 /** 
  * @class TkrCandTrack
@@ -64,7 +68,7 @@ private:
     TVector3   m_direction;
 
     //TkrCandHitVec m_hits;
-    std::vector<TkrCandHit> m_hits;
+    vector<TkrCandHit> m_hits;
 
     ClassDef(TkrCandTrack,1)
 };

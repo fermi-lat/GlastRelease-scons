@@ -89,7 +89,7 @@ private:
 
     //! Object array of hit planes
     //TkrHitPlaneVector m_hits;
-    std::vector<TkrHitPlane> m_hits;
+    vector<TkrHitPlane> m_hits;
     ClassDef(TkrTrack,1)
 
 };

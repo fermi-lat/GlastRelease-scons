@@ -77,7 +77,7 @@ private:
     /// Cal ID
     CalXtalId m_xtalId;
     /// ranges and pulse heights
-    std::vector<CalRangeRecData> m_recData;
+    vector<CalRangeRecData> m_recData;
     
     ClassDef(CalXtalRecData,1)
 };
