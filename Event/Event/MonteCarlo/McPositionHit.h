@@ -112,6 +112,13 @@ class McPositionHit : virtual public ContainedObject {
     void setMcParticle( McParticle* value );
     void setMcParticle( SmartRef<McParticle> value );
 
+    /// Retrieve pointer to the ancestor McParticle (const or non-const)
+    const McParticle* originMcParticle() const;
+          McParticle* originMcParticle();
+    /// Update pointer to McParticle (by a C++ pointer or a smart reference)
+    void setOriginMcParticle( McParticle* value );
+    void setOriginMcParticle( SmartRef<McParticle> value );
+
     /// Serialize the object for writing
     virtual StreamBuffer& serialize( StreamBuffer& s ) const;
     /// Serialize the object for reading
@@ -134,6 +141,8 @@ class McPositionHit : virtual public ContainedObject {
     double                  m_timeOfFlight;
     /// Pointer to McParticle causing the hit
     SmartRef<McParticle>    m_mcParticle;
+    /// Pointer to the ancestor McParticle
+    SmartRef<McParticle>    m_originMcParticle;
     /// Packed flags for the internal use.
     unsigned long           m_packedFlags;
 };
@@ -307,6 +316,26 @@ inline void McPositionHit::setMcParticle( McParticle* value )
 inline void McPositionHit::setMcParticle( SmartRef<McParticle> value )
 { 
   m_mcParticle = value; 
+}
+
+
+/// Retrieve pointer to the ancestor McParticle (const or non-const)
+inline const McParticle* McPositionHit::originMcParticle() const
+{
+  return m_originMcParticle;
+}
+inline       McParticle* McPositionHit::originMcParticle()
+{
+  return m_originMcParticle;
+}
+/// Update pointer to McParticle (by a C++ pointer or a smart reference)
+inline void McPositionHit::setOriginMcParticle( McParticle* value )
+{
+  m_originMcParticle = value;
+}
+inline void McPositionHit::setOriginMcParticle( SmartRef<McParticle> value )
+{
+  m_originMcParticle = value;
 }
 
 //} // NameSpace GlastEvent

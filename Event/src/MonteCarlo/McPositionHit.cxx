@@ -35,6 +35,7 @@ StreamBuffer& McPositionHit::serialize( StreamBuffer& s ) const
     << m_particleEnergy
     << m_timeOfFlight
     << m_mcParticle(this)
+    << m_originMcParticle(this)
     << m_packedFlags;
 }
 
@@ -51,6 +52,7 @@ StreamBuffer& McPositionHit::serialize( StreamBuffer& s )
     >> m_particleEnergy
     >> m_timeOfFlight
     >> m_mcParticle(this)
+    >> m_originMcParticle(this)
     >> m_packedFlags;
 }
 
@@ -84,5 +86,6 @@ std::ostream& McPositionHit::fillStream( std::ostream& s ) const
     << m_exit.y() << ", "
     << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
     << m_exit.z() << " )"
-    << "\n        McParticle            = " << m_mcParticle(this);
+    << "\n        McParticle            = " << m_mcParticle(this)
+    << "\n        ancestor McParticle   = " << m_originMcParticle(this);
 }
