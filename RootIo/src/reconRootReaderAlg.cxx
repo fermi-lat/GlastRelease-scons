@@ -733,6 +733,12 @@ StatusCode reconRootReaderAlg::storeCalXtalRecDataCol(CalRecon *calRecRoot) {
             unsigned int range;
             for (range = idents::CalXtalId::LEX8; range < idents::CalXtalId::HEX1; range++) {    
                 const CalRangeRecData *xtalRangeRoot = calXtalRecRoot->getRangeRecData(range);
+                if (!xtalRangeRoot) {
+                    log << MSG::DEBUG;
+                    if( log.isActive()) log.stream() << "Readout for Range " << range << " does not exist";
+                    log << endreq;
+                    continue;
+                 }
                 TVector3 posRoot = xtalRangeRoot->getPosition();
                 Point posTds(posRoot.X(), posRoot.Y(), posRoot.Z());
                 Event::CalXtalRecData::CalRangeRecData *xtalRangeTds = 
