@@ -42,8 +42,8 @@
     <!ENTITY NADDimPrim     SYSTEM "../flight/flightNADDimPrim.xml">
     <!ENTITY NADGeo         SYSTEM "../flight/flightNADGeo.xml">
 
-    <!ENTITY oneTower         SYSTEM "../flight/flightOneTower.xml">
-    <!ENTITY section         SYSTEM "../em/emSection.xml">
+    <!ENTITY oneTower       SYSTEM "../flight/flightOneTower.xml">
+    <!ENTITY section        SYSTEM "../em/emSection.xml">
 
     <!ENTITY Trigger        SYSTEM "../flight/flightTrigger.xml">
 
@@ -56,7 +56,7 @@
 
     <!ENTITY idDict         SYSTEM "../flight/flightIdDictSegVols.xml">
 
-    <!ENTITY Materials         SYSTEM "../materials.xml">
+    <!ENTITY Materials      SYSTEM "../em/emMaterials.xml">
   ]
 >
 <gdd CVSid="$Id$" 
