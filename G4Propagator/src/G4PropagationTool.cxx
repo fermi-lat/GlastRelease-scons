@@ -16,7 +16,6 @@
 
 #include "GlastSvc/Reco/IPropagator.h"
 #include "ParticleTransporter.h"
-#include "CLHEP/Matrix/Vector.h"
 
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
@@ -36,8 +35,8 @@ class G4PropagationTool : public ParticleTransporter, public AlgTool, virtual pu
     //! Methods to intialize propagator before stepping 
     //! Tracking from intitial point and direction
     virtual void setStepStart(const Point& startPos, const Vector& startDir);
-	//! Tracking from initial parameters
-    virtual void setStepStart(const Event::TkrTrackParams& trackPar, double z, bool upwards);
+    //! Tracking from initial parameters
+    virtual void setStepStart(const Event::TkrFitPar& trackPar, const Event::TkrFitMatrix& trackCov, double z);
 
     //! Takes a step of distance given by arcLen
     virtual void step(double arcLen);
@@ -56,13 +55,12 @@ class G4PropagationTool : public ParticleTransporter, public AlgTool, virtual pu
     virtual double getStepArcLen(int stepIdx = -1) const;
 
     //! Return track parameters after stepping, arcLen can be less than step taken
-    virtual Event::TkrTrackParams getTrackParams(double arcLen   = -1.,
-                                                 double momentum = 1.,
-                                                 bool   forward  = true)    const;
+    virtual Event::TkrFitPar getTrackPar(double arcLen = -1.) const;
+    //! Return track covariance matrix after stepping, arcLen can be less than step taken
+    //! *** NOTE *** this only has meaning if initial matrix given at setStepStart
+    virtual Event::TkrFitMatrix getTrackCov(int propDir, double momentum, double arcLen = -1.) const;
     //! Return multiple scattering matrix after stepping, arcLen can be less than step taken
-    virtual HepMatrix getMscatCov(double arcLen   = -1.,
-                                  double momentum =  1.,
-                                  bool   forward  =  true) const;
+    virtual Event::TkrFitMatrix getMscatCov(double momentum, double arcLen = -1.) const;
 
     //! Return volume identifer after stepping
     virtual idents::VolumeIdentifier getVolumeId(double arcLen = -1.) const;
@@ -97,8 +95,9 @@ class G4PropagationTool : public ParticleTransporter, public AlgTool, virtual pu
     bool isTkrPlane(int& view) const;
 
     /// Initial parameters
-    Event::TkrTrackParams m_trackPar;
-    double                m_zCoord;
+    Event::TkrFitPar    m_trackPar;
+    Event::TkrFitMatrix m_trackCov;
+    double              m_zCoord;
 };
 
 static ToolFactory<G4PropagationTool> g4prop_factory;
@@ -118,7 +117,8 @@ G4PropagationTool::G4PropagationTool(const std::string& type, const std::string&
   declareInterface<IPropagator>(this);
 
   //Initialize the track parameters
-  m_trackPar = Event::TkrTrackParams();
+  m_trackPar = Event::TkrFitPar(0.,0.,0.,0.);
+  m_trackCov = Event::TkrFitMatrix(0);
   m_zCoord   = 0.;
 }
 
@@ -165,22 +165,9 @@ void G4PropagationTool::setStepStart(const Point& startPos, const Vector& startD
     // Outputs:  None
     // Dependencies: None
     // Restrictions and Caveats: None
-    m_trackPar(1) = startPos.x();
-    m_trackPar(2) = startDir.x() / startDir.z();
-    m_trackPar(3) = startPos.y();
-    m_trackPar(4) = startDir.y() / startDir.z();
 
-    m_trackPar(1,1) = 1.;
-    m_trackPar(1,2) = 0.;
-    m_trackPar(1,3) = 0.;
-    m_trackPar(1,4) = 0.;
-    m_trackPar(2,2) = 1.;
-    m_trackPar(2,3) = 0.;
-    m_trackPar(2,4) = 0.;
-    m_trackPar(3,3) = 1.;
-    m_trackPar(3,4) = 0.;
-    m_trackPar(4,4) = 1.;
-
+    m_trackPar = Event::TkrFitPar(startPos.x(),startDir.x(),startPos.y(),startDir.y());
+    m_trackCov = Event::TkrFitMatrix(0);
     m_zCoord   = startPos.z();
 
     setInitStep(startPos, startDir);
@@ -189,7 +176,7 @@ void G4PropagationTool::setStepStart(const Point& startPos, const Vector& startD
 }
 
 //! Tracking from initial parameters
-void G4PropagationTool::setStepStart(const Event::TkrTrackParams& trackPar, double z, bool upwards)
+void G4PropagationTool::setStepStart(const Event::TkrFitPar& trackPar, const Event::TkrFitMatrix& trackCov, double z)
 {
     // Purpose and Method: Initializes to the starting point and direction. This
     //                     will serve to set the initial volume at the start point
@@ -200,16 +187,16 @@ void G4PropagationTool::setStepStart(const Event::TkrTrackParams& trackPar, doub
 
     // Save parameters 
     m_trackPar = trackPar;
+    m_trackCov = trackCov;
     m_zCoord   = z;
 
     // Create initial position and direction from said parameters
-    double x_slope = trackPar.getxSlope();   
-    double y_slope = trackPar.getySlope(); 
+    double x_slope = trackPar.getXSlope();   
+    double y_slope = trackPar.getYSlope(); 
     Vector dir_ini = Vector(-x_slope, -y_slope, -1.).unit();
-	if(upwards) dir_ini = Vector(x_slope, y_slope, 1.).unit();
 
-    double x0      = trackPar.getxPosition();
-    double y0      = trackPar.getyPosition();
+    double x0      = trackPar.getXPosition();
+    double y0      = trackPar.getYPosition();
     Point  x_ini(x0,y0,z);
 
     // Initialize the actual propagator...
@@ -287,9 +274,7 @@ Point G4PropagationTool::getStepPosition(int stepIdx) const
 }
 
 //! Return track parameters after stepping, arcLen can be less than step taken
-Event::TkrTrackParams G4PropagationTool::getTrackParams(double arcLen,
-                                                        double momentum,
-                                                        bool   forward) const
+Event::TkrFitPar G4PropagationTool::getTrackPar(double arcLen) const
 {
     // Purpose and Method: Returns the track parameters after stepping arcLen distance
     //                     If arcLen is negative or more than stepped arcLen, returns position
@@ -299,77 +284,16 @@ Event::TkrTrackParams G4PropagationTool::getTrackParams(double arcLen,
     // Dependencies: None
     // Restrictions and Caveats: None
 
-    // The eventual result
-    Event::TkrTrackParams trackPar;
-
-    // Step taken along z axis
     double relDeltaZ = arcLen * getStartDir().z();
 
-    // Look for exceeding limits
-    if (arcLen < 0. || arcLen > getTotalArcLen())
+    if (arcLen < 0. || arcLen > getLastStep().GetArcLen())
     {
-        relDeltaZ = getTotalArcLen() * getStartDir().z();
+        relDeltaZ = getLastStep().GetArcLen() * getStartDir().z();
     }
 
-    // Build a transport matrix
-    HepMatrix F(4,4,1);
-    F(1,2) = relDeltaZ;
-    F(3,4) = relDeltaZ;
-
-    // Vector representing the track parameters
-    HepVector TrkP(4);
-    TrkP(1) = m_trackPar(1);
-    TrkP(2) = m_trackPar(2);
-    TrkP(3) = m_trackPar(3);
-    TrkP(4) = m_trackPar(4);
-
-    TrkP = F * TrkP;
-
-    trackPar(1) = TrkP(1);
-    trackPar(2) = TrkP(2);
-    trackPar(3) = TrkP(3);
-    trackPar(4) = TrkP(4);
-
-    // Matrix representing current covariance matrix
-    HepMatrix cov(4,4,0);
-    cov(1,1) = m_trackPar(1,1);
-    cov(1,2) = m_trackPar(1,2);
-    cov(1,3) = m_trackPar(1,3);
-    cov(1,4) = m_trackPar(1,4);
-    cov(2,1) = m_trackPar(2,1);
-    cov(2,2) = m_trackPar(2,2);
-    cov(2,3) = m_trackPar(2,3);
-    cov(2,4) = m_trackPar(2,4);
-    cov(3,1) = m_trackPar(3,1);
-    cov(3,2) = m_trackPar(3,2);
-    cov(3,3) = m_trackPar(3,3);
-    cov(3,4) = m_trackPar(3,4);
-    cov(4,1) = m_trackPar(4,1);
-    cov(4,2) = m_trackPar(4,2);
-    cov(4,3) = m_trackPar(4,3);
-    cov(4,4) = m_trackPar(4,4);
-
-    HepMatrix Qmaterial = getMscatCov(arcLen, momentum, forward);
-
-    if (forward) cov = (F * (cov * F.T())) + Qmaterial;
-    else         cov = (F * (cov + Qmaterial) * F.T());
-
-    trackPar(1,1) = cov(1,1);
-    trackPar(1,2) = cov(1,2);
-    trackPar(1,3) = cov(1,3);
-    trackPar(1,4) = cov(1,4);
-    trackPar(2,1) = cov(2,1);
-    trackPar(2,2) = cov(2,2);
-    trackPar(2,3) = cov(2,3);
-    trackPar(2,4) = cov(2,4);
-    trackPar(3,1) = cov(3,1);
-    trackPar(3,2) = cov(3,2);
-    trackPar(3,3) = cov(3,3);
-    trackPar(3,4) = cov(3,4);
-    trackPar(4,1) = cov(4,1);
-    trackPar(4,2) = cov(4,2);
-    trackPar(4,3) = cov(4,3);
-    trackPar(4,4) = cov(4,4);
+    Event::TkrFitMatrix F(relDeltaZ);
+                          
+    Event::TkrFitPar trackPar = Event::TkrFitPar(F*m_trackPar);
 
     return trackPar;
 }
@@ -391,7 +315,6 @@ double G4PropagationTool::getStepArcLen(int stepIdx) const
 
 //! Return track covariance matrix after stepping, arcLen can be less than step taken
 //! *** NOTE *** this only has meaning if initial matrix given at setStepStart
-/*
 Event::TkrFitMatrix G4PropagationTool::getTrackCov(int propDir, double momentum, double arcLen) const
 {
     // Purpose and Method: Returns the track parameters after stepping arcLen distance
@@ -419,9 +342,9 @@ Event::TkrFitMatrix G4PropagationTool::getTrackCov(int propDir, double momentum,
 
     return cov;
 }
-*/
+
 //! Return multiple scattering matrix after stepping, arcLen can be less than step taken
-HepMatrix G4PropagationTool::getMscatCov(double arcLenIn, double momentum, bool forward) const
+Event::TkrFitMatrix G4PropagationTool::getMscatCov(double momentum, double arcLenIn) const
 {
     // Purpose and Method: Calculates Q, the 4x4 covariance matrix due to multiple
     //                     scattering
@@ -516,7 +439,7 @@ HepMatrix G4PropagationTool::getMscatCov(double arcLenIn, double momentum, bool 
     cov(2,4) = cov(4,2) = scat_angle*p34;
     cov(3,4) = cov(4,3) = -scat_covr*p44; 
   
-    return cov;
+    return Event::TkrFitMatrix(cov);
 }
 
 //! Return radlen for this step
@@ -722,7 +645,7 @@ idents::VolumeIdentifier G4PropagationTool::getVolumeId(double arcLen) const
 
 //    G4VPhysicalVolume* pCurVolume = getVolume(stepPtr->GetCoords(), true);
 
-    return constructId(stepPtr->GetCoords());
+    return constructId(stepPtr->GetCoords(), true);
 }
 
 //! Return volume identifer after stepping
