@@ -99,14 +99,19 @@ StatusCode AcdDigiAlg::execute() {
              overHigh = energyDeposited > m_highThreshold;
         
         /// using conversion from ROOTWriter for now to get PHA
-        int pha = static_cast<int>(std::min((float)floor(energyDeposited * m_adcChannelsPerMeV), 4095.0f)) ;
+        unsigned short pha = static_cast<unsigned short>(std::min((float)floor(energyDeposited * m_adcChannelsPerMeV), 4095.0f)) ;
+
+        unsigned short phaArr[2] = { pha, 0 };
+        bool vetoArr[2] = { overVeto, false };
+        bool lowArr[2] = { overLow, false };
+        bool highArr[2] = { overHigh, false };
         
         
         digiCol->push_back(
             new AcdDigi(
                 idents::AcdId(layer, face, row, column), 
-                pha, 
-                overVeto, overLow, overHigh
+                phaArr, 
+                vetoArr, lowArr, highArr
             ) 
         );   
         
