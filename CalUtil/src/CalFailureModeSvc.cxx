@@ -7,8 +7,7 @@
 // Author: Richard Dubois
 
 
-#include "CalUtil/CalFailureModeSvc.h"
-
+#include "CalFailureModeSvc.h"
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"

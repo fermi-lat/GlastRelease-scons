@@ -3,6 +3,7 @@
 @verbatim
  $Id$	
  * Package CalUtil
+ * v2r0       05-Feb-2005 ZF moved CalResponse to it's own package, removed convertADC (obsolete), added CalDefs
  * v1r4p4     17-Jan-2005 THB replace RootPolicy with direct ROOT use.
  * v1r4p3      3-Jan-2005 jrb Eliminate unnecessary #include in TestAdcTools.cxx
  * v1r4p2     24-Sep-2004 ZF Made some slight modifications to TestAdcTool.cxx in order to make alg as close as possible to orig CalDigi algorithm
