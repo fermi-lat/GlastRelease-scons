@@ -48,6 +48,13 @@
 #include "G4Trajectory.hh"
 #include "G4TrajectoryPoint.hh"
 
+#include "G4LogicalVolume.hh"
+#include "G4Region.hh"
+#include "G4RegionStore.hh"
+#include "G4ProductionCuts.hh"
+#include "G4ProductionCutsTable.hh"
+
+
 #include "G4ios.hh"
 #include "g4std/strstream"
 
@@ -58,7 +65,13 @@ RunManager* RunManager::fRunManager = NULL;
 RunManager* RunManager::GetRunManager()
 { return fRunManager; }
 
-RunManager::RunManager(std::ostream& log, double defaultCutValue, std::string& physics_choice, std::string& physics_table,std::string&  physics_dir)
+RunManager::RunManager(std::ostream& log, 
+                       double defaultCutValue, 
+                       double defaultTkrCutValue,
+                       double defaultCalCutValue,
+                       std::string& physics_choice, 
+                       std::string& physics_table,
+                       std::string&  physics_dir)
   :m_log(log),
    physicsList(NULL),
    userPrimaryGeneratorAction(NULL),
@@ -69,8 +82,10 @@ RunManager::RunManager(std::ostream& log, double defaultCutValue, std::string& p
    initializedAtLeastOnce(false),
    geometryToBeOptimized(true),runIDCounter(0),verboseLevel(0),DCtable(NULL),
    currentRun(NULL),
-   storeRandomNumberStatus(0)
-   
+   storeRandomNumberStatus(0),
+   defaultCut(defaultCutValue),
+   TkrCutValue(defaultTkrCutValue),
+   CalCutValue(defaultCalCutValue)
 {
   if(fRunManager)
     { G4Exception("RunManager constructed twice."); }
@@ -196,7 +211,13 @@ void RunManager::RunInitialization()
 {
   if (currentEvent) delete currentEvent;
   currentRun = new G4Run();
+
+  G4StateManager* stateManager = G4StateManager::GetStateManager();
+  stateManager->SetNewState(G4State_GeomClosed);
+
   currentRun->SetRunID(runIDCounter);
+
+  BuildPhysicsTables();
 
   currentRun->SetDCtable(DCtable);
   G4SDManager* fSDM = G4SDManager::GetSDMpointerIfExist();
@@ -211,8 +232,6 @@ void RunManager::RunInitialization()
       geomManager->CloseGeometry(geometryToBeOptimized);
       geometryNeedsToBeClosed = false;
     }
-  G4StateManager* stateManager = G4StateManager::GetStateManager();
-  stateManager->SetNewState(G4State_GeomClosed);
 
   runAborted = false;
 
@@ -221,6 +240,30 @@ void RunManager::RunInitialization()
   
   if(verboseLevel>0) G4cout << "Start Run processing." << G4endl;
 }
+
+void RunManager::BuildPhysicsTables()
+{
+//  UpdateRegion();
+  G4RegionStore::GetInstance()->UpdateMaterialList();
+
+  // Let G4ProductionCutsTable create new couples
+  G4ProductionCutsTable::GetProductionCutsTable()->UpdateCoupleTable();
+
+  if(G4ProductionCutsTable::GetProductionCutsTable()->IsModified())
+  {
+    physicsList->BuildPhysicsTable();
+    G4ProductionCutsTable::GetProductionCutsTable()->PhysicsTableUpdated();
+  }
+
+  physicsList->DumpCutValuesTableIfRequested();
+}
+
+//void G4RunManager::UpdateRegion()
+//{
+//  // Let G4RegionStore scan materials
+//  G4RegionStore::GetInstance()->UpdateMaterialList();
+//}
+ 
 
 G4Event* RunManager::GenerateEvent(G4int i_event)
 {
@@ -278,15 +321,82 @@ void RunManager::Initialize()
 void RunManager::InitializeGeometry()
 {
   // Check the world volume to the Navigator
-  if (G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking()
-    ->GetWorldVolume())
+  if (G4VPhysicalVolume* currentWorld = G4TransportationManager::GetTransportationManager()
+              ->GetNavigatorForTracking()->GetWorldVolume())
   {
+    // Check to see if the geometry has already been associated to a region
+    if (currentWorld->GetLogicalVolume()->GetRegion())
+    {
+        // If so, this is an error
+        G4cerr << "The world volume has a user-defined region <" 
+               << currentWorld->GetLogicalVolume()->GetRegion()->GetName()
+               << ">." << G4endl;
+    }
+    else
+    {
+        // Define the default region for the world geometry
+        G4Region* defaultRegion = new G4Region("DefaultRegionForGLAST");
+        defaultRegion->SetProductionCuts(G4ProductionCutsTable::GetProductionCutsTable()->GetDefaultProductionCuts());
+        
+        // set the default region to the world
+        G4LogicalVolume* worldLog = currentWorld->GetLogicalVolume();
+        worldLog->SetRegion(defaultRegion);
+        defaultRegion->AddRootLogicalVolume(worldLog);
+
+        // Now want to define special regions for the track and the cal. To do this
+        // we need to search through the logical volumes to find the mother volumes for
+        // the track and the cal. 
+        G4LogicalVolumeStore* Store    = G4LogicalVolumeStore::GetInstance();
+        int                   nVolumes = Store->size();
+        G4LogicalVolumeStore::iterator volIter = Store->begin();
+
+        bool needTkr = true;
+        bool needCal = true;
+
+        // Loop over volumes until end or we are finished
+        while(volIter < Store->end() && (needTkr || needCal))
+        {
+            G4LogicalVolume* logVol  = *volIter++;
+
+            // Is it the Tracker mother volume?
+            if (logVol->GetName() == "oneTKR")
+            {
+                // Define a special region for the Tracker
+                G4Region*         tkrRegion = new G4Region("TrackerRegion");
+                G4ProductionCuts* tkrCuts   = new G4ProductionCuts();
+                tkrCuts->SetProductionCut(TkrCutValue);
+                tkrRegion->SetProductionCuts(tkrCuts);
+
+                logVol->SetRegion(tkrRegion);
+                tkrRegion->AddRootLogicalVolume(logVol);
+                needTkr = false;
+            }
+
+            // Is it the Cal mother volume?
+            if (logVol->GetName() == "oneCAL")
+            {
+                // Define a region for the Cal
+                G4Region*         calRegion = new G4Region("CalorimeterRegion");
+                G4ProductionCuts* calCuts   = new G4ProductionCuts();
+                calCuts->SetProductionCut(CalCutValue);
+                calRegion->SetProductionCuts(calCuts);
+
+                logVol->SetRegion(calRegion);
+                calRegion->AddRootLogicalVolume(logVol);
+                needCal = false;
+            }
+        }
+    }
 
 	// Let VisManager know it
 	G4VVisManager* pVVisManager = G4VVisManager::GetConcreteInstance();
 	if(pVVisManager) pVVisManager->GeometryHasChanged();
 
 	geometryNeedsToBeClosed = true;
+  }
+  else
+  {
+    G4cerr << "Cannot find a valid geometry! " << G4endl; 
   }
   geometryInitialized = true;
 }

@@ -70,6 +70,8 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("saveTrajectories", m_saveTrajectories=0);
   declareProperty("mcTreeMode", m_mcTreeMode="minimal");
   declareProperty("defaultCutValue", m_defaultCutValue=0.1*mm);
+  declareProperty("defaultTkrCutValue", m_defaultTkrCutValue=0.1*mm);
+  declareProperty("defaultCalCutValue", m_defaultCalCutValue=0.1*mm);
   declareProperty("physics_choice", m_physics_choice="full");
   declareProperty("physics_tables", m_physics_table="build");
   declareProperty("physics_dir", m_physics_dir="G4cuts/100micron/");
@@ -93,7 +95,9 @@ StatusCode G4Generator::initialize()
 
   // user jobOtions on cuts and physics 
 
-  log << MSG::INFO << "DefaultCutValue=" << m_defaultCutValue << " mm" << endreq;
+  log << MSG::INFO << "DefaultCutValue="    << m_defaultCutValue    << " mm" << endreq;
+  log << MSG::INFO << "DefaultTkrCutValue=" << m_defaultTkrCutValue << " mm" << endreq;
+  log << MSG::INFO << "DefaultCalCutValue=" << m_defaultCalCutValue << " mm" << endreq;
 
   log << MSG::INFO << "Physics List = " << m_physics_choice << endreq;
 
@@ -132,7 +136,13 @@ StatusCode G4Generator::initialize()
   // The geant4 manager
   if (!(m_runManager = RunManager::GetRunManager()))
     {
-      m_runManager = new RunManager(log.stream(), m_defaultCutValue, m_physics_choice, m_physics_table, m_physics_dir);
+      m_runManager = new RunManager(log.stream(), 
+                                    m_defaultCutValue, 
+                                    m_defaultTkrCutValue,
+                                    m_defaultCalCutValue,
+                                    m_physics_choice, 
+                                    m_physics_table, 
+                                    m_physics_dir);
 
       log << "\n done." << endreq;
     }

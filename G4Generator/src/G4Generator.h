@@ -58,8 +58,11 @@ class G4Generator : public Algorithm {
   std::string m_mcTreeMode;
   
   /// The default cutoff value (in mm)
-
+  /// This now includes cutoffs for the tracker, calorimeter and 
+  /// everything else
   DoubleProperty m_defaultCutValue;
+  DoubleProperty m_defaultTkrCutValue;
+  DoubleProperty m_defaultCalCutValue;
 
   /// the Physics List
   /// It can be "full" or "only_em"

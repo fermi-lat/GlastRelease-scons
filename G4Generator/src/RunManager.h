@@ -26,6 +26,9 @@ class Hep3Vector;
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 
+#include "G4LogicalVolume.hh"
+#include "G4Region.hh"
+
 #include <memory>
 
 /** 
@@ -71,7 +74,13 @@ class RunManager
      GlastDetSvc and to the DataProviderSvc. It gets also the mode for the
      geometry level of details
   */
-  RunManager(std::ostream& log, double defaultCutValue, std::string& physics_choice, std::string& physics_table,std::string&  physics_dir);
+  RunManager(std::ostream& log, 
+             double defaultCutValue, 
+             double defaultTkrCutValue,
+             double defaultCalCutValue,
+             std::string& physics_choice, 
+             std::string& physics_table,
+             std::string&  physics_dir);
   
   virtual ~RunManager();
 
@@ -117,6 +126,9 @@ class RunManager
   /// Method to generate the Event .. the argument must be eliminated
   virtual G4Event* GenerateEvent(G4int i_event);
 
+  /// Method to update the production cuts tables
+  virtual void BuildPhysicsTables();
+
   protected:
   /// The Event manager of G4
   G4EventManager * eventManager;
@@ -153,6 +165,11 @@ class RunManager
 
   /// This is a dummy session to be used to silent G4
   UIsession* session;
+
+  /// Range cutoff values for regions
+  G4double defaultCut;
+  G4double TkrCutValue;
+  G4double CalCutValue;
 
  public:
   virtual void StoreRandomNumberStatus(G4int eventID=-1);
