@@ -1,5 +1,5 @@
 package FluxSvc
-version v6r13
+version v6r13p1
 
 # $Id$
 author  T. Kozanecki <hansl$slac.stanford.edu> T. Burnett
@@ -12,7 +12,7 @@ use GlastPolicy v*
 use Event       v9r*
 
 use GlastSvc    v9r*
-use astro       v0r*
+use astro       v1r*
 use ntupleWriterSvc v3r*
 
 # libraries that are only linked locally
@@ -30,7 +30,7 @@ apply_pattern package_include
 private
 
 macro  source  "*.cxx"  WIN32 "*.h *.cxx *.txt"
-
+macro_append includes  $(ppcmd)"$(FLUXROOT)" '
 #  shared component library 
 apply_pattern package_Cshlibflags
 library  FluxSvc   -import=flux -import=GRB \
