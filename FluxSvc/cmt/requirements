@@ -27,8 +27,6 @@ macro  source  "*.cxx"  WIN32 "*.h *.cxx *.txt"
 
 public
 
-macro_append ROOT_linkopts " -lHist"
-
 #  linker library ..Lib
 library FluxSvcLib  -import=flux \ 
                     $(source)    \
