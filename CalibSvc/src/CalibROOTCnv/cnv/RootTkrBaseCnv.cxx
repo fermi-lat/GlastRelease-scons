@@ -68,7 +68,8 @@ StatusCode RootTkrBaseCnv::readTower(TTree* pTree, unsigned iTow,
                                      CalibData::TkrBase* pCol) {
   CalibData::TkrBase::TkrTower* tdsTow = pCol->makeTower(iTow);
 
-  calibRootData::TkrTower* rootTow = 0;
+  //  calibRootData::TkrTower* rootTow = 0;
+  calibRootData::TkrTower* rootTow = new calibRootData::TkrTower;
   TObject* pTObj = rootTow;
   StatusCode ret = readRootObj(pTree, 
                                std::string("calibRootData::TkrTower"), 

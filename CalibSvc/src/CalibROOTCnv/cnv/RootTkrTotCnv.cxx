@@ -88,7 +88,7 @@ StatusCode RootTkrTotCnv::readUnis(TTree* tree, int iTow,
 
   for (unsigned ix = 0; ix < nEntries; ix++) {  // process a unilayer
 
-    calibRootData::TotUnilayer* rootUni = 0;
+    calibRootData::TotUnilayer* rootUni = new calibRootData::TotUnilayer();
     TObject* pObj = rootUni;
 
     StatusCode ret = 

@@ -243,8 +243,9 @@ StatusCode RootBaseCnv::readRootObj(const std::string& treename,
 StatusCode RootBaseCnv::readRootObj(TTree* pTree,
                                     const std::string& branch,
                                     TObject*& pObj, unsigned ix){
-  pTree->SetBranchAddress(branch.c_str(), &pObj);
-  pTree->GetEvent(ix);
+  TBranch* pBranch=pTree->GetBranch(branch.c_str());
+  pBranch->SetAddress(&pObj);
+  pBranch->GetEntry(ix);
   return StatusCode::SUCCESS;
  }
 
