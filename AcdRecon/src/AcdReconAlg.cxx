@@ -206,7 +206,7 @@ StatusCode AcdReconAlg::acdDoca() {
     Event::TkrFitColPtr trkPtr = tracksTds->begin();
     while(trkPtr != tracksTds->end())
     {
-        Event::TkrFitTrack* trackTds  = *trkPtr++;       // The TDS track
+        const Event::TkrFitTrack* trackTds  = *trkPtr++;       // The TDS track
         float testDoca = doca(trackTds->getPosition(), trackTds->getDirection(), m_rowDocaCol);
         if(testDoca < m_doca) m_doca = testDoca;
         float test_dist= hitTileDist(trackTds->getPosition(), -(trackTds->getDirection()));
