@@ -4,6 +4,7 @@
 #ifndef G4MEDIA_H
 #define G4MEDIA_H
 #include <vector>
+#include <string>
 #include "GlastSvc/GlastDetSvc/IMedia.h"
 
 class G4Media : public IMedia {

@@ -22,7 +22,11 @@
 #include "geomrep/TubeRep.h"
 #include "geomrep/BoxRep.h"
 #include <iomanip>
+#ifdef WIN32
 #include <sstream>
+#else
+#include <stringstream>
+#endif
 #include <cassert>
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
