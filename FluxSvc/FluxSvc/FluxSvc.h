@@ -10,6 +10,7 @@
 #include "FluxSvc/IFluxSvc.h"
 #include <list>
 
+
 //forward declarations
 template <class TYPE> class SvcFactory;
 class IFlux;  // interface
@@ -35,7 +36,11 @@ public:
     
     /// 
     virtual StatusCode finalize ();
- 
+
+      
+   /// Query interface
+   virtual StatusCode queryInterface( const IID& riid, void** ppvUnknown );
+
 protected: 
 
     /// Standard Constructor

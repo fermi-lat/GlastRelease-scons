@@ -11,6 +11,9 @@
 #include <string>
 #include <list>
 
+// Declaration of the interface ID ( interface id, major version, minor version) 
+static const InterfaceID IID_IFluxSvc(910, 1 , 0); 
+
 // forward declarations
 class IFlux;
 
@@ -25,6 +28,11 @@ public:
     
     /// return a list of legal names
     virtual std::list<std::string> fluxNames()const=0;
+
+        /// Retrieve interface ID
+    static const InterfaceID& interfaceID() { return IID_IFluxSvc; }
+
+
 };
 
 #endif  // _H_IFluxSvc

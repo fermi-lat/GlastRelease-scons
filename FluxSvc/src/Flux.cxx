@@ -78,3 +78,4 @@ double Flux::targetArea()const
 {
     return m_event->totalArea();
 }
+

@@ -12,6 +12,7 @@
 #include "CLHEP/Geometry/Vector3D.h"
 
 
+
 /*!  Abstract interface for an object that generates particles
 */
 class IFlux {

@@ -95,3 +95,14 @@ StatusCode FluxSvc::finalize ()
     return status;
 }
 
+/// Query interface
+StatusCode FluxSvc::queryInterface(const IID& riid, void** ppvInterface)  {
+  if ( IID_IFluxSvc.versionMatch(riid) )  {
+    *ppvInterface = (IFluxSvc*)this;
+  }
+  else  {
+    return Service::queryInterface(riid, ppvInterface);
+  }
+  addRef();
+  return SUCCESS;
+}

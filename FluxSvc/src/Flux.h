@@ -51,6 +51,7 @@ public:
     /// retrieve the area (a static, same for all fluxes)
     double targetArea()const;
 
+
 private:
 
     EventSource* m_event;  
