@@ -34,7 +34,7 @@ class TowerId
       int iy () const {return (m_id / xNum);}
 
       //! is this module a neighbor?
-      bool neighbor (const TowerId& n){
+      bool neighbor (const TowerId& n)const{
           int dx = ix()-n.ix(), dy=iy()-n.iy();
           return dx<2 && dx>-2 && dy<2 && dy>-2; 
       }
@@ -42,6 +42,11 @@ class TowerId
       /* dereference operator -- replace with explicit method above
       operator unsigned int () const { return m_id; }
       */
+      /* don't know why the above was done, but add this comparison to allow sorting */
+      //! comparison operator to allow sorting. 
+      operator<(const idents::TowerId& other)const{ return m_id< other.m_id;}
+
+
 
 private:
       unsigned int m_id;

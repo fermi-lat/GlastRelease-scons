@@ -5,7 +5,6 @@
 #define _H_Acd_Id
 
 #include "facilities/bitmanip.h"
-#include "idents/ModuleId.h"
 /*!
 \class AcdId 
 \brief encapsulate the id for an ACD tile.
