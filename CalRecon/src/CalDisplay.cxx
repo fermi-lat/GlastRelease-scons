@@ -161,6 +161,8 @@ StatusCode CalDisplay::initialize()
     IGuiSvc* guiSvc = 0;
     StatusCode sc = service("GuiSvc", guiSvc);
 
+    m_crl = 0;
+    m_cls = 0;
 	
      sc = service("CalGeometrySvc", m_CalGeo);
 	 float logheight = m_CalGeo->logHeight();
