@@ -19,7 +19,10 @@
 #include "GaudiKernel/ITime.h"
 
 #include "CalibData/CalibModel.h"
+
 // extern const CLID& CLID_Calib_CalibBase;
+
+class MsgStream;
 
 namespace CalibData {
   class CalibBase : public DataObject,
@@ -34,7 +37,7 @@ namespace CalibData {
     CalibBase(const CalibBase& obj);
     
     /// Following is intended for deep copy
-    virtual void update(CalibBase& obj);
+    virtual StatusCode update(CalibBase& obj, MsgStream *);
     virtual ~CalibBase();
     
     // Re-implemented from DataObject

@@ -4,6 +4,7 @@
  */
 
 #include "CalibData/Tkr/BadStrips.h"
+#include "GaudiKernel/MsgStream.h"
 
 namespace CalibData {
   BadStrips::Tower::Tower(bool allBad, int howBad, 
@@ -69,11 +70,13 @@ namespace CalibData {
   }
 
 
-  void BadStrips::update(CalibBase& other) {
+  StatusCode BadStrips::update(CalibBase& other, MsgStream* log) {
     // The following dynamic_cast has got to work
     BadStrips& other1 = dynamic_cast<BadStrips& >(other);
 
-    CalibBase::update(other1);
+    StatusCode sc = CalibBase::update(other1, log);
+    if (sc != StatusCode::SUCCESS) return sc;
+
     m_type = other1.m_type;
 
     m_towers->clear();
@@ -84,6 +87,8 @@ namespace CalibData {
       m_towers->push_back(*iT);
       iT++;
     }
+
+    return StatusCode::SUCCESS;
   }
 
   BadStrips::eBadType BadStrips::getBadType() const {return m_type;}

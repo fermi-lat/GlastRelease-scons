@@ -105,7 +105,7 @@ namespace CalibData {
     static inline const CLID& classID() { return CLID_Calib_TKR_BadChan; }
 
     // Re-implemented from CalibBase
-    virtual void    update(CalibBase& other);
+    virtual StatusCode update(CalibBase& other, MsgStream* log);
 
   private:
     class Uniplane {

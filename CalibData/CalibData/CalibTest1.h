@@ -32,7 +32,7 @@ namespace CalibData {
 
 
     // Re-implemented from CalibBase
-    virtual void    update(CalibBase& other);
+    virtual StatusCode   update(CalibBase& other, MsgStream* log);
 
     std::string getValueName() const;
     int         getValue() const {return m_value;}

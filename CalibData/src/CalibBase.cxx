@@ -32,13 +32,14 @@ namespace CalibData {
   }
 
 
-  void CalibBase::update(CalibBase& obj) {
+  StatusCode CalibBase::update(CalibBase& obj, MsgStream* ) {
     delete m_validSince;
     delete m_validTill;
 
     m_validTill = new CalibData::CalibTime(obj.validTill() );
     m_validSince = new CalibData::CalibTime(obj.validSince() );
     m_serNo = obj.m_serNo;  
+    return StatusCode::SUCCESS;
   }
 
   bool CalibBase::isValid() {

@@ -41,7 +41,7 @@ namespace CalibData {
     static const CLID& classID();   // shouldn't get called
 
     // Maybe won't need to be virtual after all
-    virtual void update(CalCalibBase& other);
+    virtual StatusCode update(CalibBase& other, MsgStream* log);
     
   private:
     CalFinder* m_finder;
