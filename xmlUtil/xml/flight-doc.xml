@@ -8,19 +8,22 @@
     <!ENTITY CALMatPrim SYSTEM "flightCALMatPrim.xml">
     <!ENTITY CALCountPrim SYSTEM "flightCALCountPrim.xml">
     <!ENTITY CALDimPrim SYSTEM "flightCALDimPrim.xml">
+    <!ENTITY CALOneCal SYSTEM "flightCALOneCal.xml">
 
     <!ENTITY TKRMatPrim SYSTEM "flightTKRMatPrim.xml">
     <!ENTITY TKRCountPrim SYSTEM "flightTKRCountPrim.xml">
     <!ENTITY TKRDimPrim SYSTEM "flightTKRDimPrim.xml">
+    <!ENTITY TKROneTkr SYSTEM "flightTKROneTkr.xml">
 
     <!ENTITY ACDMatPrim SYSTEM "flightACDMatPrim.xml">
     <!ENTITY ACDCountPrim SYSTEM "flightACDCountPrim.xml">
     <!ENTITY ACDDimPrim SYSTEM "flightACDDimPrim.xml">
+    <!ENTITY ACDAcd SYSTEM "flightACDAcd.xml">
 
     <!ENTITY idDict SYSTEM "flightIdDict.xml">
   ]>
 <gdd CVSid="$Id$" DTDversion="2.0" substituted="false">
-  <source inputId="Id: flight.xml,v 1.5 2001/04/12 18:34:17 jrb Exp " creatorId="Id: makeXmlForDoc.cxx,v 1.1.1.1 2001/03/30 00:03:31 jrb Exp ">
+  <source inputId="Id: flight.xml,v 1.9 2001/07/03 21:34:14 jrb Exp " creatorId="Id: makeXmlForDoc.cxx,v 1.2 2001/04/23 23:26:02 jrb Exp ">
     Do not edit! This file automatically created by xmlUtil/v1/src/forDoc.exe  </source>
   <constants>
     <version major="0" minor="0" />
@@ -71,9 +74,8 @@ Si and CAL layers        </prim>
         <overview>
           Fundamental dimensions and offsets for objects not
 associated with any single subsystem.        </overview>
-        <prim name="modWidth" type="double" uType="length" value="389.7" unitAngle="deg" unitLength="mm">
-          Width of a single CAL-TKR module.
-THIS IS TOO BIG -- NEED NEW CAL NUMBERS        </prim>
+        <!--  <prim name="modWidth" value="389.7">Width of a single CAL-TKR module.
+THIS IS TOO BIG.  NEED NEW CAL NUMBERS</prim>  -->
         <prim name="calTrackerGap" type="double" uType="length" value="42.8" unitAngle="deg" unitLength="mm">
           Spacing between tracker 
            and calorimeter        </prim>
@@ -100,21 +102,28 @@ THIS IS TOO BIG -- NEED NEW CAL NUMBERS        </prim>
         <prim name="CALCellMat" type="string" uType="mat" value="CarbonFiber" unitAngle="deg" unitLength="mm">
           **NEW** 
 CAL composite cell material        </prim>
-        <prim name="CALCloseoutMat" type="string" uType="mat" value="C20" unitAngle="deg" unitLength="mm">
-          **NEW** 
-CAL composite cell closeout material        </prim>
-        <prim name="sideWallMat" type="string" uType="mat" value="A120" unitAngle="deg" unitLength="mm">
-          **NEW** 
-Material for CAL EMI side walls and PCBs        </prim>
         <prim name="PCBMat" type="string" uType="mat" value="Fiberglass" unitAngle="deg" unitLength="mm">
           **NEW** 
 Material for printed circuit boards        </prim>
+        <prim name="CALFrameMat" type="string" uType="mat" value="Al" unitAngle="deg" unitLength="mm">
+          
+Material for CAL frame        </prim>
+        <prim name="CALMountTabMat" type="string" uType="mat" value="Al" unitAngle="deg" unitLength="mm">
+          
+Material for CAL mount tabs        </prim>
+        <prim name="CALRibMat" type="string" uType="mat" value="Al" unitAngle="deg" unitLength="mm">
+          
+Material for CAL (bottom) ribs        </prim>
+        <prim name="CALCylSupportMat" type="string" uType="mat" value="Al" unitAngle="deg" unitLength="mm">
+          
+Material for CAL cylindrical supports.        </prim>
+        <prim name="CALCellWallMat" type="string" uType="mat" value="C" unitAngle="deg" unitLength="mm">
+          
+Material for cell walls, reinforcement        </prim>
+        <!--  Everything below this comment is of doubtful value -->
         <prim name="CALWrapMat" type="string" uType="mat" value="Polystyrene" unitAngle="deg" unitLength="mm">
           
 Wrap material for CsI logs [obsolete??]        </prim>
-        <prim name="CALFrameMat" type="string" uType="mat" value="Al20" unitAngle="deg" unitLength="mm">
-          
-Material for CAL frame [obsolete??]        </prim>
         <prim name="CALSpaceMat" type="string" uType="mat" value="rubber60A1" unitAngle="deg" unitLength="mm">
           
 Material for space between CAL layers [obsolete??]        </prim>
@@ -136,37 +145,43 @@ CsI crystals        </prim>
         <prim name="nCsIPerLayer" type="double" uType="count" value="12" unitAngle="deg" unitLength="mm">
           Number of crystals per
  layer within a tower        </prim>
-        <prim name="eLogXtal" type="double" uType="count" value="0" unitAngle="deg" unitLength="mm">
-          idField value for CAL log cmp
+        <prim name="CALnBottomRibs" type="double" uType="count" value="3" unitAngle="deg" unitLength="mm">
+           Number of
+ribs in bottom frame grid in one direction (X or Y)        </prim>
+        <prim name="eXtal" type="double" uType="count" value="0" unitAngle="deg" unitLength="mm">
+          idField value for CAL cell cmp
 field (the CsI crystal)        </prim>
         <prim name="eDiodeMSmall" type="double" uType="count" value="1" unitAngle="deg" unitLength="mm">
           idField value for CAL
-log cmp field diode(minus, small)        </prim>
+cell cmp field diode(minus, small)        </prim>
         <prim name="eDiodePSmall" type="double" uType="count" value="2" unitAngle="deg" unitLength="mm">
           idField value for CAL
-log cmp field diode(plus, small)        </prim>
+cell cmp field diode(plus, small)        </prim>
         <prim name="eDiodeMLarge" type="double" uType="count" value="3" unitAngle="deg" unitLength="mm">
           idField value for CAL 
-log cmp field diode(minus, large)        </prim>
+cell cmp field diode(minus, large)        </prim>
         <prim name="eDiodePLarge" type="double" uType="count" value="4" unitAngle="deg" unitLength="mm">
           idField value for CAL
-log cmp diode(plus, large)        </prim>
+cell cmp diode(plus, large)        </prim>
+        <prim name="eCellWall" type="double" uType="count" value="5" unitAngle="deg" unitLength="mm">
+          idField value for CAL
+cell component for cell wall.         </prim>
       </primCategory>
       <primCategory name="CALDimPrim">
         <overview>
           Fundamental dimensions of solids and offsets for the Calorimeter
         </overview>
-        <prim name="diodeX" type="double" uType="length" value="0.18" unitAngle="deg" unitLength="mm">
-          Thickness of diodes
+        <prim name="diodeX" type="double" uType="length" value="0.30" unitAngle="deg" unitLength="mm">
+           **NEW** Depletion depth of diode Si
         </prim>
-        <prim name="diodeY" type="double" uType="length" value="12.0" unitAngle="deg" unitLength="mm">
-          Width of diodes
+        <prim name="diodeLY" type="double" uType="length" value="14.5" unitAngle="deg" unitLength="mm">
+           **NEW** Width of large diode Si
         </prim>
-        <prim name="diodeLZ" type="double" uType="length" value="8.0" unitAngle="deg" unitLength="mm">
-          Height of large diode
+        <prim name="diodeSY" type="double" uType="length" value="2.4" unitAngle="deg" unitLength="mm">
+           **NEW** Width of small diode Si
         </prim>
-        <prim name="diodeSZ" type="double" uType="length" value="2.0" unitAngle="deg" unitLength="mm">
-          Height of a small diode
+        <prim name="diodeZ" type="double" uType="length" value="10.5" unitAngle="deg" unitLength="mm">
+          **NEW** Height of diode Si
         </prim>
         <prim name="CsILength" type="double" uType="length" value="333.0" unitAngle="deg" unitLength="mm">
           **NEW VALUE** Length of a CsI crystal.
@@ -179,32 +194,108 @@ a CsI crytal        </prim>
         <prim name="CsIHeight" type="double" uType="length" value="19.9" unitAngle="deg" unitLength="mm">
           **NEW VALUE** Height of a CsI crystal
         </prim>
-        <prim name="diodeYOffset" type="double" uType="length" value="0.0" unitAngle="deg" unitLength="mm">
-          Y (transverse) offset of diode 
-relative to crystal        </prim>
-        <prim name="diodeLZOffset" type="double" uType="length" value="-2.6" unitAngle="deg" unitLength="mm">
-          Z offset of large diode relative 
+        <prim name="diodeZOffset" type="double" uType="length" value="0.9" unitAngle="deg" unitLength="mm">
+          Z offset of diodes relative to
+crystal        </prim>
+        <prim name="diodeLYOffset" type="double" uType="length" value="-2.55" unitAngle="deg" unitLength="mm">
+          Y (transverse) offset of 
+large diode relative to crystal        </prim>
+        <prim name="diodeSYOffset" type="double" uType="length" value="8.6" unitAngle="deg" unitLength="mm">
+          Y offset of small diode relative 
 to crystal        </prim>
-        <prim name="diodeSZOffset" type="double" uType="length" value="5.6" unitAngle="deg" unitLength="mm">
-          Z offset of small diode relative 
-to crystal        </prim>
-        <!--  trans. distance between logs -->
-        <prim name="CALGap" type="double" uType="length" value="0.84" unitAngle="deg" unitLength="mm">
-          Transverse distance between logs
-        </prim>
-        <prim name="CALInterLayer" type="double" uType="length" value="2.62" unitAngle="deg" unitLength="mm">
-          Gap between CAL layers
-        </prim>
+        <!--  trans. distance between logs now obsolete.  Use cellVertPitch,
+        cellHorPitch -->
+        <!-- 
+  <prim name= "CALGap" value= "0.84">Transverse distance between logs
+</prim> 
+  <prim name="CALInterLayer" value="2.62" >Gap between CAL layers
+</prim>
+-->
+        <prim name="cellVertPitch" type="double" uType="length" value="21.35" unitAngle="deg" unitLength="mm">
+          **NEW** Vertical pitch of CsI and
+cells        </prim>
+        <prim name="cellHorPitch" type="double" uType="length" value="27.844" unitAngle="deg" unitLength="mm">
+           **NEW** Horizontal pitch of CsI 
+and cells        </prim>
+        <prim name="cellVertWallThick" type="double" uType="length" value="0.49" unitAngle="deg" unitLength="mm">
+           **NEW** Thickness of reflector 
+and composite cell vertical walls (C)        </prim>
+        <prim name="cellHorWallThick" type="double" uType="length" value="0.85" unitAngle="deg" unitLength="mm">
+           **NEW** Thickness of reflector 
+and composite cell horizontal walls (C)        </prim>
+        <prim name="cellSideReinfThick" type="double" uType="length" value="1.4" unitAngle="deg" unitLength="mm">
+           **NEW and not understood**
+ Horizontal thickness of
+reinforcement on side of outermost cells (C)        </prim>
+        <prim name="CALSideWallThick" type="double" uType="length" value="11.60" unitAngle="deg" unitLength="mm">
+          **NEW** Horizontal thickness
+of side compartment with electronics        </prim>
+        <prim name="CALSideWallInnerThick" type="double" uType="length" value="1.0" unitAngle="deg" unitLength="mm">
+          **NEW** Horizontal thickness
+of inner wall within (largely hollow) side wall        </prim>
+        <prim name="CALSideWallOuterThick" type="double" uType="length" value="1.0" unitAngle="deg" unitLength="mm">
+          **NEW** Horizontal thickness
+of outer wall within (largely hollow) side wall        </prim>
+        <prim name="CALSideWallPCBThick" type="double" uType="length" value="1.6" unitAngle="deg" unitLength="mm">
+          **NEW** Horizontal thickness
+of PCB  within (largely hollow) side wall        </prim>
+        <prim name="CALModuleWidth" type="double" uType="length" value="363.0" unitAngle="deg" unitLength="mm">
+          **NEW** Horizontal, face-to-face
+dimension of CAL module (presumably both X and Y)        </prim>
+        <prim name="CALModuleHeight" type="double" uType="length" value="223.80" unitAngle="deg" unitLength="mm">
+          **NEW** Vertical, top-to-bottom
+dimention of CAL module        </prim>
+        <prim name="CALCylSupportDiameter" type="double" uType="length" value="10.00" unitAngle="deg" unitLength="mm">
+          **NEW** Diameter of
+cylindrical supports (Al)        </prim>
+        <prim name="CALCylSupportCellDelta" type="double" uType="count" value="4" unitAngle="deg" unitLength="mm">
+           **NEW** 
+Number of
+cells between adjacent (in the same layer) cylindrical supports        </prim>
         <prim name="CALFrameSideThick" type="double" uType="length" value="8.0" unitAngle="deg" unitLength="mm">
           Thickness of CAL frame sides
         </prim>
         <!--  Just use one symbol for now since top and bottome are the same.
      Would have to have additional symbol and additional box type
      if this changes.  -->
-        <prim name="CALFrameTBThick" type="double" uType="length" value="20.0" unitAngle="deg" unitLength="mm">
+        <prim name="CALFrameTBThick" type="double" uType="length" value="16.0" unitAngle="deg" unitLength="mm">
           Thickness of top and bottom of 
-CAL frame        </prim>
-        <!--  Cal grid stuff -->
+CAL frame [partially obsolete]         </prim>
+        <prim name="CALTopFrameThick" type="double" uType="length" value="16.0" unitAngle="deg" unitLength="mm">
+          Thickness of top of
+CAL frame (Al)         </prim>
+        <prim name="CALBottomFrameThick" type="double" uType="length" value="16.0" unitAngle="deg" unitLength="mm">
+          Thickness of bottom of 
+CAL frame (Al)         </prim>
+        <prim name="CALTopFrameWidth" type="double" uType="length" value="22.0" unitAngle="deg" unitLength="mm">
+          Width of top picture
+frame (Al)        </prim>
+        <prim name="CALBottomFrameWidth" type="double" uType="length" value="35.0" unitAngle="deg" unitLength="mm">
+          Width of bottom picture
+frame (Al)        </prim>
+        <prim name="CALTopPlateThick" type="double" uType="length" value="2.0" unitAngle="deg" unitLength="mm">
+          Vertical thickness of CAL
+top plate composite        </prim>
+        <prim name="CALBottomPlateThick" type="double" uType="length" value="4.0" unitAngle="deg" unitLength="mm">
+          Vertical thickness of CAL
+bottom plate composite        </prim>
+        <prim name="CALBottomRibPitch" type="double" uType="length" value="73.0" unitAngle="deg" unitLength="mm">
+          Pitch of bottom plate
+ribs (Al)         </prim>
+        <prim name="CALBottomRibWidth" type="double" uType="length" value="10.0" unitAngle="deg" unitLength="mm">
+          Width of bottom plate
+ribs (Al)         </prim>
+        <prim name="CALBottomRibThick" type="double" uType="length" value="12.0" unitAngle="deg" unitLength="mm">
+          Thickness of bottom plate
+ribs (Al)         </prim>
+        <prim name="CALMountTabThick" type="double" uType="length" value="15.0" unitAngle="deg" unitLength="mm">
+          Thickness of CAL mounting
+tabs, CAL to grid (Al)        </prim>
+        <prim name="CALMountTabWidth" type="double" uType="length" value="12.0" unitAngle="deg" unitLength="mm">
+          Width of CAL mounting
+tabs        </prim>
+        <!--  Cal grid stuff.  Should be replaced with information 
+         from Eduardo's document -->
         <prim name="CALGridInner" type="double" uType="length" value="3.0" unitAngle="deg" unitLength="mm">
           Thickness of CAL grid between towers
         </prim>
@@ -465,75 +556,148 @@ ACD tile        </prim>
             upper limit on Cal layer idfield value          </notes>
         </const>
         <!--  diodePosXOffset  = (CsILength + diodeX)/2 -->
-        <const name="diodePosXOffset" uType="length" value="166.59" unitAngle="deg" unitLength="mm">
+        <const name="diodePosXOffset" uType="length" value="166.65" unitAngle="deg" unitLength="mm">
           <notes>
             X-offset of a diode relative to the center of the CsI crystal          </notes>
         </const>
-        <const name="diodeNegXOffset" uType="length" value="-166.59" unitAngle="deg" unitLength="mm">
+        <const name="diodeNegXOffset" uType="length" value="-166.65" unitAngle="deg" unitLength="mm">
           <notes>
             X-offset of diode on negative end of a crystal          </notes>
         </const>
-        <const name="CALHalfGap" uType="length" value="0.42" unitAngle="deg" unitLength="mm">
+        <!-- 
+        <const name= "CALHalfGap">
+          <notes>was convenience, now OBSOLETE</notes>
+          <mul> 
+            <refer refTo="CALGap" /> 
+            <const value="0.5" uType="count" /> 
+          </mul>
+        </const>
+-->
+        <const name="cellVertWallHalfThick" uType="length" value="0.245" unitAngle="deg" unitLength="mm">
+          <notes>
+            convenience          </notes>
+        </const>
+        <const name="cellHorWallHalfThick" uType="length" value="0.425" unitAngle="deg" unitLength="mm">
           <notes>
             convenience          </notes>
         </const>
         <!--  dimensions for log envelope volume -->
-        <const name="CsIEnvX" uType="length" value="333.36" unitAngle="deg" unitLength="mm">
+        <const name="CsIEnvX" uType="length" value="333.6" unitAngle="deg" unitLength="mm">
           <notes>
             Long dimension of envelope containing a CsI crystal and its diodes          </notes>
         </const>
-        <const name="CsIEnvY" uType="length" value="27.554" unitAngle="deg" unitLength="mm">
+        <const name="CsIEnvY" uType="length" value="27.844" unitAngle="deg" unitLength="mm">
           <notes>
-            Transverse dimension of envelope containing a CsI crystal and its diodes          </notes>
+            Transverse dimension of envelope containing a CsI 
+crystal and its diodes          </notes>
+          <!-- 
+          <add>
+            <refer refTo="CsIWidth" />
+            <refer refTo="CALGap" />
+          </add>
+ -->
         </const>
-        <const name="CsIEnvZ" uType="length" value="20.74" unitAngle="deg" unitLength="mm">
+        <const name="CsIEnvZ" uType="length" value="21.35" unitAngle="deg" unitLength="mm">
           <notes>
             Height of the envelope containing a CsI crystal and its diodes          </notes>
+          <!-- 
+          <add>
+            <refer refTo="CsIHeight" />
+            <refer refTo="CALGap" />
+          </add>
+ -->
+        </const>
+        <const name="cellIntWallZ" uType="length" value="20.5" unitAngle="deg" unitLength="mm">
+          <notes>
+            Height of vertical wall, up to but not including 
+               horizontal walls          </notes>
+        </const>
+        <!--  offsets for positioning cell walls inside the cel -->
+        <const name="cellHorWall_dz" uType="length" value="41.85" unitAngle="deg" unitLength="mm">
+          <notes>
+            Z position rel. to cell of upper horiz. wall          </notes>
+        </const>
+        <const name="cellHorWall_dzn" uType="length" value="-41.85" unitAngle="deg" unitLength="mm">
+          <notes>
+            Z position rel. to cell of lower horiz. wall          </notes>
+        </const>
+        <const name="cellVertWall_dy" uType="length" value="55.198" unitAngle="deg" unitLength="mm">
+          <notes>
+            Y displacement rel. to cell of vertical cell wall
+(here Y means perp. to height and length directions)          </notes>
+        </const>
+        <const name="cellVertWall_dyn" uType="length" value="-55.198" unitAngle="deg" unitLength="mm">
+          <notes>
+            Neg. of Y  displacement rel. to cell of vertical cell wall
+(here Y means perp. to height and length directions)          </notes>
         </const>
         <!--  the following should be the maximum of the length of a single
      CsIElement and the transverse distance across the whole 
      collection of CsIElements in a layer, so
       max(CsIEnvX, nCsIPerLayer*CsIEnvY), which ends up being
       CsIEnvX in this case    -->
-        <const name="CALLayerTrans" uType="length" value="333.36" unitAngle="deg" unitLength="mm">
+        <const name="CALLayerTrans" uType="length" value="334.128" unitAngle="deg" unitLength="mm">
           <notes>
             Transverse dimension of a CAL layer: max(CsiEnvX, nEltPerlayer*CsIEnvY)          </notes>
         </const>
+        <const name="CALTransvGap" uType="length" value="1.436" unitAngle="deg" unitLength="mm">
+          <notes>
+            New from Eric/Sacha.  Gap between
+side of log + C-cell [composite cell??] and CAL side wall          </notes>
+        </const>
+        <const name="cellHorGap" uType="length" value="0.32" unitAngle="deg" unitLength="mm">
+          <notes>
+            New from Eric/Sacha.  Horizontal gap between xtal
+                 and cell wall.          </notes>
+        </const>
+        <const name="cellVertGap" uType="length" value="0.3" unitAngle="deg" unitLength="mm">
+          <notes>
+            New from Eric/Sacha.  Vertical gap between xtal
+                 and cell wall.          </notes>
+        </const>
+        <!--  Following comes from CAL docs of 31 May, 2001 -->
+        <const name="CALCylLength" uType="length" value="12.036" unitAngle="deg" unitLength="mm">
+          <notes>
+            Length of cylindrical supports for side walls          </notes>
+        </const>
         <!--  the following includes cal layers and inter-layer spacers, but
      not frame, grid between cal and tkr, etc. 
-     Hence it's nlayer*CsIEnvZ + (nlayer - 1)*CALInterLayer or
-     nLayer*(CsIEnvZ + CALInterLayer) - CALInterLayer = 19.306 -->
-        <const name="CALTotalZ" uType="length" value="184.26" unitAngle="deg" unitLength="mm">
+     Hence it's just nlayer*cellVertPitch 
+-->
+        <const name="CALTotalZ" uType="length" value="170.8" unitAngle="deg" unitLength="mm">
           <notes>
-            Includes cal layers and inter-layer spacers, but not frame, grid, etc.          </notes>
+            Includes cal layers and inter-layer walls but not frame, 
+grid, etc. (may be superseded by info from Eric)          </notes>
         </const>
         <!--  additional (derived) dimensions for frame -->
-        <const name="CALFrameWidth" uType="length" value="349.36" unitAngle="deg" unitLength="mm">
+        <const name="CALFrameWidth" uType="length" value="350.128" unitAngle="deg" unitLength="mm">
           <notes>
             transverse dimension for cal frame (one tower)          </notes>
         </const>
         <!--   Height of side pieces is just CALTotalZ -->
         <!--  Height of entire frame must also include thickness of top&bottom -->
-        <const name="CALFrameHeight" uType="length" value="224.26" unitAngle="deg" unitLength="mm">
+        <const name="CALFrameHeight" uType="length" value="202.8" unitAngle="deg" unitLength="mm">
           <notes>
             Height of entire frame          </notes>
         </const>
-        <const name="CALFrameSide_d" uType="length" value="178.68" unitAngle="deg" unitLength="mm">
+        <const name="CALFrameSide_d" uType="length" value="179.064" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement of a side frame relative to tower          </notes>
         </const>
-        <const name="CALFrameSide_dN" uType="length" value="-178.68" unitAngle="deg" unitLength="mm">
+        <const name="CALFrameSide_dN" uType="length" value="-179.064" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement of a side frame relative to tower          </notes>
         </const>
-        <const name="CALFrameTB_d" uType="length" value="102.13" unitAngle="deg" unitLength="mm">
+        <!--  May want to replace this with separate definitions for
+     top and bottom frame displacements -->
+        <const name="CALFrameTB_d" uType="length" value="93.4" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement of top and bottom of frame, relative to 
                 the whole.          </notes>
         </const>
-        <const name="CALFrameTB_dN" uType="length" value="-102.13" unitAngle="deg" unitLength="mm">
+        <const name="CALFrameTB_dN" uType="length" value="-93.4" unitAngle="deg" unitLength="mm">
           <notes>
-            Displacement of top and bottom of frame, relative to 
+            Neg of displacement of top and bottom of frame, relative to 
                 the whole.          </notes>
         </const>
       </derCategory>
@@ -628,12 +792,12 @@ ACD tile        </prim>
         </const>
         <!--  These might not be quite right.  Check that frame is
      accounted for. -->
-        <const name="towersTotalX" uType="length" value="1567.8" unitAngle="deg" unitLength="mm">
+        <const name="towersTotalX" uType="length" value="1494" unitAngle="deg" unitLength="mm">
           <notes>
             Meant to be X width of the array of towers, but doesn't 
 (yet) include grid          </notes>
         </const>
-        <const name="towersTotalY" uType="length" value="1567.8" unitAngle="deg" unitLength="mm">
+        <const name="towersTotalY" uType="length" value="1494" unitAngle="deg" unitLength="mm">
           <notes>
             Meant to be X width of the array of towers, but doesn't 
 (yet) include grid          </notes>
@@ -645,7 +809,7 @@ ACD tile        </prim>
             Z of top half of top tray, bottom half of bottom tray
               (which is the same as Z of a single outer tray)
 -->
-        <const name="towersTotalZ" uType="length" value="884.847" unitAngle="deg" unitLength="mm">
+        <const name="towersTotalZ" uType="length" value="863.387" unitAngle="deg" unitLength="mm">
           <notes>
             Height of cal + height of tracker + gap between          </notes>
         </const>
@@ -653,19 +817,19 @@ ACD tile        </prim>
       <derCategory name="derACD" save="true">
         <overview>
           Derived constants specific to the ACD        </overview>
-        <const name="ACDTopTotalX" uType="length" value="1639.3" unitAngle="deg" unitLength="mm">
+        <const name="ACDTopTotalX" uType="length" value="1565.5" unitAngle="deg" unitLength="mm">
           <notes>
             Total X width to be covered by top tiles          </notes>
         </const>
-        <const name="ACDTotalX" uType="length" value="1665.3" unitAngle="deg" unitLength="mm">
+        <const name="ACDTotalX" uType="length" value="1591.5" unitAngle="deg" unitLength="mm">
           <notes>
             max extent in x of all of ACD          </notes>
         </const>
-        <const name="ACDTopTotalY" uType="length" value="1639.3" unitAngle="deg" unitLength="mm">
+        <const name="ACDTopTotalY" uType="length" value="1565.5" unitAngle="deg" unitLength="mm">
           <notes>
             Total Y width to be covered by top tiles          </notes>
         </const>
-        <const name="ACDTotalY" uType="length" value="1665.3" unitAngle="deg" unitLength="mm">
+        <const name="ACDTotalY" uType="length" value="1591.5" unitAngle="deg" unitLength="mm">
           <notes>
             max extent in y of all of ACD          </notes>
         </const>
@@ -693,11 +857,11 @@ ACD tile        </prim>
           <notes>
             Column number of last tile in a long row          </notes>
         </const>
-        <const name="ACDTopXWidth" uType="length" value="342.66" unitAngle="deg" unitLength="mm">
+        <const name="ACDTopXWidth" uType="length" value="327.9" unitAngle="deg" unitLength="mm">
           <notes>
             X dimension for a top tile. Must be derived from total width top and other things.  Tiles overlap in X.          </notes>
         </const>
-        <const name="ACDTopYWidth" uType="length" value="324.26" unitAngle="deg" unitLength="mm">
+        <const name="ACDTopYWidth" uType="length" value="309.5" unitAngle="deg" unitLength="mm">
           <notes>
             Y dimension for a top tile.  Derived from total width, size of gaps.          </notes>
         </const>
@@ -727,23 +891,23 @@ ACD tile        </prim>
           <notes>
             Tile thickness + tape thickness + gap (ACD sides)          </notes>
         </const>
-        <const name="ACDTotalXSide" uType="length" value="1689.3" unitAngle="deg" unitLength="mm">
+        <const name="ACDTotalXSide" uType="length" value="1615.5" unitAngle="deg" unitLength="mm">
           <notes>
             total length (in x direction) to be covered by a 
 row of side tiles          </notes>
         </const>
-        <const name="sideTileWidthShortXRow" uType="length" value="334.86" unitAngle="deg" unitLength="mm">
+        <const name="sideTileWidthShortXRow" uType="length" value="320.1" unitAngle="deg" unitLength="mm">
           <notes>
             to get width of an individual tile, take account of
               number of tiles in a row (and number of gaps)."Short"
               refers to the fact that the row has only 5 tiles          </notes>
         </const>
-        <const name="sideTileWidthLongXRow" uType="length" value="165.93" unitAngle="deg" unitLength="mm">
+        <const name="sideTileWidthLongXRow" uType="length" value="158.55" unitAngle="deg" unitLength="mm">
           <notes>
             Same as above for a long (10-tile) row          </notes>
         </const>
         <!--  Now do same for Y-direction -->
-        <const name="ACDTotalYSide" uType="length" value="1689.3" unitAngle="deg" unitLength="mm">
+        <const name="ACDTotalYSide" uType="length" value="1615.5" unitAngle="deg" unitLength="mm">
           <notes>
             Same as above but for Y sides          </notes>
         </const>
@@ -751,11 +915,11 @@ row of side tiles          </notes>
           <notes>
             Total height of an ACD side: tiles plus gaps          </notes>
         </const>
-        <const name="sideTileWidthShortYRow" uType="length" value="334.86" unitAngle="deg" unitLength="mm">
+        <const name="sideTileWidthShortYRow" uType="length" value="320.1" unitAngle="deg" unitLength="mm">
           <notes>
             Same idea as for ACD X-side tiles          </notes>
         </const>
-        <const name="sideTileWidthLongYRow" uType="length" value="165.93" unitAngle="deg" unitLength="mm">
+        <const name="sideTileWidthLongYRow" uType="length" value="158.55" unitAngle="deg" unitLength="mm">
           <notes>
             Same idea as for ACD X-side tiles          </notes>
         </const>
@@ -784,7 +948,7 @@ row of side tiles          </notes>
             length of scintillating tape on a side (assume a single 
           piece going from top to bottom for now          </notes>
         </const>
-        <const name="topTapeLenLong" uType="length" value="357.66" unitAngle="deg" unitLength="mm">
+        <const name="topTapeLenLong" uType="length" value="342.9" unitAngle="deg" unitLength="mm">
           <notes>
             lengths of tape convering gaps in the top.  There are
             3 different lengths to deal with the fact that tiles in
@@ -793,11 +957,11 @@ row of side tiles          </notes>
             the shortest across the central row.  See Heather's 
             first diagram          </notes>
         </const>
-        <const name="topTapeLenMedium" uType="length" value="347.66" unitAngle="deg" unitLength="mm">
+        <const name="topTapeLenMedium" uType="length" value="332.9" unitAngle="deg" unitLength="mm">
           <notes>
             Length of top tapes for rows 1 and 3          </notes>
         </const>
-        <const name="topTapeLenShort" uType="length" value="322.66" unitAngle="deg" unitLength="mm">
+        <const name="topTapeLenShort" uType="length" value="307.9" unitAngle="deg" unitLength="mm">
           <notes>
             Length of top tape for central row: row 2          </notes>
         </const>
@@ -806,7 +970,7 @@ row of side tiles          </notes>
              Tapes on top come in columns, similar to tiles, except there
      is one less piece of tape than there are tiles in a row          </notes>
         </const>
-        <const name="topTapeGap" uType="length" value="317.26" unitAngle="deg" unitLength="mm">
+        <const name="topTapeGap" uType="length" value="302.5" unitAngle="deg" unitLength="mm">
           <notes>
             gap between adjacent pieces of (top)tape in the 
           same row          </notes>
@@ -814,12 +978,12 @@ row of side tiles          </notes>
         <!--  Need to compute a bunch of displacements of top tapes relative to
      the "top ACD" envelope.  First do X, then Z.  Y displacements are
      all zero.  -->
-        <const name="topTapeX4_d" uType="length" value="640.82" unitAngle="deg" unitLength="mm">
+        <const name="topTapeX4_d" uType="length" value="611.3" unitAngle="deg" unitLength="mm">
           <notes>
             x-displacement for a top tape in row 4
           relative to the "top ACD" envelope          </notes>
         </const>
-        <const name="topTapeX3_d" uType="length" value="335.16" unitAngle="deg" unitLength="mm">
+        <const name="topTapeX3_d" uType="length" value="320.4" unitAngle="deg" unitLength="mm">
           <notes>
             x-displacement for a top tape in  row 3          </notes>
         </const>
@@ -827,11 +991,11 @@ row of side tiles          </notes>
           <notes>
             x-displacement for a top tape in  row 2          </notes>
         </const>
-        <const name="topTapeX1_d" uType="length" value="-335.16" unitAngle="deg" unitLength="mm">
+        <const name="topTapeX1_d" uType="length" value="-320.4" unitAngle="deg" unitLength="mm">
           <notes>
             x-displacement for a top tape in  row 1          </notes>
         </const>
-        <const name="topTapeX0_d" uType="length" value="-640.82" unitAngle="deg" unitLength="mm">
+        <const name="topTapeX0_d" uType="length" value="-611.3" unitAngle="deg" unitLength="mm">
           <notes>
             x-displacement for a top tape in  row 0          </notes>
         </const>
@@ -863,27 +1027,27 @@ row of side tiles          </notes>
           <notes>
              middle row is centered in X          </notes>
         </const>
-        <const name="topTileX3_d" uType="length" value="332.66" unitAngle="deg" unitLength="mm">
+        <const name="topTileX3_d" uType="length" value="317.9" unitAngle="deg" unitLength="mm">
           <notes>
             X-displacement for a top tile in row 3          </notes>
         </const>
-        <const name="topTileX4_d" uType="length" value="665.32" unitAngle="deg" unitLength="mm">
+        <const name="topTileX4_d" uType="length" value="635.8" unitAngle="deg" unitLength="mm">
           <notes>
             X-displacement for a top tile in row 4          </notes>
         </const>
-        <const name="topTileX0_d" uType="length" value="-665.32" unitAngle="deg" unitLength="mm">
+        <const name="topTileX0_d" uType="length" value="-635.8" unitAngle="deg" unitLength="mm">
           <notes>
             X-displacement for a top tile in row 0          </notes>
         </const>
-        <const name="topTileX1_d" uType="length" value="-332.66" unitAngle="deg" unitLength="mm">
+        <const name="topTileX1_d" uType="length" value="-317.9" unitAngle="deg" unitLength="mm">
           <notes>
             X-displacement for a top tile in row 1          </notes>
         </const>
-        <const name="betweenSideTapesX" uType="length" value="324.86" unitAngle="deg" unitLength="mm">
+        <const name="betweenSideTapesX" uType="length" value="310.1" unitAngle="deg" unitLength="mm">
           <notes>
             gap between two tapes on an ACD X-side          </notes>
         </const>
-        <const name="betweenSideTapesY" uType="length" value="324.86" unitAngle="deg" unitLength="mm">
+        <const name="betweenSideTapesY" uType="length" value="310.1" unitAngle="deg" unitLength="mm">
           <notes>
             gap between two tapes on an ACD Y-side          </notes>
         </const>
@@ -898,23 +1062,23 @@ row of side tiles          </notes>
         <overview>
           A few more constants needed for the outermost 
                  LAT composition        </overview>
-        <const name="LATX" uType="length" value="1665.3" unitAngle="deg" unitLength="mm">
+        <const name="LATX" uType="length" value="1591.5" unitAngle="deg" unitLength="mm">
           <notes>
             X-dimension of an envelope for the LAT          </notes>
         </const>
-        <const name="LATY" uType="length" value="1665.3" unitAngle="deg" unitLength="mm">
+        <const name="LATY" uType="length" value="1591.5" unitAngle="deg" unitLength="mm">
           <notes>
             Y-dimension of an envelope for the LAT          </notes>
         </const>
-        <const name="LATZ" uType="length" value="944.847" unitAngle="deg" unitLength="mm">
+        <const name="LATZ" uType="length" value="923.387" unitAngle="deg" unitLength="mm">
           <notes>
             Z-dimension of an envelope for the LAT          </notes>
         </const>
-        <const name="LATZHalf" uType="length" value="472.423" unitAngle="deg" unitLength="mm">
+        <const name="LATZHalf" uType="length" value="461.693" unitAngle="deg" unitLength="mm">
           <notes>
             convenience          </notes>
         </const>
-        <const name="ACDTop_d" uType="length" value="428.923" unitAngle="deg" unitLength="mm">
+        <const name="ACDTop_d" uType="length" value="418.193" unitAngle="deg" unitLength="mm">
           <notes>
             Z displacement of top ACD relative to LATenv, the envelope
                  volume containing them + ACD          </notes>
@@ -924,51 +1088,51 @@ row of side tiles          </notes>
             Z displacement of towers relative to LATenv          </notes>
         </const>
         <!--  have to do analogous 5 constants for side tile locations -->
-        <const name="tileSide_dz" uType="length" value="97.423" unitAngle="deg" unitLength="mm">
+        <const name="tileSide_dz" uType="length" value="86.693" unitAngle="deg" unitLength="mm">
           <notes>
             displacement in z of side tiles rel. to LATenv          </notes>
         </const>
-        <const name="tileXSide_dy" uType="length" value="827.65" unitAngle="deg" unitLength="mm">
+        <const name="tileXSide_dy" uType="length" value="790.75" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement in y of tiles along a side || to X axis,
                 relative to center of LATenv          </notes>
         </const>
-        <const name="tileXSide_dyN" uType="length" value="-827.65" unitAngle="deg" unitLength="mm">
+        <const name="tileXSide_dyN" uType="length" value="-790.75" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement in y of tiles along a side || to X axis,
                 neg direction, relative to center of LATenv          </notes>
         </const>
-        <const name="tileYSide_dx" uType="length" value="827.65" unitAngle="deg" unitLength="mm">
+        <const name="tileYSide_dx" uType="length" value="790.75" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement in x of tiles along a side || to Y axis,
                 relative to center of LATenv          </notes>
         </const>
-        <const name="tileYSide_dxN" uType="length" value="-827.65" unitAngle="deg" unitLength="mm">
+        <const name="tileYSide_dxN" uType="length" value="-790.75" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement in x of tiles along a side || to Y axis,
                 neg direction, relative to center of LATenv          </notes>
         </const>
         <!--     edit above -->
-        <const name="tapeSide_dz" uType="length" value="83.923" unitAngle="deg" unitLength="mm">
+        <const name="tapeSide_dz" uType="length" value="73.193" unitAngle="deg" unitLength="mm">
           <notes>
             displacement in z of side tapes rel. to LATenv          </notes>
         </const>
-        <const name="tapeXSide_dy" uType="length" value="820.65" unitAngle="deg" unitLength="mm">
+        <const name="tapeXSide_dy" uType="length" value="783.75" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement in y of tapes along a side || to X axis,
                 relative to center of LATenv          </notes>
         </const>
-        <const name="tapeXSide_dyN" uType="length" value="-820.65" unitAngle="deg" unitLength="mm">
+        <const name="tapeXSide_dyN" uType="length" value="-783.75" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement in y of tapes along a side || to X axis,
                 neg direction, relative to center of LATenv          </notes>
         </const>
-        <const name="tapeYSide_dx" uType="length" value="820.65" unitAngle="deg" unitLength="mm">
+        <const name="tapeYSide_dx" uType="length" value="783.75" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement in x of tapes along a side || to Y axis,
                 relative to center of LATenv          </notes>
         </const>
-        <const name="tapeYSide_dxN" uType="length" value="-820.65" unitAngle="deg" unitLength="mm">
+        <const name="tapeYSide_dxN" uType="length" value="-783.75" unitAngle="deg" unitLength="mm">
           <notes>
             Displacement in x of tapes along a side || to Y axis,
                 neg direction, relative to center of LATenv          </notes>
