@@ -7,9 +7,10 @@
 */
 
 #include "FluxSvc/IRegisterSource.h"
-
+#include "facilities/Observer.h"
 
 #include "flux/rootplot.h"
+#include "flux/orbitavg.h"
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -79,6 +80,9 @@ public:
 
     /// create a set of display windows using rootplot.
     void rootDisplay(std::vector<const char*> arguments);
+
+    /// attach an external observer to GPS
+    void attachGpsObserver(Observer* anObserver);
     
     ///return the pointer to the current IFlux object
     IFlux* currentFlux();
@@ -342,6 +346,11 @@ void FluxSvc::pass ( double t){
 
 void FluxSvc::rootDisplay(std::vector<const char*> arguments){
     rootplot abc(arguments, m_fluxMgr);
+}
+
+void FluxSvc::attachGpsObserver(Observer* anObserver)
+{
+   GPS::instance()->notification().attach( anObserver );
 }
 
 ///return the pointer to the current IFlux object

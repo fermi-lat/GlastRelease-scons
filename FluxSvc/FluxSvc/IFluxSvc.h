@@ -10,6 +10,7 @@
 // includes
 #include "GaudiKernel/IInterface.h"
 #include "CLHEP/Vector/Rotation.h"
+#include "facilities/Observer.h"
 
 #include <string>
 #include <list>
@@ -52,6 +53,9 @@ public:
     
     /// create a set of display windows using rootplot.
     virtual void rootDisplay(std::vector<const char*> arguments)=0;
+
+    /// allow an external observer to attach to gps
+    virtual void attachGpsObserver(Observer* anObserver)=0;
     
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IFluxSvc; }
