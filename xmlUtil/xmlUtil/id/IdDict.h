@@ -2,7 +2,7 @@
 #ifndef XMLUTIL_IDDICT_H
 #define XMLUTIL_IDDICT_H
 
-#include <xercesc/dom/DOM_Element.hpp>
+#include <xercesc/dom/DOMElement.hpp>
 
 #include <vector>
 #include <string>
@@ -43,7 +43,7 @@ namespace xmlUtil {
     enum Constituents {nodeHierarchy = 1,
                        fieldManager = 2};
 
-    IdDict(DOM_Element elt);
+    IdDict(XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* elt);
     ~IdDict();
 
     //! Verify that dictionary is valid

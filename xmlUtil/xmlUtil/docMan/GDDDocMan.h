@@ -45,14 +45,14 @@ namespace xmlUtil {
 
       virtual ~ConstsClient() {}
 
-      void handleChild(DOM_Node elt); 
+      void handleChild(XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* node); 
       bool m_saveNotes;
       const std::string& getCVSid() const {return CVSid;}
       const std::string& getDTDversion() const {return DTDversion;}
     private:
       std::string name;
       GDDDocMan* m_owner;
-      DOM_Document m_doc;
+      DOMDocument* m_doc;
       Substitute* m_sub;
       std::string CVSid;
       std::string DTDversion;

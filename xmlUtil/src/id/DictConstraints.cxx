@@ -4,17 +4,18 @@
 #include <algorithm>
 #include "xml/Dom.h"
 #include "xmlUtil/id/DictConstraints.h"
-#include <xercesc/dom/DOMString.hpp>
-#include <xercesc/dom/DOM_Element.hpp>
-#include <xercesc/dom/DOM_NodeList.hpp>
+//#include <xercesc/dom/DOMString.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+// #include <xercesc/dom/DOMNodeList.hpp>
 
 
 namespace xmlUtil {
+  XERCES_CPP_NAMESPACE_USE
   /*! One and only public constructor.  Note that constraints specified
       as a list in xml, but describable in terms of a min and max
       bound will be represented in terms of the bounds.  The list
       representation is only used when there is no other option. */
-  DictConstraints::DictConstraints(DOM_Element elt) : 
+  DictConstraints::DictConstraints(DOMElement* elt) : 
     m_style(ESTYLE_uninit), m_valList(0), m_minVal(0), m_maxVal(0)
   {
     using xml::Dom;
@@ -37,7 +38,7 @@ namespace xmlUtil {
       minVal = 0x7fffffff;
       maxVal = -1;
 
-      std::vector<DomElement> children;
+      std::vector<DOMElement*> children;
       // a vList should have only vEnumVal children (according to dtd)
       Dom::getChildrenByTagName(elt, "vEnumVal", children);
       unsigned nChild = children.size();
@@ -48,7 +49,7 @@ namespace xmlUtil {
       m_valList = new std::vector<unsigned>(nChild);
       for (unsigned ix = 0; ix < nChild; ix++) {
         int temp;
-        DOM_Element    childElt = children[ix];
+        DOMElement*    childElt = children[ix];
         try {
           temp = Dom::getIntAttribute(childElt, "value");
           if (temp < 0) {

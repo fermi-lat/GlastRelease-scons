@@ -1,8 +1,11 @@
 // $Header$
 
 #include "xmlUtil/Source.h"
-#include <xercesc/dom/DOMString.hpp>
-#include <xercesc/dom/DOM_Text.hpp>
+// #include <xercesc/dom/DOMString.hpp>
+#include <xercesc/dom/DOMText.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/util/XMLString.hpp>
 #include "xml/Dom.h"
 
 
@@ -26,7 +29,11 @@ namespace {
 }      // end of blank namespace
 
 namespace xmlUtil {
-  Source::Source(DOM_Document doc, const char * creator,
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument;
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMText;
+  using XERCES_CPP_NAMESPACE_QUALIFIER XMLString;
+  Source::Source(DOMDocument* doc, const char * creator,
       const char* creatorCVSID) : m_doc(doc), m_creator(creator)  {
     
     char * tmp = new char[strlen(creatorCVSID) + 1];
@@ -35,15 +42,17 @@ namespace xmlUtil {
     delete [] tmp;
   }
 
-  void Source::add(DOM_Element parentArg) {
+  void Source::add(DOMElement* parentArg) {
     static char * unknownId = "unidentified input file";
-    DOM_Element docElt = m_doc.getDocumentElement();
-    DOM_Element parent = parentArg;
-    if (parent == DOM_Element()) {
+    DOMElement* docElt = m_doc->getDocumentElement();
+    DOMElement* parent = parentArg;
+    if (parent == 0) {
       parent = docElt;
     }
 
-    DOM_Element source = m_doc.createElement("source");
+    XMLCh* xmlchSource = XMLString::transcode("source");
+    DOMElement* source = m_doc->createElement(xmlchSource);
+    XMLString::release(&xmlchSource);
 
     // Document element should have a CVSid attribute
     std::string idAtt = xml::Dom::getAttribute(docElt, "CVSid");
@@ -68,13 +77,15 @@ namespace xmlUtil {
     std::string theText = 
       std::string("Do not edit! This file automatically created by ");
     theText.append(m_creator);
-    DOM_Text    sourceText = m_doc.createTextNode(theText.c_str()); 
+    XMLCh* xmlchText = XMLString::transcode(theText.c_str());
+    
+    DOMText*    sourceText = m_doc->createTextNode(xmlchText);
+    XMLString::release(&xmlchText);
 
-
-    source.appendChild(sourceText);
+    source->appendChild(sourceText);
 
     if (myRaw) delete [] myRaw;
     // Finally need to insert this node as the first child of specified elt
-    parent.insertBefore(source, parent.getFirstChild());
+    parent->insertBefore(source, parent->getFirstChild());
   }
 }

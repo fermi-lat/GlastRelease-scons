@@ -7,28 +7,29 @@
 */
 #include "xmlUtil/docMan/GDDDocMan.h"
 #include "xml/docMan/DocClient.h"
-#include <xercesc/dom/DOM_Element.hpp>
-#include <xercesc/dom/DOMString.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+//#include <xercesc/dom/DOMString.hpp>
 #include "xml/Dom.h"
 
 #include <string>
 #include <iostream>
 using namespace xmlUtil;
+XERCES_CPP_NAMESPACE_USE
 
 class MiniClient : public xml::DocClient {
 public:
   MiniClient() {m_name = "miniClient";}
   MiniClient(std::string name) : m_name(name) {}
   const std::string& getName() { return m_name;}
-  void handleChild(DOM_Node node);
+  void handleChild(DOMNode* node);
   ~MiniClient() {};
 private:
   std::string m_name;
 };
 
-void MiniClient::handleChild(DOM_Node node) {
-  if (node.getNodeType() == DOM_Node::ELEMENT_NODE) {
-    DOM_Element& elt = static_cast<DOM_Element&>(node);
+void MiniClient::handleChild(DOMNode* node) {
+  if (node->getNodeType() == DOMNode::ELEMENT_NODE) {
+    DOMElement* elt = static_cast<DOMElement*>(node);
     //    DOMString eltName = node.getNodeName();
     std::string eltName = xml::Dom::getTagName(elt);
     std::cout << m_name 

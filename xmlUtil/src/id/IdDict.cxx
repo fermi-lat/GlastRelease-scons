@@ -10,7 +10,8 @@
 #include "xmlUtil/id/DictValidVisitor.h"
 #include <assert.h>
 namespace xmlUtil {
-  IdDict::IdDict(DomElement elt)  {
+  XERCES_CPP_NAMESPACE_USE
+  IdDict::IdDict(DOMElement* elt)  {
     // Check that element has the right tag name: idDict
     // Caller probably will have done this already
     if (!xml::Dom::checkTagName(elt, "idDict")) 
@@ -33,7 +34,7 @@ namespace xmlUtil {
     }
 
     // Check number of field children.
-    std::vector<DomElement> children;
+    std::vector<DOMElement*> children;
     xml::Dom::getChildrenByTagName(elt, "field", children);
     unsigned int nField = children.size();
     m_fieldMan = new DictFieldMan(nField);
@@ -47,7 +48,7 @@ namespace xmlUtil {
       //      fieldElt = xml::Dom::getSiblingElement(fieldElt);
     }
     //DictRoot immediately follows last field element
-    DomElement dictRoot = xml::Dom::getSiblingElement(children.back());
+    DOMElement* dictRoot = xml::Dom::getSiblingElement(children.back());
     // Finally make the hierarchy of constraints on Identifiers
     m_root = new DictNode(dictRoot, 0, m_fieldMan);
   }

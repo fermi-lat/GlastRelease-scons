@@ -2,13 +2,23 @@
 #ifndef XMLUTIL_SUBSTITUTE_H 
 #define XMLUTIL_SUBSTITUTE_H
 
-#include <xercesc/dom/DOM_Document.hpp>
-#include <xercesc/dom/DOMString.hpp>
-#include <xercesc/dom/DOM_TreeWalker.hpp>
+//#include <xercesc/dom/DOMDocument.hpp>
+
+// #include <xercesc/dom/DOMString.hpp>
+//#include <xercesc/dom/DOMTreeWalker.hpp>
 #include <string>
 
+#include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
+class DOMElement;
+class DOMDocument;
+XERCES_CPP_NAMESPACE_END
 
 namespace xmlUtil {
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument;
+
   /*! The Substitute class will look up references to values (in
       attributes of type IDREF in a given subtree of a document)
       and replace the attribute with another that has as value
@@ -29,7 +39,7 @@ namespace xmlUtil {
          \param suffix The suffix which identitifies references in
          the source docoument (defaults to "REF")
     */
-    Substitute::Substitute(DOM_Document doc, std::string suffix =
+    Substitute::Substitute(DOMDocument* doc, std::string suffix =
                            std::string("REF")); 
 
     /*! Do substitution for the subtree indicated, returning count.
@@ -38,20 +48,20 @@ namespace xmlUtil {
         \param treeTop  the root of the subtree for which substitutions
         are to be performed.
     */
-    int execute(DOM_Element treeTop);
+    int execute(DOMElement* treeTop);
 
     //! Destructor.
     ~Substitute() {};
 
   private:
-    DOM_Document m_doc;    /*!< Document on which substitutions may be done */
+    DOMDocument* m_doc;    /*!< Document on which substitutions may be done */
     int          m_count;  /*!< Keep track of \#subs done for one \b execute */
     std::string  m_suffix; /*!< Suffix identifying references */
     int          m_suffixLen; 
     int          m_notFound; /*!< count of id's not found-- shouldn't happen */
 
     /*! Handle a single element (invoked from public execute method) */
-    void  sub(DOM_Element elt);
+    void  sub(DOMElement* elt);
   };
 
 }

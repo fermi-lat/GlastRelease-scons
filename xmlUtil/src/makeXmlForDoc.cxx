@@ -22,9 +22,8 @@
 #include "xmlUtil/Source.h"
 #include "xmlUtil/Arith.h"
 #include "xmlUtil/Constants.h"
-#include <xercesc/dom/DOM_Element.hpp>
-#include <xercesc/dom/DOM_NodeList.hpp>
-#include <xercesc/dom/DOM_DocumentType.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMDocumentType.hpp>
 
 #include <string>
 #include <iostream>
@@ -32,7 +31,8 @@
 
 std::ostream *openOut(char * outfile);
 
-void outProlog(const DOM_DocumentType& doctype, std::ostream& out);
+void outProlog(const XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentType* doctype, 
+               std::ostream& out);
 
 const std::string myId("$Id$");
 // Can't literally put in the string we want or CVS will mess it up.
@@ -46,6 +46,10 @@ const std::string idTemplate("#Id: not committed $");
 */
 int main(int argc, char* argv[]) {
 
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentType;
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument;
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
+
   std::ostream *out;
   if (argc < 3) {  // instructions
     std::cout << "Required first argument is xml file to be parsed" 
@@ -56,7 +60,7 @@ int main(int argc, char* argv[]) {
   }
 
   xml::XmlParser* parser = new xml::XmlParser();
-  DOM_Document doc = parser->parse(argv[1], "gdd");
+  DOMDocument* doc = parser->parse(argv[1], "gdd");
 
   if (doc == 0) {
     std::cout << "Document failed to parse correctly" << std::endl;
@@ -66,8 +70,8 @@ int main(int argc, char* argv[]) {
   // Else successful.   Open output
   out = openOut(argv[2]);
 
-  DOM_Element docElt = doc.getDocumentElement();
-  DOM_DocumentType  doctype = doc.getDoctype(); //  check for gdd?? 
+  DOMElement* docElt = doc->getDocumentElement();
+  DOMDocumentType*  doctype = doc->getDoctype(); //  check for gdd?? 
 
   // For each const child of a derCategory
   //   evaluate it, saving value
@@ -78,39 +82,39 @@ int main(int argc, char* argv[]) {
 
   // Delete any id dictionaries
 
-  std::vector<DOM_Element> dicts;
+  std::vector<DOMElement*> dicts;
   xml::Dom::getDescendantsByTagName(docElt, "idDict", dicts);
 
   unsigned nDict = dicts.size();
   for (unsigned iDict = 0; iDict < nDict; iDict++) {
-    DOM_Element& dictElt = dicts[iDict];
+    DOMElement* dictElt = dicts[iDict];
 
     xml::Dom::prune(dictElt);
-    (dictElt.getParentNode()).removeChild(dictElt);
+    (dictElt->getParentNode())->removeChild(dictElt);
   }
 
   // Delete all sections
-  std::vector<DOM_Element> sections;
+  std::vector<DOMElement*> sections;
   xml::Dom::getDescendantsByTagName(docElt, "section", sections);
 
   unsigned nSec = sections.size();
   for (unsigned iSec = 0; iSec < nSec; iSec++) {
 
-    DOM_Element& secElt = sections[iSec];
+    DOMElement* secElt = sections[iSec];
     xml::Dom::prune(secElt);
-    (secElt.getParentNode()).removeChild(secElt);
+    (secElt->getParentNode())->removeChild(secElt);
   }
 
   // Delete materials
-  std::vector<DOM_Element> materials;
+  std::vector<DOMElement*> materials;
   xml::Dom::getDescendantsByTagName(docElt, "materials", materials);
 
   unsigned nM = materials.size();
   for (unsigned iM = 0; iM < nM; iM++) {
 
-    DOM_Element& matElt = materials[iM];
+    DOMElement* matElt = materials[iM];
     xml::Dom::prune(matElt);
-    (matElt.getParentNode()).removeChild(matElt);
+    (matElt->getParentNode())->removeChild(matElt);
     //    secNode = toCome;
   }
 

@@ -1,16 +1,23 @@
 // $Header$
-
+#include <iostream>
 #include <string>
-#include <xercesc/dom/DOMString.hpp>
-#include <xercesc/dom/DOM_Node.hpp>
-#include <xercesc/dom/DOM_NodeList.hpp>
-#include <xercesc/dom/DOM_TreeWalker.hpp>
+
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+
+#include <xercesc/dom/DOMTreeWalker.hpp>
+#include <xercesc/util/XMLString.hpp>
 #include "xmlUtil/Constants.h"
 #include "xmlUtil/Arith.h"
 #include "xml/Dom.h"
-#include <vector>
 
 namespace {
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMNode;
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument;
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMNodeFilter;
+  using XERCES_CPP_NAMESPACE_QUALIFIER XMLString;
+
   // Put a local utility in the unnamed namespace
 
 /* For each <prim>
@@ -28,7 +35,7 @@ namespace {
       100000 place  -- unknown unit; couldn't convert
 */
 
-  int normPrim(DOM_Element elt, std::vector<DOM_Element>& save) {
+  int normPrim(DOMElement* elt, std::vector<DOMElement*>& save) {
     using xml::Dom;
 
     int ret = 0;
@@ -54,7 +61,9 @@ namespace {
       }
 
       // Found a prim, but we don't have to convert since it's not a length
-      if (!(elt.getAttribute(DOMString("uType"))).equals("length")) return ret;
+      // if (!(elt.getAttribute(DOMString("uType"))).equals("length")) return ret;
+      if (!(xml::Dom::getAttribute(elt, "uType") == "length" ) ) return ret;
+
       if (isInt) {   // mistake.  Don't use type=int for length
 
       }
@@ -96,16 +105,42 @@ namespace {
     return ret;
   }                 // end of utility normPrim
 
-  void handleEnergies(std::vector<DomElement> saved) {
+}   // end of anonymous namespace
+
+namespace xmlUtil {
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMNode;
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument;
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMTreeWalker;
+
+  Constants::Constants(DOMDocument* doc) : m_doc(doc), m_constants(0),
+                                           m_walker(0) {
+    // There is at most 1 <constants> element
+    m_constants = 
+      xml::Dom::findFirstChildByName(doc->getDocumentElement(), "constants");
+    if (m_constants) {
+      m_walker = doc->createTreeWalker(m_constants, 
+                                       DOMNodeFilter::SHOW_ELEMENT,
+                                       0, true);
+    }
+  }
+
+  // Deleting the TreeWalker causes free(  ) to complain.  Could
+  // be that deletion is handled by the parent document
+  Constants::~Constants() { /* delete m_walker; */} 
+
+  void Constants::handleEnergies(std::vector<DOMElement*> saved) {
     // Make a new <prim> node to replace it; meanwhile convert
     // GeV to MeV if necessary
     using xml::Dom;
 
-    std::vector<DomElement>::const_iterator eltIt;
+    std::vector<DOMElement*>::const_iterator eltIt;
     for (eltIt = saved.begin(); eltIt != saved.end(); eltIt++) {
-      DomElement elt = *eltIt;
-      DOM_Document doc = elt.getOwnerDocument();
-      DomElement  prim = doc.createElement("prim");
+      DOMElement* elt = *eltIt;
+      DOMDocument* doc = elt->getOwnerDocument();
+      XMLCh* xmlchPrim = XMLString::transcode("prim");
+      DOMElement*  prim = doc->createElement(xmlchPrim);
+      XMLString::release(&xmlchPrim);
       Dom::addAttribute(prim, "name", Dom::getAttribute(elt, "name"));
       Dom::addAttribute(prim, "type", "double");
       Dom::addAttribute(prim, "uType", "energy");
@@ -126,51 +161,46 @@ namespace {
       }
 
       Dom::addAttribute(prim, std::string("value"), energy);
-      elt.normalize();
-      DomNode textChild = elt.getFirstChild();
-      prim.appendChild(textChild);
+      elt->normalize();
+      DOMNode* textChild = elt->getFirstChild();
+      prim->appendChild(textChild);
       //      elt.removeChild(textChild);
-      DomNode parent = elt.getParentNode();
-      DomNode oldChild =  parent.replaceChild(prim, elt);
+      //      DOMNode* parent = elt->getParentNode();
+      m_walker->setCurrentNode(elt);
+      DOMNode* parent = m_walker->parentNode();
+      DOMNode* oldChild =  parent->replaceChild(prim, elt);
     }
-  }
-}   // end of anonymous namespace
-
-namespace xmlUtil {
-
-  Constants::Constants(DOM_Document doc) : m_doc(doc) {
-
-    // There is at most 1 <constants> element
-    m_constants = 
-      xml::Dom::findFirstChildByName(doc.getDocumentElement(), "constants");
   }
 
   void Constants::normalizePrimary()
   {
     using xml::Dom;
 
-    if (m_constants == DomElement()) return;
+    if (m_constants == 0) return;
 
-    DomElement primary = Dom::findFirstChildByName(m_constants, "primary");
+    DOMElement* primary = Dom::findFirstChildByName(m_constants, "primary");
 
-    DomNode curNode = primary;
+    DOMNode* curNode = primary;
 
     if (std::string("true") == Dom::getAttribute(primary, "normalized"))
       return;
 
     // Make a DOMTreeWalker which returns only elements
-    unsigned long whatToShow = 1 << (DomNode::ELEMENT_NODE -1);
+    /*  Now we already have one
+    unsigned long whatToShow = 1 << (DOMNode::ELEMENT_NODE -1);
     
-    DOM_TreeWalker walker = 
+    DOMTreeWalker* walker = 
       //      m_doc.createTreeWalker(curNode, whatToShow, 0, 0);
-      m_doc.createTreeWalker(primary, whatToShow, 0, 0);
-    
+      //     last argument says to expand entity references
+      m_doc->createTreeWalker(primary, whatToShow, 0, true);
+    */
+    m_walker->setCurrentNode(curNode);
     // Diagnostic -- number of <prim>s seen
     int count = 0;
-    std::vector<DomElement> energyElts;
-    while (curNode != DomNode() ) {
-      count += normPrim(static_cast<DomElement &> (curNode), energyElts);
-      curNode = walker.nextNode();
+    std::vector<DOMElement*> energyElts;
+    while (curNode != 0 ) {
+      count += normPrim(static_cast<DOMElement*> (curNode), energyElts);
+      curNode = m_walker->nextNode();
     }
     handleEnergies(energyElts);
 
@@ -181,31 +211,31 @@ namespace xmlUtil {
   void Constants::pruneConstants(bool keepNotes) { 
     using xml::Dom;
 
-    if (m_constants == DomNode()) return;
+    if (m_constants == 0) return;
 
-    DomElement curConst;
+    DOMElement* curConst;
     
     // For each derCategory, prune each const child
-    std::vector<DomElement> cats;
+    std::vector<DOMElement*> cats;
 
     Dom::getDescendantsByTagName(m_constants, "derCategory", cats);
     int nCats = cats.size();
     int iCat;
     
     for (iCat = 0; iCat < nCats; iCat++) {
-      DomElement& curCat = cats[iCat];
+      DOMElement* curCat = cats[iCat];
       curConst = Dom::findFirstChildByName(curCat, "const" );
       
-      while (curConst != DomElement()) {
+      while (curConst != 0) {
         if (keepNotes) { // tread more carefully
-          DomElement child = Dom::getFirstChildElement(curConst);
-          if (child != DomElement() ) {
+          DOMElement* child = Dom::getFirstChildElement(curConst);
+          if (child != 0 ) {
 
             if (Dom::checkTagName(child, "notes") ) {
               child = Dom::getSiblingElement(child);
-              if (child != DomElement()) {
+              if (child != 0) {
                 Dom::prune(child);
-                (child.getParentNode()).removeChild(child);
+                (child->getParentNode())->removeChild(child);
               }
             }
             else {
@@ -226,30 +256,53 @@ namespace xmlUtil {
   void Constants::evalConstants() {
     using xml::Dom;
 
-    if (m_constants == DomNode()) return;
-    DomElement derived = 
+    if (m_constants == 0) return;
+    DOMElement* derived = 
       Dom::findFirstChildByName(m_constants, "derived"); 
-    if (derived == DomElement()) return; 
+    if (derived == 0) return; 
     if (std::string("true") == Dom::getAttribute(derived, "evaluated")) return;
 
-    DomElement curConst;
+    DOMElement* curConst;
 
-    std::vector<DomElement> cats;
+    std::vector<DOMElement*> cats;
     
-    Dom::getDescendantsByTagName(m_doc.getDocumentElement(), "derCategory",
+    Dom::getDescendantsByTagName(m_doc->getDocumentElement(), "derCategory",
                               cats);
     int nCats = cats.size();
     int iCat;
     
     for (iCat = 0; iCat < nCats; iCat++) {
-      DomElement& curCat = cats[iCat];
+      DOMElement* curCat = cats[iCat];
       curConst = Dom::findFirstChildByName(curCat, "const" );
-      
-      while (curConst != DomElement()) {
+      while (curConst != 0) {
         try {
           Arith curArith(curConst);
           double evalValue = curArith.evaluate();
+
+          /*
+                for debug
+          std::string curConstName = Dom::getAttribute(curConst, "name");
+          DOMElement* eltById = Dom::getElementById(m_doc, curConstName);
+          XMLCh* xmlchConstName = XMLString::transcode(curConstName.c_str());
+          DOMElement* XercesEltById = m_doc->getElementById(xmlchConstName);
+          std::cout << "curConst addr: " << curConst << " my ById: " 
+                    << eltById <<  " Xerces byId: " << xmlchConstName << std::endl;
+          XMLString::release(&xmlchConstName);
+          */
           curArith.saveValue();
+          /*
+
+            TEMPORARILY eliminate "save" to see if this makes a difference
+
+          debug code
+          if (curConstName == "bigXZDim") {
+            curArith.saveValue();
+            std::cout << curConstName << " evaluated and saved " << std::endl;
+            std::string bigXZDimValue = Dom::getAttribute(curConst, "value");
+            std::cout << "..saved value is " << bigXZDimValue << std::endl;
+          }
+          else curArith.saveValue();
+          */
         }
         catch (XmlUtilException ex) {
           std::cerr << ex.getMsg();

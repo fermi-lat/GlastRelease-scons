@@ -1,10 +1,11 @@
 // $Header$
 #include "xmlUtil/docMan/GDDDocMan.h"
-#include <xercesc/dom/DOM_Element.hpp>
+#include <xercesc/dom/DOMElement.hpp>
 #include "xmlUtil/Constants.h"
 #include "xml/Dom.h"
 
 namespace xmlUtil {
+  XERCES_CPP_NAMESPACE_USE
   GDDDocMan* GDDDocMan::m_me = 0;
 
   GDDDocMan* GDDDocMan::getPointer() {
@@ -34,8 +35,8 @@ namespace xmlUtil {
     return m_constsClient->getDTDversion();
   }
 
-  void GDDDocMan::ConstsClient::handleChild(DOM_Node node) {
-    if (node == DOM_Node()) { //clean up call
+  void GDDDocMan::ConstsClient::handleChild(XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* node) {
+    if (node == 0) { //clean up call
       m_doc = 0;
       if (m_sub != 0) {
         delete m_sub;
@@ -43,14 +44,13 @@ namespace xmlUtil {
       }
       return;
     }
-    if (node.getNodeType() == DOM_Node::DOCUMENT_NODE) { 
-      DOM_Document& doc = static_cast<DOM_Document&>(node);
-
-      // Save CVSid and DTDversion attributes
-      CVSid = xml::Dom::getAttribute(doc.getDocumentElement(), "CVSid");
-      DTDversion = xml::Dom::getAttribute(doc.getDocumentElement(), 
-                                          "DTDversion");
+    if (node->getNodeType() == DOMNode::DOCUMENT_NODE) { 
       // Evaluate constants
+      //      DOMDocument* doc = static_cast<DOMDocument *>(node);
+      DOMDocument* doc = static_cast<DOMDocument *>(node);
+      CVSid = xml::Dom::getAttribute(doc->getDocumentElement(), "CVSid");
+      DTDversion = xml::Dom::getAttribute(doc->getDocumentElement(), 
+                                          "DTDversion");
       Constants constants(doc);
       constants.normalizePrimary();
       constants.evalConstants();
@@ -59,8 +59,9 @@ namespace xmlUtil {
       m_doc = doc;
       m_sub = new  Substitute(m_doc);
     }  else {  // Child element of root; substitute
-      DOM_Element& elt = static_cast<DOM_Element&>(node);
-      if (elt.getAttributeNode("substituted") != DOM_Node()) {
+      DOMElement* elt = static_cast<DOMElement *>(node);
+      //      if (elt->getAttributeNode("substituted") != 0) {
+      if (xml::Dom::hasAttribute(elt, "substituted")) {
         m_sub->execute(elt);
       }
     }

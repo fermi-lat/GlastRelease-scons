@@ -11,7 +11,7 @@ namespace xmlUtil {
   //! 
   class IdOpTruncate : public IdOperation {
   public:
-    IdOpTruncate(DomElement trunc);
+    IdOpTruncate(const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* trunc);
     ~IdOpTruncate() {}
 
     virtual NamedId * convert(const NamedId& inputId);

@@ -5,19 +5,29 @@
 #include "xmlUtil/Substitute.h"
 #include "xml/Dom.h"
 #include "xmlUtil/Arith.h"
-#include <xercesc/dom/DOM_Element.hpp>
-#include <xercesc/dom/DOM_TreeWalker.hpp>
-#include <xercesc/dom/DOM_NamedNodeMap.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+// #include <xercesc/dom/DOMTreeWalker.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
+#include <xercesc/dom/DOMAttr.hpp>
+#include <xercesc/util/XMLString.hpp>
 #include <vector>
 
 namespace xmlUtil {
-
-  Substitute::Substitute(DOM_Document doc, std::string suffix) :
+  XERCES_CPP_NAMESPACE_USE
+  //  using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
+  //  using XERCES_CPP_NAMESPACE_QUALIFIER DOMNode;
+  //  using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument;
+  //  using XERCES_CPP_NAMESPACE_QUALIFIER DOMTreeWalker;
+  //  using XERCES_CPP_NAMESPACE_QUALIFIER DOMAttr;
+  //  using XERCES_CPP_NAMESPACE_QUALIFIER XMLString;
+  //  using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
+  Substitute::Substitute(DOMDocument* doc, std::string suffix) :
     m_doc(doc), m_count(0), m_suffix(suffix) {
     m_suffixLen = suffix.size();
   }
 
-  int Substitute::execute(DOM_Element top) {
+  int Substitute::execute(DOMElement* top) {
     // Get rid of some inefficiency by means of the following imperfect
     // mechanism:
     //   An element may have an attribute called "substituted".  If it
@@ -36,7 +46,7 @@ namespace xmlUtil {
     //   for an element to have a "substituted" attribute value of "false"
     //   when it really should be "true", but never the other way around.
     //   
-    DOM_Element docElt = m_doc.getDocumentElement();
+    DOMElement* docElt = m_doc->getDocumentElement();
 
     if (std::string("true") == xml::Dom::getAttribute(docElt, "substituted"))
       return 0;
@@ -44,38 +54,52 @@ namespace xmlUtil {
     if (std::string("true") == xml::Dom::getAttribute(top, "substituted"))
       return 0;
 
-    DOM_Node curNode = top;
+    DOMNode* curNode = top;
 
     // This is not explained anywhere in the xerces doc. that I
     // can see, but from the code in TreeWalkerImpl::acceptNode
     // this would seem to be the right value for whatToShow
-    unsigned long whatToShow = 1 << (DOM_Node::ELEMENT_NODE -1);
+    //    unsigned long whatToShow = 1 << (DOMNode::ELEMENT_NODE -1);
 
-    DOM_TreeWalker walker = m_doc.createTreeWalker(top, whatToShow, 0, 0);
+    /*
+    DOMTreeWalker* walker = m_doc->createTreeWalker(top, whatToShow, 0, true);
     m_count = 0;
-    while (curNode != DOM_Node() ) {
-      sub(static_cast<DOM_Element &> (curNode));
-      curNode = walker.nextNode();
+    while (curNode != 0 ) {
+      sub(dynamic_cast<DOMElement* > (curNode));
+      curNode = walker->nextNode();
     }
-    DOM_Attr subNode = top.getAttributeNode("substituted");
-    if (subNode != DOM_Attr()) { 
-      subNode.setValue("true");
+    */
+    std::vector<DOMElement*> allElts;
+    xml::Dom::getDescendantsByTagName(top, "*", allElts);
+
+    unsigned int nElt = allElts.size();
+
+    for (unsigned int iElt = 0; iElt < nElt; iElt++) {
+      sub(allElts[iElt]);
+    }
+    XMLCh* xmlchSubs = XMLString::transcode("substituted");
+    DOMAttr* subNode = top->getAttributeNode(xmlchSubs);
+    XMLString::release(&xmlchSubs);
+    if (subNode != 0) { 
+      XMLCh* xmlchTrue = XMLString::transcode("true");
+      subNode->setValue(xmlchTrue);
+      XMLString::release(&xmlchTrue);
     }
 
     return m_count;
   }
 
-  void Substitute::sub(DOM_Element elt) {
+  void Substitute::sub(DOMElement* elt) {
     using xml::Dom;
 
-    DOM_NamedNodeMap attMap = elt.getAttributes();
-    int   nAtt = attMap.getLength();
+    DOMNamedNodeMap* attMap = elt->getAttributes();
+    int   nAtt = attMap->getLength();
     int   iAtt;
     std::vector<std::string> toProcess;
     std::vector<unsigned> toProcessPos;
 
     for (iAtt = 0; iAtt <nAtt; iAtt++) {
-      DOM_Node att = attMap.item(iAtt);
+      DOMNode* att = attMap->item(iAtt);
       std::string attName = Dom::getNodeName(att);
       
       // Look for suffix
@@ -92,10 +116,12 @@ namespace xmlUtil {
       unsigned  pos = toProcessPos.back();
       toProcess.pop_back();
       toProcessPos.pop_back();
-      DomElement constElt = 
-        Dom::getElementById(m_doc, Dom::getAttribute(elt, oldAttName));
+      std::string eltId = Dom::getAttribute(elt, oldAttName);
+      DOMElement* constElt =  Dom::getElementById(m_doc, eltId);
+        //  Dom::getElementById(m_doc, Dom::getAttribute(elt, oldAttName));
 
-      if (constElt == DomElement() ) { // shouldn't happen
+
+      if (constElt == 0 ) { // shouldn't happen
         m_notFound++;
         continue;
       }
@@ -115,7 +141,9 @@ namespace xmlUtil {
       std::string newAttName = std::string(oldAttName, 0, pos);
 
       Dom::addAttribute(elt, newAttName, val);
-      elt.removeAttribute(oldAttName.c_str());
+      XMLCh* xmlchOldAttName = XMLString::transcode(oldAttName.c_str());
+      elt->removeAttribute(xmlchOldAttName);
+      XMLString::release(&xmlchOldAttName);
       m_count++;
     }
 

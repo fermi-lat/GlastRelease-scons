@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include <xercesc/dom/DOM_Element.hpp>
+#include <xercesc/dom/DOMElement.hpp>
 
 #include "xmlUtil/id/DictObject.h"
 
@@ -18,7 +18,7 @@ namespace xmlUtil {
 
   class DictField : public DictObject {
   public: 
-    DictField(DOM_Element elt);
+    DictField(XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* elt);
     ~DictField(){ if (m_constraints) delete m_constraints;};
 
     const std::string& getName() const {return m_name;}

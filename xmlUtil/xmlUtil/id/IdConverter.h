@@ -3,7 +3,7 @@
 #ifndef XMLUTIL_IDCONVERTER_H
 #define XMLUTIL_IDCONVERTER_H
 #include "xmlUtil/id/NamedId.h"
-#include <xercesc/dom/DOM_Element.hpp>
+#include <xercesc/dom/DOMElement.hpp>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -24,7 +24,7 @@ namespace xmlUtil {
         in the sense that constants evaluation and substitution has
         been done.
     */
-    IdConverter(DOM_Element elt);
+    IdConverter(XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* elt);
     ~IdConverter();
 
     std::ostream& displayConversions(std::ostream& s);

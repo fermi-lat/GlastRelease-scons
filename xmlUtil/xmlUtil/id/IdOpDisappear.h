@@ -13,7 +13,7 @@ namespace xmlUtil {
      and let convert return 0 . */
   class IdOpDisappear : public IdOperation {
   public:
-    IdOpDisappear(DomElement) {}
+    IdOpDisappear(const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement*) {}
     ~IdOpDisappear() {}
     NamedId * convert(const NamedId& ) {return new NamedId();}
     virtual std::string myOp() const {return std::string("DISAPPEAR ");}

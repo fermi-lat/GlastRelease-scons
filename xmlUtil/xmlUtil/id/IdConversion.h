@@ -3,7 +3,7 @@
 #ifndef XMLUTIL_IDCONVERSION_H
 #define XMLUTIL_IDCONVERSION_H
 
-#include <xercesc/dom/DOM_Element.hpp>
+#include <xercesc/dom/DOMElement.hpp>
 #include "xmlUtil/id/NamedId.h"
 #include <functional>
 #include <iostream>
@@ -28,7 +28,7 @@ namespace xmlUtil {
 
 
     //! The usual case:  build a conversion from its XML description
-    IdConversion(const DOM_Element); 
+    IdConversion(const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement*); 
 
     ~IdConversion();
 
@@ -57,11 +57,11 @@ namespace xmlUtil {
     NamedId * internalConvert(const NamedId& inputId);
 
     //! Form path component from corresponding piece of xml
-    void makePath(const DOM_Element& pathElt);
+    void makePath(const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* pathElt);
 
     //! Determine operation type and instantiate object of
     //! appropriate operation class.
-    void buildOp(const DOM_Element& optElt);
+    void buildOp(const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* optElt);
     
     //! For now only condition recognized is \b hasField, which
     //! can be represented by a string: the field name.

@@ -24,17 +24,16 @@
 #include "xmlUtil/Constants.h"
 #include "xmlUtil/Arith.h"
 #include "xmlUtil/Substitute.h"
-#include <xercesc/dom/DOM_Element.hpp>
-#include <xercesc/dom/DOM_NodeList.hpp>
-#include <xercesc/dom/DOM_NamedNodeMap.hpp>
-#include <xercesc/dom/DOM_DocumentType.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMDocumentType.hpp>
 
 #include <string>
 #include <iostream>
 #include <fstream>
 
 std::ostream *openOut(char * outfile);
-void outProlog(const DOM_DocumentType& doctype, std::ostream& out);
+void outProlog(const XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentType* doctype, 
+               std::ostream& out);
 
 const std::string myId("$Id$");
 
@@ -49,6 +48,11 @@ const std::string idTemplate("#Id: not committed $");
     to std::cout
 */
 int main(int argc, char* argv[]) {
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentType;
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument;
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMNode;
+
   std::ostream *out;
   if (argc < 3) {  // instructions
     std::cout << "Required first argument is xml file to be parsed" 
@@ -59,7 +63,7 @@ int main(int argc, char* argv[]) {
   }
 
   xml::XmlParser* parser = new xml::XmlParser();
-  DOM_Document doc = parser->parse(argv[1], "gdd");
+  DOMDocument* doc = parser->parse(argv[1], "gdd");
 
   if (doc == 0) {
     std::cout << "Document failed to parse correctly" << std::endl;
@@ -69,8 +73,8 @@ int main(int argc, char* argv[]) {
   // Else successful.   Open output
   out = openOut(argv[2]);
 
-  DOM_Element docElt = doc.getDocumentElement();
-  DOM_DocumentType  doctype = doc.getDoctype(); //  check for gdd?? 
+  DOMElement* docElt = doc->getDocumentElement();
+  DOMDocumentType*  doctype = doc->getDoctype(); //  check for gdd?? 
   xmlUtil::Constants   *constants = new xmlUtil::Constants(doc);
 
   // prim processing
@@ -85,25 +89,25 @@ int main(int argc, char* argv[]) {
 
   xmlUtil::Substitute* sub = new xmlUtil::Substitute(doc);
 
-  std::vector<DOM_Element> dicts;
+  std::vector<DOMElement*> dicts;
   xml::Dom::getDescendantsByTagName(docElt, "idDict", dicts);
 
   //  There is only one dictionary
-  DOM_Element& dictElt = dicts[0];
+  DOMElement* dictElt = dicts[0];
   int nDictSub = sub->execute(dictElt);
     std::cout << "#elements substituted for id dictionary:  " << nDictSub
               << std::endl;
 
   // Search for all dimension and position references, substitute
   // value of referenced element.
-  std::vector<DOM_Element> sections;
+  std::vector<DOMElement*> sections;
   xml::Dom::getDescendantsByTagName(docElt, "section", sections);
 
   unsigned int nSec = sections.size();
   unsigned int iSec;
   for (iSec = 0; iSec < nSec; iSec++) {
     int nSub;
-    DOM_Element& secElt = sections[iSec];
+    DOMElement* secElt = sections[iSec];
     nSub = sub->execute(secElt);
     std::cout << "#elements substituted for in this section:  " << nSub
               << std::endl;
@@ -112,23 +116,21 @@ int main(int argc, char* argv[]) {
   // Get rid of any <derCategory> without the save attribute set to "true".
   // For the rest, prune element content from all <const> children;
   // it's no longer needed.
-  DOM_Element derived = xml::Dom::findFirstChildByName(docElt, "constants");
-  if (derived != DOM_Element() ) {
+  DOMElement* derived = xml::Dom::findFirstChildByName(docElt, "constants");
+  if (derived != 0 ) {
     derived = xml::Dom::findFirstChildByName(derived, "derived");
     
-    if (derived != DOM_Element()) {
+    if (derived != 0) {
 
-      std::vector<DOM_Element> cats;
+      std::vector<DOMElement*> cats;
       xml::Dom::getDescendantsByTagName(docElt, "derCategory", cats);
 
       unsigned nCat = cats.size();
 
-      //      DOM_NodeList cats = derived.getElementsByTagName("derCategory");
-      //      int nCat = cats.getLength();
       unsigned int iCat;
-      std::vector<DomElement> toRemove;
+      std::vector<DOMElement*> toRemove;
       for (iCat=0; iCat < nCat; iCat++) {
-        DOM_Element elt = cats[iCat];
+        DOMElement* elt = cats[iCat];
         if (std::string("false") ==  xml::Dom::getAttribute(elt, "save") ) {
           //remove
         
@@ -138,9 +140,9 @@ int main(int argc, char* argv[]) {
       }
       if (unsigned nRemove = toRemove.size() > 0) {
         // all elements to be removed have the same parent
-        DOM_Node parent = (toRemove[0]).getParentNode();
+        DOMNode* parent = (toRemove[0])->getParentNode();
         for (unsigned iVictim= 0; iVictim < nRemove; iVictim++) {
-          parent.removeChild(toRemove[iVictim]);
+          parent->removeChild(toRemove[iVictim]);
         }
       }
       // Now just get rid of all content for <const> children 
@@ -159,7 +161,8 @@ int main(int argc, char* argv[]) {
 
   // If have gdd element with CVSid attribute, null it out.  Don't have
   // a real CVS id until the file has been committed
-  if (docElt.getAttribute("CVSid") != DOMString() ) {
+  //  if (docElt->getAttribute("CVSid") != 0 ) {
+  if (xml::Dom::hasAttribute(docElt, "CVSid")) {
     std::string noId(idTemplate);
     noId.replace(0, 1, "$");
     xml::Dom::addAttribute(docElt, "CVSid", noId);

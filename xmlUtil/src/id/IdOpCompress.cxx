@@ -4,7 +4,8 @@
 #include "xml/Dom.h"
 
 namespace xmlUtil {
-  IdOpCompress::IdOpCompress(DomElement cmprss) {
+  IdOpCompress::IdOpCompress(const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* cmprss)
+  {
     from = xml::Dom::getAttribute(cmprss, "from");
     to = xml::Dom::getAttribute(cmprss, "to");
   }

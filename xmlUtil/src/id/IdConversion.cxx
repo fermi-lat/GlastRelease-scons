@@ -3,20 +3,20 @@
 #include "xmlUtil/id/IdConversion.h"
 #include "xmlUtil/id/IdOperation.h"
 #include "xml/Dom.h"
-// #include <xercesc/dom/DOMString.hpp>
 #include "xmlUtil/id/IdOpTruncate.h"
 #include "xmlUtil/id/IdOpDisappear.h"
 #include "xmlUtil/id/IdOpCompress.h"
 
 namespace xmlUtil {
+  XERCES_CPP_NAMESPACE_USE
   IdConversion::IdConversion() : m_path(0), m_condition(0) {
     m_op = new IdOperation();
   }
 
-  IdConversion::IdConversion(DomElement conversion) {
+  IdConversion::IdConversion(const DOMElement* conversion) {
 
     // Get first child; invoke private function to build path
-    DomElement child = xml::Dom::getFirstChildElement(conversion);
+    DOMElement* child = xml::Dom::getFirstChildElement(conversion);
     makePath(child);
 
     // Get next child; save field name in condition component
@@ -52,14 +52,14 @@ namespace xmlUtil {
     }
   }
 
-  void IdConversion::makePath(const DomElement& pathElt) {
+  void IdConversion::makePath(const DOMElement* pathElt) {
     
     // "path" consists of a list of fields.  Fields have 
     // a required attribute "name".  Save its value.
     m_path = new NameSeq;
-    DomElement child = xml::Dom::getFirstChildElement(pathElt);
+    DOMElement* child = xml::Dom::getFirstChildElement(pathElt);
 
-    while (child != DomElement()) {
+    while (child != 0) {
       m_path->push_back(new std::string(xml::Dom::getAttribute(child, "name")));
       child = xml::Dom::getSiblingElement(child);
     }
@@ -69,8 +69,8 @@ namespace xmlUtil {
   // Could maybe do something more elegant than a switch, but it would
   // take quite a bit of machinery and would only be worthwhile if
   // the set of ops was expected to change often.
-  void IdConversion::buildOp(const DomElement& opElt) {
-    //    DOMString opType = opElt.getTagName();
+  void IdConversion::buildOp(const DOMElement* opElt) {
+
     std::string opType = xml::Dom::getTagName(opElt);
 
     if (opType == std::string("truncate"))

@@ -12,8 +12,8 @@
 #include "xmlUtil/id/IdConverter.h"
 #include "xmlUtil/id/IdConversion.h"  // maybe don't need this
 
-#include <xercesc/dom/DOM_Element.hpp>
-#include <xercesc/dom/DOM_DocumentType.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMDocumentType.hpp>
 
 #include <iostream>
 // #include <fstream>
@@ -30,6 +30,7 @@ int testConverter(xmlUtil::IdConverter* converter);
     \param arg1 is the input xml file, defaults to ../xml/test-dict.xml
 */
 int main(int argc, char* argv[]) {
+  XERCES_CPP_NAMESPACE_USE
   char* xmlInput = "../xml/test-dict.xml";
   if (argc >= 2) {
     xmlInput = argv[1];
@@ -42,8 +43,8 @@ int main(int argc, char* argv[]) {
   }
 
   xml::XmlParser* parser = new xml::XmlParser();
-  DOM_Document doc = parser->parse(xmlInput);
-  DOM_Element  docElt = doc.getDocumentElement();
+  DOMDocument* doc = parser->parse(xmlInput);
+  DOMElement*  docElt = doc->getDocumentElement();
 
   if (doc == 0) {
     std::cout << "Document failed to parse correctly" << std::endl;
@@ -56,8 +57,8 @@ int main(int argc, char* argv[]) {
   xmlUtil::Substitute* sub = new xmlUtil::Substitute(doc);
 
   // Look for IdDict element
-  DOM_Element dictElt = xml::Dom::findFirstChildByName(docElt, "idDict");
-  if (dictElt == DOM_Element()) {
+  DOMElement* dictElt = xml::Dom::findFirstChildByName(docElt, "idDict");
+  if (dictElt == 0) {
     std::cout << "No identifier dictionary found " << std::endl;
     exit(0);
   }
@@ -101,9 +102,9 @@ int main(int argc, char* argv[]) {
     std::endl;
 
   // Look for IdConverter
-  DOM_Element converterElt = 
+  DOMElement* converterElt = 
     xml::Dom::findFirstChildByName(docElt, "idConverter");
-  if (converterElt == DOM_Element()) {
+  if (converterElt == 0) {
     std::cout << "No id converter found " << std::endl;
     exit(0);
   }

@@ -1,14 +1,15 @@
 // $Header$
-#include <xercesc/dom/DOM_Element.hpp>
-#include <xercesc/dom/DOMString.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+// #include <xercesc/dom/DOMString.hpp>
 #include "xml/Dom.h"
 #include "xmlUtil/id/DictNode.h"
 #include "xmlUtil/id/DictFieldMan.h"
 #include <assert.h>
 
 namespace xmlUtil {
+  XERCES_CPP_NAMESPACE_USE
   std::ostream* DictNode::m_err = &(std::cout);
-  DictNode::DictNode(DomElement elt, DictNode *parent,
+  DictNode::DictNode(DOMElement* elt, DictNode *parent,
                      DictFieldMan *fieldMan) : 
     m_children(0), m_parent(parent), m_parConstraints(0), 
     m_myConstraints(0)   {
@@ -29,15 +30,15 @@ namespace xmlUtil {
     // Do something if it doesn't exist?? Shouldn't be terribly
     // necessary by ID/IDREF mechanism
 
-    DomElement child = xml::Dom::getFirstChildElement(elt);
+    DOMElement* child = xml::Dom::getFirstChildElement(elt);
     // Could be a leaf with no children
-    if (child == DomElement()) {
+    if (child == 0) {
       return;
     }
 
     if (Dom::getTagName(child) == std::string("pValues")) {
       // parent constraints
-      DomElement gChild = xml::Dom::getFirstChildElement(child);
+      DOMElement* gChild = xml::Dom::getFirstChildElement(child);
       m_parConstraints = new DictConstraints(gChild);
       
       // check for compatibility
@@ -53,7 +54,7 @@ namespace xmlUtil {
         }
       }
       child = xml::Dom::getSiblingElement(child);
-      if (child == DomElement()) {
+      if (child == 0) {
         return;    // new Dec. 4
       }
     }
@@ -83,7 +84,7 @@ namespace xmlUtil {
     
     // All that's left are child nodes, if any
     
-    while (child != DomElement()) {
+    while (child != 0) {
       std::string childName = xml::Dom::getTagName(child);
       if (childName != std::string("dictNode")) {
         std::cerr << "odd child:  " << childName << std::endl;

@@ -4,14 +4,15 @@
 #include "xml/Dom.h"
 
 namespace xmlUtil {
-  DictField::DictField(DOM_Element elt) {
-    DOM_Element child = xml::Dom::getFirstChildElement(elt);
+  XERCES_CPP_NAMESPACE_USE
+  DictField::DictField(DOMElement* elt) {
+    DOMElement* child = xml::Dom::getFirstChildElement(elt);
 
-    if (child != DOM_Element())
-      m_constraints = new DictConstraints(child);
+    if (child != 0) m_constraints = new DictConstraints(child);
     else m_constraints = 0;
 
-    m_name = std::string(xml::Dom::transToChar(elt.getAttribute("name")));
+    m_name = xml::Dom::getAttribute(elt, "name");
+      //std::string(xml::Dom::transToChar(elt->getAttribute("name")));
   }
 
   bool DictField::allowed(unsigned value) const {

@@ -3,25 +3,36 @@
 #define XMLUTIL_ARITH_H
 
 #include <string>
-#include <xercesc/dom/DOM_Element.hpp>
+#include <xercesc/dom/DOMElement.hpp>
 #include "xmlUtil/XmlUtilException.h"
 
 namespace xmlUtil {
       
-  class BadTag : public XmlUtilException {
-  public:
-    BadTag(std::string reason = "") : XmlUtilException() {
-      m_name = std::string("BadTag");
-      makeMsg(reason);
-    }
-  };
-
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
   //! The Arith class handles the xml arithmetic elements, allowing
   //! derived constants to be computed and their values put into
   //! the DOM representation of the XML file.
   class Arith {
   public: 
     //! The different element types handled (evaluated) by this class
+
+    Arith::Arith(DOMElement* elt = 0);
+    //! Return a double, the result of performing all the operations
+    //! indicated by the element and its children. 
+    double evaluate();
+
+    //! add "value" attribute into DOM. 
+    /*! This is a no-op for all but const elements. */
+    void   saveValue(); 
+
+    //! Return scale factor due to units specification.  
+    /*! For now only applies to lengths, which should be converted 
+        to mm (always returns 1.0 for other kinds of constants)
+    */
+    static double getUnitsScale(const DOMElement* elt);
+    ~Arith() {};
+
+  private:
     enum  eTagType {
       ETAG_const = 0,
       ETAG_refer, 
@@ -35,56 +46,35 @@ namespace xmlUtil {
       ETAG_n 
     } ;
 
-    Arith::Arith(const DOM_Element elt);
-    //! Return a double, the result of performing all the operations
-    //! indicated by the element and its children. 
-    double evaluate();
+    typedef std::string* ptrString;
+    static ptrString *typeNames;
+    static ptrString valString;   // pointer to std::string of  "value"
+    static ptrString refToString; // ..and so forth
+    static ptrString notesString;
+    static ptrString lengthString;
+    static ptrString cmString;
+    static ptrString mString;
 
-    //! add "value" attribute into DOM. 
-    /*! This is a no-op for all but const elements. */
-    void   saveValue(); 
 
-    //! Return scale factor due to units specification.  
-    /*! For now only applies to lengths, which should be converted 
-        to mm (always returns 1.0 for other kinds of constants)
-    */
-    static double getUnitsScale(const DOM_Element& elt);
-    ~Arith() {};
-
-  private:
-    static void init(); /*< Sets up static strings */
     double add();       /*< evaluate an \b add element */
     double minus();     /*< evaluate a \b minus element */
     double mul();       /*< evaluate a \b mul element */
     double quo();       /*< evalauate a \b quo element */
     double myMax();     /*< evaluate a \b max element */
+    static void init();
 
-    DOM_Element  m_elt; /*< element which may be evaluated */
+    DOMElement*  m_elt; /*< element which may be evaluated */
     int     m_tag;      /*< element type (tagname) */
     double  m_number;   /*< value of element after evaluation */
     bool    m_evaluated;/*< flag to keep track of whether eval has been done*/
-    
-    /* keep some static strings so we don't have to build them over and over */
 
-
-    typedef const char* ptrString;
-    static  ptrString *typeNames;
-    static  ptrString valString;   // a DOMString containing "value"
-    static  ptrString refToString; // ..and so forth
-    static  ptrString constString;
-    static  ptrString referString;
-    static  ptrString addString;
-    static  ptrString minusString;
-    static  ptrString uminusString;
-    static  ptrString mulString;
-    static  ptrString quoString;
-    static  ptrString maxString;
-    static  ptrString notesString;
-    static  ptrString lengthString;
-    static  ptrString cmString;
-    static  ptrString mString;
-    static  ptrString halfString;
-
+  };
+  class BadTag : public XmlUtilException {
+  public:
+    BadTag(std::string reason = "") : XmlUtilException() {
+      m_name = std::string("BadTag");
+      makeMsg(reason);
+    }
   };
 
 }
