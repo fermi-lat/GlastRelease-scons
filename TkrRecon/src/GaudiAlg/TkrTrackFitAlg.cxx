@@ -113,7 +113,11 @@ StatusCode TkrTrackFitAlg::execute()
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
 
-    log << MSG::DEBUG << "------- Recon of new Event --------" << endreq;
+    log << MSG::DEBUG; 
+    if (log.isActive()) {
+        log << "------- Recon of new Event --------";
+    }
+    log << endreq;
 
     // Recover pointer to the reconstructed clusters NOT USED
     //    Event::TkrClusterCol* TkrClusters = SmartDataPtr<Event::TkrClusterCol>(eventSvc(),EventModel::TkrRecon::TkrClusterCol); 

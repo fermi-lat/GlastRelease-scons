@@ -32,8 +32,14 @@ TkrPatCandHit::TkrPatCandHit(unsigned int hitId, const Point& pos, unsigned int 
 
 void TkrPatCandHit::writeOut(MsgStream& log) const
 {
-    log << MSG::DEBUG << " --- TkrPatCandHit::writeOut --- " << endreq;
-    log << MSG::DEBUG << " Position= " << Position().x() << ", " <<Position().y() << ", " << Position().z() << endreq;
-    log << MSG::DEBUG << " Tower: " << TowerIndex() << ", Layer: " << PlaneIndex() << ", view: " << View() << endreq;
+    log << MSG::DEBUG;
+    if (log.isActive()) {
+        log << " --- TkrPatCandHit::writeOut --- " << endreq
+            << " Position= " << Position().x() << ", " 
+            <<Position().y() << ", " << Position().z() << endreq
+            << " Tower: " << TowerIndex() << ", Layer: " 
+            << PlaneIndex() << ", view: " << View();
+    }
+    log << endreq;
 }
 

@@ -233,7 +233,12 @@ StatusCode TkrSimpleDigiAlg::execute()
     
     //If the McPositionHitVector doesn't exist
     if( 0 == mcHits)  { 
-        log << MSG::DEBUG << "could not find \""<< "EventModel::MC::McPositionHitCol" <<"\"" << endreq;
+        log << MSG::DEBUG;
+        if (log.isActive() ) {
+            log << "could not find \""<< "EventModel::MC::McPositionHitCol" 
+                <<"\"";
+        }
+        log << endreq;
         return  sc;
     }
     
@@ -414,7 +419,11 @@ void TkrSimpleDigiAlg::addNoise(){
     }
     
     MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG << "added " << noiseCount <<" noise hits" << endreq;
+    log << MSG::DEBUG;
+    if (log.isActive() ) {
+        log << "added " << noiseCount <<" noise hits";
+    }
+    log << endreq;
     
     
 }
@@ -444,7 +453,11 @@ void TkrSimpleDigiAlg::createSiHits(const Event::McPositionHitVector& hits)
     // Restrictions and Caveats:  None
     MsgStream   log( msgSvc(), name() );
     
-    log << MSG::DEBUG << "Number of position hits found = " << hits.size() << endreq;
+    log << MSG::DEBUG;
+    if (log.isActive() ) {
+        log << "Number of position hits found = " << hits.size();
+    }
+    log << endreq;
     
     clear();
     

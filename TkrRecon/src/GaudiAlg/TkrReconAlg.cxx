@@ -93,10 +93,15 @@ StatusCode TkrReconAlg::execute()
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
 
-    log << MSG::DEBUG << "------- Recon of new Event --------" << endreq;
+    log << MSG::DEBUG;
+    if (log.isActive()) {
+        log << "------- Recon of new Event --------";
+    }
+    log << endreq;
 
     // Call the four main algorithms in order
 
+    
     if(m_TkrClusterAlg->execute() == StatusCode::FAILURE)
     {
         log << MSG::ERROR << " TkrClusterAlg FAILED to execute!" << endreq;

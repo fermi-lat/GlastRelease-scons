@@ -45,13 +45,14 @@ void TkrCluster::writeOut(MsgStream& log) const
 	// Inputs:  message stream
 	// Outputs: data written to message stream
 	
-    if(log.isActive()) {
-        log << MSG::DEBUG << " plane " << m_plane << " XY " << (int) m_view
+    log << MSG::DEBUG;
+    if (log.isActive()) {
+        log << " plane " << m_plane << " XY " << (int) m_view
             << " xpos  " << m_position.x()  << " ypos   " << m_position.y()
             << " zpos  " << m_position.z()
-            << " i0-if " << m_strip0 <<"-"<< m_stripf
-            <<endreq;
+            << " i0-if " << m_strip0 <<"-"<< m_stripf;
     }
+    log << endreq;
 }
 //---------  Private --------------------------------
 

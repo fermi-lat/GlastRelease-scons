@@ -113,14 +113,20 @@ Vector TkrKalFitTrack::getDirection(TrackEnd end) const
 void TkrKalFitTrack::writeOut(MsgStream& log) const
 {
     
-    log << MSG::DEBUG << " --- TkrKalFitTrack::writeOut --- "            << endreq;
-    log << MSG::DEBUG << " Position      = " << getPosition().x()  << " " << getPosition().y()  << " " << getPosition().z()  << endreq;
-    log << MSG::DEBUG << " Direction     = " << getDirection().x() << " " << getDirection().y() << " " << getDirection().z() << endreq;
-    log << MSG::DEBUG << " Energy        = " << getEnergy() << endreq;
-    log << MSG::DEBUG << " first Layer   = " << getLayer() << endreq;
-    log << MSG::DEBUG << " Tower         = " << getTower() << endreq;
-    log << MSG::DEBUG << " quality       = " << getQuality()       << endreq;
-    log << MSG::DEBUG << " num m_hits    = " << getNumHits()       << endreq;
+    log << MSG::DEBUG;
+    if (log.isActive() ) {
+        log << " --- TkrKalFitTrack::writeOut --- "            << endreq
+            << " Position      = " << getPosition().x()  << " " 
+            << getPosition().y()  << " " << getPosition().z()  << endreq
+            << " Direction     = " << getDirection().x() << " " 
+            << getDirection().y() << " " << getDirection().z() << endreq
+            << " Energy        = " << getEnergy() << endreq
+            << " first Layer   = " << getLayer() << endreq
+            << " Tower         = " << getTower() << endreq
+            << " quality       = " << getQuality()       << endreq
+            << " num m_hits    = " << getNumHits();
+    }
+    log << endreq;
 }
 
 

@@ -51,7 +51,11 @@ StatusCode TkrVertexAlg::initialize()
 
     setProperties();
     
-    log << MSG::DEBUG << "Initializing TkrVertexAlg"<<endreq;
+    log << MSG::DEBUG; 
+    if (log.isActive() ) {
+        log << "Initializing TkrVertexAlg";
+    }
+    log <<endreq;
 
     return StatusCode::SUCCESS;
 }
@@ -100,7 +104,11 @@ StatusCode TkrVertexAlg::execute()
             VtxToolName = std::string("DEFAULT");
         }
 
-        log << MSG::DEBUG << "Vertexing performed with: "<< VtxToolName.c_str() <<endreq;
+        log << MSG::DEBUG;
+        if (log.isActive()) {
+            log << "Vertexing performed with: "<< VtxToolName.c_str();
+        }
+        log <<endreq;
 
         // Look up (and instantiate if necessary) a private version of the tool
         sc = toolSvc()->retrieveTool(VtxToolName.c_str(), m_VtxTool, this);
