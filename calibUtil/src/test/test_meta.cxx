@@ -30,7 +30,7 @@ int main(int, char**) {
   using facilities::Timestamp;
 
   // just for exercise..
-  compatibility();
+  //  compatibility();
 
   Timestamp t_ok("2001-11-10 08:00");
   Timestamp t_none("2000-09-08 10:00");
@@ -200,17 +200,4 @@ calibUtil::Metadata::eRet soonest(const std::string& ctype,
   }
 
   return ret;
-}
-
-void compatibility() {
-  using calibUtil::Metadata;
-
-  Metadata       meta("*", "*", "calib_test");
-  Metadata::eRet  ret = meta.compareSchema();
-
-  if (ret == Metadata::RETOk) {
-    std::cout << "Schema compatible with MySQL dbs " << std::endl;
-  } else {
-    std::cout << "Schema *NOT* compatible with MySQL dbs " << std::endl;
-  }
 }
