@@ -1,5 +1,5 @@
 package FluxSvc
-version v5r7p1
+version v5r8
 
 branches FluxSvc mgr doc
 
@@ -11,7 +11,7 @@ use geometry   v3*
 use GaudiSvc
 use xml
 use CLHEP
-use cfitsio
+#use cfitsio
 
 
 apply_pattern packageShr

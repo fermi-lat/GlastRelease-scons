@@ -3,6 +3,7 @@
  * Coordinator: T.Burnett, S. Robinson
  *
  * v5r8   THB  * Implement scheme using new IRegisterSource to find external Spectrum objects
+ *        SR   * Start of 
  * v5r7p1 THB  * convert proton name in FluxAlg
  * v5r7   THB  * set time in event header
  * v5r6p2 THB  * fix units for default soruce
