@@ -11,7 +11,7 @@
 #include "Event/MonteCarlo/McPositionHit.h"
 #include "Event/Digi/CalDigi.h"
 #include "idents/CalXtalId.h"
-#include "Event/Recon/AcdRecon.h"
+#include "Event/Recon/AcdRecon/AcdRecon.h"
 #include "Event/Recon/TkrRecon/TkrClusterCol.h"
 #include "Event/Recon/TkrRecon/TkrPatCandCol.h"
 #include "Event/Recon/TkrRecon/TkrFitTrack.h"

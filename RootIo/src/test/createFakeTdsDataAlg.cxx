@@ -12,7 +12,7 @@
 #include "Event/Digi/AcdDigi.h"
 #include "Event/Digi/CalDigi.h"
 #include "Event/Digi/TkrDigi.h"
-#include "Event/Recon/AcdRecon.h"
+#include "Event/Recon/AcdRecon/AcdRecon.h"
 
 #include "idents/CalXtalId.h"
 #include "idents/VolumeIdentifier.h"
