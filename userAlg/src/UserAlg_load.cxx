@@ -11,4 +11,5 @@
 DECLARE_FACTORY_ENTRIES(UserAlg) {
     DECLARE_ALGORITHM( UserAlg );
     DECLARE_ALGORITHM( PauseEvent );
+    DECLARE_ALGORITHM( Replay );
 }

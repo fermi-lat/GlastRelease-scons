@@ -21,6 +21,14 @@ ApplicationMgr.TopAlg += { "UserAlg"};
 // and this when run number is not needed: (not sure why this works, but it does!)
 //PauseEvent.eventList = {20, 22, 24, 50};
 
+// How to replay any algorithm from a paused condition:
+//
+//ApplicationMgr.TopAlg += {"Replay/button1", "Replay/button2"};
+//button1.algname="TkrReconAlg";
+//button2.algname="TkrFindAlg";
+
+//Output.Members={}; // turn off rootwriter.
+
 //==============================================================
 //
 // End of job options file

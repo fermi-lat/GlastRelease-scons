@@ -15,6 +15,11 @@ simulation/ reconstruction environment. This includes
 </ul>
   The primary component (which can be easily added to) is UserAlg.
 
+\section utilites Interactive Utilities
+<ul>
+ <li> PauseEvent </li>
+ <li> Replay </li>
+ </ul>
 
   <hr>
   \section jobOptions src/jobOptions.txt
