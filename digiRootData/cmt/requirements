@@ -24,7 +24,7 @@ private
 setup_script dorootcint
 
 # Create the Root Cint classes on UNIX
-macro root_headers "AcdHeader.h AcdId.h AcdTile.h CalHeader.h CalLog.h ESAPID.h DigiEvent.h L1T.h LiveTime.h LogId.h StripId.h SubSystemHeader.h Tagger.h TkrHeader.h TkrLayer.h EventLinkDef.h"
+macro root_headers "AcdHeader.h AcdId.h AcdTile.h CalDigi.h CalHeader.h CalLog.h CalLogId.h CalLogReadout.h ESAPID.h DigiEvent.h L1T.h LiveTime.h LogId.h StripId.h SubSystemHeader.h Tagger.h TkrHeader.h TkrLayer.h EventLinkDef.h"
 
 # on unix use a document to make rootcint part of the build process
 make_fragment event_dorootcint_header
