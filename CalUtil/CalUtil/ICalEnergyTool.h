@@ -43,8 +43,8 @@ public:
   /// \param position input energy centroid position
   /// \param energy output total deposited energy 
   virtual StatusCode calculate(const idents::CalXtalId &xtalId,
-                               idents::CalXtalId::AdcRange range,
                                idents::CalXtalId::XtalFace face,
+                               idents::CalXtalId::AdcRange range,
                                int adc, 
                                float position,
                                float &energy                    // output

@@ -25,11 +25,13 @@ public:
 
   /// calculate xtal Adc response for all ranges basedon collection of McHits in xtal & diode regions
   StatusCode calculate(const idents::CalXtalId &xtalId, 
-                       const std::vector<const Event::McIntegratingHit*> &hitList,
-                       std::vector<int> &adcP,              // output - ADC's for all ranges 0-3
+                       const std::vector<const Event::McIntegratingHit*> &hitList, 
+                       bool &lacP,
+                       bool &lacN,
                        idents::CalXtalId::AdcRange &rangeP, // output - best range
-                       std::vector<int> &adcN,              // output - ADC's for all ranges 0-3
-                       idents::CalXtalId::AdcRange &rangeN  // output - best range
+                       idents::CalXtalId::AdcRange &rangeN, // output - best range
+                       std::vector<int> &adcP,              // output - ADC's for all ranges 0-3
+                       std::vector<int> &adcN               // output - ADC's for all ranges 0-3
                        );
 private:
   /// calculate light taper for the two xtal ends
@@ -54,6 +56,7 @@ private:
   int m_nCsISeg;                         ///< number of geometric segments per Xtal
   int m_noise[2];                        ///< noise for diodes 1=Small, 0=Large units=electrons
   int m_pedestal;                        ///< single pedestal
+  double m_thresh;                       ///< zero suppression threshold
 
   // *** STOLEN FROM CalUtil::LinearConvertAdc *** //
   double m_gain[2][4];                   ///< overall gain factor: MeV/channel
@@ -64,8 +67,6 @@ private:
         fMeasure, fCALXtal,fCellCmp, fSegment};
 
   BooleanProperty m_doFluctuations;      ///< string flag for applying electron statistics fluctuations per channel
-  StringProperty m_xmlFile;              ///< input XML file containing parameters for Digitization
-
 };
 
 #endif //_TestAdcTool_H

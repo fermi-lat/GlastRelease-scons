@@ -20,7 +20,6 @@ TestAdcTool::TestAdcTool( const std::string& type,
   declareInterface<ICalAdcTool>(this);
 
   declareProperty ("doFluctuations", m_doFluctuations=true);
-  declareProperty ("xmlFile", m_xmlFile="$(CALDIGIROOT)/xml/CalDigi.xml");
 }
 
 StatusCode TestAdcTool::initialize() {
@@ -71,6 +70,8 @@ StatusCode TestAdcTool::initialize() {
   DPARAMAP dparam;
   dparam[&m_CsILength]  = std::string("CsILength");
   dparam[&m_lightAtt]   = std::string("cal.lightAtt");
+  dparam[&m_thresh]=std::string("cal.zeroSuppressEnergy");
+
 
   for(DPARAMAP::iterator dit=dparam.begin(); dit!=dparam.end();dit++){
     if(!detSvc->getNumericConstByName((*dit).second,(*dit).first)) {
@@ -79,11 +80,9 @@ StatusCode TestAdcTool::initialize() {
     }
   }
 
-  // Read in the parameters from the XML file
-  xml::IFile m_ifile(m_xmlFile.value().c_str());
-  if (m_ifile.contains("cal","ePerMeVinDiode"))
-    m_ePerMeVinDiode = m_ifile.getDouble("cal", "ePerMeVinDiode");
-  else return StatusCode::FAILURE;
+  // eperMevInDiode originally from CalDigi XML file
+  // but i don't want dependency, so i'm hard coding it.  (just a testing tool anyway :)
+  m_ePerMeVinDiode = 2.77e5;
 
   // from CalUtil::LinearConvertAdc
   if(!detSvc->getNumericConstByName("cal.maxResponse0",&m_maxResponse[0])) {
@@ -123,10 +122,12 @@ StatusCode TestAdcTool::initialize() {
 */
 StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
                                   const std::vector<const Event::McIntegratingHit*> &hitList, // list of all mc hits for this xtal & it's diodes.
-                                  std::vector<int> &adcP,              // output - ADC's for all ranges 0-3
+                                  bool &lacP,
+                                  bool &lacN,
                                   idents::CalXtalId::AdcRange &rangeP, // output - best range
-                                  std::vector<int> &adcN,              // output - ADC's for all ranges 0-3
-                                  idents::CalXtalId::AdcRange &rangeN  // output - best range
+                                  idents::CalXtalId::AdcRange &rangeN,  // output - best range
+                                  std::vector<int> &adcP,              // output - ADC's for all ranges 0-3
+                                  std::vector<int> &adcN              // output - ADC's for all ranges 0-3
                                   ) {
 
   MsgStream msglog(msgSvc(), name());
@@ -139,6 +140,11 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
   typedef idents::CalXtalId CalXtalId;
   typedef std::pair<int,int> diodeId;
   std::map<diodeId,double> diodeEnergy;
+  // initialize 4 diodes
+  diodeEnergy[diodeId(0,0)] = 0;
+  diodeEnergy[diodeId(0,1)] = 0;
+  diodeEnergy[diodeId(1,0)] = 0;
+  diodeEnergy[diodeId(1,1)] = 0;
 
   // STAGE 1 Clone CalDigiAlg::fillSignalEnergies() ////////////////////////////////////////
 
@@ -157,10 +163,9 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
     }
 
     // make sure volumeid matches xtalId
-    if (volId[fCALXtal]  != xtalId.getColumn() ||
-        volId[fLayer]    != xtalId.getLayer()  ||
-        (volId[fTowerY]*m_xNum + 
-         volId[fTowerX]) != xtalId.getTower()) {
+    if ((int)volId[fCALXtal]  != xtalId.getColumn() ||
+        (int)volId[fLayer]    != xtalId.getLayer()  ||
+        (int)(volId[fTowerY]*m_xNum + volId[fTowerX]) != xtalId.getTower()) {
       msglog << MSG::WARNING << "Invalid volume id.  Continuing w/out it but this shouldn't happen." << endreq;
       continue;
     }
@@ -201,7 +206,7 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
     }
   }
 
-  // STAGE 2 Clone CalDigiAlg::addNoiseToSignals() ////////////////////////////////////////
+  // STAGE 2 Clone CalDigiAlg::addNoiseToSignals() and ::addNewNoseToSignals() 
   // Purpose and Method:
   // add electronic noise to the diode response and add to the crystal
   // response. The diodeEnergy becomes the readout source.
@@ -234,16 +239,6 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
       diodeEnergy[diode_id] += RandGauss::shoot()*m_noise[diode]/m_ePerMeV[diode];
     }
 
-  // output debug::msg to msglog
-  msglog << MSG::DEBUG; if (msglog.isActive()){ msglog.stream() << " id " << xtalId
-         << " s0=" << signal[CalXtalId::POS]
-         << " s1=" << signal[CalXtalId::NEG]
-         << " d0=" << diodeEnergy[diodeId(0,0)]
-         << " d1=" << diodeEnergy[diodeId(0,1)]
-         << " d2=" << diodeEnergy[diodeId(1,0)]
-         << " d3=" << diodeEnergy[diodeId(1,1)]
-      ;} msglog << endreq;
-      
   // STAGE 3 Clone CalDigiAlg::createDigis
 
   // calculate all ADC responses
@@ -260,7 +255,9 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
     if (adcN[range] > m_maxAdc) adcN[range] = m_maxAdc;
   }
 
-  // find best range for each face
+  // Best Range And Lac Tests //
+
+  // best range POS
   xtalface = CalXtalId::POS;
   for (int range = 0; range < 4; range++) {
     int diode = range/2;
@@ -269,6 +266,12 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
     if (ene < m_maxResponse[range]) break;  // break on 1st energy range that is < threshold
   }
 
+  // log-accept POS - hardware only tests large diode for zero suppression
+  if (diodeEnergy[diodeId(xtalface,idents::CalXtalId::LARGE)] > m_thresh) 
+    lacP = true;
+  else lacP = false;
+
+  // best range NEG
   xtalface = CalXtalId::NEG;
   for (int range = 0; range < 4; range++) {
     int diode = range/2;
@@ -277,7 +280,13 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
     if (ene < m_maxResponse[range]) break;  // break on 1st energy range that is < threshold
   }
 
-  msglog << MSG::INFO  << "CalAdcTool id " << xtalId
+  // log-accept NEG - hardware only tests large diode fro zero suppression
+  lacN = false;
+  if (diodeEnergy[diodeId(xtalface,idents::CalXtalId::LARGE)] > m_thresh) 
+    lacN = true;
+  else lacN = false;
+
+  msglog << MSG::DEBUG  << "CalAdcTool id " << xtalId
          << " s0=" << signal[CalXtalId::POS]
          << " s1=" << signal[CalXtalId::NEG]
          << " d0=" << diodeEnergy[diodeId(0,0)]

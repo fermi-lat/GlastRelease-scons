@@ -29,10 +29,10 @@ class ICalPosTool : virtual public IAlgTool {
   /// \param rangeN input adc range for Negative end
   /// \param position output energy centroid position
   virtual StatusCode calculate(const idents::CalXtalId &xtalId,
-                               int adcP, 
                                idents::CalXtalId::AdcRange rangeP,
-                               int adcN, 
                                idents::CalXtalId::AdcRange rangeN,
+                               int adcP, 
+                               int adcN, 
                                float &position
                                ) = 0;
   

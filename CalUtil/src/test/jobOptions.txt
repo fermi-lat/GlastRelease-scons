@@ -4,7 +4,7 @@
 
 // primary DLLs
 
-ApplicationMgr.DLLs+= {"CalUtil"};
+ApplicationMgr.DLLs+= {"CalUtil","CalibSvc"};
 
 // ----------------------------
 // setup basic event loop stuff
@@ -33,6 +33,34 @@ ApplicationMgr.ExtSvc += {"CalFailureModeSvc"};
 CalFailureModeSvc.towerAfeeList= {"10_2"}; 
 CalFailureModeSvc.towerList= {"11"}; 
 CalFailureModeSvc.towerControllerList= {"4_2"}; 
+
+// Start up a CalibDataSvc 
+ApplicationMgr.ExtSvc += {"CalibDataSvc"};
+
+ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
+CalibMySQLCnvSvc.DbName = "calib_user";
+
+DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
+DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
+
+// CalibDataSvc properties 
+// Storage type of 14 corresponds to MYSQL
+CalibDataSvc.CalibInstrumentName = "EM";
+CalibDataSvc.CalibStorageType = 14;
+CalibDataSvc.CalibRootName = "Calib";
+CalibDataSvc.CalibFlavorList = {"ideal", "test"};
+CalibDataSvc.CalibTimeSource = "clock";
+CalibDataSvc.startTime = "2003-2-28 23:59:59";
+CalibDataSvc.delayTime = 10000;
+
+// Start up a CalCalibSvc
+ApplicationMgr.ExtSvc += {"CalCalibSvc"};
+// CalCalibSvc properties
+CalCalibSvc.DefaultFlavor = "vanilla";
+CalCalibSvc.FlavorIntNonlin = "test";
+CalCalibSvc.FlavorLightAsym = "test";
+
+
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel = 2;

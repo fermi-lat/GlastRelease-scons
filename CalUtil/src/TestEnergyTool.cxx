@@ -172,7 +172,7 @@ StatusCode TestEnergyTool::calculate(const idents::CalXtalId &xtalId,
     std::string fullPedPath = "/Calib/CAL_Ped/"+m_calibFlavor;
     std::string fullGainPath = "/Calib/CAL_ElecGain/"+m_calibFlavor;
 
-    DataObject *pObject;
+    DataObject *pObject = 0 ;
         
     //getting pointers to the calibration data of each type
     if(m_pCalibDataSvc->retrieveObject(fullPedPath, pObject) == StatusCode::SUCCESS) {
@@ -183,7 +183,8 @@ StatusCode TestEnergyTool::calculate(const idents::CalXtalId &xtalId,
         return StatusCode::FAILURE;
       }
     } else{
-      log << MSG::INFO << "Enable to retrieve pedestals from calib database" << endreq;
+      log << MSG::ERROR << "Unable to retrieve pedestals from calib database" << endreq;
+      return StatusCode::FAILURE;
     }
     if(m_pCalibDataSvc->retrieveObject(fullGainPath, pObject) == StatusCode::SUCCESS) {
 
@@ -193,7 +194,8 @@ StatusCode TestEnergyTool::calculate(const idents::CalXtalId &xtalId,
         return StatusCode::FAILURE;
       }
     }else{            
-      log << MSG::INFO << "Enable to retrieve gains from calib database" << endreq;
+      log << MSG::ERROR << "Unable to retrieve gains from calib database" << endreq;
+      return StatusCode::FAILURE;
     }
 
   }
@@ -251,8 +253,8 @@ StatusCode TestEnergyTool::calculate(const idents::CalXtalId &xtalId,
   -# convert adc values into energy (e = gain*(adc-ped))
 */
 StatusCode TestEnergyTool::calculate(const idents::CalXtalId &xtalId,
-                                     idents::CalXtalId::AdcRange range,
                                      idents::CalXtalId::XtalFace face,
+                                     idents::CalXtalId::AdcRange range,
                                      int adc, 
                                      float position,
                                      float &energy                    // output
@@ -286,7 +288,8 @@ StatusCode TestEnergyTool::calculate(const idents::CalXtalId &xtalId,
         return StatusCode::FAILURE;
       }
     } else{
-      log << MSG::INFO << "Enable to retrieve pedestals from calib database" << endreq;
+      log << MSG::ERROR << "Unable to retrieve pedestals from calib database" << endreq;
+      return StatusCode::FAILURE;
     }
     if(m_pCalibDataSvc->retrieveObject(fullGainPath, pObject) == StatusCode::SUCCESS) {
 
@@ -296,9 +299,9 @@ StatusCode TestEnergyTool::calculate(const idents::CalXtalId &xtalId,
         return StatusCode::FAILURE;
       }
     }else{            
-      log << MSG::INFO << "Enable to retrieve gains from calib database" << endreq;
+      log << MSG::ERROR << "Unable to retrieve gains from calib database" << endreq;
+      return StatusCode::FAILURE;
     }
-
   }
 
   //extraction of pedestals

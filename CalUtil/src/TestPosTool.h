@@ -31,10 +31,10 @@ public:
 
   /// calculate position of energy deposition relative to xtal-center = 0
   StatusCode calculate(const idents::CalXtalId &xtalId,
-                       int adcP, 
                        idents::CalXtalId::AdcRange rangeP,
-                       int adcN, 
                        idents::CalXtalId::AdcRange rangeN,
+                       int adcP, 
+                       int adcN, 
                        float &position                // output
                        );
 private:

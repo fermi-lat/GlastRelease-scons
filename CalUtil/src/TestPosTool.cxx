@@ -167,10 +167,10 @@ StatusCode TestPosTool::initialize() {
   -# return position relative to xtal center
 */
 StatusCode TestPosTool::calculate(const idents::CalXtalId &xtalId,
-                                  int adcP, 
                                   idents::CalXtalId::AdcRange rangeP,
-                                  int adcN, 
                                   idents::CalXtalId::AdcRange rangeN,
+                                  int adcP, 
+                                  int adcN, 
                                   float &position                // output
                                   ) {
 
@@ -178,32 +178,35 @@ StatusCode TestPosTool::calculate(const idents::CalXtalId &xtalId,
 
   DataObject *pObject;
   pMuSlopes = 0;
-  std::string fullMuSlopePath = "/Calib/CAL_MuSlope/"+m_calibFlavor;
-  if (m_pCalibDataSvc->retrieveObject(fullMuSlopePath, pObject) == StatusCode::SUCCESS) {
-    pMuSlopes = dynamic_cast<CalibData::CalCalibMuSlope *> (pObject);
-    if (!pMuSlopes) {
-      msglog << MSG::ERROR << "Dynamic cast to CalCalibMuSlope failed" << endreq;
+  if (m_calibFlavor != "none") {
+    std::string fullMuSlopePath = "/Calib/CAL_MuSlope/"+m_calibFlavor;
+    if (m_pCalibDataSvc->retrieveObject(fullMuSlopePath, pObject) == StatusCode::SUCCESS) {
+      pMuSlopes = dynamic_cast<CalibData::CalCalibMuSlope *> (pObject);
+      if (!pMuSlopes) {
+        msglog << MSG::ERROR << "Dynamic cast to CalCalibMuSlope failed" << endreq;
+        return StatusCode::FAILURE;
+      }
+    } else {
+      msglog << MSG::ERROR << "Unable to retrieve mu slopes from calib database" << endreq;            
       return StatusCode::FAILURE;
     }
-  } else {
-    msglog << MSG::INFO << "Enable to retrieve mu slopes from calib database" << endreq;            
   }
 	
   //extract energy for the best range for both crystal faces 	
   float calEnergyP,calEnergyN;
-  if (m_pCalEnergyTool->calculate(xtalId,(idents::CalXtalId::AdcRange)rangeP,
-                                  (idents::CalXtalId::POS),
+  if (m_pCalEnergyTool->calculate(xtalId,(idents::CalXtalId::POS),
+                                  (idents::CalXtalId::AdcRange)rangeP,
                                   adcP,.5,calEnergyP)!=StatusCode::SUCCESS) {
     msglog << MSG::ERROR << "Error on calenergytool::calculate" << endreq;
     return StatusCode::FAILURE;
   }
-  if (m_pCalEnergyTool->calculate(xtalId,(idents::CalXtalId::AdcRange)rangeN,
-                                  (idents::CalXtalId::NEG),
+  if (m_pCalEnergyTool->calculate(xtalId,(idents::CalXtalId::NEG),
+                                  (idents::CalXtalId::AdcRange)rangeN,
                                   adcN,.5,calEnergyN)!=StatusCode::SUCCESS) {
     msglog << MSG::ERROR << "Error on calenergytool::calculate" << endreq;
     return StatusCode::FAILURE;
   }
-  msglog << MSG::INFO << " eneP " << calEnergyP << " eneM " << calEnergyN << std::endl;
+  msglog << MSG::INFO << " eneP " << calEnergyP << " eneM " << calEnergyN << endreq;
    
   double eneNeg = calEnergyN;
   double enePos = calEnergyP;

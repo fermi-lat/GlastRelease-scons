@@ -42,8 +42,8 @@ public:
   
   /// calculate energy deposition given the digi response for one xtal face
   StatusCode calculate(const idents::CalXtalId &xtalId,
-                       idents::CalXtalId::AdcRange range,
                        idents::CalXtalId::XtalFace face,
+                       idents::CalXtalId::AdcRange range,
                        int adc, 
                        float position,
                        float &energy                    // output
