@@ -363,8 +363,12 @@ StatusCode mcRootReaderAlg::readMcPositionHits() {
             posHitTds->setOriginMcParticle(originTds);
         }
 
+        Event::McParticle::StdHepId particleIdTds = posHitRoot->getMcParticleId();
+
         // setup the TDS McPositionHit
         posHitTds->init(edepTds, volIdTds, entryTds, exitTds);
+        posHitTds->setMcParticleId(particleIdTds);
+
         // add the McPositionHit to the TDS collection of McPositionHits
         pTdsCol->push_back(posHitTds);
     }

@@ -313,6 +313,8 @@ StatusCode mcRootWriterAlg::writeMcPositionHits() {
         (*hit)->fillStream(log.stream());
         log << endreq;
 
+        Int_t particleId = (*hit)->getMcParticleId();
+
         idents::VolumeIdentifier volIdTds = (*hit)->volumeID();
         VolumeIdentifier volIdRoot;
         convertVolumeId(volIdTds, volIdRoot);
@@ -354,8 +356,8 @@ StatusCode mcRootWriterAlg::writeMcPositionHits() {
 
         McPositionHit *mcPosHit = new McPositionHit();
         // Setup the ROOT McPositionHit
-        mcPosHit->initialize(edepRoot, volIdRoot, entryRoot, exitRoot, mcRoot, 
-            originRoot, epartRoot, tofRoot, flagsRoot);
+        mcPosHit->initialize(particleId, edepRoot, volIdRoot, entryRoot, 
+            exitRoot, mcRoot, originRoot, epartRoot, tofRoot, flagsRoot);
         // Add the ROOT McPositionHit to the ROOT collection of McPositionHits
         m_mcEvt->addMcPositionHit(mcPosHit);
     }
