@@ -180,7 +180,7 @@
 
     <!-- the TimeCandle spectrum  -->
     <source name="timetick15s">
-         <spectrum escale="GeV"> <SpectrumClass name="TimeCandle" params="300."/>  
+         <spectrum escale="GeV"> <SpectrumClass name="TimeCandle" params="57.338"/>  
 		 <use_spectrum/><launch_point />
          </spectrum>
     </source>

@@ -91,6 +91,12 @@ public:
     
     //return how many sources are in the sourcelist (defaults to 1 if only a single FluxSource)
     virtual int howManySources(){return 1;}
+
+    /// write the characteristics of the current source distribution to a stream
+    virtual void writeSourceCharacteristic(std::ostream& out){
+        out << fullTitle() << std::endl;
+        out<< "default message - no sources" << std::endl;
+    }
     
     //double m_time;    // elapsed time, really only needed for EventSource
 private:

@@ -71,7 +71,7 @@ StatusCode ExposureAlg::initialize(){
 
     //TODO: set the file name from a property
     m_out = new std::ofstream("orbitFromAlg.out");
-    //m_fluxSvc->setRockType(GPS::UPDOWN);
+    m_fluxSvc->setRockType(GPS::SLEWING);
 
     return sc;
 }
@@ -200,6 +200,13 @@ StatusCode ExposureAlg::execute()
     Event::D2EntryCol::iterator curEntry = (*elist).begin();
     //some test output - to show that the data got onto the TDS
     (*curEntry)->writeOut(log);
+
+    SkyDir curDir(raz,decz);
+    SkyDir xDir(rax,decx);
+
+    SkyDir sunDir(rasun,decsun);
+    //Rotation galtoglast(m_fluxSvc->transformGlastToGalactic(currentTime).inverse);
+    sunDir()=(m_fluxSvc->transformGlastToGalactic(currentTime).inverse())*sunDir();
      
     //and here's the file output.
     std::ostream& out = *m_out;
@@ -220,7 +227,12 @@ StatusCode ExposureAlg::execute()
         out<<lon <<'\t';
         out<<lat <<'\t';
         out<<alt <<'\t';
+        out<<curDir.l() <<'\t';
+        out<<curDir.b()<<'\t';
+        out<<xDir.l() <<'\t';
+        out<<xDir.b()<<'\t';
         out<< rasun <<"\t"<<decsun  <<'\t';
+        out<< sunDir().x() <<"\t"<< sunDir().y()  <<"\t"<< sunDir().z()  <<'\t';
         out<<ramoon <<"\t"<<decmoon   <<std::endl;
                                 
 

@@ -91,6 +91,9 @@ public:
     virtual EventSource* currentEvent()=0;
     
     virtual FluxSource* currentFlux()=0;
+
+    /// write the characteristics of the current source distribution to a stream
+    virtual void writeSourceCharacteristic(std::ostream& out)=0;
     
 #if 0
     // get a description of the parameters that can be modified, and reference to a list of them

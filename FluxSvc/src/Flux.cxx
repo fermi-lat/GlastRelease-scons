@@ -142,3 +142,7 @@ Rotation Flux::transformGlastToGalactic(double time)const{
     
     return s_mgr->transformGlastToGalactic(time);
 }
+
+void Flux::writeSourceCharacteristic(std::ostream& out){
+    m_event->writeSourceCharacteristic(out);
+}

@@ -51,6 +51,7 @@ private:
     std::string m_source_name;
     IParticlePropertySvc * m_partSvc;
     std::ostream* m_out;  //for output that looks like the stuff from the astro orbit model test.
+    std::ostream* m_diffsources; //for output concerning the source used (extra output for diffuse model)
 
 };
 
@@ -90,6 +91,7 @@ StatusCode FluxTestAlg::initialize() {
 #if 0 // this does not make sense for testing FluxAlg
     //set the output file.
     m_out = new std::ofstream("TestOutputData.out");
+    m_diffsources = new std::ofstream("SourceCharacteristics.out");
 
     // get the pointer to the flux Service 
     IFluxSvc* fsvc;
@@ -165,8 +167,10 @@ StatusCode FluxTestAlg::execute() {
         << "(" << d.x() <<", "<< d.y() <<", "<<d.z()<<")"
          << ",  Elapsed Time = " << header->time()
         << endreq;
+
 #if 0 // enable for tests: see above
     double theta = acos(d.z()/(d.mag()));
+
     double phi = atan2(d.y(),d.x());
 
     //and here's the file output.
@@ -185,6 +189,9 @@ StatusCode FluxTestAlg::execute() {
 //------------------------------------------------------------------------------
 StatusCode FluxTestAlg::finalize() {
     delete m_out;
+    std::ostream& diffsources = *m_diffsources;
+    m_flux->writeSourceCharacteristic(diffsources);
+    delete m_diffsources;
     return StatusCode::SUCCESS;
 }
 

@@ -89,6 +89,12 @@ void CompositeDiffuse::addNewSource(){
     double  l = RandFlat::shoot(-180, 180);       
     double b = (acos(costh)*180/M_PI)-90.;
     EventSource* aSource=new FluxSource(flux,spec,l,b);
+    PointSourceData thissource; 
+    thissource.flux = flux;
+    thissource.l = l;
+    thissource.b = b;
+    //thissource.energyIndex = spec;
+    m_listOfDiffuseSources.push_back(thissource);
     
     FluxSource* abc = (FluxSource*)aSource;
     //then add it into the list of sources..

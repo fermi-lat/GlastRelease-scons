@@ -35,6 +35,13 @@ class FluxSource;
 class CompositeDiffuse: public CompositeSource { 
 public:
     
+    typedef struct{
+        double l;
+        double b;
+        double flux;
+        double energyIndex;
+    }PointSourceData;
+
     CompositeDiffuse(double totalFlux):
       m_totalFlux(totalFlux),m_unclaimedFlux(totalFlux)
       {
@@ -66,6 +73,20 @@ public:
       //stolen from FluxMgr, this collects xml and dtd and prepares an input
       //file for parsing by the DOM parser.
       std::string writeXmlFile(const std::vector<std::string>& fileList);
+
+
+      /// write the characteristics of the current source distribution to a stream
+      void writeSourceCharacteristic(std::ostream& out){
+        out << fullTitle() << std::endl;
+        out << "Diffuse Added Point Sources:" << std::endl;
+        out << "l" << '\t' << "b" <<'\t' << "flux" << '\t'<< "energyIndex" << std::endl << std::endl;
+
+        std::vector<PointSourceData>::iterator now= m_listOfDiffuseSources.begin();
+        for ( ; now != m_listOfDiffuseSources.end(); now++) {
+            out << (*now).l << '\t' <<(*now).b << '\t' << (*now).flux << '\t' << (*now).energyIndex << std::endl;
+        }
+
+    }
       
 private:
     double m_totalFlux; // The total flux from the entire sky, particles/sec/m^2/steradian.
@@ -74,6 +95,7 @@ private:
     //long double pofi(long double intensity);
     long double logNlogS(long double flux);
     std::vector<std::pair<double,double> > m_logNLogS; // inputted logN.logS graph, to be used for finding random fluxes.
+    std::vector<PointSourceData> m_listOfDiffuseSources; //information on the sources which got added randomly.
     double m_minFlux; //the minimum flux to be considered in the spectrum
     double m_maxFlux; //the maximum flux to be considered.
     double m_totalIntegratedFlux; //integrated flux, using input file.

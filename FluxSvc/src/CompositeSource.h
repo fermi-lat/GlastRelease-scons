@@ -68,11 +68,12 @@ public:
     /// set the interval to the next event
     double setInterval (double interval){return (m_interval = interval);}
     
-    // double m_time; 
+    /// double m_time; 
     double m_interval;
     
-    //return how many sources are in the sourcelist
+    /// return how many sources are in the sourcelist
     int howManySources(){return m_sourceList.size();}
+
     
 protected:
     virtual void setupXML (const DOM_Element&);

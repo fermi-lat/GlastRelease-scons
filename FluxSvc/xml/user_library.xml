@@ -50,13 +50,6 @@
          </spectrum>
     </source>
 
-<!-- Test source at some other galactic coordinates -->
-     <source name="gal10020" flux="0.01">
-          <spectrum escale="GeV">
-              <particle name="gamma"> <energy e="0.1"/> </particle>
-               <galactic_dir l="20" b="20"/>
-          </spectrum>
-     </source>
 
 	 <!-- Test source at some other celestial coordinates -->
      <source name="celposition" flux="0.05">
@@ -282,4 +275,29 @@
               <galactic_spread  l="0" b="0"/>
          </spectrum>
     </source>
+
+
+	<!-- Test source at some other galactic coordinates -->
+     <source name="galpnttestsrc" flux="0.05">
+          <spectrum escale="GeV">
+              <particle name="gamma"> <energy e="0.1"/> </particle>
+               <galactic_dir l="-10" b="5"/>
+          </spectrum>
+     </source>
+
+	 <source name="galdifftestsrc" flux="0.001">
+        <spectrum escale="GeV">
+            <particle name="gamma" >
+                <power_law emin="0.010" emax="0.1" gamma="1.0"/>
+            </particle>
+            <solid_angle mincos="-1.0" maxcos="1.0"/>
+        </spectrum>
+     </source>
+
+	 <!-- The point source with background, for likelihood testing-->
+    <source name="likltest">
+        <nestedSource sourceRef="galdifftestsrc"/>
+		<nestedSource sourceRef="galpnttestsrc"/>
+    </source>
+
 </source_library>

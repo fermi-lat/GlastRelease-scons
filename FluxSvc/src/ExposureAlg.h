@@ -52,7 +52,6 @@ private:
     unsigned long m_event;    // event number
     std::ostream* m_out;  //for output that looks like the stuff from the astro orbit model test.
     
-    
     IDataProviderSvc* m_eds;
     
     IParticlePropertySvc * m_partSvc;

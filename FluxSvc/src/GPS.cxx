@@ -16,7 +16,7 @@ GPS*	GPS::s_instance = 0;
 
 GPS::GPS() 
 : m_orbit(new Orbit),
-m_rockDegrees(25.),
+m_rockDegrees(15.),
 m_rockType(NONE),
 m_earthOrbit(new astro::EarthOrbit),
 m_expansion(1.),    // default expansion:regular orbit for now
@@ -282,8 +282,8 @@ Rotation GPS::rockingAngleTransform(double seconds){
     }else if(m_rockType == SLEWING){
         //slewing is experimental
         if(m_DECZenith <= 0) rockNorth *= -1.;
-        if(m_DECZenith >= -10 && m_DECZenith <= 10){
-            rockNorth -= rockNorth*((10.-fabs(m_DECZenith))/10.);
+        if(m_DECZenith >= -5.5 && m_DECZenith <= 5.5){
+            rockNorth -= rockNorth*((5.5-fabs(m_DECZenith))/5.5);
         }
     }else if(m_rockType == ONEPERORBIT){
         //this needs an implementation - it only rocks one way now!
@@ -376,6 +376,10 @@ void GPS::getPointingCharacteristics(double seconds){
     m_RAZenith = dirZ.ra();
     m_DECZenith = dirZ.dec();
     
+
+
+
+
     // now, we want to find the proper transformation for the rocking angles:
     //HepRotation rockRot(Hep3Vector(0,0,1).cross(dirZ.dir()) , rockNorth);    
     //and apply the transformation to dirZ and dirX:
@@ -389,8 +393,8 @@ void GPS::getPointingCharacteristics(double seconds){
     }else if(m_rockType == SLEWING){
         //slewing is experimental
         if(m_DECZenith <= 0) rockNorth *= -1.;
-        if(m_DECZenith <= 10 || m_DECZenith <= 10){
-            rockNorth -= rockNorth*(m_DECZenith/10.);
+        if(m_DECZenith >= -5.5 && m_DECZenith <= 5.5){
+            rockNorth -= rockNorth*((5.5-fabs(m_DECZenith))/5.5);
         }
     }else if(m_rockType == ONEPERORBIT){
         //this needs an implementation - it only rocks one way now!

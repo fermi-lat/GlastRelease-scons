@@ -98,6 +98,9 @@ public:
     EventSource* currentEvent(){return m_event;}
     
     FluxSource* currentFlux(){return m_flux;}
+
+    /// write the characteristics of the current source distribution to a stream
+    void writeSourceCharacteristic(std::ostream& out);
     
 private:
     
