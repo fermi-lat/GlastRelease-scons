@@ -152,7 +152,7 @@ StatusCode relationRootReaderAlg::initialize()
     // This will retrieve parameters set in the job options file
     setProperties();
 
-    if ( service("RootIoSvc", m_rootIoSvc).isFailure() ){
+    if ( service("RootIoSvc", m_rootIoSvc, true).isFailure() ){
         log << MSG::INFO << "Couldn't find the RootIoSvc!" << endreq;
         log << MSG::INFO << "Event loop will not terminate gracefully" << endreq;
         m_rootIoSvc = 0;

@@ -35,6 +35,7 @@
 #include "GaudiKernel/IRunable.h"
 #include "GaudiKernel/Property.h"
 #include "RootIo/IRootIoSvc.h"
+#include "TSystem.h"
 
 //forward declarations
 template <class TYPE> class SvcFactory;
@@ -162,6 +163,12 @@ StatusCode RootIoSvc::initialize ()
 
     incsvc->addListener(this, "BeginEvent", 100);
     incsvc->addListener(this, "EndEvent", 0);
+
+    // Tell ROOT to reset signals to their default behavior
+    gSystem->ResetSignal(kSigBus); 
+    gSystem->ResetSignal(kSigSegmentationViolation); 
+    gSystem->ResetSignal(kSigIllegalInstruction); 
+    gSystem->ResetSignal(kSigFloatingException);  
 
     return StatusCode::SUCCESS;
 }
