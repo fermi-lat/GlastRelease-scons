@@ -29,7 +29,7 @@
  * @author Tracy Usher
  */
 
-static const InterfaceID IID_ITkrGeometrySvc("ITkrGeometrySvc", 8 , 0); 
+static const InterfaceID IID_ITkrGeometrySvc("ITkrGeometrySvc", 9 , 0); 
 
 namespace {
     enum convType { ABSENT = -1, NOCONV = 0, STANDARD, SUPER, ALL, NTYPES};
@@ -138,6 +138,12 @@ public:
     virtual double getLATLimit   (int view, enum limitType) const = 0;
     /// are we in the "active" LAT?
     virtual bool   isInActiveLAT (Point pos) const = 0;
+
+    // definitions of plane, layer
+    virtual int trayToPlane(int tray, int botTop) const = 0; 
+    virtual int trayToBiLayer(int tray, int botTop) const = 0;
+    virtual int planeToTray(int plane) const = 0;
+    virtual int planeToBotTop(int plane) const = 0;
 };
 
 #endif

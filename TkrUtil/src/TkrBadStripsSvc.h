@@ -50,6 +50,8 @@
 #include "TkrUtil/ITkrBadStripsSvc.h"
 #include "TkrUtil/ITkrBadStripsSvcCalib.h"
 
+#include "TkrUtil/ITkrGeometrySvc.h"
+
 #include <string>
 
 namespace {
@@ -74,12 +76,14 @@ namespace {
             const CalibData::StripCol& strips);
         
         void setService(ITkrBadStripsSvcCalib* pBadStrips) {m_pBadStrips = pBadStrips;}
+        void setService(ITkrGeometrySvc*       pGeoSvc)    {m_pGeoSvc    = pGeoSvc;}
 
         bool isEmpty() { return m_nStrips==0; }
         
     private:
         MsgStream* m_log;
         ITkrBadStripsSvcCalib* m_pBadStrips;
+        ITkrGeometrySvc*       m_pGeoSvc;
         int m_nStrips;
     };
 }
@@ -155,6 +159,8 @@ private:
     stripCol m_stripsCol[NELEMENTS];
 	
 	BadVisitor* m_visitor;
+
+    ITkrGeometrySvc* m_pGeoSvc;
 	
     bool m_killDigi;
 

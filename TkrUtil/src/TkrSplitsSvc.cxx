@@ -170,15 +170,11 @@ void TkrSplitsSvc::update(CalibData::TkrSplitsCalib* pSplits)
     log << MSG::INFO << "Splits pointer updated" << endreq;
 }
 
-
 StatusCode TkrSplitsSvc::doInit()
 {
     // Open the message log
     MsgStream log( msgSvc(), name() );
     StatusCode sc = StatusCode::SUCCESS;
-
-    // test of getting TkrGeometrySvc from inside TkrSplitsSvc... It works!
-    //int stripsPerLadder  = m_geoSvc->ladderNStrips();
 
     /*  Keep this for a while
 
