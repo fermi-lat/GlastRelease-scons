@@ -25,7 +25,7 @@
 class PhysicsList: public G4VModularPhysicsList
 {
  public:
-  PhysicsList(double cutValue, std::string& physicsChoice);
+  PhysicsList(double cutValue, std::string& physicsChoice, std::string& physicsTable, std::string& physicsDir);
   ~PhysicsList();
   
  public:
@@ -37,6 +37,8 @@ class PhysicsList: public G4VModularPhysicsList
  private:
   
   std::string m_physicsChoice;
+  std::string m_physicsTable;
+  std::string m_physicsDir;
 
 };
 

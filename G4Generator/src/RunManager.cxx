@@ -58,7 +58,7 @@ RunManager* RunManager::fRunManager = NULL;
 RunManager* RunManager::GetRunManager()
 { return fRunManager; }
 
-RunManager::RunManager(std::ostream& log, double defaultCutValue, std::string& physics_choice)
+RunManager::RunManager(std::ostream& log, double defaultCutValue, std::string& physics_choice, std::string& physics_table,std::string&  physics_dir)
   :m_log(log),
    physicsList(NULL),
    userPrimaryGeneratorAction(NULL),
@@ -94,7 +94,7 @@ RunManager::RunManager(std::ostream& log, double defaultCutValue, std::string& p
   randomNumberStatusDir = "./";
 
   // The user stuff
-  physicsList = new PhysicsList(defaultCutValue, physics_choice);
+  physicsList = new PhysicsList(defaultCutValue, physics_choice, physics_table, physics_dir);
   userPrimaryGeneratorAction = new PrimaryGeneratorAction;
 }
 
@@ -262,6 +262,7 @@ void RunManager::Initialize()
 
   /// Set a dummy session to silent G4 intitialization messages on screen
   G4UImanager* pUImanager = G4UImanager::GetUIpointer();
+  
   pUImanager->SetCoutDestination(session);
   
   stateManager->SetNewState(G4State_Init);

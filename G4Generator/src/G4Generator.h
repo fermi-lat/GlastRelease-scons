@@ -54,15 +54,25 @@ class G4Generator : public Algorithm {
 
   /// the McParticle tree mode
   /// It can be "full" or "minimal" or "pruneCal"
+
   std::string m_mcTreeMode;
   
   /// The default cutoff value (in mm)
+
   DoubleProperty m_defaultCutValue;
 
   /// the Physics List
   /// It can be "full" or "only_em"
 
   std::string m_physics_choice;
+
+  /// the Physics Tables could be built at initialisation time ("build")
+  /// or stored in the appropriate directory ("store") or retrieved from
+  /// the specified directory ("retrieve") 
+  /// The directory name shall be specified by the user
+
+  std::string m_physics_table;
+  std::string m_physics_dir;
 
 };
 

@@ -26,8 +26,9 @@
 #include "HadronPhysics.h"
 #include "IonPhysics.h"
 
+#include <cstdlib>
 
-PhysicsList::PhysicsList(double cutValue, std::string& physicsChoice):  G4VModularPhysicsList()
+PhysicsList::PhysicsList(double cutValue, std::string& physicsChoice, std::string& physicsTable, std::string& physicsDir):  G4VModularPhysicsList()
 {
   // The default cut value for all particles
   defaultCutValue = cutValue;
@@ -35,6 +36,12 @@ PhysicsList::PhysicsList(double cutValue, std::string& physicsChoice):  G4VModul
   // Physics Choice
 
   m_physicsChoice = physicsChoice;
+
+  // Physics Tables
+
+  m_physicsTable = physicsTable;
+  m_physicsDir = physicsDir;
+
   
   // General Physics
   RegisterPhysics( new GeneralPhysics("general") );
@@ -65,7 +72,20 @@ PhysicsList::~PhysicsList()
 
 void PhysicsList::SetCuts()
 {
-  SetCutsWithDefault();   
+
+  std::string physics_basedir = getenv("G4GENERATORROOT");
+  std::string physics_Dir = physics_basedir + "/" + m_physicsDir;
+  if (m_physicsTable=="retrieve")
+    {  
+      SetPhysicsTableRetrieved(physics_Dir);
+    }
+  SetCutsWithDefault(); 
+  if (m_physicsTable=="store")
+    {  
+      if(StorePhysicsTable(physics_Dir))
+	{// std::cout << "done Physics Store" << std::endl;
+	}
+    }
 }
 
 

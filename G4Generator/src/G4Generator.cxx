@@ -71,6 +71,8 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("mcTreeMode", m_mcTreeMode="minimal");
   declareProperty("defaultCutValue", m_defaultCutValue=0.1*mm);
   declareProperty("physics_choice", m_physics_choice="full");
+  declareProperty("physics_tables", m_physics_table="build");
+  declareProperty("physics_dir", m_physics_dir="G4cuts/100micron/");
 }
     
 ////////////////////////////////////////////////////////////////////////////
@@ -94,8 +96,12 @@ StatusCode G4Generator::initialize()
   log << MSG::INFO << "DefaultCutValue=" << m_defaultCutValue << " mm" << endreq;
 
   log << MSG::INFO << "Physics List = " << m_physics_choice << endreq;
- 
 
+  // user jobOtions on cuts directory 
+
+  log << MSG::INFO << "Cut Table " << m_physics_table << endreq;
+  log << MSG::INFO << "Cut Table Dir" << m_physics_dir << endreq;
+ 
   // Apply Geant4 specific commands throught the ui
   if( !m_uiCommands.value().empty() ) {
     G4UImanager* UI = G4UImanager::GetUIpointer();
@@ -126,7 +132,7 @@ StatusCode G4Generator::initialize()
   // The geant4 manager
   if (!(m_runManager = RunManager::GetRunManager()))
     {
-      m_runManager = new RunManager(log.stream(), m_defaultCutValue, m_physics_choice);
+      m_runManager = new RunManager(log.stream(), m_defaultCutValue, m_physics_choice, m_physics_table, m_physics_dir);
 
       log << "\n done." << endreq;
     }
