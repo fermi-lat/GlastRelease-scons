@@ -1,5 +1,5 @@
 package RootIo
-version v14r9
+version v15r0p1
 
 # $Header$
 
@@ -12,7 +12,7 @@ apply_pattern packageShr
 apply_pattern package_include
 
 use mcRootData v2r* -no_auto_imports
-use digiRootData v7r* -no_auto_imports
+use digiRootData v8r* -no_auto_imports
 use reconRootData v5r* -no_auto_imports
 use commonRootData v1r* -no_auto_imports
 
