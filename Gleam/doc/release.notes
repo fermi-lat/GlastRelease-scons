@@ -2,6 +2,14 @@
  * package Gleam
  * package manager:T.Burnett
 
+ * v2r1p6 31-may-02 THB mostly new TkrVertex
+      use Event                  v8r6
+      use FluxSvc                v5r7
+      use Trigger                v3r3
+      use TkrRecon               v6r3
+      use CalRecon               v5r5p1       
+      use merit                  v5r2
+
  * v2r1p5 28-may-02 THB more geometry fixes
       use Recon                 v2r2p3
       use TkrRecon              v6r2p2
