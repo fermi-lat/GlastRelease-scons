@@ -55,7 +55,7 @@ Ray TkrPoint::getRayTo(const TkrPoint* point) const
         y1 += (z0 - z1y)*slopeY;
 	}
 	else { //Reverse direction
-		double z0 = std::min(z1x,z1y);
+		z0 = std::min(z1x,z1y);
 	    x1 += (z0 - z1x)*slopeX;
         y1 += (z0 - z1y)*slopeY;
 	}
