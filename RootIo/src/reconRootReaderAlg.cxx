@@ -807,21 +807,27 @@ StatusCode reconRootReaderAlg::storeCalXtalRecDataCol(CalRecon *calRecRoot) {
             unsigned int range;
             for (range = idents::CalXtalId::LEX8; range < idents::CalXtalId::HEX1; range++) {    
                 const CalRangeRecData *xtalRangeRoot = calXtalRecRoot->getRangeRecData(range);
+                TVector3 posRoot = xtalRangeRoot->getPosition();
+                Point posTds(posRoot.X(), posRoot.Y(), posRoot.Z());
                 Event::CalXtalRecData::CalRangeRecData *xtalRangeTds = 
                     new Event::CalXtalRecData::CalRangeRecData(
                     xtalRangeRoot->getRange(CalXtalId::POS), xtalRangeRoot->getEnergy(CalXtalId::POS),
                     xtalRangeRoot->getRange(CalXtalId::NEG), xtalRangeRoot->getEnergy(CalXtalId::NEG));
+                xtalRangeTds->setPosition(posTds);
                 calXtalRecDataTds->addRangeRecData(*xtalRangeTds);
             }
         } else if (calXtalRecRoot->getMode() == CalXtalId::BESTRANGE) {
             
             calXtalRecDataTds = new Event::CalXtalRecData(idents::CalXtalId::BESTRANGE, idTds);
             const CalRangeRecData *xtalRangeRoot = calXtalRecRoot->getRangeRecData(0);   
+            TVector3 posRoot = xtalRangeRoot->getPosition();
+            Point posTds(posRoot.X(), posRoot.Y(), posRoot.Z());
             
             Event::CalXtalRecData::CalRangeRecData *xtalRangeTds = 
                 new Event::CalXtalRecData::CalRangeRecData(
                 xtalRangeRoot->getRange(CalXtalId::POS), xtalRangeRoot->getEnergy(CalXtalId::POS),
                 xtalRangeRoot->getRange(CalXtalId::NEG), xtalRangeRoot->getEnergy(CalXtalId::NEG));
+            xtalRangeTds->setPosition(posTds);
             calXtalRecDataTds->addRangeRecData(*xtalRangeTds);
         }
         
