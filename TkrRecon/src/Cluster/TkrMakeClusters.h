@@ -75,7 +75,7 @@ public:
     /// swap the possibly tagged strip for the merged sort (toggle)
     int swapForSort(const int strip);
     /// sort the merged data and bad strips
-    void sortTaggedHits (std::vector<int> * list);
+    void sortTaggedStrips(std::vector<int> * list);
     
     // bool less_than(const int strip1, const int strip2);
     

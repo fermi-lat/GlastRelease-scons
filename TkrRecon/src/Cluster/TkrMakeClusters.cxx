@@ -78,7 +78,7 @@ TkrMakeClusters::TkrMakeClusters(TkrClusterCol* pClus,
 
         // sort data and badstrips by strip number
 
-        sortTaggedHits(&mergedHits);
+        sortTaggedStrips(&mergedHits);
 
         // the first strip of the current potential cluster
         int lowStrip  = mergedHits[0];  
@@ -254,7 +254,7 @@ int TkrMakeClusters::tagField(const int strip)
     }
 }
 
-void TkrMakeClusters::sortTaggedHits(std::vector<int> * list) 
+void TkrMakeClusters::sortTaggedStrips(std::vector<int> * list) 
 {
     // Purpose: sort the input list by strip number
     // Method:  pass to TkrBadStripsSvc
@@ -266,7 +266,7 @@ void TkrMakeClusters::sortTaggedHits(std::vector<int> * list)
     // the following is a horrible kludge to do the merged sort 
     //    until I figure out how to get the predicate thing working
     
-    m_pBadStrips->sortTaggedHits(list);
+    m_pBadStrips->sortTaggedStrips(list);
 }
     
 int TkrMakeClusters::swapForSort(const int strip) {

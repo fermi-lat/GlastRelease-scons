@@ -88,8 +88,8 @@ public:
 
     /// returns sentinel strip to TkrMakeClusters
     int lastStrip() {return tooBig;}
-    /// Sorts a list of tagged hits by strip number
-    void sortTaggedHits(std::vector<int>* list);
+    /// Sorts a list of tagged strips by strip number
+    void sortTaggedStrips(std::vector<int>* list);
     /// swaps the possibly tagged strip into sorting order (and back)
     int swapForSort(const int strip);
 
