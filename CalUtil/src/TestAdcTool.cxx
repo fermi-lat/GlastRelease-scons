@@ -144,16 +144,16 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
 
     // add energy to appropriate volume
     if((int)volId[fCellCmp] == m_eDiodePLarge)
-      diodeEnergy[diodeId((int)CalXtalId::POS,(int)CalXtalId::LARGE)] += ene;
+      diodeEnergy[diodeId(CalXtalId::POS,CalXtalId::LARGE)] += ene;
 
     else if((int)volId[fCellCmp] == m_eDiodeMLarge)
-      diodeEnergy[diodeId((int)CalXtalId::NEG,(int)CalXtalId::LARGE)] += ene;
+      diodeEnergy[diodeId(CalXtalId::NEG,CalXtalId::LARGE)] += ene;
 
     else if((int)volId[fCellCmp] == m_eDiodePSmall )
-      diodeEnergy[diodeId((int)CalXtalId::POS,(int)CalXtalId::SMALL)] += ene;
+      diodeEnergy[diodeId(CalXtalId::POS,CalXtalId::SMALL)] += ene;
 
     else if((int)volId[fCellCmp] ==  m_eDiodeMSmall)
-      diodeEnergy[diodeId((int)CalXtalId::NEG,(int)CalXtalId::SMALL)] += ene;
+      diodeEnergy[diodeId(CalXtalId::NEG,CalXtalId::SMALL)] += ene;
 
     else if((int)volId[fCellCmp] ==  m_eXtal ){
       // let's define the position of the segment along the crystal
@@ -182,7 +182,7 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
   // loop through all 4 diodes
   for (int face = 0; face < 2; face++)
     for (int diode = 0; diode < 2; diode++) {
-      diodeId diode_id((int)face,(int)diode);
+      diodeId diode_id(face,diode);
 
       // convert energy deposition in a diode to
       // the equivalent energy in a crystal
@@ -208,15 +208,15 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
     }
 
   // output debug::msg to msglog
-  msglog << MSG::DEBUG << " id " << xtalId
+  msglog << MSG::DEBUG; if (msglog.isActive()){ msglog.stream() << " id " << xtalId
          << " s0=" << signal[CalXtalId::POS]
          << " s1=" << signal[CalXtalId::NEG]
-         << " d0=" << diodeEnergy[diodeId((int)0,(int)0)]
-         << " d1=" << diodeEnergy[diodeId((int)0,(int)1)]
-         << " d2=" << diodeEnergy[diodeId((int)1,(int)0)]
-         << " d3=" << diodeEnergy[diodeId((int)1,(int)1)]
-         << endreq;
-
+         << " d0=" << diodeEnergy[diodeId(0,0)]
+         << " d1=" << diodeEnergy[diodeId(0,1)]
+         << " d2=" << diodeEnergy[diodeId(1,0)]
+         << " d3=" << diodeEnergy[diodeId(1,1)]
+      ;} msglog << endreq;
+      
   // STAGE 3 Clone CalDigiAlg::createDigis
 
   // calculate all ADC responses
@@ -224,11 +224,11 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
   for (int range = 0; range < 4; range++) {
     int diode = range/2;
     xtalface = CalXtalId::POS;
-    diodeId dId((int)xtalface,(int)diode);
+    diodeId dId(xtalface,diode);
     adcP[range] = (int)(diodeEnergy[dId]*m_gain[xtalface][range]) + m_pedestal;
 
     xtalface = CalXtalId::NEG;
-    dId = diodeId((int)xtalface,(int)diode);
+    dId = diodeId(xtalface,diode);
     adcN[range] = (int)(diodeEnergy[dId]*m_gain[xtalface][range]) + m_pedestal;
     if (adcN[range] > m_maxAdc) adcN[range] = m_maxAdc;
   }
@@ -237,7 +237,7 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
   xtalface = CalXtalId::POS;
   for (int range = 0; range < 4; range++) {
     int diode = range/2;
-    double ene = diodeEnergy[diodeId((int)xtalface,(int)0)];
+    double ene = diodeEnergy[diodeId(xtalface,diode)];
     rangeP = (CalXtalId::AdcRange)range;
     if (ene < m_maxResponse[range]) break;  // break on 1st energy range that is < threshold
   }
@@ -245,7 +245,7 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
   xtalface = CalXtalId::NEG;
   for (int range = 0; range < 4; range++) {
     int diode = range/2;
-    double ene = diodeEnergy[diodeId((int)xtalface,(int)0)];
+    double ene = diodeEnergy[diodeId(xtalface,diode)];
     rangeN = (CalXtalId::AdcRange)range;
     if (ene < m_maxResponse[range]) break;  // break on 1st energy range that is < threshold
   }
@@ -253,10 +253,10 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
   msglog << MSG::INFO  << "CalAdcTool id " << xtalId
          << " s0=" << signal[CalXtalId::POS]
          << " s1=" << signal[CalXtalId::NEG]
-         << " d0=" << diodeEnergy[diodeId((int)0,(int)0)]
-         << " d1=" << diodeEnergy[diodeId((int)0,(int)1)]
-         << " d2=" << diodeEnergy[diodeId((int)1,(int)0)]
-         << " d3=" << diodeEnergy[diodeId((int)1,(int)1)]
+         << " d0=" << diodeEnergy[diodeId(0,0)]
+         << " d1=" << diodeEnergy[diodeId(0,1)]
+         << " d2=" << diodeEnergy[diodeId(1,0)]
+         << " d3=" << diodeEnergy[diodeId(1,1)]
          << endreq;
 
   return StatusCode::SUCCESS;

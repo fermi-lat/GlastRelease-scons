@@ -603,7 +603,7 @@ std::string &CalCalibSvc::generateSplineName(std::string &grName,              /
                                              const idents::CalXtalId &xtalId,
                                              idents::CalXtalId::XtalFace face,
                                              idents::CalXtalId::AdcRange range) {
-  std::ostrstream tmp_stream;
+  std::ostringstream tmp_stream;
   
   tmp_stream << grType 
              << 'x' << xtalId
@@ -611,9 +611,7 @@ std::string &CalCalibSvc::generateSplineName(std::string &grName,              /
              << 'r' << range
              << std::ends;
 
-  tmp_stream.freeze();
   grName = std::string(tmp_stream.str());
-  tmp_stream.freeze(0);  // boy there's gotta be a better way! -zf
 
   return grName;
 }

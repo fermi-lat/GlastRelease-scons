@@ -3,7 +3,7 @@
 
 // Include files
 // ANSI C++
-#include <strstream>
+#include <sstream>
 
 // GAUDI
 #include "GaudiKernel/Service.h"
