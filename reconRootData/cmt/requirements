@@ -32,6 +32,9 @@ make_fragment recon_dorootcint_header
 make_fragment recon_dorootcint -header=recon_dorootcint_header
 document recon_dorootcint ReconRootDataCint CINTFILE=../reconRootData/ReconCint.cxx
 
+macro_append reconRootData_shlibflags " ${ROOT_PATH}/lib/libPhysics.so " \
+             VisualC        ""
+
 library  reconRootData *.cxx \
      ../reconRootData/ReconCint.cxx\
      ../reconRootData/ReconCint.h\
