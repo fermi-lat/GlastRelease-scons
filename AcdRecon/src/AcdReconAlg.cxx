@@ -17,7 +17,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/StatusCode.h"
 
-#include "Event/Recon/TkrRecon/TkrFitTrackBase.h"
+#include "Event/Recon/TkrRecon/TkrTrack.h"
 
 #include "CLHEP/Geometry/Transform3D.h"
 
@@ -249,7 +249,7 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol) {
     MsgStream   log( msgSvc(), name() );
     
     // Retrieve the information on fit tracks
-    SmartDataPtr<Event::TkrFitTrackCol> tracksTds(eventSvc(), EventModel::TkrRecon::TkrFitTrackCol);
+    SmartDataPtr<Event::TkrTrackCol> tracksTds(eventSvc(), EventModel::TkrRecon::TkrTrackCol);
 	
     if (!tracksTds) {
         log << MSG::INFO << "No reconstructed tracks found on the TDS" << endreq;
@@ -257,20 +257,20 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol) {
     }
 	
     double testDoca, test_dist, ribDist;
-    Event::TkrFitColPtr trkPtr = tracksTds->begin();
+    Event::TkrTrackColPtr trkPtr = tracksTds->begin();
     while(trkPtr != tracksTds->end())
     {
-        const Event::TkrFitTrackBase* trackTds  = *trkPtr++;       // The TDS track
-        sc = doca(digiCol, trackTds->getPosition(), trackTds->getDirection(), 
+        const Event::TkrTrack* trackTds  = *trkPtr++;       // The TDS track
+        sc = doca(digiCol, trackTds->getInitialPosition(), trackTds->getInitialDirection(), 
             m_rowDocaCol, testDoca);
         if (sc.isFailure()) return sc;
         if(testDoca < m_doca) m_doca = testDoca;
-        sc = hitTileDist(digiCol, trackTds->getPosition(), 
-            -(trackTds->getDirection()), m_rowActDistCol, test_dist);
+        sc = hitTileDist(digiCol, trackTds->getInitialPosition(), 
+            -(trackTds->getInitialDirection()), m_rowActDistCol, test_dist);
         if (sc.isFailure()) return sc;
         if(test_dist > m_act_dist) m_act_dist = test_dist;
 
-        sc = hitRibbonDist(digiCol, trackTds->getPosition(), -(trackTds->getDirection()),
+        sc = hitRibbonDist(digiCol, trackTds->getInitialPosition(), -(trackTds->getInitialDirection()),
             ribDist);
         if (ribDist > m_ribbon_act_dist) m_ribbon_act_dist = ribDist;
         if (sc.isFailure()) return sc;
