@@ -6,6 +6,8 @@
 */
 
 // Include files
+#include "FluxSvc/PointingInfo.h"
+
 // Gaudi system includes
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/MsgStream.h"
@@ -53,25 +55,6 @@ public:
     StatusCode finalize();
 
 
-        // the root tuple, a la FT2
-        // http://glast.gsfc.nasa.gov/ssc/dev/fits_def/definitionFT2.html
-
-    class FT2entry {
-    public:
-        FT2entry(INTupleWriterSvc* tuple, const std::string& tname);
-
-        double start, stop;
-        float sc_position[3];
-        float lat_geo, lon_geo;
-        float rad_geo;
-        float ra_zenith, dec_zenith;
-        float ra_scz, dec_scz;
-        float ra_scx, dec_scx;
-        float livetime;
-
-        void begin(double start_time);
-        void finish(double stop_time, double live);
-    };
 private: 
 
     double m_lasttime; //time value to hold time between events;
@@ -85,64 +68,13 @@ private:
     int         m_tickCount; // number of ticks processed
     INTupleWriterSvc* m_rootTupleSvc;;
 
-    FT2entry* m_history;
+    PointingInfo m_history;
 };
 //------------------------------------------------------------------------
 
 static const AlgFactory<ExposureAlg>  Factory;
 const IAlgFactory& ExposureAlgFactory = Factory;
 
-void ExposureAlg::FT2entry::begin(double time)
-{
-    // Purpose: save the current status until the next tick
-    using namespace astro;
- 
-    start = time;
-    // The GPS singleton has current time and orientation
-    GPS* gps = GPS::instance();
-    gps->getPointingCharacteristics(time); // sets time for other functions
-    Hep3Vector location = 1.e3* gps->position(time); // special, needs its own time
-    
-    // cartesian location of the LAT
-    sc_position[0] = location.x();
-    sc_position[1] = location.y();
-    sc_position[2] = location.z(); 
-
-    ra_zenith = gps->RAZenith();
-    dec_zenith= gps->DECZenith();
-    ra_scx =    gps->RAX();
-    dec_scx =   gps->DECX();
-
-    ra_scz =    gps->RAZ();
-    dec_scz =   gps->DECZ();
-    //uncomment for debug check double check=astro::SkyDir(rax, decx)().dot(astro::SkyDir(raz, decz)());
-
-    lat_geo = gps->lat(); 
-    lon_geo = gps->lon(); 
-    rad_geo = gps->altitude(); 
-}
-void ExposureAlg::FT2entry::finish(double stop_time, double live)
-{
-    stop = stop_time;
-    livetime = live;
-}
-ExposureAlg::FT2entry::FT2entry(INTupleWriterSvc* tuple, const std::string& tname)
-{
-    if( tuple==0 ) return;
-    tuple->addItem(tname, "start",  &start);
-    tuple->addItem(tname, "stop",   &stop);
-    tuple->addItem(tname, "sc_position[3]", sc_position);
-    tuple->addItem(tname, "lat_geo", &lat_geo);
-    tuple->addItem(tname, "lon_geo", &lon_geo);
-    tuple->addItem(tname, "rad_geo", &rad_geo);
-    tuple->addItem(tname, "ra_zenith", &ra_zenith);
-    tuple->addItem(tname, "dec_zenith",&dec_zenith);
-    tuple->addItem(tname, "ra_scz", &ra_scz);
-    tuple->addItem(tname, "dec_scz", &dec_scz);
-    tuple->addItem(tname, "ra_scx",   &ra_scx);
-    tuple->addItem(tname, "dec_scx", &dec_scx);
-    tuple->addItem(tname, "livetime", &livetime);
-}
 //------------------------------------------------------------------------
 //! ctor
 ExposureAlg::ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator)
@@ -199,7 +131,7 @@ StatusCode ExposureAlg::initialize(){
             return sc;
     }
 
-    m_history = new FT2entry(m_rootTupleSvc, m_root_tree.value());
+    m_history.setFT2Tuple(m_rootTupleSvc, m_root_tree.value());
 
     return sc;
 }
@@ -211,7 +143,16 @@ StatusCode ExposureAlg::execute()
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
 
-    m_lasttime = m_fluxSvc->currentFlux()->time();
+    IFlux* flux=m_fluxSvc->currentFlux();
+    m_lasttime = flux->time();
+        
+    std::string particleName = flux->particleName();
+
+
+    if(particleName != "TimeTick" && particleName != "Clock"){
+        return sc;
+    }
+
 
     log << MSG::DEBUG ;
     if( log.isActive() ){
@@ -223,12 +164,12 @@ StatusCode ExposureAlg::execute()
     log << endreq;
 
     if( m_tickCount!=0){
-        double interval = m_lasttime - m_history->start;
+        double interval = m_lasttime - m_history.start_time();
         if( interval<=0) return sc;
-        m_history->finish( m_lasttime, interval);
+        m_history.finish( m_lasttime, interval);
         m_rootTupleSvc->storeRowFlag(this->m_root_tree.value(), true);
     }
-    m_history->begin(m_lasttime);
+    m_history.set(m_lasttime);
 
     m_tickCount++;
     return sc;
@@ -243,7 +184,6 @@ StatusCode ExposureAlg::finalize(){
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "Processed " << m_tickCount << " ticks" << endreq;
 
-    delete m_history;
     return sc;
 }
 

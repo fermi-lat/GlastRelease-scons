@@ -5,6 +5,7 @@ $Header$
 
 */
 
+
 // Include files
 // Gaudi system includes
 #include "GaudiKernel/MsgStream.h"
@@ -20,8 +21,16 @@ $Header$
 #include "Event/TopLevel/MCEvent.h"
 #include "Event/MonteCarlo/McParticle.h"
 #include "Event/TopLevel/EventModel.h"
+#include "Event/MonteCarlo/Exposure.h"
+
+
+
+// to write a Tree with entryosure info
+#include "ntupleWriterSvc/INTupleWriterSvc.h"
+#include "facilities/Util.h"
 
 //flux
+#include "FluxSvc/PointingInfo.h"
 #include "FluxSvc/IFluxSvc.h"
 #include "flux/IFlux.h"
 #include "flux/Spectrum.h"
@@ -94,6 +103,10 @@ private:
     std::map<int, int> m_counts; //! for measuring the total number generated per code.
     TimeStamp m_initialTime;
 
+    PointingInfo m_pointing_info;
+    StringProperty m_root_tree;
+    INTupleWriterSvc* m_rootTupleSvc;;
+
 };
 //------------------------------------------------------------------------
 
@@ -115,6 +128,8 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("rocking_angle", m_rocking_angle=0); // in degrees
     declareProperty("rocking_angle_z", m_rocking_angle_z=0); // in degrees
     declareProperty("pointing_history_input_file",  m_pointing_history_input_file="");
+
+    declareProperty("pointing_info_tree_name",  m_root_tree="MeritTuple");
 
 }
 //------------------------------------------------------------------------
@@ -202,6 +217,19 @@ StatusCode FluxAlg::initialize(){
         log << MSG::ERROR << "Couldn't find the ParticlePropertySvc!" << endreq;
         return StatusCode::FAILURE;
     }
+
+    // get a pointer to RootTupleSvc 
+    if( (sc = service("RootTupleSvc", m_rootTupleSvc, true) ). isFailure() ) {
+            log << MSG::ERROR << " failed to get the RootTupleSvc" << endreq;
+            return sc;
+    }
+
+
+    if( !m_root_tree.value().empty() ) {
+        
+        m_pointing_info.setPtTuple(m_rootTupleSvc, m_root_tree.value());
+    }
+
     return sc;
 }
 
@@ -231,8 +259,8 @@ StatusCode FluxAlg::execute()
     std::string particleName = m_flux->particleName();
 
 
-    //if it's a "timeTick, then ExposureAlg will take care of it, and no othe algorithms should care about it.
-    if(particleName == "TimeTick"){
+    //if it's a clock then ExposureAlg will take care of it, and no othe algorithms should care about it.
+    if(particleName == "TimeTick" || particleName == "Clock"){
         setFilterPassed( false );
         return sc;
     }
@@ -315,10 +343,29 @@ StatusCode FluxAlg::execute()
     }
 
     TimeStamp currentTime=m_flux->time();
+
+    m_pointing_info.set(currentTime);
+
+    // Here the TDS receives the exposure data
+    Event::ExposureCol* exposureDBase = new Event::ExposureCol;
+    sc=eventSvc()->registerObject(EventModel::MC::ExposureCol , exposureDBase);
+    if(sc.isFailure()) {
+        log << MSG::ERROR << EventModel::MC::ExposureCol  
+            <<" could not be entered into existing data store" << endreq;
+        return sc;
+    }
+    exposureDBase->push_back(m_pointing_info.forTDS());
+
+    
+    // put pointing stuff into the root tree
+    if( !m_root_tree.value().empty()){
+        m_rootTupleSvc->storeRowFlag(this->m_root_tree.value(), true);
+    }
+
     if( m_initialTime==0) m_initialTime=currentTime;
     h->setTime(currentTime);
     int numEvents = ++m_sequence;
-    m_counts[m_flux->numSource()]++; // update count fo r
+    m_counts[m_flux->numSource()]++; // update count
 
     m_currentRate=numEvents/(currentTime-m_initialTime);
     return StatusCode::SUCCESS;
