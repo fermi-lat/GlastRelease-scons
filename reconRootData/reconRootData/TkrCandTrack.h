@@ -4,8 +4,12 @@
 #include "TObject.h"
 #include "TkrCandHit.h"
 #include "TVector3.h"
-#ifdef WIN32
+#ifndef R__GLOBALSTL
+#ifndef WIN32
+using std::vector;
+#else
 using namespace std;
+#endif
 #endif
 
 

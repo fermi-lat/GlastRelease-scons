@@ -3,6 +3,13 @@
 
 #include "TObject.h"
 #include "TkrHitPlane.h"
+#ifndef R__GLOBALSTL
+#ifndef WIN32
+using std::vector;
+#else
+using namespace std;
+#endif
+#endif
 /** 
  * @class TkrTrack
  * @brief Root object representing a reconstructed track

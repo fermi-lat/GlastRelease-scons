@@ -5,8 +5,12 @@
 #include "TkrFitHit.h"
 #include "TkrCovMat.h"
 #include <vector>
-#ifdef WIN32
+#ifndef R__GLOBALSTL
+#ifndef WIN32
+using std::vector;
+#else
 using namespace std;
+#endif
 #endif
 
 /** 
