@@ -1,6 +1,8 @@
 /** @file release.notes
  * Package detModel <pre>
  * Coordinator: T.Burnett, S. Robinson
+ * v5r17p2 THB  * release the tool
+ * ---------------- GlastRelease --------------------------------
  * v5r16p1 THB  * fix vsnet problem with include files
  * v5r16  THB  * Fix FILESpectrum issue involving changed Spectrum interface
  * v5r15p2 SR  * rootplots advances time - fixes composite-rootplot bug.
