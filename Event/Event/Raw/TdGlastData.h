@@ -24,7 +24,7 @@
 
 // forward declarations
 #include "GlastEvent/Raw/TdSiData.h"
-#include "GlastEvent/Raw/TdCsiData.h"
+#include "GlastEvent/Raw/TdCsIData.h"
 
 #include <iostream>
 #include <vector>
