@@ -8,17 +8,17 @@
 <!DOCTYPE calib SYSTEM "../genCalib.dtd" [] >
 
 <calib>
-  <header instrument="LAT" timestamp="2002-12-4-16:23"
+  <header instrument="LAT" timestamp="2003-1-7-16:23"
           calType="Test_Gen" fmtVersion="1.0" locale="B108" >
 
-    <inputSample startTime="2000-1-1-00:00" stopTime="2001-10-10-00:00"
+    <inputSample startTime="2003-1-10-08:00" stopTime="2003-1-10-17:00"
                  triggers="random" mode="normal" source="made-up" >
        Don't need anything sensible here
     </inputSample>
   </header>
 
   <data name="fakeGen1" >
-    <leaf name="anInt" dtype="int" value="28" />
+    <leaf name="anInt" dtype="int" value="496" />
   </data>
 </calib>
 
