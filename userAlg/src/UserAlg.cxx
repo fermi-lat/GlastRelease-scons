@@ -20,6 +20,7 @@
 #include "GlastEvent/data/TdGlastData.h"
 #include "GlastEvent/MonteCarlo/McVertex.h"
 #include "GlastEvent/MonteCarlo/McParticle.h"
+#include "GlastEvent/TopLevel/Event.h"
 
 // for access to instrument.ini
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
@@ -83,9 +84,9 @@ StatusCode UserAlg::initialize(){
     
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
-
+	
     if( m_tupleName.empty()) {log << MSG::ERROR << "tupleName property not set!"<<endreq;
-        return StatusCode::FAILURE;}
+	return StatusCode::FAILURE;}
     // now try to find the GlastDevSvc service
     if (service("GlastDetSvc", m_detSvc).isFailure()){
         log << MSG::ERROR << "Couldn't find the GlastDetSvc!" << endreq;
@@ -94,20 +95,20 @@ StatusCode UserAlg::initialize(){
     // get the ini file
     m_ini = const_cast<xml::IFile*>(m_detSvc->iniFile()); //OOPS!
     assert(4==m_ini->getInt("glast", "xNum"));  // simple check
-
+	
     // get the Gui service (not required)
     if (service("GuiSvc", m_guiSvc).isFailure ()){
         log << MSG::WARNING << "No GuiSvc, so no display" << endreq;
     }else{
-       //m_guiSvc->guiMgr()->display().add(new Rep, "User rep");
+		//m_guiSvc->guiMgr()->display().add(new Rep, "User rep");
     }
-
+	
     // get a pointer to our ntupleWriterSvc
     if (service("ntupleWriterSvc", m_ntupleWriteSvc).isFailure()) {
         log << MSG::ERROR << "writeJunkAlg failed to get the ntupleWriterSvc" << endreq;
         return StatusCode::FAILURE;
     }
-
+	
     return sc;
 }
 
@@ -118,13 +119,13 @@ StatusCode UserAlg::execute()
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
     log << MSG::INFO << "executing " << ++m_count << " time" << endreq;
-
+	
     // Here we are adding to our ROOT ntuple
     sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "NumCalls", m_count);
- 
+	
     // An example of retrieving data from the TDS
     SmartDataPtr<TdGlastData> glastData(eventSvc(),"/Event/TdGlastData");
-
+	
     // retrieve TKR data pointer
     const SiData *tkrDigiData = glastData->getSiData();
     if (tkrDigiData == 0) {
@@ -136,7 +137,17 @@ StatusCode UserAlg::execute()
         // Now to add the total number of Hits in Plane 0 to the ntuple
         sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "TKR_numHitsPlane0", (nx+ny));
     }
-
+	
+	// An example of pausing the display 
+	bool pause = false;
+    // calculate some condition here...
+	// pause = .....;
+	if (pause) {
+		log << MSG::INFO << "Pausing at event " << m_count <<  endreq;
+		m_guiSvc->guiMgr()->pause();
+	} 
+	
+	
     return sc;
 }
 

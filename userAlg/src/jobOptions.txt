@@ -8,7 +8,7 @@
 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-MessageSvc.OutputLevel      = 3;
+MessageSvc.OutputLevel      = 2;
 
 // include algorithms in this package to append to GismoGenerator, and pdr recon
 ApplicationMgr.TopAlg += { "UserAlg"};
@@ -24,8 +24,13 @@ NTupleSvc.Output = {"PDR DATAFILE='userAlg.root' OPT='NEW'"};
 //ApplicationMgr.EvtMax = 10000;
 
 // How to pause the GUI with a list of events of interest
-//ApplicationMgr.TopAlg +={"PauseEvent"};
-//PauseEvent.event_list = {1578, 3545, 6358, 6485, 7632};
+//   You can also pause the GUI on any calculable condition. (See userAlg.)
+
+ApplicationMgr.TopAlg +={"PauseEvent"};
+// use this when you want to specify the run numbers (Run_Event):
+//PauseEvent.eventList = {"0_20", "0_22", "3_24", "5_50"};
+// and this when run number is not needed: (not sure why this works, but it does!)
+//PauseEvent.eventList = {20, 22, 24, 50};
 
 //==============================================================
 //
