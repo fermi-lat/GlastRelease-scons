@@ -189,9 +189,9 @@ HepRepGeometry::pushShape(ShapeType s, const UintVector& idvec,
   else
     return AbortSubtree;
 
-//  if (m_actualDepth == m_depth)
-//    return AbortSubtree;      
-//  else 
+  if ((m_typesList.size() == 0) && (m_actualDepth == m_depth))
+    return AbortSubtree;      
+  else 
     return More;
 }
 
