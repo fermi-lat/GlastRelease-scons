@@ -1,6 +1,6 @@
 package CRflux
 
-use FluxSvc v5r*
+use FluxSvc v6*
 
 use CLHEP v2* IExternal
 
