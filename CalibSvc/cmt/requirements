@@ -4,7 +4,7 @@ package CalibSvc
 ### Might end up changing this name to have a prefix a bit more general
 ### than "Calib"; e.g., DetSvc or CondSvc
 
-version v0r13p3
+version v0r13p4
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
@@ -13,8 +13,9 @@ use GlastPolicy v*
 apply_pattern component_library library=CalibSvc
 
 # the runtime public interface to this package must expose sharables from 
-# calibUtil and calibRootData
+# calibUtil, CalibData, and calibRootData
 use calibUtil v0r* -no_auto_imports
+use CalibData v0r* -no_auto_imports
 use calibRootData v1r* -no_auto_imports
 
 #because the latter package unfortunately exposes RootcintPolicy, the following macros have to be defined
