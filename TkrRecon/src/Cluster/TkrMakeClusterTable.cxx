@@ -47,9 +47,15 @@ TkrMakeClusterTable::TkrMakeClusterTable(const TkrClusterCol* pClus,
         while(highStrip.size()<4) { highStrip = " "+highStrip;}
         TkrDigi* p_digi = *itD;
         int order = digiOrder(p_clu);
+             //std::cout << "Before loop (o/d) " << order << " " 
+             //   << (int) *p_digi << std::endl;
         while (order!=*p_digi && itD!=pDigi->end()) {
-            p_digi = (*itD++);
+             //std::cout << "In     loop (o/d) " << order << " " 
+             //   << (int) *p_digi << std::endl;
+            p_digi = *(++itD);
         }
+             //std::cout << "After  loop (o/d) " << order << " " 
+             //   << (int) *p_digi << std::endl;
         if (itD==pDigi->end()) return;
         // cluster and digi match; get the McHits
         std::vector<Relation<TkrDigi, McPositionHit> *> relsByDigi = digiHitsTab.getRelByFirst(p_digi);
