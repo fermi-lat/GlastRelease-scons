@@ -6,6 +6,10 @@
 #include "rdbModel/Db/Connection.h"
 #include "rdbModel/Tables/Assertion.h"
 
+namespace rdbModel {
+  class Rdb;
+  class Manager;
+}
 
 namespace calibUtil {
   /** Provide interface between calibration clients and the
@@ -33,7 +37,8 @@ namespace calibUtil {
       RETNoConnect = 3,
       RETWrongState = 4,
       RETBadValue = 5,
-      RETMySQLError = 6
+      RETMySQLError = 6,
+      RETNoSchemaMatch = 7
     };
     /// Used to form bit masks for dbs queries
     enum eLevel {
@@ -160,7 +165,6 @@ namespace calibUtil {
     // Might make these private
     void disconnectRead();
     void disconnectWrite();
-    eRet compareSchema(const std::string& schema="");
 
   private:
 
@@ -193,6 +197,14 @@ namespace calibUtil {
 
     bool connectRead(eRet& err);
     bool connectWrite(eRet& err);
+
+    eRet compareSchema(rdbModel::Connection* conn,
+                       const std::string& schema);
+
+    bool checkValues(const rdbModel::StringVector& cols,
+                     const rdbModel::StringVector& vals) const;
+
+    bool checkNulls(const rdbModel::StringVector& cols) const;
 
     // Find 'best' calibration, based on conditions and levelMask; store
     // serial number.
@@ -232,6 +244,9 @@ namespace calibUtil {
     std::string  m_host;
     std::string  m_table;
     std::string  m_dbName;
+    rdbModel::Manager* m_man;
+    rdbModel::Rdb* m_rdb;
+    bool     m_match; // true if succeeded.  If not attempted, m_rdb is 0
   };
 }
 
