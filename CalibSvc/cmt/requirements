@@ -21,8 +21,10 @@ apply_pattern packageShr
 apply_pattern packag_Cshlibflags
 
 ## uncomment following when ready
-library CalibSvc *.cxx  CalibDataSvc/*.cxx \
-                        CalibMySQLCnv/*.cxx \
+library CalibSvc *.cxx  CalibDataSvc/*.cxx      \
+                        CalibMySQLCnv/*.cxx     \
+                        CalibXMLCnv/*.cxx       \
+                        CalibXMLCnv/cnv/*.cxx   \
                         Dll/*.cxx ${CalibSvc_headers}
 
 
