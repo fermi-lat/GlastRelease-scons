@@ -41,13 +41,14 @@ namespace ldfReader {
         osw.initPacketError(contribution->packetError());
         //ldfReader::LatData::instance()->getOsw().initLength(((EBFcontribution*)contribution)->length());
         osw.initLength(((EBFcontribution*)contribution)->length());
-        ldfReader::LatData::instance()->setOsw(osw);
+
         // OSW contribution only exists in later versions starting in Feb 2004
         if (ldfReader::LatData::instance()->getFormatIdentity() >= ID_WITH_OSW) {
             osw.setExist(); 
             OswParser oswParse(event, contribution);
             oswParse.iterate();
         }
+        ldfReader::LatData::instance()->setOsw(osw);
         return 0;
     }
 
@@ -221,8 +222,7 @@ int LatComponentParser::error(EBFevent* event, TEMcontribution* contribution) {
     ldfReader::ErrData err;
     err.initLength(((EBFcontribution*)contribution)->length());    
     //err.initPacketError(((EBFcontribution*)contribution)->packetError());
-    ldfReader::LatData::instance()->setErr(err);
-    if ( EventSummary::error(contribution->summary())) {
+    if ( EventSummary::error(((EBFcontribution*)contribution)->summary())) {
         err.setExist();
         unsigned offset;
         if (0 != diagnosticEnd())
@@ -233,6 +233,7 @@ int LatComponentParser::error(EBFevent* event, TEMcontribution* contribution) {
         errParse.iterate();
         errorEnd(offset+errParse.size());
     }
+    ldfReader::LatData::instance()->setErr(err);
     return 0;
 }
 

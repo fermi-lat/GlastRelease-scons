@@ -14,7 +14,7 @@ namespace ldfReader {
     {
     public:
 
-        EventSummaryCommon():EventSummary(0) { m_summary =0; };
+        EventSummaryCommon():EventSummary(0) { m_summary=0; };
         EventSummaryCommon(unsigned summary) : EventSummary(0) {
             m_summary = summary;  };
 
@@ -50,6 +50,19 @@ namespace ldfReader {
             unsigned tag = EventSummary::tag(m_summary);
             return ((eventNumber << 2) | tag);
         }
+
+
+
+    unsigned calStrobe() const { return EventSummary::calStrobe(m_summary);};
+    unsigned tag() const { return EventSummary::tag(m_summary); };
+    unsigned TACK() const { return EventSummary::TACK(m_summary); };
+    unsigned readout4() const { return EventSummary::readout4(m_summary); };
+    unsigned zeroSuppress() const { return EventSummary::zeroSuppress(m_summary); };
+    unsigned marker() const { return EventSummary::marker(m_summary); };
+    unsigned error() const { return EventSummary::error(m_summary); };
+    unsigned diagnostic() const { return EventSummary::diagnostic(m_summary); };
+    unsigned eventNumber() const { return EventSummary::eventNumber(m_summary); };
+    unsigned trgParityError() const { return EventSummary::trgParityError(m_summary); };
 
 
     private:

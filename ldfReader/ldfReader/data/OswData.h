@@ -36,7 +36,7 @@ namespace ldfReader {
             }
             printf("OSW: \n");
             m_summary.print();
-            printf("Len: %lu", m_lenInBytes);
+            printf("Len: %lu\n\n", m_lenInBytes);
         }
 
         const EventSummaryCommon& summary() const { return m_summary; };
