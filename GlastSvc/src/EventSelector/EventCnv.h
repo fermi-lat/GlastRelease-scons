@@ -3,7 +3,7 @@
 
 #include "BaseCnv.h"
 
-class Event;
+namespace Event{ class EventHeader; }
 extern const CLID& CLID_Event;
 
 // Abstract factory to create the converter
@@ -34,7 +34,7 @@ protected:
 
   virtual StatusCode createObj(IOpaqueAddress* pAddress, DataObject*& refpObject);
 
-  virtual StatusCode updateObj(int* data, Event* pObject);
+  virtual StatusCode updateObj(int* data, Event::EventHeader* pObject);
 
 
 };

@@ -27,11 +27,11 @@ EventCnv::EventCnv(ISvcLocator* svc)
 
 
 StatusCode EventCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObject) {
-    refpObject = new Event();
+    refpObject = new Event::EventHeader();
     return StatusCode::SUCCESS;
 };
 
-StatusCode EventCnv::updateObj(int* iarray, Event* pEvent)             {
+StatusCode EventCnv::updateObj(int* iarray, Event::EventHeader* pEvent)             {
     MsgStream log(msgSvc(), "EventCnv");
     log << MSG::DEBUG << "EventCnv::updateObj" << endreq;
     return StatusCode::SUCCESS;
