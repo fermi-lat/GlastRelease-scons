@@ -9,8 +9,15 @@
 
 /**
 * @class McParticle
-* @brief GLAST Monte Carlo particle class.  Designed originally for 2001 balloon flight.
-*  Inheritance information given for parentage only.
+* @brief GLAST Monte Carlo particle class.  This class mirrors the TDS 
+* McParticle class.
+* Each McParticle contains:
+* - Particle Id
+* - Status flags
+* - Final position, the initial position is calculated
+* - Initial and final momentum
+* - Pointer to the mother McParticle - if any
+* - An array of daughter McParticles - if any
 *
 *  \author Daniel Flath and Heather Kelly
 *  

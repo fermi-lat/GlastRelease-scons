@@ -30,9 +30,14 @@ McParticle::McParticle(const McParticle &p) {
         p.m_finalFourMomentum.Y(), p.m_finalFourMomentum.Z(),
         p.m_finalFourMomentum.T());
     m_mother = p.m_mother;
-    TRefArrayIter daughterIter(&p.m_daughters);
+    // TRefArrayIter::Next does not seem to be implemented in Root 3.02.03
+    // or ROOT 3.03.04 - just iterating over the entries for now.
+    //TRefArrayIter daughterIter(&p.m_daughters);
     McParticle *curRef;
-    while (curRef = (McParticle*)daughterIter.Next()){
+    UInt_t iPart;
+    for (iPart = 0; iPart < p.m_daughters.GetEntries(); iPart++) {
+    //while ( (curRef = (McParticle*)daughterIter.Next()) ){
+        curRef = (McParticle*)p.m_daughters.At(iPart);
         m_daughters.Add(curRef);
     }
 }
@@ -86,7 +91,7 @@ void McParticle::initialize( McParticle* mother, Int_t id, UInt_t statusBits,
 
 const McParticle* McParticle::getMother() {
 
-    return ( (const McParticle*)(m_mother.GetObject()) );
+    return ( (McParticle*)(m_mother.GetObject()) );
 }
 
 const McParticle* McParticle::getDaughter(Int_t index) const {

@@ -12,7 +12,16 @@
 /* @class McPositionHit
 * @brief A ROOT class for storing McPositionHit information.
 * This class mirrors the McPositionHit class used in the Gaudi TDS.
-*
+* Each McPositionHit contains:
+* - VolumeIdentifier
+* - Status flags
+* - Deposited energy
+* - Particle energy
+* - Time of Flight
+* - Entry and Exit positions
+* - Pointer to the McParticle causing the hit
+* - Pointer to the origin McParticle
+* 
 * $Header$
 */
 
