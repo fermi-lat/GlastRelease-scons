@@ -32,6 +32,7 @@ public:
 
     void initialize(UInt_t trigger, UInt_t *triRowBits);
     void setTriRowBits(UInt_t tower, UInt_t bits);
+    void setTriRowBits(UInt_t *triRowBits);
 
     void Clear(Option_t *option ="");
 

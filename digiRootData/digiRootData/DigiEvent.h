@@ -51,11 +51,17 @@ public:
         Double_t liveTime, const L1T& level1, const EventSummaryData &summary, 
         Bool_t fromMc=true);
 
+    void initialize(UInt_t eventId, UInt_t runId, Double_t time, 
+        Double_t liveTime, const L1T& level1, Bool_t fromMc=true);
+
+    void initEventSummary(const EventSummaryData& summary) { 
+         m_summary = summary; };
+
     void Clear(Option_t *option="");
  
     void Print(Option_t *option="") const;
 	
-	/** @defgroup DigiEventGroup DigiEvent End-User Interface */
+    /** @defgroup DigiEventGroup DigiEvent End-User Interface */
     /*@{*/
     /// Access the DigiEvent number
     inline UInt_t getEventId() { return m_eventId; };
@@ -82,7 +88,7 @@ public:
         return (upper + lower);
     };
 
-	/// Flag denoting if this event was generated from a Monte Carlo Simulation
+    /// Flag denoting if this event was generated from a Monte Carlo Simulation
     inline Bool_t getFromMc() { return m_fromMc; };
 
     /// retrieve the whole TClonesArray of Acd Digi data
@@ -104,6 +110,7 @@ public:
 
     /// Access Level 1 Trigger data
     inline const L1T& getL1T() const { return m_levelOneTrigger; };    
+    inline L1T& getL1T() { return m_levelOneTrigger; };    
 
 	/// Returns a reference to the EventSummaryData
     inline const EventSummaryData& getEventSummaryData() const { return m_summary; };

@@ -42,6 +42,12 @@ void L1T::setTriRowBits(UInt_t tower, UInt_t bits) {
     m_triRowBits[tower] = bits;
 }
 
+void L1T::setTriRowBits(UInt_t *bits) {
+    Int_t itower;
+    for (itower = 0; itower < 16; itower++) 
+        setTriRowBits(itower, bits[itower]);
+}
+
 
 void L1T::Clear(Option_t *option) {
     m_trigger = 0;
