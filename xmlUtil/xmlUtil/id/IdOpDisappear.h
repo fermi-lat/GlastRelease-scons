@@ -15,7 +15,7 @@ namespace xmlUtil {
   public:
     IdOpDisappear(DOM_Element) {}
     ~IdOpDisappear() {}
-    NamedId * convert(const NamedId& inputId) {return new NamedId();}
+    NamedId * convert(const NamedId& ) {return new NamedId();}
     virtual std::string myOp() const {return std::string("DISAPPEAR ");}
   };
 }    

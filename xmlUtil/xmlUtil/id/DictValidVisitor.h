@@ -14,8 +14,8 @@ namespace xmlUtil {
     virtual bool visitDict(IdDict *dict);
     virtual bool visitNode(DictNode *node);
 
-    virtual bool visitField(DictField *field) {return true;}
-    virtual bool visitFieldMan(DictFieldMan *fieldMan) {return true;}
+    virtual bool visitField(DictField *) {return true;}
+    virtual bool visitFieldMan(DictFieldMan *) {return true;}
 
     bool wasValid() {return (m_state == eValid); }
     
