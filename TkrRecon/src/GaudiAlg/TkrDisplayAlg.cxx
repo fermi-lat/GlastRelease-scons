@@ -19,6 +19,7 @@
 
 #include "TkrRecon/GaudiAlg/TkrDisplayAlg.h"
 #include "src/Display/TkrClustersRep.h"
+#include "src/Display/TkrTracksRep.h"
 
 // Display stuff for NeuralNet PatRec Alg
 #include "src/Display/TkrDispCompleteNet.h"
@@ -113,7 +114,7 @@ StatusCode TkrDisplayAlg::initialize()
         }
         
         //Set up the display rep for the reconstructed tracks
-//        tkrmenu.add(new TkrTracksRep(eventSvc()), "Tracks");
+        tkrmenu.add(new TkrTracksRep(eventSvc()), "Tracks");
     
         //Vertex display routines
         tkrmenu.add(new TkrGammaRep(eventSvc(), tkrGeom), "Gamma Vertex");

@@ -132,11 +132,11 @@ TkrMakeClusters::TkrMakeClusters(TkrClusterCol* pClus, Event::TkrIdClusterMap* c
                    int end;
                    int rawToT;
                    float ToT = calculateMips(pDigi, strip0, stripf, rawToT, end);
-                   unsigned int status = defaultStatus | TkrCluster::setStatus(rawToT, end);
+                   unsigned int status = defaultStatus | ((end<<TkrCluster::shiftEND)&TkrCluster::maskEND);
 
                     TkrCluster* cl = new TkrCluster(hitId, strip0, stripf, 
-                        pos, 0.0, status, nBad);
-                    cl->setMips(ToT);
+                        pos, rawToT, ToT, status, nBad);
+                    //cl->setMips(ToT);
                     pClus->push_back(cl);
                     nclusters++;
                     (*clusMap)[hitId].push_back(cl);
