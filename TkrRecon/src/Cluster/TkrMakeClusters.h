@@ -40,7 +40,7 @@
 #include "Event/Recon/TkrRecon/TkrCluster.h"
 #include "Event/Recon/TkrRecon/TkrClusterCol.h"
 #include "TkrRecon/ITkrGeometrySvc.h"
-#include "TkrRecon/ITkrBadStripsSvc.h"
+#include "TkrUtil/ITkrBadStripsSvc.h"
 
 class TkrMakeClusters
 {
