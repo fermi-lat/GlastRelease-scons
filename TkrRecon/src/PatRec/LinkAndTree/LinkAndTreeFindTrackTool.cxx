@@ -1,3 +1,12 @@
+// File and Version Information:
+//      $Header$
+//
+// Description:
+//      Tool for find candidate tracks via the Link and Tree approach
+//
+// Author:
+//      The Tracking Software Group  
+
 #include "src/PatRec/LinkAndTree/LinkAndTreeFindTrackTool.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"

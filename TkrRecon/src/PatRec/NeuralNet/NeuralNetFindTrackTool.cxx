@@ -1,3 +1,12 @@
+// File and Version Information:
+//      $Header$
+//
+// Description:
+//      Tool for find candidate tracks via the Neural Net approach
+//
+// Author:
+//      The Tracking Software Group  
+
 #include "src/PatRec/NeuralNet/NeuralNetFindTrackTool.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
