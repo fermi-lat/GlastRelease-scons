@@ -83,7 +83,6 @@ TriggerAlg.mask = -1; // all bits on by default
 //
 ApplicationMgr.DLLs +={ 
     "Recon",
-    "TkrRecon",
     "CalRecon"
     };
 ApplicationMgr.ExtSvc += {"RecoSvc"};
@@ -101,7 +100,7 @@ TkrInitSvc.TrackerReconType = 0;    // = 0 for Link and Tree, = 1 for Combo
 
 // don't call CalClustersAlg for now
 TkrReco.Members = { 
-     "TkrDigiAlg" , "TkrClusterAlg", "TkrFindAlg", "TkrReconAlg", "TkrVertexAlg"
+      "TkrClusterAlg", "TkrFindAlg", "TkrReconAlg", "TkrVertexAlg"
          };
 
 
@@ -114,7 +113,7 @@ ApplicationMgr.DLLs +={
 //Output.Members += {"   "};
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-MessageSvc.OutputLevel = 3;
+MessageSvc.OutputLevel = 2;
 ApplicationMgr.EvtMax = 1000;
 
 //==============================================================
