@@ -159,7 +159,7 @@ int main(int argn, char** argc) {
         }
 
         // Move the event pointer to the next event in the EBF file
-        ebfP->nextEvent();
+        status = ebfP->nextEvent();
 
     } while (status >= 0);
 

@@ -2,7 +2,7 @@
 #define LdfParser_H 1
 
 #include <string>
-#include "DFC/EBF_fileIn.h"
+//#include "DFC/EBF_fileIn.h"
 #include "data/LatData.h"
 #include "EBFevent.h"
 #include "LATdatagram.h"
@@ -46,6 +46,13 @@ namespace ldfReader {
         //bool end(EBFevent *evt);
         bool end();
 
+        FILE* file_initialize(const char* filename);
+        unsigned from_file(FILE *fpevents, char* buffer);
+        void file_finalize(FILE *fpevents);
+
+        unsigned* evtsize(char* buffer);
+        unsigned* evtremaining(char* buffer);
+
         // local exception class
         class Exception{ };
 
@@ -53,7 +60,7 @@ namespace ldfReader {
         std::string m_fileName;
         bool        m_fitsWrap;
 
-        EBF_file   *m_ebf;
+        FILE   *m_ebf;
 
         // This is really of type (fitsfile *) but don't want to include all of
         // fitsio.h just for that!  Means we have to cast and copy a bunch.
@@ -78,6 +85,8 @@ namespace ldfReader {
         int m_ebfSize;
 
         unsigned char* m_buffer;   // probably obsolete
+
+        static const unsigned BufferSize;
 
         //    EBFevent *m_evt, *m_end;
         LATdatagram *m_end, *m_start, *m_datagram;
