@@ -2,6 +2,8 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
+ *  6-Oct-2004: jrb v0r14p0: Add test algorithms, job options for
+ *                           CAL_MevPerDac and CAL_TholdMuon
  *  4-Oct-2004: jrb v0r14:   1. Add support for a bunch of new CAL calibration
  *                           types, some not yet fully tested
  *                           2. public but no_auto_imports use of astro to

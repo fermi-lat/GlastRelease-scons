@@ -1,6 +1,7 @@
 /** @file release.notes
  * Package CalibData
  * Coordinator:  J. Bogart
+ *  6-Oct-2004 jrb - v0r9p1   Make const what should be const
  *  4-Oct-2004 jrb - v0r9p0   Pick up additional little changes needed for 
 *                             new CAL types
  *  4-Oct-2004 jrb - v0r9     Support for new CAL calibration types
