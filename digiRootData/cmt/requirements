@@ -8,27 +8,15 @@ use ROOT v3r0p7
 ignore_pattern include_none
 apply_pattern package_include
 
-apply_pattern link_opts
+apply_pattern package_linkopts
 
 apply_pattern ld_library_path
 
-#replaced this stuff by the above patterns
 
-#include_path ${DIGIROOTDATAROOT}
-
-#macro   digiRootData_linkopts "-L${DIGIROOTDATAROOT}/${CMTCONFIG} -ldigiRootData"\
-#        VisualC         ""
-
-
-#macro_append Win32Debug " ${DIGIROOTDATAROOT}/${DebugDir}/digiRootDatalib.lib"
-#macro_append Win32Release " ${DIGIROOTDATAROOT}/${ReleaseDir}/digiRootDatalib.lib"
-
-#path_append LD_LIBRARY_PATH "${DIGIROOTDATAROOT}/${CMTCONFIG}"
 
 private
 
-# This is where things start to go haywire
-
+# Create the Root Cint classes
 macro root_headers "ACDTile.h CalHit.h ESAPID.h Event.h L1T.h LogID.h StripID.h Tagger.h TileID.h TkrLayer.h EventLinkDef.h"
 
 # try to build this by adding to compilation for requirements
@@ -40,10 +28,12 @@ make_fragment event_dorootcint_header
 make_fragment event_dorootcint -header=event_dorootcint_header
 document event_dorootcint EventRootCint CINTFILE=../digiRootData/EventCint.cxx
 
+
+
 # For some reason, I was getting errors when loading the digiRootData shareable
 # in root.  Linking the Root Physics library in avoids this.
 macro digiRootData_shlibflags " -L${ROOT_PATH}/lib -lPhysics -lMatrix " \
-      VisualC            ""
+      VisualC            " ${use_linkopts} "
 
 
 # I think this is still ok?
