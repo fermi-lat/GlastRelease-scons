@@ -18,8 +18,6 @@
 #include "GlastEvent/TopLevel/Event.h"
 #include "GlastEvent/TopLevel/ObjectVector.h"
 
-#include "GlastEvent/data/TdCsIData.h"
-#include "GlastEvent/data/TdSiData.h"
 
 #include "GlastEvent/TopLevel/IrfEvent.h"
 #include "GlastEvent/Irf/IrfAcdHit.h"
@@ -179,66 +177,6 @@ StatusCode CreateEvent::execute() {
 #endif // End of decreased output comment.
 
 
-    sc = eventSvc()->retrieveObject("/Event/Raw/TdCsIDatas", pObject);
-    if( sc.isFailure() ) return sc;                                                             
-    
-        log << MSG::INFO << "Successfully retrieved CsIContainer Container!!!" << endreq;
-
-    TdCsIData* csiList;
-    try {
-        csiList  = dynamic_cast<TdCsIData*>(pObject);
-    } catch(...) {
-        log << MSG::INFO << "Failed to convert object to TdCsIData" << endreq;
-        return StatusCode::FAILURE;
-    }
-#if 0    
-    log << MSG::INFO << "Printing all hit crystal information:" << endreq;
-    for(int i = 0; i < 9; i++)
-    {
-        for(int j = 0; j < csiList->nHits(i); j++)
-        {
-            log << MSG::INFO << "Layer: "<< i << " Crystal: " << j << ":" << endreq;
-            log << MSG::INFO << "       Energy: " << csiList->energy(i,j) << endreq;
-            log << MSG::INFO << "        Lresp: " << csiList->Lresp(i,j)  << endreq;
-            log << MSG::INFO << "   Position X: " << csiList->xtalPos(i,j).x() << endreq;
-        }
-    }
-#endif
-
-//    return sc;
-
-    sc = eventSvc()->retrieveObject("/Event/Raw/TdSiDatas", pObject);
-    if( sc.isFailure() ) return sc;                                                             
-    
-        log << MSG::INFO << "Successfully retrieved SiContainer Container!!!" << endreq;
-
-    TdSiData* siList;
-    try {
-        siList  = dynamic_cast<TdSiData*>(pObject);
-    } catch(...) {
-        log << MSG::INFO << "Failed to convert object to TdSiData" << endreq;
-        return StatusCode::FAILURE;
-    }
-    
-    TdSiData::Axis a = TdSiData::Axis(0);
-
-#if 1 
-    /*! This not a comprehensive or intelligent check of the data members.
-        It's simply a quick check to see if they are dead or alive.
-    */
-    log << MSG::INFO << "\n\nPrinting TRK information:" << endreq;
-    for(int i = 0; i < 16; i++)
-    {
-        for(int j = 0; j < siList->nHits(a = TdSiData::Axis(0),i); j++)
-        {
-            log << MSG::INFO << "       Layer: "<< i << " Crystal: " << j << ":" << endreq;
-            log << MSG::INFO << "       X Hit: "  << siList->hit(a = TdSiData::Axis(0),i,j).x() << endreq;
-            log << MSG::INFO << "       Y Hit: "  << siList->hit(a = TdSiData::Axis(0),i,j).y() << endreq;
-        }
-    }
-#endif
-
-    sc = testMcClass();
 
     return sc;
 
