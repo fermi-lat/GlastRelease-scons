@@ -8,7 +8,7 @@ package CalRecon
 
 package manager: Alexandre Chekhtman
 
-  v5r23p? ??-apr-05   DC  Energy corrections made optional.
+  v5r23p2 05-apr-05   DC  Energy corrections made optional.
                       DC  Experimental: check the use of algorithm options.
                       DC  Tests independent of TkrRecon.
                       DC  merge v5r22p5em0 and v5r22p5em1 
