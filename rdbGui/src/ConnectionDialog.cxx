@@ -96,7 +96,7 @@ FXuint ConnectionDialog::execute(FXuint opts)
       
     if (m_uiSavepass->getCheck())
       m_uiPass->setText("");
-    FXDialogBox::execute(opts);
+    return FXDialogBox::execute(opts);
 }
 
 // Quick finish if the return key was pressed, pass other keys
