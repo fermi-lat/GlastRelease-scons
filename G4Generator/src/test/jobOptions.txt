@@ -5,7 +5,7 @@
 // $Header$
 
 //  -------------- basic Glast/Gaudi run enviornment -----------
-ApplicationMgr.DLLs   = { "GaudiAlg",  "GlastSvc", "GlastDigi"};
+ApplicationMgr.DLLs   = { "GaudiAlg",  "GlastSvc"};
 
 ApplicationMgr.ExtSvc = { 
     "GlastEventSelector/EventSelector" , 
@@ -30,8 +30,7 @@ FluxSvc.source_lib = {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
 //----------------- local algorithms to run -------------------
 ApplicationMgr.TopAlg = { 
     "G4Generator",
-    "G4TestAlg",
-    "TkrBariDigiAlg"};
+    "G4TestAlg"};
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
