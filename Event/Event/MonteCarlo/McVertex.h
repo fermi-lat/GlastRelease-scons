@@ -2,9 +2,8 @@
 #ifndef GlastEvent_McVertex_H
 #define GlastEvent_McVertex_H 1
 
-
-// Uncomment the following line if you need sub-event ID.
-//#define NeedSubEvtID
+// If you wish to introduce the namespace `GlastEvent', uncomment
+// the lines commented as `NameSpace'.
 
 
 // Include files
@@ -21,9 +20,6 @@
 #include "GlastEvent/TopLevel/ObjectVector.h"
 #include "GlastEvent/TopLevel/ObjectList.h"
 
-
-// Forward declarations
-class MCParticle;
 
 
 /*!
@@ -48,18 +44,19 @@ class MCParticle;
 //------------------------------------------------------------------------------
  */
 
+//namespace GlastEvent { // NameSpace
+
+// Forward declarations
+class McParticle;
 
 class McVertex : virtual public ContainedObject {
-
-public:
+  public:
     // vertex type definition
     enum originType {primaryOrigin = 1, daughterOrigin = 2, decayProduct = 3, showerContents = 4, showerBacksplash = 5};
 
     /// Constructors
     McVertex() :
-#ifdef NeedSubEvtID
      m_subEvtID(0),
-#endif // NeedSubEvtID
      m_timeOfFlight(0.),
      m_vertexType(primaryOrigin)
     { }
@@ -106,30 +103,28 @@ public:
     void setFinalFourMomentum( const HepLorentzVector& value );
 
     /// Retrieve pointer to mother particle (const or non-const)
-    const MCParticle* motherMCParticle() const;
-          MCParticle* motherMCParticle();
+    const McParticle* motherMcParticle() const;
+          McParticle* motherMcParticle();
     /// Update pointer to mother particle (by a C++ pointer or a smart reference)
-    void setMotherMCParticle( const MCParticle* value );
-    void setMotherMCParticle( const SmartRef<MCParticle> value );
+    void setMotherMcParticle( McParticle* value );
+    void setMotherMcParticle( SmartRef<McParticle> value );
 
     /// Retrieve pointer to vector of daughter particles (const or non-const)
-    const SmartRefVector<MCParticle>& daughterMCParticles() const;
-          SmartRefVector<MCParticle>& daughterMCParticles();
+    const SmartRefVector<McParticle>& daughterMcParticles() const;
+          SmartRefVector<McParticle>& daughterMcParticles();
     /// Update all daughter particles
-    void setDaughterMCParticles( const SmartRefVector<MCParticle>& value );
+    void setDaughterMcParticles( const SmartRefVector<McParticle>& value );
     /// Remove all daughter particles
-    void removeDaughterMCParticles();
+    void removeDaughterMcParticles();
     /// Add single daughter particle to vector of daughter particles
     ///   (by a C++ pointer or a smart reference)
-    void addDaughterMCParticle( const MCParticle* value );
-    void addDaughterMCParticle( const SmartRef<MCParticle> value );
+    void addDaughterMcParticle( McParticle* value );
+    void addDaughterMcParticle( SmartRef<McParticle> value );
 
-#ifdef NeedSubEvtID
     /// Retrieve sub event ID
     short subEvtID() const;
     /// Set sub event ID
     void setSubEvtID( short value );
-#endif // NeedSubEvtID
 
     /// Serialize the object for writing
     virtual StreamBuffer& serialize( StreamBuffer& s ) const;
@@ -138,11 +133,9 @@ public:
     /// Fill the ASCII output stream
     virtual std::ostream& fillStream( std::ostream& s ) const;
 
-private:
-#ifdef NeedSubEvtID
+  private:
     /// Sub-event ID
     short                      m_subEvtID;
-#endif // NeedSubEvtID
     /// Positions:
     /// <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Geometry/HepPoint3D.html">class HepPoint3D</A>
     /// Initial position
@@ -160,9 +153,9 @@ private:
     /// Final 4-momentum
     HepLorentzVector          m_finalFourMomentum;
     /// Pointer to mother particle
-    SmartRef<MCParticle>       m_motherMCParticle;
+    SmartRef<McParticle>       m_motherMcParticle;
     /// Vector of pointers to daughter particles
-    SmartRefVector<MCParticle> m_daughterMCParticles;
+    SmartRefVector<McParticle> m_daughterMcParticles;
 };
 
 
@@ -172,9 +165,132 @@ typedef ObjectVector<McVertex>     McVertexVector;
 template <class TYPE> class ObjectList;
 typedef ObjectList<McVertex>       McVertexList;
 
+//} // NameSpace GlastEvent
+
 
 // Inline codes
-#include "GlastEvent/MonteCarlo/McVertex.cpp"
+#include "GlastEvent/MonteCarlo/McParticle.h"
 
+//namespace GlastEvent { // NameSpace
+
+/// Retrieve initial position
+inline const HepPoint3D& McVertex::initialPosition () const
+{
+  return m_initialPosition;
+}
+/// Retrieve initial position
+inline HepPoint3D& McVertex::initialPosition ()
+{
+  return m_initialPosition;
+}
+/// Update initial position
+inline void McVertex::setInitialPosition (const HepPoint3D& value)
+{
+  m_initialPosition = value;
+}
+
+/// Retrieve final position
+inline const HepPoint3D& McVertex::finalPosition () const
+{
+  return m_finalPosition;
+}
+/// Retrieve final position
+inline HepPoint3D& McVertex::finalPosition ()
+{
+  return m_finalPosition;
+}
+/// Update final position
+inline void McVertex::setFinalPosition (const HepPoint3D& value)
+{
+  m_finalPosition = value;
+}
+
+/// retrieve time of flight
+inline double McVertex::timeOfFlight () const
+{
+  return m_timeOfFlight;
+}
+/// update time of flight
+inline void McVertex::setTimeOfFlight (double value)
+{
+  m_timeOfFlight = value;
+}
+/// retrieve vertex type
+inline McVertex::originType McVertex::vertexType () const
+{
+  return m_vertexType;
+}
+/// update vertex type
+inline void McVertex::setVertexType (McVertex::originType value)
+{
+  m_vertexType = value;
+}
+
+
+/// Retrieve pointer to mother particle (const or non-const)
+inline const McParticle* McVertex::motherMcParticle() const                             {
+  return m_motherMcParticle;
+}
+inline       McParticle* McVertex::motherMcParticle()
+{
+  return m_motherMcParticle;
+}
+
+/// Update pointer to mother particle (by a C++ pointer or a smart reference)
+inline void McVertex::setMotherMcParticle( McParticle* value )
+{
+  m_motherMcParticle = value;
+}
+inline void McVertex::setMotherMcParticle( SmartRef<McParticle> value )
+{
+  m_motherMcParticle = value;
+}
+
+/// Retrieve pointer to vector of daughter particles (const or non-const)
+inline const SmartRefVector<McParticle>& McVertex::daughterMcParticles() const
+{
+  return m_daughterMcParticles;
+}
+inline       SmartRefVector<McParticle>& McVertex::daughterMcParticles()
+{
+  return m_daughterMcParticles;
+}
+
+/// Update all daughter particles
+inline void McVertex::setDaughterMcParticles( const SmartRefVector<McParticle>& value )
+{
+  m_daughterMcParticles = value;
+}
+
+/// Remove all daughter particles
+inline void McVertex::removeDaughterMcParticles()
+{
+  m_daughterMcParticles.clear();
+}
+
+/// Add single daughter particle to vector of daughter particles
+///   (by a C++ pointer or a smart reference)
+inline void McVertex::addDaughterMcParticle( McParticle* value )
+{
+  m_daughterMcParticles.push_back(value);
+}
+inline void McVertex::addDaughterMcParticle( SmartRef<McParticle> value )
+{
+  m_daughterMcParticles.push_back(value);
+}
+
+
+/// Retrieve sub event ID
+inline short McVertex::subEvtID() const
+{
+  return m_subEvtID;
+}
+/// Set sub event ID
+inline void McVertex::setSubEvtID( short value )
+{
+  m_subEvtID = value;
+}
+
+//} // NameSpace GlastEvent
 
 #endif    // GlastEvent_McVertex_H

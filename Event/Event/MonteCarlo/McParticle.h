@@ -2,9 +2,8 @@
 #ifndef GlastEvent_McParticle_H
 #define GlastEvent_McParticle_H 1
 
-
-// Uncomment the following line if you need sub-event ID.
-//#define NeedSubEvtID
+// If you wish to introduce the namespace `GlastEvent', uncomment
+// the lines commented as `NameSpace'.
 
 
 // Include files
@@ -13,7 +12,36 @@
 #include "Gaudi/Kernel/ContainedObject.h"
 #include "Gaudi/Kernel/SmartRef.h"
 #include "Gaudi/Kernel/SmartRefVector.h"
+#if 0 // *** FIXME!! ***
+    // Gaudi v8's ParticleProperty class seems to have some problems
+    // around the message stream, so temporarily commented-out.
 #include "Gaudi/ParticlePropertySvc/ParticleProperty.h"
+#else // 0
+    /// An ad-hoc workaround...
+#include "Gaudi/Kernel/StreamBuffer.h"
+#include "GlastEvent/TopLevel/Definitions.h"
+    struct ParticleProperty {
+        int m_dummy;
+        typedef ParticleProperty PP;
+        friend StreamBuffer& operator<< ( StreamBuffer& s, const PP& obj ){
+            return s << obj.m_dummy;
+        }
+        /// Serialize the object for reading
+        friend StreamBuffer& operator>> ( StreamBuffer& s, PP& obj ){
+            return s >> obj.m_dummy;
+        }
+        /// Output operator (ASCII)
+        friend std::ostream& operator<< ( std::ostream& s, const PP& obj ){
+            return obj.fillStream(s);
+        }
+        /// Fill the output stream (ASCII)
+        std::ostream& fillStream( std::ostream& s ) const{
+            return s << "class ParticleProperty : "
+              << GlastEventField( GlastEvent::field4 )
+              << m_dummy;
+        }
+    };
+#endif // 0
 #include "GlastEvent/TopLevel/Definitions.h"
 #include "GlastEvent/Utilities/ParticleID.h"
 #include "CLHEP/Vector/LorentzVector.h"
@@ -23,9 +51,6 @@
 #include "GlastEvent/TopLevel/ObjectVector.h"
 #include "GlastEvent/TopLevel/ObjectList.h"
 
-
-// Forward declarations
-class MCVertex;
 
 
 /*!
@@ -46,16 +71,17 @@ class MCVertex;
 //------------------------------------------------------------------------------
  */
 
+//namespace GlastEvent {  // NameSpace
+
+// Forward declarations
+class McVertex;
 
 class McParticle  : virtual public ContainedObject  {
-
-public:
+  public:
     /// Constructors
     McParticle() :
-#ifdef NeedSubEvtID
      m_subEvtID(0),
-#endif // NeedSubEvtID
-     m_primaryParticle(false),
+//   m_primaryParticle(false),
      m_statusFlags(0)
     {}
     /// Destructor
@@ -77,25 +103,23 @@ public:
     void setPrimaryParticleFlag( bool value );
 
     /// Retrieve pointer to origin vertex (const or non-const)
-    const MCVertex* originMCVertex() const;
-          MCVertex* originMCVertex();
+    const McVertex* originMcVertex() const;
+          McVertex* originMcVertex();
     /// Update pointer to origin vertex (by a C++ pointer or a smart reference)
-    void setOriginMCVertex( const MCVertex* value );
-    void setOriginMCVertex( const SmartRef<MCVertex> value );
+    void setOriginMcVertex( McVertex* value );
+    void setOriginMcVertex( SmartRef<McVertex> value );
 
     /// Retrieve pointer to vector of end vertex (const or non-const)
-    const MCVertex* endMCVertex() const;
-          MCVertex* endMCVertex();
+    const McVertex* endMcVertex() const;
+          McVertex* endMcVertex();
     /// Update pointer to origin vertex (by a C++ pointer or a smart reference)
-    void setEndMCVertex( const MCVertex* value );
-    void setEndMCVertex( const SmartRef<MCVertex> value );
+    void setEndMcVertex( McVertex* value );
+    void setEndMcVertex( SmartRef<McVertex> value );
 
-#ifdef NeedSubEvtID
     /// Retrieve sub event ID 
     short subEvtID() const;
     /// Set sub event ID 
     void setSubEvtID( short value );
-#endif // NeedSubEvtID
 
     /// Serialize the object for writing
     virtual StreamBuffer& serialize( StreamBuffer& s ) const ;
@@ -104,25 +128,19 @@ public:
     /// Fill the ASCII output stream
     virtual std::ostream& fillStream( std::ostream& s ) const;
 
-private:
+  private:
     /// Particle ID
     ParticleID                m_particleID;
     /// We need particle property (such as electron or proton or ....)
     ParticleProperty          m_particleProperty;
-#ifdef NeedSubEvtID
     /// Sub-event ID
     short                     m_subEvtID;
-#endif // NeedSubEvtID
     /// Bit-field status flag
     unsigned long             m_statusFlags;
     /// Pointer to origin vertex
-    SmartRef<MCVertex>        m_originMCVertex;
-    /// Vector of pointers to end vertex
-    SmartRef<MCVertex>        m_endMCVertex;
-
-    /// Constant(s) for internal use.  Should be moved to .cpp file when
-    /// the namespace "GlastEvent" is introduced.
-    const unsigned long       STATUS_PRIMARY = 1<<0;
+    SmartRef<McVertex>        m_originMcVertex;
+    /// Pointer to end vertex
+    SmartRef<McVertex>        m_endMcVertex;
 };
 
 
@@ -132,9 +150,123 @@ typedef ObjectVector<McParticle>     McParticleVector;
 template <class TYPE> class ObjectList;
 typedef ObjectList<McParticle>       McParticleList;
 
+//} // NameSpace GlastEvent
+
+
 
 // Inline codes
-#include "GlastEvent/MonteCarlo/McParticle.cpp"
+#include "GlastEvent/MonteCarlo/McVertex.h"
+#include "GlastEvent/MonteCarlo/McConstants.h"
 
+//namespace GlastEvent { // NameSpace
+
+/// Retrieve particle identification
+inline ParticleID McParticle::particleID() const
+{
+  return m_particleID;
+}
+
+
+/// Update particle identification
+inline void McParticle::setParticleID( ParticleID value )
+{
+  m_particleID = value;
+}
+
+
+/// Retrieve particle property
+inline ParticleProperty McParticle::particleProperty() const
+{
+  return m_particleProperty;
+}
+
+
+/// Update particle property
+inline void McParticle::setParticleProperty( ParticleProperty value )
+{
+  m_particleProperty = value;
+}
+
+
+/// Retrieve whether this is a primary particle
+inline bool McParticle::primaryParticle() const
+{
+  using GlastEvent::McConstants::PRIMARY;
+  return m_statusFlags & PRIMARY;
+}
+
+
+/// Set whether this is a primary particle
+inline void McParticle::setPrimaryParticleFlag( bool value )
+{
+  using GlastEvent::McConstants::PRIMARY;
+  if (value){
+    m_statusFlags |= PRIMARY;
+  } else {
+    m_statusFlags &= ~PRIMARY;
+  }
+}
+
+
+/// Retrieve pointer to origin vertex (const or non-const)
+inline const McVertex* McParticle::originMcVertex() const
+{ 
+//  McVertex* ret = m_originMcVertex;
+//  return ret;
+  return m_originMcVertex; 
+}
+inline       McVertex* McParticle::originMcVertex()
+{ 
+  return m_originMcVertex;
+}
+
+
+/// Update pointer to origin vertex (by a C++ pointer or a smart reference)
+inline void McParticle::setOriginMcVertex( McVertex* value )
+{ 
+  m_originMcVertex = value; 
+}
+inline void McParticle::setOriginMcVertex( SmartRef<McVertex> value )
+{ 
+  m_originMcVertex = value; 
+}
+
+
+/// Retrieve pointer to vector of end vertex (const or non-const)
+inline const McVertex* McParticle::endMcVertex() const
+{ 
+  return m_endMcVertex; 
+}
+inline       McVertex* McParticle::endMcVertex()
+{ 
+  return m_endMcVertex; 
+}
+
+
+/// Update pointer to end vertex (by a C++ pointer or a smart reference)
+inline void McParticle::setEndMcVertex( McVertex* value )
+{ 
+  m_endMcVertex = value; 
+}
+inline void McParticle::setEndMcVertex( SmartRef<McVertex> value )
+{ 
+  m_endMcVertex = value; 
+}
+
+
+/// Retrieve sub event ID 
+inline short McParticle::subEvtID() const
+{
+  return m_subEvtID;
+}
+
+
+/// Set sub event ID 
+inline void McParticle::setSubEvtID( short value )
+{
+  m_subEvtID = value;
+}
+
+//} // NameSpace GlastEvent
 
 #endif    // GlastEvent_McParticle_H
