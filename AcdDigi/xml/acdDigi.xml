@@ -26,6 +26,7 @@
 
     <section name="global_constants"> 
         <item name="mean_pe_per_mip"   value="18"> number of photoelectrons per mip </item>
+        <item name="mean_pe_per_mip_ribbon" value="5"> number of photoelectrons per mip for a ribbon </item>
         <item name="noise_std_dev_pha" value="0.02"> std deviation for pha gaussian noise </item>
         <item name="noise_std_dev_veto" value="0.02"> std deviation for veto gaussian noise </item>
         <item name="noise_std_dev_cno" value="0.02"> std deviation for cno gaussian noise </item>
