@@ -4,7 +4,7 @@ version v1r6
 branches GlastEvent mgr doc src
 use idents
 use data 
-use Gaudi 
+#use Gaudi 
 
 library GlastEvent -no_share\
         ../GlastEvent/*.h \ 
@@ -24,7 +24,8 @@ library GlastEvent -no_share\
 
 # library tkrTest ../GlastEvent/Digi/TkrTest.cxx ../GlastEvent/Digi/TkrDigi.h ../GlastEvent/Digi/TkrDigiCol.h 
 
-include_path ${GLASTEVENTROOT}
+ignore_pattern include_none
+apply_pattern package_include
 
 macro GlastEventDir     "$(GLASTEVENTROOT)/$(DEBUGDIR)"
 
