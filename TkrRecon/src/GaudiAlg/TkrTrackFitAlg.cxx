@@ -118,8 +118,8 @@ StatusCode TkrTrackFitAlg::execute()
 
 	log << MSG::DEBUG << "------- Recon of new Event --------" << endreq;
 
-    // Recover pointer to the reconstructed clusters
-    Event::TkrClusterCol* TkrClusters = SmartDataPtr<Event::TkrClusterCol>(eventSvc(),EventModel::TkrRecon::TkrClusterCol); 
+    // Recover pointer to the reconstructed clusters NOT USED
+    //    Event::TkrClusterCol* TkrClusters = SmartDataPtr<Event::TkrClusterCol>(eventSvc(),EventModel::TkrRecon::TkrClusterCol); 
 
     // Find the collection of candidate tracks
     Event::TkrPatCandCol* pTkrCands   = SmartDataPtr<Event::TkrPatCandCol>(eventSvc(),EventModel::TkrRecon::TkrPatCandCol);
