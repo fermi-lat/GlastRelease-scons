@@ -44,11 +44,10 @@
 static const AlgFactory<ExposureAlg>  Factory;
 const IAlgFactory& ExposureAlgFactory = Factory;
 
-static std::ofstream m_out("orbitFromAlg.out");
 //------------------------------------------------------------------------
 //! ctor
 ExposureAlg::ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator)
-:Algorithm(name, pSvcLocator)
+:Algorithm(name, pSvcLocator), m_out(0)
 {
     // declare properties with setProperties calls
     declareProperty("source_name",  m_source_name="default");
@@ -102,8 +101,6 @@ StatusCode ExposureAlg::initialize(){
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "initialize" << endreq;
 
-    //m_out = new std::ofstream("orbitFromAlg.out");
-    
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
     
@@ -111,6 +108,10 @@ StatusCode ExposureAlg::initialize(){
         log << MSG::ERROR << "Couldn't find the FluxSvc!" << endreq;
         return StatusCode::FAILURE;
     }
+
+    //TODO: set the file name from a property
+    m_out = new std::ofstream("orbitFromAlg.out");
+    
     
     // set up the standard time candle spectrum
     makeTimeCandle(m_fluxSvc);
@@ -257,25 +258,26 @@ StatusCode ExposureAlg::execute()
 
      
         //m_out.flags(ios::fixed);
-        m_out<<intrvalstart <<'\t';
-        m_out<<intrvalend <<'\t';
-        m_out<< posx<<'\t';
-        m_out<< posy<<'\t';
-        m_out<< posz<<'\t';
-        m_out<<raz<<'\t';
-        m_out<<decz<<'\t';
-        m_out<<rax<<'\t';
-        m_out<<decx<<'\t';
-        m_out<<razenith<<"\t";
-        m_out<<deczenith <<'\t';
-        m_out<<"1"<<'\t';
-        m_out<<livetime <<'\t';
-        m_out<<SAA<<'\t';
-        m_out<<lon <<'\t';
-        m_out<<lat <<'\t';
-        m_out<<alt <<'\t';
-        m_out<< rasun <<"\t"<<decsun  <<'\t';
-        m_out<<ramoon <<"\t"<<decmoon   <<std::endl;
+    std::ostream& out = *m_out;
+        out<<intrvalstart <<'\t';
+        out<<intrvalend <<'\t';
+        out<< posx<<'\t';
+        out<< posy<<'\t';
+        out<< posz<<'\t';
+        out<<raz<<'\t';
+        out<<decz<<'\t';
+        out<<rax<<'\t';
+        out<<decx<<'\t';
+        out<<razenith<<"\t";
+        out<<deczenith <<'\t';
+        out<<"1"<<'\t';
+        out<<livetime <<'\t';
+        out<<SAA<<'\t';
+        out<<lon <<'\t';
+        out<<lat <<'\t';
+        out<<alt <<'\t';
+        out<< rasun <<"\t"<<decsun  <<'\t';
+        out<<ramoon <<"\t"<<decmoon   <<std::endl;
                                 
                                 
 
@@ -293,7 +295,7 @@ StatusCode ExposureAlg::execute()
 StatusCode ExposureAlg::finalize(){
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
-    m_out.close();
+    delete m_out;
     
     return sc;
 }

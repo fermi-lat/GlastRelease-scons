@@ -21,10 +21,7 @@
 
 //for file handling
 #include <iostream>
-#include <fstream> 
 #include <string>
-#include <cassert>
-//#include <ofstream>
 
 class IFlux;
 class IFluxSvc;
@@ -53,7 +50,7 @@ private:
     
     unsigned long m_run;      // run number
     unsigned long m_event;    // event number
-    //std::ofstream m_out;  //for output that looks like the stuff from the astro orbit model test.
+    std::ostream* m_out;  //for output that looks like the stuff from the astro orbit model test.
     
     
     IDataProviderSvc* m_eds;
