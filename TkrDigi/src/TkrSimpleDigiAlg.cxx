@@ -116,6 +116,10 @@ private:
     double m_mevPerMip;
     /// threshold for ToT (in Mips)
     double m_totThreshold;
+    /// if true, kill bad strips in digi
+    bool   m_killBadStrips;
+    /// if true, kill failed layers and towers in digi
+    bool   m_killFailed;
 };
 
 static const AlgFactory<TkrSimpleDigiAlg>  Factory;
@@ -130,6 +134,8 @@ TkrSimpleDigiAlg::TkrSimpleDigiAlg(const std::string& name, ISvcLocator* pSvcLoc
     declareProperty("totAt1Mip"     , m_totAt1Mip     = 52.5  );
     declareProperty("mevPerMip"     , m_mevPerMip     = 0.155 );
     declareProperty("totThreshold"  , m_totThreshold  = 0.1   );
+    declareProperty("killBadStrips" , m_killBadStrips = false );
+    declareProperty("killFailed"    , m_killFailed    = true  );
 }
 
 StatusCode TkrSimpleDigiAlg::initialize(){
@@ -313,7 +319,8 @@ StatusCode TkrSimpleDigiAlg::execute()
         idents::GlastAxis::axis iview = (view==0 ? idents::GlastAxis::X : idents::GlastAxis::Y);
         int theTower = tower.id();
 
-        if (m_fsv && !m_fsv->empty() && m_fsv->isFailed(theTower, layer, view)) continue;
+        if (m_killFailed && m_fsv && !m_fsv->empty() 
+            && m_fsv->isFailed(theTower, layer, view)) continue;
         
         TkrDigi* pDigi  = new TkrDigi(layer, iview, tower, ToT);
         
@@ -326,7 +333,8 @@ StatusCode TkrSimpleDigiAlg::execute()
             const SiStripList::Strip & strip = *i;
             int stripId = strip.index();
             // kill bad strips
-            if(m_bsv && !m_bsv->empty() && m_bsv->isBadStrip(theTower, layer, iview, stripId)) continue;
+            if(m_killBadStrips && m_bsv && !m_bsv->empty() 
+                && m_bsv->isBadStrip(theTower, layer, iview, stripId)) continue;
             nStrips++;
             float e = strip.energy();
             bool noise  = strip.noise();
