@@ -210,6 +210,13 @@ inline std::ostream& McParticle::fillStream( std::ostream& s ) const
     << " :"
     << "\n    Particle ID                = " << m_particleID
     << "\n    Status Flags               = " << m_statusFlags
+    << "\n    Initial position (x, y, z) = ( "
+    << EventFloatFormat (EventFormat::width, EventFormat::precision )
+    << m_initialPosition.x() << ","
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
+    << m_initialPosition.y() << ","
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
+    << m_initialPosition.z() << " ) "
     << "\n    Final position (x, y, z) = ( "
     << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_finalPosition.x() << ","
