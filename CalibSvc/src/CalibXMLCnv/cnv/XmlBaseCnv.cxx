@@ -17,7 +17,8 @@
 #include "xml/Dom.h"
 
 // A little ugly to include this here.  It's needed for 
-// CAL-specific utilities findNextRange, findFirstRange
+// CAL-specific utilities involving dac collections (maybe should be
+// moved to XmlCalbaseCnv ?)
 #include "idents/CalXtalId.h"
 
 // Similarly this is needed for calibrations involving dac settings
