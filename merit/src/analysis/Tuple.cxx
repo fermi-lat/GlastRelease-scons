@@ -141,11 +141,11 @@ void
 Tuple::writeHeader(std::ostream& os)const
 {
     
-    os << m_title << '\n';
     if( !size() ){
         WARNING("Tuple::writeHeader--no items in tuple!");
         return;
     }
+    if(! m_title.empty()){ os << m_title << '\n'; }
     for( const_iterator it=begin(); it !=end(); ++it) {
         os <<  (*it)->name() << " \t";
     }
