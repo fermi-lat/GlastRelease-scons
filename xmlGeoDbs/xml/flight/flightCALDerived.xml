@@ -1,8 +1,25 @@
 <!-- $Header$ -->
-
       <derCategory name="derCAL" save="true">
 <overview>Derived constants specific to CAL.
 </overview>
+ 
+       <const name="CsISegLength">
+          <notes>length along measurement dimension of a CsI segment</notes>
+          <quo>
+            <refer refTo="CsILength" />
+            <refer refTo="nCsISeg" />
+          </quo>
+        </const>
+
+
+        <const name="nCsISegM1" uType="count"  type="int">
+          <notes>upper limit for id field keeping track of segment number
+          </notes>
+          <minus>
+            <refer refTo="nCsISeg" />
+            <const value="1" uType="count" />
+          </minus>
+        </const>
 
         <const name="CALMaxLayer" uType="count"  type="int">
           <notes>upper limit on Cal layer idfield value</notes>
@@ -122,7 +139,8 @@
 <!-- the following should be the maximum of the length of a single
      CsIElement and the transverse distance across the whole 
      collection of CsIElements in a layer, so
-      max(CsIEnvX, nCsIPerLayer*CsIEnvY) -->
+      max(CsIEnvX, nCsIPerLayer*CsIEnvY) 
+ -->
         <const name = "CALLayerTrans" >
           <notes>Transverse dimension of a CAL layer: 
                  max(CsiEnvX, nEltPerlayer*CsIEnvY)</notes>
@@ -364,7 +382,7 @@ grid, etc. (may be superseded by info from Eric)</notes>
         </const>
 
 <!-- Make sure values for CALStructural field are distinct from layer #'s -->
-        <const name="eBottomFrame" uType="count"  type="int">
+        <const name="eBottomFrame" uType="count" type="int">
           <notes>For use in identifiers</notes>
           <add>
             <refer refTo="CALnLayer" />
@@ -372,7 +390,7 @@ grid, etc. (may be superseded by info from Eric)</notes>
           </add>
         </const>
 
-        <const name="eTopFrame" uType="count"  type="int">
+        <const name="eTopFrame" uType="count" type="int">
           <notes>For use in identifiers</notes>
           <add>
             <refer refTo="eBottomFrame" />
