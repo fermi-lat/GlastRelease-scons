@@ -21,11 +21,11 @@ namespace detModel{
     /**
      *
      */ 
-    void setValue(double pvalue){value=pvalue;}
+    void setValue(int pvalue){value=pvalue;}
     /**
      *
      */ 
-    void setStep(double pstep){step=pstep;}
+    void setStep(int pstep){step=pstep;}
     /**
      *
      */ 
@@ -45,8 +45,8 @@ namespace detModel{
   
   private:
     std::string name;
-    double value; ///default 0 NMTOKEN
-    double step; ///default 0 NMTOKEN
+    int value; ///default 0 NMTOKEN
+    int step; ///default 0 NMTOKEN
   };
 }
 #endif //IDFIELD_H
