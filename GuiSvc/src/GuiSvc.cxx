@@ -44,8 +44,8 @@ GuiSvc::GuiSvc(const std::string& name,ISvcLocator* svc)
 
     // declare the properties and set defaults
 
-    declareProperty ("size", m_size=-300);
-    declareProperty( "pause_interval", m_pause_interval=0);
+    declareProperty ("size", m_size=-3000);
+    declareProperty( "pause_interval", m_pause_interval=-1);
     declareProperty( "paused", m_paused=true);
 
     declareProperty("EvtMax", m_evtMax=0xFEEDBABE);
@@ -53,7 +53,7 @@ GuiSvc::GuiSvc(const std::string& name,ISvcLocator* svc)
 
 }
 
-
+// ___________________________________________________________
 
 void GuiSvc::pause()
 {
@@ -62,6 +62,8 @@ void GuiSvc::pause()
 
 
 // initialize
+// ___________________________________________________________
+
 StatusCode GuiSvc::initialize () 
 {
     using namespace gui;
@@ -100,9 +102,10 @@ StatusCode GuiSvc::initialize ()
     sub_menu.addButton("Quit Loop",
         new SimpleCommand<GuiSvc>(this, &GuiSvc::quit));
 #endif
+#if 0 // already implemented somewhere else
     sub_menu.addButton("Set Pause interval...", 
         new SimpleCommand<GuiMgr>(m_guiMgr, &GuiMgr::queryPause));
-
+#endif
     m_guiMgr->menu().add(new MenuClient<GuiSvc>(this)); // schedule callback if exit button pressed
 
 
@@ -169,12 +172,15 @@ StatusCode GuiSvc::initialize ()
     return StatusCode::SUCCESS;
 }
 
+// ___________________________________________________________
 
 void GuiSvc::queryEvtMax()
 {
 
     m_guiMgr->menu().query("Enter new max event",& m_evtMax);
 }
+
+// ___________________________________________________________
 
 void GuiSvc::queryOutputLevel()
 {
@@ -195,13 +201,17 @@ void GuiSvc::queryOutputLevel()
 
 }
 
+// ___________________________________________________________
 
 void GuiSvc::quit() {
     m_evtMax=0;
     m_guiMgr->resume();
 }
 
+
 // handle "incidents"
+// ___________________________________________________________
+
 void GuiSvc::handle(const Incident &inc)
 {
 #if 0 // don't need now that implementing Runable interface
@@ -210,6 +220,7 @@ void GuiSvc::handle(const Incident &inc)
 #endif
 }
 
+// ___________________________________________________________
 
 void GuiSvc::beginEvent() // should be called at the beginning of an event
 { 
@@ -228,12 +239,15 @@ void GuiSvc::beginEvent() // should be called at the beginning of an event
     m_guiMgr->begin_event();
 }
 
+// ___________________________________________________________
+
 void GuiSvc::endEvent()  // must be called at the end of an event to update, allow pause
 {        
     m_guiMgr->end_event();
 }
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ___________________________________________________________
+
 StatusCode GuiSvc::run(){
     StatusCode status = StatusCode::FAILURE;
     MsgStream log( msgSvc(), name() );
@@ -286,6 +300,8 @@ StatusCode GuiSvc::run(){
 }
 
 // finalize
+// ___________________________________________________________
+
 StatusCode GuiSvc::finalize ()
 {
     StatusCode  status = StatusCode::SUCCESS;
@@ -293,7 +309,10 @@ StatusCode GuiSvc::finalize ()
     delete m_guiMgr;
     return status;
 }
-/// Query interface
+
+// Query interface
+// ___________________________________________________________
+
 StatusCode GuiSvc::queryInterface(const IID& riid, void** ppvInterface)  {
     if ( IID_IGuiSvc.versionMatch(riid) )  {
         *ppvInterface = (IGuiSvc*)this;
@@ -307,4 +326,3 @@ StatusCode GuiSvc::queryInterface(const IID& riid, void** ppvInterface)  {
     addRef();
     return SUCCESS;
 }
-
