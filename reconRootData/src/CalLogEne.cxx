@@ -7,8 +7,8 @@ CalLogEne::CalLogEne() {
 }
 
 
-CalLogEne::CalLogEne (UInt_t layer, UInt_t column, LogID::CALAxes xy) {
-    m_id = new LogID();
+CalLogEne::CalLogEne (UInt_t layer, UInt_t column, LogId::CALAxes xy) {
+    m_id = new LogId();
     m_id->setColumn(column);
     m_id->setLayer(layer);
     m_id->setXY(xy);

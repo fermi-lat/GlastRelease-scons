@@ -9,7 +9,7 @@
 #include "TObject.h"
 #include "TVector3.h"
 // Local Cal forward declaration
-#include "digiRootData/LogID.h"
+#include "digiRootData/LogId.h"
 
 // =========================================================
 //      CalLogEne
@@ -17,7 +17,7 @@
 
 //! Root object that contains the response of a single CsI log
 /*! Contains:
-    1.) LogID
+    1.) LogId
     2.) Response from the Minus end
     2.) Response from the Plus end */
 class CalLogEne : public TObject
@@ -30,7 +30,7 @@ private:
     Float_t  m_ePlus; 
     
     //! Pointer to the identifier for this log
-    LogID *m_id;
+    LogId *m_id;
 
   
 public:
@@ -38,17 +38,17 @@ public:
     //! default constructor
     CalLogEne();
     //! constructor
-    CalLogEne(UInt_t layer, UInt_t column, LogID::CALAxes xy);
+    CalLogEne(UInt_t layer, UInt_t column, LogId::CALAxes xy);
 
     //! destructor
     virtual ~CalLogEne();
 
     void Clean();
 
-    //! access the LogID 
-    LogID* getId () { return m_id; };
-    //! set the LogID
-    inline void setId(LogID *id) { m_id = id; };
+    //! access the LogId
+    LogId* getId () { return m_id; };
+    //! set the LogId
+    inline void setId(LogId *id) { m_id = id; };
 
     //!  access response on the MINUS end of the log
     Float_t getEminus() { return m_eMinus; };

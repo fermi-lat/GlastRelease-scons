@@ -47,7 +47,7 @@ extern G__linked_taginfo G__ReconCintLN_TVector2;
 extern G__linked_taginfo G__ReconCintLN_TVector3;
 extern G__linked_taginfo G__ReconCintLN_TArrayF;
 extern G__linked_taginfo G__ReconCintLN_CalCluster;
-extern G__linked_taginfo G__ReconCintLN_LogID;
+extern G__linked_taginfo G__ReconCintLN_LogId;
 extern G__linked_taginfo G__ReconCintLN_CalLogEne;
 extern G__linked_taginfo G__ReconCintLN_CalRecon;
 extern G__linked_taginfo G__ReconCintLN_TkrRecon;
