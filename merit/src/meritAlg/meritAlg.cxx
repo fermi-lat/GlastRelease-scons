@@ -443,7 +443,8 @@ void meritAlg::copyFT1Info(){
       if(m_ctree->useVertex())
 	{
 	  // Retrieve Vertex to get summary info from reco
-	  m_ft1energy    = m_tuple->tupleItem("TkrSumConEne")->value();
+	  //	  m_ft1energy    = m_tuple->tupleItem("TkrSumConEne")->value();
+	  m_ft1energy    = m_tuple->tupleItem("EvtEnergySumOpt")->value();
 	  glastDir = Hep3Vector(m_tuple->tupleItem("VtxXDir")->value(),
 				m_tuple->tupleItem("VtxYDir")->value(),
 				m_tuple->tupleItem("VtxZDir")->value());
@@ -453,7 +454,8 @@ void meritAlg::copyFT1Info(){
 	}
       else
 	{
-	  m_ft1energy    = m_tuple->tupleItem("Tkr1ConEne")->value();
+	  //	  m_ft1energy    = m_tuple->tupleItem("Tkr1ConEne")->value();
+	  m_ft1energy    = m_tuple->tupleItem("EvtEnergySumOpt")->value();
 	  glastDir = Hep3Vector(m_tuple->tupleItem("Tkr1XDir")->value(),
 				m_tuple->tupleItem("Tkr1YDir")->value(),
 				m_tuple->tupleItem("Tkr1ZDir")->value());
