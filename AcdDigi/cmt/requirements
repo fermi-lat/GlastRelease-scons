@@ -1,11 +1,11 @@
 package AcdDigi
-version v1r3p4
+version v1r4
 # $Id$
 
 use GaudiSvc v7r*
 
-use GlastSvc v8r*
-use Event v8r*
+use GlastSvc v9r*
+use Event v9r*
 
 use facilities v2r*
 
