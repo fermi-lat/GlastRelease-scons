@@ -447,7 +447,7 @@ StatusCode CalClustersAlg::initialize()
     }
 
     setProperties();
-    log << MSG::INFO << "callNumber = " << m_callNumber << endreq;
+    log << MSG::INFO << "CalClustersAlg: callNumber = " << m_callNumber << endreq;
 
     logheight = m_CalGeo->logHeight();
 	logwidth = m_CalGeo->logWidth();
@@ -473,7 +473,6 @@ StatusCode CalClustersAlg::retrieve()
     StatusCode sc = StatusCode::SUCCESS;
 
     MsgStream log(msgSvc(), name());
-        log << MSG::INFO << "Initialize" << endreq;
 
 	DataObject* pnode=0;
 
