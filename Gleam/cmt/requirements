@@ -1,6 +1,6 @@
 package Gleam
 
-version  v2r2p8
+version  v2r2p9
 # This is a checkout package
 # $Id$
 
@@ -28,9 +28,9 @@ use gui         v3r2
 use geomrep     v4r1
 
 # the geometry data base
-use idents      v2r8p2
+use idents      v2r8p2  
 use detModel    v2r12
-use xmlGeoDbs   v1r5p3
+use xmlGeoDbs           v1r6p0
 
 # interface to G4 - make private to avoid so many libs
 private 
@@ -39,21 +39,21 @@ use Geant4      v1r1p0
 public
 # Gaudi component packages follow
 
-use GuiSvc                v3r1p3
+use GuiSvc      v3r1p3
 
 use Event       v8r14
 use GlastSvc    v8r1p2
 
 # simulation
 
-use FluxSvc               v5r10
+use FluxSvc     v5r10
 use FluxDisplay v2r1
 use G4Generator v4r2
 
 #digitization
 use CalDigi     v1r1p2 
-use TkrDigi               v1r5p5
-use AcdDigi     v1r2
+use TkrDigi     v1r5p5
+use AcdDigi              v1r3
 
 
 
