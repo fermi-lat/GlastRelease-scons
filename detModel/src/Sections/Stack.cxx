@@ -22,11 +22,20 @@ namespace detModel{
       
 	if(AxisMPos* pos = dynamic_cast<AxisMPos*>(*i))
 	  {
-	    pos->setDispCM(actualDisp + 
-			   b->getDirDim((BoundingBox::axisDir)getAxisDir())/2 
-			   + pos->getGap0());
-	    actualDisp = actualDisp + 
-	      b->getDirDim((BoundingBox::axisDir)getAxisDir()) + pos->getGap0();
+	    if(pos->getShift0())
+	      {
+		pos->setDispCM(actualDisp+pos->getShift0());
+		actualDisp = actualDisp+ b->getDirDim((BoundingBox::axisDir)getAxisDir())/2 + 
+		  pos->getShift0();			       
+	      }
+	    else
+	      {	    
+		pos->setDispCM(actualDisp + 
+			       b->getDirDim((BoundingBox::axisDir)getAxisDir())/2 
+			       + pos->getGap0());
+		actualDisp = actualDisp + 
+		  b->getDirDim((BoundingBox::axisDir)getAxisDir()) + pos->getGap0();
+	      }
 	    pos->translateDisp(pos->getDispCM());
 	  }
       }
@@ -73,7 +82,7 @@ namespace detModel{
 		}	
 	      }
 	  }
-
+	
 	for(i=p.begin();i<p.end();i++)
 	  {
 	    b = (*i)->getBBox();
