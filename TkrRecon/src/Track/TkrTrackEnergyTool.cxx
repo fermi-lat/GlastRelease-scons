@@ -214,10 +214,10 @@ double TkrTrackEnergyTool::getTotalEnergy(Event::TkrPatCand* track, double CalEn
     int num_last_hits = 0; 
     double arc_len    = 5./fabs(dir_ini.z()); 
 
-    // these vars are not currently used, but I'm leaving them in to avoid pitfalls later
-    double rad_thick = 0.;
-    double rad_thin  = 0.;
-    double rad_last  = 0.; 
+    // these vars are not currently used
+    //double rad_thick = 0.;
+    //double rad_thin  = 0.;
+    //double rad_last  = 0.; 
     
     int top_plane     = track->getLayer(); 
     
