@@ -22,16 +22,32 @@
     // we are running
     if (!strcmp(gSystem->GetName(), "WinNT")) {
         // nt version can use CMT for env vars.
-        char buf[128]; 
+        char buf[2000]; 
         for(int j=0; j< sizeof(libs)/sizeof(char*); j++){
-           char * env = getenv( strcat( strcpy(buf,libs[j]), "Shr") );
+            TString envStr(libs[j]);
+            envStr.Append("ROOT");
+            char *env = getenv(envStr.Data());
            // If we are not using CMT - we will use the ROOTANALYSIS env var to determine
            // where the GLAST ROOT libraries are located.
            char * raPath = getenv("ROOTANALYSIS");
-           char * path = env? strcat( strcpy(buf,env), ".dll")
-                            : strcat( strcat( strcat( strcpy(buf, raPath), "/lib/") ,libs[j]),".dll");
-           printf("\t%s\n",path);
-           gSystem->Load( path ); 
+           TString path;
+           if (env) {
+               path = env;
+               path.Append("/");
+               TString configStr(libs[j]);
+               configStr.Append("CONFIG");
+               char *config = getenv(configStr.Data());
+               path.Append(config);
+               path.Append("/");
+               path.Append(libs[j]);
+               path.Append(".dll");
+           } else {
+               path.Append(raPath);
+               path.Append("/lib/");
+               path.Append(libs[j]);
+               path.Append(".dll");
+           }
+           gSystem->Load( path.Data() ); 
         }
        
     } else {  // UNIX
