@@ -1,4 +1,5 @@
 /** @file release.notes  package reconRootData  package manager:H.Kelly @verbatim
+v5r2      24-Jan-05  : LSR Mods for TkrCluster
 v5r1p2    27-Dec-04  : LSR fix test program for linux
 v5r1p1    26-Dec-04  : LSR fix for linux
 v5r1      26-Dec-04  : LSR synch with mods to TkrCluster
@@ -14,4 +15,40 @@ v4r7      20-jun-04  : THB convert to comprehensive pattern
 v4r6      16-jun-04  : THB Use new RootPolicy pattern for rootcint building 
 v4r5      27-may-04  : HMK Pick up latest digiRootData tag v7r0 
 v4r4p0    27-apr-04  : HMK Update to new GlastPolicy version 
-v4r4      15-mar-04  : HMK Use latest digiRootData - merged with EM v4r3p5    16-jan-04  : HMK re-introduce std::vector for linux v4r3p4    14-jan-04  : HMK remove std:: from vector data members - it was messing up reading v4r3p3    09-jan-04  : HMK Fix up signed/unsigned warnings v4r3p2    15-dec-03  : TU  Fix for TMatrixD usage for ROOT 3.10.02 v4r3p1    17-nov-03  : HMK update digiRootData Tag - not a real change - only incremented version to allow branch for EM v4r3p0    25-mar-03  : HMK Update to use new digiRootData tag v4r3      26-feb-03  : HMK Update to CalCluster for energyCorrected v4r2      11-feb-03  : TU  Update to Tkr classes for vsnet  v4r1p1    15-jan-03  : THB vsnet enable  v4r1   --------------------- GlastRelease--------------------------    v4r0p0    31-Dec-2002: HMK Fix up TkrKalFitTrack to compile on Linux v4r0      20-Dec-2002: TU&HMK Add new TkrKalFitTrack class v3r7      18-Nov-2002: HMK Fix TkrCovMat, TkrParams, TkrFitHit v3r6      02-Sep-2002: HMK add AcdRecon energy and id collections v3r5      20-Sep-2002: HMK Add TkrCluster class and remove TkrSiCluster class v3r4      29-Aug-2002: HMK add active distance collection to AcdRecon v3r3p0    27-Aug-2002: HMK get rootcint output and fix test routine  v3r3      26-Aug-2002: HMK fix TkrCovMat operator =  v3r2p3    26-Aug-2002: HMK update to RootPolicy v1r* for Unix v3r2p2    26-Aug-2002: THB use new RootPolicy package to produce rootcint file v3r2p1    03-jul-2002: HMK add access mtds to CalCluster and fix           capitalization of ctor in TkrCandHit v3r2      11-jun-2002: HMK Add AcdRecon class v3r1      11-jun-2002: TU  Add in active distance in TkrHitPlane  v3r0p2    24-may-2002: HMK Patch CalCluster to include ctor for energySum v3r0p1    23-may-2002: HMK Patch for linux  v3r0      22-may-2002: HMK Fix up TKR & CAL classes for Gleam           20-may-2002: HMK new TKR and CAL classes  v1r3      28-jun-2001: HMK renamed LogID to LogId  v1        First version to use ROOT v3r0p6           There were no changes to the reconRootData code to use Root v3r0p6, however,            TBEvent did change, and this version of reconRootData links to the TBEvent library.           Starting with this version of reconRootData, one should not use a version of TBEvent < v2r1. v0r1      Last version to explicitly use ROOT v2r25 v0        initial import of new package @endverbatim */ 
+v4r4      15-mar-04  : HMK Use latest digiRootData - merged with EM v4r3p5    
+16-jan-04  : HMK re-introduce std::vector for linux v4r3p4    
+14-jan-04  : HMK remove std:: from vector data members - it was messing up reading v4r3p3    
+09-jan-04  : HMK Fix up signed/unsigned warnings v4r3p2    
+15-dec-03  : TU  Fix for TMatrixD usage for ROOT 3.10.02 v4r3p1    
+17-nov-03  : HMK update digiRootData Tag - not a real change - only incremented version to allow branch for EM v4r3p0    
+25-mar-03  : HMK Update to use new digiRootData tag v4r3      
+26-feb-03  : HMK Update to CalCluster for energyCorrected v4r2      
+11-feb-03  : TU  Update to Tkr classes for vsnet  v4r1p1    
+15-jan-03  : THB vsnet enable  v4r1   
+--------------------- GlastRelease--------------------------    
+v4r0p0    31-Dec-2002: HMK Fix up TkrKalFitTrack to compile on Linux v4r0      
+20-Dec-2002: TU&HMK Add new TkrKalFitTrack class v3r7      
+18-Nov-2002: HMK Fix TkrCovMat, TkrParams, TkrFitHit v3r6      
+02-Sep-2002: HMK add AcdRecon energy and id collections v3r5      
+20-Sep-2002: HMK Add TkrCluster class and remove TkrSiCluster class v3r4      
+29-Aug-2002: HMK add active distance collection to AcdRecon v3r3p0    
+27-Aug-2002: HMK get rootcint output and fix test routine  v3r3      
+26-Aug-2002: HMK fix TkrCovMat operator =  v3r2p3    
+26-Aug-2002: HMK update to RootPolicy v1r* for Unix v3r2p2    
+26-Aug-2002: THB use new RootPolicy package to produce rootcint file v3r2p1    
+03-jul-2002: HMK add access mtds to CalCluster and fix  capitalization of ctor in TkrCandHit v3r2      
+11-jun-2002: HMK Add AcdRecon class v3r1      
+11-jun-2002: TU  Add in active distance in TkrHitPlane  v3r0p2    
+24-may-2002: HMK Patch CalCluster to include ctor for energySum v3r0p1    
+23-may-2002: HMK Patch for linux  v3r0      
+22-may-2002: HMK Fix up TKR & CAL classes for Gleam           
+20-may-2002: HMK new TKR and CAL classes  v1r3      
+28-jun-2001: HMK renamed LogID to LogId  v1     
+                 First version to use ROOT v3r0p6           
+                 There were no changes to the reconRootData code to use Root v3r0p6,
+                 however,TBEvent did change, and this version of reconRootData links 
+                 to the TBEvent library.           
+                 Starting with this version of reconRootData, one should not use a 
+                 version of TBEvent < v2r1. 
+v0r1      Last version to explicitly use ROOT v2r25 v0        
+initial import of new package @endverbatim */ 

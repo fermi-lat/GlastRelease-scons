@@ -27,7 +27,7 @@ public:
         // once we have an official release, the version number can be used
         //  to allow backward compatibility
 
-        enum {VERSION = 2};
+        enum {VERSION = 3};
 
         // fields and shifts of the status word, which together make a mask
         //  
@@ -60,7 +60,7 @@ public:
     TkrCluster();
 	
     TkrCluster(commonRootData::TkrId tkrId, UInt_t istrip0, UInt_t istripf, 
-               const TVector3& position, Double_t ToT, UInt_t status);
+               const TVector3& position, Float_t ToT, UInt_t status, UInt_t nBad);
 
     virtual ~TkrCluster();
 	
@@ -72,15 +72,14 @@ public:
     inline commonRootData::TkrId getTkrId()      const { return m_tkrId;}
     inline UInt_t                getFirstStrip() const { return m_strip0; }
     inline UInt_t                getLastStrip()  const { return m_stripf; }
-    inline Double_t              getToT()        const { return m_ToT; }
-    //inline UInt_t                getId()         const { return m_id; }
+    inline Float_t               getToT()        const { return getRawToT(); }
+    inline UInt_t                getNBad()       const { return m_nBad; }
+    
 
-    /// Returns the chip number calculated using the strip number
-    inline Int_t getChip()     const { return (m_strip0/64); };
     /// Returns the center strip of this cluster
-    inline Double_t getStrip() const { return (0.5*(m_strip0+m_stripf)); };
+    inline Float_t getStrip() const { return (0.5*(m_strip0+m_stripf)); };
     /// Returns the size of this cluster
-    inline Double_t getSize()  const { return (TMath::Abs(Double_t(m_stripf-m_strip0)) + 1.); };
+    inline Float_t getSize()  const { return (TMath::Abs(Double_t(m_stripf-m_strip0)) + 1.); };
 
     inline const TVector3& getPosition() const { return m_position; }
     /// construct plane from tray/face
@@ -94,12 +93,30 @@ public:
     /// returns true if the cluster has been flagged
     bool hitFlagged()     const { 
         return ((maskVERSION&m_status)!=0 ? ((m_status&maskUSED)>0) : m_status!=0);}
+
+    /// retrieves raw ToT (will be raw or corrected depending on the version)
+    inline Float_t getRawToT() const { 
+        return ( (m_status&maskVERSION)>2 ? (m_status&maskRAWTOT)>>shiftRAWTOT : m_ToT );
+    }
+    /// retrieve corrected ToT (zero for old-style records)
+    inline Float_t getMips() const {
+        return ( (m_status&maskVERSION)>2 ? m_ToT : 0.0 );
+    }
+    /// retrieve end
+    inline UInt_t getEnd() const {
+        return ( (m_status&maskVERSION)>2 ? (m_status&maskEND)>>shiftEND : 2 );
+    }
+    /// retrieve version number (old-style is zero)
+    inline UInt_t getVersion() const {
+        return m_status&maskVERSION>>shiftVERSION;
+    }
+
 	
 private:
-        inline int getPlaneOffset() const { 
+        inline UInt_t getPlaneOffset() const { 
             return ((maskVERSION & m_status)!=0 ? ((m_status&maskPLANEOFFSET)>>shiftPLANEOFFSET) : 1); }
-        inline int getLayerOffset() const { 
-            return ((maskVERSION & m_status)!=0 ?((m_status&maskLAYEROFFSET)>>shiftLAYEROFFSET) : 0); }
+        inline UInt_t getLayerOffset() const { 
+            return ((maskVERSION & m_status)!=0 ? ((m_status&maskLAYEROFFSET)>>shiftLAYEROFFSET) : 0); }
     
     /// volume id
     commonRootData::TkrId m_tkrId;  
@@ -110,12 +127,12 @@ private:
     /// space position of the cluster
     TVector3 m_position;
     /// ToT value of the cluster
-    Double_t m_ToT;    
+    Float_t m_ToT;    
     /// Everything  below here is a candidate for removal
     /// flag of the cluster, used during pattern recognition
     UInt_t   m_status;
-    //TO BE REMOVED
-    UInt_t   m_id;   
+    /// number of bad strips in this cluster
+    UInt_t   m_nBad;
 
 	ClassDef(TkrCluster,2) 
 };
