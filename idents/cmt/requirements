@@ -1,6 +1,7 @@
 package idents
 # $Header$
-version v2r4p2
+version v2r5
+
 use GlastPolicy
 
 apply_pattern  package_include
