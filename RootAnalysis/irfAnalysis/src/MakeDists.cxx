@@ -27,7 +27,12 @@ void MakeDists::project(const std::string &branchName,
                         double xmin, double xmax, int nbins,
                         Fitter * fitter) {
 
-    
+   m_branchName = branchName;
+   if (m_scalingFunction != "") {
+      applyEnergyScaling();
+      std::cout << "Applying energy scaling: "
+                << m_branchName << std::endl;
+   }
 
    m_nbins = nbins;
 
@@ -60,9 +65,9 @@ void MakeDists::project(const std::string &branchName,
             h = new TH1F(hist_name(i, j), title.str().c_str(), 
                          nbins, xmin, xmax);
          }
-         h->GetXaxis()->SetTitle(branchName.c_str());
+         h->GetXaxis()->SetTitle(m_branchName.c_str());
          std::cout << "\t" << title.str() << "... ";
-         m_tree->Project(h->GetName(), branchName.c_str(),
+         m_tree->Project(h->GetName(), m_branchName.c_str(),
              goodEvent && energy && angle);
 
          std::cout << "count " << h->Integral() << ", "
@@ -81,7 +86,7 @@ void MakeDists::project(const std::string &branchName,
    histFile.Write();
 }
 
-void MakeDists::draw(const std::string &ps_filename,  bool logy, Fitter* fitter) {
+void MakeDists::draw(const std::string &ps_filename, bool logy, Fitter* fitter) {
 
     TFile psf_file(summary_filename().c_str() ); // for the histograms
     if( ! psf_file.IsOpen()) throw "could not open psf root file";
@@ -180,3 +185,75 @@ void MakeDists::addCutInfo(const std::string &rootFile,
    tree->Write("", TObject::kOverwrite);
 //   f.Close();
 }
+
+void MakeDists::setEnergyScaling(std::string scalingFunction,
+                                 const std::vector<double> &params) {
+   m_scalingFunction = scalingFunction;
+   m_params = params;
+   replace_substring(scalingFunction, "McEnergy", "x");
+   m_energyScale = new TF1("energyScale", scalingFunction.c_str());
+   m_energyScale->SetParameters(&params[0]);
+}
+
+void MakeDists::addEnergyScaling(const std::string &rootFile,
+                                 const std::string &treeName) {
+
+   if (m_energyScale) {
+// Assume the file is in the root output directory.
+      std::string path = ::getenv("output_file_root");
+      TFile f( (path + "/" + rootFile).c_str(), "update" );
+
+// Create and name the tree.
+      TTree tree("PsfScale", "Energy scaling for McDirErr");
+      Double_t energy, scaleFactor;
+      tree.Branch("McEnergy", &energy, "McEnergy/D");
+      tree.Branch("ScaleFactor", &scaleFactor, "ScaleFactor/D");
+
+// Should be ok to hard-wire these values...
+      double emin = 10;   // in MeV
+      double emax = 3e5;  // 300 GeV
+      int npts = 100;
+      double estep = log(emax/emin)/(npts-1);
+      for (int i = 0; i < npts; i++) {
+         energy = emin*exp(estep*i);
+         scaleFactor = m_energyScale->Eval(energy);
+         tree.Fill();
+      }
+      tree.Write();
+   }
+}
+
+void MakeDists::applyEnergyScaling() {
+   replaceVariables();
+   modifyBranchName();
+}
+
+void MakeDists::replaceVariables() {
+   for (unsigned int i = 0; i < m_params.size(); i++) {
+      std::ostringstream pvar, pvalue;
+      pvar << "[" << i << "]";
+      pvalue << m_params[i];
+      replace_substring(m_scalingFunction, pvar.str(), pvalue.str());
+   }
+}
+
+void MakeDists::modifyBranchName() {
+   std::ostringstream newBranchName;
+   newBranchName << m_branchName 
+                 << "/(" << m_scalingFunction << ")";
+   m_branchName = newBranchName.str();
+}
+
+void MakeDists::replace_substring(std::string &expression,
+                                  const std::string &oldstr,
+                                  const std::string &newstr) {
+   size_t len = oldstr.size();
+   size_t pos = expression.find(oldstr);
+   while (pos != std::string::npos) {
+      expression.replace(pos, len, newstr);
+      pos = expression.find(oldstr);
+   }
+//   std::cout << expression << std::endl;
+}
+
+   

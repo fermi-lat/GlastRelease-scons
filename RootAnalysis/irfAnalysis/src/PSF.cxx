@@ -7,6 +7,7 @@ $Header$
 #include "TProfile.h"
 
 #include <cmath>
+#include <algorithm>
 
 double PSF::probSum[2]={0.68, 0.95}; // for defining quantiles
 

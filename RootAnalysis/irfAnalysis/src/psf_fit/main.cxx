@@ -4,6 +4,7 @@ $Header$
 
 #include "MakeDists.h"
 #include "Fitter.h"
+#include "GenericFitter.h"
 #include "TF1.h"
 #include <cmath> // for mod
 
@@ -72,6 +73,33 @@ int main(){
     psf_thick.draw("psf_fit_thick.ps", true , myfit);
     delete myfit;
     psf_thick.addCutInfo("psf_fit_thick_parameters.root", "fitParams");
+
+    //-------test GenericFitter and setEnergyScaling--------------
+    std::string myFunction 
+       = "x*( [0]*exp(-0.5*x*x/([1]*[1]))/[1] + [2]*exp(-pow((x/[3]), [4])) )";
+    double pinit[] = {0.01, 1.0, 0.2, 1.0, 1.0};
+    std::vector<double> fitParams(pinit, pinit+sizeof(pinit)/sizeof(double));
+    myfit = new GenericFitter(myFunction, fitParams, 
+                              "psf_test_parameters.root");
+    double lower[] = {0., 0.5, 0., 0.1, 0.};
+    std::vector<double> lowerLims(lower, lower+sizeof(lower)/sizeof(double));
+    double upper[] = {1., 5., 5., 1., 3.};
+    std::vector<double> upperLims(upper, upper+sizeof(upper)/sizeof(double));
+    myfit->setBounds(lowerLims, upperLims);
+
+    MakeDists psf_test("psf_test.root");
+    psf_test.set_user_cut(TCut("Tkr1FirstLayer<12"));
+    std::vector<double> params;
+    params.push_back(0.05);
+    params.push_back(-0.66);
+    psf_test.setEnergyScaling("[0]*pow(McEnergy/100, [1])", params);
+    if ( !psf_test.fileExists() )
+       psf_test.project("BestDirErr", 0, 10, 100 );
+    psf_test.set_ymax(0.5); psf_test.set_ymin(1e-4);
+    psf_test.draw("psf_test.ps", true , myfit);
+    delete myfit;
+    psf_test.addCutInfo("psf_test_parameters.root", "fitParams");
+    psf_test.addEnergyScaling("psf_test_parameters.root", "energyScaling");
 
     return 0;
 }

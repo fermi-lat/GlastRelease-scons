@@ -9,8 +9,11 @@
 #ifndef RootAnalysis_irfAnalysis_MakeDists_h
 #define RootAnalysis_irfAnalysis_MakeDists_h
 
+#include <vector>
+
 #include "PSF.h"
 
+class TF1;
 class Fitter;
 
 /**
@@ -26,10 +29,7 @@ class MakeDists : public PSF {
 
 public:
 
-//    MakeDists(const std::string &summaryFile, bool applyEnergyScaling=false,
-//              bool makeProfile=false);
-   MakeDists(const std::string &summaryFile,
-             bool makeProfile=false);
+   MakeDists(const std::string &summaryFile, bool makeProfile=false);
 
 //   ~MakeDists(){}
    
@@ -37,13 +37,13 @@ public:
                 double xmin, double xmax, int nbins=50,
                 Fitter *fitter=0);
 
-
    void draw(const std::string &ps_filename,  bool logy=false, Fitter* fit=0);
 
-//    void setEnergyScaling(const std::string &scalingFunction);
+   void setEnergyScaling(std::string scalingFunction,
+                         const std::vector<double> &params);
 
-//    void addEnergyScaling(const std::string &rootFile, 
-//                          const std::string &treeName);
+   void addEnergyScaling(const std::string &rootFile, 
+                         const std::string &treeName);
 
    void addCutInfo(const std::string &rootFile,
                    const std::string &treeName);
@@ -54,7 +54,18 @@ private:
 
    int m_nbins;
 
-//    double energyScaling(double energy);
+   std::string m_branchName;
+
+   std::string m_scalingFunction;
+   std::vector<double> m_params;
+
+   TF1 * m_energyScale;
+
+   void applyEnergyScaling();
+   void replaceVariables();
+   void modifyBranchName();
+   void replace_substring(std::string & expression, const std::string &oldstr,
+                          const std::string &newstr);
 
 };
 
