@@ -4,7 +4,7 @@ version v4r4
 
 #use these to get the env vars defined
 use mcRootData v2r11p*
-use digiRootData v4r*
+use digiRootData v5r*
 use reconRootData v4r3p*
 use RootPolicy v2r* 
 
