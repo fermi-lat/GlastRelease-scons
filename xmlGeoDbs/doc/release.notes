@@ -2,6 +2,8 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 28-mar-2002: jrb - tag v1r3 - Include enough p's in 
+ *                                cal.zeroSuppressEnergy
  * 22-mar-2002: jrb - tag v1r2 - Alternate flight description segmenting
  *                               CsI crystals in "real" volumes
  * 11-mar-2002: jrb - tag v1r1 - new possibilities for "sensitive" attribute
