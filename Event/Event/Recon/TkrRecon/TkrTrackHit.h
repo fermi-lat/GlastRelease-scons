@@ -68,14 +68,14 @@ public:
                     m_chiSquareFilter(0.), m_chiSquareSmooth(0.) {}
 
     /// Construct all but the track parameters, they must be set during recon stage
-    TkrTrackHit(TkrClusterPtr  cluster,
-                idents::TkrId& tkrID,
-                const double   hitZ,
-                const double   hitEnergy,
-                const double   hitRadLen,
-                const double   hitActDist,
-                const double   hitChiFilter,
-                const double   hitChiSmooth) :
+    TkrTrackHit(Event::TkrCluster* cluster,
+                idents::TkrId      tkrID,
+                const double       hitZ,
+                const double       hitEnergy,
+                const double       hitRadLen,
+                const double       hitActDist,
+                const double       hitChiFilter,
+                const double       hitChiSmooth) :
                     m_statusBits(0), m_cluster(cluster), m_hitID(tkrID), m_zPlane(hitZ), 
                     m_energy(hitEnergy), m_radLen(hitRadLen), m_activeDist(hitActDist),
                     m_chiSquareFilter(hitChiFilter), m_chiSquareSmooth(hitChiSmooth)
