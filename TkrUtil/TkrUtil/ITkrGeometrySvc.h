@@ -105,6 +105,7 @@ public:
 
     /// new stuff, based on plane and TkrId;
     virtual int    getPlane (const idents::TkrId& tkrId) const = 0;
+
     virtual double getPlaneZ(int plane) const = 0;
     virtual double getPlaneZ(const idents::TkrId& tkrId) const = 0;
     virtual int    getLayer (int plane) const = 0;
@@ -171,6 +172,10 @@ public:
     virtual int planeToBotTop(int plane) const = 0;
     virtual int getBottomTrayFlag() const = 0;
     virtual int getTopTrayFlag()    const = 0;
+
+    // changes added at end for minimal disruption, should reorganize later
+    virtual int getPlaneSeparation(const idents::TkrId& id1, const idents::TkrId& id2) const = 0;
+
 };
 
 #endif

@@ -93,6 +93,9 @@ public:
     int    getPlane (const idents::TkrId& tkrId) const {
         return 2*tkrId.getTray() + tkrId.getBotTop() - getBottomTrayFlag();
     }
+    /// returns number of planes between two objects specified by TkrId
+    int getPlaneSeparation(const idents::TkrId& id1, const idents::TkrId& id2) const;
+
     double getPlaneZ(int plane) const {
         return m_planeZ[plane];
     }
