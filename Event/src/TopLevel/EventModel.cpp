@@ -135,8 +135,11 @@ public:
     const CLID& CLID_McEvent            = 1100;
     const CLID& CLID_McVertex           = 1101;
     const CLID& CLID_McParticle         = 1102;
+    const CLID& CLID_McParticleCol      = CLID_McParticle+CLID_ObjectList;
     const CLID& CLID_McPositionHit      = 1103;
+    const CLID& CLID_McPositionHitCol   = CLID_McPositionHit+CLID_ObjectVector;
     const CLID& CLID_McIntegratingHit   = 1104;
+    const CLID& CLID_McIntegratingHitCol= CLID_McIntegratingHit+CLID_ObjectVector;
     const CLID& CLID_McTrajectory       = 1105;
     const CLID& CLID_McTkrStrip         = 1106;
     const CLID& CLID_D2Entry            = 1107;
@@ -146,6 +149,7 @@ public:
     const CLID& CLID_DigiEvent          = 1300; 
     const CLID& CLID_TkrDigi            = 1310;  // indicative only, use 1310, 1311,.. for Tkr
     const CLID& CLID_CalDigi            = 1320;  // indicative only, use 1320, 1321,.. for Cal
+    const CLID& CLID_CalDigiCol         =CLID_CalDigi+CLID_ObjectVector;
     const CLID& CLID_AcdDigi            = 1330;
     
     // clarify where these are used 
@@ -175,6 +179,7 @@ public:
     //! Reconstruction: Cal class IDs
     const CLID& CLID_CalRecon           = 3200;
     const CLID& CLID_CalXtalRecData     = 3201;
+    const CLID& CLID_CalXtalRecCol      = CLID_CalXtalRecData+CLID_ObjectVector;
     const CLID& CLID_CalClusterCol      = 3202;
 
     //! Reconstruction: Acd class IDs
