@@ -85,7 +85,7 @@ namespace detModel{
                       std::string* s, std::vector<double>* params);
 
     /// Return ID of top volume relative to world
-    const idents::VolumeIdentifier& getIDPrefix() const {return m_IDPrefix;}
+    idents::VolumeIdentifier getIDPrefix() const {return m_IDPrefix;}
 
     /// Return transform of top volume relative to world
     const HepTransform3D& getTransform3DPrefix() const 
