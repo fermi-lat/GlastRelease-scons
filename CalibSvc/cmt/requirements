@@ -4,6 +4,8 @@
 package CalibSvc
 version v0r2p8
 
+author Joanne Bogart <jrb@slac.stanford.edu>
+
 use CalibData v0r*
 use calibUtil v0r*
 
