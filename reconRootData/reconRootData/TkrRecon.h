@@ -7,6 +7,7 @@
 #include "TkrCluster.h"
 #include "TkrCandTrack.h"
 #include "TkrTrack.h"
+#include "TkrKalFitTrack.h"
 #include "TkrVertex.h"
 /** 
  * @class TkrRecon
@@ -45,7 +46,7 @@ public:
     void addTrackCand(TkrCandTrack *track) { m_trackCandCol->Add(track); };
 
     TObjArray *getTrackCol() { return m_trackCol; };
-    void addTrack(TkrTrack* track) { m_trackCol->Add(track); };
+    void addTrack(TObject* track) { m_trackCol->Add(track); };
 
     TObjArray *getVertexCol() { return m_vertexCol; };
     void addVertex(TkrVertex* vertex) { m_vertexCol->Add(vertex); };
