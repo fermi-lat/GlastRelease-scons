@@ -14,10 +14,10 @@
 #include "GlastEvent/MonteCarlo/MCCalorimeterHit.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
-#include "IRFConverter.h"
+#include "src/EventSelector/IRFConverter.h"
 
 // Inherited sources
-#include "src/EventSelector/MCCalorimeterHitCnv.h"
+#include "GlastSvc/MonteCarlo/MCCalorimeterHitCnv.h"
 
 
 // Instantiation of a static factory class used by clients to create instances

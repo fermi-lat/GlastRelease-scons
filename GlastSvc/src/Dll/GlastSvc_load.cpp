@@ -14,7 +14,7 @@
 #include "Gaudi/Interfaces/ICnvFactory.h"
 #include "Gaudi/Interfaces/ISvcFactory.h"
 #include "Gaudi/Interfaces/IAlgFactory.h"
-#include "src/EventSelector/MCCalorimeterHitCnv.h"
+#include "GlastSvc/MonteCarlo/MCCalorimeterHitCnv.h"
 
 
 #define DLL_DECL_SERVICE(x)    extern const ISvcFactory& x##Factory; x##Factory.addRef();

@@ -4,7 +4,7 @@
 
 // Include files
 //#include "Gaudi/Kernel/Converter.h"
-#include "BaseCnv.h"
+#include "src/EventSelector/BaseCnv.h"
 
 // Abstract factory to create the converter
 template <class TYPE> class CnvFactory;
