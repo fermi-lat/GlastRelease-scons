@@ -12,29 +12,22 @@ ClassImp(CalDigi)
 //
 
 CalDigi::CalDigi() {
-    m_readoutCol = 0;
     Clear();
 }
 
 CalDigi::~CalDigi() { 
-    Clear();
-    if(m_readoutCol) {
-        m_readoutCol->Delete();
-        delete m_readoutCol;
-        m_readoutCol = 0;
-    }
+    Clear();    
 }
 
 void CalDigi::initialize(CalXtalId::CalTrigMode m, const CalXtalId &id) {
     m_mode = m;
     m_xtalId = id;
-    m_readoutCol = new TClonesArray("CalXtalReadout", 1);
 }
 
 void CalDigi::Clear(Option_t *option) {
-    m_numXtals = 0;
+    m_numReadouts = 0;
     m_xtalId.Clear();
-    if (m_readoutCol) m_readoutCol->Clear();
+    for(int i=0;i<4;i++)(m_readoutCol[i]).Clear();
     m_mode = CalXtalId::BESTRANGE;
 }
 
@@ -44,7 +37,7 @@ void CalDigi::Print(Option_t *option) const {
     cout.precision(2);
     cout << "Id: " << endl;
     m_xtalId.Print();
-    cout << "Num Readouts: " << m_readoutCol->GetEntries() << endl;
+    cout << "Num Readouts: " << m_numReadouts << endl;
 }
 
 const CalXtalReadout* CalDigi::addReadout(Char_t rangeP, UShort_t adcP, Char_t rangeM, UShort_t adcM) 
@@ -53,27 +46,26 @@ const CalXtalReadout* CalDigi::addReadout(Char_t rangeP, UShort_t adcP, Char_t r
     // TClonesArrays can only be filled via
     // a new with placement call
     //++m_numXtals;
-    TClonesArray &xtals = *m_readoutCol;
-    new(xtals[m_numXtals]) CalXtalReadout(rangeP, adcP, rangeM, adcM);
-    return ((CalXtalReadout*)(xtals[m_numXtals++]));
+    m_readoutCol[m_numReadouts] =  CalXtalReadout(rangeP, adcP, rangeM, adcM);
+    return &(m_readoutCol[m_numReadouts++]);
 } 
 
 Char_t CalDigi::getRange(short readoutIndex, CalXtalId::XtalFace face) const
 {
-    return (readoutIndex < m_readoutCol->GetEntries()) 
-        ? ((CalXtalReadout*)m_readoutCol->At(readoutIndex))->getRange(face) : (Char_t)-1;
+    return (readoutIndex < m_numReadouts) 
+        ? (m_readoutCol[readoutIndex]).getRange(face) : (Char_t)-1;
 }
 
 Short_t CalDigi::getAdc(Short_t readoutIndex, CalXtalId::XtalFace face) const
 {
-    return (readoutIndex < m_readoutCol->GetEntries()) 
-        ? ((CalXtalReadout*)m_readoutCol->At(readoutIndex))->getAdc(face) : (Short_t)-1;
+    return (readoutIndex < m_numReadouts) 
+        ? (m_readoutCol[readoutIndex]).getAdc(face) : (Short_t)-1;
 }
 
 const CalXtalReadout* CalDigi::getXtalReadout(Short_t readoutIndex)
 {
-    if ( readoutIndex < m_readoutCol->GetEntries() )
-        return ((CalXtalReadout*)m_readoutCol->At(readoutIndex));
+    if ( readoutIndex < m_numReadouts )
+        return &(m_readoutCol[readoutIndex]);
     else
         return 0;
     
@@ -81,16 +73,15 @@ const CalXtalReadout* CalDigi::getXtalReadout(Short_t readoutIndex)
 
 Short_t CalDigi::getAdcSelectedRange(Char_t range, CalXtalId::XtalFace face) const
 {
-    Char_t nRanges = (Char_t)m_readoutCol->GetEntries();
-    if (nRanges <= 0) return (Short_t)-1;
-    CalXtalReadout* firstXtal = (CalXtalReadout*)m_readoutCol->At(0);
+    if (m_numReadouts <= 0) return (Short_t)-1;
+    const CalXtalReadout* firstXtal = &(m_readoutCol[0]);
 
-    if (nRanges == 1) {
+    if (m_numReadouts == 1) {
         return (range == firstXtal->getRange(face)) 
         ? firstXtal->getAdc(face) : (Short_t)-1;
     } else {
-        UInt_t index = (nRanges + range - firstXtal->getRange(face)) % nRanges;
-        CalXtalReadout* xtal = (CalXtalReadout*) m_readoutCol->At(index);
+        UInt_t index = (m_numReadouts + range - firstXtal->getRange(face)) % m_numReadouts;
+        const CalXtalReadout* xtal = & (m_readoutCol[index]);
         return xtal->getAdc(face);
     }
 }

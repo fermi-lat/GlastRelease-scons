@@ -45,7 +45,8 @@ public:
     const CalXtalId getPackedId() const { return m_xtalId; };
     
     const CalXtalReadout* addReadout(Char_t rangeP, UShort_t adcP, Char_t rangeM, UShort_t adcM);
-    const TClonesArray* getReadoutCol() const { return m_readoutCol; };
+    const CalXtalReadout* getReadoutCol() const { return m_readoutCol; }
+    const UInt_t getNumReadouts() const { return m_numReadouts;}
     
     /// Retrieve energy range for selected face and readout
     Char_t getRange(short readoutIndex, CalXtalId::XtalFace face) const;
@@ -63,11 +64,12 @@ private:
     
     /// Cal readout mode is based on trigger type
     CalXtalId::CalTrigMode m_mode;
-    UInt_t m_numXtals;
+    /// number of readouts actually filled in m_readoutCol
+    UInt_t m_numReadouts;
     /// Cal Xtal Id
     CalXtalId m_xtalId;
     /// collection of ranges and pulse heights
-    TClonesArray *m_readoutCol;
+    CalXtalReadout m_readoutCol[4];
     
     ClassDef(CalDigi,1) // CAL Digitization Class
 };

@@ -106,16 +106,21 @@ int checkCalDigi(CalDigi *digi, UInt_t ievent) {
         std::cout << "Cal Digi Mode is wrong: " << mode << std::endl;
         return -1;
     }
-    const TClonesArray *readoutCol = digi->getReadoutCol();
-    UInt_t numEntries = readoutCol->GetEntries();
+
+    
+    const CalXtalReadout *readoutCol = digi->getReadoutCol();
+    UInt_t numEntries = digi->getNumReadouts();
     if (numEntries != 1) {
         std::cout << "Wrong number of readouts in Cal Digi " 
             << numEntries << std::endl;
         return -1;
     }
-    TIter readoutIt(readoutCol);
-    CalXtalReadout *calReadout;
-    while(calReadout = (CalXtalReadout*) readoutIt.Next()) {
+//    TIter readoutIt(readoutCol);
+    const CalXtalReadout *calReadout;
+
+    for (int iReadout = 0; iReadout<numEntries; iReadout++){
+//    while(calReadout = (CalXtalReadout*) readoutIt.Next()) {
+        calReadout = &(readoutCol[iReadout]);
         calReadout->Print();
         UShort_t adcP = calReadout->getAdc(CalXtalId::POS);
         UShort_t adcM = calReadout->getAdc(CalXtalId::NEG);
@@ -404,7 +409,7 @@ int write(char* fileName, int numEvents) {
         ev->initialize(ievent, runNum, randNum*ievent, level1, fromMc);
         
         for (ixtal = 0; ixtal < numXtals; ixtal ++) {
-            CalDigi *cal = new CalDigi();
+            CalDigi *cal = ev->addCalDigi();
             CalXtalId::CalTrigMode mode = CalXtalId::BESTRANGE;
             Short_t tower = 5;
             Short_t layer = 4;
@@ -415,8 +420,7 @@ int write(char* fileName, int numEvents) {
             Char_t rangeP = CalXtalId::HEX8;
             UShort_t adcM = 4095;
             UShort_t adcP = 4095;
-            cal->addReadout(rangeP, adcP, rangeM, adcM);
-            ev->addCalDigi(cal);
+            cal->addReadout(rangeP, adcP, rangeM, adcM);            
         }
 
         UInt_t idigi;

@@ -11,12 +11,13 @@ ClassImp(DigiEvent)
 // Allocate the TClonesArrays and TObjArray just once
 TClonesArray *DigiEvent::s_acdDigiStaticCol = 0;
 TObjArray *DigiEvent::s_staticTkrDigiCol = 0;
-TObjArray *DigiEvent::s_calDigiStaticCol = 0;
+TClonesArray *DigiEvent::s_calDigiStaticCol = 0;
 
 DigiEvent::DigiEvent() {
 
-    if (!s_calDigiStaticCol) s_calDigiStaticCol = new TObjArray();
+    if (!s_calDigiStaticCol) s_calDigiStaticCol = new TClonesArray("CalDigi",1536);
     m_calDigiCol = s_calDigiStaticCol;
+    m_numCalDigis = -1;
 
     if (!s_staticTkrDigiCol) s_staticTkrDigiCol = new TObjArray();
     m_tkrDigiCol = s_staticTkrDigiCol;
@@ -61,11 +62,11 @@ void DigiEvent::Clear(Option_t *option) {
     m_runId = 0;
     m_timeStamp = 0.0;
     m_levelOneTrigger.Clear();
-    m_calDigiCol->Delete();
+    m_calDigiCol->Clear("C");
     m_tkrDigiCol->Delete();
     m_acdDigiCol->Clear("C");
     m_numAcdDigis = -1;
-
+    m_numCalDigis = -1;
 }
 
 void DigiEvent::Print(Option_t *option) const {
@@ -118,11 +119,17 @@ const TkrDigi* DigiEvent::getTkrDigi(UInt_t i) const {
     return (TkrDigi*)m_tkrDigiCol->At(i);
 }
 
-void DigiEvent::addCalDigi(CalDigi *cal) {
-    m_calDigiCol->Add(cal);
+CalDigi* DigiEvent::addCalDigi() {
+    // Add a new CalDigi entry, note that
+    // TClonesArrays can only be filled via
+    // a new with placement call
+    ++m_numCalDigis;
+    TClonesArray &calDigis = *m_calDigiCol;
+    new(calDigis[m_numCalDigis]) CalDigi();
+    return ((CalDigi*)(calDigis[m_numCalDigis]));
 }
 
 const CalDigi* DigiEvent::getCalDigi(UInt_t i) const {
-    if (i >= m_calDigiCol->GetEntries()) return 0;
+    if (i > m_numCalDigis) return 0;
     return (CalDigi*)m_calDigiCol->At(i);
 }

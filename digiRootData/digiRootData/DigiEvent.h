@@ -68,8 +68,8 @@ public:
     const AcdDigi* getAcdDigi(const AcdId &id) const;
 
     /// retrieve the CalDigi object
-    const TObjArray* getCalDigiCol() { return m_calDigiCol; };
-    void addCalDigi(CalDigi *cal);
+    const TClonesArray* getCalDigiCol() { return m_calDigiCol; };
+    CalDigi* addCalDigi();
     const CalDigi* getCalDigi(UInt_t i) const;
 
     /// retrieve the whole TObjArray of TkrDigi Data
@@ -103,8 +103,9 @@ private:
     static TClonesArray *s_acdDigiStaticCol; //!
 
     /// data members to store CAL data
-    TObjArray *m_calDigiCol; //->
-    static TObjArray *s_calDigiStaticCol; //! Collection of Cal Digi objects
+    TClonesArray *m_calDigiCol; //->
+    Int_t m_numCalDigis;
+    static TClonesArray *s_calDigiStaticCol; //! Collection of Cal Digi objects
 
     /// data members to store TKR data
     static TObjArray *s_staticTkrDigiCol;

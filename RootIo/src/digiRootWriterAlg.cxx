@@ -280,7 +280,7 @@ StatusCode digiRootWriterAlg::writeCalDigi() {
         if( log.isActive()) (*calDigiTds)->fillStream(log.stream());
         log << endreq;
         
-        CalDigi *calDigiRoot = new CalDigi();
+        CalDigi *calDigiRoot = m_digiEvt->addCalDigi();
         m_common.m_calDigiMap[(*calDigiTds)] = calDigiRoot;
 
         idents::CalXtalId::CalTrigMode modeTds = (*calDigiTds)->getMode();
@@ -310,7 +310,6 @@ StatusCode digiRootWriterAlg::writeCalDigi() {
             }
         }
 
-        m_digiEvt->addCalDigi(calDigiRoot);
     }
 
     return sc;

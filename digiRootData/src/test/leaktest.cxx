@@ -48,14 +48,14 @@
         ev->initialize(ievent, runNum, rand*ievent, level1, true);
 
         for (ixtal = 0; ixtal < numXtals; ixtal++) {
-            CalDigi *cal = new CalDigi();
+            CalDigi *cal = ev->addCalDigi();
             CalXtalId::CalTrigMode mode = CalXtalId::BESTRANGE;
             Short_t tower = 5;
             Short_t layer = 4;
             Short_t col = 3;
             xtalId.init(tower, layer, col);
             cal->initialize(mode, xtalId);
-            ev->addCalDigi(cal);
+            
             Char_t rangeM = CalXtalId::LEX8;
             Char_t rangeP = CalXtalId::HEX8;
             UShort_t adcM = 4095;
