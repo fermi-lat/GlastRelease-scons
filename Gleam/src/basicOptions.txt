@@ -102,7 +102,7 @@ TriggerAlg.mask = -1; // all bits on by default
 //
 ApplicationMgr.DLLs +={ 
     "Recon",
-    "CalRecon",
+    "CalRecon", "CalUtil",
     "TkrRecon"
     };
 Reconstruction.Members={ 
