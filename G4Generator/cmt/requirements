@@ -1,5 +1,5 @@
 package G4Generator
-version v3r3p2
+version v3r5p1
 #$Header$
 
 use GlastPolicy v4r*
@@ -13,12 +13,12 @@ apply_pattern packageShr
 
 # export nothing but the dll path
 # this version has Geant4 library path
-use EXTLIB v2r4p2
+use EXTLIB v2r*
 
-use Geant4   v1r1
+use Geant4   v1r*
 
 use facilities v2r*
-use XMLEXT   v2r2
+use XMLEXT   v2r*
 use xml      v4*
 use xmlUtil  v2*
 

@@ -203,33 +203,33 @@ StatusCode G4Generator::execute()
   std::string name;
 
   if( pcol==0){ 
-    //no: get from the flux service
-    m_flux->generate();
-        
-    // these are the particle properties
-    name = m_flux->particleName();
-    dir =  m_flux->launchDir(); 
-    ke=    m_flux->energy() ;
-    p =    m_flux->launchPoint();
-        
-    /// Starting position, in mm
-    p = 10*p;
-    /// Energy in MeV
-    ke = ke*1000;
+      //no: get from the flux service (remove this soon!)
+      m_flux->generate();
+      
+      // these are the particle properties
+      name = m_flux->particleName();
+      dir =  m_flux->launchDir(); 
+      ke=    m_flux->energy() ;
+      p =    m_flux->launchPoint();
+      
+      /// Starting position
+      p = 10*p;
+      /// Energy in MeV
+      ke = ke;
   } else {
-    // yes: get it from the TDS
+      // yes: get it from the TDS
       assert(pcol->size()==1); // something wrong: must be only one
-    mc::McParticle* primary = pcol->front();
-    mc::McParticle::StdHepId hepid= primary->particleProperty();
-    ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
-    name = ppty->particle(); 
-    const HepLorentzVector& pfinal = primary->finalFourMomentum();
-    dir=    pfinal.vect().unit();
-    p =   primary->finalPosition();
-
-    // note possibility of truncation error here! especially with MeV.
-    ke =   pfinal.e() - pfinal.m(); 
-
+      mc::McParticle* primary = pcol->front();
+      mc::McParticle::StdHepId hepid= primary->particleProperty();
+      ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
+      name = ppty->particle(); 
+      const HepLorentzVector& pfinal = primary->finalFourMomentum();
+      dir=    pfinal.vect().unit();
+      p =   primary->finalPosition();
+      
+      // note possibility of truncation error here! especially with MeV.
+      ke =   pfinal.e() - pfinal.m(); 
+      
   }
     
   PrimaryGeneratorAction* primaryGenerator = 
@@ -250,19 +250,6 @@ StatusCode G4Generator::execute()
   G4ParticleDefinition * pdef = primaryGenerator->GetParticleDefinition();
   HepLorentzVector pin= primaryGenerator->GetFourMomentum();
 
-#if 0
-  mc::McParticleCol* pcol = new mc::McParticleCol;
-  eventSvc()->registerObject("/Event/MC/McParticleCol", pcol);
-  mc::McParticle * parent= new mc::McParticle;
-  pcol->push_back(parent);
-
-  // This parent particle decay at the start in the first particle, 
-  // so initial momentum and final one are the same
-  parent->initialize(parent, pdef->GetPDGEncoding(), 
-                     mc::McParticle::PRIMARY,
-                     pin);
-  parent->finalize(pin, p);
-#else
 
   mc::McParticle * parent= new mc::McParticle;
   // This parent particle decay at the start in the first particle, 
@@ -274,7 +261,6 @@ StatusCode G4Generator::execute()
     
   McParticleManager::getPointer()->addMcParticle(0,parent);
     
-#endif    
 
   // Run geant4
   m_runManager->BeamOn(); 
