@@ -1,6 +1,4 @@
 
-//#include "Event/dataManager.h"
-//#include "Event/messageManager.h"
 #include "CalRecon/CalBase.h"
 #include "CalRecon/CalPedCalib.h"
 #include "CalRecon/CalCalibLogs.h"
@@ -24,6 +22,8 @@ Algorithm(name, pSvcLocator) {
     declareProperty("IntlinFile",m_IntlinFileName);
     declareProperty("RailFile",m_RailFileName);
     declareProperty("SlopeFile",m_SlopeFileName);
+    declareProperty("ChargePeaksFile",m_ChargePeaksFileName);
+    declareProperty("MuPeaksFile",m_MuPeaksFileName);
     
 }
 
@@ -34,14 +34,6 @@ StatusCode CalRecLogsAlg::initialize()
 {
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
-    /*	
-    m_CalPedLogs   = dataManager::instance()->getData("CalPedCalib",m_CalPedLogs);
-    m_CalCalibLogs = dataManager::instance()->getData("CalCalibLogs",m_CalCalibLogs);
-    m_CalGeoLogs   = dataManager::instance()->geo()->cal();
-    
-      m_CalRawLogs   = dataManager::instance()->getData("CalRawLogs",m_CalRawLogs);
-      m_CalRecLogs   = dataManager::instance()->getData("CalRecLogs",m_CalRecLogs);
-    */
     sc = service("CalGeometrySvc", m_CalGeo);
 
     if(sc.isFailure())
@@ -57,7 +49,8 @@ StatusCode CalRecLogsAlg::initialize()
     m_CalPedLogs->make();
     
     m_CalCalibLogs = new CalCalibLogs();
-    m_CalCalibLogs->setFileNames(m_IntlinFileName, m_GainFileName, m_RailFileName, m_SlopeFileName);
+    m_CalCalibLogs->setFileNames(m_IntlinFileName, m_GainFileName, m_RailFileName,
+                         m_SlopeFileName, m_ChargePeaksFileName, m_MuPeaksFileName);
     m_CalCalibLogs->make();
     
     
@@ -80,7 +73,6 @@ StatusCode CalRecLogsAlg::execute()
 		CalDetGeo::axis view   = ADCLog->view();
 	    int icol            = ADCLog->column();
 
-//		detGeo*    geoLog = m_CalGeoLogs->getLog(ilayer,view,icol);
 		CalDetGeo geoLog = m_CalGeo->getLog(ilayer,view,icol);
 
 		
@@ -90,7 +82,6 @@ StatusCode CalRecLogsAlg::execute()
 		CalRecLog* recLog = m_CalRecLogs->getLogID(CalLogID::ID(ilayer,view,icol));
 		computeEnergy(recLog, ADCLog, pedLog, calibLog);
 		computePosition(recLog,&geoLog, calibLog);
-//		std::cout << " ilayer = " << ilayer << " view=" << view << " icol=" << icol << std::endl;
 	}
 //	m_CalRecLogs->writeOut();
 
@@ -169,22 +160,25 @@ void CalRecLogsAlg::computeEnergy(CalRecLog* recLog, const CalADCLog* ADCLog,
 			if (s== CalBase::NEG) recLog->setNegADC(r,adc_ped);
 			else recLog->setPosADC(r,adc_ped);
 
-			double adcSat = 0.6*(calibLog->getRail(iside,irange));
-			double ene = calibLog->adc_to_MeV(adc_ped,iside,irange);
+//			double adcSat = 0.6*(calibLog->getRail(iside,irange));
+			double adcSat = calibLog->getRail(iside,irange);
+            double dac = calibLog->adc_to_dac(adc,iside,irange);
+           double ene = calibLog->dac_to_MeV(dac,iside,irange);
+//            double ene = calibLog->adc_to_MeV(adc_ped,iside,irange);
 			iside == 0? eneNeg = ene: enePos = ene;
 			iside == 0? adcNeg = adc_ped: adcPos = adc_ped;
 			iside == 0? adcSatNeg = adcSat: adcSatPos = adcSat;
 		}
 		recLog->setNegEnergy(r,eneNeg);
 		recLog->setPosEnergy(r,enePos);
-		if(adcNeg<50 || adcPos<50)eneNeg=enePos=0;
+		if(adcNeg<50 || adcPos<50 || eneNeg < 5.0 || enePos < 5.0)eneNeg=enePos=0;
 
 		if (!eneSet && (adcNeg < adcSatNeg && adcPos < adcSatPos)) {
 			eneSet = true;
 			recLog->setNegEnergy(eneNeg);
 			recLog->setPosEnergy(enePos);
             recLog->setBestRange(r);
-		}
+        }
 	}
 }
 //################################################

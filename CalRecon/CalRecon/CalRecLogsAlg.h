@@ -62,6 +62,9 @@ private:
     std::string m_IntlinFileName;
     std::string m_RailFileName;
     std::string m_SlopeFileName;
+    std::string m_ChargePeaksFileName;
+    std::string m_MuPeaksFileName;
+
 };
 
 #endif

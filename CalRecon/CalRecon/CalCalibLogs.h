@@ -2,6 +2,7 @@
 #define CALCALIBLOGS_H 1
 
 #include <string>
+#include <map>
 // #include "Event/serviceI.h"
 // #include "Event/trsDataVI.h"
 
@@ -22,11 +23,19 @@ double getCoefb( int i,int side,int range)const {return m_coefb[i][side][range];
 double getGain(int side,int range)const {return m_gain[side][range];}
 double getRail(int side,int range)const {return m_rail[side][range];}
 double getSlope(int range)const {return m_slope[range];}
+double getOffset()const {return m_offset;}
+double getMuPeak(int side)const {return m_mu_peak[side];}
+const std::map<float,float>& getChargePeaks(int side, int range)const 
+                                    {return m_charge_peaks[side][range];}
 void readIntlin(std::istream& file,int side,int range);
 void readGain(std::istream& file, int side);
 void readRail(std::istream& file, int side);
 void readSlope(std::istream& file);
+void readChargePeak(std::istream& file, int side, int range);
+void readMuPeak(std::istream& file, int side );
 double adc_to_MeV(double adc, int side, int range) const;
+double adc_to_dac(double adc, int side, int range) const;
+double dac_to_MeV(double dac, int side, int range) const;
 private:
 
 	double m_brkpt[CALNSIDES][CALNRANGES];
@@ -35,6 +44,9 @@ private:
 	double m_gain[CALNSIDES][CALNRANGES];
 	double m_rail[CALNSIDES][CALNRANGES];
 	double m_slope[CALNRANGES];
+    double m_offset;
+    std::map<float,float> m_charge_peaks[CALNSIDES][CALNRANGES];
+    double m_mu_peak[CALNSIDES];
 };
 
 class CalCalibLogs 
@@ -47,13 +59,17 @@ public:
 	void setFileNames(const std::string& IntlinFileName,
 					  const std::string& GainFileName,
 					  const std::string& RailFileName,
-					  const std::string& SlopeFileName)
+					  const std::string& SlopeFileName,
+                      const std::string& ChargePeaksFileName,
+                      const std::string& MuPeaksFileName)
 	{
 
 		m_IntlinFile = IntlinFileName;
 		m_GainFile   = GainFileName;
 		m_RailFile   = RailFileName;
 		m_SlopeFile  = SlopeFileName;
+        m_ChargePeaksFile = ChargePeaksFileName;
+        m_MuPeaksFile = MuPeaksFileName;
 
 	}
 
@@ -62,6 +78,8 @@ public:
 	void readIntlin();
 	void readRail();
 	void readSlope();
+    void readMuPeaks();
+    void readChargePeaks();
 	virtual void make();
 	virtual void clear() {}
 	virtual void ini(int nLogs, int nLayers);
@@ -77,6 +95,8 @@ private:
 	std::string m_GainFile;
 	std::string m_RailFile;
 	std::string m_SlopeFile;
+    std::string m_MuPeaksFile;
+    std::string m_ChargePeaksFile;
 	std::vector<CalCalibLog*> m_List;
 
 };
