@@ -33,13 +33,19 @@
 
 <!ELEMENT badStrips (meta, inputSample, cuts, tower*) >
 <!ELEMENT  meta  (EMPTY) >
-<!ATTLIST meta  instrument      NMTOKEN #REQUIRED
-                timestamp       NMTOKEN #REQUIRED
-                calType         NMTOKEN #REQUIRED
-                formatVersion   NMTOKEN #IMPLIED >
+<!ATTLIST meta  
+   instrument  NMTOKEN (flight | BFEM | BTEM | EM | CU) #REQUIRED
+   timestamp   NMTOKEN #REQUIRED
+   calType     NMTOKEN #REQUIRED
+   fmtVersion  NMTOKEN #IMPLIED >
 
-<!-- Description of events used as input to the procedure -->
+<!-- Description of events used as input to the procedure 
+     Start- and stop-times should be timestamps of earliest and
+     latest events included in sample
+-->
 <!ELEMENT inputSample (#PCDATA) >
+<!ATTLIST inputSample  startTime NMTOKEN #REQUIRED"
+                       stopTime  NMTOKEN #REQUIRED" >
 
 <!-- Noisy and veryNoisy could be percentages of strip-on for
      a sample of events expected to be quiet (so quietExpected
@@ -73,12 +79,12 @@
 
 <!-- For each plane containing bad strips, include a list for each
      type of bad strip which occurs in that plane. -->
-<!ELEMENT plane (EMPTY) >
-<!ATTLIST plane which NMTOKEN (TOP | BOT) #REQUIRED 
-                noisy     NMTOKENS #IMPLIED
-                veryNoisy NMTOKENS #IMPLIED
-                dead      NMTOKENS #IMPLIED
-                veryDead  NMTOKENS #IMPLIED >
+<!ELEMENT unilayer (EMPTY) >
+<!ATTLIST unilayer which NMTOKEN (TOP | BOT) #REQUIRED 
+                   noisy     NMTOKENS #IMPLIED
+                   veryNoisy NMTOKENS #IMPLIED
+                   dead      NMTOKENS #IMPLIED
+                   veryDead  NMTOKENS #IMPLIED >
 
 
 
