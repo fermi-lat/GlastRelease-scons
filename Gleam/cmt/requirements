@@ -51,7 +51,7 @@ use GlastSvc    v8r2
 # simulation
 
 use FluxSvc     v5r10p4
-use FluxDisplay v2r1
+use FluxDisplay         v2r2
 use G4Generator         v4r3p2
 
 #digitization
@@ -65,9 +65,9 @@ use AcdDigi             v1r3p2
 use Trigger     v3r3p3
 use Recon       v2r3p2
 
-use TkrRecon            v6r5p3
+use TkrRecon            v7r0
 use CalRecon    v5r7p2  
-use AcdRecon            v0r5p2       
+use AcdRecon            v1r0       
 
 #ROOT persistence: RootIo specifies the data packages
 use RootIo      v4r11
