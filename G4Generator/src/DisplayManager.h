@@ -52,8 +52,11 @@ public:
     void addHit(const Hep3Vector& a, const Hep3Vector& b);
 
     //! Add rep to display the tracks
+    //! @param track a list of dots to connect
+    //! @param charge tell if neurtal
+    //! @param primary flag if primary track, to distinguish from neutrals?
     typedef std::vector<Hep3Vector> PointList;
-    void addTrack(const PointList& track,  int charge);
+    void addTrack(const PointList& track,  int charge, bool primary=false);
     
     //! Add to rep that displays ID's
     void addIdDisplay(const HepTransform3D& T, idents::VolumeIdentifier id);

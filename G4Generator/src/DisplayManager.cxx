@@ -46,9 +46,10 @@ DisplayManager::DisplayManager( gui::DisplayControl* d)
 
     m.add(m_detmap["integrating_boxes"] = new EmptyRep("blue"), 
            "hit Int detectors");
-
-    m.add((m_detmap["tracks"]= new EmptyRep("black")), "tracks");
-    m.add((m_detmap["neutrals"] = new EmptyRep("white")), "neutrals");
+ 
+    m.add((m_detmap["primary"] = new EmptyRep()), "primary track");
+    m.add((m_detmap["tracks"]= new EmptyRep("black")), "charged tracks");
+    m.add((m_detmap["neutrals"] = new EmptyRep("white")), "neutral tracks");
     m.add((m_detmap["ids"] = new EmptyRep("black")), 
            "volume identifiers", false);
 }
@@ -95,20 +96,23 @@ void DisplayManager::addHit( const Hep3Vector& a, const Hep3Vector& b)
     m_detmap["steps"]->append( LineRep(a,b) );
 }
 
-void DisplayManager::addTrack(const PointList & track, int charge)
+void DisplayManager::addTrack(const PointList & track, int charge, bool primary)
 {
     class TrackRep : public gui::DisplayRep {
     public:
-        TrackRep( const DisplayManager::PointList& track){
+        TrackRep( const DisplayManager::PointList& track, bool neutral=false, bool primary=false){
+            if( neutral) setColor("white");
             DisplayManager::PointList::const_iterator pit = track.begin();
-        moveTo(*pit++);
-        for(; pit !=track.end(); ++pit) lineTo(*pit);
+            if(primary) markerAt(*pit);
+            moveTo(*pit++);
+            for(; pit !=track.end(); ++pit) lineTo(*pit);
         }
         void update(){}
     };
 
-    if(charge==0) m_detmap["neutrals"]->append(TrackRep(track));
-    else          m_detmap["tracks"]->append(TrackRep(track));
+    if( primary)        m_detmap["primary"]->append(TrackRep(track, charge==0, primary));
+    else  if(charge==0) m_detmap["neutrals"]->append(TrackRep(track));
+    else                m_detmap["tracks"]->append(TrackRep(track));
 }
 void DisplayManager::addIdDisplay(const HepTransform3D& T, 
                                   idents::VolumeIdentifier id)

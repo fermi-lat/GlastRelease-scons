@@ -221,7 +221,7 @@ StatusCode G4Generator::execute()
     for( int i = 0; i< m_runManager->getNumberOfTrajectories(); ++i){
       std::auto_ptr<std::vector<Hep3Vector> > points = 
         m_runManager->getTrajectoryPoints(i);
-      dm->addTrack(*(points.get()), m_runManager->getTrajectoryCharge(i));
+      dm->addTrack(*(points.get()), m_runManager->getTrajectoryCharge(i), i==0);
     }
   }
 
