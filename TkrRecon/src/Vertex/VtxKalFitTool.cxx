@@ -580,8 +580,7 @@ VtxKalFitTool::computeWeightMatrix(const Event::TkrFitTrack& theTrack,
   double E = theTrack.getEnergy();
   if(E>1000000) 
     {
-      log<<MSG::WARNING<<"Track Energy Not determined: will 
-                          put huge errors"<<endreq;
+      log << MSG::WARNING << "Track Energy Not determined: will put huge errors" << endreq;
       G(5,5) = 0.001; //arbitrary but should be enough to kill it
     }
   else
