@@ -302,7 +302,7 @@ XmlBaseCnv::processValSigs(DOM_Element elt, std::string valName,
   unsigned n = vals.size();
   std::vector<CalibData::ValSig>* pValSigs = 
     new std::vector<CalibData::ValSig>(n);
-  for (unsigned i = 0; i++; i < n) {
+  for (unsigned i = 0; i < n; i++) {
     (*pValSigs)[i].m_val = vals[i];
     (*pValSigs)[i].m_sig = sigs[i];
   }
