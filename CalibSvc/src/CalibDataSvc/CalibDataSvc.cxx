@@ -3,7 +3,7 @@
 // Include files
 #include "CalibDataSvc.h"
 #include "CalibCLIDNode.h"
-#include "CalibData/CalibModel.h"
+// #include "CalibData/CalibModel.h"
 #include "GaudiKernel/IAddressCreator.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/IOpaqueAddress.h"
@@ -26,7 +26,9 @@
 //  * Get CalibData to do the registerObjects, or at least nicely
 //    supply a vector of pairs (pathname, classID) to CalibDataSvc
 //    so it can do the registerObject(s) without having to know anything.
-#include "CalibData/CalibModel.h"
+//#include "CalibData/CalibModel.h"
+//Try this instead:
+#include "CalibData/CalibModelSvc.h"
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
@@ -125,9 +127,15 @@ StatusCode CalibDataSvc::initialize()   {
   // derived from DataObject, CalibCLIDNode.  Only additional 
   // information is CLID of child nodes.  List comes from CalibData 
   // namespace
-  CalibData::PairIt  pairIt;
-  for (pairIt = CalibData::pairs.begin(); pairIt++; 
-       pairIt != CalibData::pairs.end() ) {
+  
+  typedef std::vector<CalibData::CalibModelSvc::CalibPair>::const_iterator 
+    PairIt;
+  PairIt  pairIt;
+  CalibData::CalibModelSvc svc;
+  const std::vector<CalibData::CalibModelSvc::CalibPair>& pairs = 
+    svc.getPairs();
+  for (pairIt = pairs.begin(); pairIt++; 
+       pairIt != pairs.end() ) {
     
     CalibCLIDNode* node = new CalibCLIDNode(pairIt->second);
 
