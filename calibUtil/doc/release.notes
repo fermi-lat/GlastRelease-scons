@@ -3,6 +3,8 @@
  * Coordinator: J. Bogart
  *       *  EOH *
 
+   v1r3p1  2-Mar-2005 jrb Update VEND for old rows as appropriate when inserting
+                          new row into metadata dbs
    v1r3p0  1-Mar-2005 jrb Add more validity checking when db schema is available
    v1r3   25-Feb-2005 jrb Metadata class revamping: Use rdbModel as wrapper 
                           for MySQL stuff; also change call interface to
