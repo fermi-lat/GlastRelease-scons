@@ -629,7 +629,7 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
   // Deep copy the new calib into the old DataObject.  To copy the *whole*
   // object, not just the CalibBase part, classes derived from CalibBase
   // must override update method.
-  pBase->update(*pNewBase);  
+  pBase->update(*pNewBase, &log);  
   delete pNewBase;
 
   // Set validity of updated object
