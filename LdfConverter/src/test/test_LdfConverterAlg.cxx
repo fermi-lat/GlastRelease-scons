@@ -13,21 +13,23 @@
 #include "LdfEvent/EventSummaryData.h"
 #include "idents/CalXtalId.h"
 
+//static const AlgFactory<test_LdfConverterAlg> Factory;
+//const IAlgFactory& test_LdfConverterAlgFactory = Factory
 
 //#include <map>
 
-/** @class test_EbfConverterAlg
+/** @class test_LdfConverterAlg
  * @brief Takes data from the TDS to test reading from EBF files
  *
  * @author Heather Kelly
  * $Header$
  */
 
-class test_EbfConverterAlg : public Algorithm
+class test_LdfConverterAlg : public Algorithm
 {	
 public:
     
-    test_EbfConverterAlg(const std::string& name, ISvcLocator* pSvcLocator);
+    test_LdfConverterAlg(const std::string& name, ISvcLocator* pSvcLocator);
     
     StatusCode initialize();
    
@@ -46,16 +48,16 @@ private:
     
 };
 
-static const AlgFactory<test_EbfConverterAlg>  Factory;
-const IAlgFactory& test_EbfConverterAlgFactory = Factory;
+static const AlgFactory<test_LdfConverterAlg>  Factory;
+const IAlgFactory& test_LdfConverterAlgFactory = Factory;
 
 
-test_EbfConverterAlg::test_EbfConverterAlg(const std::string& name, ISvcLocator* pSvcLocator) : 
+test_LdfConverterAlg::test_LdfConverterAlg(const std::string& name, ISvcLocator* pSvcLocator) : 
 Algorithm(name, pSvcLocator)
 {
 }
 
-StatusCode test_EbfConverterAlg::initialize()
+StatusCode test_LdfConverterAlg::initialize()
 {
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
@@ -68,7 +70,7 @@ StatusCode test_EbfConverterAlg::initialize()
     
 }
 
-StatusCode test_EbfConverterAlg::execute()
+StatusCode test_LdfConverterAlg::execute()
 {
 
     ++m_count;
@@ -114,7 +116,7 @@ StatusCode test_EbfConverterAlg::execute()
     return sc;
 }
 
-StatusCode test_EbfConverterAlg::readEventSummaryData() {
+StatusCode test_LdfConverterAlg::readEventSummaryData() {
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
 
@@ -131,7 +133,7 @@ StatusCode test_EbfConverterAlg::readEventSummaryData() {
     return sc;
 }
 
-StatusCode test_EbfConverterAlg::readTkrDigiData() {
+StatusCode test_LdfConverterAlg::readTkrDigiData() {
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
 
@@ -168,7 +170,7 @@ StatusCode test_EbfConverterAlg::readTkrDigiData() {
     return StatusCode::SUCCESS;
 }
 
-StatusCode test_EbfConverterAlg::readCalDigiData() {
+StatusCode test_LdfConverterAlg::readCalDigiData() {
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
 
@@ -205,7 +207,7 @@ StatusCode test_EbfConverterAlg::readCalDigiData() {
 }
 
 /*
-StatusCode test_EbfConverterAlg::readDigiData() {
+StatusCode test_LdfConverterAlg::readDigiData() {
 MsgStream log(msgSvc(), name());
 StatusCode sc = StatusCode::SUCCESS;
 
@@ -234,7 +236,7 @@ return sc;
 */
 
 
-StatusCode test_EbfConverterAlg::finalize()
+StatusCode test_LdfConverterAlg::finalize()
 {    
     StatusCode sc = StatusCode::SUCCESS;
     return sc;
