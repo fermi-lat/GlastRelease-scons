@@ -74,14 +74,14 @@
  * ParticleTransporter and G4ParticlePropagator) and to deal with some oddity in
  * the output of Geant4 (UIsession)<br>
  *
- * @section properties properties
- * These properties can be set in the job options file
- *
- * -  UIcommands [""]
- * -  geometryMode [""] Blank means use default from GlastDetSvc
- * -  saveTrajectories [0]
- * -  mcTreeMode ["minimal"]
- * -  defaultCutValue [0.1*mm] The cut to be applied to all physics processes, all materials
+ *<hr>
+ * @section jobOptions jobOptions
+ * @param G4Generator.UICommands  
+ *   default value ""
+ * @param G4Generator.geometryMode [""] Blank means use default from GlastDetSvc
+ * @param G4Generator.saveTrajectories [0] Set non-zero to allow trajectorie objects (Event::McTrajectory) to be saved on the TDS
+ * @param G4Generator.mcTreeMode ["minimal"]
+ * @param G4Generator.defaultCutValue [0.1*mm] The cut to be applied to all physics processes, all materials
  *
  * @section test test
  * A test program, under src/test, exercises everything.
