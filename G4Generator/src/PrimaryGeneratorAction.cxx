@@ -47,12 +47,13 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
   delete particleGun;
 }
 
-void PrimaryGeneratorAction::init(Event::McParticle* part, IParticlePropertySvc* ppsvc)
+void PrimaryGeneratorAction::init(Event::McParticle* part, IParticlePropertySvc* ppsvc, double dz)
 {
-  // Purpose and Method: this method set the particle by passing an
+  // Purpose and Method: this method sets the particle by passing an
   // Event::McParticle pointer and the ParticlePropertySvc; 
   // Inputs: part is the pointer to the Event::McParticle
   // Inputs: ppsvc is the pointer to the IParticlePropertySvc
+  // Inputs: dz is an optional z offset of the particle, to match LAT offset
 
   Event::McParticle::StdHepId hepid= part->particleProperty();
   ParticleProperty* ppty = ppsvc->findByStdHepID( hepid );
@@ -60,6 +61,7 @@ void PrimaryGeneratorAction::init(Event::McParticle* part, IParticlePropertySvc*
   const HepLorentzVector& pfinal = part->finalFourMomentum();
   Hep3Vector dir=    pfinal.vect().unit();
   HepPoint3D p =   part->finalPosition();
+  p = Hep3Vector(p.x(), p.y(), p.z()+dz);
   // note possibility of truncation error here! especially with MeV.
   double ke =   pfinal.e() - pfinal.m(); 
   

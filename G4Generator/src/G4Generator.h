@@ -35,7 +35,6 @@ class G4Generator : public Algorithm {
   /// a pointer to the service for particle properties
   IParticlePropertySvc* m_ppsvc;
 
-
   /// set of UI commands for setup; this is a property of the algorithm and can
   /// be set in the jobOptions file
   StringArrayProperty m_uiCommands;
