@@ -10,6 +10,11 @@ one event.
 class SubSystemHeader: public TObject {
 
 public:
+    enum {
+        DeadTimeMask = 0x00002fff,
+        DeadTimeCauseMask = 0x001fc000
+    };
+
     
     SubSystemHeader();
 
@@ -23,17 +28,18 @@ public:
     unsigned long getTimerWord() { return m_timerWord; };
     void setTimerWord(unsigned int time) { m_timerWord = time; };
 
-    unsigned long getStatus() { return m_TREQ_VETO_status; };
-    void setStatus(unsigned int stat) { m_TREQ_VETO_status = stat; };
+    unsigned long getTreqStatus() { return m_TREQ_VETO_status; };
+    void setTreqStatus(unsigned int stat) { m_TREQ_VETO_status = stat; };
 
-    unsigned long getDeadTime() { return m_deadtime_and_cause; };
+    unsigned long getDeadTime() { return (m_deadtime_and_cause & DeadTimeMask); };
 
-    unsigned long getDeadTimeCause() { return m_deadtime_and_cause; };
+    unsigned long getDeadTimeCause() { return (m_deadtime_and_cause & DeadTimeCauseMask); };
 
     unsigned long getDeadTimeAndCause() { return m_deadtime_and_cause; };
     void setDeadTimeAndCause(unsigned int t) { m_deadtime_and_cause = t; };
 
 protected:
+
 
     UInt_t m_eventId;
     UInt_t m_timerWord;
