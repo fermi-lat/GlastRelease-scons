@@ -23,9 +23,10 @@ namespace calibRootData {
     
     CalDimension(unsigned nRow=0, unsigned nCol=0, 
                  unsigned nLayer=0, unsigned nXtal=0, 
-                 unsigned nFace=0, unsigned nRange=0) : 
+                 unsigned nFace=0, unsigned nRange=0, bool exact=false) : 
       m_nRow(nRow), m_nCol(nCol), m_nLayer(nLayer),
-      m_nXtal(nXtal), m_nFace(nFace), m_nRange(nRange) { };
+      m_nXtal(nXtal), m_nFace(nFace), m_nRange(nRange),
+      m_exact(exact) { };
 
     virtual ~CalDimension() { };
 
@@ -35,15 +36,17 @@ namespace calibRootData {
     unsigned getXtal() const {return m_nXtal;}
     unsigned getNFace() const {return m_nFace;}
     unsigned getNRange() const {return m_nRange;}
+    bool     isExact() const {return m_exact;}
 
  protected:
 
-    unsigned char m_nRow;
-    unsigned char m_nCol;
-    unsigned char m_nLayer;
-    unsigned char m_nXtal;
-    unsigned char m_nFace;
-    unsigned char m_nRange;
+    UChar_t m_nRow;
+    UChar_t m_nCol;
+    UChar_t m_nLayer;
+    UChar_t m_nXtal;
+    UChar_t m_nFace;
+    UChar_t m_nRange;
+    Bool_t  m_exact;    
   
     ClassDef(calibRootData::CalDimension, 1)
   };
