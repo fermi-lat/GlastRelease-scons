@@ -19,4 +19,6 @@
 #pragma link C++ class calibRootData::TkrTower+;
 #pragma link C++ class calibRootData::TotStrip+;
 #pragma link C++ class calibRootData::TotUnilayer+;
+#pragma link C++ class calibRootData::ChargeScaleObj+;
+#pragma link C++ class calibRootData::ChargeScaleUnilayer+;
 #endif

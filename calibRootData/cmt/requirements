@@ -14,11 +14,14 @@ apply_pattern root_package headers="\
  ../calibRootData/Cal/CalGain.h\
  ../calibRootData/Cal/CalGainCol.h\
  ../calibRootData/Tkr/TkrTower.h\
+ ../calibRootData/Tkr/ChargeScale.h\
  ../calibRootData/Tkr/Tot.h"\
  includes="-I${COMMONROOTDATAROOT} -ICal -IAcd -ITkr"\
  extra_source="Cal/*.cxx Tkr/*.cxx"
 
 # ..and all other include files, once I figure out what they are
+
+## ../calibRootData/Tkr/ChargeScale.h\
 
 private
 use facilities v2r*
