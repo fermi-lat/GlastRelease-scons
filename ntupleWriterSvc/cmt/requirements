@@ -1,13 +1,13 @@
 package ntupleWriterSvc
-version v1
+version v1r1
 
 branches src mgr doc
 
+use GlastPolicy
 use GaudiSvc
 use RootHistCnv
 
-include_dirs ${NTUPLEWRITERSVCROOT}
-
+apply_pattern package_include
 apply_pattern packageShr
 
 #=============================================================
