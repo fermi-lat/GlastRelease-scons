@@ -26,7 +26,7 @@
 //
 //------------------------------------------------------------------------------
  */
-class CalLogReadout : virtual public ContainedObject  { 
+class CalLogReadout {  // : virtual public ContainedObject  { 
 
 public:
         CalLogReadout(char rangeP, short adcP, char rangeM, short adcM) :
@@ -52,7 +52,7 @@ public:
 	// retrieve energy range from specified face
 	inline char getRange(LogFace face) const {return face == POS ? m_rangeP : m_rangeM;};
 
-        /// Serialize the object for writing
+/*        /// Serialize the object for writing
         inline StreamBuffer& serialize( StreamBuffer& s ) const
 	{
 		s = ContainedObject::serialize(s);
@@ -71,6 +71,7 @@ public:
 		  >> m_adcM;
 		return s;
 	}
+*/
 
 private:
 
@@ -143,24 +144,29 @@ public:
         inline const idents::CalLogId getPackedId() const { return m_logId; };
         inline void setPackedId(idents::CalLogId id) { m_logId = id; };
 
-        inline void addReadout(CalLogReadout *r) { m_readout.push_back(r); } ;
+        inline void addReadout(CalLogReadout r) { m_readout.push_back(r); } ;
 	
 	/// Retrieve energy range for selected face and readout
 	inline char getRange(short readoutIndex, CalLogReadout::LogFace face) const
 	{
-		return (readoutIndex < m_readout.size()) ? (*(m_readout[readoutIndex])).getRange(face) : (char)-1;
+		return (readoutIndex < m_readout.size()) ? ((m_readout[readoutIndex])).getRange(face) : (char)-1;
 	}
 
 	/// Retrieve pulse height for selected face and readout
 	inline short getAdc(short readoutIndex, CalLogReadout::LogFace face) const
 	{
-		return (readoutIndex < m_readout.size()) ? (*(m_readout[readoutIndex])).getAdc(face) : (short)-1;
+		return (readoutIndex < m_readout.size()) ? ((m_readout[readoutIndex])).getAdc(face) : (short)-1;
 	}
 
 	/// Retrieve ranges and pulse heights from both ends of selected readout
 	inline const CalLogReadout* getLogReadout(short readoutIndex)
 	{
-		return (readoutIndex < m_readout.size()) ? m_readout[readoutIndex] : NULL;
+ 		//return ((readoutIndex < m_readout.size()) ? m_readout[readoutIndex] : 0);
+        if ( readoutIndex < m_readout.size() )
+            return &(m_readout[readoutIndex]);
+        else
+            return 0;
+
 	}
 
 	/// Retrieve pulse height from selected range
@@ -168,9 +174,9 @@ public:
 	{
 		char nRanges = (char)m_readout.size();
 		if (nRanges == 1)
-			return (range == (*(m_readout[0])).getRange(face)) ? (*(m_readout[0])).getAdc(face) : (short)-1;
+			return (range == ((m_readout[0])).getRange(face)) ? ((m_readout[0])).getAdc(face) : (short)-1;
 		else
-			return (*(m_readout[(nRanges + range - (*(m_readout[0])).getRange(face)) % nRanges])).getAdc(face);
+			return ((m_readout[(nRanges + range - ((m_readout[0])).getRange(face)) % nRanges])).getAdc(face);
 	}
 
         /// Serialize the object for writing
@@ -188,20 +194,22 @@ private:
         idents::CalLogId m_logId;
         /// ranges and pulse heights
         //ObjectVector<CalLogReadout> m_readout;
-        std::vector<CalLogReadout*> m_readout;
+        std::vector<CalLogReadout> m_readout;
+       // std::vector<int> m_readout;
 
 };
 
-
 //! Definition of all container types of CalDigi
-template <class TYPE> class ObjectVector;
+//	//m_CalRawLogs = SmartDataPtr<CalDigiVector>(eventSvc(),"/Event/Digi/CalDigis"); 
+//template <class TYPE> class ObjectVector;
 typedef ObjectVector<CalDigi> CalDigiVector;
+typedef ObjectList<CalDigi> CalDigiList;
 
 
 /// Serialize the object for writing
 inline StreamBuffer& CalDigi::serialize( StreamBuffer& s ) const
 {
-	s = ContainedObject::serialize(s);
+	ContainedObject::serialize(s);
 	//s << m_mode;
 	//s = m_logId.serialize(s);
 	//s = (*(m_readout[0])).serialize(s);
@@ -216,7 +224,7 @@ inline StreamBuffer& CalDigi::serialize( StreamBuffer& s ) const
 /// Serialize the object for reading
 inline StreamBuffer& CalDigi::serialize( StreamBuffer& s )
 {
-	s = ContainedObject::serialize(s);
+	ContainedObject::serialize(s);
 //        int mode;
   //      s >> mode; m_mode = (mode==CalTrigMode::ALLRANGE) ? ALLRANGE:BESTRANGE;
 // For now by default m_mode is considered to be BESTRANGE
@@ -234,6 +242,7 @@ inline StreamBuffer& CalDigi::serialize( StreamBuffer& s )
 /// Fill the ASCII output stream
 inline std::ostream& CalDigi::fillStream( std::ostream& s ) const
 {
+    /*
     s << "    base class CalDigi :"
     << "\n        CalTrigMode = ( "
     << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
@@ -262,7 +271,9 @@ inline std::ostream& CalDigi::fillStream( std::ostream& s ) const
 	}
 
 	s << " )\n";
-
+*/
 	return s;
 }
+
+
 #endif
