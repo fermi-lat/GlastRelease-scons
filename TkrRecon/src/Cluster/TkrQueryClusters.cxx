@@ -195,7 +195,7 @@ int TkrQueryClusters::numberOfHitsNear( int layer, double dX, double dY,
         double hitDiffX = x0.x() - clusterList[nHitsInPlane]->position().x();
         double hitDiffY = x0.y() - clusterList[nHitsInPlane]->position().y();
         
-        if (fabs(hitDiffX < dX) && fabs(hitDiffY) < s_towerPitch) numHits++;
+        if (fabs(hitDiffX) < dX && fabs(hitDiffY) < s_towerPitch) numHits++;
     }
     
     // Look for hits in the Y view of desired layer
