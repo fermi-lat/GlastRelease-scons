@@ -16,7 +16,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/DataObject.h"
 
-#include "Event/Recon/TkrRecon/TkrVertexCol.h"
+#include "Event/Recon/TkrRecon/TkrVertex.h"
 #include "Event/Recon/ICsIClusters.h"
 #include "Event/TopLevel/EventModel.h"
 
