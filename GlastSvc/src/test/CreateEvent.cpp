@@ -18,9 +18,6 @@
 #include "GlastEvent/TopLevel/Event.h"
 #include "GaudiKernel/ObjectVector.h"
 
-
-#include "GlastEvent/TopLevel/IrfEvent.h"
-
 #include "GlastEvent/MonteCarlo/McIntegratingHit.h"
                                 
 static const AlgFactory<CreateEvent>  Factory;
