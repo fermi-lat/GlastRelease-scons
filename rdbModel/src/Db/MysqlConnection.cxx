@@ -561,7 +561,8 @@ namespace rdbModel {
 
     // Field 4 is default
     // Extra (may say auto_increment)
-    bool autoInc = (colDescrip[5] == "auto_increment");
+    bool autoInc = 
+      (std::string(colDescrip[5]) == std::string("auto_increment"));
     if (autoInc != col->isAutoIncrement()) {
       m_matchReturn = MATCHfail;
       return Visitor::VERRORABORT;
