@@ -184,10 +184,11 @@ StatusCode digiRootReaderAlg::initialize()
 
     m_numEvents = m_digiTree->GetEntries();
     
-	if (m_rootIoSvc) {
-		m_rootIoSvc->setRootEvtMax(m_numEvents);
-		if (!m_digiTree->GetIndex()) m_digiTree->BuildIndex("m_runId", "m_eventId");
-	}
+    if (m_rootIoSvc) {
+      m_rootIoSvc->setRootEvtMax(m_numEvents);
+      if (!m_digiTree->GetIndex()) m_digiTree->BuildIndex("m_runId", "m_eventId");
+      m_rootIoSvc->registerRootTree(m_digiTree);
+    }
 
 
     saveDir->cd();

@@ -197,10 +197,11 @@ StatusCode relationRootReaderAlg::initialize()
     m_relTree->SetBranchAddress("RelTable", &m_relTab);
 
     m_numEvents = m_relTree->GetEntries();
-	if (m_rootIoSvc) {
-		m_rootIoSvc->setRootEvtMax(m_numEvents);
-		if(!m_relTree->GetIndex()) m_relTree->BuildIndex("m_runId", "m_eventId");
-	}
+    if (m_rootIoSvc) {
+        m_rootIoSvc->setRootEvtMax(m_numEvents);
+        if(!m_relTree->GetIndex()) m_relTree->BuildIndex("m_runId", "m_eventId");
+        m_rootIoSvc->registerRootTree(m_relTree);
+    }
 
     saveDir->cd();
     return sc;

@@ -9,7 +9,7 @@
 
 // includes
 #include "GaudiKernel/IInterface.h"
-
+#include <TChain.h>
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
 static const InterfaceID IID_IRootIoSvc("RootIoSvc", 1 , 0); 
@@ -29,11 +29,12 @@ public:
     virtual void setRootEvtMax(unsigned int max) = 0;
     virtual void setRootTimeMax(unsigned int max) = 0;
 
-	virtual int index() = 0;
-	virtual void setIndex(int i) = 0;
+    virtual int index() = 0;
+    virtual bool setIndex(int i) = 0;
 
-	virtual void setRunEventPair(std::pair<int,int> ids) = 0;
-	virtual std::pair<int,int> runEventPair() = 0;
+    virtual void registerRootTree(TChain *ch) = 0;
+    virtual bool setRunEventPair(std::pair<int,int> ids) = 0;
+    virtual std::pair<int,int> runEventPair() = 0;
 
     virtual int getAutoSaveInterval() = 0;
 

@@ -183,10 +183,11 @@ StatusCode mcRootReaderAlg::initialize()
     
     m_numEvents = m_mcTree->GetEntries();
 
-	if (m_rootIoSvc) {
-		m_rootIoSvc->setRootEvtMax(m_numEvents);
-		if (!m_mcTree->GetIndex()) m_mcTree->BuildIndex("m_runId", "m_eventId");
-	}
+    if (m_rootIoSvc) {
+        m_rootIoSvc->setRootEvtMax(m_numEvents);
+	if (!m_mcTree->GetIndex()) m_mcTree->BuildIndex("m_runId", "m_eventId");
+        m_rootIoSvc->registerRootTree(m_mcTree);
+    }
      
     saveDir->cd();
     return sc;
