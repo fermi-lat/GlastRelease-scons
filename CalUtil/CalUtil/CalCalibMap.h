@@ -147,10 +147,11 @@ template <class CalibData, class CalibElement,unsigned int nFaces>
         }
 
 template <class CalibData, class CalibElement,unsigned int nFaces>
-        void CalCalibMap<CalibData,CalibElement,nFaces>::generateCalib(unsigned int nTowers,
-                                        unsigned int nLayers,
-                                        unsigned int nColumns,
-                                        unsigned int nRanges)
+        void CalCalibMap<CalibData,CalibElement,nFaces>::generateCalib(
+                                        const unsigned int nTowers,
+                                        const unsigned int nLayers,
+                                        const unsigned int nColumns,
+                                        const unsigned int nRanges)
     {
 
 
@@ -175,7 +176,7 @@ template <class CalibData, class CalibElement,unsigned int nFaces>
                             
                             CalibData* rangeCalib = new CalibData();
             
-                            rangeCalib->generateCalib();
+                            rangeCalib->generateCalib(range);
                             
                             
                             addRangeCalib(rangeCalib,xtalId,range,face);

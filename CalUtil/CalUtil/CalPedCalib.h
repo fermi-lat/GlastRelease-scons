@@ -7,18 +7,18 @@
 class CalPedElement
 {
     public:
-        CalPedElement():pedAvr(0),pedSig(0){ }
+        CalPedElement():m_pedAvr(0),m_pedSig(0){ }
         ~CalPedElement() {}
-        void generateCalib(){pedAvr=100.0; pedSig=5.0;}
-        void readFile(std::ifstream& file) { file >> pedAvr >> pedSig;}
-        void writeFile(std::ofstream& file) const { file << " " << pedAvr << " " 
-                                             << pedSig << std::endl;} 
+        void generateCalib(unsigned int range = 0){m_pedAvr=100.0; m_pedSig=5.0;}
+        void readFile(std::ifstream& file) { file >> m_pedAvr >> m_pedSig;}
+        void writeFile(std::ofstream& file) const { file << " " << m_pedAvr << " " 
+                                             << m_pedSig << std::endl;} 
 
-        const float getAvr() const {return pedAvr;}
-        const float getSig() const {return pedSig;}
+        const float getAvr() const {return m_pedAvr;}
+        const float getSig() const {return m_pedSig;}
     private:
-        float pedAvr;
-        float pedSig;
+        float m_pedAvr;
+        float m_pedSig;
 };
 
 class CalPedCalib
@@ -35,8 +35,8 @@ class CalPedCalib
         } 
 
         
-        void generateCalib(){if(m_elem == 0) m_elem = new CalPedElement();
-                                m_elem->generateCalib();}
+        void generateCalib(const unsigned int range){if(m_elem == 0) m_elem = new CalPedElement();
+                                m_elem->generateCalib(range);}
         void writeFile(std::ofstream& file, unsigned int tower,
                                   unsigned int layer,
                                   unsigned int col,
