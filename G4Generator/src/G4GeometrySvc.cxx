@@ -81,7 +81,7 @@ G4GeometrySvc::~G4GeometrySvc()
   if (UserDetector)
   {
 	  DetectorConstruction* UserDetectorConstruction = dynamic_cast<DetectorConstruction*>(UserDetector);
-      delete UserDetectorConstruction;
+      //delete UserDetectorConstruction;
   }
 }
 
