@@ -2,6 +2,12 @@
  * package Gleam
  * package manager:T.Burnett
 
+ * v1r1p1 03-may-02 ALS new versions
+    use FluxSvc		v5r5p1 
+    use mcRootData	v2r1p1 
+    use GaudiSys	v9r0p6 
+
+
  * v1r1   02-may-02 THB
     use idents           v2r6 
     use Geant4           v1r1p0
