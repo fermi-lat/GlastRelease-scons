@@ -30,7 +30,7 @@ use geomrep     v4r1
 
 # the geometry data base
 use idents      v2r8p4 
-use xmlGeoDbs              v1r8
+use xmlGeoDbs              v1r8p0
 use xmlUtil     v2r8p3
 use detModel    v2r13p0
 

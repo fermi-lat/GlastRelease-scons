@@ -5,7 +5,7 @@
 
 * v3r1  THB 06-nov-02
      use gui               v3r3p2
-     use xmlGeoDbs         v1r8
+     use xmlGeoDbs         v1r8p0
      use Geant4Runtime     v1r1
      use FluxSvc          v5r15p2
      use G4Generator      v4r4p1
