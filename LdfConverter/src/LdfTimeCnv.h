@@ -2,9 +2,8 @@
 #define LdfTimeCnv_H 1
 
 #include "LdfBaseCnv.h"
-namespace LdfEvent { class LdfTime; }
 
-extern const CLID& CLID_LdfTime;
+#include "LdfEvent/LdfTime.h"
 
 // Abstract factory to create the converter
 template <class TYPE> class CnvFactory;

@@ -2,9 +2,7 @@
 #define LDFEVENTCNV_H 1
 
 #include "LdfBaseCnv.h"
-namespace LdfEvent { class EventSummaryData; }
-
-extern const CLID& CLID_LdfEventSummaryData;
+#include "LdfEvent/EventSummaryData.h"
 
 // Abstract factory to create the converter
 template <class TYPE> class CnvFactory;

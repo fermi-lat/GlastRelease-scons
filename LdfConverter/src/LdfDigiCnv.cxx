@@ -38,7 +38,7 @@ StatusCode LdfDigiCnv::createObj(IOpaqueAddress* ,
     return StatusCode::SUCCESS;
 };
 
-StatusCode LdfDigiCnv::updateObj(int* , Event::EventHeader* ) {
+StatusCode LdfDigiCnv::updateObj(int* , Event::DigiEvent* ) {
     // Purpose and Method:  This method does nothing other than announce it has
     //   been called.
 

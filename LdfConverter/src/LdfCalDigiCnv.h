@@ -3,9 +3,7 @@
 
 #include "LdfBaseCnv.h"
 
-namespace Event{ class EventHeader; }
 #include "Event/Digi/CalDigi.h"
-//extern const CLID& CLID_CalDigi;
 
 // Abstract factory to create the converter
 template <class TYPE> class CnvFactory;
@@ -37,7 +35,7 @@ protected:
   virtual StatusCode createObj(IOpaqueAddress* pAddress, DataObject*& refpObject);
 
   /// override the LdfBaseCnv version
-  virtual StatusCode updateObj(int* data, Event::EventHeader* pObject);
+  virtual StatusCode updateObj(int* data, Event::CalDigi* pObject);
 
 
 };

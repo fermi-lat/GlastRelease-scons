@@ -2,9 +2,7 @@
 #define LdfDiagnosticCnv_H 1
 
 #include "LdfBaseCnv.h"
-namespace LdfEvent { class DiagnosticData; }
-
-extern const CLID& CLID_LdfDiagnosticData;
+#include "LdfEvent/DiagnosticData.h"
 
 // Abstract factory to create the converter
 template <class TYPE> class CnvFactory;

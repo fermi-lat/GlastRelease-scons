@@ -13,7 +13,7 @@
 #include "GaudiKernel/MsgStream.h"
 
 #include "ldfReader/data/LatData.h"
-#include "LdfEvent/Gem.h"
+//#include "LdfEvent/Gem.h"
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
@@ -48,7 +48,7 @@ StatusCode LdfGemCnv::createObj(IOpaqueAddress* ,
     return StatusCode::SUCCESS;
 }
 
-StatusCode LdfGemCnv::updateObj(int* , LdfEvent::LdfGem*) {
+StatusCode LdfGemCnv::updateObj(int* , LdfEvent::Gem*) {
     // Purpose and Method:  This method does nothing other than announce it has
     //   been called.
 

@@ -3,9 +3,7 @@
 
 #include "LdfBaseCnv.h"
 
-namespace Event{ class EventHeader; }
 #include "Event/Digi/TkrDigi.h"
-//extern const CLID& CLID_TkrDigi;
 
 // Abstract factory to create the converter
 template <class TYPE> class CnvFactory;
@@ -37,7 +35,7 @@ protected:
   virtual StatusCode createObj(IOpaqueAddress* pAddress, DataObject*& refpObject);
 
   /// override the EbfBaseCnv version
-  virtual StatusCode updateObj(int* data, Event::EventHeader* pObject);
+  virtual StatusCode updateObj(int* data, Event::TkrDigi* pObject);
 
 
 };

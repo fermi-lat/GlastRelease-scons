@@ -6,7 +6,6 @@
 namespace Event{ class EventHeader; }
 
 #include "Event/TopLevel/DigiEvent.h"
-//extern const CLID& CLID_DigiEvent;
 
 // Abstract factory to create the converter
 template <class TYPE> class CnvFactory;
@@ -38,7 +37,7 @@ protected:
   virtual StatusCode createObj(IOpaqueAddress* pAddress, DataObject*& refpObject);
 
   /// override the EbfBaseCnv version
-  virtual StatusCode updateObj(int* data, Event::EventHeader* pObject);
+  virtual StatusCode updateObj(int* data, Event::DigiEvent* pObject);
 
 
 };

@@ -2,9 +2,7 @@
 #define LdfGemCnv_H 1
 
 #include "LdfBaseCnv.h"
-namespace LdfEvent { class LdfGem; }
-
-extern const CLID& CLID_LdfGem;
+#include "LdfEvent/Gem.h"
 
 // Abstract factory to create the converter
 template <class TYPE> class CnvFactory;
@@ -36,7 +34,7 @@ protected:
   virtual StatusCode createObj(IOpaqueAddress* pAddress, DataObject*& refpObject);
 
   /// override the LdfBaseCnv version
-  virtual StatusCode updateObj(int* data, LdfEvent::LdfGem* pObject);
+  virtual StatusCode updateObj(int* data, LdfEvent::Gem* pObject);
 
 
 

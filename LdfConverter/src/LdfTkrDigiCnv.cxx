@@ -108,7 +108,7 @@ StatusCode LdfTkrDigiCnv::createObj(IOpaqueAddress* ,
     return StatusCode::SUCCESS;
 }
 
-StatusCode LdfTkrDigiCnv::updateObj(int* , Event::EventHeader* ) {
+StatusCode LdfTkrDigiCnv::updateObj(int* , Event::TkrDigi* ) {
     // Purpose and Method:  This method does nothing other than announce it has
     //   been called.
 

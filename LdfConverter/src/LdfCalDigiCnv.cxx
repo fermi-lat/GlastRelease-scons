@@ -83,7 +83,7 @@ StatusCode LdfCalDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
     return StatusCode::SUCCESS;
 }
 
-StatusCode LdfCalDigiCnv::updateObj(int* , Event::EventHeader* ) {
+StatusCode LdfCalDigiCnv::updateObj(int* , Event::CalDigi* ) {
     // Purpose and Method:  This method does nothing other than announce it has
     //   been called.
 
