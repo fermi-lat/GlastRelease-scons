@@ -964,14 +964,34 @@ too, but not required.</overview>
           </minus>
         </const>
 
+        <const name="LATX" >
+          <max>
+            <refer refTo="totalX" />
+            <refer refTo="ACDTopTotalX" />
+          </max>
+        </const>
+        <const name="LATY" >
+          <max>
+            <refer refTo="totalY" />
+            <refer refTo="ACDTopTotalY" />
+          </max>
+        </const>
+        <const name="LATZ" >
+          <max>
+            <refer refTo="totalZ" />
+            <refer refTo="ACDSideHeight" />
+          </max>
+        </const>
+
+
       </derCategory>
     </derived>
   </constants>
 
-  <section name="towers"
-           version="1.0" date="2001/1/4" author="J.Bogart"
-           topVolume="towers16" >
-    <!-- "towers" is made up of 16 "tower" s.
+  <section name="LAT"
+           version="1.0" date="2001/3/9" author="J.Bogart"
+           topVolume="LATenv" >
+    <!-- (will) include the 16 towers, grid, and ACD
          Each "tower" has a tracker, a calorimeter, and a mechanical
          piece inbetween. (what about electronics?)
          Each tracker consists of trays
@@ -1001,11 +1021,13 @@ too, but not required.</overview>
      still be deduced from the rotation attribute of the positioning
      element
     -->
-    
-    <box name="towers16" 
+    <box name="LATenv"
+         XREF="LATX" YREF="LATY" ZREF="LATZ" />
+
+<!--    <box name="towers16" 
          XREF="totalX" YREF="totalY" ZREF="totalZ"
          materialREF = "vacuumMat" />
-    
+    -->
     <!-- According to conventions above, an unrotated CsIDetector would
     be an X-log -->
     <box name="CsIDetector" 
@@ -1370,11 +1392,6 @@ too, but not required.</overview>
      structural stuff to make a tower.  Front plane of grid
      defines Z = 0 (Steve Ritz memo) -->
 
-  </section>
-
-  <section name="ACDsect"
-           version="1.0" date="2001/3/2" author="J.Bogart"
-           topVolume="ACDTop" >     <!-- Temporary!! -->
     <box name="topTile" 
          XREF="ACDTopXWidth"
          YREF="ACDTopYWidth"
