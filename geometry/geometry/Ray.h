@@ -34,6 +34,8 @@ public:
 
   double getArcLength() const { return arclength; }
   void setArcLength( double s ) { arclength = s; }
+  void setFlag( int k ) {flag = k;}
+  int  getFlag() const {return flag;} 
   void addArcLength( double ds ) { arclength += ds; }
   // access to internal position
 
@@ -49,6 +51,7 @@ public:
   Point pos;			// starting point
   Vector dir;   		// direction unit vector
   float arclength;	// length along the Ray to be drawn
+  int flag;                     // a flag to be used by clients
 
 };
 

@@ -3,7 +3,7 @@
 #include "geometry/Ray.h"
 
 Ray::Ray( const Point& p, const Vector& d )
-: pos( p ), dir(d.unit()) , arclength(0)
+: pos( p ), dir(d.unit()) , arclength(0), flag(0)
 {
 }
 
