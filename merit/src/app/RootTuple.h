@@ -33,13 +33,14 @@ public:
     int numEvents(){return m_numEvents;}
 
     /// special for ROOT: pointers are to floats, not doubles
-    virtual bool isFloat()const{return true;}
+    virtual bool isFloat()const{return m_float;}
 private:
     TTree * m_tree;
     TFile * m_file;
 
     int m_numEvents;
     int m_event;
+    bool m_float; // not really global, sigh
 };
 
 #endif

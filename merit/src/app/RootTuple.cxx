@@ -118,9 +118,11 @@ void RootTuple::loadBranches()
         if( leaf->GetLenType()==4) {
             float * pf = (float*)leaf->GetValuePointer();
             new TupleItem(name,pf);
+            m_float = true;
         }else{
             double* pf = (double*)leaf->GetValuePointer();
             new TupleItem(name,pf);
+            m_float = false;
         }
     }
 }
