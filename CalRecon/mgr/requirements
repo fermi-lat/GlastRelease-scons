@@ -6,7 +6,7 @@ branches src mgr doc
 use GlastSvc
 use GuiSvc
 
-use reconstruction v4
+use reconstruction 
 
 library CalRecon  *.cxx ../CalRecon/*.h  Dll/*.cpp
 
@@ -17,13 +17,10 @@ macro CalRecon_stamps
 
 set   CalReconShr           "${CALRECONROOT}/${DEBUGDIR}/libCalRecon"
 
-include_path $(CALRECONROOT)
 
 private
 
-# this for MSVCC, to fix incompatibilities, turn off warnings
-macro_append cppflags ""\
-       VisualC " /FI$(ntconfigfile)" 
+include_path $(CALRECONROOT)
 
 # note that the debug versions of the used libraries are inserted below
 
@@ -34,13 +31,13 @@ macro CalRecon_shlibflags   "$(libraryshr_linkopts) $(use_linkopts)"\
       VisualC               "DataObject.obj $(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
 
 
-# build this for testing 
+# build this for testing, console only 
 
 
 macro WinJobOption  "" \
       VisualC       "test/jobOptions.txt"
 
-
+macro_append use_linkopts $(console_linkopts)
 
 application test test/*.cxx test/*.h ${WinJobOption}
 

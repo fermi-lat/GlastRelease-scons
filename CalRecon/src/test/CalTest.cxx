@@ -22,10 +22,15 @@
 void FATAL(const char* text){std::cerr << text << std::endl;}
 #endif // WIN32
 
+//------------------------------------------------------------------------------
+//
+//  Package    : CalRecon
+//
+//  Description: Test Main Program
+//
+//------------------------------------------------------------------------------
 
 int main( int argn, char** argc) {
-    
-
 
     // get the path to this package from its root environment variable: if not there,
     // assume that we are in the root
