@@ -171,11 +171,22 @@ Triggered.Members += { "ExposureAlg", "meritAlg" };
 //
 ApplicationMgr.DLLs +={   "RootIo"}; 
 Output.Members = {"mcRootWriterAlg", "digiRootWriterAlg", "reconRootWriterAlg"};
+
+ // output levels, including suppression to allow debug, info
 mcRootWriterAlg.OutputLevel=3;
 digiRootWriterAlg.OutputLevel=3;
 reconRootWriterAlg.OutputLevel=3;
 ToolSvc.OutputLevel=3;    // too verbose in debug
-     
+CalClustersAlg.OutputLevel=4; // too much info
+TkrClusFirst.OutputLevel=4;
+CalDigiAlg.OutputLevel=4;
+TkrAlignmentSvc.OutputLevel=4;
+TkrGeometrySvc.OutputLevel=4;
+EbfWriter.OutputLevel=4;
+ToolSvc.LastLayerCorrTool.OutputLevel=4; 
+ToolSvc.OutputLevel=4;
+CalXtalRecAlg.OutputLevel=4;
+    
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel = 3;
 
