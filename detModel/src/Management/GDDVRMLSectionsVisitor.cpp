@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -29,7 +30,6 @@ GDDVRMLSectionsVisitor::GDDVRMLSectionsVisitor(std::string nvol)
   typedef std::map<std::string,int>M2;
   typedef std::map<std::string,GDDvolume*>M3;
   M3::const_iterator j;
-  std::vector <std::string>::const_iterator n;
 
   /// This visitor is not recursive
   setRecursive(0);
@@ -96,8 +96,11 @@ void  GDDVRMLSectionsVisitor::visitSection(GDDsection* section)
     {
       GDDmanager* manager = GDDmanager::getPointer();
       if (manager->getGDD()->getVolumeByName(actualVolume))
+	vol = manager->getGDD()->getVolumeByName(actualVolume);
+      else
 	{
-	  vol = manager->getGDD()->getVolumeByName(actualVolume);
+	  std::cout << "No such volume" << std::endl;
+	  exit(0);
 	}
     }
   
