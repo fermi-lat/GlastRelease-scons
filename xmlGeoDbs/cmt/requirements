@@ -5,7 +5,7 @@ version v1r17
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
-use GlastPolicy v6r*
+use GlastPolicy v*
 
 apply_pattern package_xmlfiles
 
