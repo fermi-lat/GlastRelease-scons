@@ -1,4 +1,4 @@
-#include "RootTreeAnalysis/RootTreeAnalysis.h"
+#include "RootTreeAnalysis.h"
 #include "TSystem.h"
 #include <iostream>
 #include <string>
