@@ -3,6 +3,9 @@
  * package manager:T.Burnett
  * $Id$
 
+* v4   THB 21-nov-02     
+     use Event             v9r5
+     use TkrRecon          v8r5p1
 * v3r4  HMK 19-Nov-02
      use RootIo            v4r21
 * v3r3  THB 19-Nov-02

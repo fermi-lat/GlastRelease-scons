@@ -1,6 +1,7 @@
 package Gleam
 
-version  v3r4
+version  v4
+
 # This is a checkout package
 # $Id$
 
@@ -46,7 +47,7 @@ use Geant4Runtime v1r1
 
 use GuiSvc      v3r3
 
-use Event       v9r4
+use Event                v9r5
 use GlastSvc    v9r3p1
 
 # simulation
@@ -67,7 +68,7 @@ use GlastDigi   v4r5p2
 use Trigger     v3r4
 use Recon       v2r3p7
 
-use TkrRecon    v8r5
+use TkrRecon              v8r5p1
 use CalRecon    v5r7p5 
 use AcdRecon    v1r4p1       
 
