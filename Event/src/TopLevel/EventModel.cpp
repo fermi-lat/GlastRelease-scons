@@ -34,7 +34,7 @@
             EventModel::MC::Event = EventModel::Event + "/MC";
             EventModel::MC::MCACDHits = EventModel::MC::Event + "/MCACDHits";
             EventModel::MC::MCCalorimeterHits = EventModel::MC::Event + "/MCCalorimeterHits";
-            EventModel::MC::MCTrackerHits = EventModel::MC::Event + "/MCTrackerHits";
+            EventModel::MC::MCTKRHits = EventModel::MC::Event + "/MCTKRHits";
 
             // Hits event
             EventModel::Hits::Event
@@ -79,9 +79,10 @@
     const CLID& CLID_SiStripHits          = 2005;   // SiStrip hits
     const CLID& CLID_CalorimeterHits      = 2006;   // Calorimeter hits
     const CLID& CLID_CalorimeterLogHits   = 2007;   // Calorimeter log hits
-    const CLID& CLID_TrackerHits          = 2008;   // Tracker hits
+    const CLID& CLID_MCTKRHit          = 2008;   // Tracker hits
     const CLID& CLID_MCACDHit             = 2009;
     const CLID& CLID_MCTrack              = 2010; //Ian Mod
-	const CLID& CLID_MCCalorimeterHit     = 2011;
+const CLID& CLID_MCCalorimeterHit     = 2011;
     const CLID& CLID_MCEvent              = 2012;
+    const CLID& CLID_MCSiLayer          = 2013;
         

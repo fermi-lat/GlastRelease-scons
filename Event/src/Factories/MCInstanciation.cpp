@@ -39,7 +39,22 @@ _ImplementHitContainedFactories(MCACDHit)
 _ImplementHitContainedFactories(MCCalorimeterHit)
 
 
+// ====================================================================
+// Object factory implementation for objects of class MCTKRHit
+// ====================================================================
+#include "GlastEvent/MonteCarlo/MCTKRHit.h"
+_ImplementHitContainedFactories(MCTKRHit)
+
+// ====================================================================
+// Object factory implementation for objects of class MCSiLayer
+// ====================================================================
+#include "GlastEvent/MonteCarlo/MCSiLayer.h"
+_ImplementHitContainedFactories(MCSiLayer)
+
+
 void MCInstanciation()  {
     DLL_DECL_CONTAINEDOBJECTFACTORY( MCACDHit );
     DLL_DECL_CONTAINEDOBJECTFACTORY( MCCalorimeterHit );
+    DLL_DECL_CONTAINEDOBJECTFACTORY( MCTKRHit );
+    DLL_DECL_CONTAINEDOBJECTFACTORY( MCSiLayer );
 }

@@ -1,8 +1,5 @@
-// $Header$
-// Author: H. Arrighi
-
-#ifndef MCACDHit_H
-#define MCACDHit_H 1
+#ifndef MCTKRHit_H
+#define MCTKRHit_H 1
 
 // Include files
 #include <iostream>
@@ -12,51 +9,61 @@
 #include "GlastEvent/TopLevel/Definitions.h"
 
 // Externals 
-extern const CLID& CLID_MCACDHit;
+extern const CLID& CLID_MCTKRHit;
 
 
 //------------------------------------------------------------------------------
 //
-// ClassName:   MCACDHit
+// ClassName:   MCTKRHit
 //  
-// Description: Essential information of the MCACDHit
+// Description: Essential information of the MCTKRHit
 //
 //              It contains:
 //                  - id
 //                  - energy
+//                  - noise
 //
 //
 //------------------------------------------------------------------------------
 
 /*!
-Essential information of the MCACDHit.
+Essential information of the MCTKRHit.
 
   It contains:
   - id
   - energy
+  - noise
 */
 
 
-class MCACDHit : virtual public ContainedObject  {  
+class MCTKRHit : virtual public ContainedObject  {  
     
 public:
-    /// Constructor
-    MCACDHit() { }
+    /// Constructors
+    MCTKRHit() { 
+        m_id = 0;
+        m_energy = 0.f;
+        m_noise = 0;
+    }
     
     /// Destructor
-    virtual ~MCACDHit() { }
+    virtual ~MCTKRHit() { }
     
     //! Retrieve reference to class definition structure
-    virtual const CLID& clID() const   { return MCACDHit::classID(); }
-    static const CLID& classID()       { return CLID_MCACDHit; }
+    virtual const CLID& clID() const   { return MCTKRHit::classID(); }
+    static const CLID& classID()       { return CLID_MCTKRHit; }
     
-    //! Tile id number
+    //! strip id number
     unsigned int id () const           { return m_id; }
     void setId (long value)            { m_id = value; }
     
-    //! energy deposited (GeV)
+    //! energy deposited
     float energy () const              { return m_energy; }
     void setEnergy (float value)        { m_energy = value; }
+
+    /// noise
+    int noise () const           { return m_noise; }
+    void setNoise (int value)   { m_noise = value; }
     
     //! used to convert container of objects
     virtual StreamBuffer& serialize( StreamBuffer& s );
@@ -66,41 +73,42 @@ public:
 private:
     unsigned int         m_id;
     float                m_energy;
+    int                  m_noise;
 };
 
-inline StreamBuffer& MCACDHit::serialize( StreamBuffer& s ) const                 {
+inline StreamBuffer& MCTKRHit::serialize( StreamBuffer& s ) const                 {
     ContainedObject::serialize(s);
     return s
 	<< m_id
 	<< m_energy
-	;
+        << m_noise;
 }
 
 
-inline StreamBuffer& MCACDHit::serialize( StreamBuffer& s )                       {
+inline StreamBuffer& MCTKRHit::serialize( StreamBuffer& s )                       {
     ContainedObject::serialize(s);
     return s
 	>> m_id
 	>> m_energy
-	;
+        >> m_noise;
 }
 
 
-inline std::ostream& MCACDHit::fillStream( std::ostream& s ) const                {
+inline std::ostream& MCTKRHit::fillStream( std::ostream& s ) const                {
     return s
-	<< "class MCACDHit :"
+	<< "class MCTKRHit :"
 	<< "\n    Energy    = "
-	//  << LHCbEventFloatFormat( LHCbEvent::width, LHCbEvent::precision )
 	<< m_energy
-	<< "\n    Cell ID   = " << m_id;
+	<< "\n    Strip id   = " << m_id
+        << "\n    Noise = " << m_noise;
 }
 
 
-//! Definition of all container types of MCACDHit
+// Definition of all container types of MCTKRHit
 template <class TYPE> class ObjectVector;
-typedef ObjectVector<MCACDHit>     MCACDHitVector;
+typedef ObjectVector<MCTKRHit>     MCTKRHitVector;
 template <class TYPE> class ObjectList;
-typedef ObjectList<MCACDHit>       MCACDHitList;
+typedef ObjectList<MCTKRHit>       MCTKRHitList;
 
 
-#endif    // MCACDHit_H
+#endif    // MCTKRHit_H

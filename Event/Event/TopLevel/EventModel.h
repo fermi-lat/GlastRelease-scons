@@ -23,7 +23,7 @@
 
         namespace MC {
             _EXTERN_ std::string Event;
-            _EXTERN_ std::string MCTrackerHits;
+            _EXTERN_ std::string MCTKRHits;
             _EXTERN_ std::string MCCalorimeterHits;
             _EXTERN_ std::string MCACDHits;
         };
