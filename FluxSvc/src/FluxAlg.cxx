@@ -219,7 +219,7 @@ StatusCode FluxAlg::initialize(){
     }
 
     // get a pointer to RootTupleSvc, use only if available 
-    if( (sc = service("RootTupleSvc", m_rootTupleSvc, true) ). isFailure() ) {
+    if( (service("RootTupleSvc", m_rootTupleSvc, true) ). isFailure() ) {
         log << MSG::WARNING << " RootTupleSvc is not available, will not write Pt tuple" << endreq;
         m_rootTupleSvc=0;
     }else if( !m_root_tree.value().empty() ) {
