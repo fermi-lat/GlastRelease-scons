@@ -41,6 +41,7 @@ std::string tkr;
 std::string cal;
 std::string acd;
 std::string test;
+std::string nas;
 
 
 class CalibModel {
@@ -56,6 +57,7 @@ public:
     std::string cal = root + "/CAL";
     std::string tkr = root + "/TKR";
     std::string test = root + "/Test";
+    std::string nas = root + "/NAS";
 
     // Practically all of these don't exist in any shape or form,
     // but go ahead an reserve names anyway.
@@ -74,9 +76,14 @@ public:
 
     CalibData::TKR_TOTSignal = tkr +"_TOTSignal";
     CalibData::TKR_TOTDist = tkr + "_TOTDist";
-    CalibData::TKR_Splits = tkr + "_Splits";
 
     CalibData::TKR_MIPEff = tkr + "_MIPEff";
+
+    CalibData::TKR_Splits = tkr + "_Splits";
+  
+    CalibData::TKR_ChargeScale = tkr + "_ChargeScale";
+    CalibData::TKR_TrgThresh = tkr + "_TrgThresh";
+    CalibData::TKR_DataThresh = tkr + "_DataThresh";
 
     CalibData::CAL_LightAtt = cal + "_LightAtt";
     CalibData::CAL_LightAsym = cal + "_LightAsym";
@@ -98,6 +105,8 @@ public:
     CalibData::CAL_TholdMuon = cal + "_TholdMuon";
     CalibData::CAL_Asym      = cal + "_Asym";
 
+    CalibData::NAS_TowerCfg = nas + "_TowerCfg";
+
     CalibData::Test_Gen = test + "_Gen";
     CalibData::Test_1   = test + "_1";
 
@@ -113,6 +122,12 @@ public:
                                               CLID_Calib_TKR_Splits));
     CalibData::pairs.push_back(std::make_pair(CalibData::TKR_TOTSignal,
                                               CLID_Calib_TKR_TOTSignal));
+    CalibData::pairs.push_back(std::make_pair(CalibData::TKR_ChargeScale,
+                                              CLID_Calib_TKR_ChargeScale));
+    CalibData::pairs.push_back(std::make_pair(CalibData::TKR_TrgThresh,
+                                              CLID_Calib_TKR_TrgThresh));
+    CalibData::pairs.push_back(std::make_pair(CalibData::TKR_DataThresh,
+                                              CLID_Calib_TKR_DataThresh));
 
     CalibData::pairs.push_back(std::make_pair(CalibData::CAL_Ped,
                                               CLID_Calib_CAL_Ped));
@@ -145,6 +160,8 @@ public:
     CalibData::pairs.push_back(std::make_pair(CalibData::Test_1,
                                               CLID_Calib_CalibTest1));
 
+    CalibData::pairs.push_back(std::make_pair(CalibData::NAS_TowerCfg,
+                                              CLID_Calib_NAS_TowerCfg));
 
 
   }
