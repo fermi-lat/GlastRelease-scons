@@ -54,7 +54,7 @@ EventDisplay::EventDisplay(TString filename) {
     myTracker = new Tracker;
     if ( TOWER ) {  
         myTracker->loadGeometry(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0Geometry.txt"));
-        myTracker->loadFitting(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/FittingPlanes.txt"));
+        myTracker->loadFitting(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0FittingPlanes.txt"));
         myTracker->IsTower(TOWER);
     }
     else
@@ -108,6 +108,11 @@ void EventDisplay::Go(int numEvent) {
     std::cout << "TkrTotalNumHits = " << TkrTotalNumHits << std::endl;
 
     Recon* recon = myEvent->GetRecon();
+
+    TMap *myGeometry = myTracker->GetGeometry();
+    // this here "corrects" cluster positions with respect to the recon results.
+    recon->TkrAlignmentSvc(myGeometry);
+
     int TkrNumClus = recon->GetTkrNumClus();
     int TkrNumTracks = recon->GetTkrNumTracks();
     int TkrTrk1NumClus = recon->GetTkrTrk1NumClus();
@@ -117,14 +122,12 @@ void EventDisplay::Go(int numEvent) {
     if ( TkrTrk1NumClus > TkrNumClus || TkrNumClus > TkrTotalNumHits )
         std::cout << "??? TkrTrk1NumClus > TkrNumClus > TkrTotalNumHits ???" << std::endl;
 
-    TMap *myGeometry = myTracker->GetGeometry();
-  
     TMapIter ti(myGeometry);
     TObjString* key;
 
     int i=0;
     while ( ( key = (TObjString*)ti.Next() ) ) {
-        Layer *aLayer = ((Layer*) myGeometry->GetValue(key));
+        Layer* aLayer = (Layer*)myGeometry->GetValue(key);
 
         TString LayerName=key->String();
 

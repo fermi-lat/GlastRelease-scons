@@ -8,6 +8,7 @@
 #include <iomanip>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 
 Tracker::Tracker()
@@ -32,15 +33,20 @@ void Tracker::loadGeometry(TString filename) {
       std::cout << "File " << filename << " could not be opened!" << std::endl;
       return;
   }
-  TString layer;
-  double value;
-  while ( 1 ) 
-    {
-      fin >> layer >> value;
-      if ( !fin.good() ) break;
-      Layer *aLayer = new Layer(layer, value);
-      myGeometry->Add(new TObjString(layer),aLayer);
-    }
+  std::string line;
+  while ( !fin.eof() ) {
+      std::getline(fin, line);
+      TString layer;
+      double z, y, x;
+      z = y = x = 0;
+      std::istringstream ist(line);
+      ist >> layer >> z >> y >> x;
+      if ( layer == "" )
+          continue;
+      Layer* aLayer = new Layer(layer, z, y, x);
+      myGeometry->Add(new TObjString(layer), aLayer);
+  }
+
   fin.close();
   myGeometry->Print();
 }

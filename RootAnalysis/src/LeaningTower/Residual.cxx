@@ -34,7 +34,7 @@ public:
 Residual::Residual(TString filename, TString resFileName) {
     myTracker = new Tracker;
     myTracker->loadGeometry(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0Geometry.txt"));
-    myTracker->loadFitting(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/FittingPlanes.txt"));
+    myTracker->loadFitting(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0FittingPlanes.txt"));
     myTracker->IsTower(true);
     myEvent = new Event(filename, (TMap*)myTracker->GetGeometry());
     myResFileName = resFileName;
@@ -73,11 +73,7 @@ void Residual::Go(int lastEntry) {
         hY[i] = TH1D(title, title, bins, xmin, xmax);
     }
 
-    //#define SANDWICH
-#define ALLLAYERS
-#ifdef SANDWICH
-    const TMap *myGeometry = myTracker->GetGeometry();
-#endif
+    const TMap* myGeometry = myTracker->GetGeometry();
 
     Recon* recon = myEvent->GetRecon();
     Progress progress;
@@ -95,6 +91,9 @@ void Residual::Go(int lastEntry) {
         if ( TkrNumTracks != 1 )
             continue;
 
+        // this here "corrects" cluster positions with respect to the recon results.
+        recon->TkrAlignmentSvc(myGeometry);
+
         // ATTENTION -------------------------------------------------
         // recon counts layers from top, i.e. X0 -> layer 17 view 0
         const Int_t* TkrClusLayer = recon->GetTkrClusLayer();
@@ -108,6 +107,8 @@ void Residual::Go(int lastEntry) {
             const int iReconLayer = TkrClusLayer[i];
             const int iLayer = 17 - iReconLayer;
             const TString planeName = GetPlaneName(iLayer, iView);
+//#define SANDWICH
+#define ALLLAYERS
 #ifdef SANDWICH
             // version with sandwiching
             const Layer* plane = (Layer*)myGeometry->GetValue(planeName);

@@ -18,12 +18,15 @@
 
 class Layer : public TObject {
  public:
-    Layer(TString name, double height);
+    Layer(TString name, float zz, float yy=0, float xx=0);
     ~Layer();
     void SetPlanesForFittingCol(std::vector<TString> v) { planesForFittingCol = v; }
 
     TString GetLayerName() const { return Name; }
-    double GetHeight()     const { return Z; }
+    double GetHeight()     const { return GetZ(); }
+    double GetZ()          const { return Z; }
+    double GetY()          const { return Y; }
+    double GetX()          const { return X; }
 
     double GetCoordinate(int stripId);
     bool checkActiveArea(double ParallelCoordinate, double NormalCoordinate, double BorderWidth);
@@ -43,9 +46,9 @@ class Layer : public TObject {
     }
 
     TString Name;
-    double ShiftX;
-    double ShiftY;
-    double Z;
+    float X;
+    float Y;
+    float Z;
     TLine *LayerLine;
     TLine *LadderLine[4];
     TTree *LayerTree;
@@ -96,6 +99,8 @@ TString GetPlaneName(const int layer, const int view) {
     TString v = view ? "Y" : "X";
     return v += layer;
 }
+
+TString GetPlaneNameFromRecon(const int layer, const int view) { return GetPlaneName(17-layer, view); }
 
 TString GetTwinPlaneName(const int layer, const int view) {
     const int tray = GetTray(layer, view);

@@ -7,6 +7,7 @@
 #include "TFile.h"
 #include "TGraph.h"
 #include "TLine.h"
+#include "TMap.h"
 
 #include <iomanip>
 #include <iostream>
@@ -17,6 +18,7 @@ class Recon : public TObject {
     Recon(TFile*);
 
     void GetEvent(int);
+    void TkrAlignmentSvc(const TMap* myGeometry);
     Int_t GetEntries()        const { return (Int_t)reconTree->GetEntries(); }
     Int_t GetTkrNumClus()     const { return TkrNumClus; }
     Int_t GetTkrNumTracks()   const { return TkrNumTracks; }

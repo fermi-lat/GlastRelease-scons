@@ -19,10 +19,28 @@ void Recon::GetEvent(int event) {
     int bytes = reconTree->GetEntry(event);
     if ( bytes == 0 )
         std::cerr << "Recon::GetEvent: couldn't read the Recon part!" << std::endl;
+    // the data are nominally tower 0, which is located at about -700, -700.
+    // We would like to have to origin at 0,0 (equivalent to tower 10).
+    // There is also a non-understood not-cared-for shift in z.
     for ( int i=0; i<TkrNumClus; ++i ) {
         TkrClusX[i] = TkrClusX[i] + 740;
         TkrClusY[i] = TkrClusY[i] + 740;
         TkrClusZ[i] = TkrClusZ[i] +  18;
+    }
+}
+
+void Recon::TkrAlignmentSvc(const TMap *myGeometry) {
+    // this is the real alignment.  Z is replaced by the Z of the geometry file.
+    // This seems to be awkward, but the alternative would be to rerun recon
+    // every time the position changes.
+    // X and Y are taken as corrections, i.e. X and Y of the geo file are
+    // subtracted from the cluster positions.
+  
+    for ( int i=0; i<TkrNumClus; ++i ) {
+        Layer* plane = (Layer*)myGeometry->GetValue(GetPlaneNameFromRecon(TkrClusLayer[i], TkrClusView[i]));
+        TkrClusX[i] -= plane->GetX();
+        TkrClusY[i] -= plane->GetY();
+        TkrClusZ[i]  = plane->GetZ();
     }
 }
 

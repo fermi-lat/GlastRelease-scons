@@ -5,18 +5,18 @@
 #include <fstream>
 #include <string>
 
-Layer::Layer(TString name, double height) {
-    ShiftX=0;
-    ShiftY=0;
+Layer::Layer(TString name, float zz, float yy, float xx) {
+    Name = name;
+    Z = zz;
+    Y = yy;
+    X = xx;
+
     EDGE_WIDTH        =  1.000;
     STRIP_PITCH       =  0.228;
     LADDER_SEPARATION =  0.200; 
     WAFER_WIDTH       = 89.500;
     MissedHits=0;
     HitsInActiveArea=0;
-
-    Name = name;
-    Z = height;
 
     for ( int i=0; i<4; i++ ) {
         double xcoord1 = GetCoordinate(i*384);
