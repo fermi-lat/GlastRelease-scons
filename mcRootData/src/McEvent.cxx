@@ -9,6 +9,7 @@
 // Authors:  Dan Flath and Heather Kelly                       
 
 #include "mcRootData/McEvent.h"
+#include <iostream>
 
 // Allocate the TObjArrays just once
 TObjArray *McEvent::m_staticParticleCol = 0;
@@ -65,6 +66,17 @@ void McEvent::Clear(Option_t *option) {
     m_particleCol->Delete();
     m_positionHitCol->Delete();
     m_integratingHitCol->Delete();
+}
+
+void McEvent::Print(Option_t *option) const {
+    using namespace std;
+    TObject::Print(option);
+    cout.precision(2);
+    cout << "Run: " << m_runId << " Event: " << m_eventId << endl;
+    cout << m_particleCol->GetEntries() << " McParticles" << endl;
+    cout << m_positionHitCol->GetEntries() << " McPositionHits" << endl;
+    cout << m_integratingHitCol->GetEntries() 
+        << " McIntegratingHits" << endl;
 }
 
 

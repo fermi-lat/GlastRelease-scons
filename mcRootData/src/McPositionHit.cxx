@@ -1,4 +1,5 @@
 #include "mcRootData/McPositionHit.h"
+#include <iostream>
 
 ClassImp(McPositionHit)
 
@@ -24,6 +25,25 @@ void McPositionHit::Clear(Option_t *option)
     m_volumeId.Clear();
 }
 
+void McPositionHit::Print(Option_t *option) const {
+    using namespace std;
+    TObject::Print(option);
+    m_volumeId.Print(option);
+    cout.precision(2);
+    cout << "Flags: " << m_statusFlags 
+        << "    Dep Energy: " << m_depositedEnergy
+        << "    Part Energy: " << m_particleEnergy
+        << "    TOF:  " << m_timeOfFlight << endl;
+    cout << "Entry: (" << m_entry.X() << ","
+        << m_entry.Y() << "," << m_entry.Z() << ")"
+        << "   Exit: (" << m_exit.X() << "," 
+        << m_exit.Y() << "," << m_exit.Z() << ")" << endl;
+    cout << "McParticle Ref" << endl;
+    if (getMcParticle()!= 0) getMcParticle()->Print();
+    cout << "Origin Particle Ref" << endl;
+    if (getOriginMcParticle() != 0) getOriginMcParticle()->Print();
+
+}
 
 Double_t McPositionHit::getDirectionCosine() const
 {

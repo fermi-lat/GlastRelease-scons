@@ -1,5 +1,6 @@
 
 #include "mcRootData/VolumeIdentifier.h"
+#include <iostream>
 
 ClassImp(VolumeIdentifier)
 
@@ -9,12 +10,13 @@ ClassImp(VolumeIdentifier)
 // Description:
 //      The class VolumeIdentifier encapsulates volume identifiers defined in
 //      the xml file describing the detector geometry. It represents the 
-//      identifier through a 64 integer to enable an efficient sorting of 
+//      identifier through two 32 integers to enable an efficient sorting of 
 //      objects which use this identifier.
 //      Every single identifier which constitute the volume identifier is code
-//      into a binary string of 6 bits and these bit strings are packed into a
-//      64 bit integer.  So, every single id can be an integer beteween 0 and 
-//      63 and each volume identifier can be built by a maximum number of 10 ids.  
+//      into a binary string of 6 bits and these bit strings are packed into two
+//      32 bit integers.  So, every single id can be an integer beteween 0 and 
+//      63 and each volume identifier can be built by a maximum number of 10 ids.
+//      index == 0 corresponds to the upper most bits  
 //
 
 
@@ -43,6 +45,14 @@ void VolumeIdentifier::initialize(UInt_t bits0to31, UInt_t bits32to63, UInt_t si
     m_size = size;
 }
 
+void VolumeIdentifier::Print(Option_t *option) const {
+    using namespace std;
+    TObject::Print(option);
+    cout << "Size: " << m_size << endl;
+    cout << this->name() << endl;
+}
+
+
 std::string VolumeIdentifier::name(const char* delimiter) const
 {
     // Purpose and Method:  Return the equivalent string of the volume 
@@ -54,37 +64,12 @@ std::string VolumeIdentifier::name(const char* delimiter) const
 #endif
     
     UInt_t bufIds = 0;
-    
-    static UInt_t mask_bits0to31 = 0xfc000000;
-    // this is a 64 bit mask with the 6 bits (positions 54-59) set to 1 and the
-    // others to 0
-    static UInt_t mask_bits32to63 = 0x0fc00000;
-    
-    UInt_t copy_bits0to31 = m_bits0to31;
-    UInt_t copy_bits32to63 = m_bits32to63;
-    
+   
     unsigned int i;
     s << delimiter;
     for (i = 0; i < m_size; i++)
     {
-        if (i < 4) {
-            bufIds = (copy_bits32to63 & mask_bits32to63) >> 22;
-            s << bufIds << delimiter;
-            copy_bits32to63 = copy_bits32to63<< 6;
-        } else if (i == 4) {
-            UInt_t mask_upper4bits = 15 << 24;
-            UInt_t mask_lower2bits = 3 << 30;
-            UInt_t upperBits = (copy_bits32to63 && mask_upper4bits) >> 22;
-            UInt_t lowerBits = (copy_bits0to31 && mask_lower2bits) >> 30;
-            bufIds = upperBits | lowerBits;
-            s << bufIds << delimiter;
-            copy_bits0to31 = copy_bits0to31 << 2;
-            
-        } else {
-            bufIds = (copy_bits0to31 & mask_bits0to31) >> 26;
-            s << bufIds << delimiter;
-            copy_bits0to31 = copy_bits0to31 << 6;  
-        }
+        s << this->operator[](i) << delimiter;
     }
     
 #ifndef WIN32
@@ -100,48 +85,49 @@ void VolumeIdentifier::Clear(Option_t *option) {
     m_size = 0;
 }
 
-UInt_t VolumeIdentifier::operator[](unsigned int index)
+UInt_t VolumeIdentifier::operator[](unsigned int index) const
 {
+    // Purpose and Method:  Return a particular id corresponding to the index
+    //    Note that index == 0 refers to the upper most bits, in m_bits32to63
+
     // Check for invalid index, we only store 10 ids per VolumeIdentifier
     if (index > 9) return 0;
+
+    // Turn on 6 bits:  111111
     static UInt_t mask_id = 63;
-    
-    if (index < 4) {
-        UInt_t idBits = m_bits32to63 >> (22 - 6*index);
+    const UInt_t numBitsPerId = 6;
+    const UInt_t shift = 24;
+
+    // Stored the first 5 ids (index 0-4) in m_bits32to63
+    if (index < 5) {
+        UInt_t idBits = m_bits32to63 >> (shift - numBitsPerId*index);
         return (idBits & mask_id);
-    } else if (index == 4) {
-        UInt_t mask_lower4bits = 15;
-        UInt_t mask_upper2bits = 3 << 30;
-        UInt_t upperBits = m_bits32to63 && mask_lower4bits;
-        UInt_t lowerBits = m_bits0to31 && mask_upper2bits;
-        UInt_t id = (upperBits << 2) | lowerBits;
-        return id;
     } 
-    UInt_t idBits = m_bits0to31 >> (22 - 6*(index-5));
+    // other 5 ids are in m_bits0to31
+    UInt_t idBits = m_bits0to31 >> (shift - 6*(index-5));
     return (idBits & mask_id);
 }
 
 
 void VolumeIdentifier::append( unsigned int id)
 {
+    // Purpose and Method:  Add another 6 bit id to the packed bit string
     // the first id appended becomes the most significant number in the internal
     // representation. In this way I can obtain an equivalent of the lexicographic order
     // between volume identifiers
+    const UInt_t numBitsPerId = 6;
+    const UInt_t shift = 24;
+
     UInt_t t = id;
-    if (m_size < 4) {
-        t = t << 22; //54;
+    // We store the first 5 ids (index 0-4) in m_bits32to63
+    if (m_size < 5) {
+        t = t << shift; 
         // Filling the upper bits
-        m_bits32to63 = m_bits32to63 | (t >> 6 * m_size);
-    } else if (m_size == 4) {
-        // Splitting bits across the two 32 bit ints, 4 bits in the upper, 2 bits in the lower
-        UInt_t copyT = t << 30;
-        t = t << 22; //54;
-        m_bits32to63  = m_bits32to63 | (t >> 6 * m_size);
-        m_bits0to31 = m_bits0to31 | copyT;
+        m_bits32to63 = m_bits32to63 | (t >> (numBitsPerId * m_size));
     } else {
-        t = t << 24;
-        // Storing in the lower bits
-        m_bits0to31 = m_bits0to31 | (t >> 6*(m_size-5));
+        // Store the second 5 ids (idex 5-9) in m_bits0to31
+        t = t << shift;
+        m_bits0to31 = m_bits0to31 | (t >> numBitsPerId * (m_size-5));
     } 
     
     m_size++;

@@ -1,4 +1,5 @@
 #include "mcRootData/McIntegratingHit.h"
+#include <iostream>
 
 ClassImp(McIntegratingHit)
 
@@ -15,14 +16,8 @@ McIntegratingHit::~McIntegratingHit() {
 }
 
 
-void McIntegratingHit::initialize(const VolumeIdentifier& id, Double_t e,
-                            const TVector3 &moment1, const TVector3 &moment2) {
-    
-    //m_volumeId.initialize(id.getBits0to31(), id.getBits32to63(), id.size());
+void McIntegratingHit::initialize(const VolumeIdentifier& id) {
     m_volumeId = id;
-    m_totalEnergy = e;
-    m_moment1Seed.SetXYZ(moment1.X(), moment1.Y(), moment1.Z());
-    m_moment2Seed.SetXYZ(moment2.X(), moment2.Y(), moment2.Z());
 }
 
 
@@ -35,20 +30,39 @@ void McIntegratingHit::Clear(Option_t *option)
     m_volumeId.Clear();
 }
 
+void McIntegratingHit::Print(Option_t *option) const {
+    using namespace std;
+    TObject::Print(option);
+    UInt_t p = 2;
+    cout.precision(p);
+    m_volumeId.Print(option);
+    cout << "Flags: " << m_packedFlags 
+        << " Energy: " << m_totalEnergy << endl;
+    cout << "Mom1: (" << m_moment1Seed.X() << "," << m_moment1Seed.Y() << ","
+        << m_moment1Seed.Z() << ")   ";
+    cout << "Mom2: (" << m_moment2Seed.X() << "," << m_moment2Seed.Y() << ","
+        << m_moment2Seed.Z() << ")" << endl;
+}
+
+
 const McIntegratingHit::energyDepositMap& McIntegratingHit::getItemizedEnergy() const
 {
     return m_energyItem;
 }
 
 
-void McIntegratingHit::addEnergyItem(const Double_t& energy, McParticle* t)
+void McIntegratingHit::addEnergyItem(const Double_t& energy, McParticle* t, const TVector3& pos)
 {
-    m_energyItem[t] += energy;    
+    m_energyItem[t] += energy; 
+    TVector3 pos2 = TVector3(pos.X()*pos.X(), pos.Y()*pos.Y(), pos.Z()*pos.Z());
+    m_totalEnergy += energy;
+    m_moment1Seed = energy * pos;
+    m_moment2Seed = energy * pos2;
 }
 
 
 
-const TVector3 McIntegratingHit::getMoment1 () const
+const TVector3& McIntegratingHit::getMoment1 () const
 {
     // Purpose and Method:  Retrieve the energy-weighted first moments of the
     //    position.
@@ -56,7 +70,7 @@ const TVector3 McIntegratingHit::getMoment1 () const
 }
 
 
-const TVector3 McIntegratingHit::getMoment2 () const
+const TVector3& McIntegratingHit::getMoment2 () const
 {
     // Purpose and Method:  Retrieve the energy-weighted second moments of the
     //    position

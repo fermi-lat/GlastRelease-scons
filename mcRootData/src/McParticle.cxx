@@ -5,6 +5,7 @@
 // $Header$
 
 #include "mcRootData/McParticle.h"
+#include <iostream>
 
 ClassImp(McParticle)
 
@@ -49,6 +50,24 @@ void McParticle::Clear(Option_t *option) {
     m_daughters.Clear();
 }
 
+void McParticle::Print(Option_t *option) const {
+    using namespace std;
+    TObject::Print(option);
+    cout.precision(2);
+    cout << "ParticleId: " << m_particleId;
+    cout << " StatusFlag: " << m_statusFlags << endl;
+    cout << "FinalPos: (" << m_finalPosition.x() << "," << m_finalPosition.y()
+        << "," << m_finalPosition.z() << ")  ";
+    cout << "InitMom: (" << m_initialFourMomentum.X() << "," << m_initialFourMomentum.Y() << ","
+        << m_initialFourMomentum.Z() << "," << m_initialFourMomentum.T() << ")    ";
+    cout << "FinalMom: (" << m_finalFourMomentum.X() << "," << m_finalFourMomentum.Y() << ","
+        << m_finalFourMomentum.Z() << "," << m_finalFourMomentum.T() << ")" << endl;
+    cout << "Mother:  ";
+    m_mother.Print();
+    cout << "Number of Daughters: " << m_daughters.GetEntries() << endl;
+}
+
+
 void McParticle::initialize( McParticle* mother, Int_t id, UInt_t statusBits,
                       const TLorentzVector& initMom,
                       const TLorentzVector& finalMom,
@@ -65,9 +84,9 @@ void McParticle::initialize( McParticle* mother, Int_t id, UInt_t statusBits,
 }
 
 
-McParticle* McParticle::getMother() {
+const McParticle* McParticle::getMother() {
 
-    return ( (McParticle*)(m_mother.GetObject()) );
+    return ( (const McParticle*)(m_mother.GetObject()) );
 }
 
 const McParticle* McParticle::getDaughter(Int_t index) const {
