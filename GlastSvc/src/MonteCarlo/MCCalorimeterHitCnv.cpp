@@ -1,10 +1,11 @@
 // $Header$
 //------------------------------------------------------------------------------
 //
-// Implementation of class :  ACDhitCnv
+// Implementation of class  :  MCCalorimeterHitCnv
 //
-//
+// Desciption               :  Gaudi converter for MCCalorimeterHit
 //------------------------------------------------------------------------------
+
 #define MCCalorimeterHitCnv_CPP 
 
 // Include files
@@ -16,15 +17,23 @@
 
 #include "src/EventSelector/IRFConverter.h"
 
-// Inherited sources
 #include "GlastSvc/MonteCarlo/MCCalorimeterHitCnv.h"
 
+/*! Handles the conversion of MCCalorimeterHit class currently uses the IRF
+    information.
+    
+      Current Data Handled
+        -Left Response
+        -Right Response
+        -Energy
+*/
 
-// Instantiation of a static factory class used by clients to create instances
+
+//! Instantiation of a static factory class used by clients to create instances
 static CnvFactory<MCCalorimeterHitCnv> s_factory;
 const ICnvFactory& MCCalorimeterHitCnvFactory = s_factory;
 
-/// Create the transient representation of an object.
+//! Create the transient representation of an object.
 StatusCode MCCalorimeterHitCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObject)   {
   refpObject = new MCCalorimeterHitVector();
   StatusCode status = updateObj(pAddress, refpObject);
@@ -35,7 +44,7 @@ StatusCode MCCalorimeterHitCnv::createObj(IOpaqueAddress* pAddress, DataObject*&
   return status;
 }
 
-/// Update object from scratch
+//! Update object from scratch
 StatusCode MCCalorimeterHitCnv::updateObj(IOpaqueAddress* pAddress, DataObject* pObject)   {
   ObjectVector<MCCalorimeterHit>* calHitList  = dynamic_cast<ObjectVector<MCCalorimeterHit>*>(pObject);
   if ( 0 != calHitList )    {
@@ -49,6 +58,8 @@ StatusCode MCCalorimeterHitCnv::updateObj(IOpaqueAddress* pAddress, DataObject* 
       for (ObjectVector<MCCalorimeterHit>::const_iterator it = mcCalData->begin(); it != mcCalData->end(); it++) {
           MCCalorimeterHit * mcCalHit = new MCCalorimeterHit();
           mcCalHit->setEnergy((*it)->energy());
+          mcCalHit->setLeftResponse((*it)->leftResponse());
+          mcCalHit->setRightResponse((*it)->rightResponse());
           calHitList->push_back(mcCalHit);
       }
 
@@ -58,12 +69,12 @@ StatusCode MCCalorimeterHitCnv::updateObj(IOpaqueAddress* pAddress, DataObject* 
   return StatusCode::FAILURE;
 }
 
-/// class ID
+//! class ID
 const CLID& MCCalorimeterHitCnv::classID()    {
   return ObjectVector<MCCalorimeterHit>::classID(); 
 }
 
-/// Standard Constructor
+//! Standard Constructor
 MCCalorimeterHitCnv::MCCalorimeterHitCnv(ISvcLocator* svc) 
 : BaseCnv(classID(), svc)
 {
@@ -71,5 +82,5 @@ MCCalorimeterHitCnv::MCCalorimeterHitCnv(ISvcLocator* svc)
   declareObject("/Event/MC/MCCalorimeterHits", objType(), "PASS");
 }
 
-/// Standard Destructor
+//! Standard Destructor
 MCCalorimeterHitCnv::~MCCalorimeterHitCnv(){ }
