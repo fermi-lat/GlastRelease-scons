@@ -8,23 +8,18 @@ ApplicationMgr.ExtSvc   = { "FluxSvc" };
 
 ApplicationMgr.DLLs   = { "FluxSvc" }; 
 
-//--------------------------------------------------------------
-// Private Application Configuration options
-//--------------------------------------------------------------
 
 ApplicationMgr.TopAlg = { "FluxTestAlg" };
 
-// Here is a list of files (can be empty) that also is parsed
-// FluxSvc.source_lib += {};
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-
 MessageSvc.OutputLevel      = 2;
-FluxTestAlg.source_name="gamma_pencil";
 
-//--------------------------------------------------------------
-// Algorithms Private Options
-//--------------------------------------------------------------
+// Append to a list of source library documents
+FluxSvc.source_lib += {"$(FLUXROOT)/xml/user_library.xml"};
+
+// ask for a source that is in the user_library
+FluxTestAlg.source_name="gamma_pencil_test";
 
 ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 100;
