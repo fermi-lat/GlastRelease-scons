@@ -1,6 +1,6 @@
 package Gleam
 
-version  v2r2p7
+version  v2r2p8
 # This is a checkout package
 # $Id$
 
@@ -52,7 +52,7 @@ use G4Generator v4r2
 
 #digitization
 use CalDigi     v1r1p2 
-use TkrDigi     v1r5p2
+use TkrDigi               v1r5p3
 use AcdDigi     v1r2
 
 
@@ -66,7 +66,7 @@ use CalRecon    v5r7p2
 use AcdRecon    v0r4p1       
 
 #ROOT persistence: RootIo specifies the data packages
-use RootIo                v4r9p2
+use RootIo      v4r9p2
 
 #diagnostic and summary of bottom line
 use merit       v5r6
