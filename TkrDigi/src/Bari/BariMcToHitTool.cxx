@@ -64,8 +64,7 @@ StatusCode BariMcToHitTool::initialize()
     // Set a default current file
     // new file currents is more compact
     declareProperty("CurrentsFile",
-		    m_CurrentsFile="$(TKRDIGIROOT)/src/Bari/currents");
-		    //    		            m_CurrentsFile="$(TKRDIGIROOT)/src/Bari/correnti");
+		    m_CurrentsFile="$(TKRDIGIROOT)/src/Bari/correnti");
 
 
     // Do the currents file (once) - LSR
