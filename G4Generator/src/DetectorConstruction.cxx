@@ -1,5 +1,5 @@
+// $Header$
 #include "DetectorConstruction.h"
-//#include "SensitiveDetector.h"
 
 #include "G4Material.hh"
 #include "G4Box.hh"

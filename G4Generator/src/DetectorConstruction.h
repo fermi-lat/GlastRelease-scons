@@ -2,7 +2,6 @@
 #define DetectorConstruction_H 1
 
 class G4VPhysicalVolume;
-class SensitiveDetector;
 #ifdef WIN32
 # include <float.h>
 #endif
