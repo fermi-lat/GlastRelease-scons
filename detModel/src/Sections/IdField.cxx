@@ -7,7 +7,7 @@ namespace detModel{
     name = pname;
   }
 
-  std::string IdField::getName(){
+  std::string IdField::getName()const{
     return name;
   }
 }

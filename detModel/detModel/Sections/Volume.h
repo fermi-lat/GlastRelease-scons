@@ -29,12 +29,12 @@ namespace detModel{
      * extend the class in the future.  
      */
     void setParameters(std::string pparameters){parameters = pparameters;};
-    std::string getParameters(){return parameters;};
+    std::string getParameters()const{return parameters;};
     /**
      * This methods sets and gets the volume name 
      */
     void setName(std::string pname){name = pname;};
-    std::string getName(){return name;};
+    std::string getName()const{return name;};
 
     /// This method is the recursive Accept for the visitor pattern
     virtual void Accept(SectionsVisitor*) = 0;
