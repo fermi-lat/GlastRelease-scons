@@ -55,6 +55,7 @@ public:
     inline int    getNumYHits()              const{return m_nyHits;}
     inline double getKalEnergyError()        const{return m_KalEnergyErr;}
     inline int    getType()                  const{return m_type;}
+    inline double getTkrCalRadlen()          const{return m_TkrCal_radlen;}
 
     /// Access errors at track start
     double        getErrorXPosition()      const;
@@ -138,6 +139,7 @@ private:
     int    m_nxHits;
     int    m_nyHits;
     double m_KalEnergyErr;
+    double m_TkrCal_radlen; 
 
     /// Pointers to clusters, geoemtry, and control parameters
     Event::TkrClusterCol* m_clusters;
