@@ -1,0 +1,416 @@
+<!-- $Header$ -->
+      <derCategory name="derCAL" save="true">
+<overview>Derived constants specific to CAL.
+</overview>
+
+        <const name="CsISegLength">
+          <notes>length along measurement dimension of a CsI segment</notes>
+          <quo>
+            <refer refTo="CsILength" />
+            <refer refTo="nCsISeg" />
+          </quo>
+        </const>
+
+        <const name="nCsISegM1" uType="count"  type="int">
+          <notes>upper limit for id field keeping track of segment number
+          </notes>
+          <minus>
+            <refer refTo="nCsISeg" />
+            <const value="1" uType="count" />
+          </minus>
+        </const>
+
+        <const name="CALMaxLayer" uType="count"  type="int">
+          <notes>upper limit on Cal layer idfield value</notes>
+          <minus>
+            <refer refTo="CALnLayer" />
+            <const value="1" uType="count" />
+          </minus>
+        </const>
+
+    <!-- diodePosXOffset  = (CsILength + diodeX)/2 -->
+        <const name="diodePosXOffset" >
+          <notes>X-offset of a diode relative to the center of the CsI crystal</notes>
+          <quo>
+            <add>
+              <refer refTo="CsILength" />
+              <refer refTo="diodeX" />
+            </add>
+            <const value="2" uType="count"/>
+          </quo>
+        </const>
+        <const name="diodeNegXOffset" >
+          <notes>X-offset of diode on negative end of a crystal</notes>
+          <uminus><refer refTo="diodePosXOffset" /> </uminus>
+        </const>
+
+        <const name="cellVertWallHalfThick">
+          <notes>convenience</notes>
+          <mul> 
+            <refer refTo="cellVertWallThick" /> 
+            <const value="0.5" uType="count" /> 
+          </mul>
+        </const>
+
+        <const name="cellHorWallHalfThick">
+          <notes>convenience</notes>
+          <mul> 
+            <refer refTo="cellHorWallThick" /> 
+            <const value="0.5" uType="count" /> 
+          </mul>
+        </const>
+
+
+        
+
+<!-- dimensions for log envelope volume -->
+        <const name="CsIEnvX">  
+          <notes>Long dimension of envelope containing a CsI crystal and its diodes</notes>
+          <add>
+            <refer refTo="CsILength" />
+            <mul>
+              <const value="2" uType="count"/>
+              <refer refTo="diodeX" />
+            </mul>
+          </add>
+        </const>
+
+        <const name="CsIEnvY">  
+          <notes>Transverse dimension of envelope containing a CsI 
+                  crystal and its diodes</notes>
+          <refer refTo="cellHorPitch" />
+        </const>
+
+        <const name = "CsIEnvZ" >
+          <notes>Height of the envelope containing a CsI crystal and 
+                 its diodes</notes>
+          <refer refTo="cellVertPitch" />
+        </const>
+
+        <const name="cellIntWallZ">
+          <notes>Height of vertical wall, up to but not including 
+               horizontal walls</notes>
+          <minus>
+            <refer refTo="CsIEnvZ" />
+            <refer refTo="cellHorWallThick" />
+          </minus>
+        </const>
+
+<!-- offsets for positioning cell walls inside the cel -->
+        <const name="cellHorWall_dz">
+          <notes>Z position rel. to cell of upper horiz. wall</notes>
+          <mul>
+            <const value="0.5" />
+            <minus>
+              <refer refTo="cellVertPitch" />
+              <refer refTo="cellHorWallHalfThick" />
+            </minus>
+          </mul>
+        </const>
+
+        <const name="cellHorWall_dzn">
+          <notes>Z position rel. to cell of lower horiz. wall</notes>
+          <uminus>
+            <refer refTo="cellHorWall_dz" />
+          </uminus>
+        </const>
+
+        <const name="cellVertWall_dy">
+          <notes>Y displacement rel. to cell of vertical cell wall
+(here Y means perp. to height and length directions)</notes>
+          <mul>
+            <const value="0.5" />
+            <minus>
+              <refer refTo="cellHorPitch" />
+              <refer refTo="cellVertWallHalfThick" />
+            </minus>
+          </mul>
+        </const>
+
+        <const name="cellVertWall_dyn" >
+          <notes>Neg. of Y  displacement rel. to cell of vertical cell wall
+(here Y means perp. to height and length directions)</notes>
+          <uminus>
+            <refer refTo="cellVertWall_dy" />
+          </uminus>
+        </const>
+        
+<!-- the following should be the maximum of the length of a single
+     CsIElement and the transverse distance across the whole 
+     collection of CsIElements in a layer, so
+      max(CsIEnvX, nCsIPerLayer*CsIEnvY) 
+ -->
+        <const name = "CALLayerTrans" >
+          <notes>Transverse dimension of a CAL layer: 
+                 max(CsiEnvX, nEltPerlayer*CsIEnvY)</notes>
+          <max>
+            <refer refTo="CsIEnvX" />
+            <mul>
+              <refer refTo="nCsIPerLayer" />
+              <refer refTo="CsIEnvY" />
+            </mul>
+          </max>
+	</const>
+
+        <const name="CALTransvGap">
+          <notes>New from Eric/Sacha.  Gap between side of log + C-cell 
+                [composite cell??] and CAL side wall</notes>
+          <mul>
+            <const value="0.5" />
+            <minus>
+              <refer refTo="CALModuleWidth" />
+              <add>
+                <mul>
+                  <refer refTo="nCsIPerLayer" />
+                  <refer refTo="cellHorPitch" />
+                </mul>
+                <mul>
+                  <const value="2.0" />
+                  <add>
+                    <refer refTo="CALSideWallThick" />
+                    <refer refTo="cellSideReinfThick" />
+                  </add>
+                </mul>
+              </add>
+            </minus>
+          </mul>
+        </const>
+
+        <const name="cellHorGap">
+          <notes>New from Eric/Sacha.  Horizontal gap between xtal
+                 and cell wall.</notes>
+          <mul>
+            <const value="0.5" />
+            <minus>
+              <minus>
+                <refer refTo="cellHorPitch" />
+                <refer refTo="CsIWidth" />
+              </minus>
+              <refer refTo="cellVertWallThick" />
+            </minus>
+          </mul>
+        </const>
+
+        <const name="cellVertGap" >
+          <notes>New from Eric/Sacha.  Vertical gap between xtal
+                 and cell wall.</notes>
+          <mul>
+            <const value="0.5" />
+            <minus>
+              <minus>
+                <refer refTo="cellVertPitch" />
+                <refer refTo="CsIHeight" />
+              </minus>
+              <refer refTo="cellHorWallThick" />
+            </minus>
+          </mul>
+        </const>
+
+<!-- Following comes from CAL docs of 31 May, 2001 -->
+        <const name="CALCylLength">
+          <notes>Length of cylindrical supports for side walls</notes>
+          <add>
+            <refer refTo="CALTransvGap" />
+            <refer refTo="CALSideWallThick" />
+            <uminus>
+              <refer refTo="CALSideWallOuterThick" />
+            </uminus>
+          </add>
+        </const>
+
+<!-- the following includes cal layers and inter-layer spacers, but
+     not frame, grid between cal and tkr, etc. 
+     Hence it's just nlayer*cellVertPitch 
+-->
+        <const name="CALTotalZ">
+<notes>Includes cal layers and inter-layer walls but not frame, 
+grid, etc. (may be superseded by info from Eric)</notes>
+          <mul>
+            <refer refTo="CALnLayer" />
+            <refer refTo="cellVertPitch" />
+          </mul>
+        </const>
+
+
+    <!-- additional (derived) dimensions for frame -->
+        <const name = "CALFrameWidth">
+          <notes>transverse dimension for cal frame (one tower)</notes>
+          <add>
+            <refer refTo="CALLayerTrans" />
+            <mul>
+              <const value="2" uType="count"/>
+              <refer refTo="CALFrameSideThick" />
+            </mul>
+          </add>
+        </const>
+  
+    <!--  Height of side pieces is just CALTotalZ -->
+
+    <!-- Height of entire frame must also include thickness of top&bottom -->
+	<const name="CALFrameHeight"  >
+          <notes>Height of entire frame</notes>
+	  <add>
+	    <refer refTo="CALTotalZ" />
+            <refer refTo="CALTopFrameZ" />
+            <refer refTo="CALBottomFrameZ" />
+	  </add>
+	</const>
+
+	<const name = "CALFrameSide_d"> 
+          <notes>Displacement of a side frame relative to tower</notes>
+	  <mul>
+	    <add>
+	      <refer refTo="CALFrameSideThick" />
+	      <refer refTo= "CALFrameWidth" />
+	    </add>
+	    <const value="0.5" uType="count" />
+	  </mul>
+	</const>
+
+	<const name ="CALFrameSide_dN" >
+          <notes>Displacement of a side frame relative to tower</notes>
+	  <uminus>
+	    <refer refTo="CALFrameSide_d" />
+	  </uminus>
+	</const>
+
+<!-- May want to replace this with separate definitions for
+     top and bottom frame displacements -->
+	<const name="CALFrameTB_d" > 
+          <notes>Displacement of top and bottom of frame, relative to 
+                the whole.</notes>
+	  <mul>
+	    <add>
+	      <refer refTo= "CALFrameTBThick" />
+	      <refer refTo="CALTotalZ" />
+	    </add>
+	    <const value="0.5" uType="count"/>
+	  </mul>
+	</const>
+	    
+	<const name="CALFrameTB_dN" >
+          <notes>Neg of displacement of top and bottom of frame, relative to 
+                the whole.</notes>
+	  <uminus>
+	    <refer refTo="CALFrameTB_d" />
+	  </uminus>
+	</const>
+
+        <const name="CALTopFrameCutoutWidth" >
+          <notes>Dimension of cutout in CAL top frame pieces</notes>
+          <minus>
+            <refer refTo="CALModuleWidth" />
+            <mul>
+              <const value="2" uType="count" />
+              <refer refTo="CALTopFrameWidth" />
+            </mul>
+          </minus>
+        </const>
+
+        <const name="CALBottomFrameCutoutWidth" >
+          <notes>Dimension of cutout in CAL bottom frame pieces</notes>
+          <minus>
+            <refer refTo="CALModuleWidth" />
+            <mul>
+              <const value="2" uType="count" />
+              <refer refTo="CALBottomFrameWidth" />
+            </mul>
+          </minus>
+        </const>
+
+        <!-- for new-style frame built out of 4 pieces rather than
+             cutouts.  Two pieces of length = CALModuleWidth; two
+             are shorter by the frame width -->
+        <const name="CALTopFrameShort" >
+          <notes>Length of shorter pieces in CAL top frame</notes>
+          <minus>
+            <refer refTo="CALModuleWidth" />
+            <mul>
+              <const value="2" uType="count" />
+              <refer refTo="CALTopFrameWidth" />
+            </mul>
+          </minus>
+        </const>
+
+        <const name="CALBottomFrameShort" >
+          <notes>Length of shorter pieces in CAL bottom frame</notes>
+          <minus>
+            <refer refTo="CALModuleWidth" />
+            <mul>
+              <const value="2" uType="count" />
+              <refer refTo="CALBottomFrameWidth" />
+            </mul>
+          </minus>
+        </const>
+
+        <const name="CALTopFrame_dt" >
+          <notes>Transverse displacement of top frame pieces</notes>
+          <quo>
+            <minus>
+              <refer refTo="CALModuleWidth" />
+              <refer refTo="CALTopFrameWidth" />
+            </minus>
+            <const value="2" uType="count" />
+          </quo>
+        </const>
+
+        <const name="CALTopFrame_dtn" >
+          <notes>Negative transverse displacement of top frame pieces</notes>
+          <uminus>
+            <refer refTo="CALTopFrame_dt" />
+          </uminus>
+        </const>
+
+        <const name="CALBottomFrame_dt" >
+          <notes>Transverse displacement of bottom frame pieces</notes>
+          <quo>
+            <minus>
+              <refer refTo="CALModuleWidth" />
+              <refer refTo="CALBottomFrameWidth" />
+            </minus>
+            <const value="2" uType="count" />
+          </quo>
+        </const>
+
+        <const name="CALBottomFrame_dtn" >
+          <notes>Negative transverse displacement of bottom 
+                 frame pieces</notes>
+          <uminus>
+            <refer refTo="CALBottomFrame_dt" />
+          </uminus>
+        </const>
+
+<!-- Make sure values for CALStructural field are distinct from layer #'s -->
+        <const name="eBottomFrame" uType="count" type="int">
+          <notes>For use in identifiers</notes>
+          <add>
+            <refer refTo="CALnLayer" />
+            <const value="10" uType="count" />
+          </add>
+        </const>
+
+        <const name="eTopFrame" uType="count" type="int">
+          <notes>For use in identifiers</notes>
+          <add>
+            <refer refTo="eBottomFrame" />
+            <const value="1" uType="count" />
+          </add>
+        </const>
+
+        <const name="eBottomPlate" uType="count" type="int">
+          <notes>For use in identifiers</notes>
+          <add>
+            <refer refTo="eTopFrame" />
+            <const value="1" uType="count" />
+          </add>
+        </const>
+
+        <const name="eTopPlate" uType="count" type="int">
+          <notes>For use in identifiers</notes>
+          <add>
+            <refer refTo="eBottomPlate" />
+            <const value="1" uType="count" />
+          </add>
+        </const>
+
+      </derCategory>

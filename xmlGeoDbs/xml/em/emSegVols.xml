@@ -1,0 +1,80 @@
+<?xml version="1.0"  ?>
+
+<!--  $Header$        -->
+<!-- 1 Feb 2001   Default length unit is now mm.  Change constants
+                   accordingly.                             (jrb) 
+    22 Feb 2001   Add CVS macros, CVSid attribute for gdd     
+     1 Mar 2001   Changes for <identifier> to <idField> change in dtd.
+                  Includes combining old pair of diode identifier fields
+                  into just one and ( *sigh* ) eliminating "orient" field.
+    19 Sep 2002   Modify this xml file and following 4 xml files to 
+                  simulate EM:
+                  flightGlobalCountPrim.xml, flightTKRDimPrim.xml
+                  flightSection.xml,  flightTKROneTkr.xml
+                  All other xml files are copies of flight xml files.
+-->
+
+<!DOCTYPE gdd SYSTEM "../gdd.dtd"
+  [
+    <!-- Keep primary definitions in separate files -->
+    <!ENTITY globalMatPrim   SYSTEM "emGlobalMatPrim.xml">
+    <!ENTITY globalCountPrim SYSTEM "emGlobalCountPrim.xml">
+    <!ENTITY globalDimPrim   SYSTEM "emGlobalDimPrim.xml">
+
+    <!ENTITY CALMatPrim     SYSTEM "emCALMatPrim.xml">
+    <!ENTITY CALCountPrim   SYSTEM "emCALCountPrim.xml">
+    <!ENTITY CALDimPrim     SYSTEM "emCALDimPrim.xml">
+    <!ENTITY CALResponse    SYSTEM "emCALResponse.xml">
+    <!ENTITY CALOneCal      SYSTEM "emCALOneCalSegVols.xml">
+
+    <!ENTITY TKRMatPrim     SYSTEM "emTKRMatPrim.xml">
+    <!ENTITY TKRCountPrim   SYSTEM "emTKRCountPrim.xml">
+    <!ENTITY TKRDimPrim     SYSTEM "emTKRDimPrim.xml">
+    <!ENTITY TKRResponse    SYSTEM "emTKRResponse.xml">
+    <!ENTITY TKROneTkr      SYSTEM "emTKROneTkr.xml">
+
+    <!ENTITY ACDMatPrim     SYSTEM "emACDMatPrim.xml">
+    <!ENTITY ACDCountPrim   SYSTEM "emACDCountPrim.xml">
+    <!ENTITY ACDDimPrim     SYSTEM "emACDDimPrim.xml">
+    <!ENTITY ACDResponse    SYSTEM "emACDResponse.xml">
+    <!ENTITY ACDAcd         SYSTEM "emACDAcd.xml">
+
+    <!ENTITY NADDimPrim     SYSTEM "emNADDimPrim.xml">
+    <!ENTITY NADGeo         SYSTEM "emNADGeo.xml">
+
+    <!ENTITY oneTower         SYSTEM "emOneTower.xml">
+    <!ENTITY section         SYSTEM "emSection.xml">
+
+    <!ENTITY Trigger        SYSTEM "emTrigger.xml">
+
+    <!ENTITY Derived        SYSTEM "emDerivedConstants.xml">
+    <!ENTITY TKRDerived     SYSTEM "emTKRDerived.xml">
+    <!ENTITY CALDerived     SYSTEM "emCALDerSegVols.xml">
+    <!ENTITY ACDDerived     SYSTEM "emACDDerived.xml">
+    <!ENTITY NADDerived     SYSTEM "emNADDerived.xml">
+    <!ENTITY Primary        SYSTEM "emPrimaryConstants.xml">
+
+    <!ENTITY idDict         SYSTEM "emIdDictSegVols.xml">
+
+    <!ENTITY Materials         SYSTEM "../materials.xml">
+  ]
+>
+<gdd CVSid="$Id$" 
+     DTDversion="2.0" >
+  <constants>
+    <version major="0" minor="0" />
+     &Primary;
+     &Derived;
+  </constants>
+ 
+  &Materials;
+
+  &idDict;
+  &section;
+
+</gdd>
+
+
+
+
+
