@@ -79,8 +79,10 @@ void McEvent::Clear(Option_t *option) {
       //      m_particleCol->Delete();
       Int_t n = m_particleCol->GetEntries();
       if (n>limit) {
-        cout <<"!!!Warning: particle nr entries more than limit!!!Limit was increased "<<n<<endl;
+        //cout <<"!!!Warning: particle nr entries more than limit!!!Limit was increased "<<n<<endl;
 	limit=n+10;
+        if (limit > nd)
+          cout << "!!!Warning:  limit for mcParticles is greater than " << nd << endl;
 	for (Int_t j=0;j<indpart;j++) delete keeppart[j];
 	indpart = 0;
       }
@@ -97,8 +99,10 @@ void McEvent::Clear(Option_t *option) {
       //      m_positionHitCol->Delete();
       Int_t n = m_positionHitCol->GetEntries();
       if (n>limit) {
-        cout <<"!!!Warning: positionhit nr entries more than limit!!!Limit was increased "<<n<<endl;
+        //cout <<"!!!Warning: positionhit nr entries more than limit!!!Limit was increased "<<n<<endl;
 	limit=n+10;
+        if (limit > ndpos)
+          cout << "!!!Warning:  limit for posHits is greater than " << ndpos << endl;
         for (Int_t j=0;j<indpos;j++) delete keeppos[j];
 	indpos = 0;
       }
@@ -117,8 +121,10 @@ void McEvent::Clear(Option_t *option) {
       //      m_integratingHitCol->Delete();
       Int_t n = m_integratingHitCol->GetEntries();
       if (n>limit) {
-        cout <<"!!!Warning: integratinghit nr entries more than limit!!!Limit was increased "<<n<<endl;
+        //cout <<"!!!Warning: integratinghit nr entries more than limit!!!Limit was increased "<<n<<endl;
 	limit=n+10;
+        if (limit > nd)
+          cout << "!!!Warning:  limit for intHits is greater than " << nd << endl;
 	for (Int_t j=0;j<indint;j++) delete keepint[j];
 	indint = 0;
       }
