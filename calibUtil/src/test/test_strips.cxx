@@ -42,7 +42,7 @@ int main(int, char* argv[]) {
 
   std::cout<< "BAD TYPE IS" << (int) ssObj.getBadType() << std::endl;
 
-  std::cout << "instrument name is" << ssObj.getCalType() << endl;
+  std::cout << "instrument name is" << ssObj.getCalType() << std::endl;
 
   MyObject cli;
   ssObj.traverseInfo(&cli);
