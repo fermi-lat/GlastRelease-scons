@@ -204,10 +204,16 @@ void HepRepSvc::endEvent()
   
   clearInstanceTrees();
   addInstanceTree("Geometry3D","GLAST-LAT");
+#ifdef DEFECT_NO_STRINGSTREAM
+  sName << std::ends;
+#endif
   addInstanceTree("Event",sName.str());
   if (m_saveXml)
     {
       sFileName << m_xmlPath << sName.str() << ".xml.gz";
+#ifdef DEFECT_NO_STRINGSTREAM
+      sFileName << std::ends;
+#endif
       saveXML(sFileName.str());
       log << MSG::DEBUG << "Saved XML file for HepRep" << endreq;
     }
