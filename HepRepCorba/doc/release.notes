@@ -6,4 +6,5 @@
  * v0r7     04-06-04 RG First stable tag with OmniOrb
  * v0r8     20-07-04 RG Tag with support for random access to Root files
  * v1r0     29-09-04 RG Support for HepEventServer CORBA interface and full types
+ * v1r1     06-12-04 RG Increased the maximum lenght of CORBA messages; cleaned the code
 */
