@@ -34,7 +34,7 @@
      </src>
      <type typename="varchar" size="16">
        <restriction>
-         <enum use="prefer" values="LAT EM miniTower"/>
+         <enum use="prefer" values="LAT EM EM2 miniTower"/>
        </restriction>
      </type>
      <comment>Instrument on which calibration occurred.  Standard
@@ -50,7 +50,7 @@
      <type typename="varchar" size="20">
        <restriction>
          <enum use="prefer" values=
- "TKR_DeadChan TKR_HotChan CAL_Ped CAL_MuSlope Test_Gen" />
+ "TKR_DeadChan TKR_HotChan CAL_Ped CAL_MuSlope CAL_ElecGain CAL_LightAsym CAL_IntNonlin ACD_Ped ACD_ElecGain Test_Gen" />
        </restriction>
      </type>
      <comment>Calibration type.  Standard
