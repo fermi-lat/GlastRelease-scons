@@ -18,21 +18,16 @@ apply_pattern root_package
 
 macro root_headers "\
  ../digiRootData/AcdDigi.h\
- ../digiRootData/AcdHeader.h\
  ../digiRootData/AcdId.h\
  ../digiRootData/CalDiagnosticData.h\
  ../digiRootData/CalDigi.h\
- ../digiRootData/CalHeader.h\
  ../digiRootData/CalXtalId.h\
  ../digiRootData/CalXtalReadout.h\
  ../digiRootData/DigiEvent.h\
  ../digiRootData/GlastAxis.h\
  ../digiRootData/L1T.h\
- ../digiRootData/LiveTime.h\
- ../digiRootData/SubSystemHeader.h\
  ../digiRootData/TkrDiagnosticData.h\
  ../digiRootData/TkrDigi.h\
- ../digiRootData/TkrHeader.h\
  ../digiRootData/TowerId.h\
  ../digiRootData/EventSummaryData.h"
 
