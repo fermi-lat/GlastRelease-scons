@@ -10,7 +10,6 @@
 class TdCsIData;
 #include "idents/ModuleId.h"
 #include "GlastEvent/TopLevel/ObjectVector.h"
-#include "GlastEvent/MonteCarlo/MCTrack.h"
 
 #include "GlastEvent/Irf/IrfAcdHit.h"
 #include "GlastEvent/Irf/IrfCalHit.h"
@@ -67,8 +66,6 @@ private:
     // one of Gaudi's ObjectContainers
         TdCsIData* allcsiData;
         TdSiData* allsiData;
-
-	MCTrackVector* MCTrackContainer;
 
         IrfAcdHitVector* IrfAcdHitContainer;
         IrfCalHitVector* IrfCalHitContainer;
