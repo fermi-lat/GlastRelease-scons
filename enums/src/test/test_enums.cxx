@@ -9,23 +9,30 @@
 
 int main() 
 {
-    unsigned int m_gemCondSummary  = 255;
-    unsigned int m_triggerWord = 63;
-    unsigned int m_eventFlag = 15;
+    unsigned int m_gemCondSummary  = enums::GEM_mask;
+
+    unsigned m_triggerWord = 0;
+    int ibit = enums::number_of_trigger_bits;
+    while(ibit--) { m_triggerWord |= 1<<ibit; }
+
+    unsigned int m_eventFlag = 31;
 
     std::cout << "Test EventFlag Enum " << std::endl;
     std::cout << "Test EvtSeq Bit " << (m_eventFlag & enums::EVTSEQ) << " "
         << "Test TkrRecon bit " << (m_eventFlag & enums::TKRRECON) << std::endl;
-    std::cout << "Test PacketError Bit " << (m_eventFlag & enums::PACKETERROR) << " "
-        << "Test SummaryError Bit " << (m_eventFlag & enums::SUMMARYERROR) << std::endl << std::endl;
+    std::cout << "Test PacketError Bit " << (m_eventFlag & enums::PACKETERROR) 
+        << ", SummaryError Bit " << (m_eventFlag & enums::SUMMARYERROR)
+        << ", ParityError Bit " << ( m_eventFlag & enums::TRGPARITYERROR)
+        << std::endl << std::endl;
 
     std::cout << "Test Trigger Word Enum " << std::endl;
     std::cout << "Test ACDL bit " << (m_triggerWord & enums::b_ACDL) << " "
-        << "Test 3 in a row bit " << (m_triggerWord & enums::b_Track) << std::endl;
+        << "Test 3-in-a-row-bit " << (m_triggerWord & enums::b_Track) << std::endl;
     std::cout << "Test Low CAL bit " << (m_triggerWord & enums::b_LO_CAL) << " "
         << "Test Hi CAL bit " << (m_triggerWord & enums::b_HI_CAL) << std::endl;
     std::cout << "Test ACD CNO bit " << (m_triggerWord & enums::b_ACDH) << " "
-        << "Test Ritz Throttle bit " << (m_triggerWord & enums::b_THROTTLE) << std::endl << std::endl;
+        << "Test Ritz Throttle bit " << (m_triggerWord & enums::b_THROTTLE) 
+        << std::endl << std::endl;
 
     std::cout << "Gem Condition Summary Bits" << std::endl;
     std::cout << "Test ROI bit " << (m_gemCondSummary & enums::ROI) << " "
@@ -38,5 +45,4 @@ int main()
         << "Test External bit " << (m_gemCondSummary & enums::EXTERNAL) << std::endl;
 
   return 0;
-
 }

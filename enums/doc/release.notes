@@ -5,9 +5,9 @@ Package enums
 Coordinator:H.Kelly
 @verbatim
 
-
-v0r1p1 19-Mar-2005 THB provide documentation link to trigger bits
-v0r1  13-Mar-2005 HMK Add TRGPARITYERROR to event flags
-v0    16-Feb-2005 HMK initial import
+v0r2    31-Mar-2005 Add GEM_mask to TriggerBits.h
+v0r1p1  19-Mar-2005 THB provide documentation link to trigger bits
+v0r1    13-Mar-2005 HMK Add TRGPARITYERROR to event flags
+v0      16-Feb-2005 HMK initial import
 @endverbatim
 */
