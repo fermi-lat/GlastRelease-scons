@@ -34,7 +34,8 @@ namespace rdbModel {
     enum CONTENTS {
       CONTENTSunspecified = 0,
       CONTENTSserviceName = 1,
-      CONTENTSusername 
+      CONTENTSusername    = 2,
+      CONTENTSenterTime
     };
 
     Column(Table* myTable=0) : m_myTable(myTable), m_type(0), 

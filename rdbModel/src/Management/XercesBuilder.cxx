@@ -148,6 +148,9 @@ namespace rdbModel {
         else if (contents == "username") {
           newCol->m_contents = Column::CONTENTSusername;
         }
+        else if (contents == "enter_time") {
+          newCol->m_contents = Column::CONTENTSenterTime;
+        }
         // otherwise just stick with default value of CONTENTSunspecified
       }
       // shouldn't be anything else
