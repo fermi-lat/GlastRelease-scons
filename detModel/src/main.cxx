@@ -77,6 +77,10 @@ int main(int argc, char* argv[]) {
   std::cout << "XML file contains " << g->getMaterialsNumber() << " materials." << std::endl;
   std::cout << "XML file contains " << g->getConstantsNumber() << " constants." << std::endl;
 
+  double maxLogVal;
+  manager->getNumericConstByName("maxLog", &maxLogVal);
+  std::cout << "value for maxLog is " << maxLogVal << std::endl;
+
   // Retrive the materials, generate the colors and set some transparency values
   detModel::MatCollection* mats = g->getMaterials();  
   mats->generateColor();
@@ -84,7 +88,7 @@ int main(int argc, char* argv[]) {
   
   // We start the HTMLConstantsVisitor to build the html file with the
   // constants tables. Colors and layout are stolen from Joanne ones.
-  manager->startVisitor(new detModel::HtmlConstantsVisitor);
+  manager->startVisitor(new detModel::HtmlConstantsVisitor());
   // We set a mode for choices
   //  manager->setMode("propagate");
   // We start the vrml visitor
