@@ -87,9 +87,16 @@ public:
     CalibData::CAL_DiffNonlin = cal + "_DiffNonlin";
     CalibData::CAL_HotChan = cal + "_HotChan";
     CalibData::CAL_DeadChan = cal + "_DeadChan";
-    CalibData::CAL_DiscrLO = cal + "_DiscrLO";
-    CalibData::CAL_DiscrHI = cal + "_DiscrHI";
+
+    // As of Sept 2004, CAL folk expect never to use DiscrLO and DiscrHI
+    //    CalibData::CAL_DiscrLO = cal + "_DiscrLO";
+    //    CalibData::CAL_DiscrHI = cal + "_DiscrHI";
     CalibData::CAL_MuSlope = cal + "_MuSlope";
+
+    CalibData::CAL_MevPerDac = cal + "_MevPerDac";
+    CalibData::CAL_TholdCI   = cal + "_TholdCI";
+    CalibData::CAL_TholdMuon = cal + "_TholdMuon";
+    CalibData::CAL_Asym      = cal + "_Asym";
 
     CalibData::Test_Gen = test + "_Gen";
     CalibData::Test_1   = test + "_1";
@@ -104,6 +111,7 @@ public:
                                               CLID_Calib_TKR_BadChan));
     CalibData::pairs.push_back(std::make_pair(CalibData::TKR_Splits,
                                               CLID_Calib_TKR_Splits));
+
     CalibData::pairs.push_back(std::make_pair(CalibData::CAL_Ped,
                                               CLID_Calib_CAL_Ped));
     CalibData::pairs.push_back(std::make_pair(CalibData::CAL_ElecGain,
@@ -116,50 +124,31 @@ public:
                                               CLID_Calib_CAL_LightAsym));
     CalibData::pairs.push_back(std::make_pair(CalibData::CAL_IntNonlin,
                                               CLID_Calib_CAL_IntNonlin));
+
+    CalibData::pairs.push_back(std::make_pair(CalibData::CAL_MevPerDac,
+                                              CLID_Calib_CAL_MevPerDac));
+    CalibData::pairs.push_back(std::make_pair(CalibData::CAL_TholdCI,
+                                              CLID_Calib_CAL_TholdCI));
+    CalibData::pairs.push_back(std::make_pair(CalibData::CAL_TholdMuon,
+                                              CLID_Calib_CAL_TholdMuon));
+    CalibData::pairs.push_back(std::make_pair(CalibData::CAL_Asym,
+                                              CLID_Calib_CAL_Asym));
+
+
     CalibData::pairs.push_back(std::make_pair(CalibData::ACD_Ped,
                                               CLID_Calib_ACD_Ped));
     CalibData::pairs.push_back(std::make_pair(CalibData::ACD_ElecGain,
                                               CLID_Calib_ACD_ElecGain));
+
     CalibData::pairs.push_back(std::make_pair(CalibData::Test_1,
                                               CLID_Calib_CalibTest1));
+
 
 
   }
 
 };       // end of calibModel class definition
 
-/*
-const CLID& CLID_Calib_CalibCLIDNode     = 6000;
-const CLID& CLID_Calib_CalibBase         = 6001;
-
-const CLID& CLID_Calib_TKR_HotChan       = 6100;
-const CLID& CLID_Calib_TKR_DeadChan      = 6101;
-const CLID& CLID_Calib_TKR_BadChan      = 6102;
-const CLID& CLID_Calib_TKR_TOTSignal      = 6103;
-const CLID& CLID_Calib_TKR_TOTDist      = 6104;
-const CLID& CLID_Calib_TKR_MIPEff       = 6105;
-
-const CLID& CLID_Calib_CAL_LightAtt   = 6200;
-const CLID& CLID_Calib_CAL_LightAsym  = 6201;
-const CLID& CLID_Calib_CAL_LightYield = 6202;
-const CLID& CLID_Calib_CAL_Ped        = 6203;
-const CLID& CLID_Calib_CAL_ElecGain   = 6204;
-const CLID& CLID_Calib_CAL_IntNonlin  = 6205;
-const CLID& CLID_Calib_CAL_DiffNonlin = 6206;
-const CLID& CLID_Calib_CAL_HotChan    = 6207;
-const CLID& CLID_Calib_CAL_DeadChan   = 6208;
-const CLID& CLID_Calib_CAL_DiscrLO    = 6209;
-const CLID& CLID_Calib_CAL_DiscrHI    = 6210;
-const CLID& CLID_Calib_CAL_MuSlope    = 6211;
-
-const CLID& CLID_Calib_ACD_Eff        = 6300;
-const CLID& CLID_Calib_ACD_ThreshHigh = 6301;
-const CLID& CLID_Calib_ACD_ThreshVeto = 6302;
-const CLID& CLID_Calib_ACD_Ped        = 6304;
-const CLID& CLID_Calib_ACD_ElecGain   = 6305;
-
-const CLID& CLID_Calib_CalibTest1       = 6500;
-*/
 // Instantiate an instance to get the ball rolling.
 static CalibModel mod;
 
