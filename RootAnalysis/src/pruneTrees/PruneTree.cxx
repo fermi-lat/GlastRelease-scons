@@ -321,7 +321,7 @@ void RootTreeAnalysis::ReconTkr() {
     TkrTrack *track = 0;
     
     while (track = (TkrTrack*)trackIter.Next()) {
-        ((TH1F*)GetObjectPtr("TKRNUMHITSPERTRACK"))->Fill(track->getNumHits());
+        ((TH1F*)GetObjectPtr("TKRNUMHITSPERTRACK"))->Fill(track->Size());
     }
 }
 

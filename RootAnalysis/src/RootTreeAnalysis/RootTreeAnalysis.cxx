@@ -310,10 +310,10 @@ void RootTreeAnalysis::ReconTkr() {
 
     const TObjArray *trackCol = tkrRec->getTrackCol();
     TIter trackIter(trackCol);
-    TkrKalFitTrack *track = 0;
+    TkrTrack *track = 0;
     
-    while (track = (TkrKalFitTrack*)trackIter.Next()) {
-        ((TH1F*)GetObjectPtr("TKRNUMHITSPERTRACK"))->Fill(track->getNumHits());
+    while (track = (TkrTrack*)trackIter.Next()) {
+        ((TH1F*)GetObjectPtr("TKRNUMHITSPERTRACK"))->Fill(track->Size());
     }
 }
 
