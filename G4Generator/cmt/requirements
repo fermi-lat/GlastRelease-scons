@@ -4,7 +4,7 @@ use Geant4
 use GaudiSvc
 use GaudiAlg
 
-use detModel HEAD
+use detModel 
 use FluxSvc
 use GlastSvc
 
@@ -27,7 +27,15 @@ macro_prepend includes "-I ../src " WIN32 "/I ..\src "
 library G4Generator ${G4Generator_headers} *.cxx   Dll/*.cxx
 
 # stuff for test
+public
 apply_pattern package_test
+
+# alternative test program that links stuff into the exe
+macro other_source "" WIN32 "test/*.txt test/*.xml *.h test/*.h" 
+application G4Test ${GlastMain} test/*.cxx *.cxx  Dll/*.cxx ${other_source}
+
+
+
 
 
 

@@ -1,3 +1,4 @@
+// $Header$
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -39,7 +40,8 @@
 /// \todo Distruzione degli oggetti
 
 
-G4SectionsVisitor::G4SectionsVisitor()
+G4SectionsVisitor::G4SectionsVisitor(std::string topvol)
+: actualVolume(topvol)
 {
     typedef std::map<std::string,float>M1;
     typedef std::map<std::string,detModel::Material*>M2;
@@ -47,7 +49,6 @@ G4SectionsVisitor::G4SectionsVisitor()
   M2::const_iterator k;
 
   setRecursive(0);
-  setActualVolume("");
 
   detModel::Manager* manager = detModel::Manager::getPointer();
   detModel::Gdd* g = manager->getGdd();
@@ -120,7 +121,6 @@ void  G4SectionsVisitor::visitSection(detModel::Section* section)
 			    g4Logicals[0],
 			    g4Logicals[0]->GetName(),
 			    worldlog,false,0);
-	  std::cout<< "Geometry constructed " << std::endl;
 	}
       else actualVolume = "";
     }
@@ -144,8 +144,8 @@ void  G4SectionsVisitor::visitSection(detModel::Section* section)
 		}
 	    }
       }
-      std::cout<< "Geometry constructed " << std::endl;
     }
+    std::cout<< "Geometry constructed: " << g4Physicals.size() << " physical volumes" << std::endl;
   
   
 }
@@ -260,6 +260,8 @@ void  G4SectionsVisitor::visitPosXYZ(detModel::PosXYZ* pos)
 					    volName,
 					    actualMother,false,0));
   
+    m_physicalsPerLogical[volName]++;
+
   for(i=0;i<(pos->getIdFields()).size();i++)
     { 
       sprintf(temp, "/%d", (int) pos->getIdFields()[i]->getValue()); 
@@ -307,8 +309,42 @@ void  G4SectionsVisitor::visitAxisMPos(detModel::AxisMPos* pos)
       ind = g4Logicals.size();
       pos->getVolume()->AcceptNotRec(this);
     }
+#if 1 //THB: replacement code to construct the physical volumes in the stack
 
-  G4RotationMatrix* rm = new G4RotationMatrix();
+  double   rot=pos->getRotation()*GDDPI/180;
+
+  // rotation matrix to apply to everything in the stack. Must be on stack if nonzero
+  G4RotationMatrix* rm = rot==0? 0: new G4RotationMatrix(); 
+
+  Hep3Vector stackDir; // unit vector to set 
+  switch(pos->getAxisDir()){
+  case (detModel::Stack::xDir):if(rm)rm->rotateX(rot); stackDir=Hep3Vector(1,0,0); break;
+  case (detModel::Stack::yDir):if(rm)rm->rotateY(rot); stackDir=Hep3Vector(0,1,0); break;
+  case (detModel::Stack::zDir):if(rm)rm->rotateZ(rot); stackDir=Hep3Vector(0,0,1); break;
+  }
+  Hep3Vector origin(pos->getDx(),pos->getDy(),pos->getDz());
+  origin *= mm;  // convert to mm (!)
+
+  G4LogicalVolume * motherLogicalVolume = getLogicalByName(volName);
+
+  // loop over the stack contents, creating physical volumes for each.
+  
+  for(i=0;i<ncopy;i++)
+  {
+    double disp = pos->getDisp(i)*mm; // displacement for this phys. vol.
+    g4Physicals.push_back(
+      
+      new G4PVPlacement( rm, origin+disp*stackDir,
+      motherLogicalVolume,
+      volName,
+      actualMother,false,0)
+      );	
+    m_physicalsPerLogical[volName]++;
+  }//endfor
+
+#else // original version. Seems wrong, in that rm  is constantly rotated
+
+ G4RotationMatrix* rm = new G4RotationMatrix();
 
   for(i=0;i<ncopy;i++)
     {
@@ -354,9 +390,10 @@ void  G4SectionsVisitor::visitAxisMPos(detModel::AxisMPos* pos)
 	}	
 	break;
       }//endSwitch
+    m_physicals[volName]++;
     }//endfor
 
-
+#endif //  of THB replacement
   for(j=0;j<pos->getIdFields().size();j++)
     {	
       sprintf(temp, "/%d", 
@@ -430,8 +467,15 @@ G4LogicalVolume* G4SectionsVisitor::getLogicalByName(std::string name){
 }
 
 
-
-
+void G4SectionsVisitor::summary(std::ostream out)const
+{
+    out << "G4SectionsVisitor: Summary of logical, number of physical volumes" << std::endl;
+    for( std::map<std::string, int>::const_iterator i = m_physicalsPerLogical.begin(); 
+    i!=m_physicalsPerLogical.end(); ++i ){
+        out << std::setw(22) << (*i).first 
+          << std::setw(5) << (*i).second << std::endl;
+    }
+}
 
 
 

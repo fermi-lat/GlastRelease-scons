@@ -18,19 +18,20 @@
 #include "G4SectionsVisitor.h"
 #include "G4MaterialsVisitor.h"
 
-DetectorConstruction::DetectorConstruction()
+#include <iomanip>
+
+DetectorConstruction::DetectorConstruction(std::string topvol, std::string visitorMode)
+: m_topvol(topvol)
 {
-  std::string filename;
+  std::string filename= std::string(::getenv("XMLUTILROOT"))+"/xml/flight.xml" ;
 
   detModel::Manager* gddManager = detModel::Manager::getPointer();
   
   gddManager->setBuilder(new detModel::XercesBuilder);  
 
-  filename = std::string(::getenv("XMLUTILROOT"))+"/xml/flight.xml" ;
-
   gddManager->setNameFile(filename);
 
-  gddManager->setMode("fastmc");
+  gddManager->setMode(visitorMode);
 
   gddManager->build(detModel::Manager::all);
   
@@ -73,7 +74,7 @@ G4VPhysicalVolume* DetectorConstruction::GeometryConstruct()
   detModel::Manager* gddManager = detModel::Manager::getPointer();
   detModel::Gdd* gdd = gddManager->getGdd();
   
-  G4SectionsVisitor* visitor = new G4SectionsVisitor;
+  G4SectionsVisitor* visitor = new G4SectionsVisitor(m_topvol);
   
   G4SDManager* SDman = G4SDManager::GetSDMpointer();
 
@@ -85,6 +86,19 @@ G4VPhysicalVolume* DetectorConstruction::GeometryConstruct()
 
   gddManager->startVisitor(visitor);
   
+  //----------------------------------------
+  // alternate code introduced by THB
+  //----------------------------------------
+  for( std::vector<G4LogicalVolume*>::iterator it = visitor->g4Logicals.begin(); 
+  it != visitor->g4Logicals.end(); ++it){
+      G4LogicalVolume * lv = *it;
+      detModel::Shape* sh = gdd->getShapeByName(lv->GetName());
+      if( sh  && sh->getSensitive() ){
+          //std::cout << "Found sensitive: " << sh->getName() << std::endl;
+      }
+  }
+  //----------------------------------------
+
   for(i=0;i<visitor->g4Logicals.size();i++)
     {
       if(gdd->getShapeByName(visitor->g4Logicals[i]->GetName())!=0)
@@ -97,6 +111,7 @@ G4VPhysicalVolume* DetectorConstruction::GeometryConstruct()
   g4ID = visitor->g4Identifiers;
 
   res = visitor->worldphys;
+  visitor->summary(std::cout);
   
   delete visitor;
 

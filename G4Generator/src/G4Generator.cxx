@@ -4,6 +4,8 @@
 
 // Geant4
 #include "G4Generator.h"
+#include "G4UImanager.hh"
+
 #include "RunManager.h"
 #include "PrimaryGeneratorAction.h"
 
@@ -32,6 +34,9 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
 // set defined properties
 //    setProperty("file_name", m_file_name);
      declareProperty("source_name",  m_source_name="default");
+     declareProperty("UIcommands", m_UIcommands);
+     declareProperty("topVolume", m_topvol="");
+     declareProperty("visitorMode", m_visitorMode="fastmc");
 
 }
     
@@ -57,8 +62,18 @@ StatusCode G4Generator::initialize()
     log << MSG::INFO << "Source: "<< m_flux->title() << endreq;
 
     // Set the geant4 classes needed for the simulation
-    // The manager
-    m_runManager = new RunManager;
+    // The manager, with specified (maybe) top volume
+    m_runManager = new RunManager(m_topvol, m_visitorMode);
+
+    if( !m_UIcommands.value().empty() ) {
+        G4UImanager* UI = G4UImanager::GetUIpointer();
+        for( std::vector<std::string>::const_iterator k = m_UIcommands.value().begin(); 
+            k!=m_UIcommands.value().end(); ++k){
+            UI->ApplyCommand(*k);
+            log << MSG::INFO << "UI command: " << (*k) << endreq;
+        }
+            UI->ApplyCommand("/event/verbose 3");
+    }  
     // Initialize Geant4
     m_runManager->Initialize();
 
@@ -68,6 +83,18 @@ StatusCode G4Generator::initialize()
 StatusCode G4Generator::execute() 
 {
     MsgStream   log( msgSvc(), name() );
+
+    // following model from previous version, allow property "UIcommands" to generate
+    // UI commands here. (but does not seem to work??)
+    //
+    if( !m_UIcommands.value().empty() ) {
+        for( std::vector<std::string>::const_iterator k = m_UIcommands.value().begin(); 
+            k!=m_UIcommands.value().end(); ++k){
+            G4UImanager::GetUIpointer()->ApplyCommand(*k);
+            log << MSG::INFO << "Apply UI command: \"" << (*k) << "\"" <<endreq;
+        }
+    }  
+
     //
     // have the flux service create parameters of an incoming particle, 
     // and define it as a MCParticle

@@ -36,7 +36,7 @@ RunManager* RunManager::fRunManager = NULL;
 RunManager* RunManager::GetRunManager()
 { return fRunManager; }
 
-RunManager::RunManager()
+RunManager::RunManager(std::string topvol, std::string visitorMode)
   :userDetector(NULL),physicsList(NULL),
    userPrimaryGeneratorAction(NULL),
    currentRun(NULL),currentEvent(NULL),
@@ -44,7 +44,9 @@ RunManager::RunManager()
    geometryNeedsToBeClosed(true),initializedAtLeastOnce(false),
    runAborted(false),
    geometryToBeOptimized(true),verboseLevel(0),DCtable(NULL),runIDCounter(0),
-   storeRandomNumberStatus(0)
+   storeRandomNumberStatus(0),
+   m_topvol(topvol),
+   m_visitorMode(visitorMode)
 {
   if(fRunManager)
   { G4Exception("RunManager constructed twice."); }
@@ -61,7 +63,7 @@ RunManager::RunManager()
   randomNumberStatusDir = "./";
 
   // The user stuff
-  userDetector = new DetectorConstruction; 
+  userDetector = new DetectorConstruction(m_topvol, m_visitorMode);
   physicsList = new PhysicsList;
   userPrimaryGeneratorAction = new PrimaryGeneratorAction;
 

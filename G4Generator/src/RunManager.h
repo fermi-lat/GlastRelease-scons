@@ -35,9 +35,13 @@ class RunManager
   
  private:
   static RunManager* fRunManager;
+  std::string m_topvol;
+
+  /// mode to apply to start the visitor, like "fastmc"
+  std::string m_visitorMode;
   
  public: // with description
-  RunManager();
+     RunManager(std::string topvol, std::string visitorMode);
   virtual ~RunManager();
   //  The constructor and the destructor. The user must construct this class
   // object at the beginning of his/her main() and must delete it at the 

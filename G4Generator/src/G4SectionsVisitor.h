@@ -1,3 +1,4 @@
+// $Header$
 #ifndef G4SECTIONSVISITOR_H
 #define G4SECTIONSVISITOR_H
 #include "detModel/Management/SectionsVisitor.h"
@@ -5,7 +6,6 @@
 #include <vector>
 #include <map>
 
-class G4Box;
 class G4VPhysicalVolume;
 class G4LogicalVolume;
 class G4VisAttributes;
@@ -13,13 +13,13 @@ class Gdd;
 class G4VSensitiveDetector;
 /*
  * This is a concrete implementation of a sectionsVisitor that produces
- * a VRML file with the geometry. 
+ * the Geant4 geometry. 
  */
 class G4SectionsVisitor : public detModel::SectionsVisitor {
 
  public:
 
-  G4SectionsVisitor();
+     G4SectionsVisitor(std::string topvol="");
   virtual ~G4SectionsVisitor();
   
   /**
@@ -74,6 +74,9 @@ class G4SectionsVisitor : public detModel::SectionsVisitor {
 
   G4LogicalVolume* getLogicalByName(std::string name);
 
+  /// make a summary  of the volumes on the stream
+  void summary(std::ostream out)const;
+
   /// This map holds the opacity information of the material colors
   std::map <std::string, float> opacityMap;
 
@@ -96,6 +99,9 @@ class G4SectionsVisitor : public detModel::SectionsVisitor {
   G4LogicalVolume* actualMother;
   G4VPhysicalVolume* worldphys;
   G4LogicalVolume* worldlog;
+ private:
+  // a little map to count the number of physical volumes for each logical one
+  std::map<std::string, int> m_physicalsPerLogical;
 };
 #endif //G4SECTIONSVISITOR_H
 

@@ -11,7 +11,7 @@ class SensitiveDetector;
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
  public:
-  DetectorConstruction();
+     DetectorConstruction(std::string topvol, std::string mode);
   ~DetectorConstruction();
   
  public:
@@ -24,6 +24,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4VPhysicalVolume* GeometryConstruct();
   
   SensitiveDetector* sDetector;  
+
+  std::string m_topvol;
 };
 
 #endif

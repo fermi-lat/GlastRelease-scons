@@ -1,3 +1,5 @@
+//$Header$
+
 #include <map>
 
 #include "DetectorConstruction.h"
@@ -28,6 +30,7 @@ SensitiveDetector::~SensitiveDetector()
 
 void SensitiveDetector::Initialize(G4HCofThisEvent*HCE)
 {
+    m_energySummary.clear();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -72,18 +75,16 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
   // Final Position 
   
   G4ThreeVector FinPos = aStep->GetPostStepPoint()->GetPosition();
-
-  std::cout << "Hit -> " << " " << 
-    aStep->GetTrack()->GetDefinition()->GetParticleName() << 
-    " " << 
-    edep << 
-    " " << 
-    stepl << 
-    " " <<
-    name << " " <<
-    nameVolume << " " << material << " " << 
-    std::endl;
-
+#if 1
+  std::cout << "Hit -> " 
+     << std::setw(8) << aStep->GetTrack()->GetDefinition()->GetParticleName()  
+     << std::setw(8) << std::setprecision(3) << edep 
+     << std::setw(8) << std::setprecision(3) <<stepl 
+     << std::setw(18) << name << " " 
+     << std::setw(12) << nameVolume << " " << material
+     << std::endl;
+#endif
+  m_energySummary[logVol->GetName()] += edep;
   return true;
 
 }
@@ -92,6 +93,13 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
 
 void SensitiveDetector::EndOfEvent(G4HCofThisEvent* HCE)
 {
+
+    std::cout << "Energy deposit summary: " << std::endl;
+    for( std::map<std::string, double>::const_iterator it = m_energySummary.begin(); it!= m_energySummary.end(); ++it){
+        std::cout 
+            << std::setw(20) << (*it).first 
+            << std::setw(10) << std::setprecision(3) << (*it).second << std::endl;
+    }
 
 }
 

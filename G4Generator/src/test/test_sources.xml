@@ -13,6 +13,14 @@
        </spectrum>
      </source>
 
+    <source name="gamma_test">
+       <spectrum> 
+         <particle name="gamma"><energy e="1.0"/> </particle>
+           <direction theta="0" phi="0" />
+           <launch_point x="5" y="5" z="60" />
+       </spectrum>
+     </source>
+
     <source name="gamma_patch_for_G4">
        <spectrum> 
          <particle name="gamma"><energy e="10"/> </particle>
