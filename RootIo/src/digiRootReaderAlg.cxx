@@ -35,7 +35,7 @@
 #include "RootIo/IRootIoSvc.h"
 
 // ADDED FOR THE FILE HEADERS DEMO
-#include "src/FileHeadersTool.h"
+#include "RootIo/FhTool.h"
 
 /** @class digiRootReaderAlg
  * @brief Reads Digitization data from a persistent ROOT file and stores the
@@ -108,7 +108,7 @@ private:
     IRootIoSvc* m_rootIoSvc;
 
     // ADDED FOR THE FILE HEADERS DEMO
-    IFileHeadersTool * m_headersTool ;
+    IFhTool * m_headersTool ;
 };
 
 static const AlgFactory<digiRootReaderAlg>  Factory;
@@ -141,7 +141,7 @@ StatusCode digiRootReaderAlg::initialize()
     MsgStream log(msgSvc(), name());
     
     // ADDED FOR THE FILE HEADERS DEMO
-    StatusCode headersSc = toolSvc()->retrieveTool("FileHeadersTool",m_headersTool) ;
+    StatusCode headersSc = toolSvc()->retrieveTool("FhTool",m_headersTool) ;
     if (headersSc.isFailure()) {
         log<<MSG::WARNING << "Failed to retreive headers tool" << endreq;
     }

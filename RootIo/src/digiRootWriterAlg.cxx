@@ -34,7 +34,7 @@
 #include "RootIo/IRootIoSvc.h"
 
 // ADDED FOR THE FILE HEADERS DEMO
-#include "src/FileHeadersTool.h"
+#include "RootIo/FhTool.h"
 #include <cstdlib>
 
 /** @class digiRootWriterAlg
@@ -115,7 +115,7 @@ private:
     IRootIoSvc* m_rootIoSvc;
 
     // ADDED FOR THE FILE HEADERS DEMO
-    IFileHeadersTool * m_headersTool ;
+    IFhTool * m_headersTool ;
 };
 
 
@@ -148,7 +148,7 @@ StatusCode digiRootWriterAlg::initialize()
     MsgStream log(msgSvc(), name());
     
     // ADDED FOR THE FILE HEADERS DEMO
-    StatusCode headersSc = toolSvc()->retrieveTool("FileHeadersTool",m_headersTool) ;
+    StatusCode headersSc = toolSvc()->retrieveTool("FhTool",m_headersTool) ;
     if (headersSc.isFailure()) {
         log<<MSG::WARNING << "Failed to retreive headers tool" << endreq;
     }
