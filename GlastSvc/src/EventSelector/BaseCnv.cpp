@@ -92,10 +92,8 @@ BaseCnv::BaseCnv(const CLID& clid, ISvcLocator* svc)
         IID_IGlastDetSvc, reinterpret_cast<IInterface*&>( m_detSvc ));
     
     if(sc.isFailure()){
-            log << MSG::ERROR << "Unable start Glast detector service within BaseCnv" << endreq;
-    } else {
-        log << MSG::INFO << "Got Glast detector Service within BaseCnv" << endreq;
-    }
+       log << MSG::ERROR << "Unable start Glast detector service within BaseCnv" << endreq;
+    } 
 }
 
 /// Standard Destructor

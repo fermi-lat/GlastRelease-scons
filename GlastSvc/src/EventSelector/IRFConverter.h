@@ -3,6 +3,8 @@
 
 #include "instrument/DetectorConverter.h"
 
+#include "idents/ModuleId.h"
+
 //forward declarations
 
 class TdCsIData;
@@ -31,11 +33,15 @@ public:
 
     //! called due to a GlastDetector::accept(DetectorConverter) call
     virtual void forward (const Scintillator& s) ;
+
     //! called due to GlastDetector::accept(), handles Cal data
     virtual void forward ( const CsIDetector& csi) ;
     
     //! not implemented
     virtual void forward ( const MCTruth& mc);
+
+    //! sets m_tower
+    virtual void forward( const Tower& t);
 
     //! called due to GlastDetector::accept(), handles TKR strip data
     virtual void forward ( const SiDetector& si) ;
@@ -49,7 +55,10 @@ public:
     //! provide access to the Raw CsI  Data geometry included as well
     TdCsIData* getTdCsIData() ;
 
+
 private:
+     idents::ModuleId m_tower; // set by forward with tower
+
     // one of Gaudi's ObjectContainers
         TdCsIData* allcsiData;
 

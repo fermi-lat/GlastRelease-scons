@@ -60,14 +60,14 @@ Point TdCsIData::xtalPos (unsigned int layer, unsigned int n) const
     return  (*calorList[layer])[n].pos;
 }
 
-// Will implement later
-/*ModuleId TdCsIData::moduleId (unsigned int layer, unsigned int n) const
+
+idents::ModuleId TdCsIData::moduleId (unsigned int layer, unsigned int n) const
 {
     return (*calorList[layer])[n].module;
-}*/
+}
 
 //! get the id 
-unsigned int TdCsIData::xtalId (unsigned int layer, unsigned int n) const
+idents::XtalId TdCsIData::xtalId (unsigned int layer, unsigned int n) const
 {
     return (*calorList[layer])[n].id;
 }
@@ -90,16 +90,12 @@ const std::vector<double>& TdCsIData::Diodes_Energy (unsigned int layer, unsigne
     return (*calorList[layer])[n].Diodes_Energy;
 }
 
-ModuleId TdCsIData::moduleId (unsigned int layer, unsigned int n) const
-{
-    return (*calorList[layer])[n].module;
-}
 
 
 /*! Takes in a TdCsIData object makes an xtal object and pushes in back onto
     the  calorList of xtal objects. Currently called from IRFConverter
 */
-void TdCsIData::load (const CsIDetector& xtal)
+void TdCsIData::load (const CsIDetector& xtal, idents::ModuleId tower)
 {
     
     // The moduleId was taken out and replaced with a zero for now    
@@ -109,16 +105,15 @@ void TdCsIData::load (const CsIDetector& xtal)
             xtal.xtalId(), xtal.Lresp(), xtal.Rresp(),
 				xtal.getDiodesEnergy());
 
-        calorList[xtal.layer()]->push_back(Xtal(xtal.xtalPos(), xtal.energy(),0/*moduleId*/,
+        calorList[xtal.layer()]->push_back(Xtal(xtal.xtalPos(), xtal.energy(),tower,
             xtal.xtalId(), xtal.Lresp(), xtal.Rresp(),
 				xtal.getDiodesEnergy()));
-        int temp = xtal.layer();
+
         // put the "raw" information into the basic list
-        // Replaced moduleId with a 0 for now must fix
-    //       XtalId id(0, xtal.layer(), xtal.xtalId());
+        idents::XtalId id(tower, xtal.layer(), xtal.xtalId());
         int	left =  static_cast<int>(xtal.Lresp()*1e6),
             right = static_cast<int>(xtal.Rresp()*1e6);
-    //        m_xtals[id]=std::pair<int,int>(left,right);
+            m_xtals[id]=std::pair<int,int>(left,right);
     }
 
 
@@ -157,5 +152,17 @@ void TdCsIData::clear ()
     }
 }
 
+void TdCsIData::printOn (std::ostream& cout) const
+{
+  cout << "\nCsIData:\n";
+  for(unsigned layer=0; layer < calorList.size(); layer++)
+  {
+    int nh = nHits(layer);
+    if( nh==0 ) continue;
+    for(int i=0; i<nh; i++)
+      cout << '\t' << energy(layer,i) << '\t' << xtalPos(layer,i) << '\n';
+  }
+
+}
 
 
