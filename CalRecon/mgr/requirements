@@ -1,5 +1,5 @@
 package CalRecon
-version v2r4
+version v3
 
 branches src mgr doc
 

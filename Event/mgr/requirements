@@ -1,5 +1,5 @@
 package GlastEvent
-version v2r2
+version v3
 
 branches GlastEvent mgr doc src
 use idents
