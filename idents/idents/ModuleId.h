@@ -14,7 +14,7 @@ class ModuleId
 {
   public:
 
-      enum {yNum=4, yNum=4}; // not likely to change again
+      enum {xNum=4, yNum=4}; // not likely to change again
 
       //! create from another Id (0..15)
       ModuleId (unsigned int id = 0):m_id(id){}
