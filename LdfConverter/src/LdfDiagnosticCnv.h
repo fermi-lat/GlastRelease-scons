@@ -1,7 +1,7 @@
 #ifndef LdfDiagnosticCnv_H
 #define LdfDiagnosticCnv_H 1
 
-#include "LDfBaseCnv.h"
+#include "LdfBaseCnv.h"
 namespace LdfEvent { class DiagnosticData; }
 
 extern const CLID& CLID_LdfDiagnosticData;
