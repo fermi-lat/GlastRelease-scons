@@ -2,6 +2,8 @@
  * Package calibUtil
  * Coordinator: J. Bogart
  *
+ * v0r4   12-Dec-2003 jrb  Allow arbitrary orderings of stripSpan,stripList 
+ *                         elements in badStrips xml files
  * v0r3p1 07-Aug-2003 jrb for tk more requirements updates
  * v0r3p0 07-Aug-2003 tk   update requirements for GlastRelease v5r2p4
  * v0r3   11-Jul-2003 jrb  New bad strips xml format; define status bits

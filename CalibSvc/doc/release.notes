@@ -2,6 +2,8 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
+ * 12-Dec-2003: jrb v0r4:    Allow arbitrary sequence of stripList, stripSpan
+ *                           elements in badStrips file
  * 21-Nov-2003: jrb v0r3:    Make fake event time algorithm CalibEvtClock
  *                           publicly available; other minor clean-up
  * 17-Nov-2003: jrb v0r2p14: Various requirements file changes.  Latest
