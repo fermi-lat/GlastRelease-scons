@@ -5,11 +5,9 @@
 
 // Include files
 #include <iostream>
-//#include "GaudiKernel/StreamBuffer.h"
-//#include "Event/TopLevel/Definitions.h"
-#include "geometry/Vector.h"
 #include "geometry/CoordTransform.h"
 #include "CLHEP/Vector/Rotation.h"
+#include "CLHEP/Vector/ThreeVector.h"
 
 /*! \class SkyDir
 \brief encapsulate a direction.
@@ -26,75 +24,22 @@ public:
     ///Constructors
     //(l,b) or (Ra, Dec) instantiation
     SkyDir(double param1, double param2, coordSystem inputType = GALACTIC);
-    SkyDir(Vector);
+    SkyDir(Hep3Vector);
     
     ///return methods
-    double l();
-    double b();
-    double ra();
-    double dec();
-    Vector r();
-    
+    Hep3Vector& operator () () {return m_dir;}
+    double l () const;
+    double b () const;
+    double ra () const;
+    double dec () const;
+    Hep3Vector r () const;
+    Hep3Vector m_dir;
 
 private:
-    Rotation celToGal();
-    void setCelCoordsFromDir();
-    void setGalCoordsFromDir();
-    double m_l,m_b,m_ra,m_dec;
-    Vector m_dir;
+    Rotation celToGal() const;
+    std::pair<double,double> setCelCoordsFromDir() const;
+    std::pair<double,double> setGalCoordsFromDir() const;
 
 };
-
-
-  /*  {
-
-public:
-
-  /// Constructors
-  TimeStamp()
-    : m_time(0)                                                              { }
-  TimeStamp( double t )
-    : m_time(t)                                                              { }
-  /// Destructor
-  ~TimeStamp()                                                               { }
-
-  /// Retrieve time
-  double time() const                                                            {
-    return m_time;
-  }
-  /// Update time 
-  void setTime( double value )                                                   {
-    m_time = value;
-  }
-
-  operator double()const { return time(); }
-
-  /// Serialize the object for writing
-  friend StreamBuffer& operator<< ( StreamBuffer& s, const TimeStamp& obj )    {
-    return s << obj.m_time;
-  }
-  /// Serialize the object for reading
-  friend StreamBuffer& operator>> ( StreamBuffer& s, TimeStamp& obj )          {
-    return s >> obj.m_time;
-  }
-
-  /// Output operator (ASCII)
-  friend std::ostream& operator<< ( std::ostream& s, const TimeStamp& obj )    {
-    return obj.fillStream(s);
-  }
-  /// Fill the output stream (ASCII)
-  std::ostream& fillStream( std::ostream& s ) const                            {
-    return s << "class TimeStamp : "
-      << EventField( EventFormat::field12 )
-      << m_time;
-  }
-
-private:
-
-  /// Time
-  double m_time;
-
-};
-*/
 
 #endif    // LHCBEVENT_SKYDIR_H

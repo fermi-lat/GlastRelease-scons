@@ -21,10 +21,10 @@ public:
     dateRep(int years, int months, int days, double hours):
     m_years(years),m_months(months),m_days(days),m_hours(hours)
     {}
-    int years(){return m_years;}
-    int months(){return m_months;}
-    int days(){return m_days;}
-    double hours(){return m_hours;}
+    int years() const{return m_years;}
+    int months() const{return m_months;}
+    int days() const{return m_days;}
+    double hours() const{return m_hours;}
     void reSet(int years, int months, int days, double hours){
         m_years = years;
         m_months = months;
