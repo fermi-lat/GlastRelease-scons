@@ -111,7 +111,7 @@ Point TkrQueryClusters::nearestHitOutside(Event::TkrCluster::view v, int iplane,
 	id = -1;
 
     // Kludge to prevent crashes when requested plane out of range
-    if (iplane < 0 || iplane > Event::TkrClusterCol::NPLANES) return Pnear;
+    if (iplane < 0 || iplane >= Event::TkrClusterCol::NPLANES) return Pnear;
 	
 	int nhits = m_pClus->nHits(v,iplane);
 	if (nhits == 0) return Pnear;
