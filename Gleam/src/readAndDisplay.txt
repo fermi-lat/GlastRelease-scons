@@ -1,0 +1,43 @@
+// ---------------------------------------------------------
+// Options for Gleam that are specific to reading ROOT files and using the GUI
+// $Id$
+#include "$GLEAMROOT/src/basicOptions.txt"
+
+// this necessary (for now) to see the event
+G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
+G4Generator.saveTrajectories=true;
+
+ApplicationMgr.ExtSvc += {"GuiSvc"};
+ApplicationMgr.Runable = "GuiSvc";
+GuiSvc.size=-3000;  // set size, orientation
+ApplicationMgr.DLLs   += {"DetDisplay", "RootDisplay" };    
+
+EventDisplay.Members = {   "CalDisplay",   "AcdDisplay"     };
+
+Triggered.Members += {"GuiPause"};  // allow pause when triggered
+
+
+// Setup to read all - if you desire to read only Mc or Digi or Recon
+// Just set the corresponding sequence to null set for example:
+//Generator.Members = {};
+Generator.Members = {"mcRootReaderAlg"};
+Digitization.Members = {"digiRootReaderAlg"};
+Reconstruction.Members = {"reconRootReaderAlg" };
+
+// No full ROOT Output
+Output.Members = {};
+
+// Names of input ROOT files - note that you can supply a list of input files
+// comma delimited list
+mcRootReaderAlg.mcRootFileList = {"$(ROOTIOROOT)/src/test/mc.root"};
+digiRootReaderAlg.digiRootFileList = {"$(ROOTIOROOT)/src/test/digi.root"};
+reconRootReaderAlg.reconRootFileList = {"$(ROOTIOROOT)/src/test/recon.root"};
+
+ApplicationMgr.DLLs +=    { "RootIo" };
+ApplicationMgr.ExtSvc += { "RootIoSvc" };
+
+ApplicationMgr.EvtMax  = 1000000;
+
+
+// -------end readAndDisplay-specific-------
+// ----------------------------------
