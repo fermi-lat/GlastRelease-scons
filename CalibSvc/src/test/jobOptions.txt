@@ -11,8 +11,10 @@ ApplicationMgr.DLLs   += {"CalibSvc"};
  ApplicationMgr.ExtSvc   = {"GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
 
 
+// ApplicationMgr.TopAlg = {"digiRootReaderAlg", "EvtClock", "UseCalib",
+//		      "UseBadStrips" };
 ApplicationMgr.TopAlg = {"digiRootReaderAlg", "EvtClock", "UseCalib",
-		      "UseBadStrips" };
+		      "UsePeds" };
 digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
 
 
@@ -56,6 +58,7 @@ CalibDataSvc.CalibInstrumentName = "LAT";
 CalibDataSvc.CalibStorageType = 14;
 CalibDataSvc.CalibRootName = "Calib";
 
+EvtClock.startTime = "2003-1-10_00:20";
 EvtClock.delayTime = 36000;
 
 //==============================================================
