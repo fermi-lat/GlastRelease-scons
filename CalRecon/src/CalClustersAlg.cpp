@@ -448,7 +448,7 @@ StatusCode CalClustersAlg::execute()
 
 	Profile(ene,cl);
 
-	m_CsIClusterList->writeOut();
+//	m_CsIClusterList->writeOut();
 
 	return sc;
 }

@@ -156,8 +156,8 @@ StatusCode CalIRFAlg::execute() {
 		}
 	}
 
-    crl->writeOut();
-	std::cout << std::endl << " ene = " << ene << std::endl << std::endl;    
+//    crl->writeOut();
+//	std::cout << std::endl << " ene = " << ene << std::endl << std::endl;    
 
     return sc;
 }
