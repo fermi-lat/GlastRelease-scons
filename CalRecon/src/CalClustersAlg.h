@@ -124,6 +124,12 @@ private:
 
     /// pointer to actual tool for last layer energy correlation
     EnergyCorr* m_profileTool;
+
+    /// name of Tool for calling CalVals tool
+    std::string m_calValsCorrToolName;
+
+    /// pointer to actual tool for last layer energy correlation
+    EnergyCorr* m_calValsCorrTool;
 };
 
 #endif

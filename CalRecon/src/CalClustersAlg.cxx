@@ -31,6 +31,7 @@ Algorithm(name, pSvcLocator)
     declareProperty ("clusterToolName", m_clusterToolName="SingleClusterTool");
     declareProperty ("lastLayerToolName", m_lastLayerToolName="LastLayerCorrTool");
     declareProperty ("profileToolName", m_profileToolName="ProfileTool");
+    declareProperty ("calValsCorrToolName", m_calValsCorrToolName="CalValsCorrTool");
     
 }
 
@@ -126,6 +127,14 @@ StatusCode CalClustersAlg::initialize()
         return sc;
     }
     m_profileTool = dynamic_cast<EnergyCorr*>(iprof);
+
+    IEnergyCorr* ivals;
+    sc = toolSvc()->retrieveTool(m_calValsCorrToolName,ivals);
+    if (sc.isFailure() ) {
+        log << MSG::ERROR << "  Unable to create " << m_calValsCorrToolName << endreq;
+        return sc;
+    }
+    m_calValsCorrTool = dynamic_cast<EnergyCorr*>(ivals);
 
     return sc;
 }
@@ -300,6 +309,10 @@ StatusCode CalClustersAlg::execute()
         m_profileTool->setStaticSlope(slope);
         m_profileTool->doEnergyCorr((*it)->getEnergySum(),(*it));
         
+         // get corrections from CalValsTool... self contained
+
+        m_calValsCorrTool->doEnergyCorr((*it)->getEnergySum(),(*it));
+ 
         // calculating the transverse offset of average position in the calorimeter
         // with respect to the position predicted from tracker information
         double calTransvOffset = 0.;
