@@ -231,7 +231,22 @@
         delete m;</font></i></p>
         <p><font size="3"><b><a name="NtupleAnalysis">NtupleAnalysis</a></b></font></p>
         <p><font size="3">Please <a href="http://www-glast.slac.stanford.edu/software/root/howto/pdr.html">see
-        this page</a> for a description.</font></p>
+        this page</a> for a description... But here is a summary:</font></p>
+        <p><font size="3">This class handles any ntuple file, and produces an
+        output PostScript file containing plots of any and all entries in the
+        ntuple - and can apply an optional cut to the data as well before
+        creating the plots.&nbsp; One can pre-set the number of columns and rows
+        of the PS pages as well - to determine how many plots to display per
+        page.</font></p>
+        <p><font size="3"><b>USAGE:</b><br>
+        </font><i><font size="2">NtupleAnalysis *m = new NtupleAnalysis( );<br>
+        m-&gt;OpenRootFile(&quot;myNtupleFile.root&quot;, &quot;PDR/t1&quot;);
+        // you supply a file name, and the name (and path if necessary) of the
+        TTree in the file.<br>
+        m-&gt;SetNumRows(4);<br>
+        m-&gt;SetNumCols(4);</font></i><font size="2"><i><br>
+        m-&gt;DrawAll(&quot;myNewPSFile.ps&quot;, &quot;TKR_NO_TRACKS &gt;
+        0&quot;); // creates the PS file - and applies the cut to the data</i></font></p>
         <h3><a name="Ancillary Data files">Ancillary Data files</a></h3>
         <p><font size="3"><b><a name="Calibration">Calibration</a></b></font></p>
         <p>This directory contains pedestal files from both the 1999-2000 SLAC
