@@ -60,7 +60,7 @@ public:
     @param pval - pointer to a double value
     */
     virtual StatusCode addItem(const std::string & tupleName, 
-        const std::string& itemName, const double* val);
+        const std::string& itemName, const double* pval);
 
     /// force writing of the ntuple to disk -- not suppored, but harmless since it happens anyway
     virtual StatusCode saveNTuples(){return StatusCode::SUCCESS;};
@@ -94,6 +94,7 @@ private:
 
     int m_trials; /// total number of calls
     bool m_defaultStoreFlag;
+    IntegerProperty m_autoSave; // passed to TTree::SetAutoSave.
 
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -111,6 +112,8 @@ RootTupleSvc::RootTupleSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("treename", m_treename="1");
     declareProperty("title", m_title="Glast tuple");
     declareProperty("defaultStoreFlag", m_defaultStoreFlag=false);
+    declareProperty("AutoSave", m_autoSave=100000); // ROOT default is 10000000
+
 
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -138,23 +141,29 @@ StatusCode RootTupleSvc::initialize ()
     // -- set up the tuple ---
     m_tf   = new TFile( m_filename.value().c_str(), "RECREATE");
     // with the default treename, and default title
-    m_tree[m_treename.value().c_str()] = new TTree( m_treename.value().c_str(),  m_title.value().c_str() );
+    TTree* t = new TTree( m_treename.value().c_str(),  m_title.value().c_str() );
+    m_tree[m_treename.value().c_str()] = t;
+    t->SetAutoSave(m_autoSave); 
 
     return status;
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
-                                 const std::string& itemName, const double* val)
+                                 const std::string& itemName, const double* pval)
 {
      MsgStream log(msgSvc(),name());
     StatusCode status = StatusCode::SUCCESS;
     std::string treename=tupleName.empty()? m_treename.value() : tupleName;
     if( m_tree.find(treename)==m_tree.end()){
         // create new tree
-        m_tree[treename]=new TTree(treename.c_str(), m_title.value().c_str());
-        log << MSG::INFO << "Creating new tree " << treename << endreq;
+        TTree* t = new TTree(treename.c_str(), m_title.value().c_str());
+        t->SetAutoSave(m_autoSave);
+        m_tree[treename]=t;
+        log << MSG::INFO << "Creating new tree \"" << treename << "\"" << endreq;
     }
-    m_tree[treename]->Branch(itemName.c_str(), (void*)val, (itemName+"/D").c_str());
+
+    // this adds a branch with a pointer to a double (the "/D" after the second name)
+    m_tree[treename]->Branch(itemName.c_str(), (void*)pval, (itemName+"/D").c_str());
     return status;
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
