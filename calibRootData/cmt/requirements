@@ -1,7 +1,7 @@
 package calibRootData
 #  $Id$
 
-version v1r3
+version v1r4
 
 use RootcintPolicy v4r* GlastPolicy
 use commonRootData v1r*
