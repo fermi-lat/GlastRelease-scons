@@ -31,8 +31,9 @@ namespace rdbModel {
     /// ask the connection to do the insert and return status (an int,
     /// meaning to be determined.  Should include values for illegal
     /// input, missing connection, etc. )
-    int  insertRow(const std::vector<std::string>& colNames,
-                   const std::vector<std::string>& colValues);
+    //  hasn't been implemented
+    //    int  insertRow(const std::vector<std::string>& colNames,
+    //                   const std::vector<std::string>& colValues);
 
     
     Visitor::VisitorState accept(Visitor* v);
