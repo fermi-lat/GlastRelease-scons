@@ -5,7 +5,7 @@
 // $Header$
 
 //  -------------- basic Glast/Gaudi run enviornment -----------
-ApplicationMgr.DLLs   = { "GlastSvc", "AcdRecon", "TkrRecon", "RootIo", "Recon"};
+ApplicationMgr.DLLs = { "GlastSvc", "AcdRecon", "RootIo"};
 
 ApplicationMgr.ExtSvc = { 
     "GlastEventSelector/EventSelector" , 
@@ -23,18 +23,15 @@ GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
 //----------------- local algorithms to run -------------------
-ApplicationMgr.TopAlg = {  "digiRootReaderAlg", "TkrReconAlg", "AcdReconAlg"};
+ApplicationMgr.TopAlg = { "digiRootReaderAlg", "reconRootReaderAlg", "AcdReconAlg"};
 
 digiRootReaderAlg.digiRootFile = "$ACDRECONROOT/src/test/digi.root";
-
-ApplicationMgr.ExtSvc   += { "TkrGeometrySvc"};
-ApplicationMgr.ExtSvc   += { "TkrInitSvc"};
-ApplicationMgr.ExtSvc   += { "RecoSvc" };
+reconRootReaderAlg.reconRootFile = "$ACDRECONROOT/src/test/recon.root";
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
 
-ApplicationMgr.EvtMax =100;
+ApplicationMgr.EvtMax =10;
 
 //==============================================================
 //
