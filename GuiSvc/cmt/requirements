@@ -11,8 +11,7 @@ use RootHistCnv
 # library is not shareable since it is expected to be linked into the executable
 library GuiSvc -no_share\
  *.cxx \
- Dll/*.cxx\
- ../GuiSvc/*.h 
+  ../GuiSvc/*.h 
 
 include_path $(GUISVCROOT)
 
