@@ -85,7 +85,8 @@ private:
     // the target area
     DoubleProperty m_area;
     IntegerProperty m_pointing_mode;
-    DoubleProperty m_rocking_angle;
+    DoubleProperty m_rocking_angle; // x-axis
+    DoubleProperty m_rocking_angle_z; // z-axis
     
 };
 //------------------------------------------------------------------------
@@ -105,6 +106,7 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("area",        m_area=5.0); // target area in m^2
     declareProperty("pointing_mode", m_pointing_mode=0);
     declareProperty("rocking_angle", m_rocking_angle=0); // in degrees
+    declareProperty("rocking_angle_z", m_rocking_angle_z=0); // in degrees
     
 }
 //------------------------------------------------------------------------
@@ -126,7 +128,7 @@ StatusCode FluxAlg::initialize(){
     }
     //this line sets the explicit rocking angles to be used IF the 
     //rocking type is "explicit." Note that it uses the m_rocking_angle also.
-    m_fluxSvc->setExplicitRockingAngles(m_rocking_angle*M_PI/180,0);
+    m_fluxSvc->setExplicitRockingAngles(m_rocking_angle*M_PI/180,m_rocking_angle_z*M_PI/180);
     //m_fluxSvc->setRockingAngle(m_rocking_angle);
 
     //then this line sets the rocking type, as well as the rocking angle.

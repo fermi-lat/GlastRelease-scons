@@ -23,7 +23,7 @@
 #include <sstream>
 namespace {
     // this is the (wired-in) distance to back off from the target sphere.
-    double backoff_distance=1000.;
+    const double backoff_distance=1500.;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

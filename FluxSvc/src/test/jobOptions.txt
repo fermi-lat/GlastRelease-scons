@@ -32,6 +32,7 @@ FluxSvc.source_lib +={"$(FLUXSVCROOT)/src/test/test_source.xml"};
 Top.area= 0.1;
 Top.pointing_mode=4;  // this is the fixed angle 
 Top.rocking_angle=90; // degrees about x-axis   
+Top.rocking_angle_z=90; // degrees about z-axis   
 Top.source_name="vertical_surface_muons";
 
 ApplicationMgr.EvtMax = 10;

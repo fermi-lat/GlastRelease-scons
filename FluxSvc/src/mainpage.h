@@ -34,7 +34,8 @@ Usage is primarily via the FluxAlg algorithm, which access the service to genera
         - 2 (experimental) like UPDOWN, except that rotation at equator happens gradually.
         - 3 LAT rocked northward for one orbit, southward for the next.
         - 4 fixed.
-    @param FluxAlg.rocking_angle [0 deg] Rotation angle for Glast, about x-axis.
+    @param FluxAlg.rocking_angle [0 deg] Rotation angle for Glast, about x-axis. 
+    @param FluxAlg.rocking_angle_z [0 deg] Rotation angle for Glast, about z-axis.
 
  <hr>
   @section Basic_XML_Sources Sources
