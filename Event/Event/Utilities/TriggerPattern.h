@@ -71,7 +71,7 @@ public:
   /// Fill the output stream (ASCII)
   std::ostream& fillStream( std::ostream& s ) const                            {
     return s << "class TriggerPattern : "
-      << GlastEventField( EventFormat::field12 )
+      << EventField( EventFormat::field12 )
       << m_pattern;
   }
 

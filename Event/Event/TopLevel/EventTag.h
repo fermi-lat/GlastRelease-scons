@@ -9,9 +9,9 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/SmartRef.h"
-#include "GlastEvent/Utilities/TriggerPattern.h"
-#include "GlastEvent/Utilities/Classification.h"
-#include "GlastEvent/TopLevel/Definitions.h"
+#include "Event/Utilities/TriggerPattern.h"
+#include "Event/Utilities/Classification.h"
+#include "Event/TopLevel/Definitions.h"
 
 
 // Forward declarations

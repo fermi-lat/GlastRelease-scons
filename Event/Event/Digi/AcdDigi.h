@@ -173,21 +173,21 @@ inline std::ostream& AcdDigi::fillStream( std::ostream& s ) const
   return s
     << "    base class AcdDigi :"
     << "\n        ID = ( "
-    << GlastEventFloatFormat( EventFormat::width, EventFormat::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_ID << ", "
     << "\n        pulse height      = "
-    << GlastEventFloatFormat( EventFormat::width, EventFormat::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_pulseHeight << ", "
     << "\n        veto              = "
-    << GlastEventFloatFormat( EventFormat::width, EventFormat::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_veto   << " )"
     << "\n        Low Threshold     = "
     << m_lowThreshold << " )"
     << "\n        High Threshold     = "
-    << GlastEventFloatFormat( EventFormat::width, EventFormat::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_highThreshold << " )"
     << "\n        packed PHA        = "
-    << GlastEventFloatFormat( EventFormat::width, EventFormat::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_packedPHA << " )";
 }
 

@@ -8,9 +8,9 @@
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/DataObject.h"
-#include "GlastEvent/Utilities/TriggerPattern.h"
-#include "GlastEvent/Utilities/RandomNumberSeed.h"
-#include "GlastEvent/TopLevel/Definitions.h"
+#include "Event/Utilities/TriggerPattern.h"
+#include "Event/Utilities/RandomNumberSeed.h"
+#include "Event/TopLevel/Definitions.h"
 
 
 // Externals 
@@ -230,7 +230,7 @@ inline std::ostream& Run::fillStream( std::ostream& s ) const                  {
     << GlastEventField( GlastEvent::field12 )
     << m_enabledDetectorMask
     << "\n    Luminosity           = "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << EventFloatFormat( GlastEvent::width, GlastEvent::precision )
     << m_luminosity
     << "\n    Fill number          = "
     << GlastEventField( GlastEvent::field12 )

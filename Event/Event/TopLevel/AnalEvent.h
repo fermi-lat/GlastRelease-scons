@@ -8,8 +8,8 @@
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/StreamBuffer.h"
-#include "GlastEvent/Utilities/Classification.h"
-#include "GlastEvent/TopLevel/Definitions.h"
+#include "Event/Utilities/Classification.h"
+#include "Event/TopLevel/Definitions.h"
 
 
 // Externals 

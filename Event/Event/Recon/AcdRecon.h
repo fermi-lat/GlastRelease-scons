@@ -123,15 +123,15 @@ inline std::ostream& AcdRecon::fillStream( std::ostream& s ) const
   return s
     << "    base class AcdRecon :"
     << "\n        total energy      = "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << EventFloatFormat( GlastEvent::width, GlastEvent::precision )
     << m_totEnergy << ", "
     << "\n        tile Count              = "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << EventFloatFormat( GlastEvent::width, GlastEvent::precision )
     << m_tileCount   << " )"
     << "\n        gamma DOCA     = "
     << m_gammaDOCA << " )"
     << "\n        DOCA     = "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << EventFloatFormat( GlastEvent::width, GlastEvent::precision )
     << m_DOCA << " )";
 }
 

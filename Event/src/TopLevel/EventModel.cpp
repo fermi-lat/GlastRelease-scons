@@ -19,10 +19,10 @@ public:
     
     EvModel() {
         // Access to GLAST event
-        EventModel::Event                    = "/Event";
+        EventModel::EventHeader              = "/Event";
             
         // Monte Carlo 
-        EventModel::MC::Event                = EventModel::Event + "/MC";
+        EventModel::MC::Event                = EventModel::EventHeader + "/MC";
         EventModel::MC::McVertexCol          = EventModel::MC::Event  + "/McVertexCol";
         EventModel::MC::McParticleCol        = EventModel::MC::Event  + "/McParticleCol";
 
@@ -30,13 +30,13 @@ public:
         EventModel::MC::McIntegratingHitCol   = EventModel::MC::Event  + "/IntegratingHitsCol";
 
         // Digi event
-        EventModel::Digi::Event             = EventModel::Event + "/Digi";
+        EventModel::Digi::Event             = EventModel::EventHeader + "/Digi";
         EventModel::Digi::AcdDigis          = EventModel::Digi::Event + "/AcdDigis";
         EventModel::Digi::TkrDigis          = EventModel::Digi::Event + "/TkrDigis";
         EventModel::Digi::CalDigiCol          = EventModel::Digi::Event + "/CalDigis";
 
         // Data Data
-        EventModel::Data::Event              = EventModel::Event + "/Data";
+        EventModel::Data::Event              = EventModel::EventHeader + "/Data";
         EventModel::Data::TdGlastData        = EventModel::Data::Event + "/TdGlastData";
         EventModel::Data::TdSiData           = EventModel::Data::Event + "/TdSiData";
         EventModel::Data::TdCsIData          = EventModel::Data::Event + "/TdCsIData";
@@ -44,7 +44,7 @@ public:
         
 
         // reconstructed data (Tracker)
-        EventModel::TkrRecon::Event          = EventModel::Event + "/TkrRecon";
+        EventModel::TkrRecon::Event          = EventModel::EventHeader + "/TkrRecon";
         EventModel::TkrRecon::SiLayers       = EventModel::TkrRecon::Event + "/SiLayers";
         EventModel::TkrRecon::TkrClusterCol  = EventModel::TkrRecon::Event + "/TkrClusterCol";
         EventModel::TkrRecon::TkrPatCandCol  = EventModel::TkrRecon::Event + "/TkrPatCandCol";
@@ -53,7 +53,7 @@ public:
         EventModel::TkrRecon::TkrVertexCol   = EventModel::TkrRecon::Event + "/TkrVertexCol";
 
         // reconstructed ACD data
-        EventModel::AcdRecon::Event          = EventModel::Event + "/AcdRecon";
+        EventModel::AcdRecon::Event          = EventModel::EventHeader + "/AcdRecon";
     }
 };
     

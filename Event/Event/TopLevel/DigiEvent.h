@@ -1,5 +1,5 @@
-#ifndef GLASTEVENT_DIGIEVENT_H
-#define GLASTEVENT_DIGIEVENT_H 1
+#ifndef Event_DIGIEVENT_H
+#define Event_DIGIEVENT_H 1
 
 #include <iostream>
 #include "GaudiKernel/Kernel.h"

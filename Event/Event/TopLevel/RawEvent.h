@@ -8,8 +8,8 @@
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/DataObject.h"
-#include "GlastEvent/Utilities/TriggerPattern.h"
-#include "GlastEvent/TopLevel/Definitions.h"
+#include "Event/Utilities/TriggerPattern.h"
+#include "Event/TopLevel/Definitions.h"
 
 
 // Externals 
@@ -165,10 +165,10 @@ inline std::ostream& RawEvent::fillStream( std::ostream& s ) const             {
     s << "false";
   }
   s << "\n    Error status      = "
-    << GlastEventField( GlastEvent::field12 )
+    << EventField( GlastEvent::field12 )
     << m_errorStatus
     << "\n    High voltage mask = "
-    << GlastEventField( GlastEvent::field12 )
+    << EventField( GlastEvent::field12 )
     << m_highVoltageMask
     << "\n    Present triggers  = " << m_triggerPattern;
   return s;

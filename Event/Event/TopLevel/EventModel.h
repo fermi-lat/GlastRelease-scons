@@ -36,7 +36,7 @@
  *    AcdDigi       becomes   AcdDigis
  */  
     namespace EventModel {
-        _EXTERN_ std::string   Event;
+        _EXTERN_ std::string   EventHeader;
 
         namespace MC {
             _EXTERN_ std::string Event;

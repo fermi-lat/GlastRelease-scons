@@ -11,7 +11,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "GlastEvent/Hits/GlastHits.h"
 
-namespace GlastEvent { // declare the namespace for the glast raw event
+namespace Event { // declare the namespace for the glast raw event
 
     // declare the GAUDI class-id for this class
     extern const CLID&   CLID_EventHits;

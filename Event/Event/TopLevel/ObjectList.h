@@ -8,8 +8,8 @@
 #include "Gaudi/Kernel/Kernel.h"
 #include "Gaudi/Kernel/StreamBuffer.h"
 #include "Gaudi/Kernel/ObjectContainerBase.h"
-#include "GlastEvent/Utilities/ProcessingVersion.h"
-#include "GlastEvent/TopLevel/Definitions.h"
+#include "tEvent/Utilities/ProcessingVersion.h"
+#include "Event/TopLevel/Definitions.h"
 
 
 // Externals 
