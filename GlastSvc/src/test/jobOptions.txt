@@ -11,7 +11,6 @@ ApplicationMgr.DLLs   = { "GlastSvc", "RootHistCnv" };
 //--------------------------------------------------------------
 // Private Application Configuration options
 //--------------------------------------------------------------
-GlastDetSvc.IRFFile = "src/test/muontest.irf";
 GlastDetSvc.PersistencyFile = "src/test/detector.xml";
 
 ApplicationMgr.TopAlg = { "CreateEvent" };
@@ -29,9 +28,6 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 // Number of events to be processed (default is 10)
 // This property is not available in our EventSelector - use ApplicationMgr.EvtMax instead
 //EventSelector.EvtMax = 20;
-
-// Print event number every event, this property is not available in our EventSelector
-//EventSelector.PrintFreq = 1;
 
 // Input IRF file
 EventSelector.Input = "IRFFILE src/test/muontest.irf";
