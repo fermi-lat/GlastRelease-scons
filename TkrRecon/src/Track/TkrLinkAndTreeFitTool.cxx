@@ -103,8 +103,10 @@ StatusCode TkrLinkAndTreeFitTool::doTrackFit(Event::TkrPatCand* patCand)
     Event::CandHitVectorPtr candPtr = patCand->getHitIterBegin();
     while(numHits--)
     {
-        Event::TkrPatCandHit candHit = *candPtr++;
-        fitter->addMeasHit(candHit);
+        ////Event::TkrPatCandHit candHit = *candPtr++;
+        ////fitter->addMeasHit(candHit);
+        Event::TkrPatCandHit* candHit = *candPtr++;
+        fitter->addMeasHit(*candHit);
     }
         
     fitter->doFit();
