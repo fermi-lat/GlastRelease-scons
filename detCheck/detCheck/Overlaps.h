@@ -32,7 +32,8 @@ namespace detCheck {
         child volume will "stick out" of its enclosing Ensemble.  
         All that remains is to check that siblings don't overlap.  
         The work is done by several private methods.         */
-    bool check(std::string errfileName, bool verbose = false);
+    bool check(std::string errfileName, bool verbose = false, 
+               bool dump = false);
 
 
     /** Trying to make floating-point comparisons is risky.   If
@@ -51,6 +52,7 @@ namespace detCheck {
     std::ostream* m_out;
     double        m_eps;
     bool          m_verbose;
+    bool          m_dump;
 
     /// Look for overlaps among (1st-generation) children of
     /// a Composition. 
