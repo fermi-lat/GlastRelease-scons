@@ -12,7 +12,7 @@ apply_pattern packageShr
 
 set JOBOPTIONS ${TKRUTILROOT}/src/test/jobOptions.txt
 
-macro_prepend includes "-I $(TKRUTILROOT) " WIN32 "/I $(TKRUTILROOT) "
+apply_pattern package_include
 
 apply_pattern package_headers
 
