@@ -38,6 +38,8 @@ public:
     inline  const char * nameOf() const {return "MapSpectrum";}
     //   use default destructor, copy constructor, and assignment op.
     
+    double sizeOf1by1(double b);
+
     ///sets the net flux
     void setNetFlux();   
     float parseParamList(std::string input, int index);
