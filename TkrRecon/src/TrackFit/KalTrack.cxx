@@ -208,7 +208,7 @@ double KalTrack::doFit()
 
 void KalTrack::ini()
 {
-    m_energy0      = 0.;
+    //m_energy0      = 0.;
     m_x0           = Point(0., 0., 0.);
     m_dir          = Vector(0., 0., 0.);
     m_rmsResid     = 0.;
