@@ -66,11 +66,6 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
 
   // Toolbar buttons
   new FXVerticalSeparator(uiToolbar, SEPARATOR_GROOVE|LAYOUT_FILL_Y);
-  new FXToggleButton(uiToolbar, "&Tab", "&Txt\tToggle output",
-                     NULL, NULL, this, ID_TOGGLERESULT, FRAME_RAISED|FRAME_THICK);
-  new FXButton(uiToolbar, "&Paste result\tPaste from result table",
-               NULL, this, ID_PASTEFROMTABLE, FRAME_RAISED|FRAME_THICK);
-  new FXVerticalSeparator(uiToolbar, SEPARATOR_GROOVE|LAYOUT_FILL_Y);
 
 
   // Horizontal splitter
@@ -117,7 +112,7 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   // File menu
   uiFilemenu = new FXMenuPane(this);
   new FXMenuTitle(uiMenuBar, "&File", NULL, uiFilemenu);
-  new FXMenuCommand(uiFilemenu, "&Open XML ...\tCtl-O\tLoad the xml database description",
+  new FXMenuCommand(uiFilemenu, "&Open DB Schema ...\tCtl-O\tLoad the xml database description",
     NULL, this, ID_OPENXML);
   new FXMenuSeparator(uiFilemenu);
   new FXMenuCommand(uiFilemenu, "&Quit\tCtl-Q\tQuit DbGui", NULL,
@@ -157,6 +152,7 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   uiTable->setBackColors(FXRGB(255, 255, 255), FXRGB(255, 240, 240),
       FXRGB(240, 255, 240), FXRGB(240, 240, 255));
   uiTable->setTableSize(1, 1);
+  uiTable->setRowHeaderWidth(20);
   uiTable->setItemText(0, 0, "No data");
   
   // Disable some menù items
@@ -175,6 +171,8 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   m_rdbBuilder = new rdbModel::XercesBuilder();
   m_rdbManager = rdbModel::Manager::getManager();
   m_rdbManager->setBuilder(m_rdbBuilder);
+  
+  m_lastDbSchema = "";
 
 }
 
@@ -257,6 +255,7 @@ void RdbGUIWindow::loadXMLFile(FXString fileName)
         {
           m_rdbManager->startVisitor(uiTblColList);
           m_cmdOpenConn->enable();
+          m_lastDbSchema = fileName;
         }
         
     }  
@@ -286,17 +285,19 @@ long RdbGUIWindow::onOpenConnection(FXObject*,FXSelector, void*)
           m_uiDBSelection->appendItem(data[0]+" ("+data[2]+"@"+data[1]+")");
           m_uiDBSelection->setCurrentItem(0);   // this line will have to be changed
           
-          rdbModel::MATCH match = m_connect->matchSchema(m_rdbManager->getRdb());
+          rdbModel::MATCH match = m_connect->matchSchema(m_rdbManager->getRdb(), false);
         
           switch (match) {
           case rdbModel::MATCHequivalent:
             uiLog->logText("XML schema and MySQL database are equivalent!\n");
             searchFrame->setConnection(m_connect);
+            m_cmdOpenConn->disable();
             m_cmdCloseConn->enable();
             break;
           case rdbModel::MATCHcompatible:
             uiLog->logText("XML schema and MySQL database are compatible\n");
             searchFrame->setConnection(m_connect);
+            m_cmdOpenConn->disable();
             m_cmdCloseConn->enable();
             break;
           case rdbModel::MATCHfail:
@@ -326,6 +327,8 @@ long RdbGUIWindow::onCloseConnection(FXObject*,FXSelector, void*)
       message.text()))
     {
       closeConnection();
+      m_cmdCloseConn->disable();
+      m_cmdOpenConn->enable();
     }
   return 1;  
 }
@@ -354,6 +357,14 @@ long RdbGUIWindow::onSendQuery(FXObject*,FXSelector, void*)
   rdbModel::ResultHandle *queryResult = searchFrame->getQueryResult();
   uiLog->update();
   
+  if (queryResult->getNRows() < 1)
+    {
+      uiTable->setTableSize(1, 1);
+      uiTable->setRowHeaderWidth(20);
+      uiTable->setItemText(0, 0, "No data");
+      return 1;
+    }
+    
   uiTable->setTableSize(queryResult->getNRows(), columns->getNumItems());
   
   int i,j;

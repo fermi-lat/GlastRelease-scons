@@ -53,7 +53,7 @@ QueryFrame::QueryFrame(FXComposite *owner, FXObject *target):
   new FXHorizontalSeparator(this);
   
   int  numOper= 6;
-  FXString relOper[] = {"<",">","=","<>","<=",">="};
+  FXString relOper[] = {">", "<", "=","<>","<=",">="};
   m_operators.assign(relOper, &relOper[numOper]);
   
   m_factory = new ColWidgetFactory();
@@ -226,10 +226,10 @@ rdbModel::Assertion::Operator* QueryFrame::buildCompOperator(std::string col,
 {
   rdbModel::OPTYPE opType;
   
-  if (comp == "<") 
-    opType = rdbModel::OPTYPElessThan;  
-  else if (comp == ">")
-    opType = rdbModel::OPTYPEgreaterThan;
+  if (comp == ">") 
+    opType = rdbModel::OPTYPEgreaterThan;  
+  else if (comp == "<")
+    opType = rdbModel::OPTYPElessThan;
   else if  (comp ==  "=")
     opType = rdbModel::OPTYPEequal;
   else if (comp == "<>")

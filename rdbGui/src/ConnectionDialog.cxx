@@ -94,8 +94,8 @@ FXuint ConnectionDialog::execute(FXuint opts)
     else
       m_uiDbname->setFocus();
       
-    if (m_uiSavepass->getCheck())
-      m_uiPass->setText("");
+//     if (m_uiSavepass->getCheck())
+//       m_uiPass->setText("");
     return FXDialogBox::execute(opts);
 }
 
