@@ -11,9 +11,11 @@
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 
-//#include "reconstruction/ReconData.h"
 #include "reconstruction/GlastTuple.h"
 #include "reconstruction/PrintReconData.h"
+#include "reconstruction/SummaryData.h"
+#include "reconstruction/GlastTuple.h"
+
 #include "GlastEvent/Raw/TdCsIData.h"
 
 static const AlgFactory<CalRecoAlg>  Factory;
@@ -43,8 +45,8 @@ StatusCode CalRecoAlg::initialize() {
     setProperties();
     
     // now try to find the GlastDevSvc service
+#if 1  // old way, Gaudi v5.  
     IGlastDetSvc* detSvc = 0;
-#if 1    
     const IID&  IID_IGlastDetSvc  =  401; // wired it for now!
     StatusCode sc = serviceLocator()->getService ("GlastDetSvc",
         IID_IGlastDetSvc, reinterpret_cast<IInterface*&>( detSvc ));
@@ -57,9 +59,15 @@ StatusCode CalRecoAlg::initialize() {
 
     if (!sc.isSuccess ()){
         log << MSG::ERROR << "Couldn't find the GlastDetSvc!" << endreq;
-        return StatusCode::FAILURE;
     }
-    return StatusCode::SUCCESS;
+    m_recon=new CalRecon;
+
+    // define the tuple
+    m_summary = new  SummaryData<GlastTuple>(*new GlastTuple("test cal tuple")) ;
+    m_recon->accept(*m_summary);
+
+    m_summary->tuple()->writeHeader(std::cout);
+    return sc;
 }
 
 
@@ -69,51 +77,25 @@ StatusCode CalRecoAlg::execute() {
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
     log << MSG::INFO << "execute" << endreq;
-    
+        
+    // get the CsiData object from the TDS by a converter
+    SmartDataPtr<TdCsIData> csi(eventSvc(), "/Event/Raw/TdCsIDatas");
 
-    // create a GlastData object
-    //GlastData data;
-
-    // fill it from the IRF (FAILS)
-    //m_detSvc->accept(data);
-    
-    /*! Goin to try the Dynamic cast and see what happens
-    */ 
-    DataObject* pObject;
-
-    /*! Currently the retrieval from the TDS is no operational in
-        the CalRecon package.
-    */
-    sc = eventSvc()->retrieveObject("/Event/Raw/TdCsIDatas", pObject);
-
-    if( sc.isFailure() ) {
-        log << MSG::INFO << "TdCsIData not retrieved from the the TDS" << endreq;
-    
-        return sc;
-    }
-    
-    log << MSG::INFO << "Successfully retrieved TdCsIData object from the TDS!!!" << endreq;
-
-    TdCsIData* newData;
-    try {
-        newData  = dynamic_cast<TdCsIData*>(pObject);
-    } catch(...) {
-        log << MSG::INFO << "Failed to convert object to MCACDHitVector" << endreq;
-        return StatusCode::FAILURE;
-    }
-    
-
-    
     // see what is there
-    //data.printOn(std::cout);
+    csi->printOn(std::cout);
 
-    // create the recon object from the reconstrution package and pass data to it.
+    // create the CalRecon object from the reconstrution package and pass data to it.
 
-    CalRecon recon;
-    recon.reconstruct(newData);
+    m_recon->clear();
+    m_recon->reconstruct(csi);
 
     // print out the  tuple
-    recon.accept(PrintReconData(std::cout));
+    m_recon->accept(PrintReconData(std::cout));
+
+    // fill the tuple and print the line
+    m_summary->tuple()->fill();
+    std::cout << *(m_summary->tuple());
+
     return sc;
 }
 
@@ -123,6 +105,8 @@ StatusCode CalRecoAlg::finalize() {
     
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "finalize" << endreq;
+    delete m_recon;
+    delete m_summary;
     
     return StatusCode::SUCCESS;
 }
