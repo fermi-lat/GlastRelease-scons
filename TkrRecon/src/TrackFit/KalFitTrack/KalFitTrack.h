@@ -86,7 +86,7 @@ private:
     TkrFitHit     generateFirstFitHit(TkrFitPar pars);
     void          finish();
     void          filterStep(int iplane);
-    int           okClusterSize(TkrCluster::view axis, int indexhit, double slope); 
+    int           okClusterSize(int indexhit, double slope); 
        
     /// Finds the next hit layer using particle propagator
     TkrFitPlane   projectedKPlane(TkrFitPlane previous, int klayer, double& arc_min, TkrFitHit::TYPE type = TkrFitHit::FIT);

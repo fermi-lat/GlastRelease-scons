@@ -109,7 +109,7 @@ StatusCode TkrComboFitTool::doTrackFit(Event::TkrPatCand* patCand)
                     slope = tkr_par.getXSlope();
                 }        
                 int hit_Id = plane.getIDHit();;
-                double cls_size = pTkrClus->size(hit_proj, hit_Id);        
+                double cls_size = pTkrClus->size(hit_Id);        
                 double prj_size = 400.*fabs(slope)/228. + 1.;
                 if(cls_size> prj_size) {
                     track->unFlagHit(i_Hit);
