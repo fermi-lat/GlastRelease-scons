@@ -94,7 +94,8 @@ void McParticleManager::pruneCal()
   for(it=m_particles.begin();it != m_particles.end() ; it++)
     {
       if (((it->second)->initialPosition().z() < 0) && ((it->second)->finalPosition().z()<0)
-          && !((it->second)->statusFlags()&Event::McParticle::POSHIT))
+          && !((it->second)->statusFlags()&Event::McParticle::POSHIT)
+          && !((it->second)->statusFlags()&Event::McParticle::PRIMARY))
         {
           for(unsigned int i=0;i<(it->second)->daughterList().size();i++)
             {
