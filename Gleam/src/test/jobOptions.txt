@@ -19,7 +19,8 @@ Output.Members={}; // turn off any root ouptut
 ApplicationMgr.EvtMax = 1000;
 MeritAlg.generated = 1000; // for estimation of Aeff--must be the same
 // set root output from merit with following
-// MeritAlg.RootFilename="merit.root"; 
+MeritAlg.RootFilename="merit.root"; 
+G4Generator.DefaultCutValue=1.0;
 //==============================================================
 //
 // End of job options file

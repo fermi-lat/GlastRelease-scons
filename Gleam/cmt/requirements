@@ -52,7 +52,7 @@ use GlastSvc    v8r2
 
 use FluxSvc     v5r10p4
 use FluxDisplay v2r1
-use G4Generator v4r3p1
+use G4Generator         v4r3p2
 
 #digitization
 use CalDigi     v1r2p1
