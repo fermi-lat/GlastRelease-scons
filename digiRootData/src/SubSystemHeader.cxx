@@ -1,24 +1,21 @@
-#include "digiRootData/AcdHeader.h"
+#include "digiRootData/SubSystemHeader.h"
 
 
-ClassImp(AcdHeader)
+ClassImp(SubSystemHeader)
 
-
-AcdHeader::AcdHeader() {
+SubSystemHeader::SubSystemHeader() {
     m_eventId = 0;
     m_timerWord = 0;
     m_TREQ_VETO_status = 0;
     m_deadtime_and_cause = 0;
 }
 
-AcdHeader::~AcdHeader() {
+SubSystemHeader::~SubSystemHeader() {
 }
 
-
-void AcdHeader::Clean(Option_t *option) {
+void SubSystemHeader::Clean(Option_t *option) {
     m_eventId = 0;
     m_timerWord = 0;
     m_TREQ_VETO_status = 0;
     m_deadtime_and_cause = 0;
 }
-

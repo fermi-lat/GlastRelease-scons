@@ -1,19 +1,19 @@
 
 
-#ifndef LOGID_H
-#define LOGID_H
+#ifndef CalLogId_H
+#define CalLogId_H
 
-#include "TMath.h"
 #include "TObject.h"
 
-/*! \class LogID
+/*! \class CalLogId
 \brief
- access and set functions for binary calorimeter tags
+ access and set functions for calorimeter log ids
+ Jun 2001 Heather Kelly renamed LogID to CalLogId
  Version 1.0 21 Oct 1998 Richard creation
  Version 1.1 25 Oct 1999 R.Dubois Clone from LCD towerID
 */
 
-class LogID : public TObject {
+class CalLogId : public TObject {
 public: 
     typedef struct TAG_STRUCT {
         UInt_t xy, 
@@ -25,7 +25,7 @@ public:
     };
 private:
     /*
-    LogID tag word layout
+    CalLogId tag word layout
     (defined in following enum):
      ________________________________________________________________
     |31| ... |17||16|  |  |13|12|  |  |09|08|07||06|  |04|03|  |01|00|
@@ -82,38 +82,42 @@ private:
     };
     UInt_t m_tag;   // Packed word containing log data
 
-    static Bool_t isValidTagStruct(LogID::TAG_STRUCT ts);
+    static Bool_t isValidTagStruct(CalLogId::TAG_STRUCT ts);
     static Bool_t isValidTagWord(UInt_t tagWord);
     static Bool_t isValidColumn(UInt_t columnVal);
     static Bool_t isValidPipeLine(UInt_t pipeVal);
-//    static Bool_t isValidID(UInt_t idVal);
 
     static UInt_t getTower(UInt_t tagWord);
     static UInt_t getColumn(UInt_t tagWord);
     static UInt_t getLayer(UInt_t tagWord);
-    static UInt_t getID(UInt_t tagWord);
+
+    static UInt_t getId(UInt_t tagWord);
     static UInt_t getPipeline(UInt_t tagWord);
     static UInt_t getSequence(UInt_t tagWord);
     static UInt_t getXY(UInt_t tagWord);
 public:
+    // orientation of the layer
+    // X logs are oriented along the X axis
+    // Y logs are oriented along the Y axis
     typedef enum {
         X = 0,
         Y
     } CALAxes;
 
-    LogID();            
-    LogID(UInt_t tag);
-    virtual ~LogID();
+    CalLogId();            
+    CalLogId(UInt_t tag);
+    virtual ~CalLogId();
 
-    static Bool_t fillIDFromGeom(LogID::TAG_STRUCT *ts);
-    static Bool_t fillGeomFromID(LogID::TAG_STRUCT *ts);
-    static UInt_t fillTagWord(LogID::TAG_STRUCT *ts);
-    static void fillTagStruct(UInt_t tagVal, LogID::TAG_STRUCT *ts);
+    static Bool_t fillIdFromGeom(CalLogId::TAG_STRUCT *ts);
+    static Bool_t fillGeomFromId(CalLogId::TAG_STRUCT *ts);
+    static UInt_t fillTagWord(CalLogId::TAG_STRUCT *ts);
+    static void fillTagStruct(UInt_t tagVal, CalLogId::TAG_STRUCT *ts);
 
     UInt_t getTag()         const;
     UInt_t getColumn()      const;
     UInt_t getLayer()       const;
-    UInt_t getID()          const;
+
+    UInt_t getId()          const;
     CALAxes getXY()         const;
     UInt_t getPipeline()    const;
     UInt_t getSequence()    const;
@@ -125,6 +129,6 @@ public:
     Bool_t setXY(CALAxes xyVal);
 //    Bool_t setID(UInt_t idVal);
 
-ClassDef(LogID,3)       // CsI log identification and readout information
+ClassDef(CalLogId,3)       // CsI log identification and readout information
 };
 #endif

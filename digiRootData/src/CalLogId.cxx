@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////
 //                                                                        
-// The LogID class contains a log ID number (encoding of detector
+// The CalLogId class contains a log ID number (encoding of detector
 // element position) as well as functions to obtain the location of
-// log in question. LogID is used in the CalHit class.
+// log in question. CalLogId is used in the CalDigi class.
 //                                                                        
 ///////////////////////////////////////////////////////////////////////////
 
@@ -10,32 +10,32 @@
 // Version 1.0 21 Oct 1998 Richard creation
 // Version 1.1 25 Oct 1999 R.Dubois Clone from LCD
 
-#include "digiRootData/LogID.h"
+#include "digiRootData/CalLogId.h"
 
-ClassImp(LogID)
+ClassImp(CalLogId)
 
 ///________________________________________________________________________
-LogID::LogID(){
+CalLogId::CalLogId(){
     // Default constructor
     // All fields in tagword initialized to 0
     setTag(static_cast<UInt_t>(0));
 }
 ///________________________________________________________________________
-LogID::LogID(UInt_t tag=0) {
-    // Create a LogID object with number tag
+CalLogId::CalLogId(UInt_t tag=0) {
+    // Create a CalLogId object with number tag
     setTag(tag);
 }
 ///________________________________________________________________________
-LogID::~LogID() {
+CalLogId::~CalLogId() {
     // Destructor
 }
 ///________________________________________________________________________
-UInt_t LogID::getTag() const { 
+UInt_t CalLogId::getTag() const { 
     // Returns the log number
     return m_tag;
 }
 ///________________________________________________________________________
-Bool_t LogID::isValidColumn(UInt_t columnVal) {
+Bool_t CalLogId::isValidColumn(UInt_t columnVal) {
     // Check if given value is a valid Column number:
 
     return (
@@ -44,7 +44,7 @@ Bool_t LogID::isValidColumn(UInt_t columnVal) {
            );
 }
 ///________________________________________________________________________
-Bool_t LogID::isValidPipeLine(UInt_t pipeVal) {
+Bool_t CalLogId::isValidPipeLine(UInt_t pipeVal) {
     // Check if given value is a valid pipe number:
 
     return (
@@ -54,7 +54,7 @@ Bool_t LogID::isValidPipeLine(UInt_t pipeVal) {
 }
 ///________________________________________________________________________
 /*
-Bool_t LogID::isValidID(UInt_t idVal) {
+Bool_t CalLogId::isValidID(UInt_t idVal) {
     // Check length of idVal:
     if (idVal & CAL_M_ID)
         return kFALSE;
@@ -65,7 +65,7 @@ Bool_t LogID::isValidID(UInt_t idVal) {
 }
 */
 ///________________________________________________________________________
-Bool_t LogID::fillGeomFromID(LogID::TAG_STRUCT *ts) {
+Bool_t CalLogId::fillGeomFromId(CalLogId::TAG_STRUCT *ts) {
     // fill Layer, Column fields from ID fields:
     
     if (!isValidPipeLine(ts->pipeline))
@@ -77,7 +77,7 @@ Bool_t LogID::fillGeomFromID(LogID::TAG_STRUCT *ts) {
     if (ts->tower & ~CAL_M_TOWER)
         return kFALSE;
 
-    // Calculation code copied from LogID::isValidTagWord, it should be therefore
+    // Calculation code copied from CalLogId::isValidTagWord, it should be therefore
     // moved to a single function called from both places...  (TODO)
 
     // seq_divisor is 1/2 the number of possible sequence values:
@@ -92,7 +92,7 @@ Bool_t LogID::fillGeomFromID(LogID::TAG_STRUCT *ts) {
     return kTRUE;
 }
 ///________________________________________________________________________
-Bool_t LogID::fillIDFromGeom(LogID::TAG_STRUCT *ts) {
+Bool_t CalLogId::fillIdFromGeom(CalLogId::TAG_STRUCT *ts) {
     // fill Pipeline, ADC Sequence, etc. from Geometry fields: 
 
     if (!isValidColumn(ts->column))
@@ -117,7 +117,7 @@ Bool_t LogID::fillIDFromGeom(LogID::TAG_STRUCT *ts) {
     return kTRUE;
 }
 ///________________________________________________________________________
-Bool_t LogID::isValidTagStruct(TAG_STRUCT ts) {
+Bool_t CalLogId::isValidTagStruct(TAG_STRUCT ts) {
     // Test the validity of a particular tag structure.
     // Ensures that fields which don't use all possible values are
     // within bounds.  Compares 'geometric' and 'electronic' position data
@@ -147,7 +147,7 @@ Bool_t LogID::isValidTagStruct(TAG_STRUCT ts) {
     return kTRUE;
 }
 ///________________________________________________________________________
-Bool_t LogID::isValidTagWord(UInt_t tagWord) {
+Bool_t CalLogId::isValidTagWord(UInt_t tagWord) {
     // In this function, we must ensure that the (Pipeline, Sequence, XY)
     // and (Layer, Column) data map to identical logs.  If this is not the
     // case, then the data encoded in the tagword is contradictory and 
@@ -164,14 +164,14 @@ Bool_t LogID::isValidTagWord(UInt_t tagWord) {
 ///
 /// ACCESS FUNCTIONS for tagword fields:
 ///________________________________________________________________________
-UInt_t LogID::getTower(UInt_t tagWord) {
+UInt_t CalLogId::getTower(UInt_t tagWord) {
     // Returns the GLAST tower this log belongs to.  In the '99/2000
     // beamtest, this value is always 0.
 
     return static_cast<UInt_t>((tagWord >> CAL_V_TOWER) & CAL_M_TOWER);
 }
 ///________________________________________________________________________
-UInt_t LogID::getColumn(UInt_t tagWord) {
+UInt_t CalLogId::getColumn(UInt_t tagWord) {
     // Returns the column of the log in the calorimeter
     // Columns are numberd 0-9.  Looking at the positive X face of the cal
     // the log ends are numbered 0-9 from left to right.  Looking at the 
@@ -181,7 +181,7 @@ UInt_t LogID::getColumn(UInt_t tagWord) {
     return static_cast<UInt_t>((tagWord >> CAL_V_COLUMN) & CAL_M_COLUMN);
 }
 ///________________________________________________________________________
-UInt_t LogID::getLayer(UInt_t tagWord) {
+UInt_t CalLogId::getLayer(UInt_t tagWord) {
     // Returns the layer this log is in.  Layers are numbered from
     // 0: (closest to TKR) to 7: (furthest from TKR).
 
@@ -192,26 +192,26 @@ UInt_t LogID::getLayer(UInt_t tagWord) {
     return layerVal;
 }
 ///________________________________________________________________________
-UInt_t LogID::getID(UInt_t tagWord) {
+UInt_t CalLogId::getId(UInt_t tagWord) {
     // Returns the id of this log.  Each log in the calorimeter has a unique
     // id value based upon it's position in the cal.
     
     return static_cast<UInt_t>((tagWord >> CAL_V_ID) & CAL_M_ID);
 }
 ///________________________________________________________________________
-UInt_t LogID::getPipeline(UInt_t tagWord) {
+UInt_t CalLogId::getPipeline(UInt_t tagWord) {
     // Returns the electronics pipeline the log is read out through
 
     return static_cast<UInt_t>((tagWord >> CAL_V_PIPE) & CAL_M_PIPE);
 }
 ///________________________________________________________________________
-UInt_t LogID::getSequence(UInt_t tagWord) {
+UInt_t CalLogId::getSequence(UInt_t tagWord) {
     // Returns the electronics ADC sequence the log is read out from
 
     return static_cast<UInt_t>((tagWord >> CAL_V_SEQ) & CAL_M_SEQ);
 }
 ///________________________________________________________________________
-UInt_t LogID::getXY(UInt_t tagWord) {
+UInt_t CalLogId::getXY(UInt_t tagWord) {
     // Returns whether the log is in an x or y plane of the cal.
     
     return static_cast<UInt_t>((tagWord >> CAL_V_XY) & CAL_M_XY);
@@ -220,7 +220,7 @@ UInt_t LogID::getXY(UInt_t tagWord) {
 // Fill a TAG_STRUCT with data from tagVal.
 // *** NOTE: There is no assertion that user supplied tagword contains
 // valid fields!
-void LogID::fillTagStruct(UInt_t tagVal, LogID::TAG_STRUCT *ts) {
+void CalLogId::fillTagStruct(UInt_t tagVal, CalLogId::TAG_STRUCT *ts) {
     ts->column = getColumn(tagVal);
     ts->layer = getLayer(tagVal);
     ts->pipeline = getPipeline(tagVal);
@@ -232,7 +232,7 @@ void LogID::fillTagStruct(UInt_t tagVal, LogID::TAG_STRUCT *ts) {
 // Fill a tagword from a tag structure:
 // *** NOTE: There is no assertion that user supplied tag struct contains
 // valid fields!
-UInt_t LogID::fillTagWord(LogID::TAG_STRUCT *ts) {
+UInt_t CalLogId::fillTagWord(CalLogId::TAG_STRUCT *ts) {
     UInt_t tagWord = 0;
     tagWord += (ts->xy & CAL_M_XY) << CAL_V_XY;
     tagWord += (ts->sequence & CAL_M_SEQ) << CAL_V_SEQ;
@@ -245,7 +245,7 @@ UInt_t LogID::fillTagWord(LogID::TAG_STRUCT *ts) {
     return tagWord;
 }
 ///________________________________________________________________________
-Bool_t LogID::setTag(UInt_t tagVal) { 
+Bool_t CalLogId::setTag(UInt_t tagVal) { 
     // Set value of tag word to tagVal if taVal is valid
 
     if (isValidTagWord(tagVal)) {
@@ -255,7 +255,7 @@ Bool_t LogID::setTag(UInt_t tagVal) {
     else return kFALSE;
 }
 ///________________________________________________________________________
-Bool_t LogID::setTag(TAG_STRUCT *ts) {
+Bool_t CalLogId::setTag(TAG_STRUCT *ts) {
     // Fill tag word from values in a tag struct.
 
     if (isValidTagStruct(*ts)) {
@@ -265,13 +265,13 @@ Bool_t LogID::setTag(TAG_STRUCT *ts) {
     else return kFALSE;
 }
 ///________________________________________________________________________
-UInt_t LogID::getColumn() const {
+UInt_t CalLogId::getColumn() const {
     // return column value from tag word:
 
     return getColumn(m_tag);
 }
 ///_______________________________________________________________________
-Bool_t LogID::setColumn(UInt_t columnVal) {
+Bool_t CalLogId::setColumn(UInt_t columnVal) {
     // Sets the column field in the tag word
 
     if (!isValidColumn(columnVal)) 
@@ -283,20 +283,20 @@ Bool_t LogID::setColumn(UInt_t columnVal) {
     return kTRUE;
 }
 ///________________________________________________________________________
-UInt_t LogID::getID() const {
+UInt_t CalLogId::getId() const {
     // Returns the unique id of this log
 
-    return getID(m_tag);
+    return getId(m_tag);
 }
 ///________________________________________________________________________
-LogID::CALAxes LogID::getXY() const {
+CalLogId::CALAxes CalLogId::getXY() const {
     // Returns whether this log is in an x (logs || x-axis) or y 
     // (logs || y-axis) layer
 
     return (CALAxes)getXY(m_tag);
 }
 ///_______________________________________________________________________
-Bool_t LogID::setXY(CALAxes xyVal) {
+Bool_t CalLogId::setXY(CALAxes xyVal) {
     // Sets the XY field in the tag word
     
     m_tag &= ~(CAL_M_XY << CAL_V_XY);
@@ -305,25 +305,25 @@ Bool_t LogID::setXY(CALAxes xyVal) {
     return kTRUE;
 }
 ///________________________________________________________________________
-UInt_t LogID::getLayer() const {
+UInt_t CalLogId::getLayer() const {
     // return layer value from tag word:
 
     return getLayer(m_tag);
 }
 ///________________________________________________________________________
-UInt_t LogID::getPipeline() const {
+UInt_t CalLogId::getPipeline() const {
     // return layer value from tag word:
 
     return getPipeline(m_tag);
 }
 ///________________________________________________________________________
-UInt_t LogID::getSequence() const {
+UInt_t CalLogId::getSequence() const {
     // return ADC sequence value from tag word:
 
     return getSequence(m_tag);
 }
 ///________________________________________________________________________
-Bool_t LogID::setLayer(UInt_t layerVal) {
+Bool_t CalLogId::setLayer(UInt_t layerVal) {
     // Sets the layer field in the tag word
 
     // *** See note in header (in the private enum of tagword fields) 
@@ -347,7 +347,7 @@ Bool_t LogID::setLayer(UInt_t layerVal) {
 }
 ///________________________________________________________________________
 /*
-Bool_t LogID::setID(UInt_t idVal) {
+Bool_t CalLogId::setID(UInt_t idVal) {
     if (!isValidID(idVal))
         return kFALSE;
     

@@ -12,9 +12,9 @@
 #include "CalHeader.h"
 #include "TkrHeader.h"
 
-#include "ACDTile.h"
-#include "CalHit.h"
-#include "TkrLayer.h"
+#include "AcdDigi.h"
+#include "CalDigi.h"
+#include "TkrDigi.h"
 
 /*! \class Event
 \brief This is the top-level event class to store the
@@ -39,20 +39,20 @@ private:
     //Tagger *m_Tagger;       // Tagger object
 
     /// data members to store ACD data
-    TClonesArray *m_AcdData;  //-> 
+    TClonesArray *m_AcdDigiVec;  //-> 
     Int_t m_numTiles;
-    static TClonesArray *m_staticAcdData;
+    static TClonesArray *m_staticAcdDigiVec;
     AcdHeader m_AcdHeader;
 
     /// data members to store CAL data
-    TClonesArray *m_CalData;  //->
+    TClonesArray *m_CalDigiVec;  //->
     Int_t m_numLogs;
-    static TClonesArray *m_staticCalData;
+    static TClonesArray *m_staticCalDigiVec;
     CalHeader m_CalHeader;
 
     /// data members to store TKR data
-    static TObjArray *m_staticTkrData;
-    TObjArray* m_TkrData;       //-> List of Tracker layers
+    static TObjArray *m_staticTkrDigiVec;
+    TObjArray* m_TkrDigiVec;       //-> List of Tracker layers
     Int_t m_numLayers;
     TkrHeader m_TkrHeader;
 
@@ -70,26 +70,26 @@ public:
     inline Int_t getEventId() { return m_eventId; };
 
     /// Access the run number
-    inline void setRun(UInt_t run) { m_run = run; };
-    inline Int_t getRun() { return m_run; };
+    inline void setRunId(UInt_t run) { m_run = run; };
+    inline Int_t getRunId() { return m_run; };
 
     /// Access ACD data
     AcdHeader* getAcdHeader() { return &m_AcdHeader; };
-    TClonesArray* getAcdData() { return m_AcdData; };
-    /// Add a new ACDTile entry into the ACD data array
-    ACDTile* AddTile(UShort_t id);
+    TClonesArray* getAcdDigi() { return m_AcdDigiVec; };
+    /// Add a new AcdTile entry into the ACD data array
+    AcdDigi* addAcdDigi(UShort_t id);
 
     /// Access CAL data
     CalHeader* getCalHeader() { return &m_CalHeader; };
-    TClonesArray* getCalData() { return m_CalData; };
+    TClonesArray* getCalDigi() { return m_CalDigiVec; };
     /// Add a new CalHit entry into the CAL data array
-    CalHit* AddLog();
+    CalDigi* addCalDigi();
 
     /// Access TKR data
     TkrHeader* getTkrHeader() { return &m_TkrHeader; };
-    TObjArray* getTkrData() { return m_TkrData; };
+    TObjArray* getTkrDigi() { return m_TkrDigiVec; };
     /// Add a TkrLayer entry into the TKR data array
-    void AddLayer(TkrLayer *layer);
+    void addTkrDigi(TkrDigi *layer);
 
     /// Access Level 1 Trigger data
     inline L1T* getL1T() { return &m_L1T; };

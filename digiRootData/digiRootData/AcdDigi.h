@@ -1,12 +1,14 @@
 
-#ifndef ACDTile_H
-#define ACDTile_H
+#ifndef AcdDigi_H
+#define AcdDigi_H
 
-#include "TileID.h"
+#include "AcdId.h"
 #include "TObject.h"
 
-/*! \class ACDTile
+/*! \class AcdDigi
 \brief 
+ The digitization for a single ACD tile.
+ Jun 2001 Heather Kelly renamed to AcdDigi
  Jun 2001 Heather Kelly - Remove pointer to TileID
  Feb 2000 Daniel Flath - Rewrite to facilitate standardization of
 			 code & interface across all classes.
@@ -15,10 +17,10 @@
  Oct 25,1999 Richard Dubois Clone from LCD version
 */
 
-class ACDTile: public TObject {
+class AcdDigi: public TObject {
 private:
     /*!
-    ACDTile tag word layout
+    AcdDigi tag word layout
     (defined in following enum):
      _______________________________________________
     |15|  |  |12|11|  |  |  |  |  |  |	|  |  |  |00|
@@ -37,23 +39,22 @@ private:
 	ACD_M_HIT = ((1 << ACD_K_HIT) - 1)
     };
     UShort_t m_tag;	// Packed word containing tile data
-    TileID m_tileID;   // Tile identity info class
+    AcdId m_tileId;   // Tile identity info class
 public:
-    ACDTile();
-   // ACDTile(TileID& id);
-    ACDTile(UShort_t id);
-    virtual ~ACDTile();
-    TileID* getID() { return &m_tileID; };
-    UShort_t getPHA();
-    UChar_t getHit();
-    Bool_t setPHA(UShort_t pmtVal);
-    Bool_t setHit(UChar_t hitVal);
+    AcdDigi();
+    AcdDigi(UShort_t id);
+    virtual ~AcdDigi();
+    AcdId* getId() { return &m_tileId; };
+    UShort_t getPulseHeight();
+    UChar_t getVeto();
+    Bool_t setPulseHeight(UShort_t phaVal);
+    Bool_t setVeto(UChar_t hitVal);
 
     /// Root >= 3.0 is now const correct for the Compare function
     Int_t Compare(const TObject *obj) const; 
     Bool_t IsSortable() const;
 
-    ClassDef(ACDTile,3) 	// Information on a single ACD Tile
+    ClassDef(AcdDigi,3) 	// Digitization for a single ACD Tile
 };
 
 #endif

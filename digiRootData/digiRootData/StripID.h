@@ -1,19 +1,20 @@
-#ifndef StripID_H
-#define StripID_H
+#ifndef StripId_H
+#define StripId_H
 
 #include "TObject.h"
 
-/*! \class StripID
+/*! \class StripId
 \brief
+ Jun 2001 Heather Kelly - renamed StripID to StripId
  Jan 1999 Daniel Flath - ROOT HTML Documentation added
  Dec 1999 Daniel Flath - Creation
 */
 
-class StripID : public TObject  
+class StripId : public TObject  
 {
 private:
     /*
-    StripID tag word layout
+    StripId tag word layout
     (defined in following enum):
      _______________________________________________
     |15|  |  |12|11|10|  |  |  |  |  |  |  |  |  |00|
@@ -24,8 +25,9 @@ private:
     ***** NOTES: *****
 
     (1) CT == Controller (right or left)
-    (2) CTRL, TOWER fields not used in '99/2000 beamtest.
-    (3) Valid strip numbers: [0,1599]
+    (2) CTRL, TOWER fields not used in '99/2000 beamtest
+    (3) Valid strip numbers: [0,1599] for full layers
+    (4) CTRL field is used in the 2001 balloon, still only one tower
 
     */
     enum {
@@ -46,23 +48,23 @@ public:
         STRIP_CTRL_LEFT = 1
     };
 
-    StripID();
-    virtual ~StripID() { };
+    StripId();
+    virtual ~StripId() { };
 
     UShort_t getTag()   const { return m_tag; };
-    UShort_t getID()    const { return (m_tag >> TKR_V_STRIP) & TKR_M_STRIP; };
-    UShort_t getCtrl()  const { return (m_tag >> TKR_V_CTRL) & TKR_M_CTRL; };
+    UShort_t getId()    const { return (m_tag >> TKR_V_STRIP) & TKR_M_STRIP; };
+    UShort_t getController()  const { return (m_tag >> TKR_V_CTRL) & TKR_M_CTRL; };
     UShort_t getTower() const { return (m_tag >> TKR_V_TOWER) & TKR_M_TOWER; };
 
     Bool_t setTag(UShort_t tagVal) { m_tag = tagVal; return kTRUE; };
     Bool_t setStrip(UShort_t stripVal);
-    Bool_t setCTRL(UShort_t ctrlVal);
+    Bool_t setController(UShort_t ctrlVal);
     Bool_t setTower(UShort_t towerVal);
 
     Int_t Compare(TObject *obj);
     Bool_t IsSortable() const;
 
-    ClassDef(StripID,3)     // Information on a single Si Strip
+    ClassDef(StripId,3)     // Information on a single Si Strip
 };
 
-#endif // !defined StripID_H
+#endif // !defined StripId_H
