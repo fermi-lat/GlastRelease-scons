@@ -20,7 +20,7 @@ class RadLossHitEnergy : public IFitHitEnergy
 public:
 
     // Constructor needs the matrices that transform state vector, covariance matrix
-    RadLossHitEnergy();
+    RadLossHitEnergy(double mass = 0.);
     virtual ~RadLossHitEnergy() {};
 
     double initialHitEnergy(const Event::TkrTrack& patCand, 
@@ -28,8 +28,11 @@ public:
                             const double trkEnergy);
     double updateHitEnergy(const double curEnergy, const double radLen);
     double getHitEnergy(const double energy) {return energy;}
+    double kinETopBeta(const double energy);
+    double pBetaToKinE(const double energy);
 
 private:
+    double      m_mass;
     TkrControl* m_control;
 };
 

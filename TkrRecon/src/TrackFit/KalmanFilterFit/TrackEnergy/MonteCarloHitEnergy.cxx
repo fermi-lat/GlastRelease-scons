@@ -102,9 +102,10 @@ double MonteCarloHitEnergy::updateHitEnergy(const double /*curEnergy*/, const do
     double energy = -1.;
     return energy;
 }
-
-double MonteCarloHitEnergy::getHitEnergy(const double energy)
+    
+double MonteCarloHitEnergy::kinETopBeta(const double energy)
 {
+    // The input energy is the kinetic energy of the particle in question
     double hitEnergy = energy;
 
     Event::McParticle::StdHepId hepid= m_mcParticle->particleProperty();
@@ -118,6 +119,28 @@ double MonteCarloHitEnergy::getHitEnergy(const double energy)
     }
 
     return hitEnergy;
+}
+
+double MonteCarloHitEnergy::pBetaToKinE(const double pBeta)
+{
+    double kineticE = pBeta;
+
+    Event::McParticle::StdHepId hepid= m_mcParticle->particleProperty();
+    ParticleProperty* ppty = m_partPropSvc->findByStdHepID( hepid );
+    if (ppty) 
+    {
+        double mass = ppty->mass();
+        double p_sq = 0.5 * pBeta*pBeta * (1 + sqrt(1. + (mass * mass) / (pBeta * pBeta)));
+
+        kineticE = sqrt(p_sq + mass * mass) - mass;
+    }
+
+    return kineticE;
+}
+
+double MonteCarloHitEnergy::getHitEnergy(const double energy)
+{
+    return energy;
 }
 
 

@@ -11,8 +11,8 @@
 #include "RadLossHitEnergy.h"
 #include "Event/Recon/TkrRecon/TkrTrack.h"
 
-RadLossHitEnergy::RadLossHitEnergy() : 
-                  m_control(TkrControl::getPtr())
+RadLossHitEnergy::RadLossHitEnergy(double mass) : 
+                  m_mass(mass), m_control(TkrControl::getPtr())
 {
     return;
 }
@@ -22,6 +22,16 @@ double RadLossHitEnergy::initialHitEnergy(const Event::TkrTrack& patCand,
                                           const double trkEnergy)
 {
     return trkEnergy;
+}
+    
+double RadLossHitEnergy::kinETopBeta(const double energy)
+{
+    return energy;
+}
+    
+double RadLossHitEnergy::pBetaToKinE(const double energy)
+{
+    return energy;
 }
 
 double RadLossHitEnergy::updateHitEnergy(const double curEnergy, const double radLen)

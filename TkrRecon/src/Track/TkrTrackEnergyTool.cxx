@@ -60,10 +60,6 @@ private:
 
     /// Pointer to the Gaudi data provider service
     DataSvc*               m_dataSvc;
-
-    /// Flag for using Kalman Energies when no Cal available
-    bool                   m_useKalmanEnergy;
-
 };
 
 static ToolFactory<TkrTrackEnergyTool> s_factory;
@@ -90,8 +86,6 @@ TkrTrackEnergyTool::TkrTrackEnergyTool(const std::string& type, const std::strin
 {
     //Declare the additional interface
     declareInterface<ITkrTrackEnergyTool>(this);
-
-    declareProperty("UseKalmanEnergy", m_useKalmanEnergy=false);
 
     return;
 }
@@ -229,24 +223,10 @@ StatusCode TkrTrackEnergyTool::SetTrackEnergies()
                     {
                         e2_con = e2_min; 
                     }
-                    //firstCandTrk->setInitialEnergy(e1_con); 
+                    firstCandTrk->setInitialEnergy(e1_con); 
                     (*firstCandTrk)[0]->setEnergy(e1_con);       // change the hit energy on first track
-                    //secndCandTrk->setInitialEnergy(e2_con);
+                    secndCandTrk->setInitialEnergy(e2_con);
                     (*secndCandTrk)[0]->setEnergy(e1_con);       // change the hit energy on second track
-                }
-            }
-            else if (m_useKalmanEnergy)
-            {
-                for(Event::TkrTrackColPtr trackIter = trackCol->begin(); trackIter != trackCol->end(); trackIter++)
-                {
-                    Event::TkrTrack* track     = *trackIter;
-                    double           kalEnergy = track->getKalEnergy();
-                    double           trkEnergy = std::min(kalEnergy, 2.*m_control->getMinEnergy());
-
-                    track->clearEnergyStatusBits();
-                    track->setStatusBit(Event::TkrTrack::USERENERGY);
-
-                    (*track)[0]->setEnergy(trkEnergy);
                 }
             }
         }

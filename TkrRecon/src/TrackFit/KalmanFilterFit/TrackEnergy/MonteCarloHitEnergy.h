@@ -32,6 +32,8 @@ public:
                             const double              trkEnergy);
     double updateHitEnergy(const double curEnergy, const double radLen);
     double getHitEnergy(const double energy);
+    double kinETopBeta(const double energy);
+    double pBetaToKinE(const double energy);
 
 private:
     /// Tracker recon control singleton
