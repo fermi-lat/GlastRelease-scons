@@ -28,7 +28,7 @@ use xml      v4
 use xmlUtil  v2r7p1
 
 use idents   v2r3p1
-use detModel v2r6
+use detModel    v2r6r1
 
 use instrument      v5r1
 use data     v4r2
@@ -57,14 +57,13 @@ macro_prepend includes "-I ../src " WIN32 "/I ..\src "
 
 library G4Generator ${G4Generator_headers} *.cxx   Dll/*.cxx
 
-# stuff for test
-public
+# stuff for test (need public for set temporarily
+public 
 set JOBOPTIONS ${G4GENERATORROOT}/src/test/jobOptions.txt
-
+private
 # alternative test program that links stuff into the exe
 
-
-macro_prepend gui_linkopts "$(GuiSvc_lib) ${guiapp_linkopts} -u GuiSvc_loadRef  -ldl "\
+macro G4Testlinkopts "$(GuiSvc_lib) ${guiapp_linkopts} -u GuiSvc_loadRef  -ldl "\
               WIN32 " ${guiapp_linkopts} $(GuiSvc_lib)  /include:_GuiSvc_loadRef "
 
 macro other_source "" WIN32 "test/*.txt test/*.xml *.h test/*.h" 
