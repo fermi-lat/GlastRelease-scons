@@ -29,11 +29,10 @@ ApplicationMgr.ExtSvc += {"CalCalibSvc"} ;
 CalCalibSvc.DefaultFlavor  = "ideal" ;
 
 // algorithms skeleton
-ApplicationMgr.DLLs += { "GaudiAlg", "RootIo", "CalRecon" } ;
+ApplicationMgr.DLLs += { "GaudiAlg", "RootIo" } ;
 ApplicationMgr.TopAlg = { "PropertiesCheckAlg" } ;  
 ApplicationMgr.TopAlg += { "TkrCalibAlg" } ;
 ApplicationMgr.TopAlg += { "Sequencer/Simulation" } ;
 ApplicationMgr.TopAlg += { "Sequencer/Reconstruction" } ;
-ApplicationMgr.TopAlg += { "test_CalRecon" } ;
 MessageSvc.OutputLevel = 3 ;
 

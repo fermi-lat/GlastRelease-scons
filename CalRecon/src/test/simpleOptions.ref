@@ -39,41 +39,29 @@ ApplicationMgr.ExtSvc += {"CalCalibSvc"} ;
 CalCalibSvc.DefaultFlavor  = "ideal" ;
 
 // algorithms skeleton
-ApplicationMgr.DLLs += { "GaudiAlg", "RootIo", "CalRecon" } ;
+ApplicationMgr.DLLs += { "GaudiAlg", "RootIo" } ;
 ApplicationMgr.TopAlg = { "PropertiesCheckAlg" } ;  
 ApplicationMgr.TopAlg += { "TkrCalibAlg" } ;
 ApplicationMgr.TopAlg += { "Sequencer/Simulation" } ;
 ApplicationMgr.TopAlg += { "Sequencer/Reconstruction" } ;
-ApplicationMgr.TopAlg += { "test_CalRecon" } ;
 MessageSvc.OutputLevel = 3 ;
 
 
 // <-- End of including file $CALRECONROOT/src/test/common.txt
 
 
-// read back simulation
-Simulation.Members += { "digiRootReaderAlg" } ;  
-PropertiesCheckAlg.targets = { "digiRootReaderAlg" } ;
-digiRootReaderAlg.digiRootFile="$CALRECONROOT/src/test/gamma_5_gev_normal.root" ;
+// read back simulation and reconstruction first pass
+Simulation.Members += { "digiRootReaderAlg", "reconRootReaderAlg" } ;  
+PropertiesCheckAlg.targets += { "digiRootReaderAlg", "reconRootReaderAlg"  } ;
+digiRootReaderAlg.digiRootFile = "$CALRECONROOT/src/test/gamma_5_gev_normal-digi.root" ;
+reconRootReaderAlg.reconRootFile = "$CALRECONROOT/src/test/gamma_5_gev_normal-recon.root" ;
 
-// --> Including file $CALRECONROOT/src/test/reconstruction.txt
-
-
-
-// Reconstruction
-ApplicationMgr.DLLs += { "CalRecon", "TkrRecon" } ;
-ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" };
-Reconstruction.Members += { "CalXtalRecAlg", "CalClustersAlg/first" } ;
-Reconstruction.Members += { "TkrReconAlg/FirstPass" } ;
-Reconstruction.Members += { "CalClustersAlg/second" } ;
-Reconstruction.Members += { "TkrReconAlg/Iteration" } ;
-PropertiesCheckAlg.targets += { "CalXtalRecAlg" } ;
-PropertiesCheckAlg.targets += { "first", "FirstPass", "second", "Iteration" } ;
-
-
-
-
-// <-- End of including file $CALRECONROOT/src/test/reconstruction.txt
+// calo reconstruction second pass
+ApplicationMgr.DLLs += { "CalRecon" } ;
+ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" } ;
+Reconstruction.Members += { "CalClustersAlg" } ;
+PropertiesCheckAlg.targets += { "CalClustersAlg" } ;
+ApplicationMgr.TopAlg += { "test_CalRecon" } ;
 
 
 
@@ -83,16 +71,7 @@ PropertiesCheckAlg.targets += { "first", "FirstPass", "second", "Iteration" } ;
 CalClustersAlg.clusteringToolName="CalSimpleClusteringTool";
 
 Job options successfully read in from /home/chamont/Glast/CalReconDev/CalRecon/src/test/simpleOptions.txt
-WARNING Algorithm factory for type PropertiesCheckAlg already declared. Overwriting it.
-ObjectManager     WARNING Factory for class:ProfileTool already exists.
-ObjectManager     WARNING Factory for class:LastLayerCorrTool already exists.
-WARNING Algorithm factory for type CalXtalRecAlg already declared. Overwriting it.
-ObjectManager     WARNING Factory for class:CalValsCorrTool already exists.
-ObjectManager     WARNING Factory for class:CalSingleClusteringTool already exists.
-ObjectManager     WARNING Factory for class:CalSimpleClusteringTool already exists.
-WARNING Algorithm factory for type CalDisplay already declared. Overwriting it.
-WARNING Algorithm factory for type CalClustersAlg already declared. Overwriting it.
-ApplicationMgr       INFO Successfully loaded modules: GlastSvc, G4Generator, G4Propagator, TkrUtil, CalUtil, CalibSvc, CalXtalResponse, GaudiAlg, RootIo, CalRecon, CalRecon, TkrRecon
+ApplicationMgr       INFO Successfully loaded modules: GlastSvc, G4Generator, G4Propagator, TkrUtil, CalUtil, CalibSvc, CalXtalResponse, GaudiAlg, RootIo, CalRecon
 ApplicationMgr       INFO Application Manager Configured successfully
 EventSelector        INFO GlastEventSelector input has been set to NONE
 EventPersistenc...   INFO "CnvServices": ["EventCnvSvc"]
@@ -162,14 +141,13 @@ TkrSplitsSvc      WARNING Service already initialized
 TkrToTSvc            INFO TkrToTSvc initialized with mode: ideal
 TkrGeometrySvc       INFO TkrGeometrySvc successfully initialized
 TkrBadStripsSvc      INFO No bad strips file was requested.
-Simulation           INFO Member list: digiRootReaderAlg
-digiRootReaderAlg    INFO Opened file: /home/chamont/Glast/CalReconDev/CalRecon/src/test/gamma_5_gev_normal.root
-Reconstruction       INFO Member list: CalXtalRecAlg, CalClustersAlg/first, TkrReconAlg/FirstPass, CalClustersAlg/second, TkrReconAlg/Iteration
-ToolSvc.XtalEne...   INFO initialize
-ToolSvc.XtalPos...   INFO initialize
-first                INFO CalClustersAlg: callNumber = 0
-ToolSvc.CalSing...   INFO BEGIN initialize()
-ToolSvc.CalSing...   INFO END initialize()
+Simulation           INFO Member list: digiRootReaderAlg, reconRootReaderAlg
+digiRootReaderAlg    INFO Opened file: /home/chamont/Glast/CalReconDev/CalRecon/src/test/gamma_5_gev_normal-digi.root
+reconRootReaderAlg   INFO Opened file: /home/chamont/Glast/CalReconDev/CalRecon/src/test/gamma_5_gev_normal-recon.root
+Reconstruction       INFO Member list: CalClustersAlg
+CalClustersAlg       INFO CalClustersAlg: callNumber = 0
+ToolSvc.CalSimp...   INFO BEGIN initialize()
+ToolSvc.CalSimp...   INFO END initialize()
 ToolSvc.LastLay...   INFO Initializing LastLayerCorrTool
 ToolSvc.LastLay...   INFO  value for c0 -35.3747
 ToolSvc.LastLay...   INFO  value for c1 68.1653
@@ -194,17 +172,6 @@ ToolSvc.Profile...   INFO  value for bias6 0.273117
 ToolSvc.Profile...   INFO  value for bias7 -0.604589
 ToolSvc.Profile...   INFO  value for bias8 0.452359
 ToolSvc.CalVals...   INFO Initializing CalValsCorrTool
-FirstPass            INFO TkrReconAlg Initialization
-ToolSvc.TkrMake...   INFO TkrMakeClustersTool successfully initialized
-ToolSvc.TkrQuer...   INFO TkrQueryClustersTool successfully initialized
-ToolSvc.ComboFi...   INFO PatRecBaseTool successfully initialized
-ParticlePropert...   INFO Opened particle properties file : /home/chamont/Glast/GlastRelease/v6r3p2/FluxSvc/v6r17p1/cdf/particle.cdf
-TkrFitFirst          INFO TkrTrackFitAlg Initialization
-TkrDisplayAlg       ERROR service_i: can not locate service GuiSvc
-TkrDisplayAlg     WARNING No GuiSvc: so, no event display 
-second               INFO CalClustersAlg: callNumber = 0
-Iteration            INFO TkrReconAlg Initialization
-TkrFitIter           INFO TkrTrackFitAlg Initialization
 test_CalRecon        INFO initialize
 EventSelector        INFO No input file selected for GlastEventSelector
 HistogramPersis...   INFO "CnvServices": ["HbookHistSvc", "RootHistSvc"]
@@ -216,13 +183,52 @@ test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -10
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 2 time
-test_CalRecon        INFO Energy 2765.69 Corrected 4091.24 -688.291 -411.255 -137.827 -0.0361487 0.000770428 0.999346
-test_CalRecon        INFO Profile Corr Energy 4012.59
+test_CalRecon        INFO Energy 2691.01 Corrected 4038.17 -684.135 -410.456 -137.51 -0.0400505 -0.00182971 0.999196
+test_CalRecon        INFO Profile Corr Energy 3888.04
 test_CalRecon        INFO Last Layer Corr Energy -4
+test_CalRecon        INFO Energy 60.2084 Corrected 4038.17 -651.601 -333.873 -153.389 -0.0612865 0.0626875 0.99615
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 3.45836 Corrected 4038.17 -464.31 -301.569 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 2.95682 Corrected 4038.17 -585.534 -509.356 -79.42 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 2.50377 Corrected 4038.17 -625.565 -585.734 -129.266 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.52409 Corrected 4038.17 -714.87 -197.649 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 2.29443 Corrected 4038.17 -648.367 -292.836 -92.5441 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.18552 Corrected 4038.17 -615.201 -61.97 -100.77 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.11572 Corrected 4038.17 -464.31 -675.146 -79.42 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 3 time
-test_CalRecon        INFO Energy 3238.98 Corrected 4694.36 -711.236 -457.981 -133.597 -0.0137954 0.16105 0.98685
-test_CalRecon        INFO Profile Corr Energy 4555.15
+test_CalRecon        INFO Energy 3209.55 Corrected 4658.03 -710.38 -448.869 -133.659 -0.0181812 0.167783 0.985656
+test_CalRecon        INFO Profile Corr Energy 4516.73
 test_CalRecon        INFO Last Layer Corr Energy -4
+test_CalRecon        INFO Energy 14.7384 Corrected 4658.03 -631.925 -226.959 -122.604 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 4.12479 Corrected 4658.03 -643.636 -323.312 -192.272 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 2.88845 Corrected 4658.03 -519.99 -350.25 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 6.51676 Corrected 4658.03 -621.479 -590.023 -75.0837 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.13901 Corrected 4658.03 -398.75 -340.37 -58.07 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 4 time
 test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
@@ -252,13 +258,46 @@ test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -10
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 11 time
-test_CalRecon        INFO Energy 702.197 Corrected 1349.37 109.211 -29.8717 -139.888 -0.0134158 0.00976502 0.999862
+test_CalRecon        INFO Energy 673.738 Corrected 1151.73 123.598 -32.4539 -138.493 -0.0471131 0.0151466 0.998775
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -4
+test_CalRecon        INFO Energy 22.6029 Corrected 1151.73 134.763 33.2528 -182.734 0.882639 1.01207e-16 0.470051
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.93008 Corrected 1151.73 293.797 34.13 -100.77 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.15784 Corrected 1151.73 337.251 145.49 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.09758 Corrected 1151.73 57.6578 229.01 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 0.951881 Corrected 1151.73 -34.13 -24.2498 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 12 time
-test_CalRecon        INFO Energy 2340.6 Corrected 3550.15 -670.546 410.56 -120.348 -0.0175184 -0.0127855 0.999765
-test_CalRecon        INFO Profile Corr Energy 2849.87
+test_CalRecon        INFO Energy 2300.2 Corrected 3313.78 -670.745 413.995 -119.748 0.00124697 -0.0251825 0.999682
+test_CalRecon        INFO Profile Corr Energy 2752.58
 test_CalRecon        INFO Last Layer Corr Energy -4
+test_CalRecon        INFO Energy 27.976 Corrected 3313.78 -693.707 329.489 -170.693 0.351521 -8.1827e-15 0.93618
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 2.83774 Corrected 3313.78 -673.218 519.99 -100.77 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 2.11172 Corrected 3313.78 -714.87 262.233 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.88883 Corrected 3313.78 -628.828 340.37 -58.07 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 0.975916 Corrected 3313.78 -603.51 350.25 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 0.889246 Corrected 3313.78 -703.848 547.83 -58.07 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 13 time
 test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
@@ -272,9 +311,18 @@ test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -10
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 16 time
-test_CalRecon        INFO Energy 3686.75 Corrected 3686.75 -164.751 -518.377 -147.023 0.0168335 0.0658872 0.997685
-test_CalRecon        INFO Profile Corr Energy 5861.72
+test_CalRecon        INFO Energy 3682.45 Corrected 3682.45 -150.07 -501.972 -146.983 0.0161712 0.0748634 0.997063
+test_CalRecon        INFO Profile Corr Energy 5849.14
 test_CalRecon        INFO Last Layer Corr Energy -4
+test_CalRecon        INFO Energy 3.14248 Corrected 3682.45 85.2259 -547.715 -172.219 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.74607 Corrected 3682.45 -331.968 -340.37 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 0.766088 Corrected 3682.45 -408.63 -398.75 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 17 time
 test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
@@ -284,23 +332,25 @@ test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -10
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 19 time
-test_CalRecon        INFO Energy 3001.69 Corrected 3965.38 658.395 -301.23 -169.653 -0.106539 -0.18256 0.977405
-test_CalRecon        INFO Profile Corr Energy 7155.29
-test_CalRecon        INFO Last Layer Corr Energy 5040.74
+test_CalRecon        INFO Energy 2997.22 Corrected 3911.4 667.316 -292.676 -169.674 -0.112716 -0.174683 0.978152
+test_CalRecon        INFO Profile Corr Energy 7138.7
+test_CalRecon        INFO Last Layer Corr Energy 5027.04
+test_CalRecon        INFO Energy 1.88638 Corrected 3911.4 714.87 -398.75 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.53888 Corrected 3911.4 520.564 -436.47 -58.07 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.45991 Corrected 3911.4 492.15 -550.894 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 20 time
 test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 TkrCalibAlg          INFO           Finalize TkrCalibAlg 
-FirstPass            INFO 
-FirstPass            INFO ====>> 0 events failed in this run
-FirstPass            INFO 
-Iteration            INFO 
-Iteration            INFO ====>> 0 events failed in this run
-Iteration            INFO 
 test_CalRecon        INFO finalize after 20 calls.
 EventLoopMgr         INFO Histograms converted successfully according to request.
-ParticlePropert...   INFO Service finalised successfully
 TkrGeometrySvc       INFO TkrGeometrySvc finalize called
 ToolSvc              INFO Removing all tools created by ToolSvc
 ApplicationMgr       INFO Application Manager Finalized successfully

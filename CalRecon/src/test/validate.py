@@ -183,6 +183,3 @@ build_application_test('CalRecon')
 run_job('CalRecon','CalRecon','jobOptions',False)
 run_job('CalRecon','CalRecon','simpleOptions',False)
 
-# needs TkrRecon so to trigger the various energy corrections.
-run_job('Gleam','CalRecon','gleamOptions',True)
-

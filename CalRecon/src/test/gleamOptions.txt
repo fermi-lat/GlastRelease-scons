@@ -1,7 +1,0 @@
-
-#include "$CALRECONROOT/src/test/common.txt"
-#include "$CALRECONROOT/src/test/simulation.txt"
-#include "$CALRECONROOT/src/test/reconstruction.txt"
-
-FluxAlg.source_name = "gamma_5_gev_normal" ;
-

@@ -1,11 +1,18 @@
 
 #include "$CALRECONROOT/src/test/common.txt"
 
-// read back simulation
-Simulation.Members += { "digiRootReaderAlg" } ;  
-PropertiesCheckAlg.targets = { "digiRootReaderAlg" } ;
-digiRootReaderAlg.digiRootFile="$CALRECONROOT/src/test/gamma_5_gev_normal.root" ;
+// read back simulation and reconstruction first pass
+Simulation.Members += { "digiRootReaderAlg", "reconRootReaderAlg" } ;  
+PropertiesCheckAlg.targets += { "digiRootReaderAlg", "reconRootReaderAlg"  } ;
+digiRootReaderAlg.digiRootFile = "$CALRECONROOT/src/test/gamma_5_gev_normal-digi.root" ;
+reconRootReaderAlg.reconRootFile = "$CALRECONROOT/src/test/gamma_5_gev_normal-recon.root" ;
 
-#include "$CALRECONROOT/src/test/reconstruction.txt"
+// calo reconstruction second pass
+ApplicationMgr.DLLs += { "CalRecon" } ;
+ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" } ;
+Reconstruction.Members += { "CalClustersAlg" } ;
+PropertiesCheckAlg.targets += { "CalClustersAlg" } ;
+ApplicationMgr.TopAlg += { "test_CalRecon" } ;
+
 
 

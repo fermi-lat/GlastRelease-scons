@@ -61,8 +61,6 @@ StatusCode test_CalRecon::execute() {
         return StatusCode::FAILURE ;
     }
     
-    // David: I display here what is not already displayed
-    // by the CalClustersAlg
     Event::CalClusterCol::const_iterator cluster ;
     for ( cluster = clusCol->begin() ;
           cluster != clusCol->end() ;

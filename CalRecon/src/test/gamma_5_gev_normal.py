@@ -118,6 +118,6 @@ def run_job(setup_package,binary_package,options,cmtbin_depend) :
 #  job
 #=================================
 
-build_application_test('CalRecon')
-run_job('Gleam','CalRecon','gamma_5_gev_normal',True)
+build_application_test('Gleam')
+run_job('Gleam','Gleam','gamma_5_gev_normal',True)
 
