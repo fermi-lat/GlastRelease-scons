@@ -32,7 +32,7 @@ void GlastSvc_load() {
     DLL_DECL_CONVERTER( RawEventCnv );
     DLL_DECL_CONVERTER( MCSiLayerCnv );
     DLL_DECL_CONVERTER( MCCalorimeterHitCnv );
-    DLL_DECL_CONVERTER( CsIDataCnv );
+    DLL_DECL_CONVERTER( TdCsIDataCnv );
 } 
 
 extern "C" void GlastSvc_loadRef()    {
