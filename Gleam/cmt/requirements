@@ -1,6 +1,6 @@
 package Gleam
 
-version  v2r2p10
+version  v2r2p11
 # This is a checkout package
 # $Id$
 
@@ -16,16 +16,16 @@ use RootHistCnv v5r0p1
 
 use XMLEXT      v2r2 
 use GlastPolicy v4r6 
-use facilities           v2r5
+use facilities  v2r5
 use xml         v4r1p4 
 use xmlUtil     v2r8p1
 
 use geometry    v3
-use astro                v0r1p1 
+use astro       v0r1p1 
 
 # low-level graphics
 
-use gui                  v3r3
+use gui         v3r3
 use geomrep     v4r1
 
 # the geometry data base
@@ -39,41 +39,41 @@ use Geant4      v1r1p0
 
 public
 # this is the minimal G4 runtime only stuff
-use Geant4Runtime       v1r0
+use Geant4Runtime v1r0
 
 # Gaudi component packages follow
 
 use GuiSvc      v3r1p3
 
-use Event               v8r15
+use Event       v8r15
 use GlastSvc    v8r2
 
 # simulation
 
-use FluxSvc             v5r10p4
+use FluxSvc     v5r10p4
 use FluxDisplay v2r1
-use G4Generator         v4r3p1
+use G4Generator v4r3p1
 
 #digitization
-use CalDigi             v1r2p1
-use TkrDigi             v1r5p6
-use AcdDigi             v1r3p1
+use CalDigi     v1r2p1
+use TkrDigi             v1r5p7
+use AcdDigi     v1r3p1
 
 
 
 #reconstruction
 use Trigger     v3r3p3
-use Recon               v2r3p2
+use Recon       v2r3p2
 
 use TkrRecon    v6r4p4
 use CalRecon    v5r7p2  
-use AcdRecon            v0r5p1       
+use AcdRecon    v0r5p1       
 
 #ROOT persistence: RootIo specifies the data packages
-use RootIo              v4r11
+use RootIo      v4r11
 
 #diagnostic and summary of bottom line
-use merit                v5r8p2
+use merit       v5r8p2
 
 ### define a simple executable with GUI
 
