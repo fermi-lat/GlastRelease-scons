@@ -109,6 +109,9 @@ public:
     
     ///use GPS to correct m_launchDir for the rocking of the spacecraft.
     void FluxSource::correctForTiltAngle();
+
+    /// for the SPREAD Launch Type, spread the vector direction randomly, with a cutoff of m_degreespread.
+    void spreadTheDirection();
     
     //! choices for generating incoming particle trajectory
     enum LaunchType { 
@@ -119,7 +122,8 @@ public:
             SPECTRUM, //! direction calculated by the spectrum object
             SPECGAL,   //! direction coming from the spectrum object, in the form (l,b) - galactic coordinates
             PATCHFIXED,   //! fixed direction, fixed surface (unused)
-            GALACTIC  //!  fixed direction with respect to the galactic coordinate system (l,b)
+            GALACTIC,  //!  fixed direction with respect to the galactic coordinate system (l,b)
+            SPREAD   //!  galactic direction declared with a uniform diffuse distribution of flux around it.
     } m_launch;
     
     enum PointType { 
@@ -134,7 +138,6 @@ public:
         MeV,        //! MeV
             GeV         //! GeV
     } m_energyscale;
-    
     
     //! whether or not the current particle is occluded by the earth
     bool occluded();
@@ -180,7 +183,6 @@ public:
       Box* illumBox;
       double m_interval; //the current value of the interval in time to the next particle.
       
-      
       //! transform the current m_launchDir into GLAST-relative coordinates
       //! to give to the client
       //void transformDirection();
@@ -191,6 +193,9 @@ public:
       Point  m_launchPoint;
       double m_energy;
       // associated with a specific launch
+
+      /// degrees to spread the diffuse source by.
+      double m_degreespread;
       
       /// rotation associated with the "tilting" angles.
       Rotation m_correctForTilt;

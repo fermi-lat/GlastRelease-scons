@@ -36,7 +36,7 @@ FluxSource::FluxSource(ISpectrum* aSpec, double aFlux)
 m_maxEnergy(100.),  // note defualt maximum kinetic energy
 _minCos(-0.4f), _maxCos(1.0f), _minPhi(0.0f), _maxPhi(2*M_PI),
 m_rmin(0), m_rmax(1), _phi(0.0f), _theta(0.0f), m_pointtype(NOPOINT),
-m_launch(NONE), illumBox(0), m_energyscale(GeV)
+m_launch(NONE), illumBox(0), m_energyscale(GeV) ,m_degreespread(0)
 {
     s_backoff = 0.;
     spectrum(aSpec);
@@ -51,7 +51,7 @@ FluxSource::FluxSource(double aFlux, ISpectrum* aSpec,  double l, double b)
 m_maxEnergy(100.),  // note defualt maximum kinetic energy
 _minCos(-0.4f), _maxCos(1.0f), _minPhi(0.0f), _maxPhi(2*M_PI),
 m_rmin(0), m_rmax(1), _phi(0.0f), _theta(0.0f), m_pointtype(NOPOINT),
-m_launch(NONE), illumBox(0),m_gall(l),m_galb(b)
+m_launch(NONE), illumBox(0),m_gall(l),m_galb(b),m_degreespread(0)
 {
     s_backoff = 0.;
     spectrum(aSpec);
@@ -71,7 +71,7 @@ FluxSource::FluxSource(const DOM_Element& xelem )
 m_maxEnergy(100.),  // note defualt maximum kinetic energy
 _minCos(-0.4f), _maxCos(1.0f), _minPhi(0.0f), _maxPhi(2*M_PI),
 m_rmin(0), m_rmax(1), _phi(0.0f), _theta(0.0f), m_pointtype(NOPOINT), m_launch(NONE),
-illumBox(0), m_energyscale(GeV)
+illumBox(0), m_energyscale(GeV),m_degreespread(0)
 {
     static double d2r = M_PI/180.;
     
@@ -89,7 +89,6 @@ illumBox(0), m_energyscale(GeV)
         useSpectrumDirection(); // and will use its direction generation
         
     } else {
-        
         // process spectrum element
         DOM_NodeList children = spec.getChildNodes();
         
@@ -132,7 +131,7 @@ illumBox(0), m_energyscale(GeV)
         }
         // second child element is angle
         DOM_Element angles = xml::Dom::getSiblingElement(specType);
-        
+            std::cout << "here" << std::endl;
         DOMString anglesTag = angles.getTagName();
         
         if (anglesTag.equals("solid_angle") ) {
@@ -172,6 +171,15 @@ illumBox(0), m_energyscale(GeV)
             //    ra << " , dec = " << dec << std::endl;
             getGalacticDir(m_gall,m_galb);
             m_launch=GALACTIC;
+        }
+        else if(anglesTag.equals("galactic_spread")){
+            //get l and b, just like for 
+            m_galb=atof(xml::Dom::transToChar(angles.getAttribute("b")));
+            m_gall=atof(xml::Dom::transToChar(angles.getAttribute("l")));
+            m_degreespread = atof(xml::Dom::transToChar(angles.getAttribute("degreespread")));
+            //getGalacticDir(atof(xml::Dom::transToChar(angles.getAttribute("l"))),
+            //    atof(xml::Dom::transToChar(angles.getAttribute("b"))) );
+            m_launch=SPREAD;
         }
         else {
             FATAL_MACRO("Unknown angle specification in Flux::Flux \""
@@ -224,12 +232,12 @@ illumBox(0), m_energyscale(GeV)
         //		std::vector<float> paramvec; parseParamList(source_params, paramvec);
         s = SpectrumFactoryTable::instance()->instantiate(class_name, source_params);
         if(s==0){
-            FATAL_MACRO("Unknown Spectrum: "<< class_name);
+            
             std::cerr << "List of known Spectrum classes:\n" ;
             std::list<std::string>list= SpectrumFactoryTable::instance()->spectrumList();
             for( std::list<std::string>::iterator i = list.begin(); i!=list.end(); ++i)
                 std::cerr << "\t" << *i << std::endl;
-            
+            FATAL_MACRO("Unknown Spectrum: "<< class_name);
             return;
         }
     }
@@ -278,6 +286,10 @@ void FluxSource::setAcceptance()
         break;
     case PATCHFIXED:
         EventSource::solidAngle(1.0); // single direction, solid angle = 1.
+        break;
+    case SPREAD:
+        EventSource::solidAngle(M_PI*pow(m_degreespread*M_PI/180.,2));
+        if (m_degreespread == 0.0) EventSource::solidAngle(1.);  // treat as direction solid angle = 1
         break;
     }
 }
@@ -427,6 +439,14 @@ void FluxSource::computeLaunch (double time)
             //getGalacticDir should already have been called in the constructor
             
             getGalacticDir(m_gall, m_galb);
+            break;
+        }
+    case SPREAD:
+        {
+            getGalacticDir(m_gall, m_galb);
+            m_launch = SPREAD;
+            spreadTheDirection();
+            correctForTiltAngle();
             break;
         }
     case SURFACE:
@@ -1091,4 +1111,14 @@ void FluxSource::correctForTiltAngle(){
     m_correctedDir = m_correctForTilt*m_launchDir;
     //and return it.
     //return rockingAngles;
+}
+
+void FluxSource::spreadTheDirection(){
+double phi = RandFlat::shoot(M_2PI);
+double mcostheta = cos(m_degreespread*M_PI/180.);
+double costheta = RandFlat::shoot(mcostheta,1.0);
+Vector launchprime = m_launchDir;
+m_launchDir.rotate(acos(costheta) , m_launchDir.orthogonal());
+m_launchDir.rotate(phi,launchprime);
+
 }

@@ -54,7 +54,7 @@
      <source name="gal10020" flux="0.01">
           <spectrum escale="GeV">
               <particle name="gamma"> <energy e="0.1"/> </particle>
-               <galactic_dir l="50" b="-30"/>
+               <galactic_dir l="20" b="20"/>
           </spectrum>
      </source>
 
@@ -275,4 +275,11 @@
           </spectrum>
      </source>
 
+	<!-- Test source at the galactic origin -->
+    <source name="testspread" flux="3.0">
+         <spectrum escale="GeV">
+             <particle name="gamma"> <energy e="0.1"/> </particle>
+              <galactic_spread  l="0" b="0"/>
+         </spectrum>
+    </source>
 </source_library>
