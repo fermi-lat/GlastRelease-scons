@@ -29,7 +29,7 @@ ntupleWriterSvc.tuple_name = { "TESTALG" };
 writeJunkAlg.tupleName = "TESTALG";
 
 // Output root ntuple file, specify by logical variable
-NTupleSvc.Output = {"TESTALG DATAFILE='/heather/NTUPLES/testAlg.root' OPT='NEW'"};
+NTupleSvc.Output = {"TESTALG DATAFILE='/NTUPLES/testAlg.root' OPT='NEW'"};
 
 // Number of Events to Process
 ApplicationMgr.EvtMax = 20;
