@@ -3,20 +3,14 @@
 #define DigiEvent_H
 
 #include "TObject.h"
-#include "L1T.h"
+//#include "L1T.h"
 #include "TClonesArray.h"
 #include "TObjArray.h"
 
-#include "AcdHeader.h"
-#include "CalHeader.h"
-#include "TkrHeader.h"
-
-#include "AcdTile.h"
+#include "AcdDigi.h"
 #include "CalDigi.h"
 #include "TkrDigi.h"
-#include "TkrLayer.h"
 
-#include "LiveTime.h"
 
 /** @class DigiEvent
  * @brief This is the top-level event class to store the raw (digi) data.
@@ -53,16 +47,16 @@ public:
     /// Access ACD data
     //AcdHeader* getAcdHeader() { return &m_AcdHeader; };
     /// retrieve the whole TClonesArray of Acd Digi data
-    //TClonesArray* getAcdDigi() { return m_AcdDigiVec; };
-    /// Add a new AcdTile entry into the ACD digi array
-    //AcdTile* addAcdTile(UInt_t id, short base=10, short used=1);
-    /// retrieve a specific AcdTile - if not found, returns null
-    /// User should provide a valid (Ritz) Acd id, in base 10 - where 010 == 10
-    //const AcdTile* getAcdTile(UInt_t id);
-    /// retrieve a specific AcdTile, based upon the layer, face, row, col, if not found returns null
-    //const AcdTile* getAcdTile(short l, short f, short r, short c);
+    TClonesArray* getAcdDigiCol() { return m_acdDigiCol; };
+    /// Add a new AcdDigi entry into the ACD digi array
+    AcdDigi* addAcdDigi(const AcdId& id, Float_t energy, UShort_t *pha, 
+        Bool_t *veto, Bool_t *low, Bool_t *high);
+
+    /// retrieve a specific AcdDigi, based upon the layer, face, row, col, if not found returns null
+    const AcdDigi* getAcdDigi(UShort_t l, UShort_t f, UShort_t r, UShort_t c);
+
     /// retrieve a specific AcdTile, based upon a valid AcdId, if not found returns null
-    //const AcdTile* getAcdTile(AcdId &id);
+    const AcdDigi* getAcdDigi(const AcdId &id);
 
     /// Access CAL data
     //CalHeader* getCalHeader() { return &m_CalHeader; };
@@ -99,9 +93,9 @@ private:
     //L1T m_L1T;
 
     /// data members to store ACD data
-    //TClonesArray *m_AcdDigiVec;  //-> 
-    //Int_t m_numTiles;
-    //static TClonesArray *m_staticAcdDigiVec;
+    TClonesArray *m_acdDigiCol;  //-> 
+    Int_t m_numAcdDigis;
+    static TClonesArray *s_acdDigiStaticCol; //!
     //AcdHeader m_AcdHeader;
 
     /// data members to store CAL data
@@ -117,7 +111,7 @@ private:
 
     /// store LiveTime counter data
     //LiveTime m_liveTime;
-    ClassDef(DigiEvent,4) // Storage for Raw(Digi) event and subsystem data
+    ClassDef(DigiEvent,5) // Storage for Raw(Digi) event and subsystem data
 }; 
 
 #endif

@@ -2,7 +2,6 @@
 #ifndef digiRootData_CalXtalReadout_H
 #define digiRootData_CalXtalReadout_H 1
 
-#include <iostream>
 #include "TObject.h"
 
 #include "CalXtalId.h"

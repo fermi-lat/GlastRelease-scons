@@ -26,7 +26,11 @@ unless we agree to number the towers 0, 1, 4, 5.
     TowerId (UInt_t ix, UInt_t iy);
 
     ~TowerId() { };
-    
+
+    void Clear(Option_t *option ="");
+
+    void Print(Option_t *option="") const;
+
     //! access the id itself
     Int_t id () const { return m_id; }
     
