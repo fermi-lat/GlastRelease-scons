@@ -48,9 +48,6 @@ public:
     /// return a unique number correcponding to that spectrum
     int numSource()const;
     
-    //number of times we've iterated the front() pointer into sourcelist 
-    //to get the current particle - represents the source
-    int m_numofiters;
     
     ///	    list of sources which make up this composite
     std::vector< EventSource* >& sourceList ();
@@ -61,7 +58,7 @@ public:
     double interval (double){return m_interval;}
 
     /// set the interval to the next event
-    double setInterval (double interval){m_interval = interval;}
+    double setInterval (double interval){return (m_interval = interval);}
 
    // double m_time; 
     double m_interval;
@@ -71,6 +68,11 @@ public:
 
 protected:
     virtual void setupXML (const DOM_Element&);
+
+    //number of times we've iterated the front() pointer into sourcelist 
+    //to get the current particle - represents the source
+    int m_numofiters;
+
     
 private: 
     std::vector< EventSource* > m_sourceList;
