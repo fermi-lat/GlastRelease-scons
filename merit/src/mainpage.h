@@ -2,9 +2,11 @@
 // (Special "header" just for doxygen)
 
 /*! @mainpage  package merit
-Sample output, the first sensible Gleam-related results!
+Sample output, the first sensible Gleam-related results, from Gleam v2r1p3 (prior to disaster of p4)
+<br>
+Note that still need the layer number for the reconstructed conversion
+<hr>
 <pre>
-meritAlg             INFO 
         Generated events :   1000
 =======================================================
 Analysis cuts: nA
