@@ -17,7 +17,7 @@ static const InterfaceID IID_ITkrQueryClustersTool("ITkrQueryClustersTool", 1 , 
 *
 * Example of usage:
 *
-* <pre>
+* @verbatim
 *  #include "GaudiKernel/IToolSvc.h"
 *  #include "GaudiKernel/AlgTool.h"
 *  #include "TkrUtil/ITkrQueryClustersTool.h"
@@ -45,7 +45,7 @@ static const InterfaceID IID_ITkrQueryClustersTool("ITkrQueryClustersTool", 1 , 
 *  ...
 *
 *  int nHits = pQuery->numberOfHitsNear(view, layer, inDistance, x0);
-* </pre>
+* @endverbatim
 */
 
 class   ITkrQueryClustersTool : virtual public IAlgTool {
