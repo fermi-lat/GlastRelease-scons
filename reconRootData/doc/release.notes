@@ -1,7 +1,8 @@
 /** @file release.notes
  package reconRootData
- package manager: H. Kelly
+ package manager:H.Kelly
 
+v3r5      20-Sep-2002: HMK Add TkrCluster class and remove TkrSiCluster class\n
 v3r4      29-Aug-2002: HMK add active distance collection to AcdRecon\n
 v3r3p0    27-Aug-2002: HMK get rootcint output and fix test routine \n
 v3r3      26-Aug-2002: HMK fix TkrCovMat operator = \n
