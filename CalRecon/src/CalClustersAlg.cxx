@@ -4,11 +4,10 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/TkrRecon/TkrVertex.h"
-
+#include "SingleClusterTool.h"
 
 /// Glast specific includes
 #include "Event/TopLevel/EventModel.h"
@@ -32,7 +31,7 @@ using namespace Event;
 
 //! function to compute the true energy deposited in a layer
 /*! Uses the incomplete gamma function:
- *       gamma(double,double) implemented in gamma.cxx
+*       gamma(double,double) implemented in gamma.cxx
 */ 
 static double gam_prof(double *par, int i)
 
@@ -51,36 +50,36 @@ static double gam_prof(double *par, int i)
 //
 {
 	double result =0; 
-
+	
 	double length = ((xtalHeight*i+par[2])/1.85)/slope;
-
+	
 	// Evaluation of the parameters of CsI at this energy	
 	//	double alpha = par[1];
 	//	double lambda = par[3];
-
+	
 	double alpha = 2.65*exp(0.15*log(par[0]));
-        double lambda = 2.29*exp(-0.031*log(par[0]));
-
-
+	double lambda = 2.29*exp(-0.031*log(par[0]));
+	
+	
 	double x=length/lambda;
 	double dx = xtalHeight / (1.85 *lambda)/slope;
 	
 	double gamma1 =0;
 	double gamma2 = 0;
-
+	
 	// Now we will calculate the gamma incomplete function
-
+	
 	// gamma1 = integration from 0 to x	
 	gamma1 = TMath::Gamma(alpha,x);
 	x += dx;
-
+	
 	// gamma2 = integration from 0 to x+dx	
 	gamma2 = TMath::Gamma(alpha,x);
 	
 	// the result of integration over Xtal pathlength is E*(gamma2-gamma1)
 	result = par[0]*(gamma2 - gamma1);
-
-        return result;
+	
+	return result;
 }
 
 
@@ -102,17 +101,17 @@ static void fcn(int & , double *, double &f, double *par, int )
 //         
 // Output: f - the result of chi2 calculation
 {
-        int i;
+	int i;
 	//calculate 'chisquare'
-        double chisq = 0;
-        double dlt;
-   
-        for (i=0;i<nbins; i++) {
-                dlt  = (g_elayer[i]-gam_prof(par,i));
-                if(g_elayer[i]>0.001) chisq += dlt*dlt/g_elayer[i];
+	double chisq = 0;
+	double dlt;
+	
+	for (i=0;i<nbins; i++) {
+		dlt  = (g_elayer[i]-gam_prof(par,i));
+		if(g_elayer[i]>0.001) chisq += dlt*dlt/g_elayer[i];
 	}
-   
-        f = chisq;
+	
+	f = chisq;
 }
 
 double CalClustersAlg::Leak(double eTotal,double elast)
@@ -204,15 +203,15 @@ void CalClustersAlg::Profile(double eTotal, Event::CalCluster* cl)
         
         // starting value of each parameter
         vstrt[0] = eTotal_GeV;
-
+		
         
         // parametrisation of alpha
         vstrt[1] = 2.65 * exp(0.15*log(eTotal_GeV));
-
+		
         // eq to 1X0 in CsI
         vstrt[2] = 1.8f;			
         vstrt[3] = 2.29 * exp(-0.031*log(eTotal_GeV));
-
+		
         // step value of each parameter
         stp[0] = 0.1f;
         stp[1] = 0.1f;
@@ -255,13 +254,13 @@ void CalClustersAlg::Profile(double eTotal, Event::CalCluster* cl)
         // Defines parameters
         
         minuit->mnparm(0, "Energy",    vstrt[0], stp[0],
-                       bmin[0],bmax[0],ierflg);
+			bmin[0],bmax[0],ierflg);
         minuit->mnparm(1, "Alpha",    vstrt[1], stp[1],
-                       bmin[1],bmax[1],ierflg);
+			bmin[1],bmax[1],ierflg);
         minuit->mnparm(2, "Starting point",  vstrt[2], stp[2],
-                       bmin[2],bmax[2],ierflg);
+			bmin[2],bmax[2],ierflg);
         minuit->mnparm(3, "Lambda",  vstrt[3], stp[3],
-                       bmin[3],bmax[3],ierflg);
+			bmin[3],bmax[3],ierflg);
         
         // Fix some parameters
         // alpha
@@ -293,13 +292,13 @@ void CalClustersAlg::Profile(double eTotal, Event::CalCluster* cl)
         // Fills data
         
         cl->initProfile(1000*fit_energy,ki2,fit_start,fit_alpha,fit_lambda);
-
+		
         // Clear minuit
         arglist[0] = 1;
         minuit->mnexcm("CLEAR", arglist ,1,ierflg);
         
     } 
-        
+	
 }
 
 
@@ -307,25 +306,25 @@ void CalClustersAlg::Profile(double eTotal, Event::CalCluster* cl)
 Vector CalClustersAlg::Fit_Direction(std::vector<Vector> pos,
                                      std::vector<Vector> sigma2,
                                      int nlayers)
-//
-// Purpose and Method:
-//       find the particle direction from average positions in each
-//       layer and their quadratic errors. The fit is made independently
-//       in XZ and YZ planes for odd and even layers, respectively.
-//       Then the 3-vector of particle direction is calculated from these 
-//       2 projections.
-//       Only position information based on the transversal crystal position
-//       is used. The position along the crystal, calculated from signal
-//       asymmetry is not used.
-//
-// Inputs:
-//         pos      - average position for each calorimeter layer
-//         sigma2   - quadratic error of position measurement for each layer
-//                    in each direction  
-//         nlayers  - number of calorimeter layers
-//
-// Returned value:    3-Vector of reconstructred particle direction
-//
+									 //
+									 // Purpose and Method:
+									 //       find the particle direction from average positions in each
+									 //       layer and their quadratic errors. The fit is made independently
+									 //       in XZ and YZ planes for odd and even layers, respectively.
+									 //       Then the 3-vector of particle direction is calculated from these 
+									 //       2 projections.
+									 //       Only position information based on the transversal crystal position
+									 //       is used. The position along the crystal, calculated from signal
+									 //       asymmetry is not used.
+									 //
+									 // Inputs:
+									 //         pos      - average position for each calorimeter layer
+									 //         sigma2   - quadratic error of position measurement for each layer
+									 //                    in each direction  
+									 //         nlayers  - number of calorimeter layers
+									 //
+									 // Returned value:    3-Vector of reconstructred particle direction
+									 //
                                      
 {
     
@@ -342,36 +341,36 @@ Vector CalClustersAlg::Fit_Direction(std::vector<Vector> pos,
     double norm2=0;     // sum of weights for even layers
     double var_z1=0;    // variance of z for odd layers	
     double var_z2=0;    // variance of z for even layers
-
+	
     // number of layers with non-zero energy deposition
     // in X and Y direction, respectively
     int nlx=0,nly=0;
     
-
+	
     // "non-physical vector of direction, which is returned
     // if fit is imposible due to insufficient number of hitted layers
     Vector nodir(-1000.,-1000.,-1000.);
-
+	
     
     // loop over calorimeter layers
     for(int il=0;il<nlayers;il++)
     {                
         // For the moment forget about longitudinal position
-
+		
         // odd layers used for XZ fit
         if(il%2==1)
         {
-
+			
             // only if the spread in X direction is not zero,
             // which is the case if there is non-zero energy
             // deposition in this layer
             if (sigma2[il].x()>0.)
             {
                 nlx++; // counting layers used for the fit in XZ plane 
-
+				
                 // calculate weighting coefficient for this layer
                 double err = 1/sigma2[il].x(); 
-
+				
                 // calculate sums for least square linear fit in XZ plane
                 cov_xz += pos[il].x()*pos[il].z()*err;
                 var_z1 += pos[il].z()*pos[il].z()*err;
@@ -390,11 +389,11 @@ Vector CalClustersAlg::Fit_Direction(std::vector<Vector> pos,
             {
                 
                 nly++; // counting layers used for the fit in YZ plane 
-
+				
                 // calculate weighting coefficient for this layer
                 double err = 1/sigma2[il].y();
-
-
+				
+				
                 // calculate sums for least square linear fit in YZ plane
                 cov_yz += pos[il].y()*pos[il].z()*err;
                 var_z2 += pos[il].z()*pos[il].z()*err;
@@ -419,10 +418,10 @@ Vector CalClustersAlg::Fit_Direction(std::vector<Vector> pos,
     cov_xz -= mx*mz1;
     var_z1 /= norm1;
     var_z1 -= mz1*mz1;
-
+	
     // protection against dividing by 0 in the next statment
     if(var_z1 == 0) return nodir;
-
+	
     // Now we have cov(x,z) and var(z) we can
     // deduce slope in XZ plane
     double tgthx = cov_xz/var_z1;
@@ -437,7 +436,7 @@ Vector CalClustersAlg::Fit_Direction(std::vector<Vector> pos,
     
     // protection against dividing by 0 in the next statment
     if(var_z2 == 0) return nodir;
-
+	
     // Now we have cov(y,z) and var(z) we can
     // deduce slope in YZ plane
     double tgthy = cov_yz/var_z2;
@@ -455,12 +454,13 @@ CalClustersAlg::CalClustersAlg(const std::string& name,
                                ISvcLocator* pSvcLocator):
 Algorithm(name, pSvcLocator)
 {
-
+	
     // declaration of parameter needed to distinguish 2 calls
     // of CalClustersAlg:
     // 1st - before TkrRecon and 2nd - after TkrRecon
     
     declareProperty("callNumber",m_callNumber=0);
+    declareProperty ("clusterToolName", m_clusterToolName="SingleClusterTool");
     
 }
 
@@ -479,7 +479,7 @@ StatusCode CalClustersAlg::initialize()
 {
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
-
+	
     
     
     // get pointer to GlastDetSvc
@@ -492,9 +492,9 @@ StatusCode CalClustersAlg::initialize()
         return sc;
     }
     
-
+	
     // extracting detector geometry constants from xml file
-
+	
     double value;
     if(!detSvc->getNumericConstByName(std::string("CALnLayer"), &value)) 
     {
@@ -540,7 +540,17 @@ StatusCode CalClustersAlg::initialize()
     
     
     g_elayer.clear();
-    
+
+    // it appears that retrieveTool cannot store a Cluster* pointer. Will need
+    // to find ICluster* and downcast it to Cluster*
+    ICluster* iclus;
+    sc = toolSvc()->retrieveTool(m_clusterToolName,iclus);
+    if (sc.isFailure() ) {
+        log << MSG::ERROR << "  Unable to create " << m_clusterToolName << endreq;
+        return sc;
+    }
+    m_clusterTool = dynamic_cast<Cluster*>(iclus);
+	
     return sc;
 }
 
@@ -561,15 +571,15 @@ StatusCode CalClustersAlg::retrieve()
     
     DataObject* pnode=0;
     
-
+	
     // get pointer to Calrecon directory in TDS
     sc = eventSvc()->retrieveObject(EventModel::CalRecon::Event, pnode );
     
     // if this directory doesn't yet exist - attempt to create it
     if( sc.isFailure() ) {
         sc = eventSvc()->registerObject(EventModel::CalRecon::Event,
-                                        new DataObject);
-
+			new DataObject);
+		
         
         // if can't create - put error message and return
         if( sc.isFailure() ) {
@@ -579,11 +589,11 @@ StatusCode CalClustersAlg::retrieve()
             return sc;
         }
     }
-
+	
     // attempt to get pointer to CalClusterCol, if it exists already
     m_calClusterCol = SmartDataPtr<CalClusterCol> (eventSvc(),
-                      EventModel::CalRecon::CalClusterCol);
-
+		EventModel::CalRecon::CalClusterCol);
+	
     
     // if it doesn't exist - create it and register in TDS
     if (!m_calClusterCol )
@@ -591,7 +601,7 @@ StatusCode CalClustersAlg::retrieve()
         m_calClusterCol = 0;
         m_calClusterCol = new CalClusterCol();
         sc = eventSvc()->registerObject(EventModel::CalRecon::CalClusterCol,
-                                        m_calClusterCol);
+			m_calClusterCol);
     }
     
     // if it exists - delete all clusters
@@ -599,10 +609,12 @@ StatusCode CalClustersAlg::retrieve()
     {
         m_calClusterCol->delClusters();
     }
-    
+	
+	m_clusterTool->setClusterCol(m_calClusterCol);
+	
     // get pointer to CalXtalRecCol
     m_calXtalRecCol = SmartDataPtr<CalXtalRecCol>(eventSvc(),
-                      EventModel::CalRecon::CalXtalRecCol); 
+		EventModel::CalRecon::CalXtalRecCol); 
     
     
     return sc;
@@ -632,31 +644,31 @@ StatusCode CalClustersAlg::execute()
 {
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
-
+	
     //get pointers to the TDS data structures
     sc = retrieve();
-
+	
     const Point p0(0.,0.,0.);
     
     // variable indicating ( if >0) the presence of tracker
     // reconstruction output
     int rectkr=0;  
-
+	
     int ntracks=0;
     Vector trackDirection;
     Point trackVertex;
     
-
+	
     // get pointer to the tracker vertex collection
     SmartDataPtr<TkrVertexCol> tkrRecData(eventSvc(),
-                 EventModel::TkrRecon::TkrVertexCol);
-
+		EventModel::TkrRecon::TkrVertexCol);
+	
     // if reconstructed tracker data doesn't exist - put the debugging message
     if (tkrRecData == 0) {
         log << MSG::DEBUG << "No TKR Reconstruction available " << endreq;
         // return sc;
     }
-
+	
     
     // if data exist and number of tracks not zero 
     // - get information of track position and direction 
@@ -678,186 +690,71 @@ StatusCode CalClustersAlg::execute()
             log << MSG::DEBUG << "No reconstructed tracks " << endreq;
         }	
     }
-
-    
-    double ene = 0;                 // total energy in calorimeter
-    Vector pCluster(p0);            // cluster position
-    int nLayers = m_CalnLayers;     // number of layers
-    
-    // energy per layer
-    std::vector<double> eneLayer(nLayers,0.);   
-    
-    // Vector of average position per layer
-    std::vector<Vector> pLayer(nLayers);    
-    
-    
-    // Vector of quadratic spread per layer
-    std::vector<Vector> rmsLayer(nLayers);  
-    
-    
-    
-    // Compute barycenter and various moments
-    
-    
-    // loop over all hitted crystals in CalXtalRecCol
-    for (CalXtalRecCol::const_iterator it = m_calXtalRecCol->begin();
-    it != m_calXtalRecCol->end(); it++){
-
-        // get pointer to teh reconstructed data for given crystal
-        CalXtalRecData* recData = *it;
+	
+	int nLayers = m_CalnLayers;
+	
+	// call the Cluster tool to find clusters
+	m_clusterTool->findClusters(m_calXtalRecCol);
+	
+	
+    // loop over all found clusters
+    for (Event::CalClusterCol::const_iterator it = m_calClusterCol->begin();
+    it != m_calClusterCol->end(); it++){
+		
+		
+		// Compute direction using the positions and rms per layer
+		Vector caldir = Fit_Direction((*it)->getPosLayer(),
+			(*it)->getRmsLayer(),
+			nLayers);
+		
+		
+		// if no tracker rec then fill slope
+		if(!rectkr) slope = caldir.z();
+		
         
-        // get reconstructed values
-        double eneXtal = recData->getEnergy(); // crystal energy
-        Vector pXtal = recData->getPosition() - p0; // Vector of crystal position
-        int layer = (recData->getPackedId()).getLayer(); // layer number
-        
-        // update energy of corresponding layer
-        eneLayer[layer]+=eneXtal;
-        
-        // update average position of corresponding layer
-        Vector ptmp = eneXtal*pXtal;
-        pLayer[layer] += ptmp;
-        
-        // Vector containing squared coordinates, weighted by crystal energy 
-        Vector ptmp_sqr(ptmp.x()*pXtal.x(),
-                        ptmp.y()*pXtal.y(),
-                        ptmp.z()*pXtal.z());
- 
-        
-        
-        // update quadratic spread, which is proportional to eneXtal;
-        // this means, that position error in one crystal
-        // is assumed to be 1/sqrt(eneXtal) 
-        rmsLayer[layer] += ptmp_sqr;
-        
-        
-        // update energy sum
-        ene  += eneXtal;
-
-        // update cluster position
-        pCluster += ptmp;
-    }
-    
-    // Now take the means
-
-    // if energy sum is not zero - normalize cluster position
-    if(ene>0.)pCluster *= (1./ene); 
-
-    // if energy is zero - set cluster position to non-physical value
-    else pCluster=Vector(-1000., -1000., -1000.);
-    int i = 0;
-    
-    // loop over calorimeter layers
-    for( ;i<nLayers;i++){
-
-        // if energy in the layer is not zero - finalize calculations
-        if(eneLayer[i]>0)
-        {
-            // normalize position in the layer
-            pLayer[i] *= (1./eneLayer[i]); 
-            
-            // normalize quadratic spread in the laye
-            rmsLayer[i] *= (1./eneLayer[i]);
-            
-            
-            // Vector containing the squared average position in each component
-            Vector sqrLayer(pLayer[i].x()*pLayer[i].x(),
-                            pLayer[i].y()*pLayer[i].y(),
-                            pLayer[i].z()*pLayer[i].z());
-            
-            
-            // the precision of transverse coordinate measurement
-            // if there is no fluctuations: 1/sqrt(12) of crystal width
-            Vector d; 
-            if(i%2 == 1) d = Vector(m_CsIWidth*m_CsIWidth/12.,0.,0.);
-            else d = Vector(0.,m_CsIWidth*m_CsIWidth/12.,0.);
-            
-            // subtracting the  squared average position and adding
-            // the square of crystal width, divided by 12
-            rmsLayer[i] += d-sqrLayer;
-            
-        }
-        
-        // if energy in the layer is zero - reset position and spread Vectors
-        else 
-        {
-            pLayer[i]=p0;
-            rmsLayer[i]=p0;
-        }
-    }
-    
-    
-    // Now sum the different rms to have one transverse and one longitudinal rms
-    double rms_trans=0;
-    double rms_long=0;
-    std::vector<Vector> posrel(nLayers);
-    
-    
-    for(int ilayer=0;ilayer<nLayers;ilayer++)
-    {
-        
-        posrel[ilayer]=pLayer[ilayer]-pCluster;
-        
-        // Sum alternatively the rms
-        if(ilayer%2)
-        {
-            rms_trans += rmsLayer[ilayer].y();
-            rms_long += rmsLayer[ilayer].x();
-        }
-        else
-        {
-            rms_trans += rmsLayer[ilayer].x();
-            rms_long += rmsLayer[ilayer].y();
-        }
-    }
-    
-    
-    // Compute direction using the positions and rms per layer
-    Vector caldir = Fit_Direction(posrel,rmsLayer,nLayers);
-    
-    
-    // if no tracker rec then fill slope
-    if(!rectkr) slope = caldir.z();
-    
-    
-    // Fill CalCluster data
-    CalCluster* cl = new CalCluster(ene,pCluster+p0);
-    m_calClusterCol->add(cl);
-    
-    // Leakage correction
-    double eleak = Leak(ene,eneLayer[nLayers-1])+ene;
-    
-    // iteration
-    eleak = Leak(eleak,eneLayer[nLayers-1])+ene;	
-    
-    
-    
-    // defines global variable to be used for fcn
-    g_elayer.resize(nLayers);
-    for ( i =0;i<nLayers;i++)
-    {
-        // We are working in GeV
-        g_elayer[i] = eneLayer[i]/1000.;
-    }
-    nbins = nLayers;
-    
-    // Do profile fitting
-    Profile(ene,cl);
-
-    // calculating the transverse offset of average position in the calorimeter
-    // with respect to the position predicted from tracker information
-    double calTransvOffset = 0.;
-    if(ntracks>0){
-        Vector calOffset = (p0+pCluster) - trackVertex;
-        double calLongOffset = trackDirection*calOffset;
-        calTransvOffset =sqrt(calOffset.mag2() - calLongOffset*calLongOffset);
-        
-    }
-
-    // store the calculated quantities in CalCluster object
-    cl->initialize(eleak,eneLayer,pLayer,rmsLayer,rms_long,rms_trans,
-        caldir,calTransvOffset);
-    
+		// Leakage correction
+		double eleak = Leak((*it)->getEnergySum(),
+			(*it)->getEneLayer(nLayers-1))
+			+(*it)->getEnergySum();
+		
+		// iteration
+		eleak = Leak(eleak,(*it)->getEneLayer(nLayers-1))
+			+(*it)->getEnergySum();	
+		
+		
+		
+		// defines global variable to be used for fcn
+		g_elayer.resize(nLayers);
+		for (int i =0;i<nLayers;i++)
+		{
+			// We are working in GeV
+			g_elayer[i] = (*it)->getEneLayer(i)/1000.;
+		}
+		nbins = nLayers;
+		
+		// Do profile fitting
+		Profile((*it)->getEnergySum(),(*it));
+		
+		// calculating the transverse offset of average position in the calorimeter
+		// with respect to the position predicted from tracker information
+		double calTransvOffset = 0.;
+		if(ntracks>0){
+			Vector calOffset = ((*it)->getPosition()) - trackVertex;
+			double calLongOffset = trackDirection*calOffset;
+			calTransvOffset =sqrt(calOffset.mag2() - calLongOffset*calLongOffset);
+			
+		}
+		
+		// store the calculated quantities back in this CalCluster object. Note
+		// temporary ugly kluge of overwriting all but two existing elements!
+		(*it)->initialize(eleak,
+			(*it)->getEneLayer(),
+			(*it)->getPosLayer(),
+			(*it)->getRmsLayer(),
+			(*it)->getRmsLong(),
+			(*it)->getRmsTrans(),
+			caldir,calTransvOffset);
+	}   // close loop on clusters
     
     // print the reconstruction results for debugging
     m_calClusterCol->writeOut(log << MSG::DEBUG);
@@ -871,8 +768,8 @@ StatusCode CalClustersAlg::finalize()
 	
 	
 	// delete Minuit object
-        delete minuit;
-
+	delete minuit;
+	
 	return sc;
 }
 

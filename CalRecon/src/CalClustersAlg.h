@@ -7,6 +7,8 @@
 #include "geometry/Vector.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
+#include "Cluster.h"
+
 class TMinuit;
 
 /**   
@@ -228,6 +230,12 @@ private:
 
     //! pointer to GlasDetSvc
     IGlastDetSvc* detSvc;
+
+    /// name of Tool for finding clusters
+    std::string m_clusterToolName;
+
+    /// pointer to actual tool for finding clusters
+    Cluster* m_clusterTool;
 
 };
 
