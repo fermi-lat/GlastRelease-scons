@@ -1,6 +1,5 @@
 //$Header$
 #include <string>
-//#include <stdio.h>   // ???
 #include <cstdio>
 
 #include "CalibMySQLCnvSvc.h"
