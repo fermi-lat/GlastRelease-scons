@@ -2,6 +2,11 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 11-Aug-2003: jrb - tag v1r13    1. (Xin) revised em and miniTower files
+ *                                 to be consistent with recent CAL and TKR
+ *                                 changes
+ *                                 2. (Joanne) Most of new ACD geometry, using
+ *                                 3-d model, is in.  Missing some ribbons.
  * 28-jul-2003: jrb - tag v1r12    (for Leon) add enclosing volume for
  *                                 LAT z-displacement test
  * 17-jul-2003: jrb - tag v1r11p4  Fix erroneous ACD tile identifier
