@@ -70,9 +70,9 @@ namespace Event
                             double eneM) :
                   m_eneP(eneP), 
                   m_eneM(eneM),
-                  m_pos(Point(0.,0.,0.))
+                  m_pos(Point(0.,0.,0.)),
                   m_rangeP(rangeP), 
-                  m_rangeM(rangeM), 
+                  m_rangeM(rangeM) 
               {};
               
               ~CalRangeRecData() {};
