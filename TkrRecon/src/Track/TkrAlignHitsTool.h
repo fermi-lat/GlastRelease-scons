@@ -25,8 +25,6 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 
 #include "../src/Track/ITkrAlignHitsTool.h"
-
-#include "Event/Recon/TkrRecon/TkrKalFitTrack.h"
 #include "Event/TopLevel/EventModel.h"
 
 #include "TkrUtil/ITkrGeometrySvc.h"
@@ -45,7 +43,7 @@ namespace {
         HepPoint3D pos;
         HepVector3D slope;
         HepPoint3D newPos;
-        Event::TkrFitHit  newHit;
+        Event::TkrTrackHit  newHit;
     };
     typedef std::vector<HitStuff*>  hitVec;
     typedef hitVec::iterator itVec;
@@ -72,7 +70,7 @@ public:
     ///        added to the collection in the TDS.
 
     StatusCode initialize();
-    StatusCode alignHits(const Event::TkrKalFitTrack* track,
+    StatusCode alignHits(const Event::TkrTrack* track,
         alignVector& aVec);
 
 private:

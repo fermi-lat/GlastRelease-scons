@@ -4,7 +4,6 @@
 #include "IVtxBaseTool.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "Event/Recon/TkrRecon/TkrFitTrack.h"
 
 /**
  * @class VtxBaseTool

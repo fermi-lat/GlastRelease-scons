@@ -18,13 +18,6 @@
 #include "GaudiKernel/ToolFactory.h"
 
 #include "Event/Recon/TkrRecon/TkrCluster.h"
-#include "Event/Recon/TkrRecon/TkrCluster.h"
-
-#include "Event/Recon/TkrRecon/TkrFitPar.h"
-#include "Event/Recon/TkrRecon/TkrFitMatrix.h"
-#include "Event/Recon/TkrRecon/TkrFitPlane.h"
-#include "Event/Recon/TkrRecon/TkrFitHit.h"
-
 
 namespace {
     bool debug = false;
@@ -54,7 +47,7 @@ StatusCode TkrAlignHitsTool::initialize() {
     return sc;
 }
 
-StatusCode TkrAlignHitsTool::alignHits(const Event::TkrKalFitTrack* track,
+StatusCode TkrAlignHitsTool::alignHits(const Event::TkrTrack* track,
                                        std::vector<double>& alignVec)
 {
     StatusCode sc = StatusCode::SUCCESS;
@@ -66,7 +59,7 @@ StatusCode TkrAlignHitsTool::alignHits(const Event::TkrKalFitTrack* track,
     // get the clusterCol
     Event::TkrClusterCol* m_clusCol = 
         SmartDataPtr<Event::TkrClusterCol>(m_dataSvc,EventModel::TkrRecon::TkrClusterCol); 
-
+/*
     // loop over the planes
     Event::TkrFitPlaneConPtr pPlane = track->begin();
     int planeNumber = 0;
@@ -187,7 +180,7 @@ StatusCode TkrAlignHitsTool::alignHits(const Event::TkrKalFitTrack* track,
         alignVec.push_back(deltaPos[view]);
     }
     clearHits();
-
+*/
     return sc;
 }
     

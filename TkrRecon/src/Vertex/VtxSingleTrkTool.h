@@ -3,7 +3,6 @@
 #define VTX_SINGLETRK_TOOL_H
 
 #include "VtxBaseTool.h"
-#include "Event/Recon/TkrRecon/TkrFitTrack.h"
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 
 /**

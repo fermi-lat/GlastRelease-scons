@@ -24,7 +24,6 @@
 #include "TkrUtil/TkrTrkParams.h"
 #include "TkrUtil/TkrCovMatrix.h"
 #include "Event/Recon/TkrRecon/TkrTrack.h"
-#include "Event/Recon/TkrRecon/TkrPatCand.h"
 #include "Event/Recon/TkrRecon/TkrCluster.h"
 #include "src/TrackFit/KalmanFilterFit/TrackEnergy/IFitHitEnergy.h"
 

@@ -16,12 +16,8 @@
 #include "GaudiKernel/GaudiException.h" 
 
 #include "Event/TopLevel/EventModel.h"
-#include "Event/Recon/TkrRecon/TkrPatCand.h"
-#include "Event/Recon/TkrRecon/TkrFitTrackBase.h"
 
-//#include "TkrRecon/GaudiAlg/TkrTrackFitAlg.h"
 #include "src/Track/TkrControl.h"
-#include "src/TrackFit/KalFitTrack/KalFitter.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
 #include "TkrUtil/ITkrQueryClustersTool.h"
 
@@ -51,19 +47,19 @@ public:
 
 private:
     /// Internal methods
-    inline Point  getPosAtZ(const Event::TkrPatCand* track, double deltaZ)const
-                {return track->getPosition() + track->getDirection() * deltaZ;} 
+    //inline Point  getPosAtZ(const Event::TkrPatCand* track, double deltaZ)const
+    //            {return track->getPosition() + track->getDirection() * deltaZ;} 
 
-    double getTotalEnergy(Event::TkrPatCand* track, double CalEnergy);
+    //double getTotalEnergy(Event::TkrPatCand* track, double CalEnergy);
 
     /// Pointer to the local Tracker geometry service
-    ITkrGeometrySvc*       m_tkrGeom;
+    //ITkrGeometrySvc*       m_tkrGeom;
 
     /// Pointer to the cluster tool
-    ITkrQueryClustersTool* m_clusTool;
+    //ITkrQueryClustersTool* m_clusTool;
 
-    TkrControl*            m_control;
+    //TkrControl*            m_control;
 
     /// Pointer to the Gaudi data provider service
-    DataSvc*         m_dataSvc;
+    //DataSvc*         m_dataSvc;
 };

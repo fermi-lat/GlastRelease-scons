@@ -11,7 +11,6 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ISvcLocator.h"
-#include "Event/Recon/TkrRecon/TkrFitTrack.h"
 #include "Event/TopLevel/EventModel.h"
 
 PatRecBaseTool::PatRecBaseTool( const std::string& type, 

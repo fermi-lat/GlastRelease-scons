@@ -20,20 +20,16 @@
 #ifndef TkrComboVtxRecon_H
 #define TkrComboVtxRecon_H
 
-#include "Event/Recon/TkrRecon/TkrVertexTab.h"
-#include "Event/Recon/TkrRecon/TkrPatCand.h"
 #include "Event/Recon/TkrRecon/TkrTrack.h"
+#include "Event/Recon/TkrRecon/TkrVertex.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
-#include "Event/RelTable/RelTable.h"
 
 class TkrComboVtxRecon 
 {
 public:
     TkrComboVtxRecon(ITkrGeometrySvc* tkrGeom, 
                      Event::TkrVertexCol* vertexCol, 
-                     Event::TkrTrackCol* pTracks, 
-                     Event::TkrPatCandCol* pCandTracks, 
-                     Event::TkrVertexTrackTab* vertexRelTab);
+                     Event::TkrTrackCol*  trackCol);
    ~TkrComboVtxRecon();
 
 private:

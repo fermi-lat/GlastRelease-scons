@@ -14,9 +14,9 @@
 
 #include "GaudiKernel/DataSvc.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
-#include "Event/Recon/TkrRecon/TkrPatCand.h"
 #include "src/PatRec/NeuralNet/TkrNeuron.h"
 #include "src/PatRec/PatRecBaseTool.h"
+#include "Event/Recon/TkrRecon/TkrTrack.h"
 
 class NeuralNetFindTrackTool : public PatRecBaseTool
 {
@@ -40,9 +40,9 @@ class NeuralNetFindTrackTool : public PatRecBaseTool
 
 
   /// Instantiation and fake fit of the TkrPatCand candidate tracks.
-  void buildCand( Event::TkrPatCandCol&, 
-		  const TkrNeuronList&, 
-		  Event::TkrClusterCol* );
+  void buildCand( Event::TkrTrackCol&, 
+		          const TkrNeuronList&, 
+		          Event::TkrClusterCol* );
   
 
  private:

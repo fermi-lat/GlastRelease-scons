@@ -19,7 +19,6 @@
 #include "Event/Recon/TkrRecon/TkrTrack.h"
 
 #include "src/Track/TkrControl.h"
-#include "src/TrackFit/KalFitTrack/KalFitter.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
 #include "TkrUtil/ITkrQueryClustersTool.h"
 
@@ -270,9 +269,9 @@ double TkrTrackEnergyTool::getTotalEnergy(Event::TkrTrack* track, double CalEner
         double xms = 0.;
         double yms = 0.;
         if(ilayer > top_layer) {
-            Event::TkrFitMatrix Q = kalPart->mScat_Covr(CalEnergy/2., arc_len);
-            xms = Q.getcovX0X0();
-            yms = Q.getcovY0Y0();
+            HepMatrix Q = kalPart->mScat_Covr(CalEnergy/2., arc_len);
+            xms = Q(1,1);
+            yms = Q(3,3);
         }
         double xSprd = sqrt(2.+xms*16.); // 4.0 sigma and not smaller then 2mm (was 2.5 sigma)
         double ySprd = sqrt(2.+yms*16.); // Limit to a tower... 

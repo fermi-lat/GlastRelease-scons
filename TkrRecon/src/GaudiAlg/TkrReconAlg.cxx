@@ -20,9 +20,6 @@
 
 #include <vector>
 
-#include "Event/Recon/TkrRecon/TkrFitTrack.h"
-#include "Event/Recon/TkrRecon/TkrPatCand.h"
-
 #include "TkrRecon/Services/TkrInitSvc.h"
 
 #include "GaudiKernel/Algorithm.h"

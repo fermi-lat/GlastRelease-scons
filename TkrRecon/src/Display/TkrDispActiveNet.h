@@ -16,7 +16,6 @@
 #ifndef __TKRDISPACTIVENET_H
 #define __TKRDISPACTIVENET_H
 
-#include "Event/Recon/TkrRecon/TkrPatCand.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
 #include "gui/DisplayRep.h"
 #include "GaudiKernel/IDataProviderSvc.h"
