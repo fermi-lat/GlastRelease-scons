@@ -251,7 +251,7 @@ idents::CalXtalId::AdcRange LinearConvertAdc::calculateAdcAndNoise(
     }
       
     for( short int range=2*diode; range<2+2*diode; ++range ){
-      depositedEnergy[range]=(int)depositedEnergy[2*diode+1]*m_gain[face][range];
+      depositedEnergy[range]=(int)(depositedEnergy[2*diode+1]*m_gain[face][range]);
       depositedEnergy[range]+=m_pedestal;
       if( depositedEnergy[range]<m_maxAdc ) 
         return (idents::CalXtalId::AdcRange) range;
