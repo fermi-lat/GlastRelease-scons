@@ -48,6 +48,13 @@ namespace CalibData {
     unsigned findIx(idents::CalXtalId id, unsigned range, unsigned face=0) 
       const;
 
+    bool checkIx(unsigned towerRow, unsigned towerCol, unsigned layer,
+                 unsigned xtal, unsigned range, unsigned face=0) const {
+      return ((towerRow <m_towerRow) && (towerCol <= m_towerCol) &&
+              (layer <= m_layer) && (xtal < m_xtal) &&
+              (range < m_range) && (face < m_face)); }
+    bool checkIx(idents::CalXtalId id, unsigned range, unsigned face=0);
+
     unsigned getSize() const {return m_c3*m_tower;}
 
     unsigned getNTowerRow() const {return m_towerRow;}
