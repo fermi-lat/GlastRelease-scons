@@ -45,8 +45,9 @@
             Float_t rand = gRandom->Rndm();
             TLorentzVector initMom(1., 2., 3.);
             TLorentzVector finalMom(ipart*rand+ievent, rand*ievent+ipart, 1., 2.);
+            TVector3 initPos(ipart*rand, ipart*2.0*rand, ipart*4.0*rand);
             TVector3 finalPos(ipart*rand, ipart*rand, ipart*rand);
-            mcPart->initialize(mcPart, 0, 0, initMom, finalMom, finalPos);
+            mcPart->initialize(mcPart, 0, 0, initMom, finalMom, initPos, finalPos);
             ev->addMcParticle(mcPart);
             if (ipart % 2) {
                 McPositionHit *posHit = new McPositionHit();

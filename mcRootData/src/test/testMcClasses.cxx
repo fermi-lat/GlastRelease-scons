@@ -75,6 +75,15 @@ int checkMcParticle(McParticle* mcPart, Int_t ipart, UInt_t ievent) {
             << finalMom.Y() << "," << finalMom.Z() << "," << finalMom.T() << ")" << std::endl;
         return -1;
     }
+
+    TVector3 initPos = mcPart->getInitialPosition();
+    if ( !floatInRange(initPos.X(), randNum) ||
+         !floatInRange(initPos.Y(), 2.0*fr) ||
+         !floatInRange(initPos.Z(), 4.0*fr) ) {
+        std::cout << "McParticle initial position does not match" << std::endl;
+        return -1;
+    }
+
     TVector3 finalPos = mcPart->getFinalPosition();
     if ( !floatInRange(finalPos.X(), fr) || 
          !floatInRange(finalPos.Y(), fr) || 
@@ -249,8 +258,9 @@ int write(char* fileName, UInt_t numEvents) {
             Float_t fr = f*randNum;
             TLorentzVector initMom(f, f, f, f);
             TLorentzVector finalMom(fr+ievent, fr+ievent, fr+ievent, fr+ievent);
+            TVector3 initPos(randNum, f*2.0*randNum, f*4.0*randNum);
             TVector3 finalPos(f*randNum, f*randNum, f*randNum);
-            mcPart->initialize(mcPart, ipart, 0, initMom, finalMom, finalPos);
+            mcPart->initialize(mcPart, ipart, 0, initMom, finalMom, initPos, finalPos);
             ev->addMcParticle(mcPart);
             
             McPositionHit *posHit = new McPositionHit();
