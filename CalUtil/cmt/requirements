@@ -1,6 +1,6 @@
 package CalUtil
 
-version v1r1
+version v1r2p1
 
 branches src cmt doc
 
@@ -9,18 +9,11 @@ use facilities
 
 apply_pattern packageShr
 
+apply_pattern package_include
 
 
 ### hide the packages used only for test program
 #private
-
-
-#the following prepend makes the includes folder available locally only: avoid the package_include
-#apply_pattern package_include
-macro_prepend includes "-I $(CALUTILROOT) " WIN32 "/I $(CALUTILROOT) "
-
-#apply_pattern package_include
-
 
 apply_pattern package_headers
 
