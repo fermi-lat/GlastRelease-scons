@@ -4,6 +4,6 @@
 of ACD electronics</overview>
 <prim name='acd.efficiency' value='0.9997' uType='none'>Readout 
 effiency of ACD tiles</prim>
-<prim name='threshold' value='0.0004' uType='none'>Threshold in GeV, 
-calculated as 0.2 * MIP </prim>
+<primEnergy name='threshold' value='0.0004' units='GeV'>Threshold, 
+calculated as 0.2 * MIP </primEnergy>
 </primCategory>
