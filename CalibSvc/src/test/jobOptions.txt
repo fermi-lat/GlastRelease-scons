@@ -68,6 +68,11 @@ CalibDataSvc.CalibRootName = "Calib";
 // For local MySQL server, use value "localhost"
 CalibMySQLCnvSvc.Host = "*";
 
+// By default, use production database "calib", but user may override.
+//  calib_user is a development database for use of, e.g., calibration
+//  algorithm developers
+// CalibMySQLCnvSvc.DbName = "calib_user";
+
 CalibEvtClock.startTime = "2003-2-25_00:20";
 CalibEvtClock.delayTime = 3;
 
