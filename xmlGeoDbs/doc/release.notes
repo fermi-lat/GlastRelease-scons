@@ -2,6 +2,8 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 28-jul-2003: jrb - tag v1r12    (for Leon) add enclosing volume for
+ *                                 LAT z-displacement test
  * 17-jul-2003: jrb - tag v1r11p4  Fix erroneous ACD tile identifier
  *  8-jul-2003: jrb - tag v1r11p3  Incorporate one more tkr adjustment and
  *                                 minor CAL constant redefinition
