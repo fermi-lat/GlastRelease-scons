@@ -2,7 +2,7 @@ void RootTreeAnalysis::ReconCalHistDefine() {
     
     histFile->cd();
     
-    float maxEnergy = 200000.; //MeV
+    float maxEnergy = 50.; //MeV
 
     TH1F *CALCLUSCOUNT = new TH1F("CALCLUSCOUNT", "Cal Cluster Count",
         10, 0, 10);

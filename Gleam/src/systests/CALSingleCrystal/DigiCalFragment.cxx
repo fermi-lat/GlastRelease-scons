@@ -2,8 +2,8 @@ void RootTreeAnalysis::DigiCalHistDefine() {
     
   histFile->cd();
 
-        float maxAdc = 4000.;   // electrons histo max range
-        //    float maxAdc = 1000.;   // muons histo max range
+  //float maxAdc = 4000.;   // electrons histo max range
+            float maxAdc = 1000.;   // muons histo max range
     
     TH1F *CALDIGICOUNT = new TH1F("CALDIGICOUNT", "CalDigi multiplicity",
         50, 0, 50);
@@ -106,7 +106,7 @@ void RootTreeAnalysis::DigiCal() {
 
       float asy = (adcP-adcN)/(adcP+adcN-200.);   // subtract pedestal!
       float mcX = p->getInitialPosition().Px();
-      float resid = 764.*asy - mcX;
+      float resid = 1452.*asy - mcX;
       ((TH1F*)GetObjectPtr("RESIDUAL"))->Fill(resid);
       ((TH2F*)GetObjectPtr("RESIDUALMCX"))->Fill(mcX,resid);
 
