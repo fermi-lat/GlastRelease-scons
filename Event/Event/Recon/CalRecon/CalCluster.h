@@ -157,7 +157,7 @@ private:
  */
 
 //#####################################
-class CalClusterCol : public DataObject, std::vector<CalCluster*>
+class CalClusterCol : public DataObject, public std::vector<CalCluster*>
 //#####################################
 {
 public:
