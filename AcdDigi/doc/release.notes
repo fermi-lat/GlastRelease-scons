@@ -2,6 +2,7 @@
  Package AcdDigi\n
  Coordinator:H.Kelly
 
+        30-Dec-2002 HMK prepare to process ribbons in AcdDigiAlg\n
  v1r7   09-Dec-2002 HMK Retrieve all ACD tiles in existance for a particular run\n
         using the GlastSvc/detModel interface and modify the mechanism to apply  \n
         Gaussian noise to the PMTs - to allow for non-hit tiles to fire as well\n
