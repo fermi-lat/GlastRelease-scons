@@ -29,13 +29,13 @@
 		<item name="nSuperGLayers"   value="4">       Number of layers with thick converter (obsolete) </item>
         -->
 
-		<item name="Z0"              value="-6.64">       Z coordinate at the center of the lowest Si layer</item>
+		<item name="Z0"              value="-6.64">   Z coordinate at the center of the lowest Si layer</item>
 		<item name="towerPitch"      value="37.35">   Tower pitch </item>
 		<item name="trayWidth"       value="35.86">   Width of a tray </item>
-                <!-- we will use an average tray height to make life easier for glastsim 
-              this was my calulation, but lets use 3.2 to agree with gismo.
-		<item name="trayHeight"      value="3.2412">  Height of one tray </item>
-        -->
+        <!-- we will use an average tray height to make life easier for glastsim 
+                 this was my calulation, but lets use 3.2 to agree with gismo.
+		        <item name="trayHeight"      value="3.2412">  Height of one tray </item>
+                 -->
 		<item name="trayHeight"      value="3.2">     Height of one tray </item>
 		<item name="ladderWidth"     value="8.95">    Width of one ladder </item>
 		<item name="ladderLength"    value="35.8075"> Length of one ladder </item>
