@@ -2,6 +2,12 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ *  1-may-2003: jrb - tag v1r10p3  1. Move origin to top of grid, where it
+ *                                    belongs
+ *                                 2. Move CAL to top of its stay-clear
+ *                                 3. Set ACD/tracker gap back to last known
+ *                                    blessed value. Required adjustment to
+ *                                    location of ACD side supports
  * 17-apr-2003: jrb - tag v1r10p2  Add author line
  *  1-apr-2003: jrb - tag v1r10p1  (for Xin) better EM model
  * 18-mar-2003: jrb - tag v1r10p0  1. Modify vacuum for G4. 
