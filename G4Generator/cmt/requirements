@@ -2,7 +2,8 @@ package G4Generator
 version v3r2
 #$Header$
 
-use GlastPolicy v4r3
+# Following line is temporary; was originally v4r3
+use GlastPolicy v4r*
 
 # expect these to be already in the CMTPATH!
 use GaudiSvc
@@ -27,7 +28,9 @@ use xmlUtil  v2*
 use idents   v2*
 
 use GlastEvent v6*
-use GlastSvc  v5*
+
+# New GlastSvc interface is incompatible with old
+use GlastSvc  v6*
 
 # flux determination
 use FluxSvc  v5*
