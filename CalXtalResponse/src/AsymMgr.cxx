@@ -22,7 +22,7 @@ AsymMgr::AsymMgr() :
     m_splineLists[i].resize(XtalIdx::N_VALS);
 };
 
-bool AsymMgr::validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBase *rngBase) {
+bool AsymMgr::validateRangeBase(const CalXtalId&, CalibData::RangeBase *rngBase) {
   MsgStream msglog(m_msgSvc, *m_logName);
   const vector<CalibData::ValSig> *lrg;
   const vector<CalibData::ValSig> *sm;

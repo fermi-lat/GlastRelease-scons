@@ -236,7 +236,7 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
   if (sc.isFailure()) return sc;
 
   RngNum rng(xtalId.getRange());
-  DiodeNum diode = RngNum(rng.getDiode());
+  DiodeNum diode(rng.getDiode());
 
   // use appropriate asymmetry to calc position based on
   // diode size

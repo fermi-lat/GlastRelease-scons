@@ -8,12 +8,6 @@
 using namespace CalDefs;
 using namespace idents;
 
-bool PedMgr::validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBase *rngBase) {
-  // recast for specific calibration type
-  CalibData::Ped *ped = (CalibData::Ped*)(rngBase);
-  return true;
-}
-
 /// retrieve pedestal values for given xtal/face/rng
 StatusCode PedMgr::getPed(const CalXtalId &xtalId,
                           float &avr,

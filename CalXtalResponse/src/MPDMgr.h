@@ -29,9 +29,13 @@ class MPDMgr : public CalibItemMgr {
     if (sc.isFailure()) return NULL;
     return (CalibData::CalMevPerDac*)(m_rngBases[XtalIdx(xtalId)]);
   }
-  bool validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBase *rngBase);
+
+  bool validateRangeBase(const CalXtalId&, CalibData::RangeBase*)
+    {return true;}
+
   StatusCode fillRangeBases();
-  bool checkXtalId(const CalXtalId &xtalId) {return true;}
+
+  bool checkXtalId(const CalXtalId&) {return true;}
 };
 
 #endif

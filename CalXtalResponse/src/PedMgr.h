@@ -30,7 +30,8 @@ class PedMgr : public CalibItemMgr {
     return (CalibData::Ped*)(m_rngBases[RngIdx(xtalId)]);
   }
   
-  bool validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBase *rngBase);
+  bool validateRangeBase(const CalXtalId&, CalibData::RangeBase*)
+    {return true;}
   
   StatusCode fillRangeBases();
   

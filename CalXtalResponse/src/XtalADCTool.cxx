@@ -229,8 +229,8 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
       // sum energy to each diode
       diodeDAC[XtalDiode(POS_FACE,LRG_DIODE)] += dacLP;
       diodeDAC[XtalDiode(POS_FACE,SM_DIODE)] += dacSP;
-      diodeDAC[XtalDiode(NEG_FACE,LRG_DIODE)] += dacLP;
-      diodeDAC[XtalDiode(NEG_FACE,SM_DIODE)] += dacSP;
+      diodeDAC[XtalDiode(NEG_FACE,LRG_DIODE)] += dacLN;
+      diodeDAC[XtalDiode(NEG_FACE,SM_DIODE)] += dacSN;
     } else {
     
       //--DIRECT DIODE DEPOSIT--//
@@ -395,7 +395,6 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
     // BEST RANGE
     RngNum rng;
     for (rng=0; rng.isValid(); rng++) {
-      DiodeNum diode = rng.getDiode();
       XtalRng xRng(face,rng);
 
       // get ULD threshold
@@ -427,8 +426,8 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
   //-- COPY ADCS TO OUTPUT --//
   // round to nearest integer.
   for (RngNum rng=0; rng.isValid(); rng++) {
-    adcP[rng] = floor(tmpADC[XtalRng(POS_FACE,rng)]+0.5);
-    adcN[rng] = floor(tmpADC[XtalRng(NEG_FACE,rng)]+0.5);
+    adcP[rng] = (int)floor(tmpADC[XtalRng(POS_FACE,rng)]+0.5);
+    adcN[rng] = (int)floor(tmpADC[XtalRng(NEG_FACE,rng)]+0.5);
   }
 
   return StatusCode::SUCCESS;

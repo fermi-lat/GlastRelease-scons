@@ -38,7 +38,8 @@ class TholdCIMgr : public CalibItemMgr {
     return (CalibData::CalTholdCI*) (m_rngBases[XtalIdx(xtalId)]);
   }
   
-  bool validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBase *rngBase);
+  bool validateRangeBase(const CalXtalId&, CalibData::RangeBase*) 
+    {return true;}
   
   StatusCode fillRangeBases();
   

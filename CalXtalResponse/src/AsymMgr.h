@@ -94,6 +94,6 @@ class AsymMgr : public CalibItemMgr {
 
   StatusCode genSplines();
 
-  bool checkXtalId(const CalXtalId &xtalId) {return true;}
+  bool checkXtalId(const CalXtalId&) {return true;}
 };
 #endif

@@ -13,12 +13,6 @@ using namespace std;
 using namespace CalDefs;
 using namespace idents;
 
-bool MPDMgr::validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBase *rngBase) {
-  // recast for specific calibration type
-  CalibData::CalMevPerDac* MeVPerDac = (CalibData::CalMevPerDac*)(rngBase);
-  return true;
-}
-
 /// retrieve MeVPerDac ratios for given xtal
 StatusCode MPDMgr::getMPD(const CalXtalId &xtalId,
                           CalibData::ValSig &lrg,

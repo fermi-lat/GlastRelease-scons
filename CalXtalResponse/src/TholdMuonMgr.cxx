@@ -8,12 +8,6 @@
 using namespace CalDefs;
 using namespace idents;
 
-bool TholdMuonMgr::validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBase *rngBase) {
-  // recast for specific calibration type
-  CalibData::CalTholdMuon *tholdMuon = (CalibData::CalTholdMuon*)(rngBase);
-  return true;
-}
-
 /// retrieve threshold calibration constants as measured w/ muon calibration
 StatusCode TholdMuonMgr::getTholds(const CalXtalId &xtalId,
                                    CalibData::ValSig &FLE,

@@ -1,5 +1,4 @@
 package CalXtalResponse
-version v0r0
 author zachary.fewtrell@nrl.navy.mil
 
 branches src cmt doc
@@ -10,9 +9,9 @@ use ROOT           * IExternal
 use CalUtil
 use CalibData
 
-# Additional ROOT library Needed for TSpline3 object
-macro_append ROOT_libs " -lGraf " \
-             WIN32 " ${ROOT_PATH}/lib/libGraf.lib "
+# Additional ROOT libraries Needed for TSpline3 object
+macro_append ROOT_libs " -lGraf -lHist " \
+             WIN32 " ${ROOT_PATH}/lib/libGraf.lib ${ROOT_PATH}/lib/libHist.lib"
 
 
 # These macros are needed by any package that means to share a library & it's headers
