@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  *
  *
+ * v10r2p0 01-Feb-05 HMK default value for DigiEvent::fromMc set to true
  * v10r2   24-Jan-05 LSR Fix warning in Event.h, retooled TkrCluster.h
  * v10r1p3 17-Jan-05 LSR Fix small bug in TkrTrack
  * v10r1p2 14-Jan-05 LSR Retag for RM

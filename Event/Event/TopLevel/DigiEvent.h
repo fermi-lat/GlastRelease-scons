@@ -25,7 +25,7 @@ class DigiEvent : public DataObject {
 public:
     
     DigiEvent()
-        : DataObject(), m_fromMc(false) { }
+        : DataObject(), m_fromMc(true) { }
     
     virtual ~DigiEvent() { }
     
