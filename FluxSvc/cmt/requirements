@@ -1,51 +1,51 @@
 package FluxSvc
-version v6r12p3
+version v6r13
 
 # $Id$
+author  T. Kozanecki <hansl$slac.stanford.edu> T. Burnett
 
-branches FluxSvc cmt doc
+branches FluxSvc cmt doc cdf 
 
-use GlastPolicy *
+# _____________________________________________________________
 
-use Event   *
+use GlastPolicy v5r*
+use Event       v9r*
 
-use GlastSvc *
-use astro v0r*
+use GlastSvc    v9r*
+use astro       v0r*
+use ntupleWriterSvc v3r*
 
-# prevent clients from automatically seeing flux.lib, includes
-use flux * -no_auto_imports 
+use flux        v8r*
+# _____________________________________________________________
 
-use ntupleWriterSvc *
+apply_pattern  package_include
 
-apply_pattern packageShr
-apply_pattern package_include
-
-# this sets path for the Gaudi ParticleProperySvc to find the file 
-#  $(FlUXSVCROOT)/cdf/particleproperty.cdf
-set LHCBDBASE "${FLUXSVCROOT}"
-
-
-#=============================================================
 private
-
-
-# get flags to build shared library
-apply_pattern package_Cshlibflags
-
-macro headers      "" WIN32 "*.h"
-macro source "*.cxx" WIN32 "*.h *.cxx *.txt"
-
-macro interface_headers "" WIN32 "-s=../FluxSvc/ *.h"
-
-# for includes from flux (for now)
-macro FluxSvc_cppflags '$(ppcmd)"$(FLUXROOT)"'
-
-library FluxSvc -import=flux\
- $(interface_headers)\
- -s=Dll *.cxx\
- -s=../src $(source)
-
+apply_pattern  package_headers
+macro  source  "*.cxx"  WIN32 "*.h *.cxx *.txt"
 
 public
-apply_pattern package_test
-macro_append test_FluxSvc_files "" WIN32 "test/*.xml"
+
+#  linker library ..Lib
+library FluxSvcLib  $(source)    \
+                    $(FluxSvc_headers)
+
+#  component library 
+library  FluxSvc    Dll/*.cxx
+
+apply_pattern  package_Llinkopts
+
+apply_pattern  ld_library_path
+macro_append   FluxSvc_stamps  "$(FluxSvcDir)/FluxSvcLib.stamp"
+ 
+apply_pattern  package_Cshlibflags
+apply_pattern  package_Lshlibflags
+
+#  set  path to particle properties (used by Gaudi ParticlePropertySvc) 
+#  $(FlUXSVCROOT)/cdf/particleproperty.cdf
+set LHCBDBASE  "${FLUXSVCROOT}"
+
+#  build the test
+apply_pattern  package_test
+macro_append   test_FluxSvc_files ""    WIN32 "test/*.xml"
+
