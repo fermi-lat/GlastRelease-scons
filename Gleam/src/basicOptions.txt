@@ -101,6 +101,11 @@ TriggerAlg.mask = -1; // all bits on by default
 // ----------------------------
 //   Reconstruction
 //
+
+ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" };
+// the following sets the Gismo Propagator
+//GlastPropagatorSvc.PropagatorType = "gismo";
+
 ApplicationMgr.DLLs +={ 
     "Recon",
     "CalRecon", "CalUtil", "TkrUtil",
@@ -130,8 +135,6 @@ Cal2.Members = {
       "CalClustersAlg/second"
       };
 second.OutputLevel=5;  // since this guy generates INFO lines
-// following sets to use G4propagator
-//TkrTrackFitAlg.PropagatorType=0;
 
 // ----------------------------
 //   ACD recon
