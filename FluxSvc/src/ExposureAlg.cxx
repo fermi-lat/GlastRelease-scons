@@ -118,7 +118,11 @@ const IAlgFactory& ExposureAlgFactory = Factory;
 //------------------------------------------------------------------------
 //! ctor
 ExposureAlg::ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator)
-:Algorithm(name, pSvcLocator), m_out(0),m_lasttime(0), m_tickCount(0)
+: Algorithm(name, pSvcLocator)
+, m_pointing_tree(0)
+, m_out(0)
+, m_lasttime(0)
+, m_tickCount(0)
 {
     // declare properties with setProperties calls
     declareProperty("source_name",  m_source_name="default");
