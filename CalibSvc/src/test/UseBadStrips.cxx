@@ -22,8 +22,6 @@
    to get at them.  
 */
 
-
-
 /**
      @class BadVisitor
 
@@ -123,11 +121,6 @@ StatusCode UseBadStrips::execute( ) {
   MsgStream log(msgSvc(), name());
   m_visitor->setLog(&log);
 
-  //  SmartDataPtr<CalibData::CalibTest1> test1(m_pCalibDataSvc,
-  //                                        CalibData::Test_Gen);
-  //  CalibData::CalibTest1* test1 = 
-  //    SmartDataPtr<CalibData::CalibTest1>(m_pCalibDataSvc, CalibData::Test_Gen);
-  
   std::string fullDeadPath = "/Calib/TKR_DeadChan/vanilla";
   DataObject *pDeadObject;
   

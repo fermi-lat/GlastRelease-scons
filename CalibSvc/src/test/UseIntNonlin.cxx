@@ -89,11 +89,6 @@ StatusCode UseIntNonlin::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
-  //  SmartDataPtr<CalibData::CalibTest1> test1(m_pCalibDataSvc,
-  //                                        CalibData::Test_Gen);
-  //  CalibData::CalibTest1* test1 = 
-  //    SmartDataPtr<CalibData::CalibTest1>(m_pCalibDataSvc, CalibData::Test_Gen);
-  
   std::string fullPath = "/Calib/CAL_IntNonlin/test";
   DataObject *pObject;
   

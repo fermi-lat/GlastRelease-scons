@@ -93,8 +93,12 @@ StatusCode UsePeds::execute( ) {
   //  CalibData::CalibTest1* test1 = 
   //    SmartDataPtr<CalibData::CalibTest1>(m_pCalibDataSvc, CalibData::Test_Gen);
   
-  //  std::string fullPath = "/Calib/CAL_Ped/ideal";
-  std::string fullPath = CalibData::CAL_Ped + "/ideal";
+  std::string fullPath = "/Calib/CAL_Ped/ideal";
+
+  // For the following to work on Windows, must add 
+  //     apply_pattern use_CalibData_symbols 
+  //  to requirements (it's a no-op for Linux)
+  //  std::string fullPath = CalibData::CAL_Ped + "/ideal";
   DataObject *pObject;
   
 

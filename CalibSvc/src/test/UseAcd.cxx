@@ -93,11 +93,6 @@ StatusCode UseAcd::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
-  //  SmartDataPtr<CalibData::CalibTest1> test1(m_pCalibDataSvc,
-  //                                        CalibData::Test_Gen);
-  //  CalibData::CalibTest1* test1 = 
-  //    SmartDataPtr<CalibData::CalibTest1>(m_pCalibDataSvc, CalibData::Test_Gen);
-  
   std::string fullPathGain = "/Calib/ACD_ElecGain/vanilla";
   std::string fullPathPed = "/Calib/ACD_Ped/vanilla";
   DataObject *pObjectGain;

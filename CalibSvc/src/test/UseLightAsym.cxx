@@ -15,8 +15,6 @@
    Simple algorithm to test functioning of "the other" TDS, Cal light asym data
 */
 
-
-
   /** 
    @class UseLightAsym
 
@@ -87,11 +85,6 @@ StatusCode UseLightAsym::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
-  //  SmartDataPtr<CalibData::CalibTest1> test1(m_pCalibDataSvc,
-  //                                        CalibData::Test_Gen);
-  //  CalibData::CalibTest1* test1 = 
-  //    SmartDataPtr<CalibData::CalibTest1>(m_pCalibDataSvc, CalibData::Test_Gen);
-  
   std::string fullPath = "/Calib/CAL_LightAsym/test";
   DataObject *pObject;
   
