@@ -2,6 +2,8 @@
 Package digiRootData
 Coordinator:H.Kelly
 
+v3r7      05-Feb-2003 HMK Fix DigiEvent::Clear for ACD TClonesArray\n
+v3r6      15-Jan-2003 ALS Update to requirements for new CMT and GlastRelease\n
 v3r5p7    02-Sep-2002 HMK Add operator== to AcdId\n
 v3r5p6    24-Sep-2002 HMK Update documentation\n
 v3r5p2    26-Aug-2002 THB Use new RootPolicy to produce rootcint file\n
