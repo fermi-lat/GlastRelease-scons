@@ -39,6 +39,9 @@ testgeom_LDADD =						\
 testgeom_linkremove = \
 	$(top_builddir)/../graphics/libmotif.la
 
+testgeom_linkopts = \
+	$(top_builddir)/../graphics/libwindows.la
+
 TESTS = $(noinst_PROGRAMS)
 
 
