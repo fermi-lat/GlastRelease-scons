@@ -17,6 +17,7 @@ $Header$
 
 
 int main(int argn, char** argc) {
+  try {
     using namespace ldfReader;
     std::string filename = "$(LDFROOT)/test/muon-5.arch";
 
@@ -167,6 +168,10 @@ int main(int argn, char** argc) {
 
     std::cout << "Test completed successfully" << std::endl;
     return 0;
+  } catch(...) {
+    printf("Caught exception - exiting\n"); 
+    return(-1);
+  }
 }
 
 #endif
