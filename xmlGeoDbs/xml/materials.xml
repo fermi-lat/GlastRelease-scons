@@ -1,8 +1,17 @@
 <!-- $Header$ -->
 <!-- Definition of the materials used by GLAST -->
 <!-- All the density att. are specified in g/cm3 and all aweight in g/mole -->
-<!-- All materials, whether or not they consist of a single element,
-     are defined using as a "composite".  -->
+<!-- Except for the special case of Vacuum, all materials, whether or not 
+     they consist of a single element, are defined as a "composite".
+
+     To add a new material
+          - Add a new <element> for any atomic elements which are 
+            components of the new material and not already defined.
+            Follow format for existing elements, like Silicon.
+          - Make a new <composite>.  Either natoms (e.g. FOAM05) 
+            or fractionmass (Tray_bot_bias) style can be used to 
+            specify proportions.
+ -->
 
 <materials version="0.1" date="071101" author="M.Frailis">
 
@@ -69,7 +78,7 @@
 	 aweight="55.847" 
 	 />
 
-<element name="Berillium" 
+<element name="Beryllium" 
 	 symbol="Be"
 	 z="4" 
 	 aweight="9.012" 
@@ -162,7 +171,7 @@
 </composite>
 
 <composite name="Be" density="1.85">
-  <addmaterial material="Berillium">
+  <addmaterial material="Beryllium">
     <natoms n="1" />
    </addmaterial>
 </composite>
