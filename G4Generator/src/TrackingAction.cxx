@@ -28,7 +28,6 @@
 //clhep
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
-#include <typeinfo.h>
 
 
 TrackingAction::TrackingAction(IG4GeometrySvc* gsv):m_geoSvc(gsv)

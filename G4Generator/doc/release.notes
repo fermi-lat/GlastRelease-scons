@@ -2,6 +2,7 @@
     @brief package G4Generator 
 @verbatim
     $Id$
+ v5r9p5 16-Dec-04 TU  Remove an unecessary #include which causes TrackingAction to fail compile
  v5r9p4 11-Dec-04 THB Reconstruct our pdgid for ions before saving as McParticles
  v5r9p3 11-Dec-04 THB Add make native (current) e-loss the default 
  v5r9p2 10-Dec-04 THB Add log indication as to which energy loss was selected. 
