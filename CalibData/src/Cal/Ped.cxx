@@ -9,5 +9,7 @@ namespace CalibData {
     // check that otherPed isn't 0 (dynamic cast worked)
     m_pedAvr = otherPed->m_pedAvr;
     m_pedSig = otherPed->m_pedSig;
+    m_pedSig = otherPed->m_pedSig;
+    m_pedCosAngle = otherPed->m_pedCosAngle;
   }
 }
