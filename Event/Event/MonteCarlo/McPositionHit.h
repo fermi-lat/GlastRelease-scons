@@ -131,6 +131,11 @@ class McPositionHit : virtual public ContainedObject {
     /// Set the particle ID
     void setMcParticleId(McParticle::StdHepId id){m_mcParticleId = id;};
 
+    /// Retrieve ancestor particle ID
+    McParticle::StdHepId getOriginMcParticleId(){return m_originMcParticleId;};
+    /// Set the ancestor particle ID
+    void setOriginMcParticleId(McParticle::StdHepId id){m_originMcParticleId = id;};
+
     /// Retrieve pointer to the ancestor McParticle (const or non-const)
     const McParticle* originMcParticle() const;
           McParticle* originMcParticle();
@@ -160,6 +165,8 @@ class McPositionHit : virtual public ContainedObject {
     double                  m_timeOfFlight;
     /// ID of the McParticle causing the hit
     McParticle::StdHepId    m_mcParticleId;
+    /// ID of the ancestor McParticle
+    McParticle::StdHepId    m_originMcParticleId;
     /// Pointer to McParticle causing the hit
     SmartRef<McParticle>    m_mcParticle;
     /// Pointer to the ancestor McParticle

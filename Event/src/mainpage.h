@@ -1,7 +1,7 @@
 //$Header$
 // (Special "header" just for doxygen)
 
-/*! @mainpage  package GlastEvent
+/*! @mainpage  package Event
 
 This package contains definitions for all GLAST event data:
 	- Event

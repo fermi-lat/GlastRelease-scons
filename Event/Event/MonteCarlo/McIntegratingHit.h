@@ -41,15 +41,20 @@ namespace Event {  // NameSpace
 class McIntegratingHit : virtual public ContainedObject {
   public:
 
-    virtual const CLID& clID() const   { return McIntegratingHit::classID(); }
-    static const CLID& classID()       { return CLID_McIntegratingHit; }
-    /// McParticle -> deposited energy map
-    // Here I needed to takeout SmartRef<McParticle> because the 
-    // template library was not giving a compile error.
-    typedef std::vector< std::pair<McParticle*, double> > energyDepositMap;
+  /// This enumerative is used to aid in the fill of the m_energyArray member
+  enum Particle{primary,electron,positron};
+
+  virtual const CLID& clID() const   { return McIntegratingHit::classID(); }
+  static const CLID& classID()       { return CLID_McIntegratingHit; }
+  /// McParticle -> deposited energy map
+  // Here I needed to takeout SmartRef<McParticle> because the 
+  // template library was not giving a compile error.
+  typedef std::vector< std::pair<McParticle*, double> > energyDepositMap;
+  /// McParticleID -> deposited energy map
+  typedef std::vector< std::pair<McParticle::StdHepId, double> > energyDepositMapId;
 
     McIntegratingHit() : m_packedFlags(0),m_totalEnergy(0),m_moment1seed(0),
-        m_moment2seed(0){}
+        m_moment2seed(0){m_energyArray[0]=m_energyArray[1]=m_energyArray[2]=0;}
 
     ~McIntegratingHit(){}
 
@@ -69,14 +74,20 @@ class McIntegratingHit : virtual public ContainedObject {
 
     /// Retrieve itemized energy
     const energyDepositMap& itemizedEnergy() const;
-          energyDepositMap& itemizedEnergy();
+    energyDepositMap& itemizedEnergy();
+    /// Retrieve itemized energy with ID
+    const energyDepositMapId& itemizedEnergyId() const;
+    energyDepositMapId& itemizedEnergyId();
+   
     /// Update all energyInfos
     void setEnergyItems( const energyDepositMap& value );
     /// Remove all energyInfos
     void clearEnergyItems();
+    
     /// Add single energyInfo to energyDepositMap
     void addEnergyItem( const double& energy, McParticle* t, const HepPoint3D& position );
     void addEnergyItem( const double& energy, SmartRef<McParticle> t, const HepPoint3D& position );
+    void addEnergyItem( double energy, Particle p, const HepPoint3D& position );
 
     /// Retrieve primary-origin flag
     bool primaryOrigin() const;
@@ -100,6 +111,8 @@ class McIntegratingHit : virtual public ContainedObject {
       idents::VolumeIdentifier      m_volumeID;
       /// Vector of Energy information that consists of deposited energy and the mother McParticle
       energyDepositMap              m_energyItem;
+      /// Vector of Energy information that consists of deposited energy and the mother McParticleId
+      energyDepositMapId            m_energyItemId;
       /// total deposited energy: set automatically when m_energyInfo is modified.
       double                        m_totalEnergy;
       /// Energy-weighted_first_moments_of_the_position * number_of_energy_deposition
@@ -108,6 +121,10 @@ class McIntegratingHit : virtual public ContainedObject {
       HepPoint3D                    m_moment2seed;
       /// Packed flags for particle property
       unsigned long                 m_packedFlags;
+
+      /// This is an array that holds energy contribution to the hit from the
+      /// primary particle, the electron and the postitron
+      double m_energyArray[3];
 };
 
 /// Serialize the object for writing

@@ -121,6 +121,8 @@ public:
     const CLID& CLID_McParticle         = 1102;
     const CLID& CLID_McPositionHit      = 1103;
     const CLID& CLID_McIntegratingHit   = 1104;
+    const CLID& CLID_McTrajectory       = 1105;
+    const CLID& CLID_McTkrStrip         = 1106;
 
     //! Raw event and Digi IDs
     const CLID& CLID_DigiEvent          = 1300; 
