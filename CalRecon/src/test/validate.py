@@ -108,14 +108,22 @@ def key_values(filename) :
         hashed_posdir += string.atof(words[9]) + string.atof(words[9]) + string.atof(words[11])
       
   # result
-  raw_energy = raw_energy/nb_clusters
-  corrected_energy = corrected_energy/nb_clusters
-  hashed_posdir = hashed_posdir/nb_clusters
-  fit_energy = fit_energy/nb_profiles
-  ll_energy = ll_energy/nb_ll
-  format = '%g'
-  return [ nb_clusters, format % raw_energy, format % ll_energy, format % fit_energy, format % corrected_energy, format % hashed_posdir ]
-   
+  if nb_clusters>0 :
+    raw_energy = raw_energy/nb_clusters
+    corrected_energy = corrected_energy/nb_clusters
+    hashed_posdir = hashed_posdir/nb_clusters
+  if nb_profiles>0 :
+    fit_energy = fit_energy/nb_profiles
+  if nb_ll>0 :
+    ll_energy = ll_energy/nb_ll
+  ft_count = '%d'
+  ft_mean = '%g'
+  all_values = [ (ft_count % nb_clusters)+'*'+ (ft_mean % raw_energy) ]
+  all_values = all_values + [ (ft_count % nb_ll)+'*'+ (ft_mean % ll_energy) ]
+  all_values = all_values + [ (ft_count % nb_profiles)+'*'+ (ft_mean % fit_energy) ]
+  all_values = all_values + [ (ft_count % nb_clusters)+'*'+ (ft_mean % corrected_energy) ]
+  all_values = all_values + [ ft_mean % hashed_posdir ]
+  return all_values
 
 #=================================================
 # all things to be done for a given set of options

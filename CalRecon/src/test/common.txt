@@ -34,5 +34,5 @@ ApplicationMgr.TopAlg = { "PropertiesCheckAlg" } ;
 ApplicationMgr.TopAlg += { "TkrCalibAlg" } ;
 ApplicationMgr.TopAlg += { "Sequencer/Simulation" } ;
 ApplicationMgr.TopAlg += { "Sequencer/Reconstruction" } ;
-MessageSvc.OutputLevel = 3 ;
+MessageSvc.OutputLevel = 2 ;
 

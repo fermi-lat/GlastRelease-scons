@@ -10,8 +10,8 @@ reconRootReaderAlg.reconRootFile = "$CALRECONROOT/src/test/gamma_5_gev_normal-re
 // calo reconstruction second pass
 ApplicationMgr.DLLs += { "CalRecon" } ;
 ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" } ;
-Reconstruction.Members += { "CalClustersAlg" } ;
-PropertiesCheckAlg.targets += { "CalClustersAlg" } ;
+Reconstruction.Members += { "CalXtalRecAlg", "CalClustersAlg" } ;
+PropertiesCheckAlg.targets += { "CalXtalRecAlg", "CalClustersAlg" } ;
 ApplicationMgr.TopAlg += { "test_CalRecon" } ;
 
 

@@ -31,7 +31,7 @@ StatusCode PropertiesCheckAlg::initialize()
     for ( client = clients.begin() ; client != clients.end() ; ++client )
      {
       const std::vector< std::string > & targets = m_targets ;
-      std::vector< std::string >::iterator target ;
+      std::vector< std::string >::const_iterator target ;
       for ( target = targets.begin() ; target != targets.end() ; ++target )
        {
         if ((*target)==(*client))

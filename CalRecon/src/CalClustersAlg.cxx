@@ -67,24 +67,40 @@ StatusCode CalClustersAlg::initialize()
         log << MSG::ERROR << "  Unable to create " << m_clusteringToolName << endreq;
         return sc;
     }
-    
-    sc = toolSvc()->retrieveTool(m_lastLayerToolName, m_lastLayerTool);
-    if (sc.isFailure() ) {
-        log << MSG::ERROR << "  Unable to create " << m_lastLayerToolName << endreq;
-        return sc;
+        
+    if ( m_lastLayerToolName.value() != "" ) {
+        sc = toolSvc()->retrieveTool(m_lastLayerToolName, m_lastLayerTool);
+        if (sc.isFailure() ) {
+            log << MSG::ERROR << "  Unable to create " << m_lastLayerToolName << endreq;
+            return sc;
+        }
+    }
+    else {
+        m_lastLayerTool = 0 ;
     }
 
-    sc = toolSvc()->retrieveTool(m_profileToolName, m_profileTool);
-    if (sc.isFailure() ) {
-        log << MSG::ERROR << "  Unable to create " << m_profileToolName << endreq;
-        return sc;
+    if ( m_profileToolName.value() != "" ) {
+        sc = toolSvc()->retrieveTool(m_profileToolName, m_profileTool);
+        if (sc.isFailure() ) {
+            log << MSG::ERROR << "  Unable to create " << m_profileToolName << endreq;
+            return sc;
+        }
+    }
+    else {
+        m_profileTool = 0 ;
     }
 
-    sc = toolSvc()->retrieveTool(m_calValsCorrToolName,m_calValsCorrTool);
-    if (sc.isFailure() ) {
-        log << MSG::ERROR << "  Unable to create " << m_calValsCorrToolName << endreq;
-        return sc;
+    if ( m_calValsCorrToolName.value() != "" ) {
+        sc = toolSvc()->retrieveTool(m_calValsCorrToolName,m_calValsCorrTool);
+        if (sc.isFailure() ) {
+            log << MSG::ERROR << "  Unable to create " << m_calValsCorrToolName << endreq;
+            return sc;
+        }
     }
+    else {
+        m_calValsCorrTool = 0 ;
+    }
+
     return sc;
 }
 
@@ -134,6 +150,10 @@ StatusCode CalClustersAlg::retrieve()
     // get pointer to CalXtalRecCol
     m_calXtalRecCol = SmartDataPtr<CalXtalRecCol>(eventSvc(),
         EventModel::CalRecon::CalXtalRecCol); 
+    if (!m_calXtalRecCol) {
+            log<<MSG::ERROR<<"No CalXtalRecCol"<<endreq ;
+            return StatusCode::FAILURE ;
+    }
         
     return sc;
 }
@@ -171,10 +191,6 @@ StatusCode CalClustersAlg::execute()
     // call the Clustering tool to find clusters
     m_clusteringTool->findClusters(m_calXtalRecCol,m_calClusterCol);
     
-//    m_lastLayerTool->execute() ;
-//    m_profileTool->execute() ;
-//    m_calValsCorrTool->execute() ;
-    
     // loop over all found clusters
     Event::CalClusterCol::const_iterator it ;
     for ( it = m_calClusterCol->begin() ;
@@ -186,25 +202,33 @@ StatusCode CalClustersAlg::execute()
           m_data->setSlope((*it)->getDirection().z()) ;
  
         // do last layer correlation method
-        //m_lastLayerTool->setTrackSlope(slope);
-        m_lastLayerTool->doEnergyCorr(m_data,*it) ;
+        double elastlayer = 0 ;
+        if (m_lastLayerTool) {
+            
+            m_lastLayerTool->doEnergyCorr(m_data,*it) ;
+            
+            // eleak is observed + estimated leakage energy
+            // double elastlayer = m_lastLayerTool->getEnergyCorr() + (*it)->getEnergySum();
+            elastlayer = m_lastLayerTool->getEnergyCorr();
 
-        // eleak is observed + estimated leakage energy
-        // double elastlayer = m_lastLayerTool->getEnergyCorr() + (*it)->getEnergySum();
-        double elastlayer = m_lastLayerTool->getEnergyCorr();
-
-        // iteration commented out, now done in LastLayerTool.cxx
-        //m_lastLayerTool->doEnergyCorr(elastlayer,(*it));       
-        //elastlayer = m_lastLayerTool->getEnergyCorr() + (*it)->getEnergySum() ;
+            // iteration commented out, now done in LastLayerTool.cxx
+            //m_lastLayerTool->doEnergyCorr(elastlayer,(*it));       
+            //elastlayer = m_lastLayerTool->getEnergyCorr() + (*it)->getEnergySum() ;
+        }
+        
         
         // [Pol&?] Do profile fitting - use StaticSlope because of static functions
         // passed to minuit fitter
-//        dynamic_cast<EnergyCorr*>(m_profileTool)->setStaticSlope(slope);
-//        m_profileTool->setTrackSlope(slope);
-        m_profileTool->doEnergyCorr(m_data,*it);
+        if (m_profileTool) {
+//            dynamic_cast<EnergyCorr*>(m_profileTool)->setStaticSlope(slope);
+//            m_profileTool->setTrackSlope(slope);
+            m_profileTool->doEnergyCorr(m_data,*it);
+        }
         
         // [Bill Atwood] get corrections from CalValsTool... self contained
-        m_calValsCorrTool->doEnergyCorr(m_data,*it);
+        if (m_calValsCorrTool) {       
+            m_calValsCorrTool->doEnergyCorr(m_data,*it);
+        }
 
         // calculating the transverse offset of average position in the calorimeter
         // with respect to the position predicted from tracker information
@@ -224,7 +248,7 @@ StatusCode CalClustersAlg::execute()
             (*it)->getRmsLong(),
             (*it)->getRmsTrans(),
             (*it)->getDirection(),
-            calTransvOffset);
+            calTransvOffset) ;
     }   // close loop on clusters
     
     // print the reconstruction results for debugging

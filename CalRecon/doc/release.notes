@@ -8,6 +8,10 @@ package CalRecon
 
 package manager: Alexandre Chekhtman
 
+  v5r23p? ??-mar-05   DC  Energy corrections made optional.
+                      DC  Experimental: check the use of algorithm options.
+                      DC  Tests independent of TkrRecon.
+                      ZF  Windows bug fixes.
   v5r23p1 16-mar-05   DC  improved tests, unified EnergyCorr interface, centralized Clustering data
   v5r22p5 16-mar-05   ZF  improved verbose print outs, improved performance re: MsgStream ctors
   v5r22p4  2-mar-05   ZF  uses latest CalXtalResponse
