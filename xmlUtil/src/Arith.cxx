@@ -70,6 +70,11 @@ namespace xmlUtil {
       }
       i++;
     }
+    if (notFound) {
+      std::string msg = std::string("From Arith::Arith unrecognized tag ") +
+        tagNameStr;
+      throw BadTag(msg);
+    }
   }
 
   double Arith::evaluate() {
@@ -162,7 +167,9 @@ namespace xmlUtil {
         break;
       }
       default: {
-        return 0;
+        std::string msg = 
+          std::string("From Arith::evaluate  Unknown element type");
+        throw BadTag(msg);
       }
       }
       m_evaluated = true;

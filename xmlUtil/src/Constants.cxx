@@ -246,10 +246,15 @@ namespace xmlUtil {
       curConst = Dom::findFirstChildByName(curCat, "const" );
       
       while (curConst != DomElement()) {
-        Arith curArith(curConst);
-        double evalValue = curArith.evaluate();
-        curArith.saveValue();
-        
+        try {
+          Arith curArith(curConst);
+          double evalValue = curArith.evaluate();
+          curArith.saveValue();
+        }
+        catch (XmlUtilException ex) {
+          std::cerr << ex.getMsg();
+          throw(ex);
+        }
         curConst = xml::Dom::getSiblingElement(curConst);
       }
     }
