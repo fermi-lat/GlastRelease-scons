@@ -20,8 +20,8 @@ namespace ldfReader {
     class TowerData {
     public:
 
-        TowerData() { m_tkrMap.clear(); };
-        TowerData(unsigned short id) { m_tkrMap.clear(); m_calDigiCol.clear(); m_towerId = id; };
+        TowerData() { m_tkrMap.clear(); m_tem.clear(); m_calDigiCol.clear(); };
+        TowerData(unsigned short id) { m_tkrMap.clear(); m_calDigiCol.clear(); m_towerId = id; m_tem.clear(); };
         ~TowerData() { clear(); };
 
         void clear();

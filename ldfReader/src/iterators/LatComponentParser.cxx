@@ -37,14 +37,15 @@ namespace ldfReader {
     {
         const char* prefix = "  ";
         ldfReader::LatData::instance()->setSummary(event->summary());
-        ldfReader::OswData summary(ldfReader::EventSummaryCommon(contribution->summary()));
-        summary.setExist(); 
-        ldfReader::LatData::instance()->getOsw().initLength(((EBFcontribution*)contribution)->length());
-        ldfReader::LatData::instance()->setOsw(summary);
+        ldfReader::OswData osw(ldfReader::EventSummaryCommon(contribution->summary()));
+        osw.setExist(); 
+        //ldfReader::LatData::instance()->getOsw().initLength(((EBFcontribution*)contribution)->length());
+        osw.initLength(((EBFcontribution*)contribution)->length());
+        ldfReader::LatData::instance()->setOsw(osw);
         // OSW contribution only exists in later versions starting in Feb 2004
         if (ldfReader::LatData::instance()->getFormatIdentity() >= ID_WITH_OSW) {
-            OswParser osw(event, contribution);
-            osw.iterate();
+            OswParser oswParse(event, contribution);
+            oswParse.iterate();
         }
         return 0;
     }
