@@ -33,7 +33,7 @@
     <!ENTITY TKRMatPrim     SYSTEM "../em/emTKRMatPrim.xml">
     <!ENTITY TKRCountPrim   SYSTEM "../em/emTKRCountPrim.xml">
     <!ENTITY TKRDimPrim     SYSTEM "../em2/em2TKRDimPrim.xml">
-    <!ENTITY TKRResponse    SYSTEM "../flight/flightTKRResponse.xml">
+<!--    <!ENTITY TKRResponse    SYSTEM "../flight/flightTKRResponse.xml"> -->
     <!ENTITY TKROneTkr      SYSTEM "../em2/em2TKROneTkr.xml">
 
     <!ENTITY ACDMatPrim     SYSTEM "../flight/flightACDMatPrim.xml">
