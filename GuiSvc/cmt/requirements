@@ -6,13 +6,11 @@ branches GuiSvc mgr doc
 use gui 
 use GaudiSvc
 
-
 # library is not shareable since it is expected to be linked into the executable
-library GuiSvc -no_share\
- *.cxx \
-  ../GuiSvc/*.h 
+macro GUiSvc_h "" WIN32 "../GuiSvc/*.h"
+library GuiSvc -no_share  *.cxx ${GuiSvc_h} 
 
-include_dirs $(GUISVCROOT)
+apply_pattern package_include
 
 macro GuiSvc_lib " -L ${GUISVCROOT}/${CMTCONFIG} -lGuiSvc "\
     WIN32 "${GUISVCROOT}/${BINDIR}/GuiSvc.lib "
@@ -28,17 +26,17 @@ private
 # This following is a pattern to use on any Gui application. A main is not necessary since the lib has 
 # a generic one that looks for $JOBOPTIONS.
 # note redefinition of the macro to *not* include any other dependent libs
-# and to force inclusion of the loadRef
+# and to force inclusion of the loadRef (Win32) or -u (linux)
 
 
 # don't know why we need the dl library - TL
 pattern guiapp \
-  macro use_linkopts " $(GuiSvc_lib) -u GuiSvc_loadRef  $(guiapp_linkopts) $(GaudiKernel_linkopts) -ldl "\
-               WIN32 " $(GaudiKernel_linkopts) $(GuiSvc_lib) $(guiapp_linkopts) /include:_GuiSvc_loadRef "
+  macro use_linkopts " $(GaudiKernel_linkopts) $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
+               WIN32 " $(GaudiKernel_linkopts) $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) /include:_GuiSvc_loadRef "
 
 apply_pattern guiapp
 
-macro WinJobOptions ""  VisualC  test/jobOptions.txt
+macro WinJobOptions ""  WIN32  test/jobOptions.txt
 
 
 application GuiTest test/*.cxx ${WinJobOptions} ${Win32Resource}
