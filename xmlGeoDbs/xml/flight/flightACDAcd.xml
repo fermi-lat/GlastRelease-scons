@@ -819,7 +819,7 @@
 
 <!-- Stack up the rows in Z for face 2 -->
     <stackZ name="TileFace2or3" >
-      <axisPos volume="sideTileR3">
+      <axisPos volume="sideTileRowR3">
         <idField name="fRow" value="3" />
       </axisPos>
       <axisPos volume="sideTileRow2Face2" gapREF="sideVerticalGap" >
@@ -834,7 +834,7 @@
     </stackZ>
 
     <stackZ name="TileFace4or1" >
-      <axisPos volume="sideTileR3">
+      <axisPos volume="sideTileRowR3">
         <idField name="fRow" value="3" />
       </axisPos>
       <axisPos volume="sideTileRow2Face4" gapREF="sideVerticalGap" >
