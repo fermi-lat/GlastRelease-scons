@@ -1,9 +1,10 @@
 package digiRootData
-version v7r14
+version v7r15
 # $Id$
 
 use RootcintPolicy v4r* GlastPolicy
 use commonRootData v1r*
+use enums v0
 use ldfExt  v0r*  IExternal
 
 # See RootPolicy for discussion of this pattern
@@ -19,5 +20,5 @@ apply_pattern root_package headers="\
  ../digiRootData/TkrDigi.h\
  ../digiRootData/Gem.h\
  ../digiRootData/EventSummaryData.h"\
- includes="-I${COMMONROOTDATAROOT}"\
+ includes="-I${COMMONROOTDATAROOT} -I${ENUMSROOT}"\
  test_source="test/testDigiClasses.cxx"

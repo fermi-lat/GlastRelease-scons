@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v7r15     16-Feb-2005 HMK Use new enums package for globally defined enums
 v7r14     03-Feb-2005 HMK patch to DigiEvent::initialize removes default
           value for fromMc, and add non-const getL1T method
 v7r13     04-Jan-2005 HMK Store LDF error summary bits

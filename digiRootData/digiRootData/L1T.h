@@ -3,6 +3,8 @@
 
 #include "TObject.h"
 
+#include "enums/TriggerBits.h"
+
 /** @class L1T
  * @brief Store the Level One Trigger information
  *
@@ -12,19 +14,6 @@
 class L1T : public TObject {
 public:
     
-	/**@defgroup L1TGroup L1T End-User Interface */
-	/*@{*/
-    enum  {
-        // definition of  trigger bits        
-        b_ACDL =     1,  //  set if cover or side veto, low threshold
-        b_ACDH =     2,   //  cover or side veto, high threshold
-        b_Track=     4,   //  3 consecutive x-y layers hit
-        b_LO_CAL=    8,  //  single log above low threshold
-        b_HI_CAL=   16,   //  3 cal layers in a row above high threshold
-        number_of_trigger_bits = 5
-    };
-	/*@}*/
-            
     L1T();
     L1T(UInt_t trigger, UInt_t *triRowBits);
     L1T(const L1T& level1);
@@ -43,15 +32,17 @@ public:
     UInt_t getTriggerWord() const { return m_trigger; };
 
     /// kTRUE indicates that ACD LOW occurred
-    bool getAcdLow() const { return m_trigger & b_ACDL;};
+    bool getAcdLow() const { return m_trigger & enums::b_ACDL;};
     /// kTRUE indicates that ACD HIGH occurred
-    bool getAcdHigh() const { return m_trigger & b_ACDH;};
+    bool getAcdHigh() const { return m_trigger & enums::b_ACDH;};
     /// kTRUE indicates that 3-in-a-row occurred in the TKR
-    bool getTkr3InARow() const { return m_trigger & b_Track;};
+    bool getTkr3InARow() const { return m_trigger & enums::b_Track;};
     /// kTRUE indicates that CAL LOW occurred
-    bool getCalLow() const { return m_trigger & b_LO_CAL; };
+    bool getCalLow() const { return m_trigger & enums::b_LO_CAL; };
     /// kTRUE indicates that CAL HIGH occurred
-    bool getCalHigh() const { return m_trigger & b_HI_CAL; };
+    bool getCalHigh() const { return m_trigger & enums::b_HI_CAL; };
+    /// kTRUE when Ritz Throttle is satisfied
+    bool getThrottle() const { return m_trigger & enums::b_THROTTLE; };
 	/*@}*/
 
     UInt_t getTriRowBits(const Int_t tower) const;

@@ -2,6 +2,7 @@
 #define ROOT_Gem_H
 
 #include "TObject.h"
+#include "enums/GemConditionSummary.h"
 
 
 class GemTileList : public TObject
@@ -133,24 +134,6 @@ class Gem: public TObject {
 
 public:
 
-	/** @defgroup GemGroup Gem End-User Interface */
-	/*@{*/
-        /// Defines the 8 bits in the Condition Summary word
-        /// Please see Section 1.7.2 The Condition Summary in the
-        /// "The GLT Electronics Module" available at:
-        /// http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/GEM.pdf
-        typedef enum {
-            ROI = 1,
-            TKR = 2,
-            CALLE = 4,
-            CALHE = 8,
-            CNO = 16,
-            PERIODIC = 32,
-            SOLICITED = 64,
-            EXTERNAL = 128
-        } Summary;
-		/*@}*/
-
     Gem();
     Gem(const Gem& gem); 
     virtual ~Gem() { };
@@ -191,21 +174,21 @@ public:
 
 
     /// Method to query ROI bit in the condition summary word
-    Bool_t getRoiSet() const { return( (m_conditionSummary & ROI) != 0); };
+    Bool_t getRoiSet() const { return( (m_conditionSummary & enums::ROI) != 0); };
 	/// Method to query TKR bit in condition summary word
-    Bool_t getTkrSet() const { return( (m_conditionSummary & TKR) != 0); };
+    Bool_t getTkrSet() const { return( (m_conditionSummary & enums::TKR) != 0); };
 	/// Method to query Cal LE bit in condition summary word
-    Bool_t getCalLeSet() const { return( (m_conditionSummary & CALLE) != 0); };
+    Bool_t getCalLeSet() const { return( (m_conditionSummary & enums::CALLE) != 0); };
 	/// Method Cal HE bit in condition summary word
-    Bool_t getCalHeSet() const { return( (m_conditionSummary & CALHE) != 0); };
+    Bool_t getCalHeSet() const { return( (m_conditionSummary & enums::CALHE) != 0); };
 	/// Method to query CNO bit in condition summary word
-    Bool_t getCnoSet() const { return( (m_conditionSummary & CNO) != 0); };
+    Bool_t getCnoSet() const { return( (m_conditionSummary & enums::CNO) != 0); };
 	/// Method to query periodic bit in condition summary word
-    Bool_t getPeriodicSet() const { return( (m_conditionSummary & PERIODIC) != 0); };
+    Bool_t getPeriodicSet() const { return( (m_conditionSummary & enums::PERIODIC) != 0); };
 	/// Query Solicited bit in condition summary word
-    Bool_t getSolicitedSet() const { return( (m_conditionSummary & SOLICITED) != 0); };
+    Bool_t getSolicitedSet() const { return( (m_conditionSummary & enums::SOLICITED) != 0); };
 	/// Query External bit in condition summary word
-    Bool_t getExternalSet() const { return( (m_conditionSummary & EXTERNAL) != 0); };
+    Bool_t getExternalSet() const { return( (m_conditionSummary & enums::EXTERNAL) != 0); };
 	/*@}*/
 
     private:

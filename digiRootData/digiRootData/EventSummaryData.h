@@ -2,6 +2,7 @@
 #define ROOT_EventSummaryData_H
 
 #include "TObject.h"
+#include "enums/EventFlags.h"
 
 /** @class EventSummaryData
  * @brief This is the event summary class.
@@ -17,14 +18,6 @@ public:
 
     /**@defgroup EventSummaryDataGroup EventSummaryData End-User Interface */
 	/*@{*/
-	typedef enum {
-        GOOD = 0,
-        EVTSEQ = 1,
-        TKRRECON = 2,
-        PACKETERROR = 4,
-        SUMMARYERROR = 8
-    } EventFlags;
-
     typedef enum {
         GEM = 0,
         OSW = 1,
@@ -96,11 +89,11 @@ public:
     /// Returns true if the flag member is non-zero
     Bool_t badEvent() const { return (m_flags != 0); };
     /// Checks of event sequence bit is set in the event flags
-    Bool_t badEventSequence() const { return (m_flags & EVTSEQ); };
+    Bool_t badEventSequence() const { return (m_flags & enums::EVTSEQ); };
     /// Checks the TkrRecon bit, if set an error occurred during TkrRecon
-    Bool_t badTkrRecon() const { return (m_flags & TKRRECON); };
-    Bool_t packetError() const { return (m_flags & PACKETERROR); };
-    Bool_t errorEventSummary() const { return (m_flags & SUMMARYERROR); };
+    Bool_t badTkrRecon() const { return (m_flags & enums::TKRRECON); };
+    Bool_t packetError() const { return (m_flags & enums::PACKETERROR); };
+    Bool_t errorEventSummary() const { return (m_flags & enums::SUMMARYERROR); };
     
     /// Returns the length in bytes of the TEM contribution identified by a value in [0,15]
     UInt_t temLength(unsigned int tem) { return m_temLen[tem]; }
