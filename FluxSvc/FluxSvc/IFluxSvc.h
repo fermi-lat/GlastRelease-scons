@@ -10,6 +10,7 @@
 #include "GaudiKernel/IInterface.h"
 #include <string>
 #include <list>
+#include <vector>
 //#include "flux/SpectrumFactoryTable.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
@@ -40,6 +41,9 @@ public:
 
     /// pass a specific amount of time
     virtual void pass (double t)=0;    
+
+    /// create a set of display windows using rootplot.
+    virtual void rootDisplay(std::vector<char*> arguments)=0;
     
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IFluxSvc; }

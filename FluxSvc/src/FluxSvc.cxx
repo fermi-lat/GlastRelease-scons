@@ -150,7 +150,7 @@ void FluxSvc::pass ( double t){
 m_fluxMgr->pass(t);
 }
 
-void rootDisplay(std::vector<char*> arguments){
+void FluxSvc::rootDisplay(std::vector<char*> arguments){
 rootplot abc(arguments);
 }
 
