@@ -66,10 +66,10 @@ use CalRecon    v5r7p2
 use AcdRecon            v0r5       
 
 #ROOT persistence: RootIo specifies the data packages
-use RootIo              v4r10p1
+use RootIo              v4r11
 
 #diagnostic and summary of bottom line
-use merit                v5r8
+use merit                v5r8p1
 
 ### define a simple executable with GUI
 
