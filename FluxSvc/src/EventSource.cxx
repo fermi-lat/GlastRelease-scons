@@ -6,6 +6,7 @@
 #include "xml/Dom.h"
 #include "GPS.h"
 #include "CLHEP/Random/RandExponential.h"
+#include "FluxException.h"
 
 #include <strstream>
 
@@ -13,7 +14,7 @@ unsigned int  EventSource::s_id = 0;
 double  EventSource::s_total_area = 6.; // area in m^2
 
 EventSource::EventSource (double aFlux, unsigned acode)
-:  m_enabled(true), m_flux(aFlux), m_solid_angle(1.), m_code(acode)
+:  m_enabled(true), m_flux(aFlux),  m_code(acode)
 {
     std::strstream  s;
     
@@ -25,7 +26,7 @@ EventSource::EventSource (double aFlux, unsigned acode)
 }
 
 EventSource::EventSource (const DOM_Element& xelem)
-:  m_enabled(true), m_flux(1.0), m_solid_angle(1.), m_code(0)
+:  m_enabled(true), m_flux(1.0),  m_code(0)
 {
     m_name = xml::Dom::getAttribute(xelem, "name");
     m_flux = atof (xml::Dom::getAttribute(xelem, "flux").c_str());
@@ -37,7 +38,7 @@ EventSource::EventSource (const DOM_Element& xelem)
     else  {
         m_code = ++s_id;
     }
-    
+#if 0  // do not believe we need this - THB  
     // this is set by default to be overriden when the solid_angle 
     // element is present...
     DOM_Element   angles = 
@@ -51,6 +52,7 @@ EventSource::EventSource (const DOM_Element& xelem)
     }
     else if (xml::Dom::findFirstChildByName(xelem, "direction") != DOM_Element())
         m_solid_angle = 1.;
+#endif
 }
 
 
@@ -77,12 +79,14 @@ double  EventSource::rate (double time )const
   // Outputs - rate, in units of (particles/sec)
     return enabled()? (solidAngle()*flux(time)*s_total_area) :0;
 }
-
 void    EventSource::setRate ( double rate )
 {
+#if 0
     setFlux(  rate/(m_solid_angle*s_total_area) );
+#else
+    FATAL_MACRO("Should not be setting the rate");
+#endif
 }
-
 //Orbit*  EventSource::makeOrbit () const
 //{
 //    return new Orbit;
