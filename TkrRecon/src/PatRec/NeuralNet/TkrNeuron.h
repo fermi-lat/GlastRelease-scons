@@ -22,7 +22,7 @@
 
 #include "geometry/Point.h"
 #include "geometry/Vector.h"
-#include "TkrRecon/Track/TkrPoint.h"
+#include "src/PatRec/Utilities/TkrPoint.h"
 #include <vector>
 #include <assert.h>
 

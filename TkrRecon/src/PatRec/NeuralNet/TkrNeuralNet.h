@@ -22,9 +22,7 @@
 #include "Event/Recon/TkrRecon/TkrPatCandCol.h"
 #include "src/TrackFit/KalFitTrack/KalFitTrack.h"
 #include "src/PatRec/NeuralNet/TkrNeuron.h"
-#include "TkrRecon/Track/TkrPoints.h"
-#include "TkrRecon/Track/TkrPoint.h"
-#include "TkrRecon/Track/TkrBase.h"
+#include "src/PatRec/NeuralNet/TkrBase.h"
 #include <vector>
 
 using namespace Event;
@@ -154,6 +152,9 @@ private:
     /// energy for the event
     double         m_energy;
 
+    // pointers to clusters and geometry
+    ITkrGeometrySvc* m_tkrGeo;
+    TkrClusterCol*   m_clusters;
 };
 
 #endif // __TKR_NEURLNET_H
