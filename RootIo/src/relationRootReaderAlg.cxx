@@ -220,9 +220,9 @@ StatusCode relationRootReaderAlg::execute()
     int numBytes;
 	std::pair<int,int> runEventPair = (m_rootIoSvc) ? m_rootIoSvc->runEventPair() : std::pair<int,int>(-1,-1);
 	
-	if ((m_rootIoSvc) && (m_rootIoSvc->index() >= 0)) {
+	if ((m_rootIoSvc) && (m_rootIoSvc->useIndex())) {
 		readInd = m_rootIoSvc->index();
-	} else if ((m_rootIoSvc) && (runEventPair.first != -1) && (runEventPair.second != -1)) {
+	} else if ((m_rootIoSvc) && (m_rootIoSvc->useRunEventPair())) {
 		int run = runEventPair.first;
 		int evt = runEventPair.second;
 		readInd = m_relTree->GetEntryNumberWithIndex(run, evt);
@@ -235,12 +235,14 @@ StatusCode relationRootReaderAlg::execute()
         return StatusCode::SUCCESS;
     }
 
+    if (m_rootIoSvc) m_rootIoSvc->setActualIndex(readInd);
+
     numBytes = m_relTree->GetEvent(readInd);
 	
-	if ((numBytes <= 0) || (!m_relTab)) {
-            log << MSG::WARNING << "Failed to Relational Table" << endreq;
-            return StatusCode::SUCCESS;
-	}
+    if ((numBytes <= 0) || (!m_relTab)) {
+        log << MSG::WARNING << "Failed to Relational Table" << endreq;
+        return StatusCode::SUCCESS;
+    }
 
 
     sc = createTDSTables();
