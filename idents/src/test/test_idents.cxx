@@ -50,47 +50,66 @@ int main()
   idents::VolumeIdentifier acdVolId;
   acdVolId.append(1); acdVolId.append(0); acdVolId.append(41);
   acdVolId.append(1); acdVolId.append(2);
-  idents::AcdId acdId(acdVolId);
-
-  std::cout << "AcdVolId = " << acdVolId.name() << std::endl;
-  std::cout << "AcdId = " << acdId.id() << std::endl;
-  std::cout << acdId.tile() << " " << acdId.ribbon() << " " << acdId.ribbonNum() 
+  try {
+    idents::AcdId acdId(acdVolId);
+    std::cout << "AcdVolId = " << acdVolId.name() << std::endl;
+    std::cout << "AcdId = " << acdId.id() << std::endl;
+    std::cout << acdId.tile() << " " << acdId.ribbon() << " " << acdId.ribbonNum() 
       << " " << acdId.ribbonOrientation() << std::endl;
   
-  std::cout << "Value of acdVolId.isAcd() is " << acdVolId.isAcd() 
+    std::cout << "Value of acdVolId.isAcd() is " << acdVolId.isAcd() 
             << std::endl;
+  }
+  catch (std::invalid_argument ex) {
+    std::cout << 
+      "Caught expected invalid_argument exception in AcdId constructor " 
+              << "with input acdVolId" << std::endl;
+  }
 
-  idents::VolumeIdentifier acdVolId2;
-  acdVolId2.append(1); acdVolId2.append(0); acdVolId2.append(41);
-  acdVolId2.append(0); acdVolId2.append(3);
-  idents::AcdId acdId2(acdVolId2);
 
-  std::cout << "AcdVolId2 = " << acdVolId2.name() << std::endl;
-  std::cout << "AcdId2 = " << acdId2.id() << std::endl;
-  std::cout << acdId2.tile() << " " << acdId2.ribbon() << " " << acdId2.ribbonNum() 
+  try {
+    idents::VolumeIdentifier acdVolId2;
+    acdVolId2.append(1); acdVolId2.append(0); acdVolId2.append(41);
+    acdVolId2.append(0); acdVolId2.append(3);
+    idents::AcdId acdId2(acdVolId2);
+
+    std::cout << "AcdVolId2 = " << acdVolId2.name() << std::endl;
+    std::cout << "AcdId2 = " << acdId2.id() << std::endl;
+    std::cout << acdId2.tile() << " " << acdId2.ribbon() << " " << acdId2.ribbonNum() 
       << " " << acdId2.ribbonOrientation() << std::endl;
 
-  std::cout << "Value of acdVolId2.isAcd() is " << acdVolId.isAcd() 
+    std::cout << "Value of acdVolId2.isAcd() is " << acdVolId.isAcd() 
+            << std::endl;
+    } catch(std::invalid_argument ex){
+        std::cout << 
+        "Caught expected invalid_argument exception in AcdId constructor " 
+              << "with input acdVolId2" << std::endl;
+  }
+
+  try {
+      idents::VolumeIdentifier acdVolId3;
+      acdVolId3.append(1); acdVolId3.append(1); acdVolId3.append(40);
+      acdVolId3.append(0); acdVolId3.append(3);
+      idents::AcdId acdId3(acdVolId3);
+    
+      std::cout << "AcdVolId3 = " << acdVolId3.name() << std::endl;
+      std::cout << "AcdId3 = " << acdId3.id() << std::endl;
+      std::cout << acdId3.tile() << " " << acdId3.ribbon() << " " << acdId3.face() 
+          << " " << acdId3.row() << " " << acdId3.column() << std::endl;
+
+      std::cout << "Value of acdVolId3.isAcd() is " << acdVolId.isAcd() 
             << std::endl;
 
-  idents::VolumeIdentifier acdVolId3;
-  acdVolId3.append(1); acdVolId3.append(1); acdVolId3.append(40);
-  acdVolId3.append(0); acdVolId3.append(3);
-  idents::AcdId acdId3(acdVolId3);
-
-  std::cout << "AcdVolId3 = " << acdVolId3.name() << std::endl;
-  std::cout << "AcdId3 = " << acdId3.id() << std::endl;
-  std::cout << acdId3.tile() << " " << acdId3.ribbon() << " " << acdId3.face() 
-      << " " << acdId3.row() << " " << acdId3.column() << std::endl;
-
-  std::cout << "Value of acdVolId3.isAcd() is " << acdVolId.isAcd() 
+      std::cout << "Value of acdVolId3.isCal() is " << acdVolId.isCal() 
             << std::endl;
 
-  std::cout << "Value of acdVolId3.isCal() is " << acdVolId.isCal() 
+      std::cout << "Value of acdVolId3.isTkr() is " << acdVolId.isTkr() 
             << std::endl;
-
-  std::cout << "Value of acdVolId3.isTkr() is " << acdVolId.isTkr() 
-            << std::endl;
+  } catch (std::invalid_argument ex) {
+    std::cout << 
+      "Caught expected invalid_argument exception in AcdId constructor " 
+              << "with input acdVolId3" << std::endl;
+  }
   
 
   idents::VolumeIdentifier vIdCal, vIdBad;
