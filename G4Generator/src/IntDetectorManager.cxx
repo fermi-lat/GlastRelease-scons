@@ -72,10 +72,11 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
     HepTransform3D 
         global(*(theTouchable->GetRotation()), 
         theTouchable->GetTranslation());
+	
 
     HepTransform3D local = global.inverse();
-    prePos = local * (HepVector3D)prePos;
-    postPos = local * (HepVector3D)postPos;
+    prePos = local * (HepPoint3D)prePos;
+    postPos = local * (HepPoint3D)postPos;
 
     // fill the energy and position    
     hit->addEnergyItem(edep,(mc::McParticle*)0,(prePos+postPos)/2);
