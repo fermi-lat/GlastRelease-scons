@@ -1,15 +1,20 @@
 package CalRecon
-version v5r0
+version v5r1
 
 branches src mgr doc
 
 use GuiSvc v3*
 use Event v8*
 use GlastSvc v8*
-use GlastDigi v3*
+use GlastDigi v4*
 use geometry v3*
 
-apply_pattern package_include
+
+#the following prepend makes the includes folder available locally only: avoid the package_include
+#apply_pattern package_include
+macro_prepend includes "-i $(CALRECONROOT) " WIN32 "/I $(CALRECONROOT) "
+
+#apply_pattern package_include
 
 
 
