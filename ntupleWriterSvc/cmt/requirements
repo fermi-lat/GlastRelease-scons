@@ -17,7 +17,9 @@ private
 
 apply_pattern package_Cshlibflags
 
-library ntupleWriterSvc  *.cxx ../ntupleWriterSvc/*.h Dll/*.cxx
+apply_pattern package_headers
+
+library ntupleWriterSvc  *.cxx Dll/*.cxx ${ntupleWriterSvc_headers}
 
 # build this for testing
 

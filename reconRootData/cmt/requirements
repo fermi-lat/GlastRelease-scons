@@ -35,8 +35,8 @@ macro_append ROOT_linkopts " ${ROOT_PATH}/lib/libPhysics.so " \
 macro reconRootData_shlibflags "" \
       VisualC            " ${use_linkopts} "
 
+apply_pattern package_headers
 
 library  reconRootData *.cxx \
      ../reconRootData/ReconCint.cxx\
-     ../reconRootData/ReconCint.h\
-     ../reconRootData/*.h 
+     ${reconRootData_headers}
