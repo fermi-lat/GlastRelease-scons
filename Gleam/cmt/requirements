@@ -37,7 +37,7 @@ use Geant4      v1r1p0
 
 # Gaudi component packages follow
 
-use GuiSvc             v3r1
+use GuiSvc      v3
 use GlastEvent         v7r3
 use GlastSvc    v7r2
 
@@ -57,7 +57,7 @@ use CalRecon           v4r1
 
 #ROOT persistence
 use mcRootData  v2r1p1
-use RootIo              v1r1
+use RootIo      v1r0
 
 
 ### define a simple executable 
