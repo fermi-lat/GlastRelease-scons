@@ -2,6 +2,7 @@
  * Package detModel <pre>
  * Coordinator: T.Burnett, S. Robinson
  *
+ * v5r15p1 THB * fix rootplots bug
  * v5r15  THB  * Move rootplots, remove CHIME
  * v5r14p2THB  * Fix Irunable to not crash if using root digi input
  * v5r14  THB  * Implement Irunable interface

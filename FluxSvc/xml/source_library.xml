@@ -132,7 +132,16 @@
 <!-- ************************************************************************** -->
 <source_library title="background">
 
-    <!-- default creme is the orbit average -->   
+  
+    <!-- the CHIME spectrum. angular dependence and rate are from the CHIME spectrum object 
+         This is deprecated, since it is not supported, and gives wrong angular distributions.
+      -->
+    <source name="chime" >
+        <spectrum escale="GeV"> <SpectrumClass name="CHIMESpectrum"/> <use_spectrum/> </spectrum>
+    </source>
+
+
+  <!-- default creme is the orbit average -->   
     <source name="cremeavg" >
         <spectrum escale="GeV"> <SpectrumClass name="FILESpectrum" params="sources/glast_smin_flx.txt"/> 
             <solid_angle mincos="-0.4" maxcos="1.0"/>
