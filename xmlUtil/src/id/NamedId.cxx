@@ -94,10 +94,11 @@ namespace xmlUtil {
     s << "(" << (*it)->name << "=" << (*it)->value;
     ++it;
     while (it != nId.m_fields->end()) {
-      s << ", " << std::endl << (*it)->name << "=" << (*it)->value;
+      s << ", " << (*it)->name << "=" << (*it)->value;
+      //      s << ", " << std::endl << (*it)->name << "=" << (*it)->value;
       ++it;
     }
-    s << ")" << std::endl;
+    s << ")" ;   // << std::endl;
     return s;
   }
 
