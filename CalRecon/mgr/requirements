@@ -4,7 +4,7 @@ version v3
 branches src mgr doc
 
 use GuiSvc v3*
-use GlastEvent v7*
+use Event v8*
 use GlastSvc v7*
 use GlastDigi v2*
 use geometry v3*
