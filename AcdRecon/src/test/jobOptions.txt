@@ -25,8 +25,8 @@ GlastDetSvc.visitorMode="recon";
 //----------------- local algorithms to run -------------------
 ApplicationMgr.TopAlg = { "digiRootReaderAlg", "reconRootReaderAlg", "AcdReconAlg"};
 
-digiRootReaderAlg.digiRootFile = "$ACDRECONROOT/src/test/digi.root";
-reconRootReaderAlg.reconRootFile = "$ACDRECONROOT/src/test/recon.root";
+digiRootReaderAlg.digiRootFile = "$ROOTTESTDATAROOT/vertical_surface_muons/digi.root";
+reconRootReaderAlg.reconRootFile = "$ROOTTESTDATAROOT/vertical_surface_muons/reccon.root";
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;

@@ -4,7 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
-          
+v1r7p6    06-Jan-2005 HMK use rootTestData files in unit test          
 v1r7p5    04-Jan-2005 JRB remove xml/IFile include
 v1r7p4    16-Dec-2004 TU  Modify requirements to pick up latest Event (v10+)
           24-Aug-2004 TK  Update requirements, install jobOptions
