@@ -29,6 +29,8 @@
 #include "TkrRecon/MonteCarlo/McPatCand.h"
 #include "src/MonteCarlo/McBuildTracks.h"
 
+#include "TkrRecon/MonteCarlo/ITkrMcTracksTool.h"
+
 class TkrBuildMcRelationsAlg : public Algorithm
 {
 public:
@@ -121,6 +123,15 @@ StatusCode TkrBuildMcRelationsAlg::execute()
 
     //Have the Monte Carlo base info, now relate to the recon info
     buildPatCandRelations();
+
+    //Quick test of our new tool
+    ITkrMcTracksTool* mcPatTool = 0;
+    sc = toolSvc()->retrieveTool("TkrMcTracksTool", mcPatTool);
+
+    int numMcTracks = mcPatTool->getNumMcTracks();
+    const unsigned long classBits = mcPatTool->getClassificationBits();
+    int nn=0;
+
         
     return sc;
 }
