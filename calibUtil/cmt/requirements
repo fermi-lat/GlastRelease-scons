@@ -3,6 +3,6 @@ package calibUtil
 
 version v0
 
-# use xml
-# use MYSQL   need to make an interface package to get to MySQL client lib
+use xml
+use MYSQLEXT
 # use ROOT
