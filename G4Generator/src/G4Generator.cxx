@@ -17,10 +17,20 @@
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/SmartDataPtr.h"
+
+// special to setup the TdGlastData structure
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+#include "GlastEvent/data/TdGlastData.h"
+#include "instrument/GlastDetector.h"
+#include "data/CsIData.h"
+#include "data/IVetoData.h"
+#include "data/SiData.h"
 
 //flux
 #include "FluxSvc/FluxSvc.h"
 #include "FluxSvc/IFlux.h"
+
 
 //gui
 #include "GuiSvc/GuiSvc.h"
@@ -39,7 +49,6 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator) 
 {
 // set defined properties
-//    setProperty("file_name", m_file_name);
      declareProperty("source_name",  m_source_name="default");
      declareProperty("UIcommands", m_UIcommands);
      declareProperty("topVolume", m_topvol="");
@@ -68,6 +77,8 @@ StatusCode G4Generator::initialize()
     }
     log << MSG::INFO << "Source: "<< m_flux->title() << endreq;
 
+    setupGui();
+
     // Set the geant4 classes needed for the simulation
     // The manager, with specified (maybe) top volume
     m_runManager = new RunManager(m_topvol, m_visitorMode);
@@ -79,12 +90,21 @@ StatusCode G4Generator::initialize()
             UI->ApplyCommand(*k);
             log << MSG::INFO << "UI command: " << (*k) << endreq;
         }
-            UI->ApplyCommand("/event/verbose 3");
     }  
     // Initialize Geant4
     m_runManager->Initialize();
 
-    setupGui();
+
+    // Get the Glast detector service 
+    IGlastDetSvc* gsv=0;
+    if( service( "GlastDetSvc", gsv).isFailure() ) {
+        log << MSG::ERROR << "Couldn't set up GlastDetSvc!" << endreq;
+        return StatusCode::FAILURE;
+    }
+    // this is necessary for the converter to find the GlastDetector hierarcy that was
+    // built by the GlastDetectorManager object
+    gsv->setDetector(GlastDetector::findDetector(0)); 
+
     return StatusCode::SUCCESS;
 
 }
@@ -95,7 +115,7 @@ void G4Generator::setupGui()
     //
     // get the (optional) Gui service
     //
-        MsgStream log(msgSvc(), name());
+    MsgStream log(msgSvc(), name());
 
     IGuiSvc* guiSvc=0;
     
@@ -106,22 +126,7 @@ void G4Generator::setupGui()
     m_guiMgr= guiSvc->guiMgr();
     new DisplayManager(&m_guiMgr->display());
 
-#if 0 // sub algorithm examples
-    // get the display sub algoritm
-    if( createSubAlgorithm("DetDisplay", "DetDisplay", m_detDisplay).isFailure() ) {
-        log << MSG::ERROR << " could not set up DetDisplay " << endreq;
-        return StatusCode::FAILURE;
-    }
-    
-    // get the event sub algoritm
-    if( createSubAlgorithm("GismoEventDisplay", "GismoEventDisplay", m_eventDisplay).isFailure() ) {
-        log << MSG::ERROR << " could not set up GismoEventDisplay " << endreq;
-        return StatusCode::FAILURE;
-    }
-    GismoEventDisplay* ev = dynamic_cast<GismoEventDisplay*>(m_eventDisplay);
-    ev->m_gen=this;
-    
-#endif       
+
     // now get the filemenu and add a source button to it.
     gui::SubMenu& filemenu = m_guiMgr->menu().file_menu();
     
@@ -140,13 +145,6 @@ void G4Generator::setupGui()
         source_menu.addButton(*it, new SetSource(this, *it));
     }
     
- 
-#ifdef MATERIAL_AUDIT
-    // material audit
-    filemenu.addButton("Audit materials",  new MaterialList);
-#endif
-        
-
 }
 //------------------------------------------------------------------------------
 StatusCode G4Generator::execute() 
@@ -201,6 +199,20 @@ StatusCode G4Generator::execute()
         std::auto_ptr<std::vector<Hep3Vector> > points = m_runManager->getTrajectoryPoints(i);
         dm->addTrack(*(points.get()), m_runManager->getTrajectoryCharge(i));
     }
+
+    //
+    // extract the hits/digis to the TDS via the converter
+    //
+    static std::string path("/Event/TdGlastData");
+    SmartDataPtr<TdGlastData> data(eventSvc(), path);
+    if( 0==data) { log << MSG::ERROR << "could not find \""<< path <<"\"" << endreq;
+        return StatusCode::FAILURE;
+    }
+    log << MSG::DEBUG << "G4 event generated ok: " 
+        << data->getVetoData()->count()<< ", "
+        << data->getSiData()->totalHits()<< ", "
+        << data->getCsIData()->count() << " hits in acd, tkr, cal"
+        << endreq;
 
     return StatusCode::SUCCESS;
 }
