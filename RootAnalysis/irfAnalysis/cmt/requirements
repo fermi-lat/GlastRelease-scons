@@ -7,6 +7,8 @@ branches data
 use RootPolicy *
 use GlastPolicy *
 
+apply_pattern package_linkopts
+
 macro irfAnalysis_cppflags  ""\
   Linux "-I ../src -g -pedantic "\
   WIN32 " /I ..\src /wd4800 /wd4305"
@@ -16,6 +18,10 @@ macro_append ROOT_libs ""\
   WIN32 "  libHist.lib libGraf.lib libGpad.lib libPostScript.lib"
 
 macro source "*.cxx" WIN32 "*.cxx *.h"
+
+library     irfAnalysis -no_share $(source)
+
+application psf_fit -s=psf_fit $(source)
 
 application energy $(source) -s=energy $(source) 
 application psf    $(source) -s=psf $(source)
