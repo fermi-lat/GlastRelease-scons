@@ -401,10 +401,10 @@ DOM_Element XmlBaseCnv::findNextRange(const DOM_Element& rangeElt) {
 
   // otherwise we've got a new tower; go through the whole
   // rigamarole
-  std::string att = Dom::getAttribute(elt, "nRow");
+  std::string att = Dom::getAttribute(elt, "iRow");
   m_nRow = atoi(att.c_str());
 
-  att = Dom::getAttribute(elt, "nCol");
+  att = Dom::getAttribute(elt, "iCol");
   m_nCol = atoi(att.c_str());
 
   // All child elements of a tower are layer elements
