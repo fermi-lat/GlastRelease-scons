@@ -33,7 +33,7 @@
 
 
 #include "ThrottleAlg.h"
-#include "TriRowBits.h"
+#include "Trigger/TriRowBits.h"
 
 #include <map>
 
