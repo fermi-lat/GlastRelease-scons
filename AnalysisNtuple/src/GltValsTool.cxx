@@ -155,8 +155,12 @@ StatusCode GltValsTool::calculate()
     if(!pEvent || !pClusters) return StatusCode::FAILURE;
 
     unsigned int word = pEvent->trigger();
-    if(word > 1024) return sc; 
-    bool three_in_a_row = (word/4)%2 == 1; 
+    // remove this test, GEM bits cause it to fail
+    //if(word > 1024) return sc; 
+
+    //bool three_in_a_row = (word/4)%2 == 1;
+    // better, but should use an enum:
+    bool three_in_a_row = ((word & 4)!=0);
     Trig_word = word;
 
     int tower, layer;
