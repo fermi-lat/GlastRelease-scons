@@ -3,6 +3,9 @@ package detModel
 # $Header$
 version v2r15
 
+author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
+author Joanne Bogart <jrb@slac.stanford.edu>
+
 use CLHEP   v2* IExternal
 use xmlUtil
 use idents
