@@ -1,12 +1,11 @@
 package Gleam
 
-version  v2r1p4
+version  v2r1p5
 # This is a checkout package
 # $Id$
 
 # gaudi system files: this would checkout all of the Gaudi packages
 use GaudiSys    v9r0p6
-#use GaudiAlg	v5r0p2
 
 # ROOT add-on
 use ROOT        v3r2p9
@@ -17,7 +16,7 @@ use RootHistCnv v5r0p1
 use XMLEXT      v2r2 
 use GlastPolicy v4r4 
 use facilities  v2r4p1
-use xml                  v4r1p4 
+use xml         v4r1p4 
 use xmlUtil     v2r8p1
 
 use geometry    v3
@@ -29,8 +28,8 @@ use geomrep     v4r1
 
 # the geometry data base
 use idents      v2r8
-use detModel             v2r11
-use xmlGeoDbs            v1r5p2
+use detModel    v2r11
+use xmlGeoDbs   v1r5p2
 
 # interface to G4 - make private to avoid so many libs
 private 
@@ -42,36 +41,36 @@ public
 use GuiSvc      v3
 
 use Event       v8r5p1
-use GlastSvc             v8r1
+use GlastSvc    v8r1
 
 # simulation
 
 use FluxSvc     v5r6p2
 use FluxDisplay v2r0p1
-use G4Generator          v4r1p2
+use G4Generator v4r1p2
 
 #digitization
 use CalDigi     v1r0p1
-use TkrDigi              v1r0
+use TkrDigi     v1r0
 use AcdDigi     v0r1
 
 #reconstruction
-use Trigger              v3r2
-use Recon                v2r2p2
+use Trigger     v3r2
+use Recon                 v2r2p3
 
-use TkrRecon             v6r2p1
+use TkrRecon              v6r2p2
 use CalRecon    v5r2       
 
 
 #ROOT persistence
 use mcRootData     v2r2
 use digiRootData   v3r2
-use reconRootData        v3r0p2
+use reconRootData  v3r0p2
 
-use RootIo               v4r1p1
+use RootIo         v4r1p1
 
 #diagnostic and summary of bottom line
-use merit                v5
+use merit                 v5p1
 
 ### define a simple executable with GUI
 

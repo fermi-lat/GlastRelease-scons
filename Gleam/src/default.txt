@@ -14,34 +14,20 @@
 FluxSvc.source_lib = {"$(FLUXSVCROOT)/xml/source_library.xml"};
 FluxAlg.source_name="default";
 
-// Number of events to process
-ApplicationMgr.EvtMax = 1000;
-
 
 //Output.Members += {"mcRootWriterAlg", "digiRootWriterAlg", "reconRootWriterAlg"};
-
-mcRootWriterAlg.mcRootFile = "mc.root";
-mcRootWriterAlg.splitMode = 1;
-mcRootWriterAlg.bufferSize = 64000;
-mcRootWriterAlg.compressionLevel = 1;
-
-digiRootWriterAlg.digiRootFile = "digi.root";
-digiRootWriterAlg.splitMode = 1;
-digiRootWriterAlg.bufferSize = 64000;
-digiRootWriterAlg.compressionLevel = 1;
-
-reconRootWriterAlg.reconRootFile = "recon.root";
-reconRootWriterAlg.splitMode = 1;
-reconRootWriterAlg.bufferSize = 64000;
-reconRootWriterAlg.compressionLevel = 1;
+Output.Members = {}; // turn off root for this
 
 // setup up merit to monitor the output
 ApplicationMgr.DLLs   += {"merit"};
 Triggered.Members += {"meritAlg"};
-MeritAlg.generated = 1000; // for estimation of Aeff
+MeritAlg.generated = 10000; // for estimation of Aeff
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 CalClustersAlg.OutputLevel=4; // too much info
+
+// Number of events to process
+ApplicationMgr.EvtMax = 10000;
 
 MessageSvc.OutputLevel      =3;
 

@@ -1,6 +1,10 @@
 /** @file release.notes
  * package Gleam
  * package manager:T.Burnett
+
+ * v2r1p5 28-may-02 THB more geometry fixes
+      use Recon                 v2r2p3
+      use TkrRecon              v6r2p2
  *
  * v2r1p4 26-may-02 THB fixed geometry
       use xml                  v4r1p4 		 
