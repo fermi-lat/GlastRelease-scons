@@ -3,7 +3,7 @@
 
 /** @mainpage package CalRecon
  *
- * @authors A.Chekhtman, R.Terrier, J.A.Hernando 
+ * @authors A.Chekhtman, R.Terrier, J.A.Hernando, G. Musat
  *
  * @section intro Introduction
  *
@@ -67,9 +67,15 @@
  *
  * The clustering is now based on the ICluster and Cluster base classes, 
  * while the leakage corrections derive from IEnergyCorr and EnergyCorr.
- * The single cluster tool implemented is SingleClusterTool. The last
+ * The single cluster tool implemented is SingleClusterTool. The fuzzy
+ * clustering tool implemented is FuzzyClusterTool. The last
  * layer leakage tool is LastLayerCorrTool, and the profile tool is
  * ProfileTool.
+ *
+ * The FuzzyClusterTool retrieves the FuzzyCluster Gaudi tool to perform
+ * fuzzy clustering on all cal hits. However, if there are less than one
+ * hit point per cluster, it applies one single cluster calculations, like
+ * the SingleClusterTool. 
  *
  * CalClustersAlg calls all 3 tools so far.
  *
@@ -83,6 +89,19 @@
  *
  * @param CalClustersAlg.clusterToolName
  *        name of tool performing clustering. Default is SingleClusterTool
+ *        If set to FuzzyClusterTool, the following param is mandatory:
+ * @param ToolSvc.FuzzyClusterTool.FuzzyCluster.command
+ *        the command param is mandatory for the FuzzyCluster Gaudi tool
+ *        which is retrieved as a private tool by FuzzyClusterTool, that
+ *        in its turn is a shared tool. Example:
+ *        ToolSvc.FuzzyClusterTool.FuzzyCluster.command="cini -r2:4|fcm|picK";
+ * @param ToolSvc.FuzzyClusterTool.clusterSetNo
+ *        clusterSetNo is a param of FuzzyClusterTool that specifies
+ *        the index of the partition that should be considered; its default
+ *        value is zero.
+ * @param ApplicationMgr.DLLs += {"FC"};
+ *        The FC library should be loaded if one uses FuzzyClusterTool.
+ *
  * @param CalClustersAlg.lastLayerToolName
  *        name of tool performing last layer energy correction
  * @param CalClustersAlg.profileToolName
