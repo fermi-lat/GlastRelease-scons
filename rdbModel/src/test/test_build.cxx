@@ -9,7 +9,7 @@
 
 
 int main(int, char**) {
-  std::string infile("$(RDBMODELROOT)/xml/calibMetaDb.xml)");
+  std::string infile("$(RDBMODELROOT)/xml/calibMetaDb.xml");
 
   rdbModel::Manager* man = rdbModel::Manager::getManager();
 
