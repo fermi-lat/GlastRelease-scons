@@ -26,9 +26,12 @@ const ISvcFactory& CalibMySQLCnvSvcFactory = CalibMySQLCnvSvc_factory;
 
 CalibMySQLCnvSvc::CalibMySQLCnvSvc( const std::string& name, ISvcLocator* svc)
   : ConversionSvc (name, svc, MYSQL_StorageType)
-  , m_meta(0)
+    , m_meta(0), m_useEventTime(true),m_enterTimeStart(0), m_enterTimeEnd(0)
 {
   declareProperty("Host", m_host = "*");
+  declareProperty("UseEventTime", m_useEventTime = true);
+  declareProperty("EnterTimeEnd", m_enterTimeEndString = std::string("") );
+  declareProperty("EnterTimeStart", m_enterTimeStartString = std::string("") );
 }
 
 CalibMySQLCnvSvc::~CalibMySQLCnvSvc(){ }
@@ -125,6 +128,38 @@ StatusCode CalibMySQLCnvSvc::initialize()
   }
   log << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
 
+  if (!m_useEventTime) {  // special diagnostic mode
+    std::string defStart("2003-09-01");
+    if (m_enterTimeStartString.size() == 0) {
+      // set some  default
+      m_enterTimeStartString = defStart;
+    }
+    log << MSG::INFO << "Calibrations created at or after " 
+        << m_enterTimeStartString << " will be fetched" << endreq;
+    try {
+      m_enterTimeStart = new facilities::Timestamp(m_enterTimeStartString);
+    }
+    catch (facilities::BadTimeInput ex) {
+      log << MSG::ERROR << "Enter time no good:  " << ex.complaint << endreq;
+      log << "Using default " << defStart << endreq;
+      m_enterTimeStartString = defStart;
+      m_enterTimeStart = new facilities::Timestamp(m_enterTimeStartString);
+    }
+    if (m_enterTimeEndString.size()) {
+      try {
+        m_enterTimeEnd = new facilities::Timestamp(m_enterTimeEndString);
+      }
+      catch (facilities::BadTimeInput ex) {
+        log << MSG::ERROR << "Enter end time no good: " << ex.complaint 
+            << endreq;
+        log << "Using default of forever " << endreq;
+        m_enterTimeEnd = 0;
+      }
+    }
+    // There is no easy way to tell data service about this, so user
+    // is expected to supply yet another job options parameter to CalibDataSvc
+    // to tell it not to check for valid event time.  Ugh.
+  }
   // Make a calibUtil::Metadata instance 
   // Conceivably, could start up a different conversion service, depending 
   // on job options parameters, which would look very much like this one
@@ -416,9 +451,16 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
   }
 
   unsigned int ser;
-  calibUtil::Metadata::eRet ret = 
-    m_meta->findBest(&ser, cType, CalibData::CalibTime(time),
-                     m_calibLevelMask, instrName, flavor);
+  calibUtil::Metadata::eRet ret;
+  if (m_useEventTime) {
+    ret = m_meta->findBest(&ser, cType, CalibData::CalibTime(time),
+                           m_calibLevelMask, instrName, flavor);
+  }
+  else {
+    ret = m_meta->findSoonAfter(&ser, cType, m_enterTimeStart, 
+                                m_enterTimeEnd, m_calibLevelMask, 
+                                instrName, flavor);
+  }
   if (ret != calibUtil::Metadata::RETOk) {
     log << MSG::ERROR << "Could not access MySQL database" << endreq;
     return StatusCode::FAILURE;
@@ -552,9 +594,15 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
   // Following comes from createCalib.  Perhaps create and update
   // should be calling common utility since much of what they do is identical.
   unsigned int ser;
-  calibUtil::Metadata::eRet ret = 
-    m_meta->findBest(&ser, cType, CalibData::CalibTime(time),
-                     m_calibLevelMask, instr, flavor);
+  calibUtil::Metadata::eRet ret;
+  if (m_useEventTime) {
+    ret = m_meta->findBest(&ser, cType, CalibData::CalibTime(time),
+                           m_calibLevelMask, instr, flavor);
+  }
+  else {
+    ret = m_meta->findSoonAfter(&ser, cType, m_enterTimeStart, m_enterTimeEnd,
+                                m_calibLevelMask, instr, flavor);
+  }
   if (ret != calibUtil::Metadata::RETOk) {
     log << MSG::ERROR << "Could not access MySQL database" << endreq;
     return StatusCode::FAILURE;
@@ -688,4 +736,12 @@ StatusCode CalibMySQLCnvSvc::getValidInterval(unsigned int& serNo,
   delete till;
   return status;
 }
+
+//void CalibMySQLCnvSvc::setCalibEnterTime(const ITime&  time, 
+//                                         unsigned int interval)
+// {
+//  m_enterTime = time;
+//  m_enterInterval = interval;
+// }
+
 

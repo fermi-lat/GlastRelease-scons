@@ -6,6 +6,7 @@
 #include "CalibSvc/ICalibMetaCnvSvc.h"
 #include "CalibSvc/IInstrumentName.h"
 #include "GaudiKernel/ConversionSvc.h"
+#include "facilities/Timestamp.h"
 
 /// Forward and external declarations
 // class ConditionsDBGate;
@@ -122,6 +123,9 @@ class CalibMySQLCnvSvc : public ConversionSvc,
   virtual StatusCode getValidInterval(unsigned int& serNo,
                                       ITime** pvStart, ITime** pvEnd);
 
+  // virtual void setCalibEnterTime(const ITime&  time, unsigned int interval);
+
+
  private:
 
   /// Handle for metadata access
@@ -133,6 +137,19 @@ class CalibMySQLCnvSvc : public ConversionSvc,
   /// How official does a calibration have to be in order to be acceptable
   /// Should default to calibUtil::Metadata::LEVELProd
   unsigned int m_calibLevelMask;
+
+  /// Use event time to select calibration?  Normal state is TRUE.
+  bool m_useEventTime;
+
+  /// Following only used if m_useEventTime is FALSE.  In this case 
+  /// search for calibration using enter-time instead
+  facilities::Timestamp*  m_enterTimeStart;
+  facilities::Timestamp*  m_enterTimeEnd;
+
+  std::string m_enterTimeStartString;
+  std::string m_enterTimeEndString;
+
+  /// Interval in seconds
 
   /// Handle to the IConversionSvc interface of the DetectorPersistencySvc
   IConversionSvc*      m_detPersSvc;
