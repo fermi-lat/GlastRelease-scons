@@ -170,6 +170,7 @@ StatusCode GuiSvc::initialize ()
                     log << MSG::DEBUG << "Initializing gui stuff in " << tooltype << endreq;
                     dynamic_cast<IGuiTool*>(itool)->initialize(m_guiMgr);
                 }else {
+                    itool->release();
                     tsvc->releaseTool(itool);
                 }
             }

@@ -186,7 +186,8 @@ StatusCode GlastRandomSvc::initialize ()
 		// Store its name and address in a map
                 m_engineMap[tooltype] = hr;
             }else{
-            tsvc->releaseTool(itool);
+              itool->release();
+              tsvc->releaseTool(itool);
 	    }
         }
     }
