@@ -229,4 +229,25 @@
         </spectrum>
     </source>
 
+	<!-- background mixture 6 - maximums-->
+    <source name="occltest">
+        <nestedSource sourceRef="center"/>
+        <nestedSource sourceRef="vertmu"/>
+    </source>
+
+	<!-- Test source at the galactic origin -->
+     <source name="center" flux="5000.0">
+          <spectrum>
+              <particle name="gamma"> <energy e="0.1"/> </particle>
+               <galactic_dir l="0" b="0"/>
+          </spectrum>
+     </source>
+
+   <source name="vertmu" flux="0.05">
+        <spectrum>
+            <particle name="mu+"> <energy e="10."/> </particle>
+            <direction theta="0" phi="0"/>
+        </spectrum>
+    </source>
+
 </source_library>

@@ -228,8 +228,8 @@ void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
     for( int i = 0; i< count; ++i) {
         
         //testing - pass time
-        pass(0.01);
-        time+=0.01;
+        //pass(0.01);
+        //time+=0.01;
         
         f = e->event(time);
         //TESTING THE lat, lon FUNCTIONS
@@ -239,6 +239,11 @@ void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
         
         double interval=e->interval(time);
 
+        //here we increment the "elapsed" time and the "orbital" time,
+        //just as is done in flux.  NOTE: this is important for the operation 
+        //of fluxsource, and is expected.
+        time+=interval;
+        pass(interval);
         int sourceNumber = e->numSource();
         if(sourceNumber==-1){counts[0]++;
         }else{counts[sourceNumber]++;}
@@ -250,7 +255,8 @@ void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
         cout << " GeV), Launch: " << f->launchPoint() 
             << " Dir " << f->launchDir() << " ,Flux="
             << f->flux(time) << " ,Interval="
-            << interval << "   Event ID number: "<< sourceNumber <<std::endl;
+            << interval << "   Event ID number: "<< sourceNumber <<std::endl
+            << "elapsed time = " << totalinterval << std::endl;
     }
     cout << "------------------------------------------------------" << std::endl;
     

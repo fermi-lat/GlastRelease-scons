@@ -255,10 +255,11 @@ void FluxSource::spectrum(ISpectrum* s, double emax)
 // old event.
 //FluxSource* FluxSource::event(double time) 
 //{
+//    m_extime = 0;
 //    computeLaunch(time);
 //    EventSource::setTime(time);
 //    return this;
-// could be a call-back
+// //could be a call-back
 //}
 
 
@@ -268,7 +269,7 @@ FluxSource* FluxSource::event(double time)
     //go through the "veto" loop only if galactic coordinates are given for the source - otherwise,
     //the particles originate close to GLAST, and can still be incident.
     // loop through until you get a particle which is not occluded by the earth.
-    if(occluded()){
+/*    if(occluded()){
     do{
         computeLaunch(time);
         m_extime+=5;
@@ -277,7 +278,13 @@ FluxSource* FluxSource::event(double time)
     //just do this once, source is not occluded
     computeLaunch(time);
     m_extime+=5;
-}
+}*/
+computeLaunch(time);
+    m_extime+=5;
+    while(occluded()){
+        computeLaunch(time);
+        m_extime+=5;
+    }
 m_extime-=5; // to make up for doing this once too many.
 EventSource::setTime(time+m_extime);
 return this;
@@ -1017,7 +1024,7 @@ double FluxSource::interval (double time){
     double intrval=m_spectrum->interval(time + m_extime);
     if(intrval!=-1){return intrval;
     }else{
-        return explicitInterval(time + m_extime);
+        return explicitInterval(time) + m_extime;
     }
 }
 
