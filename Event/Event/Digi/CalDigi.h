@@ -32,7 +32,7 @@ public:
         CalLogReadout(char rangeP, short adcP, char rangeM, short adcM) :
 	        m_rangeP(rangeP), 
 		m_adcP(adcP), 
-		m_rangeM(adcM), 
+		m_rangeM(rangeM), 
 		m_adcM(adcM)
         {};
 
