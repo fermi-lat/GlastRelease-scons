@@ -11,6 +11,7 @@
 class IGlastDetSvc;
 class CalRecon;
 class GlastTuple;
+namespace xml { class IFile; }
 
 
 /*! \class CalRecoAlg
@@ -37,6 +38,9 @@ private:
     // ptr to the CalRecon object used to do the analysis
     CalRecon*    m_recon;
 
+    // constants from the "instrument.xml" file.
+    xml::IFile * m_ini;
+    
     // sumamry object from glastsim creates a n-tuple
     SummaryData<GlastTuple>* m_summary; 
 };

@@ -10,6 +10,7 @@
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
+#include "xml/IFile.h"
 
 #include "reconstruction/GlastTuple.h"
 #include "reconstruction/PrintReconData.h"
@@ -60,6 +61,11 @@ StatusCode CalRecoAlg::initialize() {
     if (!sc.isSuccess ()){
         log << MSG::ERROR << "Couldn't find the GlastDetSvc!" << endreq;
     }
+
+    // test: get a constant from the ini file
+    m_ini = const_cast<xml::IFile*>(m_detSvc->iniFile()); //OOPS!
+    int nx = m_ini->getInt("glast", "xNum");
+
     m_recon=new CalRecon;
 
     // define the tuple
