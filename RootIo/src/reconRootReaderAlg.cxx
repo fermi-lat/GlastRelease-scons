@@ -204,7 +204,7 @@ StatusCode reconRootReaderAlg::initialize()
       
 	if (m_rootIoSvc) {
 		m_rootIoSvc->setRootEvtMax(m_numEvents);
-		m_reconTree->BuildIndex("m_runId", "m_eventId");
+		if(!m_reconTree->GetIndex()) m_reconTree->BuildIndex("m_runId", "m_eventId");
 	}
 
     saveDir->cd();

@@ -186,7 +186,7 @@ StatusCode digiRootReaderAlg::initialize()
     
 	if (m_rootIoSvc) {
 		m_rootIoSvc->setRootEvtMax(m_numEvents);
-		m_digiTree->BuildIndex("m_runId", "m_eventId");
+		if (!m_digiTree->GetIndex()) m_digiTree->BuildIndex("m_runId", "m_eventId");
 	}
 
 

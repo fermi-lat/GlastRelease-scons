@@ -185,7 +185,7 @@ StatusCode mcRootReaderAlg::initialize()
 
 	if (m_rootIoSvc) {
 		m_rootIoSvc->setRootEvtMax(m_numEvents);
-		m_mcTree->BuildIndex("m_runId", "m_eventId");
+		if (!m_mcTree->GetIndex()) m_mcTree->BuildIndex("m_runId", "m_eventId");
 	}
      
     saveDir->cd();

@@ -199,7 +199,7 @@ StatusCode relationRootReaderAlg::initialize()
     m_numEvents = m_relTree->GetEntries();
 	if (m_rootIoSvc) {
 		m_rootIoSvc->setRootEvtMax(m_numEvents);
-		m_relTree->BuildIndex("m_runId", "m_eventId");
+		if(!m_relTree->GetIndex()) m_relTree->BuildIndex("m_runId", "m_eventId");
 	}
 
     saveDir->cd();
