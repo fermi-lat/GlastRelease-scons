@@ -7,6 +7,8 @@
 // start with the basic program defined in Gleam
 #include "$GLEAMROOT/src/basicOptions.txt"
 
+ApplicationMgr.ExtSvc +={"RootIoSvc"};  // allow termination at end of root file
+
 Generator.Members = {} ; // turn off generation
 
 Digitization.Members = {"digiRootReaderAlg"}; // replace digi algs.
