@@ -2,7 +2,9 @@
  * Coordinator:H.Kelly
  *
  @verbatim
- * v3r3p0 10-oct-2003 HMK : make sure to switch ROOT TDirectory when creating a                             new TTree
+ * v3r4   21-oct-2003 THB : add feature to interface to allow RootTupleSvc client to selectively write
+                            TTree's
+ * v3r3p0 10-oct-2003 HMK : make sure to switch ROOT TDirectory when creating a new TTree
  * v3r3   26-sep-2003 THB : Implement multiple TTree's in RootTupleSvc; also settable autosave property
  * v3r2p3 29-aug-2003 THB : make default RootTupleSvc filename more descriptive 
  * v3r2p2 25-aug-2003 THB : try to account for isfinite gcc 3.2 
