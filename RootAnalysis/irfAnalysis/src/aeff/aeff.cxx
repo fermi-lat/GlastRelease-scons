@@ -1,9 +1,9 @@
 /** @file aeff.cxx  
-   @brief Create a set of histograms to allow analysis of the effective area
-$Header$
+    @brief Create a set of histograms to allow analysis of the effective area
+    $Header$
+
 */
 #include "PSF.h"
-#include "TH2.h"
 
 #include <fstream>
 
@@ -50,49 +50,6 @@ public:
             m_tree->Project(h->GetName(), "McZDir", goodEvent && TCut(energy_cut(j)));
             h->SetDirectory(&hist_file);  // move to the summary file
         }
-
-        // This code is only very temporarily here -- will move soon
-        std::cout << "Fill logE vs cosT Histograms for latResponse AeffRootTable "
-            << std::endl;
-        // determine normalization factor for Aeff
-        double  dcosT       = 1.0/m_zdir_bins;
-        double  dlogE       = m_binsize;
-        double  ngenPerBin  = m_ngen * (dcosT*dlogE)/log10(m_emax/m_emin);
-        double  norm_factor = m_target_area/ngenPerBin ;
-
-        std::cout << "Apply normalization factor for Aeff Table assuming " 
-            << m_ngen 
-            << " events generated uniformly over:"
-            << "\n\t cos theta from -1 to 0"
-            << "\n\t log E with E from "<< m_emin << " to " << m_emax 
-            << "\n\t dcosTheta " << dcosT
-            << "\n\t dlogE     " << dlogE
-            << "\n\t generated per bin    " << ngenPerBin
-            << "\n\t Normalization factor " << norm_factor
-            << std::endl;
-
-        // Plot logE versus cosTheta
-        TCut front("Tkr1FirstLayer<12" );
-        TCut back( "Tkr1FirstLayer>=12");
-
-        char title[256];  
-        sprintf(title, "logE vs cosTheta, front Tkr" );
-        TH2F *hf = new TH2F( "lectf", title, 
-            (5.5-1.0)/m_binsize, 1.0, 5.5,   m_zdir_bins, -1.0, 0.0 );
-        m_tree->Project( hf->GetName(),"McZDir:McLogEnergy", goodEvent && front );
-        hf->Scale(norm_factor);        
-
-        sprintf(title, "logE vs cosTheta, back  Tkr" );
-        TH2F *hb = new TH2F( "lectb", title, 
-            (5.5-1.0)/m_binsize, 1.0, 5.5,   m_zdir_bins, -1.0, 0.0 );
-        m_tree->Project( hb->GetName(),"McZDir:McLogEnergy", goodEvent && back );
-        hb->Scale(norm_factor);
-
-        sprintf(title, "logE vs cosTheta, front & back" );
-        TH2F *ha = new TH2F( "lecta", title, 
-            (5.5-1.0)/m_binsize, 1.0, 5.5,   m_zdir_bins, -1.0, 0.0 );
-        m_tree->Project( ha->GetName(),"McZDir:McLogEnergy", goodEvent );
-        ha->Scale(norm_factor);
 
         hist_file.Write();
     }
