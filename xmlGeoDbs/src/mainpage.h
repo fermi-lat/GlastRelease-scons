@@ -18,6 +18,24 @@
  * description) and flightTKROneTkr.xml (simple solids and their positionings
  * to build up tracker for a single tower).
  *
+ * Subdirectories are used as follows:
+ * <ul>
+   <li><b>flight</b> is for standard LAT instrument.  There are two
+        versions: flight.xml and flightSegVols.xml.  The only difference
+        is that CsI crystals are built up as a stack of smaller CsI 
+        volumes in the latter case </li>
+   <li><b>em</b> is for the complete Engineering Model instrument,
+       calorimeter + tracker </li>
+   <li><b>minitower</b> is for the Engineering Model, tracker only </li>
+   <li><b>cu</b> is for Calibration Unit</li>
+   <li><b>Slab</b> trivial single-box geometry for testing</li>
+   <li><b>flightSlab</b> integrates slab and current flight model</li>
+   <li><b>misalignment</b>  mostly use standard flight geometry, but
+       place towers one by one to produce known misalignments for
+       testing. </li>
+   <li><b>EM</b> Unused; obsolete. </li>
+   </ul>
+ *
  * <hr>
  * @section notes release.notes
  * release.notes
@@ -25,7 +43,6 @@
  * @section requirements requirements
  * @verbinclude requirements
  * <hr> 
- * @todo  Reorganize so that top file flight.xml is just a shell
  * @todo  Define symbols in requirements for each instrument's top file
  */
 
