@@ -329,7 +329,6 @@ void GlastRandomSvc::handle(const Incident &inc)
 
         header->setRun(runNo);
         header->setEvent(seqNo);
-        header->setTrigger(0); // flag that not set yet
 
         applySeeds(runNo, seqNo);
 
