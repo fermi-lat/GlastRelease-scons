@@ -1,5 +1,5 @@
 #include "DetectorConstruction.h"
-#include "SensitiveDetector.h"
+//#include "SensitiveDetector.h"
 
 #include "G4Material.hh"
 #include "G4Box.hh"
@@ -72,7 +72,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //----------------------------------------
 
 
-  visitor.summary(std::cout);
+  //G4VPhysicalVolume* res = visitor.worldphys;
+   //visitor.summary(std::cout);
   
   return visitor.getWorld();
 }

@@ -15,7 +15,7 @@
 // Geant4 interface
 #include "G4Step.hh"
 #include "G4VSolid.hh"
-#include "G4Box.hH"
+#include "G4Box.hh"
 #include "G4SDManager.hh"
 
 
