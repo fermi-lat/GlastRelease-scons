@@ -21,7 +21,7 @@
 #include "CalibData/DacCol.h"
 
 #include "CalibData/CalibTime.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 // Temporary.  Hope to find a better way to do this
 #include "CalibData/CalibModel.h"
@@ -48,17 +48,17 @@ namespace {
   /// Local utility which knows how to get the information out of a
   /// <calLightAsym> element and make a CalibData::IntNonlin with it
   CalibData::IntNonlin* processRange(DOMElement* intNonlinElt) {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     // Could check here to make sure it really is a <intNonlin>
 
     float err;
     std::vector<float> vals;
     try {
-      xml::Dom::getFloatsAttribute(intNonlinElt, "values", vals);
-      err = xml::Dom::getDoubleAttribute(intNonlinElt, "error");
+      xmlBase::Dom::getFloatsAttribute(intNonlinElt, "values", vals);
+      err = xmlBase::Dom::getDoubleAttribute(intNonlinElt, "error");
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From CalibSvc::XmlCalIntNonlinCnv::processRange" << std::endl;
       std::cerr << ex.getMsg() << std::endl;
       throw ex;
@@ -72,7 +72,7 @@ namespace {
 StatusCode XmlCalIntNonlinCnv::i_createObj(const DOMElement* docElt, 
                                      DataObject*& refpObject)
 {
-  using xml::Dom;
+  using xmlBase::Dom;
   using CalibData::IntNonlin;
   using CalibData::DacCol;
 

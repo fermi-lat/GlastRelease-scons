@@ -28,7 +28,7 @@
 #include "CalibData/Cal/Xpos.h"
 
 #include "CalibData/CalibTime.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 // Temporary.  Hope to find a better way to do this
 #include "CalibData/CalibModel.h"
@@ -79,7 +79,7 @@ const CLID& XmlCalMevPerDacCnv::classID() {
 
 CalibData::CalMevPerDac* 
 XmlCalMevPerDacCnv::processRange(DOMElement* mevPerDacElt) {
-  using xml::Dom;
+  using xmlBase::Dom;
   using CalibData::ValSig;
   using CalibData::CalMevPerDac;
 
@@ -132,7 +132,7 @@ XmlCalMevPerDacCnv::processRange(DOMElement* mevPerDacElt) {
                                       "bigSmallRatioSigs");
     }
   }
-  catch (xml::DomException ex) {
+  catch (xmlBase::DomException ex) {
     log << MSG::ERROR  << ex.getMsg() << endreq;
     if (big) delete big;
     if (small) delete small;
@@ -153,7 +153,7 @@ XmlCalMevPerDacCnv::processRange(DOMElement* mevPerDacElt) {
 StatusCode XmlCalMevPerDacCnv::i_createObj(const DOMElement* docElt, 
                                            DataObject*& refpObject)
 {
-  using xml::Dom;
+  using xmlBase::Dom;
   using CalibData::CalMevPerDac;
   using CalibData::CalMevPerDacCol;
   using CalibData::Xpos;

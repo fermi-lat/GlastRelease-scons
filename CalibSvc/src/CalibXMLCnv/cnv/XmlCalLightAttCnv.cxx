@@ -17,7 +17,7 @@
 
 #include "CalibData/Cal/CalCalibLightAtt.h"
 #include "CalibData/CalibTime.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 // Temporary.  Hope to find a better way to do this
 #include "CalibData/CalibModel.h"
@@ -52,16 +52,16 @@ namespace {
   /// Local utility which knows how to get the information out of a
   /// <calLightAtt> element and make a CalibData::LightAtt with it
   CalibData::LightAtt* processRange(DOMElement* lightAttElt) {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     // Could check here to make sure it really is a <calLightAtt>
     float light_att, norm;
 
     try {
-      light_att = xml::Dom::getDoubleAttribute(lightAttElt, "att");
-      norm = xml::Dom::getDoubleAttribute(lightAttElt, "norm");
+      light_att = xmlBase::Dom::getDoubleAttribute(lightAttElt, "att");
+      norm = xmlBase::Dom::getDoubleAttribute(lightAttElt, "norm");
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From CalibSvc::XmlCalPedCnv::processRange" << std::endl;
       std::cerr << ex.getMsg() << std::endl;
       throw ex;
@@ -81,7 +81,7 @@ namespace {
 StatusCode XmlCalLightAttCnv::i_createObj(const DOMElement* docElt, 
                                      DataObject*& refpObject)
 {
-  using xml::Dom;
+  using xmlBase::Dom;
   using CalibData::LightAtt;
 
   unsigned nRow, nCol, nLayer, nXtal, nFace, nRange;

@@ -1,7 +1,7 @@
 // $Header$
 #include "GaudiKernel/MsgStream.h"
 #include "XmlTkrBaseCnv.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 #include "idents/TkrId.h"
 
 
@@ -12,7 +12,7 @@ StatusCode XmlTkrBaseCnv::readDimension(const DOMElement* docElt,
                                         unsigned& nRow, unsigned& nCol, 
                                         unsigned& nTray, unsigned& nChip)
 {
-  using xml::Dom;
+  using xmlBase::Dom;
 
   MsgStream log(msgSvc(), "XmlTkrBaseCnv" );
   DOMElement* dimElt = Dom::findFirstChildByName(docElt, "dimension");
@@ -28,7 +28,7 @@ StatusCode XmlTkrBaseCnv::readDimension(const DOMElement* docElt,
       nChip = Dom::getIntAttribute(dimElt, "nChip");
     }
   }
-  catch (xml::DomException ex) {
+  catch (xmlBase::DomException ex) {
     std::cerr << "From CalibSvc::XmlTkrBaseCnv::readDimension" << std::endl;
     std::cerr << ex.getMsg() << std::endl;
     throw ex;

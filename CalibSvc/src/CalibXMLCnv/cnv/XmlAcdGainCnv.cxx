@@ -17,7 +17,7 @@
 
 #include "CalibData/Acd/AcdCalibGain.h"
 #include "CalibData/CalibTime.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 // Temporary.  Hope to find a better way to do this
 #include "CalibData/CalibModel.h"
@@ -44,15 +44,15 @@ namespace {
   /// Local utility which knows how to get the information out of a
   /// <acdGain> element and make a CalibData::AcdGain with it
   CalibData::AcdGain* processRange(DOMElement* gainElt) {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     // Could check here to make sure it really is an <acdGain>
     float gain, sig;
     try {
-      gain = xml::Dom::getDoubleAttribute(gainElt, "avg");
-      sig = xml::Dom::getDoubleAttribute(gainElt, "sig");
+      gain = xmlBase::Dom::getDoubleAttribute(gainElt, "avg");
+      sig = xmlBase::Dom::getDoubleAttribute(gainElt, "sig");
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From CalibSvc::XmlAcdGainCnv::processRange" << std::endl;
       std::cerr << ex.getMsg() << std::endl;
       throw ex;
@@ -66,7 +66,7 @@ namespace {
 StatusCode XmlAcdGainCnv::i_createObj(const DOMElement* docElt, 
                                      DataObject*& refpObject)
 {
-  using xml::Dom;
+  using xmlBase::Dom;
   using CalibData::AcdGain;
 
   unsigned nFace, nRow, nCol, nPmt, nRange;

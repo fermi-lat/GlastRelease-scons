@@ -16,7 +16,7 @@
 
 #include "CalibData/CalibTest1.h"
 #include "CalibData/CalibTime.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 // Temporary.  Hope to find a better way to do this
 #include "CalibData/CalibModel.h"
@@ -52,7 +52,7 @@ StatusCode XmlBaseCnv::i_processObj(DataObject*, // pObject,
 StatusCode XmlTest1Cnv::i_createObj(const DOMElement* element, 
                                     DataObject*& refpObject)
 {
-  using xml::Dom;
+  using xmlBase::Dom;
 
   // Fetch quantities we need: name, value
   DOMElement* child = Dom::findFirstChildByName(element, "data");
@@ -69,7 +69,7 @@ StatusCode XmlTest1Cnv::i_createObj(const DOMElement* element,
   try {
     value = Dom::getIntAttribute(child, "value");
   }
-  catch (xml::DomException ex) {
+  catch (xmlBase::DomException ex) {
     std::cerr << "From CalibSvc::XmlTest1Cnv::i_crateObj " << std::endl;
     std::cerr << ex.getMsg() << std::endl;
   }

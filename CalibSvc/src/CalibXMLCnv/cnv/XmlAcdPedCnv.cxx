@@ -17,7 +17,7 @@
 
 #include "CalibData/Acd/AcdCalibPed.h"
 #include "CalibData/CalibTime.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 // Temporary.  Hope to find a better way to do this
 #include "CalibData/CalibModel.h"
@@ -44,15 +44,15 @@ namespace {
   /// Local utility which knows how to get the information out of a
   /// <acdPed> element and make a CalibData::AcdPed with it
   CalibData::AcdPed* processRange(DOMElement* pedElt) {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     // Could check here to make sure it really is an <acdPed>
     float ped, sig;
     try {
-      ped = xml::Dom::getDoubleAttribute(pedElt, "avg");
-      sig = xml::Dom::getDoubleAttribute(pedElt, "sig");
+      ped = xmlBase::Dom::getDoubleAttribute(pedElt, "avg");
+      sig = xmlBase::Dom::getDoubleAttribute(pedElt, "sig");
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From CalibSvc::XmlAcdPedCnv::processRange" << std::endl;
       std::cerr << ex.getMsg() << std::endl;
       throw ex;
@@ -66,7 +66,7 @@ namespace {
 StatusCode XmlAcdPedCnv::i_createObj(const DOMElement* docElt, 
                                      DataObject*& refpObject)
 {
-  using xml::Dom;
+  using xmlBase::Dom;
   using CalibData::AcdPed;
 
   unsigned nFace, nRow, nCol, nPmt, nRange;

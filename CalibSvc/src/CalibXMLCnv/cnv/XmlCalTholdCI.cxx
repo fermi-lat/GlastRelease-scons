@@ -28,7 +28,7 @@
 // #include "CalibData/CalibTime.h"
 
 #include "idents/CalXtalId.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 // Temporary.  Hope to find a better way to do this
 #include "CalibData/CalibModel.h"
@@ -79,7 +79,7 @@ const CLID& XmlCalTholdCICnv::classID() {
 
 CalibData::CalTholdCI* 
 XmlCalTholdCICnv::processRange(DOMElement* tholdCIElt) {
-  using xml::Dom;
+  using xmlBase::Dom;
   using CalibData::ValSig;
   using CalibData::CalTholdCI;
   using idents::CalXtalId;
@@ -100,7 +100,7 @@ XmlCalTholdCICnv::processRange(DOMElement* tholdCIElt) {
     FHE = processValSig(tholdCIElt, "FHEVal", "FHESig");
     LAC = processValSig(tholdCIElt, "LACVal", "LACSig");
   }
-  catch (xml::DomException ex1) {
+  catch (xmlBase::DomException ex1) {
     delete FLE; delete FHE; delete LAC;
     log << MSG::ERROR <<  ex1.getMsg() << endreq;
     return 0;
@@ -143,7 +143,7 @@ XmlCalTholdCICnv::processRange(DOMElement* tholdCIElt) {
       delete vs;
       rangeElt = Dom::getSiblingElement(rangeElt);
     }
-    catch (xml::DomException ex2) {
+    catch (xmlBase::DomException ex2) {
       problem = true;
       errMsg = ex2.getMsg();
       break;
@@ -166,7 +166,7 @@ XmlCalTholdCICnv::processRange(DOMElement* tholdCIElt) {
 StatusCode XmlCalTholdCICnv::i_createObj(const DOMElement* docElt, 
                                            DataObject*& refpObject)
 {
-  using xml::Dom;
+  using xmlBase::Dom;
   using CalibData::CalTholdCI;
   using CalibData::CalTholdCICol;
 

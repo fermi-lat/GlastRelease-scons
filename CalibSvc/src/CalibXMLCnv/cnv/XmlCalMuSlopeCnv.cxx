@@ -17,7 +17,7 @@
 
 #include "CalibData/Cal/CalCalibMuSlope.h"
 #include "CalibData/CalibTime.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 // Temporary.  Hope to find a better way to do this
 #include "CalibData/CalibModel.h"
@@ -52,16 +52,16 @@ namespace {
   /// Local utility which knows how to get the information out of a
   /// <calGain> element and make a CalibData::Gain with it
   CalibData::MuSlope* processRange(DOMElement* slopeElt) {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     // Could check here to make sure it really is a <calMuSlope>
     float slope, error;
 
     try {
-      slope = xml::Dom::getDoubleAttribute(slopeElt, "slope");
-      error = xml::Dom::getDoubleAttribute(slopeElt, "error");
+      slope = xmlBase::Dom::getDoubleAttribute(slopeElt, "slope");
+      error = xmlBase::Dom::getDoubleAttribute(slopeElt, "error");
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From CalibSvc::XmlCalMuySlopeCnv::processRange" 
                 << std::endl;
       std::cerr << ex.getMsg() << std::endl;
@@ -82,7 +82,7 @@ namespace {
 StatusCode XmlCalMuSlopeCnv::i_createObj(const DOMElement* docElt, 
                                          DataObject*& refpObject)
 {
-  using xml::Dom;
+  using xmlBase::Dom;
   using CalibData::MuSlope;
 
   unsigned nRow, nCol, nLayer, nXtal, nFace, nRange;

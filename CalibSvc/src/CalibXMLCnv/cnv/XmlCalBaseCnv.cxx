@@ -1,7 +1,7 @@
 // $Header$
 #include "GaudiKernel/MsgStream.h"
 #include "XmlCalBaseCnv.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 #include "idents/CalXtalId.h"
 
 // Local utilities to interpret attributes 
@@ -9,7 +9,7 @@ namespace {
   using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
 
   unsigned findRangeAtt(const DOMElement* rangeElt) {
-    using xml::Dom;
+    using xmlBase::Dom;
     using idents::CalXtalId;
 
     std::string att = Dom::getAttribute(rangeElt, "range");
@@ -33,7 +33,7 @@ namespace {
   }
 
   unsigned findFace(const DOMElement* faceElt) {
-    using xml::Dom;
+    using xmlBase::Dom;
     using idents::CalXtalId;
 
     std::string att = Dom::getAttribute(faceElt, "end");
@@ -58,7 +58,7 @@ StatusCode XmlCalBaseCnv::readDimension(const DOMElement* docElt,
                                         unsigned& nRange,
                                         unsigned* nDacCol,
                                         unsigned* nXpos) {
-  using xml::Dom;
+  using xmlBase::Dom;
 
   MsgStream log(msgSvc(), "XmlCalBaseCnv" );
   DOMElement* dimElt = Dom::findFirstChildByName(docElt, "dimension");
@@ -74,7 +74,7 @@ StatusCode XmlCalBaseCnv::readDimension(const DOMElement* docElt,
     if (nDacCol) *nDacCol = Dom::getIntAttribute(dimElt, "nDacCol");
     if (nDacCol) *nXpos = Dom::getIntAttribute(dimElt, "nXpos");
   }
-  catch (xml::DomException ex) {
+  catch (xmlBase::DomException ex) {
     std::cerr << "From CalibSvc::XmlCalBaseCnv::readDimension" << std::endl;
     std::cerr << ex.getMsg() << std::endl;
     throw ex;
@@ -141,7 +141,7 @@ StatusCode XmlCalBaseCnv::readDimension(const DOMElement* docElt,
 }
 
 DOMElement* XmlCalBaseCnv::findFirstRange(const DOMElement* docElt) {
-  using xml::Dom;
+  using xmlBase::Dom;
   using idents::CalXtalId;
 
   DOMElement* elt = Dom::findFirstChildByName(docElt, "tower");
@@ -162,7 +162,7 @@ DOMElement* XmlCalBaseCnv::findFirstRange(const DOMElement* docElt) {
     elt = Dom::getFirstChildElement(elt);
     m_nXtal = Dom::getIntAttribute(elt, "iXtal");
   }
-  catch (xml::DomException ex) {
+  catch (xmlBase::DomException ex) {
     std::cerr << "From CalibSvc::XmlCalBaseCnv::findFirstRange" << std::endl;
     std::cerr << ex.getMsg() << std::endl;
     throw ex;
@@ -179,7 +179,7 @@ DOMElement* XmlCalBaseCnv::findFirstRange(const DOMElement* docElt) {
 
 /// Still another one to navigate XML file and find next set of range data
 DOMElement* XmlCalBaseCnv::findNextRange(const DOMElement* rangeElt) {
-  using xml::Dom;
+  using xmlBase::Dom;
   using XERCES_CPP_NAMESPACE_QUALIFIER DOMNode;
 
   DOMElement* elt = Dom::getSiblingElement(rangeElt);
@@ -210,7 +210,7 @@ DOMElement* XmlCalBaseCnv::findNextRange(const DOMElement* rangeElt) {
     try {
       m_nXtal = Dom::getIntAttribute(elt, "iXtal");
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From CalibSvc::XmlCalBaseCnv::findNextRange" << std::endl;
       std::cerr << ex.getMsg() << std::endl;
       throw ex;
@@ -237,7 +237,7 @@ DOMElement* XmlCalBaseCnv::findNextRange(const DOMElement* rangeElt) {
     try {
       m_nLayer = Dom::getIntAttribute(elt, "iLayer");
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From CalibSvc::XmlCalBaseCnv::findNextRange" << std::endl;
       std::cerr << ex.getMsg() << std::endl;
       throw ex;
@@ -250,7 +250,7 @@ DOMElement* XmlCalBaseCnv::findNextRange(const DOMElement* rangeElt) {
     try {
       m_nXtal = Dom::getIntAttribute(elt, "iXtal");
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From CalibSvc::XmlCalBaseCnv::findNextRange" << std::endl;
       std::cerr << ex.getMsg() << std::endl;
       throw ex;
@@ -289,7 +289,7 @@ DOMElement* XmlCalBaseCnv::findNextRange(const DOMElement* rangeElt) {
     elt = Dom::getFirstChildElement(elt);
     m_nXtal = Dom::getIntAttribute(elt, "iXtal");
   }
-  catch (xml::DomException ex) {
+  catch (xmlBase::DomException ex) {
     std::cerr << "From CalibSvc::XmlCalBaseCnv::findFirstRange" << std::endl;
     std::cerr << ex.getMsg() << std::endl;
     throw ex;

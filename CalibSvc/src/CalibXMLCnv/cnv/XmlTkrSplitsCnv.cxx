@@ -25,7 +25,7 @@
 #include "CalibData/CalibTime.h"
 #include "CalibData/CalibModel.h"         // for definition of CLid
 
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 
 template <class TYPE> class CnvFactory;
@@ -66,7 +66,7 @@ const CLID& XmlTkrSplitsCnv::classID() {
 StatusCode XmlTkrSplitsCnv::i_createObj(const DOMElement* docElt, 
                                         DataObject*& refpObject)
 {
-  using xml::Dom;
+  using xmlBase::Dom;
   using CalibData::TkrSplit;
 
   unsigned nRow, nCol, nTray, nChip;
@@ -100,7 +100,7 @@ StatusCode XmlTkrSplitsCnv::i_createObj(const DOMElement* docElt,
       CalibData::TkrSplit split(low, high);
       pObj->putChannel(&split, iTowerRow, iTowerCol, iTray, top);
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       return StatusCode::FAILURE;
     }
   }

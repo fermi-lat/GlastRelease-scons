@@ -17,7 +17,7 @@
 
 #include "CalibData/Cal/CalCalibLightAsym.h"
 #include "CalibData/CalibTime.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 // Temporary.  Hope to find a better way to do this
 #include "CalibData/CalibModel.h"
@@ -52,17 +52,17 @@ namespace {
   /// Local utility which knows how to get the information out of a
   /// <calLightAsym> element and make a CalibData::LightAsym with it
   CalibData::LightAsym* processRange(DOMElement* lightAsymElt) {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     // Could check here to make sure it really is a <lightAsym>
 
     float err;
     std::vector<float> vals;
     try {
-      xml::Dom::getFloatsAttribute(lightAsymElt, "values", vals);
-      err = xml::Dom::getDoubleAttribute(lightAsymElt, "error");
+      xmlBase::Dom::getFloatsAttribute(lightAsymElt, "values", vals);
+      err = xmlBase::Dom::getDoubleAttribute(lightAsymElt, "error");
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From CalibSvc::XmlCalLightAsymCnv::processRange" << std::endl;
       std::cerr << ex.getMsg() << std::endl;
       throw ex;
@@ -76,7 +76,7 @@ namespace {
 StatusCode XmlCalLightAsymCnv::i_createObj(const DOMElement* docElt, 
                                      DataObject*& refpObject)
 {
-  using xml::Dom;
+  using xmlBase::Dom;
   using CalibData::LightAsym;
 
   unsigned nRow, nCol, nLayer, nXtal, nFace, nRange;

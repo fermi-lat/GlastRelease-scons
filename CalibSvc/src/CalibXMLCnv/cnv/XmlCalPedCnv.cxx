@@ -17,7 +17,7 @@
 
 #include "CalibData/Cal/CalCalibPed.h"
 #include "CalibData/CalibTime.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 // Temporary.  Hope to find a better way to do this
 #include "CalibData/CalibModel.h"
@@ -52,15 +52,15 @@ namespace {
   /// Local utility which knows how to get the information out of a
   /// <calPed> element and make a CalibData::Ped with it
   CalibData::Ped* processRange(DOMElement* pedElt) {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     // Could check here to make sure it really is a <calPed>
     float avg, sig, cos;
     try {
-      avg = xml::Dom::getDoubleAttribute(pedElt, "avg");
-      sig = xml::Dom::getDoubleAttribute(pedElt, "sig");
+      avg = xmlBase::Dom::getDoubleAttribute(pedElt, "avg");
+      sig = xmlBase::Dom::getDoubleAttribute(pedElt, "sig");
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From CalibSvc::XmlCalPedCnv::processRange" << std::endl;
       std::cerr << ex.getMsg() << std::endl;
       throw ex;
@@ -68,12 +68,12 @@ namespace {
 
     // backward compatibility
     try {
-      cos = xml::Dom::getDoubleAttribute(pedElt, "cos");
+      cos = xmlBase::Dom::getDoubleAttribute(pedElt, "cos");
     }
-    catch (xml::NullNode nullEx) {
+    catch (xmlBase::NullNode nullEx) {
       cos=2.0;
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
         std::cerr << "From CalibSvc::XmlCalPedCnv::processRange" << std::endl;
         std::cerr << ex.getMsg() << std::endl;
         throw ex;
@@ -87,7 +87,7 @@ namespace {
 StatusCode XmlCalPedCnv::i_createObj(const DOMElement* docElt, 
                                      DataObject*& refpObject)
 {
-  using xml::Dom;
+  using xmlBase::Dom;
   using CalibData::Ped;
 
   unsigned nRow, nCol, nLayer, nXtal, nFace, nRange;

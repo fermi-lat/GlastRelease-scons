@@ -16,7 +16,7 @@
 
 // #include "CalibData/Tkr/BadStrips.h"  already in XmlBadStripsCnv.h
 #include "CalibData/CalibTime.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 // For channel status bit definitions
 #include "calibUtil/ChannelStatusDef.h"
@@ -83,7 +83,7 @@ namespace {
 StatusCode XmlBadStripsCnv::i_createObj(const DOMElement* element,
                                         DataObject*& refpObject)
 {
-  using xml::Dom;
+  using xmlBase::Dom;
   using CalibData::BadStrips;
 
   // Interesting information in file is the bad type (hot or dead)
@@ -120,7 +120,7 @@ StatusCode XmlBadStripsCnv::i_createObj(const DOMElement* element,
 
 StatusCode XmlBadStripsCnv::processTower(const DOMElement* towerElt,
                                          CalibData::BadStrips *pBad) {
-  using xml::Dom;
+  using xmlBase::Dom;
 
   //  std::string attValue;
   unsigned row, col;
@@ -128,7 +128,7 @@ StatusCode XmlBadStripsCnv::processTower(const DOMElement* towerElt,
     row = Dom::getIntAttribute(towerElt, "row");
     col = Dom::getIntAttribute(towerElt, "col");
   }
-  catch (xml::DomException ex) {
+  catch (xmlBase::DomException ex) {
     std::cerr << "From CalibSvc::XmlBadStripsCnv::processTower" << std::endl;
     std::cerr << ex.getMsg() << std::endl;
     throw ex;
@@ -174,7 +174,7 @@ StatusCode XmlBadStripsCnv::processUni(const DOMElement* uniElt,
                                        CalibData::BadStrips* pBad)
 {
   using CalibData::BadStrips;
-  using xml::Dom;
+  using xmlBase::Dom;
 
   CalibData::StripCol strips;
 
@@ -204,7 +204,7 @@ StatusCode XmlBadStripsCnv::processUni(const DOMElement* uniElt,
     //  unsigned int tray = (unsigned int)atoi(attValue.c_str());
     tray = Dom::getIntAttribute(uniElt, "tray");
   }
-  catch (xml::DomException ex) {
+  catch (xmlBase::DomException ex) {
     std::cerr << "From CalibSvc::XmlBadStripsCnv::processUni" << std::endl;
     std::cerr << ex.getMsg() << std::endl;
     throw ex;
@@ -228,7 +228,7 @@ StatusCode XmlBadStripsCnv::processUni(const DOMElement* uniElt,
 
 StatusCode XmlBadStripsCnv::addStrips(const DOMElement* uniElt,
                                       CalibData::StripCol* strips) {
-  using xml::Dom;
+  using xmlBase::Dom;
 
   // Children of uniElt are an arbitrary collection of stripList
   // and stripSpan elements
@@ -248,7 +248,7 @@ StatusCode XmlBadStripsCnv::addStrips(const DOMElement* uniElt,
         first = Dom::getIntAttribute(childElt, "first");
         last = Dom::getIntAttribute(childElt, "last");
       }
-      catch  (xml::DomException ex) {
+      catch  (xmlBase::DomException ex) {
         std::cerr << "From CalibSvc::XmlBadStripsCnv::addStrips" << std::endl;
         std::cerr << ex.getMsg() << std::endl;
         throw ex;

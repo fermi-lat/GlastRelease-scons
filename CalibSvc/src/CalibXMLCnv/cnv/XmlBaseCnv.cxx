@@ -18,7 +18,7 @@
 
 // Needed for ValSig
 #include "CalibData/RangeBase.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 // A little ugly to include this here.  It's needed for 
 // CAL-specific utilities involving dac collections (maybe should be
@@ -230,19 +230,19 @@ void XmlBaseCnv::setBaseInfo(CalibData::CalibBase* pObj) {
 
 
 DOMElement* XmlBaseCnv::findFirstDacCol(const DOMElement* docElt) {
-  return  xml::Dom::findFirstChildByName(docElt, "dac");
+  return  xmlBase::Dom::findFirstChildByName(docElt, "dac");
 }
 
 DOMElement* XmlBaseCnv::findNextDacCol(const DOMElement* dacElt) {
-  DOMElement* next = xml::Dom::getSiblingElement(dacElt);
-  if (xml::Dom::checkTagName(next, "dac")) return next;
+  DOMElement* next = xmlBase::Dom::getSiblingElement(dacElt);
+  if (xmlBase::Dom::checkTagName(next, "dac")) return next;
   else return 0;
 }
 
 CalibData::DacCol* XmlBaseCnv::processDacCol(DOMElement* dacColElt,
                                              unsigned* range) {
 
-  using xml::Dom;
+  using xmlBase::Dom;
   using idents::CalXtalId;
 
   std::string att = Dom::getAttribute(dacColElt, "range");
@@ -263,11 +263,11 @@ CalibData::DacCol* XmlBaseCnv::processDacCol(DOMElement* dacColElt,
 }
 
 DOMElement* XmlBaseCnv::findXpos(const DOMElement* docElt) {
-  return  xml::Dom::findFirstChildByName(docElt, "xpos");
+  return  xmlBase::Dom::findFirstChildByName(docElt, "xpos");
 }
 
 CalibData::Xpos* XmlBaseCnv::processXpos(DOMElement* xposElt) {
-  using xml::Dom;
+  using xmlBase::Dom;
 
   std::vector<float> vals;
 
@@ -283,8 +283,8 @@ CalibData::ValSig* XmlBaseCnv::processValSig(DOMElement* elt,
                                              std::string sigName) {
   if (elt == 0 ) return 0;
   CalibData::ValSig *pValSig = new CalibData::ValSig;
-  pValSig->m_val = xml::Dom::getDoubleAttribute(elt, valName);
-  pValSig->m_sig = xml::Dom::getDoubleAttribute(elt, sigName);
+  pValSig->m_val = xmlBase::Dom::getDoubleAttribute(elt, valName);
+  pValSig->m_sig = xmlBase::Dom::getDoubleAttribute(elt, sigName);
   return pValSig;
 }
 
@@ -299,8 +299,8 @@ XmlBaseCnv::processValSigs(DOMElement* elt, std::string valName,
   std::vector<float> vals;
   std::vector<float> sigs;
 
-  xml::Dom::getFloatsAttribute(elt, valName, vals);
-  xml::Dom::getFloatsAttribute(elt, sigName, sigs);
+  xmlBase::Dom::getFloatsAttribute(elt, valName, vals);
+  xmlBase::Dom::getFloatsAttribute(elt, sigName, sigs);
   if (vals.size() != sigs.size() ) {
     log << MSG::ERROR << "#values <> #sigmas " << endreq;
     return 0;

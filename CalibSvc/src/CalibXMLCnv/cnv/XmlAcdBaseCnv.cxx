@@ -1,7 +1,7 @@
 // $Header$
 #include "GaudiKernel/MsgStream.h"
 #include "XmlAcdBaseCnv.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 #include <xercesc/dom/DOMNode.hpp>
 
 // #include "idents/AcdId.h"
@@ -16,7 +16,7 @@ StatusCode XmlAcdBaseCnv::readAcdDimension(const DOMElement* docElt,
                                         unsigned& nFace,
                                         unsigned& nRow, unsigned& nCol, 
                                         unsigned& nPmt, unsigned& nRange) {
-  using xml::Dom;
+  using xmlBase::Dom;
 
   MsgStream log(msgSvc(), "XmlBaseCnv" );
   DOMElement* dimElt = Dom::findFirstChildByName(docElt, "dimension");
@@ -29,7 +29,7 @@ StatusCode XmlAcdBaseCnv::readAcdDimension(const DOMElement* docElt,
     nPmt = Dom::getIntAttribute(dimElt, "nPmt");
     nRange = Dom::getIntAttribute(dimElt, "nRange");
   }
-  catch (xml::DomException ex) {
+  catch (xmlBase::DomException ex) {
     std::cerr << "From CalibSvc::XmlAcdBaseCnv::readAcdDimension" << std::endl;
     std::cerr << ex.getMsg() << std::endl;
     throw ex;
@@ -38,7 +38,7 @@ StatusCode XmlAcdBaseCnv::readAcdDimension(const DOMElement* docElt,
 }
 
 DOMElement* XmlAcdBaseCnv::findFirstRange(const DOMElement* docElt) {
-  using xml::Dom;
+  using xmlBase::Dom;
   //  using idents::CalXtalId;
 
   /*  Rewrite for ACD */
@@ -62,7 +62,7 @@ DOMElement* XmlAcdBaseCnv::findFirstRange(const DOMElement* docElt) {
     m_nPmt = Dom::getIntAttribute(pmtElt, "iPmt");
     m_nRange = Dom::getIntAttribute(rangeElt, "range");
   }
-  catch (xml::DomException ex) {
+  catch (xmlBase::DomException ex) {
     std::cerr << "From CalibSvc::XmlAcdBaseCnv::findFirstRange" << std::endl;
     std::cerr << ex.getMsg() << std::endl;
     throw ex;
@@ -73,7 +73,7 @@ DOMElement* XmlAcdBaseCnv::findFirstRange(const DOMElement* docElt) {
 
 /// Still another one to navigate XML file and find next set of range data
 DOMElement* XmlAcdBaseCnv::findNextRange(const DOMElement* rangeElt) {
-  using xml::Dom;
+  using xmlBase::Dom;
 
 
   DOMElement* elt = Dom::getSiblingElement(rangeElt);
@@ -107,7 +107,7 @@ DOMElement* XmlAcdBaseCnv::findNextRange(const DOMElement* rangeElt) {
     try {
       m_nCol = Dom::getIntAttribute(elt, "iCol");
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From CalibSvc::XmlAcdBaseCnv::findNextRange" << std::endl;
       std::cerr << ex.getMsg() << std::endl;
       throw ex;
@@ -131,7 +131,7 @@ DOMElement* XmlAcdBaseCnv::findNextRange(const DOMElement* rangeElt) {
     try {
       m_nRow = Dom::getIntAttribute(elt, "iRow");
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From CalibSvc::XmlAcdBaseCnv::findNextRange" << std::endl;
       std::cerr << ex.getMsg() << std::endl;
       throw ex;
@@ -144,7 +144,7 @@ DOMElement* XmlAcdBaseCnv::findNextRange(const DOMElement* rangeElt) {
     try {
       m_nCol = Dom::getIntAttribute(elt, "iCol");
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From CalibSvc::XmlAcdBaseCnv::findNextRange" << std::endl;
       std::cerr << ex.getMsg() << std::endl;
       throw ex;
@@ -186,7 +186,7 @@ DOMElement* XmlAcdBaseCnv::findNextRange(const DOMElement* rangeElt) {
     elt = Dom::getFirstChildElement(elt);
     m_nPmt = Dom::getIntAttribute(elt, "iPmt");
   }
-  catch (xml::DomException ex) {
+  catch (xmlBase::DomException ex) {
     std::cerr << "From CalibSvc::XmlAcdBaseCnv::findFirstRange" << std::endl;
     std::cerr << ex.getMsg() << std::endl;
     throw ex;
