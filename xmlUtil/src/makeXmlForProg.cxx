@@ -24,10 +24,10 @@
 #include "xmlUtil/Constants.h"
 #include "xmlUtil/Arith.h"
 #include "xmlUtil/Substitute.h"
-#include <dom/DOM_Element.hpp>
-#include <dom/DOM_NodeList.hpp>
-#include <dom/DOM_NamedNodeMap.hpp>
-#include <dom/DOM_DocumentType.hpp>
+#include <xercesc/dom/DOM_Element.hpp>
+#include <xercesc/dom/DOM_NodeList.hpp>
+#include <xercesc/dom/DOM_NamedNodeMap.hpp>
+#include <xercesc/dom/DOM_DocumentType.hpp>
 
 #include <string>
 #include <iostream>

@@ -1,4 +1,4 @@
-// $Header
+// $Header$
 
 #include "xmlUtil/id/DictFieldMan.h"
 #include "xmlUtil/id/DictField.h"

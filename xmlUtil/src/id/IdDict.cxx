@@ -1,7 +1,7 @@
 // $Header$
 
-#include <dom/DOMString.hpp>
-#include <dom/DOM_NodeList.hpp>
+#include <xercesc/dom/DOMString.hpp>
+#include <xercesc/dom/DOM_NodeList.hpp>
 #include "xml/Dom.h"
 #include "xmlUtil/id/IdDict.h"
 #include "xmlUtil/id/DictFieldMan.h"

@@ -1,4 +1,4 @@
-// $Header $
+// $Header$
 
 #include "xmlUtil/id/IdOperation.h"
 

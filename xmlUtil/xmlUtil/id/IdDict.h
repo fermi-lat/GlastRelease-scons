@@ -2,7 +2,7 @@
 #ifndef XMLUTIL_IDDICT_H
 #define XMLUTIL_IDDICT_H
 
-#include <dom/DOM_Element.hpp>
+#include <xercesc/dom/DOM_Element.hpp>
 
 #include <vector>
 #include <string>
