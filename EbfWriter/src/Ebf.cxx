@@ -2,8 +2,6 @@
 
 using namespace EbfWriterTds;
 
-std::string Path = EventModel::EventHeader + "/Filter" + "/Ebf";
-
 Ebf::Ebf(){
   data=NULL;
   length=0;
