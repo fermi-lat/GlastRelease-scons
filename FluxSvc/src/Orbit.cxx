@@ -43,14 +43,15 @@ void    Orbit::startphase ( double phs )
 }
 
 double Orbit::latitude(double time) const {
-    // latitude as a function of time (in minutes)
+    // Purpose:  Return the latitude as a function of time (in minutes)
+    // Input:  the current time
     return (360./M_2PI) * asin(m_sini * sin(M_2PI*time/m_period + startphase()));
 }
 
 double Orbit::longitude(double time) const {
-    // longitude as a function of time, taking into account the starting
+    // Purpose:  Return the longitude as a function of time, taking into account the starting
     // longitude and the eastward rotation of the earth
-
+    // Input:  current time
     double phase = M_2PI * time / m_period + startphase();
     double lon = (360./M_2PI) * atan2(m_cosi*sin(phase), cos(phase)) -
         360.* time /1440. + m_ascendingLon; // orbital motion - earth rotation
@@ -81,6 +82,8 @@ std::pair<double,double> Orbit::coords(double time) const {
 }
 
 Rotation Orbit::CELTransform(double time){
+    // Purpose:  Return the 3x3 matrix which transforms a vector from a galactic 
+    // coordinate system to a local coordinate system.
     
     //THIS IS THE PART WHERE WE MAKE THE MATRIX CEL INTO SOMETHING WE CAN USE
     Rotation gal,cel,cel1,cel2,cel3,cel4;
@@ -110,8 +113,9 @@ Rotation Orbit::CELTransform(double time){
 }
 
 
-// computation of pointing characteristics of GLAST - assumed, here, to be zenith-pointing
+
 void Orbit::computeAttitudes(double time){
+    // Purpose: computation of pointing characteristics of GLAST - assumed, here, to be zenith-pointing
     
     //lat, lon, sidereal??? time becomes J2000.0 coordinates here:
     m_raz=((time/(24.0*60.0*60.0))*360.0)+longitude(time);  //need to take into account starting phase too!

@@ -60,6 +60,9 @@ EventSource::~EventSource()
 
 double EventSource::flux (double time) const
 {
+  // Purpose and Method: This method returns the flux of the particular source.
+  // Inputs  - current time
+  // Outputs - flux, in units of (particles/(m^2*sr*sec))
     return m_flux;  // default if not overridden
 }
 
@@ -70,6 +73,9 @@ void   EventSource::setFlux (double value) {
 
 double  EventSource::rate (double time )const
 {
+  // Purpose and Method: This method returns the rate of particles entering the detector.
+  // Inputs  - current time
+  // Outputs - rate, in units of (particles/sec)
     return enabled()? (solidAngle()*flux(time)*s_total_area) :0;
 }
 

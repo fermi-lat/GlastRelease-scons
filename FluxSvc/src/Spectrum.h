@@ -70,10 +70,10 @@ public:
     
     /// new interface for Hirosima classes
     virtual double energySrc(HepRandomEngine* engine, double time=0);
-
+    
     /*! 
     \param dir direction is either in the format (cos theta, phi)
-       (zenith-local coordinates, or (l,b) (galactic coordinates).
+    (zenith-local coordinates, or (l,b) (galactic coordinates).
     */
     virtual std::pair<double,double> dir(double energy, HepRandomEngine* engine);
     

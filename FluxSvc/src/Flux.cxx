@@ -35,9 +35,13 @@ std::string Flux::title()const
     return m_event->fullTitle();
 }
 
-// generate a new entry trajectory, set FluxSource, increment local time
+
 void Flux::generate()
 {
+    // Purpose and Method: generate a new entry trajectory, set FluxSource, increment local time
+    // Inputs  - none
+    // Outputs - none
+    
     m_flux = m_event->event(time());
     double timepass = m_event->interval(time());
     m_time+= timepass;
@@ -48,13 +52,7 @@ void Flux::generate()
 std::string Flux::particleName()const{
     return std::string(m_flux->spectrum()->particleName());
 }
-/*
-ParticleProperty* property()const {
-ParticleProperty* prop = m_propSvc->find(particleName());
-return prop;
 
-  }
-*/
 // its kinetic energy
 double Flux::energy()const
 {

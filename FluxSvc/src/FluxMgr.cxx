@@ -31,6 +31,7 @@ FluxMgr::FluxMgr(const std::vector<std::string>& fileList, std::string dtdname)
 }
 
 void FluxMgr::defaultFile(){
+    //Purpose: to se the default xml file and initialize the package to use it.
     std::vector<std::string> input;
     // must find the source_library.xml file.
     // set up the xml document to use for initialization parameters
@@ -42,10 +43,13 @@ void FluxMgr::defaultFile(){
 }
 
 void FluxMgr::init(const std::vector<std::string>& fileList){	
+    
+    //Purpose:  to initialize the infrastructure of the package with
+    //the named xml files.
     std::string fileName;
     
     xml::XmlParser parser;
-        
+    
     std::string xmlFileIn = writeXmlFile( fileList);
     
     // a quick way of displaying what goes to the parser
@@ -102,6 +106,8 @@ FluxMgr::~FluxMgr(){
 
 EventSource* FluxMgr::source(std::string name)
 {
+    //Purpose: to return a pointer to a source, referenced by name.
+    //Input: the name of the desired source.
     // first check that it is in the library
     if( m_sources.find(name)==m_sources.end() ) {
         // nope. Maybe a Spectrum object
@@ -113,10 +119,11 @@ EventSource* FluxMgr::source(std::string name)
 }
 
 
-// sourceFromXML - create a new EventSource from a DOM element
-// instantiated, e.g., from a description in source_library.xml
 EventSource*  FluxMgr::getSourceFromXML(const DOM_Element& src)
 {
+    //Purpose: sourceFromXML - create a new EventSource from a DOM element
+    //instantiated, e.g., from a description in source_library.xml
+    //Input:  the element holding particle information.
     DOM_Node    childNode = src.getFirstChild();
     if (childNode == DOM_Node()) {
     /*
@@ -175,10 +182,12 @@ EventSource*  FluxMgr::getSourceFromXML(const DOM_Element& src)
 
 
 
-// source library lookup.  Each source is uniquely identified
-// by its "name" attribute because "name" is of type ID
+
 DOM_Element    FluxMgr::getLibrarySource(const DOMString& id)
 {
+    //Purpose: source library lookup.  Each source is uniquely identified
+    // by its "name" attribute because "name" is of type ID
+    
     // quit if the library was unitialized
     if (s_library == DOM_Element() ) return DOM_Element(); 
     
@@ -329,7 +338,8 @@ Rotation FluxMgr::transformGlastToGalactic(double time){
 }
 
 
-/** creates a document of the form
+std::string FluxMgr::writeXmlFile(const std::vector<std::string>& fileList) {
+/** purpose: creates a document of the form
 
   <?xml version='1.0' ?>
   <!DOCTYPE source_library SYSTEM "d:\users\burnett\pdr_v7r1c\flux\v5r3/xml/source.dtd" [
@@ -341,9 +351,7 @@ Rotation FluxMgr::transformGlastToGalactic(double time){
   &libraryb;
   </source_library>
   
-*/
-std::string FluxMgr::writeXmlFile(const std::vector<std::string>& fileList) {
-    
+    */
     std::strstream fileString;
     // Unique tag to add to ENTITY elements in the DTD.
     char libchar = 'a';

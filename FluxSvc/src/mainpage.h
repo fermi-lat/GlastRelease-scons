@@ -11,7 +11,7 @@
   <br>
   the file /src/test/jobOptions.txt holds information used for the implementation of FluxSvc.
   it also holds the standard set of strings representing xml filenames, thus allowing multiple 
-  xml files to be used. <a href="../FluxSvcDoc2.htm">More Documentation</a>
+  xml files to be used. <a href="http://d0.phys.washington.edu/~srobinsn/FluxSvc/">More Documentation</a>
   <br>
   <h2> Defining an external source </h2>
     See the interface definition IRegisterSource.

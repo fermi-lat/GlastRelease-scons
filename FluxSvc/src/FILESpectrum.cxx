@@ -100,16 +100,16 @@ FILESpectrum::FILESpectrum(const std::string& params)
 }
 
 
-
-/// calculate flux for the current position
 double FILESpectrum::flux() const
 {
+    /// Purpose: Calculate flux for the current position
     return m_flux;
 }
 
-/// sample a single particle energy from the spectrum
+
 float FILESpectrum::operator() (float r)const
 {
+    /// Purpose: sample a single particle energy from the spectrum
     double target_flux = r * m_flux;
     
     std::vector<efpair>::const_iterator i;

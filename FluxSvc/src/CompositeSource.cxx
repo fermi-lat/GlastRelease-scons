@@ -183,9 +183,9 @@ std::string CompositeSource::findSource()const
     return m_recent->fullTitle();
 }
 
-/// return a unique number correcponding to that spectrum
 int CompositeSource::numSource()const
 {
+    ///Purpose: Return a unique number correcponding to the current spectrum.
     return m_numofiters;
 }
 

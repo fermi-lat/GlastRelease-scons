@@ -235,6 +235,7 @@ void    GPS::printOn(std::ostream& out) const
 
 
 Vector GPS::earthToGlast(Vector launchDir){
+    //Purpose:  rotate a vector from the earth-based frame to the GLAST-based frame.
     Vector retlaunch=launchDir;
     double theta=rotateAngles().first;
     double phi=rotateAngles().second;
@@ -243,6 +244,7 @@ Vector GPS::earthToGlast(Vector launchDir){
 }
 
 Vector GPS::galaxyToGlast(Vector launchDir){
+    //Purpose:  rotate a vector from the galactic frame to the GLAST-based frame.
     
     //code for changing vector into theta, phi (actually l,b, as these are the declared coordinates for the source)
     double lpri = (-launchDir).theta();
@@ -270,7 +272,7 @@ Vector GPS::galaxyToGlast(Vector launchDir){
 
 
 std::pair<double,double> GPS::galPositionOfGlast(){
-    
+    //Purpose:  return the galactic-pointing coordinates of the GALST satellite
     //lat, lon, sidereal??? time becomes J2000.0 coordinates here:
     double ra=((orbittime()/(24.0*60.0*60.0))*360.0)+lon();
     if(ra > 360.0) ra-=360.0;
@@ -322,7 +324,9 @@ void GPS::rotateAngles(std::pair<double,double> coords){
 
 
 Rotation GPS::rockingAngleTransform(double time){
-    
+    //Purpose:  return the rotation to correct for satellite rocking.
+    //Input:  Current time
+    //Output:  3x3 rocking-angle transformation matrix.
     Rotation gal;   
     //and here we construct the rotation matrix
     double zenithPhase = m_rotangles.first;

@@ -6,6 +6,8 @@
 void CompositeDiffuse::addSource (EventSource* aSource)
 {
     m_sourceList.push_back(aSource);
+    //flux should ensure proper units.
+    // want EVERYTHING in particles/sec/m^2/steradian.
     double flux = aSource->flux(EventSource::time());
     //EventSource::setFlux( flux );
     m_unclaimedFlux-=flux;
@@ -13,12 +15,15 @@ void CompositeDiffuse::addSource (EventSource* aSource)
 
 FluxSource* CompositeDiffuse::event (double time)
 {
+    //Purpose: To determine which contained source is currently represented
+    //Input: Current time
+    //Output: Pointer to the current represented FluxSource object.
     EventSource::setTime(time);
     
     int m_numofiters=0;
     
     // here we should be setting the total rate as the maximum sum rate of everything - FIX!
-    //double mr = rate(EventSource::time());
+    // double mr = rate(EventSource::time());
     double mr = m_totalFlux;
     
     // do this once if there is no source, or no rate at all (null source?)
@@ -104,35 +109,84 @@ double CompositeDiffuse::remainingFluxInterval(){
 }
 
 
-double CompositeDiffuse::getRandomFlux(){
-    long double prob=RandFlat::shoot(0.0, 1.0);
-    long double dx=0.0000001;
-    
-    long double highthresholdofintensity = 0.0001; //for debugging and checking purposes
-    
+/*double CompositeDiffuse::getRandomFlux(){
+long double prob=RandFlat::shoot(0.0, 1.0);
+long double dx=0.0000001;
+
+  long double highthresholdofintensity = 0.0001; //for debugging and checking purposes
+  
     long double i=0.000000001;//lowthresholdofintensity;
     
-    while(prob > 0 && i<highthresholdofintensity){
-        dx=0.01*pow(10.0,log10(i));
-        prob-=(dx)*pofi(i);
-        i+=dx;
-        //	printf("\nin the findandaddnew loop; i=%12.10e, prob=%12.10e, dx=%12.10e , logi=%lf\n",i,prob,dx,log10(i));
-    }
-    return i*10000000.;
-}
-
-
-long double CompositeDiffuse::pofi(long double intensity){  //this function gives P(I).  see documentation.
-    long double p;
-    if(intensity>=pow(10.0,-7)){
-        p=2.49555*pow(10.0,-13)*pow(intensity,-2.5);//egret range value for pofi
-    }else{
-        p=2.49555*pow(10.0,-13)*pow(intensity,-2.5-0.05*(7.0+(log(intensity)/log(10.0))));	
-    }	//glast range value for pofi
-    return p;
-}
+      while(prob > 0 && i<highthresholdofintensity){
+      dx=0.01*pow(10.0,log10(i));
+      prob-=(dx)*pofi(i);
+      i+=dx;
+      //	printf("\nin the findandaddnew loop; i=%12.10e, prob=%12.10e, dx=%12.10e , logi=%lf\n",i,prob,dx,log10(i));
+      }
+      return i*10000000.;
+      }
+      
+        
+          long double CompositeDiffuse::pofi(long double intensity){  //this function gives P(I).  see documentation.
+          long double p;
+          if(intensity>=pow(10.0,-7)){
+          p=2.49555*pow(10.0,-13)*pow(intensity,-2.5);//egret range value for pofi
+          }else{
+          p=2.49555*pow(10.0,-13)*pow(intensity,-2.5-0.05*(7.0+(log(intensity)/log(10.0))));	
+          }	//glast range value for pofi
+          return p;
+}*/
 
 long double CompositeDiffuse::logNlogS(long double flux){
+    //READ MY LIPS - THIS NEEDS TO DO A PROPER INTERPOLATION!!!
+    //Purpose:  this is designed to interpolate over the logN/logS characteristic.
+    //Input:  the flux (in linear units)
+    //Output:  the number of sources per 1/5 decade, at the input flux.
+    //Caveats: the vector should be sorted - right now the file needs to be in order of ascending flux
+    int i = 0;
+    double logHighFlux,logLowFlux;
+    while( (log10(flux) - m_logNLogS[i].first >= 0) && (m_logNLogS[i].first!=m_maxFlux) ){
+        i++;
+    }
+    logHighFlux = m_logNLogS[i].first;
+    double logHighSources = m_logNLogS[i].second;
+    logLowFlux = m_logNLogS[i-1].first;
+    double logLowSources = m_logNLogS[i-1].second;
     
-    return 0.;
+    double logNumSources = logLowSources + ((logHighSources-logLowSources)*(log10(flux)-logLowFlux));
+    return pow(10,logNumSources);
+}
+
+double sizeOfFifthDecade(double currentFlux){
+    return /*currentFlux**/(pow(10,0.2)-1.);
+}
+
+double CompositeDiffuse::getRandomFlux(){
+    //NEED TO SET TOTAL INTEGRATED FLUX!!!!
+    long double prob=RandFlat::shoot(m_totalIntegratedFlux);
+    long double dx=0.001;
+    
+    double currentFlux = m_minFlux;
+    while(prob > 0 && currentFlux<m_maxFlux){
+        //dx=0.01*pow(10.0,log10(i));
+        double sourcesPerFlux = logNlogS(currentFlux)/sizeOfFifthDecade(currentFlux);
+        prob-=(dx)* sourcesPerFlux;
+        currentFlux+=sourcesPerFlux*dx;
+        //	printf("\nin the findandaddnew loop; i=%12.10e, prob=%12.10e, dx=%12.10e , logi=%lf\n",i,prob,dx,log10(i));
+    }
+    std::cout << "New Source, with flux = " << currentFlux << std::endl;
+    return currentFlux;
+}
+
+void CompositeDiffuse::setFileFlux(){
+    double  currentFlux = m_minFlux ;
+    m_totalIntegratedFlux = 0.;  //to initialize
+    long double dx=0.001; 
+    while(currentFlux < m_maxFlux){
+        double sourcesPerFlux = logNlogS(currentFlux)/sizeOfFifthDecade(currentFlux);
+        m_totalIntegratedFlux+=(dx)* sourcesPerFlux;
+        currentFlux+=sourcesPerFlux*dx;
+        
+    }
+    
 }

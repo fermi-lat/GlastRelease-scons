@@ -25,9 +25,9 @@
 * The dir() member returns a sampled particle's direction.  The 
 * argument is the particle energy, as produced by ().
 
-* \author Patrick Nolan, Stanford University, 1999
-* 
-* $Header $
+  * \author Patrick Nolan, Stanford University, 1999
+  * 
+  * $Header $
 */
 
 #include "Spectrum.h"

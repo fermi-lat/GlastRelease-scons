@@ -29,7 +29,7 @@ CHIMESpectrum::InterpVec::InterpVec() : std::vector<float>() {}
 //-------------------------- InterpVec::search
 
 CHIMESpectrum::Intrp CHIMESpectrum::InterpVec::search(float x) const {
-    // Binary search a vector for values that straddle x using STL lower_bound.
+    // Purpose: Binary search a vector for values that straddle x using STL lower_bound.
     // Deal gracefully with values off the end by extrapolation.
     // Contents of vector must be monotonic.
     // Return integer index for use by another vector
@@ -60,9 +60,9 @@ float CHIMESpectrum::InterpVec::interpolate(Intrp y) const {
 const float CHIMESpectrum::m_rearth = 6371.f;  // radius of earth in km
 const float CHIMESpectrum::m_altitude = 600.f;  // altitude of circular orbit
 
-//Initializes parameters during construction
+
 void CHIMESpectrum::init(std::string paramstring) {
-    
+    //Purpose: Initializes parameters during construction
     
     std::vector<float> params;
     

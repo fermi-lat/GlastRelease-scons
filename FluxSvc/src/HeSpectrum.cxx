@@ -29,7 +29,7 @@ HeSpectrum::InterpVec::InterpVec() : std::vector<float>() {}
 
 HeSpectrum::Intrp HeSpectrum::InterpVec::search(float x) const {
     using namespace std;
-    // Binary search a vector for values that straddle x using STL lower_bound.
+    // Purpose: Binary search a vector for values that straddle x using STL lower_bound.
     // Deal gracefully with values off the end by extrapolation.
     // Contents of vector must be monotonic.
     // Return integer index for use by another vector
@@ -60,9 +60,9 @@ float HeSpectrum::InterpVec::interpolate(Intrp y) const {
 const float HeSpectrum::m_rearth = 6371.f;  // radius of earth in km
 const float HeSpectrum::m_altitude = 600.f;  // altitude of circular orbit
 
-//Initializes parameters during construction
+
 void HeSpectrum::init(float lat, float lon) {
-    
+    //Purpose: Initializes parameters during construction
     int nen = sizeof(energies)/sizeof(float);
     m_en.reserve(nen);
     float amus = 4.;  // Mass of 4He; CHIME  energy is in MeV/amu
@@ -138,7 +138,7 @@ void HeSpectrum::setParticleName(std::string name)
 //-------------------------- flux()  (specified cutoff value)
 
 float HeSpectrum::flux(float cut) const {
-    // Total flux in nuclei / m^2 sec ster
+    // Purpose:  Return total flux in nuclei / m^2 sec ster
     // Interpolate in table if possible, otherwise assume power law
     //  tail at high energy.
     if (cut > m_etop) return m_upper * pow(cut/m_etop, m_expo);
@@ -148,7 +148,7 @@ float HeSpectrum::flux(float cut) const {
 //-------------------------- flux() (current cutoff value)
 
 double HeSpectrum::flux(double) const {
-    // calculate flux for the current cutoff
+    // Purpose: calculate flux for the current cutoff
     return m_flux;
 }
 
@@ -163,7 +163,7 @@ double HeSpectrum::solidAngle() const
 //-------------------------- flux() (specified position)
 
 double HeSpectrum::flux(double lat, double lon) const {
-    // Flux as a function of latitude and longitude in a 600 km orbit.
+    // Purpose:  Return flux as a function of latitude and longitude in a 600 km orbit.
     // Linear interpolate in a table with a 5 degree sampling grid.
     int ilat = static_cast<int>(lat/5.+6.);
     double/*float*/ a = fmod(lat+30., 5.)/5.;
@@ -194,7 +194,7 @@ int HeSpectrum::askGPS()
 }
 
 void HeSpectrum::setPosition(double lat, double lon) {
-    // Do the initialization necessary when moving to a new position:
+    // Purpose:  Do the initialization necessary when moving to a new position:
     // look up cutoff energy, build a new table of integral alpha
     // fluxes
     
@@ -257,7 +257,7 @@ float HeSpectrum::rad2() const {
 //------------------------- cosomega()
 
 float HeSpectrum::cosomega(float E) const {
-    // Opening angle of geomagnetic cutoff cone.
+    // Purpose:  Give opening angle of geomagnetic cutoff cone.
     // This is a pretty backward way to do it.  It starts from a cutoff
     // energy which is derived from a desired rate.  Then it calculates
     // the magnetic latitude from that.  Really, the cutoff and latitude
@@ -291,7 +291,7 @@ float HeSpectrum::exposure(float E) const {
 std::pair<float,float> HeSpectrum::dir(float energy)const
 {
     
-    // Random particle direction from Størmer cone
+    // Purpose:  Random particle direction from Størmer cone
     
     // Rejection method for the direction.  Direction must be inside
     // the Stormer cone and above the horizon.

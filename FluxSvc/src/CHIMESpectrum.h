@@ -34,9 +34,9 @@
 * from the east, +pi/2 from the north, -pi/2 from the south.  At
 * energies near the cutoff, particles come mainly from the west.
 
-* \author Patrick Nolan, Stanford University, 1998
-* 
-* $Header $
+  * \author Patrick Nolan, Stanford University, 1998
+  * 
+  * $Header $
 */
 
 #include "Spectrum.h"

@@ -29,7 +29,8 @@ double Spectrum::solidAngle( )const
 
 std::pair<float,float> Spectrum::dir(float energy)const
 {
-    // return solid angle pair (costh, phi) for the given energy
+    // Purpose: return solid angle pair (costh, phi) for the given energy
+    // Input:: the given energy.
     // default: random except for Earth occultation
     //here's an attempt at random default distributions as above:
     return std::make_pair(((RandFlat::shoot(1.0))*1.4)-0.4,(RandFlat::shoot(1.0))*2*M_PI);

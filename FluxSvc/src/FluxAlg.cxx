@@ -86,12 +86,11 @@ StatusCode FluxAlg::execute()
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
     //
-    // have the flux service create parameters of an incoming particle 
-    //
-    
+    // Purpose: have the flux service create parameters of an incoming particle 
     // if nothing has changed, then use the existing m_flux,
-    //but if the "current" IFlux is not the same as the one we have now,
-    //then change our m_flux pointer to be the new one.
+    // but if the "current" IFlux is not the same as the one we have now,
+    // then change our m_flux pointer to be the new one.
+    // Output:  a staturCode to ensure the function executed properly.
     
     if(m_fluxSvc->currentFlux() == m_flux){
         m_flux->generate();
@@ -114,7 +113,7 @@ StatusCode FluxAlg::execute()
         log << MSG::ERROR << "Particle name " << particleName << " not found by particle properties" << endreq;
         return StatusCode::FAILURE;
     }
-
+    
     int partID = prop->jetsetID(); // same as stdhep id
     
     log << MSG::DEBUG << particleName

@@ -241,6 +241,7 @@ inline static double    sqr(double x) {return x*x; }
 
 void FluxSource::setAcceptance()
 {
+    //Purpose:  set the solid angle of the source
     s_radius = sqrt(totalArea() / M_PI ) * 1000;    // radius in mm
     if(!s_backoff) s_backoff = s_radius;
     
@@ -281,6 +282,9 @@ void FluxSource::spectrum(ISpectrum* s, double emax)
 
 FluxSource* FluxSource::event(double time)
 {
+    // Purpose and Method: generate a new incoming particle
+    // Inputs  - current time
+    // Outputs - pointer to the "current" fluxSource object.
     m_extime = 0;
     //go through the "veto" loop only if galactic coordinates are given for the source - otherwise,
     //the particles originate close to GLAST, and can still be incident.
@@ -304,6 +308,7 @@ FluxSource* FluxSource::event(double time)
 
 void FluxSource::randomLaunchPoint()
 {
+    //Purpose:  cerate a random launch point
     HepRotation r_pln;
     
     double ly = m_launchDir.y(), lx = m_launchDir.x();
@@ -347,7 +352,7 @@ double FluxSource::solidAngle() const
 
 void FluxSource::computeLaunch (double time)
 {
-    // set energy using the Spectrum object (scales momentum)
+    // Purpose: set energy using the Spectrum object (scales momentum)
     // Note: since PEGS files crap out at some energ, the max energy must
     // be limited
     const double fudge=1.001; // in ncase max is only energy, round-off error
@@ -1039,7 +1044,8 @@ double FluxSource::explicitInterval (double time)
 
 bool FluxSource::occluded(){
     double current,max,z;
-    
+    //Purpose:  to determine whether or not the current incoming particle will be blocked by the earth.
+    //Output:  "yes" or "no"
     //REMEMBER:  the earth is directly below the satellite, so, to determine occlusion,
     // we must assume the frame to be checked against is zenith-pointing, and hence, we want 
     //the direction of the particle BEFORE it is compensated for tilt angles.
@@ -1054,6 +1060,7 @@ bool FluxSource::occluded(){
 }
 
 void FluxSource::correctForTiltAngle(){
+    //Purpose: transform the incoming particle direction, correcting for the rocking angles of the satellite
     
     //get the transformation matrix..
     m_correctForTilt =GPS::instance()->rockingAngleTransform(GPS::instance()->time());

@@ -48,7 +48,7 @@ public:
     
     ///returns position as a pair using  specified time
     std::pair<double,double> coords(double time) const;
-
+    
     /*! 
     \param latitude Latitude is in the range (-180,180)
     */

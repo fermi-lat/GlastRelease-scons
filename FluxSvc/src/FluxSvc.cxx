@@ -87,7 +87,7 @@ StatusCode FluxSvc::initialize ()
     // open the message log
     MsgStream log( msgSvc(), name() );
     
-    //If source library was not set, put in default
+    // If source library was not set, put in default
     if( m_source_lib.empty() ){
         m_source_lib.push_back(default_source_library);
         log << MSG::INFO << "Set source library list to " << default_source_library << endreq;
@@ -109,31 +109,31 @@ StatusCode FluxSvc::initialize ()
         log << MSG::ERROR << "Couldn't find the ParticlePropertySvc!" << endreq;
         return StatusCode::FAILURE;
     }
-
+    
     //----------------------------------------------------------------
     // most of  the following cribbed from ToolSvc and ObjManager
-
+    
     // look for a factory of an AlgTool that implements the IRegisterSource interface:
     // if found, make one and call the special method 
-
+    
     // Manager of the AlgTool Objects
     IObjManager* objManager=0;             
-
+    
     // locate Object Manager to locate later the tools 
     status = serviceLocator()->service("ApplicationMgr", objManager );
     if( status.isFailure()) {
         log << MSG::ERROR << "Unable to locate ObjectManager Service" << endreq;
         return status;
     }
-
+    
     
     IToolSvc* tsvc  =0;
     status = service( "ToolSvc", tsvc, true );
     if( status.isFailure() ) {
-         log << MSG::ERROR << "Unable to locate Tool Service" << endreq;
+        log << MSG::ERROR << "Unable to locate Tool Service" << endreq;
         return status;
     }
-
+    
     IToolFactory* toolfactory = 0;
     
     // search throught all objects (factories?)
@@ -145,7 +145,7 @@ StatusCode FluxSvc::initialize ()
         IFactory* fact = const_cast<IFactory*>(factory);
         status = fact->queryInterface( IID_IToolFactory, (void**)&toolfactory );
         if( status.isSuccess() ) {
-
+            
             // yes: now see if the tool implements the IRegisterSource interface
             IRegisterSource* ireg;
             status = tsvc->retrieveTool(tooltype, ireg);
@@ -156,7 +156,7 @@ StatusCode FluxSvc::initialize ()
             }
             
         }
-
+        
     }
     
     

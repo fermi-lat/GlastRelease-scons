@@ -22,16 +22,16 @@ is something else.  Can someone look it up?
 * adjusting for the smaller mass of the electron.  (Actually the electron
 * mass is assumed to be zero.)
 
-*  As with CHIMESpectrum, the flux normalization is handled in a screwy
-*  way.  We should come up with a better way to handle this.
-*  The value returned is in electrons/(m^2 sec ster), as if it was
-*  isotropic.  This value is obtained by taking the observed isotropic
-*  flux and multiplying by a correction factor for the fraction of the
-*  sky blocked by the earth.  Thus the total integrated flux in
-*  electrons/(m^2 sec) can be obtained by multiplying by 4*pi.
-* \author P. L. Nolan, April 1999
-* 
-* $Header $
+  *  As with CHIMESpectrum, the flux normalization is handled in a screwy
+  *  way.  We should come up with a better way to handle this.
+  *  The value returned is in electrons/(m^2 sec ster), as if it was
+  *  isotropic.  This value is obtained by taking the observed isotropic
+  *  flux and multiplying by a correction factor for the fraction of the
+  *  sky blocked by the earth.  Thus the total integrated flux in
+  *  electrons/(m^2 sec) can be obtained by multiplying by 4*pi.
+  * \author P. L. Nolan, April 1999
+  * 
+  * $Header $
 */
 
 
