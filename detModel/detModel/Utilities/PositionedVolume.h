@@ -27,14 +27,14 @@ namespace detModel{
 
     /// Set and get methods for the translation vector
     void setTranslation(Hep3Vector t){m_translation = t;};
-    Hep3Vector getTranslation(){return m_translation;};
+    Hep3Vector getTranslation()const{return m_translation;};
 
     /** 
        Set and get methods for the rotation matrix (to be changed 
        in order to return a reference or pointer       
     */
     void setRotation(HepRotation r){m_rotation = r;};
-    HepRotation getRotation(){return m_rotation;};
+    HepRotation getRotation()const{return m_rotation;};
 
   private:
     

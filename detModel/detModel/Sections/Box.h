@@ -43,15 +43,15 @@ namespace detModel{
     /**
      * This method gives the X dimension
      */
-    double getX(){return x;}
+    double getX()const{return x;}
     /**
      * This method gives the y dimension
      */
-    double getY(){return y;}
+    double getY()const{return y;}
     /**
      * This method gives the z dimension 
      */
-    double getZ(){return z;}
+    double getZ()const{return z;}
 
     /**
      * This method build the bounding box information

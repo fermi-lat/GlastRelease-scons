@@ -11,6 +11,7 @@
 
 namespace detModel{
   class PositionedVolume;
+  class Volume;
 
   /**
    *  This visitor build a map of PositionedVolume indicized by ID.
