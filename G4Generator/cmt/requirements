@@ -34,10 +34,10 @@ use FluxSvc  v5*
 
 
 #to make standard display available
-use gui      v2r6p2
+use gui      v2r*
 use GuiSvc   v3*
-use geometry v3
-use geomrep  v4r1
+use geometry v3*
+use geomrep  v4r*
 
 
 # get flags to build shared library
