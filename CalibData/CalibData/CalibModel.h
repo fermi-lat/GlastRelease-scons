@@ -47,6 +47,7 @@ const CLID CLID_Calib_CAL_HotChan    = 6207;
 const CLID CLID_Calib_CAL_DeadChan   = 6208;
 const CLID CLID_Calib_CAL_DiscrLO    = 6209;
 const CLID CLID_Calib_CAL_DiscrHI    = 6210;
+const CLID CLID_Calib_CAL_MuSlope    = 6211;
 
 const CLID CLID_Calib_ACD_Eff        = 6300;
 const CLID CLID_Calib_ACD_ThreshHigh = 6301;
@@ -94,6 +95,7 @@ const CLID CLID_Calib_CalibTest1       = 6500;
       _EXTERN_ std::string   CAL_DeadChan;
       _EXTERN_ std::string   CAL_DiscrLO;
       _EXTERN_ std::string   CAL_DiscrHI;
+      _EXTERN_ std::string   CAL_MuSlope;
 
       //   ... more for CAL calib types
 
