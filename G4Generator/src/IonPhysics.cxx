@@ -4,6 +4,16 @@
 #include "G4ios.hh"
 #include "g4std/iomanip"   
 
+/** 
+ * @class IonPhysics 
+ *
+ * @brief Ions physics processes setup
+ *
+ *  
+ * @author F.Longo 
+ *    
+ * \$Header\$
+ */
 
 IonPhysics::IonPhysics(const G4String& name)
                  :  G4VPhysicsConstructor(name)

@@ -14,6 +14,16 @@
 #include "G4eBremsstrahlung.hh"
 #include "G4eplusAnnihilation.hh"
 
+/** 
+ * @class EMPhysics 
+ *
+ * @brief Electromagnetic physics processes setup
+ *
+ *  
+ * @author F.Longo 
+ *    
+ * \$Header\$
+ */
 class EMPhysics : public G4VPhysicsConstructor
 {
   public: 

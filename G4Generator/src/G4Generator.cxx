@@ -1,15 +1,16 @@
 // File and Version Information:
 // $Header$
 //
-// Description:
-// This is the Gaudi algorithm that runs Geant4 and fills the TDS with
-// Montecarlo data. It initalize some services (for tds and detector geometry)
-// and than passes them to the RunManager class that do most of the work.  
+// Description: This is the Gaudi algorithm that runs Geant4 and fills the TDS
+// with Montecarlo data. It initalizes some services (for tds and detector
+// geometry) and than passes them to the RunManager class that do most of the
+// work. Optionally it can uses the GuiSvc to show the event in a GUI; in that
+// case the GUI takes control on the event loop
 //      
-//
 // Author(s):
 //      T.Burnett
 //      R.Giannitrapani
+
 
 // Include files
 
@@ -33,16 +34,15 @@
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
-// special to setup the TdGlastData structure
+//special to setup the TdGlastData structure
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
-#include "GlastEvent/MonteCarlo/McPositionHit.h"
+//montecarlo data structures 
 #include "GlastEvent/MonteCarlo/McParticle.h"
 
 //flux
 #include "FluxSvc/IFluxSvc.h"
 #include "FluxSvc/IFlux.h"
-
 
 //gui
 #include "GuiSvc/GuiSvc.h"
@@ -51,6 +51,7 @@
 #include "gui/SimpleCommand.h"
 #include "DisplayManager.h"
 
+//vectors
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 
@@ -69,9 +70,10 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
 ////////////////////////////////////////////////////////////////////////////
 StatusCode G4Generator::initialize()
 {
-  // Purpose and Method:  This routine is the initialize routine for the
-  //     Gaudi algorithm.  It is called once before event processing begins.
-  // Outputs:  A StatusCode which denotes success or failure.
+  // Purpose and Method: This routine initialize the Gaudi algorithm.  It is
+  // called once before event processing begins.  
+  // Outputs: A StatusCode which denotes success or failure.
+
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "initialize" << endreq;
 
@@ -91,8 +93,11 @@ StatusCode G4Generator::initialize()
     }
     log << MSG::INFO << "Source: "<< m_flux->title() << endreq;
   }
+
+  // setup the GuiSvc, if available
   setupGui();
 
+  // Apply Geant4 specific commands throught the ui
   if( !m_uiCommands.value().empty() ) {
     G4UImanager* UI = G4UImanager::GetUIpointer();
     for( std::vector<std::string>::const_iterator k = 
@@ -117,7 +122,6 @@ StatusCode G4Generator::initialize()
     log << MSG::ERROR << "Couldn't set up ParticlePropertySvc!" << endreq;
     return StatusCode::FAILURE;
   }
-
 
   // The geant4 manager
   if (!(m_runManager = RunManager::GetRunManager()))

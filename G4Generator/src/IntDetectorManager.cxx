@@ -1,8 +1,9 @@
 // File and Version Information:
 // $Header$
 //
-// Description:
-//      
+// Description: This is a concrete implementation of the DetectorManager
+// abstract class; this one is used to manage sensitive detectors of integrating
+// type
 //
 // Author(s):
 //      R.Giannitrapani
@@ -26,82 +27,107 @@
 #include <algorithm>
 
 IntDetectorManager::IntDetectorManager(DetectorConstruction *det,
-                                           IDataProviderSvc* esv)
-:DetectorManager(det->idMap(), esv,"IntegratingDetectorManager")
+                                       IDataProviderSvc* esv)
+  :DetectorManager(det->idMap(), esv,"IntegratingDetectorManager")
 {
+  // See the father class DetectorManager
 }
 
 void IntDetectorManager::Initialize(G4HCofThisEvent*HCE)
 {
+  // Purpose and Method: initialization of the detectors manager
+  // Inputs: the G4HCofThisEvent is hinerited from the Geant4 structure and is
+  // of no use for our actual implementation of G4Generator (but must be there
+  // for Geant4 internal working) 
+
+  // clear the list of hited detectors
   m_detectorList.clear();
-  // At the start of the event we create a new container
+  // At the start of the event we create a new container for the TDS
   m_intHit = new McIntegratingHitVector;    
 }
 
 G4bool IntDetectorManager::ProcessHits(G4Step* aStep,
                                        G4TouchableHistory* ROhist)
 {    
+  // Purpose and Method: this method is called internally by Geant4 every time a
+  // particle issue an hit in a sensitive detector of this kind
+  // Inputs: the step of the hit and the hierarchy of touchable volumes
+  // Outpus: false if there is no hit to register, true otherwise
+
   // Energy Deposition & Step Length  
   G4double edep = aStep->GetTotalEnergyDeposit()/MeV;
   G4double stepl = aStep->GetStepLength()/mm;
     
-    if ((edep==0.)) return false;          
-    // Physical Volume
-    
-    G4TouchableHistory* theTouchable
-        = (G4TouchableHistory*)(aStep->GetPreStepPoint()->GetTouchable());
-    G4VPhysicalVolume* physVol = theTouchable->GetVolume(); 
-    G4LogicalVolume* logVol = physVol->GetLogicalVolume();
-    G4String material = logVol->GetMaterial()->GetName();
-    G4String nameVolume = physVol->GetName();
-    
-    G4ThreeVector prePos = aStep->GetPreStepPoint()->GetPosition();
-    G4ThreeVector postPos = aStep->GetPostStepPoint()->GetPosition();
-    
-    // determine the ID by studying the history, then call appropriate 
-    idents::VolumeIdentifier id = constructId(aStep);
+  if ((edep==0.)) return false;          
 
-    // We fill an integrating hit
-    mc::McIntegratingHit *hit; 
-    // If the hit has already been created we use it, otherwise we
-    // create a new one
-    if( !(hit = m_detectorList[id]))
-      {
-        // This draw the volume
-        makeDisplayBox( theTouchable, id );        
-        // Filling of the hits container
-        hit = new mc::McIntegratingHit;
-        hit->setVolumeID(id);
-        m_intHit->push_back(hit);
-        m_detectorList[id] = hit;
-      }
+  // Physical Volume    
+  G4TouchableHistory* theTouchable
+    = (G4TouchableHistory*)(aStep->GetPreStepPoint()->GetTouchable());
+  G4VPhysicalVolume* physVol = theTouchable->GetVolume(); 
+  G4LogicalVolume* logVol = physVol->GetLogicalVolume();
+  G4String material = logVol->GetMaterial()->GetName();
+  G4String nameVolume = physVol->GetName();
 
-    // this transforms it to local coordinates
-    HepTransform3D 
-        global(*(theTouchable->GetRotation()), 
-        theTouchable->GetTranslation());
+  // start position of the hit and final one
+  G4ThreeVector prePos = aStep->GetPreStepPoint()->GetPosition();
+  G4ThreeVector postPos = aStep->GetPostStepPoint()->GetPosition();
     
-    HepTransform3D local = global.inverse();
-    prePos = local * (HepPoint3D)prePos;
-    postPos = local * (HepPoint3D)postPos;
+  // determine the ID by studying the history, then call appropriate 
+  idents::VolumeIdentifier id = constructId(aStep);
 
-    // fill the energy and position    
-    hit->addEnergyItem(edep, 
-                       McParticleManager::getPointer()->getLastParticle(),
-                       (prePos+postPos)/2);
-    return true;
+  // We want to fill an integrating hit
+  mc::McIntegratingHit *hit; 
+
+  // If the hit has already been created we use it, otherwise we
+  // create a new one
+  if( !(hit = m_detectorList[id]))
+    {
+      // This draw the volume
+      makeDisplayBox( theTouchable, id );        
+      // A new object is needed
+      hit = new mc::McIntegratingHit;
+      // Set its volume identifier
+      hit->setVolumeID(id);
+      // Put it in the collection of hits
+      m_intHit->push_back(hit);
+      // Keep track of already used id
+      m_detectorList[id] = hit;
+    }
+
+  // this transforms it to local coordinates
+  HepTransform3D 
+    global(*(theTouchable->GetRotation()), 
+           theTouchable->GetTranslation());  
+  HepTransform3D local = global.inverse();
+  prePos = local * (HepPoint3D)prePos;
+  postPos = local * (HepPoint3D)postPos;
+  
+  // fill the energy and position    
+  hit->addEnergyItem(edep, 
+                     McParticleManager::getPointer()->getLastParticle(),
+                     (prePos+postPos)/2);
+  return true;
 }
 
 void IntDetectorManager::EndOfEvent(G4HCofThisEvent* HCE)
 {
-    // Let's sort the hits
-    std::sort(m_intHit->begin(),m_intHit->end(), CompareIntHits());
+  // Purpose and Method: this method finalize the manager by saving the
+  // integrating hits collection in the TDS
+  // Inputs: again G4HCofThisEvent is used only internally by Geant4 and is of
+  // no use for us
+  // TDS Outputs: The collection of McIntegratingHit is saved in the 
+  // /Event/MC/IntegratingHitsCol folder
+  
+  // Let's sort the hits by volume identifier
+  std::sort(m_intHit->begin(),m_intHit->end(), CompareIntHits());
 
-    // store the hits in the TDS
-    m_esv->registerObject("/Event/MC/IntegratingHitsCol", m_intHit);    
+  // store the hits in the TDS
+  m_esv->registerObject("/Event/MC/IntegratingHitsCol", m_intHit);    
 
-    std::cout << "Actual Event done! " << m_intHit->size() 
-        << " integrating hits stored in the TDS" << std::endl;
+  // This message is for debug purpouses .. it should be eliminated or converted
+  // to a true GAUDI log message
+  std::cout << "Actual Event done! " << m_intHit->size() 
+            << " integrating hits stored in the TDS" << std::endl;
 
 }
 

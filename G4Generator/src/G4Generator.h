@@ -35,20 +35,24 @@ class G4Generator : public Algorithm {
   IFluxSvc* m_fluxSvc;
   IFlux*    m_flux;
 
+  /// a pointer to the service for particle properties
   IParticlePropertySvc* m_ppsvc;
 
-  /// source name to get from the Flux service
+  /// source name to get from the Flux service; this is a property of the
+  /// algorithm and can be setted in the jobOptions file
   std::string m_source_name;
 
-  /// set of UI commands for setup
+  /// set of UI commands for setup; this is a property of the algorithm and can
+  /// be setted in the jobOptions file
   StringArrayProperty m_uiCommands;
   
   /// This is the G4 manager that handles the simulation
   RunManager* m_runManager;
 
-  /// internal routine to set up gui stuff  
+  /// internal routine to set up the (optional) gui stuff  
   void setupGui();
 
+  /// the geometry level of details
   std::string m_geometryMode;
 };
 

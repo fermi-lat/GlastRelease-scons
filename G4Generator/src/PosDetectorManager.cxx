@@ -1,8 +1,10 @@
 // File and Version Information:
 // $Header$
 //
-// Description:
-//      
+// Description: This is a concrete implementation of the DetectorManager
+// abstract class; this one is used to manage sensitive detectors of integrating
+// type
+//
 //
 // Author(s):
 //      R.Giannitrapani
@@ -26,13 +28,20 @@
 
 
 PosDetectorManager::PosDetectorManager(DetectorConstruction *det,
-                                           IDataProviderSvc* esv)
-:DetectorManager(det->idMap(), esv,"PositionDetectorManager")
+                                       IDataProviderSvc* esv)
+  :DetectorManager(det->idMap(), esv,"PositionDetectorManager")
 {
+  // See the father class DetectorManager
 }
 
 void PosDetectorManager::Initialize(G4HCofThisEvent*HCE)
 {
+  // Purpose and Method: initialization of the detectors manager
+  // Inputs: the G4HCofThisEvent is hinerited from the Geant4 structure and is
+  // of no use for our actual implementation of G4Generator (but must be there
+  // for Geant4 internal working) 
+
+  // clear the list of hited detectors
   m_detectorList.clear();
   // At the start of the event we create a new container
   m_posHit = new McPositionHitVector;    
@@ -41,57 +50,68 @@ void PosDetectorManager::Initialize(G4HCofThisEvent*HCE)
 G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
                                        G4TouchableHistory* ROhist)
 {
+  // Purpose and Method: this method is called internally by Geant4 every time a
+  // particle issue an hit in a sensitive detector of this kind
+  // Inputs: the step of the hit and the hierarchy of touchable volumes
+  // Outpus: false if there is no hit to register, true otherwise
+
   // Energy Deposition & Step Length
   G4double edep = aStep->GetTotalEnergyDeposit()/MeV;
   G4double stepl = aStep->GetStepLength()/mm;
     
-    if ((edep==0.)) return false;          
-    // Physical Volume
+  if ((edep==0.)) return false;          
+  // Physical Volume
     
-    G4TouchableHistory* theTouchable
-        = (G4TouchableHistory*)(aStep->GetPreStepPoint()->GetTouchable());
-    G4VPhysicalVolume* physVol = theTouchable->GetVolume(); 
-    G4LogicalVolume* logVol = physVol->GetLogicalVolume();
-    G4String material = logVol->GetMaterial()->GetName();
-    G4String nameVolume = physVol->GetName();
+  G4TouchableHistory* theTouchable
+    = (G4TouchableHistory*)(aStep->GetPreStepPoint()->GetTouchable());
+  G4VPhysicalVolume* physVol = theTouchable->GetVolume(); 
+  G4LogicalVolume* logVol = physVol->GetLogicalVolume();
+  G4String material = logVol->GetMaterial()->GetName();
+  G4String nameVolume = physVol->GetName();
     
-    HepPoint3D prePos = aStep->GetPreStepPoint()->GetPosition();
-    HepPoint3D postPos = aStep->GetPostStepPoint()->GetPosition();
+  // start position of the hit and final one
+  HepPoint3D prePos = aStep->GetPreStepPoint()->GetPosition();
+  HepPoint3D postPos = aStep->GetPostStepPoint()->GetPosition();
     
-    // determine the ID by studying the history, then call appropriate 
-    idents::VolumeIdentifier id = constructId(aStep);
+  // determine the ID by studying the history, then call appropriate 
+  idents::VolumeIdentifier id = constructId(aStep);
 
-    // Filling of the hits container
-    mc::McPositionHit *hit = new mc::McPositionHit;
+  // Filling of the hits container
+  mc::McPositionHit *hit = new mc::McPositionHit;
 
-    // this transforms it to local coordinates
-    
-    HepTransform3D 
-        global(*(theTouchable->GetRotation()), 
-        theTouchable->GetTranslation());
+  // this transforms it to local coordinates    
+  HepTransform3D 
+    global(*(theTouchable->GetRotation()), 
+           theTouchable->GetTranslation());
+  HepTransform3D local = global.inverse();
+  hit->init(edep, id, local*prePos, local*postPos);
+  hit->setMcParticle(McParticleManager::getPointer()->getLastParticle());
+  m_posHit->push_back(hit);
 
-    HepTransform3D local = global.inverse();
-    
-    hit->init(edep, id, local*prePos, local*postPos);
-    hit->setMcParticle(McParticleManager::getPointer()->getLastParticle());
-    m_posHit->push_back(hit);
+  display(theTouchable, id, prePos, postPos);
 
-    display(theTouchable, id, prePos, postPos);
-
-    return true;
-    
+  return true;
 }
 
 void PosDetectorManager::EndOfEvent(G4HCofThisEvent* HCE)
 {
-    // Let's sort the hits
-    std::sort(m_posHit->begin(),m_posHit->end(), ComparePosHits());
+  // Purpose and Method: this method finalize the manager by saving the
+  // integrating hits collection in the TDS
+  // Inputs: again G4HCofThisEvent is used only internally by Geant4 and is of
+  // no use for us
+  // TDS Outputs: The collection of McPositionHit is saved in the 
+  // /Event/MC/PositionHitsCol folder
+  
+  // Let's sort the hits
+  std::sort(m_posHit->begin(),m_posHit->end(), ComparePosHits());
 
-    // store the hits in the TDS
-    m_esv->registerObject("/Event/MC/PositionHitsCol", m_posHit);    
+  // store the hits in the TDS
+  m_esv->registerObject("/Event/MC/PositionHitsCol", m_posHit);    
 
-    std::cout << "Actual Event done! " << m_posHit->size() 
-        << " position hits stored in the TDS" << std::endl;
+  // This message is for debug purpouses .. it should be eliminated or converted
+  // to a true GAUDI log message
+  std::cout << "Actual Event done! " << m_posHit->size() 
+            << " position hits stored in the TDS" << std::endl;
 
 }
 

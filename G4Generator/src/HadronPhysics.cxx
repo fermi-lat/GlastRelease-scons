@@ -4,6 +4,16 @@
 #include "G4ios.hh"
 #include "g4std/iomanip"   
 
+/** 
+ * @class HadronicPhysics 
+ *
+ * @brief Hadronic physics processes setup
+ *
+ *  
+ * @author F.Longo 
+ *    
+ * \$Header\$
+ */
 
 HadronPhysics::HadronPhysics(const G4String& name)
                     :  G4VPhysicsConstructor(name)

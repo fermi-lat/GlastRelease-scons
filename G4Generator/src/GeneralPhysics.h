@@ -6,7 +6,16 @@
 
 #include "G4VPhysicsConstructor.hh"
 #include "G4Decay.hh"
-
+/** 
+ * @class GeneralPhysics
+ *
+ * @brief Generic physics processes setup
+ *
+ *  
+ * @author F.Longo 
+ *    
+ * \$Header\$
+ */
 class GeneralPhysics : public G4VPhysicsConstructor
 {
   public: 

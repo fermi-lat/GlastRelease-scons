@@ -1,9 +1,12 @@
 // File and Version Information:
 // $Header$
 //
-// Description:
+// Description: this method is used to generate new McParticle objects in the
+// McParticle hierarchy. It uses a standard mechanism of Geant4 that permits to
+// do something whenever a new track is created or an existing track is
+// destroyed. To identify the track Geant4 assign an unsigned integer as an
+// identifier, starting from 1 for the primary particle
 //      
-//
 // Author(s):
 //      R.Giannitrapani
 
@@ -27,49 +30,54 @@ TrackingAction::TrackingAction()
 
 void TrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 {
+  // Purpose and Method: this method is called every time a new track is created
+  // during the Geant4 event simulation
+  // Inputs: the G4Track pointer aTrack that gives access to the actual created
+  // track object
+
   mc::McParticle* parent;
   mc::McParticle* particle;
+  
+  // we get the pointer to the McParticleManager singleton
   McParticleManager* man = McParticleManager::getPointer();
-  
 
-#if 0
-  G4cout <<  "PRE -- " << aTrack->GetTrackID() << " ";
-  G4cout <<  aTrack->GetCurrentStepNumber() << " ";
-  G4cout <<  G4BestUnit(aTrack->GetKineticEnergy(), "Energy") << 
-    aTrack->GetParentID() << G4endl;
-#endif
-  
+  // if this the primary it has no parent
   if (aTrack->GetTrackID() == 1)
     parent = man->getMcParticle(0);
-  else
+  else // otherwise it has
     parent = man->getMcParticle(aTrack->GetParentID());
 
+  // lets create a new particle (we don't need to destroy this since it will go
+  // in the TDS
   particle = new mc::McParticle();
   
-  // get the 4-momentum
-  
+  // get the 4-momentum  
   HepLorentzVector pin(aTrack->GetTotalEnergy(), aTrack->GetMomentum());  
+  // we initialize the particle by giving the parent, the PDG encoding, a flag
+  // (in that case Swum, and the initial momentum of the particle
   particle->initialize(parent, aTrack->GetDefinition()->GetPDGEncoding(),
                        mc::McParticle::Swum,pin);
   
-  man->addMcParticle(aTrack->GetTrackID(),particle);
-  
+  // we add this particle to our collection for subsequent saving in the TDS
+  man->addMcParticle(aTrack->GetTrackID(),particle);  
 }
 
 void TrackingAction::PostUserTrackingAction(const G4Track* aTrack)
 {
+  // Purpose and Method: this method is called every time a track is destroied
+  // during the Geant4 event simulation
+  // Inputs: the G4Track pointer aTrack that gives access to the actual track
+  // object
+  
   mc::McParticle* particle;
+
+  // we get the pointer to the McParticleManager singleton
   McParticleManager* man = McParticleManager::getPointer();
-
-#if 0
-  G4cout <<  "POS -- " << aTrack->GetTrackID() << " ";
-  G4cout <<  aTrack->GetCurrentStepNumber() << " ";
-  G4cout <<  G4BestUnit(aTrack->GetKineticEnergy(), "Energy") <<
-    G4endl;
-#endif
-
+  // get the 4-momentum   
   HepLorentzVector pfin(aTrack->GetTotalEnergy(), aTrack->GetMomentum());  
+  // retrive the particle from our collection with the singleton manager
   particle = man->getMcParticle(aTrack->GetTrackID());
+  // we finalize the particle by giving the final momentum and position
   particle->finalize(pfin, aTrack->GetPosition());
 }
 

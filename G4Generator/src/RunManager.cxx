@@ -8,7 +8,7 @@
 // G4RunManager class. Most of its methods and members are hinerited from the
 // Geant4 one; since they are not supposed to be used directly by any GLAST
 // client (since they are automatically used by Geant4 internal architecture)
-// they are not documented. For their meaning please look at the standard Geant4
+// they are not documented. For their meaning please see the standard Geant4
 // documentation
 //
 // Author(s):

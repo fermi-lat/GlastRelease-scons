@@ -1,9 +1,9 @@
 // File and Version Information:
 // $Header$
 //
-// Description:
+// Description: this class is responsable of the drawing of hits, hits volumes
+// and trajectories if the GUI has been activated
 //      
-//
 // Author(s):
 //      T.Burnett
 
@@ -20,15 +20,13 @@
 #include <map>
 #include <cassert>
 
-
+// this is the singleton static pointer
 DisplayManager* DisplayManager::s_instance=0;
-
 
 DisplayManager::DisplayManager( gui::DisplayControl* d)
 :m_display(d)
 {
     s_instance = this;
-    
 
     //! minimal rep just to append stuff to. Allows default color
     class EmptyRep : public gui::DisplayRep {

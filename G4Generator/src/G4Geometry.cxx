@@ -1,9 +1,14 @@
 // File and Version Information:
 // $Header$
 //
-// Description:
+// Description: this is a concrete implementation of the abstract interface
+// IGeometry of GlastDetSvc. Its methods are called by the visitor mechanism of
+// detModel encapsulated in the GlastDetSvc. The use of an abstract interface
+// permits to avoid the explicit exposition of detModel interfaces to
+// clients. This concrete implementation uses Geant4 classes to build the
+// volumes hierarchy for G4Generator. For more detailed information, please see
+// the GlastDetSvc documentation
 //      
-//
 // Author(s):
 //      R.Giannitrapani
 
@@ -35,7 +40,8 @@
 
 G4Geometry::G4Geometry(std::string mode) : m_mode(mode)
 {
-
+  // Inputs: the mode specify the level of details to be used in building the
+  // geometry
 }
 
 G4Geometry::~G4Geometry()
@@ -48,6 +54,11 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
                       std::string name, std::string material, 
                       const DoubleVector& params, VolumeType type)
 {
+  // Purpose and Method: this method push a new volume in the stack of volumes
+  // Inputs: for the meaning of ShapeType, the VolumeType and the params vector
+  // see the GlastDetSvc documentation. T
+  // Outputs: the VisitorRet can be used to stop the recursion during geometry building
+
   // The first 6 parameters in params are the translations and rotations
   double x=params[0], y=params[1], z=params[2];
   double rx=params[3], ry=params[4], rz=params[5];  
@@ -56,8 +67,6 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
   G4VPhysicalVolume* phys;
   G4LogicalVolume* logical;
 
-
-#if 1
   // Let's check if the logical is already there
   if (!(logical = m_logicals[name]))
     {
@@ -118,40 +127,6 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
       m_replica = 1;
     }
 
-#else
-
-  // the shape
-  G4VSolid* shape;
-  // Get the material
-  G4Material* ptMaterial = G4Material::GetMaterial(material);
-  if (!ptMaterial) ptMaterial = G4Material::GetMaterial("Vacuum");
-
-  // Build a box or a tube
-  if( s==Box) 
-    {
-      double dx=params[6], dy=params[7], dz=params[8];
-      // if there is no actualMother, it means this is the world volume
-      // we use at the moment a box of 3m*3m*3m
-      if (!actualMother()) { dx = 3000; dy = 3000; dz = 3000;}
-      shape = new G4Box(name,
-                        dx*mm/2,
-                        dy*mm/2,
-                        dz*mm/2);    
-    }
-  else if(s==Tube) 
-    {
-      double dz=params[6], rmin=params[7], rmax=params[8];
-      shape = new G4Tubs(name,
-                         rmin*mm,
-                         rmax*mm,
-                         dz*mm*0.5,
-                         0,2*M_PI);
-    }
-  // put the logical in the m_logicals vector
-  logical = new G4LogicalVolume(shape,ptMaterial,name,0,0,0);
-  m_logicals[name] = logical; 
-
-#endif  
   // Set the rotation: note conversion to radians
   G4RotationMatrix* rm = new G4RotationMatrix(); 
   rm->rotateX(rx*M_PI/180);
@@ -189,14 +164,17 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
     {
       m_idm->process(logical);
     }
+
   // push this volume in the stack of mothers
   pushActualMother(logical);    
   return More;
 }
 
-/* called to signal end of nesting */
+
 void G4Geometry::popShape()
 {
+  // Purpose and Method: called to signal end of nesting 
+
   // pop the actual mother stack
   popActualMother();
 
@@ -208,10 +186,11 @@ void G4Geometry::popShape()
 }
 
 
-// Search a physical volume by name
 G4VPhysicalVolume* G4Geometry::getPhysicalByName(std::string name){
+  // Purpose and Method: a utility method to search a physical volume by name
+  
   std::vector<G4VPhysicalVolume*>::const_iterator i;
-
+  
   for(i=m_physicals.begin();i!=m_physicals.end();i++)
     if ((*i)->GetName() == name) return (*i);
 
@@ -219,6 +198,8 @@ G4VPhysicalVolume* G4Geometry::getPhysicalByName(std::string name){
 }
 
 G4LogicalVolume* G4Geometry::actualMother()const{
+  // Purpose and Method: this one return the actual mother volume
+
   if (m_actualMother.size()) 
     return m_actualMother.back();
   else return 0;

@@ -4,7 +4,16 @@
 #include "G4ios.hh"
 #include "g4std/iomanip"   
 
-
+/** 
+ * @class MuonPhysics 
+ *
+ * @brief Muons physics processes setup
+ *
+ *  
+ * @author F.Longo 
+ *    
+ * \$Header\$
+ */
 MuonPhysics::MuonPhysics(const G4String& name)
                    :  G4VPhysicsConstructor(name)
 {
