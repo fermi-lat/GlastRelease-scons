@@ -3,7 +3,6 @@
 #define RDBMODEL_XERCESBUILDER_H
 
 #include "rdbModel/Management/Builder.h"
-#include "xml/XmlParser.h"
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMElement.hpp>
 #include "rdbModel/Tables/Column.h"
