@@ -1,6 +1,28 @@
-
 #ifndef _GlastRandomSvc_H
 #define _GlastRandomSvc_H 1
+
+/** @class GlastRandomSvc
+ *
+* @brief Gaudi Service for setting the random engines and seeds
+* for shared libraries that use random numbers (via CLHEP) 
+* 
+* This service, in its initialize() method, collects the adresses 
+* of all tools that inherit form the RandomAccess tool (one in each
+* Dll that uses random numbers). The RandomAccess tool lives in 
+* GlastRandomAvc. The initialize() method also sets the random engine
+* for each of its Dll's either via the job options parameter
+* RandomEngine or the default which is currently TripleRand. The
+* handle() methods listens for BeginEvent events via the
+* IncidentListener service and increments the run and particle 
+* sequence numbers, sets those in the MCEvent header, then sets the
+* seed for each of the Dll's that use randoms, based on the run and
+* particle sequence numbers.
+* 
+*
+* @authors Toby Burnett, Karl Young
+*
+* $Header
+*/
 
 #include <map>
 #include "GaudiKernel/Service.h"
@@ -11,16 +33,6 @@
 #include "CLHEP/Random/Random.h"
 
 #include "GlastSvc/GlastRandomSvc/IGlastRandomSvc.h"
-
-/** @class GlastRandomSvc
-* @brief This is a Gaudi Service for setting the random engines
-* and seeds for shared libraries that use random numbers (via CLHEP) 
-* 
-* @author Toby Burnett, Karl Young
-* $Header
-*/
-
-
 
 class GlastRandomSvc : public Service,
 virtual public IIncidentListener,
@@ -44,16 +56,12 @@ public:
   /// return the service type
   const IID& type() const;
   
+  /// required for Gaudi service
   StatusCode initialize ();
   
+  /// required for Gaudi service
   StatusCode finalize ();
   
-  // set random seed for engine
-  StatusCode setSeeds();
-
-  // query for available tools and make the map
-  StatusCode getEngines();
-
  private:  
   /// Data members
   // store Engine names and addresses in a map

@@ -83,7 +83,7 @@ StatusCode GlastRandomSvc::initialize ()
 
     // use the incident service to register begin, end events
     IIncidentSvc* incsvc = 0;
-    StatusCode sc = service ("IncidentSvc", incsvc, true);
+    status = service ("IncidentSvc", incsvc, true);
     
     if( status.isFailure() ) return status;
     
@@ -116,37 +116,36 @@ StatusCode GlastRandomSvc::initialize ()
     // Search throught all objects (factories?)
     for(IObjManager::ObjIterator it = objManager->objBegin(); it
         !=objManager->objEnd(); ++ it){
-        log << MSG::DEBUG << "Checking object " << it << endreq;
         std::string tooltype= (*it)->ident();
-        log << MSG::DEBUG << "of type " << tooltype << endreq;
         // is it a tool factory?
         const IFactory* factory = objManager->objFactory( tooltype );
-        log << MSG::DEBUG << "Is " << factory << " a tool factory ?" << endreq;
         IFactory* fact = const_cast<IFactory*>(factory);
         status = fact->queryInterface( IID_IToolFactory,
             (void**)&toolfactory );
         if( status.isSuccess() ) {
-            log << MSG::DEBUG << "Guess so... is it a RandomAccess instance ?" << endreq; 
             IAlgTool* itool;
             status = tsvc->retrieveTool(tooltype, itool);
             if( status.isSuccess()) {
-                log << MSG::DEBUG << "Ok retrieved it..." << endreq;
                 status =itool->queryInterface(IRandomAccess::interfaceID(), 
                     (void**)&itool);
             }
             if( status.isSuccess() ){
-                log << MSG::DEBUG << "Found random access: " << tooltype 
-                    << ", setting engine to " << m_randomEngine << endreq;
+	      // note: the following should be DEBUG rather than INFO
+	      //       but for some reason DEBUG won't print here
+	      // log << MSG::INFO << "Found RandomAccess tool: " << itool << endreq;
                 // Set the Random engine
                 dynamic_cast<IRandomAccess*>(itool)->setTheEngine(m_randomEngine);
                 // Get its address
                 HepRandomEngine* hr =
                     dynamic_cast<IRandomAccess*>(itool)->getTheEngine();
-                log << MSG::DEBUG << "Random engine at: " << (int)hr << endreq;
-                // Store its name and address in a map
+		// note: the following should be DEBUG rather than INFO
+		//       but for some reason DEBUG won't print here
+		// log << MSG::INFO << "CLHEP Engine for " << itool << " at " << hr << endreq;
+		// Store its name and address in a map
                 m_engineMap[tooltype] = hr;
-            }
+            }else{
             tsvc->releaseTool(itool);
+	    }
         }
     }
     return StatusCode::SUCCESS;
@@ -187,10 +186,13 @@ void GlastRandomSvc::handle(const Incident &inc)
         int dummy = 0; // for 2nd argument to setSeed
         std::map< std::string, HepRandomEngine* >::const_iterator dllEngine;
         for (dllEngine = m_engineMap.begin(); dllEngine != m_engineMap.end(); ++dllEngine ) {
-            long theSeed = multiplier * 100000 * ((m_RunNumber+1) % 20000) + ((m_SequenceNumber+1) % 100000);
-            log << MSG::DEBUG << "Setting seed for " <<  dllEngine->first << " to " <<  theSeed << endreq;
+            long theSeed = multiplier * 100000 * ((m_RunNumber+1) % 20000) + ((2*m_SequenceNumber+1) % 100000);
+	    // note: the following should be DEBUG rather than INFO
+            //       but for some reason DEBUG won't print here
+            // log << MSG::INFO << "Setting seed for " <<  dllEngine->first << " to " <<  theSeed << endreq;
             dllEngine->second->setSeed(theSeed,dummy);
             ++multiplier;
         }
     }
 }
+

@@ -29,6 +29,12 @@
 * wrapper class, DMmanager.  GlastDetSvc thus provides access to geometry
 * parameters and constants.
 *
+* @section GlastRandomSvc GlastRandomSvc
+* A GLAST-defined Gaudi service which provides for the setting of CLHEP
+* engines on a per Dll basis and provides for the setting of seeds
+* for the random number generators for each Dll on a per incident
+* particle basis.
+*
 * @section Interfaces Interfaces
 * A number of interfaces are defined in this package:
 * - IEventCnvSvc
@@ -48,7 +54,17 @@
 * Default:  LAT
 * @param GlastDetSvc.visitorMode
 * Default: propagate
-*
+* @param GlastRandomSvc.RandomEngine
+* The CLHEP Random engine to use - same for all Dll's that use random
+* numbers.
+* Default:TripleRand
+* @param GlastRandomSvc.RunNumber
+* Run number - set via GlastRandomSvc.
+* Default:10
+* @param GlastRandomSvc.InitialSequenceNumber
+* Incident particle sequence number to begin run with - is not
+* event number as not all events trigger - set via GlastRandomSvc.
+* Default:0
 *
 * @section Testing test_GlastSvc
 * The test routine contains one main algorithm called CreateEvent.
