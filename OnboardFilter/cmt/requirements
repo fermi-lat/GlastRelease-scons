@@ -1,6 +1,6 @@
 package OnboardFilter
 
-version v0r6p3
+version v0r7
 # $Header$
 
 use EbfWriter           *
