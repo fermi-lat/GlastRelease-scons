@@ -24,13 +24,16 @@ class TkrPatCand: public TkrRecInfo, virtual public ContainedObject
 {    
 public:
     
-    TkrPatCand(int layer, int tower, double energy, double quality, const Ray& testRay);
+    TkrPatCand(int layer, int tower, double energy, double energyErr, double quality, const Ray& testRay);
+    TkrPatCand(int layer, int tower, double energy, double quality, const Ray& testRay) 
+                    {TkrPatCand(layer,tower,energy,1.,quality,testRay);}
     ~TkrPatCand();
 
     /// Define the TkrRecInfo routines
 
     double        getQuality()                       const {return m_quality;};
     double        getEnergy(TrackEnd end = Start)    const ;
+    double        getEnergyErr(TrackEnd end = Start) const ;
     int           getLayer(TrackEnd end = Start)     const ;
     int           getTower(TrackEnd end = Start)     const ;
     Point         getPosition(TrackEnd end = Start)  const ;
@@ -49,7 +52,8 @@ public:
     void addCandHit(TkrPatCandHit candHit);
 
     //Methods to set member variables if need be
-    void setEnergy(double energy) {m_energy = energy;}
+    void setEnergy(double energy)       {m_energy = energy;}
+    void setEnergyErr(double energyErr) {m_energyErr = energyErr;}
 
     //Access to some information regarding hits (if they exist)
     int              lastLayer();
@@ -72,6 +76,7 @@ private:
     Point         m_position;
     Vector        m_direction;
     double        m_energy;
+    double        m_energyErr;
     double        m_quality;
     int           m_firstLayer;
     int           m_itower;    
