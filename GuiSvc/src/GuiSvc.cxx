@@ -16,7 +16,6 @@
 #include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IObjManager.h"
-#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IToolFactory.h"
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/Algorithm.h"
@@ -141,14 +140,6 @@ StatusCode GuiSvc::initialize ()
         return status;
     }
 
-
-    IToolSvc* tsvc  =0;
-    status = service( "ToolSvc", tsvc, true );
-    if( status.isFailure() ) {
-        log << MSG::ERROR << "Unable to locate Tool Service" << endreq;
-        return status;
-    }
-
     IToolFactory* toolfactory = 0;
 
     // search through all object factories for tool factories
@@ -162,8 +153,8 @@ StatusCode GuiSvc::initialize ()
         if( status.isSuccess() ) {
 
             // found a tool factory: have it create a tool, and check its interface
-            std::string fullname = "ToolSvc."+tooltype;
-            IAlgTool* itool = toolfactory->instantiate(fullname,  tsvc );
+            std::string fullname = this->name()+"."+tooltype;
+            IAlgTool* itool = toolfactory->instantiate(fullname, this );
             status =itool->queryInterface( IGuiTool::interfaceID(), (void**)&itool);
             if( status.isSuccess() ){
                 log << MSG::DEBUG << "Initializing gui stuff in " << tooltype << endreq;
