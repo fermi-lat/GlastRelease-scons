@@ -2,6 +2,16 @@
  * package Gleam
  * package manager:T.Burnett
 
+* v2r1p8 05-jun-02 THB  many changes resulting from collection mods
+     use GlastPolicy            v4r5 
+     use Event                  v8r7p1
+     use G4Generator            v4r1p3
+     use AcdDigi                v1r0
+     use RootIo                 v4r1p5
+     use TkrRecon               v6r3p3
+     use CalRecon               v5r5p2       
+     use merit                  v5r3
+
  * v2r1p6 31-may-02 THB mostly new TkrVertex
       use Event                  v8r6
       use FluxSvc                v5r7
