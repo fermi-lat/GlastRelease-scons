@@ -61,7 +61,11 @@ private:
     friend class SvcFactory<FluxSvc>;
     
     FluxMgr * m_fluxMgr;
-    std::string m_source_library;
+    //std::string m_source_library;
+	//std::string m_user_library;
+	std::vector<std::string> m_source_lib;
+	std::string m_source_lib_default;
+
 };
 
 

@@ -46,7 +46,10 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
     // declare the properties and set defaults
     
     //declareProperty ("size", m_default_name);
-    declareProperty("source_library" , m_source_library);
+    //declareProperty("source_library" , m_source_library);
+	//declareProperty("user_library" , m_user_library);
+    declareProperty("source_lib" , m_source_lib);
+    declareProperty("source_lib_default" , m_source_lib_default);
     
     HepRandom::setTheEngine(new RanluxEngine);
 }
@@ -79,6 +82,8 @@ FluxSvc::~FluxSvc()
 // initialize
 StatusCode FluxSvc::initialize () 
 {
+	//std::vector<std::string> fileList;
+
     StatusCode  status =  Service::initialize ();
     
     // bind all of the properties for this service
@@ -86,9 +91,14 @@ StatusCode FluxSvc::initialize ()
     
     // open the message log
     MsgStream log( msgSvc(), name() );
-    
+
+	 //build the constructor argument for FluxMgr
+	//fileList.push_back(m_source_library);
+	//fileList.push_back(m_user_library);
+    m_source_lib.push_back(m_source_lib_default);
+
     // create a FluxMgr object which will then be available.
-    m_fluxMgr = new FluxMgr(m_source_library);
+    m_fluxMgr = new FluxMgr(m_source_lib/*fileList*/);
     
     Flux::mgr(m_fluxMgr); // tell our Flux object
     

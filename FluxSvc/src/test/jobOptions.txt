@@ -14,6 +14,12 @@ ApplicationMgr.DLLs   = { "FluxSvc" };
 
 ApplicationMgr.TopAlg = { "FluxTestAlg" };
 
+// This is the default file that gets sent to the parser
+FluxSvc.source_lib_default="$(FLUXROOT)/xml/source_library.xml";
+
+// Here is a list of files (can be empty) that also is parsed
+FluxSvc.source_lib = {};
+
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 
 MessageSvc.OutputLevel      = 2;
