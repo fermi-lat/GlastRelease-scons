@@ -36,24 +36,23 @@ StatusCode PatRecBaseTool::initialize()
   MsgStream log(msgSvc(), name());
   StatusCode sc   = StatusCode::SUCCESS;
   StatusCode fail = StatusCode::FAILURE;
-  
-  std::cout<<"Initializing PatRecTool"<<std::endl;
 
   if( serviceLocator() ) 
-    {   
+  {   
       if(service( "TkrGeometrySvc", m_tkrGeo, true ).isFailure()) 
-	{
-	  log << MSG::ERROR << "Could not find TkrGeometrySvc" << endreq;
-	  return fail;
-	}
+      {
+          log << MSG::ERROR << "Could not find TkrGeometrySvc" << endreq;
+          return fail;
+      }
       m_tkrFail = m_tkrGeo->getTkrFailureModeSvc();
-      
+
       if(service( "EventDataSvc", m_dataSvc, true ).isFailure()) 
-	{
-	  log << MSG::ERROR << "Could not find EventDataSvc" << endreq;
-	  return fail;
-	}
-    }
+      {
+          log << MSG::ERROR << "Could not find EventDataSvc" << endreq;
+          return fail;
+      }
+  }
+  log << MSG::INFO << "PatRecBaseTool successfully initialized" << endreq;
   return sc;
 }
 
