@@ -30,6 +30,7 @@ void GlastSvc_load() {
     DLL_DECL_SERVICE( EventCnvSvc );
     DLL_DECL_CONVERTER( MCACDHitCnv );
     DLL_DECL_CONVERTER( MCEventCnv );
+    DLL_DECL_CONVERTER( MCSiLayerCnv );
 
 //	extern ICnvFactory& MCCalorimeterHitCnvFactory;
 //	MCCalorimeterHitCnvFactory.addRef();
