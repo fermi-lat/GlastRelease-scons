@@ -223,31 +223,31 @@ namespace calibUtil {
 
 
   void StripSrv::fillStrips(const DOM_Element& badElt, StripCol& list) {
-    // Handle stripList elt first, if any
-    DOM_Element listElt = 
-      xml::Dom::findFirstChildByName(badElt, "stripList");
-    if (listElt != DOM_Element()) {
-      std::string xmlList = xml::Dom::getAttribute(listElt, "strips");
-      strToNum(xmlList, list);
-    }
-    
-    // Then one or more stripSpan elements
-    DOM_Element 
-      spanElt = xml::Dom::findFirstChildByName(badElt, "stripSpan");
-    while (spanElt != DOM_Element() ) {
-      std::string firstStr = xml::Dom::getAttribute(spanElt, "first");
-      unsigned short first = (unsigned short) atoi(firstStr.c_str());
-      std::string lastStr = xml::Dom::getAttribute(spanElt, "last");
-      unsigned short last = (unsigned short) atoi(lastStr.c_str());
+
+    DOM_Element childElt = xml::Dom::getFirstChildElement(badElt);
+
+    while (childElt != DOM_Element() ) {
+      // must be list or span
+      if ((childElt.getTagName()).equals("stripList") ) {
+
+        std::string xmlList = xml::Dom::getAttribute(childElt, "strips");
+        strToNum(xmlList, list);
+      }
+      else if ((childElt.getTagName()).equals("stripSpan") ) {
+        std::string firstStr = xml::Dom::getAttribute(childElt, "first");
+        unsigned short first = (unsigned short) atoi(firstStr.c_str());
+        std::string lastStr = xml::Dom::getAttribute(childElt, "last");
+        unsigned short last = (unsigned short) atoi(lastStr.c_str());
       
-      if (last >= first) {
-        // Might as well reserve memory all at once
-        list.reserve(list.size() + last + 1 - first);  
-        for (unsigned short int i = first; i <= last; i++) {
-          list.push_back(i);
+        if (last >= first) {
+          // Might as well reserve memory all at once
+          list.reserve(list.size() + last + 1 - first);  
+          for (unsigned short int i = first; i <= last; i++) {
+            list.push_back(i);
+          }
         }
       }
-      spanElt = xml::Dom::getSiblingElement(spanElt);
+      childElt = xml::Dom::getSiblingElement(childElt);
     }
   }
 
