@@ -8,7 +8,7 @@
 #include "xmlUtil/Constants.h"
 #include "xmlUtil/Arith.h"
 #include "xml/Dom.h"
-
+#include <vector>
 
 namespace {
   // Put a local utility in the unnamed namespace
@@ -17,71 +17,104 @@ namespace {
     if it's of type "length"
      if units are not "mm" then convert to "mm"
 
+   for each <primEnergy>
+      Make a <prim> node with same name, value fields to replace it.
+      Convert GeV to MeV
+
    For diagnostics, digits in return value are calculated as follows:
-           1's place  -- was a <prim>
-        1000 place  -- was a length
+           1's place (1)  -- was a <prim>
+              1000 place  -- was a <primEnergy>
        10000 place  -- required conversion
       100000 place  -- unknown unit; couldn't convert
 */
 
-  int normPrim(DOM_Element elt) {
+  int normPrim(DOM_Element elt, std::vector<DOM_Element>& save) {
     int ret = 0;
-    if (!(elt.getNodeName()).equals(DOMString("prim"))) return ret;
+    //    if (!(elt.getNodeName()).equals(DOMString("prim"))) return ret;
+    if ((elt.getNodeName()).equals(DOMString("prim"))) {
     
-    ret += 1;
-    DOMString valueString = DOMString("value");
+      ret += 1;
+      DOMString valueString = DOMString("value");
 
-    // Check for int.  If we've got one, round it.
-        // Check if we're supposed to be an int.  If so, coerce
-    // m_number to be nearby int in case of round-off error 
-    if (DOMString("int").equals(elt.getAttribute("type"))) {
-      // If we're not already a perfect int, attempt to fix
-      // so that we round the right way.
-      // Otherwise, leave well enough alone
-
-      double   origValueDbl =
-        atof(xml::Dom::transToChar(elt.getAttribute(valueString)));
-      int origValueInt = 
-        atoi(xml::Dom::transToChar(elt.getAttribute(valueString)));
-      double   intified = origValueInt;
-      if (intified != origValueDbl) { 
-        // put back properly rounded int
-        double fixup = 0.5;
-        if (origValueDbl < 0) fixup = -fixup;
-        origValueDbl += fixup;
-        int newValue = origValueDbl;
-        xml::Dom::addAttribute(elt, valueString, newValue);
+      // Check for int.  If we've got one, round it.
+      // Check if we're supposed to be an int.  If so, coerce
+      // m_number to be nearby int in case of round-off error 
+      if (DOMString("int").equals(elt.getAttribute("type"))) {
+        // If we're not already a perfect int, attempt to fix
+        // so that we round the right way.
+        // Otherwise, leave well enough alone
+        
+        double   origValueDbl =
+          atof(xml::Dom::transToChar(elt.getAttribute(valueString)));
+        int origValueInt = 
+          atoi(xml::Dom::transToChar(elt.getAttribute(valueString)));
+        double   intified = origValueInt;
+        if (intified != origValueDbl) { 
+          // put back properly rounded int
+          double fixup = 0.5;
+          if (origValueDbl < 0) fixup = -fixup;
+          origValueDbl += fixup;
+          int newValue = origValueDbl;
+          xml::Dom::addAttribute(elt, valueString, newValue);
+        }
       }
-    }
 
-    // Found a prim, but we don't have to convert since it's not a length
-    if (!(elt.getAttribute(DOMString("uType"))).equals("length")) return ret;
+      // Found a prim, but we don't have to convert since it's not a length
+      if (!(elt.getAttribute(DOMString("uType"))).equals("length")) return ret;
     
-    ret += 1000;
-    DOMString uLength = DOMString("unitLength");
+      //      ret += 1000;
+      DOMString uLength = DOMString("unitLength");
     
-    DOMString units = elt.getAttribute(uLength);
-    if (units.equals(DOMString("mm"))) return ret;
+      DOMString units = elt.getAttribute(uLength);
+      if (units.equals(DOMString("mm"))) return ret;
     
-    double scale, value;
-    if (units.equals(DOMString("cm"))) {
-      ret += 10000;
-      scale = 10;
+      double scale, value;
+      if (units.equals(DOMString("cm"))) {
+        ret += 10000;
+        scale = 10;
+      }
+      else if (units.equals(DOMString("m"))) {
+        ret += 10000;
+        scale = 1000;
+      }
+      else return (100000 + ret);          // should never happen
+    
+      value = atof(xml::Dom::transToChar(elt.getAttribute(valueString)));
+      value *= scale;
+      xml::Dom::addAttribute(elt, valueString, value);
+      elt.setAttribute(uLength, DOMString("mm"));
+    
+      //      return ret;
     }
-    else if (units.equals(DOMString("m"))) {
-      ret += 10000;
-      scale = 1000;
+    else if ((elt.getNodeName()).equals(DOMString("primEnergy"))) {
+      save.push_back(elt);
+      ret += 1000;
     }
-    else return (100000 + ret);          // should never happen
-    
-    value = atof(xml::Dom::transToChar(elt.getAttribute(valueString)));
-    value *= scale;
-    xml::Dom::addAttribute(elt, valueString, value);
-    elt.setAttribute(uLength, DOMString("mm"));
-    
     return ret;
+  }                 // end of utility normPrim
+
+  void handleEnergies(std::vector<DOM_Element> saved) {
+    // Make a new <prim> node to replace it; meanwhile convert
+    // GeV to MeV if necessary
+    std::vector<DOM_Element>::const_iterator eltIt;
+    for (eltIt = saved.begin(); eltIt != saved.end(); eltIt++) {
+      DOM_Element elt = *eltIt;
+      DOM_Document doc = elt.getOwnerDocument();
+      DOM_Element  prim = doc.createElement("prim");
+      prim.setAttribute("name", elt.getAttribute("name"));
+      prim.setAttribute("type", "double");
+      prim.setAttribute("utype", "energy");
+      prim.setAttribute("unitEnergy", "MeV");
+      double energy = atof(xml::Dom::transToChar(elt.getAttribute("value")));
+      if ((DOMString("GeV")).equals(elt.getAttribute("units")) ) {
+        energy *= 1000;
+      }
+      xml::Dom::addAttribute(prim, "value", energy);
+      DOM_Node parent = elt.getParentNode();
+      DOM_Node oldChild =  parent.replaceChild(prim, elt);
+    }
   }
-}
+}   // end of anonymous namespace
 
 namespace xmlUtil {
 
@@ -112,10 +145,13 @@ namespace xmlUtil {
     
     // Diagnostic -- number of <prim>s seen
     int count = 0;
+    std::vector<DOM_Element> energyElts;
     while (curNode != DOM_Node() ) {
-      count += normPrim(static_cast<DOM_Element &> (curNode));
+      count += normPrim(static_cast<DOM_Element &> (curNode), energyElts);
       curNode = walker.nextNode();
     }
+    handleEnergies(energyElts);
+
     primary.setAttribute("normalized", "true");
     //    std::cout << "Results of normalizePrim: " << count << std::endl;
     //    return (count < 100000);
