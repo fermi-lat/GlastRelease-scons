@@ -2,6 +2,7 @@
  * Coordinator:H.Kelly
  *
  @verbatim
+ * v3r6p1 18-mar-2005 THB : check for entry to fill in finalize stage
  * v3r6p0 04-dec-2004 HMK : add test for TFile::IsOpen in RootTupleSvc
  * v3r6   09-aug-2004 THB : add int and float options, arrays.
  * v3r5p0 22-jul-2004 HMK : Address JIRA CMT-25, bug in CMT, add extra private statement

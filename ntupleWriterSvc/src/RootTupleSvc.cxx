@@ -275,6 +275,7 @@ void RootTupleSvc::endEvent()
         if( m_storeAll || m_storeTree[it->first]  ) {
             TTree* t = it->second;
             t->Fill();
+            m_storeTree[it->first]=false; 
             // doing the checksum here
             std::string treeName = t->GetName();
             if ( m_checkSum->is_open() && treeName == "MeritTuple" ) {
@@ -308,6 +309,7 @@ StatusCode RootTupleSvc::finalize ()
 
     for( std::map<std::string, TTree*>::iterator it = m_tree.begin(); it!=m_tree.end(); ++it){
         TTree* t = it->second; 
+        if( m_storeTree[it->first] ) t->Fill(); // In case the algorithm did an entry during its finalize
 
         if( t->GetEntries() ==0 ) {
 
