@@ -4,9 +4,10 @@
  * package manager:T.Burnett
  * $Id$
  *
- *  v6r9p2  THB  09-oct-03 fix code	 in emulation of IM cuts
- *  v6r9p1  THB  08-oct-03 fix test program to run PSF cuts
- *  v6r9    THB  07-oct-03 new CT's for PSF analysis
+ *  v6r10   THB  28-oct-03 implement output of exposure data; add new background rejection tuple item
+ *  v6r9p2  THB  09-sep-03 fix code	 in emulation of IM cuts
+ *  v6r9p1  THB  08-sep-03 fix test program to run PSF cuts
+ *  v6r9    THB  07-sep-03 new CT's for PSF analysis
  *  v6r8    THB  25-aug-03 implement use of ntupleWriterSvc
  *  v6r7p1  THB  17-aug-03 protect against TDS info not present
  *  v6r7    THB  16-aug-03 add OnboardFilter info 
