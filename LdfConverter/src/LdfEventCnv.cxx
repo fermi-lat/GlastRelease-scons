@@ -17,6 +17,7 @@
 #include "facilities/Timestamp.h"
 #include "astro/JulianDate.h"
 #include "Event/Utilities/TimeStamp.h"
+#include <math.h>
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
@@ -35,6 +36,7 @@ StatusCode LdfEventCnv::createObj(IOpaqueAddress* ,
                                DataObject*& refpObject) {
     // Purpose and Method:  This converter will create an empty EventHeader on
     //   the TDS.
+    MsgStream log(msgSvc(), "LdfEventCnv");
     Event::EventHeader *header = new Event::EventHeader();
     refpObject = header;
     // Retrieve the LAT data for this event 
@@ -50,9 +52,31 @@ StatusCode LdfEventCnv::createObj(IOpaqueAddress* ,
     header->setRun(ldfReader::LatData::instance()->runId());
 	
     // Also set the time in the Event::EventHeader
+    unsigned upperPpcTime = ldfReader::LatData::instance()->summaryData().upperPpcTimeBaseWord();
+    unsigned lowerPpcTime = ldfReader::LatData::instance()->summaryData().lowerPpcTimeBaseWord();
+    const double sixteenMHz = 16000000.;
+    // To handle th 64-bit value - we separate the computation
+    // The upper 32 bits would have to be shifted by 31 (or multiplied)
+    // by 2^32 - we divide this by 16000000 to get the upperMultiplier
+    const double upperMultiplier = 268.435456; 
+    double lower = lowerPpcTime / sixteenMHz;
+    double upper = upperPpcTime * upperMultiplier;
+    double ppcSeconds =  upper + lower;
+    float ppcWholeSeconds = floor(ppcSeconds);
+    double frac = ppcSeconds - ppcWholeSeconds;
+    int ppcNanoSec = frac / 0.000000001;
+    log << MSG::DEBUG << "ppcSeconds: " << ppcSeconds << " frace = " << frac << endreq;
+    log << MSG::DEBUG << "ppcNanoSec: " << ppcNanoSec << endreq;
+
+    // To eliminate duplicate times, we make use of the PPC time as suggested 
+    // by Jim Panetta.  Here we ignore the fractional seconds from the "real"
+    // absolute time and add in the fractional seconds as computed by the PPC
+    // word.  This should produce a unique time stamp for each event.
+    log << MSG::DEBUG << "seconds: " << ldfReader::LatData::instance()->summaryData().timeSec() << endreq;
+    log << MSG::DEBUG << "nanosec: " << ldfReader::LatData::instance()->summaryData().timeNanoSec() << endreq;
     facilities::Timestamp facTimeStamp(
              ldfReader::LatData::instance()->summaryData().timeSec(), 
-             ldfReader::LatData::instance()->summaryData().timeNanoSec());
+             ppcNanoSec);
     double julTimeStamp = facTimeStamp.getJulian();
     astro::JulianDate julDate(julTimeStamp);
     // Find number of seconds since missionStart
