@@ -41,18 +41,18 @@ public
 
 use GuiSvc      v3
 
-use Event                 v8r12
+use Event                 v8r13
 use GlastSvc    v8r1p2
 
 # simulation
 
 use FluxSvc     v5r8
 use FluxDisplay v2r0p2
-use G4Generator v4r1p6
+use G4Generator           v4r2
 
 #digitization
 use CalDigi               v1r1p2 
-use TkrDigi     v1r2
+use TkrDigi               v1r3
 use AcdDigi     v1r2
 
 
