@@ -23,12 +23,12 @@ use geometry    v3
 
 # low-level graphics
 
-use gui         v2r7 
+use gui              v3 
 use geomrep     v4r1
 
 # the geometry data base
 use idents           v2r5 
-use detModel    v2r8
+use detModel         v2r9
 use xmlGeoDbs   v1r2
 
 # interface to G4
@@ -37,11 +37,11 @@ use Geant4      v1r1
 # Gaudi component packages
 
 use GuiSvc      v3
-use GlastEvent      v6r2
+use GlastEvent      v6r3
 use FluxSvc     v5r2
 
 use GlastSvc        v6r0
-use G4Generator v3r2
+use G4Generator     v3r3
 use GlastDigi       v2r3
 
 use Recon           v0r7
