@@ -2,6 +2,7 @@
  * Coordinator:H.Kelly
  *
  @verbatim
+ * v3r4p2 20-apr-2004 THB : adjust for new GlastPolicy
  * v3r4p1 21-jan-2004 THB : clear ROOT signal handling - make detailed output from RootTupleSvc debug
  * v3r4p0 15-nov-2003 HMK : Remove default "1" TTree and write once in RootTupleSvc::finalize
  * v3r4   21-oct-2003 THB : add feature to interface to allow RootTupleSvc client to selectively write
