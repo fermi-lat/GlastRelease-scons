@@ -88,6 +88,9 @@ void    EventSource::setRate ( double rate )
 //    return new Orbit;
 //}
 
+double	EventSource::solidAngle () const{
+    return m_solid_angle;
+}
 
 // UI titles
 std::string EventSource::fullTitle () const 

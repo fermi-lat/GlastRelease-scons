@@ -104,6 +104,7 @@ private:
     
     static unsigned int  s_id;    // id for new EventSources...
     static double s_total_area;   // total area for flux generation (in square meters)
+    double m_solid_angle;
 };
 
 // inline function declarations:

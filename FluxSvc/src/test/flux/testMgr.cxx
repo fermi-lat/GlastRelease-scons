@@ -7,6 +7,9 @@
 #include <iostream>
 #include <algorithm>
 #include "../../CHIMESpectrum.h"
+#include "../../FILESpectrum.h"
+#include "../../AlbedoPSpectrum.h"
+
 //#include "../../Orbit.h"
 
 
@@ -51,7 +54,7 @@ void flux_load() {
     // these are the spectra that we want to make available
     DLL_DECL_SPECTRUM( CHIMESpectrum);
     DLL_DECL_SPECTRUM( AlbedoPSpectrum);
-    //DLL_DECL_SPECTRUM( HeSpectrum);
+    DLL_DECL_SPECTRUM( FILESpectrum);
     DLL_DECL_SPECTRUM( GalElSpectrum);
     //  DLL_DECL_SPECTRUM( CrElectron);
     //  DLL_DECL_SPECTRUM( CrProton);
@@ -70,10 +73,9 @@ int main(int argn, char * argc[]) {
     int count = default_count;
     std::string source_name(default_source);
     
-    
     //TESTING MULTIPLE XML INPUT
     std::vector<std::string> fileList;
-    fileList.push_back("$(FLUXSVCROOT)/xml/source_library.xml");	
+    fileList.push_back("$(FLUXSVCROOT)/src/test/flux/test_library.xml");	
     FluxMgr fm(fileList);
     
     //FluxMgr fm;
@@ -92,28 +94,44 @@ int main(int argn, char * argc[]) {
     
     cout << "------------------------------------------------------" << endl;
     cout << " Flux test program: type 'help' for help" << endl;
-    cout << ( ( argn ==1)?  " No command line args, using default flux \""
+    cout << ( ( argn ==1)?  " No command line args, using default fluxes \""
         :  " Selected source name \"");
     cout  << source_name <<"\"" << endl;
     
     
     std::list<std::string> source_list(fm.sourceList());
     
-    if( std::find(source_list.begin(), source_list.end(), source_name)==source_list.end() ) {
+    if(( argn !=1) && std::find(source_list.begin(), source_list.end(), source_name)==source_list.end() ) {
         std::list<std::string> spectra(SpectrumFactoryTable::instance()->spectrumList());
         
         if( std::find(spectra.begin(), spectra.end(), source_name)==spectra.end() ) {
             std::cout << "Source \"" << source_name << "\" not found in the list or sources!" << std::endl;
             listSources(source_list);
-            std::cout << "or in specra list, which is:\n";
+            std::cout << "or in spectra list, which is:\n";
             listSpectra();
             
             return -1;
         }
     }
-    // now have FluxMgr create and run it.
+std::list<std::string> allTheSources = fm.sourceList();
+std::list<std::string>::iterator abc;
+if(argn != 1){
     fm.test(std::cout, source_name, count);
     return 0;
-    
+}
+
+std::ostream* m_out = new std::ofstream("testMgrOutput.out");
+std::ostream& out = *m_out;
+
+for(abc= allTheSources.begin() ; abc != allTheSources.end() ; abc++){
+
+    // now have FluxMgr create and run it.
+    std::cout << "Source:  " << *abc << std::endl;
+    out << "Source:  " << *abc <<std::endl;
+    fm.test(out, (*abc), count);
+    out << std::endl << std::endl << std::endl;
+}
+
+    return 0;    
 }
 

@@ -302,7 +302,7 @@ void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
         //  countIter++;
     }
     
-    delete e;
+    //delete e;
     
 }
 
