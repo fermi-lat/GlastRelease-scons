@@ -7,25 +7,25 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "CalibData/CalibModel.h"
-#include "CalibData/Cal/CalTholdMuon.h"
+#include "CalibData/Cal/CalTholdCI.h"
 #include "CalibData/Cal/Xpos.h"
 #include "idents/CalXtalId.h"   
 
 /**
-   @file UseTholdMuon.cxx
+   @file UseTholdCI.cxx
    Simple algorithm to test functioning of "the other" TDS, Cal new 
-   (Sept. 04) tholdMuon calibration data.
+   (Sept. 04) tholdCI calibration data.
 */
 
   /** 
-   @class UseTholdMuon
+   @class UseTholdCI
 
-   Algorithm exemplifying retrieval and use of CAL_TholdMuon calibration.
+   Algorithm exemplifying retrieval and use of CAL_TholdCI calibration.
 */
-class UseTholdMuon : public Algorithm {
+class UseTholdCI : public Algorithm {
 
 public:
-  UseTholdMuon(const std::string& name, ISvcLocator* pSvcLocator); 
+  UseTholdCI(const std::string& name, ISvcLocator* pSvcLocator); 
 
   StatusCode initialize();
 
@@ -35,7 +35,7 @@ public:
 
 private:
   /// Helper function called by execute
-  void processNew(CalibData::CalTholdMuonCol* pNew, const std::string& path);
+  void processNew(CalibData::CalTholdCICol* pNew, const std::string& path);
 
   void printValSigs(MsgStream* log, const std::vector<CalibData::ValSig>* v, 
                     std::string title);
@@ -48,11 +48,11 @@ private:
 
 
 /// Instantiation of a static factory to create instances of this algorithm
-static const AlgFactory<UseTholdMuon> Factory;
-const IAlgFactory& UseTholdMuonFactory = Factory;
+static const AlgFactory<UseTholdCI> Factory;
+const IAlgFactory& UseTholdCIFactory = Factory;
 
 
-UseTholdMuon::UseTholdMuon(const std::string&  name, 
+UseTholdCI::UseTholdCI(const std::string&  name, 
                  ISvcLocator*        pSvcLocator )
   : Algorithm(name, pSvcLocator), m_pCalibDataSvc(0), 
   m_ser(-1)
@@ -62,7 +62,7 @@ UseTholdMuon::UseTholdMuon(const std::string&  name,
 }
 
 
-StatusCode UseTholdMuon::initialize() {
+StatusCode UseTholdCI::initialize() {
   StatusCode sc;
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Initialize()" << endreq;
@@ -86,58 +86,58 @@ StatusCode UseTholdMuon::initialize() {
 }
 
 
-StatusCode UseTholdMuon::execute( ) {
+StatusCode UseTholdCI::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
-  std::string fullPath = "/Calib/CAL_TholdMuon/test";
+  std::string fullPath = "/Calib/CAL_TholdCI/test";
   DataObject *pObject;
   
 
   m_pCalibDataSvc->retrieveObject(fullPath, pObject);
 
-  CalibData::CalTholdMuonCol* pTholdMuon = 0;
-  pTholdMuon = dynamic_cast<CalibData::CalTholdMuonCol *> (pObject);
-  if (!pTholdMuon) {
-    log << MSG::ERROR << "Dynamic cast to CalTholdMuonCol failed" << endreq;
+  CalibData::CalTholdCICol* pTholdCI = 0;
+  pTholdCI = dynamic_cast<CalibData::CalTholdCICol *> (pObject);
+  if (!pTholdCI) {
+    log << MSG::ERROR << "Dynamic cast to CalTholdCICol failed" << endreq;
     return StatusCode::FAILURE;
   }
 
-  int newSerNo = pTholdMuon->getSerNo();
+  int newSerNo = pTholdCI->getSerNo();
   if (newSerNo != m_ser) {
     log << MSG::INFO 
-        << "Processing new TholdMuon calibration after retrieveObject" 
+        << "Processing new TholdCI calibration after retrieveObject" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pTholdMuon, fullPath);
+    processNew(pTholdCI, fullPath);
   }
   m_pCalibDataSvc->updateObject(pObject);
 
-  pTholdMuon = 0;
+  pTholdCI = 0;
   try {
-    pTholdMuon = dynamic_cast<CalibData::CalTholdMuonCol *> (pObject);
+    pTholdCI = dynamic_cast<CalibData::CalTholdCICol *> (pObject);
   }
   catch (...) {
     log << MSG::ERROR 
-        << "Dynamic cast to CalTholdMuonCol after update failed" << endreq;
+        << "Dynamic cast to CalTholdCICol after update failed" << endreq;
     return StatusCode::FAILURE;
   }
-  newSerNo = pTholdMuon->getSerNo();
+  newSerNo = pTholdCI->getSerNo();
   if (newSerNo != m_ser) {
-    log << MSG::INFO << "Processing new TholdMuon after update" 
+    log << MSG::INFO << "Processing new TholdCI after update" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pTholdMuon, fullPath);
+    processNew(pTholdCI, fullPath);
   }
 
   return StatusCode::SUCCESS;
 }
 
 
-void UseTholdMuon::processNew(CalibData::CalTholdMuonCol* pNew, 
+void UseTholdCI::processNew(CalibData::CalTholdCICol* pNew, 
                               const std::string& path) {
   using idents::CalXtalId;
-  using CalibData::CalTholdMuon;
+  using CalibData::CalTholdCI;
   using CalibData::ValSig;
   using CalibData::Xpos;
 
@@ -152,71 +152,81 @@ void UseTholdMuon::processNew(CalibData::CalTholdMuonCol* pNew,
   if (!done) {
     done = true;
     short iTower = 0;
-    short iLayer = 0;
+    short iLayer = 2;
     short iXtal = 1;
-    //   No range for this type
+    // no range for this type
     unsigned range = 0;
     unsigned face = 0;
     CalXtalId id(iTower, iLayer, iXtal);
     
     CalibData::RangeBase* pRange = pNew->getRange(id, range, face);
     
-    CalTholdMuon* pTholdMuon = dynamic_cast<CalTholdMuon * >(pRange);
+    CalTholdCI* pTholdCI = dynamic_cast<CalTholdCI * >(pRange);
     log << MSG::INFO << "For tower = " << iTower << " layer = " << iLayer
         << " xtal = " << iXtal << endreq;
 
-    log << MSG::INFO << "Retrieving TholdMuon values and uncertainties:"  
+    log << MSG::INFO << "Retrieving TholdCI values and uncertainties:"  
         << endreq;
 
-    if (!pTholdMuon) {
+    if (!pTholdCI) {
       log << MSG::INFO << "No calibration data found for this channel" 
           << endreq;
       return;
     }
 
-    const ValSig* pFLE = pTholdMuon->getFLE();
-    const ValSig* pFHE = pTholdMuon->getFHE();
+    const ValSig* pFLE = pTholdCI->getFLE();
+    const ValSig* pFHE = pTholdCI->getFHE();
+    const ValSig* pLAC = pTholdCI->getLAC();
 
     printValSig(&log, pFLE, "FLE: ");
     printValSig(&log, pFHE, "FHE: ");
+    printValSig(&log, pLAC, "LAC: ");
 
 
-    const ValSig* pPed = pTholdMuon->getPed(CalXtalId::LEX8);
+    const ValSig* pPed = pTholdCI->getPed(CalXtalId::LEX8);
+    const ValSig* pULD = pTholdCI->getULD(CalXtalId::LEX8);
     if (pPed) {
       printValSig(&log, pPed, "ped for LEX8");
+      printValSig(&log, pULD, "ULD for LEX8");
     }
     else {
-      log << "No ped for LEX8" << endreq;
+      log << "No data for LEX8" << endreq;
     }
-    pPed = pTholdMuon->getPed(CalXtalId::LEX1);
+    pPed = pTholdCI->getPed(CalXtalId::LEX1);
+    pULD = pTholdCI->getULD(CalXtalId::LEX1);
     if (pPed) {
       printValSig(&log, pPed, "ped for LEX1");
+      printValSig(&log, pULD, "ULD for LEX1");
     }
     else {
-      log << "No ped for LEX1" << endreq;
+      log << "No data for LEX1" << endreq;
     }
 
-    pPed = pTholdMuon->getPed(CalXtalId::HEX8);
+    pPed = pTholdCI->getPed(CalXtalId::HEX8);
+    pULD = pTholdCI->getULD(CalXtalId::HEX8);
     if (pPed) {
       printValSig(&log, pPed, "ped for HEX8");
+      printValSig(&log, pULD, "ULD for HEX8");
     }
     else {
-      log << "No ped for HEX8" << endreq;
+      log << "No data for HEX8" << endreq;
     }
 
-    pPed = pTholdMuon->getPed(CalXtalId::HEX1);
+    pPed = pTholdCI->getPed(CalXtalId::HEX1);
+    pULD = pTholdCI->getULD(CalXtalId::HEX1);
     if (pPed) {
       printValSig(&log, pPed, "ped for HEX1");
+      printValSig(&log, pULD, "ULD for HEX1");
     }
     else {
-      log << "No ped for HEX1" << endreq;
+      log << "No data for HEX1" << endreq;
     }
 
 
   }
 }
 
-void UseTholdMuon::printValSigs(MsgStream* log, 
+void UseTholdCI::printValSigs(MsgStream* log, 
                            const std::vector<CalibData::ValSig>* v, 
                            std::string title) {
   (*log) << MSG::INFO << "ValSig vector " << title << endreq;
@@ -228,7 +238,7 @@ void UseTholdMuon::printValSigs(MsgStream* log,
   return;
 }
 
-void UseTholdMuon::printValSig(MsgStream* log, 
+void UseTholdCI::printValSig(MsgStream* log, 
                                const CalibData::ValSig* v, 
                                std::string title) {
   (*log) << MSG::INFO << "ValSig  " << title << endreq;
@@ -240,11 +250,11 @@ void UseTholdMuon::printValSig(MsgStream* log,
   return;
 }
 
-StatusCode UseTholdMuon::finalize( ) {
+StatusCode UseTholdCI::finalize( ) {
 
   MsgStream log(msgSvc(), name());
   log << MSG::INFO 
-      << "Finalize UseTholdMuon "
+      << "Finalize UseTholdCI "
       << endreq;
   
   return StatusCode::SUCCESS;
