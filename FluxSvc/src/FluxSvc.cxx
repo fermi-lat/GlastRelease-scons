@@ -116,6 +116,9 @@ public:
     /// get the current satellite location
     std::pair<double,double> location();
 
+    /// return pointer to our GPS instance
+    GPS* GPSinstance();
+
     /// return a string which uniquely identifies the source
     std::string uniqueIDString()const;
 
@@ -402,6 +405,11 @@ void FluxSvc::attachGpsObserver(Observer* anObserver)
 {
     GPS::instance()->notification().attach( anObserver );
 }
+
+
+/// return pointer to the GPS instance of FluxSVc
+GPS* FluxSvc::GPSinstance(){ return GPS::instance();}
+
 
 ///return the pointer to the current IFlux object
 IFlux* FluxSvc::currentFlux(){
