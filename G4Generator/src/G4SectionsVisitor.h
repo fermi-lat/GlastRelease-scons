@@ -45,7 +45,7 @@ class G4SectionsVisitor : public detModel::SectionsVisitor {
   /**
    * This is the visitor for the Tube 
    */
-  virtual void visitTube(detModel::Tube*){};
+  virtual void visitTube(detModel::Tube*);
 
   /**
    * This is the visitor for the GDDposXYZ 
@@ -91,7 +91,11 @@ class G4SectionsVisitor : public detModel::SectionsVisitor {
   double trans;
   double halfPrec;
 
+  /** Todo: there is no sense in having the following two vector,
+      it is sufficient to have a vector of G4VShape*
+   */
   std::vector <G4Box*> g4Boxes;
+  std::vector <G4Tubs*> g4Tubes;
   std::vector <G4LogicalVolume*> g4Logicals;  
   std::vector <G4VPhysicalVolume*> g4Physicals;  
   std::map <std::string, G4VisAttributes*> g4VisAttributes;  

@@ -6,6 +6,7 @@
 
 #include "G4Material.hh"
 #include "G4Box.hh"
+#include "G4Tubs.hh"
 #include "G4LogicalVolume.hh"
 #include "G4ThreeVector.hh"
 #include "G4PVPlacement.hh"
@@ -31,6 +32,7 @@
 #include "detModel/Materials/MatCollection.h"
 #include "detModel/Materials/Material.h"
 #include "detModel/Sections/Box.h"
+#include "detModel/Sections/Tube.h"
 #include "detModel/Sections/Composition.h"
 #include "detModel/Sections/PosXYZ.h"
 #include "detModel/Sections/Stack.h"
@@ -150,6 +152,7 @@ void  G4SectionsVisitor::visitSection(detModel::Section* section)
   
 }
 
+/// Todo: for composition we have to use the envelope as mother volume.
 void  G4SectionsVisitor::visitEnsemble(detModel::Ensemble* ensemble)
 {
   unsigned int i, logind;
@@ -157,17 +160,15 @@ void  G4SectionsVisitor::visitEnsemble(detModel::Ensemble* ensemble)
 
   G4Material* ptMaterial = G4Material::GetMaterial("Vacuum");
 
-  g4Boxes.push_back(
-		    new G4Box(ensemble->getName(),
-			      ensemble->getBBox()->getXDim()*mm/2,
-			      ensemble->getBBox()->getYDim()*mm/2,
-			      ensemble->getBBox()->getZDim()*mm/2)
-		    );
-
-
+  G4Box* newBox = new G4Box(ensemble->getName(),
+			    ensemble->getBBox()->getXDim()*mm/2,
+			    ensemble->getBBox()->getYDim()*mm/2,
+			    ensemble->getBBox()->getZDim()*mm/2);
+  
+  
   g4Logicals.push_back(
 		       new G4LogicalVolume(
-					   g4Boxes.back(),ptMaterial,ensemble->getName(),
+					   newBox,ptMaterial,ensemble->getName(),
 					   0,0,0)
 		       );
 
@@ -196,22 +197,41 @@ void  G4SectionsVisitor::visitBox(detModel::Box* box)
   M::const_iterator i; 
 
   G4Material* ptMaterial = G4Material::GetMaterial(box->getMaterial());
-  g4Boxes.push_back(
-		    new G4Box(box->getName(),
-			      box->getX()*mm/2,
-			      box->getY()*mm/2,
-			      box->getZ()*mm/2)
-		    );
+  G4Box* newBox = new G4Box(box->getName(),
+			   box->getX()*mm/2,
+			   box->getY()*mm/2,
+			   box->getZ()*mm/2);
+    
+    g4Logicals.push_back(new G4LogicalVolume(newBox,ptMaterial,box->getName(),
+					     0,0,0));
 
+  i = g4VisAttributes.find(box->getMaterial());
+  if(i != g4VisAttributes.end()) 
+    g4Logicals.back()->SetVisAttributes(i->second);
+  
+}  
+
+void  G4SectionsVisitor::visitTube(detModel::Tube* tube)
+{
+  typedef std::map<std::string, G4VisAttributes*> M;
+  M::const_iterator i; 
+
+  G4Material* ptMaterial = G4Material::GetMaterial(tube->getMaterial());
+  G4Tubs* newTubs = new G4Tubs(tube->getName(),
+			       tube->getRin()*mm,
+			       tube->getRout()*mm,
+			       tube->getZ()*mm*0.5,
+			       2*M_PI,0);
+  
   g4Logicals.push_back(
 		       new G4LogicalVolume(
-					   g4Boxes.back(),ptMaterial,box->getName(),
+					   newTubs,ptMaterial,tube->getName(),
 					   0,0,0)
 		       );
 
 
 
-  i = g4VisAttributes.find(box->getMaterial());
+  i = g4VisAttributes.find(tube->getMaterial());
   if(i != g4VisAttributes.end()) 
     g4Logicals.back()->SetVisAttributes(i->second);
   
