@@ -7,7 +7,13 @@
 // Author:
 //      The Tracking Software Group  
 
-#include "MonteCarloFindTrackTool.h"
+
+#include "GaudiKernel/IParticlePropertySvc.h"
+#include "src/PatRec/PatRecBaseTool.h"
+#include "Event/MonteCarlo/McParticle.h"
+#include "Event/Recon/TkrRecon/TkrPatCand.h"
+
+//#include "MonteCarloFindTrackTool.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/GaudiException.h" 
@@ -18,6 +24,27 @@
 #include "TkrRecon/MonteCarlo/McLayerHit.h"
 #include "src/MonteCarlo/McBuildTracks.h"
 #include "Event/Recon/TkrRecon/TkrPatCand.h"
+
+
+class MonteCarloFindTrackTool : public PatRecBaseTool 
+{
+public:
+    /// Standard Gaudi Tool interface constructor
+    MonteCarloFindTrackTool(const std::string& type, const std::string& name, const IInterface* parent);
+    virtual ~MonteCarloFindTrackTool() {}
+	
+    /// @brief Intialization of the tool
+    StatusCode initialize();
+    /// @brief Method to association the Monte Carlo hits into Pattern Candidate tracks
+    StatusCode findTracks();
+
+private:
+    /// private method to build an individual Monte Carlo track
+    Event::TkrPatCand* buildTrack(const Event::McParticle* mcPart);
+
+    IParticlePropertySvc* m_ppsvc;
+};
+
 
 static ToolFactory<MonteCarloFindTrackTool> s_factory;
 const IToolFactory& MonteCarloFindTrackToolFactory = s_factory;
