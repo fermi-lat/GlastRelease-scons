@@ -3,6 +3,7 @@
 
 
 #include <fstream>
+#include <math.h>
 
 class CalGainElement
 {

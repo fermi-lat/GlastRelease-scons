@@ -58,8 +58,7 @@ const CalCalibMap<CalibData,CalibElement,nFaces>::XTALCALIB*
     // initializing calibration data for the crystal with given xtalId
 template <class CalibData, class CalibElement,unsigned int nFaces>
     void CalCalibMap<CalibData,CalibElement,nFaces>::addElement(CalibElement* elem, const idents::CalXtalId xtalId,
-        unsigned int range, idents::CalXtalId::XtalFace face =
-        idents::CalXtalId::POS)
+        unsigned int range, idents::CalXtalId::XtalFace face)
     {
     std::map<idents::CalXtalId,XTALCALIB*>::iterator it = m_calibMap.find(xtalId);
     if(it == m_calibMap.end())m_calibMap[xtalId] = new XTALCALIB();

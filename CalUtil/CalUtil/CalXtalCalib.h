@@ -36,8 +36,7 @@ private:
 
 template <class CalibData, class CalibElement, unsigned int nFaces>
 const CalibData* CalXtalCalib<CalibData,CalibElement,nFaces>::getRangeCalib(unsigned short range,
-                              idents::CalXtalId::XtalFace face
-                                  =idents::CalXtalId::POS) const
+                              idents::CalXtalId::XtalFace face) const
     {
         const std::map<int,CalibData*>& calibFace = 
         (nFaces>1 && face == idents::CalXtalId::NEG) ? m_calib[1]:m_calib[0];
@@ -62,8 +61,7 @@ template <class CalibData, class CalibElement, unsigned int nFaces>
 
 template <class CalibData, class CalibElement, unsigned int nFaces>
     void CalXtalCalib<CalibData,CalibElement,nFaces>::addElement(CalibElement* elem, const unsigned range,
-                        const idents::CalXtalId::XtalFace face
-                             =idents::CalXtalId::POS) 
+                        const idents::CalXtalId::XtalFace face) 
     {
         std::map<int,CalibData*>& calibFace = 
         (nFaces>1 && face == idents::CalXtalId::NEG) ? m_calib[1]:m_calib[0];
