@@ -1,15 +1,16 @@
 package CalUtil
 
-version v1r4p3
-
+version v1r4p4
+# $Id$
 branches src cmt doc
 
 use GlastSvc v*
 use CalibSvc v*
 use CalibData
 use facilities
+use ROOT  v* IExternal
 
-use RootPolicy v*
+# THB: changing this macro should be private
 macro_append ROOT_libs " -lHist -lGraf -lGpad " \
              WIN32 " ${ROOT_PATH}/lib/libHist.lib ${ROOT_PATH}/lib/libGraf.lib ${ROOT_PATH}/lib/libGpad.lib "
 

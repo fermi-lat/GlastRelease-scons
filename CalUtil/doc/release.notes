@@ -1,5 +1,9 @@
 /** @file release.notes
+
+@verbatim
+ $Id$	
  * Package CalUtil
+ * v1r4p4     17-Jan-2005 THB replace RootPolicy with direct ROOT use.
  * v1r4p3      3-Jan-2005 jrb Eliminate unnecessary #include in TestAdcTools.cxx
  * v1r4p2     24-Sep-2004 ZF Made some slight modifications to TestAdcTool.cxx in order to make alg as close as possible to orig CalDigi algorithm
  * v1r4p1     27-Aug-2004 ZF CalCalibSvc and TestResponseTools (aka CalResponseSvc) are now online.
@@ -9,4 +13,5 @@
  * v1r2p2     03-Apr-2003 AC  calibration classes removed from CalUtil
  * v1r0       28-Oct-2002 RXD initial version
  *
+@endverbatim
  */
