@@ -25,20 +25,23 @@ private:
     AcdTile tag word layout
     (defined in following enum):
      _______________________________________________
-    |15|  |  |12|11|  |  |  |  |  |  |	|  |  |  |00|
+    |15|  |13|12|11|  |  |  |  |  |  |	|  |  |  |00|
     |__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|
-    |Hit Status |	      PHA Value 	    |
+    |      CNOVe|	      PHA Value 	    |
     |___________|___________________________________| 
 
     */
 
     enum {
-	ACD_K_PMT = 12,
-	ACD_V_PMT = 0,
-	ACD_M_PMT = ((1 << ACD_K_PMT) - 1),
-	ACD_K_HIT = 4,
-	ACD_V_HIT = (ACD_K_PMT + ACD_V_PMT),
-	ACD_M_HIT = ((1 << ACD_K_HIT) - 1)
+	ACD_K_PMT = 12,  // width of field
+	ACD_V_PMT = 0,   // shift from right
+	ACD_M_PMT = ((1 << ACD_K_PMT) - 1), // word representing bits in this field
+	ACD_K_VETO = 1,
+	ACD_V_VETO = (ACD_K_PMT + ACD_V_PMT),
+	ACD_M_VETO = ((1 << ACD_K_VETO) - 1),
+        ACD_K_HIGH = 1,
+        ACD_V_HIGH = (ACD_K_VETO + ACD_V_VETO),
+        ACD_M_HIGH = ((1 << ACD_K_HIGH) - 1)
     };
     /// packed word containing ACD tile data
     UShort_t m_tag;	
@@ -50,16 +53,22 @@ public:
     AcdTile(AcdId &id);
     virtual ~AcdTile();
     AcdId* getId() { return &m_tileId; };
+    /// Returns the PHA value for this ACD Tile
     UShort_t getPulseHeight();
+    /// Returns 1/0 denoting whether this ACD Tile's veto threshold bit is on.
     UChar_t getVeto();
+    /// Returns 1/0 denoting if this ACD Tile's high discriminator bit is on (CNO).
+    UChar_t getCNO();
+
     Bool_t setPulseHeight(UShort_t phaVal);
     Bool_t setVeto(UChar_t hitVal);
+    Bool_t setCNO(UChar_t hitVal);
 
     /// Root >= 3.0 is now const correct for the Compare function
     Int_t Compare(const TObject *obj) const; 
     Bool_t IsSortable() const;
 
-    ClassDef(AcdTile,3) 	// Digitization for a single ACD Tile
+    ClassDef(AcdTile,4) 	// Digitization for a single ACD Tile
 };
 
 #endif

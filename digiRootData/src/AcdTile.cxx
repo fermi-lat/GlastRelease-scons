@@ -42,9 +42,14 @@ Bool_t AcdTile::IsSortable() const {
   return kTRUE;
 }
 
+UChar_t AcdTile::getCNO() {
+
+    return ((m_tag >> ACD_V_HIGH) & ACD_M_HIGH);
+}
+
 UChar_t AcdTile::getVeto() {
     // Returns 1 if tile above thresh, 0 otherwise
-    return ((m_tag >> ACD_V_HIT) & ACD_M_HIT);
+    return ((m_tag >> ACD_V_VETO) & ACD_M_VETO);
 }
 
 UShort_t AcdTile::getPulseHeight() {
@@ -69,11 +74,24 @@ Bool_t AcdTile::setVeto(UChar_t hitVal)
 {
     // Set the 'hit' status of this tile
     // 1 == above thresh, 0 == below
-    if (hitVal & ~ACD_M_HIT) 
+    if (hitVal & ~ACD_M_VETO) 
 	return kFALSE;
     else {
-	m_tag &= ~(ACD_M_HIT << ACD_V_HIT);
-	m_tag |= (hitVal << ACD_V_HIT);
+	m_tag &= ~(ACD_M_VETO << ACD_V_VETO);
+	m_tag |= (hitVal << ACD_V_VETO);
 	return kTRUE;
     }
+}
+
+
+Bool_t AcdTile::setCNO(UChar_t hitVal) {
+
+    if (hitVal & ~ACD_M_HIGH) 
+	return kFALSE;
+    else {
+	m_tag &= ~(ACD_M_HIGH << ACD_V_HIGH);
+	m_tag |= (hitVal << ACD_V_HIGH);
+	return kTRUE;
+    }
+
 }
