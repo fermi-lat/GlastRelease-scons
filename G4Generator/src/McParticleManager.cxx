@@ -43,7 +43,8 @@ void McParticleManager::save()
   // /Event/MC/McParticleCol folder of the TDS
 
   // if running FluxAlg, collection will already have parent 
-  mc::McParticleCol*  pcol=  SmartDataPtr<mc::McParticleCol>(m_esv, "/Event/MC/McParticleCol");
+  mc::McParticleCol*  pcol=  
+    SmartDataPtr<mc::McParticleCol>(m_esv, "/Event/MC/McParticleCol");
 
   if( pcol==0) {
     // create the TDS stuff

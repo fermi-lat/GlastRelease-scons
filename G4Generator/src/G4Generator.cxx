@@ -194,7 +194,8 @@ StatusCode G4Generator::execute()
   // and define it as a MCParticle
   //
   // is there a particle already in the TDS??
-  mc::McParticleCol*  pcol=  SmartDataPtr<mc::McParticleCol>(eventSvc(), "/Event/MC/McParticleCol");
+  mc::McParticleCol*  pcol=  
+    SmartDataPtr<mc::McParticleCol>(eventSvc(), "/Event/MC/McParticleCol");
 
   HepVector3D dir;
   double ke;
@@ -223,7 +224,9 @@ StatusCode G4Generator::execute()
     name = ppty->particle(); 
     const HepLorentzVector& pfinal = primary->finalFourMomentum();
     dir=    pfinal.vect().unit();
-    ke =   pfinal.e() - pfinal.m(); // note possibility of truncation error here! especially with MeV.
+
+    // note possibility of truncation error here! especially with MeV.
+    ke =   pfinal.e() - pfinal.m(); 
 
   }
     

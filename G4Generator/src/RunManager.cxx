@@ -63,12 +63,13 @@ RunManager::RunManager(IGlastDetSvc* gds, IDataProviderSvc* esv,
                        std::string geometryMode)
   :userDetector(NULL),physicsList(NULL),
    userPrimaryGeneratorAction(NULL),
-   currentRun(NULL),currentEvent(NULL),
+   currentEvent(NULL),
    geometryInitialized(false),physicsInitialized(false),
    cutoffInitialized(false),
-   geometryNeedsToBeClosed(true),initializedAtLeastOnce(false),
-   runAborted(false),
-   geometryToBeOptimized(true),verboseLevel(0),DCtable(NULL),runIDCounter(0),
+   geometryNeedsToBeClosed(true),runAborted(false),
+   initializedAtLeastOnce(false),
+   geometryToBeOptimized(true),runIDCounter(0),verboseLevel(0),DCtable(NULL),
+   currentRun(NULL),
    storeRandomNumberStatus(0)
 {
   if(fRunManager)
@@ -397,7 +398,7 @@ int RunManager::getTrajectoryCharge(unsigned int i)
       G4Trajectory* trajectory = 
         static_cast<G4Trajectory*>((*((event)->GetTrajectoryContainer()))[i]);
       
-      return trajectory->GetCharge();
+      return (int)trajectory->GetCharge();
     }
   else return -99;
 }
@@ -414,7 +415,7 @@ std::auto_ptr<std::vector<Hep3Vector> > RunManager::getTrajectoryPoints(unsigned
         static_cast<G4Trajectory*>((*((event)->GetTrajectoryContainer()))[i]);
       
       std::vector<Hep3Vector>* points = new std::vector<Hep3Vector>;
-      for(unsigned int j=0;j<trajectory->GetPointEntries();j++)
+      for(int j=0;j<trajectory->GetPointEntries();j++)
         {  
           G4TrajectoryPoint* currentPoint = 
             static_cast<G4TrajectoryPoint*>(trajectory->GetPoint(j));

@@ -30,7 +30,7 @@ public:
 
     void SetCoords(const G4ThreeVector& coords) {position   = coords;}
     void SetArcLen(const G4double newArcLen)    {arcLen     = newArcLen;}
-    void                SetVolume(G4VPhysicalVolume* volume)   {pCurVolume = volume;}
+    void SetVolume(G4VPhysicalVolume* volume)   {pCurVolume = volume;}
     
 private:
     G4ThreeVector      position;

@@ -53,7 +53,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
    *  @param esv A pointer to the data provider service
    *  @param geometry_mode The mode to use for detModel
    */
-  DetectorConstruction(IGlastDetSvc* gds, IDataProviderSvc* esv, std::string geometry_mode="recon");
+  DetectorConstruction(IGlastDetSvc* gds, IDataProviderSvc* esv, 
+                       std::string geometry_mode="recon");
 
   ~DetectorConstruction();
   

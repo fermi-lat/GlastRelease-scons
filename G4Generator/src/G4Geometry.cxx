@@ -57,7 +57,8 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
   // Purpose and Method: this method push a new volume in the stack of volumes
   // Inputs: for the meaning of ShapeType, the VolumeType and the params vector
   // see the GlastDetSvc documentation. T
-  // Outputs: the VisitorRet can be used to stop the recursion during geometry building
+  // Outputs: the VisitorRet can be used to stop the recursion during geometry
+  // building
 
   // The first 6 parameters in params are the translations and rotations
   double x=params[0], y=params[1], z=params[2];

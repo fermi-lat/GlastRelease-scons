@@ -47,7 +47,8 @@ DisplayManager::DisplayManager( gui::DisplayControl* d)
            "hit Int detectors");
 
     d->add((m_detmap["tracks"]= new EmptyRep("black")), "tracks");
-    d->add((m_detmap["ids"] = new EmptyRep("black")), "volume identifiers", false);
+    d->add((m_detmap["ids"] = new EmptyRep("black")), 
+           "volume identifiers", false);
 }
 void DisplayManager::addDetectorBox(std::string detName, 
                                     const HepTransform3D& T, 

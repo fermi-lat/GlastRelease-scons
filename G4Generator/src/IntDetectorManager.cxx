@@ -33,7 +33,7 @@ IntDetectorManager::IntDetectorManager(DetectorConstruction *det,
   // See the father class DetectorManager
 }
 
-void IntDetectorManager::Initialize(G4HCofThisEvent*HCE)
+void IntDetectorManager::Initialize(G4HCofThisEvent*)
 {
   // Purpose and Method: initialization of the detectors manager
   // Inputs: the G4HCofThisEvent is hinerited from the Geant4 structure and is
@@ -109,7 +109,7 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,
   return true;
 }
 
-void IntDetectorManager::EndOfEvent(G4HCofThisEvent* HCE)
+void IntDetectorManager::EndOfEvent(G4HCofThisEvent*)
 {
   // Purpose and Method: this method finalize the manager by saving the
   // integrating hits collection in the TDS
