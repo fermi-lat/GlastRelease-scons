@@ -19,13 +19,15 @@
 #include "PSdraw.h"
 #include "gui/Projector.h"
 
-
 #include "gui/PrintControl.h"
 #include "gui/SimpleCommand.h"
-
 #include <string>  
 #include <fstream>
+#ifndef DEFECT_NO_STRINGSTREAM
+#include <sstream>
+#else
 #include <strstream>
+#endif
 #include <iomanip>
 #include <cmath>
 
@@ -143,7 +145,11 @@ class ReferencePoint : public DisplayRep2D
 public:
     ReferencePoint(DisplayControl& dc):m_dc(dc){};
     void draw2D(Draw2D* canvas) {
+#ifdef DEFECT_NO_STRINGSTREAM
         std::strstream text;
+#else
+        std::stringstream text;
+#endif
         GraphicsVector p(m_dc.reference_point());
         static int precision=3, w=10;
         text << "ref pt: "  << std::setprecision(precision) << std::setiosflags(std::ios::fixed)
@@ -160,9 +166,12 @@ public:
 	canvas->set_rgb(0,0,0);
 
 	// display in ULH corner for now?
-        canvas->draw_string(-0.95f, 0.9f, text.str());
-#ifdef _MSC_VER // avoids memory leak in Visual
-        text.freeze(false);
+        canvas->draw_string(-0.95f, 0.9f, 
+
+#ifdef DEFECT_NO_STRINGSTREAM
+            text.str());
+#else
+        text.str().c_str());
 #endif
     }
 private:
@@ -180,7 +189,11 @@ public:
             sqrt(( m_dc->view().transformToWorld(xa,y)
                  - m_dc->view().transformToWorld(xb,y)
                  ).mag2());
+#ifdef DEFECT_NO_STRINGSTREAM
         std::strstream text;
+#else
+        std::stringstream text;
+#endif
         text <<  std::setprecision(3) << scale  << '\0';
         canvas->move_to(xa, y+0.025);
         canvas->line_to(xa, y-0.025);
@@ -188,11 +201,13 @@ public:
 	canvas->line_to(xb, y);
         canvas->move_to(xb, y+0.025);
 	canvas->line_to(xb, y-0.025);
-        canvas->draw_string(xb+0.01, y-0.01, text.str());
-
-#ifdef _MSC_VER // avoids memory leak in Visual
-        text.freeze(false);
+        canvas->draw_string(xb+0.01, y-0.01,
+#ifdef DEFECT_NO_STRINGSTREAM
+            text.str());
+#else
+            text.str().c_str());
 #endif
+
     }
 private:
     SceneControl* m_dc;
@@ -405,16 +420,31 @@ void DisplayControl::postScript()
 //--------------------------------
 // ask the scene to draw itself to a file in postscript
 {
-    static const char* filename = "temp.ps";
-    PSdraw ps(filename);
+    static filenumber=0;
+#ifdef DEFECT_NO_STRINGSTREAM
+    std::strstream filename;
+    filename << "display" << (filenumber++) << ".ps";
+    PSdraw ps(filename.str());
+#else
+    std::stringstream filename;
+    filename << "display" << (filenumber++) << ".ps";
+    PSdraw ps(filename.str().c_str());
+#endif
     if( !ps() ) {
 	GUI::instance()->inform("Cannot open file for postscript output");
 	return;
     }
 
     m_control->redisplay(&ps);
-    std::ostrstream msg; msg << "Postscript version written to file " << filename << '\0';
+#ifdef DEFECT_NO_STRINGSTREAM
+    std::strstream msg;
+    msg << "Postscript version written to file " << filename.str() << '\0';
     GUI::instance()->inform(msg.str());
+#else
+    std::stringstream msg;
+    msg << "Postscript version written to file " << filename.str() << '\0';
+    GUI::instance()->inform(msg.str().c_str());
+#endif
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
