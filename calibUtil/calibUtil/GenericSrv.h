@@ -19,7 +19,7 @@ namespace calibUtil {
   public: 
 
     /// Constructor that fills in values of generic data from XML file
-    GenericSrv(DOM_Element docElt);
+    GenericSrv(const DOM_Element& docElt);
 
     /// Get instrument name
     std::string getInst(){
