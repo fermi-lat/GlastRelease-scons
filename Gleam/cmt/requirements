@@ -1,6 +1,6 @@
 package Gleam
 
-version  v2r4
+version  v2r4p1
 # This is a checkout package
 # $Id$
 
@@ -44,19 +44,19 @@ use Geant4Runtime v1r0
 
 # Gaudi component packages follow
 
-use GuiSvc                 v3r2
+use GuiSvc      v3r2
 
-use Event       v9r3
-use GlastSvc               v9r3
+use Event                v9r4
+use GlastSvc    v9r3
 
 # simulation
 
-use FluxSvc                v5r13
-use FluxDisplay            v2r3
+use FluxSvc     v5r13
+use FluxDisplay v2r3
 use G4Generator  v4r3p4
 
 #digitization
-use CalDigi                v1r2p7
+use CalDigi     v1r2p7
 use TkrDigi     v1r6
 use AcdDigi     v1r4p0
 
@@ -66,12 +66,12 @@ use AcdDigi     v1r4p0
 use Trigger     v3r3p5
 use Recon       v2r3p5
 
-use TkrRecon    v8r2
+use TkrRecon              v8r3
 use CalRecon    v5r7p5 
 use AcdRecon    v1r4       
 
 #ROOT persistence: RootIo specifies the data packages
-use RootIo      v4r17
+use RootIo                v4r18
 
 #diagnostic and summary of bottom line
 use merit       v5r11
