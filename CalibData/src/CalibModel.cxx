@@ -4,7 +4,7 @@
 
 #include "CalibData/CalibModel.h"
 #include "GaudiKernel/Kernel.h"
-#include "GaudiKernl/ClassID.h"
+#include "GaudiKernel/ClassID.h"
 
 /**  @file CalibModel.cxx 
      Implementation for CalibModel class, which initializes strings
@@ -42,7 +42,30 @@ std::string cal;
 std::string acd;
 std::string test;
 
-class calibModel {
+// Start class ids at 6000 to stay well away from Gaudi classes and
+// our TDS event classes.  Layout could be
+//     6000 - 6099        internals
+//     6100 - 6199        tracker
+//     6200 - 6299        calorimeter
+//     6300 - 6399        ACD
+//     6400 - 6499        this space intentionally left blank in case
+//                        we have calibrations spanning subsystems
+//     6500 - 6599        test 
+
+const CLID& CLID_Calib_CalibCLIDNode     = 6000;
+const CLID& CLID_Calib_CalibBase         = 6001;
+
+const CLID& CLID_Calib_TKR_HotChan       = 6100;
+const CLID& CLID_Calib_TKR_DeadChan      = 6101;
+const CLID& CLID_Calib_TKR_BadChan      = 6102;
+const CLID& CLID_Calib_TKR_TOTSignal      = 6103;
+const CLID& CLID_Calib_TKR_TOTDist      = 6104;
+const CLID& CLID_Calib_TKR_MIPEff       = 6105;
+
+const CLID& CLID_Calib_MetadataInfo       = 6500;
+
+
+class CalibModel {
 public:
   /** The constructor sets values into the externally-accessible
       string variables */
@@ -74,7 +97,7 @@ public:
     CalibData::TKR_TOTSignal = tkr +"_TOTSignal";
     CalibData::TKR_TOTDist = tkr + "_TOTDist";
 
-    CalibData::TKR_MIPEfficiency = tkr + "_MIPEff";
+    CalibData::TKR_MIPEff = tkr + "_MIPEff";
 
     CalibData::CAL_LightAtt = cal + "LightAtt";
     CalibData::CAL_LightAsym = cal + "LightAsym";
@@ -90,22 +113,15 @@ public:
 
     CalibData::TestMetadataInfo = test + "_MetadataInfo";
 
-    CalibData::CalibPairCol.push_back(std::pair(CalibData::TKR_BadChan,
-                                                CLID_Calib_TKR_BadChan));
+
     // Use same class for hot strips, dead strips or (merged) bad strips,
     // but different path in TDDS
-    CalibData::CalibPairCol.push_back(std::pair(CalibData::TKR_HotChan,
-                                                CLID_Calib_TKR_BadChan));
-    CalibData::CalibPairCol.push_back(std::pair(CalibData::TKR_DeadChan,
-                                                CLID_Calib_TKR_BadChan));
-    CalibData::CalibPairCol.push_back(std::pair(CalibData::TestMetadataInfo,
-                                                CLID_Calib_MetadataInfo));
-    /* or maybe..
-    CalibData::CalibPairCol.push_back(std::make_pair(CalibData::TkrBadStrips,
-                                                CLID_Calib_TkrBadStrips));
-    CalibData::CalibPairCol.push_back(std::make_pair(CalibData::TestMetadataInfo,
-                                                CLID_Calib_MetadataInfo));
-    */
+
+    CalibData::pairs.push_back(std::make_pair(CalibData::TKR_HotChan,
+                                                CLID_Calib_TKR_HotChan));
+    CalibData::pairs.push_back(std::make_pair(CalibData::TKR_DeadChan,
+                                                CLID_Calib_TKR_DeadChan));
+
 
   }
 
@@ -114,21 +130,6 @@ public:
 // Instantiate an instance to get the ball rolling.
 static CalibModel mod;
 
-// Start class ids at 6000 to stay well away from Gaudi classes and
-// our TDS event classes.  Layout could be
-//     6000 - 6099        internals
-//     6100 - 6199        tracker
-//     6200 - 6299        calorimeter
-//     6300 - 6399        ACD
-//     6400 - 6499        this space intentionally left blank in case
-//                        we have calibrations spanning subsystems
-//     6500 - 6599        test 
-
-const CLID& CLID_Calib_CalibCLIDNode     = 6000;
-const CLID& CLID_Calib_CalibBase         = 6001;
-const CLID& CLID_Calib_TkrBadStrips      = 6100;
-
-const CLID& CLID_Calib_MetadataInfo       = 6500;
 
 #undef _CalibData_CalibModel_cxx
 

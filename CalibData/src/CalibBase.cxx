@@ -5,25 +5,27 @@
  */
 
 #include "CalibData/CalibBase.h"
-#include "GaudiKernel/TimePoint.h" 
+//#include "GaudiKernel/TimePoint.h" 
+#include "CalibData/CalibTime.h"
 #include "GaudiKernel/StatusCode.h"
 
 namespace CalibData {
   CalibBase::CalibBase() : m_validSince(0), m_validTill(0) {}
 
-  CalibBase::CalibBase(const ITime& since, const ITime& till)
-    m_validSince(0), m_validTill(0) {
-    m_validSince = new TimePoint(since);
-    m_validTill = new TimePoint(till);
-}
+  CalibBase::CalibBase(const ITime& since, const ITime& till) :
+    m_validSince(0), m_validTill(0) 
+  {
+    m_validSince = new CalibTime::CalibTime(since);
+    m_validTill = new CalibTime::CalibTime(till);
+  }
 
   // Should be overridden by derived classes
   void CalibBase::update(CalibBase& obj) {
     delete m_validSince;
     delete m_validTill;
 
-    till = new TimePoint(obj.validTill() );
-    since = new TimePOint(obj.validSince() );
+    m_validTill = new CalibTime::CalibTime(obj.validTill() );
+    m_validSince = new CalibTime::CalibTime(obj.validSince() );
   }
 
   bool CalibBase::isValid() {
@@ -31,7 +33,17 @@ namespace CalibData {
             && (validSince() <= validTill())   );
   }
 
-  bool Calibbase::isValid (const ITime& t) {
+
+  // It makes no sense to go comparing times or setting times
+  // using ITime interface unless we have an agreed-upon base;
+  // i.e., ITime::absoluteTime() must always return something
+  // in consistent units, counting from the same zero point.
+  // There is no way to enforce this; it has to be a programmers'
+  // agreement.
+  // In our case, we assume that the underlying class implementing
+  // ITime is always CalibTime.
+
+  bool CalibBase::isValid (const ITime& t) {
     if (!isValid()) return false;
     return validSince() <= t &&  t <= validTill();
   };
@@ -51,25 +63,15 @@ namespace CalibData {
 
   void CalibBase::setValiditySince(const ITime& since) {
     delete m_validSince;
-    m_validSince = new TimePoint(since);
+    m_validSince = new CalibTime(since);
   }
 
   void CalibBase::setValidityTill(const ITime& till) {
     delete m_validSince;
-    m_validTill = new TimePoint(till);
+    m_validTill = new CalibTime(till);
   }
 
   StatusCode CalibBase::updateValidity() {
     return StatusCode::SUCCESS;
   }
-}
-
-
-
-
-
-
-
-
-
 }
