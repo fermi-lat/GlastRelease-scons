@@ -3,6 +3,7 @@ Package LdfEvent
 Coordinator:H.Kelly
 @verbatim
 
+v2r4    24-Nov-2004 HMK Store tower and layer/gtcc for CAL/TKR diagnostic
 v2r3    19-Nov-2004 HMK Define new TKRRECON bit in event flag
 v2r2p1  04-Oct-2004 HMK Add CLID methods
 v2r2p0  04-Oct-2004 HMK Use unsigned ints consistently

@@ -26,8 +26,8 @@ extern const CLID& CLID_LdfDiagnosticData;
 namespace LdfEvent {
     class CalDiagnosticData {
     public:
-        CalDiagnosticData(unsigned datum) 
-            : m_datum(datum)
+        CalDiagnosticData(unsigned datum, unsigned tower, unsigned layer) 
+            : m_datum(datum), m_tower(tower), m_layer(layer)
         {
         }
 
@@ -35,23 +35,31 @@ namespace LdfEvent {
         ~CalDiagnosticData() {}
 
         unsigned dataWord() const { return m_datum; };
+        unsigned tower() const { return m_tower; };
+        unsigned layer() const { return m_layer; };
 
     private:
         unsigned m_datum;
+        unsigned m_tower;
+        unsigned m_layer;
     };
 
     class TkrDiagnosticData {
     public:
 
-        TkrDiagnosticData(unsigned datum) 
-            : m_datum(datum) {}
+        TkrDiagnosticData(unsigned datum, unsigned tower, unsigned gtcc) 
+            : m_datum(datum), m_tower(tower), m_gtcc(gtcc) {}
             TkrDiagnosticData()  {}
             ~TkrDiagnosticData() {}
 
             unsigned dataWord() const { return m_datum; };
+            unsigned tower() const { return m_tower; }; 
+            unsigned gtcc() const { return m_gtcc; };
 
     private:
         unsigned m_datum;
+        unsigned m_tower;  
+        unsigned m_gtcc;
     };
 
     class DiagnosticData : public DataObject{
