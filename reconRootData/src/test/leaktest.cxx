@@ -147,6 +147,44 @@
             tkrRec->addTrack(track);
         }
         
+        TkrKalFitTrack *kalTrack;
+        for (itrack = 0; itrack < numTracks; itrack++) {
+            kalTrack = new TkrKalFitTrack();
+            TkrKalFitTrack::Status status   = TkrKalFitTrack::FOUND;
+            TVector3 iniPos   = TVector3(f, 2.*f, 3.*f);
+            TVector3 iniDir   = TVector3(4.*f, 5.*f, 6.*f);
+            Float_t startEnergy = f*randNum;
+            Int_t trkId = numTracks+itrack;
+            // Initialize the track
+            kalTrack->initializeBase(status, 
+                1,
+                trkId,
+                startEnergy,
+                iniPos,
+                iniDir);
+            
+            kalTrack->initializeQual(randNum,
+                f*randNum,
+                2.*randNum,
+                3.*randNum,
+                4.*randNum,
+                5.*randNum,
+                6.*randNum );
+            
+            kalTrack->initializeGaps(0,
+                1,
+                2,
+                3);
+            
+            kalTrack->initializeKal( 7,
+                f,
+                5,
+                6,
+                f);
+            
+            tkrRec->addTrack(kalTrack);
+        }
+
         UInt_t ivertex;
         for (ivertex=0; ivertex < numVertices; ivertex++) {
             vertex = new TkrVertex();

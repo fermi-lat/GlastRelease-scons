@@ -476,6 +476,100 @@ int checkTrack(const TkrTrack *track,  UInt_t ievent, UInt_t itrack) {
     return 0;
 }
 
+
+int checkKalTrack(const TkrKalFitTrack *track,  UInt_t ievent, UInt_t itrack) {
+
+    Float_t f = Float_t (ievent);
+    Float_t fr = f*randNum;
+    if (track->getId() != itrack) {
+        std::cout << "Track Id: " << track->getId() << std::endl;
+        return -1;
+    }
+    
+    if      (track->status() != TkrKalFitTrack::FOUND) {
+        std::cout << "KalFitTrack status is not FOUND" << std::endl;
+        return -1;
+    }
+ 
+    if (track->getType() != 1) {
+        std::cout << "KalFitTrack type is not 1" << std::endl;
+        return -1;
+    }
+
+    if (!floatInRange(track->getStartEnergy(), f*randNum) ) {
+        std::cout << "KalFitTrack startEnergy is wrong " << track->getStartEnergy() << std::endl;
+        return -1;
+    }
+   
+
+    if (!floatInRange(track->getChiSquare(), randNum) ) {
+        std::cout << "KalFitTrack chiSquare is wrong " << track->getChiSquare() << std::endl;
+        return -1;
+
+    }
+    if (!floatInRange(track->getChiSquareSmooth(), f*randNum) ) {
+        std::cout << "KalFitTrack chiSquareSmooth is wrong " << track->getChiSquareSmooth() << std::endl;
+        return -1;
+
+    }
+    if (!floatInRange(track->getScatter(), 2.*randNum) ) {
+        std::cout << "KalFitTrack scatter is wrong " << track->getScatter() << std::endl;
+        return -1;
+
+    }
+    if (!floatInRange(track->getQuality(), 3.*randNum) ) {
+        std::cout << "KalFitTrack quality is wrong " << track->getQuality() << std::endl;
+        return -1;
+    }
+    if (!floatInRange(track->getKalEnergy(), 4.*randNum) ) {
+        std::cout << "KalFitTrack kalEnergy is wrong " << track->getKalEnergy() << std::endl;
+        return -1;
+
+    }
+
+    if (!floatInRange(track->getKalEnergyError(), 5.*randNum) ) {
+        std::cout << "KalFitTrack kalEnergyError is wrong " << track->getKalEnergyError() << std::endl;
+        return -1;
+    }
+
+    if (!floatInRange(track->getKalThetaMS(), 6.*randNum) ) {
+        std::cout << "KalFitTrack KalThetaMS is wrong " << track->getKalThetaMS() << std::endl;
+        return -1;
+    }
+
+    if (track->getNumXGaps() != 0) {
+        std::cout << "KalFitTrack NumXGaps is wrong " << track->getNumXGaps() << std::endl;
+        return -1;
+    }
+
+    if (track->getNumYGaps() != 1) {
+        std::cout << "KalFitTrack NumYGaps is wrong " << track->getNumYGaps() << std::endl;
+        return -1;
+    }
+
+    if (track->getNumXFirstGaps() != 2) {
+        std::cout << "KalFitTrack NumXFirstGaps is wrong " << track->getNumXFirstGaps() << std::endl;
+        return -1;
+    }
+
+    if (track->getNumYFirstGaps() != 3) {
+        std::cout << "KalFitTrack getNumYFirstGaps is wrong " << track->getNumYFirstGaps() << std::endl;
+        return -1;
+    }
+
+    if (track->getNumXHits() != 5) {
+        std::cout << "KalFitTrack getNumXHits is wrong " << track->getNumXHits() << std::endl;
+        return -1;
+    }
+    if (track->getNumYHits() != 6) {
+        std::cout << "KalFitTrack getNumYHits is wrong " << track->getNumYHits() << std::endl;
+        return -1;
+    }
+
+
+    return 0;
+}
+
 int checkTkrVertex(const TkrVertex* vertex, UInt_t ievent, UInt_t ivertex) {
     Float_t f = Float_t (ievent);
     Float_t fr = f*randNum;
@@ -620,16 +714,20 @@ int checkTkrRecon(TkrRecon *tkr, UInt_t ievent) {
 
     UInt_t iTrack = 0;
     TObjArray* trackCol = tkr->getTrackCol();
-    if (trackCol->GetEntries() != numTracks) {
+    if (trackCol->GetEntries() != 2*numTracks) {
         std::cout << "Number of TkrRecon tracks is wrong: " << trackCol->GetEntries() << std::endl;
         return -1;
     }
     TIter trackIt(trackCol);
-    TkrTrack *track;
-    while ((track = (TkrTrack*)(trackIt.Next()) )) {
-        if (checkTrack(track, ievent, iTrack) < 0) 
-            return -1;
-        iTrack++;
+    TObject *trackObj = 0;
+    while ( trackObj = trackIt.Next() ) {
+        if (TkrTrack* track = dynamic_cast<TkrTrack*>(trackObj)) {
+            if (checkTrack(track, ievent, iTrack) < 0) return -1;
+            iTrack++;
+        } else if (TkrKalFitTrack* track = dynamic_cast<TkrKalFitTrack*>(trackObj)) {
+            if (checkKalTrack(track, ievent, iTrack) < 0) return -1;
+            iTrack++;
+        }
     }
 
     TObjArray* vertexCol = tkr->getVertexCol();
@@ -925,6 +1023,43 @@ int write(char* fileName, int numEvents) {
             Double_t ms = f*6.0;
             track->initializeQual(chiSq, chiSqSmooth, rms, qual, e, ms);
             tkrRec->addTrack(track);
+        }
+        TkrKalFitTrack *kalTrack;
+        for (itrack = 0; itrack < numTracks; itrack++) {
+            kalTrack = new TkrKalFitTrack();
+            TkrKalFitTrack::Status status   = TkrKalFitTrack::FOUND;
+            TVector3 iniPos   = TVector3(f, 2.*f, 3.*f);
+            TVector3 iniDir   = TVector3(4.*f, 5.*f, 6.*f);
+            Float_t startEnergy = f*randNum;
+            Int_t trkId = numTracks+itrack;
+            // Initialize the track
+            kalTrack->initializeBase(status, 
+                1,
+                trkId,
+                startEnergy,
+                iniPos,
+                iniDir);
+            
+            kalTrack->initializeQual(randNum,
+                f*randNum,
+                2.*randNum,
+                3.*randNum,
+                4.*randNum,
+                5.*randNum,
+                6.*randNum );
+            
+            kalTrack->initializeGaps(0,
+                1,
+                2,
+                3);
+            
+            kalTrack->initializeKal( 7,
+                f,
+                5,
+                6,
+                f);
+            
+            tkrRec->addTrack(kalTrack);
         }
         
         UInt_t ivertex;
