@@ -1,5 +1,9 @@
 package CRflux
 
+version v1r1p2
+
+author Tsunefumi Mizuno <suhonen@slac.stanford.edu>
+
 use FluxSvc v6*
 
 use CLHEP v2* IExternal
