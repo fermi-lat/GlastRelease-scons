@@ -5,4 +5,7 @@
 # Author: Paul_Kunz@slac.stanford.edu
 #
 
+# The following set,  else would follow GNU conventions
+AUTOMAKE_OPTIONS = foreign
+
 SUBDIRS = src
