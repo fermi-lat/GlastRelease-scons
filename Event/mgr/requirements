@@ -2,10 +2,10 @@ package GlastEvent
 version v7r1
 
 branches GlastEvent mgr doc src
-use idents
+use idents v2r*
 
-use GaudiKernel 
-use CLHEP
+use GaudiKernel v11r0p*
+use CLHEP v1r7p*
 
 apply_pattern package_headers
 
