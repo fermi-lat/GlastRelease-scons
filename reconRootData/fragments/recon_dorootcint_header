@@ -1,0 +1,9 @@
+#====================================================
+${CONSTITUENT}:: ${CINTFILE}
+	@echo "------> ${CONSTITUENT} ok"
+
+VPATH=../TBEvent/
+${CINTFILE}:: ${root_headers}
+	@echo " running rootcint to generate ${CINTFILE} "
+	cd ../${package}/ ; ${ROOT_PATH}/bin/rootcint -f ${CINTFILE} -c -I${TBEVENTROOT} ${root_headers}
+#==================================================== 
