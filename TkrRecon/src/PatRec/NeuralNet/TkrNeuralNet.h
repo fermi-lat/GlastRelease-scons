@@ -20,7 +20,7 @@
 #define __TKR_NEURALNET_H
 
 #include "TkrRecon/PatRec/TkrCandidates.h"
-#include "TkrRecon/Track/TkrFitTrack.h"
+#include "src/TrackFit/KalFitTrack/KalFitTrack.h"
 #include "src/PatRec/NeuralNet/TkrNeuron.h"
 #include "TkrRecon/Track/TkrPoints.h"
 #include "TkrRecon/Track/TkrPoint.h"
@@ -137,21 +137,21 @@ private:
 	//data members
 
     /// list of candidate tracks to be passed to the Kalman fit.
-	CandidateList m_candidates;
+	CandidateList  m_candidates;
     /// list of tracks to be used with Kalman fit.
-	TkrVector     m_tracks;
+	TkrFitTrackCol m_tracks;
     /// list of all neurons
-	TkrNeuronList m_neuronList;
+	TkrNeuronList  m_neuronList;
     /// list of all (x,y,z) points (not all are used in neurons)
-	TkrPointList  m_pointList;
+	TkrPointList   m_pointList;
     /// number of neurons in m_neuronList
-	unsigned int  m_numNeurons;
+	unsigned int   m_numNeurons;
     /// number of points in m_pointList
-	unsigned int  m_numPoints;
+	unsigned int   m_numPoints;
     /// position of cal hit
-    Point         m_Pcal;
+    Point          m_Pcal;
     /// energy for the event
-    double        m_energy;
+    double         m_energy;
 
 };
 

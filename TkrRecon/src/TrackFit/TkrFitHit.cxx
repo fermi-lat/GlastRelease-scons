@@ -1,26 +1,23 @@
-
-// $Header$
-
 //----------------------------------------------------------------------
 //    
 //    Implementation of the Kalman Filter Functions
-//               KalHit 
+//               TkrFitHit 
 //
 //      Original due to Jose Hernando-Angel circa 1997-1999
 //      Re-written to combine both X and Y projections (2001) 
 //      
 //-----------------------------------------------------------------------
 
-#include "TkrRecon/TrackFit/KalHit.h"
+#include "TkrRecon/TrackFit/TkrFitHit.h"
 
-KalHit KalHit::changeType(TYPE typ)
+TkrFitHit TkrFitHit::changeType(TYPE typ)
 {
     
-    KalHit hit;
+    TkrFitHit hit;
     
-    hit.m_type=typ;
-    hit.m_par=m_par;
-    hit.m_cov=m_cov;
+    hit.m_type = typ;
+    hit.m_par  = m_par;
+    hit.m_cov  = m_cov;
     
     return hit;
 }
