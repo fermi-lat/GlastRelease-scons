@@ -49,12 +49,12 @@ public:
     ///void setTkrGeometrySvc(TkrGeometrySvc* p_geoSvc) { m_geoSvc = p_geoSvc; }
 
     /// get the last C0 strip for this layer
-    int getSplitPoint(int tower, int layer, int view) const {
+    int getSplitPoint(const int tower, const int layer, const int view) const {
         return m_splits[tower][layer][view];
     }
 
     /// tell which end this strip belongs to
-    int getEnd(int tower, int layer, int view, int strip) const {
+    int getEnd(const int tower, const int layer, const int view, const int strip) const {
         return (strip<=m_splits[tower][layer][view]? 0 : 1);
     }
 

@@ -14,6 +14,7 @@ DECLARE_FACTORY_ENTRIES(TkrUtil) {
     DECLARE_SERVICE( TkrGeometrySvc      );
     DECLARE_SERVICE( TkrAlignmentSvc     );
     DECLARE_SERVICE( TkrSplitsSvc        );
+    DECLARE_SERVICE( TkrToTSvc           );
 
     DECLARE_TOOL(    TkrQueryClustersTool);
     DECLARE_TOOL(    TkrMeritTool        );
