@@ -21,7 +21,7 @@ public:
 
     TkrParams() {};
 
-    TkrParams(Double_t ax, Double_t sx, Double_t ay, Double_t sy) : TVectorD(0,3,ax,sx,ay,sy) 
+    TkrParams(Double_t ax, Double_t sx, Double_t ay, Double_t sy) : TVectorD(0,3,ax,sx,ay,sy,"END") 
     {}
 
     TkrParams(const TkrParams& params);
