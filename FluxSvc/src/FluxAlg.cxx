@@ -214,16 +214,17 @@ StatusCode FluxAlg::execute()
     SmartDataPtr<Event::MCEvent> mcheader(eventSvc(), EventModel::MC::Event);
     if (mcheader == 0) {
         sc=eventSvc()->registerObject(EventModel::MC::Event , mch= new Event::MCEvent);
-        mch->initialize(0,0,m_sequence);
+        mch->initialize(0,0,m_sequence, m_flux->time());
         if(sc.isFailure()) {
             log << MSG::WARNING << EventModel::MC::Event  <<" could not be registered on data store" << endreq;
+            delete mch;
             return sc;
         }
         
     }else mch = mcheader;
 
 
-    mch->initialize(mch->getRunNumber(), m_flux->numSource(), mch->getSequence());
+    mch->initialize(mch->getRunNumber(), m_flux->numSource(), mch->getSequence(), m_flux->time());
 
 
     

@@ -22,7 +22,7 @@
 #include "Event/TopLevel/MCEvent.h"
 #include "Event/MonteCarlo/McParticle.h"
 #include "Event/TopLevel/EventModel.h"
-#include "Event/MonteCarlo/D2Entry.h"
+#include "Event/MonteCarlo/Exposure.h"
 
 //flux
 #include "FluxSvc/IFluxSvc.h"
@@ -48,14 +48,14 @@
 class ExposureAlg : public Algorithm {
 public:
     ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator);
-    
+
     //stuff that an Algorithm needs.
     StatusCode initialize();
     StatusCode execute();
     StatusCode finalize();
-    
+
 private: 
-    
+
     double m_lasttime; //time value to hold time between events;
     StringProperty m_source_name;
     StringProperty m_file_name;
@@ -65,8 +65,8 @@ private:
 
     std::ostream* m_out;  //for output that looks like the stuff from the astro orbit model test.
     int         m_tickCount; // number of ticks processed
-        
-    
+
+
 };
 //------------------------------------------------------------------------
 
@@ -81,7 +81,7 @@ ExposureAlg::ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator)
     // declare properties with setProperties calls
     declareProperty("source_name",  m_source_name="default");
     declareProperty("file_name",  m_file_name="");
-    
+
 }
 
 //------------------------------------------------------------------------
@@ -93,7 +93,7 @@ StatusCode ExposureAlg::initialize(){
 
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
-    
+
     if ( service("FluxSvc", m_fluxSvc).isFailure() ){
         log << MSG::ERROR << "Couldn't find the FluxSvc!" << endreq;
         return StatusCode::FAILURE;
@@ -116,13 +116,13 @@ StatusCode ExposureAlg::execute()
     MsgStream   log( msgSvc(), name() );
     double currentTime;
     //-----------------------------------------------------------------------
-    
+
     Event::McParticleCol* pcol = new Event::McParticleCol;
     eventSvc()->retrieveObject("/Event/MC/McParticleCol",(DataObject *&)pcol);
     //only make a new source if one does not already exist.
     if(pcol==0){
         //FluxAlg didn't do anything.  proceed.
-        
+
         //if the flux had changed, something changed the source type.
         if(m_fluxSvc->currentFlux() == m_flux){
             m_flux->generate();
@@ -144,12 +144,12 @@ StatusCode ExposureAlg::execute()
         return StatusCode::SUCCESS;
     }
 
-    //by now, we should know that we have the appropriate particle to make a D2Entry with.
+    //by now, we should know that we have the appropriate particle to make a Exposure with.
     double secondsperday = 60.*60.*24.;
 
     // here we get the time characteristics
 
-    
+
     EarthOrbit orb; //for the following line - this should have a better implementation.
     double julianDate = orb.dateFromSeconds(currentTime);
 
@@ -170,7 +170,7 @@ StatusCode ExposureAlg::execute()
     GPS::instance()->getPointingCharacteristics(currentTime);
     //EarthOrbit orbt;
     Hep3Vector location = GPS::instance()->position(currentTime);
-    
+
     // hold onto the cartesian location of the LAT
     double posx = location.x(); 
     double posy = location.y(); 
@@ -182,55 +182,61 @@ StatusCode ExposureAlg::execute()
     double decz = GPS::instance()->DECZ();
     double razenith = GPS::instance()->RAZenith();
     double deczenith = GPS::instance()->DECZenith();
-    
+
     EarthCoordinate earthpos(location,julianDate);
     double lat = earthpos.latitude();
     double lon = earthpos.longitude();
     double alt = earthpos.altitude();
     bool SAA = earthpos.insideSAA();
-    
+
     SolarSystem sstm;
-    
+
     double ramoon = sstm.direction(astro::SolarSystem::Moon,julianDate).ra();
     double decmoon = sstm.direction(astro::SolarSystem::Moon,julianDate).dec();
     double rasun = sstm.direction(astro::SolarSystem::Sun,julianDate).ra();
     double decsun = sstm.direction(astro::SolarSystem::Sun,julianDate).dec();
-    
+
     // Here the TDS is prepared to receive hits vectors
     // Check for the MC branch - it will be created if it is not available
-    
-    DataObject *mc = new Event::D2EntryCol;
+
+    DataObject *mc = new Event::ExposureCol;
     sc=eventSvc()->registerObject(EventModel::MC::Event , mc);
     // THB: why is this commented out?
     //if(sc.isFailure()) {
     //    log << MSG::ERROR << EventModel::MC::Event  <<" could not be registered on data store" << endreq;
     //    return sc;
     //}
-    
+
     // Here the TDS receives the exposure data
-    Event::D2EntryCol* exposureDBase = new Event::D2EntryCol;
-    sc=eventSvc()->registerObject(EventModel::MC::D2EntryCol , exposureDBase);
+    Event::ExposureCol* exposureDBase = new Event::ExposureCol;
+    sc=eventSvc()->registerObject(EventModel::MC::ExposureCol , exposureDBase);
     if(sc.isFailure()) {
-        log << MSG::ERROR << EventModel::MC::D2EntryCol  <<" could not be entered into existing data store" << endreq;
+        log << MSG::ERROR << EventModel::MC::ExposureCol  <<" could not be entered into existing data store" << endreq;
         return sc;
     }
-    
-    Event::D2Entry* entry = new Event::D2Entry;
-    
-    exposureDBase->push_back(entry);
 
+    Event::Exposure* entry = new Event::Exposure;
+
+    exposureDBase->push_back(entry);
+#if 0 // old version for D2Entry
     entry->init(posx, posy, posz,rax,raz,decx,decz,razenith,deczenith,lat,
         lon,alt,intrvalstart,intrvalend,
         livetime,ramoon,decmoon,rasun,decsun,
         SAA);
-    
+#else // new version for Exposure
+    entry->init(intrvalstart,lat,lon,alt,posx,posy,posz,rax,decx,raz,decz);
+#endif
     // now we'll retreive the data from the TDS as a check.
-    Event::D2EntryCol* elist = new Event::D2EntryCol;
-    eventSvc()->retrieveObject("/Event/MC/D2EntryCol",(DataObject *&)elist);
-    
-    Event::D2EntryCol::iterator curEntry = (*elist).begin();
+    Event::ExposureCol* elist = new Event::ExposureCol;
+    eventSvc()->retrieveObject("/Event/MC/ExposureCol",(DataObject *&)elist);
+
+    Event::ExposureCol::iterator curEntry = (*elist).begin();
     //some test output - to show that the data got onto the TDS
-    (*curEntry)->writeOut(log);
+    log << MSG::DEBUG ;
+    if(log.isActive()){
+        (*curEntry)->fillStream(log.stream());
+    }
+    log << endreq;
 
     SkyDir curDir(raz,decz);
     SkyDir xDir(rax,decx);
@@ -238,15 +244,15 @@ StatusCode ExposureAlg::execute()
     SkyDir sunDir(rasun,decsun);
     //Rotation galtoglast(m_fluxSvc->transformGlastToGalactic(currentTime).inverse);
     sunDir()=(m_fluxSvc->transformGlastToGalactic(currentTime).inverse())*sunDir();
-     
+
     //and here's the file output.
     if( m_out !=0) {
         std::ostream& out = *m_out;
         out << std::setw(14) << std::setprecision(14) 
-        <<intrvalstart <<'\t'
-        <<intrvalend <<'\t';
+            <<intrvalstart <<'\t'
+            <<intrvalend <<'\t';
         out << std::setw(9) << std::setprecision(7)
-        << posx<<'\t';
+            << posx<<'\t';
         out<< posy<<'\t';
         out<< posz<<'\t';
         out<<raz<<'\t';
@@ -268,10 +274,10 @@ StatusCode ExposureAlg::execute()
         out<< rasun <<"\t"<<decsun  <<'\t';
         out<< sunDir().x() <<"\t"<< sunDir().y()  <<"\t"<< sunDir().z()  <<'\t';
         out<<ramoon <<"\t"<<decmoon   <<std::endl;
-        
-        
+
+
     }
-        setFilterPassed( false );
+    setFilterPassed( false );
     log << MSG::DEBUG << "ExposureAlg found a TimeTick particle, ended this execution after making a record, filterpassed = " << filterPassed() << endreq;
 
     m_tickCount++;
@@ -285,7 +291,7 @@ StatusCode ExposureAlg::finalize(){
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "Processed " << m_tickCount << " ticks" << endreq;
     delete m_out;
-    
+
     return sc;
 }
 
