@@ -95,6 +95,9 @@ class ICalibMetaCnvSvc : virtual public IInterface
   // Get handle for metadata access from calibUtil.
   virtual calibUtil::Metadata* getMeta() = 0;
 
+  virtual StatusCode getValidInterval(unsigned int& serNo, 
+                                      ITime*& vStart, ITime*& vEnd);
+
   // Might want to add additional methods which will return certain metadata
   // in a convenient form, given a serial number.  Would be used
   // by the bulk data conversion services to get some standard set
