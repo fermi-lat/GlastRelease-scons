@@ -81,6 +81,11 @@ public:
 
     /// (-) if non-active or gap (P is in local system)    
     virtual double insideActiveArea (const HepPoint3D& p)=0; 
+
+    /// methods to return separate x and y values for insideActive
+    virtual double insideActiveLocalX( const HepPoint3D& p)=0;
+    virtual double insideActiveLocalY( const HepPoint3D& p)=0;
+
     
     /// return the global position of a strip in the plane, will accept int or double
     virtual HepPoint3D getStripPosition(idents::VolumeIdentifier volId, double stripid)=0;

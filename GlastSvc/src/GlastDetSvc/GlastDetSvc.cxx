@@ -197,6 +197,16 @@ double GlastDetSvc::insideActiveArea (const HepPoint3D& p)
     return SiliconPlaneGeometry::insideActiveArea(p);
 }
 
+double GlastDetSvc::insideActiveLocalX( const HepPoint3D& p)
+{
+    return SiliconPlaneGeometry::insideActiveArea1D(p.x(), SiliconPlaneGeometry::ladder_gap());
+}
+
+double GlastDetSvc::insideActiveLocalY( const HepPoint3D& p)
+{
+    return SiliconPlaneGeometry::insideActiveArea1D(p.y(), SiliconPlaneGeometry::ssd_gap());
+}
+
 double GlastDetSvc::stripLocalX( double strip)
 {
     return SiliconPlaneGeometry::localX(strip);

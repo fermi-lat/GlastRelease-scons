@@ -83,8 +83,13 @@ public:
     /// compute strip id from local coordinate for a tkr plane
     virtual unsigned int stripId (double x);
     virtual unsigned int stripId (const HepPoint3D&  x);
+
     /// (-) if non-active or gap (P is in local system)    
-    virtual double insideActiveArea (const HepPoint3D& p);  
+    virtual double insideActiveArea  ( const HepPoint3D& p);
+    /// insideActive for local X
+    virtual double insideActiveLocalX( const HepPoint3D& p);
+    /// insideActive for local Y
+    virtual double insideActiveLocalY( const HepPoint3D& p);
     
     /// location of strip ix in local coords
     virtual double stripLocalX ( double istrip); 
@@ -93,16 +98,16 @@ public:
     virtual HepPoint3D siPlaneCoord( const HepPoint3D &p, idents::VolumeIdentifier volId);
     
     /// return the global position of a strip in the plane, will accept int or double
-    HepPoint3D getStripPosition(idents::VolumeIdentifier id, double stripid);
+    virtual HepPoint3D getStripPosition(idents::VolumeIdentifier id, double stripid);
     
     /// calculate the tray number, botTop from layer, view
-    void layerToTray (int layer, int view, int& tray, int& botTop);
+    virtual void layerToTray (int layer, int view, int& tray, int& botTop);
     
     /// calculate layer, view from tray, botTop
-    void trayToLayer (int tray, int botTop, int& layer, int& view);
+    virtual void trayToLayer (int tray, int botTop, int& layer, int& view);
     
     /// calculate layer (digi format) and view from plane number
-    void planeToLayer (int plane, int& layer, int& view);
+    virtual void planeToLayer (int plane, int& layer, int& view);
     
     
 private:
