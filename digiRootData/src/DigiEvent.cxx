@@ -77,14 +77,15 @@ void DigiEvent::Print(Option_t *option) const {
     m_levelOneTrigger.Print();
 }
 
-AcdDigi* DigiEvent::addAcdDigi(const AcdId& id, Float_t energy, UShort_t *pha, 
+AcdDigi* DigiEvent::addAcdDigi(const AcdId& id, const VolumeIdentifier& volId,
+                               Float_t energy, UShort_t *pha, 
                                Bool_t *veto, Bool_t *low, Bool_t *high) {
     // Add a new AcdDigi entry, note that
     // TClonesArrays can only be filled via
     // a new with placement call
     ++m_numAcdDigis;
     TClonesArray &tiles = *m_acdDigiCol;
-    new(tiles[m_numAcdDigis]) AcdDigi(id, energy, pha, veto, low, high);
+    new(tiles[m_numAcdDigis]) AcdDigi(id, volId, energy, pha, veto, low, high);
     return ((AcdDigi*)(tiles[m_numAcdDigis]));
 }
 

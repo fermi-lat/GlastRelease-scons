@@ -4,6 +4,7 @@
 
 #include "AcdId.h"
 #include "TObject.h"
+#include "mcRootData/VolumeIdentifier.h"
 
 /** @class AcdDigi
  * @brief 
@@ -57,7 +58,8 @@ public:
 
     AcdDigi(const AcdId& id);
     
-    AcdDigi(const AcdId& id, Float_t energy, UShort_t *pha, Bool_t *veto,
+    AcdDigi(const AcdId& id, const VolumeIdentifier& volId, Float_t energy, 
+        UShort_t *pha, Bool_t *veto,
         Bool_t *low, Bool_t *high);
     
     virtual ~AcdDigi() { };
@@ -69,6 +71,7 @@ public:
     Float_t getEnergy() { return m_energy; };
 
     const AcdId& getId() const { return m_id; };
+    const VolumeIdentifier& getVolId() const { return m_volId; };
 
     /// Returns the PHA value for the PMT requested
     UShort_t getPulseHeight (AcdDigi::PmtId pmt) const;
@@ -93,6 +96,8 @@ private:
     UShort_t m_packed[2];	
     /// ACD Id
     AcdId m_id; 
+    /// Volume id for geometry
+    VolumeIdentifier m_volId;
 
     ClassDef(AcdDigi,2) // Digitization for a single ACD entity
 };

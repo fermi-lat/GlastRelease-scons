@@ -19,9 +19,9 @@ AcdDigi::AcdDigi(const AcdId& id) : m_id(id) {
     m_packed[AcdDigi::B] = 0;
 }
 
-AcdDigi::AcdDigi(const AcdId& id, Float_t energy, UShort_t *pha,
-                 Bool_t *veto, Bool_t *low, Bool_t *high) 
-                 : m_id(id)
+AcdDigi::AcdDigi(const AcdId& id, const VolumeIdentifier& volId, Float_t energy, 
+                 UShort_t *pha, Bool_t *veto, Bool_t *low, Bool_t *high) 
+                 : m_id(id), m_volId(volId)
 {
     AcdDigi::PmtId pmt = AcdDigi::A;
     initPackedWord(pmt, pha[pmt], veto[pmt], low[pmt], high[pmt]); 

@@ -10,7 +10,7 @@ del dirstor.txt
 
 cd %DIGIROOTDATAROOT%\digiRootData
 
-%ROOT_PATH%\bin\rootcint -f digiRootDataCint.cxx -c AcdDigi.h AcdId.h CalDigi.h CalXtalId.h CalXtalReadout.h DigiEvent.h GlastAxis.h L1T.h TkrDigi.h TowerId.h EventLinkDef.h
+%ROOT_PATH%\bin\rootcint -f digiRootDataCint.cxx -c -I%MCROOTDATAROOT% AcdDigi.h AcdId.h CalDigi.h CalXtalId.h CalXtalReadout.h DigiEvent.h GlastAxis.h L1T.h TkrDigi.h TowerId.h EventLinkDef.h
 
 REM Return to the original directory
 call %DIGIROOTDATAROOT%\changeDir.bat

@@ -48,8 +48,8 @@ public:
     /// retrieve the whole TClonesArray of Acd Digi data
     const TClonesArray* getAcdDigiCol() const { return m_acdDigiCol; };
     /// Add a new AcdDigi entry into the ACD digi array
-    AcdDigi* addAcdDigi(const AcdId& id, Float_t energy, UShort_t *pha, 
-        Bool_t *veto, Bool_t *low, Bool_t *high);
+    AcdDigi* addAcdDigi(const AcdId& id, const VolumeIdentifier& volId, 
+        Float_t energy, UShort_t *pha, Bool_t *veto, Bool_t *low, Bool_t *high);
 
     /// retrieve a specific AcdDigi, based upon the layer, face, row, col, if not found returns null
     const AcdDigi* getAcdDigi(UShort_t l, UShort_t f, UShort_t r, UShort_t c) const;
