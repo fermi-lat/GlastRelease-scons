@@ -22,7 +22,7 @@ void UserAlg_load() {
     DLL_DECL_ALGORITHM( UserAlg );
 } 
 
-extern "C" void UserAlg_loadRef()    {
+extern "C" void userAlg_loadRef()    {
     UserAlg_load();
 }
 

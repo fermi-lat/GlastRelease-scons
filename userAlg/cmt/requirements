@@ -8,7 +8,6 @@ version v2
 # get everything we need from here
 use pdrApp 
 
-apply_pattern userlinks
 apply_pattern userjobopts
 
 application userApp ${GuiMain}  *.cxx $(jobOptions) $(Win32Resource)
