@@ -206,11 +206,11 @@ StatusCode mcRootReaderAlg::execute()
 	static Int_t evtId = 0;
 	int readInd, numBytes;
 	if (evtId==0)m_mcTree->SetBranchAddress("McEvent", &m_mcEvt);
-	std::pair<int,int> runEventPair = m_rootIoSvc->runEventPair();
+	std::pair<int,int> runEventPair = (m_rootIoSvc) ? m_rootIoSvc->runEventPair() : std::pair<int,int>(-1,-1);
 
-	if (m_rootIoSvc->index() >= 0) {
+	if ((m_rootIoSvc) &&  (m_rootIoSvc->index() >= 0)) {
 		readInd = m_rootIoSvc->index();
-	} else if ((runEventPair.first != -1) && (runEventPair.second != -1)) {
+	} else if ((m_rootIoSvc) && (runEventPair.first != -1) && (runEventPair.second != -1)) {
 		int run = runEventPair.first;
 		int evt = runEventPair.second;
 		char cutStr[100];
