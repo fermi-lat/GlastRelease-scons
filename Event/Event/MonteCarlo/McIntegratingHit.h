@@ -75,8 +75,8 @@ class McIntegratingHit : virtual public ContainedObject {
     /// Remove all energyInfos
     void clearEnergyItems();
     /// Add single energyInfo to energyDepositMap
-    void addEnergyItem( const double& energy, Event::McParticle* t, const HepPoint3D& position );
-    void addEnergyItem( const double& energy, SmartRef<Event::McParticle> t, const HepPoint3D& position );
+    void addEnergyItem( const double& energy, McParticle* t, const HepPoint3D& position );
+    void addEnergyItem( const double& energy, SmartRef<McParticle> t, const HepPoint3D& position );
 
     /// Retrieve primary-origin flag
     bool primaryOrigin() const;
@@ -150,7 +150,7 @@ inline StreamBuffer& McIntegratingHit::serialize( StreamBuffer& s )
         double               second;
         s >> first(this)
           >> second;
-        m_energyItem.push_back(std::pair<Event::McParticle*, double>(first, second));
+        m_energyItem.push_back(std::pair<McParticle*, double>(first, second));
     }
         return s
       >> m_packedFlags;
@@ -186,9 +186,9 @@ inline std::ostream& McIntegratingHit::fillStream( std::ostream& s ) const
 
 
 // Definition of all container types of McIntegratingHit
-template <class TYPE> class ObjectVector;
+//template <class TYPE> class ObjectVector;
 typedef ObjectVector<McIntegratingHit>     McIntegratingHitVector;
-template <class TYPE> class ObjectList;
+//template <class TYPE> class ObjectList;
 typedef ObjectList<McIntegratingHit>       McIntegratingHitList;
 }
 
