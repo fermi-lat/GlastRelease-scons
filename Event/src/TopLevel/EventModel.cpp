@@ -176,7 +176,7 @@ public:
     const CLID& CLID_TkrPatCandCol      = 3103;  // Is this really Layers, Clusters, RecObjs
     const CLID& CLID_SiRecObjs          = 3104;  // or rather Layer, Cluster, RecObj objects?
     const CLID& CLID_TkrFitTrackCol     = 3105;  // or rather Layer, Cluster, RecObj objects?
-    const CLID& CLID_TkrVertexCol       = 3106;  // or rather Layer, Cluster, RecObj objects?
+    const CLID& CLID_TkrVertex          = 3106;  // CLID_TkrVertexCol is ObjectVector of TkrVertices
 
     //! Reconstruction: Cal class IDs
     const CLID& CLID_CalRecon           = 3200;
