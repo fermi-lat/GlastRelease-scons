@@ -2,6 +2,8 @@
 package AcdRecon\n
 package manager:H.Kelly
 
+v1r3      27-Sep-2002 HMK rename threshold variable and use Event::AcdRecon ctor\n
+          rather than initialize method.\n
 v1r2p1    10-Sep-2002 HMK update TkrRecon version to 8\n
 v1r2      09-Sep-2002 HMK update GlastSvc version\n
 v1r1      09-Sep-2002 HMK update documentation for review\n
