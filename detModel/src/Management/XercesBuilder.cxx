@@ -80,37 +80,49 @@ namespace detModel{
   
     DOM_NamedNodeMap attr = e.getAttributes();
 
-    name=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("name")).getNodeValue() ));
-    ut=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("uType")).getNodeValue() ));
+    name=std::string(xml::Dom::transToChar
+                     (attr.getNamedItem(DOMString("name")).getNodeValue() ));
+    ut=std::string(xml::Dom::transToChar
+                   (attr.getNamedItem(DOMString("uType")).getNodeValue() ));
 
-    std::string elementName=std::string(xml::Dom::transToChar(e.getNodeName()));
+    std::string elementName=std::string(xml::Dom::transToChar
+                                        (e.getNodeName()));
     if (elementName=="prim"){
-      typeOfConst=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("type")).getNodeValue()));
+      typeOfConst=
+        std::string(xml::Dom::transToChar
+                    (attr.getNamedItem(DOMString("type")).getNodeValue()));
       Const* c;
       if (typeOfConst=="int"){
 	c=new IntConst;
-	int val=atoi(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
+	int val=atoi(xml::Dom::transToChar
+                     (attr.getNamedItem(DOMString("value")).getNodeValue()));
 	((IntConst*)c)->setValue(val);
       }
       else if (typeOfConst=="float"){
 	c=new FloatConst;
-	float val=atof(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
+	float val=atof(xml::Dom::transToChar
+                       (attr.getNamedItem(DOMString("value")).getNodeValue()));
 	((FloatConst*)c)->setValue(val);
       }
       else if (typeOfConst=="double"){
 	c=new DoubleConst;
-	double val=atof(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
+	double val=
+          atof(xml::Dom::transToChar
+               (attr.getNamedItem(DOMString("value")).getNodeValue()));
 	((DoubleConst*)c)->setValue(val);
       }
       else if (typeOfConst=="string"){
 	c=new StringConst;
-	std::string val=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
+	std::string val=
+          std::string(xml::Dom::transToChar
+                      (attr.getNamedItem(DOMString("value")).getNodeValue()));
 	((StringConst*)c)->setValue(val);
       }
       else return 0;
       c->setName(name);
       c->setConstMeaning(ut);
-      c->setNote(std::string(xml::Dom::transToChar(e.getFirstChild().getNodeValue())));
+      c->setNote(std::string(xml::Dom::transToChar
+                             (e.getFirstChild().getNodeValue())));
       return c;
     }//end if
     else{
@@ -118,7 +130,8 @@ namespace detModel{
       DoubleConst* c=new DoubleConst;
       DOM_Element n;
 
-      double val=atof(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
+      double val=atof(xml::Dom::transToChar
+                      (attr.getNamedItem(DOMString("value")).getNodeValue()));
 
       c->setName(name);
       c->setConstMeaning(ut);
@@ -127,9 +140,11 @@ namespace detModel{
       n = static_cast<DOM_Element&>(e);
       DOM_NodeList nodelist = n.getElementsByTagName(DOMString("notes"));
 
-      if (nodelist.getLength())
-	c->setNote(std::string(xml::Dom::transToChar(nodelist.item(0).getFirstChild().getNodeValue())));
-    
+      if (nodelist.getLength()) {
+	c->setNote(std::string
+                   (xml::Dom::transToChar
+                    (nodelist.item(0).getFirstChild().getNodeValue())));
+      }
       return c;
     }//end else
   }
@@ -138,20 +153,29 @@ namespace detModel{
   void XercesBuilder::buildConstants(){
     unsigned int i,j;
 
-    if (m_docClient->getConstants()){
+    if (m_docClient->getConstants() != DOM_Node()){
       Constants* ConstantsBranch = new Constants();
       
-      DOM_NodeList childs = m_docClient->getConstants()->getChildNodes();
+      DOM_NodeList childs = m_docClient->getConstants().getChildNodes();
       // version primary ?derived 
       for(i=0;i<childs.getLength();i++){
 	if(childs.item(i).getNodeType() != Comment)
 	  {
-	    std::string str = std::string(xml::Dom::transToChar(childs.item(i).getNodeName()));
+	    std::string str = 
+              std::string(xml::Dom::transToChar(childs.item(i).getNodeName()));
 	    if(str == "version"){
 	      std::string s1,s2;
 	      DOM_NamedNodeMap attr=childs.item(i).getAttributes ();
-	      s1=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("major")).getNodeValue()));
-	      s2=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("minor")).getNodeValue()));
+	      s1=
+                std::string
+                (xml::Dom::transToChar
+                 (attr.getNamedItem(DOMString("major")).getNodeValue()));
+
+	      s2=
+                std::string
+                (xml::Dom::transToChar
+                 (attr.getNamedItem(DOMString("minor")).getNodeValue()));
+
 	      ConstantsBranch->setVersion(s1,s2);
 	    }
 	    else if(str == "primary" || str == "derived"){
@@ -162,13 +186,26 @@ namespace detModel{
                     ConstCategory* cat= new ConstCategory;
                     std::string s1;
                     DOM_NamedNodeMap attrCat=child.item(j).getAttributes();
-                    s1=std::string(xml::Dom::transToChar(attrCat.getNamedItem(DOMString("name")).getNodeValue()));
+
+                    s1=
+                      std::string
+                      (xml::Dom::transToChar
+                       (attrCat.getNamedItem
+                        (DOMString("name")).getNodeValue()));
+
                     cat->setName(s1);
-                    if(attrCat.getLength()>1){ //if the actual category has more than one attribute it is derived
-                      std::string s2;
-                      s2=std::string(xml::Dom::transToChar(attrCat.getNamedItem(DOMString("save")).getNodeValue()));
-                      if (s2=="true")
+                    // if the actual category has more than one attribute 
+                    // it is derived
+                    if(attrCat.getLength()>1){ 
+
+                      std::string s2 =
+                        std::string(xml::Dom::transToChar
+                                    (attrCat.getNamedItem
+                                     (DOMString("save")).getNodeValue()));
+
+                      if (s2=="true") {
                         cat->setSave(true);
+                      }
                       cat->setPrimary(false);
                     }
                     DOM_Node over =
@@ -203,27 +240,39 @@ namespace detModel{
 
   void XercesBuilder::buildMaterials(){
 
-    if (m_docClient->getMaterials()){
+    if (m_docClient->getMaterials() != DOM_Node()){
       MatCollection* materials = currentGdd->getMaterials();
 
-      DOM_NamedNodeMap attrCol=(m_docClient->getMaterials())->getAttributes();
+      DOM_NamedNodeMap attrCol=(m_docClient->getMaterials()).getAttributes();
 
-      materials->setVersion(std::string(xml::Dom::transToChar(attrCol.getNamedItem(DOMString("version")).getNodeValue())));
-      materials->setDate(std::string(xml::Dom::transToChar(attrCol.getNamedItem(DOMString("date")).getNodeValue())));
-      materials->setAuthor(std::string(xml::Dom::transToChar(attrCol.getNamedItem(DOMString("author")).getNodeValue())));
+      materials->setVersion(std::string
+                            (xml::Dom::transToChar
+                             (attrCol.getNamedItem
+                              (DOMString("version")).getNodeValue())));
 
-      DOM_NodeList childs = m_docClient->getMaterials()->getChildNodes();
+      materials->setDate(std::string
+                         (xml::Dom::transToChar
+                          (attrCol.getNamedItem
+                           (DOMString("date")).getNodeValue())));
+
+      materials->setAuthor(std::string
+                           (xml::Dom::transToChar
+                            (attrCol.getNamedItem
+                             (DOMString("author")).getNodeValue())));
+
+      DOM_NodeList childs = m_docClient->getMaterials().getChildNodes();
       for(unsigned int i=0;i<childs.getLength();i++){
 	if(childs.item(i).getNodeType() != Comment)
 	  {
-	    std::string str = std::string(xml::Dom::transToChar(childs.item(i).getNodeName()));
+	    std::string str = 
+              std::string(xml::Dom::transToChar(childs.item(i).getNodeName()));
 	    if(str == "element")
 	      {
-		materials->addMaterial(buildElement(&(childs.item(i))));
+		materials->addMaterial(buildElement((childs.item(i))));
 	      }
 	    if(str == "composite")
 	      {
-		materials->addMaterial(buildComposite(&(childs.item(i))));
+		materials->addMaterial(buildComposite((childs.item(i))));
 	      }
 	  }
       }
@@ -231,40 +280,45 @@ namespace detModel{
     }//end if
   }
 
-  Element* XercesBuilder::buildElement(DOM_Node* e)
+  Element* XercesBuilder::buildElement(DOM_Node e)
   {
     Element* element = new Element();
-    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
+    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
     
-    element->setName(std::string(xml::Dom::transToChar(el.getAttribute("name"))));
+    element->setName(std::string
+                     (xml::Dom::transToChar(el.getAttribute("name"))));
 
     if(el.getAttribute("symbol") != "")
-      element->setSymbol(std::string(xml::Dom::transToChar(el.getAttribute("symbol"))));
+      element->setSymbol
+        (std::string(xml::Dom::transToChar(el.getAttribute("symbol"))));
 
 
     if(el.getAttribute("RGB") != "")
       {
-	std::string temp = std::string(xml::Dom::transToChar(el.getAttribute("RGB")));
+	std::string temp = 
+          std::string(xml::Dom::transToChar(el.getAttribute("RGB")));
 	
       }
 
     element->setZ(atof(xml::Dom::transToChar(el.getAttribute("z"))));
-    element->setAweight(atof(xml::Dom::transToChar(el.getAttribute("aweight"))));
+    element->setAweight(atof(xml::Dom::transToChar
+                             (el.getAttribute("aweight"))));
 
-    if(el.getAttribute("density") != "")
-      element->setDensity(atof(xml::Dom::transToChar(el.getAttribute("density"))));
-
+    if(el.getAttribute("density") != "") {
+      element->setDensity(atof(xml::Dom::transToChar
+                               (el.getAttribute("density"))));
+    }
 
     return element;
   }
 
 
   /// Method that build a composite from the relative DOM node
-  Composite* XercesBuilder::buildComposite(DOM_Node* e){
+  Composite* XercesBuilder::buildComposite(DOM_Node e){
     unsigned int i, n = 0;
 
     /// The childs of the node
-    DOM_NodeList childs = e->getChildNodes();
+    DOM_NodeList childs = e.getChildNodes();
 
     /// Counts the number of addmaterial; we need this loop to avoid comments
     for(i=0;i<childs.getLength();i++)
@@ -277,7 +331,7 @@ namespace detModel{
     Composite* comp = new Composite(n);
 
     /// Cast to an element the node
-    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
+    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
     
 
     /// Set the name of the composite
@@ -291,10 +345,13 @@ namespace detModel{
 	/// Avoid comments
 	if (childs.item(i).getNodeType()!=Comment)
 	  {
-	    DOM_Element elCh = DOM_Element(static_cast<DOM_Element &>(childs.item(i)));
+	    const DOM_Element elCh = 
+              DOM_Element(static_cast<const DOM_Element &>(childs.item(i)));
 	    
 	    /// Get the name of the material to add to the compostite
-	    std::string name = std::string(xml::Dom::transToChar(elCh.getAttribute("material")));
+	    std::string name = 
+              std::string(xml::Dom::transToChar
+                          (elCh.getAttribute("material")));
 	    
 	    /// Prepare a material	    
 	    Material* mat;
@@ -316,13 +373,20 @@ namespace detModel{
 	    DOM_Node chi = elCh.getFirstChild();
 	    DOM_Element elChi = DOM_Element(static_cast<DOM_Element &>(chi));
 
-	    std::string type = std::string(xml::Dom::transToChar(chi.getNodeName()));
-	    /// Add the component using the overloaded addComponent of composite
-	    if(type == "fractionmass")
-	      comp->addComponent(mat,atof(xml::Dom::transToChar(elChi.getAttribute("fraction"))));
-	    else if(type == "natoms")
-	      comp->addComponent(mat,(unsigned int)atoi(xml::Dom::transToChar(elChi.getAttribute("n"))));
-	    
+	    std::string type = 
+              std::string(xml::Dom::transToChar(chi.getNodeName()));
+	    /// Add component using the overloaded addComponent of composite
+	    if(type == "fractionmass") {
+	      comp->addComponent(mat,atof
+                                 (xml::Dom::transToChar
+                                  (elChi.getAttribute("fraction"))));
+            }
+	    else if(type == "natoms") {
+	      comp->addComponent
+                (mat,
+                 (unsigned int)atoi(xml::Dom::transToChar
+                                    (elChi.getAttribute("n"))));
+	    }
 	  }
       }
     return comp;
@@ -332,8 +396,10 @@ namespace detModel{
 
   void XercesBuilder::buildSections()
   {
-    if (m_docClient->getSections()){
-      currentGdd->addSection(buildSection(const_cast<DOM_Node*>(m_docClient->getSections())));
+    if (m_docClient->getSections() != DOM_Node()){
+      //      currentGdd->addSection(buildSection(const_cast<DOM_Node*>(m_docClient->getSections())));
+      currentGdd->addSection
+        (buildSection(const_cast<DOM_Node>(m_docClient->getSections())));
     }
     
     currentGdd->buildVolumeMap();
@@ -344,13 +410,13 @@ namespace detModel{
 
   }
 
-  ///////////////////////////////////////////////////////////////////////////////////
 
-  Section* XercesBuilder::buildSection(DOM_Node* e)
+
+  Section* XercesBuilder::buildSection(DOM_Node e)
   {
     unsigned int i;
 
-    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
+    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
     Section* s = new Section(
 			     xml::Dom::getAttribute(el, "name"),
 			     xml::Dom::getAttribute(el, "version"),
@@ -359,40 +425,41 @@ namespace detModel{
 			     xml::Dom::getAttribute(el, "fineChoice"),
 			     xml::Dom::getAttribute(el, "topVolume")
 			     );
-    DOM_NodeList childs = e->getChildNodes();
+    DOM_NodeList childs = e.getChildNodes();
     for(i=0;i<childs.getLength();i++)
       {
 	if (childs.item(i).getNodeType()!=Comment){
-	  std::string str = std::string(xml::Dom::transToChar(childs.item(i).getNodeName()));
+	  std::string str = 
+            std::string(xml::Dom::transToChar(childs.item(i).getNodeName()));
 	  if(str == "box")
-	    s->addVolume(buildBox(&(childs.item(i))));
+	    s->addVolume(buildBox(childs.item(i)));
 	  if(str == "tubs")
-	    s->addVolume(buildTube(&(childs.item(i))));
+	    s->addVolume(buildTube(childs.item(i)));
 	  else if(str == "choice")
 	    {
-	      Choice* t = buildChoice(&(childs.item(i)));
+	      Choice* t = buildChoice(childs.item(i));
 	      // s->addChoice(t); 
 	      s->addVolume(t);
 	    }
 	  else if(str == "composition")
-	    s->addVolume(buildComposition( &(childs.item(i)) ));
+	    s->addVolume(buildComposition(childs.item(i) ));
 	  else if(str=="stackX"||str=="stackY"||str=="stackZ")
-	    s->addVolume(buildStack( &(childs.item(i)) ));
+	    s->addVolume(buildStack(childs.item(i) ));
 	}
       }
     return s;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  Choice* XercesBuilder::buildChoice(DOM_Node* e)
+
+  Choice* XercesBuilder::buildChoice(DOM_Node e)
   {
-    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
+    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
     Choice* b = new Choice(xml::Dom::getAttribute(el, "name"),
 			   xml::Dom::getAttribute(el, "default"));
 
     //    Manager* Manager = Manager::getPointer();
 
-    DOM_NodeList childs = e->getChildNodes();
+    DOM_NodeList childs = e.getChildNodes();
   
     for(unsigned int i=0;i<childs.getLength();i++){
       if (childs.item(i).getNodeType()!=Comment)
@@ -414,12 +481,12 @@ namespace detModel{
     return b;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
+
   /// \doit Add parameters
-  Box* XercesBuilder::buildBox(DOM_Node* e)
+  Box* XercesBuilder::buildBox(DOM_Node e)
   {
 
-    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
+    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
     Box* b = new Box(xml::Dom::getAttribute(el, "name"));
 
     // b->setUnitLength(xml::Dom::transToChar(el.getAttribute("unitLength")));
@@ -431,24 +498,31 @@ namespace detModel{
     if(el.getAttribute("Z") != "0")
       b->setZ(atof(xml::Dom::transToChar(el.getAttribute("Z"))));
     b->setMaterial(xml::Dom::transToChar(el.getAttribute("material")));
-    b->setDetectorType(atoi(xml::Dom::transToChar(el.getAttribute("detectorType"))));
+    b->setDetectorType(atoi(xml::Dom::transToChar
+                            (el.getAttribute("detectorType"))));
 
-    if (std::string((xml::Dom::transToChar(el.getAttribute("sensitive")))) == "posHit")
+    if (std::string((xml::Dom::transToChar
+                     (el.getAttribute("sensitive")))) == "posHit")
       b->setSensitive(1);
-    else if (std::string((xml::Dom::transToChar(el.getAttribute("sensitive")))) == "intHit")
+    else if (std::string((xml::Dom::transToChar
+                          (el.getAttribute("sensitive")))) == "intHit")
       b->setSensitive(2);
     else
       b->setSensitive(0);
 
-    if (e->hasChildNodes()){
-      DOM_Node child=e->getFirstChild();
+    if (e.hasChildNodes()){
+      DOM_Node child=e.getFirstChild();
       Seg* s = new Seg;
 
       DOM_NamedNodeMap attributelist = child.getAttributes();
       for(unsigned int k=0;k<attributelist.getLength();k++){
 	std::string NameAttr=
-	  std::string(xml::Dom::transToChar(attributelist.item(k).getNodeName()) );
-	char* ValueAttr=xml::Dom::transToChar( attributelist.item(k).getNodeValue() );
+	  std::string(xml::Dom::transToChar
+                      (attributelist.item(k).getNodeName()) );
+
+	char* ValueAttr=xml::Dom::transToChar
+          (attributelist.item(k).getNodeValue() );
+
 	if(NameAttr=="axis")s->setAxis(ValueAttr);
 	else if(NameAttr=="reason")s->setReason(ValueAttr);
 	else if(NameAttr=="nSeg" && "1")s->setnSeg(atoi(ValueAttr));
@@ -458,12 +532,13 @@ namespace detModel{
     return b;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
+
+
   /// \doit Add parameters
-  Tube* XercesBuilder::buildTube(DOM_Node* e)
+  Tube* XercesBuilder::buildTube(DOM_Node e)
   {
 
-    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
+    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
     Tube* t = new Tube(xml::Dom::getAttribute(el, "name"));
 
 
@@ -477,7 +552,8 @@ namespace detModel{
       t->setZ(atof(xml::Dom::transToChar(el.getAttribute("Z"))));
     t->setMaterial(xml::Dom::transToChar(el.getAttribute("material")));
 
-    if (std::string((xml::Dom::transToChar(el.getAttribute("sensitive")))) == "true")
+    if (std::string((xml::Dom::transToChar
+                     (el.getAttribute("sensitive")))) == "true")
       t->setSensitive(1);
     else 
       t->setSensitive(0);
@@ -485,18 +561,19 @@ namespace detModel{
     return t;
   }
 
-  ////////////////////////////////////////////////////////////////////////
 
-  Composition* XercesBuilder::buildComposition(DOM_Node* e){
+
+  Composition* XercesBuilder::buildComposition(DOM_Node e){
     unsigned int i;
 
     Composition* b = new Composition();
-    DOM_NamedNodeMap attributelist=e->getAttributes();
+    DOM_NamedNodeMap attributelist=e.getAttributes();
 
     for (i=0;i<attributelist.getLength();i++){
       if (attributelist.item(i).getNodeType()!=Comment){
 	DOM_Node currentAttribute=attributelist.item(i);
-	std::string value = std::string(xml::Dom::transToChar( currentAttribute.getNodeValue() ));
+	std::string value = 
+          std::string(xml::Dom::transToChar(currentAttribute.getNodeValue() ));
 	std::string attributeName = 
 	  std::string(xml::Dom::transToChar( currentAttribute.getNodeName() ));
       
@@ -512,36 +589,38 @@ namespace detModel{
       }
     };
 
-    DOM_NodeList childs = e->getChildNodes();
+    DOM_NodeList childs = e.getChildNodes();
   
     for(i=0;i<childs.getLength();i++){
       if (childs.item(i).getNodeType()!=Comment)
-	b->addPosition(buildPosition( &(childs.item(i)) ));
+	b->addPosition(buildPosition( childs.item(i) ));
       
     };
 
     return b;
   }
 
-  //////////////////////////////////////////////////////////////////////////
-  Stack* XercesBuilder::buildStack(DOM_Node* e){
+
+  Stack* XercesBuilder::buildStack(DOM_Node e){
 
     Stack::axisDir st;
     unsigned int i;
 
-    std::string StackDir = std::string(xml::Dom::transToChar( e->getNodeName() ));
+    std::string StackDir = 
+      std::string(xml::Dom::transToChar( e.getNodeName() ));
     if(StackDir=="stackX")st=Stack::xDir;
     else if(StackDir=="stackY")st=Stack::yDir;
     else st=Stack::zDir;
     
     Stack* s = new Stack(st);
     
-    DOM_NamedNodeMap attributelist=e->getAttributes();
+    DOM_NamedNodeMap attributelist=e.getAttributes();
     for (i=0;i<attributelist.getLength();i++){
       if (attributelist.item(i).getNodeType()!=Comment){
 	DOM_Node currentAttribute=attributelist.item(i);
    
-	std::string value = std::string(xml::Dom::transToChar( currentAttribute.getNodeValue() ));
+	std::string value = 
+          std::string(xml::Dom::transToChar(currentAttribute.getNodeValue() ));
 	std::string attributeName = 
 	  std::string(xml::Dom::transToChar( currentAttribute.getNodeName() ));
 	
@@ -554,12 +633,12 @@ namespace detModel{
       }
     }
 
-    DOM_NodeList childs = e->getChildNodes();
+    DOM_NodeList childs = e.getChildNodes();
   
   
     for(i=0;i<childs.getLength();i++){
       if ( (childs.item(i)).getNodeType()!=Comment){
-	StackedPos* p = buildRelativePosition( &(childs.item(i)));
+	StackedPos* p = buildRelativePosition( childs.item(i));
 	p->setAxisDir((Stack::axisDir)st);
 	s->addPosition(p);
       }
@@ -568,17 +647,18 @@ namespace detModel{
     return s;
   }
 
-  ////////////////////////////////////////////////////////////////////////////////
-  SinglePos* XercesBuilder::buildPosition(DOM_Node* e){
 
-    std::string posType = std::string(xml::Dom::transToChar(e->getNodeName()));
+
+  SinglePos* XercesBuilder::buildPosition(DOM_Node e){
+
+    std::string posType = std::string(xml::Dom::transToChar(e.getNodeName()));
   
     if (posType=="posXYZ"){
     
       PosXYZ* pos=new PosXYZ();
       setAttributePosition(pos, e);
        
-      DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
+      DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
 
       if(el.getAttribute("X") != "0")
 	pos->setX(atof(xml::Dom::transToChar(el.getAttribute("X"))));
@@ -598,10 +678,10 @@ namespace detModel{
 
 
 
-  /////////////////////////////////////////////////////////////////////////
-  StackedPos* XercesBuilder::buildRelativePosition(DOM_Node* e){
 
-    std::string posType = std::string(xml::Dom::transToChar(e->getNodeName()));
+  StackedPos* XercesBuilder::buildRelativePosition(DOM_Node e){
+
+    std::string posType = std::string(xml::Dom::transToChar(e.getNodeName()));
     //AxisPos,AxisMpos
     if (posType=="axisPos"){
       //   GddaxisPos* pos=new GddaxisPos();
@@ -611,7 +691,7 @@ namespace detModel{
 
       setAttributeRelativePosition(pos, e);
        
-      DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
+      DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
 
       if(el.getAttribute("shift") != "0")
 	pos->setShift0(atof(xml::Dom::transToChar(el.getAttribute("shift"))));
@@ -630,7 +710,7 @@ namespace detModel{
 
       setAttributeRelativePosition(pos, e);
        
-      DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
+      DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
 
       if(el.getAttribute("shift0") != "0")
 	pos->setShift0(atof(xml::Dom::transToChar(el.getAttribute("shift0"))));
@@ -644,9 +724,10 @@ namespace detModel{
     }
   }
 
-  void XercesBuilder::setAttributePosition(SinglePos* pos, DOM_Node* e)
+
+  void XercesBuilder::setAttributePosition(SinglePos* pos, DOM_Node e)
   {
-    DOM_NamedNodeMap attributelistPos=e->getAttributes();
+    DOM_NamedNodeMap attributelistPos=e.getAttributes();
 
     DOM_Node node;
 
@@ -672,8 +753,8 @@ namespace detModel{
     // pos->setUnitAngle(xml::Dom::transToChar(node.getNodeValue()));
 
 
-    if (e->hasChildNodes()){
-      DOM_NodeList child=e->getChildNodes();
+    if (e.hasChildNodes()){
+      DOM_NodeList child=e.getChildNodes();
       for(unsigned int k=0; k<child.getLength() ; k++)
 	{
 	  if(child.item(k).getNodeType() != Comment) 
@@ -684,8 +765,11 @@ namespace detModel{
 	      for(unsigned int i=0;i<attributelist.getLength();i++){
 	      
 		std::string NameAttr=
-		  std::string(xml::Dom::transToChar(attributelist.item(i).getNodeName()) );
-		char* ValueAttr=xml::Dom::transToChar( attributelist.item(i).getNodeValue() );
+		  std::string(xml::Dom::transToChar
+                              (attributelist.item(i).getNodeName()) );
+
+		char* ValueAttr=xml::Dom::transToChar
+                  (attributelist.item(i).getNodeValue() );
 		if(NameAttr=="name")field->setName(ValueAttr);
 		else if(NameAttr=="step")field->setStep(atof(ValueAttr));
 		else if(NameAttr=="value")field->setValue(atof(ValueAttr));
@@ -696,9 +780,9 @@ namespace detModel{
     }
   }
 
-  void XercesBuilder::setAttributeRelativePosition(StackedPos* pos, DOM_Node* e)
+  void XercesBuilder::setAttributeRelativePosition(StackedPos* pos, DOM_Node e)
   {
-    DOM_NamedNodeMap attributelistPos=e->getAttributes();
+    DOM_NamedNodeMap attributelistPos=e.getAttributes();
 
     DOM_Node node;
 
@@ -729,8 +813,8 @@ namespace detModel{
     node = attributelistPos.getNamedItem(DOMString("shift"));
     pos->setShift(atof(xml::Dom::transToChar(node.getNodeValue())));
 
-    if (e->hasChildNodes()){
-      DOM_NodeList child=e->getChildNodes();
+    if (e.hasChildNodes()){
+      DOM_NodeList child=e.getChildNodes();
       for(unsigned int k=0; k<child.getLength() ; k++)
 	{
 	  if(child.item(k).getNodeType() != Comment) 
@@ -741,8 +825,12 @@ namespace detModel{
 	      for(unsigned int i=0;i<attributelist.getLength();i++){
 	      
 		std::string NameAttr=
-		  std::string(xml::Dom::transToChar(attributelist.item(i).getNodeName()) );
-		char* ValueAttr=xml::Dom::transToChar( attributelist.item(i).getNodeValue() );
+		  std::string(xml::Dom::transToChar
+                              (attributelist.item(i).getNodeName()) );
+
+		char* ValueAttr=xml::Dom::transToChar
+                  ( attributelist.item(i).getNodeValue() );
+
 		if(NameAttr=="name")field->setName(ValueAttr);
 		else if(NameAttr=="step")field->setStep(atof(ValueAttr));
 		else if(NameAttr=="value")field->setValue(atof(ValueAttr));
