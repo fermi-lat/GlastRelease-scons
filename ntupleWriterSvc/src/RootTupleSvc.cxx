@@ -95,7 +95,6 @@ private:
     int m_trials; /// total number of calls
     bool m_defaultStoreFlag;
     IntegerProperty m_autoSave; // passed to TTree::SetAutoSave.
-    array double test[100];
 
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
