@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v7r8      27-Sep-2004 HMK Store Contribution Lengths for LDF
 v7r7p0    14-sep-2004 HMK Fix up warnings in condition summary methods
 v7r7      14-sep-2004 HMK Add enum to Gem class to unpack condition summary
 v7r6      27-aug-2004 HMK Add Event Flags in EventSummaryData
