@@ -14,8 +14,6 @@ use Gleam *
 use ntupleWriterSvc *
 use astro *
 
-
-
 set JOBOPTIONS $(USERALGROOT)/src/jobOptions.txt
 
 macro other_source "" WIN32 " *.h *.txt ../xml/*.xml"
