@@ -13,7 +13,8 @@
 #include <cstdlib>
 #include <memory>
 
-#include "calibUtil/StripSrv.h"
+#include "calibUtil/ClientObject.h"
+#include "calibUtil/GenericSrv.h"
 
 namespace calibUtil {
   
@@ -42,7 +43,7 @@ namespace calibUtil {
   }
 
 
-  /// Initialize the data structures by parsing the XML file
+  // Initialize the data structures by parsing the XML file
   StripSrv::StripSrv(std::string xmlFileName){
     
     xml::XmlParser* parser = new xml::XmlParser();
@@ -121,7 +122,7 @@ namespace calibUtil {
     
             dnode = tree.nextNode();
                 
-            /// Check for stripList or stripSpan
+            // Check for stripList or stripSpan
             while((!dnode.DOM_Node::isNull()) && 
                   (DOMString("stripSpan").equals(dnode.getNodeName()) || 
                    DOMString("stripList").equals(dnode.getNodeName()))){
@@ -142,7 +143,7 @@ namespace calibUtil {
               }
 
               dnode = tree.nextNode(); 
-            } /// end of while stripSpan || stripList
+            } // end of while stripSpan || stripList
 
             if(which == std::string("top")){
               tray.topLayer = uniL;
@@ -154,12 +155,12 @@ namespace calibUtil {
             else
               cout << "ERROR PARSING : element unilayer"; 
                 
-          }   /// end of while unilayer
+          }   // end of while unilayer
           tower.trayCol.push_back(tray);
-        }     /// end of while tray
+        }     // end of while tray
         towerCol.push_back(tower);
-      }       /// end of if
-    }         /// end of for
+      }       // end of if
+    }         // end of for
 
   }
 
@@ -168,19 +169,16 @@ namespace calibUtil {
     delete genSrv;
   }
   
-  /// return the status (Hot or Dead) of the strip
+  /// returns the status (Hot or Dead) of the strip
   std::string  StripSrv::getBadType(){
     return badType;
   }
   
-  /// List all towers with bad strips 
+  /// Lists all towers with bad strips 
   const std::vector<towerRC> StripSrv::getBadTowers(){
     
      std::vector<towerRC> tv;
-     //     std::vector<towerRC> & rtv = tv;
      std::vector<Tower>::iterator it = towerCol.begin();
-
-     // std::vector<towerRC>::iterator i = tv.begin();
 
      while(it != towerCol.end() ) {
 
@@ -192,13 +190,10 @@ namespace calibUtil {
        tv.push_back(trc);
        it++;
      }
-
-     // return rtv;
-      
      return tv;
   }
   
-  /// count for very bad strips for the tower specified 
+  /// counts very bad strips for the tower specified 
   unsigned int  StripSrv::countVeryBad(towerRC towerId){
     
      std::vector<Tower>::iterator it = towerCol.begin();
@@ -225,7 +220,7 @@ namespace calibUtil {
      return stripCount;
   }
 
-  /// count for  bad strips (including very bad) for the tower specified 
+  /// counts bad strips (including very bad) for the tower specified 
   unsigned int  StripSrv::countBad(towerRC towerId){
    
     std::vector<Tower>::iterator it = towerCol.begin();
@@ -251,7 +246,7 @@ namespace calibUtil {
     return stripCount;
   }
   
-  /// count for very bad strips for the tower and tray specified 
+  /// counts very bad strips for the tower and tray specified 
   unsigned int  StripSrv::countVeryBad(towerRC towerId, unsigned int trayNum){
      
     std::vector<Tower>::iterator it = towerCol.begin();
@@ -280,9 +275,7 @@ namespace calibUtil {
     return stripCount;
   }
   
-  /// count for  bad strips (including very bad) for the tower and tray 
-  /// specified 
-   
+  /// counts bad strips (including very bad) for the tower and tray specified 
   unsigned int  StripSrv::countBad(towerRC towerId, unsigned int trayNum){
     
     std::vector<Tower>::iterator it = towerCol.begin();
@@ -311,8 +304,9 @@ namespace calibUtil {
     return stripCount;
   }
     
-  /// count for very bad strips for the tower,tray and unilayer  specified 
-  unsigned int  StripSrv::countVeryBad(towerRC towerId, unsigned int trayNum, uniL uniLayer){
+  /// counts very bad strips for the tower,tray and unilayer  specified 
+  unsigned int  StripSrv::countVeryBad(towerRC towerId, 
+                                       unsigned int trayNum, uniL uniLayer){
 
     std::vector<Tower>::iterator it = towerCol.begin();
     unsigned stripCount = 0;
@@ -343,7 +337,7 @@ namespace calibUtil {
 
   }
   
-  /// count for  bad strips (including very bad) for the tower, tray 
+  /// counts bad strips (including very bad) for the tower, tray 
   /// and unilayer specified 
   unsigned int  StripSrv::countBad(towerRC towerId, unsigned int trayNum, 
                                    uniL uniLayer){
@@ -376,7 +370,7 @@ namespace calibUtil {
     return stripCount;
   }
   
-  /// List all very bad strips with the tower,tray and unilayer  
+  /// Lists all very bad strips with the tower,tray and unilayer  
   std::vector<unsigned int>  StripSrv::getVeryBad(towerRC towerId, unsigned int trayNum, uniL uniLayer){
 
     std::vector<Tower>::iterator it = towerCol.begin();
@@ -409,7 +403,7 @@ namespace calibUtil {
   }
 
   
-  /// List  bad strips (including very bad) with the tower, tray 
+  /// Lists  bad strips (including very bad) with the tower, tray 
   /// and unilayer specified 
   std::vector<unsigned int>  StripSrv::getBad(towerRC towerId, unsigned int trayNum, uniL uniLayer){
 
@@ -485,7 +479,7 @@ namespace calibUtil {
 
   }
 
-}/// end of namespace calibUtil
+}// end of namespace calibUtil
 
 
 

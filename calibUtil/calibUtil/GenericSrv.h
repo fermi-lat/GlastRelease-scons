@@ -18,15 +18,7 @@ namespace calibUtil {
   public: 
 
     /// Constructor that fills in values of generic data from XML file
-    GenericSrv(DOM_Element docElt){
-
-      DOM_Element child  = xml::Dom::findFirstChildByName(docElt,"generic");
-      instName  = xml::Dom::getAttribute(child,"instrument");
-      timestamp = xml::Dom::getAttribute(child,"timestamp");
-      calType   = xml::Dom::getAttribute(child,"calType");
-      fmtVer    = xml::Dom::getAttribute(child,"fmtVersion");
-
-    }
+    GenericSrv(DOM_Element docElt);
 
     /// Get instrument name
     std::string getInst(){
@@ -57,7 +49,7 @@ namespace calibUtil {
 
   };
 
-}/// end of namespace calibUtil
+}// end of namespace calibUtil
 
 #endif
 

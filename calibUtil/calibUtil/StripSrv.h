@@ -6,10 +6,13 @@
 #include <iostream>
 #include <vector>
 
-#include "calibUtil/GenericSrv.h"
-#include "calibUtil/ClientObject.h"
-
 namespace calibUtil {
+
+  typedef struct stowerRC { unsigned int row; unsigned int col;} towerRC;
+  enum uniL {TOP, BOT};
+
+  class ClientObject;
+  class GenericSrv;
 
   class StripSrv {
 
@@ -22,45 +25,44 @@ namespace calibUtil {
   public:
 
     /// constructor. Initializes strip service by creating a DOM structure 
-    /// out the XML file and filling in the internal data structures 
+    /// out of the XML file and filling in the internal data structures 
     StripSrv(std::string xmlFileName);
 
-    /// destructor. Deallocate memory
+    /// destructor. Deallocates memory
     ~StripSrv();
   
-    /// return the status (Hot or Dead) of the strip
+    /// returns the status (Hot or Dead) of the strip
     std::string getBadType();
 
-    /// List all towers with bad strips 
+    /// lists all towers with bad strips 
     const std::vector<towerRC> getBadTowers();
 
-    /// count for very bad strips for the tower specified 
+    /// counts very bad strips for the tower specified 
     unsigned int countVeryBad(towerRC towerId);
     
-    /// count for  bad strips (including very bad) for the tower specified 
+    /// counts bad strips (including very bad) for the tower specified 
     unsigned int countBad(towerRC towerId);
     
-    /// count for very bad strips for the tower and tray specified 
+    /// counts very bad strips for the tower and tray specified 
     unsigned int countVeryBad(towerRC towerId, unsigned int trayNum);
     
-    /// count for  bad strips (including very bad) for the tower and tray 
-    /// specified 
+    /// counts bad strips (including very bad) for the tower and trayspecified 
     unsigned int countBad(towerRC towerId, unsigned int trayNum);
     
-    /// count for very bad strips for the tower,tray and unilayer  specified 
+    /// counts very bad strips for the tower,tray and unilayer  specified 
     unsigned int countVeryBad(towerRC towerId, unsigned int trayNum, 
                               uniL uniLayer);
     
-    /// count for  bad strips (including very bad) for the tower, tray 
+    /// counts bad strips (including very bad) for the tower, tray 
     /// and unilayer specified 
     unsigned int countBad(towerRC towerId, unsigned int trayNum, 
                           uniL uniLayer);
 
-    /// List all very bad strips with the tower,tray and unilayer  
+    /// lists all very bad strips with the tower,tray and unilayer  
     std::vector<unsigned int> getVeryBad(towerRC towerId, 
                                          unsigned int trayNum, uniL uniLayer);
     
-    /// List  bad strips (including very bad) with the tower, tray 
+    /// lists  bad strips (including very bad) with the tower, tray 
     /// and unilayer specified 
     std::vector<unsigned int> getBad(towerRC towerId, 
                                      unsigned int trayNum, uniL uniLayer);
@@ -104,13 +106,13 @@ namespace calibUtil {
     std::vector<Tower> towerCol;
     std::string badType;
 
-    /// Contained object to store generic data
+    // object to store generic data
     GenericSrv *genSrv;   
     
 
   };
 
-}/// end of namespace calibUtil
+}// end of namespace calibUtil
 
 #endif
 
