@@ -47,6 +47,14 @@ public:
     
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IFluxSvc; }
+
+    ///return the pointer to the current IFlux object
+    virtual IFlux* currentFlux()=0;
+
+    /// name of the flux
+    virtual std::string fluxName()const=0;
+
+
  
 };
 

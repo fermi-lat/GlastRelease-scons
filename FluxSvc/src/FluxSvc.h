@@ -44,6 +44,9 @@ public:
     ///return the pointer to the current IFlux object
     IFlux* currentFlux();
 
+    /// name of the flux
+    std::string fluxName()const;
+
     
     //------------------------------------------------------------------
     //  stuff required by a Service

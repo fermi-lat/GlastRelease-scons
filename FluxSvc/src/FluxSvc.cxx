@@ -160,5 +160,11 @@ IFlux* FluxSvc::currentFlux(){
 return m_currentFlux;
 }
 
+/// name of the flux
+std::string FluxSvc::fluxName()const{
+    return m_currentFlux->name();
+}
+
+
 void WARNING (const char * text ){  std::cerr << "WARNING: " << text << '\n';}
 void FATAL(const char* s){std::cerr << "\nERROR: "<< s;}
