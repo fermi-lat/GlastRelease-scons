@@ -33,7 +33,6 @@ public:
     double outerRadius() const { return outer_radius; }
     double stereoAngle() const { return stereo_angle; }
 
-    virtual void calcMaxDimension();
 
 
     virtual const char *nameOf() const { return "Hype"; }
