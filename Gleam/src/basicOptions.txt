@@ -118,7 +118,7 @@ ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" };
 
 ApplicationMgr.DLLs +={ 
     "CalibSvc",
-    "CalRecon", "CalUtil", "CalXtalResponse",
+    "CalRecon", "CalUtil", 
     "TkrRecon", "TkrUtil"
     };
 Reconstruction.Members={ 
@@ -129,10 +129,18 @@ Reconstruction.Members={
     "Sequencer/Acd"
     };
          
-//          tracker
+
 // -------------------------------------------
+//          tracker services
 ApplicationMgr.ExtSvc   += { "TkrGeometrySvc"};
 ApplicationMgr.ExtSvc   += { "TkrInitSvc"};
+
+
+// -------------------------------------------
+// Calorimeter services
+//
+ApplicationMgr.DLLs += {"CalXtalResponse"};
+ApplicationMgr.ExtSvc += {"CalCalibSvc"};
 
 
 // Start up a CalibDataSvc 
