@@ -102,19 +102,12 @@ class McParticle  : virtual public ContainedObject  {
     /// Set whether this is a primary particle
     void setPrimaryParticleFlag( bool value );
 
-    /// Retrieve pointer to origin vertex (const or non-const)
-    const McVertex* originMcVertex() const;
-          McVertex* originMcVertex();
+    /// Retrieve pointer to the vertex (const or non-const)
+    const McVertex* mcVertex() const;
+          McVertex* mcVertex();
     /// Update pointer to origin vertex (by a C++ pointer or a smart reference)
-    void setOriginMcVertex( McVertex* value );
-    void setOriginMcVertex( SmartRef<McVertex> value );
-
-    /// Retrieve pointer to vector of end vertex (const or non-const)
-    const McVertex* endMcVertex() const;
-          McVertex* endMcVertex();
-    /// Update pointer to origin vertex (by a C++ pointer or a smart reference)
-    void setEndMcVertex( McVertex* value );
-    void setEndMcVertex( SmartRef<McVertex> value );
+    void setMcVertex( McVertex* value );
+    void setMcVertex( SmartRef<McVertex> value );
 
     /// Retrieve sub event ID 
     short subEvtID() const;
@@ -137,10 +130,8 @@ class McParticle  : virtual public ContainedObject  {
     short                     m_subEvtID;
     /// Bit-field status flag
     unsigned long             m_statusFlags;
-    /// Pointer to origin vertex
-    SmartRef<McVertex>        m_originMcVertex;
-    /// Pointer to end vertex
-    SmartRef<McVertex>        m_endMcVertex;
+    /// Pointer to the McVertex
+    SmartRef<McVertex>        m_mcVertex;
 };
 
 
@@ -208,49 +199,25 @@ inline void McParticle::setPrimaryParticleFlag( bool value )
 }
 
 
-/// Retrieve pointer to origin vertex (const or non-const)
-inline const McVertex* McParticle::originMcVertex() const
+/// Retrieve pointer to the vertex (const or non-const)
+inline const McVertex* McParticle::mcVertex() const
 { 
-//  McVertex* ret = m_originMcVertex;
-//  return ret;
-  return m_originMcVertex; 
+  return m_mcVertex; 
 }
-inline       McVertex* McParticle::originMcVertex()
+inline       McVertex* McParticle::mcVertex()
 { 
-  return m_originMcVertex;
+  return m_mcVertex;
 }
 
 
-/// Update pointer to origin vertex (by a C++ pointer or a smart reference)
-inline void McParticle::setOriginMcVertex( McVertex* value )
+/// Update pointer to the vertex (by a C++ pointer or a smart reference)
+inline void McParticle::setMcVertex( McVertex* value )
 { 
-  m_originMcVertex = value; 
+  m_mcVertex = value; 
 }
-inline void McParticle::setOriginMcVertex( SmartRef<McVertex> value )
+inline void McParticle::setMcVertex( SmartRef<McVertex> value )
 { 
-  m_originMcVertex = value; 
-}
-
-
-/// Retrieve pointer to vector of end vertex (const or non-const)
-inline const McVertex* McParticle::endMcVertex() const
-{ 
-  return m_endMcVertex; 
-}
-inline       McVertex* McParticle::endMcVertex()
-{ 
-  return m_endMcVertex; 
-}
-
-
-/// Update pointer to end vertex (by a C++ pointer or a smart reference)
-inline void McParticle::setEndMcVertex( McVertex* value )
-{ 
-  m_endMcVertex = value; 
-}
-inline void McParticle::setEndMcVertex( SmartRef<McVertex> value )
-{ 
-  m_endMcVertex = value; 
+  m_mcVertex = value; 
 }
 
 

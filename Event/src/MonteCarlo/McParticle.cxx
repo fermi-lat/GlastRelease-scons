@@ -21,8 +21,7 @@ StreamBuffer& McParticle::serialize( StreamBuffer& s ) const
     << m_particleProperty
     << m_subEvtID
     << m_statusFlags
-    << m_originMcVertex(this)
-    << m_endMcVertex(this);
+    << m_mcVertex(this);
 }
 
 
@@ -35,8 +34,7 @@ StreamBuffer& McParticle::serialize( StreamBuffer& s )
     >> m_particleProperty
     >> m_subEvtID
     >> m_statusFlags
-    >> m_originMcVertex(this)
-    >> m_endMcVertex(this);
+    >> m_mcVertex(this);
   return s;
 }
 
@@ -50,7 +48,6 @@ std::ostream& McParticle::fillStream( std::ostream& s ) const
     << "\n    Particle ID                = " << m_particleID
     << "\n    Particle Property          = " << m_particleProperty
     << "\n    Sub Event ID               = " << m_subEvtID
-    << "\n    Origin McVertex            = " << m_originMcVertex(this)
-    << "\n    End McVertex               = " << m_endMcVertex(this);
+    << "\n    McVertex                   = " << m_mcVertex(this);
   return s;
 }
