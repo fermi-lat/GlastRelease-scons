@@ -5,11 +5,10 @@
 
 This package is the GLAST interface to Geant4. The steering is done with the main Algorithm, G4Generator.<br>
 
-  For setup, it uses detModel to construct the detector, using a helper class 
-  DetectorConstruction, which in turn uses G4SectionsVisitor and G4MaterialsVisitor.
+  For setup, it uses GlastDetSVc to construct the detector, using a helper class 
+  DetectorConstruction, which in turn uses the callback classes G4Media and G4Geometry.
   <br><br>
-  Sensitive detector setup is now done with GlastDetectorManager, which creates the GlastDetector objects
-  defined in the instrument class from XML files. It uses a vector of all the ids associated with 
+  Sensitive detector setup is now done with GlastDetectorManager. It uses a vector of all the ids associated with 
   sensitive detectors to make the correspondence for passing hit information to the appropriate object.
 
   This will be gradually replaced or enhanced by saving the hit information itself on the TDS, for interpretation by 
@@ -25,10 +24,7 @@ This package is the GLAST interface to Geant4. The steering is done with the mai
   <br>
   The display of each can be enabled independently. 
   It will be relaced or supplemented by HepRep/WIRED.
-  <br><br>
-  Finally, the Algorithm IrfDisplay (copied from GismoGenerator) is used to display GlastDetector output, in the form
-  of TdGlastData object on the TDS, as a test.
-
+<br>
   A test program, under src/test, exercises everything. See the files below.
 
   <hr>
