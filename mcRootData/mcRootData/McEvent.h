@@ -56,7 +56,9 @@ public:
     McParticle* getMcParticle(UInt_t index) const;
     /// return the full TObjArray containing McParticles
     TObjArray* getMcParticleCol() const { return m_particleCol; };
-    
+    /// clear of the array (necessary for converters)
+    void clearMcParticleCol()  { m_particleCol->Clear(); };
+   
     /// store a new McPositionHit in the collection
     void addMcPositionHit(McPositionHit *hit);
     /// return a McPositionHit corresponding to index
@@ -67,7 +69,9 @@ public:
     };
     /// return the full TObjArray containing McPositionHits
     const TObjArray* getMcPositionHitCol() const { return m_positionHitCol; };
-
+    /// clear of the array (necessary for converters)
+    void clearMcPositionHitCol()  { m_positionHitCol->Clear(); };
+ 
     /// add a new McIntegratingHit to the collection
     void addMcIntegratingHit(McIntegratingHit *hit);
     /// return a McIntegrating hit corresponding to the index 
@@ -78,7 +82,9 @@ public:
     };
     /// return the full TObjArray containing McIntegratingHits
     const TObjArray* getMcIntegratingHitCol() const { return m_integratingHitCol; };
-
+    /// clear of the array (necessary for converters)
+    void clearMcIntegratingHitCol()  { m_integratingHitCol->Clear(); };
+ 
 /// time stamp stuff here
     inline Double_t getTimeStamp() { return m_timeStamp; };
 
