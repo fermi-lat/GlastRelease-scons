@@ -26,6 +26,7 @@ int nbins;  //!< Number of bins used for the fit
 std::vector<double> g_elayer;  //!< Energy per layer in GeV
 double slope;   //!< slope of the shower direction
 double logheight; //!< log height
+double logwidth;  //!< log width
 
 //! function to compute the true energy deposited in a layer
 /*! Uses the incomplete gamma function: gamma(double,double) implemented in gamma.cxx
@@ -445,11 +446,9 @@ StatusCode CalClustersAlg::initialize()
         return sc;
     }
 
-    logheight = m_CalGeo->logHeight();
+        logheight = m_CalGeo->logHeight();
+	logwidth = m_CalGeo->logWidth();
     
-    //	m_CsIClusterList = dataManager::instance()->getData("CsIClusterList",m_CsIClusterList);
-    //	m_CalRecLogs  = dataManager::instance()->getData("CalRecLogs",m_CalRecLogs);
-    //	m_CsIClusterList->clear();
     
     // Minuit object
     minuit = new Midnight(5);
@@ -571,7 +570,7 @@ StatusCode CalClustersAlg::execute()
 
 		ene  += eneLog;
 		pCluster += ptmp;
-		}
+        }
 
 	// Now take the means
 	if(ene>0.)pCluster *= (1./ene); else pCluster=Vector(-1000., -1000., -1000.);
@@ -581,9 +580,17 @@ StatusCode CalClustersAlg::execute()
 			{
 				pLayer[i] *= (1./eneLayer[i]);
 				rmsLayer[i] *= (1./eneLayer[i]);
+
 				Vector sqrLayer(pLayer[i].x()*pLayer[i].x(),pLayer[i].y()*pLayer[i].y(),pLayer[i].z()*pLayer[i].z());
-				rmsLayer[i] -= sqrLayer;
-			}
+                                
+                                
+                                Vector d; 
+                                if(i%2 == 1) d = Vector(logwidth*logwidth/12.,0.,0.);
+                                else d = Vector(0.,logwidth*logwidth/12.,0.);
+
+                                rmsLayer[i] += d-sqrLayer;
+                                
+                        }
 			else 
 			{
 				pLayer[i]=p0;
@@ -602,6 +609,7 @@ StatusCode CalClustersAlg::execute()
 	{
 
     posrel[ilayer]=pLayer[ilayer]-pCluster;
+
 		// Sum alternatively the rms
 		if(ilayer%2)
 		{
