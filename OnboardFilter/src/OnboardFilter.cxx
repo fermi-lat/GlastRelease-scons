@@ -148,7 +148,7 @@ StatusCode OnboardFilter::initialize()
 {
   MsgStream log(msgSvc(),name());
   setProperties();
-
+  passThrough=m_passThrough;
   log<< MSG::INFO << "Initializing Filter Settings"<<endreq;
   //Set up default values for the control structure
   m_ctl_buf.ifile="test.ebf";
