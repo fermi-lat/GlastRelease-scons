@@ -22,7 +22,6 @@
 
 
 #include "GlastEvent/MonteCarlo/McParticle.h"
-#include "GlastEvent/MonteCarlo/McConstants.h"
 
 // Forward declarations
 class McParticle;

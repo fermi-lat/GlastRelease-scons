@@ -2,6 +2,8 @@
  * package GlastEvent
  * package manager:T.Burnett (original author: H. Gillespie)
  *
+ * v6r3  06-apr-02 THB remove McConstants.h, bit field in McPositionHit, McIntegratingHit for now
+ *       05-apr-02 THB  more mods to  McParticle
  * v6r2  02-apr-02 THB  mods to  McParticle
  * v6r1  26-mar-02 THB  change McParticle, remvoe McVertex 
  * v5r2 15-Mar-2002 HMK update for Gaudi v9 and remove IRF classes\n

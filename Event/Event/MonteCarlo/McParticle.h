@@ -18,7 +18,6 @@
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/SmartRefVector.h"
 
-#include "GlastEvent/MonteCarlo/McConstants.h"
 #include "GlastEvent/TopLevel/Definitions.h"
 #include "GlastEvent/Utilities/ParticleID.h"
 

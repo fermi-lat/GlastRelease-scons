@@ -121,44 +121,4 @@ void McIntegratingHit::addEnergyItem(const double& energy, SmartRef<mc::McPartic
     m_moment2seed += energy * position2;
 }
 
-
-/// Retrieve primary-origin flag
-bool McIntegratingHit::primaryOrigin() const
-{
-    using GlastEvent::McConstants::ORIGIN_PRIMARY;
-    return m_packedFlags & ORIGIN_PRIMARY;
-}
-
-
-/// Update primary-origin flag
-void McIntegratingHit::setPrimaryOrigin( bool value )
-{
-    using GlastEvent::McConstants::ORIGIN_PRIMARY;
-    if (value){
-        m_packedFlags |= ORIGIN_PRIMARY;
-    } else {
-        m_packedFlags &= ~ORIGIN_PRIMARY;
-    }
-}
-
-
-/// Retrieve whether this hit should be digitized
-bool McIntegratingHit::needDigi() const
-{
-    using GlastEvent::McConstants::NEED_DIGI;
-    return m_packedFlags & NEED_DIGI;
-}
-
-
-/// Update whether this hit should be digitized
-void McIntegratingHit::setNeedDigi( bool value )
-{
-    using GlastEvent::McConstants::NEED_DIGI;
-    if (value){
-        m_packedFlags |= NEED_DIGI;
-    } else {
-        m_packedFlags &= ~NEED_DIGI;
-    }
-}
-
 }
