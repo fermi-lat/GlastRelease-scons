@@ -39,6 +39,7 @@
             _EXTERN_ std::string McPositionHitCol;
             _EXTERN_ std::string McIntegratingHitCol;
             _EXTERN_ std::string McTkrStripCol;
+            _EXTERN_ std::string D2EntryCol;
         }
 
         namespace Digi {

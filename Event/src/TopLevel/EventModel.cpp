@@ -28,6 +28,7 @@ public:
         EventModel::MC::McPositionHitCol     = EventModel::MC::Event  + "/PositionHitsCol";
         EventModel::MC::McIntegratingHitCol  = EventModel::MC::Event  + "/IntegratingHitsCol";
         EventModel::MC::McTkrStripCol        = EventModel::MC::Event  + "/StripCol";
+        EventModel::MC::D2EntryCol           = EventModel::MC::Event  + "/D2EntryCol";
 
         // Digi event
         EventModel::Digi::Event              = EventModel::EventHeader + "/Digi";
@@ -124,6 +125,7 @@ public:
     const CLID& CLID_McIntegratingHit   = 1104;
     const CLID& CLID_McTrajectory       = 1105;
     const CLID& CLID_McTkrStrip         = 1106;
+    const CLID& CLID_D2Entry        = 1107;
 
     //! Raw event and Digi IDs
     const CLID& CLID_DigiEvent          = 1300; 
