@@ -34,6 +34,7 @@ use RootIo      v*
 
 #diagnostic and summary of bottom line
 use merit       v*
+use AnalysisNtuple v*
 
 ### define a simple executable wth GUI
 

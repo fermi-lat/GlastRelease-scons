@@ -130,12 +130,19 @@ Cal2.Members = {
       "CalClustersAlg/second"
       };
 second.OutputLevel=5;  // since this guy generates INFO lines
+// following sets to use G4propagator
+//TkrTrackFitAlg.PropagatorType=0;
 
 // ----------------------------
 //   ACD recon
 //
 ApplicationMgr.DLLs += {"AcdRecon"};
 Acd.Members = {"AcdReconAlg"};
+
+// ----------------------------
+//   Atwood's tuple
+//
+ApplicationMgr.DLLs += {"AnalysisNtuple"};
 
 // ---------------------------- 
 //   Output
@@ -150,7 +157,7 @@ reconRootWriterAlg.OutputLevel=3;
      
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel = 3;
-ToolSvc.OutputLevel=4;    // too verbose in debug
+ToolSvc.OutputLevel=3;    // too verbose in debug
 
 //==============================================================
 //
