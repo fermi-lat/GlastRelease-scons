@@ -92,7 +92,7 @@ StatusCode AcdDigiAlg::execute() {
         if (energyDeposited < m_lowThreshold) continue;
 
         // unpack from volume id. (Should be put into AcdId) 
-        int layer=0, face=volId[1], row=volId[2], column=volId[3];
+        int layer=0, face=volId[1], column=volId[2], row=volId[3];
                 
         bool overLow  = true,
              overVeto = energyDeposited > m_vetoThreshold,
@@ -106,7 +106,9 @@ StatusCode AcdDigiAlg::execute() {
         bool lowArr[2] = { overLow, false };
         bool highArr[2] = { overHigh, false };
         
-        
+        log << MSG::DEBUG << "AcdId: " << layer << " " << face << " " 
+            << row << " " << column <<endreq;
+
         digiCol->push_back(
             new AcdDigi(
                 idents::AcdId(layer, face, row, column), volId,
