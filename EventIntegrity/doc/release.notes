@@ -2,7 +2,8 @@
  * @brief package EventIntegrity 
  * package manager:H.Kelly 
   <pre>
- *  v0r0  2004-Aug-28  HMK Initial import of new package
+ * v0r0p0 2004-Aug-27  HMK add print debug statement
+ *  v0r0  2004-Aug-27  HMK Initial import of new package
  *
  </pre>
 */
