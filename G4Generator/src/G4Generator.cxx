@@ -200,9 +200,13 @@ StatusCode G4Generator::execute()
     eventSvc()->registerObject("/Event/MC/McParticleCol", pcol);
     mc::McParticle * parent= new mc::McParticle;
     pcol->push_back(parent);
-    parent->init(parent, pdef->GetPDGEncoding(), 
+
+    // This parent particle decay at the start in the first particle, 
+    // so initial momentum and final one are the same
+    parent->initialize(parent, pdef->GetPDGEncoding(), 
         mc::McParticle::PRIMARY,
-        pin, pin, p);
+        pin);
+    parent->finalize(pin, p);
     
 
     // Run geant4
