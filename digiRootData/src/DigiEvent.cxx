@@ -7,6 +7,8 @@
 #include <iostream>
 #include "TCollection.h"  // Declares TIter
 
+using namespace std;
+
 ClassImp(DigiEvent)
 
 // Allocate the TClonesArrays and TObjArray just once
