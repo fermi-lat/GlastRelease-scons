@@ -553,7 +553,7 @@ void ComboFindTrackTool::findBlindCandidates()
 
             int jlayer = ilayer-1;
             // Allows at most m_maxFirstGaps between first 2 hits
-            for(int igap=0; igap<=m_maxFirstGaps && jlayer >= lastJLayer; ++igap) {
+            for(int igap=0; igap<=m_maxFirstGaps && jlayer >= lastJLayer; igap++,jlayer--) {
                 // Tests for terminating gap loop
                 if(trials >m_maxTrials) break; 
                 //   If we already have one track at this level or above,
@@ -570,6 +570,7 @@ void ComboFindTrackTool::findBlindCandidates()
 
                 TkrPoints secondPoints(jlayer, m_clusTool);
                 if (secondPoints.empty()) continue;
+
                 TkrPointListConItr itSecond = secondPoints.begin();
                 for (; itSecond!=secondPoints.end(); ++itSecond) {
                     if(trials > m_maxTrials) break; 
@@ -593,7 +594,7 @@ void ComboFindTrackTool::findBlindCandidates()
                         klayer--;
                     }  // end klayer
                 } // end 2nd points
-                jlayer--;
+                //jlayer--;
             }  // end jlayer
         }  // end 1st points
     } // end ilayer
