@@ -41,6 +41,7 @@ void RootTreeAnalysis::McHistDefine() {
     TH1F *ENERGYMC = new TH1F("ENERGYMC", "MC Part Energy (MeV)",
         10001, -0.5, 10000.5);   
     
+    TProfile *PROFDEP = new TProfile("PROFDEP", "Total Energy Deposit in Tile 0022", 6, -7.5, 82.5, 0, 10);
 }
 
 
@@ -58,6 +59,8 @@ void RootTreeAnalysis::McData() {
     /// The 2nd McParticle in the list that represents the 
     // initial particle that interacts in the system
     McParticle *mom1 = (McParticle*)mc->getMcParticleCol()->At(1);
+    Float_t theta_rad = mom1->getInitialFourMomentum().Theta();
+    Float_t theta_deg = theta_rad * 180. / TMath::Pi();
     ((TH1F*)GetObjectPtr("MCPARTDAUGHTER"))->Fill(mom1->getDaughterList().GetEntries());
 
     UInt_t numElec = 0;
@@ -98,7 +101,7 @@ void RootTreeAnalysis::McData() {
       if( volId[0] != 1 ) continue;  // Skip non ACD tiles
 
       // Check that this is the center ACD top tile
-      if ((volId[1] == 0) && (volId[2] == 2) && (volId[3] == 2) ){
+      if ((volId[1] == 0) && (volId[3] == 2) && (volId[4] == 2) ){
           totE += posHit->getDepositedEnergy();
           if (posHit->getMcParticleId() == 11) totElecEng += posHit->getDepositedEnergy();
 
@@ -106,6 +109,8 @@ void RootTreeAnalysis::McData() {
 
     }
 
+
+  ((TProfile*)GetObjectPtr("PROFDEP"))->Fill(180.-theta_deg, totE, 1);
   
   ((TH1F*)GetObjectPtr("ACDMCHIT22"))->Fill(totE);
   ((TH1F*)GetObjectPtr("ACDELECENG22"))->Fill(totElecEng);

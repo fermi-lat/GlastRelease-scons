@@ -212,6 +212,8 @@ void RootTreeAnalysis::Clear() {
     rec = 0;
     mc = 0;
 
+    m_StartEvent = 0;
+
     fileArr = 0;
     treeArr = 0;
     chainArr = 0;
@@ -261,7 +263,7 @@ RootTreeAnalysis::RootTreeAnalysis(TChain *digiChain,
     chainArr = new TObjArray();
 
     if (digiChain != 0) {
-        evt = new DigiEvent();
+        evt = 0;
         m_digiChain = digiChain;
         m_digiChain->SetBranchAddress("DigiEvent",&evt);
         chainArr->Add(m_digiChain);
@@ -269,20 +271,18 @@ RootTreeAnalysis::RootTreeAnalysis(TChain *digiChain,
 
     if (recChain != 0) {
         m_recChain = recChain;
-        rec = new Recon();
-        m_recChain->SetBranchAddress("Recon",&rec);
+        rec = 0;
+        m_recChain->SetBranchAddress("ReconEvent",&rec);
         chainArr->Add(m_recChain);
     }
 
     if (mcChain != 0) {
         m_mcChain = mcChain;
-        mc = new McEvent();
-        m_mcChain->SetBranchAddres("mc",&mc);
+        mc = 0;
+        m_mcChain->SetBranchAddress("McEvent",&mc);
         chainArr->Add(m_mcChain);
     }
 
-    ReadPedFiles();
-    ReadVetoThresh();
 }
 
 
@@ -355,7 +355,6 @@ void RootTreeAnalysis::Init(const char* digiFileName, const char* reconFileName,
         mcFile = new TFile(mcFileName);
         if (mcFile->IsOpen() == kTRUE) {
             mcTree = (TTree*)gDirectory->Get("Mc");
-//            mc = new McEvent();
             mc = 0;
             mcTree->SetBranchAddress("McEvent",&mc);
             fileArr->Add(mcFile);
