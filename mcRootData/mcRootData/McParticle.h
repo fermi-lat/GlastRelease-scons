@@ -39,8 +39,8 @@ public:
             INTERACT=1<<5,  //! Interacted, no further decision to be made
             INTSHDEP=1<<6,  //! Interacted, further decision depends on ! selection of shower deposition  
             PRIMARY =1<<7,  //! primary particle 
-			SWERROR =1<<8,  //! Error occurred in swimming the track 
-			BCKSPL=1<<9,    //! The particle is backsplashed from the CAL back in the TKR region
+            SWERROR =1<<8,  //! Error occurred in swimming the track 
+            BCKSPL=1<<9,    //! The particle is backsplashed from the CAL back in the TKR region
             POSHIT =1<<10,  //! The particle released a hit a PositionHit detector
             NOTTRACK=1<<11, //! Not tracked by user request 
             Swum =   1<<12, //! this particle was produced by the swimmer
@@ -51,16 +51,16 @@ public:
     };
     
     McParticle();
-
+    
     McParticle(const McParticle& p);
     
     virtual ~McParticle();
-
+    
     /// clear lists, free pointers, etc., after read from / write to file
     void Clear(Option_t *option ="");
-
+    
     void Print(Option_t *option="") const;
-
+    
     //! completely initialize a newed object. No other way to set most attributes.
     void initialize( McParticle* mother, 
         Int_t id, 
@@ -74,21 +74,21 @@ public:
     Int_t getParticleId() const { return m_particleId;};    
     
     /// return an McParticle pointer to the mother particle
-    const McParticle* getMother();
-
-	/// add a daughter particle to the list
-	void addDaughter(McParticle* part) { m_daughters.Add(part); };
-
+    const McParticle* getMother() const;
+    
+    /// add a daughter particle to the list
+    void addDaughter(McParticle* part) { m_daughters.Add(part); };
+    
     /// return a daughter McParticle corresponding to index
     const McParticle* getDaughter(Int_t index) const;
-
+    
     /// return the full list of daughters
     const TRefArray& getDaughterList() const { return m_daughters; };
-
+    
     Int_t getParticleProperty() const { return m_statusFlags; };
     
     UInt_t getStatusFlags() const { return m_statusFlags; };
-
+    
     /// Retrieve whether this is a primary particle
     Bool_t primaryParticle() const;
     
@@ -99,7 +99,7 @@ public:
     const TVector3& getFinalPosition() const;
     
     const TLorentzVector& getInitialFourMomentum() const;
-
+    
     const TLorentzVector& getFinalFourMomentum() const;
     
     const TString& getProcess() const;
@@ -124,7 +124,7 @@ private:
     TRefArray m_daughters;
     /// String with the process name that produced this particle
     TString m_process; // || do not split this member
-
+    
     ClassDef(McParticle,4) // Monte Carlo Particle Class
 };
 

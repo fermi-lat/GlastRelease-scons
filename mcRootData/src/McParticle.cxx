@@ -94,7 +94,7 @@ void McParticle::initialize( McParticle* mother, Int_t id, UInt_t statusBits,
 }
 
 
-const McParticle* McParticle::getMother() {
+const McParticle* McParticle::getMother() const {
 
     return ( (McParticle*)(m_mother.GetObject()) );
 }
