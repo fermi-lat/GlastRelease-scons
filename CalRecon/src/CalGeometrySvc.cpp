@@ -25,8 +25,13 @@ CalGeometrySvc::CalGeometrySvc(const std::string& name, ISvcLocator* pSvcLocator
 		m_nmodx   = 1;
 		m_nmody   = 1;
 
-		m_Z0          = -25.9602; 
-		m_layerWidth  =   31.05;
+//   testbeam geometry 
+//		m_Z0          = -25.9602; 
+
+//    balloon flight geometry
+		m_Z0          = -24.346; 
+
+        m_layerWidth  =   31.05;
 		m_layerHeight =    2.614;
 
 		m_logWidth    =  3.05;
