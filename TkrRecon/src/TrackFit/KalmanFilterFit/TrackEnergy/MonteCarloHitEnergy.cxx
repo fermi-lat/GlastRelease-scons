@@ -89,7 +89,9 @@ double MonteCarloHitEnergy::initialHitEnergy(const Event::TkrTrack&    patCand,
         // This to insure that we are at the right cluster
         if (clusHitRel->getFirst() == cluster)
         {
-            energy = clusHitRel->getSecond()->particleEnergy();
+            double mass = (m_partPropSvc->findByStdHepID(m_mcParticle->particleProperty()))->mass();
+
+            energy = clusHitRel->getSecond()->particleEnergy() - mass;
             break;
         }
     }
