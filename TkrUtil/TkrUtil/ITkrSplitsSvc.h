@@ -11,6 +11,9 @@ $Header$
 // Include files
 #include "GaudiKernel/IInterface.h"
 
+#include "CalibData/CalibModel.h"
+#include "CalibData/Tkr/TkrSplitsCalib.h"
+
 // Declaration of the interface ID ( interface id, major version,
 // minor version)
 
@@ -28,11 +31,15 @@ class ITkrSplitsSvc : virtual public IInterface {
 public:
     static const InterfaceID& interfaceID() { return IID_ITkrSplitsSvc; }
 
-    /// get the list of enabled failure mode conditions
-    virtual int  getEnd(const int tower, const int layer, const int view, const int strip) 
+    /// get the controller for this strip
+    virtual int  getEnd(int tower, int layer, int view, int strip) 
         const = 0;
-    virtual int  getSplitPoint(const int tower, const int layer, const int view) 
+    /// get the split point for this plane (lastC0Strip)
+    virtual int  getSplitPoint(int tower, int layer, int view) 
         const = 0;
+    /// update to latest pointer when calibration changes
+    virtual void update(CalibData::TkrSplitsCalib* pSplits) = 0;
+
 };
 
 #endif // ITkrSplitsSvc_H

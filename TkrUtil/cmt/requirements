@@ -1,6 +1,6 @@
 package TkrUtil
 
-version v1r12p6
+version v1r12p7
 
 author Leon Rochester <lsrea@slac.stanford.edu>
 
@@ -8,7 +8,7 @@ branches src cmt doc
 
 use GlastSvc 
 use facilities
-use GuiSvc                v3*
+use GuiSvc       v3*
 use CalibData    v*
 use CalibSvc     v*
 use G4Propagator v*
@@ -34,6 +34,9 @@ use ROOT * IExternal
 apply_pattern package_Cshlibflags 
 
 private # Traudl says we need this
+
+# to use Joanne's symbols
+apply_pattern use_CalibData_symbols
 
 # build this for testing, console only. Load all objects directly. 
 
