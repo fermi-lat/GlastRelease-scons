@@ -101,6 +101,18 @@ class TdSiData : virtual public SiData , virtual public DataObject {
     void writeData (std::ostream& out);
     
     //	---------------------------------------------------------
+
+    
+    // Will need for the PDS
+        
+    //! Serialize the object for reading
+    virtual StreamBuffer& serialize( StreamBuffer& s );
+    //! Serialize the object for writing
+    virtual StreamBuffer& serialize( StreamBuffer& s ) const;
+    //! Fill the ASCII output stream
+    virtual std::ostream& fillStream( std::ostream& s ) const;
+
+
     void printOn (std::ostream& cout = std::cout) const;
     
 protected:
@@ -115,5 +127,26 @@ protected:
     std::vector< std::vector< class Strip >* > yhitList;
     
 };
+
+
+inline StreamBuffer& TdSiData::serialize( StreamBuffer& s ) const                 {
+    DataObject::serialize(s);
+    return s;
+}
+
+
+//! Serialize the object for reading
+inline StreamBuffer& TdSiData::serialize( StreamBuffer& s )                       {
+    DataObject::serialize(s);
+    return s;
+}
+
+
+//! Fill the ASCII output stream
+inline std::ostream& TdSiData::fillStream( std::ostream& s ) const                {
+    return s;
+}
+
+
 
 #endif
