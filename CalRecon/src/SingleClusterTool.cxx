@@ -102,6 +102,7 @@ StatusCode SingleClusterTool::findClusters(Event::CalXtalRecCol* calXtalRecCol)
     //get pointers to the TDS data structures
 
     const Point p0(0.,0.,0.);  
+    Vector zero(0.,0.,0.);
     
     double ene = 0;                 // total energy in calorimeter
     Vector pCluster = p0;            // cluster position
@@ -236,7 +237,17 @@ StatusCode SingleClusterTool::findClusters(Event::CalXtalRecCol* calXtalRecCol)
  
 
 	    // Fill CalCluster data
-	Event::CalCluster* cl = new Event::CalCluster(ene,pCluster+p0);
+    Event::CalCluster* cl = new Event::CalCluster(ene,pCluster+p0);
+
+    cl->initialize(ene,
+		   eneLayer,
+		   pLayer,
+		   rmsLayer,
+		   rms_long,
+		   rms_trans,
+		   zero,
+		   0.);
+
     getClusterCol()->add(cl);
 
     return sc;
