@@ -160,6 +160,7 @@ namespace ldfReader {
         CalParser cal(event, contribution, "   ");
         cal.parse();
         CALend(cal.CALend());
+        tower->getTem().calEnd(CALend());
         return 0;
     }
 
@@ -198,6 +199,7 @@ namespace ldfReader {
         tkr.parse();
         // Set the location of the diagnostic data in this event
         TKRend(tkr.diagnostic());
+        tower->getTem().tkrEnd(TKRend());
         return 0;
     }
 
@@ -214,6 +216,7 @@ namespace ldfReader {
             iter.iterateTKR();
 
             diagnosticEnd(TKRend()+iter.size());  // Reset the end of the diagnostic data
+            ldfReader::LatData::instance()->diagnostic()->initLength(iter.size());
         }
         return 0;
     }
@@ -232,6 +235,7 @@ int LatComponentParser::error(EBFevent* event, TEMcontribution* contribution) {
         ErrParser errParse(event,contribution,offset);
         errParse.iterate();
         errorEnd(offset+errParse.size());
+        err.initLength(errParse.size());    
     }
     ldfReader::LatData::instance()->setErr(err);
     return 0;
