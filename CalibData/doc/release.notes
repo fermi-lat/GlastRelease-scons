@@ -1,9 +1,10 @@
 /** @file release.notes
  * Package CalibData
  * Coordinator:  J. Bogart
- # 26-May-2004 jrb - v0r4   - Support for Cal. light asymm. & int. nonlinearity
+ *  4-Jun-2004 jrb - v0r4p0 - Bug fix for Windows compilation
+ * 26-May-2004 jrb - v0r4   - Support for Cal. light asymm. & int. nonlinearity
  *                            calibrations
- # 17-Feb-2004 jrb - v0r3   - Support cosAngle field for Cal. pedestals calib.
+ * 17-Feb-2004 jrb - v0r3   - Support cosAngle field for Cal. pedestals calib.
  *  3-Feb-2004 jrb - v0r2p8 - Includes light attenuation skeleton (to be 
  *                            modified later when there is real light 
  *                            attenuation data)
