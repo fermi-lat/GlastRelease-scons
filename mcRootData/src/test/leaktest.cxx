@@ -54,7 +54,7 @@
                 TVector3 entry(1., 1., 1.);
                 TVector3 exit(0., 0.5, 0.1);
                 id.initialize(0, 1, 1);
-                posHit->initialize(ipart, rand, id, entry, exit, mcPart, 0, rand*0.1, rand*0.4, 0);
+                posHit->initialize(ipart, rand, id, entry, exit, 0, rand*0.1, rand*0.4, 0);
                 ev->addMcPositionHit(posHit);
             } else {
                 McIntegratingHit *intHit = new McIntegratingHit();

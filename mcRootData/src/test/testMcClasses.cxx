@@ -279,7 +279,7 @@ int write(char* fileName, UInt_t numEvents) {
             UInt_t flags = 0;
             McParticle *originMcPart = 0;
             Int_t particleId = 7;
-            posHit->initialize(particleId, depE, id, entry, exit, mcPart, 
+            posHit->initialize(particleId, depE, id, entry, exit, 
                 originMcPart, partE, tof, flags);
             ev->addMcPositionHit(posHit);
             
