@@ -141,7 +141,7 @@ void TkrFailureModeSvc::processTowerList() {
 bool TkrFailureModeSvc::towerFailed(int tower) {
     bool found = false;
     // Search to see if this event id is among the list of ids we want to pause on
-    int *loc = std::find(m_towerList.begin(), m_towerList.end(), tower);                
+    std::vector<int>::iterator loc = std::find(m_towerList.begin(), m_towerList.end(), tower);                
     return (loc != m_towerList.end());
 }
 
