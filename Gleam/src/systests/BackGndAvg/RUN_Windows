@@ -4,9 +4,9 @@
   // the TVector3d class in it so we grab it explicitly
   gSystem->Load("libPhysics.dll");
 
-  gSystem->Load("libmcRootData.dll");
-  gSystem->Load("libdigiRootData.dll");
-  gSystem->Load("libreconRootData.dll");
+  gSystem->Load("mcRootData.dll");
+  gSystem->Load("digiRootData.dll");
+  gSystem->Load("reconRootData.dll");
 
   gROOT->Reset();
   gROOT->LoadMacro("systest_Gleam.cxx");

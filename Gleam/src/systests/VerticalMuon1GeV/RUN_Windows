@@ -1,12 +1,12 @@
 {
-  // Not sure why root can't find libPhysics.dll
-  // but it can't and libreconRootData.dll needs
+  // Not sure why root can't find libPhysics.so
+  // but it can't and libreconRootData.so needs
   // the TVector3d class in it so we grab it explicitly
   gSystem->Load("libPhysics.dll");
 
-  gSystem->Load("libmcRootData.dll");
-  gSystem->Load("libdigiRootData.dll");
-  gSystem->Load("libreconRootData.dll");
+  gSystem->Load("mcRootData.dll");
+  gSystem->Load("digiRootData.dll");
+  gSystem->Load("reconRootData.dll");
 
   gROOT->Reset();
   gROOT->LoadMacro("systest_Gleam.cxx");
