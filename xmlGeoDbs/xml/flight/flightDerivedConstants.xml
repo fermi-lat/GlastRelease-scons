@@ -426,6 +426,15 @@ Also add gap between CAL and
           </quo>
         </const>
 
+        <const name="towersTrans" >
+          <notes>Transverse dimension of envelope containing the towers
+          </notes>
+          <mul>
+            <refer refTo="towerPitch" />
+            <const value="4" uType="count" />
+          </mul>
+        </const>
+            
         <const name="innerTowers_dt" >
           <notes>Transverse displacement of towers in row (column) 2</notes>
           <half>
