@@ -4,6 +4,8 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   14-mar-05  v6r18p0 THB  Fix ExposureAlg bug
+   26-Feb-05  v6r17p1 THB  Have test program run backgndavgpdr for composite source, different particles
    13-mar-05  v6r18   THB  Start date properly implemented
    26-Feb-05  v6r17p1 THB  Have test program run backgndavgpdr for composite source, different particles
    16-Dec-04  v6r17p0 TU  Update requirements to pick up new Event
