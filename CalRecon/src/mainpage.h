@@ -99,8 +99,9 @@
  *        clusterSetNo is a param of FuzzyClusterTool that specifies
  *        the index of the partition that should be considered; its default
  *        value is zero.
- * @param ApplicationMgr.DLLs += {"FC"};
- *        The FC library should be loaded if one uses FuzzyClusterTool.
+ * @param ApplicationMgr.DLLs += {"FuzzyCluster"};
+ *        The FuzzyCluster library should be loaded if one uses 
+ *        FuzzyClusterTool.
  *
  * @param CalClustersAlg.lastLayerToolName
  *        name of tool performing last layer energy correction

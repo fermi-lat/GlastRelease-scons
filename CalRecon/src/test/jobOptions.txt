@@ -65,18 +65,18 @@ ApplicationMgr.EvtMax = 10;
 digiRootReaderAlg.digiRootFile="$(CALRECONROOT)/src/test/muon_digi.root";
 
 //    use the following lines to perform fuzzy clustering:
-//ApplicationMgr.DLLs += {"FC"};
-//CalClustersAlg.clusterToolName="FuzzyClusterTool";
+ApplicationMgr.DLLs += {"FuzzyCluster"};
+CalClustersAlg.clusterToolName="FuzzyClusterTool";
 //
 //    the command param is mandatory for the FuzzyCluster Gaudi tool
 //    which is retrieved as a private tool by FuzzyClusterTool, that
 //    in its turn is a shared tool.
-//ToolSvc.FuzzyClusterTool.FuzzyCluster.command="cini -r2:4 | fcm | pick";
+ToolSvc.FuzzyClusterTool.FuzzyCluster.command="cini -r2:4 | fcm | pick";
 //
 //    clusterSetNo is a param of FuzzyClusterTool that specifies
 //    the index of the partition that should be considered; its default
 //    value is zero.
-//ToolSvc.FuzzyClusterTool.clusterSetNo=0;
+ToolSvc.FuzzyClusterTool.clusterSetNo=0;
 
 
 //==============================================================

@@ -14,7 +14,7 @@ use AnalysisNtuple v*
 use CalibSvc v*
 
 # The following two lines are needed to use the FC library
-use FC v*
+use FuzzyCluster v*
 use CLHEP * IExternal
 
 apply_pattern packageShr
