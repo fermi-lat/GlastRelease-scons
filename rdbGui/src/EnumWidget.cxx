@@ -9,6 +9,8 @@ EnumWidget::EnumWidget(FXComposite* parent, rdbModel::Column *column)
   m_column = column;
   m_widget = new FXComboBox(parent,0, NULL, 0,FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
   m_widget->setNumVisible(en->getChoices().size());
+  if (en->choicesRequired())
+    m_widget->setEditable(FALSE); 	
   m_widget->create();
   
   for(unsigned int i=0; i<en->getChoices().size(); i++){

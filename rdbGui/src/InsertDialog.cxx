@@ -265,7 +265,7 @@ rdbModel::Visitor::VisitorState InsertDialog::visitColumn(rdbModel::Column *colu
     };
     } 
 
-    if ((source != rdbModel::Column::FROMdefault) && (!column->nullAllowed()))
+    if (!column->nullAllowed())
       label->setTextColor(FXRGB(255,0,0));
 
     if ((source == rdbModel::Column::FROMdefault)) 
