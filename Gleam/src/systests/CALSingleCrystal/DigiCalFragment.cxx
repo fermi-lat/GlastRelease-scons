@@ -2,8 +2,8 @@ void RootTreeAnalysis::DigiCalHistDefine() {
     
   histFile->cd();
 
-        float maxAdc = 5000.;   // electrons histo max range
-	//    float maxAdc = 1000.;   // muons histo max range
+        float maxAdc = 4000.;   // electrons histo max range
+        //    float maxAdc = 1000.;   // muons histo max range
     
     TH1F *CALDIGICOUNT = new TH1F("CALDIGICOUNT", "CalDigi multiplicity",
         50, 0, 50);
@@ -45,56 +45,30 @@ void RootTreeAnalysis::DigiCalHistDefine() {
         20, 0, 20);
     CALCOLUMN->SetXTitle("Column");
 
-    TH1F *CALNLAYER0 = new TH1F("CALNLAYER0", "Cal Digi Hits per layer 0",
-        20, 0, 20);
-    CALNLAYER0->SetXTitle("Number");
-    TH1F *CALNLAYER1 = new TH1F("CALNLAYER1", "Cal Digi Hits per layer 1",
-        20, 0, 20);
-    CALNLAYER1->SetXTitle("Number");
-    TH1F *CALNLAYER2 = new TH1F("CALNLAYER2", "Cal Digi Hits per layer 2",
-        20, 0, 20);
-    CALNLAYER2->SetXTitle("Number");
-    TH1F *CALNLAYER3 = new TH1F("CALNLAYER3", "Cal Digi Hits per layer 3",
-        20, 0, 20);
-    CALNLAYER3->SetXTitle("Number");
-    TH1F *CALNLAYER4 = new TH1F("CALNLAYER4", "Cal Digi Hits per layer 4",
-        20, 0, 20);
-    CALNLAYER4->SetXTitle("Number");
-    TH1F *CALNLAYER5 = new TH1F("CALNLAYER5", "Cal Digi Hits per layer 5",
-        20, 0, 20);
-    CALNLAYER5->SetXTitle("Number");
-    TH1F *CALNLAYER6 = new TH1F("CALNLAYER6", "Cal Digi Hits per layer 6",
-        20, 0, 20);
-    CALNLAYER6->SetXTitle("Number");
-    TH1F *CALNLAYER7 = new TH1F("CALNLAYER7", "Cal Digi Hits per layer 7",
-        20, 0, 20);
-    CALNLAYER7->SetXTitle("Number");
 
-    TH1F *CALELAYER0 = new TH1F("CALELAYER0", "Cal Digi ADC summed per layer 0",
-        200, 0, maxAdc);
-    CALELAYER0->SetXTitle("ADC");
-    TH1F *CALELAYER1 = new TH1F("CALELAYER1", "Cal Digi ADC summed per layer 1",
-        200, 0, maxAdc);
-    CALELAYER1->SetXTitle("ADC");
-    TH1F *CALELAYER2 = new TH1F("CALELAYER2", "Cal Digi ADC summed per layer 2",
-        200, 0, maxAdc);
-    CALELAYER2->SetXTitle("ADC");
-    TH1F *CALELAYER3 = new TH1F("CALELAYER3", "Cal Digi ADC summed per layer 3",
-        200, 0, maxAdc);
-    CALELAYER3->SetXTitle("ADC");
-    TH1F *CALELAYER4 = new TH1F("CALELAYER4", "Cal Digi ADC summed per layer 4",
-        200, 0, maxAdc);
-    CALELAYER4->SetXTitle("ADC");
-    TH1F *CALELAYER5 = new TH1F("CALELAYER5", "Cal Digi ADC summed per layer 5",
-        200, 0, maxAdc);
-    CALELAYER5->SetXTitle("ADC");
-    TH1F *CALELAYER6 = new TH1F("CALELAYER6", "Cal Digi ADC summed per layer 6",
-        200, 0, maxAdc);
-    CALELAYER6->SetXTitle("ADC");
-    TH1F *CALELAYER7 = new TH1F("CALELAYER7", "Cal Digi ADC summed per layer 7",
-        200, 0, maxAdc);
-    CALELAYER7->SetXTitle("ADC");
+    TH2F *CALADCNMCX = new TH2F("CALADCNMCX", "Cal Digi ADC - NEG vs MC x",
+        50,-200,200,200, 0, maxAdc);
+    CALADCNMCX->SetXTitle("position (mm)");
+    CALADCNMCX->SetYTitle("ADC");
 
+    TH2F *CALADCPMCX = new TH2F("CALADCPMCX", "Cal Digi ADC - POS vs MC x",
+        50,-200,200,200, 0, maxAdc);
+    CALADCPMCX->SetXTitle("position (mm)");
+    CALADCPMCX->SetYTitle("ADC");
+
+    TH1F *RESIDUAL = new TH1F("RESIDUAL", "Cal Asy - MC POS",
+        200, -200, 200);
+    RESIDUAL->SetXTitle("Residual (mm)");
+
+    TH2F *RESIDUALMCX = new TH2F("RESIDUALMCX", "Cal Residual vs MC x",
+        200,-200,200,200, -200, 200);
+    RESIDUALMCX->SetXTitle("position (mm)");
+    RESIDUALMCX->SetYTitle("Asymmetry");
+
+    TH2F *CALASYMCX = new TH2F("CALASYMCX", "Cal Light asy vs MC x",
+        200,-200,200,200, -0.4, 0.4);
+    CALASYMCX->SetXTitle("position (mm)");
+    CALASYMCX->SetYTitle("Asymmetry");
 
 };
 
@@ -117,23 +91,27 @@ void RootTreeAnalysis::DigiCal() {
       CalXtalId id = c->getPackedId();
       int layer = id->getLayer();
 
-      // get readout from zeroth range. Set to BEST
+      //      if (layer != 1) continue;
 
       CalXtalReadout* cRo=c->getXtalReadout(0);
-      float adcN = cRo->getAdc(0);
-      float adcP = cRo->getAdc(1);
-
-      // light asymmetry
+      float adcP = cRo->getAdc(CalXtalId::POS); 
+      float adcN = cRo->getAdc(CalXtalId::NEG); 
 
       float asy = (adcP-adcN)/(adcP+adcN-200.);   // subtract pedestal!
+      float resid = 764.*asy - mcX;
+      ((TH1F*)GetObjectPtr("RESIDUAL"))->Fill(resid);
+      ((TH2F*)GetObjectPtr("RESIDUALMCX"))->Fill(mcX,resid);
 
       float eAve = (adcN+adcP)/2.;
-
       ((TH1F*)GetObjectPtr("CALEAVE"))->Fill(eAve);
       ((TH1F*)GetObjectPtr("CALADC"))->Fill(adcN);
       ((TH1F*)GetObjectPtr("CALADC"))->Fill(adcP);
       ((TH1F*)GetObjectPtr("CALADCN"))->Fill(adcN);
+      ((TH2F*)GetObjectPtr("CALADCNMCX"))->Fill(mcX,adcN);
+      ((TH2F*)GetObjectPtr("CALADCPM"))->Fill(adcP,adcN);
       ((TH1F*)GetObjectPtr("CALADCP"))->Fill(adcP);
+      ((TH2F*)GetObjectPtr("CALADCPMCX"))->Fill(mcX,adcP);
+      ((TH2F*)GetObjectPtr("CALASYMCX"))->Fill(mcX,asy);
       ((TH1F*)GetObjectPtr("CALRANGE"))->Fill(cRo->getRange(0));
       ((TH1F*)GetObjectPtr("CALRANGE"))->Fill(cRo->getRange(1));
 
@@ -150,25 +128,6 @@ void RootTreeAnalysis::DigiCal() {
       
     ((TH1F*)GetObjectPtr("CALEAVETOTAL"))->Fill(eTotal);
 
-    ((TH1F*)GetObjectPtr("CALNLAYER0"))->Fill(nLayer[0]);
-    ((TH1F*)GetObjectPtr("CALNLAYER1"))->Fill(nLayer[1]);
-    ((TH1F*)GetObjectPtr("CALNLAYER2"))->Fill(nLayer[2]);
-    ((TH1F*)GetObjectPtr("CALNLAYER3"))->Fill(nLayer[3]);
-    ((TH1F*)GetObjectPtr("CALNLAYER4"))->Fill(nLayer[4]);
-    ((TH1F*)GetObjectPtr("CALNLAYER5"))->Fill(nLayer[5]);
-    ((TH1F*)GetObjectPtr("CALNLAYER6"))->Fill(nLayer[6]);
-    ((TH1F*)GetObjectPtr("CALNLAYER7"))->Fill(nLayer[7]);
-
-    ((TH1F*)GetObjectPtr("CALELAYER0"))->Fill(eLayer[0]);
-    ((TH1F*)GetObjectPtr("CALELAYER1"))->Fill(eLayer[1]);
-    ((TH1F*)GetObjectPtr("CALELAYER2"))->Fill(eLayer[2]);
-    ((TH1F*)GetObjectPtr("CALELAYER3"))->Fill(eLayer[3]);
-    ((TH1F*)GetObjectPtr("CALELAYER4"))->Fill(eLayer[4]);
-    ((TH1F*)GetObjectPtr("CALELAYER5"))->Fill(eLayer[5]);
-    ((TH1F*)GetObjectPtr("CALELAYER6"))->Fill(eLayer[6]);
-    ((TH1F*)GetObjectPtr("CALELAYER7"))->Fill(eLayer[7]);
-
 
 
 };
-
