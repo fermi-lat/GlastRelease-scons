@@ -1,5 +1,5 @@
 package RootAnalysis
-version v4r1p1
+version v4r2
 # This package contains useful Root scripts.
 
 #use these to get the env vars defined
@@ -21,7 +21,9 @@ macro_append ROOT_libs " -lHist " \
              WIN32 " ${ROOT_PATH}/lib/libHist.lib "
 
 
-application pruneTrees pruneTrees/*.cxx
+application pruneTrees pruneTrees/PruneTree.cxx pruneTrees/runTreeAnalysisChain.cxx 
+
+application peelTrees pruneTrees/PruneRunEvent.cxx pruneTrees/runEventPeeler.cxx 
 
 # Define a test program that will run RootTreeAnalysis in batch mode
 # on 3 ROOT files included with this package
