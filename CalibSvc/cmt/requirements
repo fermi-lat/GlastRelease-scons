@@ -13,10 +13,11 @@ use GlastPolicy v*
 apply_pattern component_library library=CalibSvc
 
 # the runtime public interface to this package must expose sharables from 
-# calibUtil, CalibData, and calibRootData
+# calibUtil, CalibData, calibRootData and astro
 use calibUtil v0r* -no_auto_imports
 use CalibData v0r* -no_auto_imports
 use calibRootData v1r* -no_auto_imports
+use astro         v1r* -no_auto_imports
 
 #because the latter package unfortunately exposes RootcintPolicy, the following macros have to be defined
 # to protect windows builds. this really needs fixing!
@@ -25,7 +26,7 @@ macro rootcint_end   "" vsnet "-->"
 
 private
 # _______________________________________________________
-use astro       v1r*
+#  use astro       v1r*
 use GaudiInterface * IExternal
 use ROOT   * IExternal 
 use XMLEXT * IExternal 
@@ -40,9 +41,10 @@ apply_pattern package_headers
 macro_append includes ' $(ppcmd)"$(calibUtil_root)" $(ppcmd)"$(CalibData_root)" $(ppcmd)"$(calibRootData_root)" $(ppcmd)"$(commonRootData_root)"  '
 macro_append includes ' $(ppcmd)"$(idents_root)" $(ppcmd)"$(LdfEvent_root)"' 
 macro_append includes ' $(ppcmd)"$(Event_root)" ' 
+macro_append includes ' $(ppcmd)"$(astro_root)" ' 
 
 
-library CalibSvc -import=calibUtil -import=calibRootData -import=CalibData *.cxx\
+library CalibSvc -import=calibUtil -import=calibRootData -import=CalibData -import=astro *.cxx\
                         CalibDataSvc/*.cxx      \
                         CalibMySQLCnv/*.cxx     \
                         CalibXMLCnv/*.cxx       \
