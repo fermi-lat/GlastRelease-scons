@@ -18,5 +18,9 @@ G4Generator.saveTrajectories=true;
 ApplicationMgr.DLLs+= { "HepRepSvc", "HepRepXml", "HepRepCorba"};
 ApplicationMgr.ExtSvc += {"HepRepSvc"};
 ApplicationMgr.Runable = "HepRepSvc";
+
+// tell it to automatically start the version of FRED  
+HepRepSvc.startFred = $FREDHOME
+
 // -------end display-specific stuff-------
 // ----------------------------------
