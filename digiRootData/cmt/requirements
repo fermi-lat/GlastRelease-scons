@@ -1,8 +1,8 @@
 package digiRootData
-version v2r9
+version v3r0
 
-use GlastPolicy
-use ROOT
+use GlastPolicy v4r*
+use ROOT v3r*
 
 apply_pattern packageShr
 
