@@ -60,6 +60,7 @@ private:
     IFlux* m_flux;
     std::string m_source_name;
     IParticlePropertySvc * m_partSvc;
+    double energy;
     double m_glastExposureAngle;
     int m_exposureFunction;
     double m_pointSpread;
@@ -69,11 +70,12 @@ private:
     double m_exposedArea[360][180];
     double m_currentTime;
     double m_passedTime;  //time passed during this event
-    std::vector<exposureSet> findExposed(double l,double b, double deltat);
-    void addToTotalExposure(std::vector<exposureSet>);
+    void findExposed(double l,double b, double deltat);
     void displayExposure();
     void rootDisplay();
     void makeTimeCandle(IFluxSvc* fsvc);
+    double zenithExposure(double zenithAngle);
+    double energyExposure(double energy);
     
     /// transform linear l,b coordinates into transformed equal-area coords.
     std::pair<double,double> hammerAitoff(double l,double b);
@@ -208,7 +210,7 @@ StatusCode FluxTestAlg::execute() {
     }
     
     HepVector3D p,d;
-    double energy;
+    //double energy;
     std::string partName;
     //only make a new source if one does not already exist.
     if(pcol==0){
@@ -232,7 +234,7 @@ StatusCode FluxTestAlg::execute() {
     }
     
     
-   /* log << MSG::INFO << partName
+    /* log << MSG::INFO << partName
     << "(" << energy
     << " GeV), Launch: " 
     << "(" << p.x() <<", "<< p.y() <<", "<<p.z()<<")" 
@@ -305,9 +307,9 @@ StatusCode FluxTestAlg::execute() {
     m_passedTime = (m_flux->time())-m_currentTime;
     m_currentTime = m_flux->time();
     
-    std::vector<exposureSet> exposed;
-    exposed = findExposed(l,b,m_passedTime);
-    addToTotalExposure(exposed);    
+    //std::vector<exposureSet> exposed;
+    /*exposed = */findExposed(l,b,m_passedTime);
+    //addToTotalExposure(exposed);    
     
     return sc;
 }
@@ -319,8 +321,8 @@ StatusCode FluxTestAlg::finalize() {
     return StatusCode::SUCCESS;
 }
 
-
-std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b,double deltat){    
+//------------------------------------------------------------------------------
+void FluxTestAlg::findExposed(double l,double b,double deltat){    
     MsgStream log(msgSvc(), name());
     
     std::vector<exposureSet> returned;
@@ -391,54 +393,44 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
                     exposure=1;
                     validpoint++;
                 }
+            }else if(m_exposureFunction == 4){
+                double degToRad = M_PI/180;                
+                point.x=i;
+                point.y=j;
+                double zenithAngle = acos(sin((j-90.)*degToRad)*sin((b-90.)*degToRad)+cos((b-90.)*degToRad)*cos((j-90.)*degToRad)*cos((l-i)*degToRad))/degToRad;
+                //double energy=m_flux->energy();
+                exposure=zenithExposure(zenithAngle)*energyExposure(energy);
+                if(exposure)validpoint++;
             }
-            
-            // Calculate the shift from the point spread function
-            double lshift=0,bshift=0,theta,phi;
-            if(m_pointSpread){
-                theta=m_pointSpread*log10(10.0/(RandFlat::shoot(1.0)));
-                phi=RandFlat::shoot(1.0)*M_2PI;
-                lshift=theta*sin(phi);
-                bshift=theta*cos(phi);
-            }
-            
-            
-            /// apply a projection, if desired.
-            if(m_projectionType){
-                std::pair<double,double> abc = hammerAitoff(correctedl-180.,correctedb-90.);
-                point.x = abc.first+lshift; //yes, this is doing an implicit cast.
-                point.y = abc.second+bshift;
-                point.amount = exposure*deltat*pow(cos((point.y-90.)*M_PI/180.),0.75);
-            }else{
-                point.x = correctedl+lshift; //yes, this is doing an implicit cast.
-                point.y = correctedb+bshift;
-                point.amount = exposure*deltat;
-            }
-            if(validpoint) returned.push_back(point);
+        
+        
+        // Calculate the shift from the point spread function
+        double lshift=0,bshift=0,theta,phi;
+        if(m_pointSpread){
+            theta=m_pointSpread*log10(10.0/(RandFlat::shoot(1.0)));
+            phi=RandFlat::shoot(1.0)*M_2PI;
+            lshift=theta*sin(phi);
+            bshift=theta*cos(phi);
         }
+        
+        
+        /// apply a projection, if desired.
+        if(m_projectionType){
+            std::pair<double,double> abc = hammerAitoff(correctedl-180.,correctedb-90.);
+            point.x = abc.first+lshift; //yes, this is doing an implicit cast.
+            point.y = abc.second+bshift;
+            point.amount = exposure*deltat*pow(cos((point.y-90.)*M_PI/180.),0.75);
+        }else{
+            point.x = correctedl+lshift; //yes, this is doing an implicit cast.
+            point.y = correctedb+bshift;
+            point.amount = exposure*deltat;
+        }
+        if(validpoint)m_exposedArea[point.x][point.y] += point.amount;
     }
-    return returned;
+    }
+    return;
 }
 
-//------------------------------------------------------------------------------------
-void FluxTestAlg::addToTotalExposure(std::vector<FluxTestAlg::exposureSet> toBeAdded){
-    std::vector<exposureSet>::iterator iter = toBeAdded.begin();
-    int x,y;
-    double amount;
-    if(toBeAdded.size()){
-        for( ; iter!=toBeAdded.end() ; iter++){
-            
-            x = (*iter).x;
-            y = (*iter).y;
-            amount = (*iter).amount;
-            if(x >=0 && y>=0 && x<360 && y<180) m_exposedArea[x][y] += amount;
-            
-        }
-    }else{
-        
-        std::cout << "error in addToTotalExposure - null vector input" <<std::endl;
-    }
-}
 //------------------------------------------------------------
 void FluxTestAlg::displayExposure(){
     //make the file
@@ -551,4 +543,13 @@ std::pair<double,double> FluxTestAlg::hammerAitoff(double l,double b){
     x*=90;
     y*=90;
     return std::make_pair<double,double>(x,y);
+}
+//--------------------------------------------------------------------------------------------
+double FluxTestAlg::zenithExposure(double zenithAngle){
+    double characteristicAngle=20;
+    if(zenithAngle <=60)return pow(2.71828,-zenithAngle/characteristicAngle);
+    return 0;
+}
+double FluxTestAlg::energyExposure(double energy){
+    return 1;
 }

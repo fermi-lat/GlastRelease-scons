@@ -37,19 +37,20 @@ FluxTestAlg.source_name="TimeCandle";
 // but also falls off with a gaussian profile.
 //3: cutoff "radius" is equal-area, that is,
 // representing an azimuthal angle from glast.
-FluxTestAlg.exposureFunction = 0;
+//4:  "real" exposure, with defined functions based on zenith angle, energy, etc.
+FluxTestAlg.exposureFunction = 4;
 
 // point spread characteristic size (in degrees) to
 //approximate uncertainty from GLAST. (0 = none)
 FluxTestAlg.pointSpread = 0;
 
 //the angular size of GLAST's exposure, if needed (see below)
-FluxTestAlg.glastExposureAngle = 25.;
+FluxTestAlg.glastExposureAngle = 35.;
 
 // type of map projection to use
 //0: none - l and b are cartesian
 //1: hammer-aitoff equal-area projection
-FluxTestAlg.projectionType = 1;
+FluxTestAlg.projectionType = 0;
 
 //rocking angle mode
 //0: none - no rocking
@@ -58,7 +59,7 @@ FluxTestAlg.projectionType = 1;
 FluxTestAlg.rockingMode = 0;
 
 ApplicationMgr.EvtSel = "NONE";
-ApplicationMgr.EvtMax = 20000;
+ApplicationMgr.EvtMax = 30;
 
 //==============================================================
 //
