@@ -56,9 +56,9 @@
 
 <!-- optional patch  description - factors given in millimeters -->
 <!ELEMENT patch EMPTY>
-<!ATTLIST patch xmin CDATA "-10" xmax CDATA "10" 
-                ymin CDATA "-10" ymax CDATA "10" 
-                zmin CDATA "100" zmax CDATA "100" >
+<!ATTLIST patch xmin CDATA "-100" xmax CDATA "100" 
+                ymin CDATA "-100" ymax CDATA "100" 
+                zmin CDATA "1000" zmax CDATA "1000" >
 
 
 <!-- for a specific galactic direction -->
