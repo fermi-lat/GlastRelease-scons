@@ -46,19 +46,38 @@ namespace Event {
             A = 0,
             B = 1
         } PmtId;
+
+        typedef enum {
+            LOW = 0,
+            HIGH = 1
+        } Range;
+
+        typedef enum {
+            NOERROR = 0,
+            ERROR = 1
+        } ParityError;
                 
         AcdDigi(const idents::AcdId &id, const idents::VolumeIdentifier &volId,
             double energy, unsigned short *pha, 
             bool *veto, bool *lowThresh, bool *highThresh) 
-            : m_id(id), m_volId(volId), m_energy(energy)
+            : m_id(id), m_tileName(""), m_tileNumber(-1), m_volId(volId), m_energy(energy)
         {  
             m_pulseHeight[0] = pha[0]; m_pulseHeight[1] = pha[1];
             m_veto[0] = veto[0]; m_veto[1] = veto[1];
             m_low[0] = lowThresh[0]; m_low[1] = lowThresh[1];
             m_high[0] = highThresh[0]; m_high[1] = highThresh[1];
+            m_range[0] = LOW; m_range[1] = LOW;
+            m_error[0] = NOERROR; m_error[1] = NOERROR;
         };
         
         virtual ~AcdDigi() { };
+
+        void initLdfParameters(const char* tileName, int tileNumber, Range *rangeVals, ParityError *errorVals) {
+            m_tileName = tileName;
+            m_tileNumber = tileNumber;
+            m_range[0] = rangeVals[0]; m_range[1] = rangeVals[1];
+            m_error[0] = errorVals[0]; m_error[1] = errorVals[1];
+        }
         
         /// Retrieve reference to class definition structure
         virtual const CLID& clID() const   { return AcdDigi::classID(); }
@@ -67,6 +86,10 @@ namespace Event {
         /// Retrieve ACD identifier
         inline const idents::AcdId getId() const { return m_id; };
         inline const idents::VolumeIdentifier getVolId() const { return m_volId; };
+
+        inline const char* getTileName() const { return m_tileName; };
+
+        inline int getTileNumber() const { return m_tileNumber; };
         
         inline double getEnergy() const { return m_energy; };
 
@@ -79,7 +102,10 @@ namespace Event {
         
         inline bool getHighDiscrim(PmtId id) const { return m_high[id]; };
         
-        
+        inline Range getRange(PmtId id) const { return m_range[id]; };
+
+        inline ParityError getParityError(PmtId id) const { return m_error[id]; };
+
         /// Serialize the object for writing
         virtual StreamBuffer& serialize( StreamBuffer& s ) const;
         /// Serialize the object for reading
@@ -98,9 +124,13 @@ namespace Event {
         
         /// Acd ID
         idents::AcdId        m_id;
+        /// Tile name in char* form, matches idents::AcdId
+        const char*                m_tileName;
+        /// Tile Number as reported from LDF
+        int                  m_tileNumber;
         /// Allow one to retrieve dimensions of this volume
         idents::VolumeIdentifier m_volId;
-        /// energy MeV - storing as a check on pulseHeight
+        /// Monte Carlo energy MeV - storing as a check on pulseHeight
         double               m_energy;
         /// pulse height
         unsigned short       m_pulseHeight[2];
@@ -110,6 +140,10 @@ namespace Event {
         bool                 m_low[2];
         /// 1 bit High threshold discriminator - used for calibration of the CAL
         bool                 m_high[2];
+        /// Range setting either LOW (0) or HIGH (1)
+        Range                m_range[2];
+        /// Stores the parity error bit from LDF:  NOERROR (0), ERROR (1)
+        ParityError          m_error[2];
     };
     
     
