@@ -78,7 +78,7 @@
     <!-- subsequences to conveniently refer to each subdetector -->
     <absSubseq name="absSubCAL" >
       <theIdRoot>
-        <enumVal valueREF="LAT" />
+        <enumVal valueREF="eRootLAT" />
       </theIdRoot>
       <fieldRef refTo="fLATObjects" >
          <enumVal valueREF="eLATTowers" />
@@ -92,7 +92,7 @@
 
     <absSubseq name="absSubTKR" >
       <theIdRoot>
-        <enumVal valueREF="LAT" />
+        <enumVal valueREF="eRootLAT" />
       </theIdRoot>
       <fieldRef refTo="fLATObjects" >
          <enumVal valueREF="eLATTowers" />
@@ -106,7 +106,7 @@
 
     <absSubseq name="absSubACD" >
       <theIdRoot>
-        <enumVal valueREF="LAT" />
+        <enumVal valueREF="eRootLAT" />
       </theIdRoot>
       <fieldRef refTo="fLATObjects" >
          <enumVal valueREF="eLATACD" />

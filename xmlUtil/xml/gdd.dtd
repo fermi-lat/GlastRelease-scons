@@ -823,6 +823,7 @@
 <!ELEMENT overview (#PCDATA) >
 
 <!ELEMENT primary (primCategory*) >
+<!ATTLIST primary normalized (true | false) "false" >
 
 <!ELEMENT primCategory (overview, prim*) >
 <!ATTLIST primCategory name ID #REQUIRED>
@@ -837,6 +838,9 @@
 <!-- "save" attribute can be used by transforming programs to determine
      which derived constants may be of independent interest.      --> 
 <!ELEMENT derived (derCategory*) >
+<!ATTLIST derived evaluated (true | false) "false" >
+
+
 <!ELEMENT derCategory (overview,const*) >
 <!ATTLIST derCategory name ID #REQUIRED
           save        (true | false) "false" >
