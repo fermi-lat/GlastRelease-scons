@@ -56,6 +56,7 @@ public:
         EventModel::TkrRecon::TkrCandidates = EventModel::TkrRecon::Event + "/TkrCandidates";
         EventModel::TkrRecon::SiRecObjs     = EventModel::TkrRecon::Event + "/SiRecObjs";
         EventModel::TkrRecon::TkrTracks     = EventModel::TkrRecon::Event + "/TkrTracks";
+        EventModel::TkrRecon::TkrVertexCol  = EventModel::TkrRecon::Event + "/TkrVertexCol";
 
         // reconstructed ACD data
         EventModel::AcdRecon::Event         = EventModel::Event + "/AcdRecon";
@@ -159,6 +160,7 @@ public:
     const CLID& CLID_TkrCandidates      = 3103;  // Is this really Layers, Clusters, RecObjs
     const CLID& CLID_SiRecObjs          = 3104;  // or rather Layer, Cluster, RecObj objects?
     const CLID& CLID_TkrTracks          = 3105;  // or rather Layer, Cluster, RecObj objects?
+    const CLID& CLID_TkrVertexCol       = 3106;  // or rather Layer, Cluster, RecObj objects?
 
     //! Reconstruction: Tkr class IDs
     const CLID& CLID_CalRecon           = 3200;
