@@ -6,7 +6,7 @@ JobOptionsSvc        INFO
 
 // primary DLLs
 
-ApplicationMgr.DLLs+= {"RootIo","CalRecon","CalUtil","CalibSvc"};
+ApplicationMgr.DLLs+= {"RootIo","CalRecon","CalibSvc","CalXtalResponse","CalUtil"};
 
 // ----------------------------
 // setup basic event loop stuff
@@ -20,6 +20,7 @@ EventSelector.Input = "NONE";
 
 // Start up a CalibDataSvc 
 ApplicationMgr.ExtSvc += {"CalibDataSvc"};
+CalibMySQLCnvSvc.DbName = "calib_user";
 
 ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
 
@@ -34,7 +35,16 @@ DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 CalibDataSvc.CalibInstrumentName = "LAT";
 CalibDataSvc.CalibStorageType = 14;
 CalibDataSvc.CalibRootName = "Calib";
-CalibDataSvc.CalibFlavorList = {"ideal"};
+CalibDataSvc.CalibFlavorList = {"ideal", "zachtest"};
+CalibDataSvc.CalibTimeSource = "clock";
+CalibDataSvc.startTime = "2003-2-28 23:59:59";
+CalibDataSvc.delayTime = 10000;
+
+// Start up a CalCalibSvc
+ApplicationMgr.ExtSvc += {"CalCalibSvc"};
+
+// CalCalibSvc properties
+CalCalibSvc.DefaultFlavor = "zachtest";
 
 // ----------------------------
 //  topalg
@@ -57,28 +67,11 @@ GlastDetSvc.topVolume="LAT";
 GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
-// specific for this test
-ApplicationMgr.DLLs += {"AnalysisNtuple"};
-
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel = 2;
 ApplicationMgr.EvtMax = 10;
 digiRootReaderAlg.digiRootFile="$(CALRECONROOT)/src/test/muon_digi.root";
-
-//    use the following lines to perform fuzzy clustering:
-// ApplicationMgr.DLLs += {"FuzzyCluster"};
-// CalClustersAlg.clusterToolName="FuzzyClusterTool";
-//
-//    the command param is mandatory for the FuzzyCluster Gaudi tool
-//    which is retrieved as a private tool by FuzzyClusterTool, that
-//    in its turn is a shared tool.
-// ToolSvc.FuzzyClusterTool.FuzzyCluster.command="cini -r2:4 | fcm | pick";
-//
-//    clusterSetNo is a param of FuzzyClusterTool that specifies
-//    the index of the partition that should be considered; its default
-//    value is zero.
-// ToolSvc.FuzzyClusterTool.clusterSetNo=0;
 
 
 //==============================================================
@@ -88,10 +81,8 @@ digiRootReaderAlg.digiRootFile="$(CALRECONROOT)/src/test/muon_digi.root";
 //##############################################################
 
 
-Job options successfully read in from ../src/test/jobOptions.txt
+Job options successfully read in from /home/chamont/Glast/CalReconDev/CalRecon/src/test/jobOptions.txt
 ApplicationMgr      DEBUG Getting my own properties
-DllClassManager     DEBUG Found factory Algorithm testFileHeadersSetAlg
-DllClassManager     DEBUG Found factory Algorithm testCaloFileHeadersSetAlg
 DllClassManager     DEBUG Found factory Service RootIoSvc
 DllClassManager     DEBUG Found factory RootIoRandom
 ObjectManager       DEBUG Added object factory for class:RootIoRandom
@@ -101,14 +92,14 @@ DllClassManager     DEBUG Found factory Algorithm reconRootWriterAlg
 DllClassManager     DEBUG Found factory Algorithm reconRootReaderAlg
 DllClassManager     DEBUG Found factory Algorithm mcRootWriterAlg
 DllClassManager     DEBUG Found factory Algorithm mcRootReaderAlg
-DllClassManager     DEBUG Found factory FileHeadersTool
-ObjectManager       DEBUG Added object factory for class:FileHeadersTool
-DllClassManager     DEBUG Found factory Algorithm FileHeadersSetAlg
+DllClassManager     DEBUG Found factory FhTool
+ObjectManager       DEBUG Added object factory for class:FhTool
+DllClassManager     DEBUG Found factory Algorithm FhSetAlg
+DllClassManager     DEBUG Found factory Algorithm FhDemoGetAlg
+DllClassManager     DEBUG Found factory Algorithm FhDemoCaloSetAlg
 DllClassManager     DEBUG Found factory Algorithm digiRootWriterAlg
 DllClassManager     DEBUG Found factory Algorithm digiRootReaderAlg
 DllClassManager     DEBUG Loaded 14 factories from module RootIo
-DllClassManager     DEBUG Found factory SingleClusterTool
-ObjectManager       DEBUG Added object factory for class:SingleClusterTool
 DllClassManager     DEBUG Found factory ProfileTool
 ObjectManager       DEBUG Added object factory for class:ProfileTool
 DllClassManager     DEBUG Found factory LastLayerCorrTool
@@ -116,13 +107,15 @@ ObjectManager       DEBUG Added object factory for class:LastLayerCorrTool
 DllClassManager     DEBUG Found factory Algorithm CalXtalRecAlg
 DllClassManager     DEBUG Found factory CalValsCorrTool
 ObjectManager       DEBUG Added object factory for class:CalValsCorrTool
+DllClassManager     DEBUG Found factory CalSingleClusteringTool
+ObjectManager       DEBUG Added object factory for class:CalSingleClusteringTool
+DllClassManager     DEBUG Found factory CalSimpleClusteringTool
+ObjectManager       DEBUG Added object factory for class:CalSimpleClusteringTool
+DllClassManager     DEBUG Found factory CalFuzzyClusteringTool
+ObjectManager       DEBUG Added object factory for class:CalFuzzyClusteringTool
 DllClassManager     DEBUG Found factory Algorithm CalDisplay
 DllClassManager     DEBUG Found factory Algorithm CalClustersAlg
-DllClassManager     DEBUG Loaded 7 factories from module CalRecon
-DllClassManager     DEBUG Found factory LinearConvertAdc
-ObjectManager       DEBUG Added object factory for class:LinearConvertAdc
-DllClassManager     DEBUG Found factory Service CalFailureModeSvc
-DllClassManager     DEBUG Loaded 2 factories from module CalUtil
+DllClassManager     DEBUG Loaded 9 factories from module CalRecon
 DllClassManager     DEBUG Found factory XmlTkrSplitsCnv
 ConverterFactory    DEBUG Added converter for class:XmlTkrSplitsCnv Storage id:7 clID:6106
 DllClassManager     DEBUG Found factory XmlTest1Cnv
@@ -153,6 +146,8 @@ DllClassManager     DEBUG Found factory XmlAcdPedCnv
 ConverterFactory    DEBUG Added converter for class:XmlAcdPedCnv Storage id:7 clID:6304
 DllClassManager     DEBUG Found factory XmlAcdGainCnv
 ConverterFactory    DEBUG Added converter for class:XmlAcdGainCnv Storage id:7 clID:6305
+DllClassManager     DEBUG Found factory RootTkrTotCnv
+ConverterFactory    DEBUG Added converter for class:RootTkrTotCnv Storage id:5 clID:6103
 DllClassManager     DEBUG Found factory RootCalGainCnv
 ConverterFactory    DEBUG Added converter for class:RootCalGainCnv Storage id:5 clID:6204
 DllClassManager     DEBUG Found factory Service CalibXmlCnvSvc
@@ -160,10 +155,20 @@ DllClassManager     DEBUG Found factory Service CalibRootCnvSvc
 DllClassManager     DEBUG Found factory Service CalibMySQLCnvSvc
 DllClassManager     DEBUG Found factory Algorithm CalibEvtClock
 DllClassManager     DEBUG Found factory Service CalibDataSvc
-DllClassManager     DEBUG Loaded 21 factories from module CalibSvc
+DllClassManager     DEBUG Loaded 22 factories from module CalibSvc
+DllClassManager     DEBUG Found factory XtalPosTool
+ObjectManager       DEBUG Added object factory for class:XtalPosTool
+DllClassManager     DEBUG Found factory XtalEneTool
+ObjectManager       DEBUG Added object factory for class:XtalEneTool
+DllClassManager     DEBUG Found factory XtalADCTool
+ObjectManager       DEBUG Added object factory for class:XtalADCTool
+DllClassManager     DEBUG Found factory Service CalCalibSvc
+DllClassManager     DEBUG Loaded 4 factories from module CalXtalResponse
+DllClassManager     DEBUG Found factory Service CalFailureModeSvc
+DllClassManager     DEBUG Loaded 1 factories from module CalUtil
 DllClassManager     DEBUG Found factory Algorithm SetSeeds
 DllClassManager     DEBUG Found factory MCEventCnv
-ConverterFactory    DEBUG Added converter for class:MCEventCnv Storage id:1 clID:1100
+ConverterFactory    DEBUG Added converter for class:MCEventCnv Storage id:1 clID:2929757986
 DllClassManager     DEBUG Found factory Service GlastRandomSvc
 DllClassManager     DEBUG Found factory Service GlastPropagatorSvc
 DllClassManager     DEBUG Found factory Service GlastEventSelector
@@ -192,27 +197,7 @@ DllClassManager     DEBUG Found factory Algorithm TkrCalibAlg
 DllClassManager     DEBUG Found factory Service TkrBadStripsSvc
 DllClassManager     DEBUG Found factory Service TkrAlignmentSvc
 DllClassManager     DEBUG Loaded 8 factories from module TkrUtil
-DllClassManager     DEBUG Found factory VtxValsTool
-ObjectManager       DEBUG Added object factory for class:VtxValsTool
-DllClassManager     DEBUG Found factory TkrValsTool
-ObjectManager       DEBUG Added object factory for class:TkrValsTool
-DllClassManager     DEBUG Found factory TkrHitValsTool
-ObjectManager       DEBUG Added object factory for class:TkrHitValsTool
-DllClassManager     DEBUG Found factory McValsTool
-ObjectManager       DEBUG Added object factory for class:McValsTool
-DllClassManager     DEBUG Found factory McAnalValsTool
-ObjectManager       DEBUG Added object factory for class:McAnalValsTool
-DllClassManager     DEBUG Found factory GltValsTool
-ObjectManager       DEBUG Added object factory for class:GltValsTool
-DllClassManager     DEBUG Found factory EvtValsTool
-ObjectManager       DEBUG Added object factory for class:EvtValsTool
-DllClassManager     DEBUG Found factory CalValsTool
-ObjectManager       DEBUG Added object factory for class:CalValsTool
-DllClassManager     DEBUG Found factory Algorithm AnalysisNtupleAlg
-DllClassManager     DEBUG Found factory AcdValsTool
-ObjectManager       DEBUG Added object factory for class:AcdValsTool
-DllClassManager     DEBUG Loaded 10 factories from module AnalysisNtuple
-ApplicationMgr       INFO Successfully loaded modules: RootIo, CalRecon, CalUtil, CalibSvc, GlastSvc, G4Propagator, G4Generator, TkrUtil, AnalysisNtuple
+ApplicationMgr       INFO Successfully loaded modules: RootIo, CalRecon, CalibSvc, CalXtalResponse, CalUtil, GlastSvc, G4Propagator, G4Generator, TkrUtil
 ApplicationMgr       INFO Application Manager Configured successfully
 ServiceManager      DEBUG Initializing service EventSelector
 EventSelector       DEBUG Service base class initialized successfully
@@ -227,6 +212,7 @@ CalibDataSvc        DEBUG Service base class initialized successfully
 DetectorPersist...   INFO "CnvServices": ["CalibMySQLCnvSvc", "CalibXmlCnvSvc"]
 DetectorPersist...  DEBUG Service base class initialized successfully
 CalibDataSvc        DEBUG Storage type used is: 14
+IncidentSvc         DEBUG Service base class initialized successfully
 DetectorPersist...   INFO Added successfully Conversion service:CalibMySQLCnvSvc
 ServiceManager      DEBUG Initializing service CalibMySQLCnvSvc
 CalibMySQLCnvSvc    DEBUG Service base class initialized successfully
@@ -242,6 +228,18 @@ CalibXmlCnvSvc      DEBUG Service base class initialized successfully
 CalibXmlCnvSvc      DEBUG Retrieved IConversionSvc interface of DetectorPersistencySvc
 CalibXmlCnvSvc      DEBUG Retrieved IAddressCreator interface of DetectorPersistencySvc
 CalibXmlCnvSvc      DEBUG Set it as the address creator of the CalibXmlCnvSvc
+ServiceManager      DEBUG Initializing service CalCalibSvc
+CalCalibSvc         DEBUG Service base class initialized successfully
+CalCalibSvc          INFO initialize
+CalCalibSvc         DEBUG Initializing...
+CalCalibSvc         DEBUG   CalibDavaSvc   : CalibDataSvc
+CalCalibSvc         DEBUG   DefaultFlavor  : zachtest
+CalCalibSvc         DEBUG   FlavorIntNonlin: zachtest
+CalCalibSvc         DEBUG   FlavorAsym     : zachtest
+CalCalibSvc         DEBUG   FlavorPed      : zachtest
+CalCalibSvc         DEBUG   FlavorMeVPerDac: zachtest
+CalCalibSvc         DEBUG   FlavorTholdCI  : zachtest
+CalCalibSvc         DEBUG   FlavorTholdMuon: zachtest
 ServiceManager      DEBUG Initializing service GlastDetSvc
 GlastDetSvc         DEBUG Service base class initialized successfully
 detModel Doc Client: registered the constants!
@@ -249,7 +247,7 @@ detModel Doc Client: registered the materials!
 detModel Doc Client: registered the id dictionary!
 detModel Doc Client: registered the sections!
 GlastDetSvc          INFO  geometry setup: 
-    document = /home/chamont/Glast/GlastRelease/v5r0p1/xmlGeoDbs/v1r21/xml/flight/flightSegVols.xml
+    document = /home/chamont/Glast/GlastRelease/v6r1p2/xmlGeoDbs/v1r22p1/xml/flight/flightSegVols.xml
         mode = recon
       topvol = LAT
 Summary of IDmap contents:
@@ -285,6 +283,7 @@ sideTileR2EdgeLesser         4
 ServiceManager      DEBUG Service EventPersistencySvc already initialized
 ServiceManager      DEBUG Service EventDataSvc already initialized
 ServiceManager      DEBUG Service DetectorPersistencySvc already initialized
+ServiceManager      DEBUG Service IncidentSvc already initialized
 ServiceManager      DEBUG Initializing service AppMgrRunable
 AppMgrRunable       DEBUG Service base class initialized successfully
 ServiceManager      DEBUG Initializing service EventLoopMgr
@@ -295,14 +294,12 @@ EventLoopMgr        DEBUG Creating Top Algorithm CalClustersAlg with name CalClu
 EventLoopMgr        DEBUG Creating Top Algorithm test_CalRecon with name test_CalRecon
 ToolSvc             DEBUG Service base class initialized successfully
 RootIoSvc           DEBUG Service base class initialized successfully
-IncidentSvc         DEBUG Service base class initialized successfully
-digiRootReaderAlg    INFO Opened file: /home/chamont/Glast/GlastRelease/v5r0p1/CalRecon/v5r16p2/src/test/muon_digi.root
-CalXtalRecAlg       DEBUG Retrieved IDetDataSvc interface of CalibDataSvc
-CalXtalRecAlg       DEBUG Properties were read from jobOptions
-CalXtalRecAlg        INFO Time of first event: (ascii) 2003-1-10 00:20
-CalXtalRecAlg        INFO Time of first event: (seconds since 1970) 1042158000
+digiRootReaderAlg    INFO Opened file: /home/chamont/Glast/CalReconDev/CalRecon/src/test/muon_digi.root
+ToolSvc.XtalEne...   INFO initialize
+ToolSvc.XtalPos...   INFO initialize
 CalClustersAlg       INFO CalClustersAlg: callNumber = 0
-ToolSvc.SingleC...   INFO Initializing SingleClusterTool
+ToolSvc.CalSing...   INFO BEGIN initialize()
+ToolSvc.CalSing...   INFO END initialize()
 ToolSvc.LastLay...   INFO Initializing LastLayerCorrTool
 ToolSvc.LastLay...   INFO  value for c0 -35.3747
 ToolSvc.LastLay...   INFO  value for c1 68.1653
@@ -327,7 +324,7 @@ ToolSvc.Profile...   INFO  value for bias6 0.273117
 ToolSvc.Profile...   INFO  value for bias7 -0.604589
 ToolSvc.Profile...   INFO  value for bias8 0.452359
 ToolSvc.CalVals...   INFO Initializing CalValsCorrTool
-ToolSvc.CalVals...   INFO ValBase is initializing
+TkrGeometrySvc      DEBUG Service base class initialized successfully
 ToolSvc.G4Propa...   INFO G4 Propagation Tool initializing now
 G4GeometrySvc        INFO G4GeometrySvc Initialization started
 G4GeometrySvc       DEBUG Service base class initialized successfully
@@ -366,6 +363,7 @@ ToolSvc.G4Propa...   INFO G4 Propagator Tool initializing now
 ToolSvc             DEBUG Retrieved toolG4PropagationTool
 ToolSvc.G4Propa...   INFO G4 Propagator Tool ready
 GlastPropagatorSvc   INFO Using Geant4 Particle Propagator
+TkrFailureModeSvc   DEBUG Service base class initialized successfully
 TkrAlignmentSvc     DEBUG Service base class initialized successfully
 tray 0 z: 23.5075 -19.0075 18.8075
 tray 1 z: 59.55 -14.785 14.785
@@ -426,8 +424,12 @@ rlayer/view z 17 1 596.665
 TkrAlignmentSvc     DEBUG 
 TkrAlignmentSvc      INFO No alignment was requested.
 TkrAlignmentSvc      INFO   No alignment will be done.
+TkrBadStripsSvc     DEBUG Service base class initialized successfully
 TkrBadStripsSvc      INFO No bad strips file was requested.
+TkrSplitsSvc        DEBUG Service base class initialized successfully
+TkrSplitsSvc      WARNING Service already initialized
 TkrToTSvc           DEBUG Service base class initialized successfully
+TkrToTSvc            INFO TkrToTSvc initialized with mode: ideal
 TkrGeometrySvc       INFO TkrGeometrySvc successfully initialized
 ToolSvc             DEBUG Retrieved toolG4PropagationTool
 test_CalRecon        INFO initialize
@@ -440,56 +442,126 @@ HistogramPersis...  DEBUG Service base class initialized successfully
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 EventPersistenc...   INFO Added successfully Conversion service:EventCnvSvc
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
 AuditorSvc          DEBUG Service base class initialized successfully
-ToolSvc.FileHea...WARNING No file header found
+ToolSvc.FhTool    WARNING No file header found
+CalibDataSvc         INFO Fake Clock Event number: 0
+CalibDataSvc         INFO Event time: 2003-02-28 23:59:59
+CalibDataSvc        DEBUG Event time (hours) 290688
+CalibDataSvc        DEBUG Event Time set to 2003-02-28 23:59:59
+Successfully connected to MySQL host centaurusa.slac.stanford.edu database calib_user
+CalibMySQLCnvSvc    DEBUG Creating an address of type 7 for class 6203
+DetectorPersist...   INFO Added successfully Conversion service:CalibXmlCnvSvc
+XmlBaseCnv           INFO successfully parsed document $(CALXTALRESPONSEROOT)/src/test/mc_peds.041022230030_FM101_Pshp_calu_collect_ext.xml aka /home/chamont/Glast/CalReconDev/CalXtalResponse/v0r0p3/src/test/mc_peds.041022230030_FM101_Pshp_calu_collect_ext.xml
+XmlBaseCnv          DEBUG Successfully created calib. object 
+CalibMySQLCnvSvc    DEBUG New object successfully created
+CalibMySQLCnvSvc    DEBUG Method createObj exiting
+CalCalibSvc          INFO Updating /Calib/CAL_Ped/zachtest
+CalibMySQLCnvSvc    DEBUG Creating an address of type 7 for class 6213
+XmlBaseCnv           INFO successfully parsed document $(CALXTALRESPONSEROOT)/src/test/fake_tholdci.xml aka /home/chamont/Glast/CalReconDev/CalXtalResponse/v0r0p3/src/test/fake_tholdci.xml
+XmlBaseCnv          DEBUG Successfully created calib. object 
+CalibMySQLCnvSvc    DEBUG New object successfully created
+CalibMySQLCnvSvc    DEBUG Method createObj exiting
+CalCalibSvc          INFO Updating /Calib/CAL_TholdCI/zachtest
 CalClustersAlg      DEBUG No TKR Reconstruction available 
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 107.084 Corrected 107.084 61.429 -148.712 -134.666 -2.1092e-12 0.529464 0.848332
+CalClustersAlg      DEBUG Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
 test_CalRecon        INFO executing 1 time
 EventSelector       DEBUG Reading Event 1
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
 CalClustersAlg      DEBUG No TKR Reconstruction available 
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 51.8398 Corrected 51.8398 51.0718 -134.171 -120.914 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
 test_CalRecon        INFO executing 2 time
 EventSelector       DEBUG Reading Event 2
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
+CalibDataSvc         INFO Fake Clock Event number: 1
+CalibDataSvc         INFO Event time: 2003-03-01 00:00:09
+CalibDataSvc        DEBUG Event time (hours) 290688
+CalibDataSvc        DEBUG Event Time set to 2003-03-01 00:00:09
+CalibMySQLCnvSvc    DEBUG Creating an address of type 7 for class 6205
+XmlBaseCnv           INFO successfully parsed document $(CALXTALRESPONSEROOT)/src/test/ci_intnonlin.041111143546_FM101_PSHP_CALU_COLLECT_CI_SINGLEX16.xml aka /home/chamont/Glast/CalReconDev/CalXtalResponse/v0r0p3/src/test/ci_intnonlin.041111143546_FM101_PSHP_CALU_COLLECT_CI_SINGLEX16.xml
+XmlBaseCnv          DEBUG Successfully created calib. object 
+CalibMySQLCnvSvc    DEBUG New object successfully created
+CalibMySQLCnvSvc    DEBUG Method createObj exiting
+CalCalibSvc          INFO Updating /Calib/CAL_IntNonlin/zachtest
+CalibMySQLCnvSvc    DEBUG Creating an address of type 7 for class 6212
+XmlBaseCnv           INFO successfully parsed document $(CALXTALRESPONSEROOT)/src/test/mc_mevperdac.041022230030_FM101_Pshp_calu_collect_ext.xml aka /home/chamont/Glast/CalReconDev/CalXtalResponse/v0r0p3/src/test/mc_mevperdac.041022230030_FM101_Pshp_calu_collect_ext.xml
+XmlBaseCnv          DEBUG Successfully created calib. object 
+CalibMySQLCnvSvc    DEBUG New object successfully created
+CalibMySQLCnvSvc    DEBUG Method createObj exiting
+CalCalibSvc          INFO Updating /Calib/CAL_MevPerDac/zachtest
+CalibMySQLCnvSvc    DEBUG Creating an address of type 7 for class 6215
+XmlBaseCnv           INFO successfully parsed document $(CALXTALRESPONSEROOT)/src/test/mc_asym.041022230030_FM101_Pshp_calu_collect_ext.xml aka /home/chamont/Glast/CalReconDev/CalXtalResponse/v0r0p3/src/test/mc_asym.041022230030_FM101_Pshp_calu_collect_ext.xml
+XmlBaseCnv          DEBUG Successfully created calib. object 
+CalibMySQLCnvSvc    DEBUG New object successfully created
+CalibMySQLCnvSvc    DEBUG Method createObj exiting
+CalCalibSvc          INFO Updating /Calib/CAL_Asym/zachtest
 CalClustersAlg      DEBUG No TKR Reconstruction available 
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 130.438 Corrected 130.438 35.2916 -135.371 -127.651 -1.51069e-12 0.534651 0.845073
+CalClustersAlg      DEBUG Energy 2.9679 Corrected 2.9679 34.13 -105.75 -79.42 -1000 -1000 -1000
 test_CalRecon        INFO executing 3 time
 EventSelector       DEBUG Reading Event 3
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
 CalClustersAlg      DEBUG No TKR Reconstruction available 
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 110.288 Corrected 110.288 37.8349 -144.693 -134.937 -3.14052e-12 0.54616 0.837681
+CalClustersAlg      DEBUG Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
 test_CalRecon        INFO executing 4 time
 EventSelector       DEBUG Reading Event 4
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
 CalClustersAlg      DEBUG No TKR Reconstruction available 
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 105.457 Corrected 105.457 42.8183 -130.929 -114.554 0.0198097 0.543432 0.839219
+CalClustersAlg      DEBUG Energy 5.04997 Corrected 5.04997 153.232 -98.7149 -69.9972 -1000 -1000 -1000
 test_CalRecon        INFO executing 5 time
 EventSelector       DEBUG Reading Event 5
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
 CalClustersAlg      DEBUG No TKR Reconstruction available 
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 129.862 Corrected 129.862 57.3831 -129.233 -132.499 0.00259606 0.546158 0.837678
+CalClustersAlg      DEBUG Energy 2.47392 Corrected 2.47392 61.97 -105.75 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO executing 6 time
 EventSelector       DEBUG Reading Event 6
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
 CalClustersAlg      DEBUG No TKR Reconstruction available 
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 121.502 Corrected 121.502 58.4521 -142.163 -134.528 -2.47189e-12 0.528746 0.84878
+CalClustersAlg      DEBUG Energy 2.13565 Corrected 2.13565 268.75 -145.49 -143.47 -1000 -1000 -1000
 test_CalRecon        INFO executing 7 time
 EventSelector       DEBUG Reading Event 7
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
 CalClustersAlg      DEBUG No TKR Reconstruction available 
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 114.268 Corrected 114.268 55.4652 -140.228 -132.844 -1.73562e-12 0.54616 0.837681
+CalClustersAlg      DEBUG Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
 test_CalRecon        INFO executing 8 time
 EventSelector       DEBUG Reading Event 8
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
 CalClustersAlg      DEBUG No TKR Reconstruction available 
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 112.916 Corrected 112.916 53.2895 -130.534 -129.371 -2.05565e-12 0.54616 0.837681
+CalClustersAlg      DEBUG Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
 test_CalRecon        INFO executing 9 time
 EventSelector       DEBUG Reading Event 9
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
 CalClustersAlg      DEBUG No TKR Reconstruction available 
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 171.815 Corrected 171.815 54.8409 -149.442 -137.128 0.0521149 0.545418 0.836543
+CalClustersAlg      DEBUG Energy 15.6085 Corrected 15.6085 247.161 -135.249 -127.439 -1000 -1000 -1000
 test_CalRecon        INFO executing 10 time
 EventSelector       DEBUG Reading Event 10
 test_CalRecon        INFO finalize after 10 calls.
@@ -498,12 +570,13 @@ TkrGeometrySvc       INFO TkrGeometrySvc finalize called
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc             DEBUG Removing tool ToolSvc.G4PropagatorTool
 ToolSvc             DEBUG Removing tool ToolSvc.G4PropagationTool
-ToolSvc             DEBUG Removing tool ToolSvc.CalValsTool
 ToolSvc             DEBUG Removing tool ToolSvc.CalValsCorrTool
 ToolSvc             DEBUG Removing tool ToolSvc.ProfileTool
 ToolSvc             DEBUG Removing tool ToolSvc.LastLayerCorrTool
-ToolSvc             DEBUG Removing tool ToolSvc.SingleClusterTool
-ToolSvc             DEBUG Removing tool ToolSvc.FileHeadersTool
+ToolSvc             DEBUG Removing tool ToolSvc.CalSingleClusteringTool
+ToolSvc             DEBUG Removing tool ToolSvc.XtalPosTool
+ToolSvc             DEBUG Removing tool ToolSvc.XtalEneTool
+ToolSvc             DEBUG Removing tool ToolSvc.FhTool
 CalibMySQLCnvSvc    DEBUG Finalizing
 CalibDataSvc        DEBUG Finalizing
 ApplicationMgr       INFO Application Manager Finalized successfully
