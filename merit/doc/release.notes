@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
  *
+ *  v6r14p2 JCT  26-nov-03 revert the field names
  *  v6r14p1 THB  26-nov-03 fix one of the classification tree parameters
  *  v6r14   THB  25-nov-03 Update rest of trees with post-Rome Atwood analysis
                            root trees merged, names changed
