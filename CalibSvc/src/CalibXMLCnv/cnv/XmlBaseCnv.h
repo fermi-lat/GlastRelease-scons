@@ -23,14 +23,9 @@ namespace CalibData {
   class CalibTime;
 }
 
-// template <class TYPE> class CnvFactory;
-
 class  XmlBaseCnv : public Converter {
-  //  friend class CnvFactory<XmlBaseCnv>;
 
 public:
-  //  const CLID& objType() const;
-  //  static const CLID& classID();
 
   virtual ~XmlBaseCnv();
 
@@ -45,34 +40,6 @@ public:
   */
   virtual StatusCode createObj(IOpaqueAddress* addr,
                                DataObject*& refpObject);
-
-  /**
-     Update the transient representation of an object, given an opaque
-     address.  This and the preceding create method comprise the core 
-     functionality of calibration converters.
-  */
-  //  virtual StatusCode updateObj(IOpaqueAddress* addr,
-  //                           DataObject*& refpObject);
-
-  /** 
-      Convert transient object to requested representation. This
-      method is required since XmlBaseCnv inherits from Converter,
-      but in practice it should not be called.
-      Creation of persistent calibration data will 
-      be accomplished by other means. 
-  */
-  //  virtual StatusCode createRep(DataObject *, IOpaqueAddress *&);
-
-  /** 
-      Updated converted representation of the transient object.  This
-      method is required since XmlBaseCnv inherits from Converter,
-      but in practice it should not be called.
-  */
-  //  virtual StatusCode updateRep(IOpaqueAddress *&, DataObject *);
-
-  //  virtual StatusCode fillRepRefs(IOpaqueAddress *&, DataObject *);
-
-  //  virtual StatusCode updateRepRefs(IOpaqueAddress *&, DataObject *);
 
   ICalibXmlSvc* getCalibXmlSvc() {
     return m_xmlSvc;
@@ -136,6 +103,5 @@ protected:
   CalibData::CalibTime*  m_vstart;
   CalibData::CalibTime*  m_vend;
 };
-
 
 #endif
