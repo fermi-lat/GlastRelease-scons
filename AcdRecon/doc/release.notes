@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v1r7p7    30-Jan-2005 THB fix typos in roottestdata file names          
 v1r7p6    06-Jan-2005 HMK use rootTestData files in unit test          
 v1r7p5    04-Jan-2005 JRB remove xml/IFile include
 v1r7p4    16-Dec-2004 TU  Modify requirements to pick up latest Event (v10+)
