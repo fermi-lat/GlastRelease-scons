@@ -426,6 +426,35 @@ Also add gap between CAL and
           </quo>
         </const>
 
+        <const name="innerTowers_dt" >
+          <notes>Transverse displacement of towers in row (column) 2</notes>
+          <half>
+            <refer refTo="towerPitch" />
+          </half>
+        </const>
+
+        <const name="outerTowers_dt" >
+          <notes>Transverse displacement of towers in row (column) 3</notes>
+          <add>
+            <refer refTo="towerPitch" />
+            <refer refTo="innerTowers_dt" />
+          </add>
+        </const>
+
+        <const name="innerTowers_dtn" >
+          <notes>Transverse displacement of towers in row (column) 1 </notes>
+          <uminus>
+            <refer refTo="innerTowers_dt" />
+          </uminus>
+        </const>
+
+        <const name="outerTowers_dtn" >
+          <notes>Transverse displacement of towers in row (column) 0 </notes>
+          <uminus>
+            <refer refTo="outerTowers_dt" />
+          </uminus>
+        </const>
+
         <const name="towers_dz" >
           <notes>Displacement necessary to get towers origin in the
                  right place, namely at the front face of the grid
