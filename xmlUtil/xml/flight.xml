@@ -19,20 +19,25 @@
     <!ENTITY CALMatPrim     SYSTEM "flightCALMatPrim.xml">
     <!ENTITY CALCountPrim   SYSTEM "flightCALCountPrim.xml">
     <!ENTITY CALDimPrim     SYSTEM "flightCALDimPrim.xml">
+    <!ENTITY CALResponse    SYSTEM "flightCALResponse.xml">
     <!ENTITY CALOneCal      SYSTEM "flightCALOneCal.xml">
 
     <!ENTITY TKRMatPrim     SYSTEM "flightTKRMatPrim.xml">
     <!ENTITY TKRCountPrim   SYSTEM "flightTKRCountPrim.xml">
     <!ENTITY TKRDimPrim     SYSTEM "flightTKRDimPrim.xml">
+    <!ENTITY TKRResponse    SYSTEM "flightTKRResponse.xml">
     <!ENTITY TKROneTkr      SYSTEM "flightTKROneTkr.xml">
 
     <!ENTITY ACDMatPrim     SYSTEM "flightACDMatPrim.xml">
     <!ENTITY ACDCountPrim   SYSTEM "flightACDCountPrim.xml">
     <!ENTITY ACDDimPrim     SYSTEM "flightACDDimPrim.xml">
+    <!ENTITY ACDResponse    SYSTEM "flightACDResponse.xml">
     <!ENTITY ACDAcd         SYSTEM "flightACDAcd.xml">
 
     <!ENTITY NADDimPrim     SYSTEM "flightNADDimPrim.xml">
     <!ENTITY NADGeo         SYSTEM "flightNADGeo.xml">
+
+    <!ENTITY Trigger        SYSTEM "flightTrigger.xml">
 
     <!ENTITY Derived        SYSTEM "flightDerivedConstants.xml">
     <!ENTITY Primary        SYSTEM "flightPrimaryConstants.xml">

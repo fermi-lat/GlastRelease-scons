@@ -9,11 +9,15 @@
       &CALMatPrim;
       &CALCountPrim;
       &CALDimPrim;
+      &CALResponse;
       &TKRMatPrim;
       &TKRCountPrim;
       &TKRDimPrim;
+      &TKRResponse;
       &ACDMatPrim;
       &ACDCountPrim;
       &ACDDimPrim;
+      &ACDResponse;
       &NADDimPrim;
+      &Trigger;
     </primary>

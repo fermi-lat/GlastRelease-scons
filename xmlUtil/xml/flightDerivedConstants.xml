@@ -1765,7 +1765,7 @@ grid, etc. (may be superseded by info from Eric)</notes>
         </const>
       </derCategory>
 
-      <derCategory name="NADderived" save="true">
+      <derCategory name="derNAD" save="true">
         <overview>Derived not-a-detector constants</overview>
         <const name="NADGridWebWidth" >
           <notes>Full width of grid web in X or Y</notes>
