@@ -1,11 +1,10 @@
 // TODO:
 // currently ignoring tower information & run information, perhaps i should put in a check?
 // why are we returning calXTalID not as a pointer? cuz only data point is one int?
-// put in capability for varying #'s of settings and/or trials.  probably can't use multi-dimensional 'c' arrays if i do this. yip, gonna have to switch to hard-core STL vectors.  not on this version though!
+// put in capability for varying #'s of settings and/or trials.
 // some kind of config file 
-// how to get instrument config ?
-// merge openhist/histdefine/makehistlist file into one new public function, RTA::NewHistListForDummies()
-// bjarne says not to use friends.  so that could change.  multiple in
+// how to get instrument/test config ?
+// bjarne says friends are bad.  so that could change.  multiple inheritance would probably be better
 
 #include "RootFileAnalysis.h"
 
