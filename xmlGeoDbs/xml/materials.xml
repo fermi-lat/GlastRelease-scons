@@ -84,7 +84,7 @@
 	 aweight="9.012" 
 	 />
 
-<element name="Nikel" 
+<element name="Nickel" 
 	 symbol="Ni"
 	 z="28" 
 	 aweight="58.693" 
@@ -263,6 +263,17 @@
 </addmaterial>
 </composite>
 
+<composite name="W_alloy" density = "17.6">
+<addmaterial material ="Tungsten">
+<fractionmass fraction="0.925" />
+</addmaterial>
+<addmaterial material ="Nickel">
+<fractionmass fraction="0.05" />
+</addmaterial>
+<addmaterial material ="Iron">
+<fractionmass fraction="0.025" />
+</addmaterial>
+</composite>
 
 <composite name="blanket" density = "0.081">
 <addmaterial material="Aluminum">
