@@ -15,7 +15,11 @@ apply_pattern ld_library_path
 
 #-------------------------------------------------------
 private
-use RootPolicy v1r0p2
+use RootPolicy v1r*
+apply_pattern root_package
+apply_pattern root_package2
+
+
 
 macro root_headers "\
  ../digiRootData/AcdDigi.h\
@@ -32,11 +36,6 @@ macro root_headers "\
 
 macro root_linkdef "../digiRootData/EventLinkDef.h"
 macro root_includes "-I${MCROOTDATAROOT}"
-
-apply_pattern root_package
-
-macro digiRootData_shlibflags " " \
-      VisualC            " ${use_linkopts} "
 
 
 library  digiRootData \

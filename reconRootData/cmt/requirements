@@ -15,13 +15,13 @@ apply_pattern package_linkopts
 ignore_pattern RuleChecker
 
 
-macro reconRootData_shlibflags "" \
-      VisualC            " ${use_linkopts} "
 
 
 #--------------------------------------------------------------
 private
-use RootPolicy v1r0p2
+use RootPolicy v1r*
+apply_pattern root_package
+apply_pattern root_package2
 
 
 #define the list of header files to be used in rootcint
@@ -47,7 +47,6 @@ macro root_headers "\
 macro root_includes "-I$(DIGIROOTDATAROOT)" 
 macro root_linkdef "../reconRootData/ReconLinkDef.h"
 
-apply_pattern root_package
 
 
 library  reconRootData \

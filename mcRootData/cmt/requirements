@@ -14,7 +14,10 @@ apply_pattern package_headers
 
 
 private
-use RootPolicy v1r0p2
+
+use RootPolicy v1r*
+apply_pattern root_package
+apply_pattern root_package2
 
 macro root_headers "\
  ../mcRootData/VolumeIdentifier.h\
@@ -25,11 +28,6 @@ macro root_headers "\
  ../mcRootData/mcRootDataLinkDef.h"
 
 macro root_linkdef "../mcRootData/mcRootDataLinkDef.h"
-
-apply_pattern root_package
-
-macro mcRootData_shlibflags " " \
-      VisualC            " ${use_linkopts} "
 
 
 library  mcRootData *.cxx ../mcRootData/*.cxx\
