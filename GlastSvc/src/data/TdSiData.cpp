@@ -29,6 +29,8 @@ private:
 TdSiData::TdSiData ()
 {
     for(int i = 0; i < SiTracker::numTrays(); i++) {
+        xLayers.push_back(-1);
+        yLayers.push_back(-1);
         xhitList.push_back(new vector<Strip>);
         yhitList.push_back(new vector<Strip>);
     }
@@ -38,6 +40,8 @@ TdSiData::TdSiData ()
 TdSiData::TdSiData (unsigned int n)
 {
     for(unsigned i=0; i<n; i++) {       
+        xLayers.push_back(-1);
+        yLayers.push_back(-1);
         xhitList.push_back(new vector<Strip>);
         yhitList.push_back(new vector<Strip>);
     }
@@ -74,7 +78,8 @@ const SiData::Id& TdSiData::moduleId (enum TdSiData::Axis a,
 
 void TdSiData::load (const SiDetector& plane, idents::ModuleId moduleId)
 {
-    static double tray_max=48.10, tray_spacing=3.20;
+//    static double tray_max=48.10, tray_spacing=3.20, tray_nummax = 17;
+//    static double z_offset = -6.64, tray_spacing = 3.20, tray_nummax = 17;
     
     CoordTransform T 
         = plane.localToGlobal(); // for converting the coords following
@@ -85,9 +90,17 @@ void TdSiData::load (const SiDetector& plane, idents::ModuleId moduleId)
     Axis axis = (rot>0.5)? X : Y;
     Point p(0,0,0); p.transform(T); 
     double z = p.z();
-    int tray = static_cast<int>((tray_max-z)/tray_spacing);
-    tray = tray< 0?  0: tray;
-    tray = tray>17? 17: tray;
+//    int tray = static_cast<int>((tray_max-z)/tray_spacing);
+//    tray = tray< 0?  0: tray;
+//    tray = tray>17? 17: tray;
+    int tray_nummax = SiTracker::numTrays() - 2;
+    int layer = static_cast<int>(((z - SiTracker::zFirstPlane())/SiTracker::traySpacing()) + 0.5);
+    layer = layer < 0           ? 0           : layer;
+    layer = layer > tray_nummax ? tray_nummax : layer;
+
+    int tray = tray_nummax - layer;
+    if (axis == X) {xLayers[tray] = layer;}
+    else           {yLayers[tray] = layer;}
     
     // final loop over hits
     for( SiDetector::const_iterator it3=plane.begin(); 
@@ -114,7 +127,9 @@ void TdSiData::load (const SiDetector& plane, idents::ModuleId moduleId)
 
 void TdSiData::clear () {
     for(unsigned i=0; i<xhitList.size(); i++) {
+        xLayers[i] = -1;
         xhitList[i]->clear();
+        yLayers[i] = -1;
         yhitList[i]->clear();
     }
     m_total_hits=0;
@@ -133,6 +148,15 @@ int TdSiData::nHits (enum TdSiData::Axis a, int tray) const
     if (a != X) numHits = yhitList[tray]->size();
 
     return numHits;
+}
+
+int TdSiData::layerNum (enum TdSiData::Axis a, int tray) const
+{
+    int layer = xLayers[tray];
+
+    if (a != X) layer = yLayers[tray];
+
+    return layer;
 }
 
 Point TdSiData::hit (enum TdSiData::Axis a, 

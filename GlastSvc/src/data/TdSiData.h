@@ -50,9 +50,12 @@ public:
     //  number of trays
     int nTrays(enum SiData::Axis a) const;
     
-    //  number of hit strips in the given tray (tray=0..16)
+    //  number of hit strips in the given tray (tray=0..18)
     int nHits (enum SiData::Axis a, int tray) const;
-    
+        
+    //  layer number assigned to a given tray
+    int layerNum (enum SiData::Axis a, int tray) const;
+
     //  center of the given strip, where  n=0..nHits(a,tray,n)-1
     Point hit (enum SiData::Axis a, unsigned int tray, unsigned int n) const;
     
@@ -77,9 +80,11 @@ private:
     int m_controller_max;
     class Strip;
     //  storage is a vector (by layer number) of lists of hit strips
+    std::vector<int> xLayers;
     std::vector< std::vector< class Strip >* > xhitList;
     
     //  storage is a vector (by layer number) of lists of hit strips
+    std::vector<int> yLayers;
     std::vector< std::vector< class Strip >* > yhitList;
     
 };
