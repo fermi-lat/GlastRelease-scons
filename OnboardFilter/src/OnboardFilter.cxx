@@ -437,7 +437,7 @@ StatusCode OnboardFilter::execute()
     delete[] results;
     free(dfcCtl);
     delete dfcEvt;
-    return StatusCode::SUCCESS;
+    return computeCoordinates(newStatus);
 }
 
 int OnboardFilter::countEvts (const unsigned int *evts, int size)
