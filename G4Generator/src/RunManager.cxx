@@ -374,7 +374,7 @@ unsigned int RunManager::getNumberOfTrajectories()
 int RunManager::getTrajectoryCharge(unsigned int i)
 {
   if (i > getNumberOfTrajectories())
-    return;
+    return -99;
   
   G4Event* currentEvent = getCurrentEvent();
   if (currentEvent->GetTrajectoryContainer())
@@ -383,13 +383,14 @@ int RunManager::getTrajectoryCharge(unsigned int i)
       
       return currentTrajectory->GetCharge();
     }
+  else return -99;
 
 }
 
 std::auto_ptr<std::vector<Hep3Vector> > RunManager::getTrajectoryPoints(unsigned int i)
 {
   if (i > getNumberOfTrajectories())
-    return;
+    return std::auto_ptr<std::vector<Hep3Vector> >(0);
   
   G4Event* currentEvent = getCurrentEvent();
   if (currentEvent->GetTrajectoryContainer())
@@ -407,6 +408,8 @@ std::auto_ptr<std::vector<Hep3Vector> > RunManager::getTrajectoryPoints(unsigned
       
       return std::auto_ptr<std::vector<Hep3Vector> >(points);
     }
+  else  return std::auto_ptr<std::vector<Hep3Vector> >(0);
+
 }
 
 
