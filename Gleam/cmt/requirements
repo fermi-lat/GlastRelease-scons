@@ -16,11 +16,12 @@ use RootHistCnv v5r0p1
 
 use XMLEXT      v2r2 
 use GlastPolicy v4r6 
-use facilities  v2r4p1
+use facilities           v2r5
 use xml         v4r1p4 
 use xmlUtil     v2r8p1
 
 use geometry    v3
+use astro                v0r1 
 
 # low-level graphics
 
