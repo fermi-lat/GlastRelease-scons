@@ -26,7 +26,7 @@ $Header$
 #include "Spectrum.h"
 #include "SpectrumFactory.h"
 
-#include "FluxSvc/EventSource.h"
+#include "EventSource.h"
 
 #include "CLHEP/Vector/LorentzVector.h"
 
