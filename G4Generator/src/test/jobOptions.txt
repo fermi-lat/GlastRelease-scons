@@ -58,8 +58,14 @@ FluxAlg.source_name="gamma_test";
 
 // do you want trajectories in the TDS? (default is 0)
 G4Generator.saveTrajectories = 1;
+
 // do you want the full or minimal tree of particles? (default is minimal)
 G4Generator.mcTreeMode = "pruneCal";
+
+// do you want the full or only the em physics? (default is full)
+
+G4Generator.physics_choice = "only_em";
+
 
 // commands to run before each event. 
 //G4Generator.UIcommands+={"/run/verbose 3"};
