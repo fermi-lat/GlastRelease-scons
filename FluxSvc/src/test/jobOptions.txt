@@ -38,7 +38,7 @@ FluxTestAlg.source_name="TimeCandle";
 //3: cutoff "radius" is equal-area, that is,
 // representing an azimuthal angle from glast.
 //4:  "real" exposure, with defined functions based on zenith angle, energy, etc.
-FluxTestAlg.exposureFunction = 4;
+FluxTestAlg.exposureFunction = 0;
 
 // point spread characteristic size (in degrees) to
 //approximate uncertainty from GLAST. (0 = none)
@@ -59,7 +59,7 @@ FluxTestAlg.projectionType = 0;
 FluxTestAlg.rockingMode = 0;
 
 ApplicationMgr.EvtSel = "NONE";
-ApplicationMgr.EvtMax = 30;
+ApplicationMgr.EvtMax = 20000;
 
 //==============================================================
 //
