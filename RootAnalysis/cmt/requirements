@@ -4,10 +4,11 @@ version v5r0
 
 #use these to get the env vars defined
 use mcRootData v*
+use commonRootData v*
 use digiRootData v*
 use reconRootData v*
-use GlastPolicy v*
-use RootcintPolicy v* GlastPolicy
+use ROOT v* IExternal 
+#use RootcintPolicy v* GlastPolicy
 use rootTestData v*
 
 set ROOTANALYSIS ${ROOTANALYSISROOT}
@@ -30,26 +31,18 @@ macro SelectorAnalysis_headers "" \
                        "../src/SelectorAnalysis/recon/*.h "\
 
 private
-apply_pattern root_package
-apply_pattern root_package2
-
-apply_pattern vsnet_rootcint
-
-
-macro root_headers "\
- ../src/SelectorAnalysis/digi/AcdDigiTask.h\
- ../src/SelectorAnalysis/mc/McTask.h\
- ../src/SelectorAnalysis/recon/AcdReconTask.h\
- ../src/SelectorAnalysis/digi/GlastDigiTask.h\
- ../src/SelectorAnalysis/mc/GlastMcTask.h\
- ../src/SelectorAnalysis/recon/GlastReconTask.h\
- ../src/SelectorAnalysis/digi/DigiSelector.h\
- ../src/SelectorAnalysis/mc/McSelector.h\
- ../src/SelectorAnalysis/recon/ReconSelector.h\
- ../src/SelectorAnalysis/digi/rootAnalysisLinkDef.h"
-
-macro root_linkdef "SelectorAnalysis/digi/rootAnalysisLinkDef.h"
-macro root_includes "-I${DIGIROOTDATAROOT} -I${MCROOTDATAROOT} -I${RECONROOTDATAROOT} -I${ROOTANALYSISROOT}"
+#apply_pattern root_package headers="\
+# ../src/SelectorAnalysis/digi/AcdDigiTask.h\
+# ../src/SelectorAnalysis/mc/McTask.h\
+# ../src/SelectorAnalysis/recon/AcdReconTask.h\
+# ../src/SelectorAnalysis/digi/GlastDigiTask.h\
+# ../src/SelectorAnalysis/mc/GlastMcTask.h\
+# ../src/SelectorAnalysis/recon/GlastReconTask.h\
+# ../src/SelectorAnalysis/digi/DigiSelector.h\
+# ../src/SelectorAnalysis/mc/McSelector.h\
+# ../src/SelectorAnalysis/recon/ReconSelector.h"\
+# includes="-I${COMMONROOTDATAROOT} -I${DIGIROOTDATAROOT} -I${MCROOTDATAROOT} -I${RECONROOTDATAROOT} -I${ROOTANALYSISROOT}"
+#macro root_linkdef "${ROOTANALYSISROOT}/src/SelectorAnalysis/digi/LinkDef.h" 
 
 macro_append ROOT_libs " -lHist " \
              WIN32 " ${ROOT_PATH}/lib/libHist.lib "
@@ -73,10 +66,10 @@ application runTreeMaker LeaningTower/runTreeMaker.cxx \
             LeaningTower/TreeMaker.cxx
 
 # Define the new Selector Library and Application
-library glastSelector SelectorAnalysis/mc/*.cxx SelectorAnalysis/digi/*.cxx SelectorAnalysis/recon/*.cxx ../RootAnalysis/*.cxx
+#library glastSelector SelectorAnalysis/mc/*.cxx SelectorAnalysis/digi/*.cxx SelectorAnalysis/recon/*.cxx ../RootAnalysis/*.cxx
 
-application rootSelectorApp SelectorAnalysis/mc/*.cxx \
-                            SelectorAnalysis/digi/*.cxx \ 
-                            SelectorAnalysis/recon/*.cxx \
-                     ../RootAnalysis/*.cxx SelectorAnalysis/test/*.cxx \
-                     ${SelectorAnalysis_headers}
+#application rootSelectorApp SelectorAnalysis/mc/*.cxx \
+#                            SelectorAnalysis/digi/*.cxx \ 
+#                            SelectorAnalysis/recon/*.cxx \
+#                     ../RootAnalysis/*.cxx SelectorAnalysis/test/*.cxx \
+#                     ${SelectorAnalysis_headers}
