@@ -40,7 +40,7 @@ public:
     inline commonRootData::TkrId getTkrId()      const { return m_tkrId;}
     inline UInt_t                getFirstStrip() const { return m_strip0; }
     inline UInt_t                getLastStrip()  const { return m_stripf; }
-    inline UInt_t                getToT()        const { return m_ToT; }
+    inline Double_t              getToT()        const { return m_ToT; }
     inline UInt_t                getId()         const { return m_id; }
 
     /// Returns the chip number calculated using the strip number

@@ -16,16 +16,19 @@ void TkrTrackHit::initializeInfo(TkrCluster*           cluster,
                                  const Double_t        hitChiFilter,
                                  const Double_t        hitChiSmooth)
 {
-    m_statusBits       = 0;
-    m_cluster          = 0; 
-    m_hitID            = commonRootData::TkrId();
-    m_zPlane           = 0.;
-    m_energy           = 0.; 
-    m_radLen           = 0.;
-    m_activeDist       = 0.; 
-    m_chiSquareFilter  = 0.; 
+    // First make sure we are "clear"
+    Clear();
+
+    // Now initialize
+    m_cluster          = cluster; 
+    m_hitID            = tkrID;
+    m_zPlane           = hitZ;
+    m_energy           = hitEnergy; 
+    m_radLen           = hitRadLen;
+    m_activeDist       = hitActDist; 
+    m_chiSquareFilter  = hitChiFilter; 
     m_chiSquareRevFit  = 0.; 
-    m_chiSquareSmooth  = 0.; 
+    m_chiSquareSmooth  = hitChiSmooth; 
 
     if (m_cluster != 0)  m_statusBits  = HITISSSD | HITONFIT;
     if (tkrID.hasTray()) m_statusBits |= HASVALIDTKR;
@@ -185,6 +188,8 @@ TkrTrackParams& TkrTrackHit::getTrackParams(TkrTrackHit::ParamType type)
         case REVFIT:    return m_hitRevFit;
         case SMOOTHED:  return m_hitSmooth;
         case QMATERIAL: return m_Qmaterial;
+        case UNKNOWN:   
+            throw std::invalid_argument("Type UNKNOWN of TkrTrackParams hit requested");
 
         // If here then something is wrong
         throw std::invalid_argument("Invalid type of TkrTrackParams hit requested");

@@ -1,4 +1,5 @@
 /** @file release.notes  package reconRootData  package manager:H.Kelly @verbatim
+v5r0p2    17-Dec-04  : TU  Fix bugs, update patch
 v5r0p1    15-Dec-04  : TU  Ok, forgot the two important files...
 v5r0p0    15-Dec-04  : TU  Tagging version with new TkrRecon PDS classes 
 v4r10     13-dec-04  : LSR modify for new TkrCluster (I&T version)

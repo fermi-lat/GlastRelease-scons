@@ -336,16 +336,17 @@ int checkCalRecon(CalRecon *cal, UInt_t ievent) {
 int checkTkrCluster(const TkrCluster *cluster, UInt_t ievent, UInt_t icluster) {
     Float_t f = Float_t (ievent);
     Float_t fr = f*randNum;
+
+    commonRootData::TkrId tkrId = cluster->getTkrId();
+
+    // This may go away in a future release
     if ( cluster->getId() != icluster)  {
         std::cout << "TkrCluster id is wrong: " << cluster->getId() << std::endl;
         return -1;
     }
-    if ( cluster->getPlane() != 5 ) {
-        std::cout << "TkrCluster plane is wrong: " << cluster->getPlane() << std::endl;
-        return -1;
-    }
-    if ( cluster->getView() != TkrCluster::X) {
-        std::cout << "TkrCluster axes is wrong: " << cluster->getView() << std::endl;
+
+    if ( tkrId.getView() != commonRootData::TkrId::eMeasureX) {
+        std::cout << "TkrCluster axes is wrong: " << tkrId.getView() << std::endl;
         return -1;
     }
     if ( !floatInRange(cluster->getStrip(), 7.))  {
@@ -356,8 +357,11 @@ int checkTkrCluster(const TkrCluster *cluster, UInt_t ievent, UInt_t icluster) {
         std::cout << "TkrCluster size is wrong: " << cluster->getSize() << std::endl;
         return -1;
     }
-	if (cluster->getTower() != 8) {
-		std::cout << "TkrCluster Tower number is wrong: " << cluster->getTower() << std::endl;
+
+    int tower = 4 * tkrId.getTowerX() + tkrId.getTowerY();
+	if (tower != 8) {
+		std::cout << "TkrCluster Tower number is wrong: " << tkrId.getTowerX() 
+                  << ", " << tkrId.getTowerY() << std::endl;
 		return -1;
 	}
 	if ( !floatInRange(cluster->getToT(), f) ) {
@@ -379,82 +383,32 @@ int checkTkrCluster(const TkrCluster *cluster, UInt_t ievent, UInt_t icluster) {
     return 0;
 }
 
-int checkCandTrack(const TkrCandTrack *track, UInt_t ievent, UInt_t iHit) {
-
-    Float_t f = Float_t (ievent);
-    Float_t fr = f*randNum;
-
-    if ((*track).getId() != iHit) {
-        std::cout << "TkrCandTrack id is: " << track->getId() << std::endl;
-        return -1;
-    }
-    if (track->getLayer() != 3) {
-        std::cout << "TkrCandTrack Layer: " << track->getLayer() << std::endl;
-        return -1;
-    }
-    if (track->getTower() != 1) {
-        std::cout << "TkrCandTrack Tower: " << track->getTower() << std::endl;
-        return -1;
-    }
-
-    if (!floatInRange(track->getQuality(), f)) {
-        std::cout << "TkrCandTrack Quality: " << track->getQuality() << std::endl;
-        return -1;
-    }
-
-    if (!floatInRange(track->getEnergy(), fr)) {
-        std::cout << "TkrCandTrack energy: " << track->getEnergy() << std::endl;
-        return -1;
-    }
-
-    TVector3 pos = track->getPosition();
-    if ( (!floatInRange(pos.X(), f)) || (!floatInRange(pos.Y(), fr))
-        || (!floatInRange(pos.Z(), f)) ) {
-        std::cout << "TkrCandTrack pos (x,y,z): (" << pos.X() << ","
-            << pos.Y() << "," << pos.Z() << ")" << std::endl;
-        return -1;
-    }
-    TVector3 dir = track->getDirection();
-    if ( (!floatInRange(dir.X(), fr)) || (!floatInRange(dir.Y(), f))
-        || (!floatInRange(dir.Z(), fr)) ) {
-        std::cout << "TkrCandTrack dir (x,y,z): (" << dir.X() << ","
-            << dir.Y() << "," << dir.Z() << ")" << std::endl;
-        return -1;
-    }
-
-    return 0;
-}
-
 int checkTrack(const TkrTrack *track,  UInt_t ievent, UInt_t itrack) {
 
     Float_t f = Float_t (ievent);
     Float_t fr = f*randNum;
-    if (track->getId() != itrack) {
-        std::cout << "Track Id: " << track->getId() << std::endl;
+    if (track->getNumXGaps() != itrack*itrack) {
+        std::cout << "Track xgaps: " << track->getNumXGaps() << std::endl;
         return -1;
     }
-    if (track->getXgaps() != itrack*itrack) {
-        std::cout << "Track xgaps: " << track->getXgaps() << std::endl;
+    if (track->getNumYGaps() != 2*itrack) {
+        std::cout << "Track ygaps: " << track->getNumYGaps() << std::endl;
         return -1;
     }
-    if (track->getYgaps() != 2*itrack) {
-        std::cout << "Track ygaps: " << track->getYgaps() << std::endl;
+    if (track->getNumXFirstGaps() != ievent+itrack) {
+        std::cout << "Track xistgaps: " << track->getNumXFirstGaps() << std::endl;
         return -1;
     }
-    if (track->getXistGaps() != ievent+itrack) {
-        std::cout << "Track xistgaps: " << track->getYistGaps() << std::endl;
+    if (track->getNumYFirstGaps() != 2*ievent) {
+        std::cout << "Track yistgaps: " << track->getNumYFirstGaps() << std::endl;
         return -1;
     }
-    if (track->getYistGaps() != 2*ievent) {
-        std::cout << "Track yistgaps: " << track->getYistGaps() << std::endl;
+    if ( !floatInRange(track->getChiSquareFilter(), f) ) {
+        std::cout << "Track chisq is wrong: " << track->getChiSquareFilter() << std::endl;
         return -1;
     }
-    if ( !floatInRange(track->getChiSq(), f) ) {
-        std::cout << "Track chisq is wrong: " << track->getChiSq() << std::endl;
-        return -1;
-    }
-    if ( !floatInRange(track->getChiSqSmooth(), fr) ) {
-        std::cout << "Track chisq smooth is wrong: " << track->getChiSqSmooth() << std::endl;
+    if ( !floatInRange(track->getChiSquareSmooth(), fr) ) {
+        std::cout << "Track chisq smooth is wrong: " << track->getChiSquareSmooth() << std::endl;
         return -1;
     }
     if ( !floatInRange(track->getKalEnergy(), f*2.0) ) {
@@ -469,115 +423,20 @@ int checkTrack(const TkrTrack *track,  UInt_t ievent, UInt_t itrack) {
         std::cout << "Track quality is wrong: " << track->getQuality() << std::endl;
         return -1;
     }
-    if ( !floatInRange(track->getRmsResid(), randNum*randNum) ) {
-        std::cout << "Track rms is wrong: " << track->getRmsResid() << std::endl;
+    if ( !floatInRange(track->getScatter(), randNum*randNum) ) {
+        std::cout << "Track rms is wrong: " << track->getScatter() << std::endl;
         return -1;
     }
     return 0;
 }
 
-
-int checkKalTrack(const TkrKalFitTrack *track,  UInt_t ievent, UInt_t itrack) {
-
-    Float_t f = Float_t (ievent);
-    Float_t fr = f*randNum;
-    if (track->getId() != itrack) {
-        std::cout << "Track Id: " << track->getId() << std::endl;
-        return -1;
-    }
-    
-    if      (track->status() != TkrKalFitTrack::FOUND) {
-        std::cout << "KalFitTrack status is not FOUND" << std::endl;
-        return -1;
-    }
- 
-    if (track->getType() != 1) {
-        std::cout << "KalFitTrack type is not 1" << std::endl;
-        return -1;
-    }
-
-    if (!floatInRange(track->getStartEnergy(), f*randNum) ) {
-        std::cout << "KalFitTrack startEnergy is wrong " << track->getStartEnergy() << std::endl;
-        return -1;
-    }
-   
-
-    if (!floatInRange(track->getChiSquare(), randNum) ) {
-        std::cout << "KalFitTrack chiSquare is wrong " << track->getChiSquare() << std::endl;
-        return -1;
-
-    }
-    if (!floatInRange(track->getChiSquareSmooth(), f*randNum) ) {
-        std::cout << "KalFitTrack chiSquareSmooth is wrong " << track->getChiSquareSmooth() << std::endl;
-        return -1;
-
-    }
-    if (!floatInRange(track->getScatter(), 2.*randNum) ) {
-        std::cout << "KalFitTrack scatter is wrong " << track->getScatter() << std::endl;
-        return -1;
-
-    }
-    if (!floatInRange(track->getQuality(), 3.*randNum) ) {
-        std::cout << "KalFitTrack quality is wrong " << track->getQuality() << std::endl;
-        return -1;
-    }
-    if (!floatInRange(track->getKalEnergy(), 4.*randNum) ) {
-        std::cout << "KalFitTrack kalEnergy is wrong " << track->getKalEnergy() << std::endl;
-        return -1;
-
-    }
-
-    if (!floatInRange(track->getKalEnergyError(), 5.*randNum) ) {
-        std::cout << "KalFitTrack kalEnergyError is wrong " << track->getKalEnergyError() << std::endl;
-        return -1;
-    }
-
-    if (!floatInRange(track->getKalThetaMS(), 6.*randNum) ) {
-        std::cout << "KalFitTrack KalThetaMS is wrong " << track->getKalThetaMS() << std::endl;
-        return -1;
-    }
-
-    if (track->getNumXGaps() != 0) {
-        std::cout << "KalFitTrack NumXGaps is wrong " << track->getNumXGaps() << std::endl;
-        return -1;
-    }
-
-    if (track->getNumYGaps() != 1) {
-        std::cout << "KalFitTrack NumYGaps is wrong " << track->getNumYGaps() << std::endl;
-        return -1;
-    }
-
-    if (track->getNumXFirstGaps() != 2) {
-        std::cout << "KalFitTrack NumXFirstGaps is wrong " << track->getNumXFirstGaps() << std::endl;
-        return -1;
-    }
-
-    if (track->getNumYFirstGaps() != 3) {
-        std::cout << "KalFitTrack getNumYFirstGaps is wrong " << track->getNumYFirstGaps() << std::endl;
-        return -1;
-    }
-
-    if (track->getNumXHits() != 5) {
-        std::cout << "KalFitTrack getNumXHits is wrong " << track->getNumXHits() << std::endl;
-        return -1;
-    }
-    if (track->getNumYHits() != 6) {
-        std::cout << "KalFitTrack getNumYHits is wrong " << track->getNumYHits() << std::endl;
-        return -1;
-    }
-
-
-    return 0;
-}
 
 int checkTkrVertex(const TkrVertex* vertex, UInt_t ievent, UInt_t ivertex) {
     Float_t f = Float_t (ievent);
     Float_t fr = f*randNum;
 
-    if (vertex->getId() != ivertex) {
-        std::cout << "Vertex Id is wrong: " << vertex->getId() << std::endl;
-        return -1;
-    }
+    commonRootData::TkrId tkrId = vertex->getTkrId();
+
     if (!floatInRange(vertex->getEnergy(), fr) ) {
         std::cout << "Vertex energy is wrong: " << vertex->getEnergy() << std::endl;
         return -1;
@@ -587,13 +446,13 @@ int checkTkrVertex(const TkrVertex* vertex, UInt_t ievent, UInt_t ivertex) {
         return -1;
     }
 
-    if (vertex->getLayer() != 2) {
-        std::cout << "Vertex layer is wrong: " << vertex->getLayer() << std::endl;
+    if (tkrId.getTray() != 2) {
+        std::cout << "Vertex layer is wrong: " << tkrId.getTray() << std::endl;
         return -1;
     }
 
-    if (vertex->getTower() != 4) {
-        std::cout << "Vertex tower is wrong: " << vertex->getTower() << std::endl;
+    if (tkrId.getTowerX() != 4) {
+        std::cout << "Vertex tower is wrong: " << tkrId.getTowerX() << std::endl;
         return -1;
     }
 
@@ -612,73 +471,78 @@ int checkTkrVertex(const TkrVertex* vertex, UInt_t ievent, UInt_t ivertex) {
         return -1;
     }
 
-    TkrParams params = vertex->getTrackPar();
-    if ( (!floatInRange(params.getXPos(), f) ) ||
-    (!floatInRange(params.getXSlope(), f*f) ) ){
-        std::cout << "Vertex X Param wrong: (" << params.getXPos() << ","
-            << params.getXSlope() << ")" << std::endl;
+    TkrTrackParams params = vertex->getVertexParams();
+    if ( (!floatInRange(params.getxPosition(), f) ) ||
+        (!floatInRange(params.getxSlope(), f*f) ) ){
+        std::cout << "Vertex X Param wrong: (" << params.getxPosition() << ","
+            << params.getxSlope() << ")" << std::endl;
         std::cout << "f = " << f << " f*f = " << f*f << std::endl;
         return -1;
     }
     
-    if ( (!floatInRange(params.getYPos(), fr) ) ||
-    (!floatInRange(params.getYSlope(), randNum*randNum) ) ) {
-        std::cout << "Vertex Y Param wrong: (" << params.getYPos() << ","
-            << params.getYSlope() << ")" << std::endl;
+    if ( (!floatInRange(params.getyPosition(), fr) ) ||
+       (!floatInRange(params.getySlope(), randNum*randNum) ) ) {
+        std::cout << "Vertex Y Param wrong: (" << params.getyPosition() << ","
+            << params.getySlope() << ")" << std::endl;
         return -1;
     }
 
-    TkrCovMat mat = vertex->getTrackCov();
-    if ( (!floatInRange(mat.getCovX0X0(), f) ) ||
-        (!floatInRange(mat.getCovX0Sx(), f*2.) ) ||
-        (!floatInRange(mat.getCovX0Y0(), f*3.) ) || 
-        (!floatInRange(mat.getCovX0Sy(), f*4.)) ) {
-        std::cout << "Vertex matrix row 0 vals are wrong: " << mat.getCovX0X0() << " "
-            << mat.getCovX0Sx() << " " << mat.getCovX0Y0() << " " << mat.getCovX0Sy() << std::endl;
+    if ( (!floatInRange(params.getxPosxPos(), f) ) ||
+         (!floatInRange(params.getxPosxSlp(), f*2.) ) ||
+         (!floatInRange(params.getxPosyPos(), f*3.) ) || 
+         (!floatInRange(params.getxPosySlp(), f*4.)) ) 
+    {
+        std::cout << "Vertex matrix row 0 vals are wrong: " << params.getxPosxPos() << " "
+            << params.getxPosxSlp() << " " << params.getxPosyPos() 
+            << " " << params.getxPosySlp() << std::endl;
         return -1;
     }
 
-    if ( (!floatInRange(mat.getCovSxX0(), f*5.)) ||
-        (!floatInRange(mat.getCovSxSx(), f*6.))  ||
-        (!floatInRange(mat.getCovSxY0(), f*7.)) || 
-        (!floatInRange(mat.getCovSxSy(), f*8.)) ) {
-        std::cout << "Vertex matrix row 1 vals are wrong: " << mat.getCovSxX0() << " "
-            << mat.getCovSxSx() << " " << mat.getCovSxY0() << " " << mat.getCovSxSy() << std::endl;
+    if ( (!floatInRange(params(2,1), f) ) ||
+         (!floatInRange(params(2,2), f*2.) ) ||
+         (!floatInRange(params(2,3), f*3.) ) || 
+         (!floatInRange(params(2,4), f*4.)) ) 
+    {
+        std::cout << "Vertex matrix row 1 vals are wrong: " << params(2,1) << " "
+            << params(2,2) << " " << params(2,3) << " " << params(2,4) << std::endl;
         return -1;
     }
 
-    if ( (!floatInRange(mat.getCovY0X0(), f*9.)) ||
-        (!floatInRange(mat.getCovY0Sx(), f*10.)) ||
-        (!floatInRange(mat.getCovY0Y0(), f*11.)) || 
-        (!floatInRange(mat.getCovY0Sy(), f*12.)) ) {
-        std::cout << "Vertex matrix row 2 vals are wrong: " << mat.getCovY0X0() << " "
-            << mat.getCovY0Sx() << " " << mat.getCovY0Y0() << " " << mat.getCovY0Sy() << std::endl;
+    if ( (!floatInRange(params(3,1), f) ) ||
+         (!floatInRange(params(3,2), f*2.) ) ||
+         (!floatInRange(params(3,3), f*3.) ) || 
+         (!floatInRange(params(3,4), f*4.)) ) 
+    {
+        std::cout << "Vertex matrix row 2 vals are wrong: " << params(3,1) << " "
+            << params(3,2) << " " << params(3,3) << " " << params(3,4) << std::endl;
         return -1;
     }
 
-    if ( (!floatInRange(mat.getCovSyX0(), f*13.)) ||
-        (!floatInRange(mat.getCovSySx(), f*14.))  ||
-        (!floatInRange(mat.getCovSyY0(), f*15.))  || 
-        (!floatInRange(mat.getCovSySy(), f*16.)) ) {
-        std::cout << "Vertex matrix row 3 vals are wrong: " << mat.getCovSyX0() << " "
-            << mat.getCovSySx() << " " << mat.getCovSyY0() << " " << mat.getCovSySy() << std::endl;
+    if ( (!floatInRange(params(4,1), f) ) ||
+         (!floatInRange(params(4,2), f*2.) ) ||
+         (!floatInRange(params(4,3), f*3.) ) || 
+         (!floatInRange(params(4,4), f*4.)) ) 
+    {
+        std::cout << "Vertex matrix row 3 vals are wrong: " << params(4,1) << " "
+            << params(4,2) << " " << params(4,3) << " " << params(4,4) << std::endl;
         return -1;
     }
-
 
     if (vertex->getNumTracks() != 2) {
         std::cout << "Vertex number of tracks is wrong: " << vertex->getNumTracks() << std::endl;
         return -1;
     }
-    if (vertex->getTrackId(0) != ivertex+1) {
-        std::cout << "Vertex Track id is wrong: " << vertex->getTrackId(0) << std::endl;
-        return -1;
-    }
 
-    if (vertex->getTrackId(1) != ivertex+2) {
-        std::cout << "Vertex Track id is wrong: " << vertex->getTrackId(1) << std::endl;
-        return -1;
-    }
+    // Hmm... what to do here...
+    //if (vertex->getTrackId(0) != ivertex+1) {
+    //    std::cout << "Vertex Track id is wrong: " << vertex->getTrackId(0) << std::endl;
+    //    return -1;
+    //}
+
+    //if (vertex->getTrackId(1) != ivertex+2) {
+    //    std::cout << "Vertex Track id is wrong: " << vertex->getTrackId(1) << std::endl;
+    //    return -1;
+    //}
 
     return 0;
 }
@@ -698,20 +562,6 @@ int checkTkrRecon(TkrRecon *tkr, UInt_t ievent) {
         icluster++;
     }
 
-    TObjArray *candTrackCol = tkr->getTrackCandCol();
-    if (candTrackCol->GetEntries() != numTracks) {
-        std::cout << "Number of TkrRecon cand tracks is wrong: " << candTrackCol->GetEntries() << std::endl;
-        return -1;
-    }
-    TIter candTrackIt(candTrackCol);
-    UInt_t iHit = 0;
-    TkrCandTrack *candTrack;
-    while ( (candTrack = (TkrCandTrack*)(candTrackIt.Next()) ) ) {
-        if (checkCandTrack(candTrack, ievent, iHit) < 0)
-            return -1;
-        iHit++;
-    }
-
     UInt_t iTrack = 0;
     TObjArray* trackCol = tkr->getTrackCol();
     if (trackCol->GetEntries() != 2*numTracks) {
@@ -720,14 +570,10 @@ int checkTkrRecon(TkrRecon *tkr, UInt_t ievent) {
     }
     TIter trackIt(trackCol);
     TObject *trackObj = 0;
-    while ( trackObj = trackIt.Next() ) {
-        if (TkrTrack* track = dynamic_cast<TkrTrack*>(trackObj)) {
-            if (checkTrack(track, ievent, iTrack) < 0) return -1;
-            iTrack++;
-        } else if (TkrKalFitTrack* track = dynamic_cast<TkrKalFitTrack*>(trackObj)) {
-            if (checkKalTrack(track, ievent, iTrack) < 0) return -1;
-            iTrack++;
-        }
+    while ( TkrTrack* track = (TkrTrack*) trackIt.Next() ) 
+    {
+        if (checkTrack(track, ievent, iTrack) < 0) return -1;
+        iTrack++;
     }
 
     TObjArray* vertexCol = tkr->getVertexCol();
@@ -982,129 +828,93 @@ int write(char* fileName, int numEvents) {
         TkrRecon *tkrRec = new TkrRecon();
         tkrRec->initialize();
 
-        for (icluster = 0; icluster < numClusters; icluster++ ) {
-            UInt_t iplane = 5;
-            TkrCluster::view xy = TkrCluster::X;
+        for (icluster = 0; icluster < numClusters; icluster++ ) 
+        {
+            UInt_t towerX = 2;
+            UInt_t towerY = 2;
+            UInt_t tray   = icluster % 15;
+            commonRootData::TkrId tkrId(towerX, towerY, tray, true, commonRootData::TkrId::eMeasureX);
             UInt_t strip0 = 4;
             UInt_t stripf = 10;
             TVector3 pos(f, 2.*f, 3.*f);
 			Double_t tot = f;
 			UInt_t flag = 1;
 			UInt_t tower = 8;
-            TkrCluster *cluster = new TkrCluster(icluster, iplane, xy, strip0, stripf,
-				pos, tot, flag, tower);
+            TkrCluster *cluster = new TkrCluster(tkrId, strip0, stripf, pos, tot, flag, icluster);
             tkrRec->addCluster(cluster);
         }
-        UInt_t itrack;
-        TkrCandTrack *candTrack;
-        for (itrack = 0; itrack < numTracks; itrack++) {
-            candTrack = new TkrCandTrack();
-            UInt_t lay = 3;
-            UInt_t tow = 1;
-            TVector3 pos(f, f*randNum, f);
-            TVector3 dir(f*randNum, f, f*randNum);
-            Double_t quality = f;
-            Double_t e = f*randNum;
-            candTrack->initialize(itrack, lay, tow, quality, e, pos, dir);
-            tkrRec->addTrackCand(candTrack);
-        }
+
         TkrTrack *track;
-        for (itrack=0; itrack < numTracks; itrack++) {
+        for (int itrack=0; itrack < numTracks; itrack++) 
+        {
             track = new TkrTrack();
             UInt_t xgaps = itrack * itrack;
             UInt_t ygaps = itrack+itrack;
             UInt_t x1st = ievent+itrack;
             UInt_t y1st = ievent+ievent;
-            track->initializeInfo(itrack, xgaps, ygaps, x1st, y1st);
+            track->setNumXGaps(xgaps);
+            track->setNumYGaps(ygaps);
+            track->setNumXFirstGaps(x1st);
+            track->setNumYFirstGaps(y1st);
             Double_t chiSq = f;
             Double_t chiSqSmooth = f*randNum;
             Double_t rms = randNum*randNum;
             Double_t qual = f*f;
             Double_t e = f*2.0;
             Double_t ms = f*6.0;
-            track->initializeQual(chiSq, chiSqSmooth, rms, qual, e, ms);
+            track->setChiSquareFilter(chiSq);
+            track->setChiSquareSmooth(chiSqSmooth);
+            track->setScatter(rms);
+            track->setQuality(qual);
+            track->setKalEnergy(e);
+            track->setKalThetaMS(ms);
             tkrRec->addTrack(track);
-        }
-        TkrKalFitTrack *kalTrack;
-        for (itrack = 0; itrack < numTracks; itrack++) {
-            kalTrack = new TkrKalFitTrack();
-            TkrKalFitTrack::Status status   = TkrKalFitTrack::FOUND;
-            TVector3 iniPos   = TVector3(f, 2.*f, 3.*f);
-            TVector3 iniDir   = TVector3(4.*f, 5.*f, 6.*f);
-            Float_t startEnergy = f*randNum;
-            Int_t trkId = numTracks+itrack;
-            // Initialize the track
-            kalTrack->initializeBase(status, 
-                1,
-                trkId,
-                startEnergy,
-                iniPos,
-                iniDir);
-            
-            kalTrack->initializeQual(randNum,
-                f*randNum,
-                2.*randNum,
-                3.*randNum,
-                4.*randNum,
-                5.*randNum,
-                6.*randNum );
-            
-            kalTrack->initializeGaps(0,
-                1,
-                2,
-                3);
-            
-            kalTrack->initializeKal( 7,
-                f,
-                5,
-                6,
-                f);
-            
-            tkrRec->addTrack(kalTrack);
         }
         
         UInt_t ivertex;
         TkrVertex *vertex;
         for (ivertex=0; ivertex < numVertices; ivertex++) {
             vertex = new TkrVertex();
-            UInt_t layer = 2;
-            UInt_t tower = 4;
+            UInt_t towerX = 2;
+            UInt_t towerY = 2;
+            UInt_t tray   = icluster % 15;
+            commonRootData::TkrId tkrId(towerX, towerY, tray, true, commonRootData::TkrId::eMeasureX);
+            vertex->setTkrID(tkrId);
             Double_t qual = f;
+            vertex->setQuality(qual);
             Double_t energy = f*randNum;
-            vertex->initializeInfo(ivertex, layer, tower, qual, energy);
+            vertex->setEnergy(energy);
             
-            TkrParams vtxPar;
-            Double_t ax = f;
-            Double_t sx = f*f;
-            Double_t ay = f*randNum;
-            Double_t sy = randNum*randNum;
-            vtxPar.initialize(ax, sx, ay, sy);
+            TkrTrackParams vtxPar;
+            vtxPar(1) = f;
+            vtxPar(2) = f*f;
+            vtxPar(3) = f*randNum;
+            vtxPar(4) = randNum*randNum;
             
-            TkrCovMat vtxCov;
-            Double_t a_00 = f;
-            Double_t a_01 = f*2.;
-            Double_t a_02 = f*3.;
-            Double_t a_03 = f*4.;
-            Double_t a_10 = f*5.;
-            Double_t a_11 = f*6.;
-            Double_t a_12 = f*7.;
-            Double_t a_13 = f*8.;
-            Double_t a_20 = f*9.;
-            Double_t a_21 = f*10.;
-            Double_t a_22 = f*11.;
-            Double_t a_23 = f*12.;
-            Double_t a_30 = f*13.;
-            Double_t a_31 = f*14.;
-            Double_t a_32 = f*15.;
-            Double_t a_33 = f*16.;
-            vtxCov.initialize(a_00, a_01, a_02, a_03, a_10, a_11, a_12, a_13,
-                a_20, a_21, a_22, a_23, a_30, a_31, a_32, a_33);
+            vtxPar(1,1) = f;
+            vtxPar(1,2) = f*2.;
+            vtxPar(1,3) = f*3.;
+            vtxPar(1,4) = f*4.;
+            vtxPar(2,1) = f*5;
+            vtxPar(2,2) = f*6.;
+            vtxPar(2,3) = f*7.;
+            vtxPar(2,4) = f*8.;
+            vtxPar(3,1) = f*9;
+            vtxPar(3,2) = f*10.;
+            vtxPar(3,3) = f*11.;
+            vtxPar(3,4) = f*12.;
+            vtxPar(4,1) = f*13;
+            vtxPar(4,2) = f*14.;
+            vtxPar(4,3) = f*15.;
+            vtxPar(4,4) = f*16.;
+            vertex->setParams(vtxPar);
 
             TVector3 pos(f, f*randNum, f*randNum*2.);
+            vertex->setPosition(pos);
             TVector3 dir(randNum*2., randNum*3., randNum*4.);
-            vertex->addTrackId(ivertex+1);
-            vertex->addTrackId(ivertex+2);
-            vertex->initializeVals(vtxPar, vtxCov, pos, dir);
+            vertex->setDirection(dir);
+            //vertex->addTrackId(ivertex+1);
+            //vertex->addTrackId(ivertex+2);
             tkrRec->addVertex(vertex);
         }
 
