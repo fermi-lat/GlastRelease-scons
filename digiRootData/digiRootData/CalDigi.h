@@ -71,7 +71,7 @@ private:
     /// collection of ranges and pulse heights
     CalXtalReadout m_readoutCol[4];
     
-    ClassDef(CalDigi,1) // CAL Digitization Class
+    ClassDef(CalDigi,2) // CAL Digitization Class
 };
 
 #endif

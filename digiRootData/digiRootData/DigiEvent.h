@@ -111,7 +111,7 @@ private:
     static TObjArray *s_staticTkrDigiCol;
     TObjArray* m_tkrDigiCol; //-> List of Tracker layers
 
-    ClassDef(DigiEvent,5) // Storage for Raw(Digi) event and subsystem data
+    ClassDef(DigiEvent,6) // Storage for Raw(Digi) event and subsystem data
 }; 
 
 #endif
