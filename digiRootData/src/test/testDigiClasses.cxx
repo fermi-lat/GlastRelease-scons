@@ -21,8 +21,18 @@
 const UInt_t runNum = 1;
 const UInt_t numXtals = 10;
 const UInt_t numDigi = 12;
+const UInt_t numAcd = 11;
 const Bool_t fromMc = true;
 Float_t randNum;
+
+bool floatInRange(Double_t actual, Double_t desired) {
+  const Double_t fudge=0.00001;
+  if ( (actual >= (desired - fudge)) && (actual <= (desired+fudge)) ){
+    return true;
+  }
+  return false;
+
+}
 
 int checkDigiEvent(DigiEvent *evt, UInt_t ievent) {
     if (evt->getRunId() != runNum) {
@@ -185,6 +195,88 @@ int checkTkrDigi(TkrDigi *digi, UInt_t ievent, UInt_t idigi) {
         return -1;
     }
     
+    return 0;
+}
+
+int checkAcdDigi(AcdDigi *digi, UInt_t ievent, UInt_t idigi) {
+
+    Float_t f = ievent;
+
+    if (!floatInRange(digi->getEnergy(), ievent*randNum) ) {
+        std::cout << "AcdDigi Energy is wrong " << digi->getEnergy() << std::endl;
+        return -1;
+    }
+
+    AcdId id = digi->getId();
+    if (id.getLayer() != 0) {
+        std::cout << "AcdId Layer is wrong " << id.getLayer() << std::endl;
+        return -1;
+    }
+
+    if (id.getFace() != 2) {
+        std::cout << "AcdId Face is wrong " << id.getFace() << std::endl;
+        return -1;
+    }
+
+    if (id.getRow() != 5) {
+        std::cout << "AcdId Row is wrong " << id.getRow() << std::endl;
+        return -1;
+    }
+
+    if (id.getColumn() != 4) {
+        std::cout << "AcdId Col is wrong " << id.getColumn() << std::endl;
+        return -1;
+    }
+
+    UShort_t pha_A = digi->getPulseHeight(AcdDigi::A);
+    if (pha_A != 4095) {
+        std::cout << "AcdDigi PHA A is wrong " << pha_A << std::endl;
+        return -1;
+    }
+
+    Bool_t veto_A = digi->getVeto(AcdDigi::A);
+    if (veto_A != kFALSE) {
+        std::cout << "Veto A is wrong " << veto_A << std::endl;
+        return -1;
+    }
+
+    Bool_t low_A = digi->getLowDiscrim(AcdDigi::A);
+    if (low_A != kTRUE) {
+        std::cout << "Low A is wrong " << low_A << std::endl;
+        return -1;
+    }
+
+    Bool_t high_A = digi->getHighDiscrim(AcdDigi::A);
+    if (high_A != kFALSE) {
+        std::cout << "High A is wrong " << high_A << std::endl;
+        return -1;
+    }
+
+    UShort_t pha_B = digi->getPulseHeight(AcdDigi::B);
+    if (pha_B != 1) {    
+        std::cout << "AcdDigi PHA B is wrong " << pha_B << std::endl;
+        return -1;
+    }
+
+    Bool_t veto_B = digi->getVeto(AcdDigi::B);
+    if (veto_B != kTRUE) {
+        std::cout << "Veto B is wrong " << veto_B << std::endl;
+        return -1;
+    }
+
+    Bool_t low_B = digi->getLowDiscrim(AcdDigi::B);
+    if (low_B != kTRUE) {
+        std::cout << "Low B is wrong " << low_B << std::endl;
+        return -1;
+    }
+
+    Bool_t high_B = digi->getHighDiscrim(AcdDigi::B);
+    if (high_B != kTRUE) {
+        std::cout << "High B is wrong " << high_B << std::endl;
+        return -1;
+    }
+
+    return 0;
 }
 
 
@@ -216,7 +308,18 @@ int read(char* fileName, int numEvents) {
         TkrDigi *tDigi = 0;
         UInt_t idigi = 0;
         while (tDigi = (TkrDigi*)tkrDigiIt.Next()) {
+            tDigi->Print();
             if (checkTkrDigi(tDigi, ievent, idigi) < 0) return -1;
+            idigi++;
+        }
+
+        const TClonesArray *acdDigiCol = evt->getAcdDigiCol();
+        TIter acdDigiIt(acdDigiCol);
+        AcdDigi *aDigi = 0;
+        idigi = 0;
+        while (aDigi = (AcdDigi*)acdDigiIt.Next()) {
+            aDigi->Print();
+            if (checkAcdDigi(aDigi, ievent, idigi) < 0) return -1;
             idigi++;
         }
 
@@ -243,6 +346,7 @@ int write(char* fileName, int numEvents) {
     TRandom randGen;
     Int_t ievent, ixtal;
     randNum = randGen.Rndm();
+
     for (ievent = 0; ievent < numEvents; ievent++) {
         
         ev->initialize(ievent, runNum, fromMc);
@@ -276,6 +380,17 @@ int write(char* fileName, int numEvents) {
             tkr->addC1Hit(idigi*2);
             ev->addTkrDigi(tkr);
         }
+
+        for (idigi = 0; idigi < numAcd; idigi++) {
+            AcdId id(0, 2, 5, 4);
+            Float_t energy = ievent*randNum;
+            Bool_t veto[2] = {kFALSE, kTRUE};
+            Bool_t low[2] = {kTRUE, kTRUE};
+            Bool_t high[2] = {kFALSE, kTRUE};
+            UShort_t pha[2] = {4095, 1};
+            ev->addAcdDigi(id, energy, pha, veto, low, high);
+        }
+
         t->Fill();
         ev->Clear();
     }

@@ -6,7 +6,7 @@
 //       Unix.*.Root.DynamicPath:    $(ROOTANALYSIS)/lib
 //       WinNT.*.Root.DynamicPath:   $(ROOTANALYSIS)/lib
 //   OR
-//    b) Copy mcRootData.so (or .dll) into the directory from where you start ROOT.
+//    b) Copy digiRootData.so (or .dll) into the directory from where you start ROOT.
 // 2) You want to make sure that memory statistics are kept in ROOT by modifying your
 //    local .rootrc file, and setting:
 //    Root.MemStat:            1
@@ -18,6 +18,7 @@
     UInt_t numEvents = 500;
     UInt_t numXtals = 100;
     UInt_t numDigi = 150;
+    UInt_t numAcd = 50;
     UInt_t runNum = 1;
 
     gObjectTable->Print();
@@ -66,6 +67,16 @@
             }
             tkr->addC1Hit(idigi*2);
             ev->addTkrDigi(tkr);
+        }
+
+        for (idigi = 0; idigi < numAcd; idigi++) {
+            AcdId acd_id(0, 2, 5, 4);
+            Float_t energy = ievent;
+            Bool_t veto[2] = {kFALSE, kTRUE};
+            Bool_t low[2] = {kTRUE, kTRUE};
+            Bool_t high[2] = {kFALSE, kTRUE};
+            UShort_t pha[2] = {4095, 1};
+            ev->addAcdDigi(acd_id, energy, pha, veto, low, high);
         }
 
         t->Fill();
