@@ -50,6 +50,9 @@ namespace rdbModel{
      was a connection to close and it was closed successfully */
     virtual bool close();
 
+    /// Return true iff open has been done with no matching close
+    virtual bool isConnected() {return m_connected;}
+
     /**
        Check to what degree local schema definition is compatible with
        remote db accessed via this connection.  By default check db names
@@ -82,7 +85,8 @@ namespace rdbModel{
     virtual unsigned int update(const std::string& tableName, 
                                 const StringVector& colNames, 
                                 const StringVector& values,
-                                const Assertion* where=0);
+                                const Assertion* where=0,
+                                const StringVector* nullCols = 0);
 
     /**
       Support only for relatively simple SELECT, involving just
