@@ -1,5 +1,5 @@
-v0r2p3 fixed bug in ADC tool where LAC logic only checked POS face
-v0r2p2 fixed bug in ADC tool where range selection could run out-of-bounds on rare occasions
+v0r2p4 fixed bug in ADC tool where LAC logic only checked POS face
+v0r2p3 fixed bug in ADC tool where range selection could run out-of-bounds on rare occasions
 v0r2p1 fixed 1-line bug in CalibItemMgr evidently i broke normal mode when i built ideal mode.
 v0r2p0 builds on linux w/out warning
 v0r2   ideal flavor skips mysql. defaultOptions.txt include file.  clhep random class see CVS log.  
