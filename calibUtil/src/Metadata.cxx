@@ -73,6 +73,15 @@ namespace calibUtil {
     return RETOk;
   }
 
+  Metadata::eRet Metadata::addLocale(const std::string& locale) {
+    if (!(m_rowStatus & eOpened) ) return RETWrongState;
+    if (m_rowStatus & eLocale) return RETWrongState;
+
+    m_row += ",locale='"; m_row += locale; m_row += "'";
+    m_rowStatus |= eLocale;
+    return RETOk;
+  }
+
   // WARNING: Windows and Linux/Solaris use different standard variables
   // for login name.  The test used below isn't quite right
   // since one could conceivably compile with gcc on cygwin/Windows.
@@ -266,18 +275,82 @@ namespace calibUtil {
   // Not done yet, but this is more than enough for testing.
   const std::string* const Metadata::getCalibTypeStr(eCalibType cType) {
     static std::string acdEff("ACD_Eff");
-    static std::string tkrBadChan("TKR_Bad_Chan");
-    static std::string calLightAtt("CAL_Light_Att");
-    static std::string calLightAsym("CAL_Light_Asym");
+    static std::string acdThreshHigh("ACD_ThreshHigh");
+    static std::string acdThreshVeto("ACD_ThreshVeto");
+    static std::string acdPed("ACD_Ped");
+    static std::string acdElecGain("ACD_ElecGain");
+
+    static std::string tkrBadChan("TKR_BadChan");
+    static std::string tkrHotChan("TKR_HotChan");
+    static std::string tkrDeadChan("TKR_DeadChan");
+    static std::string tkrTOTSignal("TKR_TOTSignal");
+    static std::string tkrTOTDist("TKR_TOTDist");
+    static std::string tkrAlign("TKR_Align");
+    static std::string tkrMIPEff("TKR_MIPEff");
+
+    static std::string calLightAtt("CAL_LightAtt");
+    static std::string calLightAsym("CAL_LightAsym");
+    static std::string calLightYield("CAL_LightYield");
+    static std::string calScintEff("CAL_ScintEff");
+    static std::string calPed("CAL_Ped");
+    static std::string calElecGain("CAL_ElectGain");
+    static std::string calIntNonlin("CAL_IntNonlin");
+    static std::string calDiffNonlin("CAL_DiffNonlin");
+    static std::string calHotChan("CAL_HotChan");
+    static std::string calDeadChan("CAL_DeadChan");
+    static std::string calDiscrLO("CAL_DiscrLO");
+    static std::string calDiscrHI("CAL_DiscrHI");
     switch(cType) {
     case CTYPE_ACDEff:
       return &acdEff;
+    case CTYPE_ACDThreshHigh:
+      return &acdThreshHigh;
+    case CTYPE_ACDThreshVeto:
+      return &acdThreshVeto;
+    case CTYPE_ACDPed:
+      return &acdPed;
+    case CTYPE_ACDElecGain:
+      return &acdElecGain;
+
     case CTYPE_TKRBadChan:
       return &tkrBadChan;
+    case CTYPE_TKRHotChan:
+      return &tkrHotChan;
+    case CTYPE_TKRDeadChan:
+      return &tkrDeadChan;
+    case CTYPE_TKRTOTSignal:
+      return &tkrTOTSignal;
+    case CTYPE_TKRTOTDist:
+      return &tkrTOTDist;
+    case CTYPE_TKRAlign:
+      return &tkrAlign;
+
     case CTYPE_CALLightAtt:
       return &calLightAtt;
     case CTYPE_CALLightAsym:
       return &calLightAsym;
+    case CTYPE_CALLightYield:
+      return &calLightYield;
+    case CTYPE_CALScintEff:
+      return &calScintEff;
+    case CTYPE_CALPed:
+      return &calPed;
+    case CTYPE_CALElecGain:
+      return &calElecGain;
+    case CTYPE_CALIntNonlin:
+      return &calIntNonlin;
+    case CTYPE_CALDiffNonlin:
+      return &calDiffNonlin;
+    case CTYPE_CALHotChan:
+      return &calHotChan;
+    case CTYPE_CALDeadChan:
+      return &calDeadChan;
+    case CTYPE_CALDiscrLO:
+      return &calDiscrLO;
+    case CTYPE_CALDiscrHI:
+      return &calDiscrHI;
+
+
     default:
       return 0;
     }
