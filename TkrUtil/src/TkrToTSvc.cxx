@@ -87,6 +87,11 @@ StatusCode TkrToTSvc::initialize ()
     // Call super-class
     Service::initialize ();
 
+    // set the calibration pointer to zero
+    // if it becomes non-zero, that means that calib info has
+    // been requested and found
+    m_pToT = 0;
+
     m_tkrGeom = 0;
     if( service( "TkrGeometrySvc", m_tkrGeom, true).isFailure() ) {
         log << MSG::ERROR << "Couldn't retrieve TkrGeometrySvc" << endreq;
