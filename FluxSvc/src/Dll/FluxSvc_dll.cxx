@@ -6,5 +6,5 @@
 */
 
 #include "GaudiKernel/LoadFactoryEntries.h"
-LOAD_FACTORY_ENTRIES(CalDigi)
+LOAD_FACTORY_ENTRIES( FluxSvc )
 
