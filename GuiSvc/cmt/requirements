@@ -7,8 +7,10 @@ use gui
 use GaudiSvc
 
 # library is not shareable since it is expected to be linked into the executable
-macro GUiSvc_h "" WIN32 "../GuiSvc/*.h"
-library GuiSvc -no_share  *.cxx ${GuiSvc_h} 
+
+apply_pattern package_headers
+
+library GuiSvc -no_share  *.cxx ${GuiSvc_headers} 
 
 apply_pattern package_include
 
