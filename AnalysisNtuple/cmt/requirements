@@ -1,12 +1,14 @@
 package AnalysisNtuple
 
-version v1r3p3
+version v1r3p4
 
 branches src cmt doc
 
 use GlastPolicy v*
 
+# these really belong below the "private" line, but apparently linux can't handle it...
 use TkrUtil     v*
+use G4Propagator v*
 
 apply_pattern packageShr
 
@@ -18,7 +20,6 @@ use GlastSvc        v*
 use facilities      v*
 
 use ntupleWriterSvc v*
-use G4Propagator    v*
 use Recon           v*
 use RootIo          v*
 
