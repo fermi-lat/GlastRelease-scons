@@ -254,7 +254,6 @@ void rootplot::init(std::vector<const char*> argv)
             angle_hist.storePhi(phi);
             
 			if(j % 1000 == 0) {std::cerr << "\r" << j << ": " << energy << "...";
-					std::cout << "Solid Angle is: " << f->solidAngle();
 			}
         }
         
