@@ -21,7 +21,7 @@ use xml      v4
 use xmlUtil  v2r6
 
 use idents   v2r3
-use detModel v2r5
+use detModel v2r6
 
 use instrument v5
 use data     v4r1
