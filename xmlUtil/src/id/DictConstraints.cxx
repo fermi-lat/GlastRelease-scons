@@ -95,8 +95,9 @@ namespace xmlUtil {
     m_valList = new DictValList(*list);
     m_minVal = 0xffffffff;
     m_maxVal = 0;
-    for (DictValList::iterator it = (unsigned int *) list->begin(); 
-         it != list->end(); ++it) {
+    //    for (DictValList::iterator it = (unsigned int *) list->begin(); 
+    for (DictValList::const_iterator it = list->begin(); 
+    it != list->end(); ++it) {
       const unsigned val = *it;
       if (val > m_maxVal) m_maxVal = val;
       if (val < m_minVal) m_minVal = val;
