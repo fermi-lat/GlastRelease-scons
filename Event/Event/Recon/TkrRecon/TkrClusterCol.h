@@ -58,7 +58,7 @@ public:
 	}
 	
 	/// returns the number of clusters in a given view and plane
-	int nHits(TkrCluster::view v, int iplane) {return (int) getHits(v,iplane).size();}
+	int nHits(TkrCluster::view v, int iplane); 
 	
 	void addCluster(TkrCluster* cl);
 
