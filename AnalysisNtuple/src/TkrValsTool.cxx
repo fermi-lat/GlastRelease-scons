@@ -36,6 +36,8 @@ $Header$
 
 #include "GlastSvc/Reco/IPropagatorSvc.h"
 #include "GaudiKernel/IToolSvc.h"
+#include "geometry/Ray.h"
+
 
 // M_PI defined in ValBase.h
 
@@ -765,9 +767,9 @@ StatusCode TkrValsTool::calculate()
             double yms = 0.;
 
             if(ilayer < topLayer) {
-                Event::TkrFitMatrix Q = pKalParticle->mScat_Covr(Tkr_Sum_ConEne/2., arc_len);
-                xms = Q.getcovX0X0();
-                yms = Q.getcovY0Y0();
+                HepMatrix Q = pKalParticle->mScat_Covr(Tkr_Sum_ConEne/2., arc_len);
+                xms = Q(1,1);
+                yms = Q(3,3);
                 radlen = pKalParticle->radLength(arc_len); 
             }
             double xSprd = sqrt(4.+xms*16.); // 4.0 sigma and not smaller then 2mm (was 2.5 sigma)
