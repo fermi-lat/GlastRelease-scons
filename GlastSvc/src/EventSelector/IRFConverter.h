@@ -46,11 +46,11 @@ public:
     virtual void forward ( const CsIDetector& csi) {
         // CAL CsI log data
         if ( !(csi.empty()) ) {
-            
-			MCCalorimeterHit* mcCal = new MCCalorimeterHit();
-			mcCal->setEnergy(csi.energy());
-			mcCal->setLayer(csi.layer());
-			MCCalorimeterHitContainer->push_back(mcCal);
+            MCCalorimeterHit* mcCal = new MCCalorimeterHit();
+            mcCal->setEnergy(csi.energy());
+            mcCal->setLeftResponse(csi.Lresp());
+            mcCal->setRightResponse(csi.Rresp());
+            MCCalorimeterHitContainer->push_back(mcCal);
 
 			// many more parameters need to be added here
         }
