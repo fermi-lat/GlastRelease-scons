@@ -21,7 +21,7 @@ class RegisterCorba : public AlgTool, virtual public IRegister{
 public:
 
     RegisterCorba( const std::string& type, 
-		   const std::string& name, const IInterface* parent);
+       const std::string& name, const IInterface* parent);
     virtual ~RegisterCorba() { }
 
     /// implement to define sources: will be called from FluxSvc
@@ -36,8 +36,8 @@ const IToolFactory& RegisterCorbaFactory = s_factory;
 
 // Standard Constructor
 RegisterCorba::RegisterCorba(const std::string& type, 
-			     const std::string& name, 
-			     const IInterface* parent)
+           const std::string& name, 
+           const IInterface* parent)
   : AlgTool( type, name, parent ) 
 {
   

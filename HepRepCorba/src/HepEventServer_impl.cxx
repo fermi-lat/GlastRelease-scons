@@ -95,20 +95,20 @@ char* HepEventServer_impl::setEvent(const char* command)
   
   if (cmd == "next")
     {
-			bool res;
-			res = m_svcAdapter->nextEvent(1);
-			if (res)
-			{
-				sName << "Event-" << temp;
-	      temp++;
+      bool res;
+      res = m_svcAdapter->nextEvent(1);
+      if (res)
+      {
+        sName << "Event-" << temp;
+        temp++;
 
-		    m_eventID = sName.str();
-			  nextEventMsg = "ok:" + m_eventID;   
-			} 
-			else
-			{
-				nextEventMsg = "error";
-			}
+        m_eventID = sName.str();
+        nextEventMsg = "ok:" + m_eventID;   
+      } 
+      else
+      {
+        nextEventMsg = "error";
+      }
     }
   else if (cmd == "getEventId")
   {
@@ -136,7 +136,7 @@ char* HepEventServer_impl::setEvent(const char* command)
     else
       nextEventMsg = "error:The requested Event index seems to non exist";      
   }  
-	else if (cmd == "fluxes")
+  else if (cmd == "fluxes")
     {
       nextEventMsg = m_svcAdapter->getSources();
     }
@@ -188,11 +188,11 @@ char* HepEventServer_impl::setEvent(const char* command)
       else
         nextEventMsg = "error:Aglrotithm " + algName + " not replayed";      
     } 
-	else if (cmd == "stop")
-		{
-			m_svcAdapter->shutDown();
-			nextEventMsg = "Server stop";
-		}
+  else if (cmd == "stop")
+    {
+      m_svcAdapter->shutDown();
+      nextEventMsg = "Server stop";
+    }
   else
     {
       nextEventMsg = "error:don't know the message ..\n";      

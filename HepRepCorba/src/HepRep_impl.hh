@@ -17,21 +17,21 @@ class HepRep_impl : virtual public POA_HepRep
   void addLayer (const char* layer);
 
   HepRepInstanceTree* getInstanceTreeTop(const char* instanceTreeName,
-					 const char* instanceTreeVersion);
+           const char* instanceTreeVersion);
   HepRepTypeTree* getTypeTree(const char* typeTreeName,
-			      const char* typeTreeVersion);
+            const char* typeTreeVersion);
   HepRepInstanceTree* getInstances(const char* instanceTreeName,
-				   const char* instanceTreeVersion,
-				   const StringArray& typeNames);
+           const char* instanceTreeVersion,
+           const StringArray& typeNames);
   HepRepInstanceTree* getInstancesAfterAction(const char* instanceTreeName,
-					      const char* instanceTreeVersion,
-					      const StringArray& typeNames,
-					      const HepRepActionList& actions,
-					      CORBA::Boolean getPoints,
-					      CORBA::Boolean getDrawAtts,
-					      CORBA::Boolean getNonDrawAtts,
-					      const StringArray& invertAtt);
-					      
+                const char* instanceTreeVersion,
+                const StringArray& typeNames,
+                const HepRepActionList& actions,
+                CORBA::Boolean getPoints,
+                CORBA::Boolean getDrawAtts,
+                CORBA::Boolean getNonDrawAtts,
+                const StringArray& invertAtt);
+                
   StringArray* getLayerOrder();
   char* checkForException();
 

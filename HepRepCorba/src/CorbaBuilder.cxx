@@ -16,10 +16,10 @@ void CorbaBuilder::addAttDef(std::string name,
     {
       int attNumber = type->attDefs.length() + 1;
       type->attDefs.length(attNumber);
-      type->attDefs[attNumber-1].name     = CORBA::string_dup(name.c_str());
-      type->attDefs[attNumber-1].desc     = CORBA::string_dup(desc.c_str());
-      type->attDefs[attNumber-1].category = CORBA::string_dup(category.c_str());
-      type->attDefs[attNumber-1].extra    = CORBA::string_dup(extra.c_str());
+      type->attDefs[attNumber-1].name    =CORBA::string_dup(name.c_str());
+      type->attDefs[attNumber-1].desc    =CORBA::string_dup(desc.c_str());
+      type->attDefs[attNumber-1].category=CORBA::string_dup(category.c_str());
+      type->attDefs[attNumber-1].extra   =CORBA::string_dup(extra.c_str());
     }
 }  
 

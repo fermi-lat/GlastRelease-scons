@@ -12,7 +12,7 @@ void CorbaServer::run()
   int orb_argc = 1 ;
   char* orb_argv[] = {""};
 
-  const char* options[][2] = { { "giopMaxMsgSize", "20097152" }, { 0, 0 } }; 
+  const char* options[][2] = { { "giopMaxMsgSize", "40097152" }, { 0, 0 } }; 
 
   try {
   m_orb = CORBA::ORB_init(orb_argc, orb_argv, "omniORB4",options);
@@ -47,12 +47,12 @@ void CorbaServer::run()
 
   
   hepEventServer_impl->initHepRep();
-//	hepEventServer_impl->setOrb(orb);
+//  hepEventServer_impl->setOrb(orb);
 
 
   m_orb->run();    
-	m_orb->destroy();
-	}
+  m_orb->destroy();
+  }
  catch(CORBA::COMM_FAILURE&) {
    std::cerr << "Caught system exception COMM_FAILURE -- unable to contact the "
          << "object." << std::endl;

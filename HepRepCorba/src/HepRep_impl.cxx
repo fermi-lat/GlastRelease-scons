@@ -57,7 +57,7 @@ void HepRep_impl::setHepRepSvc(IHepRepSvc* hrsv)
 */
 
 HepRepInstanceTree* HepRep_impl::getInstanceTreeTop(const char* instanceTreeName,
-						     const char* instanceTreeVersion)
+                 const char* instanceTreeVersion)
 {
   HepRepInstanceTree* instanceTreeTop = new HepRepInstanceTree;
   std::string type = m_registry->getTypeByInstance(instanceTreeName);  
@@ -117,11 +117,11 @@ void HepRep_impl::setRegistry(IRegistry* r)
 }
 
 HepRepTypeTree* HepRep_impl::getTypeTree(const char* typeTreeName,
-					 const char* typeTreeVersion)
+           const char* typeTreeVersion)
 {
   //  std::cout << "HepRep_impl::getTypeTree called for name " 
-  //	    << typeTreeName << ", version " 
-  //	    << typeTreeVersion << std::endl;
+  //      << typeTreeName << ", version " 
+  //      << typeTreeVersion << std::endl;
 
   // Trivial implementation since I am only supporting a single typeTree.
 
@@ -132,8 +132,8 @@ HepRepTypeTree* HepRep_impl::getTypeTree(const char* typeTreeName,
 
 
 HepRepInstanceTree* HepRep_impl::getInstances(const char* instanceTreeName,
-					      const char* instanceTreeVersion,
-					      const StringArray& typeNames)
+                const char* instanceTreeVersion,
+                const StringArray& typeNames)
 {
   m_registry->useBuilder(m_builder);
   typedef std::vector<IFiller*> fillerCol;
@@ -144,7 +144,7 @@ HepRepInstanceTree* HepRep_impl::getInstances(const char* instanceTreeName,
 
   const fillerCol temp = 
     m_registry->getFillersByType(
-				 m_registry->getTypeByInstance(instanceTreeName));  
+         m_registry->getTypeByInstance(instanceTreeName));  
 
   fillerCol::const_iterator j;  
 

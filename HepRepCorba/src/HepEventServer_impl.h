@@ -34,7 +34,7 @@ public:
 
   HepRep_impl* hepRep_impl;
 
-	void setOrb(CORBA::ORB_var orb){m_orb = m_orb;};
+  void setOrb(CORBA::ORB_var orb){m_orb = m_orb;};
 protected:
   ISvcAdapter* m_svcAdapter;
   IRegistry* m_registry;
@@ -42,7 +42,7 @@ protected:
   HepRep_var _hepRep_var;
   CORBA::ORB_var m_orb;
 
-	bool _busy;
+  bool _busy;
   bool _singleUse;
   char* _defaultEventID;
   char* _clientDesc;
