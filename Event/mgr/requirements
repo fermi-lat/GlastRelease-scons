@@ -1,5 +1,5 @@
 package GlastEvent
-version v5r1
+version v5r2
 
 branches GlastEvent mgr doc src
 use idents
@@ -13,7 +13,6 @@ macro_append GlastEvent_headers "" WIN32 " \
         ../GlastEvent/*.h \ 
         ../GlastEvent/TopLevel/*.h \
         ../GlastEvent/MonteCarlo/*.h \
-        ../GlastEvent/Irf/*.h \
         ../GlastEvent/data/*.h  \
         ../GlastEvent/Hits/*.h \
         ../GlastEvent/Digi/*.h \
