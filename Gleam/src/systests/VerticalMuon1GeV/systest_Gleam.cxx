@@ -63,7 +63,8 @@ void RootTreeAnalysis::Go(Int_t numEvents)
     // BEGINNING OF EVENT LOOP
     for (Int_t ievent=m_StartEvent; ievent<nMax; ievent++, curI=ievent) {
         
-      mc->Dump();
+      // Too verbose
+      // mc->Dump();
 
         if (mc) {
           mc->Clear();

@@ -21,6 +21,11 @@ void RootTreeAnalysis::DigiCalHistDefine() {
         200, 0, maxAdc);
     CALADCP->SetXTitle("ADC");
 
+    TH2F *CALADCPM = new TH2F("CALADCPM", "Cal Digi ADC - NEG vs POS",
+        200,0,maxAdc,200, 0, maxAdc);
+    CALADCPM->SetXTitle("position (mm)");
+    CALADCPM->SetYTitle("position (mm)");
+
     TH1F *CALRANGE = new TH1F("CALRANGE", "Cal Digi Hit Range - both faces",
         10, 0, 10);
     CALRANGE->SetXTitle("Range");
@@ -78,6 +83,7 @@ void RootTreeAnalysis::DigiCal() {
 // get multiplicities
 
     TObjArray* cL = evt->getCalDigiCol();
+    TObjArray* iP = mc->getMcParticleCol();
     int nCalDigi = cL->GetEntries();
     ((TH1F*)GetObjectPtr("CALDIGICOUNT"))->Fill((Float_t)nCalDigi);
 
@@ -87,6 +93,7 @@ void RootTreeAnalysis::DigiCal() {
 
     for (int ic=0; ic < nCalDigi; ic++) {
       CalDigi* c=(CalDigi*)cL->At(ic);
+      McParticle* p = (McParticle*)iP->At(ic);
 
       CalXtalId id = c->getPackedId();
       int layer = id->getLayer();
@@ -98,6 +105,7 @@ void RootTreeAnalysis::DigiCal() {
       float adcN = cRo->getAdc(CalXtalId::NEG); 
 
       float asy = (adcP-adcN)/(adcP+adcN-200.);   // subtract pedestal!
+      float mcX = p->getInitialPosition().Px();
       float resid = 764.*asy - mcX;
       ((TH1F*)GetObjectPtr("RESIDUAL"))->Fill(resid);
       ((TH2F*)GetObjectPtr("RESIDUALMCX"))->Fill(mcX,resid);
@@ -131,3 +139,5 @@ void RootTreeAnalysis::DigiCal() {
 
 
 };
+
+

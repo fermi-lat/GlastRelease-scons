@@ -63,7 +63,8 @@ void RootTreeAnalysis::Go(Int_t numEvents)
     // BEGINNING OF EVENT LOOP
     for (Int_t ievent=m_StartEvent; ievent<nMax; ievent++, curI=ievent) {
         
-      mc->Dump();
+      // Too verbose
+      // mc->Dump();
 
         if (mc) {
           mc->Clear();
@@ -95,8 +96,8 @@ void RootTreeAnalysis::Go(Int_t numEvents)
         if (evt) {
             digiEventId = evt->getEventId(); 
             digiRunNum = evt->getRunId();            
-	    DigiAcd();
-	    DigiTkr();
+	    // DigiAcd();
+	    // DigiTkr();
             DigiCal();
 	    Trigger();
         }
@@ -105,8 +106,8 @@ void RootTreeAnalysis::Go(Int_t numEvents)
         if (rec) {  // If we have mc data process it
             reconEventId = rec->getEventId();
             reconRunNum = rec->getRunId();
-	    ReconAcd();
-	    ReconTkr();
+	    // ReconAcd();
+	    // ReconTkr();
             ReconCal();
         } 
         
@@ -124,8 +125,8 @@ void RootTreeAnalysis::DigiHistDefine() {
   histFile->cd();
 
   DigiCalHistDefine();
-  DigiTkrHistDefine();
-  DigiAcdHistDefine();
+  // DigiTkrHistDefine();
+  // DigiAcdHistDefine();
   TriggerHistDefine();
 
 }
@@ -137,8 +138,8 @@ void RootTreeAnalysis::ReconHistDefine() {
   histFile->cd();
 
   ReconCalHistDefine();
-  ReconTkrHistDefine();
-  ReconAcdHistDefine();
+  //  ReconTkrHistDefine();
+  //  ReconAcdHistDefine();
 
 };    
 
