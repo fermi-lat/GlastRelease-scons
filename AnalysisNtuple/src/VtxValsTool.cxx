@@ -181,6 +181,8 @@ StatusCode VtxValsTool::calculate()
 	VTX_y0        = x0.y();
 	VTX_z0        = x0.z();
 
+    VTX_Status  = gamma->getStatusBits(); 
+
 	// Get the first track location and direction
 	Point  x1 = track_1->front()->getPoint(Event::TkrTrackHit::SMOOTHED);
 	Vector t1 = track_1->front()->getDirection(Event::TkrTrackHit::SMOOTHED);
@@ -208,9 +210,8 @@ StatusCode VtxValsTool::calculate()
 
 		VTX_Quality = gamma->getQuality(); 
 		VTX_Chisq   = gamma->getChiSquare(); 
-		VTX_Status  = gamma->getStatusBits(); 
 		VTX_AddedRL = gamma->getAddedRadLen();
 	}
-
+    
 	return sc;
 }
