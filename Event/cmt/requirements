@@ -1,5 +1,5 @@
 package Event
-version v8v5
+version v8v6
 
 branches Event mgr doc src
 use idents v2r*
@@ -13,6 +13,7 @@ apply_pattern package_headers
 macro_append Event_headers "" WIN32 " \
         ../Event/*.h \ 
         ../Event/TopLevel/*.h \
+        ../Event/Utilities/*.h \
         ../Event/MonteCarlo/*.h \
         ../Event/Hits/*.h \
         ../Event/Digi/*.h \

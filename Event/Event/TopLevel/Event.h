@@ -10,7 +10,7 @@
 
 extern const CLID& CLID_Event;
 
-/** @class Event
+/** @class EventHeader
 * @brief Essential header information of the event.
 * It can be identified by "/Event" on the TDS.
 *
@@ -18,6 +18,7 @@ extern const CLID& CLID_Event;
 * - run number
 * - event number
 * - time stamp
+* - trigger word
 *
 * $Header$
 */
@@ -50,6 +51,11 @@ public:
     const TimeStamp& time () const                              { return m_time; }
     /// Update reference to event time stamp
     void setTime (const TimeStamp& value)                      { m_time = value; }
+
+    /// Retrive trigger word
+    unsigned int trigger()const                                { return m_trigger;}
+    /// update trigger word
+    void setTrigger(unsigned int value)                         {m_trigger = value;}
     
     /// Serialize the object for writing
     virtual StreamBuffer& serialize( StreamBuffer& s ) const;
@@ -68,8 +74,10 @@ private:
     long                m_event;
     /// Run number
     long                m_run;
-    /// Time stamp
+    /// Time stamp: use special class to encapsulate type
     TimeStamp           m_time;
+    /// trigger word: note that a class is available to use for this
+    unsigned int        m_trigger;
 };
 
 
@@ -110,7 +118,8 @@ inline std::ostream& EventHeader::fillStream( std::ostream& s ) const           
         << "\n    Run number   = "
         << EventField( EventFormat::field12 )
         << m_run
-        << "\n    Time         = " << m_time;
+        << "\n    Time         = " << m_time
+        << std::setbase(16) << "\n    Trigger      = " << m_trigger;
 }
 } // namespace Event
 #endif    // Event_EVENT_H
