@@ -475,7 +475,7 @@ namespace calibUtil {
     if (mysql_num_rows(myres) ) {  // must have been a good serial number
       MYSQL_ROW myRow = mysql_fetch_row(myres);
       std::string vstart(myRow[0]);
-      std::string vend(myRow[0]);
+      std::string vend(myRow[1]);
 
       since = new facilities::Timestamp(vstart);
       till = new facilities::Timestamp(vend);
