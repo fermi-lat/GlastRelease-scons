@@ -8,44 +8,36 @@ branches FluxSvc cmt doc cdf
 
 # _____________________________________________________________
 
-use GlastPolicy v5r*
+use GlastPolicy v*
 use Event       v9r*
 
 use GlastSvc    v9r*
 use astro       v0r*
 use ntupleWriterSvc v3r*
 
-use flux        v8r*  -no_auto_imports
-use GRB v4*
-# _____________________________________________________________
-
-apply_pattern  package_include
-
-private
-apply_pattern  package_headers
-macro  source  "*.cxx"  WIN32 "*.h *.cxx *.txt"
-
-public
-
-#  linker library ..Lib
-library FluxSvcLib  -import=flux \ 
-                    $(source)    \
-                    $(FluxSvc_headers)
-
-#  component library 
-library  FluxSvc    Dll/*.cxx
-
-apply_pattern  package_Llinkopts
-
-apply_pattern  ld_library_path
-macro_append   FluxSvc_stamps  "$(FluxSvcDir)/FluxSvcLib.stamp"
- 
-apply_pattern  package_Cshlibflags
-apply_pattern  package_Lshlibflags
+# libraries that are only linked locally
+use flux        v8*  -no_auto_imports
+use GRB         v4*  -no_auto_imports
 
 #  set  path to particle properties (used by Gaudi ParticlePropertySvc) 
 #  $(FlUXSVCROOT)/cdf/particleproperty.cdf
 set LHCBDBASE  "${FLUXSVCROOT}"
+
+apply_pattern packageShr
+apply_pattern package_include
+
+# _____________________________________________________________
+private
+
+macro  source  "*.cxx"  WIN32 "*.h *.cxx *.txt"
+
+#  shared component library 
+apply_pattern package_Cshlibflags
+library  FluxSvc   -import=flux -import=GRB \
+     -s=../FluxSvc $(source) \
+     -s=Dll *.cxx\
+     -s=../src $(source)
+
 
 #  build the test 
 apply_pattern  package_test  import=flux 
