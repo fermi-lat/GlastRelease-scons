@@ -2,6 +2,7 @@
  * Package gui 
  * Coordinator: T.Burnett
  @verbatim
+   v3r6   THB 08-nov-03   new pausing functionality
    v3r5   THB 20-jul-03   provide conversion for BasicVector3D.
  * v3r3p2 THB 01-nov-2002: wire up exit button.
  * v3r3p1 THB 27-oct-2002: gcc 3.x fixes
