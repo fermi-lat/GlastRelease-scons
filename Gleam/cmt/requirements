@@ -52,7 +52,7 @@ use G4Generator            v4r1p3
 #digitization
 use CalDigi     v1r0p1
 use TkrDigi     v1r0
-use AcdDigi     v0r1
+use AcdDigi                v1r0
 
 
 #ROOT persistence
@@ -67,7 +67,7 @@ use RootIo                 v4r1p5
 use Trigger                v3r3
 use Recon       v2r2p3
 
-use TkrRecon               v6r3p2
+use TkrRecon               v6r3p3
 use CalRecon               v5r5p2       
 
 
