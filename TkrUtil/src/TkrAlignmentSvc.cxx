@@ -225,7 +225,6 @@ StatusCode TkrAlignmentSvc::getData(std::string fileName)
     if( fileName == "") return sc;
     
     // this method resolves environmental variables in the file name
-    //xml::IFile::extractEnvVar(&fileName);  
 
     int ret = facilities::Util::expandEnvVar(&fileName);
 

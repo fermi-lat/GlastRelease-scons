@@ -18,7 +18,6 @@ $Header$
 #include <algorithm>
 #include <fstream>
 #include "facilities/Util.h"
-#include "xml/IFile.h"
 #include "CLHEP/Random/Random.h"
 #include "CLHEP/Random/RandFlat.h"
 #include "CLHEP/Random/RandGauss.h"

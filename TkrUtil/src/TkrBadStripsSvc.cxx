@@ -71,7 +71,6 @@ StatusCode TkrBadStripsSvc::initialize()
 
     // this method resolves environmental variables in the file name
     if (m_badStripsFile!="") {
-        //xml::IFile::extractEnvVar(&m_badStripsFile); 
         int ret =  facilities::Util::expandEnvVar(&m_badStripsFile);
         if (ret>=0) {
             log << MSG::INFO << "Input file for bad strips: " 

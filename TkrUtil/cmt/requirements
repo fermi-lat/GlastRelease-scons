@@ -1,6 +1,6 @@
 package TkrUtil
 
-version v3r1p1
+version v3r1p2
 
 author Leon Rochester <lsrea@slac.stanford.edu>
 
@@ -12,7 +12,7 @@ use GuiSvc       v3*
 use CalibData    v*
 use CalibSvc     v*
 use G4Propagator v*
-use xml          v*
+use xmlBase      v*
 
 apply_pattern packageShr
 

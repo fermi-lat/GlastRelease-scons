@@ -23,7 +23,7 @@ $Header$
 #include <algorithm>
 #include <fstream>
 #include "facilities/Util.h"
-#include "xml/IFile.h"
+#include "xmlBase/IFile.h"
 
 // declare the service factories for the TkrSplitsSvc
 static SvcFactory<TkrSplitsSvc> a_factory;
@@ -190,7 +190,7 @@ StatusCode TkrSplitsSvc::doInit()
     }
    
     if (m_splitsFile!="") {
-        xml::IFile myFile(m_splitsFile.c_str());
+        xmlBase::IFile myFile(m_splitsFile.c_str());
 
         char buffer[8];
         for (tower=0;tower<NTOWERS;++tower) {
