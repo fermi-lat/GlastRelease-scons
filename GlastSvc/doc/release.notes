@@ -4,6 +4,7 @@
 
  package manager:T.Burnett
 
+ 14-sep-04  THB tag v9r11p2 removed trigger bit initialization in random svc (!)
  14-aug-04  THB tag v9r11p1 try with just xml completely public, for fussy linux
  13-aug-04  THB tag v9r11   Minimize interface
  19-Feb-04  TU  tag v9r10p5 Fix slight oops causing compile problems
