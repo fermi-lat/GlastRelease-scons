@@ -40,6 +40,7 @@
             _EXTERN_ std::string McIntegratingHitCol;
             _EXTERN_ std::string McTkrStripCol;
             _EXTERN_ std::string D2EntryCol;
+            _EXTERN_ std::string ExposureCol;
         }
 
         namespace Digi {
