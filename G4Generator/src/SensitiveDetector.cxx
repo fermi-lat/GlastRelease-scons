@@ -34,7 +34,7 @@ void SensitiveDetector::Initialize(G4HCofThisEvent*HCE)
 
 G4bool SensitiveDetector::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
 {
-  typedef map<G4VPhysicalVolume*, string> M;
+    typedef std::map<G4VPhysicalVolume*, std::string> M;
   M::const_iterator i; 
 
   // Energy Deposition & Step Lenght

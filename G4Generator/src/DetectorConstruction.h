@@ -17,7 +17,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
  public:
   G4VPhysicalVolume* Construct();
 
-  map <G4VPhysicalVolume*, std::string> g4ID;    
+  std::map <G4VPhysicalVolume*, std::string> g4ID;    
 
  private:
   void DefineMaterial();

@@ -42,10 +42,15 @@ void G4MaterialsVisitor::visitElement(detModel::Element* element)
   a = (G4double) element->getAweight()*g/mole;
   density = (G4double) element->getDensity()*g/cm3;
 
-  if (symbol != "")
+  if (symbol != "") {
     G4Element* el = new G4Element(name, symbol, z, a);
-  else
+  }
+  else {
+      if(name==std::string("Vacuum"))return; // right thing?
+      if( z==0  ) { z=6; a=12*g/mole;density=2.265*g/cm3;} // kluge: make it into carbon
+
     G4Material* el = new G4Material(name, z, a, density);
+  }
 }
 
 

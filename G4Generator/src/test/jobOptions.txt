@@ -3,7 +3,7 @@
 // Job options file for GismoGenerator test
 //
 
-ApplicationMgr.DLLs   = { "GaudiAlg", "FluxSvc", "GlastSvc", "G4Generator"};
+ApplicationMgr.DLLs   = { "GaudiAlg", "FluxSvc", "GlastSvc"};
 
 ApplicationMgr.ExtSvc = { 
     "GlastEventSelector/EventSelector" , 
