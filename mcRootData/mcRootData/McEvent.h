@@ -88,20 +88,20 @@ private:
     /// Must be TObjArray due to TRefArray which grows dynamically
     TObjArray *m_particleCol;
     /// static array to allow one-time array creation
-    static TObjArray *m_staticParticleCol;
+    static TObjArray *m_staticParticleCol; //!
     
     /// Collection of McIntegratingHits
     /// must be a TObjArray due to map in McIntegratingHit
     TObjArray *m_integratingHitCol;
     /// static array to allow one-time array creation
-    static TObjArray *m_staticIntegratingHitCol;
+    static TObjArray *m_staticIntegratingHitCol; //!
     
     /// Collection of McPositionHits
     TObjArray *m_positionHitCol;
     /// static array to allow one-time array creation
-    static TObjArray *m_staticPositionHitCol;
+    static TObjArray *m_staticPositionHitCol; //!
     
-    ClassDef(McEvent,2) // Monte Carlo Event Class
+    ClassDef(McEvent,3) // Monte Carlo Event Class
 };
 
 #endif
