@@ -6,7 +6,7 @@ $Header$
 
 #include "TProfile.h"
 
-
+#include <cmath>
 
 double PSF::probSum[2]={0.68, 0.95}; // for defining quantiles
 
@@ -17,18 +17,35 @@ PSF::PSF(std::string summary_root_filename)
 : IRF(summary_root_filename)
 {
 }
+bool PSF::fileExists()
+{
+        TFile f(summary_filename().c_str());
+        TFile r(friend_filename().c_str());
+        return f.IsOpen() && r.IsOpen();
+    }
+
+double PSF::psf_scale(double energy, double zdir,  bool thin)
+{
+    // the scaling function: note cutoff at 10 GeV
+    double t = 0.05*pow(std::min(energy, 1e4)/100., -0.66);
+    if( !thin) t*= 2.5;
+    return t;
+}
+std::string PSF::friend_filename()
+{
+    return output_file_root()+"psf_friend.root";
+}
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void PSF::open_input_file()
 {
-    std::string friend_file(output_file_root()+"psf_friend.root");
     std::string friend_tree_name("t2");
 
     // open the input file and set the tree
     IRF::open_input_file();
 
     // check to see if the friend file exists
-    TFile fr(friend_file.c_str() );
+    TFile fr(friend_filename().c_str() );
     if( ! fr.IsOpen() ) {
         std::cout << "Creating friend file with derived stuff: this takes a while" << std::endl;
 
@@ -54,10 +71,12 @@ void PSF::open_input_file()
         m_tree->SetBranchAddress("IMgammaProb", &IMgammaProb);
         m_tree->SetBranchAddress("AcdTileCount", &AcdTileCount);
         m_tree->SetBranchAddress("EvtTkrEComptonRatio", &EvtTkrEComptonRatio);
-
+        double mc_energy, mc_zdir;
+        m_tree->SetBranchAddress("McEnergy", &mc_energy);
+        m_tree->SetBranchAddress("McZDir",    &mc_zdir);
 
         // make a new file, with a tree and branches
-        TFile fr(friend_file.c_str(),"recreate");
+        TFile fr(friend_filename().c_str(),"recreate");
         TTree* friend_tree = new TTree(friend_tree_name.c_str(), "friend tree");
         float dir_err, psf_scale_factor, veto;
         friend_tree->Branch("PSFscaleFactor", &psf_scale_factor, "PSFscaleFactor/F");
@@ -66,8 +85,7 @@ void PSF::open_input_file()
         int count=m_tree->GetEntries();
         for(int k=0; k<count; ++k){
             m_tree->GetEntry(k);
-            psf_scale_factor=sqrt(sqr(Tkr1ThetaErr)+sqr(Tkr1PhiErr));
-            if (Tkr1FirstLayer<12.0) psf_scale_factor *= 2.5; else psf_scale_factor*=3.5;
+            psf_scale_factor= psf_scale(mc_energy, mc_zdir, Tkr1FirstLayer<12);
             if (IMvertexProb<0.5||VtxAngle==0.0){
                 dir_err=McTkr1DirErr;
             }else{
@@ -96,10 +114,10 @@ void PSF::open_input_file()
         friend_tree->Write();
     }else {
         fr.Close();
-        std::cout << "Friend file " << friend_file
+        std::cout << "Friend file " << friend_filename()
             << " used for additional branches" << std::endl;
     }
-    m_tree->AddFriend(friend_tree_name.c_str(), friend_file.c_str() );
+    m_tree->AddFriend(friend_tree_name.c_str(), friend_filename().c_str() );
 
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

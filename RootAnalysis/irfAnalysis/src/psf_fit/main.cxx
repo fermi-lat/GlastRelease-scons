@@ -56,7 +56,7 @@ int main(){
     MakeDists psf_thin("psf_fit_thin.root");
     psf_thin.set_user_cut(TCut("Tkr1FirstLayer<12"));
     if ( !psf_thin.fileExists() )
-        psf_thin.project("BestDirErr/(0.05*pow(McEnergy/100,-0.66))", 0, 10, 100 );
+        psf_thin.project("BestDirErr/PSFscaleFactor", 0, 10, 100 );
     psf_thin.set_ymax(0.2); psf_thin.set_ymin(1e-4);
     psf_thin.draw("psf_fit_thin.ps", true , myfit);
     delete myfit;
@@ -67,7 +67,7 @@ int main(){
     MakeDists psf_thick("psf_fit_thick.root");
     psf_thick.set_user_cut(TCut("Tkr1FirstLayer>11"));
     if ( !psf_thick.fileExists() )
-        psf_thick.project("BestDirErr/(0.15*pow(McEnergy/100,-0.66))", 0, 10, 100 );
+        psf_thick.project("BestDirErr/PSFscaleFactor", 0, 10, 100 );
     psf_thick.set_ymax(0.5); psf_thick.set_ymin(1e-4);
     psf_thick.draw("psf_fit_thick.ps", true , myfit);
     delete myfit;

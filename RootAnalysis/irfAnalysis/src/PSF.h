@@ -12,13 +12,15 @@ public:
     void drawAsymmetry(std::string ps_filename);
     void drawAeff(std::string ps_filename, std::string page_title="", std::string hist_title="Effective area vs energy");
 
-    bool fileExists(){
-        TFile f(summary_filename().c_str());
-        return f.IsOpen();
-    }
+    bool fileExists();
+    
+    // name to use for the friend file
+    std::string friend_filename();
 
     void open_input_file(); // override from base class
 
+    //! the scaling factor to use for projecting scaled psf
+    double psf_scale(double energy, double costh,  bool thin);
     
     static double probSum[2]; // for defining quantiles
 
