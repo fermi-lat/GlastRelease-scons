@@ -69,6 +69,8 @@ void DMmanager::printSetup(std::ostream& out) {
         << std::setw(15) << "document = " << m_dm->getNameFile() << std::endl
         << std::setw(15) << "mode = "     << m_mode << std::endl
         << std::setw(15) << "topvol = "   << std::string(m_vol->getName())  << std::endl;
+
+     m_idMap->summary(out);
 }
 
 DMmanager::~DMmanager() {        delete m_dm;    }
