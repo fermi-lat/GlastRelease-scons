@@ -17,6 +17,8 @@
 #include "GaudiKernel/ObjectVector.h"
 #include "idents/VolumeIdentifier.h"
 
+#include "CLHEP/Geometry/Vector3D.h"
+
 /*!
 * \class McTkrStrip
 * \author T. Burnett
@@ -42,12 +44,15 @@ namespace Event {
     
     //! constructor with plane id.
     McTkrStrip(idents::VolumeIdentifier id, unsigned int strip,  double e=0,
-        bool noise=0, hitList hits = hitList(0) )
+        bool noise=0, hitList hits = hitList(0), 
+        double deltaX=0, double deltaY=0)
         : m_planeId(id)
         , m_strip(strip)
         , m_energy(e)
         , m_noise(noise)
-        , m_hits(hits) {};
+        , m_hits(hits) 
+        , m_deltaX(deltaX)
+        , m_deltaY(deltaY) {};
     //! Destructor
     virtual ~McTkrStrip() {};
         
@@ -85,6 +90,12 @@ namespace Event {
     //! access to the strip number
     unsigned int getStripNumber()const { return m_strip; }
 
+    //! access to alignment translation
+    HepVector3D getDelta()const { return HepVector3D(m_deltaX, m_deltaY, 0.0); }
+    
+    double getDeltaX() const {return m_deltaX; }
+    double getDeltaY() const {return m_deltaY; }
+
     //! Serialize the object for reading
     virtual StreamBuffer& serialize( StreamBuffer& s );
     //! Serialize the object for writing
@@ -107,6 +118,10 @@ namespace Event {
 
     //! list of pointers to hits constributing to this strip
     hitList m_hits;
+
+    //! Alignment offset of this strip
+    double m_deltaX;
+    double m_deltaY;
   };
     
     
