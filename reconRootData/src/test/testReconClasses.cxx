@@ -367,8 +367,14 @@ int checkTkrCluster(const TkrCluster *cluster, UInt_t ievent, UInt_t icluster) {
 		std::cout << "TkrCluster Tower Y number is wrong: " << tkrId.getTowerY() << std::endl;
 		return -1;
 	}
-	if ( !floatInRange(cluster->getToT(), f) ) {
-		std::cout << "TkrCluster ToT is wrong: " << cluster->getToT() << std::endl;
+
+    if (cluster->getRawToT() != 50) {
+        std::cout << "TkrCluster rawToT is wrong: " << cluster->getRawToT() << std::endl;
+        return -1;
+    }
+
+	if ( !floatInRange(cluster->getMips(), f) ) {
+		std::cout << "TkrCluster ToT is wrong: " << cluster->getMips() << std::endl;
 		return -1;
 	}
 	TVector3 pos = cluster->getPosition();
@@ -709,7 +715,7 @@ int read(char* fileName, int numEvents) {
     std::cout << "Opened the ROOT file for reading" << std::endl;
     
     UInt_t ievent;
-    for (ievent = 0; ievent < numEvents; ievent++) {
+    for (ievent = 0; ievent < (UInt_t) numEvents; ievent++) {
         t->GetEvent(ievent);
         std::cout << "ReconEvent ievent = " << ievent << std::endl;
         evt->Print();
@@ -839,11 +845,12 @@ int write(char* fileName, int numEvents) {
             UInt_t strip0 = 4;
             UInt_t stripf = 10;
             TVector3 pos(f, 2.*f, 3.*f);
-			Double_t tot = f;
+            UInt_t rawTot = 50;
+			Double_t tot =  f;
 			UInt_t flag = 1;
 			UInt_t tower = 8;
             UInt_t nBad  = 0;
-            TkrCluster *cluster = new TkrCluster(tkrId, strip0, stripf, pos, tot, flag, nBad);
+            TkrCluster *cluster = new TkrCluster(tkrId, strip0, stripf, pos, rawTot, tot, nBad, flag);
             tkrRec->addCluster(cluster);
         }
 

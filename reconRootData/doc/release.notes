@@ -1,4 +1,5 @@
 /** @file release.notes  package reconRootData  package manager:H.Kelly @verbatim
+v5r3p0    07-Feb-05  : LSR fix test program
 v5r3      07-Feb-05  : LSR redo TkrCluster
 v5r2p1    25-Jan-05  : LSR fix test program, and warnings
 v5r2      24-Jan-05  : LSR Mods for TkrCluster
