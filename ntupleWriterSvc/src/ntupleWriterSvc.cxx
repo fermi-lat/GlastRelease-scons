@@ -16,7 +16,18 @@
 #include <vector>
 #include <stdlib.h>
 
+#ifdef WIN32
+#include <float.h> // used to check for NaN
+#else
+#include <math.h>
+#endif
+
+// Storage location for ntuples within the TDS
 static std::string tupleRoot("/NTUPLES/");
+
+// A value to insert into the ntuple when NaN or inf is
+// passed in to be written
+static float badValue = -99.0;
 
 unsigned int ntupleWriterSvc::m_tupleCounter;
 
@@ -194,7 +205,12 @@ StatusCode ntupleWriterSvc::addValue(const char *tupleName, const char *item, co
         log << MSG::ERROR << "failed to retrieve our ntuple item " << endreq;
         return sc;
     }
-    ntItem = val;
+    if (!isFinite(val)) {
+        log << MSG::INFO << "Attempt to add a non-finite value, inserting -99 instead" << endreq;
+        ntItem = badValue;
+    } else {
+        ntItem = val;
+    }
 
     return sc;
 }
@@ -214,7 +230,12 @@ StatusCode ntupleWriterSvc::addItem(const char *tupleName, const char *item, con
         if (sc.isFailure()) {
             log << MSG::INFO << "Adding a new item to the ntuple " << item << endreq;
             m_nt->addItem(item, ntItem);
-            ntItem = val;
+            if (!isFinite(val)) {
+                log << MSG::INFO << "Attempt to add a non-finite value, inserting -99 instead" << endreq;
+                ntItem = badValue;
+            } else {
+                ntItem = val;
+            }
             sc = StatusCode::SUCCESS;
         } else {
             // Otherwise, this item is already in the ntuple and we are adding a new row
@@ -225,4 +246,14 @@ StatusCode ntupleWriterSvc::addItem(const char *tupleName, const char *item, con
     }
 
     return sc;
+}
+
+int ntupleWriterSvc::isFinite(float val) {
+
+#ifdef WIN32 
+    return (_finite(val));  // Win32 call available in float.h
+#else
+    return (isfinite(val)); // gcc call available in math.h
+#endif
+
 }

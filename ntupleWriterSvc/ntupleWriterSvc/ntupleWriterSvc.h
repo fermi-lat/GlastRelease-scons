@@ -15,7 +15,8 @@
 //forward declarations
 template <class TYPE> class SvcFactory;
 
-/*!  
+/*!  \class ntupleWriterSvc
+\brief A service that handles the ins and outs of writing to a ROOT ntuple
 */
 class ntupleWriterSvc :  public Service, virtual public IIncidentListener,
                         virtual public INTupleWriterSvc
@@ -44,6 +45,9 @@ public:
 
    /// add a new item to an ntuple
    virtual StatusCode addItem(const char *tupleName, const char *item, const float val);
+
+   /// check for NaN and infinity
+   int isFinite(float val);
 
 protected: 
 
