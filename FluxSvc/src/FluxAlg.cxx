@@ -89,7 +89,16 @@ StatusCode FluxAlg::execute()
     // have the flux service create parameters of an incoming particle 
     //
     
-    m_flux->generate();
+    // if nothing has changed, then use the existing m_flux,
+    //but if the "current" IFlux is not the same as the one we have now,
+    //then change our m_flux pointer to be the new one.
+
+    if(m_fluxSvc->currentFlux() == m_flux){
+        m_flux->generate();
+    }else{
+        m_flux = m_fluxSvc->currentFlux();
+        m_flux->generate();
+    }
     
     HepPoint3D p = m_flux->launchPoint();
     HepPoint3D d = m_flux->launchDir();
