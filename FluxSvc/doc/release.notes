@@ -3,6 +3,7 @@
 
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
+ * 08-Mar-03  v6r3p2 THB   implement both angles, get backoff distance larger.
  * 06-Mar-03  v6r3p1 THB   get the rocking transformation correct
  * 01-Mar-03  v6r3   THB   Fix up doxygen, bug in SurfaceMuons
  * 27-Feb-03  v6r2   THB   *  Added surface muon 
