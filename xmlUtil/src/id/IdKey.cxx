@@ -1,6 +1,7 @@
 // $Header$
 
 #include "xmlUtil/id/IdKey.h"
+#include <assert.h>
 
 namespace {
   static const unsigned int maxVal = 254;
