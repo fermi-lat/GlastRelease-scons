@@ -94,9 +94,10 @@ int main()
 
   // Now lets do some queries
 
+  std::vector< Relation<FakeOne, FakeTwo>* >::iterator i;
+
   // What are all hotels visited by person1 (Jack Tripper)?
   std::vector< Relation<FakeOne, FakeTwo>* > locs = tab.getRelByFirst(person1);
-  std::vector< Relation<FakeOne, FakeTwo>* >::iterator i;
   
   std::cout << std::endl << person1->name << std::endl;
   for (i = locs.begin(); i != locs.end(); i++)
@@ -115,7 +116,38 @@ int main()
       std::cout << "Name: "     << (*i)->getFirst()->name 
                 << "     ssn: " << (*i)->getFirst()->ssn   << std::endl;
     }
+
+
+  // Now we change a relation already inserted
   
+  locs.clear();
+  
+  locs = tab.getRelByFirst(person1);
+ 
+  for (i = locs.begin(); i != locs.end(); i++)
+    {
+      (*i)->setFirst(0);
+    }
+  
+  std::cout << std::endl << "Jack Tripper set to null"  << std::endl;  
+
+  // Let's see the result oh the previous query after this change. We have to
+  // take care about null pointers now.
+
+  pers.clear();
+  pers = tab.getRelBySecond(location2);
+
+  std::cout << "Number of relations = " << pers.size() << std::endl;   
+
+  std::cout << std::endl << location2->address << std::endl;
+  for (i = pers.begin(); i != pers.end(); i++)
+    {
+      if ((*i)->getFirst())
+        std::cout << "Name: "     << (*i)->getFirst()->name 
+                  << "     ssn: " << (*i)->getFirst()->ssn   << std::endl;
+    }
+  
+
   // Using the TDS, one can finally register the collection of relations:
   // SomeSvc()->registerObject("/Event/MC/RelFakeOneFakeTwo",
   //   tab.getAllRelations());

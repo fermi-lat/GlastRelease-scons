@@ -47,10 +47,12 @@ public:
     Relation(T1* obj1, T2* obj2): m_first(obj1), m_second(obj2) {}
     Relation(T1* obj1, T2* obj2, std::string info);
     Relation(T1* obj1, T2* obj2, std::vector<std::string> infos);
-    
+
+    void setFirst(T1* obj1) { m_first.setData(obj1);}
     const T1* getFirst() const {return m_first.getData();} 
     T1* getFirst() { return m_first.getData();}
 
+    void setSecond(T2* obj2) { m_second.setData(obj2);}
     const T2* getSecond() const {return m_second.getData();} 
     T2* getSecond() { return m_second.getData();}    
 
