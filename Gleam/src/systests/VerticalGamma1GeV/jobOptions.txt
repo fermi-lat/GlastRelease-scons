@@ -33,8 +33,8 @@ digiRootWriterAlg.digiRootFile = "digi.root";
 reconRootWriterAlg.reconRootFile = "recon.root";
 
 
-FluxSvc.source_lib = {"$(USERALGROOT)/src/test_sources.xml"};
-FluxAlg.source_name="gamma_test";
+FluxSvc.source_lib = {"$(GLEAMROOT)/src/systests/test_sources.xml"};
+FluxAlg.source_name="gamma_test_vertical_1GeV";
 ApplicationMgr.EvtMax = 5000;
 
 

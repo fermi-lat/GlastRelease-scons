@@ -53,29 +53,20 @@ void RootTreeAnalysis::HistDefine() {
 void RootTreeAnalysis::DigiAcdHistDefine() {};
 void RootTreeAnalysis::DigiTkrHistDefine() {};
 
-void RootTreeAnalysis::ReconCalHistDefine() {};
 void RootTreeAnalysis::ReconTkrHistDefine() {};
 void RootTreeAnalysis::ReconAcdHistDefine() {};
+
+#include "ReconCalFragment.cxx"
 
 
 void RootTreeAnalysis::DigiAcd() {};
 
 void RootTreeAnalysis::DigiTkr() {};
 
-void RootTreeAnalysis::ReconCal() {};
-
 void RootTreeAnalysis::ReconTkr() {};
 
 void RootTreeAnalysis::ReconAcd() {};
 
-/* Process the Recon Data
-Called by Go()
-*/
-void RootTreeAnalysis::ReconAcd() {};
-
-void RootTreeAnalysis::ReconTkr() {};
-
-void RootTreeAnalysis::ReconCal() {};
 
 /* Event Loop
 All Analysis goes here

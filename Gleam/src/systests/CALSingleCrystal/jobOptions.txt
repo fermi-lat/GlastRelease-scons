@@ -120,12 +120,13 @@ CalDigiAlg.taperToolName = "OnePlusExpTaper";
 TriggerAlg.mask = 0; // all bits on by default
 
 
-ApplicationMgr.HistogramPersistency = "ROOT";
+// ApplicationMgr.HistogramPersistency = "ROOT";
 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel      = 2;
 
-#include "$GLEAMROOT/src/guiOptions.txt"
+// #include "$GLEAMROOT/src/guiOptions.txt"
 
 
 // select one of the following 
@@ -151,7 +152,7 @@ digiRootWriterAlg.digiRootFile = "digi.root";
 reconRootWriterAlg.reconRootFile = "recon.root";
 
 
-FluxSvc.source_lib = {"$(USERALGROOT)/src/test_sources.xml"};
+FluxSvc.source_lib = {"$(GLEAMROOT)/src/systests/test_sources.xml"};
 FluxAlg.source_name="electron_patch_SingleCDE";
 ApplicationMgr.EvtMax = 5000;
 
@@ -161,4 +162,3 @@ ApplicationMgr.EvtMax = 5000;
 // End of job options file
 //
 //##############################################################
-
