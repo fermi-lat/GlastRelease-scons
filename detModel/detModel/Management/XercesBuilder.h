@@ -37,9 +37,9 @@ namespace detModel{
 
     virtual ~XercesBuilder();
   
-    /** This method initialize the parser 
+    /** This method parses the xml input into in-memory DOM representation
      */
-    virtual void parseFile(std::string nameFile);
+    virtual bool parseFile(std::string nameFile);
     /**
      * This method implement the virutal method of Builder and builds the
      * sections part of the hierarchy, putting it in the private pointer currentSections

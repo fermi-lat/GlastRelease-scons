@@ -52,22 +52,24 @@ namespace detModel{
     delete m_docClient;
   }
 
-  void XercesBuilder::parseFile(std::string nameFile){
+  bool XercesBuilder::parseFile(std::string nameFile){
 //    unsigned int iSec;
     xmlUtil::GDDDocMan* pGDDMan = xmlUtil::GDDDocMan::getPointer();
     
-    pGDDMan->parse(nameFile);
+    bool parseOk = pGDDMan->parse(nameFile);
     
-    /// We start detModel stuff retriving the manager
+    /// We start detModel stuff retrieving the manager
     Manager* man = Manager::getPointer();
 
     /// We point to the current Gdd
     currentGdd = man->getGdd();
   
     /// Set some info on the parsed file
-    currentGdd->setCVSid(pGDDMan->getCVSid());
-    currentGdd->setDTDversion(pGDDMan->getDTDversion());
-    // currentGdd->setDTDversion(xml::Dom::getAttribute(docElt, "DTDversion"));
+    if (parseOk) {
+      currentGdd->setCVSid(pGDDMan->getCVSid());
+      currentGdd->setDTDversion(pGDDMan->getDTDversion());
+    }
+    return parseOk;
   }  
 
 

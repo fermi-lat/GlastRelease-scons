@@ -33,7 +33,7 @@ namespace detModel{
 
     /** This method start the parse of the xml file by the builder.
      */
-    void build(buildType);
+    bool build(buildType);
 
     /// This method gives back the actual mode for choice elements
     std::string getMode(){return manMode;};

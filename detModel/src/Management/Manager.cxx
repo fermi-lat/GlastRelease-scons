@@ -43,9 +43,10 @@ namespace detModel{
   
   }
 
-  void Manager::build(buildType b) 
+  bool Manager::build(buildType b) 
   { 
-    manBuilder->parseFile(getNameFile());
+    if (!manBuilder->parseFile(getNameFile())) return false;
+
     manGdd = manBuilder->getGdd();
   
     switch(b)
@@ -70,6 +71,7 @@ namespace detModel{
 	break;
 
       }
+    return true;
   }
 
   void Manager::startVisitor(Visitor* v)
