@@ -2,6 +2,7 @@
  * package Gleam
  * package manager:T.Burnett
 
+ * v2r0  09-may-02 THB   conversion to Event
  * v1r3  09-may-02 THB a few more small changes!
     use GlastDigi        v2r7
     use GlastSvc         v7r3
