@@ -25,15 +25,38 @@
 static SvcFactory<CalibMySQLCnvSvc>          CalibMySQLCnvSvc_factory;
 const ISvcFactory& CalibMySQLCnvSvcFactory = CalibMySQLCnvSvc_factory;
 
+// Local utility to translate calibration quality list to bit map
+namespace {
+  unsigned int toQualityMask(std::vector<std::string>& qualities) {
+    using calibUtil::Metadata;
+
+    unsigned int mask = 0;
+    unsigned n = qualities.size();
+
+    for (unsigned i = 0; i < n; i++) {
+      std::string iString = qualities[i];
+      if (iString.size() < 3) continue;
+      iString.resize(3);
+      if (iString == "PRO") mask |= Metadata::LEVELProd;
+      else if (iString =="DEV") mask |= Metadata::LEVELDev;
+      else if (iString =="TES") mask |= Metadata::LEVELTest;
+      else if (iString =="SUP") mask |= Metadata::LEVELSuperseded;
+    }
+    return mask;
+  }
+}
+
 CalibMySQLCnvSvc::CalibMySQLCnvSvc( const std::string& name, ISvcLocator* svc)
   : ConversionSvc (name, svc, MYSQL_StorageType)
-    , m_meta(0), m_useEventTime(true),m_enterTimeStart(0), m_enterTimeEnd(0)
+    , m_meta(0), m_useEventTime(true),m_enterTimeStart(0), m_enterTimeEnd(0),
+    m_qualityMask(0)
 {
   declareProperty("Host", m_host = "*");
   declareProperty("UseEventTime", m_useEventTime = true);
   declareProperty("EnterTimeEnd", m_enterTimeEndString = std::string("") );
   declareProperty("EnterTimeStart", m_enterTimeStartString = std::string("") );
   declareProperty("DbName", m_dbName = std::string("calib") );
+  declareProperty("QualityList", m_qualityList);
 }
 
 CalibMySQLCnvSvc::~CalibMySQLCnvSvc(){ }
@@ -130,6 +153,16 @@ StatusCode CalibMySQLCnvSvc::initialize()
   }
   log << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
 
+  // Translate list of calibration quality names to bit mask form used 
+  // by calibUtil::Metadata::findBest     Defaults to PROD + DEV for now
+  // (that was old fixed value)
+  m_qualityMask = toQualityMask(m_qualityList);
+  if (!m_qualityMask) {
+    m_qualityMask = calibUtil::Metadata::LEVELProd |
+      calibUtil::Metadata::LEVELDev;
+  }
+
+
   if (!m_useEventTime) {  // special diagnostic mode
     std::string defStart("2003-09-01");
     if (m_enterTimeStartString.size() == 0) {
@@ -173,8 +206,9 @@ StatusCode CalibMySQLCnvSvc::initialize()
     return MSG::ERROR;
   }
   // Probably should get this value from job options. 
-  m_calibLevelMask = calibUtil::Metadata::LEVELProd + 
-    calibUtil::Metadata::LEVELDev;
+  // Now we do.  See m_qualityMask, m_qualityList
+  //  m_calibLevelMask = calibUtil::Metadata::LEVELProd + 
+  //    calibUtil::Metadata::LEVELDev;
 
   log << MSG::INFO << "Specific initialization completed" << endreq;
   return sc;
@@ -462,11 +496,11 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
   calibUtil::Metadata::eRet ret;
   if (m_useEventTime) {
     ret = m_meta->findBest(&ser, cType, CalibData::CalibTime(time),
-                           m_calibLevelMask, instrName, flavor);
+                           m_qualityMask, instrName, flavor);
   }
   else {
     ret = m_meta->findSoonAfter(&ser, cType, m_enterTimeStart, 
-                                m_enterTimeEnd, m_calibLevelMask, 
+                                m_enterTimeEnd, m_qualityMask, 
                                 instrName, flavor);
   }
   if (ret != calibUtil::Metadata::RETOk) {
@@ -605,11 +639,11 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
   calibUtil::Metadata::eRet ret;
   if (m_useEventTime) {
     ret = m_meta->findBest(&ser, cType, CalibData::CalibTime(time),
-                           m_calibLevelMask, instr, flavor);
+                           m_qualityMask, instr, flavor);
   }
   else {
     ret = m_meta->findSoonAfter(&ser, cType, m_enterTimeStart, m_enterTimeEnd,
-                                m_calibLevelMask, instr, flavor);
+                                m_qualityMask, instr, flavor);
   }
   if (ret != calibUtil::Metadata::RETOk) {
     log << MSG::ERROR << "Could not access MySQL database" << endreq;

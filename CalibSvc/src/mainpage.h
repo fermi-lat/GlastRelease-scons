@@ -116,6 +116,15 @@
 
   The service CalibMySQLCnvSvc has the following job options properties:
   <dl>
+   <dt> QualityList</dt> <dd>list of calibration quality descriptors
+        deemed acceptable for this job.  The first 3 characters of each
+        descriptor must match one of 
+        "PRO" (production), "DEV", "TEST", or "SUP" (superseded).
+        If not supplied, defaults to {"PROD", "DEV"}.  Ordering within
+        the list is ignored.  Production (if requested and present in the
+        database) is always preferred to dev, dev to test, and
+        test to superseded.
+       </dd> 
   <dt> Host </dt>        <dd>defaults to "*", meaning "use default MySQL
                              host" </dd>
   <dt> UseEventTime</dt>         <dd>defaults to "true". If set to "false", 

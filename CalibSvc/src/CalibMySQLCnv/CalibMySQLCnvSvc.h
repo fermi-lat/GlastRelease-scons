@@ -165,6 +165,11 @@ class CalibMySQLCnvSvc : public ConversionSvc,
   // CalibDataSvc in a separate package.
   IInstrumentName*  m_instrSvc;
 
+  /// Job option parameter; individual items may take on values 
+  /// "PROD", "DEV", "TEST", "SUPSED"  (look only at first 3 characters)
+  std::vector<std::string> m_qualityList;
+  unsigned int             m_qualityMask;
+
 };
 #endif   
 
