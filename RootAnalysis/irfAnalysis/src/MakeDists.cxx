@@ -63,24 +63,15 @@ void MakeDists::project(const std::string &branchName,
          h->GetXaxis()->SetTitle(branchName.c_str());
          std::cout << "\t" << title.str() << "... ";
          m_tree->Project(h->GetName(), branchName.c_str(),
-                         goodEvent && energy && angle);
+             goodEvent && energy && angle);
 
-         if (!m_makeProfile) {
-            double scale = h->Integral();
-            if (scale > 0) { 
-               h->Scale(1./scale);
-            }
-            double mean = h->GetMean();
-            double rms = h->GetRMS();
-            std::cout << "count " << scale << ", "
-                      << "mean " << mean << ", "
-                      << "rms " << rms;
-         }
-         std::cout << std::endl;
+         std::cout << "count " << h->Integral() << ", "
+             << "mean " <<  h->GetMean()<< ", "
+             << "rms " << h->GetRMS() << std::endl;
 
          if (fitter) {
-            fitter->applyFit(h);
-            fitter->writeFitPars();
+             fitter->applyFit(h);
+             fitter->writeFitPars();
          }
 
 // Move to the summary file.
@@ -98,13 +89,13 @@ void MakeDists::draw(const std::string &ps_filename,  bool logy, Fitter* fitter)
     if( fitter!=0) gStyle->SetOptFit(111);
 
     TCanvas c;
-    divideCanvas(c,4,2, std::string("Plots from ")
-                 +summary_filename());
 
     TPostScript ps((output_file_root()+ ps_filename).c_str(), 112);
 
     for( int i=0; i<angle_bins; ++i){
        ps.NewPage();
+        divideCanvas(c,4,2, std::string("Plots from ")
+                 +summary_filename());
        for(int j=0; j<energy_bins; ++j){
           c.cd(j+1);
           gPad->SetRightMargin(0.02);
@@ -122,6 +113,15 @@ void MakeDists::draw(const std::string &ps_filename,  bool logy, Fitter* fitter)
                        << hist_name(i,j) << std::endl;
              return;
           }
+
+          if (!m_makeProfile) {
+            double scale = h->Integral();
+            if (scale > 0) { 
+                h->Sumw2(); // needed to preserve errors
+               h->Scale(1./scale);
+            }
+          }
+
           // now add overflow to last bin
           h->SetBinContent(m_nbins, h->GetBinContent(m_nbins)
                            +h->GetBinContent(m_nbins+1));
