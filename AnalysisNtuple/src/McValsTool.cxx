@@ -241,7 +241,6 @@ StatusCode McValsTool::calculate()
         // Get track energies and event energy
         Event::TkrTrackColConPtr pTrack1 = pTracks->begin();
         const Event::TkrTrack*   track_1 = *pTrack1;
- //       const Event::TkrKalFitTrack* track_1 = dynamic_cast<const Event::TkrKalFitTrack*>(trackBase);
         
         double e1 = track_1->getInitialEnergy();
         double gamEne = e1; 
@@ -250,7 +249,6 @@ StatusCode McValsTool::calculate()
             pTrack1++;
             const Event::TkrTrack* track_2 = *pTrack1;
             e2 = track_2->getInitialEnergy();
-//            e2 = track_2->getEnergy();
             gamEne += e2;
         }
         
@@ -301,7 +299,6 @@ StatusCode McValsTool::calculate()
             }
         } 
     }
-    
     return sc;
 }
 

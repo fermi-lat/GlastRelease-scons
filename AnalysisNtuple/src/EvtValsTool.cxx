@@ -423,12 +423,12 @@ StatusCode EvtValsTool::calculate()
         EvtVtxEDoca = vtxDoca/(1.55 - .685*logE+ .0851*logE2) 
                                 / (2.21 + 3.01*tkr1ZDir + 1.59*tkr1ZDir2);
     }
-
+/*
     double vtxHeadSep;
     if (m_pVtxTool->getVal("VtxHeadSep", vtxHeadSep, firstCheck).isSuccess()) {
         EvtVtxEHeadSep = vtxHeadSep/ (2.83 - .94*logE + .108*logE2) 
                                 / (2.45 + 3.34*tkr1ZDir + 1.58*tkr1ZDir2);
     }
-
+*/
     return sc;
 }
