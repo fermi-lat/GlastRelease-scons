@@ -100,24 +100,30 @@ namespace calibUtil {
     };
       
     /// Constructor keeps track of table of interest
-    Metadata();
+    Metadata(std::string host="*",
+             std::string table="*");
 
     ~Metadata();
 
 
     /// Add setting of creator column to row-in-progress
-    eRet addCreator(std::string creator);
+    eRet addCreator(const std::string& creator);
 
     /// Add description of input to cal procedure to row-in-progress
-    eRet addInputDesc(std::string desc);
+    eRet addInputDesc(const std::string& desc);
 
     /// Add notes column to row-in-progress
-    eRet addNotes(std::string notes);
+    eRet addNotes(const std::string& notes);
 
     /// Set validity interval: period over which calibration data
     /// is applicable.
     eRet addValidInterval(facilities::Timestamp startTime, 
                           facilities::Timestamp endTime);
+
+    /// Add flavor column to row-in-progress.  If this method is not
+    /// invoked, the new row will have the default value for flavor,
+    /// "VANILLA"
+    eRet addFlavor(const std::string& flavor);
 
     /** Explicit clear of record.  Must have a call to either insertRecord
      *  (to actually write the record to the database) or clearRecord 
@@ -139,6 +145,8 @@ namespace calibUtil {
                                      better than "dev" better than "test"
                                      better than "superseded")
                  @param instrument   e.g. LAT, EM, CU,...
+                 @param flavor       optionally specify non-standard
+                                     calibration flavor 
                  @return             status. Should be RETOk.
                                      
 
@@ -149,7 +157,8 @@ namespace calibUtil {
                   eCalibType calibType, 
                   const facilities::Timestamp& timestamp,
                   unsigned int levelMask, 
-                  eInstrument instrument);
+                  eInstrument instrument,
+                  const std::string& flavor="VANILLA");
     /** Return serial number for calibration which is best match to
         criteria, using strings for calibType and instrument arguments.
         This method may be useful for development when a particular
@@ -164,6 +173,8 @@ namespace calibUtil {
                                      better than "dev" better than "test"
                                      better than "superseded")
                  @param instrument   e.g. LAT, EM, CU,...
+                 @param flavor       optionally specify non-standard
+                                     calibration flavor 
                  @return             status. Should be RETOk.
                                      
 
@@ -174,7 +185,8 @@ namespace calibUtil {
                   const std::string& calibType, 
                   const facilities::Timestamp& timestamp,
                   unsigned int levelMask, 
-                  const std::string& instrument);
+                  const std::string& instrument,
+                  const std::string& flavor="VANILLA");
 
     const std::string* const getCalibTypeStr(eCalibType cType);
     const std::string* const getDataFmtStr(eDataFmt fmt);
@@ -293,13 +305,15 @@ namespace calibUtil {
       eValid = 2,
       eInputDesc = 4,
       eComment = 8,
-      eCreator = 0x10 };
+      eFlavor  = 0x10,
+      eCreator = 0x20 };
 
     /// Constant bit mask indicating all necessary fields have been set
     static const unsigned int s_rowReady;
 
     std::string m_row;     // place to keep row as it's being built
     unsigned int m_rowStatus;
+    std::string  m_host;
     std::string  m_table;
   };
 }
