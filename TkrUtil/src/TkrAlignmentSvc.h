@@ -27,7 +27,7 @@
 namespace {
     const int ntypes = 6;
     const std::string itemType[ntypes] = {"TOWER", "TRAY", "FACE", "LADDER", "WAFER", "NONE"};
-    enum aType {TOWER, TRAY, FACE, LAYER, LADDER, WAFER, NONE};
+    enum aType {TOWER, TRAY, FACE, LADDER, WAFER, NONE};
 }
 
 /// A small class to define an alignment const item
