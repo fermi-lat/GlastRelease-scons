@@ -6,7 +6,7 @@
 
 ApplicationMgr.ExtSvc   = { "GlastDetSvc", "EventSelector" , "EventCnvSvc" };
 
-ApplicationMgr.DLLs   = { "GlastSvc" };
+ApplicationMgr.DLLs   = { "GlastSvc", "CalRecon" };
 
 //--------------------------------------------------------------
 // Private Application Configuration options

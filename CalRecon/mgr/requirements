@@ -5,27 +5,20 @@ branches src mgr doc
 
 use GlastSvc
 
-use reconstruction v3
+use reconstruction v3r1
 
-# don't make for now
-# library CalRecon  *.cxx ../CalRecon/*.h  
+library CalRecon  *.cxx ../CalRecon/*.h  
 
 macro CalRecon Dir  "$(CALRECONROOT)/$(DEBUGDIR)"
 
-macro CalRecon_linkopts   " " \
-      LinuxStatic         "$(CalReconDir)/libCalRecon.a -u CalRecon_loadRef" \
-      VisualCStatic       "$(CalReconDir)/libCalRecon.lib /include:_CalRecon_loadRef"
+macro CalRecon_linkopts   " " 
+macro CalRecon_stamps     
 
-macro CalRecon_stamps     ""                              \
-      LinuxStatic         "$(CalReconDir)/CalRecon.stamp" \
-      LinuxStaticdbx      "$(CalReconDir)/CalRecon.stamp" \
-      VisualCStatic       "$(CalReconDir)/CalRecon.stamp"
+set   CalReconShr           "${CALRECONROOT}/${DEBUGDIR}/libCalReconSvc"
 
-
-set   CalReconShr           "${GLASTSVCROOT}/${DEBUGDIR}/libGlastSvc"
+include_path $(CALRECONROOT)
 
 private
-include_path $(CALRECONROOT)
 
 # this for MSVCC, to fix incompatibilities, turn off warnings
 macro_append cppflags ""\
@@ -38,7 +31,6 @@ macro CalRecon_shlibflags   "$(componentshr_linkopts) $(use_linkopts) $(Win32Deb
 # build this for non-shareable testing
 
 application test \
-        *.cxx ../CalRecon/*.h  \
         test/*.cxx test/*.h test/*.txt
 
 

@@ -11,8 +11,7 @@
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 
-#include "reconstruction/data/GlastData.h"
-#include "reconstruction/ReconData.h"
+//#include "reconstruction/ReconData.h"
 #include "reconstruction/GlastTuple.h"
 #include "reconstruction/PrintReconData.h"
 #include "GlastEvent/Raw/TdCsIData.h"
@@ -69,7 +68,7 @@ StatusCode CalRecoAlg::execute() {
     
 
     // create a GlastData object
-    GlastData data;
+    //GlastData data;
 
     // fill it from the IRF (FAILS)
     //m_detSvc->accept(data);
@@ -102,12 +101,12 @@ StatusCode CalRecoAlg::execute() {
 
     
     // see what is there
-    data.printOn(std::cout);
+    //data.printOn(std::cout);
 
     // create the recon object from the reconstrution package and pass data to it.
 
     CalRecon recon;
-    recon.reconstruct(data.getCsIData());
+    recon.reconstruct(newData);
 
     // print out the  tuple
     recon.accept(PrintReconData(std::cout));
