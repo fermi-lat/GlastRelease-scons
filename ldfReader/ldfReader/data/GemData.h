@@ -157,6 +157,8 @@ private:
 
         const EventSummaryCommon& summary() const { return m_summary; };
         void setSummary(const EventSummaryCommon &summary) { m_summary = summary; };
+       void setExist() { m_exist = true; };
+       bool exist() const { return m_exist; };
 
         void initLength(unsigned long length) { m_lenInBytes = length; };
         unsigned long lenInBytes() const { return m_lenInBytes; };
@@ -180,6 +182,7 @@ private:
 
         // Store the event sequence number for this contribution
         EventSummaryCommon m_summary;
+        bool m_exist;
 
         unsigned long m_lenInBytes;
     };
