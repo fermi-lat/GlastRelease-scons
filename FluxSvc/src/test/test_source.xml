@@ -1,0 +1,27 @@
+<source_library title="fluxsvc test sources">
+
+    <!-- test the beam radius -->
+
+    <source name="fat_pencil" >  
+	<spectrum escale="GeV">
+            <particle name="mu+"> <energy e="2"/> </particle>
+            <direction  />
+            <launch_point beam_radius="10"/>
+        </spectrum>
+    </source>
+    
+    <source name="random_position">
+        <spectrum escale="GeV"> 
+            <particle name="gamma"> <energy e="0.1"/> </particle>
+            <direction />
+        </spectrum>
+    </source>
+
+    <source name="testpatch">
+        <spectrum escale="GeV">
+            <particle name="mu+"><energy e="3"/></particle>
+            <direction />
+            <patch />
+        </spectrum>
+    </source>
+</source_library>
