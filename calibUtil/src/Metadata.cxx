@@ -1,5 +1,8 @@
 // $Header$
 
+#ifdef  WIN32
+#include <windows.h>
+#endif
 
 #include "calibUtil/Metadata.h"
 #include "facilities/Util.h"

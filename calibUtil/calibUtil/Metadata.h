@@ -6,10 +6,11 @@
 #include "facilities/Timestamp.h"
 //#include <my_global.h>
 //#include <mysql.h>
-
+/*
 #ifdef  WIN32
 #include <windows.h>
 #endif
+*/
 
 typedef struct st_mysql MYSQL;
 
