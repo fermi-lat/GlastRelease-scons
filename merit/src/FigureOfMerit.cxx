@@ -42,7 +42,7 @@ private:
 //=============================================================================
 class FOMelapsed : public Analyze {
 public:
-    FOMelapsed(const Tuple&t ): Analyze(t, "EvtTime", "Elapsed time (sec):"), m_total(0),m_last(0) {};
+    FOMelapsed(const Tuple&t ): Analyze(t, "EvtElapsedTime", "Elapsed time (sec):"), m_total(0),m_last(0) {};
     void FOMelapsed::report(std::ostream& out)
     {
         using namespace std;
@@ -361,7 +361,6 @@ FigureOfMerit::FigureOfMerit(const Tuple& t, std::string cut_string)
 
     //need this to add these aliases
     Tuple& tt = const_cast<Tuple&>(t);
-    tt.add_alias( "elapsed_time","EvtTime");
 
     if( !cut_string.empty()) setCuts(cut_string);
 
