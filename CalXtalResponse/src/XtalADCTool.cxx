@@ -371,11 +371,11 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
 
   // set log-accept flags
   lacN = tmpADC[XtalRng(NEG_FACE,LEX8)] >= lacThreshN.getVal();
-  lacP = tmpADC[XtalRng(NEG_FACE,LEX8)] >= lacThreshP.getVal();
+  lacP = tmpADC[XtalRng(POS_FACE,LEX8)] >= lacThreshP.getVal();
   
   if (hitList.size() > 0) {
     lacN = tmpADC[XtalRng(NEG_FACE,LEX8)] >= lacThreshN.getVal();
-    lacP = tmpADC[XtalRng(NEG_FACE,LEX8)] >= lacThreshP.getVal();
+    lacP = tmpADC[XtalRng(POS_FACE,LEX8)] >= lacThreshP.getVal();
   }
 
   //-- ADD PEDS, HARDWARE RANGE CONSTRAINTS --//
