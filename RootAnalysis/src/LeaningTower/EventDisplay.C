@@ -15,40 +15,50 @@
 #include "TF1.h"
 #include "TGraph.h"
 
-TMap* myGeometry = new TMap();
+TFile* myFile;
+TMap* myGeometry;
 
 void EventDisplay(TString="MyRootFile.root", int=0, int=-1);
+bool isGeometry();
 void loadGeometry(TString filename="src/LeaningTower/geometry/stack2geometry.txt");
 double getGeometry(TString layer);
 
+bool isGeometry() { return myGeometry && !myGeometry->IsEmpty(); }
+
+void loadGeometry(TString filename) {
+    if ( isGeometry() ) {
+        cout << myGeometry->GetSize() << endl;
+        myGeometry->DeleteAll();
+        cout << myGeometry->GetSize() << endl;
+    }
+    if ( !myGeometry ) {
+        std::cout << "making NEW geometry map" << std::endl;
+        myGeometry = new TMap();
+    }
+    std::ifstream fin(filename);
+    if ( !fin.is_open() )
+        std::cerr << "ERROR:  File " << filename << " couldn't be opened!" << std::endl;
+    TString layer;
+    TString value;
+    while ( !fin.eof() ) {
+        fin >> layer >> value;
+        if ( fin.good() )
+            myGeometry->Add(new TObjString(layer), new TObjString(value));
+    }
+    fin.close();
+    myGeometry->Print();
+}
+
 double getGeometry(TString layer) {
-    if ( myGeometry->IsEmpty() ) {
+    if ( !isGeometry() ) {
         std::cerr << "ERROR:  Geometry is empty!  Maybe you forgot to load it?" << std::endl;
-        return 1E15;;
+        return 1E15;
     }
     if ( !myGeometry->FindObject(layer) ) {
         std::cerr << "ERROR: Layer " << layer << " not found in geometry map!" << std::endl;
         return 1E15;
     }
     return atof(((TObjString*)myGeometry->GetValue(layer))->GetName());
-}
-
-void loadGeometry(TString filename) {
-    if ( !myGeometry->IsEmpty() ) {
-        std::cout << "WARNING: Geometry not empty!  Maybe you filled it before?" << std::endl;
-        return;
-    }
-    std::ifstream fin(filename);
-    TString layer;
-    TString value;
-    while ( 1 ) {
-        fin >> layer >> value;
-        if ( !fin.good() )
-            break;
-        myGeometry->Add(new TObjString(layer), new TObjString(value));
-    }
-    fin.close();
-    myGeometry->Print();
 }
 
 //////////////////////////////////////////////////
@@ -111,11 +121,14 @@ void EventDisplay(TString filename, int firstEvent, int lastEvent)
   bool DISPLAY=true;
   int gap=5;
 
-  //  firstEvent-=1;
-  TFile *myFile = new TFile(filename);
-  TTree *myTree = (TTree*)myFile->Get("Header");
+  if ( !myFile ) {
+      std::cout << "opening new myFile" << std::endl;
+      myFile = new TFile(filename);
+  }
+  TTree *myTree = (TTree*)gDirectory->Get("Header");
   int numEvents = myTree->GetEntries();
   std::cout << "Number of Events: " << numEvents << std::endl;
+
   TCanvas *evDisp = new TCanvas("c1","Event Display", 700, 800);
 
   Int_t EventId;
@@ -151,10 +164,9 @@ void EventDisplay(TString filename, int firstEvent, int lastEvent)
 		<< " RunId: " << RunId
 		<< " TkrTotalNumHits: "  << TkrTotalNumHits
 		<< std::endl;
-      if ( myGeometry->IsEmpty() ) {
-	std::cerr << "ERROR:  Geometry is empty!"
-		  << "  Maybe you forgot to load it?"
-		  << std::endl;
+
+      if ( !isGeometry() ) {
+	std::cerr << "ERROR:  Geometry is empty! Maybe you forgot to load it?" << std::endl;
 	return;
       }
       TMapIter ti(myGeometry);
