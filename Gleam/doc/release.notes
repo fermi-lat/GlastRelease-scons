@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v5r9   THB 15-FEB-05   add CalXtalResponse
 * v5r8p2 THB 31-jan-05   remove all systest files, clean up ^M problem
 * v5r8p1 THB 05-jan-05   Disable IM dependence in merit until new set of trees
 * v5r8   THB 12-sep-04   Add uses for HepRep, clean up jopoptions for it a bit
