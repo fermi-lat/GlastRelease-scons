@@ -142,9 +142,14 @@ StatusCode FluxAlg::initialize(){
     //then this line sets the rocking type, as well as the rocking angle.
     m_fluxSvc->setRockType(m_pointing_mode,m_rocking_angle);
 
+	//output to record the pointing settings
+	log << MSG::INFO << "rocking Mode: " << m_pointing_mode << endreq;
+	log << MSG::INFO << "rocking Angle: " << m_rocking_angle << " degrees" << endreq;
+
     //set the input file to be used as the pointing database, if used
     if(! m_pointing_history_input_file.value().empty() ){
         m_fluxSvc->setPointingHistoryFile(m_pointing_history_input_file.value().c_str());
+		log << MSG::INFO << "Pointing History File used, using rocking mode 6: " << m_pointing_history_input_file.value() << endreq;
     }
 
     if( !m_source_list.value().empty()){
