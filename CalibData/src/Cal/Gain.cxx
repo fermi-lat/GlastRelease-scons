@@ -8,5 +8,6 @@ namespace CalibData {
     
     // check that otherGain isn't 0 (dynamic cast worked)
     m_gain = otherGain->m_gain;
+    m_sig = otherGain->m_sig;
   }
 }

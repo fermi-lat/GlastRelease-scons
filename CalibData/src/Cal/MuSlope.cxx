@@ -8,5 +8,6 @@ namespace CalibData {
     
     // check that otherMuSlope isn't 0 (dynamic cast worked)
     m_muSlope = otherMuSlope->m_muSlope;
+    m_error = otherMuSlope->m_error;
   }
 }
