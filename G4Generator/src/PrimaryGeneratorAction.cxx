@@ -9,6 +9,12 @@
 
 #include "PrimaryGeneratorAction.h"
 
+#include "Event/MonteCarlo/McParticle.h"
+
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/ParticleProperty.h"
+
 #include "G4Event.hh"
 #include "G4ParticleGun.hh"
 #include "G4UImanager.hh"
@@ -39,6 +45,31 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
   delete particleGun;
+}
+
+void PrimaryGeneratorAction::init(Event::McParticle* part, IParticlePropertySvc* ppsvc)
+{
+  // Purpose and Method: this method set the particle by passing an
+  // Event::McParticle pointer; 
+  // Inputs: part is the pointer to the Event::McParticle
+  // Inputs: ppsvc is the pointer to the IParticlePropertySvc
+
+  Event::McParticle::StdHepId hepid= part->particleProperty();
+  ParticleProperty* ppty = ppsvc->findByStdHepID( hepid );
+  std::string name = ppty->particle(); 
+  const HepLorentzVector& pfinal = part->finalFourMomentum();
+  Hep3Vector dir=    pfinal.vect().unit();
+  HepPoint3D p =   part->finalPosition();
+  // note possibility of truncation error here! especially with MeV.
+  double ke =   pfinal.e() - pfinal.m(); 
+  
+  // Set the G4 primary generator
+  // the position has to be expressed in mm
+  // while the energy in MeV
+  setParticle(name);
+  setMomentum(dir);
+  setPosition(p);
+  setEnergy(ke);  
 }
 
 void PrimaryGeneratorAction::setParticle(std::string pname)

@@ -194,34 +194,14 @@ StatusCode G4Generator::execute()
 
   assert(pcol->size()==1); // something wrong: must be only one
   Event::McParticle* primary = pcol->front();
-  Event::McParticle::StdHepId hepid= primary->particleProperty();
-  ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
-  std::string name = ppty->particle(); 
-  const HepLorentzVector& pfinal = primary->finalFourMomentum();
-  Hep3Vector dir=    pfinal.vect().unit();
-  HepPoint3D p =   primary->finalPosition();
-  // note possibility of truncation error here! especially with MeV.
-  double ke =   pfinal.e() - pfinal.m(); 
-  
-    
+
+  // we get the primaryGenerator from the RunManager
   PrimaryGeneratorAction* primaryGenerator = 
     (PrimaryGeneratorAction*)m_runManager->GetUserPrimaryGeneratorAction();
-    
-  // Set the G4 primary generator
-  // the position has to be expressed in mm
-  // while the energy in MeV
-  primaryGenerator->setParticle(name);
-  primaryGenerator->setMomentum(dir);
-  primaryGenerator->setPosition(p);
-  // TODO: this shoule be full energy, but don't know mass yet
-  primaryGenerator->setEnergy(ke);  
 
-  //
-  // create entry in McParticleCol for the primary generator.
-  //
-  G4ParticleDefinition * pdef = primaryGenerator->GetParticleDefinition();
-  HepLorentzVector pin= primaryGenerator->GetFourMomentum();
-
+  // we set the primary particle by passing the pointer of the McParticle to the
+  // primaryGenerator class
+  primaryGenerator->init(primary, m_ppsvc);
 
   McParticleManager::getPointer()->addMcParticle(0,primary);   
   // Run geant4
@@ -245,6 +225,7 @@ StatusCode G4Generator::execute()
     }
   }
 
+  // we save the trajectories if the m_saveTrajectories is true
   if (m_saveTrajectories)
     {
       Event::McTrajectoryList* traj = new Event::McTrajectoryList();  
