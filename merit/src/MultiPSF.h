@@ -1,13 +1,18 @@
-// $Header$
-//
+/** @file MultiPSF.h
+  @brief Definition of the class MultiPSF
+
+$Header$
+*/
 #ifndef MULTIPSF_H
 #define MULTIPSF_H
 
 #include "Analyze.h"
 #include <vector>
 
+/** @class PSFanalysis
+    @brief  Analyzed multiple bins in generated energy for PSF analysis
+*/
 class PSFanalysis;
-// Analyzed multiple bins in generated energy for PSF analysis
 
 class MultiPSF : public Analyze , public std::vector<PSFanalysis*>{
 public:

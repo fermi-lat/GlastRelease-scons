@@ -1,6 +1,7 @@
-// LayerGroup.cxx: implementation of the LayerGroup class.
-//
-// $Id$
+/** @file LayerGroup.cxx
+   @brief implementation of the LayerGroup class.
+   $Id$
+   */
 //////////////////////////////////////////////////////////////////////
 
 #include "LayerGroup.h"
