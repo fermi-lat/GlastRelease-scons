@@ -40,11 +40,14 @@ int main(){
 //    gROOT->Reset();
 
 
-//    TFile f("/common/IRF/root_files/fulltup.root", "update");
-   std::string path = ::getenv("file_root");
-    TFile f((path+"/root_files/fulltup.root").c_str(), "update");
-    TTree *tree = (TTree*)f.Get("1");
-    Int_t nentries=tree->GetEntries();
+    std::string path = ::getenv("file_root");
+    TFile *f = new TFile( (path+"/fulltup.root").c_str(), "update");
+    cout << " newbranches : read file "<< f->GetName() << endl;
+
+    TTree *tree    = (TTree*)f->Get("1");
+    Int_t nentries = (Int_t)tree->GetEntries();
+    cout << "    get tree "<< tree->GetName() <<
+            ", number entries "<<nentries<<endl;
 
     tree_class t(tree);
 #if 0
@@ -63,33 +66,35 @@ int main(){
         //cout<<t.IMgoodCalProb;
 #if 0
         if(t.IMgoodCalProb<0.5){
-            Tag_Id=0.0;
-            DirErr=0.0;
-            ReconZDir=0.0;
-            ReconPhiDir=0.0;
+            Tag_Id      = 0.0;
+            DirErr      = 0.0;
+            ReconZDir   = 0.0;
+            ReconPhiDir = 0.0;
         }
         else if (t.IMvertexProb<0.5||t.VtxAngle==0.0){
             if (t.Tkr1FirstLayer<12.0)
                 Tag_Id=1.0;
             else
                 Tag_Id=3.0;
-            DirErr=t.McTkr1DirErr;
-            ReconZDir=t.Tkr1ZDir;
-            ReconPhiDir=t.Tkr1Phi;
+            DirErr      = t.McTkr1DirErr;
+            ReconZDir   = t.Tkr1ZDir;
+            ReconPhiDir = t.Tkr1Phi;
         }
         else{
             if(t.Tkr1FirstLayer<12.0)
                 Tag_Id=2.0;
             else
                 Tag_Id=4.0;
-            DirErr=t.McDirErr;
-            ReconZDir=t.VtxZDir;
-            ReconPhiDir=t.VtxPhi;
+            DirErr      = t.McDirErr;
+            ReconZDir   = t.VtxZDir;
+            ReconPhiDir = t.VtxPhi;
         }
 #endif
-        // added by THB: define a scale factor for simple division
+        // scale factor for thin and thick Tkr layers
         psf_scale_factor=sqrt(sqr(t.Tkr1ThetaErr)+sqr(t.Tkr1PhiErr));
-        if (t.Tkr1FirstLayer<12.0) psf_scale_factor *= 2.5; else psf_scale_factor*=3.5;
+        if (t.Tkr1FirstLayer<12.0)
+           psf_scale_factor   *= 2.5; 
+        else psf_scale_factor *= 3.5;
 #if 0
         tag->Fill();
         err->Fill();
@@ -102,6 +107,6 @@ int main(){
     }
 
     tree->Write("", TObject::kOverwrite);
-
+    f->Close();
 }
 
