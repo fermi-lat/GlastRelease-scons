@@ -13,7 +13,7 @@
 #include "GlastEvent/TopLevel/Event.h"
 #include "GlastEvent/TopLevel/MCEvent.h"
 #include "GlastEvent/MonteCarlo/McParticle.h"
-#include "GlastEvent/MonteCarlo/McVertex.h"
+
 
 //flux
 #include "FluxSvc.h"
