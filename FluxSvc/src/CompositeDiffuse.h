@@ -39,6 +39,7 @@ private:
     double m_unclaimedFlux; // The amount of the flux "unaccounted for" by the known sources
     double getRandomFlux();
     long double pofi(long double intensity);
+    long double logNlogS(long double flux);
       
     
 };

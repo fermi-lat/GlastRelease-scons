@@ -34,8 +34,8 @@ FluxSource* CompositeDiffuse::event (double time)
     //double mr = rate(EventSource::time());
     double mr = m_totalFlux;
     
-    // do this once if there is just one source, or no rate at all (null source?)
-    if( m_sourceList.size()==1 || mr == 0) {
+    // do this once if there is no source, or no rate at all (null source?)
+    if( m_sourceList.size()==0 || mr == 0) {
         m_recent = m_sourceList.front();
     }else {
         
@@ -149,7 +149,10 @@ long double CompositeDiffuse::pofi(long double intensity){  //this function give
     return p;
 }
 
+long double CompositeDiffuse::logNlogS(long double flux){
 
+return 0.;
+}
 
 
 

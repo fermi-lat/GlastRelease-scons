@@ -229,6 +229,20 @@
         </spectrum>
     </source>
 
+    <source name="truediffusebackground" flux="100.">
+        <spectrum>
+            <particle name="gamma" >
+                <power_law emin="0.010" emax="0.1" gamma="1.0"/>
+            </particle>
+            <solid_angle mincos="-1.0" maxcos="1.0"/>
+        </spectrum>
+    </source>
+
+	<!-- The constructed diffuse source-->
+    <source name="totaldiffuse" flux = "10000.">
+        <nestedSource sourceRef="truediffusebackground"/>
+    </source>
+
 	<!-- background mixture 6 - maximums-->
     <source name="occltest">
         <nestedSource sourceRef="center"/>
