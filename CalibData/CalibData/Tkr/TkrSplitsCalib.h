@@ -2,7 +2,7 @@
 #ifndef CalibData_TkrSplitsCalib_h
 #define CalibData_TkrSplitsCalib_h
 
-#include "CalibData/Tkr/TkrBase.h"
+#include "CalibData/Tkr/OldTkrBase.h"
 #include "CalibData/CalibModel.h"
 #include "CalibData/RangeBase.h"
 #include <vector>
@@ -34,13 +34,13 @@ namespace CalibData {
     unsigned short m_high;
   };
 
-  class TkrSplitsCalib : public TkrBase {
+  class TkrSplitsCalib : public OldTkrBase {
     friend class XmlTkrSplitsCnv;
 
   public:
     TkrSplitsCalib(unsigned nTowerRow, unsigned nTowerCol, 
                    unsigned nTray) : 
-      TkrBase(nTowerRow, nTowerCol, nTray, 0, false) 
+      OldTkrBase(nTowerRow, nTowerCol, nTray, false) 
     {
       //      m_splits.reserve(m_finder->getSize());
       m_splits.resize(m_finder->getSize());
@@ -53,17 +53,16 @@ namespace CalibData {
     virtual const CLID& clID() const {return classID(); }
     static const CLID&  classID();
 
-    // Reimplemented from TkrBase
-    virtual RangeBase* getChannel(const idents::TkrId& id, unsigned feChip=0);
+    // Reimplemented from OldTkrBase
+    virtual RangeBase* getChannel(const idents::TkrId& id);
     virtual RangeBase* getChannel(unsigned towerRow, unsigned towerCol,
-                                  unsigned tray, bool top, unsigned feChip=0);
+                                  unsigned tray, bool top);
     
-    virtual bool putChannel(RangeBase* data, const idents::TkrId& id, 
-                            unsigned feChip=0);
+    virtual bool putChannel(RangeBase* data, const idents::TkrId& id);
 
     virtual bool putChannel(RangeBase* data, unsigned towerRow, 
                             unsigned towerCol, unsigned tray, 
-                            bool top, unsigned feChip=0);
+                            bool top);
 
     virtual StatusCode update(CalibBase& other, MsgStream* log);
     

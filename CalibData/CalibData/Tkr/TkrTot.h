@@ -4,7 +4,7 @@
 
 #include "CalibData/Tkr/TkrBase.h"
 #include "CalibData/CalibModel.h"
-#include "CalibData/RangeBase.h"
+#include "CalibData/Tkr/UniBase.h"
 #include <vector>
 
 /** 
@@ -59,10 +59,10 @@ namespace CalibData {
      collection of strip objects belonging to the uniplane, plus
      enough information to identify the uniplane
   */
-  class TkrTotUni : public RangeBase {
+  class TkrTotUni : public UniBase {
   public:
     TkrTotUni(const idents::TkrId& id, int nStrips=1536);
-    TkrTotUni() : m_id(), m_strips(0), m_nStrips(0) {}
+    TkrTotUni() : UniBase(), m_strips(0), m_nStrips(0) {}
 
     ~TkrTotUni() {if (m_strips) delete [] m_strips;};
 
@@ -73,13 +73,16 @@ namespace CalibData {
       return &m_strips[i];
     }
 
-    // reimplemented from RangeBase
-    virtual void update(RangeBase* other);
-    virtual void makeNew(RangeBase** ppNew);
+    /**
+       Use strip id field to decide where to put strip. Success iff
+       the id is in range
+    */
+    bool putStrip(const TkrTotStrip& strip);
 
+    // reimplemented from UniBase
+    virtual void update(UniBase* other);
 
   private:
-    idents::TkrId m_id;
     TkrTotStrip* m_strips;
     unsigned    m_nStrips;
   };
@@ -90,18 +93,18 @@ namespace CalibData {
      class TkrTotCol
   */
   class TkrTotCol : public TkrBase {
-    friend class XmlTkrTotCnv;
+    friend class RootTkrTotCnv;
 
   public:
-    TkrTotCol(unsigned nTowerRow, unsigned nTowerCol, 
-              unsigned nTray) : TkrBase(nTowerRow, nTowerCol, nTray) { }
+    TkrTotCol(unsigned nTowerRow=4, unsigned nTowerCol=4, unsigned nTray=19);
 
-    ~TkrTotCol();
+    /// Nothing left to do in destructor; it's all handled by base class
+    ~TkrTotCol() {}
 
     /// The one routine of interest to applications: fetch constants for
     /// a particular strip
     const TkrTotStrip* getStripInfo(const idents::TkrId& id, unsigned iStrip) {
-      TkrTotUni* uni = dynamic_cast<TkrTotUni*>(getChannel(id));
+      TkrTotUni* uni = dynamic_cast<TkrTotUni*>(getUni(id));
       if (!uni) return 0;
       return uni->getStripData(iStrip);
     }
@@ -110,28 +113,20 @@ namespace CalibData {
     virtual const CLID& clID() const {return classID(); }
     static const CLID&  classID();
 
-    
-    /// Reimplemented from TkrBase. Copy in TkrTotUni data
-    virtual bool putChannel(RangeBase* data, const idents::TkrId& id, 
-                            unsigned feChip=0);
+    // Reimplemented from TkrBase. All we need to do is check that
+    // pointer is really of right type, then invoke base implementation.
+    virtual bool putUni(UniBase* data, const idents::TkrId& id);
 
-    /// Reimplemented from TkrBase. Copy in TkrTotUni data
-    virtual bool putChannel(RangeBase* data, unsigned towerRow, 
-                            unsigned towerCol, unsigned tray, 
-                            bool top, unsigned feChip=0) {
-      return putChannel(data, idents::TkrId(towerCol, towerRow,
-                                            tray, top) );
-    }
+    /// Reimplemented from TkrBase.  Establish #uniplanes for the tower
+    // not sure we need this either
+    //    virtual void reserveUni(unsigned row, unsigned col, unsigned nUni);
 
     // Reimplemented from TkrBase. Copy in TkrTotUni data
     // or maybe we don't need to
     //    virtual StatusCode update(TkrBase& other, MsgStream* log);
-
     
   private:
-    /// Pointers to (large) objects for uniplane-worth of data, allocated
-    /// as needed during conversion from ROOT file.
-    std::vector<TkrTotUni*> m_unis;
+    // no new private data over what's in TkrBase
 
   };     // end   TkrTotCol
 

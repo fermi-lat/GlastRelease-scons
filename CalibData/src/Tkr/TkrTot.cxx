@@ -14,6 +14,14 @@
 
 namespace CalibData {
 
+  /// Define factory class to TkrTotUni
+  class UniTotFactory : public UniFactoryBase {
+  public:
+    UniTotFactory() : UniFactoryBase() {}
+    virtual ~UniTotFactory() {}
+    virtual UniBase* makeUni() {return new TkrTotUni();}
+  };
+
   // Remainder of trivial TkrTotStrip class implementation
   void TkrTotStrip::copy(const TkrTotStrip& other) {
     m_stripId = other.m_stripId;
@@ -36,15 +44,11 @@ namespace CalibData {
 
   // TkrTotUni
   TkrTotUni::TkrTotUni(const idents::TkrId& id, int nStrips) : 
-    m_id(id), m_nStrips(nStrips) {
+    UniBase(id), m_nStrips(nStrips) {
     m_strips = new TkrTotStrip[nStrips];
   }
 
-  void TkrTotUni::makeNew(RangeBase** ppNew) {
-    *ppNew = new TkrTotUni(m_id, m_nStrips);
-  }
-
-  void TkrTotUni::update(RangeBase* other) {
+  void TkrTotUni::update(UniBase* other) {
     TkrTotUni* otherUni = dynamic_cast<TkrTotUni* > (other);
     using idents::TkrId;
 
@@ -61,23 +65,29 @@ namespace CalibData {
     }
   }
 
+  bool TkrTotUni::putStrip(const TkrTotStrip& strip) {
+    int iStrip = strip.getStripId();
+    if ( (iStrip < 0) || (iStrip >= m_nStrips) ) return false;
+
+    m_strips[iStrip].copy(strip);
+    return true;
+  }
   //  TkrTotCol
 
-  TkrTotCol::~TkrTotCol() {
-    unsigned size = m_unis.size();
-    for (unsigned i = 0; i < size; i++) {
-      if (m_unis[i] != 0) delete m_unis[i];
-    }
-  } 
+  TkrTotCol::TkrTotCol(unsigned nTowerRow, unsigned nTowerCol, unsigned nTray) 
+    :    TkrBase(nTowerRow, nTowerCol, nTray) { 
+    if (m_factory) delete m_factory;  // don't want base class factory
+    m_factory = new UniTotFactory();
+  }
+
   const CLID&  TkrTotCol::classID() {return CLID_Calib_TKR_TOTSignal;}
 
-  bool TkrTotCol::putChannel(RangeBase* data, const idents::TkrId& id, 
-                             unsigned) {
+  bool TkrTotCol::putUni(UniBase* data, const idents::TkrId& id) {
     if (!dynamic_cast<TkrTotUni*>(data)) return false;
 
     // Otherwise go ahead and let base class handle it. 
     // We (well, TkrTotUni) might get called back to allocate memory
-    return TkrBase::putChannel(data, id, 0);
+    return TkrBase::putUni(data, id);
   }
 
   /* maybe we don't need this after all

@@ -10,68 +10,130 @@
 #include "CalibData/Tkr/TkrFinder.h"
 #include "idents/TkrId.h"
 
+#define TKRBASE_MAXROW 4
+#define TKRBASE_MAXCOL 4
+#define TKRBASE_MAXTOWER (TKRBASE_MAXROW * TKRBASE_MAXCOL)
+
+class RootTkrBaseCnv;
+
 namespace CalibData {
+  class UniBase;
+
+  /**
+     Each derived, completely implemented tkr calibration class should
+     register a suitable factory object which will produce the right
+     kind of object of a class derived from UniBase
+  */
+  class UniFactoryBase {
+  public: 
+    UniFactoryBase() {}
+    virtual ~UniFactoryBase() { };
+    virtual UniBase* makeUni();
+  };
+
   /**
      Base class for Tkr calibrations other than bad strips, which have
-     a fixed amount of data per Si layer or fe chip.
+     a fixed amount of data per Si layer, typically involving a
+     per-strip or per-gtfe structure
   */
-  class RangeBase;
   class TkrBase : public CalibBase {
-    
+    friend class RootTkrBaseCnv;
+
   public:
     /**
-       Constructor configures its TkrFinder and keeps track of whether
-       data is stored directly in a vector or whether its a vector
-       of pointers.
+       Constructor configures its TkrFinder
     */
     TkrBase(unsigned nTowerRow=4, unsigned nTowerCol=4, unsigned nTray=19,
-            unsigned nFeChip=0, bool indirect=true);
+             bool indirect=true);
+
     virtual ~TkrBase();
     
-    virtual RangeBase* getChannel(const idents::TkrId& id, unsigned feChip=0);
+    virtual UniBase* getUni(const idents::TkrId& id);
 
-    virtual RangeBase* getChannel(unsigned towerRow, unsigned towerCol,
-                                  unsigned tray, bool top, unsigned feChip=0);
+    virtual UniBase* getUni(unsigned towerRow, unsigned towerCol,
+                                  unsigned tray, bool top);
     
-    virtual bool putChannel(RangeBase* data, const idents::TkrId& id, 
-                            unsigned feChip=0);
+    virtual bool putUni(UniBase* data, const idents::TkrId& id);
 
-    virtual bool putChannel(RangeBase* data, unsigned towerRow, 
-                            unsigned towerCol, unsigned tray, 
-                            bool top, unsigned feChip=0);
+    virtual bool putUni(UniBase* data, unsigned towerRow, 
+                        unsigned towerCol, unsigned tray, bool top);
 
     // Get dimensioning information; needed when transforming to 
-    // permanent storage
+    // permanent storage...might not need this
     /// Get # tower rows
-    unsigned getNTowerRow() const {return m_finder->getNTowerRow();}
+    unsigned getNTowerRow() const;
 
     /// Get # tower columns
-    unsigned getNTowerCol() const {return m_finder->getNTowerCol();}
+    unsigned getNTowerCol() const;
 
     /// Get #  trays
-    unsigned getNUnilayer() const {return m_finder->getNUnilayer();}
+    unsigned getNUnilayer() const;
+
+    /// Get reference to vector of uni for specified tower.
+    const std::vector<UniBase*>& getUnis(int iTow) const 
+      // or maybe RootTkrBaseCnv should provide this service
+    {return m_towers[iTow]->m_unis; }
 
     /// Get # fe chips / unilayer
-    unsigned getNChip() const {return m_finder->getNChip();}
+    // unsigned getNChip() const {return m_finder->getNChip();}
     virtual const CLID& clID() const = 0;     // must be overridden
     static const CLID& classID();   // shouldn't get called
 
     // Maybe won't need to be virtual after all
     virtual StatusCode update(CalibBase& other, MsgStream* log);
+
+    //maybe want...
+    /**
+       For Specified tower, allocate uniplane objects without
+       filling
+     */
+    //    virtual void reserveUni(unsigned row, unsigned col, unsigned nUni);
     
   protected:
+    /**
+       @class TkrTower
+       Represents a tower's worth of tracker calibration data.
+       Identify the tower, keep remaining information by uniplane.
+       Different derived classes will have their own class
+       for per-uniplane data, derived from UniBase.
+    */
+    class TkrTower {
+    friend class RootTkrBaseCnv;
+    public:
+      unsigned m_iRow;
+      unsigned m_iCol;
+      std::string m_hwserial;
+      std::vector <UniBase* > m_unis;
+      TkrTower(unsigned row=0, unsigned col=0, 
+               std::string hwserial="") 
+      : m_iRow(row), m_iCol(col), m_hwserial(hwserial) 
+      {        }
+      void resize(unsigned n);
+      ~TkrTower();
+    };                        // end def TkrTower
+
+
+    // Array below is only of pointers to towers.  Allocate a tower
+    // only when needed.
+    TkrTower* makeTower(unsigned iTow, unsigned nUni=38);
+      
+
+
     TkrFinder* m_finder;
-    //    std::vector<RangeBase* >* m_pR;
-    std::vector<RangeBase* > m_ranges;
+    UniFactoryBase* m_factory;
+   
+
+    TkrTower* m_towers[TKRBASE_MAXTOWER];
+    //    std::vector<RangeBase* > m_ranges;
 
     /// Default is true: keep vector of pointers to data.  Else derived
     /// class keeps vector of data values and must do its own fetching
     /// and putting.
     bool m_indirect;
     
-    // cache last index found, for use of derived classes
-    unsigned m_ix;
-    bool     m_ixValid;
+    // (may be irrelevant) cache last index found, for use of derived classes
+    //    unsigned m_ix;
+    //    bool     m_ixValid;
 
   private:
     static const CLID noCLID;
@@ -80,9 +142,11 @@ namespace CalibData {
         method is called by the constructor and does most of the work
     */
     void cGuts(unsigned nTowerRow, unsigned nTowerCol, 
-               unsigned nTray, unsigned nChip);
+               unsigned nTray);
   };
 
+
+  
 }  
 #endif
 
