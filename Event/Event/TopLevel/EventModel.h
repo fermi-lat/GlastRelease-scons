@@ -59,7 +59,9 @@
             _EXTERN_ std::string TkrPatCandCol;
             _EXTERN_ std::string SiRecObjs;
             _EXTERN_ std::string TkrFitTrackCol;
+            _EXTERN_ std::string TkrTrackTab;
             _EXTERN_ std::string TkrVertexCol;
+            _EXTERN_ std::string TkrVertexTab;
         }
 
         namespace CalRecon {

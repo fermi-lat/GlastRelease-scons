@@ -48,7 +48,9 @@ public:
         EventModel::TkrRecon::TkrPatCandCol  = EventModel::TkrRecon::Event + "/TkrPatCandCol";
         EventModel::TkrRecon::SiRecObjs      = EventModel::TkrRecon::Event + "/SiRecObjs";
         EventModel::TkrRecon::TkrFitTrackCol = EventModel::TkrRecon::Event + "/TkrFitTrackCol";
+        EventModel::TkrRecon::TkrTrackTab    = EventModel::TkrRecon::Event + "/TkrTrackTab";
         EventModel::TkrRecon::TkrVertexCol   = EventModel::TkrRecon::Event + "/TkrVertexCol";
+        EventModel::TkrRecon::TkrVertexTab   = EventModel::TkrRecon::Event + "/TkrVertexTab";
 
 
         //reconstructed Cal data

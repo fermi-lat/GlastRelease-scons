@@ -8,7 +8,7 @@
 
 using namespace Event;
 
-TkrPatCand::TkrPatCand(int layer, int tower, double energy, double quality, const Ray& testRay)
+TkrPatCand::TkrPatCand(int layer, int tower, double energy, double energyErr, double quality, const Ray& testRay)
 {
     //Zero out the candidate hit vector
     m_hits.clear();
@@ -19,6 +19,7 @@ TkrPatCand::TkrPatCand(int layer, int tower, double energy, double quality, cons
     m_firstLayer = layer;
     m_itower     = tower;
     m_energy     = energy;
+    m_energyErr  = energyErr;
     m_quality    = quality;
 
     return;
@@ -102,35 +103,39 @@ void TkrPatCand::writeOut(MsgStream& log) const
     log << endreq;
 }
 
-    double        TkrPatCand::getEnergy(TrackEnd)       const 
-    {
-        return m_energy;
-    }
-    int           TkrPatCand::getLayer(TrackEnd )       const 
-    {
-        return m_firstLayer;
-    }
-    int           TkrPatCand::getTower(TrackEnd )       const 
-    {
-        return m_itower;
-    }
-    Point         TkrPatCand::getPosition(TrackEnd )    const 
-    {
-        return m_position;
-    }
-    Vector        TkrPatCand::getDirection(TrackEnd )   const 
-    {
-        return m_direction;
-    }
-    Ray           TkrPatCand::getRay(TrackEnd )         const 
-    {
-        return Ray(getPosition(),getDirection());
-    }
-    double        TkrPatCand::getTrackParZ(TrackEnd )   const 
-    {
-        return m_position.z();
-    }
-    bool          TkrPatCand::empty(int)                const 
-    {
-        return m_firstLayer >= 0;
-    }
+double        TkrPatCand::getEnergy(TrackEnd)       const 
+{
+    return m_energy;
+}
+double        TkrPatCand::getEnergyErr(TrackEnd)    const 
+{
+    return m_energyErr;
+}
+int           TkrPatCand::getLayer(TrackEnd )       const 
+{
+    return m_firstLayer;
+}
+int           TkrPatCand::getTower(TrackEnd )       const 
+{
+    return m_itower;
+}
+Point         TkrPatCand::getPosition(TrackEnd )    const 
+{
+    return m_position;
+}
+Vector        TkrPatCand::getDirection(TrackEnd )   const 
+{
+    return m_direction;
+}
+Ray           TkrPatCand::getRay(TrackEnd )         const 
+{
+   return Ray(getPosition(),getDirection());
+}
+double        TkrPatCand::getTrackParZ(TrackEnd )   const 
+{
+   return m_position.z();
+}
+bool          TkrPatCand::empty(int)                const 
+{
+   return m_firstLayer >= 0;
+}
