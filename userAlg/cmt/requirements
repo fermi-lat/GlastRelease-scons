@@ -1,5 +1,5 @@
 package userAlg
-version v3
+version v3r0
 
 # --------------------------
 # run a job with a user algorithm
@@ -7,8 +7,10 @@ version v3
 
 # get everything we need from here
 use Gleam
+use ntupleWriterSvc v2
 
-apply_pattern userjobopts
+#apply_pattern userjobopts
+set JOBOPTIONS $(USERALGROOT)/src/jobOptions.txt
 
 macro jobOptions "" WIN32 "jobOptions.txt"
 

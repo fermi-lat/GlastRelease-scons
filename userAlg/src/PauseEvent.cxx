@@ -10,7 +10,6 @@
 #include "gui/GuiMgr.h"
 #include "gui/DisplayControl.h"
 
-#include "GlastEvent/MonteCarlo/McVertex.h"
 #include "GlastEvent/MonteCarlo/McParticle.h"
 #include "GlastEvent/TopLevel/Event.h"
 
@@ -44,8 +43,6 @@ private:
     void processEventList();
     //! number of times called
     int m_count; 
-    //! constants from the "instrument.xml" file.
-    xml::IFile * m_ini; 
     //! access to the Gui Service for display of 3-d objects
     IGuiSvc*    m_guiSvc;
 	
@@ -67,7 +64,7 @@ const IAlgFactory& PauseEventFactory = Factory;
 
 PauseEvent::PauseEvent(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator)
-,m_count(0), m_ini(0), m_runNumFlag(true)
+,m_count(0), m_runNumFlag(true)
 {
     // List of strings, of the form:  {"runNum_eventId", "runNum_eventId"...}
     declareProperty("eventList", m_eventList);

@@ -1,29 +1,14 @@
-// $Header$
-//====================================================================
-//
-//  Description: Implementation of <Package>_load routine.
-//               This routine is needed for forcing the linker
-//               to load all the components of the library. 
-//
-//====================================================================
+/** 
+* @file UserAlg_load.cpp
+* @brief This is needed for forcing the linker to load all components
+* of the library.
+*
+*  $Header$
+*/
 
-#include "GaudiKernel/ICnvFactory.h"
-#include "GaudiKernel/ISvcFactory.h"
-#include "GaudiKernel/IAlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
-
-#define DLL_DECL_SERVICE(x)    extern const ISvcFactory& x##Factory; x##Factory.addRef();
-#define DLL_DECL_CONVERTER(x)  extern const ICnvFactory& x##Factory; x##Factory.addRef();
-#define DLL_DECL_ALGORITHM(x)  extern const IAlgFactory& x##Factory; x##Factory.addRef();
-#define DLL_DECL_OBJECT(x)     extern const IFactory& x##Factory; x##Factory.addRef();
-
-//! Load all  services: 
-void UserAlg_load() {
-    DLL_DECL_ALGORITHM( UserAlg );
-    DLL_DECL_ALGORITHM( PauseEvent );
-} 
-
-extern "C" void userAlg_loadRef()    {
-    UserAlg_load();
+DECLARE_FACTORY_ENTRIES(UserAlg) {
+    DECLARE_ALGORITHM( UserAlg );
+    DECLARE_ALGORITHM( PauseEvent );
 }
-
