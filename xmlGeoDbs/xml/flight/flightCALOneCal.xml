@@ -159,28 +159,6 @@
      Define boxed for glommed-together picture frames.  Define outer
      boxes made of frame material, then inner boxes of vacuum to 
      empty out the middle. -->
-  <!-- 
-    <box name="CALTopFrameCutout"
-         XREF="CALTopFrameCutoutWidth"
-         YREF="CALTopFrameCutoutWidth"
-         ZREF="CALTopFrameZ"
-         materialREF="vacuumMat" />
-
-    <box name="CALBottomFrameCutout"
-         XREF="CALBottomFrameCutoutWidth"
-         YREF="CALBottomFrameCutoutWidth"
-         ZREF="CALBottomFrameZ"
-         materialREF="vacuumMat" />
-
-    <composition name="CALTopFrame" envelope="CALTopFrameEnv">
-       <posXYZ volume="CALTopFrameCutout" />
-    </composition>
-
-    <composition name="CALBottomFrame" envelope="CALBottomFrameEnv">
-       <posXYZ volume="CALBottomFrameCutout" />
-    </composition>
-
--->
 
 <!-- New style for frames:  build up out of four pieces as is done
      for grid and for TKR closeout.  Use old envelope boxes but
@@ -330,7 +308,6 @@
          and layers in a composition 
        -->
 
-<!-- CALLayers centered in envelope -->
 
     <!-- Then position the whole thing inside a stay-clear volume -->
     <box name="oneCALStayClearBox"
@@ -339,8 +316,11 @@
        ZREF="CALVertStayClear"
        materialREF="vacuumMat" />
 
+<!-- As of 30 April, CALLayers at the top of the stay clear envelope (used
+     to be centered)                                           -->
     
     <composition name="oneCAL" envelope="oneCALStayClearBox" >
-      <posXYZ volume="CALLayers" />  <!-- centered in envelope -->
+      <posXYZ volume="CALLayers"
+          ZREF="CALLayers_dz" />
     </composition>
 

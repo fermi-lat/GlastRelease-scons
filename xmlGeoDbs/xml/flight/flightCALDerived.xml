@@ -381,6 +381,38 @@ grid, etc. (may be superseded by info from Eric)</notes>
           </uminus>
         </const>
 
+<!--  Define constant for z dimension of CALLayers volumes -->
+        <const name="CALLayersZ" >
+          <notes>Z dimension of CsI layers plus frame.  Note
+                 This constant may need updating if description of 
+                 CAL changes! Constant instituted 30 April 2003</notes>
+          <add>
+            <refer refTo="CALBottomPlateZ" />
+            <refer refTo="CALTopPlateZ" />
+            <refer refTo="CALBottomFrameZ" />
+            <refer refTo="CALTopFrameZ" />
+            <mul>
+              <refer refTo="cellVertPitch" />               
+              <refer refTo="CALnLayer" />
+            </mul>
+          </add>
+        </const>
+
+<!-- Define constant for offset needed to get CALLayers at top of 
+     stay-clear box -->
+        <const name="CALLayers_dz" >
+          <notes>Offset of CALLayers relative to stay-clear box.
+                 CALLayers should be at top of box.
+                 Constant instituted 30 April 2003</notes>
+          <mul>
+            <minus>
+              <refer refTo="CALVertStayClear" />
+              <refer refTo="CALLayersZ" />
+            </minus>
+            <const value="0.5" uType = "count"/>
+          </mul>
+        </const>
+ 
 <!-- Make sure values for CALStructural field are distinct from layer #'s -->
         <const name="eBottomFrame" uType="count" type="int">
           <notes>For use in identifiers</notes>

@@ -363,10 +363,16 @@
 
         <const name="towers_dz" >
           <notes>Displacement necessary to get towers origin in the
-                 right place</notes>
+                 right place, namely at the front face of the grid
+                 **Decreased by gap between CAL and TKR, nearly the
+                   same as grid flange height, as of 29 Apr 2003**
+                 </notes>
           <minus>
             <refer refTo="towersTotalHalfZ" />
-            <refer refTo="CALVertStayClear" />
+            <add>
+              <refer refTo="CALVertStayClear" />
+              <refer refTo="calTrackerGap" />
+            </add>
           </minus>
         </const>
 
@@ -375,7 +381,7 @@
                 It goes immediately under the LAT</notes>
           <uminus>
             <add>
-              <refer refTo="NADGridFlangeZ" />
+              <refer refTo="calTrackerGap" />
               <refer refTo="CALVertStayClear" />
               <refer refTo="NADSpacecraftGap" />
               <quo> 
