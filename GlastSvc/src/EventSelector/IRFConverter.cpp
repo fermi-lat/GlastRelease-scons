@@ -14,20 +14,20 @@
 
 //! constructor - create all object containers
 IRFConverter::IRFConverter() {
-    MCACDcontainer = new MCACDHitVector;
-    MCCalorimeterHitContainer = new MCCalorimeterHitVector;
-    MCSiLayerContainer = new MCSiLayerVector;
-    
     // Added because not sure as of yet how to make the
     // converter without using object vectors
     allcsiData =  new TdCsIData(9);
+
+    IrfAcdHitContainer = new IrfAcdHitVector;
+    IrfCalHitContainer = new IrfCalHitVector;
+    IrfTkrLayerContainer = new IrfTkrLayerVector;
 }
 
 //! destructor - delete all object containers
 IRFConverter::~IRFConverter() { 
-    if (MCACDcontainer)  delete MCACDcontainer;
-    if (MCCalorimeterHitContainer) delete MCCalorimeterHitContainer;
-    if (MCSiLayerContainer) delete MCSiLayerContainer;
+    if (IrfAcdHitContainer) delete IrfAcdHitContainer;
+    if (IrfCalHitContainer) delete IrfCalHitContainer;
+    if (IrfTkrLayerContainer) delete IrfTkrLayerContainer;
 }
 
 //! called due to a GlastDetector::accept(DetectorConverter) call
@@ -35,10 +35,10 @@ void IRFConverter::forward (const Scintillator& s) {
     // ACD tile data
     // retrieve data only if this detector has data
     if ( !(s.empty()) ) {
-        MCACDHit* tile = new MCACDHit(); 
-        tile->setEnergy(s.energy());
-        tile->setId(s.id());
-        MCACDcontainer->push_back(tile);
+        IrfAcdHit* newTile = new IrfAcdHit();
+        newTile->setEnergy(s.energy());
+        newTile->setId(s.id());
+        IrfAcdHitContainer->push_back(newTile);
     } 
 }
 
@@ -52,13 +52,13 @@ void IRFConverter::forward ( const CsIDetector& csi) {
     // CAL CsI log data
     if ( !(csi.empty()) ) {
         
-        // Do the MCInformation
-        MCCalorimeterHit* mcCal = new MCCalorimeterHit();
-        mcCal->setEnergy(csi.energy());
-        mcCal->setLeftResponse(csi.Lresp());
-        mcCal->setRightResponse(csi.Rresp());
-        MCCalorimeterHitContainer->push_back(mcCal);
-        
+        IrfCalHit* irfCal = new IrfCalHit();
+        irfCal->setEnergy(csi.energy());
+        irfCal->setMinusResponse(csi.Lresp());
+        irfCal->setPlusResponse(csi.Rresp());
+        IrfCalHitContainer->push_back(irfCal);
+
+
         //Do the Raw information
         allcsiData->load(csi, m_towerId);
     }
@@ -93,29 +93,30 @@ void IRFConverter::forward ( const MCTruth& mc) {
 void IRFConverter::forward ( const SiDetector& si) {
     // TKR silicon strip detectors
     if ( !(si.empty()) ) {
-        MCSiLayer* siLayer = new MCSiLayer();
-        siLayer->setId(si.id());
-        siLayer->setMaxEnergy(si.maxELoss());
+
+        IrfTkrLayer* tkrLayer = new IrfTkrLayer();
+        tkrLayer->setId(si.id());
+        tkrLayer->setMaxEnergy(si.maxELoss());
+
         // loop over all hit strips for this layer
         for (SiDetector::const_iterator it = si.begin(); it != si.end(); ++it) 
         {
-            MCTKRHit* ssd = new MCTKRHit();
-            ssd->setEnergy((*it).energy());
-            ssd->setId((*it).index());                
-            ssd->setNoise((*it).noise());
-            siLayer->addHit(ssd);
+            IrfTkrHit* newSSD = new IrfTkrHit();
+            newSSD->setEnergy((*it).energy());
+            newSSD->setId((*it).index());
+            newSSD->setNoise((*it).noise());
+            tkrLayer->addHit(newSSD);
         }
         
-        MCSiLayerContainer->push_back(siLayer);
+        IrfTkrLayerContainer->push_back(tkrLayer);
     }
 }
 
-//! provide access to the list of ACD tile data
-MCACDHitVector* IRFConverter::getACDTiles() { return MCACDcontainer; }
-//! provide access to the list of CAL crystal data
-MCCalorimeterHitVector* IRFConverter::getMCCalHits() { return MCCalorimeterHitContainer; }
-//! provide access to the TKR strip data
-MCSiLayerVector* IRFConverter::getMCTKRHits() { return MCSiLayerContainer; }
 //! provide access to the Raw CsI  Data geometry included as well
 TdCsIData* IRFConverter::getTdCsIData() { return allcsiData; }
-
+//! Provide access to the IRF ACD data
+IrfAcdHitVector* IRFConverter::getIrfAcdHits() {return IrfAcdHitContainer; }
+//! Provide access to the IRF Cal data
+IrfCalHitVector* IRFConverter::getIrfCalHits() {return IrfCalHitContainer; }
+//! Provide access to the IRF Tkr data
+IrfTkrLayerVector* IRFConverter::getIrfTkrHits() {return IrfTkrLayerContainer; }

@@ -21,14 +21,14 @@ Based upon MonteCarloConverters.cpp created by Markus Frank within DbCnv.
 // ====================================================================
 // Converter implementation for objects of class MCCalorimeterHit
 // ====================================================================
-#include "GlastEvent/MonteCarlo/MCCalorimeterHit.h"
-_ImplementContainerConverters(MCCalorimeterHit)
+//#include "GlastEvent/MonteCarlo/MCCalorimeterHit.h"
+//_ImplementContainerConverters(MCCalorimeterHit)
 
 // ====================================================================
 // Converter implementation for objects of class MCEcalFacePlaneHit
 // ====================================================================
-#include "GlastEvent/MonteCarlo/MCACDHit.h"
-_ImplementContainerConverters(MCACDHit)
+//#include "GlastEvent/MonteCarlo/MCACDHit.h"
+//_ImplementContainerConverters(MCACDHit)
 // alternative to this method
 //static const DbUserCnvFactory < ObjectVector<MCACDHit> > s_MCACDHitConverterFactory;
 //const ICnvFactory& DbMCACDHitConverterFactory = s_MCACDHitConverterFactory;
@@ -36,8 +36,32 @@ _ImplementContainerConverters(MCACDHit)
 // ====================================================================
 // Converter implementation for objects of class MCSiLayerHit
 // ====================================================================
-#include "GlastEvent/MonteCarlo/MCSiLayer.h"
-_ImplementContainerConverters(MCSiLayer)
+//#include "GlastEvent/MonteCarlo/MCSiLayer.h"
+//_ImplementContainerConverters(MCSiLayer)
+
+
+// ====================================================================
+// Converter implementation for objects of class MCCalorimeterHit
+// ====================================================================
+#include "GlastEvent/Irf/IrfCalHit.h"
+_ImplementContainerConverters(IrfCalHit)
+
+// ====================================================================
+// Converter implementation for objects of class MCEcalFacePlaneHit
+// ====================================================================
+#include "GlastEvent/Irf/IrfAcdHit.h"
+_ImplementContainerConverters(IrfAcdHit)
+// alternative to this method
+//static const DbUserCnvFactory < ObjectVector<MCACDHit> > s_MCACDHitConverterFactory;
+//const ICnvFactory& DbMCACDHitConverterFactory = s_MCACDHitConverterFactory;
+
+// ====================================================================
+// Converter implementation for objects of class MCSiLayerHit
+// ====================================================================
+#include "GlastEvent/Irf/IrfTkrLayer.h"
+_ImplementContainerConverters(IrfTkrLayer)
+
+
 
 
 // ====================================================================

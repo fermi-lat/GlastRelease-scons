@@ -23,6 +23,11 @@
 
 #include "GlastEvent/Raw/TdCsIData.h"
 
+#include "GlastEvent/TopLevel/IrfEvent.h"
+#include "GlastEvent/Irf/IrfAcdHit.h"
+#include "GlastEvent/Irf/IrfCalHit.h"
+#include "GlastEvent/Irf/IrfTkrLayer.h"
+
 
 static const AlgFactory<CreateEvent>  Factory;
 const IAlgFactory& CreateEventFactory = Factory;
@@ -85,24 +90,24 @@ StatusCode CreateEvent::execute() {
 
     /*! Causes the TDS to be searched, if the data is unavailable, the appropriate
     converter is called to retrieve the data. */
-    sc = eventSvc()->retrieveObject("/Event/MC/MCACDHits", pObject);
+    sc = eventSvc()->retrieveObject("/Event/Irf/IrfAcdHits", pObject);
 
     if( sc.isFailure() ) return sc;                                                             
     
         log << MSG::INFO << "Successfully retrieved ACD Container!!!" << endreq;
 
-    ObjectVector<MCACDHit>* acdList;
+    ObjectVector<IrfAcdHit>* acdList;
     try {
-        acdList  = dynamic_cast<ObjectVector<MCACDHit>*>(pObject);
+        acdList  = dynamic_cast<ObjectVector<IrfAcdHit>*>(pObject);
     } catch(...) {
-        log << MSG::INFO << "Failed to convert object to MCACDHitVector" << endreq;
+        log << MSG::INFO << "Failed to convert object to IrfAcdHitVector" << endreq;
         return StatusCode::FAILURE;
     }
     
 	// Decrease the amount of output
 #if 0
     //! print out the ACD data
-    for (ObjectVector<MCACDHit>::const_iterator it = acdList->begin(); it != acdList->end(); it++) {
+    for (ObjectVector<IrfAcdHit>::const_iterator it = acdList->begin(); it != acdList->end(); it++) {
         log << MSG::INFO << " ACD Tile Hit " 
             << (*it)->id() << " "
             << (*it)->energy() << endreq;
@@ -111,57 +116,57 @@ StatusCode CreateEvent::execute() {
 
     /*! Causes the TDS to be searched, if the data is unavailable, the appropriate
     converter is called to retrieve the data.  */
-    sc = eventSvc()->retrieveObject("/Event/MC/MCCalorimeterHits", pObject);
+    sc = eventSvc()->retrieveObject("/Event/Irf/IrfCalHits", pObject);
     if( sc.isFailure() ) {
-        log << MSG::INFO << "Failed to get MCCalorimeterHits" << endreq;
+        log << MSG::INFO << "Failed to get IrfCalHits" << endreq;
         return sc;                                                             
     } 
     
-    log << MSG::INFO << "Retrieved MCCalorimeterHit Vector!" << endreq;
+    log << MSG::INFO << "Retrieved IrfCalHit Vector!" << endreq;
 
-    ObjectVector<MCCalorimeterHit>* calList;
+    ObjectVector<IrfCalHit>* calList;
     try {
-        calList  = dynamic_cast<ObjectVector<MCCalorimeterHit>*>(pObject);
+        calList  = dynamic_cast<ObjectVector<IrfCalHit>*>(pObject);
     } catch(...) {
-        log << MSG::INFO << "Failed to convert object to MCCalorimeterHitVector" << endreq;
+        log << MSG::INFO << "Failed to convert object to IrfCalHitVector" << endreq;
         return StatusCode::FAILURE;
     }
 
 	// Decrease amount of output
 #if 0
     //! print out the CAL data
-    for (ObjectVector<MCCalorimeterHit>::const_iterator xtal = calList->begin(); xtal != calList->end(); xtal++) {
+    for (ObjectVector<IrfCalHit>::const_iterator xtal = calList->begin(); xtal != calList->end(); xtal++) {
         log << MSG::INFO << "Csi Log Hit: " << endreq;
         log <<MSG::INFO << "       " 
-                        << (*xtal)->leftResponse() << " " 
-                        << (*xtal)->rightResponse() << " "
+                        << (*xtal)->minusResponse() << " " 
+                        << (*xtal)->plusResponse() << " "
                         << (*xtal)->energy() << " " << endreq;
     }
 #endif
 
     /*! Causes the TDS to be seached, if the TKR data is unavailable, then the
         converter is called to retrieve the data */
-    sc = eventSvc()->retrieveObject("/Event/MC/MCTKRHits", pObject);
+    sc = eventSvc()->retrieveObject("/Event/Irf/IrfTkrHits", pObject);
     if( sc.isFailure() ) return sc;                                                             
     
         log << MSG::INFO << "Successfully retrieved TKR Container!!!" << endreq;
 
-    ObjectVector<MCSiLayer>* tkrList;
+    ObjectVector<IrfTkrLayer>* tkrList;
     try {
-        tkrList  = dynamic_cast<ObjectVector<MCSiLayer>*>(pObject);
+        tkrList  = dynamic_cast<ObjectVector<IrfTkrLayer>*>(pObject);
     } catch(...) {
-        log << MSG::INFO << "Failed to convert object to MCSiLayerVector" << endreq;
+        log << MSG::INFO << "Failed to convert object to IrfTkrLayerVector" << endreq;
         return StatusCode::FAILURE;
     }
     
 	// Decrease amount of output
 #if 0
     //! print out the TKR data
-    for (ObjectVector<MCSiLayer>::const_iterator silayer = tkrList->begin(); silayer != tkrList->end(); silayer++) {
-        log << MSG::INFO << "SiLayer " << (*silayer)->id() << " "
+    for (ObjectVector<IrfTkrLayer>::const_iterator silayer = tkrList->begin(); silayer != tkrList->end(); silayer++) {
+        log << MSG::INFO << "TkrLayer " << (*silayer)->id() << " "
             << (*silayer)->MaxEnergy() << endreq;
 
-        for (ObjectVector<MCTKRHit>::const_iterator hit = ((*silayer)->getHits())->begin(); hit != ((*silayer)->getHits())->end(); hit++) {
+        for (ObjectVector<IrfTkrHit>::const_iterator hit = ((*silayer)->getHits())->begin(); hit != ((*silayer)->getHits())->end(); hit++) {
             log << MSG::INFO << "Hit SSD Strip " 
                 << (*hit)->id() << " "
                 << (*hit)->energy() << " "

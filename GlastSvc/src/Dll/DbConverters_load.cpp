@@ -28,10 +28,15 @@ void DbConverters_load()     {
   // Now declare all availible converters
   DLL_DECL_CONVERTER( EventCnv );
   DLL_DECL_CONVERTER( MCEventCnv );
-  DLL_DECL_CONVERTER( MCACDHitVectorCnv );
-   //DLL_DECL_CONVERTER( MCTKRHitVectorCnv );
-  DLL_DECL_CONVERTER( MCSiLayerVectorCnv );
-  DLL_DECL_CONVERTER( MCCalorimeterHitVectorCnv );
+  //DLL_DECL_CONVERTER( MCACDHitVectorCnv );
+  //DLL_DECL_CONVERTER( MCSiLayerVectorCnv );
+  //DLL_DECL_CONVERTER( MCCalorimeterHitVectorCnv );
+
+  DLL_DECL_CONVERTER( IrfEventCnv );
+  DLL_DECL_CONVERTER( IrfAcdHitVectorCnv );
+  DLL_DECL_CONVERTER( IrfTkrLayerVectorCnv );
+  DLL_DECL_CONVERTER( IrfCalHitVectorCnv );
+
   //DLL_DECL_CONVERTER( AxPartCandidateVectorCnv );
   //DLL_DECL_CONVERTER( ExportConverter );
   //DLL_DECL_CONVERTER( ExportVectorCnv );

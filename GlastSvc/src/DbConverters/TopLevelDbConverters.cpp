@@ -42,6 +42,12 @@ _ImplementConverter(Event)
 _ImplementConverter(MCEvent)
 
 // ====================================================================
+// Converter implementation for objects of class IrfEvent
+// ===================================================================
+#include "GlastEvent/TopLevel/IrfEvent.h"
+_ImplementConverter(IrfEvent)
+
+// ====================================================================
 // Converter implementation for objects of class ContainedObject
 // ====================================================================
 #include "DbCnv/DbContainerConverter.h"

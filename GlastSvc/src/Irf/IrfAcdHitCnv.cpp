@@ -1,32 +1,31 @@
-// $Header$
 //------------------------------------------------------------------------------
 //
-// Implementation of class :  ACDhitCnv
+// Implementation of class :  IrfAcdHitCnv
 //
 //
 //------------------------------------------------------------------------------
-#define MCACDhitCnv_CPP 
+#define IrfAcdHitCnv_CPP 
 
 // Include files
 #include "Gaudi/Kernel/CnvFactory.h"
 #include "Gaudi/Interfaces/IDataProviderSvc.h"
 #include "GlastEvent/TopLevel/ObjectVector.h"
-#include "GlastEvent/MonteCarlo/MCACDHit.h"
+#include "GlastEvent/Irf/IrfAcdHit.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 #include "src/EventSelector/IRFConverter.h"
 
 // Inherited sources
-#include "GlastSvc/MonteCarlo/MCACDHitCnv.h"
+#include "GlastSvc/Irf/IrfAcdHitCnv.h"
 
 
 // Instantiation of a static factory class used by clients to create instances
-static CnvFactory<MCACDHitCnv> s_factory;
-const ICnvFactory& MCACDHitCnvFactory = s_factory;
+static CnvFactory<IrfAcdHitCnv> s_factory;
+const ICnvFactory& IrfAcdHitCnvFactory = s_factory;
 
 /// Create the transient representation of an object.
-StatusCode MCACDHitCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObject)   {
-  refpObject = new MCACDHitVector();
+StatusCode IrfAcdHitCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObject)   {
+  refpObject = new IrfAcdHitVector();
   StatusCode status = updateObj(pAddress, refpObject);
   if ( !status.isSuccess() )   {
     delete refpObject;
@@ -36,8 +35,8 @@ StatusCode MCACDHitCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObj
 }
 
 /// Update object from scratch
-StatusCode MCACDHitCnv::updateObj(IOpaqueAddress* pAddress, DataObject* pObject)   {
-  ObjectVector<MCACDHit>* tileList  = dynamic_cast<ObjectVector<MCACDHit>*>(pObject);
+StatusCode IrfAcdHitCnv::updateObj(IOpaqueAddress* pAddress, DataObject* pObject)   {
+  ObjectVector<IrfAcdHit>* tileList  = dynamic_cast<ObjectVector<IrfAcdHit>*>(pObject);
   if ( 0 != tileList )    {
 
       // read in the ACD data via the GlastDetector::accept method
@@ -45,9 +44,9 @@ StatusCode MCACDHitCnv::updateObj(IOpaqueAddress* pAddress, DataObject* pObject)
       m_detSvc->accept(myConverter);
       
       // iterate over the tiles and store in the pObject vector
-      ObjectVector<MCACDHit>* acdData = myConverter.getACDTiles();// Very important method.
-      for (ObjectVector<MCACDHit>::const_iterator it = acdData->begin(); it != acdData->end(); it++) {
-          MCACDHit * tile = new MCACDHit();
+      ObjectVector<IrfAcdHit>* acdData = myConverter.getIrfAcdHits();// Very important method.
+      for (ObjectVector<IrfAcdHit>::const_iterator it = acdData->begin(); it != acdData->end(); it++) {
+          IrfAcdHit * tile = new IrfAcdHit();
           tile->setEnergy((*it)->energy());
           tile->setId((*it)->id());
           tileList->push_back(tile);
@@ -60,18 +59,17 @@ StatusCode MCACDHitCnv::updateObj(IOpaqueAddress* pAddress, DataObject* pObject)
 }
 
 /// class ID
-const CLID& MCACDHitCnv::classID()    {
-  return ObjectVector<MCACDHit>::classID(); 
+const CLID& IrfAcdHitCnv::classID()    {
+  return ObjectVector<IrfAcdHit>::classID(); 
 }
 
 /// Standard Constructor
-MCACDHitCnv::MCACDHitCnv(ISvcLocator* svc) 
+IrfAcdHitCnv::IrfAcdHitCnv(ISvcLocator* svc) 
 : BaseCnv(classID(), svc)
 {
 
-  //declareObject("/Event/ACDTile", objType(), "PASS");
-  declareObject("/Event/MC/MCACDHits", objType(), "PASS");
+  declareObject("/Event/Irf/IrfAcdHits", objType(), "PASS");
 }
 
 /// Standard Destructor
-MCACDHitCnv::~MCACDHitCnv(){ }
+IrfAcdHitCnv::~IrfAcdHitCnv(){ }

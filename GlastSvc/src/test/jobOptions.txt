@@ -54,7 +54,7 @@ ApplicationMgr.EvtMax = 20;
 
 // Setup options for Root output
 // The value #9999 denotes how many directory levels below to go
-RootDst.ItemList = {"/Event/MC/MCACDHits#9999"};
+RootDst.ItemList = {"/Event/Irf/IrfAcdHits#9999"};
 //RootDst.ItemList = {"/Event#9999"};
 // set the transient data store to search for output objects
 RootDst.EvtDataSvc = "EventDataSvc";

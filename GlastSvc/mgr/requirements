@@ -18,6 +18,7 @@ library GlastSvc ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
                  GlastDetSvc/*.h  GlastDetSvc/*.cpp \
                  EventSelector/*.h  EventSelector/*.cpp \
                  ../GlastSvc/MonteCarlo/*.h MonteCarlo/*.cpp \
+                 ../GlastSvc/Irf/*.h Irf/*.cpp \
 		../GlastSvc/Raw/*.h Raw/*.cpp \
 		DbConverters/*.cpp DbConverters/*.h \
                  Dll/*.cpp 
@@ -57,6 +58,7 @@ application test ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
                  GlastDetSvc/*.h  GlastDetSvc/*.cpp \
                  EventSelector/*.h  EventSelector/*.cpp \
                  ../GlastSvc/MonteCarlo/*.h MonteCarlo/*.cpp \
+                 ../GlastSvc/Irf/*.h Irf/*.cpp \
                  DbConverters/*.h DbConverters/*.cpp \
                  ../GlastSvc/Raw/*.h Raw/*.cpp \
                  Dll/*.cpp \

@@ -10,17 +10,18 @@
 class TdCsIData;
 #include "idents/ModuleId.h"
 #include "GlastEvent/TopLevel/ObjectVector.h"
-#include "GlastEvent/MonteCarlo/MCACDHit.h"
 #include "GlastEvent/MonteCarlo/MCTrack.h"
-#include "GlastEvent/MonteCarlo/MCCalorimeterHit.h"
-#include "GlastEvent/MonteCarlo/MCSiLayer.h"
+
+#include "GlastEvent/Irf/IrfAcdHit.h"
+#include "GlastEvent/Irf/IrfCalHit.h"
+#include "GlastEvent/Irf/IrfTkrLayer.h"
 /*! 
 Derived from DetectorConverter, this class
 provides a forward method to handle reading in of GlastDetector data 
 Currently implemented for :
-    - MCACDHit (Scintillator) into an ACDhitVector.
-    - MCCalorimeterHit (CsI Logs) into MCCalorimeterHitVector
-    - MCTRKHit (Si Strips) int MCTRKHitVector
+    - IrfAcdHit (Scintillator) into an IrfAcdHitVector.
+    - IrfCalHit (CsI Logs) into IrfCalHitVector
+    - IrfTkrHit (Si Strips) int IrfTkrHitVector
 */
 
 class IRFConverter : public DetectorConverter {
@@ -47,15 +48,15 @@ public:
     //! sets m_tower
     virtual void forward( const Tower& t);
 
-    //! provide access to the list of ACD tile data
-    MCACDHitVector* getACDTiles() ;
-    //! provide access to the list of CAL crystal data
-    MCCalorimeterHitVector* getMCCalHits();
-    //! provide access to the TKR strip data
-    MCSiLayerVector* getMCTKRHits() ;
     //! provide access to the Raw CsI  Data geometry included as well
     TdCsIData* getTdCsIData() ;
 
+    //! provide access to the list of Acd hits
+    IrfAcdHitVector* getIrfAcdHits();
+    //! provide access to the list of Cal hits
+    IrfCalHitVector* getIrfCalHits();
+    //! provide access to the list of Tkr hits
+    IrfTkrLayerVector* getIrfTkrHits();
 
 private:
     idents::ModuleId m_towerId;
@@ -63,10 +64,11 @@ private:
     // one of Gaudi's ObjectContainers
         TdCsIData* allcsiData;
 
-	MCACDHitVector* MCACDcontainer;
 	MCTrackVector* MCTrackContainer;
-	MCCalorimeterHitVector* MCCalorimeterHitContainer;
-        MCSiLayerVector* MCSiLayerContainer;  
+
+        IrfAcdHitVector* IrfAcdHitContainer;
+        IrfCalHitVector* IrfCalHitContainer;
+        IrfTkrLayerVector* IrfTkrLayerContainer;
     
 };
 
