@@ -16,6 +16,7 @@ library GlastEvent -no_share\
         ../GlastEvent/Hits/*.h \
         Hits/*.cpp \
         ../GlastEvent/Digi/*.h \
+        ../GlastEvent/Recon/*.h \
         TopLevel/*.cpp
 
 #library GlastEventFactories \
