@@ -46,6 +46,15 @@ void InitializeED(TString filename = "MyRootFile.root")
   EventDisplayC = new TCanvas("EventDisplayC"  ,"EventDisplayC",1100,800);  
   tracker->Display();
   
+  for ( int i=0; i<36; ++i ) {
+      TriggerReqText[i][0].SetTextAlign(32);
+      TriggerReqText[i][1].SetTextAlign(02);
+      LabelNumHits[i].SetTextAlign(02);
+      TriggerReqText[i][0].SetTextSize(0.02);
+      TriggerReqText[i][1].SetTextSize(0.02);
+      LabelNumHits[i].SetTextSize(0.02);
+  }
+
   //////////////////////////////////////////////////
 
   XTrack = new TGraph();
@@ -119,7 +128,6 @@ void DisplayEvent(int NumEvent=0)
 	EventDisplayC->cd(1);      
       else
 	EventDisplayC->cd(2);
-      LabelNumHits[i] = TriggerReqText[i][0] = TriggerReqText[i][1] = base;
       TriggerReqText[i][0].SetText(-0.8, height, aLayer->GetTriggerReq(false) ? "x" : "");
       TriggerReqText[i][1].SetText(36, height, aLayer->GetTriggerReq(true) ? "x" : "");
       LabelNumHits[i].SetText(41.0, height, title);
