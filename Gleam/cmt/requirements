@@ -52,8 +52,8 @@ use GlastDigi            v3r0
 
 #reconstruction
 use Recon                v2r0
-#use TkrRecon    v5r7
-#use CalRecon    v4r1       
+use TkrRecon             v6r0
+use CalRecon             v5r0       
 
 
 #ROOT persistence

@@ -3,6 +3,16 @@
  * package manager:T.Burnett
 
  * v2r0  09-may-02 THB   conversion to Event
+    use Event                v8r1
+    use GlastSvc             v8r0
+    use FluxSvc              v5r6
+    use G4Generator          v4r0
+    use GlastDigi            v3r0
+    use Recon                v2r0
+    use TkrRecon             v6r0
+    use CalRecon             v5r0       
+    use RootIo               v2r0
+
  * v1r3  09-may-02 THB a few more small changes!
     use GlastDigi        v2r7
     use GlastSvc         v7r3
