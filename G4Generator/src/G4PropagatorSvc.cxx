@@ -23,151 +23,153 @@
 #include <cassert>
 
 /** 
-* @class G4PropagatorSvc
-*
-* @brief A Gaudi Service for interfacing to the G4ParticlePropagator
-*
-* G4PropagatorSvc provides an interface to the world outside the G4Generator package
-* which allows use of the G4ParticlePropagator for transporting tracks and their 
-* error matrices throughout the GLAST detector.
-* The current interface is taken from that used by RecoSvc, the Gismo equivalent
-*
-* @author Tracy Usher
-*
-*/
-
+ * @class G4PropagatorSvc
+ *
+ * @brief A Gaudi Service for interfacing to the G4ParticlePropagator
+ *
+ * G4PropagatorSvc provides an interface to the world outside the G4Generator
+ * package which allows use of the G4ParticlePropagator for transporting tracks
+ * and their error matrices throughout the GLAST detector.  The current
+ * interface is taken from that used by RecoSvc, the Gismo equivalent 
+ *
+ * @author Tracy Usher
+ *
+ */
 //class G4PropagatorSvc : virtual public DataSvc, virtual public IPropagatorSvc 
 class G4PropagatorSvc : public IPropagatorSvc, public Service
 {
-public: 
+ public: 
     
-    /// Return a pointer to the G4ParticlePropagator singleton object
-    virtual IKalmanParticle* getPropagator() {return G4ParticlePropagator::instance();}
+  /// Return a pointer to the G4ParticlePropagator singleton object
+  virtual IKalmanParticle* getPropagator() {
+    return G4ParticlePropagator::instance();}
 
-    virtual StatusCode initialize();
+  virtual StatusCode initialize();
 
-    virtual StatusCode finalize();
+  virtual StatusCode finalize();
         
-    /// queryInterface - for implementing a Service this is necessary
-    virtual StatusCode queryInterface(const IID& riid, void** ppvUnknown);
+  /// queryInterface - for implementing a Service this is necessary
+  virtual StatusCode queryInterface(const IID& riid, void** ppvUnknown);
     
-protected:
+ protected:
 
-    G4PropagatorSvc(const std::string& name, ISvcLocator* pSvcLocator);
+  G4PropagatorSvc(const std::string& name, ISvcLocator* pSvcLocator);
 
-    virtual ~G4PropagatorSvc();
+  virtual ~G4PropagatorSvc();
   
-private:
-    // Allow SvcFactory to instantiate the service.
-    friend class SvcFactory<G4PropagatorSvc>;
+ private:
+  // Allow SvcFactory to instantiate the service.
+  friend class SvcFactory<G4PropagatorSvc>;
 
-    //This is a pointer to the all important volume->idents map
-    //obtained from the RunManager singleton
-    //DetectorConstruction::IdMap* pIdMap;
+  //This is a pointer to the all important volume->idents map
+  //obtained from the RunManager singleton
+  //DetectorConstruction::IdMap* pIdMap;
 
-    RunManager* m_RunManager;
+  RunManager* m_RunManager;
 };
 
 static SvcFactory<G4PropagatorSvc> g4_factory;
 
 const ISvcFactory& G4PropagatorSvcFactory = g4_factory;
 
-//G4PropagatorSvc::G4PropagatorSvc(const std::string& name, ISvcLocator* pSvcLocator) :
-//                 DataSvc(name, pSvcLocator)
-G4PropagatorSvc::G4PropagatorSvc(const std::string& name, ISvcLocator* pSvcLocator) :
-                 Service(name, pSvcLocator)
+//G4PropagatorSvc::G4PropagatorSvc(const std::string& name, ISvcLocator*
+//pSvcLocator) : DataSvc(name, pSvcLocator)
+G4PropagatorSvc::G4PropagatorSvc(const std::string& name, 
+                                 ISvcLocator* pSvcLocator) :
+  Service(name, pSvcLocator)
 {
-    return;
+  return;
 }
 
 G4PropagatorSvc::~G4PropagatorSvc()
 {
-    //a bit tricky... may have been deleted already by G4Generator...
-    if (RunManager::GetRunManager())
+  //a bit tricky... may have been deleted already by G4Generator...
+  if (RunManager::GetRunManager())
     {
-        delete m_RunManager;
+      delete m_RunManager;
     }
 }
 
 StatusCode G4PropagatorSvc::initialize()
 {
-    // Purpose and Method:  Gaudi initialization routine. 
-    // Inputs:  None
-    // Outputs:  Gaudi StatusCode
-    // Dependencies: None
-    // Restrictions None 
+  // Purpose and Method:  Gaudi initialization routine. 
+  // Inputs:  None
+  // Outputs:  Gaudi StatusCode
+  // Dependencies: None
+  // Restrictions None 
 
-    MsgStream log(msgSvc(), name());
+  MsgStream log(msgSvc(), name());
 
-    StatusCode sc = Service::initialize();
+  StatusCode sc = Service::initialize();
     
-    sc = setProperties();
+  sc = setProperties();
 
-    // Recover the pointer to the GLAST Geant run manager. If it does not already
-    // exist, then instantiate one.
-    // We need this for using Geant to do the tracking
-    if (!(m_RunManager = RunManager::GetRunManager()))
+  // Recover the pointer to the GLAST Geant run manager. If it does not already
+  // exist, then instantiate one.
+  // We need this for using Geant to do the tracking
+  if (!(m_RunManager = RunManager::GetRunManager()))
     {
-        // Get the Glast detector service 
-        IGlastDetSvc* gsv=0;
-        if( service( "GlastDetSvc", gsv).isFailure() ) 
+      // Get the Glast detector service 
+      IGlastDetSvc* gsv=0;
+      if( service( "GlastDetSvc", gsv).isFailure() ) 
         {
-            log << MSG::ERROR << "Couldn't set up GlastDetSvc!" << endreq;
-            return 0;
+          log << MSG::ERROR << "Couldn't set up GlastDetSvc!" << endreq;
+          return 0;
         }
 
-        // Retrieve the event data service
-        IDataProviderSvc* eventSvc=0;
-        if (service( "EventDataSvc", eventSvc, true ).isFailure())
+      // Retrieve the event data service
+      IDataProviderSvc* eventSvc=0;
+      if (service( "EventDataSvc", eventSvc, true ).isFailure())
         {
-            log << MSG::ERROR << "Couldn't set up EventDataSvc!" << endreq;
-            return 0;
+          log << MSG::ERROR << "Couldn't set up EventDataSvc!" << endreq;
+          return 0;
         }
 
-        // The geant4 run manager
-        m_RunManager = new RunManager(gsv,eventSvc, "recon");
+      // The geant4 run manager
+      m_RunManager = new RunManager(gsv,eventSvc, "recon");
 
-        // Initialize Geant4
-        m_RunManager->Initialize();
+      // Initialize Geant4
+      m_RunManager->Initialize();
 
-        log << MSG::DEBUG << "G4 RunManager ready" << endreq;
+      log << MSG::DEBUG << "G4 RunManager ready" << endreq;
     }
 
-    return sc;
+  return sc;
 }
 
 
 StatusCode G4PropagatorSvc::finalize()
 {
-    // Purpose and Method:  Gaudi finalize routine. 
-    // Inputs:  None
-    // Outputs:  Gaudi StatusCode
-    // Dependencies: None
-    // Restrictions None 
+  // Purpose and Method:  Gaudi finalize routine. 
+  // Inputs:  None
+  // Outputs:  Gaudi StatusCode
+  // Dependencies: None
+  // Restrictions None 
 
-    StatusCode sc = Service::finalize();
+  StatusCode sc = Service::finalize();
 
-    return sc;
+  return sc;
 }
 
 
-/// Query interface
-StatusCode G4PropagatorSvc::queryInterface(const IID& riid, void** ppvInterface)  
+// Query interface
+StatusCode G4PropagatorSvc::queryInterface(const IID& riid, 
+                                           void** ppvInterface)  
 {
-    // Purpose and Method:  Gaudi service query interface routine 
-    // Inputs:  None
-    // Outputs:  Gaudi StatusCode
-    // Dependencies: None
-    // Restrictions None 
+  // Purpose and Method:  Gaudi service query interface routine 
+  // Inputs:  None
+  // Outputs:  Gaudi StatusCode
+  // Dependencies: None
+  // Restrictions None 
 
-    if ( IID_IPropagatorSvc.versionMatch(riid) ) 
+  if ( IID_IPropagatorSvc.versionMatch(riid) ) 
     {
-        *ppvInterface = (G4PropagatorSvc*)this;
+      *ppvInterface = (G4PropagatorSvc*)this;
     }
-    else  
+  else  
     {
-        return Service::queryInterface(riid, ppvInterface);
+      return Service::queryInterface(riid, ppvInterface);
     }
-    addRef();
-    return SUCCESS;
+  addRef();
+  return SUCCESS;
 }

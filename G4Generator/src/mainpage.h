@@ -15,9 +15,9 @@
  * The main simulation is controlled by RunManager, a customized and stripped
  * version of the Geant4 standard G4RunManager singleton. Since GLAST main event
  * loop is driven by GAUDI and it will not use any graphics or data persistency
- * features of Geant4, we have included in the RunManager only the real necessary
- * parts for setup and run the generator. RunManager itself uses the following
- * classes 
+ * features of Geant4, we have included in the RunManager only the real
+ * necessary parts for setup and run the generator. RunManager itself uses the
+ * following classes
  *
  * - DetectorConstruction: this class, derived by a standard
  * G4VUserDetectorConstruction, setup both the material list and the geometry of
@@ -36,9 +36,9 @@
  * IonPhysics) to setup particular physics processes. This part is quite recent
  * and has to be yet fully validated. Since the Geant4 toolkit is open to new
  * physics processes (along with new description of already present processes),
- * this will be the access point for further development in the physics selection
- * (and thanks to good OO architecture of Geant4 this should be decoupled 
- * from the other part of the code)
+ * this will be the access point for further development in the physics
+ * selection (and thanks to good OO architecture of Geant4 this should be
+ * decoupled from the other part of the code)
  * - PrimaryGeneratorAction: this class, derived by a standard
  * G4VUserPrimaryGeneratorAction class, is in charge of production and iniection
  * of primary particles in the detector simulation. In our cases it is linked,
