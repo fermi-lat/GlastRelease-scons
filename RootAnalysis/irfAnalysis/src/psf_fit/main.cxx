@@ -15,7 +15,7 @@ public:
     {
         m_func 
             = new TF1("myModel", 
-            "x*( [0]*exp(-0.5*x*x/[1]*[1])/[1] + [2]*exp(-x/[3]) )");  //+ [4]*exp(-x/[5]) )");
+            "x*( [0]*exp(-0.5*x*x/([1]*[1]))/[1] + [2]*exp(-x/[3]) )");  //+ [4]*exp(-x/[5]) )");
 
         // Set up the branches in the output tree.
         const char* names[]={"a1", "b1", "a2", "b2"}; //, "a3", "b3"};
@@ -53,8 +53,8 @@ int main(){
     MakeDists psf_thin("psf_fit_thin.root");
     psf_thin.set_user_cut(TCut("Tkr1FirstLayer<12"));
     if ( !psf_thin.fileExists() )
-        psf_thin.project("BestDirErr/(0.05*pow(McEnergy/100,-0.66))", 0, 10, 200 );
-    psf_thin.set_ymax(0.1); psf_thin.set_ymin(1e-4);
+        psf_thin.project("BestDirErr/(0.05*pow(McEnergy/100,-0.66))", 0, 10, 100 );
+    psf_thin.set_ymax(0.2); psf_thin.set_ymin(1e-4);
     psf_thin.draw("psf_fit_thin.ps", true , myfit);
     delete myfit;
     psf_thin.addCutInfo("psf_fit_thin_parameters.root", "fitParams");
@@ -64,8 +64,8 @@ int main(){
     MakeDists psf_thick("psf_fit_thick.root");
     psf_thick.set_user_cut(TCut("Tkr1FirstLayer>11"));
     if ( !psf_thick.fileExists() )
-        psf_thick.project("BestDirErr/(0.15*pow(McEnergy/100,-0.66))", 0, 10, 200 );
-    psf_thick.set_ymax(0.2); psf_thick.set_ymin(1e-4);
+        psf_thick.project("BestDirErr/(0.15*pow(McEnergy/100,-0.66))", 0, 10, 100 );
+    psf_thick.set_ymax(0.5); psf_thick.set_ymin(1e-4);
     psf_thick.draw("psf_fit_thick.ps", true , myfit);
     delete myfit;
     psf_thick.addCutInfo("psf_fit_thick_parameters.root", "fitParams");
