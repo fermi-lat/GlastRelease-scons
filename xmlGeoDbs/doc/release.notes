@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+   v1r22p1 11-Feb-2005 jrb  (for Xin) add files to latAssembly for 1 tower
    v1r22p0 7-Dec-2004  jrb  Change path in entity definition for extraMaterials
                             in latIntegration files for Xerces 2.6.0
    v1r22   6-Dec-2004  jrb  Add Xin's files for one tower sys test; add copies
