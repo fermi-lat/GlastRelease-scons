@@ -17,7 +17,7 @@
 #include "TkrRecon/GaudiAlg/TkrReconAlg.h"
 #include "GlastSvc/Reco/IKalmanParticle.h"
 #include <cmath>
-#ifndef WIN32
+#ifdef __CYGWIN__
 # include <ieeefp.h>
 #endif
 bool CONTROL_setDeltaEne = false;
