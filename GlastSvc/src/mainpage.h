@@ -72,6 +72,13 @@
 * that overrides individually set run and initial sequence 
 * numbers.
 * Default:10
+* @param GlastRandomSvc.RunNumberString
+* Run number in string format, allowing the use of environment variables.
+* Note that if a file of run and sequence numbers is 
+* specified via the job options parameter GlastRandomSvc.SeedFile 
+* that overrides individually set run and initial sequence 
+* numbers. If set non-null, it takes precedence over the integer version.
+* Default:null
 * @param GlastRandomSvc.InitialSequenceNumber
 * Incident particle sequence number to begin run with - is not
 * event number as not all events trigger.
