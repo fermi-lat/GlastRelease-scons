@@ -12,6 +12,8 @@
 #include "XmlBaseCnv.h"
 #include <dom/DOM_Element.hpp>
 
+template <class TYPE> class CnvFactory;
+
 class XmlTest1Cnv : public XmlBaseCnv {
 
   /// Friend needed for instantiation

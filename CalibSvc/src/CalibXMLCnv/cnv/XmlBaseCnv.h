@@ -11,6 +11,7 @@
   @author J. Bogart
 */
 #include "GaudiKernel/Converter.h"
+#include "GaudiKernel/CnvFactory.h"
 #include <dom/DOM_Element.hpp>
 
 class ISvcLocator;
@@ -22,10 +23,17 @@ namespace CalibData {
   class CalibTime;
 }
 
-template <class TYPE> class CnvFactory;
+// template <class TYPE> class CnvFactory;
 
 class  XmlBaseCnv : public Converter {
+  //  friend class CnvFactory<XmlBaseCnv>;
+
 public:
+  const CLID& objType() const;
+  //  static const CLID& classID();
+
+  virtual ~XmlBaseCnv();
+
   virtual StatusCode initialize();
 
   virtual StatusCode finalize();
@@ -43,8 +51,8 @@ public:
      address.  This and the preceding create method comprise the core 
      functionality of calibration converters.
   */
-  virtual StatusCode updateObj(IOpaqueAddress* addr,
-                               DataObject*& refpObject);
+  //  virtual StatusCode updateObj(IOpaqueAddress* addr,
+  //                           DataObject*& refpObject);
 
   /** 
       Convert transient object to requested representation. This
@@ -53,27 +61,24 @@ public:
       Creation of persistent calibration data will 
       be accomplished by other means. 
   */
-  virtual StatusCode createRep(DataObject*, // pObject,
-                               IOpaqueAddress*&)  // refpAddress) 
-  { return StatusCode::FAILURE;}
+  //  virtual StatusCode createRep(DataObject *, IOpaqueAddress *&);
 
   /** 
       Updated converted representation of the transient object.  This
       method is required since XmlBaseCnv inherits from Converter,
       but in practice it should not be called.
   */
-  virtual StatusCode updateRep(DataObject*,   // pObject,
-                               IOpaqueAddress*&)  // refpAddress) 
-  { return StatusCode::FAILURE; }
+  //  virtual StatusCode updateRep(IOpaqueAddress *&, DataObject *);
+
+  //  virtual StatusCode fillRepRefs(IOpaqueAddress *&, DataObject *);
+
+  //  virtual StatusCode updateRepRefs(IOpaqueAddress *&, DataObject *);
 
   ICalibXmlSvc* getCalibXmlSvc() {
     return m_xmlSvc;
   }
 
-  static unsigned char storageType(){
-    return XML_StorageType;
-  }
-
+  static const unsigned char storageType();
 
 protected:
   /**
@@ -81,9 +86,7 @@ protected:
      @param svc a ISvcLocator interface to find services
      @param clid the type of object the converter is able to convert
    */
-  XmlBaseCnv(ISvcLocator* svc, const CLID& clid);
-
-  virtual ~XmlBaseCnv() {};
+  XmlBaseCnv(ISvcLocator* svc, const CLID& clid = 0);
 
 
   /** This creates the transient representation of an object from the
@@ -124,9 +127,7 @@ protected:
   // Might want to verify that instrument, calType are correct,
   // for example.  If so, might as well provide the service in
   // the base converter.
-  virtual StatusCode readHeader(const DOM_Element&) {
-    return StatusCode::SUCCESS;
-  }
+  virtual StatusCode readHeader(const DOM_Element&);
 
   ICalibXmlSvc* m_xmlSvc;
   ICalibMetaCnvSvc* m_metaSvc;

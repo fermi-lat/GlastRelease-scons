@@ -26,7 +26,7 @@
 #include "CalibData/CalibModel.h"
 
 static CnvFactory<XmlTest1Cnv> s_factory;
-const  ICnvFactory& XmlTest1Cnv = s_factory;
+const  ICnvFactory& XmlTest1CnvFactory = s_factory;
 
 
 

@@ -19,6 +19,10 @@
 
 #include <dom/DOM_Document.hpp>
 
+XmlBaseCnv::~XmlBaseCnv() {}
+
+// static CnvFactory<XmlBaseCnv> s_factory;
+// const ICnvFactory& XmlBaseCnvFactory = s_factory;
 XmlBaseCnv::XmlBaseCnv( ISvcLocator* svc, const CLID& clid) :
   Converter (XML_StorageType, clid, svc),
   m_xmlSvc (0), m_metaSvc(0), m_vstart(0), m_vend(0) {
@@ -155,7 +159,37 @@ StatusCode XmlBaseCnv::i_createObj(const DOM_Element&, DataObject*&) {
   return StatusCode::FAILURE;
 }
 
+/*
+// Not sure yet whether this needs a real implementation or not
+StatusCode XmlBaseCnv::updateObj(IOpaqueAddress* ,
+                              DataObject*& ) {
+  return StatusCode::FAILURE;
+}
 
 
+StatusCode XmlBaseCnv::createRep(DataObject *, // pObject,
+                                 IOpaqueAddress *&)  // refpAddress) 
+{ return StatusCode::FAILURE;}
+
+StatusCode XmlBaseCnv::updateRep(IOpaqueAddress *&,  // refpAddress, 
+                                 DataObject *)   // pObject)
+{ return StatusCode::FAILURE; }
+
+StatusCode XmlBaseCnv::fillRepRefs(IOpaqueAddress *&, DataObject *) {
+  return StatusCode::FAILURE;
+}
+
+StatusCode XmlBaseCnv::updateRepRefs(IOpaqueAddress *&, DataObject *) {
+  return StatusCode::FAILURE;
+}
+*/
+
+StatusCode XmlBaseCnv::readHeader(const DOM_Element&) {
+  return StatusCode::SUCCESS;
+}
+
+const unsigned char XmlBaseCnv::storageType() {
+  return XML_StorageType;
+}
 
 
