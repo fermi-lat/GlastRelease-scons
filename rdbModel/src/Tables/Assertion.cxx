@@ -67,6 +67,20 @@ namespace rdbModel {
     else m_opType = OPTYPEundefined;
   }
 
+  // This only makes sense for conjunction-style operators AND, OR
+  bool Assertion::Operator::appendChild(Operator* child) {
+    if  ((m_opType == OPTYPEor) || (m_opType == OPTYPEand) ) {
+      m_operands.push_back(child);
+      return true;
+    }
+    else if ((m_opType == OPTYPEnot) && (m_operands.size() == 0) ) {
+      m_operands.push_back(child);
+      return true;
+    }
+    throw RdbException("Assertion::Operator::appendChild: wrong parent operator type");
+    return false;
+  }
+
 
   bool Assertion::Operator::validCompareOp(Table* myTable) const {
     if (!m_literal[0]) {

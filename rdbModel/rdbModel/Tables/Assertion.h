@@ -41,6 +41,12 @@ namespace rdbModel{
       a comparison ( =, <=, etc. and also "is null") or an operation which
       has child operations:  OR, AND, NOT, for all, there exists, hence
       a node is a leaf node iff it's a comparison.
+
+      Once an operation has been incorporated into an Assertion or into 
+      another operation, it is 'owned' by this parent.  Deleting the parent
+      will cause its children to be deleted.  Hence applications building
+      assertions out of operators should never delete those operators.
+      
  
   */
   class Assertion {
@@ -72,6 +78,9 @@ namespace rdbModel{
 
       /// Constructor for OR, AND, NOT
       Operator(OPTYPE type, const std::vector<Operator*>& children);
+
+      /// Add another child to a conjunction-style operator
+      bool appendChild(Operator* child);
 
       /// Check whether columns or column and literal to be compared
       /// have compatible types
