@@ -88,9 +88,7 @@ StatusCode CreateEvent::execute() {
 
     DataObject* pObject;
 
-//    sc = eventSvc()->retrieveObject("/Event/Hits/ACDTile", pObject);
-    // simplifying this example, one less level of indirection!
-    //sc = eventSvc()->retrieveObject("/Event/ACDTile", pObject);
+    //! This method call does the bulk of the work
     sc = eventSvc()->retrieveObject("/Event/MC/MCACDHits", pObject);
     if( sc.isFailure() ) return sc;                                                             
     
@@ -124,9 +122,15 @@ StatusCode CreateEvent::execute() {
         return StatusCode::FAILURE;
     }
     for (ObjectVector<MCCalorimeterHit>::const_iterator xtal = calList->begin(); xtal != calList->end(); xtal++) {
-        log << MSG::INFO << " cal xtal Energy = " << (*xtal)->energy() << endreq;
+        log << MSG::INFO << "Csi Log Hit: " << endreq;
+//        log << MSG::INFO << "    cal xtal Energy    = " << (*xtal)->energy() << endreq;
+//        log << MSG::INFO << "    cal Left Response  = " << (*xtal)->leftResponse() << endreq;
+ //       log << MSG::INFO << "    cal Right Response = " << (*xtal)->rightResponse() << endreq;
+        log <<MSG::INFO << "       " 
+                        << (*xtal)->leftResponse() << " " 
+                        << (*xtal)->rightResponse() << " "
+                        << (*xtal)->energy() << " " << endreq;
     }
-
     return sc;
 }
 
