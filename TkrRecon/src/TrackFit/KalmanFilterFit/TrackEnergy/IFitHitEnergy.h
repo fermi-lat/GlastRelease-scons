@@ -11,16 +11,19 @@
 #ifndef IFitHitEnergy_h
 #define IFitHitEnergy_h
 
-#include "Event/Recon/TkrRecon/TkrPatCand.h"
-#include "Event/Recon/TkrRecon/TkrPatCandHit.h"
+namespace Event
+{
+    class TkrTrack;
+    class TkrTrackHit;
+}
 
 class IFitHitEnergy 
 {
 public:
 
-    virtual double initialHitEnergy(const Event::TkrPatCand& patCand, 
-                                    const Event::TkrPatCandHit& candHit, 
-                                    const double trkEnergy) = 0;
+    virtual double initialHitEnergy(const Event::TkrTrack&    patCand, 
+                                    const Event::TkrTrackHit& candHit, 
+                                    const double              trkEnergy) = 0;
     virtual double updateHitEnergy(const double curEnergy, const double radLen) = 0;
     virtual double getHitEnergy(const double energy) = 0;
 };

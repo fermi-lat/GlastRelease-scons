@@ -23,8 +23,8 @@ public:
     BetheBlockHitEnergy();
     virtual ~BetheBlockHitEnergy() {};
 
-    double initialHitEnergy(const Event::TkrPatCand& patCand, 
-                            const Event::TkrPatCandHit& candHit, 
+    double initialHitEnergy(const Event::TkrTrack& patCand, 
+                            const Event::TkrTrackHit& candHit, 
                             const double trkEnergy);
     double updateHitEnergy(const double curEnergy, const double radLen);
     double getHitEnergy(const double energy) {return energy;}

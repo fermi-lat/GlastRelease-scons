@@ -9,6 +9,7 @@
  */
 
 #include "BetheBlockHitEnergy.h"
+#include "Event/Recon/TkrRecon/TkrTrack.h"
 
 const double muMass = 105.7;
 
@@ -18,8 +19,8 @@ BetheBlockHitEnergy::BetheBlockHitEnergy() :
     return;
 }
 
-double BetheBlockHitEnergy::initialHitEnergy(const Event::TkrPatCand& patCand, 
-                                             const Event::TkrPatCandHit& candHit, 
+double BetheBlockHitEnergy::initialHitEnergy(const Event::TkrTrack& patCand, 
+                                             const Event::TkrTrackHit& candHit, 
                                              const double trkEnergy)
 {
     return trkEnergy;

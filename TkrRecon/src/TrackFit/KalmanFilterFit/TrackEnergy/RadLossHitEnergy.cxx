@@ -9,6 +9,7 @@
  */
 
 #include "RadLossHitEnergy.h"
+#include "Event/Recon/TkrRecon/TkrTrack.h"
 
 RadLossHitEnergy::RadLossHitEnergy() : 
                   m_control(TkrControl::getPtr())
@@ -16,8 +17,8 @@ RadLossHitEnergy::RadLossHitEnergy() :
     return;
 }
 
-double RadLossHitEnergy::initialHitEnergy(const Event::TkrPatCand& patCand, 
-                                          const Event::TkrPatCandHit& candHit, 
+double RadLossHitEnergy::initialHitEnergy(const Event::TkrTrack& patCand, 
+                                          const Event::TkrTrackHit& candHit, 
                                           const double trkEnergy)
 {
     return trkEnergy;
