@@ -7,7 +7,6 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/Algorithm.h"
-#include "FluxSvc/PencilBeam.h"
 #include <list>
 #include <string>
 /*! \class FluxTestAlg
@@ -72,11 +71,6 @@ StatusCode FluxTestAlg::initialize() {
         return sc;
     }
 
-
-   ///PencilBeam Testing
-    static PencilBeam* sean=PencilBeam::instance();
-    fsvc->addFactory("testsean", sean);
-   ///End Testing
 
     log << MSG::INFO << "loading source..." << endreq;
 
