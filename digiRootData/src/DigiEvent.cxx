@@ -152,7 +152,7 @@ const AcdDigi* DigiEvent::getAcdDigi(const AcdId &id) const {
 }
 
 void DigiEvent::addTkrDigi(TkrDigi *digi) {
-    printf(" add TkrDigi, %d entries\n",m_tkrDigiCol->GetEntries());fflush(stdout);
+    //printf(" add TkrDigi, %d entries\n",m_tkrDigiCol->GetEntries());fflush(stdout);
     m_tkrDigiCol->Add(digi);
 }
 
