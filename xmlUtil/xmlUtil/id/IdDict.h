@@ -13,6 +13,7 @@ namespace xmlUtil {
   //! IdDict corresponds to the xml element idDict in gdd.dtd
   class DictNode;
   class DictField;
+  class DictFieldMan;
 
   class IdDict {
   public:
@@ -58,12 +59,15 @@ namespace xmlUtil {
     //! IdConverter to build output dictionary
     IdDict(DictNode* root);
 
-    //! Link up newNode to parent; also update m_fields if necessary
-    addChild(DictNode* parent, DictNode* newNode);
+    //! Link up newNode to parent; also ask m_fieldMan to add the
+    //! field if it's new
+    bool addChild(DictNode* parent, DictNode* newNode);
 
-    vector<DictField*> m_fields; /*< all fields defined in the dictionary;
+    /* vector<DictField*> m_fields;  */
+                            /*< all fields defined in the dictionary;
                                 need not all be used (associated with
                                 a node) */
+    DictFieldMan*      m_fieldMan;
     DictNode*          m_root;
     std::string        m_name;   /*< dictionary name */
     int                m_major;  /*< version information */

@@ -17,21 +17,24 @@ namespace xmlUtil {
     DictField(DOM_Element elt);
     ~DictField(){ if (m_constraints) delete m_constraints;};
 
+    const std::string& getName() const {return m_name;}
+
     //! Does the specified value satisfy the constraints, if any?
     bool allowed(const unsigned value);
 
   private:
     friend class IdDict;  // may also need friend IdConverter
-
-    // Build a field with no value constraints
-    DictField(const std::string& name) m_name(name), m_constraints(0) {};
+    friend class DictNode;
 
     // Build a field which has value constraints
     DictField(const std::string& name, const DictConstraints& constraints)
-      : m_name(name), m_constraints(constraints) {};
+      :   m_name(name) 
+    {m_constraints = new DictConstraints(constraints);}
 
-    const std::string& getName() const {return m_name;};
-    m_const DictConstraints& getConstraints() const {return m_constraints;};
+    // Build a field with no value constraints
+    DictField(const std::string& name) : m_constraints(0), m_name(name) {}
+
+    DictConstraints* getConstraints() const {return m_constraints;}
 
     DictConstraints *m_constraints;
     std::string     m_name;

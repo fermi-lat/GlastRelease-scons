@@ -8,21 +8,12 @@
 // g++ has hash_map; Visual Studio doesn't
 #ifdef __GNUG__
 #  include <hash_map>
-#  define Registry hash_map<std::string, DictField*>
-
+#  define Registry hash_map<const char *, DictField*>
 // otherwise might not have hash_map available, so use map, which
 // is overkill for our situation since we don't need sorting
 #else        
 #  include <Map>
-namespace {
-  struct ltstr {
-    bool operator()(const std::string s1, const std::string s2) const
-    { return s1.compare(s2) < 0; }
-  };
-}
-
-#  define Registry  map<std::string, DictField*, ltstr>
-#else
+#  define Registry  map<const char *, DictField*>
 #endif
 
 namespace xmlUtil {
@@ -35,8 +26,8 @@ namespace xmlUtil {
     DictFieldMan(int size = 0);
     ~DictFieldMan();
 
-    void register(DictField *field);
-    const DictField const *find(std::string name);
+    void signup(DictField *field);
+    const DictField * const find(const std::string& name) const;
 
   private:
     // Mechanism for keeping track of the fields is a 
@@ -46,3 +37,4 @@ namespace xmlUtil {
 
   };
 }
+#endif
