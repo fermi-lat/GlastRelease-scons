@@ -16,6 +16,9 @@
 #include "GaudiKernel/IObjManager.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IToolFactory.h"
+#include "GaudiKernel/IAlgManager.h"
+#include "GaudiKernel/Algorithm.h"
+
 
 #include "GuiSvc/IGuiTool.h"
 
@@ -170,6 +173,8 @@ StatusCode GuiSvc::initialize ()
             }
         }
     }
+        //
+
     return StatusCode::SUCCESS;
 }
 
@@ -239,16 +244,54 @@ void GuiSvc::endEvent()  // must be called at the end of an event to update, all
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode GuiSvc::run(){
+    StatusCode status = StatusCode::FAILURE;
+    MsgStream log( msgSvc(), name() );
+
     if ( 0 != m_appMgrUI )    {
+        // now find the top alg so we can monitor its event count
+        //
+        IAlgManager* theAlgMgr;
+        status = serviceLocator( )->getService( "ApplicationMgr",
+            IID_IAlgManager,
+            (IInterface*&)theAlgMgr );
+        IAlgorithm* theIAlg;
+        Algorithm*  theAlgorithm=0;
+        IntegerProperty errorProperty("ErrorCount",0);
+
+        status = theAlgMgr->getAlgorithm( "Top", theIAlg );
+        if ( status.isSuccess( ) ) {
+            try{
+                theAlgorithm = dynamic_cast<Algorithm*>(theIAlg);
+            } catch(...){
+                status = StatusCode::FAILURE;
+            }
+        }
+        if ( status.isFailure( ) ) {
+            log << MSG::WARNING << "Could not find algorithm 'Top'; will not monitor errors" << endreq;
+        }
+   
+
         // loop over the events
         int event= 0;
         while(event++ < m_evtMax) {
             beginEvent();
-            if( m_appMgrUI->nextEvent(1).isFailure()) return StatusCode::FAILURE;
+            status =  m_appMgrUI->nextEvent(1); // currently, always success
+
+            // the single event may have created a failure. Check the ErrorCount propery of the Top alg.
+            if( theAlgorithm !=0) theAlgorithm->getProperty(&errorProperty);
+            if( status.isFailure() || errorProperty.value() > 0){
+                status = StatusCode::FAILURE;
+                m_guiMgr->gui().inform("Event failed: terminating job after current display");
+            }
+
             endEvent();
+            if( status.isFailure()){
+                log << MSG::ERROR << "Terminating Gui loop due to error" << endreq;
+                break;
+            }
         }
     }
-    return StatusCode::SUCCESS;
+    return status;
     
 }
 
