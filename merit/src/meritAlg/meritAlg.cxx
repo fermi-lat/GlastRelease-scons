@@ -254,9 +254,9 @@ StatusCode meritAlg::execute() {
     m_time = header->time();
     m_event = header->event();
 
-	SmartDataPtr<OnboardFilterTds::FilterStatus> filterStatus(eventSvc(), "/Event/Filter/FilterStatus");
-	m_statusHi=filterStatus->getHigh();
-	m_statusLo=filterStatus->getLow();
+    SmartDataPtr<OnboardFilterTds::FilterStatus> filterStatus(eventSvc(), "/Event/Filter/FilterStatus");
+    m_statusHi=filterStatus->getHigh();
+    m_statusLo=filterStatus->getLow();
 
     if(m_root_tuple)m_root_tuple->fill();
 
