@@ -84,7 +84,7 @@ Analysis cuts: nA
 
 </pre>
 <hr>
-\section fastFilter
+\section fastFilter Utility fastFilter: Event selection applying Insightful Miner selection 
  <h3>Usage </h3>
       @verbatim
       fastFilter.exe   [input_merit.root]   [output.root]
