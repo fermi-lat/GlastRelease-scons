@@ -84,7 +84,7 @@ char* HepEventServer_impl::setEvent(const char* command)
   // -> return the actual event name (for now this name is just Event-x, with x
   // an increasing number; this will be changed in future release).
   std::stringstream sName;
-  static temp = 0;
+  static int temp = 0;
   std::string cmd(command);
   
   std::cout << "I've received from " << _clientDesc << ", setEvent to " 

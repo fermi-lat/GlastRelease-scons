@@ -52,7 +52,7 @@ void CorbaServer::run()
   orb->run();    
   orb->destroy();
  }
- catch(CORBA::COMM_FAILURE& ex) {
+ catch(CORBA::COMM_FAILURE&) {
    std::cerr << "Caught system exception COMM_FAILURE -- unable to contact the "
          << "object." << std::endl;
   }
@@ -62,7 +62,7 @@ void CorbaServer::run()
   catch(CORBA::Exception&) {
     std::cerr << "Caught CORBA::Exception." << std::endl;
   }
-  catch(omniORB::fatalException& fe) {
+  catch(omniORB::fatalException&) {
     std::cerr << "Caught omniORB::fatalException:" << std::endl;
   }
 } 
