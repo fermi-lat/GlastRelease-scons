@@ -7,6 +7,10 @@
 #include <string>
 #include "CLHEP/Random/RandFlat.h"
 #include "GRBSim.h"
+
+//for windows to know about exit()
+#include <cstdlib>
+
 /*------------------------------------------------------*/
 using namespace cst;
 /*------------------------------------------------------*/
@@ -42,12 +46,13 @@ GRBSim::GRBSim(char ParameterFile)
   double temp1=(enmax/enmin);
   double temp2=(1.0/enstep);
   double denergy = pow(temp1,temp2);
-  
-  for(int en=0;en<=enstep;en++)
+
+  int en;
+  for(en=0;en<=enstep;en++)
     {
       m_energy.push_back(enmin*pow(denergy,en)); 
     }
-  for(int en=0;en<enstep;en++)
+  for(en=0;en<enstep;en++)
     {
       m_de.push_back(m_energy[en+1]-m_energy[en]);
     }
@@ -64,8 +69,8 @@ void GRBSim::Start()
 {
    //! Step 1: Creation of the shells
   double ei = myParam->Etot()/myParam->Nshell(); //erg
-  
-  for(int i=myParam->Nshell();i>0;i--) {
+  int i;
+  for(i=myParam->Nshell();i>0;i--) {
     GRBShell* iShell = new GRBShell(ei);
     iShell->setThickness(myParam->T0());
     iShell->setRadius(i*(myParam->R0())+myParam->T0());
@@ -81,11 +86,11 @@ void GRBSim::Start()
   //! Step 2: Calculation of the evolution
   while(time<tmax)
     {
-      for(int i=1;i<myParam->Nshell()-nshock;i++)
+      for(i=1;i<myParam->Nshell()-nshock;i++)
 	{
 	  theShells[i]->evolve(dt1);      
 	}
-      for(int i=2;i<myParam->Nshell()-nshock;i++) 
+      for(i=2;i<myParam->Nshell()-nshock;i++) 
 	{
 	  GRBShell* Sh1=theShells[i-1];
 	  GRBShell* Sh2=theShells[i];
@@ -111,7 +116,7 @@ void GRBSim::Start()
   /// Step 3: Sorting the shocks and setting t min=0
   std::sort(theShocks.begin(), theShocks.end(), ShockCmp());
   double t0 = theShocks[0]->tobs();
-  for(int i=0;i<nshock;i++)
+  for(i=0;i<nshock;i++)
     {
       double temp=theShocks[i]->tobs();
       theShocks[i]->setTobs(temp-t0);
@@ -121,7 +126,7 @@ void GRBSim::Start()
   // Warning: tmax redeclared here!!
   m_tmax=1.2*theShocks[nshock-1]->tobs()+0.1;
   double dt=m_tmax/nstep;
-  for(int i=0;i<nshock;i++)
+  for(i=0;i<nshock;i++)
     {
       ssum=0.0;
       for (int tt=0;tt<nstep;tt++)
@@ -247,7 +252,7 @@ float GRBSim::DrawPhotonFromSpectrum(std::vector<double> spctrmVec, float u, dou
   //and then compute cumulative sum.
   std::vector<double> Integral(nbins-minbin,0.0);
   
-  copy(spctrmVec.begin()+minbin, spctrmVec.end(), Integral.begin());
+  std::copy(spctrmVec.begin()+minbin, spctrmVec.end(), Integral.begin());
   
   for(int i=1;i<nbins-minbin;i++) 
     {
