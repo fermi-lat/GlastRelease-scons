@@ -428,7 +428,9 @@ void reconRootWriterAlg::fillVertices(TkrRecon* recon, Event::TkrVertexCol* vert
         vtx->setAddedRadLen(vtxTds->getAddedRadLen());
         vtx->setTkrID(hitId);
 
-        vtx->setParams(convertTkrTrackParams(vtxTds->getVertexParams()));
+        TkrTrackParams params = convertTkrTrackParams(vtxTds->getVertexParams());
+
+        vtx->setParams(params);
         
         // Now add the track ids 
         // This is pretty ugly because we don't store track ids in the TDS classes
