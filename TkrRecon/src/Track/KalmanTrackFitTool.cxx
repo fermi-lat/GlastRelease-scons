@@ -488,6 +488,8 @@ int KalmanTrackFitTool::doSmootherMemory(Event::TkrTrack* track)
 
         *myHit = **hitIter;
 
+        myHit->setParent(0);
+
         myTrack->push_back(myHit);
 
         if (++numSegmentHits > m_MinSegmentHits)

@@ -277,6 +277,8 @@ StatusCode FindTrackHitsTool::findTrackHits(TkrTrack* track)
 	// Remove trailing gap hits
 	while(!track->back()->validCluster()) 
 	{
+        Event::TkrTrackHit* lastHit = track->back();
+        delete lastHit;
 		track->pop_back();
 	}
 	return sc;
