@@ -17,7 +17,6 @@ namespace rdbModel{
     friend class MysqlConnection;
 
   public:
-    MysqlResults();
     virtual ~MysqlResults();
 
     /// Return number of rows in results

@@ -6,7 +6,7 @@ namespace rdbModel {
 
   Visitor::VisitorState  Index::accept(Visitor * v) {
     Visitor::VisitorState state = v->visitIndex(this);
-    if (state == Visitor::BRANCHDONE) return Visitor::CONTINUE;
+    if (state == Visitor::VBRANCHDONE) return Visitor::VCONTINUE;
     return state;
   }
 

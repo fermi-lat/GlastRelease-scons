@@ -26,13 +26,12 @@ namespace rdbModel {
    */
   class Visitor {
   public:
-    enum VisitorState {
-      CONTINUE = 0,
-      DONE = 1,         // visitor has had its fill of visiting
-      BRANCHDONE = 2,   // don't descend further into structure; go
-                        // to next sibling, if any
-      ERROR = 3,        // error during visit; perhaps can continue, though
-      ERRORABORT = 4    // error during visit; can't handle more
+    enum  VisitorState {
+      VCONTINUE = 0,
+      VDONE,         // visitor has had its fill of visiting
+      VBRANCHDONE,   // don't descend further; go to next sibling, if any
+      VERROR,        // error during visit; perhaps can continue, though
+      VERRORABORT    // error during visit; can't handle more
     };
 
   public:

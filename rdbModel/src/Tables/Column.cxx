@@ -33,7 +33,7 @@ namespace rdbModel {
   Visitor::VisitorState Column::accept(Visitor* v) {
 
     Visitor::VisitorState state = v->visitColumn(this);
-    if (state == Visitor::BRANCHDONE) return Visitor::CONTINUE;
+    if (state == Visitor::VBRANCHDONE) return Visitor::VCONTINUE;
     return state;
   }
 
