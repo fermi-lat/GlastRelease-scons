@@ -3,7 +3,7 @@
 #ifndef SiliconPlaneGeometry_H
 #define SiliconPlaneGeometry_H
 
-#include "CLHEP/geometry/Vector3D.h"
+#include "CLHEP/Geometry/Vector3D.h"
 /**
     Static functions only for geometry of individual Si plane
   */
