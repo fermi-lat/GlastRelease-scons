@@ -29,6 +29,7 @@ use calib;
 #       creator          What program created the data?
 #       uid              What person created/entered the data?
 #       data_ident       Filename or other identifier for persistent data
+# $Header$
 #       input_desc       Comments about input to this calibration procedure
 #       notes            A spot for miscellaneous comments
 create table metadata_v1

@@ -1,3 +1,4 @@
+##   $Header$
 ## Put some fake data into metadata table
 
 use calib;
