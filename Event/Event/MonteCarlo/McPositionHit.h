@@ -12,6 +12,7 @@
 #include "GlastEvent/TopLevel/Definitions.h"
 #include "CLHEP/Geometry/Point3D.h"
 #include "GlastEvent/Utilities/CLHEPStreams.h"
+#include "GlastEvent/Utilities/IDStreams.h"
 // Include all Gaudi container types here
 //   to simplify inlude statements in algorithms
 #include "GaudiKernel/ObjectVector.h"
@@ -164,7 +165,7 @@ inline StreamBuffer& McPositionHit::serialize( StreamBuffer& s ) const
 {
   ContainedObject::serialize(s);
   return s
-//    << m_volumeID
+    << m_volumeID
     << m_entry
     << m_exit
     << m_depositedEnergy
@@ -181,7 +182,7 @@ inline StreamBuffer& McPositionHit::serialize( StreamBuffer& s )
 {
   ContainedObject::serialize(s);
   return s
-//    >> m_volumeID
+    >> m_volumeID
     >> m_entry
     >> m_exit
     >> m_depositedEnergy
