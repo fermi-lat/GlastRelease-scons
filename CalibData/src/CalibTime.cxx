@@ -23,7 +23,7 @@ namespace CalibData {
     m_nano = absTime - (m_time * billion);
   }
 
-  CalibTime&  CalibTime::operator+=( const ITime& ) {
+  ITime&  CalibTime::operator+=( const ITime& ) {
     /*   *this =  this->facilities::Timestamp::operator+=(CalibTime(other));
          return *this;
     */
@@ -31,7 +31,7 @@ namespace CalibData {
       ("CalibData::CalibTime Unsupported timestamp operation +=");
   }
 
-  CalibTime&  CalibTime::operator-=( const ITime& ) {
+  ITime&  CalibTime::operator-=( const ITime& ) {
     /*   *this =  this->facilities::Timestamp::operator-=(CalibTime(other));
          return *this;
     */

@@ -46,10 +46,10 @@ namespace CalibData {
     bool              operator> ( const ITime& other) const;
   
     // adding   -- doesn't make sense for timestamps
-    CalibTime&            operator+=(const ITime& other);
+    ITime&            operator+=(const ITime& other);
   
     // substraction  -- doesn't make sense for timestamps
-    CalibTime&            operator-=(const ITime& other);
+    ITime&            operator-=(const ITime& other);
       
     std::ostream& printOut(std::ostream&) const;
   };
