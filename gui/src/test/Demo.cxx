@@ -55,7 +55,7 @@ public:
         // go to the center and draw the label
         double c = 0.5*(a+b); move_to(GraphicsVector(c,c,c));
         drawText(m_pbox->name());
-        markerAt(c,c,c);
+        markerAt(GraphicsVector(c,c,c));
         set_color("black");
     }
 private:
