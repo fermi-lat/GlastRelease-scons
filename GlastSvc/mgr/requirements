@@ -33,8 +33,14 @@ macro GlastSvc_stamps     ""                              \
 
 set   GlastSvcShr           "${GLASTSVCROOT}/${DEBUGDIR}/libGlastSvc"
 
+path_append LD_LIBRARY_PATH "${GLASTSVCROOT}/${DEBUGDIR}"
+
 private
 include_path $(GLASTSVCROOT)
+
+# this for MSVCC, to fix incompatibilities, turn off warnings
+macro_append cppflags ""\
+       VisualC " /FI$(ntconfigfile)" 
 
 # note that the debug versions of the used libraries are inserted below
 
