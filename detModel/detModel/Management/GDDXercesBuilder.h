@@ -28,8 +28,11 @@ class GDDXercesBuilder : public GDDbuilder {
    * the class Substitute to evaluate all the derived constants and substitute
    * them in the sections. It accepts a string for the name of the file  to open
    */
-  GDDXercesBuilder(char* nameFile);
-
+  GDDXercesBuilder();
+  
+  /** This method initialize the parser 
+   */
+  virtual void parseFile(char* nameFile);
   /**
    * This method implement the virutal method of GDDbuilder and builds the
    * sections part of the hierarchy, putting it in the private pointer currentSections

@@ -43,33 +43,18 @@ public:
      *
      */
     int getNumPos(){return anyPosition.size();}
+
     /**
      *
      */
-    void constructBB();
-    /**
-     *
-     */
-    virtual double getBBX(){return bbx;};
-    /**
-     *
-     */
-    virtual double getBBY(){return bby;};
-    /**
-     *
-     */
-    virtual double getBBZ(){return bbz;};
+    virtual void constructBB();
+
     /**
      *
      */
     vector<GDDanyPosition*> getPositions(){return anyPosition;};
 
  private:
-
-    /// Bounding box
-    double bbx;
-    double bby;
-    double bbz;
 
     /** @link aggregation
      *  @supplierCardinality 1..n */

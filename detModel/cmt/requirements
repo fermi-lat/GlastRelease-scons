@@ -21,7 +21,7 @@ path_append LD_LIBRARY_PATH "${DETMODELROOT}/${CMTCONFIG}"
 
 
 library detModel -no_share \
-     GDD.cpp \
+     *.cpp \
      Management/*.cpp \
      Sections/*.cpp \
      Constants/*.cpp \

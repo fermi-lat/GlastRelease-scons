@@ -24,10 +24,14 @@ int main(int argc, char* argv[]) {
   // We retrive the manager pointer (it is a singleton, so it is not possible
   // to create it in the usual way)
   GDDmanager* manager = GDDmanager::getPointer();
+
  
   // We set the builder; the XercesBuilder needs the name of the XML file
   // in the constructor
-  manager->setBuilder(new GDDXercesBuilder(argv[1]));
+  manager->setBuilder(new GDDXercesBuilder);
+
+  manager->setNameFile(argv[1]);
+  
 
   // We set the mode for the choice elements in the XML file
   manager->setMode("propagate");
@@ -48,11 +52,10 @@ int main(int argc, char* argv[]) {
     visitor = new GDDVRMLSectionsVisitor(argv[2]);  
 
   visitor->setOpacity("FOAM05",0.0);
-  visitor->setDepth("oneTKR", 0);
+  //  visitor->setDepth("oneTKR", 0);
   //  visitor->setDepth("oneCAL", 0);
   manager->startVisitor(visitor);
  
-
   // We start the HTMLConstantsVisitor to build the html file with the
   // constants tables. Colors and layout are stolen from Joanne ones.
   manager->startVisitor(new GDDHTMLConstantsVisitor());
@@ -60,11 +63,11 @@ int main(int argc, char* argv[]) {
   // We retrive the hierarchy entry point, i.e. the GDD object. It
   // contains all the relevant information
   GDD* g = manager->getGDD();
+
   // We can use some methods of the GDD object to retrive relevant information,
   // for example the value for a constant or the dimension for a volume.
   // In this example we extract the value for the char constant convMat
   // and the material and X dimension for the volume (a box) CsIElementEnv
-
   std::cout << "The convMat value is " << g->getCharConstByName("convMat") << std::endl;
   std::cout << "The material of the CsIElementEnv is " 
 	    << (static_cast<GDDshape*>(g->getVolumeByName("CsIElementEnv")))->getMaterial() << std::endl;

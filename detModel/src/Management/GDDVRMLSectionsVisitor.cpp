@@ -136,7 +136,6 @@ void  GDDVRMLSectionsVisitor::visitStack(GDDstack* st)
 
   k = depthMap.find(st->getName());
 
-
   deltap = 0;
   if(k->second > depth) 
     {
@@ -160,17 +159,17 @@ void  GDDVRMLSectionsVisitor::visitStack(GDDstack* st)
 	  out << "Transform {  #" << apos->getVolume()->getName() << std::endl;
 	  switch(st->getStackType()){
 	  case sx:
-	    delta = apos->getBBX()/2 + deltap;
+	    delta = (apos->getBBX()+apos->getGap())/2 + deltap;
 	    out << "translation " << delta << " 0 " << " 0 " << std::endl;
 	    deltap += apos->getBBX();
 	    break;	
 	  case sy:
-	    delta = apos->getBBY()/2 + deltap;
+	    delta = (apos->getBBY()+apos->getGap())/2 + deltap;
 	    out << "translation " << " 0 " << delta << " 0 " << std::endl;
 	    deltap += apos->getBBY();
 	    break;	
 	  case sz:
-	    delta = apos->getBBZ()/2 + deltap;
+	    delta = (apos->getBBZ()+apos->getGap())/2 + deltap;
 	    out << "translation " << " 0 " << " 0 " << delta << std::endl;
 	    deltap += apos->getBBZ();
 	    break;	
@@ -215,9 +214,11 @@ void  GDDVRMLSectionsVisitor::visitBox(GDDbox* box)
 void  GDDVRMLSectionsVisitor::visitPosXYZ(GDDposXYZ* pos)
 {
   out << "Transform { " << std::endl;
-  out << "translation " << pos->getX() << " " <<
-    pos->getY() << " " << pos->getZ() << 
-    std::endl;
+
+  out << "translation " << pos->getX() << " " << pos->getY() << " " << pos->getZ() << std::endl;
+  out << "rotation " << " 1 0 0 " <<  pos->getXrot()*3.141927/180 << std::endl;  
+  out << "rotation " << " 0 1 0 " <<  pos->getYrot()*3.141927/180 << std::endl;  
+  out << "rotation " << " 0 0 1 " <<  pos->getZrot()*3.141927/180 << std::endl;  
   out << "children [ " << std::endl;
   pos->getVolume()->AcceptNotRec(this);
   out << "] " << std::endl; 

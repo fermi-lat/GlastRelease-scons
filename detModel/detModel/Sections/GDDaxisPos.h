@@ -10,7 +10,7 @@ class GDDaxisPos :public GDDanyRelativePosition {
  public:
 
   GDDaxisPos():
-    GDDanyRelativePosition(AxisPos),shift(0),gap(0){}
+    GDDanyRelativePosition(AxisPos){}
 
   virtual ~GDDaxisPos(){};
   /**
@@ -33,25 +33,7 @@ class GDDaxisPos :public GDDanyRelativePosition {
    *
    */ 
   virtual double getBBZ();  
-  /**
-   *
-   */ 
-  void setShift(double pshift){shift=pshift;}
-  /**
-   *
-   */ 
-  void setGap(double pgap){gap=pgap;}
-  /**
-   *
-   */ 
-  double getShift()const{return shift;}
-  /**
-   *
-   */ 
-  double getGap()const{return gap;}
-  
- private:
-  double shift; ///default 0
-  double gap;  ///default 0
+
+
 };
 #endif //GDDAXISPOS_H

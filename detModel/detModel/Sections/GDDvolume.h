@@ -11,6 +11,7 @@ enum stacktype{sx,sy,sz};
 enum stackorigin{atStart,atCentre};
 enum typeVolume{shape,composition,stack,logical};
 
+
 /**
  * This class represent the generic volume of the geometric 
  * description. It is not an abstract class, but it should be not
@@ -40,41 +41,79 @@ class GDDvolume {
    */  
   typeVolume getVolumeType(){return vtype;};
 
-  /** This method return the x dimension of the bounding box it has to
-     be redefined concretely in the subclasses of GDDvolume */
-  virtual double getBBX(){return 0;};
-  /** This method return the y dimension of the bounding box it has to
-     be redefined concretely in the subclasses of GDDvolume */
-  virtual double getBBY(){return 0;};
-  /** This method return the z dimension of the bounding box it has to
-     be redefined concretely in the subclasses of GDDvolume */
-  virtual double getBBZ(){return 0;};
   
   /// This method is the recursive Accept for the visitor pattern
   virtual void Accept(GDDsectionsVisitor*){};
   /// This method is the non recursive Accept for the visitor pattern
   virtual void AcceptNotRec(GDDsectionsVisitor*){};
   
+  /**
+   *
+   */
+  virtual void constructBB(){};
+
+  /** This method return the x dimension of the bounding box it has to
+      be redefined concretely in the subclasses of GDDvolume */
+  double getBBX(){return bbx;};
+  /** This method return the y dimension of the bounding box it has to
+     be redefined concretely in the subclasses of GDDvolume */
+  double getBBY(){return bby;};
+  /** This method return the z dimension of the bounding box it has to
+     be redefined concretely in the subclasses of GDDvolume */
+  double getBBZ(){return bbz;};
+
+  /// This method sets the x dimension of the bounding box 
+  void setBBX(double pbbx){bbx = pbbx;};
+  /// This method sets the y dimension of the bounding box 
+  void setBBY(double pbby){bby = pbby;};
+  /// This method sets the z dimension of the bounding box 
+  void setBBZ(double pbbz){bbz = pbbz;};
+
+  /** This method return the x dimension of the bounding box it has to
+      be redefined concretely in the subclasses of GDDvolume */
+  double getOX(){return ox;};
+  /** This method return the y dimension of the bounding box it has to
+     be redefined concretely in the subclasses of GDDvolume */
+  double getOY(){return oy;};
+  /** This method return the z dimension of the bounding box it has to
+     be redefined concretely in the subclasses of GDDvolume */
+  double getOZ(){return oz;};
+
+  /// This method sets the x dimension of the bounding box 
+  void setOX(double pox){ox = pox;};
+  /// This method sets the y dimension of the bounding box 
+  void setOY(double poy){oy = poy;};
+  /// This method sets the z dimension of the bounding box 
+  void setOZ(double poz){oz = poz;};
+
+
+
+  
   virtual ~GDDvolume(){}
 
  protected:
-
   /// Some constructors
   GDDvolume(){};
   GDDvolume(string pname,typeVolume ptype):
-    name(pname),vtype(ptype),parameters(""){;}
+    name(pname),vtype(ptype),parameters(""),bbx(0),bby(0),bbz(0){;}
   GDDvolume(typeVolume ptype):vtype(ptype),parameters(""){;}
 
-
-
  private:
+
   /// The name of the volume
   string name;
   /// The type of the volumes
   typeVolume vtype;
   /// The parameters of the volume
   string parameters;  
+  /// Bounding box
+  double bbx;
+  double bby;
+  double bbz;
 
+  double ox;
+  double oy;
+  double oz;
 };
 #endif //GDDVOLUME_H
 

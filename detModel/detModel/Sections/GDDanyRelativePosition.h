@@ -133,11 +133,28 @@ public:
    *
    */ 
   vector <GDDidField*> getIdFields()const{return idFields;}
+  /**
+   *
+   */ 
+  void setShift(double pshift){shift=pshift;}
+  /**
+   *
+   */ 
+  void setGap(double pgap){gap=pgap;}
+  /**
+   *
+   */ 
+  double getShift()const{return shift;}
+  /**
+   *
+   */ 
+  double getGap()const{return gap;}
+  
 
  protected:
   GDDanyRelativePosition(axisPosType ppositionType):
     positionType(ppositionType),dx(0),dy(0),dz(0),
-   rotation(0){}
+   rotation(0),shift(0),gap(0){}
 
  private:    
   
@@ -157,6 +174,8 @@ public:
   
   /** @link aggregation */
   vector <GDDidField *> idFields;
+  double shift; ///default 0
+  double gap;  ///default 0
 };
 #endif //GDDANYRELATIVEPOSITION_H
 

@@ -4,6 +4,7 @@
 #include "detModel/Sections/GDDcomposition.h"
 #include "detModel/Sections/GDDanyPosition.h"
 #include "detModel/Sections/GDDposXYZ.h"
+#include "detModel/GDDmatrix.h"
 
 GDDcomposition::~GDDcomposition(){
   purge(anyPosition);
@@ -22,9 +23,10 @@ void GDDcomposition::Accept(GDDsectionsVisitor* v){
 
 
 void GDDcomposition::constructBB(){
-  unsigned int i;
+  unsigned int i, j;
   double xmin, ymin, zmin, xmax, ymax, zmax;
 
+  
   xmin = ymin = zmin = 100000;
   xmax = ymax = zmax = -100000;
 
@@ -32,39 +34,89 @@ void GDDcomposition::constructBB(){
     {
       if (getPositions()[i]->getPosType() == posXYZ)
 	{
+	  vector <GDDvector*> points;
 	  GDDposXYZ* pos = static_cast<GDDposXYZ*>(getPositions()[i]);
-      
-	  GDDvolume* vol = pos->getVolume();
-      
-	  if ((pos->getX()+vol->getBBX()/2) > xmax)
-	    xmax = (pos->getX()+vol->getBBX()/2);
+      	  GDDvolume* vol = pos->getVolume();
 	  
-	  if ((pos->getY()+vol->getBBY()/2) > ymax)
-	    ymax = (pos->getY()+vol->getBBY()/2);
+	  /// These are 8 points of the bounding box of the positioned volume
+	  points.push_back(new GDDvector(-vol->getBBX()/2,
+					-vol->getBBY()/2,
+					-vol->getBBZ()/2));
 
-	  if ((pos->getZ()+vol->getBBZ()/2) > zmax)
-	    zmax = (pos->getZ()+vol->getBBZ()/2);
+	  points.push_back(new GDDvector(+vol->getBBX()/2,
+					-vol->getBBY()/2,
+					-vol->getBBZ()/2));
 
-	  if ((pos->getX()-vol->getBBX()/2) < xmin)
-	    xmin = (pos->getX()-vol->getBBX()/2);
+	  points.push_back(new GDDvector(-vol->getBBX()/2,
+					+vol->getBBY()/2,
+					-vol->getBBZ()/2));
+
+	  points.push_back(new GDDvector(-vol->getBBX()/2,
+					-vol->getBBY()/2,
+					+vol->getBBZ()/2));
+
+	  points.push_back(new GDDvector(+vol->getBBX()/2,
+					+vol->getBBY()/2,
+					-vol->getBBZ()/2));
+	  points.push_back(new GDDvector(+vol->getBBX()/2,
+					-vol->getBBY()/2,
+					+vol->getBBZ()/2));
+	  points.push_back(new GDDvector(-vol->getBBX()/2,
+					+vol->getBBY()/2,
+					+vol->getBBZ()/2));
+
+	  points.push_back(new GDDvector(+vol->getBBX()/2,
+					+vol->getBBY()/2,
+					+vol->getBBZ()/2));
+
+	  GDDvector* t = new GDDvector(pos->getX(),pos->getY(),pos->getZ());
 	  
-	  if ((pos->getY()-vol->getBBY()/2) < ymin)
-	    ymin = (pos->getY()-vol->getBBY()/2);
+	  
+	  if(pos->getZrot() != 0)
+	    for(j=0;j<8;j++)
+	      GDDrotate(2,pos->getZrot(),points[j]);
+	  if(pos->getYrot() != 0)
+	    for(j=0;j<8;j++)
+	      GDDrotate(1,pos->getYrot(),points[j]);	  
+	  if(pos->getXrot() != 0)
+	    for(j=0;j<8;j++)
+	      GDDrotate(0,pos->getXrot(),points[j]);
 
-	  if ((pos->getZ()-vol->getBBZ()/2) < zmin)
-	    zmin = (pos->getZ()-vol->getBBZ()/2);
-	}
-      else ///\todo To add other possible positioning
-	{
-	  xmax = xmin;
-	  ymax = ymin;
-	  zmax = zmin;
-	}
+
+	  for(j=0;j<8;j++)
+	    GDDtranslate(t,points[j]);
+
+
+	  for(j=0;j<8;j++)
+	    {
+	      if (points[j]->x > xmax)
+		xmax = points[j]->x;
+
+	      if (points[j]->y > ymax)
+		ymax = points[j]->y;
+
+	      if (points[j]->z > zmax)
+		zmax = points[j]->z;
+
+	      if (points[j]->x < xmin)
+		xmin = points[j]->x;
+
+	      if (points[j]->y < ymin)
+		ymin = points[j]->y;
+
+	      if (points[j]->z < zmin)
+		zmin = points[j]->z;
+	    }
+	  purge(points);
+	}///\todo To add other possible positioning
     }//endfor
 
-  bbx = fabs(xmax - xmin);
-  bby = fabs(ymax - ymin);
-  bbz = fabs(zmax - zmin);
+  setOX(xmin);
+  setOY(ymin);
+  setOZ(zmin);
+  setBBX(fabs(xmax - xmin));
+  setBBY(fabs(ymax - ymin));
+  setBBZ(fabs(zmax - zmin));
 }
 
 

@@ -75,11 +75,11 @@ public:
   /**
    *
    */ 
-  double getYrot()const{return xrot;}
+  double getYrot()const{return yrot;}
   /**
    *
    */ 
-  double getZrot()const{return xrot;}
+  double getZrot()const{return zrot;}
   /**
    *
    */ 

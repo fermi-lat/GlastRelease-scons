@@ -11,40 +11,13 @@ void GDDaxisPos::Accept(GDDsectionsVisitor* v){
 }
 
 double GDDaxisPos::getBBX(){
-  switch(getPosDir()){
-  case(sx):
-    return getVolume()->getBBX() + getGap(); 
-    break;
-  case(sy):
-  case(sz):
-    return (getVolume()->getBBX());
-    break;
-  }
-  return 0;
+  return getVolume()->getBBX(); 
 }
 
 double GDDaxisPos::getBBY(){
-  switch(getPosDir()){
-  case(sy):
-    return getVolume()->getBBY() + getGap(); 
-    break;
-  case(sx):
-  case(sz):
-    return (getVolume()->getBBY());
-    break;
-  }
-  return 0;
+  return getVolume()->getBBY(); 
 }
 
 double GDDaxisPos::getBBZ(){
-  switch(getPosDir()){
-  case(sz):
-    return getVolume()->getBBZ() + getGap(); 
-    break;
-  case(sx):
-  case(sy):
-    return (getVolume()->getBBZ());
-    break;
-  }
-  return 0;
+  return getVolume()->getBBZ(); 
 }

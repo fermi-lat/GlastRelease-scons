@@ -48,23 +48,16 @@ public:
      * This method gives the z dimension 
      */
     double getZ(){return z;}
-    /** 
-     *This method return the x dimension of the bounding box 
-     */
-    virtual double getBBX(){return x;}
-    /**
-     * This method return the y dimension of the bounding box
-     */
-    virtual double getBBY(){return y;}
-    /**
-     * This method return the z dimension of the bounding box
-     */
-    virtual double getBBZ(){return z;}
 
+    /**
+     * This method build the bounding box information
+     */
+    virtual void constructBB();
+    
     /**
      * This is the standard Accept method for the visitor mechanism
      */
-    void Accept(GDDsectionsVisitor* v){v->visitBox(this);if (seg)v->visitSeg(seg);};
+    void Accept(GDDsectionsVisitor* v);
     /**
      *  This method is the non recursive Accept for the visitor pattern
      */

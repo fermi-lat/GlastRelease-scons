@@ -1,6 +1,7 @@
 #ifndef GDDMANAGER_H
 #define GDDMANAGER_H
 #include <map>
+
 #include "detModel/Management/GDDmanager.h"
 #include "detModel/Management/GDDvisitor.h"
 #include "detModel/GDD.h"
@@ -46,11 +47,16 @@ public:
   /// This method starts the visit of a hierarchy with a specified visitor
   void startVisitor(GDDvisitor*);
 
+  void cleanGDD();
+
   /** This method gives back the pointer to the GDD object. It coule be
      used by expert clients to access information without the need of
      a visitor */
   GDD* getGDD(){return manGDD;};
-  
+
+  void setNameFile(char* pname){nameFile = pname;};
+  char* getNameFile(){return nameFile;};
+
  protected:
   /** The constructor is protected; in such a way it is forbidden to *
       build directely a manager. Here the new GDD object is explicitely
@@ -72,5 +78,7 @@ public:
   GDDbuilder * manBuilder;
   /// This string represent the mode for choices elements
   string manMode;
+
+  char* nameFile;
 };
 #endif //GDDMANAGER_H

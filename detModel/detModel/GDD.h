@@ -11,6 +11,7 @@ class GDDconst;
 class GDDvisitor;
 class GDDsection;
 class GDDchoice;
+class GDDshape;
 
 typedef vector <GDDsection*> vec;
 
@@ -73,6 +74,8 @@ public:
    * depending on the mode (see the manager).
    */
   GDDvolume * getVolumeByName(string vname);
+
+  GDDshape * getShapeByName(string vname);
   /**
    * This method search the const map with the name string and return
    * a pointer to the GDDconst object if it exists, otherwise it returns 0

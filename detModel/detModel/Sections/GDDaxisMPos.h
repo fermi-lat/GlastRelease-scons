@@ -10,7 +10,7 @@ class GDDaxisMPos : public GDDanyRelativePosition {
 public:
 
   GDDaxisMPos():
-    GDDanyRelativePosition(AxisMpos),shift(0),gap(0),shift0(0),gap0(0),ncopy(0){};
+    GDDanyRelativePosition(AxisMpos),shift0(0),gap0(0),ncopy(0){};
   /**
    *
    */ 
@@ -19,14 +19,6 @@ public:
    *
    */ 
   virtual void AcceptNotRec(GDDsectionsVisitor* v){v->visitAxisMPos(this);};
-  /**
-   *
-   */ 
-  void setShift(double pshift){shift = pshift;};
-  /**
-   *
-   */ 
-  void setGap(double pgap){gap = pgap;};
   /**
    *
    */ 
@@ -54,14 +46,6 @@ public:
   /**
    *
    */ 
-  double getShift()const{return shift;}
-  /**
-   *
-   */ 
-  double getGap()const{return gap;}
-  /**
-   *
-   */ 
   double getShift0()const{return shift0;}
   /**
    *
@@ -73,8 +57,6 @@ public:
   int getNcopy()const{return ncopy;}
 
 private:    
-    double shift;  ///default 0
-    double gap;   ///default 0
     double shift0; ///default 0
     double gap0; ///default 0
     int ncopy; ///default 0

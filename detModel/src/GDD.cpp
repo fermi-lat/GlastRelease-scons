@@ -2,6 +2,7 @@
 
 #include "detModel/GDDpurge.h"
 #include "detModel/GDD.h"
+#include "detModel/Sections/GDDshape.h"
 #include "detModel/Sections/GDDsection.h"
 #include "detModel/Sections/GDDchoice.h"
 #include "detModel/Sections/GDDvolume.h"
@@ -120,6 +121,7 @@ int GDD::getVolumesNumber()
   return n;
 }
 
+
 /// This method gives back the total number of sections  
 int GDD::getSectionsNumber()
 {
@@ -165,6 +167,16 @@ GDDvolume* GDD::getVolumeByName(string vname)
   else return i->second;
 }
 
+/* This method gives back a GDDvolume* given a name
+ * If it does not exist, it returns a null pointer
+ */
+GDDshape* GDD::getShapeByName(string vname)
+{
+  if( getVolumeByName(vname)  && (getVolumeByName(vname)->getVolumeType() == shape) )
+    return static_cast<GDDshape*>(getVolumeByName(vname));
+  else return 0;
+}
+
 /* This method build the volume map and it should be automatically 
  * called by the builder 
  */
@@ -188,13 +200,7 @@ void GDD::buildBoundingBoxes()
 
   for(i=0;i<getSectionsNumber();i++)
     for(j=0;j<sections[i]->getVolumes().size();j++)
-      {
-	if ((sections[i]->getVolumes()[j])->getVolumeType() == composition)
-	  { 
-	    GDDcomposition* comp = static_cast<GDDcomposition*>(sections[i]->getVolumes()[j]);
-	    comp->constructBB();
-	  }
-      }
+      sections[i]->getVolumes()[j]->constructBB();
 }
 
 /* This method build the choices map and it is called by the buildVolumeMap

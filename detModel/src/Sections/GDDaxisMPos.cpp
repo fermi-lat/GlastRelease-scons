@@ -15,7 +15,7 @@ void GDDaxisMPos::Accept(GDDsectionsVisitor* v){
 double GDDaxisMPos::getBBX(){
   switch(getPosDir()){
   case(sx):
-     return (getVolume()->getBBX() + getGap())*getNcopy() - getGap(); 
+     return (getVolume()->getBBX() + getGap())*getNcopy() -getGap(); 
     break;
   case(sy):
   case(sz):
@@ -28,7 +28,7 @@ double GDDaxisMPos::getBBX(){
 double GDDaxisMPos::getBBY(){
   switch(getPosDir()){
   case(sy):
-    return ((getVolume()->getBBY()+getGap())*getNcopy() - getGap() ); 
+    return (getVolume()->getBBY()+getGap())*getNcopy() - getGap(); 
     break;
   case(sx):
   case(sz):

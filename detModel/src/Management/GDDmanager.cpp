@@ -16,6 +16,7 @@ GDDmanager* GDDmanager::pointer = 0;
 
 GDDmanager::~GDDmanager(){
   delete manGDD;
+  delete manBuilder;
 }
 
 GDDmanager* GDDmanager::getPointer()
@@ -25,19 +26,28 @@ GDDmanager* GDDmanager::getPointer()
   return pointer;
 }
 
+void GDDmanager::cleanGDD(){
+  delete manGDD; 
+  manGDD = new GDD; 
+  //  delete manBuilder;
+}
+
 void GDDmanager::setBuilder(GDDbuilder* b)
 {
   manBuilder = b;
-  manGDD = b->getGDD();
+  
 }
 
 void GDDmanager::build(buildType b) 
 { 
+  manBuilder->parseFile(getNameFile());
+  manGDD = manBuilder->getGDD();
+  
   switch(b)
     {
     case all:
-      manBuilder->buildConstants(); 
       manBuilder->buildSections(); 
+      manBuilder->buildConstants(); 
       break;
     case constants:
       manBuilder->buildConstants(); 

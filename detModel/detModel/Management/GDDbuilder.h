@@ -13,7 +13,10 @@ class GDDconstants;
  */
 class GDDbuilder {
 public:
-
+    /** This method initialize the parser (implemented in a concrete
+     * subclass of this class) 
+     */
+    virtual void parseFile(char*) { };
     /** This method start the parser (implemented in a concrete
      * subclass of this class) for the sections part and put the
      * result in a private pointer */
@@ -25,6 +28,7 @@ public:
      * result in a private pointer */
     virtual void buildConstants() { };
 
+    void setGDD(GDD* pgdd){currentGDD = pgdd;}
     /** This method return a pointer to the internal
         GDDsectionsContainer */
     GDD * getGDD() { return currentGDD; };

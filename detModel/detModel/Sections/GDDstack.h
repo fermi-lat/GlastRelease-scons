@@ -32,19 +32,6 @@ class GDDstack :public GDDvolume {
   /**
    *
    */ 
-  virtual double getBBX();
-  /**
-   *
-   */ 
-  virtual double getBBY();
-  /**
-   *
-   */ 
-  virtual double getBBZ();
-  
-  /**
-   *
-   */ 
   void setOrigin(stackorigin porigin){origin=porigin;}
   /**
    *
@@ -58,6 +45,10 @@ class GDDstack :public GDDvolume {
    *
    */ 
   vector <GDDanyRelativePosition*> getPositions(){return anyRelativePosition;};
+  /**
+   *
+   */
+  virtual void constructBB();
  private:
   stacktype Stype;
   stackorigin origin; ///default atStart
@@ -66,6 +57,10 @@ class GDDstack :public GDDvolume {
   vector < GDDanyRelativePosition * > anyRelativePosition;
 };
 #endif //GDDSTACK_H
+
+
+
+
 
 
 

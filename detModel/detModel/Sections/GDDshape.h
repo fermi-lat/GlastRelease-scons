@@ -27,6 +27,8 @@ class GDDshape : public GDDvolume {
    */
   void setSensitive(bool psensitive){sensitive = psensitive;};
 
+  bool getSensitive(){return sensitive;};
+
   /**
    * This method set the material (a string) of the shape
    */  

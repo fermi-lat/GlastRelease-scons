@@ -33,8 +33,13 @@
 #include "detModel/Constants/GDDdoubleConst.h"
 #include "detModel/Constants/GDDstringConst.h"
 
-GDDXercesBuilder::GDDXercesBuilder(char* nameFile)
+GDDXercesBuilder::GDDXercesBuilder()
 {
+}
+
+
+
+void GDDXercesBuilder::parseFile(char* nameFile){
   unsigned int iSec;
 
   xml::XmlParser* parser = new xml::XmlParser();
@@ -77,13 +82,16 @@ GDDXercesBuilder::GDDXercesBuilder(char* nameFile)
     }
       
 
-
   GDDmanager* man = GDDmanager::getPointer();
   currentGDD = man->getGDD();
+
   currentGDD->setCVSid(xml::Dom::getAttribute(docElt, "CVSid"));
   currentGDD->setDTDversion(xml::Dom::getAttribute(docElt, "DTDversion"));
-  
-}
+
+  delete parser;
+  delete sub;
+}  
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 GDDconst* GDDXercesBuilder::buildConst(DOM_Node* e){
@@ -284,8 +292,10 @@ GDDchoice* GDDXercesBuilder::buildChoice(DOM_Node* e)
   DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
   GDDchoice* b = new GDDchoice(xml::Dom::getAttribute(el, "name"));
 
-  DOM_NodeList childs = e->getChildNodes();
+  GDDmanager* gddManager = GDDmanager::getPointer();
 
+  DOM_NodeList childs = e->getChildNodes();
+  
   for(unsigned int i=0;i<childs.getLength();i++){
       if (childs.item(i).getNodeType()!=Comment)
 	{
@@ -301,13 +311,17 @@ GDDchoice* GDDXercesBuilder::buildChoice(DOM_Node* e)
 			xml::Dom::transToChar(
 			attributelist.getNamedItem(DOMString("volume")).getNodeValue()));
 	  b->addCase(Mode, Volume);
+	  
+	  /// This initialize the mode
+	  if(gddManager->getMode() == "")
+	    gddManager->setMode(Mode);
 	}
   }
   return b;
 }
 
 ///////////////////////////////////////////////////////////////////////////
-/// \doit Add sensitive and parameters
+/// \doit Add parameters
 GDDbox* GDDXercesBuilder::buildBox(DOM_Node* e)
 {
 
@@ -323,6 +337,11 @@ GDDbox* GDDXercesBuilder::buildBox(DOM_Node* e)
   if(el.getAttribute("Z") != "0")
     b->setZ(atof(xml::Dom::transToChar(el.getAttribute("Z"))));
   b->setMaterial(xml::Dom::transToChar(el.getAttribute("material")));
+
+  if (std::string((xml::Dom::transToChar(el.getAttribute("sensitive")))) == "true")
+    b->setSensitive(1);
+  else 
+    b->setSensitive(0);
 
    if (e->hasChildNodes()){
     DOM_Node child=e->getFirstChild();
@@ -398,6 +417,7 @@ GDDanyPosition* GDDXercesBuilder::buildPosition(DOM_Node* e){
       pos->setY(atof(xml::Dom::transToChar(el.getAttribute("Y"))));
     if(el.getAttribute("Z") != "0")
       pos->setZ(atof(xml::Dom::transToChar(el.getAttribute("Z"))));
+
     return pos;
   }
   else if (posType=="posRPhiZ"){
@@ -418,12 +438,6 @@ GDDanyRelativePosition* GDDXercesBuilder::buildRelativePosition(DOM_Node* e){
       
       setAttributeRelativePosition(pos, e);
        
-      DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
-
-      if(el.getAttribute("shift") != "0")
-	pos->setShift(atof(xml::Dom::transToChar(el.getAttribute("shift"))));
-      if(el.getAttribute("gap") != "0")
-	pos->setGap(atof(xml::Dom::transToChar(el.getAttribute("gap"))));
     
       return pos;
       
@@ -435,11 +449,7 @@ GDDanyRelativePosition* GDDXercesBuilder::buildRelativePosition(DOM_Node* e){
     setAttributeRelativePosition(pos, e);
        
     DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
-    
-    if(el.getAttribute("shift") != "0")
-      pos->setShift(atof(xml::Dom::transToChar(el.getAttribute("shift"))));
-    if(el.getAttribute("gap") != "0")
-      pos->setGap(atof(xml::Dom::transToChar(el.getAttribute("gap"))));
+
     if(el.getAttribute("shift0") != "0")
       pos->setShift0(atof(xml::Dom::transToChar(el.getAttribute("shift0"))));
     if(el.getAttribute("gap0") != "0")
@@ -573,6 +583,11 @@ void GDDXercesBuilder::setAttributeRelativePosition(GDDanyRelativePosition* pos,
   node = attributelistPos.getNamedItem(DOMString("unitAngle"));
   pos->setUnitAngle(xml::Dom::transToChar(node.getNodeValue()));
 
+  node = attributelistPos.getNamedItem(DOMString("gap"));
+  pos->setGap(atof(xml::Dom::transToChar(node.getNodeValue())));
+
+  node = attributelistPos.getNamedItem(DOMString("shift"));
+  pos->setShift(atof(xml::Dom::transToChar(node.getNodeValue())));
 
   if (e->hasChildNodes()){
     DOM_NodeList child=e->getChildNodes();
