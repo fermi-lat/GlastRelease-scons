@@ -1,6 +1,7 @@
 // $Header$
-/// Test client program for strip services.  
-
+/**  @file test_strips.cxx
+   Sample program to exercise low-level calibration strip services.  
+*/
 #include "MyObject.h"
 
 #include <string>
