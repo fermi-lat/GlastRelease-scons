@@ -102,7 +102,11 @@ StatusCode reconRootReaderAlg::initialize()
     // Save the current directory for the ntuple writer service
     TDirectory *saveDir = gDirectory;   
     m_reconFile = new TFile(m_fileName.c_str(), "READ");
-    if (!m_reconFile->IsOpen()) sc = StatusCode::FAILURE;
+    if (!m_reconFile->IsOpen()) {
+        log << MSG::ERROR << "ROOT file " << m_fileName 
+            << " could not be opened for reading." << endreq;
+        return StatusCode::FAILURE;
+    }
     m_reconFile->cd();
     m_reconTree = (TTree*)m_reconFile->Get(m_treeName.c_str());
     m_reconEvt = 0;
@@ -120,8 +124,13 @@ StatusCode reconRootReaderAlg::execute()
     //   data on the TDS.
 
     MsgStream log(msgSvc(), name());
-
     StatusCode sc = StatusCode::SUCCESS;
+    
+    if (!m_reconFile->IsOpen()) {
+        log << MSG::ERROR << "ROOT file " << m_fileName 
+            << " could not be opened for reading." << endreq;
+        return StatusCode::FAILURE;
+    }
 
     static UInt_t evtId = 0;
     m_reconTree->GetEvent(evtId);
