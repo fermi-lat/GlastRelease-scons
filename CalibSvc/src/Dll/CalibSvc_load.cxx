@@ -14,11 +14,9 @@ DECLARE_FACTORY_ENTRIES(CalibSvc) {
 
   DECLARE_SERVICE(CalibMySQLCnvSvc);
 
-  // Following don't exist yet.  besides, they will be private,
-  // invoked only by the MySQL converter, so maybe they don't
-  // have to be declared here at all.
-  //  DECLARE_SERVICE(CalibXMLCnvSvc);
-  //  DECLARE_SERVICE(CalibROOTCnvSvc);
+  // Following don't exist yet.
+  //  DECLARE_SERVICE(CalibXmlCnvSvc);
+  //  DECLARE_SERVICE(CalibRootCnvSvc);
 
   DECLARE_CONVERTER(MetadataCnv);   // to convert MetadataEntryCol. NYW.
 
