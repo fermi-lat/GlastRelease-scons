@@ -3,6 +3,7 @@
 #include <map.h>
 #include <vector.h>
 #include <string.h>
+#include <list>
 
 class GDDvolume;
 class GDDconstants;
@@ -11,6 +12,7 @@ class GDDvisitor;
 class GDDsection;
 class GDDchoice;
 
+typedef vector <GDDsection*> vec;
 
 /**
  * This is the main container of all the geometry.
@@ -42,7 +44,7 @@ public:
   ///This method gives back the constants
   GDDconstants* getConstants()const{return constants;}
   /// This method gives back a pointer to the sections vector
-  vector <GDDsection*> getSections(){return &sections;};  
+  vec* getSections(){return &sections;};  
   ///This method gives back the GDDvolume map  
   map < string, GDDvolume * > getVolumesMap(){return volumeMap;};
 

@@ -244,7 +244,7 @@ string GDD::getCharConstByName(string cname)
  */
 void GDD::buildConstantsMap()
 {
-  unsigned int k,j;
+  unsigned int k,j,m;
 
   typedef map<string, double> M1;
   typedef map<string, string> M2;
@@ -281,7 +281,12 @@ void GDD::buildConstantsMap()
 	constCharMap.insert(M2::value_type(temp->getName(),tmp1->getValue()));
 	/// Here we fill the materialNames vector
 	if (temp->getConstMeaning() == mat)
-	  materialNames.push_back(temp->getName());
+	  {
+	    bool flag=1;
+	    for(m=0;m<materialNames.size();m++)
+	      if (materialNames[m]==tmp1->getValue()) flag = 0;
+	    if (flag) materialNames.push_back(tmp1->getValue());
+	  }
 	break;
       }
       }//end switch

@@ -68,10 +68,18 @@ class GDDVRMLSectionsVisitor : public GDDsectionsVisitor {
    */
   virtual void visitSeg(GDDseg*);
 
+  /// This method build the colors for the VRML file
+  void makeColor();
+
+  void setOpacity(string, float);
+
+  void setDepth(string, int);
+
   string actualVolume;
 
   ofstream out;
 
+  int depth;
   /// This map holds the opacity information of the material colors
   map <string, float> opacityMap;
   /// This map holds information on the recursion depth of volumes

@@ -41,10 +41,15 @@ int main(int argc, char* argv[]) {
   // vrml file for all the volumes placed in the topVolume, otherwise it
   // will build the vrml file for the specified volume. The output is
   // placed in sections.vrml
+  GDDVRMLSectionsVisitor* visitor;
   if (argc == 2)
-    manager->startVisitor(new GDDVRMLSectionsVisitor("")); 
+    visitor = new GDDVRMLSectionsVisitor("");  
   else
-    manager->startVisitor(new GDDVRMLSectionsVisitor(argv[2])); 
+    visitor = new GDDVRMLSectionsVisitor(argv[2]);  
+
+  visitor->setOpacity("FOAM05",0.5);
+  manager->startVisitor(visitor);
+ 
 
   // We start the HTMLConstantsVisitor to build the html file with the
   // constants tables. Colors and layout are stolen from Joanne ones.

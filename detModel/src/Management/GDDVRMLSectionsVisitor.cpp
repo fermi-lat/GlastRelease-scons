@@ -27,6 +27,7 @@ GDDVRMLSectionsVisitor::GDDVRMLSectionsVisitor(string nvol)
   setRecursive(0);
   setType(sectionsVisitor);
   actualVolume = nvol;
+  depth = 0;
 
   out.open("sections.wrl");
 
@@ -35,10 +36,14 @@ GDDVRMLSectionsVisitor::GDDVRMLSectionsVisitor(string nvol)
   
   /// We initialize the opacity map
   for(i=0;i<g->getMaterialNames().size();i++)
-    opacityMap.insert(M1::value_type(g->getMaterialNames()[i]->getName(),1.0));  
+    opacityMap.insert(M1::value_type(g->getMaterialNames()[i],0.0));  
+
   /// We initialize the depth map
-  for(j=g->getVolumesMap().begin();j!=g->getVolumesMap().end();j++)
-    depthMap.insert(M1::value_type(j.first(),200));  
+  M3 m = g->getVolumesMap();
+  for(j=m.begin();j!=m.end();j++)
+    {
+      depthMap.insert(M2::value_type(j->first,20));        
+    }    
 };
 
 GDDVRMLSectionsVisitor::~GDDVRMLSectionsVisitor()
@@ -49,91 +54,10 @@ GDDVRMLSectionsVisitor::~GDDVRMLSectionsVisitor()
 void GDDVRMLSectionsVisitor::visitGDD(GDD* gdd)
 {
   unsigned int i;
+
   out << "#VRML V2.0 utf8 " << std::endl;
-
-  out << " DEF SI " << std::endl;
-  out << " Appearance { " <<  std::endl;
-  out << " material Material { " <<  std::endl;
-  out << "       ambientIntensity  0.5" <<  std::endl;        
-  out << "       diffuseColor      0.8 0.8 0.2" <<  std::endl;
-  out << "       emissiveColor     0 0 0"  <<  std::endl;     
-  out << "       shininess         0.2" <<  std::endl;        
-  out << "       specularColor     0 0 0.2" <<  std::endl;      
-  out << "       transparency      0.0" <<  std::endl;          
-  out << "     }" <<  std::endl;
-  out << " }" <<  std::endl;
-
-  out << " DEF PB " << std::endl;
-  out << " Appearance { " <<  std::endl;
-  out << " material Material { " <<  std::endl;
-  out << "       ambientIntensity  0.5" <<  std::endl;        
-  out << "       diffuseColor      0.5 0.5 0.5" <<  std::endl;
-  out << "       emissiveColor     0 0 0"  <<  std::endl;     
-  out << "       shininess         0.2" <<  std::endl;        
-  out << "       specularColor     0 0 0.2" <<  std::endl;      
-  out << "       transparency      0.3" <<  std::endl;          
-  out << "     }" <<  std::endl;
-  out << " }" <<  std::endl;
-
-  out << " DEF C " << std::endl;
-  out << " Appearance { " <<  std::endl;
-  out << " material Material { " <<  std::endl;
-  out << "       ambientIntensity  0.5" <<  std::endl;        
-  out << "       diffuseColor      0.1 0.1 0.1" <<  std::endl;
-  out << "       emissiveColor     0 0 0.2"  <<  std::endl;     
-  out << "       shininess         0.2" <<  std::endl;        
-  out << "       specularColor     0 0 0.2" <<  std::endl;      
-  out << "       transparency      0.8" <<  std::endl;          
-  out << "     }" <<  std::endl;
-  out << " }" <<  std::endl;
-
-  out << " DEF RUBBER60A1 " << std::endl;
-  out << " Appearance { " <<  std::endl;
-  out << " material Material { " <<  std::endl;
-  out << "       ambientIntensity  0.5" <<  std::endl;        
-  out << "       diffuseColor      0.8 0.2 0.2" <<  std::endl;
-  out << "       emissiveColor     0 0 0"  <<  std::endl;     
-  out << "       shininess         0.2" <<  std::endl;        
-  out << "       specularColor     0 0 0" <<  std::endl;      
-  out << "       transparency      0.3" <<  std::endl;          
-  out << "     }" <<  std::endl;
-  out << " }" <<  std::endl;
-
-  out << " DEF FOAM05 " << std::endl;
-  out << " Appearance { " <<  std::endl;
-  out << " material Material { " <<  std::endl;
-  out << "       ambientIntensity  0.5" <<  std::endl;        
-  out << "       diffuseColor      0.8 0.8 0.8" <<  std::endl;
-  out << "       emissiveColor     0 0 0"  <<  std::endl;     
-  out << "       shininess         0.2" <<  std::endl;        
-  out << "       specularColor     0 0 0" <<  std::endl;      
-  out << "       transparency      0.3" <<  std::endl;          
-  out << "     }" <<  std::endl;
-  out << " }" <<  std::endl;
-
-  out << " DEF CSI " << std::endl;
-  out << " Appearance { " <<  std::endl;
-  out << " material Material { " <<  std::endl;
-  out << "       ambientIntensity  0.5" <<  std::endl;        
-  out << "       diffuseColor      0.2 0.2 0.8" <<  std::endl;
-  out << "       emissiveColor     0 0 0"  <<  std::endl;     
-  out << "       shininess         0.2" <<  std::endl;        
-  out << "       specularColor     0 0 0.2" <<  std::endl;      
-  out << "       transparency      0.0" <<  std::endl;          
-  out << "     }" <<  std::endl;
-  out << " }" <<  std::endl;
-
-  out << " DEF DUMMY " << std::endl;
-  out << " Appearance { " <<  std::endl;
-  out << " material Material { " <<  std::endl;
-  out << "       ambientIntensity  0.5" <<  std::endl;        
-  out << "       diffuseColor      1.0 0.0 1.0" <<  std::endl;
-  out << "       emissiveColor     0 0 0"  <<  std::endl;     
-  out << "       shininess         0.2" <<  std::endl;        
-  out << "       specularColor     0 0 0" <<  std::endl;      
-  out << "       transparency      0.0" <<  std::endl;          
-  out << "     }" <<  std::endl;
-  out << " }" <<  std::endl;
+  out << "#Generated by detModel " << std::endl;
+  makeColor();
 
   for(i=0; i<gdd->getSections()->size();i++){
     ((* gdd->getSections() )[i])->AcceptNotRec(this);
@@ -172,13 +96,34 @@ void  GDDVRMLSectionsVisitor::visitSection(GDDsection* section)
 void  GDDVRMLSectionsVisitor::visitComposition(GDDcomposition* composition)
 {
   unsigned int i;
+  typedef map<string, int> M;
+  M::const_iterator j; 
 
-  out << "# " << composition->getName() << std::endl;
+  j = depthMap.find(composition->getName());
 
-  for(i=0; i<composition->getPositions().size();i++){
-    GDDanyPosition* pos = composition->getPositions()[i];
-    pos->AcceptNotRec(this);
-  }
+  if(j->second > depth) 
+    {
+      depth++;
+
+      out << "# " << composition->getName() << std::endl;
+
+      for(i=0; i<composition->getPositions().size();i++){
+	GDDanyPosition* pos = composition->getPositions()[i];
+	pos->AcceptNotRec(this);
+      }
+      depth--;
+    }
+  else
+    {
+      out << "Shape {   #" << composition->getName() << std::endl;
+      out << "  geometry Box { " << std::endl;
+      out << "                     size " 
+	  << composition->getBBX() << " " 
+	  << composition->getBBY() << " " 
+	  << composition->getBBZ() << std::endl; 
+      out << "                    }" << std::endl;  
+      out << "   }" << std::endl;
+    }
 }
 
 void  GDDVRMLSectionsVisitor::visitStack(GDDstack* st)
@@ -186,51 +131,71 @@ void  GDDVRMLSectionsVisitor::visitStack(GDDstack* st)
   unsigned int j;
   double deltap, delta;
   GDDanyRelativePosition* apos;
+  typedef map<string, int> M;
+  M::const_iterator k; 
+
+  k = depthMap.find(st->getName());
+
 
   deltap = 0;
-
-  out << "Transform {  # " << st->getName() << std::endl;
-  switch(st->getStackType()){
-  case sx:
-    out << "translation " << -(st->getBBX())*0.5 << " 0 " << " 0 " << std::endl;
-    break;	
-  case sy:
-    out << "translation " << " 0 " << -(st->getBBY())*0.5 << " 0 " << std::endl;
-    break;	
-  case sz:
-    out << "translation " << " 0 " << " 0 " << -(st->getBBZ())*0.5 << std::endl;
-    break;	
-  }
-  out << "children [ " << std::endl;
-  for(j=0;j<st->getPositions().size();j++)
+  if(k->second > depth) 
     {
-      apos = st->getPositions()[j];
-      out << "Transform {  #" << apos->getVolume()->getName() << std::endl;
+      depth++;
+      out << "Transform {  # " << st->getName() << std::endl;
       switch(st->getStackType()){
       case sx:
-	delta = apos->getBBX()/2 + deltap;
-	out << "translation " << delta << " 0 " << " 0 " << std::endl;
-	deltap += apos->getBBX();
+	out << "translation " << -(st->getBBX())*0.5 << " 0 " << " 0 " << std::endl;
 	break;	
       case sy:
-	delta = apos->getBBY()/2 + deltap;
-	out << "translation " << " 0 " << delta << " 0 " << std::endl;
-	deltap += apos->getBBY();
+	out << "translation " << " 0 " << -(st->getBBY())*0.5 << " 0 " << std::endl;
 	break;	
       case sz:
-	delta = apos->getBBZ()/2 + deltap;
-	out << "translation " << " 0 " << " 0 " << delta << std::endl;
-	deltap += apos->getBBZ();
+	out << "translation " << " 0 " << " 0 " << -(st->getBBZ())*0.5 << std::endl;
 	break;	
       }
       out << "children [ " << std::endl;
-      apos->AcceptNotRec(this);
+      for(j=0;j<st->getPositions().size();j++)
+	{
+	  apos = st->getPositions()[j];
+	  out << "Transform {  #" << apos->getVolume()->getName() << std::endl;
+	  switch(st->getStackType()){
+	  case sx:
+	    delta = apos->getBBX()/2 + deltap;
+	    out << "translation " << delta << " 0 " << " 0 " << std::endl;
+	    deltap += apos->getBBX();
+	    break;	
+	  case sy:
+	    delta = apos->getBBY()/2 + deltap;
+	    out << "translation " << " 0 " << delta << " 0 " << std::endl;
+	    deltap += apos->getBBY();
+	    break;	
+	  case sz:
+	    delta = apos->getBBZ()/2 + deltap;
+	    out << "translation " << " 0 " << " 0 " << delta << std::endl;
+	    deltap += apos->getBBZ();
+	    break;	
+	  }
+	  out << "children [ " << std::endl;
+	  apos->AcceptNotRec(this);
+	  out << "] " << std::endl; 
+	  out << "} " << std::endl;
+	}  
+      
       out << "] " << std::endl; 
       out << "} " << std::endl;
-    }  
-
-  out << "] " << std::endl; 
-  out << "} " << std::endl;
+      depth --;
+    }
+  else
+    {
+      out << "Shape {   #" << st->getName() << std::endl;
+      out << "  geometry Box { " << std::endl;
+      out << "                     size " 
+	  << st->getBBX() << " " 
+	  << st->getBBY() << " " 
+	  << st->getBBZ() << std::endl; 
+      out << "                    }" << std::endl;  
+      out << "   }" << std::endl;
+    }
 }
 
 
@@ -238,37 +203,8 @@ void  GDDVRMLSectionsVisitor::visitStack(GDDstack* st)
 void  GDDVRMLSectionsVisitor::visitBox(GDDbox* box)
 {
   out << "Shape {   #" << box->getName() << std::endl;
+  out << "appearance USE " << box->getMaterial() << std::endl;
 
-  string mat = box->getMaterial();
-
-  if (mat == "CsI")
-    {
-      out << "appearance USE CSI" << std::endl;
-    }
-  else if (mat == "Si")
-    {
-      out << "appearance USE SI " << std::endl;
-    }
-  else if (mat == "rubber60A1")
-    {
-      out << "appearance USE RUBBER60A1 " << std::endl;
-    }
-  else if (mat == "FOAM05")
-    {
-      out << "appearance USE FOAM05 " << std::endl;
-    }
-  else if (mat == "Pb")
-    {
-      out << "appearance USE PB " << std::endl;
-    }
-  else if (mat == "C")
-    {
-      out << "appearance USE C " << std::endl;
-    }
-  else 
-    {
-      out << "appearance USE DUMMY " << std::endl;
-    }
   out << "  geometry Box { " << std::endl;
   out << "                     size " 
 	    << box->getX() << " " << box->getY() << " " << box->getZ() << std::endl; 
@@ -355,7 +291,67 @@ void  GDDVRMLSectionsVisitor::visitSeg(GDDseg*)
 
 }
 
+void GDDVRMLSectionsVisitor::setDepth(string name, int d)
+{
+  typedef map<string, int> M;
+  M::const_iterator j; 
+  
+  j = depthMap.find(name);
+  if (j == depthMap.end()) return;
+  else 
+    {
+      depthMap.erase(name);
+      depthMap.insert(M::value_type(name,d));
+    }  
+}
 
+void GDDVRMLSectionsVisitor::setOpacity(string name, float op)
+{
+  typedef map<string, float> M;
+  M::const_iterator j; 
+  
+  j = opacityMap.find(name);
+  if (j == opacityMap.end()) return;
+  else 
+    {
+      opacityMap.erase(name);
+      opacityMap.insert(M::value_type(name,op));
+    }  
+}
+
+void GDDVRMLSectionsVisitor::makeColor()
+{
+  unsigned int i;
+  unsigned int ncol;
+  typedef map<string, float> M;
+  M::const_iterator j; 
+  GDDmanager* manager = GDDmanager::getPointer();
+  GDD* g = manager->getGDD();
+
+  ncol = g->getMaterialNames().size();
+
+  for(i=0;i<ncol;i++)
+    {
+      j = opacityMap.find(g->getMaterialNames()[i]);
+      out << " DEF " << g->getMaterialNames()[i] << std::endl;
+      out << " Appearance { " <<  std::endl;
+      out << " material Material { " <<  std::endl;
+
+      /// Automatic coloring scheme \todo To be done better
+      out << "       diffuseColor  " 
+	  << (float)i/ncol << " " 
+	  << (float)i/ncol << " "
+	  << (float)i/ncol <<  std::endl;
+
+
+      if (j == opacityMap.end())
+	out << "     transparency    0.0" << std::endl;          
+      else
+	out << "     transparency    " << j->second << std::endl;          
+      out << "     }" <<  std::endl;
+      out << " }" <<  std::endl;
+    }
+}
 
 
 
