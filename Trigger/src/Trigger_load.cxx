@@ -10,6 +10,5 @@
 
 DECLARE_FACTORY_ENTRIES(Trigger) {
     DECLARE_ALGORITHM( TriggerAlg );
-    DECLARE_ALGORITHM( ACDthrottle );
 } 
 

@@ -240,7 +240,7 @@ StatusCode TriggerAlg::execute()
                 log << endreq;
             }else {
                 // assume set by reading digiRoot file
-                log << MSG::INFO ;
+                log << MSG::DEBUG ;
                 if(log.isActive()) log.stream() << "Read run/event " << h.run() << "/" << h.event() << " trigger & mask "
                     << std::setbase(16) << (m_mask==0 ? trigger_bits : trigger_bits & m_mask);
                 log << endreq;
