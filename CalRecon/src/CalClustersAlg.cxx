@@ -642,7 +642,7 @@ StatusCode CalClustersAlg::execute()
     // reconstruction output
     int rectkr=0;  
 
-    int ntracks;
+    int ntracks=0;
     Vector trackDirection;
     Point trackVertex;
     
