@@ -127,6 +127,9 @@ class CalibMySQLCnvSvc : public ConversionSvc,
   /// Handle for metadata access
   calibUtil::Metadata*    m_meta;
 
+  /// MySQL host, a job options parameter.
+  std::string             m_host;  
+
   /// How official does a calibration have to be in order to be acceptable
   /// Should default to calibUtil::Metadata::LEVELProd
   unsigned int m_calibLevelMask;

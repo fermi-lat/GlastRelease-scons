@@ -59,6 +59,11 @@ CalibDataSvc.CalibInstrumentName = "LAT";
 CalibDataSvc.CalibStorageType = 14;
 CalibDataSvc.CalibRootName = "Calib";
 
+// Value of "*" means 'use default MySQL host', so currently (May, 2003)
+// equivalent to value of "centaurusa.slac.stanford.edu".
+// For local MySQL server, use value "localhost"
+CalibMySQLCnvSvc.Host = "*";
+
 EvtClock.startTime = "2003-2-25_00:20";
 EvtClock.delayTime = 3;
 
