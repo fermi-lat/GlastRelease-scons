@@ -5,9 +5,11 @@ use graphics v0 glast
 
 
 macro geomrep_linkopts "-L ${GEOMREPROOT}/${CMTCONFIG} -lgeomrep"\
-    VisualC: "/LibPath:${GEOMREPROOT}/Win32Debug geomreplib.lib"
+    VisualC "/LibPath:${GEOMREPROOT}/Win32Debug geomreplib.lib"
 
 
 private
 
 library geomrep -no_share *.cxx
+
+application testgeom  -windows ../test/testgeom.cxx
