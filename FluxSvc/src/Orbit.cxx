@@ -42,12 +42,12 @@ void    Orbit::startphase ( double phs )
     m_startphase = phs;
 }
 
-double Orbit::testLatitude(double time) const {
+double Orbit::latitude(double time) const {
     // latitude as a function of time (in minutes)
     return (360./M_2PI) * asin(m_sini * sin(M_2PI*time/m_period + startphase()));
 }
 
-double Orbit::testLongitude(double time) const {
+double Orbit::longitude(double time) const {
     // longitude as a function of time, taking into account the starting
     // longitude and the eastward rotation of the earth
     
@@ -127,6 +127,7 @@ void Orbit::computeAttitudes(double time){
 }
 
 
+//NEEDS FIXING, since CELtransform has changed.
 Rotation Orbit::latLonTransform(double time) const {
     Rotation CELtoLOC;  
     
@@ -136,7 +137,8 @@ Rotation Orbit::latLonTransform(double time) const {
     return getLatLon;
 }
 
-double Orbit::longitude(double time) const {
+//NEEDS FIXING
+double Orbit::testLongitude(double time) const {
     // longitude as a function of time (in minutes)
     Vector v(1.,0,0);
     v=latLonTransform(time)*v;
@@ -146,7 +148,8 @@ double Orbit::longitude(double time) const {
     return lon;
 }
 
-double Orbit::latitude(double time) const {
+//NEEDS FIXING
+double Orbit::testLatitude(double time) const {
     // latitude as a function of time (in minutes)
     Vector v(1.,0,0);
     v=latLonTransform(time)*v;
