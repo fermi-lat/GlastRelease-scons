@@ -1,6 +1,10 @@
 /** @file release.notes
  * Package CalibData
  * Coordinator:  J. Bogart
+
+                    EOH
+
+ * 17-Dec-2004 jrb - v0r11    Rearrange, add stuff for ToT calibration
  * 15-Oct-2004 jrb - v0r10    Enhanced putRange, getRange involving
  *                            changes to CalFinder, CalCalibBase
  *  9-Oct-2004 thb - v0r9p3   Add a few spaces for WIN32 pattern 
