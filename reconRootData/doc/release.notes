@@ -1,7 +1,8 @@
 /** @file release.notes
  package reconRootData
  package manager:H.Kelly
-
+v4r1p1    15-jan-03  : THB vsnet enable \n
+v4r1   --------------------- GlastRelease--------------------------   \n
 v4r0p0    31-Dec-2002: HMK Fix up TkrKalFitTrack to compile on Linux\n
 v4r0      20-Dec-2002: TU&HMK Add new TkrKalFitTrack class\n
 v3r7      18-Nov-2002: HMK Fix TkrCovMat, TkrParams, TkrFitHit\n
