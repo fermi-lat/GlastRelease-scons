@@ -9,6 +9,7 @@
 #include <iostream>
 #include <strstream>
 #include "gui/SubMenu.h"
+#pragma warning( disable : 4311) // for type cast used to identify menus
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 HINSTANCE   WinGUI::s_instance =0;

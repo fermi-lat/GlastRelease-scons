@@ -281,7 +281,7 @@ void WinDraw::set_line_style( int s)
 
 void WinDraw::set_col_index(int i)
 {
-    assert( i<hbrTable.size() );
+    assert( i<static_cast<int>(hbrTable.size()) );
     ::SelectObject(m_hdc, hbrTable[i] );
 }
 
