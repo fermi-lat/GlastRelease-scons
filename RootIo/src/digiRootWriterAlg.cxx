@@ -358,8 +358,9 @@ StatusCode digiRootWriterAlg::writeGem() {
              gemTds->calLEvector(), gemTds->calHEvector(), gemTds->cnoVector(),
              gemTds->conditionSummary(), tileListRoot);
     gemRoot.initSummary(gemTds->liveTime(), gemTds->prescaled(), 
-             gemTds->discarded(), gemTds->sent(), gemTds->triggerTime(),
-             ppsTimeRoot, gemTds->deltaEventTime());
+             gemTds->discarded(), gemTds->condArrTime().condArr(), 
+             gemTds->triggerTime(), ppsTimeRoot, gemTds->deltaEventTime(),
+             gemTds->deltaWindowOpenTime());
     m_digiEvt->initGem(gemRoot);
     return sc;
 

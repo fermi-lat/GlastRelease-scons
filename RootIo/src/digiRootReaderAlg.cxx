@@ -417,10 +417,13 @@ StatusCode digiRootReaderAlg::readGem() {
             tileListTds);
     LdfEvent::GemOnePpsTime ppsTimeTds(gemRoot.getOnePpsTime().getTimebase(),
                             gemRoot.getOnePpsTime().getSeconds());
+    LdfEvent::GemDataCondArrivalTime gemCondTimeTds;
+    gemCondTimeTds.init(gemRoot.getCondArrTime().condArr());
     gemTds->initSummary(gemRoot.getLiveTime(), gemRoot.getPrescaled(),
-                        gemRoot.getDiscarded(), gemRoot.getSent(),
+                        gemRoot.getDiscarded(), gemCondTimeTds,
                         gemRoot.getTriggerTime(), ppsTimeTds, 
-                        gemRoot.getDeltaEventTime());
+                        gemRoot.getDeltaEventTime(), 
+                        gemRoot.getDeltaWindowOpenTime());
 
     sc = eventSvc()->registerObject("/Event/Gem", gemTds);
     if( sc.isFailure() ) {

@@ -221,7 +221,9 @@ StatusCode createFakeTdsDataAlg::storeGemData() {
     LdfEvent::GemTileList tileListTds(1,2, 3, 4, 5, 6, 7);
     gemTds->initTrigger(8, 9, 10, 11, 12, 13, tileListTds);
     LdfEvent::GemOnePpsTime ppsTimeTds(14, 15);
-    gemTds->initSummary(16, 17, 18, 19, 20, ppsTimeTds, 21);
+    LdfEvent::GemDataCondArrivalTime condArr;
+    condArr.init(19);
+    gemTds->initSummary(16, 17, 18, condArr, 20, ppsTimeTds, 21, 22);
 
     sc = eventSvc()->registerObject("/Event/Gem", gemTds);
     if (sc.isFailure()) {
