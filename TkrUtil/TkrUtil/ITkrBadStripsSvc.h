@@ -85,7 +85,6 @@ public:
     virtual bool isBadStrip(int tower, int layer, 
         idents::GlastAxis::axis axis, int strip) const = 0;
     virtual bool isBadStrip(const stripCol* v, int strip) const = 0;
-    virtual bool killDigi() const = 0;
     //! Fill the ASCII output stream
     virtual std::ostream& fillStream( std::ostream& s ) const = 0;        
 

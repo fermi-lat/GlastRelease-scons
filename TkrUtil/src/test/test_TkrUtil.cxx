@@ -65,7 +65,7 @@ StatusCode test_TkrUtil::initialize(){
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "initialize" << endreq;
 
-    sc = service("TkrFailureModeSvc", m_FailSvc);
+    sc = service("TkrFailureModeSvc", m_FailSvc, true);
     if (sc.isFailure() ) {
         log << MSG::ERROR << "  Unable to find TkrFailureMode service" << endreq;
         return sc;

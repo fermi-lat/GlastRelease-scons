@@ -20,7 +20,11 @@
 
  First version 3-Jun-2001
 
- The bad strips are kept in ascii files and/or in the TkrBadStrips database
+ The bad strips are kept in ascii files or in the TkrBadStrips database.
+ If the files are made known to the service, they are used instead of 
+ the database, providing a flexible development tool. The files are not
+ for production use, and maintenance is not guarranteed.
+
  The files are read in under
  the control of the jobOptions file. In the ascii files, strips are
  marked as hot or dead, but in memory, strips are only bad.
@@ -120,7 +124,7 @@ public:
     /// to by stripCol
     bool isBadStrip(const stripCol* v, int strip) const;
 	
-    bool killDigi() const {return m_killDigi;}
+    //bool killDigi() const {return m_killDigi;}
 		
     std::ostream& fillStream( std::ostream& s ) const;        
 
@@ -162,8 +166,7 @@ private:
 
     ITkrGeometrySvc* m_pGeoSvc;
 	
-    bool m_killDigi;
-
+    //bool m_killDigi;
     bool m_empty;
 
 };

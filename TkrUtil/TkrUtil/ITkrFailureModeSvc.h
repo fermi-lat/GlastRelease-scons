@@ -16,7 +16,7 @@ $Header$
 // Declaration of the interface ID ( interface id, major version,
 // minor version)
 
-static const InterfaceID IID_ITkrFailureModeSvc("ITkrFailureModeSvc", 2 , 0);
+static const InterfaceID IID_ITkrFailureModeSvc("ITkrFailureModeSvc", 3, 0);
 
 /** @class ITkrFailureModeSvc
 * @brief Interface class for TkrFailureModeSvc
