@@ -40,7 +40,7 @@ public
 
 use GuiSvc      v3
 
-use Event                  v8r6p1
+use Event                  v8r6
 use GlastSvc    v8r1
 
 # simulation
@@ -55,13 +55,6 @@ use CalDigi     v1r0p1
 use TkrDigi     v1r0
 use AcdDigi     v0r1
 
-#reconstruction
-use Trigger                v3r3
-use Recon       v2r2p3
-
-use TkrRecon               v6r3
-use CalRecon               v5r5p1       
-
 
 #ROOT persistence
 use mcRootData     v2r2
@@ -69,6 +62,15 @@ use digiRootData   v3r2
 use reconRootData  v3r0p2
 
 use RootIo                 v4r1p3
+
+
+#reconstruction
+use Trigger                v3r3
+use Recon       v2r2p3
+
+use TkrRecon               v6r3
+use CalRecon               v5r5p1       
+
 
 #diagnostic and summary of bottom line
 use merit                  v5r2p1
