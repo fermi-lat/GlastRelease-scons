@@ -1,5 +1,5 @@
 package gui
-version v2r5
+version v2r7
 
 use GlastPolicy
 use CLHEP

@@ -244,8 +244,10 @@ void WinDraw::clearArea(int x, int y, int width, int height)
 static float ms=0.015f;
 void WinDraw::draw_marker(float x, float y)
 {
+#if 0 // only do an x now. TODO: allow different markers
     move_to(x-ms,y);    line_to(x+ms,y);
     move_to(x,   y-ms); line_to(x,   y+ms);
+#endif
     move_to(x-ms,y-ms); line_to(x+ms,y+ms);
     move_to(x+ms,y-ms); line_to(x-ms,y+ms);
 }
