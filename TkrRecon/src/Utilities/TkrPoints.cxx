@@ -64,7 +64,7 @@ TkrPoint* TkrPoints::getNearestPointOutside(Point x0, double & dist_min) const
     double dist_best = 1000000.;
     double dist_min2 = dist_min*dist_min;
     bool found = false;
-    TkrPoint* ret;
+    TkrPoint* ret = 0;
 
     TkrPointListConItr iPt = this->begin();
     for (; iPt!=this->end(); ++iPt) {

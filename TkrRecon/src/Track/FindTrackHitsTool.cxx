@@ -539,8 +539,8 @@ TkrTrackHit* FindTrackHitsTool::findNextHit(TkrTrackHit* last_hit, bool reverse)
             yPos = end_pos.y() - yTower;
         } else {
             sign = (yWafer>0 ? 1  : -1);
-            double xPos = end_pos.x() - xTower;
-            double yPos = end_pos.y() + sign*yActiveDistWafer;
+            xPos = end_pos.x() - xTower;
+            yPos = end_pos.y() + sign*yActiveDistWafer;
         }
 
         params(xPosIdx) = xPos;

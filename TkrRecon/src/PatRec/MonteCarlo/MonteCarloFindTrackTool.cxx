@@ -294,7 +294,7 @@ void MonteCarloFindTrackTool::buildTrackFromMcPart(const Event::McParticle* mcPa
         {
             Event::ClusMcPosHitRel*  mcHitRel = (*hitIter)->getSecond();
             Event::McPositionHit*    posHit   =  mcHitRel->getSecond();
-            const Event::TkrCluster* cluster  =  mcHitRel->getFirst();
+            //const Event::TkrCluster* cluster  =  mcHitRel->getFirst();
 
             // Where are we? 
             idents::TkrId tkrId(posHit->volumeID());
