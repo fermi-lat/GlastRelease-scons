@@ -203,7 +203,7 @@ void AcdDigiMcIntHitAlg::getParameters() {
     xml::IFile ifile(m_xmlFile.c_str());
     
     m_low_threshold_mips = ifile.getDouble("thresholds", "low_threshold_mips");
-    m_veto_threshold_mips = ifile.getDouble("thresholds", "veto_theshold_mips");
+    m_veto_threshold_mips = ifile.getDouble("thresholds", "veto_threshold_mips");
     m_high_threshold_mips = ifile.getDouble("thresholds", "high_threshold_mips");
     
     m_mean_pe_per_mip = ifile.getInt("global_constants", "mean_pe_per_mip");
