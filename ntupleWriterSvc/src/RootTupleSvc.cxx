@@ -47,22 +47,38 @@ public:
     /// Query interface - required of all Gaudi services
     virtual StatusCode queryInterface( const IID& riid, void** ppvUnknown );
 
-
-    /// add a new item to an ntuple -- not supported
-    virtual StatusCode addItem(const char* /* tupleName */, 
-                               const char* /* item */,
-                               double /* val */) { return StatusCode::FAILURE; }
-
-    /** @brief Adds a <EM>pointer</EM> to an item -- only way to fill this guy
+    /** @brief Adds a pointer to a double, or an array of doubles
     @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
-    @param itemName - name of the tuple column
+    @param itemName - name of the tuple column. append [n] to make a fixed array of length n
     @param pval - pointer to a double value
     */
     virtual StatusCode addItem(const std::string & tupleName, 
         const std::string& itemName, const double* pval);
 
-    /// force writing of the ntuple to disk -- not suppored, but harmless since it happens anyway
-    virtual StatusCode saveNTuples() { return StatusCode::SUCCESS; }
+    /** @brief Adds a pointer to a float
+    @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
+    @param itemName - name of the tuple column. append [n] to make a fixed array of length n
+    @param pval - pointer to a float value
+    */
+    virtual StatusCode addItem(const std::string & tupleName, 
+        const std::string& itemName, const float* pval);
+
+    /** @brief Adds a pointer to an int 
+    @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
+    @param itemName - name of the tuple column. append [n] to make a fixed array of length n
+    @param pval - pointer to a int value
+    */
+    virtual StatusCode addItem(const std::string & tupleName, 
+        const std::string& itemName, const int* pval);
+
+    /** @brief interface to ROOT to add any item
+    @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
+    @param itemName - name of the tuple column. append [n] to make a fixed array of length n
+    @param type  - ROOT-specific type qualifier ("/F", for example)
+    @param pval - pointer to a void value or array
+    */
+    StatusCode addAnyItem(const std::string & tupleName, 
+               const std::string& itemName, const std::string type, const void* pval);
 
     /// Set a flag to denote whether or not to store a row at the end of this event,
     virtual void storeRowFlag(bool flag) { m_storeAll = flag; }
@@ -188,10 +204,9 @@ StatusCode RootTupleSvc::initialize ()
 
     return status;
 }
-
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
-                                 const std::string& itemName, const double* pval)
+StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName, 
+                                    const std::string& itemName, const std::string type,  const void* pval)
 {
     MsgStream log(msgSvc(),name());
     StatusCode status = StatusCode::SUCCESS;
@@ -205,11 +220,31 @@ StatusCode RootTupleSvc::addItem(const std::string & tupleName,
         m_tree[treename]=t;
         log << MSG::INFO << "Creating new tree \"" << treename << "\"" << endreq;
     }
-
-    // this adds a branch with a pointer to a double (the "/D" after the second name)
-    m_tree[treename]->Branch(itemName.c_str(), (void*)pval, (itemName+"/D").c_str());
+    // note have to cast away the const here!
+    m_tree[treename]->Branch(itemName.c_str(), const_cast<void*>(pval), (itemName+type).c_str());
     saveDir->cd();
     return status;
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
+                                 const std::string& itemName, const double* pval)
+{
+    return addAnyItem(tupleName, itemName, "/D", (void*)pval);
+
+
+}
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
+                                 const std::string& itemName, const float* pval)
+{
+    return addAnyItem(tupleName, itemName, "/F", (void*)pval);
+}
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
+                                 const std::string& itemName, const int* pval)
+{
+    return addAnyItem(tupleName, itemName, "/I", (void*)pval);
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void RootTupleSvc::handle(const Incident &inc)

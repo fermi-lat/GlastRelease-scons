@@ -35,8 +35,11 @@ public:
 private:
     std::string m_tupleName;
     float m_float;
+    int   m_int;
     double m_count; // special value to put into tuples
     double m_square; // another
+
+    double m_array[2]; // test an array
 
     INTupleWriterSvc *m_rootTupleSvc;
 
@@ -70,6 +73,9 @@ StatusCode writeJunkAlg::initialize() {
     }
     m_rootTupleSvc->addItem("","count", &m_count);
     m_rootTupleSvc->addItem("","square", &m_square);
+    m_rootTupleSvc->addItem("","int", &m_int);
+    m_rootTupleSvc->addItem("","float", &m_float);
+    m_rootTupleSvc->addItem("", "array[2]", m_array);
 
     // test of a second tree in the same file
     m_rootTupleSvc->addItem("tree_2","count", &m_count);
@@ -88,8 +94,13 @@ StatusCode writeJunkAlg::execute() {
     // note that setting these variables is all that is necessary to have it changed in the tuple itself
     ++m_count;
     m_square= m_count*m_count;
-    // Test the ability to turn off a row
+    // test int and float values
+    m_int=m_float=m_count;
+    // see that array really works
+    m_array[0]= m_int;
+    m_array[1]= 2*m_int;
 
+    // Test the ability to turn off a row
     if (callCount != 5)  { m_rootTupleSvc->storeRowFlag(true);}
     ++callCount;
 

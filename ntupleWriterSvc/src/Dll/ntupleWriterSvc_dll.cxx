@@ -9,10 +9,3 @@
 
 #include "GaudiKernel/LoadFactoryEntries.h"
 LOAD_FACTORY_ENTRIES(ntupleWriterSvc)
-
-
-//void FATAL(const char * msg) {
-//    std::cerr << "FATAL error from ntupleWriterSvc DLL: " << msg << std::endl;/
-//}
-
-//void WARNING(const char * t){ std::cerr << "WARNING from ntupleWriterSvc DLL: " << t << std::endl; }

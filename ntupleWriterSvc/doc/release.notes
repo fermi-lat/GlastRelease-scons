@@ -2,6 +2,7 @@
  * Coordinator:H.Kelly
  *
  @verbatim
+ * v3r6   09-aug-2004 THB : add int and float options, arrays.
  * v3r5p0 22-jul-2004 HMK : Address JIRA CMT-25, bug in CMT, add extra private statement
  * v3r5   22-jun-2004 THB : remove intupleWriterSvc, change interface to not allow direct write.
  * v3r4p2 20-apr-2004 THB : adjust for new GlastPolicy
