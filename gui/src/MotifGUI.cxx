@@ -45,15 +45,14 @@ namespace gui {
 GUI* GUI::createGUI(const char* nameOfApp, const char* title)
 {
     if( theGUI) return theGUI; // ensures only one instance
-    return (theGUI =new MotifGUI(nameOfApp, title));
+    theGUI =new MotifGUI(nameOfApp, title);
+    GUI::instance(theGUI);
+    GUI::s_instance = theGUI; //(don't know if needed)
+    return theGUI:
 }
 bool GUI::running=false;
 
-GUI* GUI::instance(){
-    if( !theGUI) createGUI("unknown", "(no title)");
-    return theGUI;
-}
-}
+}//namespace gui
 
 // forward declaration of  local utilities
 
