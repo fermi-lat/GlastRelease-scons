@@ -91,6 +91,9 @@ private:
     TTree * m_tree;
     TFile *  m_tf;
 
+    int m_trials; /// total number of calls
+    bool m_defaultStoreFlag;
+
     std::vector<float> m_floats; // needed for communication with ROOT's float branch.
     std::vector<const double*> m_pdoubles; // ordered  list of pointers to user variables
 
@@ -103,12 +106,14 @@ const ISvcFactory& RootTupleSvcFactory = a_factory;
 //         Implementation of RootTupleSvc methods
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 RootTupleSvc::RootTupleSvc(const std::string& name,ISvcLocator* svc)
-: Service(name,svc)
+: Service(name,svc), m_trials(0)
 {
     // declare the properties and set defaults
     declareProperty("filename",  m_filename="glast.root");
     declareProperty("treename", m_treename="1");
     declareProperty("title", m_title="Glast tuple");
+    declareProperty("defaultStoreFlag", m_defaultStoreFlag=false);
+
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::initialize () 
@@ -129,8 +134,6 @@ StatusCode RootTupleSvc::initialize ()
 
     incsvc->addListener(this, "BeginEvent", 100);
     incsvc->addListener(this, "EndEvent", 0);
-
-    m_storeFlag = true;
 
     // -- set up the tuple ---
     m_tf = new TFile(m_filename.value().c_str(),"RECREATE");
@@ -163,12 +166,13 @@ void RootTupleSvc::handle(const Incident &inc)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void RootTupleSvc::beginEvent()
 {
-    /// Assume that we will write out the row
-    storeRowFlag(true);
+    /// Assume that we will NOT write out the row
+    storeRowFlag(m_defaultStoreFlag);
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void RootTupleSvc::endEvent()  // must be called at the end of an event to update, allow pause
-{            
+{         
+    ++m_trials;
     if (m_storeFlag == false) return;
     std::vector<float>::iterator fit = m_floats.begin();
     for( std::vector<const double*>::const_iterator pit = m_pdoubles.begin(); pit!=m_pdoubles.end(); ++pit){
@@ -194,11 +198,16 @@ StatusCode RootTupleSvc::finalize ()
 {
     // open the message log
     MsgStream log( msgSvc(), name() );
-    log << MSG::INFO << "Writing the tuple " << m_filename.value() << " with " 
-        << m_tree->GetEntries() << " rows" << endreq;
-    m_tree->Print(); // make a summary
+    if( m_tree->GetEntries() ==0 ) {
 
-    m_tree->Write();
+        log << MSG::INFO << "No entries added to the tuple: not writing it" << endreq;
 
+    }else{
+        log << MSG::INFO << "Writing the tuple " << m_filename.value() << " with " 
+            << m_tree->GetEntries() << " rows (" << m_trials << " total events)"<< endreq;
+        m_tree->Print(); // make a summary
+
+        m_tree->Write();
+    }
     return StatusCode::SUCCESS;;
 }
