@@ -9,7 +9,9 @@ version v0r0p0
 ## now we can't.  Would need to separate calibUtil into two pieces:
 ## one simply defining the data and access methods for calib data
 ## classes, and another for (friend?) classes which would know how to
-## fill the data classes.  Then CalibData 
+## fill the data classes.  Then CalibData.. 
+
+use facilities v2r*
 use calibUtil v0r*
 
 use GaudiPolicy v5r4p*
@@ -19,11 +21,11 @@ use GaudiKernel v11r*
 use GaudiSvc    v7r*
 use GlastPolicy v4r*
 
-##apply_pattern package_include
+apply_pattern package_include
 apply_pattern package_headers
 ## apply_pattern package_linkopts
 apply_pattern packageShr
 apply_pattern packag_Cshlibflags
 
 ## uncomment following when ready
-## library CalibData *.cxx Dll/*.cxx ${CalibData_headers}
+library CalibData *.cxx Dll/*.cxx ${CalibData_headers}
