@@ -3,7 +3,9 @@
  * Coordinator: J. Bogart
  *
  *                    **EOH**
- * 29-sep-2004: jrb v1r19p2  Change cal zeroSuppressEnergy from 2 to 1 MeV
+
+   v1r20   28-October-2004  jrb  (for Anders) Add ACD tiles to EM2 model; fix
+                                  some old minor problems 
  * 16-sep-2004: lsr v1r19p1  remove obsolete and confusing flightTKRResponse.xml
  * 10-jul-2004: jrb v1r19p0  Minor fix to em2 geometry (for Anders)
  * 18-jun-2004: jrb v1r19    1. New em2 subdirectory to describe em2 (Anders)
