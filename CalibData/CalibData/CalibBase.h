@@ -1,6 +1,6 @@
 //$Header$
-#ifndef CalibBase_h
-#define CalibBase_h
+#ifndef CalibData_CalibBase_h
+#define CalibData_CalibBase_h
 
 /** @class CalibBase
 
@@ -16,8 +16,7 @@
 
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IValidity.h"
-
-class ITime;
+#include "GaudiKernel/ITime.h"
 
 
 extern const CLID& CLID_Calib_CalibBase;
@@ -84,3 +83,4 @@ namespace CalibData {
   };
 
 }
+#endif

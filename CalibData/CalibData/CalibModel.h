@@ -1,7 +1,7 @@
 // $Header$
 
 #ifndef CalibData_CalibModel_h
-#define
+#define CalibData_CalibModel_h
 
 /**
        @file CalibModel.h
@@ -13,6 +13,7 @@
 
 #include <string>
 #include <vector>
+#include "GaudiKernel/ClassID.h"
 
 // For everybody except the CalibModel class implementation file,
 // the variables are extern.  CalibModel actually defines them.
@@ -29,7 +30,6 @@
       _EXTERN_ std::string   ACD_ThreshHigh;
       _EXTERN_ std::string   ACD_ThreshVeto;
       _EXTERN_ std::string   ACD_Ped;
-      _EXTERN_ std::string   ACD_Eff;
       _EXTERN_ std::string   ACD_ElecGain;
 
       // TKR calib types
@@ -60,7 +60,7 @@
       //       for testing
       _EXTERN_ std::string   TestMetadataInfo;
 
-      typedef  std::vector<std::pair <std::string, CLID>> CalibPairCol;
+      typedef  std::vector<std::pair <std::string, CLID> > CalibPairCol;
       typedef  CalibPairCol::const_iterator PairIt;
       _EXTERN_    CalibPairCol pairs;
     }
