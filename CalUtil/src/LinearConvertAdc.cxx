@@ -219,7 +219,7 @@ idents::CalXtalId::AdcRange LinearConvertAdc::calculateAdcAndNoise(
     // add pedestal  in SMALL diode
     cosAngle= pPed->getCosAngle();
     if( cosAngle==2 ){
-      //complete correlation: backward compatibility
+      // backward compatibility with xml files without pedestal correlations
       depositedEnergy[2]+= rms[0]*noise[1]*cosAngle;
       depositedEnergy[3]+= rms[1]*noise[1]*cosAngle;
     } else {
