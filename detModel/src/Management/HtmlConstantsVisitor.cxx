@@ -46,8 +46,33 @@ namespace detModel{
   {
     unsigned int i;
 
-    out << "<H1> Detector Constants version " << constants->getVersion()  
-	<< "</H1>" <<std::endl;
+    out << "<H1 align=\"center\"> Detector Constants </H1>" <<std::endl;
+
+    out << "<H3> Primary Constants </H3>" <<std::endl;
+    out << "<ul>" << std::endl;
+    for(i=0; i<constants->getCategories().size();i++){
+      if(constants->getCategories()[i]->getPrimary())
+        {
+          std::string name = constants->getCategories()[i]->getName();
+          out << "<li>" << std::endl;
+          out << "<a href=\"#" << name << "\">" << name << "</a>" << std::endl;
+          out << "</li>" << std::endl;        
+        }
+    }
+    out << "</ul>" << std::endl;
+
+    out << "<H3> Derived Constants </H3>" <<std::endl;
+    out << "<ul>" << std::endl;
+    for(i=0; i<constants->getCategories().size();i++){
+      if(!constants->getCategories()[i]->getPrimary())
+        {
+          std::string name = constants->getCategories()[i]->getName();
+          out << "<li>" << std::endl;
+          out << "<a href=\"#" << name << "\">" << name << "</a>" << std::endl;
+          out << "</li>" << std::endl;        
+        }
+    }
+    out << "</ul>" << std::endl;
 
     for(i=0; i<constants->getCategories().size();i++){
       ((constants->getCategories() )[i])->AcceptNotRec(this);}    
@@ -59,9 +84,11 @@ namespace detModel{
 
     if (category->getPrimary())
       out << "<h2>Primary Category <font color=\"#f08000\">" << 
-	category->getName() << "</font> </h2>" << std::endl;
+        "<a name=\"" << category->getName() << "\">" <<
+        category->getName() << "</font> </h2>" << std::endl;
     else
       out << "<h2>Derived Category <font color=\"#f08000\">" << 
+        "<a name=\"" << category->getName() << "\">" <<
 	category->getName() << "</font> </h2>" << std::endl;
 
     out << "<strong><font color=\"#208020\">Overview:</font></strong> &nbsp;" 
