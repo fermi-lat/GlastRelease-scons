@@ -36,6 +36,9 @@ void CompositeSource::addSource (EventSource* aSource)
 {
     m_sourceList.push_back(aSource);
     EventSource::setFlux( flux(EventSource::time()) );
+    //here, set up the associated vectors by default.
+    m_unusedSource.push_back(0);
+    m_sourceInterval.push_back(-1.);
 }
 
 void CompositeSource::rmvSource (EventSource* aSource)
@@ -52,6 +55,9 @@ void CompositeSource::rmvSource (EventSource* aSource)
 
 FluxSource* CompositeSource::event (double time)
 {
+    int i=0; //for iterating through the m_unusedSource vector
+    int winningsourcenum; //the number of the "winning" source
+
     EventSource::setTime(time);
     
     m_numofiters=0;
@@ -65,32 +71,36 @@ FluxSource* CompositeSource::event (double time)
         // NOT used? THB  double  x = RandFlat::shoot(mr), y = 0;
         std::vector<EventSource*>::iterator  now = m_sourceList.begin();
         std::vector<EventSource*>::iterator  it = now;
-        
+                
         double intrval=0.,intrmin=100000.;
         for (int q=0 ; now != m_sourceList.end(); ++now) {
+            if(m_unusedSource[i]==1){
+                //std::cout << i << " is unused" << std::endl;
+                intrval=m_sourceInterval[i];
+            }else{
             (*now)->event(time); // to initialize particles, so that the real interval for the particle is gotten.
             intrval=(*now)->interval(EventSource::time()); //this picks out the interval of each source
-            
+            m_unusedSource[i]=1;
+            m_sourceInterval[i]=intrval;
+            }
+
             if(intrval < intrmin){
+                //the present source is "winning" here
                 it=now;
                 intrmin=intrval;
                 m_numofiters=q;
+                winningsourcenum=i;
             }
-            //y += fabs((*it)->rate(m_time));
-            //if (x <= y) {
-            //    m_recent = (*it);
-            //    break;
-            //}
             
             m_recent = (*it);
             q++;
+            i++;
         }
         setInterval(intrmin);
     }
-    //update the time
-    //m_time += interval(m_time);
-    // now ask the chosen one to generate the event, if there is a rate
-    return (FluxSource*)m_recent;//->event(time);
+    m_unusedSource[winningsourcenum]=0; //the current "winning" source is getting used..
+    // now ask the chosen one to return the event.
+    return (FluxSource*)m_recent;
 }
 
 std::string CompositeSource::fullTitle () const

@@ -35,10 +35,8 @@
 
 	<!-- 'standard' background mixture -->
     <source name="backgndmix">
-        <nestedSource sourceRef="chimeavg"/>
         <nestedSource sourceRef="albedo_proton_avg"/>
         <nestedSource sourceRef="albedo_gamma"/>
-        <nestedSource sourceRef="CrElectron"/>
     </source>
 
     <source name="albedo_electronpositronavg_total">

@@ -71,10 +71,13 @@ protected:
     //number of times we've iterated the front() pointer into sourcelist 
     //to get the current particle - represents the source
     int m_numofiters;
-    
-    
+        
     //private: 
     std::vector< EventSource* > m_sourceList;
+    //vector of flags, holds whether or not the current source has a remaining unused particle.
+    std::vector<int> m_unusedSource;
+    //vector of recorded intervals of held sources.
+    std::vector<double> m_sourceInterval;
     EventSource*  m_recent;
 };
 
