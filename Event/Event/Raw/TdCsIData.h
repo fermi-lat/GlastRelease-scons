@@ -36,7 +36,8 @@ converters and IRFConverter.
 
 class TdCsIData : virtual public DataObject , virtual public CsIData
 {
-    
+
+public:
     virtual const CLID& clID() const   { return TdCsIData::classID(); }
     static const CLID& classID()       { return CLID_TdCsIData; }
     
@@ -76,6 +77,7 @@ public:
     
     
     public:
+        TdCsIData(){};
         TdCsIData (int numLayers);
         void copyUp (TdCsIData* copy, int numLayers);
         
@@ -119,12 +121,12 @@ public:
         // Will need for the PDS
         
         //! Serialize the object for reading
-        /*      virtual StreamBuffer& serialize( StreamBuffer& s );
+        virtual StreamBuffer& serialize( StreamBuffer& s );
         //! Serialize the object for writing
         virtual StreamBuffer& serialize( StreamBuffer& s ) const;
         //! Fill the ASCII output stream
         virtual std::ostream& fillStream( std::ostream& s ) const;
-        */     
+             
         void printOn (std::ostream& cout) const ;
         
     protected:
@@ -147,7 +149,7 @@ public:
 //################################################################
 //! Serialize the object for writing
 
-/*
+
 inline StreamBuffer& TdCsIData::serialize( StreamBuffer& s ) const                 {
 DataObject::serialize(s);
 return s;
@@ -172,6 +174,6 @@ return s;
         return s;
         //   << "class TdCsIData :"
         }
-        */
+        
         
 #endif
