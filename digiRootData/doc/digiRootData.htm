@@ -14,8 +14,8 @@
   <blockquote>
     <P align="center"><A HREF="#Intro">Introduction</A>&nbsp;&nbsp;&nbsp;<a href="#Class Overview">Class
     Overview</a>&nbsp;&nbsp;&nbsp; <a href="#Event">Event</a>&nbsp;&nbsp;&nbsp; <a href="#ACD/XGT">ACD</a>&nbsp;&nbsp;&nbsp;
-    <a href="#CAL">CAL</a>&nbsp;&nbsp;&nbsp; <a href="#TKR">TKR</a>&nbsp;&nbsp;&nbsp;
-    <A HREF="#Bugs">Known
+    <a href="#CAL">CAL</a>&nbsp;&nbsp;&nbsp; <a href="#TKR">TKR</a>&nbsp;&nbsp;&nbsp;<a href="#L1T">L1T</a>&nbsp;&nbsp;&nbsp;
+    <a href="#LiveTime">LiveTime</a>&nbsp;&nbsp;&nbsp;&nbsp; <A HREF="#Bugs">Known
     Issues</A></P>
   </blockquote>
 </blockquote>
@@ -35,7 +35,8 @@ separate data array.&nbsp; The ACD data is stored in an array of <i>AcdTile</i>
 objects, as is the XGT data.&nbsp; The CAL data is stored as an array of <i>CalLog</i>
 objects.&nbsp; The TKR data is stored as an array of <i>TkrLayer</i> objects -
 where each <i>TkrLayer</i> contains a list of hit <i>StripId</i>s.&nbsp; The
-Level One Trigger data is stored in a class called <i>L1T</i>.</P>
+Level One Trigger data is stored in a class called <i>L1T</i>.&nbsp; The data
+from the Live Time counters are stored in a class called <i>LiveTime</i>.</P>
 <P ALIGN="JUSTIFY"><b><a name="Event">Event</a></b></P>
 <table border="1" width="100%" height="123">
   <tr>
@@ -138,6 +139,11 @@ Level One Trigger data is stored in a class called <i>L1T</i>.</P>
     <td width="28%" height="19"><i>AcdTile</i>* or null, if not found</td>
   </tr>
   <tr>
+    <td width="35%" height="19"><i>getLiveTime( )</i></td>
+    <td width="37%" height="19">returns the Live Time counter data</td>
+    <td width="28%" height="19"><i>LiveTime*</i></td>
+  </tr>
+  <tr>
     <td width="35%" height="19"><i>getL1T( )</i></td>
     <td width="37%" height="19">returns the Level One Trigger data</td>
     <td width="28%" height="19"><i>L1T</i>*</td>
@@ -162,6 +168,13 @@ Level One Trigger data is stored in a class called <i>L1T</i>.</P>
     <td width="14%"><i>getPulseHeight( )</i></td>
     <td width="32%">returns the PHA value for this ACD/XGT</td>
     <td width="14%" align="center">0 -&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="14%"><i>getCNO( )</i></td>
+    <td width="32%">returns 1/0 denoting whether or not this ACD/XGT was over
+      high (CNO) threshold</td>
+    <td width="14%" align="center">0 (not over threshold)<br>
+      1 (over threshold)</td>
   </tr>
   <tr>
     <td width="14%"><i>getVeto( )</i></td>
@@ -352,7 +365,7 @@ Level One Trigger data is stored in a class called <i>L1T</i>.</P>
   <tr>
     <td width="33%"><i>getNumHits( )</i></td>
     <td width="33%">returns the number of hit strips in this TkrLayer</td>
-    <td width="34%">0 - 1600</td>
+    <td width="34%">0 - 1599</td>
   </tr>
   <tr>
     <td width="33%"><i>getTot(int cntrlNum )</i></td>
@@ -403,32 +416,113 @@ Level One Trigger data is stored in a class called <i>L1T</i>.</P>
       <p align="center"><b>Returns</b></td>
   </tr>
   <tr>
-    <td width="33%">getTrigCount( )</td>
-    <td width="33%">basically the event number</td>
+    <td width="33%"><i>getTrigCount( )</i></td>
+    <td width="33%">event number - counts number of triggers seen</td>
     <td width="34%">a number, 0 -&nbsp;</td>
   </tr>
   <tr>
-    <td width="33%">getTrigTime( )</td>
+    <td width="33%"><i>getTrigTime( )</i></td>
     <td width="33%">&nbsp;</td>
     <td width="34%">&nbsp;</td>
   </tr>
   <tr>
-    <td width="33%">getXCapture( )</td>
+    <td width="33%"><i>getXCapture( )</i></td>
     <td width="33%">&nbsp;</td>
     <td width="34%">&nbsp;</td>
   </tr>
   <tr>
-    <td width="33%">getYCapture( )</td>
+    <td width="33%"><i>getYCapture( )</i></td>
     <td width="33%">&nbsp;</td>
     <td width="34%">&nbsp;</td>
   </tr>
   <tr>
-    <td width="33%">getDeadTime( )</td>
+    <td width="33%"><i>getDeadTime( )</i></td>
     <td width="33%">&nbsp;</td>
     <td width="34%">&nbsp;</td>
   </tr>
   <tr>
-    <td width="33%">getDeadTimeCause( )</td>
+    <td width="33%"><i>getDeadTimeCause( )</i></td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+</table>
+<p ALIGN="JUSTIFY"><b><a name="LiveTime">LiveTime</a></b></p>
+<table border="1" width="100%">
+  <tr>
+    <td width="33%" align="center"><b><i>LiveTime</i> Method</b></td>
+    <td width="33%" align="center"><b>Description</b></td>
+    <td width="34%" align="center"><b>Returns</b></td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getL1TCount( )</i></td>
+    <td width="33%">event id - the number of triggers seen during this run</td>
+    <td width="34%">0 - ?</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getL1TTime( )</i></td>
+    <td width="33%">32 bits of a 48 bit word representing the L1T time, 50 ns
+      FPGA clock pulses without interruption.</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getL1TTimeOverFlow( )</i></td>
+    <td width="33%">16 bits of the 48 bit word representing the L1T Time</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getPPSCount( )</i></td>
+    <td width="33%">number of GPS receiver pulse-per-second (PPS) pulses since
+      power on.</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getPPSTime( )</i></td>
+    <td width="33%">32 bits of a 48 bit word representing the L1T time latched
+      at the rising edge of the GPS receiver PPS signal</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getPPSTimeOverFlow( )</i></td>
+    <td width="33%">16 bits of a 48 bit word representing the L1T time latched
+      at the rising edge of the GPS receiver PPS signal</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getLiveTime( )</i></td>
+    <td width="33%">32 bits of the 48 bit word representing the live time, 50 ns
+      FPGA clock pulses while the L1T Enable is high AND Level-1 Trigger is
+      high.&nbsp; The count value is held between runs.</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getLiveTimeOverFlow( )</i></td>
+    <td width="33%">16 bits of the 48 bit word representing the live time</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getRunTime( )</i></td>
+    <td width="33%">32 bits of the 48 bit word representing the run time, 50 ns
+      FPGA clock pulses continuously while L1T enable is high, indicating a run
+      is in progress.&nbsp; The count value is held between runs.</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getRunTimeOverFlow( )</i></td>
+    <td width="33%">16 bits of the 48 bit word representing the run time</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getRunCount( )</i></td>
+    <td width="33%">run number</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getTREQCapture()</i></td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getLTCDeadWord()</i></td>
     <td width="33%">&nbsp;</td>
     <td width="34%">&nbsp;</td>
   </tr>
