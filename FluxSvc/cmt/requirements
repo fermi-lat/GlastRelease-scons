@@ -38,7 +38,7 @@ library FluxSvc_lib -no_share *.cxx ${FluxSvc_headers} test/flux/rootplot.cxx \
 
 macro libs ""   WIN32   "$(FluxSvcDir)/FluxSvc_lib.lib
 
-macro FluxSvc_linkopts "-L $(FluxSvcDir) -FluxSvc_lib" \
+macro FluxSvc_linkopts "-L $(FluxSvcDir) -lFluxSvc_lib" \
                       WIN32 ""
 
 
