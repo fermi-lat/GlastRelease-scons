@@ -55,7 +55,7 @@ namespace detModel{
   }
 
   void XercesBuilder::parseFile(std::string nameFile){
-    unsigned int iSec;
+//    unsigned int iSec;
     xmlUtil::GDDDocMan* pGDDMan = xmlUtil::GDDDocMan::getPointer();
     
     pGDDMan->parse(nameFile);
@@ -201,7 +201,6 @@ namespace detModel{
 
 
   void XercesBuilder::buildMaterials(){
-    unsigned int i,j;
 
     if (m_docClient->getMaterials()){
       MatCollection* materials = currentGdd->getMaterials();
@@ -213,7 +212,7 @@ namespace detModel{
       materials->setAuthor(std::string(xml::Dom::transToChar(attrCol.getNamedItem(DOMString("author")).getNodeValue())));
 
       DOM_NodeList childs = m_docClient->getMaterials()->getChildNodes();
-      for(i=0;i<childs.getLength();i++){
+      for(unsigned int i=0;i<childs.getLength();i++){
 	if(childs.item(i).getNodeType() != Comment)
 	  {
 	    std::string str = std::string(xml::Dom::transToChar(childs.item(i).getNodeName()));
@@ -244,7 +243,6 @@ namespace detModel{
 
     if(el.getAttribute("RGB") != "")
       {
-	float r, g, b;
 	std::string temp = std::string(xml::Dom::transToChar(el.getAttribute("RGB")));
 	
       }
@@ -262,8 +260,7 @@ namespace detModel{
 
   /// Method that build a composite from the relative DOM node
   Composite* XercesBuilder::buildComposite(DOM_Node* e){
-    unsigned int i, j;
-    unsigned int n = 0;
+    unsigned int i, n = 0;
 
     /// The childs of the node
     DOM_NodeList childs = e->getChildNodes();
@@ -335,7 +332,7 @@ namespace detModel{
   void XercesBuilder::buildSections()
   {
     if (m_docClient->getSections()){
-      currentGdd->addSection(buildSection(m_docClient->getSections()));
+      currentGdd->addSection(buildSection(const_cast<DOM_Node*>(m_docClient->getSections())));
     }
     
     currentGdd->buildVolumeMap();
