@@ -13,6 +13,18 @@
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 
+/// Glast specific includes
+#include "GlastEvent/TopLevel/EventModel.h"
+#include "GlastEvent/TopLevel/Event.h"
+#include "GaudiKernel/ObjectVector.h"
+#include "GlastEvent/data/TdGlastData.h"
+
+/// TkrRecon classes
+#include "TkrRecon/SiRecObjs.h"
+#include "TkrRecon/GFparticle.h"
+#include "TkrRecon/GFdata.h"
+#include "TkrRecon/GFgamma.h"
+
 
 int nbins;  //!< Number of bins used for the fit
 std::vector<double> g_elayer;  //!< Energy per layer in GeV
@@ -128,11 +140,22 @@ double CalClustersAlg::Leak(double eTotal,double elast)
 	if(eTotal<200.) return 0.;
 	else
 	{
-	        // Evaluation of energy using correlation woth last layer
-        	// coefficients fitted using tbsim and valid for ~1GeV<E<~50GeV
-        	double slope = 1.111 + 0.557*log(eTotal/1000.);
-		double intercept = 210. + 112. * log(eTotal/1000.) *log(eTotal/1000.); 
-        	double e_leak = slope * elast + intercept;
+	    // Evaluation of energy using correlation method
+		// Coefficients fitted using GlastSim.
+		double p0 = -1.49 + 1.72*slope;
+		double p1 = 0.28 + 0.434 * slope;
+		double p2 = -15.16 + 11.55 * slope;
+		double p3 = 13.88 - 10.18 * slope;
+		double lnE = log(eTotal/1000.);
+		double funcoef = (p0 + p1 * lnE )/(1+exp(-p2*(lnE - p3)));
+
+		double e_leak = funcoef * elast;
+		
+		// Evaluation of energy using correlation woth last layer
+       	// coefficients fitted using tbsim and valid for ~1GeV<E<~50GeV
+       	//double slope = 1.111 + 0.557*log(eTotal/1000.);
+	   	//double intercept = 210. + 112. * log(eTotal/1000.) *log(eTotal/1000.); 
+       	//double e_leak = slope * elast + intercept;
 		return e_leak;
 	}
 }
@@ -309,6 +332,81 @@ void CalClustersAlg::Profile(double eTotal, CsICluster* cl)
 
 }
 
+//! Reconstruct the direction in the calorimeter
+/*! Basic algorithm for now, since we need to have knowledge on longitudinal errors
+ *  Simply reconstruct direction on both sides XZ and YZ
+ */
+//################################################
+Vector CalClustersAlg::Fit_Direction(std::vector<Vector> pos,std::vector<Vector> sigma2,int nlayers)
+//################################################
+{
+	
+    MsgStream log(msgSvc(), name());
+
+	// sigma2.z() is useless here no matter its value.
+	double cov_xz = 0;  // covariance x,z
+	double cov_yz = 0;  // covariance y,z
+	double mx=0;        // mean x
+	double my=0;		// mean y
+	double mz1=0;		// mean z for x pos
+	double mz2=0;		// mean z for y pos
+	double norm1=0;
+	double norm2=0;
+	double var_z1=0;		// variance of z	
+	double var_z2=0;
+	for(int il=0;il<nlayers;il++)
+	{
+		// For the moment forget about longitudinal position
+		if(il%2==0)
+		{
+			if (sigma2[il].x()>0.)
+			{
+				double err = 1/sigma2[il].x();
+				cov_xz += pos[il].x()*pos[il].z()*err;
+				var_z1 += pos[il].z()*pos[il].z()*err;
+				mx += pos[il].x()*err;
+				mz1 += pos[il].z()*err;
+				norm1 += err;
+			}
+		}
+		else
+		{
+			if(sigma2[il].y()>0.)
+			{
+				double err = 1/sigma2[il].y();
+				cov_yz += pos[il].x()*pos[il].z()*err;
+				var_z2 += pos[il].z()*pos[il].z()*err;
+				my += pos[il].y()*err;
+				mz2 += pos[il].z()*err;
+				norm2 += err;
+			}
+		}
+	}		
+
+	mx /= norm1;
+	my /= norm2;
+	mz1 /= norm1;
+	mz2 /= norm2;
+	cov_xz /= norm1;
+	cov_xz -= mx*mx;
+	cov_yz /= norm2;
+	cov_yz -= my*my;
+	var_z1 /= norm1;
+	var_z1 -= mz1*mz1;
+	var_z2 /= norm2;
+	var_z2 -= mz2*mz2;
+
+	// Now we have cov(x,z) and var(z) we can deduce slope
+	double tgthx = 1/(cov_xz/var_z1);
+	double tgthy = 1/(cov_yz/var_z2);
+
+	double tgtheta_sqr = tgthx*tgthx+tgthy*tgthy;
+	double costheta = 1/sqrt(1+tgtheta_sqr);
+//    log << MSG::INFO << norm2 << "\t" << norm1  << "\t" << var_z2 << "\t" << var_z1 << endreq;
+	Vector dir(costheta*tgthx,costheta*tgthy,costheta);
+	return dir;
+}
+
 
 //################################################
 CalClustersAlg::CalClustersAlg(const std::string& name, ISvcLocator* pSvcLocator):
@@ -323,6 +421,7 @@ Algorithm(name, pSvcLocator)
 StatusCode CalClustersAlg::initialize()
 //################################################
 {
+    MsgStream log(msgSvc(), name());
 	StatusCode sc = StatusCode::SUCCESS;
      sc = service("CalGeometrySvc", m_CalGeo);
 	 logheight = m_CalGeo->logHeight();
@@ -348,8 +447,10 @@ StatusCode CalClustersAlg::retrieve()
 //################################################
 {
 	
-    MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
+
+    MsgStream log(msgSvc(), name());
+        log << MSG::INFO << "Initialize" << endreq;
 
 	m_CsIClusterList = 0;
 	m_CsIClusterList = new CsIClusterList();
@@ -386,9 +487,37 @@ StatusCode CalClustersAlg::retrieve()
 StatusCode CalClustersAlg::execute()
 //################################################
 {
+    MsgStream log(msgSvc(), name());
 	StatusCode sc = StatusCode::SUCCESS;
 	sc = retrieve();
 
+	int rectkr=0;  //is tracker recon OK?
+
+    SmartDataPtr<SiRecObjs> tkrRecData(eventSvc(),"/Event/TkrRecon/SiRecObjs");
+    if (tkrRecData == 0) {
+        log << MSG::INFO << "No TKR Reconstruction available " << endreq;
+       // return sc;
+	}
+	else
+	{
+		// First get reconstructed direction from tracker
+		int ngammas = tkrRecData->numGammas();
+		log << MSG::INFO << "number of gammas = " << ngammas << endreq;
+	
+		GFgamma* gamma;
+		Point gammaVertex;
+		Vector gammaDirection;
+  
+		 if (ngammas > 0) {
+			rectkr++;
+			gamma = tkrRecData->Gamma(0);
+            gammaVertex = gamma->vertex();
+            gammaDirection = gamma->direction();
+			slope = gammaDirection.z();
+		  } else {
+		  log << MSG::INFO << "No reconstructed gammas " << endreq;
+		 }	
+	}
 	int nLogs = m_CalRecLogs->num();
 	double ene = 0;
 	const Point p0(0.,0.,0.);
@@ -397,60 +526,111 @@ StatusCode CalClustersAlg::execute()
 	
 	std::vector<double> eneLayer(nLayers,0.);
 	std::vector<Vector> pLayer(nLayers);
+	std::vector<Vector> rmsLayer(nLayers);
+
 		
 	
-	
+	// Compute barycenter and various moments
+
 	for (int jlog = 0; jlog < nLogs ; jlog++) {
 		CalRecLog* recLog = m_CalRecLogs->Log(jlog);
 
 		double eneLog = recLog->energy();
 		Vector pLog = recLog->position() - p0;
 		int layer = nLayers-1 - (recLog->layer() * 2 + recLog->view());
+		
 		eneLayer[layer]+=eneLog;
-		pLayer[layer] += eneLog*pLog;
-		ene  += eneLog;
-		pCluster += eneLog*pLog;				
-	}
 
+		Vector ptmp = eneLog*pLog;
+		pLayer[layer] += ptmp;
+	
+		Vector ptmp_sqr(ptmp.x()*pLog.x(),ptmp.y()*pLog.y(),ptmp.z()*pLog.z());
+		rmsLayer[layer] += ptmp_sqr;  // Position error is assumed to be 1/sqrt(eneLog)
+
+		ene  += eneLog;
+		pCluster += ptmp;
+		}
+
+	// Now take the means
 	pCluster *= (1./ene);
 	int i = 0;
 	for( ;i<nLayers;i++){
-			if(eneLayer[i]>0)pLayer[i] *= (1./eneLayer[i]);
-			else pLayer[i]=p0;
+			if(eneLayer[i]>0)
+			{
+				pLayer[i] *= (1./eneLayer[i]);
+				rmsLayer[i] *= (1./eneLayer[i]);
+				Vector sqrLayer(pLayer[i].x()*pLayer[i].x(),pLayer[i].y()*pLayer[i].y(),pLayer[i].z()*pLayer[i].z());
+				rmsLayer[i] -= sqrLayer;
+			}
+			else 
+			{
+				pLayer[i]=p0;
+				rmsLayer[i]=p0;
+			}
 	}
 
 
+	// Now sum the different rms to have one transverse and one longitudinal rms
+	double rms_trans=0;
+	double rms_long=0;
+	for(int ilayer=0;ilayer<nLayers;ilayer++)
+	{
+
+		// Sum alternatively the rms
+		if(ilayer%2)
+		{
+			rms_trans += rmsLayer[ilayer].y();
+			rms_long += rmsLayer[ilayer].x();
+		}
+		else
+		{
+			rms_trans += rmsLayer[ilayer].x();
+			rms_long += rmsLayer[ilayer].y();
+		}
+	}
+
+	// Compute direction using the positions and rms per layer
+	Vector caldir = Fit_Direction(pLayer,rmsLayer,nLayers);
+
+	// if no tracker rec then fill slope
+	if(!rectkr) slope = caldir.z();
+
+    slope=1;  // Temporary whilst the algorith appplies to slope=1 showers only.
+
+	// Take square roots of RMS
+	rms_trans = sqrt(rms_trans);
+	rms_long = sqrt(rms_long);
+
+	// Fill CsICluster data
 	CsICluster* cl = new CsICluster(ene,pCluster+p0);
 	m_CsIClusterList->add(cl);
 	cl->setEneLayer(eneLayer);
 	cl->setPosLayer(pLayer);
+	cl->setRmsLayer(rmsLayer);
+	cl->setRmsLong(rms_long);
+	cl->setRmsTrans(rms_trans);
+	cl->setDirection(caldir);
 
-	// r138 correction
-	//	double fact = 9.35194909495273952e-01;
-
-	double fact = 1.;
-	
 	// Leakage correction
-	double eleak = Leak(fact*ene,fact*eneLayer[nLayers-1])+fact*ene;
+	double eleak = Leak(ene,eneLayer[nLayers-1])+ene;
 	
 	// iteration
-	//	eleak = Leak(eleak,fact*eneLayer[nLayers-1])+fact*ene;	
+    eleak = Leak(eleak,eneLayer[nLayers-1])+ene;	
 
 
 	cl->setEneLeak(eleak);
 
 	// defines global variable to be used for fcn
-		g_elayer.resize(nLayers);
+	g_elayer.resize(nLayers);
 	for ( i =0;i<nLayers;i++)
 	{
 		// We are working in GeV
-		g_elayer[i] = fact*eneLayer[i]/1000.;
+		g_elayer[i] = eneLayer[i]/1000.;
 	}
 	nbins = nLayers;
-	slope = 1;  // temporary
+//	slope = 1;  // temporary
 
 	// Do profile fitting
-
 	Profile(ene,cl);
 
 	m_CsIClusterList->writeOut();

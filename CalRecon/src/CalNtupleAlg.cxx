@@ -66,6 +66,7 @@ StatusCode CalNtupleAlg::initialize() {
     StatusCode sc = StatusCode::SUCCESS;
 
     MsgStream log(msgSvc(), name());
+        log << MSG::INFO << "Initialize" << endreq;
     
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
@@ -100,13 +101,28 @@ StatusCode CalNtupleAlg::execute() {
 
 	double fit_ener,fitalpha,fitlambda,profchi2,eleak,start;
 	float energy_sum;
+
 	int nClust = m_cls->num();
+	//cout << nClust << endl;
 	for ( int icl = 0; icl<nClust;icl++){
 		CsICluster* cl = m_cls->Cluster(icl);
 		energy_sum = cl->energySum();
+
 		float zpos = (cl->position()).z();
+		float xpos = (cl->position()).x();
+		float ypos = (cl->position()).y();
+
 		const std::vector<double>& eneLayer = cl->getEneLayer();
 		const std::vector<Vector>& posLayer = cl->getPosLayer();
+
+		float trans_rms = cl->getRmsTrans();
+		float long_rms = cl->getRmsLong();
+
+		Vector caldir = cl->direction();
+		float caltheta=acos(caldir.z());
+		float calphi = 1.570796326794897;
+		if(caldir.x()!=0) calphi = atan(caldir.y()/caldir.x());
+		
 		fit_ener = cl->getFitEnergy();
 		profchi2 = cl->getProfChisq();
 		fitalpha = cl->getCsiAlpha();
@@ -115,14 +131,30 @@ StatusCode CalNtupleAlg::execute() {
 		eleak = cl->energyLeak();
     
 	
-		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_Energy_Sum", energy_sum);
-		
+		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_Energy_Deposit", energy_sum);
+		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_Energy_Inc_Prof", fit_ener);
+		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_Energy_Inc_LeakCorr", eleak);
+		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_Energy_Incident", fit_ener);  // for the moment
+		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Energy_Incident_CalTkr", energy_sum);  // to be updated
+
 		const std::string name_eLayer = "Cal_eLayer";
 		const char* digit[8]={"0","1","2","3","4","5","6","7"};
 		for (int layer=0; layer<8; layer++)
 		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), (name_eLayer+digit[layer]).c_str(), eneLayer[layer]);
 	
 		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_Z", zpos);
+		
+		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_X", xpos);
+
+		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_Y", ypos);
+
+		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_transv_rms", trans_rms);
+		
+		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_long_rms", long_rms);
+
+		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_theta", caltheta);
+
+		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_phi", calphi);
 
 	}
 
