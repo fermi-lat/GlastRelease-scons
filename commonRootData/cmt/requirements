@@ -1,9 +1,7 @@
 package commonRootData
-version v1r0p1
-# $Id$
+version v1r0p2
 
-
-use RootPolicy v4r* 
+use RootcintPolicy v4r* GlastPolicy
 
 # see RootPolicy for discussion of this pattern
 apply_pattern root_package headers="\
