@@ -230,6 +230,7 @@ public:
     UShort_t getCalHeVector() const { return m_cal_He_Vector;};
     UShort_t getCnoVector() const { return m_cno_Vector;};
     UShort_t getConditionSummary() const { return m_conditionSummary;};
+    UShort_t getMissed() const { return (_conditionSummary >> 8) & (( 1 << 8 ) - 1); };
     const GemTileList& getTileList() const { return m_tileList; };
     UInt_t getLiveTime() const {return m_liveTime; };
     UInt_t getPrescaled() const { return m_prescaled;};

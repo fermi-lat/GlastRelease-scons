@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v7r19     15-Mar-2005 HMK Add Gem::missed method as does LDF v05-05-00
 v7r18     15-Mar-2005 HMK Store all diagnostic and error lengths
 v7r17     13-Mar-2005 HMK Add method for trgParityError across contributions
 v7r16p1   23-Feb-2005 HMK make number of trigger bits available through L1T
