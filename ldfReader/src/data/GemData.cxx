@@ -27,6 +27,8 @@ namespace ldfReader {
         m_triggerTime = gem.m_triggerTime;
         m_onePpsTime = gem.m_onePpsTime;
         m_deltaEventTime = gem.m_deltaEventTime;
+
+        m_lenInBytes = gem.m_lenInBytes;
     }
 
     void GemData::initTrigger(unsigned short tkr, unsigned short roi,
@@ -69,10 +71,12 @@ namespace ldfReader {
         m_triggerTime = 0;
         m_onePpsTime.clear();
         m_deltaEventTime = 0;
+        m_lenInBytes = 0;
     }
 
    void GemData::print() const {
        printf("GEM:\n");
+       printf("Contribution length = %d Bytes\n", m_lenInBytes);
        printf("ROI vector = 0x%04x\n", roiVector());
        printf("TKR vector = 0x%04x\n", tkrVector());
        printf("CAL HE vector = 0x%04x\n", m_cal_HE_Vector);

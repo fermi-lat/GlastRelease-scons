@@ -66,6 +66,7 @@ int main(int argn, char** argc) {
         unsigned int iTower;
         for (iTower = 0; iTower < 16; iTower++) {
             TowerData *tem = myLatData->getTower(iTower);
+            tem->print();
             if (!tem) {
                 //printf("Tem does not exist\n");
             } else {
