@@ -29,6 +29,12 @@ void G4MaterialsVisitor::visitElement(detModel::Element* element)
 {
   G4String name, symbol;
   G4double a, z, density;
+  G4Element* ptElement = 0;
+  G4Material* ptMaterial = 0;
+  
+  if (((ptElement = G4Element::GetElement((G4String) element->getName())) ||
+	(ptMaterial = G4Material::GetMaterial((G4String) element->getName()))))  
+    return;
   
   name = (G4String) element->getName();
   symbol = (G4String) element->getSymbol();
@@ -49,7 +55,11 @@ void G4MaterialsVisitor::visitComposite(detModel::Composite* composite)
   G4String name;
   G4double density;
   G4int ncomponents;
+  G4Material* ptMaterial = 0;
   
+  if ((ptMaterial = G4Material::GetMaterial((G4String) composite->getName())))  
+    return;  
+
   name = (G4String) composite->getName();
   density = (G4double) composite->getDensity()*g/cm3;
   ncomponents = (G4int) composite->getNComponents();

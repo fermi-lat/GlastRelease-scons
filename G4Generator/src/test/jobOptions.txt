@@ -26,10 +26,10 @@ FluxSvc.source_lib += {"$(FLUXROOT)/xml/user_library.xml"};
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 6;
 
-G4Generator.source_name="default";
+G4Generator.source_name="vertical_muons";
 
 
-ApplicationMgr.EvtMax = 5;
+ApplicationMgr.EvtMax = 2;
 
 
 //==============================================================

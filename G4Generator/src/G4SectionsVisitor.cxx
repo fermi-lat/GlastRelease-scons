@@ -82,7 +82,7 @@ void  G4SectionsVisitor::visitSection(detModel::Section* section)
 {
   detModel::Volume* topVolume = (section->getTopVolume());
   
-  G4Material* ptMaterial = G4Material::GetMaterial("Galactic");
+  G4Material* ptMaterial = G4Material::GetMaterial("Vacuum");
 
   G4Box* world
     = new G4Box(topVolume->getName(),
@@ -155,7 +155,7 @@ void  G4SectionsVisitor::visitEnsemble(detModel::Ensemble* ensemble)
   unsigned int i, logind;
   G4LogicalVolume *temp=actualMother;
 
-  G4Material* ptMaterial = G4Material::GetMaterial("Galactic");
+  G4Material* ptMaterial = G4Material::GetMaterial("Vacuum");
 
   g4Boxes.push_back(
 		    new G4Box(ensemble->getName(),
