@@ -160,9 +160,9 @@ StatusCode GltValsTool::calculate()
 
     int iTrig_tower  = -1;
     int iTrig_layer  = -1;
-    int xTower = -1;
-    int yTower = -1; 
-    int iTrig_type = 0;
+    int iTrig_xTower = -1;
+    int iTrig_yTower = -1; 
+    int iTrig_type   = 0;
 
 
     if(!pEvent || !pClusters) return StatusCode::FAILURE;
@@ -248,6 +248,9 @@ StatusCode GltValsTool::calculate()
         // new classification is number of exposed sides
         if(iTrig_tower >= 0) {
             iTrig_type = m_tkrGeom->getTowerType(iTrig_tower);
+            idents::TowerId towerId = idents::TowerId(iTrig_tower);
+            iTrig_xTower = towerId.ix();
+            iTrig_yTower = towerId.iy();
         }
 
         // Now find the average location of all hits
@@ -339,8 +342,8 @@ StatusCode GltValsTool::calculate()
 
     Trig_layer  = iTrig_layer;
     Trig_tower  = iTrig_tower;
-    Trig_xTower = xTower;
-    Trig_yTower = yTower;
+    Trig_xTower = iTrig_xTower;
+    Trig_yTower = iTrig_yTower;
     Trig_type   = iTrig_type;
 
     return sc;
