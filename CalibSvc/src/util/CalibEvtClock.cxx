@@ -1,7 +1,7 @@
 //$Header$
 #include <stdio.h>
 
-#include "EvtClock.h"
+#include "CalibEvtClock.h"
 #include "CalibData/CalibTime.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -13,12 +13,12 @@
 //  #include "GaudiKernel/TimePoint.h"
 
 /// Instantiation of a static factory to create instances of this algorithm
-static const AlgFactory<EvtClock> Factory;
-const IAlgFactory& EvtClockFactory = Factory;
+static const AlgFactory<CalibEvtClock> Factory;
+const IAlgFactory& CalibEvtClockFactory = Factory;
 
 
-EvtClock::EvtClock( const std::string&  name, 
-		    ISvcLocator*        pSvcLocator )
+CalibEvtClock::CalibEvtClock( const std::string&  name, 
+                              ISvcLocator*        pSvcLocator )
   : Algorithm     ( name, pSvcLocator )
   , m_eventNumber ( 0 )
   , m_detDataSvc  ( 0 )
@@ -31,7 +31,7 @@ EvtClock::EvtClock( const std::string&  name,
 }
 
 
-StatusCode EvtClock::initialize() {
+StatusCode CalibEvtClock::initialize() {
   StatusCode sc;
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Initialize()" << endreq;
@@ -79,13 +79,13 @@ StatusCode EvtClock::initialize() {
 }
 
 
-StatusCode EvtClock::execute( ) {
+StatusCode CalibEvtClock::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
   // Increment the event counter
   m_eventNumber++;
-  log << MSG::INFO << "EvtClock Event number: " << m_eventNumber << endreq;
+  log << MSG::INFO << "CalibEvtClock Event number: " << m_eventNumber << endreq;
 
   // Set the event time
   facilities::Timestamp time = i_evtTime();
@@ -104,7 +104,7 @@ StatusCode EvtClock::execute( ) {
 
 
 
-StatusCode EvtClock::finalize( ) {
+StatusCode CalibEvtClock::finalize( ) {
 
   MsgStream log(msgSvc(), name());
   log << MSG::INFO 
@@ -115,7 +115,7 @@ StatusCode EvtClock::finalize( ) {
   return StatusCode::SUCCESS;
 }
 
-facilities::Timestamp EvtClock::i_evtTime( ) {
+facilities::Timestamp CalibEvtClock::i_evtTime( ) {
 
   return facilities::Timestamp(m_startTime + 
                                (m_eventNumber - 1) * m_delayTime);

@@ -9,6 +9,9 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 DECLARE_FACTORY_ENTRIES(CalibSvc) {
+  // Useful for now to fake event time  
+  DECLARE_ALGORITHM(CalibEvtClock);
+
   DECLARE_SERVICE(CalibDataSvc);
 
 
@@ -20,6 +23,7 @@ DECLARE_FACTORY_ENTRIES(CalibSvc) {
   DECLARE_CONVERTER(XmlCalPedCnv);
   DECLARE_CONVERTER(XmlCalGainCnv);
   DECLARE_CONVERTER(XmlCalMuSlopeCnv);
+
 
   // Following doesn't exist yet.
   //  DECLARE_SERVICE(CalibRootCnvSvc);
