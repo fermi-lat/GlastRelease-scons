@@ -111,8 +111,9 @@ class FluxSource : public EventSource
           DIRECTION ,   //! fixed direction
           SURFACE,      //! random point and direction within a fixed surface
           SPECTRUM, //! direction calculated by the spectrum object
+          SPECGAL,   //! direction coming from the spectrum object, in the form (l,b) - galactic coordinates
           PATCHFIXED,   //! fixed direction, fixed surface (unused)
-		  GALACTIC  //!  fixed direction with respect to the galactic coordinate system
+          GALACTIC  //!  fixed direction with respect to the galactic coordinate system (l,b)
       } m_launch;
 
 	  enum PointType { 

@@ -47,8 +47,11 @@
 <!ATTLIST solid_angle mincos CDATA "-0.4"  maxcos CDATA "1.0"
                       theta  CDATA "0" phi CDATA "0">
 
-<!-- if this element exists, the Spectrum object will generate the angles -->
+<!-- if this element exists, the Spectrum object will generate the angles - "earth" means we expect the spectrum to send an earth-based
+direction (costh,phi), and "galaxy" means we expect galactic coordinates (l,b) -->
 <!ELEMENT use_spectrum EMPTY>
+<!ATTLIST use_spectrum frame CDATA "earth">
+
 
 <!-- optional launch point description - factors given in millimeters -->
 <!ELEMENT launch_point EMPTY>

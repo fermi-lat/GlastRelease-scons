@@ -142,7 +142,13 @@ m_frametype(EARTH), illumBox(0), m_energyscale(GeV)
                 atof(angles.getAttribute("phi").transcode()) *d2r);
         }
         else if (anglesTag.equals("use_spectrum") ) {
-            useSpectrumDirection();
+            std::string frame = angles.getAttribute("frame").transcode();
+            //if(angles.getAttribute("frame")/*.transcode()*/ == "galaxy"){          
+            if(frame == "galaxy"){
+                m_launch=SPECGAL;
+            }else{
+                useSpectrumDirection();
+            }
         }
         else if(anglesTag.equals("galactic_dir")){
             m_galb=atof(angles.getAttribute("b").transcode());
@@ -376,6 +382,17 @@ void FluxSource::computeLaunch (double time)
             if(m_pointtype==NOPOINT){
                 randomLaunchPoint();
             }
+            break;
+        }        
+    case SPECGAL:
+        {
+            //note: the direction is in te form (l,b) here.
+            std::pair<float,float> direction = spectrum()->dir(kinetic_energy,HepRandom::getTheEngine());
+            double l = direction.first;
+            double b = direction.second;
+  
+            //then set up this direction:
+            getGalacticDir(l,b);
             break;
         }
     case GALACTIC:
