@@ -1,5 +1,6 @@
 
 #include "rootplot.h"
+#include "CLHEP/Geometry/Vector3D.h"
 
 rootplot::rootplot(int argc, char* argv[])
 : NUM_BINS(30),LOOP(30000),
@@ -247,7 +248,7 @@ void rootplot::init(std::vector<const char*> argv)
             double timeadd = e->interval(time);
             time += timeadd;
             fm.pass(timeadd);
-            Vector dir = f->launchDir();
+            HepVector3D dir = f->launchDir();
             double energy = f->energy();
             double cos_theta = dir.z();
             
