@@ -27,8 +27,8 @@
 
  One could imagine that an ACD id could be represented by 12 bits.
  
-  __       __ __ __     __ __ __ __      __ __ __ __
- LAYER       FACE           ROW            COLUMN
+  __ __       __ __ __     __ __ __ __      __ __ __ __
+  LAYER         FACE           ROW            COLUMN
  where the layer is the most significant bit
 */
 
@@ -81,10 +81,11 @@ private:
     inline void column( unsigned int c );
     
     enum {
-        _layermask = 0x0800,
+        _layermask = 0x1800,
         _facemask  = 0x0700,
         _rowmask   = 0x00F0,
-        _colmask   = 0x000F
+        _colmask   = 0x000F,
+        layerShift = 11
     };
 
     unsigned int    m_id;   // id value (4 byte word)
@@ -114,7 +115,7 @@ inline bool AcdId::side () const
 { return (face() != 0); }
 
 inline short AcdId::layer () const 
-{ return (m_id & _layermask) ? 1 : 0; }
+{ return (m_id & _layermask) >> layerShift; }
 
 inline short AcdId::face () const
 { return bitmanip::word(2, (m_id & _facemask)); }
