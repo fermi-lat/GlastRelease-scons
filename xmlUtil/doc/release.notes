@@ -2,6 +2,8 @@
  * Package xmlUtil
  * Coordinator: J. Bogart
  *
+ * 08-Jan-2004  jrb v2r11p2 Make use of docType arg. to xml::XmlParser::parse;
+ *        make output format for obscure data structure more compact
  * 16-Dec-2003  jrb v2r11p1 Trivial clean up in Constants.cxx
  * 07-Oct-2003  jrb v2r11p0 Bug fix to IdDict::getNameSeqString
  * 02-Oct-2003  jrb v2r11 Add support to recover field names from 
