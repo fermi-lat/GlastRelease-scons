@@ -37,6 +37,7 @@ use OnboardFilter v*
 
 #ROOT persistence: RootIo specifies the data packages
 use RootIo      v*
+use RootDisplay v*
 
 #diagnostic and summary of bottom line
 use merit       v*
