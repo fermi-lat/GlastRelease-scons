@@ -55,14 +55,18 @@
   @section jobOptions jobOptions
 
   CalibDataSvc has the following job options properties:
-  <ul>
-  <li> CalibStorageType, defaults to MYSQL_StorageType</li>
-  <li> CalibNameList,   list of knwon calibration types (not sure
-       this is needed; may be no reason to make this list so
-       dynamic)</li>
-  <li> CalibRootName,  defaults to "Calib", top node in TCDS</li>
-  <li> CalibInstrumentName, defaults to "LAT"</li>
-  </ul>
+  <dl>
+  <dt> CalibStorageType</dt> <dd> defaults to MYSQL_StorageType</dd>
+  <dt> CalibFlavorList</dt> <dd>list of additional flavors (beyond vanilla,
+       which is always used) for which nodes should be created for each
+       calibration type.   </dd> 
+  <dt> CalibNameList</dt> <dd>list of calibration type/flavor
+       combinations beyond those of flavor "vanilla" or of a flavor 
+       specified in CalibFlavorList for which the data service is requested
+       to create a node.</dd>
+  <dt> CalibRootName</dt>  <dd>defaults to "Calib", top node in TCDS</dd>
+  <dt> CalibInstrumentName</dt>  <dd>defaults to "LAT"</dd>
+  </dl>
 
   The class EvtClock, used in the test program to generate fake event
   times and store them with CalibDataSvc, has job options properties
@@ -75,8 +79,9 @@
 
   @todo    Figure out what other information from the metadata needs to
            be acquired and saved, and where it should go.
-  @todo    Write CalibROOTCnvSvc and CalibXMLCnvSvc
-  @todo    Define calibration TDS classes in detail; write converters.
+  @todo    Write CalibROOTCnvSvc
+  @todo    Define remaining calibration TDS classes in detail; 
+           write converters.
            
  */
 
