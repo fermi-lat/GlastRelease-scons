@@ -453,7 +453,7 @@ unsigned int *EbfCalData::format (unsigned int *dst, int itower) const
    
 
    /* Check if there is any data in this tower */
-   if ( (m_msk & (1 << itower) == 0) )
+   if (( (m_msk & (1 << itower) )== 0) )
    {
        /* No data, 0 the count word and return */
        *dst++ = 0;
