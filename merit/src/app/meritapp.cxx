@@ -23,6 +23,7 @@ static std::string  cutstr("nA");
 static std::string  file_name("");
 
 
+
 void FATAL(const char* s){std::cerr << "\nERROR: "<< s;}
 void WARNING(const char* s){std::cerr << "\nWARNING: " << s;}
 
@@ -102,6 +103,13 @@ int main(int argc, char* argv[])
             exit(1);
         }
     }
+
+	// setup output stream
+	std::ostream* outstream = &std::cerr;
+	const char * env = ::getenv("MERIT_OUTPUT_FILE");
+	if( env ){
+		outstream = new std::ofstream(env);
+	}
     std::cerr << "Merit reading from file: \"" << file_name << "\"" << std::endl;
     // charge a head with ROOT here, figure out later how to do it consistently
 
@@ -139,7 +147,7 @@ int main(int argc, char* argv[])
 
 
 #endif
-    std::cerr << "Tuple title: \""<< tuple->title() << "\"\n" ;
+    (*outstream) << "Tuple title: \""<< tuple->title() << "\"\n" ;
 
     FigureOfMerit fm(*tuple, cutstr);
 
@@ -147,7 +155,7 @@ int main(int argc, char* argv[])
 
     while ( tuple->nextEvent() ) fm.execute();
     ::ftime(&t_final);
-    fm.report(std::cerr);
+    fm.report(*outstream);
 	
     std::cerr << "\nElapsed time: "<< t_final.time-t_init.time << " sec" << std::endl;
     return 0;
