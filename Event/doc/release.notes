@@ -2,6 +2,7 @@
  * package Event
  * package manager:T.Burnett (original author: H. Gillespie)
  *
+ * v8r7p1 5-jun-02 THB  adding new const access functions to Cal
  * v8r7   4-jun-02 THB  lots of unexpected changes associated with collections, see ChangeLog 
  * v8r6p1 1-jun-02 THB Fix to TimeStamp  now double.
  * v8r6  31-may-02 THB EventHeader with time, trigger bits.
