@@ -252,7 +252,7 @@
 
 
 	<!-- Test source at the galactic origin -->
-     <source name="center" flux="5000.0">
+     <source name="center" flux="3.0">
           <spectrum>
               <particle name="gamma"> <energy e="0.1"/> </particle>
                <galactic_dir l="0" b="0"/>

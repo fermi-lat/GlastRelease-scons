@@ -286,19 +286,24 @@ FluxSource* FluxSource::event(double time)
     // Inputs  - current time
     // Outputs - pointer to the "current" fluxSource object.
     m_extime = 0;
-    //go through the "veto" loop only if galactic coordinates are given for the source - otherwise,
+    //iterate through the "veto" loop only if galactic coordinates are given for the source - otherwise,
     //the particles originate close to GLAST, and can still be incident.
     // loop through until you get a particle which is not occluded by the earth.
-    calculateInterval(time);
-    computeLaunch(time+m_interval);
-    m_extime+=1;
-    while(occluded() || m_interval == -1){
-        calculateInterval(time-1.);
-        computeLaunch(time+m_interval);
-        m_extime+=1;
-    }
-    m_extime-=1; // to make up for doing this once too many.
-    EventSource::setTime(time+m_interval);
+    
+    do{
+        calculateInterval(time+m_extime);
+        //std::cout << "now interal is " << m_interval << std::endl;
+        computeLaunch(time+m_extime+m_interval);
+        //std::cout << "Testing at time = " << time+m_extime+m_interval << " , interval = " << m_interval << std::endl;
+        //std::cout << "occluded? " << occluded() << std::endl;
+        m_extime+=m_interval;
+    }while(occluded() || m_interval == -1);
+        m_extime -= m_interval;
+
+
+    //now set the actual interval to be what FluxMgr will get
+    m_interval += m_extime;
+    EventSource::setTime(time+m_interval+m_extime);
     correctForTiltAngle();
     return this;
     // could be a call-back
@@ -363,7 +368,7 @@ void FluxSource::computeLaunch (double time)
     do {
         // kinetic_energy= (*spectrum())(RandFlat::shoot(m_rmin, m_rmax));
         //FIXME: make this a class variable
-        kinetic_energy = spectrum()->energySrc( HepRandom::getTheEngine(), time + m_extime );
+        kinetic_energy = spectrum()->energySrc( HepRandom::getTheEngine(), time /*+ m_extime*/ );
         //std::cout << "kinetic energy=" << kinetic_energy << " , max=" << m_maxEnergy* fudge << std::endl;
         //kinetic_energy = spectrum()->operator ()(HepRandom::getTheEngine()->flat());// time + m_extime );
     }    while (kinetic_energy > m_maxEnergy* fudge);
@@ -971,7 +976,7 @@ void FluxSource::getGalacticDir(double l,double b){
     
     
     //get the transformation matrix..
-    Rotation galtoglast=GPS::instance()->orbit()->CELTransform(GPS::instance()->time() + m_interval);
+    Rotation galtoglast=GPS::instance()->orbit()->CELTransform(GPS::instance()->time() + m_interval + m_extime);
     
     //and do the transform:
     setLaunch(galtoglast*gamgal);
@@ -1025,10 +1030,10 @@ void FluxSource::refPoint(PointType point) {m_pointtype=point;}
 
 double FluxSource::calculateInterval (double time){   
     //return std::max(m_spectrum->interval(time),/*0.*/ EventSource::interval(time));
-    double intrval=m_spectrum->interval(time + m_extime);
-    if(intrval!=-1){m_interval = intrval + m_extime;
+    double intrval=m_spectrum->interval(time/* + m_extime*/);
+    if(intrval!=-1){m_interval = intrval/* + m_extime*/;
     }else{
-        m_interval = explicitInterval(time+m_extime);
+        m_interval = explicitInterval(time/*+m_extime*/);
     }
     return m_interval;
 }
@@ -1041,7 +1046,7 @@ double FluxSource::explicitInterval (double time)
     if (r == 0){ return -1.;// - m_extime; //the minus is for ensuring that interval() returns a -1 flag.
     }else{  
         double p = RandFlat::shoot(1.);
-        return ((-1.)*(log(1.-p))/r)+m_extime;
+        return ((-1.)*(log(1.-p))/r) /*+m_extime*/;
     }
 }
 

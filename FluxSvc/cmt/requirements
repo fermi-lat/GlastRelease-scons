@@ -5,12 +5,13 @@ branches FluxSvc mgr doc
 
 use GlastPolicy v4*
 
-use Event v8r*
+use Event v8r14p1
 use geometry   v3*
 
 use GaudiSvc
 use xml
 use CLHEP
+use astro v0
 
 
 apply_pattern packageShr

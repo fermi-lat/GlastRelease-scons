@@ -152,7 +152,7 @@ StatusCode FluxTestAlg::execute() {
         << "(" << p.x() <<", "<< p.y() <<", "<<p.z()<<")" 
         << " Dir " 
         << "(" << d.x() <<", "<< d.y() <<", "<<d.z()<<")"
-        // << ",  Elapsed Time = " << m_flux->time()
+         << ",  Elapsed Time = " << m_flux->time()
         << endreq;
     
     //m_flux->pass(10.);

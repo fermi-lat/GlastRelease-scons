@@ -22,6 +22,9 @@
 #include "geometry/Vector.h"
 #include "geometry/CoordTransform.h"
 
+#include "astro/SkyDir.h"
+
+
 #include <iostream>
 
 class Orbit;
@@ -89,6 +92,10 @@ public:
     std::pair<double,double> rotateAngles(); 
     // set data
     
+    /// get the pointing characteristics of the satellite, given a location and rocking angle.
+    void getPointingCharacteristics(Hep3Vector location, double rockNorth);
+    
+    
     /// set a specific Orbit object for lat/lon calculations
     void    orbit ( Orbit* );
     /// pass a specific amount of time
@@ -130,9 +137,15 @@ public:
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
     Rotation GPS::transformGlastToGalactic(double time);
     
-    
-    
     Orbit*  orbit ();               // access the orbit (for manipulation)
+    
+    double RAX()const{return m_RAX;}
+    double RAZ()const{return m_RAZ;}
+    double DECX()const{return m_DECX;}
+    double DECZ()const{return m_DECZ;}
+    double RAZenith()const{return m_RAZenith;}
+    double DECZenith()const{return m_DECZenith;}
+    
     protected:
         // singleton - protect ctor/dtor
         GPS();
@@ -150,9 +163,6 @@ public:
         void    setState ( const GPS::Coords& ); // set the orbital parameters
         std::pair<double,double> m_rotangles;  //angles for coordinate rotation (rocking angle)
         
-        
-        
-        
         // friends
         friend class FluxGenerator;
         
@@ -164,7 +174,8 @@ public:
         GPStime m_time;	    // global time
         GPStime m_orbittime;    // time in orbit (depends on expansion)
         double  m_sampleintvl;  // interval to sample for each pt. in the orbit - to normalize spectra
-        
+        double m_RAX,m_RAZ,m_DECX,m_DECZ; //pointing characteristics.
+        double m_RAZenith,m_DECZenith;  //pointing characteristic of the zenith direction.
         // notification
         Subject    m_notification; 
         

@@ -341,3 +341,37 @@ Rotation GPS::transformGlastToGalactic(double time){
     return (m_orbit->CELTransform(time).inverse())*(rockingAngleTransform(time).inverse());
 }
 
+void GPS::getPointingCharacteristics(Hep3Vector location, double rockNorth){
+    using namespace astro;
+    //first make the directions for the x and Z axes, as well as the zenith direction.
+    SkyDir dirZenith(location.unit());
+    //before rotation, the z axis points along the zenith:
+    SkyDir dirZ(location.unit());
+    SkyDir dirX(dirZ.ra()-90., 0.0);
+
+    //now set the zenith direction before the rocking.
+    m_RAZenith = dirZ.ra();
+    m_DECZenith = dirZ.dec();
+    
+    // now, we want to find the proper transformation for the rocking angles:
+    HepRotation rockRot(Hep3Vector(0,0,1).cross(dirZ.dir()) , rockNorth);
+    
+    //and apply the transformation to dirZ and dirX:
+    
+    dirZ().rotate(Hep3Vector(0,0,1).cross(dirZ.dir()) , rockNorth*M_PI/180.);
+    dirX().rotate(Hep3Vector(0,0,1).cross(dirZ.dir()) , rockNorth*M_PI/180.);
+    
+    m_RAX = dirX.ra();
+    m_RAZ = dirZ.ra();
+    m_DECX = dirX.dec();
+    m_DECZ = dirZ.dec();
+    // some output showing the calculations done.
+    //std::cout << "Ra of z axis : " << dirZ.ra() << std::endl
+    //    << "Dec of z axis : " << dirZ.dec() << std::endl
+    //    << "Ra of x axis : " << dirX.ra() << std::endl
+    //    << "Dec of x axis : " << dirZ.dec() << std::endl;
+    
+    //a test - to ensure the rotation went properly
+    //std::cout << " degrees between xhat and zhat directions: " <<
+    //    dirZ.difference(dirX)*180./M_PI << std::endl;
+}
