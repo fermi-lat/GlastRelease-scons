@@ -310,7 +310,7 @@ public:
 
 
             std::pair<float,float> direction 
-                    = m_spectrum->dir(ke,HepRandom::getTheEngine());
+                    = m_spectrum->dir(ke);
 
             if( !m_galactic) {
                 // special option that gets direction from the spectrum object
@@ -578,7 +578,7 @@ double FluxSource::rate(double time) const
 void FluxSource::computeLaunch (double time)
 {
     // get the KE from the spectrum object
-    m_energy = spectrum()->energySrc( HepRandom::getTheEngine(), time );
+    m_energy = spectrum()->energy( time );
 
     // convert to MeV if necessary
     if(m_energyscale==GeV){

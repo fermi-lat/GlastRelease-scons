@@ -97,7 +97,7 @@ float GalElSpectrum::findCutoff(std::pair<double,double> coords) const {
     return findCutoff(coords.first, coords.second);
 }
 
-std::pair<float,float> GalElSpectrum::dir(float energy) const {
+std::pair<double,double> GalElSpectrum::dir(double energy)  {
     float earthazi = 2.*M_PI* HepRandom::getTheGenerator()->flat();
     float coszenith = m_coscutoff + (1.-m_coscutoff)*
         HepRandom::getTheGenerator()->flat();

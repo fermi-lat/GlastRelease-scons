@@ -10,20 +10,11 @@
 * an abstract base class
 * \author Sean Robinson
 *
-* $Header $
+* $Header$
 */
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
-
 #include <string>
-#include <utility>
-// CLHEP
-#include "CLHEP/Random/RandomEngine.h"
-
-//forward declaration
-class HepRandomEngine;
+#include <utility> // for std::pair
 
 
 class ISpectrum  
@@ -31,24 +22,35 @@ class ISpectrum
     
 public:
     
-    /// subclasses need to specify correct particle type
+    ///  particle name that must be known to the particle service
     virtual const char * particleName()const=0;
     
     /// calculate the flux, particles/m^2/sr. (default zero)
     virtual double    flux (double time ) const=0;
     
-    /// calcualte effective solid angle 
-    virtual double solidAngle()const{return /*6.*/ 1.0;} //flag that doesen't calculate.
+    /// return effective solid angle that will be used to determine the actual rate 
+    virtual double solidAngle()const{return  1.0;} //flag that doesen't calculate.
     
     /// return a title describing the spectrum	
     virtual std::string title()const=0;
     
-    /// a randomized interval to the next event - default is 1/rate()
+    /*! a (randomized) interval to the next event.  
+     For time-independent rate, should correspond to exponential( 1/rate() )
+     Return negative to do this with flux()*solidAngle().
+     needs to know the cross-sectional area?
+    */
+
     virtual double interval (double time)=0;
     
-    /// interface for energy and direction (originally from Hirosima classes)
-    virtual double energySrc(HepRandomEngine* engine, double time=0)=0;
-    virtual std::pair<double,double> dir(double energy, HepRandomEngine* engine)=0;
+    /// return energy, either GeV or MeV
+    virtual double energy( double time=0)=0;
+
+    /** return direction in a pair:
+    @param energy The generated energy
+    \param dir direction is either in the format (cos theta, phi) for
+    (zenith-local coordinates, or (l,b) (galactic coordinates).
+    */
+    virtual std::pair<double,double> dir(double energy)=0;
     
 };
 

@@ -24,4 +24,11 @@
             <patch />
         </spectrum>
     </source>
+    
+    <source name="TestSpectrum">
+        <spectrum escale="GeV">
+            <SpectrumClass name="TestSpectrum" params="50 100"/>
+            <use_spectrum/>
+        </spectrum>
+    </source>
 </source_library>

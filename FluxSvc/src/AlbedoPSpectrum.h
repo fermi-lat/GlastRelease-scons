@@ -62,7 +62,7 @@ public:
     int askGPS(); // this one asks the GPS for position
     
     /// sample a solid angle pair (costh,phi) from angular distribution
-    virtual std::pair<float,float> dir(float energy)const;
+    virtual std::pair<double,double> dir(double energy);
     
     virtual std::string title() const;
     virtual const char * particleName() const;

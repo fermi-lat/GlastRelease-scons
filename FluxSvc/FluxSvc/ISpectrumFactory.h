@@ -47,8 +47,14 @@ public:
         classname = classname.substr(s);
         svc->addFactory(classname, this); 
     }
-    //! return a new Spectrum object
-    virtual ISpectrum* instantiate(const std::string& params) const{return new T(params);}
+    /*! return a new Spectrum object
+    @param params String from the xml
+    @param engine random engine to use
+    */
+
+    virtual ISpectrum* instantiate(const std::string& params) const{
+        return new T(params);
+    }
     
     //! dummy to follow Gaudi model
     virtual void addRef()const{}

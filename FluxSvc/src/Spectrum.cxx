@@ -28,7 +28,7 @@ double Spectrum::solidAngle( )const
     return 1.0; // flag that doesn't calculate
 }
 
-std::pair<float,float> Spectrum::dir(float energy)const
+std::pair<double,double> Spectrum::dir(double energy)
 {
     // Purpose: return solid angle pair (costh, phi) for the given energy
     // Input:: the given energy.
@@ -44,18 +44,13 @@ const char * Spectrum::particleName()const{
     return &x;
 }
 
-double Spectrum::energySrc(HepRandomEngine* engine, double time)
+double Spectrum::energy( double time)
 {
     // default implementation, which works for other Spectrum objects
-    return (*this)(engine->flat());
+    return (*this)(RandFlat::shoot());
 }
 
 
-std::pair<double,double> Spectrum::dir(double energy, HepRandomEngine* engine)
-{
-    // default that needs fixing!
-    return dir(energy);
-}
 
 void Spectrum::parseParamList(std::string input, std::vector<float>& output) const
 {

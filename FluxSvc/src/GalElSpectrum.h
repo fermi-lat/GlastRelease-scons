@@ -80,7 +80,7 @@ public:
     float findCutoff(std::pair<double,double> coords) const;
     
     /// return solid angle pair (costh, phi) for the given energy
-    virtual std::pair<float,float> dir(float energy)const;
+    virtual std::pair<double,double> dir(double energy);
     
     
     virtual std::string title() const;

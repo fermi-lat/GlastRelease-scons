@@ -153,7 +153,7 @@ double AlbedoPSpectrum::calculate_rate(double)
 //-------------------------- dir()
 ///Choose random direction for a particle.
 ///Zenith angle distribution according to 1+0.6*sin(zenith)
-std::pair<float,float> AlbedoPSpectrum::dir(float /*energy*/)const
+std::pair<double,double> AlbedoPSpectrum::dir(double /*energy*/)
 {
     // Random particle direction
     
@@ -170,7 +170,7 @@ std::pair<float,float> AlbedoPSpectrum::dir(float /*energy*/)const
     
     max_tried = std::max(trial, max_tried);
     
-    return std::make_pair<float,float>(coszenith, earthazi);
+    return std::make_pair<double,double>(coszenith, earthazi);
 }
 
 //------------------------- fitParams()

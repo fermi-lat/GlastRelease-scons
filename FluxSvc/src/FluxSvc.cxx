@@ -22,6 +22,8 @@
 #include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 
+#include "CLHEP/Random/Random.h"
+
 #include "Flux.h"
 
 #include "FluxMgr.h"
@@ -157,6 +159,12 @@ StatusCode FluxSvc::initialize ()
     
     return StatusCode::SUCCESS;
 }
+
+
+/// return pointer to the random engine
+HepRandomEngine* FluxSvc::getRandomEngine(){
+    return  HepRandom::getTheEngine();
+};
 
 // finalize
 StatusCode FluxSvc::finalize ()
@@ -329,6 +337,5 @@ StatusCode FluxSvc::run(){
         log << MSG::INFO << "Processing loop terminated by event count" << endreq;
     }
     return status;
-    
 }
 

@@ -288,7 +288,7 @@ float CHIMESpectrum::exposure(float E) const {
 
 //-------------------------- dir()
 
-std::pair<float,float> CHIMESpectrum::dir(float energy)const
+std::pair<double,double> CHIMESpectrum::dir(double energy)
 {
     
     // Random particle direction from Stormer cone
@@ -312,5 +312,5 @@ std::pair<float,float> CHIMESpectrum::dir(float energy)const
     // Transform to local earth-based coordinates.
     float earthazi = atan2(sinpolar*sin(azi), cospolar);
     
-    return std::make_pair<float,float>(coszenith, earthazi);
+    return std::make_pair<double,double>(coszenith, earthazi);
 }

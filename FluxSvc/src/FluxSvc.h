@@ -52,6 +52,10 @@ public:
     /// pass a specific amount of time
     virtual void pass ( double t);
     
+
+    /// return pointer to the random engine that FluxSvc uses
+    virtual HepRandomEngine* getRandomEngine();
+
     /// create a set of display windows using rootplot.
     void rootDisplay(std::vector<const char*> arguments);
     

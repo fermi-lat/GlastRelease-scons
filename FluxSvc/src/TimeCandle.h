@@ -7,7 +7,7 @@
 * Spectrum: base class for energy spectrum objects
 * TimeCandle: define a particle with a constant time of arrival.
 * 
-* $Header $
+* $Header$
 */
 
 #include "Spectrum.h"
@@ -35,9 +35,9 @@ public:
         return std::make_pair<float,float>(1.0,0.0);
     }     
     
-    virtual std::pair<double,double> dir(double energy, HepRandomEngine* engine){return std::make_pair<double,double>(1.0,0.0);}
+    virtual std::pair<double,double> dir(double energy){return std::make_pair<double,double>(1.0,0.0);}
     
-    double energySrc(HepRandomEngine* engine, double time){  return (*this)(engine->flat());}
+    double energy( double time){  return 0.;}
     
     double interval (double time)
     {        
