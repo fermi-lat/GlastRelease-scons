@@ -14,6 +14,8 @@
 #include "geometry/CoordTransform.h"
 
 class ParticleProperty;
+class EventSource;
+class FluxSource;
 
 //!  Abstract interface for an object that generates particles, Flux
 class IFlux {
@@ -79,6 +81,10 @@ public:
 
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
     virtual Rotation transformGlastToGalactic(double time)const=0;
+
+    virtual EventSource* currentEvent()=0;
+
+    virtual FluxSource* currentFlux()=0;
 
 #if 0
     // get a description of the parameters that can be modified, and reference to a list of them

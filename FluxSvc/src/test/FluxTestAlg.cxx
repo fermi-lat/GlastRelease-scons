@@ -102,6 +102,7 @@ StatusCode FluxTestAlg::initialize() {
         log << MSG::ERROR << "Could not find FluxSvc" << endreq;
         return sc;
     }
+    //fsvc->pass(1000000.);
     
     
     log << MSG::INFO << "loading source..." << endreq;
@@ -197,9 +198,9 @@ StatusCode FluxTestAlg::execute() {
     l+= 180;
     b+= 90;
     
-    log << MSG::INFO
-        << "(" << "l = " << l << ", b = " << b <<")" 
-        << endreq;
+    //log << MSG::INFO
+    //    << "(" << "l = " << l << ", b = " << b <<")" 
+    //    << endreq;
 
     m_passedTime = (m_flux->time())-m_currentTime;
     m_currentTime = m_flux->time();
@@ -224,7 +225,7 @@ StatusCode FluxTestAlg::finalize() {
 
 std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b,double deltat){
     std::vector<exposureSet> returned;
-    double angularRadius = 10;
+    double angularRadius = 15;
     for(int i= l-angularRadius ; i<=l+angularRadius ; i+=2){
         for(int j= b-angularRadius ; j<=b+angularRadius ; j+=2){
             

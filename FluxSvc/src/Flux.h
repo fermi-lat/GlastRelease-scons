@@ -88,7 +88,9 @@ public:
                                                                                   
 //    insert(std::make_pair<std::string, const ISpectrumFactory*>(name, factory));
 
-    
+    EventSource* currentEvent(){return m_event;}
+
+    FluxSource* currentFlux(){return m_flux;}
     
 private:
     
