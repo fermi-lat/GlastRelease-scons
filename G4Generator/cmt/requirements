@@ -1,5 +1,5 @@
 package G4Generator
-version v4r7
+version v5r0
 #$Id$
 
 use GlastPolicy v5*
@@ -26,7 +26,7 @@ use Geant4Runtime v2r* IExternal
 private
 
 #this is private to avoid passing on build info to clients
-use Geant4   v2r* IExternal
+use Geant4   v2r5* IExternal
 
 
 # get flags to build shared library
