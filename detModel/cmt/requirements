@@ -1,8 +1,8 @@
 package detModel
 # $Header$
-version v2r13p0
+version v2r14
 
-use CLHEP
+use CLHEP v2* IExternal
 use xmlUtil
 use idents
 
