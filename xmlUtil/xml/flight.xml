@@ -1738,28 +1738,29 @@ row of side tiles</notes>
          sensitive="true" />
 
    <!--   ..and Y sides (X and Y sides happen to have same dimensions now,
-      but allow for difference -->
+      but allow for difference.  Also do "rotation" here by putting tile
+      thickness in X-dimension (it's in  Y  for sideTileX.. -->
     <box name="sideTileY0" 
-         XREF="sideTileWidthShortYRow"
-         YREF="tileThickness"
+         XREF="tileThickness"
+         YREF="sideTileWidthShortYRow"
          ZREF="sideTileHeight0"
          materialREF="tileMat"
          sensitive="true" />
     <box name="sideTileY1" 
-         XREF="sideTileWidthShortYRow"
-         YREF="tileThickness"
+         XREF="tileThickness"
+         YREF="sideTileWidthShortYRow"
          ZREF="sideTileHeight1"
          materialREF="tileMat"
          sensitive="true" />
     <box name="sideTileY2" 
-         XREF="sideTileWidthLongYRow"
-         YREF="tileThickness"
+         XREF="tileThickness"
+         YREF="sideTileWidthLongYRow"
          ZREF="sideTileHeight2"
          materialREF="tileMat"
          sensitive="true" />
     <box name="sideTileY3" 
-         XREF="sideTileWidthLongYRow"
-         YREF="tileThickness"
+         XREF="tileThickness"
+         YREF="sideTileWidthLongYRow"
          ZREF="sideTileHeight3"
          materialREF="tileMat"
          sensitive="true" />
@@ -1787,9 +1788,16 @@ row of side tiles</notes>
 
 <!-- Boxes for tape on sides.  Definition is for a side parallel to
      X-axis.  Rotate 90 deg. about Z for Y-side  -->
-    <box name="sideTape"
+    <box name="sideTapeX"
          XREF="tapeWidth"
          YREF="tapeThickness"
+         ZREF="tapeSideLength"
+         materialREF="tapeMat"
+         sensitive="true" />
+
+    <box name="sideTapeY"
+         XREF="tapeThickness"
+         YREF="tapeWidth"
          ZREF="tapeSideLength"
          materialREF="tapeMat"
          sensitive="true" />
@@ -2153,14 +2161,14 @@ row of side tiles</notes>
 
     <!-- stack up tape for X and Y sides -->
     <stackX name="sideTapeRowX" >
-      <axisMPos volume="sideTape" ncopyREF="numSideTapes"
+      <axisMPos volume="sideTapeX" ncopyREF="numSideTapes"
                 gapREF="betweenSideTapesX">
         <idField name="fCol" value="0" step="1" />
       </axisMPos>
     </stackX>
 
     <stackY name="sideTapeRowY" >
-      <axisMPos volume="sideTape" ncopyREF="numSideTapes"
+      <axisMPos volume="sideTapeY" ncopyREF="numSideTapes"
                 gapREF="betweenSideTapesY">
         <idField name="fCol" value="0" step="1" />
       </axisMPos>
