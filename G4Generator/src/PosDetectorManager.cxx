@@ -65,70 +65,70 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
   G4double edep = aStep->GetTotalEnergyDeposit()/MeV;
   G4double stepl = aStep->GetStepLength()/mm;
 
-  //if ((edep==0.)) return false;
+  // Make an McPositionHit?
   if (edep > 0. || aStep->GetTrack()->GetDynamicParticle()->GetCharge() != 0.)
   {
-  if (edep == 0.) edep = 0.155;
-  // Physical Volume
+    //if (edep == 0.) edep = 0.155;  // This for testing non-interacting muons
     
-  G4TouchableHistory* theTouchable
-    = (G4TouchableHistory*)(aStep->GetPreStepPoint()->GetTouchable());
-  G4VPhysicalVolume* physVol = theTouchable->GetVolume(); 
-  G4LogicalVolume* logVol = physVol->GetLogicalVolume();
-  G4String material = logVol->GetMaterial()->GetName();
-  G4String nameVolume = physVol->GetName();
+    // Physical Volume
+    G4TouchableHistory* theTouchable
+        = (G4TouchableHistory*)(aStep->GetPreStepPoint()->GetTouchable());
+    G4VPhysicalVolume* physVol = theTouchable->GetVolume(); 
+    G4LogicalVolume* logVol = physVol->GetLogicalVolume();
+    G4String material = logVol->GetMaterial()->GetName();
+    G4String nameVolume = physVol->GetName();
     
-  // start position of the hit and final one
-  HepPoint3D prePos = aStep->GetPreStepPoint()->GetPosition();
-  HepPoint3D postPos = aStep->GetPostStepPoint()->GetPosition();
+    // start position of the hit and final one
+    HepPoint3D prePos = aStep->GetPreStepPoint()->GetPosition();
+    HepPoint3D postPos = aStep->GetPostStepPoint()->GetPosition();
     
-  // determine the ID by studying the history, then call appropriate 
-  idents::VolumeIdentifier id = constructId(aStep);
+    // determine the ID by studying the history, then call appropriate 
+    idents::VolumeIdentifier id = constructId(aStep);
 
-  // If the topvolume is not LAT, prepend a prefix in order to obtain a complete ID
-  if (m_prefix.size() != 0)
-    id.prepend(m_prefix);
+    // If the topvolume is not LAT, prepend a prefix in order to obtain a complete ID
+    if (m_prefix.size() != 0) id.prepend(m_prefix);
 
-  // Filling of the hits container
-  Event::McPositionHit *hit = new Event::McPositionHit;
+    // Filling of the hits container
+    Event::McPositionHit *hit = new Event::McPositionHit;
 
-  // this rotates the hits to local coordinates with respect to the center  
-  HepRotation local(*(theTouchable->GetRotation()));
-  HepPoint3D center=theTouchable->GetTranslation();
+    // this rotates the hits to local coordinates with respect to the center  
+    HepRotation local(*(theTouchable->GetRotation()));
+    HepPoint3D center=theTouchable->GetTranslation();
 
-  // this is the global transformation from world to the topVolume; it is the
-  // identity if topVolume is equal to LAT
-  HepTransform3D global = m_gsv->getTransform3DPrefix();
+    // this is the global transformation from world to the topVolume; it is the
+    // identity if topVolume is equal to LAT
+    HepTransform3D global = m_gsv->getTransform3DPrefix();
 
-  McParticleManager* partMan =  McParticleManager::getPointer();
+    McParticleManager* partMan =  McParticleManager::getPointer();
   
-  hit->init(edep, id, local*(prePos-center), local*(postPos-center), global*prePos, global*postPos );
+    hit->init(edep, id, local*(prePos-center), local*(postPos-center), global*prePos, global*postPos );
 
-  partMan->getLastParticle()->addStatusFlag(Event::McParticle::POSHIT);
+    partMan->getLastParticle()->addStatusFlag(Event::McParticle::POSHIT);
 
-  // Track energy at this point
-  G4double trkEnergy = aStep->GetTrack()->GetTotalEnergy();
-  hit->setParticleEnergy(trkEnergy);
+    // Track energy at this point
+    G4double trkEnergy = aStep->GetTrack()->GetTotalEnergy();
+    hit->setParticleEnergy(trkEnergy);
 
-  // Retrieve the particle causing the hit and the ancestor and set the corresponding
-  // attributes of the McPositionHit
-  if (partMan->getMode() == 1)
+    // Retrieve the particle causing the hit and the ancestor and set the corresponding
+    // attributes of the McPositionHit
+    if (partMan->getMode() == 1)
     {
       hit->setMcParticle(partMan->getLastParticle());
       hit->setOriginMcParticle(partMan->getOriginParticle());
     }
 
-  // Get the proper time for particle at this hit
-  G4double properTime = aStep->GetTrack()->GetProperTime();
-  G4double localTime  = aStep->GetTrack()->GetLocalTime();
-  hit->setTimeOfFlight(properTime);
+    // Get the proper time for particle at this hit
+    G4double properTime = aStep->GetTrack()->GetProperTime();
+    G4double localTime  = aStep->GetTrack()->GetLocalTime();
+    hit->setTimeOfFlight(properTime);
 
-  hit->setMcParticleId(aStep->GetTrack()->GetDefinition()->GetPDGEncoding());
-  hit->setOriginMcParticleId(partMan->getOriginParticle()->particleProperty());
+    hit->setMcParticleId(aStep->GetTrack()->GetDefinition()->GetPDGEncoding());
+    hit->setOriginMcParticleId(partMan->getOriginParticle()->particleProperty());
 
-  m_posHit->push_back(hit);
-  return true;
+    m_posHit->push_back(hit);
+    return true;
   }
+
   return false;
 }
 
