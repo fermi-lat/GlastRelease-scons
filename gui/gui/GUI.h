@@ -92,12 +92,14 @@ public:
     // Return a GUI. Expect subclass to implement. Prevents more that one GUI implementation
     // in an executable
 
-    static GUI* instance();
+    static GUI* instance(GUI* i=0);
     static bool running;  // use to check that GUI has been started
 
 protected:
     GUI(const char* title);  // abstract class
-    const char* _winTitle;  // window title
+    const char* _winTitle;   // window title
+private:
+    static GUI* s_instance;  // public to allow simple setup
 
 };
 

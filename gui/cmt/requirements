@@ -42,7 +42,8 @@ library  gui -no_share \
  DisplayRep.cxx       PSdraw.h         \
  GraphicsVector.cxx   PrintControl.cxx  \
  GuiMgr.cxx           Projector.cxx     \
- Scene.cxx            ../gui/*.h 
+ Scene.cxx            GUi.cxx \
+ ../gui/*.h 
 
 # these are system-dependent (windows/motif) and are only needed for an executable
 library guisystem -no_share \

@@ -28,11 +28,9 @@ GUI* GUI::createGUI(const char* nameOfApp, const char* title)
 {
     if (WinGUI::s_gui!=0 && title!=0 ) ::SetWindowText(WinGUI::s_hwnd, title);
     if (WinGUI::s_gui==0)  WinGUI::s_gui =new WinGUI(nameOfApp, title);
+    GUI::instance(WinGUI::s_gui);  // setup instance()
+    GUI::s_instance = WinGUI::s_gui;
     return WinGUI::s_gui;
-}
-GUI* GUI::instance()
-{
-    return  (WinGUI::s_gui)? WinGUI::s_gui :  createGUI("windows");
 }
 }
 bool GUI::running=false; // needed to check that display enabled 

@@ -41,8 +41,9 @@ Menu::~Menu()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Menu* Menu::s_instance = 0;
 
-Menu* Menu::instance()
+Menu* Menu::instance(Menu* m)
 {
+    if(m) s_instance = m;
     return s_instance;
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

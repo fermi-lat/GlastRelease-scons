@@ -71,7 +71,7 @@ public:
     void add(MenuBase* client);
     // client uses to schedule a call to its finishSetup method
     
-    static Menu* instance(); 
+    static Menu* instance(Menu* m=0); 
 	// deprecated method
 private:
 

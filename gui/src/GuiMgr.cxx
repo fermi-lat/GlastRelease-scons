@@ -6,7 +6,7 @@
 #include "gui/GuiMgr.h"
 #include "gui/SimpleCommand.h"
 
-#include <strstream>
+#include <sstream>
 #include <iostream>
 
 
@@ -77,12 +77,9 @@ void GuiMgr::begin_event() // should be called at the beginning of an event
 { 
     static int n=0;
     display().clear();
-    std::strstream label; label << " Event " << (++n) << '\0';
+    std::stringstream label; label << " Event " << (++n) << '\0';
     title = std::string(label.str());
     display().setTitle(title); 
-#ifdef _MSC_VER 
-    label.freeze(false); // prevent memory leak
-#endif
 }
 
 void GuiMgr::end_event()  // must be called at the end of an event to update, allow pause
