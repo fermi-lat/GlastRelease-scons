@@ -1,5 +1,5 @@
 package OnboardFilter
-version v0r5
+version v0r5p0
 # $Header$
 use EbfWriter           *
 use TkrUtil             *
