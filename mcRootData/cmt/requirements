@@ -1,5 +1,5 @@
 package mcRootData
-version v2
+version v2r0
 
 use GlastPolicy v4r*
 use ROOT v3r2p*
@@ -40,3 +40,5 @@ macro mcRootData_shlibflags " -L${ROOT_PATH}/lib -lPhysics -lMatrix " \
 library  mcRootData *.cxx \
      ../mcRootData/*.cxx \
      ${mcRootData_headers}
+
+application test_mcRootData test/testMcClasses.cxx
