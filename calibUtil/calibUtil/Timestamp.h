@@ -48,7 +48,7 @@ namespace calibUtil {
               unsigned int hour = 0, unsigned int minute = 0, 
               unsigned int second = 0);
 
-    std::string& timeString() {return m_strTime;}
+    const std::string& timeString() const {return m_strTime;}
 
     bool operator<(const Timestamp& other) {
       return m_time < other.m_time;
