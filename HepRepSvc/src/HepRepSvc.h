@@ -21,6 +21,7 @@ class IStreamer;
 class IServer;
 class IAppMgrUI;
 class SvcAdapter;
+class IFluxSvc;
 
 class HepRepSvc : virtual public Service,  
                   virtual public IIncidentListener, 
@@ -61,6 +62,12 @@ class HepRepSvc : virtual public Service,
   /// Get the pointer to the application manager
   IAppMgrUI*  getAppMgrUI(){return m_appMgrUI;};  
 
+  /// Get the list of sources
+  std::string getSources();
+
+  /// Set the flux
+  void setSource(std::string);
+  
 protected: 
     
     /// Standard Constructor
@@ -104,6 +111,8 @@ private:
     /// The service adapter
     SvcAdapter* m_adapter;
 
+    /// The FluxSvc, used to set fluxes from inside clients
+    IFluxSvc* m_fluxSvc;
 };
 
 

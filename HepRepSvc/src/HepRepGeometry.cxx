@@ -50,7 +50,7 @@ HepRepGeometry::pushShape(ShapeType s, const UintVector& idvec,
           m_actualDepth++;
 
           m_actualType.push_back(name);          
-		      m_builder->addType(father,name,"","");
+          m_builder->addType(father,name,"","");
 
 
           m_builder->addAttDef("Volume type","","Physics","");
