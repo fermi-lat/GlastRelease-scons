@@ -1,0 +1,6 @@
+package geomrep
+package manager:T.Burnett
+
+! 20000903    - THB: tag as v1r1
+! 20000903    - THB: move source under src; now depend on graphics v1r1
+!======================================================================

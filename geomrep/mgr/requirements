@@ -1,7 +1,9 @@
 package geomrep
 
+version v1r1
+
 use geometry v1
-use graphics v1
+use graphics v1r1
 
 include_path "${GEOMREPROOT}"
 
@@ -16,8 +18,11 @@ path_append LD_LIBRARY_PATH "${GEOMREPROOT}/${CMTCONFIG}"
 
 private
 
-library geomrep -no_share *.cxx\
-    ../geomrep/*.h
+library geomrep -no_share *.cxx   ../geomrep/*.h
 
-application testgeom  -windows ../test/testgeom.cxx\
-        ../../../graphics/v1/windows/wingui.rc
+# set up application link-options for test program. Note also the resource
+
+macro_append graphics_linkopts ${graphics_gui_linkopts}
+
+
+application testgeom  -windows test/testgeom.cxx ${Win32Resource}
