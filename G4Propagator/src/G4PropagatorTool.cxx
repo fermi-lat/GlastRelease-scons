@@ -11,9 +11,7 @@
 static ToolFactory<G4PropagatorTool> g4prop_factory;
 const IToolFactory& G4PropagatorToolFactory = g4prop_factory;
 
-G4VUserDetectorConstruction* G4PropagatorTool::UserDetector          = 0;
-IG4GeometrySvc::IdMap*       G4PropagatorTool::VolIdentMap           = 0;
-G4TransportationManager*     G4PropagatorTool::TransportationManager = 0;
+IG4GeometrySvc*              G4PropagatorTool::geometrySvc           = 0;
 
 G4PropagatorTool::G4PropagatorTool(const std::string& type, const std::string& name, const IInterface* parent) :
   AlgTool(type, name, parent)
@@ -43,9 +41,7 @@ G4PropagatorTool::G4PropagatorTool(const std::string& type, const std::string& n
 
   IG4GeometrySvc* gsv = dynamic_cast<IG4GeometrySvc*>(iService);
 
-  UserDetector          = gsv->getDetector();
-  TransportationManager = gsv->getTransportationManager();
-  VolIdentMap           = gsv->getIdMap();
+  geometrySvc = gsv;
 
   log << MSG::INFO << "G4 Propagator Tool ready" << endreq;
 

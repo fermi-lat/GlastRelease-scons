@@ -33,14 +33,8 @@ class G4PropagatorTool : public AlgTool, virtual public IPropagatorTool
   /// Return a pointer to the G4ParticlePropagator singleton object
   virtual IKalmanParticle* getPropagator() {return G4ParticlePropagator::instance();}
 
-  /// This is needed by propagator for getting at the geometry
-  static G4VUserDetectorConstruction* UserDetector;
-
   /// This is needed for associating Geant4 volumes to Glast identifiers
-  static IG4GeometrySvc::IdMap*       VolIdentMap;
-
-  /// This is needed to access the Geant4 volume tracking
-  static G4TransportationManager*     TransportationManager;
+  static IG4GeometrySvc* geometrySvc;
   
  private:
 };

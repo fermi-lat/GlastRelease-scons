@@ -71,10 +71,6 @@ private:
     /// Private data
     /// Pointer to the class to make it a singleton
     static G4ParticlePropagator* m_instance;
-
-    /// This is a pointer to the all important volume->idents map
-    /// obtained from the RunManager singleton
-    IG4GeometrySvc::IdMap* m_IdMap;
 };
 
 #endif
