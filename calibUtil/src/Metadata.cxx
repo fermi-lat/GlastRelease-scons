@@ -5,6 +5,7 @@
 #include "facilities/Util.h"
 #include "mysql.h"
 #include <strstream>
+#include <string.h>
 
 
 namespace calibUtil {
@@ -13,32 +14,43 @@ namespace calibUtil {
   // when building calibUtil shareable (for now it's just a static library).
   //  MYSQL* Metadata::readCxt = 0;
   //  MYSQL* Metadata::writeCxt = 0;
-  bool Metadata::writeConnect = false;
-  bool Metadata::readConnect = false;
-  MYSQL     Metadata::readCxt;
-  MYSQL     Metadata::writeCxt;
+  //  bool Metadata::writeConnect = false;
+  //  bool Metadata::readConnect = false;
+  //  MYSQL     Metadata::readCxt;
+  //  MYSQL     Metadata::writeCxt;
 
   const unsigned int Metadata::rowReady = Metadata::eOpened | Metadata::eValid 
   | Metadata::eInputDesc | Metadata::eComment;
 
 
-  Metadata::Metadata() : row(""), rowStatus(0), table("$(MYSQL_METATABLE)") {
+  Metadata::Metadata() : readCxt(0), writeCxt(0), row(""), rowStatus(0), 
+    table("$(MYSQL_METATABLE)") {
     int nsub = facilities::Util::expandEnvVar(&table);
     // IF this doesn't work, use default
     if (!nsub) table = std::string("metadata");
   }
 
+  Metadata::~Metadata() {
+    disconnectRead();
+    disconnectWrite();
+  }
   // The next 5 methods concern connection to the server
   bool Metadata::connectRead(eRet& err) {
-    return (readConnect = 
-            connect(&readCxt, std::string("glastreader"), 
-                    std::string("glastreader"), err));
+    if (readCxt == 0) {
+      readCxt = new MYSQL;
+      return connect(readCxt, std::string("glastreader"), 
+                      std::string("glastreader"), err);
+    }
+    else return true;
   }
 
   bool Metadata::connectWrite(eRet& err) {
-    return (writeConnect = 
-            connect(&writeCxt, std::string("calibrator"), 
-                    std::string("calibr8or"), err));
+    if (writeCxt == 0) {
+      writeCxt = new MYSQL;
+      return connect(writeCxt, std::string("calibrator"), 
+                      std::string("calibr8or"), err);
+    }
+    else return true;
   }
 
 
@@ -69,13 +81,21 @@ namespace calibUtil {
   }
 
   void Metadata::disconnectRead() {
-    mysql_close(&readCxt);
-    readConnect = false;
+    if (readCxt) {
+      mysql_close(readCxt);
+      delete readCxt;
+      readCxt = 0;
+    }
+    //    readConnect = false;
   }
 
   void Metadata::disconnectWrite() {
-    mysql_close(&writeCxt);
-    writeConnect = false;
+    if (writeCxt) {
+      mysql_close(writeCxt);
+      delete writeCxt;
+      writeCxt = 0;
+    }
+    //    writeConnect = false;
   }
 
 
@@ -111,14 +131,14 @@ namespace calibUtil {
 
   Metadata::eRet Metadata::openRecord(const std::string& instr, 
                                       const std::string& calibType,
-                                      const std::string& dataFmt, 
+                                      eDataFmt           fmt,
                                       const std::string& fmtVersion,
                                       const std::string& dataIdent, 
-                                      const std::string& completion,
-                                      const std::string& procLevel){
+                                      eCompletion        completion,
+                                      eLevel              procLevel){
     eRet ret;
 
-    if (!writeConnect) {
+    if (!writeCxt) {
       connectWrite(ret);
       if (ret != RETOk) return ret;
     }
@@ -130,19 +150,22 @@ namespace calibUtil {
     }
     // Do checking in advance of column values which come from an
     // enumerated sets.
-    if (!(checkCompletionInput(completion) || 
-          checkProcLevelInput(procLevel)) )
-      return RETBadValue;
+    const std::string* const  cmpString  = checkCompletionInput(completion);
+    const std::string* const  levelString = checkProcLevelInput(procLevel);
+    const std::string* const  fmtString = checkDataFmtInput(fmt);
+
+    if (!cmpString || !levelString || !fmtString)      return RETBadValue;
 
     //    += is a synonym for row.append(..)
     row += "insert into "; row += table;
     row += " set instrument='";    row += instr;
     row += "', calib_type='";  row += calibType;
-    row += "', data_fmt='"; row += dataFmt;
+    row += "', data_fmt='"; row += *fmtString;
+    
     row += "', fmt_version='"; row += fmtVersion;
-    row += "', completion='"; row += completion;
+    row += "', completion='"; row += *cmpString;
     row += "', data_ident='"; row += dataIdent;
-    row += "', proc_level='"; row += procLevel; row+="'";
+    row += "', proc_level='"; row += *levelString; row+="'";
     rowStatus = eOpened;
     return RETOk;
   }
@@ -159,7 +182,7 @@ namespace calibUtil {
     }
     addUser();
     // Actually write it...
-    int ret = mysql_query(&writeCxt, row.c_str());
+    int ret = mysql_query(writeCxt, row.c_str());
     clearRecord();
 
     if (ret) {
@@ -262,7 +285,7 @@ namespace calibUtil {
   
     eRet ret;
     *ser = 0;
-    if (!readConnect) {
+    if (!readCxt) {
       connectRead(ret);
       if (ret != RETOk) return ret;
     }
@@ -291,13 +314,13 @@ namespace calibUtil {
         return RETBadValue;
       }
 
-      int ret = mysql_query(&readCxt, q.c_str());
+      int ret = mysql_query(readCxt, q.c_str());
       if (ret) {
         std::cerr << "MySQL error during SELECT, code " << ret << std::endl;
         return RETMySQLError;
       }
       
-      MYSQL_RES *myres = mysql_store_result(&readCxt);
+      MYSQL_RES *myres = mysql_store_result(readCxt);
 
       // Since we're doing a query, a result set should be returned
       // even if there are no rows in the result.  A null pointer 
@@ -321,12 +344,12 @@ namespace calibUtil {
   }
 
   Metadata::eRet Metadata::getReadInfo(unsigned int serialNo, 
-                             std::string* dataFmt, 
-                             std::string* fmtVersion,
-                             std::string* filename) {
+                             eDataFmt&    dataFmt, 
+                             std::string& fmtVersion,
+                             std::string& filename) {
 
     eRet ret;
-    if (!readConnect) {
+    if (!readCxt) {
       connectRead(ret);
       if (ret != RETOk) return ret;
     }
@@ -337,19 +360,27 @@ namespace calibUtil {
     s << serialNo;
     q += s.str(); q+= "'";
 
-    int myRet = mysql_query(&readCxt, q.c_str());
+    int myRet = mysql_query(readCxt, q.c_str());
     if (myRet) {
       std::cerr << "MySQL error during SELECT, code " << ret << std::endl;
       return RETMySQLError;
     }
       
-    MYSQL_RES *myres = mysql_store_result(&readCxt);
+    MYSQL_RES *myres = mysql_store_result(readCxt);
     
     if (mysql_num_rows(myres) ) {  // must have been a good serial number
       MYSQL_ROW myRow = mysql_fetch_row(myres);
-      *dataFmt = std::string(myRow[0]);
-      *fmtVersion = std::string(myRow[1]);
-      *filename = std::string(myRow[2]);
+      if (!(strcmp("XML", myRow[0]))) {
+        dataFmt = FMTXml;
+      }
+      else if (!(strcmp("ROOT", myRow[0]))) {
+        dataFmt = FMTRoot;
+      }
+      else dataFmt = FMTUnknown;
+
+      //      *dataFmt = std::string(myRow[0]);
+      fmtVersion = std::string(myRow[1]);
+      filename = std::string(myRow[2]);
       return RETOk;
     }
     else return RETBadValue;
@@ -374,7 +405,7 @@ namespace calibUtil {
     else if ((testBit = LEVELTest) & *levelMask) {
       q += "and (proc_level='TEST')";
     }
-    else if ((testBit = LEVELSuper) & *levelMask) {
+    else if ((testBit = LEVELSuperseded) & *levelMask) {
       q += "and (proc_level='SUPSED')";
     }
     else {      // All that's left are unknown bits.  
@@ -391,14 +422,65 @@ namespace calibUtil {
   // whole it's better to do this ourselves rather than depending on
   // MySQL to do it.  The latter is possible in some cases, but 
   // handling and reporting errors is difficult.
+  /*
   bool Metadata::checkCompletionInput(const std::string& stat) {
     return ((stat.compare("OK") == 0 ) || (stat.compare("INC") == 0) 
             || (stat.compare("ABORT") == 0) );
   }
+  */
+  const std::string* const Metadata::checkCompletionInput(eCompletion cmpl) {
+    static std::string ok("OK");
+    static std::string inc("INC");
+    static std::string abort("ABORT");
+    switch (cmpl) {
+    case CMPLOk:
+      return &ok;
+    case CMPLInc:
+      return &inc;
+    case CMPLAbort:
+      return &abort;
+    default:
+      return 0;
+    }
+  }
+
+  /*
   bool Metadata::checkProcLevelInput(const std::string& level) {
     return ((level.compare("TEST") == 0) || 
             (level.compare("DEV") == 0) ||
             (level.compare("PROD") == 0) || 
             (level.compare("SUPERS") == 0 )    );
   }
+  */
+  const std::string* const Metadata::checkProcLevelInput(eLevel level) {
+    static std::string prod("PROD");
+    static std::string dev("DEV");
+    static std::string test("TEST");
+    static std::string sup("SUPSED");
+    switch(level) {
+    case LEVELProd:
+      return &prod;
+    case LEVELDev:
+      return &dev;
+    case LEVELTest:
+      return &test;
+    case LEVELSuperseded:
+      return &sup;
+    default:
+      return 0;
+    }
+  }
+  const std::string* const Metadata::checkDataFmtInput(eDataFmt fmt) {
+    static std::string xml("XML");
+    static std::string root("ROOT");
+    switch (fmt) {
+    case FMTXml:
+      return &xml;
+    case FMTRoot:
+      return &root;
+    default:
+      return 0;
+    }
+  }
+
 }

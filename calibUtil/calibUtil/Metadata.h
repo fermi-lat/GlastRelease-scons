@@ -30,13 +30,26 @@ namespace calibUtil {
       LEVELProd = 1,
       LEVELDev  = 2,
       LEVELTest = 4,
-      LEVELSuper = 8
+      LEVELSuperseded = 8
+    };
+
+    enum eDataFmt {
+      FMTXml = 0,
+      FMTRoot = 1,
+      FMTUnknown = 2
+    };
+
+    enum eCompletion {
+      CMPLOk = 0,
+      CMPLInc = 1,
+      CMPLAbort = 2,
+      CMPLUnknown = 3
     };
       
     /// Constructor keeps track of table of interest
     Metadata();
 
-    ~Metadata() {};
+    ~Metadata();
 
 
     /** Start a new metadata record by supplying all absolutely
@@ -59,11 +72,11 @@ namespace calibUtil {
     */
     eRet openRecord(const std::string& instr, 
                     const std::string& calibType,
-                    const std::string& dataFmt, 
+                    eDataFmt     fmt,
                     const std::string& fmtVersion,
                     const std::string& dataIdent, 
-                    const std::string& completion,
-                    const std::string& procLevel = "TEST");
+                    eCompletion  completion,
+                    eLevel       procLevel = LEVELTest);
 
     /** Write a record to the metadata database. Any required columns
      *  not specified by caller will be set to default values.
@@ -111,7 +124,7 @@ namespace calibUtil {
     eRet findBest(unsigned int *ser,
                   const std::string& calibType, 
                   Timestamp timestamp,
-                  unsigned levelMask, 
+                  unsigned int levelMask, 
                   const std::string& instrument);
 
 
@@ -130,9 +143,9 @@ namespace calibUtil {
                       non-null value; else false.
     */
     eRet getReadInfo(unsigned int serialNo, 
-                     std::string* dataFmt, 
-                     std::string* fmtVersion,
-                     std::string* dataIdent);
+                     eDataFmt&     dataFmt,
+                     std::string& fmtVersion,
+                     std::string& dataIdent);
                         
   /** 
     // Additional services will probably be needed to
@@ -152,25 +165,24 @@ namespace calibUtil {
   */
 
     // Might make these private
-    static bool connectRead(eRet& err);
-    static bool connectWrite(eRet& err);
-    static void disconnectRead();
-    static void disconnectWrite();
+    void disconnectRead();
+    void disconnectWrite();
 
   private:
     // may change MYSQL structures to not be static
-    static MYSQL readCxt;
-    static MYSQL writeCxt;
-    static bool writeConnect;
-    static bool readConnect;
-    //    static bool connect(MYSQL* cxt, const std::string& group, eRet& err);
+    MYSQL* readCxt;
+    MYSQL* writeCxt;
+
+    bool connectRead(eRet& err);
+    bool connectWrite(eRet& err);
     static bool connect(MYSQL * cxt, const std::string& user, 
                         const std::string& pw, eRet& err);
 
     //    static void makeQuery(std::string& query, unsigned int *levelMask);
     bool addLevel(std::string& q, unsigned int *levelMask);
-    bool checkCompletionInput(const std::string& stat);
-    bool checkProcLevelInput(const std::string& level);
+    const std::string*  const checkCompletionInput(eCompletion cmp);
+    const std::string* const checkProcLevelInput(eLevel level);
+    const std::string* const checkDataFmtInput(eDataFmt fmt);
 
     
 
