@@ -293,6 +293,9 @@ namespace ldfReader {
 
                 // Now check to see that the event sequences are monotonically increasing
                 if (ldfReader::LatData::instance()->summaryData().eventSequence() < eventSeqNum) {
+                    printf("Event Seq # is not monotonically increasing ");
+                    printf("Last EventSeqNum %d, current %d\n", eventSeqNum,
+                        ldfReader::LatData::instance()->summaryData().eventSequence());
                     printf("Setting Bad Event Flag\n");
                     ldfReader::LatData::instance()->setBadEventSeqFlag();
                     return 0;
