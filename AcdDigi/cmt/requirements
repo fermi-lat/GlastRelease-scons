@@ -1,0 +1,26 @@
+package AcdDigi
+version v0r0
+
+use GlastSvc v8r*
+use Event v8r*
+
+use facilities v2r*
+
+use xml v4r*         
+
+apply_pattern packageShr
+
+
+#=============================================================
+private
+
+apply_pattern package_headers
+
+library AcdDigi *.cxx \
+                Dll/*.cxx \
+                ${AcdDigi_headers}               
+
+apply_pattern package_Cshlibflags
+
+
+#application test_AcdDigi
