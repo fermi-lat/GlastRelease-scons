@@ -28,21 +28,25 @@ void ResultTable::showColumn(FXint index)
 
 void ResultTable::hideColumn(FXint index)
 {
-  setColumnWidth(index, 0);
+  if ((index >= 0) && (index < ncols) )
+    setColumnWidth(index, 0);
 }
 
 void ResultTable::formatCol(FXint index)
 {
-  int i;
-  int colWidth = getDefColumnWidth();
-  for (i = 0; i < nrows; i++)
+  if ((index >= 0) && (index < ncols))
     {
-      setItemJustify(i,index, FXTableItem::LEFT);
-      int currWidth = getItem(i,index)->getWidth(this);
-      colWidth = (colWidth < currWidth) ? currWidth : colWidth;
+      int i;
+      int colWidth = getDefColumnWidth();
+      for (i = 0; i < nrows; i++)
+        {
+          setItemJustify(i,index, FXTableItem::LEFT);
+          int currWidth = getItem(i,index)->getWidth(this);
+          colWidth = (colWidth < currWidth) ? currWidth : colWidth;
+        }
+        
+      setColumnWidth(index, colWidth);
     }
-    
-  setColumnWidth(index, colWidth);
 }
 
 
