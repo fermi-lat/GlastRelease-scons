@@ -1,11 +1,11 @@
 // Mainpage for doxygen
 
-/*! \mainpage package xml
+/*! \mainpage package xmlUtil
 <p>
 This package provides services for manipulating certain generic xml
 elements.  At this time these include elements for describing 
-constants and arithmetic  (&lt;prim>, &lt;mul>, etc.) and those having 
-to do with recording the genesis of an xml file (&lt;source>).</p>
+constants and arithmetic  (<prim>, <mul>, etc.) and those having 
+to do with recording the genesis of an xml file (<source>).</p>
 <p>
 This package also provides classes for representing and manipulating
 identifier dictionaries and identifier conversions. An <b>identifier</b>
@@ -14,7 +14,7 @@ value is a non-negative integer.  An <b>identifier dictionary</b> is
 a means of specifying constraints on a collection of Identifiers
 in such a way that 
 <ul>
-  <li>The collection of identifiers form a tree</li>
+  <li>The collection of identifiers forms a tree</li>
   <li>Given the value sequence from an identifier, it is possible
       to reconstruct the (unique) corresponding name sequence.</li>
 </ul></p>

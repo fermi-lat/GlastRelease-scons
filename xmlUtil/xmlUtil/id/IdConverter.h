@@ -12,6 +12,10 @@ namespace xmlUtil {
   class IdConversion;
   class IdDictMan;
 
+  //! An <b>IdConverter</b> is a collection of id conversions and associated
+  //! functions to 
+  //! (1) verify self-consistency of the converter
+  //! (2) apply the correct conversion to a supplied Identifier 
   class IdConverter {
   public:
     /*! Build IdConverter from its XML representation.
@@ -77,8 +81,6 @@ namespace xmlUtil {
 
 
     Conversions convCol;  /*< collection of conversion operations making up the                          IdConverter */
-
-    //! Define strict weak ordering so that we can sort (see IdConverter class)
 
     enum STATES {
       UNKNOWN = -1,

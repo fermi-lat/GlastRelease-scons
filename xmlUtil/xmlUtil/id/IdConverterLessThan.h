@@ -19,6 +19,8 @@ namespace xmlUtil {
     IdConverter::ConversionIt, bool> 
   {
   public:
+    //! One conversion is "less than" another iff it has a
+    //! shorter path
     bool operator()(IdConversion* x, 
                     IdConversion* y) {
       return ((x->path)->size() < ((y->path)->size() ) );

@@ -10,7 +10,7 @@
 namespace xmlUtil {
   class IdOperation;
 
-  //! An /b IdConversion object (corresponding to an idConv element
+  //! An \b IdConversion object (corresponding to an idConv element
   //! as defined in gdd.dtd) "has" 
   //!    a path  (list of id field names)
   //!    a condition
