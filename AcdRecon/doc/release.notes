@@ -4,8 +4,10 @@ package manager:H.Kelly
 
 @verbatim
 
-v1r7p5    16-Dec-2004 TU  Modify requirements to pick up latest Event (v10+)
-v1r7p4    24-Aug-2004 TK  Update requirements, install jobOptions
+          
+v1r7p5    04-Jan-2005 JRB remove xml/IFile include
+v1r7p4    16-Dec-2004 TU  Modify requirements to pick up latest Event (v10+)
+          24-Aug-2004 TK  Update requirements, install jobOptions
                           Use in AcdRecon_load.cxx DECLARE_FACTORY_ENTRIES;
                           temporarily also in AcdDisplay.cxx 
 
