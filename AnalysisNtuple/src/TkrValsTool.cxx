@@ -562,13 +562,9 @@ StatusCode TkrValsTool::calculate()
             double threshold   =  0.25;   // Mips
             double countThreshold = 15; // counts
             double normFactor  =  1./53.;
-            double mips;
+
             double rawToT = cluster->getRawToT();
-            if (cluster->getVersion()==0) {
-                mips = normFactor*(std::min(totMax,rawToT)+countThreshold);
-            } else {
-                mips = cluster->getMips();
-            }
+            double mips = cluster->getMips();
 
             double tot = cluster->ToT();
             if(tot>=totMax) tot = totMax;
