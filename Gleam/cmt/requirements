@@ -1,6 +1,6 @@
 package Gleam
 
-version  v2r1p3
+version  v2r1p4
 # This is a checkout package
 # $Id$
 
@@ -39,7 +39,7 @@ use Geant4      v1r1p0
 
 use GuiSvc      v3
 
-use Event                 v8r5p1
+use Event       v8r5p1
 use GlastSvc    v8r0
 
 # simulation
@@ -50,23 +50,23 @@ use G4Generator v4r1p1
 
 #digitization
 use CalDigi     v1r0p1
-use GlastDigi             v4r2
-use AcdDigi               v0r1
+use GlastDigi   v4r2
+use AcdDigi     v0r1
 
 #reconstruction
-use Trigger     v3r1
+use Trigger              v3r2
 use Recon       v2r2p1
 
-use TkrRecon    v6r2
+use TkrRecon             v6r2p1
 use CalRecon    v5r2       
 
 
 #ROOT persistence
 use mcRootData     v2r2
-use digiRootData         v3r2
-use reconRootData        v3r0p1
+use digiRootData   v3r2
+use reconRootData        v3r0p2
 
-use RootIo               v4r1p0
+use RootIo               v4r1p1
 
 
 ### define a simple executable with GUI

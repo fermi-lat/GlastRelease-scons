@@ -24,15 +24,15 @@ EventSelector.Input = "NONE";
 ApplicationMgr.TopAlg = {
     "Sequencer/Generator",
     "Sequencer/Digitization",
-    "Sequencer/EventDisplay", 
+    "Sequencer/EventDisplay",
+    "Sequencer/Triggered" };
 
-    "Sequencer/Trigger",
-      
+// the sequence that is triggered
+Triggered.Members={
+    "TriggerAlg",
     "Sequencer/Reconstruction",
     "Sequencer/RecoDisplay",
-    "Sequencer/Output"
-    };
-
+    "Sequencer/Output" };
 
 // ----------------------------
 //  Geometry definition
@@ -125,6 +125,9 @@ ApplicationMgr.DLLs +={
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel = 2;
 ApplicationMgr.EvtMax = 1000;
+
+// for setting the run number
+TriggerAlg.run=100;
 
 //==============================================================
 //
