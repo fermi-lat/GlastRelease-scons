@@ -5,8 +5,10 @@ version v6r7p1
 branches doc
 
 use GlastPolicy v*
-apply_pattern packageShr
+use ntupleWriterSvc v*
 use classification *
+
+apply_pattern packageShr
 
 private
 #--------------------------------------------------------------
