@@ -102,5 +102,22 @@ void AcdParser::pha(unsigned cable, unsigned channel, ACDpha p)
     }
 
 
+
+ int AcdParser::handleError(AEMcontribution *contribution, unsigned code,
+                            unsigned p1, unsigned p2) const {
+     switch (code)
+     {
+         case AEMcontributionIterator::ERR_TooManyPhas:
+         {
+             fprintf(stderr, "AEMcontributionIterator::iterate: %s",
+                       "more PHA values found than bits set in the Accept Map\n");
+             break;
+         }
+
+         default: break;
+     }
+     return 0;
+ }
+
 }
 #endif

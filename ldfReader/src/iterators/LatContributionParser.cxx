@@ -25,5 +25,25 @@ namespace ldfReader {
         return 0;
 
     }
+
+int LatContributionParser::handleError(LATcontribution* contribution,
+                               unsigned code, unsigned p1, unsigned p2) const
+{
+  switch (code)
+  {
+    case LATcontributionIterator::ERR_UDFcontribution:
+    {
+      fprintf(stderr, "LATcontributionIterator::UDF: "
+        "Found unrecognized LATdatagram contribution type 0x%08X\n",
+        p1);
+      return -1;
+      break;
+    }
+    default: break;
+  }
+  return 0;
+}
+
+
 }
 #endif

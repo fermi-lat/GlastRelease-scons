@@ -33,6 +33,12 @@ namespace ldfReader {
         int commonComponentData(EBFcontribution *contribution);
         void dumpLATPcellheader(const unsigned header, const char* pfx="  ");
 
+        virtual int handleError(EBFcontribution* contrib, unsigned code,
+                                unsigned p1=0, unsigned p2=0) const;
+
+        virtual int handleError(EBFevent* event, unsigned code,
+                                unsigned p1=0, unsigned p2=0) const;
+
     private:
         unsigned _calSrc;
     };

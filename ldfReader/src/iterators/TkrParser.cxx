@@ -198,6 +198,25 @@ namespace ldfReader {
         }
 
     }
+
+
+
+    int TkrParser::handleError(TKRcontribution *contribution, unsigned code, 
+                    unsigned p1, unsigned p2) const {
+
+        switch (code)
+        {
+            case TKRcontributionIterator::ERR_WrongOrder:
+            {
+                fprintf(stderr, "TKRiterator.iterateTOTs: TOTs can not be accessed before TKRiterator.iterateStrips has executed.\n");
+               return 0;
+              break;
+            }
+            default: break;
+        }
+        return 0;
+   }
+
 }
 #endif
 

@@ -41,5 +41,17 @@ namespace ldfReader {
         m_diagData->addTkrDiagnostic(tkrDiagData);
         return 0;
     }
+
+
+     int DiagnosticParser::handleError(TEMcontribution* contribution,
+                                 unsigned code, unsigned p1, unsigned p2) const
+ {
+   fprintf(stderr, "MyDIAGiterator::handleError:  Somehow an error occured. \n");
+   fprintf(stderr, "  code=%d, p1=%d, p2=%d\n", code, p1, p2);
+   return 0;
+ }
+
+
+
 }
 #endif

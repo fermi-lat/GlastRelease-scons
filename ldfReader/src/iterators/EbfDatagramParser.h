@@ -23,6 +23,24 @@ namespace ldfReader {
         virtual ~EbfDatagramParser() {}
 
         virtual int process(LATdatagram*);
+
+        virtual int handleError(LATdatagram *datagram, unsigned code, unsigned p1=0, unsigned p2=0) const {
+
+        switch (code)
+        {
+            case LATdatagramIterator::ERR_IDmismatch:
+            {
+                fprintf(stderr, "LATdatagramIterator::iterate: "
+                       "Identity mismatch: got %08x, expected %08x\n",
+                       p1, p2);
+                return -1;
+                break;
+            }
+            default: break;
+        }
+        return 0;
+    };
+
     private:
         LatContributionParser m_lci;
     };
@@ -34,6 +52,7 @@ namespace ldfReader {
 
         return m_lci.status();
     }
+
 
 }
 #endif

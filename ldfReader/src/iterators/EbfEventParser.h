@@ -23,6 +23,8 @@ namespace ldfReader {
 
         virtual int process(EBFevent* event);
 
+       virtual int handleError(EBFevent *evt, unsigned code, unsigned p1=0, unsigned p2=0) const;
+
     };
 
 

@@ -38,6 +38,8 @@ namespace ldfReader {
         // Unused with EBF library v3 and later
         //static void setInstrument(const std::string& ) {}
 
+        virtual int handleError(TKRcontribution*, unsigned code, unsigned p1=0, unsigned p2=0) const;
+
     private:
         EBFevent *m_event;
         TKRcontribution *m_contribution;

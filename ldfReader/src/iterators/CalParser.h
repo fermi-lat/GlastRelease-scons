@@ -33,6 +33,8 @@ namespace ldfReader {
 
         void parse();
 
+    virtual int handleError(CALcontribution*, unsigned code, unsigned p1=0, unsigned p2=0) const;
+
     private:
         const char *m_prefix;
     };

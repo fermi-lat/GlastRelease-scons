@@ -34,6 +34,8 @@ namespace ldfReader {
         virtual void header(unsigned cable, AEMheader hdr);
         virtual void pha(unsigned cable, unsigned channel, ACDpha p);
 
+        virtual int handleError(AEMcontribution *contribution, unsigned code, unsigned p1=0, unsigned p2=0) const;
+
         void setCurHeader(const AEMheader &header) { m_curHeader = header; };
         const AEMheader& getCurHeader() const { return m_curHeader; };
 

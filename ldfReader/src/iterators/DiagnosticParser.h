@@ -30,6 +30,8 @@ namespace ldfReader {
         virtual int CALdiag(unsigned tower, unsigned layer, CALdiagnostic diag);
         virtual int TKRdiag(unsigned tower, unsigned gtcc,  TKRdiagnostic diag);
 
+        virtual int handleError(TEMcontribution*, unsigned code, unsigned p1=0, unsigned p2=0) const;
+
     private:
         ldfReader::DiagnosticData *m_diagData;
     };
@@ -44,5 +46,7 @@ namespace ldfReader {
     return 0;// Return non-zero to abort iteration
     }
     */
+
+
 }
 #endif
