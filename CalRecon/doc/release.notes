@@ -8,6 +8,7 @@ package CalRecon
 
 package manager: Alexandre Chekhtman
 
+  v5r23p? ??-apr-05   Pol Introduction of CalTkrLikelihoodTool.
   v5r23p2 05-apr-05   DC  Energy corrections made optional.
                       DC  Experimental: check the use of algorithm options.
                       DC  Tests independent of TkrRecon.

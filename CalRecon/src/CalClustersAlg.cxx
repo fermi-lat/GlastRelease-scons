@@ -113,7 +113,7 @@ StatusCode CalClustersAlg::initialize()
         }
     }
     else {
-        m_calValsCorrTool = 0 ;
+        m_tkrLikelihoodTool = 0 ;
     }
     return sc;
 }
