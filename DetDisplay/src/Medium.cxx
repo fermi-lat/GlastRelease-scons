@@ -1,43 +1,24 @@
-// $Id$
-//
-//
+/** @file Medium.cxx
+     @brief  implementation of class Medium
+
+   $Header$
+*/
 
 #include "Medium.h"
-
 #include "geometry/Box.h"
 
 //////////////////////////////////////////////////////////////////////////////
-//              constructors
 
-Medium::Medium(Medium * prnt, float size)
-   : _volume(new Box(size,size,size))
-   , _material(0)
-   , _detector(0)
-   , _field(0)
-   , _parent(prnt)
-   , _title(0)
-{
-     set_defaults();
-}
-Medium::Medium(Medium* parent, Shape* vol, const char* matName, Detector* det)
+
+Medium::Medium(Medium* parent, Shape* vol, const char* matName)
    :  _volume(vol)
-   , _material(0)
-   ,  _detector(det)
-   ,  _field(0)
+   , _material(matName)
    ,  _parent(parent)
    ,  _title(0)
 {
-	set_defaults();
-}
-
-void Medium::set_defaults()
-{
    if(_parent) {
-     // parent was specified: set appropiate attributes to be identical, then add
-
       _parent->addMedium(this);
    }
-
    s_count ++;
 }
 
@@ -82,19 +63,14 @@ Medium& Medium::removeMedium (Medium* oldMedium)
 GeomObject&
 Medium::transform(const CoordTransform& T)
 {
-
     if( _volume )
 	_volume->transform(T); // could happen during initialzation
    return *this;
 }
 
-void Medium::createDetectorView(gui::DisplayRep& v) {
-
-}
 
 //-----------------------------------------------------------------
 //                  gobal statics
-const Medium * Medium::lastMedium = 0;
 unsigned Medium::s_count=0;
 
 

@@ -1,5 +1,8 @@
-// $Header$
+/** @file DetectorDisplay.cxx
+@brief  Declare, implement class DetectorDisplay
 
+* $Header$
+*/
 
 // includes
 #include "GaudiKernel/MsgStream.h"
@@ -7,20 +10,20 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/Property.h"
 
-
 #include "GuiSvc/IGuiTool.h"
-
 #include "gui/SubMenu.h"
 #include "gui/GuiMgr.h"
 #include "gui/Command.h"
+
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 #include "World.h"
 #include "DisplayGeometry.h"
-#if 0
 #include "MaterialDisplay.h"
-#endif
-
+#include <sstream>
+namespace {
+    gui::DisplayControl* pdisplay;
+}
 /** 
 * @class DetectorDisplay
 *
@@ -68,7 +71,6 @@ DetectorDisplay::DetectorDisplay(const std::string& type,
     declareInterface<IGuiTool>(this);
 }
 
-
 // initialize
 StatusCode DetectorDisplay::initialize (gui::GuiMgr* guiMgr) 
 {
@@ -80,7 +82,6 @@ StatusCode DetectorDisplay::initialize (gui::GuiMgr* guiMgr)
     // open the message log
     MsgStream log( msgSvc(), name() );
 
-
     // Get the Glast detector service, needed for constants, to keep the GlastDetector pointer
     IGlastDetSvc* gsv;
     if( service( "GlastDetSvc", gsv).isFailure() ) {
@@ -88,31 +89,54 @@ StatusCode DetectorDisplay::initialize (gui::GuiMgr* guiMgr)
         return StatusCode::FAILURE;
     }
 
-    // create the world instance, 
+    // create the world instance, will be the top level of the tree 
     World* world = World::instance();
 
     log << MSG::DEBUG << "Instantiating the geometry using the GlastDetSvc " << endreq;
     m_glast = new DisplayGeometry();
     gsv->accept(*m_glast);
     if( log.level() <= MSG::DEBUG ) {
-        log << MSG::INFO; 
+        log << MSG::DEBUG; 
         m_glast->printStats(log.stream());
         log << endreq;
     }
-
     // use the display from the Gui service to add the reps
-    guiMgr->display().setAxisSize(m_axisSize);
+    pdisplay = &guiMgr->display(); // put pointer into anonymous namespace
+    pdisplay->setAxisSize(m_axisSize);
 
-
-
+    // submenu for the dector
+    gui::SubMenu& detmenu= guiMgr->display().menu().subMenu("Detector");
     gui::DisplayRep * worldRep= world->detectorViewer();
-    guiMgr->display().add( worldRep, "Detector",  -1 );
     worldRep->update();  // necessary to finish building nested reps
     for(int i =0; i< m_showLevel; ++i) worldRep->show(false); 
-#if 0 // did not port: needs some logic to save material names
-    // special display of all Mediums with a given material
-    MaterialDisplay mdxxx( guiMgr );
-#endif
+
+    pdisplay->useMenu(&detmenu);
+    pdisplay->add(worldRep, "detector", -1);
+
+    //---------- command class to set detail level-----------------
+    class ShowDetector : public gui::Command {
+    public:
+        ShowDetector(gui::DisplayRep* rep, int level): m_rep(rep),m_level(level){}
+        void execute(){ 
+            m_rep->hide(false);    
+            for(int i =0; i< m_level; ++i) m_rep->show(false); 
+            pdisplay->redisplay();
+        }
+    private:
+        gui::DisplayRep* m_rep;
+        int m_level;
+    };
+    //------------------------------------------------
+    for( int level=0; level<7; ++level){
+        std::stringstream label; label << "detail level " << level;
+        detmenu.addButton( label.str(),  new ShowDetector(worldRep, level)); 
+    }
+
+    detmenu.addSeparator();
+    // special display of all volumes with a given material
+    MaterialDisplay mdxxx( guiMgr , m_glast, detmenu);
+    pdisplay->useMenu();
+
     return status;
 }
 

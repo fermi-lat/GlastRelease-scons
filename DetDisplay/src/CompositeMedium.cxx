@@ -1,6 +1,8 @@
-// $Id$
-// File: CompositeMedium.cxx
+/** @file CompositeMedium.h
+     @brief  implementation of class CompositeMedium
 
+     $Header$
+*/
 
 #include "CompositeMedium.h"
 
@@ -9,15 +11,9 @@
 #include "geometry/Shape.h"
 #include "geometry/Volume.h"
 #include <algorithm>
-//////////////////////////////////////////////////////////////////////////////
-//              constructors
 
-CompositeMedium::CompositeMedium(Medium * prnt, float size)
-: Medium(prnt, size)
-{}
-
-CompositeMedium::CompositeMedium(Medium* prnt, Shape* vol, const char* matName, Detector* det)
-: Medium(prnt, vol, matName, det)
+CompositeMedium::CompositeMedium(Medium* prnt, Shape* vol, const char* matName)
+: Medium(prnt, vol, matName)
 {}
 
 CompositeMedium::~CompositeMedium()

@@ -49,6 +49,9 @@ public:
     /// current ID
     idents::VolumeIdentifier getId()const; 
 
+    typedef std::map<std::string, std::pair<int,double> > MaterialSummary;
+    const MaterialSummary & materials()const{ return m_matSum;}
+
 private:
     typedef std::vector<std::string> StringVector;
 

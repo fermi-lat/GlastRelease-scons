@@ -11,38 +11,13 @@ static inline double sqr(double x){return x*x;}
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
 World::World(float size)
-: CompositeMedium( (Medium*)0, new Box(size,size,size), "vacuum", (Detector*)0)
+: CompositeMedium( (Medium*)0, new Box(size,size,size), "vacuum")
 {
     setTitle("World");
     s_instance = this;
 }
 
-Medium&
-World::addMedium(Medium* nextMedium)
-{
-    // intercept CompositeMedium to make sure that we are contain
-    const Shape* pvol = &nextMedium->volume();
-    if( pvol ) {
 
-	float d = pvol->getMaxDimension();
-	Point Q  = pvol->center();
-	float newsize = sqrt(1.3333*(Q.mag2() + sqr(d)) );
-	if( newsize > volume().getMaxDimension() ) {
-	    delete _volume;
-	    _volume = new Box(newsize,newsize,newsize);
-	}
-    }
-    return CompositeMedium::addMedium(nextMedium);
-}
-
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//
-void World::createDetectorView(gui::DisplayRep& v)
-{
-    for(iterator it=begin(); it !=end(); ++it)
-	(*it)->createDetectorView(v);
-}
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // implement singleton here

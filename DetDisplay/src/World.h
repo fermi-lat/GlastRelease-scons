@@ -16,12 +16,7 @@ class World : public CompositeMedium
 public:
     
     World(float size=1000);
-    
-    /// override from CompositeMedium to allow setting of box size
-    virtual Medium&  addMedium(Medium* nextMedium);
-        
-    /// override in order to avoid displaying surrounding box
-    void createDetectorView(gui::DisplayRep& v);
+            
     /// return instance of special gui::DisplayRep objects
     gui::DisplayRep* detectorViewer();
     

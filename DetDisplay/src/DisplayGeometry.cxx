@@ -42,8 +42,6 @@ public:
         // this winds up hiding all but top level box
         v.hide(); 
     }
-    // don't pass this on: will do detectors separately
-    void generateResponse(){}
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
