@@ -170,6 +170,8 @@ private:
     // starting and ending times for orbital simulation
     DoubleProperty m_startTime;
     DoubleProperty m_endTime;
+    DoubleProperty m_deltaTime;
+
 };
 
 // declare the service factories for the FluxSvc
@@ -193,6 +195,7 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("EvtMax"     , m_evtMax=0);
     declareProperty("StartTime"   , m_startTime=0);
     declareProperty("EndTime",      m_endTime=0);
+    declareProperty("DeltaTime",    m_deltaTime=1);
 
 }
 
@@ -452,6 +455,8 @@ StatusCode FluxSvc::run(){
     int eventNumber= 0;
     double currentTime=m_startTime;
     if( flux!=0 ) flux->pass(currentTime); // add to zero
+    if( m_deltaTime>0 && m_endTime==0 )  m_endTime=m_startTime+m_deltaTime;
+
     { bool noend=true;
     log << MSG::INFO << "Runable interface starting event loop as :" ; 
     if( m_evtMax>0)  { log << " MaxEvt = " << m_evtMax; noend=false;  }
