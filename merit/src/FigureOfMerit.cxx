@@ -361,6 +361,7 @@ FigureOfMerit::FigureOfMerit(const Tuple& t, std::string cut_string)
 
     //need this to add these aliases
     Tuple& tt = const_cast<Tuple&>(t);
+    tt.add_alias( "elapsed_time","EvtTime");
 
     if( !cut_string.empty()) setCuts(cut_string);
 

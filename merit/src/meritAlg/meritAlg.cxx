@@ -287,8 +287,10 @@ StatusCode meritAlg::initialize() {
 
     addItem( "Run",  &m_run );
     addItem( "Event_ID",   &m_event );
-    addItem( "elasped_time", &m_time );
-  // add when approved by Science Analysis group  addItem( "EvtLiveTime", &m_livetime);
+    addItem( "elapsed_time", &m_time );
+#if 0  //add when approved by Science Analysis group  
+    //addItem( "EvtLiveTime", &m_livetime);
+#endif
 
     addItem( "MC_src_Id", &m_mc_src_id );
 
@@ -374,6 +376,7 @@ StatusCode meritAlg::initialize() {
     printer->addPrinter("Glt tree", new gui::PrinterByPrefix_T<meritAlg>(this,"Glt"));
     printer->addPrinter("IM  tree", new gui::PrinterByPrefix_T<meritAlg>(this,"IM"));
     printer->addPrinter("FT1 tree", new gui::PrinterByPrefix_T<meritAlg>(this,"FT1"));
+    printer->addPrinter("Pt tree", new gui::PrinterByPrefix_T<meritAlg>(this,"Pt"));
     // also for the exposure tree
     printer->addPrinter("Exposure tree", new gui::Printer_T<meritAlg::TTree>(m_pointingTuple));
 
