@@ -113,7 +113,7 @@ int main(int argc, char* argv[])
         // Determine the # of events stored in ntuple
 
         std::stringstream title; 
-        title << "gen(" << tuple->numEvents() << ")" << '\0';
+        title << "gen(" << tuple->numEvents() << ")";
         tuple->setTitle(title.str());
 
 
