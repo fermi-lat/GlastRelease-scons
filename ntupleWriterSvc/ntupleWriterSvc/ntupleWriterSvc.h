@@ -46,6 +46,11 @@ public:
    /// add a new item to an ntuple
    virtual StatusCode addItem(const char *tupleName, const char *item, double val);
 
+   // Set a flag to denote whether or not to store a row
+   virtual void storeRowFlag(bool flag) { m_storeFlag = flag; };
+   // retrieve the flag that denotes whether or not to store a row
+   virtual bool storeRowFlag() { return m_storeFlag; };
+
    /// check for NaN and infinity
    int isFinite(float val);
 
@@ -61,6 +66,8 @@ private:
 
     // Allow SvcFactory to instantiate the service.
     friend class SvcFactory<ntupleWriterSvc>;
+    /// routine to be called at the beginning of an event
+    void beginEvent();
     /// routine that is called when we reach the end of an event
     void endEvent();
     /// create the ntuple
@@ -82,6 +89,8 @@ private:
 
     /// Store ntuple Id and ntuple path in data store
     std::map<std::string, std::string> m_tuples;
+
+    bool m_storeFlag;
 
     static unsigned int m_tupleCounter;
 };

@@ -23,6 +23,10 @@ public:
 
     virtual StatusCode addItem(const char *tupleName, const char *item, double val)=0;
 
+    virtual void storeRowFlag(bool flag)=0;
+
+    virtual bool storeRowFlag()=0;
+
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_INTupleWriterSvc; }
 
