@@ -5,11 +5,7 @@ version v0r0p0
 
 use facilities v2r*
 
-use GaudiPolicy v5r4p*
-use GaudiAud    v5r*
-use GaudiKernel v11r*
-use GaudiSvc    v7r*
-use GlastPolicy v4r*
+use GaudiInterface * IExternal
 
 apply_pattern package_include
 apply_pattern package_headers
