@@ -17,6 +17,9 @@ namespace ldfReader {
         virtual ~LatContributionParser() {}
 
         virtual int EBF(EBFevent* start, EBFevent* end);
+        // Over-ride so we can skip UDF and not generate an error
+        virtual int UDF(LATcontribution* start, LATcontribution* end);
+
     private:
         EbfEventParser m_eep;
     };

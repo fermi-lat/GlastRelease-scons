@@ -19,5 +19,11 @@ namespace ldfReader {
         return m_eep.status();
     }
 
+    int LatContributionParser::UDF(LATcontribution* event, LATcontribution* end)
+   {
+        printf ("WARNING:  Ignoring UDF contributions - any questions, see Eduardo\n");
+        return 0;
+
+    }
 }
 #endif
