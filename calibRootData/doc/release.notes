@@ -1,7 +1,9 @@
 /** @file release.notes
  * Package calibRootData
  * Coordinator:  J. Bogart
+                              EOH
  *
+ * 17-Dec-2004: jrb v1r3     Add classes for ToT charge injection calibration
  * 10-Aug-2004: hmk v1r2p0:  Move to new RootcintPolicy to fix Windows build
  * 26-Jul-2004: jrb v1r2:    Couple more small changes to make it usable
  * 24-Jul-2004: jrb v1r1:    Reorg CAL classes; eliminate extra inheritance
