@@ -16,7 +16,7 @@ macro_append GlastEvent_headers "" WIN32 " \
         ../GlastEvent/data/*.h  \
         ../GlastEvent/Hits/*.h \
         ../GlastEvent/Digi/*.h \
-        ../GlastEvent/Recon/*.h \
+        ../GlastEvent/Recon/*.h 
 
 library GlastEvent -no_share\
         MonteCarlo/*.cxx \
