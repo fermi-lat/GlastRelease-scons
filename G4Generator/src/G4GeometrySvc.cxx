@@ -42,19 +42,19 @@ class G4GeometrySvc : public Service, virtual public IG4GeometrySvc
   StatusCode queryInterface(const IID& riid, void** ppvUnknown);
 
   /// Return pointer to the constructed Detector
-  virtual G4VUserDetectorConstruction* getDetector();
+  virtual G4VUserDetectorConstruction* getDetector() {return m_UserDetector;}
 
   /// Return pointer to the G4 Transportation Manager
-  virtual G4TransportationManager* getTransportationManager();
+  virtual G4TransportationManager* getTransportationManager() {return m_TransportationManager;}
 
-  /// Return pointer to the ID map
-  virtual IG4GeometrySvc::IdMap* getIdMap();
+  /// Return identifier associated with a given volume
+  virtual idents::VolumeIdentifier getVolumeIdent(const G4VPhysicalVolume* volume);
   
  private:
   /// This is needed by propagator for decoding volume identifiers
-  G4VUserDetectorConstruction* UserDetector;
-  G4TransportationManager* TransportationManager;
-  IG4GeometrySvc::IdMap* idmap;
+  G4VUserDetectorConstruction* m_UserDetector;
+  G4TransportationManager*     m_TransportationManager;
+  DetectorConstruction::IdMap* m_idmap;
 
   /// the geometry level of details
   std::string m_geometryMode;
@@ -68,7 +68,7 @@ static SvcFactory<G4GeometrySvc> g4_factory;
 const ISvcFactory& G4GeometrySvcFactory = g4_factory;
 
 G4GeometrySvc::G4GeometrySvc(const std::string& name, ISvcLocator* pSvcLocator) :
-  Service(name, pSvcLocator), UserDetector(0), TransportationManager(0), idmap(0)
+  Service(name, pSvcLocator), m_UserDetector(0), m_TransportationManager(0), m_idmap(0)
 {
   declareProperty("geometryMode", m_geometryMode="recon");
 
@@ -78,9 +78,9 @@ G4GeometrySvc::G4GeometrySvc(const std::string& name, ISvcLocator* pSvcLocator) 
 G4GeometrySvc::~G4GeometrySvc()
 {
   //Clean up the geometry if it is there
-  if (UserDetector)
+  if (m_UserDetector)
   {
-	  DetectorConstruction* UserDetectorConstruction = dynamic_cast<DetectorConstruction*>(UserDetector);
+	  DetectorConstruction* UserDetectorConstruction = dynamic_cast<DetectorConstruction*>(m_UserDetector);
       //delete UserDetectorConstruction;
   }
 }
@@ -122,12 +122,12 @@ StatusCode G4GeometrySvc::initialize()
 
   DetectorConstruction* UserDetectorConstruction = new DetectorConstruction(gsv, eventSvc, m_geometryMode, std::cout);
 
-  TransportationManager = G4TransportationManager::GetTransportationManager();
+  m_TransportationManager = G4TransportationManager::GetTransportationManager();
 
-  TransportationManager->GetNavigatorForTracking()->SetWorldVolume(UserDetectorConstruction->Construct());
+  m_TransportationManager->GetNavigatorForTracking()->SetWorldVolume(UserDetectorConstruction->Construct());
 
-  UserDetector          = UserDetectorConstruction;
-  idmap                 = UserDetectorConstruction->idMap();
+  m_UserDetector          = UserDetectorConstruction;
+  m_idmap                 = UserDetectorConstruction->idMap();
   
   log << MSG::INFO << "G4GeometrySvc Initialization completed successfully" << endreq;
 
@@ -167,20 +167,12 @@ StatusCode G4GeometrySvc::queryInterface(const IID& riid, void** ppvInterface)
   return SUCCESS;
 }
 
-/// Return pointer to the constructed Detector
-G4VUserDetectorConstruction* G4GeometrySvc::getDetector() 
+idents::VolumeIdentifier G4GeometrySvc::getVolumeIdent(const G4VPhysicalVolume* volume)
 {
-	return UserDetector;
-}
-
-/// Return pointer to the G4 Transportation Manager
-G4TransportationManager* G4GeometrySvc::getTransportationManager() 
-{
-	return TransportationManager;
-}
-
-/// Return pointer to the ID map
-IG4GeometrySvc::IdMap* G4GeometrySvc::getIdMap() 
-{
-	return idmap;
+  // Purpose and Method:  Given a volume return its identifier
+  // Inputs:  Pointer to a G4VPhysicalVolume
+  // Outputs:  The identifier associated with the volume
+  // Dependencies: None
+  // Restrictions None 
+    return (*m_idmap)[volume];
 }

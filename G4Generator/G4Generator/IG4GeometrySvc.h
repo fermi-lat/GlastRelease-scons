@@ -37,9 +37,8 @@ class IG4GeometrySvc : virtual public IInterface
   /// Return pointer to the G4 Transportation Manager
   virtual G4TransportationManager* getTransportationManager() = 0;
 
-  /// Return pointer to the ID map
-  typedef std::map<const G4VPhysicalVolume*, idents::VolumeIdentifier > IdMap;
-  virtual IdMap* getIdMap() = 0;
+  /// Returns the identifier associated with a specific volume
+  virtual idents::VolumeIdentifier getVolumeIdent(const G4VPhysicalVolume* volume) = 0;
 
   /// queryInterface - for implementing a Service this is necessary
   static const InterfaceID& interfaceID() { return IID_IG4GeometrySvc; }
