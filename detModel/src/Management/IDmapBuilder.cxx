@@ -20,6 +20,7 @@
 #include "detModel/Utilities/Vector.h"
 
 #include "detModel/Management/IDmapBuilder.h"
+#include "idents/VolumeIdentifier.h"
 
 #include "CLHEP/Vector/ThreeVector.h"
 #include "CLHEP/Vector/Rotation.h"
@@ -31,8 +32,6 @@ namespace detModel{
   {
     setRecursive(0);
     m_actualVolume = nvol;
-    m_actualID = "";
-
   };
 
 IDmapBuilder::~IDmapBuilder()
@@ -49,6 +48,7 @@ void IDmapBuilder::visitGdd(Gdd* Gdd)
   sec s = Gdd->getSections();
   for(i=s.begin(); i!=s.end();i++)
     (*i)->AcceptNotRec(this);
+
 }
   
 void  IDmapBuilder::visitSection(Section* section)
@@ -108,11 +108,9 @@ void  IDmapBuilder::visitPosXYZ(PosXYZ* pos)
 {
   HepRotation tempRotation = m_actualRot;
   Hep3Vector tempPos = m_actualPos;
-
-  std::string tempID = m_actualID;
-  char tempChar[10];
-  std::string tmp = "";
   unsigned int i;
+  idents::VolumeIdentifier tempID = m_actualID;
+  char tempChar[10];
 
   m_actualPos = m_actualPos + m_actualRot*Hep3Vector(pos->getX(), pos->getY(), pos->getZ());
 
@@ -122,12 +120,8 @@ void  IDmapBuilder::visitPosXYZ(PosXYZ* pos)
   
   /// Set the identifier
   for(i=0;i<(pos->getIdFields()).size();i++)
-    { 
-      sprintf(tempChar, "/%d", (int) pos->getIdFields()[i]->getValue()); 
-      tmp = tmp+tempChar;
-    }
-  m_actualID = m_actualID + tmp;
-
+    m_actualID.append((int) pos->getIdFields()[i]->getValue());
+  
   insertVolume(pos->getVolume());
   pos->getVolume()->AcceptNotRec(this);
   
@@ -143,12 +137,10 @@ void  IDmapBuilder::visitAxisMPos(AxisMPos* pos)
   unsigned int i, j;
   HepRotation tempRotation = m_actualRot;
   Hep3Vector tempPos = m_actualPos;
-  std::string tempID = m_actualID;
-  char tempChar[10];
-  std::string tmp = "";
+  idents::VolumeIdentifier tempID = m_actualID;
 
   Hep3Vector stackDir; // unit vector to set 
-
+  
   switch(pos->getAxisDir()){
   case (detModel::Stack::xDir):
     {    
@@ -176,16 +168,13 @@ void  IDmapBuilder::visitAxisMPos(AxisMPos* pos)
   for(i=0;i<pos->getNcopy();i++)
     {
       m_actualPos = m_actualPos + origin + (pos->getDisp(i))*(m_actualRot*stackDir);
-      tmp = "";
+
       /// ID stuff
       for(j=0;j<pos->getIdFields().size();j++)
 	{	
-	  sprintf(tempChar, "/%d", 
-		  (int)(pos->getIdFields()[j]->getValue())+(int)(pos->getIdFields()[j]->getStep()*i)); 
-	  tmp = tmp+tempChar;
+	  m_actualID.append((int)(pos->getIdFields()[j]->getValue())+(int)(pos->getIdFields()[j]->getStep()*i));
 	}
 
-      m_actualID = m_actualID + tmp;
 
       insertVolume(pos->getVolume());      
       pos->getVolume()->AcceptNotRec(this);

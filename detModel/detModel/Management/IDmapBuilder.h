@@ -4,6 +4,7 @@
 #include <map>
 
 #include "detModel/Management/SectionsVisitor.h"
+#include "idents/VolumeIdentifier.h"
 
 #include "CLHEP/Vector/ThreeVector.h"
 #include "CLHEP/Vector/Rotation.h"
@@ -80,14 +81,16 @@ namespace detModel{
 
     virtual void insertVolume(Volume*);
 
+    std::map<idents::VolumeIdentifier, PositionedVolume*>* getVolMap()const{return &m_volMap;};
+
     std::string m_actualVolume;
-    std::string m_actualID;
+    idents::VolumeIdentifier m_actualID;
     
     Hep3Vector m_actualPos;
     HepRotation m_actualRot;
 
     
-    std::map<std::string, PositionedVolume*> m_volMap;
+    std::map<idents::VolumeIdentifier, PositionedVolume*> m_volMap;
   };
 
 }

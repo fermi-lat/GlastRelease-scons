@@ -4,6 +4,7 @@ version v3
 
 use CLHEP
 use xmlUtil
+use idents
 
 include_dirs "${DETMODELROOT}"
 
