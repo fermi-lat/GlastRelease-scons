@@ -1,5 +1,5 @@
 package RootIo
-version v12r10
+version v12r10gr3
 
 # $Header$
 
@@ -25,7 +25,7 @@ macro_append ROOT_libs " -lHist -lGraf -lGraf3d -lTreePlayer "\
                  WIN32 " libHist.lib libGraf.lib libGraf3d.lib libTreePlayer.lib "
 
 private
-use GlastSvc v9r*
+use GlastSvc v*
 use Trigger v*
 
 # for building this DLL, need includes from the rootData packages

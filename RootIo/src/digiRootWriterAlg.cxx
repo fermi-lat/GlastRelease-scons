@@ -44,6 +44,7 @@
  *
  * @author Heather Kelly
  * $Header$
+ * $Header$
  */
 
 class digiRootWriterAlg : public Algorithm
@@ -276,12 +277,14 @@ StatusCode digiRootWriterAlg::writeDigiEvent() {
     UInt_t evtId = evtTds->event();
     UInt_t runId = evtTds->run();
     TimeStamp timeObj = evtTds->time();
+    Double_t liveTime = evtTds->livetime();
 
     Bool_t fromMc = true;
 
     log << MSG::DEBUG;
     if( log.isActive()) evtTds->fillStream(log.stream());
     log << endreq;
+
 
     SmartDataPtr<TriRowBitsTds::TriRowBits> triRowBitsTds(eventSvc(), "/Event/Digi/TriRowBits");
     UInt_t rowBits[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -293,12 +296,13 @@ StatusCode digiRootWriterAlg::writeDigiEvent() {
 
     L1T levelOne(evtTds->trigger(), rowBits);
 
-    m_digiEvt->initialize(evtId, runId, timeObj.time(), levelOne, fromMc);
+    m_digiEvt->initialize(evtId, runId, timeObj.time(), liveTime, levelOne, fromMc);
 
     SmartDataPtr<LdfEvent::LdfTime> timeTds(eventSvc(), "/Event/Time");
     if (timeTds) {
         m_digiEvt->setEbfTime(timeTds->timeSec(), timeTds->timeNanoSec(),
-                              timeTds->upperPpcTimeBaseWord(), timeTds->lowerPpcTimeBaseWord());
+                              timeTds->upperPpcTimeBaseWord(), 
+                              timeTds->lowerPpcTimeBaseWord());
     }
 
     return sc;
@@ -379,14 +383,14 @@ StatusCode digiRootWriterAlg::writeDiagnostic() {
     for (ind = 0; ind < numCalDiag; ind++){
         LdfEvent::CalDiagnosticData calDiagTds = diagTds->getCalDiagnosticByIndex(ind);
         CalDiagnosticData *calDiagRoot = m_digiEvt->addCalDiagnostic();
-        calDiagRoot->initialize(calDiagTds.dataWord());
+        calDiagRoot->initialize(calDiagTds.dataWord(),calDiagTds.tower(),calDiagTds.layer());
     }
 
     int numTkrDiag = diagTds->getNumTkrDiagnostic();
     for (ind = 0; ind < numTkrDiag; ind++) {
         LdfEvent::TkrDiagnosticData tkrDiagTds = diagTds->getTkrDiagnosticByIndex(ind);
         TkrDiagnosticData *tkrDiagRoot = m_digiEvt->addTkrDiagnostic();
-        tkrDiagRoot->initialize(tkrDiagTds.dataWord());
+        tkrDiagRoot->initialize(tkrDiagTds.dataWord(),tkrDiagTds.tower(),tkrDiagTds.gtcc());
     }
 
     return sc;

@@ -823,6 +823,7 @@ void reconRootWriterAlg::writeEvent()
         if (eventCounter % m_rootIoSvc->getAutoSaveInterval() == 0) m_reconTree->AutoSave();
     saveDir->cd();
 
+    saveDir->cd();
     return;
 }
 
