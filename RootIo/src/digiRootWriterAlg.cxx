@@ -246,7 +246,7 @@ StatusCode digiRootWriterAlg::writeAcdDigi() {
         Bool_t vetoRoot[2] = { (*acdDigiTds)->getVeto(Event::AcdDigi::A),
             (*acdDigiTds)->getVeto(Event::AcdDigi::B) };
         Bool_t lowRoot[2] = { (*acdDigiTds)->getLowDiscrim(Event::AcdDigi::A),
-            (*acdDigiTds)->getHighDiscrim(Event::AcdDigi::B) };
+            (*acdDigiTds)->getLowDiscrim(Event::AcdDigi::B) };
         Bool_t highRoot[2] = { (*acdDigiTds)->getHighDiscrim(Event::AcdDigi::A),
             (*acdDigiTds)->getHighDiscrim(Event::AcdDigi::B) };
         idents::AcdId idTds = (*acdDigiTds)->getId();
