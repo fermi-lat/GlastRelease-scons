@@ -35,7 +35,7 @@ reconRootWriterAlg.reconRootFile = "recon.root";
 
 FluxSvc.source_lib = {"$(GLEAMROOT)/src/systests/test_sources.xml"};
 FluxAlg.source_name="all_gamma";
-ApplicationMgr.EvtMax = 5000;
+ApplicationMgr.EvtMax = 50000;
 
 GlastRandomSvc.RunNumber = 50;
 GlastRandomSvc.InitialSequenceNumber = 0;

@@ -137,7 +137,7 @@ digiRootWriterAlg.digiRootFile = "digi.root";
 reconRootWriterAlg.reconRootFile = "recon.root";
 
 // Number of events to process
-ApplicationMgr.EvtMax = 5000;
+ApplicationMgr.EvtMax = 50000;
 
 // Random Seed initialization
 GlastRandomSvc.RunNumber = 50;
