@@ -55,6 +55,7 @@ extern const CLID& CLID_McParticle;
 
 namespace mc {  // NameSpace
 
+
 class McParticle  : virtual public ContainedObject  {
   public:
     typedef int  StdHepId;
@@ -95,15 +96,13 @@ class McParticle  : virtual public ContainedObject  {
         const HepLorentzVector& finalMomentum,
         const HepPoint3D& finalPosition);
 
-    /// Retrieve particle identificatio
-    ParticleID particleID() const;
-    /// Update particle identification
-    void setParticleID( ParticleID value );
 
     /// Retrieve particle property
     StdHepId particleProperty() const;
-    /// Update particle identification
-    void setParticleProperty( StdHepId value );
+
+    /// retrieve all of status flags for const object
+    unsigned int statusFlags()const;
+
 
     /// Retrieve whether this is a primary particle: true if mother is itself
     bool primaryParticle() const;
@@ -113,6 +112,7 @@ class McParticle  : virtual public ContainedObject  {
     const HepPoint3D& finalPosition() const;
 
     const HepLorentzVector&  initialFourMomemtum()const;
+    const HepLorentzVector&  finalFourMomemtum()const;
 
     /// Serialize the object for writing
     virtual StreamBuffer& serialize( StreamBuffer& s ) const ;
