@@ -14,7 +14,7 @@ ApplicationMgr.DLLs += {"EbfWriter", "OnboardFilter"};
 Triggered.Members += {"EbfWriter", "OnboardFilter"};
 
 ApplicationMgr.DLLs += {"merit"};
-Triggered.Members += { "meritAlg" };
+Triggered.Members += { "ExposureAlg", "meritAlg" };
 
 // turn off output
 Output.Members = {};

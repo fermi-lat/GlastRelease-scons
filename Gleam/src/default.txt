@@ -18,7 +18,13 @@ Triggered.Members += {"EbfWriter", "OnboardFilter"};
 
 // setup up merit to monitor the output
 ApplicationMgr.DLLs   += {"merit"};
-Triggered.Members += {"meritAlg"};
+Triggered.Members += {"ExposureAlg", "meritAlg"};
+
+// set root output from merit with following
+MeritAlg.EventTreeName="MeritTuple";
+MeritAlg.PointingTreeName="Exposure";
+
+RootTupleSvc.filename="merit.root";
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 CalClustersAlg.OutputLevel=4; // too much info
