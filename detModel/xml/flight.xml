@@ -796,7 +796,7 @@ too, but not required.</overview>
 	<identifier field="tray" value="17" />
         <identifier field="orient" value="0" />
       </axisPos>
-      <axisPos volume="trayReg" rotation="90" gapREF="innerInterTrayGap" >
+      <axisPos volume="trayTop" rotation="90" gapREF="innerInterTrayGap" >
 	<identifier field="tray" value="18" />
         <identifier field="orient" value="1" />
       </axisPos>
