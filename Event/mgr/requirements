@@ -4,13 +4,14 @@ version v1
 branches GlastEvent mgr doc src
 
 use instrument v1r2
-use Gaudi v7
+use Gaudi v7r1
 
 library GlastEvent \
         Hits/*.cpp \
         ../GlastEvent/*.h \ 
         ../GlastEvent/Hits/*.h \
         ../GlastEvent/TopLevel/*.h \
+        ../GlastEvent/MonteCarlo/*.h \
         ../GlastEvent/GsimImp/*.h \
         TopLevel/*.cpp \
         GsimImp/*.cpp
