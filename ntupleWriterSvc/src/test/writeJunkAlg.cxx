@@ -1,6 +1,5 @@
 #define ntupleWriter_writeJunkAlg_CPP 
 
-// Include files
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
@@ -17,19 +16,19 @@
 
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
 
-//------------------------------------------------------------------------------
-/*! \class writeJunkAlg
-\brief test algorithm for the ntupleWriterSvc
-
-This algorithm tests the creation and writing of ntuples via
-the ntupleWriterSvc.  The output from this routine is a
-ROOT ntuple, containing 19 entries.
-*/
+/**
+ * @class writeJunkAlg
+ * @brief test algorithm for the ntupleWriterSvc 
+ *
+ * This algorithm tests the creation and writing of ntuples via
+ * the ntupleWriterSvc.  The output from this routine is a
+ * ROOT ntuple, containing 19 entries.
+ */
 
 class writeJunkAlg : public Algorithm {
     
 public:
-    //! Constructor of this form must be provided
+    /// Constructor of this form must be provided for all Gaudi algorithms
     writeJunkAlg(const std::string& name, ISvcLocator* pSvcLocator); 
     
     StatusCode initialize();
@@ -44,11 +43,9 @@ private:
 
 };
 
-//------------------------------------------------------------------------------
 static const AlgFactory<writeJunkAlg>  Factory;
 const IAlgFactory& writeJunkAlgFactory = Factory;
-//------------------------------------------------------------------------------
-/// 
+
 writeJunkAlg::writeJunkAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator){
 
@@ -56,9 +53,6 @@ Algorithm(name, pSvcLocator){
 
 }
 
-//------------------------------------------------------------------------------
-/*! 
-*/
 StatusCode writeJunkAlg::initialize() {
     
     StatusCode sc = StatusCode::SUCCESS;
@@ -80,8 +74,6 @@ StatusCode writeJunkAlg::initialize() {
 }
 
 
-
-//------------------------------------------------------------------------------
 StatusCode writeJunkAlg::execute() {
      
     static int callCount = 0;
@@ -111,7 +103,6 @@ StatusCode writeJunkAlg::execute() {
 }
 
 
-//------------------------------------------------------------------------------
 StatusCode writeJunkAlg::finalize() {
     StatusCode  sc = StatusCode::SUCCESS;
     
@@ -120,8 +111,4 @@ StatusCode writeJunkAlg::finalize() {
  
     return StatusCode::SUCCESS;
 }
-
-//------------------------------------------------------------------------------
-
-
 

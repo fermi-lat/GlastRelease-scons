@@ -1,5 +1,12 @@
+// File and Version Information:
+//      $Header$
+//
+// Description:
+//      main funtion for the test program for ntupleWriterSvc.
+//
+// Author(s):
+//      Heather Kelly			
 
-// Include files
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -7,23 +14,8 @@
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/System.h"
 
-
-//------------------------------------------------------------------------------
-//
-//  Package    : ntupleWriter
-//
-//  Description: Test Main Program
-//
-//------------------------------------------------------------------------------
 #include <iostream>
 
-//------------------------------------------------------------------------------
-//
-//  Package    : ntupleWriter
-//
-//  Description: Test Main Program
-//
-//------------------------------------------------------------------------------
 int main( int argn, char** argc) {
     // get the path to this package from its root environment variable: if not there,
     // assume that we are in the root

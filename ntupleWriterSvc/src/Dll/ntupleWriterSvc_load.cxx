@@ -1,14 +1,14 @@
-//====================================================================
-//  ntupleWriter_load.cpp
-//--------------------------------------------------------------------
-//
-//  Package    : ntupleWriter
-//
-//  Description: Implementation of <Package>_load routine.
-//               This routine is needed for forcing the linker
-//               to load all the components of the library. 
-//
-//====================================================================
+/** 
+ * @file ntupleWriterSvc_load.cxx
+ *
+ * @brief Implementation of <Package>_load routine.
+ * This routine is needed for forcing the linker to load all the 
+ * components of the library. 
+ * 
+ * @author H. Gillespie
+ * 
+ * $Header$
+ */
 
 #include "GaudiKernel/ICnvFactory.h"
 #include "GaudiKernel/ISvcFactory.h"

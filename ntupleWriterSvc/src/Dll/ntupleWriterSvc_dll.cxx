@@ -1,19 +1,13 @@
-//====================================================================
-//  ntupleWrtier_dll.cpp
-//--------------------------------------------------------------------
-//
-//  Package    : ntupleWriterSvc
-//
-//  Description: Implementation of DllMain routine.
-//               The DLL initialisation must be done seperately for 
-//               each DLL. 
-//
-//  Author     : H. Gillespie
-//  Created    : 1 Aug 00
-//  Changes    : 
-//               Version copied from Glast, and addopted for ntupleWriter
-//
-//====================================================================
+/** 
+ * @file ntupleWriterSvc_dll.cxx
+ *
+ * @brief Implementation of the DllMain routine.  
+ * The DLL initialization must be done seperately for each DLL. 
+ * 
+ * @author H. Gillespie
+ * 
+ * $Header$
+ */
 
 // DllMain entry point
 #include "GaudiKernel/DllMain.icpp"
