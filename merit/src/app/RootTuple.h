@@ -23,6 +23,8 @@ public:
 
     //! return false when no more events
     bool nextEvent();
+
+    int numEvents(){return m_numEvents;}
 private:
     TTree * m_tree;
 
