@@ -107,6 +107,13 @@ public:
 /// bias factor 2     
 	float m_b1;    
 
+/// golp factor 0 
+	float m_k0;
+/// golp factor 1 
+	float m_k1;
+/// golp factor 2     
+	float m_k2;    
+
 };
 
 #endif

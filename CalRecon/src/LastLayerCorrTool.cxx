@@ -10,7 +10,6 @@
 // to access an XML containing Digi parameters file
 #include "xml/IFile.h"
 
-
 static const ToolFactory<LastLayerCorrTool>  s_factory;
 const IToolFactory& LastLayerCorrToolFactory = s_factory;
 
@@ -72,6 +71,12 @@ StatusCode LastLayerCorrTool::initialize()
 	    log << MSG::INFO << " value for b0 " << m_b0 << endreq;
         m_b1 = m_ifile.getDouble("lastlayer", "b1");
 	    log << MSG::INFO << " value for b1 " << m_b1 << endreq;
+        m_k0 = m_ifile.getDouble("lastlayer", "k0");
+	    log << MSG::INFO << " value for k0 " << m_k0 << endreq;
+        m_k1 = m_ifile.getDouble("lastlayer", "k1");
+	    log << MSG::INFO << " value for k1 " << m_k1 << endreq;
+        m_k2 = m_ifile.getDouble("lastlayer", "k2");
+	    log << MSG::INFO << " value for k2 " << m_k2 << endreq;
     }
     else return StatusCode::FAILURE;
 
@@ -129,7 +134,7 @@ StatusCode LastLayerCorrTool::doEnergyCorr(double eTotal, Event::CalCluster* clu
 
 	  ntracks = tkrRecData->size();
 	  //log << MSG::DEBUG << "number of tracks = " << ntracks << endreq;
-	  //cout<<">> number of tracks "<< ntracks <<endl;	  
+
 	  Vector trackDirection;
 	  Point trackVertex;
 	double slope=0;
@@ -148,18 +153,22 @@ StatusCode LastLayerCorrTool::doEnergyCorr(double eTotal, Event::CalCluster* clu
 	    
 	    //find projected positions on the 0,0,0 plane
 	    px = trackVertex[0]+sqrt((-trackVertex[2]/thetarec)*(-trackVertex[2]/thetarec)-trackVertex[2]*trackVertex[2])*cos(phirec); 
+	   
 	    py = trackVertex[1]+sqrt((-trackVertex[2]/thetarec)*(-trackVertex[2]/thetarec)-trackVertex[2]*trackVertex[2])*sin(phirec); 
-	    //cout<<px<<"    "<<py<<endl;
+	    px = px+(m_k0-m_k1*thetarec+m_k2*thetarec*thetarec)*cos(phirec);
+
+	    py = py+(m_k0-m_k1*thetarec+m_k2*thetarec*thetarec)*sin(phirec);
+
 	    //log << MSG::INFO << "track direction = " << thetarec << endreq;
             
         } else {
 	  //log << MSG::DEBUG << "No reconstructed tracks " << endreq;
         }	
 
-	//for now valid up to 5 degrees.. 
-	if (-thetarec < 0.996 ) {setEnergyCorr(-3.);return sc;}
+	//for now valid up to 26 degrees.. 
+	if (-thetarec < 0.898 ) {setEnergyCorr(-3.);return sc;}
 
-	//make cuts for the 0-5 degree limit. Will later make the (theta,phi) dependence available
+	//make cuts for the 0-26 degree limit. Will later make the (theta,phi) dependence available
 
 	if (fabs(fabs(fabs(fabs(px)-375)-187.5)-187.5)>55 && fabs(fabs(fabs(fabs(py)-375)-187.5)-187.5)>55) {
 
@@ -173,21 +182,23 @@ StatusCode LastLayerCorrTool::doEnergyCorr(double eTotal, Event::CalCluster* clu
         double lnE = log(eTotal/1000.);
         double funcoef = (p0 + p1 * lnE )/(1+exp(-p2*(lnE - p3)));
 	  */
+	  
+	double acoef = m_c0 - m_c1*thetarec + m_c2*thetarec*thetarec;
 
         double lnE = log(eTotal/1000.);
-        double funcoef = (m_c0 + m_c1 * lnE )/(1+exp(-m_c2*(lnE - m_c3)));
+        double funcoef = (acoef + m_c3 * lnE );
 	double E1 = eTotal + funcoef* cluster->getEneLayer()[getNLayers()-1];
 	double biascoef = m_b0 + m_b1*log(E1/1000);
 	double E2 = E1/biascoef;
-	funcoef = (m_c0 + m_c1 * log(E2/1000) )/(1-exp(-m_c2*(log(E2/1000) - m_c3)));
+	funcoef = (acoef + m_c3 * log(E2/1000) );
 	///first iteration
 	double E3 = eTotal + funcoef* cluster->getEneLayer()[getNLayers()-1];
 	biascoef= m_b0 + m_b1*log(E3/1000);
 	double E4 = E3/biascoef;
-	funcoef = (m_c0 + m_c1 * log(E4/1000) )/(1-exp(-m_c2*(log(E4/1000) - m_c3)));
+	funcoef = (acoef + m_c3 * log(E4/1000) );
 	///second iteration.. probably overkill
 	setEnergyCorr( E4);
-	
+
         //setEnergyCorr( funcoef * cluster->getEneLayer()[getNLayers()-1]);
 
 	} else {setEnergyCorr(-4);}

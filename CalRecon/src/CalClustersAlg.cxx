@@ -254,7 +254,6 @@ StatusCode CalClustersAlg::execute()
         ntracks = tkrRecData->size();
         log << MSG::DEBUG << "number of tracks = " << ntracks << endreq;
         
-        
         if (ntracks > 0) {
             rectkr++;
             trackDirection = tkrRecData->front()->getDirection();
