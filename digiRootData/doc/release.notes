@@ -3,6 +3,7 @@ Package digiRootData
 Coordinator:H.Kelly
 @verbatim
 
+v7r2      16-Jun-2004 THB convert to use comprehensive pattern
 v7r1      16-Jun-2004 THB Use new RootPolicy scheme for building rootcint files
 v7r0      27-May-2004 HMK Move to use LDF Online library rather than EBF
 v6r0p0    27-Apr-2004 HMK Update for new GlastPolicy version

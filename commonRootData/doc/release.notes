@@ -3,6 +3,7 @@ Package commonRootData
 Coordinator:H.Kelly
 @verbatim
 
+v0r4    20-jun-2004 THB update to inclusive pattern
 v0r3    16-jun-2004 THB Use new RootPolicy pattern for building rootcint files
 v0r2p6  15-jun-2004 HMK Use any GlastPolicy
 v0r2p4  27-apr-2004 HMK update to new GlastPolicy version

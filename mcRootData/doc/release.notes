@@ -2,7 +2,9 @@
  package mcRootData
  package manager:H.Kelly
  @verbatim
+$Header$
 
+v2r13     20-Jun-2004 THB Update to use comprehensive pattern
 v2r12     16-Jun-2004 THB Use new RootPolicy pattern for building rootcint files
 v2r11p12  15-Jun-2004 HMK Use any GlastPolicy
 v2r11p11  27-Apr-2004 HMK update version of GlastPolicy

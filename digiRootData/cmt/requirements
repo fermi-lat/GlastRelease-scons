@@ -1,18 +1,9 @@
 package digiRootData
-version v7r1
+version v7r2
 # $Id$
 
-use mcRootData v2r*
-use GlastPolicy v*
-
-apply_pattern package_include
-apply_pattern ld_library_path
-apply_pattern package_linkopts
-
-#-------------------------------------------------------
-private
-
 use RootPolicy v4r*
+use mcRootData v2r*
 use ldfExt  v0r*  IExternal
 
 # See RootPolicy for discussion of this pattern
@@ -30,7 +21,5 @@ apply_pattern root_package headers="\
  ../digiRootData/TkrDigi.h\
  ../digiRootData/TowerId.h\
  ../digiRootData/EventSummaryData.h"\
- includes="-I${MCROOTDATAROOT}"
-
-macro test_digiRootDatalinkopts ${digiRootData_shlibflags} 
-application test_digiRootData test/testDigiClasses.cxx
+ includes="-I${MCROOTDATAROOT}"\
+ test_source="test/testDigiClasses.cxx"

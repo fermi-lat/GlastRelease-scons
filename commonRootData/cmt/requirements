@@ -1,15 +1,7 @@
 package commonRootData
-version v0r3
+version v0r4
 # $Id$
 
-use GlastPolicy v*
-
-apply_pattern package_include
-apply_pattern ld_library_path
-
-
-#-------------------------------------------------------
-private
 
 use RootPolicy v4r*
 
@@ -20,6 +12,3 @@ apply_pattern root_package headers="\
  ../commonRootData/RootDataUtil.h\
  ../commonRootData/Exception.h"
 
-
-macro test_commonRootDatalinkopts ${commonRootData_shlibflags}
-#application test_commonRootData test/testCommonClasses.cxx

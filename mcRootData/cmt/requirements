@@ -1,16 +1,7 @@
 package mcRootData
-version v2r12
+version v2r13
 # $Id$
 
-use GlastPolicy v*
-
-
-apply_pattern package_include
-apply_pattern ld_library_path
-apply_pattern package_linkopts
-
-#-------------------------------------------------------
-private
 
 use RootPolicy v4r*
 
@@ -21,9 +12,6 @@ apply_pattern root_package headers="\
  ../mcRootData/McIntegratingHit.h\
  ../mcRootData/McParticle.h\
  ../mcRootData/McPositionHit.h\
- ../mcRootData/McEvent.h"
-
-macro test_mcRootDatalinkopts ${mcRootData_shlibflags}
-
-application test_mcRootData test/testMcClasses.cxx
+ ../mcRootData/McEvent.h"\
+ test_source="test/testMcClasses.cxx"
 

@@ -1,16 +1,9 @@
 package reconRootData
 # $Id$
-version v4r6
+version v4r7
 
-use GlastPolicy v*
 use digiRootData v7r*
 
-apply_pattern package_include
-apply_pattern ld_library_path
-apply_pattern package_linkopts
-
-#--------------------------------------------------------------
-private
 use RootPolicy v4r*
 
 # See RootPolicy for discussion of this pattern
@@ -32,7 +25,5 @@ apply_pattern root_package headers="\
  ../reconRootData/TkrRecon.h\
  ../reconRootData/TkrTrack.h\
  ../reconRootData/TkrVertex.h"\
- includes="-I$(DIGIROOTDATAROOT)"
-
-macro test_reconRootDatalinkopts ${reconRootData_shlibflags}
-application test_reconRootData test/testReconClasses.cxx
+ includes="-I$(DIGIROOTDATAROOT)"\
+ test_source="test/testReconClasses.cxx"
