@@ -11,6 +11,8 @@ class GDDaxisMPos : public GDDstackedPos {
 public:
 
   GDDaxisMPos(axisDir dir):GDDstackedPos(dir),shift0(0),gap0(0),ncopy(0){};
+  GDDaxisMPos():GDDstackedPos(),shift0(0),gap0(0),ncopy(0){};
+
   virtual void Accept(GDDsectionsVisitor* v);  
   virtual void AcceptNotRec(GDDsectionsVisitor* v){v->visitAxisMPos(this);};
 

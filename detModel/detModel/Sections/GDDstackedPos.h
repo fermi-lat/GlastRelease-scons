@@ -14,6 +14,11 @@ class GDDstackedPos :public GDDposition {
     GDDposition(),aDir(dir),
     dx(0),dy(0),dz(0),
     rotation(0),shift(0),gap(0){;}
+
+  GDDstackedPos():
+    GDDposition(),aDir(xDir),
+    dx(0),dy(0),dz(0),
+    rotation(0),shift(0),gap(0){;}
   
   axisDir getAxisDir(){return aDir;};
   void setAxisDir(axisDir dir){aDir = dir;};

@@ -43,7 +43,7 @@ void GDDXercesBuilder::parseFile(char* nameFile){
   unsigned int iSec;
 
   xml::XmlParser* parser = new xml::XmlParser();
-
+  
   domfile = parser->parse(nameFile);
 
   xmlUtil::Substitute* sub = new xmlUtil::Substitute(domfile);
@@ -52,7 +52,7 @@ void GDDXercesBuilder::parseFile(char* nameFile){
   DOM_Element curConst;
   
   DOM_NodeList sections = docElt.getElementsByTagName(DOMString("section"));
-
+  
   for (iSec = 0; iSec < sections.getLength(); iSec++) {
     DOM_Node  secNode = sections.item(iSec);
     DOM_Element& secElt = static_cast<DOM_Element &> (secNode);
@@ -66,7 +66,7 @@ void GDDXercesBuilder::parseFile(char* nameFile){
   if (tmp != DOM_Element())
     {
       tmp = xml::Dom::findFirstChildByName(tmp, "derCategory" );
-  
+      
       while(tmp != DOM_Element())
 	{
 	  curConst = xml::Dom::findFirstChildByName(tmp, "const" );
@@ -113,7 +113,6 @@ GDDconst* GDDXercesBuilder::buildConst(DOM_Node* e){
       int val=atoi(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
       c->setName(name);
       c->setConstMeaning(ut);
-      c->setConstType(i);
       c->setValue(val);
       c->setNote(std::string(xml::Dom::transToChar(e->getFirstChild().getNodeValue())));
       return c;
@@ -123,7 +122,6 @@ GDDconst* GDDXercesBuilder::buildConst(DOM_Node* e){
       float val=atof(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
       c->setName(name);
       c->setConstMeaning(ut);
-      c->setConstType(f);
       c->setValue(val);
       c->setNote(std::string(xml::Dom::transToChar(e->getFirstChild().getNodeValue())));
       return c;
@@ -133,7 +131,6 @@ GDDconst* GDDXercesBuilder::buildConst(DOM_Node* e){
       double val=atof(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
       c->setName(name);
       c->setConstMeaning(ut);
-      c->setConstType(d);
       c->setValue(val);
       c->setNote(std::string(xml::Dom::transToChar(e->getFirstChild().getNodeValue())));
       return c;
@@ -143,7 +140,6 @@ GDDconst* GDDXercesBuilder::buildConst(DOM_Node* e){
       std::string val=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
       c->setName(name);
       c->setConstMeaning(ut);
-      c->setConstType(s);
       c->setValue(val);
       c->setNote(std::string(xml::Dom::transToChar(e->getFirstChild().getNodeValue())));
       return c;
@@ -159,7 +155,6 @@ GDDconst* GDDXercesBuilder::buildConst(DOM_Node* e){
 
     c->setName(name);
     c->setConstMeaning(ut);
-    c->setConstType(d);
     c->setValue(val);
     
     n = static_cast<DOM_Element&>(*e);
@@ -171,6 +166,7 @@ GDDconst* GDDXercesBuilder::buildConst(DOM_Node* e){
     return c;
   }//end else
 }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void GDDXercesBuilder::buildConstants(){
   unsigned int i,j;
@@ -329,8 +325,8 @@ GDDbox* GDDXercesBuilder::buildBox(DOM_Node* e)
   DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
   GDDbox* b = new GDDbox(xml::Dom::getAttribute(el, "name"));
 
-  b->setUnitLength(xml::Dom::transToChar(el.getAttribute("unitLength")));
-  b->setUnitAngle(xml::Dom::transToChar(el.getAttribute("unitAngle")));
+  // b->setUnitLength(xml::Dom::transToChar(el.getAttribute("unitLength")));
+  // b->setUnitAngle(xml::Dom::transToChar(el.getAttribute("unitAngle")));
   if(el.getAttribute("X") != "0")
     b->setX(atof(xml::Dom::transToChar(el.getAttribute("X"))));
   if(el.getAttribute("Y") != "0")
@@ -390,24 +386,68 @@ GDDcomposition* GDDXercesBuilder::buildComposition(DOM_Node* e){
   };
 
   DOM_NodeList childs = e->getChildNodes();
-
+  
   for(i=0;i<childs.getLength();i++){
-      if (childs.item(i).getNodeType()!=Comment)
-	b->addPosition(buildPosition( &(childs.item(i)) ));
+    if (childs.item(i).getNodeType()!=Comment)
+      b->addPosition(buildPosition( &(childs.item(i)) ));
       
   };
 
   return b;
 }
 
+//////////////////////////////////////////////////////////////////////////
+GDDstack* GDDXercesBuilder::buildStack(DOM_Node* e){
+  GDDstack::axisDir st;
+  unsigned int i;
+
+  std::string Stack = std::string(xml::Dom::transToChar( e->getNodeName() ));
+  if(Stack=="stackX")st=GDDstack::xDir;
+  else if(Stack=="stackY")st=GDDstack::yDir;
+  else st=GDDstack::zDir;
+
+  GDDstack* b = new GDDstack(st);
+
+  DOM_NamedNodeMap attributelist=e->getAttributes();
+  for (i=0;i<attributelist.getLength();i++){
+    if (attributelist.item(i).getNodeType()!=Comment){
+      DOM_Node currentAttribute=attributelist.item(i);
+   
+       std::string value = std::string(xml::Dom::transToChar( currentAttribute.getNodeValue() ));
+       std::string attributeName = 
+	 std::string(xml::Dom::transToChar( currentAttribute.getNodeName() ));
+       
+       if( attributeName=="name") b->setName(value);
+       else if (attributeName=="origin"){
+	 if (value=="atStart")b->setOrigin(GDDstack::atStart);
+	 else b->setOrigin(GDDstack::atCentre);
+       }
+       else if (attributeName== "parameters")b->setParameters(value);
+    }
+  }
+
+  DOM_NodeList childs = e->getChildNodes();
+  
+  
+  for(i=0;i<childs.getLength();i++){
+    if ( (childs.item(i)).getNodeType()!=Comment){
+      GDDstackedPos* p = buildRelativePosition( &(childs.item(i)));
+      p->setAxisDir((GDDstackedPos::axisDir)st);
+      b->addPosition(p);
+    }
+  };
+  
+  return b;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
-GDDanyPosition* GDDXercesBuilder::buildPosition(DOM_Node* e){
+GDDsinglePos* GDDXercesBuilder::buildPosition(DOM_Node* e){
 
   std::string posType = std::string(xml::Dom::transToChar(e->getNodeName()));
   
   if (posType=="posXYZ"){
     
-    GDDposXYZ* pos=new GDDposXYZ(posXYZ);
+    GDDposXYZ* pos=new GDDposXYZ();
     setAttributePosition(pos, e);
        
     DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
@@ -431,7 +471,7 @@ GDDanyPosition* GDDXercesBuilder::buildPosition(DOM_Node* e){
 
 
 /////////////////////////////////////////////////////////////////////////
-GDDanyRelativePosition* GDDXercesBuilder::buildRelativePosition(DOM_Node* e){
+GDDstackedPos* GDDXercesBuilder::buildRelativePosition(DOM_Node* e){
 
   std::string posType = std::string(xml::Dom::transToChar(e->getNodeName()));
   //AxisPos,AxisMpos
@@ -463,51 +503,8 @@ GDDanyRelativePosition* GDDXercesBuilder::buildRelativePosition(DOM_Node* e){
     
   }
 }
-//////////////////////////////////////////////////////////////////////////
-GDDstack* GDDXercesBuilder::buildStack(DOM_Node* e){
-  stacktype st;
-  unsigned int i;
 
-  std::string Stack = std::string(xml::Dom::transToChar( e->getNodeName() ));
-  if(Stack=="stackX")st=sx;
-  else if(Stack=="stackY")st=sy;
-  else st=sz;
-
-  GDDstack* b = new GDDstack(st);
-
-  DOM_NamedNodeMap attributelist=e->getAttributes();
-  for (i=0;i<attributelist.getLength();i++){
-    if (attributelist.item(i).getNodeType()!=Comment){
-      DOM_Node currentAttribute=attributelist.item(i);
-   
-       std::string value = std::string(xml::Dom::transToChar( currentAttribute.getNodeValue() ));
-       std::string attributeName = 
-	 std::string(xml::Dom::transToChar( currentAttribute.getNodeName() ));
-       
-       if( attributeName=="name") b->setName(value);
-       else if (attributeName=="origin"){
-	 if (value=="atStart")b->setOrigin(atStart);
-	 else b->setOrigin(atCentre);
-       }
-       else if (attributeName== "parameters")b->setParameters(value);
-    }
-  }
-
-  DOM_NodeList childs = e->getChildNodes();
-
-
-  for(i=0;i<childs.getLength();i++){
-    if ( (childs.item(i)).getNodeType()!=Comment){
-      GDDanyRelativePosition* p = buildRelativePosition( &(childs.item(i)));
-      p->setPosDir(st);
-      b->addPosition(p);
-    }
-  };
-  
-  return b;
-}
-
-void GDDXercesBuilder::setAttributePosition(GDDanyPosition* pos, DOM_Node* e)
+void GDDXercesBuilder::setAttributePosition(GDDsinglePos* pos, DOM_Node* e)
 {
   DOM_NamedNodeMap attributelistPos=e->getAttributes();
 
@@ -517,22 +514,22 @@ void GDDXercesBuilder::setAttributePosition(GDDanyPosition* pos, DOM_Node* e)
   pos->setVolumeRef(xml::Dom::transToChar(node.getNodeValue()));
 
   node = attributelistPos.getNamedItem(DOMString("xrot"));
-  pos->setXrot(atof(xml::Dom::transToChar(node.getNodeValue())));
+  pos->setXRot(atof(xml::Dom::transToChar(node.getNodeValue())));
 
   node = attributelistPos.getNamedItem(DOMString("yrot"));
-  pos->setYrot(atof(xml::Dom::transToChar(node.getNodeValue())));
+  pos->setYRot(atof(xml::Dom::transToChar(node.getNodeValue())));
 
   node = attributelistPos.getNamedItem(DOMString("zrot"));
-  pos->setZrot(atof(xml::Dom::transToChar(node.getNodeValue())));
+  pos->setZRot(atof(xml::Dom::transToChar(node.getNodeValue())));
 
   node = attributelistPos.getNamedItem(DOMString("S"));
   pos->setS(atof(xml::Dom::transToChar(node.getNodeValue())));
 
-  node = attributelistPos.getNamedItem(DOMString("unitLength"));
-  pos->setUnitLength(xml::Dom::transToChar(node.getNodeValue()));
+  //  node = attributelistPos.getNamedItem(DOMString("unitLength"));
+  // pos->setUnitLength(xml::Dom::transToChar(node.getNodeValue()));
 
-  node = attributelistPos.getNamedItem(DOMString("unitAngle"));
-  pos->setUnitAngle(xml::Dom::transToChar(node.getNodeValue()));
+  // node = attributelistPos.getNamedItem(DOMString("unitAngle"));
+  // pos->setUnitAngle(xml::Dom::transToChar(node.getNodeValue()));
 
 
   if (e->hasChildNodes()){
@@ -559,7 +556,7 @@ void GDDXercesBuilder::setAttributePosition(GDDanyPosition* pos, DOM_Node* e)
   }
 }
 
-void GDDXercesBuilder::setAttributeRelativePosition(GDDanyRelativePosition* pos, DOM_Node* e)
+void GDDXercesBuilder::setAttributeRelativePosition(GDDstackedPos* pos, DOM_Node* e)
 {
   DOM_NamedNodeMap attributelistPos=e->getAttributes();
 
@@ -580,11 +577,11 @@ void GDDXercesBuilder::setAttributeRelativePosition(GDDanyRelativePosition* pos,
   node = attributelistPos.getNamedItem(DOMString("rotation"));
   pos->setRotation(atof(xml::Dom::transToChar(node.getNodeValue())));
 
-  node = attributelistPos.getNamedItem(DOMString("unitLength"));
-  pos->setUnitLength(xml::Dom::transToChar(node.getNodeValue()));
+  // node = attributelistPos.getNamedItem(DOMString("unitLength"));
+  // pos->setUnitLength(xml::Dom::transToChar(node.getNodeValue()));
 
-  node = attributelistPos.getNamedItem(DOMString("unitAngle"));
-  pos->setUnitAngle(xml::Dom::transToChar(node.getNodeValue()));
+  // node = attributelistPos.getNamedItem(DOMString("unitAngle"));
+  // pos->setUnitAngle(xml::Dom::transToChar(node.getNodeValue()));
 
   node = attributelistPos.getNamedItem(DOMString("gap"));
   pos->setGap(atof(xml::Dom::transToChar(node.getNodeValue())));

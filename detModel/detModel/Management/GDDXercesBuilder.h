@@ -8,9 +8,9 @@
 class GDDsection;
 class GDDbox;
 class GDDcomposition;
-class GDDanyPosition;
+class GDDsinglePos;
+class GDDstackedPos;
 class GDDstack;
-class GDDanyRelativePosition;
 class GDDchoice;
 class GDDcontants;
 class GDDconst;
@@ -70,21 +70,13 @@ class GDDXercesBuilder : public GDDbuilder {
    */
   GDDbox* buildBox(DOM_Node* e);
   /**
-   * This method build a GDDanyPosition object and return a pointer to it
+   * This method build a GDDposition object and return a pointer to it
    */
-  GDDanyPosition* buildPosition(DOM_Node* e);
-  /**
-   * This method build a GDDanyrelativePosition object and return a pointer to it
-   */
-  GDDanyRelativePosition* buildRelativePosition(DOM_Node* e);
-  /**
-   * This method permits to specify the generic attributes of a position
-   */  
-  void setAttributePosition(GDDanyPosition* pos, DOM_Node* e);
-  /**
-   * This method permits to specify the generic attributes of a relative position
-   */  
-  void setAttributeRelativePosition(GDDanyRelativePosition* pos, DOM_Node* e);
+  GDDsinglePos* buildPosition(DOM_Node* e);
+  GDDstackedPos* buildRelativePosition(DOM_Node* e);
+
+  void setAttributePosition(GDDsinglePos* pos, DOM_Node* e);
+  void setAttributeRelativePosition(GDDstackedPos* pos, DOM_Node* e);
 
  private:
   /**
@@ -95,6 +87,9 @@ class GDDXercesBuilder : public GDDbuilder {
   enum{Comment=8}; 
 };
 #endif //GDDXERCESBUILDER_H
+
+
+
 
 
 
