@@ -42,7 +42,7 @@ library  gui -no_share \
  DisplayRep.cxx       PSdraw.h         \
  GraphicsVector.cxx   PrintControl.cxx  \
  GuiMgr.cxx           Projector.cxx     \
- Scene.cxx            GUi.cxx \
+ Scene.cxx            GUI.cxx \
  ../gui/*.h 
 
 # these are system-dependent (windows/motif) and are only needed for an executable
