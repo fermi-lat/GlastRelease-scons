@@ -46,25 +46,31 @@ public:
         TransportStepInfo(const G4ThreeVector&     coords, 
                           const G4ThreeVector&     dir,
                           G4double                 step, 
+                          const G4AffineTransform& trans,
                           const G4VPhysicalVolume* vol) :
-                          position(coords), direction(dir), arcLen(step), stepVolume(vol) {};
+                          position(coords), direction(dir), arcLen(step), 
+                          stepVolume(vol), globalToLocal(trans) {};
        ~TransportStepInfo() {};
 
-        G4ThreeVector            GetCoords()    const {return position;}
-        G4ThreeVector            GetDirection() const {return direction;}
-        G4double                 GetArcLen()    const {return arcLen;}
-        const G4VPhysicalVolume* getVolume()    const {return stepVolume;}
+        G4ThreeVector            GetEntryPoint()    const {return position;}
+        G4ThreeVector            GetEndPoint()      const {return position + arcLen * direction;}
+        G4ThreeVector            GetDirection()     const {return direction;}
+        G4double                 GetArcLen()        const {return arcLen;}
+        const G4AffineTransform& GetGlobalToLocal() const {return globalToLocal;}
+        const G4VPhysicalVolume* GetVolume()        const {return stepVolume;}
 
-        void SetCoords(const G4ThreeVector& coords)  {position   = coords;}
-        void SetDirection(const G4ThreeVector& dir)  {direction  = dir;}
-        void SetArcLen(const G4double newArcLen)     {arcLen     = newArcLen;}
-        void SetVolume(const G4VPhysicalVolume* vol) {stepVolume = vol;}
+        void SetCoords(const G4ThreeVector& coords)       {position   = coords;}
+        void SetDirection(const G4ThreeVector& dir)       {direction  = dir;}
+        void SetArcLen(const G4double newArcLen)          {arcLen     = newArcLen;}
+        void SetTransform(const G4AffineTransform& trans) {globalToLocal = trans;}
+        void SetVolume(const G4VPhysicalVolume* vol)      {stepVolume = vol;}
     
     private:
-        G4ThreeVector            position;    // The position at the start of this step 
-        G4ThreeVector            direction;   // The direction at the start of this step
-        G4double                 arcLen;      // The arc length of this step
-        const G4VPhysicalVolume* stepVolume;  // Pointer to the G4 Logical Volume step taken in
+        G4ThreeVector            position;      // The position at the start of this step 
+        G4ThreeVector            direction;     // The direction at the start of this step
+        G4double                 arcLen;        // The arc length of this step
+        G4AffineTransform        globalToLocal; // Pointer to global to local coordinate transform
+        const G4VPhysicalVolume* stepVolume;    // Pointer to the G4 Logical Volume step taken in
     };
 
     /// Useful typedefs for using the above internal class
@@ -142,8 +148,10 @@ private:
     StepVector stepInfo;
 
     //Initial start point, direction and desired step size
-    //Point      startPoint;
-    //Vector     startDir;
+    Point      prevStartPoint;
+    Vector     prevStartDir;
+    double     prevArcLen;
+    bool       sameStartParams;
 
     /// This is needed for associating Geant4 volumes to Glast identifiers
     IG4GeometrySvc* m_geometrySvc;

@@ -246,18 +246,17 @@ Point G4PropagationTool::getPosition(double arcLen) const
 
         if (arcLen < 0. || arcLen >= totArcLen)
         {
-            G4ThreeVector  stopPoint = getLastStep().GetCoords();
+            G4ThreeVector  stopPoint = getLastStep().GetEndPoint();
 
             final = Point(stopPoint.x(),stopPoint.y(),stopPoint.z());
         }
         else
         {
-                G4ThreeVector  startPoint = getStepStart()->GetCoords();
-                G4ThreeVector  lastPoint  = getLastStep().GetCoords();
-                G4ThreeVector  startDir   = getLastStep().GetDirection();
-                G4ThreeVector  stopPoint  = startPoint + arcLen * startDir;
+            G4ThreeVector  startPoint = getStepStart()->GetEntryPoint();
+            G4ThreeVector  startDir   = getStepStart()->GetDirection();
+            G4ThreeVector  stopPoint  = startPoint + arcLen * startDir;
 
-                final = Point(stopPoint.x(),stopPoint.y(),stopPoint.z());
+            final = Point(stopPoint.x(),stopPoint.y(),stopPoint.z());
         }
     }
 
@@ -277,11 +276,11 @@ Point G4PropagationTool::getStepPosition(int stepIdx) const
 
     if (idx < 0 || idx >= getNumberSteps()) idx = getNumberSteps();
 
-    G4ThreeVector stepPoint = getStep(stepIdx).GetCoords();
-    G4ThreeVector dir       = getStep(stepIdx).GetDirection();
-    double        arclen    = getStep(idx).GetArcLen();
+    G4ThreeVector stepPoint = getStep(stepIdx).GetEndPoint();
+    //G4ThreeVector dir       = getStep(stepIdx).GetDirection();
+    //double        arclen    = getStep(idx).GetArcLen();
 
-    stepPoint = stepPoint - 0.5*arclen*dir;
+    //stepPoint = stepPoint - 0.5*arclen*dir;
 
     return Point(stepPoint.x(),stepPoint.y(),stepPoint.z());
 }
@@ -447,8 +446,7 @@ HepMatrix G4PropagationTool::getMscatCov(double arcLenIn, double momentum, bool 
     {
         TransportStepInfo  curStep = *stepPtr++;
 
-        const G4VPhysicalVolume* pCurVolume = curStep.getVolume();
-        //G4VPhysicalVolume* pCurVolume = getVolume(curStep.GetCoords(), true);
+        const G4VPhysicalVolume* pCurVolume = curStep.GetVolume();
         G4Material* pMaterial  = pCurVolume->GetLogicalVolume()->GetMaterial();
 
         double radLengths = pMaterial->GetRadlen();
@@ -533,8 +531,7 @@ double G4PropagationTool::getStepRadLength(int stepIdx) const
 
     if (idx < 0 || idx >= getNumberSteps()) idx = getNumberSteps();
 
-    const G4VPhysicalVolume* pCurVolume = getStep(idx).getVolume();
-    //G4VPhysicalVolume* pCurVolume = getVolume(getStep(idx).GetCoords(), true);
+    const G4VPhysicalVolume* pCurVolume = getStep(idx).GetVolume();
     G4Material*        pMaterial  = pCurVolume->GetLogicalVolume()->GetMaterial();
 
     double matRadLen = pMaterial->GetRadlen();
@@ -569,9 +566,8 @@ double G4PropagationTool::getRadLength(double arcLenIn) const
     {
         TransportStepInfo  curStep = *stepPtr++;
 
-        const G4VPhysicalVolume* pCurVolume = curStep.getVolume();
-        //G4VPhysicalVolume* pCurVolume = getVolume(curStep.GetCoords(), true);
-        G4Material*        pMaterial  = pCurVolume->GetLogicalVolume()->GetMaterial();
+        const G4VPhysicalVolume* pCurVolume = curStep.GetVolume();
+        G4Material*              pMaterial  = pCurVolume->GetLogicalVolume()->GetMaterial();
 
 
         double matRadLen = pMaterial->GetRadlen();
@@ -662,7 +658,7 @@ bool   G4PropagationTool::isTkrPlane(int& view)        const
 
 //**    G4VPhysicalVolume* pCurVolume = getVolume(getLastStep().GetCoords(), true);
 
-    idents::VolumeIdentifier id = constructId(getLastStep().GetCoords(), getLastStep().GetDirection());
+    idents::VolumeIdentifier id = constructId(getLastStep().GetEndPoint(), getLastStep().GetDirection());
 
     // This test is specifically for the tracker.
     // Return "false" otherwise
@@ -725,7 +721,7 @@ idents::VolumeIdentifier G4PropagationTool::getVolumeId(double arcLen) const
 
 //    G4VPhysicalVolume* pCurVolume = getVolume(stepPtr->GetCoords(), true);
 
-    return constructId(stepPtr->GetCoords(), true);
+    return constructId(stepPtr->GetEndPoint(), true);
 }
 
 //! Return volume identifer after stepping
@@ -743,7 +739,7 @@ idents::VolumeIdentifier G4PropagationTool::getStepVolumeId(int stepIdx) const
 
 //    G4VPhysicalVolume* pCurVolume = getVolume(getStep(stepIdx).GetCoords(), true);
 
-    return constructId(getStep(stepIdx).GetCoords(), true);
+    return constructId(getStep(stepIdx).GetEndPoint(), true);
 }
 
 

@@ -34,6 +34,11 @@ ParticleTransporter::ParticleTransporter(const G4TransportationManager* Transpor
 
     clearStepInfo();
 
+    prevStartPoint  = Point(-10000.,-10000.,-10000.);
+    prevStartDir    = Vector(0.,0.,0.);
+    prevArcLen      = 0.;
+    sameStartParams = false;
+
     return;
 }
 
@@ -58,36 +63,51 @@ void ParticleTransporter::setInitStep(const Point& start,  const Vector& dir)
     // Dependencies: None
     // Restrictions and Caveats: None
 
-    // Clean out any previous step information
-    clearStepInfo();
-
-    // Store the starting point and direction
-    //startPoint  = start;
-    //startDir    = dir;
-
-    // Test for transportation manager!!
-    if (!m_TransportationManager) setTransportationManager(m_geometrySvc->getTransportationManager());
-
-    // Set the volume hierarchy for our initial point
-    G4Navigator*       navigator = m_TransportationManager->GetNavigatorForTracking();
-    G4VPhysicalVolume* pVolume   = navigator->LocateGlobalPointAndSetup(start, 0, true, false);
-
-    // Let's be sure that we are inside a valid volume (ie inside of GLAST - it can happen!)
-    if (!pVolume) 
+    // Compare start position and direction to last start and direction
+    // This is an attempt to cache info in order to prevent repeated running of propagator
+    // over the same parameters
+    if (const_cast<Point&>(start) == prevStartPoint && const_cast<Vector&>(dir) == prevStartDir)
     {
-        std::stringstream errorStream;
-        errorStream << "ParticleTransporter given invalid initial conditions. pos: " 
-                    << start << " dir: " << dir;
-        throw std::domain_error(errorStream.str());
+        sameStartParams = true;
     }
+    // Otherwise, this is a new setup so initialize accordingly
+    else
+    {
+        // Clean out any previous step information
+        clearStepInfo();
 
-    // Get the arclength for the first step, if we can...
-    double maxStep  = 1000.;    // Variables used by G4
-    double safeStep = 0.01;     // 
-    double trackLen = navigator->ComputeStep(start, dir, maxStep, safeStep);
+        // Test for transportation manager!!
+        if (!m_TransportationManager) setTransportationManager(m_geometrySvc->getTransportationManager());
 
-    //Record our starting point
-    stepInfo.push_back(TransportStepInfo(start, dir, trackLen, pVolume));
+        // Set the volume hierarchy for our initial point
+        G4Navigator*       navigator = m_TransportationManager->GetNavigatorForTracking();
+        G4VPhysicalVolume* pVolume   = navigator->LocateGlobalPointAndSetup(start, 0, true, false);
+
+        // Let's be sure that we are inside a valid volume (ie inside of GLAST - it can happen!)
+        if (!pVolume) 
+        {
+            std::stringstream errorStream;
+            errorStream << "ParticleTransporter given invalid initial conditions. pos: " 
+                        << start << " dir: " << dir;
+            throw std::domain_error(errorStream.str());
+        }
+
+        // Get the arclength for the first step, if we can...
+        double maxStep  = 1000.;    // Variables used by G4
+        double safeStep = 0.01;     // 
+        double trackLen = navigator->ComputeStep(start, dir, maxStep, safeStep);
+
+        const G4AffineTransform& globalToLocal = navigator->GetGlobalToLocalTransform();
+
+        //Record our starting point
+        stepInfo.push_back(TransportStepInfo(start, dir, trackLen, globalToLocal, pVolume));
+
+        // Update previous state info
+        prevStartPoint  = start;
+        prevStartDir    = dir;
+        prevArcLen      = 0.;
+        sameStartParams = false;
+    }
 
     return;
 }
@@ -110,7 +130,7 @@ bool ParticleTransporter::transport(const double step)
 
 Point  ParticleTransporter::getStartPoint() const
 {
-    G4ThreeVector startPoint = getStep(0).GetCoords();
+    G4ThreeVector startPoint = getStep(0).GetEntryPoint();
     return Point(startPoint.x(),startPoint.y(),startPoint.z());
 }
 
@@ -135,7 +155,7 @@ bool ParticleTransporter::StepToNextPlane()
   G4Navigator*  navigator      = m_TransportationManager->GetNavigatorForTracking();
   G4bool        RelativeSearch = false;
   bool          success        = false;
-  G4ThreeVector curPoint       = stepInfo.back().GetCoords();
+  G4ThreeVector curPoint       = stepInfo.back().GetEndPoint();
   G4ThreeVector curDir         = stepInfo.back().GetDirection();
   G4double      arcLen         = stepInfo.back().GetArcLen();
 
@@ -153,8 +173,9 @@ bool ParticleTransporter::StepToNextPlane()
       double maxStep = 1000.;
       double safeStep;
 
-      const G4VPhysicalVolume* pCurVolume = navigator->LocateGlobalPointAndSetup(curPoint, 0, true, true);
-      double                   trackLen   = navigator->ComputeStep(curPoint, curDir, maxStep, safeStep);
+      const G4VPhysicalVolume* pCurVolume    = navigator->LocateGlobalPointAndSetup(curPoint, 0, true, false);
+      G4AffineTransform        globalToLocal = navigator->GetGlobalToLocalTransform();
+      double                   trackLen      = navigator->ComputeStep(curPoint, curDir, maxStep, safeStep);
 
       //If we are right on the boundary then jump over and recalculate
       if (trackLen == 0.)
@@ -162,8 +183,9 @@ bool ParticleTransporter::StepToNextPlane()
         double        fudge      = 0.01; // 10 um over the edge
         G4ThreeVector fudgePoint = curPoint + fudge*curDir;
 
-        pCurVolume = navigator->LocateGlobalPointAndSetup(fudgePoint, 0, true, true);
-        trackLen   = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
+        pCurVolume    = navigator->LocateGlobalPointAndSetup(fudgePoint, 0, true, false);
+        globalToLocal = navigator->GetGlobalToLocalTransform();
+        trackLen      = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
       }
 
       //If infinite trackLen then we have stepped outside of GLAST
@@ -181,9 +203,6 @@ bool ParticleTransporter::StepToNextPlane()
       if (pSiVolume)
       {
           // this transforms it to local coordinates
-          //**G4ThreeVector trackPos = navigator->ComputeLocalPoint(curPoint);
-          //**G4ThreeVector trackDir = navigator->ComputeLocalAxis(curDir);
-          const G4AffineTransform& globalToLocal = navigator->GetGlobalToLocalTransform();
           G4ThreeVector trackPos = globalToLocal.TransformPoint(curPoint);
           G4ThreeVector trackDir = globalToLocal.IsRotated() ? globalToLocal.TransformAxis(curDir) : curDir;
 
@@ -194,7 +213,7 @@ bool ParticleTransporter::StepToNextPlane()
       //Where did we end up?
       G4ThreeVector newPoint = curPoint + trackLen * curDir;
 
-      stepInfo.push_back(TransportStepInfo(newPoint, curDir, trackLen, pCurVolume));
+      stepInfo.push_back(TransportStepInfo(newPoint, curDir, trackLen, globalToLocal, pCurVolume));
 
       arcLen     += trackLen;
       curPoint    = newPoint;
@@ -210,7 +229,7 @@ bool ParticleTransporter::StepToNextPlane()
   //If ending in a sensitive layer then stop in the middle of that volume
   if (success)
     {
-      G4ThreeVector hitPos = stepInfo.back().GetCoords();
+      G4ThreeVector hitPos = stepInfo.back().GetEndPoint();
       G4double      corLen = stepInfo.back().GetArcLen() * 0.5;
 
       hitPos -= corLen * curDir;
@@ -235,11 +254,14 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
     // Dependencies: Requires initialization via SetInitStep
     // Restrictions and Caveats: None
 
+    // First check if this is a repeated step
+    if (sameStartParams && prevArcLen == maxArcLen) return true;
+
     G4Navigator*  navigator = m_TransportationManager->GetNavigatorForTracking();
     bool          success   = false;
     G4double      arcLen    = stepInfo.back().GetArcLen();
     G4ThreeVector curDir    = stepInfo.back().GetDirection();
-    G4ThreeVector curPoint  = stepInfo.back().GetCoords() + arcLen * curDir;
+    G4ThreeVector curPoint  = stepInfo.back().GetEndPoint();
     int           maxTries  = 3;
 
     // If arcLen < maxArcLen then we still need to do some tracking
@@ -261,8 +283,9 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
 
             //Use the G4 navigator to locate the current point, then compute the distance
             //to the volume boundary
-            G4VPhysicalVolume* pCurVolume = navigator->LocateGlobalPointAndSetup(overPoint, 0, true, true);
-            double             trackLen   = navigator->ComputeStep(overPoint, curDir, maxStep, safeStep) + stepOverDist;
+            G4VPhysicalVolume* pCurVolume    = navigator->LocateGlobalPointAndSetup(overPoint, 0, true, false);
+            G4AffineTransform  globalToLocal = navigator->GetGlobalToLocalTransform();
+            double             trackLen      = navigator->ComputeStep(overPoint, curDir, maxStep, safeStep) + stepOverDist;
 
             //If we are right on the boundary then jump over and recalculate
             while(trackLen <= stepOverDist)
@@ -271,11 +294,10 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
                 // Two reasons for the problem: 1) travelling almost exactly parallel to the boundary
                 // or, 2) not parallel
                 // Try to ascertain which here
-                G4bool temp = false;
-                const G4AffineTransform& globalToLocal = navigator->GetGlobalToLocalTransform();
-                const G4ThreeVector      localExitNrml = navigator->GetLocalExitNormal(&temp);
+                G4bool              temp = false;
+                const G4ThreeVector localExitNrml = navigator->GetLocalExitNormal(&temp);
+                G4ThreeVector       trackDir = curDir;
 
-                G4ThreeVector trackDir = curDir;
                 if (globalToLocal.IsRotated()) trackDir = globalToLocal.TransformAxis(curDir);
 
                 double trkToExitAng = trackDir.dot(localExitNrml);
@@ -308,8 +330,9 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
                 }
 
                 // Re-step with new points
-                pCurVolume  = navigator->LocateGlobalPointAndSetup(overPoint, 0, true, true);
-                trackLen    = navigator->ComputeStep(overPoint, curDir, maxStep, safeStep) + stepOverDist;
+                pCurVolume    = navigator->LocateGlobalPointAndSetup(overPoint, 0, true, true);
+                globalToLocal = navigator->GetGlobalToLocalTransform();
+                trackLen      = navigator->ComputeStep(overPoint, curDir, maxStep, safeStep) + stepOverDist;
             }
 
             //If infinite trackLen then we have stepped outside of GLAST
@@ -329,14 +352,14 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
                 {
                     G4double corLen = arcLen - maxArcLen;
 
-                    curPoint -= corLen * curDir;
+                    //curPoint -= corLen * curDir;
                     trackLen -= corLen;
                 }
             }
 
             // Store current information: the point we started the step at, the step length
             // and the pointer to the current G4 logical volume
-            stepInfo.push_back(TransportStepInfo(curPoint, curDir, trackLen, pCurVolume));
+            stepInfo.push_back(TransportStepInfo(curPoint, curDir, trackLen, globalToLocal, pCurVolume));
 
             // Now update the current point for the next loop
             curPoint += trackLen * curDir;
@@ -344,6 +367,9 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
     }
     // If the initialization step has overstepped, reset it here
     else stepInfo.back().SetArcLen(maxArcLen);
+
+    // Save step arc length
+    prevArcLen = maxArcLen;
 
     //Stepping complete
     return success;
@@ -519,7 +545,7 @@ double ParticleTransporter::insideActiveArea() const
     double distInY    = insideActiveLocalY();
 
     if(distInX>0 || distInY>0) {return std::min(distInX, distInY);}
-    else                       {return -sqrt(distInX*distInX + distInY*distInY);}
+    else                       {return std::max(distInX, distInY);}
 }
 
 
@@ -543,53 +569,95 @@ double ParticleTransporter::distanceToEdge(const Vector& dir) const
     if (stepInfo.size() > 0)
     {
         G4Navigator*  navigator = m_TransportationManager->GetNavigatorForTracking();
-        G4ThreeVector stopPoint = (stepInfo.back()).GetCoords();
-        Point         curPoint  = Point(stopPoint.x(),stopPoint.y(),stopPoint.z());
-        G4double      arcLen    = 0.;
-        Vector        curDir    = dir;
+        G4ThreeVector curPoint  = stepInfo.back().GetEndPoint();
+        G4ThreeVector curDir    = dir;
 
         // This needed to insure the volume hierarchy is setup correctly for steps below
-        G4VPhysicalVolume* pCurVolume = navigator->LocateGlobalPointAndSetup(curPoint, 0, true, true);
+        const G4VPhysicalVolume* pCurVolume = stepInfo.back().GetVolume();
+            
+        // Transform the global point and direction to local (to this volume)
+        const G4AffineTransform& globalToLocal = stepInfo.back().GetGlobalToLocal();
+        G4ThreeVector localPos = globalToLocal.TransformPoint(curPoint);
+        G4ThreeVector localDir = curDir;
+        if (globalToLocal.IsRotated()) localDir = globalToLocal.TransformAxis(curDir);
+
+        // Get the distance to leave this volume, in the given direction
+        G4double arcLen = pCurVolume->GetLogicalVolume()->GetSolid()->DistanceToOut(localPos,localDir);
 
         //If we are already in a sensitive volume then simple calculation for distance
         if (pCurVolume->GetLogicalVolume()->GetSensitiveDetector())
         {
-            // this transforms it to local coordinates
-            const G4AffineTransform& globalToLocal = navigator->GetGlobalToLocalTransform();
-            G4ThreeVector trackPos = globalToLocal.TransformPoint(curPoint);
-            G4ThreeVector trackDir = curDir;
-            if (globalToLocal.IsRotated()) trackDir = globalToLocal.TransformAxis(curDir);
-
             //This calculates the distance along the direction of the track to the 
             //boundary of the current volume
-            distToActArea = pCurVolume->GetLogicalVolume()->GetSolid()->DistanceToOut(trackPos,trackDir);
+            distToActArea = arcLen;
         }
-        //Otherwise, we need to search for the nearest active volume
+        //Otherwise, we need to step until we find the next sensitive volume
         else
         {
-            G4ThreeVector fudgePoint  = curPoint;
-            double        arcLen      = 0.;
-            double        maxStep     = minStepSize(curPoint, curDir);
-            double        fudge       = 0.;
-            bool          trackStatus = maxStep > 0.;
+            bool trackStatus = true;
 
             while(trackStatus)
             {
-                double safeStep;
+                double maxStep      = 1000.;    // Variables used by G4
+                double safeStep     = 0.1;      // 
+                double stepOverDist = 1000. * kCarTolerance;
+
+                // Create the next point "just over the boundary"
+                G4ThreeVector overPoint  = curPoint + (arcLen + stepOverDist) * curDir;
 
                 //Use the G4 navigator to locate the current point, then compute the distance
                 //to the current volume boundary
-                G4VPhysicalVolume* pCurVolume = navigator->LocateGlobalPointAndSetup(fudgePoint, 0, true, true);
-                double             trackLen   = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
+                pCurVolume = navigator->LocateGlobalPointAndSetup(overPoint, &curDir, true, true);
+
+                // If we have entered an active volume, then we are done
+                if (pCurVolume->GetLogicalVolume()->GetSensitiveDetector())
+                {
+                    break;
+                }
+
+                // Otherwise, we need to step into the next volume and keep going
+                double trackLen = navigator->ComputeStep(overPoint, curDir, maxStep, safeStep) + stepOverDist;
 
                 //If we are right on the boundary then jump over and recalculate
-                if (trackLen == 0.)
+                while(trackLen <= stepOverDist)
                 {
-                    fudge       = 0.01;           // 10 um
-                    fudgePoint += fudge * curDir;
+                    // We are here because we are "on" the boundary (within the tolerance for that)
+                    // Two reasons for the problem: 1) travelling almost exactly parallel to the boundary
+                    // or, 2) not parallel
+                    // Try to ascertain which here
+                    G4bool              temp = false;
+                    const G4ThreeVector localExitNrml = navigator->GetLocalExitNormal(&temp);
+                    G4ThreeVector       trackDir = curDir;
 
-                    pCurVolume  = navigator->LocateGlobalPointAndSetup(fudgePoint, 0, true, true);
-                    trackLen    = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
+                    if (globalToLocal.IsRotated()) trackDir = globalToLocal.TransformAxis(curDir);
+
+                    double trkToExitAng = trackDir.dot(localExitNrml);
+
+                    // Parallel track case
+                    if (fabs(trkToExitAng) < kCarTolerance)
+                    {
+                        if (fabs(curDir.x()) < kCarTolerance) curDir.setX(0.);
+                        if (fabs(curDir.y()) < kCarTolerance) curDir.setY(0.);
+                        if (fabs(curDir.z()) < kCarTolerance) curDir.setZ(0.);
+
+                        curDir.setMag(1.);
+                    }
+                    // Surface tolerance case 
+                    else 
+                    {
+                        stepOverDist += 1000. * kCarTolerance / fabs(trkToExitAng); // 10 * minimum tolerance in G4
+                        overPoint     = curPoint + stepOverDist*curDir;
+                    }
+
+                    // Re-step with new points
+                    pCurVolume = navigator->LocateGlobalPointAndSetup(overPoint, &curDir, true, true);
+                    trackLen   = navigator->ComputeStep(overPoint, curDir, maxStep, safeStep) + stepOverDist;
+                }
+
+                // Test again, in the case that the above while loop was executed
+                if (pCurVolume->GetLogicalVolume()->GetSensitiveDetector())
+                {
+                    break;
                 }
 
                 //If we have reached the max step then we're not finding anything
@@ -599,16 +667,9 @@ double ParticleTransporter::distanceToEdge(const Vector& dir) const
                     break;
                 }
 
-                // If we found the SiLadders volume, compute the distance to leave
-                if (pCurVolume->GetLogicalVolume()->GetSensitiveDetector())
-                {
-                    break;
-                }
-
                 //Update distance stepped
                 arcLen     += trackLen;
                 curPoint    = curPoint + trackLen * curDir;
-                fudgePoint  = curPoint + fudge * curDir;
             }
 
             distToActArea = -arcLen;
@@ -747,7 +808,7 @@ void ParticleTransporter::printStepInfo(std::ostream& str) const
     // Restrictions and Caveats: None
 
 
-    str << "** Particle at: " << getStep(0).GetCoords() << ", dir: " << getStep(0).GetDirection() << "\n";
+    str << "** Particle at: " << getStep(0).GetEntryPoint() << ", dir: " << getStep(0).GetDirection() << "\n";
     str << "   Step Count:  "  <<getNumberSteps() <<'\n';
 
     ConstStepPtr iter    = getStepStart();
@@ -758,10 +819,10 @@ void ParticleTransporter::printStepInfo(std::ostream& str) const
     while(iter < getStepEnd())
     {
         TransportStepInfo        stepInfo   = *iter++;
-        G4ThreeVector            position   = stepInfo.GetCoords();
+        G4ThreeVector            position   = stepInfo.GetEntryPoint();
         G4ThreeVector            direction  = stepInfo.GetDirection();
         G4ThreeVector            entryPoint = position;
-        const G4VPhysicalVolume* pCurVolume = stepInfo.getVolume();
+        const G4VPhysicalVolume* pCurVolume = stepInfo.GetVolume();
         G4Material*              pMaterial  = pCurVolume->GetLogicalVolume()->GetMaterial();
         G4String                 volName    = printVolName(pCurVolume);
         double                   matRadLen  = pMaterial->GetRadlen();
