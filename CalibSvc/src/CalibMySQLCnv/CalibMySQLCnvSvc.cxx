@@ -726,12 +726,12 @@ calibUtil::Metadata* CalibMySQLCnvSvc::getMeta( ) {
 
 
 StatusCode CalibMySQLCnvSvc::getValidInterval(unsigned int& serNo,
-                                              ITime*& vStart, ITime*& vEnd) {
+                                              ITime** pvStart, ITime** pvEnd) {
   using calibUtil::Metadata;
   using CalibData::CalibTime;
 
-  if (vStart != 0) delete vStart;
-  if (vEnd != 0) delete vEnd;
+  if (*pvStart != 0) delete *pvStart;
+  if (*pvEnd != 0) delete *pvEnd;
   facilities::Timestamp* since;
   facilities::Timestamp* till;
   Metadata::eRet ret = m_meta->getInterval(serNo, since, till);
@@ -739,8 +739,8 @@ StatusCode CalibMySQLCnvSvc::getValidInterval(unsigned int& serNo,
   StatusCode status = StatusCode::FAILURE;
 
   if (ret == Metadata::RETOk) {
-    vStart = new CalibTime(*since);
-    vEnd = new CalibTime(*till);
+    *pvStart = new CalibTime(*since);
+    *pvEnd = new CalibTime(*till);
     status = StatusCode::SUCCESS;
   }
 
@@ -748,3 +748,4 @@ StatusCode CalibMySQLCnvSvc::getValidInterval(unsigned int& serNo,
   delete till;
   return status;
 }
+

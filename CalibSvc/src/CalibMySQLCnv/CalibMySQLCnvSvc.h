@@ -132,7 +132,8 @@ class CalibMySQLCnvSvc : public ConversionSvc,
   virtual calibUtil::Metadata* getMeta();
 
   virtual StatusCode getValidInterval(unsigned int& serNo,
-                                      ITime*& vStart, ITime*& vEnd);
+                                      ITime** pvStart, ITime** pvEnd);
+
  private:
 
   /// Handle for metadata access

@@ -96,7 +96,7 @@ class ICalibMetaCnvSvc : virtual public IInterface
   virtual calibUtil::Metadata* getMeta() = 0;
 
   virtual StatusCode getValidInterval(unsigned int& serNo, 
-                                      ITime*& vStart, ITime*& vEnd) = 0;
+                                      ITime** pvStart, ITime** pvEnd) = 0;
 
   // Might want to add additional methods which will return certain metadata
   // in a convenient form, given a serial number.  Would be used
