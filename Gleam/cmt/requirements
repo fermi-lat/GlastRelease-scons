@@ -29,7 +29,7 @@ use geomrep     v4r1
 
 # the geometry data base
 use idents      v2r5 
-use detModel    v2r9
+use detModel           v2r10
 use xmlGeoDbs   v1r4
 
 # interface to G4
@@ -38,12 +38,12 @@ use Geant4      v1r1
 # Gaudi component packages
 
 use GuiSvc      v3
-use GlastEvent  v7r0
-use FluxSvc     v5r2
+use GlastEvent         v7r1
+use FluxSvc            v5r4
 
-use GlastSvc           v7r0
-use G4Generator v3r3p2
-use GlastDigi   v2r4
+use GlastSvc           v7r1
+use G4Generator        v3r4
+use GlastDigi          v2r5
 
-use Recon       v0r8p2
+use Recon              v1r0
 
