@@ -1,0 +1,43 @@
+package RootDisplay
+version v0r0
+
+# $Header$
+
+
+#use FluxSvc 
+use RootIo
+use GuiSvc
+
+use geomrep 
+
+
+# this is only a shareable package
+apply_pattern packageShr
+
+
+#=============================================================
+private
+
+# get flags to build shared library
+
+apply_pattern package_Cshlibflags
+
+apply_pattern package_headers
+
+library RootDisplay ${RootDisplay_headers} *.cxx   Dll/*.cxx
+
+
+public
+
+macro RootDisplayTestlinkopts  "  $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
+      WIN32 " ${guiapp_linkopts} $(GuiSvc_lib)  /include:_GuiSvc_loadRef "
+
+
+#non-share test program for development
+set JOBOPTIONS ${ROOTDISPLAYROOT}/src/test/jobOptions.txt
+
+macro_append RootDisplay_headers "" WIN32 "test/*.txt "
+application RootDisplayTest ${GlastMain} ${Win32Resource} ${RootDisplay_headers} 
+
+
+apply_pattern dummy_test
