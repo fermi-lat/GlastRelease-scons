@@ -15,7 +15,8 @@ IGeometry::VisitorRet
         m_idValues.push_back(static_cast<unsigned int>(*u));
     }
     // is this what we want? add to the list if so and abort
-    if(name=="SiLayerBox" || name.substr(0,9)=="SiLadders" ) {
+    if(name.find("SiLayerBox")!=std::string::npos || 
+        name.find("SiLadders")!=std::string::npos ) {
         this->push_back(getId());
         return AbortSubtree;
     }
