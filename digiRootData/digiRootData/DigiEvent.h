@@ -1,16 +1,14 @@
-
-#ifndef DigiEvent_H
-#define DigiEvent_H
+#ifndef ROOT_DigiEvent_H
+#define ROOT_DigiEvent_H
 
 #include "TObject.h"
-//#include "L1T.h"
+#include "L1T.h"
 #include "TClonesArray.h"
 #include "TObjArray.h"
 
 #include "AcdDigi.h"
 #include "CalDigi.h"
 #include "TkrDigi.h"
-
 
 /** @class DigiEvent
  * @brief This is the top-level event class to store the raw (digi) data.
@@ -30,11 +28,14 @@ public:
     DigiEvent();
     virtual ~DigiEvent();
 
-    void initialize(UInt_t eventId, UInt_t runId, Bool_t fromMc=true);
+    void initialize(UInt_t eventId, UInt_t runId, Double_t time, 
+        const L1T& level1, Bool_t fromMc=true);
 
     void Clear(Option_t *option="");
 
     void Print(Option_t *option="") const;
+
+    inline Double_t getTimeStamp() { return m_timeStamp; };
 
     /// Access the DigiEvent number
     inline UInt_t getEventId() { return m_eventId; };
@@ -44,43 +45,37 @@ public:
 
     inline Bool_t getFromMc() { return m_fromMc; };
 
-    /// Access ACD data
-    //AcdHeader* getAcdHeader() { return &m_AcdHeader; };
     /// retrieve the whole TClonesArray of Acd Digi data
-    TClonesArray* getAcdDigiCol() { return m_acdDigiCol; };
+    const TClonesArray* getAcdDigiCol() const { return m_acdDigiCol; };
     /// Add a new AcdDigi entry into the ACD digi array
     AcdDigi* addAcdDigi(const AcdId& id, Float_t energy, UShort_t *pha, 
         Bool_t *veto, Bool_t *low, Bool_t *high);
 
     /// retrieve a specific AcdDigi, based upon the layer, face, row, col, if not found returns null
-    const AcdDigi* getAcdDigi(UShort_t l, UShort_t f, UShort_t r, UShort_t c);
+    const AcdDigi* getAcdDigi(UShort_t l, UShort_t f, UShort_t r, UShort_t c) const;
 
     /// retrieve a specific AcdTile, based upon a valid AcdId, if not found returns null
-    const AcdDigi* getAcdDigi(const AcdId &id);
+    const AcdDigi* getAcdDigi(const AcdId &id) const;
 
-    /// Access CAL data
-    //CalHeader* getCalHeader() { return &m_CalHeader; };
     /// retrieve the CalDigi object
     const TObjArray* getCalDigiCol() { return m_calDigiCol; };
     void addCalDigi(CalDigi *cal);
     const CalDigi* getCalDigi(UInt_t i) const;
 
-    /// Access TKR data
-    //TkrHeader* getTkrHeader() { return &m_TkrHeader; };
-    /// retrieve the whole TObjArray of Tkr Digi Data
-    TObjArray* getTkrDigiCol() { return m_tkrDigiCol; };
+    /// retrieve the whole TObjArray of TkrDigi Data
+    const TObjArray* getTkrDigiCol() const { return m_tkrDigiCol; };
     /// Add a TkrDigi into the TKR data collection
     void addTkrDigi(TkrDigi *digi);
     /// retrieve a TkrDigi from the collection, using the index into the array
     const TkrDigi* getTkrDigi(UInt_t i) const;
 
     /// Access Level 1 Trigger data
-    //inline L1T* getL1T() { return &m_L1T; };
-
-    //inline LiveTime* getLiveTime() { return &m_liveTime; };
-    
+    inline const L1T& getL1T() const { return m_levelOneTrigger; };    
 
 private:
+    /// Time in seconds
+    Double_t m_timeStamp;
+
     /// Run number
     UInt_t m_runId;  
     /// Event Number 
@@ -90,27 +85,21 @@ private:
     Bool_t m_fromMc;
 
     /// Store Level 1 trigger
-    //L1T m_L1T;
+    L1T m_levelOneTrigger;
 
     /// data members to store ACD data
     TClonesArray *m_acdDigiCol;  //-> 
     Int_t m_numAcdDigis;
     static TClonesArray *s_acdDigiStaticCol; //!
-    //AcdHeader m_AcdHeader;
 
     /// data members to store CAL data
     TObjArray *m_calDigiCol; //->
     static TObjArray *s_calDigiStaticCol; //! Collection of Cal Digi objects
-    //CalHeader m_CalHeader;
 
     /// data members to store TKR data
     static TObjArray *s_staticTkrDigiCol;
     TObjArray* m_tkrDigiCol; //-> List of Tracker layers
-    //Int_t m_numLayers;
-    //TkrHeader m_TkrHeader;
 
-    /// store LiveTime counter data
-    //LiveTime m_liveTime;
     ClassDef(DigiEvent,5) // Storage for Raw(Digi) event and subsystem data
 }; 
 

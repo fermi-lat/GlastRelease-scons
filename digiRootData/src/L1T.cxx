@@ -1,38 +1,40 @@
-///////////////////////////////////////////////////////////////////////////
 //                                                                       
 // The L1T class contains the information about the Level 1 Trigger count
 // for an event.  
 //                                                                       
-///////////////////////////////////////////////////////////////////////////
 
 #include "digiRootData/L1T.h"
+#include <iostream>
 
 ClassImp(L1T)
 
-///________________________________________________________________________
-L1T::L1T( Int_t trigCount, Int_t trigTimeValue, Int_t xCapture, Int_t yCapture,
-		 UShort_t vetoCapture, UChar_t deadTimeCause, UShort_t deadTime) :
-	m_trigCount(trigCount), m_trigTimeValue(trigTimeValue), 
-	m_xCapture(xCapture), m_yCapture(yCapture), m_vetoCapture(vetoCapture),
-	m_deadTimeCause(deadTimeCause), m_deadTime(deadTime) {
-}
-//_________________________________________________________________________
-L1T::L1T() : m_trigCount(0), m_trigTimeValue(0), m_xCapture(0), m_yCapture(0),
-m_vetoCapture(0), m_deadTimeCause(0), m_deadTime(0)
+L1T::L1T() : m_trigger(0)
 {
-  // Default constructor
-}
-//_________________________________________________________________________
-L1T::~L1T(){
-  // Destructor
 }
 
-void L1T::Clean() {
-    m_trigCount = 0;  
-    m_trigTimeValue = 0;
-    m_xCapture = 0;
-    m_yCapture = 0; 
-    m_vetoCapture = 0;  
-    m_deadTimeCause = 0; 
-    m_deadTime = 0;     
+L1T::L1T(UInt_t trigger) : m_trigger(trigger) {
+
+}
+
+L1T::L1T(const L1T& level1) {
+    m_trigger = level1.m_trigger;
+}
+
+L1T::~L1T() {
+
+}
+
+void L1T::initialize(UInt_t trigger) {
+    m_trigger = trigger;
+}
+
+void L1T::Clear(Option_t *option) {
+    m_trigger = 0;
+}
+
+void L1T::Print(Option_t *option) const {
+    using namespace std;
+    TObject::Print(option);
+    cout.precision(2);
+    cout << "Trigger Bits: " << m_trigger << endl;
 }

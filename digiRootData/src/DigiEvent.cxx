@@ -4,6 +4,7 @@
 //
 
 #include "digiRootData/DigiEvent.h"
+#include <iostream>
 
 ClassImp(DigiEvent)
 
@@ -26,8 +27,6 @@ DigiEvent::DigiEvent() {
     m_numAcdDigis = -1;
 
     Clear();
-
-
 }
 
 DigiEvent::~DigiEvent() {
@@ -48,35 +47,34 @@ DigiEvent::~DigiEvent() {
     m_calDigiCol = 0;
 }
 
-void DigiEvent::initialize(UInt_t eventId, UInt_t runId, Bool_t fromMc) {
+void DigiEvent::initialize(UInt_t eventId, UInt_t runId, Double_t time, 
+                           const L1T& level1, Bool_t fromMc) {
     m_eventId = eventId;
     m_runId = runId;
+    m_timeStamp = time;
     m_fromMc = fromMc;
+    m_levelOneTrigger = level1;
 }
 
 void DigiEvent::Clear(Option_t *option) {
     m_eventId = 0;
     m_runId = 0;
+    m_timeStamp = 0.0;
+    m_levelOneTrigger.Clear();
     m_calDigiCol->Delete();
     m_tkrDigiCol->Delete();
     m_acdDigiCol->Delete();
     m_numAcdDigis = -1;
 
-    /*
-    m_AcdHeader.Clean();
-
-    m_CalHeader.Clean();
-
-    m_TkrHeader.Clean();
-
-    m_L1T.Clean();
-
-    m_liveTime.Clean();
-    */
 }
 
 void DigiEvent::Print(Option_t *option) const {
-
+    using namespace std;
+    TObject::Print(option);
+    cout.precision(2);
+    cout << "Run, Event: " << m_runId << ", " << m_eventId
+        << " Time: " << m_timeStamp << endl;
+    m_levelOneTrigger.Print();
 }
 
 AcdDigi* DigiEvent::addAcdDigi(const AcdId& id, Float_t energy, UShort_t *pha, 
@@ -91,7 +89,7 @@ AcdDigi* DigiEvent::addAcdDigi(const AcdId& id, Float_t energy, UShort_t *pha,
 }
 
 const AcdDigi* DigiEvent::getAcdDigi(UShort_t l, UShort_t f, UShort_t r, 
-                                     UShort_t c) {
+                                     UShort_t c) const {
     // Find a specific AcdDigi in the TClonesArray
     // User supplies a valid AcdDigi identified by layer, face, row, column
     AcdId tempId(l, f, r, c);
@@ -101,7 +99,7 @@ const AcdDigi* DigiEvent::getAcdDigi(UShort_t l, UShort_t f, UShort_t r,
     return 0;
 }
 
-const AcdDigi* DigiEvent::getAcdDigi(const AcdId &id) {
+const AcdDigi* DigiEvent::getAcdDigi(const AcdId &id) const {
     // Find a specific AcdDigi in the TClonesArray
     // User supplies a valid AcdId
     AcdDigi tempDigi = AcdDigi(id.getId());
