@@ -132,7 +132,10 @@ StatusCode TkrSimpleDigiAlg::initialize(){
     }
     
     // pass the GlastDetSvc pointer to the SiStripList static functions
-    SiStripList::initialize(m_gsv);
+    if (SiStripList::initialize(m_gsv).isFailure() ) {
+        log << MSG::ERROR << "Couldn't initialize SIStripList" << endreq;
+        return StatusCode::FAILURE;
+    }
 
     log << MSG::INFO << "ssdgap " << SiStripList::ssd_gap() 
         << " laddergap " << SiStripList::ladder_gap()
