@@ -65,20 +65,25 @@ void McEvent::Clear(Option_t *option) {
     
     m_eventId = 0;
     m_runId = 0;
+    const Int_t ndpos = 20000;
     const Int_t nd = 10000;
-    const Int_t limit=100;
+    static Int_t limit=100;
     static Int_t indpart=0;
     static Int_t indpos=0;
     static Int_t indint=0;
     static McParticle* keeppart[nd];
-    static McPositionHit* keeppos[nd];
+    static McPositionHit* keeppos[ndpos];
     static McIntegratingHit* keepint[nd];
     
     if (m_particleCol) {
       //      m_particleCol->Delete();
       Int_t n = m_particleCol->GetEntries();
-      if (n>limit) 
-        cout <<"!!!Warning: particle nr entries more than limit!!! "<<n<<endl;
+      if (n>limit) {
+        cout <<"!!!Warning: particle nr entries more than limit!!!Limit was increased "<<n<<endl;
+	limit=n+10;
+	for (Int_t j=0;j<indpart;j++) delete keeppart[j];
+	indpart = 0;
+      }
       for (Int_t i=0;i<n;i++) keeppart[indpart+i] = (McParticle*)m_particleCol->At(i);
       indpart += n;
       if (indpart > nd-limit) {
@@ -91,22 +96,32 @@ void McEvent::Clear(Option_t *option) {
     if (m_positionHitCol) {
       //      m_positionHitCol->Delete();
       Int_t n = m_positionHitCol->GetEntries();
-      if (n>limit) 
-        cout <<"!!!Warning: positionhit nr entries more than limit!!! "<<n<<endl;
+      if (n>limit) {
+        cout <<"!!!Warning: positionhit nr entries more than limit!!!Limit was increased "<<n<<endl;
+	limit=n+10;
+        for (Int_t j=0;j<indpos;j++) delete keeppos[j];
+	indpos = 0;
+      }
+
       for (Int_t i=0;i<n;i++) keeppos[indpos+i] = (McPositionHit*)m_positionHitCol->At(i);
       indpos += n;
-      if (indpos > nd-limit) {
+      if (indpos > ndpos-limit) {
         for (Int_t j=0;j<indpos;j++) delete keeppos[j];
 	indpos = 0;
       }
       m_positionHitCol->Clear();
-    }
+      m_positionHitCol->Expand(10000);  //temporary
+   }
 
     if (m_integratingHitCol) {
       //      m_integratingHitCol->Delete();
       Int_t n = m_integratingHitCol->GetEntries();
-      if (n>limit) 
-        cout <<"!!!Warning: integratinghit nr entries more than limit!!! "<<n<<endl;
+      if (n>limit) {
+        cout <<"!!!Warning: integratinghit nr entries more than limit!!!Limit was increased "<<n<<endl;
+	limit=n+10;
+	for (Int_t j=0;j<indint;j++) delete keepint[j];
+	indint = 0;
+      }
       for (Int_t i=0;i<n;i++) keepint[indint+i] = (McIntegratingHit*)m_integratingHitCol->At(i);
       indint += n;
       if (indint > nd-limit) {
