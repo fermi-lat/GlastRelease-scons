@@ -23,6 +23,10 @@ namespace LdfEvent{
 
     class EventSummaryData : public DataObject {
     public:
+        /// EVTSEQ set means that the event sequence number
+        /// constructed from the eventNumber and tag in the EventSummary
+        /// are either inconsistent across contributions in the evnet
+        /// or the event sequence across events is not monotonically increasing
         typedef enum {
             GOOD = 0,
             EVTSEQ = 1
@@ -41,6 +45,11 @@ namespace LdfEvent{
         bool goodEvent() const { return (m_flags == 0); };
         bool badEventSeq() const { return (m_flags && EVTSEQ); };
         bool badEvent() const { return (m_flags != 0); } ;
+        unsigned long eventSequence() const {
+            unsigned eventNumber = EventSummary::eventNumber(m_summary);
+            unsigned tag = EventSummary::tag(m_summary);
+            return ((eventNumber << 2) | tag);
+        }
  
         unsigned int summary() { return m_summary; };
 
