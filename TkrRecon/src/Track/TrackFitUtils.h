@@ -58,6 +58,9 @@ public:
 	/// Finds the number of shared TkrClusters on the two given tracks
     int compareTracks(Event::TkrTrack& track1, Event::TkrTrack& track2);
 
+	/// Conpute the first first normalize track kink angle
+	double firstKinkNorm(Event::TkrTrack& track);
+
     /// Operations
     void   flagAllHits(Event::TkrTrack& track, int iflag=1);
     void   unFlagAllHits(Event::TkrTrack& track);
