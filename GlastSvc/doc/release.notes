@@ -4,6 +4,7 @@
 
  package manager:T.Burnett
 
+ 15-mar-03  THB            add test for duplicated random generators 
  10-mar-03  LSR tag v9r7p2 fix bug in GlastPropagatorSvc 
  17-feb-03  THB tag v9r7p1 fix component access for unix   
  17-feb-03  THB tag v9r7   

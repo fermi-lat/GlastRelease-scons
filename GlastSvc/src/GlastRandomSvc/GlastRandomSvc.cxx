@@ -234,7 +234,15 @@ StatusCode GlastRandomSvc::initialize ()
                     }
                     log << MSG::INFO << "Setting CLHEP Engine "<< m_randomEngine
                         << " for " << tooltype << " at " << hr << endreq;
-                    ranacc->setTheEngine(hr);
+                    HepRandomEngine* old = ranacc->setTheEngine(hr);
+                    // make sure that the old one was not already stored
+                    for( EngineMap::iterator eit = m_engineMap.begin(); eit != m_engineMap.end(); ++eit){
+                        if( eit->second != old) continue;
+                        log << MSG::WARNING 
+                            << " Previous engine ("<< old << ") for " 
+                            << tooltype << " was also set for "<< eit->first << endreq;
+                        break;
+                    }
                     // Store its name and address in a map
                     m_engineMap[tooltype] = hr;
 		    
