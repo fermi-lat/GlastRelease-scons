@@ -3,6 +3,8 @@
 package xmlGeoDbs
 version v1r10p1
 
+author Joanne Bogart <jrb@slac.stanford.edu>
+
 use GlastPolicy v5*
 
 apply_pattern package_xmlfiles

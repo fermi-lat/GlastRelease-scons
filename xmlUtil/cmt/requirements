@@ -2,6 +2,8 @@
 package xmlUtil
 version v2r9p2
 
+author Joanne Bogart <jrb@slac.stanford.edu>
+
 use facilities v2r*
 use xml        v4r*
 
