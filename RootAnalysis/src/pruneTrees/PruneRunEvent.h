@@ -51,6 +51,7 @@
 #include "TROOT.h"
 #include "TFile.h"
 #include "TTree.h"
+#include "TBranch.h"
 #include "TChain.h"
 #include "TMath.h"
 #include "TH1.h"
@@ -61,6 +62,7 @@
 #include "mcRootData/McEvent.h"
 #include <iostream>
 #include <fstream>
+#include <vector>
 #else  // for interactive use
 #include "iostream.h"
 class DigiEvent;
@@ -68,7 +70,16 @@ class ReconEvent;
 class McEvent;
 #endif
 
-typedef std::vector<pair<int, int> > runEventVector;
+#ifndef R__GLOBALSTL
+#ifndef WIN32
+using std::vector;
+using std::pair;
+#else
+using namespace std;
+#endif
+#endif
+
+typedef vector<pair<int, int> > runEventVector;
 
 
 class RootTreeAnalysis {
@@ -93,6 +104,9 @@ public :
     TTree       *anaTupTree;
     /// pointer to the monte carlo tree
     TTree       *mcTree;      
+    TBranch     *mcEventIdBranch, *mcRunIdBranch;
+    TBranch     *digiEventIdBranch, *digiRunIdBranch;
+    TBranch     *reconEventIdBranch, *reconRunIdBranch;
     /// Copy Input digitization file
     TFile       *copyDigiFile;   
     /// Copy Input reconstruction file

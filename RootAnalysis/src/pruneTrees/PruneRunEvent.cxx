@@ -228,7 +228,7 @@ void RootTreeAnalysis::DigiCal() {
     TIter calDigiIter(calDigiCol);
     CalDigi *c = 0;
     
-    while (c = (CalDigi*)calDigiIter.Next()) {
+    while ((c = (CalDigi*)calDigiIter.Next())!=0) {
         const CalXtalReadout* cRo=c->getXtalReadout(0);
         float eAve = (cRo->getAdc(CalXtalId::POS)+cRo->getAdc(CalXtalId::NEG))/2.;
         ((TH1F*)GetObjectPtr("CALEAVE"))->Fill(eAve);
@@ -287,7 +287,7 @@ void RootTreeAnalysis::DigiAcd() {
     TIter acdDigiIter(acdDigiCol);
     AcdDigi *acdDigiItem = 0;
     
-    while (acdDigiItem = (AcdDigi*)acdDigiIter.Next()) {
+    while ((acdDigiItem = (AcdDigi*)acdDigiIter.Next())!=0) {
         totE = acdDigiItem->getEnergy();
         AcdId id = acdDigiItem->getId();
         if (id.getId() == id41.getId()) {
@@ -320,7 +320,7 @@ void RootTreeAnalysis::ReconTkr() {
     TIter trackIter(trackCol);
     TkrTrack *track = 0;
     
-    while (track = (TkrTrack*)trackIter.Next()) {
+    while ((track = (TkrTrack*)trackIter.Next())!=0) {
         ((TH1F*)GetObjectPtr("TKRNUMHITSPERTRACK"))->Fill(track->getNumHits());
     }
 }
@@ -466,8 +466,7 @@ void RootTreeAnalysis::Go(Int_t numEvents)
         } 
 
 
-      for(runEventVector::iterator it=m_runEvents.begin(); 
-	  it!=m_runEvents.end();it++){
+      for(runEventVector::iterator it=m_runEvents.begin(); it!=m_runEvents.end();it++){
 
 	if((*it).first == reconRunNum && (*it).second == reconEventId) { 
 	CopyEntry(ievent);
@@ -483,34 +482,42 @@ void RootTreeAnalysis::Go(Int_t numEvents)
 
 void RootTreeAnalysis::Peel(Int_t numEvents) {
 
+    mcEventIdBranch = m_mcChain->GetBranch("m_eventId");
+    mcRunIdBranch =   m_mcChain->GetBranch("m_runId");
+    digiEventIdBranch = m_digiChain->GetBranch("m_eventId");
+    digiRunIdBranch = m_digiChain->GetBranch("m_runId");
+    reconEventIdBranch = m_recChain->GetBranch("m_eventId");
+    reconRunIdBranch = m_recChain->GetBranch("m_runId");
+
+/*
     if (mcTree) {
         mcTree->SetBranchStatus("*", 1);    // disable all branches
         // Activate desired branches...
-        mcTree->SetBranchStatus("m_eventId", 1);
-        mcTree->SetBranchStatus("m_particleCol", 1);
-        mcTree->SetBranchStatus("m_runId", 1);        
-        mcTree->SetBranchStatus("m_integratingHitCol", 1);        
-        mcTree->SetBranchStatus("m_positionHitCol", 1);        
+        //mcTree->SetBranchStatus("m_eventId", 1);
+        //mcTree->SetBranchStatus("m_particleCol", 1);
+        //mcTree->SetBranchStatus("m_runId", 1);        
+        //mcTree->SetBranchStatus("m_integratingHitCol", 1);        
+        //mcTree->SetBranchStatus("m_positionHitCol", 1);        
     }
     
     if (digiTree) {
         digiTree->SetBranchStatus("*",1);  // disable all branches
         // activate desired brances
-        digiTree->SetBranchStatus("m_cal*",1);  
-        digiTree->SetBranchStatus("m_tkr*",1);  
-        digiTree->SetBranchStatus("m_acd*",1);
-        digiTree->SetBranchStatus("m_eventId", 1); 
-        digiTree->SetBranchStatus("m_runId", 1);
+        //digiTree->SetBranchStatus("m_cal*",1);  
+        //digiTree->SetBranchStatus("m_tkr*",1);  
+       // digiTree->SetBranchStatus("m_acd*",1);
+       // digiTree->SetBranchStatus("m_eventId", 1); 
+        //digiTree->SetBranchStatus("m_runId", 1);
     }
     
     if (reconTree) {
         reconTree->SetBranchStatus("*",1);  // disable all branches
         // activate desired branches
-        reconTree->SetBranchStatus("m_cal", 1);  
-        reconTree->SetBranchStatus("m_tkr", 1);
-        reconTree->SetBranchStatus("m_acd", 1);
-        reconTree->SetBranchStatus("m_eventId", 1); 
-        reconTree->SetBranchStatus("m_runId", 1);
+        //reconTree->SetBranchStatus("m_cal", 1);  
+        //reconTree->SetBranchStatus("m_tkr", 1);
+        //reconTree->SetBranchStatus("m_acd", 1);
+        //reconTree->SetBranchStatus("m_eventId", 1); 
+        //reconTree->SetBranchStatus("m_runId", 1);
     }
         
     if (anaTupTree) {
@@ -519,6 +526,7 @@ void RootTreeAnalysis::Peel(Int_t numEvents) {
         anaTupTree->SetBranchStatus("AcdActiveDist", 1);  
         anaTupTree->SetBranchStatus("TkrNumTracks", 1);
     }
+*/
         
     // determine how many events to process
     Int_t nentries = GetEntries();
@@ -546,8 +554,15 @@ void RootTreeAnalysis::Peel(Int_t numEvents) {
         digiEventId = 0; reconEventId = 0; mcEventId = 0;
         digiRunNum = 0; reconRunNum = 0; mcRunNum = 0;
         
-        nb = GetEvent(ievent);
-        nbytes += nb;
+        // Just retrieve the event and run ids
+        mcEventIdBranch->GetEvent(ievent);
+        mcRunIdBranch->GetEvent(ievent);
+        digiEventIdBranch->GetEvent(ievent);
+        digiRunIdBranch->GetEvent(ievent);
+        reconEventIdBranch->GetEvent(ievent);
+        reconRunIdBranch->GetEvent(ievent);
+        //nb = GetEvent(ievent);
+        //nbytes += nb;
         
         // Monte Carlo ONLY analysis
         if (mc) {  // if we have mc data process it
@@ -572,6 +587,9 @@ void RootTreeAnalysis::Peel(Int_t numEvents) {
       for(runEventVector::iterator it=m_runEvents.begin(); 
 	  it!=m_runEvents.end();it++){
 	if((*it).first == reconRunNum && (*it).second == reconEventId) { 
+          if ((digiRunNum != reconRunNum) && (digiEventId != reconEventId)) continue;
+          if ((mcRunNum != reconRunNum) && (mcEventId != reconEventId)) continue;
+          // read in full event
           GetEvent(ievent);
 	  CopyEntry(ievent);
 	  pruned++;
