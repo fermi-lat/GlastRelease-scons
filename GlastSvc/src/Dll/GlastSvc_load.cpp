@@ -28,6 +28,12 @@ void GlastSvc_load() {
     DLL_DECL_SERVICE( GlastEventSelector );
     DLL_DECL_SERVICE( EventCnvSvc );
     DLL_DECL_CONVERTER( ACDhitCnv );
+//	extern ICnvFactory& MCCalorimeterHitCnvFactory;
+//	MCCalorimeterHitCnvFactory.addRef();
+
+//  Still having the linking problem here which is 
+//  Why the line below is comented out.
+//	DLL_DECL_CONVERTER( MCCalorimeterHitCnv ); // TODO: Take this out if causes problems
 //    DLL_DECL_SERVICE( EventCnv );
 //    DLL_DECL_SERVICE( GlastIRFLoadSvc );
 } 
