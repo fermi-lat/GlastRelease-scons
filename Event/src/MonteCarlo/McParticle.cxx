@@ -23,14 +23,14 @@ bool McParticle::primaryParticle() const
 void McParticle::init( McParticle* mother,         
                       StdHepId id, 
         unsigned int flags,
-        const HepLorentzVector& initalMomentum,
+        const HepLorentzVector& initialMomentum,
         const HepLorentzVector& finalMomentum,
         const HepPoint3D& finalPosition)
 {
     m_mother = mother;
     m_particleID = id;
     m_statusFlags = flags;
-    m_initialFourMomentum = initalMomentum;
+    m_initialFourMomentum = initialMomentum;
     m_finalFourMomentum = finalMomentum;
     m_finalPosition = finalPosition;
     if( mother != this) mother->m_daughters.push_back(this);
@@ -55,6 +55,20 @@ const HepLorentzVector&  McParticle::finalFourMomemtum()const
 
 unsigned int McParticle::statusFlags()const{
     return m_statusFlags;
+}
+
+
+/// access to the mother particle
+const McParticle& McParticle::mother()const
+{
+    return *m_mother;
+}
+
+
+/// access to the list of daughters: null if none
+const SmartRefVector<McParticle>& McParticle::daugherList()const
+{
+    return m_daughters;
 }
 
 
