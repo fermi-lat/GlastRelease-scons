@@ -1,6 +1,6 @@
 package Gleam
 
-version  v5r2p4
+version  v5r3
 
 # $Id$
 
@@ -30,6 +30,10 @@ use DetDisplay  v*
 use TkrRecon    v*
 use CalRecon    v* 
 use AcdRecon    v*       
+
+#level 1 filter
+use EbfWriter   v*
+use OnboardFilter v*
 
 #ROOT persistence: RootIo specifies the data packages
 use RootIo      v*

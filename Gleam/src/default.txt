@@ -12,6 +12,9 @@
 
 FluxAlg.source_name="default";
 
+// setup onboard filter analysis
+ApplicationMgr.DLLs += {"EbfWriter", "OnboardFilter"};
+Triggered.Members += {"EbfWriter", "OnboardFilter"};
 
 // setup up merit to monitor the output
 ApplicationMgr.DLLs   += {"merit"};

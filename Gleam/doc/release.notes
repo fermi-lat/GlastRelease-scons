@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v5r3   THB 17-aug-03   add filter stuff (EbfWriter and OnboardFilter)
 * v5r2p4 THB 15-aug-03   fix spelling (grin)
 * v5r2p3 THB 14-aug-03   fix spelling (grin)
 * v5r2p2 THB 14-aug-03   Add GRB and CRflux
