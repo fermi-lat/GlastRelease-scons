@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
  *
+ *  v6r15p1 LSR  25-aug-04 add new html file to doc/
  *  v6r15   THB  24-aug-04 add Gem summary word.
  *          THB  10-aug-04 rename local tuple variables and clean up logic
  *  v6r14p9 NG   02-aug-04 Writes out Angular Separation and FilterAlg status code from
