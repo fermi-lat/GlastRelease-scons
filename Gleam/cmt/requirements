@@ -21,7 +21,7 @@ use xml         v4r1p4
 use xmlUtil     v2r8p1
 
 use geometry    v3
-use astro                v0r1 
+use astro                v0r1p1 
 
 # low-level graphics
 
