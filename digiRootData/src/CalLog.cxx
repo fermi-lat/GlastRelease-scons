@@ -20,7 +20,7 @@ Int_t CalLog::Compare(const TObject *obj) const {
     if (this == obj) return 0;
     if (CalLog::Class() != obj->IsA()) return -1;
     UInt_t id_this = m_log.getId();
-    UInt_t id_hit = ((CalLog*)obj)->getCalLogId()->getId();
+    UInt_t id_hit = ((CalLog*)obj)->getLogId()->getId();
     if (id_this == id_hit)
         return 0;
     else

@@ -9,7 +9,7 @@
 #pragma link C++ class ESAPID;
 #pragma link C++ class Event;
 #pragma link C++ class L1T;
-#pragma link C++ class CalLogId;
+#pragma link C++ class LogId;
 #pragma link C++ class StripId;
 #pragma link C++ class Tagger;
 #pragma link C++ class AcdId;

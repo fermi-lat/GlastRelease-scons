@@ -30,10 +30,10 @@ extern void G__set_cpp_environmentEventCint();
 #include "AcdTile.h"
 #include "CalHeader.h"
 #include "CalLog.h"
-#include "CalLogId.h"
 #include "ESAPID.h"
 #include "Event.h"
 #include "L1T.h"
+#include "LogId.h"
 #include "StripId.h"
 #include "SubSystemHeader.h"
 #include "Tagger.h"
@@ -54,9 +54,9 @@ extern G__linked_taginfo G__EventCintLN_AcdIdcLcLdA;
 extern G__linked_taginfo G__EventCintLN_AcdTile;
 extern G__linked_taginfo G__EventCintLN_AcdTilecLcLdA;
 extern G__linked_taginfo G__EventCintLN_CalHeader;
-extern G__linked_taginfo G__EventCintLN_CalLogId;
-extern G__linked_taginfo G__EventCintLN_CalLogIdcLcLdA;
-extern G__linked_taginfo G__EventCintLN_CalLogIdcLcLCALAxes;
+extern G__linked_taginfo G__EventCintLN_LogId;
+extern G__linked_taginfo G__EventCintLN_LogIdcLcLdA;
+extern G__linked_taginfo G__EventCintLN_LogIdcLcLCALAxes;
 extern G__linked_taginfo G__EventCintLN_CalLog;
 extern G__linked_taginfo G__EventCintLN_CalLogcLcLAdcRange;
 extern G__linked_taginfo G__EventCintLN_CalLogcLcLLogFace;

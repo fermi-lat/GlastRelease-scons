@@ -2,7 +2,7 @@
 #ifndef CalLog_H
 #define CalLog_H
 
-#include "CalLogId.h"
+#include "LogId.h"
 #include "TObject.h"
 
 /*! \class CalLog
@@ -10,7 +10,7 @@
 The CalLog class contains the information about a single calorimeter  
 log.  This class can handle either ADC values for all 4 digitizations, or
 a readout that has one "best" range. 
-This class implements a CalLogId member which provides access to information
+This class implements a LogId member which provides access to information
 on the position of the log within the calorimeter.
 
   Jun 2001 Heather Kelly - renamed from CalHit to CalLog
@@ -86,7 +86,7 @@ _____________________________________________________
     
     
     
-    CalLogId m_log;       // Log identity info class
+    LogId m_log;       // Log identity info class
     
     //    UShort_t m_AdcValues[2][4];
     UShort_t m_AdcValues[8];
@@ -150,7 +150,7 @@ public:
     inline void setTriggerMode(CalTrigMode val) { m_mode = val; };
     
     
-    inline CalLogId* getCalLogId() { return &m_log; };
+    inline LogId* getLogId() { return &m_log; };
     
     
     ClassDef(CalLog,3)	    // Digitization for a single Cal Log
