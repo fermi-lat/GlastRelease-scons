@@ -19,6 +19,7 @@ const ICnvFactory& McVertexCnvFactory = s_factory;
 
 StatusCode McVertexCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObject)   
 {
+
     refpObject = m_vlist= new McVertexCol;
     DataObject* mcroot;
     StatusCode sc;
@@ -26,22 +27,24 @@ StatusCode McVertexCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObj
     sc=dataProvider()->registerObject(mcroot, "McParticleCol", m_plist=new McParticleCol);
 
     MCTruth* t = MCTruth::instance();
-
-    FluxGenerator * f = dynamic_cast<FluxGenerator*>(t->particle()); // first particle
-    addParticle(0, f->m_particles);
+    if( t ) {
+        // do this if MCTruth exists. Otherwise assume MCTree will take care of it
+       FluxGenerator * f = dynamic_cast<FluxGenerator*>(t->particle()); // first particle
+       addParticle(0, f->m_particles);
+    }
   
     return StatusCode::SUCCESS;
 }
 
-//! Update object from scratch
+//! Update object from scratch (not implemented here--does it matter?)
 StatusCode McVertexCnv::updateObj(IOpaqueAddress* pAddress, DataObject* pObject)   {
     return StatusCode::SUCCESS;
     
 }
 
-//! class ID
+//! class ID -- note that it uses the McVertex class ID
 const CLID& McVertexCnv::classID()    {
-  return CLID_McVertexCnv; 
+    return McVertex::classID(); 
 }
 
 //! Standard Constructor
@@ -49,7 +52,7 @@ McVertexCnv::McVertexCnv(ISvcLocator* svc)
 : BaseCnv(classID(), svc)
 {
 
-  declareObject("/Event/MC/McVertexCol", objType(), "PASS");
+  declareObject("/Event/MC/McVertexCol", objType(), "");
 }
 
 //! Standard Destructor
