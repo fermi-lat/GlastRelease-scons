@@ -438,8 +438,12 @@ unsigned int TriggerAlg::anticoincidence(const Event::AcdDigiCol& tiles)
     log << MSG::DEBUG << tiles.size() << " tiles found with hits" << endreq;
     unsigned int ret=0;
     for( AcdDigiCol::const_iterator it = tiles.begin(); it !=tiles.end(); ++it){
+        // if it is here, assume it has a bit.
         ret |= enums::b_ACDL; 
-        //TODO: check threshold, set high bit
+        // now trigger high if either PMT is above threshold
+        const AcdDigi& digi = **it;
+        if (   digi.getHighDiscrim(Event::AcdDigi::A) 
+            || digi.getHighDiscrim(Event::AcdDigi::B) ) ret |= enums::b_ACDH;
     } 
     return ret;
 }
