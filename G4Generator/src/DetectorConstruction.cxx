@@ -24,11 +24,15 @@
 #include "GlastDetectorManager.h"
 
 #include <iomanip>
+#include <cassert>
 
 DetectorConstruction::DetectorConstruction(std::string topvol, std::string visitorMode)
 : m_topvol(topvol)
 {
-  std::string filename= std::string(::getenv("XMLUTILROOT"))+"/xml/flight.xml" ;
+    //! TODO: make this depend on env var set by the service
+    const char * xmlroot = ::getenv("XMLUTILROOT");
+    assert(xmlroot);
+  std::string filename= std::string(xmlroot)+"/xml/flight.xml" ;
 
   detModel::Manager* gddManager = detModel::Manager::getPointer();
   
