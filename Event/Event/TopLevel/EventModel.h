@@ -22,10 +22,14 @@
 
         namespace MC {
             _EXTERN_ std::string Event;
-            _EXTERN_ std::string MCTKRHits;
-            _EXTERN_ std::string MCCalorimeterHits;
-            _EXTERN_ std::string MCACDHits;
         };
+
+        namespace Irf {
+            _EXTERN_ std::string Event;
+            _EXTERN_ std::string IrfTkrHits;
+            _EXTERN_ std::string IrfCalHits;
+            _EXTERN_ std::string IrfAcdHits;
+        }
 
         namespace Raw {
             _EXTERN_ std::string Event;

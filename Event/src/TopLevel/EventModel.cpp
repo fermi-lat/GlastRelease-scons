@@ -28,9 +28,10 @@ public:
         // set up the MC structure
         EventModel::MC::Event = EventModel::Event + "/MC";
 
-        EventModel::MC::MCACDHits = EventModel::MC::Event + "/MCACDHits";
-        EventModel::MC::MCCalorimeterHits = EventModel::MC::Event + "/MCCalorimeterHits";
-        EventModel::MC::MCTKRHits = EventModel::MC::Event + "/MCTKRHits";
+        EventModel::Irf::Event = EventModel::Event + "/Irf";
+        EventModel::Irf::IrfAcdHits = EventModel::Irf::Event + "/IrfAcdHits";
+        EventModel::Irf::IrfCalHits = EventModel::Irf::Event + "/IrfCalHits";
+        EventModel::Irf::IrfTkrHits = EventModel::Irf::Event + "/IrfTkrHits";
 
         EventModel::Raw::Event = EventModel::Event + "/Raw";
         EventModel::Raw::TdCsIDatas = EventModel::Raw::Event + "/TdCsIDatas";
@@ -48,13 +49,20 @@ public:
     // we can't redefine the CLID_Event identifier...LHCb already has one of their own
     //const CLID& CLID_Event              = 1000;  // Event root
 
+    // Irf class IDs
+    const CLID& CLID_IrfTkrHit          = 2001;
+    const CLID& CLID_IrfAcdHit          = 2002;
+    const CLID& CLID_IrfCalHit          = 2003;
+    const CLID& CLID_IrfEvent           = 2004;
+    const CLID& CLID_IrfTkrLayer        = 2005;
+
     // Monte Carlo class IDs
-    const CLID& CLID_MCTKRHit           = 2008;  
-    const CLID& CLID_MCACDHit           = 2009;
+  //  const CLID& CLID_MCTKRHit           = 2008;  
+  //  const CLID& CLID_MCACDHit           = 2009;
     const CLID& CLID_MCTrack            = 2010; 
-    const CLID& CLID_MCCalorimeterHit   = 2011;
+ //   const CLID& CLID_MCCalorimeterHit   = 2011;
     const CLID& CLID_MCEvent            = 2012;
-    const CLID& CLID_MCSiLayer          = 2013;
+//    const CLID& CLID_MCSiLayer          = 2013;
 
     //! Raw event definitions
     const CLID& CLID_RawEvent           = 2017;

@@ -6,12 +6,14 @@
 #define GLASTEVENT_FACTORIES_GLASTEVENT_LOAD_CPP  1
 
 extern void   HitInstanciation();
+extern void   IrfInstantiation();
 extern void   MCInstanciation();
 extern void   TopInstantiation();
 //extern void   RawInstanciation();
 
 void GlastEventFactories_load()     {
     //HitInstanciation ();
+    IrfInstantiation();
     MCInstanciation ();
     TopInstantiation ();
 }
