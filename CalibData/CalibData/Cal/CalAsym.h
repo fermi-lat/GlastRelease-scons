@@ -24,14 +24,14 @@ namespace CalibData {
   public:
     CalAsym(const std::vector<ValSig>* big = 0,
             const std::vector<ValSig>* small = 0,
-            const std::vector<ValSig>* mSmallPBig = 0,
-            const std::vector<ValSig>* pSmallMBig = 0);
+            const std::vector<ValSig>* nSmallPBig = 0,
+            const std::vector<ValSig>* pSmallNBig = 0);
     ~CalAsym();
 
     const std::vector<ValSig>* getBig() const {return m_big;}
     const std::vector<ValSig>* getSmall() const {return m_small;}
-    const std::vector<ValSig>* getMSmallPBig() const {return m_mSmallPBig;}
-    const std::vector<ValSig>* getPSmallMBig() const {return m_pSmallMBig;}
+    const std::vector<ValSig>* getNSmallPBig() const {return m_nSmallPBig;}
+    const std::vector<ValSig>* getPSmallNBig() const {return m_pSmallNBig;}
 
     virtual void update(RangeBase* other);
 
@@ -41,9 +41,9 @@ namespace CalibData {
     /// signal asymmetry over position for small diodes on both faces
     std::vector<ValSig>* m_small;
     /// signal asymm over position w/ pos face big and minus face small diodes
-    std::vector<ValSig>* m_mSmallPBig;
+    std::vector<ValSig>* m_nSmallPBig;
     /// signal asymm over position w/ pos face small and minus face big diodes
-    std::vector<ValSig>* m_pSmallMBig;
+    std::vector<ValSig>* m_pSmallNBig;
   };
 
   /**  @class CalAsymCol

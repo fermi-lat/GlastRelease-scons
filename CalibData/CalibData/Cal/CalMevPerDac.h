@@ -24,7 +24,7 @@ namespace CalibData {
   public:
     CalMevPerDac(const ValSig* big = 0, 
                const ValSig* small = 0,
-               const std::vector<ValSig>* bigSmallRatioM = 0,
+               const std::vector<ValSig>* bigSmallRatioN = 0,
                const std::vector<ValSig>* bigSmallRatioP = 0);
     ~CalMevPerDac();
 
@@ -37,26 +37,18 @@ namespace CalibData {
     /// for @a face argument.
     const std::vector<ValSig>* getBigSmallRatio(int face) const;
 
-    const std::vector<ValSig>* getBigSmallRatioM() const {
-      return m_bigSmallRatioM;
-    }
-    
-    const std::vector<ValSig>* getBigSmallRatioP() const {
-      return m_bigSmallRatioP;
-    }
-
     virtual void update(RangeBase* other);
 
   private:
 
     /// Gain and uncertainty for sqrt (P*M), big diode
     ValSig m_big;
-    /// Gain and uncertainty for sqrt (P*M), small diode
+    /// Gain and uncertainty for sqrt (P*N), small diode
     ValSig m_small;
 
-    /// Ratio of big diode/small diode for Minus end as a function of position
-    std::vector<ValSig>* m_bigSmallRatioM;
-    /// Ratio of big diode/small diode for Plus end as a function of position
+    /// Ratio of big diode/small diode for Neg end as a function of position
+    std::vector<ValSig>* m_bigSmallRatioN;
+    /// Ratio of big diode/small diode for Pos end as a function of position
     std::vector<ValSig>* m_bigSmallRatioP;
 
   };

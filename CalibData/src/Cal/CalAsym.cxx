@@ -20,9 +20,9 @@ namespace CalibData {
   // CalAsym implementation
   CalAsym::CalAsym(const std::vector<ValSig>* big,
                    const std::vector<ValSig>* small,
-                   const std::vector<ValSig>* mSmallPBig,
-                   const std::vector<ValSig>* pSmallMBig) :
-    m_big(0), m_small(0), m_mSmallPBig(0), m_pSmallMBig(0)
+                   const std::vector<ValSig>* nSmallPBig,
+                   const std::vector<ValSig>* pSmallNBig) :
+    m_big(0), m_small(0), m_nSmallPBig(0), m_pSmallNBig(0)
   {
     if (big) {
       m_big = new std::vector<ValSig>(*big);
@@ -32,19 +32,19 @@ namespace CalibData {
       m_small = new std::vector<ValSig>(*small);
     } 
 
-    if (mSmallPBig) {
-      m_mSmallPBig = new std::vector<ValSig>(*mSmallPBig);
+    if (nSmallPBig) {
+      m_nSmallPBig = new std::vector<ValSig>(*nSmallPBig);
     }
-    if (pSmallMBig) {
-      m_pSmallMBig = new std::vector<ValSig>(*pSmallMBig);
+    if (pSmallNBig) {
+      m_pSmallNBig = new std::vector<ValSig>(*pSmallNBig);
     }
   }
 
   CalAsym::~CalAsym() {
     if (m_big) delete m_big;
     if (m_small) delete m_small;
-    if (m_mSmallPBig) delete m_mSmallPBig;
-    if (m_pSmallMBig) delete m_pSmallMBig;
+    if (m_nSmallPBig) delete m_nSmallPBig;
+    if (m_pSmallNBig) delete m_pSmallNBig;
   }
 
   void CalAsym::update(RangeBase* other) {
@@ -58,13 +58,13 @@ namespace CalibData {
         delete m_small;
         m_small = 0;
       }
-      if (m_mSmallPBig) {
-        delete m_mSmallPBig;
-        m_mSmallPBig = 0;
+      if (m_nSmallPBig) {
+        delete m_nSmallPBig;
+        m_nSmallPBig = 0;
       }
-      if (m_pSmallMBig) {
-        delete m_pSmallMBig;
-        m_pSmallMBig = 0;
+      if (m_pSmallNBig) {
+        delete m_pSmallNBig;
+        m_pSmallNBig = 0;
       }
 
       if (otherConsts->m_big) {
@@ -74,13 +74,13 @@ namespace CalibData {
         m_small = new std::vector<ValSig>(*otherConsts->m_small);
       }
 
-      if (otherConsts->m_mSmallPBig) {
-        m_mSmallPBig = 
-          new std::vector<ValSig>(*otherConsts->m_mSmallPBig);
+      if (otherConsts->m_nSmallPBig) {
+        m_nSmallPBig = 
+          new std::vector<ValSig>(*otherConsts->m_nSmallPBig );
       }
-      if (otherConsts->m_pSmallMBig) {
-        m_pSmallMBig = 
-          new std::vector<ValSig>(*otherConsts->m_pSmallMBig);
+      if (otherConsts->m_pSmallNBig) {
+        m_pSmallNBig = 
+          new std::vector<ValSig>(*otherConsts->m_pSmallNBig);
       }
     }
   }

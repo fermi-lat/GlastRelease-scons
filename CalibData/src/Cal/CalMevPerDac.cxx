@@ -18,9 +18,9 @@ namespace CalibData {
   // CalMevPerDac implementation
   CalMevPerDac::CalMevPerDac(const ValSig* big, 
                              const ValSig* small,
-                             const std::vector<ValSig>* bigSmallRatioM,
+                             const std::vector<ValSig>* bigSmallRatioN,
                              const std::vector<ValSig>* bigSmallRatioP) :
-    m_bigSmallRatioM(0), m_bigSmallRatioP(0) 
+    m_bigSmallRatioN(0), m_bigSmallRatioP(0) 
   {
     if (big) {
       m_big = *big;
@@ -32,8 +32,8 @@ namespace CalibData {
     }    else {
       m_small.setUndefined();
     }
-    if (bigSmallRatioM) {
-      m_bigSmallRatioM = new std::vector<ValSig>(*bigSmallRatioM);
+    if (bigSmallRatioN) {
+      m_bigSmallRatioN = new std::vector<ValSig>(*bigSmallRatioN);
     }
     if (bigSmallRatioP) {
       m_bigSmallRatioP = new std::vector<ValSig>(*bigSmallRatioP);
@@ -41,8 +41,8 @@ namespace CalibData {
   }
 
   CalMevPerDac::~CalMevPerDac() {
-    if (m_bigSmallRatioM) {
-      delete m_bigSmallRatioM;
+    if (m_bigSmallRatioN) {
+      delete m_bigSmallRatioN;
     }
     if (m_bigSmallRatioP) {
       delete m_bigSmallRatioP;
@@ -55,7 +55,7 @@ namespace CalibData {
     case idents::CalXtalId::POS:
       return m_bigSmallRatioP;
     case idents::CalXtalId::NEG:
-      return m_bigSmallRatioM;
+      return m_bigSmallRatioN;
     default:
       return 0;
     }
@@ -67,17 +67,17 @@ namespace CalibData {
     if (otherConsts) {
       m_big = otherConsts->m_big;
       m_small = otherConsts->m_small;
-      if (m_bigSmallRatioM) {
-        delete m_bigSmallRatioM;
-        m_bigSmallRatioM = 0;
+      if (m_bigSmallRatioN) {
+        delete m_bigSmallRatioN;
+        m_bigSmallRatioN = 0;
       }
       if (m_bigSmallRatioP) {
         delete m_bigSmallRatioP;
         m_bigSmallRatioP = 0;
       }
-      if (otherConsts->m_bigSmallRatioM) {
-        m_bigSmallRatioM = 
-          new std::vector<ValSig>(*otherConsts->m_bigSmallRatioM);
+      if (otherConsts->m_bigSmallRatioN) {
+        m_bigSmallRatioN = 
+          new std::vector<ValSig>(*otherConsts->m_bigSmallRatioN);
       }
       if (otherConsts->m_bigSmallRatioP) {
         m_bigSmallRatioP = 
