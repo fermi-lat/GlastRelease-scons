@@ -1,6 +1,8 @@
 package CalRecon
 version v5r1p2
 
+apply_pattern packageShr
+
 branches src mgr doc
 
 use GuiSvc v3*
@@ -31,7 +33,7 @@ library CalRecon  *.cxx *.cpp Dll/*.cpp ${CalRecon_headers}
 macro CalRecon_stamps     
 
 
-apply_pattern packageShr
+
 
 
 private
