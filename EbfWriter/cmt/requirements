@@ -18,20 +18,17 @@ macro headers "" WIN32 " ../EbfWriter/*.h *.h"
 library EbfWriter $(headers) *.cxx Dll/*.cxx
 
 
-#use TkrRecon       *
-#use FluxSvc        *
-#use reconRootData  *
-#use commonRootData *
-#use GuiSvc         *
-#use AcdRecon       *
-#use AnalysisNtuple *
-#use TkrDigi        *
-#use AcdDigi        *
-#use CalDigi        *
-#use Trigger        *
-#use CalUtil        *
-#use CalRecon       *
-#use FluxSvc      *
+private
+use TkrRecon       *
+use FluxSvc        *
+use TkrDigi        *
+use AcdDigi        *
+use CalDigi        *
+use Trigger        *
+use CalUtil        *
+use CalRecon       *
+
+public
 
 apply_pattern package_test
 set TESTJOBOPTIONS ${EBFWRITERROOT}/src/test/jobOptions.txt
