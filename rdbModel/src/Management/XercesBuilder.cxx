@@ -33,7 +33,7 @@ namespace rdbModel {
 
     
     //  save attribute information associated with outermost (rdbms) element.
-    m_rdb->m_dbsname = xml::Dom::getAttribute(docElt, "dbs");
+    m_rdb->m_dbName = xml::Dom::getAttribute(docElt, "dbs");
 
     m_rdb->m_DTDversion = xml::Dom::getAttribute(docElt, "DTDversion");
 
