@@ -16,6 +16,8 @@ FluxAlg.source_name="vertical_surface_muons";
 MeritAlg.EventTreeName="MeritTuple";
 MeritAlg.PointingTreeName="Exposure";
 
+TriggerAlg.mask = 0; // accept events even if they don't trigger
+
 mcRootWriterAlg.mcRootFile       = "$ROOTTESTDATAROOT/data/vertical_surface_muons/mc.root";
 digiRootWriterAlg.digiRootFile   = "$ROOTTESTDATAROOT/data/vertical_surface_muons/digi.root";
 reconRootWriterAlg.reconRootFile = "$ROOTTESTDATAROOT/data/vertical_surface_muons/recon.root";
