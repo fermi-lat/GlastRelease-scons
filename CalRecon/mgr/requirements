@@ -3,9 +3,9 @@ version v1r5
 
 branches src mgr doc
 
-use TkrRecon 
 use GuiSvc
 use GlastEvent
+use GlastSvc
 use reconstruction
 
 
