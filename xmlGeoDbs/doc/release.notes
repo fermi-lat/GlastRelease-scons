@@ -2,6 +2,8 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 18-nov-2003: jrb v1r14    (for Xin) Shield volume given updated material,
+ *                           dimensions
  * 20-oct-2003: jrb v1r13p5  Form id for side ribbons properly
  * 17-oct-2003: jrb v1r13p4  Make ribbons sensitive (position hit style)
  * 17-oct-2003: jrb v1r13p3  Make ribbons sensitive (integrating hit style)
