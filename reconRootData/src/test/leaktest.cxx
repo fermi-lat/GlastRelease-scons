@@ -79,7 +79,8 @@
             Double_t rmsLong = randNum*f;
             Double_t rmsTrans = randNum*2.*f;
             Double_t transOffset = randNum*3.*f;
-            cluster->initialize(eLeak, rmsLong, rmsTrans, calDir, transOffset);
+            Double_t eCorrect = randNum*4.*f;
+            cluster->initialize(eLeak, eCorrect, rmsLong, rmsTrans, calDir, transOffset);
             
             Double_t fitEnergy = f;
             Double_t chi2 = f*randNum;

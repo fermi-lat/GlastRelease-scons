@@ -58,7 +58,7 @@ int checkCalCluster(const CalCluster* cluster, UInt_t ievent) {
         std::cout << "Energy Sum is : " << (*cluster).getEnergySum() << std::endl;
         return -1;
     }
-    if (!floatInRange((*cluster).getEnergyCorrected(), f)) {
+    if (!floatInRange((*cluster).getEnergyCorrected(), 5.*fr)) {
         std::cout << "Energy Corrected is : " << (*cluster).getEnergyCorrected() << std::endl;
         return -1;
     }
@@ -952,7 +952,8 @@ int write(char* fileName, int numEvents) {
             Double_t rmsLong = randNum*f;
             Double_t rmsTrans = randNum*2.*f;
             Double_t transOffset = randNum*3.*f;
-            cluster->initialize(eLeak, eLayer, pLayer, rmsLayer, rmsLong, 
+            Double_t eCorrect = randNum*5.*f;
+            cluster->initialize(eLeak, eCorrect, eLayer, pLayer, rmsLayer, rmsLong, 
                 rmsTrans, calDir, transOffset);
             
             Double_t fitEnergy = f;
