@@ -73,11 +73,29 @@
  * particles for reconstruction uses (G4PropagatorSvc, TransportStepInfo,
  * ParticleTransporter and G4ParticlePropagator) and to deal with some oddity in
  * the output of Geant4 (UIsession)<br>
+ * 
+ * @section pruning McParticle tree pruning
+ *
+ * Since some events has an McParticle tree too big to be easily browsed and
+ * anlyzed, it has been necessary to design some sort of pruning mechanism for
+ * such a tree; this pruning is performed at the end of the event and affect the
+ * TDS content. When an McParticle is pruned, a special care must be taken for
+ * the parentage relationships; in our case the McParticle pruned is removed
+ * from the daughters of its mother, while all the daughters of the pruned
+ * McParticle are added to the daughters list of its mother.
+ *
+ * The parameter <i>G4Generator.mcTreeMode</i> can be used to set the level of
+ * pruning of the McParticle tree; there are three possible values:
+ *
+ * - <b>full</b> in this case the full McParticle is saved in the TDS.
+ * - <b>pruneCal</b> in this case all the particles that are created and end in a
+ *                   volume belonging to the CAL are pruned, unless they generate a PosHit. 
+ * - <b>minimal</b> in this case only the primary is retained in the tree and
+ *                  all the particles "generated" by it.
  *
  *<hr>
  * @section jobOptions jobOptions
- * @param G4Generator.UICommands  
- *   default value ""
+ * @param G4Generator.UICommands  default value ""
  * @param G4Generator.geometryMode [""] Blank means use default from GlastDetSvc
  * @param G4Generator.saveTrajectories [0] Set non-zero to allow trajectory objects (Event::McTrajectory) to be saved on the TDS
  * @param G4Generator.mcTreeMode ["minimal"]

@@ -63,7 +63,7 @@ void TrackingAction::PreUserTrackingAction(const G4Track* aTrack)
   
   if ( man->getMode()== 0)
     if ((aTrack->GetTrackID() == 1) || 
-        ((aTrack->GetParentID() == 1) && (process == "conv")))
+        (aTrack->GetParentID() == 1))
       save = 1;
     else save = 0;
 
