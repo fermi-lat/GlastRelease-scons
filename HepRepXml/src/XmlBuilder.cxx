@@ -92,7 +92,16 @@ void XMLBuilder::addInstance(std::string father,
     }
   
   gzprintf(m_file,"%s",addIdent(m_actualInstance.size()).c_str());
-  gzprintf(m_file,"<instance type=\"%s\">\n",type.c_str());
+
+  // Here we build the full qualified Name of the Type
+  std::string fullName = "";
+  for (unsigned int i=0;i<m_actualInstance.size(); i++)
+  {
+    fullName = fullName + m_actualInstance[i] + "/";
+  }
+
+  
+  gzprintf(m_file,"<instance type=\"%s\">\n",(fullName + type).c_str());
 
   m_actualInstance.push_back(type);
 
