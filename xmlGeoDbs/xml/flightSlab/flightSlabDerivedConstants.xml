@@ -797,8 +797,12 @@
             <notes>z displacement of slab in front of LAT</notes>
             <add>
               <refer refTo="NADBlanketTop_dz" />
+              <refer refTo="slabZGap" />
               <quo>
-                <refer refTo="slabZ" />
+                <add>
+                  <refer refTo="slabZ" />
+                  <refer refTo="NADBlanketThick" />
+                </add>
                 <const value="2" uType="count" />
               </quo>
             </add>

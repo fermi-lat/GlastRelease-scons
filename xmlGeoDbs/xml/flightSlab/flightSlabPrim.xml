@@ -10,11 +10,6 @@
   <prim name="slabY" value="2000.">slab y dimension</prim>
   <prim name="slabZ" value="100."> slab z dimension</prim>
      
-<!--
-  <prim name="envExtra" value="10.0">Make envelope dimensions
-     this much bigger than corresponding slab dimensions</prim> 
--->        
-       
   <prim name="slabZGap" value="1000.0">Distance above LAT to the
    slab</prim>
 </primCategory>
