@@ -5,7 +5,7 @@ use graphics v0
 
 
 macro   geomrep_linkopts "-L ${GEOMREPROOT}/${CMTCONFIG} -lgeomrep"\
-        VisualC "geomrep.lib"
+        VisualC "geomreplib.lib"
 
 
 private
