@@ -162,14 +162,11 @@ GlastDetectorManager::GlastDetectorManager(DetectorConstruction *det, const detM
     m_id_end = idmap.getIdVector()->end();  // used to prevent too many: must equal m_id_it at end.
 
     m_idMap = det->idMap();
-#if 1
+
     // construct file name for xml file with detector stuff
     std::string detfile("$(INSTRUMENTROOT)/xml/");
     detfile += det->topVolumeName()+".xml";
 
-//    static std::string detfile("$(INSTRUMENTROOT)/xml/LAT.xml");
-    //static std::string detfile("$(INSTRUMENTROOT)/xml/CALLayer.xml");
-//    static std::string detfile("$(INSTRUMENTROOT)/xml/CsIElement.xml");
     std::cout << "Loading glastdetectors from " << detfile << "... ";
     m_instrument = new Instrument;
     m_instrument->initialize("",detfile );
@@ -179,7 +176,9 @@ GlastDetectorManager::GlastDetectorManager(DetectorConstruction *det, const detM
     // now use the local visitor to make a list
     m_instrument->rootDetector()->accept(Visitor(this));
     std::cout << "actually found " << m_detMap.size() << " detectors " << std::endl;
-#endif
+    if( m_id_it != m_id_end ) {
+        std::cerr << "Warning!!! Did not use all of the ids in the list of VolumeIdentifiers" << std::endl;
+    }
     // and tell G4 about us
     G4SDManager::GetSDMpointer()->AddNewDetector( this );
 
@@ -306,7 +305,7 @@ idents::VolumeIdentifier GlastDetectorManager::checkId(idents::VolumeIdentifier:
 {
     assert(m_id_it != m_id_end);
     idents::VolumeIdentifier id = *m_id_it++;
-    std::cout << "associate VolumeIdentifier " << id.name() << " with " << (int)gid << " "<< name << std::endl;
+   // std::cout << "associate VolumeIdentifier " << id.name() << " with " << (int)gid << " "<< name << std::endl;
     return id;
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

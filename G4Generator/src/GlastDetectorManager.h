@@ -70,7 +70,7 @@ private:
     DetectorConstruction::IdMap* m_idMap;
     idents::VolumeIdentifier checkId(idents::VolumeIdentifier::int64 newid, const char * name);
     // this map is used to connect the GlastDetector object with the volume ids
-    typedef std::map<idents::VolumeIdentifier::int64, GenericDet*> DetectorMap;
+    typedef std::map<idents::VolumeIdentifier, GenericDet*> DetectorMap;
     DetectorMap m_detMap;
 
     // vector of volume ids used to correlate with GlastDetector list
