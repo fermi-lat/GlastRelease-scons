@@ -4,42 +4,6 @@
 UInt_t digiEventId, reconEventId, mcEventId;
 UInt_t digiRunNum, reconRunNum, mcRunNum;
 
-/*! Digi Analysis Histogram Defintions */
-
-void RootTreeAnalysis::DigiHistDefine() {
-
-  histFile->cd();
-
-  DigiCalHistDefine();
-  DigiTkrHistDefine();
-  DigiAcdHistDefine();
-
-}
-
-/*! Recon Analysis Histogram Defintions */
-
-void RootTreeAnalysis::ReconHistDefine() {
-
-  histFile->cd();
-
-  ReconCalHistDefine();
-  ReconTkrHistDefine();
-  ReconAcdHistDefine();
-
-};    
-
-
-/* Setup ALL histograms */
-void RootTreeAnalysis::HistDefine() {
-    
-    gStyle->SetOptStat(111111);
-    
-    histFile = new TFile(m_histFileName,"RECREATE");
-    
-    McHistDefine();
-    DigiHistDefine();
-    ReconHistDefine();
-}
 
 #include "McFragment.cxx"
 
@@ -50,21 +14,17 @@ void RootTreeAnalysis::HistDefine() {
 
 #include "DigiCalFragment.cxx"
 
-void RootTreeAnalysis::DigiAcdHistDefine() {};
-void RootTreeAnalysis::DigiTkrHistDefine() {};
+#include "TrgFragment.cxx"
 
-void RootTreeAnalysis::ReconTkrHistDefine() {};
-void RootTreeAnalysis::ReconAcdHistDefine() {};
+#include "DigiAcdFragment.cxx"
+#include "ReconAcdFragment.cxx"
+
 
 #include "ReconCalFragment.cxx"
 #include "ReconTkrFragment.cxx"
 
-void RootTreeAnalysis::DigiAcd() {};
-
+void RootTreeAnalysis::DigiTkrHistDefine() {};
 void RootTreeAnalysis::DigiTkr() {};
-
-void RootTreeAnalysis::ReconAcd() {};
-
 
 /* Event Loop
 All Analysis goes here
@@ -99,16 +59,22 @@ void RootTreeAnalysis::Go(Int_t numEvents)
     
     // Keep track of how many bytes we have read in from the data files
     Int_t nbytes = 0, nb = 0;
-    
+
     // BEGINNING OF EVENT LOOP
     for (Int_t ievent=m_StartEvent; ievent<nMax; ievent++, curI=ievent) {
         
+      mc->Dump();
+
         if (mc) {
           mc->Clear();
         }
         
         if (evt) {
           evt->Clear();
+        }
+        
+        if (rec) {
+          rec->Clear();
         }
         
         digiEventId = 0; reconEventId = 0; mcEventId = 0;
@@ -132,6 +98,7 @@ void RootTreeAnalysis::Go(Int_t numEvents)
 	    DigiAcd();
 	    DigiTkr();
             DigiCal();
+	    Trigger();
         }
         
         // Recon ONLY analysis
@@ -146,6 +113,45 @@ void RootTreeAnalysis::Go(Int_t numEvents)
     }  // end analysis code in event loop
     
     m_StartEvent = curI;
+
+    return;
 }
 
+/*! Digi Analysis Histogram Defintions */
+
+void RootTreeAnalysis::DigiHistDefine() {
+
+  histFile->cd();
+
+  DigiCalHistDefine();
+  DigiTkrHistDefine();
+  DigiAcdHistDefine();
+  TriggerHistDefine();
+
+}
+
+/*! Recon Analysis Histogram Defintions */
+
+void RootTreeAnalysis::ReconHistDefine() {
+
+  histFile->cd();
+
+  ReconCalHistDefine();
+  ReconTkrHistDefine();
+  ReconAcdHistDefine();
+
+};    
+
+
+/* Setup ALL histograms */
+void RootTreeAnalysis::HistDefine() {
+    
+    gStyle->SetOptStat(111111);
+    
+    histFile = new TFile(m_histFileName,"RECREATE");
+    
+    McHistDefine();
+    DigiHistDefine();
+    ReconHistDefine();
+}
 

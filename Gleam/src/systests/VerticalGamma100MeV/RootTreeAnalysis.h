@@ -175,9 +175,10 @@ RootTreeAnalysis::~RootTreeAnalysis() {
     if (reconFile) delete reconFile;
     if (mcFile) delete mcFile;
 
-    if (evt) delete evt;
-    if (rec) delete rec;
-    if (mc) delete mc;
+    // be a little paranoid re. clearing before deleting
+    if (evt) { evt->Clear(); delete evt;}
+    if (rec) { rec->Clear(); delete rec;}
+    if (mc) { mc->Clear(); delete mc;}
 
     digiTree = 0;
     reconTree = 0;
@@ -187,6 +188,8 @@ RootTreeAnalysis::~RootTreeAnalysis() {
     if (treeArr) delete treeArr;
     if (chainArr) delete chainArr;
 
+    // ditto re. paranoia...
+    Clear();
 }
 
 void RootTreeAnalysis::Clear() {

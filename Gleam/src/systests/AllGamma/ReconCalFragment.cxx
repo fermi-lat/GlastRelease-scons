@@ -2,6 +2,8 @@ void RootTreeAnalysis::ReconCalHistDefine() {
     
     histFile->cd();
     
+    float maxEnergy = 200000.; //MeV
+
     TH1F *CALCLUSCOUNT = new TH1F("CALCLUSCOUNT", "Cal Cluster Count",
         10, 0, 10);
     CALCLUSCOUNT->SetXTitle("Number");
@@ -35,19 +37,19 @@ void RootTreeAnalysis::ReconCalHistDefine() {
 
 
     TH1F *CALRECESUM = new TH1F("CALRECESUM", "Cal Cluster Energy Sum",
-        50, 0, 1000);
+        50, 0, maxEnergy);
     CALRECESUM->SetXTitle("Energy (MeV)");
 
     TH1F *CALRECELEAK = new TH1F("CALRECELEAK", "Cal Cluster Leakage Energy",
-        50, 0, 1000);
+        50, 0, maxEnergy);
     CALRECELEAK->SetXTitle("Energy (MeV)");
 
     TH1F *CALRECECORR = new TH1F("CALRECECORR", "Cal Cluster Corrected Energy",
-        50, 0, 1000);
+        50, 0, maxEnergy);
     CALRECECORR->SetXTitle("Energy (MeV)");
 
     TH1F *CALRECEFIT = new TH1F("CALRECEFIT", "Cal Cluster Fitted Energy",
-        50, 0, 1000);
+        50, 0, maxEnergy);
     CALRECEFIT->SetXTitle("Energy (MeV)");
 
 }
