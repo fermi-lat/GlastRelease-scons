@@ -27,6 +27,12 @@ public:
    /** Returns the contents of the specified bin.  The bin numbering
        goes from 0 to (total number of bins - 1).  */
    double retrieveBin(int binNumber);
+
+   /** Increments the value stored in the bin by 1.
+       @params binNumber The bin to increment.  The bin numbering goes
+               from 0 to (total number of bins - 1). */
+   void incrementBin(int binNumber);
+
 private:
    double *hist;  ///< The histogram
    const int num_bins;  ///< The number of bins in the histogram

@@ -48,3 +48,11 @@ double rootHist::retrieveBin(int binNumber)
     else if(binNumber>=num_bins) binNumber= num_bins-1;
     return hist[binNumber];
 }
+
+// Increment the contents of a bin
+void rootHist::incrementBin(int binNumber)
+{
+   if(binNumber < 0) binNumber=0;
+   else if(binNumber >= num_bins) binNumber = num_bins-1;
+   hist[binNumber]++;
+}

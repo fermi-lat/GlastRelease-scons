@@ -21,6 +21,8 @@ num_bins(bins)
     flux_hist = new rootHist(bins);
     flux_sigma_hist = new rootHist(bins);
     raw_hist = new rootHist(bins);
+
+
     graphTitle = "No Title";
     xlabel = "";
     ylabel = "";
@@ -104,14 +106,12 @@ void rootEnergyHist::store(double energy)
         if(currentType == loglog || currentType == semilogx)
         {
             int currentBin = int(num_bins * (log10(energy/emin) / range));
-            double contents = raw_hist->retrieveBin(currentBin);
-            raw_hist->updateBin(currentBin,++contents);
+            raw_hist->incrementBin(currentBin);
         }
         else
         {
             int currentBin = int(floor(num_bins * (energy - emin) / (emax - emin)));
-            double contents = raw_hist->retrieveBin(currentBin);
-            raw_hist->updateBin(currentBin,++contents);
+            raw_hist->incrementBin(currentBin);
         }
     }
 }
@@ -209,7 +209,8 @@ void rootEnergyHist::draw(double scale_factor, std::string mode, int current_plo
     if(current_plot >= total_plots)
     {
         std::cerr << "Error:  Invalid plot number" << std::endl;
-        exit(0);
+        return;
+//        exit(0);
     }
     
     if(current_plot == 0)
@@ -223,7 +224,8 @@ void rootEnergyHist::draw(double scale_factor, std::string mode, int current_plo
             if(false == out_file.is_open())
             {
                 std::cerr << "Unable to open temporary file for writing." << std::endl;
-                exit(0);
+                return;
+//                exit(0);
             }
             
             out_file << 

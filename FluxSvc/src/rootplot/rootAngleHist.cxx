@@ -117,15 +117,13 @@ void rootAngleHist::storeTheta(double cos_theta_value)
     
     
     int binNumber = floor((cos_theta_value)/2 * num_bins);
-    double count = theta_raw_hist->retrieveBin(binNumber);
-    theta_raw_hist->updateBin(binNumber,++count);
+     theta_raw_hist->incrementBin(binNumber);
 }
 
 void rootAngleHist::storePhi(double phi_value)
 {
     int binNumber = floor(phi_value / (2*M_PI) * num_bins);
-    double count = phi_raw_hist->retrieveBin(binNumber);
-    phi_raw_hist->updateBin(binNumber,++count);
+    phi_raw_hist->incrementBin(binNumber);
 }
 
 double rootAngleHist::retrievePhiCount(int binNumber)
@@ -225,7 +223,8 @@ void rootAngleHist::draw(double scale_factor, std::string mode, int current_plot
     if(current_plot >= total_plots)
     {
         std::cerr << "Error:  Invalid plot number" << std::endl;
-        exit(0);
+        return;
+//      exit(0);
     }
     
     if(current_plot == 0)
@@ -239,7 +238,8 @@ void rootAngleHist::draw(double scale_factor, std::string mode, int current_plot
             if(false == out_file.is_open())
             {
                 std::cerr << "Unable to open temporary file for writing." << std::endl;
-                exit(0);
+                return;
+//                exit(0);
             }
             
             out_file << 

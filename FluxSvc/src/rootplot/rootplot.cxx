@@ -44,7 +44,7 @@ void rootplot::init(std::vector<const char*> argv)
     double time=TIME;  //time to use for flux and rate functions
     double energy_min = ENERGY_MIN;
     double energy_max = ENERGY_MAX;
-    bool use_trueflux = false;
+    bool use_integrated_flux = true;
     bool use_flux = false;
     bool use_flux_min = false;
     bool use_flux_max = false;
@@ -57,8 +57,8 @@ void rootplot::init(std::vector<const char*> argv)
     std::string output_file_name;
     std::string ylabel_flux   = "Flux (particles/m^2/s/MeV/sr)";
     std::string ylabel_eflux  = "E*Flux (particles/m^2/s/sr)";
-    std::string ylabel_sflux  = "Flux (particles/m^2/s/MeV)"; // Flux integrated over all solid angles
-    std::string ylabel_seflux = "E*Flux (particles/m^2/s)";   // E*Flux integrated over all solid angles
+    std::string ylabel_integ_flux  = "Flux (particles/m^2/s/MeV)"; // Flux integrated over solid angle
+    std::string ylabel_integ_eflux = "E*Flux (particles/m^2/s)";   // E*Flux integrated over solid angle
     
     std::vector<std::string> sources;
     std::vector<int> longsources;
@@ -106,8 +106,8 @@ void rootplot::init(std::vector<const char*> argv)
         }
         else if("-flux" == arg_name)
             use_flux = true;
-        else if("-trueflux" == arg_name)
-            use_trueflux = true;
+        else if("-trueflux" == arg_name || "-no_integrate" == arg_name)
+            use_integrated_flux = false;
         else if("-file" == arg_name)
         {
             write_to_file = true;
@@ -199,15 +199,15 @@ void rootplot::init(std::vector<const char*> argv)
         if(true == use_flux)
         {
             energy_hist.setFluxMode();
-            if(false == use_trueflux)
-                energy_hist.setYLabel(ylabel_sflux);
+            if(true == use_integrated_flux)
+                energy_hist.setYLabel(ylabel_integ_flux);
             else
                 energy_hist.setYLabel(ylabel_flux);
         }
         else
         {
-            if(false == use_trueflux)
-                energy_hist.setYLabel(ylabel_seflux);
+            if(true == use_integrated_flux)
+                energy_hist.setYLabel(ylabel_integ_eflux);
             else
                 energy_hist.setYLabel(ylabel_eflux);
         }
@@ -227,7 +227,7 @@ void rootplot::init(std::vector<const char*> argv)
         
         double scale_factor;
         
-        if(false == use_trueflux)
+        if(true == use_integrated_flux)
         {
             double rate = e->rate(time)/e->totalArea();
             scale_factor = rate/loop*num_bins/log(energy_max/energy_min);
