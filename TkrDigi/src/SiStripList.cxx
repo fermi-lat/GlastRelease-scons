@@ -396,14 +396,15 @@ void SiStripList::getToT(int* ToT, const int tower, const int layer, const int v
 
     double mevPerMip = GeneralHitToDigiTool::mevPerMip();    
     double fCPerMip  = GeneralHitToDigiTool::fCPerMip();
+    double countsPerMicrosecond = pToTSvc->getCountsPerMicrosecond();
 
     int size = m_strips.size();
     int controller = 0;
     int i;
     for (i=0; i<size; ++i ) { // loop over strips
         const SiStripList::Strip strip = m_strips[i];
-        // don't use strips which are "bad" or "noise"
-        if ( strip.badStrip() /* || strip.noise()*/ )
+        // don't use bad strips
+        if ( strip.badStrip() )
             continue;
         int index = strip.index();
         if (index>sep) controller = 1;
@@ -418,9 +419,11 @@ void SiStripList::getToT(int* ToT, const int tower, const int layer, const int v
         else { // strip without times ("Simple")
             float e = strip.energy();
             if ( e>0 ) { // "Simple" or noise
-                double ToTGain = 5.0*fCPerMip*pToTSvc->getGain(tower, layer, view, index);
-                double ToTThresh = 5.0*pToTSvc->getThreshold(tower, layer, view, index);
-                double dToT =  e/mevPerMip*ToTGain + ToTThresh ;
+                double ToTGain   = fCPerMip*pToTSvc->getGain(tower, layer, view, index);
+                double ToTGain2  = fCPerMip*pToTSvc->getGain2(tower, layer, view, index);
+                double ToTThresh = pToTSvc->getThreshold(tower, layer, view, index);
+                double charge    = e/mevPerMip;
+                double dToT =  countsPerMicrosecond*(ToTThresh + charge*(ToTGain + charge*ToTGain2)) ;
                 int iToT = static_cast<int> ( std::max( 0., dToT));
                 if ( iToT > simpleToT[controller] )
                     simpleToT[controller] = iToT;
