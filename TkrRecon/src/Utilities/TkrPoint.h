@@ -14,6 +14,7 @@
 #define __TKRPOINT_H
 
 #include "geometry/Point.h"
+#include <vector>
 
 class TkrPoint
 {
@@ -60,5 +61,7 @@ private:
     /// hit ID for x and y
     int   m_xID, m_yID;
 };
+
+typedef std::vector<TkrPoint> TkrPointList;
 
 #endif // __TKRPOINT_H
