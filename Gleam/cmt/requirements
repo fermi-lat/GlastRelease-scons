@@ -14,7 +14,7 @@ use XMLEXT      v2r2
 use GlastPolicy v4r3 
 use xml         v4r1p2 
 use xmlUtil     v2r8
-use facilities  v2r1 
+use facilities        v2r2p1 
 use geometry    v3
 
 # low-level graphics
