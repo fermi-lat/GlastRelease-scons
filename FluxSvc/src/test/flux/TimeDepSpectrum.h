@@ -7,7 +7,7 @@
 #include <vector>
 #include <string>
 #include <map>
-#include "GPS.h"
+#include "../GPS.h"
 
 //!  Spectrum that reads its differential spectrum from a table
 class TimeDepSpectrum : public Spectrum

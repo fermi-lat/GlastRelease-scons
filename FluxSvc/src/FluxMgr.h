@@ -3,7 +3,7 @@
 #ifndef FLUX_MGR_H
 #define FLUX_MGR_H
 
-#include "FluxSvc/CompositeSource.h"
+#include "CompositeSource.h"
 
 #include "FluxSvc/FluxSource.h"
 

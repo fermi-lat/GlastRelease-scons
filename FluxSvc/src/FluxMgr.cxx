@@ -1,7 +1,7 @@
 // $Header$
 
 
-#include "FluxSvc/FluxMgr.h"
+#include "FluxMgr.h"
 #include "FluxSvc/FluxSource.h"
 #include "FluxSvc/SpectrumFactoryTable.h"
 #include "GPS.h"
@@ -50,7 +50,7 @@ void FluxMgr::init(const std::vector<std::string>& fileList){
     
     // a quick way of displaying what goes to the parser
     //std::cout << xmlFileIn <<std::endl;
-
+    
     m_library_doc = parser.parse(xmlFileIn);
     
     if (m_library_doc == DOM_Document()) {
@@ -69,14 +69,13 @@ void FluxMgr::init(const std::vector<std::string>& fileList){
         
         DOM_Element child = xml::Dom::getFirstChildElement(s_library);
         DOM_Element toplevel = xml::Dom::getFirstChildElement(s_library);
-        while(child != DOM_Element()){
-            char * b = xml::Dom::transToChar(child.getAttribute("name"));
-            char * c = "";
-            while(*b == *c){
+        
+        while (child != DOM_Element()) {
+            while (child.getAttribute("name") == DOMString()) {
                 s_library = child;
                 child = xml::Dom::getFirstChildElement(s_library);
-                b = xml::Dom::transToChar(child.getAttribute("name"));
             }
+            
             while (child != DOM_Element()) {
                 std::string name = xml::Dom::transToChar(child.getAttribute("name"));
                 m_sources[name]=child;
@@ -199,7 +198,7 @@ void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
     EventSource* e = source(source_name);
     setExpansion(1.);
     double time=0.;
-
+    
     cout << "running source: " << e->fullTitle() << std::endl;
     cout << " Total rate is: " << e->rate(time) << " Hz into " << e->totalArea() << " m^2" << std::endl;
     //cout << "LaunchType" << f->retLaunch() << "Pointtype" << f->retPoint() <<std::endl;
@@ -208,20 +207,20 @@ void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
     
     //testing rotateangles function
     GPS::instance()->rotateAngles(std::make_pair<double,double>(0.0,0.3));
-
+    
     FluxSource* f;
     for( int i = 0; i< count; ++i) {
         
         //testing - pass time
         pass(0.01);
         time+=0.01;
-
+        
         f = e->event(time);
         //TESTING THE lat, lon FUNCTIONS
         //cout << std::endl << "lat=" << GPS::instance()->lat() << ' ' <<"lon=" << GPS::instance()->lon() << std::endl;
         //double curTime=GPS::instance()->time();
         //cout << std::endl << "testlat=" << GPS::instance()->orbit()->testLatitude(curTime) << ' ' << "testlon=" << GPS::instance()->orbit()->testLongitude(curTime) << std::endl;
-
+        
         cout << "LaunchType = " << f->refLaunch() << " , Pointtype = " << f->refPoint() <<std::endl;
         cout << f->spectrum()->particleName();
         cout << "(" << f->energy();
@@ -287,42 +286,42 @@ Rotation FluxMgr::CELTransform(double time){
 
 /** creates a document of the form
 
-<?xml version='1.0' ?>
-<!DOCTYPE source_library SYSTEM "d:\users\burnett\pdr_v7r1c\flux\v5r3/xml/source.dtd" [
-<!ENTITY librarya SYSTEM "d:\users\burnett\pdr_v7r1c\flux\v5r3/xml/user_library.xml" >
-<!ENTITY libraryb SYSTEM "d:\users\burnett\pdr_v7r1c\flux\v5r3/xml/source_library.xml" >
-]>
-<source_library>
-&librarya;
-&libraryb;
-</source_library>
-
+  <?xml version='1.0' ?>
+  <!DOCTYPE source_library SYSTEM "d:\users\burnett\pdr_v7r1c\flux\v5r3/xml/source.dtd" [
+  <!ENTITY librarya SYSTEM "d:\users\burnett\pdr_v7r1c\flux\v5r3/xml/user_library.xml" >
+  <!ENTITY libraryb SYSTEM "d:\users\burnett\pdr_v7r1c\flux\v5r3/xml/source_library.xml" >
+  ]>
+  <source_library>
+  &librarya;
+  &libraryb;
+  </source_library>
+  
 */
 std::string FluxMgr::writeXmlFile(const std::vector<std::string>& fileList) {
-  
+    
     std::strstream fileString;
     // Unique tag to add to ENTITY elements in the DTD.
     char libchar = 'a';
     std::string inFileName;
     
     std::vector<std::string>::const_iterator iter = fileList.begin();
- 
+    
     //the default DTD file
     inFileName=m_dtd;
     //replace $(FLUXROOT) by its system variable
     xml::IFile::extractEnvVar(&inFileName);
-
+    
     //this stuff goes in the beginnning of the XML file to be read into the parser
     fileString << "<?xml version='1.0' ?>" << std::endl << "<!DOCTYPE source_library" 
         << " SYSTEM " << '"' << inFileName << '"' << " [" << std::endl;
- 
+    
     //as long as there are files in the file list...
     for (;iter != fileList.end(); iter++) {
-  
+        
         // get the file name, and evaluate any system variables in it
         inFileName=(*iter).c_str();
         xml::IFile::extractEnvVar(&inFileName);
-
+        
         //then make an ENTITY entry specifying where the file is
         fileString << "<!ENTITY " << "library" << libchar << " SYSTEM " << '"' 
             << inFileName << "\" >" << std::endl;      
@@ -332,7 +331,7 @@ std::string FluxMgr::writeXmlFile(const std::vector<std::string>& fileList) {
     fileString << "]>" << std::endl << "<source_library>" << std::endl;
     iter = fileList.begin();
     libchar = 'a';
-
+    
     //as long as there are files in the file list...
     for (;iter != fileList.end(); iter++) {
         // add a reference to the file name
@@ -342,5 +341,5 @@ std::string FluxMgr::writeXmlFile(const std::vector<std::string>& fileList) {
     
     fileString << "</source_library>" << '\0';
     return fileString.str();
-
+    
 }

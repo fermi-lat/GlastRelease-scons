@@ -4,7 +4,7 @@
 #include "config.h"
 #endif
 
-#include "../FluxSvc/CompositeSource.h"  //TAKE THE /.. OUT!
+#include "CompositeSource.h"  //TAKE THE /.. OUT!
 
 #include "dom/DOM_Element.hpp"
 #include "facilities/Scheduler.h"
@@ -28,14 +28,14 @@ CompositeSource::CompositeSource (double aRate)
 CompositeSource::~CompositeSource()
 {
     for (std::vector<EventSource*>::iterator it = m_sourceList.begin();
-	 it != m_sourceList.end(); ++it ) delete (*it);
+    it != m_sourceList.end(); ++it ) delete (*it);
 }
 
 
 void CompositeSource::addSource (EventSource* aSource)
 {
     m_sourceList.push_back(aSource);
-    EventSource::setFlux( flux(m_time) );
+    EventSource::setFlux( flux(EventSource::time()) );
 }
 
 void CompositeSource::rmvSource (EventSource* aSource)
@@ -46,29 +46,30 @@ void CompositeSource::rmvSource (EventSource* aSource)
     }
     if (it != m_sourceList.end()) {
         m_sourceList.erase(it);
-        EventSource::setFlux( flux(m_time) );
+        EventSource::setFlux( flux(EventSource::time()) );
     }
 }
 
 FluxSource* CompositeSource::event (double time)
 {
-    m_time=time;
-	m_numofiters=0;
-    double mr = rate(m_time);
-
+    EventSource::setTime(time);
+    
+    m_numofiters=0;
+    double mr = rate(EventSource::time());
+    
     if( m_sourceList.size()==1 || mr ==0) {
-	m_recent = m_sourceList.front();
+        m_recent = m_sourceList.front();
     }else {
-
+        
         // more than one:: choose on basis of relative rates
         double  x = RandFlat::shoot(mr), y = 0;
         std::vector<EventSource*>::iterator  now = m_sourceList.begin();
         std::vector<EventSource*>::iterator  it = now;
- 
+        
         double intrval=0.,intrmin=100000.;
         for (; now != m_sourceList.end(); ++now) {
-            intrval=(*now)->interval(m_time);
-
+            intrval=(*now)->interval(EventSource::time());
+            
             if(intrval < intrmin){
                 it=now;
                 intrmin=intrval;
@@ -78,7 +79,7 @@ FluxSource* CompositeSource::event (double time)
             //    m_recent = (*it);
             //    break;
             //}
-
+            
             m_recent = (*it);
             m_numofiters++;
         }
@@ -93,12 +94,12 @@ std::string CompositeSource::fullTitle () const
 {
     std::strstream  s;
     std::vector<EventSource*>::const_iterator	it = m_sourceList.begin();
-
+    
     while (it != m_sourceList.end()) {
-	
-	s << (*it)->fullTitle() << " ";
-	++it;
-	if (it != m_sourceList.end())    s << "+ ";
+        
+        s << (*it)->fullTitle() << " ";
+        ++it;
+        if (it != m_sourceList.end())    s << "+ ";
     }
     s << '\0';
     std::string t(s.str());
@@ -125,16 +126,16 @@ double CompositeSource::rate(double time) const
 
 void	CompositeSource::setRate ( double value )
 {
-    double  f = rate(m_time);
+    double  f = rate(EventSource::time());
     if (f == 0.)    return;
-
+    
     std::vector<float>	fvec;
     std::vector<EventSource*>::iterator it = m_sourceList.begin();
-
+    
     while (it != m_sourceList.end())	{
-
-	(*it)->setRate( value * (*it)->rate(m_time)/f );
-	++it;
+        
+        (*it)->setRate( value * (*it)->rate(EventSource::time())/f );
+        ++it;
     }
     EventSource::setRate( value );
 }
@@ -144,21 +145,21 @@ void CompositeSource::setupXML (const DOM_Element&) {}
 
 void CompositeSource::printOn(std::ostream& out)const
 {
-    out << "Source(s), total rate="<< rate(m_time) << std::endl;
-
+    out << "Source(s), total rate="<< rate(EventSource::time()) << std::endl;
+    
     for( std::vector<EventSource*>::const_iterator it = m_sourceList.begin();
-        it != m_sourceList.end();++it)	{
-        out <<  std::setw(8) << std::setprecision(4) << (*it)->rate(m_time) <<" Hz, "
+    it != m_sourceList.end();++it)	{
+        out <<  std::setw(8) << std::setprecision(4) << (*it)->rate(EventSource::time()) <<" Hz, "
             << '#' << std::setw(6) << (*it)->eventNumber() <<' '
             << (*it)->name() << ' '<< (*it)->fullTitle() << std::endl;
-
+        
     }
-
+    
 }
 
 std::string CompositeSource::findSource()const
 {
-	return m_recent->fullTitle();
+    return m_recent->fullTitle();
 }
 
 /// return a unique number correcponding to that spectrum
@@ -173,10 +174,9 @@ int CompositeSource::numSource()const
 //    return m_interval;
 //}
 
-    /// set the interval to the next event
+/// set the interval to the next event
 //double setInterval (double interval){
 //m_interval = interval;
 //}
 
 
-	  

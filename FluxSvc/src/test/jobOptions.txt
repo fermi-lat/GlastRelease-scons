@@ -21,7 +21,7 @@ FluxSvc.source_lib ={"$(FLUXSVCROOT)/xml/source_library.xml"};
 FluxSvc.source_lib += {"$(FLUXSVCROOT)/xml/user_library.xml"};
 
 // ask for a source that is in the user_library
-FluxAlg.source_name="chime";
+FluxTestAlg.source_name="default";
 
 ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 10;

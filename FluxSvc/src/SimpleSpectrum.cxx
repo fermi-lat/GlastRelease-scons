@@ -1,7 +1,7 @@
 // $Header$
 
 
-#include "FluxSvc/SimpleSpectrum.h"
+#include "SimpleSpectrum.h"
 
 #include "dom/DOM_Element.hpp"
 #include "xml/Dom.h"

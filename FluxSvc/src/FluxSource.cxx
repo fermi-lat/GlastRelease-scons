@@ -8,7 +8,7 @@
 
 #include "FluxSvc/SpectrumFactoryTable.h"
 
-#include "FluxSvc/SimpleSpectrum.h"
+#include "SimpleSpectrum.h"
 
 #include "CLHEP/Random/RandFlat.h"
 
@@ -248,7 +248,7 @@ void FluxSource::spectrum(Spectrum* s, double emax)
 FluxSource* FluxSource::event(double time) 
 {
     computeLaunch();
-    m_time=time;
+    EventSource::setTime(time);
     return this;
     // could be a call-back
 }

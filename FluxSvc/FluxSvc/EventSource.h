@@ -77,8 +77,13 @@ class EventSource
       /// return a unique number correcponding to that spectrum
       virtual int numSource()const{return -1;}
 
+      virtual double time()const{return m_time;}
+      virtual void setTime(double time){m_time=time;}
+
+      //double m_time;    // elapsed time, really only needed for EventSource
+  private:
       double m_time;    // elapsed time, really only needed for EventSource
-  private:							    
+ 
       bool m_enabled;           // toggle that it is enabled
       double m_flux;		// representative flux for this event source...
       double m_solid_angle;     // solid angle over which the rate is computed	(in steradians)

@@ -16,7 +16,7 @@
 #include "GlastEvent/MonteCarlo/McVertex.h"
 
 //flux
-#include "FluxSvc/FluxSvc.h"
+#include "FluxSvc.h"
 #include "FluxSvc/IFlux.h"
 #include "FluxSvc/Spectrum.h"
 #include "FluxSvc/SpectrumFactory.h"

@@ -6,7 +6,7 @@
 
 #include "FluxSvc/FluxSource.h"
 #include "FluxSvc/EventSource.h"
-#include "FluxSvc/FluxMgr.h"
+#include "FluxMgr.h"
 #include "GPS.h"
 
 Flux::Flux(std::string name) 

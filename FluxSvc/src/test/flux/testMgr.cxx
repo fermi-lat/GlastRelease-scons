@@ -1,6 +1,6 @@
 // $Header$
 
-#include "FluxSvc/FluxMgr.h"
+#include "../../FluxMgr.h"
 #include "FluxSvc/EventSource.h"
 #include "FluxSvc/ISpectrumFactory.h"
 #include "FluxSvc/SpectrumFactoryTable.h"

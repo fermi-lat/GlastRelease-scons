@@ -3,7 +3,7 @@
 //  Original author: Toby Burnett tburnett@u.washington.edu
 //
 
-#include "FluxSvc/FluxSvc.h"
+#include "FluxSvc.h"
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -21,7 +21,7 @@
 
 #include "Flux.h"
 
-#include "FluxSvc/FluxMgr.h"
+#include "FluxMgr.h"
 #include <algorithm>
 
 // declare the service factories for the FluxSvc
