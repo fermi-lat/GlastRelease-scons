@@ -16,7 +16,7 @@
   <constants>
     <version major="0" minor="0" />
     <primary>
-      <category name="global">
+      <primCategory name="global">
         <prim name="modWidth" value="389.7">Width of a single CAL-TKR module.
 </prim>
         <prim name="xNum" value="4" uType="count">Number of towers in x.</prim>
@@ -27,10 +27,9 @@
         <prim name="wallMaterial"   value="C" type="string" uType="mat"> Wall material
 </prim>
         <prim name="wallThickness"  value="1.5">   Wall thickness</prim>
-        <prim name="wallWidth"  value="389.7">width of walls (less than mod_width)
-</prim>
-      </category>
-      <category name="CALprim" >
+        <prim name="wallWidth"  value="389.7">width of walls (less than mod_width)</prim>
+      </primCategory>
+      <primCategory name="CALprim" >
 	<prim name="crystalMat" value="CsI" type="string" uType="mat">Crystal Material
 </prim>
 	<prim name="diodeMat" value="Si" type="string" uType="mat">Diode Material
@@ -96,8 +95,8 @@ Material for space between CAL layers
         <prim name= "CALFlangeMat" value= "Al50" type="string" uType="mat">
 Material for CAL flange
 </prim>
-      </category>
-      <category name="TKRprim" >
+      </primCategory>
+      <primCategory name="TKRprim" >
         <prim name="convMat" value="Pb" type="string" uType="mat">material used in tracker conversion
 </prim>
         <prim name="coreMat" value="FOAM05" type="string" uType="mat">material used in tracker tray core</prim>
@@ -136,8 +135,6 @@ form a square array of this dimension</prim>
         <prim name="numSuperGlast" value="4" uType="count">number of trays with super-Glast thickness lead.  These are immediately above the no-lead trays</prim>
         <prim name= "SiThick" value= "0.4" >Si thickness
 </prim>
-        <prim name= "traySpacing" value= "32.0" >Center-to-center distance between trays
-</prim>
         
         <prim name= "TKRWidth" value= "389.7">**Is this just a replacement for wallWidth?
 </prim>  
@@ -151,11 +148,11 @@ form a square array of this dimension</prim>
 (determines number of Si strips)
 </prim>
 
-      </category>
+      </primCategory>
     </primary>
 
     <derived>
-      <category name="derAll">
+      <derCategory name="derAll">
         <const name="vacuumMat" value="Vacuum" />
 
     <!-- diodePosXOffset  = (CsILength + diodeX)/2 -->
@@ -361,7 +358,7 @@ form a square array of this dimension</prim>
 	<const name="totalY" value = "??" />
 	<const name="totalZ" value = "??" />
 
-      </category>
+      </derCategory>
     </derived>
   </constants>
 
@@ -594,9 +591,10 @@ form a square array of this dimension</prim>
 
   <!-- No explicit material, so vacuum -->
     <box name="SiLayerEnv"    
-      XREF="TKRTraywidth"
-      YREF="TKRTraywidth"
-      ZREF="SiThick" />
+      XREF="TKRTrayWidth"
+      YREF="TKRTrayWidth"
+      ZREF="SiThick" 
+      material="vacuumMat"/>
 
 <!-- The unrotated wafer is segmented along the x axis, hence measures X,
      hence is an X layer -->
@@ -636,7 +634,7 @@ form a square array of this dimension</prim>
     </stackY>
 
 <!-- The collection of wafers is centered in the volume -->
-    <composition name="SiLayerComp" env="SiLayerEnv">
+    <composition name="SiLayerComp" envelope="SiLayerEnv">
       <posXYZ volume="towerLayerWafers" />
     </composition>
 
@@ -709,7 +707,7 @@ form a square array of this dimension</prim>
 
     <!-- make a tracker by stacking up the trays -->
     <stackZ name="oneTKR" >
-      <axisPos volume="trayBot" zrot="90" >
+      <axisPos volume="trayBot" rotation="90" >
 	<identifier field="tray" value="0" />
         <identifier field="orient" value="1" /> <!-- 0 is X, 1 is Y -->
       </axisPos>
@@ -717,7 +715,7 @@ form a square array of this dimension</prim>
 	<identifier field="tray" value="1" />
         <identifier field="orient" value="0" />
       </axisPos>
-      <axisPos volume="trayNoConv" zrot="90" gapREF="innerInterTrayGap" >
+      <axisPos volume="trayNoConv" rotation="90" gapREF="innerInterTrayGap" >
 	<identifier field="tray" value="2" />
         <identifier field="orient" value="1" />
       </axisPos>
@@ -725,7 +723,7 @@ form a square array of this dimension</prim>
 	<identifier field="tray" value="3" />
         <identifier field="orient" value="0" />
       </axisPos>
-      <axisPos volume="traySuper" zrot="90" gapREF="innerInterTrayGap" >
+      <axisPos volume="traySuper" rotation="90" gapREF="innerInterTrayGap" >
 	<identifier field="tray" value="4" />
         <identifier field="orient" value="1" />
       </axisPos>
@@ -733,7 +731,7 @@ form a square array of this dimension</prim>
 	<identifier field="tray" value="5" />
         <identifier field="orient" value="0" />
       </axisPos>
-      <axisPos volume="traySuper" zrot="90" gapREF="innerInterTrayGap" >
+      <axisPos volume="traySuper" rotation="90" gapREF="innerInterTrayGap" >
 	<identifier field="tray" value="6" />
         <identifier field="orient" value="1" />
       </axisPos>
@@ -741,7 +739,7 @@ form a square array of this dimension</prim>
 	<identifier field="tray" value="7" />
         <identifier field="orient" value="0" />
       </axisPos>
-      <axisPos volume="trayReg" zrot="90" gapREF="innerInterTrayGap" >
+      <axisPos volume="trayReg" rotation="90" gapREF="innerInterTrayGap" >
 	<identifier field="tray" value="8" />
         <identifier field="orient" value="1" />
       </axisPos>
@@ -749,7 +747,7 @@ form a square array of this dimension</prim>
 	<identifier field="tray" value="9" />
         <identifier field="orient" value="0" />
       </axisPos>
-      <axisPos volume="trayReg" zrot="90" gapREF="innerInterTrayGap" >
+      <axisPos volume="trayReg" rotation="90" gapREF="innerInterTrayGap" >
 	<identifier field="tray" value="10" />
         <identifier field="orient" value="1" />
       </axisPos>
@@ -757,7 +755,7 @@ form a square array of this dimension</prim>
 	<identifier field="tray" value="11" />
         <identifier field="orient" value="0" />
       </axisPos>
-      <axisPos volume="trayReg" zrot="90" gapREF="innerInterTrayGap" >
+      <axisPos volume="trayReg" rotation="90" gapREF="innerInterTrayGap" >
 	<identifier field="tray" value="12" />
         <identifier field="orient" value="1" />
       </axisPos>
@@ -765,7 +763,7 @@ form a square array of this dimension</prim>
 	<identifier field="tray" value="13" />
         <identifier field="orient" value="0" />
       </axisPos>
-      <axisPos volume="trayReg" zrot="90" gapREF="innerInterTrayGap" >
+      <axisPos volume="trayReg" rotation="90" gapREF="innerInterTrayGap" >
 	<identifier field="tray" value="14" />
         <identifier field="orient" value="1" />
       </axisPos>
@@ -773,7 +771,7 @@ form a square array of this dimension</prim>
 	<identifier field="tray" value="15" />
         <identifier field="orient" value="0" />
       </axisPos>
-      <axisPos volume="trayReg" zrot="90" gapREF="innerInterTrayGap" >
+      <axisPos volume="trayReg" rotation="90" gapREF="innerInterTrayGap" >
 	<identifier field="tray" value="16" />
         <identifier field="orient" value="1" />
       </axisPos>
@@ -781,7 +779,7 @@ form a square array of this dimension</prim>
 	<identifier field="tray" value="17" />
         <identifier field="orient" value="0" />
       </axisPos>
-      <axisPos volume="trayReg" zrot="90" gapREF="innerInterTrayGap" >
+      <axisPos volume="trayReg" rotation="90" gapREF="innerInterTrayGap" >
 	<identifier field="tray" value="18" />
         <identifier field="orient" value="1" />
       </axisPos>
@@ -789,7 +787,8 @@ form a square array of this dimension</prim>
     </stackZ>
 
 <!-- next need to put together oneCAL and oneTKR with necessary
-     structural stuff to make a tower -->
+     structural stuff to make a tower.  Front plane of grid
+     defines Z = 0 (Steve Ritz memo) -->
 
   </section>
 </gdd>

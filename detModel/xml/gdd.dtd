@@ -475,7 +475,7 @@
     "dsize"   is small (0) or large (1)  
       -->
 <!ATTLIST identifier field
-   (layer|tower|tray|row|col|topside|xtal|orient|nsew|end|dsize) #REQUIRED
+   (layer|tower|tray|row|col|topside|xtal|orient|nsew|end|dsize|wafer|SiPosition) #REQUIRED
    value   NMTOKEN  "0"
    step    NMTOKEN  "0" >
 
@@ -736,10 +736,10 @@ with corresponding field names.
 <!ATTLIST  version major NMTOKEN #REQUIRED >
 <!ATTLIST  version minor NMTOKEN #REQUIRED >
 
-<!ELEMENT primary (category*) >
+<!ELEMENT primary (primCategory*) >
 
-<!ELEMENT category ((prim*) | (const*)) >
-<!ATTLIST category name ID #REQUIRED>
+<!ELEMENT primCategory ((prim*)) >
+<!ATTLIST primCategory name ID #REQUIRED>
 
 <!ELEMENT prim (#PCDATA) >  <!-- Should be text describing the constant -->
 <!ATTLIST prim name ID #REQUIRED 
@@ -748,7 +748,9 @@ with corresponding field names.
                 uType (length | angle | count | mat | none) "length"
                %units; >
 
-<!ELEMENT derived (category*) >
+<!ELEMENT derived (derCategory*) >
+<!ELEMENT derCategory ((const*)) >
+<!ATTLIST derCategory name ID #REQUIRED>
 
 <!ENTITY  % operator "mul | quo | add | minus | uminus | max" >
 
