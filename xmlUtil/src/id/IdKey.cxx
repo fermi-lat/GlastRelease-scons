@@ -9,7 +9,7 @@ namespace {
 }
 
 namespace xmlUtil {
-  IdKey::IdKey(const std::vector<unsigned int> id) {
+  IdKey::IdKey(const Identifier id) {
     fillFrom(id);
   }
 

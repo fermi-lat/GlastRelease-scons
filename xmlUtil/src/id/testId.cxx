@@ -146,21 +146,18 @@ void testQuery(xmlUtil::IdDict* dict) {
   std::cout << "badId is " <<  ( (valid) ? "VALID" : "INVALID" );
   std::cout << std::endl;
 
-  xmlUtil::NamedId nIdBadVal(5); 
-  xmlUtil::NamedId nIdOk(3);
-  xmlUtil::NamedId nIdBadName(4);
+  xmlUtil::NamedId nIdBadVal(4); 
+  xmlUtil::NamedId nIdOk(2);
+  xmlUtil::NamedId nIdBadName(3);
 
-  nIdBadVal.addField("fTopObjects", 0);
   nIdBadVal.addField("fLATObjects", 0);
   nIdBadVal.addField("fTowerY", 2);
   nIdBadVal.addField("fTowerX", 14);
   nIdBadVal.addField("fTowerObjects", 0);
 
-  nIdOk.addField("fTopObjects", 0);
   nIdOk.addField("fLATObjects", 0);
   nIdOk.addField("fTowerY", 2);
 
-  nIdBadName.addField("fTopObjects", 0);
   nIdBadName.addField("fLATObjects", 0);
   nIdBadName.addField("fTower", 2);
   nIdBadName.addField("fTowerX", 1);
@@ -196,7 +193,6 @@ int testConverter(xmlUtil::IdConverter* converter) {
 
   // Check out some particular Identifier and NamedId objects
   xmlUtil::NamedId nId;
-  nId.addField("fTopObjects", 0);   // LAT
   nId.addField("fLATObjects", 0);   // Towers
   nId.addField("fTowerY", 3);
 

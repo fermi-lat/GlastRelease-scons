@@ -11,7 +11,7 @@
 
 int main(int argc, char* argv[]) {
 
-  std::vector<unsigned int> a, b, c, d, e;
+  xmlUtil::Identifier a, b, c, d, e;
 
   for (int i = 0; i < 15; i++) {
     a.push_back(i);
