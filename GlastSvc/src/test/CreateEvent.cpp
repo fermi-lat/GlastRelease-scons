@@ -31,7 +31,6 @@ static const AlgFactory<CreateEvent>  Factory;
 const IAlgFactory& CreateEventFactory = Factory;
 
 extern void GlastSvc_load();
-extern void DbConverters_load();
 
 //------------------------------------------------------------------------------
 /// Algorithm parameters which can be set at run time must be declared.
@@ -39,7 +38,6 @@ extern void DbConverters_load();
 CreateEvent::CreateEvent(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator), m_detSvc(0), m_irfLoadSvc(0) {
     GlastSvc_load();
-    DbConverters_load();
 }
 
 
