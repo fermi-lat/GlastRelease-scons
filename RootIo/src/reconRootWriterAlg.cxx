@@ -321,8 +321,9 @@ void reconRootWriterAlg::fillTkrClusterCol(TkrRecon* recon, Event::TkrClusterCol
                                                  clusterTds->lastStrip(), 
                                                  posRoot, 
                                                  clusterTds->ToT(), 
-                                                 clusterTds->hitFlagged(), 
-                                                 clusterTds->id());
+                                                 clusterTds->getStatusWord()//, 
+                                                 //clusterTds->id()
+                                                 );
         
         recon->addCluster(clusterRoot);
 

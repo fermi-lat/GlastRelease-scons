@@ -420,7 +420,9 @@ StatusCode reconRootReaderAlg::storeTkrClusterCol(TkrRecon *tkrRecRoot) {
                                                               clusterRoot->getLastStrip(),
                                                               posTds,
                                                               clusterRoot->getToT(),
-                                                              clusterRoot->getId() );
+                                                              clusterRoot->getStatusWord()//,
+                                                              //clusterRoot->getId() 
+                                                              );
         
         clusterTdsCol->push_back(clusterTds);
 
