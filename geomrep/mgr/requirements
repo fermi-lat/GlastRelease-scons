@@ -1,4 +1,4 @@
-package geomrep
+llpackage geomrep
 
 version v2
 
@@ -10,13 +10,14 @@ use GlastPolicy
 ignore_pattern include_none
 apply_pattern package_include
 apply_pattern package_linkopts
+apply_pattern package_headers
 
 private
 
-library geomrep -no_share *.cxx   ../geomrep/*.h
+library geomrep -no_share *.cxx ${geomrep_headers}
 
 # set up application link-options for test program. Note also the resource
 
-macro_append cpplinkflags $(guiapp_linkopts)
+macro_append gui_linkopts $(guiapp_linkopts)
 
 application testgeom test/testgeom.cxx ${Win32Resource}

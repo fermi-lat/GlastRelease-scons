@@ -8,6 +8,7 @@ use CLHEP
 apply_pattern package_include
 
 apply_pattern package_linkopts
+apply_pattern package_headers
 
 private
 library  geometry -no_share \
@@ -19,5 +20,5 @@ library  geometry -no_share \
     Shape.cxx           Sphe.cxx\
     Sphere.cxx          Surface.cxx         Track.cxx\
     Tube.cxx            Tubs.cxx            Vector.cxx \
-    Volume.cxx          Wedge.cxx \
-    ../geometry/*.h
+    Volume.cxx          Wedge.cxx           ${geometry_headers}
+    
