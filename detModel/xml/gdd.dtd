@@ -40,11 +40,18 @@
         an attribute X for which a numerical value was expected
         gets a new attribute, XREF, whose value is an IDREF
         (and the IDREF must point to some form of constant
-        with an explicit or implicit  (in the case of derived
-        constants) value attribute.
+        with an explicit or implicit - in the case of derived
+        constants - value attribute).
 
      25 Jan 2001
         Let alternate volume descriptions go under a single name.
+
+     22 Feb 2001
+        1. Add back in tubs (tube segment) and cons (cone segment)
+        2. Change attribute type from CDATA to NMTOKEN whenever
+           possible (e.g., whenever numeric values are expected)
+        3. Bring so-far unused positioning elements like mposR
+           into compliace with REF scheme
 -->
 
 <!--
@@ -420,36 +427,32 @@
     step         only used in multi-positioning.
                  
 -->
-<!--
-2.2) Using parameters    OMITTED.  See geotest.dtd or agdd
--->
-<!--
-2.4) Using Axis compositions
--->
-<!--
-<stackX name="MU_RPC1_LongStrips">
-  <axisMPos volume="MU_RPC1_LongStrip" ncopy="96" gap0="2.6" shift="30.8"/>
-</stackX>
--->
-
-
 
 <!-- to keep changes to a mininum, temporarily nullify DTD_constraint -->
 <!ENTITY % DTDconstraint ' DTDversion CDATA  #IMPLIED' >
 
 <!-- See definition of constants and its children at the end of this file -->
-<!ELEMENT  gdd  (constants?,  section+) >
+<!ELEMENT  gdd  (source*, constants?,  section+) >
 
 
 <!ATTLIST  gdd
-           %DTDconstraint; >
+           %DTDconstraint; 
+           CVSid  CDATA #REQUIRED >
 
 
 <!-- (jrb) got rid of    
             trd | tubs | cons | pcon | 
+     (jrb) as of 22 feb 2001 add back in tubs, cons
  -->
 
-<!ELEMENT  section  ( box | 
+<!-- Pre-processing programs should add a <source> element to the output -->
+<!ELEMENT  source  (#PCDATA) >
+<!ATTLIST  source  file           CDATA #IMPLIED
+                   fileVersion    CDATA #IMPLIED
+                   creator        CDATA #IMPLIED
+                   creatorVersion CDATA #IMPLIED >
+
+<!ELEMENT  section  ( box | tubs | cons |
                       union | intersection | subtraction |
                       composition | choice |
                       stackX | stackY | stackZ |
@@ -487,8 +490,8 @@ with corresponding field names.
 <!ELEMENT layer EMPTY>
 
 <!ATTLIST layer field  (layer) "layer"
-                value  CDATA  "0"
-                step   CDATA  "0">
+                value  NMTOKEN  "0"
+                step   NMTOKEN  "0">
 
 
 <!ENTITY % anyIdentifier 'layer   | identifier'>
@@ -511,6 +514,40 @@ with corresponding field names.
            XREF    IDREF     #IMPLIED
            YREF    IDREF     #IMPLIED
            ZREF    IDREF     #IMPLIED
+           %solidProperties;
+           %units;>
+
+<!ELEMENT  tubs   EMPTY >
+<!ATTLIST  tubs
+           RIn       NMTOKEN  "0"
+           ROut      NMTOKEN  "0"
+           Z         NMTOKEN  "0"
+           PhiBeg    NMTOKEN  "0"
+           PhiEnd    NMTOKEN  "360"
+           RInREF    IDREF  #IMPLIED
+           ROutREF   IDREF  #IMPLIED
+           ZREF      IDREF  #IMPLIED
+           PhiBegREF IDREF  #IMPLIED
+           PhiEndREF IDREF  #IMPLIED
+           %solidProperties;
+           %units;>
+
+<!ELEMENT  cons   EMPTY >
+<!ATTLIST  cons
+           RIn1      NMTOKEN  "0"
+           ROut1     NMTOKEN  "0"
+           RIn2      NMTOKEN  "0"
+           ROut2     NMTOKEN  "0"
+           Z         NMTOKEN  "0"
+           PhiBeg    NMTOKEN  "0"
+           PhiEnd    NMTOKEN  "360"
+           RIn1REF   IDREF  #IMPLIED
+           ROut1REF  IDREF  #IMPLIED
+           RIn2REF   IDREF  #IMPLIED
+           ROut2REF  IDREF  #IMPLIED
+           ZREF      IDREF  #IMPLIED
+           PhiBegREF IDREF  #IMPLIED
+           PhiEndREF IDREF  #IMPLIED
            %solidProperties;
            %units;>
 
@@ -626,10 +663,10 @@ with corresponding field names.
      attributes xrot, yrot, zrot
  -->
 <!ENTITY % positionProperties 'volume    IDREF    #REQUIRED
-                                xrot       CDATA    "0"
-                                yrot       CDATA    "0"
-                                zrot       CDATA    "0"
-                                S         CDATA    "0"
+                                xrot       NMTOKEN    "0"
+                                yrot       NMTOKEN    "0"
+                                zrot       NMTOKEN    "0"
+                                S         NMTOKEN    "0"
                                 %units; '>
            
 <!-- Change single X_Y_Z attribute to three separate attributes. 
@@ -649,82 +686,120 @@ with corresponding field names.
 
 <!ELEMENT  posRPhiZ ( %anyIdentifier; )* >
 <!ATTLIST  posRPhiZ
-           RPhiZ   CDATA    "0 0 0"
+           R   NMTOKEN "0"
+           Phi NMTOKEN "0"
+           Z   NMTOKEN "0"
+           RREF IDREF   #IMPLIED
+           PhiREF IDREF   #IMPLIED
+           ZREF IDREF   #IMPLIED
            impliedRot (true | false) "true"
            %positionProperties;>
 
 <!ELEMENT  mposPhi ( %anyIdentifier; )* >
 <!ATTLIST  mposPhi
-           ncopy     CDATA    #REQUIRED
-           Phi0      CDATA    "0"                     
-           dPhi      CDATA    #IMPLIED 
-           RZ       CDATA    "0 0"
+           ncopy     NMTOKEN    "0"
+           Phi0      NMTOKEN    "0"
+           dPhi      NMTOKEN    "0"
+           R         NMTOKEN    "0"
+           Z         NMTOKEN    "0"
+           ncopyREF  IDREF      #IMPLIED
+           Phi0REF   IDREF      #IMPLIED
+           dPhiREF   IDREF      #IMPLIED
+           RREF      IDREF      #IMPLIED
+           ZREF      IDREF      #IMPLIED
            impliedRot (true | false) "true"
            %positionProperties;>
 
 <!ELEMENT  mposR ( %anyIdentifier; )* >
 <!ATTLIST  mposR
-           ncopy     CDATA    #REQUIRED
-           R0        CDATA    "0"
-           dR        CDATA    #REQUIRED
-           ZPhi     CDATA    "0 0"   
+           ncopy     NMTOKEN    "0"
+           R0        NMTOKEN    "0"
+           dR        NMTOKEN    "0"
+           Z         NMTOKEN    "0"   
+           Phi       NMTOKEN    "0"   
+           ncopyREF  IDREF      #IMPLIED
+           R0REF     IDREF      #IMPLIED
+           dRREF     IDREF      #IMPLIED
+           ZREF      IDREF      #IMPLIED
+           PhiREF    IDREF      #IMPLIED
            %positionProperties;>
 
 <!ELEMENT  mposX ( %anyIdentifier; )* >
 <!ATTLIST  mposX
-           ncopy     CDATA    #REQUIRED
-           X0        CDATA    "0"
-           dX        CDATA    #REQUIRED
-           YZ       CDATA    "0 0"   
+           ncopy     NMTOKEN    "0"
+           X0        NMTOKEN    "0"
+           dX        NMTOKEN    "0"
+           Y         NMTOKEN    "0"   
+           Z         NMTOKEN    "0"   
+           ncopyREF  IDREF      #IMPLIED
+           X0REF     IDREF      #IMPLIED
+           dXREF     IDREF      #IMPLIED
+           YREF      IDREF      #IMPLIED
+           ZREF      IDREF      #IMPLIED
            %positionProperties;>
 
 <!ELEMENT  mposY ( %anyIdentifier; )* >
 <!ATTLIST  mposY
-           ncopy     CDATA    #REQUIRED
-           Y0        CDATA    "0"
-           dY        CDATA    #REQUIRED
-           ZX       CDATA    "0 0"   
+           ncopy     NMTOKEN    "0"
+           Y0        NMTOKEN    "0"
+           dY        NMTOKEN    "0"
+           Z         NMTOKEN    "0"   
+           X         NMTOKEN    "0"   
+           ncopyREF  IDREF      #IMPLIED
+           Y0REF     IDREF      #IMPLIED
+           dYREF     IDREF      #IMPLIED
+           ZREF      IDREF      #IMPLIED
+           XREF      IDREF      #IMPLIED
            %positionProperties;>
 
 <!ELEMENT  mposZ ( %anyIdentifier; )* >
 <!ATTLIST  mposZ
-           ncopy     CDATA    #REQUIRED
-           Z0        CDATA    "0"
-           dZ        CDATA    #REQUIRED
-           RPhi     CDATA    "0 0"   
-           XY       CDATA    "0 0"   
+           ncopy     NMTOKEN    "0"
+           Z0        NMTOKEN    "0"
+           dZ        NMTOKEN    "0"
+           R         NMTOKEN    "0"   
+           Phi       NMTOKEN    "0"   
+           X         NMTOKEN    "0"   
+           Y         NMTOKEN    "0"   
+           ncopyREF  IDREF       #IMPLIED
+           Z0REF     IDREF       #IMPLIED
+           dZREF     IDREF       #IMPLIED
+           RREF      IDREF       #IMPLIED
+           PhiREF    IDREF       #IMPLIED
+           XREF      IDREF       #IMPLIED
+           YREF      IDREF       #IMPLIED
            %positionProperties;>
 
 
-<!ENTITY % relativePositionProperties 'volume    IDREF    #REQUIRED
-                                         dX        CDATA    "0"
-                                         dY        CDATA    "0"
-                                         dZ        CDATA    "0"
+<!ENTITY % relativePositionProperties 'volume      IDREF    #REQUIRED
+                                         dX        NMTOKEN    "0"
+                                         dY        NMTOKEN    "0"
+                                         dZ        NMTOKEN    "0"
                                          dXREF     IDREF    #IMPLIED
                                          dYREF     IDREF    #IMPLIED
                                          dZREF     IDREF    #IMPLIED
-                                         rotation  CDATA    "0"
+                                         rotation  NMTOKEN    "0"
                                          %units; '>
 
 <!ELEMENT  axisPos ( %anyIdentifier; )* >
 <!ATTLIST  axisPos
-           shift     CDATA    "0"
+           shift     NMTOKEN    "0"
            shiftREF  IDREF    #IMPLIED
-           gap       CDATA    "0"
+           gap       NMTOKEN    "0"
            gapREF    IDREF    #IMPLIED
            %relativePositionProperties;>
            
 <!ELEMENT  axisMPos ( %anyIdentifier; )* >
 <!ATTLIST  axisMPos
-           ncopy     CDATA    "0"
+           ncopy     NMTOKEN    "0"
            ncopyREF  IDREF    #IMPLIED
-           shift0    CDATA    "0"
+           shift0    NMTOKEN    "0"
            shift0REF IDREF    #IMPLIED
-           gap0      CDATA    "0"
+           gap0      NMTOKEN    "0"
            gap0REF   IDREF    #IMPLIED
-           shift     CDATA    "0"
+           shift     NMTOKEN    "0"
            shiftREF  IDREF    #IMPLIED
-           gap       CDATA    "0"
+           gap       NMTOKEN    "0"
            gapREF    IDREF    #IMPLIED
            %relativePositionProperties;>
 
@@ -758,7 +833,7 @@ with corresponding field names.
 
 <!ELEMENT const ((%operator;)? ) >
 <!ATTLIST const name ID #IMPLIED
-                value CDATA #IMPLIED
+                value NMTOKEN #IMPLIED
                 uType (length | angle | count | none) "length"
                 %units; >
 
