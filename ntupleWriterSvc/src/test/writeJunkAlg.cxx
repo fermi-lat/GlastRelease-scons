@@ -88,6 +88,11 @@ StatusCode writeJunkAlg::execute() {
     m_float = 700.05;
     sc = ntupleWriteSvc->addItem(m_tupleName.c_str(), "MyFirstItem", m_float);
 
+    float zero = 0.0;
+    // Let's try to add an undefined float
+    float bad = 100.0/zero;
+    sc = ntupleWriteSvc->addItem(m_tupleName.c_str(), "BadValue", bad);
+
     return sc;
 }
 
