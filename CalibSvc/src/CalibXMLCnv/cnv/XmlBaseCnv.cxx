@@ -19,10 +19,38 @@
 #include "CalibData/CalibBase.h"
 #include "xml/Dom.h"
 
+// A little ugly to include this here.  It's needed for 
+// CAL-specific utilities findNextRange, findFirstRange
+#include "idents/CalXtalId.h"
+
 #include "facilities/Util.h"
 
 #include <dom/DOM_Document.hpp>
 
+// Local utilities to interpret attributes 
+namespace {
+  unsigned findRangeAtt(const DOM_Element& rangeElt) {
+    using xml::Dom;
+    using idents::CalXtalId;
+
+    std::string att = Dom::getAttribute(rangeElt, "range");
+    if (att.compare(std::string("LEX8")) == 0) return CalXtalId::LEX8;
+    if (att.compare(std::string("LEX1")) == 0) return CalXtalId::LEX1;
+    if (att.compare(std::string("HEX8")) == 0) return CalXtalId::HEX8;
+    return CalXtalId::HEX1;  // all that's left
+  }
+
+  unsigned findFace(const DOM_Element& faceElt) {
+    using xml::Dom;
+    using idents::CalXtalId;
+
+    std::string att = Dom::getAttribute(faceElt, "end");
+    if (att.compare(std::string("NEG")) == 0) return CalXtalId::NEG;
+    if (att.compare(std::string("POS")) == 0) return CalXtalId::POS;
+    return 0;     // in case "end" is not applicable, this is the answer
+  }
+}
+    
 XmlBaseCnv::~XmlBaseCnv() {}
 
 // static CnvFactory<XmlBaseCnv> s_factory;
@@ -231,6 +259,7 @@ void XmlBaseCnv::setBaseInfo(CalibData::CalibBase* pObj) {
 
 DOM_Element XmlBaseCnv::findFirstRange(const DOM_Element& docElt) {
   using xml::Dom;
+  using idents::CalXtalId;
 
   DOM_Element elt = Dom::findFirstChildByName(docElt, "tower");
   if (elt == DOM_Element()) return elt;
@@ -252,12 +281,11 @@ DOM_Element XmlBaseCnv::findFirstRange(const DOM_Element& docElt) {
   m_nXtal = atoi(att.c_str());
 
   // All child elements of xtal are face elements
-  elt = Dom::getFirstChildElement(elt);
-  att = Dom::getAttribute(elt, "end");
-  m_nFace = (att.compare(std::string("POS")) == 0) ? 1 : 0;
+  elt = Dom::getFirstChildElement(elt); 
+  m_nFace = findFace(elt);
 
-  m_nRange = 0;
   elt = Dom::getFirstChildElement(elt);
+  m_nRange = findRangeAtt(elt);
   return elt;
 }
 
@@ -267,7 +295,7 @@ DOM_Element XmlBaseCnv::findNextRange(const DOM_Element& rangeElt) {
 
   DOM_Element elt = Dom::getSiblingElement(rangeElt);
   if (elt != DOM_Element()) {
-    m_nRange++;
+    m_nRange = findRangeAtt(elt);
     return elt;
   }
 
@@ -277,11 +305,10 @@ DOM_Element XmlBaseCnv::findNextRange(const DOM_Element& rangeElt) {
   elt = Dom::getSiblingElement(elt);          // next xtal face
 
   if (elt != DOM_Element()) {
-    std::string att = Dom::getAttribute(elt, "end");
-    m_nFace = (att.compare(std::string("POS")) == 0) ? 1 : 0;
+    m_nFace = findFace(elt);
 
-    m_nRange = 0;
     elt = Dom::getFirstChildElement(elt);
+    m_nRange = findRangeAtt(elt);
     return elt;
   }
 
@@ -296,11 +323,10 @@ DOM_Element XmlBaseCnv::findNextRange(const DOM_Element& rangeElt) {
 
     // All child elements of xtal are face elements
     elt = Dom::getFirstChildElement(elt);
-    att = Dom::getAttribute(elt, "end");
-    m_nFace = (att.compare(std::string("POS")) == 0) ? 1 : 0;
+    m_nFace = findFace(elt);
 
-    m_nRange = 0;
     elt = Dom::getFirstChildElement(elt);
+    m_nRange = findRangeAtt(elt);
     return elt;
   }
 
@@ -320,11 +346,10 @@ DOM_Element XmlBaseCnv::findNextRange(const DOM_Element& rangeElt) {
     
     // All child elements of xtal are face elements
     elt = Dom::getFirstChildElement(elt);
-    att = Dom::getAttribute(elt, "end");
-    m_nFace = (att.compare(std::string("POS")) == 0) ? 1 : 0;
+    m_nFace = findFace(elt);
     
-    m_nRange = 0;
     elt = Dom::getFirstChildElement(elt);
+    m_nRange = findRangeAtt(elt);
     return elt;
   }
 
@@ -355,10 +380,9 @@ DOM_Element XmlBaseCnv::findNextRange(const DOM_Element& rangeElt) {
 
   // All child elements of xtal are face elements
   elt = Dom::getFirstChildElement(elt);
-  att = Dom::getAttribute(elt, "end");
-  m_nFace = (att.compare(std::string("POS")) == 0) ? 1 : 0;
+  m_nFace = findFace(elt);
 
-  m_nRange = 0;
   elt = Dom::getFirstChildElement(elt);
+  m_nRange = findRangeAtt(elt);
   return elt;
 }
