@@ -4,8 +4,8 @@ use geometry v0
 use graphics v0
 
 
-macro geomrep_linkopts "-L ${GEOMREPROOT}/${CMTCONFIG} -lgeomrep"\
-    VisualC "/LibPath:${GEOMREPROOT}/Win32Debug geomreplib.lib"
+macro   geomrep_linkopts "-L ${GEOMREPROOT}/${CMTCONFIG} -lgeomrep"\
+        VisualC "geomreplib.lib"
 
 
 private
