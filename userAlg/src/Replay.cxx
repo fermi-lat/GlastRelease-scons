@@ -1,26 +1,30 @@
+//
 // Gaudi system includes
 #include "GaudiKernel/Algorithm.h"
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IAlgManager.h"
 
+// gui includes
 #include "GuiSvc/IGuiSvc.h"
-
 #include "gui/SubMenu.h"
 #include "gui/GuiMgr.h"
 #include "gui/Command.h"
 #include "gui/Menu.h"
 
-// TDS class declarations: input data, and McParticle tree
-#include <cassert>
 
 /** @class Replay 
  * @brief Call (replay?) a given algorithm by name, settable from job options
  * 
  * $Header$
+ * <br> Following is example of how to select multiple algs:
+<pre>
+  ApplicationMgr.TopAlg += {"Replay/button1", "Replay/button2"};
+  button1.algname="TkrReconAlg";
+  button2.algname="TkrFindAlg";
+ </pre>
+
 */
 class Replay : public Algorithm {
 public:
@@ -32,21 +36,23 @@ public:
     
 private:
     // Data Members
-    gui::GuiMgr* m_guiMgr;
 
     IAlgorithm* m_alg;
     StringProperty m_algname;
+    static gui::SubMenu *s_replayMenu;
 
 };
 
 static const AlgFactory<Replay>  Factory;
 const IAlgFactory& ReplayFactory = Factory;
 
+gui::SubMenu* Replay::s_replayMenu =0;
+
 Replay::Replay(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator)
 {
     // declare properties with setProperties calls
-    declareProperty("algName",  m_algname="TkrReconAlg");
+    declareProperty("algName",  m_algname);
     
 }
 
@@ -77,36 +83,39 @@ StatusCode Replay::initialize(){
         return StatusCode::FAILURE;
     }
 
-        // get the  Gui service
+    // get the  Gui service, required for interactive function
     //
     IGuiSvc* guiSvc=0;
     
     if ( service("GuiSvc", guiSvc).isFailure() ){
-        log << MSG::ERROR << "No GuiSvc, no display" << endreq;
-        return StatusCode::SUCCESS; // go on anyway     
+        log << MSG::WARNING << "No GuiSvc, no display" << endreq;
+        return StatusCode::SUCCESS;  // just ignore thisy     
     }
-    m_guiMgr = guiSvc->guiMgr();
     
-    
+    // found: create new top-level menu
     gui::GuiMgr* guiMgr=guiSvc->guiMgr() ;
-    gui::Menu& menu = guiMgr->menu();
+    if( s_replayMenu==0) {
+        s_replayMenu = & guiMgr->menu().subMenu("Replay");
+    }
 
     // define the recall class right here: all it does is call the alg.
     class ReplayCommand: public gui::Command {
     public:
         ReplayCommand(IAlgorithm* alg):m_alg(alg){}
-        void execute(){m_alg->execute();}
+        void execute(){
+            m_alg->execute();
+        }
     private:
         IAlgorithm * m_alg;
     };
-    menu.add_button(m_algname, new ReplayCommand(m_alg));
+    s_replayMenu->addButton(m_algname, new ReplayCommand(m_alg));
 
    return sc;
 }
 
 StatusCode Replay::execute()
 {
-    
-    return StatusCode::SUCCESS; //m_alg->execute();
+    // execute method not really used or needed.
+    return StatusCode::SUCCESS; 
 
 }
