@@ -3,6 +3,8 @@
  * Manager T Burnett
  * <pre>
  *
+ * v3r4p1 20-jan-2003  THB release tools
+ * --------------------GlastRelease-----------------------------------
  * v3r3   14-oct-2002  THB improve docs; put in test/example for IGuiTool
  *        10-oct-2002  THB remove non-functional parts of interface
  * v3r2   23-sep-2002  THB stop event loop if error.
