@@ -20,6 +20,7 @@
 #include "Event/Recon/TkrRecon/TkrFitPlane.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
 #include "TkrUtil/ITkrFailureModeSvc.h"
+#include "src/Track/TkrControl.h"
 
 namespace Event {
 
@@ -54,6 +55,10 @@ private:
     TkrFitMatrix          m_Qmaterial;     // The cov. matrix for last projection
     Event::TkrClusterCol* m_clusters;
     ITkrGeometrySvc*      m_tkrGeo;
+    TkrControl*           m_control;
+
+    // internal method
+    double  getError(double strips, double slope) const;
 };
 
 }; //Namespace

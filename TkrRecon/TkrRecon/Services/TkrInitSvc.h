@@ -65,6 +65,7 @@ private:
     double           m_iniErrorPosition;
 
     bool             m_planeEnergies;
+    int              m_errorType;
 };
 
 #endif // __TKRINITSVC_H

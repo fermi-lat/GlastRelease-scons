@@ -31,6 +31,9 @@ TkrControl::TkrControl()
 
     m_planeEnergies      = true; // Decrease particle energies by exp(-rad_len)
 
+    m_errorType          = 0;    // 0 -> sigma = siResolution
+                                 // 1 -> sigma = first iteration of new errors
+
     return;
 }
 
