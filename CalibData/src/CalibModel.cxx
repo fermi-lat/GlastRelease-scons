@@ -97,9 +97,9 @@ public:
     // but different path in TDDS
 
     CalibData::pairs.push_back(std::make_pair(CalibData::TKR_HotChan,
-                                              CLID_Calib_TKR_HotChan));
+                                              CLID_Calib_TKR_BadChan));
     CalibData::pairs.push_back(std::make_pair(CalibData::TKR_DeadChan,
-                                              CLID_Calib_TKR_DeadChan));
+                                              CLID_Calib_TKR_BadChan));
     CalibData::pairs.push_back(std::make_pair(CalibData::Test_1,
                                               CLID_Calib_CalibTest1));
 
