@@ -2,6 +2,8 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *  
+ * 18-Feb-2003: jrb v0r1p1: Use packageShr correctly in requirements; add
+ *                          some flavor support
  *  7-Feb-2003: jrb v0r1p0: Fix requirements so that test builds properly
  *  7-Feb-2003: jrb v0r1:   Ready to be incorporated into GlastRelease
  * 26-Jan-2003: jrb v0r0p0: Tag before adapting for GlastRelease
