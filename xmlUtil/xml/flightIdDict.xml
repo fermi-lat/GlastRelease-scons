@@ -1,16 +1,9 @@
   <idDict major="1" minor="0" patch="0">
-    <idRoot name="topObjects" >
-      <vList>
-        <enumVal valueREF="eRootLAT" />
-        <enumVal valueREF="eRootPanels" />
-        <enumVal valueREF="eRootSC" />
-      </vList>
-    </idRoot>
 
     <field name="fLATObjects" >
       <vList>
-        <enumVal valueREF="eLATTowers" />
-        <enumVal valueREF="eLATACD" />
+        <vEnumVal valueREF="eLATTowers" />
+        <vEnumVal valueREF="eLATACD" />
       </vList>
     </field>
 
@@ -24,15 +17,15 @@
 
     <field name="fTowerObjects" >
       <vList>
-        <enumVal valueREF="eTowerTKR" />
-        <enumVal valueREF="eTowerCAL" />
+        <vEnumVal valueREF="eTowerTKR" />
+        <vEnumVal valueREF="eTowerCAL" />
       </vList>
     </field>
 
     <field name="fMeasure" >
       <vList>
-        <enumVal valueREF="eMeasureX" />
-        <enumVal valueREF="eMeasureY" />
+        <vEnumVal valueREF="eMeasureX" />
+        <vEnumVal valueREF="eMeasureY" />
       </vList>
     </field>
 
@@ -44,11 +37,11 @@
 
     <field name="fCALLogCmp" >
       <vList>
-        <enumVal valueREF="eLogXtal" />
-        <enumVal valueREF="eDiodeMSmall" />
-        <enumVal valueREF="eDiodePSmall" />
-        <enumVal valueREF="eDiodeMLarge" />
-        <enumVal valueREF="eDiodePLarge" />
+        <vEnumVal valueREF="eLogXtal" />
+        <vEnumVal valueREF="eDiodeMSmall" />
+        <vEnumVal valueREF="eDiodePSmall" />
+        <vEnumVal valueREF="eDiodeMLarge" />
+        <vEnumVal valueREF="eDiodePLarge" />
       </vList>
     </field>
 
@@ -70,148 +63,136 @@
 
     <field name="fTKRTrayCmp" >
       <vList>
-        <enumVal valueREF="eTKRSiBottom" />
-        <enumVal valueREF="eTKRSiTop" />
+        <vEnumVal valueREF="eTKRSiBottom" />
+        <vEnumVal valueREF="eTKRSiTop" />
       </vList>
     </field>
 
-    <!-- subsequences to conveniently refer to each subdetector -->
-    <absSubseq name="absSubCAL" >
-      <theIdRoot>
-        <enumVal valueREF="eRootLAT" />
-      </theIdRoot>
-      <fieldRef refTo="fLATObjects" >
-         <enumVal valueREF="eLATTowers" />
-      </fieldRef>
-      <fieldRef refTo="fTowerY" />
-      <fieldRef refTo="fTowerX" />
-      <fieldRef refTo="fTowerObjects" >
-        <enumVal valueREF="eTowerCAL" />
-      </fieldRef>
-    </absSubseq>
+    <field name="fTopObjects" >
+      <vList>
+        <vEnumVal valueREF="eRootLAT" />
+        <vEnumVal valueREF="eRootPanels" />
+        <vEnumVal valueREF="eRootSC" />
+      </vList>
+    </field>
+ 
+    <dictRoot fieldName="fTopObjects" >
+      <dictNode fieldName="fLATObjects">
+        <pValues>
+          <vEnumVal valueREF="eRootLAT" />
+        </pValues>
+       
+        <dictNode fieldName="fTowerY" >
+          <pValues>
+            <vEnumVal valueREF="eLATTowers" />
+          </pValues>
+          <dictNode fieldName="fTowerX" >
+            <dictNode fieldName="fTowerObjects" >
+              <dictNode fieldName="fLayer" >
+                <pValues>
+                  <vEnumVal valueREF="eTowerCAL" />
+                </pValues>
+                <vMinMax min="0" maxREF="CALMaxLayer" />
+                <dictNode fieldName="fMeasure" >
+                  <dictNode fieldName="fCALLog" >
+                    <dictNode fieldName="fCALLogCmp" />
+                  </dictNode>
+                </dictNode> 
+              </dictNode>
+              <dictNode fieldName="fTKRTray">
+                <pValues>
+                  <vEnumVal valueREF="eTowerTKR" />
+                </pValues>
+               
+                <!-- child for bottom tray -->
+                <dictNode fieldName="fMeasure">
+                  <pValues>
+                    <vEnumVal value="0" />
+                  </pValues>
+                  <dictNode fieldName="fTKRTrayCmp" >
+                    <vEnumVal valueREF="eTKRSiTop" />
+                  </dictNode>
+                </dictNode>
 
-    <absSubseq name="absSubTKR" >
-      <theIdRoot>
-        <enumVal valueREF="eRootLAT" />
-      </theIdRoot>
-      <fieldRef refTo="fLATObjects" >
-         <enumVal valueREF="eLATTowers" />
-      </fieldRef>
-      <fieldRef refTo="fTowerY" />
-      <fieldRef refTo="fTowerX" />
-      <fieldRef refTo="fTowerObjects" >
-        <enumVal valueREF="eTowerTKR" />
-      </fieldRef>
-    </absSubseq>
+                <!-- child for other non-converter trays -->
+                <dictNode fieldName="fMeasure">
+                  <pValues>
+                    <vMinMax min="1" maxREF="TKRMaxNoCnv" />
+                  </pValues>
+                  <dictNode fieldName="fTKRTrayCmp" >
+                    <vList>
+                      <vEnumVal valueREF="eTKRSiTop" />
+                      <vEnumVal valueREF="eTKRSiBottom" />
+                    </vList>
+                  </dictNode>
+                </dictNode>
 
-    <absSubseq name="absSubACD" >
-      <theIdRoot>
-        <enumVal valueREF="eRootLAT" />
-      </theIdRoot>
-      <fieldRef refTo="fLATObjects" >
-         <enumVal valueREF="eLATACD" />
-      </fieldRef>
-    </absSubseq>
+                <!-- child for normal trays  -->
+                <dictNode fieldName="fMeasure">
+                  <pValues>
+                    <vMinMax minREF="numNoCnvTrays" maxREF="TKRMaxReg" />
+                  </pValues>
+                  <dictNode fieldName="fTKRTrayCmp" />
+                </dictNode>
 
-<!-- Sequence to represent a CAL crystal.  May want to add segment
-     for energy accounting. -->
-    <seq name="seqLogXtal" >
-      <absSubRef refTo="absSubCAL" />
-      <fieldRef refTo="fLayer" >
-        <vMinMax min="0" maxREF="CALMaxLayer" />
-      </fieldRef>
-      <fieldRef refTo="fMeasure" />
-      <fieldRef refTo="fCALLog" />
-      <fieldRef refTo="fCALLogCmp" >
-        <enumVal valueREF="eLogXtal" />
-      </fieldRef>
-    </seq>
+                <!-- child for top tray -->
+                <dictNode fieldName="fMeasure">
+                  <pValues>
+                    <vEnumVal valueREF="maxTray" />
+                   </pValues>
+                  <dictNode fieldName="fTKRTrayCmp" >
+                    <vList>
+                      <vEnumVal valueREF="eTKRCnv" />
+                      <vEnumVal valueREF="eTKRSiBottom" />
+                    </vList>
+                  </dictNode>
+                </dictNode>
+              </dictNode>         <!-- end tray field -->
+            </dictNode>           <!-- end towerObjects -->
+          </dictNode>             <!-- end towerX -->
+        </dictNode>               <!-- end towerY -->
 
-<!-- Sequence to represent a CAL diode. -->
-    <seq name="seqLogDiode" >
-      <absSubRef refTo="absSubCAL" />
-      <fieldRef refTo="fLayer" >
-        <vMinMax min="0" maxREF="CALMaxLayer" />
-      </fieldRef>
-      <fieldRef refTo="fMeasure" />
-      <fieldRef refTo="fCALLog" />
-      <fieldRef refTo="fCALLogCmp" >
-        <vMinMax minREF="eDiodeMSmall" maxREF="eDiodePLarge" />
-      </fieldRef>
-    </seq>
+        <dictNode fieldName="fACDFace" >
+          <pValues>
+            <vEnumVal valueREF="eLATACD" />
+          </pValues>
 
-<!-- Sequences to represent top or bottom Si on a tray -->
-    <seq name="seqTKRTop" >   <!-- top tray has only bottom si -->
-      <absSubRef refTo="absSubTKR"  />
-      <fieldRef refTo="fTKRTray" >
-        <enumVal valueREF="maxTray" />
-      </fieldRef >
-      <fieldRef refTo="fMeasure" />
-      <fieldRef refTo="fTKRTrayCmp">
-        <enumVal valueREF="eTKRSiBottom" />
-      </fieldRef >
-    </seq>
+          <!-- top face sequences -->
+          <dictNode fieldName="fRow" >
+            <pValues>
+              <vEnumVal valueREF="eACDTopFace" />
+            </pValues>
+            <vMinMax min="0" maxREF="YTopTileMax" />
+            <dictNode fieldName="fCol" >
+              <vMinMax min="0" maxREF="YTopTileMax" />
+            </dictNode>
+          </dictNode>
 
-    <seq name="seqTKRBottom" >   <!-- bottom tray has only bottom si -->
-      <absSubRef refTo="absSubTKR"  />
-      <fieldRef refTo="fTKRTray" >
-        <enumVal value="0" />
-      </fieldRef >
-      <fieldRef refTo="fMeasure" />
-      <fieldRef refTo="fTKRTrayCmp">
-        <enumVal valueREF="eTKRSiTop" />
-      </fieldRef >
-    </seq>
+          <!-- side faces -->
+          <dictNode fieldName="fRow" >
+            <pValues>
+              <vMinMax  minREF="eACDXNegFace" maxREF="eACDYPosFace" />
+            </pValues>
 
-    <seq name="seqTKRInterior" >   <!-- bottom tray has only bottom si -->
-      <absSubRef refTo="absSubTKR"  />
-      <fieldRef refTo="fTKRTray" >
-        <vMinMax min="1" maxREF="maxTrayM1" />
-      </fieldRef >
-      <fieldRef refTo="fMeasure" />
-      <fieldRef refTo="fTKRTrayCmp" />
-    </seq>
+            <!-- describe columns for first two rows, i.e, the short ones -->
+            <dictNode fieldName="fCol" >
+              <pValues>
+                <vMinMax minREF="ACDShortRowMin" maxREF="ACDShortRowMax" />
+              </pValues>
+              <vMinMax min="0" maxREF="ACDShortMaxCol" />
+            </dictNode>
 
-<!-- sequences for top face -->
-    <seq name="seqACDTopTile" >
-      <absSubRef refTo="absSubACD" />
-      <fieldRef refTo="fACDFace" >
-        <enumVal valueREF="eACDTopFace" />
-      </fieldRef>
-      <fieldRef refTo="fRow" >
-        <vMinMax min="0" maxREF="XTopTileMax" />
-      </fieldRef>
-      <fieldRef refTo="fCol" >
-        <vMinMax min="0" maxREF="YTopTileMax" />
-      </fieldRef>
-    </seq>
+            <!-- ..now do long side rows -->
+            <dictNode fieldName="fCol" >
+              <pValues>
+                <vMinMax minREF="ACDLongRowMin" maxREF="ACDLongRowMax" />
+              </pValues>
+              <vMinMax min="0" maxREF="ACDLongMaxCol" />
+            </dictNode>
+          </dictNode>          <!-- end of defs for side faces -->
 
-<!-- short rows of side faces -->
-    <seq name="seqACDSideShortTile" >
-      <absSubRef refTo="absSubACD" />
-      <fieldRef refTo="fACDFace" >
-        <vMinMax minREF="eACDXNegFace" maxREF="eACDYPosFace" />
-      </fieldRef>
-      <fieldRef refTo="fRow" >
-        <vMinMax minREF="ACDShortRowMin" maxREF="ACDShortRowMax" />
-      </fieldRef>
-      <fieldRef refTo="fCol" >
-        <vMinMax min="0" maxREF="ACDShortMaxCol" />
-      </fieldRef>
-    </seq>
-
-<!-- long rows of side faces -->
-    <seq name="seqACDSideShortTile" >
-      <absSubRef refTo="absSubACD" />
-      <fieldRef refTo="fACDFace" >
-        <vMinMax minREF="eACDXNegFace" maxREF="eACDYPosFace" />
-      </fieldRef>
-      <fieldRef refTo="fRow" >
-        <vMinMax minREF="ACDLongRowMin" maxREF="ACDLongRowMax" />
-      </fieldRef>
-      <fieldRef refTo="fCol" >
-        <vMinMax min="0" maxREF="ACDLongMaxCol" />
-      </fieldRef>
-    </seq>
-
+        </dictNode>            <!-- end of fACDFace -->
+      </dictNode>
+    </dictRoot>
   </idDict>
+

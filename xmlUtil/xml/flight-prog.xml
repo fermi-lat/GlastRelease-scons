@@ -460,6 +460,7 @@ ACD tile        </prim>
         <overview>
           Derived constants specific to CAL.
         </overview>
+        <const name="CALMaxLayer" uType="count" value="7" unitAngle="deg" unitLength="mm" />
         <!--  diodePosXOffset  = (CsILength + diodeX)/2 -->
         <const name="diodePosXOffset" uType="length" value="166.59" unitAngle="deg" unitLength="mm" />
         <const name="diodeNegXOffset" uType="length" value="-166.59" unitAngle="deg" unitLength="mm" />
@@ -500,6 +501,8 @@ ACD tile        </prim>
         <const name="inactiveThickToCnvReg" uType="length" value="0.302" unitAngle="deg" unitLength="mm" />
         <const name="inactiveThickToCnvSuper" uType="length" value="0.378" unitAngle="deg" unitLength="mm" />
         <const name="inactiveThickOutside" uType="length" value="0.227" unitAngle="deg" unitLength="mm" />
+        <const name="TKRMaxNoCnv" uType="count" value="2" unitAngle="deg" unitLength="mm" />
+        <const name="TKRMaxReg" uType="count" value="17" unitAngle="deg" unitLength="mm" />
         <!--  probably obsolete (3/20/01) -->
         <const name="outsideTrayZ" uType="length" value="29.504" unitAngle="deg" unitLength="mm" />
         <const name="middleTrayZ" uType="length" value="29.904" unitAngle="deg" unitLength="mm" />
@@ -603,17 +606,10 @@ ACD tile        </prim>
     </derived>
   </constants>
   <idDict major="1" minor="0" patch="0" substituted="true">
-    <idRoot name="topObjects">
-      <vList>
-        <enumVal value="0" />
-        <enumVal value="1" />
-        <enumVal value="2" />
-      </vList>
-    </idRoot>
     <field name="fLATObjects">
       <vList>
-        <enumVal value="0" />
-        <enumVal value="1" />
+        <vEnumVal value="0" />
+        <vEnumVal value="1" />
       </vList>
     </field>
     <field name="fTowerY">
@@ -624,14 +620,14 @@ ACD tile        </prim>
     </field>
     <field name="fTowerObjects">
       <vList>
-        <enumVal value="1" />
-        <enumVal value="0" />
+        <vEnumVal value="1" />
+        <vEnumVal value="0" />
       </vList>
     </field>
     <field name="fMeasure">
       <vList>
-        <enumVal value="0" />
-        <enumVal value="1" />
+        <vEnumVal value="0" />
+        <vEnumVal value="1" />
       </vList>
     </field>
     <field name="fLayer" />
@@ -640,11 +636,11 @@ ACD tile        </prim>
     </field>
     <field name="fCALLogCmp">
       <vList>
-        <enumVal value="0" />
-        <enumVal value="1" />
-        <enumVal value="2" />
-        <enumVal value="3" />
-        <enumVal value="4" />
+        <vEnumVal value="0" />
+        <vEnumVal value="1" />
+        <vEnumVal value="2" />
+        <vEnumVal value="3" />
+        <vEnumVal value="4" />
       </vList>
     </field>
     <field name="fACDFace">
@@ -661,141 +657,130 @@ ACD tile        </prim>
     </field>
     <field name="fTKRTrayCmp">
       <vList>
-        <enumVal value="0" />
-        <enumVal value="1" />
+        <vEnumVal value="0" />
+        <vEnumVal value="1" />
       </vList>
     </field>
-    <!--  subsequences to conveniently refer to each subdetector -->
-    <absSubseq name="absSubCAL">
-      <theIdRoot>
-        <enumVal value="0" />
-      </theIdRoot>
-      <fieldRef refTo="fLATObjects">
-        <enumVal value="0" />
-      </fieldRef>
-      <fieldRef refTo="fTowerY" />
-      <fieldRef refTo="fTowerX" />
-      <fieldRef refTo="fTowerObjects">
-        <enumVal value="0" />
-      </fieldRef>
-    </absSubseq>
-    <absSubseq name="absSubTKR">
-      <theIdRoot>
-        <enumVal value="0" />
-      </theIdRoot>
-      <fieldRef refTo="fLATObjects">
-        <enumVal value="0" />
-      </fieldRef>
-      <fieldRef refTo="fTowerY" />
-      <fieldRef refTo="fTowerX" />
-      <fieldRef refTo="fTowerObjects">
-        <enumVal value="1" />
-      </fieldRef>
-    </absSubseq>
-    <absSubseq name="absSubACD">
-      <theIdRoot>
-        <enumVal value="0" />
-      </theIdRoot>
-      <fieldRef refTo="fLATObjects">
-        <enumVal value="1" />
-      </fieldRef>
-    </absSubseq>
-    <!--  Sequence to represent a CAL crystal.  May want to add segment
-     for energy accounting. -->
-    <seq name="seqLogXtal">
-      <absSubRef refTo="absSubCAL" />
-      <fieldRef refTo="fLayer">
-        <vMinMax max="7" min="0" />
-      </fieldRef>
-      <fieldRef refTo="fMeasure" />
-      <fieldRef refTo="fCALLog" />
-      <fieldRef refTo="fCALLogCmp">
-        <enumVal value="0" />
-      </fieldRef>
-    </seq>
-    <!--  Sequence to represent a CAL diode. -->
-    <seq name="seqLogDiode">
-      <absSubRef refTo="absSubCAL" />
-      <fieldRef refTo="fLayer">
-        <vMinMax max="7" min="0" />
-      </fieldRef>
-      <fieldRef refTo="fMeasure" />
-      <fieldRef refTo="fCALLog" />
-      <fieldRef refTo="fCALLogCmp">
-        <vMinMax max="4" min="1" />
-      </fieldRef>
-    </seq>
-    <!--  Sequences to represent top or bottom Si on a tray -->
-    <seq name="seqTKRTop">
-      <!--  top tray has only bottom si -->
-      <absSubRef refTo="absSubTKR" />
-      <fieldRef refTo="fTKRTray">
-        <enumVal value="18" />
-      </fieldRef>
-      <fieldRef refTo="fMeasure" />
-      <fieldRef refTo="fTKRTrayCmp">
-        <enumVal value="0" />
-      </fieldRef>
-    </seq>
-    <seq name="seqTKRBottom">
-      <!--  bottom tray has only bottom si -->
-      <absSubRef refTo="absSubTKR" />
-      <fieldRef refTo="fTKRTray">
-        <enumVal value="0" />
-      </fieldRef>
-      <fieldRef refTo="fMeasure" />
-      <fieldRef refTo="fTKRTrayCmp">
-        <enumVal value="1" />
-      </fieldRef>
-    </seq>
-    <seq name="seqTKRInterior">
-      <!--  bottom tray has only bottom si -->
-      <absSubRef refTo="absSubTKR" />
-      <fieldRef refTo="fTKRTray">
-        <vMinMax max="17" min="1" />
-      </fieldRef>
-      <fieldRef refTo="fMeasure" />
-      <fieldRef refTo="fTKRTrayCmp" />
-    </seq>
-    <!--  sequences for top face -->
-    <seq name="seqACDTopTile">
-      <absSubRef refTo="absSubACD" />
-      <fieldRef refTo="fACDFace">
-        <enumVal value="0" />
-      </fieldRef>
-      <fieldRef refTo="fRow">
-        <vMinMax max="4" min="0" />
-      </fieldRef>
-      <fieldRef refTo="fCol">
-        <vMinMax max="4" min="0" />
-      </fieldRef>
-    </seq>
-    <!--  short rows of side faces -->
-    <seq name="seqACDSideShortTile">
-      <absSubRef refTo="absSubACD" />
-      <fieldRef refTo="fACDFace">
-        <vMinMax max="4" min="1" />
-      </fieldRef>
-      <fieldRef refTo="fRow">
-        <vMinMax max="1" min="0" />
-      </fieldRef>
-      <fieldRef refTo="fCol">
-        <vMinMax max="4" min="0" />
-      </fieldRef>
-    </seq>
-    <!--  long rows of side faces -->
-    <seq name="seqACDSideShortTile">
-      <absSubRef refTo="absSubACD" />
-      <fieldRef refTo="fACDFace">
-        <vMinMax max="4" min="1" />
-      </fieldRef>
-      <fieldRef refTo="fRow">
-        <vMinMax max="3" min="2" />
-      </fieldRef>
-      <fieldRef refTo="fCol">
-        <vMinMax max="9" min="0" />
-      </fieldRef>
-    </seq>
+    <field name="fTopObjects">
+      <vList>
+        <vEnumVal value="0" />
+        <vEnumVal value="1" />
+        <vEnumVal value="2" />
+      </vList>
+    </field>
+    <dictRoot fieldName="fTopObjects">
+      <dictNode fieldName="fLATObjects">
+        <pValues>
+          <vEnumVal value="0" />
+        </pValues>
+        <dictNode fieldName="fTowerY">
+          <pValues>
+            <vEnumVal value="0" />
+          </pValues>
+          <dictNode fieldName="fTowerX">
+            <dictNode fieldName="fTowerObjects">
+              <dictNode fieldName="fLayer">
+                <pValues>
+                  <vEnumVal value="0" />
+                </pValues>
+                <vMinMax max="7" min="0" />
+                <dictNode fieldName="fMeasure">
+                  <dictNode fieldName="fCALLog">
+                    <dictNode fieldName="fCALLogCmp" />
+                  </dictNode>
+                </dictNode>
+              </dictNode>
+              <dictNode fieldName="fTKRTray">
+                <pValues>
+                  <vEnumVal value="1" />
+                </pValues>
+                <!--  child for bottom tray -->
+                <dictNode fieldName="fMeasure">
+                  <pValues>
+                    <vEnumVal value="0" />
+                  </pValues>
+                  <dictNode fieldName="fTKRTrayCmp">
+                    <vEnumVal value="1" />
+                  </dictNode>
+                </dictNode>
+                <!--  child for other non-converter trays -->
+                <dictNode fieldName="fMeasure">
+                  <pValues>
+                    <vMinMax max="2" min="1" />
+                  </pValues>
+                  <dictNode fieldName="fTKRTrayCmp">
+                    <vList>
+                      <vEnumVal value="1" />
+                      <vEnumVal value="0" />
+                    </vList>
+                  </dictNode>
+                </dictNode>
+                <!--  child for normal trays  -->
+                <dictNode fieldName="fMeasure">
+                  <pValues>
+                    <vMinMax max="17" min="3" />
+                  </pValues>
+                  <dictNode fieldName="fTKRTrayCmp" />
+                </dictNode>
+                <!--  child for top tray -->
+                <dictNode fieldName="fMeasure">
+                  <pValues>
+                    <vEnumVal value="18" />
+                  </pValues>
+                  <dictNode fieldName="fTKRTrayCmp">
+                    <vList>
+                      <vEnumVal value="2" />
+                      <vEnumVal value="0" />
+                    </vList>
+                  </dictNode>
+                </dictNode>
+              </dictNode>
+              <!--  end tray field -->
+            </dictNode>
+            <!--  end towerObjects -->
+          </dictNode>
+          <!--  end towerX -->
+        </dictNode>
+        <!--  end towerY -->
+        <dictNode fieldName="fACDFace">
+          <pValues>
+            <vEnumVal value="1" />
+          </pValues>
+          <!--  top face sequences -->
+          <dictNode fieldName="fRow">
+            <pValues>
+              <vEnumVal value="0" />
+            </pValues>
+            <vMinMax max="4" min="0" />
+            <dictNode fieldName="fCol">
+              <vMinMax max="4" min="0" />
+            </dictNode>
+          </dictNode>
+          <!--  side faces -->
+          <dictNode fieldName="fRow">
+            <pValues>
+              <vMinMax max="4" min="1" />
+            </pValues>
+            <!--  describe columns for first two rows, i.e, the short ones -->
+            <dictNode fieldName="fCol">
+              <pValues>
+                <vMinMax max="1" min="0" />
+              </pValues>
+              <vMinMax max="4" min="0" />
+            </dictNode>
+            <!--  ..now do long side rows -->
+            <dictNode fieldName="fCol">
+              <pValues>
+                <vMinMax max="3" min="2" />
+              </pValues>
+              <vMinMax max="9" min="0" />
+            </dictNode>
+          </dictNode>
+          <!--  end of defs for side faces -->
+        </dictNode>
+        <!--  end of fACDFace -->
+      </dictNode>
+    </dictRoot>
   </idDict>
   <section date="2001/3/9" name="LATsection" author="J.Bogart" version="1.0" topVolume="LAT" DTDversion="2.0" substituted="true">
     <!--  (will) include the 16 towers, grid, and ACD
@@ -1011,7 +996,9 @@ ACD tile        </prim>
         <idField name="fTKRTrayCmp" step="0" value="0" />
       </axisPos>
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBelowCnv" rotation="0" unitAngle="deg" unitLength="mm" />
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="convSuper" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="convSuper" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTrayCmp" step="0" value="2" />
+      </axisPos>
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceToCnvSuper" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRCoreReg" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceUpperSuper" rotation="0" unitAngle="deg" unitLength="mm" />
@@ -1025,7 +1012,9 @@ ACD tile        </prim>
         <idField name="fTKRTrayCmp" step="0" value="0" />
       </axisPos>
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBelowCnv" rotation="0" unitAngle="deg" unitLength="mm" />
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="convReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="convReg" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTrayCmp" step="0" value="2" />
+      </axisPos>
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceToCnvReg" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRCoreReg" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceUpperReg" rotation="0" unitAngle="deg" unitLength="mm" />
@@ -1039,7 +1028,9 @@ ACD tile        </prim>
         <idField name="fTKRTrayCmp" step="0" value="0" />
       </axisPos>
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBelowCnv" rotation="0" unitAngle="deg" unitLength="mm" />
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="convReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="convReg" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTrayCmp" step="0" value="2" />
+      </axisPos>
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceToCnvReg" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRCoreReg" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceOutside" rotation="0" unitAngle="deg" unitLength="mm" />

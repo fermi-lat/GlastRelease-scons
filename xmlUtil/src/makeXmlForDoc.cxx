@@ -77,6 +77,18 @@ int main(int argc, char* argv[]) {
   constants->evalConstants();
   constants->pruneConstants(true);  
 
+  // Delete any id dictionaries
+  DOM_NodeList dicts = docElt.getElementsByTagName(DOMString("idDict"));
+  DOM_Node dictNode = dicts.item(0);
+
+  while (dictNode != DOM_Node() ) {
+    DOM_Node toCome = dictNode.getNextSibling();
+    DOM_Element& dictElt = static_cast<DOM_Element &> (dictNode);
+    xml::Dom::prune(dictElt);
+    (dictElt.getParentNode()).removeChild(dictElt);
+    dictNode = toCome;
+  }
+
   // Delete all sections
   DOM_NodeList sections = docElt.getElementsByTagName(DOMString("section"));
   DOM_Node secNode = sections.item(0);

@@ -55,6 +55,14 @@
 <overview>Derived constants specific to CAL.
 </overview>
 
+        <const name="CALMaxLayer" uType="count" >
+          <notes>upper limit on Cal layer idfield value</notes>
+          <minus>
+            <refer refTo="CALnLayer" />
+            <const value="1" uType="count" />
+          </minus>
+        </const>
+
     <!-- diodePosXOffset  = (CsILength + diodeX)/2 -->
         <const name="diodePosXOffset" >
           <notes>X-offset of a diode relative to the center of the CsI crystal</notes>
@@ -294,6 +302,23 @@
           </add>
         </const>
 
+        <const name="TKRMaxNoCnv" uType="count">
+          <notes>Tray number of most forward no-converter tray</notes>
+          <minus>
+            <refer refTo="numNoCnvTrays" />
+            <const value="1" uType="count" />
+          </minus>
+        </const>
+
+        <const name="TKRMaxReg" uType="count" >
+          <notes>Tray number of most forward "regular" tray. Top
+                 tray doesn't qualify since it has no top Si.</notes>
+          <minus>
+            <refer refTo="maxTray" />
+            <const value="1" uType="count" />
+          </minus>
+        </const>
+
 <!-- probably obsolete (3/20/01) -->
 	<const name = "outsideTrayZ">
           <notes>Total Z dimension of top and bottom trays</notes>
@@ -332,13 +357,6 @@
           </minus>
         </const>
 
-        <const name="CALMaxLayer" uType="count" >
-          <notes>upper limit on Cal layer idfield value</notes>
-          <minus>
-            <refer refTo="CALnLayer" />
-            <const value="1" uType="count" />
-          </minus>
-        </const>
 
         <const name="nLadderM1" uType="count" >
           <notes>Upper limit on ladder idField values</notes>
@@ -1552,7 +1570,9 @@ row of side tiles</notes>
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" />
       </axisPos>
       <axisPos volume="TKRBelowCnv" />
-      <axisPos volume="convSuper" />
+      <axisPos volume="convSuper" >
+        <idField name="fTKRTrayCmp" valueREF="eTKRCnv" />
+      </axisPos>
       <axisPos volume="TKRFaceToCnvSuper" />
       <axisPos volume="TKRCoreReg" />
       <axisPos volume="TKRFaceUpperSuper" />
@@ -1567,7 +1587,9 @@ row of side tiles</notes>
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" />
       </axisPos>
       <axisPos volume="TKRBelowCnv" />
-      <axisPos volume="convReg" />
+      <axisPos volume="convReg"  >
+        <idField name="fTKRTrayCmp" valueREF="eTKRCnv" />
+      </axisPos>
       <axisPos volume="TKRFaceToCnvReg" />
       <axisPos volume="TKRCoreReg" />
       <axisPos volume="TKRFaceUpperReg" />
@@ -1582,7 +1604,9 @@ row of side tiles</notes>
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" /> 
       </axisPos>
       <axisPos volume="TKRBelowCnv" />
-      <axisPos volume="convReg" />
+      <axisPos volume="convReg" >
+        <idField name="fTKRTrayCmp" valueREF="eTKRCnv" />
+      </axisPos> 
       <axisPos volume="TKRFaceToCnvReg" />
       <axisPos volume="TKRCoreReg" />
       <axisPos volume="TKRFaceOutside" />

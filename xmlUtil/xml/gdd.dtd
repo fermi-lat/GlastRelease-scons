@@ -69,6 +69,13 @@
            constants may be documented
 
      26 Mar 2001 identifier dict. elements
+
+     23 Apr 2001 New way to do identifier dictionary.  
+        Also first stab at identifier conversion definition.
+        Most likely identifier conversion definition will
+        be done in a separate document (separate from, e.g., flight.xml)
+        but still using gdd.dtd.  Root element will be 
+        <idConverter> rather than <gdd>
 -->
 
 <!--
@@ -871,48 +878,59 @@
 <!ELEMENT quo ((%operand;), (%operand;) ) >
 <!ELEMENT uminus (%operand;)  >
 
-<!-- Id dictionary stuff. Do we want dtd versioning stuff here
+<!--    ID DICTIONARY DEFINITONS
+
+   [Do we want dtd versioning stuff here
       as well, as in
-          DTDversion CDATA #FIXED "1.0" 
+          DTDversion CDATA #FIXED "1.0"  
+                             ?  ]
+
+   An id dictionary describes a set of possible identifiers.
+   An identifier is conceptually a sequence of pairs, each
+   pair of the form (field name, value).
+
+   The dictionary must define
+        1. field names
+        2. allowed sequences of field names
+        3. values a given field may have
+         
+   Note 3. is context dependent, i.e. values a field may take
+   on will depend on its "ancestors" in the sequence
+
+   The whole thing is tree-like where the children of a particular
+   node correspond to possible field names which can follow the
+   already-constructed sequence of ancestor nodes.
+
  -->
-<!ELEMENT idDict (idRoot,  (field | subseq | seq | absSubseq)* ) >
+
+<!-- An id dictionary consists of a collection of definitions
+     of fields, followed by a tree structure which refers
+     to the fields and links them into allowable sequences -->
+
+<!ELEMENT idDict (field*, dictRoot) >
 <!ATTLIST idDict
                   %didSub;  
                   major      NMTOKEN #REQUIRED 
                   minor      NMTOKEN #REQUIRED
                   patch      NMTOKEN #IMPLIED  >
 
+<!-- Different ways to constrain values: a list, bounded interval,
+     or just a single value
 
-<!-- A value for a particular field may be constrained to be
-     a single number
-     a range of numbers
-     one out of a list of not-necessarily-contiguous numbers
-     where "number" always means non-negative integer.
+     In some cases it will be more convenient to specify the
+     number with some sort of alias, that is, a number masquerading
+     as a word, hence the REF versions of attributes for vMinMax
+     and enumVal.
 
-    In some cases it will be more convenient to specify the
-    number with some sort of alias, that is, a number masquerading
-    as a word, hence the REF versions of attributes for vMinMax
-    and enumVal.
-
+     Constraints on values for a field which *always* hold may be
+     specified when the field is defined.  There may be further
+     constraints on a fields value depending on context.  Such
+     constraints will appear as a child element of the dictNode
+     referencing the field.
  -->
-<!ENTITY % vConstraints "vList | vMinMax | enumVal" >
 
-<!ELEMENT field (%vConstraints;)? >
-<!ATTLIST field name    ID #REQUIRED >
-
-<!ELEMENT fieldRef (%vConstraints;)? >
-<!ATTLIST fieldRef   refTo IDREF #REQUIRED>
-
-<!-- root is just a special field -->
-<!ELEMENT idRoot (%vConstraints;)? >
-<!ATTLIST idRoot name    ID #REQUIRED >
-
-<!-- Functionally the same as a reference to the root.  There may
-     only be one root per dictionary, so no need to refer to
-     it by name.  -->
-<!ELEMENT theIdRoot (%vConstraints;)? >
-
-<!ELEMENT vList (enumVal*) >
+<!ENTITY % vConstraints "vList | vMinMax | vEnumVal" >
+<!ELEMENT vList (vEnumVal*) >
 
 <!ELEMENT vMinMax EMPTY >
 <!ATTLIST vMinMax   min    NMTOKEN "0"
@@ -920,23 +938,106 @@
                     max    NMTOKEN "0"
                     maxREF IDREF #IMPLIED >
 
-<!ELEMENT enumVal EMPTY >
-<!ATTLIST enumVal  value NMTOKEN "0"
+<!ELEMENT vEnumVal EMPTY >
+<!ATTLIST vEnumVal  value NMTOKEN "0"
+                    valueREF IDREF #IMPLIED >
+
+<!-- A field has a name and may also have global constraints on
+     the values it can take on.                                -->
+<!ELEMENT field (%vConstraints;)? >
+<!ATTLIST field name    ID #REQUIRED >
+
+<!ELEMENT fieldRef (%vConstraints;)? >
+<!ATTLIST fieldRef   refTo IDREF #REQUIRED>
+
+<!-- "Normal" nodes are defined by four things: 
+       1. the constraints, if any, on the values which may appear 
+          in their *parent* field (may be a *proper* subset of the values
+          allowed in parent field altogether)
+       2. a field name (i.e., a reference to a field defined in
+          the same xml file)
+       3. constraints, if any, on values field may take on in this
+          context
+       4. their children   (non-leaf nodes only) 
+
+  (For all but leaf nodes, this information is available from the
+  child nodes - just take the union of the "parent" values
+  associated with each node.  Note for a valid dictionary this
+  will be a disjoint union. That is, when you know all the values 
+  in a sequence up to some point, the field name of the next idField, 
+  if any, is unique.)
+
+  The root node is also special since it has no parent, hence
+  never has a #1 type component.
+ -->
+
+<!ELEMENT dictRoot ((dictNode*) | %vConstraints;)  >
+<!ATTLIST dictRoot fieldName IDREF #REQUIRED >
+
+<!ELEMENT dictNode (pValues?, (%vConstraints;)?, (dictNode*) ) >
+
+<!ATTLIST dictNode fieldName IDREF #REQUIRED >
+
+<!-- This element labels a value constraint as applying to values
+     for its parent node -->
+<!ELEMENT pValues (%vConstraints;) >
+<!-- ATTLIST pValues field IDREF #REQUIRED -->
+
+<!--
+             IDENTIFIER CONVERSION DESCRIPTION
+
+Conversion description consists of a list of possible conversions,
+each specifying
+
+ * the classes of gdd identifiers on which it works, always some
+   subtree of the complete set
+ * what is to be done
+      - send to null
+      - change a value of a field to a different value for the same field
+      - eliminate a field
+      - replace a field with another (specify how to calculate new value)
+-->
+
+<!ELEMENT idConverter (constants?, idDict*, idConv*) >
+<!-- might want to require at least fromDict; perhaps also toDict -->
+<!-- conceivably might want to make one or both of type IDREF also -->
+<!ATTLIST idConverter fromDict NMTOKEN #IMPLIED
+                      toDict   NMTOKEN #IMPLIED >
+
+<!ENTITY % convOp "delField | setField | replaceField" >
+<!ELEMENT idConv (subTree, ((%convOp;)* | nullId | sameId) ) >
+<!ELEMENT nullId (EMPTY) >
+<!ELEMENT sameId (EMPTY) >
+
+<!ELEMENT subTree (theIdRoot, field*) >
+
+<!ELEMENT delField (EMPTY) >
+<!ATTLIST delField field NMTOKEN #REQUIRED>
+
+<!ELEMENT setField (EMPTY) >
+<!ATTLIST setField field NMTOKEN #REQUIRED
+                   value NMTOKEN #REQUIRED
                    valueREF IDREF #IMPLIED >
 
-<!ELEMENT subseq (fieldRef | subseqref)+ >
-<!ATTLIST subseq  name ID #REQUIRED >
+<!ELEMENT replaceField (EMPTY) >
+<!-- if no value is supplied for the new field via value or valueREF
+     it is unchanged.  Just the field name changes -->
+<!ATTLIST  replaceField oldField NMTOKEN #REQUIRED
+                        newField NMTOKEN #REQUIRED
+                        value    NMTOKEN #IMPLIED
+                        valueREF IDREF   #IMPLIED >
 
-<!ELEMENT absSubseq (theIdRoot, (fieldRef | subseqref)+) >
-<!ATTLIST absSubseq  name ID #REQUIRED >
-
-<!ELEMENT absSubRef EMPTY >
-<!ATTLIST absSubRef refTo IDREF #REQUIRED >
-
-<!ELEMENT subseqRef EMPTY >
-<!ATTLIST subseqRef  refTo IDREF   #REQUIRED >
-
-
-<!ELEMENT seq ((theIdRoot| absSubseq | absSubRef), (fieldRef | subseqRef)*) >
-<!ATTLIST seq name NMTOKEN #IMPLIED >
-
+<!-- If we really need to get a single tower number from its 
+     x- and y-number we'll need a special element, something like
+     the following. The code interpreting this is supposed to
+     produce a new value 
+            val = rowVal * nPerRow + colVal
+     If nPerRow hasn't been supplied explicitly it should be 
+     accessible from the input idDict description of the field
+     rowField.
+-->
+<!ELEMENT matToVect (EMPTY) >
+<!ATTLIST matToVect  rowField NMTOKEN #REQUIRED 
+                     colField NMTOKEN #REQUIRED 
+                     newField NMTOKEN #REQUIRED 
+                     nPerRow  NMTOKEN #IMPLIED >
