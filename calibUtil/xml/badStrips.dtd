@@ -39,7 +39,7 @@
    instrument  (LAT | BFEM | BTEM | EM | CU) #REQUIRED
    timestamp   NMTOKEN #REQUIRED
    calType     NMTOKEN #REQUIRED
-   DTDVersion  NMTOKEN "v3r0"       
+   DTDVersion  NMTOKEN "v3r1"       
    fmtVersion  NMTOKEN #REQUIRED >
 
 <!-- Description of events used as input to the procedure 
@@ -101,7 +101,11 @@
       instance of a particular uniplane whose strips are a particular
       "badness", but dtd can't enforce this constraint.
   -->
+<!--  
+    Don't be so fussy
 <!ELEMENT uniplane (stripList?, stripSpan*) >
+ -->
+<!ELEMENT uniplane (stripList?, stripSpan?)* >
 <!ATTLIST uniplane tray      NMTOKEN #REQUIRED
                    which       (top | bot) #REQUIRED
                    nOnbdCalib  (true | false) "false"
