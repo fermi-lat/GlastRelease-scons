@@ -326,7 +326,7 @@ void CalClustersAlg::Profile(double eTotal, CsICluster* cl)
   
   // Clear minuit
   arglist[0] = 1;
-  //minuit->mnexcm("CLEAR", arglist ,1,ierflg);
+  minuit->mnexcm("CLEAR", arglist ,1,ierflg);
 
  } 
 
@@ -513,7 +513,9 @@ StatusCode CalClustersAlg::execute()
 			gamma = tkrRecData->Gamma(0);
             gammaVertex = gamma->vertex();
             gammaDirection = gamma->direction();
-			slope = gammaDirection.z();
+			slope = fabs(gammaDirection.z());
+	     	log << MSG::DEBUG << "gamma direction = " << slope << endreq;
+
 		  } else {
 		  log << MSG::INFO << "No reconstructed gammas " << endreq;
 		 }	
