@@ -65,7 +65,8 @@ StatusCode testRootIoSvcAlg::execute()
 	if (flag % 2)
 		m_rootIoSvc->setIndex(flag);
 	else 
-		m_rootIoSvc->setRunEventPair(std::pair<int,int>(1,4));
+		//m_rootIoSvc->setRunEventPair(std::pair<int,int>(10,5));
+        m_rootIoSvc->setIndex(flag);
 
 	flag++;
 
