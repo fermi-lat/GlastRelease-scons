@@ -58,13 +58,13 @@ public:
                m_na = 0;
   };
 
-    inline std::ostream& Gem::fillStream(std::ostream &s) const{
+    inline std::ostream& fillStream(std::ostream &s) const{
         s << "tile list: " << std::endl;
-        s << "XZM, XZP = 0x"" << std::hex << xzm() << ", 0x"; 
-        s std::hex << xzy() << std::endl;
+		s << "XZM, XZP = 0x" << std::hex << std::setw(4) << xzm() << ", 0x"; 
+        s << std::hex << xzp() << std::endl;
         s << "YZM, YZP = " << yzm() << ", " << yzp() << std::endl;
-        s << "XY = " << xy() << std::endl;
-        s << "RBN, NA = " << rbn() << ", " << na() << std::endl;
+		s << "XY = " << std::setw(8) << xy() << std::endl;
+		s << "RBN, NA = " << std::setw(4) << rbn() << ", " << na() << std::endl;
         return s;
     }
 
@@ -113,9 +113,9 @@ public:
      m_seconds = 0; 
   };
 
-  inline std::ostream& Gem::fillStream(std::ostream &s) const{
-      s << "OnePPSTime:" << endl;
-      s << "seconds, timebase = " << m_seconds << ", " << m_timebase <<endl;
+  inline std::ostream& fillStream(std::ostream &s) const{
+	  s << "OnePPSTime:" << std::endl;
+	  s << "seconds, timebase = " << m_seconds << ", " << m_timebase << std::endl;
       return s;
   }
 
@@ -237,23 +237,25 @@ private:
 
     inline std::ostream& Gem::fillStream(std::ostream &s) const{
         s << "GEM:" <<std::endl;
-        s << "ROI vector = 0x" << std::hex << roiVector() << std::endl;
-        s << "TKR vector = 0x" << std::hex << tkrVector() << std::endl;
-        s << "CAL HE vector = 0x" << std::hex << m_cal_HE_Vector << std::endl;
-        s << "CAL LE vector = 0x" << std::hex << m_cal_LE_Vector << std::endl;
-        s << "Condition Summary = 0x" << std::hex << m_conditionSummary << std::endl;
-        s << "CNO vector        = 0x" << std::hex << m_cno_Vector << std::endl;
+		s << "ROI vector = 0x" << std::hex << std::setw(4) << std::setfill('0') << roiVector() << std::endl;
+		s << "TKR vector = 0x" << std::hex << std::setw(4) << tkrVector() << std::endl;
+		s << "CAL HE vector = 0x" << std::hex << std::setw(4) << m_cal_HE_Vector << std::endl;
+		s << "CAL LE vector = 0x" << std::hex << std::setw(4) << m_cal_LE_Vector << std::endl;
+		s << "Condition Summary = 0x" << std::hex << std::setw(4) << m_conditionSummary << std::endl;
+		s << "CNO vector        = 0x" << std::hex << std::setw(4) << m_cno_Vector << std::endl;
         m_tileList.fillStream(s);
-        s << "Live time         = 0x" << std::hex << m_liveTime << " = "; 
+		s << "Live time         = 0x" << std::hex << std::setw(8) << m_liveTime << std::dec << " = "; 
         s << m_liveTime << std::endl;
-        s << "Prescaled         = 0x" << std::hex << m_prescaled << " = "; 
+		s << "Prescaled         = 0x" << std::hex << std::setw(8) << m_prescaled << std::dec << " = "; 
         s << m_prescaled << std::endl;
-        s << "Discarded         = 0x" << std::hex << m_discarded << " = ";
+		s << "Discarded         = 0x" << std::hex << std::setw(8) << m_discarded << std::dec << " = ";
         s << m_discarded << std::endl;
-        s << "Sent              = 0x" << std::hex << m_sent << " = " ;
+		s << "Sent              = 0x" << std::hex << std::setw(8) << m_sent << std::dec << " = " ;
         s << m_sent << std::endl;
+		s << "Trigger Time      = 0x" << std::hex << std::setw(8) << m_triggerTime << std::dec << " = " ;
+		s << m_triggerTime << std::endl;
         m_onePpsTime.fillStream(s);
-        s << "Delta event time = 0x" << std::hex << m_deltaEventTime << " = ";
+		s << "Delta event time = 0x" << std::hex << std::setw(8) << m_deltaEventTime << std::dec << " = ";
         s << m_deltaEventTime << std::endl;
         return s;
     }
