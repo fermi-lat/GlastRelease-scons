@@ -32,6 +32,8 @@
 
 extern const CLID& CLID_CalDigi;
 
+namespace cal {
+
 class CalDigi : virtual public ContainedObject { 
     
 public:
@@ -50,7 +52,7 @@ public:
     class CalXtalReadout {  // : virtual public ContainedObject  { 
         
     public:
-        CalXtalReadout(char rangeP, short adcP, char rangeM, short adcM) :
+        CalXtalReadout(char rangeP, unsigned short adcP, char rangeM, unsigned short adcM) :
           m_rangeP(rangeP), 
               m_adcP(adcP), 
               m_rangeM(rangeM), 
@@ -62,7 +64,7 @@ public:
           
           
           // retrieve pulse height from specified face
-          inline short getAdc(idents::CalXtalId::XtalFace face) const {return face == idents::CalXtalId::POS ? m_adcP : m_adcM;};
+          inline unsigned short getAdc(idents::CalXtalId::XtalFace face) const {return face == idents::CalXtalId::POS ? m_adcP : m_adcM;};
           
           // retrieve energy range from specified face
           inline char getRange(idents::CalXtalId::XtalFace face) const {return face == idents::CalXtalId::POS ? m_rangeP : m_rangeM;};
@@ -70,12 +72,12 @@ public:
           
     private:
         
-        short m_adcP, m_adcM;
+        unsigned short m_adcP, m_adcM;
         char  m_rangeP, m_rangeM;
         
     };
 
-    typedef std::vector<CalXtalReadout> CalXtalReadoutVector;
+    typedef std::vector<CalXtalReadout> CalXtalReadoutCol;
     
     /// shifts and masks for packed readout of energy range and Adc value
     enum {POS_OFFSET = 14,						// shift for POSitive face
@@ -84,25 +86,23 @@ public:
     
     CalDigi() {};
     
-    //CalDigi(CalTrigMode mode, idents::CalXtalId CalXtalId, ObjectVector<CalXtalReadout> readout) : 
-    //    m_mode(mode),
-    //        m_XtalId(CalXtalId),
-    //        m_readout(readout)
-    //{};
+    CalDigi(idents::CalXtalId::CalTrigMode mode, idents::CalXtalId xtalId) : 
+        m_mode(mode), m_xtalId(xtalId) {};
     
     /// Destructor
     virtual ~CalDigi() { };
     
     /// Retrieve readout mode
     inline const idents::CalXtalId::CalTrigMode getMode() const { return m_mode; }
-    inline void setMode(idents::CalXtalId::CalTrigMode m) { m_mode = m; }
     
     /// Retrieve Xtal identifier
-    inline const idents::CalXtalId getPackedId() const { return m_XtalId; }
-    inline void setPackedId(idents::CalXtalId id) { m_XtalId = id; }
-    
+    inline const idents::CalXtalId getPackedId() const { return m_xtalId; }
+
+    inline void initialize(idents::CalXtalId::CalTrigMode m, idents::CalXtalId id)
+	{ m_mode = m;  m_xtalId = id;}
+
     inline void addReadout(CalXtalReadout r) { m_readout.push_back(r); } 
-	const CalXtalReadoutVector& getReadoutVector() const { return m_readout;}	
+	const CalXtalReadoutCol& getReadoutCol() const { return m_readout;}	
     
     /// Retrieve energy range for selected face and readout
     inline char getRange(short readoutIndex, idents::CalXtalId::XtalFace face) const
@@ -144,13 +144,14 @@ private:
     /// Cal readout mode is based on trigger type
     idents::CalXtalId::CalTrigMode m_mode;
     /// Cal ID
-    idents::CalXtalId m_XtalId;
+    idents::CalXtalId m_xtalId;
     /// ranges and pulse heights
-    CalXtalReadoutVector m_readout;
+    CalXtalReadoutCol m_readout;
     
 };
 
 typedef ObjectVector<CalDigi> CalDigiCol;
 
+}
 
 #endif

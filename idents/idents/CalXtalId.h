@@ -4,7 +4,6 @@
 
 // Include files
 #include <iostream>
-using namespace std;
 
 // #include "GaudiKernel/Kernel.h"
 // #include "GaudiKernel/ContainedObject.h"
@@ -38,20 +37,6 @@ using namespace std;
 namespace idents {
 class CalXtalId {
 
-private:
-
-	// Packed word containing Xtal ID = (tower*8 + layer)*16 + column
-        int m_packedId;
-	short m_tower, m_layer, m_column;
-
-	inline void unpackId()
-	{
-		m_tower = getTower();
-		m_layer = getLayer();
-		m_column = getColumn();
-	};
-	inline void packId(short tower, short layer, short column) 
-		{m_packedId = (((tower<<3) + layer)<<4) + column;};
 
 public:
 
@@ -81,17 +66,11 @@ public:
 
 
       CalXtalId(int packedId=0) :
-	        m_packedId(packedId)
-	{
-		unpackId();
-	};
+	        m_packedId(packedId) {};
 
 	CalXtalId(short tower, short layer, short column) 
 	{
 		packId(tower, layer, column);
-		m_tower = tower;
-		m_layer = layer;
-		m_column = column;
 	};
     
     ~CalXtalId() {};
@@ -109,16 +88,24 @@ public:
 
         operator int() const {return m_packedId;};
 
-       	friend ostream& operator<< (ostream &stream, CalXtalId XtalId);
-    	friend istream& operator>> (istream &stream, CalXtalId &XtalId);
+       	friend std::ostream& operator<< (std::ostream &stream, CalXtalId XtalId);
+    	friend std::istream& operator>> (std::istream &stream, CalXtalId &XtalId);
 
-		void write( ostream& stream) const;
-		void read( istream& stream);
+		void write( std::ostream& stream) const;
+		void read( std::istream& stream);
+
+private:
+
+	// Packed word containing Xtal ID = (tower*8 + layer)*16 + column
+        unsigned int m_packedId;
+
+	inline void packId(short tower, short layer, short column) 
+		{m_packedId = (((tower<<3) + layer)<<4) + column;};
 };
 
-inline ostream& operator<<(ostream &stream, CalXtalId XtalId) { XtalId.write(stream);return stream;}
+inline std::ostream& operator<<(std::ostream &stream, CalXtalId XtalId) { XtalId.write(stream);return stream;}
 
-inline istream& operator>> (istream &stream, CalXtalId &XtalId) {XtalId.read(stream);return stream;}
+inline std::istream& operator>> (std::istream &stream, CalXtalId &XtalId) {XtalId.read(stream);return stream;}
 
 
 } // namespace idents

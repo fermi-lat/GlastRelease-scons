@@ -9,7 +9,6 @@
 //			unpacked ID, i.e. tower, layer, and column.
 //		Serialize methods give i/o for packed ID.
 //		Extractor/inserter give i/o for unpacked ID.
-//		Input methods ensure that packed and unpacked IDs stay in sync.
 //
 //    Retrieve packed ID or unpacked tower, layer, and column 
 //        inline int getPackedId() const 
@@ -26,35 +25,35 @@
  */
 // Include files
 #include "idents/CalXtalId.h"
-using namespace std;
 
 
 using namespace idents; 
 
 
 // overload the inserter to stream unpacked tower, layer and column
-void CalXtalId::write(ostream &stream) const
+void CalXtalId::write(std::ostream &stream) const
 {
-        stream << m_tower << " ";
-	stream << m_layer << " ";
-	stream << m_column << " ";
+        stream << getTower() << " ";
+	stream << getLayer() << " ";
+	stream << getColumn() << " ";
 }
 
 
 // extract unpacked ID, and stuff packed ID from unpacked info
-void CalXtalId::read(istream &stream)
+void CalXtalId::read(std::istream &stream)
 {
-	stream >> m_tower >> m_layer >> m_column;
-	packId(m_tower, m_layer, m_column);		// ensure m_packedId is synced
+	int tower,layer,column;
+	stream >> tower >> layer >> column;
+	packId(tower, layer, column);		// ensure m_packedId is synced
 }
 
 
 /// retrieve unpacked ID, tower, layer, and column
 void CalXtalId::getUnpackedId(short& tower, short& layer, short& column)
 {
-	tower  = m_tower;
-	layer  = m_layer;
-	column = m_column;
+	tower  = getTower();
+	layer  = getLayer();
+	column = getColumn();
 }
 
 
