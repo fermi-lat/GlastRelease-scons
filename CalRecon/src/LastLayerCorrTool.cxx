@@ -132,11 +132,11 @@ StatusCode LastLayerCorrTool::doEnergyCorr(double eTotal, Event::CalCluster* clu
 	  //cout<<">> number of tracks "<< ntracks <<endl;	  
 	  Vector trackDirection;
 	  Point trackVertex;
-	double slope;
-	double thetarec;//reconstructed theta
-	double phirec;  //reconstructed phi
-	double px;      //projected position on (0,0,0 plane) 
-	double py;
+	double slope=0;
+	double thetarec=-1;//reconstructed theta
+	double phirec=0;  //reconstructed phi
+	double px=0;      //projected position on (0,0,0 plane) 
+	double py=0;
         
         if (ntracks > 0) {
             rectkr++;
