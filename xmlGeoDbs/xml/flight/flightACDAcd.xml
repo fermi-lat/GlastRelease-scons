@@ -68,7 +68,7 @@
      Y-ribbons are split into 5 pieces of 3 different lengths.
 
      For now (6 Nov 2002) get rid of sensitive attribute for ribbons,
-     e.g. all the lines in ribbon box definitions like this:
+     e.g. eliminate all the lines in ribbon box definitions like this:
 
          sensitive="posHit"
 
@@ -80,7 +80,9 @@
          ZREF="ribbonThickness"
          materialREF="ribbonMat"
          detectorTypeREF="eDTypeACDRibbon" />
-<!--
+
+
+
     <box name="yRibbonTopEdge"
          YREF="ribbonWidth"
          XREF="yRibbonTopEdge_l"
@@ -101,7 +103,7 @@
          ZREF="ribbonThickness"
          materialREF="ribbonMat"
          detectorTypeREF="eDTypeACDRibbon" />
--->
+
     <!-- next assemble these pieces (25 top tiles, 4 long ribbons
          running parallel to Y-axis and 4 ribbons, each broken into
          5 segments, running parallel to X-axis. First make
@@ -391,7 +393,7 @@
      and within ribbon by segment, in order of icreasing X-displ.
      There are 4 ribbons, each divided into 5 segements. -->
 <!-- Ribbon 0 -->
-<!--
+
       <posXYZ volume="yRibbonTopEdge"
               XREF="topYRibbonEdge_dxn"
               YREF="topYRibbonOuter_dyn"
@@ -436,9 +438,9 @@
             <idField name="fRibbon"  value="0" />
             <idField name="fRibbonSegment" value="5" />    
       </posXYZ>
--->    
+
 <!-- Ribbon 1 -->
-<!--
+
       <posXYZ volume="yRibbonTopEdge"
               XREF="topYRibbonEdge_dxn"
               YREF="topYRibbonInner_dyn"
@@ -483,9 +485,9 @@
             <idField name="fRibbon"  value="1" />
             <idField name="fRibbonSegment" value="5" />    
       </posXYZ>
--->
+
 <!-- Ribbon 2 -->
-<!--
+
       <posXYZ volume="yRibbonTopEdge"
               XREF="topYRibbonEdge_dxn"
               YREF="topYRibbonInner_dy"
@@ -530,9 +532,9 @@
             <idField name="fRibbon"  value="2" />
             <idField name="fRibbonSegment" value="5" />    
       </posXYZ>
--->
+
 <!-- Ribbon 3 -->    
-<!--
+
       <posXYZ volume="yRibbonTopEdge"
               XREF="topYRibbonEdge_dxn"
               YREF="topYRibbonOuter_dy"
@@ -577,7 +579,7 @@
             <idField name="fRibbon"  value="3" />
             <idField name="fRibbonSegment" value="5" />    
       </posXYZ>
--->
+
 
      </composition>
 

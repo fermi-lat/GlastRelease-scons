@@ -184,7 +184,8 @@ for sides to dovetail around top support, from 3-d model 6-23-03</prim>
   <prim name="ribbonThickness" value="5">
 Thickness of scintillating ribbon, confirmed 30 July 2003</prim>
 
-  <prim name="ribbonGap" value= ".5" >Distance between ribbon and the adjacent
+
+  <prim name="ribbonGap" value= "0.0" >Distance between ribbon and the adjacent
  top tile, as of Oct. 2002.  
 As of new 3-d model 6-23-03 old value of 2.5 caused overlap.  With
 no official blessing, try something smaller.  According to model there
@@ -195,15 +196,18 @@ model.  Real ribbons don't come in disconnected segments.)</prim>
 
  <!-- old number with new name (was "topStandoff"  
     No guarantee it's correct. -->
+<!-- obsolete??
   <prim name="TKRACDSupportGap" value="10.0"> distance between bottom of
 ACD support and top of TKR.  
 </prim>
+-->
 
-<!-- following is probably obsolete -->
+<!-- following is probably obsolete 
   <prim name="tapeTopExt" value="15.0">Distance tape should extend
 beyond the end of a top tile (see Heather's first diagram)</prim>
+-->
 
-<!-- maybe these as well, as of Oct, 2002 reworking -->
+<!-- maybe these as well, as of Oct, 2002 reworking
   <prim name="ACDSideStandoff" value="35.75">This one is right if
 side_standoff is another name for side_tile_standoff, the distance
 between the side of the tracker and the ACD tiles.  [Deprecated.  ]</prim>
@@ -211,8 +215,9 @@ between the side of the tracker and the ACD tiles.  [Deprecated.  ]</prim>
 side support structure to inside edge of side tiles.  This is temporary, to
 be replaced probably with a derived ACD constant which is the sum of the
 support thickness and gap between support and side tile.</prim>
+
   <prim name="totalTopAvail" value="91.9">This is the total amount of space
     available to top section of the ACD, includes tiles and support structure
 (Heather).</prim>
-
+-->
 </primCategory>

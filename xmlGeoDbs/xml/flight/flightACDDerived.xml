@@ -153,12 +153,12 @@
           <refer refTo="ACDTopTransverse" />
         </const>
 
-        <!-- There are 3 different possible lengths for bits of X ribbon:
+        <!-- There are 3 different possible lengths for bits of Y ribbon:
              one for ribbon segments under the central tiles, one for 
              ribbon segments under "mid" tiles (columns 1 and 3) and one
              for ribbon segments under the outer columns (0 and 4).     -->
 
-<!--
+
         <const name="yRibbonTopCent_l">
           <notes>length of ribbon segments running under the central column
             of tiles</notes>
@@ -188,7 +188,7 @@
           <notes>length of ribbon segments running under columns 0,4
             of top tiles</notes>
           <minus>
-            <refer refTo="topTileXEdgeTotal_l" />
+            <refer refTo="topTileXEdge_l" />
             <add>
               <refer refTo="topOverlap" />
               <refer refTo="ribbonGap" />
@@ -196,58 +196,8 @@
           </minus>
         </const>            
 
--->
-
-        <!-- Old stuff having to do with counts, ranges of id fields
-             is probably still useful -->
-        <const name="XTopTileMax" uType="count" type="int">
-          <notes>Convenience for idField definitons</notes>
-          <minus>
-            <refer refTo="numXTopTiles" />
-            <const value="1.0" />
-          </minus>
-        </const>
-
-        <const name="YTopTileMax" uType="count" type="int">
-          <notes>Convenience for idField definitons</notes>
-          <minus>
-            <refer refTo="numYTopTiles" />
-            <const value="1" uType="count" />
-          </minus>
-        </const>
 
 
-        <const name="ACDShortRowMin" uType="count"  type="int">
-          <notes>row number of first short ACD side row</notes>
-          <add>
-            <refer refTo="ACDLongRowMax" />
-            <const value="1" uType="count" />
-          </add>
-        </const>
-
-        <const name="ACDShortRowMax" uType="count"  type="int">
-          <notes>row number of last short ACD side row</notes>
-          <minus>
-            <refer refTo="numSideRows" />
-            <const value="1" uType="count" />
-          </minus>
-        </const>
-
-        <const name="ACDShortMaxCol" uType="count" type="int">
-          <notes>Column number of last tile in a short row</notes>
-          <minus>
-            <refer refTo="numPerSideRowShort" />
-            <const value="1" uType="count" />
-          </minus>
-        </const>
-
-        <const name="ACDLongMaxCol" uType="count" type="int">
-          <notes>Column number of last tile in a long row</notes>
-          <minus>
-            <refer refTo="numPerSideRowLong" />
-            <const value="1" uType="count" />
-          </minus>
-        </const>
 
         <const name="ACDSide_z" >
           <notes>Total height of an ACD side of tiles 
@@ -589,7 +539,7 @@
                topYRibbonOuter_dy, _dyn
  -->
 <!-- compute Z-displacements from the ones for top tiles -->
-<!--
+
         <const name="topYRibbonEdge_dz">
           <notes>Z displacement for outer segments (1 and 5) of 
                  top ribbons || to x-axis </notes>
@@ -607,40 +557,46 @@
           <notes>Z displacement for mid segments (2 and 4) of 
                  top ribbons || to x-axis </notes>
           <minus>
-            <refer refTo="topYRibbonEdge_dz" />
-            <refer refTo="tileThickness" />
+            <refer refTo="topTileMid_dz" />
+            <add>
+              <refer refTo="tileHalfThickness" />
+              <refer refTo="ribbonHalfThickness" />
+              <refer refTo="ribbonGap" />
+            </add>
           </minus>
+
         </const>
 
         <const name="topYRibbonCent_dz">
           <notes>Z displacement for central segment (3) of 
                  top ribbons || to x-axis </notes>
           <minus>
-            <refer refTo="topYRibbonMid_dz" />
-            <quo>
-              <add>
-                <refer refTo="tileThickness" />
+            <refer refTo="topTileCent_dz" />
+            <add>
+              <half>
                 <refer refTo="tileCenterThickness" />
-              </add>
-              <const value="2" uType="count" />
-            </quo>
+              </half>
+              <refer refTo="ribbonHalfThickness" />
+              <refer refTo="ribbonGap" />
+            </add>
           </minus>
+
+
         </const>
--->
+
 
         <!-- go to edge of central tile, add ribbon gap and half our length -->
-<!--
+
         <const name="topYRibbonMid_dx" >
           <notes>x-displacement of segment 4 </notes>
           <add>
             <refer refTo="ribbonGap" />
-            <quo>
+            <half>
               <add>
                 <refer refTo="topTileXCentral_l" />
                 <refer refTo="yRibbonTopMid_l" />
               </add>
-              <const value="2" uType="count" />
-            </quo>
+            </half>
           </add>
         </const>
 
@@ -650,23 +606,22 @@
             <refer refTo="topYRibbonMid_dx" />
           </uminus>
         </const>
--->
+
 
         <!-- go to center of mid tile, add half tile length (to get
            to edge) half our length and finally ribbon gap -->
 
-<!--
+
         <const name="topYRibbonEdge_dx" >
           <notes>x-displacement of segment 5 </notes>
           <add>
             <refer refTo="topTileMid_dx" />
-            <quo>
+            <half>
               <add>
                 <refer refTo="topTileXMid_l" />
                 <refer refTo="yRibbonTopEdge_l" />
               </add>
-              <const value="2" uType="count" />
-            </quo>
+            </half>
             <refer refTo="ribbonGap" />
           </add>
         </const>
@@ -680,13 +635,12 @@
 
         <const name="topYRibbonInner_dy" >
           <notes> Y displacement for segments belonging to Y-ribbon 2</notes>
-          <quo>
+          <half>
             <add>
               <refer refTo="topTileYCentral_l" />
               <refer refTo="topTileGap" />
             </add>
-            <const value="2" uType="count" />
-          </quo>
+          </half>
         </const>
 
         <const name="topYRibbonInner_dyn" >
@@ -713,7 +667,6 @@
             <refer refTo="topYRibbonOuter_dy" />
           </uminus>
         </const>
--->
 
 
         <const name="ACDSideDovetail_d" >
@@ -760,6 +713,57 @@
           <uminus>
             <refer refTo="ACDSideSupport_dDovetail" />
           </uminus>
+        </const>
+
+        <!-- Old stuff having to do with counts, ranges of id fields
+             is probably still useful -->
+        <const name="XTopTileMax" uType="count" type="int">
+          <notes>Convenience for idField definitons</notes>
+          <minus>
+            <refer refTo="numXTopTiles" />
+            <const value="1.0" />
+          </minus>
+        </const>
+
+        <const name="YTopTileMax" uType="count" type="int">
+          <notes>Convenience for idField definitons</notes>
+          <minus>
+            <refer refTo="numYTopTiles" />
+            <const value="1" uType="count" />
+          </minus>
+        </const>
+
+
+        <const name="ACDShortRowMin" uType="count"  type="int">
+          <notes>row number of first short ACD side row</notes>
+          <add>
+            <refer refTo="ACDLongRowMax" />
+            <const value="1" uType="count" />
+          </add>
+        </const>
+
+        <const name="ACDShortRowMax" uType="count"  type="int">
+          <notes>row number of last short ACD side row</notes>
+          <minus>
+            <refer refTo="numSideRows" />
+            <const value="1" uType="count" />
+          </minus>
+        </const>
+
+        <const name="ACDShortMaxCol" uType="count" type="int">
+          <notes>Column number of last tile in a short row</notes>
+          <minus>
+            <refer refTo="numPerSideRowShort" />
+            <const value="1" uType="count" />
+          </minus>
+        </const>
+
+        <const name="ACDLongMaxCol" uType="count" type="int">
+          <notes>Column number of last tile in a long row</notes>
+          <minus>
+            <refer refTo="numPerSideRowLong" />
+            <const value="1" uType="count" />
+          </minus>
         </const>
 
 
