@@ -110,6 +110,10 @@ namespace {
         energy *= 1000;
       }
       xml::Dom::addAttribute(prim, "value", energy);
+      elt.normalize();
+      DOM_Node textChild = elt.getFirstChild();
+      prim.appendChild(textChild);
+      //      elt.removeChild(textChild);
       DOM_Node parent = elt.getParentNode();
       DOM_Node oldChild =  parent.replaceChild(prim, elt);
     }
