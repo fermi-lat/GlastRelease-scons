@@ -2,6 +2,7 @@
  * Package detModel
  * Coordinator: R.Giannitrapani
  *
+ * v2r15p2 jrb 19-Feb-04   Small changes for gcc 3.3 compilation
  * v2r15p1 jrb  4-Feb-04   Bug fix: keep track of id fields for *all* position
  *                         elements
  * v2r15p0 jrb 29-Jan-04   Replace native Xerces calls with calls to xml::Dom
