@@ -1,6 +1,6 @@
 //##############################################################
 //
-// Job options file for Gleam job to run surface muons source for 10 events and store in rootTestData
+// Job options file for Gleam job to run muon_pencil_angle source for 5 events and store in rootTestData
 
 //$Header$
 
@@ -10,24 +10,24 @@
 // following, if uncommented, will run the GUI
 //#include "$GLEAMROOT/src/guiOptions.txt"
 
-FluxAlg.source_name="vertical_surface_muons";
+FluxAlg.source_name="muon_pencil_angle";
 
 // set root output from merit with following
 MeritAlg.EventTreeName="MeritTuple";
 MeritAlg.PointingTreeName="Exposure";
 
-mcRootWriterAlg.mcRootFile       = "$ROOTTESTDATAROOT/data/vertical_surface_muons/mc.root";
-digiRootWriterAlg.digiRootFile   = "$ROOTTESTDATAROOT/data/vertical_surface_muons/digi.root";
-reconRootWriterAlg.reconRootFile = "$ROOTTESTDATAROOT/data/vertical_surface_muons/recon.root";
-RootTupleSvc.filename            = "$ROOTTESTDATAROOT/data/vertical_surface_muons/merit.root";
+mcRootWriterAlg.mcRootFile       = "$ROOTTESTDATAROOT/data/default/mc.root";
+digiRootWriterAlg.digiRootFile   = "$ROOTTESTDATAROOT/data/default/digi.root";
+reconRootWriterAlg.reconRootFile = "$ROOTTESTDATAROOT/data/default/recon.root";
+RootTupleSvc.filename            = "$ROOTTESTDATAROOT/data/default/merit.root";
 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 CalClustersAlg.OutputLevel=4; // too much info
 
 // Number of events to process
-MeritAlg.generated = 10; // for estimation of Aeff
-ApplicationMgr.EvtMax = 10;
+MeritAlg.generated = 5; // for estimation of Aeff
+ApplicationMgr.EvtMax = 5;
 
 MessageSvc.OutputLevel      =3;
 
