@@ -69,6 +69,6 @@
 <!ELEMENT leaf EMPTY>
 <!ATTLIST leaf  dtype (int | unsigned | float) #REQUIRED
                      name  ID                  #REQUIRED
-                     units NMTOKEN             #IMPLIED 
+                     units NMTOKEN             "no_units"
                      value NMTOKENS            #REQUIRED >
 
