@@ -314,6 +314,7 @@ void GlastRandomSvc::handle(const Incident &inc)
         }    
 
         header->setRun(runNo);
+        header->setEvent(seqNo);
 
         int multiplier = 1; 
         int dummy = 0; // for 2nd argument to setSeed
