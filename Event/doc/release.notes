@@ -2,6 +2,7 @@
  * package GlastEvent
  * package manager:T.Burnett (original author: H. Gillespie)
  *
+ * v7r3  08-may-02 THB Ready for name change: new Tkr and Cal included
  *       08-may-02 HMK Add namespace for DigiEvent and new CalDigiCol\n
  *       string for the EventModel.\n
  *       06-may-02 TU  Add TKR Recon TDS classes\n

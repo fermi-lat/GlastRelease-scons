@@ -1,11 +1,11 @@
 package GlastEvent
-version v7r1
+version v7r3
 
 branches GlastEvent mgr doc src
 use idents v2r*
 
 use GaudiKernel v11r0p*
-use geometry
+use geometry    v3*
 use CLHEP v1r7p*
 
 apply_pattern package_headers
@@ -14,48 +14,26 @@ macro_append GlastEvent_headers "" WIN32 " \
         ../GlastEvent/*.h \ 
         ../GlastEvent/TopLevel/*.h \
         ../GlastEvent/MonteCarlo/*.h \
-        ../GlastEvent/data/*.h  \
         ../GlastEvent/Hits/*.h \
         ../GlastEvent/Digi/*.h \
         ../GlastEvent/Recon/*.h \
-        ../GlastEvent/Recon/TkrRecon/*.h
+        ../GlastEvent/Recon/TkrRecon/*.h\
+        ../GlastEvent/Recon/CalRecon/*.h
 
 library GlastEvent -no_share\
         MonteCarlo/*.cxx \
         Hits/*.cpp \
         Recon/TkrRecon/*.cxx \
+        Recon/CalRecon/*.cxx \
         TopLevel/*.cpp \
         ${GlastEvent_headers}
 
-#library GlastEventFactories \
-#        ../src/TopLevel/EventModel.cpp \
-#        ../src/Factories/*.cpp
-
-# library tkrTest ../GlastEvent/Digi/TkrTest.cxx ../GlastEvent/Digi/TkrDigi.h ../GlastEvent/Digi/TkrDigiCol.h 
 
 apply_pattern package_include
 
 macro GlastEvent_stamps   "$(GlastEventDir)/GlastEvent.stamp"
 
 apply_pattern package_linkopts
-
-# Macro to define shared libraries
-#
-set GlastEventFactoriesShr "${GLASTEVENTROOT}/${DEBUGDIR}/libGlastEventFactories"
-
-private
-macro GlastEvent_shlibflags "$(GlastEventDir)/libGlastEvent.a $(libraryshr_linkopts) $(CLHEP_linkopts)" \
- VisualC                  "$(GlastEventDir)/libGlastEvent.lib $(libraryshr_linkopts) $(CLHEP_linkopts) /def:$(GlastEventDir)/libGlastEvent.def"
-
-# note that dependent libs are debug
-
-# for the moment, use libraryshr_linkopts to fix red hat 6.2 linking problem
-#macro GlastEventFactories_shlibflags "$(componentshr_linkopts) $(Gaudi_linkopts) $(use_linkopts)"\
-macro GlastEventFactories_shlibflags "$(libraryshr_linkopts) $(Gaudi_linkopts) $(use_linkopts)"\
-        VisualC   "$(componentshr_linkopts) $(Gaudi_linkopts) $(use_linkopts) $(Win32Debug)"
-
-
-
 
 
 
