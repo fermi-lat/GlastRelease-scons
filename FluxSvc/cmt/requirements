@@ -1,5 +1,5 @@
 package FluxSvc
-version v5r10p6
+version v5r11
 
 branches FluxSvc mgr doc
 

@@ -134,7 +134,7 @@ StatusCode FluxAlg::execute()
     // Here the TDS is prepared to receive hits vectors
     // Check for the MC branch - it will be created if it is not available
     
-    DataObject *mc = new Event::McParticleCol;
+    DataObject *mc = new Event::MCEvent;
     sc=eventSvc()->registerObject(EventModel::MC::Event , mc);
     if(sc.isFailure()) {
         log << MSG::WARNING << EventModel::MC::Event  <<" could not be registered on data store" << endreq;
