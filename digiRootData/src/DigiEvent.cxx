@@ -15,7 +15,6 @@ TObjArray *DigiEvent::s_staticTkrDigiCol = 0;
 TClonesArray *DigiEvent::s_calDigiStaticCol = 0;
 
 DigiEvent::DigiEvent() {
-  printf (" my new DigiEvent constructor!!!\n");fflush(stdout);
     //if (!s_calDigiStaticCol) s_calDigiStaticCol = new TClonesArray("CalDigi",1536);
     if (!s_calDigiStaticCol) s_calDigiStaticCol = new TClonesArray("CalDigi",100);
     m_calDigiCloneCol = s_calDigiStaticCol;
@@ -36,7 +35,6 @@ DigiEvent::DigiEvent() {
 
 DigiEvent::~DigiEvent() {
   
-    printf("Destructor DigiEvent\n");fflush(stdout);
     if(m_acdDigiCol == s_acdDigiStaticCol) s_acdDigiStaticCol = 0;
     m_acdDigiCol->Delete();
     delete m_acdDigiCol;
