@@ -46,9 +46,9 @@ DisplayManager::DisplayManager( gui::DisplayControl* d)
     };
     d->add(m_detmap["steps"] = new HitsRep, "hits", false);
     
-    d->add(m_detmap["hit_boxes"] = new Boxes("blue"), "hit detectors");
+    d->add(m_detmap["hit_boxes"] = new Boxes("orange"), "hit Pos detectors");
 
-    d->add(m_detmap["integrating_boxes"] = new Boxes("orange"), "hit integrating detectors");
+    d->add(m_detmap["integrating_boxes"] = new Boxes("blue"), "hit Int detectors");
 
     d->add(m_detmap["tracks"]= new TracksRep, "tracks");
 }
