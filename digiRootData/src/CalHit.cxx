@@ -1,0 +1,131 @@
+///////////////////////////////////////////////////////////////////////////
+//                                                                       
+// The CalHit class contains the information about a single calorimeter  
+// log.  This includes the ADC values for all 4 digitizations, and
+// implements a LogID member which provides access to information
+// on the position of the log within the calorimeter.
+//                                                                       
+///////////////////////////////////////////////////////////////////////////
+
+#include "digiRootData/CalHit.h"
+#include "TClass.h"
+
+ClassImp(CalHit)
+
+///________________________________________________________________________
+CalHit::CalHit() {
+    // Default constructor
+    m_log = 0;
+}
+///________________________________________________________________________
+CalHit::CalHit(LogID* log) {
+    // Create a CalHit object with LogID of log
+    m_log = log;
+}
+//_________________________________________________________________________
+CalHit::~CalHit() {
+    // Destructor
+    Clean();
+}
+//_________________________________________________________________________
+Int_t CalHit::Compare(const TObject *obj) const {
+    if (this == obj) return 0;
+    if (CalHit::Class() != obj->IsA()) return -1;
+    UInt_t id_this = m_log->getID();
+    UInt_t id_hit = ((CalHit*)obj)->getLogID()->getID();
+    if (id_this == id_hit)
+        return 0;
+    else
+        return (id_this > id_hit) ? 1 : -1;
+}
+//_________________________________________________________________________
+Bool_t CalHit::IsSortable() const {
+  return kTRUE; 
+}
+//_________________________________________________________________________
+void CalHit::Clean() {
+    // Free up memory reserved by member pointers
+    if (m_log)
+        delete m_log;
+}
+//_________________________________________________________________________
+Bool_t CalHit::setADCValue(UShort_t newVal, LogEnd end, ADCGain gain) {
+    // Allows user to set the ADC Value for a particular log end and 
+    // digitization.  Returns kTRUE if successful, kFALSE if not.
+    if (newVal & ~ADC_M_VAL) {
+        return kFALSE;
+    } 
+    else {
+        ADCValues[end * 4 + gain] &= ~(ADC_M_VAL << ADC_V_VAL);
+        ADCValues[end * 4 + gain] |= newVal << ADC_V_VAL;
+//        ADCValues[end][gain] &= ~(ADC_M_VAL << ADC_V_VAL);
+//        ADCValues[end][gain] |= newVal << ADC_V_VAL;
+        return kTRUE;
+    }
+}
+//_________________________________________________________________________
+Bool_t CalHit::setADCID(UShort_t newVal, LogEnd end, ADCGain gain) {
+    // Allows user to set the ADC ID for a particular log end and 
+    // digitization.  Returns kTRUE if successful, kFALSE if not.
+    if (newVal & ~ADC_M_VAL) {
+        return kFALSE;
+    } 
+    else {
+        ADCValues[end * 4 + gain] &= ~(ADC_M_ID << ADC_V_ID);
+        ADCValues[end * 4 + gain] |= newVal << ADC_V_ID;
+//        ADCValues[end][gain] &= ~(ADC_M_ID << ADC_V_ID);
+//        ADCValues[end][gain] |= newVal << ADC_V_ID;
+        return kTRUE;
+    }
+}
+//_________________________________________________________________________
+Bool_t CalHit::setADCPinID(UShort_t newVal, LogEnd end, ADCGain gain) {
+    // Allows user to set the ADC Pin ID for a particular log end and 
+    // digitization.  Returns kTRUE if successful, kFALSE if not.
+    if (newVal & ~ADC_M_VAL) {
+        return kFALSE;
+    } 
+    else {
+        ADCValues[end * 4 + gain] &= ~(ADC_M_PIN << ADC_V_PIN);
+        ADCValues[end * 4 + gain] |= newVal << ADC_V_PIN;
+//        ADCValues[end][gain] &= ~(ADC_M_PIN << ADC_V_PIN);
+//        ADCValues[end][gain] |= newVal << ADC_V_PIN;
+        return kTRUE;
+    }
+}
+//_________________________________________________________________________
+Bool_t CalHit::setADCRangeScale(UShort_t newVal, LogEnd end, ADCGain gain) {
+    // Allows user to set the ADC Range Scale for a particular log end and 
+    // digitization.  Returns kTRUE if successful, kFALSE if not.
+    if (newVal & ~ADC_M_VAL) {
+        return kFALSE;
+    } 
+    else {
+        ADCValues[end * 4 + gain] &= ~(ADC_M_RS << ADC_V_RS);
+        ADCValues[end * 4 + gain] |= newVal << ADC_V_RS;
+//        ADCValues[end][gain] &= ~(ADC_M_RS << ADC_V_RS);
+//        ADCValues[end][gain] |= newVal << ADC_V_RS;
+        return kTRUE;
+    }
+}
+//_________________________________________________________________________
+/// Implement the streamer ourselves for now...to take advantage
+/// of schema evolution - and to allow our TBEvent class to handle
+/// both old (<= Root v2.25) Root files, and new (>= Root v3.00) files
+void CalHit::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class CalHit.
+   if (R__b.IsReading()) {
+      UInt_t R__s, R__c;
+      Version_t R__v = R__b.ReadVersion(&R__s, &R__c); 
+      if (R__v > 1) { 
+          CalHit::Class()->ReadBuffer(R__b, this, R__v, R__s, R__c);
+          return;
+      }
+      TObject::Streamer(R__b);
+      R__b >> m_log;
+      R__b.ReadStaticArray(ADCValues);
+   } else {
+       CalHit::Class()->WriteBuffer(R__b, this);
+   }
+}
