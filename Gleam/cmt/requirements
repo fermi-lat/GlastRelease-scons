@@ -39,7 +39,7 @@ use Geant4      v1r1p0
 
 use GuiSvc      v3
 
-use Event                v8r3
+use Event                v8r4
 use GlastSvc    v8r0
 
 # simulation
@@ -56,7 +56,7 @@ use Trigger              v3r1
 use Recon                v2r1p1
 
 use TkrRecon             v6r2
-#use CalRecon    v5r0       
+use CalRecon             v5r1       
 
 
 #ROOT persistence
