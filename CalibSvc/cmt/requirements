@@ -11,7 +11,7 @@ author Joanne Bogart <jrb@slac.stanford.edu>
 use CalibData v0r*
 use calibUtil v0r*
 use calibRootData v1r*
-
+use astro       v1r*
 use GaudiInterface * IExternal
 
 apply_pattern component_library library=CalibSvc
