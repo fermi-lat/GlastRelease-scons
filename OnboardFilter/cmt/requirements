@@ -3,6 +3,7 @@ version v0r1p1
 # $Header$
 use EbfWriter           *
 use TkrUtil             *
+use GuiSvc              *
 
 apply_pattern packageShr
 apply_pattern package_include
