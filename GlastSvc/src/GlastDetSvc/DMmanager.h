@@ -38,16 +38,25 @@ public:
     //! start a materials visitor
     void accept( detModel::MaterialsVisitor* v);
 
-    //! retrive a numeric constant
+    //! retrieve a numeric constant as floating point
     bool getNumericConstByName(std::string, double*);
+
+    //! retrieve a numeric constant -- must be int
+    bool getNumericConstByName(std::string, int*);
 
     //! summarize setup.
     void printSetup(std::ostream& out);
 
-    /// retrive the 3D transformation of a volume given a valid ID
+    /// Return Volume identifer of top volume relative to world
+    idents::VolumeIdentifier getIDPrefix() const;
+
+    /// retrieve the 3D transformation of a volume given a valid ID
     bool getTransform3DByID(idents::VolumeIdentifier, HepTransform3D*);
 
-    /// retrive the parameters (type and dimensions) of a volume given a valid
+    /// Return transform of top volume relative to world
+    const HepTransform3D& getTransform3DPrefix() const;    
+
+    /// retrieve the parameters (type and dimensions) of a volume given a valid
     /// ID
     bool getShapeByID(idents::VolumeIdentifier id,
                       std::string*, 

@@ -53,16 +53,31 @@ public:
     //! new detModel interface, will call back. 
     virtual void accept(IMedia& media);
 
-    //! start a visitor of the detModel geometry description (implements IGlastDetSvc)
+    //! start a visitor of the detModel geometry description 
+    //!(implements IGlastDetSvc)
     virtual void accept(IGeometry& geom);
 
     //! detModel interface to retrieve numeric constants
     virtual StatusCode getNumericConstByName(std::string, double*);
 
-    /// retrive the 3D transformation of a volume given a valid ID
-    virtual StatusCode getTransform3DByID(idents::VolumeIdentifier,HepTransform3D*);
+    /** detModel interface to retrieve integer numeric constants.
+        Returns FAILURE and stores no value in val if constant doesn't
+        exist or has not been declared of type int in the xml source.
+    */
+    virtual StatusCode getNumericConstByName(std::string name, int*);
 
-    /// retrive the type and dimensions of a volume given a valid ID
+    /// Return Volume identifer of top volume relative to world
+    virtual idents::VolumeIdentifier getIDPrefix();
+
+
+    /// retrieve the 3D transformation of a volume given a valid ID
+    virtual StatusCode getTransform3DByID(idents::VolumeIdentifier,
+                                          HepTransform3D*);
+
+    /// Return transform of top volume relative to world
+    virtual const HepTransform3D& getTransform3DPrefix();    
+
+    /// retrieve the type and dimensions of a volume given a valid ID
     virtual StatusCode  getShapeByID(idents::VolumeIdentifier id,
                                      std::string*, 
                                      std::vector<double>*);

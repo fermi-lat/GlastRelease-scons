@@ -154,11 +154,29 @@ StatusCode GlastDetSvc::getNumericConstByName(std::string name, double* res)
   else return StatusCode::FAILURE;
 }
 
+StatusCode GlastDetSvc::getNumericConstByName(std::string name, int* res)
+{
+  if (m_dm->getNumericConstByName(name, res))
+    return StatusCode::SUCCESS;
+  else return StatusCode::FAILURE;
+}
+
+idents::VolumeIdentifier GlastDetSvc::getIDPrefix() 
+{
+  return m_dm->getIDPrefix();
+}
+
+
 StatusCode GlastDetSvc::getTransform3DByID(idents::VolumeIdentifier id,HepTransform3D* tr)
 {
   if (m_dm->getTransform3DByID(id, tr))
     return StatusCode::SUCCESS;
   else return StatusCode::FAILURE;
+}
+
+const HepTransform3D& GlastDetSvc::getTransform3DPrefix()
+{
+  return m_dm->getTransform3DPrefix();
 }
 
 StatusCode  GlastDetSvc::getShapeByID(idents::VolumeIdentifier id,
