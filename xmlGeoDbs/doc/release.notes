@@ -2,6 +2,12 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 16-sep-2002: jrb - tag v1r6p1 - Some minor, presumably innocuous changes:
+ *          - move xml/flight/flightMaterials.xml to the attic
+ *          - change organization of xml/materials.xml a bit to increase
+ *            comprehensibility
+ *          - modify a few TKR constants slightly to increase fidelity
+ *            of flight model.
  * 31-jul-2002: jrb - tag v1r6p0 - Tiles will now produce position hits
  *                                 rather than integrating hits
  * 23-jul-2002: jrb - tag v1r6   - Add and use new "type" attribute
