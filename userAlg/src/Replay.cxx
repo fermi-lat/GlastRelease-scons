@@ -15,7 +15,7 @@
 
 
 /** @class Replay 
- * @brief Call (replay?) a given algorithm by name, settable from job options
+ * @brief Setup a Replay menu, with Algorithm buttons to call the execute members; settable from job options;
  * 
  * $Header$
  * <br> Following is example of how to select multiple algs:
