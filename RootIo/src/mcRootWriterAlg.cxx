@@ -5,6 +5,7 @@
 #include "GaudiKernel/Algorithm.h"
 
 #include "Event/TopLevel/Event.h"
+#include "Event/TopLevel/MCEvent.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "Event/TopLevel/EventModel.h"
 #include "Event/MonteCarlo/McParticle.h"
@@ -200,12 +201,16 @@ StatusCode mcRootWriterAlg::writeMcEvent() {
 
     UInt_t evtId = evt->event();
     UInt_t runId = evt->run();
+	
+	SmartDataPtr<Event::MCEvent> mcEvt(eventSvc(), EventModel::MC::Event);
+	Int_t sourceId = mcEvt->getSourceId();
+	UInt_t sequence = mcEvt->getSequence();
 
     log << MSG::DEBUG;
     evt->fillStream(log.stream());
     log << endreq;
 
-    m_mcEvt->initialize(evtId, runId);
+    m_mcEvt->initialize(evtId, runId, sourceId, sequence);
 
     return sc;
 }
