@@ -20,6 +20,8 @@ library GlastEvent -no_share\
 #        ../src/TopLevel/EventModel.cpp \
 #        ../src/Factories/*.cpp
 
+# library tkrTest ../GlastEvent/Digi/TkrTest.cxx ../GlastEvent/Digi/TkrDigi.h ../GlastEvent/Digi/TkrDigiCol.h 
+
 include_path ${GLASTEVENTROOT}
 
 macro GlastEventDir     "$(GLASTEVENTROOT)/$(DEBUGDIR)"

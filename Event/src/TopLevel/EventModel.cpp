@@ -31,6 +31,7 @@ public:
         // Digi event
         EventModel::Digi::Event           = EventModel::Event + "/Digi";
         EventModel::Digi::AcdDigis        = EventModel::Digi::Event + "/AcdDigis";
+        EventModel::Digi::TkrDigis        = EventModel::Digi::Event + "/TkrDigis";
 
         // Irf event
         EventModel::Irf::Event            = EventModel::Event + "/Irf";
@@ -50,6 +51,7 @@ public:
         EventModel::TkrRecon::SiRecObjs   = EventModel::TkrRecon::Event + "/SiRecObjs";
     }
 };
+    
     
     static EvModel mod;    // where  used? has file scope     
     
@@ -153,8 +155,6 @@ public:
 
     //! Analysis
     const CLID& CLID_AnalEvent          = 4000;
-
-    
         
     //! Classes adapted by Sasha Chekhtman from tb calorimeter reconstruction
     
