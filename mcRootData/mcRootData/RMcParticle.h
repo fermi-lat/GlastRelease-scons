@@ -12,8 +12,7 @@
 #include "TObjArray.h"
 #include "TLorentzVector.h"
 
-#include "RMcVertex.h"
-
+class RMcVertex;
 
 /*! GLAST Monte Carlo particle class.  Designed originally for 2001 balloon flight.
  *  Inheritance information given for parentage only.
@@ -28,25 +27,14 @@
  *  - 14 Jun 2001   Daniel Flath    DOxygen style comments updated for checkin with ROOTWriter
  */
 class RMcParticle: public TObject {
+
 private:
     //! particle id number
     Int_t m_nPDGId;
 
     //! initial position
-    RMcVertex *m_pVert;
+    RMcVertex *m_mcVertex;
 
-    //! parent particle
-	RMcParticle *m_pParent;
-
-    //! list of child particles
-    /*! Ensure that if list is modified, that m_nChildCount is updated accordingly
-     */
-    TObjArray *m_pChildList;
-
-    //! number of child particles in list
-    /*! Must be updated to reflect modifications to the m_pChildList
-     */
-    Int_t m_nChildCount;
 
 public:
     ////////////////////// construction/destruction: ///////////////////////
@@ -55,31 +43,33 @@ public:
     RMcParticle();
 
     //! constructor
-    RMcParticle(Int_t id, RMcParticle *pParent, RMcVertex *pVertex);
+    RMcParticle(Int_t id, RMcVertex *pVertex);
 
     //! destructor
     ~RMcParticle();
 
     //////////////////////   data access functions:  ///////////////////////
 
-    //! get pointer to associated vertex class instance
-    inline RMcVertex *getVertex()    const { return m_pVert; };
-
-    //! get parent particle
-    inline RMcParticle *getParent()  const { return m_pParent; };
-
     //! get particle id number
     inline Int_t getPDGId()         const { return m_nPDGId; };
 
-    //! get number of children
-    inline Int_t getChildCount()    const { return m_nChildCount; };
+    /// Retrieve particle property
+    //StdHepId particleProperty() const;
 
-    //! get child from list at index
-    RMcParticle *getChild(Int_t nIndex) const;    
+    /// Update particle identification
+    //void setParticleProperty( StdHepId value );
 
-    //! add a child to list
-    void addChild(RMcParticle *pChild);
+    /// Retrieve whether this is a primary particle
+    Bool_t primaryParticle() const;
+    /// Set whether this is a primary particle
+    void setPrimaryParticleFlag( Bool_t value );
 
+
+	    /// Retrieve pointer to the vertex (const or non-const)
+    const RMcVertex* mcVertex() const;
+          RMcVertex* mcVertex();
+    /// Update pointer to origin vertex (by a C++ pointer or a smart reference)
+    void setMcVertex( RMcVertex* value );
 
     ClassDef(RMcParticle,1)
 };

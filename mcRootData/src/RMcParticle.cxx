@@ -6,6 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "mcRootData/RMcParticle.h"
+#include "mcRootData/RMcVertex.h"
 
 ClassImp(RMcParticle)
 //________________________________________________________________________
@@ -14,42 +15,25 @@ ClassImp(RMcParticle)
  *  initialization is performed.
  */
 RMcParticle::RMcParticle() :
-    m_nPDGId(0), m_pParent(0), m_pVert(0) 
+    m_nPDGId(0),  m_mcVertex(0) 
 {
 }
 //________________________________________________________________________
-RMcParticle::RMcParticle(Int_t id, RMcParticle *pParent, RMcVertex *pVertex) :
-  m_nPDGId(id), m_pParent(pParent), m_pVert(pVertex)    
+RMcParticle::RMcParticle(Int_t id, RMcVertex *pVertex) :
+  m_nPDGId(id), m_mcVertex(pVertex)    
 {
-    m_pChildList = new TObjArray();
-    m_pChildList->SetOwner();
 }
 //________________________________________________________________________
 RMcParticle::~RMcParticle() {
-  if (m_pVert)
-    delete m_pVert;
+  if (m_mcVertex)
+    delete m_mcVertex;
 
-  if (m_pChildList)
-      delete m_pChildList;
 }
-//________________________________________________________________________
-/*! Returns requested child if it exists.  Else returns NULL.
- */
-RMcParticle *RMcParticle::getChild(Int_t nIndex) const {
-    RMcParticle *pChild = 0;
-    if ((nIndex >= 0) && (nIndex < m_nChildCount))
-        pChild = (RMcParticle*)m_pChildList->At(nIndex);
-    return pChild;
+
+RMcVertex* RMcParticle::mcVertex() {
+	return m_mcVertex;
 }
-//________________________________________________________________________
-/*! Adds child (if non-NULL) to list of children
- *  This function, and ALL functions which modify the child list
- *  MUST also update the m_nChildCount member.
- */
-void RMcParticle::addChild(RMcParticle *pChild) {
-    if (pChild) {
-        m_pChildList->Add(pChild);
-        m_nChildCount++;
-    }
+
+void RMcParticle::setMcVertex(RMcVertex* value){
+	m_mcVertex = value;
 }
-//________________________________________________________________________

@@ -36,8 +36,8 @@ extern G__linked_taginfo G__mcRootDataCintLN_TClass;
 extern G__linked_taginfo G__mcRootDataCintLN_TObjArray;
 extern G__linked_taginfo G__mcRootDataCintLN_TObject;
 extern G__linked_taginfo G__mcRootDataCintLN_TLorentzVector;
-extern G__linked_taginfo G__mcRootDataCintLN_RMcVertex;
 extern G__linked_taginfo G__mcRootDataCintLN_RMcParticle;
+extern G__linked_taginfo G__mcRootDataCintLN_RMcVertex;
 extern G__linked_taginfo G__mcRootDataCintLN_RMcEvent;
 
 /* STUB derived class for protected member access */

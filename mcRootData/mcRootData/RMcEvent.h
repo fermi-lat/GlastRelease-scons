@@ -12,7 +12,7 @@
 #include "TObject.h"
 #include "TObjArray.h"
 
-#include "RMcParticle.h"
+#include "RMcVertex.h"
 
 
 /*! GLAST Monte Carlo vertex class.  Designed originally for 2001 balloon flight.
@@ -38,12 +38,12 @@ private:
     //! List of particles
     /*! Ensure that if list is modified, that m_nPartCount is updated accordingly
      */
-    TObjArray *m_pPartList;
+    TObjArray *m_pVertList;
 
     //! Number of particles in list
     /*! Must be updated to reflect modifications to the m_pPartList
      */
-    Int_t m_nPartCount;
+    Int_t m_nVertCount;
 public:
     ////////////////////// construction/destruction: ///////////////////////
 
@@ -68,7 +68,7 @@ public:
     inline Int_t getRun()       const { return m_nEvent; };
 
     //! get number of particles in list
-    inline Int_t getPartCount() const { return m_nPartCount; };
+    inline Int_t getVertCount() const { return m_nVertCount; };
 
     //! set event number
     inline void setEvent(Int_t nEvent)  { m_nEvent = nEvent; };
@@ -77,10 +77,10 @@ public:
     inline void setRun(Int_t nRun)      { m_nRun = nRun; };
 
     //! get particle from list at index
-    RMcParticle *getPart(Int_t index) const;
+    RMcVertex *getVert(Int_t index) const;
 
     //! add a particle to list
-    Int_t addPart(RMcParticle *pPart);
+    Int_t addVert(RMcVertex *pPart);
 
 
     ClassDef(RMcEvent,1)

@@ -1,6 +1,7 @@
 // RMcVertex.h
 //
-// The RMcVertex class is intended to contain monte carlo particle position data for the 
+// The RMcVertex class is intended to contain monte carlo pa
+//! position/time 4-vectorrticle position data for the 
 // GLAST MC.  Designed initially to meet the simple needs of the GLAST balloon flight sim.
 //
 // May 3 2001 Daniel Flath - Creation
@@ -10,56 +11,99 @@
 
 #include "TObject.h"
 #include "TLorentzVector.h"
+#include "TObjArray.h"
+
+class RMcParticle;
+
 
 /*! GLAST Monte Carlo vertex class.  Designed originally for 2001 balloon flight.
- *  Gives position information for McParticle which keeps a pointer to a vertex.
- *  
- *  \author Daniel Flath
- *  
- *  \b Revisions:
- *  - 03 May 2001   Daniel Flath    Creation, "get" functions added
- *  - 11 May 2001   Daniel Flath    "set" functions added
- *  - 14 May 2001   Daniel Flath    DOxygen style comments added
- *  - 06 Jun 2001   Daniel Flath    Final rewrite for integration with ROOTWriter
- *  - 14 Jun 2001   Daniel Flath    DOxygen style comments updated for checkin with ROOTWriter
- */
+*  Gives position information for McParticle which keeps a pointer to a vertex.
+*  
+*  \author Daniel Flath
+*  
+*  \b Revisions:
+*  - 03 May 2001   Daniel Flath    Creation, "get" functions added
+*  - 11 May 2001   Daniel Flath    "set" functions added
+*  - 14 May 2001   Daniel Flath    DOxygen style comments added
+*  - 06 Jun 2001   Daniel Flath    Final rewrite for integration with ROOTWriter
+*  - 14 Jun 2001   Daniel Flath    DOxygen style comments updated for checkin with ROOTWriter
+*  - 14 Aug 2001   Ian Gable       Rehack to match the TDS versions of these classes
+*/
 class RMcVertex: public TObject {
-
-  private:
+	
+private:
     //! momentum/energy 4-vector
     TLorentzVector *m_pMomI, *m_pMomF;
-
-    //! position/time 4-vector
+	
     TLorentzVector *m_pPosI, *m_pPosF;
-
-  public:
+	
+	Double_t m_timeOfFlight;
+	
+	TObjArray* m_mcDaugterParticles;
+	
+	RMcParticle* m_motherParticle;
+	
+public:
     ////////////////////// construction/destruction: ///////////////////////
-
+	
     //! default constructor. DO NOT USE -- see details.
     RMcVertex();
-
+	
     //! constructor
     RMcVertex(TLorentzVector *pPosI, TLorentzVector *pPosF, 
-             TLorentzVector *pMomI, TLorentzVector *pMomF);
-
+		TLorentzVector *pMomI, TLorentzVector *pMomF);
+	
     //! destructor
     ~RMcVertex();
-
+	
     //////////////////////   data access functions:  ///////////////////////
     
     //! get initial position/time 4-vector
     const TLorentzVector *getPosInitial() const { return m_pPosI; };
-
+	
     //! get final position/time 4-vector
     const TLorentzVector *getPosFinal()   const { return m_pPosF; };
-
+	
     //! get initial momentum/energy 4-vector
     const TLorentzVector *getMomInitial() const { return m_pMomI; };
-
+	
     //! get final momentum/energy 4-vector
     const TLorentzVector *getMomFinal()   const { return m_pMomF; };
-
-
+	
+	void setPosInitial(TLorentzVector* pPosI) { m_pPosI = pPosI; };
+	
+	void setPosFinal(TLorentzVector* pPosF) { m_pPosF = pPosF; };
+	
+	void setMomInitial(TLorentzVector* pMomI) {m_pMomI = pMomI; };
+	
+	void setMomFinal(TLorentzVector* pMomF) { m_pMomF = pMomF; };
+	
+	
+	/// retrieve time of flight
+    Double_t timeOfFlight () const { return m_timeOfFlight;};
+    /// update time of flight
+    void setTimeOfFlight (double value) {m_timeOfFlight = value;};
+	
+    /// Retrieve pointer to the pair particle (const or non-const)
+    const RMcParticle* mcParticle() const;
+	RMcParticle* mcParticle();
+    /// Update pointer to the pair particle (by a C++ pointer or a smart reference)
+    void setMcParticle( RMcParticle* value );
+	
+    /// Retrieve pointer to mother particle (const or non-const)
+    const RMcParticle* motherMcParticle() const;
+	
+    /// Update pointer to mother particle (by a C++ pointer or a smart reference)
+    void setMotherMcParticle( RMcParticle* value );
+	
+    /// Retrieve pointer to vector of daughter particles (const or non-const)
+    const TObjArray* daughterMcParticles() const;
+	
+    ///   (by a C++ pointer or a smart reference)
+    void addDaughterMcParticle( RMcParticle* particle );
+	
+	
+	
     ClassDef(RMcVertex,1)
 };
 

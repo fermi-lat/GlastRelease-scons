@@ -17,7 +17,7 @@ ClassImp(RMcEvent)
  *  therefore, used for instantiating new instances.
  */
 RMcEvent::RMcEvent() : 
-    m_nEvent(0), m_nRun(0), m_nPartCount(0), m_pPartList(0)
+    m_nEvent(0), m_nRun(0), m_nVertCount(0), m_pVertList(0)
 {
 }
 //________________________________________________________________________
@@ -26,42 +26,42 @@ RMcEvent::~RMcEvent() {
 }
 //________________________________________________________________________
 void RMcEvent::Clean() {
-    if (m_pPartList)
-        delete m_pPartList;
+    if (m_pVertList)
+        delete m_pVertList;
 
-    m_pPartList = 0;
+    m_pVertList = 0;
 
     m_nEvent = 0;
     m_nRun = 0;
-    m_nPartCount = 0;
+    m_nVertCount = 0;
 }
 //________________________________________________________________________
 void RMcEvent::Create() {
-    m_pPartList = new TObjArray();
-    m_pPartList->SetOwner();
+    m_pVertList = new TObjArray();
+    m_pVertList->SetOwner();
 
     m_nEvent = 0;
     m_nRun = 0;
-    m_nPartCount = 0;
+    m_nVertCount = 0;
 }
 //________________________________________________________________________
 /*! Returns requested particle if it exists.  Else returns NULL.
  */
-RMcParticle *RMcEvent::getPart(Int_t index) const {
-    if ((index >= 0) && (index < getPartCount()))
-        return (RMcParticle*)m_pPartList->At(index);
+RMcVertex *RMcEvent::getVert(Int_t index) const {
+    if ((index >= 0) && (index < getVertCount()))
+        return (RMcVertex*)m_pVertList->At(index);
     else
         return 0;
 }
 //________________________________________________________________________
 /*! Adds particle (if non-NULL) to list of particles
  *  This function, and ALL functions which modify the particle list
- *  MUST also update the m_nPartCount member.
+ *  MUST also update the m_nVertCount member.
  */
-Int_t RMcEvent::addPart(RMcParticle *pPart) {
-    if (pPart) {
-        m_pPartList->AddLast(pPart);
-        return (m_nPartCount++);
+Int_t RMcEvent::addVert(RMcVertex *pVert) {
+    if (pVert) {
+        m_pVertList->AddLast(pVert);
+        return (m_nVertCount++);
     } else
         return -1;
 }
