@@ -59,7 +59,12 @@ StatusCode TkrDisplayAlg::initialize()
     //Look for the gui service
     IGuiSvc*   guiSvc = 0;
     StatusCode sc     = service("GuiSvc", guiSvc);
-    if( sc.isFailure() )  return sc;
+    if( sc.isFailure() )  
+    {
+        MsgStream   log( msgSvc(), name() );
+        log << MSG::WARNING << "No GuiSvc: so, no event display " << endreq;
+        return StatusCode::SUCCESS;
+    }
     
     TkrInitSvc* pTkrInitSvc = 0;
     sc = service("TkrInitSvc", pTkrInitSvc);
