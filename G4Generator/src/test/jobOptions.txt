@@ -12,6 +12,7 @@ ApplicationMgr.ExtSvc = {
     "EventCnvSvc", 
     "GlastDetSvc"};
 
+
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "NONE";
 
@@ -40,6 +41,10 @@ ApplicationMgr.TopAlg = {
     "G4Generator",
     "G4TestAlg"};
 
+// add our locally-defined service
+ApplicationMgr.DLLs += {"G4Generator"};
+ApplicationMgr.ExtSvc +={ "G4GeometrySvc" };
+
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
 
@@ -63,7 +68,7 @@ G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
 //G4Generator.UIcommands+={"/process/inactivate conv"};
 //G4Generator.UIcommands+={"/tracking/verbose 0"};
 
-ApplicationMgr.EvtMax =100;
+ApplicationMgr.EvtMax =10;
 
 //==============================================================
 //
