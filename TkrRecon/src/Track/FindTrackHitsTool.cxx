@@ -357,6 +357,7 @@ Event::TkrTrackHit* FindTrackHitsTool::findNextHit(Event::TkrTrack* track)
 	else {
 		// No cluster found  - so this a gap of some sort
 	    trackHit = new Event::TkrTrackHit();
+		trackHit->setZPlane(end_pos.z());
 		// Retrieve a reference to the measured parameters (for setting)
         Event::TkrTrackParams& params = trackHit->getTrackParams(Event::TkrTrackHit::MEASURED);
 		// Set measured track parameters - NEED NEW CODE HERE
