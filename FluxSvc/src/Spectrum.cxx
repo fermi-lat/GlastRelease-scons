@@ -60,7 +60,8 @@ std::pair<float,float> Spectrum::dir(float energy)const
     //return std::make_pair(static_cast<float>(RandFlat::shoot(-0.4,1.0)),
     //static_cast<float>(RandFlat::shoot(0.0, 2*M_PI)) );
     //here's an attempt at random default distributions as above:
-    return std::make_pair(((rand()/32767.0)*1.4)-0.4,(rand()/32767.0)*2*M_PI);
+    //return std::make_pair(((rand()/32767.0)*1.4)-0.4,(rand()/32767.0)*2*M_PI);
+    return std::make_pair(((RandFlat::shoot(1.0))*1.4)-0.4,(RandFlat::shoot(1.0))*2*M_PI);
     
 }
 
