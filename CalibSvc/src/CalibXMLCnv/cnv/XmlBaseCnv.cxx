@@ -26,6 +26,7 @@
 #include "facilities/Util.h"
 
 #include <dom/DOM_Document.hpp>
+#include <dom/DOM_NodeList.hpp>
 
 // Local utilities to interpret attributes 
 namespace {
@@ -248,6 +249,47 @@ StatusCode XmlBaseCnv::readDimension(const DOM_Element& docElt,
   att = Dom::getAttribute(dimElt, "nRange");
   nRange = (unsigned) atoi(att.c_str());
 
+  unsigned expected = nRow * nCol;
+  // Make some consistency checks.  # tower elements should be nRow*nCol
+  // # layer elements should be nRow*nCol*nLayer, etc.
+  DOM_NodeList nlist = docElt.getElementsByTagName("tower");
+  if (nlist.getLength() != expected) {
+    // put out a message and...
+    return StatusCode::FAILURE;
+  }
+  expected *= nLayer;
+  nlist = docElt.getElementsByTagName("layer");
+  if (nlist.getLength() != expected) {
+    // put out a message and...
+    return StatusCode::FAILURE;
+  }
+
+  expected *= nXtal;
+  nlist = docElt.getElementsByTagName("xtal");
+  if (nlist.getLength() != expected) {
+    // put out a message and...
+    return StatusCode::FAILURE;
+  }
+  
+  expected *= nFace;
+  nlist = docElt.getElementsByTagName("face");
+  if (nlist.getLength() != expected) {
+    // put out a message and...
+    return StatusCode::FAILURE;
+  }
+
+  expected *= nRange;
+  // Not as easy to check for the right number of range elements here
+  // since they have different names, depending on what type of calibration
+  // this is.  However they all have the same name, so just find first
+  // child of a face element, then count all similarly-named elements
+
+  DOM_Element child = Dom::getFirstChildElement(nlist.item(0));
+  nlist = docElt.getElementsByTagName(child.getTagName());
+  if (nlist.getLength() != expected) {
+    // put out a message and...
+    return StatusCode::FAILURE;
+  }
   return StatusCode::SUCCESS;
 }
 
