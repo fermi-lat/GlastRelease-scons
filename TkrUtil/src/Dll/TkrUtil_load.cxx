@@ -17,12 +17,10 @@ DECLARE_FACTORY_ENTRIES(TkrUtil) {
     DECLARE_SERVICE( TkrToTSvc           );
 
     DECLARE_TOOL(    TkrQueryClustersTool);
-    //DECLARE_TOOL(    TkrMeritTool        ); gone...
+    DECLARE_TOOL(    TkrMakeClustersTool );
 
     DECLARE_ALGORITHM ( TkrCalibAlg      );
-    //This is for test only, not part of TkrUtil package...
-    //DECLARE_ALGORITHM ( EvtClock         );
-} 
+ } 
 
 
 

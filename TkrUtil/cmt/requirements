@@ -1,6 +1,10 @@
 package TkrUtil
 
-version v3r2p3
+<<<<<<< requirements
+version v3r2p4
+=======
+version v3r2p4
+>>>>>>> 1.67
 
 author Leon Rochester <lsrea@slac.stanford.edu>
 

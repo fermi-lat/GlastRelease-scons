@@ -229,9 +229,6 @@ public:
     double truncateCoord( double x, double pitch, 
         int numElements, int& elementNumber, bool reverse = false) const;
 
-    bool inTower(int view, const Point p, int& iXTower, int& iYTower,
-        double& xActiveDist, double& yActiveDist, double& xGap, double &yGap) const;
-
 private:
     
     /// number of Towers in X

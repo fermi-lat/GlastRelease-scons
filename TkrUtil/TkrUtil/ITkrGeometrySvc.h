@@ -175,12 +175,11 @@ public:
     virtual unsigned int getDefaultClusterStatus() const = 0;
 
     // changes added at end for minimal disruption, should reorganize later
-    virtual int getPlaneSeparation(const idents::TkrId& id1, const idents::TkrId& id2) const = 0;
+    virtual int getPlaneSeparation(
+        const idents::TkrId& id1, const idents::TkrId& id2) const = 0;
 
     virtual double truncateCoord( double x, double pitch, 
         int numElements, int& elementNumber, bool reverse = false) const = 0;
-    virtual bool inTower(int view, const Point p, int& iXTower, int& iYTower,
-        double& xActiveDist, double& yActiveDist, double& xGap, double &yGap) const = 0;
     virtual double getConvZ(int layer) const = 0;
     virtual bool isTopPlaneInLayer(int plane) const = 0;
     virtual double gettkrZBot() const = 0;
