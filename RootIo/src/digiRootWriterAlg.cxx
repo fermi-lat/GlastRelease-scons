@@ -278,7 +278,8 @@ StatusCode digiRootWriterAlg::writeDigiEvent() {
     TimeStamp timeObj = evtTds->time();
     Double_t liveTime = evtTds->livetime();
 
-    Bool_t fromMc = true;
+    SmartDataPtr<Event::DigiEvent> digiTds(eventSvc(), EventModel::Digi::Event);
+    Bool_t fromMc = (digiTds) ? digiTds->fromMc() : true;
 
     log << MSG::DEBUG;
     if( log.isActive()) evtTds->fillStream(log.stream());
