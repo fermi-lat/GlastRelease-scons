@@ -62,7 +62,7 @@ set JOBOPTIONS ${G4GENERATORROOT}/src/test/jobOptions.txt
 private
 # alternative test program that links stuff into the exe
 
-macro G4Testlinkopts "$(GuiSvc_lib) ${guiapp_linkopts} -u GuiSvc_loadRef  -ldl "\
+macro G4Testlinkopts "${Geant4_linkopts} $(GuiSvc_lib) ${guiapp_linkopts} ${gui_linkopts} -u GuiSvc_loadRef -ldl "\
               WIN32 " $(GaudiKernel_linkopts) $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) /include:_GuiSvc_loadRef "
 
 
