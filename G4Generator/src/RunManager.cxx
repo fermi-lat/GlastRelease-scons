@@ -141,7 +141,8 @@ void RunManager::BeamOn()
     
     stateManager->SetNewState(GeomClosed);
     
-    /// currentEvent = NULL;
+    //    delete currentEvent;
+    //    currentEvent = NULL;
 
     RunTermination();
   }
@@ -188,6 +189,7 @@ G4bool RunManager::ConfirmBeamOnCondition()
 
 void RunManager::RunInitialization()
 {
+  if (currentEvent) delete currentEvent;
   currentRun = new G4Run();
   currentRun->SetRunID(runIDCounter);
 
