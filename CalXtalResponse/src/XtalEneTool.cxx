@@ -107,7 +107,7 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
   RngIdx rngIdxP(xtalIdx, POS_FACE, rngP);
   sc = m_calCalibSvc->getPed(rngIdxP.getCalXtalId(), pedP, sig, cos);
   if (sc.isFailure()) return sc;
-  int adcPedP = adcP - pedP;   // ped subtracted ADC
+  float adcPedP = adcP - pedP;   // ped subtracted ADC
   
   //-- THROW OUT LOW ADC VALS (POS_FACE) --/
   CalibData::ValSig fle,fhe,lacP, lacN;
@@ -125,7 +125,7 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
   RngIdx rngIdxN(xtalIdx, NEG_FACE, rngN);
   sc = m_calCalibSvc->getPed(rngIdxN.getCalXtalId(), pedN, sig, cos);
   if (sc.isFailure()) return sc;
-  int adcPedN = adcN - pedN;
+  float adcPedN = adcN - pedN;
 
   //-- THROW OUT LOW ADC VALS (NEG_FACE) --/
   CalXtalId tmpIdN(xtalId.getTower(),
