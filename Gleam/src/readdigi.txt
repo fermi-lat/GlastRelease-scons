@@ -9,11 +9,11 @@
 
 Generator.Members = {} ; // turn off generation
 
-Digitization.Members = {"digiRootReaderAlg"};
+Digitization.Members = {"digiRootReaderAlg"}; // replace digi algs.
 
 digiRootReaderAlg.digiRootFile="digi.root";
 
-Output.Members = {}; // turn off root for this
+Output.Members = {}; // turn off root output 
 
 // setup up merit to monitor the output
 ApplicationMgr.DLLs   += {"merit"};
@@ -23,9 +23,9 @@ MeritAlg.generated = 10000; // for estimation of Aeff
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 CalClustersAlg.OutputLevel=4; // too much info
 
-// Number of events to process
+// Number of events to process (in this case, must be greater than file)
 ApplicationMgr.EvtMax = 10000;
 
-MessageSvc.OutputLevel      =2;
+MessageSvc.OutputLevel      =3;
 
 
