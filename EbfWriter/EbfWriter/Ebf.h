@@ -9,6 +9,7 @@
 #include "GaudiKernel/ObjectVector.h"
 
 #include "Event/TopLevel/Definitions.h"
+#include "Event/TopLevel/EventModel.h"
 
 /**
  * @class Event
@@ -21,16 +22,17 @@
  * $Header$
  */
 
-extern const CLID& CLID_Ebf;
+//extern const CLID& CLID_Ebf;
 
 namespace EbfWriterTds{
+  static const std::string Path;
   class Ebf : public DataObject{
   public:
     Ebf();
     Ebf(char *newData,unsigned int dataLength);
     virtual ~Ebf();
-    static const CLID& classID() {return CLID_Ebf;}
-    virtual const CLID& clID() const {return classID();}
+//    static const CLID& classID() {return CLID_Ebf;}
+//    virtual const CLID& clID() const {return classID();}
 
     ///Retrieve pointer to the ebf data.
     char *get(unsigned int &dataLength) const;

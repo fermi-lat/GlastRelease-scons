@@ -168,11 +168,11 @@ StatusCode EbfWriter::execute()
     StatusCode    sc = StatusCode::SUCCESS;    
     
     DataObject *pnode=0;
-    if(eventSvc()->retrieveObject(EventModel::Filter::Event,pnode).isFailure())
-      eventSvc()->registerObject(EventModel::Filter::Event,new DataObject);
+    if(eventSvc()->retrieveObject("/Event/Filter",pnode).isFailure())
+      eventSvc()->registerObject("/Event/Filter",new DataObject);
 
     EbfWriterTds::Ebf *newEbf=new EbfWriterTds::Ebf;
-    eventSvc()->registerObject(EventModel::Filter::Ebf, newEbf);
+    eventSvc()->registerObject(EbfWriterTds::Path, newEbf);
     
     //
     // TKR
