@@ -1,6 +1,7 @@
 Linux-i686
 i386_linux*
 sun4x_*
+rh7*
 
 msdev
 Win32
