@@ -1,13 +1,13 @@
 package AnalysisNtuple
 
-version v0r1
+version v0r2
 
 branches src cmt doc
 
 use GlastSvc 
 use facilities
 #use GuiSvc          v3*
-use NTupleWriterSvc v*
+use ntupleWriterSvc v*
 use TkrUtil
 
 apply_pattern packageShr
