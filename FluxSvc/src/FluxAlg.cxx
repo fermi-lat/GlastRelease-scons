@@ -223,7 +223,7 @@ StatusCode FluxAlg::execute()
     }else mch = mcheader;
 
 
-    mch->initialize(mch->getRunNumber(), m_flux->numSource(), mch->getSequence()+1);
+    mch->initialize(mch->getRunNumber(), m_flux->numSource(), mch->getSequence());
 
 
     
