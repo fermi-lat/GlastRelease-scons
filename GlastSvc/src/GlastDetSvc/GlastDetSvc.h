@@ -89,6 +89,9 @@ public:
     /// retrive the 3D transformation of a volume given a valid ID
     virtual StatusCode getTransform3DByID(idents::VolumeIdentifier,HepTransform3D*);
     
+    /// compute strip id from local coordinate for a tkr plane
+    virtual unsigned int stripId (double x);
+
 private:
     
     // Data Members
@@ -99,7 +102,6 @@ private:
     std::string         m_xmlfile;
     std::string         m_topvol;
     std::string         m_visitorMode;
-    
 };
 
 #endif // _H_GlastDetSvc

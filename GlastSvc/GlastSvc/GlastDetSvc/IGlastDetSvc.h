@@ -16,6 +16,7 @@ class GlastDetector;
 class IGeometry;
 class IMedia;
 class HepTransform3D;
+class SiliconPlaneGeometry;
 namespace xml {class IFile; }
 namespace idents{class VolumeIdentifier;}
 
@@ -41,6 +42,8 @@ public:
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IGlastDetSvc; }
 
+    /// compute strip id from local coordinate for a tkr plane
+    virtual unsigned int stripId (double x)=0;
 };
 
 

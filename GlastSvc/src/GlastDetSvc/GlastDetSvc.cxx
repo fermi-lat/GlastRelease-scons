@@ -16,6 +16,7 @@
 #include "idents/VolumeIdentifier.h"
 #include "CLHEP/Geometry/Transform3D.h"
 
+#include "SiliconPlaneGeometry.h"
 #include "DMmanager.h"
 #include "MediaVisitor.h"
 #include "GeometryVisitor.h"
@@ -157,3 +158,11 @@ StatusCode GlastDetSvc::getTransform3DByID(idents::VolumeIdentifier id,HepTransf
     return StatusCode::SUCCESS;
   else return StatusCode::FAILURE;
 }
+
+
+unsigned int GlastDetSvc::stripId (double x)
+{
+    SiliconPlaneGeometry plane;
+    return plane.stripId(x);
+}
+
