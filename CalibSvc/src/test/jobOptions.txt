@@ -1,19 +1,18 @@
 //##############################################################
 //
-// Minimal job options file for bringing up calib services
+// Minimal job options file for reading root events + calib services
 //
-// List of required services
-// ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
 
 // List of Dlls
-ApplicationMgr.DLLs   = { "GlastSvc" };
+ApplicationMgr.DLLs   = { "GlastSvc", "RootIo" };
 
 
-//ApplicationMgr.TopAlg = { "CreateEvent" };
-ApplicationMgr.TopAlg = { "Sequencer" };
-Sequencer.Members = {};
-Sequencer.Members += { "CreateEvent" };
-Sequencer.Members += { "EvtClock" };
+// List of required services
+ ApplicationMgr.ExtSvc   = {"GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
+
+
+ApplicationMgr.TopAlg = {"digiRootReaderAlg", "EvtClock", "UseCalib" };
+digiRootReaderAlg.digiRootFile = "$CALIBSVC/src/test/digi.root";
 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
@@ -23,27 +22,32 @@ MessageSvc.OutputLevel      = 2;
 // Persistency service setup:
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 
+// Next few lines from AcdDigi test jobOptions
+EventSelector.Input = "NONE";
+
+GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.topVolume="LAT";
+
+ApplicationMgr.EvtMax = 10;
+
 // Model for immediately following lines is LHCb example.  See
 // http://lhcbsoft.web.cern.ch/LHCbSoft/Ex/DetConExamples/v2r0/options/
 //   in particular, files contDB.opts and common.opts
 
 // Start up a CalibDataSvc 
-ApplicationMgr.ExtSvc = {"CalibDataSvc"};
+ApplicationMgr.ExtSvc += {"CalibDataSvc"};
 
 // Perhaps don't need to explicitly mention CalibSvc since it's not a component
 //ApplicationMgr.DLLs += {"CalibSvc", "CalibDataSvc"};
-ApplicationMgr.DLLs += {"CalibDataSvc"};
+
+//Don't attempt to load CalibDataSvc; it's not a componenet
+//ApplicationMgr.DLLs += {"CalibDataSvc"};
 ApplicationsMgr.ExtSvc += {"CalibDataSvc"};
 ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
 
 DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 
 CalibDataSvc.CalibNameList = {"Tkr.BadStrips/chocolate"};
-
-
-
-// ApplicationMgr.EvtMax = 20;
-ApplicationMgr.EvtMax = 0;
 
 //==============================================================
 //
