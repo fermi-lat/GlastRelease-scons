@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include "EventSummaryCommon.h"
+
 namespace ldfReader {
 
 class GemDataTileList
@@ -153,6 +155,8 @@ private:
         const GemDataOnePpsTime& onePpsTime() const { return m_onePpsTime; };
         unsigned deltaEventTime() const { return m_deltaEventTime; };
 
+        const EventSummaryCommon& summary() const { return m_summary; };
+        void setSummary(const EventSummaryCommon &summary) { m_summary = summary; };
 
     private:
 
@@ -170,6 +174,9 @@ private:
         unsigned  m_triggerTime;
         GemDataOnePpsTime m_onePpsTime;
         unsigned  m_deltaEventTime;
+
+        // Store the event sequence number for this contribution
+        EventSummaryCommon m_summary;
 
     };
 } // end namespace

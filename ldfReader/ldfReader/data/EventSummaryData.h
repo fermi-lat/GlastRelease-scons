@@ -55,6 +55,15 @@ namespace ldfReader {
         unsigned upperPpcTimeBaseWord() const { return m_upperPpcTimeBase; };
         unsigned lowerPpcTimeBaseWord() const { return m_lowerPpcTimeBase; };
 
+        /// returning a signed long - makes it easier to do check for 
+        /// monotonically increasing sequence numbers and the rollover
+        /// value is less than 140000, so sign shouldn't matter
+        long eventSequence() const {
+            unsigned eventNumber = EventSummary::eventNumber(m_summary);
+            unsigned tag = EventSummary::tag(m_summary);
+            return ((eventNumber << 2) | tag);
+        }
+
     private:
         unsigned m_summary;
         long m_timeSec;

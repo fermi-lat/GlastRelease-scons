@@ -3,6 +3,7 @@
 
 #include "TkrLayer.h"
 #include "CalDigi.h"
+#include "TemData.h"
 
 #include <vector>
 #include <map>
@@ -39,12 +40,16 @@ namespace ldfReader {
 
         CalDigi* getCalDigi(unsigned int layer, unsigned int col);
 
+        void setTem(const TemData &tem) { m_tem = tem; };
+        const TemData& getTem() const { return m_tem; };
+
     private:
 
         unsigned short m_towerId;
         std::map<unsigned int, TkrLayer*> m_tkrMap;
         //std::vector<CalDigi> m_calDigiCol;
         std::map<unsigned int, CalDigi*> m_calDigiCol;
+        TemData m_tem;
 
     };
 }
