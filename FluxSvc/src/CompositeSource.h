@@ -76,7 +76,6 @@ public:
 
     
 protected:
-    virtual void setupXML (const DOM_Element&);
     
     //number of times we've iterated the front() pointer into sourcelist 
     //to get the current particle - represents the source

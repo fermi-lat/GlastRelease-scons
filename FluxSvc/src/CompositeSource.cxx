@@ -1,16 +1,11 @@
 // $Header$
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
-#include "CompositeSource.h"  //TAKE THE /.. OUT!
+#include "CompositeSource.h"  
 
-//#include "dom/DOM_Element.hpp"
 #include "facilities/Scheduler.h"
 #include "facilities/SimpleEvent.h"
 #include "FluxSvc/FluxSource.h"
-//#include "CLHEP/Random/RandFlat.h"
 
 // see coment below: #include "control/EventLoop.h"
 
@@ -79,10 +74,8 @@ FluxSource* CompositeSource::event (double time)
         for (q=0 ; now != m_sourceList.end(); ++now) {
             if(m_unusedSource[i]==1){
                 intrval=m_sourceInterval[i];
-                //std::cout << i << " is unused, interval is "<< intrval << std::endl;
             }else{
                 m_eventList[i] = (*now)->event(time); // to initialize particles, so that the real interval for the particle is gotten.
-                //intrval=(*now)->interval(/*EventSource::time()*/time); //this picks out the interval of each source
                 intrval=m_eventList[i]->interval(time);
                 m_unusedSource[i]=1;
                 m_sourceInterval[i]=intrval;
@@ -105,15 +98,12 @@ FluxSource* CompositeSource::event (double time)
         for (q=0 ; now != m_sourceList.end(); ++now) {
             //this loop sets the intervals back in accordance with
             //how far ahead time will move.
-            //std::cout << "decrementing source " << q << " ,  by " << intrmin << std::endl;
             m_sourceInterval[q] = m_sourceInterval[q] - intrmin;
             q++;
         }
     }
     m_unusedSource[winningsourcenum]=0; //the current "winning" source is getting used..
     // now ask the chosen one to return the event.
-
-   //std::cout << "the winning source number was: " << winningsourcenum << std::endl;
    return m_eventList[winningsourcenum];
 
 }
@@ -168,8 +158,6 @@ void	CompositeSource::setRate ( double value )
     EventSource::setRate( value );
 }
 
-// implement virtual function
-void CompositeSource::setupXML (const DOM_Element&) {}
 
 void CompositeSource::printOn(std::ostream& out)const
 {
