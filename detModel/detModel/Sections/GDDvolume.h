@@ -92,8 +92,6 @@ class GDDvolume {
   /// This method sets the z dimension of the bounding box 
   void setOZ(double poz){oz = poz;};
 
-
-
   
   virtual ~GDDvolume(){}
 

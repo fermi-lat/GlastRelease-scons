@@ -8,6 +8,7 @@
 class GDDvolume;
 class GDDconstants;
 class GDDconst;
+class GDDconstCategory;
 class GDDvisitor;
 class GDDsection;
 class GDDchoice;
@@ -74,7 +75,11 @@ public:
    */
   GDDvolume * getVolumeByName(std::string vname);
 
+
   GDDshape * getShapeByName(std::string vname);
+
+  GDDconstCategory* getConstCategoryByName(std::string vname);
+
   /**
    * This method search the const map with the name string and return
    * a pointer to the GDDconst object if it exists, otherwise it returns 0
@@ -102,7 +107,11 @@ public:
   int getSectionsNumber();
   /** This method return the total number of volumes in the XML file */
   int getVolumesNumber();
+  /** This method return the total number of constants in the XML file */
+  int getConstantsNumber();
 
+  GDDconst* getOrderedConst(int i);
+  GDDvolume* getOrderedVolume(int i);
 
   /** This method resolve the symbolic volumes references in the XML file 
    *  and it is automatically called by the builder.

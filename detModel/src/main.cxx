@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
   else
     visitor = new GDDVRMLSectionsVisitor(argv[2]);  
 
-  visitor->setOpacity("FOAM05",0.0);
+  visitor->setOpacity("FOAM05",0.5);
 
   // (Joanne) Added following line so I can see inside vacuum envelopes
   visitor->setOpacity("Vacuum",0.6);

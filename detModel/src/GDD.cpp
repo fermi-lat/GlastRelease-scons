@@ -122,6 +122,44 @@ int GDD::getVolumesNumber()
   return n;
 }
 
+/// This method gives back the total number of constants  
+int GDD::getConstantsNumber()
+{
+  int n=0;
+  typedef std::map<std::string, GDDconst*> M;
+  M::const_iterator i; 
+
+  for(i=constMap.begin();i!=constMap.end();i++)
+    n++;
+  return n;
+}
+
+GDDconst* GDD::getOrderedConst(int ii)
+{
+  int n=0;
+  typedef std::map<std::string, GDDconst*> M;
+  M::const_iterator i; 
+
+  for(i=constMap.begin();i!=constMap.end();i++){
+    if (n == ii) return i->second;
+    else n++;
+  }
+  return 0;
+}
+
+GDDvolume* GDD::getOrderedVolume(int ii)
+{
+  int n=0;
+  typedef std::map<std::string, GDDvolume*> M;
+  M::const_iterator i; 
+
+  for(i=volumeMap.begin();i!=volumeMap.end();i++){
+    if (n == ii) return i->second;
+    else n++;
+  }
+
+    return 0;
+}
 
 /// This method gives back the total number of sections  
 int GDD::getSectionsNumber()
@@ -221,6 +259,19 @@ void GDD::buildChoiceMap()
     modeNames.push_back(sections[0]->getChoices()[j]->getName());
 
 }
+
+GDDconstCategory* GDD::getConstCategoryByName(std::string cname){
+
+  std::vector<GDDconstCategory*>::const_iterator i;
+  
+  GDDconstants* con = getConstants();
+  vector <GDDconstCategory*> vc = con->getCategories();
+  for(i=vc.begin();i!=vc.end();i++)
+      if ((*i)->getName() == cname) return (*i); 
+
+  return 0;
+}
+
 
 /* This method gives back a GDDconst* given a name
  * If it does not exist, it returns a null pointer
