@@ -22,6 +22,10 @@ Output.Members={}; // turn off rootwriter.
 // run a few events
 ApplicationMgr.EvtMax = 10;
 
+
+// define tree to insert user stuff into: could be MeritTuple or Exposure for current trees.
+UserAlg.treeName="user";
+
 //==============================================================
 //
 // End of job options file

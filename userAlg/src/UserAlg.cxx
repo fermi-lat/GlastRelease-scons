@@ -30,6 +30,8 @@
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/AcdRecon/AcdRecon.h"
 
+#include "ntupleWriterSvc/INtupleWriterSvc.h"
+
 // for access to geometry perhaps
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
@@ -50,17 +52,17 @@ public:
     
 private: 
     /// number of times called
-    int m_count; 
+    double m_count; 
     /// the GlastDetSvc used for access to detector info
     IGlastDetSvc*    m_detSvc; 
     /// access to the Gui Service for display of 3-d objects
     IGuiSvc*    m_guiSvc;
-#ifdef NTUPLE
+
     /// access the ntupleWriter service to write out to ROOT ntuples
-    INTupleWriterSvc *m_ntupleWriteSvc;
-#endif
+    INTupleWriterSvc *m_rootTupleSvc;
+
     /// parameter to store the logical name of the ROOT file to write to
-    std::string m_tupleName;
+    std::string m_treeName;
 };
 
 
@@ -72,7 +74,7 @@ UserAlg::UserAlg(const std::string& name, ISvcLocator* pSvcLocator)
 ,m_count(0), m_detSvc(0), m_guiSvc(0)
 {
     // declare properties with setProperties calls
-    declareProperty("tupleName",  m_tupleName="");
+    declareProperty("treeName",  m_treeName="");
     
 }
 
@@ -84,7 +86,7 @@ StatusCode UserAlg::initialize(){
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
     
-    if( m_tupleName.empty()) {
+    if( m_treeName.empty()) {
         log << MSG::INFO << "tupleName property not set!  No ntuple output"<<endreq;
     }
     
@@ -101,7 +103,16 @@ StatusCode UserAlg::initialize(){
         //m_guiSvc->guiMgr()->display().add(new Rep, "User rep");
     }
     
+    // example code to create a ROOT tuple and schedule it for filling 
 
+    // get a pointer to RootTupleSvc
+    sc = service("RootTupleSvc", m_rootTupleSvc);
+
+    if( sc.isFailure() ) {
+        log << MSG::ERROR << "userAlg failed to get the RootTupleSvc" << endreq;
+        return sc;
+    }
+    m_rootTupleSvc->addItem(m_treeName, "count", &m_count);
 
     return sc;
 }
@@ -111,6 +122,12 @@ StatusCode UserAlg::execute()
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
     log << MSG::INFO << "executing " << ++m_count << " time" << endreq;
+
+    if( m_rootTupleSvc!=0) {
+        // necessary to store the tuple entry
+        m_rootTupleSvc->storeRowFlag(m_treeName, true);
+    }
+    
 
     // Retrieving pointers from the TDS
     

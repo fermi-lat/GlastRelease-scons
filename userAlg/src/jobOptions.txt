@@ -34,7 +34,9 @@ Top.Members += { "UserAlg"};
 
 Output.Members={}; // turn off rootwriter.
 
-#include "$USERALGROOT/src/ntuple.txt"
+// define tree to insert user stuff into: could be MeritTuple or Exposure for current trees.
+UserAlg.treeName="user";
+
 //==============================================================
 //
 // End of job options file
