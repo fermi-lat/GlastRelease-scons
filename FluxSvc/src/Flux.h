@@ -51,6 +51,11 @@ public:
     /// retrieve the area (a static, same for all fluxes)
     double targetArea()const;
 
+    /// find which spectrum created the current particle
+    virtual std::string findSource()const;
+
+    /// return a unique number correcponding to that spectrum
+    virtual int numSource()const;
 
 private:
 

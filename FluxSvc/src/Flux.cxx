@@ -79,3 +79,16 @@ double Flux::targetArea()const
     return m_event->totalArea();
 }
 
+
+/// find which spectrum created the current particle
+std::string Flux::findSource()const
+{
+	return m_event->findSource();
+}
+
+/// return a unique number correcponding to that spectrum
+int Flux::numSource()const
+{
+    return m_event->numSource();
+
+}

@@ -51,6 +51,11 @@ public:
     /// get the target area
     virtual double targetArea()const =0;
 
+    /// find which spectrum created the current particle
+    virtual std::string findSource()const=0;
+
+    /// return a unique number correcponding to that spectrum
+    virtual int numSource()const=0;
 };
 
 
