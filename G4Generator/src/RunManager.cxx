@@ -1,9 +1,9 @@
 // $Header$
 #include "G4Timer.hh"
 
+#include "DetectorConstruction.h"
 #include "RunManager.h"
 #include "UIsession.h"
-#include "DetectorConstruction.h"
 #include "PhysicsList.h"
 #include "PrimaryGeneratorAction.h"
 
