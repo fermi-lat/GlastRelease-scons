@@ -13,7 +13,7 @@
 #include "idents/CalXtalId.h"
 #include "Event/Recon/AcdRecon/AcdRecon.h"
 #include "Event/Recon/TkrRecon/TkrClusterCol.h"
-#include "Event/Recon/TkrRecon/TkrPatCandCol.h"
+#include "Event/Recon/TkrRecon/TkrPatCand.h"
 #include "Event/Recon/TkrRecon/TkrFitTrack.h"
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 #include "Event/Recon/CalRecon/CalCluster.h"   
@@ -179,7 +179,7 @@ StatusCode testReadAlg::readReconData() {
     if (!candidatesColTds) 
         log << MSG::INFO << "No TKR candidate tracks on the TDS" << endreq;
     else 
-        log << MSG::DEBUG << candidatesColTds->getNumCands() << " TKR candidate tracks on TDS" << endreq;
+        log << MSG::DEBUG << candidatesColTds->size() << " TKR candidate tracks on TDS" << endreq;
 
     SmartDataPtr<Event::TkrFitTrackCol> trackColTds(eventSvc(), EventModel::TkrRecon::TkrFitTrackCol);
     if (!trackColTds)

@@ -1,5 +1,4 @@
 // $Header$
-
 // Include files
 // Gaudi system includes
 #include "GaudiKernel/MsgStream.h"
@@ -14,6 +13,7 @@
 
 #include "Event/Digi/TkrDigi.h"
 
+#include "Event/Recon/TkrRecon/TkrPatCand.h"
 #include "Event/Recon/TkrRecon/TkrClusterCol.h"
 #include "Event/Recon/TkrRecon/TkrCluster.h"
 #include "Event/Recon/TkrRecon/TkrFitTrack.h"
@@ -122,7 +122,7 @@ StatusCode test_TkrRecon::execute()
         sc = StatusCode::FAILURE;        
         return sc;}
     else {
-        log << MSG::INFO  << candData->getNumCands() 
+        log << MSG::INFO  << candData->size() 
             << " candidate tracks(s) found" << endreq;
     }
     
