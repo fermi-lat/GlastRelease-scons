@@ -1,6 +1,6 @@
 // $Header$
-#ifndef XMLSubstitute_h 
-#define XMLSubstitute_h
+#ifndef XMLUTIL_SUBSTITUTE_H 
+#define XMLUTIL_SUBSTITUTE_H
 
 #include "dom/DOM_Document.hpp"
 #include "dom/DOMString.hpp"

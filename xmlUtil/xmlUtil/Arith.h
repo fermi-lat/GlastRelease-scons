@@ -1,6 +1,6 @@
 // $Header$
-#ifndef XMLArith_h 
-#define XMLArith_h
+#ifndef XMLUTIL_ARITH_H 
+#define XMLUTIL_ARITH_H
 
 #include "dom/DOM_Element.hpp"
 #include "dom/DOMString.hpp"
