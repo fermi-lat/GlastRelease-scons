@@ -13,6 +13,7 @@ $Header$
 namespace ldfReader {
 
     GemData::GemData(const GemData& gem) {
+        clear();
         m_tkrVector = gem.m_tkrVector;
         m_roiVector = gem.m_roiVector;
         m_cal_LE_Vector = gem.m_cal_LE_Vector;
@@ -73,6 +74,7 @@ namespace ldfReader {
         m_deltaEventTime = 0;
         m_exist = false;
         m_lenInBytes = 0;
+        m_packetError=0;
     }
 
    void GemData::print() const {

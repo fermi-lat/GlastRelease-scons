@@ -16,6 +16,7 @@ namespace ldfReader {
 
         OswData() { clear(); };
         OswData(const OswData& osw) { 
+            clear();
             m_summary = osw.m_summary; 
             m_lenInBytes = osw.m_lenInBytes; 
             m_exist = osw.m_exist; };
@@ -25,6 +26,7 @@ namespace ldfReader {
         void clear() { 
             m_summary.setSummary(0); 
             m_lenInBytes = 0; 
+            m_packetError = 0;
             m_exist = false;};
 
         const EventSummaryCommon& summary() const { return m_summary; };

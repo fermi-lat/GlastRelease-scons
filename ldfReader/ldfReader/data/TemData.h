@@ -16,6 +16,7 @@ namespace ldfReader {
 
         TemData() { clear(); };
         TemData(const TemData& tem) { 
+            clear();
             m_summary = tem.m_summary; 
             m_lenInBytes = tem.m_lenInBytes; 
             m_exist = tem.m_exist; };
@@ -25,7 +26,9 @@ namespace ldfReader {
         void clear() { 
             m_summary.setSummary(0); 
             m_lenInBytes = 0; 
-            m_exist = false; };
+            m_exist = false; 
+            m_packetError = 0;
+        };
 
         void print() const { 
              printf("TemData:\n");
