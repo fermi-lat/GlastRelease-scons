@@ -20,9 +20,7 @@ TkrVertex::TkrVertex(int ilyr, int itwr, double energy, double quality, const Ra
     m_vertexCov(3,3) = 1.;
     m_vertexCov(4,4) = 1.;
 
-    //Weird I thought clear was STL cotainer standard!!!
-    //    m_tracks.clear();
-    m_tracks.erase(m_tracks.begin(),m_tracks.end());
+    m_tracks.clear();
 }
 
 

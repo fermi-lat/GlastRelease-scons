@@ -18,6 +18,7 @@
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SmartRefVector.h"
 #include "Event/Recon/TkrRecon/TkrRecInfo.h"
 #include "Event/Recon/TkrRecon/TkrFitTrack.h"
 /** 
@@ -53,29 +54,29 @@ public:
     bool          empty(int numHits)                 const {return m_firstLayer >= 0;}
 
     // Add tracks to the list
-    void addTrack(TkrFitTrack* pTrack) {m_tracks.push_back(pTrack);}
+    void addTrack(TkrFitTrack* pTrack)                     {m_tracks.push_back(pTrack);}
     
     // How many tracks in the vertex?
-    int  getNumTracks()                {return m_tracks.size();}
+    int  getNumTracks()                                    {return m_tracks.size();}
 
     // Pointers to track info
-    TkrFitTrackCol::iterator getTrackIterBegin()   {return m_tracks.begin();}
-    TkrFitTrackCol::iterator getTrackIterEnd()     {return m_tracks.end();}
+    SmartRefVector<TkrFitTrack>::const_iterator getTrackIterBegin() const {return m_tracks.begin();}
+    SmartRefVector<TkrFitTrack>::const_iterator getTrackIterEnd()   const {return m_tracks.end();}
 
     /// Utilities 
     void writeOut(MsgStream& log) const; 
     
 private:
-    TkrFitPar    m_vertexPar;
-    TkrFitMatrix m_vertexCov;
-    Point        m_position;
-    Vector       m_direction;
-    double       m_energy;
-    double       m_quality;
-    int          m_firstLayer;
-    int          m_itower;        
+    TkrFitPar      m_vertexPar;
+    TkrFitMatrix   m_vertexCov;
+    Point          m_position;
+    Vector         m_direction;
+    double         m_energy;
+    double         m_quality;
+    int            m_firstLayer;
+    int            m_itower; 
     
-    TkrFitTrackCol    m_tracks;
+    SmartRefVector<TkrFitTrack> m_tracks;
 };
 
 //typedef for the Container
