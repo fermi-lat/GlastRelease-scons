@@ -45,6 +45,8 @@ public:
 
     void initialize(UInt_t summary);
 
+    void initEventSequence(UInt_t evtSeq) { m_eventSequence = evtSeq; };
+
     void initEventFlags(UInt_t flags) { m_flags = flags; };
 
     void initTemContribLen(unsigned int *len, unsigned int *diag, unsigned int *err) {
@@ -85,7 +87,7 @@ public:
     UInt_t getTrgParityError();
 
 
-    UInt_t eventSequence() const;
+    UInt_t eventSequence() const { return m_eventSequence; };
     UInt_t eventFlags() const { return m_flags; };
     /// Returns true if the flags member is zero
     Bool_t goodEvent() const { return (m_flags == 0); };
@@ -130,7 +132,9 @@ private:
     /// GEM, AEM,, OSW
     UInt_t m_otherContribLen[3];
 
-    ClassDef(EventSummaryData,4) // Storage for Event Summary Data 
+    UInt_t m_eventSequence;
+
+    ClassDef(EventSummaryData,5) // Storage for Event Summary Data 
 }; 
 
 #endif

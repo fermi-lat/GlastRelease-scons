@@ -73,9 +73,5 @@ UInt_t EventSummaryData::eventNumber() { return EventSummary::eventNumber(m_summ
 
 UInt_t EventSummaryData::getTrgParityError() { return EventSummary::trgParityError(m_summary); }
 
-UInt_t EventSummaryData::eventSequence() const {
-    UInt_t eventNumber = EventSummary::eventNumber(m_summary);
-    UInt_t tag = EventSummary::tag(m_summary);
-    return ((eventNumber << 2) | tag);
-}
+
 
