@@ -53,11 +53,11 @@ use GlastSvc    v9r3
 
 use FluxSvc     v5r13
 use FluxDisplay v2r3
-use G4Generator  v4r3p4
+use G4Generator          v4r4
 
 #digitization
 use CalDigi     v1r2p7
-use TkrDigi     v1r6
+use TkrDigi               v1r7
 use AcdDigi     v1r4p0
 
 
@@ -68,7 +68,7 @@ use Recon       v2r3p5
 
 use TkrRecon              v8r3
 use CalRecon    v5r7p5 
-use AcdRecon    v1r4       
+use AcdRecon              v1r4p1       
 
 #ROOT persistence: RootIo specifies the data packages
 use RootIo                v4r18
