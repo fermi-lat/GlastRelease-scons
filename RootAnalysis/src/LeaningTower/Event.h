@@ -36,6 +36,7 @@ class Event {
     int GetPlaneNumHits(TString PlaneName);
     int *GetPlaneHits(TString PlaneName);
     Bool_t GetTriggerReq(TString PlaneName, Bool_t side);
+    int GetToT(TString PlaneName, Bool_t side);
 
     // hits and clusters
     TGraph GetTGraphHits(TString view);

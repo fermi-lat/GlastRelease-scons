@@ -50,6 +50,12 @@ Bool_t Event::GetTriggerReq(TString PlaneName, Bool_t side) {
     return aPlane->GetTriggerReq(side);
 }
 
+int Event::GetToT(TString PlaneName, Bool_t side) {
+    Layer* aPlane = (Layer*)myGeometry->FindObject(PlaneName);
+    aPlane->GetEvent(SelectedEvent);
+    return !side ? aPlane->ToT0 : aPlane->ToT1;
+}
+
 TGraph Event::GetTGraphHits(TString view) {
     if ( view == "X" )
         return GetTGraphHits(0);

@@ -129,18 +129,26 @@ void EventDisplay::Go(int numEvent) {
     int i=0;
     while ( Layer* aPlane = (Layer*)next() ) {
         const double height = aPlane->GetHeight();
-        const int planeNumHits = myEvent->GetPlaneNumHits(aPlane->GetName());
+        const char* planeName = aPlane->GetName();
+        const int planeNumHits = myEvent->GetPlaneNumHits(planeName);
+        const int ToT0 = myEvent->GetToT(planeName, 0);
+        const int ToT1 = myEvent->GetToT(planeName, 1);
 
         if ( aPlane->IsX() ) 
             myEventDisplay->cd(1);      
         else
             myEventDisplay->cd(2);
 
-        TriggerReqText[i][0].SetText(-5, height,
-                                     aPlane->GetTriggerReq(false) ? "x" : ".");
-        TriggerReqText[i][1].SetText(365, height,
-                                     aPlane->GetTriggerReq(true) ? "x" : ".");
-        LabelNumHits[i].SetText(410, height, (TString("(")+=planeNumHits)+")");
+        TString dummy;
+        if ( ToT0 >= 0 )
+            dummy += ToT0;
+        dummy += aPlane->GetTriggerReq(false) ? " x" : " .";
+        TriggerReqText[i][0].SetText(-5, height, dummy);
+        dummy = aPlane->GetTriggerReq(true) ? "x " : ". ";
+        if ( ToT1 >= 0 )
+            dummy += ToT1;
+        TriggerReqText[i][1].SetText(365, height, dummy);
+        LabelNumHits[i].SetText(425, height, (TString("(")+=planeNumHits)+")");
         TriggerReqText[i][0].Draw();
         TriggerReqText[i][1].Draw();
         LabelNumHits[i].Draw();

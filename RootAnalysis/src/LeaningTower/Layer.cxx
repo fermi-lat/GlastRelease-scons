@@ -33,7 +33,7 @@ Layer::Layer(TString name, float pz, float py, float px,
         LadderLine[i] = new TLine(xcoord1, Z, xcoord2, Z);
     }
     LayerLine  = new TLine(GetCoordinate(0), Z, GetCoordinate(1535), Z);
-    LayerLabel = new TText(380, Z, fName);
+    LayerLabel = new TText(400, Z, fName);
     LayerLabel->SetTextAlign(02);
     LayerLabel->SetTextSize(0.02);
 }
@@ -157,6 +157,8 @@ void Layer::SetTree(TFile *file) {
     LayerTree->SetBranchAddress("TkrHits",TkrHits);
     LayerTree->SetBranchAddress("TriggerReq0",&TriggerReq0);
     LayerTree->SetBranchAddress("TriggerReq1",&TriggerReq1);
+    LayerTree->SetBranchAddress("ToT0",&ToT0);
+    LayerTree->SetBranchAddress("ToT1",&ToT1);
 }
 
 std::string Layer::GetGeometry(float dz, float dy, float dx,

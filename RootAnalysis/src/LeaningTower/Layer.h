@@ -78,6 +78,7 @@ class Layer : public TNamed {
 
     int TkrNumHits;
     int TkrHits[128];
+    int ToT0, ToT1;
 
     float SIWAFERSIDE;
     float SIWAFERACTIVESIDE;

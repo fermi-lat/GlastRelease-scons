@@ -56,7 +56,7 @@ void TriggerEfficiency::Go(int lastEntry) {
 
     for ( int entry=0; entry<lastEntry; ++entry ) { 
         myEvent->Go(entry);
-        //        const Int_t eventId = myEvent->GetEventId();
+        const Int_t eventId = myEvent->GetEventId();
         progress.Go(entry, lastEntry);
 
         bool hits[18][2];
@@ -74,11 +74,13 @@ void TriggerEfficiency::Go(int lastEntry) {
             hits[l][v] = TkrNumHits > 0;
             trigger[l][v] = myEvent->GetTriggerReq(planeName,0)
                 || myEvent->GetTriggerReq(planeName,1);
-            /*
             if ( hits[l][v] ^ trigger[l][v] )
-                std::cerr << "eventId " << eventId << " plane " << planeName
-                          << ' ' << TkrNumHits << ' ' << trigger[l][v] << std::endl;
-            */
+                std::cerr << "eventId " << std::setw(6) << eventId
+                          << " plane " << std::setw(3) << planeName
+                          << " numHits " << TkrNumHits
+                          << " triggerReqOR " << trigger[l][v]
+                          << " ToT " << std::setw(3) << myEvent->GetToT(planeName,0)
+                          << ' ' << std::setw(3) << myEvent->GetToT(planeName,1) << std::endl;
         }
         // doing 3-in-a-row
         // index i will measure the efficiency of the layer combination i-1,1,i+1
