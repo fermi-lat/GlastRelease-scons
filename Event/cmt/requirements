@@ -1,12 +1,17 @@
 package Event
-version v8r7p1
+version v8r7p2
 
-branches Event mgr doc src
+branches Event cmt doc src
 use idents v2r*
 
 use GaudiKernel v11r0p*
 use geometry    v3*
 use CLHEP v1r7p*
+
+
+apply_pattern package_include
+apply_pattern package_linkopts
+
 
 apply_pattern package_headers
 
@@ -30,17 +35,10 @@ library Event -no_share\
         ${Event_headers}
 
 
-apply_pattern package_include
-
 macro GlastEvent_stamps   "${EventDir)/Event.stamp"
 
-apply_pattern package_linkopts
+# simple test program
+# use this when we want to make a Gaudi test program apply_pattern package_test
 
-
-
-
-
-
-
-
+application test_Event test/testmain.cxx
 
