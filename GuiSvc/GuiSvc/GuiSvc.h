@@ -52,8 +52,10 @@ private:
     friend class SvcFactory<GuiSvc>;
     void beginEvent();
     void endEvent();
+    //
     void queryEvtMax();
     void queryPause();
+
 
     gui::GuiMgr* m_guiMgr;
     float   m_size;
