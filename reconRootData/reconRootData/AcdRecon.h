@@ -37,7 +37,8 @@ public:
  
     AcdRecon(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist,
             const AcdId &minDocaId, const std::vector<Double_t> &rowDoca,
-            const std::vector<Double_t> &rowActDist)       
+            const std::vector<Double_t> &rowActDist,
+			const std::vector<AcdId> &idCol, const std::vector<Double_t> &energyCol)       
             : m_totEnergy(e),
             m_tileCount(count),
             m_gammaDoca(gDoca),
@@ -45,14 +46,17 @@ public:
             m_actDist(actDist),
             m_minDocaId(minDocaId),
             m_rowDocaCol(rowDoca),
-            m_rowActDistCol(rowActDist)
+            m_rowActDistCol(rowActDist),
+			m_idCol(idCol),
+			m_energyCol(energyCol)
         {};
      
     virtual ~AcdRecon();
     
     void initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist,
         const AcdId &minDocaId, const std::vector<Double_t> &rowDoca, 
-        const std::vector<Double_t> &rowActDist);
+        const std::vector<Double_t> &rowActDist, const std::vector<AcdId> &idCol,
+		const std::vector<Double_t> &energyCol);
 
     /// overload initialize for interactive root where we cannot use std::vector
     void initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist,
@@ -76,7 +80,15 @@ public:
     inline const Double_t getRowActDist(UInt_t i) const {
         return ( (i < m_rowActDistCol.size()) ? m_rowActDistCol[i] : -1.); };
     inline void addRowActDist(Double_t val) { m_rowActDistCol.push_back(val); };
-    //inline const std::map<AcdId, Double_t>& getEnergyCol() const { return m_energyCol; };
+	inline const std::vector<Double_t>& getEnergyCol() const { return m_energyCol; };
+	inline const Double_t getEnergy(UInt_t i) const { 
+		return ( (i < m_energyCol.size()) ? m_energyCol[i] : -1.); };
+	inline void addEnergy(Double_t e) { m_energyCol.push_back(e); };
+	inline const std::vector<AcdId>& getIdCol() const { return m_idCol; };
+	inline const AcdId* getId(UInt_t i) const { 
+		return ( (i < m_idCol.size()) ? &m_idCol[i] : 0); };
+	inline void addId(const AcdId &id) { m_idCol.push_back(id); };
+	Double_t getEnergy(const AcdId &id) const;
     
 private:
     /// Total energy in MeV deposited in the whole ACD system
@@ -100,9 +112,10 @@ private:
     AcdId m_minDocaId;
     
     // Stores reconstructed energy per ACD digi
-    //std::map<AcdId, Double_t> m_energyCol;
+	std::vector<AcdId> m_idCol;
+	std::vector<Double_t> m_energyCol;
     
-    ClassDef(AcdRecon,2) // Acd Reconstruction data
+    ClassDef(AcdRecon,3) // Acd Reconstruction data
 };
 
 #endif

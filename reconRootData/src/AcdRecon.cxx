@@ -13,7 +13,9 @@ AcdRecon::~AcdRecon() {
 
 void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist,
                           const AcdId &minDocaId, const std::vector<Double_t> &rowDoca,
-                          const std::vector<Double_t> &rowActDist) {
+                          const std::vector<Double_t> &rowActDist, 
+						  const std::vector<AcdId> &idCol,
+						  const std::vector<Double_t> &energyCol) {
     Clear();
     m_totEnergy = e;
     m_tileCount = count;
@@ -23,6 +25,8 @@ void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca
     m_minDocaId = minDocaId;
     m_rowDocaCol = rowDoca;
     m_rowActDistCol = rowActDist;
+	m_idCol = idCol;
+	m_energyCol = energyCol;
 }
 
 void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist,
@@ -44,6 +48,8 @@ void AcdRecon::Clear(Option_t *option) {
     m_actDist = -200.0;
     m_rowDocaCol.clear();
     m_rowActDistCol.clear();
+	m_idCol.clear();
+	m_energyCol.clear();
 }
 
 void AcdRecon::Print(Option_t *option) const {
@@ -62,5 +68,24 @@ void AcdRecon::Print(Option_t *option) const {
     std::vector<Double_t>::const_iterator rowActDistIt;
     for (rowActDistIt = m_rowActDistCol.begin(); rowActDistIt != m_rowActDistCol.end(); rowActDistIt++) 
         cout << (*rowActDistIt) << endl;
+	cout << "Energy Collection: " << endl;
+	std::vector<Double_t>::const_iterator energyIt;
+	unsigned int i = 0;
+	for (energyIt = m_energyCol.begin(); energyIt != m_energyCol.end(); energyIt++) {
+		cout << m_idCol[i].getId() << " " << *energyIt << endl;
+		i++;
+	}
 
+}
+
+Double_t AcdRecon::getEnergy(const AcdId& id) const {
+	std::vector<AcdId>::const_iterator idIt;
+	unsigned int index = 0;
+	for (idIt = m_idCol.begin(); idIt != m_idCol.end(); idIt++) {
+		if (*idIt == id) break;
+		++index;
+	}
+	if (idIt == m_idCol.end()) return -1.0;
+	if (index >= m_energyCol.size()) return -1.0;
+	return m_energyCol[index];
 }
