@@ -2,6 +2,7 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 19-sep-2002: jrb - tag v1r7p2 - Fix comment for cal.zeroSuppressEnergy
  * 19-sep-2002: jrb - tag v1r7p1 - Pick up new better name for ACD threshold
  * 19-sep-2002: jrb - tag v1r7p0 - Define and use new element <primEnergy>
  *                                 which requires specification of GeV or MeV
