@@ -2,6 +2,7 @@
  * package GlastEvent
  * package manager:T.Burnett (original author: H. Gillespie)
  *
+ * v7r0  10-apr-02 THB CalDigi revision--make it a major version change at Richard's suggestion
  * v6r4  10-apr-02 THB CalDigi revision
  * v6r3  06-apr-02 THB remove McConstants.h, bit field in McPositionHit, McIntegratingHit for now
  *       05-apr-02 THB  more mods to  McParticle
