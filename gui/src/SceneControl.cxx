@@ -166,7 +166,7 @@ void SceneControl::move_down( float howfar){ move_by(0, howfar);}
 //                 adjust magnification (zoom)
 
 void SceneControl::zoom_in(float howfar) { m_current_view->zoom(1+howfar);}
-void SceneControl::zoom_out(float howfar){ m_current_view->zoom(1-howfar);}
+void SceneControl::zoom_out(float howfar){ m_current_view->zoom(1./(1+howfar));}
 void SceneControl::set_zoom(float z)     { m_current_view->setZoom(z);}
 
 
