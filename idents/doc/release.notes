@@ -1,6 +1,8 @@
 /*
 package manager:T.Burnett 
 
+ * v2r9   11-nov-02  jrb Modify AcdId.h to handle new volId field
+ *                       in acd tiles.  Requires xmlGeoDbs v1r9 or later.
  * v2r8p4 04-sept-02 HMK add AcdId ctor to unpack volId\n
  *                       add const operator[] to VolumeIdentifier\n
  * v2r8 11-may-02 THB  make TowerId sortable. 
