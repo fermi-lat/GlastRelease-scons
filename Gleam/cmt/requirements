@@ -40,25 +40,25 @@ use Geant4      v1r1p0
 use GuiSvc      v3
 
 use Event                v8r1
-use GlastSvc    v7r3
+use GlastSvc             v8r0
 
 # simulation
 
 use FluxSvc              v5r6
-use G4Generator v3r5
+use G4Generator          v4r0
 
 #digitization
-use GlastDigi   v2r7
+use GlastDigi            v3r0
 
 #reconstruction
-use Recon       v1r3
-use TkrRecon    v5r7
-use CalRecon    v4r1       
+use Recon                v2r0
+#use TkrRecon    v5r7
+#use CalRecon    v4r1       
 
 
 #ROOT persistence
 use mcRootData  v2r1p1
-use RootIo      v1r0
+use RootIo                v2r0
 
 
 ### define a simple executable 
