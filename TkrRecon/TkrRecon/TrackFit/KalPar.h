@@ -14,7 +14,6 @@
 #include "CLHEP/Matrix/Vector.h"
 
 class Ray; 
-class IGismoSvc;
 
 class KalPar : public HepVector
 {

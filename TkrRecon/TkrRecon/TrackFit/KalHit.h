@@ -17,7 +17,6 @@
 
 
 class Ray; 
-class IGismoSvc;
 
 class KalHit
 {   // Class to link a parameter vector and a covariance matrix together
