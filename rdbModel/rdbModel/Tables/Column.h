@@ -28,6 +28,10 @@ namespace rdbModel{
 
     Datatype* getDatatype() const {return m_type;};
 
+    /// Return pointer to Enum object associated with this column (if
+    /// none, return null pointer).
+    Enum* getEnum() const {return m_type->getEnum();}
+
     /** See if supplied value meets constraints of column definition
      *   @arg  val    std::string representation of value to be checked
      *   @arg  set    true if value is to be written to column; false

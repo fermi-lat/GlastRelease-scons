@@ -190,11 +190,11 @@ namespace rdbModel {
     case TYPEvarchar:
     case TYPEchar:
       if (m_restrict == RESTRICTnone) return true;
-      if (!m_enum->m_required) return true;
+      if (!m_enum->choicesRequired()) return true;
     case TYPEenum: {
-      unsigned nChoice = m_enum->m_choices.size();
+      unsigned nChoice = m_enum->getChoices().size();
       for (unsigned i = 0; i < nChoice; i++) {
-        if (val == m_enum->m_choices[i]) return true;
+        if (val == m_enum->getChoices()[i]) return true;
       }
       return false;
     }

@@ -9,6 +9,21 @@ namespace rdbModel{
 
   class XercesBuilder;
 
+  /// Extra little class for datatypes with values (preferred or
+  /// required) coming from an enumerated list
+  class Enum {
+  public: 
+    const std::vector<std::string>& getChoices() const {
+      return m_choices;}
+    bool choicesRequired() const {return m_required;}
+
+  private:
+    std::vector<std::string> m_choices;
+    // sometimes column *must* have one of the enumerated values; 
+    // other times they're just suggestions
+    bool m_required;  
+  };
+
   class Datatype {
   public:
     // Include MySQL-supported types we might conceivably use
@@ -41,14 +56,9 @@ namespace rdbModel{
     bool okValue(const std::string& val) const;
     bool isCompatible(const Datatype* other) const;
 
-  private:    // embedded class since Enum restriction is a bit more complex
-    class Enum {
-    public: 
-      std::vector<std::string> m_choices;
-      // sometimes column *must* have one of the enumerated values; 
-      // other times they're just suggestions
-      bool m_required;  
-    };
+    /// Return pointer to Enum object owned by datatype (if none, return
+    /// null pointer).
+    Enum* getEnum() const {return m_enum;}
 
   private:
     friend class rdbModel::XercesBuilder;
@@ -78,6 +88,8 @@ namespace rdbModel{
     int m_maxInt; 
 
   };
+
+
 }
 #endif
 
