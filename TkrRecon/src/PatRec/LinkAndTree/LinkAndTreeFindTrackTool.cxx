@@ -26,32 +26,16 @@ const IToolFactory& LinkAndTreeFindTrackToolFactory = s_factory;
 //
 
 LinkAndTreeFindTrackTool::LinkAndTreeFindTrackTool(const std::string& type, const std::string& name, const IInterface* parent) :
-                          AlgTool(type, name, parent)
+                          PatRecBaseTool(type, name, parent)
 {
-    //Declare the additional interface
-    declareInterface<ITkrFindTrackTool>(this);
 	return;
 }
 
 StatusCode LinkAndTreeFindTrackTool::initialize()
 {
-    MsgStream log(msgSvc(), name());
-    StatusCode sc   = StatusCode::SUCCESS;
-    StatusCode fail = StatusCode::FAILURE;
-    
-	if( serviceLocator() ) {   
-		if(service( "TkrGeometrySvc", m_tkrGeo, true ).isFailure()) {
-			log << MSG::ERROR << "Could not find TkrGeometrySvc" << endreq;
-			return fail;
-		}
-		m_tkrFail = m_tkrGeo->getTkrFailureModeSvc();
-
-		if(service( "EventDataSvc", m_dataSvc, true ).isFailure()) {
-			log << MSG::ERROR << "Could not find EventDataSvc" << endreq;
-			return fail;
-		}
-	}
-	return sc;
+  PatRecBaseTool::initialize();
+  StatusCode sc   = StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode LinkAndTreeFindTrackTool::findTracks()

@@ -29,13 +29,13 @@ class PatRecBaseTool : public AlgTool, virtual public ITkrFindTrackTool
  protected:
 
   /// Pointer to the local Tracker geometry service
-  ITkrGeometrySvc*    pTkrGeo;
-  ITkrFailureModeSvc* pTkrFail;
-      
-  /// @brief Event Service member directly useable by concrete classes.
-  /// It is initialized in PatRecBaseTool::initialize(), and is needed 
-  /// especially in order to use SmartDataPointers.
-  IDataProviderSvc* m_dataSvc;
+  ITkrGeometrySvc*    m_tkrGeo;
+
+  /// Pointer to the local FailureMode service
+  ITkrFailureModeSvc* m_tkrFail;
+
+  /// Event Service member directly useable by concrete classes.
+  IDataProviderSvc*   m_dataSvc;
 
 };
 #endif

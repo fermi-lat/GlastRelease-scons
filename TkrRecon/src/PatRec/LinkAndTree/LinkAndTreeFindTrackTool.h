@@ -16,8 +16,9 @@
 #include "GaudiKernel/DataSvc.h"
 #include "TkrRecon/PatRec/ITkrFindTrackTool.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
+#include "src/PatRec/PatRecBaseTool.h"
 
-class LinkAndTreeFindTrackTool : public AlgTool, virtual public ITkrFindTrackTool
+class LinkAndTreeFindTrackTool : public PatRecBaseTool //public AlgTool, virtual public ITkrFindTrackTool
 {
 public:
     /// Standard Gaudi Tool interface constructor
@@ -31,14 +32,6 @@ public:
 	StatusCode initialize();
     StatusCode findTracks();
 
-private:
-    /// Pointer to the local Tracker geometry service
-    ITkrGeometrySvc* m_tkrGeo;
-	///
-	ITkrFailureModeSvc* m_tkrFail;
-
-    /// Pointer to the Gaudi data provider service (interface to the TDS)
-    IDataProviderSvc*        m_dataSvc;
 };
 
 #endif
