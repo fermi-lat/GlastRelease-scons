@@ -120,8 +120,8 @@ void RootTreeAnalysis::DigiCal() {
       // get readout from zeroth range. Set to BEST
 
       CalXtalReadout* cRo=c->getXtalReadout(0);
-      float adcN = cRo->getAdc(0);
-      float adcP = cRo->getAdc(1);
+      float adcP = cRo->getAdc(CalXtalId::POS); 
+      float adcN = cRo->getAdc(CalXtalId::NEG);
 
       // light asymmetry
 
