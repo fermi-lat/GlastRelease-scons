@@ -40,6 +40,11 @@ namespace rdbModel{
                       const std::string& password,
                       const std::string& dbName,
                       unsigned int       port=0);
+
+    /** Parameter is normally path for an xml file descrbing the 
+        connection parameters */
+     virtual bool open(const std::string& parms);
+
     /** Close the current open connection , if any.  Return true if there
      was a connection to close and it was closed successfully */
     virtual bool close();

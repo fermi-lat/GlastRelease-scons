@@ -67,6 +67,10 @@ namespace rdbModel{
      was a connection to close and it was closed successfully */
     virtual bool close() = 0;
 
+    /** Parameter is normally path for an xml file descrbing the 
+        connection parameters */
+    virtual bool open(const std::string& parms) = 0;
+
     /**
        Check to what degree local schema definition is compatible with
        remote db accessed via this connection
