@@ -163,7 +163,7 @@ double TkrFitPlane::getSigma(TkrFitHit::TYPE type) const
 double TkrFitPlane::getDeltaChiSq(TkrFitHit::TYPE type) const
 {  
     TkrFitHit hit=getHit(type);
-
+/*
     double delpar = 0.;
     double sigma2 = 0.; 
     if(m_projection == TkrCluster::X ) {
@@ -177,6 +177,26 @@ double TkrFitPlane::getDeltaChiSq(TkrFitHit::TYPE type) const
 
     double chi2 = 1e6;
     if(sigma2 > 0) chi2=(delpar*delpar)/sigma2;
+*/
+    // Try the full 3D version (see Data Analysis Tech. in HEP by Fruthwirth et al) 
+    double rx = m_hitmeas.getPar().getXPosition()-hit.getPar().getXPosition();
+    double ry = m_hitmeas.getPar().getYPosition()-hit.getPar().getYPosition();
+
+    // Note we have to to the matrix stuff by hand here since we only meas.
+    // co-ordinates and not slopes.. 
+
+    double R11 = m_hitmeas.getCov().getcovX0X0() - hit.getCov().getcovX0X0();
+    double R33 = m_hitmeas.getCov().getcovY0Y0() - hit.getCov().getcovY0Y0();
+    double R13 = -hit.getCov()(1,3); 
+
+    // Take inverse of R matrix
+    double detr = R11*R33 - R13*R13;
+    double r11  =  R33/detr;
+    double r13  = -R13/detr; 
+    double r33  =  R11/detr;
+
+    // Form Chisq. Note: when R13 = 0 (then r13 = 0) this resduce to previous 
+    double chi2 = rx*rx*r11 + ry*ry*r33 + 2.*r13*rx*ry;
 
     return chi2;
 }
