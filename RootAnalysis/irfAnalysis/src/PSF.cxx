@@ -140,7 +140,7 @@ void PSF::project(double xmin, double xmax, int nbins)
 
         for(int j=0; j<energy_bins; ++j){
             // loop over energies
-            double logecenter=logestart+logedelta*j, ecenter=pow(10, logecenter);
+            double logecenter=logestart+logedelta*j, ecenter=pow(10., logecenter);
             char title[256];  sprintf(title, "Scaled PSF:  %6d MeV,  %2d-%2d degrees", (int)(ecenter+0.5), angles[i], angles[i+1]);
             TCut energy(energy_cut(j));
             // create and fill a histogram with the scaled dir error
@@ -199,7 +199,7 @@ void PSF::draw(std::string ps_filename, double ymax, std::string title)
         TLegend *leg = new TLegend(0.40,0.75, 0.95,0.95);
         leg->SetTextSize(0.04);
         leg->SetHeader("Angle range   68%   95%");
-        double logecenter=logestart+logedelta*j, ecenter=pow(10, logecenter);
+        double logecenter=logestart+logedelta*j, ecenter=pow(10., logecenter);
 
         double xmin=j/double(energy_bins), xmax= (j+1)/double(energy_bins);
 

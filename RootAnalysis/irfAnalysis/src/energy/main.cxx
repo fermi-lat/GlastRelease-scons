@@ -13,7 +13,7 @@ public:
         : Fitter(outputFile), m_maxTrys(maxTrys) 
     {
         m_func 
-            = new TF1("myModel",   "x*[0]*exp(-0.5*pow((x-[1])/[2], 2))");
+            = new TF1("myModel",  "x*[0]*exp(-0.5*pow((x-[1])/[2], 2))");
 
         // Set up the branches in the output tree.
         const char* names[]={"norm", "mean", "sigma"};
@@ -39,15 +39,17 @@ private:
 };
 
 int main(){
-    EnergyModel myfit("energy_fit_parameters.root");
+    EnergyModel* myfit = new EnergyModel("energy_fit_parameters.root");
 
     MakeDists irf("energy_fit.root");
 
-   // if ( !irf.fileExists() )
+   if ( !irf.fileExists() )
         irf.project("EvtEnergySumOpt/McEnergy", 0, 2, 100 );
     irf.set_ymin(1e-3);
-    irf.set_ymax(1.0);
-    irf.draw("energy_fit.ps",  true , &myfit);
+    irf.set_ymax(0.2);
+    irf.draw("energy_fit.ps",  true , myfit);
+    myfit->writeFitPars();
+    delete myfit;
 
     return 0;
 }
