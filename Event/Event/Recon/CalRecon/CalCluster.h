@@ -5,7 +5,7 @@
 #include "geometry/Point.h"
 #include "geometry/Vector.h"
 #include "GaudiKernel/DataObject.h"
-
+#include "GaudiKernel/MsgStream.h"
 
 // #include "CalRecon/CalDisplay.h"
 
@@ -100,7 +100,7 @@ public:
 	double getCsiLambda()	  const {return m_CsiLambda;}
 	double getCsiStart()	  const {return m_start;}
 	// operations
-	void writeOut() const;
+	void writeOut(MsgStream& stream) const;
 
 protected:
 
@@ -182,7 +182,7 @@ public:
 	virtual void clear();
 	virtual void make() {}
 
-	virtual void writeOut() const;
+	virtual void writeOut(MsgStream& stream) const;
 //    void setCalDisplay(CalDisplay* calDisp) {m_calDisp = calDisp;}
 
 protected:
