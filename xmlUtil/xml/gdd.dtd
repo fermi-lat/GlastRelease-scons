@@ -539,6 +539,12 @@
 <!ATTLIST  source  inputId          CDATA #IMPLIED
                    creatorId        CDATA #IMPLIED >
 
+<!-- generic material parameters -->
+<!ENTITY % materialProperties 'name         ID         #REQUIRED
+                               RGB          NMTOKENS   #IMPLIED
+                               transparency NMTOKEN    #IMPLIED                    
+                               '>
+
 <!ELEMENT  materials ( element | composite )+> 
 <!ATTLIST  materials
            version      CDATA   #REQUIRED
@@ -550,15 +556,15 @@
 <!ELEMENT  element  EMPTY>
 <!ATTLIST  element 
            symbol    NMTOKEN  #IMPLIED
-           name      ID       #REQUIRED
            z         NMTOKEN  #REQUIRED
            aweight   NMTOKEN  #REQUIRED
-           density   NMTOKEN  #IMPLIED>
+           density   NMTOKEN  #IMPLIED
+           %materialProperties;>
 
 <!ELEMENT  composite ( addmaterial )+>
 <!ATTLIST  composite
-           name     ID       #REQUIRED
-           density  NMTOKEN  #REQUIRED>
+           density  NMTOKEN  #REQUIRED
+           %materialProperties;>
 
 <!ELEMENT  addmaterial  ( fractionmass | natoms ) >
 <!ATTLIST  addmaterial
