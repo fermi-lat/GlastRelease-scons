@@ -16,6 +16,7 @@ GPS*	GPS::s_instance = 0;
 
 GPS::GPS() 
 : m_orbit(new Orbit),
+m_earthOrbit(new astro::EarthOrbit),
 m_expansion(1.),    // default expansion:regular orbit for now
 m_time(0.), 
 m_orbittime(m_time),
@@ -341,26 +342,42 @@ Rotation GPS::transformGlastToGalactic(double time){
     return (m_orbit->CELTransform(time).inverse())*(rockingAngleTransform(time).inverse());
 }
 
-void GPS::getPointingCharacteristics(Hep3Vector location, double rockNorth){
+void GPS::getPointingCharacteristics(/*Hep3Vector location, double rockNorth*/double time){
     using namespace astro;
+    //std::cout << "here" << std::endl;
+    double rockAmount = 15.0; //default - this needs to be changed.
+    double inclination = m_earthOrbit->inclination();//33.*M_PI/180.; //this should be set from astro.
+    double orbitPhase = m_earthOrbit->phase(time);//0.0; //this needs to be set from astro.
+    m_position = m_earthOrbit->position(time);
+    //std::cout << "time = " << time << std::endl;
+    //Hep3Vector location = m_earthOrbit->position(time);
     //first make the directions for the x and Z axes, as well as the zenith direction.
-    SkyDir dirZenith(location.unit());
+    SkyDir dirZenith(m_position.unit());
     //before rotation, the z axis points along the zenith:
-    SkyDir dirZ(location.unit());
+    SkyDir dirZ(m_position.unit());
+    //SkyDir dirX(dirZ.ra()-90., 0.0);
     SkyDir dirX(dirZ.ra()-90., 0.0);
+
+    //rotate the x direction so that the x direction points along the orbital direction.
+    dirX().rotate(dirZ.dir() , inclination*cos(orbitPhase));
 
     //now set the zenith direction before the rocking.
     m_RAZenith = dirZ.ra();
     m_DECZenith = dirZ.dec();
     
     // now, we want to find the proper transformation for the rocking angles:
-    HepRotation rockRot(Hep3Vector(0,0,1).cross(dirZ.dir()) , rockNorth);
+    //HepRotation rockRot(Hep3Vector(0,0,1).cross(dirZ.dir()) , rockNorth);
     
     //and apply the transformation to dirZ and dirX:
     
-    dirZ().rotate(Hep3Vector(0,0,1).cross(dirZ.dir()) , rockNorth*M_PI/180.);
-    dirX().rotate(Hep3Vector(0,0,1).cross(dirZ.dir()) , rockNorth*M_PI/180.);
+    //dirZ().rotate(Hep3Vector(0,0,1).cross(dirZ.dir()) , rockNorth*M_PI/180.);
+    //dirX().rotate(Hep3Vector(0,0,1).cross(dirZ.dir()) , rockNorth*M_PI/180.);
+    double rockNorth = rockAmount*M_PI/180;
+    if(m_DECZenith <= 0) rockNorth *= -1.;
     
+    dirZ().rotate(dirX.dir() , rockNorth*M_PI/180.);
+    //dirX().rotate(dirX.dir() , rockNorth*M_PI/180.);//unnecessary?
+
     m_RAX = dirX.ra();
     m_RAZ = dirZ.ra();
     m_DECX = dirX.dec();

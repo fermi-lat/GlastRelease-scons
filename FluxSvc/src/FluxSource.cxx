@@ -73,7 +73,7 @@ m_rmin(0), m_rmax(1), _phi(0.0f), _theta(0.0f), m_pointtype(NOPOINT), m_launch(N
 illumBox(0), m_energyscale(GeV)
 {
     static double d2r = M_PI/180.;
-    
+        
     ISpectrum*   s = 0;
     std::string class_name;
     std::string source_params; 
@@ -88,7 +88,7 @@ illumBox(0), m_energyscale(GeV)
         useSpectrumDirection(); // and will use its direction generation
         
     } else {
-        
+         
         // process spectrum element
         DOM_NodeList children = spec.getChildNodes();
         
@@ -164,8 +164,8 @@ illumBox(0), m_energyscale(GeV)
         
         // third child element is optional launch spec
         DOM_Element launch = xml::Dom::getSiblingElement(angles);
+        
         if(launch !=DOM_Element()) {
-            
             DOMString launchTag = launch.getTagName();
             
             if(launchTag.equals("launch_point")){
@@ -207,7 +207,6 @@ illumBox(0), m_energyscale(GeV)
     if( s==0) {
         //		std::vector<float> paramvec; parseParamList(source_params, paramvec);
         s = SpectrumFactoryTable::instance()->instantiate(class_name, source_params);
-        
         if(s==0){
             FATAL_MACRO("Unknown Spectrum: "<< class_name);
             std::cerr << "List of known Spectrum classes:\n" ;

@@ -23,6 +23,7 @@
 #include "geometry/CoordTransform.h"
 
 #include "astro/SkyDir.h"
+#include "astro/EarthOrbit.h"
 
 
 #include <iostream>
@@ -93,7 +94,7 @@ public:
     // set data
     
     /// get the pointing characteristics of the satellite, given a location and rocking angle.
-    void getPointingCharacteristics(Hep3Vector location, double rockNorth);
+    void getPointingCharacteristics(/*Hep3Vector location, double rockNorth*/double time);
     
     
     /// set a specific Orbit object for lat/lon calculations
@@ -145,6 +146,10 @@ public:
     double DECZ()const{return m_DECZ;}
     double RAZenith()const{return m_RAZenith;}
     double DECZenith()const{return m_DECZenith;}
+
+    Hep3Vector position(/*double time*/)const{
+        //std::cout << "in position, time = " << time << std::endl;
+        return m_position;/*m_earthOrbit->position(time);*/} //interface to EarthOrbit::position()
     
     protected:
         // singleton - protect ctor/dtor
@@ -168,6 +173,7 @@ public:
         
     private:
         static GPS* s_instance;
+        astro::EarthOrbit* m_earthOrbit; //orbital position object, from the astro package.
         
         Orbit*  m_orbit;        // orbital position object 
         double  m_expansion;    // orbit expansion factor
@@ -176,6 +182,7 @@ public:
         double  m_sampleintvl;  // interval to sample for each pt. in the orbit - to normalize spectra
         double m_RAX,m_RAZ,m_DECX,m_DECZ; //pointing characteristics.
         double m_RAZenith,m_DECZenith;  //pointing characteristic of the zenith direction.
+        Hep3Vector m_position; //current vector position of the LAT.
         // notification
         Subject    m_notification; 
         

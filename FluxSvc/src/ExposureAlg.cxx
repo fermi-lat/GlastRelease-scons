@@ -15,6 +15,7 @@
 #include "astro/SolarSystem.h"
 // Event for creating the McEvent stuff
 #include "Event/TopLevel/MCEvent.h"
+#include "Event/MonteCarlo/McParticle.h"
 #include "Event/TopLevel/EventModel.h"
 #include "Event/MonteCarlo/D2Entry.h"
 
@@ -54,7 +55,7 @@ ExposureAlg::ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator)
 }
 //-------------------------------------------------------------------------
 //! simple prototype of a spectrum class definition - this implememts all of the necessary methods in an ISpectrum
-class TimeCandle : public ISpectrum {
+/*class TimeCandle : public ISpectrum {
 public:
     TimeCandle(const std::string& params){};
     
@@ -87,10 +88,10 @@ public:
         return 5.;
     }
     
-};
+};*/
 //! set this spectrum up to be used.
 void ExposureAlg::makeTimeCandle(IFluxSvc* fsvc){
-    static RemoteSpectrumFactory<TimeCandle> timecandle(fsvc);
+    //static RemoteSpectrumFactory<TimeCandle> timecandle(fsvc);
 }
 
 //------------------------------------------------------------------------
@@ -139,34 +140,60 @@ StatusCode ExposureAlg::execute()
     using namespace astro;
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
+    double currentTime;
+    //-----------------------------------------------------------------------
     
-    if(m_fluxSvc->currentFlux() == m_flux){
-        m_flux->generate();
+    Event::McParticleCol* pcol = new Event::McParticleCol;
+    eventSvc()->retrieveObject("/Event/MC/McParticleCol",(DataObject *&)pcol);
+    //only make a new source if one does not already exist.
+    if(pcol==0){
+        //FluxAlg didn't do anything.  proceed.
+        
+        //if the flux had changed, something changed the source type.
+        if(m_fluxSvc->currentFlux() == m_flux){
+            m_flux->generate();
+            currentTime = m_flux->time();
+        }else{
+            m_flux = m_fluxSvc->currentFlux();
+            m_flux->generate();
+            currentTime = m_flux->time();
+        }
     }else{
-        m_flux = m_fluxSvc->currentFlux();
-        m_flux->generate();
+        //FluxAlg is taking care of the particle, so do nothing but get the current time.
+        currentTime = m_fluxSvc->currentFlux()->time();
+    }   
+    
+    //now, only do the rest of this algorithm if we have a timetick particle.
+    std::string particleName = m_fluxSvc->currentFlux()->particleName();
+    if(particleName != "TimeTick"){
+        log << MSG::DEBUG << particleName << " Not a timetick particle, no D2Database entry created, continuing..." << endreq;
+        return StatusCode::SUCCESS;
     }
-    
+
+    //by now, we should know that we have the appropriate particle to make a D2Entry with.
     double secondsperday = 60.*60.*24.;
-    EarthOrbit orbt;
-    Hep3Vector location( orbt.position(m_flux->time()/secondsperday) );
-    
-    // hold onto the cartesian location of the LAT
-    double posx = location.x(); 
-    double posy = location.y(); 
-    double posz = location.z(); 
-    
+
     // here we get the time characteristics
+
+    //NOTE: this gets an interval from the last time that a TimeTick particle came to this one.
+    //in other words, the timeTick particles define the beginning and ends of intervals.
     double intrvalstart = m_lasttime;
     //then get the end of the interval (this can be made into whatever).
-    double intrvalend = m_flux->time();
+    double intrvalend = currentTime;
     //get the livetime from the source itself.
     double livetime = intrvalend - m_lasttime;
     //..and reset the time of this event to be the "last time" for next time.
     m_lasttime = intrvalend;
     
     //and here the pointing characteristics of the LAT.
-    GPS::instance()->getPointingCharacteristics(location,20);
+    GPS::instance()->getPointingCharacteristics(/*location,20*/currentTime/secondsperday);
+    //EarthOrbit orbt;
+    Hep3Vector location = GPS::instance()->position();//( orbt.position(currentTime/secondsperday) );
+    
+    // hold onto the cartesian location of the LAT
+    double posx = location.x(); 
+    double posy = location.y(); 
+    double posz = location.z(); 
     std::cout << std::endl;
     double rax = GPS::instance()->RAX();
     double raz = GPS::instance()->RAZ();
@@ -175,7 +202,7 @@ StatusCode ExposureAlg::execute()
     double razenith = GPS::instance()->RAZenith();
     double deczenith = GPS::instance()->DECZenith();
     
-    EarthCoordinate earthpos(location,m_flux->time());
+    EarthCoordinate earthpos(location,currentTime/secondsperday);
     double lat = earthpos.latitude();
     double lon = earthpos.longitude();
     double alt = earthpos.altitude();
@@ -183,10 +210,10 @@ StatusCode ExposureAlg::execute()
     
     SolarSystem sstm;
     
-    double ramoon = sstm.direction(astro::SolarSystem::Moon,m_flux->time()).ra();
-    double decmoon = sstm.direction(astro::SolarSystem::Moon,m_flux->time()).dec();
-    double rasun = sstm.direction(astro::SolarSystem::Sun,m_flux->time()).ra();
-    double decsun = sstm.direction(astro::SolarSystem::Sun,m_flux->time()).dec();
+    double ramoon = sstm.direction(astro::SolarSystem::Moon,currentTime/secondsperday).ra();
+    double decmoon = sstm.direction(astro::SolarSystem::Moon,currentTime/secondsperday).dec();
+    double rasun = sstm.direction(astro::SolarSystem::Sun,currentTime/secondsperday).ra();
+    double decsun = sstm.direction(astro::SolarSystem::Sun,currentTime/secondsperday).dec();
     
     // Here the TDS is prepared to receive hits vectors
     // Check for the MC branch - it will be created if it is not available
@@ -194,10 +221,10 @@ StatusCode ExposureAlg::execute()
     DataObject *mc = new Event::D2EntryCol;
     //eventSvc()->retrieveObject("/Event/MC", mc);
     sc=eventSvc()->registerObject(EventModel::MC::Event , mc);
-    if(sc.isFailure()) {
-        log << MSG::ERROR << EventModel::MC::Event  <<" could not be registered on data store" << endreq;
-        return sc;
-    }
+    //if(sc.isFailure()) {
+    //    log << MSG::ERROR << EventModel::MC::Event  <<" could not be registered on data store" << endreq;
+    //    return sc;
+    //}
     
     // Here the TDS receives the exposure data
     Event::D2EntryCol* exposureDBase = new Event::D2EntryCol;
@@ -223,8 +250,12 @@ StatusCode ExposureAlg::execute()
     Event::D2EntryCol::iterator curEntry = (*elist).begin();
     //some test output - to show that the data got onto the TDS
     (*curEntry)->writeOut(log);
+
+    setFilterPassed( false );
+    log << MSG::DEBUG << "ExposureAlg found a TimeTick particle, ended this execution after making a record, filterpassed = " << filterPassed() << endreq;
+
     
-    return sc;
+    return sc/*return StatusCode::STOP*/;
 }
 
 //------------------------------------------------------------------------

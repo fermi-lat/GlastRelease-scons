@@ -103,6 +103,11 @@ StatusCode FluxAlg::execute()
     HepPoint3D d = m_flux->launchDir();
     double ke = m_flux->energy(); // kinetic energy in MeV
     std::string particleName = m_flux->particleName();
+    //if it's a "timeTick, then ExposureAlg should take care of it, and no othe algorithms should care about it.
+    if(particleName == "TimeTick"){
+        log << MSG::DEBUG << particleName << " particle found, will exit particle creation/reconstruction loops" << endreq;
+        particleName = "gamma"; //no need to return - we want the time record on the TDS.  the ExposureAlg will handle the rest.
+    }
     
     
     //here's where we get the particleID and mass for later.
@@ -132,8 +137,8 @@ StatusCode FluxAlg::execute()
     //eventSvc()->retrieveObject("/Event/MC", mc);
     sc=eventSvc()->registerObject(EventModel::MC::Event , mc);
     if(sc.isFailure()) {
-        log << MSG::ERROR << EventModel::MC::Event  <<" could not be registered on data store" << endreq;
-        return sc;
+        log << MSG::WARNING << EventModel::MC::Event  <<" could not be registered on data store" << endreq;
+        //return sc;
     }
     
     
@@ -167,7 +172,7 @@ StatusCode FluxAlg::execute()
         
     } else { 
         log << MSG::WARNING << " could not find the event header" << endreq;
-        return StatusCode::FAILURE;
+        return StatusCode::SUCCESS;//FAILURE;
     }
     return sc;
 }

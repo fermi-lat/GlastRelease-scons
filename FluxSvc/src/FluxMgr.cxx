@@ -97,6 +97,7 @@ void FluxMgr::init(const std::vector<std::string>& fileList){
     DLL_DECL_SPECTRUM( HeSpectrum);
     DLL_DECL_SPECTRUM( GalElSpectrum);
     DLL_DECL_SPECTRUM( FILESpectrum);
+    DLL_DECL_SPECTRUM( TimeCandle);
     
 }
 
@@ -141,7 +142,6 @@ EventSource*  FluxMgr::getSourceFromXML(const DOM_Element& src)
     }
     // If we got here, should have legit child element
     if ((sname.getTagName()).equals("spectrum")) {
-        
         return  new FluxSource(src);
     }
     else if ((sname.getTagName()).equals("nestedSource")) {
@@ -166,7 +166,7 @@ EventSource*  FluxMgr::getSourceFromXML(const DOM_Element& src)
                     xml::Dom::transToChar(sname.getAttribute("sourceRef")) << 
                     "' not in source library");
             }
-            cs->addSource(getSourceFromXML(selem));           
+            cs->addSource(getSourceFromXML(selem)); 
             sname = xml::Dom::getSiblingElement(sname);
         } 
         while (sname != DOM_Element() );

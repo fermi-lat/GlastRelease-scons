@@ -1,6 +1,21 @@
 
 <source_library>
 
+    <!-- the TimeCandle spectrum  -->
+    <source name="timetick15s">
+         <spectrum> <SpectrumClass name="TimeCandle" params="15."/>  
+		 <use_spectrum/><launch_point />
+         </spectrum>
+    </source>
+
+
+	<!-- test mixture of timeticks and photons.-->
+    <source name="d2tester">
+        <nestedSource sourceRef="timetick15s"/>
+        <nestedSource sourceRef="default_test"/>
+    </source>
+
+
    <!-- standard particle generater used as a default -->
     <source name="default_test" flux="1.0">
           <spectrum>

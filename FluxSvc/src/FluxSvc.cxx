@@ -57,7 +57,6 @@ std::list<std::string> FluxSvc::fluxNames()const{
 }
 
 StatusCode FluxSvc::source(std::string name, IFlux*& flux) {
-    
     std::list<std::string> source_list( fluxNames() );
     std::list<std::string> source_list2( SpectrumFactoryTable::instance()->spectrumList() );
     
