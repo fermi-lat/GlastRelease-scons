@@ -17,7 +17,7 @@
 
 #include "ntupleWriterSvc/INtupleWriterSvc.h"
 #include "CalRecon/CsIClusters.h"
-
+#include "CalRecon/CalRecLogs.h"
 
 
 
@@ -40,7 +40,7 @@ public:
 private:
     std::string m_tupleName;
 	CsIClusterList* m_cls;
-
+	CalRecLogs* m_crl;
     INTupleWriterSvc *m_ntupleWriteSvc;
 
 };
@@ -99,11 +99,12 @@ StatusCode CalNtupleAlg::execute() {
 
 
 	double fit_ener,fitalpha,fitlambda,profchi2,eleak,start;
-
+	float energy_sum;
 	int nClust = m_cls->num();
 	for ( int icl = 0; icl<nClust;icl++){
 		CsICluster* cl = m_cls->Cluster(icl);
-		float energy_sum = cl->energySum();
+		energy_sum = cl->energySum();
+		float zpos = (cl->position()).z();
 		const std::vector<double>& eneLayer = cl->getEneLayer();
 		const std::vector<Vector>& posLayer = cl->getPosLayer();
 		fit_ener = cl->getFitEnergy();
@@ -117,11 +118,34 @@ StatusCode CalNtupleAlg::execute() {
 		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_Energy_Sum", energy_sum);
 		
 		const std::string name_eLayer = "Cal_eLayer";
-		const char* digit[8]={"1","2","3","4","5","6","7","8"};
+		const char* digit[8]={"0","1","2","3","4","5","6","7"};
 		for (int layer=0; layer<8; layer++)
 		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), (name_eLayer+digit[layer]).c_str(), eneLayer[layer]);
 	
+		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_Z", zpos);
+
 	}
+
+	m_crl = SmartDataPtr<CalRecLogs>(eventSvc(),"/Event/CalRecon/CalRecLogs"); 
+	if (m_crl == 0){ sc = StatusCode::FAILURE;
+	
+	        log << MSG::ERROR << "CalNtupleAlg failed to access CalRecLogs" << endreq;
+			return sc;
+	}
+	
+	int no_xtals=0;
+	int no_xtals_trunc=0;
+	int nLogs = m_crl->num();
+	for (int jlog = 0; jlog < nLogs ; jlog++) {
+		CalRecLog* recLog = m_crl->Log(jlog);
+
+		double eneLog = recLog->energy();
+		if(eneLog>0)no_xtals++;
+		if(eneLog>0.01*energy_sum)no_xtals_trunc++;
+	}
+
+		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_No_Xtals", no_xtals);
+		sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_No_Xtals_Trunc", no_xtals_trunc);
 
     return sc;
 }
