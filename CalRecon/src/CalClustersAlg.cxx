@@ -267,7 +267,6 @@ StatusCode CalClustersAlg::execute()
         }	
     }
     
-    int nLayers = m_CalnLayers;
     
     // call the Cluster tool to find clusters
     m_clusterTool->findClusters(m_calXtalRecCol);

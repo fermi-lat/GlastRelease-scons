@@ -58,7 +58,7 @@ protected:
     virtual Vector Fit_Direction(std::vector<Vector> pos,
                                      std::vector<Vector> sigma2,
                                      int nlayers) {
-        return (Vector)(0.,0.,0.);
+        return Vector(0.,0.,0.);
     }
 	
 private:

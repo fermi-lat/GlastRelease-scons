@@ -41,7 +41,7 @@ public:
 	* - Energy per layer is computed and stored in CalEnergyCorr in MeV
 	* - Barycenter per layer is also computed and stored in CalEnergyCorr
 	*/        
-    virtual StatusCode doEnergyCorr(double eTotal, Event::CalCluster* cluster) 
+    virtual StatusCode doEnergyCorr(double, Event::CalCluster*) 
 	{return StatusCode::SUCCESS;};
 	
     virtual StatusCode execute() {return StatusCode::SUCCESS;};
