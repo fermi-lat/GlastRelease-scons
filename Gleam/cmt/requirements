@@ -1,6 +1,6 @@
 package Gleam
 
-version  v5r7p2
+version  v5r8
 
 # $Id$
 
@@ -42,7 +42,7 @@ use RootDisplay v*
 use merit       v*
 use AnalysisNtuple v*
 
-# Allow FRED option -- start with fredOptions.txt
+# Allow FRED option -- see fredOptions.txt
 use  HepRepSvc *
 use  HepRepXml *
 use  HepRepCorba *
