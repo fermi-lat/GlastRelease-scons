@@ -21,7 +21,7 @@ public:
 
     virtual SmartDataPtr<NTuple::Tuple> getNTuple(const char *tupleName)=0;
 
-    virtual StatusCode addItem(const char *tupleName, const char *item, const float val, bool first)=0;
+    virtual StatusCode addItem(const char *tupleName, const char *item, const float val)=0;
 
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_INTupleWriterSvc; }

@@ -81,16 +81,13 @@ StatusCode writeJunkAlg::initialize() {
 
 //------------------------------------------------------------------------------
 StatusCode writeJunkAlg::execute() {
-    
-    static bool firstIteration = true;
- 
+     
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
     
     m_float = 700.05;
-    sc = ntupleWriteSvc->addItem(m_tupleName.c_str(), "MyFirstItem", m_float, firstIteration);
+    sc = ntupleWriteSvc->addItem(m_tupleName.c_str(), "MyFirstItem", m_float);
 
-    firstIteration = false;
     return sc;
 }
 

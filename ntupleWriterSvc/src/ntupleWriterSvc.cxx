@@ -200,9 +200,7 @@ StatusCode ntupleWriterSvc::addValue(const char *tupleName, const char *item, co
 }
 
 
-StatusCode ntupleWriterSvc::addItem(const char *tupleName, const char *item, const float val, bool first) {
-
-    if (!first) return addValue(tupleName, item, val);
+StatusCode ntupleWriterSvc::addItem(const char *tupleName, const char *item, const float val) {
 
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
@@ -210,9 +208,18 @@ StatusCode ntupleWriterSvc::addItem(const char *tupleName, const char *item, con
     SmartDataPtr<NTuple::Tuple> m_nt(ntupleSvc, m_tuples[tupleName]);
 
     if (m_nt) {
-        NTuple::Item<float>* ntItem = new NTuple::Item<float>;
-        m_nt->addItem(item, *ntItem);
-        *ntItem = val;
+        NTuple::Item<float> ntItem;
+        // Check to see if this item has already been added into the ntuple
+        sc = m_nt->item(item, ntItem);
+        if (sc.isFailure()) {
+            log << MSG::INFO << "Adding a new item to the ntuple " << item << endreq;
+            m_nt->addItem(item, ntItem);
+            ntItem = val;
+            sc = StatusCode::SUCCESS;
+        } else {
+            // Otherwise, this item is already in the ntuple and we are adding a new row
+            return addValue(tupleName, item, val);
+        }
     } else {
         return StatusCode::FAILURE;
     }

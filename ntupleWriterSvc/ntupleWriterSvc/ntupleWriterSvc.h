@@ -43,7 +43,7 @@ public:
    virtual SmartDataPtr<NTuple::Tuple> getNTuple(const char *tupleName);
 
    /// add a new item to an ntuple
-   virtual StatusCode addItem(const char *tupleName, const char *item, const float val, bool first);
+   virtual StatusCode addItem(const char *tupleName, const char *item, const float val);
 
 protected: 
 
