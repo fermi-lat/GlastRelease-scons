@@ -1,6 +1,6 @@
 package Gleam
 
-version v0r0p1
+version v0r0p2
 
 # This is a G4 development check-out package, that does not yet define an executable 
 # $Header$
@@ -12,7 +12,7 @@ use GaudiSys    v9*
 
 use XMLEXT      v2r2 
 use GlastPolicy v4r3 
-use xml         v4r1p1 
+use xml         v4r1p2 
 use xmlUtil     v2r8
 use facilities  v2r1 
 use geometry    v3
