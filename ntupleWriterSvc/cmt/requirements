@@ -1,5 +1,5 @@
 package ntupleWriterSvc
-version v3r4p2
+version v3r5
 
 #$Id$
 author H. Kelly <heather@heapop.gsfc.nasa.gov>
@@ -8,7 +8,7 @@ branches src mgr doc
 use GlastPolicy v*
 use facilities v2r*
 use GaudiInterface * IExternal
-use RootPolicy *
+use ROOT * IExternal
 
 apply_pattern package_include
 apply_pattern packageShr
