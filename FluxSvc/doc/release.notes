@@ -5,9 +5,10 @@
  * Coordinator: T.Burnett, S. Robinson
 
 
-   21-jul-04  v6r13p5 TK  proper use of LOAD_FACTORY_ENTRIES
-
- * 11-jun-04  v6r13p4 thb update astro version used
+ 
+ * 08-aug-04  v6r14   thb user-friendly start time
+  21-jul-04  v6r13p5 TK  proper use of LOAD_FACTORY_ENTRIES
+* 11-jun-04  v6r13p4 thb update astro version used
  * 11-may-04  v6r13  thb  GRB added: req file cleaned up
  * 15-jan-04  v6r12p3 thb separate flux a little better
  * 03-dec-03  v6r12p2 thb catch unrecognized flux names
