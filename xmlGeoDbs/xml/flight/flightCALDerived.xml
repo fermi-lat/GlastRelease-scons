@@ -394,12 +394,15 @@
         <const name="CALTopFrameUpper_dz" >
           <notes>Displacement for upper of 2 top frame pieces
                  within stay-clear</notes>
-          <half>
-            <minus>
-               <refer refTo="CALVertStayClear" />
-               <refer refTo="CALTopFrameUpperZ" />
-            </minus>
-          </half>
+          <minus>
+            <half>
+              <minus>
+                <refer refTo="CALVertStayClear" />
+                <refer refTo="CALTopFrameUpperZ" />
+              </minus>
+            </half>
+            <refer refTo="calFlangeGap" />
+           </minus>
         </const>            
 
         <const name="CALTopFrameLower_dz" >
@@ -612,14 +615,28 @@ part of CAL side wall) and carbon fiber cell about crystals.
 
         <const name="CALSideOuter_dz">
           <notes>Vertical offset of outer Al component of CAL side 
-                 walls </notes>
-          <half>
+                 walls.  Assume top of it lines up with top of frame. </notes>
+          <add>
+            <refer refTo="CALTopFrameUpper_dz" />
+            <half>
+              <minus>
+                <refer refTo="CALTopFrameUpperZ" />
+                <refer refTo="CALSideOuterZ" />
+              </minus>
+            </half>
+          </add>
+        </const>
+
+<!--
+
+        <half>
             <minus>
               <refer refTo="CALVertStayClear" />
               <refer refTo="CALSideOuterZ" />
             </minus>
           </half>
         </const> 
+-->
 
 <!-- Make sure values for CALStructural field are distinct from layer #'s -->
         <const name="eBottomFrame" uType="count" type="int">

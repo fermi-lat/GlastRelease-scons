@@ -77,16 +77,29 @@
           </quo>
         </const>
 
+        <const name="calFlangeGap" value="1.0" >
+          <notes>Gap between grid flange (back) and CAL top frame (front).
+          Just approximate until true number is confirmed.
+          </notes>
+        </const>
+    
+<!-- use the following instead if calTrackerGap can be believed
+          <minus>
+            <refer refTo="calTrackerGap" />
+            <refer refTo="NADGridFlangeZ" />
+          </minus>
+ -->
+
+
         <const name="CAL_dz" >
           <notes>Offset of CAL within single-tower volume</notes>
           <add>
             <uminus>
               <refer refTo="towersTotalHalfZ" />
             </uminus>
-            <quo>
+            <half>
               <refer refTo="CALVertStayClear" />
-              <const value="2" uType="count" />
-            </quo>
+            </half>
           </add>
         </const>
 
