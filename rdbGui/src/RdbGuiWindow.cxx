@@ -139,6 +139,7 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   uiTblColframe->setWidth(150);
   searchFrame->setHeight(200);
   //uiEditorframe->setHeight(300);
+  m_toolTip = new FXToolTip(getApp(), TOOLTIP_VARIABLE);
 
   // Editor initialization
   //  @filename = 'untitled.sql'

@@ -27,6 +27,7 @@ private:
   FXMenuPane                     *uiFilemenu;
   FXMenuPane                     *uiSessmenu;
   FXMenuPane                     *uiActionmenu;
+  FXToolTip                      *m_toolTip;               // controls tooltip behaviour
   FXComboBox                     *m_uiDBSelection;         // Showing current connection
   TableColumnList                *uiTblColList;            // List of tables and columns
   QueryFrame                     *searchFrame;             // Frame to perform queries
