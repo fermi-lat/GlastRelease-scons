@@ -10,7 +10,7 @@ del dirstor.txt
 
 cd %RECONROOTDATAROOT%\reconRootData
 
-%ROOT_PATH%\bin\rootcint -f reconRootDataCint.cxx -c -I%DIGIROOTDATAROOT% CalCluster.h CalRecon.h CalRangeRecData.h CalXtalRecData.h ReconEvent.h TkrCandHit.h TkrCandTrack.h TkrCovMat.h TkrFitHit.h TkrHitPlane.h TkrParams.h TkrRecon.h TkrSiCluster.h TkrTrack.h TkrVertex.h ReconLinkDef.h
+%ROOT_PATH%\bin\rootcint -f reconRootDataCint.cxx -c -I%DIGIROOTDATAROOT% AcdRecon.h CalCluster.h CalRecon.h CalRangeRecData.h CalXtalRecData.h ReconEvent.h TkrCandHit.h TkrCandTrack.h TkrCovMat.h TkrFitHit.h TkrHitPlane.h TkrParams.h TkrRecon.h TkrSiCluster.h TkrTrack.h TkrVertex.h ReconLinkDef.h
 
 REM Return to the original directory
 call %RECONROOTDATAROOT%\changeDir.bat

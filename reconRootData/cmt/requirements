@@ -1,5 +1,5 @@
 package reconRootData
-version v3r1
+version v3r2
 
 use GlastPolicy v4r*
 use digiRootData v3r*
@@ -29,7 +29,7 @@ private
 setup_script dorootcint
 
 #define the list of header files to be used in rootcint
-macro root_headers "CalCluster.h CalRecon.h CalRangeRecData.h CalXtalRecData.h ReconEvent.h TkrCandHit.h TkrCandTrack.h TkrCovMat.h TkrFitHit.h TkrHitPlane.h TkrParams.h TkrRecon.h TkrTrack.h TkrVertex.h ReconLinkDef.h"
+macro root_headers "AcdRecon.h CalCluster.h CalRecon.h CalRangeRecData.h CalXtalRecData.h ReconEvent.h TkrCandHit.h TkrCandTrack.h TkrCovMat.h TkrFitHit.h TkrHitPlane.h TkrParams.h TkrRecon.h TkrTrack.h TkrVertex.h ReconLinkDef.h"
 
 # on unix use a document to make rootcint part of the build process
 make_fragment recon_dorootcint_header
@@ -42,6 +42,7 @@ library  reconRootData \
       TkrCovMat.cxx TkrHitPlane.cxx TkrSiCluster.cxx \
       TkrParams.cxx TkrTrack.cxx TkrVertex.cxx \
       CalRecon.cxx CalRangeRecData.cxx CalCluster.cxx CalXtalRecData.cxx \
+      AcdRecon.cxx \
       ../reconRootData/*.cxx \
       ${reconRootData_headers}
 

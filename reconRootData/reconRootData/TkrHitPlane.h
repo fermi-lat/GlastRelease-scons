@@ -80,7 +80,7 @@ private:
 
     TkrCovMat  m_Qmaterial;   // Covariance matrix due to multiple scatter
 
-    ClassDef(TkrHitPlane,1)
+    ClassDef(TkrHitPlane,2)
 };
 
 typedef std::vector<TkrHitPlane>                 TkrHitPlaneVector;
