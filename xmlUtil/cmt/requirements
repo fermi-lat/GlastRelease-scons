@@ -1,11 +1,11 @@
 # $Header$
 package xmlUtil
-version v2r8p6
+version v2r9
 
 use facilities v2r*
 use xml        v4r*
-use XMLEXT     v2r*
-use GlastPolicy  v4r*
+
+use GlastPolicy  v5*
 use xmlGeoDbs   v1r*
 
 include_dirs "${XMLUTILROOT}"
