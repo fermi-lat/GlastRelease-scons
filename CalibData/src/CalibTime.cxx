@@ -48,7 +48,7 @@ namespace CalibData {
   }
 
   ITime::DimensionedTime CalibTime::seconds() const {
-    ITime::DimensionedTime dim = m_nano * 1000000000.0;
+    ITime::DimensionedTime dim = m_nano / 1000000000.0;
     dim += m_time;
     return dim;
   }
