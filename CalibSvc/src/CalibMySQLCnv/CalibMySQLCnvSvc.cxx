@@ -3,6 +3,7 @@
 #include <cstdio>
 
 #include "CalibMySQLCnvSvc.h"
+#include "CalibSvc/ICalibRootSvc.h"   // for def. of CALIBROOT_StorageType
 #include "calibUtil/Metadata.h"
 
 #include "CalibData/CalibBase.h"
@@ -705,7 +706,7 @@ StatusCode  CalibMySQLCnvSvc::decodeDescription(unsigned int description,
     type = XML_StorageType;
   }
   else if (description == calibUtil::Metadata::FMTRoot) {
-    type = ROOT_StorageType;
+    type = CALIBROOT_StorageType;
   }
   else {       // unsupported
     log << MSG::ERROR << "unsupported storage type " << description << endreq;
