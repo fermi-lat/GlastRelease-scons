@@ -11,7 +11,6 @@
 #include "Gaudi/Kernel/DataObject.h"
 #include "gui/DisplayRep.h"
 
-
 extern const CLID& CLID_CalRecLogs;
 
 
@@ -38,6 +37,7 @@ public:
 
 	//construct
 	CalRecLog(int ilayer, detGeo::axis iview, int ilog);
+	CalRecLog(int ilayer, detGeo::axis iview, int ilog, idents::ModuleId mod);
 	void setNegEnergy(CalBase::RANGE r, double e)  {m_negEnergy[r] = e;}
 	void setPosEnergy(CalBase::RANGE r, double e)  {m_posEnergy[r] = e;}
 	void setNegEnergy(double e)                    {m_nEnergy = e;}

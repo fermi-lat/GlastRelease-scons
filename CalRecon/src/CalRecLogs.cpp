@@ -6,6 +6,13 @@
 // #include "reconstruction/CsIClusters.h"
 
 //----------------- CalRecLog ------------------
+//################################################
+CalRecLog::CalRecLog(int ilayer, detGeo::axis v, int icolumn,idents::ModuleId mod) : 
+CalADCLog(ilayer,v,icolumn,mod)
+//################################################
+{
+	clear();
+}
 
 //################################################
 CalRecLog::CalRecLog(int ilayer, detGeo::axis v, int icolumn) : 
@@ -27,12 +34,14 @@ double CalRecLog::asymmetry() const
 void CalRecLog::writeOut() const
 //################################################
 {
-
-	std::cout << " ID " << logID() <<  "-" << layer() << view() << column() << " ";
-	std::cout << " E-+ " << energy() << " " << negEnergy() << " " << posEnergy() ;
-	std::cout << " Asy " << asymmetry();
-	std::cout << " Pos " << position().x() << " " << position().y() << " " << position().z();
-	std::cout << "\n";
+	if(energy()>0){
+		std::cout << " ID " << logID() <<  " - "<< modId()<<" " << layer()<<" "<< view()
+				  <<" " << column() << " ";
+		std::cout << " E-+ " << energy() << " " << negEnergy() << " " << posEnergy() ;
+		std::cout << " Asy " << asymmetry();
+		std::cout << " Pos " << position().x() << " " << position().y() << " " << position().z();
+		std::cout << "\n";
+	}
 }
 //######################################################
 void CalRecLog::draw(gui::DisplayRep& v) const
@@ -78,12 +87,24 @@ void CalRecLog::clear()
 void CalRecLogs::ini()
 //######################################
 {
+	int nModX = calorimeterGeo::numModulesX();
+	int nModY = calorimeterGeo::numModulesY();
+	
 	int nLayers = calorimeterGeo::numLayers();
 	int nLogs   = calorimeterGeo::numLogs();
-	for (int ilayer = 0; ilayer < nLayers; ilayer++) {
-		for (int ilog = 0; ilog < nLogs; ilog++) {
-			m_List.push_back(new CalRecLog(ilayer,detGeo::X,ilog));
-			m_List.push_back(new CalRecLog(ilayer,detGeo::Y,ilog));
+	int nViews  = calorimeterGeo::numViews();
+	for (int iy = 0; iy < nModY; iy++){		
+		for (int ix = 0; ix < nModX; ix++){
+			idents::ModuleId mod(ix,iy);
+			
+			for (int ilayer = 0; ilayer < nLayers; ilayer++) {
+				for (int v=0; v < nViews; v++){
+					detGeo::axis view = detGeo::makeAxis(v);
+					for (int ilog = 0; ilog < nLogs; ilog++) {
+						m_List.push_back(new CalRecLog(ilayer,view,ilog,mod));
+					}
+				}
+			}
 		}
 	}
 }

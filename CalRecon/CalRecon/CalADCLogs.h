@@ -16,6 +16,7 @@ public:
 
 	// construct
 	CalADCLog(int ilayer, int iview, int column);
+	CalADCLog(int ilayer, int iview, int column, idents::ModuleId mod);
 	~CalADCLog() {};
                 
 	void setNegADC(CalBase::RANGE r, double v)   {m_ADC[CalBase::NEG][r] = v;}

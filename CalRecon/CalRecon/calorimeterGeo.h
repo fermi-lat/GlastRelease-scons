@@ -3,7 +3,7 @@
 #define CALORIMETERGEO_H 1
 
 #include "TkrRecon/detGeo.h"
-
+#include "idents/ModuleId.h"
 
 //----------------------------------------------
 //
@@ -19,10 +19,13 @@ class calorimeterGeo
 {
 public:
 
+	static int numModulesX()    {return m_nmodx;}
+	static int numModulesY()    {return m_nmody;}
 	static int numViews()     {return m_nviews;}
 	static int numLayers()    {return m_nlayers;}
 	static int numLogs()      {return m_nLogs;}
 
+	static double moduleWidth()  {return m_modWidth;}
 	static double Z0()          {return m_Z0;}
 	static double layerWidth()  {return m_layerWidth;}
 	static double layerHeight() {return m_layerHeight;}
@@ -34,16 +37,21 @@ public:
 
 	static detGeo getLayer(int ilayer, detGeo::axis a);
 	static detGeo getLog(int ilayer, detGeo::axis a, int ilog); 
+	static detGeo getLog(int ilayer, detGeo::axis a, int ilog, idents::ModuleId mod); 
 
 
 
 
 private:
 
+	static int m_nmodx;
+	static int m_nmody;
 	static int m_nviews;
 	static int m_nlayers;
 	static int m_nLogs;
 
+	static double m_modWidth;
+	
 	static double m_Z0;
 
 	static double m_layerWidth;

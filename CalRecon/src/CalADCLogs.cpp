@@ -2,9 +2,17 @@
 #include "CalRecon/CalADCLogs.h"
 #include "CalRecon/calorimeterGeo.h"
 // #include "Event/messageManager.h"
+//######################################
+CalADCLog::CalADCLog(int ilayer, int iview, int icolumn)
+:CalLogID(ilayer,iview,icolumn)
+//######################################
+{
+	clear();
+}
 
 //######################################
-CalADCLog::CalADCLog(int ilayer, int iview, int icolumn):CalLogID(ilayer,iview,icolumn)
+CalADCLog::CalADCLog(int ilayer, int iview, int icolumn, idents::ModuleId mod)
+:CalLogID(ilayer,iview,icolumn, mod)
 //######################################
 {
 	clear();
@@ -23,7 +31,7 @@ void CalADCLog::writeOut() const
 //################################################
 {
 
-	std::cout << logID() << " " << layer() << view() << column() << " ";
+	std::cout << logID() << " " << modId() << layer() << view() << column() << " ";
 	std::cout << " PED ";
 	for (int iside = 0; iside < CALNSIDES; iside++) {
 		for (int irange = 0; irange < CALNRANGES; irange++) 
@@ -36,12 +44,19 @@ void CalADCLog::writeOut() const
 void CalADCLogs::ini()
 //######################################
 {
+	int nModX = calorimeterGeo::numModulesX();
+	int nModY = calorimeterGeo::numModulesY();
 	int nLayers = calorimeterGeo::numLayers();
 	int nLogs   = calorimeterGeo::numLogs();
-	for (int ilayer = 0; ilayer < nLayers; ilayer++) {
-		for (int ilog = 0; ilog < nLogs; ilog++) {
-			m_List.push_back(new CalADCLog(ilayer,detGeo::X,ilog));
-			m_List.push_back(new CalADCLog(ilayer,detGeo::Y,ilog));
+	for (int iy = 1; iy <= nModY; iy++){		
+		for (int ix = 1; ix <= nModX; ix++){
+			idents::ModuleId mod(ix,iy);
+			for (int ilayer = 0; ilayer < nLayers; ilayer++) {
+				for (int ilog = 0; ilog < nLogs; ilog++) {
+					m_List.push_back(new CalADCLog(ilayer,detGeo::Y,ilog,mod));
+					m_List.push_back(new CalADCLog(ilayer,detGeo::X,ilog,mod));
+				}
+			}
 		}
 	}
 }
