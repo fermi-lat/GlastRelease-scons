@@ -5,6 +5,7 @@
 @verbatim
  * package manager:T.Burnett
 
+ 10-jul-2003: v3r1p1 LSR remove SiliconPlaneGeometry, attach standard GlastDetSvc, TkrGeometrySvc
  07-jul-2003: v3r1   THB display by material enabled (attempt to pick detail level not quite right)
  05-jul-2003: v3r0p1 THB unix fixes
  04-jul-2003: v3     THB Move MC display reps (pos hits, integrating hits, tracks) from Recon and G4Generator

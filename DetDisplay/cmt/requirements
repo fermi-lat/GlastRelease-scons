@@ -1,5 +1,5 @@
 package DetDisplay
-version v3r1
+version v3r1p1
 
 author T. Burnett <tburnett@u.washington.edu>
 
@@ -8,6 +8,7 @@ branches src cmt doc
 use GlastSvc
 use GuiSvc
 use geomrep
+use TkrUtil
 
 # this only for particle properties to get charge
 use FluxSvc
