@@ -10,6 +10,8 @@ apply_pattern package_include
 
 
 #=============================================================
+public use facilities
+
 private
 
 
@@ -18,8 +20,6 @@ use GlastEvent
 use xml
 use CLHEP
 use geometry
-use facilities
-
 
 
 # get flags to build shared library
