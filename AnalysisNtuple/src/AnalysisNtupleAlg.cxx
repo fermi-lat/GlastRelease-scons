@@ -156,7 +156,24 @@ StatusCode AnalysisNtupleAlg::initialize(){
         log << "AnalysisNtuple called" << endreq;
     }
     log << endreq;
-    std::cout << "AnalysisNtuple called" << std::endl;
+
+    if (!m_tupleName.empty()) {
+                
+        if(m_ntupleSvc->addItem(m_tupleName.c_str(), "NumCalls", 0).isFailure()) {
+            log << MSG::ERROR << "AddItem failed" << endreq;
+            return fail;
+        }
+
+        int size = m_toolvec.size();
+        for( int i =0; i<size; ++i){
+            if(m_toolvec[i]->traverse(m_visitor, false)==IValsTool::Visitor::ERROR) {
+                log << MSG::ERROR << m_toolvec[i] << " traversal failed" << endreq;
+                return fail;
+            }
+        }
+    }
+
+    log << MSG::INFO << "AnalysisNtuple set with " << m_toolvec.size() << " tools" << endreq;
     
     return sc;
 }
@@ -167,6 +184,14 @@ StatusCode AnalysisNtupleAlg::execute()
     StatusCode fail = StatusCode::FAILURE;
     
     MsgStream   log( msgSvc(), name() );
+
+    /* test for missing first event
+    if (m_count==0) {
+        m_ntupleSvc->storeRowFlag(false);
+        m_count++;
+        return sc;
+    }
+    */
     
     if (!m_tupleName.empty()) {
         
@@ -176,7 +201,7 @@ StatusCode AnalysisNtupleAlg::execute()
             return fail;
         }
         ++m_count;
-
+        
         int size = m_toolvec.size();
         for( int i =0; i<size; ++i){
             if(m_toolvec[i]->traverse(m_visitor)==IValsTool::Visitor::ERROR) {
