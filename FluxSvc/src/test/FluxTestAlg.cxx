@@ -261,7 +261,7 @@ void FluxTestAlg::addToTotalExposure(std::vector<FluxTestAlg::exposureSet> toBeA
 
 void FluxTestAlg::displayExposure(){
     //make the file
-    std::ofstream out_file("data.dat", std::ios::app);
+    std::ofstream out_file("data.dat", std::ios::ate);
 
     int i,j;
     for(i=0 ; i<180 ; i++){
