@@ -208,7 +208,7 @@ void CHIMESpectrum::setPosition(double lat, double lon) {
     // fluxes
 
     m_lat = lat;
-    m_lon = lon;
+    m_lon = lon>0? lon : lon+360.;
     
     // Integrated flux in the power law tail above the table.
     m_upper = -0.115*1000.*m_en.back()*m_normfact*fluxes[74]
