@@ -1,6 +1,11 @@
 /** @file release.notes
  * package Gleam
  * package manager:T.Burnett
+* v2r2p3 THB 03-jul-02
+     use GlastPolicy         v4r5p1 
+     use xmlGeoDbs           v1r5p3
+     use Recon               v2r2p4
+     use CalRecon            v5r7p1  
 
 * v2r2p2 THB 27-jun-02
      use EXTLIB             v2r4p3
