@@ -183,6 +183,9 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol)
 
     acdDoca();
 
+    log << MSG::DEBUG << "DOCA: " << m_doca << " "
+        << "ActDist: " << m_act_dist << endreq;
+
     m_acdRecon->initialize(m_totEnergy, m_tileCount, m_gammaDoca, m_doca, 
         m_act_dist, m_minDocaId, m_rowDocaCol, m_energyCol);
 
