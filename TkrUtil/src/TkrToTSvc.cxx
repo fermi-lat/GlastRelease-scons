@@ -196,6 +196,5 @@ StatusCode TkrToTSvc::doInit()
 StatusCode TkrToTSvc::finalize() {
     
     MsgStream log(msgSvc(), name());
-    log <<MSG::INFO << "Finalize" << endreq;
     return StatusCode::SUCCESS;
 }

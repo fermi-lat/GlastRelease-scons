@@ -114,8 +114,12 @@ public:
     virtual void moveCluster(int tower, int layer, int view, int ladder,
         HepPoint3D& point) const = 0;
     /// move the recon hit by the alignment consts
-    virtual void moveReconHit(int tower, int layer, int view, int ladder,
-        HepPoint3D& point, HepVector3D dir) const = 0;
+    virtual void moveReconPoint(
+        HepPoint3D& point, HepVector3D dir, int layer, int view, int tower) const = 0;
+    /// move the recon hit by the alignment consts
+    virtual HepVector3D deltaReconPoint(
+        HepPoint3D& point, HepVector3D dir, int layer, int view, 
+        int tower=-1) const = 0;
     /// Get the volId and the local coordinates for the point to be aligned
     virtual idents::VolumeIdentifier getGeometryInfo(int layer, int view, 
         HepPoint3D globalPoint, HepPoint3D& alignmentPoint) const = 0;
