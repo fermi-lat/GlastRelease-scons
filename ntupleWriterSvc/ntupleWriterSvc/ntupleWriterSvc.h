@@ -50,7 +50,11 @@ public:
    /// add a new item to an ntuple
    virtual StatusCode addItem(const char *tupleName, const char *item, double val);
 
-     /// special version that adds a <EM>pointer</EM> to an item
+   /**
+        @param tupleName name of the tuple 
+        @param itemName 
+        @param val  pointer to the value, which must be defined 
+   */
     virtual StatusCode addItem(const std::string & tupleName, const std::string& itemName, const double* val);
 
    /// force writing of the ntuple to disk

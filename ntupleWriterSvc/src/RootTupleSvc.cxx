@@ -55,7 +55,7 @@ public:
         const char *item, double val){return StatusCode::FAILURE;};
 
     /** @brief Adds a <EM>pointer</EM> to an item -- only way to fill this guy
-    @param tupleName - ignored
+    @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
     @param itemName - name of the tuple column
     @param pval - pointer to a double value
     */
@@ -87,9 +87,10 @@ private:
     StringProperty m_treename;
     StringProperty m_title;
 
-    /// the ROOT stuff: a file and a tree to put into it
-    TTree * m_tree;
-    TFile *  m_tf;
+    /// the ROOT stuff: a file and a a set of trees to put into it
+    TFile * m_tf;
+
+    std::map<std::string, TTree *> m_tree;
 
     int m_trials; /// total number of calls
     bool m_defaultStoreFlag;
@@ -138,8 +139,9 @@ StatusCode RootTupleSvc::initialize ()
     incsvc->addListener(this, "EndEvent", 0);
 
     // -- set up the tuple ---
-    m_tf = new TFile(filename.c_str(),"RECREATE");
-    m_tree = new TTree( m_treename.value().c_str(),  m_title.value().c_str() );
+    m_tf   = new TFile( m_filename.value().c_str(), "RECREATE");
+    // with the default treename, and default title
+    m_tree[m_treename.value().c_str()] = new TTree( m_treename.value().c_str(),  m_title.value().c_str() );
 
     m_floats.reserve(250); // a little weakness: if larger than this, trouble
     return status;
@@ -148,9 +150,16 @@ StatusCode RootTupleSvc::initialize ()
 StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
                                  const std::string& itemName, const double* val)
 {
+     MsgStream log(msgSvc(),name());
     StatusCode status = StatusCode::SUCCESS;
     m_floats.push_back(0);
-    m_tree->Branch(itemName.c_str(), &m_floats.back(), itemName.c_str());
+    std::string treename=tupleName.empty()? m_treename.value() : tupleName;
+    if( m_tree.find(treename)==m_tree.end()){
+        // create new tree
+        m_tree[treename]=new TTree(treename.c_str(), m_title.value().c_str());
+        log << "Creating new tree " << treename << endreq;
+    }
+    m_tree[treename]->Branch(itemName.c_str(), &m_floats.back(), itemName.c_str());
     m_pdoubles.push_back(val);
     return status;
 }
@@ -181,7 +190,11 @@ void RootTupleSvc::endEvent()  // must be called at the end of an event to updat
         double t = static_cast<float>(**pit);
         *fit++ = static_cast<float>(**pit);
     }
-    m_tree->Fill();
+
+    for( std::map<std::string, TTree*>::iterator it = m_tree.begin(); it!=m_tree.end(); ++it){
+        TTree* t = it->second;
+        t->Fill();
+    }
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::queryInterface(const IID& riid, void** ppvInterface)  {
@@ -200,22 +213,29 @@ StatusCode RootTupleSvc::finalize ()
 {
     // open the message log
     MsgStream log( msgSvc(), name() );
-    if( m_tree->GetEntries() ==0 ) {
 
-        log << MSG::INFO << "No entries added to the tuple: not writing it" << endreq;
+    for( std::map<std::string, TTree*>::iterator it = m_tree.begin(); it!=m_tree.end(); ++it){
+        TTree* t = it->second; 
 
-    }else{
-        log << MSG::INFO << "Writing the tuple " << m_filename.value() << " with " 
-            << m_tree->GetEntries() << " rows (" << m_trials << " total events)"<< endreq;
-        m_tree->Print(); // make a summary
-        m_tree->Write();
+        if( t->GetEntries() ==0 ) {
 
-        TDirectory *saveDir = gDirectory; 
-        m_tf->cd(); 
-        m_tf->Write(0,TObject::kOverwrite); 
-        m_tf->Close(); 
-        saveDir->cd();
+            log << MSG::INFO << "No entries added to the TTree \"" << it->first <<"\" : not writing it" << endreq;
 
+        }else{
+            log << MSG::INFO << "Writing the TTree \"" << it->first<< "\" in file "<<m_filename.value() 
+                << " with " 
+                << t->GetEntries() << " rows (" << m_trials << " total events)"<< endreq;
+            t->Print(); // make a summary
+            t->Write();
+        }
     }
+
+    TDirectory *saveDir = gDirectory; 
+    m_tf->cd(); 
+    m_tf->Write(0,TObject::kOverwrite); 
+    m_tf->Close(); 
+    saveDir->cd();
+
+
     return StatusCode::SUCCESS;;
 }

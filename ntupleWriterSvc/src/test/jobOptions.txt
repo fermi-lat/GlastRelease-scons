@@ -33,7 +33,7 @@ NTupleSvc.Output = {"TESTALG DATAFILE='testAlg.root' OPT='NEW'"};
 ApplicationMgr.EvtMax = 20;
 
 RootTupleSvc.filename="test.root";
-RootTupleSvc.treename="2";
+RootTupleSvc.treename="Tree_1"; // the default to use with a blank name
 RootTupleSvc.title="test";
 RootTupleSvc.defautStoreFlag=false; // can set true.
 

@@ -83,6 +83,10 @@ StatusCode writeJunkAlg::initialize() {
     }
     m_rootTupleSvc->addItem("","count", &m_count);
     m_rootTupleSvc->addItem("","square", &m_square);
+
+    // test of a second tree in the same file
+    m_rootTupleSvc->addItem("tree_2","count", &m_count);
+    m_rootTupleSvc->addItem("tree_2","square", &m_square);
     return sc;
 }
 
