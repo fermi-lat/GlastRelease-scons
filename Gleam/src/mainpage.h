@@ -86,7 +86,7 @@ Since there is no code, there are no specific job options
 $Heading:$
 <hr>
 @section notes release notes
-@include release.notes
+release.notes
 @section requirements requirements
 @include requirements
 

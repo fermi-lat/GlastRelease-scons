@@ -1,9 +1,12 @@
 /** @file release.notes
- * @brief package Gleam <pre>
+ * @brief package Gleam
+ * @verbatim
  * package manager:T.Burnett
  * $Id$
+
+* v5r1p1 LSR 10-mar-03   Add GlastPropagatorSvc to basicOptions for new TkrRecon, AnalysisNtuple
 * v5r1 THB   03-mar-03   Provide AnalysisNtuple   
-* v5r0p6 THB 03-feb-03   Add G4GeometryScv.
+* v5r0p6 THB 03-feb-03   Add G4GeometrySvc.
 * v5r0p5 THB 26-jan-03   Clean up joboptions a bit.
 
 * v5r0  
@@ -388,5 +391,5 @@
  * v0r1   22-mar-02 THB new gui, recon, xmlgeodbs
  * v0r0p1 22-mar-02 THB unix fixes
  * v0     21-mar-02: THB Initial version
- * </pre>
+ * @endverbatim
  */
