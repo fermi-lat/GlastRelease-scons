@@ -2,6 +2,7 @@
  * @brief package Event<pre>
  * package manager:T.Burnett
  *
+ *         04-dec-02 HMK add ObjectVector.h to AcdDigi explictly\n
  * v9r5p1  28-nov-02 THB fixe to TrkFitPlane 
  * v9r5    21-nov-02 THB fixes to TrkFitPlane and CalDigi
  * v9r4    09-oct-02 LSR mods to RelTable, TkrPatCand, other Tkr stuff for new reltables 
