@@ -82,7 +82,7 @@ StatusCode test_TkrDigi::execute()
             log << MSG::INFO << endreq << "Detailed dump of 1st event: " << endreq << endreq;
             int ndigi = 0;
             Event::TkrDigiCol::const_iterator pTkrDigi = digiCol->begin();
-            for (pTkrDigi; pTkrDigi!= digiCol->end(); pTkrDigi++) {
+            for (; pTkrDigi!= digiCol->end(); pTkrDigi++) {
                 log <<MSG::INFO << "Digi " << ndigi++ << " ";
                 // output the digi proper:  " << digi " no longer works because
                 // "digi" now returns an integer sort order
