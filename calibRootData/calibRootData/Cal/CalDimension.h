@@ -48,3 +48,4 @@ namespace calibRootData {
     ClassDef(calibRootData::CalDimension, 1)
   };
 }
+#endif
