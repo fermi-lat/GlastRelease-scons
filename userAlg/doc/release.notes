@@ -3,6 +3,7 @@
 
 @verbatim
 
+ * v6r4p2 11-jan-05  JRB fixed EOL on requirements, Too bad about release.notes! 
  * v6r4p1 10-dec-05  THB xml to xmlBase	
  * v6r4   26-nov-04  THB turn off usersource demo, crashes, don't have time to understand
  * v6r3   20-oct-04  MK  Example using propagator
