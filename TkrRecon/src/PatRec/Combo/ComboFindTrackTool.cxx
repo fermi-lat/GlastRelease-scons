@@ -914,9 +914,12 @@ ComboFindTrackTool::Candidate::Candidate(double e, Point x, Vector t, double chi
     double size_penalty = 0.; 
 	Event::TkrTrackHitVecItr pln_pointer = m_track->begin();   
     int i_Hit = 0; 
-    while(pln_pointer != m_track->end()) {
+    while(pln_pointer != m_track->end()) 
+    {
         
-		Event::TkrTrackHit* plane = *pln_pointer;
+		Event::TkrTrackHit* plane = *pln_pointer++;
+
+        if (!(plane->getStatusBits() & Event::TkrTrackHit::HITONFIT)) continue;
    
         Event::TkrClusterPtr cluster = plane->getClusterPtr();
 
@@ -933,7 +936,6 @@ ComboFindTrackTool::Candidate::Candidate(double e, Point x, Vector t, double chi
             else break;
         }
         i_Hit++;
-        pln_pointer++;
     }
 	int top_plane     = geometry->getPlane(x.z());
     int first_layer   = 17 - geometry->getLayer(top_plane);
