@@ -28,7 +28,7 @@ namespace calibRootData {
     unsigned getNRow() const {return m_nRow;}
     unsigned getNCol() const {return m_nCol;}
     unsigned getNLayer() const {return m_nLayer;}
-    unsigned getXtal() const {return m_nXtal;}
+    unsigned getNXtal() const {return m_nXtal;}
     unsigned getNFace() const {return m_nFace;}
     unsigned getNRange() const {return m_nRange;}
     unsigned getNDacCol() const {return m_nDacCol;}

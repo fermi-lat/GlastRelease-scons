@@ -30,12 +30,11 @@ namespace calibRootData {
 
     ///  Transparent access to CalDimension part of class.  
     CalDimension* getDimension() {return &m_dim;}
+    std::vector<CalGain>& getGains() {return m_gains;}
     
   private:
 
     std::vector<CalGain> m_gains;
-
-    // Should this be a TRef pointing to an independent CalDimension instead?
     CalDimension         m_dim;
    
     ClassDef(calibRootData::CalGainCol, 1)
