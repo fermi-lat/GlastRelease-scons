@@ -8,6 +8,8 @@ use Event *
 use GlastSvc *
 use CalUtil v1r*
 use geometry v3*
+use AnalysisNtuple v0*
+use Recon v*
 
 apply_pattern packageShr
 
