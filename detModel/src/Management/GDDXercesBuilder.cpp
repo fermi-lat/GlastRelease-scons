@@ -148,6 +148,7 @@ GDDconst* GDDXercesBuilder::buildConst(DOM_Node* e){
       c->setNote(std::string(xml::Dom::transToChar(e->getFirstChild().getNodeValue())));
       return c;
     }
+    else return 0;
   }//end if
   else{
     //e is a const element    
@@ -424,6 +425,7 @@ GDDanyPosition* GDDXercesBuilder::buildPosition(DOM_Node* e){
     /// \todo Add posRPhiZ
     return 0;
   }
+  else  return 0; // default
 }
 
 
@@ -474,7 +476,7 @@ GDDstack* GDDXercesBuilder::buildStack(DOM_Node* e){
   GDDstack* b = new GDDstack(st);
 
   DOM_NamedNodeMap attributelist=e->getAttributes();
-  for (unsigned int i=0;i<attributelist.getLength();i++){
+  for (i=0;i<attributelist.getLength();i++){
     if (attributelist.item(i).getNodeType()!=Comment){
       DOM_Node currentAttribute=attributelist.item(i);
    

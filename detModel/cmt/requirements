@@ -1,24 +1,29 @@
 package detModel
+# $Header$
+version v3
 
-use xml v3
-use xmlUtil v2
-use XMLEXT v2
-
+use xmlUtil 
 
 include_dirs "${DETMODELROOT}"
 
 apply_pattern package_linkopts
 
-library detModel -no_share\
-     *.cxx \
-     *.cpp \
+private
+
+macro headers "" WIN32\
+     ../detModel/Management/*.h \
+     ../detModel/Sections/*.h \
+     ../detModel/Constants/*.h \
+     ../detModel/Utilities/*.h 
+
+library detModel -no_share $(headers) \
      Management/*.cpp \
      Sections/*.cpp \
      Constants/*.cpp \
-     Utilities/*.cpp \
+     Utilities/*.cpp 
 	
     
-private
+
 
 application test main.cxx 
 

@@ -68,7 +68,7 @@ void  GDDVRMLSectionsVisitor::visitSection(GDDsection* section)
 {
   float dimX, dimY, dimZ;
   unsigned int i;
-  GDDvolume* vol;
+  GDDvolume* vol=0;
 
   if (actualVolume == "")
     {
