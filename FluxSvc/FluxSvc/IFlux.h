@@ -71,6 +71,9 @@ public:
     virtual Rotation CELTransform(double time)const=0;
        
     virtual void addFactory(std::string name, const ISpectrumFactory* factory )=0;
+
+    virtual int gpsTime()const=0;
+
 #if 0
     // get a description of the parameters that can be modified, and reference to a list of them
     virtual std::string paramlist(std::vector<double>& params)=0; 
