@@ -1,5 +1,5 @@
 package AcdRecon
-version v1r6p0
+version v1r6p1
 
 branches src doc
 
@@ -21,7 +21,7 @@ apply_pattern packageShr
 
 #=============================================================
 private
-use RootIo v6r*
+use RootIo v*
 
 public
 apply_pattern package_test
