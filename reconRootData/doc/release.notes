@@ -2,6 +2,8 @@
  package reconRootData
  package manager: H. Kelly
 
+v3r0p1    23-may-2002: HMK Patch for linux \n
+v3r0      22-may-2002: HMK Fix up TKR & CAL classes for Gleam\n
           20-may-2002: HMK new TKR and CAL classes \n
 v1r3      28-jun-2001: HMK renamed LogID to LogId \n
 */
