@@ -14,6 +14,9 @@
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/ObjectList.h"
 
+#include "idents/TowerId.h"
+#include "idents/GlastAxis.h"
+
 /*!
 * \class TkrDigi
 * \author Leon Rochester
@@ -37,10 +40,12 @@ public:
     TkrDigi() {};
     
     //! constructor with layer, tower and ToT, but with an empty list of strips
-    TkrDigi(int l, int v, int t, int* tot)
-        : m_layer (l), m_view (v), m_tower (t) {
+    TkrDigi(int l, idents::GlastAxis::axis v, idents::TowerId t, int* tot)
+        : m_bilayer (l), m_view (v), m_tower (t) {
         m_tot[0] = *tot;
         m_tot[1] = *(++tot);
+
+		m_lastController0Strip =  -1;
     };
     //! Destructor
     virtual ~TkrDigi() {
@@ -50,50 +55,51 @@ public:
     virtual const CLID& clID() const   { return TkrDigi::classID(); }
     static const CLID& classID()       { return CLID_TkrDigi; }
     
-    //! Retrieve methods 
-    //! Retrieve layer info
-    int layer() const {return m_layer;} 
+     //! Retrieve tower info
+	idents::TowerId getTower() const {return m_tower;}
+   //! Retrieve layer info
+    int getBilayer() const {return m_bilayer;} 
     //! Retrieve view info
-    int view () const {return m_view;}
-    //! Retrieve tower info
-    int tower() const {return m_tower;}
+	idents::GlastAxis::axis getView () const {return m_view;}
     //! Retrieve ToT info
-    int ToT( int i) const {return m_tot[i];}
+    int getToT( int i) const {return m_tot[i];}
+	//! Get ToT for a given strip
+	int getToTForStrip(int strip){ return m_tot[(strip<=m_lastController0Strip ? 0 : 1 )]; }
     //! number of hits
-    int num() const{ return m_hits.size(); }
+    int getNumHits() const{ return m_hits.size(); }
     //! Get the pointer to the ith hit strip
-    int  hit( int i ) const { return m_hits[i];}
+    int getHit( int i ) const { return m_hits[i];}
     
-    //! Set Methods
-    //! Set layer
-    void setLayer( int layer) {m_layer = layer;}
-    //! set view
-    void setView( int view) {m_view = view;}
-    //! Set tower
-    void setTower( int tower ) {m_tower = tower;}
-    //! Set the ToT array
-    void setToT ( int i, int tot) {m_tot[i] = tot;}
-    //! Add a hit to the hit list
-    void addHit( int strip ) {m_hits.push_back(strip);}
+     //! Add a controller 0 hit to the hit list (keeps track of highest strip)
+    void addC0Hit( int strip ) {
+		m_hits.push_back(strip);
+		if (m_lastController0Strip < strip) m_lastController0Strip = strip;
+	}
+
+     //! Add a controller 1 hit to the hit list
+    void addC1Hit( int strip ) {
+		m_hits.push_back(strip);
+	}
+   	
+    //! begin iterator
+    const_iterator begin()const {return m_hits.begin();}
+    //! end iterator
+    const_iterator end()const {return m_hits.end();}
     
     //! Serialize the object for reading
     virtual StreamBuffer& serialize( StreamBuffer& s );
     //! Serialize the object for writing
     virtual StreamBuffer& serialize( StreamBuffer& s ) const;
     //! Fill the ASCII output stream
-    virtual std::ostream& fillStream( std::ostream& s ) const;
-    
-    //! begin iterator
-    const_iterator begin()const {return m_hits.begin();}
-    //! end iterator
-    const_iterator end()const {return m_hits.end();}
+    virtual std::ostream& fillStream( std::ostream& s ) const;        
     
 private:
     
-    int m_layer;
-    int m_view;
-    int m_tower;
+	idents::TowerId m_tower;
+    int m_bilayer;
+	idents::GlastAxis::axis m_view;
     int m_tot[2];
+	int m_lastController0Strip;
     HitList m_hits;
 };
 
@@ -101,11 +107,12 @@ private:
 //! Serialize the object for writing
 inline StreamBuffer& TkrDigi::serialize( StreamBuffer& s ) const {
     ContainedObject::serialize(s);  
-    s << m_layer
+    s << m_bilayer
         << m_view
-        << m_tower
+        << m_tower.id()
         << m_tot[0]
         << m_tot[1]
+		<< m_lastController0Strip
         << m_hits.size();
     const_iterator ih;
     for (ih = m_hits.begin(); ih!=m_hits.end(); ih++) {
@@ -119,12 +126,16 @@ inline StreamBuffer& TkrDigi::serialize( StreamBuffer& s ) const {
 inline StreamBuffer& TkrDigi::serialize( StreamBuffer& s )       {
     ContainedObject::serialize(s);
     int size;
-    s >> m_layer
-        >> m_view
-        >> m_tower
+	int view, tower;
+    s >> m_bilayer
+        >> view
+        >> tower
         >> m_tot[0]
         >> m_tot[1]
+		>> m_lastController0Strip
         >> size;
+	m_tower = idents::TowerId(tower);
+	m_view  = (view==0 ? idents::GlastAxis::X : idents::GlastAxis::Y);
     
     m_hits.resize( size, 0);
     std::vector<int>::iterator ih;
@@ -141,11 +152,13 @@ inline std::ostream& TkrDigi::fillStream( std::ostream& s ) const {
     int j;
     int size = m_hits.size();
     s << "class TkrDigi :" << std::endl
-        << "Layer: " << m_layer 
+        << "Layer: " << m_bilayer 
         << " view: " << m_view
-        << " tower: " << m_tower
-        << " ToT: " << m_tot[0] << " " << m_tot[1] << std::endl
-        << "Number of hits strips: " << size << std::endl;
+        << " tower: " << m_tower.id()
+        << " ToT: " << m_tot[0] << " " << m_tot[1]
+		<< " last controller 0 strip " << m_lastController0Strip
+		<< std::endl
+        << " Number of hits strips: " << size << std::endl;
     
     const_iterator ih;
     for(ih = m_hits.begin(), j=0; ih != m_hits.end();ih++,j++) {
@@ -156,12 +169,7 @@ inline std::ostream& TkrDigi::fillStream( std::ostream& s ) const {
     return s;
 }
 
-//! Definition of all container types of TkrDigi
-/*! These are the containers that will go into the TDS.
-*/
-
-template <class TYPE> class ObjectVector;
-template <class TYPE> class ObjectList;
+//! Definition of all container type of TkrDigi
 
 typedef ObjectVector<TkrDigi> TkrDigiCol;
 
