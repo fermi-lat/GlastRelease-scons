@@ -94,12 +94,16 @@ StatusCode AcdReconAlg::execute() {
 	
     // run the reconstruction
     reconstruct(m_acdDigiCol);
+
+    m_acdDigiCol = 0;
 	
     return sc;
 }
 
 
 StatusCode AcdReconAlg::finalize() {    
+    clear();
+    m_acdDigiCol = 0;
     return StatusCode::SUCCESS;
 }
 
@@ -164,17 +168,17 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     
     for (acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
         
-		// toss out hits below threshold
+        // toss out hits below threshold
         if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue; 
-		
+        
         m_tileCount++;
         double tileEnergy = (*acdDigiIt)->getEnergy();
         m_totEnergy += tileEnergy;
         idents::AcdId id = (*acdDigiIt)->getId();
-		
-		// Temporarily populate reconstructed energy collection with digi energy
-		m_idCol.push_back(id);
-		m_energyCol.push_back(tileEnergy);
+        
+        // Temporarily populate reconstructed energy collection with digi energy
+        m_idCol.push_back(id);
+        m_energyCol.push_back(tileEnergy);
     }
 	
     log << MSG::DEBUG << "num Tiles = " << m_tileCount << endreq;
