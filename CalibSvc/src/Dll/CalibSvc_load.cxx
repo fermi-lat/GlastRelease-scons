@@ -15,8 +15,8 @@ DECLARE_FACTORY_ENTRIES(CalibSvc) {
   DECLARE_SERVICE(CalibMySQLCnvSvc);
   DECLARE_SERVICE(CalibXmlCnvSvc);
 
-  //  DECLARE_CONVERTER(XmlBaseCnv);  
   DECLARE_CONVERTER(XmlTest1Cnv);
+  DECLARE_CONVERTER(XmlBadStripsCnv);
 
   // Following doesn't exist yet.
   //  DECLARE_SERVICE(CalibRootCnvSvc);
