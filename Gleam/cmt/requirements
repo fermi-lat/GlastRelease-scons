@@ -21,7 +21,8 @@ use xml         v4r1p4
 use xmlUtil     v2r8p1
 
 use geometry    v3
-use astro       v0r1p2 
+
+use astro       v0r1p2
 
 # low-level graphics
 
@@ -55,7 +56,7 @@ use FluxDisplay  v2r2
 use G4Generator         v4r3p3
 
 #digitization
-use CalDigi              v1r2p4
+use CalDigi              v1r2p5
 use TkrDigi              v1r6
 use AcdDigi              v1r4
 
