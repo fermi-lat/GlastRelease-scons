@@ -112,13 +112,13 @@ StatusCode CalRecLogsAlg::retrieve()
 
 DataObject* pnode=0;
 
-    sc = eventSvc()->retrieveObject( "/Event/TkrRecon", pnode );
+    sc = eventSvc()->retrieveObject( "/Event/CalRecon", pnode );
     
     if( sc.isFailure() ) {
-        sc = eventSvc()->registerObject("/Event/TkrRecon",new DataObject);
+        sc = eventSvc()->registerObject("/Event/CalRecon",new DataObject);
         if( sc.isFailure() ) {
             
-            log << MSG::ERROR << "Could not create TkrRecon directory" << endreq;
+            log << MSG::ERROR << "Could not create CalRecon directory" << endreq;
             return sc;
         }
     }
@@ -128,8 +128,7 @@ DataObject* pnode=0;
 	m_CalRawLogs = SmartDataPtr<CalADCLogs>(eventSvc(),"/Event/CalRecon/CalADCLogs"); 
 
 
-//	sc = eventSvc()->retrieveObject("/Event/TkrRecon/CalADCLogs",m_CalRawLogs);
-	 sc = eventSvc()->registerObject("/Event/TkrRecon/CalRecLogs",m_CalRecLogs);
+	 sc = eventSvc()->registerObject("/Event/CalRecon/CalRecLogs",m_CalRecLogs);
 	return sc;
 }
 
