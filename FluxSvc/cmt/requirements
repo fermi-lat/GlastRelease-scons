@@ -15,7 +15,7 @@ use GlastSvc    v9r*
 use astro       v0r*
 use ntupleWriterSvc v3r*
 
-use flux        v8r*
+use flux        v8r*  -no_auto_imports
 # _____________________________________________________________
 
 apply_pattern  package_include
@@ -26,6 +26,23 @@ macro  source  "*.cxx"  WIN32 "*.h *.cxx *.txt"
 
 public
 
+<<<<<<< requirements
+#  linker library ..Lib
+library FluxSvcLib  -import=flux \ 
+                    $(source)    \
+                    $(FluxSvc_headers)
+
+#  component library 
+library  FluxSvc    Dll/*.cxx
+
+apply_pattern  package_Llinkopts
+
+apply_pattern  ld_library_path
+macro_append   FluxSvc_stamps  "$(FluxSvcDir)/FluxSvcLib.stamp"
+ 
+apply_pattern  package_Cshlibflags
+apply_pattern  package_Lshlibflags
+=======
 #  linker library ..Lib
 library FluxSvcLib  $(source)    \
                     $(FluxSvc_headers)
@@ -45,7 +62,8 @@ apply_pattern  package_Lshlibflags
 #  $(FlUXSVCROOT)/cdf/particleproperty.cdf
 set LHCBDBASE  "${FLUXSVCROOT}"
 
-#  build the test
-apply_pattern  package_test
+#  build the test 
+apply_pattern  package_test import=flux 
 macro_append   test_FluxSvc_files ""    WIN32 "test/*.xml"
+
 
