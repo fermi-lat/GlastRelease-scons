@@ -152,12 +152,11 @@ bool ParticleTransporter::StepToNextPlane()
   // Dependencies: Requires initialization via SetInitStep
   // Restrictions and Caveats: None
 
-  G4Navigator*  navigator      = m_TransportationManager->GetNavigatorForTracking();
-  G4bool        RelativeSearch = false;
-  bool          success        = false;
-  G4ThreeVector curPoint       = stepInfo.back().GetEndPoint();
-  G4ThreeVector curDir         = stepInfo.back().GetDirection();
-  G4double      arcLen         = stepInfo.back().GetArcLen();
+  G4Navigator*  navigator = m_TransportationManager->GetNavigatorForTracking();
+  bool          success   = false;
+  G4ThreeVector curPoint  = stepInfo.back().GetEndPoint();
+  G4ThreeVector curDir    = stepInfo.back().GetDirection();
+  G4double      arcLen    = stepInfo.back().GetArcLen();
 
   //Set the minimum step
   double fudge       = 0.00001; // 0.01 um
@@ -276,7 +275,6 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
             double maxStep      = 1000.;    // Variables used by G4
             double safeStep     = 0.1;      // 
             double stepOverDist = 1000. * kCarTolerance;
-            int    numTries     = 0;
 
             // Create a point which we hope is "just over the boundary"
             G4ThreeVector overPoint = curPoint + stepOverDist * curDir;
@@ -301,17 +299,6 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
                 if (globalToLocal.IsRotated()) trackDir = globalToLocal.TransformAxis(curDir);
 
                 double trkToExitAng = trackDir.dot(localExitNrml);
-
-                // This is really a debugging loop... should not be happening anymore
-                if (numTries++ > maxTries)
-                {
-                    int checkitout = 0;
-
-                    if (numTries > maxTries + 4)
-                    {
-                        std::cout << "G4Propagator: in danger of stuck particle" << std::endl;
-                    }
-                }
 
                 // Parallel track case
                 if (fabs(trkToExitAng) < kCarTolerance)
@@ -731,8 +718,7 @@ void ParticleTransporter::clearStepInfo()
   // Dependencies: None
   // Restrictions and Caveats: None
 
-  StepPtr stepPtr = stepInfo.begin();
-
+//  StepPtr stepPtr = stepInfo.begin();
 //  while(stepPtr < stepInfo.end()) delete *stepPtr++;
 
   stepInfo.clear();
@@ -766,10 +752,19 @@ idents::VolumeIdentifier ParticleTransporter::constructId(const Hep3Vector& posi
 
     // Look up current volume and set tree above it
     G4VPhysicalVolume*  pCurVolume = navigator->LocateGlobalPointAndSetup(curPoint, 0, true, false);
+
+    // Let's be sure that we are inside a valid volume (ie inside of GLAST - it can happen!)
+    if (pCurVolume == 0) 
+    {
+        std::stringstream errorStream;
+        errorStream << "ParticleTransporter::constructId given invalid initial conditions. pos: " 
+                    << position << " dir: " << direction;
+        throw std::domain_error(errorStream.str());
+    }
+
     G4TouchableHistory* touchable  = navigator->CreateTouchableHistory();
 
-    using  idents::VolumeIdentifier;
-    VolumeIdentifier ret = constructId(touchable);
+    idents::VolumeIdentifier ret = constructId(touchable);
 
     delete touchable;
 

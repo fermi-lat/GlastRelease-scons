@@ -49,7 +49,7 @@ public:
                           const G4AffineTransform& trans,
                           const G4VPhysicalVolume* vol) :
                           position(coords), direction(dir), arcLen(step), 
-                          stepVolume(vol), globalToLocal(trans) {};
+                          globalToLocal(trans), stepVolume(vol)  {};
        ~TransportStepInfo() {};
 
         G4ThreeVector            GetEntryPoint()    const {return position;}
