@@ -16,6 +16,7 @@ class SpheRep : public gui::DisplayRep {
 public:
     SpheRep(const Sphe& s):m_sphe(s){};
     void update();
+    const Sphe& returnSphe(){return m_sphe;}
 private:
     const Sphe& m_sphe;
 };
