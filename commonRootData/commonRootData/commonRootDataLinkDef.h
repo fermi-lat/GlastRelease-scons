@@ -8,6 +8,6 @@
 #pragma link C++ class Relation+;
 #pragma link C++ class BaseException;
 #pragma link C++ class IndexOutOfBoundsException;
-#pragma link C++ class BadPointerException;
+//#pragma link C++ class BadPointerException;
 
 #endif
