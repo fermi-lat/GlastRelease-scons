@@ -159,12 +159,13 @@ protected:
   /**
      Utility for "leaf" converters to call
      @param    Root file to open for read
-     @param    Name of branch to be read in
-     @param    ref. to pCalib pointer which will be set to address of
+//     @param    Name of branch to be read in
+//     @param    ref. to pCalib pointer which will be set to address of
                read-in object
   */
-  StatusCode openRead(const std::string& fname, const std::string& branch,
-                      TObject*& pCalib);
+  //  StatusCode openRead(const std::string& fname, const std::string& branch,
+  //                      TObject*& pCalib);
+  StatusCode openRead(const std::string& fname);
 
   /** Clean up when we've finished reading in */
   StatusCode closeRead();
@@ -179,26 +180,6 @@ protected:
   // the base converter.
   //////  virtual StatusCode readHeader(const DOM_Element&);
 
-  /*
-  /// Find first range element.  Derived classes which need it
-  /// must define their own implementation.
-  DOM_Element findFirstRange(const DOM_Element& docElt) {
-    return DOM_Element();}
-  //  DOM_Element findFirstRange(const DOM_Element& docElt);
-
-  /// Still another one to navigate XML file and find next set of range data
-  DOM_Element findNextRange(const DOM_Element& rangeElt) {
-    return DOM_Element();}
-  //  DOM_Element findNextRange(const DOM_Element& rangeElt);
-
-  /// Another one to find first dac collection element
-  DOM_Element findFirstDacCol(const DOM_Element& docElt);
-
-  /// Still another one to navigate XML file and find next dac collection
-  DOM_Element findNextDacCol(const DOM_Element& rangeElt);
-
-  CalibData::DacCol* processDacCol(DOM_Element dacColElt, unsigned* range);
-  */
 
   ICalibRootSvc* m_rootSvc;
   ICalibMetaCnvSvc* m_metaSvc;

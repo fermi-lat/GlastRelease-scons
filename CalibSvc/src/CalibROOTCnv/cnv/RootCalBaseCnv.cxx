@@ -67,3 +67,12 @@ StatusCode RootCalBaseCnv::fillRoot(CalibData::CalibBase* pTDSObj,
   return StatusCode::SUCCESS;
 }
 
+ StatusCode RootCalBaseCnv::readRootObj(const std::string& branch, 
+                                        TObject*& pCalib) {
+  TTree* pTree = (TTree*)m_inFile->Get("Calib");
+
+  pTree->SetBranchAddress(branch.c_str(), &pCalib);
+  pTree->GetEvent();
+  return StatusCode::SUCCESS;
+ }
+

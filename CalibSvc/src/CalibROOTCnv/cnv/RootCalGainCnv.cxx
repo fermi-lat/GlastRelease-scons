@@ -141,14 +141,20 @@ StatusCode RootCalGainCnv::i_createObj(const std::string& fname,
   MsgStream log(msgSvc(), "RootCalGainCnv");
   calibRootData::CalGainCol* pCol = new calibRootData::CalGainCol;
   TObject* pTObj = pCol;
-  StatusCode sc = openRead(fname, "calibRootData::CalGainCol", pTObj);
+  //  StatusCode sc = openRead(fname, "calibRootData::CalGainCol", pTObj);
+  // Note: RootBaseCnv::openRead now just opens the file, doesn't read in 
+  // an "event" from the "Calib" tree.  
+  StatusCode sc = openRead(fname);
   if (!sc.isSuccess() ) {
     delete pCol;
     return sc;
   }
-
+  
+  // Read in our object
+  sc = readRootObj("calibRootData::CalGainCol", pTObj);
   // Must have dimensions even before we call constructor for TDS obj
   calibRootData::CalDimension* pDim = pCol->getDimension();
+
   if (!pDim) {
     delete pCol;
     return StatusCode::FAILURE;

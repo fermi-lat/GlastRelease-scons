@@ -97,10 +97,13 @@ StatusCode RootBaseCnv::createRoot(const std::string& /* fname */,
       << endreq;
   return StatusCode::FAILURE;
 }
-
+/*
 StatusCode RootBaseCnv::openRead(const std::string& fname, 
                                  const std::string& branch,
                                  TObject*& pCalib) {
+*/
+StatusCode RootBaseCnv::openRead(const std::string& fname) { 
+
   MsgStream log(msgSvc(), "RootBaseCnv");
 
   // Check fname isn't empty
@@ -133,17 +136,21 @@ StatusCode RootBaseCnv::openRead(const std::string& fname,
 
   m_inFile->cd();             //    Maybe will need this
 
+  //  ##### This may only be appropriate for CAL files ####
+  //  ##### Probably should do it in RootBaseCalCnv
+  /*
   TTree* pTree = (TTree*)m_inFile->Get("Calib");
 
   pTree->SetBranchAddress(branch.c_str(), &pCalib);
   pTree->GetEvent();
-
+ 
   //  Is this really what I need to do?  Or just a shortcut
   // while I concentrate on Write?
   // Maybe it is -- at this point information has been read from file
   // into TObject.
   m_inFile->Close();
   m_saveDir->cd();
+  */
   return StatusCode::SUCCESS;
 }
 
