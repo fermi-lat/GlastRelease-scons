@@ -79,13 +79,13 @@ class McIntegratingHit : virtual public ContainedObject {
     const energyDepositMapId& itemizedEnergyId() const;
     energyDepositMapId& itemizedEnergyId();
     /// Retrieve energy from array for minimal tree
-    double energyArray( Particle p );
-    const double* energyArray() { return m_energyArray; };
+    double energyArray( Particle p ) const;
+    const double* energyArray() const { return m_energyArray; };
    
     /// Update all energyInfos
     void setEnergyItems( const energyDepositMap& value );
     void setEnergyItems( double totalEnergy, const double *energyArr,
-        const HepPoint3D &moment1, const HepPoint3D &moment2) ;
+        const HepPoint3D &moment1, const HepPoint3D &moment2);
 
     /// Remove all energyInfos
     void clearEnergyItems();
