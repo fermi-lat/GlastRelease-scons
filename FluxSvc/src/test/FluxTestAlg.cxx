@@ -132,7 +132,7 @@ StatusCode FluxTestAlg::execute() {
         partName = m_flux->particleName();
     }else{
         mc::McParticleCol::iterator elem = (*pcol).begin();
-        d = (*elem)->initialFourMomentum().v();
+        d = (*elem)->initialFourMomentum().v()*10;
         p = (*elem)->finalPosition();
 
         energy = (*elem)->initialFourMomentum().e();

@@ -11,9 +11,9 @@ ApplicationMgr.DLLs   += { "FluxSvc" };
 FluxSvc.source_lib = {"$(FLUXSVCROOT)/xml/source_library.xml"};
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
 
-//ApplicationMgr.TopAlg = {"FluxAlg","FluxTestAlg"};
+ApplicationMgr.TopAlg = {"FluxAlg","FluxTestAlg"};
 //ApplicationMgr.TopAlg = {"BFEMTestAlg"};
-ApplicationMgr.TopAlg = {"FluxTestAlg"};
+//ApplicationMgr.TopAlg = {"FluxAlg"};
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
