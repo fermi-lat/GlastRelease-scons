@@ -35,6 +35,12 @@ application testMgr  test/flux/testMgr.cxx *.cxx \
  Dll/*.cxx\
  ${FluxSvc_headers}
 
+application rootplots test/flux/rootplot.cxx test/flux/rootEnergyHist.cxx\
+ test/flux/rootHist.cxx test/flux/rootAngleHist.cxx\
+ *.cxx Dll/*.cxx\
+ ${FluxSvc_headers}
+
+
 macro_append FluxSvc_headers "" WIN32 "../xml/*.xml test/*.txt test/*.xml"
 # test program, using local joboptions
 public set JOBOPTIONS ${FLUXSVCROOT}/src/test/jobOptions.txt
