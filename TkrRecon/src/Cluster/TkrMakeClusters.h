@@ -12,9 +12,6 @@
 #include "TkrRecon/ITkrGeometrySvc.h"
 #include "TkrRecon/ITkrBadStripsSvc.h"
 
-#include <algorithm>
-
-
 /// large number, used as a sentinel in the strip list
 enum {bigStripNum = 0x7FFFFF};
 
@@ -32,7 +29,6 @@ enum {bigStripNum = 0x7FFFFF};
 class TkrMakeClusters
 {
 public:
-	
 	/// default constructor: passes pointers to services and classes, and makes the clusters
 	
 	/** The strategy for finding clusters is to merge the list 

@@ -21,7 +21,6 @@ extern const CLID& CLID_TkrClusters;
 */
 
 class TkrClusters : public DataObject
-//###################################################
 {
 public:
 	
