@@ -1,14 +1,11 @@
-//------------------------------------------------------------------------------
-//
-// Implementation of class :  MCEventCnv
-//
-// Author :                   
-//
-//------------------------------------------------------------------------------
+// File and Version Information:
 // $Header$
+//
+// Description:
+// Concrete converter for the McEvent header on the TDS /Event/MC
+
 #define CNV_MCEVENTCNV_CPP 
 
-// Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "MCEventCnv.h"
 
@@ -36,6 +33,8 @@ MCEventCnv::MCEventCnv(ISvcLocator* svc)
 
 StatusCode MCEventCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObject)
 {
+    // Purpose and Method:  Converter just creates an empty instance of MCEvent
+    //   for the TDS.  The data members will be initialized by other components.
 
     refpObject = new MCEvent();
     StatusCode sc=StatusCode::SUCCESS;

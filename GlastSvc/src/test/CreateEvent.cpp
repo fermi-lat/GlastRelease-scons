@@ -4,8 +4,6 @@
 
 //#define GlastApps_CreateEvent_CPP 
 
-
-// Include files
 #include "CreateEvent.h"
 
 #include "GaudiKernel/MsgStream.h"
@@ -17,7 +15,6 @@
 #include "Event/TopLevel/EventModel.h"
 #include "idents/VolumeIdentifier.h"
 #include "CLHEP/Geometry/Transform3D.h"
-//#include "Event/TopLevel/Event.h"
 #include "GaudiKernel/ObjectVector.h"
 
 #include "Event/MonteCarlo/McIntegratingHit.h"
@@ -27,7 +24,6 @@ const IAlgFactory& CreateEventFactory = Factory;
 
 //extern void GlastSvc_load();
 
-//------------------------------------------------------------------------------
 /// Algorithm parameters which can be set at run time must be declared.
 /// This should be done in the constructor.
 CreateEvent::CreateEvent(const std::string& name, ISvcLocator* pSvcLocator) :
@@ -36,7 +32,6 @@ Algorithm(name, pSvcLocator), m_detSvc(0), m_irfLoadSvc(0) {
 };
 
 
-//------------------------------------------------------------------------------
 /*! The "functional" part of the class: For the EmptyAlgorithm example they do
 nothing apart from print out info messages.
 NB in the initialize method: you must explicitly initialize the base class
@@ -91,8 +86,6 @@ StatusCode CreateEvent::initialize() {
     return StatusCode::SUCCESS;
 };
 
-
-//------------------------------------------------------------------------------
 StatusCode CreateEvent::execute() {
     
     StatusCode  sc = StatusCode::SUCCESS;
@@ -104,11 +97,8 @@ StatusCode CreateEvent::execute() {
 
     return sc;
 
-
-    //
 };
 
-//------------------------------------------------------------------------------
 StatusCode CreateEvent::finalize() {
     
     MsgStream log(msgSvc(), name());

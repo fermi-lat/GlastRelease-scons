@@ -1,4 +1,3 @@
-// $Header$
 #ifndef MEDIAVISITOR_H
 #define MEDIAVISITOR_H
 #include "detModel/Management/MaterialsVisitor.h"
@@ -6,6 +5,11 @@
 #include <fstream>
 #include <vector>
 
+/** @class MediaVisitor
+* @brief
+*
+* $Header$
+*/
 class MediaVisitor: public detModel::MaterialsVisitor {
 
  public:

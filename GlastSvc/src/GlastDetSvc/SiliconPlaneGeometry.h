@@ -1,4 +1,3 @@
-//$Header$
 
 #ifndef SiliconPlaneGeometry_H
 #define SiliconPlaneGeometry_H
@@ -6,33 +5,36 @@
 #include "CLHEP/Geometry/Vector3D.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "idents/VolumeIdentifier.h"
-/**
-    Static functions only for geometry of individual Si plane
-  */
+
+/** @class SiliconPlaneGeometry
+* @brief Static functions only for geometry of individual Si plane
+* 
+* $Header$
+*/
 class SiliconPlaneGeometry {
 public:    
     /// (-) if non-active or gap (P is in local system)    
     static double insideActiveArea (const HepPoint3D& p);  
-      
+    
     /// compute strip id from local coordinate
     static unsigned int stripId (double x);
-
-   /// location of strip ix in local coords, allows for non-integer strip number
+    
+    /// location of strip ix in local coords, allows for non-integer strip number
     static double localXDouble ( double x);    
-     
+    
     /// location of strip ix in local coords
     static double localX ( unsigned int ix); 
-
-	// Returns the coordinate in the plane from the ladder coordinate
-	static HepPoint3D siPlaneCoord( const HepPoint3D& p, idents::VolumeIdentifier id);
-	  
+    
+    // Returns the coordinate in the plane from the ladder coordinate
+    static HepPoint3D siPlaneCoord( const HepPoint3D& p, idents::VolumeIdentifier id);
+    
     /// insideActiveArea for local coords
     static double insideActiveArea(double x, double y); 
     
     /// insideActiveArea for local coord (one-D)
-	/// allows for different spacing in X and Y
+    /// allows for different spacing in X and Y
     static double insideActiveArea1D(double x, double spacing);
-
+    
     /// number of silicon dies across a single layer
     static unsigned int n_si_dies ();
     
@@ -64,11 +66,11 @@ public:
     /// width of dead area, aka guarg_ring
     static double guard_ring ();
     static double panel_width(); 
-
-	static void init(IGlastDetSvc * p_detSvc);
-
+    
+    static void init(IGlastDetSvc * p_detSvc);
+    
 private:
-
+    
     static double s_dice_width;
     static double s_ssd_gap;
     static double s_ladder_gap;
@@ -76,10 +78,10 @@ private:
     static double s_panel_width;
     static unsigned int s_stripPerWafer;
     static unsigned int s_n_si_dies;
-
-	static double s_waferSide;
-	static double s_waferActive;
-
+    
+    static double s_waferSide;
+    static double s_waferActive;
+    
 };
 
 #endif

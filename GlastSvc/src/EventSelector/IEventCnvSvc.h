@@ -1,27 +1,16 @@
-//  ====================================================================
-//  IEventCnvSvc.h
-//  --------------------------------------------------------------------
-//
-//  Package   : GlastSvc
-//
-//  Modified ISicbEventCnvSvc
-//
-//  ====================================================================
 #ifndef _IEventCnvSvc_H
 #define _IEventCnvSvc_H 1
 
-// Include files
 #include <string>
 #include "GaudiKernel/IInterface.h"
 
-/**
-
-    Description:
-    The event conversion service needs an additional interface 
-    used by the converters to declare their object path.
-
-    Dependencies:
-
+/** @class IEventCnvSvc
+* @brief The event conversion service needs an additional interface used 
+* by the converters to declare their object path.
+*
+* Based on ISicbEventCnvSvc
+*
+* $Header$
 */
 class IEventCnvSvc : virtual public IInterface      {
 public:

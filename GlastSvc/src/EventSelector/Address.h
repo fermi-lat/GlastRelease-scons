@@ -1,23 +1,19 @@
-// $Header$
 #ifndef Address_H
 #define Address_H 1
-
 
 #include <string>
 #include <vector>
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/GenericAddress.h"
 
-
 class IDataDirectory;
 
-
-// Externals
 extern unsigned const char SICB_StorageType;
-
 
 /** @class Address
  * @brief Definition of a GLAST address.
+ *
+ * Based on SICb's Address class.
  *
  * $Header$
  */
@@ -49,8 +45,7 @@ protected:
   References      m_refs;
   int m_recid;  //THB: does this make sense?
 public:
-  /// Validate address
-  //StatusCode validate();
+
   Address( unsigned char svc,const CLID& clid, const std::string& path);
   virtual ~Address()    {}
 };

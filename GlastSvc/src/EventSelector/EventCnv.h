@@ -11,12 +11,12 @@ template <class TYPE> class CnvFactory;
 
 
 /** @class EventCnv
- * @brief Concrete Converter for the Event header
+ * @brief Concrete converter for the Event header stored in the TDS /Event
  *
  * $Header$
  */ 
 
-class EventCnv : public BaseCnv { //public ItemCnv<Event>	    {
+class EventCnv : public BaseCnv { 
 
   friend class CnvFactory<EventCnv>;
 
@@ -32,8 +32,10 @@ protected:
 
   virtual ~EventCnv() { };
 
+  /// override the BaseCnv version to handle the conversion
   virtual StatusCode createObj(IOpaqueAddress* pAddress, DataObject*& refpObject);
 
+  /// override the BaseCnv version
   virtual StatusCode updateObj(int* data, Event::EventHeader* pObject);
 
 

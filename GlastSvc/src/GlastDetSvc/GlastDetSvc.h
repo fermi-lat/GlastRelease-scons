@@ -1,18 +1,11 @@
-// $Header$
-// 
-//  Original author: Sawyer Gillespie
-//                   hgillesp@u.washington.edu
-//
 
 #ifndef _H_GlastDetSvc_
 #define _H_GlastDetSvc_
 
-// includes
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IEvtSelector.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
-// forward declarations
 class Instrument;
 class GlastDetector;
 namespace xml { class IFile; }
@@ -21,7 +14,12 @@ class HepTransform3D;
 class HepPoint3D;
 namespace idents{class VolumeIdentifier;}
 
-/*!  This Gaudi service provides access to a tree of GlastDetector objects.
+/** @class GlastDetSvc
+* @brief This Glast-defined Gaudi service provides access to the DMmanager
+* which provides parameters and constants associated with the geometry.
+* 
+* @author Sawyer Gillespie
+* $Header$
 */
 class GlastDetSvc : public Service, 
     virtual public IGlastDetSvc
@@ -33,7 +31,6 @@ public:
     //!
     GlastDetSvc ( const std::string& name, ISvcLocator* al );
     
-    /// destructor
     virtual ~GlastDetSvc ();
 
     /// queryInterface - for implementing a Service this is necessary
@@ -101,7 +98,6 @@ public:
 
 private:
     
-    // Data Members
     Instrument*		m_instrument;
     std::string		m_xmlFile;
     std::string		m_iniFile;

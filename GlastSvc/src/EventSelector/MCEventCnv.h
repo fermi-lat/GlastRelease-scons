@@ -10,8 +10,8 @@ class MCEvent;
 // Abstract factory to create the converter
 template <class T> class CnvFactory;
 
-/** 
-* @class MCEventCnv
+/** @class MCEventCnv
+* @brief Concrete converter for the McEvent header on the TDS /Event/MC
 *
 * $Header$
 */

@@ -2,7 +2,7 @@
 //      $Header$
 //
 // Description:
-//      EventCnv is the concrete converter for the event header.
+//      EventCnv is the concrete converter for the event header on the TDS /Event
 //
 // Author(s):
 
@@ -22,20 +22,25 @@ const ICnvFactory& EventCnvFactory = s_factory;
 EventCnv::EventCnv(ISvcLocator* svc)
 : BaseCnv(classID(), svc)
 {
+    // Here we associate this converter with the /Event path on the TDS.
     declareObject("/Event", objType(), "PASS");
 }
 
 
-StatusCode EventCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObject) {
+StatusCode EventCnv::createObj(IOpaqueAddress* pAddress, 
+                               DataObject*& refpObject) {
+    // Purpose and Method:  This converter will create an empty EventHeader on
+    //   the TDS.
     refpObject = new Event::EventHeader();
     return StatusCode::SUCCESS;
 };
 
-StatusCode EventCnv::updateObj(int* iarray, Event::EventHeader* pEvent)             {
+StatusCode EventCnv::updateObj(int* iarray, Event::EventHeader* pEvent) {
+    // Purpose and Method:  This method does nothing other than announce it has
+    //   been called.
     MsgStream log(msgSvc(), "EventCnv");
     log << MSG::DEBUG << "EventCnv::updateObj" << endreq;
     return StatusCode::SUCCESS;
 }
-
 
 

@@ -1,18 +1,13 @@
-// $Header$
 #ifndef _GlastApps_HelloWorld_H
 #define _GlastApps_HelloWorld_H 1
 
-
-// Include files
 #include "GaudiKernel/Algorithm.h"
 
-
-// forward declarations
 class IGlastDetSvc;
 class IGlastIRFLoadSvc;
 
-/*! \class CreateEvent.cpp
-\brief Test algorithm to insure that the TDS is filled appropriately with MCACDHit, 
+/** @class CreateEvent.cpp
+* @brief Test algorithm to insure that the TDS is filled appropriately with MCACDHit, 
 MCCalorimeterHit and MCTKRHit data.
 
   Original Author:  Sawyer Gillespie
@@ -28,19 +23,16 @@ MCCalorimeterHit and MCTKRHit data.
     -# Make test the active project and compile if necessary
     -# Update the project settings for test, setting the working directory under Debug to ".."
     -# Hit "F5" or click on the Build menu and choose Debug
-  */
+* $Header$
+*/
 
 class CreateEvent : public Algorithm {
 
 public:
-  //! Constructor of this form must be provided
   CreateEvent(const std::string& name, ISvcLocator* pSvcLocator); 
 
-  //! mandatory
   StatusCode initialize();
-  //! mandatory
   StatusCode execute();
-  //! mandatory
   StatusCode finalize();
 
   StatusCode testMcClass();

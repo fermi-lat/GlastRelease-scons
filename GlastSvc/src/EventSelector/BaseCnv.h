@@ -20,7 +20,7 @@ extern unsigned const char SICB_StorageType;
 */
 class BaseCnv : public Converter      {
 protected:
-    /// Pointer to (enhanced) event conversion service interface
+    /// Pointer to event conversion service interface
     IEventCnvSvc*  m_CnvSvc;
     /// Leaf objects giving the locations of the objects in the data store
     std::vector<IEventCnvSvc::Leaf>   m_leaves;

@@ -1,3 +1,4 @@
+// File and Version Information:
 // $Header$
 // 
 //  Original author: Sawyer Gillespie
@@ -39,10 +40,6 @@ static MsgStream * s_log;
 // external declarations of the service identifiers
 // HSG - not necessary from the Gaudi example - extern const IID& IID_IGlastDetSvc;
 
-// ------------------------------------------------
-// Implementation of the GlastDetSvc class
-// ------------------------------------------------
-/// Standard Constructor
 GlastDetSvc::GlastDetSvc(const std::string& name,ISvcLocator* svc)
 : Service(name,svc)
 , m_instrument (0)
@@ -59,11 +56,9 @@ GlastDetSvc::GlastDetSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("xmlfile",     m_xmlfile="-");
     declareProperty("topVolume",   m_topvol="LAT");
     declareProperty("visitorMode", m_visitorMode="propagate");
-
-
     
 }
-/// Standard Destructor
+
 GlastDetSvc::~GlastDetSvc()  
 {
     // this is  repetetive in case finalize was
@@ -72,7 +67,6 @@ GlastDetSvc::~GlastDetSvc()
     finalize();
 }
 
-// queryInterface
 StatusCode  GlastDetSvc::queryInterface (const IID& riid, void **ppvIF)
 {
     if (IID_IGlastDetSvc == riid) {
@@ -85,7 +79,6 @@ StatusCode  GlastDetSvc::queryInterface (const IID& riid, void **ppvIF)
 }
 
 
-// initialize
 StatusCode GlastDetSvc::initialize () 
 {
     StatusCode  status = StatusCode::SUCCESS;
@@ -115,7 +108,6 @@ StatusCode GlastDetSvc::initialize ()
 }
 
 
-// finalize
 StatusCode GlastDetSvc::finalize ()
 {
     StatusCode  status = StatusCode::SUCCESS;
@@ -127,7 +119,6 @@ StatusCode GlastDetSvc::finalize ()
     return status;
 }
 
-// access the type of this service
 const IID&  GlastDetSvc::type () const {
     return IID_IGlastDetSvc;
 }

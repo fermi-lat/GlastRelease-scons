@@ -24,9 +24,7 @@
 #include "Address.h"
 #include "EventCnvSvc.h"
 
-//extern const IID& IID_ISicbEventCnvSvc;
 static const InterfaceID IID_IBaseCnv(902, 1 , 0); 
-//extern IID& IID_IBaseCnv;
 // RCS Id for identification of object version
 static const char* rcsid = "$Id$";
 
@@ -42,10 +40,13 @@ EventCnvSvc::EventCnvSvc(const std::string& name, ISvcLocator* svc)
 }
 
 StatusCode EventCnvSvc::initialize()     {
+    // Purpose and Method:  Setup GLAST's Event Converter Service.
+    //   Associate EventCnvSvc with the EventDataSvc
+    //   Associate the list of known converters with this EventCnvSvc.
+
     StatusCode status = ConversionSvc::initialize();
     if ( status.isSuccess() )   {
         ISvcLocator* svclocator = serviceLocator();
-        // Add known converters to the service: 
         IDataProviderSvc *pIDP = 0;
         // Set event data service
         status = service("EventDataSvc", pIDP, true);
@@ -56,16 +57,20 @@ StatusCode EventCnvSvc::initialize()     {
             return status;
         }
         
+        // Add known converters to the service: 
         ICnvManager::CnvIterator i, stop;
         for ( i = cnvManager()->cnvBegin(), stop = cnvManager()->cnvEnd(); i != stop; i++ )   {
             if ( repSvcType() == (*i)->repSvcType() )   {
-                StatusCode iret = addConverter( (*i)->objType() );        if ( !iret.isSuccess() )   {
+                StatusCode iret = addConverter( (*i)->objType() );        
+                if ( !iret.isSuccess() )   {
                     status = iret;
                 }
             }
         }
         
         // Now we have to configure the map of leaves
+        // Which should contain the association of converters with 
+        // paths on the TDS
         for (LeafMap::iterator k = m_leaves.begin(); k != m_leaves.end(); k++ )   {
             std::string path = (*k).first;
             for (LeafMap::iterator j = m_leaves.begin(); j != m_leaves.end(); j++ )   {

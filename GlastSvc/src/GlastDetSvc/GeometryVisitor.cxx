@@ -1,4 +1,9 @@
+// File and Version Information:
 // $Header$
+//
+// Description:
+// This is a concrete implementation of a "non recursive" sectionsVisitor 
+// that traverses the geometry.
 
 #include <string>
 
@@ -22,7 +27,6 @@
 
 #include <cassert>
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 GeometryVisitor::GeometryVisitor( IGeometry& geom, std::string visitorMode )
 : m_geom(geom)
 {
@@ -39,7 +43,6 @@ GeometryVisitor::GeometryVisitor( IGeometry& geom, std::string visitorMode )
 }
 
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void  GeometryVisitor::visitEnsemble(detModel::Ensemble* ensemble)
 {
     using namespace detModel;
@@ -87,7 +90,7 @@ void  GeometryVisitor::visitEnsemble(detModel::Ensemble* ensemble)
     }
     
 }
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 void  GeometryVisitor::visitBox(detModel::Box* b)
 {
     //IGeometry::DoubleVector params;
@@ -106,7 +109,7 @@ void  GeometryVisitor::visitBox(detModel::Box* b)
   m_idvec.clear();
 
 }
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 void  GeometryVisitor::visitTube(detModel::Tube* t)
 {
   IGeometry::VolumeType type;
@@ -123,7 +126,7 @@ void  GeometryVisitor::visitTube(detModel::Tube* t)
   m_params.clear();
   m_idvec.clear();
 }
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 void  GeometryVisitor::visitPosXYZ(detModel::PosXYZ* pos)
 {
     using detModel::IdField;
@@ -139,7 +142,7 @@ void  GeometryVisitor::visitPosXYZ(detModel::PosXYZ* pos)
     m_geom.popShape();
 }
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 void  GeometryVisitor::visitAxisMPos(detModel::AxisMPos* pos)
 {
     
@@ -172,13 +175,12 @@ void  GeometryVisitor::visitAxisMPos(detModel::AxisMPos* pos)
     }
 }
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void GeometryVisitor::cacheId(const detModel::IdField* id, int step )
 {
     //m_geom.id(id->getName(), id->getValue() + id->getStep()*step);
     m_idvec.push_back(id->getValue() + id->getStep()*step);
 }
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 void GeometryVisitor::cacheTransform(double x, double y, double z, double rx, double ry, double rz)
 {
     m_params.push_back(x);

@@ -1,4 +1,10 @@
+// File and Version Iinformation:
 // $Header$
+//
+// Description:
+//   
+//
+
 #define Address_cpp
 
 #include <iostream>

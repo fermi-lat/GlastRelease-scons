@@ -1,4 +1,6 @@
+// File and Version Information:
 // $Header$
+
 #include <vector>
 
 #include "MediaVisitor.h"

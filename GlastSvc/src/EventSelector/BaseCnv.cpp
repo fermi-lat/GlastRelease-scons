@@ -16,8 +16,6 @@
 
 #include "BaseCnv.h"
 
-
-//extern const IID& IID_ISicbEventCnvSvc;
 static const InterfaceID IID_IBaseCnv(902, 1 , 0); 
 
 BaseCnv::BaseCnv(const CLID& clid, ISvcLocator* svc)
@@ -26,8 +24,8 @@ BaseCnv::BaseCnv(const CLID& clid, ISvcLocator* svc)
     StatusCode sc;
     MsgStream log(msgSvc(), "BaseCnv");
     
-    // provide access to the Glast Detector Service, so that we may call the accept method
-    // from within our converters
+    // provide access to the Glast Detector Service, so that we may call the 
+    //  GlastDetSvc::accept method from within our converters
     IService *isvc=0;
     sc = serviceLocator()->getService ("GlastDetSvc", isvc, true);
     if (sc.isSuccess()) {
@@ -39,35 +37,41 @@ BaseCnv::BaseCnv(const CLID& clid, ISvcLocator* svc)
 }
 
 
-StatusCode BaseCnv::createRep(DataObject* pObject, IOpaqueAddress*& refpAddress)   {
+StatusCode BaseCnv::createRep(DataObject* pObject, 
+                              IOpaqueAddress*& refpAddress)   {
     // Purpose and Method: Convert the transient object to the requested 
     //     representation.  It is expected that derived classes will override
     //     this method.
     return StatusCode::FAILURE;
 }
 
-StatusCode BaseCnv::fillRepRefs(IOpaqueAddress* pAddress,DataObject* pObject)    {
+StatusCode BaseCnv::fillRepRefs(IOpaqueAddress* pAddress,
+                                DataObject* pObject)    {
     // Purpose and Method:  Resolve the references of the converted object.
     //     It is expected that derived classes will override this method.
     return StatusCode::FAILURE;
 }
 
-StatusCode BaseCnv::updateRep(IOpaqueAddress* pAddress, DataObject* pObject)   {
+StatusCode BaseCnv::updateRep(IOpaqueAddress* pAddress, 
+                              DataObject* pObject)   {
     // Purpose and Method:  Update the converted representation of a transient 
     //     object.  It is expected that derived classes will override this.
     return StatusCode::FAILURE;
 }
 
-// Update the references of an already converted object.
-StatusCode BaseCnv::updateRepRefs(IOpaqueAddress* pAddress, DataObject* pObject)   {
+StatusCode BaseCnv::updateRepRefs(IOpaqueAddress* pAddress, 
+                                  DataObject* pObject) {
+    // Purpose and Method:  Update the references of an already converted object.
+    //   It is expected that derived classes will override this method.
     return StatusCode::FAILURE;
 }
 
 
 StatusCode BaseCnv::initialize()   {
-    // Purpose and Method:  Perform statdard Converter initialization and
-    //     Cause the EventCnvSvc to make the appropriate calls to declareObject
-    //     for each converter loaded in this run.
+    // Purpose and Method:  Perform standard converter initialization.
+    //   Access the EventCnvSvc to create an association between converters 
+    //   and paths within the TDS, using the vector of leaves and the
+    //   declareObject methods available in each specific converter.
     StatusCode status = Converter::initialize();
     if ( status.isSuccess() )   {
         IService* isvc = 0;
@@ -89,13 +93,13 @@ StatusCode BaseCnv::finalize()   {
         m_CnvSvc->release();
         m_CnvSvc = 0;
     }
-    // Put in here SicbConverter initialization
     return Converter::finalize();
 }
 
-void BaseCnv::declareObject(const std::string& path, const CLID& cl, const std::string& bank, long par)  {
-    // Purpose and Method:  Save the path on the TDS corresponding to the
-    //     DataObject that the converter handles.
+void BaseCnv::declareObject(const std::string& path, const CLID& cl, 
+                            const std::string& bank, long par)  {
+    // Purpose and Method:  Save the path on the TDS, in the m_leaves vector, 
+    //   corresponding to the DataObject that the converter handles.
     m_leaves.push_back(IEventCnvSvc::Leaf(path, cl, bank, par));
 }
 

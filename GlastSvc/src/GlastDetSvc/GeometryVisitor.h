@@ -8,9 +8,10 @@
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 namespace detModel {class IdField; }
 
-/**
-* This is a concrete implementation of a "non recursive" sectionsVisitor that traverses
-*  the geometry.
+/** @class GeometryVisitor
+* @brief This is a concrete implementation of a "non recursive" sectionsVisitor 
+* that traverses the geometry.
+*
 * It does no analysis, passing stuff on to a helper class interface IGeometry.
 */
 class GeometryVisitor : public detModel::SectionsVisitor {
@@ -42,13 +43,13 @@ public:
     virtual void visitSeg(detModel::Seg*){}
     
 private:
-    //! typedefs for convenience
+    /// typedefs for convenience
     typedef std::vector<detModel::IdField*> IdVector;
     typedef std::vector<float> FloatVector;
 
     void cacheId(const detModel::IdField* id, int step);
     
-    //! the object to call back, passed in with the constructor
+    /// the object to call back, passed in with the constructor
     IGeometry& m_geom;
     IGeometry::DoubleVector m_params;
 
