@@ -25,4 +25,18 @@ Hyperbolic::distance( const Point&  ,const Vector& , int) const
   FATAL("not implemented");return 0;
 }
 
+Vector
+Hyperbolic::normal( const Point& ) const
+{
+  FATAL("not implemented");
+  return Vector();
+}
+
+void
+Hyperbolic::printOn( std::ostream& ) const
+{
+  FATAL("not implemented");
+  return;
+}
+
 
