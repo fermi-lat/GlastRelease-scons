@@ -38,7 +38,7 @@ apply_pattern package_test
 # alternative test program that links stuff into the exe
 
 
-macro_append gui_linkopts "$(GuiSvc_lib) ${guiapp_linkopts} -u GuiSvc_loadRef  -ldl "\
+macro_prepend gui_linkopts "$(GuiSvc_lib) ${guiapp_linkopts} -u GuiSvc_loadRef  -ldl "\
               WIN32 " ${guiapp_linkopts} $(GuiSvc_lib)  /include:_GuiSvc_loadRef "
 
 macro other_source "" WIN32 "test/*.txt test/*.xml *.h test/*.h" 
