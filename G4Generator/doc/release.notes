@@ -1,5 +1,8 @@
-//$Id$
-/*
+/** @file release.notes
+    @brief package G4Generator <pre>
+    $Id$
+*
+ * v4r4p2 02-dec-02 THB Display primary track independently
  * v4r4p1 06-nov-02 THB Refactoring of primary particle generation; support for ions
  * v4r4   10-oct-02 THB Fix to prune; random control
  * v4r3p4 20-sep-02 THB xml change required by new energy policy
@@ -30,4 +33,5 @@
  *                      GlastDetSvc for geometry and materials
  * v1     05-Jan-02 THB 
  * v0     19-Nov-01 THB Inital version  
+</pre>
 */
