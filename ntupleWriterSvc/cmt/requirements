@@ -32,3 +32,5 @@ macro WinJobOptions  "" VisualC "test/jobOptions.txt"
 # build this for non-shareable testing
 set JOBOPTIONS  "${NTUPLEWRITERSVCROOT}/src/test/jobOptions.txt"
 application test_ntupleWriterSvc  ${GlastMain} test/writeJunkAlg.cxx $(WinJobOptions)  
+
+application test_checkSum  test/testCheckSum.cxx checkSum.cxx

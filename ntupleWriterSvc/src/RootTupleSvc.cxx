@@ -115,7 +115,7 @@ private:
     TFile * m_tf;
 
     /// the checksum object
-    checkSum::checkSum* m_checkSum;
+    checkSum* m_checkSum;
 
     std::map<std::string, TTree *> m_tree;
 
@@ -185,7 +185,7 @@ StatusCode RootTupleSvc::initialize ()
     //t->SetAutoSave(m_autoSave); 
 
     // set up the check sum ofstream
-    m_checkSum = new checkSum::checkSum(m_checksumfilename);
+    m_checkSum = new checkSum(m_checksumfilename);
     if ( m_checkSum->bad() ) {
         log << MSG::ERROR
             << "cannot open checksum file " << m_checksumfilename << endreq;
@@ -269,6 +269,7 @@ void RootTupleSvc::endEvent()
         if( m_storeAll || m_storeTree[it->first]  ) {
             TTree* t = it->second;
             t->Fill();
+            // doing the checksum here
             std::string treeName = t->GetName();
             if ( m_checkSum->is_open() && treeName == "MeritTuple" ) {
                 log << MSG::VERBOSE << "calculating checksum for "

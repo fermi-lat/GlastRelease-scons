@@ -14,6 +14,8 @@
 #include "facilities/Util.h"
 
 #include "TLeafD.h"
+#include "TLeafF.h"
+#include "TLeafI.h"
 
 #include "GaudiKernel/MsgStream.h"
 
@@ -45,8 +47,8 @@ void checkSum::write(TTree* t) {
         std::cout << "TTree " << t->GetName() << " has " << lsize << " leaves "
                   << std::endl;
     std::vector<unsigned char> charCol;
-    Double_t eventId = -1;     // initialize with something unreasonable
-    Double_t elapsedTime = -1;
+    Double_t EvtEventId = -1;     // initialize with something unreasonable
+    Double_t EvtElapsedTime = -1;
 
     for ( int i=0; i<lsize; ++i ) {
         // there exists a TTreeFriendLeafIter, but how to use it?
@@ -58,10 +60,9 @@ void checkSum::write(TTree* t) {
             std::cout << i << ' ' << n << ' ' << c;
         if ( c == "TLeafD" ) {
             const Double_t v = dynamic_cast<TLeafD*>(l)->GetValue();
-            if ( VERBOSE )
+            if ( DEBUG )
                 std::cout << ' ' << std::setprecision(25) << v
-                          << std::setprecision(0);
-            std::cout << std::endl;
+                          << std::setprecision(0) << std::endl;
             const unsigned int s = sizeof(v);
             unsigned char p[s];
             for ( unsigned int ip=0; ip<s; ++ip )
@@ -75,31 +76,66 @@ void checkSum::write(TTree* t) {
             }
 
             if ( n == "EvtEventId" )
-                eventId = v;
-            else if ( n == "EvtElapsedTime" ) {
-                elapsedTime = v;
+                EvtEventId = v;
+            else if ( n == "EvtElapsedTime" )
+                EvtElapsedTime = v;
+        }
+        else if ( c == "TLeafF" ) {
+            const Float_t v = dynamic_cast<TLeafF*>(l)->GetValue();
+            if ( DEBUG )
+                std::cout << ' ' << std::setprecision(25) << v
+                          << std::setprecision(0) << std::endl;
+            const unsigned int s = sizeof(v);
+            unsigned char p[s];
+            for ( unsigned int ip=0; ip<s; ++ip )
+                p[ip] = 255;
+            memcpy(p, &v, s);
+            for ( unsigned int ip=0; ip<s; ++ip ) {
+                if ( VERBOSE )
+                    std::cout << "   " << i << ' ' << ip << ' '
+                              << (unsigned short)p[ip] << std::endl;
+                charCol.push_back(p[ip]);
             }
         }
-        else
-            std::cout << std::endl;
+        else if ( c == "TLeafI" ) {
+            const Int_t v = static_cast<Int_t>(dynamic_cast<TLeafI*>(l)->GetValue());
+            if ( DEBUG )
+                std::cout << ' ' << std::setprecision(25) << v
+                          << std::setprecision(0) << std::endl;
+            const unsigned int s = sizeof(v);
+            unsigned char p[s];
+            for ( unsigned int ip=0; ip<s; ++ip )
+                p[ip] = 255;
+            memcpy(p, &v, s);
+            for ( unsigned int ip=0; ip<s; ++ip ) {
+                if ( VERBOSE )
+                    std::cout << "   " << i << ' ' << ip << ' '
+                              << (unsigned short)p[ip] << std::endl;
+                charCol.push_back(p[ip]);
+            }
+        }
+        else {
+            if ( DEBUG )
+                std::cout << std::endl;
             if ( WARNING )
                 std::cout << "class " << c << " is not implemented!"<<std::endl;
+        }
     }
     const unsigned long theSum = simple(&charCol);
 
     if ( DEBUG )
         std::cout << "checksum: "
                   << std::setprecision(25)
-                  << std::resetiosflags(std::ios::scientific) << eventId << ' '
-                  << std::setiosflags(std::ios::scientific) << elapsedTime <<' '
+                  << std::resetiosflags(std::ios::scientific) << EvtEventId << ' '
+                  << std::setiosflags(std::ios::scientific) << EvtElapsedTime <<' '
                   << theSum << ' '
                   << charCol.size()
                   << std::endl;
     m_out.precision(25);
     m_out << std::setw(10)
-          << std::resetiosflags(std::ios::scientific) << eventId << "     "
+          << std::resetiosflags(std::ios::scientific) << EvtEventId << "     "
           << std::setw(25)
-          << std::setiosflags(std::ios::scientific) << elapsedTime << "     "
+          << std::setiosflags(std::ios::scientific) << EvtElapsedTime << "     "
           << std::setw(25) << theSum
           << std::endl;
 }
