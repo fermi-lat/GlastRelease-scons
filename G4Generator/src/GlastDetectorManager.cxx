@@ -130,6 +130,7 @@ GlastDetectorManager::GlastDetectorManager(DetectorConstruction *det)
 :G4VSensitiveDetector("GlastDetectorManager")
 {
     m_idMap = det->idMap();
+#if 0
     static std::string detfile("$(INSTRUMENTROOT)/xml/GlastDetector.xml");
     std::cout << "Loading glastdetectors from " << detfile << "... ";
     m_instrument = new Instrument;
@@ -139,7 +140,8 @@ GlastDetectorManager::GlastDetectorManager(DetectorConstruction *det)
     
     // now use the local visitor to make a list
     m_instrument->rootDetector()->accept(Visitor(this));
-    
+    //std::cout << "actually found " << count << " detectors " << std::endl;
+#endif
     // and tell G4 about us
     G4SDManager::GetSDMpointer()->AddNewDetector( this );
 
@@ -248,7 +250,6 @@ void GlastDetectorManager::process(G4LogicalVolume* lvol)
     lvol->SetSensitiveDetector(this);
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 void GlastDetectorManager::addSiDetector(SiDetector* det)
 {
     m_detMap[det->id()]=new TkrPlane(*det);
