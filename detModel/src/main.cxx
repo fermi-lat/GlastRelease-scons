@@ -51,7 +51,10 @@ int main(int argc, char* argv[]) {
   
 
   // We set the mode for the choice elements in the XML file
-  manager->setMode("digi recon");
+  manager->setMode("digi");
+
+  // only get to set one mode
+  //  manager->setMode("digi recon"); 
 
   // We build the hierarchy; in that case we build all, i.e. both the constants
   // and the sections
@@ -68,13 +71,14 @@ int main(int argc, char* argv[]) {
   else
     visitor = new GDDVRMLSectionsVisitor(argv[2]);  
 
-  visitor->setOpacity("FOAM05",0.5);
+  //  visitor->setOpacity("FOAM05",0.5);
 
+  visitor->setAllOpacity(0.4);
 
-  // (Joanne) Added following line so I can see inside vacuum envelopes
-  visitor->setOpacity("Vacuum",0.6);
+  // (Joanne) Added following line to make vacuum especially
+  // transparent
+  visitor->setOpacity("Vacuum",0.7);
 
-  visitor->setAllOpacity(0.5);
 
   // Put these back if you want to keep down size of .wrl files, 
   // visitor->setDepth("oneTKR", 0);
