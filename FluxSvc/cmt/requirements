@@ -1,5 +1,5 @@
 package FluxSvc
-version v6r17p2
+version v6r18
 
 # $Id$
 author  T. Kozanecki <hansl$slac.stanford.edu> T. Burnett
@@ -26,9 +26,9 @@ use GRB * celestialSources -no_auto_imports
 # _____________________________________________________________
 
 private
-use Event       v10*
-use GlastSvc    v9r*
-use astro       v1r*
+use Event       v*
+use GlastSvc    v*
+use astro       v*
 #use genericSources * celestialSources
 #use Pulsar  * celestialSources
 
