@@ -25,7 +25,7 @@
 #include <cassert>
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-G4Geometry::G4Geometry()
+G4Geometry::G4Geometry() : m_mode("propagate")
 {
 
 }
@@ -35,8 +35,10 @@ G4Geometry::~G4Geometry()
 
 }
 
-void G4Geometry::pushShape(ShapeType s, const UintVector& idvec, std::string name, 
-			   std::string material, const DoubleVector& params, VolumeType type)
+IGeometry::VisitorRet 
+G4Geometry::pushShape(ShapeType s, const UintVector& idvec, 
+                                 std::string name, std::string material, 
+                                 const DoubleVector& params, VolumeType type)
 {
   // The first 6 parameters in params are the translations and rotations
   double x=params[0], y=params[1], z=params[2];
@@ -92,7 +94,7 @@ void G4Geometry::pushShape(ShapeType s, const UintVector& idvec, std::string nam
       {
         // we push this logical as the actual mother and we exit
         pushActualMother(logical);
-        return;
+        return More;
       }
   
   /*
@@ -181,6 +183,7 @@ void G4Geometry::pushShape(ShapeType s, const UintVector& idvec, std::string nam
       }
   // push this volume in the stack of mothers
   pushActualMother(logical);    
+  return More;
 }
 
 /* called to signal end of nesting */
