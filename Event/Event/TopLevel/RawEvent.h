@@ -132,12 +132,12 @@ private:
 /// Serialize the object for writing
 inline StreamBuffer& RawEvent::serialize( StreamBuffer& s ) const              {
   DataObject::serialize(s);
-  unsigned char u = (m_fromMC) ? 1 : 0;
-  return s
-    << u
-    << m_errorStatus
-    << m_highVoltageMask
-    << m_triggerPattern;
+  //unsigned char u = (m_fromMC) ? 1 : 0;
+  return s;
+//    << u
+//    << m_errorStatus
+//    << m_highVoltageMask
+//    << m_triggerPattern;
 }
 
 
@@ -145,11 +145,11 @@ inline StreamBuffer& RawEvent::serialize( StreamBuffer& s ) const              {
 inline StreamBuffer& RawEvent::serialize( StreamBuffer& s )                    {
   DataObject::serialize(s);
   unsigned char u;
-  s >> u
-    >> m_errorStatus
-    >> m_highVoltageMask
-    >> m_triggerPattern;
-  m_fromMC = (u) ? true : false;
+ // s >> u
+ //   >> m_errorStatus
+ //   >> m_highVoltageMask
+ //   >> m_triggerPattern;
+ // m_fromMC = (u) ? true : false;
   return s;
 }
 
