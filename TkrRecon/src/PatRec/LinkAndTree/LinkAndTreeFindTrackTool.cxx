@@ -56,7 +56,7 @@ StatusCode LinkAndTreeFindTrackTool::findTracks()
     Event::CalClusterCol* pCalClusters = SmartDataPtr<Event::CalClusterCol>(m_dataSvc,EventModel::CalRecon::CalClusterCol);
 
     double minEnergy   = TkrControl::getPtr()->getMinEnergy();
-	double CalEnergy   = minEnergy;
+    double CalEnergy   = minEnergy;
     Point  CalPosition = Point(0.,0.,0.);
 
     //If clusters, then retrieve estimate for the energy

@@ -35,7 +35,7 @@ using namespace Event;
 class TkrComboPatRec : public TkrPatCandCol
 {
 public:
-	TkrComboPatRec(ITkrGeometrySvc* pTkrGeo, TkrClusterCol* pClusters, double CalEnergy, Point CalPosition);
+    TkrComboPatRec(ITkrGeometrySvc* pTkrGeo, TkrClusterCol* pClusters, double CalEnergy, Point CalPosition);
         ~TkrComboPatRec() {};
 
 private:
@@ -63,7 +63,7 @@ private:
         double conEnergy()     const {return m_ConEnergy;}
         KalFitTrack *track()         {return m_track;} 
         
-    private:	
+    private:    
         float m_deflection;    // End point deflection of line of 1st two hits
         float m_sigma;         // Number of sigma deflection corresponds to
         float m_qual;          // Resulting track Quality
