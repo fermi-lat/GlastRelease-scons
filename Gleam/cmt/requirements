@@ -27,8 +27,8 @@ use gui         v3r1
 use geomrep     v4r1
 
 # the geometry data base
-use idents                 v2r8p1
-use detModel               v2r12
+use idents      v2r8p1
+use detModel    v2r12
 use xmlGeoDbs   v1r5p2
 
 # interface to G4 - make private to avoid so many libs
@@ -40,34 +40,34 @@ public
 
 use GuiSvc      v3
 
-use Event                 v8r7p2
-use GlastSvc              v8r1p2
+use Event       v8r7p2
+use GlastSvc    v8r1p2
 
 # simulation
 
 use FluxSvc     v5r7
 use FluxDisplay v2r0p1
-use G4Generator           v4r1p4
+use G4Generator v4r1p4
 
 #digitization
 use CalDigi     v1r0p1
 use TkrDigi     v1r0
-use AcdDigi     v1r0
+use AcdDigi     	v1r1
 
 
 
 #reconstruction
-use Trigger              v3r3p3
+use Trigger     v3r3p3
 use Recon       v2r2p3
 
 use TkrRecon    v6r3p3
 use CalRecon    v5r5p2       
 
 #ROOT persistence: RootIo specifies the data packages
-use RootIo               v4r3p2
+use RootIo      v4r3p2
 
 #diagnostic and summary of bottom line
-use merit                 v5r4
+use merit       v5r4
 
 ### define a simple executable with GUI
 
