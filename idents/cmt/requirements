@@ -5,8 +5,9 @@ use GlastPolicy
 
 ignore_pattern include_none
 apply_pattern  package_include
+apply_pattern package_headers
 
 #since this package has only inline code, no library is needed.
 # we define one for the convenience of Dev Studio users, to be able 
 # easily examine, edit the files. "black.cxx" is to fool unix.
-library idents -no_share ../idents/blank.cxx ../idents/*.h
+library idents -no_share ../idents/blank.cxx ${idents_headers}

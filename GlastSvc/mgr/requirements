@@ -11,12 +11,19 @@ use GaudiSvc
 use GaudiAud 
 use RootHistCnv 
 
+apply_pattern package_headers
 
-library GlastSvc ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
-                 GlastDetSvc/*.h  GlastDetSvc/*.cpp \
-                 EventSelector/*.h  EventSelector/*.cpp \
-                 ../GlastSvc/data/*.h data/*.h data/*.cpp \
-		Dll/*.cpp 
+macro_append GlastSvc_headers "" WIN32 " \
+                 ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
+                 GlastDetSvc/*.h EventSelector/*.h \
+                 ../GlastSvc/data/*.h data/*.h
+
+
+library GlastSvc GlastDetSvc/*.cpp \
+                 EventSelector/*.cpp \
+                 data/*.cpp \
+		 Dll/*.cpp \
+                 ${GlastSvc_headers}
             
 ignore_pattern include_none
 apply_pattern package_include
