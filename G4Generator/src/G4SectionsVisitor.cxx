@@ -351,12 +351,12 @@ void G4SectionsVisitor::processIds(/* const*/ detModel::Position * pos, unsigned
   
   idents::VolumeIdentifier idvec;
   for(std::vector <detModel::IdField*>::const_iterator j = ids.begin(); j!=ids.end(); ++j) {
-    
-    idvec.append( (*j)->getValue() );
-    
+      unsigned int idvalue = (*j)->getValue();
+      if( i>0) idvalue += (*j)->getStep()*i;
+      idvec.append( idvalue );    
   }
   (*m_idMap)[g4Physicals.back()] = idvec;
-
+  
   
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
