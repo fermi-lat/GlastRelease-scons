@@ -175,6 +175,11 @@ namespace calibUtil {
     rdbModel::Assertion* m_findBest;
     rdbModel::Assertion* m_findSoonest;
 
+    // For each pre-existing row satisfying certain conditions, 
+    // set its vend = vstart of new row
+    unsigned adjustVend(int newSer);
+    
+
     /*
       Set val to string representation of "next" bit in levelMask
       (one of "PROD", "DEV", "TEST" or "SUPSED"),

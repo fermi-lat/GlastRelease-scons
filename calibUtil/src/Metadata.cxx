@@ -566,7 +566,10 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
     int ser_no;
     if (!(m_writeCxt->insertRow(m_table, cols, vals, &ser_no, &nullCols)) ) {
       return 0;
-    }    else return ser_no;
+    }    else {
+      adjustVend(ser_no);
+      return ser_no;
+    }
   }
 
   Metadata::eRet Metadata::compareSchema(rdbModel::Connection* conn,
@@ -646,18 +649,89 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
   }
 
 
-  //  int Metadata::adjustVend(int newSer) {
-    // Fetch information for new row: vstart, vend, flavor, completion,
-    // proc_level, calib_type, flavor
-    // If (completion != "OK") return 0
-    // select ser_no where ((flavor="f") && (calib_type = "c") &&
-    //                 (completion= "OK") && (instrument = "i") &&
-    //                 (proc_level = "p") && (vend > "new-vstart") );
+  unsigned Metadata::adjustVend(int newSer) {
+    using namespace rdbModel;
 
-    // For each such ser_no, do an update:
-    //   update vend = "new-vstart" where ser_no = [ser_no from list]
+    StringVector getCols;
+    StringVector orderBy;
 
-    // Return #rows updated
-  //  }
+    orderBy.clear();
+    getCols.reserve(7);
+
+    std::string serString;
+    facilities::Util::itoa(newSer, serString);
+
+    getCols.push_back("flavor");
+    getCols.push_back("calib_type");
+    getCols.push_back("completion");
+    getCols.push_back("instrument");
+    getCols.push_back("proc_level");
+    getCols.push_back("vstart");
+
+    ResultHandle* results = 0;
+    eRet err;
+    Assertion* where = 0;
+    try {
+      if (!m_writeCxt) {
+        if (!connectWrite(err)) return 0;
+      }
+
+      Assertion::Operator* serOp = 
+        new Assertion::Operator(OPTYPEequal, "ser_no", serString, false, true);
+    
+      where = new Assertion(Assertion::WHENwhere, serOp);
+
+      // Fetch information for new row: vstart, flavor, completion,
+      // proc_level, calib_type, flavor
+      results = m_writeCxt->select(m_table, getCols, orderBy, where);
+      delete where;
+      where = 0;
+    }
+    catch (RdbException ex) {
+      std::cout << ex.getMsg();
+      delete where;         // return heap memory
+      return 0;
+    }
+    if (!results) { // This is an error. Should be non-null even if no rows
+      std::cout << "MySQL failure in SELECT" << std::endl;
+      return 0;  // nothing to fix
+    }
+    if (results->getNRows() != 1) { // also a problem
+      std::cout << "Look-up of serial# " << serString << " failed"
+                << std::endl;
+      return 0;
+    }
+    std::vector<std::string> fields;
+    results->getRow(fields);
+    if (fields[2] != "OK") return 0;  // don't bother fixing in this case
+
+    // Now do an update on rows satisfying
+    // ((flavor="f") && (calib_type = "c") && (completion= "OK") && 
+    // (instrument = "i") &&  (proc_level = "p") && 
+    //  (vstart < "new-start" (vend > "new-vstart") );
+    std::vector<Assertion::Operator *> conditions;
+    conditions.reserve(7);
+    for (unsigned ix = 0; ix < 5; ix++) {
+      conditions.push_back(new Assertion::Operator(OPTYPEequal, getCols[ix],
+                                                   fields[ix], false, true));
+    }
+    conditions.push_back(new Assertion::Operator(OPTYPElessThan, "vstart",
+                                                 fields[5], false, true));
+    conditions.push_back(new Assertion::Operator(OPTYPEgreaterThan, "vend",
+                                            fields[5], false, true));
+                                            
+    Assertion::Operator* andOp = 
+      new Assertion::Operator(OPTYPEand, conditions);
+    where = new Assertion(Assertion::WHENwhere, andOp);
+    
+    StringVector toUpdate;
+    toUpdate.push_back("vend");
+    StringVector newVal;
+    newVal.push_back(fields[5]);
+
+    unsigned nModified = m_writeCxt->update(m_table, toUpdate, newVal, where);
+    delete where;
+    return nModified;
+  }
 
 }
