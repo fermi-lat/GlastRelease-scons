@@ -43,8 +43,10 @@
     </ul> 
 
   
-  The package also contains CalibXMLCnvSvc and and a single test converter.
-  Real XML converters plus CalibROOTCnvSvc and its converters are TBW.
+  The package also contains CalibXMLCnvSvc and several converters for
+  calibration data of different types stored in XML files.  These include
+  (Tracker) hot and dead strips, Calorimeter gains, pedestals, integral
+  non-linearity, and so forth.  CalibROOTCnvSvc and its converters are TBW.
 
   @section requirements requirements
   @include requirements
