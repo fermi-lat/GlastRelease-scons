@@ -9,7 +9,13 @@
 #ifndef RootAnalysis_irfAnalysis_Fitter_h
 #define RootAnalysis_irfAnalysis_Fitter_h
 
-class TH1F;
+#include <vector>
+#include <string>
+
+class TH1;
+class TFile;
+class TTree;
+class TF1;
 
 /**
  * @class Fitter
@@ -23,16 +29,27 @@ class Fitter {
 
 public:
 
-   virtual ~Fitter(){}
+   Fitter(const std::string &outputFile);
 
-   virtual void applyFit(TH1F *) = 0;
+   virtual ~Fitter();
+
+   virtual void applyFit(TH1 *) = 0;
 
    virtual void setBounds(const std::vector<double> &,
-                          const std::vector<double> &) = 0;
+                          const std::vector<double> &);
+
+   virtual void setParameters(const std::vector<double> &);
+
+   virtual void getParameters(std::vector<double> &) const;
+
+   virtual void writeFitPars();
 
 protected:
 
-   Fitter(){}
+   TFile * m_file;
+   TTree * m_tree;
+   TF1 * m_func;
+   std::vector<Double_t> m_params;
 
 };
 

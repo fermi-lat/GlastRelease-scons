@@ -25,11 +25,10 @@ void MakeDists::project(const std::string &branchName,
                         double xmin, double xmax, int nbins,
                         Fitter * fitter) {
 
-     open_input_file();
+   open_input_file();
 
 // Output file for the histograms.
    TFile histFile(m_summary_filename.c_str(), "recreate");
-
    std::cout << "Writing histograms to " << m_summary_filename 
              << std::endl;
 
@@ -68,7 +67,10 @@ void MakeDists::project(const std::string &branchName,
                    << "mean " << mean << ", "
                    << "rms " << rms << std::endl;
 
-         if (fitter) fitter->applyFit(h);
+         if (fitter) {
+            fitter->applyFit(h);
+            fitter->writeFitPars();
+         }
 
 // Move to the summary file.
          h->SetDirectory(&histFile);

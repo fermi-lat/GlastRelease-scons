@@ -9,11 +9,7 @@
 #ifndef RootAnalysis_irfAnalysis_SumOfGaussians_h
 #define RootAnalysis_irfAnalysis_SumOfGaussians_h
 
-#include <vector>
-
 #include "Fitter.h"
-
-class TF1;
 
 /**
  * @class SumOfGaussians
@@ -28,22 +24,16 @@ class SumOfGaussians : public Fitter {
 
 public:
 
-   SumOfGaussians(int maxTrys=5);
+   SumOfGaussians(const std::string &outputFile = "", int maxTrys=5);
 
    virtual ~SumOfGaussians();
 
-   virtual void applyFit(TH1F *);
-
-   void setBounds(const std::vector<double> &lower,
-                  const std::vector<double> &upper);
-
-//    void setParameters(const std::vector<double> &params);
-//    void getParameters(std::vector<double> &params) const;
+   virtual void applyFit(TH1 *);
 
 private:
 
-   TF1 * m_func;
    int m_maxTrys;
+
 };
 
 #endif // RootAnalysis_irfAnalysis_SumOfGaussians_h
