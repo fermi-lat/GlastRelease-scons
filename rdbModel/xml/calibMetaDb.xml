@@ -276,9 +276,10 @@
       $(...), e.g. a plausible data_ident might be
                   $(CALIBUTILROOT)/xml/Cal/CalMuSlope_LAT.xml
 
-        [maybe should change to using standard unix delimiters
-            ${..} ? Or does it matter, since Windows does it differently?]
     </comment>
+    <!-- [maybe should change to using standard unix delimiters
+         ${..} ? Or does it matter, since Windows does it differently?]
+     -->
   </col>
 
   <col name="input_desc" >
