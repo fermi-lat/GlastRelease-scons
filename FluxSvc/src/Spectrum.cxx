@@ -50,13 +50,6 @@ double Spectrum::solidAngle( )const
     return 1.0; // flag that doesn't calculate
 }
 
-void Spectrum::setPosition ( double lat, double lon, double time ) {
-  m_lat = lat;
-  m_lon = lon;
-  m_time = time;
-}
-
-
  std::pair<float,float> Spectrum::dir(float energy)const
 {
 

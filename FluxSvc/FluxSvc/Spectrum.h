@@ -47,9 +47,6 @@ public:
     /// calcualte effective solid angle  (default zero)
     virtual double solidAngle()const;
     
-    /// for forward compatibility with position base spectra
-    virtual void	setPosition ( double lat, double lon , double time=0);
-    
     /// return a title describing the spectrum	
     virtual std::string title()const=0;
     
@@ -57,9 +54,6 @@ public:
     /// for choosing limits
     float fraction(float energy);
     
-    
-    //   virtual Direction dir(float energy)const;
-    // return solid angle pair (costh, phi) for the given energy
     
     virtual ~Spectrum();
     
@@ -74,13 +68,13 @@ public:
 protected:
     Spectrum(const std::vector<float>& /*params*/){};
     Spectrum(/* double lat = 0, double lon = 0, double time=0*/) 
-        : m_lat(0), m_lon(0), m_time(0){}
+        /*: m_lat(0), m_lon(0), m_time(0)*/{}
     // all constructors protected to ensure an abstract class
     
     virtual void parseParamList(std::string input, std::vector<float>& output) const;
     
     double    m_lat, m_lon;   // latitude and longitudinal coordinates
-    double    m_time;
+
 };
 
 #endif    
