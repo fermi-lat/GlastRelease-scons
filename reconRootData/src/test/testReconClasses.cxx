@@ -675,6 +675,23 @@ int checkAcdRecon(AcdRecon *acd, UInt_t ievent) {
         return -1;
     }
 
+    std::vector<Double_t> rowActDistCol = acd->getRowActDistCol();
+    if (rowActDistCol.size() != 2) {
+        std::cout << "AcdRecon number of row actDist entries is wrong: " << rowActDistCol.size() << std::endl;
+        return -1;
+    }
+
+    if (!floatInRange(rowActDistCol[0], randNum) ) {
+        std::cout << "AcdRecon row actdist 0 is wrong: " << rowActDistCol[0] << std::endl;
+        return -1;
+    }
+
+    if (!floatInRange(rowActDistCol[1], f) ) {
+        std::cout << "AcdRecon row actdist 1 is wrong: " << rowActDistCol[1] << std::endl;
+        return -1;
+    }
+
+
     return 0;
 }
 
@@ -745,7 +762,11 @@ int write(char* fileName, int numEvents) {
         std::vector<Double_t> rowDocaCol;
         rowDocaCol.push_back(randNum);
         rowDocaCol.push_back(f);
-        acdRec->initialize(energy, count, gDoca, doca, actDist, minDocaId, rowDocaCol);
+        std::vector<Double_t> rowActDistCol;
+        rowActDistCol.push_back(randNum);
+        rowActDistCol.push_back(f);
+        acdRec->initialize(energy, count, gDoca, doca, 
+            actDist, minDocaId, rowDocaCol, rowActDistCol);
 
         // Create CalRecon object
         CalRecon *calRec = new CalRecon();

@@ -53,6 +53,8 @@
         AcdId minDocaId(0, 0, 3, 2);
         acdRec->addRowDoca(randNum);
         acdRec->addRowDoca(f);
+        acdRec->addRowActDist(randNum);
+        acdRec->addRowActDist(f);
         acdRec->initialize(energy, count, gDoca, doca, actDist, minDocaId);
 
         CalRecon *calRec = new CalRecon();
