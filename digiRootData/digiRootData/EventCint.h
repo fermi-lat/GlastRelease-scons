@@ -1,8 +1,8 @@
 /********************************************************************
-* ../digiRootData/EventCint.h
+* EventCint.h
 ********************************************************************/
 #ifdef __CINT__
-#error ../digiRootData/EventCint.h/C is only for compilation. Abort cint.
+#error EventCint.h/C is only for compilation. Abort cint.
 #endif
 #include <stddef.h>
 #include <stdio.h>
@@ -31,7 +31,7 @@ extern void G__set_cpp_environmentEventCint();
 #include "CalHeader.h"
 #include "CalLog.h"
 #include "ESAPID.h"
-#include "Event.h"
+#include "DigiEvent.h"
 #include "L1T.h"
 #include "LogId.h"
 #include "StripId.h"
@@ -75,7 +75,7 @@ extern G__linked_taginfo G__EventCintLN_StripId;
 extern G__linked_taginfo G__EventCintLN_StripIdcLcLdA;
 extern G__linked_taginfo G__EventCintLN_TkrLayer;
 extern G__linked_taginfo G__EventCintLN_TkrLayercLcLTKRAxes;
-extern G__linked_taginfo G__EventCintLN_Event;
+extern G__linked_taginfo G__EventCintLN_DigiEvent;
 extern G__linked_taginfo G__EventCintLN_Tagger;
 
 /* STUB derived class for protected member access */

@@ -1,6 +1,6 @@
 
-#ifndef Event_H
-#define Event_H
+#ifndef DigiEvent_H
+#define DigiEvent_H
 
 #include "TObject.h"
 #include "L1T.h"
@@ -16,7 +16,7 @@
 #include "CalLog.h"
 #include "TkrLayer.h"
 
-/*! \class Event
+/*! \class DigiEvent
 \brief This is the top-level event class to store the
 raw (digi) data.
  Jun 2001 Heather Kelly - revised to use TClonesArray
@@ -26,7 +26,7 @@ raw (digi) data.
  */
 
 
-class Event: public TObject {
+class DigiEvent: public TObject {
 private:
     /// Run number
     UInt_t m_run;  
@@ -64,13 +64,13 @@ private:
 
 public:
 
-    Event();
-    virtual ~Event();
+    DigiEvent();
+    virtual ~DigiEvent();
 
     void Clean(Option_t *option="");
     
 
-    /// Access the Event number
+    /// Access the DigiEvent number
     inline void setEventId(UInt_t id) { m_eventId = id; };
     inline Int_t getEventId() { return m_eventId; };
 
@@ -126,7 +126,7 @@ public:
     // inline void setTagger(Tagger *TaggerVal) { m_Tagger = TaggerVal; };
     //inline Tagger *getTagger() const { return m_Tagger; };
     
-    ClassDef(Event,3)       // Storage for Raw(Digi) event and subsystem data
+    ClassDef(DigiEvent,3)       // Storage for Raw(Digi) event and subsystem data
 }; 
 
 #endif

@@ -5,18 +5,18 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include "digiRootData/Event.h"
+#include "digiRootData/DigiEvent.h"
 
-ClassImp(Event)
+ClassImp(DigiEvent)
 
 // Allocate the TClonesArrays and TObjArray just once
-TClonesArray *Event::m_staticAcdDigiVec = 0;
-TClonesArray *Event::m_staticXgtDigiVec = 0;
-TClonesArray *Event::m_staticCalDigiVec = 0;
-TObjArray *Event::m_staticTkrDigiVec = 0;
+TClonesArray *DigiEvent::m_staticAcdDigiVec = 0;
+TClonesArray *DigiEvent::m_staticXgtDigiVec = 0;
+TClonesArray *DigiEvent::m_staticCalDigiVec = 0;
+TObjArray *DigiEvent::m_staticTkrDigiVec = 0;
 
 //__________________________________________________________________________
-Event::Event() {
+DigiEvent::DigiEvent() {
     // Default constructor.
     // Assign default values to members
     if (!m_staticAcdDigiVec) m_staticAcdDigiVec = new TClonesArray("AcdTile", 24);
@@ -41,7 +41,7 @@ Event::Event() {
     m_run = 0;
 }
 //_________________________________________________________________________
-Event::~Event() {
+DigiEvent::~DigiEvent() {
   // Destructor    
     if(m_AcdDigiVec == m_staticAcdDigiVec) m_staticAcdDigiVec = 0;
     m_AcdDigiVec->Delete();
@@ -65,7 +65,7 @@ Event::~Event() {
     
 }
 //_________________________________________________________________________
-void Event::Clean(Option_t *option) {
+void DigiEvent::Clean(Option_t *option) {
     m_AcdHeader.Clean();
     m_AcdDigiVec->Clear();
     m_numTiles = -1;
@@ -85,7 +85,7 @@ void Event::Clean(Option_t *option) {
 }
 
 
-AcdTile* Event::addAcdTile(UInt_t id, short base, short used) {
+AcdTile* DigiEvent::addAcdTile(UInt_t id, short base, short used) {
     // Add a new AcdTile entry, note that
     // TClonesArrays can only be filled via
     // a new with placement call
@@ -95,7 +95,7 @@ AcdTile* Event::addAcdTile(UInt_t id, short base, short used) {
     return ((AcdTile*)(tiles[m_numTiles]));
 }
 
-const AcdTile* Event::getAcdTile(UInt_t id) {
+const AcdTile* DigiEvent::getAcdTile(UInt_t id) {
     // Find a specific AcdTile in the TClonesArray
     // User supplies a valid AcdTile id, in base 10 or base 2
     // default is base 10
@@ -105,7 +105,7 @@ const AcdTile* Event::getAcdTile(UInt_t id) {
     return 0;
 }
 
-const AcdTile* Event::getAcdTile(short l, short f, short r, short c) {
+const AcdTile* DigiEvent::getAcdTile(short l, short f, short r, short c) {
     // Find a specific AcdTile in the TClonesArray
     // User supplies a valid AcdTile identified by layer, face, row, column
     AcdId tempId(l, f, r, c);
@@ -115,7 +115,7 @@ const AcdTile* Event::getAcdTile(short l, short f, short r, short c) {
     return 0;
 }
 
-const AcdTile* Event::getAcdTile(AcdId &id) {
+const AcdTile* DigiEvent::getAcdTile(AcdId &id) {
     // Find a specific AcdTile in the TClonesArray
     // User supplies a valid AcdId
     AcdTile tempTile = AcdTile(id.getId());
@@ -124,7 +124,7 @@ const AcdTile* Event::getAcdTile(AcdId &id) {
     return 0;
 }
 
-AcdTile* Event::addXgt(UInt_t id, short base) {
+AcdTile* DigiEvent::addXgt(UInt_t id, short base) {
     // Add a new XGT(AcdTile) entry, note that
     // TClonesArrays can only be filled via
     // a new with placement call
@@ -134,7 +134,7 @@ AcdTile* Event::addXgt(UInt_t id, short base) {
     return ((AcdTile*)(xgts[m_numXgts]));
 }
 
-const AcdTile* Event::getXgt(UInt_t id) {
+const AcdTile* DigiEvent::getXgt(UInt_t id) {
     // Find a specific XGT(AcdTile) in the TClonesArray
     // User supplies a valid AcdTile id
     AcdTile tempTile = AcdTile(id);
@@ -144,7 +144,7 @@ const AcdTile* Event::getXgt(UInt_t id) {
 }
 
 
-CalLog* Event::addCalLog() {
+CalLog* DigiEvent::addCalLog() {
     // Add a new CalLog entry, note that
     // TClonesArrays can only be filled via
     // a new with placement call
@@ -154,7 +154,7 @@ CalLog* Event::addCalLog() {
     return ((CalLog*)(logs[m_numLogs]));
 }
 
-const CalLog* Event::getCalLog(LogId &id) {
+const CalLog* DigiEvent::getCalLog(LogId &id) {
     // Find a specific CalLog in the TClonesArray
     // User supplies a valid CalLog
     CalLog tempLog = CalLog(id);
@@ -164,7 +164,7 @@ const CalLog* Event::getCalLog(LogId &id) {
 
 }
 
-const CalLog* Event::getCalLog(UShort_t tower, UShort_t layer, UShort_t column) {
+const CalLog* DigiEvent::getCalLog(UShort_t tower, UShort_t layer, UShort_t column) {
     // Find a specific CalLog in the TClonesArray
     // User supplies a valid CalLog
     CalLog tempLog = CalLog();
@@ -175,12 +175,12 @@ const CalLog* Event::getCalLog(UShort_t tower, UShort_t layer, UShort_t column) 
 }
 
 
-void Event::addTkrLayer(TkrLayer *layer) {
+void DigiEvent::addTkrLayer(TkrLayer *layer) {
     m_TkrDigiVec->Add(layer);
     ++m_numLayers;
 }
 
-const TkrLayer* Event::getTkrLayer(unsigned int layerNum) {
+const TkrLayer* DigiEvent::getTkrLayer(unsigned int layerNum) {
     TkrLayer tempLayer = TkrLayer();
     unsigned int planeNum = layerNum >> 1;
     tempLayer.setPlaneNum(planeNum);

@@ -7,7 +7,7 @@
 #pragma link C++ class AcdTile;
 #pragma link C++ class CalLog;
 #pragma link C++ class ESAPID;
-#pragma link C++ class Event;
+#pragma link C++ class DigiEvent;
 #pragma link C++ class L1T;
 #pragma link C++ class LogId;
 #pragma link C++ class StripId;
