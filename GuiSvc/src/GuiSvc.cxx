@@ -5,12 +5,12 @@
 
 #include "GuiSvc/GuiSvc.h"
 
-#include "Gaudi/Kernel/SvcFactory.h"
-#include "Gaudi/MessageSvc/MsgStream.h"
+#include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/MsgStream.h"
 
-#include "Gaudi/Kernel/Incident.h"
-#include "Gaudi/Interfaces/IIncidentSvc.h"
-#include "Gaudi/JobOptionsSvc/Property.h"
+#include "GaudiKernel/Incident.h"
+#include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/Property.h"
 
 // includes for implementing GuiMgr stuff
 #include "gui/GuiMgr.h"
@@ -169,5 +169,16 @@ StatusCode GuiSvc::finalize ()
        
     delete m_guiMgr;
     return status;
+}
+/// Query interface
+StatusCode GuiSvc::queryInterface(const IID& riid, void** ppvInterface)  {
+  if ( IID_IGuiSvc.versionMatch(riid) )  {
+    *ppvInterface = (IGuiSvc*)this;
+  }
+  else  {
+    return Service::queryInterface(riid, ppvInterface);
+  }
+  addRef();
+  return SUCCESS;
 }
 

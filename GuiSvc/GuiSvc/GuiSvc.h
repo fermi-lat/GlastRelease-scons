@@ -6,8 +6,8 @@
 #define _H_GuiSvc_
 
 // includes
-#include "Gaudi/Kernel/Service.h"
-#include "Gaudi/Interfaces/IIncidentListener.h"
+#include "GaudiKernel/Service.h"
+#include "GaudiKernel/IIncidentListener.h"
 #include "GuiSvc/IGuiSvc.h"
 
 //forward declarations
@@ -41,6 +41,10 @@ public:
     /// Handles incidents, implementing IIncidentListener interface
     virtual void handle(const Incident& inc);    
  
+   /// Query interface
+   virtual StatusCode queryInterface( const IID& riid, void** ppvUnknown );
+
+
 protected: 
 
     /// Standard Constructor

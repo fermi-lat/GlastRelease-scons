@@ -3,7 +3,7 @@
 #define GuiTestAlg_H
 
 // Include files
-#include "Gaudi/Algorithm/Algorithm.h"
+#include "GaudiKernel/Algorithm.h"
 
 // forward declarations
 namespace gui{ class GuiMgr; }

@@ -2,7 +2,10 @@
 #define _H_IGuiSvc_
 
 // includes
-#include "Gaudi/Interfaces/IInterface.h"
+#include "GaudiKernel/IInterface.h"
+
+// Declaration of the interface ID ( interface id, major version, minor version) 
+static const InterfaceID IID_IGuiSvc(900, 1 , 0); 
 
 //forward declarations
 namespace gui { class GuiMgr; }
@@ -21,6 +24,11 @@ public:
     virtual StatusCode initialize ()=0;
     
     virtual StatusCode finalize ()=0;
+
+
+    /// Retrieve interface ID
+    static const InterfaceID& interfaceID() { return IID_IGuiSvc; }
+
 };
 
 

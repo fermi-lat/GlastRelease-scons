@@ -5,6 +5,7 @@ branches GuiSvc mgr doc
 
 use gui 
 use GaudiSvc
+
 # need to use this to make the dll available.
 use RootHistCnv
 
@@ -13,10 +14,10 @@ library GuiSvc -no_share\
  *.cxx \
   ../GuiSvc/*.h 
 
-include_path $(GUISVCROOT)
+include_dirs $(GUISVCROOT)
 
 macro GuiSvc_lib " -L ${GUISVCROOT}/${CMTCONFIG} -lGuiSvc "\
-    VisualC "Service.obj ${GUISVCROOT}/${BINDIR}/libGuiSvc.lib "
+    WIN32 "${GUISVCROOT}/${BINDIR}/GuiSvc.lib "
 
 # *No* linkopts.
 
@@ -33,7 +34,7 @@ private
 
 # don't know why we need the dl library - TL
 macro use_linkopts " $(GuiSvc_lib) -u GuiSvc_loadRef  $(gui_linkopts) $(Gaudi_linkopts) -ldl "\
-                   VisualC "  $(Gaudi_linkopts) $(GuiSvc_lib) $(gui_linkopts) /include:_GuiSvc_loadRef "
+                   WIN32 "  $(GaudiKernel_linkopts) $(GuiSvc_lib) $(gui_linkopts) /include:_GuiSvc_loadRef "
 
 macro WinJobOptions ""  VisualC  test/jobOptions.txt
 

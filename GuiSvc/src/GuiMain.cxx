@@ -1,12 +1,12 @@
 // $Header$
 
 // Include files
-#include "Gaudi/Kernel/SmartIF.h"
-#include "Gaudi/Kernel/Bootstrap.h"
-#include "Gaudi/Interfaces/IAppMgrUI.h"
-#include "Gaudi/Interfaces/IProperty.h"
-#include "Gaudi/JobOptionsSvc/Property.h"
-#include "Gaudi/System/System.h"
+#include "GaudiKernel/SmartIF.h"
+#include "GaudiKernel/Bootstrap.h"
+#include "GaudiKernel/IAppMgrUI.h"
+#include "GaudiKernel/IProperty.h"
+#include "GaudiKernel/IJobOptionsSvc.h"
+#include "GaudiKernel/System.h"
 
 //------------------------------------------------------------------------------
 //
@@ -45,7 +45,7 @@ int main( int argn, char** argc) {
     // Set properties of algorithms and services
     StatusCode status = StatusCode::SUCCESS;
     if ( iface && propMgr == iface )    {
-        status = propMgr->setProperty( StringProperty("JobOptionsPath", joboptions_file) );
+        status = propMgr->setProperty( "JobOptionsPath", joboptions_file );
     }
     else  {
         exit(-1);
