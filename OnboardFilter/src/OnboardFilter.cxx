@@ -53,18 +53,6 @@
 #endif
 
 /**
- * Simple macro to drop the specified statement into the code. This
- * macro will only drop the statement if DEBUG is defined, otherwise
- * this macro is a NOOP.
- */
-#ifdef DEBUG
-#include <stdio.h>
-#define _DBG(statement) statement
-#else
-#define _DBG(statement)
-#endif
-
-/**
  * Data structure defining the standard geometry used in the filtering process.
  */
 struct _TFC_geometry;
@@ -294,8 +282,6 @@ StatusCode OnboardFilter::execute()
         int status;
         int  esize;
 
-        _DBG (printf("GLASTSIM = %9d\n", mcsequence));
-        
      
         /* Perform any diagnostic print-out of the event */
         if (dfcSys->toPrint > 0)
@@ -309,10 +295,6 @@ StatusCode OnboardFilter::execute()
         esize   = *evt;
         status  = DFC_filter (dfcCtl, result, dfcEvt, evt, esize);
 
-        if ((status & DFC_M_STATUS_VETOES) == 0)
-            _DBG (printf("GLASTSIM EVENT = %9d (%9d) NOT REJECTED (%8.8x)\n",
-                    getMCsequence(evt), idx, status));
-        
         evt = (const unsigned int *)((char *)(evt)+esize);
         result  = (struct _DFC_results *)((unsigned char *)result
                                                          + resultsSize);
