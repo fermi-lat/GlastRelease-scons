@@ -223,7 +223,7 @@ StatusCode TkrTrackFitAlg::doTrackReFit()
 
         double CalEnergy = pCalClusters->front()->getEnergyCorrected(); 
         double CalSumEne = pCalClusters->front()->getEnergySum();
-
+/*
         if (CalEnergy > CalSumEne)
         {
             // Get the energy calculation tool
@@ -232,6 +232,14 @@ StatusCode TkrTrackFitAlg::doTrackReFit()
 
             TrackEnergyTool->SetTrackEnergies(CalEnergy);
 		}
+*/
+		/// THIS IS A BIG CHANGE ///   
+		double cal_energy = std::max(CalEnergy, CalSumEne); // need to protect against CalEnergy = 0.   
+        // Get the energy calculation tool
+        TkrTrackEnergyTool* TrackEnergyTool = 0;
+        sc = toolSvc()->retrieveTool("TkrTrackEnergyTool", TrackEnergyTool);
+
+        TrackEnergyTool->SetTrackEnergies(cal_energy);
 	}
 
     // Ok, now set up to loop over candidate tracks
