@@ -57,7 +57,7 @@ FluxSource* CompositeSource::event (double time)
 {
     int i=0; //for iterating through the m_unusedSource vector
     int winningsourcenum; //the number of the "winning" source
-
+    
     EventSource::setTime(time);
     
     m_numofiters=0;
@@ -71,19 +71,19 @@ FluxSource* CompositeSource::event (double time)
         // NOT used? THB  double  x = RandFlat::shoot(mr), y = 0;
         std::vector<EventSource*>::iterator  now = m_sourceList.begin();
         std::vector<EventSource*>::iterator  it = now;
-                
+        
         double intrval=0.,intrmin=100000.;
         for (int q=0 ; now != m_sourceList.end(); ++now) {
             if(m_unusedSource[i]==1){
-                //std::cout << i << " is unused" << std::endl;
                 intrval=m_sourceInterval[i];
+                //std::cout << i << " is unused, interval is "<< intrval << std::endl;
             }else{
-            (*now)->event(time); // to initialize particles, so that the real interval for the particle is gotten.
-            intrval=(*now)->interval(EventSource::time()); //this picks out the interval of each source
-            m_unusedSource[i]=1;
-            m_sourceInterval[i]=intrval;
+                (*now)->event(time); // to initialize particles, so that the real interval for the particle is gotten.
+                intrval=(*now)->interval(EventSource::time()); //this picks out the interval of each source
+                m_unusedSource[i]=1;
+                m_sourceInterval[i]=intrval;
             }
-
+            
             if(intrval < intrmin){
                 //the present source is "winning" here
                 it=now;
@@ -97,6 +97,14 @@ FluxSource* CompositeSource::event (double time)
             i++;
         }
         setInterval(intrmin);
+        now = m_sourceList.begin();
+        for (q=0 ; now != m_sourceList.end(); ++now) {
+            //this loop sets the intervals back in accordance with
+            //how far ahead time will move.
+            //std::cout << "decrementing source " << q << " ,  by " << intrmin << std::endl;
+            m_sourceInterval[q] = m_sourceInterval[q] - intrmin;
+            q++;
+        }
     }
     m_unusedSource[winningsourcenum]=0; //the current "winning" source is getting used..
     // now ask the chosen one to return the event.
@@ -180,16 +188,4 @@ int CompositeSource::numSource()const
 {
     return m_numofiters;
 }
-
-
-/// interval to the next event
-//double interval (double){
-//    return m_interval;
-//}
-
-/// set the interval to the next event
-//double setInterval (double interval){
-//m_interval = interval;
-//}
-
 
