@@ -21,7 +21,7 @@ $Header$
 #include <vector>
 #include <iostream>
 
-static const InterfaceID IID_ITkrAlignmentSvc("ITkrAlignmentSvc", 3, 0); 
+static const InterfaceID IID_ITkrAlignmentSvc("ITkrAlignmentSvc", 4, 0); 
 
 namespace {
     enum constType {SIM=0, REC=1};
@@ -61,15 +61,15 @@ public:
 
     /// check for a zero AlignmentConsts
     bool isNull() { return (m_deltaX==0. && m_deltaY==0. && m_deltaZ==0.
-        && m_rotX==0. &&m_rotY==0. && m_rotZ==0.);}  
-    /*
+        && m_rotX==0. &&m_rotY==0. && m_rotZ==0.);} 
+
+    //! Fill the ASCII output stream
+    std::ostream& fillStream( std::ostream& s ) const;  
+        
     //! Serialize the object for reading
     StreamBuffer& serialize( StreamBuffer& s );
     //! Serialize the object for writing
     StreamBuffer& serialize( StreamBuffer& s ) const;
-    */
-    //! Fill the ASCII output stream
-    std::ostream& fillStream( std::ostream& s ) const;        
     
 private:
 
