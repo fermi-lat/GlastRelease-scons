@@ -5,6 +5,7 @@
 #include "TkrRecon/Vertex/TkrFindVertex.h"
 
 #include "GaudiKernel/Algorithm.h"
+#include "src/Vertex/IVtxBaseTool.h"
 
 
 /** 
@@ -21,8 +22,6 @@
 * $Header$
 */
 
-
-
 class TkrVertexAlg : public Algorithm
 {
 public:
@@ -33,7 +32,8 @@ public:
     StatusCode finalize();
     
 private:
-    
+    std::string m_VertexerType;
+    IVtxBaseTool* m_VtxTool;
     Event::TkrFindVertex* pFindVertex;
 };
 
