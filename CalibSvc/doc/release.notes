@@ -3,6 +3,8 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r19   31-Mar-2005  jrb  1. Support for charge scale calibration
+                             2. Always fetch event time from header
    v0r18p2  1-Mar-2005  jrb  Get rid of -no_auto_imports for calibUtil
    v0r18p1 25-Feb-2005  jrb  Changes for revamped calibUtil::Metadata class;
                              some additional clean-up
