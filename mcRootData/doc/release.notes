@@ -2,6 +2,7 @@
  package mcRootData
  package manager: H. Kelly
 
+v2r4      08-Jul-2002 HMK remove McParticle* from McPostionHit\n
 v2r3      17-Jun-2002 HMK add in Int_t particleId into McPositionHit\n
 v2r2      14-May-2002 HMK Add initialPosition to McParticle\n
 v2r1p4    14-May-2002 THB Fix dorootcint.bat to test for cint files\n
