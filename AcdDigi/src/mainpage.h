@@ -83,11 +83,16 @@
 * The full path and filename of an input XML file containing constants for 
 * the ACD digitization.
 *
+* @section Tests Tests
+* There are two tests associated with this package:  test_AcdDigi and test_AcdUtil.
+* test_AcdUtil tests the AcdUtil class, making sure that its attempts to utilize
+* the Poisson and Gaussian distributions in CLHEP are distributed as they should be.
+*
 * <hr>
 * @section notes release notes
 * release.notes
 * @section requirements requirements
-* @include requirements
+* @verbinclude requirements
 *
 * @todo Fix up test program
 */
