@@ -43,6 +43,22 @@ AcdId::AcdId(UInt_t i, Short_t base, Short_t used) {
     setId(i, used, base);
 }
 
+void AcdId::initialize(UShort_t l, UShort_t f, UShort_t r, UShort_t c) {
+    m_used = 1;
+    m_id = 0;
+    setLayer(l);
+    setFace(f);
+    setRow(r);
+    setColumn(c);
+}
+
+void AcdId::initialize(UShort_t ribOrient, UShort_t ribNum) {
+    m_used = 1;
+    m_id = 0;
+    setRibbonNumber(ribNum);
+    setRibbonOrientation(ribOrient);
+}
+
 void AcdId::Clear(Option_t *option) {
     m_used = 1;
     m_id = 0;

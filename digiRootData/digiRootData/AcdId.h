@@ -66,6 +66,9 @@ public:
     AcdId(UInt_t i, Short_t base=10, Short_t used=1);
     AcdId(UShort_t ribOriet, UShort_t ribNum);
     
+    void initialize(UShort_t l, UShort_t f, UShort_t r, UShort_t c);
+    void initialize(UShort_t ribOrient, UShort_t ribNum);
+
     virtual ~AcdId() { };
 
     void Clear(Option_t *option ="");
