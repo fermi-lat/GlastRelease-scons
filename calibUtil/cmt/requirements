@@ -18,11 +18,10 @@ apply_pattern package_headers
 ## library calibUtil -no_share  $(calibUtil_headers) *.cxx *.c
 
 
-## library calibUtil -no_share $(headers) \
-##          test/*.cxx \
-##          client.cxx
+library calibUtil -no_share $(calibUtil_headers) *.cxx *.c
 
-application client main.cxx StripSrv.cxx GenericSrv.cxx
+
+application client test/main.cxx StripSrv.cxx GenericSrv.cxx
 
 
 
