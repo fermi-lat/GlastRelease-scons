@@ -13,14 +13,14 @@ namespace detModel{
   }
 
   void AxisMPos::translateDisp(double a){
-    int i;
+    unsigned int i;
   
     for(i=0;i<getNcopy();i++)
       setDisp(i,getDisp(i) + a);
   }
 
   void AxisMPos::buildBB(){
-    int i;
+    unsigned int i;
 
     if (getVolume())
       {

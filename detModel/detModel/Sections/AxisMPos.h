@@ -25,7 +25,7 @@ namespace detModel{
     void setNcopy(int pncopy){ncopy = pncopy;};
     double getShift0(){return shift0;}
     double getGap0(){return gap0;}
-    int getNcopy(){return ncopy;}
+    unsigned int getNcopy(){return ncopy;}
 
     virtual void buildBB();
     double getDispCM(){return dispCM;};
@@ -37,7 +37,7 @@ namespace detModel{
   private:    
     double shift0; ///default 0
     double gap0; ///default 0
-    int ncopy; ///default 0
+    unsigned int ncopy; ///default 0
 
     double dispCM;
 

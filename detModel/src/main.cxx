@@ -8,7 +8,7 @@
 
 #include "detModel/Management/Manager.h"
 #include "detModel/Management/VrmlSectionsVisitor.h"
-#include "detModel/Management/DawnSectionsVisitor.h"
+#include "detModel/Management/IDmapBuilder.h"
 #include "detModel/Management/PrinterSectionsVisitor.h"
 #include "detModel/Management/HtmlConstantsVisitor.h"
 #include "detModel/Management/PrinterMaterialsVisitor.h"
@@ -16,6 +16,7 @@
 #include "detModel/Materials/MatCollection.h"
 #include "detModel/Materials/Material.h"
 #include "detModel/Utilities/Color.h"
+#include "detModel/Utilities/PositionedVolume.h"
 #include "detModel/Sections/Volume.h"
 #include "detModel/Sections/Shape.h"
 #include "detModel/Sections/Box.h"
@@ -65,13 +66,6 @@ int main(int argc, char* argv[]) {
   else
     visitor = new detModel::VrmlSectionsVisitor(argv[2]);  
 
-  // The same for a DAWN visitor to produce PostScript drawings
-  detModel::DawnSectionsVisitor* visitor2;
-  if (argc == 2)
-    visitor2 = new detModel::DawnSectionsVisitor("");  
-  else
-    visitor2 = new detModel::DawnSectionsVisitor(argv[2]);  
-
   // We retrive the hierarchy entry point, i.e. the GDD object. It
   // contains all the relevant information
   detModel::Gdd* g = manager->getGdd();
@@ -89,15 +83,13 @@ int main(int argc, char* argv[]) {
   // We start the HTMLConstantsVisitor to build the html file with the
   // constants tables. Colors and layout are stolen from Joanne ones.
   manager->startVisitor(new detModel::HtmlConstantsVisitor);
-  // We start the dawn visitor
-  manager->startVisitor(visitor2);  
-  // We set a new mode for choices
-  manager->setMode("fastmc");
+  // We set a mode for choices
+  manager->setMode("propagate");
   // We start the vrml visitor
   manager->startVisitor(visitor);
 
+
   delete visitor;
-  delete visitor2;
 
   delete manager;
   return(0);

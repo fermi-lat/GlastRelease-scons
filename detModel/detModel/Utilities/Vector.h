@@ -4,6 +4,7 @@
 
 namespace detModel{
 
+  /// A Vector class; it will be substituted by the use of CLHEP
   class Vector{
   public:
     
