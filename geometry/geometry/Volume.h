@@ -52,7 +52,9 @@ class Volume : public  Shape , protected SurfaceList
 
     double getMaxDimension() const { return max_dimension; }
 
-
+    // The surface accruacy limit....
+    static const double Surface_EPSILON;
+    
  protected:
    // following methods accessible to subclasses only
    Surface& surface(int i) { return *operator[](i); }

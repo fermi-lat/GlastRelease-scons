@@ -9,6 +9,8 @@
 # include <strstream>
 
 static unsigned  s_count=0;
+//THB 13-Aug-96 const double Surface_EPSILON= 2e-6; //(100*DBL_EPSILON);
+const double Volume::Surface_EPSILON= 2e-5; //(100*DBL_EPSILON);
 
 Volume::Volume(unsigned n)
 : SurfaceList(n)
@@ -58,8 +60,6 @@ void Volume::printOn( std::ostream& os ) const
 	os << surface(i);
 }
 
-//THB 13-Aug-96 const double Surface_EPSILON= 2e-6; //(100*DBL_EPSILON);
-const double Surface_EPSILON= 2e-5; //(100*DBL_EPSILON);
 static unsigned isurf;   // local boundary index
 int
 Volume::getBoundaryIndex(const Point& p)const
@@ -115,7 +115,7 @@ static double Surface_distanceToLeave( const Surface &s, const Ray& r, double ma
     }
 
 
-    if ( d < -Surface_EPSILON ) {
+    if ( d < -Volume::Surface_EPSILON ) {
 	// the outside case for s
 		std::ostrstream error_text;
 		error_text << "Volume--bad geometry for surface \n\t" << s
@@ -126,7 +126,7 @@ static double Surface_distanceToLeave( const Surface &s, const Ray& r, double ma
 		solution = Surface_NO_SOLUTION;
 		return FLT_MAX;
     }
-    else if (d < Surface_EPSILON ) {
+    else if (d < Volume::Surface_EPSILON ) {
 		// the ambigous case for s --> take first leaving intersection
 		
 	status   = Surface_AMBIGOUS;
