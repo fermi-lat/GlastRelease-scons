@@ -3,7 +3,7 @@ Package rootTestData
 Coordinator:H.Kelly
 @verbatim
 
-v2r1      24-Jan-05  LSR new files for main branch
+v2r1      25-Jan-05  LSR new files for main branch
                          jobOptions for both sources
 v2r0      06-Jan-05  HMK Add new vertical_surface_muons data
 v1r0      01-dec-04  HMK Update default ROOT files - generated using GR v4r6
