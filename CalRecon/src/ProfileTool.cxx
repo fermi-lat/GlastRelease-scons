@@ -3,6 +3,8 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+// to access an XML containing Profile Bias parameters file
+#include "xml/IFile.h"
 
 static const ToolFactory<ProfileTool>  s_factory;
 const IToolFactory& ProfileToolFactory = s_factory;
@@ -68,7 +70,6 @@ double ProfileTool::gam_prof(double *par, int i)
 */
 
 void ProfileTool::fcn(int & , double *, double &f, double *par, int )
-
 // Purpose: calculates the weighted sum of quadratic deviations
 //          of energy depositioins in layers from predicted by shower
 //          profile function
@@ -93,6 +94,47 @@ void ProfileTool::fcn(int & , double *, double &f, double *par, int )
     f = chisq;
 }
 
+double ProfileTool::bias( double energy )
+// Purpose: calculates the mean bias for the profile method at a given energy 
+// and angle. The bias is estimated as the output energy of the fit times a 
+// polynomial P( log(fit_energy), cos(incidence) ). It is valid for 
+// energies > 2000 MeV and cos( incidence )> 0.4. the fit energy is corrected 
+// as follows: 
+//      debiased energy= fit energy
+//      debiased energy= fit energy + bias( debiased energy ) : repeated thrice 
+//
+// Input: fit energy - energy in GeV
+// Output:  - bias
+{
+  // check for valid angles
+  if( getStaticSlope() < m_BiasCTLim ) return energy;
+
+  // get value: cos(angle of incidence)
+  double cTh= 1./sqrt(1+getStaticSlope()*getStaticSlope());
+  double debiasedE= energy;
+
+  // correction repeated thrice
+  for( short int times= 0; times<3; ++times ){ 
+    double logE= log( debiasedE ); 
+    double bias= 0.;
+
+    // evaluate polynomial at logE and cTh
+    for( short int biasPar=0; biasPar<m_BiasParNb; biasPar+= m_BiasCTNb ){
+      double thetaPar=0.;
+      for( short int ctPar= biasPar; ctPar<biasPar+m_BiasCTNb; ++ctPar ){
+        thetaPar+= m_BiasVector[ctPar];
+        thetaPar*= cTh;
+      }
+      bias+= thetaPar; 
+      bias*= logE;
+    }
+
+    // apply correction
+    debiasedE= energy+bias*debiasedE;
+  }
+
+  return debiasedE;  
+}
 
 ProfileTool::ProfileTool( const std::string& type, 
                          const std::string& name, 
@@ -101,17 +143,15 @@ ProfileTool::ProfileTool( const std::string& type,
 {
     // declare base interface for all consecutive concrete classes
     declareInterface<IEnergyCorr>(this);
+    declareProperty ("xmlFile", m_xmlFile="$(CALRECONROOT)/xml/CalProfile.xml");
     // Declare the properties that may be set in the job options file
-    
 }
 
 
 
 StatusCode ProfileTool::initialize()
-
 // This function does following initialization actions:
 //    - extracts geometry constants from xml file using GlastDetSvc
-
 {
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
@@ -172,13 +212,44 @@ StatusCode ProfileTool::initialize()
     m_g_elayer.clear();
 
     
+    // Read in the parameters from the XML file
+    xml::IFile m_ifile(m_xmlFile.c_str());
+    if ( m_ifile.contains("profileBias", "CosThetaLimit" ) ){
+      m_BiasCTLim= m_ifile.getDouble("profileBias", "CosThetaLimit" );
+      log << MSG::INFO << " value for CosThetaLimit " 
+          << m_BiasCTLim << endreq;
+    } else return StatusCode::FAILURE;
+
+    if ( m_ifile.contains("profileBias", "BiasParNb" ) ){
+      m_BiasParNb= m_ifile.getInt("profileBias", "BiasParNb" );
+      log << MSG::INFO << " value for BiasParNb" 
+          << m_BiasParNb << endreq;
+    } else return StatusCode::FAILURE;
+
+    if ( m_ifile.contains("profileBias", "CosThetaParNb" ) ){
+      m_BiasCTNb= m_ifile.getInt("profileBias", "CosThetaParNb" );
+      log << MSG::INFO << " value for CosThetaParNb " 
+          << m_BiasCTNb << endreq;
+    } else return StatusCode::FAILURE;
+
+    m_BiasVector= std::vector<double> ( m_BiasParNb );
+
+    char name[10];
+    for( short int biasPar=0; biasPar<m_BiasParNb; biasPar+= m_BiasCTNb )
+      for( short int ctPar= biasPar; ctPar<biasPar+m_BiasCTNb; ++ctPar ){
+        sprintf( name, "bias%d", ctPar );
+        if ( m_ifile.contains("profileBias", name) ){
+          m_BiasVector[ctPar] = m_ifile.getDouble("profileBias", name);
+	        log << MSG::INFO << " value for " << name << " " 
+              << m_BiasVector[ctPar] << endreq;
+        } else return StatusCode::FAILURE;
+      }
 
     return sc;
 }
 
 
 StatusCode ProfileTool::doEnergyCorr(double eTotal, Event::CalCluster* cluster)
-
 //               This function fits the parameters of shower profile using
 //               the Minuit minimization package and stores the fitted
 //               parameters in the CalCluster object
@@ -189,8 +260,6 @@ StatusCode ProfileTool::doEnergyCorr(double eTotal, Event::CalCluster* cluster)
 //
 //  Output:   parameters fit_energy,ki2,fit_start,fit_alpha,fit_lambda,
 //            stored in CalCluster object using initProfile() method
-
-
 {
     MsgStream lm(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
@@ -319,21 +388,22 @@ StatusCode ProfileTool::doEnergyCorr(double eTotal, Event::CalCluster* cluster)
         m_minuit->GetParameter( 2, fit_start,start_err ); 
         m_minuit->GetParameter( 3, fit_lambda,lambda_err ); 
         
+        // bias correction
+        double fit_energy_opt= bias(fit_energy);
+        
         // Get chi-square
         double edm,errdef;
         int nvpar,nparx,icstat;
         m_minuit->mnstat(ki2,edm,errdef,nvpar,nparx,icstat);
-        
+
         // Fills data
-        
-        cluster->initProfile(1000*fit_energy,ki2,fit_start,fit_alpha,fit_lambda);
+        cluster->initProfile(1000*fit_energy_opt,ki2,
+                             fit_start,fit_alpha,fit_lambda);
         
         // Clear minuit
         arglist[0] = 1;
         m_minuit->mnexcm("CLEAR", arglist ,1,ierflg);
-        
     } 
-    
     
     return sc;
 }

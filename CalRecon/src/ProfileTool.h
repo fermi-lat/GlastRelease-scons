@@ -68,6 +68,16 @@ E_i = E_{tot}(\Gamma_{inc}
 * sum in the calorimeter, while 2 other parameters are optimized by Minuit
 * to get the best fit.
 *
+* The fit output energy is debiased using a polynomial:
+*     P( log( fit energy ), cos( angle of incdence ) ) giving the most probable
+* bias for a certain monte carlo energy and incidfent angle. Its parameters are 
+* contained in \$(CALRECONROOT)/xml/CalProfile.xml
+* The correction is operated thrice:
+*   \f[ E_{debiased}=E_{fit} 
+    \f]
+    \f[ E_{debiased}=E_{fit}+E_{debiased}*\mathrm{P}(E_{debiased},\cos(\theta))
+        \;\rbrace \times 3 
+    \f] 
 *
 * The input is:
 * \param eTotal total energy measured in the calorimeter in MeV
@@ -94,6 +104,8 @@ protected:
     static void fcn(int & , double *, double &f, double *par, int );
     // gamma function for shower shape 
     static double gam_prof(double *par, int i);
+    // profile bias function
+    double bias( double logEnergy );
 
 private:
 
@@ -104,6 +116,12 @@ private:
     static int m_nbins;  //!< Number of bins used for the fit
     static std::vector<double> m_g_elayer;  //!< Energy per layer in GeV
 
+    /// input XML file containing parameters for bias correction
+    std::string	m_xmlFile;
+    std::vector<double> m_BiasVector;
+    int m_BiasParNb;
+    int m_BiasCTNb;
+    double m_BiasCTLim;
 };
 
 #endif
