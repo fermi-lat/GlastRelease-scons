@@ -75,27 +75,41 @@ StatusCode test_CalUtil::execute()
     MsgStream   log( msgSvc(), name() );
     log << MSG::INFO << "executing " << ++m_count << " time" << endreq;
 
-    idents::CalXtalId id1(10,3,2);
-    idents::CalXtalId id2(11,1,2);
-    idents::CalXtalId id3(3,5,3);
+    idents::CalXtalId id1(10,2,2);  // tower 10, layer 3(y)
+    idents::CalXtalId id2(11,1,2);  // tower 11, layer 1(y)
+    idents::CalXtalId id3(3,5,3);   // tower 3, layer 5(y)
+    idents::CalXtalId id4(4,6,3);   // tower 4, layer 6(x)
+    idents::CalXtalId id5(4,1,3);   // tower 4, layer 1(y)
 
     if (m_FailSvc == 0) return StatusCode::FAILURE;
     if (m_FailSvc->matchChannel(id1,idents::CalXtalId::NEG)) {
-      log << MSG::INFO << "removed channel (10,3,2)" << endreq;
+      log << MSG::INFO << "removed channel (10,2,2) NEG" << endreq;
     } else {
-      log << MSG::ERROR << "failed to remove channel (10,3,2)" << endreq;
+      log << MSG::ERROR << "failed to remove channel (10,2,2) NEG" << endreq;
       return StatusCode::FAILURE;
     }
     if (m_FailSvc->matchChannel(id2,idents::CalXtalId::NEG)) {
-      log << MSG::INFO << "removed channel (11,1,2)" << endreq;
+      log << MSG::INFO << "removed channel (11,1,2) NEG" << endreq;
     } else {
-      log << MSG::ERROR << "failed to remove channel (11,1,2)" << endreq;
+      log << MSG::ERROR << "failed to remove channel (11,1,2) NEG" << endreq;
       return StatusCode::FAILURE;
     }
     if (!m_FailSvc->matchChannel(id3,idents::CalXtalId::NEG)) {
-      log << MSG::INFO << "left channel (3,5,3)" << endreq;
+      log << MSG::INFO << "left channel (3,5,3) NEG" << endreq;
     } else {
-      log << MSG::ERROR << "erroneously removed channel (3,5,3)" << endreq;
+      log << MSG::ERROR << "erroneously removed channel (3,5,3) NEG" << endreq;
+      return StatusCode::FAILURE;
+    }
+    if (m_FailSvc->matchChannel(id4,idents::CalXtalId::NEG)) {
+      log << MSG::INFO << "removed channel (4,6,3) NEG" << endreq;
+    } else {
+      log << MSG::ERROR << "erroneously left channel (4,6,3) NEG" << endreq;
+      return StatusCode::FAILURE;
+    }
+    if (!m_FailSvc->matchChannel(id5,idents::CalXtalId::NEG)) {
+      log << MSG::INFO << "left channel (4,1,3) NEG" << endreq;
+    } else {
+      log << MSG::ERROR << "erroneously removed channel (4,1,3) NEG" << endreq;
       return StatusCode::FAILURE;
     }
 

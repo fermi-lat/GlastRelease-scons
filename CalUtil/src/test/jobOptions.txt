@@ -32,6 +32,7 @@ ApplicationMgr.DLLs += {"GlastSvc"};
 ApplicationMgr.ExtSvc += {"CalFailureModeSvc"};
 CalFailureModeSvc.towerAfeeList= {"10_2"}; 
 CalFailureModeSvc.towerList= {"11"}; 
+CalFailureModeSvc.towerControllerList= {"4_2"}; 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel = 2;
