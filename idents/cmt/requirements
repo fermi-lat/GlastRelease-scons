@@ -9,3 +9,5 @@ apply_pattern package_headers
 apply_pattern package_linkopts
 
 library idents -no_share *.cxx ${idents_headers}
+
+application test test/test_idents.cxx

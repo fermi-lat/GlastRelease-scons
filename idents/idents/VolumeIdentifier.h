@@ -40,6 +40,8 @@ public:
      */
     void init(int64 , unsigned int); 
 
+    int64 getValue() const{ return m_value;}
+
     /// prepend, in front, another id
     void prepend( const VolumeIdentifier& id);
 
@@ -54,15 +56,18 @@ public:
 
     /// return a name made up with slash delimiters
     std::string name(const char* delimiter="/")const ;
-
-    
-    /// return a long word for sorting 
-
-    operator int64()const{ return m_value;}
-
+ 
     /// access single ids which constitute the volume identifier
     unsigned int operator[](unsigned int);
     
+    /// overload the < operator for correct sorting of volume identifiers
+    bool operator<(const VolumeIdentifier& id)const
+      {
+         return (m_value < id.getValue())
+	   || (m_value==id.getValue() && (m_size < id.size()));
+      }
+
+                                                       
 private:
 
     /// internal rappresentation of the volume identifier
