@@ -1,5 +1,5 @@
 
-#include "GlastEvent/Hits/SiLayers.h"
+#include "Event/Hits/SiLayers.h"
 
 #include "GaudiKernel/MsgStream.h"
 //#include "Event/messageManager.h"

@@ -17,7 +17,7 @@
 #include <vector>
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/DataObject.h"
-#include "GlastEvent/Recon/TkrRecon/TkrVertex.h"
+#include "Event/Recon/TkrRecon/TkrVertex.h"
 /** 
 * @class TkrVertexCol
 *

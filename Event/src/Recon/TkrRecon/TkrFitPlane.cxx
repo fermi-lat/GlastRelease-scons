@@ -8,7 +8,7 @@
 //      
 //-----------------------------------------------------------------------
 
-#include "GlastEvent/Recon/TkrRecon/TkrFitPlane.h"
+#include "Event/Recon/TkrRecon/TkrFitPlane.h"
 
 using namespace TkrRecon;
 

@@ -38,7 +38,7 @@ extern const CLID& CLID_CalClusterCol;
  *  - 02/29/00    JAH  first implementation
  */
 
-namespace GlastEvent 
+namespace Event 
 
 {
 

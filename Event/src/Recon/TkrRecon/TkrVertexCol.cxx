@@ -3,7 +3,7 @@
 	Tracy Usher March 1, 2002
 */
 
-#include "GlastEvent/Recon/TkrRecon/TkrVertexCol.h"
+#include "Event/Recon/TkrRecon/TkrVertexCol.h"
 
 using namespace TkrRecon;
 

@@ -10,7 +10,7 @@
 
 //------------------------------------------------------------------------------
 //
-// Description: Definitions of GlastEvent specific constants
+// Description: Definitions of Event specific constants
 //              e.g. output precision of member data
 //                   (used in the function fillstream())
 //
@@ -18,7 +18,7 @@
 //
 //------------------------------------------------------------------------------
 
-namespace GlastEvent {
+namespace Event {
 
   // Width of the output field of a floating point number
   const int width      = 12;
@@ -37,17 +37,17 @@ namespace GlastEvent {
 
 // Macro, which defines the output format of floating point numbers
 //   Standard usage :
-//     << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision ) << 
-#define GlastEventFloatFormat(X,Y)       std::setw(X) << std::setprecision(Y)
+//     << EventFloatFormat( Event::width, Event::precision ) << 
+#define EventFloatFormat(X,Y)       std::setw(X) << std::setprecision(Y)
 // The keyword scientific does not work properly om all platforms
-// #define GlastEventFloatFormat(X,Y)       std::setw(X)
+// #define EventFloatFormat(X,Y)       std::setw(X)
 //                                           << std::setprecision(Y)
 //                                           << scientific
 
 
 // Macro, which defines the output format of integer numbers
-//   Standard usage : << GlastEventField( GlastEvent::field4 ) << 
-#define GlastEventField(X)               std::setw(X)
+//   Standard usage : << EventField( Event::field4 ) << 
+#define EventField(X)               std::setw(X)
 
 
 #endif // LHCBEVENT_DEFINITIONS_H

@@ -1,6 +1,6 @@
 // $Header$
-#ifndef GlastEvent_McIntegratingHit_H
-#define GlastEvent_McIntegratingHit_H 1
+#ifndef Event_McIntegratingHit_H
+#define Event_McIntegratingHit_H 1
 
 #include <iostream>
 #include <vector>
@@ -9,10 +9,10 @@
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/SmartRefVector.h"
-#include "GlastEvent/TopLevel/Definitions.h"
+#include "Event/TopLevel/Definitions.h"
 #include "idents/VolumeIdentifier.h"
-#include "GlastEvent/Utilities/CLHEPStreams.h"
-#include "GlastEvent/Utilities/IDStreams.h"
+#include "Event/Utilities/CLHEPStreams.h"
+#include "Event/Utilities/IDStreams.h"
 // Include all Glast container types here
 //   to simplify inlude statements in algorithms
 #include "GaudiKernel/ObjectVector.h"
@@ -32,7 +32,7 @@
  * $Header$
  */
 
-#include "GlastEvent/MonteCarlo/McParticle.h"
+#include "Event/MonteCarlo/McParticle.h"
 
 extern const CLID& CLID_McIntegratingHit;
 
@@ -164,21 +164,21 @@ inline std::ostream& mc::McIntegratingHit::fillStream( std::ostream& s ) const
 {
     s << "class McCaloHitBase :"
       << "\n    Deposited Energy        = "
-      << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+      << EventFloatFormat( Event::width, Event::precision )
       << m_totalEnergy
       << "\n    First moment (x, y, z)  = "
-      << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+      << EventFloatFormat( Event::width, Event::precision )
       << m_moment1seed.x() / m_totalEnergy << ", "
-      << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+      << EventFloatFormat( Event::width, Event::precision )
       << m_moment1seed.y() / m_totalEnergy << ", "
-      << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+      << EventFloatFormat( Event::width, Event::precision )
       << m_moment1seed.z() / m_totalEnergy << " )"
       << "\n    Second moment (x, y, z) = "
-      << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+      << EventFloatFormat( Event::width, Event::precision )
       << m_moment2seed.x() / m_totalEnergy << ", "
-      << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+      << EventFloatFormat( Event::width, Event::precision )
       << m_moment2seed.y() / m_totalEnergy << ", "
-      << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+      << EventFloatFormat( Event::width, Event::precision )
       << m_moment2seed.z() / m_totalEnergy << " )"
       << "\n    Volume ID               = " << m_volumeID.name();
     return s;
@@ -199,4 +199,4 @@ class CompareIntHits {
     };
 
 
-#endif // GlastEvent_McIntegratingHit_H
+#endif // Event_McIntegratingHit_H

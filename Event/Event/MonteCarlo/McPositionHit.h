@@ -1,6 +1,6 @@
 // $Header$
-#ifndef GlastEvent_McPositionHit_H
-#define GlastEvent_McPositionHit_H 1
+#ifndef Event_McPositionHit_H
+#define Event_McPositionHit_H 1
 
 
 // Include files
@@ -9,10 +9,10 @@
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/SmartRef.h"
-#include "GlastEvent/TopLevel/Definitions.h"
+#include "Event/TopLevel/Definitions.h"
 #include "CLHEP/Geometry/Point3D.h"
-#include "GlastEvent/Utilities/CLHEPStreams.h"
-#include "GlastEvent/Utilities/IDStreams.h"
+#include "Event/Utilities/CLHEPStreams.h"
+#include "Event/Utilities/IDStreams.h"
 // Include all Gaudi container types here
 //   to simplify inlude statements in algorithms
 #include "GaudiKernel/ObjectVector.h"
@@ -21,7 +21,7 @@
 #include "idents/VolumeIdentifier.h"
 
 
-#include "GlastEvent/MonteCarlo/McParticle.h"
+#include "Event/MonteCarlo/McParticle.h"
 
 // Forward declarations
 class McParticle;
@@ -212,27 +212,27 @@ inline std::ostream& mc::McPositionHit::fillStream( std::ostream& s ) const
     << "    base class McPositionHit :"
     << "\n        Volume ID             = " << m_volumeID.name()
     << "\n        Entry point (x, y, z) = ( "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << EventFloatFormat( Event::width, Event::precision )
     << m_entry.x() << ", "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << EventFloatFormat( Event::width, Event::precision )
     << m_entry.y() << ", "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << EventFloatFormat( Event::width, Event::precision )
     << m_entry.z() << " )"
     << "\n        Deposited Energy      = "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << EventFloatFormat( Event::width, Event::precision )
     << m_depositedEnergy
     << "\n        Particle Energy       = "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << EventFloatFormat( Event::width, Event::precision )
     << m_particleEnergy
     << "\n        Time of flight        = "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << EventFloatFormat( Event::width, Event::precision )
     << m_timeOfFlight
     << "\n        Exit point (x, y, z)  = ( "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << EventFloatFormat( Event::width, Event::precision )
     << m_exit.x() << ", "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << EventFloatFormat( Event::width, Event::precision )
     << m_exit.y() << ", "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << EventFloatFormat( Event::width, Event::precision )
     << m_exit.z() << " )"
     << "\n        McParticle            = " << m_mcParticle(this)
     << "\n        ancestor McParticle   = " << m_originMcParticle(this);
@@ -251,5 +251,5 @@ class ComparePosHits {
     };
 
 
-#endif    // GlastEvent_McPositionHit_H
+#endif    // Event_McPositionHit_H
 

@@ -4,7 +4,7 @@
 */
 
 #include <algorithm>
-#include "GlastEvent/Recon/TkrRecon/TkrPatCand.h"
+#include "Event/Recon/TkrRecon/TkrPatCand.h"
 
 using namespace TkrRecon;
 

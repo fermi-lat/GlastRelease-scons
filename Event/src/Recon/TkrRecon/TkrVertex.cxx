@@ -1,5 +1,5 @@
 
-#include "GlastEvent/Recon/TkrRecon/TkrVertex.h"
+#include "Event/Recon/TkrRecon/TkrVertex.h"
 
 using namespace TkrRecon;
 

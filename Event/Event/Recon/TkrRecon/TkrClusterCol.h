@@ -5,7 +5,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/DataObject.h"
 #include "geometry/Point.h"
-#include "GlastEvent/Recon/TkrRecon/TkrCluster.h"
+#include "Event/Recon/TkrRecon/TkrCluster.h"
 
 /// constants for the array of cluster lists
 enum {NVIEWS=2, NPLANES=18};

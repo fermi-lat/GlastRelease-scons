@@ -2,8 +2,8 @@
 #define __TKRRECINFO_H 1
 
 #include "GaudiKernel/MsgStream.h"
-#include "GlastEvent/Recon/TkrRecon/TkrFitPar.h"
-#include "GlastEvent/Recon/TkrRecon/TkrFitMatrix.h"
+#include "Event/Recon/TkrRecon/TkrFitPar.h"
+#include "Event/Recon/TkrRecon/TkrFitMatrix.h"
 #include "geometry/Ray.h"
 
 /** 

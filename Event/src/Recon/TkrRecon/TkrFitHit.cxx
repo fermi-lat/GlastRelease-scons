@@ -7,7 +7,7 @@
 //      
 //-----------------------------------------------------------------------
 
-#include "GlastEvent/Recon/TkrRecon/TkrFitHit.h"
+#include "Event/Recon/TkrRecon/TkrFitHit.h"
 
 using namespace TkrRecon;
 

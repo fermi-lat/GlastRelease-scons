@@ -16,8 +16,8 @@
 
 #include <vector>
 #include "GaudiKernel/MsgStream.h"
-#include "GlastEvent/Recon/TkrRecon/TkrRecInfo.h"
-#include "GlastEvent/Recon/TkrRecon/TkrFitTrack.h"
+#include "Event/Recon/TkrRecon/TkrRecInfo.h"
+#include "Event/Recon/TkrRecon/TkrFitTrack.h"
 /** 
 * @class TkrVertex
 *

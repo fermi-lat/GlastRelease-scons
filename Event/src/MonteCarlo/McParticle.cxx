@@ -1,8 +1,8 @@
 // $Header$
 
 #include <iostream>
-#include "GlastEvent/MonteCarlo/McParticle.h"
-#include "GlastEvent/Utilities/CLHEPStreams.h"
+#include "Event/MonteCarlo/McParticle.h"
+#include "Event/Utilities/CLHEPStreams.h"
 
 
 namespace mc {

@@ -11,7 +11,7 @@
 //      
 //-----------------------------------------------------------------------
 
-#include "GlastEvent/Recon/TkrRecon/TkrFitPar.h"
+#include "Event/Recon/TkrRecon/TkrFitPar.h"
 #include "geometry/Ray.h"
 
 using namespace TkrRecon;

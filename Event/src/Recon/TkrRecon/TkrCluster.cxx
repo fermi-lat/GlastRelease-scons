@@ -1,4 +1,4 @@
-#include "GlastEvent/Recon/TkrRecon/TkrCluster.h"
+#include "Event/Recon/TkrRecon/TkrCluster.h"
 
 //---------------------------------------------------
 //       TkrCluster

@@ -4,7 +4,7 @@
 
 #include <vector>
 #include "GaudiKernel/MsgStream.h"
-#include "GlastEvent/Recon/TkrRecon/TkrCluster.h"
+#include "Event/Recon/TkrRecon/TkrCluster.h"
 /** 
 * @class TkrPatCandHit
 *

@@ -2,8 +2,8 @@
 
 #include <iostream>
 #include <math.h>
-#include "GlastEvent/MonteCarlo/McPositionHit.h"
-#include "GlastEvent/Utilities/CLHEPStreams.h"
+#include "Event/MonteCarlo/McPositionHit.h"
+#include "Event/Utilities/CLHEPStreams.h"
 
 
 namespace mc{

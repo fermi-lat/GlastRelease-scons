@@ -5,12 +5,12 @@
 
 // Include files
 #include "GaudiKernel/StreamBuffer.h"
-#include "GlastEvent/TopLevel/Definitions.h"
+#include "Event/TopLevel/Definitions.h"
 
 
 //------------------------------------------------------------------------------
 //
-// Description: Streams operators of CLHEP classes used in GlastEvent
+// Description: Streams operators of CLHEP classes used in Event
 //              (used in serialize() methods)
 //
 // CLHEPStreams.h defines additional oprators to used classes from

@@ -2,8 +2,8 @@
 #ifndef _TkrFitHit_H
 #define _TkrFitHit_H 1
 
-#include "GlastEvent/Recon/TkrRecon/TkrFitPar.h"
-#include "GlastEvent/Recon/TkrRecon/TkrFitMatrix.h"
+#include "Event/Recon/TkrRecon/TkrFitPar.h"
+#include "Event/Recon/TkrRecon/TkrFitMatrix.h"
 
 /** 
 * @class TkrFitHit

@@ -3,7 +3,7 @@
         Tracy Usher Nov 27, 2000
 */
 
-#include "GlastEvent/Recon/TkrRecon/TkrPatCandCol.h"
+#include "Event/Recon/TkrRecon/TkrPatCandCol.h"
 
 using namespace TkrRecon;
 

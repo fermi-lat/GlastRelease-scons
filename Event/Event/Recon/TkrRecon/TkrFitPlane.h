@@ -10,8 +10,8 @@
 #ifndef _TkrFitPlane_H
 #define _TkrFitPlane_H 1
 
-#include "GlastEvent/Recon/TkrRecon/TkrClusterCol.h"
-#include "GlastEvent/Recon/TkrRecon/TkrFitHit.h"
+#include "Event/Recon/TkrRecon/TkrClusterCol.h"
+#include "Event/Recon/TkrRecon/TkrFitHit.h"
 
 /** 
 * @class TkrFitPlane

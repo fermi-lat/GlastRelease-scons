@@ -10,7 +10,7 @@
 
 
 
-#include "GlastEvent/Recon/TkrRecon/TkrClusterCol.h"
+#include "Event/Recon/TkrRecon/TkrClusterCol.h"
 
 using namespace TkrRecon;
 

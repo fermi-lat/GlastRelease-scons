@@ -1,7 +1,7 @@
 
-#include "GlastEvent/Recon/CalRecon/CalCluster.h"
+#include "Event/Recon/CalRecon/CalCluster.h"
 
-using namespace GlastEvent;
+using namespace Event;
 
 //----------------- CalCluster ------------------
 

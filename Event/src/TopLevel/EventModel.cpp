@@ -1,9 +1,9 @@
 // $Id$
 
-#define _GlastEvent_EventModel_CPP_
+#define _Event_EventModel_CPP_
 
 
-#include "GlastEvent/TopLevel/EventModel.h"
+#include "Event/TopLevel/EventModel.h"
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ClassID.h"
 

@@ -13,8 +13,8 @@
 */
 #include <vector>
 #include "GaudiKernel/MsgStream.h"
-#include "GlastEvent/Recon/TkrRecon/TkrRecInfo.h"
-#include "GlastEvent/Recon/TkrRecon/TkrPatCandHit.h"
+#include "Event/Recon/TkrRecon/TkrRecInfo.h"
+#include "Event/Recon/TkrRecon/TkrPatCandHit.h"
 
 namespace TkrRecon { //Namespace
 

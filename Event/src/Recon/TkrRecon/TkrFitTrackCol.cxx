@@ -3,7 +3,7 @@
 	Tracy Usher Nov 27, 2000
 */
 
-#include "GlastEvent/Recon/TkrRecon/TkrFitTrackCol.h"
+#include "Event/Recon/TkrRecon/TkrFitTrackCol.h"
 
 using namespace TkrRecon;
 

@@ -12,7 +12,7 @@
 
 #include <vector>
 #include "GaudiKernel/MsgStream.h"
-#include "GlastEvent/Recon/TkrRecon/TkrPatCand.h"
+#include "Event/Recon/TkrRecon/TkrPatCand.h"
 #include "GaudiKernel/DataObject.h"
 
 extern const CLID& CLID_TkrPatCandCol;
