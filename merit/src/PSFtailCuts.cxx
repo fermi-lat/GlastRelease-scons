@@ -32,11 +32,11 @@ class AbsValueCut : public Analyze {
 PSFtailCuts::PSFtailCuts(const Tuple& t): AnalysisList(" PSF tail cuts")
 {
 
-    push_back( new Cut(t, "Fit_Type>0") );
-    push_back( new AbsValueCut(t, "Fit_Kink" , 3*0.0041 ) );
+    push_back( new Cut(t, "TKR_Fit_Type>0") );
+    push_back( new AbsValueCut(t, "TKR_Fit_Kink" , 3*0.0041 ) );
    
     // allow either name for the opening angle difference
     std::string tname="t0-t1_Angle";
-    if (t.find(tname)==t.end()) tname = "t_Angle"; 
+    if (t.find(tname)==t.end()) tname = "TKR_t_angle"; 
     push_back( new Cut(t, tname, Cut::LT, 4*0.0041 ) );
 }

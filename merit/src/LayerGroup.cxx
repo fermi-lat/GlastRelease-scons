@@ -7,10 +7,11 @@
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
+// -- June 12, 2001 changed fst_X_Lyr to TKR_First_XHit   TU
 //////////////////////////////////////////////////////////////////////
 
 LayerGroup::LayerGroup(const Tuple& t, int min_layer, int max_layer)
-:  Analyze(t, "fst_X_Lyr", "Events used")
+:  Analyze(t, "TKR_First_XHit", "Events used")
 ,  m_psf(t,0,0)
 ,  m_energy(t)
 ,  m_minlayer(min_layer), m_maxlayer(max_layer)
