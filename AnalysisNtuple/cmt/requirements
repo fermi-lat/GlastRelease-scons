@@ -1,6 +1,6 @@
 package AnalysisNtuple
 
-version v1r8p9
+version v1r8p11
 
 author Leon Rochester <lsrea@slac.stanford.edu>
 
@@ -25,6 +25,7 @@ use GlastSvc        v*
 use facilities      v*
 
 use RootIo          v*
+use merit           v*
 
 
 
