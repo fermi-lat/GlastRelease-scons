@@ -1,8 +1,8 @@
 #include "detModel/Management/DMDocClient.h"
 #include "detModel/Utilities/Global.h"
 
-#include "dom/DOM_Element.hpp"
-#include "dom/DOMString.hpp"
+#include <xercesc/dom/DOM_Element.hpp>
+#include <xercesc/dom/DOMString.hpp>
 #include "xml/Dom.h"
 
 #include <string>
