@@ -1,11 +1,11 @@
 package RootAnalysis
-version v3r2
+version v3r3
 # This package contains useful Root scripts.
 
 #use these to get the env vars defined
-use mcRootData v2r5p6
-use digiRootData v3r5p5
-use reconRootData v3r4
+use mcRootData v2r8p0
+use digiRootData v3r5p7
+use reconRootData v3r7
 use ROOT v3r2p*
 
 set ROOTANALYSIS ${ROOTANALYSISROOT}
