@@ -55,7 +55,11 @@ class Shape : public GeomObject
     // default constructor accessible to subclasses
 
  private:
-   Shape(const Shape& ):GeomObject(){};
+#ifdef WIN32
+   Shape(const Shape& ){};
+#else
+   Shape(const Shape& ):GeomObject(){}; //gcc wants initializer, msdev chokes
+#endif
     // copy constructor not allowed
 
   Point _center;
