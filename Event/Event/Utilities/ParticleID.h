@@ -38,6 +38,9 @@ public:
   long id () const                                                             {
     return m_id;
   }
+  /// Retrieve particle identifiaction
+  operator long()const{return m_id;}
+
   /// Update particle identifiaction
   void setID (long value)                                                      {
     m_id = value;
