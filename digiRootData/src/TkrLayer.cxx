@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 //
 // The TkrLayer class provides access to a single layer of Si Strips.
 // It contains a list of strips that were above thresh, and TOT and 
@@ -12,15 +12,20 @@
 // Dec 1999 Daniel Flath - Creation
 
 #include "digiRootData/TkrLayer.h"
-#include "TClass.h"
+//#include "TClass.h"
 
 ClassImp(TkrLayer)
+
+TObjArray *TkrLayer::m_staticArray = 0;
 
 // -------------------------------------------------------------------
 TkrLayer::TkrLayer() {
   // Default constructor
+    if (!m_staticArray) m_staticArray = new TObjArray();
+    m_strips = m_staticArray;
 }
 // -------------------------------------------------------------------
+/*
 TkrLayer::TkrLayer(TObjArray *strips = 0) {
   // Creates a new TkrLayer object with the specified TObjArray of Si
   // Si strips.  
@@ -32,16 +37,19 @@ TkrLayer::TkrLayer(TObjArray *strips = 0) {
   else
     m_strips = new TObjArray();
 }
+*/
 // -------------------------------------------------------------------
 TkrLayer::~TkrLayer() {
   // Destructor.  Removes all strips from 
 
   if (m_strips) {
-    int nEntries = m_strips->GetEntries();
-    for (int i=0; i<nEntries; i++)
-      delete m_strips->At(i);
-    m_strips->Clear();
+    //int nEntries = m_strips->GetEntries();
+   // for (int i=0; i<nEntries; i++)
+   //   delete m_strips->At(i);
+    m_strips->Delete();
+    if (m_strips == m_staticArray) m_staticArray = 0;
     delete m_strips;
+    m_strips = 0;
   }
 }
 // -------------------------------------------------------------------
@@ -83,33 +91,11 @@ Int_t TkrLayer::getErrf(UChar_t ctrlNum) {
     else
         return -1;
 }
-// -------------------------------------------------------------------
-/// Implement the streamer ourselves for now...to take advantage
-/// of schema evolution - and to allow our TBEvent class to handle
-/// both old (<= Root v2.25) Root files, and new (>= Root v3.00) files
-void TkrLayer::Streamer(TBuffer &R__b)
-{
-   // Stream an object of class TkrLayer.
-   if (R__b.IsReading()) {
-      UInt_t R__s, R__c;
-      Version_t R__v = R__b.ReadVersion(&R__s, &R__c); 
-      if (R__v > 1) 
-      { 
-          TkrLayer::Class()->ReadBuffer(R__b, this, R__v, R__s, R__c);
-          return;
-      }
-      /// Old Versions
-      TObject::Streamer(R__b);
-      R__b >> m_layer;
-      R__b >> m_xy;
-      R__b.ReadStaticArray(m_TOT);
-      R__b.ReadStaticArray(m_errf);
-      R__b >> m_strips;
-   } else {
-       TkrLayer::Class()->WriteBuffer(R__b, this);
-   }
+
+void TkrLayer::Clean(Option_t *option) {
+    m_strips->Delete(option);
+   // delete m_strips;
+ //   m_strips = 0;
 }
-
-
 
 

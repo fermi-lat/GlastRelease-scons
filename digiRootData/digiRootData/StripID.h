@@ -1,14 +1,13 @@
-// StripID.h: interface for the StripID class.
-//
-//////////////////////////////////////////////////////////////////////
-
-// Jan 1999 Daniel Flath - ROOT HTML Documentation added
-// Dec 1999 Daniel Flath - Creation
-
 #ifndef StripID_H
 #define StripID_H
 
 #include "TObject.h"
+
+/*! \class StripID
+\brief
+ Jan 1999 Daniel Flath - ROOT HTML Documentation added
+ Dec 1999 Daniel Flath - Creation
+*/
 
 class StripID : public TObject  
 {
@@ -48,7 +47,7 @@ public:
     };
 
     StripID();
-    virtual ~StripID();
+    virtual ~StripID() { };
 
     UShort_t getTag()   const { return m_tag; };
     UShort_t getID()    const { return (m_tag >> TKR_V_STRIP) & TKR_M_STRIP; };
@@ -63,7 +62,7 @@ public:
     Int_t Compare(TObject *obj);
     Bool_t IsSortable() const;
 
-    ClassDef(StripID,2)     // Information on a single Si Strip
+    ClassDef(StripID,3)     // Information on a single Si Strip
 };
 
 #endif // !defined StripID_H

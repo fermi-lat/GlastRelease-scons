@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "digiRootData/StripID.h"
-#include "TClass.h"
+//#include "TClass.h"
 
 ClassImp(StripID)
 
@@ -17,12 +17,6 @@ ClassImp(StripID)
 
 /////////////////////////////////////////////////
 StripID::StripID() : m_tag(0)
-{
-
-}
-
-/////////////////////////////////////////////////
-StripID::~StripID()
 {
 
 }
@@ -87,28 +81,4 @@ Bool_t StripID::setTower(UShort_t towerVal) {
     }
     else
         return kFALSE;
-}
-
-/////////////////////////////////////////////////
-/// Implement the streamer ourselves for now...to take advantage
-/// of schema evolution - and to allow our TBEvent class to handle
-/// both old (<= Root v2.25) Root files, and new (>= Root v3.00) files
-void StripID::Streamer(TBuffer &R__b)
-{
-   // Stream an object of class StripID.
-
-   if (R__b.IsReading()) {
-      UInt_t R__s, R__c;
-      Version_t R__v = R__b.ReadVersion(&R__s, &R__c); 
-      if (R__v > 1) 
-      { 
-          StripID::Class()->ReadBuffer(R__b, this, R__v, R__s, R__c);
-          return;
-      }
-      /// Old Versions      
-      TObject::Streamer(R__b);
-      R__b >> m_tag;
-   } else {
-       StripID::Class()->WriteBuffer(R__b, this);
-   }
 }

@@ -1,14 +1,17 @@
-// CalHit.h
-// Jan 1999 Daniel Flath - ROOT HTML comments added
-// Dec 1999 Daniel Flath - Rewritten for GLAST
-// Oct 25,1999 Richard Dubois Clone from LCD version
 
 #ifndef CALHIT_H
 #define CALHIT_H
 
 #include "LogID.h"
 #include "TObject.h"
-#include "TObjArray.h"
+//#include "TObjArray.h"
+
+/*! \class CalHit
+\brief
+ Jan 1999 Daniel Flath - ROOT HTML comments added
+ Dec 1999 Daniel Flath - Rewritten for GLAST
+ Oct 25,1999 Richard Dubois Clone from LCD version
+*/
 
 class CalHit: public TObject {
 private:
@@ -43,6 +46,7 @@ private:
         ADC_V_VAL = (ADC_K_ID + ADC_V_ID),
         ADC_M_VAL = ((1 << ADC_K_VAL) - 1),
     };
+
     LogID* m_log;       // Log identity info class
 
 //    UShort_t ADCValues[2][4];
@@ -76,6 +80,7 @@ public:
         Neg
     } LogEnd;
 
+
     UShort_t getADCValue(LogEnd end, ADCGain gain = LowEnX4) const {
         return getADCValue(ADCValues[end * 4 + gain]);
 //        return getADCValue(ADCValues[end][gain]);
@@ -103,15 +108,15 @@ public:
 
     CalHit();
     CalHit(LogID* log);
-    ~CalHit();
+    virtual ~CalHit();
     inline LogID* getLogID() { return m_log; };
-    void Clean();
+   // void Clean();
     
     /// Root >= 3.0 is now const correct for the Compare function
     Int_t Compare(const TObject *obj) const;
     Bool_t IsSortable() const; 
 
-    ClassDef(CalHit,2)      // Information for a single CsI Log
+    ClassDef(CalHit,3)      // Information for a single CsI Log
 };
 
 #endif

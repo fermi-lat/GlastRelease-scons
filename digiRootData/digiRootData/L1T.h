@@ -1,10 +1,13 @@
-// L1T.h
-// Dec 05,1999 Richard Dubois Clone from CalHit
 
 #ifndef L1T_H
 #define L1T_H
 
 #include "TObject.h"
+
+/*! \class L1T
+\brief Store the Level One Trigger information
+ Dec 05,1999 Richard Dubois Clone from CalHit
+*/
 
 class L1T : public TObject {
 private:
@@ -20,7 +23,7 @@ public:
     L1T();
 	L1T(Int_t trigCount, Int_t trigTimeValue, Int_t xCapture, Int_t yCapture,
 		 UShort_t vetoCapture, UChar_t deadTimeReason, UShort_t deadTime);
-    ~L1T();
+    virtual ~L1T();
     Int_t TrigCount(){ return m_trigCount; };
     Int_t TrigTimeValue(){ return m_trigTimeValue; };
     Int_t XCapture(){ return m_xCapture; };
@@ -37,7 +40,7 @@ public:
     void setDeadTimeReason(UChar_t newVal) { m_deadTimeReason = newVal; };
     void setDeadTime(UShort_t newVal) { m_deadTime = newVal; };
 
-    ClassDef(L1T,2)           // Level 1 Trigger information
+    ClassDef(L1T,3)           // Level 1 Trigger information
 };
 
 #endif

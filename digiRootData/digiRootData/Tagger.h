@@ -1,14 +1,15 @@
-// Tagger.h
-
-// Jan 1999 Daniel Flath - ROOT HTML Documentation added
-// Dec 1999 Daniel Flath - Rewrite for GLAST
-// Dec 04,1999 Richard Dubois Clone from CalHit
-
 #ifndef TAGGER_H
 #define TAGGER_H
 
 #include "ESAPID.h"
 #include "TObject.h"
+
+/*! \class Tagger
+\brief
+ Jan 1999 Daniel Flath - ROOT HTML Documentation added
+ Dec 1999 Daniel Flath - Rewrite for GLAST
+ Dec 04,1999 Richard Dubois Clone from CalHit
+*/
 
 class Tagger : public TObject {		// so far it does not contain the raw data
  private:
@@ -22,7 +23,7 @@ class Tagger : public TObject {		// so far it does not contain the raw data
   
   Tagger();
   Tagger(ESAPID* pid, UInt_t eBeam = 1, UShort_t iMag = 0);
-  ~Tagger();
+  virtual ~Tagger();
   ESAPID* getPID() { return m_PID; };
     
   Float_t getBeamEnergy() const;
@@ -32,7 +33,7 @@ class Tagger : public TObject {		// so far it does not contain the raw data
   void setBeamEnergy(Float_t eBeam); // (GeV)
   void setMagCurrent(Float_t iMag);  // (Amps)
 
-  ClassDef(Tagger,2)      // Tagger information
+  ClassDef(Tagger,3)      // Tagger information
 };
 
 #endif

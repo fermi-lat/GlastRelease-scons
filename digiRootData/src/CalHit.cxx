@@ -8,7 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "digiRootData/CalHit.h"
-#include "TClass.h"
+//#include "TClass.h"
 
 ClassImp(CalHit)
 
@@ -25,7 +25,11 @@ CalHit::CalHit(LogID* log) {
 //_________________________________________________________________________
 CalHit::~CalHit() {
     // Destructor
-    Clean();
+  //  Clean();
+    if (m_log) {
+        delete m_log;
+        m_log = 0;
+    }
 }
 //_________________________________________________________________________
 Int_t CalHit::Compare(const TObject *obj) const {
@@ -43,11 +47,11 @@ Bool_t CalHit::IsSortable() const {
   return kTRUE; 
 }
 //_________________________________________________________________________
-void CalHit::Clean() {
+//void CalHit::Clean() {
     // Free up memory reserved by member pointers
-    if (m_log)
-        delete m_log;
-}
+//    if (m_log)
+//        delete m_log;
+//}
 //_________________________________________________________________________
 Bool_t CalHit::setADCValue(UShort_t newVal, LogEnd end, ADCGain gain) {
     // Allows user to set the ADC Value for a particular log end and 
@@ -107,25 +111,4 @@ Bool_t CalHit::setADCRangeScale(UShort_t newVal, LogEnd end, ADCGain gain) {
 //        ADCValues[end][gain] |= newVal << ADC_V_RS;
         return kTRUE;
     }
-}
-//_________________________________________________________________________
-/// Implement the streamer ourselves for now...to take advantage
-/// of schema evolution - and to allow our TBEvent class to handle
-/// both old (<= Root v2.25) Root files, and new (>= Root v3.00) files
-void CalHit::Streamer(TBuffer &R__b)
-{
-   // Stream an object of class CalHit.
-   if (R__b.IsReading()) {
-      UInt_t R__s, R__c;
-      Version_t R__v = R__b.ReadVersion(&R__s, &R__c); 
-      if (R__v > 1) { 
-          CalHit::Class()->ReadBuffer(R__b, this, R__v, R__s, R__c);
-          return;
-      }
-      TObject::Streamer(R__b);
-      R__b >> m_log;
-      R__b.ReadStaticArray(ADCValues);
-   } else {
-       CalHit::Class()->WriteBuffer(R__b, this);
-   }
 }

@@ -1,5 +1,5 @@
 package digiRootData
-version v0
+version v2
 
 use GlastPolicy
 use ROOT v3r0p7
@@ -36,19 +36,6 @@ macro digiRootData_shlibflags " -L${ROOT_PATH}/lib -lPhysics -lMatrix " \
       VisualC            " ${use_linkopts} "
 
 
-# I think this is still ok?
 library  digiRootData *.cxx \
-     ../digiRootData/EventCint.cxx\
-     ../digiRootData/EventCint.h\
-     ../digiRootData/ACDTile.h\
-     ../digiRootData/CalHit.h\
-     ../digiRootData/ESAPID.h\
-     ../digiRootData/Event.h\
-     ../digiRootData/EventLinkDef.h\
-     ../digiRootData/L1T.h\
-     ../digiRootData/LogID.h\
-     ../digiRootData/StripID.h\
-     ../digiRootData/Tagger.h\
-     ../digiRootData/TileID.h\
-     ../digiRootData/TkrLayer.h
-
+      ../digiRootData/*.h \
+      ../digiRootData/*.cxx

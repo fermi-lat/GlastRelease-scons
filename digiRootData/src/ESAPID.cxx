@@ -6,7 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "digiRootData/ESAPID.h"
-#include "TClass.h"
+//#include "TClass.h"
 
 ClassImp(ESAPID)
 
@@ -50,38 +50,3 @@ void ESAPID::Clean() {
     m_OneGoodH = kFALSE;
 }
 
-/// Implement the streamer ourselves for now...to take advantage
-/// of schema evolution - and to allow our TBEvent class to handle
-/// both old (<= Root v2.25) Root files, and new (>= Root v3.00) files
-void ESAPID::Streamer(TBuffer &R__b)
-{
-   // Stream an object of class ESAPID.
-   if (R__b.IsReading()) {
-      UInt_t R__s, R__c;
-      Version_t R__v = R__b.ReadVersion(&R__s, &R__c); 
-      if (R__v > 1) 
-      { 
-          ESAPID::Class()->ReadBuffer(R__b, this, R__v, R__s, R__c);
-          return;
-      }
-      TObject::Streamer(R__b);
-      R__b >> m_Clean;
-      R__b >> m_XBeam;
-      R__b >> m_YBeam;
-      R__b >> m_NPart;
-      R__b.ReadStaticArray(m_ID);
-      R__b.ReadStaticArray(m_Mom);
-      R__b.ReadStaticArray(m_BeamPb);
-      R__b >> m_CADC;
-      R__b.ReadStaticArray(m_TOF);
-      R__b >> m_TOFC;
-      R__b >> m_OneGoodP;
-      R__b >> m_OneGoodG;
-      R__b >> m_OneGoodE;
-      R__b >> m_OneGoodK;
-      R__b >> m_OneGoodPi;
-      R__b >> m_OneGoodH;
-   } else {
-       ESAPID::Class()->WriteBuffer(R__b, this);
-   }
-}

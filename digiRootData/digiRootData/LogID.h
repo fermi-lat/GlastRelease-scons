@@ -1,6 +1,3 @@
-// access and set functions for binary calorimeter tags
-// Version 1.0 21 Oct 1998 Richard creation
-// Version 1.1 25 Oct 1999 R.Dubois Clone from LCD towerID
 
 
 #ifndef LOGID_H
@@ -8,6 +5,13 @@
 
 #include "TMath.h"
 #include "TObject.h"
+
+/*! \class LogID
+\brief
+ access and set functions for binary calorimeter tags
+ Version 1.0 21 Oct 1998 Richard creation
+ Version 1.1 25 Oct 1999 R.Dubois Clone from LCD towerID
+*/
 
 class LogID : public TObject {
 public: 
@@ -99,7 +103,7 @@ public:
 
     LogID();            
     LogID(UInt_t tag);
-    ~LogID();
+    virtual ~LogID();
 
     static Bool_t fillIDFromGeom(LogID::TAG_STRUCT *ts);
     static Bool_t fillGeomFromID(LogID::TAG_STRUCT *ts);
@@ -121,6 +125,6 @@ public:
     Bool_t setXY(CALAxes xyVal);
 //    Bool_t setID(UInt_t idVal);
 
-ClassDef(LogID,2)       // CsI log identification and readout information
+ClassDef(LogID,3)       // CsI log identification and readout information
 };
 #endif

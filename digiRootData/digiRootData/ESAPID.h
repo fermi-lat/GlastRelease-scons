@@ -1,12 +1,15 @@
-// ESAPID.h
-// Jan 1999 Daniel Flath - ROOT HTML comments added
-// Jan 1999 Daniel Flath - new glast_pid info added
-// Dec 05,1999 Richard Dubois Clone from CalHit
 
 #ifndef ESAPID_H
 #define ESAPID_H
 
 #include "TObject.h"
+
+/*! \class ESAPID
+\brief
+ Jan 1999 Daniel Flath - ROOT HTML comments added
+ Jan 1999 Daniel Flath - new glast_pid info added
+ Dec 05,1999 Richard Dubois Clone from CalHit
+ */
 
 class ESAPID : public TObject{
 private:
@@ -32,7 +35,7 @@ private:
 
 public:
     ESAPID();
-    ~ESAPID();
+    virtual ~ESAPID();
     inline Bool_t getClean() { return m_Clean; };
     inline Float_t getXbeam() { return m_XBeam; };
     inline Float_t getYbeam() { return m_YBeam; };
@@ -68,7 +71,7 @@ public:
     inline void setOneGoodH(Bool_t newVal) { m_OneGoodH = newVal; };
     
 
-    ClassDef(ESAPID,2)      // ESA Particle Identification information
+    ClassDef(ESAPID,3)      // ESA Particle Identification information
 };
 
 #endif
