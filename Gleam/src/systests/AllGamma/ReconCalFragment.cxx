@@ -31,7 +31,7 @@ void RootTreeAnalysis::ReconCalHistDefine() {
     CALZPOS->SetXTitle("position (mm)");
 
     TH1F *CALDRC = new TH1F("CALDRC", "Cal Cluster direction cosine",
-        50, 0.75, 1);
+        50, -1, 1);
     CALDRC->SetXTitle("direction cosine");
 
 
