@@ -10,6 +10,7 @@
 #include "TString.h"
 #include "TStyle.h"
 #include "TPaveText.h"
+
 TFile *myFile;
 TTree *myTree;
 TString TID;
@@ -19,7 +20,7 @@ long NumberOfEvents;
 void help();
 void AddRecon();
 void AddLayer(TString VL);
-void Initialize(char *filename="MyRootFile.root");
+void Initialize(TString filename="MyRootFile.root");
 TString LayerId(TString VL);
 
 ////////// HISTOGRAMS //////////
@@ -43,6 +44,7 @@ void PlotGraph(TString VL1,  TString varA, TString varB, TString myCuts="");
 void PlotHitsVsTime(TString VL1);
 //--------------------------------------------------//
 long FindEvents(TString myCuts="");
+long FindBigEvents(int cut);
 void  PlotVtx(TString myCuts="");
 TH2D *ClusHit(TString myCuts="");
 void PlotClusHit(TString myCuts="");
@@ -69,7 +71,7 @@ void AddRecon()
   std::cout<<" TkrNumClus, TkrNumVtx, TkrNumTraks, TkrTrk1Cluster"<<std::endl;
 }
 
-void Initialize(char *filename)
+void Initialize(TString filename)
 {
   
   gStyle->SetCanvasColor(10);
@@ -115,7 +117,7 @@ void help()
   std::cout<<" (otherwise the selected tray for plotting is used)       "<<std::endl;
   std::cout<<""<<std::endl;
   std::cout<<" READ THIS EXAMPLE OF ANALYSIS:"<<std::endl;
-  std::cout<<" Initialize(char* filename=\"MyRootFile.root\") Load the file (or reset the analysis)           "<<std::endl; 
+  std::cout<<" Initialize(TString filename=\"MyRootFile.root\") Load the file (or reset the analysis)           "<<std::endl; 
   std::cout<<" AddLayer(\"X0\")                    Select Layer  X0 "<<std::endl;
   std::cout<<" PlotToT(\"ToT0>0\")                  Plot the ToT for the LayerX0 if its ToT0 is >0"<<std::endl;
   std::cout<<" AddLayer(\"X1\")                    Add the Layer X1 to the stack of layers "<<std::endl;
@@ -126,10 +128,10 @@ void help()
   std::cout<<" PlotToT(\"LayerX1.ToT0>0\")          Plot the ToT for the LayerX0 if the ToT of the LayerX1 is is >0"<<std::endl;
   std::cout<<" Note that PlotToT(\"TkrHits[]==5\") Plot the ToTs for the events which hit the strip 5 !!"<<std::endl; 
   std::cout<<" --------------------------------------------------    "<<std::endl; 
-  std::cout<<" Initialize(char* filename=\"MyRootFile.root\") Load the file (or reset the analysis)           "<<std::endl; 
+  std::cout<<" Initialize(TString filename=\"MyRootFile.root\") Load the file (or reset the analysis)           "<<std::endl; 
   std::cout<<" AddLayer(\"X0\")                    Select Layer  X0 "<<std::endl;
   std::cout<<" PlotToT(\"ToT0>0\")                  Plot the ToT for the LayerX0 if its ToT0 is >0"<<std::endl;
-  std::cout<<" Initialize(char* filename=\"MyRootFile.root\") Load the file (This reset the analysis!!)        "<<std::endl; 
+  std::cout<<" Initialize(TString filename=\"MyRootFile.root\") Load the file (This reset the analysis!!)        "<<std::endl; 
   std::cout<<" AddLayer(\"X1\")                    Add the Layer X1 to the stack of layers "<<std::endl;
   std::cout<<" PlotToT(\"ToT0>0\")                  Plot the ToT for the LayerX1 its ToT0 is >0 (different from above)"<<std::endl;
   std::cout<<" "<<std::endl;
@@ -143,7 +145,7 @@ void help()
   std::cout<<" PlotClusHit(TString myCuts=\"\")"<<std::endl;
   std::cout<<" PlotRecon(TString myCuts=\"\")"<<std::endl;
   std::cout<<" ====================    Macros    ===================="<<std::endl;
-  std::cout<<" 1) Initialize(char* filename=\"MyRootFile.root\") Load the file"<<std::endl; 
+  std::cout<<" 1) Initialize(TString filename=\"MyRootFile.root\") Load the file"<<std::endl; 
   std::cout<<" 2) AddLayer(\"X0\") Add the layer 0X to the stak of layers... ready to be analyzed"<<std::endl; 
   std::cout<<" 3) PlotAllDigi(TString myCuts=\"\") Execute all the Plot macros for digi root file..."<<std::endl;
   std::cout<<" 4) Report(TString myCuts=\"\") Makes a report page with some plots and infos. "<<std::endl;
@@ -364,6 +366,43 @@ long FindEvents(TString myCuts)
   return myTree->Scan("EventId",myCuts);
 }
 
+long FindBigEvents(int cut)
+{
+  int nx=11;  
+  int ny=0;  
+  TString myCut="";    
+  
+  for(int i=0; i<nx; i++)
+    {
+      TString anXlayer="X";
+      anXlayer+=i;
+      AddLayer(anXlayer);
+      TString layerstring="Layer";
+      layerstring +=anXlayer;
+      myCut+=layerstring;
+      myCut+=".TkrNumHits";
+      myCut+=" >= ";
+      myCut+= cut;
+      if (i!=nx+ny-1) myCut += " || ";
+    }
+
+
+  for(int i=0; i<ny; i++)
+    {
+      TString anYlayer="Y";
+      anYlayer+=i;
+      AddLayer(anYlayer);
+      TString layerstring="Layer";
+      layerstring +=anYlayer;
+      myCut+=layerstring;
+      myCut+=".TkrNumHits";
+      myCut+=" >= ";
+      myCut+= cut;
+      if (i!=ny-1) myCut += " || ";
+    }
+  
+  return myTree->Scan("EventId",myCut);
+}
 
 TGraph *Correlation(TString var, TString VL1, TString VL2, TString myCuts)
 { 
@@ -846,7 +885,7 @@ void CoincidenceBigEvents(int NH)
   
 }
 
-
+/*
 void EventDisplay(long EventId)
 {
   int NumXlayers = 11;
@@ -952,6 +991,7 @@ void EventDisplay(long EventId)
   EventDisplayCanvas->cd(1);
   gY->Draw("ap*");
 }
+*/
 
 void AllLayers(int cut=0)
 {
