@@ -15,12 +15,12 @@ support thickness and gap between support and side tile.</prim>
   <prim name="totalTopAvail" value="91.9">This is the total amount of space
     available to top section of the ACD, includes tiles and support structure
 (Heather).</prim>
-  <prim name="topTileGap" value="3.0">Worst-case (most thermal expansion)
-gap between tiles on the top</prim>
+  <prim name="topTileGap" value="3.5">Worst-case (most thermal expansion)
+gap between tiles on the top (last modified 30oct2002)</prim>
   <prim name="topStandoff" value="10.0"> distance between
 ACD top and top of TKR</prim>
-  <prim name="topOverlap" value="10.0">Width of overlap
-of overlapped top tiles</prim>
+  <prim name="topOverlap" value="15.0">Width of overlap
+of overlapped top tiles (last modified 30oct2002)</prim>
 
   <prim name="totalSideAvail" value="52.0">Total amount of
 space available for side section of ACD, including both tiles and
