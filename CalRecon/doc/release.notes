@@ -2,6 +2,7 @@ package CalRecon
 
 package manager: Alexandre Chekhtman
 
+  v5r5p2 05-jun-2002 THB make RootIo use private, try to break dependency loop
   v5r5p1 31-may-2002 THB fix to use TkrVertexCol 
   v5r5 28-may-2002 AC  CalClusterCol modified to inherit from std::vector<CalCluster*>
   v5r4 22-may-2002 AC  CalClusterAlg modified to use tracker information from TkrVertexCol

@@ -1,13 +1,17 @@
 package CalRecon
-version v5r1p1
+version v5r1p2
 
 branches src mgr doc
 
 use GuiSvc v3*
 use Event v8*
 use GlastSvc v8*
-use GlastDigi v4*
+
 use geometry v3*
+
+### hide the packages used only for test program
+private
+
 use RootIo v4*
 
 
