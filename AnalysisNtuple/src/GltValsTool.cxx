@@ -1,4 +1,9 @@
-// $Header$
+/** @file GltValsTool.cxx
+@brief Calculates the Trigger analysis variables
+@author Bill Atwood, Leon Rochester
+
+$Header$
+*/
 
 // Include files
 

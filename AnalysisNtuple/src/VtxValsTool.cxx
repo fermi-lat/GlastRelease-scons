@@ -1,4 +1,10 @@
-// $Header$
+
+/** @file VtxValsTool.cxx
+@brief Calculates the Vtx analysis variables
+@author Bill Atwood, Leon Rochester
+
+$Header$
+*/
 
 // Include files
 

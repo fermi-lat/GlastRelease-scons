@@ -1,4 +1,9 @@
-// $Header$
+/** @file TkrHitValsTool.cxx
+@brief Calculates the Tkr hit analysis variables
+@author Bill Atwood, Leon Rochester
+
+$Header$
+*/
 
 // Include files
 

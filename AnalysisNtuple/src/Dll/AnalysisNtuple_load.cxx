@@ -1,9 +1,9 @@
 /** 
-* @file GlastDigi_load.cpp
-* @brief This is needed for forcing the linker to load all components
-* of the library.
-*
-*  $Header$
+ @file AnalysisNtuple_load.cxx
+ @brief This is needed for forcing the linker to load all components
+ of the library.
+
+  $Header$
 */
 
 #include "GaudiKernel/DeclareFactoryEntries.h"

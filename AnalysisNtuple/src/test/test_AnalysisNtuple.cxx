@@ -1,4 +1,9 @@
-// $Header$
+/** @file test_AnalysisNtuple.cxx
+@brief Placeholder: the actual test module is AnalysisNtupleAlg
+@author Leon Rochester
+
+$Header$
+*/
 
 // Include files
 // Gaudi system includes

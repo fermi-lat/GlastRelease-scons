@@ -1,11 +1,9 @@
 
-/*! 
-@brief Calculates Acd Values
-
-@authors Bill Atwood, Leon Rochester
+/** @file AcdValsTool.cxx
+@brief Calculates the Adc analysis variables
+@author Bill Atwood, Leon Rochester
 
 $Header$
-
 */
 
 #include "ValBase.h"
@@ -24,6 +22,9 @@ $Header$
 #include "Event/Recon/TkrRecon/TkrFitTrack.h"
 #include "Event/Recon/AcdRecon/AcdRecon.h"
 
+/** @class AcdValsTool.cxx 
+@brief Calculates Acd Values
+*/
 
 class AcdValsTool : public ValBase
 {

@@ -1,5 +1,9 @@
-// $Header$
+/** @file McValsTool.cxx
+@brief Calculates the Mc analysis variables
+@author Bill Atwood, Leon Rochester
 
+$Header$
+*/
 // Include files
 
 
