@@ -7,5 +7,8 @@ package manager: Alexandre Chekhtman
 07-may-2001; THB tag v1r9
 
 08-may-2002; AC  tag v4r1 TDS classes moved to GlastEvent
+11-may-2002; AC  tag v5r0 GlastEvent renamed to Event
+13-may-2002; AC  tag v5r1 namespace cal renamed to Event, TDS object names defined in EventModel
+                          CalCluster::writeOut now writes to MsgStream.
 
 !======================================================================
