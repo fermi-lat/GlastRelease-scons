@@ -53,16 +53,16 @@ public:
     static const CLID& classID()       { return CLID_AcdDigi; }
 
     /// Retrieve digi identifier
-    const idents::ScintillatorId ID() const;
+    inline const idents::ScintillatorId ID() const { return m_ID; };
 
     /// Retrieve pulse height
-    const int PulseHeight() const;
+    inline int PulseHeight() const { return m_pulseHeight; };
 
-    const bool Veto() const;
+    inline bool Veto() const { return m_veto; };
+    
+    inline bool LowThreshold() const { return m_lowThreshold; };
 
-    const bool LowThreshold() const;
-
-    const bool HighThreshold() const;
+    inline bool HighThreshold() const { return m_highThreshold; };
 
 
     /// Serialize the object for writing
