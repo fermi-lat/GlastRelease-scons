@@ -26,25 +26,9 @@ macro  source  "*.cxx"  WIN32 "*.h *.cxx *.txt"
 
 public
 
-<<<<<<< requirements
 #  linker library ..Lib
 library FluxSvcLib  -import=flux \ 
                     $(source)    \
-                    $(FluxSvc_headers)
-
-#  component library 
-library  FluxSvc    Dll/*.cxx
-
-apply_pattern  package_Llinkopts
-
-apply_pattern  ld_library_path
-macro_append   FluxSvc_stamps  "$(FluxSvcDir)/FluxSvcLib.stamp"
- 
-apply_pattern  package_Cshlibflags
-apply_pattern  package_Lshlibflags
-=======
-#  linker library ..Lib
-library FluxSvcLib  $(source)    \
                     $(FluxSvc_headers)
 
 #  component library 
@@ -63,7 +47,7 @@ apply_pattern  package_Lshlibflags
 set LHCBDBASE  "${FLUXSVCROOT}"
 
 #  build the test 
-apply_pattern  package_test import=flux 
+apply_pattern  package_test  import=flux 
 macro_append   test_FluxSvc_files ""    WIN32 "test/*.xml"
 
 
