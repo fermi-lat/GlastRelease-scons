@@ -289,7 +289,7 @@ StatusCode mcRootReaderAlg::readMcEvent() {
     
     SmartDataPtr<Event::MCEvent> mcEvt(eventSvc(), EventModel::MC::Event);
     if (!mcEvt) return sc;
-    mcEvt->initialize(runIdTds, sourceIdRoot, sequenceRoot, timeTds);
+    mcEvt->initialize(runIdRoot, sourceIdRoot, sequenceRoot, timeTds);
     
     return sc;
 }
