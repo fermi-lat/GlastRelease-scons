@@ -64,7 +64,7 @@ void TopInstantiation()  {
   //DLL_DECL_OBJECTFACTORY( Run );
   //DLL_DECL_OBJECTFACTORY( Event );
   DLL_DECL_OBJECTFACTORY( MCEvent );
-  //DLL_DECL_OBJECTFACTORY( RawEvent );
+  DLL_DECL_OBJECTFACTORY( RawEvent );
   //DLL_DECL_OBJECTFACTORY( RecEvent );
   //DLL_DECL_OBJECTFACTORY( AnalEvent );
 }
