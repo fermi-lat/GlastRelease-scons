@@ -275,7 +275,7 @@ void GlastDetectorManager::EndOfEvent(G4HCofThisEvent* HCE)
 {
     
     m_instrument->rootDetector()->generateResponse(true);
-
+#if 0
     std::cout << "Detector list:" << std::endl;
     
     for( DetectorList::const_iterator itd = m_detectorList.begin(); itd!=m_detectorList.end(); ++ itd){
@@ -292,7 +292,7 @@ void GlastDetectorManager::EndOfEvent(G4HCofThisEvent* HCE)
             << std::setw(10) << std::setprecision(3) << (*it).second 
             << std::endl;
     }
-    
+#endif
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
