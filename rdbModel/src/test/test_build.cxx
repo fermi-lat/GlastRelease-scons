@@ -31,9 +31,18 @@ int main(int, char**) {
   // Connect to real database
   rdbModel::MysqlConnection* con = new rdbModel::MysqlConnection();
 
+  std::string connectfile("$(RDBMODELROOT)/xml/mysqlSlac.xml");
+
+  /*
   if (!(con->open(std::string("centaurusa.slac.stanford.edu"),
                   std::string("glastreader"),
                  std::string("glastreader"), std::string("calib") ) ) ){
+    std::cerr << "Unable to connect to MySQL database" << std::endl;
+    return -1;
+  }
+  */
+  
+  if (!(con->open(connectfile)) ) {
     std::cerr << "Unable to connect to MySQL database" << std::endl;
     return -1;
   }
