@@ -216,9 +216,9 @@ void TkrBadStripsSvc::readFromFile(std::ifstream* file)
             // after each line is read in
             if (makestrips) std::sort(v->begin(), v->end());           
         }  
-        if (!v->empty()) {m_empty = false;}
-        return;
+        if (!v->empty()) {m_empty = false;}       
     }
+    return;
 }
 
 int TkrBadStripsSvc::getIndex(int tower, int layer, 
