@@ -15,6 +15,8 @@
 #define __TkrVertex_H 1
 
 #include <vector>
+#include "GaudiKernel/ContainedObject.h"
+#include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/MsgStream.h"
 #include "Event/Recon/TkrRecon/TkrRecInfo.h"
 #include "Event/Recon/TkrRecon/TkrFitTrack.h"
@@ -29,9 +31,9 @@
 */
 
 namespace Event { //Namespace
-
-class TkrVertex: public TkrRecInfo
-{    
+  
+class TkrVertex : public TkrRecInfo, virtual public ContainedObject 
+  {    
 public:
     
     TkrVertex( int layer, int tower, double energy, double quality, const Ray& testRay);
@@ -79,6 +81,8 @@ private:
 //Following typedefs for containing fit track objects
 typedef std::vector<TkrVertex*>            TkrVertexVec;
 typedef std::vector<TkrVertex*>::iterator  TkrVertexVecPtr;
+
+typedef ObjectVector<TkrVertex>     TkrVertexCol;
 
 }; //Namespace
 
