@@ -16,7 +16,7 @@
 #include "GaudiKernel/ClassID.h"
 
 // For everybody except the CalibModel class implementation file,
-// the variables are extern.  CalibModel actually defines them.
+// the variables are extern.  CalibModel.cxx actually defines them.
 
 #if defined(_CalibData_CalibModel_cxx)
 #define  _EXTERN_ 
@@ -43,6 +43,7 @@
       _EXTERN_ std::string   CAL_LightAtt;
       _EXTERN_ std::string   CAL_LightAsym;
       _EXTERN_ std::string   CAL_LightYield;
+
       _EXTERN_ std::string   CAL_Ped;
       _EXTERN_ std::string   CAL_ElecGain;
       _EXTERN_ std::string   CAL_IntNonlin;
