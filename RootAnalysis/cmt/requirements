@@ -8,6 +8,7 @@ use digiRootData v*
 use reconRootData v*
 use GlastPolicy v*
 use RootPolicy v* 
+use rootTestData v*
 
 set ROOTANALYSIS ${ROOTANALYSISROOT}
 
