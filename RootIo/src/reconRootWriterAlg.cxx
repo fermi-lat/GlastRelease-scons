@@ -9,7 +9,7 @@
 #include "Event/TopLevel/EventModel.h"
 
 #include "Event/Recon/TkrRecon/TkrClusterCol.h"
-#include "Event/Recon/TkrRecon/TkrPatCandCol.h"
+#include "Event/Recon/TkrRecon/TkrPatCand.h"
 #include "Event/Recon/TkrRecon/TkrFitTrack.h"
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 
@@ -295,9 +295,10 @@ void reconRootWriterAlg::fillCandidateTracks(TkrRecon* recon, Event::TkrPatCandC
 
     // Loop over the candidate tracks in the TDS
     int                     candId  = 0;
-    while(candId < candidatesTds->getNumCands())
+    Event::TkrPatCandColPtr cands   = candidatesTds->begin();
+    while(candId < candidatesTds->size())
     {
-        Event::TkrPatCand* candTds = candidatesTds->getTrack(candId);
+        Event::TkrPatCand* candTds = *cands++;
         Double_t           x = candTds->getPosition().x();
         Double_t           y = candTds->getPosition().y();
         Double_t           z = candTds->getPosition().z();

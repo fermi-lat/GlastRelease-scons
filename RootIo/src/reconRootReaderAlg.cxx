@@ -8,8 +8,8 @@
 #include "Event/TopLevel/EventModel.h"
 #include "idents/CalXtalId.h"
 #include "Event/Recon/AcdRecon/AcdRecon.h"
-#include "Event/Recon/TkrRecon/TkrClusterCol.h"
-#include "Event/Recon/TkrRecon/TkrPatCandCol.h"
+#include "Event/Recon/TkrRecon/TkrCluster.h"
+#include "Event/Recon/TkrRecon/TkrPatCand.h"
 #include "Event/Recon/TkrRecon/TkrFitTrack.h"
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 #include "Event/Recon/CalRecon/CalCluster.h"   
@@ -384,7 +384,7 @@ StatusCode reconRootReaderAlg::storeTkrCandidateTrackCol(TkrRecon *tkrRecRoot) {
 
             track->addCandHit(hitTds);
         }
-        candTdsCol->addTrack(track);
+        candTdsCol->push_back(track);
     }
 
     sc = eventSvc()->registerObject(EventModel::TkrRecon::TkrPatCandCol, candTdsCol);
