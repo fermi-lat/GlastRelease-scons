@@ -34,6 +34,8 @@
 
     Int_t ievent, ixtal;
     CalXtalId xtalId;
+    VolumeIdentifier volId;
+
     Float_t rand = gRandom->Rndm();
 
     for (ievent = 0; ievent < numEvents; ievent++) {
@@ -78,7 +80,9 @@
             Bool_t low[2] = {kTRUE, kTRUE};
             Bool_t high[2] = {kFALSE, kTRUE};
             UShort_t pha[2] = {4095, 1};
-            ev->addAcdDigi(acd_id, energy, pha, veto, low, high);
+            volId.Clear();
+            volId.append(1);
+            ev->addAcdDigi(acd_id, volId, energy, pha, veto, low, high);
         }
 
         t->Fill();

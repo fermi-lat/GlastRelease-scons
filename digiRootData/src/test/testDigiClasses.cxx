@@ -254,6 +254,12 @@ int checkAcdDigi(AcdDigi *digi, UInt_t ievent, UInt_t idigi) {
         return -1;
     }
 
+    VolumeIdentifier volId = digi->getVolId();
+    if ( (volId.getBits0to31() != 0) || (volId.getBits32to63() != 16777216) || (volId.size() != 1) ) {
+        std::cout << "AcdDigi VolId is incorrect" << std::endl;
+        return -1;
+    }
+
     if (id.getFace() != 2) {
         std::cout << "AcdId Face is wrong " << id.getFace() << std::endl;
         return -1;
@@ -434,7 +440,10 @@ int write(char* fileName, int numEvents) {
             Bool_t low[2] = {kTRUE, kTRUE};
             Bool_t high[2] = {kFALSE, kTRUE};
             UShort_t pha[2] = {4095, 1};
-            ev->addAcdDigi(id, energy, pha, veto, low, high);
+            VolumeIdentifier volId;
+            volId.Clear();
+            volId.append(1);
+            ev->addAcdDigi(id, volId, energy, pha, veto, low, high);
         }
 
         t->Fill();
