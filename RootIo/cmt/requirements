@@ -1,5 +1,5 @@
 package RootIo
-version v12r5p3
+version v12r5p4
 
 # $Header$
 
@@ -15,7 +15,7 @@ use RootPolicy v4r* -no_auto_imports
 use mcRootData v2r* -no_auto_imports
 use digiRootData v7r* -no_auto_imports
 use reconRootData v4r* -no_auto_imports
-use commonRootData v0r* -no_auto_imports
+use commonRootData v1r* -no_auto_imports
 
 use rootTestData v*
 
