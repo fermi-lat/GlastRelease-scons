@@ -3,6 +3,8 @@
  Coordinator:H.Kelly
   
  @verbatim
+ v6r0     24-Jan-2005: HMK: Fix up usage of TTree::GetEntries which now returns
+          a Long64_t rather than a Double_t
  v5r0     11-Jun-2004: HMK: Try out selectors and tasks - but do not build for 
            now - also includes new LeaningTower
  v4r8p0   03-Jun-2004: HMK: Replace TkrTrack with TkrKalFitTrack in RootTreeAnalysis
