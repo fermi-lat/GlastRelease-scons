@@ -42,7 +42,7 @@ GlastRandomSvc::GlastRandomSvc(const std::string& name,ISvcLocator* svc) : Servi
     // declare the properties
     declareProperty("RandomEngine",  m_randomEngine="TripleRand");
     declareProperty("RunNumber",      m_RunNumber=10);
-    declareProperty("SequenceNumber", m_SequenceNumber=0);
+    declareProperty("InitialSequenceNumber", m_InitialSequenceNumber=0);
 }
 
 GlastRandomSvc::~GlastRandomSvc()  
@@ -79,7 +79,8 @@ StatusCode GlastRandomSvc::initialize ()
     if ( (status = setProperties()).isFailure() ) {
         log << MSG::ERROR << "Failed to set properties" << endreq;
     }
-    
+    m_SequenceNumber = m_InitialSequenceNumber;
+
     // use the incident service to register begin, end events
     IIncidentSvc* incsvc = 0;
     StatusCode sc = service ("IncidentSvc", incsvc, true);
@@ -181,7 +182,7 @@ void GlastRandomSvc::handle(const Incident &inc)
             return;
         }
 
-        mcevt->initialize(m_RunNumber, -1, m_SequenceNumber= m_SequenceNumber.value()+1);
+        mcevt->initialize(m_RunNumber, -1, m_SequenceNumber++);
         int multiplier = 1; 
         int dummy = 0; // for 2nd argument to setSeed
         std::map< std::string, HepRandomEngine* >::const_iterator dllEngine;

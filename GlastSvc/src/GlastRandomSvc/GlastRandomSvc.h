@@ -60,7 +60,8 @@ public:
   std::map< std::string, HepRandomEngine* > m_engineMap;
   StringProperty    m_randomEngine;
   IntegerProperty   m_RunNumber;
-  IntegerProperty   m_SequenceNumber;
+  IntegerProperty   m_InitialSequenceNumber;
+  int m_SequenceNumber;
 };
 
 #endif // _GlastRandomSvc_H
