@@ -24,6 +24,13 @@ rather than from DataObject. The three classes completed to date are below.
   - MCACDHit
   - MCTKRHit
 
+\section RawData RawData
+
+CsIData from GlastSim has been adapted to be a DataObject capable of travelling through 
+the TDS unharmed. In addition a new branch has been added to the TDS namely /Event/Raw/.
+
+- DataObject classes
+  - CsIData
 
 \section reference Reference Document
   See the formal  
