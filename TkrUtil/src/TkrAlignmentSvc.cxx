@@ -354,7 +354,7 @@ StatusCode TkrAlignmentSvc::readFromFile()
                     maxTower = m_tower+1;
                 }
                 
-                for (m_tower;m_tower<maxTower;++m_tower) {               
+                for (;m_tower<maxTower;++m_tower) {               
                     if (fillTrayConsts().isFailure()) {
                         log << MSG::ERROR << "fillTrayConsts failed!" << endreq;
                         return StatusCode::FAILURE;
@@ -480,7 +480,7 @@ StatusCode TkrAlignmentSvc::fillWaferConsts()
     double waferGap    = m_pGeoSvc->ladderInnerGap();
     double waferWidth  = (trayWidth - (nWafer-1)*waferGap + .1)/nWafer;
     double trayWidth1   = nWafer*waferWidth + (nWafer-1)*waferGap;
-    double laddergap   = m_pGeoSvc->ladderGap();
+    //double laddergap   = m_pGeoSvc->ladderGap();
     double offset      = -0.5*trayWidth1 + 0.5*waferWidth;
 
     double xWafer, yWafer;

@@ -87,10 +87,10 @@ public:
     /// return number of layers of each type
     int getNumType(TkrGeometrySvc::convType type) const { return m_numLayers[(int)type];}
     /// get average radlen of converter for each type
-    double getAveConv(TkrGeometrySvc::convType type) const { return m_aveRadLenConv[(int)type];}
+    double getAveConv(convType type) const { return m_aveRadLenConv[(int)type];}
     /// get average radlen of rest for each type)
     ///    counting down from the bottom of the converter
-    double getAveRest(TkrGeometrySvc::convType type) const {return m_aveRadLenRest[(int) type];}
+    double getAveRest(convType type) const {return m_aveRadLenRest[(int) type];}
 
 
     /// Provide access to the old propagator
