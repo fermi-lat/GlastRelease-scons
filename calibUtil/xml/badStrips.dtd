@@ -31,19 +31,20 @@
                             it in the MySQL metadata table]
  -->
 
-<!ELEMENT badStrips (generic, cuts?, tower*) >
+<!ELEMENT badStrips (generic?, cuts?, tower*) >
 <!ATTLIST badStrips badType (hot | dead) #REQUIRED >
 
 <!ELEMENT  generic  (inputSample) >
-<!ATTLIST generic  
+<!ATTLIST generic
    instrument  NMTOKEN #REQUIRED
-   timestamp   NMTOKEN #REQUIRED
-   calType     NMTOKEN #REQUIRED
-   creator     NMTOKEN #IMPLIED
-   DTDVersion  NMTOKEN "v3r1"       
-   fmtVersion  NMTOKEN #REQUIRED >
-
-<!--    instrument  (LAT | BFEM | BTEM | EM | CU | TWR) #REQUIRED  -->
+   timestamp   NMTOKEN #IMPLIED
+   runId       NMTOKEN #IMPLIED
+   calType     NMTOKEN #IMPLIED
+   DTDVersion  NMTOKEN "v3r2"
+   fmtVersion  NMTOKEN #IMPLIED
+   creatorName NMTOKEN #IMPLIED
+   creatorVersion NMTOKEN #IMPLIED
+ >
 
 <!-- Description of events used as input to the procedure 
      Start- and stop-times should be timestamps of earliest and

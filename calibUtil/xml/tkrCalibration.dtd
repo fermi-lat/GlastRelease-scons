@@ -11,13 +11,12 @@
    timestamp   NMTOKEN #IMPLIED
    runId       NMTOKEN #IMPLIED
    calType     NMTOKEN #IMPLIED
-   DTDVersion  NMTOKEN "v1r0"
+   DTDVersion  NMTOKEN "v1r1"
    fmtVersion  NMTOKEN #IMPLIED
    creatorName NMTOKEN #IMPLIED
    creatorVersion NMTOKEN #IMPLIED
  >
 
-<!--    instrument  (LAT | BFEM | BTEM | EM | CU | TWR) #REQUIRED -->
 <!-- Description of events used as input to the procedure
      Start- and stop-times should be timestamps of earliest and
      latest events included in sample
