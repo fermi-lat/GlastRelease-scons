@@ -41,6 +41,7 @@ public:
 
     /// current position
     virtual Point position()const=0;
+    virtual Point position(double arcLen) const = 0;
     
     /// return properties associated with the propagation
     /**
@@ -50,11 +51,12 @@ public:
          asked for.  
  
     */
-    virtual HepMatrix mScat_Covr(float momentum, float s) const=0;
+    virtual HepMatrix mScat_Covr(double momentum, double arcLen) const=0;
 
     virtual double arcLength() const=0; 
 
     virtual double radLength() const=0; 
+    virtual double radLength(double arcLen) const = 0;
 
     /// dump current status, to the stream
     virtual void printOn(std::ostream& str=std::cout )const=0;
