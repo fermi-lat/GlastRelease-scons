@@ -61,6 +61,9 @@ void ParticleTransporter::setInitStep(const Point& start,  const Vector& dir)
   startPoint  = start;
   startDir    = dir;
 
+  //Test for transportation manager!!
+  if (!m_TransportationManager) setTransportationManager(m_geometrySvc->getTransportationManager());
+
   //Set the start point at the beginning of our list of volumes
   G4Navigator*       navigator = m_TransportationManager->GetNavigatorForTracking();
   G4VPhysicalVolume* pVolume   = navigator->LocateGlobalPointAndSetup(startPoint, 0, false);
