@@ -62,6 +62,7 @@ namespace LdfEvent{
         }
 
         void initialize(unsigned int summary){m_summary=summary;};
+        void initOswEvtSequence(unsigned int evtSeq) { m_evtSequence = evtSeq;};
         void initEventFlags(unsigned int flags) { m_flags = flags; };
         void initTemContribLen(unsigned int *len) {
             unsigned int i;
@@ -108,11 +109,7 @@ namespace LdfEvent{
         bool temError() const { return (m_flags & enums::SUMMARYERROR); };
         bool trgParityErrorOr() const { return (m_flags & enums::TRGPARITYERROR); };
 
-        unsigned long eventSequence() const {
-            unsigned eventNumber = EventSummary::eventNumber(m_summary);
-            unsigned tag = EventSummary::tag(m_summary);
-            return ((eventNumber << 2) | tag);
-        }
+        unsigned int eventSequence() const { return m_evtSequence; }
  
         unsigned int summary() { return m_summary; };
 
@@ -136,6 +133,8 @@ namespace LdfEvent{
     unsigned int m_diagLen[16];
     unsigned int m_errLen[16];
     unsigned int m_otherContribLen[3];
+    // New 32 bit event sequence number from OSW
+    unsigned int m_evtSequence;
     };
 
     inline EventSummaryData::~EventSummaryData(){
