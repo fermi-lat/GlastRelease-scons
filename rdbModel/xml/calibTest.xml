@@ -240,7 +240,7 @@
 
   <col name="creator" >
     <src  null="true">
-      <from agent="service" />
+      <from agent="service" contents="service_name" />
     </src>
     <!-- could maybe cut down size -->
     <type typename="varchar" size="255" />
@@ -251,7 +251,7 @@
 
   <col name="uid" >
     <src null="false" >
-      <from agent="service"  />
+      <from agent="service"  contents="username" />
     </src>
     <type typename="varchar" size="12" />
     <comment>Service creating the row should determine user id invoking
