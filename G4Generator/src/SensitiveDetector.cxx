@@ -49,6 +49,9 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
   G4TouchableHistory* theTouchable
     = (G4TouchableHistory*)(aStep->GetPreStepPoint()->GetTouchable());
   G4VPhysicalVolume* physVol = theTouchable->GetVolume(); 
+  G4LogicalVolume* logVol = physVol->GetLogicalVolume();
+  G4String material = logVol->GetMaterial()->GetName();
+  G4String nameVolume = physVol->GetName();
   G4String name = "";
 
   do
@@ -77,21 +80,10 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
     " " << 
     stepl << 
     " " <<
-    name << std::endl;
+    name << " " <<
+    nameVolume << " " << material << " " << 
+    std::endl;
 
-  //  Hit* glastHit = new Hit;  
-  /*
-  glastHit->SetTrackID(aStep->GetTrack()->GetTrackID());
-  glastHit->SetParticleID(aStep->GetTrack()->GetDefinition()->GetParticleName());
-  glastHit->SetEnergyDeposit(edep);
-  glastHit->SetHitLenght(stepl);
-  glastHit->SetInitialPos(InitPos);
-  glastHit->SetFinalPos(FinPos);  
-
-  glastHit->SetName(name);  
-
-  hCollection->insert(glastHit) -1; // basta cosi`?
-  */  
   return true;
 
 }

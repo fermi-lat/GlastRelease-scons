@@ -42,7 +42,6 @@ void G4MaterialsVisitor::visitElement(detModel::Element* element)
   a = (G4double) element->getAweight()*g/mole;
   density = (G4double) element->getDensity()*g/cm3;
 
-  std::cout << name << " " << z << " " << a << " " << density << std::endl;
   if (symbol != "")
     G4Element* el = new G4Element(name, symbol, z, a);
   else
