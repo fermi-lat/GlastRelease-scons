@@ -255,6 +255,36 @@
 </composite>
 
 
+<!-- From Leon, 25 April 2002 -->
+
+<composite name="Tkr_MCM_board" density = "1.8">
+<addmaterial material="Copper">
+<fractionmass fraction="6.2" />
+</addmaterial>
+<addmaterial material ="Silicon">
+<fractionmass fraction="6.0" />
+</addmaterial>
+<addmaterial material ="Oxygen">
+<fractionmass fraction="2.95" />
+</addmaterial>
+<addmaterial material ="Carbon">
+<fractionmass fraction="5.14" />
+</addmaterial>
+<addmaterial material ="Hydrogen">
+<fractionmass fraction="0.43" />
+</addmaterial>
+</composite>
+
+
+<composite name="Tkr_wall" density = "2.54">
+<addmaterial material="Carbon">
+<fractionmass fraction="3.30" />
+</addmaterial>
+<addmaterial material ="Iron">
+<fractionmass fraction="0.16" />
+</addmaterial>
+</composite>
+
 <!-- OBSOLETE???? -->
 
 <element name="Al20" 

@@ -42,7 +42,11 @@
 
     <!ENTITY Trigger        SYSTEM "flightTrigger.xml">
 
-    <!ENTITY Derived        SYSTEM "flightDerSegVols.xml">
+    <!ENTITY Derived        SYSTEM "flightDerivedConstants.xml">
+    <!ENTITY TKRDerived     SYSTEM "flightTKRDerived.xml">
+    <!ENTITY CALDerived     SYSTEM "flightCALDerSegVols.xml">
+    <!ENTITY ACDDerived     SYSTEM "flightACDDerived.xml">
+    <!ENTITY NADDerived     SYSTEM "flightNADDerived.xml">
     <!ENTITY Primary        SYSTEM "flightPrimaryConstants.xml">
 
     <!ENTITY idDict         SYSTEM "flightIdDictSegVols.xml">
