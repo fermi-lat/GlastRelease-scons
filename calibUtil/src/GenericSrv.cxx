@@ -2,7 +2,6 @@
 /// Module implements methods for clients to get generic services.
 
 #include "xml/Dom.h"
-#include <xercesc/dom/DOM_Element.hpp>
 
 #include <string>
 #include <iostream>
@@ -13,10 +12,11 @@
 
 namespace calibUtil {
  
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
   /// Constructor that fills in values of generic data from XML file
-  GenericSrv::GenericSrv(const DOM_Element& docElt) : m_sample(0) {
+  GenericSrv::GenericSrv(const DOMElement* docElt) : m_sample(0) {
     
-    DOM_Element child  = xml::Dom::findFirstChildByName(docElt,"generic");
+    DOMElement* child  = xml::Dom::findFirstChildByName(docElt,"generic");
     m_instName  = xml::Dom::getAttribute(child,"instrument");
     m_timestamp = xml::Dom::getAttribute(child,"timestamp");
     m_calType   = xml::Dom::getAttribute(child,"calType");

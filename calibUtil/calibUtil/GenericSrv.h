@@ -5,7 +5,7 @@
 
 #include "xml/XmlParser.h"
 #include "xml/Dom.h"
-#include <xercesc/dom/DOM_Element.hpp>
+#include <xercesc/dom/DOMElement.hpp>
 
 #include <string>
 #include <iostream>
@@ -19,7 +19,7 @@ namespace calibUtil {
   public: 
 
     /// Constructor that fills in values of generic data from XML file
-    GenericSrv(const DOM_Element& docElt);
+    GenericSrv(const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* docElt);
 
     /// Constructor to be used when creating a new calibration data set
     GenericSrv(std::string inst, std::string timestamp, 

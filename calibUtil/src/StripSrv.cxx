@@ -3,9 +3,9 @@
 
 #include "xml/XmlParser.h"
 #include "xml/Dom.h"
-#include <xercesc/dom/DOM_Element.hpp>
-#include <xercesc/dom/DOM_NodeList.hpp>
-#include <xercesc/dom/DOM_TreeWalker.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
+#include <xercesc/dom/DOMTreeWalker.hpp>
 
 #include <string>
 #include <iostream>
@@ -19,6 +19,7 @@
 
 namespace calibUtil {
   
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
 
   StripSrv::StripSrv(eBadType badType, const GenericSrv& gen)
     : m_badType(badType), m_state(BUILDING) {
@@ -31,19 +32,20 @@ namespace calibUtil {
                                                 m_genSrv(0)            
   {
     using xml::Dom;
+    using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument;
 
     xml::XmlParser* parser = new xml::XmlParser();
-    DOM_Document doc = parser->parse(xmlFileName.c_str());
+    DOMDocument* doc = parser->parse(xmlFileName.c_str());
 
-    if (doc == DOM_Document()) {
+    if (doc == 0) {
       std::cerr << "Error parsing document" << xmlFileName << std::endl;
       return;
     }
 
-    DOM_Element docElt = doc.getDocumentElement();
+    DOMElement* docElt = doc->getDocumentElement();
     m_genSrv = new GenericSrv(docElt);
 
-    std::vector<DOM_Element> towers;
+    std::vector<DOMElement *> towers;
 
     Dom::getDescendantsByTagName(docElt, "tower", towers);
     unsigned nTower = towers.size();
@@ -90,9 +92,9 @@ namespace calibUtil {
       }    // otherwise have to process individual uniplane elements
 
       {
-        DOM_Element uniElt = Dom::getFirstChildElement(towers[iTower]);
+        DOMElement* uniElt = Dom::getFirstChildElement(towers[iTower]);
 
-        while (uniElt != DOM_Element()) {
+        while (uniElt != 0) {
           Uniplane uni;
           uni.m_howBad = 0;
           fillUni(uniElt, &uni);
@@ -192,7 +194,7 @@ namespace calibUtil {
 
   // Private utilities
 
-  void StripSrv::fillUni(const DOM_Element& uniElt, Uniplane *uni) {
+  void StripSrv::fillUni(const DOMElement* uniElt, Uniplane *uni) {
     using xml::Dom;
 
     std::string attValue;
@@ -227,12 +229,12 @@ namespace calibUtil {
   }
 
 
-  void StripSrv::fillStrips(const DOM_Element& badElt, StripCol& list) {
+  void StripSrv::fillStrips(const DOMElement* badElt, StripCol& list) {
     using xml::Dom;
 
-    DOM_Element childElt = Dom::getFirstChildElement(badElt);
+    DOMElement* childElt = Dom::getFirstChildElement(badElt);
 
-    while (childElt != DOM_Element() ) {
+    while (childElt != 0 ) {
       // must be list or span
       if (Dom::checkTagName(childElt, "stripList")) {
         std::string xmlList = Dom::getAttribute(childElt, "strips");
