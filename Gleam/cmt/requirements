@@ -1,6 +1,6 @@
 package Gleam
 
-version  v3r3
+version  v3r4
 # This is a checkout package
 # $Id$
 
@@ -64,7 +64,7 @@ use GlastDigi   v4r5p2
 
 
 #reconstruction
-use Trigger            v3r4
+use Trigger     v3r4
 use Recon       v2r3p7
 
 use TkrRecon    v8r5
@@ -72,7 +72,7 @@ use CalRecon    v5r7p5
 use AcdRecon    v1r4p1       
 
 #ROOT persistence: RootIo specifies the data packages
-use RootIo              v4r20p4
+use RootIo              v4r21
 
 #diagnostic and summary of bottom line
 use merit       v5r12p2
