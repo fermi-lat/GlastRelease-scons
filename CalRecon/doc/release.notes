@@ -7,6 +7,7 @@ package CalRecon
 
 package manager: Alexandre Chekhtman
 
+  v5r13p3 25-Jun-2003 BG  Extend LastLayer tool to 26 degrees
   v5r13p2 13-Jun-2003 RXD Replace LastLayerTool with Berrie's updates; fix test app to handle change in use of CalValTool
   v5r12p1 11-may-2003 THB Fix Tool inheritance to use abstract interface, avoid downcasts 
   v5r12   03-apr-2003 AC  CalibSvc is used to get calibration data
