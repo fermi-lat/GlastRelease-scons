@@ -8,7 +8,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Algorithm.h"
 
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+//#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "Event/TopLevel/Event.h"
 #include "Event/TopLevel/EventModel.h"
 

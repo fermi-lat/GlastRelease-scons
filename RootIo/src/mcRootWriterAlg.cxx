@@ -6,7 +6,7 @@
 
 #include "Event/TopLevel/Event.h"
 #include "Event/TopLevel/MCEvent.h"
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+//#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "Event/TopLevel/EventModel.h"
 #include "Event/MonteCarlo/McParticle.h"
 #include "Event/MonteCarlo/McIntegratingHit.h"
