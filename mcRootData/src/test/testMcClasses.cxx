@@ -200,7 +200,7 @@ int checkMcIntegratingHit(McIntegratingHit* mcIntHit, UInt_t ipart,
     mcIntHit->itemizedEnergyReset();
     const McParticle *myPart;
     double energy;
-    if (mcIntHit->itemizedEnergySize() != 1) {
+    if (mcIntHit->itemizedEnergySize() != 0) {
         std::cout << "McIntHit map size: " << mcIntHit->itemizedEnergySize() << std::endl;
         return -1;
     }
@@ -214,13 +214,13 @@ int checkMcIntegratingHit(McIntegratingHit* mcIntHit, UInt_t ipart,
     }
     
     energy = mcIntHit->getMcParticleEnergy(McIntegratingHit::PRIMARY);
-    if (!floatInRange(energy, 1.5)) {
+    if (!floatInRange(energy, 2.5)) {
         std::cout << "Id energy map is incorrect: " << energy << std::endl;
         return -1;
     }
 
     energy = mcIntHit->getMcParticleEnergy(McIntegratingHit::ELECTRON);
-    if ( !floatInRange(energy, 2.4) ) {
+    if ( !floatInRange(energy, 3.0) ) {
         std::cout << "Id energy map for e- is wrong: " << energy << std::endl;
         return -1;
     }
@@ -230,6 +230,16 @@ int checkMcIntegratingHit(McIntegratingHit* mcIntHit, UInt_t ipart,
         std::cout << "Id energy map for e+ is wrong: " << energy << std::endl;
         return -1;
     }
+
+    double totE = mcIntHit->getTotalEnergy();
+    if ( !floatInRange(totE, 5.5)) {
+        std::cout << "Total E is incorrect: " << totE << std::endl;
+        return -1;
+    }
+
+    TVector3 moment1 = mcIntHit->getMoment1();
+
+    TVector3 moment2 = mcIntHit->getMoment2();
 
     if (count == 0) {
         std::cout << "No Error cannot read map which stores TRefs using" 
@@ -336,10 +346,13 @@ int write(char* fileName, UInt_t numEvents) {
             id.append(0);
             intHit->initialize(id);
             TVector3 pos = mcPart->getFinalPosition();
-            TVector3 pos2(1.3, 0.0, 12.0);
-            intHit->addEnergyItem(1.5, mcPart, pos);
-            intHit->addEnergyItem(1.5, McIntegratingHit::PRIMARY, pos);
-            intHit->addEnergyItem(2.4, McIntegratingHit::ELECTRON, pos2);
+//            TVector3 pos2(1.3, 0.0, 12.0);
+//            intHit->addEnergyItem(1.5, mcPart, pos);
+            double totE = 5.5;
+            double energyArr[3] = { 2.5, 3.0, 0.0 };
+            TVector3 moment1(1.0, 2.0, 3.0);
+            TVector3 moment2(2.0, 4.0, 6.0);
+            intHit->setEnergyItems(totE, energyArr, moment1, moment2);
             ev->addMcIntegratingHit(intHit);
         }
         t->Fill();
