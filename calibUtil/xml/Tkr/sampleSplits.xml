@@ -1,0 +1,58 @@
+<!DOCTYPE tkrSplits [
+<!ELEMENT tkrSplits  (dimension, split*) >
+<!ATTLIST tkrSplits   DTDVersion NMTOKEN "v1r0" >
+<!ELEMENT dimension EMPTY >
+<!ATTLIST dimension
+            nBayRow   NMTOKEN #REQUIRED
+            nBayCol   NMTOKEN #REQUIRED
+            nTray     NMTOKEN "19" > 
+
+<!ELEMENT split EMPTY >
+<!ATTLIST split 
+            iBayRow   NMTOKEN #REQUIRED
+            iBayCol   NMTOKEN #REQUIRED
+            iTray     NMTOKEN #REQUIRED
+            top       (true | false) #REQUIRED
+            low       NMTOKEN "11"
+            high      NMTOKEN "12" >
+] >
+
+<tkrSplits>
+  <dimension nBayRow="1"  nBayCol="1" nTray="19" /> 
+  <split iBayRow="0" iBayCol="0" iTray="0" top="true" />
+  <split iBayRow="0" iBayCol="0" iTray="1" top="false"/>
+  <split iBayRow="0" iBayCol="0" iTray="1" top="true" low="4" high="6" />
+  <split iBayRow="0" iBayCol="0" iTray="2" top="false"/>
+  <split iBayRow="0" iBayCol="0" iTray="2" top="true"/>
+  <split iBayRow="0" iBayCol="0" iTray="3" top="false"/>
+  <split iBayRow="0" iBayCol="0" iTray="3" top="true"/>
+  <split iBayRow="0" iBayCol="0" iTray="4" top="false"/>
+  <split iBayRow="0" iBayCol="0" iTray="4" top="true"/>
+  <split iBayRow="0" iBayCol="0" iTray="5" top="false"/>
+  <split iBayRow="0" iBayCol="0" iTray="5" top="true"/>
+  <split iBayRow="0" iBayCol="0" iTray="6" top="false"/>
+  <split iBayRow="0" iBayCol="0" iTray="6" top="true"/>
+  <split iBayRow="0" iBayCol="0" iTray="7" top="false"/>
+  <split iBayRow="0" iBayCol="0" iTray="7" top="true"/>
+  <split iBayRow="0" iBayCol="0" iTray="8" top="false"/>
+  <split iBayRow="0" iBayCol="0" iTray="8" top="true"/>
+  <split iBayRow="0" iBayCol="0" iTray="9" top="false" low="19" high="22" />
+  <split iBayRow="0" iBayCol="0" iTray="9" top="true"/>
+  <split iBayRow="0" iBayCol="0" iTray="10" top="false"/>
+  <split iBayRow="0" iBayCol="0" iTray="10" top="true"/>
+  <split iBayRow="0" iBayCol="0" iTray="11" top="false"/>
+  <split iBayRow="0" iBayCol="0" iTray="11" top="true"/>
+  <split iBayRow="0" iBayCol="0" iTray="12" top="false"/>
+  <split iBayRow="0" iBayCol="0" iTray="12" top="true"/>
+  <split iBayRow="0" iBayCol="0" iTray="13" top="false"/>
+  <split iBayRow="0" iBayCol="0" iTray="13" top="true"/>
+  <split iBayRow="0" iBayCol="0" iTray="14" top="false"/>
+  <split iBayRow="0" iBayCol="0" iTray="14" top="true"/>
+  <split iBayRow="0" iBayCol="0" iTray="15" top="false"/>
+  <split iBayRow="0" iBayCol="0" iTray="15" top="true"/>
+  <split iBayRow="0" iBayCol="0" iTray="16" top="false"/>
+  <split iBayRow="0" iBayCol="0" iTray="16" top="true"/>
+  <split iBayRow="0" iBayCol="0" iTray="17" top="false"/>
+  <split iBayRow="0" iBayCol="0" iTray="17" top="true"/>
+  <split iBayRow="0" iBayCol="0" iTray="18" top="false"/>
+</tkrSplits>
