@@ -8,6 +8,7 @@ use GlastPolicy v4*
 use Event   *
 use geometry   v3*
 
+use GlastSvc *
 use GaudiSvc
 use xml
 use CLHEP
@@ -20,9 +21,7 @@ apply_pattern package_include
 #=============================================================
 use facilities v2*
 
-private
-
-
+# private
 
 
 # get flags to build shared library
