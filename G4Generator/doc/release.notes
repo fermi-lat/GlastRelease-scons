@@ -1,5 +1,6 @@
 //$Header$
 /*
+ * v4r1p4 07-jun-02 THB clean out uses; remove test dependence on GlastDigi
  * v4r1p3 31-may-02 THB put display options under submenu
  * v4r1p2 26-may-02 THB fix global to local transformations
  * v4r1p1 16-may-02 THB small fix for new McParticle

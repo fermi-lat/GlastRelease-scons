@@ -5,7 +5,7 @@
 // $Header$
 
 //  -------------- basic Glast/Gaudi run enviornment -----------
-ApplicationMgr.DLLs   = { "GaudiAlg",  "GlastSvc", "GlastDigi"};
+ApplicationMgr.DLLs   = {  "GlastSvc"};
 
 ApplicationMgr.ExtSvc = { 
     "GlastEventSelector/EventSelector" , 
@@ -30,7 +30,6 @@ GlastDetSvc.topVolume="LAT";         // the whole schebang
 GlastDetSvc.visitorMode="recon";
 
 
-TkrBariDigiAlg.CurrentsFile = "$(GLASTDIGIROOT)/src/Tkr/BaPgDigiAlg/correnti";
 #include "$FLUXSVCROOT/src/defaultOptions.txt"
 // Append (no replace) the list of source library documents
 FluxSvc.source_lib = {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
@@ -39,8 +38,7 @@ FluxSvc.source_lib = {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
 ApplicationMgr.TopAlg = { 
     "FluxAlg",
     "G4Generator",
-    "G4TestAlg",
-    "TkrBariDigiAlg"};
+    "G4TestAlg"};
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
@@ -60,11 +58,11 @@ G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
 //G4Generator.UIcommands+={"/process/inactivate conv"};
 //G4Generator.UIcommands+={"/tracking/verbose 0"};
 
-ApplicationMgr.EvtMax =100;
+ApplicationMgr.EvtMax =10;
 
 // needed to have the gui available
-ApplicationMgr.ExtSvc +={"GuiSvc"};
-GuiSvc.size = -2000; 
+//ApplicationMgr.ExtSvc +={"GuiSvc"};
+//  GuiSvc.size = -2000; 
 
 //==============================================================
 //
