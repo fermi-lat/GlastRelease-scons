@@ -52,7 +52,7 @@ ApplicationMgr.EvtMax =100;
 
 // needed to have the gui available
 ApplicationMgr.ExtSvc +={"GuiSvc"};
-GuiSvc.size = -200; // in cm for now
+GuiSvc.size = -2000; 
 
 //==============================================================
 //

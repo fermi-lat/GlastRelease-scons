@@ -49,13 +49,14 @@ DisplayManager::DisplayManager( gui::DisplayControl* d)
         void update(){}
         void clear(){DisplayRep::clear(); setColor("black"); }
     };
+#if 0
     // key detector type with first 3 characters of name
     d->add(m_detmap["sid"]=m_detmap["top"]= new AllBoxes, "ACD");
     d->add(m_detmap["SiL"]= new AllBoxes, "TKR");
     d->add(m_detmap["CsI"]= new AllBoxes, "CAL");
     d->add(m_detmap["dio"]=new AllBoxes, "diodes", false);
     d->menu().addSeparator();
-
+#endif
     d->add(m_detmap["steps"] = new HitsRep, "hits", false);
     
     d->add(m_detmap["hit_boxes"] = new Boxes, "hit detectors");
@@ -66,9 +67,8 @@ void DisplayManager::addDetectorBox(std::string detName,
                                     const HepTransform3D& T, 
                                     double x, double y, double z)
 {
-    Box b(0.1*x,0.1*y,0.1*z);
-    b.transform(CoordTransform(T.getRotation(), 0.1*T.getTranslation()));
-    // b.transform(T);
+    Box b(x,y,z);
+    b.transform(CoordTransform(T.getRotation(), T.getTranslation()));
     gui::DisplayRep* rep = m_detmap[detName.substr(0,3)];
     assert(rep);
     rep->append(BoxRep(b));
@@ -77,8 +77,8 @@ void DisplayManager::addDetectorBox(std::string detName,
 void DisplayManager::addHitBox(const HepTransform3D& T,
                                double x, double y, double z)
 {
-    Box b(0.1*x,0.1*y,0.1*z);
-    b.transform(CoordTransform(T.getRotation(), 0.1*T.getTranslation()));
+    Box b(x,y,z);
+    b.transform(CoordTransform(T.getRotation(), T.getTranslation()));
     //b.transform(T); 
     m_detmap["hit_boxes"]->append(BoxRep(b));
     
@@ -89,7 +89,7 @@ void DisplayManager::addHit( const Hep3Vector& a, const Hep3Vector& b)
     public:
         LineRep(const Hep3Vector& a, const Hep3Vector& b) 
         {
-            markerAt(0.1*a); moveTo(0.1*a);  lineTo(0.1*b);
+            markerAt(a); moveTo(a);  lineTo(b);
         }
 
         void update(){}
@@ -105,8 +105,8 @@ void DisplayManager::addTrack(const PointList & track, int charge)
         TrackRep( const DisplayManager::PointList& track, int charge){
             setColor(charge==0? "white" : "black");
             DisplayManager::PointList::const_iterator pit = track.begin();
-        moveTo(0.1*(*pit++));
-        for(; pit !=track.end(); ++pit) lineTo(0.1*(*pit));
+        moveTo(*pit++);
+        for(; pit !=track.end(); ++pit) lineTo(*pit);
         }
         void update(){}
     };
