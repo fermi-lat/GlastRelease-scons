@@ -143,7 +143,7 @@ StatusCode UserAlg::execute()
 {
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
-    log << MSG::INFO << "executing " << ++m_count << " time" << endreq;
+    log << MSG::DEBUG << "executing " << ++m_count << " time" << endreq;
 
     if( m_rootTupleSvc!=0) {
         // necessary to store the tuple entry

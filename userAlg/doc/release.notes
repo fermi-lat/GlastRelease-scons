@@ -3,6 +3,7 @@
 
 @verbatim
 
+ * v6r4   26-nov-04  THB turn off usersource demo, crashes, don't have time to understand
  * v6r3   20-oct-04  MK  Example using propagator
  * v6r2p2 09-sep-04  THB need explicit use astro
  * v6r2p1 15-jul-04  THB bug fix for linux
