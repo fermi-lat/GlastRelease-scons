@@ -37,21 +37,22 @@ namespace rdbModel {
   
 
   /// Throw exception if Operator is not a comparison operator
-  const std::string[2]& Assertion::Operator::getCompareArgs() const {
+  const std::string* Assertion::Operator::getCompareArgs() const {
     if (!isCompareOp()) 
       throw RdbException("Assertion::Operator::getCompareArgs: wrong type");
-    return m_compareArgs;
+    return &m_compareArgs[0];
   }
 
   /// Throw exception if Operator is not a comparison operator
-  const bool[2]& Assertion::Operator::getLiteralness() const {
+  const bool* Assertion::Operator::getLiteralness() const {
     if (!isCompareOp()) 
       throw RdbException("Assertion::Operator::getLiteralness: wrong type");
-    return m_literal;
+    return &m_literal[0];
   }
 
   /// Throw exception if Operator is a comparison operator
-  const std::vector<Operator* >& Assertion::Operator::getChildren() const {
+  const std::vector<Assertion::Operator* >& 
+  Assertion::Operator::getChildren() const {
     if (isCompareOp()) 
       throw RdbException("Assertion::Operator::getChildren: wrong type");
     return m_operands;

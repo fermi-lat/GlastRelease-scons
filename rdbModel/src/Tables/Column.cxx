@@ -10,6 +10,8 @@ namespace rdbModel {
     delete m_source;
   }
 
+  Enum* Column::getEnum() const {return m_type->getEnum();}
+
   bool Column::okValue(const std::string& val, bool set) const {
     // auto increment and datetime values are established by rdbms
     if (set) {
