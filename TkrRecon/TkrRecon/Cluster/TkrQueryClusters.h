@@ -1,13 +1,6 @@
 #ifndef TKRQUERYCLUSTERS_H
 #define TKRQUERYCLUSTERS_H 
 
-#include <vector>
-#include "GaudiKernel/MsgStream.h"
-#include "geometry/Point.h"
-#include "gui/DisplayRep.h"
-#include "Event/Recon/TkrRecon/TkrCluster.h"
-#include "Event/Recon/TkrRecon/TkrClusterCol.h"
-
 /** 
 * @class TkrQueryClusters
 *
@@ -20,6 +13,13 @@
 *
 * $Header$
 */
+
+#include <vector>
+#include "GaudiKernel/MsgStream.h"
+#include "geometry/Point.h"
+#include "gui/DisplayRep.h"
+#include "Event/Recon/TkrRecon/TkrCluster.h"
+#include "Event/Recon/TkrRecon/TkrClusterCol.h"
 
 class TkrQueryClusters
 {

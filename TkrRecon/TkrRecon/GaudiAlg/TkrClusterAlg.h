@@ -2,17 +2,6 @@
 #ifndef TKRCLUSTERALG_H
 #define TKRCLUSTERALG_H 
 
-#include <vector>
-#include "geometry/Point.h"
-#include "Event/Recon/TkrRecon/TkrClusterCol.h"
-#include "TkrRecon/ITkrGeometrySvc.h"
-#include "TkrRecon/ITkrBadStripsSvc.h"
-
-#include "Event/Digi/TkrDigi.h"
-
-#include "GaudiKernel/Algorithm.h"
-
-
 /** 
 * @class TkrClusterAlg
 *
@@ -26,6 +15,16 @@
 *
 * $Header$
 */
+
+#include <vector>
+#include "geometry/Point.h"
+#include "Event/Recon/TkrRecon/TkrClusterCol.h"
+#include "TkrRecon/ITkrGeometrySvc.h"
+#include "TkrRecon/ITkrBadStripsSvc.h"
+
+#include "Event/Digi/TkrDigi.h"
+
+#include "GaudiKernel/Algorithm.h"
 
 class TkrClusterAlg : public Algorithm
 

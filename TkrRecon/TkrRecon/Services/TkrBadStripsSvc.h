@@ -2,14 +2,6 @@
 #ifndef TKRBADSTRIPSSVC_H
 #define TKRBADSTRIPSSVC_H 
 
-#include "GaudiKernel/Service.h"
-
-#include "TkrRecon/ITkrBadStripsSvc.h"
-#include "TkrRecon/ITkrGeometrySvc.h"
-
-#include <string>
-#include <vector>
-
 /** 
  * @class BadStripsSvc
  *
@@ -41,6 +33,14 @@
  *
  * $Header$
  */
+
+#include "GaudiKernel/Service.h"
+
+#include "TkrRecon/ITkrBadStripsSvc.h"
+#include "TkrRecon/ITkrGeometrySvc.h"
+
+#include <string>
+#include <vector>
 
 class TkrBadStripsSvc : public Service,
         virtual public ITkrBadStripsSvc
