@@ -4,10 +4,7 @@
 
 
 #include "geomrep/ArcRep.h"
-#ifdef _MSC_VER // for min, max
-# include "CLHEP/config/TemplateFunctions.h"
-#endif
-
+#include <algorithm>
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ArcRep::ArcRep( const Point& center, double radius,

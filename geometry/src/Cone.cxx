@@ -1,18 +1,13 @@
 // $Id$
 //
 
-//#include "arve/config.h" // Need CLHEP_MIN_MAX_DEFINED
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "geometry/Cone.h"
 
 #include "geometry/Conic.h"
 #include "geometry/Plane.h"
-
-#include "CLHEP/config/TemplateFunctions.h"
+#include <algorithm>
+inline static double sqr(double x){return x*x;}
 
 static Vector zhat(0,0,1);
 
