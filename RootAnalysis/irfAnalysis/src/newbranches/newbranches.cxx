@@ -1,11 +1,16 @@
+/** @file newbranches.cxx
+    @author: Luis Reyes
+    $Header$
+
+*/
 #include <string>
 #include "tree_class.h"
-
+#include <iostream>
 static inline double sqr(double x){return x*x;}
 
 int main(){
 
-    using namespace std;
+    using std::cout; using std::endl;
     /******************************************************
     Procedure:
 
