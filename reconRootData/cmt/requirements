@@ -1,8 +1,8 @@
 package reconRootData
-version v4r3p5
+version v4r4
 
 use GlastPolicy v5r*
-use digiRootData v5r*
+use digiRootData v6r*
 
 apply_pattern package_include
 
