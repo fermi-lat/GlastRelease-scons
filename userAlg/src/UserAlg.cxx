@@ -1,5 +1,8 @@
-// $Header$
+/** @file UserAlg.cxx
+    @brief declartion, implementaion of the class UserAlg
 
+    $Header$
+*/
 // Gaudi system includes
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"

@@ -1,5 +1,6 @@
 package userAlg
-version v5r1p0
+version v6r0
+# $Id$
 
 # --------------------------
 # run a job with a user algorithm
@@ -7,14 +8,12 @@ version v5r1p0
 
 # get everything we need from here
 use Gleam *
-use ntupleWriterSvc v3r*
+use ntupleWriterSvc *
 
 
-
-#apply_pattern userjobopts
 set JOBOPTIONS $(USERALGROOT)/src/jobOptions.txt
 
-macro other_source "" WIN32 "*.txt ../xml/*.xml"
+macro other_source "" WIN32 " *.h *.txt ../xml/*.xml"
 
 macro userApplinkopts "${Geant4_linkopts} $(GuiSvc_lib) ${guiapp_linkopts} ${gui_linkopts} -u GuiSvc_loadRef -ldl" \
       WIN32 "$(guiapp_linkopts) $(GuiSvc_lib) /include:_GuiSvc_loadRef"

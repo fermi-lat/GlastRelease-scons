@@ -1,3 +1,6 @@
+/** @file Replay.cxx
+@brief declaration, implementaion of the class Rplay
+*/
 //
 // Gaudi system includes
 #include "GaudiKernel/Algorithm.h"
@@ -15,14 +18,14 @@
 
 
 /** @class Replay 
- * @brief Setup a Replay menu, with Algorithm buttons to call the execute members; settable from job options;
- * 
- * $Header$
- * <br> Following is example of how to select multiple algs:
-<pre>
-  ApplicationMgr.TopAlg += {"Replay"};
-  Replay.Algorithms = {"TkrReconAlg", "TkrFindAlg"};
- </pre>
+* @brief Setup a Replay menu, with Algorithm buttons to call the execute members; settable from job options;
+* 
+* $Header$
+* <br> Following is example of how to select multiple algs:
+@verbatim
+ApplicationMgr.TopAlg += {"Replay"};
+Replay.Algorithms = {"TkrReconAlg", "TkrFindAlg"};
+@endverbatim
 
 */
 class Replay : public Algorithm {
@@ -32,13 +35,12 @@ public:
     StatusCode initialize();
     StatusCode execute();
     StatusCode finalize(){return StatusCode::SUCCESS;}
-    
+
 private:
     StatusCode addButton(const std::string & name);
 
     // Data Members
 
-    StringProperty m_algname; 
     StringArrayProperty m_algnameList;
     IAlgManager* m_AlgMgr;
 
@@ -56,9 +58,8 @@ Replay::Replay(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator)
 {
     // declare properties with setProperties calls
-    declareProperty("algname", m_algname); // for backward compatibility
     declareProperty("Algorithms",  m_algnameList);
-    
+
 }
 
 //! set parameters and attach to various perhaps useful services.
@@ -66,29 +67,29 @@ StatusCode Replay::initialize(){
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "initialize" << endreq;
-    
+
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
-    
-       
-   // Alg manager service for finding algs by name
+
+
+    // Alg manager service for finding algs by name
     if ( (serviceLocator( )->getService( "ApplicationMgr",
-        IID_IAlgManager,
-        (IInterface*&)m_AlgMgr )).isFailure() ) {
+        IID_IAlgManager, (IInterface*&)m_AlgMgr )).isFailure() ) 
+    {
         log << MSG::ERROR << " no application manager???" << endreq;
         return StatusCode::FAILURE;
-        
+
     }
-    
+
     // get the  Gui service, required for interactive function
     //
     IGuiSvc* guiSvc=0;
-    
+
     if ( service("GuiSvc", guiSvc).isFailure() ){
         log << MSG::WARNING << "No GuiSvc, no display" << endreq;
         return StatusCode::SUCCESS;  // just ignore thisy     
     }
-    
+
     // found: create new top-level menu
     gui::GuiMgr* guiMgr=guiSvc->guiMgr() ;
     if( s_replayMenu==0) {
@@ -97,14 +98,13 @@ StatusCode Replay::initialize(){
 
 
     // add the button(s)
-    if( m_algname.value() != "") sc = addButton(m_algname);
 
-   std::vector<std::string> names = m_algnameList.value();
-   for( std::vector<std::string>::const_iterator it=names.begin(); it!=names.end(); ++it){
-       if( addButton(*it).isFailure() ) return StatusCode::FAILURE;
-   }
+    std::vector<std::string> names = m_algnameList.value();
+    for( std::vector<std::string>::const_iterator it=names.begin(); it!=names.end(); ++it){
+        if( addButton(*it).isFailure() ) return StatusCode::FAILURE;
+    }
 
-   return sc;
+    return sc;
 }
 
 StatusCode Replay::addButton(const std::string & algname)
