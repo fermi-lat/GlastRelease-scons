@@ -8,8 +8,10 @@
 #include "GaudiKernel/Algorithm.h"
 
 // ntuple interface
+#define NTUPLE
+#ifdef NTUPLE
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
-
+#endif
 // if using the gui
 #include "GuiSvc/IGuiSvc.h"
 #include "gui/GuiMgr.h"
@@ -22,10 +24,15 @@
 
 #include "Event/TopLevel/Event.h"
 #include "Event/TopLevel/EventModel.h"
+#include "Event/TopLevel/MCEvent.h"
 
-// for access to instrument.ini
+#include "Event/Recon/TkrRecon/TkrVertex.h"
+#include "Event/Recon/CalRecon/CalCluster.h"
+#include "Event/Recon/CalRecon/CalXtalRecData.h"
+#include "Event/Recon/AcdRecon/AcdRecon.h"
+
+// for access to geometry perhaps
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "xml/IFile.h"
 
 #include <cassert>
 
@@ -49,8 +56,10 @@ private:
     IGlastDetSvc*    m_detSvc; 
     /// access to the Gui Service for display of 3-d objects
     IGuiSvc*    m_guiSvc;
+#ifdef NTUPLE
     /// access the ntupleWriter service to write out to ROOT ntuples
     INTupleWriterSvc *m_ntupleWriteSvc;
+#endif
     /// parameter to store the logical name of the ROOT file to write to
     std::string m_tupleName;
 };
@@ -93,6 +102,7 @@ StatusCode UserAlg::initialize(){
         //m_guiSvc->guiMgr()->display().add(new Rep, "User rep");
     }
     
+#ifdef NTUPLE
     // get a pointer to our ntupleWriterSvc
     if (!m_tupleName.empty()) {
         if (service("ntupleWriterSvc", m_ntupleWriteSvc, true).isFailure()) {
@@ -100,6 +110,7 @@ StatusCode UserAlg::initialize(){
             return StatusCode::FAILURE;
         }
     }
+#endif
     return sc;
 }
 
@@ -108,19 +119,28 @@ StatusCode UserAlg::execute()
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
     log << MSG::INFO << "executing " << ++m_count << " time" << endreq;
+
+    // Retrieving pointers from the TDS
     
-    // Here we are adding to our ROOT ntuple
-    if (!m_tupleName.empty())
-        sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "NumCalls", m_count);
-    
-    // An example of retrieving data from the TDS
+    SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
+    SmartDataPtr<Event::MCEvent>     mcheader(eventSvc(),    EventModel::MC::Event);
     SmartDataPtr<Event::McParticleCol> particles(eventSvc(), EventModel::MC::McParticleCol);
+    SmartDataPtr<Event::TkrVertexCol>  tracks(eventSvc(),    EventModel::TkrRecon::TkrVertexCol);
+    SmartDataPtr<Event::CalClusterCol> clusters(eventSvc(),  EventModel::CalRecon::CalClusterCol);
+    SmartDataPtr<Event::CalXtalRecCol> xtalrecs(eventSvc(),  EventModel::CalRecon::CalXtalRecCol);
+    SmartDataPtr<Event::AcdRecon> acdrec(eventSvc(),         EventModel::AcdRecon::Event);
+
+    double t = header->time();
+    log << MSG::DEBUG << "Event time: " << t << endreq;;
+
     
+    // lop over the monte carlo particle collection
     if (particles) {
         
-        Event::McParticleCol::const_iterator p;
+        Event::McParticleCol::const_iterator piter;
         
-        for (p = particles->begin(); p != particles->end(); p++) {
+        for (piter = particles->begin(); piter != particles->end(); piter++) {
+            const Event::McParticle& mcp = **piter;
             
         }
     }
@@ -136,7 +156,16 @@ StatusCode UserAlg::execute()
         m_guiSvc->guiMgr()->pause();
     } 
     
+#ifdef NTUPLE
+    // Here we are adding to our ROOT ntuple
+    if (!m_tupleName.empty())
+        sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "NumCalls", m_count);
     
+#endif
+#if 0
+    log << MSG::FATAL << "test of a fatal error " << endreq;
+    sc = StatusCode::FAILURE;
+#endif
     return sc;
 }
 

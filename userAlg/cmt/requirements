@@ -7,14 +7,15 @@ version v4r0
 
 # get everything we need from here
 use Gleam *
-use ntupleWriterSvc v2r*
+use ntupleWriterSvc v2r0p0
+use GuiSvc v3r2
 
 #apply_pattern userjobopts
 set JOBOPTIONS $(USERALGROOT)/src/jobOptions.txt
 
-macro jobOptions "" WIN32 "jobOptions.txt"
+macro other_source "" WIN32 "*.txt ../xml/*.xml"
 
 macro userApplinkopts "${Geant4_linkopts} $(GuiSvc_lib) ${guiapp_linkopts} ${gui_linkopts} -u GuiSvc_loadRef -ldl" \
       WIN32 "$(guiapp_linkopts) $(GuiSvc_lib) /include:_GuiSvc_loadRef"
 
-application userApp ${GuiMain} *.cxx ${jobOptions} ${Win32Resource}
+application userApp ${GlastMain} *.cxx ${other_source} ${Win32Resource}

@@ -3,14 +3,19 @@
 //
 // Job options file for user algorithm development
 //
+
 #include "$GLEAMROOT/src/jobOptions.txt"
-#include "$USERALGROOT/src/ntuple.txt"
+
+// add the local source library definitions and specify our test source
+FluxSvc.source_lib += {"$(USERALGROOT)/xml/user_sources.xml"};
+
+FluxAlg.source_name = "userspectrum";
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
 
-// include algorithms in this package to append to GismoGenerator, and pdr recon
-ApplicationMgr.TopAlg += { "UserAlg"};
+// include algorithms in this package to append 
+Top.Members += { "UserAlg"};
 
 // How to pause the GUI with a list of events of interest
 //   You can also pause the GUI on any calculable condition. (See userAlg.)
@@ -21,14 +26,15 @@ ApplicationMgr.TopAlg += { "UserAlg"};
 // and this when run number is not needed: (not sure why this works, but it does!)
 //PauseEvent.eventList = {20, 22, 24, 50};
 
+
 // How to replay any algorithm from a paused condition:
 //
-//ApplicationMgr.TopAlg += {"Replay/button1", "Replay/button2"};
-//button1.algname="TkrReconAlg";
-//button2.algname="TkrFindAlg";
+//ApplicationMgr.TopAlg += {"Replay"};
+//Replay.Algorithms = {"TkrReconAlg" };
 
-//Output.Members={}; // turn off rootwriter.
+Output.Members={}; // turn off rootwriter.
 
+#include "$USERALGROOT/src/ntuple.txt"
 //==============================================================
 //
 // End of job options file
