@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
  *
+            THB  11-oct-04 Remove livetime, GemConditionWord, eventflags, since moving to AnaTup.
  *  v6r18   THB  13-sep-04 Remove redundant vars Run, Event, elapsed_time, MC_src_Id
  *  v6r17   THB  10-sep-04 Adjust to IValsTool interface change, implement floats 
  *  v6r16p3 THB  08-sep-04 add temporary variable for testing live time 
