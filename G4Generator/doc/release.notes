@@ -1,11 +1,15 @@
 //$Header$
 /*
- * v3r3p2 11-apr-02 THB patch in DisplayManager.cxx to satisfy egcs 
+ * v3r4   20-Apr-02 RG  code review tag (new documentation and comments)
+ * v3r3p2 11-Apr-02 THB patch in DisplayManager.cxx to satisfy egcs 
  * v3r3   08-Apr-02 RG  fix rotation and add McParticle tree filling
- * v3r2   26-mar-02 THB fix facilities tag, add McParticle support
- * v3r1p1 26-mar-02 THB reverse signs of rotation angles
+ * v3r2   26-Mar-02 THB fix facilities tag, add McParticle support
+ * v3r1p1 26-Mar-02 THB reverse signs of rotation angles
  * v3r1   21-Mar-02 THB All hits done, saving local coordinates
- * v2r1             THB cleaned up colors, improved digi handling. (Still no integrating hits)
- * v2  removed dependence on instrument and converted to use GlastDetSvc for geometry and materials
- * Inital version by T. Burnett 
+ * v2r1   15-Mar-02 THB cleaned up colors, improved digi handling. 
+ *                      (Still no integrating hits)
+ * v2r0   08-Mar-02 THB removed dependence on instrument and converted to use 
+ *                      GlastDetSvc for geometry and materials
+ * v1     05-Jan-02 THB 
+ * v0     19-Nov-01 THB Inital version  
 */
