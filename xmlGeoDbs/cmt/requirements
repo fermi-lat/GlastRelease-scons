@@ -1,8 +1,9 @@
 # $Header$
 
 package xmlGeoDbs
+version v1r10
 
-use GlastPolicy v4r*
+use GlastPolicy v5*
 
 apply_pattern package_xmlfiles
 
