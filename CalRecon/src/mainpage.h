@@ -87,7 +87,7 @@
  *        CalClustersAlg (for example, before and after TkrRecon).
  *        The default value is 0 .
  *
- * @param CalClustersAlg.clusterToolName
+ * @param CalClustersAlg.clusteringToolName
  *        name of tool performing clustering. Default is CalSingleClusteringTool
  *        If set to FuzzyClusteringTool, the following param is mandatory:
  * @param ToolSvc.FuzzyClusterTool.FuzzyCluster.command
