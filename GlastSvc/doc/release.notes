@@ -2,6 +2,9 @@ package GlastSvc
 
 package manager:T.Burnett
 
+23-nov-01: THB start Reco service
+22-nov-01: THB add dm folder with detModel interface classes.
+
 26-aug-01: tag v2r3
 ! 20001208 Tag v1
 ! 20000829 THB: use new class instrument/Instrument for GlastDetector stuff.

@@ -1,5 +1,5 @@
 package GlastSvc
-version v2
+version v3
 
 branches src mgr doc
 
@@ -13,7 +13,7 @@ use RootHistCnv
 
 apply_pattern package_headers
 
-macro_append GlastSvc_headers "" WIN32 " \
+macro_append GlastSvc_headers "" WIN32 " ..\GlastSvc\Reco\*.h \
                  ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
                  GlastDetSvc/*.h EventSelector/*.h \
                  ../GlastSvc/data/*.h data/*.h
