@@ -10,6 +10,10 @@
 #include <iomanip>
 #include <algorithm>
 
+// put these here because gcc could not find the inline versions???
+unsigned        FigureOfMerit::accepted() const { return m_accepted; }
+float    FigureOfMerit::area(){return s_area;}
+unsigned FigureOfMerit::generated()  { return s_generated; }
 
 using namespace std;
 
