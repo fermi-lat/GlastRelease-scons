@@ -2,6 +2,8 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 14-may-2004: jrb v1r17    1. (For Xin) add files for 1-tower, VDG shield &
+ *                           2. eliminate version spec in GlastPolicy use
  * 12-may-2004: jrb v1r17    Make it easier to add extra definitions for
  *                           non-flight instruments
  *  5-may-2004: jrb v1r16    New directory for lat assembly configurations;
