@@ -2,6 +2,9 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
+ *  9-Aug-2004: jrb v0r13:   1. Support for TKR splits calibration
+ *                           2. For mc data, fetch mission start from 
+ *                              proper place (astro package)
  *  2-Aug-2004: jrb v0r12:   1.Timestamp-fetch for mc and (simulated) digi data
  *                           2.Bug fix for fetching dac settings
  * 27-Jul-2004: jrb v0r11:   Root conversion service + one example root 
