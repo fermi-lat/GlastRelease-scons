@@ -3,7 +3,7 @@
 
 /** @mainpage package G4Propagator
  *
- * @authors Tracy Usher
+ * @author Tracy Usher
  *
  * @section description Description
  *
@@ -13,6 +13,7 @@
  * end point. 
  *
  * Several classes are defined in order to accomplish this task:
+
  * 1) G4PropagatorTool - This is a Gaudi tool for interfacing external Glast packages
  *    to the propagator. It is also responsible for obtaining the necessary Geant4 
  *    geometry information from the G4GeoemetrySvc as well as obtaining a pointer to
@@ -22,10 +23,12 @@
  *    interface for the propagator. Mostly implements the functions for returning specific
  *    values
  *
- * 3) ParticleTransporter - internal class which interfaces to the Geant4 volume code to 
+ * 3) G4PropagationTool - a tool that implements the IPropagator interface.
+ *
+ * 4) ParticleTransporter - internal class which interfaces to the Geant4 volume code to 
  *    perform the actual transportation through the Geant4 geometry
  * 
- * 4) TransportStepInfo - an internal untility routine keeping track of information for
+ * 5) TransportStepInfo - an internal utility routine keeping track of information for
  *    each step.
  *
  *<hr>
@@ -41,9 +44,7 @@
  * @section requirements requirements
  * @verbinclude requirements
  * <hr>
- * @todo Complete the implementation of "position"
- * @todo Determine the source of problem between TkrRecon and Propagator which causes crash
- * @todo Insert documentation
+ * @todo Improve documentation
  *
  */
 

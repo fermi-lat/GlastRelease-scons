@@ -1,10 +1,13 @@
 /** @file release.notes
-    @brief package G4Generator <pre>
+    @brief package G4Propagator
     $Id$
-*
-* v1r2   21-Apr-03 TU  Modifications for new G4PropagationTool
-* v1r1    6-Mar-03 TU  Really first release version for general use
-* v0r0   23-Jan-03 TU  Inital version  
-* v1r0    7-Feb-03 TU  Tag first release version
-</pre>
+ @verbatim
+
+ v1r2p1 22-Apr-03 TU   fix unix error (works fine on windows)
+ v1r2   21-Apr-03 TU   Modifications for new G4PropagationTool
+ v1r1    6-Mar-03 TU   Really first release version for general use
+ v0r0   23-Jan-03 TU   Inital version  
+ v1r0    7-Feb-03 TU   Tag first release version
+
+ @endverbatim
 */
