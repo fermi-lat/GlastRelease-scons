@@ -4,6 +4,7 @@
 
    Coordinators: M. Frailis and R. Giannitrapani
  
+   v1r1p0   9-Jul-2004  frailis  Loosen dependency on GlastPolicy to just v*
    v1r1     1-Jul-2004  frailis  First release version  
 
    @endverbatim

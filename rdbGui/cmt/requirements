@@ -1,11 +1,11 @@
 # $Header$
 package rdbGui
-version v1r1
+version v1r1p0
 
 author Marco Frailis <frailis@fisica.uniud.it>
 author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
 
-use GlastPolicy  v5r*
+use GlastPolicy  v*
 use FOX v0r125p*  IExternal
 use rdbModel v1r*
 
