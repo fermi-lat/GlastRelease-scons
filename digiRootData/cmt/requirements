@@ -12,10 +12,6 @@ apply_pattern  package_linkopts
 # temporarily re-introduce this patter to be sure bfemApp will run on linux
 apply_pattern ld_library_path
 
-# For some reason, I was getting errors when loading the digiRootData shareable
-# in root.  Linking the Root Physics library in avoids this.
-macro digiRootData_shlibflags " -L${ROOT_PATH}/lib -lPhysics -lMatrix " \
-      VisualC            " ${use_linkopts} "
 #-------------------------------------------------------
 private
 
@@ -24,17 +20,27 @@ private
 setup_script dorootcint
 
 # Create the Root Cint classes on UNIX
-macro root_headers "AcdHeader.h AcdId.h AcdTile.h CalDigi.h CalHeader.h CaXtalId.h CalXtalReadout.h DigiEvent.h L1T.h LiveTime.h StripId.h SubSystemHeader.h TkrHeader.h TkrLayer.h EventLinkDef.h"
+#macro root_headers "AcdHeader.h AcdId.h AcdTile.h CalDigi.h CalHeader.h CaXtalId.h CalXtalReadout.h DigiEvent.h L1T.h LiveTime.h StripId.h SubSystemHeader.h TkrHeader.h TkrLayer.h EventLinkDef.h"
+macro root_headers "CalDigi.h CaXtalId.h CalXtalReadout.h DigiEvent.h EventLinkDef.h"
 
 # on unix use a document to make rootcint part of the build process
 make_fragment event_dorootcint_header
 make_fragment event_dorootcint -header=event_dorootcint_header
-document event_dorootcint EventRootCint CINTFILE=../digiRootData/EventCint.cxx
+document event_dorootcint EventRootCint CINTFILE=../digiRootData/digiRootDataCint.cxx
 
 
 apply_pattern package_include
 apply_pattern package_headers
 
-library  digiRootData *.cxx \
+
+macro digiRootData_shlibflags " -L${ROOT_PATH}/lib -lPhysics -lMatrix " \
+      VisualC            " ${use_linkopts} "
+
+
+library  digiRootData \
+      DigiEvent.cxx CalDigi.cxx CalXtalReadout.cxx CalXtalId.cxx \
       ../digiRootData/*.cxx \
       ${digiRootData_headers}
+
+macro test_digiRootDatalinkopts ${digiRootData_shlibflags}
+application test_digiRootData test/testDigiClasses.cxx

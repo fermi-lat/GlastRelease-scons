@@ -10,7 +10,7 @@ REM Remove old cint files
 del EventCint.cxx
 del EventCint.h
 
-%ROOT_PATH%\bin\rootcint -f EventCint.cxx -c AcdHeader.h AcdId.h AcdTile.h CalHeader.h CalDigi.h CalXtalId.h CalXtalReadout.h DigiEvent.h L1T.h LiveTime.h StripId.h SubSystemHeader.h TkrHeader.h TkrLayer.h EventLinkDef.h
+%ROOT_PATH%\bin\rootcint -f digiRootDataCint.cxx -c CalDigi.h CalXtalId.h CalXtalReadout.h DigiEvent.h EventLinkDef.h
 
 REM Return to the original directory
 call %DIGIROOTDATAROOT%\changeDir.bat
