@@ -18,7 +18,7 @@
 
 
 const char* _MERIT_VERSION = "$Revision$";
-static std::string  cutstr("nA");
+static std::string  cutstr("ntA"); 
 static std::string  file_name("");
 
 
