@@ -30,8 +30,25 @@ void CorbaServer::run()
   obj = hepEventServer_impl->_this();
   CORBA::String_var sior(m_orb->object_to_string(obj));  
 
-
-  std::ofstream fout("hepeventserver.ior");
+  // I need this to build system command 
+  #ifdef WIN32
+  std::string separator("\\");
+  #else // gcc < 2.9.5.3 dosen't know <sstream>,stringstream
+  std::string separator("/");
+  #endif
+  
+  // We build the name of the ior file; if FREDHOME env variable is defined, it
+  // means we want to launch FRED automatically after the CORBA initialization;
+  // the ior file is than saved in the TMP directory if defined; otherwise the
+  // ior file is saved in the actual directory of execution
+  std::string iorFileName;  
+  if ((::getenv("FREDHOME") != NULL) && (::getenv("TMP") != NULL))
+  {
+    iorFileName = std::string(::getenv("TEMP")) + separator; 
+  }
+  iorFileName = iorFileName + "hepeventserver.ior";
+      
+  std::ofstream fout(iorFileName.c_str());
   if (fout.good()) {
     fout << (char*)sior << std::endl;
     fout.close( );
@@ -39,17 +56,23 @@ void CorbaServer::run()
   
   hepEventServer_impl->_remove_ref();
 
-  // hepEventServer_impl->setAppMgr(m_appMgrUI);
-  // hepEventServer_impl->setSvcLocator(serviceLocator());
-
   PortableServer::POAManager_var mgr = poa->the_POAManager();
   mgr->activate();
 
   
   hepEventServer_impl->initHepRep();
-//  hepEventServer_impl->setOrb(orb);
 
+  // If FREDHOME and TMP are defined, we will try to start FRED automatically
+  // passing to it the ior file name
+  if ((::getenv("FREDHOME") != NULL) && (::getenv("TMP") != NULL))
+  {    
+    std::string root("ruby ");
+    root = root + std::string(::getenv("FREDHOME"));
+    root = root + separator + std::string("fred.rb -s ");
+    system((root + iorFileName).c_str());
+  }
 
+  // We start the CORBA server
   m_orb->run();    
   m_orb->destroy();
   }
