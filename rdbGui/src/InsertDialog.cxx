@@ -2,6 +2,7 @@
 * @brief InsertDialog is a non-modal dialog to insert new row in the calib
 * database.
 * @author Riccardo Giannitrapani
+* @author Marco Frailis
 * $Header$
 */
 
@@ -12,6 +13,8 @@
 #include "rdbModel/Tables/Datatype.h"
 #include "ColWidgetFactory.h"
 #include <iostream>
+#include <cstdio>
+
 
 // Message Map ConnectionDialog class
 FXDEFMAP(InsertDialog) InsertDialogMap[]={
@@ -106,6 +109,12 @@ long InsertDialog::onGoPress(FXObject *,FXSelector, void*)
   std::vector<std::string> nullValues;
   std::string name;
   std::string value;
+  
+#ifdef WIN32
+  const char* usrName = "USERNAME";
+#else
+  const char* usrName = "USER";
+#endif
    
   for(i=0;i<m_widgets.size();i++)
   {
@@ -123,7 +132,18 @@ long InsertDialog::onGoPress(FXObject *,FXSelector, void*)
     }      
   }
    
-
+  for (i = 0; i < m_fromService.size(); i++)
+    if (m_fromService[i]->getContentsType() == rdbModel::Column::CONTENTSserviceName)
+      {
+        colNames.push_back(m_fromService[i]->getName());
+        values.push_back("rdbGui");
+      }
+    else if (m_fromService[i]->getContentsType() == rdbModel::Column::CONTENTSusername)
+      {
+        colNames.push_back(m_fromService[i]->getName());
+        values.push_back(::getenv(usrName));        
+      }
+      
   if (m_connection)
   {
     if(m_insertMode) //If in insert mode
@@ -167,6 +187,8 @@ rdbModel::Visitor::VisitorState InsertDialog::visitRdb(rdbModel::Rdb *)
     delete m_widgets[i];
     m_widgets.clear();      
   }
+  
+  m_fromService.clear();
     
   return rdbModel::Visitor::VCONTINUE;
 }
@@ -248,11 +270,13 @@ rdbModel::Visitor::VisitorState InsertDialog::visitColumn(rdbModel::Column *colu
 
     if ((source == rdbModel::Column::FROMdefault)) 
       colWidget->setValue(column->getDefault());
-
       
     m_widgets.push_back(colWidget);
   } 
-
+  
+  if (source == rdbModel::Column::FROMprogram)
+    m_fromService.push_back(column);
+    
   return rdbModel::Visitor::VCONTINUE;
 }
 

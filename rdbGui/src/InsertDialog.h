@@ -80,6 +80,8 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
   bool m_insertMode;
   /// The result of the query for the last row inserted 
   rdbModel::ResultHandle* m_result;
+  /// List of columns set by the service (i.e. by the rdbGui program)
+  std::vector<rdbModel::Column* > m_fromService;
 };
 
 
