@@ -13,9 +13,7 @@ macro irfAnalysis_cppflags  ""\
   Linux "-I ../src -g -pedantic "\
   WIN32 " /I ..\src /wd4800 /wd4305"
 
-macro_append ROOT_libs ""\
-  Linux " -lTreePlayer -lProof -lGX11 "\
-  WIN32 "  libHist.lib libGraf.lib libGpad.lib libPostScript.lib"
+macro_append ROOT_linkopts " $(ROOT_GUI_libs)"
 
 macro source "*.cxx" WIN32 "*.cxx *.h"
 
@@ -26,19 +24,6 @@ application energy_fit -s=energy  $(source)
 application aeff       -s=aeff aeff.cxx
 application aeffTable  -s=aeff aeffTable.cxx
 
-#application energy $(source) -s=energy $(source)
-#application psf    $(source) -s=psf  $(source)
-#application rewrite -s=newbranches $(source)
-
-# where to save/get all files
-
 set file_root "$(IRFANALYSISROOT)/root_files"
-
-# adjust the following for your special path by adding and commenting out, not changing
-#Perugia version
-#set input_file "$(IRFANALYSISROOT)/root_files/ag-v3r3p7-merituple-prune20031102-fulltup.root"
-
-#USA version
-set input_file "$(IRFANALYSISROOT)/../../root_files/ag-v3r3p7-merituple-prune20031102-fulltup.root"
-
+set input_file "$(IRFANALYSISROOT)/root_files/AllGamma.root"
 set output_file_root "$(IRFANALYSISROOT)/data"

@@ -18,8 +18,9 @@
 #include "Fitter.h"
 #include "MakeDists.h"
 
-MakeDists::MakeDists(const std::string &summaryFile, bool makeProfile)
-   : PSF(), m_makeProfile(makeProfile) {
+MakeDists::MakeDists(const std::string &summaryFile, bool makeProfile,
+                     bool useLogScale)
+   : PSF(), m_makeProfile(makeProfile), m_useLogScale(useLogScale) {
    m_summary_filename = output_file_root() + summaryFile;
 }
 
@@ -32,6 +33,10 @@ void MakeDists::project(const std::string &branchName,
       applyEnergyScaling();
       std::cout << "Applying energy scaling: "
                 << m_branchName << std::endl;
+   }
+
+   if (m_useLogScale) {
+      m_branchName = "log10(" + m_branchName + ")";
    }
 
    m_nbins = nbins;
@@ -68,7 +73,7 @@ void MakeDists::project(const std::string &branchName,
          h->GetXaxis()->SetTitle(m_branchName.c_str());
          std::cout << "\t" << title.str() << "... ";
          m_tree->Project(h->GetName(), m_branchName.c_str(),
-             goodEvent && energy && angle);
+                         goodEvent && energy && angle);
 
          std::cout << "count " << h->Integral() << ", "
              << "mean " <<  h->GetMean()<< ", "
@@ -110,7 +115,8 @@ void MakeDists::draw(const std::string &ps_filename, bool logy, Fitter* fitter) 
           
           double logecenter=logestart+logedelta*j, ecenter=pow(10, logecenter);
           
-          double xmin=j/double(energy_bins), xmax= (j+1)/double(energy_bins);
+//           double xmin=j/double(energy_bins);
+//           double xmax= (j+1)/double(energy_bins);
           
 // Amazingly, this code also works for Profile plots.
           TH1F* h = (TH1F*)psf_file.Get(hist_name(i,j));
@@ -169,7 +175,7 @@ void MakeDists::addCutInfo(const std::string &rootFile,
    TFile f( (path + "/" + rootFile).c_str(), "update" );
 
    TTree * tree = (TTree*)f.Get(treeName.c_str());
-   Int_t nentries = (Int_t)tree->GetEntries();
+//   Int_t nentries = (Int_t)tree->GetEntries();
 
    Double_t angle_min, angle_max, energy;
    TBranch *angleMin = tree->Branch("angle_min", &angle_min, "angle_min/D");
@@ -239,6 +245,7 @@ void MakeDists::setEnergyScaling(std::string scalingFunction,
 
 void MakeDists::addEnergyScaling(const std::string &rootFile,
                                  const std::string &treeName) {
+   (void)(treeName);
 
    if (m_energyScale) {
 // Assume the file is in the root output directory.

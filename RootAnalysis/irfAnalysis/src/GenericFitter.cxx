@@ -25,7 +25,7 @@ GenericFitter::GenericFitter(const std::string &userFunction,
 
    m_func = new TF1("userFunction", userFunction.c_str());
 
-   int npar = m_func->GetNpar();
+   unsigned int npar = m_func->GetNpar();
    m_params.resize(npar);
    assert(npar >= params.size());
    std::copy(params.begin(), params.end(), m_params.begin());
@@ -36,7 +36,7 @@ GenericFitter::GenericFitter(const std::string &userFunction,
 
    if (m_tree) {
 // Set up the branches in the output tree.
-      for (int i = 0; i < npar; i++) {
+      for (unsigned int i = 0; i < npar; i++) {
          std::ostringstream parName;
          parName << "p" << i;
          m_tree->Branch(parName.str().c_str(), &m_params[i], 
@@ -50,7 +50,6 @@ GenericFitter::~GenericFitter() {
 
 void GenericFitter::applyFit(TH1 * h) {
    int fitTrys = 0;
-
 
 // Do the fit in quiet mode.
    while (h->Fit("userFunction", "Q") && fitTrys++ < m_maxTrys);

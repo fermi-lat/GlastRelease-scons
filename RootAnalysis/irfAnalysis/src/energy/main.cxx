@@ -45,8 +45,10 @@ int main(){
 
     MakeDists irf("energy_fit.root");
 
-    if ( !irf.fileExists() )
+    if ( !irf.fileExists() ) {
        irf.project("EvtEnergySumOpt/McEnergy", 0, 2, 100 );
+       std::cout << "creating energy_fit.root" << std::endl;
+    }
     irf.set_ymin(1e-3);
     irf.set_ymax(0.2);
     irf.draw("energy_fit.ps",  true , myfit);

@@ -40,7 +40,7 @@ Fitter::~Fitter() {
       m_tree->Write();
       m_tree->Print();
    }
-//   delete m_func;
+   delete m_func;
    delete m_tree;
    delete m_file;
 }

@@ -29,7 +29,8 @@ class MakeDists : public PSF {
 
 public:
 
-   MakeDists(const std::string &summaryFile, bool makeProfile=false);
+   MakeDists(const std::string &summaryFile, bool makeProfile=false,
+             bool useLogScale=false);
 
 //   ~MakeDists(){}
    
@@ -52,6 +53,7 @@ public:
 private:
 
    bool m_makeProfile;
+   bool m_useLogScale;
 
    int m_nbins;
 

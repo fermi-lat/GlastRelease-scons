@@ -68,7 +68,8 @@ public:
         char title[256];  
         sprintf(title, "logE vs cosTheta, front Tkr" );
         TH2F *hf = new TH2F( "lectf", title, 
-            (5.5-1.0)/m_binsize, 1.0, 5.5,   m_zdir_bins, -1.0, 0.0 );
+                             static_cast<int>((5.5-1.0)/m_binsize), 
+                             1.0, 5.5,   m_zdir_bins, -1.0, 0.0 );
         m_tree->Project( hf->GetName(),"McZDir:McLogEnergy", goodEvent && front );
         std::cout << "Total number of front events: " 
                   << hf->Integral() << std::endl;
@@ -76,7 +77,8 @@ public:
 
         sprintf(title, "logE vs cosTheta, back  Tkr" );
         TH2F *hb = new TH2F( "lectb", title, 
-            (5.5-1.0)/m_binsize, 1.0, 5.5,   m_zdir_bins, -1.0, 0.0 );
+            static_cast<int>((5.5-1.0)/m_binsize), 
+                             1.0, 5.5,   m_zdir_bins, -1.0, 0.0 );
         m_tree->Project( hb->GetName(),"McZDir:McLogEnergy", goodEvent && back );
         std::cout << "Total number of back events: " 
                   << hb->Integral() << std::endl;
@@ -84,7 +86,8 @@ public:
 
         sprintf(title, "logE vs cosTheta, front & back" );
         TH2F *ha = new TH2F( "lecta", title, 
-            (5.5-1.0)/m_binsize, 1.0, 5.5,   m_zdir_bins, -1.0, 0.0 );
+            static_cast<int>((5.5-1.0)/m_binsize), 
+                             1.0, 5.5,   m_zdir_bins, -1.0, 0.0 );
         m_tree->Project( ha->GetName(),"McZDir:McLogEnergy", goodEvent );
         std::cout << "Total number of combined events: " 
                   << ha->Integral() << std::endl;

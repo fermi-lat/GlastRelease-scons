@@ -12,12 +12,9 @@ int IRF::angles[] = {0, 37, 53, 66, 78}; //cos theta 1, .8., .6, .4, .2
 
 
 IRF::IRF(std::string summary_root_filename)
-: m_file(0), m_tree(0)
-, m_summary_filename(output_file_root()+summary_root_filename)
-, m_ymin(0)
-, m_ymax(1)
-, m_user_cut("")
-{
+   : m_user_cut(""), 
+     m_summary_filename(output_file_root()+summary_root_filename),
+     m_file(0), m_tree(0), m_ymin(0), m_ymax(1) {
 #if 0
     // energy binning: 3 per decade
     logestart = 5./3.

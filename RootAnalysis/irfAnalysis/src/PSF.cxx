@@ -88,7 +88,7 @@ void PSF::open_input_file()
         friend_tree->Branch("PSFscaleFactor", &psf_scale_factor, "PSFscaleFactor/F");
         friend_tree->Branch("BestDirErr", &dir_err, "BestDirErr/F");
         friend_tree->Branch("BkVeto", &veto, "BkVeto/F");
-        int count=m_tree->GetEntries();
+        int count = static_cast<int>(m_tree->GetEntries());
         for(int k=0; k<count; ++k){
             m_tree->GetEntry(k);
             psf_scale_factor= psf_scale(mc_energy, Tkr1FirstLayer<12);
@@ -343,7 +343,7 @@ void PSF::drawAeff(std::string ps, std::string page_title, std::string hist_titl
     leg->SetTextSize(0.04);
 
     // determine normalization factor to Aeff
-    int ngen=4.66e6; 
+    int ngen = static_cast<int>(4.66e6);
     double anglebin=0.2, 
         logebin=0.125,  // this must correspond to the binning
         target_area=6., 

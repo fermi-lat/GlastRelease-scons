@@ -15,7 +15,7 @@ public:
         , m_ps_filename(ps_filename)
         , m_binsize(0.125)
         , m_emin(0.016), m_emax(160.0)
-        , m_ngen(4.66e6)
+        , m_ngen(static_cast<int>(4.66e6))
         , m_target_area(6.0)
         , m_zdir_bins(20)
     {}
@@ -36,7 +36,9 @@ public:
             char title[256];  sprintf(title,
                 "Energy distribution: for angles  %2d-%2d degrees", angles[i], angles[i+1]);
             // histogram to show energy distribution for each angle
-            TH1F* h = new TH1F(hist_name(i,99), title, (5.5-1.0)/m_binsize, 1.0, 5.5);
+            TH1F* h = new TH1F(hist_name(i,99), title, 
+                               static_cast<int>((5.5-1.0)/m_binsize), 
+                               1.0, 5.5);
             printf("\tProjecting angle range %s\n",angle_cut(i));
             m_tree->Project(h->GetName(), "McLogEnergy", goodEvent && TCut(angle_cut(i)));
             h->SetDirectory(&hist_file);  // move to the summary file
