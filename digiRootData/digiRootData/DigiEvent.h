@@ -66,7 +66,7 @@ public:
     /// Access CAL data
     //CalHeader* getCalHeader() { return &m_CalHeader; };
     /// retrieve the CalDigi object
-    const TObjArray* getCalDigi() { return m_calDigiCol; };
+    const TObjArray* getCalDigiCol() { return m_calDigiCol; };
     void addCalDigi(CalDigi *cal);
 
     /// Access TKR data
@@ -103,8 +103,8 @@ private:
     //AcdHeader m_AcdHeader;
 
     /// data members to store CAL data
-    TObjArray *m_calDigiCol; //!
-    static TObjArray *s_calDigiStaticCol; //-> Collection of Cal Digi objects
+    TObjArray *m_calDigiCol; //->
+    static TObjArray *s_calDigiStaticCol; //! Collection of Cal Digi objects
     //CalHeader m_CalHeader;
 
     /// data members to store TKR data
