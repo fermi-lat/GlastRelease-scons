@@ -6,13 +6,17 @@
 #include <string>
 
 #include "dom/DOM_Element.hpp"
+
+#include "xmlUtil/id/DictObject.h"
+
 #include "xmlUtil/id/DictConstraints.h"
 
 namespace xmlUtil {
   //! Represent a field -- its name plus constraints on its values, if any --
   //! which may be used as part of a NamedId
+  class DictVisitor;
 
-  class DictField {
+  class DictField : public DictObject {
   public: 
     DictField(DOM_Element elt);
     ~DictField(){ if (m_constraints) delete m_constraints;};
@@ -22,9 +26,14 @@ namespace xmlUtil {
     //! Does the specified value satisfy the constraints, if any?
     bool allowed(const unsigned value);
 
+    bool accept(DictVisitor* vis) {return vis->visitField(this);}
+    DictConstraints* getConstraints() const {return m_constraints;}
+
+    DictField(const DictField& toCopy);
+    DictField& operator=(const DictField&);
+
   private:
-    friend class IdDict;  // may also need friend IdConverter
-    friend class DictNode;
+    //    friend class IdDict;  // may also need friend IdConverter
 
     // Build a field which has value constraints
     DictField(const std::string& name, const DictConstraints& constraints)
@@ -34,7 +43,8 @@ namespace xmlUtil {
     // Build a field with no value constraints
     DictField(const std::string& name) : m_constraints(0), m_name(name) {}
 
-    DictConstraints* getConstraints() const {return m_constraints;}
+
+    void deepCopy(const DictField& toCopy);
 
     DictConstraints *m_constraints;
     std::string     m_name;

@@ -3,12 +3,12 @@
 #define XMLUTIL_DICTNODE_H
 
 #include "dom/DOM_Element.hpp"
+#include "xmlUtil/id/DictObject.h"
 #include "xmlUtil/id/DictField.h"
 #include "xmlUtil/id/DictConstraints.h"
 
 #include <vector>
 #include <algorithm>
-#include <set>
 #include <iterator>
 
 namespace xmlUtil {
@@ -19,7 +19,7 @@ namespace xmlUtil {
   */
   class DictFieldMan;
 
-  class DictNode {
+  class DictNode : public DictObject {
   public:
     //! Construct a node from its XML representation (probably
     //! recursively construct children as well)
@@ -27,10 +27,47 @@ namespace xmlUtil {
     /* IN PROGRESS */
     ~DictNode();  // similarly, delete all children recursively /* TO DO */
     const DictField& getField() const {return *m_field;};
+
+    // Following should be changed or add new function which
+    //  returns local constraints if there are any,
+    //  else if field has associated constraints, return pointer to that
+    //  else return 0
     const DictConstraints& getValueConstraints() const { 
       return *m_myConstraints;};
     const DictConstraints& getParentConstraints() const {
       return *m_parConstraints;};
+    bool accept(DictVisitor* vis);
+
+    //! Check that collection of children define appropriately disjoint
+    //! collections of Identifiers.  In the process may do some sorting
+    //! of child nodes, so these functions are not const.  
+    bool  consistentChildren();          
+
+    //! Verify that parent constraints, if any, are consistent with
+    //! other restrictions on values parent node may take on.
+    bool  consistentParent();
+
+    //! Verify that constraints (if any) on node's own value are
+    //! consistent with constraints on field.
+    bool  consistentValues();
+
+    // Maybe also need function to check that field ref points
+    // to actual field definition?
+
+    // Perhaps need to add validity functions here to check
+    //    parent constraints, if any, make sense
+    //    own constraints, if any, make sense
+    bool  allowed(const unsigned value) const;  
+    //! Are the given child field name, child field value, and 
+    //! value this node compatible with defn of node and children?
+    bool  allowedChild(std::string childField, unsigned childValue, 
+                       unsigned myValue) const;
+    //! Are the given child field value, and value this node compatible 
+    //! with defn of node and children?
+    bool  allowedChild(unsigned childValue, unsigned myValue) const;
+
+    //! Exception class
+    class No_Assignment {};
 
   private:
     friend class IdDict;
@@ -58,14 +95,6 @@ namespace xmlUtil {
     DictNode(DictField& field, DictConstraints& parConstraints);  TO DO
     DictNode(DictField& field, DictConstraints& parConstraints,   TO DO
              DictConstraints& myConstraints);                     TO DO */
-    bool  allowed(const unsigned value) const;  
-    //! Are the given child field name, child field value, and 
-    //! value this node compatible with defn of node and children?
-    bool  allowedChild(std::string childField, unsigned childValue, 
-                       unsigned myValue) const;
-    //! Are the given child field value, and value this node compatible 
-    //! with defn of node and children?
-    bool  allowedChild(unsigned childValue, unsigned myValue) const;
 
     //! Is the particular child node compatible with the given
     //! childValue and value for this?
@@ -78,20 +107,17 @@ namespace xmlUtil {
     bool  addChild(DictNode* child);
 
 
-    //! Check that collection of children define appropriately disjoint
-    //! collections of Identifiers.  In the process may do some sorting
-    //! of child nodes, so these functions are not const.  
-    bool  consistent();                        /* done, sort of */
-
-    //! Insert allowed values for this DictNode into a set so we
-    //! can use set operations to look for overlap
-    void insertValues(std::set<unsigned>& aSet) const;
-
     //! Check that for nodes in the interval demarcated by [first, last]
     //! value constraints give pairwise-disjoint sets
     bool  valuesDisjoint(ConstNodeIterator start, 
                          ConstNodeIterator last); 
 
+    //! Copy constructor copies all children, grandchildren, etc.
+    DictNode(const DictNode& toCopy);
+
+    // Assignment of nodes is not allowed
+    DictNode& operator=(const DictNode&); 
+    void deepCopy(const DictNode& toCopy);
 
     DictNode() {};                    /*< don't allow uninitialized node */
     Nodes            m_children;      /*< collection of child nodes */
