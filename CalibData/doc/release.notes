@@ -1,6 +1,7 @@
 /** @file release.notes
  * Package CalibData
  * Coordinator:  J. Bogart
+ * 26-Feb-2003 jrb - v0r2   - Include support for CAL pedestals and gains
  *  7-Feb-2003 jrb - v0r1   - Ready to be incorporated in GlastRelease
  * 26-Jan-2003 jrb - v0r0p0 - Tag before adapting for GlastRelease
  * 14-nov-2002 jrb - v0r0   - Initial import.  Not useful yet.

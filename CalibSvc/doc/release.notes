@@ -1,7 +1,8 @@
 /** @file release.notes
  * Package CalibSvc
  * Coordinator:  J. Bogart
- *  
+ *
+ * 26-Feb-2003: jrb v0r2:   Handle CAL peds and gains (XML format --> TCDS)  
  * 18-Feb-2003: jrb v0r1p1: Use packageShr correctly in requirements; add
  *                          some flavor support
  *  7-Feb-2003: jrb v0r1p0: Fix requirements so that test builds properly

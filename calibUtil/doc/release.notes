@@ -2,7 +2,8 @@
  * Package calibUtil
  * Coordinator: J. Bogart
  *
- * v0r1   7-Feb-2003  jrb  Ready to be used with GlastRelease, IExternal.
+ * v0r2   26-Feb-2003 jrb  Support CAL ped, gain (XML persistent format)
+ * v0r1    7-Feb-2003 jrb  Ready to be used with GlastRelease, IExternal.
  *                         Supports revised Tkr hot/dead strips XML format
  * v0r0p0 26-Jan-2003 jrb  Tag working version before adapting for GlastRelease
  * v0     5-Apr-2002  jrb  initial import
