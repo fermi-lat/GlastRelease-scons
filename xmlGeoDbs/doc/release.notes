@@ -2,6 +2,7 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 13-may-2002: jrb - tag v1r5p1 - Fix typo in positioning one piece of grid
  * 08-may-2002: jrb - tag v1r5 - Reorganize file structure for derived consts,
  *                               Add TKR MCM boards and walls
  *                               Fix wafer id assignment for Y trays
