@@ -204,7 +204,6 @@ long ResultTable::onCmdCopySel(FXObject*,FXSelector,void*){
     }
   return 1;
   }
-
   
 long ResultTable::onCmdMenuPane(FXObject* sender,FXSelector sel,void* ptr)
 {
