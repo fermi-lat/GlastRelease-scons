@@ -130,8 +130,9 @@ RootIoSvc::RootIoSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("StartTime"   , m_startTime=0);
     declareProperty("EndTime",      m_endTime=0);
     declareProperty("AutoSaveInterval", m_autoSaveInterval=1000);
+    declareProperty("StartingIndex", m_index=-1);
     m_rootEvtMax = 0;
-	m_index = -1;
+	//m_index = -1;
 	m_runEventPair = std::pair<int,int>(-1,-1);
 }
 
