@@ -41,7 +41,7 @@ public
 
 use GuiSvc      v3
 
-use Event       v8r9
+use Event                v8r10
 use GlastSvc    v8r1p2
 
 # simulation
@@ -61,7 +61,7 @@ use AcdDigi     v1r2
 use Trigger     v3r3p3
 use Recon       v2r2p3
 
-use TkrRecon    v6r3p5
+use TkrRecon              v6r4
 use CalRecon              v5r6  
 use AcdRecon              v0r4p1       
 
