@@ -11,9 +11,10 @@
 #include "Event/TopLevel/Definitions.h"
 
 /** @class AcdDigi        
-* @brief AcdDigi represents the output from one ACD entity.  An entity could
-* be an ACD tile or a fiber.  Each of which would contain 2 PMTs.
-* There are PHA and discriminator values for each PMT.
+* @brief AcdDigi represents the digitization output from one ACD entity.  
+*
+* An entity could be an ACD tile or a fiber.  Each of which would contain 
+* 2 PMTs.  There are PHA and discriminator values for each PMT.
 * Thus, there each member variable is an array of two entries.
 * - Low Discriminator enables the PHA value
 * - Veto Discriminator nominal ACD veto signal
