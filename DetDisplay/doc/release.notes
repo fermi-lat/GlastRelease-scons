@@ -5,6 +5,7 @@
 @verbatim
  * package manager:T.Burnett
 
+ 20-jul-2003: v3r1p2 THB gcc 3.2 requirement on the exception class
  10-jul-2003: v3r1p1 LSR remove SiliconPlaneGeometry, attach standard GlastDetSvc, TkrGeometrySvc
  07-jul-2003: v3r1   THB display by material enabled (attempt to pick detail level not quite right)
  05-jul-2003: v3r0p1 THB unix fixes
