@@ -26,12 +26,12 @@ INCLUDES = -I$(top_srcdir) \
 	-I$(top_srcdir)/../CLHEP \
 	-I$(glast_prefix)/include
 
-test_LDADDS = \
-	$(top_builddir)/libgeomrep.la \
-	$(top_builddir)/../graphics/libmotif.la \
-	@LIB_GRAPHICS@	\
-	@LIB_GEOMETRY@	\
-	@LIB_CLHEP@ 	\
+test_LDADDS =						\
+	$(top_builddir)/libgeomrep.la			\
+	$(top_builddir)/../graphics/libmotif.la		\
+	$(top_builddir)/../graphics/libgraphics.la	\
+	$(top_builddir)/../geometry/libgeometry.la	\
+	$(top_builddir)/../CLHEP/CLHEP/libCLHEP.a	\
 	$(X_LIBS)
 
 testgeom_LDADD = $(test_LDADDS)
