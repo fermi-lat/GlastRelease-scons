@@ -144,7 +144,7 @@ void AcdReconAlg::clear() {
     m_energyRibbonCol.clear();
     m_idRibbonCol.clear();
     m_act_dist = -maxDoca;
-    m_ribbon_act_dist = maxDoca;
+    m_ribbon_act_dist = -maxDoca;
 }
 
 StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
@@ -212,11 +212,13 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
         log << endreq;
         checkAcdRecTds->clear();
         checkAcdRecTds->init(m_totEnergy, m_tileCount, m_gammaDoca, m_doca, 
-            m_act_dist, m_minDocaId, m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol);
+            m_act_dist, m_minDocaId, m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol,
+            m_ribbon_act_dist, m_ribbon_act_dist_id);
     } else {
         // create the TDS location for the AcdRecon
         Event::AcdRecon *acdRecon = new Event::AcdRecon(m_totEnergy, m_tileCount, m_gammaDoca, m_doca, 
-            m_act_dist, m_minDocaId, m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol, m_ribbon_act_dist, m_ribbon_act_dist_id);
+            m_act_dist, m_minDocaId, m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol, 
+            m_ribbon_act_dist, m_ribbon_act_dist_id);
         
         sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, acdRecon);
         if (sc.isFailure()) {
@@ -260,9 +262,9 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol) {
         if (sc.isFailure()) return sc;
         if(test_dist > m_act_dist) m_act_dist = test_dist;
 
-        sc = hitRibbonDist(digiCol, trackTds->getPosition(), trackTds->getDirection(),
+        sc = hitRibbonDist(digiCol, trackTds->getPosition(), -(trackTds->getDirection()),
             ribDist);
-        if (ribDist < m_ribbon_act_dist) m_ribbon_act_dist = ribDist;
+        if (ribDist > m_ribbon_act_dist) m_ribbon_act_dist = ribDist;
         if (sc.isFailure()) return sc;
     }
 	
@@ -451,7 +453,7 @@ StatusCode AcdReconAlg::hitRibbonDist(const Event::AcdDigiCol& digiCol, const He
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
 
-    return_dist = maxDoca;
+    return_dist = -maxDoca;
     int ribbonX = 5, ribbonY = 6;
 
     // iterate over all digis and search for ribbons
@@ -512,46 +514,53 @@ StatusCode AcdReconAlg::hitRibbonDist(const Event::AcdDigiCol& digiCol, const He
             HepPoint3D center;
             double x1=0.0, y1=0.0, z1=0.0;
             double x2=0.0, y2=0.0, z2=0.0;
+            double ribbonHalfWidth;
 
-            // in this case, we need to extract the dimensions from 2 other top segments
+            // in this case, we need to extract the dimensions from 3 other top segments
             // to extend an imaginary ribbon across the whole top of the instrument
             if (acdId.ribbonOrientation() == ribbonX && isegment == 1) {
                 int iseg;
-                for(iseg = 1; iseg <= 2; iseg++) {
+                for(iseg = 1; iseg <= 3; iseg++) {
                     idents::VolumeIdentifier volId1;
                     volId1.append(volId[0]); volId1.append(0); volId1.append(volId[2]); 
                     volId1.append(volId[3]); volId1.append(volId[4]);
-                    volId1.append(iseg);
+                    if (iseg == 3) {
+                        // grab the last segment
+                        volId1.append(5);
+                    } else {
+                        volId1.append(iseg);
+                    }
 
                     std::vector<double> dim1;
                     sc = getDetectorDimensions(volId1, dim1, center);
                     if (sc.isFailure()) continue;
+                    // pick up the beginning from the first segment
                     if (iseg == 1) x1 = center.x() - dim1[0]/2.;
                     if (iseg == topSegment){
                         // pick up the other 2 dimensions from a ribbon in the middle
                         y1 = center.y(); 
                         z1 = center.z();
-                        x2 = center.x() + dim1[0]/2.;
                         y2 = center.y();
                         z2 = center.z();
+                        ribbonHalfWidth = dim1[1]/2.;
+                    } else if (iseg == 3) {
+                        // Pick up the ending point from the last segment
+                        x2 = center.x() + dim1[0]/2.;
                     }
                 }
-
             } else if (acdId.ribbonOrientation() == ribbonY && isegment == 1) {
                 std::vector<double> dim;
-                log << MSG::INFO << "volId: " << segmentVolId.name() << endreq;
                 sc = getDetectorDimensions(segmentVolId, dim, center);
                 if (sc.isFailure()) continue;
                 x1 = center.x();
-                y1 = center.y();
-                z1 = center.z() - dim[2]/2.;
+                y1 = center.y() - dim[1]/2.;
+                z1 = center.z();
                 x2 = center.x();
-                y2 = center.y();
-                z2 = center.z() + dim[2]/2.;
-
+                y2 = center.y() + dim[1]/2.;
+                z2 = center.z();
+                ribbonHalfWidth = dim[0]/2.;
             } else { // side ribbons - which are in one segment
                 std::vector<double> dim;
-             //   log << MSG::INFO << "volId: " << segmentVolId.name() << endreq;
                 sc = getDetectorDimensions(segmentVolId, dim, center);
                 if (sc.isFailure()) continue;
                 x1 = center.x();
@@ -560,24 +569,32 @@ StatusCode AcdReconAlg::hitRibbonDist(const Event::AcdDigiCol& digiCol, const He
                 x2 = center.x();
                 y2 = center.y();
                 z2 = center.z() + dim[2]/2.;
+                // Determine the half width of the ribbon
+                if ((face == 1) || (face == 3)) {
+                    ribbonHalfWidth = dim[0]/2.;
+                } else {
+                    ribbonHalfWidth = dim[0]/2.;
+                }
             }
 
+            // After all that, we have the beginning and ending points for a line segment
+            // that defines a ribbon
             HepPoint3D ribbonBeginPos(x1, y1, z1);
-            HepPoint3D ribbonEndPos(x2, y2, x2);
+            HepPoint3D ribbonEndPos(x2, y2, z2);
 
-            int iFace = face;
+            int iFace = face; 
 
             // Figure out where in the plane of this face the trajectory hits
             double arc_dist = -1.; 
             if(iFace == 0) {// Top ribbon
-                arc_dist = (center.z()-x0.z())/t0.z();	                
+                arc_dist = (z1-x0.z())/t0.z();	                
+            } else if(iFace == 1 || iFace == 3) {// X Side ribbon
+                arc_dist = (x1-x0.x())/t0.x();
+            } else if(iFace == 2 || iFace == 4) {// Y Side ribbon
+                arc_dist = (y1-x0.y())/t0.y();
             }
-            else if(iFace == 1 || iFace == 3) {// X Side ribbon
-                arc_dist = (center.x()-x0.x())/t0.x();
-            }
-            else if(iFace == 2 || iFace == 4) {// Y Side ribbon
-                arc_dist = (center.y()-x0.y())/t0.y();
-            }
+
+            if (arc_dist < 0) continue;
 
             // position of hit in the plane of the ribbon
             HepPoint3D x_isec = x0 + arc_dist*t0;
@@ -588,13 +605,19 @@ StatusCode AcdReconAlg::hitRibbonDist(const Event::AcdDigiCol& digiCol, const He
             // Form a vector for the ribbon
             HepVector3D ribbonVec = ribbonEndPos - ribbonBeginPos;
             double prod = delta * ribbonVec.unit();
+            // check that the projection of the point to the ribbon occurs within the
+            // length of the ribbon segment
+            double mag = ribbonVec.mag();
+            if ((prod < 0) || (prod > ribbonVec.mag())) continue;
             double dist = sqrt(delta.mag2() - prod*prod);
-            if(dist < return_dist){
+            // Make this an Active Distance calculation
+            dist = ribbonHalfWidth - dist;
+            if(dist > return_dist){
                 return_dist = dist;
                 m_ribbon_act_dist_id = acdId;
-            }
-        }		
-    }
+            } // endif
+        } // end loop over ribbon segments
+    }  // end loop over AcdDigis
     return StatusCode::SUCCESS;    
 }
 
