@@ -178,7 +178,7 @@ StatusCode meritAlg::initialize() {
     new TupleItem("MC_src_Id",      &m_mc_src_id);
     new TupleItem("elapsed_time",   &m_time);
     new TupleItem("FilterStatus_HI",&m_statusHi);
-	new TupleItem("FilterStatus_LO",*m_statusLo);
+    new TupleItem("FilterStatus_LO",&m_statusLo);
     if( setupTools().isFailure()) return StatusCode::FAILURE;
 
     // the tuple is made: create the classification object 
