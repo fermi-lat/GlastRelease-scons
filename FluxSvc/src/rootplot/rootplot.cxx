@@ -287,7 +287,7 @@ void rootplot::init(std::vector<const char*> argv)
             angle_hist.draw(1,"begin",i,num_sources);
             energy_hist.draw(1,"end",i,num_sources);
             
-            delete e;
+            //delete e;
             std::cout << "Normal method" << std::endl;        
         }
         else if(true == sum_mode && i == num_sources - 1)
@@ -295,7 +295,7 @@ void rootplot::init(std::vector<const char*> argv)
             angle_hist.draw(1,"begin",0,1);
             energy_hist.draw(1,"end",0,1);
             
-            delete e;
+            //delete e;
             std::cout << "Sum Mode method" << std::endl;
         }
         else if(longterm==true && longtime<=longtimemax)

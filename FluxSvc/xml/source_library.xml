@@ -169,6 +169,11 @@
         </spectrum>
     </source>
 
+    <!-- galactic electron spectrum -->
+    <source name="electron">
+        <spectrum escale="GeV"> <SpectrumClass name="GalElSpectrum"/> <use_spectrum/> </spectrum>
+    </source>
+
 
     <!-- the albedo proton spectrum, measured by AMS, implemented by AlbedoPSpectrum. isotropic for now  -->
     <source name="albedo_proton_max">

@@ -92,13 +92,14 @@ void FluxMgr::init(const std::vector<std::string>& fileList){
         }
         
     }
-    // these are the localally defined spectra that we want to make available
+    // these are the locally defined spectra that we want to make available
     DLL_DECL_SPECTRUM( FILESpectrum);
     DLL_DECL_SPECTRUM( TimeCandle);
 
     // these are deprecated, will be replaced by Hiroshima group
     DLL_DECL_SPECTRUM( AlbedoPSpectrum);
     DLL_DECL_SPECTRUM( CHIMESpectrum );
+    DLL_DECL_SPECTRUM( GalElSpectrum);
     
 }
 

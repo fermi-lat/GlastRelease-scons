@@ -96,7 +96,7 @@ void CHIMESpectrum::init(std::string paramstring) {
             m_fluxTbl[ii][jj] = gfluxes[jj+13*ii];
         }
     }
-    // if there are parameters passed to chime, it shouuldn't move.
+    // if there are parameters passed to chime, it shouldn't move.
     m_allowMove = params.size()>1? false: true;
     // set the initial location
     /*float*/double lat =  params.size()>0? params[0]: 0.0f;
