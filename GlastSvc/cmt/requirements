@@ -1,5 +1,5 @@
 package GlastSvc
-version v8r1
+version v8r1p1
 branches src cmt doc
 
 use Event v8r*
