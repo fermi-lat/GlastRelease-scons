@@ -95,6 +95,9 @@ StatusCode XmlBaseCnv::createObj(IOpaqueAddress* addr,
 
   std::string par0 = par[0];
 
+  // Ignore trailing white space.
+  facilities::Util::trimTrailing(&par0);
+
   // Just in case there are environment variables in the file specification
   //  int nSub = 
   facilities::Util::expandEnvVar(&par0);
