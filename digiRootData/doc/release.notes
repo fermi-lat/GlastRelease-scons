@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v7r16p0   23-Feb-2005 HMK use any enums
 v7r16     22-Feb-2005 HMK Prepare for new GEM
 v7r15p0   17-Feb-2005 HMK try updating the unit test too
 v7r15     16-Feb-2005 HMK Use new enums package for globally defined enums

@@ -1,10 +1,10 @@
 package digiRootData
-version v7r16
+version v7r16p0
 # $Id$
 
 use RootcintPolicy v4r* GlastPolicy
 use commonRootData v1r*
-use enums v0
+use enums v*
 use ldfExt  v0r*  IExternal
 
 # See RootPolicy for discussion of this pattern
