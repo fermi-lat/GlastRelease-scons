@@ -11,6 +11,20 @@
 
 namespace xmlUtil {
   //! IdDict corresponds to the xml element idDict in gdd.dtd
+  /*! The structure of an IdDict is
+       a collection of DictFields, each of which may point to an associated
+       DictConstraints object.  The fields may be accessed via the single
+       DictFieldMan object associated with the dictionary
+       A collection of nodes arranged hierarchically.  Each node
+          MUST reference its parent node (unless it's the root
+            of the hierarchy, in which case it has none)
+          MUST reference a DictField object in the collection
+          MAY reference an additional DictConstraints object which
+            further restricts the values its associated field may
+            take on
+          MAY referemce yet another DictConstraints object which
+            restricts the values its parent node field may take on
+  */
   class DictNode;
   class DictField;
   class DictFieldMan;
