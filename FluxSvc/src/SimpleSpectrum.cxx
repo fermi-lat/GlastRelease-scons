@@ -15,6 +15,8 @@
 #include <sstream>
 #include <cmath>
 #include "SpectrumFactory.h"
+#include "CLHEP/Random/RandBreitWigner.h"
+#include "CLHEP/Random/RandFlat.h"
 
 static SpectrumFactory<SimpleSpectrum> factory;
 
@@ -49,6 +51,7 @@ SimpleSpectrum::SimpleSpectrum(const DOM_Element& xelem, bool useGeV)
     m_name = xml::Dom::getAttribute(xelem, "name").c_str();
     
     const DOM_Element spectrum = xml::Dom::findFirstChildByName(xelem, "*");
+
     if (spectrum.getTagName().equals(DOMString("power_law"))) {
         m_E0 = atof(xml::Dom::getAttribute(spectrum, "emin").c_str());
         m_emax = atof(xml::Dom::getAttribute(spectrum, "emax").c_str());
@@ -58,6 +61,9 @@ SimpleSpectrum::SimpleSpectrum(const DOM_Element& xelem, bool useGeV)
         m_E0 = atof(xml::Dom::getAttribute(spectrum, "e").c_str());
         m_emax = 100.0;
         m_index = 0.0;
+    }
+    else if (spectrum.getTagName().equals(DOMString("vdg"))) {
+        m_index = VDG;
     }
     else {
         std::cerr << "Unknown name: " << m_name << std::endl;
@@ -78,6 +84,28 @@ std::string SimpleSpectrum::title()const
 float
 SimpleSpectrum::operator()(float f)const
 {
+  if(m_index == VDG) {   
+    // VDG gamma is composed of 2 gammas: 17.619 MeV and 14.586 MeV
+
+    float temp = RandFlat::shoot();
+
+    // ratio between two gamma intensities
+    float ratio = 100. / 49.7;
+
+    if(temp <= ratio/(ratio+1) ) {
+      return 0.017619;
+    }
+    else {
+      for(; ;) {
+	float ene = RandBreitWigner::shoot(0.014586, 0.0015);
+
+	//arbitrary 3 sigma cut
+	float low = 0.014586 - 3. * 0.0015;
+	float high = 0.014586 + 3. * 0.0015;
+	if(ene > low && ene < high) return ene;
+      }
+    }
+  }
     if( m_index == 0.0 )     return m_E0;
     
     if( m_index == 1.0 ) return m_E0*exp(f*log(m_emax/m_E0));
