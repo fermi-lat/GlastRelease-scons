@@ -69,7 +69,7 @@ std::vector<double> Event::GetClusters(TString LayerName)
   for(int i=1; i<NumHits; i++)
     {
       int nextHit =  Hits[i];
-      if(nextHit < LastClusterStrip+5) 
+      if(nextHit < LastClusterStrip+GAP) 
 	{
 	  Cluster[Clusters] = (ClusterSize * Cluster[Clusters] + 
 			       aLayer->GetCoordinate(nextHit))/

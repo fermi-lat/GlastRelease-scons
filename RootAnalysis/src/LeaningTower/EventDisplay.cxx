@@ -30,16 +30,159 @@ TGraph *YTrack;
 
 TGraph *XClusters;
 TGraph *YClusters;
+TLine anXtrack,anYtrack;
 
 int EventId, RunId,TkrTotalNumHits;
+TH1D *CHI2;
+static const double MaxChi2 = 1;
 
+//////////////////////////////////////////////////
+#define TOWER 0
+
+
+TLine *Track(TGraph *XY)
+{
+  int N = XY->GetN();
+  double *X = XY->GetX();
+  double *Y = XY->GetY();
+  double Xm = 0;
+  double Ym = 0;
+  for (int i = 0 ; i<N; i++)
+    {
+      Xm+=X[i];
+      Ym+=Y[i];
+    }
+  Xm/=N;
+  Ym/=N;
+  double Xr,Yr;
+  double A=0.0;
+  double B=0.0;
+  for (int i = 0 ; i<N; i++)
+    {
+      Xr = (Xm-X[i]);
+      Yr = (Ym-Y[i]);
+      A+=(Xr*Yr);
+      B+=pow(Yr,2.0)-pow(Xr,2.0);
+    }
+  double Theta = -0.5*TMath::ATan2(2.0*A,B);
+
+  TLine *track = new TLine(Xm,Ym,Xm+10* TMath::Cos(Theta),Ym+10* TMath::Sin(Theta));
+  return track;
+  
+}
+
+TLine Recon(TGraph *XY)
+{
+
+  double Y1=-103.1;
+  double Y2=89.5;
+  if(TOWER)
+    {
+      Y1=0.0;
+      Y2=650;
+    }
+  int N = XY->GetN();
+  double *X = XY->GetX();
+  double *Y = XY->GetY();
+  double *newX = new double[N-1];
+  double *newY = new double[N-1];
+  double MinChi2 = 1e6;
+  double A=0;
+  double B=0;
+  TLine bestFit;
+
+  if(N<=30)
+    {
+      TGraph g(N,Y,X);
+      g.Fit("pol1","Q");
+      MinChi2 = ((TF1*) g.FindObject("pol1"))->GetChisquare();      
+      A = ((TF1*) g.FindObject("pol1"))->GetParameter(0);
+      B = ((TF1*) g.FindObject("pol1"))->GetParameter(1);
+    }
+  else
+    {
+      for (int j = 0; j<N ; j++)
+	{
+	  int l=0;
+	  for(int i=0;i<N;i++)
+	    {
+	      if(i!=j) 
+		{
+		  
+		  newX[l]  = X[i];
+		  newY[l++]= Y[i];
+		}
+	    }
+	  TGraph g(N-1,newY,newX);
+	  g.Fit("pol1","Q");
+	  double chi2 = ((TF1*) g.FindObject("pol1"))->GetChisquare();
+	  //	  std::cout<<chi2<<" "<<MinChi2<<std::endl;
+	  if(chi2<MinChi2)
+	    {
+	      MinChi2=chi2;
+	      A = ((TF1*) g.FindObject("pol1"))->GetParameter(0);
+	      B = ((TF1*) g.FindObject("pol1"))->GetParameter(1);
+	    }
+	}
+    }
+  if(MinChi2>MaxChi2)
+    return TLine(0,0,0,0);
+  
+
+  double x1,x2,y1,y2;
+  x1 = A+B*Y1;//0.0;
+  y1 = Y1;//A;
+  x2 = A+B*Y2;//W;
+  y2 = Y2;//;
+  //  std::cout<<x1<<" "<<y1<<" "<<x2<<" "<<y2<<std::endl;
+  TLine track(x1,y1,x2,y2);
+  track.SetLineColor(2);
+  return track;
+  
+}
+
+//////////////////////////////////////////////////
+bool MeritFactor(TLine atrack)
+{
+  double x1 = atrack.GetX1();
+  double x2 = atrack.GetX2();
+  double y1 = atrack.GetY1();
+  double y2 = atrack.GetY2();
+  bool myFlag=true;
+  if((x1 == 0.0 && x2 == 0.0) &&(y1 == 0.0 && y2 ==0.0)) 
+    myFlag=false;
+  
+  return  myFlag;
+}
+
+
+//////////////////////////////////////////////////
+double ExtrapolateCoordinate(TLine track, double Z)
+{
+  double x1 = track.GetX1();
+  double x2 = track.GetX2();
+  double y1 = track.GetY1();
+  double y2 = track.GetY2();
+  
+  double XX = (x2==x1)? x1 : x1 + (Z-y1)/(y2-y1)*(x2-x1);
+  return XX;
+}
+
+
+//////////////////////////////////////////////////
 void InitializeED(TString filename = "MyRootFile.root")
 {
   //  Initialize(filename);
   gStyle->SetCanvasColor(10);
   tracker = new Tracker();
 
-  tracker->loadGeometry(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/stack2geometry.txt"));
+  if(TOWER)
+    {  
+      tracker->loadGeometry(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/MCTowergeometry.txt"));
+      tracker->IsTower(TOWER);
+    }
+  else
+    tracker->loadGeometry(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/stack2geometry.txt"));
   
   myEvent = new Event(filename,(TMap *) tracker->GetGeometry());
   
@@ -47,12 +190,12 @@ void InitializeED(TString filename = "MyRootFile.root")
   tracker->Display();
   
   for ( int i=0; i<36; ++i ) {
-      TriggerReqText[i][0].SetTextAlign(32);
-      TriggerReqText[i][1].SetTextAlign(02);
-      LabelNumHits[i].SetTextAlign(02);
-      TriggerReqText[i][0].SetTextSize(0.02);
-      TriggerReqText[i][1].SetTextSize(0.02);
-      LabelNumHits[i].SetTextSize(0.02);
+    TriggerReqText[i][0].SetTextAlign(32);
+    TriggerReqText[i][1].SetTextAlign(02);
+    LabelNumHits[i].SetTextAlign(02);
+    TriggerReqText[i][0].SetTextSize(0.02);
+    TriggerReqText[i][1].SetTextSize(0.02);
+    LabelNumHits[i].SetTextSize(0.02);
   }
 
   //////////////////////////////////////////////////
@@ -69,6 +212,7 @@ void InitializeED(TString filename = "MyRootFile.root")
   YClusters->SetMarkerStyle(4);
   XClusters->SetMarkerColor(3); 
   YClusters->SetMarkerColor(3);
+  
 }
 
 void DisplayEvent(int NumEvent=0)
@@ -108,6 +252,7 @@ void DisplayEvent(int NumEvent=0)
   base.SetTextAlign(02);
   base.SetTextSize(0.02);
 
+
   while ( ( key = (TObjString*)ti.Next() ) ) 
     {
       Layer *aLayer = ((Layer*) myGeometry->GetValue(key));
@@ -128,11 +273,12 @@ void DisplayEvent(int NumEvent=0)
 	EventDisplayC->cd(1);      
       else
 	EventDisplayC->cd(2);
+      
       TriggerReqText[i][0].SetText(-0.8, height, aLayer->GetTriggerReq(false) ? "x" : "");
       TriggerReqText[i][1].SetText(36, height, aLayer->GetTriggerReq(true) ? "x" : "");
       LabelNumHits[i].SetText(41.0, height, title);
-      TriggerReqText[i][0].Draw();
-      TriggerReqText[i][1].Draw();
+      //      TriggerReqText[i][0].Draw();
+      //      TriggerReqText[i][1].Draw();
       LabelNumHits[i].Draw();
       i++;      
 
@@ -143,29 +289,22 @@ void DisplayEvent(int NumEvent=0)
 	  std::vector<double> ClusterLayer = myEvent->GetClusters(LayerName);
 	  int ClusterLayerSize = ClusterLayer.size();
 	  //////////////////////////////////////////////////
-	  //	  std::cout<<LayerName<<" hits = "<<LayerNumHits<<" clusters = "<<ClusterLayerSize <<std::endl;
-	  
 	  if(aLayer->IsX()) 
 	    {
 	      EventDisplayC->cd(1);
 	      // Fill the Hits arrays...
-	      
 	      for(int j = 0; j < LayerNumHits; j++)
 		{
 		  XHitXlayers[Xhits] = aLayer->GetCoordinate(LayerHits[j]);
 		  ZHitXlayers[Xhits] = height;
 		  Xhits++;
 		}
-	      
 	      // Fill the clusters
-	      
 	      for (int j=0; j<ClusterLayerSize;j++)
 		{
 		  XClusterXlayer.push_back(ClusterLayer[j]);
 		  ZClusterXlayer.push_back(height);
 		}
-	      
-	      //      std::cout<<"GetLayerNumHits ("<<LayerName<<") = "<<LayerNumHits<<" "<<height<<std::endl;
 	    } 
 	  else
 	    { 
@@ -177,45 +316,33 @@ void DisplayEvent(int NumEvent=0)
 		  ZHitYlayers[Yhits] = height;
 		  Yhits++;
 		}
-	      
 	      // Fill the clusters
-	      
 	      for (int j=0; j<ClusterLayerSize;j++)
 		{
 		  XClusterYlayer.push_back(ClusterLayer[j]);
 		  ZClusterYlayer.push_back(height);
 		}
-	      
 	    }
 	}
     }
-  
-  // Display the track(s):
-
-
-
   
   XTrack->Set(Xhits);
   YTrack->Set(Yhits);  
   
   for (int i =0;i<Xhits;i++)
     {
-      XTrack->SetPoint(i,XHitXlayers[i],ZHitXlayers[i]);
-      
+      XTrack->SetPoint(i,XHitXlayers[i],ZHitXlayers[i]);      
     }
   for (int i =0;i<Yhits;i++)
     {
       YTrack->SetPoint(i,XHitYlayers[i],ZHitYlayers[i]);
     }
-
-
+  // Display the hits
   EventDisplayC->cd(1);
   XTrack->Draw("P");
   EventDisplayC->cd(2);
   YTrack->Draw("P");
-  
   // Display the Cluster(s)
-
   int NumClusX = XClusterXlayer.size();
   int NumClusY = XClusterYlayer.size();  
   
@@ -230,50 +357,35 @@ void DisplayEvent(int NumEvent=0)
     {
       YClusters->SetPoint(i,XClusterYlayer[i],ZClusterYlayer[i]);
     }
-
+  // RECON
+  
   EventDisplayC->cd(1);
   XClusters->Draw("P");
-  gDirectory->Delete("fun");
-  //  TF1 *fun = new TF1("fun","pol1",0,40);
-  TF1 fun("fun","pol1",0,40);
-  //  fun->SetParameters(0,-1000);
-  //  fun->SetParLimits(0,-1000,1000);
-  //  fun->SetParLimits(1,-1000,1000);
   
-  //  fun->SetLineStyle(2);
-  //  fun->SetLineWidth(0);
-  //  fun->SetLineColor(2);
-  fun.SetLineStyle(2);
-  fun.SetLineWidth(0);
-  fun.SetLineColor(2);
-
   if(NumClusX>1)
     {
-      XClusters->Fit("fun","R");
-    }
-  else
-    {
-        TObject* dummy = XClusters->FindObject("fun");
-        if ( dummy ) dummy->Delete();
+      anXtrack = Recon(XClusters);
+      anXtrack.Draw();
     }
   
   EventDisplayC->cd(2);
   YClusters->Draw("P");
+  
   if(NumClusY>1)
     {
-      YClusters->Fit("fun","R");
-    } 
-  else
-    {
-        TObject* dummy = YClusters->FindObject("fun");
-        if ( dummy ) dummy->Delete();
+      anYtrack = Recon(YClusters);
+      anYtrack.Draw();
     }
+  
   EventDisplayC->Update();
 }
 
 
 void IneffAnalysis(int LastEvent, TString LV="All")
 {
+
+  //  CHI2 = new TH1D("CHI2","CHI2",100,0,MaxChi2);
+
   std::vector<double> XInActiveArea;
   std::vector<double> YInActiveArea;
 
@@ -292,10 +404,11 @@ void IneffAnalysis(int LastEvent, TString LV="All")
   TMap *myGeometry = myGeometry = tracker->GetGeometry();
   TMapIter ti(myGeometry);
   TObjString* key;
-
-  for(int ev = 1;ev < LastEvent; ev++)
+  int SelectedEvents=0;
+  int TotalEvents=0;
+  for(int ev = 1;ev <= LastEvent; ev++)
     { 
-      
+      TotalEvents++;
       myEvent->Go(ev);
       
       int TkrTotalNumHits = myEvent->GetTkrTotalNumHits();
@@ -364,67 +477,62 @@ void IneffAnalysis(int LastEvent, TString LV="All")
 	  YClusters->SetPoint(i,XClusterYlayer[i],ZClusterYlayer[i]);
 	}
       //////////////////////////////////////////////////
-      gDirectory->Delete("fun");
-      TF1 *fun = new TF1("fun","pol1",0,40);
-
+    
       double Xextrapolated, Yextrapolated;
-      double Ax = 0;
-      double Bx = 0;      
-      double Ay = 0;
-      double By = 0;
       
       if(NumClusX > 1 && NumClusY > 1)
 	{
-	  XClusters->Fit("fun","QR");
-	  Ax = fun->GetParameter(0);
-	  Bx = fun->GetParameter(1);
-	  YClusters->Fit("fun","QR");
-	  Ay = fun->GetParameter(0);
-	  By = fun->GetParameter(1);
+	  TLine Xtrack = Recon(XClusters);
+	  TLine Ytrack = Recon(YClusters);
 	  
-	  ti.Reset();
-	  
-	  while ( ( key = (TObjString*)ti.Next() ) ) 
+	  if(MeritFactor(Xtrack) && MeritFactor(Ytrack))
 	    {
+	      ti.Reset();
+	      SelectedEvents++;
 	      
-	      Layer *aLayer = ((Layer*) myGeometry->GetValue(key));
-	      if(LV!="All" && key->GetString()!=LV) continue;
-	      //	      if(LV=="Y6") continue;
-	      double Zlayer = aLayer->GetHeight();
-	      int LayerNumHits = myEvent->GetLayerNumHits(key->GetString());
-	      
-	      Yextrapolated = (Zlayer - Ay)/By;
-	      Xextrapolated = (Zlayer - Ax)/Bx;
-	      bool ActiveRegion=false;
-	      if((aLayer->IsX() && (aLayer->checkActiveArea(Xextrapolated,Yextrapolated,1.0))) ||
-		 (aLayer->IsY() && (aLayer->checkActiveArea(Yextrapolated,Xextrapolated,1.0))))		    
-		{ 
-		  ActiveRegion=true;
-		  XInActiveArea.push_back(Xextrapolated);
-		  YInActiveArea.push_back(Yextrapolated);
-		  aLayer->AddHitInActiveArea();
-		}
- 	      else
+	      while ( ( key = (TObjString*)ti.Next() ) ) 
 		{
-		  XNotInActiveArea.push_back(Xextrapolated);
-		  YNotInActiveArea.push_back(Yextrapolated);
-		}
-	      
-	      if(ActiveRegion && LayerNumHits==0)
-		{
-		  XMissedHits.push_back(Xextrapolated);
-		  YMissedHits.push_back(Yextrapolated);
-		  aLayer->AddMissedHit();
-		}
-	      else if(ActiveRegion && LayerNumHits>0)
-		{
-		  std::vector<double> ClusterLayer = myEvent->GetClusters(aLayer->GetLayerName());
-		  int NumberOfClusterPerLayer      = ClusterLayer.size();
+		  Layer *aLayer = ((Layer*) myGeometry->GetValue(key));
+		  if(LV!="All" && key->GetString()!=LV) continue;
+		  //	      if(LV=="Y6") continue;
+		  double Zlayer = aLayer->GetHeight();
+		  int LayerNumHits = myEvent->GetLayerNumHits(key->GetString());
 		  
-		  if(aLayer->IsX() && NumberOfClusterPerLayer==1) 
-		    XResiduals->Fill(Xextrapolated-ClusterLayer[0]);
-		  else if(aLayer->IsY() && NumberOfClusterPerLayer==1)
-		    YResiduals->Fill(Yextrapolated-ClusterLayer[0]);
+		  Xextrapolated = ExtrapolateCoordinate(Xtrack,Zlayer);
+		  Yextrapolated = ExtrapolateCoordinate(Ytrack,Zlayer);
+		  
+		  //		  std::cout<<"Z = "<<Zlayer<<" Xextrapolated = "<<Xextrapolated<<" Yextrapolated = "<<Yextrapolated<<std::endl;
+		  bool ActiveRegion=false;
+		  if((aLayer->IsX() && (aLayer->checkActiveArea(Xextrapolated,Yextrapolated,1.0))) ||
+		     (aLayer->IsY() && (aLayer->checkActiveArea(Yextrapolated,Xextrapolated,1.0))))		    
+		    { 
+		      ActiveRegion=true;
+		      XInActiveArea.push_back(Xextrapolated);
+		      YInActiveArea.push_back(Yextrapolated);
+		      aLayer->AddHitInActiveArea();
+		    }
+		  else
+		    {
+		      XNotInActiveArea.push_back(Xextrapolated);
+		      YNotInActiveArea.push_back(Yextrapolated);
+		    }
+		  
+		  if(ActiveRegion && LayerNumHits==0)
+		    {
+		      XMissedHits.push_back(Xextrapolated);
+		      YMissedHits.push_back(Yextrapolated);
+		      aLayer->AddMissedHit();
+		    }
+		  else if(ActiveRegion && LayerNumHits>0)
+		    {
+		      std::vector<double> ClusterLayer = myEvent->GetClusters(aLayer->GetLayerName());
+		      int NumberOfClusterPerLayer      = ClusterLayer.size();
+		      
+		      if(aLayer->IsX() && NumberOfClusterPerLayer==1) 
+			XResiduals->Fill(Xextrapolated-ClusterLayer[0]);
+		      else if(aLayer->IsY() && NumberOfClusterPerLayer==1)
+			YResiduals->Fill(Yextrapolated-ClusterLayer[0]);
+		    }
 		}
 	    }
 	}
@@ -484,17 +592,21 @@ void IneffAnalysis(int LastEvent, TString LV="All")
     {
       aLayer = ((Layer*) myGeometry->GetValue(key));
       std::cout<<" |   "<<aLayer->GetLayerName()<<"    |     ";
-      std::cout << std::setw(5) << std::setprecision(2) << aLayer->GetEfficiency()*100.0 << " %  |"
+      std::cout << std::setw(6) << std::setprecision(3) << aLayer->GetEfficiency()*100.0 << " %  |"
                 << std::setw(6) << "   % " << aLayer->GetInefficiency()*100.0;
       //      printf("  %3.2f \%  |   %3.2f   \% ", (float) aLayer->GetEfficiency()*100.0,(float) aLayer->GetInefficiency()*100.0);
       std::cout<<"   | "<<std::endl;
     }
-
+  std::cout<<" SELECTED EVENTS = "<<SelectedEvents<<" / "<<TotalEvents<<std::endl;
   TCanvas *c2 = new TCanvas("c2","c2",500,500);
   c2->Divide(2,1);
   c2->cd(1);
   XResiduals->Draw();
   c2->cd(2);
   YResiduals->Draw();
+  /*
+    TCanvas *c3 = new TCanvas();
+    CHI2->Draw();
+  */
 }
 

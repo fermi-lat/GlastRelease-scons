@@ -24,6 +24,7 @@ const Int_t NumGTRC = 9;
 const int positionOfGTCC[8] /* in the TCloneArray */ = { 5, 7, 3, 1, 6, 4, 0, 2 };
 
 #define DEBUG 0
+#define DIAGN 1
 
 // returns the position of GTCC i in the TCloneArray m_TkrDiagnostics of the digi file
 int indexToGTCC ( int i ) { return positionOfGTCC[i]; }
@@ -124,10 +125,12 @@ void TreeMaker::CreateTree(Int_t numEvents)
     digiTree->SetBranchStatus("m_tkr*", 1);
     digiTree->SetBranchStatus("m_eventId", 1); 
     digiTree->SetBranchStatus("m_runId", 1);
-    digiTree->SetBranchStatus("m_levelOneTrigger", 1);
-    digiTree->SetBranchStatus("m_ebfTime*", 1);
-    digiTree->SetBranchStatus("m_numTkrDiagnostics", 1);
-    
+    if(DIAGN)
+      {
+	digiTree->SetBranchStatus("m_levelOneTrigger", 1);
+	digiTree->SetBranchStatus("m_ebfTime*", 1);
+	digiTree->SetBranchStatus("m_numTkrDiagnostics", 1);
+      }
     for(int i=0;i<MaxNumLayers;i++)
       {
 	TString TS="Layer";
@@ -140,8 +143,11 @@ void TreeMaker::CreateTree(Int_t numEvents)
 	TTree *Layer = new TTree(TS,TS);
 	Layer->Branch("ToT0",&ToT0,"ToT0/I");
 	Layer->Branch("ToT1",&ToT1,"ToT1/I");
-	Layer->Branch("TriggerReq0",&TriggerReq0,"TriggerReq0/B");
-	Layer->Branch("TriggerReq1",&TriggerReq1,"TriggerReq1/B");
+	if(DIAGN)
+	  {
+	    Layer->Branch("TriggerReq0",&TriggerReq0,"TriggerReq0/B");
+	    Layer->Branch("TriggerReq1",&TriggerReq1,"TriggerReq1/B");
+	  }
 	Layer->Branch("TkrNumHits",&TkrNumHits,"TkrNumHits/I");
 	Layer->Branch("TkrHits",TkrHits,"TkrHits[TkrNumHits]/I");
 	TreeCollection->Add((TObject*) Layer);
@@ -150,12 +156,15 @@ void TreeMaker::CreateTree(Int_t numEvents)
     Header->Branch("EventId",&EventId,"EventId/I");
     Header->Branch("TkrTotalNumHits",&TkrTotalNumHits,"TkrTotalNumHits/I");
     Header->Branch("RunId",&RunId,"RunId/I");
-    Header->Branch("LevelOneTrigger",&LevelOneTrigger,"LevelOneTrigger/I");
-    TString tag("TkrDiagnostics[");
-    tag += NumGTCC * NumGTRC;
-    tag += "]/I";
-    Header->Branch("TkrDiagnostics", TkrDiagnostics, tag);
-    Header->Branch("EbfTime",&EbfTime,"EbfTime/D");
+    if(DIAGN)
+      {
+	Header->Branch("LevelOneTrigger",&LevelOneTrigger,"LevelOneTrigger/I");
+	TString tag("TkrDiagnostics[");
+	tag += NumGTCC * NumGTRC;
+	tag += "]/I";
+	Header->Branch("TkrDiagnostics", TkrDiagnostics, tag);
+	Header->Branch("EbfTime",&EbfTime,"EbfTime/D");
+      }
     TreeCollection->Add(Header);
     
   }
@@ -270,26 +279,36 @@ void TreeMaker::CreateTree(Int_t numEvents)
 	  EventId = ievent+1;
 	  RunId   = digiRunNum;
           if ( DEBUG ) std::cout << "run number: " << RunId << "  event id: " << EventId << std::endl;
-          LevelOneTrigger = evt->getL1T().getTriggerWord() & 0x1f; // there are more bits set, but why?
-          if ( DEBUG ) std::cout << "LevelOneTrigger: " << LevelOneTrigger << std::endl;
-          static Double_t EbfTimeStart = evt->getEbfTimeSec();
-          EbfTime = ( evt->getEbfTimeSec() - EbfTimeStart ) + evt->getEbfTimeNanoSec() * 1E-9;
-          if ( DEBUG ) std::cout << "EbfTime: " << EbfTime << std::endl;
-          // and now, for the TkrDiagnostics
-          if ( NumGTCC != evt->getTkrDiagnosticCol()->GetEntries() )
-              std::cerr << "NumGTCC=" << NumGTCC << " != evt->getTkrDiagnosticCol()->GetEntries()=" << evt->getTkrDiagnosticCol()->GetEntries() << std::endl;
-          for ( int GTCC=0; GTCC<NumGTCC; ++GTCC ) {
-              UInt_t dataWord = evt->getTkrDiagnostic(indexToGTCC(GTCC))->getDataWord();
-              std::bitset<NumGTRC> word = dataWord;
-              if ( DEBUG ) std::cout << "TkrDiagnosticData[" << GTCC << "] " << word << ' ';
-              for ( int GTRC=NumGTRC-1; GTRC>=0; --GTRC ) {
-                  TkrDiagnostics[getIndex(GTCC,GTRC)] = word[GTRC];
-                  if ( DEBUG ) std::cout << ( TkrDiagnostics[getIndex(GTCC,GTRC)] > 0 ) ? 1 : 0;
-              }
-              if ( DEBUG ) std::cout << std::endl;
-          }
 
-	  //////////////////////////////////////////////////
+	  if(DIAGN)
+	    {
+	      LevelOneTrigger = evt->getL1T().getTriggerWord() & 0x1f; // there are more bits set, but why?
+	      if ( DEBUG ) std::cout << "LevelOneTrigger: " << LevelOneTrigger << std::endl;
+	      static Double_t EbfTimeStart = evt->getEbfTimeSec();
+	      EbfTime = ( evt->getEbfTimeSec() - EbfTimeStart ) + evt->getEbfTimeNanoSec() * 1E-9;
+	      if ( DEBUG ) std::cout << "EbfTime: " << EbfTime << std::endl;
+	      // and now, for the TkrDiagnostics
+	      
+	      
+	      if ( NumGTCC != evt->getTkrDiagnosticCol()->GetEntries() )
+		{
+		  if ( DEBUG ) std::cerr << "NumGTCC=" << NumGTCC << " != evt->getTkrDiagnosticCol()->GetEntries()=" << evt->getTkrDiagnosticCol()->GetEntries() << std::endl;
+		}
+	      for ( int GTCC=0; GTCC<NumGTCC; ++GTCC ) 
+		{ 
+		  UInt_t dataWord=0;
+		  if ( NumGTCC == evt->getTkrDiagnosticCol()->GetEntries())
+		    dataWord = evt->getTkrDiagnostic(indexToGTCC(GTCC))->getDataWord();
+		  std::bitset<NumGTRC> word = dataWord;
+		  if ( DEBUG ) std::cout << "TkrDiagnosticData[" << GTCC << "] " << word << ' ';
+		  for ( int GTRC=NumGTRC-1; GTRC>=0; --GTRC ) {
+		    TkrDiagnostics[getIndex(GTCC,GTRC)] = word[GTRC];
+		    if ( DEBUG ) std::cout << ( TkrDiagnostics[getIndex(GTCC,GTRC)] > 0 ) ? 1 : 0;
+		  }
+		  if ( DEBUG ) std::cout << std::endl;
+		}
+	    }
+     	  //////////////////////////////////////////////////
 	  // digitkr:
 	  const TObjArray* tkrDigiCol = 0;
 	  tkrDigiCol = evt->getTkrDigiCol();
@@ -423,15 +442,16 @@ void TreeMaker::CreateTree(Int_t numEvents)
 	  ToT0       = TrueToT0[i];
 	  ToT1       = TrueToT1[i];
 	  //	  TkrHits    = TrueTkrHits[i];
-
-          const char* name = aTree->GetName();
-          const int index0 = getIndex(name, false);
-          const int index1 = getIndex(name, true);
-          TriggerReq0 = TkrDiagnostics[index0];
-          TriggerReq1 = TkrDiagnostics[index1];
-          if ( DEBUG ) std::cout << "loop " << std::setw(8) << name << std::setw(3) << index0 << std::setw(3) << index1 << ' '
-                    << TriggerReq0 << ' ' << TriggerReq1 << ' ' << TkrNumHits << std::endl;
-
+	  if(DIAGN)
+	    {
+	      const char* name = aTree->GetName();
+	      const int index0 = getIndex(name, false);
+	      const int index1 = getIndex(name, true);
+	      TriggerReq0 = TkrDiagnostics[index0];
+	      TriggerReq1 = TkrDiagnostics[index1];
+	      if ( DEBUG ) std::cout << "loop " << std::setw(8) << name << std::setw(3) << index0 << std::setw(3) << index1 << ' '
+				     << TriggerReq0 << ' ' << TriggerReq1 << ' ' << TkrNumHits << std::endl;
+	    }
 	  if (TkrNumHits > 0 || i==0 ) 
 	    {
 	      for ( int h=0; h<TkrNumHits; h++ ) 

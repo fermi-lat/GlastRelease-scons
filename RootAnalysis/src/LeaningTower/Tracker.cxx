@@ -12,6 +12,7 @@
 Tracker::Tracker()
 {
   myGeometry = new TMap();
+  TOWER=false;
 }
 
 
@@ -46,10 +47,21 @@ void Tracker::Display()
   
   TMapIter ti(myGeometry);
   TObjString* key;
-
+  
   double x[2] = { -4, 40};
+  double y[2]; 
+  if(TOWER)
+    {
+      y[0]=0;
+      y[1]=650;
+    }
+  else
+    {
+      y[0]=-110;
+      y[1]=110;
+    }
   //  double y[2] = { -0, 650}; //TOWER
-  double y[2] = { -110, 100}; //STACK
+  //  double y[2] = { -110, 100}; //STACK
 
   TGraph *Border = new TGraph(2, x, y);
   Border->GetXaxis()->SetTitle("position [cm]");
@@ -84,38 +96,40 @@ void Tracker::Display()
       
       //      std::cout<<((Layer*) myGeometry->GetValue(key))->GetLayerName()<<std::endl;
     }
-
-  TLine *ScintillatorT  = new TLine(-2, 89.5,38,89.5);
-  TLine *ScintillatorM  = new TLine(-2, 0.0,38,0.0);
-  TLine *ScintillatorB  = new TLine(-2, -103.1,38,-103.1);
-
-  TLine *ScintillatorTL = new TLine(-2, 89.5, 17.75,89.5);
-  TLine *ScintillatorTR = new TLine(18.25, 89.5, 38,89.5); 
-  TLine *ScintillatorML = new TLine(-2, 0.0, 17.75,0.0);
-  TLine *ScintillatorMR = new TLine(18.25, 0.0, 38,0.0);
-  TLine *ScintillatorBL = new TLine(-2, -103.1, 17.75,-103.1);
-  TLine *ScintillatorBR = new TLine(18.25, -103.1, 38,-103.1);
-
-  ScintillatorTL->SetLineColor(4);
-  ScintillatorTR->SetLineColor(4);
-  ScintillatorML->SetLineColor(4);
-  ScintillatorMR->SetLineColor(4);
-  ScintillatorBL->SetLineColor(4);
-  ScintillatorBR->SetLineColor(4);  
-  ScintillatorT->SetLineColor(4);  
-  ScintillatorM->SetLineColor(4);
-  ScintillatorB->SetLineColor(4); 
-
-  EventDisplayC->cd(1);
-  ScintillatorTL->Draw();
-  ScintillatorTR->Draw();
-  ScintillatorML->Draw();
-  ScintillatorMR->Draw();
-  ScintillatorBL->Draw();
-  ScintillatorBR->Draw();
-
-  EventDisplayC->cd(2);
-  ScintillatorT->Draw();
-  ScintillatorM->Draw();
-  ScintillatorB->Draw();
+  if(!TOWER)
+    {
+      TLine *ScintillatorT  = new TLine(-2, 89.5,38,89.5);
+      TLine *ScintillatorM  = new TLine(-2, 0.0,38,0.0);
+      TLine *ScintillatorB  = new TLine(-2, -103.1,38,-103.1);
+      
+      TLine *ScintillatorTL = new TLine(-2, 89.5, 17.75,89.5);
+      TLine *ScintillatorTR = new TLine(18.25, 89.5, 38,89.5); 
+      TLine *ScintillatorML = new TLine(-2, 0.0, 17.75,0.0);
+      TLine *ScintillatorMR = new TLine(18.25, 0.0, 38,0.0);
+      TLine *ScintillatorBL = new TLine(-2, -103.1, 17.75,-103.1);
+      TLine *ScintillatorBR = new TLine(18.25, -103.1, 38,-103.1);
+      
+      ScintillatorTL->SetLineColor(4);
+      ScintillatorTR->SetLineColor(4);
+      ScintillatorML->SetLineColor(4);
+      ScintillatorMR->SetLineColor(4);
+      ScintillatorBL->SetLineColor(4);
+      ScintillatorBR->SetLineColor(4);  
+      ScintillatorT->SetLineColor(4);  
+      ScintillatorM->SetLineColor(4);
+      ScintillatorB->SetLineColor(4); 
+      
+      EventDisplayC->cd(1);
+      ScintillatorTL->Draw();
+      ScintillatorTR->Draw();
+      ScintillatorML->Draw();
+      ScintillatorMR->Draw();
+      ScintillatorBL->Draw();
+      ScintillatorBR->Draw();
+      
+      EventDisplayC->cd(2);
+      ScintillatorT->Draw();
+      ScintillatorM->Draw();
+      ScintillatorB->Draw();
+    }
 }

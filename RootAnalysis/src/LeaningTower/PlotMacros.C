@@ -887,115 +887,6 @@ void CoincidenceBigEvents(int NH)
   myHist->Draw();
   
 }
-
-/*
-void EventDisplay(long EventId)
-{
-  int NumXlayers = 11;
-  int NumYlayers = 8;  
-
-  int NumLayers = NumXlayers + NumYlayers;
-  
-  std::cout<<NumLayers<<std::endl;
-  
-  TString myCuts = "EventId==";
-  myCuts+=EventId;
-  
-  float XStripId[128*18];
-  float XZposition[128*18];
-
-  float YStripId[128*18];
-  float YZposition[128*18];
-  
-  float XLayersPositions[18] = {-16.8, -13.2, -23.3, -19.7, -29.8, -26.2, -36.2, -32.6, -42.7, -39.1, -55.7, -45.6, -55.7, -52.1, -62.2, -58.6, -68.7, -65.1};
-  float YLayersPositions[18] = {16.8, 13.2, 23.3, 19.7, 29.8, 26.2, 36.2, 32.6, 42.7, 39.1, 55.7, 45.6, 55.7, 52.1, 62.2, 58.6, 68.7, 65.1};
-  
-  
-  //  std::cout<<TotalNumHits<<std::endl;
-  int idx=0;
-
-  // X Layers:
-
-  for(int nx = 0; nx < NumXlayers; nx++)
-    {
-      TString anXLayer = "X";
-      anXLayer += nx;
-      AddLayer(anXLayer);
-
-      gDirectory->Delete("HitMap");
-      TH1D *HitMapHisto = HitMap(myCuts);
-      int NumHits = HitMapHisto->GetEntries();
-      if(NumHits>0)
-	{
-	  int strip=1;
-	  int hitperlayer=0;
-	  while(strip <= 1536 && hitperlayer <= NumHits)
-	    {
-	      if(HitMapHisto->GetBinContent(strip)>0)
-		{
-		  XStripId[idx]  = (float) HitMapHisto->GetBinCenter(strip);
-		  XZposition[idx]= (float) XLayersPositions[nx];
-		  idx++;
-		  hitperlayer++;
-		}
-	      strip++;
-	    }
-	}
-      
-      
-    }
-  TGraph *gX = new TGraph(idx,XStripId,XZposition);
-  gX->SetTitle("X Layers");
-  
-  // Y Layers:
-  int idy=0;
-  
-
-  for(int ny = 0; ny < NumYlayers; ny++)
-    {
-      TString anYLayer = "Y";
-      anYLayer += ny;
-      AddLayer(anYLayer);
-
-      gDirectory->Delete("HitMap");
-      TH1D *HitMapHisto = HitMap(myCuts);
-      
-      int NumHits = HitMapHisto->GetEntries();
-      
-      if(NumHits>0)
-	{
-	  int strip=1;
-	  int hitperlayer=0;
-	  while(strip <= 1536 && hitperlayer <= NumHits)
-	    {
-	      if(HitMapHisto->GetBinContent(strip)>0)
-		{
-		  YStripId[idy]  = (float) HitMapHisto->GetBinCenter(strip);
-		  YZposition[idy]= (float) YLayersPositions[ny];
-		  idy++;
-		  hitperlayer++;
-		}
-	      strip++;
-	    }
-	}
-      
-      
-    }
-  
-  TGraph *gY = new TGraph(idy,YStripId,YZposition);
-  gY->SetTitle("Y Layers");
-
-  //////////////////////////////////////////////////
-  //                     Dispaly
-  TCanvas *EventDisplayCanvas = new TCanvas("EventDisplayCanvas","EventDisplayCanvas",800,800);
-  EventDisplayCanvas->Divide(1,2);
-  EventDisplayCanvas->cd(2);
-  gX->Draw("ap*");
-  EventDisplayCanvas->cd(1);
-  gY->Draw("ap*");
-}
-*/
-
 void AllLayers(int cut=0)
 {
   int nx=11;  
@@ -1148,4 +1039,47 @@ void PrintTkrDiagnostics(TString myCuts="") {
         std::cout << std::endl;
     }
     delete h;
+}
+
+void FindPlanesPositions(TString myCuts)
+{
+  TCanvas *Canvas;
+  Canvas = new TCanvas("canvas","canvas");
+  TH1D *ZClusters;
+  ZClusters = new TH1D("ZClusters","TkrClusZ",100000,0,1000);
+  myTree->Draw("TkrClusZ>>ZClusters",myCuts);
+  ZClusters->Draw();
+  for(int i=1;i<=ZClusters->GetEntries();i++)
+    if(ZClusters->GetBinContent(i)>0) 
+      std::cout<<ZClusters->GetBinCenter(i)<<std::endl;
+}
+
+void myGraph()
+{
+  static const   int N=11;
+  double MeanV[N] = {16.06,21.93,24.77,26.99,29.62,30.94,36.07,35.95,39.53,42.44,42.49};
+  double RMSV[N]  = {15.24,17.89,18.96,20.41,21.99,23,25.22,26.63,29.67,33.69,38.62};
+  double NUMHITS[N]  = {20,25,30,35,40,45,50,55,60,65,70};
+  double fakeX[2]={15,75};
+  double fakeY[2]={10,50};
+  TGraph *fakeGraph= new TGraph(2,fakeX,fakeY);
+  fakeGraph->SetTitle("Correlation between Layers");
+  fakeGraph->GetXaxis()->SetTitle("Cut Num Hits");
+  fakeGraph->GetYaxis()->SetTitle("Average Num Hits");
+      
+  TGraph *myGraph;
+  
+  TString Name="frame";
+  TCanvas *aCanvas = new TCanvas();      
+  fakeGraph->Draw("ap");
+  for(int i = 1;i<=N;i++)
+    {
+      myGraph = new TGraph(i, NUMHITS, MeanV);
+      myGraph->SetMarkerStyle(23);
+      myGraph->SetMarkerSize(3);
+      myGraph->SetMarkerColor(2);
+      myGraph->Draw("p");
+      aCanvas->Print(Name+i+".gif");
+    }
+  
 }

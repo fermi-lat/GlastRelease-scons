@@ -45,7 +45,7 @@ class Event
   
  private:
   int NumberOfEvents;
-
+  static const int GAP=10;
   int SelectedEvent;
   int TkrTotalNumHits, RunId, EventId;
   Double_t EbfTime;
