@@ -30,10 +30,10 @@ ApplicationMgr.TopAlg = {
 //the top sequence loop
 Top.Members={
     "Sequencer/Generator",
+    "Sequencer/CalibrationUpdate",
     "Sequencer/Digitization",
     "Sequencer/EventDisplay",
     "Sequencer/Triggered" };
-
 
 // the sequence that is triggered
 Triggered.Members={
@@ -75,7 +75,15 @@ FluxAlg.source_name="muon_pencil_angle";
 // add in CRflux option
 ApplicationMgr.DLLs +={ "CRflux" };
 FluxSvc.source_lib += {
-   "$(CRFLUXROOT)/xml/source_library.xml"};
+    "$(CRFLUXROOT)/xml/source_library.xml"};
+
+//-----------------------------
+// These algorithms run before digitization or reconstruction
+//
+CalibrationUpdate.Members={
+    "TkrCalibAlg"     // found in TkrUtil
+    };
+
 
 // ----------------------------
 //  Digitization
@@ -84,7 +92,8 @@ ApplicationMgr.DLLs +={ "TkrDigi", "CalDigi", "AcdDigi"  };
 Digitization.Members = { 
     "TkrDigiAlg", 
     "CalDigiAlg", 
-    "AcdDigiAlg"};
+    "AcdDigiAlg"
+    };
 
 
 // ----------------------------
@@ -113,14 +122,13 @@ ApplicationMgr.DLLs +={
     "TkrRecon"
     };
 Reconstruction.Members={ 
-      "Sequencer/Cal1", 
-      "Sequencer/Tkr",
-      "Sequencer/Cal2",
-      "Sequencer/TkrIter",
-      "Sequencer/Acd"
-      };
+    "Sequencer/Cal1", 
+    "Sequencer/Tkr",
+    "Sequencer/Cal2",
+    "Sequencer/TkrIter",
+    "Sequencer/Acd"
+    };
          
-
 //          tracker
 // -------------------------------------------
 ApplicationMgr.ExtSvc   += { "TkrGeometrySvc"};
@@ -144,18 +152,18 @@ CalibDataSvc.CalibFlavorList = {"ideal"};
 
 
 Cal1.Members = { 
-      "CalXtalRecAlg", 
-      "CalClustersAlg/first"
-      };
+    "CalXtalRecAlg", 
+    "CalClustersAlg/first"
+    };
 Tkr.Members = {
-      "TkrReconAlg/FirstPass"
-      };
+    "TkrReconAlg/FirstPass"
+    };
 Cal2.Members = {
-      "CalClustersAlg/second"
-      };
+    "CalClustersAlg/second"
+    };
 TkrIter.Members = {
-      "TkrReconAlg/Iteration"
-      };
+    "TkrReconAlg/Iteration"
+    };
 second.OutputLevel=5;  // since this guy generates INFO lines
 // ----------------------------
 //   ACD recon
