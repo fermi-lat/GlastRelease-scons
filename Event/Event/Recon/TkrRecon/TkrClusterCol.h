@@ -35,18 +35,18 @@ public:
     /// returns total number of clusters
     int nHits()  const {return m_clustersList.size();}
 
-    /// flags ith TkrCluster
+    /// flags TkrCluster with id i
     void flagHit(int i, int iflag=1)   {getHit(i)->flag(iflag);}
     /// unflag ith TkrCluster
     void unflagHit(int i)  {getHit(i)->unflag();}
-    /// returns true if the ith TkrCluster is flagged
+    /// returns true if the TkrCluster with id i is flagged
     bool hitFlagged(int i) const {return getHit(i)->hitFlagged();}
-    /// returns size of the cluster with id "id"
+    /// returns size of the cluster with id i
     double size(int i) const {return getHit(i)->size();}     
-    /// returns  space position of the  ithTkrCluster
+    /// returns  space position of the TkrCluster with id i
     Point position(int i)  const {return getHit(i)->position();}
-    /// returns pointer to the ith TkrCluster in simple cluster list
-    TkrCluster* getHit(int i) const {return m_clustersList[i];}
+    /// returns pointer to the TkrCluster with id i
+    TkrCluster* getHit(int i) const;
           
     /// returns a reference the a cluster list of hits in a given layer
     const std::vector<TkrCluster*>& getHits(TkrCluster::view v, int iplane)

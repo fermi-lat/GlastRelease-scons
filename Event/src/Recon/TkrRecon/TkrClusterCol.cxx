@@ -74,6 +74,23 @@ int TkrClusterCol::nHits(TkrCluster::view v, int iplane) const
     }
 }
 
+TkrCluster* TkrClusterCol::getHit(int i) const 
+{
+    // this used to just return the ith cluster...
+    // now it really checks the id's, but tries the ith cluster first 
+    //   (which will be the one, unless someone sorts the list of pointers)
+    TkrCluster* ptr = 0;
+    if (i==m_clustersList[i]->id()) {
+        ptr = m_clustersList[i];
+    } else {
+        for (int j = 0; j< m_clustersList.size(); j++) {
+            if (m_clustersList[j]->id()==i) ptr = m_clustersList[j];
+        }
+    }
+    return ptr;
+}
+
+
 void TkrClusterCol::writeOut(MsgStream& log) const
 {
 	// Purpose: writes out the information about the clusters
