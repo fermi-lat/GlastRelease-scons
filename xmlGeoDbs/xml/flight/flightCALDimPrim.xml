@@ -6,22 +6,22 @@
 CAL Stay Clear envelope from LAT-DS-00038-2</prim>
   <prim name="CALVertStayClear" value="224.3.">Z-dimension of CAL
  Stay Clear envelope from LAT-DS-00038-2</prim>
-  <prim name="diodeX" value="0.30"> **NEW** Depletion depth of diode Si
+  <prim name="diodeX" value="0.30"> Depletion depth of diode Si
 </prim>
-  <prim name= "diodeLY" value= "14.5"> **NEW** Width of large diode Si
+  <prim name= "diodeLY" value= "14.5"> Width of large diode Si
 </prim>
-  <prim name= "diodeSY" value= "2.4"> **NEW** Width of small diode Si
+  <prim name= "diodeSY" value= "2.4"> Width of small diode Si
 </prim>
-  <prim name= "diodeZ" value= "10.5">**NEW** Height of diode Si
+  <prim name= "diodeZ" value= "10.5">Height of diode Si
 </prim >
-  <prim name= "CsILength" value= "333.0">**NEW VALUE** Length of a CsI crystal.
+  <prim name= "CsILength" value= "326.0"> Length of a CsI crystal as of 30May02
 </prim>
 
    <!-- this used to be called height -->
-  <prim name= "CsIWidth" value= "26.714">**NEW VALUE** (Transverse) width of 
+  <prim name= "CsIWidth" value= "26.714"> (Transverse) width of 
 a CsI crytal</prim>   
    <!-- this used to be called width -->
-  <prim name= "CsIHeight" value= "19.9">**NEW VALUE** Height of a CsI crystal
+  <prim name= "CsIHeight" value= "19.9"> Height of a CsI crystal
 </prim> 
   <prim name="diodeZOffset" value= "0.9">Z offset of diodes relative to
 crystal</prim>
@@ -39,36 +39,36 @@ to crystal</prim>
 </prim>
 -->
 
-  <prim name="cellVertPitch" value="21.35" >**NEW** Vertical pitch of CsI and
+  <prim name="cellVertPitch" value="21.35" >Vertical pitch of CsI and
 cells</prim>
-  <prim name="cellHorPitch" value="27.844" > **NEW** Horizontal pitch of CsI 
+  <prim name="cellHorPitch" value="27.844" > Horizontal pitch of CsI 
 and cells</prim>
-  <prim name="cellVertWallThick" value="0.49"> **NEW** Thickness of reflector 
+  <prim name="cellVertWallThick" value="0.49"> Thickness of reflector 
 and composite cell vertical walls (C)</prim>
-  <prim name="cellHorWallThick" value="0.85"> **NEW** Thickness of reflector 
+  <prim name="cellHorWallThick" value="0.85"> Thickness of reflector 
 and composite cell horizontal walls (C)</prim>
-  <prim name="cellSideReinfThick" value="1.4"> **NEW and not understood**
+  <prim name="cellSideReinfThick" value="1.4"> **not understood**
  Horizontal thickness of
 reinforcement on side of outermost cells (C)</prim>
-  <prim name="CALSideWallThick" value="11.60" >**NEW** Horizontal thickness
+  <prim name="CALSideWallThick" value="11.60" >Horizontal thickness
 of side compartment with electronics</prim>
 
-  <prim name="CALSideWallInnerThick" value="1.0">**NEW** Horizontal thickness
+  <prim name="CALSideWallInnerThick" value="1.0">Horizontal thickness
 of inner wall within (largely hollow) side wall</prim>
-  <prim name="CALSideWallOuterThick" value="1.0">**NEW** Horizontal thickness
+  <prim name="CALSideWallOuterThick" value="1.0"> Horizontal thickness
 of outer wall within (largely hollow) side wall</prim>
-  <prim name="CALSideWallPCBThick" value="1.6">**NEW** Horizontal thickness
+  <prim name="CALSideWallPCBThick" value="1.6"> Horizontal thickness
 of PCB  within (largely hollow) side wall</prim>
 
-  <prim name="CALModuleWidth" value="363.0">**NEW** Horizontal, face-to-face
+  <prim name="CALModuleWidth" value="363.0"> Horizontal, face-to-face
 dimension of CAL module (presumably both X and Y)</prim>
 
-<prim name="CALModuleHeight" value="223.80">**NEW** Vertical, top-to-bottom
+<prim name="CALModuleHeight" value="223.80"> Vertical, top-to-bottom
 dimention of CAL module</prim>
 
-  <prim name="CALCylSupportDiameter" value="10.00">**NEW** Diameter of
+  <prim name="CALCylSupportDiameter" value="10.00"> Diameter of
 cylindrical supports (Al)</prim>
-  <prim name="CALCylSupportCellDelta" value="4" uType="count"> **NEW** 
+  <prim name="CALCylSupportCellDelta" value="4" uType="count">
 Number of
 cells between adjacent (in the same layer) cylindrical supports</prim>
 

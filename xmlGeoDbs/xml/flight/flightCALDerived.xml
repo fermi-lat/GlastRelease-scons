@@ -122,8 +122,7 @@
 <!-- the following should be the maximum of the length of a single
      CsIElement and the transverse distance across the whole 
      collection of CsIElements in a layer, so
-      max(CsIEnvX, nCsIPerLayer*CsIEnvY), which ends up being
-      CsIEnvX in this case    --> 
+      max(CsIEnvX, nCsIPerLayer*CsIEnvY) -->
         <const name = "CALLayerTrans" >
           <notes>Transverse dimension of a CAL layer: 
                  max(CsiEnvX, nEltPerlayer*CsIEnvY)</notes>
