@@ -53,6 +53,7 @@ private:
     Algorithm*  m_TkrFindAlg;
     Algorithm*  m_TkrTrackFitAlg;
     Algorithm*  m_TkrVertexAlg;
+    Algorithm*  m_TkrDisplayAlg;
 };
 
 // Definitions for use within Gaudi
@@ -116,6 +117,14 @@ StatusCode TkrReconAlg::initialize()
             log << MSG::ERROR << " could not open TkrVertexAlg " << endreq;
             return StatusCode::FAILURE;
         }
+
+        // Display algorithm (if GuiSvc is present)
+        if( createSubAlgorithm("TkrDisplayAlg", "TkrDisplayAlg", m_TkrDisplayAlg).isFailure() ) 
+        {
+            log << MSG::ERROR << " could not open TkrDisplayAlg " << endreq;
+            return StatusCode::FAILURE;
+        }
+        m_TkrDisplayAlg->setProperty("TrackerReconType", m_TrackerReconType);
     }
     else
     {

@@ -131,7 +131,7 @@ StatusCode TkrTrackFitAlg::execute()
     StatusCode sc = StatusCode::SUCCESS;
 
     // What to do depends upon first track fit or iteration
-    if (name() != "TkrFitIter") sc = doTrackFit();
+     if (name() != "TkrFitIter") sc = doTrackFit();
     else                        sc = doTrackReFit();
 
     return sc;
