@@ -44,11 +44,11 @@ library xmlUtil ${xmlUtil_headers}  \
      ${xmlUtil_xmlfiles} 
 
 
-application eval eval.cxx 
+application eval eval.cxx local/outUtils.cxx
 
-application forProg makeXmlForProg.cxx 
+application forProg makeXmlForProg.cxx local/outUtils.cxx
 
-application forDoc     makeXmlForDoc.cxx 
+application forDoc     makeXmlForDoc.cxx local/outUtils.cxx
 application testId     id/testId.cxx
 application testDocMan docMan/*.cxx
 application testKey    id/testKey.cxx id/IdKey.cxx
