@@ -27,9 +27,13 @@ public:
             
         // set up the MC structure
         EventModel::MC::Event = EventModel::Event + "/MC";
+
         EventModel::MC::MCACDHits = EventModel::MC::Event + "/MCACDHits";
         EventModel::MC::MCCalorimeterHits = EventModel::MC::Event + "/MCCalorimeterHits";
         EventModel::MC::MCTKRHits = EventModel::MC::Event + "/MCTKRHits";
+
+        EventModel::Raw::Event = EventModel::Event + "/Raw";
+        EventModel::Raw::CsIDatas = EventModel::Raw::Event + "/CsIDatas";
     }
 };
     
@@ -53,6 +57,8 @@ public:
     const CLID& CLID_MCSiLayer          = 2013;
 
     //! Raw event definitions
-    const CLID& CLID_CsIData            = 2051;
-    const CLID& CLID_Xtal               = 2052;
+    const CLID& CLID_RawEvent           = 2017;
+    const CLID& CLID_CsIData            = 2014;
+    const CLID& CLID_Xtal               = 2015;
+    const CLID& CLID_CsIDataCnv         = 2016;
         
