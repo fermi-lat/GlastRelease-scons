@@ -18,23 +18,23 @@
 
      Description of attributes:
 
-            instrument    -- one of "flight", "EM", etc.  Could also
-                             be implemented as enumeration rather than
-                             NMTOKEN
-            timestamp     -- when the file was written (date and time)
-            calType       -- one of "TKRBadStrips", "CALLightAttenuation",
-                             etc.
-            formatVersion -- sufficient versioning information so that
-                             software attempting to read the file can
-                             determine if it supports this version. 
-                             [Might get rid of this here and just keep
-                             it in the MySQL metadata table]
+            instrument    - one of "flight", "EM", etc.  Could also
+                            be implemented as enumeration rather than
+                            NMTOKEN
+            timestamp     - when the file was written (date and time)
+            calType       - one of "TKRBadStrips", "CALLightAttenuation",
+                            etc.
+            formatVersion - sufficient versioning information so that
+                            software attempting to read the file can
+                            determine if it supports this version. 
+                            [Might get rid of this here and just keep
+                            it in the MySQL metadata table]
  -->
 
 <!ELEMENT badStrips (meta, inputSample, cuts, tower*) >
 <!ATTLIST badStrips badType (hot | dead) #REQUIRED >
 
-<!ELEMENT  meta  (EMPTY) >
+<!ELEMENT  meta  EMPTY >
 <!ATTLIST meta  
    instrument  (flight | BFEM | BTEM | EM | CU) #REQUIRED
    timestamp   NMTOKEN #REQUIRED
@@ -61,7 +61,7 @@
      "loose" will be further from "expected" than "tight", but in the
      same direction.    
  -->
-<!ELEMENT cuts (EMPTY)>
+<!ELEMENT cuts EMPTY>
 <!ATTLIST cuts  tight       NMTOKEN #REQUIRED
                 loose       NMTOKEN #REQUIRED
                 expected    NMTOKEN #REQUIRED >
@@ -91,9 +91,9 @@
 
 <!ELEMENT bad (stripList?, stripSpan*) >
 <!ELEMENT veryBad (stripList?, stripSpan*) >
-<!ELEMENT stripList (EMPTY) >
+<!ELEMENT stripList EMPTY >
 <!ATTLIST stripList strips NMTOKENS #REQUIRED >
-<!ELEMENT stripSpan (EMPTY) >
+<!ELEMENT stripSpan EMPTY >
 <!ATTLIST stripSpan first NMTOKEN #REQUIRED
                     last  NMTOKEN #REQUIRED >
 
