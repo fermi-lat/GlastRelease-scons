@@ -26,10 +26,11 @@ public:
   //! Id's are represented at a vector of unsigned ints
   typedef std::map<const G4VPhysicalVolume*, idents::VolumeIdentifier> IdMap;
 
-  G4Geometry();
+  G4Geometry(std::string mode="propagate");
   G4Geometry(PosDetectorManager* pdm,IntDetectorManager* idm,
-	     IdMap* idmap):m_pdm(pdm),m_idm(idm),m_idMap(idmap),
-      m_worldPhys(0),m_replica(0),m_replicaMother(0){};
+	     IdMap* idmap, std::string mode="propagate") : 
+    m_pdm(pdm),m_idm(idm),m_idMap(idmap), 
+      m_worldPhys(0),m_replica(0),m_replicaMother(0), m_mode(mode) {};
 
   ~G4Geometry();
 
@@ -76,6 +77,13 @@ public:
   virtual std::string getMode() {return m_mode;}
 
  private:
+  /// the detector managers
+  PosDetectorManager* m_pdm;    
+  IntDetectorManager* m_idm;    
+
+  /// pointer to the clients map that we fill
+  IdMap* m_idMap;
+
   /// The mother volume of the geometry
   G4VPhysicalVolume* m_worldPhys;
 
@@ -93,13 +101,6 @@ public:
   
   //! vector of the number of ids for this geometry level: 0,1, or even 2
   UintVector m_idcount;
-
-  /// pointer to the clients map that we fill
-  IdMap* m_idMap;
-
-  /// the detector managers
-  PosDetectorManager* m_pdm;    
-  IntDetectorManager* m_idm;    
 
   /// a flag for optimization mechanism of the G4 geometry
   bool m_replica;

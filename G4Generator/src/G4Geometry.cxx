@@ -25,7 +25,7 @@
 #include <cassert>
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-G4Geometry::G4Geometry() : m_mode("propagate")
+G4Geometry::G4Geometry(std::string mode) : m_mode(mode)
 {
 
 }
