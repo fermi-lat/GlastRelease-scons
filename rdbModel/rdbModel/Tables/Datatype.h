@@ -18,6 +18,7 @@ namespace rdbModel{
     bool choicesRequired() const {return m_required;}
 
   private:
+    friend class rdbModel::XercesBuilder;
     std::vector<std::string> m_choices;
     // sometimes column *must* have one of the enumerated values; 
     // other times they're just suggestions

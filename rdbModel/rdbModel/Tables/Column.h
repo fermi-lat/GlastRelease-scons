@@ -9,6 +9,7 @@ namespace rdbModel{
 
   class Table;
   class Datatype;
+  class Enum;
 
   class XercesBuilder;
 
@@ -30,7 +31,7 @@ namespace rdbModel{
 
     /// Return pointer to Enum object associated with this column (if
     /// none, return null pointer).
-    Enum* getEnum() const {return m_type->getEnum();}
+    Enum* getEnum() const;
 
     /** See if supplied value meets constraints of column definition
      *   @arg  val    std::string representation of value to be checked
