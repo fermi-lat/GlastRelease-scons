@@ -111,13 +111,13 @@
      * TKRWallLong, TKRWallShort
  -->
     <box name="TKRCoreRegEnv"
-	 XREF="TKRTrayWidth" 
+	 XREF="TKRCloseoutTrans"
 	 YREF="TKRTrayWidth" 
 	 ZREF="coreThick" 
          materialREF="vacuumMat" />        
 
     <box name="TKRCoreOuterEnv"
-	 XREF="TKRTrayWidth" 
+	 XREF="TKRCloseoutTrans"
 	 YREF="TKRTrayWidth" 
 	 ZREF="coreThickOuter" 
          materialREF="vacuumMat" />        
@@ -421,8 +421,8 @@
      
     <box name="SiLayerBox"
          sensitive="posHit"  detectorTypeREF="eDTypeTKRSi"
-	 XREF="TKRTrayWidth" 
-	 YREF="TKRTrayWidth"
+	 XREF="TKRCloseoutWidth" 
+	 YREF="TKRCloseoutWidth"
 	 ZREF="SiThick" materialREF="TKRDetMat" />
 
 <!--  Just a single sheet. For convenience make a box the thickness of

@@ -12,11 +12,23 @@
 
       <derCategory name="derTKR"  save="true" >
         <overview>Derived constants specific to tracker</overview>
-	<const name="TKRTrayWidth" >
+	<const name="TKRCloseoutTrans" >
           <notes>Transverse dimension of the business part of the
                  tray, large enough to include all silicon, closeout,
                  etc. but no larger (Revised 3May02) </notes>
           <refer refTo="faceWidth" />
+	</const>
+
+	<const name="TKRTrayWidth" >
+          <notes>Large enough to include 2 MCM boards (and 2 gaps) as 
+             well as closeout.</notes>
+          <add>
+            <refer refTo="TKRCloseoutTrans" />
+            <refer refTo="MCMThick" />
+            <refer refTo="MCMThick" />
+            <refer refTo="MCMGap" />
+            <refer refTo="MCMGap" />
+          </add>
 	</const>
 
 
