@@ -14,7 +14,6 @@
 #include "Event/Digi/TkrDigi.h"
 
 #include "Event/Recon/TkrRecon/TkrPatCand.h"
-#include "Event/Recon/TkrRecon/TkrClusterCol.h"
 #include "Event/Recon/TkrRecon/TkrCluster.h"
 #include "Event/Recon/TkrRecon/TkrFitTrack.h"
 #include "Event/Recon/TkrRecon/TkrFitPlane.h"
@@ -109,7 +108,7 @@ StatusCode test_TkrRecon::execute()
         sc = StatusCode::FAILURE;        
         return sc;}
     else {
-        log << MSG::INFO << clusterData->nHits() << " Tkr clusters found " 
+        log << MSG::INFO << clusterData->size() << " Tkr clusters found " 
             << endreq;
     }
     

@@ -15,7 +15,7 @@
 #include "Event/Recon/TkrRecon/TkrTrackParams.h"
 
 
-class TkrTrkParams : public HepVector, public Event::ITkrTrackParamsAccess
+class TkrTrkParams : public HepVector, virtual public Event::ITkrTrackParamsAccess
 {
 public:
 

@@ -15,7 +15,7 @@
 #include "CLHEP/Matrix/Matrix.h"
 #include "Event/Recon/TkrRecon/TkrTrackParams.h"
 
-class TkrCovMatrix : public HepMatrix, public Event::ITkrTrackParamsAccess
+class TkrCovMatrix : public HepMatrix, virtual public Event::ITkrTrackParamsAccess
 {
 public:
 
