@@ -112,9 +112,13 @@ const TupleItem* RootTuple::tupleItem(const std::string& name)const
 
     TBranch* b = m_tree->GetBranch(name.c_str());
     if( b==0 ) {
-         std::cerr << "Sorry, did not find '" << name << "' in the tuple\n";
+#if 1 // new behavior
+        return 0;
+#else
+         std::cerr << "\nSorry, did not find '" << name << "' in the tuple\n";
          exit(-1);
          return *it;
+#endif
     }
     TLeafF* leaf = (TLeafF*)(*b->GetListOfLeaves())[0];
     const char * fname = leaf->GetName();

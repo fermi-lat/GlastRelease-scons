@@ -18,6 +18,7 @@
 #include <sstream>
 
 #include <assert.h>
+#define CLASSIF
 
 const char* _MERIT_VERSION = "$Revision$";
 static std::string  cutstr("nA");
@@ -124,7 +125,7 @@ int main(int argc, char* argv[])
         (*outstream) << "Tuple title: \""<< tuple->title() << "\"\n" ;
 #ifdef CLASSIF
         // create the ct: pass in the tuple.
-        ClassificationTree* pct;
+        ClassificationTree* pct=0;
         try {
            pct = new ClassificationTree(*tuple);
         }catch ( std::exception &e ) {
@@ -140,7 +141,7 @@ int main(int argc, char* argv[])
 
         while ( tuple->nextEvent() ) { 
 #ifdef CLASSIF
-            pct->execute();   // fill in the classification (testing here)
+          if(pct!=0) pct->execute();   // fill in the classification (testing here)
 #endif
             fm.execute(); // run the rest.
         }

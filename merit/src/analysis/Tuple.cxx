@@ -119,6 +119,13 @@ Tuple::find(const std::string& nam)const
         if( check==(*it)->name() )break;
         //if( nam==(*it)->name() )break;
     }
+    if( it== end()){    // try alias
+        std::map<std::string, std::string>::const_iterator sit=m_alias_list.find(nam);
+        if( sit != m_alias_list.end() ) {
+            const std::string& alias= sit->second;
+            it = find( alias );
+        }
+    }
     return it;
 }
 
