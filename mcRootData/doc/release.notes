@@ -3,6 +3,8 @@
  package manager:H.Kelly
  @verbatim
 
+v2r11p6   16-Dec-2003 HMK increase limit again for position hits to 75k
+v2r11p5               HMK increate limit again for position hits to 50k
 v2r11p4   03-Sep-2003 HMK increase limit 10x
 v2r11p3   30-Aug-2003 HMK increase limit on McParticle in McEvent::Clear
 v2r11p2   21-Jul-2003 HMK increment McEvent due to addition of TimeStamp
