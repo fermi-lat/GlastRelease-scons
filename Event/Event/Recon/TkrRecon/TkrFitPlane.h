@@ -43,15 +43,20 @@ public:
     {}
 
     TkrFitPlane(unsigned id, int kplane, double ene, double z, const TkrFitHit& hit, AXIS prj)
-        : m_IDHit(id), m_IDPlane(kplane), m_eneplane(ene), m_zplane(z), m_projection(prj),
+        : m_IDHit(id), m_IDPlane(kplane), m_eneplane(ene),
           m_radLen(0), m_activeDist(0)   
     { 
-	    setHit(hit); 
+	    setHit(hit);
+        m_zplane = z;
+        m_projection = prj;
     }
     TkrFitPlane(unsigned id, int kplane, double ene, double z, AXIS prj)
-        : m_IDHit(id), m_IDPlane(kplane), m_eneplane(ene), m_zplane(z), m_projection(prj),
+        : m_IDHit(id), m_IDPlane(kplane), m_eneplane(ene),
           m_radLen(0), m_activeDist(0)
-    {}
+    {
+        m_zplane = z;
+        m_projection = prj;
+    }
 
     void     initializeInfo(unsigned int hit, unsigned int tower, unsigned int plane, AXIS proj,
                             AXIS nextProj, double z, double energy, double radLen, double activeDist);
