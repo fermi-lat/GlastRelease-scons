@@ -24,6 +24,9 @@
 #include <vector>
 #include "GaudiKernel/ParticleProperty.h"
 
+#include "FluxSvc/ISpectrum.h"
+#include "FluxSvc/ISpectrumFactory.h" 
+
 #include "CLHEP/Random/RandFlat.h"
 
 
@@ -65,6 +68,7 @@ private:
     void addToTotalExposure(std::vector<exposureSet>);
     void displayExposure();
     void rootDisplay();
+    void makeTimeCandle(IFluxSvc* fsvc);
 
     /// transform linear l,b coordinates into transformed equal-area coords.
     std::pair<double,double> hammerAitoff(double l,double b);
@@ -111,7 +115,10 @@ StatusCode FluxTestAlg::initialize() {
         log << MSG::ERROR << "Could not find FluxSvc" << endreq;
         return sc;
     }
-    //fsvc->pass(1000000.);
+
+    // set up the standard time candle spectrum
+    makeTimeCandle(fsvc);
+//    static RemoteSpectrumFactory<TimeCandle> timecandle(fsvc);  
     
     
     log << MSG::INFO << "loading source..." << endreq;
@@ -135,6 +142,45 @@ StatusCode FluxTestAlg::initialize() {
 }
 
 
+//! simple prototype of a spectrum class definition - this implememts all of the necessary methods in an ISpectrum
+class TimeCandle : public ISpectrum {
+public:
+    TimeCandle(const std::string& params){};
+    
+    virtual const char * particleName()const{return "gamma";}
+    
+    /// return a title describing the spectrum	
+    virtual std::string title()const{ return "standard time candle";}
+    
+    /// calculate flux 
+    //virtual double flux() const { return 1.0;}
+    
+    virtual double flux(double time) const {return 1.0;}
+    
+    /// return kinetic energy (in GeV) 
+    /// @param r Number between 0 and 1 for min to max energy
+    virtual float operator()(float r)const{
+        return r;
+    }
+    
+    virtual std::pair<float,float> dir(float)const{
+        return std::make_pair<float,float>(0.0,0.0);
+    }     
+    
+    virtual std::pair<double,double> dir(double energy, HepRandomEngine* engine){return std::make_pair<double,double>(0.0,0.0);}
+    
+    double energySrc(HepRandomEngine* engine, double time){  return (*this)(engine->flat());}
+    
+    double interval (double time)
+    {        
+       return 20;
+    }
+    
+};
+/// set this spectrum up to be used.
+void FluxTestAlg::makeTimeCandle(IFluxSvc* fsvc){
+    static RemoteSpectrumFactory<TimeCandle> timecandle(fsvc);
+}
 //------------------------------------------------------------------------------
 StatusCode FluxTestAlg::execute() {
     
