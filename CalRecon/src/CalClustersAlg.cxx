@@ -286,15 +286,19 @@ StatusCode CalClustersAlg::execute()
         m_lastLayerTool->setTrackSlope(slope);
         m_lastLayerTool->doEnergyCorr((*it)->getEnergySum(),(*it));
 
+        // eleak is observed + estimated leakage energy
+        double eleak = m_lastLayerTool->getEnergyCorr() + (*it)->getEnergySum();
+
         // iteration
-        m_lastLayerTool->doEnergyCorr(m_lastLayerTool->getEnergyCorr(),(*it));       
-        double eleak = m_lastLayerTool->getEnergyCorr();
+        m_lastLayerTool->doEnergyCorr(eleak,(*it));       
+        eleak = m_lastLayerTool->getEnergyCorr() + (*it)->getEnergySum();
 
         
-        // Do profile fitting
+        // Do profile fitting - use StaticSlope because of static functions
+        // passed to minuit fitter
 
         m_profileTool->setStaticSlope(slope);
-        m_profileTool->doEnergyCorr(eleak,(*it));
+        m_profileTool->doEnergyCorr((*it)->getEnergySum(),(*it));
         
         // calculating the transverse offset of average position in the calorimeter
         // with respect to the position predicted from tracker information
