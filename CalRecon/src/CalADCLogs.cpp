@@ -1,6 +1,6 @@
 
-#include "TkrRecon/CalADCLogs.h"
-#include "TkrRecon/calorimeterGeo.h"
+#include "CalRecon/CalADCLogs.h"
+#include "CalRecon/calorimeterGeo.h"
 // #include "Event/messageManager.h"
 
 //######################################

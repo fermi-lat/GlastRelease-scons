@@ -1,7 +1,7 @@
 
-#include "TkrRecon/CalRecLogs.h"
+#include "CalRecon/CalRecLogs.h"
 // #include "Event/messageManager.h"
-#include "TkrRecon/calorimeterGeo.h"
+#include "CalRecon/calorimeterGeo.h"
 // #include "Event/dataManager.h"
 // #include "reconstruction/CsIClusters.h"
 

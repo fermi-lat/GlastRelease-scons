@@ -6,8 +6,8 @@
 #include <vector>
 // #include "Event/trsDataVI.h"
 #include "TkrRecon/detGeo.h"
-#include "TkrRecon/CalADCLogs.h"
-#include "TkrRecon/CalBase.h"
+#include "CalRecon/CalADCLogs.h"
+#include "CalRecon/CalBase.h"
 #include "Gaudi/Kernel/DataObject.h"
 #include "gui/DisplayRep.h"
 

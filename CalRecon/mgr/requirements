@@ -1,15 +1,14 @@
 package CalRecon
-version v1r3
+version v1r5
 
 branches src mgr doc
 
-use GlastSvc
+use TkrRecon 
 use GuiSvc
 use GlastEvent
 
-use reconstruction 
 
-library CalRecon  *.cxx ../CalRecon/*.h  Dll/*.cpp
+library CalRecon  *.cxx *.cpp *.h ../CalRecon/*.h  Dll/*.cpp
 
 macro CalRecon Dir  "$(CALRECONROOT)/$(DEBUGDIR)"
 

@@ -12,7 +12,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "TkrRecon/Midnight.h"
+#include "CalRecon/Midnight.h"
 
 #define changeBlockSize realloc
 #define freeBlock free

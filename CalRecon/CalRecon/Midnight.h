@@ -5,7 +5,7 @@
 #ifndef Midnight_h
 #define Midnight_h
 
-#include "TkrRecon/MString.h"
+#include "CalRecon/MString.h"
 
 typedef unsigned char MBool;
 typedef int MInt;

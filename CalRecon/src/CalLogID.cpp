@@ -1,6 +1,6 @@
 
-#include "TkrRecon/CalLogID.h"
-#include "TkrRecon/calorimeterGeo.h"
+#include "CalRecon/CalLogID.h"
+#include "CalRecon/calorimeterGeo.h"
 
 //#######################################
 CalLogID::CalLogID(int ilayer, int iview, int icolumn)

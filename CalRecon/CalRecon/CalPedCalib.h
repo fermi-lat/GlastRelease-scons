@@ -4,8 +4,8 @@
 #include <string>
 // #include "Event/serviceI.h"
 // #include "Event/trsDataVI.h"
-#include "TkrRecon/CalBase.h"
-#include "TkrRecon/CalADCLogs.h"
+#include "CalRecon/CalBase.h"
+#include "CalRecon/CalADCLogs.h"
 
 
 //###########################################

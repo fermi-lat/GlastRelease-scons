@@ -5,8 +5,8 @@
 // #include "Event/serviceI.h"
 // #include "Event/trsDataVI.h"
 
-#include "TkrRecon/CalBase.h"
-#include "TkrRecon/CalLogID.h"
+#include "CalRecon/CalBase.h"
+#include "CalRecon/CalLogID.h"
 
 class CalCalibLog : public CalLogID
 {

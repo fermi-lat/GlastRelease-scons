@@ -2,8 +2,8 @@
 #ifndef CALADCLOGS_H
 #define CALADCLOGS_H 1
 
-#include "TkrRecon/CalBase.h"
-#include "TkrRecon/CalLogID.h"
+#include "CalRecon/CalBase.h"
+#include "CalRecon/CalLogID.h"
 #include "Gaudi/Kernel/DataObject.h"
 
 extern const CLID& CLID_CalADCLogs;

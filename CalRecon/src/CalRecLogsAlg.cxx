@@ -1,13 +1,13 @@
 
 //#include "Event/dataManager.h"
 //#include "Event/messageManager.h"
-#include "TkrRecon/CalBase.h"
-#include "TkrRecon/calorimeterGeo.h"
-#include "TkrRecon/CalPedCalib.h"
-#include "TkrRecon/CalCalibLogs.h"
-#include "TkrRecon/CalRecLogsAlg.h"
-#include "TkrRecon/CalADCLogs.h"
-#include "TkrRecon/CalRecLogs.h"
+#include "CalRecon/CalBase.h"
+#include "CalRecon/calorimeterGeo.h"
+#include "CalRecon/CalPedCalib.h"
+#include "CalRecon/CalCalibLogs.h"
+#include "CalRecon/CalRecLogsAlg.h"
+#include "CalRecon/CalADCLogs.h"
+#include "CalRecon/CalRecLogs.h"
 #include "Gaudi/MessageSvc/MsgStream.h"
 #include "Gaudi/Kernel/AlgFactory.h"
 #include "Gaudi/Interfaces/IDataProviderSvc.h"
@@ -125,7 +125,7 @@ DataObject* pnode=0;
 
     
 
-	m_CalRawLogs = SmartDataPtr<CalADCLogs>(eventSvc(),"/Event/TkrRecon/CalADCLogs"); 
+	m_CalRawLogs = SmartDataPtr<CalADCLogs>(eventSvc(),"/Event/CalRecon/CalADCLogs"); 
 
 
 //	sc = eventSvc()->retrieveObject("/Event/TkrRecon/CalADCLogs",m_CalRawLogs);

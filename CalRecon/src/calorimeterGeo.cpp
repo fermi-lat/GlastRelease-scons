@@ -1,5 +1,5 @@
 
-#include "TkrRecon/calorimeterGeo.h"
+#include "CalRecon/calorimeterGeo.h"
 
 //--------------- parameters -----------------------
 int calorimeterGeo::m_nviews  = 2;

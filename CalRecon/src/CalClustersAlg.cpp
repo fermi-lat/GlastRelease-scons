@@ -1,17 +1,17 @@
 
-#include "TkrRecon/CalClustersAlg.h"
+#include "CalRecon/CalClustersAlg.h"
 // #include "Event/dataManager.h"
 // #include "Event/messageManager.h"
-#include "TkrRecon/CsIClusters.h"
-#include "TkrRecon/CalRecLogs.h"
-#include "TkrRecon/gamma.h"
-#include "TkrRecon/Midnight.h"
+#include "CalRecon/CsIClusters.h"
+#include "CalRecon/CalRecLogs.h"
+#include "CalRecon/gamma.h"
+#include "CalRecon/Midnight.h"
 #include "Gaudi/MessageSvc/MsgStream.h"
 #include "Gaudi/Kernel/AlgFactory.h"
 #include "Gaudi/Interfaces/IDataProviderSvc.h"
 #include "Gaudi/DataSvc/SmartDataPtr.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "TkrRecon/calorimeterGeo.h"
+#include "CalRecon/calorimeterGeo.h"
 
 static const AlgFactory<CalClustersAlg>  Factory;
 const IAlgFactory& CalClustersFactory = Factory;
@@ -351,24 +351,24 @@ StatusCode CalClustersAlg::retrieve()
 
 	DataObject* pnode=0;
 
-    sc = eventSvc()->retrieveObject( "/Event/TkrRecon", pnode );
+    sc = eventSvc()->retrieveObject( "/Event/CalRecon", pnode );
     
     if( sc.isFailure() ) {
-        sc = eventSvc()->registerObject("/Event/TkrRecon",new DataObject);
+        sc = eventSvc()->registerObject("/Event/CalRecon",new DataObject);
         if( sc.isFailure() ) {
             
-            log << MSG::ERROR << "Could not create TkrRecon directory" << endreq;
+            log << MSG::ERROR << "Could not create CalRecon directory" << endreq;
             return sc;
         }
     }
 
     
 
-	m_CalRecLogs = SmartDataPtr<CalRecLogs>(eventSvc(),"/Event/TkrRecon/CalRecLogs"); 
+	m_CalRecLogs = SmartDataPtr<CalRecLogs>(eventSvc(),"/Event/CalRecon/CalRecLogs"); 
 
 
-//	sc = eventSvc()->retrieveObject("/Event/TkrRecon/CalADCLogs",m_CalRawLogs);
-	 sc = eventSvc()->registerObject("/Event/TkrRecon/CsIClusterList",m_CsIClusterList);
+//	sc = eventSvc()->retrieveObject("/Event/CalRecon/CalADCLogs",m_CalRawLogs);
+	 sc = eventSvc()->registerObject("/Event/CalRecon/CsIClusterList",m_CsIClusterList);
 	return sc;
 }
 

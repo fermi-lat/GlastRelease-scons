@@ -23,7 +23,7 @@
 
 //! Load all  services: 
 void CalRecon_load() {
-    DLL_DECL_ALGORITHM( CalRecoAlg );
+    DLL_DECL_ALGORITHM( CalRecLogsAlg );
 } 
 
 extern "C" void CalRecon_loadRef()    {
