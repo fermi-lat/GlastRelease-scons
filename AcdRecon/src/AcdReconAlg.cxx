@@ -209,7 +209,7 @@ StatusCode AcdReconAlg::acdDoca() {
         Event::TkrFitTrack* trackTds  = *trkPtr++;       // The TDS track
         float testDoca = doca(trackTds->getPosition(), trackTds->getDirection(), m_rowDocaCol);
         if(testDoca < m_doca) m_doca = testDoca;
-        float test_dist= hitTileDist(trackTds->getPosition(), trackTds->getDirection());
+        float test_dist= hitTileDist(trackTds->getPosition(), -(trackTds->getDirection()));
         if(test_dist > m_act_dist) m_act_dist = test_dist;
 
     }
@@ -284,7 +284,7 @@ double AcdReconAlg::doca (const Point &x0, const Vector &t0, std::vector<double>
     return 0;
 }
 
-double AcdReconAlg::hitTileDist(const Point &x0, Vector &t0)
+double AcdReconAlg::hitTileDist(const Point &x0, const Vector &t0)
 {
     // Purpose and Method:  Bill Atwood's new edge DOCA algorithm
     //       Determines minimum distance between a track and the edges of ACD
@@ -297,8 +297,6 @@ double AcdReconAlg::hitTileDist(const Point &x0, Vector &t0)
     MsgStream   log( msgSvc(), name() );
 
     double return_dist = -200.;
-
-    t0 = -t0;
         
     // iterate over all tiles
     Event::AcdDigiCol::const_iterator acdDigiIt;

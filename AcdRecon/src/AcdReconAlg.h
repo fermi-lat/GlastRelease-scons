@@ -56,7 +56,7 @@ class AcdReconAlg : public Algorithm
       double doca (const Point &x0, const Vector &dir, std::vector<double> &doca_values);
 
       /// Bill Atwood's new calculation for Active Distance
-      double hitTileDist(const Point &x0, Vector &dir);
+      double hitTileDist(const Point &x0, const Vector &dir);
 
       /// variables to store instrument parameters
       static double s_thresholdEnergy;
