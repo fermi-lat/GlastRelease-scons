@@ -20,6 +20,7 @@
     <!ENTITY globalMatPrim   SYSTEM "../flight/flightGlobalMatPrim.xml">
     <!ENTITY globalCountPrim SYSTEM "../miniTower/emGlobalCountPrim.xml">
     <!ENTITY globalDimPrim   SYSTEM "../flight/flightGlobalDimPrim.xml">
+    <!ENTITY extraPrim      SYSTEM "../empty.xml">
 
     <!ENTITY CALMatPrim     SYSTEM "../flight/flightCALMatPrim.xml">
     <!ENTITY CALCountPrim   SYSTEM "../flight/flightCALCountPrim.xml">
@@ -53,6 +54,7 @@
     <!ENTITY CALDerived     SYSTEM "../flight/flightCALDerived.xml">
     <!ENTITY ACDDerived     SYSTEM "../flight/flightACDDerived.xml">
     <!ENTITY NADDerived     SYSTEM "../flight/flightNADDerived.xml">
+    <!ENTITY extraDerived   SYSTEM "../empty.xml">
     <!ENTITY Primary        SYSTEM "../flight/flightPrimaryConstants.xml">
 
     <!ENTITY idDict         SYSTEM "../flight/flightIdDictSegVols.xml">
