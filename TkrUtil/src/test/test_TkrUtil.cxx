@@ -9,7 +9,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Algorithm.h"
 
-#include "TkrUtil/TkrFailureModeSvc.h"
+#include "TkrUtil/ITkrFailureModeSvc.h"
 
 // Define the class here instead of in a header file: not needed anywhere but here!
 //------------------------------------------------------------------------------

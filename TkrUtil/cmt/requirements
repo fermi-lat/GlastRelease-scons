@@ -1,10 +1,10 @@
 package TkrUtil
 
-version v1r1
+version v1r2
 
 branches src cmt doc
 
-use GlastSvc v*
+use GlastSvc 
 use facilities
 use GuiSvc                v3*
 
