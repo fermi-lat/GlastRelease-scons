@@ -293,6 +293,9 @@ long RdbGUIWindow::onCloseConnection(FXObject*,FXSelector, void*)
 
 long RdbGUIWindow::onInsert(FXObject*,FXSelector, void*)
 {
+  m_dgInsert->setConnection(m_connect);
+  m_dgInsert->setTableName("metadata_v2r1");
+  
   m_rdbManager->startVisitor(m_dgInsert);
   m_dgInsert->show();
   m_dgInsert->update();
@@ -302,6 +305,8 @@ long RdbGUIWindow::onInsert(FXObject*,FXSelector, void*)
     return 1; 
   }
 
+  uiLog->update();
+  
   return 0;
 }
 

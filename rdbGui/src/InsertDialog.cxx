@@ -33,6 +33,7 @@ InsertDialog::InsertDialog(FXWindow *owner):
   new FXButton(uiClosebox, "&Send", NULL, this, ID_GO,
                BUTTON_INITIAL|LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK, 0, 0, 0, 0, 20, 20);
 
+  m_connection = 0;
   m_factory = new ColWidgetFactory();
 }
 
@@ -41,13 +42,24 @@ long InsertDialog::onGoPress(FXObject *sender,FXSelector sel, void* ptr)
 {     
   unsigned int i;
   
+  std::vector<std::string> colNames;
+  std::vector<std::string> values;
+  
+  std::cout << m_tableName << std::endl;
+  
   for(i=0;i<m_widgets.size();i++)
   {
     ColWidget* temp = m_widgets[i]; 
+    colNames.push_back(temp->getColumn()->getName()); 
+    values.push_back(temp->getValue());
     std::cout << temp->getColumn()->getName() << " -> ";    
     std::cout << temp->getValue() << std::endl;
   }
-    
+   
+
+  if (m_connection)
+    m_connection->insertRow(m_tableName, colNames, values);  
+  
   this->handle(this, MKUINT(ID_ACCEPT, SEL_COMMAND),NULL);
   return 1;
 }

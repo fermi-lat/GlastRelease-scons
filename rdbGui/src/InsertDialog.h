@@ -8,6 +8,7 @@
 #include "rdbModel/Tables/Table.h"
 #include "rdbModel/Tables/Assertion.h"
 #include "rdbModel/Tables/Column.h"
+#include "rdbModel/db/Connection.h"
 
 class ColWidgetFactory;
 class ColWidget;
@@ -24,6 +25,9 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
 
  
   InsertDialog(FXWindow *owner);
+ 
+  void setConnection(rdbModel::Connection* con){m_connection = con;};
+  void setTableName(std::string name){m_tableName = name;};
   
   long onGoPress(FXObject*,FXSelector,void*);
   
@@ -47,7 +51,11 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
   rdbModel::Visitor::VisitorState visitIndex(rdbModel::Index *index);
   rdbModel::Visitor::VisitorState visitAssertion(rdbModel::Assertion *assertion);
 
-  // The vector of widgets for the insert operation
+  /// The name of the current table
+  std::string m_tableName;
+  /// The pointer to the database connection class
+  rdbModel::Connection* m_connection;
+  /// The vector of widgets for the insert operation
   std::vector<ColWidget*> m_widgets;
 };
 
