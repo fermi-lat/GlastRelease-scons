@@ -1,6 +1,6 @@
 package Gleam
 
-version  v2r3p2
+version  v2r3p3
 # This is a checkout package
 # $Id$
 
@@ -30,9 +30,9 @@ use geomrep     v4r1
 
 # the geometry data base
 use idents      v2r8p4 
-use xmlGeoDbs              v1r7p3
-use detModel    v2r13p0
+use xmlGeoDbs   v1r7p3
 use xmlUtil     v2r8p3
+use detModel    v2r13p0
 
 # interface to G4 - make private to avoid so many libs
 private 
@@ -46,7 +46,7 @@ use Geant4Runtime v1r0
 
 use GuiSvc      v3r1p3
 
-use Event                  v9r3
+use Event       v9r3
 use GlastSvc    v9r2p1
 
 # simulation
@@ -58,7 +58,7 @@ use G4Generator  v4r3p4
 #digitization
 use CalDigi     v1r2p6
 use TkrDigi     v1r6
-use AcdDigi             v1r4p0
+use AcdDigi     v1r4p0
 
 
 
@@ -66,15 +66,15 @@ use AcdDigi             v1r4p0
 use Trigger     v3r3p5
 use Recon       v2r3p5
 
-use TkrRecon             v8r2
+use TkrRecon    v8r2
 use CalRecon    v5r7p5 
-use AcdRecon             v1r4       
+use AcdRecon    v1r4       
 
 #ROOT persistence: RootIo specifies the data packages
-use RootIo               v4r17
+use RootIo      v4r17
 
 #diagnostic and summary of bottom line
-use merit                v5r11
+use merit       v5r11
 
 ### define a simple executable with GUI
 

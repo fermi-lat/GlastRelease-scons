@@ -3,6 +3,8 @@
  * package manager:T.Burnett
  * $Id$
 
+* v2r3p3 THB 06-oct-02  Reorder detModel and xmlUtil due to changed dependence
+
 * v2r3p2 THB 03-oct-02
 
        use xmlGeoDbs     v1r7p3
