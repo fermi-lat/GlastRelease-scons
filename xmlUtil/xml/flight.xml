@@ -541,37 +541,19 @@ grid, etc. (may be superseded by info from Eric)</notes>
 	<const name="towersTotalX">
           <notes>Meant to be X width of the array of towers, but doesn't 
 (yet) include grid</notes>
-          <add>
-            <mul>
-              <refer refTo="xNum" />
-              <refer refTo="modWidth" />
-            </mul>
-            <mul>
-              <refer refTo="xNumM1" />
-              <add>
-                <refer refTo="wallThickness" />
-                <refer refTo="wallGap" />
-              </add>
-            </mul>
-          </add>
+          <mul>
+            <refer refTo="xNum" />
+            <refer refTo="towerPitch" />
+          </mul>
         </const>
 
 	<const name="towersTotalY">
           <notes>Meant to be X width of the array of towers, but doesn't 
 (yet) include grid</notes>
-          <add>
-            <mul>
-              <refer refTo="yNum" />
-              <refer refTo="modWidth" />
-            </mul>
-            <mul>
-              <refer refTo="xNumM1" />
-              <add>
-                <refer refTo="wallThickness" />
-                <refer refTo="wallGap" />
-              </add>
-            </mul>
-          </add>
+          <mul>
+            <refer refTo="yNum" />
+            <refer refTo="towerPitch" />
+          </mul>
         </const>
 
 <!-- Compute total Z by adding up

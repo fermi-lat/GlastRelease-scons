@@ -2,8 +2,8 @@
   <overview>Fundamental dimensions and offsets for objects not
 associated with any single subsystem.</overview>
 
-  <prim name="modWidth" value="389.7">Width of a single CAL-TKR module.
-THIS IS TOO BIG -- NEED NEW CAL NUMBERS</prim>
+  <!-- <prim name="modWidth" value="389.7">Width of a single CAL-TKR module.
+THIS IS TOO BIG.  NEED NEW CAL NUMBERS</prim>  -->
   <prim name="calTrackerGap" value="42.8">Spacing between tracker 
            and calorimeter</prim>
   <prim name="wallGap" value="1.5">gap between modules</prim>
