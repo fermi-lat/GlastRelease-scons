@@ -30,6 +30,7 @@
 
 #include "TkrUtil/ITkrFailureModeSvc.h"
 #include "TkrUtil/ITkrBadStripsSvc.h"
+#include "TkrUtil/ITkrAlignmentSvc.h"
 
 #include "idents/VolumeIdentifier.h"
 #include "idents/TowerId.h"
@@ -97,6 +98,7 @@ private:
 
     ITkrFailureModeSvc * m_fsv;
     ITkrBadStripsSvc   * m_bsv;
+    ITkrAlignmentSvc   * m_asv;
     
     SiLayerList m_layers;
     
@@ -156,6 +158,13 @@ StatusCode TkrSimpleDigiAlg::initialize(){
     m_fsv=0;
     if( service( "TkrFailureModeSvc", m_fsv).isFailure() ) {
         log << MSG::INFO << "Couldn't set up TkrFailureModeSvc" << endreq;
+        log << MSG::INFO << "Will assume it is not required"    << endreq;
+    }
+
+    // Get the alignment service 
+    m_asv=0;
+    if( service( "TkrAlignmentSvc", m_asv).isFailure() ) {
+        log << MSG::INFO << "Couldn't set up TkrAlignmentSvc" << endreq;
         log << MSG::INFO << "Will assume it is not required"    << endreq;
     }
 
@@ -435,10 +444,13 @@ void TkrSimpleDigiAlg::createSiHits(const Event::McPositionHitVector& hits)
         static double waferOffset = 0.5*(SiStripList::n_si_dies() - 1);
         
         int ladder = id[7], wafer=id[8];
-        Hep3Vector 
-            offset( (ladder-waferOffset)*ladder_pitch, (wafer-waferOffset)*ssd_pitch, 0),
+        HepVector3D 
+            offset( (ladder-waferOffset)*ladder_pitch, (wafer-waferOffset)*ssd_pitch, 0);
+        HepPoint3D
             entry(hit.entryPoint()+offset),
-            exit( hit.exitPoint()+offset);       
+            exit( hit.exitPoint()+offset);
+        // move hit by alignment constants
+        if( m_asv && m_asv->alignSim()) m_asv->moveMCHit(id, entry, exit);
         
         //now truncate the id to the plane.
         idents::VolumeIdentifier planeId;
@@ -457,3 +469,30 @@ void TkrSimpleDigiAlg::clear()
     m_SiMap.clear();
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
