@@ -108,7 +108,7 @@ TkrInitSvc.TrackerReconType = 0;    // = 0 for Link and Tree, = 1 for Combo
 
 Cal1.Members = { 
       "CalXtalRecAlg", 
-      "CalClustersAlg/first",
+      "CalClustersAlg/first"
       };
 Tkr.Members = {
       "TkrClusterAlg", 
