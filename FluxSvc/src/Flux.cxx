@@ -8,6 +8,7 @@
 #include "flux/FluxSource.h"
 #include "flux/EventSource.h"
 #include "flux/FluxMgr.h"
+#include "flux/GPS.h"
 
 Flux::Flux(std::string name) 
 : m_time(0)
