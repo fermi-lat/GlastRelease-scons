@@ -1,7 +1,7 @@
 // $Header$
 
 #include "CalibData/Cal/CalFinder.h"
-#include "CalibData/Cal/RangeBase.h" 
+#include "CalibData/RangeBase.h" 
 #include "CalibData/Cal/CalCalibBase.h"
 #include "CalibData/DacCol.h"
 #include "GaudiKernel/MsgStream.h"
