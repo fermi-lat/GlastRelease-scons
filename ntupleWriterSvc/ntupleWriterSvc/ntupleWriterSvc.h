@@ -6,7 +6,7 @@
 // includes
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IIncidentListener.h"
-#include "ntupleWriterSvc/INtupleWriterSvc.h"
+#include "ntupleWriterSvc/INTupleWriterSvc.h"
 #include "GaudiKernel/INTupleSvc.h"
 #include "GaudiKernel/NTuple.h"
 
