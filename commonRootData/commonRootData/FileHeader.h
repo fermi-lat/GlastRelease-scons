@@ -7,11 +7,19 @@
 #include <TMap.h>
 class ISvcLocator ;
 
-/** @class FileHeader
- * @brief Set of dynamically named attributes, storable inside a root file.
- *
- * $Header$
- */
+/*! 
+
+ @class FileHeader
+ @brief Set of dynamically named attributes, storable inside a root file.
+
+ Each ROOT file should contains one instance of this class, with
+ data concerning all the file events. The interface is very open: anyone
+ can store there any string, integer or double associated to
+ a name.
+ 
+ @author David Chamont - CNRS IN2P3 LLR Ecole Polytechnique
+
+*/
 
 class FileHeader: public TObject {
 

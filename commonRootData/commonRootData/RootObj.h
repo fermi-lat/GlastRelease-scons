@@ -2,23 +2,19 @@
 #ifndef ROOT_OBJ_H
 #define ROOT_OBJ_H
 
-//===================================================================
-// Author: David Chamont - CNRS IN2P3 LLR Ecole Polytechnique
-// 
-// Modification history:
-//  
-// $Log$
-//
-//===================================================================
-
 /*!
+
+ @class RootObj        
+ @brief Wrap any class into a kind of TObject
 
  This class is meant to transform any class T into a kind of TObject,
  so to benefit from some ROOT features, such as containers.
 
  For each kind of T, one is expected to add a pragma link in
  a LinkDef file, and it is also adviced to add an explicit
- template instanciation in a body file.
+ template instanciation in some body file.
+
+ @author David Chamont - CNRS IN2P3 LLR Ecole Polytechnique
 
  */
 
