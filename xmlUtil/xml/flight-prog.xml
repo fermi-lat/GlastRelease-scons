@@ -1,0 +1,1360 @@
+<?xml version="1.0"?>
+<!DOCTYPE gdd  SYSTEM "gdd.dtd"[
+    <!--  Keep some of the primary definitions in separate files  -->
+    <!ENTITY globalMatPrim SYSTEM "globalMatPrim.xml">
+    <!ENTITY globalCountPrim SYSTEM "globalCountPrim.xml">
+    <!ENTITY globalDimPrim SYSTEM "globalDimPrim.xml">
+
+    <!ENTITY CALMatPrim SYSTEM "CALMatPrim.xml">
+    <!ENTITY CALCountPrim SYSTEM "CALCountPrim.xml">
+    <!ENTITY CALDimPrim SYSTEM "CALDimPrim.xml">
+
+    <!ENTITY TKRMatPrim SYSTEM "TKRMatPrim.xml">
+    <!ENTITY TKRCountPrim SYSTEM "TKRCountPrim.xml">
+    <!ENTITY TKRDimPrim SYSTEM "TKRDimPrim.xml">
+
+    <!ENTITY ACDMatPrim SYSTEM "ACDMatPrim.xml">
+    <!ENTITY ACDCountPrim SYSTEM "ACDCountPrim.xml">
+    <!ENTITY ACDDimPrim SYSTEM "ACDDimPrim.xml">
+  ]>
+<gdd CVSid="$Id$" DTDversion="2.0" substituted="false">
+  <source inputId="Id: flight.xml,v 1.5 2001/03/20 23:51:22 jrb Exp " creatorId="Id: makeXmlForProg.cxx,v 1.4 2001/03/27 00:18:15 jrb Exp ">
+    Do not edit! This file automatically created by xmlUtil/v1/src/forProg.exe  </source>
+  <constants>
+    <version major="0" minor="0" />
+    <primary normalized="true">
+      <primCategory name="globalMatPrim">
+        <overview>
+          Materials not specific to a single subsystem.        </overview>
+        <prim name="wallMaterial" type="string" uType="mat" value="C" unitAngle="deg" unitLength="mm">
+           Wall material        </prim>
+        <prim name="vacuumMat" type="string" uType="mat" value="Vacuum" unitAngle="deg" unitLength="mm">
+          Need
+      vacuum for some 'solids'        </prim>
+      </primCategory>
+      <primCategory name="globalCountPrim">
+        <overview>
+          Counts of objects more inclusive than a single subsystem;
+  also other integer constants used in identifiers.        </overview>
+        <prim name="xNum" type="double" uType="count" value="4" unitAngle="deg" unitLength="mm">
+          Number of towers in x.        </prim>
+        <prim name="yNum" type="double" uType="count" value="4" unitAngle="deg" unitLength="mm">
+          Number of towers in y.        </prim>
+        <prim name="towerCAL" type="double" uType="count" value="0" unitAngle="deg" unitLength="mm">
+          Id field value for CAL
+(within towers)        </prim>
+        <prim name="towerTKR" type="double" uType="count" value="1" unitAngle="deg" unitLength="mm">
+          Id field value for TKR 
+(within towers)        </prim>
+        <prim name="rootLAT" type="double" uType="count" value="0" unitAngle="deg" unitLength="mm">
+          Id field value for LAT        </prim>
+        <prim name="rootPanels" type="double" uType="count" value="1" unitAngle="deg" unitLength="mm">
+          Id field value for solar panels        </prim>
+        <prim name="rootSC" type="double" uType="count" value="2" unitAngle="deg" unitLength="mm">
+          Id field value for spacecraft        </prim>
+        <prim name="LATTowers" type="double" uType="count" value="0" unitAngle="deg" unitLength="mm">
+          id field for towers
+(within LAT)        </prim>
+        <prim name="LATACD" type="double" uType="count" value="1" unitAngle="deg" unitLength="mm">
+          id field for ACD
+(within LAT)        </prim>
+      </primCategory>
+      <primCategory name="globalDimPrim">
+        <overview>
+          Fundamental dimensions and offsets for objects not
+associated with any single subsystem.        </overview>
+        <prim name="modWidth" type="double" uType="length" value="389.7" unitAngle="deg" unitLength="mm">
+          Width of a single CAL-TKR module.
+THIS IS TOO BIG -- NEED NEW CAL NUMBERS        </prim>
+        <prim name="calTrackerGap" type="double" uType="length" value="42.8" unitAngle="deg" unitLength="mm">
+          Spacing between tracker 
+           and calorimeter        </prim>
+        <prim name="wallGap" type="double" uType="length" value="1.5" unitAngle="deg" unitLength="mm">
+          gap between modules        </prim>
+        <prim name="wallThickness" type="double" uType="length" value="1.5" unitAngle="deg" unitLength="mm">
+             Wall thickness        </prim>
+        <prim name="wallWidth" type="double" uType="length" value="371.5" unitAngle="deg" unitLength="mm">
+          width of tower, including
+  walls.        </prim>
+        <prim name="towerPitch" type="double" uType="length" value="373.5" unitAngle="deg" unitLength="mm">
+          Distance between centers of 
+    towers (X or Y)        </prim>
+      </primCategory>
+      <primCategory name="CALMatPrim">
+        <overview>
+          Materials used in the calorimeter        </overview>
+        <prim name="crystalMat" type="string" uType="mat" value="CsI" unitAngle="deg" unitLength="mm">
+          Crystal Material
+        </prim>
+        <prim name="diodeMat" type="string" uType="mat" value="Si" unitAngle="deg" unitLength="mm">
+          Diode Material
+        </prim>
+        <prim name="CALWrapMat" type="string" uType="mat" value="Polystyrene" unitAngle="deg" unitLength="mm">
+          
+Wrap material for CsI logs        </prim>
+        <prim name="CALFrameMat" type="string" uType="mat" value="Al20" unitAngle="deg" unitLength="mm">
+          
+Material for CAL frame        </prim>
+        <prim name="CALSpaceMat" type="string" uType="mat" value="rubber60A1" unitAngle="deg" unitLength="mm">
+          
+Material for space between CAL layers        </prim>
+        <prim name="CALGridMat" type="string" uType="mat" value="Al" unitAngle="deg" unitLength="mm">
+          Material for CAL grid        </prim>
+        <prim name="CALFlangeMat" type="string" uType="mat" value="Al50" unitAngle="deg" unitLength="mm">
+          
+Material for CAL flange
+        </prim>
+      </primCategory>
+      <primCategory name="CALCountPrim">
+        <overview>
+          Counts for replicated objects in the Calorimeter; other
+            integer constants used to keep track of identifiers.        </overview>
+        <prim name="CALnLayer" type="double" uType="count" value="8" unitAngle="deg" unitLength="mm">
+           Number of layers of CAL CsI crystals        </prim>
+        <prim name="nLogPerLayer" type="double" uType="count" value="12" unitAngle="deg" unitLength="mm">
+          Number of crystals per layer within a tower
+        </prim>
+        <prim name="logXtal" type="double" uType="count" value="0" unitAngle="deg" unitLength="mm">
+          idField value for CAL log field
+(the CsI crystal)        </prim>
+        <prim name="logDiode" type="double" uType="count" value="1" unitAngle="deg" unitLength="mm">
+          idField value for CAL log field
+(a diode)        </prim>
+        <prim name="diodeMSmall" type="double" uType="count" value="1" unitAngle="deg" unitLength="mm">
+          idField value for diode 
+field (minus, small)        </prim>
+        <prim name="diodePSmall" type="double" uType="count" value="2" unitAngle="deg" unitLength="mm">
+          idField value for diode 
+field (plus, small)        </prim>
+        <prim name="diodeMLarge" type="double" uType="count" value="3" unitAngle="deg" unitLength="mm">
+          idField value for diode 
+field (minus, large)        </prim>
+        <prim name="diodePLarge" type="double" uType="count" value="4" unitAngle="deg" unitLength="mm">
+          idField value for diode
+field (plus, large)        </prim>
+      </primCategory>
+      <primCategory name="CALDimPrim">
+        <overview>
+          Fundamental dimensions of solids and offsets for the Calorimeter        </overview>
+        <prim name="diodeX" type="double" uType="length" value="0.18" unitAngle="deg" unitLength="mm">
+          Thickness of diodes
+        </prim>
+        <prim name="diodeY" type="double" uType="length" value="12.0" unitAngle="deg" unitLength="mm">
+          Width of diodes
+        </prim>
+        <prim name="diodeLZ" type="double" uType="length" value="8.0" unitAngle="deg" unitLength="mm">
+          Height of large diode
+        </prim>
+        <prim name="diodeSZ" type="double" uType="length" value="2.0" unitAngle="deg" unitLength="mm">
+          Height of a small diode
+        </prim>
+        <prim name="CsILength" type="double" uType="length" value="369.9" unitAngle="deg" unitLength="mm">
+          Length of a CsI crystal.
+Too big??
+        </prim>
+        <!--  this used to be called height -->
+        <prim name="CsITrans" type="double" uType="length" value="30.0" unitAngle="deg" unitLength="mm">
+          (Transverse) width of a CsI crytal
+        </prim>
+        <!--  this used to be called width -->
+        <prim name="CsIZ" type="double" uType="length" value="21.0" unitAngle="deg" unitLength="mm">
+          Height of a CsI crystal
+        </prim>
+        <prim name="diodeYOffset" type="double" uType="length" value="0.0" unitAngle="deg" unitLength="mm">
+          Y (transverse) offset of diode relative to crystal
+        </prim>
+        <prim name="diodeLZOffset" type="double" uType="length" value="-2.6" unitAngle="deg" unitLength="mm">
+          Z offset of large diode relative to crystal
+        </prim>
+        <prim name="diodeSZOffset" type="double" uType="length" value="5.6" unitAngle="deg" unitLength="mm">
+          Z offset of small diode relative to crystal
+        </prim>
+        <!--  trans. distance between logs -->
+        <prim name="CALGap" type="double" uType="length" value="0.84" unitAngle="deg" unitLength="mm">
+          Transverse distance between logs
+        </prim>
+        <prim name="CALInterLayer" type="double" uType="length" value="2.62" unitAngle="deg" unitLength="mm">
+          Gap between CAL layers
+        </prim>
+        <prim name="CALFrameSideThick" type="double" uType="length" value="8.0" unitAngle="deg" unitLength="mm">
+          Thickness of CAL frame sides
+        </prim>
+        <!--  Just use one symbol for now since top and bottome are the same.
+     Would have to have additional symbol and additional box type
+     if this changes.  -->
+        <prim name="CALFrameTBThick" type="double" uType="length" value="20.0" unitAngle="deg" unitLength="mm">
+          Thickness of top and bottom of CAL frame
+        </prim>
+        <!--  Cal grid stuff -->
+        <prim name="CALGridInner" type="double" uType="length" value="3.0" unitAngle="deg" unitLength="mm">
+          Thickness of CAL grid between towers
+        </prim>
+        <prim name="CALGridOuter" type="double" uType="length" value="12.0" unitAngle="deg" unitLength="mm">
+          Thickness of CAL grid on outside towers        </prim>
+        <prim name="CALFlange" type="double" uType="length" value="26.0" unitAngle="deg" unitLength="mm">
+          ** Need meaningful comment here**
+        </prim>
+      </primCategory>
+      <primCategory name="TKRMatPrim">
+        <overview>
+          Materials used in the TKR description        </overview>
+        <prim name="convMat" type="string" uType="mat" value="W" unitAngle="deg" unitLength="mm">
+          material 
+     used in tracker conversion        </prim>
+        <prim name="TKRDetMat" type="string" uType="mat" value="Si" unitAngle="deg" unitLength="mm">
+          Material 
+        of tracker detector elements        </prim>
+        <prim name="coreMat" type="string" uType="mat" value="FOAM05" unitAngle="deg" unitLength="mm">
+          material 
+        used in tracker tray core        </prim>
+        <prim name="TKRFaceMat" type="string" uType="mat" value="C" unitAngle="deg" unitLength="mm">
+          
+        Material of tracker face sheet        </prim>
+      </primCategory>
+      <primCategory name="TKRCountPrim">
+        <overview>
+          Counts of objects  and other quantities used to form identifiers
+   within the tracker.        </overview>
+        <prim name="stripPerWafer" type="double" uType="count" value="384" unitAngle="deg" unitLength="mm">
+          Number of strips per wafer        </prim>
+        <prim name="nWaferAcross" type="double" uType="count" value="4" unitAngle="deg" unitLength="mm">
+           Wafers for a layer 
+   within a tower form a square array of this dimension        </prim>
+        <!--  NB Maintainers - The following constants defining the layout of
+     lead in the trays do not  propagate to the section of the
+     file which describes the trays.  They merely act as documentation.
+     At best, the code interpreting this file could check that the
+     description of tracker volumes below is in accord with the 
+     numbers.  In particular, 
+       ** any change to numTrays, numNoLeadTrays or numSuperGlast
+       ** will entail changes to the definition of the 
+       ** tracker volumes.
+ -->
+        <prim name="numTrays" type="double" uType="count" value="19" unitAngle="deg" unitLength="mm">
+          number of trays (one more than number of x-y planes)        </prim>
+        <prim name="numNoCnvTrays" type="double" uType="count" value="3" unitAngle="deg" unitLength="mm">
+          number of trays 
+    with no converter.  These trays have the lowest tray number        </prim>
+        <prim name="numSuperGlast" type="double" uType="count" value="4" unitAngle="deg" unitLength="mm">
+          number of trays 
+    with super-Glast thickness converter.  These are immediately above
+    the no-lead trays        </prim>
+        <prim name="nFeChips" type="double" uType="count" value="7" unitAngle="deg" unitLength="mm">
+          Number of front-end readout strips per die
+(determines number of Si strips)
+          </prim>
+        <prim name="TKRSiBottom" type="double" uType="count" value="0" unitAngle="deg" unitLength="mm">
+          Field value for Si field
+(bottom of tray)         </prim>
+        <prim name="TKRSiTop" type="double" uType="count" value="1" unitAngle="deg" unitLength="mm">
+          Field value for Si field
+(top of tray)         </prim>
+      </primCategory>
+      <primCategory name="TKRDimPrim">
+        <overview>
+          Fundamental solid dimensions and offsets within the Tracker.        </overview>
+        <!--  Fundamental Z dimensions in tracker -->
+        <prim name="SiThick" type="double" uType="length" value="0.4" unitAngle="deg" unitLength="mm">
+          Si thickness        </prim>
+        <prim name="coreThick" type="double" uType="length" value="27.92" unitAngle="deg" unitLength="mm">
+          Thickness of core material
+            in all trays except the bottom        </prim>
+        <prim name="coreThickBottom" type="double" uType="length" value="33.909" unitAngle="deg" unitLength="mm">
+          Core thickness for
+            bottom tray        </prim>
+        <prim name="glueSiThick" type="double" uType="length" value="0.15" unitAngle="deg" unitLength="mm">
+          Thickness of glue
+            between Si and bias plane        </prim>
+        <prim name="glueThick" type="double" uType="length" value="0.075" unitAngle="deg" unitLength="mm">
+          Thickness of glue between
+            non-Si components        </prim>
+        <prim name="convThickReg" type="double" uType="length" value="0.105" unitAngle="deg" unitLength="mm">
+          Thickness of conversion 
+            material in "regular" layers in mm        </prim>
+        <prim name="convThickSup" type="double" uType="length" value="0.630" unitAngle="deg" unitLength="mm">
+          Thickness of conversion 
+            material in super-GLAST layers in mm        </prim>
+        <prim name="faceThick" type="double" uType="length" value="0.152" unitAngle="deg" unitLength="mm">
+          Face sheet thickness
+            for all but super-glast layers        </prim>
+        <prim name="faceThickSuper" type="double" uType="length" value="0.228" unitAngle="deg" unitLength="mm">
+          Face sheet thickness
+            for super-glast layers        </prim>
+        <prim name="biasPlaneThick" type="double" uType="length" value="0.239" unitAngle="deg" unitLength="mm">
+          Thickness of bias
+            plane        </prim>
+        <prim name="intertrayGap" type="double" uType="length" value="2.00" unitAngle="deg" unitLength="mm">
+          Gap between top of one tray
+         and bottom of the tray above        </prim>
+        <prim name="TKRTotalZ" type="double" uType="length" value="617.787" unitAngle="deg" unitLength="mm">
+          Height of a tracker tower        </prim>
+        <!--  inner structure of Si -->
+        <prim name="ssdGap" type="double" uType="length" value="0.1" unitAngle="deg" unitLength="mm">
+          gap between Si dies (superseded/obsolete?)
+        </prim>
+        <prim name="SiWaferSide" type="double" uType="length" value="89.5" unitAngle="deg" unitLength="mm">
+          Length and width of Si wafer        </prim>
+        <prim name="SiWaferActiveSide" type="double" uType="length" value="87.552" unitAngle="deg" unitLength="mm">
+          Length and width of active
+area on a wafer        </prim>
+        <!--  widths -->
+        <prim name="TKRWidth" type="double" uType="length" value="371.5" unitAngle="deg" unitLength="mm">
+          **Is this just a replacement 
+           for wallWidth?        </prim>
+        <prim name="faceWidth" type="double" uType="length" value="360.1" unitAngle="deg" unitLength="mm">
+          X and y width of face sheet        </prim>
+        <prim name="TKRElectGap" type="double" uType="length" value="4.2" unitAngle="deg" unitLength="mm">
+          **Insert comment here**        </prim>
+        <prim name="ladderGap" type="double" uType="length" value="0.20" unitAngle="deg" unitLength="mm">
+          gap between ladders        </prim>
+        <prim name="traySpacing" type="double" uType="length" value="32.0" unitAngle="deg" unitLength="mm">
+          Center-to-center distance
+         between trays.  Obsolete.  Now gap between trays is constant        </prim>
+        <prim name="panelThick" type="double" uType="length" value="28.8" unitAngle="deg" unitLength="mm">
+          Thickness of converter + core??
+           Probably obsolete        </prim>
+        <prim name="guardRing" type="double" uType="length" value="0.745" unitAngle="deg" unitLength="mm">
+          guard ring size. Probably 
+         irrelevant.        </prim>
+      </primCategory>
+      <primCategory name="ACDMatPrim">
+        <overview>
+          Materials used in the ACD description        </overview>
+        <prim name="tileMat" type="string" uType="mat" value="Polystyrene" unitAngle="deg" unitLength="mm">
+          material used for tiles
+        </prim>
+        <prim name="ACDSupportMat" type="string" uType="mat" value="someStuff" unitAngle="deg" unitLength="mm">
+          
+Material of ACD support.  Still need input from engineers about this.        </prim>
+        <prim name="tapeMat" type="string" uType="mat" value="Polystyrene" unitAngle="deg" unitLength="mm">
+          
+Material for scintillating tape        </prim>
+      </primCategory>
+      <primCategory name="ACDCountPrim">
+        <overview>
+          Counts of objects  and other quantities used to form identifiers
+   within the ACD.        </overview>
+        <prim name="numXTopTiles" type="double" uType="count" value="5" unitAngle="deg" unitLength="mm">
+          Number of tiles
+across top in x direction        </prim>
+        <prim name="numYTopTiles" type="double" uType="count" value="5" unitAngle="deg" unitLength="mm">
+          Number of tiles
+across top in y direction        </prim>
+        <prim name="numSideTapes" type="double" uType="count" value="4" unitAngle="deg" unitLength="mm">
+          Number of
+gaps (long axis = Z) to be covered by scintillating tape on each side
+o the ACD.  Should this be derived from #tiles in some side row?        </prim>
+        <prim name="numSideRows" type="double" uType="count" value="4" unitAngle="deg" unitLength="mm">
+          Number of rows of 
+tiles along the sides        </prim>
+        <prim name="numPerSideRowShort" type="double" uType="count" value="5" unitAngle="deg" unitLength="mm">
+          Number of
+  tiles in some (currently upper two) side rows        </prim>
+        <prim name="numPerSideRowLong" type="double" uType="count" value="10" unitAngle="deg" unitLength="mm">
+          Number of
+  tiles in some (currently lower two) side rows        </prim>
+        <!--  assign idfield values for sides and top of ACD -->
+        <prim name="ACDTopFace" type="double" uType="count" value="0" unitAngle="deg" unitLength="mm">
+          Top of ACD        </prim>
+        <prim name="ACDXNegFace" type="double" uType="count" value="1" unitAngle="deg" unitLength="mm">
+          Neg. x face        </prim>
+        <prim name="ACDYNegFace" type="double" uType="count" value="2" unitAngle="deg" unitLength="mm">
+          Neg. y face        </prim>
+        <prim name="ACDXPosFace" type="double" uType="count" value="3" unitAngle="deg" unitLength="mm">
+          Pos. x face        </prim>
+        <prim name="ACDYPosFace" type="double" uType="count" value="4" unitAngle="deg" unitLength="mm">
+          Pos. y face        </prim>
+      </primCategory>
+      <primCategory name="ACDDimPrim">
+        <overview>
+          Fundamental solid dimensions and offsets within the ACD.        </overview>
+        <prim name="tileThickness" type="double" uType="length" value="10.0" unitAngle="deg" unitLength="mm">
+          Thickness of ACD tiles        </prim>
+        <prim name="ACDSupportThickness" type="double" uType="length" value="20.0" unitAngle="deg" unitLength="mm">
+          This is just a figment
+of my imagination.  I have no real number yet.        </prim>
+        <prim name="ACDSideStandoff" type="double" uType="length" value="35.75" unitAngle="deg" unitLength="mm">
+          This one is right if
+side_standoff is another name for side_tile_standoff, the distance
+between the side of the tracker and the ACD tiles        </prim>
+        <prim name="totalTopAvail" type="double" uType="length" value="91.9" unitAngle="deg" unitLength="mm">
+          This is the total amount of space
+    available to top section of the ACD, includes tiles and support structure
+(Heather).        </prim>
+        <prim name="topTileGap" type="double" uType="length" value="3.0" unitAngle="deg" unitLength="mm">
+          Worst-case (most thermal expansion)
+gap between tiles on the top        </prim>
+        <prim name="topStandoff" type="double" uType="length" value="10.0" unitAngle="deg" unitLength="mm">
+           distance between
+ACD top and top of TKR        </prim>
+        <prim name="topOverlap" type="double" uType="length" value="10.0" unitAngle="deg" unitLength="mm">
+          Width of overlap
+of overlapped top tiles        </prim>
+        <prim name="totalSideAvail" type="double" uType="length" value="52.0" unitAngle="deg" unitLength="mm">
+          Total amount of
+space available for side section of ACD, including both tiles and
+support structure        </prim>
+        <prim name="sideTileHeight0" type="double" uType="length" value="250.0" unitAngle="deg" unitLength="mm">
+          Height of top row 
+of side tiles        </prim>
+        <prim name="sideTileHeight1" type="double" uType="length" value="200.0" unitAngle="deg" unitLength="mm">
+          Height of 2nd row 
+of side tiles        </prim>
+        <prim name="sideTileHeight2" type="double" uType="length" value="150.0" unitAngle="deg" unitLength="mm">
+          Height of 3rd row 
+of side tiles        </prim>
+        <prim name="sideTileHeight3" type="double" uType="length" value="150.0" unitAngle="deg" unitLength="mm">
+          Height of 4th row 
+of side tiles        </prim>
+        <prim name="sideOverlap" type="double" uType="length" value="30.0" unitAngle="deg" unitLength="mm">
+          Distance side tiles
+extend above topACD tile surface --- used for positioning        </prim>
+        <prim name="sideVerticalGap" type="double" uType="length" value="0.0." unitAngle="deg" unitLength="mm">
+          Vertical gap
+between (rows of?) side tiles        </prim>
+        <prim name="sideHorizontalGap" type="double" uType="length" value="3.0" unitAngle="deg" unitLength="mm">
+          Horizontal
+gap at the corners between adjacent sides of tiles        </prim>
+        <prim name="tapeThickness" type="double" uType="length" value="2.0" unitAngle="deg" unitLength="mm">
+          Thickness of scintillating tape        </prim>
+        <prim name="tapeWidth" type="double" uType="length" value="10.0" unitAngle="deg" unitLength="mm">
+          Width of scintillating tape        </prim>
+        <prim name="tapeTopExt" type="double" uType="length" value="15.0" unitAngle="deg" unitLength="mm">
+          Distance tape should extend
+beyond the end of a top tile (see Heather's first diagram)        </prim>
+        <prim name="tapeGap" type="double" uType="length" value="1.0" unitAngle="deg" unitLength="mm">
+          Distance between the tape and the adjacent
+ACD tile        </prim>
+      </primCategory>
+    </primary>
+    <derived evaluated="true">
+      <derCategory name="derCAL" save="true">
+        <overview>
+          Derived constants specific to CAL.
+        </overview>
+        <!--  diodePosXOffset  = (CsILength + diodeX)/2 -->
+        <const name="diodePosXOffset" uType="length" value="185.04" unitAngle="deg" unitLength="mm" />
+        <const name="diodeNegXOffset" uType="length" value="-185.04" unitAngle="deg" unitLength="mm" />
+        <const name="CALHalfGap" uType="length" value="0.42" unitAngle="deg" unitLength="mm" />
+        <!--  dimensions for log envelope volume -->
+        <const name="CsIEnvX" uType="length" value="370.26" unitAngle="deg" unitLength="mm" />
+        <const name="CsIEnvY" uType="length" value="30.84" unitAngle="deg" unitLength="mm" />
+        <const name="CsIEnvZ" uType="length" value="21.84" unitAngle="deg" unitLength="mm" />
+        <!--  the following should be the maximum of the length of a single
+     CsIElement and the transverse distance across the whole 
+     collection of CsIElements in a layer, so
+      max(CsIEnvX, nLogPerLayer*CsIEnvY), which ends up being
+      CsIEnvX in this case    -->
+        <const name="CALLayerTrans" uType="length" value="370.26" unitAngle="deg" unitLength="mm" />
+        <!--  the following includes cal layers and inter-layer spacers, but
+     not frame, grid between cal and tkr, etc. 
+     Hence it's nlayer*CsIEnvZ + (nlayer - 1)*CALInterLayer or
+     nLayer*(CsIEnvZ + CALInterLayer) - CALInterLayer = 19.306 -->
+        <const name="CALTotalZ" uType="length" value="193.06" unitAngle="deg" unitLength="mm" />
+        <!--  additional (derived) dimensions for frame -->
+        <const name="CALFrameWidth" uType="length" value="386.26" unitAngle="deg" unitLength="mm" />
+        <!--   Height of side pieces is just CALTotalZ -->
+        <!--  Height of entire frame must also include thickness of top&bottom -->
+        <const name="CALFrameHeight" uType="length" value="233.06" unitAngle="deg" unitLength="mm" />
+        <const name="CALFrameSide_d" uType="length" value="197.13" unitAngle="deg" unitLength="mm" />
+        <const name="CALFrameSide_dN" uType="length" value="-197.13" unitAngle="deg" unitLength="mm" />
+        <const name="CALFrameTB_d" uType="length" value="106.53" unitAngle="deg" unitLength="mm" />
+        <const name="CALFrameTB_dN" uType="length" value="-106.53" unitAngle="deg" unitLength="mm" />
+      </derCategory>
+      <derCategory name="derTKR" save="true">
+        <overview>
+          Derived constants specific to tracker        </overview>
+        <const name="TKRTrayWidth" uType="length" value="363.1" unitAngle="deg" unitLength="mm" />
+        <const name="inactiveThickUpperReg" uType="length" value="0.691" unitAngle="deg" unitLength="mm" />
+        <const name="inactiveThickUpperSuper" uType="length" value="0.767" unitAngle="deg" unitLength="mm" />
+        <const name="inactiveThickLowerNoCnv" uType="length" value="0.766" unitAngle="deg" unitLength="mm" />
+        <const name="inactiveThickBelowCnv" uType="length" value="0.464" unitAngle="deg" unitLength="mm" />
+        <const name="inactiveThickToCnvReg" uType="length" value="0.302" unitAngle="deg" unitLength="mm" />
+        <const name="inactiveThickToCnvSuper" uType="length" value="0.378" unitAngle="deg" unitLength="mm" />
+        <const name="inactiveThickOutside" uType="length" value="0.227" unitAngle="deg" unitLength="mm" />
+        <!--  probably obsolete (3/20/01) -->
+        <const name="outsideTrayZ" uType="length" value="29.504" unitAngle="deg" unitLength="mm" />
+        <const name="middleTrayZ" uType="length" value="29.904" unitAngle="deg" unitLength="mm" />
+      </derCategory>
+      <derCategory name="derACD" save="true">
+        <overview>
+          Derived constants specific to the ACD        </overview>
+        <const name="ACDTopTotalX" uType="length" value="1639.3" unitAngle="deg" unitLength="mm" />
+        <const name="ACDTotalX" uType="length" value="1665.3" unitAngle="deg" unitLength="mm" />
+        <const name="ACDTopTotalY" uType="length" value="1639.3" unitAngle="deg" unitLength="mm" />
+        <const name="ACDTotalY" uType="length" value="1665.3" unitAngle="deg" unitLength="mm" />
+        <const name="ACDTopXWidth" uType="length" value="342.66" unitAngle="deg" unitLength="mm" />
+        <const name="ACDTopYWidth" uType="length" value="324.26" unitAngle="deg" unitLength="mm" />
+        <!--  Compute Z for the smallest box containing the top tiles + tape.
+     From Heather's first diagram, this is
+
+      3*tileThickness + tapeGap + tapeThickness
+
+     May have to do this over for a box containing support as well,
+     but so far have no information for support                   -->
+        <const name="ACDTopZwidth" uType="length" value="33" unitAngle="deg" unitLength="mm" />
+        <!--  following are convenient to have.. -->
+        <const name="sideOverlapToTopTape" uType="length" value="27" unitAngle="deg" unitLength="mm" />
+        <const name="ACDTopZHalfWidth" uType="length" value="16.5" unitAngle="deg" unitLength="mm" />
+        <const name="tapeHalfThickness" uType="length" value="1" unitAngle="deg" unitLength="mm" />
+        <!--  thickness of side tiles + tape -->
+        <const name="ACDSideThick" uType="length" value="13" unitAngle="deg" unitLength="mm" />
+        <const name="ACDTotalXSide" uType="length" value="1689.3" unitAngle="deg" unitLength="mm" />
+        <const name="sideTileWidthShortXRow" uType="length" value="334.86" unitAngle="deg" unitLength="mm" />
+        <const name="sideTileWidthLongXRow" uType="length" value="165.93" unitAngle="deg" unitLength="mm" />
+        <!--  Now do same for Y-direction -->
+        <const name="ACDTotalYSide" uType="length" value="1689.3" unitAngle="deg" unitLength="mm" />
+        <const name="ACDSideHeight" uType="length" value="750" unitAngle="deg" unitLength="mm" />
+        <const name="sideTileWidthShortYRow" uType="length" value="334.86" unitAngle="deg" unitLength="mm" />
+        <const name="sideTileWidthLongYRow" uType="length" value="165.93" unitAngle="deg" unitLength="mm" />
+        <!--  end Y side tile calculations -->
+        <!--  heights of tiles on both X and Y sides are the same: -->
+        <const name="sideTileRow0_d" uType="length" value="250" unitAngle="deg" unitLength="mm" />
+        <const name="sideTileRow1_d" uType="length" value="25" unitAngle="deg" unitLength="mm" />
+        <const name="sideTileRow2_d" uType="length" value="-150" unitAngle="deg" unitLength="mm" />
+        <const name="sideTileRow3_d" uType="length" value="-300" unitAngle="deg" unitLength="mm" />
+        <!--  Now some stuff involving the ACD tape -->
+        <const name="tapeSideLength" uType="length" value="723" unitAngle="deg" unitLength="mm" />
+        <const name="topTapeLenLong" uType="length" value="357.66" unitAngle="deg" unitLength="mm" />
+        <const name="topTapeLenMedium" uType="length" value="347.66" unitAngle="deg" unitLength="mm" />
+        <const name="topTapeLenShort" uType="length" value="322.66" unitAngle="deg" unitLength="mm" />
+        <const name="topTapesPerRow" uType="length" value="4" unitAngle="deg" unitLength="mm" />
+        <const name="topTapeGap" uType="length" value="317.26" unitAngle="deg" unitLength="mm" />
+        <!--  Need to compute a bunch of displacements of top tapes relative to
+     the "top ACD" envelope.  First do X, then Z.  Y displacements are
+     all zero.  -->
+        <const name="topTapeX4_d" uType="length" value="640.82" unitAngle="deg" unitLength="mm" />
+        <const name="topTapeX3_d" uType="length" value="335.16" unitAngle="deg" unitLength="mm" />
+        <const name="topTapeX2_d" uType="length" value="0" unitAngle="deg" unitLength="mm" />
+        <const name="topTapeX1_d" uType="length" value="-335.16" unitAngle="deg" unitLength="mm" />
+        <const name="topTapeX0_d" uType="length" value="-640.82" unitAngle="deg" unitLength="mm" />
+        <const name="topTapeZLong_d" uType="length" value="15.5" unitAngle="deg" unitLength="mm" />
+        <const name="topTapeZMedium_d" uType="length" value="5.5" unitAngle="deg" unitLength="mm" />
+        <const name="topTapeZShort_d" uType="length" value="-4.5" unitAngle="deg" unitLength="mm" />
+        <const name="topTileZEdge_d" uType="length" value="8.5" unitAngle="deg" unitLength="mm" />
+        <const name="topTileZMedium_d" uType="length" value="-1.5" unitAngle="deg" unitLength="mm" />
+        <const name="topTileZCenter_d" uType="length" value="-11.5" unitAngle="deg" unitLength="mm" />
+        <const name="topTileX2_d" uType="length" value="0" unitAngle="deg" unitLength="mm" />
+        <const name="topTileX3_d" uType="length" value="332.66" unitAngle="deg" unitLength="mm" />
+        <const name="topTileX4_d" uType="length" value="665.32" unitAngle="deg" unitLength="mm" />
+        <const name="topTileX0_d" uType="length" value="-665.32" unitAngle="deg" unitLength="mm" />
+        <const name="topTileX1_d" uType="length" value="-332.66" unitAngle="deg" unitLength="mm" />
+        <const name="betweenSideTapesX" uType="length" value="324.86" unitAngle="deg" unitLength="mm" />
+        <const name="betweenSideTapesY" uType="length" value="324.86" unitAngle="deg" unitLength="mm" />
+        <const name="ACDSideDovetail_d" uType="length" value="-6.5" unitAngle="deg" unitLength="mm" />
+      </derCategory>
+      <derCategory name="derGlobal" save="true">
+        <overview>
+          A few more constants needed for the outermost 
+                 LAT composition        </overview>
+        <const name="LATX" uType="length" value="1665.3" unitAngle="deg" unitLength="mm" />
+        <const name="LATY" uType="length" value="1665.3" unitAngle="deg" unitLength="mm" />
+        <const name="LATZ" uType="length" value="953.647" unitAngle="deg" unitLength="mm" />
+        <const name="LATZHalf" uType="length" value="476.824" unitAngle="deg" unitLength="mm" />
+        <const name="ACDTop_d" uType="length" value="433.324" unitAngle="deg" unitLength="mm" />
+        <const name="allTowers_d" uType="length" value="-29.9995" unitAngle="deg" unitLength="mm" />
+        <!--  have to do analogous 5 constants for side tile locations -->
+        <const name="tileSide_dz" uType="length" value="101.824" unitAngle="deg" unitLength="mm" />
+        <const name="tileXSide_dy" uType="length" value="827.65" unitAngle="deg" unitLength="mm" />
+        <const name="tileXSide_dyN" uType="length" value="-827.65" unitAngle="deg" unitLength="mm" />
+        <const name="tileYSide_dx" uType="length" value="827.65" unitAngle="deg" unitLength="mm" />
+        <const name="tileYSide_dxN" uType="length" value="-827.65" unitAngle="deg" unitLength="mm" />
+        <!--     edit above -->
+        <const name="tapeSide_dz" uType="length" value="88.324" unitAngle="deg" unitLength="mm" />
+        <const name="tapeXSide_dy" uType="length" value="820.65" unitAngle="deg" unitLength="mm" />
+        <const name="tapeXSide_dyN" uType="length" value="-820.65" unitAngle="deg" unitLength="mm" />
+        <const name="tapeYSide_dx" uType="length" value="820.65" unitAngle="deg" unitLength="mm" />
+        <const name="tapeYSide_dxN" uType="length" value="-820.65" unitAngle="deg" unitLength="mm" />
+      </derCategory>
+    </derived>
+  </constants>
+  <idDict major="1" minor="0" patch="0" substituted="false">
+    <idRoot name="topObjects">
+      <vConstraints min="0">
+        <fValREF refTo="rootLAT" />
+        <fValREF refTo="rootPanels" />
+        <fValREF refTo="rootSC" />
+      </vConstraints>
+    </idRoot>
+    <field name="fLATObjects">
+      <vConstraints min="0">
+        <fValREF refTo="LATTowers" />
+        <fValREF refTo="LATACD" />
+      </vConstraints>
+    </field>
+    <field name="fTowerY">
+      <vConstraints min="0" maxREF="yNumM1" />
+    </field>
+    <field name="fTowerX">
+      <vConstraints min="0" maxREF="xNumM1" />
+    </field>
+    <field name="fTowerObjects">
+      <vConstraints min="0">
+        <fValREF refTo="towerTKR" />
+        <fValREF refTo="towerCAL" />
+      </vConstraints>
+    </field>
+    <field name="fLayer" />
+    <field name="fCALLog">
+      <vConstraints min="0" maxREF="maxLog" />
+    </field>
+    <field name="fCALLogCmp">
+      <vConstraints min="0">
+        <fValREF refTo="logXtal" />
+        <fValREF refTo="logDiode" />
+      </vConstraints>
+    </field>
+    <field name="fCALLogDiode">
+      <vConstraints min="0">
+        <fValREF refTo="diodeMSmall" />
+        <fValREF refTo="diodePSmall" />
+        <fValREF refTo="diodeMLarge" />
+        <fValREF refTo="diodePLarge" />
+      </vConstraints>
+    </field>
+    <field name="fACDFace">
+      <vConstraints min="0" maxREF="ACDYPosFace" minREF="ACDTopFace" />
+    </field>
+    <field name="fLadder">
+      <vConstraints min="0" maxREF="nLadderM1" />
+    </field>
+    <!--  constraints for these depend on which side we're in -->
+    <field name="fRow" />
+    <field name="fCol" />
+    <field name="fTKRTray">
+      <vConstraints min="0" maxREF="maxTray" />
+    </field>
+    <field name="fTKRSi">
+      <vConstraints min="0">
+        <fValREF refTo="TKRSiBottom" />
+        <fValREF refTo="TKRSiTop" />
+      </vConstraints>
+    </field>
+    <!--  subsequences to conveniently refer to each subdetector -->
+    <absSubseq name="absSubCAL">
+      <theIdRoot>
+        <vConstraints min="0" mustbeREF="LAT" />
+      </theIdRoot>
+      <fieldRef refTo="fLATObjects">
+        <vConstraints min="0" mustbeREF="LATTowers" />
+      </fieldRef>
+      <fieldRef refTo="fTowerY" />
+      <fieldRef refTo="fTowerX" />
+      <fieldRef refTo="fTowerObjects">
+        <vConstraints min="0" mustbeREF="towerCAL" />
+      </fieldRef>
+    </absSubseq>
+    <absSubseq name="absSubTKR">
+      <theIdRoot>
+        <vConstraints min="0" mustbeREF="LAT" />
+      </theIdRoot>
+      <fieldRef refTo="fLATObjects">
+        <vConstraints min="0" mustbeREF="LATTowers" />
+      </fieldRef>
+      <fieldRef refTo="fTowerY" />
+      <fieldRef refTo="fTowerX" />
+      <fieldRef refTo="fTowerObjects">
+        <vConstraints min="0" mustbeREF="towerTKR" />
+      </fieldRef>
+    </absSubseq>
+    <absSubseq name="absSubACD">
+      <theIdRoot>
+        <vConstraints min="0" mustbeREF="LAT" />
+      </theIdRoot>
+      <fieldRef refTo="fLATObjects">
+        <vConstraints min="0" mustbeREF="LATACD" />
+      </fieldRef>
+    </absSubseq>
+    <!--  Sequence to represent a CAL crystal.  May want to add segment
+     for energy accounting. -->
+    <seq name="seqLogXtal">
+      <absSubRef refTo="absSubCAL" />
+      <fieldRef refTo="fLayer">
+        <vConstraints min="0" maxREF="CALMaxLayer" />
+      </fieldRef>
+      <fieldRef refTo="fCALLog" />
+      <fieldRef refTo="fCALLogCmp">
+        <vConstraints min="0" mustbeREF="logXtal" />
+      </fieldRef>
+    </seq>
+    <!--  Sequence to represent a CAL diode. -->
+    <seq name="seqLogDiode">
+      <absSubRef refTo="absSubCAL" />
+      <fieldRef refTo="fLayer">
+        <vConstraints min="0" maxREF="CALMaxLayer" />
+      </fieldRef>
+      <fieldRef refTo="fCALLog" />
+      <fieldRef refTo="fCALLogCmp">
+        <vConstraints min="0" mustbeREF="logDiode" />
+      </fieldRef>
+      <fieldRef refTo="fCALLogDiode" />
+    </seq>
+    <!--  Sequences to represent top or bottom Si on a tray -->
+    <seq name="seqTKRTop">
+      <!--  top tray has only bottom si -->
+      <absSubRef refTo="absSubTKR" />
+      <fieldRef refTo="fTKRTray">
+        <vConstraints min="0" mustbeREF="maxTray" />
+      </fieldRef>
+      <fieldRef refTo="fTKRSi">
+        <vConstraints min="0" mustbeREF="TKRSiBottom" />
+      </fieldRef>
+    </seq>
+    <seq name="seqTKRBottom">
+      <!--  bottom tray has only bottom si -->
+      <absSubRef refTo="absSubTKR" />
+      <fieldRef refTo="fTKRTray">
+        <vConstraints min="0" mustbe="0" />
+      </fieldRef>
+      <fieldRef refTo="fTKRSi">
+        <vConstraints min="0" mustbeREF="TKRSiTop" />
+      </fieldRef>
+    </seq>
+    <seq name="seqTKRinterior">
+      <!--  bottom tray has only bottom si -->
+      <absSubRef refTo="absSubTKR" />
+      <fieldRef refTo="fTKRTray">
+        <vConstraints min="1" maxREF="maxTrayM1" />
+      </fieldRef>
+      <fieldRef refTo="fTKRSi" />
+    </seq>
+  </idDict>
+  <section date="2001/3/9" name="LATsection" author="J.Bogart" version="1.0" topVolume="LAT" DTDversion="2.0" substituted="true">
+    <!--  (will) include the 16 towers, grid, and ACD
+         Each "tower" has a tracker, a calorimeter, and a mechanical
+         piece inbetween. (what about electronics?)
+         Each tracker consists of trays
+         Each tray has 1 (iff top or bottom) or 2 layers of silicon
+         and most trays also have a converter layer (can be of
+         two possible thicknesses. -->
+    <!--  Use conventions as laid out in Steve Ritz's memo.  Z is
+    up (perp. to cal. layers and tracker trays).  An "x-strip"
+    is one that measures the x-coordinate of the hit, hence its
+    length is parallel to the y-axis.  An "x-log", on the other
+    hand, has its long axis parallel to the x-axis (but there 
+    is some consistency here: logs make their most precise 
+    measurement in the direction parallel to their length.) 
+    
+    Cal layer numbers increase from the front (largest Z value,
+    which is 0 for the Cal) to the back (smallest Z).  Layer 0 
+    has x-logs;  layer 7, the last layer, has y-logs.  
+    
+    Tracker trays and layers are numbered from back to front,
+    i.e. increase with increasing Z.  All strips associated
+    with a tray (i.e., front side and back side, if the tray 
+    is one that has both) have the same orientation.  Even-numbered
+    trays have Y-strips and odd-numbered trays have X-strips.
+
+    (As of March 1, 2001, had to eliminate the convenience idField
+     for orientation of trays and cal layers.  This information can
+     still be deduced from the rotation attribute of the positioning
+     element
+    -->
+    <box X="1665.3" Y="1665.3" Z="953.647" name="LATenv" material="Vacuum" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <!--     <box name="towers16" 
+         XREF="towersTotalX" YREF="towersTotalY" ZREF="towersTotalZ"
+         materialREF = "vacuumMat" />
+    -->
+    <!--  According to conventions above, an unrotated CsIDetector would
+    be an X-log -->
+    <box X="369.9" Y="30.0" Z="21.0" name="CsIDetector" material="CsI" sensitive="true" unitAngle="deg" unitLength="mm">
+      <seg axis="X" nSeg="10" reason="energyAcct" />
+    </box>
+    <!--  there are two kinds of diodes: large and small. See diode section of
+     instrument.xml.   These
+     diode boxes or oriented the same way as the unrotated CsIDetector
+     above.  Old names for x,y,z dimensions were respectively
+     thickness,x_width,y_width   -->
+    <box X="0.18" Y="12.0" Z="8.0" name="diodeL" material="Si" sensitive="true" unitAngle="deg" unitLength="mm" />
+    <box X="0.18" Y="12.0" Z="2.0" name="diodeS" material="Si" sensitive="true" unitAngle="deg" unitLength="mm" />
+    <box X="370.26" Y="30.84" Z="21.84" name="CsIElementEnv" material="Polystyrene" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <!--  This name comes from GlastSim code. -->
+    <composition name="CsIElement" envelope="CsIElementEnv">
+      <posXYZ S="0" X="0" Y="0" Z="0" xrot="0" yrot="0" zrot="0" volume="CsIDetector" unitAngle="deg" unitLength="mm" />
+      <!--  centered in envelope -->
+      <posXYZ S="0" X="-185.04" Y="0.0" Z="5.6" xrot="0" yrot="0" zrot="0" volume="diodeS" unitAngle="deg" unitLength="mm">
+        <idField name="fCALLogDiode" step="0" value="1" />
+      </posXYZ>
+      <posXYZ S="0" X="185.04" Y="0.0" Z="5.6" xrot="0" yrot="0" zrot="0" volume="diodeS" unitAngle="deg" unitLength="mm">
+        <idField name="fCALLogDiode" step="0" value="2" />
+      </posXYZ>
+      <posXYZ S="0" X="-185.04" Y="0.0" Z="-2.6" xrot="0" yrot="0" zrot="0" volume="diodeL" unitAngle="deg" unitLength="mm">
+        <idField name="fCALLogDiode" step="0" value="3" />
+      </posXYZ>
+      <posXYZ S="0" X="185.04" Y="0.0" Z="-2.6" xrot="0" yrot="0" zrot="0" volume="diodeL" unitAngle="deg" unitLength="mm">
+        <idField name="fCALLogDiode" step="0" value="4" />
+      </posXYZ>
+    </composition>
+    <!--  make a layer out of some evenly-spaced CsIElements -->
+    <stackY name="CALLayer" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="0.84" gap0="0" ncopy="12" shift="0" shift0="0" volume="CsIElement" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCALLog" step="1" value="0" />
+      </axisMPos>
+    </stackY>
+    <!--  Need to define spacer box between layers -->
+    <box X="370.26" Y="370.26" Z="2.62" name="CALSpace" material="rubber60A1" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <!--  intersperse log layers with calSpace boxes.  Volumes get
+     added with increasing Z, so we're starting at the back
+     with layer 7 (a Y-layer) and working our way forward to
+     layer 0, an X layer.  The Y-layers must be rotated -->
+    <stackZ name="CALLayers" origin="atStart">
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="CALLayer" rotation="90" unitAngle="deg" unitLength="mm">
+        <idField name="fLayer" step="0" value="7" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="CALSpace" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="CALLayer" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fLayer" step="0" value="6" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="CALSpace" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="CALLayer" rotation="90" unitAngle="deg" unitLength="mm">
+        <idField name="fLayer" step="0" value="5" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="CALSpace" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="CALLayer" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fLayer" step="0" value="4" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="CALSpace" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="CALLayer" rotation="90" unitAngle="deg" unitLength="mm">
+        <idField name="fLayer" step="0" value="3" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="CALSpace" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="CALLayer" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fLayer" step="0" value="2" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="CALSpace" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="CALLayer" rotation="90" unitAngle="deg" unitLength="mm">
+        <idField name="fLayer" step="0" value="1" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="CALSpace" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="CALLayer" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fLayer" step="0" value="0" />
+      </axisPos>
+    </stackZ>
+    <!--  Calorimeter for a tower consists of layers plus frame pieces -->
+    <!--  Can just embed layers stack into box of frame material -->
+    <box X="386.26" Y="386.26" Z="233.06" name="oneCALEnv" material="Al20" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <composition name="oneCAL" envelope="oneCALEnv">
+      <posXYZ S="0" X="0" Y="0" Z="0" xrot="0" yrot="0" zrot="0" volume="CALLayers" unitAngle="deg" unitLength="mm" />
+      <!--  centered in envelope -->
+    </composition>
+    <!--  Tracker stuff.  The tracker consists of trays.  Alternate trays
+     are rotated by 90 degrees with just vacuum inbetween.  But
+     the rotation is not apparent to the simulator since it
+     doesn't know about individual strips  -->
+    <!--  Trays come in 3 flavors: top tray, bottom tray and middle tray.
+     These are further subdivided by thickness of converter layer which
+     may be any of 
+          no converter (bottom and middle trays only)
+          super-GLAST thickness (middle only)
+          "normal" thickness (middle and top only)  -->
+    <box X="363.1" Y="363.1" Z="0.105" name="convReg" material="W" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="363.1" Y="363.1" Z="0.630" name="convSuper" material="W" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="363.1" Y="363.1" Z="27.92" name="TKRCoreReg" material="FOAM05" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="363.1" Y="363.1" Z="33.909" name="TKRCoreBottom" material="FOAM05" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <!--  box name="TKRCoreNoConv" 
+	 XREF="TKRTrayWidth" 
+	 YREF="TKRTrayWidth"
+	 ZREF="panelThick" materialREF="coreMat" /   -->
+    <!--  Instead of defining a silicon box, should perhaps make
+     a composition or stack(s) defining internal structure
+     of ladders and strips.
+  -->
+    <box X="363.1" Y="363.1" Z="0.4" name="SiLayerBox" material="Si" sensitive="true" unitAngle="deg" unitLength="mm" />
+    <choice name="SiLayer">
+      <case mode="propagate" volume="SiLayerBox" />
+      <case mode="digi recon" volume="SiLayerComp" />
+    </choice>
+    <!--  No explicit material, so vacuum -->
+    <box X="363.1" Y="363.1" Z="0.4" name="SiLayerEnv" material="Vacuum" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <!--  The unrotated wafer is segmented along the x axis, hence measures X,
+     hence is an X layer -->
+    <box X="87.552" Y="87.552" Z="0.4" name="SiWaferActive" material="Si" sensitive="true" unitAngle="deg" unitLength="mm">
+      <seg axis="X" nSeg="384" reason="readout" />
+    </box>
+    <box X="89.5" Y="89.5" Z="0.4" name="SiWafer" material="Si" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <composition name="SiWaferNest" envelope="SiWafer">
+      <posXYZ S="0" X="0" Y="0" Z="0" xrot="0" yrot="0" zrot="0" volume="SiWaferActive" unitAngle="deg" unitLength="mm" />
+    </composition>
+    <!--  identify wafers by their position along stack in direction
+     of measurement.                                          
+     strip id in glastsim style is then 
+           local(in wafer)-strip# + strips-per-wafer * wafer-id
+ -->
+    <stackX name="waferRow" origin="atCentre">
+      <axisMPos dX="0" dY="0" dZ="0" gap="0" gap0="0" ncopy="4" shift="0" shift0="0" volume="SiWaferNest" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fLadder" step="1" value="0" />
+      </axisMPos>
+    </stackX>
+    <stackY name="towerLayerWafers" origin="atCentre">
+      <axisMPos dX="0" dY="0" dZ="0" gap="0" gap0="0" ncopy="4" shift="0" shift0="0" volume="waferRow" rotation="0" unitAngle="deg" unitLength="mm" />
+    </stackY>
+    <!--  The collection of wafers is centered in the volume -->
+    <composition name="SiLayerComp" envelope="SiLayerEnv">
+      <posXYZ S="0" X="0" Y="0" Z="0" xrot="0" yrot="0" zrot="0" volume="towerLayerWafers" unitAngle="deg" unitLength="mm" />
+    </composition>
+    <!--  actually includes all inactive materials except core, conv -->
+    <box X="360.1" Y="360.1" Z="0.691" name="TKRFaceUpperReg" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="360.1" Y="360.1" Z="0.767" name="TKRFaceUpperSuper" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="360.1" Y="360.1" Z="0.766" name="TKRFaceLowerNoCnv" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="360.1" Y="360.1" Z="0.464" name="TKRBelowCnv" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="360.1" Y="360.1" Z="0.378" name="TKRFaceToCnvSuper" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="360.1" Y="360.1" Z="0.302" name="TKRFaceToCnvReg" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="360.1" Y="360.1" Z="0.227" name="TKRFaceOutside" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <!--  Make a stack for the bottom tray -->
+    <stackZ name="trayBot" origin="atStart">
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceOutside" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRCoreBottom" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceUpperReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="SiLayer" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRSi" step="0" value="1" />
+        <!--  1 means top -->
+      </axisPos>
+    </stackZ>
+    <!--  Stack for middle no-lead trays -->
+    <stackZ name="trayNoConv" origin="atStart">
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="SiLayer" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRSi" step="0" value="0" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceLowerNoCnv" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRCoreReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceUpperReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="SiLayer" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRSi" step="0" value="1" />
+        <!--  1 means top -->
+      </axisPos>
+    </stackZ>
+    <!--  stack for super-GLAST layers -->
+    <stackZ name="traySuper" origin="atStart">
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="SiLayer" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRSi" step="0" value="0" />
+        <!--  0 for bottom -->
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBelowCnv" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="convSuper" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceToCnvSuper" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRCoreReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceUpperSuper" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="SiLayer" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRSi" step="0" value="1" />
+        <!--  1 means top -->
+      </axisPos>
+    </stackZ>
+    <!--  Regular trays other than top -->
+    <stackZ name="trayReg" origin="atStart">
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="SiLayer" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRSi" step="0" value="0" />
+        <!--  0 for bottom -->
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBelowCnv" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="convReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceToCnvReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRCoreReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceUpperReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="SiLayer" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRSi" step="0" value="1" />
+        <!--  1 means top -->
+      </axisPos>
+    </stackZ>
+    <!--  top tray -->
+    <stackZ name="trayTop" origin="atStart">
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="SiLayer" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRSi" step="0" value="0" />
+        <!--  0 for bottom -->
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBelowCnv" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="convReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceToCnvReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRCoreReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceOutside" rotation="0" unitAngle="deg" unitLength="mm" />
+    </stackZ>
+    <!--  make a tracker by stacking up the trays -->
+    <stackZ name="oneTKR" origin="atStart">
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="trayBot" rotation="90" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="0" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayNoConv" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="1" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayNoConv" rotation="90" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="2" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="traySuper" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="3" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="traySuper" rotation="90" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="4" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="traySuper" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="5" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="traySuper" rotation="90" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="6" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="7" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="90" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="8" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="9" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="90" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="10" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="11" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="90" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="12" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="13" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="90" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="14" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="15" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="90" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="16" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="17" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayTop" rotation="90" unitAngle="deg" unitLength="mm">
+        <idField name="fTKRTray" step="0" value="18" />
+      </axisPos>
+    </stackZ>
+    <!--  next need to put together oneCAL and oneTKR with necessary
+     structural stuff to make a tower.  Front plane of grid
+     defines Z = 0 (Steve Ritz memo) -->
+    <!--  For now, just stack up oneCAL and oneTKR, then make a 4x4 array
+     Need structural stuff -->
+    <stackZ name="oneTower" origin="atStart">
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="oneCAL" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTowerObjects" step="0" value="0" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="42.8" shift="0" volume="oneTKR" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fTowerObjects" step="0" value="1" />
+      </axisPos>
+    </stackZ>
+    <!--  This doesn't behave well w.r.t. ids, but just ignore that for
+     now to get a full LAT assembled.  In reality once structural
+     entities are really dealt with, probably won't be able to use
+     stacks to put the towers together. -->
+    <stackX name="towerRow" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="0" gap0="0" ncopy="4" shift="0" shift0="0" volume="oneTower" rotation="0" unitAngle="deg" unitLength="mm">
+        <!--  ought to have a gap here, but I don't know what -->
+      </axisMPos>
+    </stackX>
+    <stackY name="allTowers" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="0" gap0="0" ncopy="4" shift="0" shift0="0" volume="towerRow" rotation="0" unitAngle="deg" unitLength="mm">
+        <!--  ought to have a gap here, but I don't know what -->
+      </axisMPos>
+    </stackY>
+    <box X="342.66" Y="324.26" Z="10.0" name="topTile" material="Polystyrene" sensitive="true" unitAngle="deg" unitLength="mm" />
+    <!--  different box needed for each of the 4 rows of side tiles on X sides 
+     and Y sides (X and Y sides happen to have same dimensions now,
+      but allow for difference -->
+    <box X="334.86" Y="10.0" Z="250.0" name="sideTileX0" material="Polystyrene" sensitive="true" unitAngle="deg" unitLength="mm" />
+    <box X="334.86" Y="10.0" Z="200.0" name="sideTileX1" material="Polystyrene" sensitive="true" unitAngle="deg" unitLength="mm" />
+    <box X="165.93" Y="10.0" Z="150.0" name="sideTileX2" material="Polystyrene" sensitive="true" unitAngle="deg" unitLength="mm" />
+    <box X="165.93" Y="10.0" Z="150.0" name="sideTileX3" material="Polystyrene" sensitive="true" unitAngle="deg" unitLength="mm" />
+    <!--    ..and Y sides (X and Y sides happen to have same dimensions now,
+      but allow for difference -->
+    <box X="334.86" Y="10.0" Z="250.0" name="sideTileY0" material="Polystyrene" sensitive="true" unitAngle="deg" unitLength="mm" />
+    <box X="334.86" Y="10.0" Z="200.0" name="sideTileY1" material="Polystyrene" sensitive="true" unitAngle="deg" unitLength="mm" />
+    <box X="165.93" Y="10.0" Z="150.0" name="sideTileY2" material="Polystyrene" sensitive="true" unitAngle="deg" unitLength="mm" />
+    <box X="165.93" Y="10.0" Z="150.0" name="sideTileY3" material="Polystyrene" sensitive="true" unitAngle="deg" unitLength="mm" />
+    <!--  boxes for tape on the top.  Long dimension of tape is 
+     parallel to X-axis -->
+    <box X="357.66" Y="10.0" Z="2.0" name="topTapeLong" material="Polystyrene" sensitive="true" unitAngle="deg" unitLength="mm" />
+    <box X="347.66" Y="10.0" Z="2.0" name="topTapeMedium" material="Polystyrene" sensitive="true" unitAngle="deg" unitLength="mm" />
+    <box X="322.66" Y="10.0" Z="2.0" name="topTapeShort" material="Polystyrene" sensitive="true" unitAngle="deg" unitLength="mm" />
+    <!--  Boxes for tape on sides.  Definition is for a side parallel to
+     X-axis.  Rotate 90 deg. about Z for Y-side  -->
+    <box X="10.0" Y="2.0" Z="723" name="sideTape" material="Polystyrene" sensitive="true" unitAngle="deg" unitLength="mm" />
+    <!--  Make a row of top tiles.  They're all the same.  Since this
+     represents a row of tiles, ids of individual tiles in the row
+     differ by which column they're in; hence we have idField "col"
+     set here.
+     The long axis of the top rows (tape or tiles) is || to the
+     Y axis -->
+    <stackY name="topTileRow" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="3.0" gap0="0" ncopy="5" shift="0" shift0="0" volume="topTile" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="1" value="0" />
+      </axisMPos>
+    </stackY>
+    <!--  Make rows for X sides -->
+    <stackX name="sideTileRowX0" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="3.0" gap0="0" ncopy="5" shift="0" shift0="0" volume="sideTileX0" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="1" value="0" />
+      </axisMPos>
+    </stackX>
+    <stackX name="sideTileRowX1" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="3.0" gap0="0" ncopy="5" shift="0" shift0="0" volume="sideTileX1" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="1" value="0" />
+      </axisMPos>
+    </stackX>
+    <!--  have to do bottom side rows tile by tile since gaps are not uniform -->
+    <stackX name="sideTileRowX2" origin="atStart">
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileX2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="0" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileX2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="1" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="3.0" shift="0" volume="sideTileX2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="2" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileX2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="3" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="3.0" shift="0" volume="sideTileX2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="4" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileX2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="5" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="3.0" shift="0" volume="sideTileX2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="6" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileX2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="7" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="3.0" shift="0" volume="sideTileX2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="8" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileX2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="9" />
+      </axisPos>
+    </stackX>
+    <stackX name="sideTileRowX3" origin="atStart">
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileX3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="0" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileX3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="1" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="3.0" shift="0" volume="sideTileX3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="2" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileX3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="3" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="3.0" shift="0" volume="sideTileX3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="4" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileX3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="5" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="3.0" shift="0" volume="sideTileX3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="6" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileX3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="7" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="3.0" shift="0" volume="sideTileX3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="8" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileX3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="9" />
+      </axisPos>
+    </stackX>
+    <!--  Do same for Y sides -->
+    <stackY name="sideTileRowY0" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="3.0" gap0="0" ncopy="5" shift="0" shift0="0" volume="sideTileY0" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="1" value="0" />
+      </axisMPos>
+    </stackY>
+    <stackY name="sideTileRowY1" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="3.0" gap0="0" ncopy="5" shift="0" shift0="0" volume="sideTileY1" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="1" value="0" />
+      </axisMPos>
+    </stackY>
+    <!--  have to do bottom side rows tile by tile since gaps are not uniform -->
+    <stackY name="sideTileRowY2" origin="atStart">
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileY2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="0" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileY2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="1" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="3.0" shift="0" volume="sideTileY2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="2" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileY2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="3" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="3.0" shift="0" volume="sideTileY2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="4" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileY2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="5" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="3.0" shift="0" volume="sideTileY2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="6" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileY2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="7" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="3.0" shift="0" volume="sideTileY2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="8" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileY2" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="9" />
+      </axisPos>
+    </stackY>
+    <stackY name="sideTileRowY3" origin="atStart">
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileY3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="0" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileY3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="1" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="3.0" shift="0" volume="sideTileY3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="2" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileY3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="3" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="3.0" shift="0" volume="sideTileY3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="4" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileY3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="5" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="3.0" shift="0" volume="sideTileY3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="6" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileY3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="7" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="3.0" shift="0" volume="sideTileY3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="8" />
+      </axisPos>
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="sideTileY3" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="0" value="9" />
+      </axisPos>
+    </stackY>
+    <!--  stop sub here!! -->
+    <!--  we have a row of (widely separated) pieces of tape for each
+     row of top tiles.  There are three flavors of such rows, made
+     of the 3 different lengths of top tapes.              -->
+    <stackY name="topTapeRowLong" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="317.26" gap0="0" ncopy="4" shift="0" shift0="0" volume="topTapeLong" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="1" value="0" />
+      </axisMPos>
+    </stackY>
+    <stackY name="topTapeRowMedium" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="317.26" gap0="0" ncopy="4" shift="0" shift0="0" volume="topTapeMedium" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="1" value="0" />
+      </axisMPos>
+    </stackY>
+    <stackY name="topTapeRowShort" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="317.26" gap0="0" ncopy="4" shift="0" shift0="0" volume="topTapeShort" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="1" value="0" />
+      </axisMPos>
+    </stackY>
+    <!--  next assemble these pieces (five rows of top tiles,
+         two long-tape rows, two medium-tape rows and one
+         short-tape row) into the acd top, but first make
+         an envelope volume for it                       -->
+    <box X="1639.3" Y="1639.3" Z="33" name="ACDTopEnv" material="Vacuum" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <!--  all components are centered w.r.t. Y, so only supply X and Z -->
+    <composition name="ACDTop" envelope="ACDTopEnv">
+      <posXYZ S="0" X="-640.82" Y="0" Z="15.5" xrot="0" yrot="0" zrot="0" volume="topTapeRowLong" unitAngle="deg" unitLength="mm">
+        <idField name="fRow" step="0" value="0" />
+      </posXYZ>
+      <posXYZ S="0" X="-335.16" Y="0" Z="5.5" xrot="0" yrot="0" zrot="0" volume="topTapeRowMedium" unitAngle="deg" unitLength="mm">
+        <idField name="fRow" step="0" value="1" />
+      </posXYZ>
+      <posXYZ S="0" X="0" Y="0" Z="-4.5" xrot="0" yrot="0" zrot="0" volume="topTapeRowShort" unitAngle="deg" unitLength="mm">
+        <idField name="fRow" step="0" value="2" />
+      </posXYZ>
+      <posXYZ S="0" X="335.16" Y="0" Z="5.5" xrot="0" yrot="0" zrot="0" volume="topTapeRowMedium" unitAngle="deg" unitLength="mm">
+        <idField name="fRow" step="0" value="3" />
+      </posXYZ>
+      <posXYZ S="0" X="640.82" Y="0" Z="15.5" xrot="0" yrot="0" zrot="0" volume="topTapeRowLong" unitAngle="deg" unitLength="mm">
+        <idField name="fRow" step="0" value="4" />
+      </posXYZ>
+      <posXYZ S="0" X="-665.32" Y="0" Z="8.5" xrot="0" yrot="0" zrot="0" volume="topTileRow" unitAngle="deg" unitLength="mm">
+        <idField name="fRow" step="0" value="0" />
+      </posXYZ>
+      <posXYZ S="0" X="-332.66" Y="0" Z="-1.5" xrot="0" yrot="0" zrot="0" volume="topTileRow" unitAngle="deg" unitLength="mm">
+        <idField name="fRow" step="0" value="1" />
+      </posXYZ>
+      <posXYZ S="0" X="0" Y="0" Z="-11.5" xrot="0" yrot="0" zrot="0" volume="topTileRow" unitAngle="deg" unitLength="mm">
+        <idField name="fRow" step="0" value="2" />
+      </posXYZ>
+      <posXYZ S="0" X="332.66" Y="0" Z="-1.5" xrot="0" yrot="0" zrot="0" volume="topTileRow" unitAngle="deg" unitLength="mm">
+        <idField name="fRow" step="0" value="3" />
+      </posXYZ>
+      <posXYZ S="0" X="665.32" Y="0" Z="8.5" xrot="0" yrot="0" zrot="0" volume="topTileRow" unitAngle="deg" unitLength="mm">
+        <idField name="fRow" step="0" value="4" />
+      </posXYZ>
+    </composition>
+    <!--  Make the envelope for an X side of tiles -->
+    <box X="1689.3" Y="10.0" Z="750" name="TileXSideEnv" material="Vacuum" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <composition name="TileXSide" envelope="TileXSideEnv">
+      <!--  consists of 4 rows of tiles (long dimension of rows in X) 
+         The positioning in Y will be done at the next stage. -->
+      <posXYZ S="0" X="0" Y="0" Z="250" xrot="0" yrot="0" zrot="0" volume="sideTileRowX0" unitAngle="deg" unitLength="mm">
+        <idField name="fRow" step="0" value="0" />
+      </posXYZ>
+      <posXYZ S="0" X="0" Y="0" Z="25" xrot="0" yrot="0" zrot="0" volume="sideTileRowX1" unitAngle="deg" unitLength="mm">
+        <idField name="fRow" step="0" value="1" />
+      </posXYZ>
+      <posXYZ S="0" X="0" Y="0" Z="-150" xrot="0" yrot="0" zrot="0" volume="sideTileRowX2" unitAngle="deg" unitLength="mm">
+        <idField name="fRow" step="0" value="2" />
+      </posXYZ>
+      <posXYZ S="0" X="0" Y="0" Z="-300" xrot="0" yrot="0" zrot="0" volume="sideTileRowX3" unitAngle="deg" unitLength="mm">
+        <idField name="fRow" step="0" value="3" />
+      </posXYZ>
+    </composition>
+    <!--  do the same for Y-side rows of tiles -->
+    <box X="10.0" Y="1689.3" Z="750" name="TileYSideEnv" material="Vacuum" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <composition name="TileYSide" envelope="TileYSideEnv">
+      <!--  consists of 4 rows of tiles (long dimension of rows in Y) 
+         The positioning in X will be done at the next stage. -->
+      <posXYZ S="0" X="0" Y="0" Z="250" xrot="0" yrot="0" zrot="0" volume="sideTileRowY0" unitAngle="deg" unitLength="mm">
+        <idField name="fRow" step="0" value="0" />
+      </posXYZ>
+      <posXYZ S="0" X="0" Y="0" Z="25" xrot="0" yrot="0" zrot="0" volume="sideTileRowY1" unitAngle="deg" unitLength="mm">
+        <idField name="fRow" step="0" value="1" />
+      </posXYZ>
+      <posXYZ S="0" X="0" Y="0" Z="-150" xrot="0" yrot="0" zrot="0" volume="sideTileRowY2" unitAngle="deg" unitLength="mm">
+        <idField name="fRow" step="0" value="2" />
+      </posXYZ>
+      <posXYZ S="0" X="0" Y="0" Z="-300" xrot="0" yrot="0" zrot="0" volume="sideTileRowY3" unitAngle="deg" unitLength="mm">
+        <idField name="fRow" step="0" value="3" />
+      </posXYZ>
+    </composition>
+    <!--  stack up tape for X and Y sides -->
+    <stackX name="sideTapeRowX" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="324.86" gap0="0" ncopy="4" shift="0" shift0="0" volume="sideTape" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="1" value="0" />
+      </axisMPos>
+    </stackX>
+    <stackY name="sideTapeRowY" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="324.86" gap0="0" ncopy="4" shift="0" shift0="0" volume="sideTape" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fCol" step="1" value="0" />
+      </axisMPos>
+    </stackY>
+    <!--  Make a LAT.  Not stopping to figure out idFields just yet -->
+    <composition name="LAT" envelope="LATenv">
+      <posXYZ S="0" X="0" Y="0" Z="433.324" xrot="0" yrot="0" zrot="0" volume="ACDTop" unitAngle="deg" unitLength="mm" />
+      <posXYZ S="0" X="0" Y="0" Z="-29.9995" xrot="0" yrot="0" zrot="0" volume="allTowers" unitAngle="deg" unitLength="mm" />
+      <posXYZ S="0" X="-6.5" Y="827.65" Z="101.824" xrot="0" yrot="0" zrot="0" volume="TileXSide" unitAngle="deg" unitLength="mm" />
+      <posXYZ S="0" X="-6.5" Y="-827.65" Z="101.824" xrot="0" yrot="0" zrot="0" volume="TileXSide" unitAngle="deg" unitLength="mm" />
+      <posXYZ S="0" X="827.65" Y="-6.5" Z="101.824" xrot="0" yrot="0" zrot="0" volume="TileYSide" unitAngle="deg" unitLength="mm" />
+      <posXYZ S="0" X="-827.65" Y="-6.5" Z="101.824" xrot="0" yrot="0" zrot="0" volume="TileYSide" unitAngle="deg" unitLength="mm" />
+      <posXYZ S="0" X="-6.5" Y="820.65" Z="88.324" xrot="0" yrot="0" zrot="0" volume="sideTapeRowX" unitAngle="deg" unitLength="mm" />
+      <posXYZ S="0" X="-6.5" Y="-820.65" Z="88.324" xrot="0" yrot="0" zrot="0" volume="sideTapeRowX" unitAngle="deg" unitLength="mm" />
+      <posXYZ S="0" X="820.65" Y="-6.5" Z="88.324" xrot="0" yrot="0" zrot="0" volume="sideTapeRowY" unitAngle="deg" unitLength="mm" />
+      <posXYZ S="0" X="-820.65" Y="-6.5" Z="88.324" xrot="0" yrot="0" zrot="0" volume="sideTapeRowY" unitAngle="deg" unitLength="mm" />
+    </composition>
+  </section>
+</gdd>

@@ -1,0 +1,6 @@
+<primCategory name="globalMatPrim">
+  <overview>Materials not specific to a single subsystem.</overview>
+  <prim name="wallMaterial"   value="C" type="string" uType="mat"> Wall material</prim>
+  <prim name="vacuumMat" value="Vacuum" type="string" uType="mat">Need
+      vacuum for some 'solids'</prim>
+</primCategory>

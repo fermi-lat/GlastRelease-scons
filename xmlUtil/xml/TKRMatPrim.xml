@@ -1,0 +1,11 @@
+<primCategory name="TKRMatPrim" >
+  <overview>Materials used in the TKR description</overview>
+  <prim name="convMat" value="W" type="string" uType="mat">material 
+     used in tracker conversion</prim>
+  <prim name="TKRDetMat" value="Si" type="string" uType="mat">Material 
+        of tracker detector elements</prim>
+  <prim name="coreMat" value="FOAM05" type="string" uType="mat">material 
+        used in tracker tray core</prim>
+  <prim name="TKRFaceMat" value="C" type="string" uType="mat">
+        Material of tracker face sheet</prim>
+</primCategory>
