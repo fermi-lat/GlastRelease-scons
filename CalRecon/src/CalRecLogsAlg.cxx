@@ -11,7 +11,6 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 static const AlgFactory<CalRecLogsAlg>  Factory;
 const IAlgFactory& CalRecLogsAlgFactory = Factory;
