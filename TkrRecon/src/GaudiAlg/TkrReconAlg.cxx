@@ -41,7 +41,6 @@ StatusCode TkrReconAlg::initialize()
 
     setProperties();
 
-
     // Clustering algorithm
     if( createSubAlgorithm("TkrClusterAlg", "TkrClusterAlg", m_TkrClusterAlg).isFailure() ) 
     {
@@ -89,8 +88,8 @@ StatusCode TkrReconAlg::execute()
     // Outputs:  StatusCode upon completetion
     // Dependencies: None
     // Restrictions and Caveats:  None
-
     MsgStream log(msgSvc(), name());
+
     StatusCode sc = StatusCode::SUCCESS;
 
     log << MSG::DEBUG;
@@ -98,9 +97,6 @@ StatusCode TkrReconAlg::execute()
         log << "------- Recon of new Event --------";
     }
     log << endreq;
-
-    // Call the four main algorithms in order
-
     
     if(m_TkrClusterAlg->execute() == StatusCode::FAILURE)
     {
@@ -133,4 +129,3 @@ StatusCode TkrReconAlg::finalize()
 {   
     return StatusCode::SUCCESS;
 }
-
