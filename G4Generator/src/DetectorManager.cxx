@@ -87,7 +87,7 @@ void DetectorManager::makeDisplayBox(G4TouchableHistory* touched,
   G4VPhysicalVolume* pvol = touched->GetVolume(); 
     
   HepTransform3D 
-    global(*(touched->GetRotation()), 
+    global( ((touched->GetRotation())->inverse()) , 
            touched->GetTranslation());
     
     
