@@ -43,6 +43,7 @@ into their own namespace(s).
 programs to automatically generate special-purpose xml files from
 an initial file describing an instrument.
 </p>
+<p>See release.notes for recent activity.</p>
 <hr>
   \section requirements requirements
   \include requirements
