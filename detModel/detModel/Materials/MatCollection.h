@@ -44,6 +44,8 @@ namespace detModel{
     void addMaterial(Material*);
     /// Method to get the total number of materials in the collection
     int getMaterialsNumber(){return materials.size();};
+    /// Method to get the total number of material colors in the collection
+    int getMaterialColorsNumber(){return materialColors.size();};
     /// Method to retrive a materials map
     std::map<std::string, Material* > getMaterials(){return materials;};
     /// Method to retrive a material colors map

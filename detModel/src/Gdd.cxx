@@ -161,9 +161,10 @@ namespace detModel{
   {
     typedef std::map<std::string, Material*> M;
     M::const_iterator i; 
-    
-    i = (materials->getMaterials()).find(cname);
-    if(i == (materials->getMaterials()).end()) return 0;
+    std::map<std::string, Material*> mats = materials->getMaterials();
+
+    i = mats.find(cname);
+    if(i == mats.end()) return 0;
     else return i->second;
   }
 

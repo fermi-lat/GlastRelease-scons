@@ -60,6 +60,7 @@ namespace detModel{
       case materials:
 	manBuilder->buildMaterials();
 	break;
+
       }
   }
 

@@ -1,7 +1,7 @@
 #ifndef DAWNSECTIONSVISITOR_H
 #define DAWNSECTIONSVISITOR_H
 #include "detModel/Management/SectionsVisitor.h"
-#include "detModel/Utilities/Matrix.h"
+#include "detModel/Utilities/Vector.h"
 #include <fstream>
 #include <vector>
 #include <map>

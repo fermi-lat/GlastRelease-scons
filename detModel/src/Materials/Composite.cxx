@@ -5,11 +5,15 @@
 namespace detModel{
 
   void Composite::Accept(MaterialsVisitor* v){
+    typedef std::vector<Material*>C;
+    C::const_iterator i; 
     
     v->visitComposite(this);
     
+    for(i=components.begin(); i != components.end();i++){
+      (*i)->Accept(v);
+    }
   }
-
 
 
   void Composite::AcceptNotRec(MaterialsVisitor* v){

@@ -57,7 +57,7 @@ namespace detModel{
     M::iterator i; 
     unsigned int n = 0;
 
-    ColorCreator* cColor = new ColorCreator(getMaterialsNumber());
+    ColorCreator* cColor = new ColorCreator(getMaterialColorsNumber());
     
     for(i=materialColors.begin();i!=materialColors.end();i++)
       {

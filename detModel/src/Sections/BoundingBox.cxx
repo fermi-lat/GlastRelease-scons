@@ -1,4 +1,4 @@
-#include "detModel/Utilities/Matrix.h"
+#include "detModel/Utilities/Vector.h"
 #include "detModel/Utilities/Purge.h"
 #include "detModel/Sections/BoundingBox.h"
 
@@ -128,9 +128,9 @@ namespace detModel{
 
     for(j=0;j<8;j++)
       {
-	Rotate(0,xAngle,points[j]);
-	Rotate(1,yAngle,points[j]);	  
-	Rotate(2,zAngle,points[j]);
+	points[j]->Rotate(0,xAngle);
+	points[j]->Rotate(1,yAngle);	  
+	points[j]->Rotate(2,zAngle);
       }
   
     for(j=0;j<8;j++)

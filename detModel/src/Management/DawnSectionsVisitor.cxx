@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "detModel/Materials/MatCollection.h"
-
 #include "detModel/Management/DawnSectionsVisitor.h"
 #include "detModel/Management/Manager.h"
 #include "detModel/Sections/Section.h"
@@ -18,7 +17,7 @@
 #include "detModel/Sections/Position.h"
 #include "detModel/Utilities/ColorCreator.h"
 #include "detModel/Utilities/Color.h"
-#include "detModel/Utilities/Matrix.h"
+#include "detModel/Utilities/Vector.h"
 
 namespace detModel{
 
@@ -206,22 +205,22 @@ void  DawnSectionsVisitor::visitPosXYZ(PosXYZ* pos)
 
   Vector* relPos = new Vector(pos->getX(),pos->getY(),pos->getZ());
 
-  Rotate(0,pos->getXRot(), actualXAxis); 
-  Rotate(0,pos->getXRot(), actualYAxis); 
-  Rotate(0,pos->getXRot(), actualZAxis); 
+  actualXAxis->Rotate(0,pos->getXRot()); 
+  actualYAxis->Rotate(0,pos->getXRot()); 
+  actualZAxis->Rotate(0,pos->getXRot()); 
   
-  Rotate(1,pos->getYRot(), actualXAxis); 
-  Rotate(1,pos->getYRot(), actualYAxis); 
-  Rotate(1,pos->getYRot(), actualZAxis); 
+  actualXAxis->Rotate(1,pos->getYRot()); 
+  actualYAxis->Rotate(1,pos->getYRot()); 
+  actualZAxis->Rotate(1,pos->getYRot()); 
 
-  Rotate(2,pos->getZRot(), actualXAxis); 
-  Rotate(2,pos->getZRot(), actualYAxis); 
-  Rotate(2,pos->getZRot(), actualZAxis); 
+  actualXAxis->Rotate(2,pos->getZRot()); 
+  actualYAxis->Rotate(2,pos->getZRot()); 
+  actualZAxis->Rotate(2,pos->getZRot()); 
 
-
-  Rotate(0,actualXRot,relPos);
-  Rotate(1,actualYRot,relPos);
-  Rotate(2,actualZRot,relPos);
+  
+  relPos->Rotate(0,actualXRot);
+  relPos->Rotate(1,actualYRot);
+  relPos->Rotate(2,actualZRot);
 
   
   actualPos->x = temp->x + relPos->x;
@@ -297,9 +296,9 @@ void  DawnSectionsVisitor::visitAxisMPos(AxisMPos* pos)
 
       actualXRot = actualXRot + pos->getRotation();
 
-      Rotate(0,pos->getRotation(), actualXAxis); 
-      Rotate(0,pos->getRotation(), actualYAxis); 
-      Rotate(0,pos->getRotation(), actualZAxis);
+      actualXAxis->Rotate(0,pos->getRotation()); 
+      actualYAxis->Rotate(0,pos->getRotation()); 
+      actualZAxis->Rotate(0,pos->getRotation());
  
     }
     break;
@@ -311,9 +310,9 @@ void  DawnSectionsVisitor::visitAxisMPos(AxisMPos* pos)
 
       actualYRot = actualYRot + pos->getRotation();
 
-      Rotate(1,pos->getRotation(), actualXAxis); 
-      Rotate(1,pos->getRotation(), actualYAxis); 
-      Rotate(1,pos->getRotation(), actualZAxis);
+      actualXAxis->Rotate(1,pos->getRotation()); 
+      actualYAxis->Rotate(1,pos->getRotation()); 
+      actualZAxis->Rotate(1,pos->getRotation());
 
     }
     break;
@@ -325,17 +324,17 @@ void  DawnSectionsVisitor::visitAxisMPos(AxisMPos* pos)
 
       actualZRot = actualZRot + pos->getRotation();
 
-      Rotate(2,pos->getRotation(), actualXAxis); 
-      Rotate(2,pos->getRotation(), actualYAxis); 
-      Rotate(2,pos->getRotation(), actualZAxis);
+      actualXAxis->Rotate(2,pos->getRotation()); 
+      actualYAxis->Rotate(2,pos->getRotation()); 
+      actualZAxis->Rotate(2,pos->getRotation());
 
     }
     break;
   }
 
-  Rotate(0,actualXRot,relPos);
-  Rotate(1,actualYRot,relPos);
-  Rotate(2,actualZRot,relPos);
+  relPos->Rotate(0,actualXRot);
+  relPos->Rotate(1,actualYRot);
+  relPos->Rotate(2,actualZRot);
 
 
   actualPos->x = actualPos->x + relPos->x;
