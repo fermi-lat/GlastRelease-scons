@@ -2,13 +2,12 @@
 #define EVENTCNV_H 1
 
 #include "BaseCnv.h"
+#include "GaudiKernel/IInterface.h"
 
 namespace Event{ class EventHeader; }
-extern const CLID& CLID_Event;
 
 // Abstract factory to create the converter
 template <class TYPE> class CnvFactory;
-
 
 /** @class EventCnv
  * @brief Concrete converter for the Event header stored in the TDS /Event
@@ -21,10 +20,10 @@ class EventCnv : public BaseCnv {
   friend class CnvFactory<EventCnv>;
 
 public: 
-  static const CLID& classID()   
-  {
-    return CLID_Event;
-  }
+  static const CLID& classID();   
+  //{
+  //  return CLID_Event;
+  //}
 
 protected:
 

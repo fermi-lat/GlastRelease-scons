@@ -44,3 +44,7 @@ StatusCode EventCnv::updateObj(int* iarray, Event::EventHeader* pEvent) {
     return StatusCode::SUCCESS;
 }
 
+const CLID& EventCnv::classID()
+{
+    return Event::EventHeader::classID();
+}
