@@ -234,7 +234,7 @@ StatusCode EvtValsTool::calculate()
         }
     }
     
-    EvtLogESum = log10(std::min(std::max(EvtEnergySumOpt,40.),15000.));
+    EvtLogESum = log10(std::min(std::max(EvtEnergySumOpt,20.),50000.));
 
     double tkr1ConE;
     if (m_pTkrTool->getVal("Tkr1ConEne",tkr1ConE, nextCheck).isSuccess()) {
