@@ -125,6 +125,7 @@ static CalibModel mod;
 //     6500 - 6599        test 
 
 const CLID& CLID_Calib_CalibCLIDNode     = 6000;
+const CLID& CLID_Calib_CalibBase         = 6001;
 const CLID& CLID_Calib_TkrBadStrips      = 6100;
 
 const CLID& CLID_Calib_MetadataInfo       = 6500;
