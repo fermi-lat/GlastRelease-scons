@@ -28,11 +28,11 @@ class TkrDispCompleteNet : public gui::DisplayRep
 {
 public:
 
-	//! Constructor of this form must be provided
-	TkrDispCompleteNet(IDataProviderSvc* dps, ITkrGeometrySvc* pTkrGeo);
-	virtual ~TkrDispCompleteNet() {}
+    //! Constructor of this form must be provided
+    TkrDispCompleteNet(IDataProviderSvc* dps, ITkrGeometrySvc* pTkrGeo);
+    virtual ~TkrDispCompleteNet() {}
 
-	void update();
+    void update();
 
 private:
 
