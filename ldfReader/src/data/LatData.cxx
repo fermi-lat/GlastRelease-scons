@@ -65,6 +65,7 @@ namespace ldfReader {
         }
         m_acdCol.clear();
         m_diagnostic.clear();
+        m_gem.clear();
     }
 
 

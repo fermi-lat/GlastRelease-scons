@@ -11,6 +11,11 @@ namespace ldfReader {
     class LatComponentParser : public LATcomponentIterator
     {
     public:
+        typedef enum {
+            ID_ORG = 0x101f0010,
+            ID_WITH_OSW = 0x102f0010
+        } EBF_FORMAT_ID;
+
         LatComponentParser() : _calSrc(0xffffffff) {}
         virtual ~LatComponentParser() {}
 
