@@ -164,6 +164,7 @@ StatusCode meritAlg::initialize() {
     new TupleItem("TKR_Gamma_zdir", &m_tkr_gamma_zdir);
     new TupleItem("TKR_qual",       &m_tkr_qual);
     new TupleItem("TKR_t_angle",    &m_tkr_t_angle);
+    new TupleItem("TKR_Fit_Kink",   &m_tkr_fit_kink);
     new TupleItem("TKR_xeneXSlope", &m_tkr_eneslope[0]);
     new TupleItem("TKR_xeneYSlope", &m_tkr_eneslope[1]);
 
