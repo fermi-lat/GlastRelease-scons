@@ -1,591 +1,404 @@
-<HTML>
-<HEAD>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
-<META NAME="Generator" CONTENT="Microsoft FrontPage 4.0">
-<TITLE>digiRootData documentation</TITLE>
-<META NAME="Template" CONTENT="C:\Program Files\Microsoft Office\Office\html.dot">
-</HEAD>
-<BODY LINK="#0000ff" VLINK="#800080" BGCOLOR="#FFFFCC">
+<html>
+    <head>
+        <title>Workbook : digiRootData</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">	    
+    </head>
 
-<B><FONT SIZE=5><P ALIGN="CENTER">digiRootData</P>
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            Workbook : digiRootData
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Oct 13, 2004 by <font color="#0050B2">heather</font>.
+				    </div>
 
-</B></FONT>
-<blockquote>
-  <blockquote>
-    <P align="center"><A HREF="#Intro">Introduction</A>&nbsp;&nbsp;&nbsp;<a href="#Class Overview">Class
-    Overview</a>&nbsp;&nbsp;&nbsp; <a href="#Event">DigiEvent</a>&nbsp;&nbsp;&nbsp;
-    <a href="#ACD/XGT">ACD</a>&nbsp;&nbsp;&nbsp;
-    <a href="#CAL">CAL</a>&nbsp;&nbsp;&nbsp; <a href="#TKR">TKR</a>&nbsp;&nbsp;&nbsp;<a href="#L1T">L1T</a>&nbsp;
-    <A HREF="#Bugs">Known
-    Issues</A></P>
-  </blockquote>
-</blockquote>
+				    <p class="paragraph"><a name="digiRootData-top"></a><b class="strong">Note:</b> The digiRootData package contains the definition of the digitization ROOT classes. Originally, these classes were defined for the 1999 GLAST beamtest (TBEvent), and they have undergone a number of mutations since then. The current form of digi data is described in this document.</p>The top-level class is called DigiEvent and contains the data for one event:<br/>
 
-<B><P ALIGN="JUSTIFY"><A NAME="Intro">Introduction:</P>
-</A>
-</B><P ALIGN="JUSTIFY">This package contains the definition of our digitization
-ROOT classes.&nbsp; These classes were originally defined for the GLAST 1999
-beamtest (TBEvent) and have undergone a number of mutations since then.&nbsp;
-This is the current form of our digi data.</P>
-<P ALIGN="JUSTIFY"><b><a name="Class Overview">Class Overview</a></b></P>
-<P ALIGN="JUSTIFY">The top-level class is called <i>DigiEvent </i>this class
-contains the data for one event.&nbsp; The detector data for each subsystems is stored in a
-separate data collection..&nbsp; The ACD data is stored in collection of <i>AcdDigi</i>
-objects.&nbsp; The CAL data is stored as an collection of <i>CalDigi</i>
-objects.&nbsp; The TKR data is stored as a collection of <i>TkrDigi</i> objects -
-where each <i>TkrDigi</i> contains a list of hit strips for a particular layer
-in the TKR.&nbsp; The
-Level One Trigger data is stored in a class called <i>L1T</i>.</P>
-<h3>Digi Tree</h3>
-<p>The Digi tree has one main branch, <a href="#DigiEvent">DigiEvent</a>.&nbsp; All of the Digitization data is
-contained within this branch.</p>
-<P ALIGN="JUSTIFY"><img border="0" src="images/digiTree.jpg" width="621" height="436"></P>
-<P ALIGN="JUSTIFY">&nbsp;</P>
-        <h3><a name="Method">Method </a>Definitions</h3>
-<p><b><a name="DigiEvent">DigiEvent</a></b></p>
-<table border="1" width="100%">
-  <tr>
-    <td width="100%" colspan="3">
-      <p align="center">Summary Data</td>
-  </tr>
-  <tr>
-    <td width="33%">getEventId( )</td>
-    <td width="33%">Returns the Event Id</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getRunId( )</td>
-    <td width="33%">Returns the Run Id</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getL1T( )</td>
-    <td width="33%">Returns the Level One Trigger</td>
-    <td width="34%">const <a href="#L1T">L1T</a>&amp;</td>
-  </tr>
-  <tr>
-    <td width="33%">getTimeStamp( )</td>
-    <td width="33%">Time in seconds.&nbsp; This is the time that is reported
-      when doing simulations.&nbsp;</td>
-    <td width="34%">Double_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getEbfTimeSec( )</td>
-    <td width="33%">Returns the number of seconds, used in conjunction with
-      getEbfTimeNanoSec for a measure of absolute time.&nbsp; This data is only
-      available when processing LDF data from real tests.</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getEbfTimeNanoSec( )</td>
-    <td width="33%">Returns the number of nano-seconds, used in conjunction with
-      getEbfTimeSec for a measure of absolute time.&nbsp; This data is only
-      available when processing LDF data from real tests.</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getEbfUpperPpcTimeBase( )</td>
-    <td width="33%">Returns the UpperPpcTimeBase word as stored in the LDF from
-      real tests.&nbsp; Used in conjunction with getEbfLowerPpcTimeBase, these
-      words can be used to determine the spacing of real test events.&nbsp; Also
-      see getEbfPpcTimeSeconds( )</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getEbfLowerPpcTimeBase( )</td>
-    <td width="33%">Returns the LowerPpcTimeBase word stored in the LDF from
-      real tests, used in conjunction with getEbfUpperPpcTimeBase, these words
-      can be used to determine the spacing of real test events.&nbsp; Also see
-      getEbfPpcTimeSeconds( )</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getEbfPpcTimeSeconds( )</td>
-    <td width="33%">Uses the data words stored in the UpperPpcTimeBase and
-      LowerPpcTimeBase to calculate seconds since power on.&nbsp; This time is
-      used to determine the spacing of events - NOT as an absolute time.&nbsp;
-      This is only available when processing LDF data from real tests.</td>
-    <td width="34%">Double_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getEventSummaryData( )</td>
-    <td width="33%">Returns the full EventSummaryData object.&nbsp; This is only
-      available when processing LDF data from real tests.</td>
-    <td width="34%">const <a href="#EventSummaryData">EventSummaryData</a>&amp;</td>
-  </tr>
-  <tr>
-    <td width="33%">getFromMc( )</td>
-    <td width="33%">Returns a flag denoting whether or not this data originated
-      from Monte Carlo simulation (kTRUE) or not (kFALSE)</td>
-    <td width="34%">Bool_t</td>
-  </tr>
-  <tr>
-    <td width="100%" colspan="3" bordercolordark="#008000">
-      <p align="center">ACD</td>
-  </tr>
-  <tr>
-    <td width="33%" bordercolordark="#008000">getAcdDigiCol( )</td>
-    <td width="33%" bordercolordark="#008000">Returns the full collection of AcdDigi objects</td>
-    <td width="34%" bordercolordark="#008000">const TClonesArray*</td>
-  </tr>
-  <tr>
-    <td width="33%" bordercolordark="#008000">getAcdDigi(UShort layer, UShort face, UShort row, UShort col
-      )</td>
-    <td width="33%" bordercolordark="#008000">Returns a specific AcdDigi object identified by layer, face,
-      row, column</td>
-    <td width="34%" bordercolordark="#008000">const <a href="#AcdDigi">AcdDigi</a>*</td>
-  </tr>
-  <tr>
-    <td width="33%" bordercolordark="#008000">getAcdDigi(const AcdId&amp; )</td>
-    <td width="33%" bordercolordark="#008000">Returns a specific AcdDigi object identified by its AcdId</td>
-    <td width="34%" bordercolordark="#008000">const <a href="#AcdDigi">AcdDigi</a>*</td>
-  </tr>
-  <tr>
-    <td width="100%" bordercolordark="#800000" colspan="3">
-      <p align="center">CAL</td>
-  </tr>
-  <tr>
-    <td width="33%" bordercolordark="#800000">getCalDigiCol( )</td>
-    <td width="33%" bordercolordark="#800000">Returns the complete CalDigi collection</td>
-    <td width="34%" bordercolordark="#800000">const TClonesArray*</td>
-  </tr>
-  <tr>
-    <td width="33%" bordercolordark="#800000">getCalDigi(UInt_t i)</td>
-    <td width="33%" bordercolordark="#800000">Returns a specific CalDigi object identified by its index in
-      the TObjArray</td>
-    <td width="34%" bordercolordark="#800000">const <a href="#CalDigi">CalDigi</a>*</td>
-  </tr>
-  <tr>
-    <td width="33%" bordercolordark="#800000">getCalDiagnosticCol( )</td>
-    <td width="33%" bordercolordark="#800000">Returns the full collection of CAL
-      Diagnostic data - only available when processing LDF files storing real
-      test data.</td>
-    <td width="34%" bordercolordark="#800000">const TClonesArray*</td>
-  </tr>
-  <tr>
-    <td width="33%" bordercolordark="#800000">getCalDiagnostic(UInt_t i )</td>
-    <td width="33%" bordercolordark="#800000">Returns the ith CalDiagnostic
-      object.&nbsp; Only available when processing LDF files storing real test
-      data.</td>
-    <td width="34%" bordercolordark="#800000">const <a href="#CalDiagnostic">CalDiagnosticData</a>*</td>
-  </tr>
-  <tr>
-    <td width="100%" colspan="3" bordercolordark="#0000FF">
-      <p align="center">TKR</td>
-  </tr>
-  <tr>
-    <td width="33%" bordercolordark="#0000FF">getTkrDigiCol( )</td>
-    <td width="33%" bordercolordark="#0000FF">Returns the complete TkrDigi collection</td>
-    <td width="34%" bordercolordark="#0000FF">const TObjArray*</td>
-  </tr>
-  <tr>
-    <td width="33%" bordercolordark="#0000FF">getTkrDigi( )</td>
-    <td width="33%" bordercolordark="#0000FF">Returns a specific TkrDigi object identified by its index in
-      the TObjArray</td>
-    <td width="34%" bordercolordark="#0000FF">const <a href="#TkrDigi">TkrDigi</a>*</td>
-  </tr>
-  <tr>
-    <td width="33%" bordercolordark="#0000FF">getTkrDiagnosticCol( )</td>
-    <td width="33%" bordercolordark="#0000FF">Returns the full collection of
-      TkrDiagnostic objects.&nbsp; This collection is only available when
-      processing LDF file from real test data.</td>
-    <td width="34%" bordercolordark="#0000FF">const TClonesArray*</td>
-  </tr>
-  <tr>
-    <td width="33%" bordercolordark="#0000FF">getTkrDiagnostic(UInt_t i)</td>
-    <td width="33%" bordercolordark="#0000FF">Returns the ith TkrDiagnostic
-      object in the collection.&nbsp; This collection is populated only when
-      processing LDF files storing real test data</td>
-    <td width="34%" bordercolordark="#0000FF">const <a href="#TkrDiagnosticData">TkrDiagnosticData</a>*</td>
-  </tr>
+<ul class="star">
+<li> Event ID and Run ID</li>
+</ul>
+<ul class="star">
+<li> Time Stamp - note the various methods available for MC simulation data versus real LDF data</li>
+</ul>
+<ul class="star">
+<li> MC Flag denoting whether or not this event was generated using the Monte Carlo simulation</li>
+</ul>
+<ul class="star">
+<li> ACD data is stored in collection of AcdDigi objects. <br/>
+where each AcdDigi represents on ACD detector (tile or ribbon) consisting of 2 PMTs
+</li>
+</ul>
+<ul class="star">
+<li> CAL data is stored as an collection of CalDigi objects. </li>
+</ul>
+<ul class="star">
+<li> TKR data is stored as a collection of TkrDigi objects<br/>
+where each TkrDigi contains a list of hit strips for a particular layer in the TKR.
+</li>
+</ul>
+<ul class="star">
+<li> Level One Trigger data is stored in a class called L1T.</li>
+</ul>
+<ul class="star">
+<li> GEM data (real data only)</li>
+</ul>
+<ul class="star">
+<li> Event Summary (currently for real data only)</li>
+</ul>
+<ul class="star">
+<li> CAL Diagnostic Trigger Primitives (real data only)</li>
+</ul>
+<ul class="star">
+<li> TKR Diagnostic Trigger Primitives (real data only)</li>
+</ul><br/>
+Detector data for each subsystem is stored in a separate data collection.<p class="paragraph"><h2 class="heading2"><a name="digiRootData-Digi+Tree"> Digi Tree</a></h2></p>The Digi tree has <em class="emphasis">one</em> main branch, <a href="digiRootData.html#WB-digiRootData-DigiEvent" title="DigiEvent on digiRootData">DigiEvent</a>.  All of the Digitization data is contained within this branch.<br/>
+
+<div align="center"><img src="images/digiTree.gif" border="0"  /></div><p class="paragraph"><h2 class="heading2"><a name="digiRootData-DigiEvent+%3Ca+name%3D%22digiRootDataDigiEvent%22%3E%3C%2Fa%3E"> DigiEvent <a name="digiRootData-DigiEvent"></a></a></h2></p><table class="wikitable">
+<tr>
+<td> </td><th><b class="strong">Summary Data</b></th><th> </th>
+</tr><tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getEventId( )</td><td>Returns the Event Id</td><td>UInt_t</td>
+</tr><tr>
+<td>getRunId( )</td><td>Returns the Run Id</td><td>UInt_t</td>
+</tr><tr>
+<td>getL1T( )</td><td>Returns the Level One Trigger</td><td>const <a href="digiRootData.html#WB-digiRootData-L1T" title="L1T on digiRootData">L1T</a>&amp;</td>
+</tr><tr>
+<td>getTimeStamp( )</td><td>Time in seconds, since mission start, currently 1/1/2001. This is the time that is reported when doing simulations.</td><td>Double_t</td>
+</tr><tr>
+<td>getEbfTimeSec( )</td><td>Returns the number of seconds, since 1/1/1970, used in conjunction with getEbfTimeNanoSec for a measure of absolute time. This data is only available when processing LDF data from real tests.</td><td>UInt_t</td>
+</tr><tr>
+<td>getEbfTimeNanoSec( )</td><td>Returns the number of nano-seconds, since 1/1/1970, used in conjunction with getEbfTimeSec for a measure of absolute time. This data is only available when processing LDF data from real tests.</td><td>UInt_t</td>
+</tr><tr>
+<td>getEbfUpperPpcTimeBase( )</td><td>Returns the UpperPpcTimeBase word as stored in the LDF from real tests. Used in conjunction with <em class="emphasis">getEbfLowerPpcTimeBase</em>, these words can be used to determine the spacing of real test events. Also see getEbfPpcTimeSeconds( )</td><td>UInt_t</td>
+</tr><tr>
+<td>getEbfLowerPpcTimeBase( )</td><td>Returns the LowerPpcTimeBase word stored in the LDF from real tests, used in conjunction with getEbfUpperPpcTimeBase, these words can be used to determine the spacing of real test events. Also see getEbfPpcTimeSeconds( )</td><td>UInt_t</td>
+</tr><tr>
+<td>getEbfPpcTimeSeconds( )</td><td>Uses the data words stored in the UpperPpcTimeBase and LowerPpcTimeBase to calculate seconds since power on. This time is used to determine the spacing of events - NOT as an absolute time. This is only available when processing LDF data from real tests.</td><td>Double_t</td>
+</tr><tr>
+<td>getEventSummaryData( )</td><td>Returns the full EventSummaryData object. This is only available when processing LDF data from real tests.</td><td>const <a href="digiRootData.html#WB-digiRootData-EventSummaryData" title="EventSummaryData on digiRootData">EventSummaryData</a>&amp;</td>
+</tr><tr>
+<td>getGem( )</td><td>Returns the full GEM data.  This is only available when processing LDF data from real tests.</td><td>const Gem&amp;</td>
+</tr><tr>
+<td>getFromMc( )</td><td>Returns a flag denoting whether or not this data originated from Monte Carlo simulation (kTRUE) or not (kFALSE)</td><td>Bool_t</td>
+</tr><tr>
+<td> </td><th>ACD</th><th> </th>
+</tr><tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getAcdDigiCol( )</td><td>Returns the full collection of AcdDigi objects</td><td>const TClonesArray*</td>
+</tr><tr>
+<td>getAcdDigi(UShort layer, UShort face, UShort row, UShort col )</td><td>Returns a specific AcdDigi object identified by layer, face, row, column</td><td>const <a href="digiRootData.html#WB-digiRootData-AcdDigi" title="AcdDigi on digiRootData">AcdDigi</a>*</td>
+</tr><tr>
+<td>getAcdDigi(const AcdId&amp; )</td><td>Returns a specific AcdDigi object identified by its AcdId</td><td>const <a href="digiRootData.html#WB-digiRootData-AcdDigi" title="AcdDigi on digiRootData">AcdDigi</a>*</td>
+</tr><tr>
+<td> </td><th>CAL</th><th> </th>
+</tr><tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getCalDigiCol( )</td><td>Returns the complete CalDigi collection</td><td>const TClonesArray*</td>
+</tr><tr>
+<td>getCalDigi(UInt_t i)</td><td>Returns a specific CalDigi object identified by its index in the TObjArray</td><td>const <a href="digiRootData.html#WB-digiRootData-CalDigi" title="CalDigi on digiRootData">CalDigi</a>*</td>
+</tr><tr>
+<td>getCalDiagnosticCol( )</td><td>Returns the full collection of CAL Diagnostic (trigger primitive) data - only available when processing LDF files storing real test data.</td><td>const TClonesArray*</td>
+</tr><tr>
+<td>getCalDiagnostic(UInt_t i )</td><td>Returns the ith CalDiagnostic (trigger primitive) object. Only available when processing LDF files storing real test data.</td><td>const <a href="digiRootData.html#WB-digiRootData-CalDiagnosticData" title="CalDiagnosticData on digiRootData">CalDiagnosticData</a>*</td>
+</tr><tr>
+<td> </td><th>TKR</th><th> </th>
+</tr><tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getTkrDigiCol( )</td><td>Returns the complete TkrDigi collection</td><td>const TObjArray*</td>
+</tr><tr>
+<td>getTkrDigi( )</td><td>Returns a specific TkrDigi object identified by its index in the TObjArray</td><td>const <a href="digiRootData.html#WB-digiRootData-TkrDigi" title="TkrDigi on digiRootData">TkrDigi</a>*</td>
+</tr><tr>
+<td>getTkrDiagnosticCol( )</td><td>Returns the full collection of TkrDiagnostic (trigger primitive) objects. This collection is only available when processing LDF file from real test data.</td><td>const TClonesArray*</td>
+</tr><tr>
+<td>getTkrDiagnostic(UInt_t i)</td><td>Returns the ith TkrDiagnostic (trigger primitive) object in the collection. This collection is populated only when processing LDF files storing real test data</td><td>const <a href="digiRootData.html#WB-digiRootData-TkrDiagnosticData" title="TkrDiagnosticData on digiRootData">TkrDiagnosticData</a>*</td>
+</tr>
 </table>
-<p>&nbsp;</p>
-<p><b><a name="EventSummaryData">EventSummaryData<br>
-</a></b>This class is just an interface to the LDF Online's EventSummary
-class.&nbsp; All of the methods use the Online's methods to unpack the summary
-data.&nbsp; For a full description of the EventSummary data please see:</p>
-<p><a href="http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/LATcom.pdf">http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/LATcom.pdf</a></p>
-<table border="1" width="100%">
-  <tr>
-    <td width="33%">summary( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">calStrobe( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">tag( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">TACK( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">readout4( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">zeroSuppress( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">marker( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">error( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">diagnostic( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">eventNumber( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">trgParityError( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">UInt_t</td>
-  </tr>
+<h2 class="heading2"><a name="digiRootData-EventSummaryData+%3Ca+name%3D%22digiRootDataEventSummaryData%22%3E%3C%2Fa%3E"> EventSummaryData <a name="digiRootData-EventSummaryData"></a></a></h2><p class="paragraph">This class is just an interface to the LDF Online&#039;s EventSummary class. All of the methods use the Online&#039;s methods to unpack the summary data. For a full description of the EventSummary data please see:</p><a href="http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/LATcom.pdf" title="Visit page outside Confluence">&#104;ttp://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/LATcom.pdf</a><br/>
+
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>summary( )</td><td>See Online Documentation LATcom.pdf</td><td>UInt_t</td>
+</tr><tr>
+<td>calStrobe( )</td><td>See Online Documentation LATcom.pdf</td><td>UInt_t</td>
+</tr><tr>
+<td>tag( )</td><td>See Online Documentation LATcom.pdf</td><td>UInt_t</td>
+</tr><tr>
+<td>TACK( )</td><td>See Online Documentation LATcom.pdf</td><td>UInt_t</td>
+</tr><tr>
+<td>readout4( )</td><td>See Online Documentation LATcom.pdf</td><td>UInt_t</td>
+</tr><tr>
+<td>zeroSuppress( )</td><td>See Online Documentation LATcom.pdf</td><td>UInt_t</td>
+</tr><tr>
+<td>marker( )</td><td>See Online Documentation LATcom.pdf</td><td>UInt_t</td>
+</tr><tr>
+<td>error( )</td><td>See Online Documentation LATcom.pdf</td><td>UInt_t</td>
+</tr><tr>
+<td>diagnostic( )</td><td>See Online Documentation LATcom.pdf</td><td>UInt_t</td>
+</tr><tr>
+<td>eventNumber( )</td><td>See Online Documentation LATcom.pdf</td><td>UInt_t</td>
+</tr><tr>
+<td>trgParityError( )</td><td>See Online Documentation LATcom.pdf</td><td>UInt_t</td>
+</tr><tr>
+<td>eventFlags( )</td><td>Offline addition to denote good/bad events.  GOOD = 0, BAD != 0.  Currently the only bit in the eventFlags is 1, denoting a bad eventSequence</td><td>UInt_t</td>
+</tr><tr>
+<td>goodEvent( )</td><td>Returns kTRUE/kFALSE depending upon value of event flags</td><td>Bool_t</td>
+</tr><tr>
+<td>badEvent( )</td><td>Returns kTRUE/kFALSE depending upon value of event flags</td><td>Bool_t</td>
+</tr><tr>
+<td>badEventSequence( )</td><td>Returns kTRUE/kFALSE depending upon whether the event sequence bit is set in event flags</td><td>Bool_t</td>
+</tr><tr>
+<td>eventSequence( )</td><td>returns the computed eventSequence constructed using eventNumber and tag</td><td>UInt_t</td>
+</tr><tr>
+<td>temLength(UInt_t item )</td><td>return length in bytes of the TEM contribution, where TEM is identified by id in 0,15</td><td>UInt_t</td>
+</tr><tr>
+<td>aemLength( )</td><td>returns length in bytes of the AEM contribution for this event</td><td>UInt_t</td>
+</tr><tr>
+<td>gemLength( )</td><td>return length in bytes of the GEM contribution for this event</td><td>UInt_t</td>
+</tr><tr>
+<td>oswLength( )</td><td>returns length in bytes of OSW contribution of this event</td><td>UInt_t</td>
+</tr><tr>
+<td>diagLength( )</td><td>returns length in bytes of the DIAGNOSTIC contribution of this event</td><td>UInt_t</td>
+</tr><tr>
+<td>errLength( )</td><td>returns length in bytes of the ERROR contribution of this event</td><td>UInt_t</td>
+</tr>
 </table>
-<p><b><a name="L1T">L1T</a></b></p>
-<table border="1" width="100%" height="100">
-  <tr>
-    <td width="33%" height="19">getTriggerWord( )</td>
-    <td width="33%" height="19">Returns the full trigger word</td>
-    <td width="34%" height="19">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%" height="19">getAcdLow( )</td>
-    <td width="33%" height="19">Returns kTRUE if ACD LOW</td>
-    <td width="34%" height="19">Bool_t</td>
-  </tr>
-  <tr>
-    <td width="33%" height="19">getAcdHigh( )</td>
-    <td width="33%" height="19">Returns kTRUE is ACD HIGH</td>
-    <td width="34%" height="19">Bool_t</td>
-  </tr>
-  <tr>
-    <td width="33%" height="19">getTkr3InARow( )</td>
-    <td width="33%" height="19">Returns kTRUE if 3-in-a-row in the TKR has
-      occurred</td>
-    <td width="34%" height="19">Bool_t</td>
-  </tr>
-  <tr>
-    <td width="33%" height="19">getCalLow( )</td>
-    <td width="33%" height="19">Returns kTRUE if CAL LOW</td>
-    <td width="34%" height="19">Bool_t</td>
-  </tr>
-  <tr>
-    <td width="33%" height="19">getCalHigh( )</td>
-    <td width="33%" height="19">Returns kTRUE if CAL HIGH</td>
-    <td width="34%" height="19">Bool_t</td>
-  </tr>
+<h2 class="heading2"><a name="digiRootData-L1T+%3Ca+name%3D%22digiRootDataL1T%22%3E%3C%2Fa%3E"> L1T <a name="digiRootData-L1T"></a></a></h2>
+
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getTriggerWord( )</td><td>Returns the full trigger word</td><td>UInt_t</td>
+</tr><tr>
+<td>getAcdLow( )</td><td>Returns kTRUE if ACD LOW</td><td>Bool_t</td>
+</tr><tr>
+<td>getAcdHigh( )</td><td>Returns kTRUE is ACD HIGH</td><td>Bool_t</td>
+</tr><tr>
+<td>getTkr3InARow( )</td><td>Returns kTRUE if 3-in-a-row in the TKR has occurred</td><td>Bool_t</td>
+</tr><tr>
+<td>getCalLow( )</td><td>Returns kTRUE if CAL LOW</td><td>Bool_t</td>
+</tr><tr>
+<td>getCalHigh( )</td><td>Returns kTRUE if CAL HIGH</td><td>Bool_t</td>
+</tr>
 </table>
-<p>&nbsp;</p>
-<p><b><a name="AcdDigi">AcdDigi</a></b></p>
-<table border="1" width="100%">
-  <tr>
-    <td width="33%">getId( )</td>
-    <td width="33%">Returns the AcdId associated with this digi</td>
-    <td width="34%">const <a href="#AcdId">AcdId</a>&amp;</td>
-  </tr>
-  <tr>
-    <td width="33%">getVolId( )</td>
-    <td width="33%">Returns the VolumeIdentifier associated with this digi.</td>
-    <td width="34%">const <a href="http://www-glast.slac.stanford.edu/software/gleam/userGuide/mcRoot.htm">VolumeIdentifie</a>r&amp;</td>
-  </tr>
-  <tr>
-    <td width="33%">getPulseHeight(AcdDigi::PmtId )</td>
-    <td width="33%">Returns the PHA (Pulse Height Analysis) for this ACD
-      detector</td>
-    <td width="34%">UShort_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getVeto(AcdDigi::PmtId)</td>
-    <td width="33%">Returns kTRUE if the veto discriminator is set, returns
-      kFALSE otherwise</td>
-    <td width="34%">Bool_t</td>
-  </tr>
-  <tr>
-    <td width="33%">get:LowDiscrim(AcdDigi::PmtId )</td>
-    <td width="33%">Returns kTRUE if the low discriminator is set, returns
-      kFALSE otherwise</td>
-    <td width="34%">Bool_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getHighDiscrim(AcdDigi::PmtId)</td>
-    <td width="33%">Returns kTRUE if the high (CNO) discriminator is set,
-      returns kFALSE otherwise</td>
-    <td width="34%">Bool_t</td>
-  </tr>
+<h2 class="heading2"><a name="digiRootData-AcdDigi+%3Ca+name%3D%22digiRootDataAcdDigi%22%3E%3C%2Fa%3E"> AcdDigi <a name="digiRootData-AcdDigi"></a></a></h2>
+
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getId( )</td><td>Returns the AcdId associated with this digi</td><td>const <a href="digiRootData.html#WB-digiRootData-AcdId" title="AcdId on digiRootData">AcdId</a>&amp;</td>
+</tr><tr>
+<td>getVolId( )</td><td>Returns the VolumeIdentifier associated with this digi.</td><td>const <a href="http://www-glast.slac.stanford.edu/software/gleam/userGuide/mcRoot.htm" title="Visit page outside Confluence">VolumeIdentifier</a>&</td>
+</tr><tr>
+<td>getPulseHeight(AcdDigi::PmtId )</td><td>Returns the PHA (Pulse Height Analysis) for this ACD detector</td><td>UShort_t</td>
+</tr><tr>
+<td>getVeto(AcdDigi::PmtId)</td><td>Returns kTRUE if the veto discriminator is set, returns kFALSE otherwise</td><td>Bool_t</td>
+</tr><tr>
+<td>get:LowDiscrim(AcdDigi::PmtId )</td><td>Returns kTRUE if the low discriminator is set, returns kFALSE otherwise</td><td>Bool_t</td>
+</tr><tr>
+<td>getHighDiscrim(AcdDigi::PmtId)</td><td>Returns kTRUE if the high (CNO) discriminator is set, returns kFALSE otherwise</td><td>Bool_t</td>
+</tr><tr>
+<td>getEnergy( )</td><td>returns the amount of Monte Carlo energy (MeV) deposited in this detector only useful for simulated data</td><td>Float_t</td>
+</tr><tr>
+<td>getTileNumber( )</td><td>returns as reported by LDF in real data</td><td>Int_t</td>
+</tr><tr>
+<td>getTileName( )</td><td>returns the string denoting the name of this tile as reported by LDF in real data</td><td>const char*</td>
+</tr><tr>
+<td>getRange(AcdDigi::PmtId)</td><td>Returns the range for the specified PMT (A or B) either HIGH or LOW</td><td>AcdDigi::Range</td>
+</tr><tr>
+<td>getParityError(AcdDigi::PmtId)</td><td>Returns the parity error bit for the specified PMT (A or B) either ERROR or NOERROR</td><td>AcdDigi::ParityError</td>
+</tr>
 </table>
-<p><b><a name="AcdId">AcdId</a></b></p>
-<table border="1" width="100%">
-  <tr>
-    <td width="33%">getId(Short_t base = 10 )</td>
-    <td width="33%">Returns a numerical value for the AcdId, by default in base
-      10.</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">isTop( )</td>
-    <td width="33%">Returns kTRUE if this Acd detector is on the top (Face 0) of
-      the instrument, returns kFALSE otherwise</td>
-    <td width="34%">Bool_t</td>
-  </tr>
-  <tr>
-    <td width="33%">isSide( )</td>
-    <td width="33%">Returns kTRUE if this Acd detector is on a side (Face != 0),
-      returns kFALSE otherwise</td>
-    <td width="34%">Bool_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getLayer( )</td>
-    <td width="33%">Returns the layer number of this AcdId</td>
-    <td width="34%">UShort_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getFace( )</td>
-    <td width="33%">Returns the face number [0-4]</td>
-    <td width="34%">UShort_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getRow( )</td>
-    <td width="33%">Returns the row number</td>
-    <td width="34%">UShort_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getColumn( )</td>
-    <td width="33%">Returns the column number</td>
-    <td width="34%">UShort_t</td>
-  </tr>
+<h2 class="heading2"><a name="digiRootData-AcdId+%3Ca+name%3D%22digiRootDataAcdId%22%3E%3C%2Fa%3E"> AcdId <a name="digiRootData-AcdId"></a></a></h2>
+
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getId(Short_t base = 10 )</td><td>Returns a numerical value for the AcdId, by default in base 10.</td><td>UInt_t</td>
+</tr><tr>
+<td>isTop( )</td><td>Returns kTRUE if this Acd detector is on the top (Face 0) of the instrument, returns kFALSE otherwise</td><td>Bool_t</td>
+</tr><tr>
+<td>isSide( )</td><td>Returns kTRUE if this Acd detector is on a side (Face != 0), returns kFALSE otherwise</td><td>Bool_t</td>
+</tr><tr>
+<td>getLayer( )</td><td>Returns the layer number of this AcdId</td><td>UShort_t</td>
+</tr><tr>
+<td>getFace( )</td><td>Returns the face number 0-4</td><td>UShort_t</td>
+</tr><tr>
+<td>getRow( )</td><td>Returns the row number</td><td>UShort_t</td>
+</tr><tr>
+<td>getColumn( )</td><td>Returns the column number</td><td>UShort_t</td>
+</tr>
 </table>
-<p><b><a name="CalDigi">CalDigi</a></b></p>
-<table border="1" width="100%">
-  <tr>
-    <td width="33%">getMode( )</td>
-    <td width="33%">Returns the readout mode</td>
-    <td width="34%">CalXtalId::CalTrigMode</td>
-  </tr>
-  <tr>
-    <td width="33%">getPackedId( )</td>
-    <td width="33%">Returns the crystal id associated with this CalDigi</td>
-    <td width="34%">const <a href="#CalXtalId">CalXtalId</a></td>
-  </tr>
-  <tr>
-    <td width="33%">getReadoutCol( )</td>
-    <td width="33%">Returns the full collection of CalXtalReadout objects</td>
-    <td width="34%">const TClonesArray*</td>
-  </tr>
-  <tr>
-    <td width="33%">getRange(short readoutIndex, CalXtalId::XtalFace face)</td>
-    <td width="33%">Retrieve energy range for selected face and readout</td>
-    <td width="34%">Char_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getAdc(Short_t readoutIndex, CalXtalId::XtalFace face)</td>
-    <td width="33%">Retrieve pulse height for selected face and readout</td>
-    <td width="34%">Short_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getXtalReadout(Short_t readoutIndex)</td>
-    <td width="33%">Retrieve ranges and pulse heights from both ends of selected readout</td>
-    <td width="34%">const <a href="#CalXtalReadout">CalXtalReadout</a>*</td>
-  </tr>
-  <tr>
-    <td width="33%">getAdcSelectedRange(Char_t range, CalXtalId::XtalFace face)</td>
-    <td width="33%">Retrieve pulse height from selected range</td>
-    <td width="34%">Short_t</td>
-  </tr>
+<h2 class="heading2"><a name="digiRootData-CalDigi+%3Ca+name%3D%22digiRootDataCalDigi%22%3E%3C%2Fa%3E"> CalDigi <a name="digiRootData-CalDigi"></a></a></h2>
+
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getMode( )</td><td>Returns the readout mode</td><td>CalXtalId::CalTrigMode</td>
+</tr><tr>
+<td>getPackedId( )</td><td>Returns the crystal id associated with this CalDigi</td><td>const <a href="digiRootData.html#WB-digiRootData-CalXtalId" title="CalXtalId on digiRootData">CalXtalId</a></td>
+</tr><tr>
+<td>getReadoutCol( )</td><td>Returns the full collection of CalXtalReadout objects</td><td>const TClonesArray*</td>
+</tr><tr>
+<td>getRange(short readoutIndex, CalXtalId::XtalFace face)</td><td>Retrieve energy range for selected face and readout</td><td>Char_t</td>
+</tr><tr>
+<td>getAdc(Short_t readoutIndex, CalXtalId::XtalFace face)</td><td>Retrieve pulse height for selected face and readout</td><td>Short_t</td>
+</tr><tr>
+<td>getXtalReadout(Short_t readoutIndex)</td><td>Retrieve ranges and pulse heights from both ends of selected readout</td><td>const <a href="digiRootData.html#WB-digiRootData-CalXtalReadout" title="CalXtalReadout on digiRootData">CalXtalReadout</a>*</td>
+</tr><tr>
+<td>getAdcSelectedRange(Char_t range, CalXtalId::XtalFace face)</td><td>Retrieve pulse height from selected range</td><td>Short_t</td>
+</tr>
 </table>
-<p><b><a name="CalXtalId">CalXtalId</a></b></p>
-<table border="1" width="100%">
-  <tr>
-    <td width="33%">getPackedId( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getUnpackedId(Short_t&amp; tower, Short_t&amp; layer, Short_t&amp; column)</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">void</td>
-  </tr>
-  <tr>
-    <td width="33%">getTower( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">Short_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getLayer( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">Short_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getColumn( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">Short_t</td>
-  </tr>
+<h2 class="heading2"><a name="digiRootData-CalXtalId+%3Ca+name%3D%22digiRootDataCalXtalId%22%3E%3C%2Fa%3E"> CalXtalId <a name="digiRootData-CalXtalId"></a></a></h2>
+
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getPackedId( )</td><td>Bit packed identifier for the crystal</td><td>UInt_t</td>
+</tr><tr>
+<td>getUnpackedId(Short_t&amp; tower, Short_t&amp; layer, Short_t&amp; column)</td><td>Unpacks the crystal id into tower, layer and column</td><td>void</td>
+</tr><tr>
+<td>getTower( )</td><td>Returns the tower number this crystal is associated with</td><td>Short_t</td>
+</tr><tr>
+<td>getLayer( )</td><td>Returns the layer associated with this crystal</td><td>Short_t</td>
+</tr><tr>
+<td>getColumn( )</td><td>Returns the column number associated with this crystal</td><td>Short_t</td>
+</tr>
 </table>
-<p><b><a name="CalXtalReadout">CalXtalReadout</a></b></p>
-<table border="1" width="100%">
-  <tr>
-    <td width="33%">getAdc(CalXtalId::XtalFace face)</td>
-    <td width="33%">retrieve pulse height from specified face</td>
-    <td width="34%">UShort_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getRange(CalXtalId::XtalFace face)</td>
-    <td width="33%">retrieve energy range from specified face</td>
-    <td width="34%">Char_t</td>
-  </tr>
+<h2 class="heading2"><a name="digiRootData-CalXtalReadout+%3Ca+name%3D%22digiRootDataCalXtalReadout%22%3E%3C%2Fa%3E"> CalXtalReadout <a name="digiRootData-CalXtalReadout"></a></a></h2>
+
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getAdc(CalXtalId::XtalFace face)</td><td>Retrieve pulse height from specified face</td><td>UShort_t</td>
+</tr><tr>
+<td>getRange(CalXtalId::XtalFace face)</td><td>Retrieve energy range from specified face</td><td>Char_t</td>
+</tr>
 </table>
-<p><b><a name="CalDiagnostic">CalDiagnosticData<br>
-</a></b>This class is just an interface to the Online's LDF CALdiagnostic class.</p>
-<p><a href="http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/TEM.pdf">http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/TEM.pdf</a></p>
-<table border="1" width="100%" height="94">
-  <tr>
-    <td width="33%" height="19">getDataWord( )</td>
-    <td width="33%" height="19">Returns the full data word for this
-      CALdiagnostic</td>
-    <td width="34%" height="19">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%" height="13">high(UInt_t sign )</td>
-    <td width="33%" height="13">Returns high energy trigger request value for
-      the specified layer end:&nbsp; 0-Positiive, 1-Negative</td>
-    <td width="34%" height="13">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%" height="19">low( UInt_t sign)</td>
-    <td width="33%" height="19">Returns low energy trigger request value for
-      specified layer end:&nbsp; 0-Positive, 1-Negative</td>
-    <td width="34%" height="19">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%" height="19">logAccepts(UInt_t sign )</td>
-    <td width="33%" height="19">Returns status of logaccepts lines for the
-      specified layer end:&nbsp; 0-Positive, 1-Negative</td>
-    <td width="34%" height="19">UInt_t</td>
-  </tr>
+<h2 class="heading2"><a name="digiRootData-CalDiagnosticData+%3Ca+name%3D%22digiRootDataCalDiagnosticData%22%3E%3C%2Fa%3E"> CalDiagnosticData <a name="digiRootData-CalDiagnosticData"></a></a></h2><p class="paragraph">This class is just an interface to the Online&#039;s LDF CALdiagnostic class.</p><a href="http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/TEM.pdf" title="Visit page outside Confluence">&#104;ttp://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/TEM.pdf</a><br/>
+
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getDataWord( )</td><td>Returns the full data word for this CALdiagnostic</td><td>UInt_t</td>
+</tr><tr>
+<td>high(UInt_t sign )</td><td>Returns high energy trigger request value for the specified layer end: 0-Positiive, 1-Negative</td><td>UInt_t</td>
+</tr><tr>
+<td>low( UInt_t sign)</td><td>Returns low energy trigger request value for specified layer end: 0-Positive, 1-Negative</td><td>UInt_t</td>
+</tr><tr>
+<td>logAccepts(UInt_t sign )</td><td>Returns status of logaccepts lines for the specified layer end: 0-Positive, 1-Negative</td><td>UInt_t</td>
+</tr>
 </table>
-<p><b><a name="GlastAxis">GlastAxis</a></b></p>
-<table border="1" width="100%">
-  <tr>
-    <td width="33%">enum axis {X=0, Y=1, XY=2, NONE=3}</td>
-    <td width="33%">An enumeration that identifies orientation.</td>
-    <td width="34%">&nbsp;</td>
-  </tr>
+<h2 class="heading2"><a name="digiRootData-GlastAxis+%3Ca+name%3D%22digiRootDataGlastAxis%22%3E%3C%2Fa%3E"> GlastAxis <a name="digiRootData-GlastAxis"></a></a></h2>
+
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>enum axis <div class="error">Unknown macro: {X=0, Y=1, XY=2, NONE=3}</div></td><td>An enumeration that identifies orientation.</td><td> </td>
+</tr>
 </table>
-<p>&nbsp;</p>
-<p><b><a name="TkrDigi">TkrDigi</a></b></p>
-<table border="1" width="100%">
-  <tr>
-    <td width="33%">getTower( )</td>
-    <td width="33%">Returns the tower identifier associated with this TkrDigi</td>
-    <td width="34%"><a href="#TowerId">TowerId</a></td>
-  </tr>
-  <tr>
-    <td width="33%">getBilayer( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">UShort_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getView( )</td>
-    <td width="33%">Returns the view which denotes the orientation of the strips</td>
-    <td width="34%"><a href="#GlastAxis">GlastAxis::axis</a></td>
-  </tr>
-  <tr>
-    <td width="33%">getLastController0Strip()</td>
-    <td width="33%">Retrieve the last strip associated with controller zero</td>
-    <td width="34%">Int_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getToT(UInt_t i)</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">Int_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getToTForStrip(UInt_t strip)</td>
-    <td width="33%">Returns Time Over Threshold for a given strip</td>
-    <td width="34%">Int_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getNumHits( )</td>
-    <td width="33%">Returns the number of hits associated with this TkrDigi</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getStrip(UInt_t i)</td>
-    <td width="33%">Returns the ith strip number</td>
-    <td width="34%">Int_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getHit(UInt_t i)</td>
-    <td width="33%">Returns a specific hit identifier by its index in the
-      collection of hits</td>
-    <td width="34%">Int_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getHitCol( )</td>
-    <td width="33%">Returns the full collection of hit strips</td>
-    <td width="34%">std::vector&lt;UInt_t&gt;</td>
-  </tr>
+<h2 class="heading2"><a name="digiRootData-TkrDigi+%3Ca+name%3D%22digiRootDataTkrDigi%22%3E%3C%2Fa%3E"> TkrDigi <a name="digiRootData-TkrDigi"></a></a></h2>
+
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getTower( )</td><td>Returns the tower identifier associated with this TkrDigi</td><td><a href="digiRootData.html#WB-digiRootData-TowerId" title="TowerId on digiRootData">TowerId</a></td>
+</tr><tr>
+<td>getBilayer( )</td><th>UShort_t</th>
+</tr><tr>
+<td>getView( )</td><td>Returns the view which denotes the orientation of the strips</td><td><a href="digiRootData.html#WB-digiRootData-GlastAxis" title="GlastAxis on digiRootData">GlastAxis::axis</a></td>
+</tr><tr>
+<td>getLastController0Strip()</td><td>Retrieve the last strip associated with controller zero</td><td>Int_t</td>
+</tr><tr>
+<td>getToT(UInt_t i)</td><td>Returns the Time Over Threshold value for either controller zero or controller one - dependent upon the input parameter, i.</td><td>Int_t</td>
+</tr><tr>
+<td>getToTForStrip(UInt_t strip)</td><td>Returns Time Over Threshold for a given strip</td><td>Int_t</td>
+</tr><tr>
+<td>getNumHits( )</td><td>Returns the number of hits associated with this TkrDigi</td><td>UInt_t</td>
+</tr><tr>
+<td>getStrip(UInt_t i)</td><td>Returns the ith strip number</td><td>Int_t</td>
+</tr><tr>
+<td>getHit(UInt_t i)</td><td>Returns a specific hit identifier by its index in the collection of hits</td><td>Int_t</td>
+</tr><tr>
+<td>getHitCol( )</td><td>Returns the full collection of hit strips</td><td>std::vector&lt;UInt_t&gt;</td>
+</tr>
 </table>
-<p><b><a name="TkrDiagnosticData">TkrDiagnosticData</a></b></p>
-<p>This class is just an interface to the Online's LDF TKRdiagnostic
-class.&nbsp; We use the TKRdiagnostic class to unpack the data.</p>
-<table border="1" width="100%">
-  <tr>
-    <td width="33%">dataWord( )</td>
-    <td width="33%">returns full data word associated with this TKRdiagnostic</td>
-    <td width="34%">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%">getGTRC( int gtrc )</td>
-    <td width="33%">Returns the state of the trigger request line for the given
-      GTRC</td>
-    <td width="34%">UInt_t</td>
-  </tr>
+<h2 class="heading2"><a name="digiRootData-TkrDiagnosticData+%3Ca+name%3D%22digiRootDataTkrDiagnosticData%22%3E%3C%2Fa%3E"> TkrDiagnosticData <a name="digiRootData-TkrDiagnosticData"></a></a></h2><p class="paragraph">This class is just an interface to the Online&#039;s LDF TKRdiagnostic class. We use the TKRdiagnostic class to unpack the data.</p><a href="http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/TEM.pdf" title="Visit page outside Confluence">&#104;ttp://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/TEM.pdf</a><br/>
+
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>dataWord( )</td><td>Returns full data word associated with this TKRdiagnostic</td><td>UInt_t</td>
+</tr><tr>
+<td>getGTRC( int gtrc )</td><td>Returns the state of the trigger request line for the given GTRC</td><td>UInt_t</td>
+</tr>
 </table>
-<p><b><a name="TowerId">TowerId</a></b></p>
-<table border="1" width="100%">
-  <tr>
-    <td width="33%">id( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">Int_t</td>
-  </tr>
-  <tr>
-    <td width="33%">ix( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">Int_t</td>
-  </tr>
-  <tr>
-    <td width="33%">iy( )</td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">Int_t</td>
-  </tr>
-  <tr>
-    <td width="33%">neighbor (const TowerId&amp; n)</td>
-    <td width="33%">Reports whether or not a tower identifier by TowerId n is a
-      neighbor (kTRUE) or not (kFALSE)</td>
-    <td width="34%">Bool_t</td>
-  </tr>
-</table>
-<p>&nbsp;</p>
-</BODY>
-</HTML>
+<h2 class="heading2"><a name="digiRootData-TowerId+%3Ca+name%3D%22digiRootDataTowerId%22%3E%3C%2Fa%3E"> TowerId <a name="digiRootData-TowerId"></a></a></h2>
+
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>id( )</td><td>Returns the full tower number</td><td>Int_t</td>
+</tr><tr>
+<td>ix( )</td><td>Returns the x-component of the tower number</td><td>Int_t</td>
+</tr><tr>
+<td>iy( )</td><td>Returns the y-component of the tower number</td><td>Int_t</td>
+</tr><tr>
+<td>neighbor (const TowerId&amp; n)</td><td>Reports whether or not a tower identifier by TowerId n is a neighbor (kTRUE) or not (kFALSE)</td><td>Bool_t</td>
+</tr>
+</table><br/>
+<a href="digiRootData.html#WB-digiRootData-top" title="top on digiRootData">Back to Top</a>&#160;<br/>
+
+
+
+
+
+
+
+				    					    <br/>
+                        <div class="tabletitle">
+                            <a name="attachments">Attachments:</a>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="digiRootData_attachments/digiTree.gif">digiTree.gif</a> (image/gif)
+                                <br/>
+                                                    </div>
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Oct 13, 2004 14:12</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>
