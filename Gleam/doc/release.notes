@@ -1,7 +1,16 @@
 /** @file release.notes
  * package Gleam
  * package manager:T.Burnett
-* v2r2p8 THB 08-Aug-02
+
+* v2r2p9 THB 15-Aug-02
+
+      use detModel      v2r13
+      use xmlGeoDbs     v1r6p0
+      use GlastSvc      v8r2
+      use G4Generator    v4r3
+      use AcdDigi        v1r3
+
+* v2r2p8 THB 14-Aug-02
      use GuiSvc                v3r1p3
      use FluxSvc               v5r10
      use TkrDigi               v1r5p5
