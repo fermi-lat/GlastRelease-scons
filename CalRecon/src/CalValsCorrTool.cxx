@@ -71,10 +71,8 @@ StatusCode CalValsCorrTool::doEnergyCorr(double eTotal, Event::CalCluster* clust
     StatusCode sc = m_calValsTool->calculate();
     
     double correctedEnergy;
-    if (sc == StatusCode::SUCCESS) {
-        sc = m_calValsTool->getVal("CAL_Energy_Corr",correctedEnergy);
-//        if (sc == StatusCode::SUCCESS) cluster->setEnergyCorrected(correctedEnergy);
-    }
+    sc = m_calValsTool->getVal("CAL_Energy_Corr",correctedEnergy);
+    if (sc == StatusCode::SUCCESS) cluster->setEnergyCorrected(correctedEnergy);
 
     return sc;
 }
