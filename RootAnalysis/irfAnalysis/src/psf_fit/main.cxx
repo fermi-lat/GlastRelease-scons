@@ -76,7 +76,7 @@ int main(){
 
     //-------test GenericFitter and setEnergyScaling--------------
     std::string myFunction 
-       = "x*( [0]*exp(-0.5*x*x/([1]*[1]))/[1] + [2]*exp(-pow((x/[3]), [4])) )";
+       = "x*( [0]*exp(-0.5*x*x/([1]*[1])) + [2]*exp(-pow((x/[3]), [4])) )";
     double pinit[] = {0.01, 1.0, 0.2, 1.0, 1.0};
     std::vector<double> fitParams(pinit, pinit+sizeof(pinit)/sizeof(double));
     myfit = new GenericFitter(myFunction, fitParams, 

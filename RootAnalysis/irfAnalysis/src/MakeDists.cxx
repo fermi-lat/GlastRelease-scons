@@ -159,6 +159,11 @@ void MakeDists::draw(const std::string &ps_filename, bool logy, Fitter* fitter) 
 
 void MakeDists::addCutInfo(const std::string &rootFile, 
                            const std::string &treeName) {
+// It's more convenient (and compact) to have separate trees for each
+// theta and energy grid.
+   addThetaGrid(rootFile);
+   addEnergyGrid(rootFile);
+
 // Assume the file is in the root output directory.
    std::string path = ::getenv("output_file_root");
    TFile f( (path + "/" + rootFile).c_str(), "update" );
@@ -186,6 +191,37 @@ void MakeDists::addCutInfo(const std::string &rootFile,
    tree->Write("", TObject::kOverwrite);
 //   f.Close();
 }
+
+void MakeDists::addThetaGrid(const std::string &rootFile) {
+   std::string path = ::getenv("output_file_root");
+   TFile f( (path + "/" + rootFile).c_str(), "update" );
+
+   TTree tree("thetaGrid", 
+              "Grid boundaries of incident photon inclinations (degrees)");
+   Double_t theta;
+   tree.Branch("theta", &theta, "theta/D");
+   for (int i = 0; i < angle_bins + 1; i++) {
+      theta = static_cast<Double_t>(angles[i]);
+      tree.Fill();
+   }
+   tree.Write();
+}   
+
+void MakeDists::addEnergyGrid(const std::string &rootFile) {
+   std::string path = ::getenv("output_file_root");
+   TFile f( (path + "/" + rootFile).c_str(), "update" );
+
+   TTree tree("energyGrid", 
+              "Grid boundaries of incident photon energies (MeV)");
+   Double_t energy;
+   tree.Branch("energy", &energy, "energy/D");
+   double my_logestart = logestart - logedelta/2.;
+   for (int j =0; j < energy_bins + 1; j++) {
+      energy = pow(10., my_logestart + logedelta*j);
+      tree.Fill();
+   }
+   tree.Write();
+}   
 
 void MakeDists::setEnergyScaling(std::string scalingFunction,
                                  const std::vector<double> &params) {

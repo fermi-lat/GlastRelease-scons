@@ -61,6 +61,9 @@ private:
 
    TF1 * m_energyScale;
 
+   void addThetaGrid(const std::string &rootFile);
+   void addEnergyGrid(const std::string &rootFile);
+
    void applyEnergyScaling();
    void replaceVariables();
    void modifyBranchName();
