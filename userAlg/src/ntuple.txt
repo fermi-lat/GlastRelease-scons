@@ -7,7 +7,7 @@
 ApplicationMgr.DLLs   += { "RootHistCnv", "ntupleWriterSvc"};
 ApplicationMgr.HistogramPersistency = "ROOT";
 
-ApplicationMgr.ExtSvc += { "NTupleSvc", "ntupleWriterSvc" };
+ApplicationMgr.ExtSvc += { "ntupleWriterSvc" };
 
 // add this guy the the general n-tuple
 
