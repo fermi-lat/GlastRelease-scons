@@ -19,7 +19,7 @@ namespace ldfReader {
             m_summary = tem.m_summary; 
             m_lenInBytes = tem.m_lenInBytes; 
             m_exist = tem.m_exist; };
-        TemData(const EventSummaryCommon& summary) {m_summary = summary; };
+        TemData(const EventSummaryCommon& summary) {clear(); m_summary = summary; };
         ~TemData() { clear(); };
 
         void clear() { 

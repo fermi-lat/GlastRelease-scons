@@ -19,7 +19,7 @@ namespace ldfReader {
             m_summary = osw.m_summary; 
             m_lenInBytes = osw.m_lenInBytes; 
             m_exist = osw.m_exist; };
-        OswData(const EventSummaryCommon& summary) { m_summary = summary; };
+        OswData(const EventSummaryCommon& summary) { clear(); m_summary = summary; };
         ~OswData() { clear(); };
 
         void clear() { 

@@ -19,7 +19,7 @@ namespace ldfReader {
             m_summary = error.m_summary; 
             m_lenInBytes = error.m_lenInBytes; 
             m_exist = error.m_exist; };
-        ErrData(const EventSummaryCommon &summary) { m_summary = summary; }
+        ErrData(const EventSummaryCommon &summary) { clear(); m_summary = summary; }
         ~ErrData() { clear(); };
 
         void clear() { 

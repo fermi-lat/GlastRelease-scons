@@ -19,7 +19,7 @@ namespace ldfReader {
            m_summary = aem.m_summary; 
            m_lenInBytes = aem.m_lenInBytes; 
            m_exist = aem.m_exist; };
-        AemData(const EventSummaryCommon &summary) { m_summary = summary; };
+        AemData(const EventSummaryCommon &summary) { clear(); m_summary = summary; };
         ~AemData() { clear(); };
 
         void clear() { 
