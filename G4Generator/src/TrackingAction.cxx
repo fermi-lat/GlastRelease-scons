@@ -12,6 +12,9 @@
 
 #include "McParticleManager.h"
 #include "TrackingAction.h"
+#include "G4Generator/IG4GeometrySvc.h"
+
+#include "idents/VolumeIdentifier.h"
 
 #include "Event/MonteCarlo/McParticle.h"
 
@@ -19,13 +22,15 @@
 #include "G4TrackingManager.hh"
 #include "G4UnitsTable.hh"
 #include "G4Track.hh"
+#include "G4SDManager.hh"
+#include "G4TouchableHistory.hh"
 
 //clhep
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 
 
-TrackingAction::TrackingAction()
+TrackingAction::TrackingAction(IG4GeometrySvc* gsv):m_geoSvc(gsv)
 {;}
 
 void TrackingAction::PreUserTrackingAction(const G4Track* aTrack)
@@ -41,7 +46,7 @@ void TrackingAction::PreUserTrackingAction(const G4Track* aTrack)
   
   // we get the pointer to the McParticleManager singleton
   McParticleManager* man = McParticleManager::getPointer();
-  
+ 
   // the name of the process producing the track; by defauld is primary
   std::string process = "primary";
 
@@ -52,9 +57,9 @@ void TrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     }
   else // otherwise it has
     {
-      parent = man->getMcParticle(aTrack->GetParentID());
+	  parent = man->getMcParticle(aTrack->GetParentID());
       process = aTrack->GetCreatorProcess()->GetProcessName();
-    }
+	}
   
   if ( man->getMode()== 0)
     if ((aTrack->GetTrackID() == 1) || 
@@ -78,6 +83,22 @@ void TrackingAction::PreUserTrackingAction(const G4Track* aTrack)
       particle->initialize(parent, aTrack->GetDefinition()->GetPDGEncoding(),
                            Event::McParticle::Swum,pin,aTrack->GetPosition(),
                            process);
+      
+      
+      idents::VolumeIdentifier ret;
+      G4TouchableHistory* theTouchable
+	= (G4TouchableHistory*)aTrack->GetTouchable();
+      if (theTouchable)
+	{
+	  for( int i = 0; i<theTouchable->GetHistoryDepth() ; ++i) {
+	    const G4VPhysicalVolume* physVol = theTouchable->GetVolume(i); 
+	    if( physVol->GetMother()==0) break;
+	    idents::VolumeIdentifier id = m_geoSvc->getVolumeIdent(physVol);
+	    ret.prepend(id);
+	  }
+	}
+      
+      particle->setInitialId(ret);
       
       // we add this particle to our collection for subsequent saving in the TDS
       man->addMcParticle(aTrack->GetTrackID(),particle);  
@@ -116,8 +137,24 @@ void TrackingAction::PostUserTrackingAction(const G4Track* aTrack)
       HepLorentzVector pfin(aTrack->GetTotalEnergy(), aTrack->GetMomentum());  
       // we finalize the particle by giving the final momentum and position
       particle->finalize(pfin, aTrack->GetPosition());
-    }
 
+      idents::VolumeIdentifier ret;
+      G4TouchableHistory* theTouchable
+	= (G4TouchableHistory*)aTrack->GetTouchable();
+      if (theTouchable)
+	{
+	  for( int i = 0; i<theTouchable->GetHistoryDepth() ; ++i) {
+	    const G4VPhysicalVolume* physVol = theTouchable->GetVolume(i); 
+	    if( physVol->GetMother()==0) break;
+	    idents::VolumeIdentifier id = m_geoSvc->getVolumeIdent(physVol);
+	    ret.prepend(id);
+	  }
+	}
+      
+      particle->setFinalId(ret);
+      
+    }
+  
 }
 
 

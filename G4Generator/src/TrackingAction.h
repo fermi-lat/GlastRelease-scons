@@ -3,6 +3,7 @@
 
 #include "G4UserTrackingAction.hh"
 
+class IG4GeometrySvc;
 /** 
  * @class TrackingAction
  *
@@ -19,7 +20,7 @@
 class TrackingAction : public G4UserTrackingAction {
 
   public:
-    TrackingAction();
+    TrackingAction(IG4GeometrySvc*);
     virtual ~TrackingAction(){};
 
     /// Action to be performed before a new track is created
@@ -28,5 +29,6 @@ class TrackingAction : public G4UserTrackingAction {
     virtual void PostUserTrackingAction(const G4Track*);
   
   private:
+    IG4GeometrySvc* m_geoSvc;
 };
 #endif

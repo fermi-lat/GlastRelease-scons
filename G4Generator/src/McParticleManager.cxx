@@ -16,10 +16,19 @@
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/SmartRefVector.h"
 
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+
 #include "Event/TopLevel/EventModel.h"
 
 // This is the singleton static pointer
 McParticleManager* McParticleManager::m_pointer = 0;
+
+void McParticleManager::initialize(IDataProviderSvc* esv, IGlastDetSvc* gsvc)
+{
+	m_esv = esv;
+	m_glastDetSvc = gsvc;
+}
+
 
 Event::McParticle* McParticleManager::getMcParticle(unsigned int id)
 {
@@ -83,18 +92,28 @@ void McParticleManager::save()
 
 void McParticleManager::pruneCal()
 {
-  // Purpose and Method: with that method we prune all the McParticle that does
-  // not belong to the TKR region (very LAT speicific, we check z<0 for both
-  // start and end position of an McParticle) and that does not interact with the
-  // TKR itself (producing an McPositionHit).
+  // Purpose and Method: with that method we prune all the McParticle that 
+  // start in the Cal and die in the Cal (to find that we are using the id
+  // and some GlastDetSvc constant to check them.
 
   std::map <unsigned int, Event::McParticle*>::iterator it;
 
+  int towersId;
+  int calId;
+  m_glastDetSvc->getNumericConstByName("eLATTowers", &towersId);
+  m_glastDetSvc->getNumericConstByName("eTowerCAL", &calId);
+
   for(it=m_particles.begin();it != m_particles.end() ; it++)
     {
-      if (((it->second)->initialPosition().z() < 0) && ((it->second)->finalPosition().z()<0)
-          && !((it->second)->statusFlags()&Event::McParticle::POSHIT)
-          && !((it->second)->statusFlags()&Event::McParticle::PRIMARY))
+
+      if (((it->second)->getInitialId().size() > 3) && 
+	  ((it->second)->getInitialId()[0] == towersId) && 
+	  ((it->second)->getInitialId()[3] == calId) &&
+	  ((it->second)->getFinalId().size() > 3) &&
+	  ((it->second)->getFinalId()[0] == 0) && 
+	  ((it->second)->getFinalId()[3] == 0) && 
+	  !((it->second)->statusFlags()&Event::McParticle::POSHIT) && 
+	  !((it->second)->statusFlags()&Event::McParticle::PRIMARY))
         {
           for(unsigned int i=0;i<(it->second)->daughterList().size();i++)
             {
@@ -104,8 +123,7 @@ void McParticleManager::pruneCal()
               part->addStatusFlag(Event::McParticle::BCKSPL);
               mother->addDaughter(part);
             }
-
-          delete it->second;
+	  delete it->second;
           it->second = 0;
         }
       

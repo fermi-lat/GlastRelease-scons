@@ -17,6 +17,8 @@ class G4Run;
 
 class Hep3Vector;
 
+class IG4GeometrySvc;
+
 #include "G4Event.hh"
 
 #include "G4EventManager.hh"
@@ -83,7 +85,8 @@ class RunManager
              std::string& physics_choice, 
              std::string& physics_table,
              std::string&  physics_dir,
-             Geant4::MultipleScatteringFactory& msfactory);
+             Geant4::MultipleScatteringFactory& msfactory,
+			 IG4GeometrySvc*);
   
   virtual ~RunManager();
 

@@ -11,6 +11,8 @@
 
 #include <map>
 
+class IGlastDetSvc;
+
 /** 
  *  @class McParticleManager
  *
@@ -50,7 +52,8 @@ class McParticleManager {
   /// initialize the class, passing the event selector pointer for TDS
   /// operations
   /// @param esv The pointer to the DataProviderSvc service 
-  void initialize(IDataProviderSvc* esv){m_esv = esv;}
+  /// @param gsvc The pointer to the GlastDetSvc service
+  void initialize(IDataProviderSvc* esv, IGlastDetSvc* gsvc);
 
   /// Retrive the actual origin particle 
   /// @return The actual origin McParticle 
@@ -109,5 +112,8 @@ class McParticleManager {
   /// A flag for the mode of generation of the McParticle tree; true means the
   /// full modes false means the minimal one
   bool m_mode;
+
+  /// The GlastDetSvc is used to retrive some constants in the pruneCal method 
+  IGlastDetSvc* m_glastDetSvc;
 };
 #endif //McParticleManager_H
