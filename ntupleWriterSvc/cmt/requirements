@@ -1,12 +1,12 @@
 package ntupleWriterSvc
-version v2r0p0
+version v3r0
 
 branches src mgr doc
 
-use GlastPolicy v4r*
+use GlastPolicy v5r*
 use facilities v2r*
-use GaudiSvc v7r*
-use RootHistCnv v5r*
+use GaudiInterface * IExternal
+use RootPolicy *
 
 apply_pattern package_include
 apply_pattern packageShr
@@ -26,5 +26,6 @@ library ntupleWriterSvc  *.cxx Dll/*.cxx ${ntupleWriterSvc_headers}
 
 macro WinJobOptions  "" VisualC "test/jobOptions.txt"
 
-application test_ntupleWriterSvc \
-    test/*.cxx ${WinJobOptions}
+# build this for non-shareable testing
+set JOBOPTIONS  "${NTUPLEWRITERSVCROOT}/src/test/jobOptions.txt"
+application test_ntupleWriterSvc  ${GlastMain} test/writeJunkAlg.cxx
