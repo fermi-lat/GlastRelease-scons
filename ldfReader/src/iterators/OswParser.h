@@ -29,6 +29,7 @@ namespace ldfReader {
 
         virtual int OSW_UDF(EBFevent* event, OSWcontribution* contribution)const {
             fprintf(stderr, "Undefined OSW contribution encountered with identity %08x\n", contribution->identity().value());  
+            return 0;
         } ;
 
     private:
