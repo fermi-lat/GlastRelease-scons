@@ -129,7 +129,7 @@ StatusCode FluxTestAlg::execute() {
     //only make a new source if one does not already exist.
     if(pcol==0){
         m_flux->generate();
-        p = m_flux->launchPoint();
+        p = m_flux->launchPoint()*10.;
         d = m_flux->launchDir();
         energy = m_flux->energy();
         partName = m_flux->particleName();

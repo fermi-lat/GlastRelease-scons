@@ -103,7 +103,7 @@ StatusCode FluxAlg::execute()
     
     m_flux->generate();
     
-    HepPoint3D p = m_flux->launchPoint();
+    HepPoint3D p = m_flux->launchPoint()*10.;//the 10 is so that d is in mm, instead of cm.
     HepPoint3D d = m_flux->launchDir();
     double ke = m_flux->energy(); // kinetic energy
     std::string particleName = m_flux->particleName();
@@ -145,7 +145,7 @@ StatusCode FluxAlg::execute()
     mc::McParticle * parent= new mc::McParticle;
     pcol->push_back(parent);
 
-    HepLorentzVector pin(d*10.,ke);  //the 10 is so that d is in mm, instead of cm.
+    HepLorentzVector pin(d,ke);  
 
     // This parent particle decay at the start in the first particle, 
     // so initial momentum and final one are the same
