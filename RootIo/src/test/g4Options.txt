@@ -29,7 +29,7 @@ FluxSvc.source_lib = {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
 
 //----------------- local algorithms to run -------------------
 ApplicationMgr.TopAlg = { "FluxAlg", "G4Generator", "AcdDigiAlg",
-                          "TkrSimpleDigiAlg", "CalDigiAlg",
+                          "TkrDigiAlg", "CalDigiAlg",
                           "TkrClusterAlg", "TkrFindAlg", "TkrReconAlg", "TkrVertexAlg",
                           "CalXtalRecAlg", "CalClustersAlg",
                           "AcdReconAlg"};

@@ -83,7 +83,7 @@ FluxSvc.source_lib += {
 //
 ApplicationMgr.DLLs +={ "TkrDigi", "CalDigi", "AcdDigi"  };
 Digitization.Members = { 
-    "TkrSimpleDigiAlg", 
+    "TkrDigiAlg", 
     "CalDigiAlg", 
     "AcdDigiAlg"};
 
