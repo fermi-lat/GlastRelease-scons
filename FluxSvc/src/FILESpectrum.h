@@ -28,14 +28,14 @@ public:
     /// params is the filename to read
     FILESpectrum(const std::string& params);
     
-    
     /// return total flux 
     virtual double flux() const;
-    
+
+    /// flux method to conform to FluxSvc spectrum standard
+    double flux (double time ) const;
     
     /// sample a single particle energy from the spectrum
     virtual float operator() (float)const;
-    
     
     virtual std::string title() const;
     virtual const char * particleName() const;

@@ -112,6 +112,10 @@ double FILESpectrum::flux() const
     return m_flux;
 }
 
+double FILESpectrum::flux (double time ) const{
+    return flux();
+}
+
 
 float FILESpectrum::operator() (float r)const
 {
