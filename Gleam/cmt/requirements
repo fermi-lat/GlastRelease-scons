@@ -41,13 +41,13 @@ public
 
 use GuiSvc      v3
 
-use Event       v8r10
+use Event                  v8r11
 use GlastSvc    v8r1p2
 
 # simulation
 
-use FluxSvc     v5r7p1
-use FluxDisplay v2r0p1
+use FluxSvc                v5r8
+use FluxDisplay            v2r0p2
 use G4Generator v4r1p6
 
 #digitization
