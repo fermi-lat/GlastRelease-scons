@@ -19,28 +19,9 @@
  *
  *   CalXtalRecAlg takes the digitized calorimeter information from CalDigiCol
  *   as input, calculates the energy and position in each hitted crystal
- *   and stores this data into CalXtalRecCol.
- *    Energy for each crystal face is converted from adc value using simple
- *   linear formula:
- *   
- *    \f[
-         E = E_{max} * (ADC - PED)/(ADC_{max} - PED)
-     \f]   
- *   where \f$ E_{max} \f$ - maximum energy for used energy range,
- *  \f$ PED \f$ - pedestal, \f$ ADC_{max} \f$ - maximum ADC value.
- *   These constants are the same for all crystals and are defined
- *   in xml file flightCALResponse.xml .
- *
- *   Position along the crystal direction is calculated from asymmetry between
- *   energies reconstructed from positive and negative faces of the crystal
- *
- *   \f[ pos = \frac{E_{pos} - E_{neg}}{E_{pos} + E_{neg}} * 
-               \frac{1+lightAtt}{1-lightAtt} * \frac{L_{crystal}}{2}
-     \f]
- *   where \f$ L_{crystal} \f$ - crystal length and \f$ lightAtt \f$ - 
- *   the ratio of signal from "far" crystal face to the signal
- *   from"near" crystal face in the case when the energy deposition is close
- *   to one end of the crystal.
+ *   and stores this data into CalXtalRecCol.  CalXtalResponse package is 
+ *   used for the estimation of energy & position from digi info.  See
+ *   documentation in that package for details.
  *  
  *   CalClustersAlg calculates the energy, position and direction for
  *   calorimeter clusters and applies energy corrections.

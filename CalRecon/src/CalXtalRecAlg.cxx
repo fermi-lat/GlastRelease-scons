@@ -177,15 +177,6 @@ StatusCode CalXtalRecAlg::execute()
 }
 
 
-StatusCode CalXtalRecAlg::finalize()
-  // empty function: required by base class (Algorithm)
-{
-  StatusCode sc = StatusCode::SUCCESS;
-  return sc;
-}
-
-
-
 StatusCode CalXtalRecAlg::retrieve()
 
   // Purpose and method: 

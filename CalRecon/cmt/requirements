@@ -9,11 +9,14 @@ use GlastPolicy
 use CalUtil
 use CalXtalResponse
 use GaudiInterface * IExternal
+use CLHEP          * IExternal
 use GlastSvc
 use GuiSvc
 use Event
 use TkrUtil
 use xmlBase
+use gui
+use geometry
 
 apply_pattern packageShr
 

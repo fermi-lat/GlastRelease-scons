@@ -32,7 +32,7 @@ class CalXtalRecAlg : public Algorithm
     
   StatusCode initialize();
   StatusCode execute();
-  StatusCode finalize();
+  StatusCode finalize() {return StatusCode::SUCCESS;}
  protected:
   ///  function for setting pointers to the input and output data in Gaudi TDS
   StatusCode retrieve();
