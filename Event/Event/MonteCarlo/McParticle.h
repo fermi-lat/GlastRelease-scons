@@ -23,8 +23,6 @@
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/ObjectList.h"
 
-// Forward declarations
-class McVertex;
 
 
 /*!
@@ -45,26 +43,50 @@ class McVertex;
 //------------------------------------------------------------------------------
  */
 
-//namespace GlastEvent {  // NameSpace
+namespace mc {  // NameSpace
 
 extern const CLID& CLID_McParticle;
 
 class McParticle  : virtual public ContainedObject  {
   public:
     typedef int  StdHepId;
+   // vertex type definition
+    enum originType {primaryOrigin = 1, 
+        daughterOrigin = 2, 
+        decayProduct = 3, 
+        showerContents = 4, 
+        showerBacksplash = 5};
+
+    enum StatusBits{
+        DECAYED =1 ,   //! Decayed by generator
+        DECAYFLT=1<<1, //! Decayed in flight by swimmer
+        MISSED=  1<<2 ,//! Does not hit detector
+        NOINTER =1<<3, //! Traverses detector w/o interacting 
+        STOPPED =1<<4, //! Energy below cut; other bits may say why 
+        INTERACT=1<<5, //! Interacted, no further decision to be made
+        INTSHDEP=1<<6, //! Interacted, further decision depends on ! selection of shower deposition r 
+        PRIMARY =1<<7, //! primary particle 
+        SWERROR =1<<8, //! Error occurred in swimming the track 
+        SW2MNYST=1<<9, //! Swim aborted: too many steps (ISTOP=99) Parameter 
+        WOUTOFT =1<<10, //! Swim aborted: out of sensitive time of ! detector (ISTOP=4) 
+        NOTTRACK=1<<11, //! Not tracked by user request 
+        Swum =   1<<12  //! // this particle was produced by the swimmer
+    };
+
+
 
     virtual const CLID& clID() const   { return McParticle::classID(); }
     static const CLID& classID()       { return CLID_McParticle; }
     /// Constructors
     McParticle() :
-     m_subEvtID(0),
-//   m_primaryParticle(false),
      m_statusFlags(0)
     {}
     /// Destructor
     virtual ~McParticle() {}
 
-    /// Retrieve particle identification
+    void init(const McParticle* mother, StdHepId id, const Mc 
+
+    /// Retrieve particle identificatio
     ParticleID particleID() const;
     /// Update particle identification
     void setParticleID( ParticleID value );
@@ -74,22 +96,12 @@ class McParticle  : virtual public ContainedObject  {
     /// Update particle identification
     void setParticleProperty( StdHepId value );
 
-    /// Retrieve whether this is a primary particle
+    /// Retrieve whether this is a primary particle: true if mother is itself
     bool primaryParticle() const;
-    /// Set whether this is a primary particle
-    void setPrimaryParticleFlag( bool value );
 
-    /// Retrieve pointer to the vertex (const or non-const)
-    const McVertex* mcVertex() const;
-          McVertex* mcVertex();
-    /// Update pointer to origin vertex (by a C++ pointer or a smart reference)
-    void setMcVertex( McVertex* value );
-    void setMcVertex( SmartRef<McVertex> value );
+    /// Retrieve pointer to the incoming vertex 
+    const HepPoint3D& originVertex() const;
 
-    /// Retrieve sub event ID 
-    short subEvtID() const;
-    /// Set sub event ID 
-    void setSubEvtID( short value );
 
     /// Serialize the object for writing
     virtual StreamBuffer& serialize( StreamBuffer& s ) const ;
@@ -99,16 +111,23 @@ class McParticle  : virtual public ContainedObject  {
     virtual std::ostream& fillStream( std::ostream& s ) const;
 
   private:
-    /// Particle ID
-    ParticleID                m_particleID;
+
     /// particle property (such as electron or proton or ....) ID
-    StdHepId                  m_particleProperty;
-    /// Sub-event ID
-    short                     m_subEvtID;
+    StdHepId                  m_particleID;
     /// Bit-field status flag
     unsigned long             m_statusFlags;
-    /// Pointer to the McVertex
-    SmartRef<McVertex>        m_mcVertex;
+    /// Final position
+    HepPoint3D                 m_finalPosition;
+    /// 4-momentum vectors:
+    /// <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Vector/HepLorentzVector.html">class HepLorentzVector</A>
+    /// Initial 4-momentum
+    HepLorentzVector           m_initialFourMomentum;
+    /// Final 4-momentum
+    HepLorentzVector           m_finalFourMomentum;
+    /// Pointer to mother particle
+    SmartRef<McParticle>       m_mother;
+    /// Vector of pointers to daughter particles
+    SmartRefVector<McParticle> m_daughters;
 };
 
 
@@ -124,11 +143,14 @@ inline StreamBuffer& McParticle::serialize( StreamBuffer& s ) const
 {
   ContainedObject::serialize(s);
   return s
-    << m_particleID
+#if 0
+      << m_particleID
     << m_particleProperty
     << m_subEvtID
     << m_statusFlags
-    << m_mcVertex(this);
+    << m_mcVertex(this)
+#endif
+    ;
 }
 
 
@@ -136,12 +158,14 @@ inline StreamBuffer& McParticle::serialize( StreamBuffer& s ) const
 inline StreamBuffer& McParticle::serialize( StreamBuffer& s )
 {
   ContainedObject::serialize(s);
+#if 0
   s
     >> m_particleID
     >> m_particleProperty
     >> m_subEvtID
     >> m_statusFlags
     >> m_mcVertex(this);
+#endif
   return s;
 }
 
@@ -149,6 +173,7 @@ inline StreamBuffer& McParticle::serialize( StreamBuffer& s )
 /// Fill the ASCII output stream
 inline std::ostream& McParticle::fillStream( std::ostream& s ) const
 {
+#if 0
   s << "class McParticle"
     << " (SubEvent:" << m_subEvtID << ")"
     << " :"
@@ -156,11 +181,12 @@ inline std::ostream& McParticle::fillStream( std::ostream& s ) const
     << "\n    Particle Property          = " << m_particleProperty
     << "\n    Sub Event ID               = " << m_subEvtID
     << "\n    McVertex                   = " << m_mcVertex(this);
+#endif
   return s;
 }
 
 
-//} // NameSpace GlastEvent
+} // NameSpace GlastEvent
 
 
 #endif    // GlastEvent_McParticle_H
