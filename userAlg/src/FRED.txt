@@ -1,0 +1,3 @@
+// FRED plus joboptions here
+#include "$USERALGROOT/src/jobOptions.txt"
+#include "$GLEAMROOT/src/fredOptions.txt"
