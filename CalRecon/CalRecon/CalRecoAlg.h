@@ -33,7 +33,7 @@ public:
   //! mandatory
   StatusCode finalize();
 
-  StatusCode printNewNTuple();
+  StatusCode printNewNTuple(std::string name);
 
 private:
     // the GlastDetSvc used for access to detector info

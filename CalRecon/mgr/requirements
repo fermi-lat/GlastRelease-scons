@@ -5,6 +5,7 @@ branches src mgr doc
 
 use GlastSvc
 use GuiSvc
+use GlastEvent
 
 use reconstruction 
 
@@ -39,5 +40,5 @@ macro WinJobOptions  "" \
 
 macro_append use_linkopts $(console_linkopts)
 
-application test test/*.cxx ${WinJobOptions}
+application test_CalRecon test/*.cxx ${WinJobOptions}
 

@@ -23,11 +23,12 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 // Input IRF file
 EventSelector.Input = "IRFFILE $(INSTRUMENTROOT)/src/test/muontest.irf";
 
-NTupleSvc.Output = {"FILE1 DATAFILE='/NTUPLES/tuples.root' OPT='NEW'"};
+// Output root ntuple file
+NTupleSvc.Output = {"CALRECON DATAFILE='/NTUPLES/CalRecon.root' OPT='NEW'"};
 
     
 // Number of Events to Process
-ApplicationMgr.EvtMax = 10;
+ApplicationMgr.EvtMax = 20;
 
 
 //==============================================================

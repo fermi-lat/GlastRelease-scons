@@ -1,3 +1,5 @@
+// $Header$
+// Original author: Ian Gable
 // GaudiGlastTuple.h: interface for the GaudiGlastTuple class.
 //
 //////////////////////////////////////////////////////////////////////
@@ -12,35 +14,47 @@
 #include "Gaudi/NTupleSvc/NTuple.h"
 #include "Gaudi/DataSvc/SmartDataPtr.h"
 #include "Gaudi/Kernel/StatusCode.h"
-#include "reconstruction/analysis/Tuple.h"
 
 
 /*! \class GaudiGlastTuple
 \brief Wrapper for the Ntuple Servise so that this can plug into the SummaryData
-        template.
+template. Will create a row-wise ntuple.
+
+*/
+class GaudiGlastTuple {
+    
+public:
+    /** 
+       @param ntSvc The ntuple service
+       @param title Title of the tuple
+       @param logicalFileName For example, "FILE1". This must be defined by the job options, as
+       NTupleSvc.Output = {"FILE1 DATAFILE='/NTUPLES/CalRecon.root' OPT='NEW'"};
 
   */
-class GaudiGlastTuple : public Tuple {
-
-public:
-  //! Constructor of this form must be provided
-    GaudiGlastTuple(const char* name, INTupleSvc* ntSvc);
+    GaudiGlastTuple(INTupleSvc* ntSvc, const char* title, const char* logicalFileName );
     ~GaudiGlastTuple();
-
+    
+    //! setup: add a new item, by name and a pointer to the actual data
     void addItem (const char* name, const float *datum);
+    
+    /// Must be called to write out a row.
     void fill();
-    void dumpData ();
+    
+    /// access to the NTuplePtr
     NTuplePtr getNTuple();
-;
+    
 private:
+    
+    INTupleSvc* m_ntSvc;   /// the tuple service
+    NTuplePtr* m_nt; /// pointer to the actual ntuple
 
-  std::vector<NTuple::Item<float>*> m_ntupleItemList;
-  INTupleSvc* m_ntSvc;
-  const char* m_ntName;
-  NTupleFilePtr* m_file1;
-  NTuplePtr* m_nt;
-  std::vector<const float*> m_float_array;
+    std::string m_fileName; /// the logical file name, e.g. "/NTUPLES/FILE1"
+
+    ///maintain a list of pairs of pointers to the Gaudi Ntuple::Item, and our float
+    typedef std::vector< std::pair<NTuple::Item<float>*,const float*> > container;
+    typedef container::iterator iterator;
+    container m_ntupleItemList; 
 };
 
 
-#endif // CalRecoAlg_H
+#endif // GaudiGlastTuple_H
