@@ -1,4 +1,4 @@
-/**
+ /**
  * @class McBuildTracks
  *
  * @brief Implements a Gaudi Tool for setting the candidate track energies before 
