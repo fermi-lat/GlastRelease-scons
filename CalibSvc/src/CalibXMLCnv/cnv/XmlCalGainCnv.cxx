@@ -90,7 +90,8 @@ StatusCode XmlCalGainCnv::i_createObj(const DOM_Element& docElt,
 
   while (rangeElt != DOM_Element() ) {
     Gain* pGain = processRange(rangeElt);
-    pObj->putRange(nRow, nCol, nLayer, nXtal, nRange, nFace, pGain);
+    pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, 
+                   m_nFace, pGain);
     rangeElt = findNextRange(rangeElt);
   }
 
