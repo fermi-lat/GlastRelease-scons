@@ -1,12 +1,12 @@
 package merit
-version v6r12p1
+version v6r13
 # $Id$
 
 branches doc
 
 use GlastPolicy v*
 use ntupleWriterSvc v*
-use classification *
+use classification v2*
 use astro *
 
 apply_pattern packageShr
