@@ -154,12 +154,13 @@ void UseTot::processNew(CalibData::TkrTotCol* pNew,
   log << MSG::INFO << "Vstart: " <<  (pNew->validSince()).hours()
       << "  Vend: " << (pNew->validTill()).hours() << endreq;
   
-  if (!done) {
-    done = true;
+  unsigned tray = 0;
+  bool top = true;
+  while (!done) {
     unsigned towerX = 0;
     unsigned towerY = 0;
-    unsigned tray = 3;
-    bool top = true;
+    //    unsigned tray = 3;
+    //    bool top = true;
     TkrId id(towerX, towerY, tray, top);
     
     unsigned iStrip = 27;
@@ -180,6 +181,9 @@ void UseTot::processNew(CalibData::TkrTotCol* pNew,
       log << MSG::INFO << "Chi2      = " << pInfo->getChi2() << endreq;
       log << MSG::INFO << "Deg. fr.  = " << pInfo->getDf() << endreq;
     }
+    if (top) tray++;
+    else if (tray == 18) done = true;
+    top = !top;
   }
 }
 
