@@ -3,6 +3,7 @@
 
 <pre>
  * Coordinator: T.Burnett, S. Robinson
+ * 27-Feb-03  v6r2   THB   *  Added surface muon 
  * 24-Feb-03  v6r0   THB   *  Major version change since IFluxSvc and ISpectrum interfaces changed 
  * v5r19   THB  * massive refactoring of EventSource hierarchy
  * v5r18p1 THB  * simplify tool setup for external package sources
