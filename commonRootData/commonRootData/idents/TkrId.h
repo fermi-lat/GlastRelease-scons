@@ -55,7 +55,7 @@ namespace commonRootData {
     TkrId() : TObject(), m_packedId(0) {};
 
     /// Copy constructor
-    TkrId(TkrId& other) : TObject(other), m_packedId(other.m_packedId) {};
+    TkrId(const TkrId& other) : TObject(other), m_packedId(other.m_packedId) {};
 
     ~TkrId() {};
 
