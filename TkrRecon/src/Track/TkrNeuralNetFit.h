@@ -17,17 +17,21 @@
 
 #include <vector>
 #include "GaudiKernel/MsgStream.h"
-#include "TkrRecon/PatRec/TkrCandidates.h"
-#include "TkrRecon/Track/TkrTracks.h"
+#include "GlastEvent/Recon/TkrRecon/TkrPatCandCol.h"
+#include "GlastEvent/Recon/TkrRecon/TkrFitTrackCol.h"
+#include "TkrRecon/ITkrGeometrySvc.h"
 
-class TkrNeuralNetFit : public TkrTracks
+namespace TkrRecon { //Namespace
+
+class TkrNeuralNetFit : public TkrFitTrackCol
 {
 public:
     TkrNeuralNetFit() {}
-    TkrNeuralNetFit(ITkrGeometrySvc* pTkrGeo, TkrClusters* pTkrClus, TkrCandidates* pTkrCand, double CalEnergy);
+    TkrNeuralNetFit(ITkrGeometrySvc* pTkrGeo, TkrClusterCol* pTkrClus, TkrPatCandCol* pTkrCand, double CalEnergy);
     ~TkrNeuralNetFit() {}
     
 private:
 };
 
+}; //Namespace
 #endif

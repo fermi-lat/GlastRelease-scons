@@ -18,17 +18,20 @@
 #include "src/Track/TkrNeuralNetFit.h"
 #include "TkrRecon/Track/TkrTrackFit.h"
 
+namespace TkrRecon { //Namespace
+
 class TkrNeuralNetTrackFit : public TkrTrackFit
 {
 public:
     TkrNeuralNetTrackFit(ITkrGeometrySvc* pTkrGeo) {pGeometry = pTkrGeo;}
    ~TkrNeuralNetTrackFit() {}
 
-    TkrTracks* doTrackFit(TkrClusters* pTkrClus, TkrCandidates* pTkrCand, double CalEnergy)
+    TkrFitTrackCol* doTrackFit(TkrClusterCol* pTkrClus, TkrPatCandCol* pTkrCand, double CalEnergy)
     {return new TkrNeuralNetFit(pGeometry, pTkrClus, pTkrCand, CalEnergy );}
 
 private:
     ITkrGeometrySvc* pGeometry;
 };
 
+}; //Namespace
 #endif
