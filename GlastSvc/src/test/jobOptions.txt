@@ -3,7 +3,8 @@
 // Job options file for CreateEvent
 //
 // List of required services
-ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
+ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastRandomSvc",
+ "GlastEventSelector/EventSelector" , "EventCnvSvc" };
 
 // List of Dlls
 ApplicationMgr.DLLs   = { "GlastSvc" };
