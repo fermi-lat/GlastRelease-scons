@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include "dom/DOM_Element.hpp"
+#include <dom/DOM_Element.hpp>
 
 #include "xmlUtil/id/DictObject.h"
 

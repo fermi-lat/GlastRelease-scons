@@ -4,7 +4,7 @@
 #define XMLUTIL_DICTCONSTRAINTS_H
 
 #include <vector>
-#include "dom/DOM_Element.hpp"
+#include <dom/DOM_Element.hpp>
 #include "xmlUtil/id/DictVisitor.h"
 #include <set>
 

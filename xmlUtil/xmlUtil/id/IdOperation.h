@@ -3,7 +3,7 @@
 #ifndef XMLUTIL_IDOPERATION_H
 #define XMLUTIL_IDOPERATION_H
 
-#include "dom/DOM_Element.hpp"
+#include <dom/DOM_Element.hpp>
 #include "xmlUtil/id/NamedId.h"
 #include <iostream>
 #include <string>

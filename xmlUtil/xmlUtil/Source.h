@@ -5,8 +5,8 @@
 #define XMLUTIL_SOURCE_H
 
 #include <string>
-#include "dom/DOM_Element.hpp"
-#include "dom/DOM_Document.hpp"
+#include <dom/DOM_Element.hpp>
+#include <dom/DOM_Document.hpp>
 
 namespace xmlUtil {
   /*! This class provides an interface to the <source> element of

@@ -3,7 +3,7 @@
 #ifndef XMLUTIL_IDCONVERTER_H
 #define XMLUTIL_IDCONVERTER_H
 #include "xmlUtil/id/NamedId.h"
-#include "dom/DOM_Element.hpp"
+#include <dom/DOM_Element.hpp>
 #include <string>
 #include <vector>
 #include <iostream>

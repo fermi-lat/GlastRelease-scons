@@ -2,9 +2,9 @@
 #ifndef XMLUTIL_SUBSTITUTE_H 
 #define XMLUTIL_SUBSTITUTE_H
 
-#include "dom/DOM_Document.hpp"
-#include "dom/DOMString.hpp"
-#include "dom/DOM_TreeWalker.hpp"
+#include <dom/DOM_Document.hpp>
+#include <dom/DOMString.hpp>
+#include <dom/DOM_TreeWalker.hpp>
 #include <string>
 
 

@@ -2,8 +2,8 @@
 #ifndef XMLUTIL_ARITH_H 
 #define XMLUTIL_ARITH_H
 
-#include "dom/DOM_Element.hpp"
-#include "dom/DOMString.hpp"
+#include <dom/DOM_Element.hpp>
+#include <dom/DOMString.hpp>
 
 namespace xmlUtil {
   //! The Arith class handles the xml arithmetic elements, allowing
