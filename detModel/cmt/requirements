@@ -15,6 +15,7 @@ library detModel -no_share\
      Management/*.cpp \
      Sections/*.cpp \
      Constants/*.cpp \
+     Utilities/*.cpp \
 	
     
 private
