@@ -38,6 +38,8 @@ private:
     float m_index;	// spectral index: <=1 is delta function at E0
     float m_emax;
     bool m_useGeV;  // true if using GeV units, MeV otherwise
+
+    enum {VDG = -1};
 };
 
 #endif

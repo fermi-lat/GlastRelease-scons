@@ -25,6 +25,14 @@
         </spectrum>
     </source>
 
+<!-- simulation of photons produced by Van de Graaff accelerator at SLAC -->
+    <source name="vdg" flux="1.0">
+        <spectrum escale="GeV">
+            <particle name="gamma"> <vdg /> </particle>
+           <direction theta="0" phi="0" />            
+            <patch xmin="-100.9" xmax="-50.1" ymin="-145.5" ymax="-94.6" zmin="500" zmax="501"/>
+        </spectrum>
+    </source>
 
     <!-- E^-1 spectrum from 18 MeV to 18 GeV and normal incidence-->
     <source name="normal_gamma" flux="1.0">
