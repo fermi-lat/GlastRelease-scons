@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "detModel/Management/GDDmanager.h"
+#include "detModel/Management/GDDRIBSectionsVisitor.h"
 #include "detModel/Management/GDDVRMLSectionsVisitor.h"
 #include "detModel/Management/GDDHTMLConstantsVisitor.h"
 #include "detModel/Management/GDDXercesBuilder.h"
@@ -55,7 +56,8 @@ int main(int argc, char* argv[]) {
   //  visitor->setDepth("oneTKR", 0);
   //  visitor->setDepth("oneCAL", 0);
   manager->startVisitor(visitor);
- 
+  manager->startVisitor(new GDDRIBSectionsVisitor(argv[2]));
+  
   // We start the HTMLConstantsVisitor to build the html file with the
   // constants tables. Colors and layout are stolen from Joanne ones.
   manager->startVisitor(new GDDHTMLConstantsVisitor());
@@ -68,12 +70,13 @@ int main(int argc, char* argv[]) {
   // for example the value for a constant or the dimension for a volume.
   // In this example we extract the value for the char constant convMat
   // and the material and X dimension for the volume (a box) CsIElementEnv
+  /*
   std::cout << "The convMat value is " << g->getCharConstByName("convMat") << std::endl;
   std::cout << "The material of the CsIElementEnv is " 
 	    << (static_cast<GDDshape*>(g->getVolumeByName("CsIElementEnv")))->getMaterial() << std::endl;
   std::cout << "and its X dimension (in mm) is " 
 	    << (static_cast<GDDbox*>(g->getVolumeByName("CsIElementEnv")))->getX() << std::endl;
-
+  */
   delete manager;
   return(0);
 }

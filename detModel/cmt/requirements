@@ -3,6 +3,7 @@ package detModel
 branches detModel src doc xml
 
 use xml 
+use xmlUtil 
 use XMLEXT
 
 

@@ -1,5 +1,5 @@
-#include "xml/Substitute.h"
-#include "xml/Arith.h"
+#include "xmlUtil/Substitute.h"
+#include "xmlUtil/Arith.h"
 #include "xml/XmlParser.h"
 #include "xml/Dom.h"
 #include "dom/DOM_Element.hpp"
@@ -46,7 +46,7 @@ void GDDXercesBuilder::parseFile(char* nameFile){
 
   domfile = parser->parse(nameFile);
 
-  xml::Substitute* sub = new xml::Substitute(domfile);
+  xmlUtil::Substitute* sub = new xmlUtil::Substitute(domfile);
   DOM_Element docElt = domfile.getDocumentElement();
   DOM_Element tmp;
   DOM_Element curConst;
@@ -72,7 +72,7 @@ void GDDXercesBuilder::parseFile(char* nameFile){
 	  curConst = xml::Dom::findFirstChildByName(tmp, "const" );
 	  
 	  while (curConst != DOM_Element()) {
-	    xml::Arith curArith(curConst);
+	    xmlUtil::Arith curArith(curConst);
 	    double evalValue = curArith.evaluate();
 	    curArith.saveValue();
 	    curConst = xml::Dom::getSiblingElement(curConst);
