@@ -245,7 +245,7 @@ StatusCode FindTrackHitsTool::findTrackHits(Event::TkrTrack* track)
 	// at least 2 in each projection
 	if((track->getNumXHits() + track->getNumYHits() < 5) ||
 		track->getNumXHits() <= 2 || track->getNumYHits() <= 2) sc = StatusCode::FAILURE;
-	else track->setStatusBit(Event::TkrTrack::Found);
+	else track->setStatusBit(Event::TkrTrack::FOUND);
 	return sc;
 }
 

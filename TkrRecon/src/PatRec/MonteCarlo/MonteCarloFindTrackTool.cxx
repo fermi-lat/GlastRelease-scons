@@ -304,7 +304,7 @@ Event::TkrTrack* MonteCarloFindTrackTool::buildTrack(const Event::McParticle* mc
             m_tdsTracks->push_back(candTrack);
 
             // Set status to indicate track has been "found"
-            candTrack->setStatusBit(Event::TkrTrack::Found);
+            candTrack->setStatusBit(Event::TkrTrack::FOUND);
 
             // Sort in decreasing z position of the planes (downward going tracks)
             // Eventually leave in time ordered fashion??
