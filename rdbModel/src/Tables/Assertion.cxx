@@ -18,6 +18,56 @@ namespace rdbModel {
     delete m_op;
   }
 
+  // Constructor for comparisons
+  Assertion::Operator::Operator(OPTYPE type, const std::string& leftArg, 
+                                const std::string& rightArg, bool leftLiteral, 
+                                bool rightLiteral) :  m_opType(type)  {
+    m_tableName.clear();
+    m_operands.clear();
+    if (!isCompareOp()) {
+      m_opType = OPTYPEundefined;
+      return;
+    }
+
+    m_compareArgs[0] = leftArg;
+    m_compareArgs[1] = rightArg;
+    m_literal[0] = leftLiteral;
+    m_literal[1] = rightLiteral;
+  }
+
+  /// Constructor for EXISTS
+  Assertion::Operator::Operator(OPTYPE type, const std::string& tableName,
+                                Operator* child) : m_opType(type),
+                                                   m_tableName(tableName)
+  {
+    if (type != OPTYPEexists) {
+      m_opType = OPTYPEundefined;
+      return;
+    }
+    m_operands.clear();
+    m_operands.push_back(child);
+  }
+
+  /// Constructor for OR, AND, NOT
+  Assertion::Operator::Operator(OPTYPE type, 
+                                const std::vector<Operator*>& children)  :
+    m_opType(type) {
+    
+    if ((type == OPTYPEor) || (type == OPTYPEand) || (type = OPTYPEnot)) {
+      m_tableName.clear();
+      unsigned int nChild = children.size();
+      if (!nChild) {
+        m_opType = OPTYPEundefined;
+        return;
+      }
+      for (unsigned int iChild = 0; iChild < nChild; iChild++) {
+        m_operands.push_back(children[iChild]);
+      }
+    }
+    else m_opType = OPTYPEundefined;
+  }
+
+
   bool Assertion::Operator::validCompareOp(Table* myTable) const {
     if (!m_literal[0]) {
       Column* col0 = myTable->getColumnByName(m_compareArgs[0]);
