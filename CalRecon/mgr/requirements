@@ -19,7 +19,7 @@ macro CalRecon_linkopts   "$(CalReconDir)/libCalReconData.a  " \
 
 library CalRecon  *.cxx *.cpp ../CalRecon/*.h  Dll/*.cpp
 
-macro CalRecon_linkopts   " " 
+
 macro CalRecon_stamps     
 
 set   CalReconShr           "${CALRECONROOT}/${DEBUGDIR}/libCalRecon"
