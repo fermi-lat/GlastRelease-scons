@@ -878,19 +878,24 @@
       <posXYZ volume="sideRibbon"
               XREF="xRibbonOuter_dxn" >
         <idField name="fRibbon" value="0" />
+        <idField name="fRibbonSegment" value="0" />    
+
       </posXYZ>
 
       <posXYZ volume="sideRibbon"
               XREF="xRibbonInner_dxn" >
         <idField name="fRibbon" value="1" />
+        <idField name="fRibbonSegment" value="0" />    
       </posXYZ>
       <posXYZ volume="sideRibbon"
               XREF="xRibbonInner_dx" >
         <idField name="fRibbon" value="2" />
+        <idField name="fRibbonSegment" value="0" />    
       </posXYZ>
       <posXYZ volume="sideRibbon"
               XREF="xRibbonOuter_dx" >
         <idField name="fRibbon" value="3" />
+        <idField name="fRibbonSegment" value="0" />    
       </posXYZ>
     </composition>
 
