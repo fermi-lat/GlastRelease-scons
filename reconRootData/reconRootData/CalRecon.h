@@ -4,51 +4,52 @@
 #include "TObject.h"
 #include "TObjArray.h"
 
-// ========================================================
-//      CalRecon
-// ========================================================
-//! Primary Root object containing CAL reconstruction data.
-/*! Primary CAL reconstruction Data Root object
-portal through which one gains access to the CAL recon data. 
-Currently there are 2 lists available:
-1.) A list of hit CsI Logs (CalLogEne)
-2.) A list of CAL clusters (CalCluster)
+#include <vector>
+
+#include "CalXtalRecData.h"
+#include "CalCluster.h"
+
+/** @class CalRecon
+ * @brief Primary Root object containing CAL reconstruction data.
+   portal through which one gains access to the CAL recon data. 
+   Currently there are 2 lists available:
+   - A collection of reconstruction CAL crystals (CalXtalRecData)
+   - A collection of CAL clusters (CalCluster)
 */
 
 class CalRecon : public TObject
 {
 
-private:
-    //! list of hit logs
-    TObjArray *m_logs;      
-
-    //! list of CalClusters
-    TObjArray *m_clusters;  
-
 public:
 
-    //! constructor
-    // default constructor
-    // so client must call Create() to setup 
-    // TObjArray properly
     CalRecon();
 
-    //! destructor
     virtual ~CalRecon();
 
-    //! frees all dynamically allocated memory
-    void Clean();
+    void Clear(Option_t *option="");
 
-    //! allocates memory as necessary
-    void Create();
+    void Print(Option_t *option="");
 
-    //! provide access to list of CalClusters
-    TObjArray* getCalClusters() { return m_clusters; };
+    /// provide access to list of CalClusters
+    TObjArray* getCalClusters() { return m_clusterCol; };
 
-    //! provide access to the list of CalLogs
-    TObjArray* getCalLogs() { return m_logs; };
+    /// provide access to the list of CalXtalRecData
+    std::vector<CalXtalRecData> getCalXtalRecCol() { return m_xtalRecCol; };
+
+    void addCalCluster(CalCluster *cluster) { m_clusterCol->Add(cluster); };
+
+    void addXtalRecData(const CalXtalRecData& xtal) { m_xtalRecCol.push_back(xtal); };
+
+private:
+    /// list of CalXtalRecData
+//    TObjArray *m_xtalRecCol;      
+    std::vector<CalXtalRecData> m_xtalRecCol;
+
+    /// list of CalClusters
+    TObjArray *m_clusterCol;  
+
   
-    ClassDef(CalRecon,1)
+    ClassDef(CalRecon,2)
 };
 
 #endif

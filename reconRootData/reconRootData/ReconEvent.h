@@ -14,14 +14,14 @@
    3) A pointer to a ReconHeader object 
 */
 
-class Recon : public TObject
+class ReconEvent : public TObject
 {
 
 public:
 
-    Recon();
+    ReconEvent();
 
-    virtual ~Recon();
+    virtual ~ReconEvent();
 
     void initialize(UInt_t eventId, UInt_t runId);
 
@@ -34,7 +34,7 @@ public:
     UInt_t getRunId() { return m_runId; };
 
     //! provide access to the CAL recon data
-    const CalRecon* getCalRecon() { return &m_cal; };
+    const CalRecon* getCalRecon() const { return &m_cal; };
     CalRecon* getCalRecon() { return &m_cal; };
     //! set the CalRecon pointer
     //inline void setCalRecon(CalRecon *cal) { m_cal = cal; };
@@ -59,7 +59,7 @@ private:
     /// pointer to Recon Header data
     //ReconHeader m_recFlags;
 
-    ClassDef(Recon,1) 
+    ClassDef(ReconEvent,1) 
 };
 
 #endif

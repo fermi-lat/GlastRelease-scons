@@ -1,26 +1,26 @@
-#include "reconRootData/Recon.h"
+#include "reconRootData/ReconEvent.h"
 #include <iostream>
 
-ClassImp(Recon)
+ClassImp(ReconEvent)
 
-Recon::Recon() {
+ReconEvent::ReconEvent() {
     Clear();
 }
 
-Recon::~Recon() {
+ReconEvent::~ReconEvent() {
 }
 
-void Recon::initialize(UInt_t eventId, UInt_t runId) {
+void ReconEvent::initialize(UInt_t eventId, UInt_t runId) {
     m_eventId = eventId;
     m_runId = runId;
 }
 
-void Recon::Clear(Option_t *option) {
+void ReconEvent::Clear(Option_t *option) {
     m_eventId = 0;
     m_runId = 0;
 }
 
-void Recon::Print(Option_t *option) {
+void ReconEvent::Print(Option_t *option) {
     using namespace std;
     cout << "(Run, Event): (" << m_runId << ", " << m_eventId << ")" << endl;
 }

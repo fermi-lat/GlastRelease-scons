@@ -3,26 +3,20 @@
 #define Root_CalXtalRecCol_H 1
 
 
-// Include files
-// Root Includes
 #include "CalRangeRecData.h"
 #include "TObject.h"
 #include "TVector3.h"
 #include <iostream>
 #include <vector>
+
 #include "digiRootData/CalXtalId.h"
 
 
-/*!
-//------------------------------------------------------------------------------
-//
-// \class   CalXtalRecData        
-//  
-// \brief reconstructed data for a calorimeter crystal                                
-//              
-// Author:  A.Chekhtman, Apr,17,2002
-//
-//------------------------------------------------------------------------------
+/** @class   CalXtalRecData        
+* @brief Reconstructed data for one calorimeter crystal                                
+*             
+* @author A.Chekhtman
+* $Header$
 */
 
 class CalXtalRecData :  public TObject { 
@@ -31,47 +25,45 @@ public:
     
     
     CalXtalRecData() {};
-    
-    //CalDigi(CalTrigMode mode, CalXtalId CalXtalId, ObjectVector<CalXtalReadout> readout) : 
-    //    m_mode(mode),
-    //        m_XtalId(CalXtalId),
-    //        m_readout(readout)
-    //{};
-    
-    /// Destructor
+        
     virtual ~CalXtalRecData() { };
     
-    /// Retrieve readout mode
-     const CalXtalId::CalTrigMode getMode() const { return m_mode; };
-    void setMode(CalXtalId::CalTrigMode m) { m_mode = m; };
+    void initialize(CalXtalId::CalTrigMode m, CalXtalId id);
 
-    /// Retrieve Xtal identifier
-     const CalXtalId getPackedId() const { return m_XtalId; };
-     void setPackedId(CalXtalId id) { m_XtalId = id; };
+    void Clear(Option_t *option="");
+
+    void Print(Option_t *option="");
+
+    /// Retrieve readout mode
+    const CalXtalId::CalTrigMode getMode() const { return m_mode; };
     
-     void addRangeRecData(CalRangeRecData r) { m_RecData.push_back(r); } ;
+    /// Retrieve Xtal identifier
+    const CalXtalId getPackedId() const { return m_xtalId; };
+    
+    /// Add a new element to the CalRangeRecData collection
+    void addRangeRecData(CalRangeRecData r) { m_recData.push_back(r); } ;
     
     /// Retrieve energy range for selected face and readout
-     Char_t getRange(Short_t readoutIndex, CalXtalId::XtalFace face) const;
+    Char_t getRange(Short_t readoutIndex, CalXtalId::XtalFace face) const;
     
     /// Retrieve energy for selected face and readout
-     Double_t getEnergy(Short_t readoutIndex, CalXtalId::XtalFace face) const;
+    Double_t getEnergy(Short_t readoutIndex, CalXtalId::XtalFace face) const;
     
     
     /// Retrieve average energy of two faces for the best range
-     Double_t getEnergy();
+    Double_t getEnergy();
     
     /// Retrieve the position for the best range
-     TVector3 getPosition()
+    TVector3 getPosition()
     {
         return getRangeRecData(0)->getPosition();
     }
     
     /// Retrieve reconstructed data from both ends of selected readout
-    CalRangeRecData* getRangeRecData(short readoutIndex);
+    CalRangeRecData* getRangeRecData(Short_t readoutIndex);
     
     /// Retrieve pulse height from selected range
-    Short_t getEnergySelectedRange(char range, CalXtalId::XtalFace face) const;
+    Double_t getEnergySelectedRange(CalXtalId::AdcRange range, CalXtalId::XtalFace face) const;
     
     
     
@@ -80,9 +72,9 @@ private:
     /// Cal readout mode is based on trigger type
     CalXtalId::CalTrigMode m_mode;
     /// Cal ID
-    CalXtalId m_XtalId;
+    CalXtalId m_xtalId;
     /// ranges and pulse heights
-    std::vector<CalRangeRecData> m_RecData;
+    std::vector<CalRangeRecData> m_recData;
     
     ClassDef(CalXtalRecData,1)
 };
