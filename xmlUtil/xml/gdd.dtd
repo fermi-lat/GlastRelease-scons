@@ -89,13 +89,14 @@
 1) General structure of a detector description
    ===========================================
 
-  o The GDD element is the main container where all detector description information is
-    maintained and managed. 
+  o The GDD element is the main container where all detector description 
+    information is maintained and managed. 
 
   o Currently one may find within the gdd element :
       o constants   : definition of primary and derived constants
       o identifier dictionary : defines collection of allowable identifiers
-      o section     : definition of a section (ie. the main division of the detector)
+      o section     : definition of a section (ie. the main division of the 
+                      detector)
 
   o General rule for angle definition for all XML statements:
 
@@ -119,7 +120,8 @@
   holds the implementation of the geometry for this particular piece
   of detector. A section is primarily made of "volume" elements but
   also may receive a set of named and typed parameter blocks (used to specify
-  constants).
+  constants) [NOTE:  GLAST does not use this feature.  Instead constants
+  are specified as subelements of the <constants> element].
 
   Attributes of section are :
 
@@ -146,7 +148,7 @@
 
         2) composition (build a logical composition)
 
-        4) boolean volume
+        4) boolean volume            [NOTE: Not implemented for GLAST]
            |-> union
            |-> intersection
            +-> subtraction
@@ -158,12 +160,12 @@
 
   All kinds of volumes have at least the following attribute:
 
-         name       : their identifier
-         parameters : an IDREF to a parameter block.
+         name       : their identifier            (required)
+         parameters : an IDREF to a parameter block.  (optional)
 
   Parameter blocks are meant to describe non-geometrical information
   or geometrical details that cannot or should not be described using
-  the generic model.
+  the generic model.  [GLAST does not use parameter blocks]
 
   A volume in itself is not positioned. Rather, compositions, boolean
   volumes or stacks combine "position" elements which role is to
@@ -211,6 +213,7 @@
   Volume are positionned according to the coordinates specified in the
   above positionning elements w.r.t the implicit coordinate system of
   the composition (which defines the reference)..
+  [NOTE: GLAST description uses only posXYZ from this list]
 
   In general, there is a priori no defined volume corresponding to
   this entity i.e. it is a juxtaposition of volumes. Its envelope has
@@ -305,6 +308,8 @@
 1.4.4) Boolean volumes (union, intersection and subtraction)
 ============================================================
 
+   [NOTE: not currently implemented for GLAST]
+
      union        : Union of several volumes
 
      intersection : Intersection of several volumes
@@ -373,11 +378,12 @@
    Single positions and Multiple positions may provide a local rotation (specified as
    three angles around X, Y and Z)
 
-   The rotation around X,Y,Z axis is defined by rot="a b c"
+   The rotation around X,Y,Z axis is defined by xrot="a" yrot="b" zrot="c"
           the X rotation of a angle is done first 
           the Y rotation of b angle is done second 
           the Z rotation of c angle is done last.
-
+   regardless of the order in which the attributes appear. If there is
+   no rotation about a particular axis that attribute may be omitted
 
 1.5.1.1) posXYZ
 
@@ -390,7 +396,7 @@
 
       specific attributes:
 
-      X_Y_Z : X, Y and Z coordinates of the volume inside the
+      X Y and Z : x, y and z coordinates of the volume inside the
               coordinate system   
           The volume is rotated before it is placed.
 
@@ -408,18 +414,26 @@
      ncopy      : Number of volumes to be placed
      R0,X0,Y0,Z0: Starting values in R,X,Y,Z
      dR,DX,DY,dZ: Increment values in R,X,Y,Z
-     Z_Phi      : transverse displacement for mposR
-     R_Phi      : transverse displacement for mposZ
-     X_Y        : transverse displacement for mposZ (alternate for R_Phi)
-     Y_Z        : transverse displacement for mposX
-     Z_X        : transverse displacement for mposY
+     Z Phi      : transverse displacements for mposR
+     R Phi      : transverse displacements for mposZ
+     X Y        : transverse displacements for mposZ (alternate for R_Phi)
+     Y Z        : transverse displacements for mposX
+     Z X        : transverse displacements for mposY
      S          : Move along the "ortho-radial" coordinate S 
                   before placing the objects.
 
      Note that the origin of the coordinate system is implicitly
-     defined in the 'transverse' direction by the Z_Phi, R_phi, X_Y, Y_Z or Z_X
-     attributes. In the positioning-direction it is defined by the
-     attributes R0, X0, Y0 or Z0. 
+     defined in the 'transverse' direction by the Z & Phi, R & phi, 
+     X & Y, Y & Z or Z& X attributes. In the positioning-direction 
+     it is defined by the  attributes R0, X0, Y0 or Z0. 
+
+   [GLAST note: most if not all attributes specifying displacements,
+    gaps, etc., described above have a "REF" counterpart so
+    that the value can be specified through a level of indirection.
+    for example, the axisPos element has an attribute gapREF as well
+    as the attribute gap.  gap takes an NMTOKEN value; gapREF takes
+    an IDREF value. Didn't bother with angles since so far they're
+    always 0 or 90]
 -->
 <!--
 1.6) Identifiers/IdFields
@@ -485,7 +499,8 @@
      the <gdd> element of the input file (which, in turn, should be
      the evaluation of the CVS macro $Id$ for that file) but without
      the surrounding "$" and creatorId should be the translation of the 
-     CVS macro $Id$ for the pre-processing program, also without the
+     CVS macro $Id$ for the
+     pre-processing program, also without the
      "$", but other information could be used instead for less formal 
      circumstances. (Note surrounding "$" should be omitted so that further
      check-ins to CVS will not cause substitutions).
@@ -970,7 +985,7 @@
           the same xml file)
        3. constraints, if any, on values field may take on in this
           context
-       4. their children   (non-leaf nodes only) 
+       4. their children   (applies to non-leaf nodes only) 
 
   (For all but leaf nodes, this information is available from the
   child nodes - just take the union of the "parent" values
@@ -1011,13 +1026,15 @@ each specifying
  * operation.  All identifiers in the domain and satisfying
    the condition are transformed as specified; others in the
    domain are left alone.  Defined operations are 
-      - change the value of a field to a different (fixed) value
       - truncate all fields beyond the one in the condition
       - delete the identifiers.  
       - create a new identifier by eliminating all fields in a
         specified segment - (or are the endpoints of the segment
         somehow already known?  Maybe just one of them? The
         field specified in the condition could be an endpoint.)
+   If it seems useful, might also add
+      - change the value of a field to a different (fixed) value
+
 -->
 <!ELEMENT idConverter (constants?, idDict*, idConv*) >
 <!-- might want to require at least fromDict; perhaps also toDict -->
