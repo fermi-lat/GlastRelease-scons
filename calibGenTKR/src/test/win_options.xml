@@ -28,7 +28,7 @@
     <item name="sourceFilePath" value= "c:/Glast/files/em/" > 
           common part of the path to the digi.root files (may be blank) </item>
     <!-- the original files are found at: 
-           /nfs/farm/g/glast/u03/EM2003/rootFiles/em_v1r030302p5/digi/
+           /nfs/farm/g/glast/u08/EM2003/rootFiles/em_v1r030302p5/digi/
     -->
     <item name="sourceFileList"      
         value= " ebf031006235353_digi.root  " > 
