@@ -11,7 +11,7 @@
 #ifndef _KALPLANE_H
 #define _KALPLANE_H 1
 
-#include "TkrRecon/cluster/TkrClusters.h"
+#include "TkrRecon/Cluster/TkrClusters.h"
 #include "TkrRecon/TrackFit/KalHit.h"
 
 class KalPlane
