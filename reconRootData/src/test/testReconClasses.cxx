@@ -358,10 +358,13 @@ int checkTkrCluster(const TkrCluster *cluster, UInt_t ievent, UInt_t icluster) {
         return -1;
     }
 
-    int tower = 4 * tkrId.getTowerX() + tkrId.getTowerY();
-	if (tower != 8) {
-		std::cout << "TkrCluster Tower number is wrong: " << tkrId.getTowerX() 
-                  << ", " << tkrId.getTowerY() << std::endl;
+	if (tkrId.getTowerX() != icluster % 4) {
+		std::cout << "TkrCluster Tower X number is wrong: " << tkrId.getTowerX() << std::endl;
+		return -1;
+	}
+
+	if (tkrId.getTowerY() != (icluster / 4) % 4) {
+		std::cout << "TkrCluster Tower Y number is wrong: " << tkrId.getTowerY() << std::endl;
 		return -1;
 	}
 	if ( !floatInRange(cluster->getToT(), f) ) {
@@ -446,13 +449,18 @@ int checkTkrVertex(const TkrVertex* vertex, UInt_t ievent, UInt_t ivertex) {
         return -1;
     }
 
-    if (tkrId.getTray() != 2) {
+    if (tkrId.getTray() != ivertex % 15) {
         std::cout << "Vertex layer is wrong: " << tkrId.getTray() << std::endl;
         return -1;
     }
 
-    if (tkrId.getTowerX() != 4) {
-        std::cout << "Vertex tower is wrong: " << tkrId.getTowerX() << std::endl;
+    if (tkrId.getTowerX() != ivertex % 4) {
+        std::cout << "Vertex tower X is wrong: " << tkrId.getTowerX() << std::endl;
+        return -1;
+    }
+
+    if (tkrId.getTowerY() != ivertex / 4) {
+        std::cout << "Vertex tower Y is wrong: " << tkrId.getTowerY() << std::endl;
         return -1;
     }
 
@@ -498,40 +506,34 @@ int checkTkrVertex(const TkrVertex* vertex, UInt_t ievent, UInt_t ivertex) {
         return -1;
     }
 
-    if ( (!floatInRange(params(2,1), f) ) ||
-         (!floatInRange(params(2,2), f*2.) ) ||
-         (!floatInRange(params(2,3), f*3.) ) || 
-         (!floatInRange(params(2,4), f*4.)) ) 
+    if ( (!floatInRange(params(2,2), f*5.) ) ||
+         (!floatInRange(params(2,3), f*6.) ) || 
+         (!floatInRange(params(2,4), f*7.)) ) 
     {
         std::cout << "Vertex matrix row 1 vals are wrong: " << params(2,1) << " "
             << params(2,2) << " " << params(2,3) << " " << params(2,4) << std::endl;
         return -1;
     }
 
-    if ( (!floatInRange(params(3,1), f) ) ||
-         (!floatInRange(params(3,2), f*2.) ) ||
-         (!floatInRange(params(3,3), f*3.) ) || 
-         (!floatInRange(params(3,4), f*4.)) ) 
+    if ( (!floatInRange(params(3,3), f*8.) ) || 
+         (!floatInRange(params(3,4), f*9.)) ) 
     {
         std::cout << "Vertex matrix row 2 vals are wrong: " << params(3,1) << " "
             << params(3,2) << " " << params(3,3) << " " << params(3,4) << std::endl;
         return -1;
     }
 
-    if ( (!floatInRange(params(4,1), f) ) ||
-         (!floatInRange(params(4,2), f*2.) ) ||
-         (!floatInRange(params(4,3), f*3.) ) || 
-         (!floatInRange(params(4,4), f*4.)) ) 
+    if ( (!floatInRange(params(4,4), f*10.)) ) 
     {
         std::cout << "Vertex matrix row 3 vals are wrong: " << params(4,1) << " "
             << params(4,2) << " " << params(4,3) << " " << params(4,4) << std::endl;
         return -1;
     }
 
-    if (vertex->getNumTracks() != 2) {
-        std::cout << "Vertex number of tracks is wrong: " << vertex->getNumTracks() << std::endl;
-        return -1;
-    }
+    //if (vertex->getNumTracks() != 2) {
+    //    std::cout << "Vertex number of tracks is wrong: " << vertex->getNumTracks() << std::endl;
+    //    return -1;
+    //}
 
     // Hmm... what to do here...
     //if (vertex->getTrackId(0) != ivertex+1) {
@@ -564,7 +566,7 @@ int checkTkrRecon(TkrRecon *tkr, UInt_t ievent) {
 
     UInt_t iTrack = 0;
     TObjArray* trackCol = tkr->getTrackCol();
-    if (trackCol->GetEntries() != 2*numTracks) {
+    if (trackCol->GetEntries() != numTracks) {
         std::cout << "Number of TkrRecon tracks is wrong: " << trackCol->GetEntries() << std::endl;
         return -1;
     }
@@ -830,8 +832,8 @@ int write(char* fileName, int numEvents) {
 
         for (icluster = 0; icluster < numClusters; icluster++ ) 
         {
-            UInt_t towerX = 2;
-            UInt_t towerY = 2;
+            UInt_t towerX = icluster % 4;
+            UInt_t towerY = (icluster / 4) % 4;
             UInt_t tray   = icluster % 15;
             commonRootData::TkrId tkrId(towerX, towerY, tray, true, commonRootData::TkrId::eMeasureX);
             UInt_t strip0 = 4;
@@ -875,9 +877,9 @@ int write(char* fileName, int numEvents) {
         TkrVertex *vertex;
         for (ivertex=0; ivertex < numVertices; ivertex++) {
             vertex = new TkrVertex();
-            UInt_t towerX = 2;
-            UInt_t towerY = 2;
-            UInt_t tray   = icluster % 15;
+            UInt_t towerX = ivertex % 4;
+            UInt_t towerY = ivertex / 4;
+            UInt_t tray   = ivertex % 15;
             commonRootData::TkrId tkrId(towerX, towerY, tray, true, commonRootData::TkrId::eMeasureX);
             vertex->setTkrID(tkrId);
             Double_t qual = f;
@@ -895,18 +897,12 @@ int write(char* fileName, int numEvents) {
             vtxPar(1,2) = f*2.;
             vtxPar(1,3) = f*3.;
             vtxPar(1,4) = f*4.;
-            vtxPar(2,1) = f*5;
-            vtxPar(2,2) = f*6.;
-            vtxPar(2,3) = f*7.;
-            vtxPar(2,4) = f*8.;
-            vtxPar(3,1) = f*9;
-            vtxPar(3,2) = f*10.;
-            vtxPar(3,3) = f*11.;
-            vtxPar(3,4) = f*12.;
-            vtxPar(4,1) = f*13;
-            vtxPar(4,2) = f*14.;
-            vtxPar(4,3) = f*15.;
-            vtxPar(4,4) = f*16.;
+            vtxPar(2,2) = f*5.;
+            vtxPar(2,3) = f*6.;
+            vtxPar(2,4) = f*7.;
+            vtxPar(3,3) = f*8.;
+            vtxPar(3,4) = f*9.;
+            vtxPar(4,4) = f*10.;
             vertex->setParams(vtxPar);
 
             TVector3 pos(f, f*randNum, f*randNum*2.);

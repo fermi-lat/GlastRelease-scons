@@ -36,5 +36,5 @@ void TkrRecon::Print(Option_t *option) const {
     using namespace std;
     cout << "Number of TkrClusters: " << m_clusterCol->GetEntries() << endl;
     cout << "Number of Tracks: " << m_trackCol->GetEntries() << endl;
-    cout << "Number of Vertics: " << m_vertexCol->GetEntries() << endl;
+    cout << "Number of Vertices: " << m_vertexCol->GetEntries() << endl;
 }
