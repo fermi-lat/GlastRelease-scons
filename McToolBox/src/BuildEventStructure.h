@@ -26,6 +26,15 @@ public:
    ~BuildEventStructure();
 
 private:
+    // Creates and fills a new McEventStructure object
+    Event::McEventStructure* newMcEventStructure(IDataProviderSvc* dataSvc, IParticlePropertySvc* ppSvc);
+
+    // This determines if input McParticle is a direct descendant of the primary
+    //bool isPrimaryDaughter(const Event::McParticle* primary, const Event::McParticle* mcPart);
+
+    // This finds all McParticles "associated" to the  input particle
+    void findAssociated(Event::McEventStructure* mcEvent, const Event::McParticle* mcPart);
+
     // This "finds" the McParticle pointed at by mcPart in an McParticleRefVec
     bool find(const Event::McParticleRefVec::iterator begin, 
               const Event::McParticleRefVec::iterator end,

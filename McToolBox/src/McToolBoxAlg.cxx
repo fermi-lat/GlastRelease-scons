@@ -125,6 +125,7 @@ StatusCode McToolBoxAlg::initialize()
 
         mcmenu.add(new McTracksRep(m_McTracks), "Monte Carlo Tracks");
     }
+    else sc = StatusCode::SUCCESS;
    
     return sc;
 }

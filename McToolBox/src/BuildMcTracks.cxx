@@ -23,6 +23,8 @@
 #include "Event/Recon/TkrRecon/TkrCluster.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "Event/TopLevel/EventModel.h"
+#include "idents/TkrId.h"
+#include <stdexcept>
 
 Event::BuildMcTracks::BuildMcTracks(IDataProviderSvc* dataSvc)
 {
@@ -59,6 +61,15 @@ Event::BuildMcTracks::BuildMcTracks(IDataProviderSvc* dataSvc)
         const Event::McParticle*       mcPart   = mcPosHit->mcParticle();
         const idents::VolumeIdentifier curVolId = mcPosHit->volumeID();
 
+        try
+        {
+            idents::TkrId trkId(curVolId);
+        }
+        catch (std::invalid_argument ex) 
+        {
+            continue;
+        }
+
         // Only interested in volumes inside the tracker
         if (curVolId[0] != 0) continue;
 
@@ -78,18 +89,6 @@ Event::BuildMcTracks::BuildMcTracks(IDataProviderSvc* dataSvc)
             clusMcPosHitRel = new Event::ClusMcPosHitRel(tkrCluster, const_cast<Event::McPositionHit*>(mcPosHit));
             if (!clusHitTab.addRelation(clusMcPosHitRel)) delete clusMcPosHitRel;
         }
-
-        // Can this happen?
-        if (numRels > 1)
-        {
-            int mmm = -1;
-        }
-
-        // Just checking here
-        int trayNum = curVolId[4];
-        int botTop  = curVolId[6];
-        int view    = curVolId[5];
-        int layer   = 2*trayNum - 1 + botTop;
 
         // Create the McParticle to TkrCluster relation and add to the table
         Event::McPartToClusRel* partClusRel = new Event::McPartToClusRel(const_cast<Event::McParticle*>(mcPart), tkrCluster);

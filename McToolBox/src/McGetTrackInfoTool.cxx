@@ -24,6 +24,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/GaudiException.h" 
 #include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/AlgTool.h"
 

@@ -24,6 +24,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/GaudiException.h" 
 #include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/AlgTool.h"
 
@@ -781,7 +782,7 @@ const Hep3Vector McGetEventInfoTool::getTrackDirection(const Event::McParticleRe
                 if (!tkrClus) continue;
 
                 // Check to see which orientation we have, store info accordingly
-                if (tkrClus->v() == Event::TkrCluster::X && nHitsX < 2)
+                if (tkrClus->getTkrId().getView() == idents::TkrId::eMeasureX && nHitsX < 2)
                 {
                     xVals[nHitsX]   = tkrClus->position().x();
                     zVals_x[nHitsX] = tkrClus->position().z();
@@ -939,6 +940,9 @@ const double McGetEventInfoTool::getTrackBremELoss(const Event::McParticleRef mc
                 // Looking only gammas
                 ParticleProperty* ppty = m_ppsvc->findByStdHepID( daughter->particleProperty() );
 
+                // why do we have to check this? 
+                if (!ppty) continue;
+
                 if (ppty->particle() == "gamma")
                 {
                     radEloss += daughter->initialFourMomentum().e();
@@ -989,6 +993,9 @@ const double McGetEventInfoTool::getTrackDeltaELoss(const Event::McParticleRef m
             {
                 // Get the particle property
                 ParticleProperty* ppty = m_ppsvc->findByStdHepID( daughter->particleProperty() );
+
+                // why do we have to check this? 
+                if (!ppty) continue;
 
                 // Looking for energy carried away by delta rays...
                 if (ppty->particle() != "gamma")
@@ -1043,6 +1050,9 @@ const int McGetEventInfoTool::getTrackDeltaRange(const Event::McParticleRef mcPa
             {
                 // Get the particle property
                 ParticleProperty* ppty = m_ppsvc->findByStdHepID( daughter->particleProperty() );
+
+                // why do we have to check this? 
+                if (!ppty) continue;
 
                 // Looking for energy carried away by delta rays...
                 if (ppty->particle() != "gamma")

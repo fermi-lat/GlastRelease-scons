@@ -18,46 +18,43 @@
 #include "Event/TopLevel/EventModel.h"
 #include "Event/MonteCarlo/McRelTableDefs.h"
 #include "Event/MonteCarlo/McEventStructure.h"
-#include "Event/Recon/TkrRecon/TkrClusterCol.h"
-#include "Event/Recon/TkrRecon/TkrPatCand.h"
+#include "Event/Recon/TkrRecon/TkrCluster.h"
+#include "Event/Recon/TkrRecon/TkrTrack.h"
 
 Event::BuildPatCandTab::BuildPatCandTab(IDataProviderSvc* dataSvc)
 {
     StatusCode sc = StatusCode::SUCCESS;
  
     // Look up the Pattern Track collection from the TDS
-    Event::TkrPatCandCol* pTkrCands = SmartDataPtr<Event::TkrPatCandCol>(dataSvc,EventModel::TkrRecon::TkrPatCandCol);
-    Event::TkrClusterCol* pTkrClus  = SmartDataPtr<Event::TkrClusterCol>(dataSvc,EventModel::TkrRecon::TkrClusterCol); 
+    Event::TkrTrackCol* pTkrCands = SmartDataPtr<Event::TkrTrackCol>(dataSvc,EventModel::TkrRecon::TkrTrackCol);
+    //Event::TkrClusterCol* pTkrClus  = SmartDataPtr<Event::TkrClusterCol>(dataSvc,EventModel::TkrRecon::TkrClusterCol); 
 
     // Look up the Monte Carlo track tables 
     SmartDataPtr<Event::McPartToClusTabList> mcClusTable(dataSvc,EventModel::MC::McPartToClusTab);
     Event::McPartToClusTab mcPartToClusTab(mcClusTable);
 
     //Create the pattern track relational tables
-    Event::McPartToTkrCandHitTab partToHitTab;
-    Event::McPartToTkrPatCandTab partToPatCandTab;
+    Event::McPartToTkrTrackHitTab partToHitTab;
+    Event::McPartToTkrTrackTab    partToTkrTrackTab;
 
     partToHitTab.init();
-    partToPatCandTab.init();
+    partToTkrTrackTab.init();
 
     //Store them in the TDS
-    sc = dataSvc->registerObject(EventModel::MC::McPartToTkrCandHitTab,partToHitTab.getAllRelations());
-    sc = dataSvc->registerObject(EventModel::MC::McPartToTkrPatCandTab,partToPatCandTab.getAllRelations());
+    sc = dataSvc->registerObject(EventModel::MC::McPartToTkrTrackHitTab,partToHitTab.getAllRelations());
+    sc = dataSvc->registerObject(EventModel::MC::McPartToTkrTrackTab,partToTkrTrackTab.getAllRelations());
 
     // Loop over the Pattern Candidate tracks
-    for(Event::TkrPatCandColPtr cands = pTkrCands->begin(); cands != pTkrCands->end(); cands++)
+    for(Event::TkrTrackColPtr cands = pTkrCands->begin(); cands != pTkrCands->end(); cands++)
     {
-        Event::TkrPatCand*      patCand = *cands;
-        int                     numHits = patCand->numPatCandHits();
-        Event::CandHitVectorPtr candPtr = patCand->getHitIterBegin();
+        Event::TkrTrack* patCand = *cands;
 
         // Loop over the hits in the candidate track
-        while(numHits--)
+        for(Event::TkrTrackHitVecItr hitIter = patCand->begin(); hitIter != patCand->end(); hitIter++)
         {
-            Event::TkrPatCandHit*  candHit = *candPtr++;
-            int                    clusIdx = candHit->HitIndex();
-            Event::TkrCluster*     cluster = pTkrClus->getHit(clusIdx);
-            Event::McPartToClusVec hitVec  = mcPartToClusTab.getRelBySecond(cluster);
+            Event::TkrTrackHit*      candHit = *hitIter;
+            const Event::TkrCluster* cluster = candHit->getClusterPtr();
+            Event::McPartToClusVec   hitVec  = mcPartToClusTab.getRelBySecond(cluster);
 
             // Ok, now loop over the  McParticle <-> TkrCluster relations
             Event::McPartToClusVec::const_iterator hitVecIter;
@@ -65,13 +62,13 @@ Event::BuildPatCandTab::BuildPatCandTab(IDataProviderSvc* dataSvc)
             {
                 Event::McParticle* mcPart = (*hitVecIter)->getFirst();
 
-                Event::McPartToTkrCandHitRel* partToHitRel = new Event::McPartToTkrCandHitRel(mcPart,candHit);
+                Event::McPartToTkrTrackHitRel* partToHitRel = new Event::McPartToTkrTrackHitRel(mcPart,candHit);
                 partToHitRel->addInfo("h");
                 if (!partToHitTab.addRelation(partToHitRel)) delete partToHitRel;
 
-                Event::McPartToTkrPatCandRel* partToPatRel = new Event::McPartToTkrPatCandRel(mcPart,patCand);
-                partToPatRel->addInfo("p");
-                if (!partToPatCandTab.addRelation(partToPatRel)) delete partToPatRel;
+                Event::McPartToTkrTrackRel* partToTrackRel = new Event::McPartToTkrTrackRel(mcPart,patCand);
+                partToTrackRel->addInfo("p");
+                if (!partToTkrTrackTab.addRelation(partToTrackRel)) delete partToTrackRel;
             }
         }
     }
