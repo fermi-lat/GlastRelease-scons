@@ -145,10 +145,13 @@ namespace calibUtil {
     if (connected != 0) {
       cxt = connected;
       err = RETOk;
+      std::cout << "Successfully connected to MySQL host " << 
+        host << std::endl;
       return true;
     }
     else {
       err = RETNoConnect;
+      std::cerr << "Unable to connect to MySQL host " << host << std::endl;
       return false;
     }
   }
@@ -156,8 +159,13 @@ namespace calibUtil {
   bool Metadata::connectRead(eRet& err) {
     if (m_readCxt == 0) {
       m_readCxt = new MYSQL;
-      return connect(m_readCxt, std::string("glastreader"), 
-                      std::string("glastreader"), err);
+      bool ok = connect(m_readCxt, std::string("glastreader"), 
+                        std::string("glastreader"), err);
+      if (!ok) {
+        delete m_readCxt;
+        m_readCxt = 0;
+      }
+      return ok;
     }
     else return true;
   }
@@ -165,8 +173,13 @@ namespace calibUtil {
   bool Metadata::connectWrite(eRet& err) {
     if (m_writeCxt == 0) {
       m_writeCxt = new MYSQL;
-      return connect(m_writeCxt, std::string("calibrator"), 
+      bool ok = connect(m_writeCxt, std::string("calibrator"), 
                       std::string("calibr8tor"), err);
+      if (!ok) {
+        delete m_readCxt;
+        m_readCxt = 0;
+      }
+      return ok;
     }
     else return true;
   }
@@ -409,7 +422,9 @@ namespace calibUtil {
     eRet ret;
     if (!m_readCxt) {
       connectRead(ret);
-      if (ret != RETOk) return ret;
+      if (ret != RETOk) {
+        return ret;
+      }
     }
     std::string q("select data_fmt, fmt_version, data_ident from ");
     q += m_table;
@@ -422,7 +437,7 @@ namespace calibUtil {
 
     int myRet = mysql_query(m_readCxt, q.c_str());
     if (myRet) {
-      std::cerr << "MySQL error during SELECT, code " << (int) ret 
+      std::cerr << "MySQL error during SELECT, code " << (int) myRet 
                 << std::endl;
       return RETMySQLError;
     }
