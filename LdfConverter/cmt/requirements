@@ -1,5 +1,5 @@
 package LdfConverter
-version v1r3
+version v1r3p0
 
 author Heather Kelly <heather@lheapop.gsfc.nasa.gov>
 author Joanne Bogart <jrb@slac.stanford.edu>
@@ -8,7 +8,7 @@ author Tracy Usher   <usher@slac.stanford.edu>
 public
 use GlastPolicy v*
 use GlastSvc v9r*
-use Event v9r*
+use Event v*
 use ldfReader v*
 use LdfEvent v*
 
