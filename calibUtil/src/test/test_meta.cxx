@@ -11,14 +11,14 @@ int main(int argc, char* argv[]) {
 
   // Very simplest thing to test first is getReadInfo.
 
-  std::string dataFmt;
-  std::string fmtVersion;
+  std::string  fmtVersion;
+  calibUtil::Metadata::eDataFmt dataFmt;
   std::string dataIdent;
   unsigned    ser = 2;
 
   calibUtil::Metadata  meta;
   calibUtil::Metadata::eRet ret = 
-    meta.getReadInfo(ser, &dataFmt, &fmtVersion, &dataIdent);
+    meta.getReadInfo(ser, dataFmt, fmtVersion, dataIdent);
 
   if (ret == calibUtil::Metadata::RETOk) {
     std::cout << "Success reading info for record #" << ser << std::endl;
