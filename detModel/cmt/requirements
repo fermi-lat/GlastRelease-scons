@@ -1,8 +1,8 @@
 package detModel
-version v1
 
 branches detModel src doc xml
-use xml
+
+use xml 
 use XMLEXT
 
 
@@ -18,11 +18,15 @@ macro_append Win32Release " ${DETMODELROOT}/${ReleaseDir}/detModellib.lib"
 
 path_append LD_LIBRARY_PATH "${DETMODELROOT}/${CMTCONFIG}"
 
-library  detModel -no_share *.cxx\
-        ../detModel/*.h\
-	../xml/*.xml\
-        ../xml/*.dtd\
-        ../xml/*.xsl
 
 
+library detModel -no_share \
+     GDD.cpp \
+     Management/*.cpp \
+     Sections/*.cpp \
+
+    
+private
+
+application test main.cxx 
 
