@@ -77,7 +77,7 @@
 <!-- Add in the rest of the grid web and flange (outside the towers) -->
       <posXYZ volume="LATGridFlangeLong" 
               YREF="LATGridFlange_dt"
-              ZREF="NADGridFlangeZ" >
+              ZREF="NADGridFlange_dz" >
         <idField name="fLATObjects" valueREF="eLATGrid" />
         <idField name="fGridObjects" value="0" />
       </posXYZ>
