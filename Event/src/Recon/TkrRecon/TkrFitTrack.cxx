@@ -22,6 +22,11 @@ TkrFitTrack::TkrFitTrack()
     m_Q           = -1e6;
     m_KalEnergy   = 0.;
     m_KalThetaMS  = 0.;
+    m_Xgaps       = 0;
+    m_Ygaps       = 0;
+    m_XistGaps    = 0;
+    m_YistGaps    = 0;
+
     m_hits.clear();
 }
 
