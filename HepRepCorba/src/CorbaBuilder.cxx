@@ -299,7 +299,7 @@ void CorbaBuilder::setSubinstancesNumber(std::string name, unsigned int i)
 
 //      instance->instances = in;
       
-      instance->instances.replace(i,0,0,FALSE);
+      instance->instances.replace(i,0,0,false);
     }
 }
 
