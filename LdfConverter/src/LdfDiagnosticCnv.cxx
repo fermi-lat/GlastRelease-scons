@@ -41,13 +41,15 @@ StatusCode LdfDiagnosticCnv::createObj(IOpaqueAddress* ,
     unsigned int numCal = diagnostic->getNumCalDiagnostic();
     unsigned int ind;
     for (ind = 0; ind < numCal; ind++) {
-        LdfEvent::CalDiagnosticData cal(diagnostic->getCalDiagnosticByIndex(ind).dataWord());
+        ldfReader::CalDiagnosticData ldfCalDiag = diagnostic->getCalDiagnosticByIndex(ind);
+        //LdfEvent::CalDiagnosticData cal(diagnostic->getCalDiagnosticByIndex(ind).dataWord());
+        LdfEvent::CalDiagnosticData cal(ldfCalDiag.dataWord(), ldfCalDiag.tower(), ldfCalDiag.layer());
         diag->addCalDiagnostic(cal);
     }
     unsigned int numTkr = diagnostic->getNumTkrDiagnostic();
     for (ind = 0; ind < numTkr; ind++) {
-        ldfReader::TkrDiagnosticData ebfTkrDiag = diagnostic->getTkrDiagnosticByIndex(ind);
-        LdfEvent::TkrDiagnosticData tkr(ebfTkrDiag.dataWord());
+        ldfReader::TkrDiagnosticData ldfTkrDiag = diagnostic->getTkrDiagnosticByIndex(ind);
+        LdfEvent::TkrDiagnosticData tkr(ldfTkrDiag.dataWord(), ldfTkrDiag.tower(), ldfTkrDiag.gtcc());
         diag->addTkrDiagnostic(tkr);
     }
     return StatusCode::SUCCESS;
