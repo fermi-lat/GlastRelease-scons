@@ -15,7 +15,7 @@
       - delete any <derCategory> without the "save" attribute set
         to true and all its children.  For any <derCategory> which
         is to be saved, delete all element content from each
-        <const> (except for notes??).
+        <const> (except for notes?).
  */
 
 #include "xml/XmlParser.h"

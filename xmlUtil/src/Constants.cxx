@@ -99,7 +99,9 @@ namespace xmlUtil {
  
   // Remove children of evaluated constants
   void Constants::pruneConstants(bool keepNotes) { 
-    //  DOM_Element tmp;
+
+    if (m_constants == DOM_Node()) return;
+
     DOM_Element curConst;
     
     // For each derCategory, prune each const child
@@ -139,31 +141,33 @@ namespace xmlUtil {
   /*! For each derCategory, evaluate each const child, writing
       value back to "value" attribute in the DOM */
   void Constants::evalConstants() {
-  DOM_Element derived = 
-    xml::Dom::findFirstChildByName(m_constants, "derived");  
-  if ((derived.getAttribute("evaluated")).equals(DOMString("true"))) return;
+    if (m_constants == DOM_Node()) return;
+    DOM_Element derived = 
+      xml::Dom::findFirstChildByName(m_constants, "derived"); 
+    if (derived == DOM_Element()) return; 
+    if ((derived.getAttribute("evaluated")).equals(DOMString("true"))) return;
 
-  DOM_Element curConst;
+    DOM_Element curConst;
 
-  DOM_NodeList cats = m_doc.getElementsByTagName("derCategory");
-  int nCats = cats.getLength();
-  int iCat;
-  
-  for (iCat = 0; iCat < nCats; iCat++) {
-    DOM_Node catNode = cats.item(iCat);
-    DOM_Element& curCat = static_cast<DOM_Element&> (catNode); 
-    curConst = xml::Dom::findFirstChildByName(curCat, "const" );
-
-    while (curConst != DOM_Element()) {
-      Arith curArith(curConst);
-      double evalValue = curArith.evaluate();
-      curArith.saveValue();
+    DOM_NodeList cats = m_doc.getElementsByTagName("derCategory");
+    int nCats = cats.getLength();
+    int iCat;
+    
+    for (iCat = 0; iCat < nCats; iCat++) {
+      DOM_Node catNode = cats.item(iCat);
+      DOM_Element& curCat = static_cast<DOM_Element&> (catNode); 
+      curConst = xml::Dom::findFirstChildByName(curCat, "const" );
       
-      curConst = xml::Dom::getSiblingElement(curConst);
+      while (curConst != DOM_Element()) {
+        Arith curArith(curConst);
+        double evalValue = curArith.evaluate();
+        curArith.saveValue();
+        
+        curConst = xml::Dom::getSiblingElement(curConst);
+      }
     }
+    derived.setAttribute("evaluated", "true");
   }
-  derived.setAttribute("evaluated", "true");
-}
 
 
 }
