@@ -37,7 +37,7 @@
 #include "Event/Digi/CalDigi.h"
 #include "Event/Digi/AcdDigi.h"
 
-#include "Event/Filter/Ebf.h"
+#include "EbfWriter/Ebf.h"
 
 #include "EbfAcdData.h"
 #include "EbfCalData.h"
@@ -172,7 +172,7 @@ StatusCode EbfWriter::execute()
     if(eventSvc()->retrieveObject(EventModel::Filter::Event,pnode).isFailure())
       eventSvc()->registerObject(EventModel::Filter::Event,new DataObject);
 
-    Event::Ebf *newEbf=new Event::Ebf;
+    EbfWriterTds::Ebf *newEbf=new EbfWriterTds::Ebf;
     eventSvc()->registerObject(EventModel::Filter::Ebf, newEbf);
     
     //

@@ -14,16 +14,19 @@ use Gleam		*
 use GuiSvc		*
 # Use this pattern for shareable libraries that Gaudi must load
 apply_pattern packageShr
+apply_pattern package_include
+apply_pattern library_Llinkopts library="EbfWriterTds"
+
+apply_pattern package_header
+
+library EbfWriterTds -no_share Ebf.cxx
 
 library EbfWriter *.cxx Dll/*.cxx
-
-private
 
 # Flags for building shared libraries
 apply_pattern package_Cshlibflags
 
 use FluxSvc 		*
-public
 
 apply_pattern package_test
 set TESTJOBOPTIONS ${EBFWRITERROOT}/src/test/jobOptions.txt
