@@ -12,5 +12,8 @@
 
  <p>For more news please look at http://www.fisica.uniud.it/~riccardo/research/glast/GDD
 
+ <hr>
+  \section requirements cmt/requirements
+  \include requirements
  
 */
