@@ -140,13 +140,7 @@
     </source>
 
 
-	<!-- galactic electron spectrum evaluated at the CHIME  average . angular dependence and rate are from the CHIME spectrum object -->
-    <source name="electronavg" >
-        <spectrum escale="GeV"> <SpectrumClass name="GalElSpectrum" params="13.8, 24.9"/> <use_spectrum/> </spectrum>
-    </source>
-
-
-	<!-- the albedo proton spectrum, measured by AMS, implemented by AlbedoPSpectrum. isotropic for now  -->
+    <!-- the albedo proton spectrum, measured by AMS, implemented by AlbedoPSpectrum. isotropic for now  -->
     <source name="albedo_proton_max">
          <spectrum escale="GeV"> <SpectrumClass name="AlbedoPSpectrum" params="4.78,8.18"/>  <solid_angle mincos="-1.0" maxcos="1.0"/>
          </spectrum>
@@ -233,7 +227,7 @@
 		<nestedSource sourceRef="cremeavg" /> 
 		<nestedSource sourceRef="albedo_proton_avg" /> 
 		<nestedSource sourceRef="albedo_gamma" /> 
-		<nestedSource sourceRef="electronavg" /> 
+		<!-- TODO: restore nestedSource sourceRef="electronavg" /  --> 
 		<nestedSource sourceRef="albedo_electronpositronavglow"/>
         <nestedSource sourceRef="albedo_electronpositronavghi"/> 
     </source>
