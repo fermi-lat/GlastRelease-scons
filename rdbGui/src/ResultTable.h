@@ -6,6 +6,8 @@
 
 class ResultTable: public FXTable
 {
+  FXDECLARE(ResultTable) 
+   
   public:
   
     ResultTable(FXComposite *p, FXObject* tgt=NULL,FXSelector sel=0,
@@ -18,6 +20,14 @@ class ResultTable: public FXTable
     void format();
     void showColumn(FXint);
     void hideColumn(FXint);  
+    void enableColumn(FXint);
+    void disableColumn(FXint);
+    
+    /// Extract cells from given range as text.
+    void extractText(FXchar*& text,FXint& size,FXint startrow,FXint endrow,FXint startcol,FXint endcol,FXString cs="\t",FXchar rs='\n') const;
+    
+    long onKeyPress(FXObject*,FXSelector,void*);
+    long onCmdCopySel(FXObject*,FXSelector,void*);
     
   protected:
     ResultTable() {};

@@ -64,6 +64,8 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
 
   // Toolbar buttons
   new FXVerticalSeparator(uiToolbar, SEPARATOR_GROOVE|LAYOUT_FILL_Y);
+  
+  
 
 
   // Horizontal splitter
@@ -97,7 +99,8 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
       LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_THICK|FRAME_SUNKEN);
     // Result table
   uiTable = new ResultTable(tableFrame, this, ID_TABLEOUT, LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 2,2,2,2);
-
+  
+  new FXButton(uiToolbar, "Copy", NULL, uiTable, FXTable::ID_COPY_SEL);
       
   new FXTabItem(lowerTab, "Log", NULL, TAB_BOTTOM_NORMAL);         
   // Log window frame
@@ -256,7 +259,8 @@ void RdbGUIWindow::loadXMLFile(FXString fileName)
           m_lastDbSchema = fileName;
         }
         
-    }  
+    } 
+  searchFrame->setEnabled(false); 
 }
 
 
@@ -403,9 +407,11 @@ long RdbGUIWindow::onInsert(FXObject*,FXSelector, void*)
   m_dgInsert->show(PLACEMENT_OWNER);
   m_dgInsert->setUiLog(uiLog);
 
-  m_dgInsert->resize(m_dgInsert->getDefaultWidth(),m_dgInsert->getDefaultHeight());
-  m_dgInsert->recalc();
-  
+  if (m_dgInsert->getDefaultWidth() < 250)
+    m_dgInsert->resize(250,m_dgInsert->getDefaultHeight());
+  else
+    m_dgInsert->resize(m_dgInsert->getDefaultWidth(),m_dgInsert->getDefaultHeight());
+  m_dgInsert->recalc();  
   
   return 1;
 }
@@ -422,6 +428,7 @@ void RdbGUIWindow::closeConnection()
 
 long RdbGUIWindow::onQueryFrameUpdate(FXObject *, FXSelector, void*)
 {
+  searchFrame->setEnabled(true);
   searchFrame->updateColumnSelection(uiTblColList->getTableList(), 
       uiTblColList->getColList());
   return 1; 

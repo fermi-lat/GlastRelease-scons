@@ -36,6 +36,7 @@ InsertDialog::InsertDialog(FXApp *owner):
       LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK, 0, 0, 0, 0, 20, 20);
   new FXButton(uiClosebox, "&Send", NULL, this, ID_GO,
                BUTTON_INITIAL|LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK, 0, 0, 0, 0, 20, 20);
+               
 
   m_connection = 0;
   m_factory = new ColWidgetFactory();
@@ -88,7 +89,7 @@ rdbModel::Visitor::VisitorState InsertDialog::visitRdb(rdbModel::Rdb *rdb)
     delete m_matrix;
   }
   
-  m_matrix = new FXMatrix(m_uiRpanel,2,MATRIX_BY_COLUMNS,0,0,0,0,0,0,0,0,0,4);
+  m_matrix = new FXMatrix(m_uiRpanel,2,MATRIX_BY_COLUMNS|LAYOUT_FILL_X,0,0,0,0,0,0,0,0,0,4);
   m_matrix->create();
 
   // Let's delete the previous widgets

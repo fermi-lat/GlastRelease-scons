@@ -41,6 +41,7 @@ class QueryFrame: public FXVerticalFrame
   void setConnection(rdbModel::Connection* con){m_connect = con;}
   rdbModel::ResultHandle* getQueryResult() const {return m_queryResult;}
   void reset();
+  void setEnabled(bool);
 
   
  protected:
@@ -49,13 +50,16 @@ class QueryFrame: public FXVerticalFrame
   
  private:
   FXObject *m_target;                    // The target of some messages sent by this widget
-  FXMatrix *m_searchFrame;                  // Martix of FXComboBox containing search conditions
+  FXMatrix *m_searchFrame;               // Martix of FXComboBox containing search conditions
   std::vector<FXString> m_operators;     // vector of comparison operators
   ColWidgetFactory* m_factory;  
   std::vector<ColWidget*> m_widgets;
-  rdbModel::Connection* m_connect;    // pointer to the DB connection class
+  rdbModel::Connection* m_connect;       // pointer to the DB connection class
   std::string m_tableName;               // Name of the selected table
   rdbModel::ResultHandle *m_queryResult; // object containing the result of a query
+  FXButton* m_moreBtn;                   // More button  
+  FXButton* m_fewerBtn;                  // Fewer button
+  FXButton* m_sendBtn;                   // Send button
 
   rdbModel::Assertion::Operator* QueryFrame::buildCompOperator(std::string col, 
       std::string comp, std::string value);

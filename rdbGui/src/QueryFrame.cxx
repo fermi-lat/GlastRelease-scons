@@ -45,10 +45,12 @@ QueryFrame::QueryFrame(FXComposite *owner, FXObject *target):
   
   FXHorizontalFrame *addRemovFrame = new FXHorizontalFrame(this, LAYOUT_FILL_X|PACK_UNIFORM_WIDTH);
   
-  new FXButton(addRemovFrame,"&More\tAdd a new search condition", NULL, this, ID_MORE);
-  new FXButton(addRemovFrame,"F&ewer\tRemove last search condition", NULL, this, ID_FEWER);
-  new FXButton(addRemovFrame,"&Send\tSend query to the database", NULL, this, 
+  m_moreBtn = new FXButton(addRemovFrame,"&More\tAdd a new search condition", NULL, this, ID_MORE);
+  m_fewerBtn = new FXButton(addRemovFrame,"F&ewer\tRemove last search condition", NULL, this, ID_FEWER);
+  m_sendBtn = new FXButton(addRemovFrame,"&Send\tSend query to the database", NULL, this, 
       ID_QUERY, BUTTON_NORMAL|LAYOUT_RIGHT);
+      
+  m_moreBtn->disable();
   
   new FXHorizontalSeparator(this);
   
@@ -303,4 +305,20 @@ rdbModel::Assertion::Operator* QueryFrame::buildOperator(int row)
 void QueryFrame::reset()
 {
   m_connect = NULL;
+}
+
+void QueryFrame::setEnabled(bool flag)
+{
+  if (flag)
+    {
+      m_moreBtn->enable();
+      m_fewerBtn->enable();
+      m_sendBtn->enable();
+    }
+  else
+    {
+      m_moreBtn->disable();
+      m_fewerBtn->disable();
+      m_sendBtn->disable();
+    }
 }

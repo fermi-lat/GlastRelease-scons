@@ -92,7 +92,7 @@ FXIMPLEMENT(DateField, FXHorizontalFrame, DateFieldMap,ARRAYNUMBER(DateFieldMap)
 DateField::DateField(FXComposite* owner)
 : FXHorizontalFrame(owner, LAYOUT_FILL_X, LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0)
 {
-  m_dateField = new FXTextField((FXComposite*)this,20,NULL,0,TEXTFIELD_NORMAL|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
+  m_dateField = new FXTextField((FXComposite*)this,3,NULL,0,TEXTFIELD_NORMAL|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
   m_startCal = new FXButton((FXComposite*)this, "...", NULL, this, ID_SET);
   
   m_dateField->setText("");
