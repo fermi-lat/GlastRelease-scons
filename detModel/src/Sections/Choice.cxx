@@ -45,21 +45,18 @@ namespace detModel{
   void Choice::Accept(SectionsVisitor* s)
   {
     Manager* man = Manager::getPointer();
-    if (Volume* v = getVolumeByMode(man->getMode()))
-      v->Accept(s);
-    else
-      defaultVol->Accept(s);
+    Volume* v = getVolumeByMode(man->getMode());
+    v->Accept(s);
   }
   
   void Choice::AcceptNotRec(SectionsVisitor* s)
   {
     Manager* man = Manager::getPointer();
-    if (Volume* v = getVolumeByMode(man->getMode()))
-      v->AcceptNotRec(s);
-    else
-      defaultVol->Accept(s);
+    Volume* v = getVolumeByMode(man->getMode());
+    v->AcceptNotRec(s);
+
   }  
-  
+
   void Choice::buildBB()
   {
     BoundingBox* bb = getBBox();
@@ -67,3 +64,7 @@ namespace detModel{
   }
   
 }
+
+
+
+
