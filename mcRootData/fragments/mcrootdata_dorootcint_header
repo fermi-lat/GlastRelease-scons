@@ -5,5 +5,5 @@ ${CONSTITUENT}:: ${CINTFILE}
 VPATH=../mcRootData/
 ${CINTFILE}:: ${root_headers}
 	@echo " running rootcint to generate ${CINTFILE} "
-	cd ../${package}/ ; ${ROOT_PATH}/bin/rootcint -f ${CINTFILE} -c ${root_headers}
+	cd ../${package}/ ; export LD_LIBRARY_PATH=${ROOT_PATH}/lib;${ROOT_PATH}/bin/rootcint -f ${CINTFILE} -c ${root_headers}
 #==================================================== 
