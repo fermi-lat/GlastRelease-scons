@@ -1,23 +1,28 @@
 package GlastSvc
-version v9r10p2
+version v9r11
 
 branches src cmt doc
 #$Id$
 
-use Event v9r*
-use xmlGeoDbs  v1r*
-use detModel   v2r*
-use CLHEP v2* IExternal
+use GlastPolicy *
 
 apply_pattern packageShr
 apply_pattern package_include
 
 #=============================================================
-
 # private
-macro headers "" WIN32 "*.h"
+use Event v9r*
+use detModel   v2r* -no_auto_imports
+use xmlGeoDbs  v1r* -no_auto_imports
+use CLHEP v2* IExternal -no_auto_imports
+use xml * -no_auto_imports
+use xmlUtil * -no_auto_imports
+use XMLEXT * IExternal -no_auto_imports
 
-library GlastSvc \
+macro headers "" WIN32 "*.h"
+macro_append includes ' $(ppcmd)"$(xml_root)"'
+
+library GlastSvc  -import=detModel -import=CLHEP -import=xml -import=xmlUtil \
      Dll/*.cpp \
      -s="../GlastSvc/GlastDetSvc" $(headers)\
      -s="GlastDetSvc $(headers) *.cxx\
@@ -37,8 +42,9 @@ apply_pattern package_Cshlibflags
 
 macro WinInclude "" WIN32 "test/*.h  test/*.txt test/*.xml" 
 
-# build this for non-shareable testing
+# build this for testing
 set TESTJOBOPTIONS  "${GLASTSVCROOT}/src/test/jobOptions.txt"
-application test_GlastSvc  ${TestGlastMain} test/*.cpp   $(WinInclude) 
-application checkSeeds  test/checkSeeds.cxx   $(WinInclude) 
+apply_pattern package_test
+
+#application checkSeeds  test/checkSeeds.cxx   $(WinInclude) 
 
