@@ -1,3 +1,9 @@
+/** 
+* @file FILESpectrum.h
+* @brief definition of FILESpectrum
+*
+*  $Header$
+*/
 #ifndef FILESpectrum_H
 #define FILESpectrum_H
 /** 
@@ -6,7 +12,7 @@
 * \brief Spectrum that reads its differential spectrum from a table
 * \author Theodore Hierath
 * 
-* $Header $
+* $Header $:
 */
 //
 #include "Spectrum.h"

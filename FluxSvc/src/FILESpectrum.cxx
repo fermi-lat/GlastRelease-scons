@@ -1,3 +1,9 @@
+/** 
+* @file FILESpectrum.cxx
+* @brief Implementation of FILESpectrum
+*
+*  $Header$
+*/
 
 #include "FILESpectrum.h"
 
@@ -24,16 +30,16 @@ FILESpectrum::FILESpectrum(const std::string& params)
     
     // construct filename, assuming data files in folder <packageroot>/CREME
     std::string fileName = "";
-    const char* flux_root = ::getenv("FLUXROOT");
+    const char* flux_root = ::getenv("FLUXSVCROOT");
     std::string doc_path= (flux_root? std::string(flux_root)+"/" : "");
     fileName = doc_path+initialization_document;
     std::ifstream input_file;
     input_file.open(fileName.c_str());
     
-    if(false == input_file.is_open())
+    if(! input_file.is_open())
     {
         std::cerr << "ERROR:  Unable to open:  " << fileName.c_str() << std::endl;
-        exit(0);
+        throw(std::string("ERROR:  Unable to open: "+ fileName ));
     }
     else
     {
