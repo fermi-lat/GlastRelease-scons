@@ -125,7 +125,8 @@
 <!ELEMENT calPed  EMPTY>
 <!ATTLIST calPed  %ranges;
                   avg NMTOKEN #REQUIRED
-                  sig NMTOKEN #REQUIRED>
+                  sig NMTOKEN #REQUIRED
+                  cos NMTOKEN "2" >
 
 <!ELEMENT calGain EMPTY>
 <!ATTLIST calGain %ranges;
