@@ -123,14 +123,8 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,
       p = Event::McIntegratingHit::electron;
     else p = Event::McIntegratingHit::positron;
 
-#if 0
   // fill the energy and position    
-  hit->addEnergyItem(edep, 
-                     partMan->getLastParticle(),
-                     (prePos+postPos)/2);
-#else
   hit->addEnergyItem(edep, p, (prePos+postPos)/2);
-#endif
 
   return true;
 }
