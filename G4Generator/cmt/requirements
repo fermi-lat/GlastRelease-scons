@@ -1,5 +1,5 @@
 package G4Generator
-version v5r0
+version v5r1
 #$Id$
 
 use GlastPolicy v5*
@@ -12,9 +12,6 @@ apply_pattern package_include
 use Event *
 
 use GlastSvc  *
-# following for test
-use FluxSvc  v5r*
-
 
 use GuiSvc   v3*
 use geometry v3*
