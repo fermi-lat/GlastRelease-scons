@@ -1,12 +1,14 @@
 #ifndef LocalMagneticFieldDes_H
 #define LocalMagneticFieldDes_H
+// $Header$
 
 #include <string>
 
 // Description of a local magnetic field, real field is constructed in
 // DetectorConstruction's constructor
 
-struct LocalMagneticFieldDes {
+class LocalMagneticFieldDes { 
+public:
 
   // only used in generating a local magnetic field
   std::string m_magFieldVol;

@@ -3,6 +3,7 @@
 @verbatim
     $Id$
 
+ v5r3   30-may-03 THB Update for G4 5.1 interface changes. Also, now has mag field
  v5r2p1 10-mar-03 LSR kill (Windows!) warning messages
  v5r2    6-Mar-03 TU  Modify interface to G4GeometrySvc to solve std::map problem
  v5r1p1 27-feb-03 THB had to add a use FluxSvc for the test.
