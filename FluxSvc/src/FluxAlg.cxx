@@ -131,11 +131,6 @@ StatusCode FluxAlg::initialize(){
         return StatusCode::FAILURE;
     }
 
-		//set the input file to be used as the pointing database
-	if(! m_pointing_history_input_file.value().empty() ){
-		m_fluxSvc->setPointingHistoryFile(m_pointing_history_input_file.value().c_str());
-    }
-
     //this line sets the explicit rocking angles to be used IF the 
     //rocking type is "explicit." Note that it uses the m_rocking_angle also.
     m_fluxSvc->setExplicitRockingAngles(m_rocking_angle*M_PI/180,m_rocking_angle_z*M_PI/180);
@@ -143,6 +138,11 @@ StatusCode FluxAlg::initialize(){
 
     //then this line sets the rocking type, as well as the rocking angle.
     m_fluxSvc->setRockType(m_pointing_mode,m_rocking_angle);
+
+	//set the input file to be used as the pointing database, if used
+	if(! m_pointing_history_input_file.value().empty() ){
+		m_fluxSvc->setPointingHistoryFile(m_pointing_history_input_file.value().c_str());
+    }
 
     log << MSG::INFO << "loading source " << m_source_name << endreq;
     
