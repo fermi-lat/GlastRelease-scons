@@ -14,7 +14,6 @@
 #include "GaudiKernel/INTupleSvc.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/AlgTool.h"
-#include "GaudiTuple.h"
 
 
 #include "Event/MonteCarlo/McParticle.h"
@@ -102,7 +101,7 @@ Algorithm(name, pSvcLocator), m_tuple(0), m_root_tuple(0) {
     declareProperty("generated" , m_generated=10000);
     declareProperty("RootFilename", m_root_filename="");
     declareProperty("IM_filename", m_IM_filename="$(CLASSIFICATIONROOT)/xml/PSF_Analysis.xml");
-    declareProperty("RootTreeName", m_treename="1"); // this is GLAST default tuple name
+    declareProperty("RootTreeName", m_treename="MeritTuple"); 
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode meritAlg::setupTools() {
