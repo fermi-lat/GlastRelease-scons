@@ -102,7 +102,7 @@ StatusCode TkrReconAlg::execute()
     if (pCalClusters)
     {
         ICsICluster* pCalClus = pCalClusters->Cluster(0);
-        CalEnergy             = pCalClus->energySum() / 1000; //GeV for now 
+        CalEnergy             = pCalClus->energySum(); 
         CalPosition           = pCalClus->position();
     }
 
