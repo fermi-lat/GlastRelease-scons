@@ -3,7 +3,6 @@ version v1r2
 
 branches GlastEvent mgr doc src
 use idents
-use instrument v2r4
 use data 
 use Gaudi 
 
