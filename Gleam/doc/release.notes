@@ -3,6 +3,14 @@
  * package manager:T.Burnett
  * $Id$
 
+* v3      THB 31-oct-02
+
+     use FluxSvc          v5r15
+     use FluxDisplay      v2r6
+     use CalDigi          v1r2p10
+     use AcdDigi          v1r6
+     use merit            v5r12p2
+
 * v2r5p2 THB 20-oct-02
        use FluxSvc        v5r14p2
        use FluxDisplay    v2r5
