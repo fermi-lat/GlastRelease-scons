@@ -22,10 +22,10 @@ namespace calibRootData {
   public:
     
     CalDimension(unsigned nRow=0, unsigned nCol=0, 
-                 unsigned nLayer=0, unsigned nXtal=0, 
-                 unsigned nFace=0, unsigned nRange=0, bool exact=false) : 
+                 unsigned nLayer=0, unsigned nXtal=0, unsigned nFace=0, 
+                 unsigned nRange=0, unsigned nDacCol=0, bool exact=false) : 
       m_nRow(nRow), m_nCol(nCol), m_nLayer(nLayer),
-      m_nXtal(nXtal), m_nFace(nFace), m_nRange(nRange),
+      m_nXtal(nXtal), m_nFace(nFace), m_nRange(nRange), m_nDacCol(nDacCol),
       m_exact(exact) { };
 
     virtual ~CalDimension() { };
@@ -36,6 +36,7 @@ namespace calibRootData {
     unsigned getXtal() const {return m_nXtal;}
     unsigned getNFace() const {return m_nFace;}
     unsigned getNRange() const {return m_nRange;}
+    unsigned getNDacCol() const {return m_nDacCol;}
     bool     isExact() const {return m_exact;}
 
  protected:
@@ -46,7 +47,18 @@ namespace calibRootData {
     UChar_t m_nXtal;
     UChar_t m_nFace;
     UChar_t m_nRange;
+    UChar_t m_nDacCol;
     Bool_t  m_exact;    
+
+  private:
+    friend class CalBase;  // so it can call initialize
+
+    void initialize(unsigned nRow, unsigned nCol, unsigned nLayer, 
+                    unsigned nXtal, unsigned nFace, unsigned nRange, 
+                    unsigned nDacCol) {
+      m_nRow = nRow;    m_nCol = nCol;  m_nLayer = nLayer;   m_nXtal = nXtal;
+      m_nFace = nFace;  m_nRange = nRange;      m_nDacCol = nDacCol;
+    }
   
     ClassDef(calibRootData::CalDimension, 1)
   };

@@ -31,6 +31,10 @@ namespace calibRootData {
 
     // Should these arguments default to TString equivalent of empty?
     Base(TString i, TString t) : m_instrument(i), m_calibType(t) { };
+
+    void setInstrument(TString i) {
+      m_instrument = i; 
+    }
     virtual ~Base() { };
 
   protected:

@@ -30,16 +30,23 @@ namespace calibRootData {
     CalBase(TString i = TString(), TString t = TString(),
             unsigned nRow=0, unsigned nCol=0, unsigned nLayer=0, 
             unsigned nXtal=0, unsigned nFace=0, unsigned nRange=0) : 
-      Base(i, t), m_dim(nRow, nCol, nLayer, nXtal, nFace, nRange), 
-      m_exact(false) { }
+      Base(i, t), m_dim(nRow, nCol, nLayer, nXtal, nFace, nRange, false)
+      { }
     virtual ~CalBase() { };
 
     const CalDimension* getCalDimension() const {return &m_dim;}
-    bool getExact() const {return m_exact;}
+    bool getExact() const {return getCalDimension()->isExact();}
+
+    void initialize(unsigned nRow, unsigned nCol, unsigned nLayer, 
+                    unsigned nXtal, unsigned nFace, unsigned nRange,
+                    unsigned nDacCol) 
+    {
+      m_dim.initialize(nRow, nCol, nLayer, nXtal, nFace, nRange, nDacCol);
+    }
+    void setExact(bool exact) {m_dim.m_exact = exact;}
   protected:
 
     CalDimension m_dim;
-    Bool_t m_exact;                       // true iff dimension info is exact
     ClassDef(calibRootData::CalBase, 1)
   };
 }
