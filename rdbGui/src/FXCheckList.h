@@ -162,6 +162,10 @@ public:
   long onQueryHelp(FXObject*,FXSelector,void*);
   long onTipTimer(FXObject*,FXSelector,void*);
   long onLookupTimer(FXObject*,FXSelector,void*);
+  long onCheckSel(FXObject*,FXSelector,void*);
+  long onUncheckSel(FXObject*,FXSelector,void*);
+  long onCheckAll(FXObject*,FXSelector,void*);
+  long onUncheckAll(FXObject*,FXSelector,void*);
   long onCmdSetValue(FXObject*,FXSelector,void*);
   long onCmdGetIntValue(FXObject*,FXSelector,void*);
   long onCmdSetIntValue(FXObject*,FXSelector,void*);
@@ -172,6 +176,10 @@ public:
   enum {
     ID_TIPTIMER=FXScrollArea::ID_LAST,
     ID_LOOKUPTIMER,
+    ID_CHECKSEL,
+    ID_UNCHECKSEL,
+    ID_CHECKALL,
+    ID_UNCHECKALL,
     ID_LAST
     };
 public:

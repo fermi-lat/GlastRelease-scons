@@ -74,6 +74,7 @@ public:
   long onOpenConnection(FXObject*,FXSelector, void*);  
   long onCloseConnection(FXObject*,FXSelector, void*);
   long onQueryFrameUpdate(FXObject *, FXSelector, void*);
+  long onUpdResTableCols(FXObject*,FXSelector, void*);
   long onSendQuery(FXObject*,FXSelector, void*);
   long onInsert(FXObject*,FXSelector, void*);
   // ..eccetera

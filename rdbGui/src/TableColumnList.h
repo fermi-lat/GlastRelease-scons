@@ -25,7 +25,9 @@ class TableColumnList: public FXVerticalFrame, public rdbModel::Visitor
   TableColumnList(FXComposite *, FXObject *target = NULL, FXSelector sel = 0);
 
   long onSelectTable(FXObject*, FXSelector, void*);
-  long onSelectColumn(FXObject*, FXSelector, void*);
+  long onCheckColumn(FXObject*, FXSelector, void*);
+  long onUncheckColumn(FXObject*, FXSelector, void*);
+  long onCmdMenuPane(FXObject*, FXSelector, void*);
   
   const FXCheckList* getColList() const {return m_colList;}
   const FXList* getTableList() const {return m_tblList;}
@@ -40,6 +42,7 @@ class TableColumnList: public FXVerticalFrame, public rdbModel::Visitor
   FXSelector m_selector;                            // ID sent to the taget
   FXList *m_tblList;                                // List of database tables
   FXCheckList *m_colList;                           // List of comlumns for the selected table
+  FXMenuPane *m_colListPop;                         // Pop-up menù to select or deselect multiple columns
   bool m_tableSelected;                             // True if a table has been selected 
   
   

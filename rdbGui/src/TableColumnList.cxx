@@ -5,9 +5,11 @@
 // Message Map TableColumnList class
 FXDEFMAP(TableColumnList) TableColumnListMap[]={
 
-  //__Message_Type_____________ID________________________Message_Handler_____
-  FXMAPFUNC(SEL_COMMAND,   TableColumnList::ID_TBLLIST,          TableColumnList::onSelectTable),
-  FXMAPFUNC(SEL_CLICKED,   TableColumnList::ID_COLLIST,          TableColumnList::onSelectColumn)
+  //__Message_Type_____________________________ID________________________Message_Handler_____
+  FXMAPFUNC(SEL_COMMAND,           TableColumnList::ID_TBLLIST,          TableColumnList::onSelectTable),
+  FXMAPFUNC(SEL_SELECTED,          TableColumnList::ID_COLLIST,          TableColumnList::onCheckColumn),
+  FXMAPFUNC(SEL_DESELECTED,        TableColumnList::ID_COLLIST,          TableColumnList::onUncheckColumn),
+  FXMAPFUNC(SEL_RIGHTBUTTONRELEASE,TableColumnList::ID_COLLIST,          TableColumnList::onCmdMenuPane)
   };
 
 // Object implementation
@@ -41,6 +43,12 @@ TableColumnList::TableColumnList(FXComposite *owner, FXObject *target, FXSelecto
   FXVerticalFrame *colListFrame = new FXVerticalFrame(colFrame, LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_SUNKEN, 0, 0, 0, 0, 0, 0, 0, 0); 
         
   m_colList = new FXCheckList(colListFrame, 0,this, ID_COLLIST, LIST_NORMAL|LAYOUT_FILL_X|LAYOUT_FILL_Y);
+  
+  m_colListPop = new FXMenuPane(owner);
+  new FXMenuCommand(m_colListPop,"check selected",NULL,m_colList,FXCheckList::ID_CHECKSEL);
+  new FXMenuCommand(m_colListPop,"uncheck selected",NULL,m_colList,FXCheckList::ID_UNCHECKSEL); 
+  new FXMenuCommand(m_colListPop,"check all",NULL,m_colList,FXCheckList::ID_CHECKALL); 
+  new FXMenuCommand(m_colListPop,"uncheck all",NULL,m_colList,FXCheckList::ID_UNCHECKALL); 
       
   m_tableSelected = false;
   
@@ -61,8 +69,21 @@ long TableColumnList::onSelectTable(FXObject*,FXSelector sel,void*)
 }
 
 
-long TableColumnList::onSelectColumn(FXObject*,FXSelector,void*)
+long TableColumnList::onCheckColumn(FXObject*,FXSelector,void* ptr)
 {
+  return m_target && m_target->handle(NULL,FXSEL(SEL_SELECTED,ID_TBLLIST),ptr);;
+}
+
+long TableColumnList::onUncheckColumn(FXObject*,FXSelector,void* ptr)
+{
+  return m_target && m_target->handle(NULL,FXSEL(SEL_DESELECTED,ID_TBLLIST),ptr);;
+}
+
+long TableColumnList::onCmdMenuPane(FXObject*, FXSelector, void* ptr)
+{
+  FXEvent *event = (FXEvent*) ptr;
+  m_colListPop->popup(NULL,event->root_x,event->root_y);
+  //getApp()->runModalWhileShown(getOwner());
   return 1;
 }
 

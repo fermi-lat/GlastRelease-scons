@@ -3,13 +3,46 @@
 
 #include <vector>
 
-
 ResultTable::ResultTable(FXComposite *p, FXObject* tgt,
                          FXSelector sel, FXuint opts,FXint x,FXint y,FXint w,
                          FXint h,FXint pl,FXint pr,FXint pt,FXint pb):
   FXTable(p, tgt, sel, opts, x, y, w, h, pl, pr, pt, pb)
 {
 
+}
+
+ 
+// Set table background colors
+void ResultTable::setBackColors(FXColor c00, FXColor c01,FXColor c10, FXColor c11)
+{
+  setCellColor(0, 0, c00);
+  setCellColor(0, 1, c01);
+  setCellColor(1, 0, c10);
+  setCellColor(1, 1, c11);
+}
+
+void ResultTable::showColumn(FXint index)
+{
+  formatCol(index);
+}
+
+void ResultTable::hideColumn(FXint index)
+{
+  setColumnWidth(index, 0);
+}
+
+void ResultTable::formatCol(FXint index)
+{
+  int i;
+  int colWidth = getDefColumnWidth();
+  for (i = 0; i < nrows; i++)
+    {
+      setItemJustify(i,index, FXTableItem::LEFT);
+      int currWidth = getItem(i,index)->getWidth(this);
+      colWidth = (colWidth < currWidth) ? currWidth : colWidth;
+    }
+    
+  setColumnWidth(index, colWidth);
 }
 
 
@@ -29,17 +62,10 @@ void ResultTable::format()
     }
   setRowHeaderWidth(rowWidth);
       
-  for (j = 0; j < ncols; j++)
-    colWidth[j] = getColumnWidth(j);
-  
-  for (i = 0; i < nrows; i++)
-    for (j = 0; j < ncols; j++)
-      {
-        setItemJustify(i,j, FXTableItem::LEFT);
-        int currWidth = getItem(i,j)->getWidth(this);
-        colWidth[j] = (colWidth[j] < currWidth) ? currWidth : colWidth[j];
-      }
 
   for (j = 0; j < ncols; j++)
-    setColumnWidth(j, colWidth[j]);
+    {
+      formatCol(j);
+    }
+
 }  

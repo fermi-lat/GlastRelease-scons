@@ -335,6 +335,10 @@ FXDEFMAP(FXCheckList) FXCheckListMap[]={
   FXMAPFUNC(SEL_TIMEOUT,FXWindow::ID_AUTOSCROLL,FXCheckList::onAutoScroll),
   FXMAPFUNC(SEL_TIMEOUT,FXCheckList::ID_TIPTIMER,FXCheckList::onTipTimer),
   FXMAPFUNC(SEL_TIMEOUT,FXCheckList::ID_LOOKUPTIMER,FXCheckList::onLookupTimer),
+  FXMAPFUNC(SEL_COMMAND,FXCheckList::ID_CHECKSEL,FXCheckList::onCheckSel),
+  FXMAPFUNC(SEL_COMMAND,FXCheckList::ID_UNCHECKSEL,FXCheckList::onUncheckSel),
+  FXMAPFUNC(SEL_COMMAND,FXCheckList::ID_CHECKALL,FXCheckList::onCheckAll),
+  FXMAPFUNC(SEL_COMMAND,FXCheckList::ID_UNCHECKALL,FXCheckList::onUncheckAll),
   FXMAPFUNC(SEL_UNGRABBED,0,FXCheckList::onUngrabbed),
   FXMAPFUNC(SEL_LEFTBUTTONPRESS,0,FXCheckList::onLeftBtnPress),
   FXMAPFUNC(SEL_LEFTBUTTONRELEASE,0,FXCheckList::onLeftBtnRelease),
@@ -676,7 +680,7 @@ FXbool FXCheckList::selectItem(FXint index,FXbool notify){
       case CHECKLIST_MULTIPLESELECT:
         items[index]->setSelected(TRUE);
         updateItem(index);
-        if(notify && target){target->handle(this,MKUINT(message,SEL_SELECTED),(void*)index);}
+        if(notify && target){target->handle(this,MKUINT(message,SEL_SELECTED),(void*) index);}
         break;
       }
     return TRUE;
@@ -710,7 +714,7 @@ FXbool FXCheckList::checkItem(FXint index,FXbool notify){
   if(!items[index]->isChecked()){
     items[index]->setChecked(TRUE);
     updateItem(index);
-    if(notify && target){target->handle(this,MKUINT(message,SEL_SELECTED),(void*)index);}
+    if(notify && target){target->handle(this,MKUINT(message,SEL_SELECTED),(void*) index);}
     return TRUE;
     }
   return FALSE;
@@ -723,7 +727,7 @@ FXbool FXCheckList::uncheckItem(FXint index,FXbool notify){
   if(items[index]->isChecked()){
     items[index]->setChecked(FALSE);
     updateItem(index);
-    if(notify && target){target->handle(this,MKUINT(message,SEL_DESELECTED),(void*)index);}
+    if(notify && target){target->handle(this,MKUINT(message,SEL_DESELECTED),(void*) index);}
     return TRUE;
     }
   return FALSE;
@@ -736,13 +740,13 @@ FXbool FXCheckList::toggleCheckItem(FXint index,FXbool notify){
   if(items[index]->isChecked()){
     items[index]->setChecked(FALSE);
     updateItem(index);
-    if(notify && target){target->handle(this,MKUINT(message,SEL_DESELECTED),(void*)index);}
+    if(notify && target){target->handle(this,MKUINT(message,SEL_DESELECTED),(void*) index);}
     return TRUE;
     }
   else{
     items[index]->setChecked(TRUE);
     updateItem(index);
-    if(notify && target){target->handle(this,MKUINT(message,SEL_SELECTED),(void*)index);}
+    if(notify && target){target->handle(this,MKUINT(message,SEL_SELECTED),(void*) index);}
     return TRUE;
     }
   return FALSE;
@@ -758,7 +762,7 @@ FXbool FXCheckList::toggleItem(FXint index,FXbool notify){
         killSelection(notify);
         items[index]->setSelected(TRUE);
         updateItem(index);
-        if(notify && target){target->handle(this,MKUINT(message,SEL_SELECTED),(void*)index);}
+        if(notify && target){target->handle(this,MKUINT(message,SEL_SELECTED),(void*) index);}
         }
       break;
     case CHECKLIST_SINGLESELECT:
@@ -766,12 +770,12 @@ FXbool FXCheckList::toggleItem(FXint index,FXbool notify){
         killSelection(notify);
         items[index]->setSelected(TRUE);
         updateItem(index);
-        if(notify && target){target->handle(this,MKUINT(message,SEL_SELECTED),(void*)index);}
+        if(notify && target){target->handle(this,MKUINT(message,SEL_SELECTED),(void*) index);}
         }
       else{
         items[index]->setSelected(FALSE);
         updateItem(index);
-        if(notify && target){target->handle(this,MKUINT(message,SEL_DESELECTED),(void*)index);}
+        if(notify && target){target->handle(this,MKUINT(message,SEL_DESELECTED),(void*) index);}
         }
       break;
     case CHECKLIST_EXTENDEDSELECT:
@@ -779,12 +783,12 @@ FXbool FXCheckList::toggleItem(FXint index,FXbool notify){
       if(!items[index]->isSelected()){
         items[index]->setSelected(TRUE);
         updateItem(index);
-        if(notify && target){target->handle(this,MKUINT(message,SEL_SELECTED),(void*)index);}
+        if(notify && target){target->handle(this,MKUINT(message,SEL_SELECTED),(void*) index);}
         }
       else{
         items[index]->setSelected(FALSE);
         updateItem(index);
-        if(notify && target){target->handle(this,MKUINT(message,SEL_DESELECTED),(void*)index);}
+        if(notify && target){target->handle(this,MKUINT(message,SEL_DESELECTED),(void*) index);}
         }
       break;
     }
@@ -893,6 +897,35 @@ long FXCheckList::onLookupTimer(FXObject*,FXSelector,void*){
   return 1;
   }
 
+// Check selected items
+long FXCheckList::onCheckSel(FXObject*,FXSelector,void*){
+  for (FXint i = 0; i < nitems; i++){
+    if (isItemSelected(i))
+      checkItem(i, true);  
+    }
+  }
+  
+// Uncheck selected items  
+long FXCheckList::onUncheckSel(FXObject*,FXSelector,void*){
+  for (FXint i = 0; i < nitems; i++){
+    if (isItemSelected(i))
+      uncheckItem(i, true);  
+    }
+  }
+
+// Check all items
+long FXCheckList::onCheckAll(FXObject*,FXSelector,void*){
+  for (FXint i = 0; i < nitems; i++){
+    checkItem(i, true);
+    }
+}
+
+// Uncheck all items
+long FXCheckList::onUncheckAll(FXObject*,FXSelector,void*){
+  for (FXint i = 0; i < nitems; i++){
+    uncheckItem(i, true);
+    }
+}
 
 // We were asked about tip text
 long FXCheckList::onQueryTip(FXObject* sender,FXSelector,void*){
@@ -1646,7 +1679,7 @@ FXint FXCheckList::insertItem(FXint index,FXCheckListItem* item,FXbool notify){
 
   // Current item may have changed
   if(old!=current){
-    if(notify && target){target->handle(this,MKUINT(message,SEL_CHANGED),(void*)current);}
+    if(notify && target){target->handle(this,MKUINT(message,SEL_CHANGED),(void*) current);}
     }
 
   // Was new item

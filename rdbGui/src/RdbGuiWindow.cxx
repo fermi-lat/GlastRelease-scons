@@ -9,19 +9,21 @@
 // Message Map RdbGUIWindow class
 FXDEFMAP(RdbGUIWindow) RdbGUIWindowMap[]={
 
-  //__Message_Type_____________ID________________________Message_Handler_____
-  FXMAPFUNC(SEL_UPDATE,   RdbGUIWindow::ID_TITLE,              RdbGUIWindow::onUpdTitle),
-  FXMAPFUNC(SEL_UPDATE,   RdbGUIWindow::ID_OVERSTRIKE,         RdbGUIWindow::onUpdOverstrike),
-  FXMAPFUNC(SEL_CHANGED,  RdbGUIWindow::ID_SQLEDIT,            RdbGUIWindow::onSQLEdit),
-  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_OPENXML,            RdbGUIWindow::onOpenXMLFile),
-  FXMAPFUNC(SEL_CLOSE,    RdbGUIWindow::ID_TITLE,              RdbGUIWindow::onQuit),
-  FXMAPFUNC(SEL_SIGNAL,   RdbGUIWindow::ID_QUIT,               RdbGUIWindow::onQuit),
-  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_QUIT,               RdbGUIWindow::onQuit),
-  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_OPENCONNECTION,     RdbGUIWindow::onOpenConnection),
-  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_CLOSECONNECTION,    RdbGUIWindow::onCloseConnection), 
-  FXMAPFUNC(SEL_COMMAND,  TableColumnList::ID_TBLLIST,         RdbGUIWindow::onQueryFrameUpdate), 
-  FXMAPFUNC(SEL_COMMAND,  QueryFrame::ID_QUERY,                RdbGUIWindow::onSendQuery),
-  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_INSERT,             RdbGUIWindow::onInsert)
+  //__Message_Type____________________ID_______________________________________Message_Handler_____
+  FXMAPFUNC(SEL_UPDATE,           RdbGUIWindow::ID_TITLE,              RdbGUIWindow::onUpdTitle),
+  FXMAPFUNC(SEL_UPDATE,           RdbGUIWindow::ID_OVERSTRIKE,         RdbGUIWindow::onUpdOverstrike),
+  FXMAPFUNC(SEL_CHANGED,          RdbGUIWindow::ID_SQLEDIT,            RdbGUIWindow::onSQLEdit),
+  FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_OPENXML,            RdbGUIWindow::onOpenXMLFile),
+  FXMAPFUNC(SEL_CLOSE,            RdbGUIWindow::ID_TITLE,              RdbGUIWindow::onQuit),
+  FXMAPFUNC(SEL_SIGNAL,           RdbGUIWindow::ID_QUIT,               RdbGUIWindow::onQuit),
+  FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_QUIT,               RdbGUIWindow::onQuit),
+  FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_OPENCONNECTION,     RdbGUIWindow::onOpenConnection),
+  FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_CLOSECONNECTION,    RdbGUIWindow::onCloseConnection), 
+  FXMAPFUNC(SEL_COMMAND,          TableColumnList::ID_TBLLIST,         RdbGUIWindow::onQueryFrameUpdate), 
+  FXMAPFUNC(SEL_SELECTED,         TableColumnList::ID_TBLLIST,         RdbGUIWindow::onUpdResTableCols),
+  FXMAPFUNC(SEL_DESELECTED,       TableColumnList::ID_TBLLIST,         RdbGUIWindow::onUpdResTableCols),
+  FXMAPFUNC(SEL_COMMAND,          QueryFrame::ID_QUERY,                RdbGUIWindow::onSendQuery),
+  FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_INSERT,             RdbGUIWindow::onInsert)
 };
 
 
@@ -103,6 +105,7 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
       LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_THICK|FRAME_SUNKEN);
     // Result table
   uiTable = new ResultTable(tableFrame, this, ID_TABLEOUT, LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 2,2,2,2);
+
       
   new FXTabItem(lowerTab, "Log", NULL, TAB_BOTTOM_NORMAL);         
   // Log window frame
@@ -152,6 +155,8 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   //m_shactive = getApp()->reg().readStringEntry("SETTINGS", "HighLightSyntax", "Y") == "Y";
   
   // Result table initialization
+  uiTable->setBackColors(FXRGB(255, 255, 255), FXRGB(255, 240, 240),
+      FXRGB(240, 255, 240), FXRGB(240, 240, 255));
   uiTable->setTableSize(1, 1);
   uiTable->setItemText(0, 0, "No data");
   
@@ -307,6 +312,24 @@ long RdbGUIWindow::onCloseConnection(FXObject*,FXSelector, void*)
       m_uiDBSelection->removeItem(m_uiDBSelection->getCurrentItem());
     }
   return 1;  
+}
+
+long RdbGUIWindow::onUpdResTableCols(FXObject*,FXSelector, void* ptr)
+{
+  FXint j;
+  const FXCheckList* chList = uiTblColList->getColList();
+  FXint index = (FXint) ptr;
+  
+  if (index >= 0 && index < chList->getNumItems());
+    {
+ 
+      
+      if (!chList->isItemChecked(index))
+        uiTable->hideColumn(index);
+      else
+        uiTable->showColumn(index);
+    }
+  return 1;
 }
 
 long RdbGUIWindow::onSendQuery(FXObject*,FXSelector, void*)
