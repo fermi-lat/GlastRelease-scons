@@ -1,5 +1,5 @@
 package merit
-version v6r14p8
+version v6r14p9
 # $Id$
 
 branches doc
@@ -17,7 +17,7 @@ use AnalysisNtuple v*
 use GlastSvc *
 use Event *
 use GuiSvc v3*
-use OnboardFilter *
+use OnboardFilter v1*
 
 use facilities *
 
