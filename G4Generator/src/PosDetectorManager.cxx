@@ -55,20 +55,18 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
     // Filling of the hits container
     mc::McPositionHit *hit = new mc::McPositionHit;
 
-#if 0 // this transforms it to local coordinates
+    // this transforms it to local coordinates
     
     HepTransform3D 
         global(*(theTouchable->GetRotation()), 
         theTouchable->GetTranslation());
 
     HepTransform3D local = global.inverse();
-    prePos= local*prePos;
-    postPos=local*postPos;
-#endif
-    hit->init(edep, id, prePos, postPos);
+
+    hit->init(edep, id, local*prePos, local*postPos);
     m_posHit->push_back(hit);
 
-    display(theTouchable, hit);
+    display(theTouchable, id, prePos, postPos);
 
 
     return true;

@@ -93,14 +93,16 @@ void DetectorManager::makeIntegratingBox(G4TouchableHistory* touched)
     
 }
 
-void DetectorManager::display(G4TouchableHistory* touched, mc::McPositionHit * hit)
+void DetectorManager::display(G4TouchableHistory* touched, 
+                              idents::VolumeIdentifier id, 
+                              const HepPoint3D& entry, const HepPoint3D& exit)
 {
     
-    DisplayManager::instance()->addHit(hit->entryPoint(), hit->exitPoint());
+    DisplayManager::instance()->addHit(entry, exit);
 
-    if( m_detectorList[hit->volumeID()]==0) {
+    if( m_detectorList[id]==0) {
         makeHitBox( touched );        
     }
-    ++ m_detectorList[hit->volumeID()]; 
+    ++ m_detectorList[id]; 
 
 }

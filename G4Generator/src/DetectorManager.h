@@ -50,7 +50,8 @@ protected:
     /// The pointer to the IdataProviderSvc
     IDataProviderSvc* m_esv;
     
-    void display(G4TouchableHistory* touched, mc::McPositionHit * hit);
+    void display(G4TouchableHistory* touched, idents::VolumeIdentifier id, 
+        const HepPoint3D& entry, const HepPoint3D& exit);
 
    //! keep track of hit detectors for display
     typedef std::map<idents::VolumeIdentifier, unsigned int> DetectorList;
