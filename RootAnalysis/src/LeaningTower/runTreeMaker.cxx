@@ -36,17 +36,17 @@ int main(int argn, char** argc) {
     
     if ( gSystem->AccessPathName(digiFileName.c_str(), kFileExists) ) {
         std::cout << " ===>>> Wrong Digifile name!!!" << std::endl;
-        return 1;
+        return 66;
     }
     
     if ( reconFileName != "" && gSystem->AccessPathName(reconFileName.c_str(), kFileExists) ) {
         std::cout << " ===>>> Reconfile " << reconFileName << " not existing!!!" << std::endl;
-        return 2;
+        return 66;
     }
 
     if ( mcFileName != "" && gSystem->AccessPathName(mcFileName.c_str(), kFileExists) ) {
         std::cout << " ===>>> MCfile " << mcFileName << " not existing!!!" << std::endl;
-        return 3;
+        return 66;
     }
     if ( treeFileName == "" )
         treeFileName = "MyRootFile.root";
