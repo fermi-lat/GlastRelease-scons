@@ -73,7 +73,7 @@ Bool_t AcdTile::setVeto(UChar_t hitVal)
 	return kFALSE;
     else {
 	m_tag &= ~(ACD_M_HIT << ACD_V_HIT);
-	m_tag |= hitVal;
+	m_tag |= (hitVal << ACD_V_HIT);
 	return kTRUE;
     }
 }
