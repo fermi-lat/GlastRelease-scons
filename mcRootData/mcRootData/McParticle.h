@@ -7,6 +7,8 @@
 #include "TRef.h"
 #include "TRefArray.h"
 
+#include <string>
+
 /**
 * @class McParticle
 * @brief GLAST Monte Carlo particle class.  This class mirrors the TDS 
@@ -19,6 +21,7 @@
 * - Initial and final momentum
 * - Pointer to the mother McParticle - if any
 * - An array of daughter McParticles - if any
+* - String containing the name of the process that produced the particle
 *
 *  \author Daniel Flath and Heather Kelly
 *  
@@ -65,7 +68,8 @@ public:
         const TLorentzVector& initalMomentum,
         const TLorentzVector& finalMomentum,
         const TVector3& initialPosition,
-        const TVector3& finalPosition);
+        const TVector3& finalPosition,
+        const std::string& process = "");
     
     Int_t getParticleId() const { return m_particleId;};    
     
@@ -78,7 +82,7 @@ public:
     /// return the full list of daughters
     const TRefArray& getDaughterList() const { return m_daughters; };
 
-    Int_t getParticleProperty() const;
+    Int_t getParticleProperty() const { return m_statusFlags; };
     
     UInt_t getStatusFlags() const { return m_statusFlags; };
 
@@ -91,10 +95,11 @@ public:
     /// Retrieve pointer to end vertex position
     const TVector3& getFinalPosition() const;
     
-    const TLorentzVector&  getInitialFourMomentum() const;
+    const TLorentzVector& getInitialFourMomentum() const;
 
     const TLorentzVector& getFinalFourMomentum() const;
     
+    const std::string& getProcess() const;
     
 private:
     
@@ -114,8 +119,10 @@ private:
     TRef m_mother;
     /// Reference array of daughter particles
     TRefArray m_daughters;
+    /// String with the process name that produced this particle
+    std::string m_process;
 
-    ClassDef(McParticle,2) // Monte Carlo Particle Class
+    ClassDef(McParticle,3) // Monte Carlo Particle Class
 };
 
 #endif

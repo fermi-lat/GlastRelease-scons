@@ -22,13 +22,24 @@ using namespace std;
 * - Status flags packed into an unsigned integer
 * - Total energy
 * - First and Second moments
-* - A map of McParticles and their corresponding energies
+* - One of the following:
+*    -# An array of energies for the primary particle (and e-/e+ if available)
+*    -# A map of McParticle pointers and their corresponding energies
 *
-* The map of McParticles and energies are actually stored to the ROOT file
-* as 2 separate arrays.  One TRefArray of McParticles and a vector of
+* If the map of McParticleIds and energy are available, they are stored as 2 
+* separate arrays.  One is a vector of Int_t for the ids, and the other a 3
+* element array of energy for the primary particle, and optionally if the 
+* primary is gamma which pair produces, an e-/e+ pair.  Access is provided
+* through methods that retrieve the appropriate McParticleId, energy pair.
+* Use the methods itemizedEnergyIdSize(), itemizedEnergyIdReset(), and
+* Int_t itemizedEnergyIdNext(Double_t& energy) to access the data.
+*
+* If available, the map of McParticles and energies are actually stored to the 
+* ROOT file as 2 separate arrays.  One TRefArray of McParticles and a vector of
 * energies.  Access is provided through methods that retrieve the appropriate
-* McParticle*, energy pair.  Use the methods mapSize(), mapReset() and 
-* const* McParticle mapNext(Double_t& energy) to acces the data.
+* McParticle*, energy pair.  Use the methods itemizedEnergySize(), 
+* itemizedEnergyReset() and 
+* const* McParticle itemizedEnergyNext(Double_t& energy) to access the data.
 *
 * @author Heather Kelly
 *  
@@ -38,6 +49,13 @@ class McIntegratingHit: public TObject {
     
 public:
     
+    /// This enum is used to aid in the fill of the m_energyArray member
+    enum Particle{
+        PRIMARY = 0,
+        ELECTRON = 1,
+        POSITRON = 2
+    };
+
     McIntegratingHit();
     
     virtual ~McIntegratingHit();
@@ -52,16 +70,22 @@ public:
     
     Double_t getTotalEnergy() const { return m_totalEnergy; };
     
-    /// Add single energyInfo to energyDepositMap
+    /// Add single energyInfo to McParticle*, energy map
     void addEnergyItem( const Double_t& energy, McParticle* t, const TVector3& pos );
+    /// Add single energyInfo to McParticleId, energy map
+    void addEnergyItem( Double_t energy, Particle particleId, const TVector3& pos);
+
     /// Retrieve the next McParticle, energy pair
-    /// Returns the pair corresponding to m_mapEntry - set via the mapReset()
-    /// If we have finished traversing the list - mapNext will return null (0).
-    const McParticle* mapNext(Double_t &energy);
+    /// Returns the pair corresponding to m_mapPtr
+    /// If we have finished traversing the list - Next will return null (0).
+    const McParticle* itemizedEnergyNext(Double_t &energy);
     /// Set the McParticle, energy map counter to zero - the beginning
-    void mapReset() { m_mapEntry = 0; };
+    void itemizedEnergyReset() { m_mapPtr = 0; };
     /// Returns the size of the list of McParticle, energy pairs
-    UInt_t mapSize() const { return m_mcPartArr.GetEntries(); };
+    UInt_t itemizedEnergySize() const { return m_mcPartArr.GetEntries(); };
+
+    /// Retrieve energy associated with PRIMARY, ELECTRON or POSITRON
+    Double_t getMcParticleEnergy(Particle p);
 
     /// Retrieve the energy-weighted first moments of the position
     const TVector3 getMoment1 () const;
@@ -71,6 +95,8 @@ public:
 private:
     /// total deposited energy: set automatically when m_energyInfo is modified.
     Double_t m_totalEnergy;
+    /// Optionally store the energy associated with the primary and e-/e+
+    Double_t m_energyArray[3];
     /// Packed flags for particle property
     UInt_t m_packedFlags;
     /// identifies what volume this integrating hit occurred in
@@ -79,16 +105,23 @@ private:
     TVector3 m_moment1Seed;
     /// Energy-weighted_second_moments_of_the_position * number_of_energy_deposition
     TVector3 m_moment2Seed;
+    
     /// Actually store McParticles as a TRefArray
     TRefArray m_mcPartArr;
-    /// Store energies in a vector
-    std::vector<Double_t> m_energies;
+    /// Store energies from McParticle* pair in a vector
+    std::vector<Double_t> m_energyPtrArr;
+   
+    /// Store a vector of McParticle Ids
+    //std::vector<Int_t> m_mcIdArr;
+
     /// Vector of Energy information that consists of deposited energy and 
     /// the mother McParticle.  This data member is transient - not written!
     //energyDepositMap m_energyItem; //!
-    UInt_t m_mapEntry; //!
+    
+    /// transient data member to keep track of place in McParticle*, energy map
+    UInt_t m_mapPtr; //!
 
-    ClassDef(McIntegratingHit,1)  // Monte Carlo Integrating Hit Class
+    ClassDef(McIntegratingHit,2)  // Monte Carlo Integrating Hit Class
 };
 
 #endif

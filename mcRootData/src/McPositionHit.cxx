@@ -22,6 +22,8 @@ void McPositionHit::Clear(Option_t *option)
     m_statusFlags = 0;
     m_entry = TVector3(0., 0., 0.);
     m_exit = TVector3(0., 0., 0.);
+    m_globalEntry = TVector3(0., 0., 0.);
+    m_globalExit = TVector3(0., 0., 0.);
     m_volumeId.Clear();
 }
 
@@ -34,14 +36,25 @@ void McPositionHit::Print(Option_t *option) const {
         << "    Dep Energy: " << m_depositedEnergy
         << "    Part Energy: " << m_particleEnergy
         << "    TOF:  " << m_timeOfFlight << endl;
-    cout << "Entry: (" << m_entry.X() << ","
+    cout << "Local Entry: (" << m_entry.X() << ","
         << m_entry.Y() << "," << m_entry.Z() << ")"
-        << "   Exit: (" << m_exit.X() << "," 
+        << "  Local Exit: (" << m_exit.X() << "," 
         << m_exit.Y() << "," << m_exit.Z() << ") Direction Cosine: " 
         << getDirectionCosine() << endl;
+    cout << "Global Entry: (" << m_globalEntry.X() << ","
+        << m_globalEntry.Y() << "," << m_globalEntry.Z() << ")"
+        << "  Global Entry: (" << m_globalExit.X() << ","
+        << m_globalExit.Y() << "," << m_globalExit.Z() << ")" << endl;
     cout << "McParticleId " << m_mcParticleId << endl;
-    cout << "Origin Particle Ref" << endl;
-    if (getOriginMcParticle() != 0) getOriginMcParticle()->Print();
+    if (getMcParticle() != 0) {
+        cout << "McParticle Ref" << endl;
+        getMcParticle()->Print();
+    }
+    cout << "Origin ParticleId " << m_originMcParticleId << endl;
+    if (getOriginMcParticle() != 0) {
+        cout << "Origin Particle Ref" << endl;
+        getOriginMcParticle()->Print();
+    }
 
 }
 
@@ -55,19 +68,44 @@ Double_t McPositionHit::getDirectionCosine() const
 void McPositionHit::initialize(Int_t particleId, Double_t edep, 
                                const VolumeIdentifier &volId,
                                const TVector3& entry, const TVector3& exit,
-                               McParticle *origin, Double_t pE, 
+                               McParticle *mc, McParticle *origin, 
+                               Double_t pE, 
                                Double_t tof, UInt_t flags)
 {
     m_mcParticleId = particleId;
     m_depositedEnergy = edep;
     m_volumeId = volId;
-    m_entry.SetXYZ(entry.X(), entry.Y(), entry.Z());
-    m_exit.SetXYZ(exit.X(), exit.Y(), exit.Z());
+    m_entry = entry;
+    m_exit = exit;
+    m_mcParticle = mc;
     m_originMcParticle = origin;
     m_particleEnergy = pE;
     m_timeOfFlight = tof;
     m_statusFlags = flags;
 }
+
+void McPositionHit::initialize(Int_t mcParticleId, Int_t originParticleId, 
+                               Double_t edep, const VolumeIdentifier& volId, 
+                               const TVector3& entry, const TVector3& exit,
+                               const TVector3& gEntry, const TVector3& gExit, 
+                               McParticle *mc, McParticle *origin, Double_t pE,
+                               Double_t tof, UInt_t flags)
+{
+    m_mcParticleId = mcParticleId;
+    m_originMcParticleId = originParticleId;
+    m_depositedEnergy = edep;
+    m_volumeId = volId;
+    m_entry = entry;
+    m_exit = exit;
+    m_globalEntry = gEntry;
+    m_globalExit = gExit;
+    m_mcParticle = mc;
+    m_originMcParticle = origin;
+    m_particleEnergy = pE;
+    m_timeOfFlight = tof;
+    m_statusFlags = flags;
+}
+
 
 Bool_t McPositionHit::needDigi() const
 {

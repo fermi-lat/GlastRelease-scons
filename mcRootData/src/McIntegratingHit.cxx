@@ -23,13 +23,14 @@ void McIntegratingHit::initialize(const VolumeIdentifier& id) {
 void McIntegratingHit::Clear(Option_t *option)
 {
     m_mcPartArr.Clear();
-    m_energies.clear();
+    m_energyPtrArr.clear();
     m_packedFlags = 0;
     m_totalEnergy = 0.0;
     m_moment1Seed = TVector3(0., 0., 0.);
     m_moment2Seed = TVector3(0., 0., 0.);
     m_volumeId.Clear();
-    m_mapEntry = 0;
+    m_mapPtr = 0;
+    m_energyArray[0] = 0.; m_energyArray[1] = 0.; m_energyArray[2] = 0.;
 }
 
 void McIntegratingHit::Print(Option_t *option) const {
@@ -44,15 +45,20 @@ void McIntegratingHit::Print(Option_t *option) const {
         << m_moment1Seed.Z() << ")   ";
     cout << "Mom2: (" << m_moment2Seed.X() << "," << m_moment2Seed.Y() << ","
         << m_moment2Seed.Z() << ")" << endl;
-    cout << "Energy Map:  Size of energy vector: " << m_energies.size();
-    cout << "    Size of McParticle array: " << m_mcPartArr.GetEntries() 
+    if (m_energyPtrArr.size() > 0) {
+        cout << "Energy Map:  Size of energy vector: " << m_energyPtrArr.size();
+        cout << "    Size of McParticle array: " << m_mcPartArr.GetEntries() 
         << endl;
+    } else {
+        cout << "energies stored: " << m_energyArray[0] << " , "
+            << m_energyArray[1] << " , " << m_energyArray[2] << endl;
+    }
     TRefArrayIter mcPartIter(&m_mcPartArr);
     McParticle *mcPart = 0;
     UInt_t iEnergy = 0;
     cout << "Energy :" << endl;
     while( (mcPart = (McParticle*)mcPartIter.Next()) ) {
-        cout << "( " << mcPart->getParticleId() << ", " << m_energies[iEnergy]
+        cout << "( " << mcPart->getParticleId() << ", " << m_energyPtrArr[iEnergy]
             << " )    " << endl;
         ++iEnergy;
     }
@@ -60,19 +66,22 @@ void McIntegratingHit::Print(Option_t *option) const {
 } 
 
 
-const McParticle* McIntegratingHit::mapNext(Double_t &energy) {
+const McParticle* McIntegratingHit::itemizedEnergyNext(Double_t &energy) {
     // Purpose and Method:  Access the next McParticle* and energy pair
     //   The transient data member, m_mapEntry, is used to access a specific
     //   pair.  If we have reached the end of the map, then a null McParticle*
     //   is returned.
-    if ( m_mapEntry < m_mcPartArr.GetEntries() ) {
-        energy = m_energies[m_mapEntry];
-        return (McParticle*) m_mcPartArr.At(m_mapEntry++);
+    if ( m_mapPtr < m_mcPartArr.GetEntries() ) {
+        energy = m_energyPtrArr[m_mapPtr];
+        return (McParticle*) m_mcPartArr.At(m_mapPtr++);
     }
     energy = 0;
     return 0;
 }
 
+Double_t McIntegratingHit::getMcParticleEnergy(Particle p) {
+    return m_energyArray[p];
+}
 
 void McIntegratingHit::addEnergyItem(const Double_t& energy, McParticle* t, 
                                      const TVector3& pos)
@@ -81,14 +90,22 @@ void McIntegratingHit::addEnergyItem(const Double_t& energy, McParticle* t,
     //    position.  Stores the McParticle* and energy in the apporpriate 
     //    vectors.  Updates total energy and the first and second moments.
     m_mcPartArr.Add(t);
-    m_energies.push_back(energy);
+    m_energyPtrArr.push_back(energy);
     TVector3 pos2 = TVector3(pos.X()*pos.X(), pos.Y()*pos.Y(), pos.Z()*pos.Z());
     m_totalEnergy += energy;
-    m_moment1Seed = energy * pos;
-    m_moment2Seed = energy * pos2;
+    m_moment1Seed += energy * pos;
+    m_moment2Seed += energy * pos2;
 }
 
+void McIntegratingHit::addEnergyItem(Double_t energy, McIntegratingHit::Particle p, const TVector3& pos) 
+{
 
+    m_energyArray[p] += energy;
+    TVector3 pos2(pos.X() * pos.X(), pos.Y()*pos.Y(), pos.Z()*pos.Z());
+    m_totalEnergy += energy;
+    m_moment1Seed += energy * pos;
+    m_moment2Seed += energy * pos2;
+}
 
 const TVector3 McIntegratingHit::getMoment1 () const
 {

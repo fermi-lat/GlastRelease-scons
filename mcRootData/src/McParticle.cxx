@@ -21,16 +21,10 @@ McParticle::McParticle(const McParticle &p) {
 
     m_particleId = p.m_particleId;
     m_statusFlags = p.m_statusFlags;
-    m_initialPosition = TVector3(p.m_initialPosition.X(), p.m_initialPosition.Y(),
-        p.m_initialPosition.Z());
-    m_finalPosition = TVector3(p.m_finalPosition.X(), p.m_finalPosition.Y(),
-        p.m_finalPosition.Z());
-    m_initialFourMomentum = TLorentzVector(p.m_initialFourMomentum.X(),
-        p.m_initialFourMomentum.Y(), p.m_initialFourMomentum.Z(), 
-        p.m_initialFourMomentum.T());
-    m_finalFourMomentum = TLorentzVector(p.m_finalFourMomentum.X(),
-        p.m_finalFourMomentum.Y(), p.m_finalFourMomentum.Z(),
-        p.m_finalFourMomentum.T());
+    m_initialPosition = p.m_initialPosition;
+    m_finalPosition = p.m_finalPosition;
+    m_initialFourMomentum = p.m_initialFourMomentum;
+    m_finalFourMomentum = p.m_finalFourMomentum;
     m_mother = p.m_mother;
     // TRefArrayIter::Next does not seem to be implemented in Root 3.02.03
     // or ROOT 3.03.04 - just iterating over the entries for now.
@@ -82,15 +76,17 @@ void McParticle::initialize( McParticle* mother, Int_t id, UInt_t statusBits,
                       const TLorentzVector& initMom,
                       const TLorentzVector& finalMom,
                       const TVector3& initPos,
-                      const TVector3& finalPos)
+                      const TVector3& finalPos,
+                      const std::string& process)
 {
     m_mother = mother;
     m_particleId = id;
     m_statusFlags = statusBits;
-    m_initialFourMomentum.SetXYZT(initMom.X(), initMom.Y(), initMom.Z(), initMom.T());
-    m_finalFourMomentum.SetXYZT(finalMom.X(), finalMom.Y(), finalMom.Z(), finalMom.T());
-    m_initialPosition.SetXYZ(initPos.X(), initPos.Y(), initPos.Z());
-    m_finalPosition.SetXYZ(finalPos.X(), finalPos.Y(), finalPos.Z());
+    m_initialFourMomentum = initMom;
+    m_finalFourMomentum = finalMom;
+    m_initialPosition = initPos;
+    m_finalPosition = finalPos;
+    m_process = process;
     if ( mother == 0 ) return;
     if( mother != this) mother->m_daughters.Add(this);
 }
@@ -105,9 +101,6 @@ const McParticle* McParticle::getDaughter(Int_t index) const {
     return ( (McParticle*)m_daughters.At(index) );
 }
 
-Int_t McParticle::getParticleProperty() const {
-    return m_statusFlags;
-}
 
 Bool_t McParticle::primaryParticle() const
 {
@@ -133,3 +126,7 @@ const TLorentzVector& McParticle::getInitialFourMomentum() const {
 const TLorentzVector& McParticle::getFinalFourMomentum() const {
     return m_finalFourMomentum;
 };
+
+const std::string& McParticle::getProcess() const {
+    return m_process;
+}
