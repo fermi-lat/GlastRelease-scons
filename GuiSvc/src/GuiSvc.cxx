@@ -155,10 +155,11 @@ StatusCode GuiSvc::initialize ()
             // found a tool factory: have it create a tool, and check its interface
             std::string fullname = this->name()+"."+tooltype;
             IAlgTool* itool = toolfactory->instantiate(fullname, this );
-            status =itool->queryInterface( IGuiTool::interfaceID(), (void**)&itool);
+            IGuiTool* gtool;
+            status =itool->queryInterface( IGuiTool::interfaceID(), (void**)&gtool);
             if( status.isSuccess() ){
                 log << MSG::DEBUG << "Initializing gui stuff in " << tooltype << endreq;
-                dynamic_cast<IGuiTool*>(itool)->initialize(m_guiMgr);
+                gtool->initialize(m_guiMgr);
             }
             itool->release();
         }
