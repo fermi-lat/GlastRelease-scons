@@ -32,15 +32,11 @@ using namespace std;
 CalXtalId::CalXtalId(UInt_t packedId)
 : m_packedId(packedId)
 {
-    unpackId();
 }
 
 CalXtalId::CalXtalId(Short_t tower, Short_t layer, Short_t column) 
 {
     packId(tower, layer, column);
-    m_tower = tower;
-    m_layer = layer;
-    m_column = column;
 }
 
 CalXtalId::~CalXtalId() {
@@ -48,9 +44,6 @@ CalXtalId::~CalXtalId() {
 }
 
 void CalXtalId::Clear(Option_t *option) {
-    m_tower = 0;
-    m_layer = 0;
-    m_column = 0;
     m_packedId = 0;
 }
 
@@ -61,15 +54,11 @@ void CalXtalId::Print(Option_t *option) const {
 void CalXtalId::init(Short_t tower, Short_t layer, Short_t column)
 { 
     Clear();
-    m_tower = tower;
-    m_layer = layer;
-    m_column = column;
     packId(tower, layer, column);
 }
 
 void CalXtalId::init(UInt_t packedId) {
     m_packedId = packedId;
-    unpackId();
 }
 
 UInt_t CalXtalId::getPackedId() const { 
@@ -90,15 +79,8 @@ Short_t CalXtalId::getColumn() const {
 
 void CalXtalId::getUnpackedId(Short_t& tower, Short_t& layer, Short_t& column)
 {
-    tower  = m_tower;
-    layer  = m_layer;
-    column = m_column;
-}
-
-void CalXtalId::unpackId() 
-{
-    m_tower = getTower();
-    m_layer = getLayer();
-    m_column = getColumn();
+    tower  = getTower();
+    layer  = getLayer();
+    column = getColumn();
 }
 

@@ -4,7 +4,6 @@
 
 #include "TObject.h"
 #include "L1T.h"
-//#include "Tagger.h"
 #include "TClonesArray.h"
 #include "TObjArray.h"
 
@@ -13,21 +12,20 @@
 #include "TkrHeader.h"
 
 #include "AcdTile.h"
-#include "CalLog.h"
+#include "CalDigi.h"
 #include "TkrLayer.h"
 
 #include "LiveTime.h"
 
-/*! \class DigiEvent
-\brief This is the top-level event class to store the
-raw (digi) data.
- 
- \li Jun 2001 Heather Kelly - revised to use TClonesArray
- \li Jan 2000 Daniel Flath - ROOT HTML comments added
- \li Dec 1999 Daniel Flath - Rewritten for GLAST
- \li Oct 25,1999 Richard Dubois - Clone from LCD version
+/** @class DigiEvent
+ * @brief This is the top-level event class to store the raw (digi) data.
+ *
+ * @li Jun 2001 Heather Kelly - revised to use TClonesArray
+ * @li Jan 2000 Daniel Flath - ROOT HTML comments added
+ * @li Dec 1999 Daniel Flath - Rewritten for GLAST
+ * @li Oct 25,1999 Richard Dubois - Clone from LCD version
+ * $Header$
  */
-
 
 class DigiEvent: public TObject {
 private:
@@ -39,23 +37,14 @@ private:
     /// Store Level 1 trigger
     L1T m_L1T;
 
-    //Tagger *m_Tagger;       // Tagger object
-
     /// data members to store ACD data
     TClonesArray *m_AcdDigiVec;  //-> 
     Int_t m_numTiles;
     static TClonesArray *m_staticAcdDigiVec;
     AcdHeader m_AcdHeader;
 
-    /// data members to store XGT data
-    TClonesArray *m_XgtDigiVec;  //-> 
-    Int_t m_numXgts;
-    static TClonesArray *m_staticXgtDigiVec;
-
     /// data members to store CAL data
-    TClonesArray *m_CalDigiVec;  //->
-    Int_t m_numLogs;
-    static TClonesArray *m_staticCalDigiVec;
+    CalDigi *m_calDigi;
     CalHeader m_CalHeader;
 
     /// data members to store TKR data
@@ -63,7 +52,6 @@ private:
     TObjArray* m_TkrDigiVec;       //-> List of Tracker layers
     Int_t m_numLayers;
     TkrHeader m_TkrHeader;
-
 
     /// store LiveTime counter data
     LiveTime m_liveTime;
@@ -73,8 +61,9 @@ public:
     DigiEvent();
     virtual ~DigiEvent();
 
-    void Clean(Option_t *option="");
-    
+    void Clear(Option_t *option="");
+
+    void Print(Option_t *option="");
 
     /// Access the DigiEvent number
     inline void setEventId(UInt_t id) { m_eventId = id; };
@@ -98,24 +87,10 @@ public:
     /// retrieve a specific AcdTile, based upon a valid AcdId, if not found returns null
     const AcdTile* getAcdTile(AcdId &id);
 
-    /// retrieve the whole TClonesArray of XGT Digi data
-    TClonesArray* getXgtDigi() { return m_XgtDigiVec; };
-    /// add a new AcdTile to store XGT data into the XGT digi array
-    AcdTile* addXgt(UInt_t id, short base = 10);
-    /// retrieve a specific XGT (AcdTile), if not found, returns null
-    /// User should provide valid (Ritz) XGT id in base 10: 2000, 2001, 2010, 2011
-    const AcdTile* getXgt(UInt_t id);
-
     /// Access CAL data
     CalHeader* getCalHeader() { return &m_CalHeader; };
-    /// retrieve the whole TClonesArray of Cal Digi data
-    TClonesArray* getCalDigi() { return m_CalDigiVec; };
-    /// Add a new CalLog entry into the CAL digi array
-    CalLog* addCalLog();
-    /// retrieve a specific CalLog based on LogId, if not found returns null
-    const CalLog* getCalLog(LogId &id);
-    /// retrieve a specific CalLog based on tower, layer, column, if not found returns null.
-    const CalLog* getCalLog(UShort_t tower, UShort_t layer, UShort_t column);
+    /// retrieve the CalDigi object
+    const CalDigi* getCalDigi() { return m_calDigi; };
 
     /// Access TKR data
     TkrHeader* getTkrHeader() { return &m_TkrHeader; };
@@ -130,11 +105,8 @@ public:
     inline L1T* getL1T() { return &m_L1T; };
 
     inline LiveTime* getLiveTime() { return &m_liveTime; };
-
-    // inline void setTagger(Tagger *TaggerVal) { m_Tagger = TaggerVal; };
-    //inline Tagger *getTagger() const { return m_Tagger; };
     
-    ClassDef(DigiEvent,3)       // Storage for Raw(Digi) event and subsystem data
+    ClassDef(DigiEvent,4) // Storage for Raw(Digi) event and subsystem data
 }; 
 
 #endif

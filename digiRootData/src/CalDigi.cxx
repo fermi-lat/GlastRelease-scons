@@ -21,30 +21,30 @@ CalDigi::~CalDigi() { }
 
 
 /// Retrieve readout mode
-const CalDigi::CalTrigMode CalDigi::getMode() const { return m_mode; };
-void CalDigi::setMode(CalTrigMode m) { m_mode = m; };
+const CalXtalId::CalTrigMode CalDigi::getMode() const { return m_mode; };
+void CalDigi::setMode(CalXtalId::CalTrigMode m) { m_mode = m; };
 
 /// Retrieve log identifier
-const CalLogId CalDigi::getPackedId() const { return m_logId; };
-void CalDigi::setPackedId(CalLogId id) { m_logId = id; };
+const CalXtalId CalDigi::getPackedId() const { return m_xtalId; };
+void CalDigi::setPackedId(CalXtalId id) { m_xtalId = id; };
 
-void CalDigi::addReadout(CalLogReadout r) 
+void CalDigi::addReadout(CalXtalReadout r) 
 { m_readout.push_back(r); } 
 
 /// Retrieve energy range for selected face and readout
-Char_t CalDigi::getRange(short readoutIndex, CalLogReadout::LogFace face) const
+Char_t CalDigi::getRange(short readoutIndex, CalXtalId::XtalFace face) const
 {
     return (readoutIndex < m_readout.size()) ? ((m_readout[readoutIndex])).getRange(face) : (Char_t)-1;
 }
 
 /// Retrieve pulse height for selected face and readout
-Short_t CalDigi::getAdc(Short_t readoutIndex, CalLogReadout::LogFace face) const
+Short_t CalDigi::getAdc(Short_t readoutIndex, CalXtalId::XtalFace face) const
 {
     return (readoutIndex < m_readout.size()) ? ((m_readout[readoutIndex])).getAdc(face) : (Short_t)-1;
 }
 
 /// Retrieve ranges and pulse heights from both ends of selected readout
-const CalLogReadout* CalDigi::getLogReadout(Short_t readoutIndex)
+const CalXtalReadout* CalDigi::getLogReadout(Short_t readoutIndex)
 {
     if ( readoutIndex < m_readout.size() )
         return &(m_readout[readoutIndex]);
@@ -54,7 +54,7 @@ const CalLogReadout* CalDigi::getLogReadout(Short_t readoutIndex)
 }
 
 /// Retrieve pulse height from selected range
-Short_t CalDigi::getAdcSelectedRange(Char_t range, CalLogReadout::LogFace face) const
+Short_t CalDigi::getAdcSelectedRange(Char_t range, CalXtalId::XtalFace face) const
 {
     Char_t nRanges = (Char_t)m_readout.size();
     if (nRanges == 1)

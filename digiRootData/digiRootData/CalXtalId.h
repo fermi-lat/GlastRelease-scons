@@ -86,12 +86,7 @@ private:
     
     /// Packed word containing log ID = (tower*8 + layer)*16 + column
     UInt_t m_packedId;
-    Short_t m_tower;
-    Short_t m_layer;
-    Short_t m_column;
     
-    inline void unpackId();
-
     inline void packId(Short_t tower, Short_t layer, Short_t column) 
     {m_packedId = (((tower<<3) + layer)<<4) + column;};
     
