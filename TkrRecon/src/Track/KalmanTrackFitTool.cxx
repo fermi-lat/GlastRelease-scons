@@ -473,6 +473,7 @@ int KalmanTrackFitTool::doSmootherMemory(Event::TkrTrack* track)
     *myTrack = *track;
 
     myTrack->clear();
+    myTrack->setParent(0);
 
     //int numHits = 0;
 
