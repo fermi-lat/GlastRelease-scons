@@ -21,7 +21,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "xml/IFile.h"
+#include "facilities/Util.h"
 
 static const SvcFactory<TkrBadStripsSvc> s_factory;
 const ISvcFactory& TkrBadStripsSvcFactory = s_factory;
@@ -70,9 +70,15 @@ StatusCode TkrBadStripsSvc::initialize()
 
     // this method resolves environmental variables in the file name
     if (m_badStripsFile!="") {
-        xml::IFile::extractEnvVar(&m_badStripsFile);    
-        log << MSG::INFO << "Input file for bad strips: " 
-            << m_badStripsFile << endreq;
+        //xml::IFile::extractEnvVar(&m_badStripsFile); 
+        int ret =  facilities::Util::expandEnvVar(&m_badStripsFile);
+        if (ret>=0) {
+            log << MSG::INFO << "Input file for bad strips: " 
+                << m_badStripsFile << endreq;
+        } else {
+            log << MSG::ERROR << "Input filename " << m_badStripsFile << " not resolved" << endreq;
+            return StatusCode::FAILURE;
+        }
     }
 
     sc = doInit();

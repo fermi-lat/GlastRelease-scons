@@ -19,11 +19,11 @@ $Header$
 #include "idents/TowerId.h"
 #include "idents/VolumeIdentifier.h"
 
+#include "facilities/Util.h"
+
 #include <fstream>
 #include <algorithm>
 #include <string>
-
-#include "xml/IFile.h"
 
 static const SvcFactory<TkrAlignmentSvc> s_factory;
 const ISvcFactory& TkrAlignmentSvcFactory = s_factory;
@@ -233,9 +233,17 @@ StatusCode TkrAlignmentSvc::getData(std::string fileName)
     if( fileName == "") return sc;
     
     // this method resolves environmental variables in the file name
-    xml::IFile::extractEnvVar(&fileName);    
-    log << MSG::INFO << "Input file for " << m_mode << " alignment: " << endreq
+    //xml::IFile::extractEnvVar(&fileName);  
+
+    int ret = facilities::Util::expandEnvVar(&fileName);
+
+    if(ret>=0) {
+        log << MSG::INFO << "Input file for " << m_mode << " alignment: " << endreq
         << "    " << fileName << endreq;
+    } else {
+        log << MSG::ERROR << "Input filename " << fileName << " not resolved" << endreq;
+        return StatusCode::FAILURE;
+    }
     
     std::ifstream theFile;
     theFile.open( fileName.c_str());
