@@ -533,7 +533,7 @@ StatusCode CalClustersAlg::execute()
 
 		SmartDataPtr<TkrVertexCol> tkrRecData(eventSvc(),EventModel::TkrRecon::TkrVertexCol);
     if (tkrRecData == 0) {
-        log << MSG::INFO << "No TKR Reconstruction available " << endreq;
+        log << MSG::DEBUG << "No TKR Reconstruction available " << endreq;
        // return sc;
 	}
 	else
