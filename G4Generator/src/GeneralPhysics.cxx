@@ -37,21 +37,26 @@ void GeneralPhysics::ConstructParticle()
   G4ChargedGeantino::ChargedGeantinoDefinition();  
 }
 
+#include "G4Decay.hh"
+
 void GeneralPhysics::ConstructProcess()
 {
   // Purpose and Method: this method is invoked by G4 to build the physics
   //                     processes table
 
   // Add Decay Process
+
+  G4Decay* fDecayProcess = new G4Decay();
+
   theParticleIterator->reset();
   while( (*theParticleIterator)() ){
     G4ParticleDefinition* particle = theParticleIterator->value();
     G4ProcessManager* pmanager = particle->GetProcessManager();
-    if (fDecayProcess.IsApplicable(*particle)) { 
-      pmanager ->AddProcess(&fDecayProcess);
+    if (fDecayProcess->IsApplicable(*particle)) { 
+      pmanager ->AddProcess(fDecayProcess);
       // set ordering for PostStepDoIt and AtRestDoIt
-      pmanager ->SetProcessOrdering(&fDecayProcess, idxPostStep);
-      pmanager ->SetProcessOrdering(&fDecayProcess, idxAtRest);
+      pmanager ->SetProcessOrdering(fDecayProcess, idxPostStep);
+      pmanager ->SetProcessOrdering(fDecayProcess, idxAtRest);
     }
   }
 }

@@ -52,6 +52,13 @@ void EMPhysics::ConstructParticle()
 
 #include "G4ProcessManager.hh"
 
+#include "G4PhotoElectricEffect.hh"
+#include "G4ComptonScattering.hh"
+#include "G4GammaConversion.hh"
+#include "G4MultipleScattering.hh"
+#include "G4eIonisation.hh"
+#include "G4eBremsstrahlung.hh"
+#include "G4eplusAnnihilation.hh"
 
 void EMPhysics::ConstructProcess()
 {
@@ -59,41 +66,49 @@ void EMPhysics::ConstructProcess()
   //                     processes table
 
   G4ProcessManager * pManager = 0;
-  
+
   // Gamma Physics
+
   pManager = G4Gamma::Gamma()->GetProcessManager();
-  pManager->AddDiscreteProcess(&thePhotoEffect);
-  pManager->AddDiscreteProcess(&theComptonEffect);
-  pManager->AddDiscreteProcess(&thePairProduction);
+  
+  G4PhotoElectricEffect* thePhotoEffect = new G4PhotoElectricEffect();
+  G4ComptonScattering* theComptonEffect = new G4ComptonScattering();
+  G4GammaConversion* thePairProduction = new  G4GammaConversion();
+  pManager->AddDiscreteProcess(thePhotoEffect);
+  pManager->AddDiscreteProcess(theComptonEffect);
+  pManager->AddDiscreteProcess(thePairProduction);
 
   // Electron Physics
+
   pManager = G4Electron::Electron()->GetProcessManager();
-   // add processes
-  pManager->AddDiscreteProcess(&theElectronBremsStrahlung);  
 
-  pManager->AddProcess(&theElectronIonisation, ordInActive,2, 2);
-
-  pManager->AddProcess(&theElectronMultipleScattering);
-  pManager->SetProcessOrdering(&theElectronMultipleScattering, 
+  G4MultipleScattering* theElectronMultipleScattering = new G4MultipleScattering();
+  G4eIonisation* theElectronIonisation = new G4eIonisation();
+  G4eBremsstrahlung* theElectronBremsStrahlung = new G4eBremsstrahlung();
+  pManager->AddDiscreteProcess(theElectronBremsStrahlung);  
+  pManager->AddProcess(theElectronIonisation, ordInActive,2, 2);
+  pManager->AddProcess(theElectronMultipleScattering);
+  pManager->SetProcessOrdering(theElectronMultipleScattering, 
                                idxAlongStep,  1);
-  pManager->SetProcessOrdering(&theElectronMultipleScattering, 
+  pManager->SetProcessOrdering(theElectronMultipleScattering, 
                                idxPostStep,  1);
 
   //Positron Physics
+
   pManager = G4Positron::Positron()->GetProcessManager();
-  // add processes
-  pManager->AddDiscreteProcess(&thePositronBremsStrahlung);
 
-  pManager->AddDiscreteProcess(&theAnnihilation);
-
-  pManager->AddRestProcess(&theAnnihilation);
-
-  pManager->AddProcess(&thePositronIonisation, ordInActive,2, 2);
-
-  pManager->AddProcess(&thePositronMultipleScattering);
-  pManager->SetProcessOrdering(&thePositronMultipleScattering, 
+  G4MultipleScattering* thePositronMultipleScattering  = new  G4MultipleScattering();
+  G4eIonisation* thePositronIonisation = new  G4eIonisation(); 
+  G4eBremsstrahlung* thePositronBremsStrahlung = new G4eBremsstrahlung();  
+  G4eplusAnnihilation* theAnnihilation = new G4eplusAnnihilation();
+  pManager->AddDiscreteProcess(thePositronBremsStrahlung);
+  pManager->AddDiscreteProcess(theAnnihilation);
+  pManager->AddRestProcess(theAnnihilation);
+  pManager->AddProcess(thePositronIonisation, ordInActive,2, 2);
+  pManager->AddProcess(thePositronMultipleScattering);
+  pManager->SetProcessOrdering(thePositronMultipleScattering, 
                                idxAlongStep,  1);
-  pManager->SetProcessOrdering(&thePositronMultipleScattering, 
+  pManager->SetProcessOrdering(thePositronMultipleScattering, 
                                idxPostStep,  1);
 }
 

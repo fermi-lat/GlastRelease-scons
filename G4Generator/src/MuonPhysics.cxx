@@ -39,6 +39,7 @@ void MuonPhysics::ConstructParticle()
   //                     classes
 
   // Mu
+
   G4MuonPlus::MuonPlusDefinition();
   G4MuonMinus::MuonMinusDefinition();
   G4NeutrinoMu::NeutrinoMuDefinition();
@@ -55,59 +56,81 @@ void MuonPhysics::ConstructParticle()
 
 #include "G4ProcessManager.hh"
 
+#include "G4MultipleScattering.hh"
+#include "G4MuBremsstrahlung.hh"
+#include "G4MuPairProduction.hh"
+#include "G4MuIonisation.hh"
+#include "G4hIonisation.hh"
+#include "G4MuonMinusCaptureAtRest.hh"
+
+
 void MuonPhysics::ConstructProcess()
 {
   // Purpose and Method: this method is invoked by G4 to build the physics
   //                     processes table
 
-  G4ProcessManager * pManager = 0;
-
+  G4ProcessManager * pManager = 0; 
+  
   // Muon Plus Physics
+
   pManager = G4MuonPlus::MuonPlus()->GetProcessManager();
-   // add processes
-  pManager->AddProcess(&fMuPlusIonisation, ordInActive,2, 2);
-
-  pManager->AddDiscreteProcess(&fMuPlusBremsstrahlung);
-
-  pManager->AddDiscreteProcess(&fMuPlusPairProduction);
-
-  pManager->AddProcess(&fMuPlusMultipleScattering);
-  pManager->SetProcessOrdering(&fMuPlusMultipleScattering, idxAlongStep,  1);
-  pManager->SetProcessOrdering(&fMuPlusMultipleScattering, idxPostStep,  1);
+  
+  G4MultipleScattering*   fMuPlusMultipleScattering = new  G4MultipleScattering(); 
+  G4MuBremsstrahlung*     fMuPlusBremsstrahlung = new G4MuBremsstrahlung();
+  G4MuPairProduction*     fMuPlusPairProduction = new G4MuPairProduction();
+  G4MuIonisation*         fMuPlusIonisation = new G4MuIonisation();
+  pManager->AddProcess(fMuPlusIonisation, ordInActive,2, 2);
+  
+  pManager->AddDiscreteProcess(fMuPlusBremsstrahlung);
+  pManager->AddDiscreteProcess(fMuPlusPairProduction);
+  pManager->AddProcess(fMuPlusMultipleScattering);
+  pManager->SetProcessOrdering(fMuPlusMultipleScattering, idxAlongStep,  1);
+  pManager->SetProcessOrdering(fMuPlusMultipleScattering, idxPostStep,  1);
 
   // Muon Minus Physics
+
   pManager = G4MuonMinus::MuonMinus()->GetProcessManager();
-   // add processes
-  pManager->AddProcess(&fMuMinusIonisation, ordInActive,2, 2);
 
-  pManager->AddDiscreteProcess(&fMuMinusBremsstrahlung);
-
-  pManager->AddDiscreteProcess(&fMuMinusPairProduction);
-
-  pManager->AddProcess(&fMuMinusMultipleScattering);
-  pManager->SetProcessOrdering(&fMuMinusMultipleScattering, idxAlongStep,  1);
-  pManager->SetProcessOrdering(&fMuMinusMultipleScattering, idxPostStep,  1);
-//  pManager->AddRestProcess(&fMuMinusCaptureAtRest);
+  G4MultipleScattering*   fMuMinusMultipleScattering = new G4MultipleScattering();
+  G4MuBremsstrahlung*     fMuMinusBremsstrahlung = new G4MuBremsstrahlung();
+  G4MuPairProduction*     fMuMinusPairProduction = new G4MuPairProduction();
+  G4MuIonisation*         fMuMinusIonisation = new  G4MuIonisation();
+  //G4MuonMinusCaptureAtRest* fMuMinusCaptureAtRest = new G4MuonMinusCaptureAtRest();
+  pManager->AddProcess(fMuMinusIonisation, ordInActive,2, 2);
+  pManager->AddDiscreteProcess(fMuMinusBremsstrahlung);
+  pManager->AddDiscreteProcess(fMuMinusPairProduction);
+  pManager->AddProcess(fMuMinusMultipleScattering);
+  pManager->SetProcessOrdering(fMuMinusMultipleScattering, idxAlongStep,  1);
+  pManager->SetProcessOrdering(fMuMinusMultipleScattering, idxPostStep,  1);
+  //  pManager->AddRestProcess(fMuMinusCaptureAtRest);
 
   // Tau Plus Physics
-  pManager = G4TauPlus::TauPlus()->GetProcessManager();
-   // add processes
-  pManager->AddProcess(&fTauPlusIonisation, ordInActive,2, 2);
 
-  pManager->AddProcess(&fTauPlusMultipleScattering);
-  pManager->SetProcessOrdering(&fTauPlusMultipleScattering, idxAlongStep,  1);
-  pManager->SetProcessOrdering(&fTauPlusMultipleScattering, idxPostStep,  1);
+  pManager = G4TauPlus::TauPlus()->GetProcessManager();
+
+  G4MultipleScattering*   fTauPlusMultipleScattering = new G4MultipleScattering();
+  G4hIonisation*          fTauPlusIonisation = new G4hIonisation();
+  pManager->AddProcess(fTauPlusIonisation, ordInActive,2, 2);
+  pManager->AddProcess(fTauPlusMultipleScattering);
+  pManager->SetProcessOrdering(fTauPlusMultipleScattering, idxAlongStep,  1);
+  pManager->SetProcessOrdering(fTauPlusMultipleScattering, idxPostStep,  1);
 
   // Tau Minus Physics
-  pManager = G4TauMinus::TauMinus()->GetProcessManager();
-   // add processes
-  pManager->AddProcess(&fTauMinusIonisation, ordInActive,2, 2);
 
-  pManager->AddProcess(&fTauMinusMultipleScattering);
-  pManager->SetProcessOrdering(&fTauMinusMultipleScattering, idxAlongStep,  1);
-  pManager->SetProcessOrdering(&fTauMinusMultipleScattering, idxPostStep,  1);
+  pManager = G4TauMinus::TauMinus()->GetProcessManager();
+
+  G4MultipleScattering*   fTauMinusMultipleScattering = new  G4MultipleScattering();
+  G4hIonisation*          fTauMinusIonisation = new G4hIonisation();
+  pManager->AddProcess(fTauMinusIonisation, ordInActive,2, 2);
+  pManager->AddProcess(fTauMinusMultipleScattering);
+  pManager->SetProcessOrdering(fTauMinusMultipleScattering, idxAlongStep,  1);
+  pManager->SetProcessOrdering(fTauMinusMultipleScattering, idxPostStep,  1);
 
 }
+
+
+
+
 
 
 

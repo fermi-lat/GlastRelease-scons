@@ -71,7 +71,7 @@ class RunManager
      GlastDetSvc and to the DataProviderSvc. It gets also the mode for the
      geometry level of details
   */
-  RunManager(std::ostream& log, double defaultCutValue);
+  RunManager(std::ostream& log, double defaultCutValue, std::string& physics_choice);
   
   virtual ~RunManager();
 
@@ -225,6 +225,15 @@ class RunManager
 };
 
 #endif
+
+
+
+
+
+
+
+
+
 
 
 

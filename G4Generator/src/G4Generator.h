@@ -58,9 +58,17 @@ class G4Generator : public Algorithm {
   
   /// The default cutoff value (in mm)
   DoubleProperty m_defaultCutValue;
+
+  /// the Physics List
+  /// It can be "full" or "only_em"
+
+  std::string m_physics_choice;
+
 };
 
 #endif
+
+
 
 
 

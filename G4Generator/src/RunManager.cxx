@@ -58,7 +58,7 @@ RunManager* RunManager::fRunManager = NULL;
 RunManager* RunManager::GetRunManager()
 { return fRunManager; }
 
-RunManager::RunManager(std::ostream& log, double defaultCutValue)
+RunManager::RunManager(std::ostream& log, double defaultCutValue, std::string& physics_choice)
   :m_log(log),
    physicsList(NULL),
    userPrimaryGeneratorAction(NULL),
@@ -67,7 +67,7 @@ RunManager::RunManager(std::ostream& log, double defaultCutValue)
    cutoffInitialized(false),
    geometryNeedsToBeClosed(true),runAborted(false),
    initializedAtLeastOnce(false),
-   geometryToBeOptimized(true),runIDCounter(0),verboseLevel(0),DCtable(NULL),
+   geometryToBeOptimized(true),runIDCounter(0),verboseLevel(3),DCtable(NULL),
    currentRun(NULL),
    storeRandomNumberStatus(0)
    
@@ -78,7 +78,7 @@ RunManager::RunManager(std::ostream& log, double defaultCutValue)
   fRunManager = this;
 
   // This dummy session is needed later to silent G4
-  session = new UIsession;
+  //  session = new UIsession;
 
   // The event manager of G4
   eventManager = new G4EventManager();
@@ -94,7 +94,7 @@ RunManager::RunManager(std::ostream& log, double defaultCutValue)
   randomNumberStatusDir = "./";
 
   // The user stuff
-  physicsList = new PhysicsList(defaultCutValue);
+  physicsList = new PhysicsList(defaultCutValue, physics_choice);
   userPrimaryGeneratorAction = new PrimaryGeneratorAction;
 }
 
@@ -103,7 +103,7 @@ RunManager::~RunManager()
   G4StateManager* pStateManager = G4StateManager::GetStateManager();
   pStateManager->SetNewState(G4State_Quit);
 
-  delete session;
+  //delete session;
 
   delete timer;
 
@@ -262,8 +262,8 @@ void RunManager::Initialize()
 
   /// Set a dummy session to silent G4 intitialization messages on screen
   G4UImanager* pUImanager = G4UImanager::GetUIpointer();
-  pUImanager->SetCoutDestination(session);
-
+  // pUImanager->SetCoutDestination(session);
+  pUImanager->SetCoutDestination(new G4UIsession);
   stateManager->SetNewState(G4State_Init);
   if(!geometryInitialized) InitializeGeometry();
   if(!physicsInitialized) InitializePhysics();
@@ -271,7 +271,7 @@ void RunManager::Initialize()
   stateManager->SetNewState(G4State_Idle);
   if(!initializedAtLeastOnce) initializedAtLeastOnce = true;
 
-  pUImanager->SetCoutDestination(new G4UIsession);
+  //  pUImanager->SetCoutDestination(new G4UIsession);
 }
 
 void RunManager::InitializeGeometry()
@@ -294,7 +294,9 @@ void RunManager::InitializePhysics()
 {
   if(physicsList)
     {
-      if(verboseLevel>1) G4cout << "physicsList->Construct() start." << G4endl;
+      std::cout << "sono qui FISICA" << std::endl;
+      //      if(verboseLevel>1) G4cout << "physicsList->Construct() start." << G4endl;
+      std::cout << "physicsList->Construct() start." << std::endl;
       physicsList->SetVerboseLevel(0);
       physicsList->Construct();
     }
@@ -309,8 +311,12 @@ void RunManager::InitializeCutOff()
 {
   if(physicsList)
     {
-      if(verboseLevel>1) G4cout << "physicsList->setCut() start." << G4endl;
-      physicsList->SetCuts();
+      std::cout <<"physicsList->setCut() start."  << std::endl;
+      //      if(verboseLevel>1) G4cout << "physicsList->setCut() start." << G4endl;
+      //    physicsList->SetCuts();
+      physicsList->SetPhysicsTableRetrieved(".");
+      if(physicsList->StorePhysicsTable("."))
+	{std::cout << "FATTO FISICA" << std::endl;}
     }
   cutoffInitialized = true;
 }

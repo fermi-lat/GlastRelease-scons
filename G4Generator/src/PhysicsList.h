@@ -1,6 +1,8 @@
 #ifndef PhysicsList_h
 #define PhysicsList_h 1
 
+#include <string>
+
 #include "G4VModularPhysicsList.hh"
 #include "globals.hh"
 
@@ -23,13 +25,19 @@
 class PhysicsList: public G4VModularPhysicsList
 {
  public:
-  PhysicsList(double cutValue);
+  PhysicsList(double cutValue, std::string& physicsChoice);
   ~PhysicsList();
   
  public:
   
   /// This method set all the physics cuts for the simulation
   virtual void SetCuts();
+  
+
+ private:
+  
+  std::string m_physicsChoice;
+
 };
 
 #endif

@@ -27,25 +27,36 @@
 #include "IonPhysics.h"
 
 
-PhysicsList::PhysicsList(double cutValue):  G4VModularPhysicsList()
+PhysicsList::PhysicsList(double cutValue, std::string& physicsChoice):  G4VModularPhysicsList()
 {
   // The default cut value for all particles
   defaultCutValue = cutValue;
+
+  // Physics Choice
+
+  m_physicsChoice = physicsChoice;
   
   // General Physics
   RegisterPhysics( new GeneralPhysics("general") );
   
-  // EM Physics
+  // EM Physics 
+
   RegisterPhysics( new EMPhysics("standard EM"));
 
   // Muon Physics
+
   RegisterPhysics(  new MuonPhysics("muon"));
 
-  // Hadron Physics
-  RegisterPhysics(  new HadronPhysics("hadron"));
+  // Full or EM Hadron Physics
 
-  // Ion Physics
-  RegisterPhysics( new IonPhysics("ion"));
+  RegisterPhysics(  new HadronPhysics("hadron", m_physicsChoice));
+  // RegisterPhysics(  new HadronPhysics("hadron"));
+  
+  // Full or EM Ion Physics
+
+  RegisterPhysics( new IonPhysics("ion", m_physicsChoice));
+  //RegisterPhysics( new IonPhysics("ion"));
+  
 
 }
 
@@ -56,6 +67,14 @@ void PhysicsList::SetCuts()
 {
   SetCutsWithDefault();   
 }
+
+
+
+
+
+
+
+
 
 
 
