@@ -91,28 +91,28 @@ void  GDDHTMLConstantsVisitor::visitConst(GDDconst* c)
   out << "<td><b>" << c->getName() << "</b></td>" << std::endl;
   switch(c->getConstType()){
   case i:
-    out << "<td>" << (static_cast<GDDintConst*>(c))->getValue()
-	      << " " << c->getUnitLength()  
-	      << "</td>" << std::endl;
+    out << "<td>" << (static_cast<GDDintConst*>(c))->getValue();
     break;
   case f:
-    out << "<td>" << (static_cast<GDDfloatConst*>(c))->getValue()
-	      <<  " " << c->getUnitLength()  
-	      << "</td>" << std::endl;
+    out << "<td>" << (static_cast<GDDfloatConst*>(c))->getValue();
     break;
   case d:
-    out << "<td>" << (static_cast<GDDdoubleConst*>(c))->getValue()
-	      <<  " " << c->getUnitLength() 
-	      << "</td>" << std::endl;
+    out << "<td>" << (static_cast<GDDdoubleConst*>(c))->getValue();
     break;
   case s:
-    out << "<td>" << (static_cast<GDDstringConst*>(c))->getValue()
-	      << "</td>" << std::endl;
+    out << "<td>" << (static_cast<GDDstringConst*>(c))->getValue();
     break;
   }
-    out << "<td>" << c->getNote() << "</td>" << std::endl;    
 
-    out << "</tr>" << std::endl;
+  if(c->getConstMeaning() == length)
+    out <<  " " << c->getUnitLength();
+
+  out << "</td>" << std::endl;
+
+
+  out << "<td>" << c->getNote() << "</td>" << std::endl;    
+  
+  out << "</tr>" << std::endl;
 }
 
 
