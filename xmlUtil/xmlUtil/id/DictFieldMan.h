@@ -5,7 +5,12 @@
 
 #include <string>
 #ifdef __GNUG__
-#include <hash_map>
+# if (__GNUC__ >= 3 )
+#   include <ext/hash_map>
+# else
+#   include <hash_map>
+# endif
+
 #else
 #include <map>
 #endif
