@@ -65,7 +65,7 @@ namespace CalibData {
       return 
         (   (id.getTowerX() < m_towerCol) &&
             (id.getTowerY() < m_towerRow) &&
-            (id.getPlane() < m_nUni)           );
+            (2*id.getTray() <= m_nUni)           );
     }
 
     unsigned findUniIx(const idents::TkrId& id)                            {
