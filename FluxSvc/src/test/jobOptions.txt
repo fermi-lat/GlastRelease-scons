@@ -41,24 +41,25 @@ FluxSvc.source_lib +={"$(FLUXSVCROOT)/src/test/test_source.xml"};
 // test generating a history root tree
 ExposureAlg.root_tree="pointing_history";
 
-// this to set up the DC2 standard.
-//FluxSvc.StartDate=""; // actually 1-may-07 00:00??
-//FluxSvc.startTime=7200;
-//FluxSvc.EndTime=4838400;
-//ExposureAlg.pointing_history_input_file="D:\common\DC2\history\Gleam42.txt";
 
 // test the various FluxAlg properties
 FluxAlg.area= 6.0;
 //FluxAlg.pointing_mode=4;  // this is the fixed angle 
 //FluxAlg.rocking_angle=90; // degrees about x-axis   
 //FluxAlg.rocking_angle_z=90; // degrees about z-axis   
-//FluxAlg.source_name="backgndavgpdr";
-FluxAlg.sources={"timetick30s","default"};
 FluxSvc.EndTime= 200;
 ApplicationMgr.EvtMax = 1000000; // needs to be set, 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 3;
 ExposureAlg.OutputLevel=2;
+FluxAlg.sources={"timetick30s","default"};
+
+// this to set up the DC2 standard.
+//FluxSvc.StartDate=""; // actually 1-may-07 00:00??
+//FluxSvc.startTime=7200;
+//FluxSvc.EndTime=4838300;
+//ExposureAlg.pointing_history_input_file="D:\common\DC2\history\Gleam42.txt";
+//FluxAlg.sources={"timetick30s"}; //,"default"};
 
 //==============================================================
 //

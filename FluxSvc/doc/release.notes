@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   21-mar-05  v6r20   THB  Move history and pointing stuff to new class, have it generate tuples
    19-mar-05  v6r19p1 THB  Fix S/C altiude in history tree
    14-mar-05  v6r19   THB  Manage time as mission elapsed time, put history stuff into special tree
    14-mar-05  v6r18p0 THB  Fix ExposureAlg bug
