@@ -305,6 +305,15 @@ void GDDVRMLSectionsVisitor::setOpacity(std::string name, float op)
     j->second->setTra(op);
 }
 
+void GDDVRMLSectionsVisitor::setAllOpacity(float op)
+{
+  typedef std::map<std::string, GDDcolor*> M;
+  M::const_iterator j; 
+  
+  for(j=colorsMap.begin();j!=colorsMap.end();j++)
+    j->second->setTra(op);
+}
+
 void GDDVRMLSectionsVisitor::makeColor()
 {
   typedef std::map<std::string, GDDcolor*> M;

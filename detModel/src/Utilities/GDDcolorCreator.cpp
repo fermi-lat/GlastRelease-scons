@@ -30,7 +30,6 @@ void GDDcolorCreator::hsvToRgb(double *r, double *g, double *b, double h, double
 void GDDcolorCreator::makeColors(int n)
 {
   unsigned int i;
-  unsigned int ncol;
   double r, g, b;
 
   purge(colors);
@@ -38,6 +37,6 @@ void GDDcolorCreator::makeColors(int n)
   for(i=0;i<n;i++)
     {
       hsvToRgb(&r, &g, &b, 360.0*(n-i)/n, 1.0, 1.0);
-      addColor(new GDDcolor(r,g,b,1.0));
+      addColor(new GDDcolor(r,g,b,0.0));
     }
 }

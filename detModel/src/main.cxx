@@ -70,8 +70,11 @@ int main(int argc, char* argv[]) {
 
   visitor->setOpacity("FOAM05",0.5);
 
+
   // (Joanne) Added following line so I can see inside vacuum envelopes
   visitor->setOpacity("Vacuum",0.6);
+
+  visitor->setAllOpacity(0.5);
 
   // Put these back if you want to keep down size of .wrl files, 
   // visitor->setDepth("oneTKR", 0);

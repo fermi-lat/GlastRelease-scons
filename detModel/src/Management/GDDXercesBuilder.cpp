@@ -33,19 +33,21 @@
 #include "detModel/Constants/GDDdoubleConst.h"
 #include "detModel/Constants/GDDstringConst.h"
 
+
 GDDXercesBuilder::GDDXercesBuilder()
 {
 }
 
-
-
 void GDDXercesBuilder::parseFile(char* nameFile){
   unsigned int iSec;
 
+  /// The parser is created
   xml::XmlParser* parser = new xml::XmlParser();
-  
+
+  /// The DOM hierarchy is parsed
   domfile = parser->parse(nameFile);
 
+  /// We use xmlUtil to substitute all the sections
   xmlUtil::Substitute* sub = new xmlUtil::Substitute(domfile);
   DOM_Element docElt = domfile.getDocumentElement();
   DOM_Element tmp;
@@ -58,6 +60,8 @@ void GDDXercesBuilder::parseFile(char* nameFile){
     DOM_Element& secElt = static_cast<DOM_Element &> (secNode);
     sub->execute(secElt);
   }
+  
+  /// We use xmlUtil to calculated all the derived constants
   
   tmp = xml::Dom::findFirstChildByName(docElt, "constants" );
 
@@ -81,21 +85,28 @@ void GDDXercesBuilder::parseFile(char* nameFile){
 	}
     }
       
+  
 
+  /// We start detModel stuff retriving the manager
   GDDmanager* man = GDDmanager::getPointer();
-  currentGDD = man->getGDD();
 
+  /// We point to the current GDD
+  currentGDD = man->getGDD();
+  
+  /// Set some info on the parsed file
   currentGDD->setCVSid(xml::Dom::getAttribute(docElt, "CVSid"));
   currentGDD->setDTDversion(xml::Dom::getAttribute(docElt, "DTDversion"));
 
+  /// Delete some stuff
   delete parser;
   delete sub;
 }  
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ *  This method build a constant
+ */
 GDDconst* GDDXercesBuilder::buildConst(DOM_Node* e){
-
   std::string name;
   std::string typeOfConst;
   std::string ut;
@@ -108,43 +119,32 @@ GDDconst* GDDXercesBuilder::buildConst(DOM_Node* e){
   std::string elementName=std::string(xml::Dom::transToChar(e->getNodeName()));
   if (elementName=="prim"){
     typeOfConst=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("type")).getNodeValue()));
+    GDDconst* c;
     if (typeOfConst=="int"){
-      GDDintConst* c=new GDDintConst;
+      c=new GDDintConst;
       int val=atoi(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
-      c->setName(name);
-      c->setConstMeaning(ut);
-      c->setValue(val);
-      c->setNote(std::string(xml::Dom::transToChar(e->getFirstChild().getNodeValue())));
-      return c;
+      ((GDDintConst*)c)->setValue(val);
     }
     else if (typeOfConst=="float"){
-      GDDfloatConst* c=new GDDfloatConst;
+      c=new GDDfloatConst;
       float val=atof(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
-      c->setName(name);
-      c->setConstMeaning(ut);
-      c->setValue(val);
-      c->setNote(std::string(xml::Dom::transToChar(e->getFirstChild().getNodeValue())));
-      return c;
+      ((GDDfloatConst*)c)->setValue(val);
     }
     else if (typeOfConst=="double"){
-      GDDdoubleConst* c=new GDDdoubleConst;
+      c=new GDDdoubleConst;
       double val=atof(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
-      c->setName(name);
-      c->setConstMeaning(ut);
-      c->setValue(val);
-      c->setNote(std::string(xml::Dom::transToChar(e->getFirstChild().getNodeValue())));
-      return c;
+      ((GDDdoubleConst*)c)->setValue(val);
     }
     else if (typeOfConst=="string"){
-      GDDstringConst* c=new GDDstringConst;
+      c=new GDDstringConst;
       std::string val=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
-      c->setName(name);
-      c->setConstMeaning(ut);
-      c->setValue(val);
-      c->setNote(std::string(xml::Dom::transToChar(e->getFirstChild().getNodeValue())));
-      return c;
+      ((GDDstringConst*)c)->setValue(val);
     }
     else return 0;
+    c->setName(name);
+    c->setConstMeaning(ut);
+    c->setNote(std::string(xml::Dom::transToChar(e->getFirstChild().getNodeValue())));
+    return c;
   }//end if
   else{
     //e is a const element    
@@ -167,7 +167,7 @@ GDDconst* GDDXercesBuilder::buildConst(DOM_Node* e){
   }//end else
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////
+/// This methods build the constants part of detModel
 void GDDXercesBuilder::buildConstants(){
   unsigned int i,j;
   DOM_Element docElt = domfile.getDocumentElement();
@@ -235,7 +235,7 @@ void GDDXercesBuilder::buildSections()
   unsigned int i;
   DOM_Element docElt = domfile.getDocumentElement();
   DOM_NodeList childs = docElt.getChildNodes();
-
+  
   for(i=0;i<childs.getLength();i++)
     {
       std::string str = std::string(xml::Dom::transToChar(childs.item(i).getNodeName()));
@@ -432,7 +432,7 @@ GDDstack* GDDXercesBuilder::buildStack(DOM_Node* e){
   for(i=0;i<childs.getLength();i++){
     if ( (childs.item(i)).getNodeType()!=Comment){
       GDDstackedPos* p = buildRelativePosition( &(childs.item(i)));
-      p->setAxisDir((GDDstackedPos::axisDir)st);
+      p->setAxisDir((GDDstack::axisDir)st);
       b->addPosition(p);
     }
   };

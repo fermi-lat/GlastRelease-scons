@@ -76,6 +76,8 @@ class GDDVRMLSectionsVisitor : public GDDsectionsVisitor {
 
   void setOpacity(std::string, float);
 
+  void setAllOpacity(float);
+
   void setDepth(std::string, int);
 
   std::string actualVolume;
