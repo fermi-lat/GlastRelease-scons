@@ -69,10 +69,11 @@ namespace CalibData {
     /// Get #  trays
     unsigned getNUnilayer() const;
 
-    /// Get reference to vector of uni for specified tower.
-    std::vector<UniBase*>& getUnis(int iTow) 
+    /// Get pointer to vector of uni for specified tower.
+    std::vector<UniBase*> *getUnis(int iTow) {
       // or maybe RootTkrBaseCnv should provide this service
-    {return m_towers[iTow]->m_unis; }
+      return &(m_towers[iTow]->m_unis); 
+    }
 
     /// Get # fe chips / unilayer
     // unsigned getNChip() const {return m_finder->getNChip();}
@@ -82,13 +83,6 @@ namespace CalibData {
     // Maybe won't need to be virtual after all
     virtual StatusCode update(CalibBase& other, MsgStream* log);
 
-    //maybe want...
-    /**
-       For Specified tower, allocate uniplane objects without
-       filling
-     */
-    //    virtual void reserveUni(unsigned row, unsigned col, unsigned nUni);
-    
   protected:
     /**
        @class TkrTower
@@ -124,22 +118,17 @@ namespace CalibData {
    
 
     TkrTower* m_towers[TKRBASE_MAXTOWER];
-    //    std::vector<RangeBase* > m_ranges;
-
-    /// Default is true: keep vector of pointers to data.  Else derived
-    /// class keeps vector of data values and must do its own fetching
-    /// and putting.
+    /// Default is true: keep vector of pointers to data.  
+    /// Else derived class keeps vector of data values and must 
+    /// do its own fetching and putting.
     bool m_indirect;
-    
-    // (may be irrelevant) cache last index found, for use of derived classes
-    //    unsigned m_ix;
-    //    bool     m_ixValid;
 
   private:
     static const CLID noCLID;
 
-    /** Due to bug in gcc, gdb can't find symbols in constructors.  This
-        method is called by the constructor and does most of the work
+    /** Due to bug in gcc, gdb can't find symbols in constructors.  
+        This method is called by the constructor and does most 
+        of the work
     */
     void cGuts(unsigned nTowerRow, unsigned nTowerCol, 
                unsigned nTray);

@@ -70,15 +70,13 @@ namespace CalibData {
 
     ~TkrTotUni() {if (m_strips) delete [] m_strips;};
 
-    //  Get functions
     unsigned getNStrips() const {return m_nStrips;}
     const TkrTotStrip* getStripData(unsigned i) const {
       if (i > m_nStrips) return 0;
       return &m_strips[i];
     }
 
-    // TODO -- implement clearStrips, resize or decide they're
-    // not needed.  Is there a possibility that calibration files
+    // Is there a possibility that calibration files
     // will have "holes":  No data for stripId x but data for x+1 ? 
     void clearStrips();
 
@@ -102,6 +100,8 @@ namespace CalibData {
 
   /**
      class TkrTotCol
+
+     TDS class for complete (charge-injection) calibration
   */
   class TkrTotCol : public TkrBase {
     friend class RootTkrTotCnv;
@@ -128,14 +128,6 @@ namespace CalibData {
     // pointer is really of right type, then invoke base implementation.
     virtual bool putUni(UniBase* data, const idents::TkrId& id);
 
-    /// Reimplemented from TkrBase.  Establish #uniplanes for the tower
-    // not sure we need this either
-    //    virtual void reserveUni(unsigned row, unsigned col, unsigned nUni);
-
-    // Reimplemented from TkrBase. Copy in TkrTotUni data
-    // or maybe we don't need to
-    //    virtual StatusCode update(TkrBase& other, MsgStream* log);
-    
   private:
     // no new private data over what's in TkrBase
 
