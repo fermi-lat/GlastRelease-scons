@@ -7,6 +7,7 @@
 #include <vector>
 class IFluxSvc;
 class IFlux;
+class IParticlePropertySvc;
 class RunManager;
 namespace gui{class GuiMgr;}
 
@@ -39,6 +40,8 @@ class G4Generator : public Algorithm {
   /// a pointer to the flux service main classes
   IFluxSvc* m_fluxSvc;
   IFlux*    m_flux;
+
+  IParticlePropertySvc* m_ppsvc;
 
   /// source name to get from the Flux service
   std::string m_source_name;

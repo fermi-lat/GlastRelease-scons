@@ -36,6 +36,7 @@ FluxSvc.source_lib = {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
 
 //----------------- local algorithms to run -------------------
 ApplicationMgr.TopAlg = { 
+//    "FluxAlg",
     "G4Generator",
     "G4TestAlg"};
 
@@ -45,9 +46,10 @@ MessageSvc.OutputLevel      = 2;
 
 // ask for a source that is in the library
 //G4Generator.source_name="gamma_patch_for_G4";
-//G4Generator.source_name="muon_pencil";
-G4Generator.source_name="muon_patch";
+G4Generator.source_name="muon_pencil";
+//G4Generator.source_name="muon_patch";
 //G4Generator.source_name="gamma_test";
+//FluxAlg.source_name="muon_pencil";
 
 // commands to run before each event. 
 //G4Generator.UIcommands+={"/run/verbose 3"};
@@ -59,8 +61,8 @@ G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
 ApplicationMgr.EvtMax =100;
 
 // needed to have the gui available
-ApplicationMgr.ExtSvc +={"GuiSvc"};
-GuiSvc.size = -2000; 
+//ApplicationMgr.ExtSvc +={"GuiSvc"};
+//GuiSvc.size = -2000; 
 
 //==============================================================
 //

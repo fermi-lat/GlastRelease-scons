@@ -19,6 +19,8 @@
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/ParticleProperty.h"
 
 // special to setup the TdGlastData structure
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
@@ -48,7 +50,7 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator) , m_guiMgr(0)
 {
 // set defined properties
-     declareProperty("source_name",  m_source_name="default");
+     declareProperty("source_name",  m_source_name);
      declareProperty("UIcommands", m_uiCommands);
 }
     
@@ -60,19 +62,20 @@ StatusCode G4Generator::initialize()
 
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
+    if(! m_source_name.empty()){
 
-    if ( service("FluxSvc", m_fluxSvc).isFailure() ){
-        log << MSG::ERROR << "Couldn't find the FluxSvc!" << endreq;
-        return StatusCode::FAILURE;
-    }
-    
-    if ( m_fluxSvc->source(m_source_name, m_flux).isFailure() ){
-        log << MSG::ERROR << "Couldn't find the source \"" 
-            << m_source_name << "\"" << endreq;
-        return StatusCode::FAILURE;
-    }
+        if ( service("FluxSvc", m_fluxSvc).isFailure() ){
+            log << MSG::ERROR << "Couldn't find the FluxSvc!" << endreq;
+            return StatusCode::FAILURE;
+        }
+        
+        if ( m_fluxSvc->source(m_source_name, m_flux).isFailure() ){
+            log << MSG::ERROR << "Couldn't find the source \"" 
+                << m_source_name << "\"" << endreq;
+            return StatusCode::FAILURE;
+        }
     log << MSG::INFO << "Source: "<< m_flux->title() << endreq;
-
+    }
     setupGui();
 
     if( !m_uiCommands.value().empty() ) {
@@ -94,6 +97,11 @@ StatusCode G4Generator::initialize()
 
     // Init the McParticle hierarchy 
     McParticleManager::getPointer()->initialize(eventSvc());
+
+    if( service( "ParticlePropertySvc", m_ppsvc).isFailure() ) {
+        log << MSG::ERROR << "Couldn't set up ParticlePropertySvc!" << endreq;
+        return StatusCode::FAILURE;
+    }
 
 
     // The geant4 manager
@@ -183,18 +191,39 @@ StatusCode G4Generator::execute()
     // have the flux service create parameters of an incoming particle, 
     // and define it as a MCParticle
     //
-    m_flux->generate();
+    // is there a particle already in the TDS??
+    mc::McParticleCol*  pcol=  SmartDataPtr<mc::McParticleCol>(eventSvc(), "/Event/MC/McParticleCol");
 
-    // these are the particle properties
-    std::string name(m_flux->particleName());
-    HepVector3D dir(m_flux->launchDir());
-    double ke= m_flux->energy() ;
-    HepPoint3D p(m_flux->launchPoint());
+    HepVector3D dir;
+    double ke;
+    HepPoint3D p;
+    std::string name;
 
-    /// Starting position, in mm
-    p = 10*p;
-    /// Energy in MeV
-    ke = ke*1000;
+    if( pcol==0){ 
+        //no: get from the flux service
+        m_flux->generate();
+        
+        // these are the particle properties
+        name = m_flux->particleName();
+        dir =  m_flux->launchDir(); 
+        ke=    m_flux->energy() ;
+        p =    m_flux->launchPoint();
+        
+        /// Starting position, in mm
+        p = 10*p;
+        /// Energy in MeV
+        ke = ke*1000;
+    } else {
+        // yes: get it from the TDS
+        mc::McParticle* primary = pcol->front();
+        mc::McParticle::StdHepId hepid= primary->particleProperty();
+        ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
+        name = ppty->particle(); 
+        const HepLorentzVector& pfinal = primary->finalFourMomentum();
+        dir=    pfinal.vect().unit();
+        ke =   pfinal.e() - pfinal.m(); // note possibility of truncation error here! especially with MeV.
+
+    }
     
     PrimaryGeneratorAction* primaryGenerator = 
       (PrimaryGeneratorAction*)m_runManager->GetUserPrimaryGeneratorAction();
