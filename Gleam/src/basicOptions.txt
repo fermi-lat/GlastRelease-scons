@@ -98,7 +98,8 @@ TriggerAlg.mask = -1; // all bits on by default: reject if none set (e.g., misse
 //  onboard filter 
 //
 ApplicationMgr.DLLs += {"EbfWriter", "OnboardFilter"};
-Trigger.Members += {"EbfWriter", "OnboardFilter", "FilterAlg" };
+Trigger.Members += {"EbfWriter", "OnboardFilter"};
+Triggered.Members += {"FilterTracks","FilterAlg"};
 OnboardFilter.mask=0; // all bits off by default: no rejection
 
 // ----------------------------
