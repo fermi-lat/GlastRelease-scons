@@ -49,10 +49,6 @@
   0.1 GeV gamma-rays coming from the vertical local direction.  Used for default tests.
   @param albedo_gamma
   Source that represents the Earth horizon albedo with Glast zenith pointing
-  @param chime
-  The CHIME spectrum. angular dependence and rate are from the CHIME spectrum object
-  @param He
-  The Helium spectrum. angular dependence and rate come from the HeSpectrum object.
   @param albedo_electronpositron
   Source that represents the spalsh and re-entrant albedo electrons and positrons
   @param diffuse

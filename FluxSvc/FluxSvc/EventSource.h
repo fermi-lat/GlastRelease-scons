@@ -11,7 +11,7 @@
 * what Glastsim uses as a data source.  This can constitute GISMO based 
 * event generation, reading in from a file, etc...
 * 
-* $Header $
+* $Header$
 */
 
 

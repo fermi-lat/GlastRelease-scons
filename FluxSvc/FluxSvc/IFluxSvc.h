@@ -50,7 +50,7 @@ public:
     virtual void pass (double t)=0;    
     
     /// create a set of display windows using rootplot.
-    virtual void rootDisplay(std::vector<char*> arguments)=0;
+    virtual void rootDisplay(std::vector<const char*> arguments)=0;
     
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IFluxSvc; }

@@ -10,9 +10,9 @@ Test program for graphing the spectrums available through the flux
 package.
 */
 
-#include "../../FluxMgr.h"
+#include "../FluxMgr.h"
 #include "FluxSvc/EventSource.h"
-#include "../../SpectrumFactoryTable.h"
+#include "../SpectrumFactoryTable.h"
 #include "rootEnergyHist.h"
 #include "rootAngleHist.h"
 

@@ -33,16 +33,6 @@
         </spectrum>
     </source>
 
-    <!-- the CHIME spectrum. angular dependence and rate are from the CHIME spectrum object -->
-    <source name="chime" >
-        <spectrum escale="GeV"> <SpectrumClass name="CHIMESpectrum"/> <use_spectrum/> </spectrum>
-    </source>
-
-    <!-- the Helium spectrum. angular dependence and rate come from the HeSpectrum instance -->
-    <source name="He">
-        <spectrum escale="GeV"> <SpectrumClass name="HeSpectrum"/> <use_spectrum/> </spectrum>
-    </source>
-
     <!-- the albedo proton spectrum, measured by AMS, implemented by AlbedoPSpectrum. isotropic for now  -->
     <source name="albedo_proton">
          <spectrum escale="GeV"> <SpectrumClass name="AlbedoPSpectrum"/>  
@@ -120,13 +110,6 @@
 
     </source>
 
-    <!-- galactic electron spectrum -->
-    <source name="electron">
-        <spectrum escale="GeV"> <SpectrumClass name="GalElSpectrum"/> <use_spectrum/> </spectrum>
-    </source>
-
-   
-
     <!-- E^-1 spectrum from 18 MeV to 18 GeV and normal incidence-->
     <source name="normal_gamma" flux="1.0">
         <spectrum escale="GeV">
@@ -135,23 +118,6 @@
             <solid_angle mincos="0.99" maxcos="1.0"/>
         </spectrum>
     </source>
-
-
-    <!--Power law gammaS1 -->
-     <source name="gammaS1">
-         <spectrum escale="GeV">
-            <particle name="gamma"> <energy e="1.0"/> </particle>
-            <solid_angle mincos="0.8659" maxcos="0.8661"/>
-         </spectrum>
-      </source>
-     <!--Power law gammaS2 -->
-     <source name="gammaS2">
-         <spectrum escale="GeV">
-            <particle name="gamma">
-               <power_law emin="0.1" emax="10." gamma="1.0"/> </particle>
-            <direction theta="30.2" phi="0"/>
-         </spectrum>
-      </source>
 
 
     <!-- special source that mimics non-interacting cosmics -->
@@ -200,5 +166,38 @@
                <direction/>
           </spectrum>
      </source>
+
+</source_library>
+
+<source_library title="PDR_background">
+
+
+    <!--average flux for pdr studies -->
+    <source name="backgndavgpdr">
+		<nestedSource sourceRef="cremeavg" /> 
+		<nestedSource sourceRef="albedo_proton_avg" /> 
+		<nestedSource sourceRef="albedo_gamma" /> 
+		<nestedSource sourceRef="electronavg" /> 
+		<nestedSource sourceRef="albedo_electronpositronavglow"/>
+        <nestedSource sourceRef="albedo_electronpositronavghi"/> 
+    </source>
+
+    <!-- 'standard' background mixture -->
+    <source name="backgndmix">
+        <nestedSource sourceRef="albedo_proton_avg"/>
+        <nestedSource sourceRef="albedo_gamma"/>
+    </source>
+
+    <source name="albedo_electronpositronavg_total">
+        <nestedSource sourceRef="albedo_electronpositronavglow"/>
+        <nestedSource sourceRef="albedo_electronpositronavghi"/>
+    </source>
+
+	
+    <source name="albedo_electronpositron_total">
+        <nestedSource sourceRef="albedo_electronpositronlow"/>
+        <nestedSource sourceRef="albedo_electronpositronhi"/>
+    </source>
+
 
 </source_library>
