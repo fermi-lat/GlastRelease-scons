@@ -50,6 +50,13 @@ namespace rdbModel {
     return &m_literal[0];
   }
 
+  /// Throw exception if Operator is not EXISTS
+  const std::string& Assertion::Operator::getTableName() const {
+    if (m_opType != OPTYPEexists) 
+      throw RdbException("Assertion::Operator::getTableNmae: wrong type");
+    return m_tableName;
+  }
+
   /// Throw exception if Operator is a comparison operator
   const std::vector<Assertion::Operator* >& 
   Assertion::Operator::getChildren() const {
