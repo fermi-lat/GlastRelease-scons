@@ -1,0 +1,38 @@
+// File and Version Information:
+// $Header$
+
+#define _TkrEventModel_CPP_
+
+
+#include "TkrRecon/MonteCarlo/TkrEventModel.h"
+#include "GaudiKernel/Kernel.h"
+#include "GaudiKernel/ClassID.h"
+
+    
+/** @class EvModel
+ *  @brief Event Model: Definition of logical paths and class identifiers
+ *
+ * $Header$
+ */
+class TkrEvModel {
+        
+public:
+    
+    TkrEvModel() {
+        // Access to GLAST event
+        TkrEventModel::EventHeader           = "/Event";
+            
+        // Monte Carlo 
+        TkrEventModel::MC::Event             = TkrEventModel::EventHeader + "/tmp";
+        TkrEventModel::MC::McEventStructure  = TkrEventModel::MC::Event  + "/McEventStructure";
+
+        TkrEventModel::MC::McPartToHitTab    = TkrEventModel::MC::Event  + "/McPartToHitTab";
+        TkrEventModel::MC::McClusToLyrHitTab = TkrEventModel::MC::Event  + "/McClusToLyrHitTab";
+        TkrEventModel::MC::McLyrToHitTab     = TkrEventModel::MC::Event  + "/McLyrToHitTab";
+        TkrEventModel::MC::McLayerHitCol     = TkrEventModel::MC::Event  + "/McLayerHitCol";
+    }
+};
+    
+    
+static TkrEvModel TkrMod;    // where  used? has file scope     
+    
