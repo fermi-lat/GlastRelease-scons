@@ -7,6 +7,7 @@ package CalRecon
 
 package manager: Alexandre Chekhtman
 
+          22-sep-04   THB Modify CalValsCorrTool to invoke a local copy of code from AnalysisNtuple::CalvalsTool
   v5r15               BG  Temporarily move Fuzzies to Attic
   v5r14               BG  Tag for Gabriel's clustering
   v5r13p3 25-Jun-2003 BG  Extend LastLayer tool to 26 degrees
