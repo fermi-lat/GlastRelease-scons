@@ -10,7 +10,7 @@ void Event::TkrTrackHit::clean()
     m_hitSmooth   = Event::TkrTrackParams();
     m_Qmaterial   = Event::TkrTrackParams();
 
-    m_statusBits &= StatusBits::HASCLUSTER | StatusBits::HASMEASURED | StatusBits::HASVALIDTKR;
+    m_statusBits &= HASCLUSTER | HASMEASURED | HASVALIDTKR;
 
     m_chiSquareFilter = 0.;
     m_chiSquareSmooth = 0.;
@@ -24,7 +24,7 @@ void Event::TkrTrackHit::clear()
     m_hitSmooth   = Event::TkrTrackParams();
     m_Qmaterial   = Event::TkrTrackParams();
 
-    m_statusBits &= StatusBits::HASCLUSTER | StatusBits::HASVALIDTKR;
+    m_statusBits &= HASCLUSTER | HASVALIDTKR;
 
     m_chiSquareFilter = 0.;
     m_chiSquareSmooth = 0.;
@@ -129,34 +129,34 @@ void Event::TkrTrackHit::setTrackParams(ITkrTrackParamsAccess& access, TkrTrackH
     // Switch on the type of hit to set
     switch(type)
     {
-        case ParamType::MEASURED:
+        case MEASURED:
         {
             access.setParams(&m_hitMeas);
-            statusBits = StatusBits::HASMEASURED;
+            statusBits = HASMEASURED;
             break;
         }
-        case ParamType::PREDICTED: 
+        case PREDICTED: 
         {
             access.setParams(&m_hitPred);
-            statusBits = StatusBits::HASPREDICTED;
+            statusBits = HASPREDICTED;
             break;
         }
-        case ParamType::FILTERED:  
+        case FILTERED:  
         {
             access.setParams(&m_hitFit);
-            statusBits = StatusBits::HASFILTERED;
+            statusBits = HASFILTERED;
             break;
         }
-        case ParamType::SMOOTHED:
+        case SMOOTHED:
         {
             access.setParams(&m_hitSmooth);
-            statusBits = StatusBits::HASSMOOTHED;
+            statusBits = HASSMOOTHED;
             break;
         }
-        case ParamType::QMATERIAL: 
+        case QMATERIAL: 
         {
             access.setParams(&m_Qmaterial);
-            statusBits = StatusBits::HASMATERIAL;
+            statusBits = HASMATERIAL;
         }
     }
 
