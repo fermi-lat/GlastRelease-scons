@@ -30,10 +30,17 @@ public:
 
 
     EventSummaryData();
-    EventSummaryData(UInt_t summary) { m_summary = summary; m_flags = 0; };
+    EventSummaryData(UInt_t summary) { Clear(); m_summary = summary; m_flags = 0; };
     EventSummaryData(const EventSummaryData &summary):TObject(summary) {
         m_summary = summary.m_summary;
         m_flags = summary.m_flags;
+        m_otherContribLen[GEM] = summary.m_otherContribLen[GEM];
+        m_otherContribLen[OSW] = summary.m_otherContribLen[OSW];
+        m_otherContribLen[ERR] = summary.m_otherContribLen[ERR];
+        m_otherContribLen[DIAG] = summary.m_otherContribLen[DIAG];
+        m_otherContribLen[AEM] = summary.m_otherContribLen[AEM];
+        int i;
+        for (i = 0; i < 16; i++) { m_temLen[i] = summary.m_temLen[i]; }
     }
 
     virtual ~EventSummaryData();
