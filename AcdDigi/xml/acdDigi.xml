@@ -26,9 +26,9 @@
 
     <section name="global_constants"> 
         <item name="mean_pe_per_mip"   value="18"> number of photoelectrons per mip </item>
-        <item name="noise_std_dev_pha" value="1.0"> std deviation for pha gaussian noise </item>
-        <item name="noise_std_dev_veto" value="0.5"> std deviation for veto gaussian noise </item>
-        <item name="noise_std_dev_cno" value="0.5"> std deviation for cno gaussian noise </item>
+        <item name="noise_std_dev_pha" value="0.02"> std deviation for pha gaussian noise </item>
+        <item name="noise_std_dev_veto" value="0.02"> std deviation for veto gaussian noise </item>
+        <item name="noise_std_dev_cno" value="0.02"> std deviation for cno gaussian noise </item>
         <item name="full_scale" value="4095"> full scale for PHA </item>
         <item name="mips_full_scale" value="20.0"> number of MIPs at full scale </item>
         <item name="mev_per_mip" value="1.9"> Mev per MIP </item>
