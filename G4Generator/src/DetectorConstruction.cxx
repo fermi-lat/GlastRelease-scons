@@ -23,7 +23,7 @@ DetectorConstruction::DetectorConstruction()
   detModel::Manager* gddManager = detModel::Manager::getPointer();
   
   gddManager->setBuilder(new detModel::XercesBuilder);  
-  gddManager->setNameFile("/scratch/users/riccardo/glast-slac/xmlUtil/HEAD/xml/flight.xml");
+  gddManager->setNameFile("/scratch/users/frailis/GlastPack/xmlUtil/v3r1/xml/flight.xml");
 
   gddManager->setMode("fastmc");
 

@@ -67,11 +67,17 @@ void G4MaterialsVisitor::visitComposite(detModel::Composite* composite)
     {
       if ( detModel::Element* el = dynamic_cast<detModel::Element*>(*m))
 	{
-	  G4Element* ptElement = G4Element::GetElement((G4String) el->getName());
-	  if (!ptElement)
+	  G4Element* ptElement = 0;
+	  G4Material* ptMaterial = 0;
+	  
+	  if (!((ptElement = G4Element::GetElement((G4String) el->getName())) ||
+		(ptMaterial = G4Material::GetMaterial((G4String) el->getName()))))
 	    {
 	      el->Accept(this);
-	      ptElement = G4Element::GetElement((G4String) el->getName());
+	      if (!(ptElement = G4Element::GetElement((G4String) el->getName())))
+		{
+		  ptMaterial = G4Material::GetMaterial((G4String) el->getName());
+		}
 	    }
 	  if (ptElement)
 	    {
@@ -82,6 +88,18 @@ void G4MaterialsVisitor::visitComposite(detModel::Composite* composite)
 	      else
 		{
 		  mat->AddElement(ptElement, (G4int) natoms[i]);
+		}
+	      i++;
+	    }
+	  else if (ptMaterial)
+	    {
+	      if (composite->isFractions())
+		{
+		  mat->AddMaterial(ptMaterial, (G4double) fractions[i]);
+		}
+	      else
+		{
+		  mat->AddMaterial(ptMaterial, (G4int) natoms[i]);
 		}
 	      i++;
 	    }
