@@ -232,7 +232,7 @@ namespace detModel{
     std::vector<ConstCategory*>::const_iterator i;
   
     Constants* con = getConstants();
-    vector <ConstCategory*> vc = con->getCategories();
+    std::vector <ConstCategory*> vc = con->getCategories();
     for(i=vc.begin();i!=vc.end();i++)
       if ((*i)->getName() == cname) return (*i); 
 
