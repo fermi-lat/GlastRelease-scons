@@ -1,6 +1,9 @@
 /** @file release.notes
  * package Gleam
  * package manager:T.Burnett
+* v2r2p7 THB 08-Aug-02
+      use RootIo         v4r9p2
+
 * v2r2p6 THB 08-Aug-02
       use GuiSvc         v3r1p2
       use Event          v8r14
