@@ -87,7 +87,7 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
 
   McParticleManager* partMan =  McParticleManager::getPointer();
   
-  hit->init(edep, id, local*(prePos-center), local*(postPos-center) );
+  hit->init(edep, id, local*(prePos-center), local*(postPos-center), prePos, postPos );
   // Retrieve the particle causing the hit and the ancestor and set the corresponding
   // attributes of the McPositionHit
   if (partMan->getMode() == 1)
