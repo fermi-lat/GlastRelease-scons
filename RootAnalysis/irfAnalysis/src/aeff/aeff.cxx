@@ -8,7 +8,8 @@ Create a set of histograms to allow analysis of the effective area
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class Aeff : public PSF {
 public:
-    Aeff(std::string filename): PSF(filename)
+    Aeff(std::string filename, std::string ps_filename): PSF(filename)
+        , m_ps_filename(ps_filename)
         , m_binsize(0.125)
         , m_emin(0.016), m_emax(160.0)
         , m_ngen(4.66e6)
@@ -137,22 +138,40 @@ public:
         c.Print(ps.c_str() );
 
     }
+    void doit(){
+        std::string psfile( output_file_root()+m_ps_filename);
+        if( ! fileExists()) project();
+        draw(psfile+"(", "", "Effective Area vs. energy");
+        drawAngles(psfile+")");
+    }
+    private:
+
     double m_binsize;
     double m_emin, m_emax;
     int m_ngen;
     double m_target_area;
     int m_zdir_bins;
-
+    std::string m_ps_filename;
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 int main(){
-    Aeff  all("aeff.root");
-    std::string psfile(all.output_file_root()+"aeff.ps");
+    TCut bkg("BkVeto==0");
 
-   if( ! all.fileExists())
-        all.project();
-    all.draw(psfile+"(", "", "Effective Area vs. energy");
-    all.drawAngles(psfile+")");
+    Aeff  all( "aeff_all.root", "aeff_all.ps" );
+    all.doit();
+
+    Aeff  all2( "aeff_all2.root", "aeff_all2.ps" );
+    all2.set_user_cut(bkg);
+    all2.doit();
+
+    Aeff front("aeff_front.root", "aeff_front.ps");
+    front.set_user_cut(TCut("Tkr1FirstLayer<12"));
+    front.doit();
+
+    Aeff back("aeff_back.root", "aeff_back.ps");
+    back.set_user_cut(TCut("Tkr1FirstLayer>11&&"));
+    back.doit();
+
 #if 0
     Aeff cut("cut_aeff.root");
     cut.set_user_cut(TCut("BkVeto==0"));
