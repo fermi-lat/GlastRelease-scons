@@ -1,5 +1,5 @@
 package EbfWriter
-version v0r0p9
+version v0r0p10
 # $Header$
 
 author Navid Golpayegani <golpa@milkyway.gsfc.nasa.gov>
@@ -26,18 +26,4 @@ library EbfWriter $(headers) *.cxx Dll/*.cxx
 
 
 private
-use TkrRecon       * -no_auto_imports
-use FluxSvc        * -no_auto_imports
-use TkrDigi        * -no_auto_imports
-use AcdDigi        * -no_auto_imports
-use CalDigi        * -no_auto_imports
-use Trigger        * -no_auto_imports
-use CalUtil        * -no_auto_imports
-use CalRecon       * -no_auto_imports
-use RootIo         * -no_auto_imports
-use AcdRecon       * -no_auto_imports
-
-public
-
-apply_pattern package_test
-set TESTJOBOPTIONS ${EBFWRITERROOT}/src/test/jobOptions.txt
+# no test for now --THB
