@@ -24,8 +24,9 @@
 #include "Event/Recon/TkrRecon/TkrFitTrack.h"
 #include "Event/Recon/TkrRecon/TkrPatCandHit.h"
 #include "Event/Recon/TkrRecon/TkrCluster.h"
-#include "TkrRecon/ITkrGeometrySvc.h"
-#include "src/Track/TkrControl.h"
+
+class ITkrGeometrySvc;
+class TkrControl;
 
 namespace Event {
 
@@ -53,6 +54,7 @@ public:
     inline int    getNumXHits()              const{return m_nxHits;}
     inline int    getNumYHits()              const{return m_nyHits;}
     inline double getKalEnergyError()        const{return m_KalEnergyErr;}
+    inline int    getType()                  const{return m_type;}
 
     /// Access errors at track start
     double        getErrorXPosition()      const;
@@ -72,6 +74,7 @@ public:
 
     enum          Status {EMPTY, FOUND, CRACK}; 
     void          setStatus(Status status) {m_status = status;}
+    void          setType(int type)        {m_type   = type;}
     Status        status() const           {return m_status;}
     
 private:	
@@ -122,6 +125,7 @@ private:
     /// Status
     Status m_status;
     bool   m_alive;
+    int    m_type; 
 
     /// Axis information: First hit orientation
     TkrCluster::view m_axis;
