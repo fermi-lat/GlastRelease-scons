@@ -2,14 +2,11 @@
 <!-- Definition of one tower's worth of calorimeter, to be included
      in flight.xml as external entity  -->
 
-    <!-- According to conventions above, an unrotated CsIDetector would
+<!-- depending on definition of entity CALCsI in parent file, this will
+    produce a segmented or unsegmented cal -->
+    <!-- According to conventions, an unrotated CsIDetector would
     be an X-log -->
-    <box name="CsIDetector" 
-         sensitive="intHit"  detectorTypeREF="eDTypeCALXtal"
-         XREF="CsILength" YREF="CsIWidth" ZREF="CsIHeight"
-         materialREF="crystalMat"  >
-      <seg axis="X" nSegREF="nCsISeg" reason="energyAcct" />
-    </box>
+    &CALCsI;
 
 <!-- there are two kinds of diodes: large and small. See diode section of
      instrument.xml.   These
@@ -42,6 +39,32 @@
           XREF="CsIEnvX"
           YREF="CsIEnvY"
           ZREF="cellHorWallHalfThick"
+          />
+
+     <!-- Define boxes for extra thickness of cell material
+          on top and bottom of calorimeter and on sides of
+          each layer.  May later need two varieties of extra
+          side material with 2 or 3 embedded slices of 
+          cylindrical supports. -->
+     <box name="cellVertWallExtra"
+          materialREF="CALCellMat"
+          XREF="CsIEnvX"
+          YREF="cellSideExtraThick"
+          ZREF="cellIntWallZ"
+          />
+
+     <box name="CALTopCellWallExtra"
+          materialREF="CALCellMat"
+          XREF="CALLayerTrans"
+          YREF="CALLayerTrans"
+          ZREF="cellTopExtraThick"
+          />
+
+     <box name="CALBottomCellWallExtra"
+          materialREF="CALCellMat"
+          XREF="CALLayerTrans"
+          YREF="CALLayerTrans"
+          ZREF="cellBottomExtraThick"
           />
 
      <box name="CsIWrapVertWall"
@@ -157,13 +180,17 @@
 
     </composition>
 
-    <!-- make a layer out of some evenly-spaced CsIElements -->
+    <!-- make a layer out of some evenly-spaced CsIElements and
+         a little bit of extra cell material on the outside 
+         -y and +y edges -->
     <!-- Crystals in this layer measure X -->
     <stackY name="CALLayer" >
+      <axisPos  volume="cellVertWallExtra" />
       <axisMPos volume="CsIElement" ncopyREF="nCsIPerLayer"
                 shiftREF="cellHorPitch" >
         <idField name="fCALLog" value="0" step="1" />
       </axisMPos>
+      <axisPos  volume="cellVertWallExtra" />
     </stackY>
 
     <!-- For Y-measuring layers, the crystal ids have to go
@@ -177,52 +204,51 @@
       </axisMPos>
     </stackY>
 
-<!-- define boxes for top and bottom plates -->
-    <box name="CALBottomPlate"
-         XREF="CALLayerTrans"
-         YREF="CALLayerTrans"
-         ZREF="CALBottomPlateZ"
-         materialREF = "CALCellMat"
-     />
 
-    <box name="CALTopPlate"
-         XREF="CALLayerTrans"
-         YREF="CALLayerTrans"
-         ZREF="CALTopPlateZ"
-         materialREF = "CALCellMat"
-     />
+<!-- As of 19 June, 2003 new design for top frame: model the two
+     actual frames, but using the cutout method.  Let bottom
+     frame be for now (just one frame, built out of its 4 sides). -->
+     <box name="CALTopFrameLowerEnv"
+       XREF="CALTopFrameLowerLen"
+       YREF="CALTopFrameLowerLen"
+       ZREF="CALTopFrameLowerZ"
+       materialREF="CALFrameMat"
+      />
 
-<!-- Original: 
-     Define boxed for glommed-together picture frames.  Define outer
-     boxes made of frame material, then inner boxes of vacuum to 
-     empty out the middle. -->
+     <box name="CALTopFrameLowerCutout"
+       XREF="CALTopFrameLowerCutoutLen"
+       YREF="CALTopFrameLowerCutoutLen"
+       ZREF="CALTopFrameLowerZ"
+       materialREF="vacuumMat"
+      />
 
-<!-- New style for frames:  build up out of four pieces as is done
-     for grid and for TKR closeout.  Use old envelope boxes but
-     material is now vacuum.  -->
-     <box name="CALTopFrameEnv"
-          XREF="CALModuleWidth"
-          YREF="CALModuleWidth"
-          ZREF="CALTopFrameZ"
-          materialREF="vacuumMat" />
+     <composition name="CALTopFrameLowerVol" envelope="CALTopFrameLowerEnv">
+       <posXYZ volume="CALTopFrameLowerCutout" />
+     </composition>
+       
+     <box name="CALTopFrameUpperEnv"
+       XREF="CALTopFrameUpperLen"
+       YREF="CALTopFrameUpperLen"
+       ZREF="CALTopFrameUpperZ"
+       materialREF="CALFrameMat"
+      />
+
+     <box name="CALTopFrameUpperCutout"
+       XREF="CALTopFrameUpperCutoutLen"
+       YREF="CALTopFrameUpperCutoutLen"
+       ZREF="CALTopFrameUpperZ"
+       materialREF="vacuumMat"
+      />
+
+     <composition name="CALTopFrameUpperVol" envelope="CALTopFrameUpperEnv">
+       <posXYZ volume="CALTopFrameUpperCutout" />
+     </composition>
 
      <box name="CALBottomFrameEnv"
           XREF="CALModuleWidth"
           YREF="CALModuleWidth"
           ZREF="CALBottomFrameZ"
           materialREF="vacuumMat" />
-
-     <box name="CALTopFrameLongSide"
-       XREF="CALModuleWidth"
-       YREF="CALTopFrameWidth"
-       ZREF="CALTopFrameZ"
-       materialREF="CALFrameMat" />
-     <box name="CALTopFrameShortSide"
-       XREF="CALTopFrameShort"
-       YREF="CALTopFrameWidth"
-       ZREF="CALTopFrameZ"
-       materialREF="CALFrameMat" />
-
      <box name="CALBottomFrameLongSide"
        XREF="CALModuleWidth"
        YREF="CALBottomFrameWidth"
@@ -233,27 +259,6 @@
        YREF="CALBottomFrameWidth"
        ZREF="CALBottomFrameZ"
        materialREF="CALFrameMat" />
-
-     <composition name="CALTopFrame" envelope="CALTopFrameEnv">
-       <posXYZ volume="CALTopFrameLongSide" 
-               YREF="CALTopFrame_dt" >
-         <idField name="fBorderCmp" valueREF="eTop" />
-       </posXYZ>
-       <posXYZ volume="CALTopFrameLongSide" 
-               YREF="CALTopFrame_dtn" >
-         <idField name="fBorderCmp" valueREF="eBottom" />
-       </posXYZ>
-       <posXYZ volume="CALTopFrameShortSide" 
-               zrot="90"
-               XREF="CALTopFrame_dt" >
-         <idField name="fBorderCmp" valueREF="eRight" />
-       </posXYZ>
-       <posXYZ volume="CALTopFrameShortSide" 
-               zrot="90"
-               XREF="CALTopFrame_dtn" >
-         <idField name="fBorderCmp" valueREF="eLeft" />
-       </posXYZ>
-     </composition>
 
      <composition name="CALBottomFrame" envelope="CALBottomFrameEnv">
        <posXYZ volume="CALBottomFrameLongSide" 
@@ -285,16 +290,13 @@
      with layer 7 (a Y-layer) and working our way forward to
      layer 0, an X layer.  The Y-layers must be rotated -->
 
-<!-- On the very bottom are frame pieces and a plate.  Then comes
-     the actual layers of crystals, then another thin plate and
-     then the top frame pieces.  For now the actual 3 top (bottom)
-     frame pieces are represented by a single volume which would
-     contain - and then some - the real pieces. -->
+<!-- On the very bottom is a volume of "extra" cell material.
+     Then come the actual layers of crystals, then another thin 
+     layer of cell material.
+-->
     <stackZ name="CALLayers"  >
-      <axisPos volume="CALBottomFrame" >
-        <idField name="fCALStructural" valueREF="eBottomFrame" />
-      </axisPos>
-      <axisPos volume="CALBottomPlate" >
+
+      <axisPos volume="CALBottomCellWallExtra" >
         <idField name="fCALStructural" valueREF="eBottomPlate" />
       </axisPos>
 
@@ -330,20 +332,38 @@
         <idField name="fLayer" value="0" />
         <idField name="fMeasure" valueREF="eMeasureX" />
       </axisPos>
-      <axisPos volume="CALTopPlate" >
+
+      <axisPos volume="CALTopCellWallExtra">
         <idField name="fCALStructural" valueREF="eTopPlate" />
       </axisPos>
-      <axisPos volume="CALTopFrame" >
-        <idField name="fCALStructural" valueREF="eTopFrame" />
-      </axisPos>
+
     </stackZ>
 
-    <!-- Calorimeter for a tower consists of layers plus frame pieces -->
-    <!-- For now embed layers stack into box of frame material
-         but ultimately probably want to represent frame pieces
-         (really picture-frame shaped) more accurately, put them
-         and layers in a composition 
-       -->
+
+    <!-- Make boxes for the components of side walls.  The "original"
+         boxes all have their long dimension in x -->
+    <box name="CALCloseoutBox"
+         XREF="CALCloseoutLen" 
+         YREF="CALSideWallInnerThick"
+         ZREF="CALCloseoutZ"
+         materialREF="CALCloseoutMat"
+    />
+
+    <box name="CALSidePCBBox"
+         XREF="CALSidePCBLen" 
+         YREF="CALSideWallPCBThick"
+         ZREF="CALSidePCBZ"
+         materialREF="CALSidePCBMat"
+    />
+
+    <box name="CALSideOuterBox"
+         XREF="CALSideOuterLen" 
+         YREF="CALSideWallOuterThick"
+         ZREF="CALSideOuterZ"
+         materialREF="CALOuterWallMat"
+    />
+
+
 
 
     <!-- Then position the whole thing inside a stay-clear volume -->
@@ -355,9 +375,74 @@
 
 <!-- As of 30 April, CALLayers at the top of the stay clear envelope (used
      to be centered)                                           -->
+
+    <!-- Calorimeter for a tower consists of layers plus frame pieces
+         plus side walls -->
     
     <composition name="oneCAL" envelope="oneCALStayClearBox" >
+      <posXYZ volume="CALBottomFrame" 
+         ZREF="CALBottomFrame_dz">
+        <idField name="fCALStructural" valueREF="eBottomFrame" />
+      </posXYZ>
       <posXYZ volume="CALLayers"
           ZREF="CALLayers_dz" />
+      <posXYZ volume="CALTopFrameLowerVol" 
+          ZREF="CALTopFrameLower_dz" >
+        <idField name="fCALStructural" valueREF="eTopFrame" />
+      </posXYZ>
+      <posXYZ volume="CALTopFrameUpperVol"
+          ZREF="CALTopFrameUpper_dz" >
+        <idField name="fCALStructural" valueREF="eTopFrame" />
+      </posXYZ>
+
+      <!-- First do all unrotated side pieces.  They extend in X so get
+           displaced in Y (and Z; everybody gets displaced in Z) -->
+      <posXYZ volume="CALCloseoutBox"
+              YREF="CALCloseout_dt"
+              ZREF="CALCloseout_dz" />
+      <posXYZ volume="CALCloseoutBox"
+              YREF="CALCloseout_dtn"
+              ZREF="CALCloseout_dz" />
+      <posXYZ volume="CALSidePCBBox"
+              YREF="CALSidePCB_dt"
+              ZREF="CALSidePCB_dz" />
+      <posXYZ volume="CALSidePCBBox"
+              YREF="CALSidePCB_dtn"
+              ZREF="CALSidePCB_dz" />
+      <posXYZ volume="CALSideOuterBox"
+              YREF="CALSideOuter_dt"
+              ZREF="CALSideOuter_dz" />
+      <posXYZ volume="CALSideOuterBox"
+              YREF="CALSideOuter_dtn"
+              ZREF="CALSideOuter_dz" />
+
+      <!-- now for rotated pieces -->
+      <posXYZ volume="CALCloseoutBox"
+              zrot="90"
+              XREF="CALCloseout_dt"
+              ZREF="CALCloseout_dz" />
+      <posXYZ volume="CALCloseoutBox"
+              zrot="90"
+              XREF="CALCloseout_dtn"
+              ZREF="CALCloseout_dz" />
+      <posXYZ volume="CALSidePCBBox"
+              zrot="90"
+              XREF="CALSidePCB_dt"
+              ZREF="CALSidePCB_dz" />
+      <posXYZ volume="CALSidePCBBox"
+              zrot="90"
+              XREF="CALSidePCB_dtn"
+              ZREF="CALSidePCB_dz" />
+      <posXYZ volume="CALSideOuterBox"
+              zrot="90"
+              XREF="CALSideOuter_dt"
+              ZREF="CALSideOuter_dz" />
+      <posXYZ volume="CALSideOuterBox"
+              zrot="90"
+              XREF="CALSideOuter_dtn"
+              ZREF="CALSideOuter_dz" />
+
     </composition>
+
+
 

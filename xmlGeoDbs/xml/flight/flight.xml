@@ -21,6 +21,7 @@
     <!ENTITY CALDimPrim     SYSTEM "flightCALDimPrim.xml">
     <!ENTITY CALResponse    SYSTEM "flightCALResponse.xml">
     <!ENTITY CALOneCal      SYSTEM "flightCALOneCal.xml">
+    <!ENTITY CALCsI         SYSTEM "flightCsIUnsegmented.xml">
 
     <!ENTITY TKRMatPrim     SYSTEM "flightTKRMatPrim.xml">
     <!ENTITY TKRCountPrim   SYSTEM "flightTKRCountPrim.xml">

@@ -8,6 +8,14 @@
 <prim name="CALCellMat" value="CarbonFiber" type="string" uType="mat">**NEW** 
 CAL composite cell material, also used for top and bottom plates</prim>
 
+  <prim name= "CALCloseoutMat" value= "Al" type="string" uType="mat">
+Material for CAL side closeout walls</prim>
+  <prim name="CALOuterWallMat" value="Al" type="string" uType="mat">
+material for CAL outer side wall components</prim>
+
+  <prim name="CALSidePCBMat" value="Polystyrene" type="string" uType="mat">
+material for CAL PCB side wall components -- need real material defined!</prim>
+
   <prim name= "CALFrameMat" value= "Al" type="string" uType="mat">
 Material for CAL frame</prim>
   <prim name= "CALMountTabMat" value= "Al" type="string" uType="mat">
