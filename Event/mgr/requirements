@@ -3,7 +3,7 @@ version v1r2
 
 branches GlastEvent mgr doc src
 use idents
-use instrument v2r3
+use instrument v2r4
 use data 
 use Gaudi 
 
@@ -14,6 +14,7 @@ library GlastEvent \
         MonteCarlo/*.cxx \
         ../GlastEvent/Irf/*.h \
         ../GlastEvent/Raw/*.h Raw/*.cpp \
+        ../GlastEvent/Digi/*.h Digi/*.cpp \
         TopLevel/*.cpp
 
 library GlastEventFactories \
