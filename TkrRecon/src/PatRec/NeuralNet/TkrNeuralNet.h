@@ -107,7 +107,7 @@ class TkrNeuralNet : public DataObject
   TkrNeuronList  m_neuronList;
       
   /// list of all (x,y,z) points (not all are used in neurons)
-  TkrPointList   m_pointList;
+  std::vector<TkrPoint>   m_pointList;
 
   /// number of neurons in m_neuronList
   unsigned int   m_numNeurons;

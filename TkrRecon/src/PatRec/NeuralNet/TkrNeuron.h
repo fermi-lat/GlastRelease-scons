@@ -94,7 +94,7 @@ public:
     //@{    
     // in the following 'position' is an enum which has values of 'top' or 'bottom'.
     Point  getPnt(position pos)   const {
-        return pos==top ? m_pnt0->getPoint() : m_pnt1->getPoint();}
+        return pos==top ? m_pnt0->getPosition() : m_pnt1->getPosition();}
 
     int    getLayer(position pos) const {
         return pos==top ? m_pnt0->getLayer() : m_pnt1->getLayer();}
@@ -102,11 +102,11 @@ public:
     int    getTower(position pos) const {
         return pos==top ? m_pnt0->getTower() : m_pnt1->getTower();}
 
-    Event::TkrCluster*  getClusterX(position pos)   const {
-        return pos==top ? m_pnt0->getClusterX() : m_pnt1->getClusterX();}
+    const Event::TkrCluster*  getXCluster(position pos)   const {
+        return pos==top ? m_pnt0->getXCluster() : m_pnt1->getXCluster();}
 
-    Event::TkrCluster*  getClusterY(position pos)   const {
-        return pos==top ? m_pnt0->getClusterY() : m_pnt1->getClusterY();}
+    const Event::TkrCluster*  getYCluster(position pos)   const {
+        return pos==top ? m_pnt0->getYCluster() : m_pnt1->getYCluster();}
 
     int    getLayerDiff()         const {return m_l;}
     Vector getDirection()         const {return m_direction;}

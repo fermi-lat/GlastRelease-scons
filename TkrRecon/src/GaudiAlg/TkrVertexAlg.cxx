@@ -188,8 +188,9 @@ StatusCode TkrVertexAlg::execute()
 
         // This tells the tool to perform the vertexing
         sc = m_VtxTool->retrieveVtxCol(*pVtxCol);
-        std::cout << "TkrVertexAlg::execute: " << pVtxCol->size() << " vertices found" << std::endl;
-
+		log << MSG::DEBUG;
+		if (log.isActive()) log << pVtxCol->size() << " vertices found ";
+	    log << endreq;
     }
   
     return sc;
