@@ -125,7 +125,7 @@ namespace Event {
         inline int    chip()  const { return m_strip0/64;}
 
         /// writes out the information of the cluster if msglevel is set to debug
-        inline void writeOut(MsgStream& log) const;
+	inline std::ostream& fillStream( std::ostream& s ) const;
 
         // set methods
         /// sets the used flag of a cluster
@@ -164,24 +164,22 @@ namespace Event {
         int m_id;
     };
 
-    void TkrCluster::writeOut(MsgStream& log) const
+    std::ostream& TkrCluster::fillStream( std::ostream& s ) const
     {
         // Purpose: writes out debug info
         // Inputs:  message stream
         // Outputs: data written to message stream
 
-        log << MSG::DEBUG;
-        if (log.isActive()) {
-            log << " tray " << getTkrId().getTray() 
-                << " face " << getTkrId().getBotTop()
-                << " XY " << getTkrId().getView()
-                << " xpos  " << m_position.x()  << " ypos   " << m_position.y()
-                << " zpos  " << m_position.z()
-                << " i0-if " << m_strip0 <<"-"<< m_stripf;
-        }
-        log << endreq;
+        s << " tray " << getTkrId().getTray() 
+            << " face " << getTkrId().getBotTop()
+            << " XY " << getTkrId().getView()
+            << " pos (" << m_position.x() << ", " << m_position.y()
+            << ", " << m_position.z() << ") "
+            << " i0-if " << m_strip0 <<"-"<< m_stripf
+            << " ToT " << m_ToT;
+            //<< " status " << m_status; // std::hex << m_status << std::dec;
+        return s;
     }
-
 
     //typedef for the Container (to be stored in the TDS)
     typedef ObjectVector<TkrCluster>       TkrClusterCol;
