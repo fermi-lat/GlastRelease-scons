@@ -1,6 +1,8 @@
 // $Header$
 #include "xmlUtil/id/Identifier.h"
 
+#include <iterator>
+
 namespace xmlUtil {
 
   // Nothing to do for now because, although we're formally a derived
