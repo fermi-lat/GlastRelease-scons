@@ -13,7 +13,7 @@ use calibUtil v0r*
 
 use GaudiInterface * IExternal
 
-apply_pattern component_library
+apply_pattern component_library library=CalibSvc
 
 
 private
