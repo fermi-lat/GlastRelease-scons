@@ -9,7 +9,6 @@
 
 namespace rdbModel {
   
-
   class Table;
   class Column;
   class Index;
