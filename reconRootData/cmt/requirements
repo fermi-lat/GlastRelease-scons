@@ -39,7 +39,7 @@ document recon_dorootcint ReconRootDataCint CINTFILE=../reconRootData/reconRootD
 library  reconRootData \
       ReconEvent.cxx \
       TkrRecon.cxx TkrCandHit.cxx TkrCandTrack.cxx TkrFitHit.cxx \
-      TkrCovMat.cxx TkrHitPlane.cxx \
+      TkrCovMat.cxx TkrHitPlane.cxx TkrSiCluster.cxx \
       TkrParams.cxx TkrTrack.cxx TkrVertex.cxx \
       CalRecon.cxx CalRangeRecData.cxx CalCluster.cxx CalXtalRecData.cxx \
       ../reconRootData/*.cxx \
