@@ -43,14 +43,24 @@
         <p><font size="3">This package contains all GLAST ROOT macros that are
         supported by the GLAST ground software group.&nbsp; The routines
         provided, are meant to provide some basic, general, functions that most
-        GLAST ROOT users may find useful.&nbsp; To process an GLAST ROOT data,
+        GLAST ROOT users may find useful.&nbsp; To process GLAST ROOT data,
         it is not necessary to use this package, but it may make it easier.</font></p>
         <h3><font size="3"><a name="Setup">Setup the ROOT environment for GLAST</a></font></h3>
         <p><font size="3">RootAnalysis now comes with a simple .rootrc.&nbsp;
         This is the file used by ROOT to setup your ROOT environment upon
-        startup.&nbsp; First, setup a ROOTANALYSIS environment variable that is
+        startup.&nbsp;&nbsp;</font></p>
+        <p><font size="3"> First, setup a <b> ROOTANALYSIS</b> environment variable that is
         set to the directory path, where you have the RootAnalysis package
         installed.&nbsp;</font></p>
+        <p><font size="3">On UNIX:&nbsp; setenv ROOTANALYSIS $HOME/RootAnalysis</font></p>
+        <p><font size="3">On Windows:&nbsp;</font></p>
+        <ol>
+          <li><font size="3">In Control Panel, Click on System,&nbsp;</font></li>
+          <li><font size="3">Then Click on the Environment tab</font></li>
+          <li><font size="3">Then define a new variable called ROOTANALYSIS<br>
+            Set its value equal to the RootAnalysis directory on your system,
+            i.e. D:/glast/RootAnalysis</font></li>
+        </ol>
         <p><font size="3">To be used, the .rootrc file must be in the directory
         from where you launch ROOT.</font>&nbsp; <font size="3">Next do one of
         the following:</font></p>
@@ -240,12 +250,12 @@
         page.</font></p>
         <p><font size="3"><b>USAGE:</b><br>
         </font><i><font size="2">NtupleAnalysis *m = new NtupleAnalysis( );<br>
-        m-&gt;OpenRootFile(&quot;myNtupleFile.root&quot;, &quot;PDR/t1&quot;);
+        m-&gt;openRootFile(&quot;myNtupleFile.root&quot;, &quot;PDR/t1&quot;);
         // you supply a file name, and the name (and path if necessary) of the
         TTree in the file.<br>
-        m-&gt;SetNumRows(4);<br>
-        m-&gt;SetNumCols(4);</font></i><font size="2"><i><br>
-        m-&gt;DrawAll(&quot;myNewPSFile.ps&quot;, &quot;TKR_NO_TRACKS &gt;
+        m-&gt;setNumRows(4);<br>
+        m-&gt;setNumCols(4);</font></i><font size="2"><i><br>
+        m-&gt;drawAllPlots(&quot;myNewPSFile.ps&quot;, &quot;TKR_NO_TRACKS &gt;
         0&quot;); // creates the PS file - and applies the cut to the data</i></font></p>
         <h3><a name="Ancillary Data files">Ancillary Data files</a></h3>
         <p><font size="3"><b><a name="Calibration">Calibration</a></b></font></p>
