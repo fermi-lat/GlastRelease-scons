@@ -10,4 +10,5 @@
 
 DECLARE_FACTORY_ENTRIES(G4Generator) {
     DECLARE_ALGORITHM( G4Generator);
+    DECLARE_SERVICE(   G4PropagatorSvc);
 } 
