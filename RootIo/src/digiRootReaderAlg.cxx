@@ -196,7 +196,7 @@ StatusCode digiRootReaderAlg::readDigiEvent() {
 
     // Check to see if the event and run ids have already been set.
     if (eventIdTds != eventIdRoot) evt->setEvent(eventIdRoot);
-    if (runIdTds != runIdTds) evt->setRun(runIdRoot);
+    if (runIdTds != runIdRoot) evt->setRun(runIdRoot);
 
     Event::DigiEvent* digiEventTds = 
         SmartDataPtr<Event::DigiEvent>(eventSvc(), EventModel::Digi::Event);

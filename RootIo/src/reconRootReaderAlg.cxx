@@ -182,7 +182,7 @@ StatusCode reconRootReaderAlg::readReconEvent() {
 
     // Check to see if the event and run ids have already been set.
     if (eventIdTds != eventIdRoot) evt->setEvent(eventIdRoot);
-    if (runIdTds != runIdTds) evt->setRun(runIdRoot);
+    if (runIdTds != runIdRoot) evt->setRun(runIdRoot);
 
     return sc;
 }
