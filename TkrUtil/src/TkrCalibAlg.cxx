@@ -174,12 +174,13 @@ StatusCode TkrCalibAlg::initialize()
 StatusCode TkrCalibAlg::execute( ) {
     
     MsgStream log(msgSvc(), name());
-    StatusCode sc = StatusCode::SUCCESS;
     
     bool updateStripsNow = false;
 
     // check the dead channels
-    SmartDataPtr<CalibData::BadStrips> pDead(m_pCalibDataSvc, "");
+
+    //    SmartDataPtr<CalibData::BadStrips> pDead(m_pCalibDataSvc, "");
+    CalibData::BadStrips* pDead = SmartDataPtr<CalibData::BadStrips>(m_pCalibDataSvc, "");
     if(m_deadStripsFlavor!="ideal" && m_deadStripsFlavor!="") {
         std::string fullDeadPath = "/Calib/TKR_DeadChan/"+m_flavor;
         pDead = SmartDataPtr<CalibData::BadStrips>(m_pCalibDataSvc, fullDeadPath);
@@ -213,7 +214,8 @@ StatusCode TkrCalibAlg::execute( ) {
 
     // now the hot channels
 
-    SmartDataPtr<CalibData::BadStrips>pHot(m_pCalibDataSvc, "");
+    //    SmartDataPtr<CalibData::BadStrips>pHot(m_pCalibDataSvc, "");
+    CalibData::BadStrips* pHot = SmartDataPtr<CalibData::BadStrips>(m_pCalibDataSvc, "");
     if(m_hotStripsFlavor!="ideal" && m_hotStripsFlavor!="") {
         std::string fullHotPath = "/Calib/TKR_HotChan/"+m_flavor;
         pHot = SmartDataPtr<CalibData::BadStrips>(m_pCalibDataSvc, fullHotPath);
