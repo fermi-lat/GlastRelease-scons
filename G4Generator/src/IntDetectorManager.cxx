@@ -94,13 +94,12 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,
       m_detectorList[id] = hit;
     }
 
-  // this transforms it to local coordinates
-  HepTransform3D 
-    global(*(theTouchable->GetRotation()), 
-           theTouchable->GetTranslation());  
-  HepTransform3D local = global.inverse();
-  prePos = local * (HepPoint3D)prePos;
-  postPos = local * (HepPoint3D)postPos;
+  // this rotates the hit to local coordinates with respect to the center  
+  HepRotation local(*(theTouchable->GetRotation()));
+  HepPoint3D center=theTouchable->GetTranslation();
+
+  prePos = local * (prePos-center);
+  postPos = local * (postPos-center);
   
   // fill the energy and position    
   hit->addEnergyItem(edep, 

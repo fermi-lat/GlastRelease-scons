@@ -89,8 +89,8 @@ void DetectorManager::makeDisplayBox(G4TouchableHistory* touched,
   HepTransform3D 
     global( ((touched->GetRotation())->inverse()) , 
            touched->GetTranslation());
-    
-    
+  
+
   const G4LogicalVolume* lvol = pvol->GetLogicalVolume();
   const G4VSolid * solid = lvol->GetSolid();
   const G4Box* box = dynamic_cast<const G4Box*>(solid);
