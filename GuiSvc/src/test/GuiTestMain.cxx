@@ -16,17 +16,22 @@
 //
 //------------------------------------------------------------------------------
 
-extern void GuiSvc_load();
 
 int main( int argn, char** argc) {
 
-    if(0) GuiSvc_load(); // make sure in executable
     // get the path to this package from its root environment variable: if not there,
     // assume that we are in the root
-    const char * local_path = ::getenv("GUISVCROOT");
-    std::string joboptions_file = std::string(local_path? local_path: "");
 
-    joboptions_file +=  std::string("/src/test/jobOptions.txt");
+    std::string joboptions_file;
+    // is ther a job options env var defined?
+    const char * job = ::getenv("JOBOPTIONS");
+
+    if( job ) { joboptions_file = job; }
+    else {
+        const char * local_path = ::getenv("GUISVCROOT");
+        joboptions_file = std::string(local_path? local_path: "");
+        joboptions_file +=  std::string("/src/test/jobOptions.txt");
+    }
     
     // Create an instance of an application manager
     IInterface* iface = Gaudi::createApplicationMgr();

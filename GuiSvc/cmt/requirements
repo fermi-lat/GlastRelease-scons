@@ -19,11 +19,18 @@ include_path $(GUISVCROOT)
 macro GuiSvc_lib " -L ${GUISVCROOT}/${CMTCONFIG} -lGuiSvc "\
     VisualC "Service.obj ${GUISVCROOT}/${BINDIR}/libGuiSvc.lib "
 
+macro GuiSvc_linkopts " -L ${GUISVCROOT}/${CMTCONFIG} -lGuiSvc "\
+    VisualC "Service.obj ${GUISVCROOT}/${BINDIR}/libGuiSvc.lib /include:_GuiSvc_loadRef"
+
 private
 # note redefinition of the macro to *not* include any other dependent libs
-macro use_linkopts " $(Gaudi_linkopts) $(GuiSvc_lib) $(gui_linkopts)"
+# and to force inclusion of the loadRef
+macro use_linkopts " $(Gaudi_linkopts) $(GuiSvc_lib) $(gui_linkopts) "\
+                   VisualC " $(Gaudi_linkopts) $(GuiSvc_linkopts) $(gui_linkopts) "
 
-macro WinJobOptions "" \
-      VisualC       test/*.txt
+macro WinJobOptions ""  VisualC  test/jobOptions.txt
+
+set JOBOPTIONS ${GUISVCROOT}/src/test/jobOptions.txt
 
 application GuiTest test/*.cxx ${WinJobOptions} ${Win32Resource}
+
