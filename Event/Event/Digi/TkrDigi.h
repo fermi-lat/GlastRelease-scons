@@ -113,7 +113,7 @@ namespace Event {
     inline StreamBuffer& TkrDigi::serialize( StreamBuffer& s ) const {
         ContainedObject::serialize(s);  
         s << m_bilayer
-            << m_view
+            << (int)m_view
             << m_tower.id()
             << m_tot[0]
             << m_tot[1]
@@ -131,7 +131,8 @@ namespace Event {
     inline StreamBuffer& TkrDigi::serialize( StreamBuffer& s )       {
         ContainedObject::serialize(s);
         int size;
-        int view, tower;
+        int view;
+	long tower;
         s >> m_bilayer
             >> view
             >> tower
@@ -158,7 +159,7 @@ namespace Event {
         int size = m_hits.size();
         s << "class TkrDigi :" << std::endl
             << "Layer: " << m_bilayer 
-            << " view: " << m_view
+            << " view: " << (int)m_view
             << " tower: " << m_tower.id()
             << " ToT: " << m_tot[0] << " " << m_tot[1]
             << " last controller 0 strip " << m_lastController0Strip
