@@ -154,7 +154,7 @@ StatusCode G4Generator::initialize()
       m_mscatOption? Geant4::MultipleScatteringFactory::OLD32 
                    : Geant4::MultipleScatteringFactory::NATIVE);
 
-  log << MSG::ERROR << "Using the " << (m_mscatOption? "Old 3.2" : "current G4") 
+  log << MSG::WARNING << "Using the " << (m_mscatOption? "Old 3.2" : "current G4") 
       << " version of Multiple scattering" << endreq;
 
   log << MSG::INFO << "Initializing run manager...\n";
