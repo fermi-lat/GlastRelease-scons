@@ -1,6 +1,6 @@
 // $Header$
-#include "dom/DOM_Element.hpp"
-#include "dom/DOMString.hpp"
+#include <dom/DOM_Element.hpp>
+#include <dom/DOMString.hpp>
 #include "xml/Dom.h"
 #include "xmlUtil/id/DictNode.h"
 #include "xmlUtil/id/DictFieldMan.h"

@@ -1,6 +1,6 @@
 // $Header$
 #include "xmlUtil/docMan/GDDDocMan.h"
-#include "dom/DOM_Element.hpp"
+#include <dom/DOM_Element.hpp>
 #include "xmlUtil/Constants.h"
 
 namespace xmlUtil {

@@ -4,9 +4,9 @@
 #include <algorithm>
 #include "xml/Dom.h"
 #include "xmlUtil/id/DictConstraints.h"
-#include "dom/DOMString.hpp"
-#include "dom/DOM_Element.hpp"
-#include "dom/DOM_NodeList.hpp"
+#include <dom/DOMString.hpp>
+#include <dom/DOM_Element.hpp>
+#include <dom/DOM_NodeList.hpp>
 
 
 namespace xmlUtil {

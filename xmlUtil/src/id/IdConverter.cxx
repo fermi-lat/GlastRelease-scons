@@ -4,7 +4,7 @@
 #include "xmlUtil/id/IdConverter.h"
 #include "xmlUtil/id/IdDictMan.h"
 #include "xmlUtil/id/IdDict.h"
-#include "dom/DOM_Element.hpp"
+#include <dom/DOM_Element.hpp>
 #include "xml/Dom.h"
 #include <algorithm>
 #include "xmlUtil/id/IdConverterLessThan.h"

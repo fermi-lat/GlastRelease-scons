@@ -12,8 +12,8 @@
 #include "xmlUtil/id/IdConverter.h"
 #include "xmlUtil/id/IdConversion.h"  // maybe don't need this
 
-#include "dom/DOM_Element.hpp"
-#include "dom/DOM_DocumentType.hpp"
+#include <dom/DOM_Element.hpp>
+#include <dom/DOM_DocumentType.hpp>
 
 #include <iostream>
 // #include <fstream>

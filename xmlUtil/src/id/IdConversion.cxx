@@ -3,7 +3,7 @@
 #include "xmlUtil/id/IdConversion.h"
 #include "xmlUtil/id/IdOperation.h"
 #include "xml/Dom.h"
-#include "dom/DOMString.hpp"
+#include <dom/DOMString.hpp>
 #include "xmlUtil/id/IdOpTruncate.h"
 #include "xmlUtil/id/IdOpDisappear.h"
 #include "xmlUtil/id/IdOpCompress.h"

@@ -7,8 +7,8 @@
 */
 #include "xmlUtil/docMan/GDDDocMan.h"
 #include "xml/docMan/DocClient.h"
-#include "dom/DOM_Element.hpp"
-#include "dom/DOMString.hpp"
+#include <dom/DOM_Element.hpp>
+#include <dom/DOMString.hpp>
 #include "xml/Dom.h"
 
 #include <string>
