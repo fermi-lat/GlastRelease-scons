@@ -56,7 +56,6 @@ void HepRep_impl::setHepRepSvc(IHepRepSvc* hrsv)
 HepRepInstanceTree* HepRep_impl::getInstanceTreeTop(const char* instanceTreeName,
 						     const char* instanceTreeVersion)
 {
-  // To be done
   HepRepInstanceTree* instanceTreeTop = new HepRepInstanceTree;
   std::string type = m_registry->getTypeByInstance(instanceTreeName);  
   
@@ -138,12 +137,8 @@ HepRepInstanceTree* HepRep_impl::getInstances(const char* instanceTreeName,
   
   int nTypes = typeNames.length();
 
-  //  std::cout << "HepRep_impl::getInstances Called for " 
-  //	    << instanceTreeName 
-  //	    << "with Number of Types " << nTypes << std::endl;
-
   HepRepInstanceTree* instanceTree = new HepRepInstanceTree;
-  
+
   const fillerCol temp = 
     m_registry->getFillersByType(
 				 m_registry->getTypeByInstance(instanceTreeName));  
@@ -160,7 +155,6 @@ HepRepInstanceTree* HepRep_impl::getInstances(const char* instanceTreeName,
       instanceTree->typeTreeID.version = CORBA::string_dup("1.0");
       instanceTree->instances = tmp;
     }
-    
 
   std::vector<std::string> names;
   for(unsigned int i=0;i<typeNames.length();i++)

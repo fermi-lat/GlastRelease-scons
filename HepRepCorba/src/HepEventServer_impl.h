@@ -36,12 +36,15 @@ public:
 
   HepRep_impl* hepRep_impl;
 
+	void setOrb(CORBA::ORB_var orb){m_orb = m_orb;};
 protected:
   ISvcAdapter* m_svcAdapter;
   IRegistry* m_registry;
   std::string m_eventID;
   HepRep_var _hepRep_var;
-  bool _busy;
+  CORBA::ORB_var m_orb;
+
+	bool _busy;
   bool _singleUse;
   char* _defaultEventID;
   char* _clientDesc;

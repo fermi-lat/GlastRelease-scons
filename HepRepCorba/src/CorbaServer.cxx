@@ -1,5 +1,4 @@
 #include "CorbaServer.h"
-
 #include "HepEventServer_impl.h"
 
 #include <fstream>
@@ -16,9 +15,9 @@ void CorbaServer::run()
   const char* options[][2] = { { "giopMaxMsgSize", "20097152" }, { 0, 0 } }; 
 
   try {
-  CORBA::ORB_var orb = CORBA::ORB_init(orb_argc, orb_argv, "omniORB4",options);
+  m_orb = CORBA::ORB_init(orb_argc, orb_argv, "omniORB4",options);
   // Activate the Portable Object Adapter.
-  CORBA::Object_var obj = orb->resolve_initial_references("RootPOA");
+  CORBA::Object_var obj = m_orb->resolve_initial_references("RootPOA");
   PortableServer::POA_var poa = PortableServer::POA::_narrow(obj);
     
   // Instantiate the HepEventServer servant.
@@ -29,7 +28,7 @@ void CorbaServer::run()
     poa->activate_object( hepEventServer_impl );
 
   obj = hepEventServer_impl->_this();
-  CORBA::String_var sior(orb->object_to_string(obj));  
+  CORBA::String_var sior(m_orb->object_to_string(obj));  
 
 
   std::ofstream fout("hepeventserver.ior");
@@ -48,10 +47,12 @@ void CorbaServer::run()
 
   
   hepEventServer_impl->initHepRep();
+//	hepEventServer_impl->setOrb(orb);
 
-  orb->run();    
-  orb->destroy();
- }
+
+  m_orb->run();    
+	m_orb->destroy();
+	}
  catch(CORBA::COMM_FAILURE&) {
    std::cerr << "Caught system exception COMM_FAILURE -- unable to contact the "
          << "object." << std::endl;
@@ -65,4 +66,10 @@ void CorbaServer::run()
   catch(omniORB::fatalException&) {
     std::cerr << "Caught omniORB::fatalException:" << std::endl;
   }
-} 
+}
+
+void CorbaServer::shutDown()
+{
+  std::cout << "Destro" << std::endl;
+  m_orb->shutdown(0);
+}

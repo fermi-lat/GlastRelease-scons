@@ -96,12 +96,20 @@ char* HepEventServer_impl::setEvent(const char* command)
   
   if (cmd == "next")
     {
-      m_svcAdapter->nextEvent(1);
-      sName << "Event-" << temp;
-      temp++;
+			bool res;
+			res = m_svcAdapter->nextEvent(1);
+			if (res)
+			{
+				sName << "Event-" << temp;
+	      temp++;
 
-      m_eventID = sName.str();
-      nextEventMsg = "Event set to next";      
+		    m_eventID = sName.str();
+			  nextEventMsg = "Event set to next";   
+			} 
+			else
+			{
+				nextEventMsg = "No more event";
+			}
     }
 	else if (cmd == "fluxes")
     {
@@ -119,6 +127,11 @@ char* HepEventServer_impl::setEvent(const char* command)
     {
       nextEventMsg = m_eventID.c_str();
     }
+	else if (cmd == "stop")
+		{
+			m_svcAdapter->shutDown();
+			nextEventMsg = "Server stop";
+		}
   else
     {
       nextEventMsg = "Nope, don't know the message ..\n";      
