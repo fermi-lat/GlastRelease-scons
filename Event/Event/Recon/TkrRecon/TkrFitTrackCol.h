@@ -7,7 +7,7 @@
 #include "GlastEvent/Recon/TkrRecon/TkrFitTrack.h"
 #include "GaudiKernel/DataObject.h"
 
-extern const CLID& CLID_TkrTracks;
+extern const CLID& CLID_TkrFitTrackCol;
 
 /** 
 * @class TkrFitTrackCol
@@ -33,7 +33,7 @@ public:
     void writeOut(MsgStream& log) const;
 
 	//! GAUDI members to be use by the converters
-	static const CLID&  classID()           {return CLID_TkrTracks;}
+	static const CLID&  classID()           {return CLID_TkrFitTrackCol;}
 	virtual const CLID& clID()        const {return classID();}
 
     //How many reconstructed tracks are there?

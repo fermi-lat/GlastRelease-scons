@@ -15,7 +15,7 @@
 #include "GlastEvent/Recon/TkrRecon/TkrPatCand.h"
 #include "GaudiKernel/DataObject.h"
 
-extern const CLID& CLID_TkrCandidates;
+extern const CLID& CLID_TkrPatCandCol;
 
 namespace TkrRecon { //Namespace
 
@@ -29,7 +29,7 @@ public:
     void writeOut(MsgStream& log) const;
 
 	//! GAUDI members to be use by the converters
-	static const CLID&  classID()           {return CLID_TkrCandidates;}
+	static const CLID&  classID()           {return CLID_TkrPatCandCol;}
 	virtual const CLID& clID()        const {return classID();}
 
     //How many track candidates are there?
