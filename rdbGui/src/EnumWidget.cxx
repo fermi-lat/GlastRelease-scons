@@ -11,7 +11,7 @@ EnumWidget::EnumWidget(FXComposite* parent, rdbModel::Column *column)
   m_widget->setNumVisible(en->getChoices().size());
   m_widget->create();
   
-  for(int i=0; i<en->getChoices().size(); i++){
+  for(unsigned int i=0; i<en->getChoices().size(); i++){
     m_widget->appendItem((en->getChoices()[i]).c_str());
   }
 }

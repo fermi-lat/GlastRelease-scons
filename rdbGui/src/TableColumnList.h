@@ -36,7 +36,7 @@ class TableColumnList: public FXVerticalFrame, public rdbModel::Visitor
   
  protected:
   TableColumnList(){}
-  TableColumnList(TableColumnList&){} 
+  TableColumnList(const TableColumnList&);
   
  private:
  

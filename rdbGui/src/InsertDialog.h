@@ -44,7 +44,7 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
 
  protected:
   InsertDialog(){}
-  InsertDialog(const InsertDialog&){}
+  InsertDialog(const InsertDialog&);
   
  private:
 

@@ -47,7 +47,6 @@ void ResultTable::showColumn(FXint index)
 
 void ResultTable::hideColumn(FXint index)
 {
-  int r;
   if ((index >= 0) && (index < ncols) )
     {
       setColumnWidth(index, 0);

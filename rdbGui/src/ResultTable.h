@@ -31,7 +31,7 @@ class ResultTable: public FXTable
     
   protected:
     ResultTable() {};
-    ResultTable(ResultTable&) {};
+    ResultTable(const ResultTable&);
     
 };
 

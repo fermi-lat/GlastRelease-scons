@@ -58,7 +58,7 @@ TableColumnList::TableColumnList(FXComposite *owner, FXObject *target, FXSelecto
 //   m_uncheckIcon->create();
 }
 
-long TableColumnList::onSelectTable(FXObject*,FXSelector sel,void*)
+long TableColumnList::onSelectTable(FXObject*,FXSelector,void*)
 {
   m_tableSelected = true;
   m_colList->clearItems();
@@ -93,7 +93,7 @@ void TableColumnList::reset()
   m_colList->clearItems(); 
 }
 
-rdbModel::Visitor::VisitorState TableColumnList::visitRdb(rdbModel::Rdb *rdb)
+rdbModel::Visitor::VisitorState TableColumnList::visitRdb(rdbModel::Rdb *)
 {
   m_tblList->clearItems();
   m_colList->clearItems();

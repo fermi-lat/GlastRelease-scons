@@ -37,11 +37,11 @@ ConnectionDialog::ConnectionDialog(FXWindow *owner):
   // Right panel - buttons
   FXHorizontalFrame *uiProfilebox = new FXHorizontalFrame(uiRpanel, LAYOUT_TOP|
       LAYOUT_FILL_X|PACK_UNIFORM_WIDTH);
-  FXButton *newBtn = new FXButton(uiProfilebox, "&New", NULL, this, ID_NEW, FRAME_RAISED|
+  new FXButton(uiProfilebox, "&New", NULL, this, ID_NEW, FRAME_RAISED|
       FRAME_THICK, 0, 0, 0, 0, 20, 20);
-  FXButton *saveBtn = new FXButton(uiProfilebox, "&Save", NULL, this, ID_SAVE,
+  new FXButton(uiProfilebox, "&Save", NULL, this, ID_SAVE,
       FRAME_RAISED|FRAME_THICK, 0, 0, 0, 0, 20, 20);
-  FXButton *deleteBtn = new FXButton(uiProfilebox, "&Delete", NULL, this, ID_DELETE,
+  new FXButton(uiProfilebox, "&Delete", NULL, this, ID_DELETE,
       FRAME_RAISED|FRAME_THICK, 0, 0, 0, 0, 20, 20);
   // Right panel - settings
   FXMatrix *uiMatrix = new FXMatrix(uiRpanel, 2, LAYOUT_FILL_X|LAYOUT_FILL_Y|
@@ -100,7 +100,7 @@ FXuint ConnectionDialog::execute(FXuint opts)
 }
 
 // Quick finish if the return key was pressed, pass other keys
-long ConnectionDialog::onKeyPress(FXObject *sender,FXSelector sel, void* ptr)
+long ConnectionDialog::onKeyPress(FXObject *,FXSelector , void* ptr)
 {  
   FXEvent *event = (FXEvent*) ptr;
   if (event->code == KEY_Return || event->code == KEY_KP_Enter)
@@ -141,7 +141,7 @@ void ConnectionDialog::readProfiles()
   
   std::vector<FXString> lines = splitString(record, "\n"); 
 
-  for (int i = 0; i < lines.size(); i++)
+  for (unsigned int i = 0; i < lines.size(); i++)
     {
       FXString *line = new FXString(lines[i]);
       std::vector<FXString> settings = splitString(lines[i],"|");

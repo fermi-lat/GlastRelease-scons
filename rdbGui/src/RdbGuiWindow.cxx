@@ -45,7 +45,7 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   uiMenuBar = new FXMenuBar(this, LAYOUT_SIDE_TOP|LAYOUT_FILL_X);
 
   // Statusbar
-  FXStatusBar *uiStatusBar = new FXStatusBar(this,
+  new FXStatusBar(this,
     LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|STATUSBAR_WITH_DRAGCORNER);
 
   // Tooltip
@@ -339,7 +339,6 @@ long RdbGUIWindow::onCloseConnection(FXObject*,FXSelector, void*)
 
 long RdbGUIWindow::onUpdResTableCols(FXObject*,FXSelector, void* ptr)
 {
-  FXint j;
   const FXCheckList* chList = uiTblColList->getColList();
   FXint index = (FXint) ptr;
   

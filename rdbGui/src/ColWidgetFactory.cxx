@@ -80,6 +80,11 @@ ColWidget* ColWidgetFactory::createColWidget(FXComposite* parent, rdbModel::Colu
       colWidget = createStringWidget(parent, column);
     break;
   };
+  case rdbModel::Datatype::TYPEnotFound :
+  {
+      colWidget = NULL;
+      break;
+  };
   } 
 
   if ((source == rdbModel::Column::FROMdefault)) 

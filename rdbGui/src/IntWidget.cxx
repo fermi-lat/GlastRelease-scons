@@ -40,6 +40,8 @@ IntWidget::IntWidget(FXComposite* parent, rdbModel::Column *column)
         m_widget->setRange(mi,ma);
         break;
       };
+    default:
+      {};
   }
 
 }

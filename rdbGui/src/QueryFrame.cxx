@@ -35,7 +35,6 @@ QueryFrame::QueryFrame(FXComposite *owner, FXObject *target):
       LAYOUT_FILL_Y|FRAME_SUNKEN|FRAME_THICK|PACK_UNIFORM_WIDTH);
   m_searchFrame->setBackColor(getApp()->getBackColor());
   
-  FXComboBox *temp;
   new FXComboBox(m_searchFrame, 0, this, ID_COLSELECT, FRAME_SUNKEN|FRAME_THICK|COMBOBOX_STATIC|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
   new FXComboBox(m_searchFrame, 0, NULL, 0, FRAME_SUNKEN|FRAME_THICK|COMBOBOX_STATIC|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
   FXHorizontalFrame *tempFrame = new FXHorizontalFrame(m_searchFrame,LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_FILL_COLUMN,  
@@ -78,9 +77,9 @@ long QueryFrame::onCmdMore(FXObject*,FXSelector,void*)
   
   FXComboBox *colSelect = new FXComboBox(m_searchFrame, 0, this, ID_COLSELECT, 
       FRAME_SUNKEN|FRAME_THICK|COMBOBOX_STATIC|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
-  int i;
+  unsigned int i;
   FXComboBox *firstColSel = (FXComboBox *) m_searchFrame->getFirst();
-  for (i = 0; i < firstColSel->getNumItems(); i++)
+  for (i = 0; i < (unsigned int)firstColSel->getNumItems(); i++)
     colSelect->appendItem(firstColSel->getItemText(i), firstColSel->getItemData(i));
   colSelect->setNumVisible(10);
   colSelect->create();
@@ -133,8 +132,7 @@ long QueryFrame::onCmdFewer(FXObject*,FXSelector,void*)
 
 void QueryFrame::updateColumnSelection(const FXList *tableList, const FXCheckList *colList)
 {
-  int i;
-  FXWindow *temp; 
+  unsigned int i;
   
   m_tableName = tableList->getItemText(tableList->getCurrentItem()).text();
   
@@ -152,7 +150,7 @@ void QueryFrame::updateColumnSelection(const FXList *tableList, const FXCheckLis
   FXComboBox *colSelect = (FXComboBox *) m_searchFrame->getFirst();
   colSelect->clearItems();
   
-  for (i = 0; i < colList->getNumItems(); i++)
+  for (i = 0; i < (unsigned int) colList->getNumItems(); i++)
     colSelect->appendItem(colList->getItemText(i), colList->getItemData(i));
   colSelect->setNumVisible(10);
 
@@ -175,7 +173,7 @@ void QueryFrame::updateColumnSelection(const FXList *tableList, const FXCheckLis
 long QueryFrame::onSelectCol(FXObject *sender, FXSelector, void*)
 {
   FXComboBox *colList = (FXComboBox *) sender;
-  FXint row, col;
+  FXint row;
   row = m_searchFrame->rowOfChild(colList);
   
   if (rdbModel::Column* col = (rdbModel::Column *)colList->getItemData(colList->getCurrentItem()))

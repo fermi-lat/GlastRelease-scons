@@ -40,7 +40,7 @@ class ConnectionDialog: public FXDialogBox
   
  protected:
   ConnectionDialog(){}
-  ConnectionDialog(const ConnectionDialog&){}
+  ConnectionDialog(const ConnectionDialog&);
   
  private:
  

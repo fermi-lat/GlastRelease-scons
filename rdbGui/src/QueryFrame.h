@@ -46,7 +46,7 @@ class QueryFrame: public FXVerticalFrame
   
  protected:
   QueryFrame(){}
-  QueryFrame(QueryFrame&){} 
+  QueryFrame(const QueryFrame&);
   
  private:
   FXObject *m_target;                    // The target of some messages sent by this widget

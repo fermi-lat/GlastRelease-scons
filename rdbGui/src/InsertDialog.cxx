@@ -92,7 +92,7 @@ void InsertDialog::fillWithLastRow()
 }
 
 // Try to insert the new row
-long InsertDialog::onGoPress(FXObject *sender,FXSelector sel, void* ptr)
+long InsertDialog::onGoPress(FXObject *,FXSelector, void*)
 {     
   unsigned int i;
   
@@ -145,7 +145,7 @@ long InsertDialog::onGoPress(FXObject *sender,FXSelector sel, void* ptr)
 
 
 /// Visitors to build the insert widgets  
-rdbModel::Visitor::VisitorState InsertDialog::visitRdb(rdbModel::Rdb *rdb)
+rdbModel::Visitor::VisitorState InsertDialog::visitRdb(rdbModel::Rdb *)
 {
   if (m_matrix != 0)
   {
@@ -167,7 +167,7 @@ rdbModel::Visitor::VisitorState InsertDialog::visitRdb(rdbModel::Rdb *rdb)
   return rdbModel::Visitor::VCONTINUE;
 }
 
-rdbModel::Visitor::VisitorState InsertDialog::visitTable(rdbModel::Table *table)
+rdbModel::Visitor::VisitorState InsertDialog::visitTable(rdbModel::Table *)
 {
   return rdbModel::Visitor::VCONTINUE;
 }
@@ -232,6 +232,11 @@ rdbModel::Visitor::VisitorState InsertDialog::visitColumn(rdbModel::Column *colu
         colWidget = m_factory->createStringWidget(m_matrix, column);
       break;
     };
+    case rdbModel::Datatype::TYPEnotFound :
+    {
+      colWidget = NULL;
+      break;
+    };
     } 
 
     if ((source != rdbModel::Column::FROMdefault) && (!column->nullAllowed()))
@@ -247,12 +252,12 @@ rdbModel::Visitor::VisitorState InsertDialog::visitColumn(rdbModel::Column *colu
   return rdbModel::Visitor::VCONTINUE;
 }
 
-rdbModel::Visitor::VisitorState InsertDialog::visitIndex(rdbModel::Index *index)
+rdbModel::Visitor::VisitorState InsertDialog::visitIndex(rdbModel::Index *)
 {
   return rdbModel::Visitor::VCONTINUE;
 }
 
-rdbModel::Visitor::VisitorState InsertDialog::visitAssertion(rdbModel::Assertion *assertion)
+rdbModel::Visitor::VisitorState InsertDialog::visitAssertion(rdbModel::Assertion *)
 {
   return rdbModel::Visitor::VCONTINUE;
 }

@@ -99,7 +99,7 @@ DateField::DateField(FXComposite* owner)
 }
 
 
-long  DateField::onCmdSet(FXObject* sender,FXSelector sel,void* ptr)
+long  DateField::onCmdSet(FXObject*, FXSelector, void*)
 {
 
   CalDialog* test = new CalDialog(getApp());

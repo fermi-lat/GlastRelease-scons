@@ -492,23 +492,23 @@ namespace FX {
 	bool FXDate::operator > (FXDate param)
 	{
 		
-		unsigned long  dif =param.julian-julian;
+		long  dif =param.julian-julian;
 		return (dif<0)?true:false;
 	}
 	bool FXDate::operator < (FXDate param)
 	{
-		unsigned long  dif =param.julian-julian;
+		long  dif =param.julian-julian;
 		return (dif>0)?true:false;
 	}
 	bool FXDate::operator >= (FXDate param)
 	{
 		
-		unsigned long  dif =param.julian-julian;
+		long  dif =param.julian-julian;
 		return (dif<=0)?true:false;
 	}
 	bool FXDate::operator <= (FXDate param)
 	{
-		unsigned long  dif =param.julian-julian;
+		long  dif =param.julian-julian;
 		return (dif>=0)?true:false;
 	}
 	
