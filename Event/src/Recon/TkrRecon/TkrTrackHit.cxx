@@ -57,7 +57,12 @@ Vector Event::TkrTrackHit::getDirection(TkrTrackHit::ParamType type)
     const TkrTrackParams& hit = getTrackParams(type);
 
     // This assumes that track directions are slopes
-    return Vector(-hit.getxSlope(), -hit.getySlope(), -1.).unit();
+	if(m_statusBits & UPWARDS){
+		return Vector(hit.getxSlope(), hit.getySlope(), 1.).unit();
+	}
+	else { 
+		return 	Vector(-hit.getxSlope(), -hit.getySlope(), -1.).unit();
+	}
 }
 
 const Event::TkrTrackParams& Event::TkrTrackHit::getTrackParams(TkrTrackHit::ParamType type) const
