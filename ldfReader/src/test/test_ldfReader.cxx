@@ -69,7 +69,7 @@ int main(int argn, char** argc) {
                 printf("CAL data\n");
 
                 //      for (it = calData.begin(); it != calData.end(); it++) {
-                unsigned int iLayer, iCol;
+                int iLayer, iCol;
                 const int maxLayerNum = 20;
                 const int maxColNum = 15;
                 for (iLayer = 0; iLayer < maxLayerNum; iLayer++) {
