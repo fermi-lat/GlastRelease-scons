@@ -2,7 +2,7 @@ package GlastSvc
 version v8r2
 branches src cmt doc
 
-use Event v8r*
+use Event v9r*
 use xmlGeoDbs  v1r*
 use detModel   v2r*
 
