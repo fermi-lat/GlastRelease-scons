@@ -1022,3 +1022,66 @@ void PlotTotalTkrNumHits()
   myTree->Draw("TkrTotalNumHits>>TotalNumHits");
   TotalNumHits->Draw();
 }
+
+void AllLayers01(int cut)
+{
+  int nx=11;  
+  int ny=0;  
+  TString myCut="";    
+
+  for(int i=0; i<nx; i++)
+    {
+      TString anXlayer="X";
+      anXlayer+=i;
+      AddLayer(anXlayer);
+      TString layerstring="Layer";
+      layerstring +=anXlayer;
+      myCut+=layerstring;
+      myCut+=".TkrNumHits";
+      myCut+=" <= ";
+      myCut+= cut;
+      if (i!=nx+ny-1) myCut += " && ";
+    }
+
+
+  for(int i=0; i<ny; i++)
+    {
+      TString anYlayer="Y";
+      anYlayer+=i;
+      AddLayer(anYlayer);
+      TString layerstring="Layer";
+      layerstring +=anYlayer;
+      myCut+=layerstring;
+      myCut+=".TkrNumHits";
+      myCut+=" <=  ";
+      myCut+= cut;
+      if (i!=ny-1) myCut += " && ";
+    }
+
+  std::cout<<myCut<<std::endl;
+
+  TH1D* h0;
+
+  for(int i=0; i < nx+ny; i++)
+    {
+      if(i<nx)
+	{
+	  TString anXlayer="X";
+	  anXlayer+=i;
+	  AddLayer(anXlayer);
+	  std::cout<<anXlayer<<std::endl;
+	}
+      else //if(i<ny)
+	{
+	  TString anYlayer="Y";
+	  int ii = (i-nx);
+	  anYlayer+=ii;
+	  AddLayer(anYlayer);
+	  std::cout<<anYlayer<<std::endl;
+	}
+      
+      if(i==0) h0 = NumHitsLayer(myCut);    
+      if(i>0) h0->Add(NumHitsLayer(myCut)); 
+    }
+  h0->Draw();
+}
