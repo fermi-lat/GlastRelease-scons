@@ -29,6 +29,8 @@
 #include "TkrRecon/Display/TkrDispCompleteNet.h"
 #include "TkrRecon/Display/TkrDispActiveNet.h"
 
+#include "TkrRecon/Display/TkrMcTracksRep.h"
+
 #include "src/Vertex/Combo/TkrComboVtxRep.h"
 #include "src/Vertex/TkrGammaRep.h"
 
@@ -109,6 +111,12 @@ StatusCode TkrDisplayAlg::initialize()
         
             tkrmenu.add(new TkrDispActiveNet(eventSvc(), pTkrGeo), "PatRec: Active NN");
         
+        }
+        //Neural Net display routines
+        else if (m_TrackerReconType == "MonteCarlo")
+        {
+            //Set up the display rep for the complete Neural Network
+            tkrmenu.add(new TkrMcTracksRep(eventSvc()), "PatRec: Monte Carlo");
         }
         
         //Set up the display rep for the reconstructed tracks

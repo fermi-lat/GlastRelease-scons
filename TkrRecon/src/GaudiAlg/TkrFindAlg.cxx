@@ -75,6 +75,11 @@ StatusCode TkrFindAlg::initialize()
         // Neural Net Pat Rec
         sc = toolSvc()->retrieveTool("NeuralNetFindTrackTool", m_findTool);
     }
+    else if (m_TrackFindType == "MonteCarlo")
+    {
+        // Neural Net Pat Rec
+        sc = toolSvc()->retrieveTool("MonteCarloFindTrackTool", m_findTool);
+    }
     else
     {
         log << MSG::FATAL << "TkrTrackFindAlg cannot initialize track fit algorithm" << endreq;

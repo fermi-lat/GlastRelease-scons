@@ -101,7 +101,7 @@ StatusCode TkrTrackFitAlg::initialize()
         // Set up for the track fit using Combo candidate tracks as input
         sc = toolSvc()->retrieveTool("TkrComboFitTool", m_FitTool);
     }
-    else if (m_TrackFitType == "LinkAndTree")
+    else if (m_TrackFitType == "LinkAndTree" || m_TrackFitType == "MonteCarlo")
     {
         // Set up for the track fit using Link And Tree candidate tracks as input
         sc = toolSvc()->retrieveTool("TkrLinkAndTreeFitTool", m_FitTool);
