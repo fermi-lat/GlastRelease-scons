@@ -38,7 +38,7 @@
     <item name = "FLE"     value = "0">   FLE threshold </item>
     <item name = "FHE"     value = "0">   FHE threshold </item>
     <item name = "LAC"     value = "30">  LAC threshold </item>
-    <item name = "ULD"     value = "3500, 3500, 3500, 3500"> 1 ULD threshold per ADC range</item>
+    <item name = "ULD"     value = "3400, 3400, 3400, 3400"> 1 ULD threshold per ADC range</item>
     <item name = "SIG_PCT" value = "0.01"> sigma/val for all vals in THOLD_CI group    </item>
     <item name = "PEDS"    value = "500, 200, 500, 200"> 1 pedestal value per ADC range       </item>
   </section>

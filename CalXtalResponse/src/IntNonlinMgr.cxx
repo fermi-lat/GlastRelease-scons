@@ -156,6 +156,7 @@ StatusCode IntNonlinMgr::fillRangeBases() {
 }
 
 StatusCode IntNonlinMgr::loadIdealVals() {
+  const int maxADC = 4095;
 
   //-- SANITY CHECKS --//
   if (owner->m_idealCalib.ciULD.size() != (unsigned)RngNum::N_VALS) {
@@ -180,12 +181,11 @@ StatusCode IntNonlinMgr::loadIdealVals() {
     m_idealADCs[rng].resize(2);
     
     m_idealADCs[rng][0] = 0;
-    m_idealADCs[rng][1] = owner->m_idealCalib.ciULD[rng];
+    m_idealADCs[rng][1] = maxADC;
 
     m_idealDACs[rng][0] = 0;
     m_idealDACs[rng][1] = 
-      (unsigned int)(owner->m_idealCalib.ciULD[rng] /
-                     owner->m_idealCalib.inlADCPerDAC[rng]);
+      (unsigned int)(maxADC / owner->m_idealCalib.inlADCPerDAC[rng]);
   }
 
   // we don't have this info at this point
