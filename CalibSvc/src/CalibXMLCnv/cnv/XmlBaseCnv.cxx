@@ -300,7 +300,7 @@ DOM_Element XmlBaseCnv::findNextRange(const DOM_Element& rangeElt) {
   }
 
   // Done with this xtal face; look for sibling
-  DOM_Node node = elt.getParentNode();
+  DOM_Node node = rangeElt.getParentNode();
   elt = static_cast<DOM_Element &>(node);   // current xtal face
   elt = Dom::getSiblingElement(elt);          // next xtal face
 
@@ -313,7 +313,7 @@ DOM_Element XmlBaseCnv::findNextRange(const DOM_Element& rangeElt) {
   }
 
   // Done with this xtal
-  node = elt.getParentNode();  // current xtal
+  node = node.getParentNode();  // current xtal
   elt = static_cast<DOM_Element &>(node);
   elt = Dom::getSiblingElement(elt);         // next xtal
 
@@ -331,7 +331,7 @@ DOM_Element XmlBaseCnv::findNextRange(const DOM_Element& rangeElt) {
   }
 
   // Done with this layer
-  node = elt.getParentNode();  // current layer
+  node = node.getParentNode();  // current layer
   elt = static_cast<DOM_Element &>(node);
   elt = Dom::getSiblingElement(elt);         // next layer
 
@@ -354,7 +354,7 @@ DOM_Element XmlBaseCnv::findNextRange(const DOM_Element& rangeElt) {
   }
 
   // Done with this tower
-  node = elt.getParentNode();  // current tower
+  node = node.getParentNode();  // current tower
   elt = static_cast<DOM_Element &>(node);
   elt = Dom::getSiblingElement(elt);         // next tower
 
