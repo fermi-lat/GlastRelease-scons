@@ -32,7 +32,7 @@
 
 #include "GaudiKernel/IInterface.h"
 
-static const CLID& CLID_TkrCluster = InterfaceID("TkrCluster", 2, 0);
+static const CLID& CLID_TkrCluster = InterfaceID("TkrCluster", 3, 0);
 
 namespace Event {
 
@@ -43,7 +43,7 @@ namespace Event {
         // once we have an official release, the version number can be used
         //  to allow backward compatibility
 
-        enum {VERSION = 2};
+        enum {VERSION = 3};
 
         // fields and shifts of the status word, which together make a mask
         //  
@@ -84,11 +84,14 @@ namespace Event {
         * @param position global position of cluster center
         * @param ToT corrected ToT
         */
-        TkrCluster(idents::TkrId tkrId, int istrip0, int istripf, Point position, 
-            double ToT, unsigned int status)
+        TkrCluster(idents::TkrId tkrId, int istrip0, int istripf, 
+            Point position, float ToT, unsigned int status, int nBad)
             : m_tkrId(tkrId),m_strip0(istrip0),m_stripf(istripf),
-            m_position(position), m_ToT(ToT), m_status(status), m_id(-1)
-        {}
+            m_position(position), m_ToT(ToT), m_status(status), m_nBad(nBad)
+        { }
+
+        static unsigned int setStatus(int rawToT, int end) {
+            return   maskRAWTOT&(rawToT<<shiftRAWTOT) | maskEND&(end<<shiftEND);}
 
         virtual ~TkrCluster() {}
 
@@ -96,20 +99,37 @@ namespace Event {
         virtual const CLID& clID() const   { return TkrCluster::classID(); }
         static const CLID& classID()       { return CLID_TkrCluster; }
 
+        /// set the corrected ToT
+        void setMips(float ToT) {m_ToT = ToT;}
+
         // get methods
         idents::TkrId getTkrId()   const {return m_tkrId;}
         int           tower()      const {return idents::TowerId(m_tkrId.getTowerX(),
             m_tkrId.getTowerY()).id();} //DANGEROUS: SOON TO BE REMOVED??
+
+        /// sets the flag of a cluster
+        inline void flag(int flag=1) {
+            if (flag==0) {
+                unflag();
+            } else {
+                m_status = ( (m_status&maskVERSION)!=0 ? ((m_status&~maskUSED) | (1<<shiftUSED)) : 1);
+            }
+        }
+        /// clears the flag of a cluster
+        inline void unflag() {
+            m_status = ( (m_status&maskVERSION)!=0 ? m_status&~maskUSED : 0);
+        }
 
         inline int    firstStrip() const {return m_strip0;}
         inline int    lastStrip()  const {return m_stripf;}
         inline double strip()      const {return 0.5*(m_strip0+m_stripf);}
         inline double size ()      const {return std::abs(m_stripf-m_strip0) + 1.;}
 
-        inline double ToT()        const {return m_ToT;}
+        inline double ToT()        const {return getRawToT();}
 
         inline Point position()    const {return m_position;}
         inline int   getStatusWord() const {return m_status;}
+        inline int   getNBad()     const {return m_nBad;}
 
         /// construct plane from tray/face
         inline int getPlane() const {
@@ -125,17 +145,24 @@ namespace Event {
         inline int    chip()  const { return m_strip0/64;}
 
         /// writes out the information of the cluster if msglevel is set to debug
-	inline std::ostream& fillStream( std::ostream& s ) const;
+        inline std::ostream& fillStream( std::ostream& s ) const;
 
-        // set methods
-        /// sets the used flag of a cluster
-        inline void flag(int flag=1) {
-            unflag();
-            if(flag>0) m_status |= maskUSED;
+        /// retrieves raw ToT (will be raw or corrected depending on the version)
+        inline double getRawToT() const { 
+            return ( (m_status&maskVERSION)>2 ? (m_status&maskRAWTOT)>>shiftRAWTOT : m_ToT );
         }
-        /// clears the used flag of a cluster
-        inline void unflag()         {m_status &= ~maskUSED;}
-
+        /// retrieve corrected ToT (zero for old-style records)
+        inline double getMips() const {
+            return ( (m_status&maskVERSION)>2 ? m_ToT : 0.0 );
+        }
+        /// retrieve end
+        inline int getEnd() const {
+            return ( (m_status&maskVERSION)>2 ? (m_status&maskEND)>>shiftEND : 2 );
+        }
+        /// retrieve version number (old-style is zero)
+        inline int getVersion() const {
+            return m_status&maskVERSION>>shiftVERSION;
+        }
         /// Everything below here is a candidate for removal
         //inline int    id()         const {return m_id;}
 
@@ -158,10 +185,8 @@ namespace Event {
         float m_ToT;    
         /// various odds and ends
         unsigned int   m_status;
-
-        /// Everything  below here is a candidate for removal
-        //TO BE REMOVED
-        int m_id;
+        /// number of bad strips in this cluster
+        int m_nBad;
     };
 
     std::ostream& TkrCluster::fillStream( std::ostream& s ) const
@@ -177,7 +202,7 @@ namespace Event {
             << ", " << m_position.z() << ") "
             << " i0-if " << m_strip0 <<"-"<< m_stripf
             << " ToT " << m_ToT;
-            //<< " status " << m_status; // std::hex << m_status << std::dec;
+        //<< " status " << m_status; // std::hex << m_status << std::dec;
         return s;
     }
 

@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  *
  *
+ * v10r2   24-Jan-05 LSR Fix warning in Event.h, retooled TkrCluster.h
  * v10r1p3 17-Jan-05 LSR Fix small bug in TkrTrack
  * v10r1p2 14-Jan-05 LSR Retag for RM
  * v10r1p1 26-Dec-04 LSR Fix for linux

@@ -31,7 +31,7 @@ class EventHeader : public DataObject                                           
 public:
     /// default constructor: flag all fields invalic
     EventHeader()
-        : DataObject(), m_event(-1), m_run(-1), m_time(-1),  m_trigger(-1) { }
+        : DataObject(), m_event(-1), m_run(-1), m_time(-1),  m_trigger((unsigned int)-1) { }
     
     virtual ~EventHeader() { }
     
