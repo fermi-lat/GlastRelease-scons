@@ -147,6 +147,7 @@ void  GDDVRMLSectionsVisitor::visitComposition(GDDcomposition* composition)
 	GDDanyPosition* pos = composition->getPositions()[i];
 	pos->AcceptNotRec(this);
       }
+      (composition->getEnvelope())->AcceptNotRec(this);
       depth--;
     }
   else
@@ -276,6 +277,7 @@ void  GDDVRMLSectionsVisitor::visitAxisPos(GDDaxisPos* pos)
     out << "rotation " << " 0 0 1 " <<  pos->getRotation()*3.141927/180  << std::endl;  
     break;
   }
+  out << "translation " << pos->getDx() << " " << pos->getDy() << " " << pos->getDz() << std::endl;
   out << "children [ " << std::endl;
   pos->getVolume()->AcceptNotRec(this);
   out << "] " << std::endl; 

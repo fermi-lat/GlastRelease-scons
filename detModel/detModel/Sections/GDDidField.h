@@ -11,6 +11,8 @@ public:
 
   GDDidField():value(0),step(0){}
 
+  virtual ~GDDidField(){};
+
   /**
    *
    */ 

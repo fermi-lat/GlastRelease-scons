@@ -464,6 +464,7 @@ GDDanyRelativePosition* GDDXercesBuilder::buildRelativePosition(DOM_Node* e){
 //////////////////////////////////////////////////////////////////////////
 GDDstack* GDDXercesBuilder::buildStack(DOM_Node* e){
   stacktype st;
+  unsigned int i;
 
   std::string Stack = std::string(xml::Dom::transToChar( e->getNodeName() ));
   if(Stack=="stackX")st=sx;

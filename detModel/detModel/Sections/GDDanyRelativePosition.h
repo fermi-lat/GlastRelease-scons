@@ -84,9 +84,7 @@ public:
    *
    */ 
   virtual double getBBZ(){return 0;};
-  /**
-   *
-   */ 
+
   
   double getDx(){return dx;}
   /**

@@ -51,6 +51,8 @@ class GDDstack :public GDDvolume {
    *
    */
   virtual void constructBB();
+
+
  private:
   stacktype Stype;
   stackorigin origin; ///default atStart

@@ -21,6 +21,7 @@ void GDDstack::Accept(GDDsectionsVisitor* v){
 
 };
 
+
 void GDDstack::constructBB(){
   unsigned int i, j;
   double xmin, ymin, zmin, xmax, ymax, zmax;

@@ -1,5 +1,6 @@
 #ifndef GDDAXISMPOS_H
 #define GDDAXISMPOS_H
+#include <vector>
 #include "detModel/Sections/GDDanyRelativePosition.h"
 #include "detModel/Management/GDDsectionsVisitor.h"
 
@@ -57,9 +58,9 @@ public:
   int getNcopy()const{return ncopy;}
 
 private:    
-    double shift0; ///default 0
-    double gap0; ///default 0
-    int ncopy; ///default 0
+  double shift0; ///default 0
+  double gap0; ///default 0
+  int ncopy; ///default 0
 
 };
 #endif //GDDAXISMPOS_H
