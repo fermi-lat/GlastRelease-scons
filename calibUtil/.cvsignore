@@ -2,6 +2,7 @@ sun4x_*
 i386_linux*
 Linux-i686
 rh7*
+rh9*
 Win32*
 Visual
 setup.*
