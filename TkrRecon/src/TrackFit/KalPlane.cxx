@@ -161,7 +161,7 @@ KalHit KalPlane::predicted(KalHit::TYPE typ, int &nlayers, int klayer, double &z
     KalMatrix Ck=hit.getCov();
     
     double ene =getEnergy();
-    double x_slope = pp.getXSlope(); 
+    double x_slope = pp.getXSlope();   
     double y_slope = pp.getYSlope(); 
     Vector dir_ini = Vector(-x_slope, -y_slope, -1.).unit();
 
