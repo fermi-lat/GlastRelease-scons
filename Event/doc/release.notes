@@ -1,7 +1,9 @@
 /** @file release.notes
- * @brief package Event<pre>
+ * @brief package Event
+@verbatim
  * package manager:T.Burnett
  *
+ * v9r8p2  04-Ul-03 THB  Add charge to McTrajectory
  * v9r8p1  20-Mar-03 TU  Modify TkrFitPlane constructor to include tower id
  * v9r8    13-mar-03 LSR (for Tracy) add a couple of Tables, fix to TkrPatCand
  * v9r7p2  28-feb-03 LSR add access method to TkrCluster; fix unix warning in McIntegratingHit
@@ -58,5 +60,6 @@
  *       08-Aug-2000 THB many things copied from LHCbEvent, all of \n
  *       the TopLevel directory!\n
  *       Start fixing source comments to be picked up by doxygen. \n
- *       Put in reference to Traudl's Raw data definition.,</PRE>
+ *       Put in reference to Traudl's Raw data definition.,
+@endverbatim
 */

@@ -53,6 +53,10 @@ class McTrajectory : virtual public ContainedObject {
     /// Get the 3d points
     std::vector<Hep3Vector>& getPoints(){return m_points;}
 
+    /// get, set charge
+    int getCharge() const { return m_charge; }
+    void setCharge(int charge){ m_charge=charge;}
+
     /// Serialize the object for writing
     virtual StreamBuffer& serialize( StreamBuffer& s ) const;
     /// Serialize the object for reading
@@ -64,6 +68,8 @@ class McTrajectory : virtual public ContainedObject {
     SmartRef<McParticle>    m_mcParticle;
     /// The point of the trajectory
     std::vector<Hep3Vector> m_points;
+    /// the (redundant?) charge
+    int m_charge;
 
 };
 
