@@ -142,6 +142,25 @@ private:
   StringProperty m_FT1TreeName;
   StringProperty m_primaryType;
   long           m_nbOfEvtsInFile;
+#if defined(__GNUC__) && (__GNUC__ != 2)
+  //grab Bill's tuples
+  class VisitBill : virtual public IValsTool::Visitor
+  {
+  public:
+      VisitBill( meritAlg* me) 
+          : m_merit(me){}
+      IValsTool::Visitor::eVisitorRet analysisValue(std::string varName, const double& value) const
+      {
+       //   std::cout << "Creating tupleitem  from AnalysisNtuple value " << varName << std::endl;
+          double * val = const_cast<double*>(&value);
+          new TupleItem(varName, val);
+          return IValsTool::Visitor::CONT;
+      }
+      
+  private:
+      meritAlg* m_merit;
+  };
+#endif
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -187,7 +206,7 @@ StatusCode meritAlg::setupTools() {
             return sc;
         }
     }
-
+#if !defined(__GNUC__) || (__GNUC__ != 2)
     //grab Bill's tuples
     class VisitBill : virtual public IValsTool::Visitor
     {
@@ -205,7 +224,7 @@ StatusCode meritAlg::setupTools() {
     private:
         meritAlg* m_merit;
     };
-
+#endif
     VisitBill visitor(this);
     for( std::vector<IValsTool*>::iterator it =m_toolvec.begin(); it != m_toolvec.end(); ++it){
         if( (*it)->traverse(&visitor,false)==IValsTool::Visitor::ERROR) {
