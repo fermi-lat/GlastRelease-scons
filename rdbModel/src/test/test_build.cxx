@@ -62,14 +62,14 @@ int main(int, char**) {
   // Connect to real database
   rdbModel::MysqlConnection* con = new rdbModel::MysqlConnection();
 
-  std::string connectfile("$(RDBMODELROOT)/xml/mysqlSlac.xml");
+  std::string connectfile("$(RDBMODELROOT)/xml/connect/mysqlSlac.xml");
 
   // mostly don't want to run code doing an insert.  For times
   // when we do, must connect as user with INSERT priv.
 #ifdef TEST_INSERT
-  std::string connectfileT("$(RDBMODELROOT)/xml/mysqlTester.xml");
+  std::string connectfileT("$(RDBMODELROOT)/xml/connect/mysqlTester.xml");
 #else
-  std::string connectfileT("$(RDBMODELROOT)/xml/mysqlSlacT.xml");
+  std::string connectfileT("$(RDBMODELROOT)/xml/connect/mysqlSlacT.xml");
 #endif
   
   if (!(con->open(connectfile)) ) {
