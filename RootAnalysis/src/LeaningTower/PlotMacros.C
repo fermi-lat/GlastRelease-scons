@@ -251,7 +251,7 @@ TH1D* HitMap(TString myCuts) {
   if ( myCuts != "" )
       title += TString(" {") + myCuts + "}";
   //  gDirectory->Delete("HitMap");
-  TH1D* HitMap = new TH1D("HitMap",title,1536,-0.5,1535.6);
+  TH1D* HitMap = new TH1D("HitMap",title,1536,-0.5,1535.5);
   HitMap->SetLineColor(4);
   var += ">>HitMap";
   myTree->Draw(var, myCuts);
@@ -1167,6 +1167,16 @@ void myGraph()
       aCanvas->Print(Name);
     }
   
+}
+
+void printBadStrips(TString LV, int threshold=0) {
+    AddLayer(LV);
+    const TH1D* h = HitMap();
+    for ( int i=0; i<h->GetNbinsX(); ++i )
+        if ( static_cast<int>(h->GetBinContent(i+1)) <= threshold )
+            std::cout << ' ' << i;
+    std::cout << std::endl;
+    delete h;
 }
 
 void makeTkrBadStripsSvcFile(int tower=10,
