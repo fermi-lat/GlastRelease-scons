@@ -36,15 +36,15 @@ void TrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     parent = man->getMcParticle(aTrack->GetParentID());
 
   particle = new mc::McParticle();
-
+  
   // get the 4-momentum
-
+  
   HepLorentzVector pin(aTrack->GetTotalEnergy(), aTrack->GetMomentum());  
   particle->initialize(parent, aTrack->GetDefinition()->GetPDGEncoding(),
-		       mc::McParticle::Swum,pin);
-
+                       mc::McParticle::Swum,pin);
+  
   man->addMcParticle(aTrack->GetTrackID(),particle);
-
+  
 }
 
 void TrackingAction::PostUserTrackingAction(const G4Track* aTrack)

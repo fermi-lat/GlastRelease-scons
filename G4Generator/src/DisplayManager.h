@@ -14,10 +14,15 @@ class Hep3Vector;
 #include <map>
 #include <string>
 
-/**
-    A simple class to manage a GuiSvc display of G4 objects. It is a singleton
-    @author T. Burnett
-  */
+/** 
+ * @class DetectorManager
+ *
+ * @brief An abstract class for sensitive detectors definition
+ * 
+ * A simple class to manage a GuiSvc display of G4 objects. It is a singleton
+ * 
+ * @author T. Burnett
+ */
 class DisplayManager {
 
 public:
@@ -32,13 +37,15 @@ public:
     //! add a integrating detector box to the display
     //! @param T global to local transformation
     //! @param x,y,z dimensions of the box
-    void addIntegratingBox(const HepTransform3D& T, double x, double y, double z);
+    void addIntegratingBox(const HepTransform3D& T, 
+                           double x, double y, double z);
 
     //! add to the static display of all detector boxes
     //! @param detname The name of the logical volume
     //! @param T global to local transformation
     //! @param x,y,z dimensions of the box
-    void addDetectorBox(std::string detname, const HepTransform3D& T, double x, double y, double z);
+    void addDetectorBox(std::string detname, const HepTransform3D& T, 
+                        double x, double y, double z);
 
     //! add a hit to the display 
     //! @param a,b initial, final points for the step

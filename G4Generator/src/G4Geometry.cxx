@@ -24,12 +24,11 @@
 #include <iomanip>
 #include <cassert>
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 G4Geometry::G4Geometry(std::string mode) : m_mode(mode)
 {
 
 }
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 G4Geometry::~G4Geometry()
 {
 
@@ -37,8 +36,8 @@ G4Geometry::~G4Geometry()
 
 IGeometry::VisitorRet 
 G4Geometry::pushShape(ShapeType s, const UintVector& idvec, 
-                                 std::string name, std::string material, 
-                                 const DoubleVector& params, VolumeType type)
+                      std::string name, std::string material, 
+                      const DoubleVector& params, VolumeType type)
 {
   // The first 6 parameters in params are the translations and rotations
   double x=params[0], y=params[1], z=params[2];
@@ -52,36 +51,36 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
 #if 1
   // Let's check if the logical is already there
   if (!(logical = m_logicals[name]))
-      {
-          // the shape
-          G4VSolid* shape;
-          // Get the material
-          G4Material* ptMaterial = G4Material::GetMaterial(material);
-          if (!ptMaterial) ptMaterial = G4Material::GetMaterial("Vacuum");
+    {
+      // the shape
+      G4VSolid* shape;
+      // Get the material
+      G4Material* ptMaterial = G4Material::GetMaterial(material);
+      if (!ptMaterial) ptMaterial = G4Material::GetMaterial("Vacuum");
     
-          // Build a box or a tube
-          if( s==Box) {
-             double dx=params[6], dy=params[7], dz=params[8];
-             // if there is no actualMother, it means this is the world volume
-             // we use at the moment a box of 30m*30m*30m
-             if (!actualMother())
-                 { dx = 30000; dy = 30000; dz = 30000;}
-             shape = new G4Box(name,
-		        dx*mm/2,
-		        dy*mm/2,
-		        dz*mm/2);    
-             }else if(s==Tube) {
-             double dz=params[6], rmin=params[7], rmax=params[8];
-             shape = new G4Tubs(name,
-		        rmin*mm,
-		        rmax*mm,
-		        dz*mm*0.5,
-		        0,2*M_PI);
-             }
-          // put the logical in the m_logicals vector
-          logical = new G4LogicalVolume(shape,ptMaterial,name,0,0,0);
-          m_logicals[name] = logical; 
+      // Build a box or a tube
+      if( s==Box) {
+        double dx=params[6], dy=params[7], dz=params[8];
+        // if there is no actualMother, it means this is the world volume
+        // we use at the moment a box of 30m*30m*30m
+        if (!actualMother())
+          { dx = 30000; dy = 30000; dz = 30000;}
+        shape = new G4Box(name,
+                          dx*mm/2,
+                          dy*mm/2,
+                          dz*mm/2);    
+      }else if(s==Tube) {
+        double dz=params[6], rmin=params[7], rmax=params[8];
+        shape = new G4Tubs(name,
+                           rmin*mm,
+                           rmax*mm,
+                           dz*mm*0.5,
+                           0,2*M_PI);
       }
+      // put the logical in the m_logicals vector
+      logical = new G4LogicalVolume(shape,ptMaterial,name,0,0,0);
+      m_logicals[name] = logical; 
+    }
 
   /*
    * In order to avoid duplication of physical volumes in 
@@ -91,11 +90,11 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
    * same name has been already created
    */
   if ((m_replica) && (getPhysicalByName(name)))
-      {
-        // we push this logical as the actual mother and we exit
-        pushActualMother(logical);
-        return More;
-      }
+    {
+      // we push this logical as the actual mother and we exit
+      pushActualMother(logical);
+      return More;
+    }
   
   /*
    * If this volume is already in the physicals vector, we need
@@ -105,10 +104,10 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
    * if we have to disable the m_replica flag
    */
   if (getPhysicalByName(name)) 
-      {
-        m_replicaMother = actualMother();
-        m_replica = 1;
-      }
+    {
+      m_replicaMother = actualMother();
+      m_replica = 1;
+    }
 
 #else
 
@@ -116,29 +115,29 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
   G4VSolid* shape;
   // Get the material
   G4Material* ptMaterial = G4Material::GetMaterial(material);
-     if (!ptMaterial) ptMaterial = G4Material::GetMaterial("Vacuum");
+  if (!ptMaterial) ptMaterial = G4Material::GetMaterial("Vacuum");
 
   // Build a box or a tube
   if( s==Box) 
-      {
-        double dx=params[6], dy=params[7], dz=params[8];
-        // if there is no actualMother, it means this is the world volume
-        // we use at the moment a box of 3m*3m*3m
-        if (!actualMother()) { dx = 3000; dy = 3000; dz = 3000;}
-        shape = new G4Box(name,
-		                  dx*mm/2,
-		                  dy*mm/2,
-		                  dz*mm/2);    
-      }
+    {
+      double dx=params[6], dy=params[7], dz=params[8];
+      // if there is no actualMother, it means this is the world volume
+      // we use at the moment a box of 3m*3m*3m
+      if (!actualMother()) { dx = 3000; dy = 3000; dz = 3000;}
+      shape = new G4Box(name,
+                        dx*mm/2,
+                        dy*mm/2,
+                        dz*mm/2);    
+    }
   else if(s==Tube) 
-      {
-        double dz=params[6], rmin=params[7], rmax=params[8];
-        shape = new G4Tubs(name,
-		                   rmin*mm,
-		                   rmax*mm,
-		                   dz*mm*0.5,
-		                   0,2*M_PI);
-      }
+    {
+      double dz=params[6], rmin=params[7], rmax=params[8];
+      shape = new G4Tubs(name,
+                         rmin*mm,
+                         rmax*mm,
+                         dz*mm*0.5,
+                         0,2*M_PI);
+    }
   // put the logical in the m_logicals vector
   logical = new G4LogicalVolume(shape,ptMaterial,name,0,0,0);
   m_logicals[name] = logical; 
@@ -152,9 +151,9 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
 
   // Create the positioned physical volume
   phys = new G4PVPlacement(rm,G4ThreeVector(x*mm,y*mm,z*mm),
-			   logical,
-			   name,
-			   actualMother(),false,0);
+                           logical,
+                           name,
+                           actualMother(),false,0);
 
   // push it in the physical volumes vector
   m_physicals.push_back(phys);
@@ -165,22 +164,22 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
   // Set the id
   idents::VolumeIdentifier vid;
   for( UintVector::const_iterator ui=idvec.begin(); ui !=idvec.end(); ++ui) 
-      {
-        vid.append((unsigned int)*ui);  
-      }
+    {
+      vid.append((unsigned int)*ui);  
+    }
 
   // Fill the physicals-id map
   (*m_idMap)[phys] = vid;
 
   // Register the volume to the sensitive detector if necessary
   if (type == posSensitive) 
-      {
-	m_pdm->process(logical);
-      }
+    {
+      m_pdm->process(logical);
+    }
   else if (type == intSensitive)
-      {
-	m_idm->process(logical);
-      }
+    {
+      m_idm->process(logical);
+    }
   // push this volume in the stack of mothers
   pushActualMother(logical);    
   return More;
@@ -189,20 +188,20 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
 /* called to signal end of nesting */
 void G4Geometry::popShape()
 {
-   // pop the actual mother stack
-   popActualMother();
+  // pop the actual mother stack
+  popActualMother();
 
-   // if we were in a replicated volume, check if we have to set
-   // the replica flag back to 0
-   if (m_replica)
-       if (actualMother() == m_replicaMother)
-           m_replica = 0;
+  // if we were in a replicated volume, check if we have to set
+  // the replica flag back to 0
+  if (m_replica)
+    if (actualMother() == m_replicaMother)
+      m_replica = 0;
 }
 
 
 // Search a physical volume by name
 G4VPhysicalVolume* G4Geometry::getPhysicalByName(std::string name){
-    std::vector<G4VPhysicalVolume*>::const_iterator i;
+  std::vector<G4VPhysicalVolume*>::const_iterator i;
 
   for(i=m_physicals.begin();i!=m_physicals.end();i++)
     if ((*i)->GetName() == name) return (*i);
@@ -210,4 +209,8 @@ G4VPhysicalVolume* G4Geometry::getPhysicalByName(std::string name){
   return 0;
 }
 
-
+G4LogicalVolume* G4Geometry::actualMother()const{
+  if (m_actualMother.size()) 
+    return m_actualMother.back();
+  else return 0;
+}

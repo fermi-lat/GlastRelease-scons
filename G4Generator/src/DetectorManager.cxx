@@ -70,7 +70,7 @@ void DetectorManager::makeDisplayBox(G4TouchableHistory* touched,
             z = 2*box->GetZHalfLength();
         
         if( hitBox)  DisplayManager::instance()->addHitBox(global, x,y,z);
-        else        DisplayManager::instance()->addIntegratingBox(global, x,y,z);
+        else DisplayManager::instance()->addIntegratingBox(global, x,y,z);
 
 
     }

@@ -49,7 +49,7 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
 {
 // set defined properties
      declareProperty("source_name",  m_source_name="default");
-     declareProperty("UIcommands", m_UIcommands);
+     declareProperty("UIcommands", m_uiCommands);
 }
     
 ////////////////////////////////////////////////////////////////////////////
@@ -75,12 +75,13 @@ StatusCode G4Generator::initialize()
 
     setupGui();
 
-    if( !m_UIcommands.value().empty() ) {
+    if( !m_uiCommands.value().empty() ) {
         G4UImanager* UI = G4UImanager::GetUIpointer();
-        for( std::vector<std::string>::const_iterator k = m_UIcommands.value().begin(); 
-            k!=m_UIcommands.value().end(); ++k){
-            UI->ApplyCommand(*k);
-            log << MSG::INFO << "UI command: " << (*k) << endreq;
+        for( std::vector<std::string>::const_iterator k = 
+               m_uiCommands.value().begin(); 
+             k!=m_uiCommands.value().end(); ++k){
+          UI->ApplyCommand(*k);
+          log << MSG::INFO << "UI command: " << (*k) << endreq;
         }
     }  
 
@@ -114,7 +115,6 @@ StatusCode G4Generator::initialize()
 
 }
 
-//------------------------------------------------------------------------------
 void G4Generator::setupGui()
 {
     //
@@ -146,12 +146,13 @@ void G4Generator::setupGui()
     G4Generator* m_gg;
     };
     std::list<std::string> names = m_fluxSvc->fluxNames();
-    for( std::list<std::string>::iterator it = names.begin(); it!=names.end(); ++it){
-        source_menu.addButton(*it, new SetSource(this, *it));
+    for( std::list<std::string>::iterator it = names.begin(); 
+         it!=names.end(); ++it){
+      source_menu.addButton(*it, new SetSource(this, *it));
     }
     
 }
-//------------------------------------------------------------------------------
+
 StatusCode G4Generator::execute() 
 {
     MsgStream   log( msgSvc(), name() );
@@ -166,14 +167,15 @@ StatusCode G4Generator::execute()
     // Clean the McParticle hierarchy 
     McParticleManager::getPointer()->clear();
 
-    // following model from previous version, allow property "UIcommands" to generate
-    // UI commands here. 
+    // following model from previous version, allow property "UIcommands" to
+    // generate UI commands here.
     //
-    if( !m_UIcommands.value().empty() ) {
-        for( std::vector<std::string>::const_iterator k = m_UIcommands.value().begin(); 
-            k!=m_UIcommands.value().end(); ++k){
-            G4UImanager::GetUIpointer()->ApplyCommand(*k);
-            log << MSG::INFO << "Apply UI command: \"" << (*k) << "\"" <<endreq;
+    if( !m_uiCommands.value().empty() ) {
+        for( std::vector<std::string>::const_iterator 
+               k = m_uiCommands.value().begin(); 
+             k!=m_uiCommands.value().end(); ++k){
+          G4UImanager::GetUIpointer()->ApplyCommand(*k);
+          log << MSG::INFO << "Apply UI command: \"" << (*k) << "\"" <<endreq;
         }
     }  
 
@@ -203,7 +205,8 @@ StatusCode G4Generator::execute()
     primaryGenerator->setParticle(name);
     primaryGenerator->setMomentum(dir);
     primaryGenerator->setPosition(p);
-    primaryGenerator->setEnergy(ke);  // TODO: this shoule be full energy, but don't know mass yet
+    // TODO: this shoule be full energy, but don't know mass yet
+    primaryGenerator->setEnergy(ke);  
 
     //
     // create entry in McParticleCol for the primary generator.
@@ -246,15 +249,15 @@ StatusCode G4Generator::execute()
     // set up display of trajectories
     DisplayManager* dm = DisplayManager::instance();
     if(dm !=0) {   
-        for( int i = 0; i< m_runManager->getNumberOfTrajectories(); ++i){
-            std::auto_ptr<std::vector<Hep3Vector> > points = m_runManager->getTrajectoryPoints(i);
-            dm->addTrack(*(points.get()), m_runManager->getTrajectoryCharge(i));
-        }
+      for( int i = 0; i< m_runManager->getNumberOfTrajectories(); ++i){
+        std::auto_ptr<std::vector<Hep3Vector> > points = 
+          m_runManager->getTrajectoryPoints(i);
+        dm->addTrack(*(points.get()), m_runManager->getTrajectoryCharge(i));
+      }
     }
     return StatusCode::SUCCESS;
 }
 
-//------------------------------------------------------------------------------
 StatusCode G4Generator::finalize() 
 {
     MsgStream log(msgSvc(), name());
@@ -266,7 +269,6 @@ StatusCode G4Generator::finalize()
     return StatusCode::SUCCESS;
 }
 
-//------------------------------------------------------------------------------
 // called from GUI
 void G4Generator::setSource(std::string source_name)
 {
@@ -276,6 +278,7 @@ void G4Generator::setSource(std::string source_name)
         gui::GUI::instance()->inform("Could not find the source!");
     }
 }
+
 
 
 

@@ -6,6 +6,12 @@
 
 McParticleManager* McParticleManager::m_pointer = 0;
 
+void McParticleManager::addMcParticle(unsigned int id, 
+                                      mc::McParticle *particle){
+  m_particles[id]=particle; 
+  m_lastParticle = particle;
+}
+
 McParticleManager* McParticleManager::getPointer()
 {
   if(m_pointer == 0)

@@ -48,14 +48,15 @@ RunManager::RunManager(IGlastDetSvc* gds, IDataProviderSvc* esv)
   :userDetector(NULL),physicsList(NULL),
    userPrimaryGeneratorAction(NULL),
    currentRun(NULL),currentEvent(NULL),
-   geometryInitialized(false),physicsInitialized(false),cutoffInitialized(false),
+   geometryInitialized(false),physicsInitialized(false),
+   cutoffInitialized(false),
    geometryNeedsToBeClosed(true),initializedAtLeastOnce(false),
    runAborted(false),
    geometryToBeOptimized(true),verboseLevel(0),DCtable(NULL),runIDCounter(0),
    storeRandomNumberStatus(0)
 {
   if(fRunManager)
-  { G4Exception("RunManager constructed twice."); }
+    { G4Exception("RunManager constructed twice."); }
 
   fRunManager = this;
 
@@ -96,22 +97,22 @@ RunManager::~RunManager()
   G4ProcessTable::GetProcessTable()->DeleteMessenger();
 
   if(userDetector)
-  {
-    delete userDetector;
-  }
+    {
+      delete userDetector;
+    }
   if(physicsList)
-  {
-    delete physicsList;
-  }
+    {
+      delete physicsList;
+    }
   if(userPrimaryGeneratorAction)
-  {
-    delete userPrimaryGeneratorAction;
-  }
+    {
+      delete userPrimaryGeneratorAction;
+    }
   G4SDManager* fSDM = G4SDManager::GetSDMpointerIfExist();
   if(fSDM)
-  {
-    delete fSDM;
-  }
+    {
+      delete fSDM;
+    }
   delete eventManager;
 
   G4UImanager* pUImanager = G4UImanager::GetUIpointer();
@@ -119,33 +120,24 @@ RunManager::~RunManager()
     if(pUImanager) delete pUImanager;
   }
   if(pStateManager) 
-  {
-    delete pStateManager;
-  }
+    {
+      delete pStateManager;
+    }
 }
 
 void RunManager::BeamOn()
 {
   G4bool cond = ConfirmBeamOnCondition();
   if(cond)
-  {    
-    G4StateManager* stateManager = G4StateManager::GetStateManager();
-
-    RunInitialization();
-
-    stateManager->SetNewState(EventProc);
-    
-    currentEvent = GenerateEvent(0);
-
-    eventManager->ProcessOneEvent(currentEvent);
-    
-    stateManager->SetNewState(GeomClosed);
-    
-    //    delete currentEvent;
-    //    currentEvent = NULL;
-
-    RunTermination();
-  }
+    {    
+      G4StateManager* stateManager = G4StateManager::GetStateManager();
+      RunInitialization();
+      stateManager->SetNewState(EventProc);
+      currentEvent = GenerateEvent(0);
+      eventManager->ProcessOneEvent(currentEvent);
+      stateManager->SetNewState(GeomClosed);
+      RunTermination();
+    }
 }
 
 G4Event* RunManager::getCurrentEvent()const
@@ -159,30 +151,30 @@ G4bool RunManager::ConfirmBeamOnCondition()
 
   G4ApplicationState currentState = stateManager->GetCurrentState();
   if(currentState!=PreInit && currentState!=Idle)
-  {
-    G4cerr << "Illegal application state - BeamOn() ignored." << G4endl;
-    return false;
-  }
+    {
+      G4cerr << "Illegal application state - BeamOn() ignored." << G4endl;
+      return false;
+    }
 
   if(!initializedAtLeastOnce)
-  {
-    G4cerr << " Geant4 kernel should be initialized" << G4endl;
-    G4cerr << "before the first BeamOn(). - BeamOn ignored." << G4endl;
-    return false;
-  }
+    {
+      G4cerr << " Geant4 kernel should be initialized" << G4endl;
+      G4cerr << "before the first BeamOn(). - BeamOn ignored." << G4endl;
+      return false;
+    }
 
   if(!(geometryInitialized && physicsInitialized && cutoffInitialized)) 
-  {
-    if(verboseLevel>0)
     {
-      G4cout << "Start re-initialization because " << G4endl;
-      if(!geometryInitialized) G4cout << "  Geometry" << G4endl;
-      if(!physicsInitialized)  G4cout << "  Physics processes" << G4endl;
-      if(!cutoffInitialized)   G4cout << "  Cutoff" << G4endl;
-      G4cout << "has been modified since last Run." << G4endl;
+      if(verboseLevel>0)
+        {
+          G4cout << "Start re-initialization because " << G4endl;
+          if(!geometryInitialized) G4cout << "  Geometry" << G4endl;
+          if(!physicsInitialized)  G4cout << "  Physics processes" << G4endl;
+          if(!cutoffInitialized)   G4cout << "  Cutoff" << G4endl;
+          G4cout << "has been modified since last Run." << G4endl;
+        }
+      Initialize();
     }
-    Initialize();
-  }
 
   return true;
 }
@@ -196,22 +188,23 @@ void RunManager::RunInitialization()
   currentRun->SetDCtable(DCtable);
   G4SDManager* fSDM = G4SDManager::GetSDMpointerIfExist();
   if(fSDM)
-  { currentRun->SetHCtable(fSDM->GetHCtable()); }
+    { currentRun->SetHCtable(fSDM->GetHCtable()); }
   
   if(geometryNeedsToBeClosed)
-  {
-    if(verboseLevel>1) G4cout << "Start closing geometry." << G4endl;
-    G4GeometryManager* geomManager = G4GeometryManager::GetInstance();
-    geomManager->OpenGeometry();
-    geomManager->CloseGeometry(geometryToBeOptimized);
-    geometryNeedsToBeClosed = false;
-  }
+    {
+      if(verboseLevel>1) G4cout << "Start closing geometry." << G4endl;
+      G4GeometryManager* geomManager = G4GeometryManager::GetInstance();
+      geomManager->OpenGeometry();
+      geomManager->CloseGeometry(geometryToBeOptimized);
+      geometryNeedsToBeClosed = false;
+    }
   G4StateManager* stateManager = G4StateManager::GetStateManager();
   stateManager->SetNewState(GeomClosed);
 
   runAborted = false;
 
-  if(storeRandomNumberStatus==1 || storeRandomNumberStatus==-1) StoreRandomNumberStatus();
+  if(storeRandomNumberStatus==1 || storeRandomNumberStatus==-1)
+    StoreRandomNumberStatus();
   
   if(verboseLevel>0) G4cout << "Start Run processing." << G4endl;
 }
@@ -220,9 +213,9 @@ G4Event* RunManager::GenerateEvent(G4int i_event)
 {
   if(!userPrimaryGeneratorAction)
     {
-    G4Exception
-    ("RunManager::BeamOn - G4VUserPrimaryGeneratorAction is not defined.");
-  }
+      G4Exception
+        ("RunManager::BeamOn - G4VUserPrimaryGeneratorAction is not defined.");
+    }
 
   G4Event* anEvent = new G4Event(i_event);
 
@@ -248,11 +241,11 @@ void RunManager::Initialize()
   G4StateManager* stateManager = G4StateManager::GetStateManager();
   G4ApplicationState currentState = stateManager->GetCurrentState();
   if(currentState!=PreInit && currentState!=Idle)
-  {
-    G4cerr << "Illegal application state - "
-         << "RunManager::Initialize() ignored." << G4endl;
-    return;
-  }
+    {
+      G4cerr << "Illegal application state - "
+             << "RunManager::Initialize() ignored." << G4endl;
+      return;
+    }
 
   /// Set a dummy session to silent G4 intitialization messages on screen
   G4UImanager* pUImanager = G4UImanager::GetUIpointer();
@@ -271,10 +264,10 @@ void RunManager::Initialize()
 void RunManager::InitializeGeometry()
 {
   if(!userDetector)
-  {
-    G4Exception
-    ("RunManager::InitializeGeometry - G4VUserDetectorConstruction is not defined.");
-  }
+    {
+      G4Exception
+        ("G4VUserDetectorConstruction is not defined.");
+    }
 
   if(verboseLevel>1) G4cout << "userDetector->Construct() start." << G4endl;
   DefineWorldVolume(userDetector->Construct());
@@ -284,25 +277,25 @@ void RunManager::InitializeGeometry()
 void RunManager::InitializePhysics()
 {
   if(physicsList)
-  {
-    if(verboseLevel>1) G4cout << "physicsList->Construct() start." << G4endl;
-    physicsList->SetVerboseLevel(0);
-    physicsList->Construct();
-  }
+    {
+      if(verboseLevel>1) G4cout << "physicsList->Construct() start." << G4endl;
+      physicsList->SetVerboseLevel(0);
+      physicsList->Construct();
+    }
   else
-  {
-    G4Exception("G4VUserPhysicsList is not defined");
-  }
+    {
+      G4Exception("G4VUserPhysicsList is not defined");
+    }
   physicsInitialized = true;
 }
 
 void RunManager::InitializeCutOff()
 {
   if(physicsList)
-  {
-    if(verboseLevel>1) G4cout << "physicsList->setCut() start." << G4endl;
-    physicsList->SetCuts();
-  }
+    {
+      if(verboseLevel>1) G4cout << "physicsList->setCut() start." << G4endl;
+      physicsList->SetCuts();
+    }
   cutoffInitialized = true;
 }
   
@@ -312,14 +305,14 @@ void RunManager::AbortRun()
   G4ApplicationState currentState = 
     G4StateManager::GetStateManager()->GetCurrentState();
   if(currentState==GeomClosed || currentState==EventProc)
-  {
-    runAborted = true;
-    if(currentState==EventProc) eventManager->AbortCurrentEvent();
-  }
+    {
+      runAborted = true;
+      if(currentState==EventProc) eventManager->AbortCurrentEvent();
+    }
   else
-  {
-    G4cerr << "Run is not in progress. AbortRun() ignored." << G4endl;
-  }
+    {
+      G4cerr << "Run is not in progress. AbortRun() ignored." << G4endl;
+    }
 }
 
 void RunManager::DefineWorldVolume(G4VPhysicalVolume* worldVol)
@@ -340,21 +333,21 @@ void RunManager::StoreRandomNumberStatus(G4int eventID)
 {
   G4String fileN = randomNumberStatusDir+"RandEngine";
   if(storeRandomNumberStatus>0 && currentRun != NULL)
-  {
-    char st[20];
-    G4std::ostrstream os(st,20);
-    os << currentRun->GetRunID() << '\0';
-    fileN += "R";
-    fileN += st;
-  }
+    {
+      char st[20];
+      G4std::ostrstream os(st,20);
+      os << currentRun->GetRunID() << '\0';
+      fileN += "R";
+      fileN += st;
+    }
   if(storeRandomNumberStatus==2 && eventID>=0)
-  {
-    char st[20];
-    G4std::ostrstream os(st,20);
-    os << eventID << '\0';
-    fileN += "E";
-    fileN += st;
-  }
+    {
+      char st[20];
+      G4std::ostrstream os(st,20);
+      os << eventID << '\0';
+      fileN += "E";
+      fileN += st;
+    }
   fileN += ".stat";
   HepRandom::saveEngineStatus(fileN);
 }
@@ -363,9 +356,9 @@ void RunManager::RestoreRandomNumberStatus(G4String fileN)
 {
   G4String fileNameWithDirectory;
   if(fileN.index("/")==G4std::string::npos)
-  { fileNameWithDirectory = randomNumberStatusDir+fileN; }
+    { fileNameWithDirectory = randomNumberStatusDir+fileN; }
   else
-  { fileNameWithDirectory = fileN; }
+    { fileNameWithDirectory = fileN; }
   HepRandom::restoreEngineStatus(fileNameWithDirectory);
 }
 
@@ -383,15 +376,15 @@ int RunManager::getTrajectoryCharge(unsigned int i)
   if (i > getNumberOfTrajectories())
     return -99;
   
-  G4Event* currentEvent = getCurrentEvent();
-  if (currentEvent->GetTrajectoryContainer())
+  G4Event* event = getCurrentEvent();
+  if (event->GetTrajectoryContainer())
     {
-      G4Trajectory* currentTrajectory = static_cast<G4Trajectory*>((*((currentEvent)->GetTrajectoryContainer()))[i]);
+      G4Trajectory* trajectory = 
+        static_cast<G4Trajectory*>((*((event)->GetTrajectoryContainer()))[i]);
       
-      return currentTrajectory->GetCharge();
+      return trajectory->GetCharge();
     }
   else return -99;
-
 }
 
 std::auto_ptr<std::vector<Hep3Vector> > RunManager::getTrajectoryPoints(unsigned int i)
@@ -399,24 +392,22 @@ std::auto_ptr<std::vector<Hep3Vector> > RunManager::getTrajectoryPoints(unsigned
   if (i > getNumberOfTrajectories())
     return std::auto_ptr<std::vector<Hep3Vector> >(0);
   
-  G4Event* currentEvent = getCurrentEvent();
-  if (currentEvent->GetTrajectoryContainer())
+  G4Event* event = getCurrentEvent();
+  if (event->GetTrajectoryContainer())
     {
-      G4Trajectory* currentTrajectory = static_cast<G4Trajectory*>((*((currentEvent)->GetTrajectoryContainer()))[i]);
+      G4Trajectory* trajectory =
+        static_cast<G4Trajectory*>((*((event)->GetTrajectoryContainer()))[i]);
       
-      std::vector<Hep3Vector>* points = new std::vector<Hep3Vector>;;
-      
-      for(unsigned int j=0;j<currentTrajectory->GetPointEntries();j++)
-	{
-	  G4TrajectoryPoint* currentPoint = 
-	    static_cast<G4TrajectoryPoint*>(currentTrajectory->GetPoint(j));
-	  points->push_back(currentPoint->GetPosition());
-	}
-      
+      std::vector<Hep3Vector>* points = new std::vector<Hep3Vector>;
+      for(unsigned int j=0;j<trajectory->GetPointEntries();j++)
+        {  
+          G4TrajectoryPoint* currentPoint = 
+            static_cast<G4TrajectoryPoint*>(trajectory->GetPoint(j));
+          points->push_back(currentPoint->GetPosition());
+        }
       return std::auto_ptr<std::vector<Hep3Vector> >(points);
     }
-  else  return std::auto_ptr<std::vector<Hep3Vector> >(0);
-
+  else return std::auto_ptr<std::vector<Hep3Vector> >(0);
 }
 
 

@@ -1,5 +1,3 @@
-// $Header$
-
 #ifndef G4GEOMETRY_h
 #define G4GEOMETRY_h
 
@@ -17,36 +15,56 @@ class PosDetectorManager;
 class IntDetectorManager;
 
 /**
-This class instantiates the G4 geometry, from detModel
-*/
+ * @class G4Geometry
+ * 
+ * @brief Utility class to instantiate the Geant4 geometry 
+ *
+ * This class instanciates the Geant4 geometry from the xml representation; this
+ * is done via the visitors mechanism provided by detModel. To hide the concrete
+ * implementation of detModel, this is done with methods provided by the
+ * abstracts GlastSvc interfaces. The G4Geometry implements one of these
+ * interfaces.
+ *
+ * @author R.Giannitrapani
+ * 
+ * $Header$
+ */
 class G4Geometry : public IGeometry
 {
-public:
+ public:
 
-  //! Id's are represented at a vector of unsigned ints
+  //! Id's are represented as a vector of unsigned ints
   typedef std::map<const G4VPhysicalVolume*, idents::VolumeIdentifier> IdMap;
 
   G4Geometry(std::string mode="propagate");
   G4Geometry(PosDetectorManager* pdm,IntDetectorManager* idm,
-	     IdMap* idmap, std::string mode="propagate") : 
+             IdMap* idmap, std::string mode="propagate") : 
     m_pdm(pdm),m_idm(idm),m_idMap(idmap), 
-      m_worldPhys(0),m_replica(0),m_replicaMother(0), m_mode(mode) {};
-
+    m_worldPhys(0),m_replica(0),m_replicaMother(0), m_mode(mode) {};
+  
   ~G4Geometry();
 
   /**     
+   * This method implement the abstract pushShape of IGeometry; it must push a
+   * new Geant4 shape in the stack of volumes
+   *
    * @param s type of the shape
    * @param id vector of unsigned ints (maybe null)
    * @param name
    * @param material
-   * @param params vector with the six transformation parameters, followed by 3 or so dimensions
+   * @param params vector with the six transformation parameters, 
+   *        followed by 3 or so dimensions
    * @return tell caller whether to skip subvolumes or not
-  */
+   */
   virtual IGeometry::VisitorRet
-  pushShape(ShapeType s, const UintVector& id, std::string name, 
-            std::string material, const DoubleVector& params, VolumeType type);
+    pushShape(ShapeType s, 
+              const UintVector& id, 
+              std::string name, 
+              std::string material, 
+              const DoubleVector& params, 
+              VolumeType type);
   
-  //* called to signal end of nesting */
+  /// called to signal end of nesting 
   virtual void popShape();
 
   /// current ID
@@ -54,9 +72,9 @@ public:
 
   /// return pointer to the mother volume
   G4VPhysicalVolume* getWorld()const{ return m_worldPhys; }
+
   /// set the mother volume
   void setWorld(G4VPhysicalVolume* world){ m_worldPhys = world; }
-
 
   /// Get a physical volume by name
   G4VPhysicalVolume* getPhysicalByName(std::string name);
@@ -65,11 +83,10 @@ public:
   void pushActualMother(G4LogicalVolume* vol){ m_actualMother.push_back(vol);}
   void popActualMother(){m_actualMother.pop_back();}
 
-  G4LogicalVolume* actualMother()const{
-      if (m_actualMother.size()) return m_actualMother.back();
-        else return 0;}
+  /// Get the mother volume
+  G4LogicalVolume* actualMother()const;
   
-  /// Return the number of physical volumes created
+  /// Returns the number of physical volumes created
   unsigned int getPhysicalNumber(){return m_physicals.size();};
 
   /// Need a setMode in order to implement getMode for IGeometry interface
@@ -77,7 +94,7 @@ public:
   virtual std::string getMode() {return m_mode;}
 
  private:
-  /// the detector managers
+  /// the sensitive detector managers
   PosDetectorManager* m_pdm;    
   IntDetectorManager* m_idm;    
 
@@ -108,6 +125,7 @@ public:
   /// a logical for optimizaion mechanism of the G4 geometry
   G4LogicalVolume* m_replicaMother;
 
+  /// the mode of traversal of the geometry
   std::string m_mode;
 
 };

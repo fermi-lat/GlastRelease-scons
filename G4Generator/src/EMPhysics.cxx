@@ -59,8 +59,10 @@ void EMPhysics::ConstructProcess()
   pManager->AddProcess(&theElectronIonisation, ordInActive,2, 2);
 
   pManager->AddProcess(&theElectronMultipleScattering);
-  pManager->SetProcessOrdering(&theElectronMultipleScattering, idxAlongStep,  1);
-  pManager->SetProcessOrdering(&theElectronMultipleScattering, idxPostStep,  1);
+  pManager->SetProcessOrdering(&theElectronMultipleScattering, 
+                               idxAlongStep,  1);
+  pManager->SetProcessOrdering(&theElectronMultipleScattering, 
+                               idxPostStep,  1);
 
   //Positron Physics
   pManager = G4Positron::Positron()->GetProcessManager();
@@ -74,9 +76,10 @@ void EMPhysics::ConstructProcess()
   pManager->AddProcess(&thePositronIonisation, ordInActive,2, 2);
 
   pManager->AddProcess(&thePositronMultipleScattering);
-  pManager->SetProcessOrdering(&thePositronMultipleScattering, idxAlongStep,  1);
-  pManager->SetProcessOrdering(&thePositronMultipleScattering, idxPostStep,  1);
-
+  pManager->SetProcessOrdering(&thePositronMultipleScattering, 
+                               idxAlongStep,  1);
+  pManager->SetProcessOrdering(&thePositronMultipleScattering, 
+                               idxPostStep,  1);
 }
 
 

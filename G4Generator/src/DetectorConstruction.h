@@ -22,13 +22,18 @@ class IntDetectorManager;
  * @brief A class to build the detector geometry
  *
  * This class hinerits from G4VUserDetectorConstruction and it is used to build
- * the detector geometry of the G4 simulation. In particular it defines
+ * the detector geometry of the G4 simulation. In particular 
  *
- *   - full detector geometry
- *   - define materials
- *   - identify sensitive detectors, set up callbacks
- *   - create a map of ids and physical volumes
+ *   - it builds the full detector geometry
+ *   - it defines the materials table
+ *   - it identifies sensitive detectors and set up callbacks
+ *   - it creates a map of ids and physical volumes
  *
+ * To do this it uses two other classes, G4Geometry and G4Media, that implement
+ * abstract interfaces of the GlastSvc package; they setup the Visitor mechanism
+ * of detModel to visit the geometry representation built from the xml
+ * database. Thanks to the abstraction mechanism implemented in the GlastDetSvc,
+ * this can be done without exposing internal representation of detModel.
  *  
  * @author R.Giannitrapani
  *    
@@ -40,20 +45,25 @@ class DetectorConstruction : public G4VUserDetectorConstruction
  public:
   typedef std::map<const G4VPhysicalVolume*, idents::VolumeIdentifier > IdMap;
 
-  //! @param gds A pointer to the abstract interface of the GlastDetSvc
-  //! @param esv A pointer to the data provider service
+  /** The constructor needs from the caller (RunManager) a pointer to the
+   *  IGlastDetSvc that is passed than to the DetectorManager subclasses
+   *  (PosDetectorManager and IntDetectorManager); this permits to them to fill
+   *  the TDS directly at the end of an event.  
+   *  @param gds A pointer to the abstract interface of the GlastDetSvc 
+   *  @param esv A pointer to the data provider service
+   */
   DetectorConstruction(IGlastDetSvc* gds, IDataProviderSvc* esv);
 
   ~DetectorConstruction();
   
-  /* Actual call to construct things. Please note that this is the concrete
+  /** Actual call to construct things. Please note that this is the concrete
    * implementation of the abstract method of G4VUserDetectorConstruction class
    * (geant4 name convention). 
    * @return The mother G4VPhysicalVolume for the full detector
    */
   G4VPhysicalVolume* Construct();
   
-  //! Return to the map of physical volume/id pairs.
+  //! Return the map of physical volume/id pairs.
   IdMap* idMap(){return &m_idMap;}
 
   //! Return the name of the volume used as mother

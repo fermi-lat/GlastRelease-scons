@@ -1,5 +1,3 @@
-// $Header$
-
 #ifndef RunManager_h
 #define RunManager_h 1
 
@@ -30,10 +28,26 @@ class Hep3Vector;
 
 #include <memory>
 
-/** Very draft version of a customized G4RunManager for Glast;
-    It will override the normal eventloop of G4, letting Gaudi
-    to manage it.
-*/
+/** 
+ * @class RunManager
+ *
+ * @brief The Geant4 singleton manager
+ *
+ * This is a very draft version of a customized G4RunManager for Glast; it
+ * overrides the normal eventloop of G4, letting Gaudi to manage it. Most of its
+ * functionalities are duplicated from the Geant4 class and are not relevant for
+ * the rest of the code. Some methods will be removed in the near future since
+ * they are not used by GLAST. For these motivations this class is not
+ * completely documented. Please see the Geant4 toolkit for more information.
+ *
+ * Please note that overriding the RunManager of Geant4, while has been quite
+ * easy and fast to do and is providing us with the expected result, is risky
+ * since we are not garanteeded against future releases of Geant4. 
+ *
+ * @author R.Giannitrapani
+ *    
+ * $Header$
+ */
 class RunManager
 {
  public: 
@@ -45,14 +59,13 @@ class RunManager
   static RunManager* fRunManager;
   /// This is the top volume used for geometry
   std::string m_topvol;
-
   /// mode to apply to start the visitor, like "fastmc"
   std::string m_visitorMode;
   
  public: 
   /** 
      The constructor needs a pointer to the abstract interface of
-     the GlastDetSvc
+     the GlastDetSvc and to the DataProviderSvc
   */
   RunManager(IGlastDetSvc* gds, IDataProviderSvc* esv);
   virtual ~RunManager();
@@ -145,11 +158,10 @@ class RunManager
   /// Return methods for the 3 user classes
   inline const G4VUserDetectorConstruction* GetUserDetectorConstruction() const
     { return userDetector; }
-  //  inline const G4VUserPhysicsList* GetUserPhysicsList() const
   inline const G4VModularPhysicsList* GetUserPhysicsList() const
     { return physicsList; }
-  inline const G4VUserPrimaryGeneratorAction* GetUserPrimaryGeneratorAction() const
-    { return userPrimaryGeneratorAction; }
+  inline const G4VUserPrimaryGeneratorAction* GetUserPrimaryGeneratorAction() 
+    const { return userPrimaryGeneratorAction; }
   
   public:
 
@@ -184,10 +196,10 @@ class RunManager
   inline void SetGeometryToBeOptimized(G4bool vl)
     { 
       if(geometryToBeOptimized != vl)
-	{
-	  geometryToBeOptimized = vl;
-	  geometryNeedsToBeClosed = true;
-	}
+        {
+          geometryToBeOptimized = vl;
+          geometryNeedsToBeClosed = true;
+        }
     }
   inline G4bool GetGeometryToBeOptimized()
     { return geometryToBeOptimized; }
@@ -195,16 +207,16 @@ class RunManager
  public: 
   inline const G4Run* GetCurrentRun() const
     { return currentRun; }
-  //  Returns the pointer to the current run. This method is available for Geant4
-  // states of GeomClosed and EventProc.
+  /// Returns the pointer to the current run. This method is available for
+  /// Geant4 states of GeomClosed and EventProc.
   inline const G4Event* GetCurrentEvent() const
     { return currentEvent; }
-  //  Returns the pointer to the current event. This method is available for EventProc
-  // state.
+  /// Returns the pointer to the current event. This method is available for
+  /// EventProc state.
   inline void SetRunIDCounter(G4int i)
     { runIDCounter = i; }
-  //  Set the run number counter. Initially, the counter is initialized to zero and
-  // incremented by one for every BeamOn().
+  /// Set the run number counter. Initially, the counter is initialized to zero
+  /// and incremented by one for every BeamOn().
 
   public:
     inline void SetDCtable(G4DCtable* DCtbl)

@@ -16,7 +16,7 @@
  * - the range cuts for each particle
  * - the physics processes to be simulated
  *  
- * @author F.Longo
+ * @author F.Longo 
  *    
  * \$Header\$
  */
