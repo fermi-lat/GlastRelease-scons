@@ -57,5 +57,6 @@ application Gleam $(GlastMain) $(Win32Resource) $(jobOpts)
 macro Gleamlinkopts  "  $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
       WIN32 " ${guiapp_linkopts} $(GuiSvc_lib)  /include:_GuiSvc_loadRef "
 
+
 # define a standard test executable, if desired
 apply_pattern package_test
