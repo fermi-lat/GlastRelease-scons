@@ -120,11 +120,19 @@ void TdSiData::clear () {
     m_total_hits=0;
 }
 
+int TdSiData::nTrays (enum TdSiData::Axis a) const
+{
+    return a == X ? xhitList.size() : yhitList.size() ;
+    
+}
+
 int TdSiData::nHits (enum TdSiData::Axis a, int tray) const
 {
-    return a==X?  xhitList[tray]->size()
-        :  yhitList[tray]->size() ;
-    
+    int numHits = xhitList[tray]->size();
+
+    if (a != X) numHits = yhitList[tray]->size();
+
+    return numHits;
 }
 
 Point TdSiData::hit (enum TdSiData::Axis a, 

@@ -46,6 +46,9 @@ public:
     
     //-------------------- access functions for data analysis------------------------
     void clear ();
+
+    //  number of trays
+    int nTrays(enum SiData::Axis a) const;
     
     //  number of hit strips in the given tray (tray=0..16)
     int nHits (enum SiData::Axis a, int tray) const;
