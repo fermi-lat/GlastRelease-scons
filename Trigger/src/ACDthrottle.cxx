@@ -412,7 +412,7 @@ StatusCode ACDthrottle::fillNtuple() {
 	   // Here we are adding to our ROOT ntuple
     
     // setup the entries to our tuple
-    if ((sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "ACD_Throttle", m_vetoword)).isFailure()) return sc;
+    if ((sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "ACD_Throttle_Bits", m_vetoword)).isFailure()) return sc;
     if ((sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "ACD_No_Face0", m_nhitface0)).isFailure()) return sc;
     if ((sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "ACD_No_Face1", m_nhitface1)).isFailure()) return sc;
     if ((sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "ACD_No_Face2", m_nhitface2)).isFailure()) return sc;
