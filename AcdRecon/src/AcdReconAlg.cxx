@@ -21,8 +21,6 @@
 
 #include "CLHEP/Geometry/Transform3D.h"
 
-#include "xml/IFile.h"
-
 #include <algorithm>
 #include <cstdio>
 #include <stdlib.h>
