@@ -48,7 +48,7 @@ static double gam_prof(double *par, int i)
 	//	double lambda = par[3];
 
 	double alpha = 2.65*exp(0.15*log(par[0]));
-        double lambda = 2.29*exp(-0.031*log(par[0]));
+    double lambda = 2.29*exp(-0.031*log(par[0]));
 
 
 	double x=length/lambda;
@@ -428,8 +428,8 @@ CalClustersAlg::CalClustersAlg(const std::string& name, ISvcLocator* pSvcLocator
 //################################################
 Algorithm(name, pSvcLocator)
 {
-
-
+    declareProperty("callNumber",m_callNumber=0);
+ 
 }
 
 //################################################
@@ -446,7 +446,10 @@ StatusCode CalClustersAlg::initialize()
         return sc;
     }
 
-        logheight = m_CalGeo->logHeight();
+    setProperties();
+    log << MSG::INFO << "callNumber = " << m_callNumber << endreq;
+
+    logheight = m_CalGeo->logHeight();
 	logwidth = m_CalGeo->logWidth();
     
     
@@ -472,9 +475,6 @@ StatusCode CalClustersAlg::retrieve()
     MsgStream log(msgSvc(), name());
         log << MSG::INFO << "Initialize" << endreq;
 
-	m_CsIClusterList = 0;
-	m_CsIClusterList = new CsIClusterList();
-
 	DataObject* pnode=0;
 
     sc = eventSvc()->retrieveObject( "/Event/CalRecon", pnode );
@@ -487,14 +487,20 @@ StatusCode CalClustersAlg::retrieve()
             return sc;
         }
     }
-
-    
+    m_CsIClusterList = SmartDataPtr<CsIClusterList> (eventSvc(),"/Event/CalRecon/CsIClusterList");
+ //   sc = eventSvc()->retrieveObject("/Event/CalRecon/CsIClusterList",m_CsIClusterList);
+    if (!m_CsIClusterList ){
+	    m_CsIClusterList = 0;
+	    m_CsIClusterList = new CsIClusterList();
+     	sc = eventSvc()->registerObject("/Event/CalRecon/CsIClusterList",m_CsIClusterList);
+    } else {
+        m_CsIClusterList->clear();
+    }
 
 	m_CalRecLogs = SmartDataPtr<CalRecLogs>(eventSvc(),"/Event/CalRecon/CalRecLogs"); 
 
 
 //	sc = eventSvc()->retrieveObject("/Event/CalRecon/CalADCLogs",m_CalRawLogs);
-	 sc = eventSvc()->registerObject("/Event/CalRecon/CsIClusterList",m_CsIClusterList);
 	return sc;
 }
 
