@@ -6,6 +6,10 @@
 // expect this to be defined in pdrApp, as basic set.
 #include "$PDRAPPROOT/src/pdrOptions.txt"
 
+ApplicationMgr.DLLs += {"ntupleWriterSvc"};
+
+ApplicationMgr.ExtSvc += { "ntupleWriterSvc"};
+
 // include algorithms in this package to append to GismoGenerator, AOrecon.
 ApplicationMgr.TopAlg += { "UserAlg"};
 
@@ -14,6 +18,12 @@ MessageSvc.OutputLevel      = 2;
 
 // suppress output tuple with ""; enable with "AORECON". 
 //AOrecon.tuple_name="";
+
+ntupleWriterSvc.tuple_name = { "USERALG" };
+
+UserAlg.tupleName="USERALG";
+
+NTupleSvc.Output += {"USERALG DATAFILE='/NTUPLES/userAlg.root' OPT='NEW'"};
 
 // source name from flux/xml/source_library.xml, and number of events.
 GismoGenerator.source_name="muons";

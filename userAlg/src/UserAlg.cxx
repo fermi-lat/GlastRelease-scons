@@ -8,10 +8,8 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Algorithm.h"
 
-// Gaudi ntuple interface
-#include "GaudiKernel/INTupleSvc.h"
-#include "GaudiKernel/INTuple.h"
-#include "GaudiKernel/NTuple.h"
+// ntuple interface
+#include "ntupleWriterSvc/INTupleWriterSvc.h"
 
 // if use the gui
 #include "GuiSvc/IGuiSvc.h"
@@ -52,7 +50,10 @@ private:
     xml::IFile * m_ini; 
     //! access to the Gui Service for display of 3-d objects
     IGuiSvc*    m_guiSvc;
-    
+    //! access the ntupleWriter service to write out to ROOT ntuples
+    INTupleWriterSvc *m_ntupleWriteSvc;
+    //! parameter to store the logical name of the ROOT file to write to
+    std::string m_tupleName;
 };
 //------------------------------------------------------------------------
 
@@ -70,6 +71,7 @@ UserAlg::UserAlg(const std::string& name, ISvcLocator* pSvcLocator)
 ,m_count(0), m_detSvc(0), m_ini(0), m_guiSvc(0)
 {
     // declare properties with setProperties calls
+    declareProperty("tupleName",  m_tupleName="");
     
 }
 //------------------------------------------------------------------------
@@ -98,6 +100,12 @@ StatusCode UserAlg::initialize(){
        //m_guiSvc->guiMgr()->display().add(new Rep, "User rep");
     }
 
+    // get a pointer to our ntupleWriterSvc
+    if (service("ntupleWriterSvc", m_ntupleWriteSvc).isFailure()) {
+        log << MSG::ERROR << "writeJunkAlg failed to get the ntupleWriterSvc" << endreq;
+        return StatusCode::FAILURE;
+    }
+
     return sc;
 }
 
@@ -108,7 +116,25 @@ StatusCode UserAlg::execute()
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
     log << MSG::INFO << "executing " << ++m_count << " time" << endreq;
-    
+
+    // Here we are adding to our ROOT ntuple
+    sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "NumCalls", m_count);
+ 
+    // An example of retrieving data from the TDS
+    SmartDataPtr<TdGlastData> glastData(eventSvc(),"/Event/TdGlastData");
+
+    // retrieve TKR data pointer
+    const SiData *tkrDigiData = glastData->getSiData();
+    if (tkrDigiData == 0) {
+        log << MSG::INFO << "No TKR Data available" << endreq;
+    } else {
+        // Get the number of hits in the X and Y layers of plane 0
+        int nx = tkrDigiData->nHits(SiData::X, 0);
+        int ny = tkrDigiData->nHits(SiData::Y, 0);
+        // Now to add the total number of Hits in Plane 0 to the ntuple
+        sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "TKR_numHitsPlane0", (nx+ny));
+    }
+
     return sc;
 }
 
