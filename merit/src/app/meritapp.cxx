@@ -16,8 +16,9 @@
 #include <sys/timeb.h>
 #include <string>
 #include <sstream>
+#include <typeinfo>
 
-#include <assert.h>
+
 #define CLASSIF
 
 const char* _MERIT_VERSION = "$Revision$";
