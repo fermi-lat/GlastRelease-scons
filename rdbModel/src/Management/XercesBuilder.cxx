@@ -14,7 +14,7 @@ namespace rdbModel {
   using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument;
   using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
 
-  XercesBuilder::XercesBuilder() : Builder(), m_rdb(0), m_doc(0) {
+  XercesBuilder::XercesBuilder() : Builder(), m_doc(0), m_rdb(0) {
   }
 
   unsigned int XercesBuilder::parseInput(const std::string& filename) {
