@@ -37,7 +37,7 @@ TH1D *CHI2;
 static const double MaxChi2 = 1;
 
 //////////////////////////////////////////////////
-#define TOWER 0
+#define TOWER 1
 
 
 TLine *Track(TGraph *XY)
@@ -74,12 +74,12 @@ TLine *Track(TGraph *XY)
 TLine Recon(TGraph *XY)
 {
 
-  double Y1=-103.1;
-  double Y2=89.5;
+  double Y1=0.0;
+  double Y2=70.0;
   if(TOWER)
     {
       Y1=0.0;
-      Y2=650;
+      Y2=70.0;
     }
   int N = XY->GetN();
   double *X = XY->GetX();
@@ -91,7 +91,10 @@ TLine Recon(TGraph *XY)
   double B=0;
   TLine bestFit;
 
-  if(N<=30)
+  if(N<2)    
+    return TLine(0,0,0,0);
+
+  if(N<=3)
     {
       TGraph g(N,Y,X);
       g.Fit("pol1","Q");
@@ -125,6 +128,7 @@ TLine Recon(TGraph *XY)
 	    }
 	}
     }
+  std::cout<<MinChi2<<std::endl;
   if(MinChi2>MaxChi2)
     return TLine(0,0,0,0);
   
@@ -178,7 +182,7 @@ void InitializeED(TString filename = "MyRootFile.root")
 
   if(TOWER)
     {  
-      tracker->loadGeometry(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/MCTowergeometry.txt"));
+      tracker->loadGeometry(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/LatGeometry.txt"));
       tracker->IsTower(TOWER);
     }
   else
@@ -277,8 +281,8 @@ void DisplayEvent(int NumEvent=0)
       TriggerReqText[i][0].SetText(-0.8, height, aLayer->GetTriggerReq(false) ? "x" : "");
       TriggerReqText[i][1].SetText(36, height, aLayer->GetTriggerReq(true) ? "x" : "");
       LabelNumHits[i].SetText(41.0, height, title);
-      //      TriggerReqText[i][0].Draw();
-      //      TriggerReqText[i][1].Draw();
+      TriggerReqText[i][0].Draw();
+      TriggerReqText[i][1].Draw();
       LabelNumHits[i].Draw();
       i++;      
 
@@ -362,22 +366,24 @@ void DisplayEvent(int NumEvent=0)
   EventDisplayC->cd(1);
   XClusters->Draw("P");
   
-  if(NumClusX>1)
-    {
+  //  if(NumClusX>1)
+  //    {
       anXtrack = Recon(XClusters);
       anXtrack.Draw();
-    }
+      //    }
+  
   
   EventDisplayC->cd(2);
   YClusters->Draw("P");
   
-  if(NumClusY>1)
-    {
+  //  if(NumClusY>1)
+  //    {
       anYtrack = Recon(YClusters);
       anYtrack.Draw();
-    }
-  
+      //    }
+  EventDisplayC->cd();
   EventDisplayC->Update();
+  
 }
 
 
@@ -604,6 +610,7 @@ void IneffAnalysis(int LastEvent, TString LV="All")
   XResiduals->Draw();
   c2->cd(2);
   YResiduals->Draw();
+  c2->cd();
   /*
     TCanvas *c3 = new TCanvas();
     CHI2->Draw();

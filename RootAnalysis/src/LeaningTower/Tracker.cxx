@@ -53,7 +53,7 @@ void Tracker::Display()
   if(TOWER)
     {
       y[0]=0;
-      y[1]=650;
+      y[1]=70;
     }
   else
     {
