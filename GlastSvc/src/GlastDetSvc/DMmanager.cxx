@@ -32,7 +32,7 @@ void DMmanager::init(int argc, char* argv[] )
 void DMmanager::init(std::string filename, std::string mode, std::string topvol) 
 {
     m_dm->setBuilder(new detModel::XercesBuilder);
-    if( filename.empty() || filename == "-" ) filename = "$(XMLGEODBSROOT)/xml/flight.xml" ;
+    if( filename.empty() || filename == "-" ) filename = "$(XMLGEODBSROOT)/xml/flight/flight.xml" ;
     xml::IFile::extractEnvVar(&filename);
     m_dm->setNameFile( filename);
     m_dm->setMode(m_mode=mode);
