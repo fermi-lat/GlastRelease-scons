@@ -49,8 +49,8 @@ private:
     class Lookup;                // nested class
     class PreClassify;           // nested class
 
-    PreClassify *          m_preclassify; /// association of ROOT branches to TupleItems
-    classification::Tree * m_classifier;  /// interface to IM classification tree 
+    PreClassify *          m_preclassify; //! association of ROOT branches to TupleItems
+    classification::Tree * m_classifier;  //! interface to IM classification tree 
 };
 #endif   //  MERIT_PRUNETREE_H
 
