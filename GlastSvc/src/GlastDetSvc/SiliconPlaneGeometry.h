@@ -4,6 +4,7 @@
 #define SiliconPlaneGeometry_H
 
 #include "CLHEP/Geometry/Vector3D.h"
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 /**
     Static functions only for geometry of individual Si plane
   */
@@ -56,6 +57,8 @@ public:
     /// width of dead area, aka guarg_ring
     static double guard_ring ();
     static double panel_width(); 
+
+	static void init(IGlastDetSvc * p_detSvc);
 
 private:
 

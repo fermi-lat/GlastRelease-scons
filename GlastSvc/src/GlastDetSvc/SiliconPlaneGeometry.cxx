@@ -1,9 +1,9 @@
 //$Header$
 #include "SiliconPlaneGeometry.h"
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 #include <cmath>
 #include <algorithm>
+//#include <iostream>
 /*
 In xmlGeoDbs/xml/flight/flightTKRCountPrim.xml
    
@@ -21,17 +21,17 @@ Will assume that
   guard ring = 0.5*(SiWaferSide-SiWaferActive) 
 */
 
-// static variable implementations -- TODO: initialize from geometry
-unsigned int SiliconPlaneGeometry::s_n_si_dies=4; // # of Si dies across single SSD plane
-unsigned int SiliconPlaneGeometry::s_stripPerWafer =384;
-double       SiliconPlaneGeometry::s_dice_width     =89.500; // width of a single silicon die 
+// static variable implementations, initialized from geometry
+unsigned int SiliconPlaneGeometry::s_n_si_dies = 0;        // was 4; // # of Si dies across single SSD plane
+unsigned int SiliconPlaneGeometry::s_stripPerWafer = 0;    // was 384;
+double       SiliconPlaneGeometry::s_dice_width     = 0.0; // was 89.500; // width of a single silicon die 
 
 // width of the dead area around the perimeter of a die (from edge to active)
-double       SiliconPlaneGeometry::s_guard_ring     = 0.974;
+double       SiliconPlaneGeometry::s_guard_ring     = 0.0; // was 0.974;
 
 // width of the gap between SSD dies (glue & wirebonds, etc.) (cm)
-double       SiliconPlaneGeometry::s_ssd_gap        = 0.025;
-double       SiliconPlaneGeometry::s_ladder_gap     = 0.200;
+double       SiliconPlaneGeometry::s_ssd_gap        = 0.0; // was 0.025;
+double       SiliconPlaneGeometry::s_ladder_gap     = 0.0; // was 0.200;
 
 
 // insideActiveArea - does a point fall on (in local coords) an active 
@@ -127,4 +127,27 @@ double SiliconPlaneGeometry::si_strip_pitch () {
 /// panel_width - width of all connected silicon in a single layer
 double SiliconPlaneGeometry::panel_width () {
     return (n_si_dies() * die_width() + (n_si_dies() - 1) * ladder_gap());
+}
+
+void SiliconPlaneGeometry::init(IGlastDetSvc *p_detSvc) 
+{	
+    StatusCode sc;
+	double temp;
+	sc = p_detSvc->getNumericConstByName("ssdGap", &s_ssd_gap);
+	sc = p_detSvc->getNumericConstByName("ladderGap", &s_ladder_gap);	
+	sc = p_detSvc->getNumericConstByName("stripPerWafer", &temp);
+	s_stripPerWafer = temp + 0.5;
+	sc = p_detSvc->getNumericConstByName("nWaferAcross", &temp);
+	s_n_si_dies = temp + 0.5;
+	sc = p_detSvc->getNumericConstByName("SiWaferSide", &s_dice_width);	
+	double SiActiveSide;
+	sc = p_detSvc->getNumericConstByName("SiWaferActiveSide", &SiActiveSide);	
+	s_guard_ring = 0.5*(s_dice_width - SiActiveSide);
+
+	/*std::cout << "SPG init: ssdgap " << s_ssd_gap << " laddergap " << s_ladder_gap 
+		<< " stripperwafer " << s_stripPerWafer << " ndies " << s_n_si_dies 
+		<< " waferside " << s_dice_width << " deaddist " << s_guard_ring << std::endl;
+	*/
+
+	return;
 }

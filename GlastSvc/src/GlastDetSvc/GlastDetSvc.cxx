@@ -109,6 +109,8 @@ StatusCode GlastDetSvc::initialize ()
     m_dm->printSetup(log.stream());
     log << endreq;
 
+	SiliconPlaneGeometry::init(this);
+
     return status;
 }
 
