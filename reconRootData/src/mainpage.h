@@ -3,8 +3,11 @@
 *
 * @section intro Introduction
 *
-* ROOT classes used to store GLAST reconstruction data.  
+* ROOT classes used to store GLAST reconstruction data. 
 * The reconstruction data consist of TKR, CAL, and ACD data.
+* ReconEvent is the main branch on the tree.
+*
+* @image html reconTree.gif
 * 
 * @section ReconEvent ReconEvent
 * The top level object in the Recon Tree is ReconEvent, which contains:
