@@ -66,7 +66,9 @@ void GDDVRMLSectionsVisitor::visitGDD(GDD* gdd)
   
 void  GDDVRMLSectionsVisitor::visitSection(GDDsection* section)
 {
+  float dimX, dimY, dimZ;
   unsigned int i;
+  GDDvolume* vol;
 
   if (actualVolume == "")
     {
@@ -76,7 +78,7 @@ void  GDDVRMLSectionsVisitor::visitSection(GDDsection* section)
 	    GDDcomposition* comp = static_cast<GDDcomposition*>(section->getVolumes()[i]);
 	    if (comp->getEnvelope() == section->getTopVolume())
 	      {
-		section->getVolumes()[i]->AcceptNotRec(this);
+		vol = section->getVolumes()[i];
 	      }
 	  }
       }
@@ -87,9 +89,43 @@ void  GDDVRMLSectionsVisitor::visitSection(GDDsection* section)
       
       if (manager->getGDD()->getVolumeByName(actualVolume))
 	{
-	  manager->getGDD()->getVolumeByName(actualVolume)->AcceptNotRec(this);
+	  vol = manager->getGDD()->getVolumeByName(actualVolume);
 	}
     }
+
+  /// We calulate the dimensions for the projected views
+  dimX = 2*vol->getBBX()/0.005;
+  dimY = 2*vol->getBBY()/0.005;
+  dimZ = 2*vol->getBBZ()/0.005;
+
+  /** 
+   * We setup three standard view on the three coordinates planes;
+   * since in VRML97 there is no orthographic camera, we simulate it
+   * with a far away camera and a small field of view. */
+  
+  out << "Viewpoint {" << std::endl;
+  out << "position 0 0 " << dimX << std::endl;
+  out << "orientation 0 0 1 0" << std::endl;
+  out << "fieldOfView 0.005" << std::endl;
+  out << "description \"Plane XY\"" << std::endl;
+  out << "}" << std::endl;
+
+  out << "Viewpoint {" << std::endl;
+  out << "position 0 " << -dimY << " 0" << std::endl;
+  out << "orientation 1 0 0 1.5707963" << std::endl;
+  out << "fieldOfView 0.005" << std::endl;
+  out << "description \"Plane XZ\"" << std::endl;
+  out << "}" << std::endl;
+
+  out << "Viewpoint {" << std::endl;
+  out << "position " << -dimZ << " 0 0" << std::endl; 
+  out << "orientation 0 1 0 -1.5707963" << std::endl;
+  out << "fieldOfView 0.005" << std::endl;
+  out << "description \"Plane ZY\"" << std::endl;
+  out << "}" << std::endl;
+
+  /// Here we start the visit of the hierarchy.
+  vol->AcceptNotRec(this);
 }
 
 
@@ -320,6 +356,8 @@ void GDDVRMLSectionsVisitor::setOpacity(string name, float op)
     }  
 }
 
+/** This function convert from the HSV to the RGB colours spaces \todo
+    To bring outside the visitor and inside detModel */
 void HSVtoRGB(double *r, double *g, double *b, double h, double s, double v)
 {
   double f,p,q,t;
@@ -345,6 +383,9 @@ void HSVtoRGB(double *r, double *g, double *b, double h, double s, double v)
   }
 }
 
+/** This function generates enought colors for the GDD partitioning
+    the HSV space uniformly.  \todo To bring outside the visitor and
+    inside detModel */
 void GDDVRMLSectionsVisitor::makeColor()
 {
   unsigned int i;
