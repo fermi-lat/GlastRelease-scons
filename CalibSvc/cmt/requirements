@@ -27,4 +27,10 @@ library CalibSvc *.cxx  CalibDataSvc/*.cxx      \
                         CalibXMLCnv/cnv/*.cxx   \
                         Dll/*.cxx ${CalibSvc_headers}
 
+private
+macro WinInclude "" WIN32 "test/*.h test/*.txt"
+
+public
+set JOBOPTIONS "${CALIBSVCROOT}/src/test/jobOptions.txt"
+application simpletest ${GlastMain} test/*.cxx $(WinInclude)
 
