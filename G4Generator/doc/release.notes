@@ -3,6 +3,7 @@
 @verbatim
     $Id$
 
+ v5r6   07-aug-03 LSR updates to pruning; check for z offset
  v5r5   04-jul-03 THB Remove all GUI code (moved to DetDisplay or Recon); fix McTraj code for track display
  v5r4   05-jun-03 THB Implemnt flexible multiplescattering selection
  v5r3   30-may-03 THB Update for G4 5.1 interface changes. Also, now has mag field
