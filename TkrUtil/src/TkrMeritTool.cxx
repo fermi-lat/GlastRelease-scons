@@ -296,7 +296,7 @@ double TkrMeritTool::radLen(int layer) const {
 }
 
 StatusCode TkrMeritTool::doExtraHits(const Event::TkrVertex& vertex,
-                               const Event::TkrClusterCol& clusters,
+                               const Event::TkrClusterCol& /* clusters */,
                                double energy)
 {    
     // Hardwired constants for this method

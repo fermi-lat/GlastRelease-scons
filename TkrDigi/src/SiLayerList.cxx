@@ -4,10 +4,10 @@
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 IGeometry::VisitorRet 
-  SiLayerList::pushShape(ShapeType s, const UintVector& idvec, 
-                           std::string name, std::string material, 
-                           const DoubleVector& params, 
-                           VolumeType type)
+  SiLayerList::pushShape(ShapeType /* s */, const UintVector& idvec, 
+                           std::string name, std::string /* material */, 
+                           const DoubleVector& /* params */, 
+                           VolumeType /* type */)
 {
     // concatenate the id for this node to current id.
     m_idcount.push_back(idvec.size());

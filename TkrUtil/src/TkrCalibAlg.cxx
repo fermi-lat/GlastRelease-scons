@@ -92,8 +92,6 @@ StatusCode TkrCalibAlg::initialize()
             << endreq;
         return sc;
     }
-
-    unsigned long foo = 0;
     
     sc = service("TkrBadStripsSvc", m_pTkrBadStripsSvc, true);
     if ( !sc.isSuccess()) {
