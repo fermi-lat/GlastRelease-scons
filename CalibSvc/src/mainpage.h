@@ -91,14 +91,28 @@
        must also set CalibMySQLCnvSvc.UseEventTime to "false"</dd>
   <dt> CalibTimeSource</dt> <dd> Use value "data" for actual instrument
        data, "mc" (when implemented) for Monte Carlo, "clock" for fake
-       event time.  Default is "none", also the correct value for mode 3.
-       Currently it is not strictly necessary to specify "clock" for
-       fake event time, but this implementation is expected to change.</dd>
+       event time. (Old method of using fake clock via algorithm EvtClock
+       is still available, but deprecated.)  Default is "none", also 
+       the correct value for mode 3 (use enter_time of calibration rather
+       than validity interval).       </dd>
+  <dt> startTime </dt> <dd> Only relevant if CalibTimeSource="clock". 
+       Start time for the fake clock, in format "yyyy-mm-dd hh:ss".
+       Hours and seconds may be omitted. Defaults to "2003-1-10 00:20"  </dd>
+  <dt> delayTime</dt> <dd> Only relevant if CalibTimeSource="clock".
+       Difference in timestamp values (units of milliseconds) between
+       adjacent events.  Defaults to 2000.</dd>
   <dt> DbName</dt>         <dd>defaults to "calib", the production dbs for
        calibration metadata.  Algorithm developers, etc., may need to
        use the development database, "calib_user", instead.
   </dd>
   </dl>
+
+  <ul>
+  <li>  startTime, defaults to current time. Time assigned to first event </li>
+  <li>  delayTime, defaults to 2 seconds. Difference in timestamps between
+        adjacent events</li>
+  </ul>
+
 
   The service CalibMySQLCnvSvc has the following job options properties:
   <dl>
@@ -117,15 +131,10 @@ Ignored unless UseEventTime is false.  </dd>
   </dl>
 
 
-  The algorithm CalibEvtClock, used in the test program to generate fake event
-  times and store them with CalibDataSvc, may also be scheduled by user
-  applications.  It has job options properties
+  The algorithm CalibEvtClock is the old method used in  test programs to 
+  generate fake event times, now deprecated.  Set 
+  CalibDataSvc.CalibTimeSource = "clock" instead.
 
-  <ul>
-  <li>  startTime, defaults to current time. Time assigned to first event </li>
-  <li>  delayTime, defaults to 2 seconds. Difference in timestamps between
-        adjacent events</li>
-  </ul>
 
   @todo    Figure out what other information from the metadata needs to
            be acquired and saved, and where it should go.
