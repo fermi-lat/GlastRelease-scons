@@ -20,7 +20,7 @@ Wafers for a layer
  -->
   <prim name="numTrays" value="4" uType="count" type="int">
 number of trays (one more than number of x-y planes)</prim>
-  <prim name="numNoCnvTrays" value="2" uType="count" type="int">
+  <prim name="numNoCnvTrays" value="0" uType="count" type="int">
 number of trays 
     with no converter.  These trays have the lowest tray number</prim>
   <prim name="numSuperGlast" value="0" uType="count" type="int">
