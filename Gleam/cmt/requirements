@@ -62,18 +62,18 @@ use AcdDigi              v1r4
 
 
 #reconstruction
-use Trigger     v3r3p3
-use Recon       v2r3p2
+use Trigger             v3r3p4
+use Recon               v2r3p3
 
 use TkrRecon            v8r1
 use CalRecon    v5r7p2  
-use AcdRecon            v1r2       
+use AcdRecon            v1r2p1       
 
 #ROOT persistence: RootIo specifies the data packages
 use RootIo              v4r12
 
 #diagnostic and summary of bottom line
-use merit       v5r8p2
+use merit               v5r8p3
 
 ### define a simple executable with GUI
 
