@@ -58,7 +58,7 @@ use G4Generator  v4r3p4
 #digitization
 use CalDigi     v1r2p6
 use TkrDigi     v1r6
-use AcdDigi     v1r4
+use AcdDigi             v1r4p0
 
 
 
@@ -68,7 +68,7 @@ use Recon       v2r3p5
 
 use TkrRecon             v8r2
 use CalRecon    v5r7p5 
-use AcdRecon    v1r2p1       
+use AcdRecon             v1r3       
 
 #ROOT persistence: RootIo specifies the data packages
 use RootIo               v4r16
