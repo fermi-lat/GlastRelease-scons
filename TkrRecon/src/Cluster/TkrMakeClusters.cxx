@@ -224,5 +224,3 @@ const stripCol* TkrMakeClusters::getBadStrips(int tower, int digiLayer,
     }
     return badStrips;
 }
-
- 
