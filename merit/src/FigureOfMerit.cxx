@@ -56,8 +56,10 @@ private:
 
     virtual bool apply (){ 
         float val = item();
-        if( val < m_last ) m_last=0;  // in case concatenated input files
-        m_total += val - m_last;
+        if( m_last>0 ){ // use first entry  for setting start time
+            if( val < m_last ) m_last=0;  // in case concatenated input files
+            m_total += val - m_last;
+        }
         m_last = val;
         return    true;
     };
