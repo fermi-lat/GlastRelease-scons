@@ -32,7 +32,10 @@
 
 namespace detModel{
 
-  IDmapBuilder::IDmapBuilder(std::string nvol)
+  IDmapBuilder::IDmapBuilder(std::string nvol) 
+    : m_topSeen(false), 
+    m_transformPrefix(HepTransform3D::Identity),
+    m_inverseTransformPrefix(HepTransform3D::Identity)
   {
     setRecursive(0);
     m_actualVolume = nvol;
@@ -40,8 +43,8 @@ namespace detModel{
 
 IDmapBuilder::~IDmapBuilder()
 {
-  for(std::map<idents::VolumeIdentifier,const PositionedVolume*>::iterator i=m_volMap.begin();
-      i != m_volMap.end();i++)
+  for (std::map<idents::VolumeIdentifier,const PositionedVolume*>::iterator i
+         = m_volMap.begin(); i != m_volMap.end(); i++)
     {
       delete (*i).second;
       (*i).second = 0;
@@ -58,7 +61,7 @@ void IDmapBuilder::visitGdd(Gdd* gdd)
 
   m_gdd = gdd;
   sec s = gdd->getSections();
-  for(i=s.begin(); i!=s.end();i++)
+  for (i=s.begin(); i!=s.end();i++)
     (*i)->AcceptNotRec(this);
 
 }
@@ -67,33 +70,26 @@ void  IDmapBuilder::visitSection(Section* section)
 {
   Volume* vol=0;
   std::vector <Volume*>::iterator v;
-  
-  if (m_actualVolume == "")
-    {
-      std::vector<Volume*> volumes = section->getVolumes();
+
+  if (m_actualVolume != "") {  // just make sure it exists
+    if (!(m_gdd->getVolumeByName(m_actualVolume))) {
+      std::cout << "No such volume" << std::endl;
+      exit(0);
+    }
+  }
+  //  if (m_actualVolume == "")
+  // Now always start with section's top volume
+  std::vector<Volume*> volumes = section->getVolumes();
       
-      for(v=volumes.begin(); v!=volumes.end(); v++){
-	if(Ensemble* ens = dynamic_cast<Ensemble*>(*v))
-	  {
-	    if (ens == section->getTopVolume())
-	      vol = ens;
-	  }
+  for (v=volumes.begin(); v!=volumes.end(); v++){
+    if (Ensemble* ens = dynamic_cast<Ensemble*>(*v))
+    {
+      if (ens == section->getTopVolume()) {
+        vol = ens;
+        break;         // I think! must ask Riccardo if break is OK here
       }
     }
-  else
-    {
-      //      Manager* manager = Manager::getPointer();
-      //      if (manager->getGdd()->getVolumeByName(m_actualVolume))
-      //	vol = manager->getGdd()->getVolumeByName(m_actualVolume);
-      if (m_gdd->getVolumeByName(m_actualVolume))
-	vol = m_gdd->getVolumeByName(m_actualVolume);
-      else
-	{
-	  std::cout << "No such volume" << std::endl;
-	  exit(0);
-	}
-    }
-
+  }
   vol->AcceptNotRec(this);
 }
 
@@ -104,7 +100,7 @@ void  IDmapBuilder::visitEnsemble(Ensemble* ensemble)
   
   /// Here the positioned volumes are visited
   pos p = ensemble->getPositions();
-  for(i=p.begin(); i!=p.end();i++)
+  for (i=p.begin(); i!=p.end();i++)
     (*i)->AcceptNotRec(this);
 
 }
@@ -125,18 +121,29 @@ void  IDmapBuilder::visitPosXYZ(PosXYZ* pos)
   unsigned int i;
   idents::VolumeIdentifier tempID = m_actualID;
 
-  m_actualPos = m_actualPos + m_actualRot*Hep3Vector(pos->getX(), pos->getY(), pos->getZ());
+  m_actualPos = m_actualPos + 
+    m_actualRot*Hep3Vector(pos->getX(), pos->getY(), pos->getZ());
 
   m_actualRot.rotateX(pos->getXRot()*GDDPI/180);
   m_actualRot.rotateY(pos->getYRot()*GDDPI/180);
   m_actualRot.rotateZ(pos->getZRot()*GDDPI/180);
   
   /// Set the identifier
-  for(i=0;i<(pos->getIdFields()).size();i++)
+  for (i=0;i<(pos->getIdFields()).size();i++)
     m_actualID.append((int) pos->getIdFields()[i]->getValue());
   
-  insertVolume(pos->getVolume());
-  pos->getVolume()->AcceptNotRec(this);
+  Volume* vol = pos->getVolume();
+  if (!(m_topSeen)) {
+    if (vol->getName() == m_actualVolume) {
+      m_topSeen = true;
+      m_IDPrefix = tempID;
+      m_transformPrefix = HepTransform3D(tempRotation, tempPos);
+      m_inverseTransformPrefix = m_transformPrefix.inverse();
+    }
+  }
+
+  insertVolume(vol);
+  vol->AcceptNotRec(this);
   
   m_actualID = tempID;
 
@@ -180,17 +187,28 @@ void  IDmapBuilder::visitAxisMPos(AxisMPos* pos)
 
   for(i=0;i<pos->getNcopy();i++)
     {
-      m_actualPos = m_actualPos + origin + (pos->getDisp(i))*(m_actualRot*stackDir);
+      m_actualPos = m_actualPos + origin + 
+        (pos->getDisp(i))*(m_actualRot*stackDir);
 
       /// ID stuff
       for(j=0;j<pos->getIdFields().size();j++)
 	{	
-	  m_actualID.append((int)(pos->getIdFields()[j]->getValue())+(int)(pos->getIdFields()[j]->getStep()*i));
+	  m_actualID.append((int)(pos->getIdFields()[j]->getValue())+
+                            (int)(pos->getIdFields()[j]->getStep()*i));
 	}
 
+      Volume* vol = pos->getVolume();
+      if (!(m_topSeen)) {
+        if (vol->getName() == m_actualVolume) {
+          m_topSeen = true;
+          m_IDPrefix = tempID;
+          m_transformPrefix = HepTransform3D(tempRotation, tempPos);
+          m_inverseTransformPrefix = m_transformPrefix.inverse();
+        }
+      }
 
-      insertVolume(pos->getVolume());      
-      pos->getVolume()->AcceptNotRec(this);
+      insertVolume(vol);
+      vol->AcceptNotRec(this);
       
       m_actualID = tempID;
       m_actualPos = tempPos;
@@ -220,7 +238,7 @@ void IDmapBuilder::insertVolume(Volume* vol)
     }
   else volume = vol;
 
-  /// This is the criterium to add the volume
+  /// This is the criterion to add the volume
   if(Shape* shape = dynamic_cast<Shape*>(volume))
     {
       if (shape->getSensitive())
@@ -230,25 +248,30 @@ void IDmapBuilder::insertVolume(Volume* vol)
 	  pos->setTranslation(m_actualPos);
 	  pos->setRotation(m_actualRot);
  	  m_volMap[m_actualID] = pos;
-      // also save a vector of id's
-      m_idvec.push_back(m_actualID);
+          // also save a vector of id's
+          m_idvec.push_back(m_actualID);
 	}
     }
 }  
 
-const std::map<idents::VolumeIdentifier, const PositionedVolume*>* IDmapBuilder::getVolMap() const
+const std::map<idents::VolumeIdentifier, const PositionedVolume*>* 
+IDmapBuilder::getVolMap() const
 {
   return &m_volMap;
 }
 
-const PositionedVolume* IDmapBuilder::getPositionedVolumeByID(idents::VolumeIdentifier id) const
+const PositionedVolume* 
+IDmapBuilder::getPositionedVolumeByID(idents::VolumeIdentifier id) const
 {
     PVmap::const_iterator i = m_volMap.find(id);
     return i != end() ?  (*i).second : 0;
 
 }
 
-bool IDmapBuilder::getTransform3DByID(idents::VolumeIdentifier id, HepTransform3D* tr)
+
+
+bool IDmapBuilder::getTransform3DByID(idents::VolumeIdentifier id, 
+                                      HepTransform3D* tr)
 {
   const PositionedVolume* pv = getPositionedVolumeByID(id);
   if (pv)
@@ -259,6 +282,38 @@ bool IDmapBuilder::getTransform3DByID(idents::VolumeIdentifier id, HepTransform3
     }
   else return false;
 }
+
+bool IDmapBuilder::getTransform3DByTopID(idents::VolumeIdentifier id, 
+                                         HepTransform3D* tr)
+{
+  idents::VolumeIdentifier fullId = m_IDPrefix;
+  fullId.append(id);
+  return getTransform3DByID(fullId, tr);
+}
+
+bool IDmapBuilder::getTopTransform3DByTopID(idents::VolumeIdentifier id, 
+                                            HepTransform3D* tr) {
+
+  // Don't do unnecessary algebra for common case of top volume = world
+  if (m_IDPrefix.size() == 0) return getTransform3DByID(id, tr);
+
+  if (!(getTransform3DByTopID(id, tr))) return false;
+  *tr = m_inverseTransformPrefix * (*tr);
+
+  return true;
+}
+
+bool IDmapBuilder::getTopTransform3DByID(idents::VolumeIdentifier id, 
+                                         HepTransform3D* tr) {
+  // Don't do unnecessary algebra for common case of top volume = world
+  if (m_IDPrefix.size() == 0) return getTransform3DByID(id, tr);
+
+  if (!(getTransform3DByID(id, tr))) return false;
+  *tr = m_inverseTransformPrefix * (*tr);
+
+  return true;
+}
+  
 
 bool IDmapBuilder::getShapeByID(idents::VolumeIdentifier id,
                                 std::string* s, std::vector<double>* params)
@@ -281,24 +336,38 @@ bool IDmapBuilder::getShapeByID(idents::VolumeIdentifier id,
   else return false;
 }
 
+bool IDmapBuilder::getShapeByTopID(idents::VolumeIdentifier relId, 
+                                   std::string* s, 
+                                   std::vector<double>* params) {
 
+  if (m_IDPrefix.size() == 0) return getShapeByID(relId, s, params);
+
+  idents::VolumeIdentifier global = m_IDPrefix;
+  global.append(relId);
+
+  return getShapeByID(global, s, params);
+}
 
 void IDmapBuilder::summary(std::ostream & out) 
 {
     std::map<std::string, unsigned int> names;
 
     for( PVmap::const_iterator it = begin(); it !=end(); ++it){
-        const detModel::PositionedVolume * pv = (*it).second;
-        const detModel::Volume* vol = pv->getVolume();
-        std::string name = vol->getName();
-        names[name]++;
+      const detModel::PositionedVolume * pv = (*it).second;
+      const detModel::Volume* vol = pv->getVolume();
+      std::string name = vol->getName();
+      names[name]++;
     }
     out << "Summary of IDmap contents:" << std::endl
-        << std::setw(20) << "Detector name" << std::setw(10) << "count" << std::endl
-        << std::setw(20) << "-------------" << std::setw(10) << "-----" << std::endl;
+        << std::setw(20) << "Detector name";
+    out << std::setw(10) << "count" << std::endl
+        << std::setw(20) << "-------------" 
+        << std::setw(10) << "-----" << std::endl;
     
-    for( std::map<std::string, unsigned int>::iterator j=names.begin(); j!=names.end(); ++j){
-        out << std::setw(20) << (*j).first << std::setw(10) << (*j).second << std::endl;
+    for( std::map<std::string, unsigned int>::iterator j=names.begin(); 
+         j!=names.end(); ++j){
+      out << std::setw(20) << (*j).first;
+      out << std::setw(10) << (*j).second << std::endl;
     }
     out << std::setw(20) << "total:" << std::setw(10) << size() << std::endl;
 }

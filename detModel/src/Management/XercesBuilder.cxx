@@ -126,18 +126,42 @@ namespace detModel{
       return c;
     }//end if
     else{
-      //e is a const element    
-      DoubleConst* c=new DoubleConst;
-      DOM_Element n;
-
-      double val=atof(xml::Dom::transToChar
-                      (attr.getNamedItem(DOMString("value")).getNodeValue()));
+      //e is a const element.  Can be any of the numeric types
+      // For backward compatibility, if no "type" attribute, treat
+      // it as a double
+      if (attr.getNamedItem(DOMString("type")) == DOM_Node() ) {
+        typeOfConst = "double";
+      }  else {
+        typeOfConst=
+        std::string(xml::Dom::transToChar
+                    (attr.getNamedItem(DOMString("type")).getNodeValue()));
+      }
+      Const* c;
+      if (typeOfConst=="int"){
+	c=new IntConst;
+	int val=atoi(xml::Dom::transToChar
+                     (attr.getNamedItem(DOMString("value")).getNodeValue()));
+	((IntConst*)c)->setValue(val);
+      }
+      else if (typeOfConst=="float"){
+	c=new FloatConst;
+	float val=atof(xml::Dom::transToChar
+                       (attr.getNamedItem(DOMString("value")).getNodeValue()));
+	((FloatConst*)c)->setValue(val);
+      }
+      else if (typeOfConst=="double"){
+	c=new DoubleConst;
+	double val=
+          atof(xml::Dom::transToChar
+               (attr.getNamedItem(DOMString("value")).getNodeValue()));
+	((DoubleConst*)c)->setValue(val);
+      }
+      else return 0;
 
       c->setName(name);
       c->setConstMeaning(ut);
-      c->setValue(val);
     
-      n = static_cast<DOM_Element&>(e);
+      DOM_Element n = static_cast<DOM_Element&>(e);
       DOM_NodeList nodelist = n.getElementsByTagName(DOMString("notes"));
 
       if (nodelist.getLength()) {

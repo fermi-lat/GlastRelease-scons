@@ -112,4 +112,20 @@ namespace detModel{
       }
     else return false;
   }
+
+  bool Manager::getNumericConstByName(std::string name, int* res)
+  {
+    Gdd* gdd = getGdd();
+    Const* con = gdd->getConstByName(name);
+
+    if (con) 
+      {
+	if (IntConst* in = dynamic_cast<IntConst*>(con)) {
+	  *res = in->getValue();
+          return true;
+        }
+      }
+    return false;
+  }
+
 }
