@@ -210,7 +210,7 @@ int checkMcIntegratingHit(McIntegratingHit* mcIntHit, UInt_t ipart,
     mcIntHit->itemizedEnergyReset();
     const McParticle *myPart;
     double energy;
-    if (mcIntHit->itemizedEnergySize() != 0) {
+    if (mcIntHit->itemizedEnergySize() != 1) {
         std::cout << "McIntHit map size: " << mcIntHit->itemizedEnergySize() << std::endl;
         return -1;
     }
@@ -356,8 +356,8 @@ int write(char* fileName, UInt_t numEvents) {
             id.append(0);
             intHit->initialize(id);
             TVector3 pos = mcPart->getFinalPosition();
-//            TVector3 pos2(1.3, 0.0, 12.0);
-//            intHit->addEnergyItem(1.5, mcPart, pos);
+            TVector3 pos2(1.3, 0.0, 12.0);
+            intHit->addEnergyItem(1.5, mcPart, pos);
             double totE = 5.5;
             double energyArr[3] = { 2.5, 3.0, 0.0 };
             TVector3 moment1(1.0, 2.0, 3.0);
