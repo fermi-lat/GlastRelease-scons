@@ -48,7 +48,7 @@ std::string VolumeIdentifier::name(const char* delimiter) const
     unsigned int bufIds = 0;
     
     // this is a 64 bit mask with 6 bits (positions 54-59) set to 1 and the others to 0
-    static int64 mask = 0x0fc0000000000000;
+    static int64 mask =0x3f << 54; // 0x0fc0000000000000;
     
     int64 copyValue = m_value;
     
