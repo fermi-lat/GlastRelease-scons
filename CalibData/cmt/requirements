@@ -17,6 +17,6 @@ private
 
 apply_pattern package_headers
 
-library CalibData *.cxx Cal/*.cxx Tkr/*.cxx ${CalibData_headers}
+library CalibData *.cxx Cal/*.cxx Tkr/*.cxx Acd/*.cxx ${CalibData_headers}
 
 
