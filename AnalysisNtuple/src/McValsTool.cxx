@@ -167,8 +167,10 @@ StatusCode McValsTool::calculate()
         Event::McParticle::StdHepId hepid= (*pMCPrimary)->particleProperty();
         MC_Id = (double)hepid;
         ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
-        std::string name = ppty->particle(); 
-        MC_Charge = ppty->charge();
+        if (ppty) {
+            std::string name = ppty->particle(); 
+            MC_Charge = ppty->charge();
+        }
         
         HepPoint3D Mc_x0;
         // launch point for charged particle; conversion point for neutral
