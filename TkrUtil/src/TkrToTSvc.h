@@ -14,6 +14,7 @@ $Header$
 #include "TkrUtil/ITkrToTSvc.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
 #include "GaudiKernel/Service.h"
+#include "idents/TowerId.h"
 
 /** @class TkrToTSvc
 * @brief Service to store and compare to a list of desired failure modes in

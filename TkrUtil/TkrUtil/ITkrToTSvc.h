@@ -10,6 +10,7 @@ $Header$
 
 // Include files
 #include "GaudiKernel/IInterface.h"
+#include "idents/VolumeIdentifier.h"
 
 // Declaration of the interface ID ( interface id, major version,
 // minor version)
