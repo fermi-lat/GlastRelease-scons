@@ -334,6 +334,6 @@ Rotation GPS::rockingAngleTransform(double time){
 }
 
 Rotation GPS::transformGlastToGalactic(double time){
-    return (rockingAngleTransform(time).inverse())*(m_orbit->CELtransform(time).inverse());
+    return (m_orbit->CELtransform(time).inverse())*(rockingAngleTransform(time).inverse());
 }
 

@@ -46,7 +46,7 @@
      <source name="gal10020" flux="100.">
           <spectrum>
               <particle name="gamma"> <energy e="0.1"/> </particle>
-               <galactic_dir l="50" b="80"/>
+               <galactic_dir l="50" b="-30"/>
           </spectrum>
      </source>
 
