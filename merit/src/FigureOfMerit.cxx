@@ -42,7 +42,7 @@ private:
 //=============================================================================
 class FOMelapsed : public Analyze {
 public:
-    FOMelapsed(const Tuple&t ): Analyze(t, "elapsed_time", "Elapsed time (sec):"), m_total(0),m_last(0) {};
+    FOMelapsed(const Tuple&t ): Analyze(t, "EvtTime", "Elapsed time (sec):"), m_total(0),m_last(0) {};
     void FOMelapsed::report(std::ostream& out)
     {
         using namespace std;
