@@ -1,5 +1,5 @@
 #include "CalRecon/CalXtalRecAlg.h"
-#include "CalRecon/CalXtalRecData.h"
+#include "GlastEvent/Recon/CalRecon/CalXtalRecData.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -12,6 +12,8 @@ static const AlgFactory<CalXtalRecAlg>  Factory;
 const IAlgFactory& CalXtalRecAlgFactory = Factory;
 #include "GlastEvent/Digi/CalDigi.h"
 #include <map>
+
+using namespace GlastEvent;
 
 // constructor
 CalXtalRecAlg::CalXtalRecAlg(const std::string& name, ISvcLocator* pSvcLocator):
@@ -113,7 +115,7 @@ StatusCode CalXtalRecAlg::execute()
 		   << " col=" << icol  << endreq;
 
 
-	   CalXtalRecData* recData = new CalXtalRecData((*it)->getMode(),xtalId);
+	   GlastEvent::CalXtalRecData* recData = new GlastEvent::CalXtalRecData((*it)->getMode(),xtalId);
 	   
 	   computeEnergy(recData, *it);
 	   computePosition(recData);

@@ -5,10 +5,8 @@
 #include "GaudiKernel/Algorithm.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "geometry/Vector.h"
-#include "CalRecon/CalXtalRecData.h"
-
-class CsIClusterList;
-class CsICluster;
+#include "GlastEvent/Recon/CalRecon/CalXtalRecData.h"
+#include "GlastEvent/Recon/CalRecon/CalCluster.h"
 class Midnight;
 
 //----------------------------------------------
@@ -72,7 +70,7 @@ public:
     //! Leakage corrections with last layer
     double Leak(double sum,double elast);
     //! Leakage corrections with profile fitting
-    void Profile(double sum, CsICluster* cl);
+    void Profile(double sum, GlastEvent::CalCluster* cl);
     //! Direction reconstruction
     Vector Fit_Direction(std::vector<Vector> pos,std::vector<Vector> sigma2,int nlayers);
     
@@ -83,9 +81,9 @@ protected:
 private:
     
     //! reconstructed data for crystals, the input of the reconstruction
-    CalXtalRecCol* m_CalXtalRecCol;
+	GlastEvent::CalXtalRecCol* m_calXtalRecCol;
     //! the clusters list, the output of the reconstruction
-    CsIClusterList* m_CsIClusterList;
+    GlastEvent::CalClusterCol* m_calClusterCol;
     //! the minimizer for Profile()
     Midnight* minuit;
     int m_callNumber;

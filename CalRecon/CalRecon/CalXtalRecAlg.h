@@ -3,11 +3,9 @@
 
 #include "GaudiKernel/Algorithm.h"
 #include "GlastEvent/Digi/CalDigi.h"
-#include "CalRecon/CalXtalRecData.h"
+#include "GlastEvent/Recon/CalRecon/CalXtalRecData.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
-class CalDigi;
-class CalXtalRecData;
 
 //----------------------------------------------
 //
@@ -38,14 +36,13 @@ protected:
     
 private:
     
-    void computeEnergy(CalXtalRecData* recLog, const cal::CalDigi* adcLog); 
-    void computePosition(CalXtalRecData* recLog);
+    void computeEnergy(GlastEvent::CalXtalRecData* recLog, const cal::CalDigi* adcLog); 
+    void computePosition(GlastEvent::CalXtalRecData* recLog);
     
 private:
     
-//    ICalGeometrySvc* m_CalGeo;
 	cal::CalDigiCol* m_CalDigiCol;
-    CalXtalRecCol* m_CalXtalRecCol;
+    GlastEvent::CalXtalRecCol* m_CalXtalRecCol;
 
         enum {fLATObjects, fTowerY, fTowerX, fTowerObjects, fLayer,
             fMeasure, fCALXtal,fCellCmp, fSegment};
