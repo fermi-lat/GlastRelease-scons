@@ -100,8 +100,8 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
     StatusCode sc;
     MsgStream log(msgSvc(), name());
 
-    if (storageType == "EBFFILE") {
-      m_criteriaType = EBFFILE;
+    if (storageType == "LDFFILE") {
+      m_criteriaType = LDFFILE;
 
       m_fileName = (m_inputList.value())[0];
 
@@ -120,8 +120,8 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
       }
       m_ebfParser->setDebug((m_ebfDebugLevel != 0) );
 
-    } else if (storageType == "EBFFITS") {
-      m_criteriaType = EBFFITS;
+    } else if (storageType == "LDFFITS") {
+      m_criteriaType = LDFFITS;
 
       m_fileName = (m_inputList.value())[0];
 
@@ -219,7 +219,7 @@ StatusCode LdfEventSelector::getFileName(ListName::const_iterator* inputIt,
 
     MsgStream log(msgSvc(), name());
     
-    if( m_criteriaType == EBFFILE){                 // If CRITERIA = FILE Get File name
+    if( m_criteriaType == LDFFILE){                 // If CRITERIA = FILE Get File name
         fName = **inputIt;
     } else if(m_criteriaType == NONE)  {
         log << MSG::ERROR << "Selection Criteria set to NONE can't get file Name" << endreq;
@@ -238,7 +238,7 @@ IEvtSelector::Iterator* LdfEventSelector::begin() const {
     MsgStream log(msgSvc(), name());
     //    StatusCode sc;       [unused for now]
 
-    if ((m_criteriaType == EBFFILE) || (m_criteriaType == EBFFITS) ) {
+    if ((m_criteriaType == LDFFILE) || (m_criteriaType == LDFFITS) ) {
         
         log << MSG::DEBUG << " Input data set is " << m_fileName << endreq;
         m_it->m_recId = 0;                           
@@ -267,8 +267,8 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
   const {
     MsgStream log(msgSvc(), name());
     
-    if  ((m_criteriaType == EBFFILE) ||
-         (m_criteriaType == EBFFITS) )
+    if  ((m_criteriaType == LDFFILE) ||
+         (m_criteriaType == LDFFITS) )
     {
         LdfEvtIterator* irfIt = dynamic_cast<LdfEvtIterator*>(&it);
         

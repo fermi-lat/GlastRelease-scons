@@ -60,8 +60,8 @@ public:
     
 private:
   enum CriteriaType { 
-    EBFFILE, //When the input is a raw file
-    EBFFITS, //When the input is fitsified raw ebf
+    LDFFILE, //When the input is a raw file
+    LDFFITS, //When the input is fitsified raw ldf
     NONE     //When there is no input
   };
     
@@ -70,7 +70,7 @@ private:
   //! Used internally to get the MaxEvent from the ApplicationMgr
   StatusCode LdfEventSelector::getMaxEvent();
 
-  /// Job options parameter. Options are EBFFILE, EBFFITS
+  /// Job options parameter. Options are LDFFILE, LDFFITS
   StringProperty        m_storageType;
 
   /// Job options parameter. List of input data files
