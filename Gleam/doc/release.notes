@@ -2,6 +2,7 @@
  * package Gleam
  * package manager:T.Burnett
  *
+ * v0r4   27-mar-02 THB Recon, GlastEvent, G4Generator new McParticle class
  * v0r3   26-mar-02 THB Reocn, G4Generator with proper rotation angles
  * v0r2   25-mar-02 THB new facilities, recon, xmlgeodbs
  * v0r1   22-mar-02 THB new gui, recon, xmlgeodbs
