@@ -2,6 +2,7 @@
  * Coordinator:H.Kelly
  *
  @verbatim
+ * v3r3   26-sep-2003 THB : Implement multiple TTree's in RootTupleSvc; also settable autosave property
  * v3r2p3 29-aug-2003 THB : make default RootTupleSvc filename more descriptive 
  * v3r2p2 25-aug-2003 THB : try to account for isfinite gcc 3.2 
  * v3r2p1 25-aug-2003 THB : apply fix for closing RootTupleSvc
