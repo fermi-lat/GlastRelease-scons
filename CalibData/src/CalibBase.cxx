@@ -26,6 +26,11 @@ namespace CalibData {
     m_serNo     = other.m_serNo;
   }
 
+  CalibBase::~CalibBase() {
+    delete m_validSince;
+    delete m_validTill;
+  }
+
   // Should be overridden by derived classes
   void CalibBase::update(CalibBase& obj) {
     delete m_validSince;
