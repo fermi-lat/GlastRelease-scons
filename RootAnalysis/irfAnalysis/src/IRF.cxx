@@ -50,6 +50,9 @@ void IRF::open_input_file()
     }
     std::cout << "Opened root file " << input_filename() << std::endl;
     m_tree = (TTree*)m_file->Get(tree_name.c_str());
+    if(m_tree==0){ // try this too.
+        m_tree = (TTree*)m_file->Get("MeritTuple");
+    }
     if( m_tree==0) {
         std::cerr << "Did not find tree \"" << tree_name << "\" in the input file" << std::endl;
         throw "did not find the TTree";
