@@ -4,7 +4,8 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
-   26-mar-05  v6r21 THB   Allow RootTupleSvc to not be available-2nd try
+   26-mar-05  v6r21p1 THB  Add property to allow saving of pointing into in tuple to be normally off, until set by merit
+   26-mar-05  v6r21   THB  Allow RootTupleSvc to not be available-2nd try
    21-mar-05  v6r20p2 THB  Allow RootTupleSvc to not be available-2nd try
    21-mar-05  v6r20p1 THB  Allow RootTupleSvc to not be available
    21-mar-05  v6r20   THB  Move history and pointing stuff to new class, have it generate tuples

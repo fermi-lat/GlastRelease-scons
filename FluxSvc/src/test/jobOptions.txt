@@ -53,6 +53,8 @@ ApplicationMgr.EvtMax = 1000000; // needs to be set,
 MessageSvc.OutputLevel      = 3;
 ExposureAlg.OutputLevel=2;
 FluxAlg.sources={"timetick30s","default"};
+// uncomment next to test saving all pointing info entries
+//FluxAlg.save_pointing_info=true;
 
 // this to set up the DC2 standard.
 //FluxSvc.StartDate=""; // actually 1-may-07 00:00??
