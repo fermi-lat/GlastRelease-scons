@@ -14,8 +14,10 @@ namespace xmlUtil {
   }
 
   bool GDDDocMan::parse(const std::string& filename, bool saveNotes) {
+    using namespace xml;
+
     m_constsClient->m_saveNotes = saveNotes;
-    return this->xml::DocMan::parse(filename);
+    return DocMan::parse(filename);
   }
 
   GDDDocMan::GDDDocMan() {
