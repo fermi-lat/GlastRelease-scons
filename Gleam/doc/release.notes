@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v5r2p4 THB 15-aug-03   fix spelling (grin)
 * v5r2p3 THB 14-aug-03   fix spelling (grin)
 * v5r2p2 THB 14-aug-03   Add GRB and CRflux
 * v5r2p1 THB 20-jul-03   Take TkrDisplayAlg out of guiOptions. (it is a sub-alg)
