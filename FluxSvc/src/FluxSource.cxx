@@ -355,11 +355,11 @@ void FluxSource::computeLaunch (double time)
         // kinetic_energy= (*spectrum())(RandFlat::shoot(m_rmin, m_rmax));
         //FIXME: make this a class variable
         kinetic_energy = spectrum()->energySrc( HepRandom::getTheEngine(), time + m_extime );
+        //std::cout << "kinetic energy=" << kinetic_energy << " , max=" << m_maxEnergy* fudge << std::endl;
         //kinetic_energy = spectrum()->operator ()(HepRandom::getTheEngine()->flat());// time + m_extime );
     }    while (kinetic_energy > m_maxEnergy* fudge);
     
     // get the launch point and direction, according to the various strategies
-    
     switch (m_launch) {
     case SPECTRUM:
         {
