@@ -97,27 +97,28 @@
 <element name="Vacuum" 
 	 z="1" 
 	 aweight="1.01" 
-	 density="0.0"
+	 density="10e-20"
 	 />
 
 <!-- ATTENTION .. THIS MATERIAL MUST BE SPECIFIED -->
 <element name="CarbonFiber" 
-	 z="1" 
-	 aweight="1.01" 
-	 density="0.0"
+	 z="6" 
+	 aweight="12.00" 
+	 density="2.265"
 	 />
+
 <!-- ATTENTION .. THIS MATERIAL MUST BE SPECIFIED -->
 <element name="Fiberglass" 
 	 z="1" 
 	 aweight="1.01" 
-	 density="0.0"
+	 density="10e-20"
 	 />
 
 <!-- ATTENTION .. THIS MATERIAL MUST BE SPECIFIED -->
 <element name="someStuff" 
 	 z="1" 
 	 aweight="1.01" 
-	 density="0.0"
+	 density="10e-20"
 	 />
 
 <composite name="rubber60A1" density = "1.64">
