@@ -74,7 +74,7 @@ void McEvent::Clear(Option_t *option) {
     static McIntegratingHit* keepint[nd];
     
     if (m_particleCol) {
-      /m_particleCol->Delete();
+      //m_particleCol->Delete();
       Int_t n = m_particleCol->GetEntries();
       for (Int_t i=0;i<n;i++) keeppart[indpart+i] = (McParticle*)m_particleCol->At(i);
       indpart += n;
