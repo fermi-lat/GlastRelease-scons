@@ -2,16 +2,16 @@
 
 // Include files
 // Gaudi system includes
-#include "Gaudi/MessageSvc/MsgStream.h"
-#include "Gaudi/Kernel/AlgFactory.h"
-#include "Gaudi/Interfaces/IDataProviderSvc.h"
-#include "Gaudi/DataSvc/SmartDataPtr.h"
-#include "Gaudi/Algorithm/Algorithm.h"
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/Algorithm.h"
 
 // Gaudi ntuple interface
-#include "Gaudi/Interfaces/INTupleSvc.h"
-#include "Gaudi/Interfaces/INTuple.h"
-#include "Gaudi/NTupleSvc/NTuple.h"
+#include "GaudiKernel/INTupleSvc.h"
+#include "GaudiKernel/INTuple.h"
+#include "GaudiKernel/NTuple.h"
 
 // if use the gui
 #include "GuiSvc/IGuiSvc.h"
