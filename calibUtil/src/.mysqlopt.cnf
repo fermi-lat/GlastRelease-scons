@@ -1,0 +1,8 @@
+[reader]
+password	= glastreader
+user            = glastreader
+
+[calibrator]
+password = calibr8or
+user     = calibrator
+

@@ -80,6 +80,13 @@ namespace calibUtil {
                                       const std::string& filename, 
                                       const std::string& calibStatus,
                                       const std::string& procLevel){
+    eRet ret;
+
+    if (!writeCxt) {
+      connectWrite(ret);
+      if (ret != RETOk) return ret;
+    }
+
     if (row.size() > 0) {
       std::cout << 
         "calibration metadata record build already in progress" << std::endl;
@@ -196,10 +203,56 @@ namespace calibUtil {
     return RETOk;
   }
 
-  unsigned int Metadata::findBest(const std::string& calibType, 
-                                  unsigned dispMask, 
-                                  unsigned int timestamp) {
+  Metadata::eRet Metadata::findBest(unsigned int *ser,
+                          const std::string& calibType, 
+                          Timestamp timestamp, 
+                          unsigned int levelMask,    // could have default
+                          const std::string& instrument) // could have default
+  {
     // To be written
+    // Retrieve all rows 
+    //     * of correct calibType
+    //     * for which timestamp is within valid interval
+    //     * which have a match with levelMask
+    //  Don't need all columns of the rows.  Will need at least
+    //       - serial number
+    //       - valid start and end times
+    //       - proc_time
+    //       - calib_status
+  
+    eRet ret;
+    ser = 0;
+    if (!readCxt) {
+      connectRead(ret);
+      if (ret != RETOk) return ret;
+    }
+
+    std::string query("select serial_num, validity_start_time, validity_end_time, proc_time,");
+    query += "calib_status from metadata order by proc_time desc where ";
+    query += "(calib_status = 'OK') and instrument ="; query += instrument;
+    query += "and ";
+    query += timestamp.timeString();
+    query += "'> validity_start_time) and (validity_end_time > '";
+    query += timestamp.timeString();
+
+    while (levelMask) {
+      // find highest priority known bit in levelMask, add appropriate
+      // clause onto query.  Return false if no known bits found
+      std::string q = query;
+      bool ok = addLevel(q, &levelMask);  
+      int ret = mysql_query(readCxt, q.c_str());
+      if (ret) {
+        std::cerr << "MySQL error during SELECT, code " << ret << std::endl;
+        return RETMySQLError;
+      }
+      
+      
+
+      // If got some rows back, process and return; else 
+      // stay in this loop
+    }
+
+
     return 0;
 
   }
@@ -211,5 +264,36 @@ namespace calibUtil {
     // To be written
     return true;
   }
+
+  // Internal utility. Sticks on the last part of the "where" clause
+  // -- the part for dev/prod/..etc.
+  // Return "true" if we added something to the query (found a bit
+  // we understand in *levelMask) otherwise return false.
+  bool Metadata::addLevel(std::string& q, unsigned int *levelMask) {
+    
+    bool ret = true;
+    unsigned int testBit = 0;
+    if ((testBit = LEVELProd) & *levelMask) {
+      q += "and (proc_level=PRODUCTION)";
+    }
+    else if ((testBit = LEVELDev) & *levelMask) {
+      q += "and (proc_level=DEVELOPMENT)";
+    }
+    else if ((testBit = LEVELTest) & *levelMask) {
+      q += "and (proc_level=TEST)";
+    }
+    else if ((testBit = LEVELSuper) & *levelMask) {
+      q += "and (proc_level=SUPERSEDED)";
+    }
+    else {      // All that's left are unknown bits.  
+      testBit = *levelMask;
+      std::cerr << "Improper bit(s) in level mask " << testBit 
+                << std::endl;
+      ret = false;
+    }
+    *levelMask &= (~testBit);
+    return ret;
+  }
+
            
 }
