@@ -5,3 +5,4 @@
 # certain files from those directories. 
 
 EXCLUDE_PATTERNS       = "*rootcint*" "*Header*" "LiveTime.*"
+DISTRIBUTE_GROUP_DOC   = YES
