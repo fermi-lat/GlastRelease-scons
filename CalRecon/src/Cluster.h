@@ -58,59 +58,9 @@ public:
 
 	virtual Event::CalClusterCol* getClusterCol() {return m_calClusterCol;};
 	
-	virtual double getEnergy() {return m_ene;};
-    
-	virtual Vector getClusterPosition() {return m_pCluster;};
-    
-	virtual std::vector<double> getEnergyPerLayer() 
-	{return m_eneLayer;};
-	
-	virtual std::vector<Vector> getPositionPerLayer() 
-	{return m_pLayer;};
-	
-	virtual std::vector<Vector> getRmsPerLayer() 
-	{return m_rmsLayer;};
-	
-	virtual double getRmsTrans() {return m_rms_trans;};
-	
-	virtual double getRmsLong() {return m_rms_long;};
-
 	virtual void setClusterCol(Event::CalClusterCol* calClusterCol)
 			{m_calClusterCol = calClusterCol;};
 
-	
-	virtual void setData(Event::CalXtalRecCol* calXtalRecCol,
-		double energy,
-		std::vector<double> EnergyVector,
-		Vector pos,
-		std::vector<Vector> PositionVector,
-		std::vector<Vector> RmsVector,
-		double rmsTrans,
-		double rmsLong) {
-		setRecCol(calXtalRecCol);
-		setEnergy(energy);
-		setClusterPosition(pos);
-		setEnergyPerLayer(EnergyVector);
-		setPositionPerLayer(PositionVector);
-		setRmsPerLayer(RmsVector);
-		setRmsTrans(rmsTrans);
-		setRmsLong(rmsLong);	
-	}
-	
-protected:
-	
-	virtual void setRecCol(Event::CalXtalRecCol* calXtalRecCol)
-	{m_calXtalRecCol = calXtalRecCol;};
-	virtual void setClusterPosition(Vector pos) {m_pCluster = pos;};
-	virtual void setEnergy(double energy) {m_ene = energy;};
-	virtual void setEnergyPerLayer(std::vector<double> EnergyVector)
-	{m_eneLayer = EnergyVector;};
-	virtual void setPositionPerLayer(std::vector<Vector> PositionVector)
-	{m_pLayer = PositionVector;};
-	virtual void setRmsPerLayer(std::vector<Vector> RmsVector)
-	{m_rmsLayer = RmsVector;};
-	virtual void setRmsTrans(double rmsTrans) {m_rms_trans = rmsTrans;};
-	virtual void setRmsLong(double rmsLong) {m_rms_long = rmsLong;};
 	
 	
 private:
@@ -118,27 +68,7 @@ private:
 	
 	//! reconstructed data for crystals, the input of the reconstruction
 	Event::CalXtalRecCol* m_calXtalRecCol;
-	
-	// total energy in calorimeter
-	double m_ene;                 
-	
-	// cluster position
-	Vector m_pCluster;            
-	
-	// energy per layer
-	std::vector<double> m_eneLayer;   
-	
-	// Vector of average position per layer
-	std::vector<Vector> m_pLayer;    
-	
-	// Vector of quadratic spread per layer
-	std::vector<Vector> m_rmsLayer;  
-	
-	// transverse rms
-	double m_rms_trans;
-	// longitudinal rms
-	double m_rms_long;
-	
+		
 	Event::CalClusterCol* m_calClusterCol;
 	};
 

@@ -234,8 +234,6 @@ StatusCode SingleClusterTool::findClusters(Event::CalXtalRecCol* calXtalRecCol)
         }
     }
  
-	setData(calXtalRecCol, ene, eneLayer, pCluster, pLayer, rmsLayer, rms_trans,
-		rms_long);
 
 	    // Fill CalCluster data
 	Event::CalCluster* cl = new Event::CalCluster(ene,pCluster+p0);
