@@ -1,9 +1,9 @@
 package GlastEvent
-version 4r2
+version v5r0
 
 branches GlastEvent mgr doc src
 use idents
-use data 
+
 use GaudiKernel 
 
 apply_pattern package_headers
