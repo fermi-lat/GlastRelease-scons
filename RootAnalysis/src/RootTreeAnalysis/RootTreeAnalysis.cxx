@@ -314,9 +314,9 @@ void RootTreeAnalysis::ReconTkr() {
 
     const TObjArray *trackCol = tkrRec->getTrackCol();
     TIter trackIter(trackCol);
-    TkrTrack *track = 0;
+    TkrKalFitTrack *track = 0;
     
-    while (track = (TkrTrack*)trackIter.Next()) {
+    while (track = (TkrKalFitTrack*)trackIter.Next()) {
         ((TH1F*)GetObjectPtr("TKRNUMHITSPERTRACK"))->Fill(track->getNumHits());
     }
 }
