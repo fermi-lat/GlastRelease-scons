@@ -1,7 +1,8 @@
 /*
 package manager:T.Burnett 
  *         EOH      
- *v2r12p1 02-Jan-05 lsr revert to previous version until CalibData is straightened out
+ * v2r12p2 02-Jan-05 lsr back to v2r12 (Joanne has "fixed" CalibData)
+ * v2r12p1 02-Jan-05 lsr revert to previous version until CalibData is straightened out
  * v2r12   01-Jan-05 lsr remove getPlane() and getLayer()
  * v2r11p6 15-Dec-04 jrb Make it easy to copy TkrId object
  * v2r11p5 21-Oct-04 hmk throw exception if volId passed to AcdId ctor is not
