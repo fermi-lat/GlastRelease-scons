@@ -2,23 +2,19 @@
 
 #ifndef INTEGRATINGDETECTORMANAGER_H
 #define INTEGRATINGDETECTORMANAGER_H
-#ifdef WIN32 // for G4 
-#include <float.h>
-#endif
 
-#include "G4LogicalVolume.hh"
-#include "G4VSensitiveDetector.hh"
 
 #include "DisplayManager.h"
 
 #include "idents/VolumeIdentifier.h"
-#include "DetectorConstruction.h"
 
 #include "GlastEvent/MonteCarlo/McIntegratingHit.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 
 #include "DetectorManager.h"
 #include <map>
+
+class DetectorConstruction;
+class IDataProviderSvc;
 
 /**
 

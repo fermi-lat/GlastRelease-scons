@@ -2,7 +2,6 @@
 
 #include "IntDetectorManager.h"
 #include <iostream>
-#include "CLHEP/Geometry/Transform3D.h"
 #include "GlastEvent/MonteCarlo/McIntegratingHit.h"
 #include "idents/VolumeIdentifier.h"
 
@@ -13,30 +12,6 @@
 #include "G4SDManager.hh"
 
 
-namespace{
-    void makeBox(G4TouchableHistory* touched)
-    {
-        G4VPhysicalVolume* pvol = touched->GetVolume(); 
-        
-        HepTransform3D 
-            global(*(touched->GetRotation()), 
-            touched->GetTranslation());
-        
-        
-        const G4LogicalVolume* lvol = pvol->GetLogicalVolume();
-        const G4VSolid * solid = lvol->GetSolid();
-        const G4Box* box = dynamic_cast<const G4Box*>(solid);
-        if( box !=0){
-            double 
-                x = 2*box->GetXHalfLength(), 
-                y = 2*box->GetYHalfLength(), 
-                z = 2*box->GetZHalfLength();
-            
-            DisplayManager::instance()->addHitBox(global, x,y,z);
-        }
-        
-    }
-}
 
 IntDetectorManager::IntDetectorManager(DetectorConstruction *det,
                                            IDataProviderSvc* esv)

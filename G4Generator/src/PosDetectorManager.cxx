@@ -2,7 +2,6 @@
 
 #include "PosDetectorManager.h"
 #include <iostream>
-#include "CLHEP/Geometry/Transform3D.h"
 #include "GlastEvent/MonteCarlo/McPositionHit.h"
 #include "idents/VolumeIdentifier.h"
 
@@ -13,30 +12,6 @@
 #include "G4SDManager.hh"
 
 
-namespace{
-    void makeBox(G4TouchableHistory* touched)
-    {
-        G4VPhysicalVolume* pvol = touched->GetVolume(); 
-        
-        HepTransform3D 
-            global(*(touched->GetRotation()), 
-            touched->GetTranslation());
-        
-        
-        const G4LogicalVolume* lvol = pvol->GetLogicalVolume();
-        const G4VSolid * solid = lvol->GetSolid();
-        const G4Box* box = dynamic_cast<const G4Box*>(solid);
-        if( box !=0){
-            double 
-                x = 2*box->GetXHalfLength(), 
-                y = 2*box->GetYHalfLength(), 
-                z = 2*box->GetZHalfLength();
-            
-            DisplayManager::instance()->addHitBox(global, x,y,z);
-        }
-        
-    }
-}
 
 PosDetectorManager::PosDetectorManager(DetectorConstruction *det,
                                            IDataProviderSvc* esv)
@@ -46,7 +21,6 @@ PosDetectorManager::PosDetectorManager(DetectorConstruction *det,
 
 void PosDetectorManager::Initialize(G4HCofThisEvent*HCE)
 {
-  m_detectorList.clear();
   // At the start of the event we create a new container
   m_posHit = new McPositionHitVector;    
 }
@@ -85,14 +59,7 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
 
     m_posHit->push_back(hit);
 
-    //**** interface to display *************
-    
-    DisplayManager::instance()->addHit(InitPos, FinPos);
-    
-    if( m_detectorList[id]==0) {
-        makeBox( theTouchable );        
-    }
-    ++ m_detectorList[id]; 
+    display(theTouchable, hit);
 
     return true;
     

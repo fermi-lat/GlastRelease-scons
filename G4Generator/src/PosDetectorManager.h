@@ -2,23 +2,16 @@
 
 #ifndef POSITIONDETECTORMANAGER_H
 #define POSITIONDETECTORMANAGER_H
-#ifdef WIN32 // for G4 
-#include <float.h>
-#endif
 
-#include "G4LogicalVolume.hh"
-#include "G4VSensitiveDetector.hh"
 
-#include "DisplayManager.h"
 
-#include "idents/VolumeIdentifier.h"
-#include "DetectorConstruction.h"
 
 #include "GlastEvent/MonteCarlo/McPositionHit.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 
 #include "DetectorManager.h"
-#include <map>
+
+class DetectorConstruction;
+class IDataProviderSvc;
 
 /**
 
@@ -44,8 +37,6 @@ private:
     /// The collection of McPositionHit to save in the TDS
     McPositionHitVector *m_posHit;  
 
-    typedef std::map<idents::VolumeIdentifier, unsigned int> DetectorList;
-    DetectorList m_detectorList;
 };
 
 #endif
