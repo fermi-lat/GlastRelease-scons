@@ -56,7 +56,7 @@ use AcdDigi     v1r0
 
 
 #ROOT persistence: RootIo specifies the data packages
-use RootIo               v4r3
+use RootIo               v4r3p1
 
 
 #reconstruction
