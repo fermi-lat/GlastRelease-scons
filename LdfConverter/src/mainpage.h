@@ -1,9 +1,14 @@
 xx/** @mainpage package LdfConverter
 
   @section intro Introduction
-  Handles ebf input, either raw or "FITSified", storing digis in the usual
+  Handles ldf or ebf input, either raw or "FITSified", storing digis in the usual
   place in the TDS.  It depends on the ldfReader package to parse the
   input file.
+
+  The LDF Online's library EventSummary::marker routine is used to determine if
+  the retrieved event is a data event or not.  A marker == 0 denotes a data
+  event (from Jim Panette 6/22/2004) non-zero makrers are non-data events..where
+  marker == 5 is a "sweep event"...whatever that means..
   <hr>
   @section jobOptions jobOptions
   @param StorageType
