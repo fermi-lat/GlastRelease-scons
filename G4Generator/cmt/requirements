@@ -1,0 +1,33 @@
+package G4Generator
+
+version v0
+
+use Geant4
+use GaudiSvc
+use GaudiAlg
+
+use detModel
+use FluxSvc
+use GlastSvc
+
+# define link options
+apply_pattern packageShr
+
+
+#=============================================================
+private
+
+# get flags to build shared library
+
+apply_pattern package_Cshlibflags
+
+apply_pattern package_headers
+
+# this to allow includes of internal "package" 
+macro_prepend includes "-I ../src " WIN32 "/I ..\src "
+
+library G4Generator ${G4Generator_headers} *.cxx   Dll/*.cxx
+
+# stuff for test
+apply_pattern package_test
+
