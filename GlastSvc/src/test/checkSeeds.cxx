@@ -12,7 +12,7 @@ int main() {
  
   for(int i = 0; i != nEvents; ++i) {
 
-    string temp;
+    std::string temp;
     getline(f, temp);
 
     getline(f, seeds[i]);
