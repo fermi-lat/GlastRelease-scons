@@ -640,7 +640,7 @@
 	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
       </axisPos>
       <axisPos volume="TKRTopFaceSup" >
-	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
+	<idField name="fTKRTrayCmp" valueREF="eTKRTopFace" />
       </axisPos>
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" />
@@ -664,7 +664,7 @@
 	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
       </axisPos>
       <axisPos volume="TKRTopFaceSup" >
-	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
+	<idField name="fTKRTrayCmp" valueREF="eTKRTopFace" />
       </axisPos>
       <axisPos volume="SiLayerYMeas" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" />
