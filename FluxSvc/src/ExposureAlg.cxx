@@ -159,7 +159,7 @@ StatusCode ExposureAlg::execute()
 
 
     EarthOrbit orb; //for the following line - this should have a better implementation.
-    double julianDate = orb.dateFromSeconds(currentTime);
+    double julianDate = orb.dateFromSeconds(m_lasttime);
 
     //NOTE: this gets an interval from the last time that a TimeTick particle came to this one.
     //in other words, the timeTick particles define the beginning and ends of intervals.
@@ -175,9 +175,9 @@ StatusCode ExposureAlg::execute()
     //intrvalend = orb.dateFromSeconds(intrvalend);
 
     //and here the pointing characteristics of the LAT.
-    GPS::instance()->getPointingCharacteristics(currentTime);
+    GPS::instance()->getPointingCharacteristics(intrvalstart);
     //EarthOrbit orbt;
-    Hep3Vector location = GPS::instance()->position(currentTime);
+    Hep3Vector location = GPS::instance()->position(intrvalstart);
 
     // hold onto the cartesian location of the LAT
     double posx = location.x(); 
@@ -251,7 +251,7 @@ StatusCode ExposureAlg::execute()
 
     SkyDir sunDir(rasun,decsun);
     //Rotation galtoglast(m_fluxSvc->transformGlastToGalactic(currentTime).inverse);
-    sunDir()=(m_fluxSvc->transformGlastToGalactic(currentTime).inverse())*sunDir();
+    sunDir()=(m_fluxSvc->transformGlastToGalactic(intrvalstart).inverse())*sunDir();
 
     //and here's the file output.
     if( m_out !=0) {
