@@ -291,7 +291,7 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
             // Check marker to see if this is a data event
             unsigned int summary = ldfReader::LatData::instance()->summaryData().summary();
             unsigned marker = EventSummary::marker(summary);
-            log << MSG::INFO << "Marker = " << marker << endreq;
+            log << MSG::DEBUG << "Marker = " << marker << endreq;
             if (marker == 0) DONE = true;
             if (marker != 0) {
               // Move file pointer for the next event

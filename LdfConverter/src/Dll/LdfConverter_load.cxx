@@ -20,6 +20,7 @@ DECLARE_FACTORY_ENTRIES(LdfConverter) {
   DECLARE_CONVERTER(LdfDiagnosticCnv);
   DECLARE_CONVERTER(LdfTimeCnv);
   DECLARE_CONVERTER(LdfGemCnv);
+  DECLARE_CONVERTER( McEventCnv );
 
 }
   
