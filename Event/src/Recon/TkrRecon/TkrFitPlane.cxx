@@ -14,7 +14,7 @@
 using namespace Event;
     
 void TkrFitPlane::initializeInfo(unsigned int hit, unsigned int tower, unsigned int plane, 
-                                 AXIS, AXIS, double z, double energy, 
+                                 AXIS proj, AXIS nextproj, double z, double energy, 
                                  double radLen, double activeDist) {
     m_IDHit = hit;
     m_IDTower = tower;
@@ -23,6 +23,8 @@ void TkrFitPlane::initializeInfo(unsigned int hit, unsigned int tower, unsigned 
     m_eneplane = energy;
     m_radLen = radLen;
     m_activeDist = activeDist;
+    m_projection = proj;
+	m_projPlus = nextproj;
 }
     
 void TkrFitPlane::initializeHits(const TkrFitHit& meas, const TkrFitHit& pred, const TkrFitHit& fit,
