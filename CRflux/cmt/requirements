@@ -1,6 +1,6 @@
 package CRflux
 
-version v1r1p6
+version v1r1p13
 
 author Tsunefumi Mizuno <suhonen@slac.stanford.edu>
 
@@ -31,7 +31,3 @@ macro CRflux_headers "" WIN32 " *.h *.hh ../xml/*.xml test/*.txt test/*.xml "
 public set JOBOPTIONS ${CRFLUXROOT}/src/test/jobOptions.txt
 apply_pattern package_test
 
-#application CRfluxTest test/CRTestAlg.cxx *.cxx  ${FluxDisplay_headers} ${GlastMain} ${Win32Resource}
-
-#macro libs ""   WIN32   "$(FluxSvcDir)/FluxSvc_lib.lib
-#application crplot test/plot/crplot.cxx $(CRfluxDir)/CRflux.lib $(libs) 
