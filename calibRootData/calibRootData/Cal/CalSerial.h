@@ -35,11 +35,11 @@ namespace calibRootData {
       UInt_t gridBay;
       TString serial;
     };
-    void addEntry(GridSerial entry) {m_entries.push_back(entry);}
-    const std::vector<GridSerial>& getEntries() const {return m_entries;}
+    void addEntry(calibRootData::CalSerial::GridSerial entry) {m_entries.push_back(entry);}
+    const std::vector<calibRootData::CalSerial::GridSerial>& getEntries() const {return m_entries;}
   private:
 
-    std::vector<GridSerial> m_entries;
+      std::vector<calibRootData::CalSerial::GridSerial> m_entries;
   
     ClassDef(calibRootData::CalSerial, 1)
   };

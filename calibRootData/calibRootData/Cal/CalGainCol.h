@@ -30,7 +30,7 @@ namespace calibRootData {
 
     ///  Transparent access to CalDimension part of class.  
     CalDimension* getDimension() {return &m_dim;}
-    std::vector<CalGain>& getGains() {return m_gains;}
+    std::vector<calibRootData::CalGain>& getGains() {return m_gains;}
     
   private:
 
