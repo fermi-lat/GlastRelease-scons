@@ -1,19 +1,37 @@
 // $Header$
 /**  @file test_strips.cxx
-   Sample program to exercise low-level calibration strip services.  
+   Sample program to exercise low-level calibration strip services. 
+   Optional argument is path to file using badStrips.dtd.  If omitted,
+     use file $CALIBUTILROOT/xml/test/testHot.xml
 */
-#include "MyObject.h"
+#include "calibUtil/StripSrv.h"
+#include "facilities/Util.h"
 
 #include <string>
 #include <iostream>
 #include <fstream>
 
+using calibUtil::StripCol;
 
-int main(int, char* argv[]) {
+class MyObject : public calibUtil::ClientObject {
+
+  virtual calibUtil::eVisitorRet badTower(unsigned int row, unsigned int col, 
+                                          int badness);
+  virtual calibUtil::eVisitorRet badPlane(unsigned int row, unsigned int col, 
+                                          unsigned int tray, bool top,
+                                          int badness, bool allBad,
+                                          const StripCol& strips);
+};
+
+int main(int argc, char* argv[]) {
   using calibUtil::StripSrv;
 
-  std::string name(argv[1]);
+  std::string name = "$(CALIBUTILROOT)/xml/test/testHot.xml";
   
+  facilities::Util::expandEnvVar(&name);
+  if (argc > 1) {
+    name = std::string((argv[1]));
+  }
   StripSrv ssObj(name);
 
   std::vector<StripSrv::towerRC> trc;
@@ -21,28 +39,13 @@ int main(int, char* argv[]) {
   for (unsigned int i = 0; i < trc.size(); i++ ) {
     std::cout << "Tower id is (" << trc[i].row << ", " << trc[i].col;
     std::cout << ")" << std::endl;
-    std::cout << "# very bad is " << ssObj.nVeryBad(trc[i]) << std::endl;
-    std::cout << "# bad is " << ssObj.nBad(trc[i]) << std::endl;
+
   }
   std::cout << std::endl;
 
-  std::cout << "For first tower, # very bad for each tray: " << std::endl;
-  for (unsigned int iTray = 0; iTray <= 18; iTray++)  {
-    std::cout << "  Tray " << iTray <<  " #very bad   " 
-              << ssObj.nVeryBad(trc[0], iTray)  << " #bad, TOP  " 
-              << ssObj.nBad(trc[0], iTray, StripSrv::TOP) << std::endl;
-  }
+  std::cout<< "Bad type is " << (int) ssObj.getBadType() << std::endl;
 
-  
-  StripSrv::StripCol  strips;
-  unsigned int        trayNum = 0;
-  
-  ssObj.getBad(trc[0], trayNum ,StripSrv::TOP, strips);
-
-
-  std::cout<< "BAD TYPE IS" << (int) ssObj.getBadType() << std::endl;
-
-  std::cout << "instrument name is" << ssObj.getCalType() << std::endl;
+  std::cout << "calType name is " << ssObj.getCalType() << std::endl;
 
   MyObject cli;
   ssObj.traverseInfo(&cli);
@@ -52,32 +55,24 @@ int main(int, char* argv[]) {
 } /* end of main */
 
 
-calibUtil::StripSrv::eRet
- MyObject::readData(calibUtil::StripSrv::towerRC towerId, 
-                   unsigned int trayNum, 
-                   calibUtil::StripSrv::eUnilayer uni, 
-                   calibUtil::StripSrv::eBadness howBad,
-                   const calibUtil::StripSrv::StripCol* const strips) {
-  using calibUtil::StripSrv;
-
-  std::cout << "In readData for tower (" << towerId.row << ", " << towerId.col;
-  std::cout << ") tray #" << trayNum << "  unilayer ";
-  if (uni == StripSrv::TOP) std::cout << "TOP ";
-  if (uni == StripSrv::BOT) std::cout << "BOT ";
-  std::cout << "  Badness: ";
-  if (howBad == StripSrv::VERYBAD) std::cout << " VERYBAD";
-  if (howBad == StripSrv::BAD) std::cout << " JUST BAD";
-
-  std::cout << std::endl;
-  std::cout << "Bad strip count:  " << strips->size() << std::endl;
-  std::cout << std::endl;
+calibUtil::eVisitorRet MyObject::badTower(unsigned int row, unsigned int col,
+                                          int badness) {
   
-  return StripSrv::CONT;
+  std::cout << "MyObject::badTower called back for tower (" << row
+           << ", " << col << ") badness = " << badness << std::endl;
+  return calibUtil::CONT;
 }
 
+calibUtil::eVisitorRet MyObject::badPlane(unsigned int row, unsigned int col, 
+                                          unsigned int tray, bool top,
+                                          int badness, bool allBad,
+                                          const calibUtil::StripCol& strips) {
 
+  std::cout << "MyObject::badPlane called back for tower (" << row
+            << ", " << col << ") tray = " << tray << " top = " 
+            << top <<std::endl;
+  std::cout << "badness = " << badness << " allBad = " << allBad << std::endl;
+  std::cout << "#strips in strip collection = " << strips.size() << std::endl;
 
-
-
-
-
+  return calibUtil::CONT;
+}
