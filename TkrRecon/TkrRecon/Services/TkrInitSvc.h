@@ -44,7 +44,7 @@ public:
     Event::TkrPatRecon*     setPatRecon();
 
     /// This for initializing the particular display routines
-    void                    setDisplayRtns(gui::DisplayControl& display, IDataProviderSvc* dps);
+    void                    setDisplayRtns(gui::DisplayControl::DisplaySubMenu&, IDataProviderSvc* dps);
 
     /// This for initializing the track fit algorithm
     Event::TkrTrackFit*     setTrackFit();
