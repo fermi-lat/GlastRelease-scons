@@ -2,32 +2,33 @@
  * package GlastSvc
  * package manager:T.Burnett
  *
- *  9-oct-02  THB tag v9r3 new code for handling randoms from KY
+ * 10-oct-02  LSR tag v9r3p1 fix bug in GlastDetSvc
+ *  9-oct-02  THB tag v9r3   new code for handling randoms from KY
  * 24-sep-02  THB tag v9r2p1 do not require SiliconPlaneGeometry init success
- * 13-sep-02  THB tag v9r1 change to MCEvent converter
- * 07-sep-02  LSR tag v9r0 for changes to SiliconPlaneGeometry etc.
- * 06-sep-02  HMK          Update documentation
- * 15-aug-02  THB Tag v8r2  GlastDetSvc changes
+ * 13-sep-02  THB tag v9r1   change to MCEvent converter
+ * 07-sep-02  LSR tag v9r0   for changes to SiliconPlaneGeometry etc.
+ * 06-sep-02  HMK            Update documentation
+ * 15-aug-02  THB Tag v8r2   GlastDetSvc changes
  * 09-jun-02  THB Tag v8r1p2 after fix to const in GeometryVisitor 
  * 26-may-02  THB Tag v8r1p1 geometry changes+ a little more output 
- * 10-may-02  THB          GlastEvent to Evnet 
- * 08-may-02  HMK          update DigiEventCnv to use Event namespace 
- * 02-may-02  THB Tag v7r2 default geometry mode for visitors
- * 20-apr-02  THB Tag v7r1 new features in GlastDetSvc for Tkr
- * 17-apr-02  THB Tag v7r0 incompatible interface for IRecoSvc
- * 05-apr-02  THB Tag v6r0 incompatible interface for IGeometry
- * 02-apr-02  LSR Tag v5r2p1 allow non-integer strips (for clusters)
- * 29-mar-02: THB Tag v5r2 removed more McVertex stuff. 
+ * 10-may-02  THB            GlastEvent to Evnet 
+ * 08-may-02  HMK            update DigiEventCnv to use Event namespace 
+ * 02-may-02  THB Tag v7r2   default geometry mode for visitors
+ * 20-apr-02  THB Tag v7r1   new features in GlastDetSvc for Tkr
+ * 17-apr-02  THB Tag v7r0   incompatible interface for IRecoSvc
+ * 05-apr-02  THB Tag v6r0   incompatible interface for IGeometry
+ * 02-apr-02  LSR Tag v5r2p  allow non-integer strips (for clusters)
+ * 29-mar-02: THB Tag v5r2   removed more McVertex stuff. 
  * 25-mar-02: LSR Tag v5r1p2 to fix tower in SiliconPlaneGeometry
- * 21-mar-02: THB Tag v5r1 with new GlastDetSvc functionality
- * 15-mar-02: HMK tag v4r2 Updated for Gaudi v9.
+ * 21-mar-02: THB Tag v5r1   with new GlastDetSvc functionality
+ * 15-mar-02: HMK tag v4r2   Updated for Gaudi v9.
  * 15-mar-02: THB tag v4r1
- * 08-mar-02: THB remove instrument, tag v4r0
- * 23-nov-01: THB start Reco service
- * 22-nov-01: THB add dm folder with detModel interface classes.
+ * 08-mar-02: THB remove     instrument, tag v4r0
+ * 23-nov-01: THB            start Reco service
+ * 22-nov-01: THB            add dm folder with detModel interface classes.
  * 26-aug-01: tag v2r3
  * 08-dec-00 Tag v1
- * 29-aug-00 THB: use new class instrument/Instrument for GlastDetector
- *               stuff.
- * 01-jul-00 Created by HSG. 
+ * 29-aug-00 THB:            use new class instrument/Instrument for 
+ *                           GlastDetector stuff.
+ * 01-jul-00                 Created by HSG. 
 * /
