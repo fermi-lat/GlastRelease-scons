@@ -9,10 +9,12 @@
     <prim name= "SiThick" value= "0.4" >Si thickness</prim>
     <prim name="coreThick" value="27.92">Thickness of core material
             in all trays except the bottom and top</prim>
+  
     <prim name="coreThickBot" value="36.535">Core thickness for
             top tray  (20Jun03)</prim>
     <prim name="coreThickTop" value="33.995">Core thickness for
             top tray  (20Jun03)</prim>
+                     
     <prim name="TKRCloseoutWidth" value="5.0">Width of closeout 
             walls.  Last modified 2aug02</prim>
     <prim name="glueSiThick" value="0.15">Thickness of glue
@@ -39,8 +41,10 @@
         trays</prim>
     <prim name="trayRegGap" value="2.125">Gap above regular trays. Last
         modified 2aug02</prim>
-    <prim name="TKRTotalZ" value="627.465">Height of a tracker tower.
+    <prim name="TKRTraysTotalZ" value="627.465">Height of a tracker tower.
         (From spreadsheet, 21jun03</prim>
+    <prim name="TKRFootZ" value="4.5"> Height of foot between bottom of bottom tray 
+       and grid </prim>
 
 <!-- inner structure of Si -->
     <prim name="ssdGap" value="0.025">gap between Si dies within a ladder 

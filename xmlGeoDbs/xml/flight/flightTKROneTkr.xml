@@ -300,8 +300,6 @@
 
 
 
-
-
 <!-- Dimensions of core+closeout for super-GLAST are the same as
     above, but core box is a different material  -->
     <composition name="TKRCoreSup" envelope="TKRCoreRegEnv">
@@ -493,6 +491,12 @@
          YREF="faceWidth"
          ZREF="TKRFaceMinBotZ"
          materialREF="TKRBotFaceMat" />
+         
+    <box name="TKRFoot"
+         XREF = "faceWidth"
+         YREF = "faceWidth"
+         ZREF = "TKRFootZ"
+         materialREF = "vacuumMat" />
 
 
 <!-- The unrotated wafer is segmented along the x axis, hence measures X,
@@ -778,6 +782,7 @@
 
     <!-- make a tracker by stacking up the trays -->
     <stackZ name="oneTKRStack" >
+      <axisPos volume="TKRFoot" />
       <axisPos volume="trayBot" rotation="90" >
 	<idField name="fTKRTray" value="0" />
         <idField name="fMeasure" valueREF="eMeasureY" />

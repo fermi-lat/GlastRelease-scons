@@ -18,6 +18,14 @@
                  etc. but no larger (Revised 3May02) </notes>
           <refer refTo="faceWidth" />
 	</const>
+	
+	<const name="TKRTotalZ" >
+	  <notes> total space occupied by tracker, including foot</notes>
+	  <add>
+	    <refer refTo="TKRTraysTotalZ" />
+	    <refer refTo="TKRFootZ" />
+	  </add>
+	</const>
 
 	<const name="TKRTrayWidth" >
           <notes>Large enough to include 2 MCM boards (and 2 gaps) as 
