@@ -511,7 +511,11 @@ void reconRootWriterAlg::fillCalCluster(CalRecon *calRec, Event::CalClusterCol* 
     unsigned int iCluster;
     for (iCluster = 0; iCluster < numClusters; iCluster++) {
         Event::CalCluster *clusterTds = clusterColTds->getCluster(iCluster);
-        CalCluster *clusterRoot = new CalCluster();
+        Point posTds = clusterTds->getPosition();
+        TVector3 posRoot(posTds.x(), posTds.y(), posTds.z());
+
+        CalCluster *clusterRoot = new CalCluster(
+            clusterTds->getEnergySum(), posRoot);
         
         Vector dirTds = clusterTds->getDirection();
         TVector3 dirRoot(dirTds.x(), dirTds.y(), dirTds.z());
