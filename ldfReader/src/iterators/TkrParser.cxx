@@ -92,7 +92,7 @@ namespace ldfReader {
         unsigned       array[8];              // 8 longwords of space
         unsigned*      accepts = m_contribution->acceptsMask(m_event, array);
 
-        printf("%s           GTCC   odd even  GTCC\n", m_prefix);
+        if (EbfDebug::getDebug()) printf("%s           GTCC   odd even  GTCC\n", m_prefix);
         unsigned i;
 
         if (EbfDebug::getDebug()) {
