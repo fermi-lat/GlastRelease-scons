@@ -78,29 +78,41 @@ namespace calibUtil {
        various tables of calibration types, e.g. the one in
    http://www-glast.slac.stanford.edu/LAT/INT/SVAC/Calibration/calibrations.htm
        For example CTYPE_TKRBadChan handles both hot and dead (but any
-       individual dataset has only all hot or all dead).  Similarly for
+       individual dataset has only all hot or all dead).  [as of Nov 2002,
+       define HotChan and NoisyChan types and generally speaking get away
+       from idea of using same number for different kinds of data, even
+       if structure is identical] Similarly for
        CTYPE_TKRAlign, which may apply to any of several subcategories of
        alignment data, and CTYPE_ACDThresh (veto threshold or high threshold).
     */
 
     enum eCalibType {
       CTYPE_ACDEff = 0,
-      CTYPE_ACDThresh,
+      CTYPE_ACDThreshHigh,
+      CTYPE_ACDThreshVeto,
       CTYPE_ACDPed,
       CTYPE_ACDElecGain,
-      CTYPE_TKRBadChan = 8,
-      CTYPE_TKRThresh,
-      CTYPE_TKRTotSig,
-      CTYPE_TKRTotCount,
+
+      CTYPE_TKRBadChan = 16,
+      CTYPE_TKRHotChan,
+      CTYPE_TKRDeadChan,
+      CTYPE_TKRTOTSignal,
+      CTYPE_TKRTOTDist,
       CTYPE_TKRAlign,
-      CTYPE_CALLightAtt = 16,
+      CYTPE_TKRMIPEff,
+
+      CTYPE_CALLightAtt = 32,
       CTYPE_CALLightAsym,
       CTYPE_CALLightYield,
       CTYPE_CALScintEff,
       CTYPE_CALPed,
       CTYPE_CALElecGain,
       CTYPE_CALIntNonlin,
-      CTYPE_CALDiffNonlin
+      CTYPE_CALDiffNonlin,
+      CTYPE_CALHotChan,
+      CTYPE_CALDeadChan,
+      CTYPE_CALDiscrLO,
+      CTYPE_CALDiscrHI
     };
       
     /// Constructor keeps track of table of interest
@@ -126,8 +138,13 @@ namespace calibUtil {
 
     /// Add flavor column to row-in-progress.  If this method is not
     /// invoked, the new row will have the default value for flavor,
-    /// "VANILLA"
+    /// "vanilla"
     eRet addFlavor(const std::string& flavor);
+
+    /// Add locale column to row-in-progress.  If this method is not
+    /// invoked, the new row will ahve the default value for locale,
+    /// "orbit"
+    eRet addLocale(const std::string& flavor);
 
     /** Explicit clear of record.  Must have a call to either insertRecord
      *  (to actually write the record to the database) or clearRecord 
@@ -162,7 +179,7 @@ namespace calibUtil {
                   const facilities::Timestamp& timestamp,
                   unsigned int levelMask, 
                   eInstrument instrument,
-                  const std::string& flavor="VANILLA");
+                  const std::string& flavor="vanilla");
     /** Return serial number for calibration which is best match to
         criteria, using strings for calibType and instrument arguments.
         This method may be useful for development when a particular
@@ -310,7 +327,8 @@ namespace calibUtil {
       eInputDesc = 4,
       eComment = 8,
       eFlavor  = 0x10,
-      eCreator = 0x20 };
+      eLocale  = 0x20,
+      eCreator = 0x40 };
 
     /// Constant bit mask indicating all necessary fields have been set
     static const unsigned int s_rowReady;
