@@ -53,6 +53,13 @@ public:
           m_radLen(0), m_activeDist(0)
     {}
 
+    void     initializeInfo(unsigned int hit, unsigned int tower, unsigned int plane, AXIS proj,
+                            AXIS nextProj, double z, double energy, double radLen, double activeDist);
+
+    void     initializeHits(const TkrFitHit& meas, const TkrFitHit& pred, const TkrFitHit& fit,
+                            const TkrFitHit& smooth, const TkrFitMatrix& material);
+
+
     // Access Information
     inline unsigned getIDHit()                           const {return m_IDHit;}
     inline int      getIDTower()                         const {return m_IDTower;}

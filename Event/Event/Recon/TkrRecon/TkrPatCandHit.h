@@ -22,6 +22,8 @@ class TkrPatCandHit
 public:
     
     TkrPatCandHit(TkrCluster* pCluster);
+    TkrPatCandHit(unsigned int hitId, const Point& pos, unsigned int tower, 
+        unsigned int layer, TkrCluster::view v);
    ~TkrPatCandHit() {}
 
     //Output method to write out the contents of the class

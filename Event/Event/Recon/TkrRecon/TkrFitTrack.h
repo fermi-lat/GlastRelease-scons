@@ -34,6 +34,13 @@ public:
     TkrFitTrack();
    ~TkrFitTrack();
 
+    void     initializeInfo(unsigned int xgaps, unsigned int ygaps, 
+        unsigned int x1st, unsigned int y1st);
+    void     initializeQual(double chiSq, double ChiSqSmooth, 
+        double rms, double quality, double e, double ms);
+
+
+
     /// Define the TkrRecInfo access methods
     /// Provides access to the basic information needed by external users
     double        getQuality()                       const {return m_Q;};
