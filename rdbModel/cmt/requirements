@@ -6,7 +6,7 @@ version v1r5
 author Joanne Bogart <jrb@slac.stanford.edu>
 
 use GlastPolicy  v*
-use xml          v5r*
+use xmlBase      v5r*
 use facilities   v2r*
 use MYSQLEXT v0r* IExternal 
 
