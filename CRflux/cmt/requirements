@@ -14,7 +14,7 @@ private
 apply_pattern package_Cshlibflags
 apply_pattern package_headers
 
-library CRflux *.cxx test/CRTestAlg.cxx\
+library CRflux *.cxx \
  Dll/*.cxx\
 $(CRflux_headers)
 
