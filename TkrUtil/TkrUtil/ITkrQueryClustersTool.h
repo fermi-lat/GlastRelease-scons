@@ -47,7 +47,7 @@ static const InterfaceID IID_ITkrQueryClustersTool("ITkrQueryClustersTool", 2 , 
   // in execute
 
   ITkrQueryClustersTool pQuery;
-  StatusCode sc = m_pToolSvc->retrieveTool("TkrMeritTool", pQuery);
+  StatusCode sc = m_pToolSvc->retrieveTool("TkrQueryClustersTool", pQuery);
       if( sc.isFailure() ) {
           log << MSG::ERROR << "Unable to find a TkrQueryClustersTool" << endreq;
       }
