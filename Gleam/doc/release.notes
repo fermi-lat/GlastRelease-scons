@@ -2,6 +2,9 @@
  * package Gleam
  * package manager:T.Burnett
 
+ * v1r2p1  09-may-02 THB Forgot to check for update on this guy
+    use TkrRecon           v5r7
+
  * v1r2   08-may-02 THB last version before conversion GlastEvent -> Event
     use ROOT              v3r2p9
     use facilities        v2r4p1
