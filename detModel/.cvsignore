@@ -1,0 +1,12 @@
+i686
+Linux
+
+sun4x*
+i386_linux*
+
+msdev
+Win32*
+Visual
+
+setup.*
+*.mak*

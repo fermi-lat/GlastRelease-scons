@@ -1,0 +1,775 @@
+
+<!-- Test dtd for describing detector geometry for glast,
+     slightly modified, ripped off from AGDD.  Changes include
+          * rename root element to "gdd"   
+          * get rid of materials stuff; just use string attribute
+            for material name (later might put AGDD machinery
+            for materials back in)
+          * put in separate, explicit attributes for  box dimensions
+          * (maybe) eliminate unused shapes
+          * Add identifier names
+          * add ability for alternate volume definitions going
+            by the same name.  The immediate reason is to support
+            more or less detail in the description for different
+            clients.  For example, simulation propagation only
+            wants to know about a layer of silicon; digitization
+            needs to know more detail.
+
+     Wonderful AGDD comments can be found in geotest.dtd
+
+     J. Bogart
+     7 December 2000
+
+     9 Jan 2001
+
+        Added seg element, optional child of primitive
+        solids like box.
+
+     17 Jan 2001
+        Changes to address
+           * lack of arithmetic in XML
+           * lack of easy and reliable means of extracting
+             primary instrument-defining constants from this file.
+        This entails adding several new element types to
+        define constants (and document them in case they're
+        fundamental) and do arithmetic on them.
+
+        Also need to add attributes to any elements that
+        already have attributes expecting numerical or
+        string constants.  For example, any element that had
+        an attribute X for which a numerical value was expected
+        gets a new attribute, XREF, whose value is an IDREF
+        (and the IDREF must point to some form of constant
+        with an explicit or implicit  (in the case of derived
+        constants) value attribute.
+
+     25 Jan 2001
+        Let alternate volume descriptions go under a single name.
+-->
+
+<!--
+1) General structure of a detector description
+   ===========================================
+
+  o The GDD element is the main container where all detector description information is
+    maintained and managed. 
+
+  o Currently one may find within the gdd element :
+      o constants   : definition of primary and derived constants
+      o section     : definition of a section (ie. the main division of the detector)
+
+  o General rule for angle definition for all XML statements:
+
+     a) Right handed coordinate system is used.
+          Explicitly this means that:  
+            Z-axis angle rotation should be positive when rotation is
+              made in the direction from X to Y in the short way 
+            Y-axis angle rotation should be positive when rotation is
+              made in the direction from Z to X in the short way
+            X-axis angle rotation should be positive when rotation is
+              made in the direction from Y to Z in the short way
+     b) All angles corresponds to "active" rotation, i.e. the object is rotated
+        in the fixed coordinate system
+        (NOT "passive" rotation when the axis are rotated and the object
+         is fixed) 
+
+1.2) Sections
+==============
+
+  A section forms the basic sub-division of the entire detector. It
+  holds the implementation of the geometry for this particular piece
+  of detector. A section is primarily made of "volume" elements but
+  also may receive a set of named and typed parameter blocks (used to specify
+  constants).
+
+  Attributes of section are :
+
+            name        : (short) unique name to identify the section
+            version     : internal version of the section
+            date        : last modification date
+            author      : last modification author
+            top_volume  : envelope volume corresponding to the
+                          section
+-->
+
+<!--
+1.4) Volumes
+============
+
+  The 'volume' is a generic name for a geometric object. Effective
+  volume are organized as a hierarchy of types.
+
+        1) solid volume (have a "material" and may be "sensitive"))
+           |-> box
+           |-> tubs
+           |-> trd
+           +-> cons 
+
+        2) composition (build a logical composition)
+
+        4) boolean volume
+           |-> union
+           |-> intersection
+           +-> subtraction
+
+        5) stack (pile up other volumes)
+           |-> stackX
+           |-> stackY
+           +-> stackZ
+
+  All kinds of volumes have at least the following attribute:
+
+         name       : their identifier
+         parameters : an IDREF to a parameter block.
+
+  Parameter blocks are meant to describe non-geometrical information
+  or geometrical details that cannot or should not be described using
+  the generic model.
+
+  A volume in itself is not positioned. Rather, compositions, boolean
+  volumes or stacks combine "position" elements which role is to
+  position a volume (see paragraph on positions)
+         
+
+1.4.1) Solid volume:
+====================
+
+  A basic geometry unit; Specialized types provide for specific shapes
+  (boxes, tube sections, trapezoids and cone sections). A solid
+  references a material, and may be declared as "sensitive" (which
+  opens the not-yet-implemented capability of producing hits).
+
+
+1.4.1.1) Box (element tag "box") :
+
+  A Box is a cuboid of given total lengths X,Y and Z. The Box is
+  centred on the origin with sides parallel to the x/y/z axes.
+
+  NB: Note the factor two difference in the dimensions wrt the 'Geant4 - Box'
+
+  Its dimensions are given by :
+
+                      X_Y_Z="X Y Z"
+
+
+1.4.2) Composition
+==================
+
+  Construct a new volume which consists of positioning several volumes
+  (defined elsewhere in AGDD) placed at various places w.r.t the
+  reference frame of this new entity.
+
+    The positioning of volumes proceeds via position elements:
+
+        posXYZ
+        posRPhiZ
+        mposR
+        mposPhi
+        mposX
+        mposY
+        mposZ
+  
+  Volume are positionned according to the coordinates specified in the
+  above positionning elements w.r.t the implicit coordinate system of
+  the composition (which defines the reference)..
+
+  In general, there is a priori no defined volume corresponding to
+  this entity i.e. it is a juxtaposition of volumes. Its envelope has
+  to be computed from the juxtaposed volumes. However one can force
+  this envelope to be one specific (elswhere defined) volume.  Then
+  all positioned volume will be placed into this "envelope" volume.
+-->
+<!--
+1.4.3) Stacks
+=============
+
+  Constructs a new volume which consists of several other volumes
+  piled up along one given axis.
+
+   Stacks may be defined along
+     the X axis (element tag "stackX")
+     the Y axis (element tag "stackY")
+     the Z axis (element tag "stackZ")
+
+  The positioning of volumes proceeds via elements:
+
+         axisPos    : a single volume is added to the pile. A
+                      rotation (one angle) along the same axis as well as
+                      a transverse displacement may also be specified.
+
+         axisMPos   : a multiple position of a given volume. A
+                      rotation (one angle) along the same axis as well as
+                      a transverse displacement (both applicable to all copies) 
+                      may also be specified.
+
+         Offsets along the stack axis can be specified either using 
+
+         a shift : distance between the coordinate origin of the stack and the
+                   coordinate origin of the first stacked volume, or between
+                   the coordinate origin of the previously stacked volume and the
+                   coordinate origin of the first stacked volume.
+
+         a gap   : distance between the coordinate origin of the stack and the
+                   lowest dimension of the first stacked volume, or between the
+                   highest dimension of the previously stacked volume and the
+                   lowest dimension of the first stacked volume.
+
+
+     Coordinate system: The coordinate system of the stack can be
+                        defined in two ways, that are selected by 
+                        the attribute 'center'.
+ 
+        origin="atStart" (default)
+                        The coordinate-system of the stack is defined before
+                        any volumes are positioned in the stack, and
+                        it is fixed (i.e. independent of the contents
+                        of the stack).
+                        For example, in the absence of the gap0 or
+                        shift0 attributes, the origin of the
+                        coordinate system coincides with the edge of
+                        the stack.
+
+        origin="atCentre"   After the stack is build an additional shift
+                        along the direction axis is applied to the
+                        coordinate system of the stack, such that it
+                        lies in the center of the stack (including
+                        gaps). The 'center' is defined as the
+                        geometric middle between two planes
+                        perpendicular to the direction axis, with the
+                        planes just touching the extreme edges of the
+                        stack (which include gaps).  Note that the
+                        coordinate system always lies on the direction
+                        axis, and does not change in the perpendicular
+                        direction.  
+                        To avoid ambiguities when gap0 is smaller than zero:
+                        Define point A at the "stack start" (from which gap0 is 
+                        measured), and define the last physical part of the stack 
+                        as B. The center of the stack is then defined at 
+                        position (A+B)/2.
+                        In the simple case of zero gap0
+                        and shift0, the coordinate sytem is shifted to
+                        the center of the stack of volumes.
+-->
+
+<!-- new element types "choice" and "case" to enclose alternative
+     volume definitions.
+
+          <choice name = "SiLayer" >
+             <case mode="propagate" volume="SiBox" />
+             <case mode="digi" volume="SiComp" />
+          </choice>
+    -->
+<!-- 
+
+1.4.4) Boolean volumes (union, intersection and subtraction)
+============================================================
+
+     union        : Union of several volumes
+
+     intersection : Intersection of several volumes
+
+     subtraction  : Subtraction of several volumes. All the volumes 
+                    (but the first) are substracted from the first
+
+   The positioning of volumes within boolean operation can only be
+   done via single positioners, say:
+
+       posXYZ
+       posRPhiZ
+
+   Note that it is required that the materials of the boolean volumes
+   are identical. This is however not checked (or forced) within the
+   XML syntax, and is left to the responsibility of the user (and the
+   application).
+
+
+1.5) Positioning of volumes
+===========================
+
+   Each volume (Solid volumes, compositions, unions, etc) are
+   positioned relatively to other volumes using the "position"
+   elements. A given volume may referenced (through its name) in
+   several position operations.
+
+   Position operators are organized as a hierarchy of types as follows
+
+         Single positions
+           | posXYZ
+           | posRPhiZ
+         Multiple positions
+           | mposR
+           | mposPhi
+           | mposX
+           | mposY
+           | mposZ
+         Axis positions
+           | axisPos
+           | axisMPos
+
+    o Single positions can be used in compositions or boolean volumes
+
+    o Multiple positions can only be used in compositions
+
+    o Axis positions can only be used in stacks
+-->
+<!--
+1.5.1) Common properties
+
+
+   All positioning operators share some properties :
+
+     attributes :
+
+        volume      : the volume they are positioning.
+        units       : the units used to specify the coordinates.
+
+     member elements :
+
+        identifiers : a set of identifier specifications (see paragraph on 
+                      identifiers for details)
+
+
+   Single positions and Multiple positions may provide a local rotation (specified as
+   three angles around X, Y and Z)
+
+   The rotation around X,Y,Z axis is defined by rot="a b c"
+          the X rotation of a angle is done first 
+          the Y rotation of b angle is done second 
+          the Z rotation of c angle is done last.
+
+
+1.5.1.1) posXYZ
+
+
+     posXYZ: single positioning of a 'generic' volume, in carthesians
+             coordinates.
+             The coordinate system is implicitly defined by the
+             posXYZ (take a coordinate system, and place the volume in
+             it with a given set of coordinates and rotations)
+
+      specific attributes:
+
+      X_Y_Z : X, Y and Z coordinates of the volume inside the
+              coordinate system   
+          The volume is rotated before it is placed.
+
+1.5.1.4) mposR/X/Y/Z
+
+
+     mposR, mposX, mposY, mposZ: multiple positioning of volumes along
+                                 the R, X, Y, Z directions respectively.
+
+     mposR:  positioning along the radius R with fixed (Z,phi). 
+     mposX:  positioning along the X-axis with fixed (R,phi). 
+     mposY:  positioning along the Y-axis with fixed (R,phi). 
+     mposZ:  positioning along the Z-axis with fixed (R,phi). 
+
+     ncopy      : Number of volumes to be placed
+     R0,X0,Y0,Z0: Starting values in R,X,Y,Z
+     dR,DX,DY,dZ: Increment values in R,X,Y,Z
+     Z_Phi      : transverse displacement for mposR
+     R_Phi      : transverse displacement for mposZ
+     X_Y        : transverse displacement for mposZ (alternate for R_Phi)
+     Y_Z        : transverse displacement for mposX
+     Z_X        : transverse displacement for mposY
+     S          : Move along the "ortho-radial" coordinate S 
+                  before placing the objects.
+
+     Note that the origin of the coordinate system is implicitly
+     defined in the 'transverse' direction by the Z_Phi, R_phi, X_Y, Y_Z or Z_X
+     attributes. In the positioning-direction it is defined by the
+     attributes R0, X0, Y0 or Z0. 
+-->
+<!--
+1.6) Identifiers
+================
+
+    Identifiers provide for a generalized identification scheme of
+    positioned volumes in the detector. Identifier are specified as
+    member elements attached to any position operator.
+
+    Generally, an identifier is composed of a set of numbers such as
+
+      /1/3/4/5/1/34
+
+    The meaning of each field is conventional and reflects the local
+    hierarchy of volumes.
+
+    The identifier elements permit to freely specify which field(s)
+    will be affected by the positioning operation. When single
+    positioning is used, a single value of one or several fields will
+    be affected by the operation. When a multiple positioning
+    operation is considered, one or several fields will be iteratively
+    affected. In this case, it is possible to follow the iteration by
+    specifying a first value and a step used to compute iterated field
+    values.
+
+    Attributes :
+
+    field      : a symbolic name characterizing the affected field. Legal names
+                 should be conventionally specified. Currently three symbols have 
+                 been introduced :
+
+                 layer  (typically R in barrels and Z in end-caps)
+                 ring   (typically Z in barrels and R in end-caps)
+                 sector (typically Phi)
+
+    value        the exact value to be entered in single positioning or
+                 the first value in multiple positiong.
+
+    step         only used in multi-positioning.
+                 
+-->
+<!--
+2.2) Using parameters    OMITTED.  See geotest.dtd or agdd
+-->
+<!--
+2.4) Using Axis compositions
+-->
+<!--
+<stackX name="MU_RPC1_LongStrips">
+  <axisMPos volume="MU_RPC1_LongStrip" ncopy="96" gap0="2.6" shift="30.8"/>
+</stackX>
+-->
+
+
+
+<!-- to keep changes to a mininum, temporarily nullify DTD_constraint -->
+<!ENTITY % DTDconstraint ' DTDversion CDATA  #IMPLIED' >
+
+<!-- See definition of constants and its children at the end of this file -->
+<!ELEMENT  gdd  (constants?,  section+) >
+
+
+<!ATTLIST  gdd
+           %DTDconstraint; >
+
+
+<!-- (jrb) got rid of    
+            trd | tubs | cons | pcon | 
+ -->
+
+<!ELEMENT  section  ( box | 
+                      union | intersection | subtraction |
+                      composition | choice |
+                      stackX | stackY | stackZ |
+                      parameters )+>
+ 
+<!ATTLIST  section
+           name       CDATA  #REQUIRED 
+           version    CDATA  #REQUIRED
+           date       CDATA  #REQUIRED
+           author     CDATA  #REQUIRED
+           topVolume  IDREF  #REQUIRED
+           %DTDconstraint;>
+         
+<!-- Added cm unit and made it default (jrb 13 Dec 2000) -->
+<!-- Changed default back to mm (jrb 1 Feb 2001 -->  
+<!ENTITY % units 'unitLength  ( mm  | m | cm)    "mm"
+                  unitAngle   ( deg | mrad ) "deg"'>
+
+<!ELEMENT identifier EMPTY>
+<!--
+    "orient" is x or y
+    "end"     is negative end (0) or positive end (1)
+    "dsize"   is small (0) or large (1)  
+      -->
+<!ATTLIST identifier field
+   (layer|tower|tray|row|col|topside|xtal|orient|nsew|end|dsize) #REQUIRED
+   value   NMTOKEN  "0"
+   step    NMTOKEN  "0" >
+
+<!--
+    The "layer", "ring" and "sector" entities are short cuts for identifiers
+with corresponding field names.
+-->
+
+<!ELEMENT layer EMPTY>
+
+<!ATTLIST layer field  (layer) "layer"
+                value  CDATA  "0"
+                step   CDATA  "0">
+
+
+<!ENTITY % anyIdentifier 'layer   | identifier'>
+
+<!-- do we want the generic parameters?? -->
+<!ENTITY % volumeProperties 'name        ID               #REQUIRED
+                              parameters  IDREF            #IMPLIED'>
+
+<!-- change material attribute from IDREF to NMTOKEN -->
+<!--  As of Jan 17, change it back! -->
+<!ENTITY % solidProperties '%volumeProperties;
+                             material    IDREF            #REQUIRED
+                             sensitive   ( true | false ) "false"'>
+
+<!ELEMENT  box    (seg?) >
+<!ATTLIST  box
+           X       NMTOKEN   "0"
+           Y       NMTOKEN   "0"
+           Z       NMTOKEN   "0"
+           XREF    IDREF     #IMPLIED
+           YREF    IDREF     #IMPLIED
+           ZREF    IDREF     #IMPLIED
+           %solidProperties;
+           %units;>
+
+<!ELEMENT  seg EMPTY >
+<!ATTLIST  seg  axis (X|Y|X) #REQUIRED 
+                reason CDATA #REQUIRED
+                      nSegREF NMTOKEN #IMPLIED
+                      nSeg NMTOKEN "1"       >
+
+<!-- A bunch of solids we don't need, at least for now, were omitted -->
+
+<!ENTITY % anyPosition      
+     ' posXYZ | posRPhiZ | mposR | mposPhi | mposX | mposY | mposZ '>
+
+<!ELEMENT  composition     ( %anyPosition; )+ >
+<!ATTLIST  composition    
+           %volumeProperties;
+           envelope   IDREF   #IMPLIED>
+
+<!ELEMENT  choice (case)+ >
+<!ATTLIST  choice name ID #REQUIRED>
+
+<!ELEMENT  case EMPTY >
+<!ATTLIST  case mode NMTOKENS #IMPLIED 
+                volume IDREF  #REQUIRED >
+
+<!ENTITY % anyRelativePosition ' axisPos | axisMPos '>
+
+<!ELEMENT  stackX      ( %anyRelativePosition; )+ >
+<!ATTLIST  stackX
+           origin      (atStart|atCentre)    "atStart"
+           %volumeProperties;>
+
+<!ELEMENT  stackY      ( %anyRelativePosition; )+ >
+<!ATTLIST  stackY
+           origin      (atStart|atCentre)    "atStart"
+           %volumeProperties;>
+
+<!ELEMENT  stackZ      ( %anyRelativePosition; )+ >
+<!ATTLIST  stackZ
+           origin      (atStart|atCentre)    "atStart"
+           %volumeProperties;>
+
+<!ENTITY % anySinglePosition ' posXYZ | posRPhiZ '>
+
+<!ELEMENT  union     ( %anySinglePosition; )+ >
+<!ATTLIST  union    
+           %volumeProperties;>
+
+<!ELEMENT  intersection ( %anySinglePosition; )+ >
+<!ATTLIST  intersection
+           %volumeProperties;>
+
+<!ELEMENT  subtraction  ( %anySinglePosition; )+ >
+<!ATTLIST  subtraction
+           %volumeProperties;>
+
+<!ENTITY  % anyParameter 'real       | string        | reference | 
+                           realArray | stringVector | referenceVector'>
+
+<!ELEMENT  parameters ( %anyParameter; )* >
+<!ATTLIST  parameters
+           name      ID      #REQUIRED
+           type      CDATA   #REQUIRED>
+
+<!ENTITY  % parameterProperties 'name      CDATA #IMPLIED
+                                  comment   CDATA #IMPLIED'>
+
+<!ELEMENT  real   EMPTY>
+<!ATTLIST  real
+           %parameterProperties;
+           value       CDATA            #REQUIRED
+           unit        ( m | cm | mm | 
+                         degree | radian | mrad |
+                         percent | none )  #REQUIRED>
+
+<!ELEMENT  string EMPTY>
+<!ATTLIST  string 
+           %parameterProperties;
+           value        CDATA     #REQUIRED>
+
+<!ELEMENT  reference EMPTY>
+<!ATTLIST  reference
+           %parameterProperties;
+           value        IDREF     #REQUIRED>
+
+
+<!ELEMENT  stringData  EMPTY>
+<!ATTLIST  stringData
+           value       CDATA     #REQUIRED>
+
+<!ELEMENT  referenceData  EMPTY>
+<!ATTLIST  referenceData
+           value       IDREF     #REQUIRED>
+
+<!ELEMENT  realArray EMPTY >
+<!ATTLIST  realArray
+           %parameterProperties;
+           values        CDATA   #REQUIRED
+           unit        ( m | cm | mm | 
+                         degree | radian | mrad |
+                         percent | none )  #REQUIRED>
+
+<!ELEMENT  stringVector ( stringData )+ >
+<!ATTLIST  stringVector
+           %parameterProperties;>
+
+<!ELEMENT  referenceVector ( referenceData )+ >
+<!ATTLIST  referenceVector
+           %parameterProperties;>
+
+<!-- changed array-valued rot attribute to three single-valued
+     attributes xrot, yrot, zrot
+ -->
+<!ENTITY % positionProperties 'volume    IDREF    #REQUIRED
+                                xrot       CDATA    "0"
+                                yrot       CDATA    "0"
+                                zrot       CDATA    "0"
+                                S         CDATA    "0"
+                                %units; '>
+           
+<!-- Change single X_Y_Z attribute to three separate attributes. 
+     Old attribute looked like this:
+        X_Y_Z CDATA "0 0 0"
+ (jrb) -->
+
+<!ELEMENT  posXYZ ( %anyIdentifier; )* >
+<!ATTLIST  posXYZ
+           X     NMTOKEN "0"
+           Y     NMTOKEN "0"
+           Z     NMTOKEN "0"
+           XREF IDREF   #IMPLIED
+           YREF IDREF   #IMPLIED
+           ZREF IDREF   #IMPLIED
+           %positionProperties;>
+
+<!ELEMENT  posRPhiZ ( %anyIdentifier; )* >
+<!ATTLIST  posRPhiZ
+           RPhiZ   CDATA    "0 0 0"
+           impliedRot (true | false) "true"
+           %positionProperties;>
+
+<!ELEMENT  mposPhi ( %anyIdentifier; )* >
+<!ATTLIST  mposPhi
+           ncopy     CDATA    #REQUIRED
+           Phi0      CDATA    "0"                     
+           dPhi      CDATA    #IMPLIED 
+           RZ       CDATA    "0 0"
+           impliedRot (true | false) "true"
+           %positionProperties;>
+
+<!ELEMENT  mposR ( %anyIdentifier; )* >
+<!ATTLIST  mposR
+           ncopy     CDATA    #REQUIRED
+           R0        CDATA    "0"
+           dR        CDATA    #REQUIRED
+           ZPhi     CDATA    "0 0"   
+           %positionProperties;>
+
+<!ELEMENT  mposX ( %anyIdentifier; )* >
+<!ATTLIST  mposX
+           ncopy     CDATA    #REQUIRED
+           X0        CDATA    "0"
+           dX        CDATA    #REQUIRED
+           YZ       CDATA    "0 0"   
+           %positionProperties;>
+
+<!ELEMENT  mposY ( %anyIdentifier; )* >
+<!ATTLIST  mposY
+           ncopy     CDATA    #REQUIRED
+           Y0        CDATA    "0"
+           dY        CDATA    #REQUIRED
+           ZX       CDATA    "0 0"   
+           %positionProperties;>
+
+<!ELEMENT  mposZ ( %anyIdentifier; )* >
+<!ATTLIST  mposZ
+           ncopy     CDATA    #REQUIRED
+           Z0        CDATA    "0"
+           dZ        CDATA    #REQUIRED
+           RPhi     CDATA    "0 0"   
+           XY       CDATA    "0 0"   
+           %positionProperties;>
+
+
+<!ENTITY % relativePositionProperties 'volume    IDREF    #REQUIRED
+                                         dX        CDATA    "0"
+                                         dY        CDATA    "0"
+                                         dZ        CDATA    "0"
+                                         dXREF     IDREF    #IMPLIED
+                                         dYREF     IDREF    #IMPLIED
+                                         dZREF     IDREF    #IMPLIED
+                                         rotation  CDATA    "0"
+                                         %units; '>
+
+<!ELEMENT  axisPos ( %anyIdentifier; )* >
+<!ATTLIST  axisPos
+           shift     CDATA    "0"
+           shiftREF  IDREF    #IMPLIED
+           gap       CDATA    "0"
+           gapREF    IDREF    #IMPLIED
+           %relativePositionProperties;>
+           
+<!ELEMENT  axisMPos ( %anyIdentifier; )* >
+<!ATTLIST  axisMPos
+           ncopy     CDATA    "0"
+           ncopyREF  IDREF    #IMPLIED
+           shift0    CDATA    "0"
+           shift0REF IDREF    #IMPLIED
+           gap0      CDATA    "0"
+           gap0REF   IDREF    #IMPLIED
+           shift     CDATA    "0"
+           shiftREF  IDREF    #IMPLIED
+           gap       CDATA    "0"
+           gapREF    IDREF    #IMPLIED
+           %relativePositionProperties;>
+
+<!---   get rid of materials definitions for now            -->
+
+<!-- new stuff for handling constants, arithmetic -->
+<!ELEMENT  constants (version, primary, derived?) >
+<!ELEMENT  version EMPTY >
+<!ATTLIST  version major NMTOKEN #REQUIRED >
+<!ATTLIST  version minor NMTOKEN #REQUIRED >
+
+<!ELEMENT primary (category*) >
+
+<!ELEMENT category ((prim*) | (const*)) >
+<!ATTLIST category name ID #REQUIRED>
+
+<!ELEMENT prim (#PCDATA) >  <!-- Should be text describing the constant -->
+<!ATTLIST prim name ID #REQUIRED 
+               value CDATA #REQUIRED
+               type (int | float | double | string ) "double" 
+                uType (length | angle | count | mat | none) "length"
+               %units; >
+
+<!ELEMENT derived (category*) >
+
+<!ENTITY  % operator "mul | quo | add | minus | uminus | max" >
+
+<!ELEMENT const ((%operator;)? ) >
+<!ATTLIST const name ID #IMPLIED
+                value CDATA #IMPLIED
+                uType (length | angle | count | mat | none) "length"
+                %units; >
+
+<!-- possible "operand" is
+        operations, i.e., their results
+        an in-place const with a value
+        a reference to a const or to a fund
+  -->
+<!ENTITY  % operand "%operator; | const | refer " >
+
+<!ELEMENT refer EMPTY >
+<!ATTLIST refer refTo IDREF #REQUIRED>
+<!ELEMENT add ( (%operand;) , (%operand;)+ ) >
+<!ELEMENT mul ((%operand;), (%operand;)+ ) >
+<!ELEMENT max ((%operand;), (%operand;)+ ) >
+<!ELEMENT minus ((%operand;), (%operand;) ) >
+<!ELEMENT quo ((%operand;), (%operand;) ) >
+<!ELEMENT uminus (%operand;)  >
