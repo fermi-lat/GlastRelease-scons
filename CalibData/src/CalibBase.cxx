@@ -10,10 +10,10 @@
 #include "GaudiKernel/StatusCode.h"
 
 namespace CalibData {
-  CalibBase::CalibBase() : m_validSince(0), m_validTill(0) {}
+  CalibBase::CalibBase() : m_validSince(0), m_validTill(0), m_serNo(-1) {}
 
-  CalibBase::CalibBase(const ITime& since, const ITime& till) :
-    m_validSince(0), m_validTill(0) 
+  CalibBase::CalibBase(const ITime& since, const ITime& till, int serNo) :
+    m_validSince(0), m_validTill(0), m_serNo(serNo)
   {
     m_validSince = new CalibTime::CalibTime(since);
     m_validTill = new CalibTime::CalibTime(till);
