@@ -67,6 +67,7 @@ public:
         insert(std::make_pair<std::string, const ISpectrumFactory*>(name, factory));
     }*/
 
+
 private:
 
     EventSource* m_event;  

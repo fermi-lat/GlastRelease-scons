@@ -65,7 +65,13 @@ public:
     virtual void addFactory( const IFactory* factory )=0;
 
     virtual void addFactory(std::string name, const ISpectrumFactory* factory )=0;
+#if 0
+    // get a description of the parameters that can be modified, and reference to a list of them
+    virtual std::string paramlist(std::vector<double>& params)=0; 
 
+    // set the parameters
+    virtual void setParams(std::vector<double>& params)=0;
+#endif
 };
 
 
