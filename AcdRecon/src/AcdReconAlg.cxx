@@ -39,7 +39,7 @@ double AcdReconAlg::s_thresholdEnergy;
 
 unsigned int AcdReconAlg::s_numSideRows;
 
-static float maxDoca = 200.0;
+static float maxDoca = 2000.0;
 
 // Define the factory for this algorithm
 static const AlgFactory<AcdReconAlg>  Factory;
@@ -139,7 +139,7 @@ void AcdReconAlg::clear() {
     m_rowDocaCol.clear();
     m_rowDocaCol.resize(s_numSideRows+1, maxDoca);  // one for each side, plus one for the top
     m_energyCol.clear();
-    m_act_dist = -200.0;
+    m_act_dist = -2000.0;
 }
 
 StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol)
