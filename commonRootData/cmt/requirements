@@ -3,7 +3,7 @@ version v1r0p1
 # $Id$
 
 
-use RootcintPolicy v4r* GlastPolicy
+use RootPolicy v4r* 
 
 # see RootPolicy for discussion of this pattern
 apply_pattern root_package headers="\
