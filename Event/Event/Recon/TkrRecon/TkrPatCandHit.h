@@ -39,11 +39,10 @@ public:
     TkrCluster::view  View() const {return m_view;}
 
     //The following provided to allow sorting (by layer)
-    friend bool operator<( const TkrPatCandHit& o1, const TkrPatCandHit& o2) {return o1.m_position.z() >  o2.m_position.z();}
     friend bool operator>( const TkrPatCandHit& o1, const TkrPatCandHit& o2) {return o1.m_position.z() <  o2.m_position.z();}
     friend bool operator==(const TkrPatCandHit& o1, const TkrPatCandHit& o2) {return o1.m_position.z() == o2.m_position.z();}
     friend bool operator!=(const TkrPatCandHit& o1, const TkrPatCandHit& o2) {return o1.m_position.z() != o2.m_position.z();}
-        
+
 private:
 
     Point m_position;          //xyz coordinates of this hit
@@ -54,8 +53,6 @@ private:
 };
 
 //Following typedefs for containing hits
-//typedef std::vector<TkrPatCandHit>           CandHitVector;
-//typedef std::vector<TkrPatCandHit>::iterator CandHitVectorPtr;
 typedef ObjectVector<TkrPatCandHit>           CandHitVector;
 typedef ObjectVector<TkrPatCandHit>::iterator CandHitVectorPtr;
 

@@ -60,16 +60,23 @@ public:
 
     //Provide access to the vector of hit candidates
     int              numPatCandHits()    {return m_hits.size();}
-    ////TkrPatCandHit*   getCandHit(int idx) {return &m_hits[idx];}
     TkrPatCandHit*   getCandHit(int idx) {return m_hits[idx];}
     TkrPatCandHit*   getFoLPlane(TrackEnd end = Start);
 
     //Provide access to a vector iterator (do we want this?)
     CandHitVectorPtr getHitIterBegin()   {return m_hits.begin();}
+
+    //Provide an stl like interface to the hits
+    CandHitVectorPtr begin()             {return m_hits.begin();}
+    CandHitVectorPtr end()               {return m_hits.end();}
+    int              size()              {return m_hits.size();}
+
+    //Provide mechanism to sort hits in the list
+    void             sortHits();
            
 private:
     //For sorting the hits
-    friend bool      sortHits(const TkrPatCandHit o1, const TkrPatCandHit o2) {return o1 < o2;}
+    ////friend bool      sortHits(const TkrPatCandHit o1, const TkrPatCandHit o2) {return o1 < o2;}
 
     CandHitVector m_hits;
 
@@ -82,10 +89,6 @@ private:
     int           m_firstLayer;
     int           m_itower;    
 };
-
-//Following typedefs for containing track candidate objects
-//typedef std::vector<TkrPatCand*>            CandTrkVector;
-//typedef std::vector<TkrPatCand*>::iterator  CandTrkVectorPtr;
 
 //typedef for the Container
 typedef ObjectVector<TkrPatCand>      TkrPatCandCol;

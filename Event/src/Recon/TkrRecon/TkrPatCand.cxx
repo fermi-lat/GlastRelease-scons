@@ -29,20 +29,34 @@ TkrPatCand::~TkrPatCand()
 {
 }
 
+// Define a class for sorting
+class ComparePatHits
+{
+  public:
+      ComparePatHits() {}
+      bool operator()(Event::TkrPatCandHit* patHitLeft, Event::TkrPatCandHit* patHitRight)
+    {
+        return patHitLeft->Position().z() >  patHitRight->Position().z();;
+    }
+};
+
+void TkrPatCand::sortHits()
+{
+    std::sort(begin(),end(),ComparePatHits());
+}
+
 void TkrPatCand::addCandHit(TkrCluster* pCluster)
 {
-    ////m_hits.push_back(TkrPatCandHit(pCluster));
     m_hits.push_back(new TkrPatCandHit(pCluster));
-    std::sort(m_hits.begin(),m_hits.end());
+//    std::sort(m_hits.begin(),m_hits.end());
 
     return;
 }
 
 void TkrPatCand::addCandHit(TkrPatCandHit CandHit)
 {
-    ////m_hits.push_back(CandHit);
     m_hits.push_back(&CandHit);
-    std::sort(m_hits.begin(),m_hits.end());
+//    std::sort(m_hits.begin(),m_hits.end());
 
     return;
 }
