@@ -1,0 +1,7 @@
+Package RootAnalysis
+Coordinator: H. Kelly
+
+06-nov-2001: HMK: tagged v2r4
+06-nov-2001: HMK: insert Doxyfile into doc directory
+06-nov-2001: HMK: added new macros copyTree and chainAll
+01-nov-2001: HMK: inserted new ACD BFEM veto threshold file

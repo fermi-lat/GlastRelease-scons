@@ -35,7 +35,9 @@
         </a><a href="#NtupleAnalysis">NtupleAnalysis</a></font></p>
         <p><font size="2"><strong><a href="#Low level macros">Low Level Utilties</a></strong></font><font size="4"><br>
         </font><font size="2"><a href="#chainTrees">chainTrees.cxx<br>
-        </a><a href="#createEventList.cxx">createEventList.cxx</a><br>
+        </a><a href="#chainAll">chainAll.cxx</a><br>
+        <a href="#copyTree">copyTree.cxx</a><a href="#createEventList.cxx"><br>
+        createEventList.cxx</a><br>
         <a href="#pruneTree.cxx">pruneTree.cxx</a></font></p>
         <p><font size="2">
         <a href="#plotMacros"><b>plotMacros<br>
@@ -106,21 +108,43 @@
         <h3><a name="Ancillary Data files">Ancillary Data files</a></h3>
         <p><font size="3"><b><a name="Calibration">Calibration</a></b></font></p>
         <p>This directory contains pedestal files from both the 1999-2000 SLAC
-        test beam and the 2001 Balloon Flight.&nbsp; Be aware of the type of
-        data you are processing.&nbsp; </p>
-        <p>Run208Ped.h is pedestal data for the CAL from the 1999-2000 SLAC test
+        test beam and the 2001 Balloon Flight.&nbsp; <font color="#FF0000">Be aware of the type of
+        data you are processing.&nbsp;</font> </p>
+        <p><i><b>Run208Ped.h</b></i> is pedestal data for the CAL from the 1999-2000 SLAC test
         beam.</p>
         <p>The other pedestal files are for the 2001 Balloon Flight:<br>
-        bfem_peds_cal.dat, bfem_peds_acd.dat, bfem_peds_xgt.dat<br>
+        <b><i>
+        bfem_peds_cal.dat, bfem_peds_acd.dat, bfem_peds_xgt.dat</i></b><br>
         These files have been updated as of 08/23/01 - according to the data
         provided by the subsystems.</p>
         <p>Currently by default, the RootTreeAnalysis and RawValidate macros
         will read in and use the Balloon pedestal files.&nbsp; You may modify
         this behavior if desired.</p>
+        <p>The file <b><i>bfem_vetotresh_acd.dat </i></b>contains the veto
+        thresholds for the ACD tiles from the 2001 Balloon Flight.&nbsp; Here is
+        the documentation included in the veto threshold file:</p>
+        <p><font face="Courier New" size="1"># ACD thresholds for raw PHA data<br>
+        # These thresholds correspond to 0.2 MIP + pedestal<br>
+        # To choose a different threshold, subtract the<br>
+        # acd pedestal (can be found in<br>
+        # RootAnalysis/calibration/bfem_peds_acd.dat) and scale<br>
+        # the resulting number linearly. For example, to get<br>
+        # 0.1 MIP to be more certain of getting all particles,<br>
+        # take the threshold, subtract the pedestal, scale the<br>
+        # resulting number (by 0.1/0.2) then add the pedestal<br>
+        # back in. For Tile 1000 this would be done as follows<br>
+        # 272.1 - 197.1 = 75 = 0.2 MIP<br>
+        # 0.1 MIP = (0.1/0.2) * 0.2 MIP = 75/2 = 37.5<br>
+        # 0.1 MIP threshold = ped + 0.1 MIP = 197.1 + 37.5 = 234.6</font></p>
         <h3><a name="EventDisplay">EventDisplay</a></h3>
-        <p>Included with the RootAnalysis distribution is the EventDisplay
-        developed in Italy, release tag ED-1-4.&nbsp; The Event Display
-        documentation is available at: <a href="http://www.pi.infn.it/glast/docs/EDDoc_new.html">http://www.pi.infn.it/glast/docs/EDDoc_new.html</a></p>
+        <p>You may also be interested in the ROOT event display.&nbsp;
+        Currently, this event display works with the balloon instrument.&nbsp; The Event Display
+        documentation is available at: <a href="http://www.pi.infn.it/glast/docs/EDDoc_new.html">http://www.pi.infn.it/glast/docs/EDDoc_new.html</a>&nbsp;
+        The Event Display now uses CMT to construct the necessary makefiles to
+        compile the code.&nbsp;&nbsp;</p>
+        <p>If you retrieved the RootAnalysis package via FTP from a tar.gz file
+        - then included in this distribution is the most recent tagged version
+        for the bfemDisplay package.&nbsp;</p>
         <p>Please note that the EventDisplay expects that reconstruction ROOT
         files are named *-recon.root.&nbsp; If you try to load a reconstruction
         ROOT file that does not contain &quot;-recon&quot; in the name, the file
@@ -186,10 +210,11 @@
         macro's function and its usage.&nbsp; What follows is a summary for each
         of the macros.</p>
         <p><font size="3"><b><a name="chainTrees">chainTrees</a>.cxx</b></font></p>
-        <p><font size="3">This small macro accepts a list of files names and
+        <p><font size="3">This small macro accepts a list of files names, the
+        path and name of the TTree and
         returns a TChain.</font></p>
-        <p><font size="3">All files must be of the same type i.e. all ntuple
-        files, all raw files, all recon files, or all monte carlo files.</font></p>
+        <p><font size="3">All files must contain TTrees of the same type i.e. ntuple,
+        raw, recon, or Monte Carlo.</font></p>
         <p><font size="3">A TChain is useful if you want to analyze multiple
         files at once.&nbsp; The TChain created can then be passed to
         RootTreeAnalysis for event loop processing.</font></p>
@@ -207,9 +232,38 @@
         you are processing.&nbsp; If it is an ntuple file, the name will be
         &quot;PDR/t1&quot; or &quot;BFEM/t1&quot;, depending upon whether it is
         a PDR (full flight instrument) ntuple or a balloon ntuple.</font></p>
-        <p><font size="3">Raw, Recon and Monte Carlo Root files have a tree
+        <p><font size="3">Raw, Recon and Monte Carlo ROOT files currently
+        contain a tree
         named &quot;T&quot;.
         </font></p>
+        <p><font size="3"><b><a name="chainAll">chainAll.cxx</a></b></font></p>
+        <p><font size="3">Similar to chainTrees, this macro chains all Trees
+        located in ROOT files in a specified directory.&nbsp; ROOT files are
+        identified by having the *.root extension - this macro will ignore all
+        other files.&nbsp;&nbsp;</font></p>
+        <p>chainAll is declared as:<br>
+        <i><font size="2">TChain* chainAll(char* dir, char* treePath)&nbsp;</font><br>
+        </i>where the user specifies:<br>
+        The name of a directory containing ROOT files<br>
+        The path and name of the TTree in those ROOT files.</p>
+        <p><font size="3">Here is an example:<br>
+        <i>TChain *myChain = chainAll(&quot;C:/rootfiles/&quot;, &quot;PDR/t1&quot;);</i></font></p>
+        <p><font size="3">Remember that all chained TTrees must be of the same
+        type:&nbsp; ntuple, raw, recon, monte carlo, etc...</font></p>
+        <p><font size="3"><b><a name="copyTree">copyTree.cxx</a></b></font></p>
+        <p><font size="3">Copies a TTree from one file into a new file, allowing
+        for a new directory to be created to store the TTree in the new file.</font></p>
+        <p>copyTree is declared as:<br>
+        <font size="2"><i>void copyTree(char *orgFileName, char *newFileName, char *newDir, char
+        *treeName)<br>
+        </i></font><font size="3">Where the user provides:<br>
+        </font>N<font size="3">ame of the original ROOT file<br>
+        New ROOT file name<br>
+        Directory in which to store the copy of the TTree<br>
+        The path and name of the TTree to copy</font></p>
+        <p><font size="3">Here is an example:<br>
+        </font><i><font size="2">copyTree(&quot;myOrgRootFile.root&quot;, &quot;myNewRootFile.root&quot;,
+        &quot;myNewDir&quot;, &quot;T&quot;);</font></i></p>
         <p><font size="3"><b><a name="createEventList.cxx">createEventList.cxx</a></b>
         </font></p>
         <p>This macro provides a generic mechanism to create a ROOT TEventList.&nbsp;
