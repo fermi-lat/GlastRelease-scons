@@ -163,7 +163,6 @@ public:
                 pitchvec.transform(T_plane);
                 HepPoint3D leftEnd(from-pitchvec), rightEnd(from+pitchvec);
                 moveTo(leftEnd); lineTo(rightEnd);
-                std::cout << "News from StripRep: leftEnd = " << leftEnd << std::endl;
             }
         }
 
