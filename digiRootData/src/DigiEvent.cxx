@@ -183,6 +183,7 @@ const AcdDigi* DigiEvent::getAcdDigi(UShort_t l, UShort_t f, UShort_t r,
     // User supplies a valid AcdDigi identified by layer, face, row, column
     AcdId tempId(l, f, r, c);
     AcdDigi tempDigi = AcdDigi(tempId.getId());
+    if (!m_acdDigiCol->IsSorted()) m_acdDigiCol->Sort();
     int index = m_acdDigiCol->BinarySearch(&tempDigi);
     if (index >= 0) return ((AcdDigi*)m_acdDigiCol->At(index));
     return 0;
@@ -192,6 +193,7 @@ const AcdDigi* DigiEvent::getAcdDigi(const AcdId &id) const {
     // Find a specific AcdDigi in the TClonesArray
     // User supplies a valid AcdId
     AcdDigi tempDigi = AcdDigi(id.getId());
+    if (!m_acdDigiCol->IsSorted()) m_acdDigiCol->Sort();
     int index = m_acdDigiCol->BinarySearch(&tempDigi);
     if (index >= 0) return ((AcdDigi*)m_acdDigiCol->At(index));
     return 0;
