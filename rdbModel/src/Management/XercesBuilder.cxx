@@ -265,8 +265,10 @@ namespace rdbModel {
 
     if (primaryElt) { // DOM_Element is a <primary> 
       newIndex->m_primary = true;
-      newIndex->m_name = xml::Dom::getAttribute(e, "col");
+      std::string col = newIndex->m_name = xml::Dom::getAttribute(e, "col");
       newIndex->m_indexCols.push_back(newIndex->m_name);
+      Column* myCol = myTable->getColumnByName(col);
+      myCol->m_isPrimaryKey = true;
     }
     else { // DOM_Element is <index>
       newIndex->m_name = xml::Dom::getAttribute(e, "name");
@@ -277,6 +279,13 @@ namespace rdbModel {
 
       // Value of "cols" attribute is a blank-separated list of column names
       std::string cols = xml::Dom::getAttribute(e, "cols");
+
+      // Could make this more robust by checking there is really just one below
+      if (newIndex->m_primary) {   // had better be just one column
+        Column* myCol = myTable->getColumnByName(cols);
+        myCol->m_isPrimaryKey = true;
+      }
+
       unsigned int start = 0;
       unsigned int blankLoc = cols.find(std::string(" "), start);
 
