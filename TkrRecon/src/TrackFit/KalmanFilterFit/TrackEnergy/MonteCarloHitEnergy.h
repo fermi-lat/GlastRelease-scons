@@ -27,7 +27,9 @@ public:
     MonteCarloHitEnergy(IDataProviderSvc* dataSvc, IParticlePropertySvc* partPropSvc);
     virtual ~MonteCarloHitEnergy() {};
 
-    double initialHitEnergy(const Event::TkrPatCandHit& candHit, const double trkEnergy);
+    double initialHitEnergy(const Event::TkrPatCand& patCand, 
+                            const Event::TkrPatCandHit& candHit, 
+                            const double trkEnergy);
     double updateHitEnergy(const double curEnergy, const double radLen);
     double getHitEnergy(const double energy);
 

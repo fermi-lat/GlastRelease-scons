@@ -44,7 +44,7 @@ public:
     TkrKalFitTrack* newFitTrack(TkrPatCand& patCand);
 
     /// Add measured hit from a pattern recognition candidate hit to a track
-    void            addMeasHit(TkrKalFitTrack& track, const TkrPatCandHit& candHit);
+    void            addMeasHit(TkrKalFitTrack& track, const TkrPatCand& patCand, const TkrPatCandHit& candHit);
     TkrFitPlane     newMeasPlane(const TkrPatCandHit& candHit, const double energy);
 
     /// Add new "hit" to an existing plane

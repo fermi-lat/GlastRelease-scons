@@ -18,7 +18,9 @@ BetheBlockHitEnergy::BetheBlockHitEnergy() :
     return;
 }
 
-double BetheBlockHitEnergy::initialHitEnergy(const Event::TkrPatCandHit& candHit, const double trkEnergy)
+double BetheBlockHitEnergy::initialHitEnergy(const Event::TkrPatCand& patCand, 
+                                             const Event::TkrPatCandHit& candHit, 
+                                             const double trkEnergy)
 {
     return trkEnergy;
 }

@@ -215,8 +215,13 @@ Event::TkrPatCand* MonteCarloFindTrackTool::buildTrack(const Event::McParticle* 
             Event::McPositionHit*    posHit   =  mcHitRel->getSecond();
             const Event::TkrCluster* cluster  = mcHitRel->getFirst();
 
+            // It is possible to have McPositionHit but no cluster
             if (!cluster) continue;
 
+            // Redundant? 
+            if (!patCand && posHit->mcParticle() != mcPart) continue;
+
+            // First hit so need candidate track wrapper
             if (!patCand)
             {
                 // Start to fill the hits
