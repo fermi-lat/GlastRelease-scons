@@ -8,6 +8,7 @@ package CalRecon
 
 package manager: Alexandre Chekhtman
 
+  v5r22   18-feb-05   ZF  differentiate range_below_thresh from xtal_below_thresh; fix math error in calcPos(); only calc one energy & pos estimate per xtal (best range only)
   v5r21p2 07-feb-05   ZF  Fixed small bug in requirements file re: ROOT_linkopts
   v5r21p1 05-feb-05   ZF  Builds & runs on Linux
   v5r21   05-feb-05   ZF  Now works with CalXtalResponse package

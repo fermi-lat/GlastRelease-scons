@@ -156,7 +156,6 @@ StatusCode CalXtalRecAlg::execute()
     CalXtalRecData* recData = 
       new CalXtalRecData((*it)->getMode(),xtalId);
            
-           
     // calculate energy in the crystal
     bool below_thresh;
     sc = computeEnergy(recData, *it, below_thresh);
@@ -164,7 +163,8 @@ StatusCode CalXtalRecAlg::execute()
 
     if(!below_thresh){      
       // calculate position in the crystal
-      computePosition(recData, *it);   
+      sc = computePosition(recData, *it);   
+      if (sc.isFailure()) return sc;
 
       // add new reconstructed data to the collection
       m_calXtalRecCol->push_back(recData);
@@ -266,39 +266,48 @@ StatusCode CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const CalDigi* 
 
   const CalDigi::CalXtalReadoutCol& roCol = digi->getReadoutCol();
   
+  // xtal wide threshold flag
   below_thresh = false;    
   
-  // loop over readout ranges
-  for ( CalDigi::CalXtalReadoutCol::const_iterator it = roCol.begin();
-        it !=roCol.end(); it++){
+  // currently allways using 1st readout
+  CalDigi::CalXtalReadoutCol::const_iterator it = roCol.begin();
 
-    // get readout range number for both crystal faces
-    CalXtalId::AdcRange rangeP = 
-      (CalXtalId::AdcRange)it->getRange(CalXtalId::POS); 
-    CalXtalId::AdcRange rangeM = 
-      (CalXtalId::AdcRange)it->getRange(CalXtalId::NEG); 
+  // get readout range number for both crystal faces
+  CalXtalId::AdcRange rangeP = 
+    (CalXtalId::AdcRange)it->getRange(CalXtalId::POS); 
+  CalXtalId::AdcRange rangeM = 
+    (CalXtalId::AdcRange)it->getRange(CalXtalId::NEG); 
+  
+  // get adc values 
+  int adcP = it->getAdc(CalXtalId::POS);   
+  int adcM = it->getAdc(CalXtalId::NEG);   
 
-    // get adc values 
-    int adcP = it->getAdc(CalXtalId::POS);   
-    int adcM = it->getAdc(CalXtalId::NEG);   
+  float ene;
 
-    float ene;
+  // used for current range only
+  bool range_below_thresh = false;
 
-    // convert adc values into energy
-    sc = m_xtalEneTool->calculate(xtalId,
-                                  rangeP,rangeM,
-                                  adcP,  adcM,
-                                  ene, below_thresh);
-    if (sc.isFailure()) return sc;
+  // convert adc values into energy
+  sc = m_xtalEneTool->calculate(xtalId,
+                                rangeP,rangeM,
+                                adcP,  adcM,
+                                ene, 
+                                range_below_thresh,
+                                below_thresh);
+  if (sc.isFailure()) return sc;
 
-    // create output object
-    CalXtalRecData::CalRangeRecData* rangeRec =
-      new CalXtalRecData::CalRangeRecData(rangeP,ene,rangeM,ene);
-
-    // add output object to output collection
-    recData->addRangeRecData(*rangeRec);
-    delete rangeRec;
-  }             
+  if (range_below_thresh) {
+    below_thresh = true;
+    return StatusCode::SUCCESS;
+  }
+    
+  // create output object
+  CalXtalRecData::CalRangeRecData* rangeRec =
+    new CalXtalRecData::CalRangeRecData(rangeP,ene,rangeM,ene);
+    
+  // add output object to output collection
+  recData->addRangeRecData(*rangeRec);
+  delete rangeRec;
   
   return StatusCode::SUCCESS;
 }
@@ -359,7 +368,7 @@ StatusCode CalXtalRecAlg::computePosition(CalXtalRecData* recData, const CalDigi
   // position of the crystal center
   Point pCenter = p0+(vect0+vect11)*0.5; 
   //normalized vector of the crystal direction 
-  Vector dirXtal = 0.5*(vect11-vect0)*m_nCsISeg/(m_nCsISeg-1);  
+  Vector dirXtal = (vect11-vect0)*m_nCsISeg/(m_nCsISeg-1);  
 
   //-- GET BEST RANGE READOUT --//
   // readout 0 will contain the best ranges in 1-range mode
