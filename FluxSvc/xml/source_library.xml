@@ -106,6 +106,19 @@
 
     </source>
 
+    <!--the Crab, pulsed portion, with pointed observation, for photons above 100 MeV,
+        based on Nolan APJ 409:697
+        The flux number is: 4.11E-9/2.15*(274/100)**2.15*(1e4cm^2/m^2)*100 MeV
+    -->
+    <source name="crab-galactic" flux="0.0167">
+        <spectrum>
+            <particle name="gamma"> <power_law emin="0.100" emax="100." gamma="2.15"/>
+            </particle>
+            <galactic_dir l="-179.31." b="-5.8."/>
+        </spectrum>
+
+    </source>
+
     <!-- galactic electron spectrum -->
     <source name="electron">
         <spectrum> <SpectrumClass name="GalElSpectrum"/> <use_spectrum/> </spectrum>

@@ -30,7 +30,7 @@ FluxTestAlg.source_name="TimeCandle";
 //FluxTestAlg.source_name="default";
 
 //the angular size of GLAST's exposure, if needed (see below)
-FluxTestAlg.glastExposureAngle = 20.;
+FluxTestAlg.glastExposureAngle = 2.;
 
 //selecting the kind of exposure GLAST gets,
 //to be appropriate for exposure maps or sky maps.
@@ -46,7 +46,7 @@ FluxTestAlg.ExposureMode = 0;
 
 
 ApplicationMgr.EvtSel = "NONE";
-ApplicationMgr.EvtMax = 30000;
+ApplicationMgr.EvtMax = 10000;
 
 //==============================================================
 //

@@ -130,7 +130,7 @@ StatusCode FluxTestAlg::initialize() {
         log << MSG::ERROR << "Could not find flux " << m_source_name << endreq;
         return sc;
     }
-    m_flux->pass(/*1000*/0.);
+    //m_flux->pass(/*1000*/0.);
     // then do the output here.
     log << MSG::INFO << "start of other loops" << endreq;
     log << MSG::INFO << "Source title: " << m_flux->title() << endreq;
@@ -165,10 +165,10 @@ public:
     }
     
     virtual std::pair<float,float> dir(float)const{
-        return std::make_pair<float,float>(0.0,0.0);
+        return std::make_pair<float,float>(1.0,0.0);
     }     
     
-    virtual std::pair<double,double> dir(double energy, HepRandomEngine* engine){return std::make_pair<double,double>(0.0,0.0);}
+    virtual std::pair<double,double> dir(double energy, HepRandomEngine* engine){return std::make_pair<double,double>(1.0,0.0);}
     
     double energySrc(HepRandomEngine* engine, double time){  return (*this)(engine->flat());}
     
@@ -192,6 +192,7 @@ StatusCode FluxTestAlg::execute() {
     
     Event::McParticleCol* pcol = new Event::McParticleCol;
     eventSvc()->retrieveObject("/Event/MC/McParticleCol",(DataObject *&)pcol);
+
     
     HepVector3D p,d;
     double energy;
@@ -235,9 +236,17 @@ StatusCode FluxTestAlg::execute() {
         log << MSG::ERROR << "Could not find FluxSvc" << endreq;
         return sc;
     }
+
+    /// FOR ROCKING UP AND DOWN ON EACH ORBIT.
+    if((int)m_flux->gpsTime()%180 <= 97){
+    // Set Rocking angles (zenith rotation, off-zenith)
+        fsvc->setOrientation(std::make_pair<double,double>(0.0,30.*M_PI/180.));
+    }else{
+        fsvc->setOrientation(std::make_pair<double,double>(0.0,-30.*M_PI/180.));
+    }
     
-    //HepVector3D pointingin = d;
-    HepVector3D pointingin(0,0,1);
+    HepVector3D pointingin = d;
+    //HepVector3D pointingin(0,0,1);
     pointingin = (fsvc->transformGlastToGalactic(m_flux->gpsTime()))*pointingin;
     
     //log << MSG::INFO
@@ -406,7 +415,7 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
                       std::pair<double,double> abc = hammerAitoff(correctedl,correctedb);
                     point.x = abc.first; //yes, this is doing an implicit cast.
                     point.y = abc.second;
-                    point.amount = deltat;
+                    point.amount = deltat*pow(cos((point.y-90.)*M_PI/180.),2);;
                     returned.push_back(point);
                 }
             }
@@ -429,7 +438,7 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
 
         point.x = l+lshift; //yes, this is doing an implicit cast.
         point.y = b+bshift;
-        point.amount = deltat;
+        point.amount = deltat;//*pow(cos((point.y-90.)*M_PI/180.),2);
         returned.push_back(point);
     }
 
@@ -536,19 +545,15 @@ void FluxTestAlg::rootDisplay(){
 
 
 
-/////////T$EST FILE////////////////////////////
+
 /*
  *  This routine will convert longitude and latitude values ("l" and "b")
  *  into equivalent cartesian coordinates "x" and "y".  The return values
  *  will be in internal Aitoff units where "*x" is in the range [-2, 2]
  *  and "*y" is in the range [-1, 1].
  */
-//#ifdef PROTOTYPE
-//static void aitoffConvert(float l, float b, float *x, float *y)
-//#else
 std::pair<double,double> FluxTestAlg::hammerAitoff(double l,double b){
 
-//#endif /* PROTOTYPE */
     double x, y;
     float lover2, den;
     float radl, radb;
