@@ -5,6 +5,8 @@
   The main branch is defined as the DigiEvent class.  This class contains:
   - Run Id
   - Event Id
+  - Time Stamp in seconds
+  - Level One Trigger
   - Collection of CalDigi objects.
     -# Mode:  BESTRANGE or ALLRANGE
     -# CalXtalId - packed UInt_t storing tower, layer, column
