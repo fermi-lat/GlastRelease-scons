@@ -30,7 +30,6 @@ StatusCode TestEnergyTool::initialize() {
   log << MSG::INFO << "initialize" << endreq;
 
   StatusCode sc = StatusCode::SUCCESS;
-
         
   // extracting int constants
   double value;  // intermediate variable for reading constants from
@@ -115,15 +114,16 @@ StatusCode TestEnergyTool::initialize() {
     return sc;
   }
 
-  unsigned int underpos = m_startTimeAsc.find("_");
-  if (underpos < m_startTimeAsc.size()) {
-    m_startTimeAsc.replace(underpos, 1, " ");
-  }
-  m_startTime = facilities::Timestamp(m_startTimeAsc).getClibTime();
+  std::string strTimeAsc = m_startTimeAsc.value();
+  unsigned int underpos = strTimeAsc.find("_");
+  if (underpos < strTimeAsc.size())
+    strTimeAsc.replace(underpos, 1, " ");
+  
+  m_startTime = facilities::Timestamp(strTimeAsc).getClibTime();
 
   log << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
   log << MSG::INFO << "Time of first event: (ascii) "
-      << m_startTimeAsc       << endreq; 
+      << strTimeAsc       << endreq; 
   log << MSG::INFO << "Time of first event: (seconds since 1970) "
       << m_startTime       << endreq; 
 
@@ -133,6 +133,23 @@ StatusCode TestEnergyTool::initialize() {
   return StatusCode::SUCCESS;
 }
 
+/*!
+  Method:
+  -# if(calibFlavor != none)
+   -# set event time for DetDataSvc
+   -# obtain pointers pedestal and elecgain data in TDS
+   -# use uniqe pedestal and gain information for each xtal/range
+  -# else
+   -# use default pedesatl values for all xtal/range
+  -# convert adc values into energy (e = gain*(adc-ped))
+  -# return average of POS and NEG energy estimations
+
+  \note The replication of the original CalXtalRec algorithm is incomplete as ICalEnergyTool interface does not
+  allow for returning two separate energy values.  In this case the average energy (POS+NEG/2) is returned. Those who 
+  need energy from both faces may want to call the overloaded version of the function which deals with each
+  face individually.
+
+ */
 StatusCode TestEnergyTool::calculate(const idents::CalXtalId &xtalId, 
                                      idents::CalXtalId::AdcRange rangeP,
                                      idents::CalXtalId::AdcRange rangeN,
@@ -221,7 +238,6 @@ StatusCode TestEnergyTool::calculate(const idents::CalXtalId &xtalId,
     gainM = pGainM->getGain();
   }
   
-  
   // convert adc values into energy
   double eneP = gainP*(adcP-pedP);
   double eneM = gainM*(adcN-pedN);
@@ -232,7 +248,16 @@ StatusCode TestEnergyTool::calculate(const idents::CalXtalId &xtalId,
   return StatusCode::SUCCESS;
 }
   
-// calculate energy from xtalId, one face/range/adc, and a position
+/*!
+  Method:
+  -# if(calibFlavor != none)
+   -# set event time for DetDataSvc
+   -# obtain pointers pedestal and elecgain data in TDS
+   -# use uniqe pedestal and gain information for each xtal/range
+  -# else
+   -# use default pedesatl values for all xtal/range
+  -# convert adc values into energy (e = gain*(adc-ped))
+ */
 StatusCode TestEnergyTool::calculate(const idents::CalXtalId &xtalId,
                                      idents::CalXtalId::AdcRange range,
                                      idents::CalXtalId::XtalFace face,

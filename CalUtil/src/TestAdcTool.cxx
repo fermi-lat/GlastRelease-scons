@@ -21,7 +21,6 @@ TestAdcTool::TestAdcTool( const std::string& type,
 
   declareProperty ("doFluctuations", m_doFluctuations=true);
   declareProperty ("xmlFile", m_xmlFile="$(CALDIGIROOT)/xml/CalDigi.xml");
-
 }
 
 StatusCode TestAdcTool::initialize() {

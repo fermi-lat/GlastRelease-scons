@@ -1,5 +1,13 @@
 #ifndef _ICalPosTool_H
 #define _ICalPosTool_H 1
+/*! @class ICalPosTool
+ *
+ * \author Zach Fewtrell
+ *
+ * \brief Abstract interface class for calculation of the deposited energy centroid for a single GLAST LAT calorimeter crystal.
+ * 
+ *
+ */
 
 // Include files
 #include "GaudiKernel/IAlgTool.h"
@@ -13,13 +21,19 @@ class ICalPosTool : virtual public IAlgTool {
   static const InterfaceID& interfaceID() { return IID_CalPosTool; }
 
 
-  // calculate position given the digital response on both faces
+  /// calculate position of energy centroid given the digital response on both faces
+  /// \param xtalId specify xtal log
+  /// \param adcP input adc value for Positive end
+  /// \param adcN input adc value for Negative end
+  /// \param rangeP input adc range for Positive end
+  /// \param rangeN input adc range for Negative end
+  /// \param position output energy centroid position
   virtual StatusCode calculate(const idents::CalXtalId &xtalId,
                                int adcP, 
                                idents::CalXtalId::AdcRange rangeP,
                                int adcN, 
                                idents::CalXtalId::AdcRange rangeN,
-                               float &position                // output
+                               float &position
                                ) = 0;
   
 };
