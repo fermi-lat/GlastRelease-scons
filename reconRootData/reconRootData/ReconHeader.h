@@ -38,7 +38,10 @@ private:
     };
 
     //! Event Id
-    UInt_t m_eventID;
+    UInt_t m_eventId;
+
+    //! Run number
+    UInt_t m_runId;
 
 public:
     //! Defines the possible values for the tkrRecon bits
@@ -131,12 +134,16 @@ public:
     Bool_t isValidCalFlag(UInt_t val);
 
     //! retrieve the event ID for this event
-    UInt_t getEventID() { return m_eventID; };
+    UInt_t getEventId() { return m_eventId; };
 
     //! set the event ID for this event - should match the event ID in the raw data!!!
-    void setEventID(UInt_t id) { m_eventID = id; };
+    void setEventId(UInt_t id) { m_eventId = id; };
 
-    ClassDef(ReconHeader,1)
+    UInt_t getRunId() { return m_runId; };
+
+    void setRunId(UInt_t id) { m_runId = id; };
+
+    ClassDef(ReconHeader,2)
 };
 
 #endif
