@@ -24,6 +24,8 @@
 * @brief TDS for storing all the possible 3-in-a-row trigger conditions per tower
 * author Luis C. Reyes   lreyes@milkyway.gsfc.nasa.gov
 */
+ 
+static const CLID& CLID_TriRowBitsTds = InterfaceID("TriRowBitsTds", 1, 0);
 
 
 namespace TriRowBitsTds{
