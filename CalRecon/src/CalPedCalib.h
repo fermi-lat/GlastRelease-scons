@@ -11,7 +11,7 @@ class CalPedElement
         ~CalPedElement() {}
         void generateCalib(){pedAvr=100.0; pedSig=5.0;}
         void readFile(std::ifstream& file) { file >> pedAvr >> pedSig;}
-        void writeFile(std::ofstream& file) { file << " " << pedAvr << " " 
+        void writeFile(std::ofstream& file) const { file << " " << pedAvr << " " 
                                              << pedSig << std::endl;} 
 
         const float getAvr() const {return pedAvr;}
@@ -27,14 +27,21 @@ class CalPedCalib
 
         CalPedCalib(){m_elem = (CalPedElement*)0;}
         ~CalPedCalib() {if(m_elem != 0) delete m_elem;}
-        void addElement(CalPedElement* elem){if(m_elem != 0) delete m_elem; m_elem = elem;} 
+        void addElement(CalPedElement* elem)
+        {
+            if(m_elem != 0) delete m_elem;
+        
+            m_elem = elem;
+        } 
+
+        
         void generateCalib(){if(m_elem == 0) m_elem = new CalPedElement();
                                 m_elem->generateCalib();}
         void writeFile(std::ofstream& file, unsigned int tower,
                                   unsigned int layer,
                                   unsigned int col,
                                   unsigned int range,
-                                  idents::CalXtalId::XtalFace face)
+                                  idents::CalXtalId::XtalFace face) const
         {
             file << " " << tower
                 << " " << layer

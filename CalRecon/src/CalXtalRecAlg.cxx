@@ -135,7 +135,14 @@ StatusCode CalXtalRecAlg::initialize()
         m_pedMap = new CALPEDMAP();
         unsigned int nranges = 4, ntowers=16,nlayers=8,ncols=12;
         m_pedMap->generateCalib(ntowers,nlayers,ncols,nranges);
-    
+        
+//        std::ofstream ofile("CalPedCalib.txt");
+//        m_pedMap->writeFile(file);
+//        ofile.close();
+//        std::ifstream ifile("CalPedCalib.txt");
+//        m_pedMap->readFile(ifile);
+//        ifile.close();
+        
 	return sc;
 }
 

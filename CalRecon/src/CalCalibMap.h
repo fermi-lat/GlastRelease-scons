@@ -60,7 +60,13 @@ template <class CalibData, class CalibElement,unsigned int nFaces>
     void CalCalibMap<CalibData,CalibElement,nFaces>::addElement(CalibElement* elem, const idents::CalXtalId xtalId,
         unsigned int range, idents::CalXtalId::XtalFace face =
         idents::CalXtalId::POS)
-    {(m_calibMap[xtalId])->addElement(elem,range,face);}
+    {
+    std::map<idents::CalXtalId,XTALCALIB*>::iterator it = m_calibMap.find(xtalId);
+    if(it == m_calibMap.end())m_calibMap[xtalId] = new XTALCALIB();
+    
+    ((*(m_calibMap.find(xtalId))).second)->addElement(elem,range,face);
+
+}
 
     // reading calibration data from ascii file
 
@@ -69,20 +75,26 @@ template <class CalibData, class CalibElement, unsigned int nFaces>
     {
 
         unsigned short tower, layer, col, range, iface;
-        
-        while ((file >> tower >> layer >> col >> range).good())
+        file >> tower >> layer >> col >> range;
+        int stat = file.good();
+        while (stat)
         {
-            const idents::CalXtalId xtalId(tower,layer,column);
+            
+            
+            const idents::CalXtalId xtalId(tower,layer,col);
 
             iface=0; if(nFaces>1) file >> iface;
             idents::CalXtalId::XtalFace face = 
-                iface==0 ? idents::CalXtalId::POS : idents::CalXtaId::NEG;
+                iface==0 ? idents::CalXtalId::POS : idents::CalXtalId::NEG;
 
-            CalibData::Element* elem = new CalibData::Element();
+            CalibElement* elem = new CalibElement();
             
             elem->readFile(file);
 
             addElement(elem,xtalId,range,face);
+
+            file >> tower >> layer >> col >> range;
+            stat = file.good();
         }
 
 
@@ -93,11 +105,14 @@ template <class CalibData, class CalibElement,unsigned int nFaces>
         void CalCalibMap<CalibData, CalibElement,nFaces>::writeFile(std::ofstream &file)
     {
         unsigned int tower,layer,col,range,iface;
-        std::map<idents::CalXtalId,XTALCALIB*>::iterator itXtal;
+        std::map<idents::CalXtalId,XTALCALIB*>::iterator itXtal = m_calibMap.begin();
+            idents::CalXtalId xtalId = (*itXtal).first;
+        XTALCALIB* xtalCalib = (*itXtal).second;
 
-        for(itXtal=m_calibMap.begin();itXtal!==m_calibMap.end();itXtal++)
+
+        for ( ;itXtal != m_calibMap.end(); itXtal++)
         {
-            idents::CalXtalId xtalId = (*itXtal).first();
+            xtalId = (*itXtal).first;
             tower = xtalId.getTower();
             layer = xtalId.getLayer();
             col   = xtalId.getColumn();
@@ -105,11 +120,11 @@ template <class CalibData, class CalibElement,unsigned int nFaces>
             for(iface = 0; iface < nFaces;iface++)
             {
                 idents::CalXtalId::XtalFace face = 
-                iface==0 ? idents::CalXtalId::POS : idents::CalXtaId::NEG;
+                iface==0 ? idents::CalXtalId::POS : idents::CalXtalId::NEG;
                 for (range = 0; range<4; range++)
                 {
                     const CalibData* rangeCalib 
-                        = (*itXtal).second()->getRangeCalib(range,face);
+                        = ((*itXtal).second)->getRangeCalib(range,face);
 
                     rangeCalib->writeFile(file,tower,layer,col,range,face);
                 }

@@ -68,8 +68,10 @@ template <class CalibData, class CalibElement, unsigned int nFaces>
         std::map<int,CalibData*>& calibFace = 
         (nFaces>1 && face == idents::CalXtalId::NEG) ? m_calib[1]:m_calib[0];
            
+        std::map<int,CalibData*>::iterator it=calibFace.find(range);
+        if(it == calibFace.end())calibFace[range] = new CalibData();
 
-        (calibFace[range])->addElement(elem);
+        ((*(calibFace.find(range))).second)->addElement(elem);
     }
 
 template <class CalibData, class CalibElement, unsigned int nFaces>
