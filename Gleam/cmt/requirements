@@ -51,7 +51,7 @@ use GlastSvc    v9r3p1
 
 # simulation
 
-use FluxSvc               v5r15p1
+use FluxSvc               v5r15p2
 use FluxDisplay v2r6
 use G4Generator v4r4
 
