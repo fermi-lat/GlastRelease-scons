@@ -28,6 +28,7 @@
 
 extern const CLID& CLID_TkrDigi;
 
+namespace Event {
 class TkrDigi : virtual public ContainedObject {
     
 public:
@@ -172,5 +173,5 @@ inline std::ostream& TkrDigi::fillStream( std::ostream& s ) const {
 //! Definition of all container type of TkrDigi
 
 typedef ObjectVector<TkrDigi> TkrDigiCol;
-
+} //Namespace Event
 #endif
