@@ -2,87 +2,88 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
- * 12-Aug-2003: jrb - tag v1r13p0  Add remaining ACD ribbons back into model.
- *   Tiles, ribbons and support structure parameters are derived from
- *   3-d model, somewhat simplied.
- * 11-Aug-2003: jrb - tag v1r13    1. (Xin) revised em and miniTower files
- *                                 to be consistent with recent CAL and TKR
- *                                 changes
- *                                 2. (Joanne) Most of new ACD geometry, using
- *                                 3-d model, is in.  Missing some ribbons.
- * 28-jul-2003: jrb - tag v1r12    (for Leon) add enclosing volume for
+ *  4-sep-2003: jrb v1r13p1  Some small adjustments in Z to CAL components
+ * 12-Aug-2003: jrb v1r13p0  Add remaining ACD ribbons back into model.
+ *                           Tiles, ribbons and support structure parameters 
+ *                           are derived from 3-d model, somewhat simplied.
+ * 11-Aug-2003: jrb v1r13    1. (Xin) revised em and miniTower files
+ *                              to be consistent with recent CAL and TKR
+ *                              changes
+ *                           2. (Joanne) Most of new ACD geometry, using
+ *                               3-d model, is in.  Missing some ribbons.
+ * 28-jul-2003: jrb v1r12    (for Leon) add enclosing volume for
  *                                 LAT z-displacement test
- * 17-jul-2003: jrb - tag v1r11p4  Fix erroneous ACD tile identifier
- *  8-jul-2003: jrb - tag v1r11p3  Incorporate one more tkr adjustment and
- *                                 minor CAL constant redefinition
- * 24-jun-2003: jrb - tag v1r11p2  Incorporate Leon's fixes to vertical 
- *                                 dimensions and positions within tracker
- * 20-jun-2003: jrb - tag v1r11p1  1. Implement top frame according to new
- *                                    description with 2 stacked frames
- *                                 2. First draft of inter-tower material.
- *                                    Still missing cyl. supports.
- * 19-jun-2003: jrb - tag v1r11p0  1. Don't forget CAL mods for segmented
- *                                    version
- *                                 2. A bit of clean-up
- * 19-jun-2003: jrb - tag v1r11    1. Many changes to EM description
- *                                 2. Use of <half> arithmetic element
- *                                 3. start revising CAL geometry: add
- *                                    crystal wrap
- *  1-may-2003: jrb - tag v1r10p3  1. Move origin to top of grid, where it
- *                                    belongs
- *                                 2. Move CAL to top of its stay-clear
- *                                 3. Set ACD/tracker gap back to last known
- *                                    blessed value. Required adjustment to
- *                                    location of ACD side supports
- * 17-apr-2003: jrb - tag v1r10p2  Add author line
- *  1-apr-2003: jrb - tag v1r10p1  (for Xin) better EM model
- * 18-mar-2003: jrb - tag v1r10p0  1. Modify vacuum for G4. 
- *                                 2. Adjust density of tray bottom face
- *                                 3. Fix superGLAST converter density
- *                                 4. EM changes
- * ??-???-????: ??  - tag v1r10
- * 13-nov-2002: jrb - tag v1r9   - 1. Substantial changes to ACD geometry top,
- *                                   addition of ACD support structure.
- *                                 2. minor reorganization to lessen number
- *                                   of distinct files needed for segmented
- *                                   CAL model
- * 06-nov-2002: jrb - tag v1r8p0 - Fix identifier field for ACD side to
- *                                 conform with convention 
- * 30-oct-2002: jrb - tag v1r8   - (jrb)slightly modify a couple ACD primary
- *                                 constants; (Xin Chen) add em subdirectory 
- *                                 containing description of EM instrument
- * 25-sep-2002: jrb - tag v1r7p3 - use <primEnergy> for trigger thresholds
- * 19-sep-2002: jrb - tag v1r7p2 - Fix comment for cal.zeroSuppressEnergy
- * 19-sep-2002: jrb - tag v1r7p1 - Pick up new better name for ACD threshold
- * 19-sep-2002: jrb - tag v1r7p0 - Define and use new element <primEnergy>
- *                                 which requires specification of GeV or MeV
- * 16-sep-2002: jrb - tag v1r6p2 - Pick up fixed transverse dimensions for
- *                                 SiLayerBox  
- * 16-sep-2002: jrb - tag v1r6p1 - Some minor, presumably innocuous changes:
+ * 17-jul-2003: jrb v1r11p4  Fix erroneous ACD tile identifier
+ *  8-jul-2003: jrb v1r11p3  Incorporate one more tkr adjustment and
+ *                           minor CAL constant redefinition
+ * 24-jun-2003: jrb v1r11p2  Incorporate Leon's fixes to vertical 
+ *                           dimensions and positions within tracker
+ * 20-jun-2003: jrb v1r11p1  1. Implement top frame according to new
+ *                              description with 2 stacked frames
+ *                           2. First draft of inter-tower material.
+ *                              Still missing cyl. supports.
+ * 19-jun-2003: jrb v1r11p0  1. Don't forget CAL mods for segmented
+ *                              version
+ *                           2. A bit of clean-up
+ * 19-jun-2003: jrb v1r11    1. Many changes to EM description
+ *                           2. Use of <half> arithmetic element
+ *                           3. start revising CAL geometry: add
+ *                              crystal wrap
+ *  1-may-2003: jrb v1r10p3  1. Move origin to top of grid, where it
+ *                              belongs
+ *                           2. Move CAL to top of its stay-clear
+ *                           3. Set ACD/tracker gap back to last known
+ *                              blessed value. Required adjustment to
+ *                              location of ACD side supports
+ * 17-apr-2003: jrb v1r10p2  Add author line
+ *  1-apr-2003: jrb v1r10p1  (for Xin) better EM model
+ * 18-mar-2003: jrb v1r10p0  1. Modify vacuum for G4. 
+ *                           2. Adjust density of tray bottom face
+ *                           3. Fix superGLAST converter density
+ *                           4. EM changes
+ * ??-???-????: ??   v1r10
+ * 13-nov-2002: jrb  v1r9   - 1. Substantial changes to ACD geometry top,
+ *                               addition of ACD support structure.
+ *                            2. minor reorganization to lessen number
+ *                               of distinct files needed for segmented
+ *                               CAL model
+ * 06-nov-2002: jrb  v1r8p0 - Fix identifier field for ACD side to
+ *                            conform with convention 
+ * 30-oct-2002: jrb  v1r8   - (jrb)slightly modify a couple ACD primary
+ *                            constants; (Xin Chen) add em subdirectory 
+ *                            containing description of EM instrument
+ * 25-sep-2002: jrb  v1r7p3 - use <primEnergy> for trigger thresholds
+ * 19-sep-2002: jrb  v1r7p2 - Fix comment for cal.zeroSuppressEnergy
+ * 19-sep-2002: jrb  v1r7p1 - Pick up new better name for ACD threshold
+ * 19-sep-2002: jrb  v1r7p0 - Define and use new element <primEnergy>
+ *                            which requires specification of GeV or MeV
+ * 16-sep-2002: jrb  v1r6p2 - Pick up fixed transverse dimensions for
+ *                            SiLayerBox  
+ * 16-sep-2002: jrb  v1r6p1 - Some minor, presumably innocuous changes:
  *          - move xml/flight/flightMaterials.xml to the attic
  *          - change organization of xml/materials.xml a bit to increase
  *            comprehensibility
  *          - modify a few TKR constants slightly to increase fidelity
  *            of flight model.
- * 31-jul-2002: jrb - tag v1r6p0 - Tiles will now produce position hits
- *                                 rather than integrating hits
- * 23-jul-2002: jrb - tag v1r6   - Add and use new "type" attribute
- *                                 for derived constants to label integers
- * 27-jun-2002: jrb - tag v1r5p3 - New (shorter) CsI crystal length
- * 23-may-2002: jrb - tag v1r5p2 - Make core-closeout envelope bigger to
- *                                 accommodate MCM boards
- * 13-may-2002: jrb - tag v1r5p1 - Fix typo in positioning one piece of grid
- * 08-may-2002: jrb - tag v1r5 - Reorganize file structure for derived consts,
- *                               Add TKR MCM boards and walls
- *                               Fix wafer id assignment for Y trays
- *                               Use correct wildcard form of "use" statements
- * 09-apr-2002: jrb - tag v1r4 - Fix crystal ordering in Y layers;
- *                               add new fineChoice attribute to <section>
- * 28-mar-2002: jrb - tag v1r3 - Include enough p's in 
- *                                cal.zeroSuppressEnergy
- * 22-mar-2002: jrb - tag v1r2 - Alternate flight description segmenting
- *                               CsI crystals in "real" volumes
- * 11-mar-2002: jrb - tag v1r1 - new possibilities for "sensitive" attribute
- * 01-mar-2002: jrb - tag v1r0 - initial import 
+ * 31-jul-2002: jrb  v1r6p0 - Tiles will now produce position hits
+ *                            rather than integrating hits
+ * 23-jul-2002: jrb  v1r6   - Add and use new "type" attribute
+ *                            for derived constants to label integers
+ * 27-jun-2002: jrb  v1r5p3 - New (shorter) CsI crystal length
+ * 23-may-2002: jrb  v1r5p2 - Make core-closeout envelope bigger to
+ *                            accommodate MCM boards
+ * 13-may-2002: jrb  v1r5p1 - Fix typo in positioning one piece of grid
+ * 08-may-2002: jrb  v1r5 - Reorganize file structure for derived consts,
+ *                          Add TKR MCM boards and walls
+ *                          Fix wafer id assignment for Y trays
+ *                          Use correct wildcard form of "use" statements
+ * 09-apr-2002: jrb  v1r4 - Fix crystal ordering in Y layers;
+ *                          add new fineChoice attribute to <section>
+ * 28-mar-2002: jrb  v1r3 - Include enough p's in 
+ *                           cal.zeroSuppressEnergy
+ * 22-mar-2002: jrb  v1r2 - Alternate flight description segmenting
+ *                          CsI crystals in "real" volumes
+ * 11-mar-2002: jrb  v1r1 - new possibilities for "sensitive" attribute
+ * 01-mar-2002: jrb  v1r0 - initial import 
  */
 
