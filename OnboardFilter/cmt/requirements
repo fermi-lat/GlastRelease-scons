@@ -2,6 +2,7 @@ package OnboardFilter
 version v0r1p1
 # $Header$
 use EbfWriter           *
+use TkrUtil             *
 
 apply_pattern packageShr
 apply_pattern package_include

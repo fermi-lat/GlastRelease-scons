@@ -1516,7 +1516,9 @@ static unsigned int latFilter  (TFC_latRecord *tlr,
                                          ttr->layerMaps[0],
                                          ttr->layerMaps[1]);
        //_DBG (TFC_projectionsPrint (&prjs, tower));
-
+#ifdef GLEAM
+       memcpy(&(TDS_variables.prjs[tower]),&prjs,sizeof(prjs));
+#endif
        
        /* If have any projections, try matching with ACD tile */
        if (tkrStatus)
