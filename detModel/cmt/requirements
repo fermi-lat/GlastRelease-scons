@@ -2,7 +2,7 @@ package detModel
 # $Header$
 version v3
 
-use xmlUtil HEAD
+use xmlUtil
 
 include_dirs "${DETMODELROOT}"
 
