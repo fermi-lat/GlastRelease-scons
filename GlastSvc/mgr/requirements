@@ -19,7 +19,6 @@ use RootHistCnv v1
 library GlastSvc ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
                  GlastDetSvc/*.h  GlastDetSvc/*.cpp \
                  EventSelector/*.h  EventSelector/*.cpp \
-                 ../GlastSvc/MonteCarlo/*.h MonteCarlo/*.cpp \
                  ../GlastSvc/Irf/*.h Irf/*.cpp \
 		../GlastSvc/Raw/*.h Raw/*.cpp \
 		Dll/*.cpp 
@@ -50,7 +49,9 @@ macro_append cppflags ""\
 
 # note that the debug versions of the used libraries are inserted below
 
-macro GlastSvc_shlibflags   "$(componentshr_linkopts) $(use_linkopts)" \
+# for the moment, use libraryshr_linkopts to fix red hat 6.2 linking problem
+#macro GlastSvc_shlibflags   "$(componentshr_linkopts) $(use_linkopts)" \
+macro GlastSvc_shlibflags   "$(libraryshr_linkopts) $(use_linkopts)" \
                  VisualC  "$(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
 
 

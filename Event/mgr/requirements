@@ -40,7 +40,9 @@ macro GlastEvent_shlibflags "$(GlastEventDir)/libGlastEvent.a $(libraryshr_linko
 
 # note that dependent libs are debug
 
-macro GlastEventFactories_shlibflags "$(componentshr_linkopts) $(Gaudi_linkopts) $(use_linkopts)"\
+# for the moment, use libraryshr_linkopts to fix red hat 6.2 linking problem
+#macro GlastEventFactories_shlibflags "$(componentshr_linkopts) $(Gaudi_linkopts) $(use_linkopts)"\
+macro GlastEventFactories_shlibflags "$(libraryshr_linkopts) $(Gaudi_linkopts) $(use_linkopts)"\
         VisualC   "$(componentshr_linkopts) $(Gaudi_linkopts) $(use_linkopts) $(Win32Debug)"
 
 

@@ -26,14 +26,17 @@ macro_append cppflags ""\
 
 # note that the debug versions of the used libraries are inserted below
 
-macro CalRecon_shlibflags   "$(componentshr_linkopts) $(use_linkopts)"\
+
+# for the moment, use libraryshr_linkopts to fix red hat 6.2 linking problem
+#macro CalRecon_shlibflags   "$(componentshr_linkopts) $(use_linkopts)"\
+macro CalRecon_shlibflags   "$(libraryshr_linkopts) $(use_linkopts)"\
       VisualC               "DataObject.obj $(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
+
 
 # build this for testing
 
-#application test \
-#        test/*.cxx test/*.h test/*.txt
 
 application test \
-        test/*.cxx
+        test/*.cxx test/*.h test/*.txt
+
 
