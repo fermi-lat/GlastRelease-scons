@@ -17,6 +17,8 @@
 #include "CalibSvc/ICalibMetaCnvSvc.h"
 #include "CalibData/CalibTime.h"
 
+#include "facilities/Util.h"
+
 #include <dom/DOM_Document.hpp>
 
 XmlBaseCnv::~XmlBaseCnv() {}
@@ -41,7 +43,7 @@ StatusCode XmlBaseCnv::initialize() {
   setDataProvider(dp);
   
   // Locate the Xml Conversion Service
-  serviceLocator()->getService ("CalibXMLCnvSvc",
+  serviceLocator()->getService ("CalibXmlCnvSvc",
                                 IID_ICalibXmlSvc,
                                 (IInterface*&)m_xmlSvc);
 
@@ -49,8 +51,8 @@ StatusCode XmlBaseCnv::initialize() {
   // Will anything need to be changed here to accommodate possibility
   // of two concrete implementations of ICalibMetaCnvSvc?  Would
   // have different storage types.  Could specify type desired
-  // as job option
-  serviceLocator()->getService("CalibMetaCnvSvc", 
+  // as job option.  Ditto for name of class?
+  serviceLocator()->getService("CalibMySQLCnvSvc", 
                                IID_ICalibMetaCnvSvc,
                                 (IInterface*&)m_metaSvc);
   return status;
@@ -76,11 +78,19 @@ StatusCode XmlBaseCnv::createObj(IOpaqueAddress* addr,
   //   First string parameter of opaque address is file ident
   //   Parse file into DOM representation
   const std::string* par = addr->par();
-  DOM_Document doc = m_xmlSvc->parse(par[0].c_str());
+
+  std::string par0 = par[0];
+
+  // Just in case there are environment variables in the file specification
+  int nSub = facilities::Util::expandEnvVar(&par0);
+
+  //  DOM_Document doc = m_xmlSvc->parse(par[0].c_str());
+  DOM_Document doc = m_xmlSvc->parse(par0.c_str());
 
   if (doc == DOM_Document() ) {
     log << MSG::FATAL 
-        << "Unable to parse document " << par[0] << endreq;
+        << "Unable to parse document " << par[0] << " aka " 
+        << par0 << endreq;
     return StatusCode::FAILURE;
   }
 
