@@ -12,34 +12,39 @@ CalCluster::CalCluster (Int_t ind)
     m_id = ind;
     m_Esum = 0.0f;
     m_Ecorr = 0.0f;
-	m_CsiAlpha=0.0f;
-	m_CsiLambda=0.0f;
-	m_start=0.0f;
-	m_ProfChisq=0.0f;
-	m_fitEnergy=0.0f;
-	m_xposLayer.Reset();
-	m_yposLayer.Reset();
-	m_eneLayer.Reset();
+    m_CsiAlpha=0.0f;
+    m_CsiLambda=0.0f;
+    m_start=0.0f;
+    m_ProfChisq=0.0f;
+    m_fitEnergy=0.0f;
+    m_xposLayer.Reset();
+    m_yposLayer.Reset();
+    m_eneLayer.Reset();
+    m_calLogs = 0;
     Create();
 }
 
 CalCluster::~CalCluster() {
     Clean();
+    if (m_calLogs) {
+        delete m_calLogs;
+        m_calLogs = 0;
+    }
 }
 
 void CalCluster::Clean() {
     m_id = 0;
     m_Esum = 0.0f;
     m_Ecorr = 0.0f;
-	m_CsiAlpha=0.0f;
-	m_CsiLambda=0.0f;
-	m_start=0.0f;
-	m_ProfChisq=0.0f;
-	m_fitEnergy=0.0f;
-	m_xposLayer.Reset();
-	m_yposLayer.Reset();
-	m_eneLayer.Reset();
-
+    m_CsiAlpha=0.0f;
+    m_CsiLambda=0.0f;
+    m_start=0.0f;
+    m_ProfChisq=0.0f;
+    m_fitEnergy=0.0f;
+    m_xposLayer.Reset();
+    m_yposLayer.Reset();
+    m_eneLayer.Reset();
+    
     if (m_position) {
         delete m_position;
         m_position = 0;
@@ -49,7 +54,7 @@ void CalCluster::Clean() {
         delete m_direction;
         m_direction = 0;
     }
-
+    
     // Don't delete the logs, just
     // clear out the TObjArray,
     // since these logs are probably in 
@@ -61,5 +66,5 @@ void CalCluster::Clean() {
 }
 
 void CalCluster::Create() {
-    m_calLogs = new TObjArray();
+    if (!m_calLogs) m_calLogs = new TObjArray();
 }

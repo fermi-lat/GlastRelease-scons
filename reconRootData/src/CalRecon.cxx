@@ -10,17 +10,27 @@ CalRecon::CalRecon() {
 
 CalRecon::~CalRecon() {
     Clean();
+    if(m_clusters) {
+        delete m_clusters;
+        m_clusters = 0;
+    }
+    if (m_logs) {
+        delete m_logs;
+        m_logs = 0;
+    }
 }
 
 void CalRecon::Clean() {
 
     if (m_clusters) {
+        
         int nEntries = m_clusters->GetEntries();
         for (int i=0; i<nEntries; i++)
             delete m_clusters->At(i);
+            
         m_clusters->Clear();
-        delete m_clusters;
-        m_clusters = 0;
+        //delete m_clusters;
+        //m_clusters = 0;
     }
 
     if (m_logs) {
@@ -28,8 +38,8 @@ void CalRecon::Clean() {
         for (int i=0; i<nEntries; i++)
             delete m_logs->At(i);
         m_logs->Clear();
-        delete m_logs;
-        m_logs = 0;
+       // delete m_logs;
+       // m_logs = 0;
     }
 }
 

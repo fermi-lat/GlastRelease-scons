@@ -43,26 +43,41 @@ TkrTrack::TkrTrack(UShort_t id) {
 
 TkrTrack::~TkrTrack() {
     Clean();
+    if (m_hits) {
+        delete m_hits;
+        m_hits = 0;
+    }
+    if (m_locator) {
+        delete m_locator;
+        m_locator = 0;
+    }
 }
 
 void TkrTrack::Clean() {
 
     if (m_hits) {
+        
         int nEntries = m_hits->GetEntries();
         for (int i=0; i<nEntries; i++)
             delete m_hits->At(i);
+            
         m_hits->Clear();
-        delete m_hits;
-        m_hits = 0;
+        //delete m_hits;
+        //m_hits = 0;
+        
+        //m_hits->Delete();
     }
 
     if (m_locator) {
+        
         int nEntries = m_locator->GetEntries();
         for (int i=0; i<nEntries; i++)
             delete m_locator->At(i);
         m_locator->Clear();
-        delete m_locator;
-        m_locator = 0;
+        //delete m_locator;
+        //m_locator = 0;
+        
+        //m_locator->Delete();
     }
 
     m_id = 0;              // track id

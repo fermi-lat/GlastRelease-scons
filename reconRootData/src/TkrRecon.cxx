@@ -7,7 +7,6 @@ ClassImp(TkrRecon)
 TkrRecon::TkrRecon() {
     // default constructor
     m_tracks = 0;
-//    m_gamma = 0;
     m_SiClusters = 0;
 }
 
@@ -15,6 +14,15 @@ TkrRecon::TkrRecon() {
 TkrRecon::~TkrRecon() {
     // destructor
     Clean();
+
+    if (m_tracks) {
+        delete m_tracks;
+        m_tracks = 0;
+    }
+    if (m_SiClusters) {
+        delete m_SiClusters;
+        m_SiClusters = 0;
+    }
 }
 
 void TkrRecon::Clean() {
@@ -23,12 +31,15 @@ void TkrRecon::Clean() {
     // writes/reads to/from file.
    
     if (m_tracks) {
+        
         int nEntries = m_tracks->GetEntries();
         for (int i=0; i<nEntries; i++)
             delete m_tracks->At(i);
+           
         m_tracks->Clear();
-        delete m_tracks;
-        m_tracks = 0;
+        //m_tracks->Delete();
+        //delete m_tracks;
+        //m_tracks = 0;
     }
 
     //if (m_gamma) {
@@ -37,12 +48,15 @@ void TkrRecon::Clean() {
    // }
 
     if (m_SiClusters) {
+        
         int nEntries = m_SiClusters->GetEntries();
         for (int i=0; i<nEntries; i++)
             delete m_SiClusters->At(i);
+            
         m_SiClusters->Clear();
-        delete m_SiClusters;
-        m_SiClusters = 0;
+        //m_SiClusters->Delete();
+        //delete m_SiClusters;
+        //m_SiClusters = 0;
     }
 }
 

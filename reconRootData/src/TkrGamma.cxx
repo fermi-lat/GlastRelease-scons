@@ -17,6 +17,14 @@ TkrGamma::TkrGamma(Int_t dummy) {
 
 TkrGamma::~TkrGamma() {
     Clean();
+    if (m_locator) {
+        delete m_locator;
+        m_locator = 0;
+    }
+    if (m_tracks) {
+        delete m_tracks;
+        m_tracks = 0;
+    }
 }
 
 void TkrGamma::Clean() {
@@ -33,12 +41,12 @@ void TkrGamma::Clean() {
         for (int i=0; i<nEntries; i++)
             delete m_locator->At(i);
         m_locator->Clear();
-        delete m_locator;
-        m_locator = 0;
+        //delete m_locator;
+        //m_locator = 0;
     }
 }
 
 void TkrGamma::Create() {
-    m_locator = new TObjArray();
-    m_tracks = new TObjArray();
+    if (!m_locator) m_locator = new TObjArray();
+    if (!m_tracks) m_tracks = new TObjArray();
 }
