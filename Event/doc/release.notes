@@ -3,6 +3,8 @@ package GlastEvent
 package manager:T.Burnett (original author: H. Gillespie)
 
 
+v4r2  THB: Tag following addition of TkrVertexCol
+
 26-aug-01: tag v2r5
 
 20000826  THB many things copied from LHCbEvent, all of the TopLevel directory!
