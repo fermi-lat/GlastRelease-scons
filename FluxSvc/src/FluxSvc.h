@@ -47,6 +47,9 @@ public:
     /// name of the flux
     std::string fluxName()const;
 
+    /// set the glast tilt angles.
+    void setGlastAngles(std::pair<double,double> ang);
+
     
     //------------------------------------------------------------------
     //  stuff required by a Service

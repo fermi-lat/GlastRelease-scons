@@ -271,16 +271,6 @@ void FluxSource::spectrum(ISpectrum* s, double emax)
     //const char* name = s->particleName();
 }
 
-// old event.
-//FluxSource* FluxSource::event(double time) 
-//{
-//    m_extime = 0;
-//    computeLaunch(time);
-//    EventSource::setTime(time);
-//    return this;
-// //could be a call-back
-//}
-
 
 FluxSource* FluxSource::event(double time)
 {
@@ -494,7 +484,7 @@ void FluxSource::computeLaunch (double time)
         }
     }
     //   transformDirection(); 
-    
+    correctForTiltAngle();
 }
 
 std::string FluxSource::fullTitle () const
@@ -1059,4 +1049,13 @@ bool FluxSource::occluded(){
     
     return (m_launch == GALACTIC || m_frametype == GALAXY) && ( (current > max) && (z > 0) );
     
+}
+
+void FluxSource::correctForTiltAngle(){
+
+    //get the transformation matrix..
+    m_correctForTilt =GPS::instance()->rockingAngleTransform(GPS::instance()->time());
+    m_correctedDir = m_correctForTilt*m_launchDir;
+    //and return it.
+    //return rockingAngles;
 }

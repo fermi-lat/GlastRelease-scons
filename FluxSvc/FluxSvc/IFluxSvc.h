@@ -54,6 +54,10 @@ public:
     /// name of the flux
     virtual std::string fluxName()const=0;
 
+    /// set the glast tilt angles.
+    virtual void setGlastAngles(std::pair<double,double> ang)=0;
+
+
 
  
 };

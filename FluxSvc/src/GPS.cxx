@@ -321,5 +321,16 @@ void GPS::rotateAngles(std::pair<double,double> coords){
 }
 
 
+Rotation GPS::rockingAngleTransform(double time){
+    
+    Rotation gal;   
+    //and here we construct the rotation matrix
+    double zenithPhase = m_rotangles.first;
+    double offZenith = m_rotangles.second;
+    gal.rotateZ(zenithPhase).rotateX(offZenith);
+ 
+    return gal;
+}
+
 
 

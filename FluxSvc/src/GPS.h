@@ -16,7 +16,7 @@
 #include "facilities/Observer.h"
 #include "geometry/Point.h"
 #include "geometry/Vector.h"
-
+#include "geometry/CoordTransform.h"
 
 #include <iostream>
 
@@ -119,6 +119,9 @@ public:
     Vector earthToGlast(Vector launchDir);
     Vector galaxyToGlast(Vector launchDir);
 
+    /// return the rotation for compensation for the rocking angles.
+    Rotation rockingAngleTransform(double time);
+
 
         
     Orbit*  orbit ();               // access the orbit (for manipulation)
@@ -137,7 +140,7 @@ public:
         GPStime orbittime () const;     // access to orbit time
         void    orbittime ( GPStime );  // set orbit time
         void    setState ( const GPS::Coords& ); // set the orbital parameters
-        std::pair<double,double> m_rotangles;  //angles for coordinate rotation
+        std::pair<double,double> m_rotangles;  //angles for coordinate rotation (rocking angle)
         
         
         

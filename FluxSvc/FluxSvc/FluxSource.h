@@ -100,6 +100,9 @@ class FluxSource : public EventSource
       void setMaxEnergy(double e) { m_maxEnergy = e; }
 
 
+      ///use GPS to correct m_launchDir for the rocking of the spacecraft.
+      void FluxSource::correctForTiltAngle();
+
      //! choices for generating incoming particle trajectory
       enum LaunchType { 
           NONE,         //! random direction
@@ -141,7 +144,8 @@ class FluxSource : public EventSource
       virtual int eventNumber()const;
 
       double energy()const { return m_energy;}
-      const Vector& launchDir()const {return /*m_transformDir*/m_launchDir;}
+       //const Vector& rawDir()const {return m_launchDir;}
+      const Vector& launchDir()const {return m_correctedDir;}//m_correctForTilt*m_launchDir;}
       const Point&  launchPoint()const { return m_launchPoint;}
 
 	  void refLaunch(LaunchType launch);
@@ -183,11 +187,17 @@ class FluxSource : public EventSource
       //void transformDirection();
 
       Vector m_launchDir;
+      
       //Vector m_transformDir;
       Point  m_launchPoint;
       double m_energy;
       // associated with a specific launch
 
+      /// rotation associated with the "tilting" angles.
+      Rotation m_correctForTilt;
+
+      ///direction after being corrected for the "tilt" angles.
+      Vector m_correctedDir;
       //!the "extra time" a source needs to come out of occlusion.
       double m_extime;
 

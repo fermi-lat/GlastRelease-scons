@@ -135,3 +135,4 @@ void Flux::addFactory(std::string name, const ISpectrumFactory* factory ) {
 Rotation Flux::CELTransform(double time)const{
 return s_mgr->CELTransform(time);
 }
+
