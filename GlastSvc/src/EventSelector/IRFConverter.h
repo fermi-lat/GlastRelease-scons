@@ -12,6 +12,7 @@
 #include "GlastEvent/MonteCarlo/MCACDhit.h"
 #include "GlastEvent/MonteCarlo/MCTrack.h"
 #include "GlastEvent/MonteCarlo/MCCalorimeterHit.h"
+#include "GlastEvent/MonteCarlo/MCSiLayer.h"
 
 /* ! 
 Derived from DetectorConverter, this class
@@ -21,14 +22,19 @@ Currently implmented is the ACD (Scintillator) into an ACDhitVector.
 
 class IRFConverter : public DetectorConverter {
 public:
-	IRFConverter() {
-		MCACDcontainer = new MCACDHitVector;
+    
+    //! constructor - create all object containers
+    IRFConverter() {
+        MCACDcontainer = new MCACDHitVector;
         MCCalorimeterHitContainer = new MCCalorimeterHitVector;
-	}
+        MCSiLayerContainer = new MCSiLayerVector;
+    }
 
+    //! destructor - delete all object containers
     ~IRFConverter() { 
         if (MCACDcontainer)  delete MCACDcontainer;
         if (MCCalorimeterHitContainer) delete MCCalorimeterHitContainer;
+        if (MCSiLayerContainer) delete MCSiLayerContainer;
     }
 
     // called due to a GlastDetector::accept(DetectorConverter) call
@@ -79,23 +85,40 @@ public:
         }
     }
 
+    //! called due to GlastDetector::accept(), handles TKR strip data
     virtual void forward ( const SiDetector& si) {
         // TKR silicon strip detectors
         if ( !(si.empty()) ) {
+            MCSiLayer* siLayer = new MCSiLayer();
+            siLayer->setId(si.id());
+            siLayer->setMaxEnergy(si.maxELoss());
+            // loop over all hit strips for this layer
+            for (SiDetector::const_iterator it = si.begin(); it != si.end(); ++it) 
+            {
+                MCTKRHit* ssd = new MCTKRHit();
+                ssd->setEnergy((*it).energy());
+                ssd->setId((*it).index());                
+                ssd->setNoise((*it).noise());
+                siLayer->addHit(ssd);
+            }
 
+            MCSiLayerContainer->push_back(siLayer);
         }
-
     }
 
- // provide access to the list of ACD tile data
+    //! provide access to the list of ACD tile data
     MCACDHitVector* getACDTiles() { return MCACDcontainer; }
-	MCCalorimeterHitVector* getMCCalHits() { return MCCalorimeterHitContainer; }
+    //! provide access to the list of CAL crystal data
+    MCCalorimeterHitVector* getMCCalHits() { return MCCalorimeterHitContainer; }
+    //! provide access to the TKR strip data
+    MCSiLayerVector* getMCTKRHits() { return MCSiLayerContainer; }
 
 private:
     // one of Gaudi's ObjectContainers
 	MCACDHitVector* MCACDcontainer;
 	MCTrackVector* MCTrackContainer;
 	MCCalorimeterHitVector* MCCalorimeterHitContainer;
+        MCSiLayerVector* MCSiLayerContainer;
     
 };
 
