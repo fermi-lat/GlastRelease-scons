@@ -1,12 +1,12 @@
 
-#ifndef TkrDigi_H
-#define TkrDigi_H
+#ifndef TkrLayer_H
+#define TkrLayer_H
 
 #include "TObject.h"
 #include "TObjArray.h"
 #include "StripId.h"
 
-/*! \class TkrDigi
+/*! \class TkrLayer
 \brief
  Stores all hit Silicon Strip detectors for a layer in the TKR,
  where a layer may cross tower boundaries
@@ -15,7 +15,7 @@
  Dec 1999 Daniel Flath - Creation
 */
 
-class TkrDigi : public TObject
+class TkrLayer : public TObject
 {
  private:
   UChar_t m_layer;	  // Tracker layer number
@@ -34,9 +34,9 @@ class TkrDigi : public TObject
     Y
   } TKRAxes;
   
-  TkrDigi();
-  TkrDigi(TObjArray *strips);
-  virtual ~TkrDigi();
+  TkrLayer();
+  TkrLayer(TObjArray *strips);
+  virtual ~TkrLayer();
   void Clean(Option_t *option="");
 
   TObjArray* getStrips() { return m_strips; };
@@ -56,7 +56,7 @@ class TkrDigi : public TObject
   Int_t Compare(const TObject *obj) const;
   Bool_t IsSortable() const;
   
-  ClassDef(TkrDigi,3)	  // Information on a single tracker layer	   
+  ClassDef(TkrLayer,3)	  // Information on a single tracker layer	   
 };
 
 #endif

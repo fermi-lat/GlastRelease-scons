@@ -1,44 +1,37 @@
 
-#include "digiRootData/CalDigi.h"
+#include "digiRootData/CalLog.h"
 
-ClassImp(CalDigi)
+ClassImp(CalLog)
 
-CalDigi::CalTrigMode CalDigi::m_mode;
+CalLog::CalTrigMode CalLog::m_mode;
 
 ///________________________________________________________________________
-CalDigi::CalDigi() {
+CalLog::CalLog() {
     // Default constructor
     m_mode = ALLRANGE;
-    //m_log.setTag(0);
+    m_log.setTag(UInt_t(0));
 }
 ///________________________________________________________________________
-CalDigi::~CalDigi() {
+CalLog::~CalLog() {
     // Destructor
-    //  Clean();
 }
 //_________________________________________________________________________
-Int_t CalDigi::Compare(const TObject *obj) const {
+Int_t CalLog::Compare(const TObject *obj) const {
     if (this == obj) return 0;
-    if (CalDigi::Class() != obj->IsA()) return -1;
+    if (CalLog::Class() != obj->IsA()) return -1;
     UInt_t id_this = m_log.getId();
-    UInt_t id_hit = ((CalDigi*)obj)->getCalLogId()->getId();
+    UInt_t id_hit = ((CalLog*)obj)->getCalLogId()->getId();
     if (id_this == id_hit)
         return 0;
     else
         return (id_this > id_hit) ? 1 : -1;
 }
 //_________________________________________________________________________
-Bool_t CalDigi::IsSortable() const {
+Bool_t CalLog::IsSortable() const {
     return kTRUE; 
 }
 //_________________________________________________________________________
-//void CalDigi::Clean() {
-// Free up memory reserved by member pointers
-//    if (m_log)
-//	  delete m_log;
-//}
-//_________________________________________________________________________
-Bool_t CalDigi::setAdcValue(UShort_t newVal, LogFace face, AdcRange range) {
+Bool_t CalLog::setAdcValue(UShort_t newVal, LogFace face, AdcRange range) {
     // Allows user to set the ADC Value for a particular log end and 
     // digitization.  Returns kTRUE if successful, kFALSE if not.
     if (newVal & ~ADC_M_VAL) {
@@ -53,7 +46,7 @@ Bool_t CalDigi::setAdcValue(UShort_t newVal, LogFace face, AdcRange range) {
     }
 }
 //_________________________________________________________________________
-Bool_t CalDigi::setAdcId(UShort_t newVal, LogFace face, AdcRange range) {
+Bool_t CalLog::setAdcId(UShort_t newVal, LogFace face, AdcRange range) {
     // Allows user to set the ADC ID for a particular log end and 
     // digitization.  Returns kTRUE if successful, kFALSE if not.
     if (newVal & ~ADC_M_VAL) {
@@ -68,7 +61,7 @@ Bool_t CalDigi::setAdcId(UShort_t newVal, LogFace face, AdcRange range) {
     }
 }
 //_________________________________________________________________________
-Bool_t CalDigi::setAdcPinId(UShort_t newVal, LogFace face, AdcRange range) {
+Bool_t CalLog::setAdcPinId(UShort_t newVal, LogFace face, AdcRange range) {
     // Allows user to set the ADC Pin ID for a particular log end and 
     // digitization.  Returns kTRUE if successful, kFALSE if not.
     if (newVal & ~ADC_M_VAL) {
@@ -83,7 +76,7 @@ Bool_t CalDigi::setAdcPinId(UShort_t newVal, LogFace face, AdcRange range) {
     }
 }
 //_________________________________________________________________________
-Bool_t CalDigi::setAdcRangeScale(UShort_t newVal, LogFace face, AdcRange range) {
+Bool_t CalLog::setAdcRangeScale(UShort_t newVal, LogFace face, AdcRange range) {
     // Allows user to set the ADC Range Scale for a particular log end and 
     // digitization.  Returns kTRUE if successful, kFALSE if not.
     if (newVal & ~ADC_M_VAL) {

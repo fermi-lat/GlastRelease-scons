@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-// The TkrDigi class provides access to a single layer of Si Strips.
+// The TkrLayer class provides access to a single layer of Si Strips.
 // It contains a list of strips that were above thresh, and TOT and 
 // ERRF values.
 //
@@ -11,20 +11,20 @@
 // Jan 1999 Daniel Flath - ROOT HTML Documentation added
 // Dec 1999 Daniel Flath - Creation
 
-#include "digiRootData/TkrDigi.h"
+#include "digiRootData/TkrLayer.h"
 
-ClassImp(TkrDigi)
+ClassImp(TkrLayer)
 
 // -------------------------------------------------------------------
-TkrDigi::TkrDigi() {
+TkrLayer::TkrLayer() {
   // Default constructor
     m_strips = 0;
     m_numStrips = -1;
 }
 // -------------------------------------------------------------------
 
-TkrDigi::TkrDigi(TObjArray *strips = 0) {
-  // Creates a new TkrDigi object with the specified TObjArray of Si
+TkrLayer::TkrLayer(TObjArray *strips = 0) {
+  // Creates a new TkrLayer object with the specified TObjArray of Si
   // Si strips.  
   // (The array pointer defaults to 0 {NULL}, in which case a new
   // TObjArray is created.)
@@ -36,7 +36,7 @@ TkrDigi::TkrDigi(TObjArray *strips = 0) {
 }
 
 // -------------------------------------------------------------------
-TkrDigi::~TkrDigi() {
+TkrLayer::~TkrLayer() {
   // Destructor.  Removes all strips
   if (m_strips) {
     m_strips->Delete();
@@ -45,46 +45,46 @@ TkrDigi::~TkrDigi() {
   }
 }
 // -------------------------------------------------------------------
-Int_t TkrDigi::Compare(const TObject *obj) const {
+Int_t TkrLayer::Compare(const TObject *obj) const {
     if (this == obj) return 0;
-    if (TkrDigi::Class() != obj->IsA()) return -1;
+    if (TkrLayer::Class() != obj->IsA()) return -1;
     UInt_t id_this = (getLayerNum() << 1) | (getXY() ? 0 : 1);
-    UInt_t id_layer = (((TkrDigi*)obj)->getLayerNum() << 1) | (((TkrDigi*)obj)->getXY() ? 0 : 1);
+    UInt_t id_layer = (((TkrLayer*)obj)->getLayerNum() << 1) | (((TkrLayer*)obj)->getXY() ? 0 : 1);
     if (id_this == id_layer)
 	return 0;
     else
 	return (id_this > id_layer) ? 1 : -1;
 }
 // -------------------------------------------------------------------
-Bool_t TkrDigi::IsSortable() const {
+Bool_t TkrLayer::IsSortable() const {
   return kTRUE;
 }
 // -------------------------------------------------------------------
-void TkrDigi::setToT(UInt_t right, UInt_t left) {
+void TkrLayer::setToT(UInt_t right, UInt_t left) {
     m_ToT[0] = right;
     m_ToT[1] = left;
 }
 // -------------------------------------------------------------------
-void TkrDigi::setErrf(UInt_t right, UInt_t left) {
+void TkrLayer::setErrf(UInt_t right, UInt_t left) {
     m_errf[0] = right;
     m_errf[1] = left;
 }
 // -------------------------------------------------------------------
-Int_t TkrDigi::getToT(UChar_t ctrlNum) {
+Int_t TkrLayer::getToT(UChar_t ctrlNum) {
     if ((ctrlNum == 0) || (ctrlNum ==1))
 	return m_ToT[ctrlNum];
     else
 	return -1;
 }
 // -------------------------------------------------------------------
-Int_t TkrDigi::getErrf(UChar_t ctrlNum) {
+Int_t TkrLayer::getErrf(UChar_t ctrlNum) {
     if ((ctrlNum == 0) || (ctrlNum ==1))
 	return m_errf[ctrlNum];
     else
 	return -1;
 }
 
-void TkrDigi::Clean(Option_t *option) {
+void TkrLayer::Clean(Option_t *option) {
     m_strips->Delete(option);
     m_numStrips = -1;
    // delete m_strips;

@@ -1,30 +1,30 @@
 
-#ifndef CalDigi_H
-#define CalDigi_H
+#ifndef CalLog_H
+#define CalLog_H
 
 #include "CalLogId.h"
 #include "TObject.h"
 
-/*! \class CalDigi
+/*! \class CalLog
 \brief
-The CalDigi class contains the information about a single calorimeter  
+The CalLog class contains the information about a single calorimeter  
 log.  This class can handle either ADC values for all 4 digitizations, or
 a readout that has one "best" range. 
 This class implements a CalLogId member which provides access to information
 on the position of the log within the calorimeter.
 
-  Jun 2001 Heather Kelly - renamed from CalHit to CalDigi
+  Jun 2001 Heather Kelly - renamed from CalHit to CalLog
   Jun 2001 Heather Kelly - remove pointer to LogId
   Jan 2000 Daniel Flath - ROOT HTML comments added
   Dec 1999 Daniel Flath - Rewritten for GLAST
   Oct 25,1999 Richard Dubois Clone from LCD version
 */
 
-class CalDigi: public TObject {
+class CalLog: public TObject {
 public:
     
-    CalDigi();
-    virtual ~CalDigi();
+    CalLog();
+    virtual ~CalLog();
     /// Root >= 3.0 is now const correct for the Compare function
     Int_t Compare(const TObject *obj) const;
     Bool_t IsSortable() const; 
@@ -151,10 +151,9 @@ public:
     
     
     inline CalLogId* getCalLogId() { return &m_log; };
-    // void Clean();
     
     
-    ClassDef(CalDigi,3)	    // Digitization for a single Cal Log
+    ClassDef(CalLog,3)	    // Digitization for a single Cal Log
 };
 
 #endif

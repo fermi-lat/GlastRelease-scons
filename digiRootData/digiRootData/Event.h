@@ -12,9 +12,9 @@
 #include "CalHeader.h"
 #include "TkrHeader.h"
 
-#include "AcdDigi.h"
-#include "CalDigi.h"
-#include "TkrDigi.h"
+#include "AcdTile.h"
+#include "CalLog.h"
+#include "TkrLayer.h"
 
 /*! \class Event
 \brief This is the top-level event class to store the
@@ -43,6 +43,11 @@ private:
     Int_t m_numTiles;
     static TClonesArray *m_staticAcdDigiVec;
     AcdHeader m_AcdHeader;
+
+    /// data members to store XGT data
+    TClonesArray *m_XgtDigiVec;  //-> 
+    Int_t m_numXgts;
+    static TClonesArray *m_staticXgtDigiVec;
 
     /// data members to store CAL data
     TClonesArray *m_CalDigiVec;  //->
@@ -75,21 +80,35 @@ public:
 
     /// Access ACD data
     AcdHeader* getAcdHeader() { return &m_AcdHeader; };
+    /// retrieve the whole TClonesArray of Acd Digi data
     TClonesArray* getAcdDigi() { return m_AcdDigiVec; };
-    /// Add a new AcdTile entry into the ACD data array
-    AcdDigi* addAcdDigi(UShort_t id);
+    /// Add a new AcdTile entry into the ACD digi array
+    AcdTile* addAcdTile(UShort_t id);
+    /// retrieve a specific AcdTile - if not found, returns null
+    const AcdTile* getAcdTile(UShort_t id);
+
+    /// retrieve the whole TClonesArray of XGT Digi data
+    TClonesArray* getXgtDigi() { return m_XgtDigiVec; };
+    /// add a new AcdTile to store XGT data into the XGT digi array
+    AcdTile* addXgt(UShort_t id);
+    /// retrieve a specific XGT (AcdTile), if not found, returns null
+    const AcdTile* getXgt(UShort_t id);
 
     /// Access CAL data
     CalHeader* getCalHeader() { return &m_CalHeader; };
+    /// retrieve the whole TClonesArray of Cal Digi data
     TClonesArray* getCalDigi() { return m_CalDigiVec; };
-    /// Add a new CalHit entry into the CAL data array
-    CalDigi* addCalDigi();
+    /// Add a new CalLog entry into the CAL digi array
+    CalLog* addCalLog();
 
     /// Access TKR data
     TkrHeader* getTkrHeader() { return &m_TkrHeader; };
+    /// retrieve the whole TObjArray of Tkr Digi Data
     TObjArray* getTkrDigi() { return m_TkrDigiVec; };
     /// Add a TkrLayer entry into the TKR data array
-    void addTkrDigi(TkrDigi *layer);
+    void addTkrLayer(TkrLayer *layer);
+    /// retrieve a specific layer of data, identified by Layer Number
+    const TkrLayer* getTkrLayer(unsigned int layerNum);
 
     /// Access Level 1 Trigger data
     inline L1T* getL1T() { return &m_L1T; };
@@ -97,7 +116,7 @@ public:
     // inline void setTagger(Tagger *TaggerVal) { m_Tagger = TaggerVal; };
     //inline Tagger *getTagger() const { return m_Tagger; };
     
-    ClassDef(Event,3)       // Storage for per-event and subsystem data
+    ClassDef(Event,3)       // Storage for Raw(Digi) event and subsystem data
 }; 
 
 #endif
