@@ -18,9 +18,10 @@ class ClassificationTree
 public:
     /** set up the tree:
     * @param t The input tuple -- will create a new column with the output
+    *@param log -- optional stream for ouptut [std::cout]
     * @param xml_file 
     */
-    ClassificationTree( Tuple&t, std::ostream& log, std::string xml_file="");
+    ClassificationTree( Tuple&t, std::ostream& log=std::cout, std::string xml_file="");
     /** run the classification
     */
     void execute();  
