@@ -90,7 +90,8 @@ StatusCode XmlCalMuSlopeCnv::i_createObj(const DOM_Element& docElt,
 
   while (rangeElt != DOM_Element() ) {
     MuSlope* pMuSlope = processRange(rangeElt);
-    pObj->putRange(nRow, nCol, nLayer, nXtal, nRange, nFace, pMuSlope);
+    pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, m_nFace, 
+                   pMuSlope);
     rangeElt = findNextRange(rangeElt);
   }
 
