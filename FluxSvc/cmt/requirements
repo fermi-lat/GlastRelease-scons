@@ -13,7 +13,8 @@ use GlastSvc *
 use astro v0r*
 
 # turn this on for now
-use flux * -no_auto_imports 
+#use flux * -no_auto_imports 
+use flux *
 
 use ntupleWriterSvc *
 
