@@ -190,7 +190,9 @@ StatusCode mcRootWriterAlg::writeMcEvent() {
     UInt_t evtId = evt->event();
     UInt_t runId = evt->run();
 
-    log << MSG::DEBUG << evt->fillStream(log.stream()) << endreq;
+    log << MSG::DEBUG;
+    evt->fillStream(log.stream());
+    log << endreq;
 
     m_mcEvt->initialize(evtId, runId);
 
@@ -216,7 +218,9 @@ StatusCode mcRootWriterAlg::writeMcParticles() {
 
     // Create map of TDS McParticles and ROOT McParticles
     for (p = particles->begin(); p != particles->end(); p++) {
-        log << MSG::DEBUG << (*p)->fillStream(log.stream()) << endreq;
+        log << MSG::DEBUG;
+        (*p)->fillStream(log.stream());
+        log << endreq;
         McParticle *mcPart = new McParticle();
         m_particleMap[(*p)] = mcPart;
     }
@@ -291,7 +295,9 @@ StatusCode mcRootWriterAlg::writeMcPositionHits() {
     Event::McPositionHitVector::const_iterator hit;
     for (hit = posHits->begin(); hit != posHits->end(); hit++ ) {
     
-        log << MSG::DEBUG << (*hit)->fillStream(log.stream()) << endreq;
+        log << MSG::DEBUG;
+        (*hit)->fillStream(log.stream());
+        log << endreq;
 
         idents::VolumeIdentifier volIdTds = (*hit)->volumeID();
         VolumeIdentifier volIdRoot;
@@ -364,7 +370,9 @@ StatusCode mcRootWriterAlg::writeMcIntegratingHits() {
     Event::McIntegratingHitVector::const_iterator hit;
     for (hit = intHits->begin(); hit != intHits->end(); hit++ ) {
 
-        log << MSG::DEBUG << (*hit)->fillStream(log.stream()) << endreq;
+        log << MSG::DEBUG;
+        (*hit)->fillStream(log.stream());
+        log << endreq;
 
         const idents::VolumeIdentifier idTds = (*hit)->volumeID();
         VolumeIdentifier idRoot;
