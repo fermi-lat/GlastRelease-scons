@@ -25,6 +25,9 @@ class G4PropagatorTool : public AlgTool, virtual public IPropagatorTool
 
   G4PropagatorTool(const std::string& type, const std::string& name, const IInterface* parent);
 
+  /// do stuff when set up by the ToolSvc
+  virtual StatusCode initialize();
+
   virtual ~G4PropagatorTool();
     
   /// Return a pointer to the G4ParticlePropagator singleton object

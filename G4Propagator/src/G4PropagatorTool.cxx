@@ -26,8 +26,11 @@ G4PropagatorTool::G4PropagatorTool(const std::string& type, const std::string& n
 
   //Declare additional interface
   declareInterface<IPropagatorTool>(this);
-    
-  MsgStream log(msgSvc(), name);
+}
+
+  StatusCode G4PropagatorTool::initialize()
+  {
+  MsgStream log(msgSvc(), name());
 
   log << MSG::INFO << "G4 Propagator Tool initializing now" << endreq;
 
@@ -35,7 +38,7 @@ G4PropagatorTool::G4PropagatorTool(const std::string& type, const std::string& n
   if( serviceLocator()->getService( "G4GeometrySvc", iService, true).isFailure() ) 
   {
     log << MSG::ERROR << "Could not find the G4 Geometry Service!" << endreq;
-    return;
+    return StatusCode::FAILURE;
   }
 
   IG4GeometrySvc* gsv = dynamic_cast<IG4GeometrySvc*>(iService);
@@ -46,7 +49,7 @@ G4PropagatorTool::G4PropagatorTool(const std::string& type, const std::string& n
 
   log << MSG::INFO << "G4 Propagator Tool ready" << endreq;
 
-  return;
+  return StatusCode::SUCCESS;
 }
 
 G4PropagatorTool::~G4PropagatorTool()
