@@ -8,7 +8,7 @@
 
 // includes
 #include "GaudiKernel/IInterface.h"
-
+#include <string>
 //forward declarations
 class DMmanager;
 class DetectorConverter;

@@ -3,7 +3,8 @@
 
 #ifndef GLASTDET_IGEOMETRY_H
 #define GLASTDET_IGEOMETRY_H
-
+#include <vector>
+#include <string>
 /** Abstract class that defines callbacks from a traversal of the detector geometry tree
 
   */
