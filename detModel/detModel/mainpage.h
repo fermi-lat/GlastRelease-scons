@@ -14,7 +14,8 @@
 \section reference Reference Document
 
   <hr>
-  \section requirements requirements
-  \include requirements
+  \section dependecies Package Dependencies
+  xml <p> 
+  XMLEXT
 
 */
