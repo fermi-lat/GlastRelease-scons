@@ -51,5 +51,10 @@
        <nestedSource sourceRef="jpoint" />
        <nestedSource sourceRef="jdiff" />
     </source>
+    
+    <source name="isotropic" flux="1">
+       <spectrum escale="MeV"> <SpectrumClass name="Isotropic" params="1,2"/> <use_spectrum frame="galaxy"/> </spectrum>
+
+    </source>
 
 </source_library>

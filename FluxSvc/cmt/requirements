@@ -1,12 +1,14 @@
 package FluxSvc
-version v6r15
+version v6r16
 
 # $Id$
 author  T. Kozanecki <hansl$slac.stanford.edu> T. Burnett
 
 branches FluxSvc cmt doc cdf 
 
-# _____________________________________________________________
+# this is a Gaudi shrared component package
+apply_pattern packageShr
+apply_pattern package_include
 
 use GlastPolicy v*
 use GaudiInterface * IExternal
@@ -17,8 +19,9 @@ use facilities *
 #  $(FlUXSVCROOT)/cdf/particleproperty.cdf
 set LHCBDBASE  "${FLUXSVCROOT}"
 
-apply_pattern packageShr
-apply_pattern package_include
+# declare external sources, in public section for xml
+use GRB * celestialSources -no_auto_imports
+
 
 # _____________________________________________________________
 
@@ -26,6 +29,8 @@ private
 use Event       v9r*
 use GlastSvc    v9r*
 use astro       v1r*
+use genericSources * celestialSources
+use Pulsar  * celestialSources
 
 use ntupleWriterSvc v3r*
 use XMLEXT * IExternal
@@ -46,7 +51,7 @@ library  FluxSvc   -import=flux -import=GRB \
 
 #  build the test 
 apply_pattern  package_test  import=flux 
-macro_append   test_FluxSvc_files ""    WIN32 "test/*.xml"
+macro_append   jobOptions ""    WIN32 " test/*.xml"
 
 
 

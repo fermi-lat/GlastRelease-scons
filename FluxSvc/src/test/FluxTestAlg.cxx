@@ -3,7 +3,7 @@
 // Include files
 #include "FluxSvc/IFluxSvc.h"
 #include "FluxSvc/IFlux.h"
-
+#include "flux/ISpectrumFactory.h"
 
 // Event for creating the McEvent stuff
 //#include "Event/TopLevel/Event.h"
@@ -25,6 +25,9 @@
 #include <string>
 #include <vector>
 #include "GaudiKernel/ParticleProperty.h"
+
+   
+
 
 //#include "FluxAlg.h"
 /*! \class FluxTestAlg
