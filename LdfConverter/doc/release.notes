@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v1r3p4  21-Jan-2004 HMK more exception handling
 v1r3p3  04-Jan-2005 hmk Fix up use of LdfEvent CLIDs
 v1r3p2  20-Dec-2004 TU  Include Event TDS defs in ldf header files to avoid static const
 v1r3p0  17-Dec-2004 hmk Allow any version of Event to be used

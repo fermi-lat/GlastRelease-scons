@@ -16,7 +16,8 @@
 #include "GaudiKernel/ObjectVector.h"
 
 #include "ldfReader/data/LatData.h"
-
+#include "ldfReader/LdfException.h"
+#include <exception>
 #include "facilities/Util.h"
 
 // Instantiation of a static factory class used by clients to create
@@ -116,6 +117,9 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
       // 2nd arg. is true if FITS file, false if raw ebf
       try {
           m_ebfParser = new ldfReader::LdfParser(m_fileName, false, m_instrument);
+      } catch(LdfException &e) {
+         log << MSG::ERROR << "LdfException: " << e.what() << endreq;
+         return(StatusCode::FAILURE);
       } catch(...) {
         log << MSG::ERROR << "failed to setup LdfParser" << endreq;
         return(StatusCode::FAILURE);
@@ -135,6 +139,9 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
 
       try {
           m_ebfParser = new ldfReader::LdfParser(m_fileName, true, m_instrument);
+      } catch(LdfException &e) {
+         log << MSG::ERROR << "LdfException: " << e.what() << endreq;
+         return(StatusCode::FAILURE);
       } catch(...){
         log << MSG::ERROR << "failed to setup LdfParser" << endreq;
         return(StatusCode::FAILURE);
@@ -269,6 +276,7 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
   const {
     MsgStream log(msgSvc(), name());
     
+    try {
     if  ((m_criteriaType == LDFFILE) ||
          (m_criteriaType == LDFFITS) )
     {
@@ -337,6 +345,15 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
         log << MSG::FATAL << "Cannot iterate a dead iterator" << endreq;
         return it;
     }
+   } catch(LdfException &e) {
+
+      log << MSG::ERROR << "LdfException caught " << e.what() << endreq;
+      throw;
+   } catch(...) {
+
+      log << MSG::ERROR << "Exception caught " << endreq;
+      throw;
+   }
 }
 
 IEvtSelector::Iterator* LdfEventSelector::end() const {
