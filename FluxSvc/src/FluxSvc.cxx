@@ -46,7 +46,7 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
     
     declareProperty("source_lib" , m_source_lib); 
     declareProperty("dtd_file"   , m_dtd_file=default_dtd_file);
-    declareProperty("EventMax"   , m_evtMax=0);
+    declareProperty("EvtMax"     , m_evtMax=0);
     declareProperty("StartTime"   , m_startTime=0);
     declareProperty("EndTime",      m_endTime=0);
     
@@ -298,11 +298,16 @@ StatusCode FluxSvc::run(){
     int eventNumber= 0;
     double currentTime=m_startTime;
     
-    log << MSG::INFO << "Starting event loop:" ;
-    if( m_evtMax>0)  { log << " MaxEvt = " << m_evtMax; }
-    if( m_endTime>0) { log << " EndTime= " << m_endTime; }
+    { bool noend=true;
+    log << MSG::INFO << "Runable interface starting event loop as :" ; 
+    if( m_evtMax>0)  { log << " MaxEvt = " << m_evtMax; noend=false;  }
+    if( m_endTime>0) { log << " EndTime= " << m_endTime; noend=false; }
     log << endreq;
     
+    if(noend) { 
+        log << MSG::WARNING << "No end condition specified: will not process any events!" << endreq; 
+    }
+    }
     while( m_evtMax>0 && eventNumber < m_evtMax
         || m_endTime>0 && currentTime< m_endTime ) {
         
@@ -321,8 +326,8 @@ StatusCode FluxSvc::run(){
     if( status.isFailure()){
         log << MSG::ERROR << "Terminating FluxSvc loop due to error" << endreq;
         
-    }else if( currentTime >= m_endTime ) {
-        log << MSG::INFO << "Loop terminated by time" << endreq;
+    }else if( m_endTime>0 && currentTime >= m_endTime ) {
+        log << MSG::INFO << "Loop terminated by time " << endreq;
     }else {
         log << MSG::INFO << "Processing loop terminated by event count" << endreq;
     }

@@ -13,8 +13,9 @@ EventSelector.Input = "NONE";
 FluxSvc.source_lib = {"$(FLUXSVCROOT)/xml/source_library.xml"};
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
 
-ApplicationMgr.TopAlg = {"FluxAlg","ExposureAlg","FluxTestAlg"};
+ApplicationMgr.TopAlg = {"FluxAlg/Top","ExposureAlg","FluxTestAlg"};
 
+ApplicationMgr.Runable = "FluxSvc";
 
 // Set the default for a source library document
 FluxSvc.source_lib ={"$(FLUXSVCROOT)/xml/source_library.xml"};
