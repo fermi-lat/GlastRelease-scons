@@ -2,6 +2,7 @@
 #include "CalValsCorrTool.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ToolFactory.h"
+#include "AnalysisNtuple/IValsTool.h"
 
 static const ToolFactory<CalValsCorrTool>  s_factory;
 const IToolFactory& CalValsCorrToolFactory = s_factory;
@@ -34,13 +35,11 @@ StatusCode CalValsCorrTool::initialize()
     // it appears that retrieveTool cannot store a EnergyCorr* pointer. Will need
     // to find IEnergyCorr* and downcast it to EnergyCorr*
 
-    IValsTool* ivals;
-        sc = toolSvc()->retrieveTool(m_calValsToolName,ivals);
+    sc = toolSvc()->retrieveTool(m_calValsToolName,m_calValsTool);
     if (sc.isFailure() ) {
         log << MSG::ERROR << "  Unable to create " << m_calValsToolName << endreq;
         return sc;
     }
-    m_calValsTool = dynamic_cast<ValBase*>(ivals);
 
     return sc;
 }
@@ -74,7 +73,7 @@ StatusCode CalValsCorrTool::doEnergyCorr(double eTotal, Event::CalCluster* clust
     double correctedEnergy;
     if (sc == StatusCode::SUCCESS) {
         sc = m_calValsTool->getVal("CAL_Energy_Corr",correctedEnergy);
-        if (sc == StatusCode::SUCCESS) cluster->setEnergyCorrected(correctedEnergy);
+//        if (sc == StatusCode::SUCCESS) cluster->setEnergyCorrected(correctedEnergy);
     }
 
     return sc;

@@ -4,7 +4,8 @@
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "EnergyCorr.h"
-#include "AnalysisNtuple/ValBase.h"
+
+class IValsTool;
 
 /**   
 * @class CalValsCorrTool
@@ -47,7 +48,7 @@ private:
     std::string m_calValsToolName;
 
     /// pointer to actual tool for last layer energy correlation
-    ValBase* m_calValsTool;
+    IValsTool* m_calValsTool;
 
 
 
