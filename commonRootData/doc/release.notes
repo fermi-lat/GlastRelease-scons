@@ -3,6 +3,8 @@ Package commonRootData
 Coordinator:H.Kelly
 @verbatim
 
+v1r0p0  26-jul-2004 HMK Decrement version of CalXtalId - no need to increment,
+        we made no changes to the data members 
 v1r0    28-jun-2004 HMK Moving all idents classes from mcRootData and digiRootData to this package:  VolumeIdentifer, AcdId, CalXtalId, TowerId
 v0r4    20-jun-2004 THB update to inclusive pattern
 v0r3    16-jun-2004 THB Use new RootPolicy pattern for building rootcint files

@@ -128,7 +128,7 @@ private:
 };
     
 
-    ClassDef(CalXtalId,2) // Cal Xtal Identifier
+    ClassDef(CalXtalId,1) // Cal Xtal Identifier
 };
 
 
