@@ -974,6 +974,15 @@
               </add>
         </const>
 
+        <const name="tower10_zCoord">
+          <notes> z coordinate of tower 10</notes>
+              <add>
+                 <refer refTo="towers_dz" />
+                 <const value="5" uType="count" />
+              </add>
+        </const>
+
+
         <const name="tower11_xCoord">
           <notes> x coordinate of tower 11</notes>
               <mul>

@@ -166,7 +166,7 @@
       <posXYZ volume="oneTower"
               XREF="tower10_xCoord"
               YREF="tower10_yCoord" 
-              ZREF="towers_dz" >
+              ZREF="tower10_zCoord" xrot="1" yrot="1" zrot="1" >
         <idField name="fLATObjects" valueREF="eLATTowers" />
         <idField name="fTowerX" value="2" />
         <idField name="fTowerY" value="2" />
