@@ -1,5 +1,5 @@
 package G4Propagator
-version v1r2p3
+version v1r2p4
 author Tracy Usher   <usher@slac.stanford.edu>
 
 #$Id$
@@ -20,6 +20,8 @@ use Geant4   v2r* IExternal
 # get flags to build shared library
 
 apply_pattern package_Cshlibflags
+
+private  # Traudl says we need this
 
 apply_pattern package_headers
 
