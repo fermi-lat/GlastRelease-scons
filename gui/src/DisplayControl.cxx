@@ -207,7 +207,8 @@ private:
 	    :m_scene(s),m_rep(rep),m_flag(f){}
 	void execute()
 	{
-	    m_rep->show(m_flag);
+	    m_rep->update();
+            m_rep->show(m_flag);
 	    m_scene->redisplay();
 	}
 	DisplayControl* m_scene;
