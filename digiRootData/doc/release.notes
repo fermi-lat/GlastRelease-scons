@@ -1,6 +1,7 @@
 Package digiRootData
 Coordinator: H. Kelly
 
+v3r5      10-Jun-2002 HMK Add VolId to AcdDigi \n
 v3r4      06-Jun-2002 HMK Add in time stamp and trigger bits \n
 v3r3      05-Jun-2002 HMK New AcdDigi\n
 v3r2      22-May-2002 HMK Add new Tkr Digi to DigiEvent \n
