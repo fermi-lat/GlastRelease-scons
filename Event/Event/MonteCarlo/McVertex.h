@@ -50,8 +50,13 @@
 // Forward declarations
 class McParticle;
 
+extern const CLID& CLID_McVertex;
+
 class McVertex : virtual public ContainedObject {
   public:
+
+    virtual const CLID& clID() const   { return McVertex::classID(); }
+    static const CLID& classID()       { return CLID_McVertex; }
     // vertex type definition
     enum originType {primaryOrigin = 1, daughterOrigin = 2, decayProduct = 3, showerContents = 4, showerBacksplash = 5};
 

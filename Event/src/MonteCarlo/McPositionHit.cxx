@@ -23,72 +23,7 @@ double McPositionHit::directionCosine() const
 }
 
 
-/// Serialize the object for writing
-StreamBuffer& McPositionHit::serialize( StreamBuffer& s ) const
-{
-  ContainedObject::serialize(s);
-  return s
-    << m_volumeID
-    << m_entry
-    << m_exit
-    << m_depositedEnergy
-    << m_particleEnergy
-    << m_timeOfFlight
-    << m_mcParticle(this)
-    << m_originMcParticle(this)
-    << m_packedFlags;
-}
 
-
-/// Serialize the object for reading
-StreamBuffer& McPositionHit::serialize( StreamBuffer& s )
-{
-  ContainedObject::serialize(s);
-  return s
-    >> m_volumeID
-    >> m_entry
-    >> m_exit
-    >> m_depositedEnergy
-    >> m_particleEnergy
-    >> m_timeOfFlight
-    >> m_mcParticle(this)
-    >> m_originMcParticle(this)
-    >> m_packedFlags;
-}
-
-
-/// Fill the ASCII output stream
-std::ostream& McPositionHit::fillStream( std::ostream& s ) const
-{
-  return s
-    << "    base class McPositionHit :"
-    << "\n        Volume ID             = " << m_volumeID
-    << "\n        Entry point (x, y, z) = ( "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
-    << m_entry.x() << ", "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
-    << m_entry.y() << ", "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
-    << m_entry.z() << " )"
-    << "\n        Deposited Energy      = "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
-    << m_depositedEnergy
-    << "\n        Particle Energy       = "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
-    << m_particleEnergy
-    << "\n        Time of flight        = "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
-    << m_timeOfFlight
-    << "\n        Exit point (x, y, z)  = ( "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
-    << m_exit.x() << ", "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
-    << m_exit.y() << ", "
-    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
-    << m_exit.z() << " )"
-    << "\n        McParticle            = " << m_mcParticle(this)
-    << "\n        ancestor McParticle   = " << m_originMcParticle(this);
-}
 
 
 const VolumeID McPositionHit::volumeID() const

@@ -22,6 +22,10 @@
 
         namespace MC {
             _EXTERN_ std::string Event;
+            _EXTERN_ std::string McParticle;
+            _EXTERN_ std::string McIntegratingHit;
+            _EXTERN_ std::string McVertex;
+
         };
 
         namespace Irf {

@@ -51,8 +51,13 @@
 // Forward declarations
 class McParticle;
 
+extern const CLID& CLID_McPositionHit;
+
 class McPositionHit : virtual public ContainedObject {
   public:
+
+    virtual const CLID& clID() const   { return McPositionHit::classID(); }
+    static const CLID& classID()       { return CLID_McPositionHit; }
     /// Constructors
     McPositionHit()
       : m_depositedEnergy(0.),
@@ -156,14 +161,71 @@ class McPositionHit : virtual public ContainedObject {
 typedef ObjectVector<McPositionHit> McPositionHitVector;
 typedef ObjectList<McPositionHit>   McPositionHitList;
 
-//} // NameSpace GlastEvent
+/// Serialize the object for writing
+inline StreamBuffer& McPositionHit::serialize( StreamBuffer& s ) const
+{
+  ContainedObject::serialize(s);
+  return s
+    << m_volumeID
+    << m_entry
+    << m_exit
+    << m_depositedEnergy
+    << m_particleEnergy
+    << m_timeOfFlight
+    << m_mcParticle(this)
+    << m_originMcParticle(this)
+    << m_packedFlags;
+}
 
 
+/// Serialize the object for reading
+inline StreamBuffer& McPositionHit::serialize( StreamBuffer& s )
+{
+  ContainedObject::serialize(s);
+  return s
+    >> m_volumeID
+    >> m_entry
+    >> m_exit
+    >> m_depositedEnergy
+    >> m_particleEnergy
+    >> m_timeOfFlight
+    >> m_mcParticle(this)
+    >> m_originMcParticle(this)
+    >> m_packedFlags;
+}
 
-//namespace GlastEvent { // NameSpace
 
-/// Retrieve cell identifier
-
-//} // NameSpace GlastEvent
+/// Fill the ASCII output stream
+inline std::ostream& McPositionHit::fillStream( std::ostream& s ) const
+{
+  return s
+    << "    base class McPositionHit :"
+    << "\n        Volume ID             = " << m_volumeID
+    << "\n        Entry point (x, y, z) = ( "
+    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << m_entry.x() << ", "
+    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << m_entry.y() << ", "
+    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << m_entry.z() << " )"
+    << "\n        Deposited Energy      = "
+    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << m_depositedEnergy
+    << "\n        Particle Energy       = "
+    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << m_particleEnergy
+    << "\n        Time of flight        = "
+    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << m_timeOfFlight
+    << "\n        Exit point (x, y, z)  = ( "
+    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << m_exit.x() << ", "
+    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << m_exit.y() << ", "
+    << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+    << m_exit.z() << " )"
+    << "\n        McParticle            = " << m_mcParticle(this)
+    << "\n        ancestor McParticle   = " << m_originMcParticle(this);
+}
 
 #endif    // GlastEvent_McPositionHit_H

@@ -9,7 +9,6 @@
 #include "Gaudi/Kernel/SmartRefVector.h"
 #include "GlastEvent/TopLevel/Definitions.h"
 #include "GlastEvent/Utilities/CellID.h"
-#include "GlastEvent/MonteCarlo/MCTrack.h"
 #include "GlastEvent/TopLevel/ObjectVector.h"
 #include "GlastEvent/TopLevel/ObjectList.h"
 

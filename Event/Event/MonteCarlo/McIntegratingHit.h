@@ -48,8 +48,14 @@
 //class McParticle;
 #include "GlastEvent/MonteCarlo/McParticle.h"
 
+extern const CLID& CLID_McIntegratingHit;
+
+
 class McIntegratingHit : virtual public ContainedObject {
   public:
+
+    virtual const CLID& clID() const   { return McIntegratingHit::classID(); }
+    static const CLID& classID()       { return CLID_McIntegratingHit; }
     /// McParticle -> deposited energy map
     // Here I needed to takeout SmartRef<McParticle> because the 
     // template library was not giving a compile error.
@@ -126,5 +132,76 @@ typedef ObjectVector<McIntegratingHit>     McIntegratingHitVector;
 template <class TYPE> class ObjectList;
 typedef ObjectList<McIntegratingHit>       McIntegratingHitList;
 
+/// Serialize the object for writing
+inline StreamBuffer& McIntegratingHit::serialize( StreamBuffer& s ) const
+{
+    ContainedObject::serialize(s);
+    s
+      << m_volumeID
+      << m_totalEnergy
+      << m_moment1seed
+      << m_moment2seed
+//    << m_energyItem(this)	// The operator<< has not implemented yet. FIX ME!!
+      << m_energyItem.size();
+    energyDepositMap::const_iterator it;
+    for (it = m_energyItem.begin(); it != m_energyItem.end(); it++){
+        s << it->first//(this)
+          << it->second;
+    }
+    return s
+      << m_packedFlags;
+}
+
+
+/// Serialize the object for reading
+inline StreamBuffer& McIntegratingHit::serialize( StreamBuffer& s )
+{
+    energyDepositMap::size_type m_energyItem_size;
+    ContainedObject::serialize(s);
+    s
+      >> m_volumeID
+      >> m_totalEnergy
+      >> m_moment1seed
+      >> m_moment2seed
+//    >> m_energyItem(this)	// The operator<< has not implemented yet. FIX ME!!
+      >> m_energyItem_size;
+    m_energyItem.clear();
+    energyDepositMap::size_type i;
+    for (i = 0; i < m_energyItem_size; i++){//for (i = 0; i < m_energyItem_size; i++){ //Nasté
+        SmartRef<McParticle> first;
+        double               second;
+        s >> first(this)
+          >> second;
+        m_energyItem[first] = second;
+    }
+        return s
+      >> m_packedFlags;
+}
+
+
+/// Fill the ASCII output stream
+inline std::ostream& McIntegratingHit::fillStream( std::ostream& s ) const
+{
+    s << "class McCaloHitBase :"
+      << "\n    Deposited Energy        = "
+      << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+      << m_totalEnergy
+      << "\n    First moment (x, y, z)  = "
+      << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+      << m_moment1seed.x() / m_totalEnergy << ", "
+      << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+      << m_moment1seed.y() / m_totalEnergy << ", "
+      << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+      << m_moment1seed.z() / m_totalEnergy << " )"
+      << "\n    Second moment (x, y, z) = "
+      << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+      << m_moment2seed.x() / m_totalEnergy << ", "
+      << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+      << m_moment2seed.y() / m_totalEnergy << ", "
+      << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
+      << m_moment2seed.z() / m_totalEnergy << " )"
+      << "\n    Volume ID               = " << m_volumeID;
+    return s;
+}
 
 #endif // GlastEvent_McIntegratingHit_H
