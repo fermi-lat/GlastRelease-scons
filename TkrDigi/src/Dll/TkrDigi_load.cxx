@@ -10,6 +10,6 @@
 
 DECLARE_FACTORY_ENTRIES(TkrDigi) {
     DECLARE_ALGORITHM( TkrSimpleDigiAlg );
-
+    DECLARE_TOOL( TkrDigiRandom );
 } 
 
