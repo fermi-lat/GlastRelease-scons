@@ -159,19 +159,19 @@ void  GDDVRMLSectionsVisitor::visitStack(GDDstack* st)
 	  out << "Transform {  #" << apos->getVolume()->getName() << std::endl;
 	  switch(st->getStackType()){
 	  case sx:
-	    delta = (apos->getBBX()+apos->getGap())/2 + deltap;
+	    delta = (apos->getBBX()/2+apos->getGap()) + deltap;
 	    out << "translation " << delta << " 0 " << " 0 " << std::endl;
-	    deltap += apos->getBBX();
+	    deltap += apos->getBBX()+apos->getGap();;
 	    break;	
 	  case sy:
-	    delta = (apos->getBBY()+apos->getGap())/2 + deltap;
+	    delta = (apos->getBBY()/2+apos->getGap()) + deltap;
 	    out << "translation " << " 0 " << delta << " 0 " << std::endl;
-	    deltap += apos->getBBY();
+	    deltap += apos->getBBY()+apos->getGap();
 	    break;	
 	  case sz:
-	    delta = (apos->getBBZ()+apos->getGap())/2 + deltap;
+	    delta = (apos->getBBZ()/2+apos->getGap()) + deltap;
 	    out << "translation " << " 0 " << " 0 " << delta << std::endl;
-	    deltap += apos->getBBZ();
+	    deltap += apos->getBBZ()+apos->getGap();
 	    break;	
 	  }
 	  out << "children [ " << std::endl;
