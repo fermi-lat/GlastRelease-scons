@@ -24,7 +24,7 @@ IRF::IRF(std::string summary_root_filename)
     angle_bins=4;
 
     // redefine some defaults
-    gStyle->SetPadColor(10); // out with the gray
+   gStyle->SetPadColor(10); // out with the gray
    gStyle->SetCanvasColor(10);
    gStyle->SetTitleColor(10);
    gStyle->SetTitleBorderSize(0);
@@ -37,6 +37,8 @@ IRF::IRF(std::string summary_root_filename)
 
 void IRF::open_input_file()
 {
+    static std::string tree_name("1");
+
      // load the file and access the TTree
     m_file = new TFile(input_filename().c_str());
     if( ! m_file->IsOpen()){
@@ -44,7 +46,7 @@ void IRF::open_input_file()
         throw "could not open input file";
     }
     std::cout << "Opened root file " << input_filename() << std::endl;
-    m_tree = (TTree*)m_file->Get("1");
+    m_tree = (TTree*)m_file->Get(tree_name.c_str());
     if( m_tree==0) {
         std::cerr << "Did not find tree \"i\" in the input file" << std::endl;
         throw "did not find the TTree";
@@ -54,7 +56,8 @@ void IRF::open_input_file()
     goodCal="CalTotRLn>2&&CalEnergySum>5.0 && IMgoodCalProb>0.5";
     goodPSF ="IMcoreProb>0.3&&IMpsfErrPred<3.0"; // this is Bill's minimal cut
     TCut tempFix("Tkr1KalEne > 0.5* McEnergy"); // temporary fix for bad energy estimate
-    goodEvent=goodCal&&goodPSF;  
+    TCut zdir_cut("Tkr1ZDir<-0.2"); 
+    goodEvent=goodCal&&goodPSF&&zdir_cut;  
 
     std::cout << "good event definition: " << goodEvent.GetTitle() << std::endl;
 
@@ -65,7 +68,7 @@ IRF::~IRF(){
     delete m_file;
 }
 
-// copy code from TCanvas::Divide
+// copy code from TCanvas::Divide, but leave room for a label at top
 void IRF::divideCanvas(TCanvas & c, int nx, int ny, std::string top_title)   {
         int color=10;
         double xmargin=0, ymargin=0, top_margin=0.08; 
