@@ -7,7 +7,7 @@
 */
 
 #include "FluxSvc/IRegisterSource.h"
-#include "facilities/Observer.h"
+#include "facilities/TimeStamp.h"
 
 #include "flux/rootplot.h"
 
@@ -154,6 +154,8 @@ protected:
     virtual ~FluxSvc ();
 
 private:
+    //! 
+    double startTime() const;
 
     IParticlePropertySvc* m_partSvc;
 
@@ -180,6 +182,8 @@ private:
     DoubleProperty m_endTime;
     DoubleProperty m_deltaTime;
 
+    StringProperty m_startDate;
+
 };
 
 // declare the service factories for the FluxSvc
@@ -204,6 +208,7 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("StartTime"   , m_startTime=0);
     declareProperty("EndTime",      m_endTime=0);
     declareProperty("DeltaTime",    m_deltaTime=0);
+    declareProperty("StartDate"   , m_startDate="");
 
 }
 
@@ -234,6 +239,19 @@ FluxSvc::~FluxSvc()
 {
 }
 
+double FluxSvc::startTime() const
+{
+    using astro::JulianDate;
+
+    if( m_startDate.value().empty()) {
+        return m_startTime;
+    }
+    // parse a string of the form "2004-09-03 18:00" using the Timestamp class.
+    facilities::Timestamp jt(m_startDate.value());
+
+    return (JulianDate(jt.getJulian())-JulianDate::missionStart())*JulianDate::secondsPerDay;
+    
+}
 
 // initialize
 StatusCode FluxSvc::initialize () 
@@ -476,7 +494,9 @@ StatusCode FluxSvc::run(){
             << endreq;
     }
     int eventNumber= 0;
-    double currentTime=m_startTime;
+    
+    // access the starting time from the job properties
+    double currentTime= startTime(); //( was: m_startTime;)
     if( flux!=0 ) flux->pass(currentTime); // add to zero
     if( m_deltaTime>0 && m_endTime==0 )  m_endTime=m_startTime+m_deltaTime;
 

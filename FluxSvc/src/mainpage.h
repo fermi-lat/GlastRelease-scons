@@ -24,6 +24,8 @@ Usage is primarily via the FluxAlg algorithm, which access the service to genera
     @param FluxSvc.EvtMax       [0]  If non-zero, used as a maximum in the FluxSvc loop
     @param FluxSvc.StartTime    [0]  Mission elapsed time start
     @param FluxSvc.EndTime      [0]  Mission elapsed time end--if non-zero, will be the end.
+    @param FluxSvc.DeltaTime    [0]  Maximum elapsed time.
+    @param FluxSvc.StartDate    [""] Date, in form "2004-07-25 18:00" 
 
     @param FluxAlg.source_name  ["default"] source name, name must be in the source_lib files
     @param FluxAlg.MCrun        [100] Initial run number
