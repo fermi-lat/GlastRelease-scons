@@ -22,7 +22,7 @@ use xmlUtil               v2r8p3
 
 use geometry    v3
 
-use astro       v0r1p2
+use astro                 v0r2
 
 # low-level graphics
 
@@ -51,9 +51,9 @@ use GlastSvc    v9r1
 
 # simulation
 
-use FluxSvc      v5r11
+use FluxSvc                v5r12
 use FluxDisplay  v2r2
-use G4Generator  v4r3p3
+use G4Generator            v4r3p4
 
 #digitization
 use CalDigi     v1r2p5
