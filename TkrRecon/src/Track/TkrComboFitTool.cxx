@@ -15,6 +15,8 @@
 #include "Event/TopLevel/EventModel.h"
 
 #include "src/TrackFit/KalFitTrack/KalFitTrack.h"
+#include "TkrRecon/ITkrGeometrySvc.h"
+#include "src/Track/TkrControl.h"
 
 static ToolFactory<TkrComboFitTool> s_factory;
 const IToolFactory& TkrComboFitToolFactory = s_factory;
@@ -54,6 +56,7 @@ StatusCode TkrComboFitTool::doTrackFit(Event::TkrPatCand* patCand)
     int    iniTower = patCand->getTower();
     Ray    testRay  = patCand->getRay();
     double energy   = patCand->getEnergy();
+    int    type     = (int)(patCand->getQuality()); //New for testing 
         
     TkrControl* control = TkrControl::getPtr();   
     Event::KalFitTrack* track = new Event::KalFitTrack(pTkrClus, pTkrGeoSvc, iniLayer, iniTower,
@@ -62,14 +65,14 @@ StatusCode TkrComboFitTool::doTrackFit(Event::TkrPatCand* patCand)
     //track->findHits(); Using PR Solution to save time
         
     //Now fill the hits from the pattern track
-    int              numHits = patCand->numPatCandHits();
+    int  numHits = patCand->numPatCandHits();
     Event::CandHitVectorPtr candPtr = patCand->getHitIterBegin();
     while(numHits--)
     {
         Event::TkrPatCandHit candHit = *candPtr++;
         track->addMeasHit(candHit);
     }
-        
+    track->setType(type);  
     track->doFit();
         
     if (!track->empty(control->getMinSegmentHits())) 
