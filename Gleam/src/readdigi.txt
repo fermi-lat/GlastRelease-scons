@@ -17,7 +17,7 @@ Generator.Members = {} ; // turn off generation
 
 Digitization.Members = {"digiRootReaderAlg"}; // replace digi algs.
 
-digiRootReaderAlg.digiRootFile="digi.root";
+digiRootReaderAlg.digiRootFile="$(ROOTTESTDATAROOT)/data/default/digi.root";
 
 Output.Members = {}; // turn off root output 
 
