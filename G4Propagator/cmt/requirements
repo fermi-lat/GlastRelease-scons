@@ -1,5 +1,7 @@
 package G4Propagator
 version v0r0
+author Tracy Usher   <usher@slac.stanford.edu>
+
 #$Id$
 
 use GlastPolicy v5*
