@@ -10,6 +10,10 @@
 #include "CalDigi.h"
 #include "TkrDigi.h"
 
+#include "TkrDiagnostic.h"
+#include "CalDiagnostic.h"
+#include "EventSummaryData.h"
+
 /** @class DigiEvent
  * @brief This is the top-level event class to store the Digi data.
  *
@@ -22,6 +26,9 @@
  * - Collection of AcdDigi objects
  * - Collection of CalDigi objects
  * - Collection of TkrDigi objects
+ * - EM CAL Diagnostic trigger primitives
+ * - EM TKR Diagnostic trigger primitives
+ * - EM Event Summary
  *
  * @li Jun 2001 Heather Kelly - revised to use TClonesArray
  * @li Jan 2000 Daniel Flath - ROOT HTML comments added
@@ -39,13 +46,39 @@ public:
     virtual ~DigiEvent();
 
     void initialize(UInt_t eventId, UInt_t runId, Double_t time, 
-        const L1T& level1, Bool_t fromMc=true);
+        const L1T& level1, const EventSummaryData &summary, Bool_t fromMc=true);
+
+    void setEbfTime(UInt_t timeSec, UInt_t timeNanoSec, 
+                    UInt_t upperPpcTimeBase, UInt_t lowerPpcTimeBase) {
+        m_ebfTimeSec = timeSec;
+        m_ebfTimeNanoSec = timeNanoSec;
+        m_ebfUpperPpcTimeBase = upperPpcTimeBase;
+        m_ebfLowerPpcTimeBase = lowerPpcTimeBase;
+    }
 
     void Clear(Option_t *option="");
-
+ 
     void Print(Option_t *option="") const;
 
     inline Double_t getTimeStamp() { return m_timeStamp; };
+
+    inline UInt_t getEbfTimeSec() const { return m_ebfTimeSec; };
+    inline UInt_t getEbfTimeNanoSec() const { return m_ebfTimeNanoSec; };
+    inline UInt_t getEbfUpperPpcTimeBase() const { return m_ebfUpperPpcTimeBase; };
+    inline UInt_t getEbfLowerPpcTimeBase() const { return m_ebfLowerPpcTimeBase; };
+    /// Return the approximate number of seconds elapsed since power on
+    /// by dividing the value in the PPC registers by 16 MHz
+    inline Double_t getEbfPpcTimeSeconds() const { 
+        const Double_t sixteenMHz = 16000000.;
+        // To handle th 64-bit value - we separate the computation
+        // The upper 32 bits would have to be shifted by 31 (or multiplied)
+        // by 2^32 - we divide this by 16000000 to get the upperMultiplier
+        const Double_t upperMultiplier = 268.435456; 
+        Double_t lower = m_ebfLowerPpcTimeBase / sixteenMHz;
+        Double_t upper = m_ebfUpperPpcTimeBase * upperMultiplier;
+        return (upper + lower);
+    };
+
 
     /// Access the DigiEvent number
     inline UInt_t getEventId() { return m_eventId; };
@@ -72,6 +105,7 @@ public:
     CalDigi* addCalDigi();
     const CalDigi* getCalDigi(UInt_t i) const;
 
+
     /// retrieve the whole TObjArray of TkrDigi Data
     const TObjArray* getTkrDigiCol() const { return m_tkrDigiCol; };
     /// Add a TkrDigi into the TKR data collection
@@ -83,6 +117,18 @@ public:
 
     /// Access Level 1 Trigger data
     inline const L1T& getL1T() const { return m_levelOneTrigger; };    
+
+    inline const EventSummaryData& getEventSummaryData() const { return m_summary; };
+    inline EventSummaryData& getEventSummaryData() { return m_summary; };
+
+    const TClonesArray *getCalDiagnosticCol() { return m_calDiagnosticCloneCol;};
+    CalDiagnosticData* addCalDiagnostic();
+    const CalDiagnosticData* getCalDiagnostic(UInt_t i) const;
+
+    const TClonesArray *getTkrDiagnosticCol() { return m_tkrDiagnosticCloneCol;};
+    TkrDiagnosticData* addTkrDiagnostic();
+    const TkrDiagnosticData* getTkrDiagnostic(UInt_t i) const;
+
 
 private:
     /// Time in seconds
@@ -115,9 +161,32 @@ private:
     static TObjArray *s_staticTkrDigiCol;
     TObjArray* m_tkrDigiCol; //-> List of Tracker layers
 
-    ClassDef(DigiEvent,6) // Storage for Raw(Digi) event and subsystem data
-}; 
 
+    EventSummaryData m_summary;
+
+    TClonesArray *m_tkrDiagnosticCloneCol; //->
+    Int_t m_numTkrDiagnostics;
+    static TClonesArray *s_tkrDiagnosticStaticCol; //! Collection of TKR diagnostic for EM
+
+    TClonesArray *m_calDiagnosticCloneCol; //->
+    Int_t m_numCalDiagnostics;
+    static TClonesArray *s_calDiagnosticStaticCol; //! Collection of CAL dianostics for EM
+
+    /// These two words represent the original clock for the EM at 30 Hz
+    UInt_t m_ebfTimeSec;
+    UInt_t m_ebfTimeNanoSec;
+
+
+    /// These two words represent the contents of 2 32-bit PPC registers
+    /// Concatenate these two words into one 64 bit word divide by 16 MHz
+    /// and get an approximate time to be used to determine the sequence of 
+    /// events
+    UInt_t m_ebfUpperPpcTimeBase;
+    UInt_t m_ebfLowerPpcTimeBase;
+
+    ClassDef(DigiEvent,11) // Storage for Raw(Digi) event and subsystem data
+}; 
+ 
 #endif
 
 

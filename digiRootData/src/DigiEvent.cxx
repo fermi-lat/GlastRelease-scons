@@ -15,6 +15,8 @@ ClassImp(DigiEvent)
 TClonesArray *DigiEvent::s_acdDigiStaticCol = 0;
 TObjArray *DigiEvent::s_staticTkrDigiCol = 0;
 TClonesArray *DigiEvent::s_calDigiStaticCol = 0;
+TClonesArray *DigiEvent::s_calDiagnosticStaticCol = 0;
+TClonesArray *DigiEvent::s_tkrDiagnosticStaticCol = 0;
 
 DigiEvent::DigiEvent() {
     //if (!s_calDigiStaticCol) s_calDigiStaticCol = new TClonesArray("CalDigi",1536);
@@ -31,6 +33,15 @@ DigiEvent::DigiEvent() {
     if (!s_acdDigiStaticCol) s_acdDigiStaticCol = new TClonesArray("AcdDigi", 1);
     m_acdDigiCol = s_acdDigiStaticCol;
     m_numAcdDigis = -1;
+
+
+    if (!s_calDiagnosticStaticCol) s_calDiagnosticStaticCol = new TClonesArray("CalDiagnosticData",8);
+    m_calDiagnosticCloneCol = s_calDiagnosticStaticCol;
+    m_numCalDiagnostics = -1;
+
+    if (!s_tkrDiagnosticStaticCol) s_tkrDiagnosticStaticCol = new TClonesArray("TkrDiagnosticData",4);
+    m_tkrDiagnosticCloneCol = s_tkrDiagnosticStaticCol;
+    m_numTkrDiagnostics = -1;
 
     Clear();
 }
@@ -58,16 +69,29 @@ DigiEvent::~DigiEvent() {
         m_calDigiCol = 0;
     }
 
+
+    if (m_calDiagnosticCloneCol == s_calDiagnosticStaticCol) s_calDiagnosticStaticCol = 0;
+    m_calDiagnosticCloneCol->Delete();
+    delete m_calDiagnosticCloneCol;
+    m_calDiagnosticCloneCol = 0;
+
+    if (m_tkrDiagnosticCloneCol == s_tkrDiagnosticStaticCol) s_tkrDiagnosticStaticCol = 0;
+    m_tkrDiagnosticCloneCol->Delete();
+    delete m_tkrDiagnosticCloneCol;
+    m_tkrDiagnosticCloneCol = 0;
+ 
 }
 
 void DigiEvent::initialize(UInt_t eventId, UInt_t runId, Double_t time, 
-                           const L1T& level1, Bool_t fromMc) {
+                           const L1T& level1, const EventSummaryData &summary, Bool_t fromMc) {
     m_eventId = eventId;
     m_runId = runId;
     m_timeStamp = time;
     m_fromMc = fromMc;
     m_levelOneTrigger = level1;
+    m_summary = summary;
 }
+  
 
 void DigiEvent::Clear(Option_t *option) {
 
@@ -79,7 +103,12 @@ void DigiEvent::Clear(Option_t *option) {
     m_eventId = 0;
     m_runId = 0;
     m_timeStamp = 0.0;
+    m_ebfTimeSec = 0;
+    m_ebfTimeNanoSec = 0;
+    m_ebfUpperPpcTimeBase = 0;
+    m_ebfLowerPpcTimeBase = 0;
     m_levelOneTrigger.Clear();
+    m_summary.Clear();
     m_calDigiCloneCol->Clear("C");
     if (m_calDigiCol) {
         m_calDigiCol->Delete();
@@ -89,6 +118,11 @@ void DigiEvent::Clear(Option_t *option) {
     m_acdDigiCol->Clear("C");
     m_numAcdDigis = -1;
     m_numCalDigis = -1;
+
+    m_calDiagnosticCloneCol->Clear("C");
+    m_tkrDiagnosticCloneCol->Clear("C");
+    m_numCalDiagnostics = -1;
+    m_numTkrDiagnostics = -1;
 
    //m_tkrDigiCol->Delete();  //<======THIS LINE COMMENTED
    //we delete the objects in keep every nd TkrDigi objects
@@ -119,6 +153,7 @@ void DigiEvent::Print(Option_t *option) const {
     cout << "Run, Event: " << m_runId << ", " << m_eventId
         << " Time: " << m_timeStamp << endl;
     m_levelOneTrigger.Print();
+    m_summary.Print();
     if ( (m_calDigiCol) && (m_calDigiCol->GetEntries() > 0)) {
       cout << "Number of CalDigis " << m_calDigiCol->GetEntries() << endl;
     } else 
@@ -227,3 +262,35 @@ const TClonesArray* DigiEvent::getCalDigiCol() {
     // Now return the TClonesArray*
     return m_calDigiCloneCol; 
 }
+
+
+CalDiagnosticData* DigiEvent::addCalDiagnostic() {
+    // Add a new CalDiagnostic entry, note that
+    // TClonesArrays can only be filled via
+    // a new with placement call
+    ++m_numCalDiagnostics;
+    TClonesArray &calDiags = *m_calDiagnosticCloneCol;
+    new(calDiags[m_numCalDiagnostics]) CalDiagnosticData();
+    return ((CalDiagnosticData*)(calDiags[m_numCalDiagnostics]));
+}
+
+const CalDiagnosticData* DigiEvent::getCalDiagnostic(UInt_t i) const {
+    if (((Int_t)i) > m_numCalDiagnostics) return 0;
+    return (CalDiagnosticData*)m_calDiagnosticCloneCol->At(i);
+}
+
+TkrDiagnosticData* DigiEvent::addTkrDiagnostic() {
+    // Add a new  TkrDiagnostic entry, note that
+    // TClonesArrays can only be filled via
+    // a new with placement call
+    ++m_numTkrDiagnostics;
+    TClonesArray &tkrDiags = *m_tkrDiagnosticCloneCol;
+    new(tkrDiags[m_numTkrDiagnostics]) TkrDiagnosticData();
+    return ((TkrDiagnosticData*)(tkrDiags[m_numTkrDiagnostics]));
+}
+
+const TkrDiagnosticData* DigiEvent::getTkrDiagnostic(UInt_t i) const {
+    if (((Int_t)i) > m_numTkrDiagnostics) return 0;
+    return (TkrDiagnosticData*)m_tkrDiagnosticCloneCol->At(i);
+}
+

@@ -22,6 +22,8 @@ const UInt_t runNum = 1;
 const UInt_t numXtals = 10;
 const UInt_t numDigi = 12;
 const UInt_t numAcd = 11;
+const UInt_t numCalDiag = 4;
+const UInt_t numTkrDiag = 2;
 const Bool_t fromMc = true;
 Float_t randNum;
 
@@ -53,6 +55,25 @@ int checkDigiEvent(DigiEvent *evt, UInt_t ievent) {
         std::cout << "From MC flag is wrong" << std::endl;
         return -1;
     }
+    return 0;
+}
+
+
+int checkCalDiagnostic(const CalDiagnosticData *calDiag) {
+    if (calDiag->getDataWord() != 10101) {
+        std::cout << "CalDiagnostic data word is wrong" << std::endl;
+        return -1;
+    }
+
+    return 0;
+}
+
+int checkTkrDiagnostic(const TkrDiagnosticData *tkrDiag) {
+    if (tkrDiag->getDataWord() != 20301) {
+        std::cout << "TkrDiagnostic datum is wrong" << std::endl;
+        return -1;
+    }
+
     return 0;
 }
 
@@ -117,7 +138,7 @@ int checkCalDigi(CalDigi *digi, UInt_t ievent) {
     }
     const CalXtalReadout *calReadout;
 
-    int iReadout;
+    unsigned int iReadout;
     for (iReadout = 0; iReadout<numEntries; iReadout++){
         calReadout = &(readoutCol[iReadout]);
         calReadout->Print();
@@ -340,7 +361,7 @@ int read(char* fileName, int numEvents) {
     
     std::cout << "Opened the ROOT file for reading" << std::endl;
     
-    UInt_t ievent;
+    Int_t ievent;
     for (ievent = 0; ievent < numEvents; ievent++) {
         t->GetEvent(ievent);
         std::cout << "DigiEvent ievent = " << ievent << std::endl;
@@ -378,6 +399,25 @@ int read(char* fileName, int numEvents) {
             idigi++;
         }
 
+
+        const TClonesArray *calDiagCol = evt->getCalDiagnosticCol();
+        if (calDiagCol->GetEntries() != numCalDiag) return -1;
+        TIter calDiagIt(calDiagCol);
+        CalDiagnosticData *cDiag = 0;
+        while (cDiag=(CalDiagnosticData*)calDiagIt.Next()) {
+            cDiag->Print();
+            if (checkCalDiagnostic(cDiag) < 0) return -1;
+        }
+
+        const TClonesArray *tkrDiagCol = evt->getTkrDiagnosticCol();
+        if (tkrDiagCol->GetEntries() != numTkrDiag) return -1;
+        TIter tkrDiagIt(tkrDiagCol);
+        TkrDiagnosticData *tDiag = 0;
+        while (tDiag=(TkrDiagnosticData*)tkrDiagIt.Next()) {
+            tDiag->Print();
+            if (checkTkrDiagnostic(tDiag) < 0) return -1;
+        }
+
  }
     
     f->Close();
@@ -405,7 +445,8 @@ int write(char* fileName, int numEvents) {
     for (ievent = 0; ievent < numEvents; ievent++) {
         
         L1T level1(13);
-        ev->initialize(ievent, runNum, randNum*ievent, level1, fromMc);
+        EventSummaryData summary(0);
+        ev->initialize(ievent, runNum, randNum*ievent, level1, summary, fromMc);
         
         for (ixtal = 0; ixtal < numXtals; ixtal ++) {
             CalDigi *cal = ev->addCalDigi();
@@ -447,6 +488,19 @@ int write(char* fileName, int numEvents) {
             volId.Clear();
             volId.append(1);
             ev->addAcdDigi(id, volId, energy, pha, veto, low, high);
+        }
+
+
+        int idiag;
+        for (idiag = 0; idiag < numCalDiag; idiag++) {
+            CalDiagnosticData *calDiag = ev->addCalDiagnostic();
+            UInt_t dataWord = 10101;
+            calDiag->initialize(dataWord);
+        }
+        for (idiag=0; idiag<numTkrDiag; idiag++) {
+            TkrDiagnosticData *tkrDiag = ev->addTkrDiagnostic();
+            UInt_t dataWord = 20301;
+            tkrDiag->initialize(dataWord);
         }
 
         t->Fill();
