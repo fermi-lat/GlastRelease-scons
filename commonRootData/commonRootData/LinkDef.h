@@ -14,6 +14,10 @@
 #pragma link C++ class Relation+;
 #pragma link C++ class BaseException;
 #pragma link C++ class IndexOutOfBoundsException;
+#pragma link C++ class AcdId+;
+#pragma link C++ class CalXtalId+;
+#pragma link C++ class TowerId+;
+#pragma link C++ class VolumeIdentifier+;
 //#pragma link C++ class BadPointerException;
 
 #endif
