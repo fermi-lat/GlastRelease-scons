@@ -88,7 +88,7 @@ StatusCode CalibItemMgr::updateCache() {
   // for the current event.
   DataObject *pObject;
   sc = m_dataProviderSvc->retrieveObject(m_calibPath, pObject);
-  if (sc.isFailure())
+  if (!sc.isFailure())
     m_calibBase = (CalibData::CalCalibBase *)(pObject);
   else {
     // create MsgStream only when needed for performance

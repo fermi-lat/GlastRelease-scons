@@ -35,7 +35,6 @@ ApplicationMgr.DLLs += {"GlastSvc"};
 ApplicationMgr.ExtSvc += {"CalibDataSvc"};
 
 ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
-CalibMySQLCnvSvc.DbName = "calib_user";
 
 DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
