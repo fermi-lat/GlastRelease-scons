@@ -2,6 +2,7 @@
  Package RootAnalysis
  Coordinator:H.Kelly
   
+ v3r3     15-Jan-2003: HMK: updated for Gleam v4r1's version of ROOT classes\n
  v3r2     18-Sep-2002: HMK: Add Clear calls to RootTreeAnalysis dtor.
             Clean up documentation. Remove old calibration files \n
  v3r1     24-Jun-2002: HMK: Use mcRootData v2r3 and update batch
