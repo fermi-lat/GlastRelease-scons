@@ -71,7 +71,7 @@ private:
     std::string m_cuts; 
     StringProperty m_root_filename;
     StringProperty m_IM_filename;
-    
+    StringProperty m_treename;    
     MeritRootTuple* m_root_tuple;
 
     IToolSvc* m_pToolSvc;
@@ -102,6 +102,7 @@ Algorithm(name, pSvcLocator), m_tuple(0), m_root_tuple(0) {
     declareProperty("generated" , m_generated=10000);
     declareProperty("RootFilename", m_root_filename="");
     declareProperty("IM_filename", m_IM_filename="$(CLASSIFICATIONROOT)/xml/PSF_Analysis.xml");
+    declareProperty("RootTreeName", m_treename="MeritTuple");
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode meritAlg::setupTools() {
@@ -194,7 +195,7 @@ StatusCode meritAlg::initialize() {
      //now make the parallel ROOT tuple
     if(!m_root_filename.value().empty() ){
         log << MSG::INFO << "Opening " << m_root_filename << " to write ROOT tuple" << endreq;
-        m_root_tuple=new MeritRootTuple(m_tuple, m_root_filename);
+        m_root_tuple=new MeritRootTuple(m_tuple, m_root_filename, m_treename);
     }
 
     m_fm= new FigureOfMerit(*m_tuple, m_cuts);

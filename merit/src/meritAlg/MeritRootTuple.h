@@ -27,7 +27,7 @@ class MeritRootTuple  {
     
 public:
     /// define the associated root tuple and a file to write it to
-    MeritRootTuple::MeritRootTuple(Tuple* tuple, std::string filename);
+    MeritRootTuple::MeritRootTuple(Tuple* tuple, std::string filename, std::string treename="MeritTuple");
     ~MeritRootTuple();
     
     /// fill it
