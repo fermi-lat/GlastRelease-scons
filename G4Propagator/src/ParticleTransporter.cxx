@@ -696,7 +696,7 @@ G4String ParticleTransporter::printVolName(const G4VPhysicalVolume* pCurVolume) 
     else return " ";
 }
 
-G4VPhysicalVolume* ParticleTransporter::getVolume(G4ThreeVector& position, bool fudge) const
+G4VPhysicalVolume* ParticleTransporter::getVolume(const Hep3Vector& position, bool fudge) const
 {
   // Purpose and Method: Returns a pointer to the lowest level G4PhysicalVolume
   //                     which contains the point given in the variable position

@@ -84,7 +84,7 @@ public:
     /// @brief Returns the current volume (include tree above it) at given position. 
     /// If position is on a volume boundary, @param fudge = true will cause it to be
     /// moved slightly off the boundary.
-    G4VPhysicalVolume* getVolume(G4ThreeVector& position, bool fudge=false) const;
+    G4VPhysicalVolume* getVolume(const Hep3Vector& position, bool fudge=false) const;
 
     /// @brief Given a volume, construct the associated volume id
     idents::VolumeIdentifier constructId(G4VPhysicalVolume* pVolume) const;
