@@ -2,7 +2,7 @@
 //
 #include "geometry/Cylinder.h"
 
-#include "CLHEP/config/TemplateFunctions.h"
+inline static double sqr(double x){return x*x;}
 #include <float.h>
 
 

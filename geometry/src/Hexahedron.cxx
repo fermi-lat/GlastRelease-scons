@@ -7,7 +7,7 @@
 
 #include "geometry/Hexahedron.h"
 
-#include "CLHEP/config/TemplateFunctions.h"
+inline static double sqr(double x){return x*x;}
 
 Hexahedron::Hexahedron()
 : Volume(6)

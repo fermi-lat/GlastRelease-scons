@@ -3,7 +3,7 @@
 //
 #include "geometry/Sphere.h"
 
-#include "CLHEP/config/TemplateFunctions.h"
+inline static double sqr(double x){return x*x;}
 #include <cfloat>
 
 Sphere::Sphere( const Point& origin, double radius)

@@ -4,11 +4,10 @@
 #include "geometry/Vector.h"
 
 #include "geometry/CoordTransform.h"
-#include "CLHEP/config/TemplateFunctions.h"
 
 Vector::Vector(double costh, double phi)
-: Hep3Vector(sqrt(1-sqr(costh))*cos(phi)
-		 ,sqrt(1-sqr(costh))*sin(phi)
+: Hep3Vector(sqrt(1-costh*costh)*cos(phi)
+	    ,sqrt(1-costh*costh)*sin(phi)
 	    ,costh)
 	    {}
 // convenient constructor of unit vector in given direction?

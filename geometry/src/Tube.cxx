@@ -11,7 +11,7 @@
 #include "geometry/Cylinder.h"
 #include "geometry/Plane.h"
 
-#include "CLHEP/config/TemplateFunctions.h"
+inline static double sqr(double x){return x*x;}
 
 static Vector zhat(0,0,1);
 
