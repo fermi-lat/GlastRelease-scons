@@ -29,14 +29,14 @@ void McParticle::setParticleID( ParticleID value )
 
 
 /// Retrieve particle property
-ParticleProperty McParticle::particleProperty() const
+McParticle::StdHepId McParticle::particleProperty() const
 {
   return m_particleProperty;
 }
 
 
 /// Update particle property
-void McParticle::setParticleProperty( ParticleProperty value )
+void McParticle::setParticleProperty( McParticle::StdHepId value )
 {
   m_particleProperty = value;
 }

@@ -14,36 +14,6 @@
 #include "Gaudi/Kernel/SmartRefVector.h"
 #include "GlastEvent/MonteCarlo/McVertex.h"
 #include "GlastEvent/MonteCarlo/McConstants.h"
-#if 0 // *** FIXME!! ***
-    // Gaudi v8's ParticleProperty class seems to have some problems
-    // around the message stream, so temporarily commented-out.
-#include "Gaudi/ParticlePropertySvc/ParticleProperty.h"
-#else // 0
-    /// An ad-hoc workaround...
-#include "Gaudi/Kernel/StreamBuffer.h"
-#include "GlastEvent/TopLevel/Definitions.h"
-    struct ParticleProperty {
-        int m_dummy;
-        typedef ParticleProperty PP;
-        friend StreamBuffer& operator<< ( StreamBuffer& s, const PP& obj ){
-            return s << obj.m_dummy;
-        }
-        /// Serialize the object for reading
-        friend StreamBuffer& operator>> ( StreamBuffer& s, PP& obj ){
-            return s >> obj.m_dummy;
-        }
-        /// Output operator (ASCII)
-        friend std::ostream& operator<< ( std::ostream& s, const PP& obj ){
-            return obj.fillStream(s);
-        }
-        /// Fill the output stream (ASCII)
-        std::ostream& fillStream( std::ostream& s ) const{
-            return s << "class ParticleProperty : "
-              << GlastEventField( GlastEvent::field4 )
-              << m_dummy;
-        }
-    };
-#endif // 0
 #include "GlastEvent/TopLevel/Definitions.h"
 #include "GlastEvent/Utilities/ParticleID.h"
 #include "CLHEP/Vector/LorentzVector.h"
@@ -82,6 +52,7 @@ extern const CLID& CLID_McParticle;
 
 class McParticle  : virtual public ContainedObject  {
   public:
+    typedef int  StdHepId;
 
     virtual const CLID& clID() const   { return McParticle::classID(); }
     static const CLID& classID()       { return CLID_McParticle; }
@@ -100,9 +71,9 @@ class McParticle  : virtual public ContainedObject  {
     void setParticleID( ParticleID value );
 
     /// Retrieve particle property
-    ParticleProperty particleProperty() const;
+    StdHepId particleProperty() const;
     /// Update particle identification
-    void setParticleProperty( ParticleProperty value );
+    void setParticleProperty( StdHepId value );
 
     /// Retrieve whether this is a primary particle
     bool primaryParticle() const;
@@ -131,8 +102,8 @@ class McParticle  : virtual public ContainedObject  {
   private:
     /// Particle ID
     ParticleID                m_particleID;
-    /// We need particle property (such as electron or proton or ....)
-    ParticleProperty          m_particleProperty;
+    /// particle property (such as electron or proton or ....) ID
+    StdHepId                  m_particleProperty;
     /// Sub-event ID
     short                     m_subEvtID;
     /// Bit-field status flag
