@@ -2,6 +2,8 @@
  * Package xmlUtil
  * Coordinator: J. Bogart
  *
+ * 25-Feb-2004  jrb v2r13   Allow GDDDocMan clients access to DTDversion,
+ *                          CVS id of input xml geometry
  *  2-Feb-2004  jrb v2r12p2 Fix up exception class for gcc 3.2
  * 27-Jan-2004  jrb v2r12p1 Use exceptions when called for
  * 22-Jan-2004  jrb v2r12p0 Bug fix in Arith.cxx for Windows
