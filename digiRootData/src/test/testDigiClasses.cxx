@@ -100,7 +100,7 @@ int checkTkrDiagnostic(const TkrDiagnosticData *tkrDiag) {
 
 int checkL1T(const L1T &level1) {
 
-    if (level1.getTriggerWord() != 13) {
+    if (level1.getTriggerWord() != 19) {
         std::cout << "Trigger Word is wrong: " << level1.getTriggerWord() 
             << std::endl;
         return -1;
@@ -111,8 +111,8 @@ int checkL1T(const L1T &level1) {
         return -1;
     }
 
-    if (level1.getAcdHigh() != false) {
-        std::cout << "Acd High is True when it should be False" << std::endl;
+    if (level1.getAcdHigh() != true) {
+        std::cout << "Acd High is false when it should be true" << std::endl;
         return -1;
     }
 
@@ -121,8 +121,8 @@ int checkL1T(const L1T &level1) {
         return -1;
     }
 
-    if (level1.getCalLow() != true) {
-        std::cout << "Cal Low is False when it should be True" << std::endl;
+    if (level1.getCalLow() != false) {
+        std::cout << "Cal Low is true when it should be false" << std::endl;
         return -1;
     }
 
@@ -508,7 +508,7 @@ int write(char* fileName, int numEvents) {
     for (ievent = 0; ievent < numEvents; ievent++) {
         
         UInt_t triRowBits[16] = {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1};
-        L1T level1(13, triRowBits);
+        L1T level1(19, triRowBits);
         EventSummaryData summary(0);
         summary.initEventFlags(1);
         ev->initialize(ievent, runNum, randNum*ievent, randNum*ievent, level1, summary, fromMc);
