@@ -347,6 +347,10 @@ void MCdisplay::endEvent()
 
                 Event::McParticle::StdHepId hepid= (*part)->particleProperty();
                 ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
+                if (ppty == 0) {
+                  log << MSG::DEBUG << "hepid = " << hepid << endreq;
+                  continue;
+                }
                 std::string name = ppty->particle(); 
                 PointList line; 
                 line.push_back((*part)->initialPosition());

@@ -5,6 +5,7 @@
 @verbatim
  * package manager:T.Burnett
 
+ 24-mar-2004: v3r1p6 HMK Check for invalid hepid, skip and output debug message
  26-jul-2003: v3r1p4 LSR Detector Display: adjust for extra level in the new LAT geometry
                          StripDisplay: recode a couple of lines to satisfy compiler
  20-jul-2003: v3r1p2 THB gcc 3.2 requirement on the exception class
