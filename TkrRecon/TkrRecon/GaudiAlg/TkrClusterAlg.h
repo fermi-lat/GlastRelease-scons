@@ -4,7 +4,6 @@
 
 #include <vector>
 #include "geometry/Point.h"
-#include "Event/Hits/SiLayers.h"
 #include "Event/Recon/TkrRecon/TkrClusterCol.h"
 #include "TkrRecon/ITkrGeometrySvc.h"
 #include "TkrRecon/ITkrBadStripsSvc.h"
