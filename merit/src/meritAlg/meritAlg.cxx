@@ -42,7 +42,7 @@
 #include <algorithm>
 #include <numeric>
 
-static std::string  default_cuts("LnA");
+static std::string  default_cuts("LntA");
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /** @class meritAlg
@@ -190,8 +190,8 @@ StatusCode meritAlg::initialize() {
         m_ctree = new  ClassificationTree(*m_tuple, log.stream(), path);
     //TODO: finish setup.
     }catch ( std::exception& e){
-        log << MSG::ERROR << "Classification tree eryror, "
-            << e.what() << typeid( e ).name( ) <<endreq;
+        log << MSG::ERROR << "Exception caught, class  "<< typeid( e ).name( ) << ", message:"
+              << e.what() <<endreq;
     }catch (...)  {
         log << MSG::ERROR << "Unexpected exception creating classification trees" << endreq;
     }
