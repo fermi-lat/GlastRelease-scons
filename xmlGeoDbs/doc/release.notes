@@ -2,6 +2,8 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 24-jun-2003: jrb - tag v1r11p2  Incorporate Leon's fixes to vertical 
+ *                                 dimensions and positions within tracker
  * 20-jun-2003: jrb - tag v1r11p1  1. Implement top frame according to new
  *                                    description with 2 stacked frames
  *                                 2. First draft of inter-tower material.
