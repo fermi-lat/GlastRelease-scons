@@ -1,6 +1,6 @@
 package Gleam
 
-version  v3
+version  v3r1
 # This is a checkout package
 # $Id$
 
@@ -25,12 +25,12 @@ use astro       v0r2
 
 # low-level graphics
 
-use gui         v3r3p1
+use gui                    v3r3p2
 use geomrep     v4r1
 
 # the geometry data base
 use idents      v2r8p4 
-use xmlGeoDbs   v1r7p3
+use xmlGeoDbs              v1r8
 use xmlUtil     v2r8p3
 use detModel    v2r13p0
 
@@ -51,14 +51,14 @@ use GlastSvc    v9r3p1
 
 # simulation
 
-use FluxSvc               v5r15
-use FluxDisplay           v2r6
+use FluxSvc               v5r15p1
+use FluxDisplay v2r6
 use G4Generator v4r4
 
 #digitization
-use CalDigi               v1r2p11
+use CalDigi     v1r2p11
 use TkrDigi     v1r7p1
-use AcdDigi               v1r6
+use AcdDigi     v1r6
 
 
 
@@ -66,7 +66,7 @@ use AcdDigi               v1r6
 use Trigger     v3r3p5
 use Recon       v2r3p6
 
-use TkrRecon              v8r5
+use TkrRecon    v8r5
 use CalRecon    v5r7p5 
 use AcdRecon    v1r4p1       
 
@@ -74,7 +74,7 @@ use AcdRecon    v1r4p1
 use RootIo      v4r20p3
 
 #diagnostic and summary of bottom line
-use merit                v5r12p2
+use merit       v5r12p2
 
 ### define a simple executable with GUI
 
