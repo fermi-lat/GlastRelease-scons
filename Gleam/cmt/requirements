@@ -76,7 +76,7 @@ use merit                 v5p1
 
 set JOBOPTIONS "${GLEAMROOT}/src/jobOptions.txt"
 
-macro jobOpts "" WIN32 "*.txt"  
+macro jobOpts "" WIN32 "*.txt *.h"  
 application Gleam $(GlastMain) $(Win32Resource) $(jobOpts) 
 
 macro Gleamlinkopts  "  $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
