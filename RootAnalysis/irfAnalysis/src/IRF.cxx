@@ -2,6 +2,7 @@
 #include <iostream>
 #include "TPaveLabel.h"
 #include "TDatime.h"
+#include "TROOT.h"
 
 int IRF::angles[] = {0, 37, 53, 66, 78}; //cos theta 1, .8., .6, .4, .2
 
@@ -32,6 +33,17 @@ IRF::IRF() :m_file(0), m_tree(0)
     if( ! m_file->IsOpen()) throw "could not open input file";
     m_tree = (TTree*)m_file->Get("1");
     if( m_tree==0) throw "did not find the TTree";
+
+    // redefine some defaults
+    gStyle->SetPadColor(10); // out with the gray
+   gStyle->SetCanvasColor(10);
+   gStyle->SetTitleColor(10);
+   gStyle->SetTitleBorderSize(0);
+   gStyle->SetPadBorderSize(0);
+   gStyle->SetPadBorderMode(0); 
+
+   // this applies it to new hist
+   gROOT->ForceStyle();
     
 }
 

@@ -118,17 +118,20 @@ void PSF::draw(std::string ps_filename)
             // now add overflow to last bin
             h->SetBinContent(nbins, h->GetBinContent(nbins)+h->GetBinContent(nbins+1));
             double quant[2];
+
             h->GetQuantiles(2,quant, probSum);
             double scale= h->Integral();
             if(scale>0) h->Scale(1/scale);
             h->SetMaximum(ymax);
             h->SetStats(false);
+            h->SetLineColor(i+1);
 
             printf("Drawing ...%s\n", h->GetTitle());
             if(i==0){
                 char title[256]; // rewrite the title for the multiple plot
                 sprintf(title, " %6d MeV", (int)(ecenter+0.5));
-                h->SetTitle( title);              
+                h->SetTitle( title);   
+                h->GetXaxis()->CenterTitle(true);
                 h->Draw(); 
             } else h->Draw("same");
             char entry[64]; sprintf(entry," %2d - %2d   %5.1f  %5.1f", angles[i], angles[i+1], quant[0],quant[1]);
@@ -164,7 +167,7 @@ void PSF::drawError(std::string ps)
         h->SetStats(false);
         h->SetTitle("Scaled Error vs energy");
         h->GetXaxis()->SetTitle("log(Egen/ 1MeV)");
-
+        h->GetXaxis()->CenterTitle(true);
         h->Draw(i==0? "" : "same");
         char entry[16]; sprintf(entry," %d - %d ", angles[i], angles[i+1] );
         leg->AddEntry( h, entry, "l");
@@ -199,6 +202,7 @@ void PSF::drawAsymmetry(std::string ps)
         h->SetStats(false);
         h->SetTitle("Asymmetry vs energy");
         h->GetXaxis()->SetTitle("log(Egen/ 1MeV)");
+        h->GetXaxis()->CenterTitle(true);
 
         h->Draw(i==0? "" : "same");
         char entry[16]; sprintf(entry," %d - %d ", angles[i], angles[i+1] );
@@ -233,6 +237,7 @@ void PSF::drawAeff(std::string ps)
         h->SetStats(false);
         h->SetTitle("Energy distribution for angular ranges");
         h->GetXaxis()->SetTitle("log(Egen/ 1MeV)");
+        h->GetXaxis()->CenterTitle(true);
         h->SetLineWidth(2);
 
         if(i==0)h->Draw(); else h->Draw("same");

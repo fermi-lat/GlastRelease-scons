@@ -43,6 +43,8 @@ void EnergyResponse::define()
             TH1F* h = new TH1F(hist_name(i,j), title, nbins, xmin, xmax);
             h->SetLineColor(i+1);
             h->GetXaxis()->SetTitle("Emeas/Egen");
+            h->GetXaxis()->CenterTitle(true);
+
             printf("\t %s ... ",title);
             m_tree->Project(h->GetName(), "EvtEnergySumOpt/McEnergy", goodEvent&&TCut(energy_cut(j))&&angle);
             double scale = h->Integral(), mean= h->GetMean(), rms=h->GetRMS();
@@ -89,7 +91,8 @@ void EnergyResponse::draw(std::string ps)
             printf("Drawing ...%s\n", h->GetTitle());
              char title[256]; // rewrite the title for the multiple plot
                sprintf(title, "%6d MeV", (int)(eCenter(j)+0.5));
-                h->SetTitle( title);              
+                h->SetTitle( title); 
+                h->GetXaxis()->CenterTitle(true);
 
             if(i==0)h->Draw(); else h->Draw("same");
             char entry[64]; sprintf(entry," %d - %d   %5.2f %5.2f", 
@@ -126,6 +129,8 @@ void EnergyResponse::drawEnergy(std::string ps)
         h->SetStats(false);
         h->SetTitle("Energy distribution for angular ranges");
         h->GetXaxis()->SetTitle("log(Egen/ 1MeV)");
+        h->GetXaxis()->CenterTitle(true);
+
         h->SetLineWidth(2);
 
         if(i==0)h->Draw(); else h->Draw("same");
