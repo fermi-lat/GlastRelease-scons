@@ -1,9 +1,10 @@
 package GlastSvc
-version v5r2
+version v6r0
 branches src cmt doc
 
 use GlastEvent
 use xmlGeoDbs
+use detModel 
 
 apply_pattern packageShr
 apply_pattern package_include
@@ -11,7 +12,6 @@ apply_pattern package_include
 #=============================================================
 private
 
-use detModel 
 use GaudiSvc 
 use GaudiAud 
 
