@@ -16,7 +16,8 @@ using namespace std;
 
 /** @class McIntegratingHit
 * @brief Stores a single McIntegratingHit.  This class mirrors the TDS
-* McIntegratingHit class.
+* Event::McIntegratingHit class.
+*
 * Each McIntegratingHit is composed of:
 * - VolumeIdentifier
 * - Status flags packed into an unsigned integer

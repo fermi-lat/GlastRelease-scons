@@ -11,6 +11,7 @@
 
 /* @class McPositionHit
 * @brief A ROOT class for storing McPositionHit information.
+*
 * This class mirrors the McPositionHit class used in the Gaudi TDS.
 * Each McPositionHit contains:
 * - VolumeIdentifier

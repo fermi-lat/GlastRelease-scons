@@ -1,6 +1,6 @@
 /** @file release.notes
  package mcRootData
- package manager: H. Kelly
+ package manager:H.Kelly
 
 v2r7      24-Sep-2002 HMK Modify McParticle StatusFlags to match those used in TDS version\n
 v2r6p1    24-Sep-2002 HMK Use //-> to speed up reading/writing and to fix \n

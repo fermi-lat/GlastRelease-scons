@@ -12,7 +12,7 @@
 * ROOT is not yet able to store 64 bit longs as a machine independent type.
 * Instead, we split the VolumeId into two 32 bit UInt_t.
 *
-*  @author Heather Kelly
+* @author Heather Kelly
 *  
 * $Header$
 */

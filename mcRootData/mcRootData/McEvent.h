@@ -16,9 +16,9 @@
 * event.  This class contains:
 * - Run id
 * - Event id
-* - Collection of McParticles
-* - Collection of McPosition hits
-* - Collection of McIntegrating hits.  
+* - Collection of McParticle
+* - Collection of McPositionHit
+* - Collection of McIntegratingHit
 * The MC data stored to ROOT files mirrors the data available within the Gaudi 
 * TDS.
 *  
