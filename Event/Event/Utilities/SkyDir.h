@@ -32,8 +32,10 @@ public:
     double b () const;
     double ra () const;
     double dec () const;
-    Hep3Vector r () const;
+    Hep3Vector dir () const;
     Hep3Vector m_dir;
+    //to return the opening angle between two objects:
+    double SkyDir::difference(const SkyDir& other)const;
 
 private:
     Rotation celToGal() const;
@@ -41,5 +43,9 @@ private:
     std::pair<double,double> setGalCoordsFromDir() const;
 
 };
+
+inline double SkyDir::difference(const SkyDir& other)const{
+    return 2.*asin(0.5*(m_dir-other.dir()).mag());
+}
 
 #endif    // LHCBEVENT_SKYDIR_H

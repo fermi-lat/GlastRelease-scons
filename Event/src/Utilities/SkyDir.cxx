@@ -118,7 +118,7 @@ double SkyDir::dec ()const{
     return setCelCoordsFromDir().second;
 }
 
-Hep3Vector SkyDir::r ()const{
+Hep3Vector SkyDir::dir ()const{
     return m_dir;
 }
 
