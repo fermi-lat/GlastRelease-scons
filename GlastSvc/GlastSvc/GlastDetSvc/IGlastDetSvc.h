@@ -29,8 +29,18 @@ static const InterfaceID IID_IGlastDetSvc(901, 1 , 0);
 class   IGlastDetSvc : virtual public IInterface {
 public:
   
-    //! detModel interface to retrive numeric constants
+    /// detModel interface to retrive numeric constants
     virtual StatusCode getNumericConstByName(std::string, double*)=0;
+
+    /** detModel interface to retrieve integer numeric constants.
+        Returns FAILURE and stores no value in val if constant doesn't
+        exist or has not been declared of type int in the xml source.
+    */
+    virtual StatusCode getNumericConstByName(std::string, int*)=0;
+
+    /// Return Volume identifer of top volume relative to world
+    virtual idents::VolumeIdentifier getIDPrefix()=0;
+
 
     //! new detModel interface, will call back. 
     virtual void accept(IGeometry& geom)=0;
@@ -40,6 +50,9 @@ public:
 
     /// retrieve the 3D transformation of a volume given a valid ID
     virtual StatusCode getTransform3DByID(idents::VolumeIdentifier,HepTransform3D*)=0;
+
+    /// Return transform of top volume relative to world
+    virtual const HepTransform3D& getTransform3DPrefix()=0;    
 
     /// retrive the type and dimensions of a volume given a valid ID
     virtual StatusCode  getShapeByID(idents::VolumeIdentifier id,
