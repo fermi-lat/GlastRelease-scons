@@ -5,7 +5,8 @@
 @verbatim
  * package manager:T.Burnett
 
- 04-jul-2003: v3  Move MC display reps (pos hits, integrating hits, tracks) from Recon and G4Generator
+ 05-jul-2003: v3r0p1 THB unix fixes
+ 04-jul-2003: v3     THB Move MC display reps (pos hits, integrating hits, tracks) from Recon and G4Generator
  08-may-2001: convert to gui structure, tag as v2r2
 @endverbatim
 */

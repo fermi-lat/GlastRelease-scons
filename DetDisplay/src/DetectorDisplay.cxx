@@ -5,7 +5,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
-#include "gaudiKernel/Property.h"
+#include "GaudiKernel/Property.h"
 
 
 #include "GuiSvc/IGuiTool.h"
