@@ -280,8 +280,8 @@ StatusCode CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const CalDigi* 
       (CalXtalId::AdcRange)it->getRange(CalXtalId::NEG); 
 
     // get adc values 
-    double adcP = it->getAdc(CalXtalId::POS);   
-    double adcM = it->getAdc(CalXtalId::NEG);   
+    int adcP = it->getAdc(CalXtalId::POS);   
+    int adcM = it->getAdc(CalXtalId::NEG);   
 
     float ene;
 
