@@ -1,5 +1,5 @@
 package reconRootData
-version v3r2p1
+version v3r2p2
 
 use GlastPolicy v4r*
 use digiRootData v3r*
@@ -21,7 +21,7 @@ macro reconRootData_shlibflags "" \
 
 #--------------------------------------------------------------
 private
-use RootPolicy 
+use RootPolicy v0r*
 
 
 #define the list of header files to be used in rootcint
