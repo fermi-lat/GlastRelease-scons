@@ -31,8 +31,9 @@ library CalibSvc *.cxx  CalibDataSvc/*.cxx      \
 
 
 macro WinInclude "" WIN32 "test/*.h test/*.txt"
-# use GlastSvc v9r*    (not used)
-# use RootIo   v9r*    (not used)
+use GlastSvc v9r*   
+
+use RootIo   v* 
 
 
 public
