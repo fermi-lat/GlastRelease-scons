@@ -15,7 +15,7 @@ macro 	gui_X_linkopts "-L${X11_DIR}/lib -lXm -lXt -lX11"
 apply_pattern package_linkopts
 
 #this macro for building a gui app, as opposed to a shareable
-macro guiapp_linkopts "-l${guiDir}/guisystem.o ${gui_X_linkopts}"\
+macro guiapp_linkopts "${guiDir}/libguisystem.a ${gui_X_linkopts}"\
       WIN32 "${guiDir}/guisystem.lib user32.lib gdi32.lib winspool.lib comdlg32.lib shell32.lib /subsystem:windows"
 
 
@@ -48,7 +48,6 @@ macro gui_system_files "MotifGUI.cxx XScene.cxx Xdraw.cxx Xostream.cxx"\
       Win32  "WinGUIostream.h WinScene.h  WinDraw.h  WinGUI.h  WinScene.h \
               WinGUI.cxx  WinGUIostream.cxx  WinMain.cxx WinScene.cxx WinDraw.cxx" 
 library guisystem -no_share ${gui_system_files}
- 
 
 #simple self-contained test program (this needs to be fixed for linux
 macro_append gui_linkopts ${guiapp_linkopts}
