@@ -2,6 +2,7 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
+ * 17-Mar-2003: jrb v0r2p2: New include path spec. for Xerces includes
  * 13-Mar-2003: jrb v0r2p1: Don't forget to declare CAL converters in 
  *                          CalibSvc_load.cxx
  *  3-Mar-2003: jrb v0r2p0: Add consistency checks when reading CAL XML data
