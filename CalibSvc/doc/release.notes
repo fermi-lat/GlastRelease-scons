@@ -2,7 +2,10 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
- * 15-Jul-2004: jrb v-r10p0: Remove large, unused root file from package
+ * 27-Jul-2004: jrb v0r11:   Root conversion service + one example root 
+ *                           converter (for calorimeter gains).
+ *                           New dependence on calibRootData package
+ * 15-Jul-2004: jrb v0r10p0: Remove large, unused root file from package
  * 14-Jul-2004: jrb v0r10:   Support new mode to use timestamp from real 
  *                           (i.e., not mc) instrument data to select 
  *                           calibrations.
