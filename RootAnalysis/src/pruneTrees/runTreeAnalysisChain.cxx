@@ -48,6 +48,7 @@ int main(int argn, char** argc) {
         while(fscanf(ifstr,"%s", name)!=EOF) {
           namestr+=name;
 	  mc->Add(namestr.c_str());
+          namestr="";
         }
     }
     if (argn > 2) {
@@ -61,6 +62,7 @@ int main(int argn, char** argc) {
         while(fscanf(ifstr,"%s", name)!=EOF) {
           namestr+=name;
 	  recon->Add(namestr.c_str());
+          namestr="";
         }
     }
     if (argn > 3) {
@@ -74,6 +76,7 @@ int main(int argn, char** argc) {
         while(fscanf(ifstr,"%s", name)!=EOF) {
           namestr+=name;
 	  digi->Add(namestr.c_str());
+          namestr="";
         }
     }
 
