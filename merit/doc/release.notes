@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
  *
+ *  v6r14p4 THB  02-dec-03 required by obsolete gcc
  *  v6r14p3 THB  26-nov-03 fix a problem in the reclassification app.
  *  v6r14p2 JCT  26-nov-03 revert the field names
  *  v6r14p1 THB  26-nov-03 fix one of the classification tree parameters
