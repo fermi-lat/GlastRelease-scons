@@ -7,6 +7,7 @@
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 
+
 //----------------------------------------------
 //
 //   CalXtalRecAlg
@@ -36,12 +37,12 @@ protected:
     
 private:
     
-    void computeEnergy(Event::CalXtalRecData* recLog, const cal::CalDigi* adcLog); 
+    void computeEnergy(Event::CalXtalRecData* recLog, const Event::CalDigi* adcLog); 
     void computePosition(Event::CalXtalRecData* recLog);
     
 private:
     
-	cal::CalDigiCol* m_CalDigiCol;
+	Event::CalDigiCol* m_CalDigiCol;
     Event::CalXtalRecCol* m_CalXtalRecCol;
 
         enum {fLATObjects, fTowerY, fTowerX, fTowerObjects, fLayer,
@@ -75,5 +76,6 @@ private:
 	    IGlastDetSvc* detSvc;
 
 };
+
 
 #endif
