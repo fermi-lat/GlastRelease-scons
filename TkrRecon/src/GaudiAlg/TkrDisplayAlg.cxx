@@ -21,7 +21,7 @@
 #include "TkrRecon/Display/TkrClustersRep.h"
 #include "TkrRecon/Display/TkrTracksRep.h"
 
-#include "../src/Display/TkrPatCandRep.h"
+#include "src/Display/TkrPatCandRep.h"
 #include "TkrRecon/Display/TkrCandidatesRep.h"
 #include "TkrRecon/Display/TkrBestCandRep.h"
 #include "TkrRecon/Display/TkrCandidate3DRep.h"
