@@ -35,7 +35,7 @@ ApplicationMgr.EvtMax = 20;
 RootTupleSvc.filename="test.root";
 RootTupleSvc.treename="Tree_1"; // the default to use with a blank name
 RootTupleSvc.title="test";
-RootTupleSvc.defautStoreFlag=false; // can set true.
+RootTupleSvc.defaultStoreFlag=false; // can set true.
 
 //==============================================================
 //
