@@ -25,7 +25,9 @@
         <p><font size="2"><strong><a href="#Running the test program">Running
         the test program</a></strong></font></p>
         <p><font size="2"><strong><a href="#Using the service">Using the service</a></strong></font><font size="3"><br>
-        </font><font size="2"><a href="#jobOptions file">JobOptions<br>
+        </font><font size="2"><a href="#jobOptions file">JobOptions
+        </a></font>
+        <p><font size="2"><a href="#Reading the Ntuple"><b>Reading the </b><b>ntuple</b></a><a href="#jobOptions file"><br>
         </a></font><font size="3"><br>
         </font></td>
       <td width="15"></td>
@@ -149,8 +151,46 @@
           item we wish to update, such as &quot;ACD_TotEnergy&quot;, this will
           be the name as it will appear in the Root ntuple.&nbsp; The third
           parameter is a float, which contains the value to be stored in this
-          item for this event.</li>
+          item for this event.
+          <h3 align="center"><a name="Reading the Ntuple">Reading the ntuple</a></h3>
+          <p align="left">Reading the ntuple is actually fairly easy.&nbsp; The
+          ntuple only contains simple branches which contain a simple data
+          type..currently just doubles.&nbsp; So to read the ntuple in Root,
+          here is an example script:<p align="left"><font size="2">{<br>
+          gROOT-&gt;Reset();    // roll back CINT context to last Save<br>
+          <br>
+     // open the file<br>
+     TFile *myTup = new TFile(&quot;I:/NTUPLES/testAlg.root&quot;);<br>
+     TTree *myTree = (TTree*) myTup-&gt;Get(&quot;TESTALG/t1&quot;);<br>
+          <br>
+     // open up a TBrowser<br>
+     TBrowser tb;<br>
+          <br>
+     // Draw a histogram of the MC X0,&nbsp;<br>
+     // and apply cuts based on Y0 and Z0<br>
+     myTree->Draw("MC_X0", "MC_Y0&lt;10 &amp;&amp; MC_Z0>40");<br>
+          <br>
+          }</font><p align="left">To use this script for your particular root
+          file - you will have to modify 2 lines:<font size="2"><br>
+     TFile *myTup = new TFile(&quot;I:/NTUPLES/testAlg.root&quot;);<br>
+     TTree *myTree = (TTree*) myTup-&gt;Get(&quot;TESTALG/t1&quot;);</font><p align="left">First
+          you need to open the correct root file in the TFile *myTup = new TFile(
+          ) call.<br>
+          Secondly, you need to access the correct name of the tree.&nbsp; Our
+          ntuple will be located within a directory named according to the
+          logical name we used in the job options file, this case &quot;TESTALG&quot;.&nbsp;
+          Then the actual name of the tree will be &quot;t1&quot;.&nbsp; If you
+          are in doubt about the name of the directory containing the TTree,
+          then open the TFile and the do &quot;myTup-&gt;ls( )&quot;, that
+          should print the contents of the file.<font size="2"><br>
+          </font><p align="left">&nbsp;</li>
       </ol>
+    </td>
+  </tr>
+    <tr>
+      <td valign="top" width="20%"></td>
+      <td width="15"></td>
+      <td valign="top" width="80%">
     </td>
   </tr>
   </table>
