@@ -415,12 +415,8 @@ StatusCode digiRootReaderAlg::readAcdDigi() {
         float energyTds = acdDigiRoot->getEnergy();
         
         AcdId idRoot = acdDigiRoot->getId();
-        //idents::AcdId idTds(idRoot.getLayer(), idRoot.getFace(), 
-        //    idRoot.getRow(), idRoot.getColumn());
-        idents::AcdId idTds(idRoot.getId());
+        idents::AcdId idTds(idRoot.getId(2));
 
-        //const VolumeIdentifier volIdRoot = acdDigiRoot->getVolId();
-        //convertVolumeId(volIdRoot, volIdTds);
         // Rather than using the volId stored in the ROOT file - recompute using the 
         // routine in the idents package.
         idents::VolumeIdentifier volIdTds = idTds.volId();
