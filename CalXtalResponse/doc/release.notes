@@ -1,3 +1,4 @@
+v0r0p3 changed int adc values to floats earlier in calculation
 v0r0p2 better checking for ADC values which are too low & cause ugly results.
 v0r0p1 got it to build w/out errors on linux
 v0r0 initial release of CalXtalResponse - uses v3 calibGenCAL calibration to do single crystal response calculation & simulation for both CalRecon & CalDigi
