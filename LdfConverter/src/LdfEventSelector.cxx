@@ -276,12 +276,13 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
   const {
     MsgStream log(msgSvc(), name());
     
+    LdfEvtIterator* irfIt = dynamic_cast<LdfEvtIterator*>(&it);
     unsigned marker;
     try {
     if  ((m_criteriaType == LDFFILE) ||
          (m_criteriaType == LDFFITS) )
     {
-        LdfEvtIterator* irfIt = dynamic_cast<LdfEvtIterator*>(&it);
+   //     LdfEvtIterator* irfIt = dynamic_cast<LdfEvtIterator*>(&it);
         
         log << MSG::DEBUG << "Processing Event " <<  irfIt->m_evtCount << endreq;
         
@@ -371,11 +372,13 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
    } catch(LdfException &e) {
 
       log << MSG::ERROR << "LdfException caught " << e.what() << endreq;
-      throw;
+      *(irfIt) = m_evtEnd;
+      return *irfIt;
    } catch(...) {
 
       log << MSG::ERROR << "Exception caught " << endreq;
-      throw;
+      *(irfIt) = m_evtEnd;
+      return *irfIt;
    }
 }
 
