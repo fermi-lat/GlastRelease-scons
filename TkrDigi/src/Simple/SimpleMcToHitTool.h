@@ -51,7 +51,7 @@ class SimpleMcToHitTool : public AlgTool, virtual public IMcToHitTool {
     /// Pointer to the Glast detector service
     IGlastDetSvc*       m_gdSvc;
     /// Pointer to the tracker geometry service
-    ITkrGeometrySvc*    m_tgSvc;
+    ITkrGeometrySvc*    m_tkrGeom;
     /// Pointer to the tracker alignment service
     ITkrAlignmentSvc*   m_taSvc;
 

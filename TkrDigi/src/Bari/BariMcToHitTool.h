@@ -43,7 +43,7 @@ private:
     /// Extracted current information
     InitCurrent       m_openCurr;
     /// pointer to geometry svc
-    ITkrGeometrySvc* m_geoSvc;
+    ITkrGeometrySvc* m_tkrGeom;
 
 };
 

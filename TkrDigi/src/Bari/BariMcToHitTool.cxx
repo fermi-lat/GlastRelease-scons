@@ -96,7 +96,7 @@ StatusCode BariMcToHitTool::initialize()
         return sc;
     }
 
-    sc = service("TkrGeometrySvc", m_geoSvc, true);
+    sc = service("TkrGeometrySvc", m_tkrGeom, true);
     if( sc.isFailure() ) {
         log << MSG::ERROR << "Couldn't set up TkrGeometrySvc!" << endreq;
         //        log << MSG::ERROR << "could not find TkrGeometrySvc !" << endreq;
@@ -153,7 +153,7 @@ StatusCode BariMcToHitTool::execute()
             + SiStripList::ssd_gap();
         static const double waferOffset  = 0.5*(SiStripList::n_si_dies() - 1);
 
-        ITkrAlignmentSvc* alsv = m_geoSvc->getTkrAlignmentSvc();
+        ITkrAlignmentSvc* alsv = m_tkrGeom->getTkrAlignmentSvc();
 
         // start hits loop 
         Event::McPositionHitCol::iterator it;        

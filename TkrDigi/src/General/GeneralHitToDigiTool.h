@@ -53,7 +53,7 @@ private:
     /// Pointer to the Glast detector service
     IGlastDetSvc*       m_gdSvc;
     /// Pointer to the tracker geometry service
-    ITkrGeometrySvc*    m_tgSvc;
+    ITkrGeometrySvc*    m_tkrGeom;
     /// Pointer to the tracker failure mode service
     ITkrFailureModeSvc* m_tfmSvc;
     /// Pointer to the tracker bad strips service
