@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v0r5p0  23-Aug-2004 hmk Store liveTime
 v0r5    22-Aug-2004 hmk Fix up handling of AcdDigi Id
                         Store seconds since 1/1/2001 (mission start) in Event::EventHeader
 v0r4p0  18-Aug-2004 hmk final cleanup for GEM
