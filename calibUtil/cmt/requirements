@@ -9,7 +9,7 @@ use MYSQLEXT v0r*
 # use ROOT   -- someday
 
 set MYSQL_HOST centaurusa.slac.stanford.edu
-set MYSQL_METATABLE metadata_v1
+set MYSQL_METATABLE metadata_v2
 
 apply_pattern package_include
 apply_pattern package_headers
