@@ -80,7 +80,13 @@ private:
     void createSiHits(const Event::McPositionHitVector& hits);
     void clear();
     IGlastDetSvc * m_gsv;
-    
+
+	/// energy deposit above which hit is recorded (MeV)
+	double m_threshold;
+	/// amount to fluctuate hit strips (MeV)
+	double m_noiseSigma;
+	/// frequency of noise hits
+	double m_noiseOccupancy;    
 };
 
 static const AlgFactory<TkrSimpleDigiAlg>  Factory;
@@ -89,7 +95,9 @@ const IAlgFactory& TkrSimpleDigiAlgFactory = Factory;
 TkrSimpleDigiAlg::TkrSimpleDigiAlg(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator)
 {
-    //    declareProperty("property",  m_property=0);    
+    declareProperty("threshold",      m_threshold     = 0.030 );  
+	declareProperty("noiseSigma",     m_noiseSigma    = 0.010 );
+	declareProperty("noiseOccupancy", m_noiseOccupancy= 1.e-4 );
 }
 
 StatusCode TkrSimpleDigiAlg::initialize(){
@@ -133,11 +141,6 @@ StatusCode TkrSimpleDigiAlg::execute()
     // Restrictions and Caveats:  None
     
     using namespace Event;
-
-    // wired in for now
-    static double threshold = 0.030,  //MeV
-                  noise_sigma = 0.010, // MeV
-                  noise_occupancy = 1e-4;
     
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
@@ -184,7 +187,7 @@ StatusCode TkrSimpleDigiAlg::execute()
         SiStripList& sidet = *si->second;
         idents::VolumeIdentifier id = si->first;  
 
-        sidet.addNoise(noise_sigma,noise_occupancy, threshold); 
+        sidet.addNoise(m_noiseSigma, m_noiseOccupancy, m_threshold); 
         
         // unpack the id: the order is correct!
 #if 0 //  old way
