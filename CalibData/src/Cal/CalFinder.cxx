@@ -16,11 +16,12 @@
 
 namespace CalibData {
   CalFinder::CalFinder(unsigned nTowerRow, unsigned nTowerCol, unsigned nLayer,
-                       unsigned nXtal, unsigned nFace, unsigned nRange) : 
+                       unsigned nXtal, unsigned nFace, unsigned nRange,
+                       unsigned nDacCol) : 
     m_towerRow(nTowerRow), m_towerCol(nTowerCol), 
     m_tower(nTowerRow*nTowerCol), m_layer(nLayer),
-    m_xtal(nXtal), m_face(nFace),
-    m_range(nRange) {
+    m_xtal(nXtal), m_face(nFace), m_range(nRange),
+    m_dacCol(nDacCol) {
     // Compute constants needed to find our way quickly in the array.
     m_c0 = m_face;
     m_c1 = m_c0 * m_range;
@@ -45,7 +46,8 @@ namespace CalibData {
        (m_layer    == other.m_layer)    &&
        (m_xtal     == other.m_xtal)     &&
        (m_face     == other.m_face)     &&
-       (m_range    == other.m_range)      );
+       (m_range    == other.m_range)    &&
+       (m_dacCol   == other.m_dacCol) );
   }
 }
 
