@@ -7,7 +7,7 @@
 // #include "Event/trsDataVI.h"
 #include "GaudiKernel/DataObject.h"
 
-#include "GlastEvent/Recon/ICsiClusters.h"
+#include "GlastEvent/Recon/ICsIClusters.h"
 
 #include "CalRecon/CalDisplay.h"
 
