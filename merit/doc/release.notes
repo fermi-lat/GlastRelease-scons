@@ -2,6 +2,8 @@
 /*   Package merit
  *
  *
+
+ *  v5r12p2 THB 31-oct-02 fix src_id calculation
  *  v5r12p1THB 27-oct-02 gcc 3.x mods
  *  v5r12  14-oct-02 skirt now ok; check for NAN in PSFAnalysis
  *  v5r11  03-oct-02 change in Acdrecon interface

@@ -325,7 +325,6 @@ void meritAlg::processTDS(const Event::EventHeader& header,
     
     m_time = header.time();
     m_event = header.event();
-    m_mc_src_id = -1; // need MC header for this?
  
     m_tracks = tracks.size();
     m_trig = header.trigger();
