@@ -31,7 +31,7 @@ fi
 AC_OUTPUT(Makefile geomrep/Makefile src/Makefile test/Makefile)
 
 
-AC_MSG_RESULT([]
+AC_MSG_RESULT([
 	geomrep package now configured.
 ])
 

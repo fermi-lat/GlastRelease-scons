@@ -26,8 +26,8 @@ if test "$MERIT" = no; then
 ])
 fi
 
-dnl Look for libanalysis
-glast_HAVE_ANALYSIS
+dnl Look for required libraries
+glast_CHECK_LIB(LIB_ANALYSIS, libanalysis.la, analysis)
 
 AC_OUTPUT(Makefile src/Makefile)
 
