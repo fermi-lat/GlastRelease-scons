@@ -53,8 +53,12 @@
                 McPositionHit *posHit = new McPositionHit();
                 TVector3 entry(1., 1., 1.);
                 TVector3 exit(0., 0.5, 0.1);
+                TVector3 gEntry(3., 3., 3.);
+                TVector3 gExit(0., 1.5, 0.2);
                 id.initialize(0, 1, 1);
-                posHit->initialize(ipart, rand, id, entry, exit, 0, rand*0.1, rand*0.4, 0);
+                posHit->initialize(ipart, 0, rand, id, 
+                    entry, exit, gEntry, gExit,
+                    0, 0, rand*0.1, rand*0.4, 0);
                 ev->addMcPositionHit(posHit);
             } else {
                 McIntegratingHit *intHit = new McIntegratingHit();
@@ -62,6 +66,7 @@
                 intHit->initialize(id);
                 TVector3 pos = mcPart->getFinalPosition();
                 intHit->addEnergyItem(1.5, mcPart, pos);
+                intHit->addEnergyItem(1.5, McIntegratingHit::PRIMARY, pos);
                 ev->addMcIntegratingHit(intHit);
             }
         }

@@ -100,6 +100,11 @@ int checkMcParticle(McParticle* mcPart, Int_t ipart, UInt_t ievent) {
     } else {
         std::cout << "Cannot check TRefs using ROOT 3.02.07" << std::endl;
     }
+
+    if (mcPart->getProcess() != "") {
+        std::cout << "Process String is wrong: " << mcPart->getProcess() << std::endl;
+        return -1;
+    }
     
     return 0;
 }
@@ -112,6 +117,11 @@ int checkMcPositionHit(const McPositionHit* mcPosHit, Int_t ipart, UInt_t ievent
     
     if (mcPosHit->getMcParticleId() != 7) {
         std::cout << "MC Particle Id is wrong: " << mcPosHit->getMcParticleId() << std::endl;
+        return -1;
+    }
+
+    if (mcPosHit->getOriginMcParticleId() != -13) {
+        std::cout << "MC Origin Id is wrong: " << mcPosHit->getOriginMcParticleId() << std::endl;
         return -1;
     }
 
@@ -136,6 +146,22 @@ int checkMcPositionHit(const McPositionHit* mcPosHit, Int_t ipart, UInt_t ievent
          !floatInRange(exit.Z(), fr) ) {
         std::cout << "McPosHit exit is (" << exit.X() << "," << exit.Y() 
             << "," << exit.Z() << std::endl;
+        return -1;
+    }
+
+    TVector3 gEntry = mcPosHit->getGlobalEntryPosition();
+    if ( !floatInRange(gEntry.X(), 3.) || !floatInRange(gEntry.Y(), 3.) || 
+         !floatInRange(gEntry.Z(), 3.) ) {
+        std::cout << "McPosHit Global Entry is (" << gEntry.X() << "," << gEntry.Y() 
+            << "," << gEntry.Z() << std::endl;
+        return -1;
+    }
+
+    TVector3 gExit = mcPosHit->getGlobalExitPosition();
+    if ( !floatInRange(gExit.X(), fr*2.) || !floatInRange(gExit.Y(), fr*2.) || 
+         !floatInRange(gExit.Z(), fr*2.) ) {
+        std::cout << "McPosHit Global exit is (" << gExit.X() << "," << gExit.Y() 
+            << "," << gExit.Z() << std::endl;
         return -1;
     }
     
@@ -171,15 +197,15 @@ int checkMcIntegratingHit(McIntegratingHit* mcIntHit, UInt_t ipart,
         return -1;
     }
 
-    mcIntHit->mapReset();
+    mcIntHit->itemizedEnergyReset();
     const McParticle *myPart;
     double energy;
-    if (mcIntHit->mapSize() != 1) {
-        std::cout << "McIntHit map size: " << mcIntHit->mapSize() << std::endl;
+    if (mcIntHit->itemizedEnergySize() != 1) {
+        std::cout << "McIntHit map size: " << mcIntHit->itemizedEnergySize() << std::endl;
         return -1;
     }
     int count = 0;
-    while ( (myPart = mcIntHit->mapNext(energy)) ) {
+    while ( (myPart = mcIntHit->itemizedEnergyNext(energy)) ) {
         ++count;
         if (!floatInRange(energy, 1.5)) {
             std::cout << "McInt map energy is incorrect: " << energy << std::endl;
@@ -187,6 +213,24 @@ int checkMcIntegratingHit(McIntegratingHit* mcIntHit, UInt_t ipart,
         }
     }
     
+    energy = mcIntHit->getMcParticleEnergy(McIntegratingHit::PRIMARY);
+    if (!floatInRange(energy, 1.5)) {
+        std::cout << "Id energy map is incorrect: " << energy << std::endl;
+        return -1;
+    }
+
+    energy = mcIntHit->getMcParticleEnergy(McIntegratingHit::ELECTRON);
+    if ( !floatInRange(energy, 2.4) ) {
+        std::cout << "Id energy map for e- is wrong: " << energy << std::endl;
+        return -1;
+    }
+
+    energy = mcIntHit->getMcParticleEnergy(McIntegratingHit::POSITRON);
+    if ( !floatInRange(energy, 0.) ) {
+        std::cout << "Id energy map for e+ is wrong: " << energy << std::endl;
+        return -1;
+    }
+
     if (count == 0) {
         std::cout << "No Error cannot read map which stores TRefs using" 
             << " compiled code and ROOT 3.02.07" << std::endl;
@@ -271,6 +315,8 @@ int write(char* fileName, UInt_t numEvents) {
             McPositionHit *posHit = new McPositionHit();
             TVector3 entry(1., 1., 1.);
             TVector3 exit(fr, fr, fr);
+            TVector3 gEntry(3., 3., 3.);
+            TVector3 gExit(fr*2., fr*2., fr*2.);
             id.Clear();
             id.append(1);
             Double_t depE = randNum;
@@ -279,8 +325,10 @@ int write(char* fileName, UInt_t numEvents) {
             UInt_t flags = 0;
             McParticle *originMcPart = 0;
             Int_t particleId = 7;
-            posHit->initialize(particleId, depE, id, entry, exit, 
-                originMcPart, partE, tof, flags);
+            Int_t originId = -13;
+            posHit->initialize(particleId, originId, depE, id, 
+                entry, exit, gEntry, gExit,
+                mcPart, originMcPart, partE, tof, flags);
             ev->addMcPositionHit(posHit);
             
             McIntegratingHit *intHit = new McIntegratingHit();
@@ -288,7 +336,10 @@ int write(char* fileName, UInt_t numEvents) {
             id.append(0);
             intHit->initialize(id);
             TVector3 pos = mcPart->getFinalPosition();
+            TVector3 pos2(1.3, 0.0, 12.0);
             intHit->addEnergyItem(1.5, mcPart, pos);
+            intHit->addEnergyItem(1.5, McIntegratingHit::PRIMARY, pos);
+            intHit->addEnergyItem(2.4, McIntegratingHit::ELECTRON, pos2);
             ev->addMcIntegratingHit(intHit);
         }
         t->Fill();
