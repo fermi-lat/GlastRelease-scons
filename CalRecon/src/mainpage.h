@@ -60,6 +60,19 @@
  *
  *   CalDisplay algorithm provides the display of reconstructed data.
  *
+ * @section Tools Tools
+ *
+ * The original clustering and energy corrections (profile and last-layer
+ * correlation methods) have been recast as Gaudi tools.
+ *
+ * The clustering is now based on the ICluster and Cluster base classes, 
+ * while the leakage corrections derive from IEnergyCorr and EnergyCorr.
+ * The single cluster tool implemented is SingleClusterTool. The last
+ * layer leakage tool is LastLayerCorrTool, and the profile tool is
+ * ProfileTool.
+ *
+ * CalClustersAlg calls all 3 tools so far.
+ *
  * <hr>
  *
  * @section jobOptions jobOptions
@@ -67,6 +80,13 @@
  *        this parameter is used to distinguish multiple calls to 
  *        CalClustersAlg (for example, before and after TkrRecon).
  *        The default value is 0 .
+ *
+ * @param CalClustersAlg.clusterToolName
+ *        name of tool performing clustering. Default is SingleClusterTool
+ * @param CalClustersAlg.lastLayerToolName
+ *        name of tool performing last layer energy correction
+ * @param CalClustersAlg.profileToolName
+ *        name of tool performing profile fitting energy correction
  *
  * <hr>
  * @section notes release notes
