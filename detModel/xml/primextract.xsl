@@ -9,7 +9,7 @@
       </head>
       <body>
 	<xsl:apply-templates select="version" />
-        <xsl:apply-templates select="category" />
+        <xsl:apply-templates select="primCategory" />
       </body>
     </html>
   </xsl:template>
@@ -21,10 +21,8 @@
 <xsl:value-of select="@major" />.<xsl:value-of select="@minor" /></h2>
 </xsl:template>
 
-<xsl:template match="category">
-   <!-- Only process if parent element is of type "primary" -->
-   <xsl:if test = "local-name(..) = 'primary' ">
-     <h2>Category <font color="#f08000"><xsl:value-of select="@name" />
+<xsl:template match="primCategory">
+<h2>Category <font color="#f08000"><xsl:value-of select="@name" />
 </font> </h2>
      <table border="1" cellpadding="3">
      <tr align="left" bgcolor="#c0ffc0">
@@ -32,7 +30,6 @@
      </tr>
       <xsl:apply-templates select="prim" />
      </table>
-   </xsl:if>
 
 </xsl:template>
 
