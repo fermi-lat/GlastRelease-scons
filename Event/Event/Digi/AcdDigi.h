@@ -4,7 +4,7 @@
 
 // Include files
 #include <iostream>
-#include "idents/ScintillatorId.h"
+#include "idents/AcdId.h"
 #include "Gaudi/Kernel/Kernel.h"
 #include "Gaudi/Kernel/StreamBuffer.h"
 #include "Gaudi/Kernel/ContainedObject.h"
@@ -21,7 +21,7 @@
 Initial Implementation by Richard Dubois
 Additions by Heather Kelly
 
-Note the usage of ScintillatorId, this will be replaced by
+Note the usage of AcdId, this will be replaced by
 the new AcdId class under development.
 
 There are no set methods in this class, users are expected to fill
@@ -50,7 +50,7 @@ class AcdDigi : virtual public ContainedObject  {
 public:
     AcdDigi() {};
 
-    AcdDigi(idents::ScintillatorId id, int pulseHeight, bool veto, bool lowThresh, 
+    AcdDigi(idents::AcdId id, int pulseHeight, bool veto, bool lowThresh, 
         bool highThresh)       
         : m_ID(id),
         m_pulseHeight(pulseHeight),
@@ -73,7 +73,7 @@ public:
     static const CLID& classID()       { return CLID_AcdDigi; }
 
     /// Retrieve digi identifier
-    inline const idents::ScintillatorId ID() const { return m_ID; };
+    inline const idents::AcdId ID() const { return m_ID; };
 
     /// Retrieve pulse height
     inline int PulseHeight() const { return m_pulseHeight; };
@@ -114,7 +114,7 @@ private:
 
 
     /// Acd ID
-    idents::ScintillatorId       m_ID;
+    idents::AcdId       m_ID;
     /// pulse height
     unsigned short       m_pulseHeight;
     /// nominal Acd veto signal
@@ -155,7 +155,7 @@ inline StreamBuffer& AcdDigi::serialize( StreamBuffer& s )
   s >> id
     >> m_packedPHA;
 
-   idents::ScintillatorId persId(id);
+   idents::AcdId persId(id);
    m_ID = persId;
 
   // unpack the bits from m_packedPHA
