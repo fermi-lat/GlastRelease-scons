@@ -47,9 +47,6 @@ namespace ldfReader {
         m_calDigiCol.clear();
     }
 
-    void TowerData::print() const {
-        m_tem.print();
-    }
 
 } // end namespace
 

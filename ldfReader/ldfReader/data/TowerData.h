@@ -26,7 +26,7 @@ namespace ldfReader {
 
         void clear();
 
-        void print() const;
+        void print() const { m_tem.print(); };
 
         unsigned short getTowerId() const { return m_towerId; };
 
