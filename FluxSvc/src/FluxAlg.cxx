@@ -76,7 +76,7 @@ private:
     
     UnsignedIntegerProperty m_run;      // run number
     unsigned int m_sequence;  // sequence number
-    
+    StringProperty m_pointing_history_input_file;
     
     IDataProviderSvc* m_eds;
     
@@ -110,6 +110,7 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("pointing_mode", m_pointing_mode=0);
     declareProperty("rocking_angle", m_rocking_angle=0); // in degrees
     declareProperty("rocking_angle_z", m_rocking_angle_z=0); // in degrees
+	declareProperty("pointing_history_input_file",  m_pointing_history_input_file="");
     
 }
 //------------------------------------------------------------------------
@@ -129,6 +130,12 @@ StatusCode FluxAlg::initialize(){
         log << MSG::ERROR << "Couldn't find the FluxSvc!" << endreq;
         return StatusCode::FAILURE;
     }
+
+		//set the input file to be used as the pointing database
+	if(! m_pointing_history_input_file.value().empty() ){
+		m_fluxSvc->setPointingHistoryFile(m_pointing_history_input_file.value().c_str());
+    }
+
     //this line sets the explicit rocking angles to be used IF the 
     //rocking type is "explicit." Note that it uses the m_rocking_angle also.
     m_fluxSvc->setExplicitRockingAngles(m_rocking_angle*M_PI/180,m_rocking_angle_z*M_PI/180);
