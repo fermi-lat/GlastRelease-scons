@@ -319,7 +319,7 @@ void GlastRandomSvc::handle(const Incident &inc)
         int dummy = 0; // for 2nd argument to setSeed
         EngineMap::const_iterator dllEngine;
         for (dllEngine = m_engineMap.begin(); dllEngine != m_engineMap.end(); ++dllEngine ) {
-            long theSeed = multiplier * 100000 * ((runNo+1) % 20000) + ((2*seqNo+1) % 100000);
+            long theSeed = multiplier * 100000 * ((runNo+1) % 20000) + 2*seqNo+1;
 
             log << MSG::DEBUG;
             if(log.isActive() ){
