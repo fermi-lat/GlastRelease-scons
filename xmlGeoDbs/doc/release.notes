@@ -2,6 +2,8 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ *  5-may-2004: jrb v1r16    New directory for lat assembly configurations;
+ *                           2 tower configuration. 
  * 20-apr-2004: jrb v1r15p5  Use v6r* of GlastPolicy
  * 15-mar-2004: jrb v1r15p4  Define skeleton tower volume and change formation
  *          of allTowers from stack to composition with individually-placed
