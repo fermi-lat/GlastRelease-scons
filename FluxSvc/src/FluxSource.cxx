@@ -938,17 +938,22 @@ void FluxSource::getGalacticDir(double l,double b){
     
     //here is the new mechanism:
     //double theta=sqrt(pow(b,2)*pow(l,2));
-    double theta=sqrt(pow(b,2)+pow(l,2));
+    double theta=sqrt(pow(b,2)+pow(l,2))*M_2PI/360.;
 
+    //std::cout << "theta is" << theta << std::endl;
     //if (theta==0.){theta+=0.000000000001;}  //to fix divide-by-zero errors
     //double phi=acos(l/theta);
 
     if (l==0.){l+=0.000000000001;}  //to fix divide-by-zero errors
     double phi = atan(b/l);
 
-    //here we construct the cartesian galactic matrix
-    Vector gamgal(sin(theta)*cos(phi) , sin(theta)*sin(phi) , cos(theta));
-    
+    //here we construct the cartesian galactic vector
+    //Vector gamgal(sin(theta)*cos(phi) , sin(theta)*sin(phi) , cos(theta));
+
+    //THIS IS EXPERIMENTAL - SEE ABOVE LINE
+    Vector gamgal(sin(l*M_2PI/360.) , cos(l*M_2PI/360.)*sin(b*M_2PI/360.) , cos(l*M_2PI/360.)*cos(b*M_2PI/360.));
+  
+
     //get the transformation matrix..
     Rotation galtoglast=GPS::instance()->orbit()->CELtransform(GPS::instance()->time() + m_extime);
     

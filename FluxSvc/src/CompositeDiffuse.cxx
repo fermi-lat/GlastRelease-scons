@@ -10,19 +10,6 @@ double flux = aSource->flux(EventSource::time());
 //EventSource::setFlux( flux );
 m_unclaimedFlux-=flux;
 }
-/*
-  void CompositeDiffuse::rmvSource (EventSource* aSource)
-  {
-  std::vector<EventSource*>::iterator   it = m_sourceList.begin();
-  for (;it != m_sourceList.end(); ++it) {
-  if ((*it) == aSource)   break;
-  }
-  if (it != m_sourceList.end()) {
-  m_sourceList.erase(it);
-  EventSource::setFlux( flux(EventSource::time()) );
-  }
-  }
-*/
 
 FluxSource* CompositeDiffuse::event (double time)
 {

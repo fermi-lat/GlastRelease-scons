@@ -229,7 +229,7 @@
         </spectrum>
     </source>
 
-    <source name="truediffusebackground" flux="100.">
+    <source name="truediffusebackground" flux="10.">
         <spectrum>
             <particle name="gamma" >
                 <power_law emin="0.010" emax="0.1" gamma="1.0"/>
@@ -239,7 +239,7 @@
     </source>
 
 	<!-- The constructed diffuse source-->
-    <source name="totaldiffuse" flux = "1000.">
+    <source name="totaldiffuse" flux = "100.">
         <nestedSource sourceRef="truediffusebackground"/>
     </source>
 

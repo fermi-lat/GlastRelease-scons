@@ -24,6 +24,8 @@
 #include <vector>
 #include "GaudiKernel/ParticleProperty.h"
 
+#include "CLHEP/Random/RandFlat.h"
+
 
 //#include "FluxAlg.h"
 /*! \class FluxTestAlg
@@ -194,10 +196,22 @@ StatusCode FluxTestAlg::execute() {
     double l,b;
     l = atan(pointingin.x()/pointingin.z());
     b = atan(pointingin.y()/pointingin.z());
+    //std::cout << "pointingin z is " << pointingin.z() <<std::endl;
     
+    l = asin(pointingin.x());
+
     l *= 360./M_2PI;
     b *= 360./M_2PI;
-    
+
+     //a serious kluge - this part needs further examination
+    if((pointingin.z())<0){
+        if(l>=0){
+            l=180.-l;
+        }else if(l<=0){
+            l=-180.-l;
+        }
+    }
+
     l+= 180;
     b+= 90;
     
@@ -247,6 +261,34 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
                 if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
                     //set up the point, and stick it into the vector
                     exposureSet point;
+//                    float correctedl = fmod(i, 360);   // Fold into the range [0, 360)
+//                    float correctedb = fmod(j, 180);   // Fold into the range [0, 360)
+//                    if(correctedl < 0)correctedl+=360;
+//                    if(correctedb < 0)correctedb+=180;
+                      float correctedl = i;   // Fold into the range [0, 360)
+                      float correctedb = j;   // Fold into the range [0, 360)
+                   
+                      if(correctedl < 0)correctedl+=360;
+                      if(correctedb < /*-90*/0)correctedb+=180;
+                      if(correctedl > 360)correctedl-=360;
+                      if(correctedb > /*90*/180)correctedb-=180;
+
+
+                    point.x = correctedl; //yes, this is doing an implicit cast.
+                    point.y = correctedb;
+                    point.amount = deltat;
+                    returned.push_back(point);
+                }
+            }
+        }
+    }
+    else if(m_exposureMode == 2){
+        for(int i= 0 ; i<=360 ; i++){
+            for(int j= 0 ; j<=180 ; j++){
+                
+                if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
+                    //set up the point, and stick it into the vector
+                    exposureSet point;
                     float correctedl = fmod(i, 360);   // Fold into the range [0, 360)
                     float correctedb = fmod(j, 180);   // Fold into the range [0, 360)
                     if(correctedl < 0)correctedl+=360;
@@ -259,7 +301,8 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
                 }
             }
         }
-    }else{
+    }
+    else{
         log << MSG::ERROR << "Invalid Exposure Mode " << endreq;
     }
     return returned;
@@ -350,7 +393,7 @@ void FluxTestAlg::rootDisplay(){
         << '"' << "CONT" << '"' 
         << ");\n"
         
-        <<");\n"
+        //<<");\n"
         
         "}\n";
     
