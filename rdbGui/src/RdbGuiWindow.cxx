@@ -42,6 +42,8 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   setTarget(this);
   setSelector(ID_TITLE);
 
+  m_primaryKey = "";
+
   // Menubar
   uiMenuBar = new FXMenuBar(this, LAYOUT_SIDE_TOP|LAYOUT_FILL_X);
 

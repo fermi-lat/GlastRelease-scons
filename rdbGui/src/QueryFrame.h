@@ -14,7 +14,7 @@
 
 class ColWidget;
 class ColWidgetFactory;
-
+class RdbGUIWindow;
 
 class QueryFrame: public FXVerticalFrame
 {
@@ -30,7 +30,7 @@ class QueryFrame: public FXVerticalFrame
     ID_QUERY
   }; 
   
-  QueryFrame(FXComposite *, FXObject *target = NULL);
+  QueryFrame(FXComposite *, RdbGUIWindow *target = NULL);
   
   long onCmdMore(FXObject*,FXSelector,void*);
   long onCmdFewer(FXObject*,FXSelector,void*);
@@ -49,7 +49,7 @@ class QueryFrame: public FXVerticalFrame
   QueryFrame(const QueryFrame&);
   
  private:
-  FXObject *m_target;                    // The target of some messages sent by this widget
+  RdbGUIWindow *m_target;                    // The target of some messages sent by this widget
   FXMatrix *m_searchFrame;               // Martix of FXComboBox containing search conditions
   std::vector<FXString> m_operators;     // vector of comparison operators
   ColWidgetFactory* m_factory;  

@@ -2,6 +2,7 @@
 #include "QueryFrame.h"
 #include "FXCheckList.h"
 #include "ColWidgetFactory.h"
+#include "RdbGUIWindow.h"
 
 #include "rdbModel/Tables/Assertion.h"
 
@@ -22,7 +23,7 @@ FXIMPLEMENT(QueryFrame,FXVerticalFrame,QueryFrameMap,ARRAYNUMBER(QueryFrameMap))
 
 
 
-QueryFrame::QueryFrame(FXComposite *owner, FXObject *target):
+QueryFrame::QueryFrame(FXComposite *owner, RdbGUIWindow *target):
   FXVerticalFrame(owner, LAYOUT_FILL_X|LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0),
   m_target(target)
 {
@@ -206,7 +207,12 @@ long QueryFrame::onQuery(FXObject*,FXSelector,void*)
       
       FXComboBox *firstColSel = (FXComboBox *) m_searchFrame->getFirst();
       for (i = 0; i < firstColSel->getNumItems(); i++)
+      {
         getCols.push_back(firstColSel->getItemText(i).text());
+      }
+
+      if (m_target->getPrimaryName() != "")
+        orderCols.push_back(m_target->getPrimaryName());
        
       if (m_queryResult) 
         {

@@ -1,6 +1,7 @@
 
 #include "TableColumnList.h"
 #include "Icons.h"
+#include "RdbGUIWindow.h"
 
 // Message Map TableColumnList class
 FXDEFMAP(TableColumnList) TableColumnListMap[]={
@@ -16,7 +17,7 @@ FXDEFMAP(TableColumnList) TableColumnListMap[]={
 FXIMPLEMENT(TableColumnList,FXVerticalFrame,TableColumnListMap,ARRAYNUMBER(TableColumnListMap))
 
 
-TableColumnList::TableColumnList(FXComposite *owner, FXObject *target, FXSelector sel):
+TableColumnList::TableColumnList(FXComposite *owner, RdbGUIWindow *target, FXSelector sel):
   FXVerticalFrame(owner, LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_SUNKEN, 0, 0, 0, 0, 0, 0, 0, 0), 
   m_target(target), 
   m_selector(sel)
@@ -120,7 +121,10 @@ rdbModel::Visitor::VisitorState TableColumnList::visitColumn(rdbModel::Column *c
 {
   FXCheckListItem *item = new FXCheckListItem(column->getName().c_str(), NULL, column);
   if (column->isPrimaryKey())
+  {
     item->setIcon(m_primKeyIcon);    
+    m_target->setPrimaryName(column->getName());
+  }
   item->setChecked(true);
   item->setTipText(column->getComment().c_str());
   m_colList->appendItem(item);

@@ -45,6 +45,7 @@ private:
   rdbModel::MysqlConnection      *m_connect;               // Object to connect to a mysql db
   FXString                        m_lastDbSchema;          // last DB schema opened
 
+  std::string                     m_primaryKey;            // the name of the primary key                       
   
 protected:
   RdbGUIWindow(){}
@@ -98,6 +99,12 @@ public:
   // RdbGUIWindow destructor
   virtual ~RdbGUIWindow(); 
 
+  // Get the primary key name
+  std::string getPrimaryName(){return m_primaryKey;};
+
+  // Set the primary key name
+  void setPrimaryName(std::string name){m_primaryKey = name;};
+  
 private:
 
   void loadXMLFile(FXString);
