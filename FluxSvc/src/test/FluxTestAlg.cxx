@@ -43,9 +43,20 @@ public:
     
 
 private:
+
+    typedef struct{
+        int x;
+        int y;
+        double amount;
+    }exposureSet;
+
     IFlux* m_flux;
     std::string m_source_name;
     IParticlePropertySvc * m_partSvc;
+    double m_exposedArea[180][90];
+    std::vector<exposureSet> findExposed(double l,double b);
+    void addToTotalExposure(std::vector<exposureSet>);
+    void displayExposure();
 };
 
 
@@ -142,8 +153,9 @@ StatusCode FluxTestAlg::execute() {
             return StatusCode::FAILURE;
         }
         partName = m_partSvc->findByStdHepID(pID)->particle();
-    }   
-   
+    }
+    
+   /*
     log << MSG::INFO << partName
         << "(" << energy
         << " GeV), Launch: " 
@@ -151,8 +163,44 @@ StatusCode FluxTestAlg::execute() {
         << " Dir " 
         << "(" << d.x() <<", "<< d.y() <<", "<<d.z()<<")"
         // << ",  Elapsed Time = " << m_flux->time()
-        << endreq;
+        << endreq;   */
     
+    // get the pointer to the flux Service 
+    IFluxSvc* fsvc;
+    // get the service
+    sc = service("FluxSvc", fsvc);
+    if( sc.isFailure()) {
+        log << MSG::ERROR << "Could not find FluxSvc" << endreq;
+        return sc;
+    }
+
+    HepVector3D pointingin(0,0,1);
+    pointingin = (fsvc->transformGlastToGalactic(m_flux->time()))*pointingin;
+
+//log << MSG::INFO
+//        << "(" << pointingin.x() <<", "<< pointingin.y() <<", "<<pointingin.z()<<")" 
+//        << endreq;
+    
+//we want to make this into l and b now.
+double l,b;
+l = atan(pointingin.x()/pointingin.z());
+b = atan(pointingin.y()/pointingin.z());
+
+l *= 360./M_2PI;
+b *= 360./M_2PI;
+
+l+= 180;
+b+= 90;
+
+log << MSG::INFO
+        << "(" << "l = " << l << ", b = " << b <<")" 
+        << endreq;
+
+std::vector<exposureSet> exposed;
+exposed = findExposed(l,b);
+addToTotalExposure(exposed);
+
+
     //m_flux->pass(10.);
     return sc;
 }
@@ -160,12 +208,47 @@ StatusCode FluxTestAlg::execute() {
 
 //------------------------------------------------------------------------------
 StatusCode FluxTestAlg::finalize() {
-    
+    displayExposure();
     return StatusCode::SUCCESS;
 }
 
 
 
+std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b){
+    std::vector<exposureSet> returned;
+    exposureSet point;
+    point.x = l/8; //yes, this is doing an implicit cast.
+    point.y = b/8;  //these should be divided by two, but they're being shrunk for the current display.
+    point.amount = 1; //this should scale with the time the satellite is there.
+    returned.push_back(point);
+
+    return returned;
+}
+
+void FluxTestAlg::addToTotalExposure(std::vector<FluxTestAlg::exposureSet> toBeAdded){
+    std::vector<exposureSet>::iterator iter = toBeAdded.begin();
+    int x,y;
+    double amount;
+    for( ; iter!=toBeAdded.end() ; iter++){
+        x = (*iter).x;
+        y = (*iter).y;
+        amount = (*iter).amount;
+        m_exposedArea[x][y] += amount;
+
+    }
+}
+
+    void FluxTestAlg::displayExposure(){
+    int i,j;
+    for(i=0 ; i<180/4 ; i++){
+        std::strstream out;
+        for(j=0 ; j<90/4 ; j++){
+            out << m_exposedArea[i][j] << " ";
+        }
+        out << std::endl;
+        std::cout << out.str();
+    }
+    }
 
 
 
