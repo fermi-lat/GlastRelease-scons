@@ -2,6 +2,7 @@
  * Package calibRootData
  * Coordinator:  J. Bogart
  *
+ * 26-Jul-2004: jrb v1r2:    Couple more small changes to make it usable
  * 24-Jul-2004: jrb v1r1:    Reorg CAL classes; eliminate extra inheritance
  * 21-Jul-2004: jrb v1r0:    This one will build
  * 21-Jul-2004: jrb v0r0:    Initial import
