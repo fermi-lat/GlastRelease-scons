@@ -54,7 +54,7 @@ private:
     /// collection of TkrVertex
     TObjArray *m_vertexCol;
 
-    ClassDef(TkrRecon,4)
+    ClassDef(TkrRecon,5)
 };
 
 #endif
