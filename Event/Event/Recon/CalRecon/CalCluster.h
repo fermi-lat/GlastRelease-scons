@@ -40,7 +40,7 @@ namespace Event
         /// @param p reconstructed cluster position
         CalCluster(double e, Point p);
         
-        ~CalCluster() {}
+        virtual ~CalCluster() {}
         
         /**
         *   initializing a subset 

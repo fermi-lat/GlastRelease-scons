@@ -45,7 +45,7 @@ public:
 	/// returns pointer to the ith TkrCluster in simple cluster list
 	TkrCluster* getHit(int i) const {return m_clustersList[i];}
 	/// returns pointer to the ith TkrCluster (view obsolete)
-	TkrCluster* getHit(TkrCluster::view v, int i) {return m_clustersList[i];}
+	TkrCluster* getHit(TkrCluster::view /*v*/, int i) {return m_clustersList[i];}
 	/// returns size of the cluster with id "id"(view obsolete)
 	double const size(TkrCluster::view v, int i)      {return getHit(v,i)->size();}     
 	/// returns  space position of the  ithTkrCluster (view obsolete)
