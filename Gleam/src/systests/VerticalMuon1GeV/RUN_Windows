@@ -1,0 +1,18 @@
+{
+  // Not sure why root can't find libPhysics.dll
+  // but it can't and libreconRootData.dll needs
+  // the TVector3d class in it so we grab it explicitly
+  gSystem->Load("libPhysics.dll");
+
+  gSystem->Load("libmcRootData.dll");
+  gSystem->Load("libdigiRootData.dll");
+  gSystem->Load("libreconRootData.dll");
+
+  gROOT->Reset();
+  gROOT->LoadMacro("systest_Gleam.cxx");
+
+  RootTreeAnalysis* m= new RootTreeAnalysis("digi.root","recon.root","mc.root");
+
+  m->Go();
+  m->histFile->Write();
+}
