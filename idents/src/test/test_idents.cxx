@@ -3,10 +3,12 @@
 
 #include "idents/VolumeIdentifier.h"
 #include "idents/AcdId.h"
+#include "idents/CalXtalId.h"
 #include <map>
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <stdexcept>
 
 int main() 
 {
@@ -74,5 +76,46 @@ int main()
   std::cout << acdId3.tile() << " " << acdId3.ribbon() << " " << acdId3.face() 
       << " " << acdId3.row() << " " << acdId3.column() << std::endl;
 
+  idents::VolumeIdentifier vId, vIdBad;
+  unsigned yNum = 1, xNum = 2, layer = 5, column = 10;
+  vId.append(0);        // LATobject = towers
+  vId.append(yNum); 
+  vId.append(xNum);        // xnum
+  vId.append(0);        // towerObject = Calorimeter
+  vId.append(layer);        // layer
+  vId.append(0);        // orientation
+  vId.append(column);       // column
+
+  vIdBad.append(0);        // LATobject = towers
+  vIdBad.append(yNum); 
+  vIdBad.append(xNum);        // xnum
+  vIdBad.append(1);        // towerObject = tracker
+  vIdBad.append(layer);        // layer
+  vIdBad.append(0);        // orientation
+  vIdBad.append(column);       // column
+
+
+  idents::CalXtalId xtalOk(vId);
+  if ((xtalOk.getTower() != (4*yNum  + xNum) ) ||
+      (xtalOk.getLayer() != layer)             ||
+      (xtalOk.getColumn() != column) ) {
+    std::string badConstructor("CalXtalId constructor from volId failed");
+    throw std::logic_error(badConstructor);
+  }
+  else {
+    std::cout << "Built CalXtalId properly from VolumeIdentifier" << std::endl;
+  }
+  
+  try {
+    idents::CalXtalId xtalBad(vIdBad);
+    std::string falsePositive("CalXtalId constructor failed to fail!");
+    throw std::logic_error(falsePositive);
+  }
+  catch (std::invalid_argument ex) {
+    std::cout << 
+      "Caught expected invalid_argument exception in CalXtalId constructor" 
+              << std::endl;
+    return 0;
+  }
   return 0;
 }
