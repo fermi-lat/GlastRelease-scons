@@ -72,7 +72,7 @@ StatusCode XmlCalBaseCnv::readDimension(const DOMElement* docElt,
     nFace = Dom::getIntAttribute(dimElt, "nFace");
     nRange = Dom::getIntAttribute(dimElt, "nRange");
     if (nDacCol) *nDacCol = Dom::getIntAttribute(dimElt, "nDacCol");
-    if (nDacCol) *nXpos = Dom::getIntAttribute(dimElt, "nXpos");
+    if (nXpos) *nXpos = Dom::getIntAttribute(dimElt, "nXpos");
   }
   catch (xmlBase::DomException ex) {
     std::cerr << "From CalibSvc::XmlCalBaseCnv::readDimension" << std::endl;
