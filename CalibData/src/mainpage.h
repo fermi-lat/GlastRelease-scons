@@ -27,6 +27,13 @@
    have a single child with flavor = "vanilla". </li>
   </ol>
 
+  Clients wishing to access calibration data by symbol  (e.g.,
+  CalibData::CAL_Ped + "/vanilla" rather than the string
+  "/Calib/CAL_Ped/vanilla") should add the following line to a private
+  section of their requirements file:
+
+          apply_pattern use_CalibData_symbols
+
   The CalibModelSvc class makes certain information internal to the
   CalibData package safely available to CalibDataSvc, which is in  the
   CalibSvc package. 

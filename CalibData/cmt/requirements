@@ -12,6 +12,14 @@ use GaudiInterface * IExternal
 
 apply_pattern shared_library
 
+## To be used by client packages referring to calibration TDS path 
+## using symbols like CalibData::CAL_Ped rather than just strings
+## In a private section of client requirements file, include the line
+##     apply_pattern use_CalibData_symbols
+pattern use_CalibData_symbols \
+  macro_append CalibData_linkopts " "\
+      WIN32  "${CalibData_root}/${BINDIR}/CalibData/CalibModel.obj"
+
 private
 #_______________________________________________________________
 
