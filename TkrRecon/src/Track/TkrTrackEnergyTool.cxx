@@ -205,7 +205,8 @@ double TkrTrackEnergyTool::getTotalEnergy(Event::TkrPatCand* track, double CalEn
     // Set up parameters for KalParticle swim through entire tracker
     Point x_ini    = getPosAtZ(track, -2.); // Backup to catch first Radiator
     Vector dir_ini = track->getDirection(); 
-    double arc_tot = x_ini.z() / fabs(dir_ini.z()); // z=0 at top of grid
+    double arc_totold = x_ini.z() / fabs(dir_ini.z()); // z=0 at top of grid
+    double arc_tot = (x_ini.z() - m_tkrGeo->calZTop()) / fabs(dir_ini.z()); // to z at top of cal
     
     IKalmanParticle* kalPart = m_tkrGeo->getPropagator();
     kalPart->setStepStart(x_ini, dir_ini, arc_tot);

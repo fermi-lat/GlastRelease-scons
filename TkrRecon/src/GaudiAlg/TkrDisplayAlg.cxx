@@ -30,8 +30,6 @@
 #include "TkrRecon/Display/TkrDispCompleteNet.h"
 #include "TkrRecon/Display/TkrDispActiveNet.h"
 
-//THB #include "TkrRecon/Display/TkrMcTracksRep.h"
-
 #include "src/Vertex/Combo/TkrComboVtxRep.h"
 #include "src/Vertex/TkrGammaRep.h"
 
@@ -126,9 +124,6 @@ StatusCode TkrDisplayAlg::initialize()
         //Vertex display routines
         tkrmenu.add(new TkrGammaRep(eventSvc(), pTkrGeo), "Gamma Vertex");
         tkrmenu.add(new TkrComboVtxRep(eventSvc(), pTkrGeo), "All Vertices");
-
-        //Monte Carlo if it exists
-//THB         tkrmenu.add(new TkrMcTracksRep(eventSvc()), "Monte Carlo Tracks");
     }
     
     return sc;
