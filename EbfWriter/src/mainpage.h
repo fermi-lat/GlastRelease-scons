@@ -18,6 +18,7 @@ packages needed to build the simulation/ reconstruction environment.  This packa
     <li> generating histograms and tuples, which would then be written to a ROOT file. (Need to document this.)
   </ul>
 
+  @image html EbfWriter.jpg
   <hr>
   @section jobOptions src/jobOptions.txt
   @include jobOptions.txt
