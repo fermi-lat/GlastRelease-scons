@@ -67,7 +67,7 @@ RunManager::RunManager(std::ostream& log, double defaultCutValue, std::string& p
    cutoffInitialized(false),
    geometryNeedsToBeClosed(true),runAborted(false),
    initializedAtLeastOnce(false),
-   geometryToBeOptimized(true),runIDCounter(0),verboseLevel(3),DCtable(NULL),
+   geometryToBeOptimized(true),runIDCounter(0),verboseLevel(0),DCtable(NULL),
    currentRun(NULL),
    storeRandomNumberStatus(0)
    
