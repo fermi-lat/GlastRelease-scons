@@ -1,5 +1,5 @@
 /**
- * @class SimpleClusteringTool
+ * @class CalSimpleClusteringTool
  *
  * @brief Implements a Gaudi Tool for performing very simple clustering in the Cal 
  *
@@ -14,19 +14,19 @@
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
-#include "ClusteringTool.h"
+#include "CalClusteringTool.h"
 
 
-class SimpleClusteringTool : public ClusteringTool
+class CalSimpleClusteringTool : public CalClusteringTool
  {
   public :
   
     /// Standard Gaudi Tool interface constructor
-    SimpleClusteringTool(
+    CalSimpleClusteringTool(
       const std::string& type,
       const std::string& name,
       const IInterface* parent ) ;
-    virtual ~SimpleClusteringTool() ;
+    virtual ~CalSimpleClusteringTool() ;
     
   protected:
 

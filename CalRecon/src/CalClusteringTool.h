@@ -1,8 +1,8 @@
 
-#ifndef __ClusteringTool_H
-#define __ClusteringTool_H 1
+#ifndef __CalClusteringTool_H
+#define __CalClusteringTool_H 1
 
-#include "IClusteringTool.h"
+#include "CalIClusteringTool.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/SmartDataPtr.h"
@@ -12,7 +12,7 @@
 #include "Event/Recon/CalRecon/CalCluster.h"
 
 /**   
-* @class ClusteringTool
+* @class CalClusteringTool
 *
 * Base class for clustering tools, containing member data and
 * default code for the global algorithm, the preparation of
@@ -26,15 +26,15 @@
 */
 
 
-class ClusteringTool : public IClusteringTool,  public AlgTool {
+class CalClusteringTool : public CalIClusteringTool,  public AlgTool {
 	
   public:
     
-    ClusteringTool
+    CalClusteringTool
      ( const std::string & type, 
        const std::string & name,
        const IInterface * parent ) ;
-    virtual ~ClusteringTool() ;
+    virtual ~CalClusteringTool() ;
     
 	/// @brief Intialization of the tool
     virtual StatusCode initialize();

@@ -32,7 +32,7 @@ Algorithm(name, pSvcLocator)
     // 1st - before TkrRecon and 2nd - after TkrRecon
     
     declareProperty("callNumber",m_callNumber=0);
-    declareProperty ("clusterToolName", m_clusteringToolName="SingleClusteringTool");
+    declareProperty ("clusterToolName", m_clusteringToolName="CalSingleClusteringTool");
     declareProperty ("lastLayerToolName", m_lastLayerToolName="LastLayerCorrTool");
     declareProperty ("profileToolName", m_profileToolName="ProfileTool");
     declareProperty ("calValsCorrToolName", m_calValsCorrToolName="CalValsCorrTool");

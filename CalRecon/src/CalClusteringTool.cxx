@@ -1,20 +1,20 @@
 
-#include "ClusteringTool.h"
+#include "CalClusteringTool.h"
 #include "GaudiKernel/MsgStream.h"
 
-ClusteringTool::ClusteringTool
+CalClusteringTool::CalClusteringTool
  ( const std::string & type, 
    const std::string & name,
    const IInterface * parent )
  : AlgTool( type, name, parent )
- { declareInterface<IClusteringTool>(this) ; }
+ { declareInterface<CalIClusteringTool>(this) ; }
 
-ClusteringTool::~ClusteringTool()
+CalClusteringTool::~CalClusteringTool()
  {} 
     
 // This function extracts geometry constants from xml
 // file using GlastDetSvc
-StatusCode ClusteringTool::initialize()
+StatusCode CalClusteringTool::initialize()
  {
   MsgStream log(msgSvc(), name());
   StatusCode sc = StatusCode::SUCCESS;
@@ -53,7 +53,7 @@ StatusCode ClusteringTool::initialize()
   return StatusCode::SUCCESS ;
  }
 
-StatusCode ClusteringTool::findClusters(
+StatusCode CalClusteringTool::findClusters(
     Event::CalXtalRecCol * calXtalRecCol,
     Event::CalClusterCol * calClusterCol )
 //Purpose and method:
@@ -108,7 +108,7 @@ StatusCode ClusteringTool::findClusters(
  }
 
 /// This makes a CalCluster out of associated CalXtalRecData pointers
-void ClusteringTool::makeCluster( xTalDataVec& xTalVec,
+void CalClusteringTool::makeCluster( xTalDataVec& xTalVec,
     Event::CalClusterCol * calClusterCol)
 {
     const Point p0(0.,0.,0.);  
@@ -236,7 +236,7 @@ void ClusteringTool::makeCluster( xTalDataVec& xTalVec,
     return;
 }
 
-Vector ClusteringTool::fitDirection
+Vector CalClusteringTool::fitDirection
  ( std::vector<Vector> pos,
    std::vector<Vector> sigma2 )
 //

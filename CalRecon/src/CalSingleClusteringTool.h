@@ -1,12 +1,12 @@
 
-#ifndef __SingleClusteringTool_H
-#define __SingleClusteringTool_H 1
+#ifndef __CalSingleClusteringTool_H
+#define __CalSingleClusteringTool_H 1
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "ClusteringTool.h"
+#include "CalClusteringTool.h"
 
 /**   
-* @class SingleClusteringTool
+* @class CalSingleClusteringTool
 *
 * Find single cluster from all CAL hits
 *
@@ -15,15 +15,15 @@
 */
 
 
-class SingleClusteringTool : public ClusteringTool
+class CalSingleClusteringTool : public CalClusteringTool
  {
   public:
     
-    SingleClusteringTool
+    CalSingleClusteringTool
      ( const std::string & type, 
        const std::string & name, 
        const IInterface * parent ) ;
-    ~SingleClusteringTool() ;
+    ~CalSingleClusteringTool() ;
         
   protected:
 

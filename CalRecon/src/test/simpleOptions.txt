@@ -61,7 +61,7 @@ ApplicationMgr.EvtMax = 10;
 digiRootReaderAlg.digiRootFile="$(CALRECONROOT)/src/test/muon_digi.root";
 
 // Simple clustering:
-CalClustersAlg.clusterToolName="SimpleClusteringTool";
+CalClustersAlg.clusterToolName="CalSimpleClusteringTool";
 
 
 //==============================================================

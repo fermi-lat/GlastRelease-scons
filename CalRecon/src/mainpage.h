@@ -65,17 +65,17 @@
  * The original clustering and energy corrections (profile and last-layer
  * correlation methods) have been recast as Gaudi tools.
  *
- * The clustering is now based on the IClusteringTool and ClusteringTool base classes, 
+ * The clustering is now based on the CalIClusteringTool and ClusteringTool base classes, 
  * while the leakage corrections derive from IEnergyCorr and EnergyCorr.
- * The clustering tools currently available are SingleClusteringTool and
- * SimpleClusteringTool (FuzzyClusteringTool needs additional tuning). The last
+ * The clustering tools currently available are CalSingleClusteringTool and
+ * CalSimpleClusteringTool (FuzzyClusteringTool needs additional tuning). The last
  * layer leakage tool is LastLayerCorrTool, and the profile tool is
  * ProfileTool.
  *
  * The calo FuzzyClusteringTool retrieves the generic FuzzyCluster Gaudi
  * tool to perform fuzzy clustering on all cal hits. However, if there are
  * less than one hit point per cluster, it applies one single cluster
- * calculations, like the SingleClusteringTool. 
+ * calculations, like the CalSingleClusteringTool. 
  *
  * CalClustersAlg calls all 3 tools so far.
  *
@@ -88,7 +88,7 @@
  *        The default value is 0 .
  *
  * @param CalClustersAlg.clusterToolName
- *        name of tool performing clustering. Default is SingleClusteringTool
+ *        name of tool performing clustering. Default is CalSingleClusteringTool
  *        If set to FuzzyClusteringTool, the following param is mandatory:
  * @param ToolSvc.FuzzyClusterTool.FuzzyCluster.command
  *        the command param is mandatory for the FuzzyCluster Gaudi tool
