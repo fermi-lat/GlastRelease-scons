@@ -3,6 +3,7 @@ package AcdRecon\n
 package manager:H.Kelly
 @verbatim
 
+v1r7p0    21-Oct-2003 HMK make that a real active distance calculation for ribbons
 v1r7      17-Oct-2003 HMK Handle the ribbons in recon
 v1r6p3    30-Jul-2003 WBA Fix AcdActDist again..other sides using wrong dimension
 v1r6p2    13-Jul-2003 WBA Fix AcdActDist
