@@ -25,7 +25,7 @@
 #include "Event/MonteCarlo/D2Entry.h"
 
 //flux
-#include "FluxSvc.h"
+#include "FluxSvc/IFluxSvc.h"
 #include "FluxSvc/IFlux.h"
 #include "GPS.h"
 

@@ -71,7 +71,8 @@ public:
     virtual double energy( double time=0);
     
     /*! 
-    \param dir direction is either in the format (cos theta, phi)
+    @param energy energy returned by previous call to energy
+    \return dir direction is either in the format (cos theta, phi)
     (zenith-local coordinates, or (l,b) (galactic coordinates).
     */
     virtual std::pair<double,double> dir(double energy);

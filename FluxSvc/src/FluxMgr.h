@@ -20,7 +20,7 @@
 
 #include "GPS.h"
 
-#include "FluxSvc/FluxSource.h"
+#include "FluxSource.h"
 
 #include "dom/DOM_Document.hpp"
 #include "dom/DOM_Element.hpp"

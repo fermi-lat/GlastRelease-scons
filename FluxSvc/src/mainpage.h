@@ -107,6 +107,10 @@ vela
 vertical_muons
 vertical_surface_muons
 @endverbatim
+
+This is extracted from 
+@verbinclude "source_library.xml"
+
   <br>
   <h2> Defining an external source </h2>
     See the interface definition IRegisterSource for information on how to link code external to this package.

@@ -1,11 +1,13 @@
-// $Header$
+/** @file Flux.cxx
+    @brief Implementation of Flux
+   $Header$
 
-// Original author: T. Burnett
-
+  Original author: T. Burnett
+*/
 #include "Flux.h"
 
-#include "FluxSvc/FluxSource.h"
-#include "FluxSvc/EventSource.h"
+#include "FluxSource.h"
+#include "EventSource.h"
 #include "FluxMgr.h"
 #include "SpectrumFactory.h"
 #include "GPS.h"

@@ -1,9 +1,12 @@
-// $Header$
+/** @file CompositeSource.cxx
+    @brief Define CompositeSource
 
+   $Header$
+*/
 
 #include "CompositeSource.h"  
 
-#include "FluxSvc/FluxSource.h"
+#include "FluxSource.h"
 
 
 #include <strstream>
@@ -23,28 +26,18 @@ CompositeSource::~CompositeSource()
     it != m_sourceList.end(); ++it ) delete (*it);
 }
 
-
 void CompositeSource::addSource (EventSource* aSource)
 {
     m_sourceList.push_back(aSource);
+#if 0 //THB does this do anything?
     EventSource::setFlux( flux(EventSource::time()) );
+#endif
     //here, set up the associated vectors by default.
     m_unusedSource.push_back(0);
     m_sourceTime.push_back(-1);
     m_eventList.push_back(0);
 }
 
-void CompositeSource::rmvSource (EventSource* aSource)
-{
-    std::vector<EventSource*>::iterator   it = m_sourceList.begin();
-    for (;it != m_sourceList.end(); ++it) {
-        if ((*it) == aSource)   break;
-    }
-    if (it != m_sourceList.end()) {
-        m_sourceList.erase(it);
-        EventSource::setFlux( flux(EventSource::time()) );
-    }
-}
 
 FluxSource* CompositeSource::event (double time)
 {
@@ -94,7 +87,6 @@ FluxSource* CompositeSource::event (double time)
     m_unusedSource[winningsourcenum]=0; //the current "winning" source is getting used..
     // now ask the chosen one to return the event.
    return m_eventList[winningsourcenum];
-
 }
 
 std::string CompositeSource::fullTitle () const
@@ -130,23 +122,6 @@ double CompositeSource::rate(double time) const
     }
     return total_rate;
 }
-
-void	CompositeSource::setRate ( double value )
-{
-    double  f = rate(EventSource::time());
-    if (f == 0.)    return;
-    
-    std::vector<float>	fvec;
-    std::vector<EventSource*>::iterator it = m_sourceList.begin();
-    
-    while (it != m_sourceList.end())	{
-        
-        (*it)->setRate( value * (*it)->rate(EventSource::time())/f );
-        ++it;
-    }
-    EventSource::setRate( value );
-}
-
 
 void CompositeSource::printOn(std::ostream& out)const
 {

@@ -1,4 +1,8 @@
-// $Header$
+/** @file EventSource.h
+   @brief Declaration of EventSource
+   $Header$
+*/
+
 #ifndef EventSource_h
 #define EventSource_h 1
 
@@ -6,6 +10,8 @@
 * \class EventSource
 *
 * \brief  Base class for managing  sources.
+
+This the abstract base class for source, (FluxSource) or a list of sources (CompositeSource)
 * 
 * $Header$
 */
@@ -13,7 +19,6 @@
 
 #include <string>
 
-class DOM_Element;
 class FluxSource;
 
 
@@ -22,7 +27,6 @@ class EventSource
 public:
     /// ctor/dtor
     EventSource (double aFlux = 1.0, unsigned acode = 0);
-    EventSource (const DOM_Element& xelem);
     virtual ~EventSource();
     
     ///    a randomized interval to the next event - default is 1/rate()
@@ -31,8 +35,7 @@ public:
     ///    calculate the rate for a given flux/solid angle integral (NOTE: integral of solid angle)
     // virtual double  rate ( double solid_angle, double flux );	
     virtual double  rate (double time)const;
-    virtual void    setRate ( double );
-    
+
     ///    abstract method - create an event
     virtual FluxSource* event (double) = 0;	  
     
@@ -42,7 +45,7 @@ public:
     
     ///    flux for this source in (p/(m^2*sr*sec))
     virtual double	flux (double time) const;
-    virtual void      setFlux (double value);
+   // virtual void      setFlux (double value);
     
     ///    disable/enable, test this particular source 
     void      disable (){m_enabled=false;}

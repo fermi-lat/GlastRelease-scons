@@ -1,8 +1,11 @@
-// $Header$
+/** @file FluxMgr.cxx
+    @brief Implementation of FluxMgr
 
+  $Header$
+*/
 
 #include "FluxMgr.h"
-#include "FluxSvc/FluxSource.h"
+#include "FluxSource.h"
 #include "SpectrumFactoryTable.h"
 #include "GPS.h"
 #include "FluxException.h" // defines FATAL_MACRO

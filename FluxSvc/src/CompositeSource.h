@@ -1,4 +1,8 @@
-// $Header$
+/** @file CompositeSource.h
+    @brief CompositeSource declaration
+    
+  $Header$
+*/
 
 #ifndef CompositeSource_h
 #define CompositeSource_h 1
@@ -10,10 +14,10 @@
 * "which source" it is representing this time.  Old particles are held, along with the
 * time of their arrival, until use.
 * 
-* $Header $
+* $Header$
 */
 
-#include "FluxSvc/EventSource.h"
+#include "EventSource.h"
 #include <vector>
 
 class FluxSource;
@@ -27,7 +31,6 @@ public:
     
     ///    add a source to the list
     virtual void addSource (EventSource* aSource);
-    void rmvSource (EventSource* aSource);
     
     /// generate an event from from one of the sources 
     /// which make up the composite, and return a pointer to it
@@ -35,7 +38,6 @@ public:
     
     /// rate - compute overall rate...
     virtual double rate (double time)const;
-    virtual void   setRate ( double );
     
     /// flux into 1 m^2 integrated over angles
     virtual double flux(double time)const{

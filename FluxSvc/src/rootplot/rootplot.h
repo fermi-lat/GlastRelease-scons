@@ -11,7 +11,7 @@ package.
 */
 
 #include "../FluxMgr.h"
-#include "FluxSvc/EventSource.h"
+#include "../EventSource.h"
 #include "../SpectrumFactoryTable.h"
 #include "rootEnergyHist.h"
 #include "rootAngleHist.h"

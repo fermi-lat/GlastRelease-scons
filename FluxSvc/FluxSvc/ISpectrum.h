@@ -25,7 +25,9 @@ public:
     ///  particle name that must be known to the particle service
     virtual const char * particleName()const=0;
     
-    /// calculate the flux, particles/m^2/sr. (default zero)
+    /** calculate the flux, particles/m^2/sr. (default zero)
+        @param time the mission elapsed time in sec
+    */
     virtual double    flux (double time ) const=0;
     
     /// return effective solid angle that will be used to determine the actual rate 
@@ -35,19 +37,19 @@ public:
     virtual std::string title()const=0;
     
     /*! a (randomized) interval to the next event.  
+    @param time the mission elapsed time in sec
      For time-independent rate, should correspond to exponential( 1/rate() )
      Return negative to do this with flux()*solidAngle().
      needs to know the cross-sectional area?
     */
-
     virtual double interval (double time)=0;
     
     /// return energy, either GeV or MeV
     virtual double energy( double time=0)=0;
 
     /** return direction in a pair:
-    @param energy The generated energy
-    \param dir direction is either in the format (cos theta, phi) for
+    @param energy The generated energy, from previous call to energy
+    @return direction is either in the format (cos theta, phi) for
     (zenith-local coordinates, or (l,b) (galactic coordinates).
     */
     virtual std::pair<double,double> dir(double energy)=0;

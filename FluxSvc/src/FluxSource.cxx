@@ -201,7 +201,6 @@ public:
         @param time mission time
         */
     virtual void execute(double KE, double time){
-        //TODO: account for transformation?
         if(m_skydir){
             m_celtoglast = GPS::instance()->transformCelToGlast(time);
         }
@@ -240,14 +239,15 @@ private:
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /** @class RandomDirection
     @brief nested launch strategy derived class
-    Gets a point randomly from a box
+    Assigns a random direction from a range of cos theta, optionally rotated
 */
 class FluxSource::RandomDirection : public FluxSource::LaunchDirection{ 
 public:
     /** ctor:
     @param minc  minimum value of cos(theta)
     @param maxc  maximum value of cos(theta)
-    @param theta 
+    @param theta [0] X rotation angle (radians)
+    @param phi   [0] Z rotation angle (radians)
     */
     RandomDirection(double minc, double maxc, double theta=0, double phi=0)
         : m_theta(theta)
@@ -315,46 +315,46 @@ public:
     */
     SourceDirection(ISpectrum* spectrum, bool galactic)
         : m_spectrum(spectrum)
-        , m_galactic(galactic){}
+        , m_galactic(galactic)
+    {}
 
-        void execute(double ke, double time){
+    void execute(double ke, double time){
 
+        std::pair<float,float> direction 
+            = m_spectrum->dir(ke);
 
-            std::pair<float,float> direction 
-                    = m_spectrum->dir(ke);
+        if( !m_galactic) {
+            // special option that gets direction from the spectrum object
+            // note extra - sign since direction corresponds to *from*, not *to*
 
-            if( !m_galactic) {
-                // special option that gets direction from the spectrum object
-                // note extra - sign since direction corresponds to *from*, not *to*
+            double  costh = direction.first,
+                sinth = sqrt(1.-costh*costh),
+                phi = direction.second;
+            setDir(-HepVector3D(cos(phi)*sinth, sin(phi)*sinth, costh));
 
-                double  costh = direction.first,
-                        sinth = sqrt(1.-costh*costh),
-                        phi = direction.second;
-                setDir(-HepVector3D(cos(phi)*sinth, sin(phi)*sinth, costh));
+        }else {
+            // iterpret direction as l,b for a galactic source
+            double  l = direction.first,
+                b = direction.second;
+            //then set up this direction:
+            astro::SkyDir unrotated(l,b,astro::SkyDir::GALACTIC);
+            //get the transformation matrix..
+            HepRotation celtoglast
+                =GPS::instance()->transformCelToGlast(GPS::instance()->time() + time);
 
-            }else {
-                // iterpret direction as l,b for a galactic source
-                double  l = direction.first,
-                        b = direction.second;
-                //then set up this direction:
-                astro::SkyDir unrotated(l,b,astro::SkyDir::GALACTIC);
-                //get the transformation matrix..
-                HepRotation celtoglast
-                    =GPS::instance()->transformCelToGlast(GPS::instance()->time() + time);
-
-                //and do the transform:
-                setDir(celtoglast*unrotated());
-            }
+            //and do the transform:
+            setDir(celtoglast*unrotated());
         }
+    }
 
-        //! solid angle
-        virtual double solidAngle()const {
-            return m_spectrum->solidAngle();
-        }
-        
-        virtual std::string title()const {
-            return "(use_spectrum)";
-        }
+    //! solid angle
+    virtual double solidAngle()const {
+        return m_spectrum->solidAngle();
+    }
+
+    virtual std::string title()const {
+        return "(use_spectrum)";
+    }
 
 private:
     ISpectrum* m_spectrum;
@@ -364,7 +364,7 @@ private:
 //                   FluxSource constructor
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 FluxSource::FluxSource(const DOM_Element& xelem )
-: EventSource (xelem)
+: EventSource ()
 , m_spectrum(0)
 {
     static double d2r = M_PI/180.;
@@ -380,12 +380,6 @@ FluxSource::FluxSource(const DOM_Element& xelem )
         
         // source has no imbedded spectrum element: expect a name
         class_name = xml::Dom::transToChar(xelem.getAttribute("name"));
-#if 0
-        useSpectrumDirection(); // and will use its direction generation
-#else
-//???        m_launch_dir = new SourceDirection(m_spectrum, frame=="galaxy"); 
-
-#endif   
     } else {
         // process spectrum element
         DOM_NodeList children = spec.getChildNodes();

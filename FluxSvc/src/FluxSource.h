@@ -4,7 +4,7 @@
 #ifndef FluxSource_h
 #define FluxSource_h 1
 
-#include "FluxSvc/EventSource.h"
+#include "EventSource.h"
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 
@@ -15,6 +15,8 @@ class ISpectrum;
 // 
 /** @class FluxSource
     @brief class which manages to compute flux from various particle source configurations
+    It is initialized from a xml description
+
     $Header$
 */
 class FluxSource : public EventSource  
@@ -24,10 +26,6 @@ public:
       @param xelem The xml description for this source
       */
     FluxSource ( const DOM_Element& xelem );
-#if 0 // are these needed anywhere?
-    FluxSource(double aFlux, ISpectrum* aSpec,  double l, double b);
-    FluxSource ( ISpectrum* aSpec = 0, double aFlux = 0 );
-#endif
 
     ///    destructor
     virtual ~FluxSource();

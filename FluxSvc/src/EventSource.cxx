@@ -1,6 +1,9 @@
-//  $Header$
+/** @file EventSource.cxx
+    @brief Implementation of class EventSource
+   $Header$
+*/
 
-#include "FluxSvc/EventSource.h"
+#include "EventSource.h"
 
 #include "dom/DOM_Element.hpp"
 #include "xml/Dom.h"
@@ -21,23 +24,6 @@ EventSource::EventSource (double aFlux, unsigned acode)
     
     m_name = s.str();
 }
-
-EventSource::EventSource (const DOM_Element& xelem)
-:  m_enabled(true), m_flux(1.0),  m_code(0)
-{
-    m_name = xml::Dom::getAttribute(xelem, "name");
-    m_flux = atof (xml::Dom::getAttribute(xelem, "flux").c_str());
-    
-    std::string code_str = xml::Dom::getAttribute(xelem, "code");
-    if (code_str != std::string("")) {
-        m_code = atoi(code_str.c_str());
-    }
-    else  {
-        m_code = ++s_id;
-    }
-}
-
-
 EventSource::~EventSource()
 {}
 
@@ -49,10 +35,6 @@ double EventSource::flux (double time) const
     return m_flux;  // default if not overridden
 }
 
-void   EventSource::setFlux (double value) {
-    m_flux = value;
-}
-
 
 double  EventSource::rate (double time )const
 {
@@ -61,14 +43,7 @@ double  EventSource::rate (double time )const
   // Outputs - rate, in units of (particles/sec)
     return enabled()? (solidAngle()*flux(time)*s_total_area) :0;
 }
-void    EventSource::setRate ( double rate )
-{
-#if 0
-    setFlux(  rate/(m_solid_angle*s_total_area) );
-#else
-    FATAL_MACRO("Should not be setting the rate");
-#endif
-}
+
 
 double	EventSource::solidAngle () const{
     return m_solid_angle;
