@@ -56,7 +56,7 @@ DisplayManager::DisplayManager( gui::DisplayControl* d)
     d->add(m_detmap["dio"]=new AllBoxes, "diodes", false);
     d->menu().addSeparator();
 
-    d->add(m_detmap["steps"] = new HitsRep, "hits");
+    d->add(m_detmap["steps"] = new HitsRep, "hits", false);
     
     d->add(m_detmap["hit_boxes"] = new Boxes, "hit detectors");
 
