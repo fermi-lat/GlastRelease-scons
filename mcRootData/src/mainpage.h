@@ -21,7 +21,6 @@
   - Collection of McPositionHits
     -# monte carlo particle id
     -# volume id
-    -# reference (TRef) to the McParticle
     -# reference (TRef) to the origin McParticle
     -# entry position
     -# exit position

@@ -19,7 +19,6 @@
 * - Particle energy
 * - Time of Flight
 * - Entry and Exit positions
-* - Pointer to the McParticle causing the hit
 * - Pointer to the origin McParticle
 * 
 * $Header$
@@ -39,7 +38,7 @@ public:
 
     void initialize(Int_t particleId, Double_t edep, 
         const VolumeIdentifier& volId, const TVector3& entry,
-        const TVector3& exit, McParticle *mc, McParticle *origin, Double_t pE,
+        const TVector3& exit, McParticle *origin, Double_t pE,
         Double_t tof, UInt_t flags = 0);
     
     const VolumeIdentifier& getVolumeId() const { return m_volumeId; };
@@ -57,9 +56,7 @@ public:
     Double_t getTimeOfFlight() const { return m_timeOfFlight; }
 
     Double_t getDirectionCosine() const;
-    
-    const McParticle* getMcParticle() const {return (McParticle*)m_mcParticle.GetObject();}
-    
+        
     const McParticle* getOriginMcParticle() const { return (McParticle*)m_originMcParticle.GetObject();}
     
     /// Retrieve whether this hit should be digitized
@@ -79,12 +76,11 @@ private:
     TVector3 m_entry;
     TVector3 m_exit;
     
-    TRef m_mcParticle;
     TRef m_originMcParticle;
     
     VolumeIdentifier m_volumeId;
     
-    ClassDef(McPositionHit,2)  // Monte Carlo PositionHit class
+    ClassDef(McPositionHit,3)  // Monte Carlo PositionHit class
 };
 
 #endif

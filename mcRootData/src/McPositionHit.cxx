@@ -40,8 +40,6 @@ void McPositionHit::Print(Option_t *option) const {
         << m_exit.Y() << "," << m_exit.Z() << ") Direction Cosine: " 
         << getDirectionCosine() << endl;
     cout << "McParticleId " << m_mcParticleId << endl;
-    cout << "McParticle Ref" << endl;
-    if (getMcParticle()!= 0) getMcParticle()->Print();
     cout << "Origin Particle Ref" << endl;
     if (getOriginMcParticle() != 0) getOriginMcParticle()->Print();
 
@@ -51,17 +49,13 @@ Double_t McPositionHit::getDirectionCosine() const
 { 
     TVector3 dir = (m_exit - m_entry).Unit();
     return dir.Z();
-    //Double_t dx = m_exit.x()-m_entry.x();
-    //Double_t dy = m_exit.y()-m_entry.y();
-    //Double_t dz = m_exit.z()-m_entry.z();
-    //return (dz / sqrt(dx * dx + dy * dy));
 }
 
 
 void McPositionHit::initialize(Int_t particleId, Double_t edep, 
                                const VolumeIdentifier &volId,
                                const TVector3& entry, const TVector3& exit,
-                               McParticle *mc, McParticle *origin, Double_t pE, 
+                               McParticle *origin, Double_t pE, 
                                Double_t tof, UInt_t flags)
 {
     m_mcParticleId = particleId;
@@ -69,7 +63,6 @@ void McPositionHit::initialize(Int_t particleId, Double_t edep,
     m_volumeId = volId;
     m_entry.SetXYZ(entry.X(), entry.Y(), entry.Z());
     m_exit.SetXYZ(exit.X(), exit.Y(), exit.Z());
-    m_mcParticle = mc;
     m_originMcParticle = origin;
     m_particleEnergy = pE;
     m_timeOfFlight = tof;
