@@ -302,7 +302,7 @@ void GlastRandomSvc::handle(const Incident &inc)
         }
 
         // recorde seeds to TDS
-        mcevt->initialize(runNo, -1, seqNo);
+        mcevt->initialize(runNo, -1, seqNo, 0); // last arg is timestamp, will be set in FluxAlg
 
         // Set run number in EventHeader for consistency with
         // with run number in MCEvent
