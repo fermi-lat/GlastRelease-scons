@@ -1,6 +1,8 @@
 package detCheck
 # $Header$
 
+version v1r2p4
+
 use detModel v2r*
 use xmlGeoDbs v1r*
 use CLHEP v2r* IExternal
