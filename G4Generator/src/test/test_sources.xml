@@ -1,5 +1,5 @@
 
-<source_library>
+<source_library name="G4_test_sources">
    <!--
        $Header$
        Some simple test flux definitions for debugging
