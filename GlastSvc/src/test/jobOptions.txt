@@ -12,8 +12,8 @@ ApplicationMgr.ExtSvc   = { "GlastDetSvc", "EventSelector" , "EventCnvSvc" };
 //--------------------------------------------------------------
 // Private Application Configuration options
 //--------------------------------------------------------------
-GlastDetSvc.IRFFile = "src/test/muontest.irf";
-GlastDetSvc.PersistencyFile = "src/test/detector.xml";
+GlastDetSvc.IRFFile = "../src/test/muontest.irf";
+GlastDetSvc.PersistencyFile = "../src/test/detector.xml";
 
 ApplicationMgr.TopAlg = { "CreateEvent" };
 

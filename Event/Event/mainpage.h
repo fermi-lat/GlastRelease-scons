@@ -13,32 +13,17 @@ This package contains definitions for all GLAST event data:
 Note that all inherit from DataObject, and correspond to transient 
 store objects at the top level, under "Event".
 
-\section MCEvent MCEvent
-The MCevent corresponds to all the Hit classes, and the MC truth. 
-- DataObject classes
-  - CalorimeterHits
-  - GlastHits
-  - SiLayerHits
-  - TowerHits
-  - TrackerHits
+\section MonteCarlo MonteCarlo
+
+All the Monte Carlo classes have been changed to inherit from ContainedObject 
+rather than from DataObject. The three classes completed to date are below.
+
+
 - ContainedObject classes
-  - ACDTileHits
-  - SiStripHits
-  - CalorimeterLogHits
+  - MCCalorimeterHit
+  - MCACDHit
+  - MCTKRHit
 
-All of the above are "wrapper" classes, inheriting from GlastEvent::HitsBase. They are 
-instantiated with concrete classes from the <b>instrument</b> package. See the Gsim*.h headers:
-  -GsimACDTileHits.h
-  -GsimCalorimeterHits.h
-  -GsimCalorimeterLogHits.h
-  -GsimGlastHits.h
-  -GsimSiLayerHits.h
-  -GsimSiStripHits.h
-  -GsimTowerHits.h
-  -GsimTrackerHits.h
-
-  An exception is the GlastEvent::EventHits class, inheriting from DataObject, and containing
-  GlastEvent::GlastHits.
 
 \section reference Reference Document
   See the formal  

@@ -14,10 +14,13 @@
 #include "GlastEvent/MonteCarlo/MCCalorimeterHit.h"
 #include "GlastEvent/MonteCarlo/MCSiLayer.h"
 
-/* ! 
+/*! 
 Derived from DetectorConverter, this class
 provides a forward method to handle reading in of GlastDetector data 
-Currently implmented is the ACD (Scintillator) into an ACDhitVector.  
+Currently implemented for :
+    - MCACDHit (Scintillator) into an ACDhitVector.
+    - MCCalorimeterHit (CsI Logs) into MCCalorimeterHitVector
+    - MCTRKHit (Si Strips) int MCTRKHitVector
 */
 
 class IRFConverter : public DetectorConverter {
@@ -37,7 +40,7 @@ public:
         if (MCSiLayerContainer) delete MCSiLayerContainer;
     }
 
-    // called due to a GlastDetector::accept(DetectorConverter) call
+    //! called due to a GlastDetector::accept(DetectorConverter) call
     virtual void forward (const Scintillator& s) {
         // ACD tile data
         // retrieve data only if this detector has data
@@ -49,6 +52,7 @@ public:
         } 
     }
 
+    //! called due to GlastDetector::accept(), handles Cal data
     virtual void forward ( const CsIDetector& csi) {
         // CAL CsI log data
         if ( !(csi.empty()) ) {
@@ -58,10 +62,10 @@ public:
             mcCal->setRightResponse(csi.Rresp());
             MCCalorimeterHitContainer->push_back(mcCal);
 
-			// many more parameters need to be added here
         }
     }
     
+    //! not implemented
     virtual void forward ( const MCTruth& mc) {
         // monte carlo truth
 		/** Going to increase the functionality of

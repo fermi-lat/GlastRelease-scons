@@ -14,9 +14,7 @@
 #include "GlastEvent/TopLevel/ObjectVector.h"
 #include "GlastEvent/TopLevel/ObjectList.h"
 
-/*! Represents the data from the CsI logs. Originally adapted from H. Arrighi
-    MCACDHit class. The IRF parser used with this class is CsIDetector
-*/
+
 
 
 // Forward declarations
@@ -25,7 +23,9 @@
 
 //! Externals 
 extern const CLID& CLID_MCCalorimeterHit;
-
+/*! Represents the data from the CsI logs. Originally adapted from H. Arrighi
+    MCACDHit class. The IRF parser used with this class is CsIDetector
+*/
 
 
 

@@ -18,6 +18,9 @@
 // Inherited sources
 #include "GlastSvc/MonteCarlo/MCSiLayerCnv.h"
 
+/*! Converter that handles TRK data from the IRF file.
+*/
+
 
 //! Instantiation of a static factory class used by clients to create instances
 static CnvFactory<MCSiLayerCnv> s_factory;

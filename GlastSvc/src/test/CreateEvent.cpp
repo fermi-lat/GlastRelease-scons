@@ -76,7 +76,7 @@ StatusCode CreateEvent::initialize() {
     }
     m_detSvc = detSvc;
 
-    // ----------------------------------------------------
+
     return StatusCode::SUCCESS;
 }
 
@@ -90,7 +90,7 @@ StatusCode CreateEvent::execute() {
 
     DataObject* pObject;
 
-    //! This method call does the bulk of the work
+
     /*! Causes the data store to be searched, if the data is unavailable, the appropriate
     converter is called to retrieve the data. */
     sc = eventSvc()->retrieveObject("/Event/MC/MCACDHits", pObject);

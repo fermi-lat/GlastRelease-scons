@@ -20,21 +20,20 @@
 class IGlastDetSvc;
 class IGlastIRFLoadSvc;
 
-/**
-  Attempts to create a GlastEvent tree in Gaudi.
-
-  @Author :   Sawyer Gillespie
- */
+/*! Short test algorithm to test the functionality of MCACDHit, MCCalorimeterHit, and MCTRKHit
+*/
 
 class CreateEvent : public Algorithm {
 
 public:
-  /// Constructor of this form must be provided
+  //! Constructor of this form must be provided
   CreateEvent(const std::string& name, ISvcLocator* pSvcLocator); 
 
-  // Three mandatory member functions of any algorithm
+  //! mandatory
   StatusCode initialize();
+  //! mandatory
   StatusCode execute();
+  //! mandatory
   StatusCode finalize();
 
 private:
