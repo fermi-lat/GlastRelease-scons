@@ -1,16 +1,17 @@
-// File and Version Information:
-// $Header$
-//
-// Description: This is the Gaudi algorithm that runs Geant4 and fills the TDS
-// with Montecarlo data. It initalizes some services (for tds and detector
-// geometry) and than passes them to the RunManager class that do most of the
-// work. Optionally it can uses the GuiSvc to show the event in a GUI; in that
-// case the GUI takes control on the event loop
-//      
-// Author(s):
-//      T.Burnett
-//      R.Giannitrapani
+/** @file G4Generator.cxx
+    @brief implementation of class G4Generator
 
+    $Header$
+
+ This is the Gaudi algorithm that runs Geant4 and fills the TDS
+ with Montecarlo data. It initalizes some services (for tds and detector
+ geometry) and than passes them to the RunManager class that do most of the
+ work. Optionally it can uses the GuiSvc to show the event in a GUI; in that
+ case the GUI takes control on the event loop
+      
+ @author  T.Burnett
+ @author  R.Giannitrapani
+*/
 
 // Include files
 
@@ -159,9 +160,12 @@ StatusCode G4Generator::initialize()
       m_eLossCurrent ? GlastMS::EnergyLossFactory::CURRENT 
                      : GlastMS::EnergyLossFactory::RELEASE52);
 
-  log << MSG::WARNING << "Using the " << (m_mscatOption? "Old 3.2" : "current G4") 
+  log << MSG::INFO << "Using the " << (m_mscatOption? "Old 3.2" : "current G4") 
       << " version of Multiple scattering" << endreq;
 
+  log << MSG::INFO << "Using the " << (!m_eLossCurrent? "Old 5.2" : "current G4") 
+      << " version of Energy Loss" << endreq;
+  
   log << MSG::INFO << "Initializing run manager...\n";
   // The geant4 manager
   if (!(m_runManager = RunManager::GetRunManager()))
