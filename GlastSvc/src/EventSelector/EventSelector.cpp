@@ -173,6 +173,7 @@ IEvtSelector::Iterator* EventSelector::begin() const {
     sc = m_detSvc->openIRF(fName);
     if(sc.isFailure()){
         *(it) = m_evtEnd; 
+        log << MSG::INFO << "failed to open file " << fName << endreq;
         return it;
     }
 
