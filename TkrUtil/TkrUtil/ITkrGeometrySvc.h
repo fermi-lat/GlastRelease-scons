@@ -1,5 +1,5 @@
-/** @file ITkrGeometrySvc
-@brief Supplies useful geometry information for TKR digitization and reconstruction
+/** @file ITkrGeometrySvc.h
+ @brief Abstract interface to TkrGeometrySvc (q.v.)
 
   $Header$
 */

@@ -1,3 +1,12 @@
+/** @file ITkrFailureModeSvcCalib.h
+@brief Abstract interface to TkrFailureModeSvc, used by TkrCalibAlg
+@author Leon Rochester
+
+$Header$
+*/
+
+
+
 #ifndef ITkrFailureModeSvcCalib_H
 #define ITkrFailureModeSvcCalib_H 1
 

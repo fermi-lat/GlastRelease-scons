@@ -1,3 +1,14 @@
+/** 
+ @file TkrBadStripsSvc.cxx
+
+ @brief Maintains lists of bad strips, and provides access methods 
+
+ First version 3-Jun-2001
+  @author Leon Rochester
+
+ $Header$
+*/
+
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"

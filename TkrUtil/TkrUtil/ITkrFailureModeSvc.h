@@ -1,3 +1,12 @@
+/** @file ITkrFailureModeSvc.h
+@brief Abstract interface to TkrFailureModeSvc (q.v.)
+@author Leon Rochester
+
+$Header$
+*/
+
+
+
 #ifndef ITkrFailureModeSvc_H
 #define ITkrFailureModeSvc_H 1
 

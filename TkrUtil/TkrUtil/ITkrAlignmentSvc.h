@@ -1,7 +1,8 @@
-/** @file ITkrAlignmentSvc
-@brief Supplies alignment constants for TKR digitization and reconstruction
+/** @file ITkrAlignmentSvc.h
+@brief AlignmentConsts class & Abstract interface to TkrAlignmentSvc (q.v.) 
+@author Leon Rochester
 
-  $Header$
+$Header$
 */
 
 
@@ -27,11 +28,8 @@ namespace {
 /// A small class to define alignment constants
 
 /** 
- * @class AlignmentConsts
- *
- * @brief holds the six alignment constants
- * 
- * @author Leon Rochester 23-Jan-2003
+  @class AlignmentConsts 
+  @brief holds the six alignment constants  
  */
 
 class AlignmentConsts 
@@ -88,11 +86,9 @@ private:
 };
 
 /** 
- * @class ITkrAligmentSvc
- *
- * @brief Abstract interface to TkrAlignmentSvc (q.v.)
- * 
- * @author Leon Rochester 23-Jan-2003
+  @class ITkrAligmentSvc 
+  @brief Abstract interface to TkrAlignmentSvc (q.v.)  
+  @author Leon Rochester 23-Jan-2003
  */
 
 

@@ -1,3 +1,12 @@
+/** @file ITkrBadStripsSvcCalib.h
+@brief Abstract Interface to TkrBadStripsSvc, used by TkrCalibAlg
+@author Leon Rochester
+
+$Header$
+*/
+
+
+
 #ifndef __ITKRBADSTRIPSSVCCALIB_H
 #define __ITKRBADSTRIPSSVCCALIB_H 1
 

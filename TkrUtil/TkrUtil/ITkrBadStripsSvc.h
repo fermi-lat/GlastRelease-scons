@@ -1,3 +1,11 @@
+/** @file ITkrBadStripsSvc.h
+@brief Abstract interface to TkrBadStripsSvc (q.v.) 
+@author Leon Rochester
+
+$Header$
+*/
+
+
 #ifndef __ITKRBADSTRIPSSVC_H
 #define __ITKRBADSTRIPSSVC_H 1
 

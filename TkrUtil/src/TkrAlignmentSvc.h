@@ -1,18 +1,16 @@
+/** 
+ @file TkrAlignmentSvc.h
+ @brief Maintains list of alignment constants
+
+ First version 23-Jan-2003
+ @author Leon Rochester
+
+ $Header$
+*/
 
 #ifndef TKRALIGNMENTSVC_H
 #define TKRALIGNMENTSVC_H 
 
-/** 
-* @class AlignmentSvc
-*
-* @brief Maintains list of alignment constants
-*
-* First version 23-Jan-2003
-*
-* @author Leon Rochester
-*
-* $Header$
-*/
 
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/ContainedObject.h"
@@ -27,6 +25,11 @@
 
 
 #include "GlastSvc/GlastDetSvc/IGeometry.h"
+
+/** 
+ @class TkrAlignmentGeomVisitor
+ @brief Retrieves the necessary geometry info
+*/
 
 class TkrAlignmentGeomVisitor: public IGeometry
 {
@@ -61,7 +64,10 @@ private:
 };
 
 
-
+/** 
+ @class TkrAlignmentSvc
+ @brief Maintains list of alignment constants
+*/
 
 class TkrAlignmentSvc : public Service, virtual public ITkrAlignmentSvc
 {

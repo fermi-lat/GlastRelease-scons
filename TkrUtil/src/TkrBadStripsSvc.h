@@ -1,40 +1,48 @@
+/** 
+ @file TkrBadStripsSvc.h
+
+ @brief Maintains lists of bad strips, and provides access methods 
+
+ First version 3-Jun-2001
+  @author Leon Rochester
+
+ $Header$
+*/
+
 
 #ifndef TKRBADSTRIPSSVC_H
 #define TKRBADSTRIPSSVC_H 
 
 /** 
-* @class BadStripsSvc
-*
-* @brief Maintains lists of bad strips, and provides access methods 
-*
-* First version 3-Jun-2001
-*
-* The bad strips are kept in ascii files and/or in the TkrBadStrips database
-* The files are read in under
-* the control of the jobOptions file. In the ascii files, strips are
-* marked as hot or dead, but in memory, strips are only bad.
-*
-* The service creates an array of vectors.  The singly indexed array
-* corresponds to a doubly indexed array by tower and layer.
-* 
-* The original design was a vector of vectors, but this was abandoned
-* because some of the code failed on unix.
-* 
-* The use of the bad strips in the clustering algorithm depends
-* on mixing good and bad strips and still being able to sort in ascending 
-* strip order.
-*
-* To this end strips are tagged good or bad by adding a high-order bit. 
-* Thus a tagged strip doesn't produce a legal strip number. The service has 
-* methods for manipulating the tags, which are currently accessed by 
-* TkrMakeClusters.
-*
-* The tagging arrangement can be extended, if necessary. For Example, 
-* we may want to differentiate dead from hot strips in the reconstruction.
-*
-* @author Leon Rochester
-*
-* $Header$
+ @class TkrBadStripsSvc
+
+ @brief Maintains lists of bad strips, and provides access methods 
+
+ First version 3-Jun-2001
+
+ The bad strips are kept in ascii files and/or in the TkrBadStrips database
+ The files are read in under
+ the control of the jobOptions file. In the ascii files, strips are
+ marked as hot or dead, but in memory, strips are only bad.
+
+ The service creates an array of vectors.  The singly indexed array
+ corresponds to a doubly indexed array by tower and layer.
+ 
+ The original design was a vector of vectors, but this was abandoned
+ because some of the code failed on unix.
+ 
+ The use of the bad strips in the clustering algorithm depends
+ on mixing good and bad strips and still being able to sort in ascending 
+ strip order.
+
+ To this end strips are tagged good or bad by adding a high-order bit. 
+ Thus a tagged strip doesn't produce a legal strip number. The service has 
+ methods for manipulating the tags, which are currently accessed by 
+ TkrMakeClusters.
+
+ The tagging arrangement can be extended, if necessary. For Example, 
+ we may want to differentiate dead from hot strips in the reconstruction.
+
 */
 
 #include "GaudiKernel/Service.h"
@@ -50,7 +58,7 @@ namespace {
 
   Minimal class derived from CalibData::BadStripsVisitor to
   check out BadStrips visitor interface.
-    */
+*/
     class BadVisitor : public CalibData::BadStripsVisitor {
     public:
         BadVisitor(MsgStream* log=0) : m_log(log) {}
