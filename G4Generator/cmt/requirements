@@ -2,7 +2,7 @@ package G4Generator
 version v1r1
 #$Header$
 
-use GlastPolicy v4
+use GlastPolicy v4r3
 
 # expect these to be already in the CMTPATH!
 use GaudiSvc
@@ -30,9 +30,9 @@ use xmlUtil  v2r7p1
 use idents   v2r3p1
 use detModel    v2r6p1
 
-use instrument      v5r1
+use instrument      v6
 use data     v4r2
-use GlastEvent v4
+use GlastEvent v5
 use GlastSvc        v3r1
 
 # flux determination
@@ -40,7 +40,7 @@ use FluxSvc  v5
 
 
 #to make standard display available
-use gui      v2r6p1
+use gui      v2r6p2
 use GuiSvc   v2r4
 use geometry v3
 use geomrep  v4r1
@@ -64,7 +64,8 @@ private
 # alternative test program that links stuff into the exe
 
 macro G4Testlinkopts "$(GuiSvc_lib) ${guiapp_linkopts} -u GuiSvc_loadRef  -ldl "\
-              WIN32 " ${guiapp_linkopts} $(GuiSvc_lib)  /include:_GuiSvc_loadRef "
+              WIN32 " $(GaudiKernel_linkopts) $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) /include:_GuiSvc_loadRef "
+
 
 macro other_source "" WIN32 "test/*.txt test/*.xml *.h test/*.h" 
 application G4Test ${GlastMain} test/*.cxx *.cxx  Dll/*.cxx ${other_source} ${Win32Resource}

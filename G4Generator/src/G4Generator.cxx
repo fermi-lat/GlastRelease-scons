@@ -9,6 +9,7 @@
 #include "RunManager.h"
 #include "PrimaryGeneratorAction.h"
 
+#include "McHitsManager.h"
 // Gaudi
 
 #include "GaudiKernel/MsgStream.h"
@@ -190,6 +191,11 @@ StatusCode G4Generator::execute()
     primaryGenerator->setPosition(p);
     primaryGenerator->setEnergy(ke);
  
+
+    // Initialization of the McHitsManager
+    McHitsManager* mchits = McHitsManager::getPointer();
+    mchits->init();
+
     // Run geant4
     m_runManager->BeamOn(); 
     
@@ -199,6 +205,28 @@ StatusCode G4Generator::execute()
         std::auto_ptr<std::vector<Hep3Vector> > points = m_runManager->getTrajectoryPoints(i);
         dm->addTrack(*(points.get()), m_runManager->getTrajectoryCharge(i));
     }
+
+
+    mchits->sort();
+    McPositionHitVector* hitsContainer = mchits->getVector();
+    
+    
+    eventSvc()->registerObject("/Event/MC/PositionHitsCol", hitsContainer);
+
+    SmartDataPtr<McPositionHitVector> hits(eventSvc(), "/Event/MC/PositionHitsCol");
+    if (hits) log << MSG::INFO << "Number of hits in the event = " << hits->size() << endreq;
+
+    /*
+    McPositionHitVector::const_iterator iter;
+
+    for( iter = hits->begin(); iter != hits->end(); iter++ ) {
+        mc::McPositionHit *hit = (*iter);
+       if (hit)
+	 {
+	   log << MSG::INFO << "hit id = " << hit->volumeID().name() << endreq;
+	 }
+    }
+    */
 
     //
     // extract the hits/digis to the TDS via the converter

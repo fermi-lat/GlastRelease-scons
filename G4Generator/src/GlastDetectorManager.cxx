@@ -11,6 +11,10 @@
 #include "instrument/Scintillator.h"
 #include "CLHEP/Geometry/Transform3D.h"
 #include "geometry/Box.h"
+#include "GlastEvent/MonteCarlo/McPositionHit.h"
+#include "idents/VolumeIdentifier.h"
+
+#include "McHitsManager.h"
 
 // Geant4 interface
 #include "G4Step.hh"
@@ -228,7 +232,21 @@ G4bool GlastDetectorManager::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhis
     idents::VolumeIdentifier id = constructId(aStep);
     assert(m_detMap[id]);
     m_detMap[id]->score(aStep);
+
+
+    // Filling of the hits container
+    mc::McPositionHit *hit = new mc::McPositionHit;
     
+    hit->setDepositedEnergy(edep);
+    hit->setVolumeID(id);
+    hit->setEntryPoint(InitPos);
+    hit->setExitPoint(FinPos);
+
+    // We add the hit to the manager
+    McHitsManager* mchits = McHitsManager::getPointer();
+    mchits->addHit(hit);
+ 
+
     //**** interface to display *************
     
     DisplayManager::instance()->addHit(InitPos, FinPos);
