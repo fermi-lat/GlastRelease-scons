@@ -2,6 +2,7 @@
  * Package calibUtil
  * Coordinator: J. Bogart
  *
+ * v0r3p0 07-Aug-2003 tk   update requirements for GlastRelease v5r2p4
  * v0r3   11-Jul-2003 jrb  New bad strips xml format; define status bits
  * v0r2p6  1-May-2003 jrb  Bug fix to allow host overriding as intended 
  * v0r2p5  1-May-2003 jrb  Log MySQL connects  (success & failure)
