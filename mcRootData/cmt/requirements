@@ -1,8 +1,7 @@
 package mcRootData
-version v2r8p1
+version v2r9
 
-use GlastPolicy v4r*
-use ROOT v3r2p*
+use GlastPolicy v5*
 
 
 apply_pattern package_include
@@ -15,7 +14,7 @@ apply_pattern package_headers
 
 private
 
-use RootPolicy v1r*
+use RootPolicy v2r*
 apply_pattern root_package
 apply_pattern root_package2
 
@@ -33,5 +32,9 @@ macro root_linkdef "../mcRootData/mcRootDataLinkDef.h"
 library  mcRootData *.cxx ../mcRootData/*.cxx\
      ${mcRootData_headers}
 
-macro test_mcRootDatalinkopts ${mcRootData_shlibflags}
+macro_append mcRootData_shlibflags $(ROOT_libs)
+macro test_mcRootDatalinkopts ${mcRootData_shlibflags} $(ROOT_libs)
+
 application test_mcRootData test/testMcClasses.cxx
+
+apply_pattern vsnet_rootcint
