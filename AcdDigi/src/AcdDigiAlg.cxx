@@ -461,7 +461,7 @@ double AcdDigiAlg::edgeEffect(const Event::McPositionHit *hit)  {
     }
     else if(iFace == 2 || iFace == 4) { // Y Side Tile
         double dist_z = dZ/2. - fabs(local_x0.z());
-        double dist_x = dY/2. - fabs(local_x0.x());	                
+        double dist_x = dX/2. - fabs(local_x0.x());	                
         dist = (dist_z < dist_x) ? dist_z : dist_x;
     }
     
