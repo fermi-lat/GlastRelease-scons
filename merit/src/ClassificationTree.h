@@ -30,6 +30,10 @@ public:
 
     ~ClassificationTree();
 
+    //! true if the vertex measurment of the gamma direction is better than one-track
+    //! must be called after the execute method.
+    bool useVertex()const;
+
 private:
     int backgroundRejection();
 
