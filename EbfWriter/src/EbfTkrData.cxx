@@ -149,10 +149,11 @@ void EbfTkrData::fill (const Event::TkrDigiCol &tkr)
                int ilayerEnd = 2*ilayer + loHi;
                int     ihits =  tower->m_nhits[ilayerEnd];
                
-                   
-               tower->m_nhits[ilayerEnd]       = ihits + 1;
-               tower->m_data[ilayerEnd][ihits] = stripId;
-               tower->m_maps[xy][loHi]        |= (1 << bilayer);
+               if(ihits<128){
+                 tower->m_nhits[ilayerEnd]       = ihits + 1;
+                 tower->m_data[ilayerEnd][ihits] = stripId;
+                 tower->m_maps[xy][loHi]        |= (1 << bilayer);
+               }
            }
        }
 
