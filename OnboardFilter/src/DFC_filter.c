@@ -73,7 +73,10 @@
           this macro is a NOOP.
                                                                           */
 /* ---------------------------------------------------------------------- */
-#define DEBUG
+#ifdef DEBUG
+# undef DEBUG
+#endif
+
 #ifdef DEBUG
 #include <stdio.h>
 #define _DBG(_statement) _statement

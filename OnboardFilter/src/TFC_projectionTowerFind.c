@@ -254,7 +254,10 @@ static inline int extendProjectionUp  (TFC_projection        *prj,
                                                                               
                                                                           */
 /* ---------------------------------------------------------------------- */
-#define DEBUG
+#ifdef DEBUG //THB disable this for now
+# undef DEBUG
+#endif
+
 #ifdef DEBUG
 
 #include <stdio.h>
