@@ -23,32 +23,44 @@ RMcVertex::RMcVertex(TLorentzVector *pPosI, TLorentzVector *pPosF,
 					 TLorentzVector *pMomI, TLorentzVector *pMomF) :
 m_pPosI(pPosI), m_pPosF(pPosF), m_pMomI(pMomI), m_pMomF(pMomF)
 {
-	m_mcDaugterParticles = new TObjArray();
-    m_mcDaugterParticles->SetOwner();
+	m_mcDaughterParticles = new TObjArray();
+    //m_mcDaughterParticles->SetOwner();
 }
 //________________________________________________________________________
 RMcVertex::~RMcVertex() {
-    if (m_pPosI)
+  
+	if (m_pPosI){
 		delete m_pPosI;
+		m_pPosI = 0;
+	}
 	
-    if (m_pPosF)
+    if (m_pPosF){
 		delete m_pPosF;
+		m_pPosF =0;
+	}
 	
-    if (m_pMomI)
+    if (m_pMomI){
 		delete m_pMomI;
+		m_pMomI = 0;
+	}
 	
-    if (m_pMomF)
+    if (m_pMomF){
 		delete m_pMomF;
+		m_pMomF = 0;
+	}
 
-	if (m_mcDaugterParticles)
-		delete m_mcDaugterParticles;
+	if (m_mcDaughterParticles){
+		delete m_mcDaughterParticles;
+		m_mcDaughterParticles = 0;
+	}
+	
 }
 //________________________________________________________________________
 
 void RMcVertex::addDaughterMcParticle( RMcParticle* particle )
 {
 	if (particle) {
-        m_mcDaugterParticles->Add(particle);
+        m_mcDaughterParticles->Add(particle);
     }
 }
 
@@ -75,5 +87,5 @@ RMcParticle* RMcVertex::motherMcParticle()
 
 const TObjArray* RMcVertex::daughterMcParticles() const
 {
-    return m_mcDaugterParticles;
+    return m_mcDaughterParticles;
 }

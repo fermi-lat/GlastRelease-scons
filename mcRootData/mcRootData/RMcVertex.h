@@ -39,7 +39,7 @@ private:
 	
 	Double_t m_timeOfFlight;
 	
-	TObjArray* m_mcDaugterParticles;
+	TObjArray* m_mcDaughterParticles;
 	
 	RMcParticle* m_motherParticle;
 

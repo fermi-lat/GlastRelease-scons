@@ -18,7 +18,7 @@ apply_pattern package_headers
 private
 
 # Create the Root Cint classes
-macro root_headers "RMcVertex.h RMcParticle.h McEvent.h mcRootDataLinkDef.h"
+macro root_headers "RMcVertex.h RMcParticle.h RMcEvent.h mcRootDataLinkDef.h"
 
 # try to build this by adding to compilation for requirements
 macro mcRootData_customBuild ""\
@@ -40,5 +40,5 @@ macro mcRootData_shlibflags " -L${ROOT_PATH}/lib -lPhysics -lMatrix " \
 
 # I think this is still ok?
 library  mcRootData *.cxx \
-     ../mcRootData/mcRootDataCint.cxx \
+     ../mcRootData/*.cxx \
      ${mcRootData_headers}
