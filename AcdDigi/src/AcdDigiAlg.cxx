@@ -79,7 +79,8 @@ StatusCode AcdDigiAlg::initialize() {
     m_tiles.setPrefix(m_glastDetSvc->getIDPrefix());
     
     m_glastDetSvc->accept(m_tiles);
-    log << MSG::INFO << "will add noise to "<< m_tiles.size() << " ACD tiles, ids from "
+    if (m_tiles.size() > 0) 
+        log << MSG::INFO << "will add noise to "<< m_tiles.size() << " ACD tiles, ids from "
         << m_tiles.front().name() << " to " << m_tiles.back().name() << endreq;
 
     return StatusCode::SUCCESS;
