@@ -33,6 +33,7 @@ void FluxSvc_load() {
 
   DLL_DECL_SPECTRUM( AlbedoPSpectrum);
   DLL_DECL_SPECTRUM( GalElSpectrum);
+  DLL_DECL_SPECTRUM( CREMESpectrum);
   // DLL_DECL_SPECTRUM( ProtonSpectrum);
 
 }
