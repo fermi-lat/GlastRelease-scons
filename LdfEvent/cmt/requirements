@@ -1,0 +1,18 @@
+package LdfEvent
+version v0r0
+
+use GaudiInterface * IExternal
+use GlastPolicy v*
+
+apply_pattern package_include
+apply_pattern package_linkopts
+apply_pattern package_headers
+
+private
+
+library LdfEvent -no_share \
+        *.cxx ${LdfEvent_headers}
+
+
+application test_LdfEvent test/testMain.cxx
+
