@@ -18,7 +18,7 @@ $Header$
 // ldfReader includes
 #include "CalParser.h"
 #include "ldfReader/data/LatData.h"
-#include "ldfReader/EbfException.h"
+#include "ldfReader/LdfException.h"
 #include "../EbfDebug.h"
 
 namespace {

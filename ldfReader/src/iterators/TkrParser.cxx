@@ -11,7 +11,7 @@ $Header$
 #include "TKRstrip.h"
 // ldfReader includes
 #include "TkrParser.h"
-#include "ldfReader/EbfException.h"
+#include "ldfReader/LdfException.h"
 #include "../EbfDebug.h"
 
 namespace {
