@@ -2,6 +2,7 @@
 package AcdRecon\n
 package manager:H.Kelly
 
+v1r4p1    09-Oct-2002 LSR remove now-offending include of TkrPatCandCol.h
 v1r4      01-Oct-2002 HMK uses vectors for energy collection now available in Event\n
           package \n
 v1r3      27-Sep-2002 HMK rename threshold variable and use Event::AcdRecon ctor\n
