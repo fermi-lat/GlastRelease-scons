@@ -18,8 +18,6 @@ ApplicationMgr.EvtMax = 1000;
 MeritAlg.generated = 1000; // for estimation of Aeff--must be the same
 // set root output from merit with following
 //MeritAlg.RootFilename="merit.root"; 
-// possibility to study effect of the cut value (in mm)
-G4Generator.defaultCutValue=0.1; // default default is 0.1
 //==============================================================
 //
 // End of job options file

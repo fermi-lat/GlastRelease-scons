@@ -56,19 +56,22 @@ GlastDetSvc.topVolume="LAT";
 //GlastDetSvc.topVolume="trayReg";
 //GlastDetSvc.topVolume="trayBot";
 
+
+GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.visitorMode="recon";
+
 // ----------------------------
 //  Randoms definition
 //
 ApplicationMgr.ExtSvc += { "GlastRandomSvc"};
-
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
-GlastDetSvc.visitorMode="recon";
 
 // ----------------------------
 //  Generation or input
 //
 ApplicationMgr.DLLs +={ "G4Generator"};
 Generator.Members = {"FluxAlg", "G4Generator"};
+G4Generator.defaultCutValue=0.7; // instead of 0.1 default
+
 #include "$FLUXSVCROOT/src/defaultOptions.txt"
 
 // Append (or replace) the list of source library documents

@@ -3,6 +3,13 @@
  * package manager:T.Burnett
  * $Id$
 
+* v2r5 THB 10-oct-02 Random now supported; leaks suppresed
+     use Event           v9r4
+     use G4Generator     v4r4
+     use TkrDigi          v1r7
+     use TkrRecon         v8r4
+     use AcdRecon         v1r4p1       
+
 * v2r4 THB 09-oct-02  GUI fixes; get GlastSvc tagged to avoid FluxSvc compilation errors
      use GuiSvc            v3r2
      use GlastSvc          v9r3
