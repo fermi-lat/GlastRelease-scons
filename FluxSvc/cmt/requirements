@@ -3,11 +3,18 @@ version v5r3
 
 branches FluxSvc mgr doc
 
-use GlastPolicy
+use GlastPolicy v4*
+
+use GlastEvent v7r*
+use geometry   v3*
+
+use GaudiSvc
+use xml
+use CLHEP
+
+
 apply_pattern packageShr
 apply_pattern package_include
-
-
 
 #=============================================================
 use facilities
@@ -15,11 +22,6 @@ use facilities
 private
 
 
-use GaudiSvc
-use GlastEvent
-use xml
-use CLHEP
-use geometry
 
 
 # get flags to build shared library
