@@ -5,7 +5,6 @@
 *  $Header$
 */
 
-// Include files
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
@@ -219,7 +218,7 @@ StatusCode TriggerAlg::caltrigsetup()
 
 bool TriggerAlg::alive(double current_time)
 { 
-    return (current_time-m_lastTriggerTime >m_deadtime);
+    return (current_time-m_lastTriggerTime >=m_deadtime);
 }
 
 //------------------------------------------------------------------------------
