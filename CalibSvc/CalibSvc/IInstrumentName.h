@@ -2,6 +2,7 @@
 #define CALIBDATASVC_IINSTRUMENTNAME_H
 
 #include "GaudiKernel/IInterface.h"
+#include <string>
 
 /**  @class IInstrumentName
      @brief Simple interface to keep track of which instrument (LAT,
@@ -11,12 +12,15 @@
      Intention is to implement in CalibDataSvc.
 */
 static const InterfaceID IID_IInstrumentName("IInstrumentName", 1, 0);
-class IInstrumentName {
+
+class IInstrumentName : virtual public IInterface {
 public:
 
-  virtual const bool validInstrumentName() = 0;
-  virtual const std::string& getInstrumentName() = 0;
+  static const InterfaceID& interfaceID() { return IID_IInstrumentName; }
+
+  virtual const bool validInstrumentName() const = 0;
+  virtual const std::string& getInstrumentName() const = 0;
   virtual void setInstrumentName(const std::string& name) = 0;
-}
+};
 
 #endif
