@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include "rdbModel/Rdb.h"
+#include "rdbModel/RdbException.h"
 #include "rdbModel/Management/Manager.h"
 #include "rdbModel/Management/XercesBuilder.h"
 #include "rdbModel/Db/MysqlConnection.h"
@@ -63,6 +64,31 @@ int main(int, char**) {
   case rdbModel::MATCHnoConnection:
     std::cout << "Connection failed while attempting match" << std::endl;
     return -1;
+  }
+
+  // Make a query
+  std::string rq[2];
+  rq[0] ="select * from metadata_v2r1";
+  rq[1] ="select garbage from metadata_v2r1";
+  for (int i = 0; i < 2; i++) {
+    try {
+      rdbModel::ResultHandle* res = 
+        con->dbRequest(rq[i]);
+      if (res) {
+        std::cout << "dbRequest '" << rq[i] << "'" << std::endl; 
+        std::cout << "succeeded, returned " << res->getNRows() 
+                  << " rows" << std::endl;
+      }
+      else {
+        std::cout << "dbRequest '" << rq[i] << "'" << std::endl; 
+        std::cout << "succeeded, no returned data expected" << std::endl;
+      }
+    }
+    catch (rdbModel::RdbException ex) {
+      std::cerr << "dbRequest '" <<  rq[i] << "'" << std::endl; 
+      std::cerr <<" failed with error: " << ex.getMsg() << std::endl;
+      std::cerr << "Code " << ex.getCode() << std::endl;
+    }
   }
 
   return 0;
