@@ -3,6 +3,7 @@ Package digiRootData
 Coordinator:H.Kelly
 @verbatim
 
+v5r0p1    14-Jan-2004 HMK Remove std:: from vector data members in TkrDigi - causes reading problems
 v5r0p0    09-Jan-2004 HMK Fix up signed/unsigned warnings
 v5r0                  HMK Increment version fo fool RM - due to EM branch tag
 v4r2p0    13-Oct-2003 HMK Add initialize routines to AcdId

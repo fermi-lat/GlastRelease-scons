@@ -54,7 +54,7 @@ public:
     Int_t getHit(UInt_t i) const;
 
     //! Get the pointer to the hit list
-    const std::vector<UInt_t> getHitCol() const { return m_hitCol; };
+    const vector<UInt_t> getHitCol() const { return m_hitCol; };
     
     //! Add a controller 0 hit to the hit list (keeps track of highest strip)
     void addC0Hit( UInt_t strip );
@@ -72,7 +72,7 @@ private:
     /// Denotes which axis is measured
     GlastAxis::axis m_view;
     /// Collection of hit strips
-    std::vector<UInt_t> m_hitCol;
+    vector<UInt_t> m_hitCol;
     
     ClassDef(TkrDigi,4)
 };

@@ -1,5 +1,5 @@
 package digiRootData
-version v5r0p0
+version v5r0p1
 
 use mcRootData v2r*
 use GlastPolicy v5*
