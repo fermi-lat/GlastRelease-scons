@@ -372,7 +372,7 @@ void meritAlg::clusterReco(const Event::CalClusterCol& clusters, const Event::Ca
     Vector caldir = cl->getDirection();
     float caltheta = -1000.0;
     float calphi = -1000.0;
-    if(abs(caldir.z())<1.){ caltheta=acos(caldir.z());
+    if(fabs(caldir.z())<1.){ caltheta=acos(caldir.z());
     calphi=float(M_PI/2.);
     if(caldir.x()!=0.) calphi = atan(caldir.y()/caldir.x());
     }
