@@ -24,7 +24,9 @@ library CalReconData -no_share CalLogID.cpp CalGeometrySvc.cpp\
 macro CalRecon_linkopts   "$(CalReconDir)/libCalReconData.a  " \
       VisualC             "$(CalReconDir)/CalReconData.lib  " 
 
-library CalRecon  *.cxx *.cpp ../CalRecon/*.h  Dll/*.cpp
+apply_pattern package_headers
+
+library CalRecon  *.cxx *.cpp Dll/*.cpp ${CalRecon_headers}
 
 
 macro CalRecon_stamps     
