@@ -122,7 +122,7 @@ public:
     inline void   setNumYHits(int i)                  {m_nyHits            = i;}
     inline void   setTkrCalRadLen(double x)           {m_TkrCal_radlen     = x;}
     inline void   setStatusBit(unsigned int status)   {m_statusBits       |= status;}
-
+	inline void   clearStatusBits()                   {m_statusBits        = 0;}
 
 private:	
     /// Status
@@ -138,25 +138,27 @@ private:
     double       m_chiSquareSmooth;     // "Smoothed" track chi-square/dof
     int          m_nDegreesOfFreedom;   // Number of degrees of freedom for above
     double       m_rmsResid;            // RMS residuals of track hits to fit
-    double       m_Quality;             // Track "Quality"
+    double       m_Quality;             // Track "Quality" derived from hit counts & chisq.
 
     // Information from the fitter
     double       m_KalmanEnergy;        // Energy estimate from Kalman Filter Fitter
     double       m_KalmanThetaMS;       // rms scattering deviation of track
 
     // Hit gap information
-    int          m_Xgaps;               //
-    int          m_Ygaps;               //
-    int          m_XistGaps;            //
-    int          m_YistGaps;            //
+    int          m_Xgaps;               // Number of x-meas points on track NOT used in fit
+    int          m_Ygaps;               // Number of y-meas points on track Not used in fit
+    int          m_XistGaps;            // Number of x-meas points in first part of track not used
+    int          m_YistGaps;            // Number of y-meas points in first part of track not used
 
     /// Kalman Filter Track data
-    int          m_numSegmentPoints;    //
-    double       m_chisqSegment;        //
-    int          m_nxHits;              //
-    int          m_nyHits;              //
-    double       m_KalmanEnergyErr;     //
-    double       m_TkrCal_radlen;       //
+    int          m_numSegmentPoints;    // Effective number of 3D segments that contribute
+	                                    //   to track direction
+    double       m_chisqSegment;        // Chi-square for this portion of the track
+    int          m_nxHits;              // Number of x meas. points USED in fit
+    int          m_nyHits;              // Number of y meas. points USED in fit
+    double       m_KalmanEnergyErr;     // Estimated Error on Kalman Energy
+    double       m_TkrCal_radlen;       // Integrated Tracker radiation lengths 
+	                                    // (uses starting track param. trajectory)
 };
 
 //typedef for the Container
