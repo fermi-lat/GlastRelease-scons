@@ -85,15 +85,15 @@ StatusCode GltValsTool::initialize()
 
     // load up the map
 
-    m_ntupleMap["TRG_Word"] =      &Trig_word;  
-    m_ntupleMap["TRG_Tower"] =     &Trig_tower; 
-    m_ntupleMap["TRG_XTower"] =    &Trig_xTower;
-    m_ntupleMap["TRG_YTower"] =    &Trig_yTower;
-    m_ntupleMap["TRG_Layer"] =     &Trig_layer; 
-    m_ntupleMap["TRG_Total"] =     &Trig_total; 
-    m_ntupleMap["TRG_Type"] =      &Trig_type;  
-    m_ntupleMap["TRG_Moment"] =    &Trig_moment;
-    m_ntupleMap["TRG_zDir"] =      &Trig_zDir;  
+    addItem("TRG_Word",      &Trig_word);  
+    addItem("TRG_Tower",     &Trig_tower); 
+    addItem("TRG_XTower",    &Trig_xTower);
+    addItem("TRG_YTower",    &Trig_yTower);
+    addItem("TRG_Layer",     &Trig_layer); 
+    addItem("TRG_Total",     &Trig_total); 
+    addItem("TRG_Type",      &Trig_type);  
+    addItem("TRG_Moment",    &Trig_moment);
+    addItem("TRG_zDir",      &Trig_zDir);  
     
     zeroVals();
     
