@@ -119,6 +119,7 @@ void TkrFitTrack::writeOut(MsgStream& log) const
 
 void TkrFitTrack::draw(gui::DisplayRep& v) 
 {
+    v.markerAt(position());
     KalTrack::drawChiSq(v,KalHit::SMOOTH);
     KalTrack::drawTrack(v,KalHit::SMOOTH);
 }
