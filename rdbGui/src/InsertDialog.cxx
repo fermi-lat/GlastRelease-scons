@@ -135,17 +135,21 @@ rdbModel::Visitor::VisitorState InsertDialog::visitColumn(rdbModel::Column *colu
     case rdbModel::Datatype::TYPEvarchar :
     case rdbModel::Datatype::TYPEchar :
     {
+      if (dt->getRestrict() == rdbModel::Datatype::RESTRICTenum)
+        colWidget = m_factory->createEnumWidget(m_matrix, column);
+      else
         colWidget = m_factory->createStringWidget(m_matrix, column);
+      break;
     };
-    }
-    
-    if (source != rdbModel::Column::FROMdefault)
-        label->setTextColor(FXRGB(255,0,0));
-    else
-        {
-            colWidget->setValue(column->getDefault());
-        }
+    } 
 
+    if ((source != rdbModel::Column::FROMdefault) && (!column->nullAllowed()))
+      label->setTextColor(FXRGB(255,0,0));
+
+    if ((source == rdbModel::Column::FROMdefault)) 
+      colWidget->setValue(column->getDefault());
+
+      
     m_widgets.push_back(colWidget);
   }  
   return rdbModel::Visitor::VCONTINUE;

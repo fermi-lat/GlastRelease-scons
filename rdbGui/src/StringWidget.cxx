@@ -3,7 +3,7 @@
 StringWidget::StringWidget(FXComposite* parent, rdbModel::Column *column)
 {
   m_column = column;
-  m_widget = new FXTextField((FXComposite*)parent,20);
+  m_widget = new FXTextField((FXComposite*)parent,3,NULL,0,TEXTFIELD_NORMAL|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
 }
 
 std::string StringWidget::getValue()

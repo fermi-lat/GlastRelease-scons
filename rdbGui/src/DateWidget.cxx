@@ -3,7 +3,7 @@
 DateWidget::DateWidget(FXComposite* parent, rdbModel::Column *column)
 {
   m_column = column;
-  m_widget = new FXHorizontalFrame(parent);
+  m_widget = new FXHorizontalFrame(parent,LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
 
   m_year = new FXComboBox(m_widget,4,NULL,0,
 			  COMBOBOX_STATIC|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP);

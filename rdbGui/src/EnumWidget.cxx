@@ -7,7 +7,7 @@ EnumWidget::EnumWidget(FXComposite* parent, rdbModel::Column *column)
   rdbModel::Enum* en = dt->getEnum();
 
   m_column = column;
-  m_widget = new FXComboBox(parent,19, NULL, 0,FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP);
+  m_widget = new FXComboBox(parent,19, NULL, 0,FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
   m_widget->setNumVisible(en->getChoices().size());
   
   for(int i=0; i<en->getChoices().size(); i++){
@@ -17,11 +17,11 @@ EnumWidget::EnumWidget(FXComposite* parent, rdbModel::Column *column)
 
 std::string EnumWidget::getValue()
 {
-  std::string res("");
+  std::string res(m_widget->getText().text());
   return res;
 }
 
 void EnumWidget::setValue(std::string val)
-{
-
+{ 
+  m_widget->setText(FXString(val.c_str()));
 }  
