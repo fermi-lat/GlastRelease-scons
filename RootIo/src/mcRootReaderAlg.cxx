@@ -172,6 +172,7 @@ StatusCode mcRootReaderAlg::initialize()
       }
 	  f.Close();
 	  m_mcTree->Add(m_fileName.c_str());
+          log << MSG::INFO << "Opened file: " << m_fileName.c_str() << endreq;
     } else {
       const std::vector<std::string> fileList = m_fileList.value( );
       std::vector<std::string>::const_iterator it;
@@ -186,6 +187,7 @@ StatusCode mcRootReaderAlg::initialize()
         }
 		f.Close();
 		m_mcTree->Add(theFile.c_str());
+                log << MSG::INFO << "Opened file: " << theFile.c_str() << endreq;
       }
     }
     

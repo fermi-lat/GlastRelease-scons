@@ -1,5 +1,5 @@
 package RootIo
-version v12r5p4
+version v12r7p0
 
 # $Header$
 
@@ -11,7 +11,6 @@ use ROOT v2r* IExternal
 apply_pattern packageShr
 apply_pattern package_include
 
-use RootPolicy v4r* -no_auto_imports
 use mcRootData v2r* -no_auto_imports
 use digiRootData v7r* -no_auto_imports
 use reconRootData v4r* -no_auto_imports

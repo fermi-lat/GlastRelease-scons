@@ -176,6 +176,7 @@ StatusCode relationRootReaderAlg::initialize()
       }
 	  f.Close();
 	  m_relTree->Add(m_fileName.c_str());
+          log << MSG::INFO << "Opened file: " << m_fileName.c_str() << endreq;
     } else {
       const std::vector<std::string> fileList = m_fileList.value( );
       std::vector<std::string>::const_iterator it;
@@ -188,8 +189,9 @@ StatusCode relationRootReaderAlg::initialize()
               << " could not be opened for reading." << endreq;
           return StatusCode::FAILURE;
         }
-		f.Close();
-	    m_relTree->Add(theFile.c_str());
+        f.Close();
+        m_relTree->Add(theFile.c_str());
+        log << MSG::INFO << "Opened file: " << theFile.c_str() << endreq;
      }
     }
 

@@ -229,7 +229,7 @@ bool RootIoSvc::setIndex(int i) {
      if (i < 0) return false;
      std::vector<TChain*>::iterator it;
      for(it = m_chainCol.begin(); it != m_chainCol.end(); it++) {
-       if (i > (*it)->GetEntries()) return false;
+       if (i >= (*it)->GetEntries()) return false;
      }
      m_index = i;
      m_runEventPair = std::pair<int, int>(-1,-1);
@@ -241,7 +241,7 @@ bool RootIoSvc::setRunEventPair(std::pair<int, int> ids) {
     std::vector<TChain*>::iterator it;
     for(it = m_chainCol.begin(); it != m_chainCol.end(); it++) {
         int readInd = (*it)->GetEntryNumberWithIndex(ids.first, ids.second);
-        if ( (readInd < 0) || (readInd > (*it)->GetEntries()) ) return false;
+        if ( (readInd < 0) || (readInd >= (*it)->GetEntries()) ) return false;
     }
     m_runEventPair = ids;
     m_index=-1;

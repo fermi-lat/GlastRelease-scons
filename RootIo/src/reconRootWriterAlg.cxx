@@ -19,6 +19,8 @@
 
 #include "Event/Recon/AcdRecon/AcdRecon.h"
 
+#include "LdfEvent/EventSummaryData.h"
+
 #include "idents/CalXtalId.h"
 
 #include "facilities/Util.h"
@@ -260,6 +262,13 @@ StatusCode reconRootWriterAlg::writeReconEvent() {
     log << endreq;
     
     m_reconEvt->initialize(evtId, runId, new TkrRecon, new CalRecon, new AcdRecon);
+
+    // For simulated data - this may not exist on the TDS and that is ok
+    // no need to fail for that
+    SmartDataPtr<LdfEvent::EventSummaryData> summaryTds(eventSvc(), "/Event/EventSummary");
+    if (summaryTds) 
+        m_reconEvt->initEventFlags(summaryTds->eventFlags());
+        
     
     return sc;
 }
