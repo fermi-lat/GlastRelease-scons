@@ -1,5 +1,5 @@
 package GlastSvc
-version v1
+version v1r3
 
 branches src mgr doc
 
@@ -11,9 +11,6 @@ use GlastEvent v1r2
 use GaudiSvc v4
 use Auditors v1
 use RootHistCnv v1
-
-# this package is needed to write out to Root
-#use DbCnv v2r1
 
 
 library GlastSvc ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
@@ -57,15 +54,12 @@ macro GlastSvc_shlibflags   "$(libraryshr_linkopts) $(use_linkopts)" \
 
 # WinIncludes is to allow header files to be added to the 
 # VC++ workspace, without causing build problems on unix
-macro WinIncludes "" \
-      VisualC     " ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
-                    GlastDetSvc/*.h EventSelector/*.h \
-                    ../GlastSvc/MonteCarlo/*.h ../GlastSvc/Irf/*.h \
-                    ../GlastSvc/Raw/*.h \
-                    test/*.h test/*.txt "
+
+macro WinInclude1 "" VisualC "test/CreateEvent.h" 
+macro WinInclude2 "" VisualC "test/jobOptions.txt"'
 
 # build this for non-shareable testing
 # note the addition of Raw. Take out shortly.
 application test  test/*.cpp \
-                  ${WinIncludes} 
+                  $(WinInclude1) $(WinInclude2) 
 

@@ -8,10 +8,6 @@ ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" , 
 // List of Dlls
 ApplicationMgr.DLLs   = { "GlastSvc", "RootHistCnv" };
 
-//--------------------------------------------------------------
-// Private Application Configuration options
-//--------------------------------------------------------------
-GlastDetSvc.PersistencyFile = "src/test/detector.xml";
 
 ApplicationMgr.TopAlg = { "CreateEvent" };
 
@@ -22,18 +18,11 @@ MessageSvc.OutputLevel      = 2;
 // Persistency service setup:
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 
-//--------------------------------------------------------------
-// Algorithms Private Options
-//--------------------------------------------------------------
-// Number of events to be processed (default is 10)
-// This property is not available in our EventSelector - use ApplicationMgr.EvtMax instead
-//EventSelector.EvtMax = 20;
 
 // Input IRF file
 EventSelector.Input = "IRFFILE src/test/muontest.irf";
 
 // Selection file - must be included - or else Gaudi will search for its file by default
-//ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 20;
 
 //==============================================================
