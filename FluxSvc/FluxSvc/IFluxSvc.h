@@ -1,4 +1,9 @@
-// $Header$
+/** 
+* @file IFluxSvc.h
+* @brief definition of the interface for IFluxSvc
+*
+*  $Header$
+*/
 #ifndef _H_IFluxSvc
 #define _H_IFluxSvc
 /** 
@@ -13,18 +18,17 @@
 
 // includes
 #include "GaudiKernel/IInterface.h"
+#include "CLHEP/Vector/Rotation.h"
+
 #include <string>
 #include <list>
 #include <vector>
-#include "geometry/CoordTransform.h"
-#include "src/GPS.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
 static const InterfaceID IID_IFluxSvc(910, 2 , 0); 
 
 // forward declarations
 class IFlux;
-class HepRandomEngine;
 class IParticlePropertySvc;
 class ISpectrumFactory;
 
@@ -41,9 +45,6 @@ public:
     /// add a new source
     virtual void addFactory(std::string name, const ISpectrumFactory* factory )=0;
     
-    
-    /// access to the local HepRandomEngine, to allow synchronization
-    virtual HepRandomEngine* getEngine()=0;
     
     /// pass a specific amount of time
     virtual void pass (double t)=0;    
@@ -68,19 +69,15 @@ public:
     
     
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
-    virtual Rotation transformGlastToGalactic(double time)const=0;
+    virtual HepRotation transformGlastToGalactic(double time)const=0;
     
     /// get the current satellite location
     virtual std::pair<double,double> location()=0;
 
-    /// this sets the rocking mode in GPS.
-    virtual void setRockType(GPS::RockType rockType)=0;
     virtual void setRockType(int rockType)=0;
-
     ///this should return the source file names, along with the contained sources.
     virtual std::vector<std::pair< std::string ,std::list<std::string> > > sourceOriginList() const=0;
-    
-    
+        
 };
 
 #endif  // _H_IFluxSvc

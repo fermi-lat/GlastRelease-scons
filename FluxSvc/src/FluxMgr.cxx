@@ -362,7 +362,7 @@ Rotation FluxMgr::orientTransform(double time){
 }
 
 ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
-Rotation FluxMgr::transformGlastToGalactic(double time){
+HepRotation FluxMgr::transformGlastToGalactic(double time){
     return GPS::instance()->transformGlastToGalactic(time);
 }
 

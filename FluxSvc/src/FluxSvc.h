@@ -1,4 +1,9 @@
-// $Header$ 
+/** 
+* @file FluxSvc.h
+* @brief definition of the class FluxSvc
+*
+*  $Header$
+*/
 
 #ifndef _H_FluxSvc_
 #define _H_FluxSvc_
@@ -9,11 +14,14 @@
 *  FluxSvc handles the creation and interfacing with Flux objects.  
 * \author Toby Burnett tburnett@u.washington.edu
 * 
-* $Header $
+* $Header$
 */
 
 // includes
 #include "GaudiKernel/Service.h"
+#include "GaudiKernel/IRunable.h"
+#include "GaudiKernel/Property.h"
+
 #include "FluxSvc/IFluxSvc.h"
 #include <list>
 
@@ -22,8 +30,13 @@ template <class TYPE> class SvcFactory;
 class IFlux;  // interface
 class FluxMgr;  // actual manager
 class IParticlePropertySvc; 
+class IAppMgrUI;
 
-class FluxSvc : virtual public Service, virtual public IFluxSvc
+
+class FluxSvc : 
+    virtual public Service, 
+    virtual public IFluxSvc,
+    virtual public IRunable
 {  
 public:
     
@@ -35,10 +48,7 @@ public:
     
     /// add a new SpectrumFactory
     virtual void addFactory(std::string name, const ISpectrumFactory* factory );
-    
-    /// access to the local random engine 
-    virtual HepRandomEngine* getEngine();
-    
+        
     /// pass a specific amount of time
     virtual void pass ( double t);
     
@@ -58,7 +68,7 @@ public:
     std::pair<double,double> getOrientation();
     
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
-    Rotation transformGlastToGalactic(double time)const;
+    HepRotation transformGlastToGalactic(double time)const;
     
     /// get the current satellite location
     std::pair<double,double> location();
@@ -66,14 +76,16 @@ public:
     /// return a string which uniquely identifies the source
     std::string uniqueIDString()const;
 
-    /// this sets the rocking mode in GPS.
-    void setRockType(GPS::RockType rockType);
     ///0=NONE, 1=UPDOWN, 2=SLEWING, 3=ONEPERORBIT
     void setRockType(int rockType);
 
     ///this should return the source file names, along with the contained sources.
     std::vector<std::pair< std::string ,std::list<std::string> > > sourceOriginList() const;
-    
+   
+
+    /// for the IRunnable interfce
+    virtual StatusCode run();
+
     //------------------------------------------------------------------
     //  stuff required by a Service
     
@@ -111,6 +123,14 @@ private:
     std::string m_dtd_file;
     /// the "current" flux object
     IFlux* m_currentFlux;
+
+    /// Reference to application manager UI
+    IAppMgrUI*    m_appMgrUI;
+    IntegerProperty m_evtMax;
+
+    // starting and ending times for orbital simulation
+    DoubleProperty m_startTime;
+    DoubleProperty m_endTime;
 };
 
 

@@ -4,4 +4,6 @@ ApplicationMgr.ExtSvc += { "FluxSvc" };
 ApplicationMgr.DLLs   += { "FluxSvc" }; 
 FluxSvc.source_lib = {"$(FLUXSVCROOT)/xml/source_library.xml"};
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
+// controls the event loop
+ApplicationMgr.Runable= "FluxSvc";
 //---------------------------------------------------

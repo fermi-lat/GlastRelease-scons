@@ -1,7 +1,10 @@
-// $Header$
-// 
-//  Original author: Toby Burnett tburnett@u.washington.edu
-//
+/** 
+* @file FluxSvc.cxx
+* @brief definition of the class FluxSvc
+*
+*  $Header$
+*  Original author: Toby Burnett tburnett@u.washington.edu
+*/
 
 #include "FluxSvc.h"
 #include "FluxSvc/IRegisterSource.h"
@@ -11,19 +14,14 @@
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
-
-#include "GaudiKernel/Incident.h"
-#include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/Property.h"
-#include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IObjManager.h"
 #include "GaudiKernel/IToolFactory.h"
-
+#include "GaudiKernel/IAlgManager.h"
+#include "GaudiKernel/Algorithm.h"
+#include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
-#include "CLHEP/Random/Random.h"
-#include "CLHEP/Random/RanluxEngine.h"
 
 #include "Flux.h"
 
@@ -48,8 +46,10 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
     
     declareProperty("source_lib" , m_source_lib); 
     declareProperty("dtd_file"   , m_dtd_file=default_dtd_file);
+    declareProperty("EventMax"   , m_evtMax=0);
+    declareProperty("StartTime"   , m_startTime=0);
+    declareProperty("EndTime",      m_endTime=0);
     
-    HepRandom::setTheEngine(new RanluxEngine);
 }
 
 std::list<std::string> FluxSvc::fluxNames()const{
@@ -86,6 +86,8 @@ StatusCode FluxSvc::initialize ()
     // open the message log
     MsgStream log( msgSvc(), name() );
     
+    status = serviceLocator()->queryInterface(IID_IAppMgrUI, (void**)&m_appMgrUI);
+
     // If source library was not set, put in default
     if( m_source_lib.empty() ){
         m_source_lib.push_back(default_source_library);
@@ -179,10 +181,12 @@ StatusCode FluxSvc::finalize ()
 StatusCode FluxSvc::queryInterface(const IID& riid, void** ppvInterface)  {
     if ( IID_IFluxSvc.versionMatch(riid) )  {
         *ppvInterface = (IFluxSvc*)this;
-    }
-    else  {
+    }else if (IID_IRunable.versionMatch(riid) ) {
+      *ppvInterface = (IRunable*)this;
+    } else  {
         return Service::queryInterface(riid, ppvInterface);
     }
+
     addRef();
     return SUCCESS;
 }
@@ -193,11 +197,6 @@ void FluxSvc::addFactory(std::string name, const ISpectrumFactory* factory ){
     m_fluxMgr->addFactory(name, factory);
 }
 
-/// access to the local HepRandomEngine, to allow synchronization
-HepRandomEngine* FluxSvc::getEngine()
-{
-    return HepRandom::getTheEngine();
-}
 
 /// pass a specific amount of time
 void FluxSvc::pass ( double t){
@@ -235,19 +234,13 @@ std::pair<double,double> FluxSvc::getOrientation(){
     return m_fluxMgr->getOrientation();
 }
 
-Rotation FluxSvc::transformGlastToGalactic(double time)const{
+HepRotation FluxSvc::transformGlastToGalactic(double time)const{
     return m_fluxMgr->transformGlastToGalactic(time);
 }
 
 std::pair<double,double> FluxSvc::location(){
     return m_fluxMgr->location();
 }
-
-/// this sets the rocking mode in GPS.
-void FluxSvc::setRockType(GPS::RockType rockType){
-   m_fluxMgr->setRockType(rockType);
-}
-
 /// this sets the rocking mode in GPS.
 void FluxSvc::setRockType(int rockType){
    m_fluxMgr->setRockType(rockType);
@@ -256,3 +249,84 @@ void FluxSvc::setRockType(int rockType){
 std::vector<std::pair< std::string ,std::list<std::string> > > FluxSvc::sourceOriginList() const{
     return m_fluxMgr->sourceOriginList();
 }
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+StatusCode FluxSvc::run(){
+    StatusCode status = StatusCode::FAILURE;
+    MsgStream log( msgSvc(), name() );
+
+    if ( 0 == m_appMgrUI )  return status; 
+
+    IProperty* propMgr=0;
+    status = serviceLocator()->service("ApplicationMgr", propMgr );
+    if( status.isFailure()) {
+        log << MSG::ERROR << "Unable to locate PropertyManager Service" << endreq;
+        return status;
+    }
+    
+    IntegerProperty evtMax("EvtMax",0);
+    status = propMgr->getProperty( &evtMax );
+    if (status.isFailure()) return status;
+    
+    setProperty(evtMax);
+    
+    // now find the top alg so we can monitor its error count
+    //
+    IAlgManager* theAlgMgr;
+    status = serviceLocator( )->getService( "ApplicationMgr",
+        IID_IAlgManager,
+        (IInterface*&)theAlgMgr );
+    IAlgorithm* theIAlg;
+    Algorithm*  theAlgorithm=0;
+    IntegerProperty errorProperty("ErrorCount",0);
+    
+    status = theAlgMgr->getAlgorithm( "Top", theIAlg );
+    if ( status.isSuccess( ) ) {
+        try{
+            theAlgorithm = dynamic_cast<Algorithm*>(theIAlg);
+        } catch(...){
+            status = StatusCode::FAILURE;
+        }
+    }
+    if ( status.isFailure( ) ) {
+        log << MSG::WARNING << "Could not find algorithm 'Top'; will not monitor errors" << endreq;
+    }
+    
+    
+    // loop over the events
+    IFlux* flux=currentFlux();
+    int eventNumber= 0;
+    double currentTime=m_startTime;
+    
+    log << MSG::INFO << "Starting event loop:" ;
+    if( m_evtMax>0)  { log << " MaxEvt = " << m_evtMax; }
+    if( m_endTime>0) { log << " EndTime= " << m_endTime; }
+    log << endreq;
+    
+    while( m_evtMax>0 && eventNumber < m_evtMax
+        || m_endTime>0 && currentTime< m_endTime ) {
+        
+        status =  m_appMgrUI->nextEvent(1); // currently, always success
+        
+        // the single event may have created a failure. Check the ErrorCount propery of the Top alg.
+        if( theAlgorithm !=0) theAlgorithm->getProperty(&errorProperty);
+        if( status.isFailure() || errorProperty.value() > 0){
+            status = StatusCode::FAILURE;
+        }
+        
+        if( status.isFailure()) break;
+        currentTime = flux->gpsTime();
+        eventNumber ++;
+    }
+    if( status.isFailure()){
+        log << MSG::ERROR << "Terminating FluxSvc loop due to error" << endreq;
+        
+    }else if( currentTime >= m_endTime ) {
+        log << MSG::INFO << "Loop terminated by time" << endreq;
+    }else {
+        log << MSG::INFO << "Processing loop terminated by event count" << endreq;
+    }
+    return status;
+    
+}
+
