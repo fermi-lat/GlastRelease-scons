@@ -2,8 +2,9 @@
     @brief package G4Generator <pre>
     $Id$
 *
- * v1r2    6-Mar-03 TU  Really first release version for general use
- * v0r0   23-Jan-03 TU  Inital version  
- * v1r0    7-Feb-03 TU  Tag first release version
+* v1r2   21-Apr-03 TU  Modifications for new G4PropagationTool
+* v1r1    6-Mar-03 TU  Really first release version for general use
+* v0r0   23-Jan-03 TU  Inital version  
+* v1r0    7-Feb-03 TU  Tag first release version
 </pre>
 */
