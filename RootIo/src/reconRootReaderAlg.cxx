@@ -220,7 +220,7 @@ StatusCode reconRootReaderAlg::execute()
         return sc;
     }
     
-    m_reconEvt->Clear();
+    //m_reconEvt->Clear();
     evtId++;
     
     return sc;
