@@ -14,6 +14,7 @@
 #include "McParticleManager.h"
 
 #include <iostream>
+#include "Event/TopLevel/EventModel.h"
 #include "Event/MonteCarlo/McPositionHit.h"
 #include "idents/VolumeIdentifier.h"
 
@@ -105,12 +106,12 @@ void PosDetectorManager::EndOfEvent(G4HCofThisEvent*)
   std::sort(m_posHit->begin(),m_posHit->end(), ComparePosHits());
 
   // store the hits in the TDS
-  m_esv->registerObject("/Event/MC/PositionHitsCol", m_posHit);    
-
+  m_esv->registerObject( EventModel::MC::McPositionHitCol  , m_posHit);    
+#if 0
   // This message is for debug purpouses .. it should be eliminated or converted
   // to a true GAUDI log message
   std::cout << "Actual Event done! " << m_posHit->size() 
             << " position hits stored in the TDS" << std::endl;
-
+#endif
 }
 
