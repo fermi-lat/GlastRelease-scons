@@ -75,7 +75,7 @@ double TkrCluster::strip()
 double TkrCluster::size()  
 { 
 	// Purpose: returns number of strips in the cluster
-	return fabs(m_stripf-m_strip0) + 1.;
+    return std::abs(m_stripf-m_strip0) + 1.;
 }
 
 TkrCluster::view TkrCluster::intToView(int iv)
