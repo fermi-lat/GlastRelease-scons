@@ -110,6 +110,6 @@ const TkrHitPlane* TkrTrack::getEndHit(TKREND end) const
     if (m_hits.size() == 0) return 0;
 
     // Return the TkrHitPlane object at the desired end of the track
-    if (end == TKREND::FIRSTHIT) return &(m_hits.front());
+    if (end == TkrTrack::FIRSTHIT) return &(m_hits.front());
     else                         return &(m_hits.back());
 }
