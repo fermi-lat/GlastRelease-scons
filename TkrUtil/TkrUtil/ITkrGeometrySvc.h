@@ -29,7 +29,7 @@
  * @author Tracy Usher
  */
 
-static const InterfaceID IID_ITkrGeometrySvc("ITkrGeometrySvc", 11 , 0); 
+static const InterfaceID IID_ITkrGeometrySvc("ITkrGeometrySvc", 12 , 0); 
 
 namespace {
     enum convType { ABSENT = -1, NOCONV = 0, STANDARD, SUPER, ALL, NTYPES};
