@@ -70,8 +70,8 @@ public:
     int           getNumHits()             const {return m_hits.size();}
     TkrFitPlane   getFoLPlane(TrackEnd end = Start) const;
 
-    TkrFitPlaneConPtr getHitIterBegin()          {return m_hits.begin();}
-    TkrFitPlaneConPtr getHitIterEnd()            {return m_hits.end();}
+    TkrFitPlaneConPtr getHitIterBegin()    const {return m_hits.begin();}
+    TkrFitPlaneConPtr getHitIterEnd()      const {return m_hits.end();}
 
     /// Add hits to our track 
     void          addPlane(TkrFitPlane& newPlane) {m_hits.push_back(newPlane);}
@@ -100,7 +100,9 @@ protected:
 };
 
 //typedef for the Container
-  typedef ObjectVector<TkrFitTrack>     TkrFitTrackCol;
+  typedef ObjectVector<TkrFitTrack>      TkrFitTrackCol;
+  typedef TkrFitTrackCol::const_iterator TkrFitConPtr;
+  typedef TkrFitTrackCol::iterator       TkrFitColPtr;
 
 }; //Namespace
 
