@@ -227,7 +227,11 @@ StatusCode digiRootWriterAlg::writeAcdDigi() {
     Event::AcdDigiCol::const_iterator acdDigiTds;
     
     for (acdDigiTds = acdDigiColTds->begin(); acdDigiTds != acdDigiColTds->end(); acdDigiTds++) {
-        log << MSG::DEBUG << acdDigiTds << endreq;
+        log << MSG::DEBUG ;
+        if( log.isActive()) {
+            (*acdDigiTds)->fillStream(log.stream());
+        }
+        log << endreq;
         Float_t energyRoot = (*acdDigiTds)->getEnergy();
         UShort_t phaRoot[2] = { (*acdDigiTds)->getPulseHeight(Event::AcdDigi::A),
             (*acdDigiTds)->getPulseHeight(Event::AcdDigi::B) };
