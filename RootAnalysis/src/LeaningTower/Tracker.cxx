@@ -47,9 +47,11 @@ void Tracker::Display()
   TMapIter ti(myGeometry);
   TObjString* key;
 
-  double x[4] = { -4, 40, 40, -4 };
-  double y[4] = { -110, -110, 100, 100 };
-  TGraph *Border = new TGraph(4, x, y);
+  double x[2] = { -4, 40};
+  //  double y[2] = { -0, 650}; //TOWER
+  double y[2] = { -110, 100}; //STACK
+
+  TGraph *Border = new TGraph(2, x, y);
   Border->GetXaxis()->SetTitle("position [cm]");
   Border->GetYaxis()->SetTitle("position in stack/cm");
 
