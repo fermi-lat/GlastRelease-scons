@@ -10,7 +10,7 @@ apply_pattern package_linkopts
 
 #------------------------------------------------------------------------------
 private
-use Geant4 v2r51p* IExternal
+use Geant4 v2r6* IExternal
 
 macro headers "" WIN32 "-s=../GlastMS *.hh *.h *.icc "
 

@@ -63,6 +63,7 @@
 #include "G4VPhysicalVolume.hh"
 #include "G4ParticleChangeForMSC.hh"
 #include "G4UnitsTable.hh"
+#include "G4MaterialCutsCouple.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 namespace GlastMS {
