@@ -8,7 +8,7 @@
 #include "rdbModel/Tables/Table.h"
 #include "rdbModel/Tables/Assertion.h"
 #include "rdbModel/Tables/Column.h"
-#include "rdbModel/db/Connection.h"
+#include "rdbModel/Db/Connection.h"
 
 class ColWidgetFactory;
 class ColWidget;
