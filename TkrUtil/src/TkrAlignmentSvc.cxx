@@ -1032,10 +1032,8 @@ idents::VolumeIdentifier TkrAlignmentSvc::getGeometryInfo(
     HepPoint3D towerPoint
         = getTowerCoordinates(globalPoint, nXTower, nYTower);
 
-    double WaferSide = m_pGeoSvc->siStripPitch()*m_pGeoSvc->ladderNStrips() 
-        + 2.*m_pGeoSvc->siDeadDistance();
-    double ladderPitch = WaferSide + m_pGeoSvc->ladderGap();
-    double waferPitch  = WaferSide + m_pGeoSvc->ladderInnerGap();
+    double ladderPitch = m_pGeoSvc->ladderPitch();
+    double waferPitch  = m_pGeoSvc->waferPitch();
     int nLadders = m_pGeoSvc->nWaferAcross();
     double xLocal, yLocal;
 
