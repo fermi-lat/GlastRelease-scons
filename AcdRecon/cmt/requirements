@@ -1,5 +1,5 @@
 package AcdRecon
-version v1r4p1
+version v1r4p2
 
 branches src doc
 
@@ -8,6 +8,8 @@ use Event v9r*
 use AcdDigi v1r*
 use TkrRecon v8r*
 use GlastPolicy v4r*
+use Recon v2r*
+
 
 apply_pattern package_headers
 
@@ -22,7 +24,6 @@ apply_pattern packageShr
 
 #=============================================================
 private
-use Recon v2r*
 use RootIo v4r*
 
 public
