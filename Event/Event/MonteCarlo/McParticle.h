@@ -12,6 +12,8 @@
 #include "Gaudi/Kernel/ContainedObject.h"
 #include "Gaudi/Kernel/SmartRef.h"
 #include "Gaudi/Kernel/SmartRefVector.h"
+#include "GlastEvent/MonteCarlo/McVertex.h"
+#include "GlastEvent/MonteCarlo/McConstants.h"
 #if 0 // *** FIXME!! ***
     // Gaudi v8's ParticleProperty class seems to have some problems
     // around the message stream, so temporarily commented-out.
@@ -143,97 +145,5 @@ typedef ObjectList<McParticle>       McParticleList;
 
 //} // NameSpace GlastEvent
 
-
-
-// Inline codes
-#include "GlastEvent/MonteCarlo/McVertex.h"
-#include "GlastEvent/MonteCarlo/McConstants.h"
-
-//namespace GlastEvent { // NameSpace
-
-/// Retrieve particle identification
-inline ParticleID McParticle::particleID() const
-{
-  return m_particleID;
-}
-
-
-/// Update particle identification
-inline void McParticle::setParticleID( ParticleID value )
-{
-  m_particleID = value;
-}
-
-
-/// Retrieve particle property
-inline ParticleProperty McParticle::particleProperty() const
-{
-  return m_particleProperty;
-}
-
-
-/// Update particle property
-inline void McParticle::setParticleProperty( ParticleProperty value )
-{
-  m_particleProperty = value;
-}
-
-
-/// Retrieve whether this is a primary particle
-inline bool McParticle::primaryParticle() const
-{
-  using GlastEvent::McConstants::PRIMARY;
-  return m_statusFlags & PRIMARY;
-}
-
-
-/// Set whether this is a primary particle
-inline void McParticle::setPrimaryParticleFlag( bool value )
-{
-  using GlastEvent::McConstants::PRIMARY;
-  if (value){
-    m_statusFlags |= PRIMARY;
-  } else {
-    m_statusFlags &= ~PRIMARY;
-  }
-}
-
-
-/// Retrieve pointer to the vertex (const or non-const)
-inline const McVertex* McParticle::mcVertex() const
-{ 
-  return m_mcVertex; 
-}
-inline       McVertex* McParticle::mcVertex()
-{ 
-  return m_mcVertex;
-}
-
-
-/// Update pointer to the vertex (by a C++ pointer or a smart reference)
-inline void McParticle::setMcVertex( McVertex* value )
-{ 
-  m_mcVertex = value; 
-}
-inline void McParticle::setMcVertex( SmartRef<McVertex> value )
-{ 
-  m_mcVertex = value; 
-}
-
-
-/// Retrieve sub event ID 
-inline short McParticle::subEvtID() const
-{
-  return m_subEvtID;
-}
-
-
-/// Set sub event ID 
-inline void McParticle::setSubEvtID( short value )
-{
-  m_subEvtID = value;
-}
-
-//} // NameSpace GlastEvent
 
 #endif    // GlastEvent_McParticle_H

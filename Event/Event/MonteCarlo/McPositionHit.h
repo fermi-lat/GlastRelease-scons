@@ -8,6 +8,7 @@
 
 // Include files
 #include <iostream>
+#include <math.h>
 #include "Gaudi/Kernel/Kernel.h"
 #include "Gaudi/Kernel/ContainedObject.h"
 #include "Gaudi/Kernel/SmartRef.h"
@@ -19,6 +20,10 @@
 #include "GlastEvent/TopLevel/ObjectVector.h"
 #include "GlastEvent/TopLevel/ObjectList.h"
 #include "GlastEvent/Utilities/VolumeID.h"
+
+
+#include "GlastEvent/MonteCarlo/McParticle.h"
+#include "GlastEvent/MonteCarlo/McConstants.h"
 
 
 
@@ -154,189 +159,10 @@ typedef ObjectList<McPositionHit>   McPositionHitList;
 //} // NameSpace GlastEvent
 
 
-// Inline codes
-#include <math.h>
-#include "GlastEvent/MonteCarlo/McParticle.h"
-#include "GlastEvent/MonteCarlo/McConstants.h"
 
 //namespace GlastEvent { // NameSpace
 
 /// Retrieve cell identifier
-inline const VolumeID McPositionHit::volumeID() const
-{
-  return m_volumeID;
-}
-/// Update cell identifier
-inline void McPositionHit::setVolumeID( VolumeID value )
-{
-  m_volumeID = value;
-}
-
-
-/// Retrieve entry member
-inline const HepPoint3D& McPositionHit::entryPoint() const
-{
-  return m_entry;
-}
-inline HepPoint3D& McPositionHit::entryPoint()
-{
-  return m_entry;
-}
-
-
-/// Update Entry member
-inline void McPositionHit::setEntryPoint( const HepPoint3D& value )
-{
-  m_entry = value;
-}
-
-
-/// Retrieve exit point
-inline const HepPoint3D& McPositionHit::exitPoint() const
-{
-  return m_exit;
-}
-inline HepPoint3D& McPositionHit::exitPoint()
-{
-  return m_exit;
-}
-
-
-/// Update exit point
-inline void McPositionHit::setExitPoint( const HepPoint3D& value )
-{
-  m_exit = value;
-}
-
-
-/// Retrieve deposited energy
-inline double McPositionHit::depositedEnergy() const
-{
-  return m_depositedEnergy;
-}
-
-
-/// Update deposited energy
-inline void McPositionHit::setDepositedEnergy( double value )
-{
-  m_depositedEnergy = value;
-}
-
-/// Retrieve depositing particle's energy
-inline double McPositionHit::particleEnergy() const
-{
-  return m_particleEnergy;
-}
-
-/// Set depositing particle's energy
-inline void McPositionHit::setParticleEnergy(double value)
-{
-  m_particleEnergy = value;
-}
-
-/// Retrieve primary-origin flag
-inline bool McPositionHit::primaryOrigin() const
-{
-  using GlastEvent::McConstants::ORIGIN_PRIMARY;
-  return m_packedFlags & ORIGIN_PRIMARY;
-}
-/// Update primary-origin flag
-inline void McPositionHit::setPrimaryOrigin( bool value )
-{
-  using GlastEvent::McConstants::ORIGIN_PRIMARY;
-  if (value){
-    m_packedFlags |= ORIGIN_PRIMARY;
-  } else {
-    m_packedFlags &= ~ORIGIN_PRIMARY;
-  }
-}
-/// Retrieve calorimeter-shower-origin flag
-inline bool McPositionHit::caloShowerOrigin() const
-{
-  using GlastEvent::McConstants::ORIGIN_CALOSHOWER;
-  return m_packedFlags & ORIGIN_CALOSHOWER;
-}
-/// Update calorimeter-shower-origin flag
-inline void McPositionHit::setCaloShowerOrigin( bool value )
-{
-  using GlastEvent::McConstants::ORIGIN_CALOSHOWER;
-  if (value){
-    m_packedFlags |= ORIGIN_CALOSHOWER;
-  } else {
-    m_packedFlags &= ~ORIGIN_CALOSHOWER;
-  }
-}
-
-/// Retrieve whether this hit should be digitized
-inline bool McPositionHit::needDigi() const
-{
-  using GlastEvent::McConstants::NEED_DIGI;
-  return m_packedFlags & NEED_DIGI;
-}
-/// Update whether this hit should be digitized
-inline void McPositionHit::setNeedDigi( bool value )
-{
-  using GlastEvent::McConstants::NEED_DIGI;
-  if (value){
-    m_packedFlags |= NEED_DIGI;
-  } else {
-    m_packedFlags &= ~NEED_DIGI;
-  }
-}
-
-
-/// Retrieve member TOF
-inline double McPositionHit::timeOfFlight() const
-{
-  return m_timeOfFlight;
-}
-
-
-/// Update TOF member
-inline void McPositionHit::setTimeOfFlight( double value )
-{
-  m_timeOfFlight = value;
-}
-
-
-/// Retrieve pointer to McParticle (const or non-const)
-inline const McParticle* McPositionHit::mcParticle() const
-{
-  return m_mcParticle; 
-}
-inline       McParticle* McPositionHit::mcParticle()
-{
-  return m_mcParticle; 
-}
-/// Update pointer to McParticle (by a C++ pointer or a smart reference)
-inline void McPositionHit::setMcParticle( McParticle* value )
-{
-  m_mcParticle = value; 
-}
-inline void McPositionHit::setMcParticle( SmartRef<McParticle> value )
-{ 
-  m_mcParticle = value; 
-}
-
-
-/// Retrieve pointer to the ancestor McParticle (const or non-const)
-inline const McParticle* McPositionHit::originMcParticle() const
-{
-  return m_originMcParticle;
-}
-inline       McParticle* McPositionHit::originMcParticle()
-{
-  return m_originMcParticle;
-}
-/// Update pointer to McParticle (by a C++ pointer or a smart reference)
-inline void McPositionHit::setOriginMcParticle( McParticle* value )
-{
-  m_originMcParticle = value;
-}
-inline void McPositionHit::setOriginMcParticle( SmartRef<McParticle> value )
-{
-  m_originMcParticle = value;
-}
 
 //} // NameSpace GlastEvent
 

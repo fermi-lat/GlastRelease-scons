@@ -55,7 +55,7 @@ StreamBuffer& McIntegratingHit::serialize( StreamBuffer& s ) const
       << m_energyItem.size();
     energyDepositMap::const_iterator it;
     for (it = m_energyItem.begin(); it != m_energyItem.end(); it++){
-        s << it->first(this)
+        s << it->first//(this)
           << it->second;
     }
     return s
@@ -77,14 +77,14 @@ StreamBuffer& McIntegratingHit::serialize( StreamBuffer& s )
       >> m_energyItem_size;
     m_energyItem.clear();
     energyDepositMap::size_type i;
-    for (i = 0; i < m_energyItem_size; i++){
+    for (i = 0; i < m_energyItem_size; i++){//for (i = 0; i < m_energyItem_size; i++){ //Nasté
         SmartRef<McParticle> first;
         double               second;
         s >> first(this)
           >> second;
         m_energyItem[first] = second;
     }
-    return s
+        return s
       >> m_packedFlags;
 }
 
@@ -112,4 +112,123 @@ std::ostream& McIntegratingHit::fillStream( std::ostream& s ) const
       << m_moment2seed.z() / m_totalEnergy << " )"
       << "\n    Volume ID               = " << m_volumeID;
     return s;
+}
+
+
+/// Retrieve volume identifier
+const VolumeID McIntegratingHit::volumeID() const
+{
+  return m_volumeID;
+}
+
+
+/// Update volume identifier
+void McIntegratingHit::setVolumeID( VolumeID value )
+{
+  m_volumeID = value;
+}
+
+
+/// Retrieve energy
+double McIntegratingHit::totalEnergy() const
+{
+  return m_totalEnergy;
+}
+
+
+/// Retrieve the energy-weighted first moments of the position
+const HepPoint3D McIntegratingHit::moment1 () const
+{
+    return m_moment1seed * (1./m_totalEnergy);
+}
+HepPoint3D McIntegratingHit::moment1 ()
+{
+    return m_moment1seed * (1./m_totalEnergy);
+}
+
+
+/// Retrieve the energy-weighted second moments of the position
+const HepPoint3D McIntegratingHit::moment2 () const
+{
+    return m_moment2seed * (1./m_totalEnergy);
+}
+HepPoint3D McIntegratingHit::moment2 ()
+{
+    return m_moment2seed * (1./m_totalEnergy);
+}
+
+
+/// Retrieve itemized energy
+const McIntegratingHit::energyDepositMap& McIntegratingHit::itemizedEnergy() const
+{
+  return m_energyItem;
+}
+
+McIntegratingHit::energyDepositMap& McIntegratingHit::itemizedEnergy()
+{
+  return m_energyItem;
+}
+
+
+/// Add an energyItem
+void McIntegratingHit::addEnergyItem(const double& energy, McParticle* t, const HepPoint3D& position)
+{
+    m_energyItem[t] += energy;
+
+    HepPoint3D        position2 = HepPoint3D(position.x()*position.x(), position.y()*position.y(), position.z()*position.z());
+    m_totalEnergy      += energy;
+    m_moment1seed += energy * position;
+    m_moment2seed += energy * position2;
+}
+
+
+/// Add an energyItem
+void McIntegratingHit::addEnergyItem(const double& energy, SmartRef<McParticle> t, const HepPoint3D& position)
+{
+    m_energyItem[t] += energy;
+
+    HepPoint3D        position2 = HepPoint3D(position.x()*position.x(), position.y()*position.y(), position.z()*position.z());
+    m_totalEnergy      += energy;
+    m_moment1seed += energy * position;
+    m_moment2seed += energy * position2;
+}
+
+
+/// Retrieve primary-origin flag
+bool McIntegratingHit::primaryOrigin() const
+{
+    using GlastEvent::McConstants::ORIGIN_PRIMARY;
+    return m_packedFlags & ORIGIN_PRIMARY;
+}
+
+
+/// Update primary-origin flag
+void McIntegratingHit::setPrimaryOrigin( bool value )
+{
+    using GlastEvent::McConstants::ORIGIN_PRIMARY;
+    if (value){
+        m_packedFlags |= ORIGIN_PRIMARY;
+    } else {
+        m_packedFlags &= ~ORIGIN_PRIMARY;
+    }
+}
+
+
+/// Retrieve whether this hit should be digitized
+bool McIntegratingHit::needDigi() const
+{
+    using GlastEvent::McConstants::NEED_DIGI;
+    return m_packedFlags & NEED_DIGI;
+}
+
+
+/// Update whether this hit should be digitized
+void McIntegratingHit::setNeedDigi( bool value )
+{
+    using GlastEvent::McConstants::NEED_DIGI;
+    if (value){
+        m_packedFlags |= NEED_DIGI;
+    } else {
+        m_packedFlags &= ~NEED_DIGI;
+    }
 }
