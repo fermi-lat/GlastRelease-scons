@@ -8,10 +8,12 @@
 #include "GaudiKernel/IIncidentListener.h"
 
 #include "CalibSvc/IInstrumentName.h"
+#include "CalibData/CalibTime.h"
 
 // Forward declarations
 class ITime;
 class StatusCode;
+class IDataProviderSvc;
 
 /** @class CalibDataSvc
 
@@ -52,6 +54,11 @@ public:
   /// Update object
   virtual StatusCode updateObject( DataObject* toUpdate );
 
+  /// Load object.  Override DataSvc implementation to get current 
+  /// event time first if necessary
+  virtual StatusCode loadObject(IConversionSvc* pLoader, IRegistry* pRegistry);
+
+
 protected:
   
   CalibDataSvc(const std::string& name, ISvcLocator* svc);
@@ -73,7 +80,7 @@ public:
   virtual const bool validEventTime() const ;
 
   /// Get the event time  
-  virtual const ITime& eventTime() const ;
+  virtual const ITime& eventTime() const;
 
   /// Set the new event time  
   virtual void setEventTime(const ITime& time);
@@ -122,7 +129,18 @@ public:
 
   bool             m_instrumentDefined;
   std::string      m_instrumentName;
+  std::string      m_timeSource;
 
+  /// Just for diagnostic purposes, keep count of events seen
+  unsigned m_nEvent;
+
+  /// Set to true by handle( ) at BeginEvent; cleared after timestamp acquired
+  bool m_newEvent;
+
+  /// Just for diagnostic purposes, save last timestamp written
+  CalibData::CalibTime m_time;
+
+  IDataProviderSvc* m_eventSvc;
   /** Redundant job option to indicate whether or not to check for valid
       event time when fetching calibrations.  There already is a similar thing
       for CalibMySQLCnvSvc, but no easy way for one service to tell the 
@@ -133,6 +151,10 @@ public:
   /// Private utility, called from initialize()
   StatusCode makeFlavorNodes(IAddressCreator*  calibCreator, 
                              MsgStream* log );
+
+  /// Private utility to check if internal timestamp has been updated for
+  /// the event; if not do it.
+  StatusCode updateTime();
 };
 
 #endif //  CalibDataSvc_h

@@ -9,11 +9,15 @@
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IValidity.h"
+#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/TimePoint.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "LdfEvent/LdfTime.h"
 
 #include "CalibData/CalibModelSvc.h"
 
@@ -44,6 +48,9 @@ CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
   m_eventTimeDefined = false;
   m_eventTime = 0;
   declareProperty("CalibInstrumentName", m_instrumentName = "LAT" );
+
+  // choices could be "data", "clock", "mc", "none"
+  declareProperty("CalibTimeSource", m_timeSource = "none" );
   m_instrumentDefined = true;
 }
 
@@ -70,13 +77,20 @@ StatusCode CalibDataSvc::initialize()   {
     return sc;
   }
 
-  sc = setProperties();   
+  // Need event data service for timestamp stuff
+  sc = serviceLocator()->service("EventDataSvc", m_eventSvc, true);
+  if (sc .isFailure() ) {
+    log << MSG::ERROR << "Unable to find EventDataSvc " << endreq;
+    return sc;
+  }
+
 
   sc = setDataLoader(cnv_svc);
   if (sc.isFailure() ) {
     log << MSG::ERROR << "Unable to set data loader " << endreq;
     return sc;
   }
+  sc = setProperties();   
 
   // Initialize the calibration data transient store
   log << MSG::DEBUG << "Storage type used is: " 
@@ -102,6 +116,19 @@ StatusCode CalibDataSvc::initialize()   {
     return sc;
   }
 
+  // Get ready to listen for BeginEvent
+  if (m_timeSource == "data") {
+    IIncidentSvc* incSvc;
+    StatusCode sc = service("IncidentSvc", incSvc, true);
+    if (sc.isSuccess() ) {
+      int priority = 100;
+      incSvc->addListener(this, "BeginEvent", priority);
+    }
+    else {
+      log << MSG::ERROR << "Unable to find IncidentSvc" << endreq;
+      return sc;
+    }
+  }
   // Make flavor nodes in the calibration TDS
   return makeFlavorNodes(calibCreator, &log);
 }
@@ -245,20 +272,34 @@ void CalibDataSvc::setEventTime(const ITime& time) {
 
 /// Check if the event time has been set
 const bool CalibDataSvc::validEventTime() const { 
-  return m_eventTimeDefined; 
+  return (m_eventTimeDefined); 
 }
 
 /// Get the event time  
-const ITime& CalibDataSvc::eventTime ( ) const { 
-  return *m_eventTime; 
+const ITime& CalibDataSvc::eventTime ( )  const { 
+  using CalibData::CalibTime;
+
+  static CalibTime   badTime(facilities::Timestamp(0,0));
+  if (m_eventTime) {
+    return *m_eventTime;
+  }
+  else return badTime;
 }
 
 /// Inform that a new incident has occured
 void CalibDataSvc::handle ( const Incident& inc ) { 
   MsgStream log( msgSvc(), name() );
-  log << MSG::DEBUG << "New incident received" << endreq;
-  log << MSG::DEBUG << "Incident source: " << inc.source() << endreq;
-  log << MSG::DEBUG << "Incident type: " << inc.type() << endreq;
+
+  if ((inc.type() == "BeginEvent") && (m_timeSource == "data")) {
+    log << MSG::DEBUG << "New incident received" << endreq;
+    log << MSG::DEBUG << "Incident source: " << inc.source() << endreq;
+    log << MSG::DEBUG << "Incident type: " << inc.type() << endreq;
+
+    
+    m_nEvent++;
+    m_newEvent = true;
+
+  }
   return; 
 }
 
@@ -284,6 +325,9 @@ StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
 	<< "There is no DataObject to update" << endreq;
     return INVALID_OBJECT; 
   }
+
+  // Update timestamp if necessary
+  updateTime();
 
   // Retrieve IValidity interface of object to update
   IValidity* condition = dynamic_cast<IValidity*>( toUpdate );
@@ -326,6 +370,9 @@ StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
     return status;
   } 
 
+  // If we're not using event time, nothing to check
+  if (!m_useEventTime)  return StatusCode::SUCCESS;
+
   // Now cross-check that the new condition is valid
   condition = dynamic_cast<IValidity*>(toUpdate);
   if ( 0 == condition ) {
@@ -343,4 +390,47 @@ StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
 
   // DataObject was successfully updated
   return StatusCode::SUCCESS;
+}
+
+
+// For now applies only in case we're reading event time from tds
+StatusCode  CalibDataSvc::updateTime() {
+  using CalibData::CalibTime;
+
+  MsgStream log( msgSvc(), name() );
+
+  if (!m_useEventTime) return StatusCode::SUCCESS;
+  if (m_timeSource != "data") return StatusCode::SUCCESS;
+
+  if (m_newEvent) {
+    // Fetch the time
+    SmartDataPtr<LdfEvent::LdfTime> timeTds(m_eventSvc, "/Event/Time");
+    if (!timeTds) {
+      log << MSG::ERROR << "Unable to retrieve ldf time " << endreq;
+
+      return StatusCode::FAILURE;
+    }
+    int secs = (int) timeTds->timeSec();
+    int  nano = (int) timeTds->timeNanoSec();
+
+    m_time = CalibTime(facilities::Timestamp(secs,nano));
+    
+    log << MSG::DEBUG << "Processing event " << m_nEvent 
+        << " found time " << m_time.getString() << endreq;
+    
+    setEventTime(m_time);
+
+    m_newEvent = false;
+  }
+  return StatusCode::SUCCESS;
+}
+
+StatusCode CalibDataSvc::loadObject(IConversionSvc* pLoader, 
+                                    IRegistry* pRegistry) {
+  if (m_newEvent) {
+    updateTime();
+    m_newEvent = false;
+  }
+  return DataSvc::loadObject(pLoader, pRegistry);
+
 }
