@@ -15,6 +15,5 @@ DECLARE_FACTORY_ENTRIES(GlastSvc) {
     
     DECLARE_CONVERTER( EventCnv );
     DECLARE_CONVERTER( MCEventCnv );
-    DECLARE_CONVERTER( McVertexCnv );   
     DECLARE_CONVERTER( DigiEventCnv );
 } 
