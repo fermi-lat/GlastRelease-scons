@@ -104,10 +104,14 @@ tabs, CAL to grid (Al)</prim>
 <prim name="CALMountTabWidth" value="12.0">Width of CAL mounting
 tabs</prim>
 
+<prim name="CALCloseoutLen" value="338.0">Transverse length of innermost
+components of CAL side wall, equal to gap between opposing closeout
+walls.  Added as primary  24 June 2003</prim>
+<!--
 <prim name="CALCloseoutGap" value="0.0">Distance from closeout (inner
 part of CAL side wall) and carbon fiber cell about crystals. Added
 19 June, 2003, probably just temporary.</prim>
-
+-->
 <prim name="CALTopFrameUpperWidth" value="13.2">Frame width for upper
 of two top frame pieces.  19 June 2003</prim>
 <prim name="CALTopFrameLowerWidth" value="7.5">Frame width for lower

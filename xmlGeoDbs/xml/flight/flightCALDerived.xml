@@ -466,16 +466,18 @@
           </minus>
         </const>
 
-        <const name="CALCloseoutLen">
-          <notes>Transverse length of innermost components of
-             CAL side wall</notes>
-          <add>
-            <refer refTo="CALLayerTrans" />
-            <refer refTo="CALCloseoutGap" /> 
-            <refer refTo="CALCloseoutGap" /> 
-          </add>
+        <const name="CALCloseoutGap">
+          <notes>Distance from closeout (inner
+part of CAL side wall) and carbon fiber cell about crystals. 
+          As of 24 June 2003, derived</notes>
+          <half>
+            <minus>
+              <refer refTo="CALCloseoutLen" />
+              <refer refTo="CALLayerTrans" />
+            </minus>
+          </half>
         </const>
- 
+
         <const name="CALSidePCBLen">
           <notes>Transverse length of PCB component of CAL side wall</notes>
           <add>
