@@ -2,6 +2,10 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 15-mar-2004: jrb v1r15p4  Define skeleton tower volume and change formation
+ *          of allTowers from stack to composition with individually-placed
+ *          towers.  Allows for easy substitution of skeleton towers for an
+ *          arbitrary collection of real towers
  * 23-feb-2004: jrb v1r15p3  Fix still more minor errors in em, minitower 
  *                           directories, propagated from flight (but already
  *                           fixed there)
