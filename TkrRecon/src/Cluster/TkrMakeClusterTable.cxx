@@ -21,9 +21,9 @@ TkrMakeClusterTable::TkrMakeClusterTable(const TkrClusterCol* pClus,
                                          ObjectList<
                                          Relation<TkrDigi,McPositionHit> >* pRelTab,
                                          RelTable<TkrCluster, McPositionHit>* pclustTab,
-                                         ITkrGeometrySvc* pTkrGeo)
+                                         ITkrGeometrySvc* tkrGeom)
 {   
-    m_pTkrGeo = pTkrGeo;
+    m_tkrGeom = tkrGeom;
 
     RelTable <TkrDigi,McPositionHit>     digiHitsTab(pRelTab);
 
@@ -95,7 +95,7 @@ TkrMakeClusterTable::TkrMakeClusterTable(const TkrClusterCol* pClus,
 
 int TkrMakeClusterTable::digiOrder ( const TkrCluster* pClust) {
 //    TkrCluster clust = *pClust;
-//    return clust.v() + 2*(m_pTkrGeo->reverseLayerNumber(clust.plane()))
+//    return clust.v() + 2*(m_tkrGeom->reverseLayerNumber(clust.plane()))
 //        + 64*clust.tower();
     return     pClust->getTkrId().getView() 
            + 2*pClust->getTkrId().getLayer() + 64*pClust->tower();

@@ -95,7 +95,7 @@ StatusCode ComboFindTrackTool::findTracks()
     }
 
     //Create the TkrCandidates TDS object
-    TkrComboPatRec comboPatRec(m_dataSvc, m_clusTool, m_tkrGeo, pTkrClus, CalEnergy, CalPosition);
+    TkrComboPatRec comboPatRec(m_dataSvc, m_clusTool, m_tkrGeom, pTkrClus, CalEnergy, CalPosition);
 
     return sc;
 }

@@ -129,7 +129,7 @@ private:
 
     /// Pointers to clusters, geoemtry, and control parameters
     Event::TkrClusterCol*  m_clusters;
-    ITkrGeometrySvc*       m_tkrGeo;
+    ITkrGeometrySvc*       m_tkrGeom;
     ITkrFailureModeSvc*    m_tkrFail;
     ITkrQueryClustersTool* m_clusTool;
     TkrControl*            m_control;

@@ -50,7 +50,7 @@ public:
 private:
     
     /// pointer to geometry service
-    ITkrGeometrySvc*         m_pTkrGeo;
+    ITkrGeometrySvc*         m_tkrGeom;
     /// pointer to bad strips service
     ITkrBadStripsSvc*        m_pBadStrips;
     /// pointer to AlignmentSvc
@@ -85,7 +85,7 @@ StatusCode TkrClusterAlg::initialize()
     MsgStream log(msgSvc(), name());
     
     //Look for the geometry service
-    StatusCode sc = service("TkrGeometrySvc", m_pTkrGeo, true);
+    StatusCode sc = service("TkrGeometrySvc", m_tkrGeom, true);
     if (sc.isFailure()) {
         log << MSG::ERROR << "TkrGeometrySvc is required for this algorithm." 
             << endreq;
@@ -166,7 +166,7 @@ StatusCode TkrClusterAlg::execute()
     
     // make the clusters
     std::set<idents::TkrId> tkrIds;
-    TkrMakeClusters maker(m_TkrClusterCol, m_TkrIdClusterMap, m_pTkrGeo, m_TkrDigis, &tkrIds);
+    TkrMakeClusters maker(m_TkrClusterCol, m_TkrIdClusterMap, m_tkrGeom, m_TkrDigis, &tkrIds);
 
     if (m_TkrClusterCol == 0) return StatusCode::FAILURE;
     
@@ -186,7 +186,7 @@ StatusCode TkrClusterAlg::execute()
          
         TkrMakeClusterTable makeTable(m_TkrClusterCol, m_TkrDigis, 
             pRelTab, &cluRelTab,
-            m_pTkrGeo); 
+            m_tkrGeom); 
 
        sc = eventSvc()->registerObject(EventModel::Digi::TkrClusterHitTab,
             cluRelTab.getAllRelations());

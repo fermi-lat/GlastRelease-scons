@@ -12,8 +12,8 @@
 
 #include "ClusWidMeasErrs.h"
 
-ClusWidMeasErrs::ClusWidMeasErrs(ITkrGeometrySvc* tkrGeo) : 
-                  m_tkrGeo(tkrGeo), m_control(TkrControl::getPtr())
+ClusWidMeasErrs::ClusWidMeasErrs(ITkrGeometrySvc* tkrGeom) : 
+                  m_tkrGeom(tkrGeom), m_control(TkrControl::getPtr())
 {
     return;
 }
@@ -45,7 +45,7 @@ TkrCovMatrix ClusWidMeasErrs::computeMeasErrs(const Event::TkrTrackParams& newPa
         other    = XPOS;
     }
 
-    double error = clusWid * m_tkrGeo->siResolution();
+    double error = clusWid * m_tkrGeom->siResolution();
     
     newCov(measured, measured) = error*error;
     newCov(other, other)       = oldCovMat(other,other);

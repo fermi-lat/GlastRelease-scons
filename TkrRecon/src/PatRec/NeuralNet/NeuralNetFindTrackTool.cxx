@@ -182,7 +182,7 @@ void NeuralNetFindTrackTool::buildCand(Event::TkrPatCandCol& TkrCands,
 	Ray   testRay  = Ray((*hypo).ray().position(),-(*hypo).ray().direction());
 	float energy   = (*hypo).energy();
 	
-	Event::KalFitTrack* _track = new Event::KalFitTrack(pTkrClusters, m_tkrGeo, m_clusTool,
+	Event::KalFitTrack* _track = new Event::KalFitTrack(pTkrClusters, m_tkrGeom, m_clusTool,
 							    iniLayer, iniTower, 
 							    control->getSigmaCut(), energy, testRay); 
 	

@@ -30,7 +30,7 @@ class PatRecBaseTool : public AlgTool, virtual public ITkrFindTrackTool
  protected:
 
   /// Pointer to the local Tracker geometry service
-  ITkrGeometrySvc*       m_tkrGeo;
+  ITkrGeometrySvc*       m_tkrGeom;
 
   /// Pointer to the local FailureMode service
   ITkrFailureModeSvc*    m_tkrFail;

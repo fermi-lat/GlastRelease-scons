@@ -57,7 +57,7 @@ private:
     double getTotalEnergy(Event::TkrPatCand* track, double CalEnergy);
 
     /// Pointer to the local Tracker geometry service
-    ITkrGeometrySvc*       m_tkrGeo;
+    ITkrGeometrySvc*       m_tkrGeom;
 
     /// Pointer to the cluster tool
     ITkrQueryClustersTool* m_clusTool;

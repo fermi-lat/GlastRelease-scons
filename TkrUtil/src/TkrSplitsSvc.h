@@ -62,7 +62,7 @@ private:
    /// pointer to data provider svc
     IDataProviderSvc* m_pCalibDataSvc;
     /// pointer to the geometry
-    ITkrGeometrySvc* m_pGeoSvc;
+    ITkrGeometrySvc* m_tkrGeom;
     /// pointer to the calibration data
     CalibData::TkrSplitsCalib* m_pSplits;
     /// name of the input file, if present

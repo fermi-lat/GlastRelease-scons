@@ -54,7 +54,7 @@ private:
     double                m_activeDist;    // the insideActiveArea parameter
     TkrFitMatrix          m_Qmaterial;     // The cov. matrix for last projection
     Event::TkrClusterCol* m_clusters;
-    ITkrGeometrySvc*      m_tkrGeo;
+    ITkrGeometrySvc*      m_tkrGeom;
     TkrControl*           m_control;
 
     // internal method

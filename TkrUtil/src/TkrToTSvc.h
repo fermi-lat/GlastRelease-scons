@@ -117,7 +117,7 @@ private:
     /// array of quality factors
     float m_ToTQuality   [NTOWERS][NLAYERS][NVIEWS][NSTRIPS];
     /// pointer to geometry service
-    ITkrGeometrySvc* m_geoSvc;
+    ITkrGeometrySvc* m_tkrGeom;
 };
 
 

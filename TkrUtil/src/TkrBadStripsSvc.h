@@ -80,14 +80,14 @@ namespace {
             const CalibData::StripCol& strips);
         
         void setService(ITkrBadStripsSvcCalib* pBadStrips) {m_pBadStrips = pBadStrips;}
-        void setService(ITkrGeometrySvc*       pGeoSvc)    {m_pGeoSvc    = pGeoSvc;}
+        void setService(ITkrGeometrySvc*       tkrGeom)    {m_tkrGeom    = tkrGeom;}
 
         bool isEmpty() { return m_nStrips==0; }
         
     private:
         MsgStream* m_log;
         ITkrBadStripsSvcCalib* m_pBadStrips;
-        ITkrGeometrySvc*       m_pGeoSvc;
+        ITkrGeometrySvc*       m_tkrGeom;
         int m_nStrips;
     };
 }
@@ -164,7 +164,7 @@ private:
 	
 	BadVisitor* m_visitor;
 
-    ITkrGeometrySvc* m_pGeoSvc;
+    ITkrGeometrySvc* m_tkrGeom;
 	
     //bool m_killDigi;
     bool m_empty;

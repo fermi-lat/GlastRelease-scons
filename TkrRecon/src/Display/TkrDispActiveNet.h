@@ -28,7 +28,7 @@ class TkrDispActiveNet : public gui::DisplayRep
 public:
 
     //! Constructor of this form must be provided
-    TkrDispActiveNet(IDataProviderSvc* dps, ITkrGeometrySvc* pTkrGeo);
+    TkrDispActiveNet(IDataProviderSvc* dps, ITkrGeometrySvc* tkrGeom);
     virtual ~TkrDispActiveNet() {}
 
     void update();
@@ -36,7 +36,7 @@ public:
 private:
 
     IDataProviderSvc* dps;
-    ITkrGeometrySvc* pTkrGeo;
+    ITkrGeometrySvc* m_tkrGeom;
 };
       
 #endif  // __TKRDISPACTIVENET_H

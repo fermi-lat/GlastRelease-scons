@@ -57,7 +57,7 @@ public:
     /// the pointers to services and data are passed through the constructor
     
     TkrMakeClusters(Event::TkrClusterCol* pClus, Event::TkrIdClusterMap* clusMap,
-        ITkrGeometrySvc* m_pTkrGeo, 
+        ITkrGeometrySvc* m_tkrGeom, 
         Event::TkrDigiCol* pTkrDigiCol,
                                  std::set<idents::TkrId>* tkrIds);
     
@@ -82,7 +82,7 @@ private:
 //private:
     
     /// Keep pointer to the geometry service
-    ITkrGeometrySvc*  m_pTkrGeo;
+    ITkrGeometrySvc*  m_tkrGeom;
     
     /// Keep pointer to the bad strip service
     ITkrBadStripsSvc* m_pBadStrips;

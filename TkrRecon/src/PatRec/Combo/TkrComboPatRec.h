@@ -40,7 +40,7 @@ class TkrComboPatRec
 {
 public:
     TkrComboPatRec(IDataProviderSvc* dataSvc, ITkrQueryClustersTool* clusTool, 
-        ITkrGeometrySvc* pTkrGeo, TkrClusterCol* pClusters, double CalEnergy, Point CalPosition);
+        ITkrGeometrySvc* tkrGeom, TkrClusterCol* pClusters, double CalEnergy, Point CalPosition);
         ~TkrComboPatRec() {};
 
 private:
@@ -114,7 +114,7 @@ private:
 
     /// Pointers to clusters, geometry, and control parameters
     IDataProviderSvc*      m_dataSvc;
-    ITkrGeometrySvc*       m_tkrGeo;
+    ITkrGeometrySvc*       m_tkrGeom;
     ITkrFailureModeSvc*    m_tkrFail;
     ITkrQueryClustersTool* m_clusTool; // Pointer to the tool to dig info out of clusters
     TkrClusterCol*         m_clusters;

@@ -48,7 +48,7 @@ public:
 
 private:
     /// Pointer to the local Tracker geometry service
-    ITkrGeometrySvc* m_geoSvc;
+    ITkrGeometrySvc* m_tkrGeom;
     /// Pointer to failure mode service
     ITkrFailureModeSvc* pTkrFail;
     /// Pointer to the cluster tool
@@ -84,7 +84,7 @@ StatusCode TkrNeuralNetFitTool::initialize()
         throw GaudiException("Service [TkrGeometrySvc] not found", name(), sc);
     }
 
-    m_geoSvc = dynamic_cast<ITkrGeometrySvc*>(iService);
+    m_tkrGeom = dynamic_cast<ITkrGeometrySvc*>(iService);
 
     //Locate and store a pointer to the data service
     if ((sc = serviceLocator()->getService("EventDataSvc", iService)).isFailure())
@@ -122,7 +122,7 @@ StatusCode TkrNeuralNetFitTool::doTrackFit(Event::TkrPatCand* patCand)
         
     Event::TkrKalFitTrack* track  = new Event::TkrKalFitTrack();
     Event::KalFitter*      fitter = new Event::KalFitter(
-        pTkrClus, m_geoSvc, m_clusTool, track, iniLayer, iniTower, 
+        pTkrClus, m_tkrGeom, m_clusTool, track, iniLayer, iniTower, 
         control->getSigmaCut(), energy, testRay);                 
         
     //track->findHits(); Using PR Solution to save time
@@ -197,7 +197,7 @@ StatusCode TkrNeuralNetFitTool::doTrackReFit(Event::TkrPatCand* patCand)
 
                 // Use KalFitter to refit the track
                 Event::KalFitter* fitter = new Event::KalFitter(pTkrClus, 
-                                                                m_geoSvc, 
+                                                                m_tkrGeom, 
                                                                 kalFitTrack, 
                                                                 control->getSigmaCut(), 
                                                                 patCand->getEnergy()); 

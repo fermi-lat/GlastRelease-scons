@@ -276,7 +276,7 @@ private:
     std::string m_mode;
     std::ifstream* m_dataFile;
 
-    ITkrGeometrySvc* m_pGeoSvc;
+    ITkrGeometrySvc* m_tkrGeom;
     IGlastDetSvc* m_pDetSvc;
 
     typedef std::vector<AlignmentItem*> alignCol;

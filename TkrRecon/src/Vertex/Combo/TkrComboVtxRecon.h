@@ -29,7 +29,7 @@
 class TkrComboVtxRecon 
 {
 public:
-    TkrComboVtxRecon(ITkrGeometrySvc* pTkrGeo, 
+    TkrComboVtxRecon(ITkrGeometrySvc* tkrGeom, 
                      Event::TkrVertexCol* vertexCol, 
                      Event::TkrTrackCol* pTracks, 
                      Event::TkrPatCandCol* pCandTracks, 

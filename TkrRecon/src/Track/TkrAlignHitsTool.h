@@ -77,7 +77,7 @@ public:
 
 private:
     /// Pointer to the local Tracker geometry service
-    ITkrGeometrySvc*    m_geoSvc;
+    ITkrGeometrySvc*    m_tkrGeom;
     /// Pointer to the failure service
     ITkrFailureModeSvc* m_failSvc;
     /// alignmentsvc

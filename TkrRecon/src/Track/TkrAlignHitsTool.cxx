@@ -47,9 +47,9 @@ StatusCode TkrAlignHitsTool::initialize() {
     sc = service("EventDataSvc", m_dataSvc, true);
 
     //Locate and store a pointer to the geometry service
-    sc = service("TkrGeometrySvc", m_geoSvc, true);
-    m_failSvc  = m_geoSvc->getTkrFailureModeSvc();
-    m_alignSvc = m_geoSvc->getTkrAlignmentSvc();
+    sc = service("TkrGeometrySvc", m_tkrGeom, true);
+    m_failSvc  = m_tkrGeom->getTkrFailureModeSvc();
+    m_alignSvc = m_tkrGeom->getTkrAlignmentSvc();
 
     return sc;
 }
@@ -175,7 +175,7 @@ StatusCode TkrAlignHitsTool::alignHits(const Event::TkrKalFitTrack* track,
         HepPoint3D  hitPoint = hit->newPos;
         HepVector3D hitSlope = hit->slope;
         //need the digiLayer for Alignment!!!
-        int digiLayer = m_geoSvc->reverseLayerNumber(hit->layer);
+        int digiLayer = m_tkrGeom->reverseLayerNumber(hit->layer);
         int view  = hit->view;
         int tower = hit->tower;
 

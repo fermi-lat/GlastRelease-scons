@@ -35,14 +35,14 @@ public:
         const Event::TkrDigiCol* pDigi, 
         ObjectList<relDigiType>* pRelTab,
         Event::RelTable<Event::TkrCluster, Event::McPositionHit>* pClRelTab,
-        ITkrGeometrySvc* pTkrGeo);
+        ITkrGeometrySvc* tkrGeom);
     
     ~TkrMakeClusterTable() { }
 
     int digiOrder(const Event::TkrCluster* pClust);
 
 private:
-    ITkrGeometrySvc* m_pTkrGeo;
+    ITkrGeometrySvc* m_tkrGeom;
     
 };
 

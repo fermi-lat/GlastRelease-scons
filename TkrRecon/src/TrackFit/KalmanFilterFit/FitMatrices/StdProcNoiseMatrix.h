@@ -40,7 +40,7 @@ public:
     const KFmatrix& getLastStepQ()       {return m_LastStepQ;}
 
 private:
-    ITkrGeometrySvc*    m_tkrGeo;
+    ITkrGeometrySvc*    m_tkrGeom;
     std::vector<double> m_zCoords;
     std::vector<double> m_energy;
 

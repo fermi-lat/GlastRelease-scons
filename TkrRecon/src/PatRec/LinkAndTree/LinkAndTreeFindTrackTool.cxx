@@ -69,7 +69,7 @@ StatusCode LinkAndTreeFindTrackTool::findTracks()
     }
 
     //Create the TkrCandidates TDS object
-    Event::TkrPatCandCol* pTkrCands = new TkrLinkAndTree(m_tkrGeo, m_clusTool, CalEnergy);
+    Event::TkrPatCandCol* pTkrCands = new TkrLinkAndTree(m_tkrGeom, m_clusTool, CalEnergy);
 
     //Register this object in the TDS
     sc = m_dataSvc->registerObject(EventModel::TkrRecon::TkrPatCandCol,pTkrCands);

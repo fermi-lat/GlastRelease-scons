@@ -63,7 +63,7 @@ public:
 
 private:    
     /// Pointers to clusters, geoemtry, and control parameters
-    ITkrGeometrySvc*      m_tkrGeo;
+    ITkrGeometrySvc*      m_tkrGeom;
     ITkrFailureModeSvc*   m_tkrFail;
     TkrControl*           m_control;
     IFitHitEnergy*        m_hitEnergy;

@@ -34,7 +34,7 @@ public:
 private:
     double getError(double strips, double slope) const;
 
-    ITkrGeometrySvc* m_tkrGeo;
+    ITkrGeometrySvc* m_tkrGeom;
     TkrControl*      m_control;
 };
 

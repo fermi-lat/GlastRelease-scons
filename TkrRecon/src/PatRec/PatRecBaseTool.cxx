@@ -39,12 +39,12 @@ StatusCode PatRecBaseTool::initialize()
 
   if( serviceLocator() ) 
   {   
-      if(service( "TkrGeometrySvc", m_tkrGeo, true ).isFailure()) 
+      if(service( "TkrGeometrySvc", m_tkrGeom, true ).isFailure()) 
       {
           log << MSG::ERROR << "Could not find TkrGeometrySvc" << endreq;
           return fail;
       }
-      m_tkrFail = m_tkrGeo->getTkrFailureModeSvc();
+      m_tkrFail = m_tkrGeom->getTkrFailureModeSvc();
 
       if(service( "EventDataSvc", m_dataSvc, true ).isFailure()) 
       {

@@ -31,7 +31,7 @@ public:
                                  const Event::TkrCluster&     cluster);
 
 private:
-    ITkrGeometrySvc* m_tkrGeo;
+    ITkrGeometrySvc* m_tkrGeom;
     TkrControl*      m_control;
 };
 
