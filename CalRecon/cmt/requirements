@@ -1,5 +1,5 @@
 package CalRecon
-version v5r17p2
+version v5r17p3
 
 author Alexandre Chekhtman <chehtman@gamma.nrl.navy.mil>
 # $Id$
@@ -23,7 +23,6 @@ apply_pattern packageShr
 
 ### hide the packages used only for test program
 private
-use RootPolicy
 use RootIo v*
 
 macro_append ROOT_linkopts " $(ROOT_GUI_libs)"
