@@ -9,7 +9,15 @@
        <spectrum> 
          <particle name="mu+"><energy e="10"/> </particle>
            <direction theta="0" phi="0" />
-           <launch_point x="5" y="5" z="80" />
+           <launch_point x="5" y="5" z="100" />
+       </spectrum>
+     </source>
+
+    <source name="muon_patch">
+       <spectrum> 
+         <particle name="mu+"><energy e="10"/> </particle>
+           <direction theta="0" phi="0" />
+           <patch xmin="-70" xmax="70" ymin="-70" ymax="70" />
        </spectrum>
      </source>
 
@@ -17,7 +25,7 @@
        <spectrum> 
          <particle name="gamma"><energy e="1.0"/> </particle>
            <direction theta="0" phi="0" />
-           <launch_point x="5" y="5" z="60" />
+           <launch_point x="5" y="5" z="100" />
        </spectrum>
      </source>
 
