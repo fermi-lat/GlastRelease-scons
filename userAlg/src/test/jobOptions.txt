@@ -1,0 +1,30 @@
+// $Header$
+//##############################################################
+//
+// Job options file to test the userAlg environment
+//
+
+#include "$GLEAMROOT/src/basicOptions.txt"
+
+// add the local source library definitions and specify our test source
+FluxSvc.source_lib += {"$(USERALGROOT)/xml/user_sources.xml"};
+
+FluxAlg.source_name = "userspectrum";
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel      = 3;
+
+// include algorithms in this package to append 
+Top.Members += { "UserAlg"};
+
+Output.Members={}; // turn off rootwriter.
+
+// run a few events
+ApplicationMgr.EvtMax = 10;
+
+//==============================================================
+//
+// End of job options file
+//
+//##############################################################
+

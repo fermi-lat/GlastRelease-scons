@@ -19,3 +19,8 @@ macro userApplinkopts "${Geant4_linkopts} $(GuiSvc_lib) ${guiapp_linkopts} ${gui
       WIN32 "$(guiapp_linkopts) $(GuiSvc_lib) /include:_GuiSvc_loadRef"
 
 application userApp ${GlastMain} *.cxx ${other_source} ${Win32Resource}
+
+
+# build a batch-oriented version from the same source, for RM testing
+set TESTJOBOPTIONS $(USERALGROOT)/src/test/jobOptions.txt
+application test_userAlg ${TestGlastMain} UserAlg.cxx RegisterSource.cxx ${other_source}

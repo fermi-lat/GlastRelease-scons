@@ -156,7 +156,7 @@ StatusCode UserAlg::execute()
         }
     }
     
-
+#if 0 // enable to use pause with the display
     // An example of pausing the display 
     bool pause = false;
     // calculate some condition here...
@@ -165,7 +165,7 @@ StatusCode UserAlg::execute()
         log << MSG::INFO << "Pausing at event " << m_count <<  endreq;
         m_guiSvc->guiMgr()->pause();
     } 
-    
+#endif
 #ifdef NTUPLE
     // Here we are adding to our ROOT ntuple
     if (!m_tupleName.empty())
