@@ -114,14 +114,14 @@ StatusCode AcdDigiMcIntHitAlg::execute() {
         log << MSG::DEBUG << "tile volId found: " << volId.name() 
             << ", energy deposited: "<< energyMevDeposited<< " MeV" << endreq;
         
-        float mips = util.convertMevToMips(energyMevDeposited);
+        double mips = util.convertMevToMips(energyMevDeposited);
         
         /// check that we're above low threshold, otherwise skip
         if (mips < m_low_threshold_mips) continue;
         
         // split the signal evenly between the 2 PMTs (A and B)
-        float pmtA_mips = mips * 0.5;
-        float pmtB_mips = mips - pmtA_mips;
+        double pmtA_mips = mips * 0.5;
+        double pmtB_mips = mips - pmtA_mips;
         
         // Number of photoelectrons for each PMT, A and B
         unsigned int pmtA_pe, pmtB_pe;
@@ -135,7 +135,7 @@ StatusCode AcdDigiMcIntHitAlg::execute() {
         
         util.convertPhotoElectronsToMips(id, pmtA_pe, pmtA_mips, pmtB_pe, pmtB_mips);
         
-        float pmtA_mipsToFullScale, pmtB_mipsToFullScale;
+        double pmtA_mipsToFullScale, pmtB_mipsToFullScale;
         
         // If in auto calibrate mode, determine the conversion factor from MIPs
         // to PHA now, at runtime
@@ -146,13 +146,13 @@ StatusCode AcdDigiMcIntHitAlg::execute() {
             util.applyGains(id, pmtA_mipsToFullScale, pmtB_mipsToFullScale);
         }
         
-        float pmtA_observedMips_pha = pmtA_mips;
-        float pmtA_observedMips_veto = pmtA_mips;
-        float pmtA_observedMips_cno = pmtA_mips;
+        double pmtA_observedMips_pha = pmtA_mips;
+        double pmtA_observedMips_veto = pmtA_mips;
+        double pmtA_observedMips_cno = pmtA_mips;
         
-        float pmtB_observedMips_pha = pmtB_mips;
-        float pmtB_observedMips_veto = pmtB_mips;
-        float pmtB_observedMips_cno = pmtB_mips;
+        double pmtB_observedMips_pha = pmtB_mips;
+        double pmtB_observedMips_veto = pmtB_mips;
+        double pmtB_observedMips_cno = pmtB_mips;
         
         // Apply Gaussian noise if requested
         // where the noise is applied separately for pha, veto and CNO discrim

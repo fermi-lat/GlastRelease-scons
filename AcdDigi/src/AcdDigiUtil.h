@@ -39,8 +39,8 @@ public:
     /// @param pmtB_mips input number of MIPs detected by PMT B
     /// @param pmtB_pe output number of PEs detected by PMT B
     static void convertMipsToPhotoElectrons(const idents::AcdId &id, 
-        float pmtA_mips, unsigned int &pmtA_pe,
-        float pmtB_mips, unsigned int &pmtB_pe);
+        double pmtA_mips, unsigned int &pmtA_pe,
+        double pmtB_mips, unsigned int &pmtB_pe);
 
     /// Converts PhotoElectrons to MIPs
     /// @param id an AcdId identifer
@@ -50,24 +50,24 @@ public:
     /// @param pmtB_pe input number of PEs detected by PMT B
     /// @param pmtB_mips output number of MIPs detected by PMT B
     static void convertPhotoElectronsToMips(const idents::AcdId &id, 
-        unsigned int pmtA_pe, float &pmtA_mips,
-        unsigned int pmtB_pe, float &pmtB_mips);
+        unsigned int pmtA_pe, double &pmtA_mips,
+        unsigned int pmtB_pe, double &pmtB_mips);
 
     /// Determine MIPS to Full Scale conversion for both PMTs for a particular AcdId
     static void calcMipsToFullScale(const idents::AcdId&, 
-        float pmtA_mips, unsigned int pmtA_pe, float &mipsToFullScaleA, 
-        float pmtB_mips, unsigned int pmtB_pe, float& mipsToFullScaleB );
+        double pmtA_mips, unsigned int pmtA_pe, double &mipsToFullScaleA, 
+        double pmtB_mips, unsigned int pmtB_pe, double& mipsToFullScaleB );
 
     /// calculate mipsToFullScale based on the specific parameters provided for AcdIds
     /// @param id an AcdId identifer
     /// @param mipsToFullScaleA the calculated parameter relating MIPs to Full Scale for PMT A
     /// @param mipsToFullScaleB the calculated parameter relating MIPs to Full Scale for PMT B
     static void applyGains(const idents::AcdId &id, 
-        float &mipsToFullScaleA, float &mipsToFullScaleB);
+        double &mipsToFullScaleA, double &mipsToFullScaleB);
     
     /// Converts MIPs to a PHA value - if the number of MIPs is offscale, returns
     /// the fullscale value
-    static unsigned short convertMipsToPha(float mips, float mipsToFullScale);
+    static unsigned short convertMipsToPha(double mips, double mipsToFullScale);
 
     /// Returns a value sampled from a Poisson distribution
     /// @param pmtPhotoElectrons is the mean of the Poisson distribution
@@ -75,7 +75,7 @@ public:
 
     /// Returns a value sampled from a Gaussian distribution
     /// @param std_dev Standard Deviation to be  used when sampling
-    static float shootGaussian(float std_dev);
+    static double shootGaussian(double std_dev);
     
 private:
             
@@ -91,15 +91,15 @@ private:
     static unsigned short m_mean_pe_per_mip;
     
     /// number of MIPs tha correspond to full scale PHA
-    static float m_mips_full_scale;
+    static double m_mips_full_scale;
     
     /// MeV per MIP
-    static float m_mev_per_mip;
+    static double m_mev_per_mip;
      
     /// store AcdId specific number of photoelectrons per mip as they are read in
     static std::map< unsigned int, std::pair<int, int> > m_pePerMipMap;
     /// store AcdId specific gain values as they are read in
-    static std::map< unsigned int, std::pair<float, float> > m_gainMap;
+    static std::map< unsigned int, std::pair<double, double> > m_gainMap;
 };
 
 #endif

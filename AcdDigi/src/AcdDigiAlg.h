@@ -69,13 +69,13 @@ private:
     unsigned short m_mean_pe_per_mip;
     
     /// number of MIPs tha correspond to full scale PHA
-    float m_mips_full_scale;
+    double m_mips_full_scale;
     
     /// MeV per MIP
-    float m_mev_per_mip;
+    double m_mev_per_mip;
 
     /// Distance (mm) cutoff for applying edge effects
-    float m_max_edge_dist;
+    double m_max_edge_dist;
     
     /// JobOptions parameter denoting whether or not to perform auto 
     /// calibration to determine the number of MIPs for full scale PHA

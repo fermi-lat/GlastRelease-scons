@@ -60,10 +60,10 @@ private:
     unsigned short m_mean_pe_per_mip;
     
     /// number of MIPs that correspond to full scale PHA
-    float m_mips_full_scale;
+    double m_mips_full_scale;
     
     /// MeV per MIP
-    float m_mev_per_mip;
+    double m_mev_per_mip;
     
     /// jobOptions parameter denoting whether or not to perform auto 
     /// calibration to determine the number of MIPs for full scale PHA

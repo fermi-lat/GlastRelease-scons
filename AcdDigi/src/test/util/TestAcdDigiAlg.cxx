@@ -101,7 +101,7 @@ StatusCode TestAcdDigiAlg::execute() {
     log << MSG::DEBUG << pmtA_mips << " is " << pmtA_pe << " pes" << endreq;
     log << MSG::DEBUG << pmtB_mips << " is " << pmtB_pe << " pes" << endreq;
 
-    float pmtA2_mips, pmtB2_mips;
+    double pmtA2_mips, pmtB2_mips;
 
     m_util.convertPhotoElectronsToMips(id, pmtA_pe, pmtA2_mips,
         pmtB_pe, pmtB2_mips);
@@ -109,7 +109,7 @@ StatusCode TestAcdDigiAlg::execute() {
     log << MSG::DEBUG << pmtA_pe << " is " << pmtA2_mips << " MIPs" << endreq;
     log << MSG::DEBUG << pmtB_pe << " is " << pmtB2_mips << " MIPs" << endreq;
 
-    float mipsToFullScaleA, mipsToFullScaleB;
+    double mipsToFullScaleA, mipsToFullScaleB;
 
     m_util.calcMipsToFullScale(id, pmtA_mips, pmtA_pe, 
         mipsToFullScaleA, pmtB_mips, pmtB_pe, mipsToFullScaleB );

@@ -27,10 +27,10 @@ double AcdDigiUtil::m_noise_std_dev_veto;
 double AcdDigiUtil::m_noise_std_dev_cno;
 unsigned short AcdDigiUtil::m_full_scale;
 unsigned short AcdDigiUtil::m_mean_pe_per_mip;
-float AcdDigiUtil::m_mips_full_scale;
-float AcdDigiUtil::m_mev_per_mip;
+double AcdDigiUtil::m_mips_full_scale;
+double AcdDigiUtil::m_mev_per_mip;
 std::map< unsigned int, std::pair<int, int> > AcdDigiUtil::m_pePerMipMap;
-std::map< unsigned int, std::pair<float, float> > AcdDigiUtil::m_gainMap;
+std::map< unsigned int, std::pair<double, double> > AcdDigiUtil::m_gainMap;
 
 AcdDigiUtil::AcdDigiUtil() {    
     
@@ -70,8 +70,8 @@ double AcdDigiUtil::convertMevToMips(double energy_mev) {
 }
 
 void AcdDigiUtil::convertMipsToPhotoElectrons(const idents::AcdId &id, 
-                                             float pmtA_mips, unsigned int &pmtA_pe, 
-                                             float pmtB_mips, unsigned int &pmtB_pe) {
+                                             double pmtA_mips, unsigned int &pmtA_pe, 
+                                             double pmtB_mips, unsigned int &pmtB_pe) {
     // Purpose and Method:  Convert from MIPs to PhotoElectrons for both PMTs of an AcdId.
     //   First check to see if an individual pePerMip has been assigned for this PMT
     //   Check both in a map that stores the values already read in from the input XML file
@@ -105,8 +105,8 @@ void AcdDigiUtil::convertMipsToPhotoElectrons(const idents::AcdId &id,
 }
 
 void AcdDigiUtil::convertPhotoElectronsToMips(const idents::AcdId &id, 
-                                             unsigned int pmtA_pe, float &pmtA_mips, 
-                                             unsigned int pmtB_pe, float &pmtB_mips) {
+                                             unsigned int pmtA_pe, double &pmtA_mips, 
+                                             unsigned int pmtB_pe, double &pmtB_mips) {
     // Purpose and Method:  Convert from PhotoElectrons to MIPs for both PMTs of an AcdId.
     //   First check to see if an individual pePerMip has been assigned for this PMT
     //   Check both in a map that stores the values already read in from the input XML file
@@ -134,8 +134,8 @@ void AcdDigiUtil::convertPhotoElectronsToMips(const idents::AcdId &id,
         return;
     }
     // Now use the global mean_pe_per_mip
-    pmtA_mips = ((float) pmtA_pe) / m_mean_pe_per_mip;
-    pmtB_mips = ((float) pmtB_pe) / m_mean_pe_per_mip;
+    pmtA_mips = ((double) pmtA_pe) / m_mean_pe_per_mip;
+    pmtB_mips = ((double) pmtB_pe) / m_mean_pe_per_mip;
     return;
     
 }
@@ -149,7 +149,7 @@ long AcdDigiUtil::shootPoisson(long pmtPhotoElectrons) {
     return RandPoisson::shoot(pmtPhotoElectrons);
 }
 
-float AcdDigiUtil::shootGaussian(float std_dev) {
+double AcdDigiUtil::shootGaussian(double std_dev) {
     // Purpose and Method:  Returns a value from a gaussian distribution, with mean
     //   zero and standard deviation determined by the one input parameter.
     // Input:  Standard Deviation
@@ -159,8 +159,8 @@ float AcdDigiUtil::shootGaussian(float std_dev) {
 }
 
 void AcdDigiUtil::calcMipsToFullScale(const idents::AcdId&, 
-                                     float pmtA_mips, unsigned int pmtA_pe, float &pmtA_mipsToFullScale, 
-                                     float pmtB_mips, unsigned int pmtB_pe, float &pmtB_mipsToFullScale) {
+                                     double pmtA_mips, unsigned int pmtA_pe, double &pmtA_mipsToFullScale, 
+                                     double pmtB_mips, unsigned int pmtB_pe, double &pmtB_mipsToFullScale) {
     
     pmtA_mipsToFullScale = m_mips_full_scale * (m_mean_pe_per_mip / (pmtA_pe / pmtA_mips) );
     pmtB_mipsToFullScale = m_mips_full_scale * (m_mean_pe_per_mip / (pmtB_pe / pmtB_mips) );
@@ -169,11 +169,11 @@ void AcdDigiUtil::calcMipsToFullScale(const idents::AcdId&,
 }
 
 void AcdDigiUtil::applyGains(const idents::AcdId &id, 
-                            float &pmtA_mipsToFullScale, float &pmtB_mipsToFullScale) {
+                            double &pmtA_mipsToFullScale, double &pmtB_mipsToFullScale) {
     
     // Check the map
     if (m_gainMap.find(id.id()) != m_gainMap.end()) {
-        std::pair<float, float> gain = m_gainMap[id.id()];
+        std::pair<double, double> gain = m_gainMap[id.id()];
         pmtA_mipsToFullScale = m_mips_full_scale * gain.first;
         pmtB_mipsToFullScale = m_mips_full_scale * gain.second;
         return;
@@ -200,8 +200,8 @@ void AcdDigiUtil::applyGains(const idents::AcdId &id,
 
 
 
-unsigned short AcdDigiUtil::convertMipsToPha(float mips, float mipsToFullScale) {
+unsigned short AcdDigiUtil::convertMipsToPha(double mips, double mipsToFullScale) {
     
-    return static_cast<unsigned short>(std::min((float)floor(mips / mipsToFullScale * m_full_scale), (float)m_full_scale));
+    return static_cast<unsigned short>(std::min((double)floor(mips / mipsToFullScale * m_full_scale), (double)m_full_scale));
     
 }

@@ -25,6 +25,8 @@
 * - Finds a PHA based on the number of MIPs associated with each PMT.
 * - Determines how discriminator bits should be set on/off
 *
+*  @image html AcdDigiDiagram.gif
+*
 * @section AcdDigiMcIntHitAlg AcdDigiMcIntHitAlg
 * The first draft of a more realistic digitization routine for the ACD.
 * Assumes ACD MC data is stored in McIntegratingHits.
