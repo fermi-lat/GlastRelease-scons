@@ -21,8 +21,8 @@
      latest events included in sample
 -->
 <!ELEMENT inputSample (#PCDATA) >
-<!ATTLIST inputSample  startTime NMTOKEN #REQUIRED
-                       stopTime  NMTOKEN #REQUIRED
+<!ATTLIST inputSample  startTime CDATA #REQUIRED
+                       stopTime  CDATA #REQUIRED
                        triggers  NMTOKENS #REQUIRED
                        source    NMTOKENS #REQUIRED
                        mode      NMTOKEN  #REQUIRED>
@@ -37,13 +37,16 @@
 <!ATTLIST tower
    row      NMTOKEN #REQUIRED
    col      NMTOKEN #REQUIRED
-   hwserial NMTOKEN #IMPLIED >
+   hwserial NMTOKEN #IMPLIED 
+   maxStripId NMTOKEN "1535"
+>
 
 <!ELEMENT uniplane ((stripTot+) | (stripCharge+) | (stripThresh+) |
                     (gtfeCharge+) | (gtfeThresh+) ) >
 <!ATTLIST uniplane
   tray NMTOKEN #REQUIRED
-  which (bot | top ) #REQUIRED >
+  which (bot | top ) #REQUIRED 
+>
 
 <!ELEMENT stripTot EMPTY >
 <!ATTLIST stripTot
