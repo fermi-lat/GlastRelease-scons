@@ -17,6 +17,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include <string>
 #include <utility>
 // CLHEP
 #include "CLHEP/Random/RandomEngine.h"

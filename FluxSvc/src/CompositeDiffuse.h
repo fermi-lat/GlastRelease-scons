@@ -74,19 +74,12 @@ public:
       //file for parsing by the DOM parser.
       std::string writeXmlFile(const std::vector<std::string>& fileList);
 
+      ///this should write a histogram of the constructed logN/logS characteristic 
+      ///as defined by te existing sources.
+      char* writeLogHistogram();
 
       /// write the characteristics of the current source distribution to a stream
-      void writeSourceCharacteristic(std::ostream& out){
-        out << fullTitle() << std::endl;
-        out << "Diffuse Added Point Sources:" << std::endl;
-        out << "l" << '\t' << "b" <<'\t' << "flux" << '\t'<< "energyIndex" << std::endl << std::endl;
-
-        std::vector<PointSourceData>::iterator now= m_listOfDiffuseSources.begin();
-        for ( ; now != m_listOfDiffuseSources.end(); now++) {
-            out << (*now).l << '\t' <<(*now).b << '\t' << (*now).flux << '\t' << (*now).energyIndex << std::endl;
-        }
-
-    }
+      void writeSourceCharacteristic(std::ostream& out);
       
 private:
     double m_totalFlux; // The total flux from the entire sky, particles/sec/m^2/steradian.

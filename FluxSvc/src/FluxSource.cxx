@@ -131,7 +131,6 @@ illumBox(0), m_energyscale(GeV),m_degreespread(0)
         }
         // second child element is angle
         DOM_Element angles = xml::Dom::getSiblingElement(specType);
-            std::cout << "here" << std::endl;
         DOMString anglesTag = angles.getTagName();
         
         if (anglesTag.equals("solid_angle") ) {

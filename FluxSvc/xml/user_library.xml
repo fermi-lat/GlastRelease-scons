@@ -1,4 +1,3 @@
-
 <source_library title="user_library">
 
 
@@ -245,7 +244,8 @@
         </spectrum>
     </source>
 
-    <source name="truediffusebackground" flux="0.000000001">
+<!-- 0.000000001-->
+    <source name="truediffusebackground" flux="0.01">
         <spectrum escale="GeV">
             <particle name="gamma" >
                 <power_law emin="0.010" emax="0.1" gamma="1.0"/>
@@ -299,6 +299,9 @@
         </spectrum>
      </source>
 
+	 </source_library>
+
+<source_library title="test">
 	 <!-- The point source with background, for likelihood testing-->
     <source name="likltest">
         <nestedSource sourceRef="galdifftestsrc"/>

@@ -288,6 +288,7 @@ void CompositeDiffuse::fillTable(){
         
     }
     
+    //now get the desired data table:
     DOM_Element characteristic = m_sources["logNlogScharacteristic"];
     
     
@@ -313,4 +314,56 @@ void CompositeDiffuse::fillTable(){
     m_maxFlux = pow(10,(m_logNLogS.back()).first);
     //std::cout << m_minFlux << "   " << m_maxFlux<<std::endl;
     return;          
+}
+
+
+///this should write a histogram of the constructed logN/logS characteristic 
+///as defined by te existing sources.
+char* CompositeDiffuse::writeLogHistogram(){
+    
+    std::vector<std::pair<double,double> > currentHistPoints;
+    //the histogram starts at minFlux, ends at maxFlux, and holds number of events.
+    for(double curFlux = m_minFlux ; curFlux*(1.+sizeOfFifthDecade(curFlux)) <=m_maxFlux ; curFlux+=curFlux*sizeOfFifthDecade(curFlux) ){
+        currentHistPoints.push_back(std::make_pair<double,double>(curFlux,0.));  
+    }
+    
+    std::vector<PointSourceData>::iterator now= m_listOfDiffuseSources.begin();
+    for ( ; now != m_listOfDiffuseSources.end(); now++) {
+        //std::vector<std::pair<double,double> >::iterator iter;
+        for(int i=0 ; i <= currentHistPoints.size() ; i++){
+            if(currentHistPoints[i].first<=(*now).flux && currentHistPoints[i+1].first>=(*now).flux) currentHistPoints[i].second++;
+        }
+    }
+    //then we want to change the histogram bins to be centered in their ranges, and log everything
+    std::vector<std::pair<double,double> >::iterator iter;
+    for(iter=currentHistPoints.begin() ; iter!=currentHistPoints.end() ; iter++){
+        (*iter).first = log10((*iter).first);
+        (*iter).second = log10((*iter).second);
+        (*iter).first += 1/10.;
+    }
+    //now, the output:
+    std::strstream out2;// = new std::strstream;
+    for(iter=currentHistPoints.begin() ; iter!=currentHistPoints.end() ; iter++){
+        out2 << (*iter).first << '\t' << (*iter).second << std::endl;
+    }
+    std::cout << out2.str(); //WHY IS THERE JUNK ON THE END OF IT?
+    return out2.str();
+    
+}
+
+
+/// write the characteristics of the current source distribution to a stream
+void CompositeDiffuse::writeSourceCharacteristic(std::ostream& out){
+    out << fullTitle() << std::endl;
+    out << "Diffuse Added Point Sources:" << std::endl;
+    out << "l" << '\t' << "b" <<'\t' << "flux" << '\t'<< "energyIndex" << std::endl << std::endl;
+    
+    std::vector<PointSourceData>::iterator now= m_listOfDiffuseSources.begin();
+    for ( ; now != m_listOfDiffuseSources.end(); now++) {
+        out << (*now).l << '\t' <<(*now).b << '\t' << (*now).flux << '\t' << (*now).energyIndex << std::endl;
+    }
+    out << "histogram of reconstructed logN/logS:" << std::endl;
+    out << "flux(integrated over 1/5 decade)" << '\t' << "number of sources" << std::endl << std::endl;
+    out << writeLogHistogram() << std::endl;
+    
 }
