@@ -2,7 +2,9 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
- * 01-mar-2002: jrb - tag v1r0 - initial import 
+ * 22-mar-2002: jrb - tag v1r2 - Alternate flight description segmenting
+ *                               CsI crystals in "real" volumes
  * 11-mar-2002: jrb - tag v1r1 - new possibilities for "sensitive" attribute
+ * 01-mar-2002: jrb - tag v1r0 - initial import 
  */
 
