@@ -1,5 +1,5 @@
 package CalRecon
-version v1r9
+version v1r10
 
 branches src mgr doc
 
@@ -8,8 +8,9 @@ use GlastEvent
 use GlastSvc
 use ntupleWriterSvc
 use GlastDigi
-use TkrRecon v1r6
-use RootHistCnv
+
+# this only for SiRecObjs
+use TkrRecon 
 
 include_dirs $(CALRECONROOT)
 
