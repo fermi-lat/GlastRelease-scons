@@ -1,3 +1,11 @@
+Package digiRootData
+Coordinator: H. Kelly
+
+31-oct-2001: new tag v2r9p1
+16-oct-2001: new tag v2r9
+16-oct-2001: update EventLinkDef file to include + to use new ROOT streamers
+28-aug-2001: new tag v2r8
+28-aug-2001: update requirements file
 21-aug-2001: new tag v2r7
 21-aug-2001:  add in CNO bit for AcdTile class
 20-june-2001: update classes for the BFEM
