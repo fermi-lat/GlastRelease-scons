@@ -5,7 +5,7 @@
 #include <string>
 #include "rdbModel/Management/Visitor.h"
 
-namespace rdbModel{
+namespace rdbModel {
 
   class Column;
   class Table;

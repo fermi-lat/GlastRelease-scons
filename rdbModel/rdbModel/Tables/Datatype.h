@@ -62,6 +62,7 @@ namespace rdbModel{
     /// Return pointer to Enum object owned by datatype (if none, return
     /// null pointer).
     Enum* getEnum() const {return m_enum;}
+    RESTRICT getRestrict() const {return m_restrict;}
 
     /** User-supplied strings min and max will be set to min and max values,
         if any, for the Datatype object.  
