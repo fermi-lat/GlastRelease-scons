@@ -128,6 +128,7 @@ StatusCode SetSeeds::execute()
     h->setRun(run);
     h->setEvent(seq );
     h->setTime(mcheader->time());
+    h->setTrigger(0); // flag that not already set
 
     return StatusCode::SUCCESS;
 }
