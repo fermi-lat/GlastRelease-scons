@@ -1,45 +1,61 @@
 #ifndef GDDCONST_H
 #define GDDCONST_H
 
-#include <string.h>
+#include <string>
 
 /**
  * @author D.Favretto & R.Giannitrapani 
  */
-///\todo rimane da risolvere il problema del tipo di costante
 
 enum constType{i,f,d,s};///int float double string
-enum constMeaning{length,angle,count,mat,none};
+enum constMeaning{length,angle,coun,mat,none};
 
 class GDDconst {
  public:
-  GDDconst();
-  ~GDDconst();
+
+  virtual ~GDDconst(){}
 
   void setName(string pname){name=pname;}
-  void setValue();
-
-  void setConstType(string pconstType);
-  void setconstMeaning(string puType);
-
+  void setConstType(constType pct){ct=pct;}
+  void setConstMeaning(string puType);
   void setNote(string pnote){note=pnote;}
-  void setPrimary(bool p){primary=p;}
+
 
   string getName()const{return name;}
-  void* getValue();
-  constType getConstType()const{return constType;}
+  constType getConstType()const{return ct;}
   constMeaning getConstMeaning()const{return uType;}
   string getNote()const{return note;}
-  bool getPrimary()const{return primary;}
+  string getUnitLength()const{return unitLength;}
+  string getUnitAngle()const{return unitAngle;}
+
  private:
   string name;
-  double value;
-  constType constType;
+  constType ct;
   constMeaning uType;
   string note;
-  bool primary;/// this attribute  expres if the contant is primary=1 or derived=0
+  string unitLength;
+  string unitAngle;
+ protected:
+  GDDconst():name(""),note(""),unitLength("mm"),unitAngle("deg"){;}
 };
 #endif //GDDCONST_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -49,10 +49,10 @@ public:
      used by expert clients to access information without the need of
      a visitor */
   GDD* getGDD(){return manGDD;};
-
+  
  protected:
   /** The constructor is protected; in such a way it is forbidden to *
-   build directely a manager. Here the new GDD object is explicitely
+      build directely a manager. Here the new GDD object is explicitely
    built */
   GDDmanager(){manGDD = new GDD;};
 

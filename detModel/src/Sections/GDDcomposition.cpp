@@ -9,7 +9,7 @@ GDDcomposition::~GDDcomposition(){
 }
 
 void GDDcomposition::Accept(GDDsectionsVisitor* v){
-    int i;
+    unsigned int i;
 
     v->visitComposition(this);
 

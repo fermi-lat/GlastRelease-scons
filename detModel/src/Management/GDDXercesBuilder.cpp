@@ -1,4 +1,5 @@
 #include "xml/Substitute.h"
+#include "xml/Arith.h"
 #include "xml/XmlParser.h"
 #include "xml/Dom.h"
 #include "dom/DOM_Element.hpp"
@@ -25,6 +26,13 @@
 #include "detModel/Sections/GDDidField.h"
 #include "detModel/Sections/GDDseg.h"
 
+#include "detModel/Constants/GDDconstants.h"
+
+#include "detModel/Constants/GDDintConst.h"
+#include "detModel/Constants/GDDfloatConst.h"
+#include "detModel/Constants/GDDdoubleConst.h"
+#include "detModel/Constants/GDDstringConst.h"
+
 GDDXercesBuilder::GDDXercesBuilder(char* nameFile)
 {
   unsigned int iSec;
@@ -35,7 +43,9 @@ GDDXercesBuilder::GDDXercesBuilder(char* nameFile)
 
   xml::Substitute* sub = new xml::Substitute(domfile);
   DOM_Element docElt = domfile.getDocumentElement();
-
+  DOM_Element tmp;
+  DOM_Element curConst;
+  
   DOM_NodeList sections = docElt.getElementsByTagName(DOMString("section"));
 
   for (iSec = 0; iSec < sections.getLength(); iSec++) {
@@ -43,6 +53,25 @@ GDDXercesBuilder::GDDXercesBuilder(char* nameFile)
     DOM_Element& secElt = static_cast<DOM_Element &> (secNode);
     sub->execute(secElt);
   }
+  
+  tmp = xml::Dom::findFirstChildByName(docElt, "constants" );
+  tmp = xml::Dom::findFirstChildByName(tmp, "derived" );
+  tmp = xml::Dom::findFirstChildByName(tmp, "derCategory" );
+  
+  while(tmp != DOM_Element())
+    {
+      curConst = xml::Dom::findFirstChildByName(tmp, "const" );
+
+      while (curConst != DOM_Element()) {
+	xml::Arith curArith(curConst);
+	double evalValue = curArith.evaluate();
+	curArith.saveValue();
+	curConst = xml::Dom::getSiblingElement(curConst);
+      }
+      tmp = xml::Dom::getSiblingElement(tmp);
+    }
+      
+
 
   GDDmanager* man = GDDmanager::getPointer();
   currentGDD = man->getGDD();
@@ -51,6 +80,144 @@ GDDXercesBuilder::GDDXercesBuilder(char* nameFile)
   
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+GDDconst* GDDXercesBuilder::buildConst(DOM_Node* e){
+
+  string name;
+  string typeOfConst;
+  string ut;
+  
+  DOM_NamedNodeMap attr = e->getAttributes();
+
+  name=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("name")).getNodeValue() ));
+  ut=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("uType")).getNodeValue() ));
+
+  string elementName=std::string(xml::Dom::transToChar(e->getNodeName()));
+  if (elementName=="prim"){
+    typeOfConst=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("type")).getNodeValue()));
+    if (typeOfConst=="int"){
+      GDDintConst* c=new GDDintConst;
+      int val=atoi(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
+      c->setName(name);
+      c->setConstMeaning(ut);
+      c->setConstType(i);
+      c->setValue(val);
+      c->setNote(std::string(xml::Dom::transToChar(e->getFirstChild().getNodeValue())));
+      return c;
+    }
+    else if (typeOfConst=="float"){
+      GDDfloatConst* c=new GDDfloatConst;
+      float val=atof(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
+      c->setName(name);
+      c->setConstMeaning(ut);
+      c->setConstType(f);
+      c->setValue(val);
+      c->setNote(std::string(xml::Dom::transToChar(e->getFirstChild().getNodeValue())));
+      return c;
+    }
+    else if (typeOfConst=="double"){
+      GDDdoubleConst* c=new GDDdoubleConst;
+      double val=atof(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
+      c->setName(name);
+      c->setConstMeaning(ut);
+      c->setConstType(d);
+      c->setValue(val);
+      c->setNote(std::string(xml::Dom::transToChar(e->getFirstChild().getNodeValue())));
+      return c;
+    }
+    else if (typeOfConst=="string"){
+      GDDstringConst* c=new GDDstringConst;
+      string val=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
+      c->setName(name);
+      c->setConstMeaning(ut);
+      c->setConstType(s);
+      c->setValue(val);
+      c->setNote(std::string(xml::Dom::transToChar(e->getFirstChild().getNodeValue())));
+      return c;
+    }
+  }//end if
+  else{
+    //e is a const element    
+    GDDdoubleConst* c=new GDDdoubleConst;
+    DOM_Element n;
+
+    double val=atof(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
+
+    c->setName(name);
+    c->setConstMeaning(ut);
+    c->setConstType(d);
+    c->setValue(val);
+    
+    n = static_cast<DOM_Element&>(*e);
+    DOM_NodeList nodelist = n.getElementsByTagName(DOMString("notes"));
+
+    if (nodelist.getLength())
+      c->setNote(std::string(xml::Dom::transToChar(nodelist.item(0).getFirstChild().getNodeValue())));
+    
+    return c;
+  }//end else
+}
+///////////////////////////////////////////////////////////////////////////////////////////////
+void GDDXercesBuilder::buildConstants(){
+  unsigned int i,j;
+  DOM_Element docElt = domfile.getDocumentElement();
+  DOM_NodeList child = docElt.getElementsByTagName(DOMString("constants"));
+  if (child.getLength()){
+    GDDconstants* ConstantsBranch = new GDDconstants();
+    
+    DOM_NodeList childs = child.item(0).getChildNodes();
+    // version primary ?derived 
+    for(i=0;i<childs.getLength();i++){
+      if(childs.item(i).getNodeType() != Comment)
+	{
+	  std::string str = std::string(xml::Dom::transToChar(childs.item(i).getNodeName()));
+	  if(str == "version"){
+	    string s1,s2;
+	    DOM_NamedNodeMap attr=childs.item(i).getAttributes ();
+	    s1=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("major")).getNodeValue()));
+	    s2=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("minor")).getNodeValue()));
+	    ConstantsBranch->setVersion(s1,s2);
+	  }
+	  else if(str == "primary" || str == "derived"){
+	    DOM_NodeList child = childs.item(i).getChildNodes();
+	    if (child.getLength()!=0){
+	      for(j=0;j<child.getLength();j++){
+		GDDconstCategory* cat= new GDDconstCategory;
+		string s1;
+		DOM_NamedNodeMap attrCat=child.item(j).getAttributes();
+		s1=std::string(xml::Dom::transToChar(attrCat.getNamedItem(DOMString("name")).getNodeValue()));
+		cat->setCategoryName(s1);
+		if(attrCat.getLength()>1){ //if the actual category has more than one attribute it is derived
+		  string s2;
+		  s2=std::string(xml::Dom::transToChar(attrCat.getNamedItem(DOMString("save")).getNodeValue()));
+		  if (s2=="true")
+		    cat->setSave(true);
+		  cat->setPrimary(false);
+		}
+		DOM_Node over=child.item(j).getFirstChild().getFirstChild();
+		s1=std::string(xml::Dom::transToChar( over.getNodeValue()));
+		cat->setOverview(s1);
+		child.item(j).removeChild(child.item(j).getFirstChild());
+		//elt is the list of prim/const
+		DOM_NodeList elt=child.item(j).getChildNodes();
+		unsigned int k;
+		for(k=0;k<elt.getLength();k++){
+		  if (elt.item(k).getNodeType()!=Comment){
+		    cat->addConstant(buildConst( &elt.item(k)) );
+		  }//end if 
+		}//end for 
+		//Insert a new category in GDDconstast object
+		ConstantsBranch->addConstantCategory(cat);
+	      
+	      }//end for prim and derived cateory 
+	    }
+	  }  
+	}
+    }//end for                                           
+    currentGDD->setConstants(ConstantsBranch);
+    currentGDD->buildConstantsMap();
+  }//end if
+}
 
 
 void GDDXercesBuilder::buildSections()

@@ -21,6 +21,8 @@ int main(int argc, char* argv[]) {
   manager->setMode("digi recon");
   manager->build();
 
+  GDD* g = manager->getGDD();
+
   if (argc == 2)
     manager->startVisitor(new GDDVRMLSectionsVisitor()); 
   else

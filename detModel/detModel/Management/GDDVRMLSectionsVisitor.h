@@ -1,6 +1,7 @@
 #ifndef GDDVRMLSECTIONSVISITOR_H
 #define GDDVRMLSECTIONSVISITOR_H
 #include "detModel/Management/GDDsectionsVisitor.h"
+#include <fstream>
 
 class GDD;
 
@@ -12,9 +13,9 @@ class GDDVRMLSectionsVisitor : public GDDsectionsVisitor {
 
  public:
 
-  virtual ~GDDVRMLSectionsVisitor(){};  
   GDDVRMLSectionsVisitor();
   GDDVRMLSectionsVisitor(string);
+  virtual ~GDDVRMLSectionsVisitor();
   
   /**
    * This is the visitor for the GDDsectionsContainer 
@@ -67,6 +68,8 @@ class GDDVRMLSectionsVisitor : public GDDsectionsVisitor {
   virtual void visitSeg(GDDseg*);
 
   string actualVolume;
+
+  ofstream out;
 
 };
 #endif //GDDVRMLSECTIONSVISITOR_H

@@ -33,6 +33,7 @@ void GDDmanager::setBuilder(GDDbuilder* b)
 void GDDmanager::build() 
 { 
   manBuilder->buildSections(); 
+  manBuilder->buildConstants(); 
 }
 
 void GDDmanager::startVisitor(GDDvisitor* v)

@@ -7,32 +7,37 @@
  */
 #include <vector.h>
 #include <string.h>
-
-class GDDconstCategory;
+#include "detModel/GDDpurge.h"
+#include "detModel/Constants/GDDconstCategory.h"
 
 class GDDconstants{
  public:
-
-  GDDconstants():majVersion(""),minVersion(""){;}
-  ~GDDconstants();//use purge.h
-
+  
+  GDDconstants():majVersion(""),minVersion(""){;}  
+  virtual ~GDDconstants(){purge(constCategories);}
+  
   void setVersion(string pmajVersion,string pminVersion)
-    {majVersion=pmajVersion;minVersion=pminVersion;}  
-  string getVersion()const{return concat(majversion,minVersion);}
-
-  void addConstantCategory(GDDconstCategory* c){constCategories.push_back(c);}
-  int getConstantCategoryNumber()const{return constCategories.size();}  
-  vector<GDDconst*> getConstantCategories()const{return constsCategories;}
-
+    {majVersion=pmajVersion ; minVersion=pminVersion;}  
+  string getVersion()const{return majVersion+"."+minVersion;}
+  
+  void addConstantCategory(GDDconstCategory* c){constCategories.push_back(c);};
+  int getConstantCategoryNumber()const{return constCategories.size();};
+  vector< GDDconstCategory* > getConstantCategories()const{return constCategories;};
+  
  private:    
   /** @link aggregation */
   string majVersion;
   string minVersion;
-
+  
   /** @link aggregation */
   vector < GDDconstCategory * > constCategories;
+
 };
 #endif //GDDCONSTANTS_H
+
+
+
+
 
 
 

@@ -2,6 +2,7 @@
 #define GDD_H
 #include <map.h>
 #include <vector.h>
+#include <string.h>
 
 class GDDvolume;
 class GDDconstants;
@@ -36,7 +37,10 @@ public:
   void setDTDversion(string pdtd){DTDversion = pdtd;};
   /// This method sets the CVSid  
   void setCVSid(string pcvs){CVSid = pcvs;};
-
+  ///This method sets the contants 
+  void setConstants(GDDconstants* pconstants){constants=pconstants;}
+  ///This method gives back the contants
+  GDDconstants* getConstants()const{return constants;}
   /// This is the recursive accept for the visitor pattern
   void Accept(GDDsectionsVisitor* v);
   /// This is the non recursive accept for the visitor pattern
@@ -46,6 +50,8 @@ public:
   void buildChoiceMap();
   /// This method build a global volumes map for all the sections 
   void buildVolumeMap();
+  /// This method build a global constants map for all the constants
+  void buildConstantsMap();
   /**
    * This method search the volumes map with the name string and return 
    * a pointer to the GDDvolume if it exists, otherwise it returns a null 
@@ -53,6 +59,16 @@ public:
    * depending on the mode (see the manager).
    */
   GDDvolume * getVolumeByName(string vname);
+  /**
+   * This method search the constant map with te name string and return
+   * a the value if it exists,otherwhise it returns 0
+   */
+  double getConstantByName(string cname);
+  /**
+   * This method search the materila  map with te name string and return
+   * a the value if it exists,otherwhise it returns 0
+   */
+  string getMaterialByConstantName(string cname);
   /**
    * This method search the choices map with the name string and return 
    * a pointer to the GDDchoice if it exists, otherwise it returns a null 
@@ -68,21 +84,29 @@ public:
   /** This method resolve the symbolic volumes references in the XML file 
    *  and it is automatically called by the builder.
    */
+
+  /** This is a private GDDvolume map indicized by names */
+  map < string, GDDvolume * > getVolumesMap(){return volumeMap;};
+
   void ResolveReferences();
   /// This method gives back a pointer to the sections vector
   vec* getSections(){return &sections;};  
-
+  void visitMap();
  private:
   /** @link aggregation */
   /// This is the sections container
   vector < GDDsection * > sections;  
   /** This is a private pointer to the GDDconstants that provide 
       the entry point to all the generic model hierarchy of constants*/
-  GDDconstants * contstants;
+  GDDconstants * constants;
   /** This is a private GDDchoice map indicized by names */
   map < string, GDDchoice * > choiceMap;  
   /** This is a private GDDvolume map indicized by names */
   map < string, GDDvolume * > volumeMap;
+  /** This is a private map of constants indicized by names */
+  map < string, double > constMap;
+  /** This is a private map of material indicized by names */
+  map < string, string > materialMap;
   /// This is the DTDversion
   string DTDversion;
   /// This is the CVSid

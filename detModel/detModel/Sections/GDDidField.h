@@ -2,10 +2,6 @@
 #define GDDIDFIELD_H
 #include "detModel/Management/GDDsectionsVisitor.h"
 
-enum typeField{layer,tower,towerDet,tray,row,col,
-topside,xtal,orient,nsew,diode,wafer,SiPosition};
-
-
 /**
  * @author D.Favretto & R.Giannitrapani
  */
@@ -14,6 +10,7 @@ class GDDidField {
 public:
 
   GDDidField():value(0),step(0){}
+  virtual ~GDDidField(){}
   /**
    *
    */ 
@@ -44,7 +41,7 @@ public:
   string getName();
   
  private:
-  typeField name;
+  string name;
   double value; ///default 0 NMTOKEN
   double step; ///default 0 NMTOKEN
 };

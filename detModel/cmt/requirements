@@ -24,9 +24,11 @@ library detModel -no_share \
      GDD.cpp \
      Management/*.cpp \
      Sections/*.cpp \
-
+     Constants/*.cpp \
+	
     
 private
 
 application test main.cxx 
+
 

@@ -6,15 +6,17 @@
 #include<vector.h>
 #include<string.h>
 
-class GDDconst;
+#include "detModel/GDDpurge.h"
+#include "detModel/Constants/GDDconst.h"
 /**
  * @author D.Favretto & R.Giannitrapani 
  */
 class GDDconstCategory {
  public:
 
-  GDDconstCategory():categoryName(""),overview(""){;} 
-  ~GDDconstCategory();//use purge
+  GDDconstCategory():categoryName(""),overview(""),primary(true),save(false){;} 
+
+  virtual ~GDDconstCategory(){purge(consts);}
 
   void setCategoryName(string name){categoryName=name;}
   string getCategoryName()const{return categoryName;}
@@ -26,10 +28,27 @@ class GDDconstCategory {
   int getConstantNumber()const{return consts.size();}  
   vector<GDDconst*>getConsts()const{return consts;}
 
+  bool getPrimary()const{return primary;}
+  void setPrimary(bool p){primary=p;}
+
+  bool getSave()const{return save;}
+  void setSave(bool p){save=p;}
+
  private:
   string categoryName;
   string overview;
   /** @link aggregation */
   vector < GDDconst * > consts;
+  bool primary;/// this attribute  expres if the category is primary=1 or derived=0
+  bool save;
+
 };
 #endif //GDDDERCATEGORY_H
+
+
+
+
+
+
+
+

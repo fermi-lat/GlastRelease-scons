@@ -12,7 +12,8 @@ class GDDanyPosition;
 class GDDstack;
 class GDDanyRelativePosition;
 class GDDchoice;
-
+class GDDcontants;
+class GDDconst;
 /**
  * This class is a concrete GDDbuilder that use the Xerces parser and the
  * DOM functionalities to parse the xml file and build the generic model
@@ -21,8 +22,6 @@ class GDDchoice;
  */
 class GDDXercesBuilder : public GDDbuilder {
  public:
-
-  virtual ~GDDXercesBuilder(){};
 
   /**
    * This is the constructor. It defines the dom tree (domfile), uses
@@ -36,12 +35,21 @@ class GDDXercesBuilder : public GDDbuilder {
    * sections part of the hierarchy, putting it in the private pointer currentSections
    */
   virtual void buildSections();
+  /**
+   * This method implement the virtual method of GDDbuilder and buil the constant part of
+   * the hierarchy.
+   */
+  virtual void  buildConstants();
 
  private:
   /**
    * This method build the GDDsection object and return a pointer to it
    */
   GDDsection* buildSection(DOM_Node* e);
+  /**
+   * This method build the GDDconst object and return a pointer to it
+   */
+  GDDconst* buildConst(DOM_Node* e);
   /**
    * This method build a GDDchoice object and return a pointer to it
    */

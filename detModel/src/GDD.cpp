@@ -8,9 +8,16 @@
 #include "detModel/Sections/GDDcomposition.h"
 #include "detModel/Sections/GDDstack.h"
 #include "detModel/Management/GDDmanager.h"
+#include "detModel/Constants/GDDconstants.h"
+#include "detModel/Constants/GDDintConst.h"
+#include "detModel/Constants/GDDfloatConst.h"
+#include "detModel/Constants/GDDdoubleConst.h"
+#include "detModel/Constants/GDDstringConst.h"
+#include "detModel/Constants/GDDconstCategory.h"
 
 /// This is the destructor of GDD 
 GDD::~GDD(){
+  if (constants)delete constants;
   /// With this call we recursively delete the vector of sections
   purge(sections);
 }
@@ -187,6 +194,76 @@ void GDD::buildChoiceMap()
 				     sections[i]->getChoices()[j]));
 }
 
+/* This method gives back a double given a name
+ * If it does not exist, it returns a null pointer
+ */
+double GDD::getConstantByName(string cname)
+{
+  typedef map<string, double> M;
+  M::const_iterator i; 
+
+  i = constMap.find(cname);
+  if(i == constMap.end()) return 0;
+  else return i->second;
+}
+
+/* This method gives back a string given a name
+ * If it does not exist, it returns a null pointer
+ */
+string GDD::getMaterialByConstantName(string cname)
+{
+  typedef map<string, string> M;
+  M::const_iterator i; 
+  
+  i = materialMap.find(cname);
+  if(i == materialMap.end()) return 0;
+  else return i->second;
+}
+
+/* This method build the constant map and  the material map,it should be automatically 
+ * called by the builder 
+ */
+void GDD::buildConstantsMap()
+{
+  unsigned int k,j;
+
+  typedef map<string, double> M1;
+  typedef map<string, string> M2;
+
+  for(k=0;k<constants->getConstantCategories().size();k++){
+    GDDconstCategory* tmp=constants->getConstantCategories()[k];
+    for(j=0;j<tmp->getConsts().size();j++){
+      GDDconst* temp = tmp->getConsts()[j];
+
+      switch(temp->getConstType()){
+      case i:{
+	GDDintConst* tmp1=static_cast<GDDintConst*>(temp);
+	double val=(double)tmp1->getValue();
+	constMap.insert(M1::value_type(temp->getName(),val));
+	break;
+      }
+      case f:{
+	GDDfloatConst* tmp1=static_cast<GDDfloatConst*>(temp);
+	double val=(double)tmp1->getValue();
+	constMap.insert(M1::value_type(temp->getName(),val));
+	break;
+      }
+      case d:{
+	GDDdoubleConst* tmp1=static_cast<GDDdoubleConst*>(temp);
+	double val=(double)tmp1->getValue();
+	constMap.insert(M1::value_type(temp->getName(),val));
+	break;
+      }
+      case s:{
+	GDDstringConst* tmp1=static_cast<GDDstringConst*>(temp);
+	materialMap.insert(M2::value_type(temp->getName(),tmp1->getValue()));
+	break;
+      }
+      }//end switch
+    }
+  }
+}
+
 /* This is the recursive Accept function for the sections visitor
  * This method start the visit on the GDD and than recursively
  * start the visit of all the sections it contains
@@ -195,8 +272,6 @@ void GDD::Accept(GDDsectionsVisitor* v){
   unsigned int i;
 
   v->visitGDD(this);
-
-
   for(i=0; i<sections.size();i++){
     sections[i]->Accept(v);
   }
@@ -209,6 +284,25 @@ void GDD::Accept(GDDsectionsVisitor* v){
 void GDD::AcceptNotRec(GDDsectionsVisitor* v){
   v->visitGDD(this);
 }
+
+
+void GDD::visitMap(){
+  typedef map<string,string>M;
+  M::const_iterator i;
+  std::cout<<"Material List"<<std::endl;
+  for (i=materialMap.begin(); i!=materialMap.end(); i++){
+    std::cout<<"constant "<<i->first<<" value: "<<i->second<<std::endl;
+  };
+  typedef map<string,double>M1;
+  M1::const_iterator j;
+  std::cout<<"Numeric constants list"<<std::endl;
+  for (j=constMap.begin(); j!=constMap.end(); j++){
+    std::cout<<"constant "<<j->first<<" value: "<<j->second<<std::endl;
+  }
+}
+
+
+
 
 
 
