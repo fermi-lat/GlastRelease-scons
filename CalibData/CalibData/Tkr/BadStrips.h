@@ -84,6 +84,10 @@ namespace CalibData {
 
     eBadType getBadType() const;
 
+    int getBadTowerCount() const {
+      return m_towers->size(); 
+    }
+
     /// call back method for client to access all data
     eVisitorRet traverse(BadStripsVisitor *visitor) const;
 
