@@ -371,9 +371,43 @@ too, but not required.</overview>
 	  </minus>
 	</const>
 
-	<const name="totalX" value = "??" />
-	<const name="totalY" value = "??" />
-	<const name="totalZ" value = "??" />
+<!-- These might not be quite right.  Check that frame is
+     accounted for. -->
+	<const name="totalX">
+          <mul>
+            <refer refTo="xNum" />
+            <refer refTo="modWidth" />
+          </mul>
+        </const>
+
+	<const name="totalY">
+          <mul>
+            <refer refTo="yNum" />
+            <refer refTo="modWidth" />
+          </mul>
+        </const>
+
+<!-- Compute total Z by adding up
+            CAL height
+            cal-tracker gap
+            (ntray-1)* inter-tray spacing
+            Z of top half of top tray, bottom half of bottom tray
+              (which is the same as Z of a single outer tray)
+-->
+	<const name="totalZ">  
+          <add>
+            <refer refTo="CALFrameHeight" />
+            <refer refTo="cal_tracker_gap" />
+            <mul>                           
+              <minus>
+                <refer refTo="numTrays" />
+                <const value="1" />
+              </minus>
+              <refer refTo="traySpacing" />
+            </mul>
+            <refer refTo="outsideTrayZ" />  
+          </add>                               
+        </const>
 
       </derCategory>
     </derived>
