@@ -1,0 +1,17 @@
+package calibRootData
+#  $Id$
+
+version v0r0
+
+use RootPolicy v4r*
+use commonRootData v0r*
+
+# See RootPolicy for discussion of this pattern
+apply_pattern root_package headers="\
+../calibRootData/BaseCalibRoot.h\
+../calibRootData/CalBaseCalibRoot.h\
+../calibRootData/AcdBaseCalibRoot.h"
+
+# ..and all other include files, once I figure out what they are
+
+
