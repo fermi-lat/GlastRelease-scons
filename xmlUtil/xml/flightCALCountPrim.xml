@@ -2,7 +2,7 @@
   <overview>Counts for replicated objects in the Calorimeter; other
             integer constants used to keep track of identifiers.</overview>
   <prim name="CALnLayer" value="8" uType="count"> Number of layers of CAL CsI crystals</prim>
-  <prim name= "nLogPerLayer" value= "12" uType="count">Number of crystals per layer within a tower
+  <prim name= "nCsIPerLayer" value= "12" uType="count">Number of crystals per layer within a tower
 </prim>
   <prim name="logXtal" value="0" uType="count">idField value for CAL log field
 (the CsI crystal)</prim>

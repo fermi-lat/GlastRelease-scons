@@ -1,0 +1,26 @@
+<primCategory name="CALMatPrim" >
+  <overview>Materials used in the calorimeter</overview>
+  <prim name="crystalMat" value="CsI" type="string" uType="mat">Crystal Material
+</prim>
+  <prim name="diodeMat" value="Si" type="string" uType="mat">Diode Material
+</prim>
+<prim name="CALCellMat" value="CarbonFiber" type="string" uType="mat">**NEW** 
+CAL composite cell material</prim>
+<prim name="CALCloseoutMat" value="C20" type="string" uType="mat">**NEW** 
+CAL composite cell closeout material</prim>
+<prim name="sideWallMat" value="A120" type="string" uType="mat">**NEW** 
+Material for CAL EMI side walls and PCBs</prim>
+<prim name="PCBMat" value="Fiberglass" type="string" uType="mat">**NEW** 
+Material for printed circuit boards</prim>
+  <prim name= "CALWrapMat" value= "Polystyrene" type="string" uType="mat">
+Wrap material for CsI logs [obsolete??]</prim>
+  <prim name= "CALFrameMat" value= "Al20" type="string" uType="mat">
+Material for CAL frame [obsolete??]</prim>
+  <prim name="CALSpaceMat" value="rubber60A1" type="string" uType="mat">
+Material for space between CAL layers [obsolete??]</prim>
+  <prim name= "CALGridMat" value= "Al" type="string" uType="mat">Material 
+for CAL grid [obsolete??]</prim>
+  <prim name= "CALFlangeMat" value= "Al50" type="string" uType="mat">
+Material for CAL flange [obsolete??]
+</prim>
+</primCategory>

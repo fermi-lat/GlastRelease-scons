@@ -10,6 +10,10 @@ gaps (long axis = Z) to be covered by scintillating tape on each side
 o the ACD.  Should this be derived from #tiles in some side row?</prim>
   <prim name="numSideRows" value="4" uType="count">Number of rows of 
 tiles along the sides</prim>
+  <prim name="ACDShortRowMin" value="0" uType="count">Row number of first
+short row</prim> 
+  <prim name="ACDShortRowMax" value="1" uType="count">Row number of last
+short row</prim>
   <prim name="numPerSideRowShort" value="5" uType="count">Number of
   tiles in some (currently upper two) side rows</prim>
   <prim name="numPerSideRowLong" value="10" uType="count">Number of

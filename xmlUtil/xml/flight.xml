@@ -12,21 +12,23 @@
 <!DOCTYPE gdd SYSTEM "gdd.dtd"
   [
     <!-- Keep some of the primary definitions in separate files -->
-    <!ENTITY globalMatPrim   SYSTEM "globalMatPrim.xml">
-    <!ENTITY globalCountPrim SYSTEM "globalCountPrim.xml">
-    <!ENTITY globalDimPrim   SYSTEM "globalDimPrim.xml">
+    <!ENTITY globalMatPrim   SYSTEM "flightGlobalMatPrim.xml">
+    <!ENTITY globalCountPrim SYSTEM "flightGlobalCountPrim.xml">
+    <!ENTITY globalDimPrim   SYSTEM "flightGlobalDimPrim.xml">
 
-    <!ENTITY CALMatPrim     SYSTEM "CALMatPrim.xml">
-    <!ENTITY CALCountPrim   SYSTEM "CALCountPrim.xml">
-    <!ENTITY CALDimPrim     SYSTEM "CALDimPrim.xml">
+    <!ENTITY CALMatPrim     SYSTEM "flightCALMatPrim.xml">
+    <!ENTITY CALCountPrim   SYSTEM "flightCALCountPrim.xml">
+    <!ENTITY CALDimPrim     SYSTEM "flightCALDimPrim.xml">
 
-    <!ENTITY TKRMatPrim     SYSTEM "TKRMatPrim.xml">
-    <!ENTITY TKRCountPrim   SYSTEM "TKRCountPrim.xml">
-    <!ENTITY TKRDimPrim     SYSTEM "TKRDimPrim.xml">
+    <!ENTITY TKRMatPrim     SYSTEM "flightTKRMatPrim.xml">
+    <!ENTITY TKRCountPrim   SYSTEM "flightTKRCountPrim.xml">
+    <!ENTITY TKRDimPrim     SYSTEM "flightTKRDimPrim.xml">
 
-    <!ENTITY ACDMatPrim     SYSTEM "ACDMatPrim.xml">
-    <!ENTITY ACDCountPrim   SYSTEM "ACDCountPrim.xml">
-    <!ENTITY ACDDimPrim     SYSTEM "ACDDimPrim.xml">
+    <!ENTITY ACDMatPrim     SYSTEM "flightACDMatPrim.xml">
+    <!ENTITY ACDCountPrim   SYSTEM "flightACDCountPrim.xml">
+    <!ENTITY ACDDimPrim     SYSTEM "flightACDDimPrim.xml">
+
+    <!ENTITY idDict         SYSTEM "flightIdDict.xml">
   ]
 >
 <gdd CVSid="$Id$" 
@@ -93,7 +95,7 @@
         <const name="CsIEnvY">  
           <notes>Transverse dimension of envelope containing a CsI crystal and its diodes</notes>
           <add>
-            <refer refTo="CsITrans" />
+            <refer refTo="CsIWidth" />
             <refer refTo="CALGap" />
           </add>
         </const>
@@ -101,7 +103,7 @@
         <const name = "CsIEnvZ" >
           <notes>Height of the envelope containing a CsI crystal and its diodes</notes>
           <add>
-            <refer refTo="CsIZ" />
+            <refer refTo="CsIHeight" />
             <refer refTo="CALGap" />
           </add>
         </const>
@@ -109,13 +111,13 @@
 <!-- the following should be the maximum of the length of a single
      CsIElement and the transverse distance across the whole 
      collection of CsIElements in a layer, so
-      max(CsIEnvX, nLogPerLayer*CsIEnvY), which ends up being
+      max(CsIEnvX, nCsIPerLayer*CsIEnvY), which ends up being
       CsIEnvX in this case    --> 
         <const name = "CALLayerTrans" ><notes>Transverse dimension of a CAL layer: max(CsiEnvX, nEltPerlayer*CsIEnvY)</notes>
           <max>
             <refer refTo="CsIEnvX" />
             <mul>
-              <refer refTo="nLogPerLayer" />
+              <refer refTo="nCsIPerLayer" />
               <refer refTo="CsIEnvY" />
             </mul>
           </max>
@@ -349,7 +351,7 @@
         <const name="maxLog" uType="count" >
           <notes>Upper limit on CsI log idField values</notes>
           <minus>
-            <refer refTo="nLogPerLayer" />
+            <refer refTo="nCsIPerLayer" />
             <const value="1" uType="count" />
           </minus>
         </const>
@@ -495,16 +497,62 @@
           </add>
         </const>
 
+        <const name="XTopTileMax" uType="count">
+          <notes>Convenience for idField definitons</notes>
+          <minus>
+            <refer refTo="numXTopTiles" />
+            <const value="1.0" />
+          </minus>
+        </const>
+
+        <const name="YTopTileMax" uType="count">
+          <notes>Convenience for idField definitons</notes>
+          <minus>
+            <refer refTo="numYTopTiles" />
+            <const value="1" uType="count" />
+          </minus>
+        </const>
+
+
+        <const name="ACDLongRowMin" uType="count" >
+          <notes>row number of first long ACD side row</notes>
+          <add>
+            <refer refTo="ACDShortRowMax" />
+            <const value="1" uType="count" />
+          </add>
+        </const>
+
+        <const name="ACDLongRowMax" uType="count" >
+          <notes>row number of last long ACD side row</notes>
+          <minus>
+            <refer refTo="numSideRows" />
+            <const value="1" uType="count" />
+          </minus>
+        </const>
+
+        <const name="ACDShortMaxCol" uType="count">
+          <notes>Column number of last tile in a short row</notes>
+          <minus>
+            <refer refTo="numPerSideRowShort" />
+            <const value="1" uType="count" />
+          </minus>
+        </const>
+
+        <const name="ACDLongMaxCol" uType="count">
+          <notes>Column number of last tile in a long row</notes>
+          <minus>
+            <refer refTo="numPerSideRowLong" />
+            <const value="1" uType="count" />
+          </minus>
+        </const>
+
         <const name="ACDTopXWidth">
           <notes>X dimension for a top tile. Must be derived from total width top and other things.  Tiles overlap in X.</notes>
           <quo>
             <add>
               <refer refTo="ACDTopTotalX"/>
               <mul>
-                <minus>
-                  <refer refTo="numXTopTiles" />
-                  <const value="1.0" />
-                </minus>
+                <refer refTo="XTopTileMax" />
                 <refer refTo="topOverlap" />
               </mul>
               <mul>
@@ -1161,178 +1209,8 @@ row of side tiles</notes>
 
     </derived>
   </constants>
-
-  <idDict major="1" minor="0" patch="0">
-    <idRoot name="topObjects" >
-      <vConstraints>
-        <fValREF refTo="rootLAT" />
-        <fValREF refTo="rootPanels" />
-        <fValREF refTo="rootSC" />
-      </vConstraints>
-    </idRoot>
-
-    <field name="fLATObjects" >
-      <vConstraints>
-        <fValREF refTo="LATTowers" />
-        <fValREF refTo="LATACD" />
-      </vConstraints>
-    </field>
-
-    <field name="fTowerY" >
-      <vConstraints min="0" maxREF="yNumM1" />
-    </field>
-
-    <field name="fTowerX" >
-      <vConstraints min="0" maxREF="xNumM1" />
-    </field>
-
-    <field name="fTowerObjects" >
-      <vConstraints>
-        <fValREF refTo="towerTKR" />
-        <fValREF refTo="towerCAL" />
-      </vConstraints>
-    </field>
-
-    <field name="fLayer" />
-
-    <field name="fCALLog" >
-      <vConstraints min="0" maxREF="maxLog" />
-    </field>
-
-    <field name="fCALLogCmp" >
-      <vConstraints>
-        <fValREF refTo="logXtal" />
-        <fValREF refTo="logDiode" />
-      </vConstraints>
-    </field>
-
-    <field name="fCALLogDiode" >
-      <vConstraints>
-        <fValREF refTo="diodeMSmall" />
-        <fValREF refTo="diodePSmall" />
-        <fValREF refTo="diodeMLarge" />
-        <fValREF refTo="diodePLarge" />
-      </vConstraints>
-    </field>
-
-    <field name="fACDFace" >
-      <vConstraints minREF="ACDTopFace" maxREF="ACDYPosFace" /> 
-    </field>
-
-    <field name="fLadder" >
-      <vConstraints min="0" maxREF="nLadderM1" />
-    </field>
-<!-- constraints for these depend on which side we're in -->
-    <field name="fRow" />
-
-    <field name="fCol" />
-
-    <field name="fTKRTray" >
-      <vConstraints min="0" maxREF="maxTray" />
-    </field>
-
-    <field name="fTKRSi" >
-      <vConstraints>
-        <fValREF refTo="TKRSiBottom" />
-        <fValREF refTo="TKRSiTop" />
-      </vConstraints>
-    </field>
-
-    <!-- subsequences to conveniently refer to each subdetector -->
-    <absSubseq name="absSubCAL" >
-      <theIdRoot>
-        <vConstraints mustbeREF="LAT" />
-      </theIdRoot>
-      <fieldRef refTo="fLATObjects" >
-         <vConstraints mustbeREF="LATTowers" />
-      </fieldRef>
-      <fieldRef refTo="fTowerY" />
-      <fieldRef refTo="fTowerX" />
-      <fieldRef refTo="fTowerObjects" >
-        <vConstraints mustbeREF="towerCAL" />
-      </fieldRef>
-    </absSubseq>
-
-    <absSubseq name="absSubTKR" >
-      <theIdRoot>
-        <vConstraints mustbeREF="LAT" />
-      </theIdRoot>
-      <fieldRef refTo="fLATObjects" >
-         <vConstraints mustbeREF="LATTowers" />
-      </fieldRef>
-      <fieldRef refTo="fTowerY" />
-      <fieldRef refTo="fTowerX" />
-      <fieldRef refTo="fTowerObjects" >
-        <vConstraints mustbeREF="towerTKR" />
-      </fieldRef>
-    </absSubseq>
-
-    <absSubseq name="absSubACD" >
-      <theIdRoot>
-        <vConstraints mustbeREF="LAT" />
-      </theIdRoot>
-      <fieldRef refTo="fLATObjects" >
-         <vConstraints mustbeREF="LATACD" />
-      </fieldRef>
-    </absSubseq>
-
-<!-- Sequence to represent a CAL crystal.  May want to add segment
-     for energy accounting. -->
-    <seq name="seqLogXtal" >
-      <absSubRef refTo="absSubCAL" />
-      <fieldRef refTo="fLayer" >
-        <vConstraints min="0" maxREF="CALMaxLayer" />
-      </fieldRef>
-      <fieldRef refTo="fCALLog" />
-      <fieldRef refTo="fCALLogCmp" >
-        <vConstraints mustbeREF="logXtal" />
-      </fieldRef>
-    </seq>
-
-<!-- Sequence to represent a CAL diode. -->
-    <seq name="seqLogDiode" >
-      <absSubRef refTo="absSubCAL" />
-      <fieldRef refTo="fLayer" >
-        <vConstraints min="0" maxREF="CALMaxLayer" />
-      </fieldRef>
-      <fieldRef refTo="fCALLog" />
-      <fieldRef refTo="fCALLogCmp" >
-        <vConstraints mustbeREF="logDiode" />
-      </fieldRef>
-      <fieldRef refTo="fCALLogDiode" />
-    </seq>
-
-<!-- Sequences to represent top or bottom Si on a tray -->
-   <seq name="seqTKRTop" >   <!-- top tray has only bottom si -->
-     <absSubRef refTo="absSubTKR"  />
-     <fieldRef refTo="fTKRTray" >
-       <vConstraints mustbeREF="maxTray" />
-     </fieldRef >
-     <fieldRef refTo="fTKRSi">
-       <vConstraints mustbeREF="TKRSiBottom" />
-     </fieldRef >
-   </seq>
-
-   <seq name="seqTKRBottom" >   <!-- bottom tray has only bottom si -->
-     <absSubRef refTo="absSubTKR"  />
-     <fieldRef refTo="fTKRTray" >
-       <vConstraints mustbe="0" />
-     </fieldRef >
-     <fieldRef refTo="fTKRSi">
-       <vConstraints mustbeREF="TKRSiTop" />
-     </fieldRef >
-  </seq>
-
-   <seq name="seqTKRinterior" >   <!-- bottom tray has only bottom si -->
-     <absSubRef refTo="absSubTKR"  />
-     <fieldRef refTo="fTKRTray" >
-       <vConstraints min="1" maxREF="maxTrayM1" />
-     </fieldRef >
-     <fieldRef refTo="fTKRSi" />
-  </seq>
-
-
-  </idDict>
+ 
+  &idDict;
 
   <section name="LATsection"
            version="1.0" date="2001/3/9" author="J.Bogart"
@@ -1362,10 +1240,6 @@ row of side tiles</notes>
     is one that has both) have the same orientation.  Even-numbered
     trays have Y-strips and odd-numbered trays have X-strips.
 
-    (As of March 1, 2001, had to eliminate the convenience idField
-     for orientation of trays and cal layers.  This information can
-     still be deduced from the rotation attribute of the positioning
-     element
     -->
     <box name="LATenv"
          XREF="LATX" YREF="LATY" ZREF="LATZ" />
@@ -1378,7 +1252,7 @@ row of side tiles</notes>
     be an X-log -->
     <box name="CsIDetector" 
          sensitive="true"
-         XREF="CsILength" YREF="CsITrans" ZREF="CsIZ"
+         XREF="CsILength" YREF="CsIWidth" ZREF="CsIHeight"
          materialREF="crystalMat"  >
       <seg axis="X" nSeg="10" reason="energyAcct" />
     </box>
@@ -1442,7 +1316,7 @@ row of side tiles</notes>
 
     <!-- make a layer out of some evenly-spaced CsIElements -->
     <stackY name="CALLayer" >
-      <axisMPos volume="CsIElement" ncopyREF="nLogPerLayer"
+      <axisMPos volume="CsIElement" ncopyREF="nCsIPerLayer"
                 gapREF="CALGap" >
         <idField name="fCALLog" value="0" step="1" />
       </axisMPos>
@@ -1463,34 +1337,42 @@ row of side tiles</notes>
     <stackZ name="CALLayers"  >
       <axisPos volume="CALLayer" rotation="90" >
         <idField name="fLayer" value="7" />
+        <idField name="fMeasure" valueREF="measureY" />
       </axisPos>
       <axisPos volume="CALSpace" />
       <axisPos volume="CALLayer"  >
         <idField name="fLayer" value="6" />
+        <idField name="fMeasure" valueREF="measureX" />
       </axisPos>
       <axisPos volume="CALSpace" />
       <axisPos volume="CALLayer" rotation="90" >
         <idField name="fLayer" value="5" />
+        <idField name="fMeasure" valueREF="measureY" />
       </axisPos>
       <axisPos volume="CALSpace" />
       <axisPos volume="CALLayer"  >
         <idField name="fLayer" value="4" />
+        <idField name="fMeasure" valueREF="measureX" />
       </axisPos>
       <axisPos volume="CALSpace" />
       <axisPos volume="CALLayer" rotation="90" >
         <idField name="fLayer" value="3" />
+        <idField name="fMeasure" valueREF="measureY" />
       </axisPos>
       <axisPos volume="CALSpace" />
       <axisPos volume="CALLayer"  >
         <idField name="fLayer" value="2" />
+        <idField name="fMeasure" valueREF="measureX" />
       </axisPos>
       <axisPos volume="CALSpace" />
       <axisPos volume="CALLayer" rotation="90" >
         <idField name="fLayer" value="1" />
+        <idField name="fMeasure" valueREF="measureY" />
       </axisPos>
       <axisPos volume="CALSpace" />
       <axisPos volume="CALLayer"  >
         <idField name="fLayer" value="0" />
+        <idField name="fMeasure" valueREF="measureX" />
       </axisPos>
     </stackZ>
 
@@ -1708,60 +1590,79 @@ row of side tiles</notes>
     <stackZ name="oneTKR" >
       <axisPos volume="trayBot" rotation="90" >
 	<idField name="fTKRTray" value="0" />
+        <idField name="fMeasure" valueREF="measureY" />
       </axisPos>
       <axisPos volume="trayNoConv" gapREF="intertrayGap" >
 	<idField name="fTKRTray" value="1" />
+        <idField name="fMeasure" valueREF="measureX" />
       </axisPos>
       <axisPos volume="trayNoConv" rotation="90" gapREF="intertrayGap" >
 	<idField name="fTKRTray" value="2" />
+        <idField name="fMeasure" valueREF="measureY" />
       </axisPos>
       <axisPos volume="traySuper" gapREF="intertrayGap" >
 	<idField name="fTKRTray" value="3" />
+        <idField name="fMeasure" valueREF="measureX" />
       </axisPos>
       <axisPos volume="traySuper" rotation="90" gapREF="intertrayGap" >
 	<idField name="fTKRTray" value="4" />
+        <idField name="fMeasure" valueREF="measureY" />
       </axisPos>
       <axisPos volume="traySuper" gapREF="intertrayGap" >
 	<idField name="fTKRTray" value="5" />
+        <idField name="fMeasure" valueREF="measureX" />
       </axisPos>
       <axisPos volume="traySuper" rotation="90" gapREF="intertrayGap" >
 	<idField name="fTKRTray" value="6" />
+        <idField name="fMeasure" valueREF="measureY" />
       </axisPos>
       <axisPos volume="trayReg" gapREF="intertrayGap" >
 	<idField name="fTKRTray" value="7" />
+        <idField name="fMeasure" valueREF="measureX" />
       </axisPos>
       <axisPos volume="trayReg" rotation="90" gapREF="intertrayGap" >
 	<idField name="fTKRTray" value="8" />
+        <idField name="fMeasure" valueREF="measureY" />
       </axisPos>
       <axisPos volume="trayReg" gapREF="intertrayGap" >
 	<idField name="fTKRTray" value="9" />
+        <idField name="fMeasure" valueREF="measureX" />
       </axisPos>
       <axisPos volume="trayReg" rotation="90" gapREF="intertrayGap" >
 	<idField name="fTKRTray" value="10" />
+        <idField name="fMeasure" valueREF="measureY" />
       </axisPos>
       <axisPos volume="trayReg" gapREF="intertrayGap" >
 	<idField name="fTKRTray" value="11" />
+        <idField name="fMeasure" valueREF="measureX" />
       </axisPos>
       <axisPos volume="trayReg" rotation="90" gapREF="intertrayGap" >
 	<idField name="fTKRTray" value="12" />
+        <idField name="fMeasure" valueREF="measureY" />
       </axisPos>
       <axisPos volume="trayReg" gapREF="intertrayGap" >
 	<idField name="fTKRTray" value="13" />
+        <idField name="fMeasure" valueREF="measureX" />
       </axisPos>
       <axisPos volume="trayReg" rotation="90" gapREF="intertrayGap" >
 	<idField name="fTKRTray" value="14" />
+        <idField name="fMeasure" valueREF="measureY" />
       </axisPos>
       <axisPos volume="trayReg" gapREF="intertrayGap" >
 	<idField name="fTKRTray" value="15" />
+        <idField name="fMeasure" valueREF="measureX" />
       </axisPos>
       <axisPos volume="trayReg" rotation="90" gapREF="intertrayGap" >
 	<idField name="fTKRTray" value="16" />
+        <idField name="fMeasure" valueREF="measureY" />
       </axisPos>
       <axisPos volume="trayReg" gapREF="intertrayGap" >
 	<idField name="fTKRTray" value="17" />
+        <idField name="fMeasure" valueREF="measureX" />
       </axisPos>
       <axisPos volume="trayTop" rotation="90" gapREF="intertrayGap" >
 	<idField name="fTKRTray" value="18" />
+        <idField name="fMeasure" valueREF="measureY" />
       </axisPos>
 
     </stackZ>
@@ -1787,12 +1688,14 @@ row of side tiles</notes>
   
     <stackX name="towerRow" >
       <axisMPos volume="oneTower" ncopyREF="xNum" > 
+        <idField name="fTowerX" value="0" step="1" />
 <!-- ought to have a gap here, but I don't know what -->
       </axisMPos>
     </stackX>
 
     <stackY name="allTowers" >
       <axisMPos volume="towerRow" ncopyREF="yNum" >
+        <idField name="fTowerY" value="0" step="1" />
 <!-- ought to have a gap here, but I don't know what -->
       </axisMPos>
     </stackY>
@@ -2261,29 +2164,45 @@ row of side tiles</notes>
       </axisMPos>
     </stackY>
 
-<!-- Make a LAT.  Not stopping to figure out idFields just yet -->
+<!-- Make a LAT.  Still need an idField for tape components -->
     <composition name="LAT" envelope="LATenv" >
       <posXYZ volume="ACDTop"
-              ZREF="ACDTop_d" />
+              ZREF="ACDTop_d" >
+        <idField name="fLATObjects" valueREF="LATACD" />
+        <idField name="fACDFace" valueREF="ACDTopFace" />
+      </posXYZ>
       <posXYZ volume="allTowers" 
-              ZREF="allTowers_d" />
+              ZREF="allTowers_d" >
+        <idField name="fLATObjects" valueREF="LATTowers" />
+      </posXYZ>
       <posXYZ volume="TileXSide"
               XREF="ACDSideDovetail_d"
               YREF="tileXSide_dy"
-              ZREF="tileSide_dz" />
+              ZREF="tileSide_dz" >
+        <idField name="fLATObjects" valueREF="LATACD" />
+        <idField name="fACDFace" valueREF="ACDXPosFace" />
+      </posXYZ>
       <posXYZ volume="TileXSide" 
               XREF="ACDSideDovetail_d"
               YREF="tileXSide_dyN"
-              ZREF="tileSide_dz" />
+              ZREF="tileSide_dz" >
+        <idField name="fLATObjects" valueREF="LATACD" />
+        <idField name="fACDFace" valueREF="ACDXNegFace" />
+      </posXYZ>
       <posXYZ volume="TileYSide" 
               XREF="tileYSide_dx"
               YREF="ACDSideDovetail_d"
-              ZREF="tileSide_dz" />
+              ZREF="tileSide_dz" >
+        <idField name="fLATObjects" valueREF="LATACD" />
+        <idField name="fACDFace" valueREF="ACDYPosFace" />
+      </posXYZ>
       <posXYZ volume="TileYSide" 
               XREF="tileYSide_dxN"
               YREF="ACDSideDovetail_d"
-              ZREF="tileSide_dz" />
-
+              ZREF="tileSide_dz" >
+        <idField name="fLATObjects" valueREF="LATACD" />
+        <idField name="fACDFace" valueREF="ACDYNegFace" />
+      </posXYZ>
       <posXYZ volume="sideTapeRowX" 
               XREF="ACDSideDovetail_d"
               YREF="tapeXSide_dy"

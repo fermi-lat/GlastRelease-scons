@@ -1,0 +1,224 @@
+  <idDict major="1" minor="0" patch="0">
+    <idRoot name="topObjects" >
+      <vList>
+        <enumVal valueREF="rootLAT" />
+        <enumVal valueREF="rootPanels" />
+        <enumVal valueREF="rootSC" />
+      </vList>
+    </idRoot>
+
+    <field name="fLATObjects" >
+      <vList>
+        <enumVal valueREF="LATTowers" />
+        <enumVal valueREF="LATACD" />
+      </vList>
+    </field>
+
+    <field name="fTowerY" >
+      <vMinMax min="0" maxREF="yNumM1" />
+    </field>
+
+    <field name="fTowerX" >
+      <vMinMax min="0" maxREF="xNumM1" />
+    </field>
+
+    <field name="fTowerObjects" >
+      <vList>
+        <enumVal valueREF="towerTKR" />
+        <enumVal valueREF="towerCAL" />
+      </vList>
+    </field>
+
+    <field name="fMeasure" >
+      <vList>
+        <enumVal valueREF="measureX" />
+        <enumVal valueREF="measureY" />
+      </vList>
+    </field>
+
+    <field name="fLayer" />
+
+    <field name="fCALLog" >
+      <vMinMax min="0" maxREF="maxLog" />
+    </field>
+
+    <field name="fCALLogCmp" >
+      <vList>
+        <enumVal valueREF="logXtal" />
+        <enumVal valueREF="logDiode" />
+      </vList>
+    </field>
+
+    <field name="fCALLogDiode" >
+      <vList>
+        <enumVal valueREF="diodeMSmall" />
+        <enumVal valueREF="diodePSmall" />
+        <enumVal valueREF="diodeMLarge" />
+        <enumVal valueREF="diodePLarge" />
+      </vList>
+    </field>
+
+    <field name="fACDFace" >
+      <vMinMax minREF="ACDTopFace" maxREF="ACDYPosFace" /> 
+    </field>
+
+    <field name="fLadder" >
+      <vMinMax min="0" maxREF="nLadderM1" />
+    </field>
+<!-- constraints for these depend on which side we're in -->
+    <field name="fRow" />
+
+    <field name="fCol" />
+
+    <field name="fTKRTray" >
+      <vMinMax min="0" maxREF="maxTray" />
+    </field>
+
+    <field name="fTKRSi" >
+      <vList>
+        <enumVal valueREF="TKRSiBottom" />
+        <enumVal valueREF="TKRSiTop" />
+      </vList>
+    </field>
+
+    <!-- subsequences to conveniently refer to each subdetector -->
+    <absSubseq name="absSubCAL" >
+      <theIdRoot>
+        <enumVal valueREF="LAT" />
+      </theIdRoot>
+      <fieldRef refTo="fLATObjects" >
+         <enumVal valueREF="LATTowers" />
+      </fieldRef>
+      <fieldRef refTo="fTowerY" />
+      <fieldRef refTo="fTowerX" />
+      <fieldRef refTo="fTowerObjects" >
+        <enumVal valueREF="towerCAL" />
+      </fieldRef>
+    </absSubseq>
+
+    <absSubseq name="absSubTKR" >
+      <theIdRoot>
+        <enumVal valueREF="LAT" />
+      </theIdRoot>
+      <fieldRef refTo="fLATObjects" >
+         <enumVal valueREF="LATTowers" />
+      </fieldRef>
+      <fieldRef refTo="fTowerY" />
+      <fieldRef refTo="fTowerX" />
+      <fieldRef refTo="fTowerObjects" >
+        <enumVal valueREF="towerTKR" />
+      </fieldRef>
+    </absSubseq>
+
+    <absSubseq name="absSubACD" >
+      <theIdRoot>
+        <enumVal valueREF="LAT" />
+      </theIdRoot>
+      <fieldRef refTo="fLATObjects" >
+         <enumVal valueREF="LATACD" />
+      </fieldRef>
+    </absSubseq>
+
+<!-- Sequence to represent a CAL crystal.  May want to add segment
+     for energy accounting. -->
+    <seq name="seqLogXtal" >
+      <absSubRef refTo="absSubCAL" />
+      <fieldRef refTo="fLayer" >
+        <vMinMax min="0" maxREF="CALMaxLayer" />
+      </fieldRef>
+      <fieldRef refTo="fMeasure" />
+      <fieldRef refTo="fCALLog" />
+      <fieldRef refTo="fCALLogCmp" >
+        <enumVal valueREF="logXtal" />
+      </fieldRef>
+    </seq>
+
+<!-- Sequence to represent a CAL diode. -->
+    <seq name="seqLogDiode" >
+      <absSubRef refTo="absSubCAL" />
+      <fieldRef refTo="fLayer" >
+        <vMinMax min="0" maxREF="CALMaxLayer" />
+      </fieldRef>
+      <fieldRef refTo="fMeasure" />
+      <fieldRef refTo="fCALLog" />
+      <fieldRef refTo="fCALLogCmp" >
+        <enumVal valueREF="logDiode" />
+      </fieldRef>
+      <fieldRef refTo="fCALLogDiode" />
+    </seq>
+
+<!-- Sequences to represent top or bottom Si on a tray -->
+    <seq name="seqTKRTop" >   <!-- top tray has only bottom si -->
+      <absSubRef refTo="absSubTKR"  />
+      <fieldRef refTo="fTKRTray" >
+        <enumVal valueREF="maxTray" />
+      </fieldRef >
+      <fieldRef refTo="fMeasure" />
+      <fieldRef refTo="fTKRSi">
+        <enumVal valueREF="TKRSiBottom" />
+      </fieldRef >
+    </seq>
+
+    <seq name="seqTKRBottom" >   <!-- bottom tray has only bottom si -->
+      <absSubRef refTo="absSubTKR"  />
+      <fieldRef refTo="fTKRTray" >
+        <enumVal value="0" />
+      </fieldRef >
+      <fieldRef refTo="fMeasure" />
+      <fieldRef refTo="fTKRSi">
+        <enumVal valueREF="TKRSiTop" />
+      </fieldRef >
+    </seq>
+
+    <seq name="seqTKRInterior" >   <!-- bottom tray has only bottom si -->
+      <absSubRef refTo="absSubTKR"  />
+      <fieldRef refTo="fTKRTray" >
+        <vMinMax min="1" maxREF="maxTrayM1" />
+      </fieldRef >
+      <fieldRef refTo="fMeasure" />
+      <fieldRef refTo="fTKRSi" />
+    </seq>
+
+<!-- sequences for top face -->
+    <seq name="seqACDTopTile" >
+      <absSubRef refTo="absSubACD" />
+      <fieldRef refTo="fACDFace" >
+        <enumVal valueREF="ACDTopFace" />
+      </fieldRef>
+      <fieldRef refTo="fRow" >
+        <vMinMax min="0" maxREF="XTopTileMax" />
+      </fieldRef>
+      <fieldRef refTo="fCol" >
+        <vMinMax min="0" maxREF="YTopTileMax" />
+      </fieldRef>
+    </seq>
+
+<!-- short rows of side faces -->
+    <seq name="seqACDSideShortTile" >
+      <absSubRef refTo="absSubACD" />
+      <fieldRef refTo="fACDFace" >
+        <vMinMax minREF="ACDXNegFace" maxREF="ACDYPosFace" />
+      </fieldRef>
+      <fieldRef refTo="fRow" >
+        <vMinMax minREF="ACDShortRowMin" maxREF="ACDShortRowMax" />
+      </fieldRef>
+      <fieldRef refTo="fCol" >
+        <vMinMax min="0" maxREF="ACDShortMaxCol" />
+      </fieldRef>
+    </seq>
+
+<!-- long rows of side faces -->
+    <seq name="seqACDSideShortTile" >
+      <absSubRef refTo="absSubACD" />
+      <fieldRef refTo="fACDFace" >
+        <vMinMax minREF="ACDXNegFace" maxREF="ACDYPosFace" />
+      </fieldRef>
+      <fieldRef refTo="fRow" >
+        <vMinMax minREF="ACDLongRowMin" maxREF="ACDLongRowMax" />
+      </fieldRef>
+      <fieldRef refTo="fCol" >
+        <vMinMax min="0" maxREF="ACDLongMaxCol" />
+      </fieldRef>
+    </seq>
+
+  </idDict>

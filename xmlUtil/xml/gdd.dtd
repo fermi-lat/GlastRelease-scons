@@ -498,14 +498,6 @@
                   unitAngle   ( deg | mrad ) "deg"'>
 
 <!ELEMENT idField EMPTY>
-<!--
-    "diode"   ranges from 0-3, specifies size and end
-      -->
-<!-- <!ATTLIST idField name
-   (layer|tower|tray|row|col|topside|xtal|towerDet|diode|wafer|SiPosition) #REQUIRED
-   value   NMTOKEN  "0"
-   step    NMTOKEN  "0" >
--->
 <!-- don't attempt to enumerate possible names -->
 <!ATTLIST idField name  IDREF #REQUIRED
                   value NMTOKEN "0"
@@ -886,20 +878,6 @@
                   minor      NMTOKEN #REQUIRED
                   patch      NMTOKEN #IMPLIED  >
 
-<!ELEMENT field (vConstraints?) >
-<!ATTLIST field name    ID #REQUIRED >
-
-<!ELEMENT fieldRef (vConstraints?) >
-<!ATTLIST fieldRef   refTo IDREF #REQUIRED>
-
-<!-- root is just a special field -->
-<!ELEMENT idRoot (vConstraints?) >
-<!ATTLIST idRoot name    ID #REQUIRED >
-
-<!-- Functionally the same as a reference to the root.  There may
-     only be one root per dictionary, so no need to refer to
-     it by name.  -->
-<!ELEMENT theIdRoot (vConstraints?) >
 
 <!-- A value for a particular field may be constrained to be
      a single number
@@ -909,26 +887,38 @@
 
     In some cases it will be more convenient to specify the
     number with some sort of alias, that is, a number masquerading
-    as a word.  This is the point of the <vAlias> ("value alias")
-    element.  
-    If the possible values to be specified by the <vConstraints>
-    element is a list of <vAlias>es the list must be specified
-    inline; a single <vAlias> may be specified either inline
-    or by means of one of the ..REF attributes.
+    as a word, hence the REF versions of attributes for vMinMax
+    and enumVal.
+
  -->
-<!ELEMENT vConstraints (fValREF* | fVal*) >
-<!ATTLIST vConstraints  mustbe      NMTOKEN #IMPLIED
-                        min       NMTOKEN "0"
-                        max       NMTOKEN #IMPLIED
-                        mustbeREF   IDREF   #IMPLIED
-                        minREF    IDREF   #IMPLIED
-                        maxREF    IDREF   #IMPLIED >
+<!ENTITY % vConstraints "vList | vMinMax | enumVal" >
 
-<!ELEMENT fVal EMPTY >
-<!ATTLIST fVal value  NMTOKEN #REQUIRED >
+<!ELEMENT field (%vConstraints;)? >
+<!ATTLIST field name    ID #REQUIRED >
 
-<!ELEMENT fValREF EMPTY >
-<!ATTLIST fValREF refTo  NMTOKEN #REQUIRED >
+<!ELEMENT fieldRef (%vConstraints;)? >
+<!ATTLIST fieldRef   refTo IDREF #REQUIRED>
+
+<!-- root is just a special field -->
+<!ELEMENT idRoot (%vConstraints;)? >
+<!ATTLIST idRoot name    ID #REQUIRED >
+
+<!-- Functionally the same as a reference to the root.  There may
+     only be one root per dictionary, so no need to refer to
+     it by name.  -->
+<!ELEMENT theIdRoot (%vConstraints;)? >
+
+<!ELEMENT vList (enumVal*) >
+
+<!ELEMENT vMinMax EMPTY >
+<!ATTLIST vMinMax   min    NMTOKEN "0"
+                    minREF IDREF #IMPLIED
+                    max    NMTOKEN "0"
+                    maxREF IDREF #IMPLIED >
+
+<!ELEMENT enumVal EMPTY >
+<!ATTLIST enumVal  value NMTOKEN "0"
+                   valueREF IDREF #IMPLIED >
 
 <!ELEMENT subseq (fieldRef | subseqref)+ >
 <!ATTLIST subseq  name ID #REQUIRED >
