@@ -28,15 +28,6 @@
 using namespace GlastEvent;
 
 // ====================================================================
-// Object factory implementation for objects of class GsimACDTileHits
-// ====================================================================
-#include "GlastEvent/MonteCarlo/MCACDHit.h"
-_ImplementHitContainedFactories(MCACDHit)
-
-#include "GlastEvent/MonteCarlo/MCCalorimeterHit.h"
-_ImplementHitContainedFactories(MCCalorimeterHit)
-
-// ====================================================================
 // Object factory implementation for objects of class GsimCalorimeterHits
 // ====================================================================
 //#include "GlastEvent/GsimImp/GsimCalorimeterHits.h"
@@ -89,8 +80,6 @@ _ImplementHitContainedFactories(MCCalorimeterHit)
 //_ImplementDataObjectFactory( GsimSiLayerHits )
 
 void HitInstanciation()  {
-  DLL_DECL_CONTAINEDOBJECTFACTORY( MCACDhit );
-  DLL_DECL_CONTAINEDOBJECTFACTORY( MCCalorimeterHit );
   //DLL_DECL_CONTAINEDOBJECTFACTORY( GsimCalorimeterLogHits );
   //DLL_DECL_CONTAINEDOBJECTFACTORY( GsimSiStripHits );
 }
