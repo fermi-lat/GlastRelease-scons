@@ -65,12 +65,7 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   new FXButton(uiToolbar, "&Paste result\tPaste from result table",
                NULL, this, ID_PASTEFROMTABLE, FRAME_RAISED|FRAME_THICK);
   new FXVerticalSeparator(uiToolbar, SEPARATOR_GROOVE|LAYOUT_FILL_Y);
-  new FXToggleButton(uiToolbar, "&Auto", "M&an\tToggle autocommit",
-                     NULL, NULL, this, ID_TOGGLEAUTOCOMMIT, FRAME_RAISED|FRAME_THICK);
-  new FXButton(uiToolbar, "&Commit\tCommit current transaction",
-               NULL, this, ID_COMMIT, FRAME_RAISED|FRAME_THICK);
-  new FXButton(uiToolbar, "&Rollback\tRollback current transaction",
-               NULL, this, ID_ROLLBACK, FRAME_RAISED|FRAME_THICK);
+
 
   // Horizontal splitter
   FXSplitter *uiHsplitter = new FXSplitter(uiContent, LAYOUT_FILL_X|
