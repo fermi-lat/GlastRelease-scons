@@ -25,6 +25,8 @@
 class MsgStream;
 
 namespace CalibData {
+  class CalibTime;
+
   class CalibBase : public DataObject,
                     virtual public IValidity {
 
@@ -78,17 +80,22 @@ namespace CalibData {
     /// Get serial number of metadata row corresponding to calibration. 
     /// Can be used by clients to determine if object has been updated
     /// since last access.
-    virtual int getSerNo() {return m_serNo;}
+    virtual int getSerNo() const {return m_serNo;}
+
+    virtual const CalibTime* getValidStart() const {return m_validSince;}
+    virtual const CalibTime* getValidEnd() const {return m_validTill;}
     
   protected:
     
     // IValidity data
     
     /// Start of validity
-    ITime* m_validSince;
+    CalibTime* m_validSince;
+    //    ITime* m_validSince;
     
     /// End of validity
-    ITime* m_validTill;
+    CalibTime* m_validTill;
+    //    ITime* m_validTill;
 
     /// Serial number of corresponding metadata row. 
     int m_serNo;

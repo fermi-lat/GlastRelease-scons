@@ -6,6 +6,10 @@
     Implements ITime interface and has facilities::Timestamp as base
     class.  Just need to implement a few more methods to satisfy
     ITime.
+
+    Note facilities::Timestamp, hence CalibTime, has get methods for 
+    several different time formats, including julian date, ascii string, 
+    and (seconds, nanoseconds) since Jan. 1 1970.
 */
 #include "facilities/Timestamp.h"
 #include "GaudiKernel/ITime.h" 
