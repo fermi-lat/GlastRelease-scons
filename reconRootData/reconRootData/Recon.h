@@ -3,10 +3,9 @@
 
 // ROOT includes
 #include "TObject.h"
-// local forward declarations
-class CalRecon;
-class TkrRecon;
-class ReconHeader;
+#include "CalRecon.h"
+#include "TkrRecon.h"
+#include "ReconHeader.h"
 
 //! Primary Root Recon Object - top level object in Root Tree
 /*! Top level Root Recon object - portal through which all recon data is
@@ -20,11 +19,11 @@ class Recon : public TObject
 {
 private:
     //! pointer to CAL reconstruction data
-    CalRecon *m_cal;    
+    CalRecon m_cal;    
     //! pointer to TKR reconstruction data
-    TkrRecon *m_tkr;    
+    TkrRecon m_tkr;    
     //! pointer to Recon Header data
-    ReconHeader *m_recFlags;
+    ReconHeader m_recFlags;
 
 public:
 
@@ -40,22 +39,22 @@ public:
     void Create();
 
     //! provide access to the CAL recon data
-    CalRecon* getCalRecon() { return m_cal; };
+    CalRecon* getCalRecon() { return &m_cal; };
     //! set the CalRecon pointer
-    inline void setCalRecon(CalRecon *cal) { m_cal = cal; };
+    //inline void setCalRecon(CalRecon *cal) { m_cal = cal; };
 
     //!  Access the TKR recon data
-    TkrRecon* getTkrRecon() { return m_tkr; };
+    TkrRecon* getTkrRecon() { return &m_tkr; };
     //! Set the TkrRecon pointer
-    inline void setTkrRecon(TkrRecon *tkr) { m_tkr = tkr; };
+    //inline void setTkrRecon(TkrRecon *tkr) { m_tkr = tkr; };
 
     //! Access the Recon Header Flags
-    ReconHeader* getReconFlags() { return m_recFlags; };
+    ReconHeader* getReconFlags() { return &m_recFlags; };
     //! set the ReconHeader pointer 
-    inline void setReconFlags(ReconHeader *r) { m_recFlags = r; };
+    //inline void setReconFlags(ReconHeader *r) { m_recFlags = r; };
 
 
-    ClassDef(Recon,1) 
+    ClassDef(Recon,2) 
 };
 
 #endif

@@ -3,10 +3,10 @@
 
 #include "TObject.h"
 #include "TObjArray.h"
+#include "TkrGamma.h"
 
 // forward declarations
 class TkrTrack;
-class TkrGamma;
 class TkrSiCluster;
 
 // ===================================
@@ -29,7 +29,7 @@ private:
     TObjArray *m_tracks; 
 
     //! Reconstructed gamma for this event
-    TkrGamma *m_gamma;
+    TkrGamma m_gamma;
       
     //! list of TkrSiClusters
     /*! All TkrSiClusters found for this event
@@ -65,13 +65,13 @@ public:
     TObjArray *getSiClusters() { return m_SiClusters; };
 
     //! provide access to the gamma
-    TkrGamma *getGamma() { return m_gamma; };   
-    inline void setGamma(TkrGamma *gam) { m_gamma = gam; };
+    TkrGamma *getGamma() { return &m_gamma; };   
+    //inline void setGamma(TkrGamma *gam) { m_gamma = gam; };
 
     //! access a specified TkrSiCluster from the TObjArray of TkrSiClusters
     TkrSiCluster* getSiCluster(int i) {return (TkrSiCluster*) m_SiClusters->At(i);};
 
-    ClassDef(TkrRecon,1)
+    ClassDef(TkrRecon,2)
 
 
 };
