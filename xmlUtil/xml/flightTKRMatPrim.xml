@@ -19,8 +19,8 @@
      and surrouding glue</prim>
   <prim name="TKRBotFaceMat" value="bot_face_material" type="string"
      uType="mat">Composite representing bottom face sheet + glue</prim>
-  <prim name="TKRBotBiasMat" value="bot_bias_material">Composite
-     for bias board + surrounding glue</prim>
+  <prim name="TKRBotBiasMat" value="bot_bias_material" type="string" 
+        uType="mat">Composite for bias board + surrounding glue </prim>
 
   <prim name="TKRFaceMat" value="C" type="string" uType="mat">
         Material of tracker face sheet  **OBSOLETE** </prim>
