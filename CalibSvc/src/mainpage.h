@@ -68,6 +68,10 @@
   <dt> CalibInstrumentName</dt>  <dd>defaults to "LAT"</dd>
   <dt> UseEventTime</dt>         <dd>defaults to "true". If set to "false", 
        must also set CalibMySQLCnvSvc.UseEventTime to "false"</dd>
+  <dt> DbName</dt>         <dd>defaults to "calib", the production dbs for
+       calibration metadata.  Algorithm developers, etc., may need to
+       use the development database, "calib_user", instead.
+  </dd>
   </dl>
 
   The service CalibMySQLCnvSvc has the following job options properties:
