@@ -28,11 +28,8 @@ DigiEventCnv::DigiEventCnv(ISvcLocator* svc)
 
 
 StatusCode DigiEventCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObject) {
-    refpObject = new DigiEvent();
+    refpObject = new Event::DigiEvent();
     return StatusCode::SUCCESS;
 };
 
-StatusCode DigiEventCnv::updateObj(int* iarray, DigiEvent* pEvent)          {
-  return StatusCode::SUCCESS;
-}
 
