@@ -12,6 +12,7 @@ namespace rdbModel{
   class Assertion;
 
   class XercesBuilder;
+  class Connection;
 
 
   /** 
@@ -25,7 +26,15 @@ namespace rdbModel{
     const std::string& getName() const { return m_name;}
     Column* getColumnByName(const std::string& name) const;
     Index* getIndexByName(const std::string& name) const;
+    /// Verify that the input can be used to form an appropriate INSERT 
+    /// statement for this row; if so and if we have a connection,
+    /// ask the connection to do the insert and return status (an int,
+    /// meaning to be determined.  Should include values for illegal
+    /// input, missing connection, etc. )
+    int  insertRow(const std::vector<std::string>& colNames,
+                   const std::vector<std::string>& colValues);
 
+    
     Visitor::VisitorState accept(Visitor* v);
     //     Visitor::VisitorState acceptNotRec(Visitor* v);
 
@@ -43,6 +52,7 @@ namespace rdbModel{
     std::string m_name;
     std::string m_version;
     std::string m_comment;
+
 
   };
 
