@@ -385,8 +385,8 @@ StatusCode TkrValsTool::calculate()
     //Tkr_float = 5.5;
     //Tkr_int   = 123;
 
-    //placeholder for offset
-    double z0 = 0.0;
+    //offset comes from Geometry
+    double z0 = m_tkrGeom->gettkrZBot();
 
     //special stuff here
     Tkr_1_FirstGapPlane = -1;
