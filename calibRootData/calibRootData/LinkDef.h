@@ -16,5 +16,7 @@
 #pragma link C++ class calibRootData::CalGain+;
 #pragma link C++ class calibRootData::DacCol+;
 #pragma link C++ class calibRootData::CalGainCol+;
-#pragma link C++ class calibRootData::CalSerial+;
+#pragma link C++ class calibRootData::TkrTower+;
+#pragma link C++ class calibRootData::TotStrip+;
+#pragma link C++ class calibRootData::TotUnilayer+;
 #endif
