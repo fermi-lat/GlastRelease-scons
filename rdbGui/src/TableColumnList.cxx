@@ -111,6 +111,7 @@ rdbModel::Visitor::VisitorState TableColumnList::visitColumn(rdbModel::Column *c
 {
   FXCheckListItem *item = new FXCheckListItem(column->getName().c_str(), NULL, column);
   item->setChecked(true);
+  item->setTipText(column->getComment().c_str());
   m_colList->appendItem(item);
   return rdbModel::Visitor::VBRANCHDONE;
 }

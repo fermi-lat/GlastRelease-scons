@@ -939,7 +939,7 @@ long FXCheckList::onUncheckAll(FXObject*,FXSelector,void*){
 long FXCheckList::onQueryTip(FXObject* sender,FXSelector,void*){
   if((flags&FLAG_TIP) && !(options&CHECKLIST_AUTOSELECT)){   // No tip when autoselect!
     if(0<=cursor){
-      FXString string=items[cursor]->getText();
+      FXString string=items[cursor]->getTipText();
       sender->handle(this,MKUINT(ID_SETSTRINGVALUE,SEL_COMMAND),(void*)&string);
       return 1;
       }

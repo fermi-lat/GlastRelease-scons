@@ -57,6 +57,7 @@ protected:
   FXIcon   *icon;
   void     *data;
   FXuint    state;
+  FXString  tipText;
 protected:
   FXCheckListItem():icon(NULL),data(NULL),state(0){}
   virtual void draw(const FXCheckList* list,FXDC& dc,FXint x,FXint y,FXint w,FXint h);
@@ -72,13 +73,15 @@ protected:
     CHECKED   = 32
     };
 public:
-  FXCheckListItem(const FXString& text,FXIcon* ic=NULL,void* ptr=NULL):label(text),icon(ic),data(ptr),state(0){}
+  FXCheckListItem(const FXString& text,FXIcon* ic=NULL,void* ptr=NULL):label(text),icon(ic),data(ptr),state(0), tipText(""){}
   virtual void setText(const FXString& txt){ label=txt; }
   FXString getText() const { return label; }
   virtual void setIcon(FXIcon* icn){ icon=icn; }
   FXIcon* getIcon() const { return icon; }
   void setData(void* ptr){ data=ptr; }
   void* getData() const { return data; }
+  void setTipText(FXString tip) {tipText = tip;}
+  FXString getTipText() {return tipText;}
   virtual void setFocus(FXbool focus);
   FXbool hasFocus() const { return (state&FOCUS)!=0; }
   virtual void setSelected(FXbool selected);
