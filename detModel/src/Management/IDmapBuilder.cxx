@@ -245,6 +245,18 @@ const PositionedVolume* IDmapBuilder::getPositionedVolumeByID(idents::VolumeIden
 
 }
 
+bool IDmapBuilder::getTransform3DByID(idents::VolumeIdentifier id, HepTransform3D* tr)
+{
+  const PositionedVolume* pv = getPositionedVolumeByID(id);
+  if (pv)
+    {
+      HepTransform3D temp(pv->getRotation(), pv->getTranslation());
+      *tr = temp;
+      return true;
+    }
+  else return false;
+}
+
 void IDmapBuilder::summary(std::ostream & out) 
 {
     std::map<std::string, unsigned int> names;

@@ -12,12 +12,11 @@
 
  <p>For more news please look at http://www.fisica.uniud.it/~riccardo/research/glast/GDD
 
-  <hr>
- * @section notes release.notes
- * release.notes
- * <hr>
- * @section requirements requirements
- * @verbinclude requirements
- * <hr> 
+ <hr>
+\section notes release notes
+\include release.notes
+* @section requirements requirements
+* @verbinclude requirements
+* <hr> 
  
 */

@@ -8,6 +8,7 @@
 
 #include "CLHEP/Vector/ThreeVector.h"
 #include "CLHEP/Vector/Rotation.h"
+#include "CLHEP/Geometry/Transform3D.h"
 
 namespace detModel{
   class PositionedVolume;
@@ -48,6 +49,11 @@ namespace detModel{
 
     /// This method return the full map of positioned volume pointers
     const std::map<idents::VolumeIdentifier, const PositionedVolume*>* getVolMap() const;
+
+    /// Retrive the HepTransform3D from an ID 
+    bool getTransform3DByID(idents::VolumeIdentifier, HepTransform3D*);
+
+
     /** 
 	This method return a PositionedVolume pointer from an ID (a null pointer if
 	the ID does not exist
