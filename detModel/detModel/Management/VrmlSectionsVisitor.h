@@ -84,6 +84,9 @@ namespace detModel{
     std::map <std::string, Color*> colorsMap;
     /// This map holds information on the recursion depth of volumes
     std::map <std::string, int> depthMap;
+
+    int numVol;
+
   };
 
 }

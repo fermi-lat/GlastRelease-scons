@@ -52,11 +52,15 @@ namespace detModel{
     M3 m = g->getVolumesMap();
     for(j=m.begin();j!=m.end();j++)
       depthMap.insert(M2::value_type(j->first,20));        
+
+
+    numVol = 0;
   };
 
   VrmlSectionsVisitor::~VrmlSectionsVisitor()
   {
     out.close();
+    std::cout << "Total positioned volume = " << numVol << std::endl;
   }
 
   void VrmlSectionsVisitor::visitGdd(Gdd* gdd)
@@ -195,6 +199,7 @@ namespace detModel{
 	<< box->getX() << " " << box->getY() << " " << box->getZ() << std::endl; 
     out << "                    }" << std::endl;  
     out << "   }" << std::endl;
+    numVol++;
   }
 
   void  VrmlSectionsVisitor::visitPosXYZ(PosXYZ* pos)

@@ -15,7 +15,7 @@ namespace detModel{
   public:
     /// This is the constructor
     PrinterSectionsVisitor();
-  
+
     /**
      * This is the visitor for the Gdd 
      */
@@ -54,6 +54,7 @@ namespace detModel{
      * This is the visitor for the Seg
      */
     virtual void visitSeg(Seg*);
+
   };
 
 }
