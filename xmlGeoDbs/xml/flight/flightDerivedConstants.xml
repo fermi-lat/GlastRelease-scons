@@ -4,6 +4,8 @@
 
       &TKRDerived;
 
+      &extraDerived;
+
       <derCategory name="misc">
         <overview>Stuff that doesn't fit elsewhere</overview>
 
