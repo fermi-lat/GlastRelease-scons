@@ -1,6 +1,6 @@
 package Gleam
 
-version v1r1
+version v1r2
 
 # This is a checkout package
 # $Id$
@@ -24,7 +24,7 @@ use geometry    v3
 
 # low-level graphics
 
-use gui         v3 
+use gui               v3r1 
 use geomrep     v4r1
 
 # the geometry data base
@@ -37,11 +37,12 @@ use Geant4      v1r1p0
 
 # Gaudi component packages follow
 
-use GuiSvc      v3
-use GlastEvent  v7r2
+use GuiSvc             v3r1
+use GlastEvent         v7r3
 use GlastSvc    v7r2
 
 # simulation
+
 use FluxSvc     v5r5p1
 use G4Generator v3r5
 
@@ -49,14 +50,14 @@ use G4Generator v3r5
 use GlastDigi   v2r6
 
 #reconstruction
-use Recon       v1r2
+use Recon              v1r3
 use TkrRecon    v5r4
-use CalRecon    v4       
+use CalRecon           v4r1       
 
 
 #ROOT persistence
 use mcRootData  v2r1p1
-use RootIo      v1r0
+use RootIo              v1r1
 
 
 ### define a simple executable 
