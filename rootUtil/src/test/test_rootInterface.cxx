@@ -1,3 +1,11 @@
+/** @file test_rootUtil.cxx
+    @brief Test routine for the rootUtil package.
+
+    @author Heather Kelly
+
+    $Header$
+  */
+
 #ifndef TEST_ROOTINTERFACE_CXX 
 #define TEST_ROOTINTERFACE_CXX 1
 
