@@ -23,8 +23,6 @@ Material for cell walls, reinforcement</prim>
 <!-- Everything below this comment is of doubtful value -->
   <prim name= "CALWrapMat" value= "Polystyrene" type="string" uType="mat">
 Wrap material for CsI logs [obsolete??]</prim>
-  <prim name="CALSpaceMat" value="rubber60A1" type="string" uType="mat">
-Material for space between CAL layers [obsolete??]</prim>
   <prim name= "CALGridMat" value= "Al" type="string" uType="mat">Material 
 for CAL grid [obsolete??]</prim>
   <prim name= "CALFlangeMat" value= "Al50" type="string" uType="mat">
