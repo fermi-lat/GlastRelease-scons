@@ -31,6 +31,14 @@ AcdId::AcdId(UShort_t l, UShort_t f, UShort_t r, UShort_t c) {
     setColumn(c);
 }
 
+AcdId::AcdId(UShort_t ribbonOrient, UShort_t r) {
+    m_used = 1;
+    m_id = 0;
+    setRibbonNumber(r);
+    setRibbonOrientation(ribbonOrient);
+}
+
+
 AcdId::AcdId(UInt_t i, Short_t base, Short_t used) {
     setId(i, used, base);
 }
@@ -44,16 +52,23 @@ void AcdId::Print(Option_t *option) const {
     using namespace std;
     TObject::Print(option);
     cout.precision(2);
-    cout << "Id: " << getId()
-        << "  (Layer, Face, Row, Column): (" << getLayer() << ", "
+    cout << "Id: " << getId() << endl;
+    if (isTile())
+        cout << "  (Layer, Face, Row, Column): (" << getLayer() << ", "
         << getFace() << ", " << getRow() << ", " << getColumn()
         << ")" << endl;
+    else
+        cout << "   (RibbonNum, RibbonOrient): (" << getRibbonNumber() << ", "
+        << getRibbonOrientation() << ") " << endl;
 }
 
 UInt_t AcdId::getId(Short_t base) const { 
     // Returns the tile ID number
     if (base == 2) return m_id; 
-    return (getLayer() * 1000 + getFace() * 100 + getRow() * 10 + getColumn());
+    if (isTile())
+        return (getLayer() * 1000 + getFace() * 100 + getRow() * 10 + getColumn());
+    else 
+        return (getLayer() * 1000 + getRibbonOrientation() * 100 + getRibbonNumber());
 }
 
 void AcdId::setId(UInt_t newVal, Short_t used, Short_t base) { 
@@ -81,6 +96,11 @@ void AcdId::setId(UInt_t newVal, Short_t used, Short_t base) {
     }
 }
 
+bool AcdId::isTile () const
+{ return (getFace() <= maxAcdTileFace); }
+
+bool AcdId::isRibbon () const
+{ return (getFace() > maxAcdTileFace); }
 
 bool AcdId::isTop () const 
 { 
@@ -89,7 +109,7 @@ bool AcdId::isTop () const
 
 bool AcdId::isSide () const 
 { 
-    return (getFace() != 0); 
+    return (!isRibbon() && (getFace() != 0)); 
 }
 
 Short_t AcdId::getLayer () const 
@@ -104,13 +124,30 @@ Short_t AcdId::getFace () const
 
 Short_t AcdId::getRow () const 
 { 
-    return(word (1, m_id)); 
+    if (isTile())
+        return(word (1, m_id)); 
+    return -1;
 }
 
 Short_t AcdId::getColumn () const 
 { 
-    return(word (0, m_id)); 
+    if (isTile())
+        return(word (0, m_id)); 
+    return -1;
 }
+
+Short_t AcdId::getRibbonNumber () const
+{ 
+    if (isRibbon()) return word(0, (m_id & _ribbonmask)); 
+    return -1;
+}
+
+Short_t AcdId::getRibbonOrientation () const
+{
+    if (isRibbon()) return word(2, (m_id & _ribbonorientmask));
+    return -1;
+}
+
 
 void AcdId::setLayer( UInt_t val )
 { 
@@ -140,6 +177,17 @@ void AcdId::setColumn( UInt_t c )
     short zero = 0;
     set_word( zero, m_id, c ); 
 }
+
+void AcdId::setRibbonNumber( UInt_t r )
+{
+    set_word( 0, m_id, r );
+}
+
+void AcdId::setRibbonOrientation( UInt_t orient) 
+{
+    set_word( 2, m_id, orient);
+}
+
 
 bool AcdId::wasConnected() const
 {

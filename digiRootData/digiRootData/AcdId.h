@@ -27,6 +27,8 @@
  
  __  __       __ __ __     __ __ __ __      __ __ __ __
  LAYER       FACE           ROW            COLUMN
+              OR                              OR
+            RIBBON ORIENTATION              RIBBON NUMBER
  where the layer bits are the most significant bits
 @endverbatim
 
@@ -48,7 +50,12 @@ private:
         _facemask  = 0x0700,
         _rowmask   = 0x00F0,
         _colmask   = 0x000F,
-        layerShift = 11
+        layerShift = 11,
+        _ribbonmask = 0x0007,
+        _ribbonorientmask = 0x0700,
+        maxAcdTileFace = 4,
+        ribbonX = 5,  // ribbons that extend along x-axis
+        ribbonY = 6   // ribbons that extend along y-axis
     };
     
 public:
@@ -57,6 +64,7 @@ public:
     AcdId(const AcdId& id);
     AcdId(UShort_t l, UShort_t f, UShort_t r, UShort_t c);
     AcdId(UInt_t i, Short_t base=10, Short_t used=1);
+    AcdId(UShort_t ribOriet, UShort_t ribNum);
     
     virtual ~AcdId() { };
 
@@ -70,6 +78,10 @@ public:
     /// set the id, specifying whether this is in base 10 or base 2
     void setId(UInt_t newVal, Short_t used = 1, Short_t base=10);
 
+    /// is this a tile?
+    bool isTile() const;
+    /// is this a ribbon?
+    bool isRibbon() const;
     /// is this a top tile?
     bool isTop () const;  
     /// is this a side tile?
@@ -82,6 +94,11 @@ public:
     Short_t getRow() const;     
     /// which column?
     Short_t getColumn () const;   
+    /// Number of the ribbon starting from 0 and increasing along increasing X or Y
+    Short_t getRibbonNumber() const;
+    /// Does this ribbon extend along the X or Y axis?
+    Short_t getRibbonOrientation() const;
+
     /// was this PMT actually connected to a tile?
     bool wasConnected() const;
     /// set the bit to denote whether this PMT was connected 0 == not connected,1 is connected
@@ -125,6 +142,9 @@ private:
     /// set the column
     void setColumn(UInt_t c);
     
+    void setRibbonNumber(UInt_t r);
+    void setRibbonOrientation(UInt_t r);
+
     /// Proper Ritz index number for this tile
     UInt_t m_id;  
     /// Denotes whether the PMT was truly connected to a tile
