@@ -8,6 +8,7 @@ package CalRecon
 
 package manager: Alexandre Chekhtman
 
+  v5r22p2 20-feb-05   THB replace xml with xmlBase, so that xml package can be removed.  
   v5r22p1 18-feb-05   ZF  once again... DOS path had bad case, had to fix for linux
   v5r22   18-feb-05   ZF  differentiate range_below_thresh from xtal_below_thresh; fix math error in calcPos(); only calc one energy & pos estimate per xtal (best range only)
   v5r21p2 07-feb-05   ZF  Fixed small bug in requirements file re: ROOT_linkopts

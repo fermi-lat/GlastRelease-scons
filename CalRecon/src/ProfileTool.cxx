@@ -4,7 +4,7 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 // to access an XML containing Profile Bias parameters file
-#include "xml/IFile.h"
+#include "xmlBase/IFile.h"
 
 static const ToolFactory<ProfileTool>  s_factory;
 const IToolFactory& ProfileToolFactory = s_factory;
@@ -213,7 +213,7 @@ StatusCode ProfileTool::initialize()
 
     
     // Read in the parameters from the XML file
-    xml::IFile m_ifile(m_xmlFile.c_str());
+    xmlBase::IFile m_ifile(m_xmlFile.c_str());
     if ( m_ifile.contains("profileBias", "CosThetaLimit" ) ){
       m_BiasCTLim= m_ifile.getDouble("profileBias", "CosThetaLimit" );
       log << MSG::INFO << " value for CosThetaLimit " 

@@ -13,7 +13,6 @@ use GlastSvc
 use GuiSvc
 use Event
 use TkrUtil
-use xml
 use xmlBase
 
 apply_pattern packageShr
