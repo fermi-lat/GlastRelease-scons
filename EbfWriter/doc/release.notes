@@ -2,6 +2,8 @@
  * @file release.notes
  * @brief Package EbfWriter
  * @verbatim
+ * v0r0p1 16-Aug-2003     Cleaned up requirements file. Ready to add to GR
+ * v0r0p0 12-Aug-2003     Cleaned up code for code review
  * v0r0   21-Jul-2003     Moved TDS code out of Event into EbfWriter
  * v0     03-Jul-2003     Initial Import
  * @endverbatim
