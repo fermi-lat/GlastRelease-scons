@@ -22,6 +22,13 @@
 #include "FluxSvc/FluxSvc.h"
 #include "FluxSvc/IFlux.h"
 
+//gui
+#include "GuiSvc/GuiSvc.h"
+#include "gui/DisplayControl.h"
+#include "gui/GuiMgr.h"
+#include "gui/SimpleCommand.h"
+#include "DisplayManager.h"
+
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 
@@ -77,7 +84,69 @@ StatusCode G4Generator::initialize()
     // Initialize Geant4
     m_runManager->Initialize();
 
+    setupGui();
     return StatusCode::SUCCESS;
+
+}
+
+//------------------------------------------------------------------------------
+void G4Generator::setupGui()
+{
+    //
+    // get the (optional) Gui service
+    //
+        MsgStream log(msgSvc(), name());
+
+    IGuiSvc* guiSvc=0;
+    
+    if ( service("GuiSvc", guiSvc).isFailure() ){
+        log << MSG::WARNING << "No GuiSvc: so, no event display " << endreq;
+        return;
+    } 
+    m_guiMgr= guiSvc->guiMgr();
+    new DisplayManager(&m_guiMgr->display());
+
+#if 0 // sub algorithm examples
+    // get the display sub algoritm
+    if( createSubAlgorithm("DetDisplay", "DetDisplay", m_detDisplay).isFailure() ) {
+        log << MSG::ERROR << " could not set up DetDisplay " << endreq;
+        return StatusCode::FAILURE;
+    }
+    
+    // get the event sub algoritm
+    if( createSubAlgorithm("GismoEventDisplay", "GismoEventDisplay", m_eventDisplay).isFailure() ) {
+        log << MSG::ERROR << " could not set up GismoEventDisplay " << endreq;
+        return StatusCode::FAILURE;
+    }
+    GismoEventDisplay* ev = dynamic_cast<GismoEventDisplay*>(m_eventDisplay);
+    ev->m_gen=this;
+    
+#endif       
+    // now get the filemenu and add a source button to it.
+    gui::SubMenu& filemenu = m_guiMgr->menu().file_menu();
+    
+    gui::SubMenu& source_menu = filemenu.subMenu("Set source");
+    
+    //   ----------------------------------
+    //  loop over sources in source_library
+    class SetSource : public gui::Command { public:
+    SetSource(G4Generator* gg, std::string sn):m_gg(gg),m_name(sn){}
+    void execute(){m_gg->setSource(m_name);}
+    std::string m_name;
+    G4Generator* m_gg;
+    };
+    std::list<std::string> names = m_fluxSvc->fluxNames();
+    for( std::list<std::string>::iterator it = names.begin(); it!=names.end(); ++it){
+        source_menu.addButton(*it, new SetSource(this, *it));
+    }
+    
+ 
+#ifdef MATERIAL_AUDIT
+    // material audit
+    filemenu.addButton("Audit materials",  new MaterialList);
+#endif
+        
+
 }
 //------------------------------------------------------------------------------
 StatusCode G4Generator::execute() 
@@ -124,15 +193,15 @@ StatusCode G4Generator::execute()
     primaryGenerator->setEnergy(ke);
  
     // Run geant4
-    m_runManager->BeamOn();  
-
-    std::cout << "Trajectories  " << m_runManager->getNumberOfTrajectories()<< std::endl;
+    m_runManager->BeamOn(); 
     
-    std::auto_ptr<std::vector<Hep3Vector> > test = (m_runManager->getTrajectoryPoints(0));
-    for(unsigned int k = 0; k<test->size(); k++)
-      std::cout << (*test)[k] << std::endl;
+    // set up display of trajectories
+    DisplayManager* dm = DisplayManager::instance();
+    for( int i = 0; i< m_runManager->getNumberOfTrajectories(); ++i){
+        std::auto_ptr<std::vector<Hep3Vector> > points = m_runManager->getTrajectoryPoints(i);
+        dm->addTrack(*(points.get()), m_runManager->getTrajectoryCharge(i));
+    }
 
-    std::cout << "Charge " << m_runManager->getTrajectoryCharge(0) << std::endl; 
     return StatusCode::SUCCESS;
 }
 
@@ -148,6 +217,16 @@ StatusCode G4Generator::finalize()
     return StatusCode::SUCCESS;
 }
 
+//------------------------------------------------------------------------------
+// called from GUI
+void G4Generator::setSource(std::string source_name)
+{
+    m_source_name=source_name;
+    StatusCode sc = m_fluxSvc->source(m_source_name, m_flux);
+    if( sc.isFailure() ) {
+        gui::GUI::instance()->inform("Could not find the source!");
+    }
+}
 
 
 

@@ -11,7 +11,7 @@
 class IFluxSvc;
 class IFlux;
 class RunManager;
-
+namespace gui{class GuiMgr;}
 /**
   Geant4 interface for GLAST simulation
   */
@@ -23,6 +23,8 @@ public:
     StatusCode execute();
     StatusCode finalize();
     
+    void setSource(std::string source_name);
+
 private:
     IFluxSvc* m_fluxSvc;
     IFlux*    m_flux;
@@ -33,7 +35,6 @@ private:
     /// set of UI commands for setup
     StringArrayProperty m_UIcommands;
 
-//    std::vector<std::string> m_UIcommands;
 
     // the top volume for instantiating the detector
     std::string m_topvol;
@@ -43,6 +44,10 @@ private:
 
     /// This is the G4 manager that handles the simulation
     RunManager* m_runManager;
+
+    /// access to the GuiManager
+    gui::GuiMgr* m_guiMgr;
+    void setupGui();
 };
 
 #endif
