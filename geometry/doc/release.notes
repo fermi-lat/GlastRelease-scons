@@ -1,0 +1,9 @@
+/** @file release.notes
+ * @brief package geometry
+@verbatim
+ * package manager:T.Burnett
+ * $Id$
+* v3r1p1 THB  09-sep-04   Removed strstream includes
+
+ 
+@endverbatim

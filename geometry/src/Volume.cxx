@@ -6,7 +6,6 @@
 #include "geometry/Ray.h"
 #include "geometry/Intersection.h"
 #include <cassert>
-# include <strstream>
 
 static unsigned  s_count=0;
 //THB 13-Aug-96 const double Surface_EPSILON= 2e-6; //(100*DBL_EPSILON);
@@ -117,7 +116,6 @@ static double Surface_distanceToLeave( const Surface &s, const Ray& r, double ma
 
     if ( d < -Volume::Surface_EPSILON ) {
 	// the outside case for s
-		std::ostrstream error_text;
                 std::cerr << "Volume--bad geometry for surface \n\t" << s
 		    << "\n\t" << r.position() << " is " << d << "cm outside\n"
                     << std::endl;

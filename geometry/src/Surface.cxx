@@ -3,7 +3,6 @@
 
 
 #include "geometry/Surface.h"
-#include <strstream>
 
 GeomObject&
 Surface::transform(const CoordTransform& T )
