@@ -12,6 +12,7 @@
 #include "Event/Digi/AcdDigi.h"
 #include "LdfEvent/DiagnosticData.h"
 #include "LdfEvent/EventSummaryData.h"
+#include "LdfEvent/Gem.h"
 #include "idents/CalXtalId.h"
 
 //static const AlgFactory<test_LdfConverterAlg> Factory;
@@ -91,6 +92,14 @@ StatusCode test_LdfConverterAlg::execute()
     int eventId = evt->event();
     int run = evt->run();
     log << MSG::INFO << "runId: " << run << " eventId: " << eventId << endreq;
+
+    SmartDataPtr<LdfEvent::Gem> gem(eventSvc(), "/Event/Gem");
+    if (!gem) {
+        log << MSG::INFO << "No GEM available" << endreq;
+    } else {
+        gem->fillStream(log.stream());
+    }
+  
 
     /*SmartDataPtr<LdfEvent::DiagnosticData> diag(eventSvc(), "/Event/Diagnostic");
     if (!diag) {

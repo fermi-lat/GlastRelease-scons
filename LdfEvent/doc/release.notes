@@ -3,6 +3,7 @@ Package LdfEvent
 Coordinator:H.Kelly
 @verbatim
 
+v1r0    01-Aug-2004 HMK Prepare to handle GEM data
 v0r0p0  01-Jun-2004 HMK Use ldfExt
 v0r0    12-May-2004 HMK initial import
 @endverbatim
