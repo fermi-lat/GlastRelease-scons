@@ -148,7 +148,7 @@ StatusCode EbfWriter::execute()
       eventSvc()->registerObject("/Event/Filter",new DataObject);
 
     EbfWriterTds::Ebf *newEbf=new EbfWriterTds::Ebf;
-    eventSvc()->registerObject(EbfWriterTds::Path, newEbf);
+	eventSvc()->registerObject("/Event/Filter/Ebf", newEbf);
     
     //
     // TKR

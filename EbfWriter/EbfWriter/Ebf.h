@@ -25,7 +25,6 @@
 //extern const CLID& CLID_Ebf;
 
 namespace EbfWriterTds{
-  static const std::string Path = EventModel::EventHeader + "/Filter" + "/Ebf";
   class Ebf : public DataObject{
   public:
     Ebf();
