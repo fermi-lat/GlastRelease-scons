@@ -14,7 +14,8 @@
 * Each McParticle contains:
 * - Particle Id
 * - Status flags
-* - Final position, the initial position is calculated
+* - Initial position
+* - Final position
 * - Initial and final momentum
 * - Pointer to the mother McParticle - if any
 * - An array of daughter McParticles - if any
@@ -63,6 +64,7 @@ public:
         UInt_t statusBits,
         const TLorentzVector& initalMomentum,
         const TLorentzVector& finalMomentum,
+        const TVector3& initialPosition,
         const TVector3& finalPosition);
     
     Int_t getParticleId() const { return m_particleId;};    
@@ -100,6 +102,8 @@ private:
     Int_t m_particleId;
     /// Bit-field status flag
     UInt_t m_statusFlags;
+    /// Initial position
+    TVector3 m_initialPosition;
     /// Final position
     TVector3 m_finalPosition;
     /// Initial 4-momentum
