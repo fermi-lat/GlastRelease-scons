@@ -3,6 +3,9 @@
  * package manager:T.Burnett
  * $Id$
 
+* v3r3  THB 19-Nov-02
+     use Trigger           v3r4
+     use RootIo            v4r20p3
 * v3r2  HMK 17-nov-02
      use idents            v2r9
      use Recon             v2r3p7
