@@ -52,7 +52,8 @@ CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
   declareProperty("CalibInstrumentName", m_instrumentName = "LAT" );
 
   // choices could be "data", "clock", "mc", "none", "digi"
-  declareProperty("CalibTimeSource", m_timeSource = "none" );
+  //  declareProperty("CalibTimeSource", m_timeSource = "none" );
+  declareProperty("CalibTimeSource", m_timeSource = "data" );
   m_instrumentDefined = true;
 
   // Still more properties.  Used only by fake clock, if active
@@ -466,16 +467,21 @@ StatusCode  CalibDataSvc::updateTime() {
   if (m_newEvent) {
     // Fetch the time using requested fetch mechanism
     switch (m_timeSourceEnum) {
-    case TIMESOURCEdata: {
-      sc = fetchDataTime();
+    case TIMESOURCEdata:
+    case TIMESOURCEdigi: 
+      {
+
+      sc = fetchEventTime();
+
+      // no longer need to handle separately with these calls:
+      // sc = fetchDataTime();
+      // sc = fetchMcTime();   ???
+      // sc = fetchDigiTime();
+
       break;
     }
     case TIMESOURCEmc: {
       sc = fetchMcTime();
-      break;
-    }
-    case TIMESOURCEdigi: {
-      sc = fetchDigiTime();
       break;
     }
     case TIMESOURCEclock: {
@@ -495,7 +501,40 @@ StatusCode  CalibDataSvc::updateTime() {
   }
   return StatusCode::SUCCESS;
 }
+/* ---    */
 
+StatusCode CalibDataSvc::fetchEventTime() {
+
+  MsgStream log(msgSvc(), name());
+
+  static const facilities::Timestamp missionStart("2001-1-1 00:00");
+  static const unsigned missionSec = (unsigned) missionStart.getClibTime();
+  static const int missionNano = missionStart.getNano();
+
+  SmartDataPtr<Event::EventHeader> eventHeader(m_eventSvc, "/Event");
+  
+  if (!eventHeader) {
+    log << MSG::ERROR << "Unable to retrieve event timestamp for digis" 
+        << endreq;
+    return StatusCode::FAILURE;
+  }
+  double fromMissionStart = (eventHeader->time()).time();
+  unsigned fromSec = (unsigned) fromMissionStart;
+  unsigned fromNano = (unsigned) ((fromMissionStart - fromSec) * 1000000000);
+
+  if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) ) ) {
+
+    log << MSG::DEBUG << "event time in seconds/nano from mission start: " 
+        << fromSec 
+        << "/" << fromNano << endreq;
+  }
+  facilities::Timestamp absTime(missionSec + fromSec, missionNano + fromNano);
+  m_time = CalibData::CalibTime(absTime);
+
+  return StatusCode::SUCCESS; 
+}
+
+/*  --- */
 StatusCode CalibDataSvc::fetchDataTime() {
   MsgStream log(msgSvc(), name());
 

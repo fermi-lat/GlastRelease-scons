@@ -185,6 +185,10 @@ public:
   /// Fetch time from simulated digis
   StatusCode fetchDigiTime();
 
+  // Supersedes all of above.  For data, digi and mc always fetch time
+  // from the same place
+  /// Fetch time from Event
+  StatusCode fetchEventTime();
 
   /// Fetch time from fake clock, using parameters below
   StatusCode fetchFakeClockTime();
