@@ -1,3 +1,12 @@
+// File and Version Information:
+//      $Header$
+//
+// Description:
+//      Tool for performing the fit of Link and Tree Pat Rec candidate tracks
+//
+// Author:
+//      The Tracking Software Group  
+
 #include "src/Track/TkrLinkAndTreeFitTool.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"

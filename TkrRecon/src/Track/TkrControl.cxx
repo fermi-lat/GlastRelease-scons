@@ -1,3 +1,12 @@
+// File and Version Information:
+//      $Header$
+//
+// Description:
+//      Implements singleton class for storing and retrieving tracker recon control parameters.
+//
+// Author:
+//      The Tracking Software Group  
+
 
 #include "src/Track/TkrControl.h"
 
