@@ -1,0 +1,9 @@
+#====================================================
+${CONSTITUENT}:: ${CINTFILE}
+	@echo "------> ${CONSTITUENT} ok"
+
+VPATH=../mcRootData/
+${CINTFILE}:: ${root_headers}
+	@echo " running rootcint to generate ${CINTFILE} "
+	cd ../${package}/ ; ${ROOT_PATH}/bin/rootcint -f ${CINTFILE} -c ${root_headers}
+#==================================================== 
