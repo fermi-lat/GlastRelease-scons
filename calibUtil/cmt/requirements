@@ -31,7 +31,7 @@ apply_pattern package_shlibflags
 application test_strips test/test_strips.cxx StripSrv.cxx GenericSrv.cxx
 ##application test_strips test/test_strips.cxx 
 application test_meta test/test_meta.cxx  Metadata.cxx
-
+application add_meta  test/add_meta.cxx 
 
 
 
