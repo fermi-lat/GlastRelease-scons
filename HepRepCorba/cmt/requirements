@@ -8,10 +8,10 @@ use OmniOrb v0r4* IExternal
 apply_pattern packageShr
 apply_pattern package_include
 
-private
-
 # Set a temp directory to store ior file if FRED is started automatically
-set TMP "/tmp" WIN32 "%TEMP%"
+set TMP "/tmp" WIN32 ""
+
+private
 
 use HepRepSvc
 

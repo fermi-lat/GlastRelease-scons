@@ -32,12 +32,14 @@ void CorbaServer::run()
   // I need this to build system command 
   #ifdef WIN32
   std::string separator("\\");
-  #else // gcc < 2.9.5.3 dosen't know <sstream>,stringstream
+  #else 
   std::string separator("/");
   #endif
   
   // We get from the HepRepSvc adapter the fredStart option
   std::string fredStart = m_svcAdapter->getStartFred();
+  if (fredStart != "")
+    std::cout << "CORBA will try to use FRED installed in " << fredStart << std::endl;
   
   // We build the name of the ior file; if FREDHOME env variable is defined, it
   // means we want to launch FRED automatically after the CORBA initialization;
@@ -46,9 +48,10 @@ void CorbaServer::run()
   std::string iorFileName;  
   if ((fredStart != "") && (::getenv("TMP") != NULL))
   {
-    iorFileName = std::string(::getenv("TMP")) + separator; 
+    iorFileName = std::string(::getenv("TMP")) + separator;
   }
   iorFileName = iorFileName + "hepeventserver.ior";
+  std::cout << "CORBA set up the ior file to " << iorFileName << std::endl;
       
   std::ofstream fout(iorFileName.c_str());
   if (fout.good()) {
@@ -64,7 +67,7 @@ void CorbaServer::run()
   
   hepEventServer_impl->initHepRep();
 
-  // If FREDHOME and TMP are defined, we will try to start FRED automatically
+  // If fredStart and TMP are defined, we will try to start FRED automatically
   // passing to it the ior file name
   if ((fredStart != "") && (::getenv("TMP") != NULL))
   {    
