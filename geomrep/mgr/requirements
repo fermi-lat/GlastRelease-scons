@@ -5,8 +5,11 @@ use graphics v0
 
 
 macro   geomrep_linkopts "-L ${GEOMREPROOT}/${CMTCONFIG} -lgeomrep"\
-        VisualC "geomreplib.lib"
+        VisualC ""
 
+
+macro_append Win32Debug   " ${GEOMREPROOT}/Win32/Debug/geomreplib.lib"
+macro_append Win32Release " ${GEOMREPROOT}/Win32/Release/geomreplib.lib"
 
 private
 
