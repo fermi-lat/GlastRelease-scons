@@ -11,7 +11,7 @@ static  int n_ebins=6;
 static double sqr(double x){return x*x;}
 
 MultiPSF::MultiPSF(const Tuple& t, char code)
-:Analyze(t,"MC_zDir","accepted for multi-PSF")
+:Analyze(t,"MC_zdir","accepted for multi-PSF")
 , m_bin_size(0.) // default bins size
 {
     static double factor = sqrt(10.);
