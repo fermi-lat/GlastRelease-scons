@@ -1,5 +1,5 @@
 package FluxSvc
-version v2r5
+version v2r8
 
 branches FluxSvc mgr doc
 
@@ -8,6 +8,14 @@ use GaudiSvc
 
 include_dirs $(FLUXSVCROOT)
 
+apply_pattern packageShr
+
+
+#=============================================================
+private
+
+# get flags to build shared library
+apply_pattern package_Cshlibflags
 apply_pattern package_headers
 
 library FluxSvc  *.cxx \
@@ -15,24 +23,10 @@ library FluxSvc  *.cxx \
  ${FluxSvc_headers}
 
 
-apply_pattern packageShr
-
-apply_pattern ld_library_path 
-
-#=============================================================
-private
-
-# get flags to build shared library
-
-apply_pattern package_Cshlibflags
-
-
 # test program, using local joboptions
 
 macro JobOptions  "src/test/jobOptions.txt"
 set JOBOPTIONS ${FLUXSVCROOT}/$(jobOptions)
 
-# BAD - Had to include GaudiSvc library to define RndmEngine !!! TL - July 19
-macro_append GaudiSvc_linkopts "-L${GaudiSvcDir} -lGaudiSvc" WIN32 ""
 
 application testFluxSvc test/TestMain.cxx test/FluxTestAlg.cxx ${jobOptions} 
