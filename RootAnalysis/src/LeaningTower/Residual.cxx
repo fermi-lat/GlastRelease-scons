@@ -15,6 +15,8 @@
 #include "Recon.h"
 #include "Progress.h"
 
+const float damp = 0.63;
+
 class Residual {
 private:
     Event*   myEvent;
@@ -347,7 +349,7 @@ void Residual::DrawResSlopeAll(TCut cut) {
                       << std::setprecision(3) << dh << " vertical = " << dz
                       << std::endl;
         }
-        fout << plane->GetGeometry(dz, dy, dx) <<std::endl;
+        fout << plane->GetGeometry(damp*dz, damp*dy, damp*dx) <<std::endl;
     }
 
     fout.close();
@@ -413,7 +415,7 @@ void Residual::DrawResOrdAll(TCut cut) {
             std::cout << planeName << " dh(h=0) = " << std::setprecision(3)
                       << std::fixed << dh << " rotZ = " << dangZ << std::endl;
         }
-        fout << plane->GetGeometry(dz, dy, dx, dangZ) <<std::endl;
+        fout << plane->GetGeometry(damp*dz, damp*dy, damp*dx, dangZ) <<std::endl;
     }
 
     fout.close();
