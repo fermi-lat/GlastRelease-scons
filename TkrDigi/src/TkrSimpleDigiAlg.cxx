@@ -133,6 +133,14 @@ StatusCode TkrSimpleDigiAlg::initialize(){
     
     // pass the GlastDetSvc pointer to the SiStripList static functions
     SiStripList::initialize(m_gsv);
+
+    log << MSG::INFO << "ssdgap " << SiStripList::ssd_gap() 
+        << " laddergap " << SiStripList::ladder_gap()
+        << " strips/wafer " << SiStripList::strips_per_die() 
+        << " #ladders " << SiStripList::n_si_dies() 
+        << " waferside " << SiStripList::die_width() 
+        << " deadgap " << SiStripList::guard_ring() 
+        << endreq;
     
     // get the list of layers, to be used to add noise to otherwise empty layers
     m_gsv->accept(m_layers);

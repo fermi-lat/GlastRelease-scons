@@ -32,14 +32,9 @@ void SiStripList::initialize(IGlastDetSvc * ds)
 	sc = s_detsvc->getNumericConstByName("SiWaferSide", &s_dice_width);
 	sc = s_detsvc->getNumericConstByName("SiWaferActiveSide", &temp);
 	s_guard_ring = 0.5*(s_dice_width - temp);
-	
-     
-	std::cout << "SPG init: ssdgap " << s_ssd_gap << " laddergap " << s_ladder_gap 
-		<< " stripperwafer " << s_stripPerWafer << " ndies " << s_n_si_dies 
-		<< " waferside " << s_dice_width << " deaddist " << s_guard_ring << std::endl;
-    
-   
+
 }
+
 SiStripList::~SiStripList(){ clear(); }
 
 // static variable implementations--now initialized with detsvc.
