@@ -140,6 +140,17 @@
       </axisMPos>
     </stackY>
 
+    <!-- For Y-measuring layers, the crystal ids have to go
+         "backwards". (When this layer is rotated 90 degrees
+         y goes to -x).  
+     -->
+    <stackY name="CALLayerYMeas" >
+      <axisMPos volume="CsIElement" ncopyREF="nCsIPerLayer"
+                shiftREF="cellHorPitch" >
+        <idField name="fCALLog" value="maxLog" step="-1" />
+      </axisMPos>
+    </stackY>
+
 
 <!-- define boxes for top and bottom plates -->
     <box name="CALBottomPlate"
@@ -284,7 +295,7 @@
         <idField name="fCALStructural" valueREF="eBottomPlate" />
       </axisPos>
 
-      <axisPos volume="CALLayer" rotation="90" >
+      <axisPos volume="CALLayerYMeas" rotation="90" >
         <idField name="fLayer" value="7" />
         <idField name="fMeasure" valueREF="eMeasureY" />
       </axisPos>
@@ -292,7 +303,7 @@
         <idField name="fLayer" value="6" />
         <idField name="fMeasure" valueREF="eMeasureX" />
       </axisPos>
-      <axisPos volume="CALLayer" rotation="90" >
+      <axisPos volume="CALLayerYMeas" rotation="90" >
         <idField name="fLayer" value="5" />
         <idField name="fMeasure" valueREF="eMeasureY" />
       </axisPos>
@@ -300,7 +311,7 @@
         <idField name="fLayer" value="4" />
         <idField name="fMeasure" valueREF="eMeasureX" />
       </axisPos>
-      <axisPos volume="CALLayer" rotation="90" >
+      <axisPos volume="CALLayerYMeas" rotation="90" >
         <idField name="fLayer" value="3" />
         <idField name="fMeasure" valueREF="eMeasureY" />
       </axisPos>
@@ -308,7 +319,7 @@
         <idField name="fLayer" value="2" />
         <idField name="fMeasure" valueREF="eMeasureX" />
       </axisPos>
-      <axisPos volume="CALLayer" rotation="90" >
+      <axisPos volume="CALLayerYMeas" rotation="90" >
         <idField name="fLayer" value="1" />
         <idField name="fMeasure" valueREF="eMeasureY" />
       </axisPos>
