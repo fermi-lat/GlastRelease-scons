@@ -39,8 +39,12 @@ Version 1.1 25 Oct 1999 R.Dubois Clone from LCD towerID
 class AcdId : public TObject {
 
 private:
-    UInt_t m_id;   // ACD Tile ID number
+    /// Proper Ritz index number for this tile
+    UInt_t m_id;  
+    /// Denotes whether the PMT was truly connected to a tile
     Char_t m_used;
+    /// Readout order - starting from 0
+    UShort_t m_readoutIndex;
     /// set layer
     void setLayer( unsigned int val );
     /// set the face number
@@ -63,8 +67,8 @@ public:
     AcdId(short l, short f, short r, short c);
     virtual ~AcdId() { };
     
-    UShort_t getId() const;
-    
+    UInt_t getId() const;
+    void setId(Short_t newVal);
     /// is this a top tile?
     bool isTop () const;  
     /// is this a side tile?
@@ -81,9 +85,12 @@ public:
     bool wasConnected() const;
     /// set the bit to denote whether this PMT was connected 0 == not connected,1 is connected
     void setConnected(Char_t c);
+    /// retrieve the readout index
+    UShort_t getReadoutIndex() const { return m_readoutIndex; };
+    /// set the readout index for this tile
+    void setReadoutIndex(UShort_t i) { m_readoutIndex = i; };
     
-    
-    void setId(Short_t newVal);
+    static UShort_t badId;
     
 private:
     inline short int word ( short i, const UInt_t& v ) const

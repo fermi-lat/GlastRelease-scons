@@ -85,7 +85,7 @@ void Event::Clean(Option_t *option) {
 }
 
 
-AcdTile* Event::addAcdTile(UShort_t id) {
+AcdTile* Event::addAcdTile(Short_t id) {
     // Add a new AcdTile entry, note that
     // TClonesArrays can only be filled via
     // a new with placement call
@@ -104,7 +104,7 @@ const AcdTile* Event::getAcdTile(UShort_t id) {
     return 0;
 }
 
-AcdTile* Event::addXgt(UShort_t id) {
+AcdTile* Event::addXgt(Short_t id) {
     // Add a new XGT(AcdTile) entry, note that
     // TClonesArrays can only be filled via
     // a new with placement call

@@ -83,14 +83,14 @@ public:
     /// retrieve the whole TClonesArray of Acd Digi data
     TClonesArray* getAcdDigi() { return m_AcdDigiVec; };
     /// Add a new AcdTile entry into the ACD digi array
-    AcdTile* addAcdTile(UShort_t id);
+    AcdTile* addAcdTile(Short_t id);
     /// retrieve a specific AcdTile - if not found, returns null
     const AcdTile* getAcdTile(UShort_t id);
 
     /// retrieve the whole TClonesArray of XGT Digi data
     TClonesArray* getXgtDigi() { return m_XgtDigiVec; };
     /// add a new AcdTile to store XGT data into the XGT digi array
-    AcdTile* addXgt(UShort_t id);
+    AcdTile* addXgt(Short_t id);
     /// retrieve a specific XGT (AcdTile), if not found, returns null
     const AcdTile* getXgt(UShort_t id);
 

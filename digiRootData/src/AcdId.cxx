@@ -14,7 +14,7 @@
 
 ClassImp(AcdId)
 
-
+UShort_t AcdId::badId = 9999;
 
 ///________________________________________________________________________
 AcdId::AcdId() : m_id(0), m_used(1) {
@@ -35,7 +35,7 @@ AcdId::AcdId(short l, short f, short r, short c) {
 
 
 ///________________________________________________________________________
-UShort_t AcdId::getId() const { 
+UInt_t AcdId::getId() const { 
     // Returns the tile ID number
     
     return m_id;
@@ -46,10 +46,10 @@ void AcdId::setId(Short_t newVal) {
 // If this is an unused PMT, store that information
     if (newVal < 0) {
         m_used = 0;
-        m_id = 0;
+        m_id = badId;
     } else {
         m_used = 1;
-        m_id = UShort_t(newVal);
+        m_id = UInt_t(newVal);
     }
 }
 
