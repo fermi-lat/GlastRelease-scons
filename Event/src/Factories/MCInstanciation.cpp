@@ -29,34 +29,34 @@ using namespace GlastEvent;
 // ====================================================================
 // Object factory implementation for objects of class MCACDHit 
 // ====================================================================
-#include "GlastEvent/MonteCarlo/MCACDHit.h"
-_ImplementHitContainedFactories(MCACDHit)
+//#include "GlastEvent/MonteCarlo/MCACDHit.h"
+//_ImplementHitContainedFactories(MCACDHit)
 
 // ====================================================================
 // Object factory implementation for objects of class MCCalorimeterHit
 // ====================================================================
-#include "GlastEvent/MonteCarlo/MCCalorimeterHit.h"
-_ImplementHitContainedFactories(MCCalorimeterHit)
+//#include "GlastEvent/MonteCarlo/MCCalorimeterHit.h"
+//_ImplementHitContainedFactories(MCCalorimeterHit)
 
 
 // ====================================================================
 // Object factory implementation for objects of class MCTKRHit
 // ====================================================================
-#include "GlastEvent/MonteCarlo/MCTKRHit.h"
-_ImplementHitContainedFactories(MCTKRHit)
+//#include "GlastEvent/MonteCarlo/MCTKRHit.h"
+//_ImplementHitContainedFactories(MCTKRHit)
 
 // ====================================================================
 // Object factory implementation for objects of class MCSiLayer
 // ====================================================================
-#include "GlastEvent/MonteCarlo/MCSiLayer.h"
-_ImplementHitContainedFactories(MCSiLayer)
+//#include "GlastEvent/MonteCarlo/MCSiLayer.h"
+//_ImplementHitContainedFactories(MCSiLayer)
 
 // ====================================================================
 // Object factory implementation for objects of class CsIData 
 // ====================================================================
 void MCInstanciation()  {
-    DLL_DECL_CONTAINEDOBJECTFACTORY( MCACDHit );
-    DLL_DECL_CONTAINEDOBJECTFACTORY( MCCalorimeterHit );
-    DLL_DECL_CONTAINEDOBJECTFACTORY( MCTKRHit );
-    DLL_DECL_CONTAINEDOBJECTFACTORY( MCSiLayer );
+    //DLL_DECL_CONTAINEDOBJECTFACTORY( MCACDHit );
+    //DLL_DECL_CONTAINEDOBJECTFACTORY( MCCalorimeterHit );
+    //DLL_DECL_CONTAINEDOBJECTFACTORY( MCTKRHit );
+    //DLL_DECL_CONTAINEDOBJECTFACTORY( MCSiLayer );
 }
