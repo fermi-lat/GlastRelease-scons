@@ -2,17 +2,10 @@
 #ifndef CALIBUTIL_METADATA_H
 #define CALIBUTIL_METADATA_H
 
-//#include "calibUtil/Timestamp.h"
 #include "facilities/Timestamp.h"
-//#include <my_global.h>
-//#include <mysql.h>
-/*
-#ifdef  WIN32
-#include <windows.h>
-#endif
-*/
+#include "rdbModel/Db/Connection.h"
+#include "rdbModel/Tables/Assertion.h"
 
-typedef struct st_mysql MYSQL;
 
 namespace calibUtil {
   /** Provide interface between calibration clients and the
@@ -50,72 +43,11 @@ namespace calibUtil {
       LEVELSuperseded = 8
     };
 
-    enum eDataFmt {
-      FMTXml = 0,
-      FMTRoot = 1,
-      FMTUnknown = 2
-    };
 
-    enum eCompletion {
-      CMPLOk = 0,
-      CMPLInc = 1,
-      CMPLAbort = 2,
-      CMPLUnknown = 3
-    };
-
-    enum eInstrument {
-      INSTLat = 0,
-      INSTBtem,
-      INSTBfem,
-      INSTEm,
-      INSTFu,
-      INSTCu
-    };
-
-    /**
-       Calibration types which might conceivably be maintained by this
-       system.  We might not actually need them all, but numbers are cheap.
-       Note some of these types correspond to more than one entry in
-       various tables of calibration types, e.g. the one in
-   http://www-glast.slac.stanford.edu/LAT/INT/SVAC/Calibration/calibrations.htm
-       For example CTYPE_TKRBadChan handles both hot and dead (but any
-       individual dataset has only all hot or all dead).  [as of Nov 2002,
-       define HotChan and NoisyChan types and generally speaking get away
-       from idea of using same number for different kinds of data, even
-       if structure is identical] Similarly for
-       CTYPE_TKRAlign, which may apply to any of several subcategories of
-       alignment data, and CTYPE_ACDThresh (veto threshold or high threshold).
+    /* Someday provide option of reading in description of table. In case
+       it is used, can check that it matches dbs we're connected to, and
+       can check column values.
     */
-
-    enum eCalibType {
-      CTYPE_ACDEff = 0,
-      CTYPE_ACDThreshHigh,
-      CTYPE_ACDThreshVeto,
-      CTYPE_ACDPed,
-      CTYPE_ACDElecGain,
-
-      CTYPE_TKRBadChan = 16,
-      CTYPE_TKRHotChan,
-      CTYPE_TKRDeadChan,
-      CTYPE_TKRTOTSignal,
-      CTYPE_TKRTOTDist,
-      CTYPE_TKRAlign,
-      CYTPE_TKRMIPEff,
-
-      CTYPE_CALLightAtt = 32,
-      CTYPE_CALLightAsym,
-      CTYPE_CALLightYield,
-      CTYPE_CALScintEff,
-      CTYPE_CALPed,
-      CTYPE_CALElecGain,
-      CTYPE_CALIntNonlin,
-      CTYPE_CALDiffNonlin,
-      CTYPE_CALHotChan,
-      CTYPE_CALDeadChan,
-      CTYPE_CALDiscrLO,
-      CTYPE_CALDiscrHI,
-      CTYPE_TestGen
-    };
       
     /// Constructor keeps track of table of interest
     Metadata(const std::string& host="*",
@@ -124,65 +56,6 @@ namespace calibUtil {
 
     ~Metadata();
 
-
-    /// Add setting of creator column to row-in-progress
-    eRet addCreator(const std::string& creator);
-
-    /// Add description of input to cal procedure to row-in-progress
-    eRet addInputDesc(const std::string& desc);
-
-    /// Add notes column to row-in-progress
-    eRet addNotes(const std::string& notes);
-
-    /// Set validity interval: period over which calibration data
-    /// is applicable.
-    eRet addValidInterval(facilities::Timestamp startTime, 
-                          facilities::Timestamp endTime);
-
-    /// Add flavor column to row-in-progress.  If this method is not
-    /// invoked, the new row will have the default value for flavor,
-    /// "vanilla"
-    eRet addFlavor(const std::string& flavor);
-
-    /// Add locale column to row-in-progress.  If this method is not
-    /// invoked, the new row will ahve the default value for locale,
-    /// "orbit"
-    eRet addLocale(const std::string& flavor);
-
-    /** Explicit clear of record.  Must have a call to either insertRecord
-     *  (to actually write the record to the database) or clearRecord 
-     *  (to abort) between successive calls to openRecord.
-     */
-    void clearRecord();
-
-
-    /** Return serial number for calibration which is best match to
-        criteria, expressed using enumerated types for calibType and
-        instrument.  Most clients should use this version of findBest.
-                 @param ser          serial number of best match 
-                                     as integer or zero if no matches
-                                     (output)
-                 @param calibType    type of data, must match
-                 @param timestamp    must be within validity interval; 
-                                     closer to center is better
-                 @param levelMask    acceptable levels ("production"
-                                     better than "dev" better than "test"
-                                     better than "superseded")
-                 @param instrument   e.g. LAT, EM, CU,...
-                 @param flavor       optionally specify non-standard
-                                     calibration flavor 
-                 @return             status. Should be RETOk.
-                                     
-
-       If there are multiple calibrations which are not distinguished
-       by the above, pick the one most recently written.
-    */
-    eRet findBest(unsigned int *ser,
-                  eCalibType calibType, 
-                  const facilities::Timestamp& timestamp,
-                  unsigned int levelMask, 
-                  eInstrument instrument,
-                  const std::string& flavor="vanilla");
     /** Return serial number for calibration which is best match to
         criteria, using strings for calibType and instrument arguments.
         This method may be useful for development when a particular
@@ -212,16 +85,16 @@ namespace calibUtil {
                   const std::string& instrument,
                   const std::string& flavor="VANILLA");
 
-    /** Similar to findBest above, but here caller constrains the enter_time
+    /** Similar to findBest above, but here caller constrains the update_time
         of the calibration by specifying an earliest and (optional) latest
         time for it.  The serial number of the calibration meeting all 
-        other conditions, and with the earliest enter_time, will be returned.
+        other conditions, and with the earliest update_time, will be returned.
              @param ser          serial number of best match 
                                  as integer or zero if no matches
                                  (output)
              @param calibType    type of data, must match
-             @param enter_start  ptr to time; early bound for enter_time 
-             @param enter_end    ptr to late bound for enter_time (may be 0)
+             @param update_start  ptr to time; early bound for update_time 
+             @param update_end    ptr to late bound for update_time (may be 0)
              @param levelMask    acceptable levels ("production"
                                  better than "dev" better than "test"
                                  better than "superseded")
@@ -233,15 +106,15 @@ namespace calibUtil {
      */
     eRet findSoonAfter(unsigned int *ser,
                        const std::string& calibType, 
-                       const facilities::Timestamp* enter_start,
-                       const facilities::Timestamp* enter_end,
+                       const facilities::Timestamp* update_start,
+                       const facilities::Timestamp* update_end,
                        unsigned int levelMask, 
                        const std::string& instrument,
                        const std::string& flavor="VANILLA");
 
-    const std::string* const getCalibTypeStr(eCalibType cType);
-    const std::string* const getDataFmtStr(eDataFmt fmt);
-    const std::string* const getInstrumentStr(eInstrument inst);
+    //    const std::string* const getCalibTypeStr(eCalibType cType);
+    //    const std::string* const getDataFmtStr(eDataFmt fmt);
+    //    const std::string* const getInstrumentStr(eInstrument inst);
 
     /// Get validity interval for a particular calibration
     eRet getInterval(unsigned int serialNo,
@@ -263,100 +136,85 @@ namespace calibUtil {
                       non-null value; else false.
     */
     eRet getReadInfo(unsigned int serialNo, 
-                     eDataFmt&     dataFmt,
+                     std::string& dataFmt,
                      std::string& fmtVersion,
                      std::string& dataIdent);
-                        
-    /** Write a record to the metadata database. Any required columns
-     *  not specified by caller will be set to default values.
-     @param serialNo   serial number of new record if insert succeeds [output]
-     @return           See eRet enumerated type for possible values
-     */
-    eRet insertRecord(unsigned int* serialNo = 0);
 
-    /** Start a new metadata record by supplying all absolutely
-        required information as arguments:
-        @param instr  Instrument name, such as "flight", "EM",etc.
-        @param calibType   One of the recognized calibration types,
-                           such as "hotStrips"
-        @param dataFmt  For now, one of "XML" or "ROOT"
-        @param fmtVersion  Something to further identify data format
-                           in case it evolves with time, e.g., "f1v0"
-        @param dataIdent   Identifies the data being described in the
-                           record; typically the full file spec of 
-                           the file containing the data
-        @param completion  Completion status of calibration; has nothing
-                           to do with health of the detector being 
-                           calibrated.  Possible values are "OK", 
-                           "INC" or "ABORT"
-        @return            See the eRet enumerated type for possible
-                           values
-    */
-    eRet openRecord(eInstrument  inst,
-                    eCalibType   ctype,
-                    eDataFmt     fmt,
-                    const std::string& fmtVersion,
-                    const std::string& dataIdent, 
-                    eCompletion  completion,
-                    eLevel       procLevel = LEVELTest);
-
-    eRet openRecord(const std::string& instr, 
-                    const std::string& calibType,
-                    const std::string& dataFmt,
-                    const std::string& fmtVersion,
-                    const std::string& dataIdent, 
-                    const std::string& completion,
-                    const std::string& level);
-
-
-
-  /** 
-    // Additional services will probably be needed to
-    //   1 change proc_level of a given calibration, e.g. from
-    //     PRODUCTION to SUPERSEDED
-    //   2 "split" a calibration.  That is, make two new calibration
-    //     metadata records, both pointing to the same actual data
-    //     file, with validity periods whose union = validity period
-    //     of an existing metadata record pointing to that file.  Then
-    //     (perhaps) mark the original metadata record as superseded
-    //
-    //  Why would one want #2?  If some reprocessing were done, but
-    //  just on some sub(time)interval, then the old calibration would
-    //  no longer be preferred for the full interval; want to be able
-    //  to mark it as superseded for the subinterval, still usable
-    //  for the remainder.  
-  */
+    // Insert a new record; return serial number if successful
+    int registerCalib(const std::string& inst, 
+                      const std::string& flavor,
+                      const std::string& calib_type,
+                      const std::string& data_ident,
+                      const std::string& data_format,
+                      const facilities::Timestamp& vstart,
+                      const facilities::Timestamp& vend,
+                      const std::string& input_desc,
+                      const std::string& notes,
+                      const std::string& proc_level,
+                      const std::string& locale,
+                      const std::string& fmt_version = "",
+                      const std::string& completion = "OK",
+                      const std::string& input_start = "",
+                      const std::string& input_end = "");
 
     // Might make these private
     void disconnectRead();
     void disconnectWrite();
+    eRet compareSchema(const std::string& schema="");
 
   private:
 
-    MYSQL* m_readCxt;
-    MYSQL* m_writeCxt;
+    rdbModel::Connection* m_readCxt;
+    rdbModel::Connection* m_writeCxt;
 
-    bool addLevel(std::string& q, unsigned int *levelMask);
+    // these could be static
+    rdbModel::Assertion* m_findBest;
+    rdbModel::Assertion* m_findSoonest;
 
-    static bool connect(MYSQL * cxt, std::string& host, 
+    /*
+      Set val to string representation of "next" bit in levelMask
+      (one of "PROD", "DEV", "TEST" or "SUPSED"),
+      and mask off that bit in levelMask.  
+    */
+    bool fetchLevel(std::string& val, unsigned int *levelMask);
+
+    //    void initConditions(std::vector<rdbModel::Operator *> conditions);
+
+    //    bool addLevel(std::string& q, unsigned int *levelMask);
+
+    /*  Use rdbModel::MysqlConnection::open( ..  )   to do most of the work */
+
+    //    static bool connect(rdbModel::MysqlConnection* conn,
+    static bool connect(rdbModel::Connection* conn,
+                        std::string& host, 
                         const std::string& user, 
-                        const std::string& pw, eRet& err, 
+                        const std::string& pw,  eRet& err,
                         const std::string& dbName);
 
     bool connectRead(eRet& err);
     bool connectWrite(eRet& err);
 
-    //    static void makeQuery(std::string& query, unsigned int *levelMask);
-    const std::string*  const getCompletionStr(eCompletion cmp);
-    const std::string* const getProcLevelStr(eLevel level);
-
+    // Find 'best' calibration, based on conditions and levelMask; store
+    // serial number.
+    eRet Metadata::doSelect(unsigned levelMask, 
+                            std::vector<rdbModel::Assertion::Operator *>& 
+                            conditions, 
+                            rdbModel::StringVector& orderBy,
+                            unsigned*& ser);
     
+    /// Discover username and store in caller-supplied string
+    eRet fetchUser(std::string& user);
 
-    /// Discover username and add to row-in-progress
-    eRet addUser();
+    /// Compare schema described in xml file (schema argument) with
+    /// actual database.  If schema="", derive file name from 
+    /// database name.
+    //    eRet compareSchema(const std::string& schema="");
 
+    // Won't need followin enum or bit mask if we eliminate multi-step
+    // insert procedure
     /** Keep track of which columns in row have been initialized 
         with bit mask */
+    /*
     enum eRow {
       eOpened = 1,
       eValid = 2,
@@ -365,12 +223,12 @@ namespace calibUtil {
       eFlavor  = 0x10,
       eLocale  = 0x20,
       eCreator = 0x40 };
-
+    */
     /// Constant bit mask indicating all necessary fields have been set
-    static const unsigned int s_rowReady;
+    //    static const unsigned int s_rowReady;
 
-    std::string m_row;     // place to keep row as it's being built
-    unsigned int m_rowStatus;
+    //    std::string m_row;     // place to keep row as it's being built
+    //    unsigned int m_rowStatus;
     std::string  m_host;
     std::string  m_table;
     std::string  m_dbName;
