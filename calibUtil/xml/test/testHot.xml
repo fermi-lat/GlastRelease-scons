@@ -33,12 +33,12 @@
   <tower row="2" col="2" allBad="true" howBad="2" />
 
   <tower row="2" col="3">
-    <uniplane tray="0" which="top" howBad="1">
+    <uniplane tray="1" which="top" howBad="1">
       <stripList strips="3 5 11 23 96" />
       <stripSpan first="12" last="20" />
       <stripSpan first="100" last="124" />
     </uniplane>
-    <uniplane tray="0" which="bot" howBad="1">
+    <uniplane tray="1" which="bot" howBad="1">
       <stripSpan first="7" last="43" />
     </uniplane>
   </tower>
