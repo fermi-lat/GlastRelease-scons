@@ -1,6 +1,6 @@
 package AnalysisNtuple
 
-version v1r3p1
+version v1r3p2
 
 branches src cmt doc
 
