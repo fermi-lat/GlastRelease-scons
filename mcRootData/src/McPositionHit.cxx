@@ -72,5 +72,5 @@ void McPositionHit::initialize(Double_t edep, const VolumeIdentifier &id,
 
 Bool_t McPositionHit::needDigi() const
 {
-    return m_statusFlags & McParticle::StatusBits::NEED_DIGI;
+    return m_statusFlags & McParticle::NEED_DIGI;
 }
