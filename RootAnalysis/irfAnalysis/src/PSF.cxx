@@ -73,8 +73,7 @@ void PSF::open_input_file()
             }else{
                 dir_err=McDirErr;
             }
-#if 1
-            // background veto calculation, from Luis 
+            // background veto calculation, from Luis Reyes
             veto=1.0;
             if(TkrNumTracks>0.0&&GltWord>3.0&&IMcoreProb>0.2){
                 if(IMvertexProb<0.5||VtxAngle==0.0){
@@ -90,9 +89,6 @@ void PSF::open_input_file()
                         veto=0.0;
                 }
             }
-#else
-            veto=0.;
-#endif
             friend_tree->Fill();
         }
         fr.cd();
@@ -295,37 +291,54 @@ void PSF::drawAsymmetry(std::string ps)
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void PSF::drawAeff(std::string ps)
+void PSF::drawAeff(std::string ps, std::string page_title, std::string hist_title)
 {
     TFile hist_file(summary_filename().c_str() ); // for the histograms
     TCanvas c;
     c.SetFillColor(10);
-
+    divideCanvas(c,1,1,page_title + "plots from "+summary_filename());
+    c.cd(1);
     TLegend* leg=new TLegend(0.13,0.7, 0.30,0.89);
     leg->SetHeader("Angle ranges");
+    leg->SetFillColor(10);
+    leg->SetBorderSize(1);
     leg->SetTextSize(0.04);
 
+    // determine normalization factor to Aeff
+    int ngen=4.66e6; 
+    double anglebin=0.2, logebin=0.125, target_area=6., emax=160., emin=0.016;
+    double norm_factor=target_area/ngen/anglebin/(logebin/log10(emax/emin));;
+    std::cout << "Applying normailzation factor assuming " << ngen 
+        << " generated uniformly over:"
+        << "\n\t cos theta from 0 to 1"
+        << "\n\t log E with E from "<< emin << " to " << emax << std::endl;
+
     for(int i=0; i<4; ++i){
-        TH1F* h =(TH1F*)hist_file.Get(hist_name(i,8)) ;
+
+        TH1F* h =(TH1F*)hist_file.Get(hist_name(i,8)) ; 
         if(h==0){
             std::cerr << "could not find "<< hist_name(i,8) << " in summary file " << hist_file.GetName() <<std::endl;
             return;
         }
         printf("Drawing %s\n", h->GetTitle());
+        h->Scale(norm_factor);
+        h->SetMaximum(1.0);
         h->SetLineColor(i+1);
         h->SetStats(false);
-        h->SetTitle("Energy distribution for angular ranges");
+        h->SetTitle(hist_title.c_str());
         h->GetXaxis()->SetTitle("log(Egen/ 1MeV)");
         h->GetXaxis()->CenterTitle(true);
+        h->GetYaxis()->SetTitle("Aeff (m^2)");
+        h->GetYaxis()->CenterTitle(true);
+
         h->SetLineWidth(2);
 
         if(i==0)h->Draw(); else h->Draw("same");
-        char entry[16]; sprintf(entry," %d-%d", angles[i], angles[i+1]);
+        char entry[16]; sprintf(entry," %2d-%d ", angles[i], angles[i+1] );
         leg->AddEntry( h, entry, "l");
     }
-    leg->SetFillColor(10);
-    leg->SetBorderSize(1);
     leg->Draw();
-    c.Print((output_file_root()+ps).c_str());
+    c.Print(ps.c_str() );
+
 }
 
