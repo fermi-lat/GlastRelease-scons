@@ -62,7 +62,7 @@ public:
   /// Fill the output stream (ASCII)
   std::ostream& fillStream( std::ostream& s ) const                            {
     return s << "class ParticleID : "
-	     << EventField( Event::field4 )
+	     << EventField( EventFormat::field4 )
       << m_id;
   }
 

@@ -164,21 +164,21 @@ inline std::ostream& mc::McIntegratingHit::fillStream( std::ostream& s ) const
 {
     s << "class McCaloHitBase :"
       << "\n    Deposited Energy        = "
-      << EventFloatFormat( Event::width, Event::precision )
+      << EventFloatFormat( EventFormat::width, EventFormat::precision )
       << m_totalEnergy
       << "\n    First moment (x, y, z)  = "
-      << EventFloatFormat( Event::width, Event::precision )
+      << EventFloatFormat( EventFormat::width, EventFormat::precision )
       << m_moment1seed.x() / m_totalEnergy << ", "
-      << EventFloatFormat( Event::width, Event::precision )
+      << EventFloatFormat( EventFormat::width, EventFormat::precision )
       << m_moment1seed.y() / m_totalEnergy << ", "
-      << EventFloatFormat( Event::width, Event::precision )
+      << EventFloatFormat( EventFormat::width, EventFormat::precision )
       << m_moment1seed.z() / m_totalEnergy << " )"
       << "\n    Second moment (x, y, z) = "
-      << EventFloatFormat( Event::width, Event::precision )
+      << EventFloatFormat( EventFormat::width, EventFormat::precision )
       << m_moment2seed.x() / m_totalEnergy << ", "
-      << EventFloatFormat( Event::width, Event::precision )
+      << EventFloatFormat( EventFormat::width, EventFormat::precision )
       << m_moment2seed.y() / m_totalEnergy << ", "
-      << EventFloatFormat( Event::width, Event::precision )
+      << EventFloatFormat( EventFormat::width, EventFormat::precision )
       << m_moment2seed.z() / m_totalEnergy << " )"
       << "\n    Volume ID               = " << m_volumeID.name();
     return s;

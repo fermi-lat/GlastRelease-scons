@@ -212,27 +212,27 @@ inline std::ostream& mc::McPositionHit::fillStream( std::ostream& s ) const
     << "    base class McPositionHit :"
     << "\n        Volume ID             = " << m_volumeID.name()
     << "\n        Entry point (x, y, z) = ( "
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_entry.x() << ", "
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_entry.y() << ", "
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_entry.z() << " )"
     << "\n        Deposited Energy      = "
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_depositedEnergy
     << "\n        Particle Energy       = "
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_particleEnergy
     << "\n        Time of flight        = "
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_timeOfFlight
     << "\n        Exit point (x, y, z)  = ( "
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_exit.x() << ", "
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_exit.y() << ", "
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_exit.z() << " )"
     << "\n        McParticle            = " << m_mcParticle(this)
     << "\n        ancestor McParticle   = " << m_originMcParticle(this);

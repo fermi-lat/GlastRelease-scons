@@ -6,7 +6,7 @@
 // Include files
 #include <iostream>
 #include "GaudiKernel/StreamBuffer.h"
-#include "GlastEvent/TopLevel/Definitions.h"
+#include "Event/TopLevel/Definitions.h"
 
 
 //------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ public:
   /// Fill the output stream (ASCII)
   std::ostream& fillStream( std::ostream& s ) const                            {
     return s << "class TimeStamp : "
-      << GlastEventField( GlastEvent::field12 )
+      << EventField( EventFormat::field12 )
       << m_time;
   }
 

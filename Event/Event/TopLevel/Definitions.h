@@ -18,7 +18,7 @@
 //
 //------------------------------------------------------------------------------
 
-namespace Event {
+namespace EventFormat {
 
   // Width of the output field of a floating point number
   const int width      = 12;

@@ -7,8 +7,8 @@
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/StreamBuffer.h"
-#include "GlastEvent/TopLevel/SubMCEvent.h"
-#include "GlastEvent/TopLevel/Definitions.h"
+//#include "GlastEvent/TopLevel/SubMCEvent.h"
+#include "Event/TopLevel/Definitions.h"
 
 extern const CLID& CLID_McEvent;
 
@@ -94,7 +94,7 @@ inline StreamBuffer& MCEvent::serialize( StreamBuffer& s )                     {
 inline std::ostream& MCEvent::fillStream( std::ostream& s ) const              {
     s << "class MCEvent :\n"
         << "    Source Id = "
-        << GlastEventField( GlastEvent::field12 )
+        << EventField( EventFormat::field12 )
         << m_sourceId;
     return s;
 }

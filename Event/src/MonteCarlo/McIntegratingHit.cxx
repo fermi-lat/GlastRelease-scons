@@ -11,7 +11,7 @@
 // phase to the namespace `Event'.
 // After the transition is completed, it should be removed and each
 // function definition should have the namespace identifier.
-using namespace Event;
+//using namespace Event;
 
 namespace mc{
 

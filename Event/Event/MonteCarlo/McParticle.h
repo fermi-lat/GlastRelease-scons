@@ -207,29 +207,29 @@ inline std::ostream& McParticle::fillStream( std::ostream& s ) const
     << "\n    Particle ID                = " << m_particleID
     << "\n    Status Flags               = " << m_statusFlags
     << "\n    Final position (x, y, z) = ( "
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_finalPosition.x() << ","
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_finalPosition.y() << ","
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_finalPosition.z() << " ) "
     << "\n    Initial Momentum  (x,y,z,t)   = ( " 
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_initialFourMomentum.x() << ","
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_initialFourMomentum.y() << ","
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_initialFourMomentum.z() << ","
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_initialFourMomentum.t() << " ) "
     << "\n    Final Momentum   (x,y,z,t)    = ( " 
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_finalFourMomentum.x() << ","
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_finalFourMomentum.y() << ","
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_finalFourMomentum.z() << ","
-    << EventFloatFormat( Event::width, Event::precision )
+    << EventFloatFormat( EventFormat::width, EventFormat::precision )
     << m_finalFourMomentum.t() << " )";
     
     //<< "\n    Mother                     = " << m_mother;
