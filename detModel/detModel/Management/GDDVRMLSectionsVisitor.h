@@ -20,7 +20,7 @@ class GDDVRMLSectionsVisitor : public GDDsectionsVisitor {
    * root volume in GDD to represent along with all the volumes
    * contained in it. If it is the empty string the root volume is the
    * topVolume of the section.  */
-  GDDVRMLSectionsVisitor(string); 
+  GDDVRMLSectionsVisitor(std::string); 
   
   /// A standard destructor
   virtual ~GDDVRMLSectionsVisitor();
@@ -77,21 +77,21 @@ class GDDVRMLSectionsVisitor : public GDDsectionsVisitor {
   /// This method build the colors for the VRML file
   void makeColor();
 
-  void setOpacity(string, float);
+  void setOpacity(std::string, float);
 
-  void setDepth(string, int);
+  void setDepth(std::string, int);
 
-  string actualVolume;
+  std::string actualVolume;
 
-  ofstream out;
+  std::ofstream out;
 
   /** This variables keep the actual depth or recursivness of the
       visit in the hierarchy */
   int depth;
   /// This map holds the opacity information of the material colors
-  map <string, float> opacityMap;
+  std::map <std::string, float> opacityMap;
   /// This map holds information on the recursion depth of volumes
-  map <string, int> depthMap;
+  std::map <std::string, int> depthMap;
 };
 #endif //GDDVRMLSECTIONSVISITOR_H
 

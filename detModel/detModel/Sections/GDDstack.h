@@ -45,7 +45,8 @@ class GDDstack :public GDDvolume {
   /**
    *
    */ 
-  vector <GDDanyRelativePosition*> getPositions(){return anyRelativePosition;};
+  std::vector <GDDanyRelativePosition*> getPositions()
+  {return anyRelativePosition;};
   /**
    *
    */
@@ -55,7 +56,7 @@ class GDDstack :public GDDvolume {
   stackorigin origin; ///default atStart
   /** @link aggregation
    *  @supplierCardinality 1..n */
-  vector < GDDanyRelativePosition * > anyRelativePosition;
+  std::vector < GDDanyRelativePosition * > anyRelativePosition;
 };
 #endif //GDDSTACK_H
 

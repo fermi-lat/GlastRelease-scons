@@ -27,7 +27,7 @@ public:
   /**
    *
    */ 
-   void setVolumeRef(string pname){volumeRef=pname;}
+   void setVolumeRef(std::string pname){volumeRef=pname;}
   /**
    *
    */ 
@@ -120,7 +120,7 @@ public:
   /**
    *
    */ 
-  string getVolumeRef()const{return volumeRef;}
+  std::string getVolumeRef()const{return volumeRef;}
   /**
    *
    */ 
@@ -132,7 +132,7 @@ public:
   /**
    *
    */ 
-  vector <GDDidField*> getIdFields()const{return idFields;}
+  std::vector <GDDidField*> getIdFields()const{return idFields;}
   /**
    *
    */ 
@@ -151,7 +151,7 @@ public:
   double getGap()const{return gap;}
 
   /** @link aggregation */
-  vector <GDDidField *> idFields;
+  std::vector <GDDidField *> idFields;
   
 
  protected:
@@ -165,7 +165,7 @@ public:
    * @clientCardinality 1
    * @supplierCardinality 1*/
   GDDvolume* volume;
-  string volumeRef;
+  std::string volumeRef;
   axisPosType positionType;
   double dx; ///dx default 0
   double dy; ///dy default 0

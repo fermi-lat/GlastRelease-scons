@@ -22,7 +22,7 @@ void GDDstack::Accept(GDDsectionsVisitor* v){
 void GDDstack::constructBB(){
   unsigned int i, j;
   double xmin, ymin, zmin, xmax, ymax, zmax;
-  vector <GDDvector*> points;
+  std::vector <GDDvector*> points;
   double trans,step = 0;
 
   xmin = ymin = zmin = 100000;

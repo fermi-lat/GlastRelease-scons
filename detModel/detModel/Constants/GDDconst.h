@@ -17,18 +17,18 @@ class GDDconst {
 
   virtual ~GDDconst(){}
 
-  void setName(string pname){name=pname;}
+  void setName(std::string pname){name=pname;}
   void setConstType(constType pct){ct=pct;}
-  void setConstMeaning(string puType);
-  void setNote(string pnote){note=pnote;}
+  void setConstMeaning(std::string puType);
+  void setNote(std::string pnote){note=pnote;}
 
 
-  string getName()const{return name;}
+  std::string getName()const{return name;}
   constType getConstType()const{return ct;}
   constMeaning getConstMeaning()const{return uType;}
-  string getNote()const{return note;}
-  string getUnitLength()const{return unitLength;}
-  string getUnitAngle()const{return unitAngle;}
+  std::string getNote()const{return note;}
+  std::string getUnitLength()const{return unitLength;}
+  std::string getUnitAngle()const{return unitAngle;}
 
   /**
    * This is the standard Accept method for the visitor mechanism
@@ -40,12 +40,12 @@ class GDDconst {
   void AcceptNotRec(GDDconstantsVisitor*);
 
  private:
-  string name;
+  std::string name;
   constType ct;
   constMeaning uType;
-  string note;
-  string unitLength;
-  string unitAngle;
+  std::string note;
+  std::string unitLength;
+  std::string unitAngle;
  protected:
   GDDconst():name(""),note(""),unitLength("mm"),unitAngle("deg"){;}
 };

@@ -12,11 +12,11 @@ class GDDseg {
   /**
    *This method sets the value of the attibute reason
    */ 
-  void setReason(string preason){reason=preason;}
+  void setReason(std::string preason){reason=preason;}
   /**
    *This method returns the value of the attribute reason
    */ 
-  string getReason()const{return reason;}
+  std::string getReason()const{return reason;}
   /**
    *This method sets the value of the attibute nSeg
    */ 
@@ -28,7 +28,7 @@ class GDDseg {
   /**
    *This method sets the value of the attribute axis 
    */ 
-  void setAxis(string paxis){if (paxis=="X")axis=X;
+  void setAxis(std::string paxis){if (paxis=="X")axis=X;
   else if(paxis=="Y")axis=Y;
   else axis=Z;
   }
@@ -39,7 +39,7 @@ class GDDseg {
   
   private:    
   axisType axis;
-  string reason;
+  std::string reason;
   int nSeg; ///default value 1
   };
 #endif //GDDSEG_H

@@ -35,7 +35,7 @@ class GDDHTMLConstantsVisitor : public GDDconstantsVisitor {
   virtual void visitConst(GDDconst*);
 
  private:
-  ofstream out;
+  std::ofstream out;
 
 };
 #endif // GDDHTMLCONSTANTSVISITOR_H

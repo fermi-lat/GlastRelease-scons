@@ -26,7 +26,7 @@ public:
      * This method set the envelopeRef of the compisition
      * The envolopeRef is used by resolvereference method to find the 
      */
-    void setEnvelopeRef(string pname){envelopeRef=pname;}
+    void setEnvelopeRef(std::string pname){envelopeRef=pname;}
     /**
      * This method set the envelope of the composition
      */
@@ -34,7 +34,7 @@ public:
     /**
      *
      */
-    string getEnvelopeRef(){return envelopeRef;}
+    std::string getEnvelopeRef(){return envelopeRef;}
     /**
      *
      */
@@ -52,13 +52,13 @@ public:
     /**
      *
      */
-    vector<GDDanyPosition*> getPositions(){return anyPosition;};
+    std::vector<GDDanyPosition*> getPositions(){return anyPosition;};
 
  private:
 
     /** @link aggregation
      *  @supplierCardinality 1..n */
-    vector < GDDanyPosition * > anyPosition;
+    std::vector < GDDanyPosition * > anyPosition;
 
     /** without loose of generality we can presume that the envelove is always a simple shape.
      * requirement:
@@ -69,6 +69,6 @@ public:
      * @label envelope*/
     GDDshape* envelope;
 //    GDDvolume* prova;
-    string envelopeRef;
+    std::string envelopeRef;
 };
 #endif //GDDCOMPOSITION_H

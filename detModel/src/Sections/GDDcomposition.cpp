@@ -33,7 +33,7 @@ void GDDcomposition::constructBB(){
     {
       if (getPositions()[i]->getPosType() == posXYZ)
 	{
-	  vector <GDDvector*> points;
+	  std::vector <GDDvector*> points;
 	  GDDposXYZ* pos = static_cast<GDDposXYZ*>(getPositions()[i]);
       	  GDDvolume* vol = pos->getVolume();
 	  

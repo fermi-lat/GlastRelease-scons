@@ -21,26 +21,26 @@ class GDDvolume {
  public:
   /// Some constructors
   GDDvolume(){};
-  GDDvolume(string pname,typeVolume ptype):
+  GDDvolume(std::string pname,typeVolume ptype):
     name(pname),vtype(ptype),parameters(""),bbx(0),bby(0),bbz(0){;}
   GDDvolume(typeVolume ptype):vtype(ptype),parameters(""){;}
 
   /**
    * This method sets the parameters associated with the volume
    */
-  void setParameters(string pparameters){parameters = pparameters;};
+  void setParameters(std::string pparameters){parameters = pparameters;};
   /**
    * This method sets the volume name 
    */
-  void setName(string pname){name = pname;};
+  void setName(std::string pname){name = pname;};
   /**
    * This method returns a string with the name of the volume
    */
-  string getName(){return name;};
+  std::string getName(){return name;};
   /**
    * This method returns a string with the parameters
    */
-  string getParameters(){return parameters;};
+  std::string getParameters(){return parameters;};
   /**
    * This method returns the type of the volume
    */  
@@ -100,11 +100,11 @@ class GDDvolume {
  private:
 
   /// The name of the volume
-  string name;
+  std::string name;
   /// The type of the volumes
   typeVolume vtype;
   /// The parameters of the volume
-  string parameters;  
+  std::string parameters;  
   /// Bounding box
   double bbx;
   double bby;

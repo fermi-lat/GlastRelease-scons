@@ -7,11 +7,11 @@ class GDDstringConst: public GDDconst{
  public:
   GDDstringConst():GDDconst(),value(""){}
 
-  string getValue()const{return value;}
-  void setValue(string pvalue){value=pvalue;}
+  std::string getValue()const{return value;}
+  void setValue(std::string pvalue){value=pvalue;}
 
  private:
- string value;
+ std::string value;
 };
 
 #endif //GDDCSTRINGCONST_H

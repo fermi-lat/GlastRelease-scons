@@ -27,7 +27,7 @@ public:
   /**
    *
    */ 
-  void setVolumeRef(string pname){volumeRef=pname;}
+  void setVolumeRef(std::string pname){volumeRef=pname;}
   /**
    *
    */ 
@@ -43,7 +43,7 @@ public:
     else unitLength = GDDm;
   };
 
-  vector <GDDidField*> getIdFields(){return idFields;}
+  std::vector <GDDidField*> getIdFields(){return idFields;}
   /**
    * This method set the units for the angles of the shape
    */  
@@ -103,7 +103,7 @@ public:
   /**
    *
    */ 
-  string getVolumeRef()const{return volumeRef;}
+  std::string getVolumeRef()const{return volumeRef;}
   /**
    *
    */ 
@@ -140,7 +140,7 @@ public:
   /** @link aggregation
    *   @supplierCardinality 1 */
   GDDvolume * volume;
-  string volumeRef;
+  std::string volumeRef;
   
 };
 #endif //GDDANYPOSITION_H

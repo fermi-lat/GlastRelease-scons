@@ -39,10 +39,10 @@ public:
   void build(buildType);
 
   /// This method gives back the actual mode for choice elements
-  string getMode(){return manMode;};
+  std::string getMode(){return manMode;};
 
   /// This method sets the actual mode for choice elements
-  void setMode(string pmode){manMode = pmode;};
+  void setMode(std::string pmode){manMode = pmode;};
 
   /// This method starts the visit of a hierarchy with a specified visitor
   void startVisitor(GDDvisitor*);
@@ -77,7 +77,7 @@ public:
       build the hierarchy from the XML file */
   GDDbuilder * manBuilder;
   /// This string represent the mode for choices elements
-  string manMode;
+  std::string manMode;
 
   char* nameFile;
 };

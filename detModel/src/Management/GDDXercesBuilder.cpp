@@ -9,7 +9,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include "vector.h"
+#include <vector>
 
 #include "detModel/Management/GDDmanager.h"
 #include "detModel/Management/GDDXercesBuilder.h"

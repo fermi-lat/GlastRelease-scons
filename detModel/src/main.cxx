@@ -10,7 +10,8 @@
 #include "detModel/Management/GDDVRMLSectionsVisitor.h"
 #include "detModel/Management/GDDprinterSectionsVisitor.h"
 #include "detModel/Management/GDDHTMLConstantsVisitor.h"
-#include "detModel/Management/GDDFakeBuilder.h"
+//#include "detModel/Management/GDDFakeBuilder.h"
+#include "detModel/Management/GDDXercesBuilder.h"
 #include "detModel/Sections/GDDvolume.h"
 #include "detModel/Sections/GDDshape.h"
 #include "detModel/Sections/GDDbox.h"
@@ -29,8 +30,9 @@ int main(int argc, char* argv[]) {
  
   // We set the builder; the XercesBuilder needs the name of the XML file
   // in the constructor
-  manager->setBuilder(new GDDFakeBuilder);
+  //////////  manager->setBuilder(new GDDFakeBuilder);
 
+  manager->setBuilder(new GDDXercesBuilder);
   manager->setNameFile(argv[1]);
   
 
@@ -53,8 +55,10 @@ int main(int argc, char* argv[]) {
     visitor = new GDDVRMLSectionsVisitor(argv[2]);  
 
   visitor->setOpacity("FOAM05",0.0);
-  // visitor->setDepth("oneTKR", 0);
-  // visitor->setDepth("oneCAL", 0);
+
+  // Put these back if you want to keep down size of .wrl files, 
+  visitor->setDepth("oneTKR", 0);
+  visitor->setDepth("oneCAL", 0);
   manager->startVisitor(visitor);
   
   // We start the HTMLConstantsVisitor to build the html file with the

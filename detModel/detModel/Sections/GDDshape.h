@@ -18,7 +18,7 @@ class GDDshape : public GDDvolume {
   /** Some constructors; since this is an abstract class, these
    * constructors are useful only in its concrete subclass
    */
-  GDDshape(string pname, shapeType pstype):GDDvolume(pname,shape),stype(pstype){;}
+  GDDshape(std::string pname, shapeType pstype):GDDvolume(pname,shape),stype(pstype){;}
   GDDshape(){};
   virtual ~GDDshape(){};
 
@@ -35,12 +35,12 @@ class GDDshape : public GDDvolume {
   /**
    * This method set the material (a string) of the shape
    */  
-  void setMaterial(string pmaterial){material = pmaterial;};
+  void setMaterial(std::string pmaterial){material = pmaterial;};
 
   /**
    * This method gives back the material (a string) of the shape
    */  
-  string getMaterial(){return material;};
+  std::string getMaterial(){return material;};
 
 
   /**
@@ -80,7 +80,7 @@ class GDDshape : public GDDvolume {
 
  private:
   shapeType stype;
-  string material;
+  std::string material;
   bool sensitive;          ///default false
   unitLengthtype unitLength; ///dufault mm
   unitAngletype unitAngle; ///default deg

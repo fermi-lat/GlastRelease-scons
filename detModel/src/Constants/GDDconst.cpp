@@ -11,7 +11,7 @@ void GDDconst::AcceptNotRec(GDDconstantsVisitor* v){
 }
 
 
-void GDDconst::setConstMeaning(string puType){
+void GDDconst::setConstMeaning(std::string puType){
   if (puType=="length")uType=length;
   else if (puType=="angle")uType=angle;
   else if (puType=="count")uType=coun;

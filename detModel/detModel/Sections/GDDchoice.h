@@ -5,13 +5,13 @@
 
 class GDDchoice {
     public:
-        GDDchoice(string pname):name(pname){};
-        string getName(){return name;};
-        string getVolumeNameByMode(string mode);
-        void addCase(string mode, string volume);
+        GDDchoice(std::string pname):name(pname){};
+        std::string getName(){return name;};
+        std::string getVolumeNameByMode(std::string mode);
+        void addCase(std::string mode, std::string volume);
 
     private:
-        string name;
-        map <string, string> cases;
+        std::string name;
+        std::map <std::string, std::string> cases;
 };
 #endif //GDDCHOICE_H

@@ -16,12 +16,12 @@
 #include "detModel/Sections/GDDidField.h"
 #include "detModel/Sections/GDDanyPosition.h"
 
-GDDVRMLSectionsVisitor::GDDVRMLSectionsVisitor(string nvol)
+GDDVRMLSectionsVisitor::GDDVRMLSectionsVisitor(std::string nvol)
 {
   unsigned int i;
-  typedef map<string,float>M1;
-  typedef map<string,int>M2;
-  typedef map<string,GDDvolume*>M3;
+  typedef std::map<std::string,float>M1;
+  typedef std::map<std::string,int>M2;
+  typedef std::map<std::string,GDDvolume*>M3;
   M3::const_iterator j;
 
   setRecursive(0);
@@ -132,7 +132,7 @@ void  GDDVRMLSectionsVisitor::visitSection(GDDsection* section)
 void  GDDVRMLSectionsVisitor::visitComposition(GDDcomposition* composition)
 {
   unsigned int i;
-  typedef map<string, int> M;
+  typedef std::map<std::string, int> M;
   M::const_iterator j; 
 
   j = depthMap.find(composition->getName());
@@ -167,7 +167,7 @@ void  GDDVRMLSectionsVisitor::visitStack(GDDstack* st)
   unsigned int j;
   double deltap, delta;
   GDDanyRelativePosition* apos;
-  typedef map<string, int> M;
+  typedef std::map<std::string, int> M;
   M::const_iterator k; 
 
   k = depthMap.find(st->getName());
@@ -328,9 +328,9 @@ void  GDDVRMLSectionsVisitor::visitSeg(GDDseg*)
 
 }
 
-void GDDVRMLSectionsVisitor::setDepth(string name, int d)
+void GDDVRMLSectionsVisitor::setDepth(std::string name, int d)
 {
-  typedef map<string, int> M;
+  typedef std::map<std::string, int> M;
   M::const_iterator j; 
   
   j = depthMap.find(name);
@@ -342,9 +342,9 @@ void GDDVRMLSectionsVisitor::setDepth(string name, int d)
     }  
 }
 
-void GDDVRMLSectionsVisitor::setOpacity(string name, float op)
+void GDDVRMLSectionsVisitor::setOpacity(std::string name, float op)
 {
-  typedef map<string, float> M;
+  typedef std::map<std::string, float> M;
   M::const_iterator j; 
   
   j = opacityMap.find(name);
@@ -392,7 +392,7 @@ void GDDVRMLSectionsVisitor::makeColor()
   unsigned int ncol;
   double r, g, b;
 
-  typedef map<string, float> M;
+  typedef std::map<std::string, float> M;
   M::const_iterator j; 
   GDDmanager* manager = GDDmanager::getPointer();
   GDD* gdd = manager->getGDD();

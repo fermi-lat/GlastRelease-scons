@@ -5,8 +5,8 @@
  * \todo All the constants package has to be implemented
  * @author D.Favretto & R.Giannitrapani 
  */
-#include <vector.h>
-#include <string.h>
+#include <vector>
+#include <string>
 #include "detModel/Utilities/GDDpurge.h"
 #include "detModel/Constants/GDDconstCategory.h"
 
@@ -18,13 +18,13 @@ class GDDconstants{
   GDDconstants():majVersion(""),minVersion(""){;}  
   virtual ~GDDconstants(){purge(constCategories);}
   
-  void setVersion(string pmajVersion,string pminVersion)
+  void setVersion(std::string pmajVersion,std::string pminVersion)
     {majVersion=pmajVersion ; minVersion=pminVersion;}  
-  string getVersion()const{return majVersion+"."+minVersion;}
+  std::string getVersion()const{return majVersion+"."+minVersion;}
   
   void addConstantCategory(GDDconstCategory* c){constCategories.push_back(c);};
   int getConstantCategoryNumber()const{return constCategories.size();};
-  vector< GDDconstCategory* > getCategories()const{return constCategories;};
+  std::vector< GDDconstCategory* > getCategories()const{return constCategories;};
 
   /**
    * This is the standard Accept method for the visitor mechanism
@@ -37,11 +37,11 @@ class GDDconstants{
   
  private:    
   /** @link aggregation */
-  string majVersion;
-  string minVersion;
+  std::string majVersion;
+  std::string minVersion;
   
   /** @link aggregation */
-  vector < GDDconstCategory * > constCategories;
+  std::vector < GDDconstCategory * > constCategories;
 
 };
 #endif //GDDCONSTANTS_H

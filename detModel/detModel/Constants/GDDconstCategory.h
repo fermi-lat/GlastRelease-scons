@@ -19,15 +19,15 @@ class GDDconstCategory {
 
   virtual ~GDDconstCategory(){purge(consts);}
 
-  void setName(string name){categoryName=name;}
-  string getName()const{return categoryName;}
+  void setName(std::string name){categoryName=name;}
+  std::string getName()const{return categoryName;}
 
-  void setOverview(string poverview){overview=poverview;}
-  string getOverview()const{return overview;}
+  void setOverview(std::string poverview){overview=poverview;}
+  std::string getOverview()const{return overview;}
 
   void addConstant(GDDconst* c){consts.push_back(c);}
   int getConstantNumber()const{return consts.size();}  
-  vector<GDDconst*>getConsts()const{return consts;}
+  std::vector<GDDconst*>getConsts()const{return consts;}
 
   bool getPrimary()const{return primary;}
   void setPrimary(bool p){primary=p;}
@@ -45,10 +45,10 @@ class GDDconstCategory {
   void AcceptNotRec(GDDconstantsVisitor*);
 
  private:
-  string categoryName;
-  string overview;
+  std::string categoryName;
+  std::string overview;
   /** @link aggregation */
-  vector < GDDconst * > consts;
+  std::vector < GDDconst * > consts;
   bool primary;/// this attribute  expres if the category is primary=1 or derived=0
   bool save;
 

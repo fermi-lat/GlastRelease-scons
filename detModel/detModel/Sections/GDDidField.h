@@ -26,7 +26,7 @@ public:
   /**
    *
    */ 
-  void setName(string pname);
+  void setName(std::string pname);
   /**
    *
    */ 
@@ -38,10 +38,10 @@ public:
   /**
    *
    */ 
-  string getName();
+  std::string getName();
   
  private:
-  string name;
+  std::string name;
   double value; ///default 0 NMTOKEN
   double step; ///default 0 NMTOKEN
 };

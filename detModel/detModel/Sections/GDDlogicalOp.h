@@ -17,7 +17,7 @@ private:
 class GDDlogicalOp : GDDvolume {
 public:
 
-    GDDlogicalOp(logicaltype plogictype,typeVolume ptype,string pname);
+    GDDlogicalOp(logicaltype plogictype,typeVolume ptype,std::string pname);
 
     void addPosition(GDDanySinglePosition* ppos);
 private:    

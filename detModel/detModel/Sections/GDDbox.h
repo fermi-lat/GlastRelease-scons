@@ -12,7 +12,7 @@ class GDDsectionsVisitor;
 class GDDbox : public GDDshape {
 public:
  
-    GDDbox(string pname):GDDshape(pname, box),
+    GDDbox(std::string pname):GDDshape(pname, box),
     x(0),y(0),z(0),seg(0){;}
 
     ~GDDbox(){if(seg) delete(seg);}
