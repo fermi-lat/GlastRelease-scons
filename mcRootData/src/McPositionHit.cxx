@@ -4,8 +4,8 @@
 ClassImp(McPositionHit)
 
 McPositionHit::McPositionHit() :
-m_statusFlags(0), m_depositedEnergy(0.), 
-m_particleEnergy(0.), m_timeOfFlight(0.)
+m_depositedEnergy(0.), m_particleEnergy(0.), 
+m_timeOfFlight(0.), m_statusFlags(0)
 {
 }
 

@@ -222,7 +222,7 @@ int read(char* fileName, unsigned int numEvents) {
     return(0);
 }
 
-int write(char* fileName, int numEvents) {
+int write(char* fileName, UInt_t numEvents) {
     // Purpose and Method: Create a new Monte Carlo ROOT file
 
     Int_t buffer = 64000;

@@ -63,8 +63,6 @@ std::string VolumeIdentifier::name(const char* delimiter) const
     std::stringstream s;
 #endif
     
-    UInt_t bufIds = 0;
-   
     unsigned int i;
     s << delimiter;
     for (i = 0; i < m_size; i++)
