@@ -162,29 +162,30 @@ StatusCode TkrSimpleDigiAlg::initialize(){
         return StatusCode::FAILURE;
     }
 
-    // Get the Glast detector service 
+    // Get the Tkr Geometry service 
     m_tgsv=0;
-    if( service( "TkrGeometrySvc", m_tgsv).isFailure() ) {
+    if( service( "TkrGeometrySvc", m_tgsv, true).isFailure() ) {
         log << MSG::ERROR << "Couldn't set up TkrGeometrySvc!" << endreq;
         return StatusCode::FAILURE;
     }
 
    // Get the failure mode service 
-    m_fsv=0;
-    if( service( "TkrFailureModeSvc", m_fsv).isFailure() ) {
+    m_fsv = m_tgsv->getTkrFailureModeSvc();
+   
+    if(!m_fsv) {
         log << MSG::INFO << "Couldn't set up TkrFailureModeSvc" << endreq;
         log << MSG::INFO << "Will assume it is not required"    << endreq;
     }
 
     // Get the alignment service 
-    m_asv=0;
-    if( service( "TkrAlignmentSvc", m_asv).isFailure() ) {
+    m_asv = m_tgsv->getTkrAlignmentSvc();
+    if(!m_asv) {
         log << MSG::INFO << "Couldn't set up TkrAlignmentSvc" << endreq;
         log << MSG::INFO << "Will assume it is not required"    << endreq;
     }
 
-    m_bsv=0;
-    if( service( "TkrBadStripsSvc", m_bsv).isFailure() ) {
+    m_bsv = m_tgsv->getTkrBadStripsSvc();
+    if(!m_bsv) {
         log << MSG::INFO << "Couldn't set up TkrBadStripsSvc" << endreq;
         log << MSG::INFO << "Will assume it is not required"    << endreq;
     }
