@@ -76,6 +76,12 @@ Analysis cuts: nA
 
 </pre>
 
+  @section Properties Properties
+  @param  meritAlg.cuts ["LnA"]
+  @param  meritAlg.generated [10000]
+   @param meritAlg.RootFilename  [""]
+
+
   <hr>
   \section notes release notes
   \include release.notes
