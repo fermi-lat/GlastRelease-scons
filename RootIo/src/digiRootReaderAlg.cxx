@@ -27,7 +27,7 @@
 
 #include "commonData.h"
 
-#include "IRootIoSvc.h"
+#include "RootIo/IRootIoSvc.h"
 
 /** @class digiRootReaderAlg
  * @brief Reads Digitization data from a persistent ROOT file and stores the
@@ -89,7 +89,7 @@ private:
     int m_numEvents;
   
     commonData m_common;
-    IRootIoSvc*   m_rootIoSvc;
+    IRootIoSvc* m_rootIoSvc;
 
 };
 
