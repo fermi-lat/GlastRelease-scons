@@ -51,10 +51,10 @@ void TkrCovMat::initialize(const TkrCovMat& covMat)
     operator()(0,1) = covMat.getCovX0Sx();
     operator()(1,0) = covMat.getCovX0Sx();
     
-    operator()(0,0) = covMat.getCovY0Y0();
-    operator()(1,1) = covMat.getCovSySy();
-    operator()(0,1) = covMat.getCovY0Sy();
-    operator()(1,0) = covMat.getCovY0Sy();
+    operator()(2,2) = covMat.getCovY0Y0();
+    operator()(3,3) = covMat.getCovSySy();
+    operator()(2,3) = covMat.getCovY0Sy();
+    operator()(3,2) = covMat.getCovY0Sy();
 }
 
 void TkrCovMat::Print(Option_t *option) const {
