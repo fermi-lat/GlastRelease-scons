@@ -88,10 +88,9 @@ void RootTreeAnalysis::ReconTkr()
         ((TH1F*)GetObjectPtr("TKRTRKSLOPEY"))->Fill(trkPrms->getYSlope());
         ((TH1F*)GetObjectPtr("TKRTRKENERGY"))->Fill(trkE);
 
-        TkrHitPlaneIter trkBegin = track->getHitIterBegin();
-        while(trkBegin != track->getHitIterEnd())
+	for(int planeIdx=0; planeIdx < track->getNumHits(); planeIdx++)
         {
-            TkrHitPlane plane = *trkBegin++;
+            TkrHitPlane plane = track->getHitPlane(planeIdx);
 
             Double_t radLen = plane.getRadLen();
             Double_t planeZ = plane.getZplane();
