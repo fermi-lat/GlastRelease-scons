@@ -2,6 +2,7 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ *  1-apr-2003: jrb - tag v1r10p1  (for Xin) better EM model
  * 18-mar-2003: jrb - tag v1r10p0  1. Modify vacuum for G4. 
  *                                 2. Adjust density of tray bottom face
  *                                 3. Fix superGLAST converter density
