@@ -75,7 +75,7 @@ void MaterialDisplay::Rep::doit(const Medium* med)
 {
     //  get the associated volume, check its type
     const Shape& vol = med->volume();
-    const type_info& t = typeid(vol);
+    const std::type_info& t = typeid(vol);
     if( t==typeid(Box) )    append(BoxRep(vol ));
     else if( t==typeid(Tube) )    append(TubeRep(vol ));
     else {
