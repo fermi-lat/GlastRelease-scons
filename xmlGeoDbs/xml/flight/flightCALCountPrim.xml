@@ -6,6 +6,8 @@
 CsI crystals</prim>
   <prim name= "nCsIPerLayer" value= "12" uType="count">Number of crystals per
  layer within a tower</prim>
+  <prim name="nCsISeg" value="12" uType="count">Number of segments in
+which to divide crystals for integrating hits</prim>
   <prim name="CALnBottomRibs" value="3" uType="count"> Number of
 ribs in bottom frame grid in one direction (X or Y)</prim>
   <prim name="eXtal" value="0" uType="count">idField value for CAL cell cmp
