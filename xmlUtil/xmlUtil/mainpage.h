@@ -6,6 +6,13 @@ This package provides services for manipulating certain generic xml
 elements.  At this time these include elements for describing 
 constants and arithmetic  (<prim>, <mul>, etc.) and those having 
 to do with recording the genesis of an xml file (<source>).</p>
+<p>The <b>DocMan</b> class and the derived class <b>GDDDocMan</b>
+facilitate sharing of a single XML document among several clients.
+Clients can sign up to be called back when an element of a particular
+type is encountered.  DocMan itself is responsible for parsing the
+file and managing the resources this requires. GDDDocMan "knows"
+about constants; it provides the additional service of evaluating
+and substituting for constants before any client handlers are invoked.</p>
 <p>
 This package also provides classes for representing and manipulating
 identifier dictionaries and identifier conversions. An <b>identifier</b>
@@ -32,7 +39,7 @@ in this package.  When xml namespaces become usable with a c++
 parser it would be preferable to split off the utility elements
 into their own namespace(s). 
 </p>
-<p>In addition to a test program, this facility includes stand-alone
+<p>In addition to several test program, this facility includes stand-alone
 programs to automatically generate special-purpose xml files from
 an initial file describing an instrument.
 </p>
