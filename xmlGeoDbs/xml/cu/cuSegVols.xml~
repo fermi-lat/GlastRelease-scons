@@ -42,7 +42,7 @@
 
     <!ENTITY Trigger        SYSTEM "../flight/flightTrigger.xml">
 
-    <!ENTITY Derived        SYSTEM "../cu/cuDerivedConstants.xml">
+    <!ENTITY Derived        SYSTEM "../flight/flightDerivedConstants.xml">
     <!ENTITY TKRDerived     SYSTEM "../flight/flightTKRDerived.xml">
     <!ENTITY CALDerived     SYSTEM "../flight/flightCALDerived.xml">
     <!ENTITY ACDDerived     SYSTEM "../flight/flightACDDerived.xml">
@@ -54,7 +54,6 @@
     <!ENTITY Materials         SYSTEM "../cu/cuMaterials.xml">
 
     <!ENTITY DumpPrim       SYSTEM "../cu/cuDumpPrim.xml">
-    <!ENTITY DumpDerived       SYSTEM "../cu/cuDumpDerived.xml">
 
   ]
 >

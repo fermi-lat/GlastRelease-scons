@@ -31,12 +31,6 @@
   <prim name="cuIronDumpY" value="2000.">cu Iron dump y dimension</prim>
   <prim name="cuIronDumpZ" value="500"> cu Iron dump z dimension</prim>
 
-  <prim name="cuScintillatorX" value="1600.">scintillator x dimension</prim>
-  <prim name="cuScintillatorY" value="1600.">scintillator x dimension</prim>
-  <prim name="cuScintillatorZ" value="10.">scintillator z dimension</prim>
-
-  <prim name="cuSciLATGapZ" value="10">gap between scintillator and LAT</prim>
-
   <prim name="cuWDumpFieldGapZ" value="10000">gap between W dump and field box</prim>
 
   <prim name="cuTargetFieldGapZ" value="100">gap between field box and e+ target</prim>

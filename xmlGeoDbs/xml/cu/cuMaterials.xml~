@@ -126,12 +126,6 @@
   </addmaterial>
 </composite>
 
-<composite name="IronStd" density="7.874">
-  <addmaterial material="Iron">
-    <natoms n="1" />
-  </addmaterial>
-</composite>
-
 <composite name="Si" density="2.4">
    <addmaterial material="Silicon">
      <natoms n="1" />

@@ -302,10 +302,9 @@
 
       <posXYZ volume="cuScintillator"
               ZREF="cuScintillatorZCoord" />
-<!--      
+      
       <posXYZ volume="LAT"
               ZREF="LATZCoord" />
--->
 
    </composition>
 
