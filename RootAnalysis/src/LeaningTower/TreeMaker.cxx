@@ -96,15 +96,15 @@ void TreeMaker::CreateTree(Int_t numEvents)
   
   int TkrNumTracks;
   int TkrTrk1Clusters[128];
-  double TkrTheta[128];
+  //  double TkrTheta[128];
   
   ////////// vertex //////////    
   
   int TkrNumVtx;
-  double TkrVtxX, TkrVtxY, TkrVtxZ;
+  double TkrVtx1X, TkrVtx1Y, TkrVtx1Z;
   
   //////////////////// Recon //////////////////////////////
-  double Theta,Phi,ThetaXZ,ThetaYZ;
+  double TkrVtx1Theta,TkrVtx1Phi,TkrVtx1ThetaXZ,TkrVtx1ThetaYZ;
   
   TreeCollection = new TObjArray();
   
@@ -187,19 +187,19 @@ void TreeMaker::CreateTree(Int_t numEvents)
     /////////// Tracks: ////////////////////////////////////////
     ReconTree->Branch("TkrNumTracks",&TkrNumTracks,"TkrNumTracks/I");
     ReconTree->Branch("TkrTrk1Clusters",TkrTrk1Clusters,"TkrTrk1Clusters[TkrNumClus]/I");
-    ReconTree->Branch("TkrTheta",TkrTheta,"TkrTheta[TkrNumTracks]/D");
+    //    ReconTree->Branch("TkrTheta",TkrTheta,"TkrTheta[TkrNumTracks]/D");
     
     /////////// Vertex: ////////////////////////////////////////
     ReconTree->Branch("TkrNumVtx",&TkrNumVtx,"TkrNumVtx/I");
-    ReconTree->Branch("TkrVtxX",&TkrVtxX,"TkrVtxX/D");
-    ReconTree->Branch("TkrVtxY",&TkrVtxY,"TkrVtxY/D");
-    ReconTree->Branch("TkrVtxZ",&TkrVtxZ,"TkrVtxZ/D");
+    ReconTree->Branch("TkrVtx1X",&TkrVtx1X,"TkrVtx1X/D");
+    ReconTree->Branch("TkrVtx1Y",&TkrVtx1Y,"TkrVtx1Y/D");
+    ReconTree->Branch("TkrVtx1Z",&TkrVtx1Z,"TkrVtx1Z/D");
     
     //////////Recon //////////
-    ReconTree->Branch("Theta",&Theta,"Theta/D");
-    ReconTree->Branch("Phi",&Phi,"Phi/D");
-    ReconTree->Branch("ThetaXZ",&ThetaXZ,"ThetaXZ/D");
-    ReconTree->Branch("ThetaYZ",&ThetaYZ,"ThetaYZ/D");
+    ReconTree->Branch("TkrVtx1Theta",&TkrVtx1Theta,"TkrVtx1Theta/D");
+    ReconTree->Branch("TkrVtx1Phi",&TkrVtx1Phi,"TkrVtx1Phi/D");
+    ReconTree->Branch("TkrVtx1ThetaXZ",&TkrVtx1ThetaXZ,"TkrVtx1ThetaXZ/D");
+    ReconTree->Branch("TkrVtx1ThetaYZ",&TkrVtx1ThetaYZ,"TkrVtx1ThetaYZ/D");
     TreeCollection->Add(ReconTree);
 
   }
@@ -390,7 +390,6 @@ void TreeMaker::CreateTree(Int_t numEvents)
 	    ////////////////// TKR CLUSTER: ////////////////////////////////
 	    const TObjArray *clusCol = tkrRec->getClusterCol();
 	    TkrNumClus = clusCol->GetEntries();
-	    
 	    TIter tkrClusIter(clusCol);
 	    TkrCluster* pTkrClus = 0;
 	    int clusIdx=0;
@@ -408,10 +407,10 @@ void TreeMaker::CreateTree(Int_t numEvents)
 	    TkrNumTracks = tkrCol->GetEntries();
 	    
 	    if ( TkrNumTracks > 0 ) {
-	      const TkrKalFitTrack* track1 = (TkrKalFitTrack*)tkrCol->First();
-	      const int nHits = track1->getNumHits();
-	      for ( int i=0; i<nHits; ++i )
-		TkrTrk1Clusters[i] = track1->getHitPlane(i)->getIdHit();
+                const TkrKalFitTrack* track1 = (TkrKalFitTrack*)tkrCol->First();
+                const int nHits = track1->getNumHits();
+                for ( int i=0; i<nHits; ++i )
+                    TkrTrk1Clusters[i] = track1->getHitPlane(i)->getIdHit();
 	    }
 	    
 	    ////////////////// TLKR VERTEX: ////////////////////////////////
@@ -426,24 +425,24 @@ void TreeMaker::CreateTree(Int_t numEvents)
 	      {
 		TVector3 dir = vtx->getDirection();
 		
-		TkrVtxX = dir.X();
-		TkrVtxY = dir.Y();
-		TkrVtxZ = dir.Z();
-		Theta = dir.Theta();
-		Phi =dir.Phi();
+		TkrVtx1X = dir.X();
+		TkrVtx1Y = dir.Y();
+		TkrVtx1Z = dir.Z();
+		TkrVtx1Theta = dir.Theta();
+		TkrVtx1Phi =dir.Phi();
 		if(dir.Z()==0)
 		  {
 		    
-		    ThetaXZ = 0.0;
-		    ThetaYZ = 0.0;
+		    TkrVtx1ThetaXZ = 0.0;
+		    TkrVtx1ThetaYZ = 0.0;
 		  }
 		else
 		  {
-		    ThetaXZ = dir.X()/dir.Z();
-		    ThetaYZ = dir.Y()/dir.Z();
+		    TkrVtx1ThetaXZ = dir.X()/dir.Z();
+		    TkrVtx1ThetaYZ = dir.Y()/dir.Z();
 		  }
 		
-		if ( DEBUG ) std::cout<<TkrVtxX<<" "<<TkrVtxY<<" "<<TkrVtxZ<<std::endl;
+		if ( DEBUG ) std::cout<<TkrVtx1X<<" "<<TkrVtx1Y<<" "<<TkrVtx1Z<<std::endl;
 	      }// vertex
 	  } // tkrrecon
       } //recon data
@@ -460,16 +459,17 @@ void TreeMaker::CreateTree(Int_t numEvents)
 	  ToT1       = TrueToT1[i];
           //          ToT0 = ToT1 = 42.;
 	  //	  TkrHits    = TrueTkrHits[i];
-	  if(DIAGN)
-	    {
+	  if(DIAGN) {
 	      const char* name = aTree->GetName();
-	      const int index0 = getIndex(name, false);
-	      const int index1 = getIndex(name, true);
-	      TriggerReq0 = TkrDiagnostics[index0];
-	      TriggerReq1 = TkrDiagnostics[index1];
-	      if ( DEBUG ) std::cout << "loop " << std::setw(8) << name << std::setw(3) << index0 << std::setw(3) << index1 << ' '
-				     << TriggerReq0 << ' ' << TriggerReq1 << ' ' << TkrNumHits << std::endl;
-	    }
+              if ( !strncmp(name,"Layer",5) ) { // if equal
+                  const int index0 = getIndex(name, false);
+                  const int index1 = getIndex(name, true);
+                  TriggerReq0 = TkrDiagnostics[index0];
+                  TriggerReq1 = TkrDiagnostics[index1];
+                  if ( DEBUG ) std::cout << "loop " << std::setw(8) << name << std::setw(3) << index0 << std::setw(3) << index1 << ' '
+                                         << TriggerReq0 << ' ' << TriggerReq1 << ' ' << TkrNumHits << std::endl;
+              }
+          }
 	  if (TkrNumHits > 0 || i==0 ) 
 	    {
 	      for ( int h=0; h<TkrNumHits; h++ ) 

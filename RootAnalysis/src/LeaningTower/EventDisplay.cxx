@@ -239,8 +239,6 @@ void DisplayEvent(int NumEvent=-1)
 
   
   TMap *myGeometry = tracker->GetGeometry();
-  TMapIter ti(myGeometry);
-  TObjString* key;
   int i=0;
   
   
@@ -261,7 +259,12 @@ void DisplayEvent(int NumEvent=-1)
   base.SetTextAlign(02);
   base.SetTextSize(0.02);
 
+  // let's do Recon here
 
+
+
+  TMapIter ti(myGeometry);
+  TObjString* key;
   while ( ( key = (TObjString*)ti.Next() ) ) 
     {
       Layer *aLayer = ((Layer*) myGeometry->GetValue(key));
@@ -283,7 +286,6 @@ void DisplayEvent(int NumEvent=-1)
       else
 	EventDisplayC->cd(2);
 
-      //      std::cout << "Diagnostics: " << aLayer->GetTriggerReq(false) << ' ' << aLayer->GetTriggerReq(true) << std::endl;
       TriggerReqText[i][0].SetText(-0.8, height, aLayer->GetTriggerReq(false) ? "x" : ".");
       TriggerReqText[i][1].SetText(36, height, aLayer->GetTriggerReq(true) ? "x" : ".");
       LabelNumHits[i].SetText(41.0, height, title);
