@@ -55,9 +55,6 @@ use TkrDigi     v1r0
 use AcdDigi     v1r0
 
 
-#ROOT persistence: RootIo specifies the data packages
-use RootIo               v4r3p2
-
 
 #reconstruction
 use Trigger              v3r3p2
@@ -66,6 +63,8 @@ use Recon       v2r2p3
 use TkrRecon    v6r3p3
 use CalRecon    v5r5p2       
 
+#ROOT persistence: RootIo specifies the data packages
+use RootIo               v4r3p2
 
 #diagnostic and summary of bottom line
 use merit                 v5r4
