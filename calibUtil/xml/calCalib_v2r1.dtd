@@ -137,7 +137,7 @@
 <!ELEMENT dac EMPTY>
 <!ATTLIST dac range (LEX8 | LEX1 | HEX8 | HEX1) #REQUIRED
           values NMTOKENS #REQUIRED
-          error  NMTOKEN  #REQUIRED >   <!-- for now.  May want default -->
+          error  NMTOKEN  #IMPLIED >   <!-- for now.  May want default -->
 
 <!ELEMENT tower (layer*) >
 <!ATTLIST tower iRow NMTOKEN #REQUIRED
