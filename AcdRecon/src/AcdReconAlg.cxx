@@ -91,7 +91,7 @@ StatusCode AcdReconAlg::execute() {
     }
 		
     // run the reconstruction
-    reconstruct(acdDigiCol);
+    sc = reconstruct(acdDigiCol);
 	
     return sc;
 }
@@ -174,18 +174,27 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
         m_idCol.push_back(id);
         m_energyCol.push_back(tileEnergy);
     }
+
 	
-    log << MSG::DEBUG << "num Tiles = " << m_tileCount << endreq;
-    log << MSG::DEBUG << "total energy = " << m_totEnergy << endreq;
+    log << MSG::DEBUG;
+    if ( log.isActive()) 
+        log.stream() << "num Tiles = " << m_tileCount 
+            << "total energy = " << m_totEnergy; 
+    log << endreq;
 	
-    trackDistances(digiCol);
+    sc = trackDistances(digiCol);
+    if (sc.isFailure()) return sc;
 	
-    log << MSG::DEBUG << "DOCA: " << m_doca << " "
-        << "ActDist: " << m_act_dist << endreq;
+    log << MSG::DEBUG;
+    if (log.isActive()) log.stream() << "DOCA: " << m_doca << " "
+        << "ActDist: " << m_act_dist;
+    log << endreq;
 	
     SmartDataPtr<Event::AcdRecon> checkAcdRecTds(eventSvc(), EventModel::AcdRecon::Event);  
     if (checkAcdRecTds) {
-        log << MSG::DEBUG << "AcdRecon data already on TDS!" << endreq;
+        log << MSG::DEBUG;
+        if (log.isActive()) log.stream() << "AcdRecon data already on TDS!";
+        log << endreq;
         checkAcdRecTds->clear();
         checkAcdRecTds->init(m_totEnergy, m_tileCount, m_gammaDoca, m_doca, 
             m_act_dist, m_minDocaId, m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol);
@@ -222,13 +231,18 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol) {
         return StatusCode::SUCCESS;
     }
 	
+    double testDoca, test_dist;
     Event::TkrFitColPtr trkPtr = tracksTds->begin();
     while(trkPtr != tracksTds->end())
     {
         const Event::TkrFitTrackBase* trackTds  = *trkPtr++;       // The TDS track
-        double testDoca = doca(digiCol, trackTds->getPosition(), trackTds->getDirection(), m_rowDocaCol);
+        sc = doca(digiCol, trackTds->getPosition(), trackTds->getDirection(), 
+            m_rowDocaCol, testDoca);
+        if (sc.isFailure()) return sc;
         if(testDoca < m_doca) m_doca = testDoca;
-        double test_dist= hitTileDist(digiCol, trackTds->getPosition(), -(trackTds->getDirection()), m_rowActDistCol);
+        sc = hitTileDist(digiCol, trackTds->getPosition(), 
+            -(trackTds->getDirection()), m_rowActDistCol, test_dist);
+        if (sc.isFailure()) return sc;
         if(test_dist > m_act_dist) m_act_dist = test_dist;
     }
 	
@@ -236,8 +250,8 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol) {
 	
 }
 
-double AcdReconAlg::doca(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, const HepVector3D &t0, 
-						 std::vector<double> &doca_values) {
+StatusCode AcdReconAlg::doca(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, const HepVector3D &t0, 
+						 std::vector<double> &doca_values, double &minDoca) {
     // Purpose and Method:  This method looks for close-by hits to the ACD tiles
     //        Calculates the minimum distance between the track and the center
     //        of all ACD tiles above veto threshold.
@@ -247,7 +261,7 @@ double AcdReconAlg::doca(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0,
     // Dependencies: None
     // Restrictions and Caveats:  None
 	
-    double minDoca = maxDoca;
+    minDoca = maxDoca;
     double dist;
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
@@ -265,13 +279,13 @@ double AcdReconAlg::doca(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0,
         std::vector<double> dim;
         sc = m_glastDetSvc->getShapeByID(volId, &str, &dim);
         if ( sc.isFailure() ) {
-            log << MSG::DEBUG << "Failed to retrieve Shape by Id" << endreq;
+            log << MSG::WARNING << "Failed to retrieve Shape by Id" << endreq;
             return sc;
         }
         HepTransform3D transform;
         sc = m_glastDetSvc->getTransform3DByID(volId, &transform);
         if (sc.isFailure() ) {
-            log << MSG::DEBUG << "Failed to get transformation" << endreq;
+            log << MSG::WARNING << "Failed to get transformation" << endreq;
             return sc;
         }
 		
@@ -300,11 +314,11 @@ double AcdReconAlg::doca(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0,
 		
     }
 	
-    return minDoca;
+    return StatusCode::SUCCESS;
 }
 
-double AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, const HepVector3D &t0, 
-                                std::vector<double> &row_values) {
+StatusCode AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, const HepVector3D &t0, 
+                                std::vector<double> &row_values, double &return_dist) {
     // Purpose and Method:  Bill Atwood's edge DOCA algorithm called active distance
     //       Determines minimum distance between a track and the edges of ACD
     //       tiles above veto threshold.
@@ -314,7 +328,7 @@ double AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol, const HepPoint
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
 	
-    double return_dist = -200.;
+    return_dist = -200.;
 	
     // iterate over all tiles
     Event::AcdDigiCol::const_iterator acdDigiIt;
@@ -328,13 +342,13 @@ double AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol, const HepPoint
         std::vector<double> dim;
         sc = m_glastDetSvc->getShapeByID(volId, &str, &dim);
         if ( sc.isFailure() ) {
-            log << MSG::DEBUG << "Failed to retrieve Shape by Id" << endreq;
+            log << MSG::WARNING << "Failed to retrieve Shape by Id" << endreq;
             return sc;
         }
         HepTransform3D transform;
         sc = m_glastDetSvc->getTransform3DByID(volId, &transform);
         if (sc.isFailure() ) {
-            log << MSG::DEBUG << "Failed to get trasnformation" << endreq;
+            log << MSG::WARNING << "Failed to get trasnformation" << endreq;
             return sc;
         }
 		
@@ -397,5 +411,5 @@ double AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol, const HepPoint
 		
     }
 	
-    return return_dist;    
+    return StatusCode::SUCCESS;    
 }
