@@ -156,7 +156,9 @@ void EbfTkrData::fill (const Event::TkrDigiCol &tkr)
                }
 			   else{
 				   if(!reported){
+#if 0 // THB: disable this message for the duration of the Data Challenge
 					   std::cout << "Initiated large number of hits workaround. Please fix."<<std::endl;
+#endif
 					   reported=true;
 				   }
 			   }
