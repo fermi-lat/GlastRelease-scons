@@ -1,6 +1,6 @@
 package idents
 # $Header$
-version v2r10p2
+version v2r11
 
 use GlastPolicy v*
 use facilities  v2r*
