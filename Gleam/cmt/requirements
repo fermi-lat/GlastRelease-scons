@@ -29,7 +29,7 @@ use gui         v3r3
 use geomrep     v4r1
 
 # the geometry data base
-use idents      v2r8p2  
+use idents              v2r8p4 
 use detModel    v2r13
 use xmlGeoDbs   v1r6p0
 
@@ -57,7 +57,7 @@ use G4Generator         v4r3p2
 #digitization
 use CalDigi     v1r2p1
 use TkrDigi             v1r5p7
-use AcdDigi     v1r3p1
+use AcdDigi             v1r3p2
 
 
 
@@ -67,7 +67,7 @@ use Recon       v2r3p2
 
 use TkrRecon            v6r5p3
 use CalRecon    v5r7p2  
-use AcdRecon    v0r5p1       
+use AcdRecon            v0r5p2       
 
 #ROOT persistence: RootIo specifies the data packages
 use RootIo      v4r11
