@@ -18,6 +18,9 @@
 #include "CalibData/CalibTime.h"
 #include "xml/Dom.h"
 
+// For channel status bit definitions
+#include "calibUtil/ChannelStatusDef.h"
+
 // Temporary.  Hope to find a better way to do this
 #include "CalibData/CalibModel.h"
 
@@ -126,6 +129,24 @@ StatusCode XmlBadStripsCnv::processTower(const DOM_Element& towerElt,
   attValue = Dom::getAttribute(towerElt, "col");
   unsigned col = (unsigned) atoi(attValue.c_str());
 
+  bool allBad = 0;
+  int howBad = 0;
+
+  attValue = Dom::getAttribute(towerElt, "nOnbdCalib");
+  if (attValue.compare("true") == 0) {
+    howBad |= vCALIBUTIL_nOnbdCalib;
+  }
+  attValue = Dom::getAttribute(towerElt, "nOnbdTrig");
+  if (attValue.compare("true") == 0) {
+    howBad |= vCALIBUTIL_nOnbdTrig;
+  }
+  attValue = Dom::getAttribute(towerElt, "nOnbdData");
+  if (attValue.compare("true") == 0) {
+    howBad |= vCALIBUTIL_nOnbdData;
+  }
+  allBad = (howBad != 0);
+
+  /*
   attValue = Dom::getAttribute(towerElt, "allBad");
   bool allBad = (attValue.compare("true") == 0);
 
@@ -135,6 +156,8 @@ StatusCode XmlBadStripsCnv::processTower(const DOM_Element& towerElt,
     howBad = atoi(attValue.c_str());
 
   } 
+  */
+
 
   StatusCode sc = 
     pBad->addBadTower(allBad, howBad, row, col);
@@ -167,9 +190,26 @@ StatusCode XmlBadStripsCnv::processUni(const DOM_Element& uniElt,
   attValue = Dom::getAttribute(uniElt, "allBad");
   bool allBad = (attValue.compare("true") == 0);
 
+  /*
   attValue = Dom::getAttribute(uniElt, "howBad");
   int howBad = atoi(attValue.c_str());
+  */
 
+  int howBad = 0;
+
+  attValue = Dom::getAttribute(uniElt, "nOnbdCalib");
+  if (attValue.compare("true") == 0) {
+    howBad |= vCALIBUTIL_nOnbdCalib;
+  }
+  attValue = Dom::getAttribute(uniElt, "nOnbdTrig");
+  if (attValue.compare("true") == 0) {
+    howBad |= vCALIBUTIL_nOnbdTrig;
+  }
+  attValue = Dom::getAttribute(uniElt, "nOnbdData");
+  if (attValue.compare("true") == 0) {
+    howBad |= vCALIBUTIL_nOnbdData;
+  }
+    
   attValue = Dom::getAttribute(uniElt, "tray");
   unsigned int tray = (unsigned int)atoi(attValue.c_str());
 
