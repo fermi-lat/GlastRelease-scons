@@ -7,6 +7,7 @@ version  v2r2
 
 # gaudi system files: this would checkout all of the Gaudi packages
 use GaudiSys    v9r0p6
+use GaudiAlg
 
 # ROOT add-on
 use ROOT        v3r2p9
@@ -39,21 +40,22 @@ use Geant4      v1r1p0
 
 use GuiSvc      v3
 
-use Event       v8r4
+use Event              v8r5
 use GlastSvc    v8r0
 
 # simulation
 
-use FluxSvc     v5r6
-use FluxDisplay v2r0
-use G4Generator v4r1
+use FluxSvc            v5r6p1
+use FluxDisplay        v2r0p1
+use G4Generator        v4r1p1
 
 #digitization
-use GlastDigi   v4r0p1
+use CalDigi             v1r0p1
+use GlastDigi           v4r1
 
 #reconstruction
 use Trigger     v3r1
-use Recon       v2r1p1
+use Recon             v2r2
 
 use TkrRecon    v6r2
 use CalRecon    v5r1       
@@ -68,9 +70,11 @@ use RootIo      v2r0p1
 
 set JOBOPTIONS "${GLEAMROOT}/src/jobOptions.txt"
 
-macro jobOptions "" WIN32 "jobOptions.txt"  
-application Gleam $(GlastMain) $(Win32Resource) $(jobOptions) 
+macro jobOpts "" WIN32 "*.txt"  
+application Gleam $(GlastMain) $(Win32Resource) $(jobOpts) 
 
 macro Gleamlinkopts  "  $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
       WIN32 " ${guiapp_linkopts} $(GuiSvc_lib)  /include:_GuiSvc_loadRef "
 
+# define a standard test executable
+apply_pattern package_test
