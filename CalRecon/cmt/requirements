@@ -1,5 +1,5 @@
 package CalRecon
-version v5r7
+version v5r9
 
 apply_pattern packageShr
 
@@ -13,13 +13,14 @@ use geometry v3*
 
 ### hide the packages used only for test program
 private
-
-use RootIo v4*
+use RootPolicy
+use RootIo v6*
 
 
 #the following prepend makes the includes folder available locally only: avoid the package_include
 #apply_pattern package_include
 macro_prepend includes "-I $(CALRECONROOT) " WIN32 "/I $(CALRECONROOT) "
+
 macro_append ROOT_linkopts "-L${ROOT_PATH}/lib -lMinuit " \ 
                  VisualC " ${ROOT_PATH}/lib/libMinuit.lib " 
 
