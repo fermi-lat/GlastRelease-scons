@@ -10,6 +10,10 @@
 #include "detModel/Management/Manager.h"
 #include "detModel/Management/Builder.h"
 #include "detModel/Gdd.h"
+#include "detModel/Constants/Const.h"
+#include "detModel/Constants/FloatConst.h"
+#include "detModel/Constants/IntConst.h"
+#include "detModel/Constants/DoubleConst.h"
 
 namespace detModel{
 
@@ -90,5 +94,22 @@ namespace detModel{
       }
   }
 
-}
+  bool Manager::getNumericConstByName(std::string name, double* res)
+  {
+    Gdd* gdd = getGdd();
+    Const* con = gdd->getConstByName(name);
 
+    if (con) 
+      {
+	if (FloatConst* fl = dynamic_cast<FloatConst*>(con))
+	  *res = fl->getValue();
+	else if (DoubleConst* db = dynamic_cast<DoubleConst*>(con))
+	  *res = db->getValue();
+	else if (IntConst* in = dynamic_cast<IntConst*>(con))
+	  *res = in->getValue();
+	else return false;
+	return true;
+      }
+    else return false;
+  }
+}

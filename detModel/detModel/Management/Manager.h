@@ -57,6 +57,8 @@ namespace detModel{
     void setNameFile(std::string pname){nameFile = pname;};
     std::string getNameFile(){return nameFile;};
 
+    bool getNumericConstByName(std::string, double*);
+
   protected:
     /** The constructor is protected; in such a way it is forbidden to *
 	build directely a manager. Here the new GDD object is explicitely
