@@ -10,7 +10,7 @@ void Event::TkrTrackHit::clean()
     m_hitSmooth   = Event::TkrTrackParams();
     m_Qmaterial   = Event::TkrTrackParams();
 
-    m_statusBits &= HASCLUSTER | HASMEASURED | HASVALIDTKR;
+    m_statusBits &= HITONFIT | HASMEASURED | HASVALIDTKR;
 
     m_chiSquareFilter = 0.;
     m_chiSquareSmooth = 0.;
@@ -24,7 +24,7 @@ void Event::TkrTrackHit::clear()
     m_hitSmooth   = Event::TkrTrackParams();
     m_Qmaterial   = Event::TkrTrackParams();
 
-    m_statusBits &= HASCLUSTER | HASVALIDTKR;
+    m_statusBits &= HITONFIT | HASVALIDTKR;
 
     m_chiSquareFilter = 0.;
     m_chiSquareSmooth = 0.;
