@@ -1,6 +1,7 @@
 #include "CalRecon/CalCalibLogs.h"
 // #include "Event/messageManager.h"
 #include <fstream>
+#include "xml/IFile.h"
 
 CalCalibLog::CalCalibLog(int ilayer, int iview, int icolumn)
 :CalLogID(ilayer,iview,icolumn){}
@@ -63,9 +64,10 @@ void CalCalibLogs::make()
 }
 void CalCalibLogs::readIntlin()
 {	
+	xml::IFile::extractEnvVar(&m_IntlinFile);
 	std::cout << " Calorimeter linearity file : "+m_IntlinFile << std::endl;
 	if (m_IntlinFile == "") return;
-	
+
 	std::ifstream file;
 	file.open(m_IntlinFile.c_str());
 	while(file.good()){
@@ -92,9 +94,10 @@ void CalCalibLogs::readIntlin()
 
 void CalCalibLogs::readGain()
 {	
+	xml::IFile::extractEnvVar(&m_GainFile);
 	std::cout << " Calorimeter gain file : "+m_GainFile << std::endl;
 	if (m_GainFile == "") return;
-	
+
 	std::ifstream file;
 	file.open(m_GainFile.c_str());
 	while(file.good()){
@@ -118,9 +121,10 @@ void CalCalibLogs::readGain()
 }
 void CalCalibLogs::readRail()
 {	
+	xml::IFile::extractEnvVar(&m_RailFile);
 	std::cout << " Calorimeter rails file : "+m_RailFile << std::endl;
 	if (m_RailFile == "") return;
-	
+
 	std::ifstream file;
 	file.open(m_RailFile.c_str());
 	while(file.good()){
@@ -144,9 +148,10 @@ void CalCalibLogs::readRail()
 }
 void CalCalibLogs::readSlope()
 {	
+	xml::IFile::extractEnvVar(&m_SlopeFile);
 	std::cout << " Calorimeter  light asymmetry file : "+m_SlopeFile << std::endl;
 	if (m_SlopeFile == "") return;
-	
+
 	std::ifstream file;
 	file.open(m_SlopeFile.c_str());
 	while(file.good()){

@@ -1,6 +1,7 @@
 
 #include "CalRecon/CalPedCalib.h"
 // #include "Event/messageManager.h"
+#include "xml/IFile.h"
 
 #include <fstream>
 
@@ -27,7 +28,7 @@ void CalPedCalib::clear()
 void CalPedCalib::make()
 //######################################
 {
-	
+	xml::IFile::extractEnvVar(&m_fileName);
 	std::cout << " Calorimeter pedestals file : "+m_fileName << std::endl;
 	if (m_fileName == "") return;
 	
