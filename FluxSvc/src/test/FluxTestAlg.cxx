@@ -216,12 +216,20 @@ StatusCode FluxTestAlg::finalize() {
 
 std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b){
     std::vector<exposureSet> returned;
+    double angularRadius = 30;
+    for(int i= l-angularRadius ; i<=l+angularRadius ; i+=8){
+        for(int j= b-angularRadius ; j<=b+angularRadius ; j+=8){
+    
+            if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
+    //set up the point, and stick it into the vector
     exposureSet point;
     point.x = l/8; //yes, this is doing an implicit cast.
     point.y = b/8;  //these should be divided by two, but they're being shrunk for the current display.
     point.amount = 1; //this should scale with the time the satellite is there.
     returned.push_back(point);
-
+            }
+        }
+    }
     return returned;
 }
 
@@ -229,12 +237,17 @@ void FluxTestAlg::addToTotalExposure(std::vector<FluxTestAlg::exposureSet> toBeA
     std::vector<exposureSet>::iterator iter = toBeAdded.begin();
     int x,y;
     double amount;
+    if(toBeAdded.size()){
     for( ; iter!=toBeAdded.end() ; iter++){
         x = (*iter).x;
         y = (*iter).y;
         amount = (*iter).amount;
         m_exposedArea[x][y] += amount;
 
+    }
+    }else{
+
+        std::cout << "error in addToTotalExposure - null vector input" <<std::endl;
     }
 }
 

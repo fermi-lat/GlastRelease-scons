@@ -174,6 +174,9 @@ Rotation FluxSvc::transformGlastToGalactic(double time)const{
     return m_fluxMgr->transformGlastToGalactic(time);
 }
 
+std::pair<double,double> FluxSvc::location(){
+    return m_fluxMgr->location();
+}
 
 void WARNING (const char * text ){  std::cerr << "WARNING: " << text << '\n';}
 void FATAL(const char* s){std::cerr << "\nERROR: "<< s;}

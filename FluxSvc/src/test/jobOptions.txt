@@ -26,7 +26,7 @@ FluxSvc.source_lib += {"$(FLUXSVCROOT)/xml/user_library.xml"};
 
 // ask for a source that is in the user_library
 FluxTestAlg.source_name="default";
-//FluxTestAlg.source_name="CrProton";
+//FluxTestAlg.source_name="all_gamma";
 //FluxAlg.source_name="chime";
 
 ApplicationMgr.EvtSel = "NONE";

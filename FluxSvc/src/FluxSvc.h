@@ -53,6 +53,9 @@ public:
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
     Rotation transformGlastToGalactic(double time)const;
 
+    /// get the current satellite location
+    std::pair<double,double> location();
+
     
     //------------------------------------------------------------------
     //  stuff required by a Service
