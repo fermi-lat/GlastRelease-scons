@@ -1,5 +1,5 @@
 package commonRootData
-version v0r4
+version v1r0
 # $Id$
 
 
@@ -10,5 +10,10 @@ apply_pattern root_package headers="\
  ../commonRootData/RelTable.h\
  ../commonRootData/Relation.h\
  ../commonRootData/RootDataUtil.h\
- ../commonRootData/Exception.h"
+ ../commonRootData/Exception.h\
+ ../commonRootData/idents/VolumeIdentifier.h\
+ ../commonRootData/idents/AcdId.h\
+ ../commonRootData/idents/CalXtalId.h\
+ ../commonRootData/idents/TowerId.h"\
+ extra_source="idents/*.cxx" WIN32 "-s=../commonRootData idents/*.h -s=../src idents/*.cxx"
 
