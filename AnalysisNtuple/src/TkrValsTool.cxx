@@ -786,10 +786,8 @@ StatusCode TkrValsTool::calculate()
                 break;
             }
             if (ilayer==firstLayer) {
-                // on first layer, add in 1/2 converter if the first plane of the track
-                //     is also the top plane of the layer
-                bool fullTopLayer = (firstLayer==m_tkrGeom->getLayer(firstPlane-1));
-                if(fullTopLayer) {delta_rad = 0.5*thisRad*secth;}
+                // on first layer, add in 1/2 if the 1st plane is the top of a layer
+                if(m_tkrGeom->isTopPlaneInLayer(firstPlane)) {delta_rad = 0.5*thisRad*secth;}
             } else {
                 // on subseqent layers, make sure that there is a minimum radiator
                 if(delta_rad*costh < thisRad) {
