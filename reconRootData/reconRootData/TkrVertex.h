@@ -22,16 +22,18 @@
 class TkrVertex : public TObject
 {
 public:
-    //! constructors
     TkrVertex();
 
-    //! destructor
     virtual ~TkrVertex() {}
 
     //! Define initialization method
-    void     initializeInfo(UInt_t id, UInt_t layer, UInt_t tower, Double_t quality, Double_t energy);
-    void     initializeVals(const TkrParams& vtxPar, const TkrCovMat& vtxCov, const TVectorD& pos, const TVectorD& dir);
-    void     addTrackId(UInt_t trackId) {m_trackIds.push_back(trackId);}
+    void initializeInfo(UInt_t id, UInt_t layer, UInt_t tower, 
+        Double_t quality, Double_t energy);
+
+    void initializeVals(const TkrParams& vtxPar, const TkrCovMat& vtxCov, 
+        const TVectorD& pos, const TVectorD& dir);
+    
+    void addTrackId(UInt_t trackId) {m_trackIds.push_back(trackId);}
 
     //! Allow hits to be added to the list
     //void     addHit(const TkrHitPlane& hit) {m_hits.push_back(hit);}
@@ -51,7 +53,6 @@ public:
     UInt_t             getNumTracks()           {return m_trackIds.size();  }
     UInt_t             getTrackId(UInt_t idx)   {return m_trackIds[idx];    }
 
-    ClassDef(TkrVertex,1)
 private:
     //! Track ID 
     UInt_t     m_id;
@@ -68,5 +69,7 @@ private:
 
     //! List of track IDs used by this vertex
     std::vector<UInt_t> m_trackIds;
+
+    ClassDef(TkrVertex,1)
 };
 #endif

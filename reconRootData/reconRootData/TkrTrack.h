@@ -24,10 +24,8 @@ public:
     //! Define the two interesting ends of the track
     enum TKREND{FIRSTHIT,LASTHIT,NOHIT};
 
-    //! constructors
     TkrTrack();
 
-    //! destructor
     virtual ~TkrTrack() {m_hits.clear();}
 
     //! Define two initialization methods
@@ -67,7 +65,6 @@ public:
     TkrHitPlaneIter    getHitIterBegin()      {return m_hits.begin();  }
     TkrHitPlaneIter    getHitIterEnd()        {return m_hits.end();    }
 
-    ClassDef(TkrTrack,1)
 private:
     //! Track ID 
     UInt_t     m_id;
@@ -90,5 +87,8 @@ private:
 
     //! Object array of hit planes
     TkrHitPlaneVector m_hits;
+
+    ClassDef(TkrTrack,1)
+
 };
 #endif

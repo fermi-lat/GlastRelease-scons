@@ -22,7 +22,6 @@ public:
     //! This probably does not want to be 
     enum TYPE{MEAS, FIT, PRED, SMOOTH, UNKNOWN};
 
-    //! constructors
     TkrFitHit();
 
     TkrFitHit(TYPE type, const TkrParams& params, const TkrCovMat& covMat) :
@@ -33,7 +32,6 @@ public:
 
     TkrFitHit(const TkrFitHit& hit);
 
-    //! destructor
     virtual ~TkrFitHit() {}
 
     //! Provide an initialize method (in the case of the default constructor)
@@ -44,11 +42,12 @@ public:
     const TkrParams& getTkrParams() const {return m_Params;}
     const TkrCovMat& getTkrCovMat() const {return m_CovMat;}
 
-    ClassDef(TkrFitHit,1)
 private:
     TYPE       m_HitType;     // Type of fit track parameters contained within
     TkrParams  m_Params;      // Track parameters at this point
     TkrCovMat  m_CovMat;      // Covariance matrix associated with these parameters
+
+    ClassDef(TkrFitHit,1)
 };
 
 #endif

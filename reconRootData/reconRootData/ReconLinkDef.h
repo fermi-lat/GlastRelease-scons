@@ -4,7 +4,7 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-//#pragma link C++ class TkrSiCluster+;
+#pragma link C++ class TkrSiCluster+;
 #pragma link C++ class TkrRecon+;
 #pragma link C++ class TkrTrack+;
 #pragma link C++ class TkrFitHit+;

@@ -3,19 +3,15 @@
 
 #include "TObject.h"
 
-// ===================================
-//          Silicon Cluster
-// ===================================
-
-//! Root Tree Object storing a single Silicon Cluster
-/*! TKR reconstruction may determine SSD clusters
-    This class stores one such cluster.
-    A cluster is defined by:
-    1.) A layer number
-    2.) center strip ID
-    3.) number of strips in the cluster 
+/** @class TkrSiCluster
+ * @brief Root Tree Object storing a single Silicon Cluster
+ *   This class stores one such cluster.
+ *   A cluster is defined by:
+ * - A layer number
+ * - center strip ID
+ * - number of strips in the cluster 
+ * $Header$
 */
-
 class TkrSiCluster : public TObject
 {
 
@@ -26,37 +22,14 @@ public:
         Y
     } TKRAxes;
  
-private :
-  //! id of the cluster
-  UInt_t m_id;   
-  //! layer number
-  UInt_t m_layer;
-  //! denotes whether this is an X or Y plane
-  TKRAxes m_xy;             
-  
-  //! center strip of the cluster
-  // HMA Question - what if a cluster is an even # of strips
-  // which strip number is provided as the "center" strip?
-  UShort_t m_centerStrip; 
-  //! number of strips in this cluster
-  UShort_t m_numStrips;        
-  
-  //! strip position
-  Float_t m_position; 
-
-  //(HMA Question: z position of the layer???)
-  //! z position   
-  Float_t m_z;              
 
 public:
     
-    //! constructors
     // in this case there are no pointers in the class, so
     // users may utilize either constructor
     TkrSiCluster();
     TkrSiCluster(UInt_t id);
 
-    //! destructor
     virtual ~TkrSiCluster();
 
     //! resets all member variables to default values
@@ -91,6 +64,27 @@ public:
     //! access the z position
     Float_t getZPosition() { return m_z; };
     void setZPosition(Float_t z) { m_z = z; };
+
+
+private :
+  //! id of the cluster
+  UInt_t m_id;   
+  //! layer number
+  UInt_t m_layer;
+  //! denotes whether this is an X or Y plane
+  TKRAxes m_xy;             
+  
+  //! center strip of the cluster
+  UShort_t m_centerStrip; 
+  //! number of strips in this cluster
+  UShort_t m_numStrips;        
+  
+  //! strip position
+  Float_t m_position; 
+
+  //! z position   
+  Float_t m_z;              
+
   
   ClassDef(TkrSiCluster,1) 
 };

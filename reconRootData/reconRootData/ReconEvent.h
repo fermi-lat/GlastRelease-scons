@@ -3,6 +3,7 @@
 
 #include "TObject.h"
 #include "CalRecon.h"
+#include "TkrRecon.h"
 
 /** @class Recon
  * @brief Primary Root Recon Object - top level object in Root Tree
@@ -36,13 +37,10 @@ public:
     //! provide access to the CAL recon data
     const CalRecon* getCalRecon() const { return &m_cal; };
     CalRecon* getCalRecon() { return &m_cal; };
-    //! set the CalRecon pointer
-    //inline void setCalRecon(CalRecon *cal) { m_cal = cal; };
 
-    //!  Access the TKR recon data
-    //TkrRecon* getTkrRecon() { return &m_tkr; };
-    //! Set the TkrRecon pointer
-    //inline void setTkrRecon(TkrRecon *tkr) { m_tkr = tkr; };
+    ///  Access the TKR recon data
+    const TkrRecon* getTkrRecon() const { return &m_tkr; };
+    TkrRecon* getTkrRecon() { return &m_tkr; };
 
     //! Access the Recon Header Flags
    // ReconHeader* getReconFlags() { return &m_recFlags; };
@@ -54,8 +52,8 @@ private:
     UInt_t m_runId;
     /// CAL reconstruction data
     CalRecon m_cal;    
-    /// pointer to TKR reconstruction data
-   // TkrRecon m_tkr;    
+    /// TKR reconstruction data
+    TkrRecon m_tkr;    
     /// pointer to Recon Header data
     //ReconHeader m_recFlags;
 

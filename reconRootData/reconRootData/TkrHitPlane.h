@@ -26,10 +26,8 @@ public:
     //! This probably does not want to be 
     enum AXIS{X,Y,NONE};
 
-    //! constructors
     TkrHitPlane();
 
-    //! destructor
     virtual ~TkrHitPlane() {}
 
     //! Two initialize methods needed for this class
@@ -54,7 +52,6 @@ public:
     const TkrFitHit& getHitSmooth()          const {return m_HitSmooth;     }
     const TkrCovMat& getQmaterial()          const {return m_Qmaterial;     }
 
-    ClassDef(TkrHitPlane,1)
 private:
     UInt_t     m_IdHit;       // Index of cluster hit in the TkrSiClusters 
     UInt_t     m_IdTower;     // Tower ID
@@ -72,6 +69,8 @@ private:
     TkrFitHit  m_HitSmooth;   // "Smoothed" track parameters
 
     TkrCovMat  m_Qmaterial;   // Covariance matrix due to multiple scatter
+
+    ClassDef(TkrHitPlane,1)
 };
 
 typedef std::vector<TkrHitPlane>                 TkrHitPlaneVector;

@@ -20,12 +20,10 @@
 class TkrCandTrack : public TObject
 {
 public:
-    //! constructors
     TkrCandTrack();
 
     TkrCandTrack(UInt_t id, UInt_t layer, UInt_t tower, Double_t q, Double_t e, const TVectorD& pos, const TVectorD& dir);
 
-    //! destructor
     virtual ~TkrCandTrack() {m_hits.clear();}
 
     //! Define initialization method
@@ -51,7 +49,6 @@ public:
     TkrCandHitIter     getHitIterBegin()      {return m_hits.begin();  }
     TkrCandHitIter     getHitIterEnd()        {return m_hits.end();    }
 
-    ClassDef(TkrCandTrack,1)
 private:
     //! Track ID 
     UInt_t     m_id;
@@ -65,5 +62,7 @@ private:
     UInt_t     m_itower;    
 
     TkrCandHitVec m_hits;
+
+    ClassDef(TkrCandTrack,1)
 };
 #endif

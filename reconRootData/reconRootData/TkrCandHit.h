@@ -22,12 +22,10 @@ public:
     //! This probably does not want to be 
     enum AXIS{X,Y,NONE};
 
-    //! constructors
     TkrCandHit();
 
     TkrCandhit(const TVectorD& pos, UInt_t hitId, UInt_t tower, UInt_t layer, AXIS view);
 
-    //! destructor
     virtual ~TkrCandHit() {}
 
     //! Provide an initialize method (in the case of the default constructor)
@@ -40,13 +38,14 @@ public:
     UInt_t           getPlane()     const {return m_plane;    }
     AXIS             getView()      const {return m_view;     }
 
-    ClassDef(TkrCandHit,1)
 private:
     TVectorD m_position;          //xyz coordinates of this hit
     UInt_t   m_hitIndex;          //Index into TkrSiClusters list of this hit
     UInt_t   m_tower;             //Index of the tower containing this hit
     UInt_t   m_plane;             //Plane (layer) - TkrRecon convention
     AXIS     m_view;              //Primary measurement projection (x or y)};
+
+    ClassDef(TkrCandHit,1)
 };
 
 typedef std::vector<TkrCandHit>                 TkrCandHitVec;
