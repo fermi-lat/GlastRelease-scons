@@ -14,7 +14,7 @@
 class Point: public Hep3Vector , public GeomObject
 {
 public:
-    Point(const Point& p):Hep3Vector(p){}
+    Point(const Point& p):Hep3Vector(p),GeomObject(){}
     Point():Hep3Vector(0,0,0){}
     Point(double x, double y, double z):Hep3Vector(x,y,z){}
     // constructors: default is null

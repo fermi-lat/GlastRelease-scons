@@ -55,7 +55,7 @@ class Shape : public GeomObject
     // default constructor accessible to subclasses
 
  private:
-   Shape(const Shape& ){};
+   Shape(const Shape& ):GeomObject(){};
     // copy constructor not allowed
 
   Point _center;

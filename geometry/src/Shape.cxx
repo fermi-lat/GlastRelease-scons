@@ -7,7 +7,7 @@
 // implementations of Shape member functions
 
 Shape::Shape()
-{}
+:GeomObject(){}
 
 
 Shape& Shape::copy()const
