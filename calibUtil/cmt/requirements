@@ -1,7 +1,7 @@
 #  $Header$
 
 package calibUtil
-version v0r0
+version v0r0p0
 
 use facilities v2r*
 use xml v4r* 

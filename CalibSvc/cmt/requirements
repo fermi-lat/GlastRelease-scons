@@ -2,7 +2,7 @@
 ### Might end up changing this name to have a prefix a bit more general
 ### than "Calib"; e.g., DetSvc or CondSvc
 package CalibSvc
-version v0r0
+version v0r0p0
 
 apply_pattern packageShr
 
