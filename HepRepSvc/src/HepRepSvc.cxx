@@ -55,11 +55,12 @@ HepRepSvc::HepRepSvc(const std::string& name,ISvcLocator* svc)
 : Service(name,svc)
 {
   /// This property turn on/off the auto streaming of the heprep at
-  /// the end of each event
+  /// the end of each event and to start (or not) a FRED instance
   declareProperty("autoStream" , m_autoStream=""); 
   declareProperty("streamPath"   , m_streamPath="");
+  declareProperty("startFred"   , m_startFred="");
   declareProperty("geometryDepth", m_geomDepth=4);
-
+  
   m_server=0;
 }
 
