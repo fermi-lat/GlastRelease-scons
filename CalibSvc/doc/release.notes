@@ -2,6 +2,7 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
+ * 13-Aug-2004: thb v0r13p5: Add use for XMLEXT, which this package needs.
  * 12-Aug-2004: hmk v0r13p4: Make CalibData a public use
  * 12-Aug-2004: hmk v0r13p3: Pick up newer LdfEvent again
  * 11-Aug-2004: hmk v0r13p2: Roll back to old LdfEvent and add Toby fixes for 
