@@ -20,7 +20,8 @@ Surface::reverse()
 // copy constructor uses same reference point, makes a copy of
 // direction, then has the subclass do the rest (if it can)
 Surface::Surface(const Surface& old)
-    :referencePoint(old.referencePoint)
+  :GeomObject(),
+    referencePoint(old.referencePoint)
     ,referenceDirection(old.referenceDirection)
 {
 }
