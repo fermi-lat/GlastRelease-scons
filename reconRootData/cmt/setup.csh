@@ -1,7 +1,7 @@
-# echo "Setting reconRoot v0 in I:/packages/Root2IDL"
+# echo "Setting reconRootData v1r1 in /a/surrey10/g.glast_users/glground/tlindner/packages3/glastgaudi_test"
 
-setenv CMTROOT I:\packages/CMT/v1r5p1
+setenv CMTROOT /afs/slac.stanford.edu/g/glast/applications/CMT/v1r6p1
 source ${CMTROOT}/mgr/setup.csh
 
 set tempfile=/tmp/setup$$
-${CMTROOT}/mgr/cmt -quiet setup -csh -pack=reconRoot -version=v0 -path=I:/packages/Root2IDL $* >$tempfile; source $tempfile; /bin/rm -f $tempfile
+${CMTROOT}/mgr/cmt -quiet setup -csh -pack=reconRootData -version=v1r1 -path=/a/surrey10/g.glast_users/glground/tlindner/packages3/glastgaudi_test $* >${tempfile}; source ${tempfile}; /bin/rm -f ${tempfile}

@@ -2,7 +2,7 @@ package reconRootData
 version v0
 
 use glast_settings
-use TBEvent v2r2
+use digiRootData
 use ROOT v3r0p6
 
 include_path ${RECONROOTDATAROOT}

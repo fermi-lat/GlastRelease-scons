@@ -5,5 +5,5 @@ ${CONSTITUENT}:: ${CINTFILE}
 VPATH=../reconRootData/
 ${CINTFILE}:: ${root_headers}
 	@echo " running rootcint to generate ${CINTFILE} "
-	cd ../${package}/ ; ${ROOT_PATH}/bin/rootcint -f ${CINTFILE} -c -I${TBEVENTROOT} ${root_headers}
+	cd ../${package}/ ; ${ROOT_PATH}/bin/rootcint -f ${CINTFILE} -c -I${DIGIROOTDATAROOT} ${root_headers}
 #==================================================== 

@@ -9,7 +9,7 @@
 #include "TObject.h"
 #include "TVector3.h"
 // Local Cal forward declaration
-#include "TBEvent/LogID.h"
+#include "digiRootData/LogID.h"
 
 // =========================================================
 //      CalLogEne
