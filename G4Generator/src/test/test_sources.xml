@@ -41,7 +41,7 @@
        <spectrum> 
          <particle name="mu+"><energy e="2"/> </particle>
            <direction theta="30" phi="90" />
-           <launch_point x="20" y="500" z="1000" />
+           <launch_point x="50" y="500" z="1000" />
        </spectrum>
      </source>
 
