@@ -7,6 +7,7 @@
 //      T.Usher
 
 #include "G4ParticlePropagator.h"
+#include "G4PropagatorSvc.h"
 #include "RunManager.h"
 #include "DetectorConstruction.h"
 #include "idents/VolumeIdentifier.h"
@@ -40,28 +41,13 @@ G4ParticlePropagator::G4ParticlePropagator()
   // Dependencies: Requires that the Geant4 Run Manager has been instantiated
   // Restrictions and Caveats:  See above
 
-  //We need to retrieve a pointer to the idents map
-  RunManager* pRunManager = RunManager::GetRunManager();
+  const DetectorConstruction*        pDet = 
+      dynamic_cast<const DetectorConstruction*>(G4PropagatorSvc::UserDetector);
+  DetectorConstruction*              pDetector = 
+     const_cast<DetectorConstruction*>(pDet);
+  m_IdMap = pDetector->idMap();
 
-  //If the run manager has been instantiated, then we get the map
-  if (pRunManager)
-    {
-      //Use the run manager to look up the detector volume-idents map
-      const G4VUserDetectorConstruction* pUser = 
-        pRunManager->GetUserDetectorConstruction();
-      const DetectorConstruction*        pDet = 
-        dynamic_cast<const DetectorConstruction*>(pUser);
-      DetectorConstruction*              pDetector = 
-        const_cast<DetectorConstruction*>(pDet);
-
-      //Finally...
-      m_IdMap = pDetector->idMap();
-    }
-  else
-    //Else we have to figure some failure condition
-    {
-      m_IdMap = 0;
-    }
+  m_IdMap = G4PropagatorSvc::idmap;
 
   return;
 }
@@ -137,7 +123,7 @@ int G4ParticlePropagator::numberPlanesCrossed() const
   // Dependencies: None
   // Restrictions and Caveats: None
 
-  return getNumberSteps() > 2 ? getNumberSteps() - 2 : 0;
+  return getNumberSteps() > 1 ? getNumberSteps() - 1 : 0;
 }
 
 //Return the position at the end of tracking
@@ -232,7 +218,6 @@ double G4ParticlePropagator::radLength() const
 }
 
 //Are we inside the active area?
-//*** NOT YET IMPLEMENTED ***
 float G4ParticlePropagator::insideActArea() const
 {
   // Purpose and Method:  Returns the distance to the nearest boundary of the
@@ -242,9 +227,11 @@ float G4ParticlePropagator::insideActArea() const
   // Dependencies: None
   // Restrictions and Caveats: None
 
-  G4VPhysicalVolume* pCurVolume = getLastStep()->GetVolume();
+//  G4VPhysicalVolume* pCurVolume = getLastStep()->GetVolume();
 
-  return 0.;
+  double dist = insideActiveArea();
+
+  return dist;
 }
 
 // Is the current plane an X plane ** This should be replaced with a routine
@@ -326,30 +313,40 @@ HepMatrix G4ParticlePropagator::mScat_Covr(float momentum, float s) const
     }
 
   Vector startDir = getStartDir();
-  double slopeX   = startDir.x()/startDir.z(); 
-  double slopeY   = startDir.y()/startDir.z();
-  float  cosThsqX = 1./(1.+slopeX*slopeX);
-  float  cosThX   = sqrt(cosThsqX);
-  float  cosThsqY = 1./(1.+slopeY*slopeY);
-  float  cosThY   = sqrt(cosThsqY);
-    
-  // Create, fill and return the covariance matrix
-  HepMatrix cov(4,4,0);
-  cov(2,2) = scat_angle/(cosThsqX*cosThsqX);
-  cov(1,1) = scat_dist/(cosThX*cosThsqX);
-  cov(1,2) = cov(2,1) = scat_covr/cosThsqX;
-  cov(4,4) = scat_angle/(cosThsqY*cosThsqY);
-  cov(3,3) = scat_dist/(cosThY*cosThsqY);
-  cov(3,4) = cov(4,3) = scat_covr/cosThsqY;
+  double slopeX = startDir.x()/startDir.z(); 
+  double slopeY = startDir.y()/startDir.z();
+  double norm_term = 1. + slopeX*slopeX + slopeY*slopeY;
 
+  // The below taken from KalParticle (by Bill Atwood) in order to match results
+  // Calc, the matrix elements (see Data Analysis Tech. for HEP, Fruhwirth et al)
+  double p33 = (1.+slopeX*slopeX)*norm_term;
+  double p34 = slopeX*slopeY*norm_term;
+  double p44 = (1.+slopeY*slopeY)*norm_term; 
+
+  //Go from arc-length to Z 
+  scat_dist /=  norm_term;
+  scat_covr  /=  sqrt(norm_term);
+
+  HepMatrix cov(4,4,0);
+  cov(1,1) = scat_dist*p33;
+  cov(2,2) = scat_angle*p33; 
+  cov(3,3) = scat_dist*p44;
+  cov(4,4) = scat_angle*p44;
+  cov(1,2) = cov(2,1) = -scat_covr*p33;
+  cov(1,3) = cov(3,1) = scat_dist*p34;
+  cov(1,4) = cov(2,3) = cov(3,2) = cov(4,1) = -scat_covr*p34;
+  cov(2,4) = cov(4,2) = scat_angle*p34;
+  cov(3,4) = cov(4,3) = -scat_covr*p44; 
+  
   return cov;
 }
 
 
 void G4ParticlePropagator::printOn(std::ostream& str )const
 {
-	str << '\n';
-    printStepInfo(str);
+  str << "\n";
 
-    return;
+  printStepInfo(str);
+
+  return;
 }

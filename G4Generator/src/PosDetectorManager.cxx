@@ -91,6 +91,8 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
   // Retrieve the id of the particle causing the hit and set the corresponding
   // attribute of the McPositionHit
   hit->setMcParticleId(partMan->getLastParticle()->particleProperty());
+  // LOCAL CHANGE FOR TESTING ONLY!!
+  hit->setMcParticle(partMan->getLastParticle());
   // Retrieve the primary particle and set the corresponding pointer of the
   // McPositionHit
   hit->setOriginMcParticle(partMan->getMcParticle(1));

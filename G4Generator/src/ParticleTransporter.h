@@ -5,16 +5,18 @@
 #include <float.h>
 #endif
 
-#include "G4SteppingManager.hh"
-#include "DetectorConstruction.h"
+//Class def for keeping track of step info
 #include "TransportStepInfo.h"
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
 
+//Necessary G4 stuff
+#include "G4Navigator.hh"
+#include "G4VSensitiveDetector.hh"
 #include "globals.hh"
 #include "g4std/vector"
 
-#include "GlastSvc/Reco/IKalmanParticle.h"
+//Get the geometry information
+#include "geometry/Point.h"
+#include "geometry/Vector.h"
 
 #include <vector>
 
@@ -50,36 +52,47 @@ public:
     bool               transport();
 
     /// Methods for retrieving information after tracking
-    int                getNumberSteps()  const {return stepInfo.size();}
-    ConstStepPtr       getStepStart()    const {return stepInfo.begin();}
-    ConstStepPtr       getStepEnd()      const {return stepInfo.end();}
+    int                getNumberSteps()   const {return stepInfo.size();}
+    ConstStepPtr       getStepStart()     const {return stepInfo.begin();}
+    ConstStepPtr       getStepEnd()       const {return stepInfo.end();}
 
-    TransportStepInfo* getLastStep()     const {return stepInfo.back();}
+    TransportStepInfo* getLastStep()      const {return stepInfo.back();}
     //for now
-    TransportStepInfo* getPrevBoundary() const {return stepInfo.back();} 
+    TransportStepInfo* getPrevBoundary()  const {return stepInfo.back();} 
 
-    HepPoint3D         getStartPoint()   const {return startPoint;}
-    HepVector3D        getStartDir()     const {return startDir;}
-    double             getMaxArcLen()    const {return maxArcLen;}
+    Point              getStartPoint()    const {return startPoint;}
+    Vector             getStartDir()      const {return startDir;}
+    double             getMaxArcLen()     const {return maxArcLen;}
+    double             insideActiveArea() const;
 
-    void printStepInfo(std::ostream& str=std::cout ) const;  
+    void               printStepInfo(std::ostream& str=std::cout ) const;    
 private:
     //Private methods
     //Determines the distance along the track to the edge of start volume
-    double     minStepSize(G4SteppingManager* stepManager);
+    double             minStepSize(const Point& start, const Vector& dir) const;
     //Make sure list is cleared when tracking started
-    void       clearStepInfo();
+    void               clearStepInfo();
+    //This function will step a given arc length
+    bool               StepAnArcLength();
+    //This function will step to the next "sensitive" plane
+    bool               StepToNextPlane();
     //Use this to in printStepInfo to print volume list name
-    G4String   printVolName(const G4VPhysicalVolume* pCurVolume) const;
+    G4String           printVolName(const G4VPhysicalVolume* pCurVolume) const;
+    //This is used to find an "SiLadders" volume in the nested heirarchy
+    G4VPhysicalVolume* findSiLadders(const G4TouchableHistory* pHistory) const;
+    //This used to find the distance to nearest edge in a given direction
+    double             distanceToEdge(const Vector& dir) const;
+
 
     //Private Data
     //Vector keeping track of the individual step information
     StepVector stepInfo;
 
     //Initial start point, direction and desired step size
-    HepPoint3D  startPoint;
-    HepVector3D startDir;
-    double      maxArcLen;
+    Point      startPoint;
+    Vector     startDir;
+    double     maxArcLen;
+    double     minimumStep;
 };
 
 #endif
