@@ -40,6 +40,7 @@ ApplicationMgr.ExtSvc += {"CalibDataSvc"};
 ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
 
 DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
+DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 
 CalibDataSvc.CalibNameList = {"Tkr.BadStrips/chocolate"};
 

@@ -39,6 +39,10 @@ class EvtClock : public Algorithm {
   /// Current event number
   long m_eventNumber;
 
+  /// Absolute time of first event (yyyy-mm-dd_hh:mm, trailing fields
+  /// optional)
+  std::string m_startTimeAsc;
+
   /// Absolute time of first event (seconds)
   long m_startTime;
 

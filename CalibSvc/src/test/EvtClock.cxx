@@ -24,8 +24,10 @@ EvtClock::EvtClock( const std::string&  name,
   , m_detDataSvc  ( 0 )
 {
   declareProperty( "startTime",  
-                   m_startTime = facilities::Timestamp().getClibTime());
-  declareProperty( "delayTime",  m_delayTime = 2 );
+                   m_startTimeAsc = "2003-1-10_00:20");
+
+  // = facilities::Timestamp("2003-1-11").getClibTime());
+  declareProperty( "delayTime",  m_delayTime = 2000);
 }
 
 
@@ -57,11 +59,18 @@ StatusCode EvtClock::initialize() {
     log << MSG::ERROR << "Could not set jobOptions properties" << endreq;
     return sc;
   }
+
+  unsigned int underpos = m_startTimeAsc.find("_");
+  if (underpos < m_startTimeAsc.size()) {
+    m_startTimeAsc.replace(underpos, 1, " ");
+  }
+  m_startTime = facilities::Timestamp(m_startTimeAsc).getClibTime();
+
   log << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
+  log << MSG::INFO << "Time of first event: (ascii) "
+      << m_startTimeAsc       << endreq; 
   log << MSG::INFO << "Time of first event: (seconds since 1970) "
-      << m_startTime 
-      << std::dec << ")" 
-      << endreq; 
+      << m_startTime       << endreq; 
   log << MSG::INFO << "Time between events (seconds): "
       << m_delayTime 
       << endreq;

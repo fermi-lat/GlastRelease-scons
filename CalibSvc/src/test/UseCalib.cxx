@@ -54,7 +54,7 @@ StatusCode UseCalib::initialize() {
   setProperties();
 
 
-  IDataProviderSvc* m_pCalibDataSvc;
+  //  IDataProviderSvc* m_pCalibDataSvc;
   sc = service("CalibDataSvc", m_pCalibDataSvc, true);
 
   // Query the IDataProviderSvc interface of the calib data service
@@ -102,8 +102,16 @@ StatusCode UseCalib::execute( ) {
       << endreq;
   log << MSG::INFO << "Execute()" << endreq;
 
-  SmartDataPtr<CalibData::CalibTest1> test1(m_pCalibDataSvc,
-                                            CalibData::Test_Gen);
+  //  SmartDataPtr<CalibData::CalibTest1> test1(m_pCalibDataSvc,
+  //                                        CalibData::Test_Gen);
+  //  CalibData::CalibTest1* test1 = 
+  //    SmartDataPtr<CalibData::CalibTest1>(m_pCalibDataSvc, CalibData::Test_Gen);
+  
+  
+  std::string fullPath = CalibData::Test_1 + "/vanilla";
+  CalibData::CalibTest1* test1Copy;
+  m_pCalibDataSvc->retrieveObject(fullPath, test1Copy);
+  //  m_pCalibDataSvc->retrieveObject(CalibData::Test_1, test1Copy);
 
   return StatusCode::SUCCESS;
 }
