@@ -237,12 +237,12 @@ namespace xmlUtil {
     return child->allowed(childValue);
   }
 
-  bool DictNode::allowIdentifier(Identifier::iterator idIt, 
+  bool DictNode::allowIdentifier(Identifier::const_iterator idIt, 
                                  Identifier::const_iterator end,
                                  NamedId *named) {
     if (!allowed(*idIt)) return false;
     if (named != 0) named->addField(m_field->getName(), *idIt);
-    Identifier::iterator tmp = idIt;
+    Identifier::const_iterator tmp = idIt;
     ++tmp;
     if (tmp == end) return true;
 
@@ -260,8 +260,8 @@ namespace xmlUtil {
     return false;
   }
 
-  bool DictNode::allowIdentifier(Identifier& id, NamedId* named) {
-    Identifier::iterator idIt = id.begin();
+  bool DictNode::allowIdentifier(const Identifier& id, NamedId* named) {
+    Identifier::const_iterator idIt = id.begin();
     return allowIdentifier(idIt, id.end(), named);
   }
     

@@ -64,7 +64,7 @@ namespace xmlUtil {
     if (sorted != YES) {
       ConversionIt start = convCol.begin(), last = convCol.end();
       IdConverterLessThan weakOrder;
-      sort(start, last, weakOrder);  // sort them
+      std::sort(start, last, weakOrder);  // sort them
       sorted = YES;
     }
   }

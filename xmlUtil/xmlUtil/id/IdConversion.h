@@ -44,7 +44,7 @@ namespace xmlUtil {
   private:
 
     // Returns true if inputId satisfies condition
-    bool satisfies(NamedId& inputId);
+    bool satisfies(const NamedId& inputId);
 
     //! Doesn't check that input is in domain.  Typically invoked
     //! from \b convert.

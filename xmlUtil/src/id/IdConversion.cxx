@@ -32,7 +32,7 @@ namespace xmlUtil {
     return inputId.hasSubpath(*path);
   }
 
-  bool IdConversion::satisfies(NamedId& inputId) {
+  bool IdConversion::satisfies(const NamedId& inputId) {
     if (condition == 0) return true;
 
     return (inputId.hasField(*condition) >= 0);

@@ -70,7 +70,7 @@ namespace xmlUtil {
     //! Given an identifier, see if it is "allowed" by this node and
     //! a sequence of its descendents.  If there is a non-null
     //! NamedId argument, build up the associated NamedId
-    bool allowIdentifier(Identifier& id, NamedId* named = 0);
+    bool allowIdentifier(const Identifier& id, NamedId* named = 0);
 
     //! return true iff there is a path starting with current node
     //! which could produce the NamedId \a nId
@@ -121,7 +121,7 @@ namespace xmlUtil {
 
 
     //! Called by version without iterators
-    bool allowIdentifier(Identifier::iterator idIt, 
+    bool allowIdentifier(Identifier::const_iterator idIt, 
                          Identifier::const_iterator end,
                          NamedId* named=0);
 
