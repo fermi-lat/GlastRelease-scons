@@ -163,7 +163,6 @@ namespace ldfReader {
             if (tem.exist())
                 orAll |= tem.packetError();
         }
-        m_packetErrorOR = orAll;
         if (orAll != 0) setPacketErrorFlag();
         return (orAll);
     }
@@ -197,7 +196,6 @@ namespace ldfReader {
             if (orAll != getOsw().summary().error()) 
                 printf("OSW error summary bit does not match OR of all error bits across all contributions\n");
         }
-        m_errorSummaryOR = orAll;
         if (orAll != 0) setErrorSummaryFlag();
         return (orAll);
     }
