@@ -7,14 +7,16 @@
 
 //forward declarations
 
-class TdCsIData;
+
 #include "idents/ModuleId.h"
 #include "GlastEvent/TopLevel/ObjectVector.h"
 
 #include "GlastEvent/Irf/IrfAcdHit.h"
 #include "GlastEvent/Irf/IrfCalHit.h"
 #include "GlastEvent/Irf/IrfTkrLayer.h"
-#include "GlastEvent/Raw/TdSiData.h"
+#include "src/Raw/LdSiData.h"
+#include "src/Raw/LdCsIData.h"
+
 /*! 
 Derived from DetectorConverter, this class
 provides a forward method to handle reading in of GlastDetector data 
@@ -64,8 +66,9 @@ private:
     idents::ModuleId m_towerId;
 
     // one of Gaudi's ObjectContainers
-        TdCsIData* allcsiData;
-        TdSiData* allsiData;
+        LdCsIData* allcsiData;
+        LdSiData* allsiData;
+
 
         IrfAcdHitVector* IrfAcdHitContainer;
         IrfCalHitVector* IrfCalHitContainer;

@@ -43,6 +43,8 @@ public:
   //! mandatory
   StatusCode finalize();
 
+  StatusCode testMcClass();
+
 private:
     // the GlastDetSvc objects
     IGlastDetSvc*       m_detSvc;

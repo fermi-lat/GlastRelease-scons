@@ -7,7 +7,7 @@
 #include "Gaudi/Kernel/CnvFactory.h"
 #include "Gaudi/Interfaces/IDataProviderSvc.h"
 #include "GlastEvent/TopLevel/ObjectVector.h"
-#include "GlastEvent/Raw/TdCsIData.h"
+#include "GlastEvent/data/TdCsIData.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 #include "src/EventSelector/IRFConverter.h"

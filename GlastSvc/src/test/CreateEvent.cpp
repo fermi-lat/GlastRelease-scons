@@ -18,15 +18,16 @@
 #include "GlastEvent/TopLevel/Event.h"
 #include "GlastEvent/TopLevel/ObjectVector.h"
 
-#include "GlastEvent/Raw/TdCsIData.h"
-#include "GlastEvent/Raw/TdSiData.h"
+#include "GlastEvent/data/TdCsIData.h"
+#include "GlastEvent/data/TdSiData.h"
 
 #include "GlastEvent/TopLevel/IrfEvent.h"
 #include "GlastEvent/Irf/IrfAcdHit.h"
 #include "GlastEvent/Irf/IrfCalHit.h"
 #include "GlastEvent/Irf/IrfTkrLayer.h"
 
-
+#include "GlastEvent/MonteCarlo/McIntegratingHit.h"
+                                
 static const AlgFactory<CreateEvent>  Factory;
 const IAlgFactory& CreateEventFactory = Factory;
 
@@ -236,6 +237,9 @@ StatusCode CreateEvent::execute() {
         }
     }
 #endif
+
+    sc = testMcClass();
+
     return sc;
 
 
@@ -251,9 +255,15 @@ StatusCode CreateEvent::finalize() {
     
     return StatusCode::SUCCESS;
 }
+;
 
+StatusCode CreateEvent::testMcClass(){
+    McIntegratingHit* integratingHit = new McIntegratingHit();
+    McParticle* mcParticle =  new McParticle();
 
-
+    
+    return StatusCode::SUCCESS;
+}
 
 
 

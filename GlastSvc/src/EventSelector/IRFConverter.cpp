@@ -9,16 +9,16 @@
 #include "instrument/Tower.h"
 
 
-#include "GlastEvent/Raw/TdCsIData.h"
-#include "GlastEvent/Raw/TdSiData.h"
+#include "GlastEvent/data/TdCsIData.h"
+#include "GlastEvent/data/TdSiData.h"
 
 
 //! constructor - create all object containers
 IRFConverter::IRFConverter() {
     // Added because not sure as of yet how to make the
     // converter without using object vectors
-    allcsiData =  new TdCsIData(9);
-    allsiData = new TdSiData(18); //TODO: Change hardcode.
+    allcsiData =  new LdCsIData(9);
+    allsiData = new LdSiData(18); //TODO: Change hardcode.
 
     IrfAcdHitContainer = new IrfAcdHitVector;
     IrfCalHitContainer = new IrfCalHitVector;

@@ -3,7 +3,7 @@ version v1r4
 
 branches src mgr doc
 
-use instrument v2r4
+use instrument 
 use Gaudi v8
 use data 
 use GlastEvent
@@ -17,7 +17,7 @@ library GlastSvc ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
                  GlastDetSvc/*.h  GlastDetSvc/*.cpp \
                  EventSelector/*.h  EventSelector/*.cpp \
                  ../GlastSvc/Irf/*.h Irf/*.cpp \
-		../GlastSvc/Raw/*.h Raw/*.cpp \
+	        ../GlastSvc/Raw/*.h Raw/*.cpp Raw/*.h \
 		Dll/*.cpp 
             
 
