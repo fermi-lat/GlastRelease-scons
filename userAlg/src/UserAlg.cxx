@@ -35,7 +35,11 @@
 // for access to geometry perhaps
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
+// for the propagator
+#include "GlastSvc/Reco/IPropagator.h"
+
 #include <cassert>
+#include <sstream>
 
 /** @class UserAlg
 @brief A simple algorithm.
@@ -63,6 +67,13 @@ private:
 
     /// parameter to store the logical name of the ROOT file to write to
     std::string m_treeName;
+
+    /// geometry propagator
+    IPropagator* m_prop;
+
+    /// distance of conversion point and nearest ACD along the vertex
+    /// aka completely useless variable
+    double m_cuv;
 };
 
 
@@ -113,6 +124,17 @@ StatusCode UserAlg::initialize(){
         return sc;
     }
     m_rootTupleSvc->addItem(m_treeName, "count", &m_count);
+    m_rootTupleSvc->addItem(m_treeName, "completely_useless", &m_cuv);
+
+    IToolSvc* toolSvc = 0;
+    if ( service("ToolSvc", toolSvc, true).isFailure() ) {
+        log << MSG::ERROR << "Couldn't find the ToolSvc!" << endreq;
+        return StatusCode::FAILURE;
+    }
+    if ( !toolSvc->retrieveTool("G4PropagationTool", m_prop) ) {
+        log << MSG::ERROR << "Couldn't find the G4PropagationTool!" << endreq;
+        return StatusCode::FAILURE;
+    }
 
     return sc;
 }
@@ -153,6 +175,75 @@ StatusCode UserAlg::execute()
             
         }
     }
+
+    // *************************************************************************
+    // exercise:
+    // 1) get the first vertex of the TkrVertexCol.
+    //    We need a pointer to Event::TkrVertexCol in the TDS.  No new code, was
+    //    here anyway.
+    // 2) retrieve position and direction.
+    // 3) use a propagator to propagate back to the ACD.
+    //    We need the IPropagator* m_prop. The pointer to it has to be retrieved
+    //    in initialize().
+    // 4) determine the distance of the vertex (conversion point) and the ACD.
+    // 5) store this completely useless variable in MeritTuple.
+    //    Not exactly true, actually.  It is stored in the tree specified by
+    //    UserAlg.treeName in jobOptions.txt.  We need m_ntupleSvc and the
+    //    pointer to it.  No new code, was here anyway.
+
+    m_cuv = 0.;
+
+    if ( tracks->size() > 0 ) {// no clue why the vertex col is called "tracks"
+        const Event::TkrVertex* vertex1 = tracks->front();
+        const Point p = vertex1->getPosition();
+        const Vector v = vertex1->getDirection();
+        log << MSG::DEBUG;
+        if ( log.isActive() ) {
+            std::ostringstream ost;
+            ost << "initial " << p;
+            log << ost.str();
+        }
+        log << endreq;
+        log << MSG::DEBUG;
+        if ( log.isActive() ) {
+            std::ostringstream ost;
+            ost << "initial Direction" << v;
+            log << ost.str();
+        }
+        log << endreq;
+
+        // start the propagation at p and go into the opposite direction of v
+        m_prop->setStepStart(p, -v);
+        // first, I misunderstood what step means.  It is the distance to be
+        // stepped by the propagator, not the length of a single step.
+        m_prop->step(3000.); // 3000 mm should do it
+
+        for ( int i=0; i<m_prop->getNumberSteps(); ++i ) {
+            idents::VolumeIdentifier volId = m_prop->getStepVolumeId(i);
+            Point pp = m_prop->getStepPosition(i);            
+            if ( !volId.isAcd() ) // not yet ACD
+                continue;
+            idents::AcdId acd(volId);
+            if ( !acd.tile() )  // not yet ACD
+                continue;
+            // fine, it's a tile
+            // Actually, I'm not convinced.  I think a tile should have id 40,
+            // but the first "tiles" I find have 42.  Anyway, it's an exercise!
+            log << MSG::DEBUG;
+            if ( log.isActive() ) {
+                std::ostringstream ost;
+                ost << "ACD " << pp;
+                log << ost.str() << ' ' << volId.name() << ' ' << acd.tile();
+            }
+            log << endreq;
+            // fill the completely useless variable
+            m_cuv = (pp-p).magnitude();
+            // let's exit, we found an ACD
+            break;
+        }
+    }
+    log << MSG::DEBUG << "completely useless: " << m_cuv << endreq;
+    // *************************************************************************
     
 #if 0 // enable to use pause with the display
     // An example of pausing the display 
