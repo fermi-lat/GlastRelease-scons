@@ -92,3 +92,30 @@ bool RootTkrBaseCnv::checkTower(const idents::TkrId& id, int iTow) {
           (iTow%TKRBASE_MAXCOL == id.getTowerX())   );
 }
 
+// For now only handle towerX, towerY, tray and botTop fields. These
+// are the only ones needed for TKR calibrations currently, probably
+// forever.
+StatusCode RootTkrBaseCnv::convertId(const commonRootData::TkrId& rootId, 
+                                     idents::TkrId* id) {
+  unsigned towerX;
+  unsigned towerY;
+  unsigned tray;
+  bool botTop;
+
+  if (!id) return StatusCode::FAILURE;
+
+  if ((!rootId.hasTowerX() ) || (!rootId.hasTowerY()) ||
+      (!rootId.hasTray() ) || (!rootId.hasBotTop())   ) {
+    return StatusCode::FAILURE;
+  }
+
+  towerX = rootId.getTowerX();
+  towerY = rootId.getTowerY();
+  tray = rootId.getTray();
+  botTop = (rootId.getBotTop() != 0);
+
+  *id = idents::TkrId(towerX, towerY, tray, botTop);
+  return StatusCode::SUCCESS;
+}
+
+

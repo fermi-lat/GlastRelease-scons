@@ -1,7 +1,6 @@
 // $Header$
 
 #include <string>
-#include "RootCalGainCnv.h"
 #include "TTree.h"
 #include "TFile.h"
 #include "TBranch.h"
@@ -59,6 +58,7 @@ StatusCode RootTkrTotCnv::i_createObj (const std::string& fname,
   TkrTotCol* totCol = new TkrTotCol();
   refpObject = totCol;
 
+  setBaseInfo(totCol);
   StatusCode ret;
   for (unsigned iTow = 0; iTow < TKRBASE_MAXTOWER; iTow++) {
     TTree* tree = findTower(iTow);
@@ -80,6 +80,9 @@ StatusCode RootTkrTotCnv::readUnis(TTree* tree, int iTow,
   using CalibData::TkrTotCol;
   using CalibData::UniBase;
   using CalibData::TkrTotStrip;
+
+  MsgStream log(msgSvc(), "RootTkrTotCnv");
+
   // set branch 
   TBranch* branch = tree->GetBranch("calibRootData::TotUnilayer");
 
@@ -93,19 +96,34 @@ StatusCode RootTkrTotCnv::readUnis(TTree* tree, int iTow,
 
     StatusCode ret = 
       readRootObj(tree, "calibRootData::TotUnilayer", pObj, ix);
-    if (ret != StatusCode::SUCCESS) return ret;
+    if (ret != StatusCode::SUCCESS) {
+      log << MSG::ERROR << "Failed to read ToT unilayer object" << endreq;
+      return ret;
+    }
+    //    if (!rootUni->consistent() ) {
+    //      log << MSG::DEBUG
+    //          << "private data m_nStrips != size of strip array: " 
+    //          <<  rootUni->getNStrips() << endreq;
+      //      return StatusCode::FAILURE;
+    //    }
+    //    else {
+    //      log << MSG::DEBUG << "Unilayer has " << rootUni->getNStrips() 
+    //                    << " strips" << endreq;
+    //    }
 
     idents::TkrId id;
   
     const commonRootData::TkrId& rootId = rootUni->getId();
     ret = convertId(rootId, &id);
     if (ret != StatusCode::SUCCESS) {
-      // complain -- illegal commonRootData::TkrId
+      log << MSG::ERROR << "Illegal TkrId in ToT root calib. object" << endreq;
       return ret;
     }
 
     if (!checkTower(id, iTow)) {
       // complain == uni doesn't belong to the right tower
+      log << MSG::ERROR << "ToT unilayer TkrId inconsistent with tower" 
+          << endreq;
       return StatusCode::FAILURE; 
     }
 
@@ -114,16 +132,18 @@ StatusCode RootTkrTotCnv::readUnis(TTree* tree, int iTow,
     /*
     TkrTotUni* dest = dynamic_cast<TkrTotUni* > (&tdsTow->m_unis[uniIx]);
     */
-    std::vector<UniBase*> unis = col->getUnis(iTow);
+    std::vector<UniBase*> *unis = col->getUnis(iTow);
     CalibData::TkrTotUni* dest;
-    if (!unis[uniIx]) {
+    if (!(*unis)[uniIx]) {
       // have to make one
-      unis[uniIx]= makeUni(col);
+      (*unis)[uniIx]= makeUni(col);
     }
   
-    dest = dynamic_cast<CalibData::TkrTotUni*>(unis[uniIx]);
+    dest = dynamic_cast<CalibData::TkrTotUni*>((*unis)[uniIx]);
     if (!dest) {
       // tilt!
+      log << MSG::ERROR << "Unable to create CalibData::TkrTotUni object" 
+          << endreq;
       return StatusCode::FAILURE;
     }  
     // For now, check if nstrips match.  If not, delete old 

@@ -40,14 +40,19 @@ protected:
      Read in generic part (tower object) of this tree and store in
      CalibData::TkrBase::TkrTower object
   */
+  StatusCode readTower(TTree* tree, unsigned bay, CalibData::TkrBase* pCol);
 
+
+  /**
+     Convert commonRootData::TkrId to idents::TkrId.  towerX, towerY,  
+     tray and botTop fields must be present and these are the only ones
+     used.  id arg. should point to already-allocated idents::TkrId object
+  */
   StatusCode convertId(const commonRootData::TkrId& rootId, 
                        idents::TkrId* id);
 
   bool checkTower(const idents::TkrId& id, int iTow);
 
-    //  bool checkTower(const idents::TkrId& id, unsigned row, unsigned col) {
-    //    return ((row == id.getTowerY()) && (col == id.getTowerX()) ); }
   /**
      Given a pointer to a TDS object which can be cast to "our" type, fill
      in corresponding information in the corresponding root class
@@ -69,7 +74,6 @@ protected:
     return StatusCode::FAILURE; 
   }
 
-  StatusCode readTower(TTree* tree, unsigned bay, CalibData::TkrBase* pCol);
 
   // Invoke factory method to make a uni.  Derived classes aren't friends
   // of CalibData::TkrBase, so have to do it for them
