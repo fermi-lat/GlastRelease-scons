@@ -32,7 +32,7 @@ FluxSvc.StartDate = "2004-09-03 18:00:01.1";
 
 //For ExposureAlg, here are lines to uncomment to:
 //write all the timetick particles out to a pointing information file:
-//ExposureAlg.pointing_history_output_file="pointingData.out";
+ExposureAlg.pointing_history_output_file="pointingData.out";
 //and read that file back in to be the pointing database:
 //Top.pointing_history_input_file="pointingData.out";
 
@@ -41,7 +41,8 @@ Top.area= 6.0;
 //Top.pointing_mode=4;  // this is the fixed angle 
 //Top.rocking_angle=90; // degrees about x-axis   
 //Top.rocking_angle_z=90; // degrees about z-axis   
-Top.source_name="backgndavgpdr";
+//Top.source_name="backgndavgpdr";
+Top.source_name="timetick30s";
 //Top.source_name="GRB_DC1";
 //Top.source_name="isotropic";
 
