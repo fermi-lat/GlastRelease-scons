@@ -25,7 +25,7 @@
 #include <cmath>
 
 // to access an XML containing Digi parameters file
-#include "xml/IFile.h"
+#include "xmlBase/IFile.h"
 
 // Define the factory for this algorithm
 static const AlgFactory<AcdDigiOrgAlg>  Factory;
@@ -51,7 +51,7 @@ StatusCode AcdDigiOrgAlg::initialize() {
     setProperties();
     
     // Read in the parameters from the XML file
-    xml::IFile m_ifile(m_xmlFile.c_str());
+    xmlBase::IFile m_ifile(m_xmlFile.c_str());
     m_lowThreshold = m_ifile.getDouble("acd", "lowThreshold", 0.2);
     m_vetoThreshold = m_ifile.getDouble("acd", "vetoThreshold", 0.4);
     m_highThreshold = m_ifile.getDouble("acd", "highThreshold", 20.0);

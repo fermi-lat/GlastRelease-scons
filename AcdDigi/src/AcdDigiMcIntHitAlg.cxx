@@ -212,7 +212,7 @@ void AcdDigiMcIntHitAlg::getParameters() {
     //   parameters, if not, an information message is provided as output.
     
     MsgStream log(msgSvc(), name());
-    xml::IFile xmlFilePtr(m_xmlFile.c_str());
+    xmlBase::IFile xmlFilePtr(m_xmlFile.c_str());
     
     // Perform some spot checking to see if our XML file contains our constants
     if (!xmlFilePtr.contains("thresholds", "low_threshold_mips")) {

@@ -7,7 +7,7 @@
 #include "idents/AcdId.h"
 
 // to access an XML containing Digi parameters file
-#include "xml/IFile.h"
+#include "xmlBase/IFile.h"
 #include "facilities/Util.h"
 
 

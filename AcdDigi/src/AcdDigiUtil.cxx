@@ -18,10 +18,10 @@
 #include <utility>
 
 // to access an XML containing Digi parameters file
-#include "xml/IFile.h"
+#include "xmlBase/IFile.h"
 #include "facilities/Util.h"
 
-xml::IFile *AcdDigiUtil::m_ifile;
+xmlBase::IFile *AcdDigiUtil::m_ifile;
 double AcdDigiUtil::m_noise_std_dev_pha;
 double AcdDigiUtil::m_noise_std_dev_veto;
 double AcdDigiUtil::m_noise_std_dev_cno;
@@ -48,7 +48,7 @@ void AcdDigiUtil::getParameters(const std::string &xmlFile) {
     
     // Purpose and Method:  Read in the parameters from the XML file using IFile
     
-    m_ifile = new xml::IFile(xmlFile.c_str());
+    m_ifile = new xmlBase::IFile(xmlFile.c_str());
         
     m_mean_pe_per_mip = m_ifile->getInt("global_constants", "mean_pe_per_mip");
     m_mean_pe_per_mip_ribbon = m_ifile->getInt("global_constants", "mean_pe_per_mip_ribbon");

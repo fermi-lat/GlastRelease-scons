@@ -8,7 +8,7 @@
 #include "idents/AcdId.h"
 
 #include "facilities/Util.h"
-#include "xml/IFile.h"
+#include "xmlBase/IFile.h"
 
 /** @class AcdDigiUtil
 * @brief Utility class that defines the methods used for ACD digitization.
@@ -79,7 +79,7 @@ public:
     
 private:
             
-    static xml::IFile *m_ifile;
+    static xmlBase::IFile *m_ifile;
     
     /// standard deviation for gaussian noise for PHA, veto and CNO discriminators
     static double m_noise_std_dev_pha, m_noise_std_dev_veto, m_noise_std_dev_cno;

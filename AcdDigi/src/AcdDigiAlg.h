@@ -10,7 +10,7 @@
 #include "Event/MonteCarlo/McPositionHit.h"
 
 // to access an XML containing Digi parameters file
-#include "xml/IFile.h"
+#include "xmlBase/IFile.h"
 #include "facilities/Util.h"
 
 #include "AcdTileList.h"

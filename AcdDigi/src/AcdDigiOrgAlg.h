@@ -2,7 +2,7 @@
 #define _AcdDigi_AcdDigiOrgAlg_H 1
 
 #include "GaudiKernel/Algorithm.h"
-namespace xml { class IFile; }
+// namespace xmlBase { class IFile; }
 
 /** @class AcdDigiOrgAlg
   * @brief Algorithm to convert from hit data into digitization data 
