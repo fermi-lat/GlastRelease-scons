@@ -25,25 +25,25 @@
 //extern const CLID& CLID_Ebf;
 
 namespace EbfWriterTds{
-  class Ebf : public DataObject{
-  public:
-    Ebf();
-    Ebf(char *newData,unsigned int dataLength);
-    virtual ~Ebf();
+    class Ebf : public DataObject{
+    public:
+        Ebf();
+        Ebf(char *newData,unsigned int dataLength);
+        virtual ~Ebf();
 
-    ///Retrieve pointer to the ebf data.
-    char *get(unsigned int &dataLength) const;
+        ///Retrieve pointer to the ebf data.
+        char *get(unsigned int &dataLength) const;
 
-    ///Store the provided ebf pointer in and delete any previous ones
-    void set(char *newData, unsigned int dataLength);
+        ///Store the provided ebf pointer in and delete any previous ones
+        void set(char *newData, unsigned int dataLength);
 
-    virtual std::ostream& fillStream(std::ostream &s) const;
-    friend std::ostream& operator << (std::ostream &s, const Ebf& obj);
-  private:
-    ///Pointer to the ebf data
-    char *data;
-    ///Number of bytes that are stored in data pointer
-    unsigned int length;
-  };
+        virtual std::ostream& fillStream(std::ostream &s) const;
+        friend std::ostream& operator << (std::ostream &s, const Ebf& obj);
+    private:
+        ///Pointer to the ebf data
+        char *m_data;
+        ///Number of bytes that are stored in data pointer
+        unsigned int m_length;
+    };
 };
 #endif

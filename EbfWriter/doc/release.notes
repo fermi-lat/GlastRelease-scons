@@ -1,0 +1,9 @@
+/**
+ * @file release.notes
+ * @brief Package EbfWriter
+ * @verbatim
+ * v0r0   21-Jul-2003     Moved TDS code out of Event into EbfWriter
+ * v0     03-Jul-2003     Initial Import
+ * @endverbatim
+ */
+ 

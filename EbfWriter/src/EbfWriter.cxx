@@ -70,7 +70,6 @@ private:
 
     EbfGltCounters  m_latcounters;
     
-
     /// parameter to store the maximum size of an event
     /// this should be fairly static
     int         m_maxEvtSize;
@@ -85,13 +84,11 @@ const IAlgFactory& EbfWriterFactory = Factory;
 
 
 
-EbfWriter::EbfWriter(const std::string& name, ISvcLocator* pSvcLocator):Algorithm(name, pSvcLocator)
-{
+EbfWriter::EbfWriter(const std::string& name, ISvcLocator* pSvcLocator):
+        Algorithm(name, pSvcLocator){
     // declare properties with setProperties calls
     declareProperty("MaxEvtSize", m_maxEvtSize=0x10000);
-
     return;
-    
 }
 
 

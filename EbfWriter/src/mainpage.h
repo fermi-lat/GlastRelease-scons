@@ -13,16 +13,18 @@ packages needed to build the simulation/ reconstruction environment.  This packa
 
   This package demonstrates how to:
   <ul>
-<li> access to all quantities in the Transient Data Store (TDS)</li>
-<li> writing text output to the log file (which can be turned on/off with the gui "printer").
-<li> generating histograms and tuples, which would then be written to a ROOT file. (Need to document this.)
-</ul>
-  The primary component (which can be easily added to) is FlightTest
-
+    <li> access to all quantities in the Transient Data Store (TDS)</li>
+    <li> writing text output to the log file (which can be turned on/off with the gui "printer").
+    <li> generating histograms and tuples, which would then be written to a ROOT file. (Need to document this.)
+  </ul>
 
   <hr>
   @section jobOptions src/jobOptions.txt
   @include jobOptions.txt
+  <hr>
+  @section notes release.notes
+  release.notes
+  <hr>
   @section requirements requirements
   @include requirements
 
