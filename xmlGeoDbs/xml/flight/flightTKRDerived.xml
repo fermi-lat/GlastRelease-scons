@@ -73,9 +73,14 @@
           <refer refTo="coreThick" />
         </const>
 
-        <const name="TKRCloseoutThickOuter" >
-          <notes>Z dimension of closeout for top and bottom trays</notes>
-          <refer refTo="coreThickOuter" />
+        <const name="TKRCloseoutThickBot" >
+          <notes>Z dimension of closeout for bottom tray</notes>
+          <refer refTo="coreThickBot" />
+        </const>
+        
+        <const name="TKRCloseoutThickTop" >
+          <notes>Z dimension of closeout for top tray</notes>
+          <refer refTo="coreThickTop" />
         </const>
 
         <const name="TKRCloseoutLen" >
@@ -181,25 +186,47 @@
           </uminus>
         </const>
 
-        <const name="TKRMCMext_dz" >
+        <const name="TKRMCMextTop_dz" >
           <notes>Offset of MCM board on + side w.r.t. enclosing envelope
-                 for exterior (top or bottom) boards
+                 for top board
           </notes>
           <quo>
             <minus>
-              <refer refTo="coreThickOuter" />
+              <refer refTo="coreThickTop" />
               <refer refTo="MCMHeight" />
             </minus>
             <const value="2.0" uType="count" />
           </quo>
         </const>
 
-        <const name="TKRMCMext_dzn" >
+        <const name="TKRMCMextTop_dzn" >
           <notes>Offset of MCM board on - side w.r.t. enclosing envelope
-                 for exterior (top or bottom) boards
+                 for top board
           </notes>
           <uminus>
-            <refer refTo="TKRMCMext_dz" />
+            <refer refTo="TKRMCMextTop_dz" />
+          </uminus>
+        </const>
+
+        <const name="TKRMCMextBot_dz" >
+          <notes>Offset of MCM board on + side w.r.t. enclosing envelope
+                 for top board
+          </notes>
+          <quo>
+            <minus>
+              <refer refTo="coreThickBot" />
+              <refer refTo="MCMHeight" />
+            </minus>
+            <const value="2.0" uType="count" />
+          </quo>
+        </const>
+
+        <const name="TKRMCMextBot_dzn" >
+          <notes>Offset of MCM board on - side w.r.t. enclosing envelope
+                 for top board
+          </notes>
+          <uminus>
+            <refer refTo="TKRMCMextBot_dz" />
           </uminus>
         </const>
 
@@ -286,8 +313,14 @@
           </add>
         </const>
 
-
-
+        <const name="TKRFaceMinBotZ" >
+          <notes>Thickness of regular face sheet and glue attaching
+                 it to core/closeout</notes>
+          <add>
+            <refer refTo="glueCoreThick" />
+            <refer refTo="faceSupThick" />
+          </add>
+        </const>
 
         <const name="TKRMaxNoCnv" uType="count">
           <notes>Tray number of most forward no-converter tray</notes>

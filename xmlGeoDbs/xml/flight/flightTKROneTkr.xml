@@ -92,7 +92,7 @@
 
 
 <!-- Now make all the other elements we need for TKR:
-     * TKRCoreReg, TKRCoreOuter and SiLayer as above except materials
+     * TKRCoreReg, TKRCoreBot, TKRCoreTop and SiLayer as above except materials
             changed somewhat.  Core material depends on whether tray
             is superGLAST or not.
 
@@ -116,10 +116,16 @@
 	 ZREF="coreThick" 
          materialREF="vacuumMat" />        
 
-    <box name="TKRCoreOuterEnv"
+    <box name="TKRCoreTopEnv"
 	 XREF="TKRCloseoutTrans"
 	 YREF="TKRTrayWidth" 
-	 ZREF="coreThickOuter" 
+	 ZREF="coreThickTop" 
+         materialREF="vacuumMat" /> 
+                
+    <box name="TKRCoreBotEnv"
+	 XREF="TKRCloseoutTrans"
+	 YREF="TKRTrayWidth" 
+	 ZREF="coreThickBot" 
          materialREF="vacuumMat" />        
 
     <box name="TKRCoreRegBox"
@@ -136,11 +142,17 @@
 	 ZREF="coreThick" 
 	 materialREF="coreSupMat" />
 
-<!-- core in top and bottom trays is thicker -->
-    <box name="TKRCoreOuterBox" 
+<!-- core in top tray is thicker -->
+    <box name="TKRCoreTopBox" 
 	 XREF="TKRCoreWidth" 
 	 YREF="TKRCoreWidth"
-	 ZREF="coreThickOuter" materialREF="coreRegMat" />
+	 ZREF="coreThickTop" materialREF="coreRegMat" />
+	 
+<!-- core in bottom tray is thicker, and denser -->
+    <box name="TKRCoreBotBox" 
+	 XREF="TKRCoreWidth" 
+	 YREF="TKRCoreWidth"
+	 ZREF="coreThickBot" materialREF="coreSupMat" />
 
 <!-- Define boxes for short and long closeout pieces, both regular
      and outer, so 4 boxes altogether. -->
@@ -156,16 +168,28 @@
          ZREF="TKRCloseoutThick"
          materialREF="TKRCloseoutMat" />
 
-    <box name="TKRCloseoutOuterLong"
+    <box name="TKRCloseoutTopLong"
          XREF="TKRCloseoutLen"
          YREF="TKRCloseoutWidth"
-         ZREF="TKRCloseoutThickOuter"
+         ZREF="TKRCloseoutThickTop"
          materialREF="TKRCloseoutMat" />
 
-    <box name="TKRCloseoutOuterShort"
+    <box name="TKRCloseoutTopShort"
          XREF="TKRCloseoutLenShort"
          YREF="TKRCloseoutWidth"
-         ZREF="TKRCloseoutThickOuter"
+         ZREF="TKRCloseoutThickTop"
+         materialREF="TKRCloseoutMat" />
+         
+    <box name="TKRCloseoutBotLong"
+         XREF="TKRCloseoutLen"
+         YREF="TKRCloseoutWidth"
+         ZREF="TKRCloseoutThickBot"
+         materialREF="TKRCloseoutMat" />
+
+    <box name="TKRCloseoutBotShort"
+         XREF="TKRCloseoutLenShort"
+         YREF="TKRCloseoutWidth"
+         ZREF="TKRCloseoutThickBot"
          materialREF="TKRCloseoutMat" />
 
 <!-- Make a box for MCM board. Long transverse dimension is in X since
@@ -183,7 +207,7 @@
         YREF="TKRWallThick"
         ZREF="TKRTotalZ" 
         materialREF="TKRWallMat" />
-
+        
    <box name="TKRWallShort"
         XREF="TKRWallLengthShort"
         YREF="TKRWallThick"
@@ -356,24 +380,24 @@
 <!-- Now same thing for outer tray cores (regular core material only) 
     They're both rotated.  Each has only one MCM board but not
      the same one!  -->
-    <composition name="TKRCoreOuterTop" envelope="TKRCoreOuterEnv">
-      <posXYZ volume="TKRCoreOuterBox" >
+    <composition name="TKRCoreOuterTop" envelope="TKRCoreTopEnv">
+      <posXYZ volume="TKRCoreTopBox" >
         <idField name="fBorderCmp" valueREF="eCenter" />
       </posXYZ>
-      <posXYZ volume="TKRCloseoutOuterLong"
+      <posXYZ volume="TKRCloseoutTopLong"
               YREF="TKRCloseout_dt" >
         <idField name="fBorderCmp" valueREF="eTop" />
       </posXYZ>
-      <posXYZ volume="TKRCloseoutOuterLong"
+      <posXYZ volume="TKRCloseoutTopLong"
               YREF="TKRCloseout_dtn" >
         <idField name="fBorderCmp" valueREF="eBottom" />
       </posXYZ>
-      <posXYZ volume="TKRCloseoutOuterShort"
+      <posXYZ volume="TKRCloseoutTopShort"
               zrot="90"
               XREF="TKRCloseout_dt" >
         <idField name="fBorderCmp" valueREF="eRight" />
       </posXYZ>
-      <posXYZ volume="TKRCloseoutOuterShort"
+      <posXYZ volume="TKRCloseoutTopShort"
               zrot="90"
               XREF="TKRCloseout_dtn" >
         <idField name="fBorderCmp" valueREF="eLeft" />
@@ -381,37 +405,37 @@
       <!-- top tray has Si on bottom only -->
       <posXYZ volume="TKRMCM"
               YREF="TKRMCM_dt"
-              ZREF="TKRMCMext_dzn">
+              ZREF="TKRMCMextTop_dzn">
         <idField name="fBorderCmp" valueREF="eFarTop" />
       </posXYZ>
     </composition>
 
-    <composition name="TKRCoreOuterBottom" envelope="TKRCoreOuterEnv">
-      <posXYZ volume="TKRCoreOuterBox" >
+    <composition name="TKRCoreOuterBottom" envelope="TKRCoreBotEnv">
+      <posXYZ volume="TKRCoreBotBox" >
         <idField name="fBorderCmp" valueREF="eCenter" />
       </posXYZ>
-      <posXYZ volume="TKRCloseoutOuterLong"
+      <posXYZ volume="TKRCloseoutBotLong"
               YREF="TKRCloseout_dt" >
         <idField name="fBorderCmp" valueREF="eTop" />
       </posXYZ>
-      <posXYZ volume="TKRCloseoutOuterLong"
+      <posXYZ volume="TKRCloseoutBotLong"
               YREF="TKRCloseout_dtn" >
         <idField name="fBorderCmp" valueREF="eBottom" />
       </posXYZ>
-      <posXYZ volume="TKRCloseoutOuterShort"
+      <posXYZ volume="TKRCloseoutBotShort"
               zrot="90"
               XREF="TKRCloseout_dt" >
         <idField name="fBorderCmp" valueREF="eRight" />
       </posXYZ>
-      <posXYZ volume="TKRCloseoutOuterShort"
+      <posXYZ volume="TKRCloseoutBotShort"
               zrot="90"
               XREF="TKRCloseout_dtn" >
         <idField name="fBorderCmp" valueREF="eLeft" />
       </posXYZ>
-      <!-- top tray has Si on bottom only -->
+      <!-- bottom tray has silicon on top only only -->
       <posXYZ volume="TKRMCM"
               YREF="TKRMCM_dtn"
-              ZREF="TKRMCMext_dz">
+              ZREF="TKRMCMextBot_dz">
         <idField name="fBorderCmp" valueREF="eFarBottom" />
       </posXYZ>
     </composition>
@@ -462,6 +486,12 @@
          XREF="faceWidth"
          YREF="faceWidth"
          ZREF="TKRFaceMinZ"
+         materialREF="TKRBotFaceMat" />
+
+    <box name="TKRFaceMinBot"
+         XREF="faceWidth"
+         YREF="faceWidth"
+         ZREF="TKRFaceMinBotZ"
          materialREF="TKRBotFaceMat" />
 
 
@@ -561,15 +591,15 @@
           "normal" thickness (middle and top only)  -->
 
     <!-- Make a stack for the bottom tray.  It's rotated, so
-         use SiLayerYMeas -->
+         use SiLayerYMeas (modified 21jun03)-->
     <stackZ name="trayBot" >
-      <axisPos volume="TKRFaceMin" >
+      <axisPos volume="TKRFaceMinBot" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
       </axisPos>
       <axisPos volume="TKRCoreOuterBottom" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
       </axisPos>
-      <axisPos volume="TKRTopFaceReg" >
+      <axisPos volume="TKRTopFaceSup" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRTopFace" />
       </axisPos>
       <axisPos volume="SiLayerYMeas" >
@@ -584,7 +614,7 @@
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" />
       </axisPos>
-      <axisPos volume="TKRBiasBox" >
+      <axisPos volume="TKRBiasBox" > 
 	<idField name="fTKRTrayCmp" valueREF="eTKRBias" />
       </axisPos>
       <axisPos volume="TKRFaceMin" >
@@ -640,7 +670,7 @@
 	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
       </axisPos>
       <axisPos volume="TKRTopFaceSup" >
-	<idField name="fTKRTrayCmp" valueREF="eTKRTopFace" />
+	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
       </axisPos>
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" />
@@ -664,7 +694,7 @@
 	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
       </axisPos>
       <axisPos volume="TKRTopFaceSup" >
-	<idField name="fTKRTrayCmp" valueREF="eTKRTopFace" />
+	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
       </axisPos>
       <axisPos volume="SiLayerYMeas" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" />
@@ -722,7 +752,8 @@
       </axisPos>
     </stackZ>
 
-    <!-- top tray.  It's rotated, so use YMeas versions of Si & converter -->
+    <!-- top tray.  It's rotated, so use YMeas versions of Si & converter
+         (modified 21jun03) -->
     <stackZ name="trayTop" >
       <axisPos volume="SiLayerYMeas" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" /> 
@@ -829,13 +860,13 @@
     <composition name="oneTKR" envelope="TKRStayClearBox">
       <posXYZ volume="oneTKRStack" />
       <posXYZ volume="TKRWallLong"
-              YREF="TKRWall_dt" />
+              YREF="TKRWall_dt"  />
       <posXYZ volume="TKRWallLong"
               YREF="TKRWall_dtn" />
       <posXYZ volume="TKRWallShort" 
               zrot="90"
-              XREF="TKRWall_dt" />
-      <posXYZ volume="TKRWallShort" 
+              XREF="TKRWall_dt"  /> 
+     <posXYZ volume="TKRWallShort" 
               zrot="90"
               XREF="TKRWall_dtn" />
     </composition>
