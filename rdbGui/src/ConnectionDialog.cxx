@@ -104,9 +104,11 @@ long ConnectionDialog::onKeyPress(FXObject *sender,FXSelector sel, void* ptr)
 {  
   FXEvent *event = (FXEvent*) ptr;
   if (event->code == KEY_Return || event->code == KEY_KP_Enter)
-    return 0;
-  //handle(this, MKUINT(ID_ACCEPT, SEL_COMMAND), NULL);
-  return FXDialogBox::onKeyPress(sender, sel, ptr);
+    {
+      handle(this, MKUINT(ID_ACCEPT, SEL_COMMAND), NULL);
+      return 1;
+    }
+  return 0;
 }
 
 
@@ -251,8 +253,8 @@ std::vector<FXString> ConnectionDialog::getConnectionData()
 {
   std::vector<FXString> data, host;
   data.push_back(m_uiDbname->getText());
-  host = splitString(m_uiHost->getText(), ":");
-  data.insert(data.end(), host.begin(), host.end());
+  //host = splitString(m_uiHost->getText(), ":");
+  data.push_back(m_uiHost->getText());
   data.push_back(m_uiUser->getText());
   data.push_back(m_uiPass->getText());
   return data;

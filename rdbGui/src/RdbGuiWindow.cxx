@@ -137,6 +137,10 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   m_shactive = getApp()->reg().readStringEntry("SETTINGS", "HighLightSyntax", "Y") == "Y";
   
   
+  // Initialize connection dialog and mysql connection
+  m_dgNewCon = new ConnectionDialog(this);
+  m_connect = new rdbModel::MysqlConnection(uiLog->getOutStream(), uiLog->getErrStream());
+  
   // Initialize the rdb manager and it's builder
   m_rdbBuilder = new rdbModel::XercesBuilder();
   m_rdbManager = rdbModel::Manager::getManager();
@@ -222,18 +226,18 @@ long RdbGUIWindow::onQuit(FXObject* sender,FXSelector sel, void* ptr)
 
 long RdbGUIWindow::onOpenConnection(FXObject*,FXSelector, void*)
 {
-  m_dgNewCon = new ConnectionDialog(this);
-  m_connect = new rdbModel::MysqlConnection();
+
   if (m_dgNewCon->execute(PLACEMENT_OWNER) != 0)
     {
       getApp()->beginWaitCursor();
       std::vector<FXString> data = m_dgNewCon->getConnectionData();      
       if (!(m_connect->open(data[1].text(), data[2].text(), data[3].text(), data[0].text()))) 
         {
-          uiLog->logText("Unable to connect to MySQL database\n");
+          uiLog->update();
         }
       else
         {
+          uiLog->update();
           m_uiDBSelection->appendItem(data[0]+" ("+data[2]+"@"+data[1]+")");
           m_uiDBSelection->setCurrentItem(0);   // this line will have to be changed
           
@@ -256,7 +260,6 @@ long RdbGUIWindow::onOpenConnection(FXObject*,FXSelector, void*)
         }
       getApp()->endWaitCursor();
     }
-  delete m_dgNewCon;
   return 1;
 }
 
@@ -271,10 +274,16 @@ long RdbGUIWindow::onCloseConnection(FXObject*,FXSelector, void*)
       message.text()))
     {
       m_connect->close();
-      delete m_connect;
       m_uiDBSelection->removeItem(m_uiDBSelection->getCurrentItem());
     }
   return 1;  
+}
+
+void RdbGUIWindow::closeConnection()
+{
+  m_connect->close();
+  m_uiDBSelection->removeItem(m_uiDBSelection->getCurrentItem());
+  
 }
 
 // Here we begin

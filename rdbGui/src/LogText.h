@@ -4,9 +4,14 @@
 
 #include "fx.h"
 
+#include <sstream>
+
 
 class LogText : public FXText 
 {
+ private:
+  std::ostringstream m_outStream,m_errStream; 
+
 
  public:
 
@@ -14,6 +19,11 @@ class LogText : public FXText
 
   /// Method for using FXText as a log window
   void  logText(FXString text);
+  
+  std::ostringstream* getOutStream();
+  std::ostringstream* getErrStream();
+  
+  void update();
 
 };
 

@@ -82,6 +82,8 @@ public:
 private:
 
   void loadXMLFile(FXString);
+  
+  void closeConnection();
   };
   
   
