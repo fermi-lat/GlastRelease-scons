@@ -128,7 +128,19 @@ Reconstruction.Members={
     "Sequencer/TkrIter",
     "Sequencer/Acd"
     };
-         
+Cal1.Members = { 
+    "CalXtalRecAlg", 
+    "CalClustersAlg/first"
+    };
+Tkr.Members = {
+    "TkrReconAlg/FirstPass"
+    };
+Cal2.Members = {
+    "CalClustersAlg/second"
+    };
+TkrIter.Members = {
+    "TkrReconAlg/Iteration"
+    };
 
 // -------------------------------------------
 //          tracker services
@@ -139,12 +151,13 @@ ApplicationMgr.ExtSvc   += { "TkrInitSvc"};
 // -------------------------------------------
 // Calorimeter services
 //
-// comment out since backed off
-//ApplicationMgr.DLLs += {"CalXtalResponse"};
-//ApplicationMgr.ExtSvc += {"CalCalibSvc"};
+ApplicationMgr.Dlls += {"CalXtalResponse"};
+#include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
 
 
-// Start up a CalibDataSvc 
+// -------------------------------------------
+//  Calibration sevices
+//
 ApplicationMgr.ExtSvc += {"CalibDataSvc"};
 
 ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
@@ -160,20 +173,8 @@ CalibDataSvc.CalibRootName = "Calib";
 CalibDataSvc.CalibFlavorList = {"ideal"};
 
 
-Cal1.Members = { 
-    "CalXtalRecAlg", 
-    "CalClustersAlg/first"
-    };
-Tkr.Members = {
-    "TkrReconAlg/FirstPass"
-    };
-Cal2.Members = {
-    "CalClustersAlg/second"
-    };
-TkrIter.Members = {
-    "TkrReconAlg/Iteration"
-    };
-second.OutputLevel=5;  // since this guy generates INFO lines
+
+
 // ----------------------------
 //   ACD recon
 //

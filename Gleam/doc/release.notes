@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v5r10  THB 2-mar-05    Cal fixed up
 * v5r9p3 THB 20-FEB-05   further support for the Cal calib stuff in test_Gleam
 * v5r9p2 THB 19-FEB-05   support for the Cal calib stuff in test_Gleam
 * v5r9p1 THB 15-FEB-05   add CalCalibSvc *and* CalXtalResponse

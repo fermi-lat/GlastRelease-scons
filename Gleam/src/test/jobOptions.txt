@@ -8,9 +8,6 @@
 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-second.OutputLevel=4; // too much info from second CalClustersAlg
-CalClustersAlg.OutputLevel=4; // too much info from second CalClustersAlg
-TkrVertexAlg.OutputLevel=4; // supress INFO message "Vertexing performed with: TkrComboVtxRecon(not a tool)"
 Output.Members={}; // turn off any root ouptut
 
 // how to set a different source
@@ -21,11 +18,6 @@ ApplicationMgr.EvtMax = 1000;
 MeritAlg.generated = 1000; // for estimation of Aeff--must be the same
 MeritAlg.IM_filename=""; // disable IM variable
 MeritAlg.cuts="LnA";     // no test for tail suppression
-
-// need these so support Calorimeter default 
-CalCalibSvc.DefaultFlavor = "cal_gleam_default";
-CalibDataSvc.CalibFlavorList += {"cal_gleam_default"};
-CalibDataSvc.CalibTimeSource  = "clock";
 
 
 //==============================================================
