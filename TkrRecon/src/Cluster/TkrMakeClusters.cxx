@@ -266,7 +266,11 @@ void TkrMakeClusters::sortTaggedStrips(std::vector<int> * list)
     // the following is a horrible kludge to do the merged sort 
     //    until I figure out how to get the predicate thing working
     
-    m_pBadStrips->sortTaggedStrips(list);
+    if (m_pBadStrips) {
+        m_pBadStrips->sortTaggedStrips(list);
+    } else {
+        std::sort(list->begin(), list->end());
+    }
 }
     
 int TkrMakeClusters::swapForSort(const int strip) {
