@@ -12,18 +12,23 @@
 #include <sstream>
 
 #include "TF1.h"
+#include "TProfile.h"
+#include "TPostScript.h"
 
-#include "PSF.h"
+//#include "PSF.h"
 #include "Fitter.h"
 #include "MakeDists.h"
 
-MakeDists::MakeDists(const std::string &summaryFile) : IRF() {
+MakeDists::MakeDists(const std::string &summaryFile, bool makeProfile)
+   : IRF(), m_makeProfile(makeProfile) {
    m_summary_filename = output_file_root() + summaryFile;
 }
 
 void MakeDists::project(const std::string &branchName, 
                         double xmin, double xmax, int nbins,
                         Fitter * fitter) {
+
+   m_nbins = nbins;
 
    open_input_file();
 
@@ -42,27 +47,35 @@ void MakeDists::project(const std::string &branchName,
          double logecenter = logestart + logedelta*j;
          double ecenter = pow(10, logecenter);
          std::ostringstream title;
-         title << "Scaled distribution: "
-               << (int)(ecenter+0.5) << " MeV, "
-               << angles[i] << "--"
+         title << (int)(ecenter+0.5) << " MeV, "
+               << angles[i] << "-"
                << angles[i+1] << " degrees";
          TCut energy(energy_cut(j));
-         TH1F * h = new TH1F(hist_name(i, j), title.str().c_str(), 
+         TH1 * h;
+         if (m_makeProfile) {
+            h = new TProfile(hist_name(i, j), title.str().c_str(), 
                              nbins, xmin, xmax);
+         } else {
+            h = new TH1F(hist_name(i, j), title.str().c_str(), 
+                         nbins, xmin, xmax);
+         }
          h->GetXaxis()->SetTitle(branchName.c_str());
          std::cout << "\t" << title.str() << "... ";
          m_tree->Project(h->GetName(), branchName.c_str(),
                          goodEvent && energy && angle);
 
-         double scale = h->Integral();
-         if (scale > 0) { 
-            h->Scale(1./scale);
+         if (!m_makeProfile) {
+            double scale = h->Integral();
+            if (scale > 0) { 
+               h->Scale(1./scale);
+            }
+            double mean = h->GetMean();
+            double rms = h->GetRMS();
+            std::cout << "count " << scale << ", "
+                      << "mean " << mean << ", "
+                      << "rms " << rms;
          }
-         double mean = h->GetMean();
-         double rms = h->GetRMS();
-         std::cout << "count " << scale << ", "
-                   << "mean " << mean << ", "
-                   << "rms " << rms << std::endl;
+         std::cout << std::endl;
 
          if (fitter) {
             fitter->applyFit(h);
@@ -76,9 +89,61 @@ void MakeDists::project(const std::string &branchName,
    histFile.Write();
 }
 
+// void MakeDists::draw(const std::string &ps_filename, double ymax) {
+// // Delegate to PSF::draw(...) method.
+//    PSF psf;
+//    psf.m_summary_filename = m_summary_filename;
+//    psf.ymax = ymax;
+//    psf.draw(ps_filename);
+// }
+
 void MakeDists::draw(const std::string &ps_filename, double ymax) {
-// Delegate to PSF::draw(...) method.
-   PSF psf;
-   psf.m_summary_filename = m_summary_filename;
-   psf.draw(ps_filename,ymax);
+
+    TFile psf_file(summary_filename().c_str() ); // for the histograms
+    if( ! psf_file.IsOpen()) throw "could not open psf root file";
+
+    TCanvas c("psf","psf"); //, 4,2);
+    divideCanvas(c,4,2, std::string("Plots from ")
+                 +summary_filename());
+
+    TPostScript ps((output_file_root()+ ps_filename).c_str(), 112);
+
+    for( int i=0; i<angle_bins; ++i){
+       ps.NewPage();
+       for(int j=0; j<energy_bins; ++j){
+          c.cd(j+1);
+          gPad->SetRightMargin(0.02);
+          gPad->SetTopMargin(0.03);
+          
+          double logecenter=logestart+logedelta*j, ecenter=pow(10, logecenter);
+          
+          double xmin=j/double(energy_bins), xmax= (j+1)/double(energy_bins);
+          
+// Amazingly, this code also works for Profile plots.
+          TH1F* h = (TH1F*)psf_file.Get(hist_name(i,j));
+          if( h==0) { 
+             std::cerr << "could not find hist " 
+                       << hist_name(i,j) << std::endl;
+             return;
+          }
+          // now add overflow to last bin
+          h->SetBinContent(m_nbins, h->GetBinContent(m_nbins)
+                           +h->GetBinContent(m_nbins+1));
+          h->SetMaximum(ymax);
+          h->SetStats(false);
+          h->SetLineColor(i+1);
+          
+          printf("Drawing ...%s\n", h->GetTitle());
+
+// Rewrite the title to describe the energy and angle ranges.
+          char title[256];
+          sprintf(title, " %6d MeV, %2d-%2d degrees", 
+                  (int)(ecenter+0.5), angles[i], angles[i+1]);
+          h->SetTitle(title);   
+          h->GetXaxis()->CenterTitle(true);
+          h->Draw(); 
+       }
+       c.Update();
+    }
+    ps.Close(); // print ps file,
 }

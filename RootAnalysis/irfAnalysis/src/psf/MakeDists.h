@@ -26,7 +26,7 @@ class MakeDists : public IRF {
 
 public:
 
-   MakeDists(const std::string &summaryFile);
+   MakeDists(const std::string &summaryFile, bool makeProfile=false);
 
 //   ~MakeDists(){}
    
@@ -35,6 +35,12 @@ public:
                 Fitter *fitter=0);
 
    void draw(const std::string &ps_filename, double ymax);
+
+private:
+
+   bool m_makeProfile;
+
+   int m_nbins;
 
 };
 
