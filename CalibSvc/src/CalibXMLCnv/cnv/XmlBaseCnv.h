@@ -11,12 +11,16 @@
   @author J. Bogart
 */
 #include "GaudiKernel/Converter.h"
-#include <dom/DOM_Document.hpp>
+#include <dom/DOM_Element.hpp>
 
 class ISvcLocator;
 class GenericAddress;
 class ICalibXmlSvc;
-class ICalibMetaSvc;
+class ICalibMetaCnvSvc;
+
+namespace CalibData {
+  class CalibTime;
+}
 
 template <class TYPE> class CnvFactory;
 
@@ -89,13 +93,13 @@ protected:
    *  does is get a pointer to the appropriate derived converter.
    *  Converters typically don't need to override this method
    *  but only to  override/implement some of the i_* methods.
-   *  @param element the DOM_Element (actually a DOM_Document)
-       to be used to builds the object
+   *  @param element the DOM_Element (typically the root element of the
+   *   document) to be used to build the object
    *  @param refpObject the object to be built
    *  @param address the opaque address for this object
    *  @return status depending on the completion of the call
    */
-  virtual StatusCode internalCreateObj (DOM_Document element,
+  virtual StatusCode internalCreateObj (const DOM_Element& element,
                                         DataObject*& refpObject,
                                         IOpaqueAddress* address);
   
@@ -105,21 +109,31 @@ protected:
    *  does nothing; it should not normally be called because it doesn't
    *  correspond to any TCDS class.  Instead, 
    *  i_createObj of some derived class will be called.
-   *  @param element the DOM_Element (actually a DOM_Document) 
+   *  @param element the DOM_Element (typically root element of document)
    *  to be used to builds the object
    *  @param refpObject the object to be built
    *  @return status depending on the completion of the call
    */
-  virtual StatusCode i_createObj (DOM_Document element,
+  virtual StatusCode i_createObj (const DOM_Element& element,
                                   DataObject*& refpObject);
 
   /// In case there is additional work to do on the created object
   virtual StatusCode i_processObj(DataObject* pObject,
                                   IOpaqueAddress* address);
 
-  ICalibXmlSvc* m_xmlSvc;
-  ICalibMetaSvc* m_metaSvc;
+  // Might want to verify that instrument, calType are correct,
+  // for example.  If so, might as well provide the service in
+  // the base converter.
+  virtual StatusCode readHeader(const DOM_Element&) {
+    return StatusCode::SUCCESS;
+  }
 
+  ICalibXmlSvc* m_xmlSvc;
+  ICalibMetaCnvSvc* m_metaSvc;
+
+  int m_serNo;
+  CalibData::CalibTime*  m_vstart;
+  CalibData::CalibTime*  m_vend;
 };
 
 

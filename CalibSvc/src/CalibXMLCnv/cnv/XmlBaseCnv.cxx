@@ -15,10 +15,13 @@
 
 #include "CalibSvc/ICalibXmlSvc.h"
 #include "CalibSvc/ICalibMetaCnvSvc.h"
+#include "CalibData/CalibTime.h"
+
+#include <dom/DOM_Document.hpp>
 
 XmlBaseCnv::XmlBaseCnv( ISvcLocator* svc, const CLID& clid) :
   Converter (XML_StorageType, clid, svc),
-  m_xmlSvc (0), m_metaSvc(0) {
+  m_xmlSvc (0), m_metaSvc(0), m_vstart(0), m_vend(0) {
 }
 
 StatusCode XmlBaseCnv::initialize() {
@@ -84,13 +87,14 @@ StatusCode XmlBaseCnv::createObj(IOpaqueAddress* addr,
   // Then do some fancy footwork in internalCreateObj to get the 
   // appropriate specific converter invoked to interpret the DOM 
   // correctly and make a new object of the correct kind.
-  return internalCreateObj(doc, refpObject, addr);
+
+  return internalCreateObj(doc.getDocumentElement(), refpObject, addr);
 }
 
 
 /// In a backhanded way, invoke the right specific converter
 /// for the type of the object to be created
-StatusCode XmlBaseCnv::internalCreateObj(DOM_Document doc,
+StatusCode XmlBaseCnv::internalCreateObj(const DOM_Element& elt,
                                          DataObject*& refpObject,
                                          IOpaqueAddress* address) {
   // creates a msg stream for debug purposes
@@ -119,9 +123,17 @@ StatusCode XmlBaseCnv::internalCreateObj(DOM_Document doc,
       converter = this;
     }
   }
+
+  unsigned int serNo = *(address->ipar());
+  // Make start and end times available to the specific converter
+  ITime* i_vstart = m_vstart;
+  ITime* i_vend = m_vend;
+  StatusCode sc = m_metaSvc->getValidInterval(serNo, 
+                                              i_vstart, 
+                                              i_vend);
   
   // creates an object for the node found
-  StatusCode sc = converter->i_createObj (doc, refpObject);
+  if (sc.isSuccess()) sc = converter->i_createObj (elt, refpObject);
   if (sc.isFailure()) {
     return sc;
   }
@@ -139,7 +151,7 @@ StatusCode XmlBaseCnv::i_processObj(DataObject*, // pObject,
  
 
 // Shouldn't ever really get here 
-StatusCode XmlBaseCnv::i_createObj(DOM_Document, DataObject*&) {
+StatusCode XmlBaseCnv::i_createObj(const DOM_Element&, DataObject*&) {
   return StatusCode::FAILURE;
 }
 
