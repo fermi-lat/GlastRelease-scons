@@ -13,10 +13,16 @@ namespace calibUtil {
   // when building calibUtil shareable (for now it's just a static library).
   MYSQL* Metadata::readCxt = 0;
   MYSQL* Metadata::writeCxt = 0;
-  std::string Metadata::row("");
+
   const unsigned int Metadata::rowReady = Metadata::eOpened | Metadata::eValid 
   | Metadata::eInputDesc | Metadata::eComment;
 
+
+  Metadata::Metadata() : row(""), rowStatus(0), table("$(MYSQL_METATABLE)") {
+    int nsub = facilities::Util::expandEnvVar(&table);
+    // IF this doesn't work, use default
+    if (!nsub) table = std::string("metadata");
+  }
 
   // The next 5 methods concern connection to the server
   bool Metadata::connectRead(eRet& err) {
@@ -109,10 +115,10 @@ namespace calibUtil {
 
   Metadata::eRet Metadata::openRecord(const std::string& instr, 
                                       const std::string& calibType,
-                                      const std::string& dataFormat, 
+                                      const std::string& dataFmt, 
                                       const std::string& fmtVersion,
-                                      const std::string& filename, 
-                                      const std::string& calibStatus,
+                                      const std::string& dataIdent, 
+                                      const std::string& completion,
                                       const std::string& procLevel){
     eRet ret;
 
@@ -128,18 +134,19 @@ namespace calibUtil {
     }
     // Do checking in advance of column values which come from an
     // enumerated sets.
-    if (!(checkCalibStatusInput(calibStatus) || 
+    if (!(checkCompletionInput(completion) || 
           checkProcLevelInput(procLevel)) )
       return RETBadValue;
 
     //    += is a synonym for row.append(..)
-    row += "insert into metadata set instrument=";    row += instr;
-    row += ", calib_type=";  row += calibType;
-    row += ", data_format="; row += dataFormat;
-    row += ", format_version="; row += fmtVersion;
-    row += ", calib_status="; row += calibStatus;
-    row += ", calib_file_name"; row += filename;
-    row += ", proc_level"; row += procLevel;
+    row += "insert into "; row += table;
+    row += " set instrument='";    row += instr;
+    row += "', calib_type='";  row += calibType;
+    row += "', data_fmt='"; row += dataFmt;
+    row += "', fmt_version='"; row += fmtVersion;
+    row += "', completion='"; row += completion;
+    row += "', data_ident='"; row += dataIdent;
+    row += "', proc_level='"; row += procLevel; row+="'";
     rowStatus = eOpened;
     return RETOk;
   }
@@ -154,6 +161,7 @@ namespace calibUtil {
     if (!(rowStatus & eCreator)) {
       addCreator("calibUtil::Metadata::insertRecord");
     }
+    addUser();
     // Actually write it...
     int ret = mysql_query(writeCxt, row.c_str());
     clearRecord();
@@ -183,17 +191,18 @@ namespace calibUtil {
 
     if (rowStatus & eValid) return RETWrongState;
     
-    row += ", validity_start_time="; row += startTime.timeString();
-    row += ", validity_end_time="; row += endTime.timeString();
+    row += ", validity_start_time='"; row += startTime.timeString();
+    row += "', validity_end_time='"; row += endTime.timeString();
+    row += "'";
     rowStatus |=  eValid;
     return RETOk;   // or something else
   }
 
-  Metadata::eRet Metadata::addComment(std::string comment) {
+  Metadata::eRet Metadata::addNotes(std::string comment) {
     if (!(rowStatus & eOpened) ) return RETWrongState;
     if (rowStatus & eComment) return RETWrongState;
 
-    row += ",comments="; row += comment;
+    row += ",notes='"; row += comment; row += "'";
     rowStatus |= eComment;
     return RETOk;
   }
@@ -202,7 +211,7 @@ namespace calibUtil {
     if (!(rowStatus & eOpened) ) return RETWrongState;
     if (rowStatus & eInputDesc) return RETWrongState;
 
-    row += ",input_desc="; row += desc;
+    row += ",input_desc='"; row += desc; row+="'";
     rowStatus |= eInputDesc;
     return RETOk;
   }
@@ -211,9 +220,26 @@ namespace calibUtil {
     if (!(rowStatus & eOpened) ) return RETWrongState;
     if (rowStatus & eCreator) return RETWrongState;
 
-    row += ",creator="; row += creator;
+    row += ",creator='"; row += creator; row += "'";
     rowStatus |= eCreator;
     return RETOk;
+  }
+
+  // WARNING: Need to look into what's available on Windows.
+  // Might have to do something different to get user (or just punt)
+  Metadata::eRet Metadata::addUser() {
+    std::string user("$(USER)");
+    row +=",uid='"; 
+
+    int nsub = facilities::Util::expandEnvVar(&user);
+    if (nsub == 1) {
+      row += user; row+="'";
+      return RETOk;
+    }
+    else {
+      row += "'unkown'";
+      return RETBadValue;
+    }
   }
 
   Metadata::eRet Metadata::findBest(unsigned int *ser,
@@ -241,16 +267,18 @@ namespace calibUtil {
     }
 
     // Sort rows by timestamp, most recent first
-    std::string query("select serial_num, validity_start_time, validity_end_time, proc_time,");
-    query += "calib_status from metadata order by proc_time desc where ";
-    query += "(calib_status = 'OK') and instrument ="; query += instrument;
-    query += "and calib_type =";
+    std::string 
+      query("select ser_no,vstart,vend, enter_time,completion from ");
+    query += table;
+    query += " order by enter_time desc where ";
+    query += "(completion = 'OK') and instrument ='"; query += instrument;
+    query += "' and calib_type ='";
     query += calibType;
-    query += " and ";
+    query += "' and '";
     query += timestamp.timeString();
-    query += "'> validity_start_time) and (validity_end_time > '";
+    query += "'> vstart) and (vend > '";
     query += timestamp.timeString();
-
+    query += "')";
     while (levelMask) {
       // find highest priority known bit in levelMask, add appropriate
       // clause onto query.  Return false if no known bits found
@@ -296,11 +324,12 @@ namespace calibUtil {
                              std::string* fmtVersion,
                              std::string* filename) {
 
-    std::string q("select data_format, format_version, calib_file_name ");
-    q += "from metadata where serial_num=";
+    std::string q("select data_fmt, fmt_version, data_ident from ");
+    q += table;
+    q += "where ser_no='";
     std::strstream s;
     s << serialNo;
-    q += s.str();
+    q += s.str(); q+= "'";
 
     int ret = mysql_query(readCxt, q.c_str());
     if (ret) {
@@ -331,16 +360,16 @@ namespace calibUtil {
     bool ret = true;
     unsigned int testBit = 0;
     if ((testBit = LEVELProd) & *levelMask) {
-      q += "and (proc_level=PRODUCTION)";
+      q += "and (proc_level='PROD')";
     }
     else if ((testBit = LEVELDev) & *levelMask) {
-      q += "and (proc_level=DEVELOPMENT)";
+      q += "and (proc_level='DEV')";
     }
     else if ((testBit = LEVELTest) & *levelMask) {
-      q += "and (proc_level=TEST)";
+      q += "and (proc_level='TEST')";
     }
     else if ((testBit = LEVELSuper) & *levelMask) {
-      q += "and (proc_level=SUPERSEDED)";
+      q += "and (proc_level='SUPSED')";
     }
     else {      // All that's left are unknown bits.  
       testBit = *levelMask;
@@ -356,7 +385,7 @@ namespace calibUtil {
   // whole it's better to do this ourselves rather than depending on
   // MySQL to do it.  The latter is possible in some cases, but 
   // handling and reporting errors is difficult.
-  bool Metadata::checkCalibStatusInput(const std::string& stat) {
+  bool Metadata::checkCompletionInput(const std::string& stat) {
     return ((stat.compare("OK") == 0 ) || (stat.compare("INCOMPLETE") == 0) 
             || (stat.compare("ABORTED") == 0) );
   }
