@@ -121,8 +121,8 @@ StatusCode McValsTool::initialize()
     addItem("McZDirErr",      &MC_zdir_err);     
     
     addItem("McDirErr",       &MC_dir_err);      
-    addItem("McTKR1DirErr",   &MC_TKR1_dir_err); 
-    addItem("McTKR2DirErr",   &MC_TKR2_dir_err);   
+    addItem("McTkr1DirErr",   &MC_TKR1_dir_err); 
+    addItem("McTkr2DirErr",   &MC_TKR2_dir_err);   
     
     zeroVals();
     
