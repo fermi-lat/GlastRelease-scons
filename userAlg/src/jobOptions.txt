@@ -15,7 +15,7 @@ FluxAlg.source_name = "userspectrum";
 MessageSvc.OutputLevel      = 2;
 
 // include algorithms in this package to append 
-ApplicationMgr.TopAlg += { "UserAlg"};
+Top.Members += { "UserAlg"};
 
 // How to pause the GUI with a list of events of interest
 //   You can also pause the GUI on any calculable condition. (See userAlg.)
