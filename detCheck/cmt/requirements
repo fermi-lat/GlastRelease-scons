@@ -15,7 +15,7 @@ apply_pattern package_headers
 library detCheck -no_share ${detCheck_headers} -no_share \
    Overlaps.cxx SolidStats.cxx
 
-private
+##private
 application test overlapsMain.cxx Overlaps.cxx
 
 # Only can build this app on Linux (doesn't compile on Windows).
@@ -24,6 +24,8 @@ application test overlapsMain.cxx Overlaps.cxx
 # say
 #     $ gmake Linux
 application summary -group=Linux solidStatsMain.cxx SolidStats.cxx 
+
+application constsDoc constsDocMain.cxx 
 
 
 
