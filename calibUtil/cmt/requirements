@@ -9,7 +9,9 @@ author Joanne Bogart <jrb@slac.stanford.edu>
 use facilities v2r*
 use xmlBase    v5r* 
 
-use MYSQLEXT * IExternal
+## use MYSQLEXT * IExternal
+## rdbModel use could be -no_auto_imports
+use rdbModel v1r*
 
 
 set MYSQL_HOST       centaurusa.slac.stanford.edu
@@ -27,7 +29,7 @@ library calibUtil  $(calibUtil_headers) *.cxx *.c
 
 application test_strips test/test_strips.cxx StripSrv.cxx GenericSrv.cxx
 
-application test_meta   test/test_meta.cxx  Metadata.cxx
+application test_meta   test/test_meta.cxx 
 application add_meta    test/add_meta.cxx 
 
 
