@@ -81,15 +81,7 @@ StatusCode FluxAlg::initialize(){
     return sc;
 }
 
-namespace {
-    double massOf(std::string name) {
-        static double GeV=1.0, MeV = GeV/1000, keV = MeV/1000;
-        if( name == "gamma" ) return 0;
-        if( name == "p")      return 938.272 * MeV;
-        if( name == "e-")     return 511.0 * keV;
-        return -1;
-    }
-}
+
 //------------------------------------------------------------------------
 //! process an event
 StatusCode FluxAlg::execute()
@@ -99,31 +91,29 @@ StatusCode FluxAlg::execute()
     //
     // have the flux service create parameters of an incoming particle 
     //
-    //using namespace mc;
     
     m_flux->generate();
     
     HepPoint3D p = m_flux->launchPoint()*10.;//the 10 is so that d is in mm, instead of cm.
     HepPoint3D d = m_flux->launchDir();
-    double ke = m_flux->energy(); // kinetic energy
+    double ke = m_flux->energy()*1E3; // kinetic energy in MeV
     std::string particleName = m_flux->particleName();
     
 
-    //here's where we get the particleID for later.
+    //here's where we get the particleID and mass for later.
     ParticleProperty* prop = m_partSvc->find(particleName);
 
-    int partID = prop->type();
+    assert(prop);
+    int partID = prop->jetsetID(); // same as stdhep id
       
     log << MSG::DEBUG << particleName
         << "(" << m_flux->energy()
         << " GeV), Launch: " 
         << "(" << p.x() <<", "<< p.y() <<", "<<p.z()<<")" 
-        << " Dir " 
+        << "mm, Dir " 
         << "(" << d.x() <<", "<< d.y() <<", "<<d.z()<<")" 
         << endreq;
     
-    if( m_event%100 ==0 ) log << MSG::WARNING << "Event % " << m_event << endreq;
-
     mc::McParticleCol* pcol = new mc::McParticleCol;
 
     // Here the TDS is prepared to receive hits vectors
@@ -137,7 +127,7 @@ StatusCode FluxAlg::execute()
     IDataProviderSvc* temp = eventSvc();
     //log << MSG::DEBUG << "FluxAlg temp =" << temp << endreq;   
     
-    StatusCode sc2 = temp->registerObject("/Event/McParticleCol", pcol);
+    StatusCode sc2 = temp->registerObject("/Event/MC/McParticleCol", pcol);
     if( sc2.isFailure()) {
         log << MSG::ERROR << "Could not Register pcol" << endreq;
         return sc2;
@@ -145,26 +135,19 @@ StatusCode FluxAlg::execute()
     mc::McParticle * parent= new mc::McParticle;
     pcol->push_back(parent);
 
-    HepLorentzVector pin(d,ke);  
+    double mass = prop->mass() , 
+        energy = (ke+mass),
+        momentum=sqrt(energy*energy - mass*mass); 
+    HepLorentzVector pin(d*momentum,energy);
 
     // This parent particle decay at the start in the first particle, 
     // so initial momentum and final one are the same
-    parent->initialize(parent, partID, //pdef->GetPDGEncoding(), 
+    parent->initialize(parent, partID, 
         mc::McParticle::PRIMARY,
         pin);
     parent->finalize(pin, p);
-#if 0
-    SmartDataPtr<MCEvent> mcEvent(eventSvc(),"/Event/MC");
-    if( 0==mcEvent) { 
-        log << MSG::ERROR << "could not find the McEvent header" << endreq;
-        return StatusCode::FAILURE;
-    }
-#endif
-   // mcEvent->setSourceId(m_flux->numSource());
-    
-    double mass = massOf(particleName), 
-        energy = mass+ke, 
-        momentum= sqrt(energy*energy+mass*mass);
+
+    // mcEvent->setSourceId(m_flux->numSource());
     return sc;
 }
 
@@ -177,22 +160,3 @@ StatusCode FluxAlg::finalize(){
     return sc;
 }
 
-/*
-mc::McParticleCol* pcol = new mc::McParticleCol;
-    eventSvc()->registerObject("/Event/MC/McParticleCol", pcol);
-    mc::McParticle * parent= new mc::McParticle;
-    pcol->push_back(parent);
-
-    // This parent particle decay at the start in the first particle, 
-    // so initial momentum and final one are the same
-    parent->initialize(parent, pdef->GetPDGEncoding(), 
-        mc::McParticle::PRIMARY,
-        pin);
-    parent->finalize(pin, p);
-*/
-/*// Here the TDS is prepared to receive hits vectors
-    // Check for the MC branch - it will be created if it is not available
-    DataObject *mc;
-    eventSvc()->retrieveObject("/Event/MC", mc);
-
-    log << MSG::DEBUG << "TDS ready" << endreq;*/
