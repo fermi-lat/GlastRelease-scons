@@ -312,6 +312,8 @@ long RdbGUIWindow::onSendQuery(FXObject*,FXSelector, void*)
 {
   FXCheckList *columns = (FXCheckList *) uiTblColList->getColList();
   rdbModel::ResultHandle *queryResult = searchFrame->getQueryResult();
+  uiLog->update();
+  
   uiTable->setTableSize(queryResult->getNRows(), columns->getNumItems());
   
   int i,j;

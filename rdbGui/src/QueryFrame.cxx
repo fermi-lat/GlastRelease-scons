@@ -245,6 +245,8 @@ rdbModel::Assertion::Operator* QueryFrame::buildCompOperator(std::string col,
 rdbModel::Assertion::Operator* QueryFrame::buildOperator(int row)
 {
   rdbModel::Assertion::Operator *leftOper;
+  std::vector<rdbModel::Assertion::Operator* > children;
+  
   FXComboBox *column, *compOp, *conjOp;
   std::string leftArg, comp, rightArg;
   
@@ -256,21 +258,43 @@ rdbModel::Assertion::Operator* QueryFrame::buildOperator(int row)
   comp = compOp->getText().text();
   rightArg = m_widgets[row]->getValue();
   
-  leftOper = buildCompOperator(leftArg, comp, rightArg);
+  children.push_back(buildCompOperator(leftArg, comp, rightArg));
   
-  if ((row + 1) < m_searchFrame->getNumRows())
+  while (row + 1 < m_searchFrame->getNumRows())
     {
-      std::vector<rdbModel::Assertion::Operator* > children;
-      children.push_back(leftOper);
-      children.push_back(buildOperator(row + 1));
-      rdbModel::OPTYPE opType;
       conjOp = (FXComboBox *)m_searchFrame->childAtRowCol(row,3);
+
       if (conjOp->getText()=="AND")
-        opType = rdbModel::OPTYPEand;
-      else  // "OR" case
-        opType = rdbModel::OPTYPEor;
-      return new rdbModel::Assertion::Operator(opType, children);
+        {
+          row++;
+          column = (FXComboBox *) m_searchFrame->childAtRowCol(row,0);
+          compOp = (FXComboBox *) m_searchFrame->childAtRowCol(row,1);
+          
+          leftArg = column->getText().text();
+          comp = compOp->getText().text();
+          rightArg = m_widgets[row]->getValue();
+          children.push_back(buildCompOperator(leftArg, comp, rightArg));
+        }
+      else
+        break;
+    }
+    
+  if (children.size() > 1)
+    {
+      leftOper = new rdbModel::Assertion::Operator(rdbModel::OPTYPEand, children);
     }
   else
-    return leftOper;   
+    {
+      leftOper = children[0];
+    }
+    
+  children.clear();
+  if (row + 1 < m_searchFrame->getNumRows())
+    {
+      children.push_back(leftOper);
+      children.push_back(buildOperator(row + 1));
+      leftOper = new rdbModel::Assertion::Operator(rdbModel::OPTYPEor, children);
+    }
+    
+  return leftOper;
 }
