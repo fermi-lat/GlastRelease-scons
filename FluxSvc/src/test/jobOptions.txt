@@ -4,13 +4,12 @@
 //
 
 
-ApplicationMgr.ExtSvc   = { "FluxSvc" };
-
-ApplicationMgr.DLLs   = { "FluxSvc" }; 
-
+ApplicationMgr.ExtSvc += { "FluxSvc" };
+ApplicationMgr.DLLs   += { "FluxSvc" }; 
+FluxSvc.source_lib = {"$(FLUXROOT)/xml/source_library.xml"};
+ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
 
 ApplicationMgr.TopAlg = { "FluxTestAlg" };
-
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
@@ -22,10 +21,10 @@ FluxSvc.source_lib ={"$(FLUXROOT)/xml/source_library.xml"};
 FluxSvc.source_lib += {"$(FLUXROOT)/xml/user_library.xml"};
 
 // ask for a source that is in the user_library
-FluxTestAlg.source_name="default";
+FluxAlg.source_name="default";
 
 ApplicationMgr.EvtSel = "NONE";
-ApplicationMgr.EvtMax = 100;
+ApplicationMgr.EvtMax = 10;
 
 //==============================================================
 //

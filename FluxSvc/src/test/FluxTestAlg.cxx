@@ -32,10 +32,10 @@ private:
 
 static const AlgFactory<FluxTestAlg>  Factory;
 const IAlgFactory& FluxTestAlgFactory = Factory;
-
+/*
 void WARNING (const char * text ){  std::cerr << "WARNING: " << text << '\n';}
 void FATAL(const char* s){std::cerr << "\nERROR: "<< s;}
-
+*/
 
 //------------------------------------------------------------------------------
 //

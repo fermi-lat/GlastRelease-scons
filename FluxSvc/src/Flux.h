@@ -34,6 +34,9 @@ public:
     /// the particle generated 
     virtual std::string particleName()const;
     
+    /// the particle property entry for the last particle generated 
+    //virtual ParticleProperty* property()const=0;
+
     /// its kinetic energy
     virtual double energy()const;
     
@@ -70,7 +73,7 @@ public:
     /// return a unique number correcponding to that spectrum
     virtual int numSource()const;
     
-    virtual void addFactory( const IFactory* factory );
+   // virtual void addFactory( const IFactory* factory );
     
     virtual void addFactory(std::string name, const ISpectrumFactory* factory );/* {
                                                                                 insert(std::make_pair<std::string, const ISpectrumFactory*>(name, factory));

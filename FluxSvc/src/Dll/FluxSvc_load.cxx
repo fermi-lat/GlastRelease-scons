@@ -13,7 +13,6 @@
 #include "GaudiKernel/ISvcFactory.h"
 #include "GaudiKernel/IAlgFactory.h"
 
-#include "flux/ISpectrumFactory.h"
 
 #define DLL_DECL_SERVICE(x)    extern const ISvcFactory& x##Factory; x##Factory.addRef();
 #define DLL_DECL_CONVERTER(x)  extern const ICnvFactory& x##Factory; x##Factory.addRef();
@@ -22,6 +21,7 @@
 
 void FluxSvc_load() {
     DLL_DECL_SERVICE( FluxSvc );
+    DLL_DECL_ALGORITHM( FluxAlg );
     
 }
 

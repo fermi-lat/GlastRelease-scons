@@ -13,12 +13,8 @@
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 
-// nasty include needed so that we can get at the HepRandomEngine
-// in the initialize method. (Ian Gable) 
-// The actual is GaudiSvc
-#if 0
-#include "src/RndmGenSvc/HepRndmBaseEngine.h"
-#endif
+#include "GaudiKernel/IParticlePropertySvc.h"
+
 #include "CLHEP/Random/Random.h"
 #include "CLHEP/Random/RanluxEngine.h"
 
@@ -32,9 +28,10 @@
 static SvcFactory<FluxSvc> a_factory;
 const ISvcFactory& FluxSvcFactory = a_factory;
 
-void FATAL(const char* text){std::cerr << text << std::endl;}
-void WARNING(const char* text){std::cerr << text << std::endl;}
+//void FATAL(const char* text){std::cerr << text << std::endl;}
+//void WARNING(const char* text){std::cerr << text << std::endl;}
 
+static std::string default_source_library("$(FLUXROOT)/xml/source_library.xml");
 
 // ------------------------------------------------
 // Implementation of the FluxSvc class
@@ -84,13 +81,15 @@ StatusCode FluxSvc::initialize ()
     // bind all of the properties for this service
     setProperties ();
     
-    //set a default source library, which the user can add to or change
-    if(m_source_lib.begin()==m_source_lib.end()){
-    m_source_lib.push_back("$(FLUXROOT)/xml/source_library.xml");
-    }
-
     // open the message log
     MsgStream log( msgSvc(), name() );
+
+    //If source library was not set, put in default
+    if( m_source_lib.empty() ){
+        m_source_lib.push_back(default_source_library);
+        log << MSG::INFO << "Set source library list to " << default_source_library << endreq;
+    }
+
      
     // create a FluxMgr object which will then be available.
     m_fluxMgr = new FluxMgr(m_source_lib);
@@ -102,6 +101,12 @@ StatusCode FluxSvc::initialize ()
         log << MSG::ERROR  << "Did not initialize properly: no sources detected" << endreq;
         status = StatusCode::FAILURE;
     }
+        
+    if ( service("ParticlePropertySvc", m_partSvc).isFailure() ){
+        log << MSG::ERROR << "Couldn't find the ParticlePropertySvc!" << endreq;
+        return StatusCode::FAILURE;
+    }
+
     
     return status;
 }

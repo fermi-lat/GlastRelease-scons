@@ -1,10 +1,11 @@
 package FluxSvc
-version v3r2
+version v4
 
 branches FluxSvc mgr doc
 
 use flux 
 use GaudiSvc
+use GlastEvent
 
 include_dirs $(FLUXSVCROOT)
 
@@ -23,6 +24,7 @@ library FluxSvc  *.cxx \
  ${FluxSvc_headers}
 
 
+macro_append FluxSvc_headers "" WIN32 "test/*.txt test/*.xml"
 # test program, using local joboptions
 
 apply_pattern package_test

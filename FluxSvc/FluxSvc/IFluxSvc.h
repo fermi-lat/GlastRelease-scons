@@ -18,6 +18,7 @@ static const InterfaceID IID_IFluxSvc(910, 1 , 0);
 // forward declarations
 class IFlux;
 class HepRandomEngine;
+class IParticlePropertySvc;
 
 //! Abstract interface for the flux service, FluxSvc.
 class  IFluxSvc : virtual public IInterface {
@@ -39,8 +40,7 @@ public:
     
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IFluxSvc; }
-    
-    
+ 
 };
 
 #endif  // _H_IFluxSvc
