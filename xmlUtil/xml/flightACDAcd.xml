@@ -308,7 +308,7 @@
       <axisMPos volume="topTapeLong"
                 ncopyREF="topTapesPerRow"
                 gapREF="topTapeGap" >
-        <idField name="fCol" value="0" step="1" />
+<!--        <idField name="fCol" value="0" step="1" /> -->
       </axisMPos>
     </stackY>
 
@@ -316,7 +316,7 @@
       <axisMPos volume="topTapeMedium"
                 ncopyREF="topTapesPerRow"
                 gapREF="topTapeGap" >
-        <idField name="fCol" value="0" step="1" />
+<!--        <idField name="fCol" value="0" step="1" />  -->
       </axisMPos>
     </stackY>
 
@@ -324,7 +324,7 @@
       <axisMPos volume="topTapeShort"
                 ncopyREF="topTapesPerRow"
                 gapREF="topTapeGap" >
-        <idField name="fCol" value="0" step="1" />
+<!--        <idField name="fCol" value="0" step="1" />  -->
       </axisMPos>
     </stackY>
 
@@ -345,7 +345,7 @@
       <posXYZ volume="topTapeRowLong"
               XREF="topTapeX0_d"
               ZREF="topTapeZLong_d">
-        <idField name="fRow" value="0" />
+<!--        <idField name="fRow" value="0" />   -->
       </posXYZ>
       <posXYZ volume="topTapeRowMedium"
               XREF="topTapeX1_d "
@@ -355,19 +355,19 @@
       <posXYZ volume="topTapeRowShort"
               XREF="topTapeX2_d "
               ZREF="topTapeZShort_d">
-        <idField name="fRow" value="2" />
+<!--        <idField name="fRow" value="2" />   -->
       </posXYZ>
 
       <posXYZ volume="topTapeRowMedium"
               XREF="topTapeX3_d "
               ZREF="topTapeZMedium_d">
-        <idField name="fRow" value="3" />
+<!--        <idField name="fRow" value="3" />   -->
       </posXYZ>
 
       <posXYZ volume="topTapeRowLong"
               XREF="topTapeX4_d"
               ZREF="topTapeZLong_d">
-        <idField name="fRow" value="4" />
+<!--        <idField name="fRow" value="4" />  -->
       </posXYZ>
 
       <posXYZ volume="topTileRow"
@@ -462,13 +462,13 @@
     <stackX name="sideTapeRowX" >
       <axisMPos volume="sideTapeX" ncopyREF="numSideTapes"
                 gapREF="betweenSideTapesX">
-        <idField name="fCol" value="0" step="1" />
+<!--        <idField name="fCol" value="0" step="1" />   -->
       </axisMPos>
     </stackX>
 
     <stackY name="sideTapeRowY" >
       <axisMPos volume="sideTapeY" ncopyREF="numSideTapes"
                 gapREF="betweenSideTapesY">
-        <idField name="fCol" value="0" step="1" />
+<!--        <idField name="fCol" value="0" step="1" />   -->
       </axisMPos>
     </stackY>
