@@ -140,6 +140,31 @@ void RootTreeAnalysis::ReconHistDefine() {
     TH1F *TKRNUMHITSPERTRACK = new TH1F("TKRNUMHITSPERTRACK", "Number of Hits/Tracks",
         40, 0, 40);
 
+
+   TH1F *CALXTALCOUNT = new TH1F("CALXTALCOUNT", "Cal Xtal multiplicity",
+        50, 0, 200);
+    TH1F* CALXTALTOTE = new TH1F("CALXTALTOTE","Total Xtal Energy in CAL",50,0,20000);
+    
+    TH1F* CALXTALE = new TH1F("CALXTALE","Xtal Energy in CAL",50,0,7500);
+
+
+    TH1F* CALNUMCLUS = new TH1F("CALNUMCLUS","Number of clusters",20,0,20);
+    TH1F* CALECLUS = new TH1F("CALECLUS","Energy per cluster",50,0,20000);
+    TH1F* CALTOTE = new TH1F("CALTOTE","Total Energy in CAL",50,0,20000);
+    TH1F* CALEFRAC = new TH1F("CALEFRAC","Energy fraction per cluster",50,0,1.);
+   TH1F *CALRECESUM = new TH1F("CALRECESUM", "Cal Cluster Energy Sum",
+        50, 0, 25000);
+    CALRECESUM->SetXTitle("Energy (MeV)");
+
+    TH1F *CALRECELEAK = new TH1F("CALRECELEAK", "Cal Cluster Leakage Energy",
+        50, 0, 25000 );
+    CALRECELEAK->SetXTitle("Energy (MeV)");
+
+    TH1F *CALRECECORR = new TH1F("CALRECECORR", "Cal Cluster Corrected Energy",
+        50, 0, 25000);
+    CALRECECORR->SetXTitle("Energy (MeV)");
+
+
     TH1F *ACDDOCA = new TH1F("ACDDOCA", "ACD DOCA",
         40, 0, 200);
 
@@ -429,25 +454,59 @@ void RootTreeAnalysis::ReconCal() {
     CalRecon *calRec = rec->getCalRecon();
     if (!calRec) return;
 
-    TObjArray *clusterCol = calRec->getCalClusterCol();
-
-    // loop over all clusters
-    TIter clusterIter(clusterCol);
-    CalCluster *cluster = 0;
-    while (cluster = (CalCluster*)clusterIter.Next()) {
-
-    }
+    float totXE = 0.;
     
     TObjArray *xtalRecCol = calRec->getCalXtalRecCol();
     TIter xtalIter(xtalRecCol);
     CalXtalRecData *xtal = 0;
     while (xtal = (CalXtalRecData*)xtalIter.Next()) {
-        const CalXtalId id = xtal->getPackedId();
-        Double_t avgEngBestRange = xtal->getEnergy();
+        Double_t xtalEnergy = xtal->getEnergy();
+        if (xtalEnergy > 2000) {
+            const CalXtalId id = xtal->getPackedId();
+	    int lyr = id.getLayer();
+	    int twr = id.getTower();
+	    int col = id.getColumn();
+	    CalRangeRecData* rData = xtal->getRangeRecData(0);
+	    int range = rData->getRange(0);
+	    double ph0 = xtal->getEnergySelectedRange(range,0);
+  	    continue;
+         }
+      totXE += xtalEnergy;
 
     }
+
+
+    ((TH1F*)GetObjectPtr("CALXTALTOTE"))->Fill(totXE);
+
     
-    Float_t recArr[2] = {clusterCol->GetEntries(), xtalRecCol->GetEntries()};
+    TObjArray*  clusCol = calRec->getCalClusterCol();
+    Long64_t numClus = clusCol->GetEntries();
+    ((TH1F*)GetObjectPtr("CALNUMCLUS"))->Fill(numClus);
+
+    float totE = 0.;
+    for (int jc=0;jc<numClus; jc++) {
+      CalCluster* c1 = (CalCluster*)clusCol->At(jc);
+      float clusterEnergy = c1->getEnergySum();
+      totE += clusterEnergy;
+      ((TH1F*)GetObjectPtr("CALRECESUM"))->Fill(c1->getEnergySum());
+      ((TH1F*)GetObjectPtr("CALRECELEAK"))->Fill(c1->getEnergyLeak());
+      ((TH1F*)GetObjectPtr("CALRECECORR"))->Fill(c1->getEnergyCorrected());
+    }
+    ((TH1F*)GetObjectPtr("CALTOTE"))->Fill(totE);
+
+    if (totE > 0.) {
+      for (int ic=0;ic<numClus; ic++) {
+	CalCluster* c2 = (CalCluster*)clusCol->At(ic);
+	float clusterEnergy = c2->getEnergySum();
+	((TH1F*)GetObjectPtr("CALECLUS"))->Fill(clusterEnergy);
+        float eFraction = clusterEnergy/totE;
+        ((TH1F*)GetObjectPtr("CALEFRAC"))->Fill(eFraction);
+      }
+    }
+
+
+
+    Float_t recArr[2] = {clusCol->GetEntries(), xtalRecCol->GetEntries()};
     ((TNtuple*)GetObjectPtr("calReconTup"))->Fill(recArr);
 
     return;
