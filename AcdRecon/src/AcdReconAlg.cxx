@@ -391,13 +391,14 @@ StatusCode AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol, const HepP
         }
         else if(iFace == 1 || iFace == 3) {// X Side Tile
             double dist_z = dZ/2. - fabs(local_x0.z());
-            double dist_y = dY/2. - fabs(local_x0.y());	                
+        //  double dist_y = dY/2. - fabs(local_x0.y());	 And this one is WRONG TOO!
+			double dist_y = dX/2. - fabs(local_x0.y());	
             test_dist = (dist_z < dist_y) ? dist_z : dist_y;
             if(test_dist > return_dist) return_dist = test_dist;
         }
         else if(iFace == 2 || iFace == 4) {// Y Side Tile
             double dist_z = dZ/2. - fabs(local_x0.z());
-         //   double dist_x = dY/2. - fabs(local_x0.x());	THIS IS THE MAIN ERROR!!!!  
+         // double dist_x = dY/2. - fabs(local_x0.x());	THIS IS THE MAIN ERROR!!!!  
 			double dist_x = dX/2. - fabs(local_x0.x());
             test_dist = (dist_z < dist_x) ? dist_z : dist_x;
             if(test_dist > return_dist) return_dist = test_dist;
