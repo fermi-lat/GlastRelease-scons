@@ -1,3 +1,9 @@
+/** 
+* @file IGuiSvc.h
+* @brief declaration of the interface for the Gui service. Implemented by GuiSvc
+*
+*  $Header$
+*/
 #ifndef _H_IGuiSvc_
 #define _H_IGuiSvc_
 

@@ -1,14 +1,17 @@
 /** @file release.notes
- * Package GuiSvc
- * Manager T. Burnett
+ * @brief Package GuiSvc release notes
+ * Manager T Burnett
+ * <pre>
  *
+ * v3r3   14-oct-2002  THB improve docs; put in test/example for IGuiTool
+ *        10-oct-2002  THB remove non-functional parts of interface
  * v3r2   23-sep-2002  THB stop event loop if error.
  * v3r1p3 15-aug-2002  THB avoid toolsvc error messages when search tools
  * v3r1p2 27-jul-2002  THB get maxEvt from ApplicationMgr more reliable
  * v3r1p1 25-jul-2002  THB patch for Linux
  * v3r1   22-jul-2002  THB use the IRunable interface to control event loop 
  * v1r2   20-Mar-01 THB: tag v1r2
- */package manager:T.Burnett 
-
  
+ </pre>
+*/ 
  

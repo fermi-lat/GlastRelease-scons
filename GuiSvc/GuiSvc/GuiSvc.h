@@ -1,6 +1,9 @@
-// $Header$
-// 
-//  Original author: Toby Burnett tburnett@u.washington.edu
+/** 
+* @file GuiSvc.h
+* @brief declaration of the interface for the class GuiSvc, implementing IGuiSvc
+*
+*  $Header$
+*/
 
 #ifndef _H_GuiSvc_
 #define _H_GuiSvc_
@@ -17,8 +20,27 @@ namespace gui { class GuiMgr; }
 template <class TYPE> class SvcFactory;
 class IAppMgrUI;
 
-/*!  
-*/
+/** @class GuiSvc
+ * @brief Define a service that gives access to the GUI, specificially to a GuiMgr instance
+ *
+ * @author Toby Burnett
+ * $Header$
+ *
+ * Implements Gaudi's IRunable interface in order to be able to control the event loop; for this requires
+ * the following line in the job options file:
+ *
+ *   ApplicationMgr.Runable= "GuiSvc";
+ *
+ *  @section properties properties
+ *
+ *  The following properties are used to initialize the GuiMgr instance.
+ *
+ *     - size  [-300] Set initial size of the display window. Negative means z-axis upward
+ *     - pause_interval [0] Time to wait, while displaying current event, before starting next
+ *     - paused [true]  Initial setting
+ *     - EvtMax [0xFEEDBABE] Internal use. Normally gets this property from the Application manager
+ *
+ */
 class GuiSvc :  public Service, virtual public IIncidentListener, 
                 virtual public IGuiSvc, virtual public IRunable
 {  

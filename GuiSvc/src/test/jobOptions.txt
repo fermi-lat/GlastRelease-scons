@@ -7,11 +7,8 @@
 ApplicationMgr.ExtSvc   = { "GuiSvc" };
 
 
-//--------------------------------------------------------------
-// Private Application Configuration options
-//--------------------------------------------------------------
-
-ApplicationMgr.TopAlg = { "GuiTestAlg" };
+// define the topalg for the test, call it Top so GuiSvc can check its error count
+ApplicationMgr.TopAlg = { "GuiTestAlg/Top" };
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 
@@ -22,7 +19,7 @@ ApplicationMgr.Runable= "GuiSvc";
 
 ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 100;
-GuiSvc.size = 1000;
+GuiSvc.size = -1000;
 
 //==============================================================
 //

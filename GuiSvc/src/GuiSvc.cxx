@@ -1,7 +1,9 @@
-// $Header$
-// 
-//  Original author: Toby Burnett tburnett@u.washington.edu
-//
+/** 
+* @file GuiSvc.cxx
+* @brief definition of the class GuiSvc
+*
+*  $Header$
+*/
 
 #include "GuiSvc/GuiSvc.h"
 
@@ -90,11 +92,11 @@ StatusCode GuiSvc::initialize ()
 
     sub_menu.addButton("set max event...",
         new SimpleCommand<GuiSvc>(this, &GuiSvc::queryEvtMax));
-#if 0 // doesn't work
+#if 0 // doesn't work TODO to fix
     m_guiMgr->menu().file_menu().addButton("set OutputLevel...",
         new SimpleCommand<GuiSvc>(this, &GuiSvc::queryOutputLevel));
 #endif
-#if 0 // seems to crash on X 
+#if 0 // seems to crash on X TODO: figure out why, if we need this.
     sub_menu.addButton("Quit Loop",
         new SimpleCommand<GuiSvc>(this, &GuiSvc::quit));
 #endif
@@ -247,48 +249,47 @@ StatusCode GuiSvc::run(){
     StatusCode status = StatusCode::FAILURE;
     MsgStream log( msgSvc(), name() );
 
-    if ( 0 != m_appMgrUI )    {
-        // now find the top alg so we can monitor its event count
-        //
-        IAlgManager* theAlgMgr;
-        status = serviceLocator( )->getService( "ApplicationMgr",
-            IID_IAlgManager,
-            (IInterface*&)theAlgMgr );
-        IAlgorithm* theIAlg;
-        Algorithm*  theAlgorithm=0;
-        IntegerProperty errorProperty("ErrorCount",0);
-
-        status = theAlgMgr->getAlgorithm( "Top", theIAlg );
-        if ( status.isSuccess( ) ) {
-            try{
-                theAlgorithm = dynamic_cast<Algorithm*>(theIAlg);
-            } catch(...){
-                status = StatusCode::FAILURE;
-            }
+    if ( 0 == m_appMgrUI ) return status;
+    // now find the top alg so we can monitor its event count
+    //
+    IAlgManager* theAlgMgr;
+    status = serviceLocator( )->getService( "ApplicationMgr",
+        IID_IAlgManager,
+        (IInterface*&)theAlgMgr );
+    IAlgorithm* theIAlg;
+    Algorithm*  theAlgorithm=0;
+    IntegerProperty errorProperty("ErrorCount",0);
+    
+    status = theAlgMgr->getAlgorithm( "Top", theIAlg );
+    if ( status.isSuccess( ) ) {
+        try{
+            theAlgorithm = dynamic_cast<Algorithm*>(theIAlg);
+        } catch(...){
+            status = StatusCode::FAILURE;
         }
-        if ( status.isFailure( ) ) {
-            log << MSG::WARNING << "Could not find algorithm 'Top'; will not monitor errors" << endreq;
+    }
+    if ( status.isFailure( ) ) {
+        log << MSG::WARNING << "Could not find algorithm 'Top'; will not monitor errors" << endreq;
+    }
+    
+    
+    // loop over the events
+    int event= 0;
+    while(event++ < m_evtMax) {
+        beginEvent();
+        status =  m_appMgrUI->nextEvent(1); // currently, always success
+        
+        // the single event may have created a failure. Check the ErrorCount propery of the Top alg.
+        if( theAlgorithm !=0) theAlgorithm->getProperty(&errorProperty);
+        if( status.isFailure() || errorProperty.value() > 0){
+            status = StatusCode::FAILURE;
+            m_guiMgr->gui().inform("Event failed: terminating job after current display");
         }
-   
-
-        // loop over the events
-        int event= 0;
-        while(event++ < m_evtMax) {
-            beginEvent();
-            status =  m_appMgrUI->nextEvent(1); // currently, always success
-
-            // the single event may have created a failure. Check the ErrorCount propery of the Top alg.
-            if( theAlgorithm !=0) theAlgorithm->getProperty(&errorProperty);
-            if( status.isFailure() || errorProperty.value() > 0){
-                status = StatusCode::FAILURE;
-                m_guiMgr->gui().inform("Event failed: terminating job after current display");
-            }
-
-            endEvent();
-            if( status.isFailure()){
-                log << MSG::ERROR << "Terminating Gui loop due to error" << endreq;
-                break;
-            }
+        
+        endEvent();
+        if( status.isFailure()){
+            log << MSG::ERROR << "Terminating Gui loop due to error" << endreq;
+            break;
         }
     }
     return status;
