@@ -2,5 +2,6 @@
 /*   Package merit
  *
  *
+ *  v5r1  28-may-02  use vertex for layer number.
  *  v5r0  25-may-02  convert to Gaudi 9, set up for Gleam TDS 
  */
