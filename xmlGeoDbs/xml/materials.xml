@@ -340,5 +340,8 @@
 	 aweight="12.01" 
 	 density="2.265"
 	 />
+
+&extraMaterials;
+
 </materials>
 
