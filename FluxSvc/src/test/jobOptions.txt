@@ -30,17 +30,22 @@ FluxTestAlg.source_name="default";
 //FluxAlg.source_name="chime";
 
 //the angular size of GLAST's exposure, if needed (see below)
-FluxTestAlg.glastExposureAngle = 60.;
+FluxTestAlg.glastExposureAngle = 30.;
 
 //selecting the kind of exposure GLAST gets,
 //to be appropriate for exposure maps or sky maps.
 //0: sources only expose EXACTLY where they are
 //1: exposure of GLAST has an angular size to the aperture, given above
-FluxTestAlg.ExposureMode = 2;
+//2: exposure is not only cut at an angular radius,
+// but also falls off with a gaussian profile.
+//3: cutoff "radius" is equal-area, that is,
+// representing an azimuthal angle from glast.
+//4: output run through a hammer-aitoff equal area projection.
+FluxTestAlg.ExposureMode = 1;
 
 
 ApplicationMgr.EvtSel = "NONE";
-ApplicationMgr.EvtMax = 1000;
+ApplicationMgr.EvtMax = 2000;
 
 //==============================================================
 //

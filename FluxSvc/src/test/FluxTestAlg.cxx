@@ -65,6 +65,10 @@ private:
     void addToTotalExposure(std::vector<exposureSet>);
     void displayExposure();
     void rootDisplay();
+
+    /// transform linear l,b coordinates into transformed equal-area coords.
+    std::pair<double,double> hammerAitoff(double l,double b);
+
 };
 
 
@@ -307,6 +311,60 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
             }
         }
     }
+    else if(m_exposureMode == 3){
+        for(int i= 0 ; i<360 ; i++){
+            for(int j= 0 ; j<180 ; j++){
+                double degToRad = M_PI/180;
+                
+                if(1.5*acos(sin((j-90.)*degToRad)*sin((b-90.)*degToRad)+cos((b-90.)*degToRad)*cos((j-90.)*degToRad)*cos((l-i)*degToRad))/degToRad  <= pow(angularRadius,1)){
+                    //set up the point, and stick it into the vector
+                    exposureSet point;// = new exposureSet;
+                      float correctedl = i;   // Fold into the range [0, 360)
+                      float correctedb = j;   // Fold into the range [0, 360)
+                   
+                      if(correctedl < 0)correctedl+=360;
+                      if(correctedb < /*-90*/0)correctedb+=180;
+                      if(correctedl > 360)correctedl-=360;
+                      if(correctedb > /*90*/180)correctedb-=180;
+
+
+                    point.x = correctedl; //yes, this is doing an implicit cast.
+                    point.y = correctedb;
+                    point.amount = deltat;
+                    returned.push_back(point);
+                }
+            }
+        }
+    }
+        else if(m_exposureMode == 4){
+        for(int i= l-angularRadius ; i<=l+angularRadius ; i++){
+            for(int j= b-angularRadius ; j<=b+angularRadius ; j++){
+                
+                if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
+                    //set up the point, and stick it into the vector
+                    exposureSet point;// = new exposureSet;
+//                    float correctedl = fmod(i, 360);   // Fold into the range [0, 360)
+//                    float correctedb = fmod(j, 180);   // Fold into the range [0, 360)
+//                    if(correctedl < 0)correctedl+=360;
+//                    if(correctedb < 0)correctedb+=180;
+                      float correctedl = i;   // Fold into the range [0, 360)
+                      float correctedb = j;   // Fold into the range [0, 360)
+                   
+                      if(correctedl < 0)correctedl+=360;
+                      if(correctedb < /*-90*/0)correctedb+=180;
+                      if(correctedl > 360)correctedl-=360;
+                      if(correctedb > /*90*/180)correctedb-=180;
+
+                      std::pair<double,double> abc = hammerAitoff(correctedl,correctedb);
+                    point.x = abc.first; //yes, this is doing an implicit cast.
+                    point.y = abc.second;
+                    point.amount = deltat;
+                    returned.push_back(point);
+                }
+            }
+        }
+    }
+
     else{
         log << MSG::ERROR << "Invalid Exposure Mode " << endreq;
     }
@@ -407,3 +465,52 @@ void FluxTestAlg::rootDisplay(){
     
 }
 
+
+
+
+/////////T$EST FILE////////////////////////////
+/*
+ *  This routine will convert longitude and latitude values ("l" and "b")
+ *  into equivalent cartesian coordinates "x" and "y".  The return values
+ *  will be in internal Aitoff units where "*x" is in the range [-2, 2]
+ *  and "*y" is in the range [-1, 1].
+ */
+//#ifdef PROTOTYPE
+//static void aitoffConvert(float l, float b, float *x, float *y)
+//#else
+std::pair<double,double> FluxTestAlg::hammerAitoff(double l,double b){
+
+//#endif /* PROTOTYPE */
+    double x, y;
+    float lover2, den;
+    float radl, radb;
+
+   /*
+    *  Force "l" to be in the range (-180 <= l <= +180) and
+    *  "b" to be in the range (-90 <= b <= +90).
+    */
+
+    while (l < -180.0) l += 360;
+    while (l >  180.0) l -= 360;
+    while (b <  -90.0) b += 180;
+    while (b >   90.0) b -= 180;
+
+    /*  Convert l and b to radians. */
+
+    double RadPerDeg = M_PI/180.;
+    radl = l * RadPerDeg;
+    radb = b * RadPerDeg;
+
+    lover2 = radl / 2.0;
+    den = sqrt(1.0 + (cos(radb) * cos(lover2)));
+    x = 2.0 * cos(radb) * sin(lover2) / den;
+    y = sin(radb) / den;
+
+    /* "x" is now in the range [-2, 2] and "y" in the range [-1, 1]. */
+
+    x +=2;
+    y +=1;
+    x*=90;
+    y*=90;
+    return std::make_pair<double,double>(x,y);
+}
