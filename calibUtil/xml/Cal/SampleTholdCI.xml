@@ -1,36 +1,22 @@
 <!--
    $Header$
 
-   /**  @file       SampleMevPerDac.xml
+   /**  @file       SampleTholdCI.xml
         @authors    J. Bogart
 
-        Sample MevPerDac file.  
+        Sample TholdCI file.  
 
     */
 -->
 
 <!-- First define doctype and literally insert correct dtd -->
+<!--
+  Whatever creates this file should
+   just insert the contents of calibUtil/xml/CalcalCalib_v2r2.dtd
+   between the [    ]
+-->
 
 <!DOCTYPE calCalib [
-
-<!-- 
-   Overall structure is some header information followed by
-   a sequence of tower data.  Tower data is made up
-   of layer data, in turn made up of data for individual
-   crystals, which consists of data for (1 or 2, depending
-   on calibration type) faces.  
-
-   The header information comes in two parts:
-     "generic" is relevant to any sort of calibration data,
-               not just that from the CAL, such as the
-               name of the instrument being calibrated.
-               See further comments above the generic element
-               declaration
-     "dimension" contains all the parameters necessary to figure 
-               out which data goes with which hardware entity.
-               See further comments above the dimension element
-               declaration
-  -->  
 
 <!ELEMENT calCalib (generic, dimension, dac*, xpos?, tower* ) >
        
@@ -252,18 +238,17 @@
                          pedSig NMTOKEN #REQUIRED
 >
 
-
 ] >
 
 <!-- Now comes the calibration data --> 
 
 <calCalib>
   <generic instrument="EM" timestamp="2003-9-2-12:56"
-           calibType="CAL_MevPerDac" fmtVersion="v2r2">
-
-<!-- inputSample element is optional; comment out here
-    <inputSample startTime=..           >
-                The <inputSample> element is optional
+           calibType="CAL_TholdCI" fmtVersion="v2r2">
+<!--
+    inputSample element is option; comment it out here
+    <inputSample>
+            Bunch of stuff
     </inputSample>
 -->
   </generic>
@@ -272,209 +257,186 @@
   <!-- LAT instrument: 4x4 tower array, 8 layers, 12 columns.  
        Need not contain data for all towers.  If data is only partial, set
        exact="false"  -->
-  <!-- For MevPerDac file, nFace and nRange are always 1.  
-       nXpos should be 1 if xpos data is present -->
-<!-- 
-    In this testing-only file, make nLayer and nXtal smaller than 
-    true values of 8, 12
- -->
-  <dimension nRow="1" nCol="1" nLayer="3" nXtal="4" nFace="1" nRange="1"
-       nXpos="1" />
-
-
-
-<!-- new xpos element -->
-  <xpos values="1.1 2.2 3.3" />
-
+  <!-- For TholdCI file,  nRange for this purpose is always 1.   The
+       per-range information is kept in child elements. 
+       There is no xpos data.
+    -->
+  <dimension nRow="1" nCol="1" nLayer="3" nXtal="2" nFace="2" nRange="1" />
 
   <tower iRow="0" iCol="0">
     <layer iLayer="0">
       <xtal iXtal="0">
-        <face end="NA">
-          <mevPerDac bigVal="8.0" bigSig="1.1" smallVal="4.3" smallSig="0.8">
-            <bigSmall end="NEG" 
-                     bigSmallRatioVals="2.1 2.3 3.1"
-                     bigSmallRatioSigs="0.6 1.1 2.1"
-              />
-             <bigSmall end="POS" 
-                       bigSmallRatioVals="2.2 2.4 3.2"
-                       bigSmallRatioSigs="0.55 1.05 2.05"
-              />
-          </mevPerDac>
+        <face end="NEG">
+          <tholdCI FLEVal="8.0" FLESig="0.4" FHEVal="14.1" FHESig="0.8"
+                   LACVal="43.0" LACSig="2.1">
+<!-- Just leave out unused range -->
+            <tholdCIRange range="LEX8" pedVal="6.2" pedSig="0.7" 
+             ULDVal="46.2" ULDSig="0.8" />
+            <tholdCIRange range="LEX1" pedVal="5.9" pedSig="0.5" 
+              ULDVal="46.2" ULDSig="0.8" />
+            <tholdCIRange range="HEX8" pedVal="8.2" pedSig="1.7" 
+              ULDVal="46.2" ULDSig="0.8" />
+          </tholdCI>
+        </face>
+        <face end="POS">
+          <tholdCI FLEVal="8.1" FLESig="0.5" FHEVal="14.2" FHESig="0.9"
+            LACVal="44.0" LACSig="2.1">
+<!-- Just leave out unused range -->
+            <tholdCIRange range="LEX8" pedVal="5.8" pedSig="0.6" 
+              ULDVal="46.2" ULDSig="0.8" />
+            <tholdCIRange range="LEX1" pedVal="6.3" pedSig="0.6" 
+              ULDVal="46.2" ULDSig="0.8" />
+            <tholdCIRange range="HEX8" pedVal="7.2" pedSig="0.6" 
+              ULDVal="46.2" ULDSig="0.8" />
+          </tholdCI>
         </face>
       </xtal>
 
+<!-- on to next log -->
       <xtal iXtal="1">
-         <face end="NA">
-           <mevPerDac bigVal="7.0" bigSig="1.0" smallVal="4.2" smallSig="0.7">
-            <bigSmall end="NEG" 
-                     bigSmallRatioVals="2.0 2.2 3.0"
-                     bigSmallRatioSigs="0.5 1.0 2.0"
-              />
-             <bigSmall end="POS" 
-                       bigSmallRatioVals="2.1 2.3 3.1"
-                       bigSmallRatioSigs="0.54 1.04 2.04"
-              />
-          </mevPerDac>
+         <face end="NEG">
+           <tholdCI FLEVal="7.0" FLESig="0.3" FHEVal="13.2" FHESig="0.7"
+             LACVal="45.0" LACSig="2.1">
+<!-- Just leave out unused range -->
+             <tholdCIRange range="LEX8" pedVal="6.1" pedSig="0.6" 
+              ULDVal="46.2" ULDSig="0.8" />
+             <tholdCIRange range="LEX1" pedVal="5.8" pedSig="0.4" 
+              ULDVal="46.2" ULDSig="0.8" />
+             <tholdCIRange range="HEX8" pedVal="8.1" pedSig="1.6" 
+              ULDVal="46.2" ULDSig="0.8" />
+          </tholdCI>
         </face>
-      </xtal>
-
-      <xtal iXtal="2">
-        <face end="NA">
-          <mevPerDac bigVal="8.0" bigSig="1.1" smallVal="4.3" smallSig="0.8">
-            <bigSmall end="NEG" 
-                     bigSmallRatioVals="2.1 2.3 3.1"
-                     bigSmallRatioSigs="0.6 1.1 2.1"
-              />
-             <bigSmall end="POS" 
-                       bigSmallRatioVals="2.2 2.4 3.2"
-                       bigSmallRatioSigs="0.55 1.05 2.05"
-              />
-          </mevPerDac>
-        </face>
-      </xtal>
-
-      <xtal iXtal="3">
-         <face end="NA">
-           <mevPerDac bigVal="7.0" bigSig="1.0" smallVal="4.2" smallSig="0.7">
-            <bigSmall end="NEG" 
-                     bigSmallRatioVals="2.0 2.2 3.0"
-                     bigSmallRatioSigs="0.5 1.0 2.0"
-              />
-             <bigSmall end="POS" 
-                       bigSmallRatioVals="2.1 2.3 3.1"
-                       bigSmallRatioSigs="0.54 1.04 2.04"
-              />
-          </mevPerDac>
+        <face end="POS">
+          <tholdCI FLEVal="8.1" FLESig="0.5" FHEVal="14.2" FHESig="0.9"
+           LACVal="46.0" LACSig="2.1">
+<!-- Just leave out unused range -->
+            <tholdCIRange range="LEX8" pedVal="5.7" pedSig="0.5" 
+              ULDVal="46.2" ULDSig="0.8" />
+            <tholdCIRange range="LEX1" pedVal="6.2" pedSig="0.5" 
+              ULDVal="46.2" ULDSig="0.8" />
+            <tholdCIRange range="HEX8" pedVal="7.1" pedSig="0.5" 
+              ULDVal="46.2" ULDSig="0.8" />
+          </tholdCI>
         </face>
       </xtal>
     </layer>
 
-<!--    -->
-
+<!-- 2nd layer (layer 1) -->
     <layer iLayer="1">
       <xtal iXtal="0">
-        <face end="NA">
-          <mevPerDac bigVal="18.0" bigSig="1.1" smallVal="4.3" smallSig="0.8">
-            <bigSmall end="NEG" 
-                     bigSmallRatioVals="2.1 2.3 3.1"
-                     bigSmallRatioSigs="0.6 1.1 2.1"
-              />
-             <bigSmall end="POS" 
-                       bigSmallRatioVals="2.2 2.4 3.2"
-                       bigSmallRatioSigs="0.55 1.05 2.05"
-              />
-          </mevPerDac>
+        <face end="NEG">
+          <tholdCI FLEVal="8.0" FLESig="0.4" FHEVal="14.1" FHESig="0.8"
+           LACVal="47.0" LACSig="2.1">
+<!-- Just leave out unused range -->
+            <tholdCIRange range="LEX8" pedVal="6.2" pedSig="0.7" 
+              ULDVal="46.2" ULDSig="0.8" />
+            <tholdCIRange range="LEX1" pedVal="5.9" pedSig="0.5" 
+              ULDVal="46.2" ULDSig="0.8" />
+            <tholdCIRange range="HEX8" pedVal="8.2" pedSig="1.7" 
+              ULDVal="46.2" ULDSig="0.8" />
+          </tholdCI>
+        </face>
+        <face end="POS">
+          <tholdCI FLEVal="8.1" FLESig="0.5" FHEVal="14.2" FHESig="0.9"
+           LACVal="48.0" LACSig="2.1">
+<!-- Just leave out unused range -->
+            <tholdCIRange range="LEX8" pedVal="5.8" pedSig="0.6" 
+              ULDVal="46.2" ULDSig="0.8" />
+            <tholdCIRange range="LEX1" pedVal="6.3" pedSig="0.6" 
+              ULDVal="46.2" ULDSig="0.8" />
+            <tholdCIRange range="HEX8" pedVal="7.2" pedSig="0.6" 
+              ULDVal="46.2" ULDSig="0.8" />
+          </tholdCI>
         </face>
       </xtal>
 
+<!-- on to next log -->
       <xtal iXtal="1">
-         <face end="NA">
-           <mevPerDac bigVal="17.0" bigSig="1.0" smallVal="4.2" smallSig="0.7">
-            <bigSmall end="NEG" 
-                     bigSmallRatioVals="2.0 2.2 3.0"
-                     bigSmallRatioSigs="0.5 1.0 2.0"
-              />
-             <bigSmall end="POS" 
-                       bigSmallRatioVals="2.1 2.3 3.1"
-                       bigSmallRatioSigs="0.54 1.04 2.04"
-              />
-          </mevPerDac>
+         <face end="NEG">
+           <tholdCI FLEVal="7.0" FLESig="0.3" FHEVal="13.2" FHESig="0.7"
+             LACVal="48.0" LACSig="2.1">
+<!-- Just leave out unused range -->
+             <tholdCIRange range="LEX8" pedVal="6.1" pedSig="0.6" 
+              ULDVal="46.2" ULDSig="0.8" />
+             <tholdCIRange range="LEX1" pedVal="5.8" pedSig="0.4" 
+              ULDVal="46.2" ULDSig="0.8" />
+             <tholdCIRange range="HEX8" pedVal="8.1" pedSig="1.6" 
+              ULDVal="46.2" ULDSig="0.8" />
+          </tholdCI>
         </face>
-      </xtal>
-
-      <xtal iXtal="2">
-        <face end="NA">
-          <mevPerDac bigVal="18.0" bigSig="1.1" smallVal="4.3" smallSig="0.8">
-            <bigSmall end="NEG" 
-                     bigSmallRatioVals="2.1 2.3 3.1"
-                     bigSmallRatioSigs="0.6 1.1 2.1"
-              />
-             <bigSmall end="POS" 
-                       bigSmallRatioVals="2.2 2.4 3.2"
-                       bigSmallRatioSigs="0.55 1.05 2.05"
-              />
-          </mevPerDac>
-        </face>
-      </xtal>
-
-      <xtal iXtal="3">
-         <face end="NA">
-           <mevPerDac bigVal="17.0" bigSig="1.0" smallVal="4.2" smallSig="0.7">
-            <bigSmall end="NEG" 
-                     bigSmallRatioVals="2.0 2.2 3.0"
-                     bigSmallRatioSigs="0.5 1.0 2.0"
-              />
-             <bigSmall end="POS" 
-                       bigSmallRatioVals="2.1 2.3 3.1"
-                       bigSmallRatioSigs="0.54 1.04 2.04"
-              />
-          </mevPerDac>
+        <face end="POS">
+          <tholdCI FLEVal="8.1" FLESig="0.5" FHEVal="14.2" FHESig="0.9"
+           LACVal="49.0" LACSig="2.1">
+<!-- Just leave out unused range -->
+            <tholdCIRange range="LEX8" pedVal="5.7" pedSig="0.5" 
+              ULDVal="46.2" ULDSig="0.8" />
+            <tholdCIRange range="LEX1" pedVal="6.2" pedSig="0.5" 
+              ULDVal="46.2" ULDSig="0.8" />
+            <tholdCIRange range="HEX8" pedVal="7.1" pedSig="0.5" 
+              ULDVal="46.2" ULDSig="0.8" />
+          </tholdCI>
         </face>
       </xtal>
     </layer>
 
+<!-- 3rd layer (layer 2) -->
     <layer iLayer="2">
       <xtal iXtal="0">
-        <face end="NA">
-          <mevPerDac bigVal="28.0" bigSig="1.1" smallVal="4.3" smallSig="0.8">
-            <bigSmall end="NEG" 
-                     bigSmallRatioVals="2.1 2.3 3.1"
-                     bigSmallRatioSigs="0.6 1.1 2.1"
-              />
-             <bigSmall end="POS" 
-                       bigSmallRatioVals="2.2 2.4 3.2"
-                       bigSmallRatioSigs="0.55 1.05 2.05"
-              />
-          </mevPerDac>
+        <face end="NEG">
+          <tholdCI FLEVal="8.0" FLESig="0.4" FHEVal="14.1" FHESig="0.8"
+           LACVal="50.0" LACSig="2.1">
+<!-- Just leave out unused range -->
+            <tholdCIRange range="LEX8" pedVal="6.2" pedSig="0.7" 
+              ULDVal="46.2" ULDSig="0.8" />
+            <tholdCIRange range="LEX1" pedVal="5.9" pedSig="0.5" 
+              ULDVal="46.2" ULDSig="0.8" />
+            <tholdCIRange range="HEX8" pedVal="8.2" pedSig="1.7" 
+              ULDVal="46.2" ULDSig="0.8" />
+          </tholdCI>
+        </face>
+        <face end="POS">
+          <tholdCI FLEVal="8.1" FLESig="0.5" FHEVal="14.2" FHESig="0.9"
+           LACVal="51.0" LACSig="2.1">
+<!-- Just leave out unused range -->
+            <tholdCIRange range="LEX8" pedVal="5.8" pedSig="0.6" 
+              ULDVal="46.2" ULDSig="0.8" />
+            <tholdCIRange range="LEX1" pedVal="6.3" pedSig="0.6" 
+              ULDVal="46.2" ULDSig="0.8" />
+            <tholdCIRange range="HEX8" pedVal="7.2" pedSig="0.6" 
+              ULDVal="46.2" ULDSig="0.8" />
+          </tholdCI>
         </face>
       </xtal>
 
+<!-- on to next log -->
       <xtal iXtal="1">
-         <face end="NA">
-           <mevPerDac bigVal="27.0" bigSig="1.0" smallVal="4.2" smallSig="0.7">
-            <bigSmall end="NEG" 
-                     bigSmallRatioVals="2.0 2.2 3.0"
-                     bigSmallRatioSigs="0.5 1.0 2.0"
-              />
-             <bigSmall end="POS" 
-                       bigSmallRatioVals="2.1 2.3 3.1"
-                       bigSmallRatioSigs="0.54 1.04 2.04"
-              />
-          </mevPerDac>
+         <face end="NEG">
+           <tholdCI FLEVal="7.0" FLESig="0.3" FHEVal="13.2" FHESig="0.7"
+            LACVal="52.0" LACSig="2.1">
+<!-- Just leave out unused range -->
+             <tholdCIRange range="LEX8" pedVal="6.1" pedSig="0.6" 
+              ULDVal="46.2" ULDSig="0.8" />
+             <tholdCIRange range="LEX1" pedVal="5.8" pedSig="0.4" 
+              ULDVal="46.2" ULDSig="0.8" />
+             <tholdCIRange range="HEX8" pedVal="8.1" pedSig="1.6" 
+              ULDVal="46.2" ULDSig="0.8" />
+          </tholdCI>
         </face>
-      </xtal>
-
-      <xtal iXtal="2">
-        <face end="NA">
-          <mevPerDac bigVal="28.0" bigSig="1.1" smallVal="4.3" smallSig="0.8">
-            <bigSmall end="NEG" 
-                     bigSmallRatioVals="2.1 2.3 3.1"
-                     bigSmallRatioSigs="0.6 1.1 2.1"
-              />
-             <bigSmall end="POS" 
-                       bigSmallRatioVals="2.2 2.4 3.2"
-                       bigSmallRatioSigs="0.55 1.05 2.05"
-              />
-          </mevPerDac>
-        </face>
-      </xtal>
-
-      <xtal iXtal="3">
-         <face end="NA">
-           <mevPerDac bigVal="27.0" bigSig="1.0" smallVal="4.2" smallSig="0.7">
-            <bigSmall end="NEG" 
-                     bigSmallRatioVals="2.0 2.2 3.0"
-                     bigSmallRatioSigs="0.5 1.0 2.0"
-              />
-             <bigSmall end="POS" 
-                       bigSmallRatioVals="2.1 2.3 3.1"
-                       bigSmallRatioSigs="0.54 1.04 2.04"
-              />
-          </mevPerDac>
+        <face end="POS">
+          <tholdCI FLEVal="8.1" FLESig="0.5" FHEVal="14.2" FHESig="0.9"
+           LACVal="53.0" LACSig="2.1">
+<!-- Just leave out unused range -->
+            <tholdCIRange range="LEX8" pedVal="5.7" pedSig="0.5" 
+              ULDVal="46.2" ULDSig="0.8" />
+            <tholdCIRange range="LEX1" pedVal="6.2" pedSig="0.5" 
+              ULDVal="46.2" ULDSig="0.8" />
+            <tholdCIRange range="HEX8" pedVal="7.1" pedSig="0.5" 
+              ULDVal="46.2" ULDSig="0.8" />
+          </tholdCI>
         </face>
       </xtal>
     </layer>
+
   </tower>
 
 </calCalib>
