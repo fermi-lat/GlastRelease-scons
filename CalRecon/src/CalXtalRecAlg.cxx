@@ -391,7 +391,7 @@ bool CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi*
         idents::CalXtalId xtalId = digi->getPackedId();
 
         const Event::CalDigi::CalXtalReadoutCol& readoutCol = digi->getReadoutCol();
-	bool above_thresh = false;	
+	bool below_thresh = false;	
         // loop over readout ranges
         for ( Event::CalDigi::CalXtalReadoutCol::const_iterator it = readoutCol.begin();
 		      it !=readoutCol.end(); it++){
@@ -442,7 +442,8 @@ bool CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi*
             double eneP = gainP*(adcP-pedP);
             double eneM = gainM*(adcM-pedM);
 
-            above_thresh = above_thresh || ((eneP > m_thresh) && (eneM > m_thresh));
+            below_thresh = below_thresh || ((rangeP == 0) && (eneP < m_thresh)) 
+                                        || ((rangeM == 0) && (eneM < m_thresh));
                 // create output object
                 CalXtalRecData::CalRangeRecData* rangeRec =
                     new CalXtalRecData::CalRangeRecData(rangeP,eneP,rangeM,eneM);
@@ -451,7 +452,7 @@ bool CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi*
                 recData->addRangeRecData(*rangeRec);
             
         }		
-	return above_thresh;
+	return !below_thresh;
 }
 
 
