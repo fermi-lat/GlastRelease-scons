@@ -30,7 +30,8 @@ of the LAT.</overview>
 </prim>
         <prim name="wallThickness"  value="1.5">   Wall thickness</prim>
         <prim name="wallWidth"  value="389.7">width of walls (less than mod_width)</prim>
-        <prim name="vacuumMat" value="Vacuum" />
+        <prim name="vacuumMat" value="Vacuum" type="string" uType="mat">Need
+         vacuum for some 'solids'</prim>
       </primCategory>
       <primCategory name="CALprim" >
 <overview><![CDATA[CAL people need to put something real here.  If
