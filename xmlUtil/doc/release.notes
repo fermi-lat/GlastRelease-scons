@@ -1,7 +1,9 @@
 /** @file release.notes
  * Package xmlUtil
  * Coordinator: J. Bogart
+ *    EHO
  *
+ * 10-Nov-2004  jrb v3r0    Upgrades for Xerces 2.6.0
  * 20-Apr-2004  jrb v2r13p0 Use v6r* of GlastPolicy
  * 25-Feb-2004  jrb v2r13   Allow GDDDocMan clients access to DTDversion,
  *                          CVS id of input xml geometry
