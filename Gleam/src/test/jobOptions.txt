@@ -20,9 +20,6 @@ Output.Members={}; // turn off any root ouptut
 ApplicationMgr.EvtMax = 1000;
 MeritAlg.generated = 1000; // for estimation of Aeff--must be the same
 
-ApplicationMgr.DLLs += {"ntupleWriterSvc"};
-ApplicationMgr.ExtSvc += {"RootTupleSvc"};
-
 
 //==============================================================
 //

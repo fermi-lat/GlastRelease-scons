@@ -12,14 +12,6 @@
 
 FluxAlg.source_name="default";
 
-// setup onboard filter analysis
-ApplicationMgr.DLLs += {"EbfWriter", "OnboardFilter"};
-Triggered.Members += {"EbfWriter", "OnboardFilter"};
-
-// setup up merit to monitor the output
-ApplicationMgr.DLLs   += {"merit"};
-Triggered.Members += {"ExposureAlg", "meritAlg"};
-
 // set root output from merit with following
 MeritAlg.EventTreeName="MeritTuple";
 MeritAlg.PointingTreeName="Exposure";
