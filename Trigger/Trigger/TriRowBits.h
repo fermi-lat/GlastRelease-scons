@@ -7,7 +7,7 @@
 */
 
 #ifndef TRIROWBITS_H
-#define TRIROWBITSS_H
+#define TRIROWBITS_H
 
 #include <iostream>
 
