@@ -14,6 +14,9 @@
  *  @brief  Calorimeter crystal reconstruction algorithm
  *
  * This algorithm reconstructs energy and position in each calorimeter crystal
+ * It contains computeEnergy() and computePosition() methods for energy
+ * and position reconstruction, respectively. See the descriptions.
+ * of these methods for details
  *
  *  @author           A.Chekhtman
  *
@@ -27,7 +30,6 @@ public:
     CalXtalRecAlg(const std::string& name, ISvcLocator* pSvcLocator);
     virtual ~CalXtalRecAlg() {}
     
-    // operations
     StatusCode initialize();
     StatusCode execute();
     StatusCode finalize();
@@ -36,17 +38,39 @@ protected:
     StatusCode retrieve();
     
 private:
-    /** method to calculate energy deposited in a crystal
-     * @param recData pointer to CalXtalRecData object to store reconstructed energy
-     * @param digi pointer to CalDigi object with input data
-     */
+    /** @brief method to calculate energy deposited in a crystal
+    *
+    *    Energy for each crystal face is converted from adc value using simple
+    *   linear formula:
+    *   
+    *    \f[
+             E = E_{max} * (ADC - PED)/(ADC_{max} - PED)
+         \f]   
+    *   where \f$ E_{max} \f$ - maximum energy for used energy range,
+    *  \f$ PED \f$ - pedestal, \f$ ADC_{max} \f$ - maximum ADC value.
+    *
+    * @param recData pointer to CalXtalRecData object to store reconstructed energy
+    * @param digi pointer to CalDigi object with input data
+    */
     void computeEnergy(Event::CalXtalRecData* recData,
                        const Event::CalDigi* digi);
     
-    /** method to calculate longitudinal position in a crystal 
-     * @param recData pointer to CalXtalRecData object used as a source of input
-     *        information on energy and to store the calculated position
-     */
+    /** @brief method to calculate longitudinal position in a crystal
+    *
+    *   Position along the crystal direction is calculated from asymmetry between
+    *   energies reconstructed from positive and negative faces of the crystal
+    *
+    *   \f[ pos = \frac{E_{pos} - E_{neg}}{E_{pos} + E_{neg}} * 
+                   \frac{1+lightAtt}{1-lightAtt} * \frac{L_{crystal}}{2}
+         \f]
+    *   where \f$ L_{crystal} \f$ - crystal length and \f$ lightAtt \f$ - 
+    *   the ratio of signal from "far" crystal face to the signal
+    *   from"near" crystal face in the case when the energy deposition is close
+    *   to one end of the crystal.
+    *
+    * @param recData pointer to CalXtalRecData object used as a source of input
+    *        information on energy and to store the calculated position
+    */
     void computePosition(Event::CalXtalRecData* recData);
     
 private:
