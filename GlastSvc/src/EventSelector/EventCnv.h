@@ -1,45 +1,39 @@
-// $Header$
 #ifndef EVENTCNV_H
 #define EVENTCNV_H 1
 
+#include "BaseCnv.h"
 
-// Include files
-#include "ItemCnv.h"
-
-
-// Forward declarations
 class Event;
+extern const CLID& CLID_Event;
 
 // Abstract factory to create the converter
 template <class TYPE> class CnvFactory;
 
 
-//------------------------------------------------------------------------------
-// (original stuff)
-// ClassName :    EventCnv
-//  
-// Description :  converter of event header
-//
-// 
-//
-//------------------------------------------------------------------------------
+/** @class EventCnv
+ * @brief Concrete Converter for the Event header
+ *
+ * $Header$
+ */ 
 
-
-class EventCnv : public ItemCnv<Event>	    {
+class EventCnv : public BaseCnv { //public ItemCnv<Event>	    {
 
   friend class CnvFactory<EventCnv>;
 
+public: 
+  static const CLID& classID()   
+  {
+    return CLID_Event;
+  }
+
 protected:
 
-  /// Standard Constructor
   EventCnv(ISvcLocator* svc);
 
-  /// Standard Destructor
-  virtual ~EventCnv();
+  virtual ~EventCnv() { };
 
   virtual StatusCode updateObj(int* data, Event* pObject);
 
-  //virtual StatusCode updateObjRefs(int* data, Event* pObject);
 
 };
 

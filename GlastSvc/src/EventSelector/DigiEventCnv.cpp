@@ -1,11 +1,7 @@
-// DigiEventCnv.cpp: implementation of the DigiEventCnv class.
-//
-//////////////////////////////////////////////////////////////////////
 
 
 #define CNV_DIGIEVENTCNV_CPP 
 
-// Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "DigiEventCnv.h"
 #include "GlastEvent/TopLevel/DigiEvent.h"
@@ -22,15 +18,10 @@ StatusCode DigiEventCnv::updateObj(int* iarray, DigiEvent* pEvent)          {
   return StatusCode::SUCCESS;
 }
 
-//! Standard Constructor
 DigiEventCnv::DigiEventCnv(ISvcLocator* svc)
-: ItemCnv<DigiEvent>(svc)               
+: BaseCnv(classID(), svc)
 {
   declareObject("/Event/Digi", objType(), "PASS");
 }
 
-
-//! Standard Destructor
-DigiEventCnv::~DigiEventCnv()   { 
-}
 

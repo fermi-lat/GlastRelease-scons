@@ -1,28 +1,19 @@
-// $Header$
 #ifndef EVENTCNVSVC_H
 #define EVENTCNVSVC_H 1
 
 #include <map>
 
-// Include files
 #include "GaudiKernel/ConversionSvc.h"
 #include "IEventCnvSvc.h"
 
-
-// Forward declarations
 template <class TYPE> class SvcFactory;
 
-
-//------------------------------------------------------------------------------
-//
-// ClassName :    EventCnvSvc
-//  
-// Description :  Glast event conversion service
-//
-// Author :       Markus Frank
-//
-//------------------------------------------------------------------------------
-
+/** @class EventCnvSvc
+ * @brief GLAST Event Conversion Service
+ * Based on SICb service written by Markus Frank.
+ *
+ * $Header$
+ */
 
 class EventCnvSvc  : virtual public ConversionSvc, virtual public IEventCnvSvc	{
 
@@ -35,28 +26,38 @@ class EventCnvSvc  : virtual public ConversionSvc, virtual public IEventCnvSvc	{
 
 public:
 
-  /// Initialize the service.
   virtual StatusCode initialize();
 
-  /// Finalize the service.
   virtual StatusCode finalize();
 
-  /// Update state of the service
   virtual StatusCode updateServiceState(IOpaqueAddress* pAddress);
 
-  /// Override queryinterface due to enhanced interface
+  /// Override inherited queryInterface due to enhanced interface
   virtual StatusCode queryInterface(const IID& riid, void** ppvInterface);
 
-  /// Declara data leaf(s)
+  /// Store path on TDS for a particular converter
   virtual StatusCode declareObject(const IEventCnvSvc::Leaf& leaf);
 
+  /** IAddressCreator implementation: Address creation.
+    Create an address using the link infotmation together with
+    the triple (database name/container name/object name).
+
+    @param refLink        Reference to abstract link information
+    @param dbName         Database name
+    @param containerName  Object container name
+    @param refpAddress    Opaque address information to retrieve object
+    @return               StatusCode indicating SUCCESS or failure
+  */
+  virtual StatusCode createAddress( unsigned char svc_type,
+                                    const CLID& clid,
+                                    const std::string* par, 
+                                    const unsigned long* ip,
+                                    IOpaqueAddress*& refpAddress);
 protected:
 
-  /// Standard Constructor
   EventCnvSvc(const std::string& name, ISvcLocator* svc);
 
-  /// Standard Destructor
-  virtual ~EventCnvSvc();
+  virtual ~EventCnvSvc() { };
 
 };
 

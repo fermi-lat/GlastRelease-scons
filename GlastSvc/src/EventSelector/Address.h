@@ -3,14 +3,12 @@
 #define Address_H 1
 
 
-// Include files
 #include <string>
 #include <vector>
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/GenericAddress.h"
 
 
-// Forward declarations
 class IDataDirectory;
 
 
@@ -18,16 +16,11 @@ class IDataDirectory;
 extern unsigned const char SICB_StorageType;
 
 
-//------------------------------------------------------------------------------
-//
-// ClassName :    Address
-//  
-// Description :  Definition of a dummy address
-//
-//
-//------------------------------------------------------------------------------
-
-
+/** @class Address
+ * @brief Definition of a GLAST address.
+ *
+ * $Header$
+ */
 class Address : public GenericAddress   {
 public:
 
@@ -57,16 +50,9 @@ protected:
   int m_recid;  //THB: does this make sense?
 public:
   /// Validate address
-  StatusCode validate();
-  /// Standard Constructor
-  Address(const CLID& cl, const std::string& fname, int recid, const std::string& bank);
-  /// Constructor for non-initialized addresses
-  Address(const GenericLink& link);
-  /// Constructor for non-initialized addresses
-  Address(const GenericLink* link);
-  /// Standard destructor
-  virtual ~Address()    {
-  }
+  //StatusCode validate();
+  Address( unsigned char svc,const CLID& clid, const std::string& path);
+  virtual ~Address()    {}
 };
 
 

@@ -1,30 +1,16 @@
-// $Header$
-//
-//
-//  GlastEventSelector.cpp
-//
-//
-// Include files
 #include "GlastEventSelector.h"
 
 #include "GaudiKernel/MsgStream.h"
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/SvcFactory.h"
-#include "GaudiKernel/AddrFactory.h"
-
-#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IDataManagerSvc.h"
+#include "GaudiKernel/IAddressCreator.h"
 #include "GaudiKernel/Property.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 #include "GaudiKernel/ObjectVector.h"
-
-//THB: old style extern const CLID CLID_Event;
-
-// Glast address factory
-extern unsigned char GLAST_StorageType;
-extern const IAddrFactory& DummyAddressFactory;
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
@@ -50,16 +36,31 @@ StatusCode GlastEventSelector::initialize()     {
     	// now try to find the GlastDevSvc service
     IGlastDetSvc* m_detSvc = 0;
     
-	//StatusCode sc;
-	sc = serviceLocator()->getService( "EventDataSvc", IID_IDataProviderSvc, (IInterface*&)m_eventDataSvc );
-	if( sc.isFailure() ) {
-		log << MSG::ERROR << "Unable to locate service " << "EventDataSvc" << endreq;
-	}
+      // Retrive conversion service handling event iteration
+  sc = serviceLocator()->service("EventCnvSvc", m_addrCreator);
+  if( !sc.isSuccess() ) {
+    log << MSG::ERROR << 
+      "Unable to localize interface IID_IAddressCreator from service:" 
+      << "EventCnvSvc" 
+      << endreq;
+    return sc;
+  }
+  // Get DataSvc
+  IDataManagerSvc* eds = 0;
+  sc = serviceLocator()->service("EventDataSvc", eds, true);
+  if( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+      << "Unable to localize interface IID_IDataManagerSvc "
+      << "from service EventDataSvc"
+	    << endreq;
+    return sc;
+  }
 
+  m_rootCLID = eds->rootCLID();
+   
 
     return sc;
 }
-
 
 GlastEventSelector::GlastEventSelector( const std::string& name, ISvcLocator* svcloc ) 
 : Service( name, svcloc)
@@ -118,9 +119,12 @@ StatusCode GlastEventSelector::setCriteria( const std::string& criteria ) {
         return sc;
     }
 
-    sc = serviceLocator()->getService ("GlastDetSvc",
-         IID_IGlastDetSvc, reinterpret_cast<IInterface*&>( m_detSvc ));
-    
+    IService *isvc = 0;
+    sc = service("GlastDetSvc", isvc, true);
+    if (sc.isSuccess() ) {
+        sc = isvc->queryInterface(IID_IGlastDetSvc, (void**)&m_detSvc);
+    }
+   
     if(sc.isFailure()){
             log << MSG::ERROR << "Unable start Glast detector service" << endreq;
         return sc;
@@ -182,7 +186,7 @@ StatusCode GlastEventSelector::setCriteria( const SelectionCriteria& criteria ) 
 
 //!  Find out the name of the file from list of files or Jobs.
 StatusCode GlastEventSelector::getFileName(ListName::const_iterator* inputIt, std::string& fName) const {
-    MsgStream log(messageService(), name());
+    MsgStream log(msgSvc(), name());
 
     if( m_criteriaType == IRFFILE){                 // If CRITERIA = FILE Get File name
         fName = **inputIt;
@@ -202,7 +206,7 @@ StatusCode GlastEventSelector::getFileName(ListName::const_iterator* inputIt, st
     Called by the ApplicationMgr::intialize() method
 */
 IEvtSelector::Iterator* GlastEventSelector::begin() const {
-    MsgStream log(messageService(), name());
+    MsgStream log(msgSvc(), name());
     StatusCode sc;
 
 #if 0
@@ -254,7 +258,7 @@ IEvtSelector::Iterator* GlastEventSelector::begin() const {
     Event Selector iterator next(it)
 */
 IEvtSelector::Iterator& GlastEventSelector::next(IEvtSelector::Iterator& it) const {
-    MsgStream log(messageService(), name());
+    MsgStream log(msgSvc(), name());
 
     if(m_criteriaType == IRFFILE)
     {
@@ -343,13 +347,19 @@ IOpaqueAddress* GlastEventSelector::reference(const IEvtSelector::Iterator& it) 
     
     ListName::const_iterator* inputDataIt = (ListName::const_iterator*)(&irfIt->m_inputDataIt);
     
-    // finally create an opaque address to pass back
-    IOpaqueAddress* addr = DummyAddressFactory.instantiate(CLID_Event, fName, "PASS", recId);
-    return addr;
+    
+    IOpaqueAddress* pAddr = 0;
+    std::string str("");
+    unsigned long temp = 0;
+    if ( m_addrCreator->createAddress(SICB_StorageType, m_rootCLID, &str, &temp, pAddr).isSuccess() ) 
+    {
+      return pAddr;
+    }
+
+    return 0;
 }
 
 
-//! IInterface::queryInterface
 StatusCode GlastEventSelector::queryInterface(const IID& riid, void** ppvInterface)  {
     if ( riid == IID_IEvtSelector )  {
         *ppvInterface = (IEvtSelector*)this;
@@ -364,9 +374,6 @@ StatusCode GlastEventSelector::queryInterface(const IID& riid, void** ppvInterfa
     return SUCCESS;
 }
 
-
-/*! C
-*/
 StatusCode GlastEventSelector::getMaxEvent()
 {
     IProperty* appPropMgr=0;
