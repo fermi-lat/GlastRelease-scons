@@ -9,10 +9,6 @@
 #ifndef CoordSystem_H
 #define CoordSystem_H
 
-#ifdef __GNUG__
-#pragma interface
-#endif
-
 #include "geometry/GeomObject.h"
 #include "geometry/CoordTransform.h"
 
