@@ -16,6 +16,7 @@
 */
 
 #include "CompositeSource.h"
+#include "GPS.h"
 
 #include "FluxSvc/FluxSource.h"
 
@@ -26,7 +27,6 @@
 #include <map>
 #include <list>
 #include <string>
-#include "geometry/CoordTransform.h"
 
 class FluxMgr 
 {

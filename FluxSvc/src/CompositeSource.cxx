@@ -13,7 +13,7 @@
 #include <iomanip>
 
 CompositeSource::CompositeSource (double aRate)
-: EventSource(aRate), m_recent(0),m_numofiters(0)//,m_time(0)
+: EventSource(aRate),m_numofiters(0), m_recent(0)
 {
 }
 

@@ -13,10 +13,11 @@
 #include "SimpleSpectrum.h"
 
 #include "FluxException.h" // for FATAL_MACRO
+#include "GPS.h"
+
 #include <algorithm>
 #include <sstream>
 
-double  FluxSource::s_radius=1.0;
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /** @class LaunchPoint
     @brief nested launch strategy base class for point determination
@@ -91,7 +92,7 @@ public:
     /// return info, 
     std::string title()const{
         std::stringstream t;
-        t << "radius("<< FluxSource::s_radius << ")";
+        t << "radius("<< m_radius << ")";
         return t.str();
     }
 
@@ -357,7 +358,6 @@ FluxSource::FluxSource(const DOM_Element& xelem )
 {
     static double d2r = M_PI/180.;
 
-    s_radius = sqrt(totalArea() / M_PI ) * 1000;    // radius in mm
 
     ISpectrum*   s = 0;
     std::string class_name;
@@ -507,12 +507,10 @@ FluxSource::FluxSource(const DOM_Element& xelem )
                     << xml::Dom::transToChar(launchTag) << "\"" );
             }
         } else {
-            m_launch_pt = new RandomPoint(s_radius, s_radius);
+            double radius = sqrt(totalArea() / M_PI ) * 1000;    // radius in mm
+            m_launch_pt = new RandomPoint(radius, radius);
         }
-
-        
     }
-    
 }
 
 

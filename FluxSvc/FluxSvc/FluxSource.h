@@ -5,7 +5,8 @@
 #define FluxSource_h 1
 
 #include "FluxSvc/EventSource.h"
-#include "CLHEP/Vector/ThreeVector.h"
+#include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Geometry/Vector3D.h"
 
 // forward declarations
 class DOM_Element;
@@ -69,8 +70,6 @@ public:
     double energy()const { return m_energy;}
     const HepVector3D& launchDir()const {return m_correctedDir;}
     const HepPoint3D&  launchPoint()const { return m_launchPoint;}
-
-    static	double	s_radius;
 
 private:
 

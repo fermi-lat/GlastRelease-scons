@@ -13,9 +13,6 @@
 
 #include <string>
 
-#include "GPS.h"
-
-
 class DOM_Element;
 class FluxSource;
 
