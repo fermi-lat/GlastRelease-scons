@@ -26,17 +26,17 @@ public:
    ~TkrPatCand();
 
     /// Define the TkrRecInfo routines
-    double        getQuality()                      const {return m_quality;};
-    double        getEnergy(TrackEnd end = Start)      const {return m_energy;}
-    int           getLayer(TrackEnd end = Start)       const {return m_firstLayer;}
-    int           getTower(TrackEnd end = Start)       const {return m_itower;}
-    Point         getPosition(TrackEnd end = Start)    const {return m_position;}
-    Vector        getDirection(TrackEnd end = Start)   const {return m_direction;}
-    Ray           getRay(TrackEnd end = Start)         const {return Ray(getPosition(),getDirection());}
-    TkrFitPar     getTrackPar(TrackEnd end = Start)    const;
-    double        getTrackParZ(TrackEnd end = Start)   const {return m_position.z();}
-    TkrFitMatrix  getTrackCov(TrackEnd end = Start)    const; 
-    bool          empty(int numHits)                const {return m_firstLayer >= 0;}
+    double        getQuality()                      const ;
+    double        getEnergy(TrackEnd end = Start)   const ;
+    int           getLayer(TrackEnd end = Start)    const ;
+    int           getTower(TrackEnd end = Start)    const ;
+    Point         getPosition(TrackEnd end = Start) const ;
+    Vector        getDirection(TrackEnd end = Start) const ;
+    Ray           getRay(TrackEnd end = Start)      const ;
+    TkrFitPar     getTrackPar(TrackEnd end = Start) const ;
+    double        getTrackParZ(TrackEnd end = Start)   const ;
+    TkrFitMatrix  getTrackCov(TrackEnd end = Start)    const ; 
+    bool          empty(int numHits)                const ;
 
     //Provide a method to writeout the contents of the class
     void writeOut(MsgStream& log) const; 

@@ -41,23 +41,23 @@ public:
    ~TkrVertex() {}
 
     /// Define the TkrBase routines
-    double        getQuality()                       const {return m_quality;};
-    double        getEnergy(TrackEnd end = Start)    const {return m_energy;}
-    int           getLayer(TrackEnd end = Start)     const {return m_firstLayer;}
-    int           getTower(TrackEnd end = Start)     const {return m_itower;}
-    Point         getPosition(TrackEnd end = Start)  const {return m_position;}
-    Vector        getDirection(TrackEnd end = Start) const {return m_direction;}
-    Ray           getRay(TrackEnd end = Start)       const {return Ray(getPosition(),getDirection());}
-    TkrFitPar     getTrackPar(TrackEnd end = Start)  const {return m_vertexPar;}
-    double        getTrackParZ(TrackEnd end = Start) const {return m_position.z();}
-    TkrFitMatrix  getTrackCov(TrackEnd end = Start)  const {return m_vertexCov;}
-    bool          empty(int numHits)                 const {return m_firstLayer >= 0;}
+    double        getQuality() const;                    
+    double        getEnergy(TrackEnd end = Start)    const;   
+    int           getLayer(TrackEnd end = Start)     const; 
+    int           getTower(TrackEnd end = Start)     const; 
+    Point         getPosition(TrackEnd end = Start)  const; 
+    Vector        getDirection(TrackEnd end = Start) const; 
+    Ray           getRay(TrackEnd end = Start)       const; 
+    TkrFitPar     getTrackPar(TrackEnd end = Start)  const; 
+    double        getTrackParZ(TrackEnd end = Start) const; 
+    TkrFitMatrix  getTrackCov(TrackEnd end = Start)  const; 
+    bool          empty(int numHits)                 const; 
 
     // Add tracks to the list
-    void addTrack(TkrFitTrack* pTrack)                     {m_tracks.push_back(pTrack);}
+    void addTrack(TkrFitTrack* pTrack) {m_tracks.push_back(pTrack);}
     
     // How many tracks in the vertex?
-    int  getNumTracks()                                    {return m_tracks.size();}
+    int  getNumTracks() const {return m_tracks.size();}
 
     // Pointers to track info
     SmartRefVector<TkrFitTrack>::const_iterator getTrackIterBegin() const {return m_tracks.begin();}

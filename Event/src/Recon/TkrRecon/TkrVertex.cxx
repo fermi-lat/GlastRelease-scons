@@ -39,3 +39,48 @@ void TkrVertex::writeOut(MsgStream& log) const
     log << MSG::DEBUG << " first Layer   = " << getLayer() << endreq;
     log << MSG::DEBUG << " Tower         = " << getTower() << endreq;
 }
+
+double        TkrVertex::getQuality()            const 
+{
+    return m_quality;
+};
+double        TkrVertex::getEnergy(TrackEnd)     const 
+{
+    return m_energy;
+}
+int           TkrVertex::getLayer(TrackEnd )     const 
+{
+    return m_firstLayer;
+}
+int           TkrVertex::getTower(TrackEnd )     const 
+{
+    return m_itower;
+}
+Point         TkrVertex::getPosition(TrackEnd )  const 
+{
+    return m_position;
+}
+Vector        TkrVertex::getDirection(TrackEnd ) const 
+{
+    return m_direction;
+}
+Ray           TkrVertex::getRay(TrackEnd )       const 
+{
+    return Ray(getPosition(),getDirection());
+}
+TkrFitPar     TkrVertex::getTrackPar(TrackEnd )  const 
+{
+    return m_vertexPar;
+}
+double        TkrVertex::getTrackParZ(TrackEnd ) const 
+{
+    return m_position.z();
+}
+TkrFitMatrix  TkrVertex::getTrackCov(TrackEnd )  const 
+{
+    return m_vertexCov;}
+bool          TkrVertex::empty(int)              const 
+{
+    return m_firstLayer >= 0;
+}
+

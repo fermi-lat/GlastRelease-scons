@@ -108,3 +108,8 @@ TkrFitPlane TkrFitTrack::getFoLPlane(TrackEnd end) const
         else                          return m_hits.back();
     }
 }
+
+Ray TkrFitTrack::getRay(TrackEnd) const 
+{
+    return Ray(getPosition(),getDirection());
+}

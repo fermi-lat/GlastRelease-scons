@@ -44,15 +44,31 @@ public:
     /// Define the TkrRecInfo access methods
     /// Provides access to the basic information needed by external users
     double        getQuality()                       const {return m_Q;};
-    double        getEnergy(TrackEnd end = Start)    const {return getFoLPlane(end).getEnergy();}
-    int           getLayer(TrackEnd end = Start)     const {return getFoLPlane(end).getIDPlane();}
-    int           getTower(TrackEnd end = Start)     const {return getFoLPlane(end).getIDTower();}
-    Point         getPosition(TrackEnd end = Start)  const {return getFoLPlane(end).getPoint(TkrFitHit::SMOOTH);}
+    double        getEnergy(TrackEnd end = Start)    const {
+        return getFoLPlane(end).getEnergy();
+    }
+    int           getLayer(TrackEnd end = Start)     const {
+        return getFoLPlane(end).getIDPlane();
+    }
+    int           getTower(TrackEnd end = Start)     const {
+        return getFoLPlane(end).getIDTower();
+    }
+    Point         getPosition(TrackEnd end = Start)  const {
+        return getFoLPlane(end).getPoint(TkrFitHit::SMOOTH);
+    }
+
     Vector        getDirection(TrackEnd end = Start) const;
-    Ray           getRay(TrackEnd end = Start)       const {return Ray(getPosition(),getDirection());}
-    TkrFitPar     getTrackPar(TrackEnd end = Start)  const {return getFoLPlane(end).getHit(TkrFitHit::SMOOTH).getPar();}
-    double        getTrackParZ(TrackEnd end = Start) const {return getFoLPlane(end).getZPlane();}
-    TkrFitMatrix  getTrackCov(TrackEnd end = Start)  const {return getFoLPlane(end).getHit(TkrFitHit::SMOOTH).getCov();}
+    Ray           getRay(TrackEnd end = Start)       const;
+
+    TkrFitPar     getTrackPar(TrackEnd end = Start)  const {
+        return getFoLPlane(end).getHit(TkrFitHit::SMOOTH).getPar();
+    }
+    double        getTrackParZ(TrackEnd end = Start) const {
+        return getFoLPlane(end).getZPlane();
+    }
+    TkrFitMatrix  getTrackCov(TrackEnd end = Start)  const {
+        return getFoLPlane(end).getHit(TkrFitHit::SMOOTH).getCov();
+    }
     bool          empty(int numHits)                 const;
     
     /// Utilities 

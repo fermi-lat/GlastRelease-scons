@@ -96,3 +96,35 @@ void TkrPatCand::writeOut(MsgStream& log) const
     log << MSG::DEBUG << " Tower         = " << getTower() << endreq;
 }
 
+    double        TkrPatCand::getEnergy(TrackEnd)       const 
+    {
+        return m_energy;
+    }
+    int           TkrPatCand::getLayer(TrackEnd )       const 
+    {
+        return m_firstLayer;
+    }
+    int           TkrPatCand::getTower(TrackEnd )       const 
+    {
+        return m_itower;
+    }
+    Point         TkrPatCand::getPosition(TrackEnd )    const 
+    {
+        return m_position;
+    }
+    Vector        TkrPatCand::getDirection(TrackEnd )   const 
+    {
+        return m_direction;
+    }
+    Ray           TkrPatCand::getRay(TrackEnd )         const 
+    {
+        return Ray(getPosition(),getDirection());
+    }
+    double        TkrPatCand::getTrackParZ(TrackEnd )   const 
+    {
+        return m_position.z();
+    }
+    bool          TkrPatCand::empty(int)                const 
+    {
+        return m_firstLayer >= 0;
+    }
