@@ -379,7 +379,7 @@ Point TkrClusters::position(const int plane, TkrCluster::view v, const double st
     // note the differences between layers and planes - ordering!
     int layer = pTkrGeo->ilayer(plane);
 	
-	HepPoint3D p = pTkrGeo->getStripPosition(tower, layer, (int) v, (int) strip);
+	HepPoint3D p = pTkrGeo->getDoubleStripPosition(tower, layer, (int) v, strip);
 	Point p1(p.x(), p.y(), p.z());
 	return p1;
 	
