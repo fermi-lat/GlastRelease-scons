@@ -28,8 +28,7 @@ INCLUDES = -I$(top_srcdir) \
 
 test_LDADDS = \
 	$(top_builddir)/libgeomrep.la \
-	@LIB_MOTIF@	\
-	@LIB_BATCH@	\
+	$(top_builddir)/../graphics/libmotif.la \
 	@LIB_GRAPHICS@	\
 	@LIB_GEOMETRY@	\
 	@LIB_CLHEP@ 	\

@@ -31,7 +31,6 @@ fi
 
 dnl Check for required libraries
 glast_CHECK_LIB_SRC(LIB_GRAPHICS, libgraphics.la, ../graphics)
-glast_CHECK_LIB(LIB_BATCH, libbatch.la, ../graphics/batch)
 glast_CHECK_LIB(LIB_MOTIF, libmotif.la, ../graphics/motif)
 glast_CHECK_LIB_SRC(LIB_GEOMETRY, libgeometry.la, ../geometry)
 glast_CHECK_LIB(LIB_CLHEP, libCLHEP.a, ../CLHEP/CLHEP)
