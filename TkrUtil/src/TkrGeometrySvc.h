@@ -75,6 +75,9 @@ public:
     /// return the average z position for a reconLayer
     double getReconLayerZ(int layer);
 
+    /// Provide access to the propagator
+    IKalmanParticle* getPropagator() {return m_KalParticle;}
+
     /// calculate the tray number, botTop from layer, view
     void layerToTray (int layer, int view, int& tray, int& botTop);
     /// calculate layer, view from tray, botTop
@@ -146,6 +149,9 @@ private:
     idents::VolumeIdentifier m_volId_tower[NTOWERS];
     /// array to hold the tray part of the volumeIds of the silicon planes
     idents::VolumeIdentifier m_volId_layer[NLAYERS][NVIEWS];
+
+    // This maintains a pointer to the particular propagator needed by the track fit
+    IKalmanParticle* m_KalParticle;
 };
 
 #endif // TKRGEOMETRYSVC_H

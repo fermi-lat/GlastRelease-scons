@@ -3,6 +3,8 @@
 
 #include "GaudiKernel/IInterface.h"
 
+#include "GlastSvc/Reco/IKalmanParticle.h"
+
 #include "CLHEP/Geometry/Point3D.h"
 
 #include <string>
@@ -64,6 +66,9 @@ public:
     virtual double getReconLayerZ(int layer, int view) = 0;
     /// Return average z position for a layer
     virtual double getReconLayerZ(int layer) = 0;
+
+    /// Provide access to the propagator
+    virtual IKalmanParticle* getPropagator() = 0;
 };
 
 #endif
