@@ -226,17 +226,22 @@ long RdbGUIWindow::onSQLEdit(FXObject*, FXSelector, void*)
 long RdbGUIWindow::onOpenXMLFile(FXObject*, FXSelector, void*)
 {
   // Open file
-  onCloseConnection(NULL,0,NULL);
-  if (m_rdbManager->getRdb())
-    {    
-      m_rdbManager->cleanRdb();
-      uiTblColList->reset();
-    }
   FXFileDialog *opendialog = new FXFileDialog(this, "Open File");
   opendialog->setSelectMode(SELECTFILE_EXISTING);
   opendialog->setPatternList("XML files (*.xml)\nAll files (*)");
   if (opendialog->execute() != 0)
-    loadXMLFile(opendialog->getFilename());
+    {
+      if (onCloseConnection(NULL,0,NULL))
+        {
+          if (m_rdbManager->getRdb())
+            {    
+              m_rdbManager->cleanRdb();
+              uiTblColList->reset();
+            }
+          loadXMLFile(opendialog->getFilename());        
+        }
+    }
+    
   return 1;
 }
 
@@ -331,8 +336,9 @@ long RdbGUIWindow::onCloseConnection(FXObject*,FXSelector, void*)
       closeConnection();
       m_cmdCloseConn->disable();
       m_cmdOpenConn->enable();
+      return 1;
     }
-  return 1;  
+  return 0;  
 }
 
 long RdbGUIWindow::onUpdResTableCols(FXObject*,FXSelector, void* ptr)
