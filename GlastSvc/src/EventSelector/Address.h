@@ -11,7 +11,7 @@ class IDataDirectory;
 extern unsigned const char SICB_StorageType;
 
 /** @class Address
- * @brief Definition of a GLAST address.
+ * @brief Definition of a GLAST address, derived from IOpaqueAddress.
  *
  * Based on SICb's Address class.
  *
