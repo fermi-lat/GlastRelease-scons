@@ -72,4 +72,5 @@ public:
     const CLID& CLID_TdCsIDataCnv         = 2016;
     const CLID& CLID_TdSiData           =  2017;
     const CLID& CLID_TdSiDataCnv        =   2018;
+    const CLID& CLID_TdGlastData        =   2019;
         
