@@ -130,7 +130,7 @@ StatusCode CalXtalRecAlg::initialize()
     }
 
     // conversion from GeV to MeV
-    for (int r=0; r<4;r++) m_maxEnergy[r] *= 1000.; 
+//    for (int r=0; r<4;r++) m_maxEnergy[r] *= 1000.; 
 	
 	
 	return sc;
