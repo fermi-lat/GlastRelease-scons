@@ -13,15 +13,20 @@ set MYSQL_METATABLE metadata_v2r1
 
 apply_pattern package_include
 apply_pattern package_headers
-apply_pattern package_linkopts
 
 ## Start with static library, but ultimately should be shareable
 ## when there is some c or c++ source, uncomment the following
 ## library calibUtil -no_share  $(calibUtil_headers) *.cxx *.c
 
+## Try shareable..
+library calibUtil  $(calibUtil_headers) *.cxx *.c
 
-library calibUtil -no_share $(calibUtil_headers) *.cxx *.c
-
+apply_pattern package_linkopts
+apply_pattern package_stamps
+apply_pattern ld_library_path
+#
+private
+apply_pattern package_shlibflags
 
 application test_strips test/test_strips.cxx StripSrv.cxx GenericSrv.cxx
 ##application test_strips test/test_strips.cxx 
