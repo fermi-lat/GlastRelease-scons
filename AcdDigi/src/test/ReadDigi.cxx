@@ -1,4 +1,4 @@
-#define GlastDigi_ReadDigi_CPP 
+#define AcdDigi_ReadDigi_CPP 
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
