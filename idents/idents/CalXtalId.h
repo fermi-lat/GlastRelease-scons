@@ -90,6 +90,12 @@ namespace idents {
                 SMALL = 1
             } DiodeType;
 		
+        /// Return diode type, given AdcRange
+        static DiodeType rangeToDiode(AdcRange range) {
+            if ((range == LEX8) || (range == LEX1)) return LARGE;
+            else return SMALL;
+        }
+
         /// constructor from packed Id
         CalXtalId(int packedId=0) :
         m_packedId(packedId) {};
@@ -189,7 +195,8 @@ namespace idents {
                 m_packedId += ((1 << FACE_VALID_SHIFT) + (face << FACE_SHIFT));
             }
             if (range != RANGE_UNUSED) {
-                m_packedId += ((1 << RANGE_VALID_SHIFT) + (range<<FACE_SHIFT));
+                m_packedId += ((1 << RANGE_VALID_SHIFT) + 
+                               (range<<RANGE_SHIFT));
             }
         };
     };
