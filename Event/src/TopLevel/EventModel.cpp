@@ -46,7 +46,7 @@ public:
         // reconstructed data (Tracker)
         EventModel::TkrRecon::Event          = EventModel::Event + "/TkrRecon";
         EventModel::TkrRecon::SiLayers       = EventModel::TkrRecon::Event + "/SiLayers";
-        EventModel::TkrRecon::TkrClusters    = EventModel::TkrRecon::Event + "/TkrClusters";
+        EventModel::TkrRecon::TkrClusterCol  = EventModel::TkrRecon::Event + "/TkrClusterCol";
         EventModel::TkrRecon::TkrPatCandCol  = EventModel::TkrRecon::Event + "/TkrPatCandCol";
         EventModel::TkrRecon::SiRecObjs      = EventModel::TkrRecon::Event + "/SiRecObjs";
         EventModel::TkrRecon::TkrFitTrackCol = EventModel::TkrRecon::Event + "/TkrFitTrackCol";

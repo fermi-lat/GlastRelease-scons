@@ -63,7 +63,7 @@
         namespace TkrRecon {
             _EXTERN_ std::string Event;
             _EXTERN_ std::string SiLayers;
-            _EXTERN_ std::string TkrClusters;
+            _EXTERN_ std::string TkrClusterCol;
             _EXTERN_ std::string TkrPatCandCol;
             _EXTERN_ std::string SiRecObjs;
             _EXTERN_ std::string TkrFitTrackCol;
