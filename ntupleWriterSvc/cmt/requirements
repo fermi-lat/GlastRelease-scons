@@ -1,10 +1,10 @@
 package ntupleWriterSvc
-version v2r0
+version v2r0p0
 
 branches src mgr doc
 
 use GlastPolicy v4r*
-use facilities v2r4p*
+use facilities v2r*
 use GaudiSvc v7r*
 use RootHistCnv v5r*
 
