@@ -1,6 +1,6 @@
 package Gleam
 
-version  v3r1
+version  v3r2
 # This is a checkout package
 # $Id$
 
@@ -29,8 +29,8 @@ use gui         v3r3p2
 use geomrep     v4r1
 
 # the geometry data base
-use idents      v2r8p4 
-use xmlGeoDbs   v1r8p0
+use idents                 v2r9
+use xmlGeoDbs              v1r9
 use xmlUtil     v2r8p3
 use detModel    v2r13p0
 
@@ -65,7 +65,7 @@ use GlastDigi   v4r5p2
 
 #reconstruction
 use Trigger     v3r3p5
-use Recon       v2r3p6
+use Recon                  v2r3p7
 
 use TkrRecon    v8r5
 use CalRecon    v5r7p5 
