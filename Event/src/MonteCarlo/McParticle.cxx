@@ -86,7 +86,7 @@ const McParticle& McParticle::mother()const
 
 
 /// access to the list of daughters: null if none
-const SmartRefVector<McParticle>& McParticle::daugherList()const
+const SmartRefVector<McParticle>& McParticle::daughterList()const
 {
     return m_daughters;
 }
