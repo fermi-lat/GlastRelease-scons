@@ -2,6 +2,7 @@
  * Package detModel
  * Coordinator: R.Giannitrapani
  *
+ * v2r11 THB new map builder featurs
  * v2r10 THB new features for visitor mode
  * v2r9 RG  fixed a rotation bug in idMapBuilder
  * v2r8 THB new sensitive flags, idMapBuilder access 
