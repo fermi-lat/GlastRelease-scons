@@ -2,3 +2,9 @@ package RootAnalysis
 
 # No code.
 # This package has the Root Analysis scripts.
+
+#use these to get the env vars defined
+use digiRootData 
+use reconRootData 
+
+set ROOTANALYSIS ${ROOTANALYSISROOT}
