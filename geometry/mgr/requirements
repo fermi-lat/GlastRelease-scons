@@ -16,6 +16,6 @@ library  geometry -no_share \
     Plane.cxx           Point.cxx           Ray.cxx\
     Shape.cxx           Sphe.cxx\
     Sphere.cxx          Surface.cxx         Track.cxx\
-    Tube.cxx            Vector.cxx \
+    Tube.cxx            Tubs.cxx            Vector.cxx \
     Volume.cxx          Wedge.cxx \
     ../geometry/*.h
