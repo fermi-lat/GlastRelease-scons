@@ -2,7 +2,11 @@
 
 #include "idents/VolumeIdentifier.h"
 
+#ifndef WIN32  
+#include <strstream>
+#else
 #include <sstream>
+#endif
 #include <cassert>
 
 using namespace idents;
@@ -11,7 +15,11 @@ VolumeIdentifier::VolumeIdentifier():  m_value(0){}
 
 std::string VolumeIdentifier::name(const char* delimiter) const
 {
+#ifndef WIN32    
+    std::strstream s;
+#else
     std::stringstream s;
+#endif
     s << delimiter;
     std::copy(begin(),end(), std::ostream_iterator<unsigned int>(s,delimiter));
     std::string tmp=s.str();

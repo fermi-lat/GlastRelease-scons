@@ -3,6 +3,7 @@
 #ifndef VolumeIdentifier_h
 #define VolumeIdentifier_h
 #include <deque>
+#include <string>
 
 namespace idents{
 
