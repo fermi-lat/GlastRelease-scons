@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
     // charge a head with ROOT here, figure out later how to do it consistently
 
 //    RootTuple* tuple = new RootTuple("unknown", file_name, "AORECON/t1");
-    RootTuple* tuple = new RootTuple("unknown", file_name, "PDR/t1");
+    RootTuple* tuple = new RootTuple("unknown", file_name, "MeritTuple");
     // now assign input stream, either the file name or std input
         // Determine the # of events stored in ntuple
 

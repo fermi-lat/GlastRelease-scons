@@ -5,7 +5,6 @@
 
 #include <string>
 class Tuple;
-class TNtuple;
 class TFile;
 class TTree;
 
@@ -33,8 +32,7 @@ public:
 private:
     Tuple* m_tuple;
 
-    /// the ROOT stuff
-    //TNtuple  * m_tnt;
+    /// the ROOT stuff: a file and a tree to put into it
     TTree * m_tree;
     TFile *  m_tf;
 

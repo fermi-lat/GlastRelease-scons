@@ -298,12 +298,14 @@ private:
         float siderow3 = *m_siderow3;
         float siderow2 = *m_siderow2;
         float elayer0 = *m_elayer0;
+#if 0 // not used
         float elayer1 = *m_elayer1;
         float elayer2 = *m_elayer2;
         float elayer3 = *m_elayer3;
         float elayer4 = *m_elayer4;
         float elayer5 = *m_elayer5;
         float elayer6 = *m_elayer6;
+#endif
         float elayer7 = *m_elayer7;
         float s2doca  = *m_s2doca;
 

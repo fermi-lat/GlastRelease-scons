@@ -186,13 +186,11 @@ StatusCode meritAlg::initialize() {
         new TupleItem(std::string("Cal_eLayer")+digit[layer],&m_cal_elayer[layer]);
     }
     new TupleItem("CAL_Z",           &m_cal_z);
-#if 0 // no longer need?
     new TupleItem("ACD_DOCA",        &m_acd_doca);
     new TupleItem("ACD_TopDOCA",     &m_doca[0]);
     new TupleItem("ACD_S0DOCA",      &m_doca[1]);
     new TupleItem("ACD_S1DOCA",      &m_doca[2]);
     new TupleItem("ACD_S2DOCA",      &m_doca[3]);
-#endif
     new TupleItem("ACD_Act_Dist",    &m_acd_actdist[0]);
     new TupleItem("REC_Act_Dist_SideRow0",&m_acd_actdist[1]);
     new TupleItem("REC_Act_Dist_SideRow1",&m_acd_actdist[2]);
@@ -210,7 +208,8 @@ StatusCode meritAlg::initialize() {
     // not implemented at all
     new TupleItem("REC_Surplus_Hit_ratio", &dummy);
     new TupleItem("ACD_Throttle_Bits",     &dummy);
-
+    new TupleItem("REC_Tkr_SkirtX",        &dummy);
+    new TupleItem("REC_Tkr_SkirtY",        &dummy);
 
     //now make the parallel ROOT tuple
     if(!m_root_filename.value().empty() ){
@@ -392,6 +391,7 @@ void meritAlg::clusterReco(const Event::CalClusterCol& clusters, const Event::Ca
     
     // set tuple items for this cluster. (What if more????)
     m_cal_z=zpos;
+    m_cal_energy_deposit = energy_sum;
     std::copy(eneLayer.begin(), eneLayer.end(), m_cal_elayer);
     m_calFitErrNrm = calFitErrNrm;
     m_cal_transv_rms = trans_rms;
@@ -410,12 +410,6 @@ void meritAlg::clusterReco(const Event::CalClusterCol& clusters, const Event::Ca
         if(eneLog>0.01*energy_sum)no_xtals_trunc++;
     }
     float cal_xtal_ratio= (no_xtals>0) ? float(no_xtals_trunc)/no_xtals : 0;
-    /*
-    sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_No_Xtals", no_xtals);
-    sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_No_Xtals_Trunc", no_xtals_trunc);
-    sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "Cal_Xtal_Ratio", cal_xtal_ratio);
-    
-    */
     // set tuple items
     
     m_no_xtals = no_xtals;
