@@ -2,13 +2,9 @@
 #ifndef GlastEvent_McIntegratingHit_H
 #define GlastEvent_McIntegratingHit_H 1
 
-// If you wish to introduce the namespace `GlastEvent', uncomment
-// the lines commented as `NameSpace'.
-
-
-// Include files
 #include <iostream>
-#include <map>
+#include <vector>
+#include <utility>
 #include "CLHEP/Geometry/Point3D.h"
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ContainedObject.h"
@@ -23,27 +19,19 @@
 #include "GaudiKernel/ObjectList.h"
 
 
-/*!
-//------------------------------------------------------------------------------
-//
-// ClassName:   McIntegratingHit
-//  
-// Description: Monte Carlo integrating hits such as calorimeter
-//
-// Author:      OZAKI Masanobu
-//
-// Changes:     M.Frank 04/10/1999 : Proper use of SmartRefs and SmartRefVectors
-//              P.Binko 19/10/1999 : Proper accessors of smart references,
-//                                   Formating of ASCII output
-//              M.Ozaki 2000-12-07 : Modified for GLAST
-//              M.Ozaki 2001-01-05 : MCIntegratingHits -> McIntegratingHit
-//
-//------------------------------------------------------------------------------
+/** @class McIntegratingHit
+ * @brief Monte Carlo integrating hits such as calorimeter
+ *
+ * @author:      OZAKI Masanobu 
+ *
+ * Changes:     M.Frank 04/10/1999 : Proper use of SmartRefs and SmartRefVectors
+ *              P.Binko 19/10/1999 : Proper accessors of smart references,
+ *                                   Formating of ASCII output
+ *              M.Ozaki 2000-12-07 : Modified for GLAST
+ *              M.Ozaki 2001-01-05 : MCIntegratingHits -> McIntegratingHit
+ * $Header$
  */
 
-// Posible rehash Ian
-// Forward declarations
-//class McParticle;
 #include "GlastEvent/MonteCarlo/McParticle.h"
 
 extern const CLID& CLID_McIntegratingHit;
@@ -58,14 +46,12 @@ class McIntegratingHit : virtual public ContainedObject {
     /// McParticle -> deposited energy map
     // Here I needed to takeout SmartRef<McParticle> because the 
     // template library was not giving a compile error.
-    typedef std::map<McParticle*,double>  energyDepositMap;
+    typedef std::vector< std::pair<McParticle*, double> > energyDepositMap;
 
-    /// Constructors
     McIntegratingHit() : m_packedFlags(0),m_totalEnergy(0),m_moment1seed(0),
         m_moment2seed(0){}
-    /// Destructor
-    ~McIntegratingHit(){}
 
+    ~McIntegratingHit(){}
 
     /// Retrieve cell identifier
     const idents::VolumeIdentifier volumeID() const;
@@ -137,7 +123,7 @@ inline StreamBuffer& McIntegratingHit::serialize( StreamBuffer& s ) const
       << m_energyItem.size();
     energyDepositMap::const_iterator it;
     for (it = m_energyItem.begin(); it != m_energyItem.end(); it++){
-        s << it->first//(this)
+        s << it->first
           << it->second;
     }
     return s
@@ -164,7 +150,7 @@ inline StreamBuffer& McIntegratingHit::serialize( StreamBuffer& s )
         double               second;
         s >> first(this)
           >> second;
-        m_energyItem[first] = second;
+        m_energyItem.push_back(std::pair<mc::McParticle*, double>(first, second));
     }
         return s
       >> m_packedFlags;

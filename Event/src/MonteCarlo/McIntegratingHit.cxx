@@ -14,8 +14,8 @@
 using namespace GlastEvent;
 
 namespace mc{
-/// Update all energyInfos
-void McIntegratingHit::setEnergyItems( const energyDepositMap& value )
+
+    void McIntegratingHit::setEnergyItems( const energyDepositMap& value )
 {
     m_energyItem = value;
     m_totalEnergy = 0.;
@@ -33,7 +33,6 @@ void McIntegratingHit::setEnergyItems( const energyDepositMap& value )
 }
 
 
-/// Remove all energyInfos
 void McIntegratingHit::clearEnergyItems()
 {
     m_energyItem.clear();
@@ -43,30 +42,27 @@ void McIntegratingHit::clearEnergyItems()
 }
 
 
-/// Retrieve volume identifier
 const idents::VolumeIdentifier McIntegratingHit::volumeID() const
 {
   return m_volumeID;
 }
 
 
-/// Update volume identifier
 void McIntegratingHit::setVolumeID( idents::VolumeIdentifier value )
 {
   m_volumeID = value;
 }
 
 
-/// Retrieve energy
 double McIntegratingHit::totalEnergy() const
 {
   return m_totalEnergy;
 }
 
-
-/// Retrieve the energy-weighted first moments of the position
 const HepPoint3D McIntegratingHit::moment1 () const
 {
+    // Purpose and Method:   Retrieve the energy-weighted first moments of the
+    //    position.
     return m_moment1seed * (1./m_totalEnergy);
 }
 HepPoint3D McIntegratingHit::moment1 ()
@@ -75,18 +71,17 @@ HepPoint3D McIntegratingHit::moment1 ()
 }
 
 
-/// Retrieve the energy-weighted second moments of the position
 const HepPoint3D McIntegratingHit::moment2 () const
 {
     return m_moment2seed * (1./m_totalEnergy);
 }
+
 HepPoint3D McIntegratingHit::moment2 ()
 {
     return m_moment2seed * (1./m_totalEnergy);
 }
 
 
-/// Retrieve itemized energy
 const McIntegratingHit::energyDepositMap& McIntegratingHit::itemizedEnergy() const
 {
   return m_energyItem;
@@ -98,10 +93,12 @@ McIntegratingHit::energyDepositMap& McIntegratingHit::itemizedEnergy()
 }
 
 
-/// Add an energyItem
 void McIntegratingHit::addEnergyItem(const double& energy, mc::McParticle* t, const HepPoint3D& position)
 {
-    m_energyItem[t] += energy;
+    // Purpose and Method:  Add a McParticle*, energy pair to the collection.
+    //    Update the total energy and moments.
+
+    m_energyItem.push_back( std::pair<mc::McParticle*, double>(t, energy));
 
     HepPoint3D        position2 = HepPoint3D(position.x()*position.x(), position.y()*position.y(), position.z()*position.z());
     m_totalEnergy      += energy;
@@ -110,11 +107,12 @@ void McIntegratingHit::addEnergyItem(const double& energy, mc::McParticle* t, co
 }
 
 
-/// Add an energyItem
 void McIntegratingHit::addEnergyItem(const double& energy, SmartRef<mc::McParticle> t, const HepPoint3D& position)
 {
-    m_energyItem[t] += energy;
+    // Purpose and Method:  Add a McParticle*, energy pair to the collection.
+    //    Update the total energy and moments.
 
+    m_energyItem.push_back( std::pair<mc::McParticle*, double>(t, energy));
     HepPoint3D        position2 = HepPoint3D(position.x()*position.x(), position.y()*position.y(), position.z()*position.z());
     m_totalEnergy      += energy;
     m_moment1seed += energy * position;
