@@ -31,15 +31,16 @@
                             it in the MySQL metadata table]
  -->
 
-<!ELEMENT badStrips (generic, cuts, tower*) >
+<!ELEMENT badStrips (generic, cuts?, tower*) >
 <!ATTLIST badStrips badType (hot | dead) #REQUIRED >
 
 <!ELEMENT  generic  (inputSample) >
 <!ATTLIST generic  
-   instrument  (flight | BFEM | BTEM | EM | CU) #REQUIRED
+   instrument  (LAT | BFEM | BTEM | EM | CU) #REQUIRED
    timestamp   NMTOKEN #REQUIRED
    calType     NMTOKEN #REQUIRED
-   fmtVersion  NMTOKEN #IMPLIED >
+   DTDVersion  NMTOKEN "v2r0"       
+   fmtVersion  NMTOKEN #REQUIRED >
 
 <!-- Description of events used as input to the procedure 
      Start- and stop-times should be timestamps of earliest and
@@ -72,27 +73,35 @@
      to misinterpretation for different instruments 
      Only include towers for which there is at least one
      tray with bad strips
+
+     Convention for howBad attribute both here and in uniplane
+     element is that higher number ==> worse strip
 -->
-<!ELEMENT tower (tray+) >
+<!ELEMENT tower (uniplane*) >
 <!ATTLIST tower row NMTOKEN #REQUIRED 
-                col NMTOKEN #REQUIRED >
+                col NMTOKEN #REQUIRED 
+                allBad (true | false) "false"
+                howBad (1 | 2 | 3 |4 ) #IMPLIED >
 
-<!--  Tray is identified by a number (zero based, back-most tray
-      is tray 0, according to Steve Ritz convention).  Don't
-      mention a tray unless at least one of its two planes
-      has bad strips.
+<!-- Each uniplane is identified by a tray # (zero based, back-most tray
+      is tray 0, according to Steve Ritz convention) and top/bottom
+      field.   A uniplane is either all bad or specifies which strips
+      are bad.  Within a givin tower, there should be at most one
+      instance of a particular uniplane whose strips are a particular
+      "badness", but dtd can't enforce this constraint.
   -->
-<!ELEMENT tray (unilayer, unilayer?) >
-<!ATTLIST tray trayNum NMTOKEN #REQUIRED >
+<!ELEMENT uniplane (stripList?, stripSpan*) >
+<!ATTLIST uniplane tray      NMTOKEN #REQUIRED
+                   which    (top | bot) #REQUIRED
+                   howBad   (1 | 2 | 3 | 4) #REQUIRED
+                   allBad   (true | false) "false" >
 
-<!-- For each plane containing bad strips, include a list or span(s) 
-     for barely bad and very bad strips in that plane -->
 
-<!ELEMENT unilayer ((bad, veryBad?) | (veryBad, bad?) ) >
-<!ATTLIST unilayer which  (top | bot) #REQUIRED >
+<!-- For each plane containing bad strips of a particular badness,
+     include a list or span(s)  of affected strips, or mark it
+     as all bad.
+ -->
 
-<!ELEMENT bad (stripList?, stripSpan*) >
-<!ELEMENT veryBad (stripList?, stripSpan*) >
 <!ELEMENT stripList EMPTY >
 <!ATTLIST stripList strips NMTOKENS #REQUIRED >
 <!ELEMENT stripSpan EMPTY >
