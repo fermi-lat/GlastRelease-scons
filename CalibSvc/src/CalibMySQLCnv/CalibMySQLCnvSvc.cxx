@@ -153,7 +153,7 @@ StatusCode CalibMySQLCnvSvc::finalize()
 }
 
 
-StatusCode CalibMySQLCnvSvc::queryInterface(const IID& riid, 
+StatusCode CalibMySQLCnvSvc::queryInterface(const InterfaceID& riid, 
                                             void** ppvInterface)
 {
   if ( IID_ICalibMetaCnvSvc == riid )  {
