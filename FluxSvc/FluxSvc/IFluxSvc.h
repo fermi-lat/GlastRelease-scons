@@ -20,7 +20,7 @@
 #include "src/GPS.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_IFluxSvc(910, 1 , 0); 
+static const InterfaceID IID_IFluxSvc(910, 2 , 0); 
 
 // forward declarations
 class IFlux;
