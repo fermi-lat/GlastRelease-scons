@@ -571,7 +571,7 @@ double ParticleTransporter::distanceToEdge(const Vector& dir) const
         G4Navigator*  navigator = m_TransportationManager->GetNavigatorForTracking();
         G4ThreeVector curPoint  = stepInfo.back().GetEndPoint();
         G4ThreeVector curDir    = dir;
-        double        maxStep   = 4000.;
+        double        maxStep   = 200.;
 
         // This needed to insure the volume hierarchy is setup correctly for steps below
         const G4VPhysicalVolume* pCurVolume = stepInfo.back().GetVolume();
@@ -600,11 +600,12 @@ double ParticleTransporter::distanceToEdge(const Vector& dir) const
         //Otherwise, we need to step until we find the next sensitive volume
         else
         {
-            bool trackStatus = true;
+            // Reset arc length to watch for embedded volumes
+            arcLen = 0.;
 
-            while(trackStatus)
+            while(arcLen <= maxStep)
             {
-                double safeStep     = 0.1;      // 
+                double safeStep     = 0.1; 
                 double stepOverDist = 1000. * kCarTolerance;
 
                 // Create the next point "just over the boundary"
@@ -622,6 +623,15 @@ double ParticleTransporter::distanceToEdge(const Vector& dir) const
                 {
                     break;
                 }
+
+                // Get global to local transformation
+                ////const G4AffineTransform& gblToLocal = navigator->GetGlobalToLocalTransform();
+                ////localPos = gblToLocal.TransformPoint(overPoint);
+                ////localDir = curDir;
+                ////if (gblToLocal.IsRotated()) localDir = gblToLocal.TransformAxis(curDir);
+
+                // Get the distance to leave this volume, in the given direction
+                ////G4double distToOut = pCurVolume->GetLogicalVolume()->GetSolid()->DistanceToOut(localPos,localDir);
 
                 // Otherwise, we need to step into the next volume and keep going
                 double trackLen = navigator->ComputeStep(overPoint, curDir, maxStep, safeStep) + stepOverDist;
@@ -665,13 +675,6 @@ double ParticleTransporter::distanceToEdge(const Vector& dir) const
                 // Test again, in the case that the above while loop was executed
                 if (pCurVolume->GetLogicalVolume()->GetSensitiveDetector())
                 {
-                    break;
-                }
-
-                //If we have reached the max step then we're not finding anything
-                if (arcLen+trackLen >= maxStep) 
-                {
-                    arcLen = 100000.;
                     break;
                 }
 
