@@ -78,7 +78,7 @@ public:
     void set_ymax(double y){ m_ymax=y;}
 
     //! optional extra user cut
-    void set_user_cut(TCut & cut){ m_user_cut=cut;}
+    void set_user_cut(const TCut & cut){ m_user_cut=cut;}
 
 protected:
     TCut goodCal, goodPSF, goodEvent;

@@ -26,7 +26,10 @@ class MakeDists : public PSF {
 
 public:
 
-   MakeDists(const std::string &summaryFile, bool makeProfile=false);
+//    MakeDists(const std::string &summaryFile, bool applyEnergyScaling=false,
+//              bool makeProfile=false);
+   MakeDists(const std::string &summaryFile,
+             bool makeProfile=false);
 
 //   ~MakeDists(){}
    
@@ -37,11 +40,21 @@ public:
 
    void draw(const std::string &ps_filename,  bool logy=false, Fitter* fit=0);
 
+//    void setEnergyScaling(const std::string &scalingFunction);
+
+//    void addEnergyScaling(const std::string &rootFile, 
+//                          const std::string &treeName);
+
+   void addCutInfo(const std::string &rootFile,
+                   const std::string &treeName);
+
 private:
 
    bool m_makeProfile;
 
    int m_nbins;
+
+//    double energyScaling(double energy);
 
 };
 

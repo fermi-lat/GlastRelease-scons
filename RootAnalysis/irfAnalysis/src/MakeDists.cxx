@@ -90,14 +90,6 @@ void MakeDists::project(const std::string &branchName,
    histFile.Write();
 }
 
-// void MakeDists::draw(const std::string &ps_filename, double ymax) {
-// // Delegate to PSF::draw(...) method.
-//    PSF psf;
-//    psf.m_summary_filename = m_summary_filename;
-//    psf.ymax = ymax;
-//    psf.draw(ps_filename);
-// }
-
 void MakeDists::draw(const std::string &ps_filename,  bool logy, Fitter* fitter) {
 
     TFile psf_file(summary_filename().c_str() ); // for the histograms
@@ -157,4 +149,34 @@ void MakeDists::draw(const std::string &ps_filename,  bool logy, Fitter* fitter)
        c.Update();
     }
     ps.Close(); // print ps file,
+}
+
+void MakeDists::addCutInfo(const std::string &rootFile, 
+                           const std::string &treeName) {
+// Assume the file is in the root output directory.
+   std::string path = ::getenv("output_file_root");
+   TFile f( (path + "/" + rootFile).c_str(), "update" );
+
+   TTree * tree = (TTree*)f.Get(treeName.c_str());
+   Int_t nentries = (Int_t)tree->GetEntries();
+
+   Double_t angle_min, angle_max, energy;
+   TBranch *angleMin = tree->Branch("angle_min", &angle_min, "angle_min/D");
+   TBranch *angleMax = tree->Branch("angle_max", &angle_max, "angle_max/D");
+   TBranch *ee = tree->Branch("energy", &energy, "energy/D");
+
+   int indx = 0;
+   for (int i = 0; i < angle_bins; ++i) {
+      angle_min = angles[i];
+      angle_max = angles[i+1];
+      for (int j =0; j < energy_bins; ++j, indx++) {
+         double logecenter = logestart + logedelta*j;
+         energy = pow(10, logecenter);
+         angleMin->Fill();
+         angleMax->Fill();
+         ee->Fill();
+      }
+   }
+   tree->Write("", TObject::kOverwrite);
+//   f.Close();
 }

@@ -48,23 +48,27 @@ private:
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 int main(){
 
-    PsfModel myfit("psf_fit_parameters.root");
-
     //-------thin --------------
+    Fitter * myfit = new PsfModel("psf_fit_thin_parameters.root");
     MakeDists psf_thin("psf_fit_thin.root");
     psf_thin.set_user_cut(TCut("Tkr1FirstLayer<12"));
     if ( !psf_thin.fileExists() )
         psf_thin.project("BestDirErr/(0.05*pow(McEnergy/100,-0.66))", 0, 10, 200 );
     psf_thin.set_ymax(0.1); psf_thin.set_ymin(1e-4);
-    psf_thin.draw("psf_fit_thin.ps", true , &myfit);
+    psf_thin.draw("psf_fit_thin.ps", true , myfit);
+    delete myfit;
+    psf_thin.addCutInfo("psf_fit_thin_parameters.root", "fitParams");
 
     //-------thick --------------
+    myfit = new PsfModel("psf_fit_thick_parameters.root");
     MakeDists psf_thick("psf_fit_thick.root");
     psf_thick.set_user_cut(TCut("Tkr1FirstLayer>11"));
     if ( !psf_thick.fileExists() )
         psf_thick.project("BestDirErr/(0.15*pow(McEnergy/100,-0.66))", 0, 10, 200 );
     psf_thick.set_ymax(0.2); psf_thick.set_ymin(1e-4);
-    psf_thick.draw("psf_fit_thick.ps", true , &myfit);
+    psf_thick.draw("psf_fit_thick.ps", true , myfit);
+    delete myfit;
+    psf_thick.addCutInfo("psf_fit_thick_parameters.root", "fitParams");
 
     return 0;
 }
