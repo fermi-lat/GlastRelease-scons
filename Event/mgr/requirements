@@ -6,18 +6,23 @@ use idents
 use data 
 use GaudiKernel 
 
-library GlastEvent -no_share\
+apply_pattern package_headers
+
+macro_append GlastEvent_headers "" WIN32 " \
         ../GlastEvent/*.h \ 
         ../GlastEvent/TopLevel/*.h \
         ../GlastEvent/MonteCarlo/*.h \
-        MonteCarlo/*.cxx \
         ../GlastEvent/Irf/*.h \
         ../GlastEvent/data/*.h  \
         ../GlastEvent/Hits/*.h \
-        Hits/*.cpp \
         ../GlastEvent/Digi/*.h \
         ../GlastEvent/Recon/*.h \
-        TopLevel/*.cpp
+
+library GlastEvent -no_share\
+        MonteCarlo/*.cxx \
+        Hits/*.cpp \
+        TopLevel/*.cpp \
+        ${GlastEvent_headers}
 
 #library GlastEventFactories \
 #        ../src/TopLevel/EventModel.cpp \
