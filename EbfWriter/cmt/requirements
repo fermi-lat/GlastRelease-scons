@@ -1,0 +1,29 @@
+package EbfWriter
+version v0
+
+use GlastPolicy 	v5*
+use Event 		*
+use ebfReader		*
+use IExternal		*
+use TkrRecon		*
+use GlastSvc		*
+use FluxSvc		*
+use reconRootData	*
+use commonRootData	*
+use Gleam		*
+use GuiSvc		*
+# Use this pattern for shareable libraries that Gaudi must load
+apply_pattern packageShr
+
+library EbfWriter *.cxx Dll/*.cxx
+
+private
+
+# Flags for building shared libraries
+apply_pattern package_Cshlibflags
+
+use FluxSvc 		*
+public
+
+apply_pattern package_test
+set TESTJOBOPTIONS ${EBFWRITERROOT}/src/test/jobOptions.txt
