@@ -218,6 +218,10 @@ StatusCode TriggerAlg::caltrigsetup()
 
 bool TriggerAlg::alive(double current_time)
 { 
+    // this is the case when reading back.
+    if (m_deadtime<=0) return true;
+    // ok we actually want to apply a deadtime: in this case *assume* time is increasing!
+
     return (current_time-m_lastTriggerTime >=m_deadtime);
 }
 
