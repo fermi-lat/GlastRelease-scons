@@ -74,8 +74,8 @@ StatusCode GuiPause::initialize()
         // enable skiping
         gui::DisplayControl& display = m_guiSvc->guiMgr()->display();
         display.menu().addToggle("enable skip", false,
-            new gui::SimpleCommand<GuiPause>(this,GuiPause::enable),
-            new gui::SimpleCommand<GuiPause>(this,GuiPause::disable));
+            new gui::SimpleCommand<GuiPause>(this,&GuiPause::enable),
+            new gui::SimpleCommand<GuiPause>(this,&GuiPause::disable));
     }
     return sc;
 }
