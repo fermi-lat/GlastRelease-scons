@@ -251,9 +251,6 @@ namespace ldfReader {
             return -1;
         }
 
-        printf("LDF Evt Seq %d\n", ldfReader::LatData::instance()->summaryData().eventSequence());
-        printf("static evt seq %d\n", eventSeqNum);
-
         if (!ldfReader::LatData::instance()->eventSeqConsistent()) {
             printf("Event Sequence numbers are not consistent within all contributions\n");
             printf("Setting bad event flag\n");
