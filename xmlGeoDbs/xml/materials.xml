@@ -1,7 +1,8 @@
 <!-- $Header$ -->
 <!-- Definition of the materials used by GLAST -->
 <!-- All the density att. are specified in g/cm3 and all aweight in g/mole -->
-
+<!-- All materials, whether or not they consist of a single element,
+     are defined using as a "composite".  -->
 
 <materials version="0.1" date="071101" author="M.Frailis">
 
@@ -87,78 +88,95 @@
 	 />
 
 
-<!-- ELEMENTS -->
-
-<element name="CarbonFiber" 
-	 z="6" 
-	 aweight="12.011" 
-	 density="1.6"
+<!-- invented to satisfy Geant4, but doesn't seem to be good enough    -->
+<!--
+<element name="VacuumElement" 
+         symbol="vac"
+	 z="1" 
+	 aweight="1.01" 
 	 />
+-->
+<!-- Go back to old style method of dealing with vacuum -->
+<element name="Vacuum" 
+         z="1" 
+         aweight="1.01" 
+         density="10e-26"
+         />
 
-<element name="Si" 
-	 z="14" 
-	 aweight="28.088" 
-	 density="2.4"
-	 />
+<!-- Single-element materials -->
 
-<element name="Al" 
-	 z="13" 
-	 aweight="26.982" 
-	 density="2.702"
-	 />
+<composite name="CarbonFiber" density="1.6">
+  <addmaterial material="Carbon">
+    <natoms n="1" />
+  </addmaterial>
+</composite>
 
-<element name="W" 
-	 z="74" 
-	 aweight="183.85" 
-	 density="19.3"
-	 />
 
-<element name="C_closeout" 
-	 z="6" 
-	 aweight="12.011" 
-	 density="1.17"
-	 />
+<composite name="Si" density="2.4">
+   <addmaterial material="Silicon">
+     <natoms n="1" />
+   </addmaterial>
+</composite>
 
-<element name="Al_1lb" 
-	 z="13" 
-	 aweight="26.982" 
-	 density="0.016"
-	 />
 
-<element name="Al_3lb" 
-	 z="13" 
-	 aweight="26.982" 
-	 density="0.0481"
-	 />
+<composite name="Al" density="2.702">
+  <addmaterial material="Aluminum">
+    <natoms n="1" />
+   </addmaterial>
+</composite>
 
-<element name="Algrid" 
-	 z="13" 
-	 aweight="26.982" 
-	 density="2.702"
-	 />
+<composite name="W" density="19.3">
+  <addmaterial material="Tungsten">
+    <natoms n="1" />
+   </addmaterial>
+</composite>
 
-<element name="Alsc" 
-	 z="13" 
-	 aweight="26.982" 
-	 density="0.34"
-	 />
+<composite name="C_closeout" density="1.17">
+  <addmaterial material="Carbon">
+    <natoms n="1" />
+   </addmaterial>
+</composite>
 
-<element name="Be" 
-	 z="4" 
-	 aweight="59.012" 
-	 density="1.85"
-	 />
+<composite name="Al_1lb" density="0.016">
+  <addmaterial material="Aluminum">
+    <natoms n="1" />
+   </addmaterial>
+</composite>
+
+<composite name="Al_3lb" density="0.0481">
+  <addmaterial material="Aluminum">
+    <natoms n="1" />
+   </addmaterial>
+</composite>
+
+<composite name="Algrid" density="2.702">
+  <addmaterial material="Aluminum">
+    <natoms n="1" />
+   </addmaterial>
+</composite>
+
+<composite name="Alsc" density="0.34">
+  <addmaterial material="Aluminum">
+    <natoms n="1" />
+   </addmaterial>
+</composite>
+
+<composite name="Be" density="1.85">
+  <addmaterial material="Berillium">
+    <natoms n="1" />
+   </addmaterial>
+</composite>
 
 
 <!-- THIS IS SPECIAL -->
-<element name="Vacuum" 
-	 z="1" 
-	 aweight="1.01" 
-	 density="10e-26"
-	 />
-
-
-<!-- COMPUND -->
+<!--
+<composite name="Vacuum" density="10e-26">
+  <addmaterial material="VacuumElement">
+    <natoms n="1" />
+  </addmaterial>
+</composite>
+-->
+<!-- COMPOUNDS -->
 
 <composite name="CsI" density = "4.51">
 <addmaterial material="Cesium">
