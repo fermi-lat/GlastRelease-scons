@@ -69,6 +69,9 @@ class McPositionHit : virtual public ContainedObject {
     /// Destructor
     virtual ~McPositionHit() { }
 
+    /// special set
+    void init(double edep, idents::VolumeIdentifier id, const HepPoint3D& entry, const HepPoint3D& exit);
+
     /// Retrieve cell identifier
     idents::VolumeIdentifier volumeID() const;
     /// Update cell identifier
@@ -158,6 +161,14 @@ class McPositionHit : virtual public ContainedObject {
     /// Packed flags for the internal use.
     unsigned long           m_packedFlags;
 };
+
+inline void McPositionHit::init(double edep, idents::VolumeIdentifier id, const HepPoint3D& entry, const HepPoint3D& exit)
+{
+    m_depositedEnergy = edep;
+    m_volumeID=id;
+    m_entry = entry;
+    m_exit = exit;
+}
 
 /// Serialize the object for writing
 inline StreamBuffer& McPositionHit::serialize( StreamBuffer& s ) const
