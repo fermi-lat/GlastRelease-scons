@@ -39,8 +39,8 @@ namespace CalDefs {
   /// Generic typesafe vector used for fast & simple arrays
   /// based on various Calorimeter geometry idents
   template <typename _Idx, typename _Tp >
-    class CalVec : protected vector<_Tp > {
-    protected:
+  class CalVec : protected vector<_Tp > {
+  protected:
     typedef vector<_Tp > parent_type;
     typedef size_t size_type;
     typedef typename parent_type::value_type value_type;
@@ -49,7 +49,7 @@ namespace CalDefs {
     typedef typename parent_type::iterator iterator;
     typedef typename parent_type::const_iterator const_iterator;
 
-    public:
+  public:
     CalVec() : parent_type() {};
     CalVec(size_type sz) : parent_type(sz) {}
     CalVec(size_type sz, const value_type &val) : parent_type(sz,val) {}
@@ -126,7 +126,7 @@ namespace CalDefs {
   public:
     TwrNum() : SimpleId() {}
     TwrNum(short val) : SimpleId(val) {}
-    static const short N_VALS=1; // only supportinjg 1 tower currently
+    static const short N_VALS=1; // only supporting 1 tower currently
     bool isValid() const {return m_data < N_VALS;}
   };
 
@@ -136,7 +136,9 @@ namespace CalDefs {
     LyrNum(short val) : SimpleId(val) {}
     static const short N_VALS=8;
     bool isValid() const {return m_data < N_VALS;}
-    short getDir() const {return (m_data%2 == 0) ? X_DIR : Y_DIR;} // 0 is 'X' Direction
+
+    // 0 is 'X' Direction
+    short getDir() const {return (m_data%2 == 0) ? X_DIR : Y_DIR;}
     short getXLyr() const {return m_data/2;}
     short getYLyr() const {return (m_data-1)/2;}
   };
@@ -188,7 +190,8 @@ namespace CalDefs {
     static const short N_VALS=4;
     
     short getDiode() const {
-      return idents::CalXtalId::rangeToDiode((idents::CalXtalId::AdcRange)m_data);
+      using idents::CalXtalId;
+      return CalXtalId::rangeToDiode((CalXtalId::AdcRange)m_data);
     }
     bool isValid() const {return m_data < N_VALS;}
   };
@@ -293,11 +296,20 @@ namespace CalDefs {
     
     int getInt() const {return m_data;}
     
-    bool operator==(const LATWideIndex &that) const {return m_data == that.m_data;}
-    bool operator<=(const LATWideIndex &that) const {return m_data <= that.m_data;}
-    bool operator!=(const LATWideIndex &that) const {return m_data != that.m_data;}
-    bool operator< (const LATWideIndex &that) const {return m_data <  that.m_data;}
-    //LATWideIndex& operator= (const LATWideIndex &that) {m_data = that.m_data;}
+    bool operator==(const LATWideIndex &that) const {
+      return m_data == that.m_data;
+    }
+    bool operator<=(const LATWideIndex &that) const {
+      return m_data <= that.m_data;
+    }
+    bool operator!=(const LATWideIndex &that) const {
+      return m_data != that.m_data;
+    }
+    bool operator< (const LATWideIndex &that) const {
+      return m_data <  that.m_data;
+    }
+    //LATWideIndex& operator= (const LATWideIndex &that) {
+    //m_data = that.m_data;}
   protected:
     LATWideIndex(int val) : m_data(val) {}
     LATWideIndex() : m_data(0) {}
@@ -308,7 +320,7 @@ namespace CalDefs {
   public:
     XtalIdx(const idents::CalXtalId &xtal) :
       //LATWideIndex(calc(xtal.getTower(),
-        LATWideIndex(calc(0, // currently only using tower=0
+      LATWideIndex(calc(0, // currently only using tower=0
                         xtal.getLayer(),
                         xtal.getColumn())) {}
         
@@ -330,11 +342,12 @@ namespace CalDefs {
     short getCol() const {return m_data%LYR_BASE;}
 
     void setTwr(short twr) {
-       m_data = calc(twr,getLyr(),getCol());
+      m_data = calc(twr,getLyr(),getCol());
     }
 
     /// operator to put XtalIdx to output stream
-    friend ostream& operator<< (ostream &stream, const XtalIdx &idx);
+    friend ostream &operator<< 
+      (ostream &stream, const XtalIdx &idx);
     bool isValid() const {return m_data < N_VALS;}
     
   private:
@@ -351,7 +364,8 @@ namespace CalDefs {
 
     FaceIdx(const idents::CalXtalId &xtalId) {
       if (!xtalId.validFace())
-        throw invalid_argument("FaceIdx requires valid face info in xtalId.  Programmer error");
+        throw invalid_argument("FaceIdx requires valid face info in xtalId"
+                               ".  Programmer error");
 
       //m_data = calc(xtalId.getTower(),
       m_data = calc(0, // currently only supporting 1-tower mode
@@ -389,11 +403,12 @@ namespace CalDefs {
     }
     
     void setTwr(short twr) {
-       m_data = calc(twr,getLyr(),getCol(),getFace());
+      m_data = calc(twr,getLyr(),getCol(),getFace());
     }
 
     /// operator to put FaceIdx to output stream
-    friend ostream& operator<< (ostream &stream, const FaceIdx &idx);
+    friend ostream& operator<< 
+      (ostream &stream, const FaceIdx &idx);
     
     bool isValid() const {return m_data < N_VALS;}
   private:
@@ -409,7 +424,8 @@ namespace CalDefs {
   public:
     DiodeIdx(const idents::CalXtalId &xtalId, short diode) {
       if (!xtalId.validFace())
-        throw invalid_argument("DiodeIdx requires valid face info in xtalId.  Programmer error");
+        throw invalid_argument("DiodeIdx requires valid face info in xtalId."
+                               "  Programmer error");
 
       //m_data = calc(xtalId.getTower(),
       m_data = calc(0, // currenly only support 1-tower mode
@@ -423,14 +439,16 @@ namespace CalDefs {
       LATWideIndex(calc(twr,lyr,col,face,diode)) {}
 
     DiodeIdx(XtalIdx xtal, short face, short diode) :
-      LATWideIndex(calc(xtal.getTwr(),xtal.getLyr(),xtal.getCol(),face,diode)) {}
+      LATWideIndex(calc(xtal.getTwr(),xtal.getLyr(),xtal.getCol(),face,diode)) 
+    {}
 
     DiodeIdx(XtalIdx xtal, XtalDiode xDiode) :
       LATWideIndex(calc(xtal.getTwr(), xtal.getLyr(), xtal.getCol(),
-			xDiode.getFace(), xDiode.getDiode())) {}
+                        xDiode.getFace(), xDiode.getDiode())) {}
 
     DiodeIdx(FaceIdx face, short diode) :
-      LATWideIndex(calc(face.getTwr(),face.getLyr(),face.getCol(),face.getFace(),diode)) {}
+      LATWideIndex(calc(face.getTwr(), face.getLyr(), face.getCol(), 
+                        face.getFace(),diode)) {}
     
     DiodeIdx() : LATWideIndex() {}
 
@@ -443,11 +461,12 @@ namespace CalDefs {
     short getDiode() const {return m_data%FACE_BASE;}
 
     void setTwr(short twr) {
-       m_data = calc(twr,getLyr(),getCol(),getFace(), getDiode());
+      m_data = calc(twr,getLyr(),getCol(),getFace(), getDiode());
     }
     
     /// operator to put DiodeIdx to output stream
-    friend ostream& operator<< (ostream &stream, const DiodeIdx &idx);
+    friend ostream& operator<< 
+      (ostream &stream, const DiodeIdx &idx);
 
     XtalIdx getXtalIdx() const {return XtalIdx(getTwr(),
                                                getLyr(),
@@ -474,24 +493,27 @@ namespace CalDefs {
   public:
     RngIdx(const idents::CalXtalId &xtalId) {
       if (!xtalId.validFace() || ! xtalId.validRange())
-        throw invalid_argument("RngIdx requires valid face and range info in xtalId.  Programmer error");
-      m_data = calc(xtalId.getTower(),xtalId.getLayer(),xtalId.getColumn(),xtalId.getFace(), xtalId.getRange());
+        throw invalid_argument("RngIdx requires valid face and range info"
+                               " in xtalId.  Programmer error");
+      m_data = calc(xtalId.getTower(), xtalId.getLayer(), xtalId.getColumn(), 
+                    xtalId.getFace(), xtalId.getRange());
 
     }
 
     RngIdx(short twr, short lyr, short col, short face, short rng) :
       LATWideIndex(calc(twr,lyr,col,face,rng)) 
-      {}
+    {}
     
     RngIdx(XtalIdx xtal, short face, short rng) :
       LATWideIndex(calc(xtal.getTwr(),xtal.getLyr(),xtal.getCol(),face,rng)) {}
 
     RngIdx(XtalIdx xtal, XtalRng xRng) :
       LATWideIndex(calc(xtal.getTwr(), xtal.getLyr(), xtal.getCol(),
-			xRng.getFace(),xRng.getRng())) {}
+                        xRng.getFace(),xRng.getRng())) {}
 
     RngIdx(FaceIdx faceIdx, short rng) :
-      LATWideIndex(calc(faceIdx.getTwr(),faceIdx.getLyr(),faceIdx.getCol(),faceIdx.getFace(),rng)) {}
+      LATWideIndex(calc(faceIdx.getTwr(),faceIdx.getLyr(),faceIdx.getCol(),
+                        faceIdx.getFace(),rng)) {}
     
     RngIdx() : LATWideIndex() {}
 
@@ -510,7 +532,7 @@ namespace CalDefs {
     short getRng()  const {return m_data%FACE_BASE;}
 
     void setTwr(short twr) {
-       m_data = calc(twr,getLyr(),getCol(),getFace(), getRng());
+      m_data = calc(twr,getLyr(),getCol(),getFace(), getRng());
     }
  
     void setFace(short face) {
@@ -524,7 +546,8 @@ namespace CalDefs {
     static const int N_VALS = FaceIdx::N_VALS*RngNum::N_VALS;
 
     /// operator to put DiodeIdx to output stream
-    friend ostream& operator<< (ostream &stream, const RngIdx &idx);
+    friend ostream& operator<< 
+      (ostream &stream, const RngIdx &idx);
     
     XtalIdx getXtalIdx() const {return XtalIdx(getTwr(),
                                                getLyr(),
@@ -544,9 +567,8 @@ namespace CalDefs {
     static const int COL_BASE  = FACE_BASE*FaceNum::N_VALS;
     static const int LYR_BASE  = COL_BASE*ColNum::N_VALS;
     static const int TWR_BASE  = LYR_BASE*LyrNum::N_VALS; 
-  };
-
-
+  }; 
+   
 }; // namespace caldefs
 
 #endif // CalDefs_H
