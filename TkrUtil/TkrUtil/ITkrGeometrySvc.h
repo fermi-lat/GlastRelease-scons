@@ -105,6 +105,7 @@ public:
 
     /// new stuff, based on plane and TkrId;
     virtual int    getPlane (const idents::TkrId& tkrId) const = 0;
+    virtual int getPlane(double z) const = 0;
 
     virtual double getPlaneZ(int plane) const = 0;
     virtual double getPlaneZ(const idents::TkrId& tkrId) const = 0;
