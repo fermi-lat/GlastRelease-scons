@@ -36,4 +36,19 @@ for fBorderCmp id field</prim>
 for fBorderCmp id field</prim>
   <prim name="eBottom" value="4" uType="count">one of five possible values
 for fBorderCmp id field</prim>
+  <prim name="eDTypeNone" value="0" uType="count">Possible (in fact, default)
+   value for detectorType attribute of logical volume</prim>
+  <prim name="eDTypeTKRSi" value="1" uType="count">Tracker Si detector type
+  </prim>
+  <prim name="eDTypeCALXtal" value="2" uType="count">CAL CsI 
+crystal detector type</prim>
+  <prim name="eDTypeCALDiode" value="3" uType="count">CAL diode detector 
+type</prim>
+  <prim name="eDTypeACDTile" value="4" uType="count">ACD tile detector 
+type</prim>
+  <prim name="eDTypeACDTape" value="5" uType="count">ACD tape detector
+type </prim>
+
+
+ 
 </primCategory>

@@ -6,7 +6,8 @@
          YREF="ACDTopYWidth"
          ZREF="tileThickness"
          materialREF="tileMat"
-         sensitive="true" />
+         sensitive="true" 
+         detectorTypeREF="eDTypeACDTile"/>
 
 <!-- different box needed for each of the 4 rows of side tiles on X sides 
      and Y sides (X and Y sides happen to have same dimensions now,
@@ -16,25 +17,29 @@
          YREF="tileThickness"
          ZREF="sideTileHeight0"
          materialREF="tileMat"
-         sensitive="true" />
+         sensitive="true" 
+         detectorTypeREF="eDTypeACDTile"/>
     <box name="sideTileX1" 
          XREF="sideTileWidthShortXRow"
          YREF="tileThickness"
          ZREF="sideTileHeight1"
          materialREF="tileMat"
-         sensitive="true" />
+         sensitive="true" 
+         detectorTypeREF="eDTypeACDTile"/>
     <box name="sideTileX2" 
          XREF="sideTileWidthLongXRow"
          YREF="tileThickness"
          ZREF="sideTileHeight2"
          materialREF="tileMat"
-         sensitive="true" />
+         sensitive="true" 
+         detectorTypeREF="eDTypeACDTile"/>
     <box name="sideTileX3" 
          XREF="sideTileWidthLongXRow"
          YREF="tileThickness"
          ZREF="sideTileHeight3"
          materialREF="tileMat"
-         sensitive="true" />
+         sensitive="true" 
+         detectorTypeREF="eDTypeACDTile"/>
 
    <!--   ..and Y sides (X and Y sides happen to have same dimensions now,
       but allow for difference.  Also do "rotation" here by putting tile
@@ -44,25 +49,29 @@
          YREF="sideTileWidthShortYRow"
          ZREF="sideTileHeight0"
          materialREF="tileMat"
-         sensitive="true" />
+         sensitive="true"
+         detectorTypeREF="eDTypeACDTile"/>
     <box name="sideTileY1" 
          XREF="tileThickness"
          YREF="sideTileWidthShortYRow"
          ZREF="sideTileHeight1"
          materialREF="tileMat"
-         sensitive="true" />
+         sensitive="true" 
+         detectorTypeREF="eDTypeACDTile"/>
     <box name="sideTileY2" 
          XREF="tileThickness"
          YREF="sideTileWidthLongYRow"
          ZREF="sideTileHeight2"
          materialREF="tileMat"
-         sensitive="true" />
+         sensitive="true" 
+         detectorTypeREF="eDTypeACDTile"/>
     <box name="sideTileY3" 
          XREF="tileThickness"
          YREF="sideTileWidthLongYRow"
          ZREF="sideTileHeight3"
          materialREF="tileMat"
-         sensitive="true" />
+         sensitive="true" 
+         detectorTypeREF="eDTypeACDTile"/>
 
 <!-- boxes for tape on the top.  Long dimension of tape is 
      parallel to X-axis -->
@@ -70,19 +79,22 @@
          XREF="topTapeLenLong"
          YREF="tapeWidth"
          ZREF="tapeThickness"
-         materialREF="tapeMat" />
+         materialREF="tapeMat" 
+         detectorTypeREF="eDTypeACDTape"/>
  <!--         sensitive="true" />  -->
     <box name="topTapeMedium"
          XREF="topTapeLenMedium"
          YREF="tapeWidth"
          ZREF="tapeThickness"
-         materialREF="tapeMat" />
+         materialREF="tapeMat"
+         detectorTypeREF="eDTypeACDTape"/>
 <!--         sensitive="true" />  -->
     <box name="topTapeShort"
          XREF="topTapeLenShort"
          YREF="tapeWidth"
          ZREF="tapeThickness"
-         materialREF="tapeMat" />
+         materialREF="tapeMat"
+         detectorTypeREF="eDTypeACDTape"/>
 <!--         sensitive="true" /> -->
 
 <!-- Boxes for tape on sides.  Definition is for a side parallel to
@@ -91,14 +103,16 @@
          XREF="tapeWidth"
          YREF="tapeThickness"
          ZREF="tapeSideLength"
-         materialREF="tapeMat" />
+         materialREF="tapeMat" 
+         detectorTypeREF="eDTypeACDTape"/>
 <!--         sensitive="true" />  -->
 
     <box name="sideTapeY"
          XREF="tapeThickness"
          YREF="tapeWidth"
          ZREF="tapeSideLength"
-         materialREF="tapeMat" />
+         materialREF="tapeMat"
+         detectorTypeREF="eDTypeACDTape"/>
 <!--         sensitive="true" />  -->
 
 <!-- Make a row of top tiles.  They're all the same.  Since this

@@ -195,7 +195,8 @@
   The 'volume' is a generic name for a geometric object. Effective
   volume are organized as a hierarchy of types.
 
-        1) solid volume (have a "material" and may be "sensitive"))
+        1) solid volume (have a "material" , may be "sensitive",
+           has a "detectorType"
            |-> box
            |-> tubs
            |-> trd
@@ -638,7 +639,9 @@
 <!ENTITY % solidProperties '%volumeProperties;
                              materialREF  IDREF            #IMPLIED
                              material     NMTOKEN          "Vacuum"
-                             sensitive   ( true | false ) "false"'>
+                             sensitive   ( true | false ) "false"
+                             detectorType NMTOKEN         "0"
+                             detectorTypeREF IDREF        #IMPLIED '>
 
 <!ELEMENT  box    (seg?) >
 <!ATTLIST  box
