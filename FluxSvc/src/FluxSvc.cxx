@@ -452,7 +452,7 @@ StatusCode FluxSvc::run(){
     }
     int eventNumber= 0;
     double currentTime=m_startTime;
-    
+    flux->pass(currentTime); // add to zero
     { bool noend=true;
     log << MSG::INFO << "Runable interface starting event loop as :" ; 
     if( m_evtMax>0)  { log << " MaxEvt = " << m_evtMax; noend=false;  }
