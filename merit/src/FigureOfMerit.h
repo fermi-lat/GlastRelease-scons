@@ -11,9 +11,6 @@
 #ifndef FIGUREOFMERIT_H
 #define FIGUREOFMERIT_H
 
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 #include "LayerGroup.h"
 #include "PSFanalysis.h"

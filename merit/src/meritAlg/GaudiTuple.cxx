@@ -2,8 +2,8 @@
 // Original author: T. Burnett
 
 #include "GaudiTuple.h"
-#include "Gaudi/Interfaces/INTuple.h"
-#include "Gaudi/NTupleSvc/NTuple.h"
+#include "GaudiKernel/INTuple.h"
+#include "GaudiKernel/NTuple.h"
 
 GaudiTuple::GaudiTuple(const std::string& title, NTuplePtr* nt)
 : Tuple(title)
