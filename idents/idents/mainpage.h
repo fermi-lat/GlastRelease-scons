@@ -5,10 +5,10 @@
 
 This package contains identifier definitions for 
 - towers (ModuleId)
-- crystals (XtalId)
-- ACD Tiles (ScintillatorId) 
-- Tracker strips
-- Volumes (VolumeIdentifier)
+- crystals (CalXtalId)
+- ACD Tiles and ribbons (AcdId) 
+- Tracker volumes down to wafers (TkrId)
+- Geometry Volumes (VolumeIdentifier)
 
 <hr>
   \section notes release notes
