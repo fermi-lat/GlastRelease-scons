@@ -1,5 +1,6 @@
 //$Header$
 /*
+ * v4r1p1 16-may-02 THB small fix for new McParticle
  * v4r1   11-may-02 THB hide the G4 libs from clients only wanting the DLL
  * v4r0   10-may-02 THB convert from GlastEvent to Event
  * v3r5   02-may-02 THB No longer uses FluxSvc: gets incoming particle from TDS
