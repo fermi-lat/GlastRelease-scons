@@ -54,7 +54,7 @@ const CalXtalReadout* CalDigi::addReadout(Char_t rangeP, UShort_t adcP, Char_t r
     return &(m_readoutArr[m_numReadouts++]);
 } 
 
-Char_t CalDigi::getRange(short readoutIndex, CalXtalId::XtalFace face) const
+Char_t CalDigi::getRange(UShort_t readoutIndex, CalXtalId::XtalFace face) const
 {
     // Maintain backward compatibility
     if (m_readoutCol) {
@@ -66,7 +66,7 @@ Char_t CalDigi::getRange(short readoutIndex, CalXtalId::XtalFace face) const
         ? (m_readoutArr[readoutIndex]).getRange(face) : (Char_t)-1;
 }
 
-Short_t CalDigi::getAdc(Short_t readoutIndex, CalXtalId::XtalFace face) const
+Short_t CalDigi::getAdc(UShort_t readoutIndex, CalXtalId::XtalFace face) const
 {
     // Maintain backward compatibility
     if (m_readoutCol) {
@@ -78,7 +78,7 @@ Short_t CalDigi::getAdc(Short_t readoutIndex, CalXtalId::XtalFace face) const
         ? (m_readoutArr[readoutIndex]).getAdc(face) : (Short_t)-1;
 }
 
-const CalXtalReadout* CalDigi::getXtalReadout(Short_t readoutIndex)
+const CalXtalReadout* CalDigi::getXtalReadout(UShort_t readoutIndex)
 {
     // Maintain Backward Compatibility
     if (m_readoutCol) {

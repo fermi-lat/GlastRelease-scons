@@ -64,7 +64,7 @@ Int_t TkrDigi::getToTForStrip(UInt_t strip) const
     //  determining which controller this strip is associated with.
     //  We then return the ToT corresponding to that controller.
     if (m_lastController0Strip == -1) return -1;
-    return m_tot[(strip<=m_lastController0Strip ? 0 : 1 )]; 
+    return m_tot[(Int_t(strip)<=m_lastController0Strip ? 0 : 1 )]; 
 }
 
 

@@ -159,7 +159,7 @@ void DigiEvent::addTkrDigi(TkrDigi *digi) {
 }
 
 const TkrDigi* DigiEvent::getTkrDigi(UInt_t i) const {
-    if (i >= m_tkrDigiCol->GetEntries()) return 0;
+    if (Int_t(i) >= m_tkrDigiCol->GetEntries()) return 0;
     return (TkrDigi*)m_tkrDigiCol->At(i);
 }
 
@@ -175,7 +175,7 @@ CalDigi* DigiEvent::addCalDigi() {
 
 const CalDigi* DigiEvent::getCalDigi(UInt_t i) const {
     if (m_calDigiCol) return (CalDigi*)m_calDigiCol->At(i);
-    if (i > m_numCalDigis) return 0;
+    if (Int_t(i) > m_numCalDigis) return 0;
     return (CalDigi*)m_calDigiCloneCol->At(i);
 }
 
