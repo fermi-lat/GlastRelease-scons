@@ -1,3 +1,12 @@
+// File and Version Information:
+//      $Header$
+//
+// Description:
+//      Contains the implementation of the methods for setting up the TkrRecon display
+//
+// Author:
+//      Tracy Usher       
+
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
