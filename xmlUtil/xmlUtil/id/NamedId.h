@@ -6,11 +6,11 @@
 #include <string>
 namespace xmlUtil {
 
-  //! An /b Identifier is simply a finite list of non-neg. integers
+  //! An \b Identifier is simply a finite list of non-neg. integers
   typedef std::vector<unsigned> Identifier;
 
   //! Another convenience typedef for a list of strings (the
-  //! id field names which may be extracted from a /b NamedId )
+  //! id field names which may be extracted from a \b NamedId )
   typedef std::vector<std::string * > NameSeq;
 
   class NamedId {
@@ -27,6 +27,11 @@ namespace xmlUtil {
 
     //! Build a NamedId incrementally
     void addField(const std::string name, const unsigned value);
+
+    //! Return true if initial field names are compatible with \a path
+    bool hasPath(const NamedSeq& path);
+
+    bool hasField(const std::string name);
 
     // Retrieve just the value of each field
     // Identifier *extractIdentifier() const;

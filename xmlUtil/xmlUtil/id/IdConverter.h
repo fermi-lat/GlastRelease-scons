@@ -19,6 +19,10 @@ namespace xmlUtil {
     /*! \arg \b inDict: the input dictionary
         \arg \b status: report on success of conversion, validity of
              output dictionary (and hence of IdConverter object).
+        Note the collection of conversions making up a converter must
+        act on disjoint domains, which is identical to the restriction
+        that no conversion have a path which is a subset of another
+        converter's path.
     */
     IdDict *convert(const IdDict const *inDict, unsigned *status) const;
 
@@ -31,6 +35,10 @@ namespace xmlUtil {
         to the Identifier */
     Identifier *convert(const Identifier const *inIdent) const;
 
+    // Check that conversions comprising the converter have disjoint
+    // domains.
+    bool isConsistent();
+
   private:
     // Should inputDict be optional or required?
     IdDict *inputDict; /*< Input IdDict.   */
@@ -38,7 +46,7 @@ namespace xmlUtil {
     // Might choose a different container for the conversions, for
     // example a tree, ordered by input path on which a conversion
     // operates
-    typedef std:vector<IdConversion*>  Convs; 
+    typedef std:vector<IdConversion*>  Conversions; 
 
     Conversions conv;  /*< collection of conversion operations making up the 
                          IdConverter */

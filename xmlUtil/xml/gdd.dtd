@@ -995,11 +995,18 @@ each specifying
 
  * the classes of gdd identifiers on which it works, always some
    subtree of the complete set
- * what is to be done
-      - send to null
-      - change a value of a field to a different value for the same field
-      - eliminate a field
-      - replace a field with another (specify how to calculate new value)
+ * a condition.  For now the only recognized condition is
+   "has field X" where X is variable, denoting the field name
+ * operation.  All identifiers in the domain and satisfying
+   the condition are transformed as specified; others in the
+   domain are left alone.  Defined operations are 
+      - change the value of a field to a different (fixed) value
+      - truncate all fields beyond the one in the condition
+      - delete the identifiers.  
+      - create a new identifier by eliminating all fields in a
+        specified segment - (or are the endpoints of the segment
+        somehow already known?  Maybe just one of them? The
+        field specified in the condition could be an endpoint.)
 -->
 <!ELEMENT idConverter (constants?, idDict*, idConv*) >
 <!-- might want to require at least fromDict; perhaps also toDict -->
@@ -1007,10 +1014,51 @@ each specifying
 <!ATTLIST idConverter fromDict NMTOKEN #IMPLIED
                       toDict   NMTOKEN #IMPLIED >
 
-<!ENTITY % convOp "delField | setField | replaceField" >
-<!ELEMENT idConv (path, ((%convOp;)* | nullId | sameId) ) >
-<!ELEMENT nullId (EMPTY) >
+<!ENTITY % convOp "singleValue | truncate | disappear | compress" >
+
+<!-- Might want to change the "hasField" part of the content model
+     to 
+              hasField+,
+     If so, would have to change the operations since they generally
+     use the value of hasField as an implicit argument.
+
+     Another possibility would be to add an #IMPLIED (optional) 
+     attribute to the hasField element to specify a value.  Then
+     the condition, instead of reading "has field X" reads
+     "has field X with value y". Downside is that conversions
+     can no longer be defined on dictionaries; they're only 
+     defined on identifiers.
+ -->
+
+<!ELEMENT idConv (path, hasField, ((%convOp;)* | sameId) ) >
+<!ELEMENT hasField (EMPTY) >
+<!ATTLIST hasField name IDREF #REQUIRED>
+
 <!ELEMENT sameId (EMPTY) >
+
+<!-- Set value of field "name" to "val" -->
+<!ELEMENT singleValue (EMPTY) >
+<!ATTLIST singleValue name IDREF #REQUIRED
+                      val  NMTOKEN "0" 
+                      valREF IDREF #IMPLIED>
+
+<!-- Eliminate all fields starting with "start" or just beyond "start" -->
+<!ELEMENT truncate (EMPTY) >
+<!ATTLIST truncate start IDREF #REQUIRED
+                   beyond NMTOKEN (true | false) "true" >
+
+<!-- All identifiers in the domain, satisfying the condition have
+     no counterpart in the image hierarchy. -->
+<!ELEMENT disappear (EMPTY) >
+
+<!-- "compress" compresses from the field specified in its "from"
+     attribute to the field specified in its "to" attribute, exclusive.
+     That is, it leaves those fields alone and squeezes out everything
+     in between. -->
+<!ELEMENT compress (EMPTY)>
+<!ATTLIST compress from IDREF #REQUIRED
+                   to   IDREF #REQUIRED >
+
 
 <!-- If fromDict has been specified, code will want to check that 
      "subTree" is really just that by invoking service which 
@@ -1019,39 +1067,3 @@ each specifying
      start from root of full tree.
  -->
 <!ELEMENT path (field+) >
-
-<!ELEMENT delField (EMPTY) >
-<!ATTLIST delField field NMTOKEN #REQUIRED>
-
-<!ELEMENT setField (EMPTY) >
-<!ATTLIST setField field NMTOKEN #REQUIRED
-                   value NMTOKEN #REQUIRED
-                   valueREF IDREF #IMPLIED >
-
-<!ELEMENT replaceField (EMPTY) >
-<!-- if no value is supplied for the new field via value or valueREF
-     it is unchanged.  Just the field name changes -->
-<!ATTLIST  replaceField oldField NMTOKEN #REQUIRED
-                        newField NMTOKEN #REQUIRED
-                        value    NMTOKEN #IMPLIED
-                        valueREF IDREF   #IMPLIED >
-
-<!-- If we really need to get a single tower number from its 
-     x- and y-number we'll need a special element, something like
-     the following. The code interpreting this is supposed to
-     produce a new value 
-            val = rowVal * nPerRow + colVal
-     If nPerRow hasn't been supplied explicitly it should be 
-     accessible from the input idDict description of the field
-     rowField.
--->
-<!ELEMENT matToVect (EMPTY) >
-<!ATTLIST matToVect  rowField NMTOKEN #REQUIRED 
-                     colField NMTOKEN #REQUIRED 
-                     newField NMTOKEN #REQUIRED 
-                     nPerRow  NMTOKEN #IMPLIED >
-
-<!-- and maybe also.. -->
-<!ELEMENT swapFields (EMPTY)>
-<!ATTLIST swapFields field1 NMTOKEN #REQUIRED
-                     field2 NMTOKEN #REQUIRED >

@@ -7,31 +7,55 @@
 #include "xmlUtil/id/NamedId.h"
 
 namespace xmlUtil {
-  class DictField;
   class IdOperation;
 
-  //! An /b IdConversion object specifies a set of NamedIds and a
-  //! collection of operations it will perform on any of them to
-  //! produce a new NamedId.
+  //! An /b IdConversion object (corresponding to an idConv element
+  //! as defined in gdd.dtd) "has" 
+  //!    a path  (list of id field names)
+  //!    a condition
+  //!    an operation to be performed on identifiers starting with
+  //!       the specified path and satisfying the condition
+  //!       and producing a new NamedId.
   class IdConversion {
   public:
-    // Default constructor produces a conversion which acts on any NamedId 
-    // and does nothing to it; that is, returns a copy.
-    IdConverion() {};
+    //! Default constructor produces a conversion which acts on any NamedId 
+    //! and does nothing to it; that is, returns a copy.
+    IdConverion() {}; // 
+
+
+    //! The usual case:  build a conversion from its XML description
     IdConversion(const DOM_Element); 
 
     ~IdConversion();
 
+    //! Check that start of inputId fieldnames match path
+    bool inDomain(NamedId& inputId);
+
+    //! Convert the identifier if in domain; else return null.
     *NamedId convert(NamedId& inputId);
     // {return new NamedId(*inputId);};
 
   private:
-    typedef vector<DictField*> Path;
 
-    Path *path;
+    // Returns true if inputId satisfies condition
+    bool satisfies(NamedId& inputId);
 
-    typedef vector<IdOperation*> Operations;
+    //! Doesn't check that input is in domain.  Typically invoked
+    //! from \b convert.
+    *NamedId internalConvert(NamedId& inputId);
+    
+    //! For now only condition recognized is \b hasField, which
+    //! can be represented by a string: the field name.
+    typedef std::string  Condition;   // may want more complicated
+    //definition for Condition later
 
-    Operations *ops;
+    //! Defines domain of conversion
+    NameSeq *path;
+
+    //! Given an identifier in domain, convert if \b condition is satisfied
+    Condition *condition;
+
+    //! \b op knows how to do a conversion
+    IdOperation *op;
   };  // end of class IdConversion
 }   // end of namespace
