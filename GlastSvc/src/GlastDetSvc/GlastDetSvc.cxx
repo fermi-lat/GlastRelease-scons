@@ -9,8 +9,6 @@
 #include <fstream>
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
-#include "instrument/Instrument.h"
-#include "xml/IFile.h"
 
 #include "GlastSvc/GlastDetSvc/IGeometry.h"
 #include "GlastSvc/GlastDetSvc/IMedia.h"
@@ -99,13 +97,6 @@ StatusCode GlastDetSvc::initialize ()
     MsgStream log( msgSvc(), name() );
     s_log = & log;  // make available globally while executing the following
     
-#if 0
-    log << MSG::DEBUG << "Loading instrument ...";
-    // now create and initialize the instrurment
-    m_instrument = new Instrument;
-    if (m_instrument->initialize(m_iniFile, m_xmlFile) ) status=StatusCode::FAILURE;
-    log << MSG::DEBUG << "done. Loaded "<< m_instrument->detector_count() << " detectors." << endreq;
-#endif
     
     // setup the detModel geometry, so can be visited below
     m_dm = new DMmanager;
@@ -123,9 +114,6 @@ StatusCode GlastDetSvc::finalize ()
 {
     StatusCode  status = StatusCode::SUCCESS;
     
-    // get rid of a glast detector hierarchy
-    delete m_instrument;
-    m_instrument = 0;
     
     // remove the detModel interface.
     delete m_dm;
@@ -133,72 +121,11 @@ StatusCode GlastDetSvc::finalize ()
     return status;
 }
 
-#if 0
-void GlastDetSvc::setDetector(GlastDetector* d)
-{ 
-    m_instrument->setDetector(d);    
-}
-// loadNextEvent - attempt to load the next event from the
-//                 IRF file.
-StatusCode  GlastDetSvc::readIRF ()
-{
-    StatusCode  status = StatusCode::SUCCESS;
-    
-    if (m_instrument->readIRF() ) status = StatusCode::FAILURE;
-    return status;
-}
-
-#endif
 // access the type of this service
 const IID&  GlastDetSvc::type () const {
     return IID_IGlastDetSvc;
 }
 
-#if 0
-
-// loadIRFFile - attempt to open the IRF file here
-StatusCode  GlastDetSvc::openIRF (std::string filename)
-{
-    MsgStream log( msgSvc(), name() );
-    s_log = & log;  // make available globally while executing the following
-    
-    int rc = m_instrument->openIRF(filename);
-    return rc==0? StatusCode::SUCCESS : StatusCode::FAILURE;
-}
-
-//! return the number of detectors currently with data
-int GlastDetSvc::detectors_with_data()const 
-{
-    return m_instrument->detectors_with_data();
-}
-
-GlastDetector* GlastDetSvc::getRootDetector(void)
-{
-    return m_instrument->rootDetector();
-}
-
-//! accept a visitor to traverse the structure note that must be on a const object
-void GlastDetSvc::accept(DetectorConverter& v)const {
-    m_instrument->accept(v);
-}
-
-//! access to the IFile containing detector constants (implements IGlastDetSvc)
-const xml::IFile* GlastDetSvc::iniFile()const{
-    return m_instrument->iniFile();
-}
-#endif
-
-///! satisfy external. Need to make it really fatal!
-extern void FATAL ( const char* msg )
-{
-    (*s_log) << MSG::FATAL <<  msg << endreq;
-}
-
-//! Satisfy external
-extern void WARNING ( const char* msg )
-{
-    (*s_log) << MSG::WARNING << msg << endreq;
-}
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -8,7 +8,6 @@
 #include "GaudiKernel/ObjectVector.h"
 
 #include "McVertexCnv.h"
-#include "instrument/MCTruth.h"
 
 //! Instantiation of a static factory class used by clients to create instances
 static CnvFactory<McVertexCnv> s_factory;
@@ -25,14 +24,14 @@ StatusCode McVertexCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObj
     StatusCode sc;
     sc=dataProvider()->findObject("/Event/MC", mcroot);
     sc=dataProvider()->registerObject(mcroot, "McParticleCol", m_plist=new McParticleCol);
-
+#if 0
     MCTruth* t = MCTruth::instance();
     if( t ) {
         // do this if MCTruth exists. Otherwise assume MCTree will take care of it
        FluxGenerator * f = dynamic_cast<FluxGenerator*>(t->particle()); // first particle
        addParticle(0, f->m_particles);
     }
-  
+#endif
     return StatusCode::SUCCESS;
 }
 
@@ -57,7 +56,7 @@ McVertexCnv::McVertexCnv(ISvcLocator* svc)
 
 //! Standard Destructor
 McVertexCnv::~McVertexCnv(){ }
-
+#if 0
 void McVertexCnv::addParticle(McVertex* mother, FluxGenerator::ParticleData* p)
 {
     // create a new node in the tree
@@ -104,3 +103,4 @@ void McVertexCnv::addParticle(McVertex* mother, FluxGenerator::ParticleData* p)
     v1->setFinalFourMomentum(final);
     return;
 }
+#endif

@@ -11,7 +11,6 @@
 
 #include "GlastEvent/TopLevel/MCEvent.h"
 
-#include "instrument/FluxGenerator.h" 
 
 // GlastEvent for creating the McEvent stuff
 #include "GlastEvent/MonteCarlo/McParticle.h"
@@ -48,8 +47,6 @@ public:
   virtual StatusCode createObj(IOpaqueAddress* pAddress, DataObject*& refpObject);
 
 private:
-    // internal for interating
-    void addParticle(McVertex* mother, FluxGenerator::ParticleData* p);
 
     McVertex*       m_root; // 
     

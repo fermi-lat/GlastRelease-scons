@@ -17,8 +17,6 @@
 #include "GaudiKernel/Property.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "instrument/DetectorConverter.h"
-#include "instrument/Scintillator.h"
 
 #include "GaudiKernel/ObjectVector.h"
 

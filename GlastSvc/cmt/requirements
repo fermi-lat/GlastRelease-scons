@@ -1,9 +1,6 @@
 package GlastSvc
 version v4
 branches src mgr doc
-
-use instrument 
-use data 
 use GlastEvent
 
 
