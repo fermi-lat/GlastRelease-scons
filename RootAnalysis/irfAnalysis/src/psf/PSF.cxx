@@ -16,7 +16,7 @@ public:
     void drawAeff(std::string ps_filename);
 
     bool fileExists(){
-        TFile f(summary_filename.c_str());
+        TFile f(summary_filename().c_str());
         return f.IsOpen();
     }
 
@@ -31,15 +31,15 @@ double PSF::probSum[2]={0.68, 0.95}; // for defining quantiles
 PSF::PSF()
 : nbins(50), xmin(0), xmax(5.0), ymax(0.16)
 {
-    summary_filename=file_root+"root_files/2/psf_summary.root";
+    m_summary_filename=output_file_root()+"psf.root";
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void PSF::project() 
 {
-    TFile  psf_file(summary_filename.c_str(), "recreate"); // for the histograms
+    TFile  psf_file(m_summary_filename.c_str(), "recreate"); // for the histograms
 
-    std::cout << " writing hists to " << summary_filename << std::endl;
+    std::cout << " writing hists to " << summary_filename() << std::endl;
 
     for(int i=0; i<angle_bins; ++i){
 
@@ -94,11 +94,11 @@ void PSF::project()
 void PSF::draw(std::string ps_filename)
 {
 
-    TFile psf_file(summary_filename.c_str() ); // for the histograms
+    TFile psf_file(summary_filename().c_str() ); // for the histograms
     if( ! psf_file.IsOpen()) throw "could not open psf root file";
 
     TCanvas c("psf","psf"); //, 4,2);
-    divideCanvas(c,4,2, std::string("Scaled PSF  plots from ")+summary_filename);
+    divideCanvas(c,4,2, std::string("Scaled PSF  plots from ")+summary_filename());
 
     for(int j=0; j<energy_bins; ++j){
         c.cd(j+1);
@@ -147,7 +147,7 @@ void PSF::draw(std::string ps_filename)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void PSF::drawError(std::string ps)
 {
-    TFile psf_file(summary_filename.c_str() ); // for the histograms
+    TFile psf_file(summary_filename().c_str() ); // for the histograms
     if( ! psf_file.IsOpen()) { return;}
 
     TCanvas c;
@@ -182,7 +182,7 @@ void PSF::drawError(std::string ps)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void PSF::drawAsymmetry(std::string ps)
 {
-    TFile psf_file(summary_filename.c_str() ); // for the histograms
+    TFile psf_file(summary_filename().c_str() ); // for the histograms
     if( ! psf_file.IsOpen()) { return;}
 
     TCanvas c;
@@ -218,7 +218,7 @@ void PSF::drawAsymmetry(std::string ps)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void PSF::drawAeff(std::string ps)
 {
-    TFile hist_file(summary_filename.c_str() ); // for the histograms
+    TFile hist_file(summary_filename().c_str() ); // for the histograms
     TCanvas c;
      c.SetFillColor(10);
 
@@ -255,7 +255,7 @@ int main()
 {
     PSF p;
     if(!p.fileExists())  p.project();
-    std::string ps = p.file_root+ "canvas_files/2/psf.ps";
+    std::string ps = p.output_file_root()+ "psf.ps";
     p.draw(ps+"(");
     p.drawAeff(ps);
     p.drawError(ps);

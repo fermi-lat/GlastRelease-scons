@@ -53,15 +53,25 @@ public:
     }
 
     bool fileExists(){
-        TFile f(summary_filename.c_str());
+        TFile f(summary_filename().c_str());
         return f.IsOpen();
     }
 
+    std::string output_file_root(){
+        return std::string(::getenv("output_file_root"))+"/";
+    }    
+
+    std::string input_file_root(){
+        return std::string(::getenv("file_root"))+"/";
+    }
+
+    std::string summary_filename(){ return m_summary_filename;}
+    std::string input_filename(){return m_input_filename;}
 
 //should be private::
     TCut goodCal, goodPSF, goodEvent;
-    std::string file_root, input_filename;
-    std::string output_path, summary_filename;
+    std::string  m_input_filename;
+    std::string  m_summary_filename;
 
     // define angle bins
     static int angles[5];

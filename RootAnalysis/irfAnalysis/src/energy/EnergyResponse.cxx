@@ -16,15 +16,15 @@ public:
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 EnergyResponse::EnergyResponse()
 {
-    summary_filename=file_root+"root_files/2/energy.root";
+    m_summary_filename=output_file_root()+"energy.root";
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void EnergyResponse::define() 
 {
 
-    TFile  hist_file(summary_filename.c_str(), "recreate"); // for the histograms
+    TFile  hist_file(summary_filename().c_str(), "recreate"); // for the histograms
 
-    std::cout << " writing hists to " << summary_filename << std::endl;
+    std::cout << " writing hists to " << summary_filename() << std::endl;
 
     int nbins=80; double xmin=0, xmax=2.0, ymax=0.15;
     for(int i=0; i<angle_bins; ++i){
@@ -66,14 +66,14 @@ void EnergyResponse::define()
 void EnergyResponse::draw(std::string ps)
 {
 
-    TFile hist_file(summary_filename.c_str() ); // for the histograms
+    TFile hist_file(summary_filename().c_str() ); // for the histograms
     if( ! hist_file.IsOpen()){
-        std::cerr <<  "count not open psf root file " << summary_filename << std::endl;
+        std::cerr <<  "could not open psf root file " << summary_filename() << std::endl;
         return;;
     }
 
     TCanvas c("energy", "energy");
-    divideCanvas(c,4,2, std::string("Energy response  plots from ")+summary_filename);
+    divideCanvas(c,4,2, std::string("Energy response  plots from ")+summary_filename());
     for(int j=0; j<energy_bins; ++j){
 
         c.cd(j+1);
@@ -109,7 +109,7 @@ void EnergyResponse::draw(std::string ps)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void EnergyResponse::drawEnergy(std::string ps)
 {
-    TFile hist_file(summary_filename.c_str() ); // for the histograms
+    TFile hist_file(summary_filename().c_str() ); // for the histograms
     TCanvas c;
 
     divideCanvas(c,1,1,"Effective Area");
@@ -162,11 +162,11 @@ int main(){
     EnergyResponse er;
 
     if( !er.fileExists() ) er.define();
-    if( !er.fileExists() ) { std::cerr << "cound not open  root file " << er.summary_filename << std::endl;
-    exit (-1);
+    if( !er.fileExists() ) { std::cerr << "cound not open  root file " << er.summary_filename() << std::endl;
+        return -1;
     }
 
-    std::string psfile(er.file_root+"/canvas_files/2/energy.ps");
+    std::string psfile(er.output_file_root()+"energy.ps");
     er.draw(psfile+"(");
     er.drawEnergy(psfile+")");
 

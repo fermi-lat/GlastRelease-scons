@@ -13,12 +13,11 @@ IRF::IRF() :m_file(0), m_tree(0)
     goodCal="CalTotRLn>2&&CalEnergySum>5.0 && IMgoodCalProb>0.5";
     goodPSF ="IMcoreProb>0.3&&IMpsfErrPred<3.0"; // this is Bill's minimal cut
     TCut tempFix("Tkr1KalEne > 0.5* McEnergy"); // temporary fix for bad energy estimate
-    goodEvent=goodCal&&goodPSF&&tempFix;;  
+    goodEvent=goodCal&&goodPSF;  
 
     std::cout << "Applying global cut " << goodEvent.GetTitle() << std::endl;
     // define root files
-    file_root=::getenv("file_root");
-    input_filename=file_root+"root_files/fulltup.root";
+    m_input_filename=input_file_root()+"/fulltup.root";
 
     // energy binning: 3 per decade
     logestart=5./3., logedelta=1./3.;
@@ -28,8 +27,8 @@ IRF::IRF() :m_file(0), m_tree(0)
     angle_bins=4;
 
      // load the file and access the TTree
-    std::cout << "reading from " << input_filename << std::endl;
-    m_file = new TFile(input_filename.c_str());
+    std::cout << "reading from " << input_filename() << std::endl;
+    m_file = new TFile(input_filename().c_str());
     if( ! m_file->IsOpen()) throw "could not open input file";
     m_tree = (TTree*)m_file->Get("1");
     if( m_tree==0) throw "did not find the TTree";
