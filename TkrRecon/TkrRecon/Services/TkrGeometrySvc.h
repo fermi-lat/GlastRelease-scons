@@ -39,6 +39,7 @@ public:
     int    numYTowers()      {return m_numY;} 
     int    numViews()        {return m_nviews;}	
     int    numLayers()       {return m_nlayers;}
+	int    nWaferAcross()    {return m_nWaferAcross;}
 
     int    numPlanes()       {return m_nlayers;}
 
@@ -88,7 +89,9 @@ private:
 	/// two views, always!
 	int    m_nviews;        
  	/// total number of x-y layers
-   int    m_nlayers;       
+    int    m_nlayers; 
+    ///  number of wafers in a ladder
+    int m_nWaferAcross;
 
 	/// Distance between centers of adjacent towers
     double m_towerPitch;
