@@ -475,7 +475,7 @@ StatusCode TkrValsTool::calculate()
         double costh = fabs(t1.z()); 
         double arc_min = (x1.z() + minHeight)/costh; 
         pKalParticle->setStepStart(x1, t1, arc_min);
-        double total_radlen = pKalParticle->radLength(); 
+        //double total_radlen = pKalParticle->radLength(); 
         
         // Compute the sum-of radiation_lengths x Hits in each layer
         double tracker_ene_sum  = 0.;

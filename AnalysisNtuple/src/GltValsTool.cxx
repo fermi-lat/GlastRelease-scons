@@ -172,7 +172,7 @@ StatusCode GltValsTool::calculate()
         
         // Now classify according to tower type
         if(Trig_tower >= 0) {
-            int towerId = Trig_tower;
+            int towerId = (int) Trig_tower;
             Trig_xTower = towerId%4;
             Trig_yTower = towerId/4; 
             if(Trig_tower==0  || Trig_tower==3 || 

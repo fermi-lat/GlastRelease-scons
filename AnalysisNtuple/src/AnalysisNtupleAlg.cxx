@@ -136,7 +136,11 @@ StatusCode AnalysisNtupleAlg::initialize(){
     
     m_visitor = new NtupleVisitor(m_ntupleSvc, m_tupleName);
     
-    log << MSG::DEBUG << "AnalysisNtuple called" << endreq;
+    log << MSG::DEBUG;
+    if(log.isActive()) {
+        log << "AnalysisNtuple called" << endreq;
+    }
+    log << endreq;
     std::cout << "AnalysisNtuple called" << std::endl;
     
     return sc;
@@ -189,7 +193,11 @@ StatusCode AnalysisNtupleAlg::execute()
             //std::cout << "toolname " << varnames[i] << std::endl;  
             m_toolvec[i]->browse(varnames[i]);
             sc = m_toolvec[i]->getVal(varnames[i], answer);
-            log << MSG::DEBUG << "  compared to: " << answer << endreq;    
+            log << MSG::DEBUG;
+            if (log.isActive()) {
+                log << "  compared to: " << answer;
+            }
+            log << endreq;    
         }        
     }     
     return sc;
