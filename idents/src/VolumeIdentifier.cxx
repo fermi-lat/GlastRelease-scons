@@ -7,7 +7,7 @@
 //      a 64 integer to enable an efficient sorting of objects which use this identifier.
 //      Every single identifier which constitute the volume identifier is code into a 
 //      binary string of 6 bits and these bit strings are packed into a 64 bit integer.
-//      So, every single id can be an integer beteween 0 and 64 and each volume identifier
+//      So, every single id can be an integer beteween 0 and 63 and each volume identifier
 //      can be built by a maximum number of 10 ids.  
 //
 // Author(s):
@@ -47,11 +47,10 @@ std::string VolumeIdentifier::name(const char* delimiter) const
     
     unsigned int bufIds = 0;
     
-    // this is a 64 bit mask with the first 6 bits set to 1 and the others to 0
-    static int64 mask = 63;
+    // this is a 64 bit mask with the 6 bits (positions 54-59) set to 1 and the others to 0
+    static int64 mask = 0x0fc0000000000000;
     
-    // shift the 1's to bit 54
-    mask = mask << 54;
+    
     int64 copyValue = m_value;
     
     int i;
@@ -73,9 +72,9 @@ std::string VolumeIdentifier::name(const char* delimiter) const
 
 unsigned int VolumeIdentifier::operator[](unsigned int index)
 {
-    static int64 mask = 63;
+    static int64 mask2 = 63;
     int64 copyShifted = m_value >> (54 - 6*index);
-    return (copyShifted & mask);
+    return (copyShifted & mask2);
 }
 
 void VolumeIdentifier::prepend( const VolumeIdentifier& id)
