@@ -7,7 +7,7 @@
 #include "geometry/Cone.h"
 
 
-inline static void createPolyLine(ArvePlottableRep* v, Vector a[], unsigned n)
+inline static void createPolyLine(GraphicsRep* v, Vector a[], unsigned n)
 {
     v->move_to(a[0]);
     for(unsigned i=1;i<n;i++)

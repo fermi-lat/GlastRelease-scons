@@ -4,11 +4,11 @@
 
 #ifndef ARCREP_H
 #define ARCREP_H
-#include "graphics/ArvePlottableRep.h"
+#include "graphics/GraphicsRep.h"
 #include "geometry/Point.h"
 #include "geometry/Vector.h"
 
-class ArcRep : public ArvePlottableRep {
+class ArcRep : public GraphicsRep {
 public:
     ArcRep( const Point& center, double radius, const Vector& xhat,
 	const Vector& yhat, double phi0);

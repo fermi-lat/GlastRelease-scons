@@ -5,11 +5,11 @@
 
 #ifndef CONSREP_H
 #define CONSREP_H
-#include "graphics/ArvePlottableRep.h"
+#include "graphics/GraphicsRep.h"
 
 class Cons;
 
-class ConsRep : public ArvePlottableRep {
+class ConsRep : public GraphicsRep {
 
 public:
     ConsRep(const Cons& cons):m_cons(cons){};

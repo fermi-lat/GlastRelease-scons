@@ -20,7 +20,7 @@ GUI* theGUI;   // make the theGUI available below
 DisplayControl* g_display;
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class Lines : public ArvePlottableRep {
+class Lines : public GraphicsRep {
 public:
 
     Lines( const Hep3Vector& p, const Volume& v )

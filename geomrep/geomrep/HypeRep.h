@@ -6,11 +6,11 @@
 
 #ifndef TUBSREP_H
 #define HYPEREP_H
-#include "graphics/ArvePlottableRep.h"
+#include "graphics/GraphicsRep.h"
 
 class Hype;
 
-class HypeRep : public ArvePlottableRep {
+class HypeRep : public GraphicsRep {
 
 public:
     HypeRep(const Hype& hype):m_hype(hype){};

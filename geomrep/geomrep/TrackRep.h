@@ -4,10 +4,10 @@
 #ifndef TRACKREP_H
 #define TRACKREP_H
 
-#include "graphics/ArvePlottableRep.h"
+#include "graphics/GraphicsRep.h"
 #include "geometry/Track.h"
 
-class TrackRep : public ArvePlottableRep {
+class TrackRep : public GraphicsRep {
 public:
     TrackRep(const Track& t):m_track(t){}
 

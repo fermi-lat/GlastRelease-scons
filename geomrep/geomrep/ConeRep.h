@@ -6,11 +6,11 @@
 
 #ifndef CONEREP_H
 #define CONEREP_H
-#include "graphics/ArvePlottableRep.h"
+#include "graphics/GraphicsRep.h"
 
 class Cone;
 
-class ConeRep : public ArvePlottableRep {
+class ConeRep : public GraphicsRep {
 
 public:
     ConeRep(const Cone& cone):m_cone(cone){};

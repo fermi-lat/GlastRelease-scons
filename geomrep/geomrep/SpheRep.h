@@ -7,11 +7,11 @@
 #ifndef TUBEREP_H
 #define TUBEREP_H
 
-#include "graphics/ArvePlottableRep.h"
+#include "graphics/GraphicsRep.h"
 
 class Sphe;
 
-class SpheRep : public ArvePlottableRep {
+class SpheRep : public GraphicsRep {
 
 public:
     SpheRep(const Sphe& s):m_sphe(s){};

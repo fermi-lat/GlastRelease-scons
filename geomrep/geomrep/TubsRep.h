@@ -6,11 +6,11 @@
 
 #ifndef TUBSREP_H
 #define TUBSREP_H
-#include "graphics/ArvePlottableRep.h"
+#include "graphics/GraphicsRep.h"
 
 class Tubs;
 
-class TubsRep : public ArvePlottableRep {
+class TubsRep : public GraphicsRep {
 
 public:
     TubsRep(const Tubs& tubs):m_tubs(tubs){};

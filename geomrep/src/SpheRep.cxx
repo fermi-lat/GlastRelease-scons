@@ -7,7 +7,7 @@
 #include "geomrep/SpheRep.h"
 #include "geometry/Sphe.h"
 
-static void createCircle(ArvePlottableRep& view, const Point& p, double r, const Vector& xhat,
+static void createCircle(GraphicsRep& view, const Point& p, double r, const Vector& xhat,
 const Vector& yhat)
 {
     static const int ns=100;

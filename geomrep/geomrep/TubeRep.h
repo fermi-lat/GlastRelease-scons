@@ -7,12 +7,12 @@
 #ifndef TUBEREP_H
 #define TUBEREP_H
 
-#include "graphics/ArvePlottableRep.h"
+#include "graphics/GraphicsRep.h"
 #include "geometry/Tube.h"
 
 class Shape;
 
-class TubeRep : public ArvePlottableRep {
+class TubeRep : public GraphicsRep {
     
 public:
     TubeRep(const Tube& tube):m_tube(tube){};

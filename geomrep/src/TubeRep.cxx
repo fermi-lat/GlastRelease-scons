@@ -11,14 +11,14 @@ TubeRep::TubeRep(const Shape& shape)
 {};
 
 
-inline static void createPolyLine(ArvePlottableRep* v, Vector a[], unsigned n)
+inline static void createPolyLine(GraphicsRep* v, Vector a[], unsigned n)
 {
     v->move_to(a[0]); 
     for(unsigned i=1;i<n;i++) 
 	v->line_to(a[i]);
 }
 
-static inline void createPolyLine(ArvePlottableRep& v, Vector a[], unsigned n)
+static inline void createPolyLine(GraphicsRep& v, Vector a[], unsigned n)
 {
   v.move_to(a[0]); 
   for(unsigned i=1;i<n;i++) 
