@@ -79,7 +79,7 @@ void Flux::pass ( double t){
 }
 
 /// Get the time as held by GPS    
-/*GPStime*/int Flux::gpsTime () const{
+/*GPStime*//*int*/double Flux::gpsTime () const{
     return s_mgr->time();
 }
 

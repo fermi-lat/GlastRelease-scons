@@ -53,7 +53,7 @@ public:
     virtual void pass ( double t);
 
     /// Get the time as held by GPS
-    /*GPStime*/int gpsTime () const;
+    /*GPStime*//*int*/double gpsTime () const;
     
     /// rate ( /mm**2 /s)
     virtual double rate()const;
