@@ -27,7 +27,7 @@ use gui         v3r1
 use geomrep     v4r1
 
 # the geometry data base
-use idents      v2r8
+use idents                 v2r8p1
 use detModel    v2r11
 use xmlGeoDbs   v1r5p2
 
@@ -41,7 +41,7 @@ public
 use GuiSvc      v3
 
 use Event       v8r7p1
-use GlastSvc    v8r1
+use GlastSvc              v8r1p2
 
 # simulation
 
