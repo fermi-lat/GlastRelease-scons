@@ -122,11 +122,11 @@ public:
 
         CalDigi() {};
 
-        CalDigi(CalTrigMode mode, idents::CalLogId CalLogId, ObjectVector<CalLogReadout> readout) : 
-	        m_mode(mode),
-                m_logId(CalLogId),
-                m_readout(readout)
-        {};
+        //CalDigi(CalTrigMode mode, idents::CalLogId CalLogId, ObjectVector<CalLogReadout> readout) : 
+	    //    m_mode(mode),
+        //        m_logId(CalLogId),
+        //        m_readout(readout)
+        //{};
 
         /// Destructor
         virtual ~CalDigi() { };
@@ -137,9 +137,13 @@ public:
 
 	/// Retrieve readout mode
 	inline const CalTrigMode getMode() const { return m_mode; };
+    inline void setMode(CalTrigMode m) { m_mode = m; };
 
 	/// Retrieve log identifier
         inline const idents::CalLogId getPackedId() const { return m_logId; };
+        inline void setPackedId(idents::CalLogId id) { m_logId = id; };
+
+        inline void addReadout(CalLogReadout *r) { m_readout.push_back(r); } ;
 	
 	/// Retrieve energy range for selected face and readout
 	inline char getRange(short readoutIndex, CalLogReadout::LogFace face) const
@@ -183,7 +187,8 @@ private:
         /// Cal ID
         idents::CalLogId m_logId;
         /// ranges and pulse heights
-        ObjectVector<CalLogReadout> m_readout;
+        //ObjectVector<CalLogReadout> m_readout;
+        std::vector<CalLogReadout*> m_readout;
 
 };
 
@@ -197,12 +202,12 @@ typedef ObjectVector<CalDigi> CalDigiVector;
 inline StreamBuffer& CalDigi::serialize( StreamBuffer& s ) const
 {
 	s = ContainedObject::serialize(s);
-	s << m_mode;
-	s = m_logId.serialize(s);
-	s = (*(m_readout[0])).serialize(s);
-	if (m_mode == ALLRANGE)
-		for (int rangeIndex=1; rangeIndex<4; rangeIndex++)
-			s = (*(m_readout[rangeIndex])).serialize(s);
+	//s << m_mode;
+	//s = m_logId.serialize(s);
+	//s = (*(m_readout[0])).serialize(s);
+	//if (m_mode == ALLRANGE)
+	//	for (int rangeIndex=1; rangeIndex<4; rangeIndex++)
+//			s = (*(m_readout[rangeIndex])).serialize(s);
   
 	return s;
 }
@@ -212,15 +217,15 @@ inline StreamBuffer& CalDigi::serialize( StreamBuffer& s ) const
 inline StreamBuffer& CalDigi::serialize( StreamBuffer& s )
 {
 	s = ContainedObject::serialize(s);
-        int mode;
-        s >> mode; m_mode = (mode==CalTrigMode::ALLRANGE) ? ALLRANGE:BESTRANGE;
+//        int mode;
+  //      s >> mode; m_mode = (mode==CalTrigMode::ALLRANGE) ? ALLRANGE:BESTRANGE;
 // For now by default m_mode is considered to be BESTRANGE
         
-        s = m_logId.serialize(s);
-	s = (*(m_readout[0])).serialize(s);
-	if (m_mode == ALLRANGE)
-		for (int rangeIndex = 1; rangeIndex < 4; rangeIndex++)
-			s = (*(m_readout[rangeIndex])).serialize(s);
+    //    s = m_logId.serialize(s);
+	//s = (*(m_readout[0])).serialize(s);
+	//if (m_mode == ALLRANGE)
+	//	for (int rangeIndex = 1; rangeIndex < 4; rangeIndex++)
+	//		s = (*(m_readout[rangeIndex])).serialize(s);
 
 	return s;
 }
