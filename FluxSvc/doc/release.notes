@@ -2,7 +2,8 @@
  * Package detModel
  * Coordinator: T.Burnett, S. Robinson
  *
- * v5r4 THB  * new baseline
+ * v5r4p1 THB  * remove cm and GeV factors from FluxAlg
+ * v5r4   THB  * new baseline
 9-Aug-01: Add CREMESpectrum to list to instantiate, tag v2r9
 1-Aug-01: Update with simplifed requirements
  */

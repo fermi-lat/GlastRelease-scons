@@ -94,9 +94,9 @@ StatusCode FluxAlg::execute()
     
     m_flux->generate();
     
-    HepPoint3D p = m_flux->launchPoint()*10.;//the 10 is so that d is in mm, instead of cm.
+    HepPoint3D p = m_flux->launchPoint();
     HepPoint3D d = m_flux->launchDir();
-    double ke = m_flux->energy()*1E3; // kinetic energy in MeV
+    double ke = m_flux->energy(); // kinetic energy in MeV
     std::string particleName = m_flux->particleName();
     
 
