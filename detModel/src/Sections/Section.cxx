@@ -33,9 +33,11 @@ namespace detModel{
 	  delete ens;
 	else if(Shape* sha = dynamic_cast<Shape*>(*i))
 	  delete sha;
+	else if(Choice* ch = dynamic_cast<Choice*>(*i))
+	  delete ch;
 	*i = 0;
       }
-    purge(choices);
+    // purge(choices);
   }
 
 }

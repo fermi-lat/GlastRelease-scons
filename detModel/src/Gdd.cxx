@@ -75,6 +75,22 @@ namespace detModel{
 		actualComp->setEnvelope(refEnvelope);	  
 	    }
 	}
+      if (Choice* actualChoice = dynamic_cast<Choice*>(actualVolume))
+	{
+	  typedef std::map<std::string, std::string> M1;
+	  typedef std::map<std::string, Volume*> M2;
+
+	  M1::const_iterator i;
+
+	  std::map<std::string, std::string>* modeName = actualChoice->getCasesName();
+
+	  for(i=modeName->begin(); i!=modeName->end();i++)
+	    {
+	      actualChoice->addCase(i->first, getVolumeByName(i->second));
+	    }
+
+	  actualChoice->setDefaultVol(getVolumeByName(actualChoice->getDefaultName()));
+	}
     }
   }
 
@@ -141,18 +157,6 @@ namespace detModel{
     return sections.size();
   }
 
-  /* This method gives back a Choice* given a name
-   * If it does not exist, it returns a null pointer
-   */
-  Choice* Gdd::getChoiceByName(std::string cname)
-  {
-    typedef std::map<std::string, Choice*> M;
-    M::const_iterator i; 
-
-    i = choiceMap.find(cname);
-    if(i == choiceMap.end()) return 0;
-    else return i->second;
-  }
 
   /* This method gives back a Material* given a name
    * If it does not exist, it returns a null pointer
@@ -190,21 +194,11 @@ namespace detModel{
     M::const_iterator i; 
 
     i = volumeMap.find(vname);
-    if(i == volumeMap.end()){
-      Choice* choice = getChoiceByName(vname);
-    
-      /* We check that the name correspond to a choice
-       * In that case we return a pointer to a Volume
-       * depending to the mode, contained in the manager.
-       */
-      if(choice)
-	{
-	  std::string mode = Manager::getPointer()->getMode();
-	  return getVolumeByName(choice->getVolumeNameByMode(mode));
-	}
-      else return 0;
-    }
+    if(i == volumeMap.end())
+      return 0;
     else return i->second;
+
+
   }
 
   /* This method gives back a Volume* given a name
@@ -231,7 +225,6 @@ namespace detModel{
       for(j=0;j<sections[i]->getVolumes().size();j++)
 	volumeMap.insert(M::value_type(sections[i]->getVolumes()[j]->getName(),
 				       sections[i]->getVolumes()[j]));
-    buildChoiceMap();
   }
 
   void Gdd::buildBoundingBoxes()
@@ -244,23 +237,6 @@ namespace detModel{
 	sections[i]->getVolumes()[j]->buildBB();
   }
 
-  /* This method build the choices map and it is called by the buildVolumeMap
-   */
-  void Gdd::buildChoiceMap()
-  {
-    unsigned int i,j;
-    typedef std::map<std::string, Choice*> M;
-
-    for(i=0;i<sections.size();i++)
-      for(j=0;j<sections[i]->getChoices().size();j++)
-	choiceMap.insert(M::value_type(sections[i]->getChoices()[j]->getName(),
-				       sections[i]->getChoices()[j]));
-
-    /// We fill the modeNames vector
-    for(j=0;j<sections[0]->getChoices().size();j++)
-      modeNames.push_back(sections[0]->getChoices()[j]->getName());
-
-  }
 
   ConstCategory* Gdd::getConstCategoryByName(std::string cname){
 

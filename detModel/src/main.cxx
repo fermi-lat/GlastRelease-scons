@@ -91,14 +91,14 @@ int main(int argc, char* argv[]) {
   manager->startVisitor(new detModel::HtmlConstantsVisitor);
   // We start the dawn visitor
   manager->startVisitor(visitor2);  
+  // We set a new mode for choices
+  manager->setMode("fastmc");
   // We start the vrml visitor
   manager->startVisitor(visitor);
 
-  
   delete manager;
   return(0);
 }
-
 
 
 

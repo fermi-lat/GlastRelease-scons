@@ -407,7 +407,11 @@ namespace detModel{
 	  if(str == "box")
 	    s->addVolume(buildBox(&(childs.item(i))));
 	  else if(str == "choice")
-	    s->addChoice(buildChoice(&(childs.item(i)))); 
+	    {
+	      Choice* t = buildChoice(&(childs.item(i)));
+	      // s->addChoice(t); 
+	      s->addVolume(t);
+	    }
 	  else if(str == "composition")
 	    s->addVolume(buildComposition( &(childs.item(i)) ));
 	  else if(str=="stackX"||str=="stackY"||str=="stackZ")
@@ -421,7 +425,8 @@ namespace detModel{
   Choice* XercesBuilder::buildChoice(DOM_Node* e)
   {
     DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
-    Choice* b = new Choice(xml::Dom::getAttribute(el, "name"));
+    Choice* b = new Choice(xml::Dom::getAttribute(el, "name"),
+			   xml::Dom::getAttribute(el, "default"));
 
     Manager* Manager = Manager::getPointer();
 
@@ -441,11 +446,7 @@ namespace detModel{
 	    std::string(
 			xml::Dom::transToChar(
 					      attributelist.getNamedItem(DOMString("volume")).getNodeValue()));
-	  b->addCase(Mode, Volume);
-	  
-	  /// This initialize the mode
-	  if(Manager->getMode() == "")
-	    Manager->setMode(Mode);
+	  b->addCaseName(Mode, Volume);
 	}
     }
     return b;

@@ -65,8 +65,6 @@ namespace detModel{
     /// This is the non recursive accept for the visitor pattern
     void AcceptNotRec(Visitor* v);
 
-    /// This method builds a global choices map for all the sections 
-    void buildChoiceMap();
     /// This method builds a global volumes map for all the sections 
     void buildVolumeMap();
     /// This method builds the global constants maps for all the constants
@@ -81,8 +79,7 @@ namespace detModel{
     /**
      * This method search the volumes map with the name string and return 
      * a pointer to the Gddvolume if it exists, otherwise it returns a null 
-     * pointer. It uses also the GetChoiceByName to search for possible choices
-     * depending on the mode (see the manager).
+     * pointer.
      */
     Volume * getVolumeByName(std::string vname);
 
@@ -128,12 +125,6 @@ namespace detModel{
      * string and return the value if it exists,otherwhise it returns
      * 0 */
     std::string getCharConstByName(std::string cname);
-    /**
-     * This method search the choices map with the name string and return 
-     * a pointer to the Gddchoice if it exists, otherwise it returns a null 
-     * pointer. 
-     */  
-    Choice * getChoiceByName(std::string cname);
 
     /** This method return the total number of sections contained 
 	in the XML file */
@@ -167,8 +158,6 @@ namespace detModel{
     /// This is the collection of materials
     MatCollection* materials;
 
-    /** This is a private Gddchoice map indicized by names */
-    std::map < std::string, Choice * > choiceMap;  
     /** This is a private Gddvolume map indicized by names */
     std::map < std::string, Volume * > volumeMap;
     /** This is a private Gddconst map indicized by names */

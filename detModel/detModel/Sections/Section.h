@@ -24,7 +24,7 @@ namespace detModel{
     ~Section();
 
     void addVolume(Volume* nextVolume){volumes.push_back(nextVolume);}
-    void addChoice(Choice* nextChoice){choices.push_back(nextChoice);}
+    //    void addChoice(Choice* nextChoice){choices.push_back(nextChoice);}
     void Accept(SectionsVisitor* v);
     void AcceptNotRec(SectionsVisitor* v);
 
@@ -42,7 +42,7 @@ namespace detModel{
     void setTopVolumeRef(std::string pref){topVolumeRef = pref;}
 
     std::vector< Volume * > getVolumes()const{return volumes;}
-    std::vector < Choice * > getChoices()const{return choices;}
+    //    std::vector < Choice * > getChoices()const{return choices;}
 
 
 
@@ -51,7 +51,7 @@ namespace detModel{
      *  @supplierCardinality 1..n */
     std::vector < Volume * > volumes;
     /** @link aggregation */
-    std::vector < Choice * > choices;
+    //    std::vector < Choice * > choices;
     std::string name;
     std::string version;
     std::string date;

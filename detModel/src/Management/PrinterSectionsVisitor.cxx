@@ -33,8 +33,7 @@ namespace detModel{
   void  PrinterSectionsVisitor::visitSection(Section* section)
   {
     std::cout << "\t Starting the visit of section " << section->getName() << std::endl;
-    std::cout << "\t composed by " << section->getVolumes().size() << " volumes and " 
-	      << section->getChoices().size() << " choices" << std::endl;
+    std::cout << "\t composed by " << section->getVolumes().size() << " volumes" << std::endl;
     std::cout << "\t whose topVolume is " << section->getTopVolume()->getName() << std::endl;
     std::cout << "\t Author: " << section->getAuthor() << std::endl;
     std::cout << "\t Version: " << section->getVersion() << std::endl;
