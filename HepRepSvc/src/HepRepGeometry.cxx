@@ -56,10 +56,9 @@ HepRepGeometry::pushShape(ShapeType s, const UintVector& idvec,
           m_builder->addAttDef("Volume type","","Physics","");
           m_builder->addAttDef("Material","","Physics","");
           m_builder->addAttDef("Shape","","Physics","");
+          m_builder->addAttValue("Color","gray","");
           
           m_builder->addAttValue("Material",material,"");
-          m_builder->addAttValue("LineColor","gray","");
-
           
           switch(type)
             {
