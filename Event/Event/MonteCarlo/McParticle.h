@@ -23,6 +23,8 @@
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/ObjectList.h"
 
+// Forward declarations
+class McVertex;
 
 
 /*!
@@ -44,9 +46,6 @@
  */
 
 //namespace GlastEvent {  // NameSpace
-
-// Forward declarations
-class McVertex;
 
 extern const CLID& CLID_McParticle;
 

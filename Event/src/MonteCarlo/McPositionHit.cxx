@@ -6,12 +6,7 @@
 #include "GlastEvent/Utilities/CLHEPStreams.h"
 
 
-// FIXME!!:
-// The next `using' directive is an ad-hoc declaration for the transition
-// phase to the namespace `GlastEvent'.
-// After the transition is completed, it should be removed and each
-// function definition should have the namespace identifier.
-using namespace GlastEvent;
+namespace mc{
 
 /// Retrieve hit's direction cosine
 double McPositionHit::directionCosine() const
@@ -23,15 +18,12 @@ double McPositionHit::directionCosine() const
 }
 
 
-
-
-
-const VolumeID McPositionHit::volumeID() const
+idents::VolumeIdentifier McPositionHit::volumeID() const
 {
     return m_volumeID;
 }
 /// Update cell identifier
-void McPositionHit::setVolumeID( VolumeID value )
+void McPositionHit::setVolumeID( idents::VolumeIdentifier value )
 {
     m_volumeID = value;
 }
@@ -200,4 +192,6 @@ void McPositionHit::setOriginMcParticle( McParticle* value )
 void McPositionHit::setOriginMcParticle( SmartRef<McParticle> value )
 {
     m_originMcParticle = value;
+}
+
 }

@@ -2,9 +2,6 @@
 #ifndef GlastEvent_McPositionHit_H
 #define GlastEvent_McPositionHit_H 1
 
-// If you wish to introduce the namespace `GlastEvent', uncomment
-// the lines commented as `NameSpace'.
-
 
 // Include files
 #include <iostream>
@@ -19,11 +16,15 @@
 //   to simplify inlude statements in algorithms
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/ObjectList.h"
-#include "GlastEvent/Utilities/VolumeID.h"
+
+#include "idents/VolumeIdentifier.h"
 
 
 #include "GlastEvent/MonteCarlo/McParticle.h"
 #include "GlastEvent/MonteCarlo/McConstants.h"
+
+// Forward declarations
+class McParticle;
 
 
 
@@ -43,15 +44,17 @@
 //              M.Ozaki 2000-12-05 : Modified for GLAST
 //              M.Ozaki 2001-01-05 : MCPositionHits -> McPositionHit
 //
+//            M.Frailis
+//      R.Giannitrapani
+//             C.Cecchi 2002-02-29 : Added namespace mc, changed the VolumeID with
+//                                   new VolumeIdentifier
+//
 //------------------------------------------------------------------------------
  */
 
-//namespace GlastEvent { // NameSpace
-
-// Forward declarations
-class McParticle;
-
 extern const CLID& CLID_McPositionHit;
+
+namespace mc { // NameSpace
 
 class McPositionHit : virtual public ContainedObject {
   public:
@@ -66,11 +69,10 @@ class McPositionHit : virtual public ContainedObject {
     /// Destructor
     virtual ~McPositionHit() { }
 
-
     /// Retrieve cell identifier
-    const VolumeID volumeID() const;
+    idents::VolumeIdentifier volumeID() const;
     /// Update cell identifier
-    void setVolumeID( VolumeID value );
+    void setVolumeID( idents::VolumeIdentifier value );
 
     /// Retrieve entry member
     const HepPoint3D& entryPoint() const;
@@ -138,7 +140,7 @@ class McPositionHit : virtual public ContainedObject {
 
   private:
     /// Volume ID
-    VolumeID                m_volumeID;
+    idents::VolumeIdentifier m_volumeID;
     /// Entry point
     HepPoint3D              m_entry;
     /// Exit point
@@ -157,16 +159,12 @@ class McPositionHit : virtual public ContainedObject {
     unsigned long           m_packedFlags;
 };
 
-
-typedef ObjectVector<McPositionHit> McPositionHitVector;
-typedef ObjectList<McPositionHit>   McPositionHitList;
-
 /// Serialize the object for writing
 inline StreamBuffer& McPositionHit::serialize( StreamBuffer& s ) const
 {
   ContainedObject::serialize(s);
   return s
-    << m_volumeID
+//    << m_volumeID
     << m_entry
     << m_exit
     << m_depositedEnergy
@@ -183,7 +181,7 @@ inline StreamBuffer& McPositionHit::serialize( StreamBuffer& s )
 {
   ContainedObject::serialize(s);
   return s
-    >> m_volumeID
+//    >> m_volumeID
     >> m_entry
     >> m_exit
     >> m_depositedEnergy
@@ -195,12 +193,14 @@ inline StreamBuffer& McPositionHit::serialize( StreamBuffer& s )
 }
 
 
+}
+
 /// Fill the ASCII output stream
-inline std::ostream& McPositionHit::fillStream( std::ostream& s ) const
+inline std::ostream& mc::McPositionHit::fillStream( std::ostream& s ) const
 {
   return s
     << "    base class McPositionHit :"
-    << "\n        Volume ID             = " << m_volumeID
+    << "\n        Volume ID             = " << m_volumeID.name()
     << "\n        Entry point (x, y, z) = ( "
     << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
     << m_entry.x() << ", "
@@ -228,4 +228,9 @@ inline std::ostream& McPositionHit::fillStream( std::ostream& s ) const
     << "\n        ancestor McParticle   = " << m_originMcParticle(this);
 }
 
+
+typedef ObjectVector<mc::McPositionHit> McPositionHitVector;
+typedef ObjectList<mc::McPositionHit>   McPositionHitList;
+
 #endif    // GlastEvent_McPositionHit_H
+
