@@ -8,7 +8,7 @@ use MYSQLEXT v0r*
 # use ROOT
 
 set MYSQL_HOST centaurusa.slac.stanford.edu
-
+set MYSQL_METATABLE metadata_v1
 ## when we've written an actual public header file, uncomment the following:
 apply_pattern package_include
 apply_pattern package_headers
