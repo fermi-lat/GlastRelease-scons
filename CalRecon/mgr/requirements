@@ -7,6 +7,8 @@ use TkrRecon
 use GuiSvc
 use GlastEvent
 
+macro CalReconDir  "$(CALRECONROOT)/$(DEBUGDIR)"
+
 # have a seperate library to export the calorimeter recon data classes 
 library CalReconData -no_share CalLogID.cpp calorimeterGeo.cpp \
                      CalBase.cpp CalADCLogs.cpp CalRecLogs.cpp \
@@ -16,8 +18,6 @@ macro CalRecon_linkopts   "$(CalReconDir)/libCalReconData.a  " \
       VisualC             "$(CalReconDir)/libCalReconData.lib  " 
 
 library CalRecon  *.cxx *.cpp ../CalRecon/*.h  Dll/*.cpp
-
-macro CalReconDir  "$(CALRECONROOT)/$(DEBUGDIR)"
 
 macro CalRecon_linkopts   " " 
 macro CalRecon_stamps     
