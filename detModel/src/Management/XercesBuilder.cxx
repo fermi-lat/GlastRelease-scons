@@ -158,33 +158,36 @@ namespace detModel{
 	      DOM_NodeList child = childs.item(i).getChildNodes();
 	      if (child.getLength()!=0){
 		for(j=0;j<child.getLength();j++){
-		  ConstCategory* cat= new ConstCategory;
-		  std::string s1;
-		  DOM_NamedNodeMap attrCat=child.item(j).getAttributes();
-		  s1=std::string(xml::Dom::transToChar(attrCat.getNamedItem(DOMString("name")).getNodeValue()));
-		  cat->setName(s1);
-		  if(attrCat.getLength()>1){ //if the actual category has more than one attribute it is derived
-		    std::string s2;
-		    s2=std::string(xml::Dom::transToChar(attrCat.getNamedItem(DOMString("save")).getNodeValue()));
-		    if (s2=="true")
-		      cat->setSave(true);
-		    cat->setPrimary(false);
-		  }
-		  DOM_Node over=child.item(j).getFirstChild().getFirstChild();
-		  s1=std::string(xml::Dom::transToChar( over.getNodeValue()));
-		  cat->setOverview(s1);
-		  child.item(j).removeChild(child.item(j).getFirstChild());
-		  //elt is the list of prim/const
-		  DOM_NodeList elt=child.item(j).getChildNodes();
-		  unsigned int k;
-		  for(k=0;k<elt.getLength();k++){
-		    if (elt.item(k).getNodeType()!=Comment){
-		      cat->addConstant(buildConst(elt.item(k)));
-		    }//end if 
-		  }//end for 
-		  //Insert a new category in Constast object
-		  ConstantsBranch->addConstantCategory(cat);
-	      
+                  if (child.item(j).getNodeType() != Comment) {
+                    ConstCategory* cat= new ConstCategory;
+                    std::string s1;
+                    DOM_NamedNodeMap attrCat=child.item(j).getAttributes();
+                    s1=std::string(xml::Dom::transToChar(attrCat.getNamedItem(DOMString("name")).getNodeValue()));
+                    cat->setName(s1);
+                    if(attrCat.getLength()>1){ //if the actual category has more than one attribute it is derived
+                      std::string s2;
+                      s2=std::string(xml::Dom::transToChar(attrCat.getNamedItem(DOMString("save")).getNodeValue()));
+                      if (s2=="true")
+                        cat->setSave(true);
+                      cat->setPrimary(false);
+                    }
+                    DOM_Node over =
+                      child.item(j).getFirstChild().getFirstChild();
+                    s1 =
+                      std::string(xml::Dom::transToChar( over.getNodeValue()));
+                    cat->setOverview(s1);
+                    child.item(j).removeChild(child.item(j).getFirstChild());
+                    //elt is the list of prim/const
+                    DOM_NodeList elt=child.item(j).getChildNodes();
+                    unsigned int k;
+                    for(k=0;k<elt.getLength();k++){
+                      if (elt.item(k).getNodeType()!=Comment){
+                        cat->addConstant(buildConst(elt.item(k)));
+                      }//end if 
+                    }//end for iterating over k
+                    //Insert a new category in Constast object
+                    ConstantsBranch->addConstantCategory(cat);
+                  } // end if != Comment
 		}//end for prim and derived cateory 
 	      }
 	    }  
