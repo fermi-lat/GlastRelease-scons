@@ -920,15 +920,15 @@ int write(char* fileName, int numEvents) {
         std::vector<Double_t> rowActDistCol;
         rowActDistCol.push_back(randNum);
         rowActDistCol.push_back(f);
-		std::vector<AcdId> idCol;
-		idCol.push_back(AcdId(0, 0, 3, 2));
-		idCol.push_back(AcdId(0, 2, 2, 1));
-		std::vector<Double_t> energyCol;
-		energyCol.push_back(f);
-		energyCol.push_back(2.*f);
+        std::vector<AcdId> idCol;
+        idCol.push_back(AcdId(0, 0, 3, 2));
+        idCol.push_back(AcdId(0, 2, 2, 1));
+        std::vector<Double_t> energyCol;
+        energyCol.push_back(f);
+        energyCol.push_back(2.*f);
         acdRec->initialize(energy, count, gDoca, doca, 
-            actDist, minDocaId, rowDocaCol, rowActDistCol,
-			idCol, energyCol);
+          actDist, minDocaId, rowDocaCol, rowActDistCol,
+          idCol, energyCol);
 
         // Create CalRecon object
         CalRecon *calRec = new CalRecon();
@@ -1110,6 +1110,7 @@ int write(char* fileName, int numEvents) {
 
 
         ev->initialize(ievent, runNum, tkrRec, calRec, acdRec);
+        ev->initEventFlags(1);
         t->Fill();
         ev->Clear();
     }

@@ -2,6 +2,7 @@
  package reconRootData
  package manager:H.Kelly
 @verbatim
+v4r9      27-aug-04  : HMK Add new event flags in ReconEvent
 v4r8p2    10-aug-04  : HMK Use new RootcintPolicy replacing RootPolicy
 v4r8      22-jul-04  : HMK move all idents classes to commonRootData
 v4r7      20-jun-04  : THB convert to comprehensive pattern

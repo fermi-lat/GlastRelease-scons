@@ -25,11 +25,19 @@ class ReconEvent : public TObject
 
 public:
 
+    /// Define the bits in the m_eventFlag member
+    typedef enum {
+        GOOD = 0,
+        EVTSEQ = 1
+    } EventFlags;
+
     ReconEvent();
 
     virtual ~ReconEvent();
 
     void initialize(UInt_t eventId, UInt_t runId, TkrRecon *tkr, CalRecon *cal, AcdRecon *acd);
+
+    void initEventFlags(UInt_t flags) { m_eventFlags = flags; };
 
     void Clear(Option_t *option="");
 
@@ -52,6 +60,11 @@ public:
     //! set the ReconHeader pointer 
     //inline void setReconFlags(ReconHeader *r) { m_recFlags = r; };
 
+    UInt_t getEventFlags() const { return m_eventFlags; };
+    Bool_t goodEvent() const { return (m_eventFlags == 0); };
+    Bool_t badEvent() const { return (m_eventFlags != 0); };
+    Bool_t badEventSeq() const { return (m_eventFlags && EVTSEQ); };
+
 private:
 	/// Event Id
     UInt_t m_eventId;
@@ -65,8 +78,10 @@ private:
     TkrRecon *m_tkr;    
     /// pointer to Recon Header data
     //ReconHeader m_recFlags;
+    /// Do the easy thing and add flags here
+    UInt_t m_eventFlags;
 
-    ClassDef(ReconEvent,2) 
+    ClassDef(ReconEvent,3) 
 };
 
 #endif

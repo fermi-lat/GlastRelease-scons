@@ -16,6 +16,7 @@
 * - A pointer to the ACD reconstruction object.
 * - A pointer to the CAL reconstruction object.
 * - A pointer to the TKR reconstruction object.
+* - Event Flags - current a single bit packed UInt_t
 *
 * @section AcdRecon AcdRecon
 * The AcdRecon object provides access to some simple ACD reconstructed quantities.

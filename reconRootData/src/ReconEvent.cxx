@@ -53,9 +53,11 @@ void ReconEvent::Clear(Option_t *option) {
         delete m_acd;
         m_acd = 0;
     }
+    m_eventFlags = 0;
 }
 
 void ReconEvent::Print(Option_t *option) const {
     using namespace std;
     cout << "(Run, Event): (" << m_runId << ", " << m_eventId << ")" << endl;
+    cout << "EventFlags: " << m_eventFlags << endl;
 }
