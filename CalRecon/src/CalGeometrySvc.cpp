@@ -33,7 +33,7 @@ CalGeometrySvc::CalGeometrySvc(const std::string& name, ISvcLocator* pSvcLocator
 		m_logLength   = 31.05;
 		m_logHeight   =  2.35;
 		m_logGap      =  0.06;
-
+        m_latt        =  0.35;
 
 
 	
@@ -71,7 +71,7 @@ StatusCode CalGeometrySvc::initialize()
 		m_logLength   = 36.99;
 		m_logHeight   =  2.10;
 		m_logGap      =  0.084;
-
+        m_latt        =  0.35;
 
 	}
 	else if (m_geoType == 2)
@@ -85,7 +85,9 @@ StatusCode CalGeometrySvc::initialize()
 		m_nmody   = 4;
 
 		m_modWidth    = 37.35;
-		m_Z0          = -32.1425;   
+//		m_Z0          = -32.1425;        
+//     after tracker geometry modification m_Z0 became
+		m_Z0          = -32.7756;   
 
 		m_layerWidth  =   33.3;
 		m_layerHeight =    2.139;
@@ -94,7 +96,7 @@ StatusCode CalGeometrySvc::initialize()
 		m_logLength   = 33.3;
 		m_logHeight   =  1.99;
 		m_logGap      =  0.113;
-
+        m_latt        =  0.35;
 
 	}
 	return sc;
