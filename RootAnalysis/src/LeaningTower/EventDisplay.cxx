@@ -11,6 +11,7 @@
 #include "TF1.h"
 #include "TGraph.h"
 #include "TStyle.h"
+#include "TSystem.h"
 
 #include <vector>
 #include "Tracker.h"
@@ -36,8 +37,8 @@ void InitializeED(TString filename = "MyRootFile.root")
   //  Initialize(filename);
   gStyle->SetCanvasColor(10);
   tracker = new Tracker();
-  
-  tracker->loadGeometry("geometry/stack2geometry.txt");
+
+  tracker->loadGeometry(gSystem->ExpandPathName("$ROOTANALYSISROOT/src/LeaningTower/geometry/stack2geometry.txt"));
   
   myEvent = new Event(filename,(TMap *) tracker->GetGeometry());
   
@@ -83,7 +84,7 @@ void DisplayEvent(int NumEvent=0)
   double *ZHitXlayers = new double[TkrTotalNumHits];
   double *XHitYlayers = new double[TkrTotalNumHits];
   double *ZHitYlayers = new double[TkrTotalNumHits];
-  
+
   int Xhits = 0;
   int Yhits = 0;
 
@@ -92,7 +93,7 @@ void DisplayEvent(int NumEvent=0)
   std::vector<double> XClusterYlayer;
   std::vector<double> ZClusterYlayer;
   
-  while ( key = (TObjString*)ti.Next() ) 
+  while ( ( key = (TObjString*)ti.Next() ) ) 
     {
       Layer *aLayer = ((Layer*) myGeometry->GetValue(key));
       
@@ -171,7 +172,6 @@ void DisplayEvent(int NumEvent=0)
 	}
     }
   
-
   // Display the track(s):
 
 
@@ -216,23 +216,27 @@ void DisplayEvent(int NumEvent=0)
   EventDisplayC->cd(1);
   XClusters->Draw("P");
   gDirectory->Delete("fun");
-  TF1 *fun = new TF1("fun","pol1",0,40);
+  //  TF1 *fun = new TF1("fun","pol1",0,40);
+  TF1 fun("fun","pol1",0,40);
   //  fun->SetParameters(0,-1000);
   //  fun->SetParLimits(0,-1000,1000);
   //  fun->SetParLimits(1,-1000,1000);
   
-
-  fun->SetLineStyle(2);
-  fun->SetLineWidth(.5);
-  fun->SetLineColor(2);
+  //  fun->SetLineStyle(2);
+  //  fun->SetLineWidth(0);
+  //  fun->SetLineColor(2);
+  fun.SetLineStyle(2);
+  fun.SetLineWidth(0);
+  fun.SetLineColor(2);
 
   if(NumClusX>1)
     {
-      XClusters->Fit("fun","RL");
+      XClusters->Fit("fun","R");
     }
   else
     {
-      XClusters->GetFunction("fun")->Delete();
+        TObject* dummy = XClusters->FindObject("fun");
+        if ( dummy ) dummy->Delete();
     }
   
   EventDisplayC->cd(2);
@@ -243,7 +247,8 @@ void DisplayEvent(int NumEvent=0)
     } 
   else
     {
-      YClusters->GetFunction("fun")->Delete();
+        TObject* dummy = YClusters->FindObject("fun");
+        if ( dummy ) dummy->Delete();
     }
   EventDisplayC->Update();
 }
@@ -290,7 +295,7 @@ void IneffAnalysis(int LastEvent, TString LV="All")
       std::vector<double> XClusterYlayer;
       std::vector<double> ZClusterYlayer;
 
-      while ( key = (TObjString*)ti.Next() ) 
+      while ( ( key = (TObjString*)ti.Next() ) ) 
 	{
 	  Layer *aLayer = ((Layer*) myGeometry->GetValue(key));
        	  TString LayerName=key->String();
@@ -361,7 +366,7 @@ void IneffAnalysis(int LastEvent, TString LV="All")
 	  
 	  ti.Reset();
 	  
-	  while ( key = (TObjString*)ti.Next() ) 
+	  while ( ( key = (TObjString*)ti.Next() ) ) 
 	    {
 	      
 	      Layer *aLayer = ((Layer*) myGeometry->GetValue(key));
@@ -443,7 +448,8 @@ void IneffAnalysis(int LastEvent, TString LV="All")
   TGraph *XYRegionMH  = new TGraph(NMH,x3,y3);
   
 	
-  TCanvas *c1 = new TCanvas("c1","c1",500,500);
+  TCanvas *c1;
+  c1 = new TCanvas("c1","c1",500,500);
   XYRegionAA->SetMarkerColor(2);
   XYRegionNAA->SetMarkerColor(3);
   XYRegionMH->SetMarkerStyle(28);
@@ -456,11 +462,13 @@ void IneffAnalysis(int LastEvent, TString LV="All")
   ti.Reset();
   Layer *aLayer;
   std::cout<<" LAYER NAME | EFFICIENCY | INEFFICIENCY"<<std::endl;
-  while ( key = (TObjString*)ti.Next()) 
+  while ( ( key = (TObjString*)ti.Next() ) ) 
     {
       aLayer = ((Layer*) myGeometry->GetValue(key));
       std::cout<<" |   "<<aLayer->GetLayerName()<<"    |     ";
-      printf("  %3.2f \%  |   %3.2f   \% ", (float) aLayer->GetEfficiency()*100.0,(float) aLayer->GetInefficiency()*100.0);
+      std::cout << std::setw(5) << std::setprecision(2) << aLayer->GetEfficiency()*100.0 << " %  |"
+                << std::setw(6) << "   % " << aLayer->GetInefficiency()*100.0;
+      //      printf("  %3.2f \%  |   %3.2f   \% ", (float) aLayer->GetEfficiency()*100.0,(float) aLayer->GetInefficiency()*100.0);
       std::cout<<"   | "<<std::endl;
     }
 

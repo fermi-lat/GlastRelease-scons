@@ -21,6 +21,10 @@ void Tracker::loadGeometry(TString filename) {
     return;
   }
   std::ifstream fin(filename);
+  if ( !fin ) {
+      std::cout << "File " << filename << " could not be opened!" << std::endl;
+      return;
+  }
   TString layer;
   double value;
   while ( 1 ) 
@@ -55,7 +59,7 @@ void Tracker::Display()
   EventDisplayC->cd(2);
   Border->Draw("AP");
   
-  while ( key = (TObjString*)ti.Next() ) 
+  while ( ( key = (TObjString*)ti.Next() ) ) 
     {
       Layer *aLayer = ((Layer*) myGeometry->GetValue(key));
       
