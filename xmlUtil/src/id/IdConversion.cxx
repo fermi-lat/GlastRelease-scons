@@ -98,7 +98,7 @@ namespace xmlUtil {
     return true;
   }
 
-  ostream& operator<<(ostream& s, const IdConversion& convers) {
+  std::ostream& operator<<(std::ostream& s, const IdConversion& convers) {
     s << (*(convers.m_op)) << std::endl << " Path: " << (*(convers.m_path)) << 
       " Condition: hasField " << (*(convers.m_condition));
     return s;

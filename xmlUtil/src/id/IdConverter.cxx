@@ -126,7 +126,7 @@ namespace xmlUtil {
     return converted;
   }
 
-  ostream& IdConverter::displayConversions(ostream& s) {
+  std::ostream& IdConverter::displayConversions(std::ostream& s) {
     Conversions::const_iterator it = m_convCol.begin();
 
     while (it != m_convCol.end() ) {

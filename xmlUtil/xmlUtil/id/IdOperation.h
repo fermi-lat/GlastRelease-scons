@@ -23,7 +23,7 @@ namespace xmlUtil {
          - compress    (eliminate id fields between specified endpoints)
   */
   class IdOperation;
-  ostream& operator<<(ostream& s, const IdOperation& op);
+  std::ostream& operator<<(std::ostream& s, const IdOperation& op);
 
 
   class IdOperation {

@@ -11,7 +11,7 @@
 namespace xmlUtil {
   class IdOperation;
   class IdConversion;
-  ostream& operator<<(ostream& s, const IdConversion& convers);
+  std::ostream& operator<<(std::ostream& s, const IdConversion& convers);
 
   //! An \b IdConversion object (corresponding to an idConv element
   //! as defined in gdd.dtd) "has" 
@@ -32,7 +32,8 @@ namespace xmlUtil {
 
     ~IdConversion();
 
-    friend ostream& operator<<(ostream& s, const IdConversion& convers);
+    friend std::ostream& operator<<(std::ostream& s, 
+                                    const IdConversion& convers);
 
     //! Check that start of inputId fieldnames match path
     bool inDomain(const NamedId& inputId);

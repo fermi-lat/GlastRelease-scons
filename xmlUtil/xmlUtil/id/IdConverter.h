@@ -27,7 +27,7 @@ namespace xmlUtil {
     IdConverter(DOM_Element elt);
     ~IdConverter();
 
-    ostream& displayConversions(ostream& s);
+    std::ostream& displayConversions(std::ostream& s);
 
     /*  Wait on implementing this one.
     // Return image of the input dictionary under the conversions

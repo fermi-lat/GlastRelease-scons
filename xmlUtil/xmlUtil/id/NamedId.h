@@ -16,13 +16,13 @@ namespace xmlUtil {
 
   class NamedId;
 
-  ostream& operator<<(ostream& s, const NameSeq& seq);
-  ostream& operator<<(ostream& s, const Identifier& seq);
-  ostream& operator<<(ostream& s, const NamedId& nId);
+  std::ostream& operator<<(std::ostream& s, const NameSeq& seq);
+  std::ostream& operator<<(std::ostream& s, const Identifier& seq);
+  std::ostream& operator<<(std::ostream& s, const NamedId& nId);
 
   class NamedId {
   public:
-    friend ostream& operator<<(ostream& s, const NamedId& nId);
+    friend std::ostream& operator<<(std::ostream& s, const NamedId& nId);
 
     //! When length is known, best to allocate all at once at start
     NamedId(const int len = 0);
