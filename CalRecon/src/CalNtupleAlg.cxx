@@ -188,7 +188,7 @@ StatusCode CalNtupleAlg::finalize() {
     StatusCode  sc = StatusCode::SUCCESS;
     
     MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "finalize writeJunkAlg " << endreq;
+    log << MSG::INFO << "finalize CalNtupleAlg " << endreq;
  
     return StatusCode::SUCCESS;
 }
