@@ -1,5 +1,5 @@
 package FluxSvc
-version v5r15p2
+version v5r16
 
 # $Id$
 
@@ -10,7 +10,7 @@ use GlastPolicy *
 use Event   *
 
 use GlastSvc *
-use GaudiSvc
+
 use xml
 use CLHEP
 use astro v0r*
@@ -18,6 +18,11 @@ use astro v0r*
 
 apply_pattern packageShr
 apply_pattern package_include
+
+# this sets path for the Gaudi ParticleProperySvc to find the file 
+#  $(FlUXSVCROOT)/cdf/particleproperty.cdf
+set LHCBDBASE "${FLUXSVCROOT}"
+
 
 #=============================================================
 use facilities v2*
