@@ -79,7 +79,7 @@
          YREF="xRibbonTop_l"
          ZREF="ribbonThickness"
          materialREF="ribbonMat"
-         sensitive="intHit"
+         sensitive="posHit"
          detectorTypeREF="eDTypeACDRibbon" />
 
 
@@ -89,7 +89,7 @@
          XREF="yRibbonTopEdge_l"
          ZREF="ribbonThickness"
          materialREF="ribbonMat"
-         sensitive="intHit"
+         sensitive="posHit"
          detectorTypeREF="eDTypeACDRibbon" />
 
     <box name="yRibbonTopMid"
@@ -97,7 +97,7 @@
          XREF="yRibbonTopMid_l"
          ZREF="ribbonThickness"
          materialREF="ribbonMat"
-         sensitive="intHit"
+         sensitive="posHit"
          detectorTypeREF="eDTypeACDRibbon" />
 
     <box name="yRibbonTopCent"
@@ -105,7 +105,7 @@
          XREF="yRibbonTopCent_l"
          ZREF="ribbonThickness"
          materialREF="ribbonMat"
-         sensitive="intHit"
+         sensitive="posHit"
          detectorTypeREF="eDTypeACDRibbon" />
 
     <!-- next assemble these pieces (25 top tiles, 4 long ribbons
@@ -693,7 +693,7 @@
          YREF="ribbonThickness"
          ZREF="ribbonsSideZ"
          materialREF="ribbonMat"
-         sensitive="intHit"
+         sensitive="posHit"
          detectorTypeREF="eDTypeACDRibbon" />
 
 
