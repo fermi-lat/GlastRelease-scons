@@ -326,7 +326,8 @@ namespace detCheck {
 
   void SolidStats::visitTube(detModel::Tube* tube) {
     if (PI <= 0.0) {
-      PI = 2 * (asin(1));
+      double one = 1.0;
+      PI = 2 * (asin(one));
     }
     double rOut = tube->getRout();
     double rIn = tube->getRin();
