@@ -36,12 +36,14 @@
 
 <!ELEMENT  generic  (inputSample) >
 <!ATTLIST generic  
-   instrument  (LAT | BFEM | BTEM | EM | CU | TWR) #REQUIRED
+   instrument  NMTOKEN #REQUIRED
    timestamp   NMTOKEN #REQUIRED
    calType     NMTOKEN #REQUIRED
    creator     NMTOKEN #IMPLIED
    DTDVersion  NMTOKEN "v3r1"       
    fmtVersion  NMTOKEN #REQUIRED >
+
+<!--    instrument  (LAT | BFEM | BTEM | EM | CU | TWR) #REQUIRED  -->
 
 <!-- Description of events used as input to the procedure 
      Start- and stop-times should be timestamps of earliest and
@@ -113,6 +115,7 @@
                    nOnbdCalib  (true | false) "false"
                    nOnbdTrig   (true | false) "false"
                    nOnbdData   (true | false) "false"  
+                   howBad    NMTOKEN          "0"
                    allBad      (true | false) "false" >
 
 <!-- For each plane containing bad strips of a particular badness,

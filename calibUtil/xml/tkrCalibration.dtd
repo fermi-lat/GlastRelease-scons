@@ -6,7 +6,7 @@
 
 <!ELEMENT  generic  (inputSample) >
 <!ATTLIST generic
-   instrument  (LAT | BFEM | BTEM | EM | CU | TWR) #REQUIRED
+   instrument  NMTOKEN #REQUIRED
    timestamp   NMTOKEN #IMPLIED
    runId       NMTOKEN #IMPLIED
    calType     NMTOKEN #IMPLIED
@@ -16,6 +16,7 @@
    creatorVersion NMTOKEN #IMPLIED
  >
 
+<!--    instrument  (LAT | BFEM | BTEM | EM | CU | TWR) #REQUIRED -->
 <!-- Description of events used as input to the procedure
      Start- and stop-times should be timestamps of earliest and
      latest events included in sample
@@ -51,34 +52,43 @@
 <!ELEMENT stripTot EMPTY >
 <!ATTLIST stripTot
    id        NMTOKEN #REQUIRED
-   slope     NMTOKEN #REQUIRED
-   intercept NMTOKEN #REQUIRED
-   quad      NMTOKEN #REQUIRED
-   chi2      NMTOKEN #REQUIRED
-   df        NMTOKEN #REQUIRED >
+   slope     NMTOKEN "0.5"
+   intercept NMTOKEN "1.3"
+   quad      NMTOKEN "0.004"
+   chi2      NMTOKEN "-1.0"
+   df        NMTOKEN "-1.0" >
 
 
-<!ELEMENT stripCharge EMPTY >
-<!ATTLIST stripCharge
+<!ELEMENT stripScale EMPTY >
+<!ATTLIST stripScale
    id          NMTOKEN #REQUIRED
-   chargeScale NMTOKEN #IMPLIED >
+   chargeScale NMTOKEN "1.0"
+   error       NMTOKEN "-1.0"
+   chi2        NMTOKEN "-1.0"
+   df          NMTOKEN "-1.0"
+>
 
 
 <!ELEMENT stripThresh EMPTY >
 <!ATTLIST stripThresh
    id        NMTOKEN #REQUIRED
-   trg_thr      NMTOKEN #IMPLIED
-   data_thr     NMTOKEN #IMPLIED>
+   trg_thr   NMTOKEN "1.3"
+   data_thr  NMTOKEN "1.5"
+>
 
 
-<!ELEMENT gtfeCharge EMPTY >
-<!ATTLIST gtfeCharge
+<!ELEMENT gtfeScale EMPTY >
+<!ATTLIST gtfeScale
    id           NMTOKEN #REQUIRED
-   trg_thr      NMTOKEN #IMPLIED
-   chargeScale  NMTOKEN #IMPLIED >
+   chargeScale  NMTOKEN "1.0"
+   error       NMTOKEN "-1.0"
+   chi2        NMTOKEN "-1.0"
+   df          NMTOKEN "-1.0"
+>
 
 <!ELEMENT gtfeThresh EMPTY >
 <!ATTLIST gtfeThresh
    id        NMTOKEN #REQUIRED
-   trg_thr   NMTOKEN #IMPLIED
-   data_thr  NMTOKEN #IMPLIED >
+   trg_thr   NMTOKEN "1.3"
+   data_thr  NMTOKEN "1.5"
+>
