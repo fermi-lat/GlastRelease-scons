@@ -126,6 +126,13 @@
          </spectrum>
     </source>
 
+    <!-- the TimeCandle spectrum  -->
+    <source name="timetick30s">
+         <spectrum escale="GeV"> <SpectrumClass name="TimeCandle" params="30.0"/>  
+		 <use_spectrum/>
+                 <launch_point />
+         </spectrum>
+    </source>
 
 </source_library>
 
@@ -139,11 +146,11 @@
     <source name="chime" >
         <spectrum escale="GeV"> <SpectrumClass name="CHIMESpectrum"/> <use_spectrum/> </spectrum>
     </source>
+
      <!-- the CHIME spectrum at Maximum flux. angular dependence and rate are from the CHIME spectrum object -->
     <source name="chimemax" >
         <spectrum escale="GeV"> <SpectrumClass name="CHIMESpectrum" params="-28.5,110"/> <use_spectrum/> </spectrum>
     </source>
-
 
   <!-- default creme is the orbit average -->   
     <source name="cremeavg" >

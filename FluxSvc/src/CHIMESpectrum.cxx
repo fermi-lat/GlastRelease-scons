@@ -96,6 +96,9 @@ void CHIMESpectrum::init(std::string paramstring) {
             m_fluxTbl[ii][jj] = gfluxes[jj+13*ii];
         }
     }
+    // if there are parameters passed to chime, it shouuldn't move.
+    m_allowMove = params.size()>1? false: true;
+    // set the initial location
     /*float*/double lat =  params.size()>0? params[0]: 0.0f;
     /*float*/double lon =  params.size()>1? params[1]: 0.0f;
     
@@ -195,7 +198,7 @@ float CHIMESpectrum::operator() (float x)const {
 
 int CHIMESpectrum::askGPS()
 {
-    setPosition(GPS::instance()->lat(), GPS::instance()->lon());
+    if(m_allowMove)setPosition(GPS::instance()->lat(), GPS::instance()->lon());
     return 0; // can't be void in observer pattern
 }
 

@@ -132,6 +132,7 @@ private:
     float cosomega(float E) const;  // Opening angle of Størmer cone
     static const float m_rearth;    // radius of earth in km
     static const float m_altitude;  // altitude of circular orbit
+    bool m_allowMove;   //whether or not the flux will be allowed to change position.
     
     std::string m_particle_name;
     ObserverAdapter< CHIMESpectrum > m_observer; //obsever tag
