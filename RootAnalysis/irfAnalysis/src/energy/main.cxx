@@ -50,10 +50,12 @@ int main(){
     irf.set_ymin(1e-3);
     irf.set_ymax(0.2);
     irf.draw("energy_fit.ps",  true , myfit);
-    myfit->writeFitPars();
     delete myfit;
+    irf.addCutInfo("energy_fit_parameters.root", "fitParams");
 
-    myfit = new EnergyModel("energy_fit_parameters_thick.root");
+   EnergyModel * myfit = new EnergyModel("energy_fit_parameters_thick.root");
+
+    EnergyModel * myfit = new EnergyModel("edisp_thick_parameters.root");
     MakeDists irf_thick("energy_fit_thick.root");
     irf_thick.set_user_cut(TCut("Tkr1FirstLayer>=12.0"));
     if(!irf_thick.fileExists())
@@ -61,11 +63,10 @@ int main(){
     irf_thick.set_ymin(1e-3);
     irf_thick.set_ymax(0.2);
     irf_thick.draw("energy_fit_thick.ps", true, myfit);
-    myfit->writeFitPars();
     delete myfit;
+    irf_thick.addCutInfo("edisp_thick_parameters.root", "fitParams");
 
-
-    myfit = new EnergyModel("energy_fit_parameters_thin.root");
+    myfit = new EnergyModel("edisp_thin_parameters.root");
     MakeDists irf_thin("energy_fit_thin.root");
     irf_thin.set_user_cut(TCut("Tkr1FirstLayer<12.0"));
     if(!irf_thin.fileExists())
@@ -73,8 +74,8 @@ int main(){
     irf_thin.set_ymin(1e-3);
     irf_thin.set_ymax(0.2);
     irf_thin.draw("energy_fit_thin.ps", true, myfit);
-    myfit->writeFitPars();
     delete myfit;
+    irf_thin.addCutInfo("edisp_thin_parameters.root", "fitParams");
 
     return 0;
 }
