@@ -13,6 +13,9 @@
 #include "GlastSvc/GlastDetSvc/IGeometry.h"
 #include "GlastSvc/GlastDetSvc/IMedia.h"
 
+#include "idents/VolumeIdentifier.h"
+#include "CLHEP/Geometry/Transform3D.h"
+
 #include "DMmanager.h"
 #include "MediaVisitor.h"
 #include "GeometryVisitor.h"
@@ -138,13 +141,19 @@ void GlastDetSvc::accept(IGeometry& geom)
 
 void GlastDetSvc::accept(IMedia& media)
 {
-    m_dm->accept(&MediaVisitor(media));
+  m_dm->accept(&MediaVisitor(media));
 }
 
 StatusCode GlastDetSvc::getNumericConstByName(std::string name, double* res)
 {
-    if (m_dm->getNumericConstByName(name, res))
-      return StatusCode::SUCCESS;
-    else return StatusCode::FAILURE;
+  if (m_dm->getNumericConstByName(name, res))
+    return StatusCode::SUCCESS;
+  else return StatusCode::FAILURE;
 }
 
+StatusCode GlastDetSvc::getTransform3DByID(idents::VolumeIdentifier id,HepTransform3D* tr)
+{
+  if (m_dm->getTransform3DByID(id, tr))
+    return StatusCode::SUCCESS;
+  else return StatusCode::FAILURE;
+}

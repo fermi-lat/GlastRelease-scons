@@ -6,6 +6,11 @@
 #include "detModel/Management/XercesBuilder.h"
 #include "detModel/Sections/Volume.h"
 #include "detModel/Management/MaterialsVisitor.h"
+#include "detModel/Management/IDmapBuilder.h"
+
+#include "idents/VolumeIdentifier.h"
+
+#include "CLHEP/Geometry/Transform3D.h"
 
 #include "xml/IFile.h" //for extractEnvVar
 #include <string>
@@ -42,7 +47,9 @@ void DMmanager::init(std::string filename, std::string mode, std::string topvol)
         std::cerr << "Could not find a topvol " << topvol << std::endl;
         exit(-1);
     }
-    
+    // We setup the IDmap 
+    m_idMap = new detModel::IDmapBuilder(topvol);
+    m_dm->startVisitor(m_idMap);    
 }
 
 bool DMmanager::getNumericConstByName(std::string name, double* res)
@@ -64,3 +71,8 @@ void DMmanager::printSetup(std::ostream& out) {
 DMmanager::~DMmanager() {        delete m_dm;    }
 
 std::string DMmanager::topvol()const{ return m_vol->getName(); }
+
+bool DMmanager::getTransform3DByID(idents::VolumeIdentifier id, HepTransform3D* tr)
+{
+  return m_idMap->getTransform3DByID(id,tr);
+}

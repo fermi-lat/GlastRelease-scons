@@ -17,6 +17,8 @@ class Instrument;
 class GlastDetector;
 namespace xml { class IFile; }
 class DMmanager;
+class HepTransform3D;
+namespace idents{class VolumeIdentifier;}
 
 /*!  This Gaudi service provides access to a tree of GlastDetector objects.
 */
@@ -84,6 +86,8 @@ public:
     //! detModel interface to retrive numeric constants
     virtual StatusCode getNumericConstByName(std::string, double*);
 
+    /// retrive the 3D transformation of a volume given a valid ID
+    virtual StatusCode getTransform3DByID(idents::VolumeIdentifier,HepTransform3D*);
     
 private:
     
