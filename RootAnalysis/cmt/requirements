@@ -7,7 +7,7 @@ use mcRootData v*
 use digiRootData v*
 use reconRootData v*
 use GlastPolicy v*
-use RootPolicy v* 
+use RootcintPolicy v* GlastPolicy
 use rootTestData v*
 
 set ROOTANALYSIS ${ROOTANALYSISROOT}
