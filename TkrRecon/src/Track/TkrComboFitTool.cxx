@@ -39,12 +39,8 @@ TkrComboFitTool::TkrComboFitTool(const std::string& type, const std::string& nam
 
     pTkrGeoSvc = dynamic_cast<ITkrGeometrySvc*>(iService);
 
-    //Locate and store a pointer to the geometry service
-    iService = 0;
-    sc = serviceLocator()->getService("TkrFailureModeSvc", iService, true);
-
-    pTkrFailSvc = dynamic_cast<ITkrFailureModeSvc*>(iService);
-
+    // which stores a pointer to the failuremode service
+    pTkrFailSvc = pTkrGeoSvc->getTkrFailureModeSvc();
 
     iService = 0;
     //Locate and store a pointer to the data service
@@ -130,7 +126,8 @@ StatusCode TkrComboFitTool::doTrackFit(Event::TkrPatCand* patCand)
                 }        
                 int hit_Id = plane.getIDHit();;
                 double cls_size = pTkrClus->size(hit_Id);        
-                double prj_size = 400.*fabs(slope)/228. + 1.;
+                double prj_size = pTkrGeoSvc->siThickness()*fabs(slope)
+                    /pTkrGeoSvc->siStripPitch() + 1.;
                 if(cls_size> prj_size) {
                     fitter->unFlagHit(i_Hit);
                     i_share++;

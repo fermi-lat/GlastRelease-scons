@@ -39,7 +39,6 @@ class TkrComboPatRec : public TkrPatCandCol
 {
 public:
     TkrComboPatRec(ITkrGeometrySvc* pTkrGeo, 
-        ITkrFailureModeSvc* pTkrFail,
         TkrClusterCol* pClusters, double CalEnergy, Point CalPosition);
         ~TkrComboPatRec() {};
 
@@ -49,7 +48,6 @@ private:
     public:
         Candidate(TkrClusterCol* clusters,
                   ITkrGeometrySvc* geometry,
-                  ITkrFailureModeSvc* failure,
                   int layer, int twr, double e, 
                   Point x, Vector t, float d, float s, int g, int top);
         ~Candidate();
