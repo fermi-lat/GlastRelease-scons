@@ -5,9 +5,6 @@
 #include "geometry/Plane.h"
 #include <cfloat>
 
-static Plane dummy(Point(), Vector()); // force something?
-
-Plane::~Plane() {} // dummy
 
 Plane::Plane(const Point& o, const Vector& n)
 : Surface(o, n.unit())	 // save unit vector in Surface

@@ -9,11 +9,6 @@
 
 #ifndef __PLANE_H
 #define __PLANE_H
-
-//#ifdef __GNUG__
-//#pragma interface
-//#endif
-
 #include "geometry/Surface.h"
 
 class Plane: public Surface
@@ -25,7 +20,6 @@ class Plane: public Surface
    // origin to the plane. Note that inside is defined as the side with the  origin.
    // second form is equivalent, but allows plane to pass through origin
 
-   ~Plane(); // dummy destructor
 
    virtual double how_near( const Point& x ) const;
    virtual double distance( const Point& x, const Vector& v, int inout)const;
