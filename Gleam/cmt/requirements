@@ -1,6 +1,6 @@
 package Gleam
 
-version  v2r5p1
+version  v2r5p2
 # This is a checkout package
 # $Id$
 
@@ -66,7 +66,7 @@ use AcdDigi     v1r4p0
 use Trigger     v3r3p5
 use Recon       v2r3p5
 
-use TkrRecon              v8r4p3
+use TkrRecon              v8r4p4
 use CalRecon    v5r7p5 
 use AcdRecon    v1r4p1       
 
