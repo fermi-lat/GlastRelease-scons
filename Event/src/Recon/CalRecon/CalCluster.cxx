@@ -119,7 +119,7 @@ void CalClusterCol::writeOut(MsgStream& stream) const
     stream << " --- CalClusterCol  --- " << size() << endreq;
 
     // loop over all clusters
-    for (int i = 0; i < size();i++) {
+    for (unsigned int i = 0; i < size();i++) {
         
         // call the writeOut() method for each cluster
         (operator[](i))->writeOut(stream);
