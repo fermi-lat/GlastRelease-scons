@@ -115,6 +115,11 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
       hit->setOriginMcParticle(partMan->getOriginParticle());
     }
 
+  // Get the proper time for particle at this hit
+  G4double properTime = aStep->GetTrack()->GetProperTime();
+  G4double localTime  = aStep->GetTrack()->GetLocalTime();
+  hit->setTimeOfFlight(properTime);
+
   hit->setMcParticleId(aStep->GetTrack()->GetDefinition()->GetPDGEncoding());
   hit->setOriginMcParticleId(partMan->getOriginParticle()->particleProperty());
 
@@ -132,7 +137,7 @@ void PosDetectorManager::EndOfEvent(G4HCofThisEvent*)
   // /Event/MC/PositionHitsCol folder
   
   // Let's sort the hits
-  std::sort(m_posHit->begin(),m_posHit->end(), ComparePosHits());
+///////  std::sort(m_posHit->begin(),m_posHit->end(), ComparePosHits());
 
   // store the hits in the TDS
   m_esv->registerObject( EventModel::MC::McPositionHitCol  , m_posHit);    
