@@ -2,6 +2,9 @@
  * package Gleam
  * package manager:T.Burnett
 
+ * v1r3  09-may-02 THB a few more small changes!
+    use GlastDigi        v2r7
+    use GlastSvc         v7r3
  * v1r2p1  09-may-02 THB Forgot to check for update on this guy
     use TkrRecon           v5r7
 
