@@ -1,0 +1,5 @@
+*.bat 
+*Make*
+cleanup*
+setup*
+rh*
