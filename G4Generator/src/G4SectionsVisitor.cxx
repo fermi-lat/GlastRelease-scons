@@ -17,7 +17,6 @@
 #include "G4VisAttributes.hh"
 #include "G4Colour.hh"
 #endif
-#include "G4VSensitiveDetector.hh"
 #include "G4Transform3D.hh"
 #include "G4RotationMatrix.hh"
 
@@ -42,8 +41,9 @@
 /// \todo Distruzione degli oggetti
 
 
-G4SectionsVisitor::G4SectionsVisitor(std::string topvol)
-: actualVolume(topvol)
+G4SectionsVisitor::G4SectionsVisitor(std::string topvol, IdMap* map)
+: actualVolume(topvol) ,
+  m_idMap(map)
 {
     typedef std::map<std::string,float>M1;
     typedef std::map<std::string,detModel::Material*>M2;
@@ -60,7 +60,7 @@ G4SectionsVisitor::G4SectionsVisitor(std::string topvol)
   g->getMaterials()->generateColor();
   
   /// We initialize the opacity map
-  for(k=mat.begin();k!=mat.end();k++)
+  for(k=mat.begin();k!=mat.end();k++) 
     opacityMap.insert(M1::value_type(k->first,0.0));  
 
   compX = 0;
@@ -358,20 +358,21 @@ void G4SectionsVisitor::processIds(/*const*/ detModel::Position * pos, unsigned 
 
   // note: this thing returns a vector on the stack! do it only here
   std::vector <detModel::IdField*> ids = pos->getIdFields();
-  if( ids.empty()) return;
+  if( ids.empty()) return; // should not happen
   
   std::string idstring = "";
+  idents::VolumeIdentifier idvec;
   for(std::vector <detModel::IdField*>::const_iterator j = ids.begin(); j!=ids.end(); ++j) {
     
-    char temp[10];
     unsigned int idvalue = (*j)->getValue();
-    if( i>0) idvalue += (*j)->getStep()*i;
+    idvec.append(idvalue);
     
-    sprintf(temp, "/%d", idvalue); 
-    idstring += temp;
   }
-  typedef std::map<G4VPhysicalVolume*,std::string>M;
-  g4Identifiers.insert(M::value_type(g4Physicals.back(),idstring));  
+//  g4Identifiers[g4Physicals.back()] = idstring;
+  (*m_idMap)[g4Physicals.back()] = idvec;
+
+  //typedef std::map<G4VPhysicalVolume*,std::string>M;
+  //g4Identifiers.insert(M::value_type(g4Physicals.back(),idstring));  
   
   
 }

@@ -10,7 +10,9 @@ class G4VPhysicalVolume;
 class G4LogicalVolume;
 class G4VisAttributes;
 class Gdd;
-class G4VSensitiveDetector;
+//class G4VSensitiveDetector;
+#include "idents/VolumeIdentifier.h"
+
 namespace detModel { class Position; }
 /*
  * This is a concrete implementation of a sectionsVisitor that produces
@@ -20,7 +22,12 @@ class G4SectionsVisitor : public detModel::SectionsVisitor {
 
  public:
 
-     G4SectionsVisitor(std::string topvol="");
+
+     //! Id's are represented at a vector of unsigned ints
+     typedef std::map<const G4VPhysicalVolume*, idents::VolumeIdentifier> IdMap;
+
+   //! ctor, with top volume and pointer to map of ids to fill
+   G4SectionsVisitor(std::string topvol, IdMap* idmap);
   virtual ~G4SectionsVisitor();
   
   /**
@@ -101,7 +108,7 @@ class G4SectionsVisitor : public detModel::SectionsVisitor {
   std::vector <G4VPhysicalVolume*> g4Physicals;  
   std::map <std::string, G4VisAttributes*> g4VisAttributes;  
 
-  std::map <G4VPhysicalVolume*, std::string> g4Identifiers;  
+  //std::map <G4VPhysicalVolume*, std::string> g4Identifiers;  
 
   std::string actualVolume;
 
@@ -109,6 +116,11 @@ class G4SectionsVisitor : public detModel::SectionsVisitor {
   G4LogicalVolume* actualMother;
   G4VPhysicalVolume* worldphys;
   G4LogicalVolume* worldlog;
+  //-------------------------------------------------------------------
+  //          THB additions below here
+
+
+
  private:
 
    //! private function to manage the identifiers
@@ -117,6 +129,8 @@ class G4SectionsVisitor : public detModel::SectionsVisitor {
    void processIds(/*const*/ detModel::Position* pos, unsigned int i=0); 
   //! a little map to count the number of physical volumes for each logical one
   std::map<std::string, int> m_physicalsPerLogical;
+  IdMap* m_idMap;
+
 };
 #endif //G4SECTIONSVISITOR_H
 
