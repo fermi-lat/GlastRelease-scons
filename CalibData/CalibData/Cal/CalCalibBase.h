@@ -43,9 +43,10 @@ namespace CalibData {
     // Maybe won't need to be virtual after all
     virtual StatusCode update(CalibBase& other, MsgStream* log);
     
-  private:
+  protected:
     CalFinder* m_finder;
     std::vector<RangeBase* >* m_pR;
+  private:
     static const CLID noCLID;
   };
 

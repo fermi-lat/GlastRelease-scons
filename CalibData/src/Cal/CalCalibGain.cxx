@@ -1,9 +1,22 @@
 // $Header$
 
 #include "CalibData/Cal/CalCalibGain.h"
+#include "CalibData/Cal/CalFinder.h"
 #include "CalibData/CalibModel.h"
 
 namespace CalibData {
+
+  CalCalibGain::CalCalibGain(unsigned nTowerRow, unsigned nTowerCol, 
+                             unsigned nLayer, unsigned nXtal, 
+                             unsigned nFace, unsigned nRange) :
+    CalCalibBase(nTowerRow, nTowerCol, nLayer, nXtal, nFace, nRange) {
+    unsigned ix = 0;
+    unsigned size = m_finder->getSize();
+
+    for (ix = 0; ix < size; ix++) {
+      (*m_pR)[ix] = new Gain(0.0);
+    }
+  }
 
   const CLID& CalCalibGain::classID()   {return CLID_Calib_CAL_ElecGain;}
 

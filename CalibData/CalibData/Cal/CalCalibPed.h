@@ -20,8 +20,7 @@ namespace CalibData {
 
   public:
     CalCalibPed(unsigned nTowerRow=4, unsigned nTowerCol=4, unsigned nLayer=8, 
-                unsigned nXtal=12, unsigned nFace=2, unsigned nRange=4) :
-      CalCalibBase(nTowerRow, nTowerCol, nLayer, nXtal, nFace, nRange) {}
+                unsigned nXtal=12, unsigned nFace=2, unsigned nRange=4);
 
     ~CalCalibPed() {}
 

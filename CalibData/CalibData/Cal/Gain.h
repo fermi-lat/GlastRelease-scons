@@ -11,6 +11,8 @@ namespace CalibData {
     Gain(float gain = 0.0) : m_gain(gain) {}
     ~Gain() {}
 
+    float getGain() {return m_gain;}
+
     virtual void update(RangeBase* other);
 
   private:

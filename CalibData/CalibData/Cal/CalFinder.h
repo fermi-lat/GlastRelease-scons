@@ -45,11 +45,7 @@ namespace CalibData {
     }
 
     unsigned findIx(idents::CalXtalId id, unsigned range, unsigned face=0) 
-      const
-    {
-      return 
-        findIx(id.getTower(), id.getLayer(), id.getColumn(), range, face);
-    }
+      const;
 
     unsigned getSize() const {return m_c3*m_tower;}
 

@@ -28,5 +28,15 @@ namespace CalibData {
     m_c3 = m_c2 * m_layer;
   }
 
+  unsigned CalFinder::findIx(idents::CalXtalId id, unsigned range, 
+                             unsigned face)       const
+  {
+    unsigned iTow = id.getTower();
+    unsigned iRow = iTow / m_towerCol;
+    unsigned iCol = iTow - iRow*m_towerCol;
+    return 
+        findIx(iRow, iCol, id.getLayer(), id.getColumn(), range, face);
+    }
+
 }
 
