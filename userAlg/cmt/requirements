@@ -1,12 +1,12 @@
 package userAlg
-version v1
+version v2
 
 # --------------------------
 # run a pdr job with a user algorithm
 # --------------------------
 
 # get everything we need from here
-use pdrApp
+use pdrApp 
 
 apply_pattern userlinks
 apply_pattern userjobopts
