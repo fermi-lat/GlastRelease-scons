@@ -18,6 +18,7 @@ namespace rdbModel{
   Manager::~Manager(){
     delete m_rdb;
     delete m_builder;
+    s_pMyself = 0;
   }
 
   Manager* Manager::getManager()
