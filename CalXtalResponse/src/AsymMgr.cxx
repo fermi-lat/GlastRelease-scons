@@ -165,7 +165,7 @@ StatusCode AsymMgr::genSplines() {
     dblAsymNSPB[n+1] = 2*dblAsymNSPB[n] - dblAsymNSPB[n-1];
     dblAsymPSNB[n+1] = 2*dblAsymPSNB[n] - dblAsymPSNB[n-1];
 
-    dblXpos[n+1]     = 2*dblXpos[n] - dblAsymPSNB[n-1];
+    dblXpos[n+1]     = 2*dblXpos[n] - dblXpos[n-1];
 
     genSpline(ASYMLRG_SPLINE,   xtalIdx, "asymLrg",   dblXpos, dblAsymLrg);
     genSpline(ASYMSM_SPLINE,    xtalIdx, "asymSm",    dblXpos, dblAsymSm);

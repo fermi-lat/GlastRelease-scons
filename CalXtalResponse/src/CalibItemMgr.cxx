@@ -137,7 +137,7 @@ StatusCode CalibItemMgr::evalSpline(int calibType, LATWideIndex idx, double x, d
   }
 
   // create MsgStream only when needed for performance
-  //MsgStream msglog(m_msgSvc, *m_logName); 
+  MsgStream msglog(m_msgSvc, *m_logName); 
   //   msglog << "Evaluating spline nl=" << m_splineLists.size()
   //          << " t=" << calibType
   //          << " i=" << idx
@@ -175,16 +175,19 @@ StatusCode CalibItemMgr::genSpline(int calibType, LATWideIndex idx, const string
 
   // put spline in list
   m_splineLists[calibType][idx] = mySpline;
+
+#if 0 // DEBUG
   // create MsgStream only when needed for performance
-  //MsgStream msglog(m_msgSvc, *m_logName); 
-  //   msglog << MSG::INFO << "Generated spline " << spl_name.str() 
-  //                       << " t="  << calibType 
-  //                       << " i="  << idx 
-  //                       << " nx=" << x.size() 
-  //                       << " ("   << min_val(x) << "->" << max_val(x) << ")"
-  //                       << " ny=" << y.size() 
-  //                       << " ("   << min_val(y) << "->" << max_val(y) << ")"
-  //                       << endreq;
+  MsgStream msglog(m_msgSvc, *m_logName); 
+  msglog << MSG::VERBOSE << "Generated spline " << spl_name.str() 
+         << " t="  << calibType 
+         << " i="  << idx.getInt()
+         << " nx=" << x.size() 
+         << " ("   << min_val(x) << "->" << max_val(x) << ")"
+         << " ny=" << y.size() 
+         << " ("   << min_val(y) << "->" << max_val(y) << ")"
+         << endreq;
+#endif
 
   return StatusCode::SUCCESS;
 }

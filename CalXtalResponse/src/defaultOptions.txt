@@ -5,5 +5,5 @@
 
 //CalibDataSvc.CalibFlavorList += {"cal_gleam_default"};
 ApplicationMgr.ExtSvc += {"CalCalibSvc"};
-CalCalibSvc.DefaultFlavor     = "ideal";
+CalCalibSvc.DefaultFlavor = "ideal";
 //-------------------------------------

@@ -156,8 +156,12 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
   sc = m_calCalibSvc->getMeVPerDac(xtalId, mpdLrg, mpdSm);
   if (sc.isFailure()) return sc;
 
-  //if (hitList.size())
-  //   msglog << MSG::DEBUG << "xtalId=" << xtalId << "\tnHits=" << hitList.size() << endreq;
+#if 0 //DEBUG ONLY  
+  // create MsgStream only when needed for performance
+  MsgStream msglog(msgSvc(), name()); 
+  if (hitList.size())
+    msglog << MSG::DEBUG << "xtalId=" << xtalId << "\tnHits=" << hitList.size() << endreq;
+#endif
     
   // loop over hits.
   for (vector<const Event::McIntegratingHit*>::const_iterator it = hitList.begin();
@@ -177,7 +181,9 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
       throw invalid_argument("volume id does not match xtalId.  Programmer error.");
 
     double ene = hit.totalEnergy();
-    //msglog << MSG::DEBUG << "\tcell=" << volId[fCellCmp] << " ene=" << ene << endreq;
+#if 0 // DEBUG 
+    msglog << MSG::DEBUG << "\tcell=" << volId[fCellCmp] << " ene=" << ene << endreq;
+#endif
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////// SUM DAC VALS FOR EACH HIT /////////////////////////
@@ -364,20 +370,23 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
   // retreive thresholds for both faces
   sc = m_calCalibSvc->getTholdCI(tmpIdP,fle,fhe,lacThreshP);
   if (sc.isFailure()) return sc;
-  //cout << "xtalId=" << (int)xtalId << "\ttmpIdP=" << (int)tmpIdP << "\ttmpIdN=" << (int)tmpIdN << endl;
-  //cout << "xtalId=" << xtalId << "\ttmpIdP=" << tmpIdP << "\ttmpIdN=" << tmpIdN << endl;
+#if 0 //DEBUG
+  msglog << "xtalId=" << (int)xtalId << "\ttmpIdP=" << (int)tmpIdP << "\ttmpIdN=" << (int)tmpIdN << endl;
+#endif 
   sc = m_calCalibSvc->getTholdCI(tmpIdN,fle,fhe,lacThreshN);
   if (sc.isFailure()) return sc;
 
+#if 1 // currently set so that noise CAN set lac trigger even if not hits.
   // set log-accept flags
   lacN = tmpADC[XtalRng(NEG_FACE,LEX8)] >= lacThreshN.getVal();
   lacP = tmpADC[XtalRng(POS_FACE,LEX8)] >= lacThreshP.getVal();
-  
+#else // only check lac if there was one hit
   if (hitList.size() > 0) {
     lacN = tmpADC[XtalRng(NEG_FACE,LEX8)] >= lacThreshN.getVal();
     lacP = tmpADC[XtalRng(POS_FACE,LEX8)] >= lacThreshP.getVal();
   }
-
+#endif
+  
   //-- ADD PEDS, HARDWARE RANGE CONSTRAINTS --//
   // double check that ADC vals are all >= 0
   // double check that ADC vals are all < maxadc(4095)
