@@ -842,7 +842,8 @@ int write(char* fileName, int numEvents) {
 			Double_t tot = f;
 			UInt_t flag = 1;
 			UInt_t tower = 8;
-            TkrCluster *cluster = new TkrCluster(tkrId, strip0, stripf, pos, tot, flag);
+            UInt_t nBad  = 0;
+            TkrCluster *cluster = new TkrCluster(tkrId, strip0, stripf, pos, tot, flag, nBad);
             tkrRec->addCluster(cluster);
         }
 

@@ -39,7 +39,7 @@ TkrCluster::~TkrCluster()
 
 
 
-void TkrCluster::Clear(Option_t *option) 
+void TkrCluster::Clear(Option_t* /* option */) 
 {
     m_tkrId    = commonRootData::TkrId();
     m_status   = 0;

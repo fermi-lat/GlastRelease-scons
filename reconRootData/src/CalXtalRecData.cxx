@@ -15,11 +15,11 @@ void CalXtalRecData::initialize(CalXtalId::CalTrigMode m, CalXtalId id) {
     m_xtalId = id;
 }
 
-void CalXtalRecData::Clear(Option_t *option) {
+void CalXtalRecData::Clear(Option_t* /* option */) {
     m_recData.clear();
 }
 
-void CalXtalRecData::Print(Option_t *option) const {
+void CalXtalRecData::Print(Option_t* /* option */) const {
     using namespace std;
     TObject::Print();
     cout << "XtalId (tower, layer, column): " << m_xtalId.getTower() << "," 

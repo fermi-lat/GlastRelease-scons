@@ -26,7 +26,7 @@ void CalRecon::initialize() {
     if (!m_xtalRecCol) m_xtalRecCol = new TObjArray();
 }
 
-void CalRecon::Clear(Option_t *option) {
+void CalRecon::Clear(Option_t* /* option */) {
     if (m_xtalRecCol) m_xtalRecCol->Delete();
     if (m_clusterCol) m_clusterCol->Delete();
 }

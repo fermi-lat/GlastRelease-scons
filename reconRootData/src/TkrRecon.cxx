@@ -25,7 +25,7 @@ void TkrRecon::initialize() {
     if (!m_vertexCol) m_vertexCol = new TObjArray();
 }
 
-void TkrRecon::Clear(Option_t *option) {
+void TkrRecon::Clear(Option_t* /* option */) {
     if (m_clusterCol) m_clusterCol->Delete();
     if (m_trackCol) m_trackCol->Delete();
     if (m_vertexCol) m_vertexCol->Delete();

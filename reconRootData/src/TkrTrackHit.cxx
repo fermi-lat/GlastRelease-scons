@@ -47,7 +47,7 @@ void TkrTrackHit::initializeHits(const TkrTrackParams& meas,
     m_Qmaterial = material;
 }
 
-void TkrTrackHit::Clear(Option_t *option) {
+void TkrTrackHit::Clear(Option_t* /* option */) {
     // Make sure everything is properly zeroed
     m_statusBits       = 0;                       // See StatusBits enumeration above for definitions
     m_cluster          = 0;                       // Pointer to the cluster associated with this hit
@@ -167,8 +167,10 @@ const TkrTrackParams& TkrTrackHit::getTrackParams(TkrTrackHit::ParamType type) c
             if (!validMaterial()) throw std::invalid_argument("Invalid Material TkrTrackParams requested");
             return m_Qmaterial;
         }
-
-        throw std::invalid_argument("Invalid type of TkrTrackParams hit requested");
+        default:
+        {
+            throw std::invalid_argument("Invalid type of TkrTrackParams hit requested");
+        }
     }
 
     return m_hitMeas;

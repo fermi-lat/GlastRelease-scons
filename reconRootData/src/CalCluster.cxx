@@ -54,7 +54,7 @@ void CalCluster::initProfile(Double_t fitEnergy, Double_t ki2, Double_t fitStart
 }
 
 
-void CalCluster::Clear(Option_t *option) {
+void CalCluster::Clear(Option_t* /* option */) {
     m_energySum = 0.;
     m_leakEnergy = 0.;
     m_energyCorrected = 0.;
@@ -77,7 +77,7 @@ void CalCluster::Clear(Option_t *option) {
 
 }
 
-void CalCluster::Print(Option_t *option) const {
+void CalCluster::Print(Option_t* /* option */) const {
     using namespace std;
     cout << "Energy: " << m_energySum << " Corrected: " << m_energyCorrected << endl;
     cout << "Pos: (" << m_position.X() << "," << m_position.Y() << "," 

@@ -27,7 +27,7 @@ TkrTrackParams::TkrTrackParams(const TkrTrackParams& params)
     initialize(params);
 }
 
-void TkrTrackParams::Clear(Option_t *option) 
+void TkrTrackParams::Clear(Option_t* /* option */) 
 {
    /// Track parameters
     m_xPosition  = 0.;

@@ -13,7 +13,7 @@ TkrVertex::~TkrVertex()
     Clear();
 }
 
-void TkrVertex::Clear(Option_t *option) 
+void TkrVertex::Clear(Option_t* /* option */) 
 {
     m_statusBits =  0;
 

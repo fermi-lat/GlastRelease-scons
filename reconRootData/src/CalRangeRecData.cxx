@@ -18,7 +18,7 @@ Double_t CalRangeRecData::getEnergy(CalXtalId::XtalFace face) const {return face
 // retrieve energy range from specified face
 Char_t CalRangeRecData::getRange(CalXtalId::XtalFace face) const {return face == CalXtalId::POS ? m_rangeP : m_rangeM;};
 
-void CalRangeRecData::Clear(Option_t *option) {
+void CalRangeRecData::Clear(Option_t* /* option */) {
     m_eneP = 0.0;
     m_eneM = 0.0;
     m_pos = TVector3(0.0, 0.0, 0.0);

@@ -12,7 +12,7 @@ TkrTrack::~TkrTrack()
     Clear();
 }
 
-void TkrTrack::Clear(Option_t *option) 
+void TkrTrack::Clear(Option_t* /* option */) 
 {
     m_statusBits         = 0;
 
@@ -33,10 +33,10 @@ void TkrTrack::Clear(Option_t *option)
     m_KalmanThetaMS      = 0.;
 
     // Hit gap information
-    m_Xgaps              = 0.;
-    m_Ygaps              = 0.;
-    m_XistGaps           = 0.;
-    m_YistGaps           = 0.;
+    m_Xgaps              = 0;
+    m_Ygaps              = 0;
+    m_XistGaps           = 0;
+    m_YistGaps           = 0;
 
     /// Kalman Filter Track data
     m_numSegmentPoints   = 0;

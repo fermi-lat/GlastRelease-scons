@@ -40,7 +40,7 @@ void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca
     m_minDocaId = minDocaId;
 }
 
-void AcdRecon::Clear(Option_t *option) {
+void AcdRecon::Clear(Option_t* /*option*/) {
     m_totEnergy = 0.0;
     m_tileCount = 0;
     m_gammaDoca = -200.;

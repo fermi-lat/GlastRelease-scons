@@ -38,7 +38,7 @@ void ReconEvent::initialize(UInt_t eventId, UInt_t runId, TkrRecon *tkr, CalReco
     m_acd = acd;
 }
 
-void ReconEvent::Clear(Option_t *option) {
+void ReconEvent::Clear(Option_t* /* option */) {
     m_eventId = 0;
     m_runId = 0;
     if (m_cal) {
@@ -56,7 +56,7 @@ void ReconEvent::Clear(Option_t *option) {
     m_eventFlags = 0;
 }
 
-void ReconEvent::Print(Option_t *option) const {
+void ReconEvent::Print(Option_t* /* option */) const {
     using namespace std;
     cout << "(Run, Event): (" << m_runId << ", " << m_eventId << ")" << endl;
     cout << "EventFlags: " << m_eventFlags << endl;
