@@ -27,9 +27,9 @@ public:
     virtual ~SlopeCorrectedMeasErrs() {};
 
 
-    Event::TkrFitMatrix computeMeasErrs(const Event::TkrFitPar& newPars, 
-                                        const Event::TkrFitMatrix& oldCovMat, 
-                                        const Event::TkrCluster& cluster);
+    TkrCovMatrix computeMeasErrs(const Event::TkrTrackParams& newPars, 
+                                 const TkrCovMatrix&          oldCovMat, 
+                                 const Event::TkrCluster&     cluster);
 
 private:
     double getError(double strips, double slope) const;

@@ -12,16 +12,16 @@
 #define IComputeMeasErrors_h
 
 #include "Event/Recon/TkrRecon/TkrCluster.h"
-#include "Event/Recon/TkrRecon/TkrFitPar.h"
-#include "Event/Recon/TkrRecon/TkrFitMatrix.h"
+#include "Event/Recon/TkrRecon/TkrTrackParams.h"
+#include "TkrUtil/TkrCovMatrix.h"
 
 class IComputeMeasErrors 
 {
 public:
 
-    virtual Event::TkrFitMatrix computeMeasErrs(const Event::TkrFitPar& newPars, 
-                                                const Event::TkrFitMatrix& oldCovMat, 
-                                                const Event::TkrCluster& cluster) = 0;
+    virtual TkrCovMatrix computeMeasErrs(const Event::TkrTrackParams& newPars, 
+                                         const TkrCovMatrix&          oldCovMat, 
+                                         const Event::TkrCluster&     cluster) = 0;
 };
 
 

@@ -20,9 +20,9 @@ StandardMeasErrs::StandardMeasErrs(ITkrGeometrySvc* tkrGeo) :
 
 const double oneOverSqrt12 = 1. / sqrt(12.);
 
-Event::TkrFitMatrix StandardMeasErrs::computeMeasErrs(const Event::TkrFitPar& newPars, 
-                                                            const Event::TkrFitMatrix& oldCovMat, 
-                                                            const Event::TkrCluster& cluster)
+TkrCovMatrix StandardMeasErrs::computeMeasErrs(const Event::TkrTrackParams& newPars, 
+                                               const TkrCovMatrix&          oldCovMat, 
+                                               const Event::TkrCluster&     cluster)
 {
     enum paramIndex {XPOS=1, XSLOPE=2, YPOS=3, YSLOPE=4};
 
@@ -35,28 +35,25 @@ Event::TkrFitMatrix StandardMeasErrs::computeMeasErrs(const Event::TkrFitPar& ne
 
     // This version due to Bill Atwood
 
-    Event::TkrFitMatrix newCov(1);
+    TkrCovMatrix newCov(4,4,1);
 
     double clusWid = const_cast<Event::TkrCluster&>(cluster).size();
     double min_err = m_tkrGeo->siResolution();   
 
     int measured, other;
-    double covOther;
     double slope;
 
-    if(cluster.v()==Event::TkrCluster::X) 
+    if (cluster.getTkrId().getView() == idents::TkrId::eMeasureX)
     {
-        slope    = newPars.getXSlope();
+        slope    = newPars.getxSlope();
         measured = XPOS;
         other    = YPOS;
-        covOther = oldCovMat.getcovY0Y0();
     } 
     else 
     {
-        slope    = newPars.getYSlope();
+        slope    = newPars.getySlope();
         measured = YPOS;
         other    = XPOS;
-        covOther = oldCovMat.getcovX0X0();
     }
 
     double wid_proj = fabs(slope * m_tkrGeo->siThickness());
@@ -66,7 +63,7 @@ Event::TkrFitMatrix StandardMeasErrs::computeMeasErrs(const Event::TkrFitPar& ne
     error = (error > min_err) ? error : min_err; 
     
     newCov(measured, measured) = error*error;
-    newCov(other, other)       = covOther;
+    newCov(other, other)       = oldCovMat(other, other);
 
     return newCov;
 }

@@ -26,9 +26,9 @@ public:
     virtual ~StandardMeasErrs() {};
 
 
-    Event::TkrFitMatrix computeMeasErrs(const Event::TkrFitPar& newPars, 
-                                        const Event::TkrFitMatrix& oldCovMat, 
-                                        const Event::TkrCluster& cluster);
+    TkrCovMatrix computeMeasErrs(const Event::TkrTrackParams& newPars, 
+                                 const TkrCovMatrix&          oldCovMat, 
+                                 const Event::TkrCluster&     cluster);
 
 private:
     ITkrGeometrySvc* m_tkrGeo;
