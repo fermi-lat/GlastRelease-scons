@@ -8,7 +8,7 @@
  *
  * $Header$
  */
-#include "src/MonteCarlo/McBuildPatCandTab.h"
+#include "McBuildPatCandTab.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Recon/TkrRecon/TkrClusterCol.h"

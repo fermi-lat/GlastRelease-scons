@@ -8,7 +8,7 @@
  *
  * $Header$
  */
-#include "src/MonteCarlo/McBuildTracks.h"
+#include "McBuildTracks.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "Event/TopLevel/EventModel.h"
 #include "TkrRecon/MonteCarlo/TkrEventModel.h"
