@@ -45,10 +45,10 @@ StatusCode G4PropagatorTool::initialize()
   geometrySvc = gsv;
 
   StatusCode sc = toolSvc()->retrieveTool("G4PropagationTool", propagatorTool);
+  if (sc.isSuccess()) {log << MSG::INFO << "G4 Propagator Tool ready" << endreq;}
+  else  { log << MSG::ERROR << "Couldn't retrieve G4PropagationTool " << endreq; }
 
-  log << MSG::INFO << "G4 Propagator Tool ready" << endreq;
-
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 G4PropagatorTool::~G4PropagatorTool()
