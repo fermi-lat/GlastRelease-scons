@@ -1,5 +1,6 @@
-//$Header$
+//$Id$
 /*
+ * v4r3p2 04-sep-02 THB Add property to set defaultCutValue
  * v4r3p1 01-sep-02 THB Geant4Runtime used for clients
  * v4r3   15-aug-02 THB various: see changelog
  * v4r2   25-jul-02 THB 
