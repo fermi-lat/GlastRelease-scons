@@ -43,6 +43,7 @@
 #include "CLHEP/Random/Ranlux64Engine.h"
 #include "CLHEP/Random/RanluxEngine.h"
 #include "CLHEP/Random/RanshiEngine.h"
+#include "CLHEP/Random/RandGauss.h"
 
 
 // declare the service factories for the GlastRandomSvc
@@ -372,6 +373,10 @@ void GlastRandomSvc::applySeeds(int runNo, int seqNo)
             dllEngine->second->setSeed(theSeed,dummy);
             ++multiplier;
         }
+        // Gaussian are always produced in pairs, one of them being returned,
+        // the other one being cached for a second call.  Setting the seed
+        // doesn't flush the cache!
+        RandGauss::setFlag(false);
 
 }
 
