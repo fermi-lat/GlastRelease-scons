@@ -1,85 +1,65 @@
 #include "reconRootData/TkrRecon.h"
 #include "reconRootData/TkrTrack.h"
 #include "reconRootData/TkrSiCluster.h"
+#include <iostream>
 
 ClassImp(TkrRecon)
 
-//This is the default constructor (which does nothing but insure the pointers are zero)
+TObjArray *TkrRecon::s_siClusterStaticCol=0;
+TObjArray *TkrRecon::s_trackCandStaticCol=0;
+TObjArray *TkrRecon::s_trackStaticCol=0;
+TObjArray *TkrRecon::s_vertexStaticCol=0;
+
+
 TkrRecon::TkrRecon() 
 {
-    m_SiClusters = 0;
-    m_TrackCands = 0;
-    m_Tracks     = 0;
-    m_Vertices   = 0;
+    if (!s_siClusterStaticCol) s_siClusterStaticCol = new TObjArray();
+    m_siClusterCol = s_siClusterStaticCol;
+
+    if (!s_trackCandStaticCol) s_trackCandStaticCol = new TObjArray();
+    m_trackCandCol = s_trackCandStaticCol;
+
+    if (!s_trackStaticCol) s_trackStaticCol = new TObjArray();
+    m_trackCol = s_trackStaticCol;
+
+    if (!s_vertexStaticCol) s_vertexStaticCol = new TObjArray();
+    m_vertexCol = s_vertexStaticCol;
+
 }
 
-//Destructor
 TkrRecon::~TkrRecon() 
 {
-    Clean();
+    if (m_siClusterCol == s_siClusterStaticCol) s_siClusterStaticCol = 0;
+    m_siClusterCol->Delete();
+    delete m_siClusterCol;
+    m_siClusterCol = 0;
 
-    // Delete the allocated memory
-    if (m_SiClusters) {delete m_SiClusters;}
-    if (m_TrackCands) {delete m_TrackCands;}
-    if (m_Tracks)     {delete m_Tracks;}
-    if (m_Vertices)   {delete m_Vertices;}
+    if (m_trackCandCol == s_trackCandStaticCol) s_trackCandStaticCol = 0;
+    m_trackCandCol->Delete();
+    delete m_trackCandCol;
+    m_trackCandCol = 0;
 
-    // Zero the pointers (is this really necessary?)
-    m_SiClusters = 0;
-    m_TrackCands = 0;
-    m_Tracks     = 0;
-    m_Vertices   = 0;
+    if (m_trackCol == s_trackStaticCol) s_trackStaticCol = 0;
+    m_trackCol->Delete();
+    delete m_trackCol;
+    m_trackCol = 0;
+
+    if (m_vertexCol == s_vertexStaticCol) s_vertexStaticCol = 0;
+    m_vertexCol->Delete();
+    delete m_vertexCol;
+    m_vertexCol = 0;
+
 }
 
-// Clean out existing object arrays (e.g. between events)
-void TkrRecon::Clean() 
-{
-    // First up clear the SiClusters
-    if (m_SiClusters)
-    {
-        int nEntries = m_SiClusters->GetEntries();
-
-        while(nEntries--) delete m_SiClusters->At(nEntries);
-
-        m_SiClusters->Clear();
-    }
-
-    // Next are the pattern track candidates
-    if (m_TrackCands)
-    {
-        int nEntries = m_TrackCands->GetEntries();
-
-        while(nEntries--) delete m_TrackCands->At(nEntries);
-
-        m_TrackCands->Clear();
-    }
-
-    // Now the fit tracks
-    if (m_Tracks)
-    {
-        int nEntries = m_Tracks->GetEntries();
-
-        while(nEntries--) delete m_Tracks->At(nEntries);
-
-        m_Tracks->Clear();
-    }
-
-    // Now the vertices
-    if (m_Vertices)
-    {
-        int nEntries = m_Vertices->GetEntries();
-
-        while(nEntries--) delete m_Vertices->At(nEntries);
-
-        m_Vertices->Clear();
-    }
+void TkrRecon::Clear(Option_t *option) {
+    m_siClusterCol->Delete();
+    m_trackCandCol->Delete();
+    m_trackCol->Delete();
+    m_vertexCol->Delete();
 }
 
-// Creates (i.e. allocates the memory for) the object arrays
-void TkrRecon::Create() 
-{
-    if (!m_SiClusters) m_SiClusters = new TObjArray();
-    if (!m_TrackCands) m_TrackCands = new TObjArray();
-    if (!m_Tracks)     m_Tracks     = new TObjArray();
-    if (!m_Vertices)   m_Vertices   = new TObjArray();
+void TkrRecon::Print(Option_t *option) const {
+    using namespace std;
+    TObject::Print(option);
+
 }
