@@ -1,0 +1,29 @@
+# $Header$
+### Might end up changing this name to have a prefix a bit more general
+### than "Calib"; e.g., DetData or CondData
+package CalibData
+version v0r0p0
+
+## would be nice if we could get away without the "use calibUtil"
+## to divorce ourselves from xml and MySQL, but as things stand
+## now we can't.  Would need to separate calibUtil into two pieces:
+## one simply defining the data and access methods for calib data
+## classes, and another for (friend?) classes which would know how to
+## fill the data classes.  Then CalibData 
+use calibUtil v0r*
+
+use GaudiPolicy v5r4p*
+use GaudiAlg    v5r*
+use GaudiAud    v5r*
+use GaudiKernel v11r*
+use GaudiSvc    v7r*
+use GlastPolicy v4r*
+
+##apply_pattern package_include
+apply_pattern package_headers
+## apply_pattern package_linkopts
+apply_pattern packageShr
+apply_pattern packag_Cshlibflags
+
+## uncomment following when ready
+## library CalibData *.cxx Dll/*.cxx ${CalibData_headers}
