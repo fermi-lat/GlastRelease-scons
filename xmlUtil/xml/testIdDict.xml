@@ -3,14 +3,6 @@
 
     <field name="fLayer" />
 
-    <field name="fTopObjects" >
-      <vList>
-        <vEnumVal valueREF="eRootLAT" />
-        <vEnumVal valueREF="eRootPanels" />
-        <vEnumVal valueREF="eRootSC" />
-      </vList>
-    </field>
-
     <field name="fLATObjects" >
       <vList>
         <vEnumVal valueREF="eLATTowers" />
@@ -79,123 +71,124 @@
     </field>
 
  
-    <dictRoot fieldName="fTopObjects" >
-      <dictNode fieldName="fLATObjects">
+
+    <dictRoot fieldName="fLATObjects">
+<!--
         <pValues>
           <vEnumVal valueREF="eRootLAT" />
         </pValues>
-       
-        <dictNode fieldName="fTowerY" >
-          <pValues>
-            <vEnumVal valueREF="eLATTowers" />
-          </pValues>
-          <dictNode fieldName="fTowerX" >
-            <dictNode fieldName="fTowerObjects" >
-              <dictNode fieldName="fLayer" >
-                <pValues>
-                  <vEnumVal valueREF="eTowerCAL" />
-                </pValues>
-                <vMinMax min="0" maxREF="CALMaxLayer" />
-                <dictNode fieldName="fMeasure" >
-                  <dictNode fieldName="fCALLog" >
-                    <dictNode fieldName="fCALLogCmp" />
-                  </dictNode>
-                </dictNode> 
-              </dictNode>
-              <dictNode fieldName="fTKRTray">
-                <pValues>
-                  <vEnumVal valueREF="eTowerTKR" />
-                </pValues>
-               
-                <!-- child for bottom tray -->
-                <dictNode fieldName="fMeasure">
-                  <pValues>
-                    <vEnumVal value="0" />
-                  </pValues>
-                  <dictNode fieldName="fTKRTrayCmp" >
-                    <vEnumVal valueREF="eTKRSiTop" />
-                  </dictNode>
+-->       
+      <dictNode fieldName="fTowerY" >
+        <pValues>
+          <vEnumVal valueREF="eLATTowers" />
+        </pValues>
+        <dictNode fieldName="fTowerX" >
+          <dictNode fieldName="fTowerObjects" >
+            <dictNode fieldName="fLayer" >
+              <pValues>
+                <vEnumVal valueREF="eTowerCAL" />
+              </pValues>
+              <vMinMax min="0" maxREF="CALMaxLayer" />
+              <dictNode fieldName="fMeasure" >
+                <dictNode fieldName="fCALLog" >
+                  <dictNode fieldName="fCALLogCmp" />
                 </dictNode>
-
-                <!-- child for other non-converter trays -->
-                <dictNode fieldName="fMeasure">
-                  <pValues>
-                    <vMinMax min="1" maxREF="TKRMaxNoCnv" />
-                  </pValues>
-                  <dictNode fieldName="fTKRTrayCmp" >
-                    <vList>
-                      <vEnumVal valueREF="eTKRSiTop" />
-                      <vEnumVal valueREF="eTKRSiBottom" />
-                    </vList>
-                  </dictNode>
-                </dictNode>
-
-                <!-- child for normal trays  -->
-                <dictNode fieldName="fMeasure">
-                  <pValues>
-                    <vMinMax minREF="numNoCnvTrays" maxREF="TKRMaxReg" />
-                  </pValues>
-                  <dictNode fieldName="fTKRTrayCmp" />
-                </dictNode>
-
-                <!-- child for top tray -->
-                <dictNode fieldName="fMeasure">
-                  <pValues>
-                    <vEnumVal valueREF="maxTray" />
-                   </pValues>
-                  <dictNode fieldName="fTKRTrayCmp" >
-                    <vList>
-                      <vEnumVal valueREF="eTKRCnv" />
-                      <vEnumVal valueREF="eTKRSiBottom" />
-                    </vList>
-                  </dictNode>
-                </dictNode>
-              </dictNode>         <!-- end tray field -->
-            </dictNode>           <!-- end towerObjects -->
-          </dictNode>             <!-- end towerX -->
-        </dictNode>               <!-- end towerY -->
-
-        <dictNode fieldName="fACDFace" >
-          <pValues>
-            <vEnumVal valueREF="eLATACD" />
-          </pValues>
-
-          <!-- top face sequences -->
-          <dictNode fieldName="fRow" >
-            <pValues>
-              <vEnumVal valueREF="eACDTopFace" />
-            </pValues>
-            <vMinMax min="0" maxREF="YTopTileMax" />
-            <dictNode fieldName="fCol" >
-              <vMinMax min="0" maxREF="YTopTileMax" />
+              </dictNode> 
             </dictNode>
+            <dictNode fieldName="fTKRTray">
+              <pValues>
+                <vEnumVal valueREF="eTowerTKR" />
+              </pValues>
+             
+              <!-- child for bottom tray -->
+              <dictNode fieldName="fMeasure">
+                <pValues>
+                  <vEnumVal value="0" />
+                </pValues>
+                <dictNode fieldName="fTKRTrayCmp" >
+                  <vEnumVal valueREF="eTKRSiTop" />
+                </dictNode>
+              </dictNode>
+
+              <!-- child for other non-converter trays -->
+              <dictNode fieldName="fMeasure">
+                <pValues>
+                  <vMinMax min="1" maxREF="TKRMaxNoCnv" />
+                </pValues>
+                <dictNode fieldName="fTKRTrayCmp" >
+                  <vList>
+                    <vEnumVal valueREF="eTKRSiTop" />
+                    <vEnumVal valueREF="eTKRSiBottom" />
+                  </vList>
+                </dictNode>
+              </dictNode>
+
+              <!-- child for normal trays  -->
+              <dictNode fieldName="fMeasure">
+                <pValues>
+                  <vMinMax minREF="numNoCnvTrays" maxREF="TKRMaxReg" />
+                </pValues>
+                <dictNode fieldName="fTKRTrayCmp" />
+              </dictNode>
+
+              <!-- child for top tray -->
+              <dictNode fieldName="fMeasure">
+                <pValues>
+                  <vEnumVal valueREF="maxTray" />
+                 </pValues>
+                <dictNode fieldName="fTKRTrayCmp" >
+                  <vList>
+                    <vEnumVal valueREF="eTKRCnv" />
+                    <vEnumVal valueREF="eTKRSiBottom" />
+                  </vList>
+                </dictNode>
+              </dictNode>
+            </dictNode>         <!-- end tray field -->
+          </dictNode>           <!-- end towerObjects -->
+        </dictNode>             <!-- end towerX -->
+      </dictNode>               <!-- end towerY -->
+
+      <dictNode fieldName="fACDFace" >
+        <pValues>
+          <vEnumVal valueREF="eLATACD" />
+        </pValues>
+
+        <!-- top face sequences -->
+        <dictNode fieldName="fRow" >
+          <pValues>
+            <vEnumVal valueREF="eACDTopFace" />
+          </pValues>
+          <vMinMax min="0" maxREF="YTopTileMax" />
+          <dictNode fieldName="fCol" >
+            <vMinMax min="0" maxREF="YTopTileMax" />
+          </dictNode>
+        </dictNode>
+
+        <!-- side faces -->
+        <dictNode fieldName="fRow" >
+          <pValues>
+            <vMinMax  minREF="eACDXNegFace" maxREF="eACDYPosFace" />
+          </pValues>
+
+          <!-- describe columns for first two rows, i.e, the short ones -->
+          <dictNode fieldName="fCol" >
+            <pValues>
+              <vMinMax minREF="ACDShortRowMin" maxREF="ACDShortRowMax" />
+            </pValues>
+            <vMinMax min="0" maxREF="ACDShortMaxCol" />
           </dictNode>
 
-          <!-- side faces -->
-          <dictNode fieldName="fRow" >
+          <!-- ..now do long side rows -->
+          <dictNode fieldName="fCol" >
             <pValues>
-              <vMinMax  minREF="eACDXNegFace" maxREF="eACDYPosFace" />
+              <vMinMax minREF="ACDLongRowMin" maxREF="ACDLongRowMax" />
             </pValues>
+            <vMinMax min="0" maxREF="ACDLongMaxCol" />
+          </dictNode>
+        </dictNode>          <!-- end of defs for side faces -->
 
-            <!-- describe columns for first two rows, i.e, the short ones -->
-            <dictNode fieldName="fCol" >
-              <pValues>
-                <vMinMax minREF="ACDShortRowMin" maxREF="ACDShortRowMax" />
-              </pValues>
-              <vMinMax min="0" maxREF="ACDShortMaxCol" />
-            </dictNode>
+      </dictNode>            <!-- end of fACDFace -->
 
-            <!-- ..now do long side rows -->
-            <dictNode fieldName="fCol" >
-              <pValues>
-                <vMinMax minREF="ACDLongRowMin" maxREF="ACDLongRowMax" />
-              </pValues>
-              <vMinMax min="0" maxREF="ACDLongMaxCol" />
-            </dictNode>
-          </dictNode>          <!-- end of defs for side faces -->
-
-        </dictNode>            <!-- end of fACDFace -->
-      </dictNode>
     </dictRoot>
   </idDict>
 

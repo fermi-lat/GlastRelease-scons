@@ -1,7 +1,6 @@
   <idConverter fromDict="TEST_IDENTIFIER_DICTIONARY" >
      <idConv>
        <path>
-         <pathField name="fTopObjects" />
          <pathField name="fLATObjects" />
          <pathField name="fTowerY" />
          <pathField name="fTowerX" />
@@ -15,7 +14,6 @@
 
      <idConv>
        <path>
-         <pathField name="fTopObjects" />
          <pathField name="fLATObjects" />
          <pathField name="fTowerY" />
          <pathField name="fTowerX" />
@@ -31,7 +29,6 @@
 
      <idConv>
        <path>
-         <pathField name="fTopObjects" />
          <pathField name="fLATObjects" />
          <pathField name="fACDFace" />
        </path> 
@@ -46,3 +43,6 @@
           
 
   </idConverter>
+
+
+
