@@ -27,7 +27,11 @@ application dumpIds dumpIds.cxx
 # The usual gmake command will not build it.  One has to
 # say
 #     $ gmake Linux
-application summary -group=Linux solidStatsMain.cxx SolidStats.cxx 
+# application summary -group=Linux solidStatsMain.cxx SolidStats.cxx 
+
+# As of 21 November, try dispensing with Linux group in hopes that
+# VC 7 has a better implementation of 64 bit than VC 6 did
+application summary solidStatsMain.cxx SolidStats.cxx 
 
 application constsDoc constsDocMain.cxx 
 
