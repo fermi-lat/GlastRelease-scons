@@ -26,9 +26,10 @@ CalXtalId::CalXtalId(UInt_t packedId)
 {
 }
 
-CalXtalId::CalXtalId(Short_t tower, Short_t layer, Short_t column) 
+CalXtalId::CalXtalId(Short_t tower, Short_t layer, Short_t column,
+                     Short_t face, Short_t range) 
 {
-    packId(tower, layer, column);
+    packId(tower, layer, column, face, range);
 }
 
 CalXtalId::~CalXtalId() {
@@ -48,10 +49,11 @@ void CalXtalId::Print(Option_t *option) const {
         << "," << getLayer() << "," << getColumn() << ")" << endl;
 }
 
-void CalXtalId::init(Short_t tower, Short_t layer, Short_t column)
+void CalXtalId::init(Short_t tower, Short_t layer, Short_t column, 
+                     Short_t face, Short_t range)
 { 
     Clear();
-    packId(tower, layer, column);
+    packId(tower, layer, column, face, range);
 }
 
 void CalXtalId::init(UInt_t packedId) {
@@ -68,6 +70,15 @@ Short_t CalXtalId::getTower() const {
 
 Short_t CalXtalId::getLayer() const {
     return (m_packedId >> 0x4) & 0x7;
+}
+
+Short_t CalXtalId::getFace() const {
+    if (!validFace()) return FACE_UNUSED;
+    return ((m_packedId >> FACE_SHIFT) & 0x1);
+}
+Short_t CalXtalId::getRange() const {
+    if (!validRange()) return RANGE_UNUSED;
+    return ((m_packedId >> RANGE_SHIFT) & 0x3);
 }
 
 Short_t CalXtalId::getColumn() const {

@@ -77,7 +77,7 @@ std::string VolumeIdentifier::name(const char* delimiter) const
     return tmp.substr(0,tmp.size()-1);
 }
 
-void VolumeIdentifier::Clear(Option_t *option) {
+void VolumeIdentifier::Clear(Option_t* /* *option */) {
     m_bits0to31 = 0;
     m_bits32to63 = 0;
     m_size = 0;
