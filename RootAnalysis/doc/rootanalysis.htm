@@ -210,15 +210,14 @@
         routine, located in the RootTreeAnalysis.cxx file.&nbsp; Note that there
         are separate functions for Raw, Recon, and MC ntuples.</font></p>
         <p><font size="3">Example usage:<br>
-        </font><i><font size="2">RootTreeAnalysis* m = new RootTreeAnalysis("myRawFile.root", "myReconFile.root"); // create RootTreeAnalysis object<br>
-  m->Go(500);      // loop over 500 events. Go contains your analysis code<br>
-        m-&gt;StartWithEvent(1001); // set the file pointer to eventNum = 1001<br>
-        m-&gt;Go(50); // process the next 50 events starting from eventNum 1001<br>
-        m-&gt;HistClear(); // clear all histograms<br>
-        m-&gt;Go(1000); // Process the next 1000 events, starting from eventNum
-        1052<br>
-        delete m; // deletes the object and causes the Histogram file to be
-        written</font></i></p>
+        </font><i><font size="2">RootTreeAnalysis m(&quot;myRawFile.root&quot;,
+        &quot;myReconFile.root&quot;); // create RootTreeAnalysis object<br>
+        m.Go(500);      // loop over 500 events. Go contains your analysis code<br>
+        m.StartWithEvent(1001); // set the file pointer to eventNum = 1001<br>
+        m.Go(50); // process the next 50 events starting from eventNum 1001<br>
+        m.HistClear(); // clear all histograms<br>
+        m.Go(1000); // Process the next 1000 events, starting from eventNum
+        1052</font></i></p>
         <p><font size="3"><b><a name="RawValidate">RawValidate</a></b></font></p>
         <p><font size="3">Handles only raw ROOT files.&nbsp; Behaves just as
         RootTreeAnalysis does, but it contains some additional default
@@ -232,13 +231,12 @@
         modify/add histograms.&nbsp; Users define their histograms in the <i>HistDefine</i>
         routine, located in the RawValidate.cxx file.&nbsp;&nbsp;</font></p>
         <p>Example usage:<font size="2"><i><br>
-        </i></font><i><font size="2">RawValidate* m = new RawValidate("MyRootFile.root"); // create RawValidate object<br>
-      m->Go(500);      // loop over 500 events. Go contains your analysis code<br>
-        m-&gt;StartWithEvent(2001); // set the file pointer to eventNum = 2001<br>
-        m-&gt;Go(50); // process the next 50 events<br>
-        m-&gt;HistClear(); // clear all histograms<br>
-        m-&gt;Go(1000);<br>
-        delete m;</font></i></p>
+        </i></font><i><font size="2">RawValidate m(&quot;MyRootFile.root&quot;); // create RawValidate object<br>
+        m.Go(500);      // loop over 500 events. Go contains your analysis code<br>
+        m.StartWithEvent(2001); // set the file pointer to eventNum = 2001<br>
+        m.Go(50); // process the next 50 events<br>
+        m.HistClear(); // clear all histograms<br>
+        m.Go(1000);</font></i></p>
         <p><font size="3"><b><a name="NtupleAnalysis">NtupleAnalysis</a></b></font></p>
         <p><font size="3">Please <a href="http://www-glast.slac.stanford.edu/software/root/howto/pdr.html">see
         this page</a> for a description... But here is a summary:</font></p>
@@ -249,13 +247,13 @@
         of the PS pages as well - to determine how many plots to display per
         page.</font></p>
         <p><font size="3"><b>USAGE:</b><br>
-        </font><i><font size="2">NtupleAnalysis *m = new NtupleAnalysis( );<br>
-        m-&gt;openRootFile(&quot;myNtupleFile.root&quot;, &quot;PDR/t1&quot;);
+        </font><i><font size="2">NtupleAnalysis m( );<br>
+        m.openRootFile(&quot;myNtupleFile.root&quot;, &quot;PDR/t1&quot;);
         // you supply a file name, and the name (and path if necessary) of the
         TTree in the file.<br>
-        m-&gt;setNumRows(4);<br>
-        m-&gt;setNumCols(4);</font></i><font size="2"><i><br>
-        m-&gt;drawAllPlots(&quot;myNewPSFile.ps&quot;, &quot;TKR_NO_TRACKS &gt;
+        m.setNumRows(4);<br>
+        m.setNumCols(4);</font></i><font size="2"><i><br>
+        m.drawAllPlots(&quot;myNewPSFile.ps&quot;, &quot;TKR_NO_TRACKS &gt;
         0&quot;); // creates the PS file - and applies the cut to the data</i></font></p>
         <h3><a name="Ancillary Data files">Ancillary Data files</a></h3>
         <p><font size="3"><b><a name="Calibration">Calibration</a></b></font></p>
