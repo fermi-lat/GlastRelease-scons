@@ -107,6 +107,10 @@ namespace xmlUtil {
   }
 
   std::string IdDict::getNameSeqString(const Identifier& id) const {
+    if (id.size() == 0) {
+      std::string s = "";
+      return s;
+    }
     NameSeq* seq = getNameSeq(id);
     std::string s = nameSeqString(*seq);
     delete seq;
