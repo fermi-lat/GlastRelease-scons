@@ -168,8 +168,8 @@ namespace idents {
     }
 
     //Access Methods for Tkr reconstruction semantics:
-    //unsigned int getLayer() const {return ( getPlane())/2;}
-    //unsigned int getPlane() const {return 2*getTray() + getBotTop() - 1;}
+    unsigned int getLayer() const {return ( getPlane())/2;}
+    unsigned int getPlane() const {return 2*getTray() + getBotTop() - 1;}
 
     /// Number of valid fields, never more than 7
     //    unsigned int getSize();
