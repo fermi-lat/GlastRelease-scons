@@ -2,8 +2,10 @@
  * Package detModel
  * Coordinator: R.Giannitrapani
  *
- * v2r15   jrb 02-Oct-03 v2r15  Add parsing of IdDict component of xml
-*              input geometry description
+ * v2r15p0 jrb 29-Jan-04   Replace native Xerces calls with calls to xml::Dom
+ *                         methods wherever possible.
+ * v2r15   jrb 02-Oct-03   Add parsing of IdDict component of xml
+ *              input geometry description
  * v2r14p1 tk  08-Aug-03   update requirements for GlastPolicy v5r2p4
  * v2r14p0 jrb 17 Mar 2003 New include path for Xerces includes
  * v2r14   ???   ???       ?????
