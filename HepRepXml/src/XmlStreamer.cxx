@@ -64,8 +64,8 @@ void XmlStreamer::saveHepRep(std::string nameFile)
       IRegistry::fillerCol temp = m_registry->getFillersByType(it->second);
       gzprintf(file,
               "<instancetree name=\"%s\" version=\"1.0\" reqtypetree=\"\" ",  
-              it->second.c_str()); 
-      gzprintf(file,"typeName=\"%s\" typeVersion=\"1.0\">\n" ,it->first.c_str());
+              it->first.c_str()); 
+      gzprintf(file,"typetreename=\"%s\" typetreeversion=\"1.0\">\n" ,it->second.c_str());
 
       for(jt=temp.begin();jt!=temp.end();jt++)
         {
