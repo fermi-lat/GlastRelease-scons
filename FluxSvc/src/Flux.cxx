@@ -63,6 +63,19 @@ double Flux::time()const
 {
     return m_time ;
 }
+
+
+/// pass a specific amount of time    
+void Flux::pass ( double t){
+    s_mgr->pass(t);
+}
+
+/// Get the time as held by GPS    
+/*GPStime*/int Flux::gpsTime () const{
+    return s_mgr->time();
+}
+
+
 // direction
 HepVector3D Flux::launchDir()const
 {
