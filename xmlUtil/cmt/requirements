@@ -2,10 +2,11 @@
 package xmlUtil
 version v2r8p2
 
-use facilities
-use xml 
-use XMLEXT
-use GlastPolicy
+use facilities v2r*
+use xml        v4r*
+use XMLEXT     v2r*
+use GlastPolicy  v4r*
+use xmlGeoDbs   v1r*
 
 include_dirs "${XMLUTILROOT}"
 
@@ -14,9 +15,6 @@ path_append LD_LIBRARY_PATH "${xmlUtilDir}"
 apply_pattern package_linkopts
 apply_pattern package_headers
 apply_pattern package_xmlfiles
-
-# private 
-# macro xmlUtil_xmlfiles "" WIN32 "../xml/*.xml" 
 
 library xmlUtil ${xmlUtil_headers}  \
      Arith.cxx            \
@@ -41,20 +39,14 @@ library xmlUtil ${xmlUtil_headers}  \
      docMan/GDDDocMan.cxx    \
      ${xmlUtil_xmlfiles} 
 
-##apply_pattern package_linkopts
 private
 apply_pattern package_shlibflags
 
 
 application eval eval.cxx 
 
-## Arith.cxx Substitute.cxx  Constants.cxx Source.cxx
-
-##application forProg makeXmlForProg.cxx Arith.cxx Substitute.cxx \
-##     Constants.cxx Source.cxx
 application forProg makeXmlForProg.cxx 
 
-##application forDoc makeXmlForDoc.cxx Arith.cxx  Constants.cxx Source.cxx
 application forDoc makeXmlForDoc.cxx 
 application testId id/testId.cxx
 application testDocMan docMan/*.cxx
