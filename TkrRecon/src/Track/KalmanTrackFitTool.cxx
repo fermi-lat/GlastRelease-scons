@@ -561,8 +561,16 @@ double KalmanTrackFitTool::doSmoother(Event::TkrTrack& track)
 {
     // Smoother
     //---------
-    int                 nplanes  = track.getNumHits();
-    Event::TkrTrackHit& prvPlane = *track[nplanes-1];
+    int nplanes  = track.getNumHits();
+    Event::TkrTrackHit& prvPlane  = *track[nplanes-1];
+
+	// Find last used plane on the track
+	int last_used_plane = nplanes-1; 
+	for( int i = nplanes -1 ; i >= 0 ; i--) {
+		prvPlane = *track[i];
+		if(prvPlane.getStatusBits() & Event::TkrTrackHit::HITONFIT) break;
+		last_used_plane--;
+	}
     idents::TkrId       tkrId    = prvPlane.getTkrId();
     double              prevZ    = prvPlane.getZPlane();
     TkrTrkParams        fitPar   = prvPlane.getTrackParams(Event::TkrTrackHit::FILTERED);
@@ -586,7 +594,7 @@ double KalmanTrackFitTool::doSmoother(Event::TkrTrack& track)
     KFvector prvStateVec(fitPar);
     KFmatrix prvCovMat(fitCov);
 
-    for (int iplane=nplanes-2; iplane >= 0; iplane--) 
+    for (int iplane=last_used_plane-1; iplane >= 0; iplane--) 
     {
         Event::TkrTrackHit& prevPlane    = *track[iplane+1];
         Event::TkrTrackHit& currentPlane = *track[iplane];
