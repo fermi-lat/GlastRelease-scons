@@ -6,15 +6,18 @@
 $Header$
 */
 
-class LdfExceptionBase {
+class LdfException : public std::exception {
 public:
-    LdfExceptionBase() {}
+    LdfException(std::string error):m_what(error) {}
+    ~LdfException() throw() {;}
+    virtual const char *what() const throw() { return m_what.c_str(); }
+    std::string m_what;
 };
 
-class LdfBadInstrument : public LdfExceptionBase {
-public:
-    LdfBadInstrument(const std::string& instrument) : m_name(instrument) {}
-    std::string m_name;
-};
+//class LdfBadInstrument : public LdfExceptionBase {
+//public:
+//    LdfBadInstrument(const std::string& instrument) : m_name(instrument) {}
+//    std::string m_name;
+//};
 
 #endif
