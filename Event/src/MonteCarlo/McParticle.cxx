@@ -33,6 +33,7 @@ void McParticle::init( McParticle* mother,
     m_initialFourMomentum = initialMomentum;
     m_finalFourMomentum = finalMomentum;
     m_finalPosition = finalPosition;
+    if (!mother) return;
     if( mother != this) mother->m_daughters.push_back(this);
 }
 
