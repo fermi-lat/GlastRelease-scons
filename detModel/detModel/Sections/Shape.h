@@ -26,21 +26,24 @@ namespace detModel{
      * sensitive for simulations purpouses
      */
     void setSensitive(bool psensitive){m_sensitive = psensitive;};
-    bool getSensitive(){return m_sensitive;};
+    bool getSensitive()const{return m_sensitive;};
+
     /**
      * With this method it is possible to set and get the 
      * detector type attribute (see the gdd.dtd for meaning)
      */
-    void setDetectorType(bool pdt){m_detectorType = pdt;};
-    bool getDetectorType(){return m_detectorType;};
+    void setDetectorType(unsigned int pdt){m_detectorType = pdt;};
+    unsigned int getDetectorType()const{return m_detectorType;};
+
     /**
      * This method set the material (a string) of the shape
      */  
     void setMaterial(std::string pmaterial){m_material = pmaterial;};
+
     /**
      * This method gives back the material (a string) of the shape
      */  
-    std::string getMaterial(){return m_material;};
+    std::string getMaterial()const{return m_material;};
 
     Units* getUnits()const{return m_units;};
 
