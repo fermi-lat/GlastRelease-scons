@@ -71,7 +71,7 @@ private:
     /// routine that is called when we reach the end of an event
     void endEvent();
     /// create the ntuple
-    StatusCode bookNTuple(int index);
+    StatusCode bookNTuple(int index, const char *title);
     /// write an event's data into the ntuple
     StatusCode writeNTuple(int index);
     /// add an entry into an ntuple, where the item has already been declared 
