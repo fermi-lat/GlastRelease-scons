@@ -76,17 +76,18 @@ void PSF::open_input_file()
             // background veto calculation, from Luis Reyes
             veto=1.0;
             if(TkrNumTracks>0.0&&GltWord>3.0&&IMcoreProb>0.2){
-                if(IMvertexProb<0.5||VtxAngle==0.0){
-                    if(EvtEnergySumOpt>450.0&&AcdTotalEnergy<6.0&&EvtTkrComptonRatio>0.7&&CalMIPDiff>80.0&&CalLRmsRatio<20.0&&IMgammaProb>0.5)
+                if(VtxAngle>0.0){
+		  if(EvtEnergySumOpt>350.0&&EvtTkrEComptonRatio>0.6&&CalMIPDiff>60.0&&IMgammaProb>0.5)
+                        veto=0.0;
+                  if(EvtEnergySumOpt<=350.0&&AcdTileCount==0.0&&CalMIPDiff>-125.0&&EvtTkrEComptonRatio>0.8&&IMgammaProb>0.9)
+                        veto=0.0;
+                  }
+                else{
+                    if(EvtEnergySumOpt>450.0&&EvtTkrComptonRatio>0.7&&CalMIPDiff>80.0&&CalLRmsRatio<20.0&&IMgammaProb>0.5)
                         veto=0.0;
                     if(EvtEnergySumOpt<=450.0&&AcdTileCount==0.0&&EvtTkrComptonRatio>1.0&&CalLRmsRatio>5.0&&Tkr1FirstLayer!=0.0&&Tkr1FirstLayer<15.0&&IMgammaProb>0.9)
                         veto=0.0;
-                }
-                else{
-                    if(EvtEnergySumOpt>350.0&&EvtTkrEComptonRatio>0.6&&CalMIPDiff>60.0&&IMgammaProb>0.5)
-                        veto=0.0;
-                    if(EvtEnergySumOpt<=350.0&&AcdTileCount==0.0&&CalMIPDiff>-125.0&&CalLRmsRatio<20.0&&IMgammaProb>0.9)
-                        veto=0.0;
+
                 }
             }
             friend_tree->Fill();
