@@ -109,7 +109,7 @@ StatusCode AcdDigiAlg::execute() {
         
         digiCol->push_back(
             new AcdDigi(
-                idents::AcdId(layer, face, row, column), 
+                idents::AcdId(layer, face, row, column), volId,
                 energyDeposited, phaArr, 
                 vetoArr, lowArr, highArr) );   
         

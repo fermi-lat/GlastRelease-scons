@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "idents/AcdId.h"
+#include "idents/VolumeIdentifier.h"
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/ContainedObject.h"
@@ -42,7 +43,8 @@ namespace Event {
             B = 1
         } PmtId;
                 
-        AcdDigi(const idents::AcdId &id, double energy, unsigned short *pha, 
+        AcdDigi(const idents::AcdId &id, const idents::VolumeIdentifier &volId,
+            double energy, unsigned short *pha, 
             bool *veto, bool *lowThresh, bool *highThresh) 
             : m_id(id), m_energy(energy)
         {  
@@ -60,6 +62,7 @@ namespace Event {
         
         /// Retrieve ACD identifier
         inline const idents::AcdId getId() const { return m_id; };
+        inline const idents::VolumeIdentifier getVolId() const { return m_volId; };
         
         inline double getEnergy() const { return m_energy; };
 
@@ -91,6 +94,8 @@ namespace Event {
         
         /// Acd ID
         idents::AcdId        m_id;
+        /// Allow one to retrieve dimensions of this volume
+        idents::VolumeIdentifier m_volId;
         /// energy MeV - storing as a check on pulseHeight
         double               m_energy;
         /// pulse height
