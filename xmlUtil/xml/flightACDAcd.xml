@@ -70,20 +70,20 @@
          XREF="topTapeLenLong"
          YREF="tapeWidth"
          ZREF="tapeThickness"
-         materialREF="tapeMat"
-         sensitive="true" />
+         materialREF="tapeMat" />
+ <!--         sensitive="true" />  -->
     <box name="topTapeMedium"
          XREF="topTapeLenMedium"
          YREF="tapeWidth"
          ZREF="tapeThickness"
-         materialREF="tapeMat"
-         sensitive="true" />
+         materialREF="tapeMat" />
+<!--         sensitive="true" />  -->
     <box name="topTapeShort"
          XREF="topTapeLenShort"
          YREF="tapeWidth"
          ZREF="tapeThickness"
-         materialREF="tapeMat"
-         sensitive="true" />
+         materialREF="tapeMat" />
+<!--         sensitive="true" /> -->
 
 <!-- Boxes for tape on sides.  Definition is for a side parallel to
      X-axis.  Rotate 90 deg. about Z for Y-side  -->
@@ -91,15 +91,15 @@
          XREF="tapeWidth"
          YREF="tapeThickness"
          ZREF="tapeSideLength"
-         materialREF="tapeMat"
-         sensitive="true" />
+         materialREF="tapeMat" />
+<!--         sensitive="true" />  -->
 
     <box name="sideTapeY"
          XREF="tapeThickness"
          YREF="tapeWidth"
          ZREF="tapeSideLength"
-         materialREF="tapeMat"
-         sensitive="true" />
+         materialREF="tapeMat" />
+<!--         sensitive="true" />  -->
 
 <!-- Make a row of top tiles.  They're all the same.  Since this
      represents a row of tiles, ids of individual tiles in the row
