@@ -181,8 +181,10 @@ StatusCode meritAlg::initialize() {
     try { 
         ClassificationTree ctree(*m_tuple, m_IM_filename);
     //TODO: finish setup.
-    }catch ( const char * error){
-        log << MSG::ERROR << "Classification tree error, " << error << endreq;
+    }catch ( classification::Tree::Exception e){
+        log << MSG::ERROR << "Classification tree error, ";
+            e.printOn(log.stream());
+                log << endreq;
     }catch (...)  {
         log << MSG::ERROR << "Unexpected exception creating classification trees" << endreq;
     }
