@@ -155,9 +155,9 @@ StatusCode RootTupleSvc::initialize ()
     // -- set up the tuple ---
     m_tf   = new TFile( m_filename.value().c_str(), "RECREATE");
     // with the default treename, and default title
-    TTree* t = new TTree( m_treename.value().c_str(),  m_title.value().c_str() );
-    m_tree[m_treename.value().c_str()] = t;
-    t->SetAutoSave(m_autoSave); 
+    //TTree* t = new TTree( m_treename.value().c_str(),  m_title.value().c_str() );
+    //m_tree[m_treename.value().c_str()] = t;
+    //t->SetAutoSave(m_autoSave); 
 
     return status;
 }
@@ -245,7 +245,7 @@ StatusCode RootTupleSvc::finalize ()
                 << " with " 
                 << t->GetEntries() << " rows (" << m_trials << " total events)"<< endreq;
             t->Print(); // make a summary
-            t->Write();
+            //t->Write();
         }
     }
 
