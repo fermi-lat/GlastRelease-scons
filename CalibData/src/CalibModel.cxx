@@ -111,6 +111,8 @@ public:
                                               CLID_Calib_TKR_BadChan));
     CalibData::pairs.push_back(std::make_pair(CalibData::TKR_Splits,
                                               CLID_Calib_TKR_Splits));
+    CalibData::pairs.push_back(std::make_pair(CalibData::TKR_TOTSignal,
+                                              CLID_Calib_TKR_TOTSignal));
 
     CalibData::pairs.push_back(std::make_pair(CalibData::CAL_Ped,
                                               CLID_Calib_CAL_Ped));
