@@ -44,7 +44,8 @@ namespace ldfReader {
         unsigned length = contribution()->numLogAccepts();
         if (length == 0)
         {
-            printf("%sCAL: no data - empty contribution\n", m_prefix);
+            if (EbfDebug::getDebug())
+                printf("%sCAL: no data - empty contribution\n", m_prefix);
             return;
         }
         if (EbfDebug::getDebug()) {
