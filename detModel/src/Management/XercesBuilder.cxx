@@ -58,10 +58,7 @@ namespace detModel{
     unsigned int iSec;
     xmlUtil::GDDDocMan* pGDDMan = xmlUtil::GDDDocMan::getPointer();
     
-    if( nameFile == "" ) 
-      pGDDMan->parse(std::string(::getenv("XMLUTILROOT"))+"/xml/flight.xml");
-    else
-      pGDDMan->parse(nameFile);
+    pGDDMan->parse(nameFile);
 
     /// We start detModel stuff retriving the manager
     Manager* man = Manager::getPointer();
