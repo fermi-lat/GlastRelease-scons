@@ -83,7 +83,9 @@ AnalysisNtupleAlg::AnalysisNtupleAlg(const std::string& name, ISvcLocator* pSvcL
 ,m_count(0)
 {
     // declare properties with setProperties calls
-    declareProperty("tupleName",  m_tupleName="");    
+    declareProperty("tupleName",  m_tupleName=""); 
+    // so it looks like NTupleWriterSvc property, no harm having both!
+    declareProperty("tuple_name",  m_tupleName="");    
 }
 
 StatusCode AnalysisNtupleAlg::initialize(){
