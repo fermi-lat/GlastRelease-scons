@@ -3,6 +3,7 @@
 // Job options file for FluxSvc test program
 //
 // List of DLLs, services
+// $Header$
 
 ApplicationMgr.DLLs   = { "GlastSvc", "FluxSvc"};
 ApplicationMgr.ExtSvc = { "GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
@@ -27,17 +28,11 @@ ApplicationMgr.TopAlg = {"FluxAlg/Top","ExposureAlg","FluxTestAlg"};
 FluxSvc.source_lib ={"$(FLUXSVCROOT)/xml/source_library.xml"};
 FluxSvc.source_lib +={"$(FLUXSVCROOT)/src/test/test_source.xml"};
 
+// test the various FluxAlg properties
 Top.area= 0.1;
-Top.pointing_mode=0;
-Top.rocking_angle=35;
-Top.source_name="surface_vertical_muons";
-
-// ask for a source that is in the user_library (must use the name assigned to FluxAlg)
-//Top.source_name="fat_pencil";
-//Top.source_name="random_position";
-//Top.source_name="testpatch";
-Top.source_name="TestSpectrum";
-
+Top.pointing_mode=4;
+Top.rocking_angle=90;
+Top.source_name="vertical_surface_muons";
 
 ApplicationMgr.EvtMax = 10;
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )

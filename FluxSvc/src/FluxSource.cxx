@@ -1,5 +1,9 @@
-//$Header$
+/** @file FluxSource.cxx
+    @brief Implementation of FluxSource
 
+  $Header$
+
+  */
 #include "FluxSource.h"
 
 #include "dom/DOM_Element.hpp"
@@ -17,6 +21,10 @@
 
 #include <algorithm>
 #include <sstream>
+namespace {
+    // this is the (wired-in) distance to back off from the target sphere.
+    double backoff_distance=1000.;
+}
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /** @class LaunchPoint
@@ -513,8 +521,9 @@ FluxSource::FluxSource(const DOM_Element& xelem )
                     << xml::Dom::transToChar(launchTag) << "\"" );
             }
         } else {
+            // default: the target sphere.
             double radius = sqrt(totalArea() / M_PI ) * 1000;    // radius in mm
-            m_launch_pt = new RandomPoint(radius, radius);
+            m_launch_pt = new RandomPoint(radius, backoff_distance);
         }
     }
 }
@@ -547,10 +556,6 @@ FluxSource* FluxSource::event(double time)
     computeLaunch(time+m_interval);
     //now set the actual interval to be what FluxMgr will get
     EventSource::setTime(time+m_interval);
-
-    // Finally rock it.
-    HepRotation correctForTilt =GPS::instance()->rockingAngleTransform(GPS::instance()->time());
-    m_correctedDir = correctForTilt*m_launchDir;
 
     return this;
 }
@@ -592,10 +597,17 @@ void FluxSource::computeLaunch (double time)
     
     // set launch direction , position (perhaps depending on direction)
     m_launch_dir->execute(m_energy, time);
-    m_launch_pt->execute((*m_launch_dir)());
+    m_launchDir  = (*m_launch_dir)();
+    
+    //  rotate by Glast orientation transformation
+    HepRotation correctForTilt =GPS::instance()->rockingAngleTransform(GPS::instance()->time());
+    m_correctedDir = correctForTilt*m_launchDir;
+    
+    // now set the launch point, which may depend on the direction
+    
+    m_launch_pt->execute(m_correctedDir);
     
     m_launchPoint = (*m_launch_pt)();
-    m_launchDir  = (*m_launch_dir)();
 
 }
 
