@@ -2,6 +2,7 @@
  * Package calibUtil
  * Coordinator: J. Bogart
  *
+ * v0r11   9-Aug-2004 jrb Add dtd, sample calibration file for new CAL types
  * v0r10   9-Aug-2004 jrb Add dtd, sample calibration file for TKR_Splits
  * v0r9p3  8-Jul-2004 jrb Add sample calibration files for CAL 
  *                        int. nonlinearity & light asymmetry.

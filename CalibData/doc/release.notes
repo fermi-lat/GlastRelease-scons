@@ -1,6 +1,7 @@
 /** @file release.notes
  * Package CalibData
  * Coordinator:  J. Bogart
+ *  4-Oct-2004 jrb - v0r9     Support for new CAL calibration types
  * 17-Aug-2004 jrb - v0r8p0-  Make include files visible to Windows users
  *  9-Aug-2004 jrb - v0r8  -  Add classes for TKR splits calibration type.
  *                            Define pattern use_CalibData_symbols so Windows
