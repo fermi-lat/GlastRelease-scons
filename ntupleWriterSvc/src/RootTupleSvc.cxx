@@ -18,6 +18,7 @@
 // root includes
 #include "TTree.h"
 #include "TFile.h"
+#include "TSystem.h"
 
 
 /** 
@@ -135,6 +136,11 @@ StatusCode RootTupleSvc::initialize ()
 {
     StatusCode  status =  Service::initialize ();
 
+    gSystem->ResetSignal(kSigBus);
+    gSystem->ResetSignal(kSigSegmentationViolation);
+    gSystem->ResetSignal(kSigIllegalInstruction);
+    gSystem->ResetSignal(kSigFloatingException); 
+
     // bind all of the properties for this service
     setProperties ();
     std::string filename(m_filename);
@@ -165,7 +171,7 @@ StatusCode RootTupleSvc::initialize ()
 StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
                                  const std::string& itemName, const double* pval)
 {
-     MsgStream log(msgSvc(),name());
+    MsgStream log(msgSvc(),name());
     StatusCode status = StatusCode::SUCCESS;
     std::string treename=tupleName.empty()? m_treename.value() : tupleName;
     TDirectory *saveDir = gDirectory;
@@ -244,8 +250,11 @@ StatusCode RootTupleSvc::finalize ()
             log << MSG::INFO << "Writing the TTree \"" << it->first<< "\" in file "<<m_filename.value() 
                 << " with " 
                 << t->GetEntries() << " rows (" << m_trials << " total events)"<< endreq;
-            t->Print(); // make a summary
-            //t->Write();
+            log << MSG::DEBUG;
+            if( log.isActive() ){
+                t->Print(); // make a summary (too bad ROOT doesn't allow you to specify a stream
+            }
+            log << endreq;
         }
     }
 
