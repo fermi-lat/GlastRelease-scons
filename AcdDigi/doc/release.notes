@@ -2,6 +2,8 @@
  Package AcdDigi
  Coordinator: H. Kelly
 
+ v1r2   12-Jun-2002 HMK Fix up volId interpretation - switching row
+        and column \n
  v1r1   07-Jun-2002 HMK Store volId to AcdDigi\n
  v1r0   05-Jun-2002 HMK Update for new version of AcdDigi class \n
  v0r0   23-May-2002 HMK initial import \n
