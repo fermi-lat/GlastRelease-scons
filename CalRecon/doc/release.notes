@@ -7,6 +7,7 @@ package CalRecon
 
 package manager: Alexandre Chekhtman
 
+  v5r12p1 11-may-2003 THB Fix Tool inheritance to use abstract interface, avoid downcasts 
   v5r12   03-apr-2003 AC  CalibSvc is used to get calibration data
   v5r11p6 25-mar-2003 AC  required RootIo version set to v*
   v5r11p5 11-mar-2003 LSR more patches for latest AnalysisNtuple
