@@ -211,6 +211,33 @@ namespace calibUtil {
                   const std::string& instrument,
                   const std::string& flavor="VANILLA");
 
+    /** Similar to findBest above, but here caller constrains the enter_time
+        of the calibration by specifying an earliest and (optional) latest
+        time for it.  The serial number of the calibration meeting all 
+        other conditions, and with the earliest enter_time, will be returned.
+             @param ser          serial number of best match 
+                                 as integer or zero if no matches
+                                 (output)
+             @param calibType    type of data, must match
+             @param enter_start  ptr to time; early bound for enter_time 
+             @param enter_end    ptr to late bound for enter_time (may be 0)
+             @param levelMask    acceptable levels ("production"
+                                 better than "dev" better than "test"
+                                 better than "superseded")
+             @param instrument   e.g. LAT, EM, CU,...
+             @param flavor       optionally specify non-standard
+                                 calibration flavor 
+             @return             status. Should be RETOk.
+
+     */
+    eRet findSoonAfter(unsigned int *ser,
+                       const std::string& calibType, 
+                       const facilities::Timestamp* enter_start,
+                       const facilities::Timestamp* enter_end,
+                       unsigned int levelMask, 
+                       const std::string& instrument,
+                       const std::string& flavor="VANILLA");
+
     const std::string* const getCalibTypeStr(eCalibType cType);
     const std::string* const getDataFmtStr(eDataFmt fmt);
     const std::string* const getInstrumentStr(eInstrument inst);

@@ -8,7 +8,6 @@
 #include "facilities/Util.h"
 #include "mysql.h"
 #include <iostream>
-#include <strstream>
 #include <cstdio>
 
 namespace calibUtil {
@@ -215,6 +214,84 @@ namespace calibUtil {
                       *instStr, flavor);
     }
     else return RETBadValue;
+  }
+
+  Metadata::eRet 
+  Metadata::findSoonAfter(unsigned int *ser,
+                          const std::string& calibType, 
+                          const facilities::Timestamp* enter_start,
+                          const facilities::Timestamp* enter_end,
+                          unsigned int levelMask, 
+                          const std::string& instrument,
+                          const std::string& flavor) {
+    eRet ret;
+    *ser = 0;
+    if (!m_readCxt) {
+      connectRead(ret);
+      if (ret != RETOk) return ret;
+    }
+
+    std::string 
+      query("select ser_no, enter_time,completion from ");
+    query += m_table;
+    query += " where ";
+    query += "completion = 'OK' and instrument ='"; query += instrument;
+    query += "' and calib_type ='";
+    query += calibType;
+    query += "' and flavor ='";
+    query += flavor;
+    query += "' and '";
+    query += enter_start->getString();
+    query += "'<= enter_time ";
+
+    //  if interval is not 0, also need to set another condition
+    //  on max. value of enter_time
+    if (enter_end) {
+      query += " and '";
+      query += enter_end->getString();
+      query += "'>= enter_time ";
+    }             
+
+    while (levelMask) {
+      // find highest priority known bit in levelMask, add appropriate
+      // clause onto query.  Return false if no known bits found
+      std::string q = query;
+      bool ok = addLevel(q, &levelMask);  
+      if (!ok) {
+        std::cerr << "In Metadata::findSoonAfter(..) bad levelMask arg" 
+                  << std::endl;
+        return RETBadValue;
+      }
+      // Sort rows by timestamp, oldest first
+      q += " order by enter_time asc ";
+
+      int ret = mysql_query(m_readCxt, q.c_str());
+      if (ret) {
+        std::cerr << "MySQL error during SELECT, code " << ret << std::endl;
+        std::cerr << "query was: " << std::endl;
+        std::cerr << q << std::endl;
+        return RETMySQLError;
+      }
+      
+      MYSQL_RES *myres = mysql_store_result(m_readCxt);
+
+      // Since we're doing a query, a result set should be returned
+      // even if there are no rows in the result.  A null pointer 
+      // indicates an error.
+      if (!myres) {
+        return RETMySQLError;
+      }
+      else if (mysql_num_rows(myres) ) {       // Get serial # of first row
+        MYSQL_ROW myRow = mysql_fetch_row(myres);
+        // serial number is pointed to by myRow[0]
+        *ser = atoi(myRow[0]);
+        mysql_free_result(myres);
+        return RETOk;
+      }
+      // otherwise there was no error, but also no rows returned
+      // which matched the query, so keep going.
+    }
+    return RETOk;
   }
 
   Metadata::eRet Metadata::findBest(unsigned int *ser,
@@ -432,9 +509,12 @@ namespace calibUtil {
     q += m_table;
     q += " where ser_no=";
 
-    char serBuf[20];
-    sprintf(serBuf, "%i", serialNo);
+    // char serBuf[20];
+    //    sprintf(serBuf, "%i", serialNo);
+    //    q += serBuf;
 
+    std::string serBuf;
+    facilities::Util::itoa(serialNo, serBuf);
     q += serBuf;
 
     int myRet = mysql_query(m_readCxt, q.c_str());
@@ -478,9 +558,12 @@ namespace calibUtil {
     q += m_table;
     q += " where ser_no=";
 
-    char serBuf[20];
-    sprintf(serBuf, "%i", serialNo);
+    //    char serBuf[20];
+    //    sprintf(serBuf, "%i", serialNo);
 
+    //    q += serBuf;
+    std::string serBuf;
+    facilities::Util::itoa(serialNo, serBuf);
     q += serBuf;
 
     int myRet = mysql_query(m_readCxt, q.c_str());
