@@ -22,20 +22,26 @@
 #include "GlastEvent/MonteCarlo/MCTrack.h"
 #include "GlastEvent/TopLevel/ObjectVector.h"
 #include "GlastEvent/TopLevel/ObjectList.h"
+#include "instrument/CsIDetector.h"
 
 class CsIDetector;
 
 extern const CLID& CLID_CsIData;
 
-
+//! Representation of the CsI Calorimeter Data
 /*! \class CsIData
-\The First attempt at addapting CsIData from the data package to be a
-TDS object. Very preliminary and untested.
-
+    The First attempt at addapting CsIData from the data package to be a
+    TDS object. Very preliminary and untested. Now Loaded from it's own 
+    converters and IRFConverter.
 */
 
 class CsIData : virtual public DataObject
 {
+
+    virtual const CLID& clID() const   { return CsIData::classID(); }
+    static const CLID& classID()       { return CLID_CsIData; }
+
+
     public:
         /*! Inner class used to store data on the individual crystals
         */
@@ -72,6 +78,7 @@ class CsIData : virtual public DataObject
 
   public:
       CsIData (int numLayers);
+      void copyUp (CsIData* copy, int numLayers);
 
 
       //	---(deprecated)-- access functions for data
@@ -102,26 +109,26 @@ class CsIData : virtual public DataObject
       //!   energy deposited in each of 4 diodes (left-big, right-big, left-small,right-small)
       const std::vector<double>& Diodes_Energy(unsigned int layer, unsigned int n) const; 
 
-      //!load local array using the Calorimeter controllers
+      //!load local array of xtal objects from a CsIDetector
       void load (const CsIDetector& xtal);
 
-      //!read data from an open stream
-      void readData (std::istream& in);
+ //     const std::vector<double>& Diodes_Energy(unsigned int layer, unsigned int n);
+
 
       //!write data to an open stream
       void writeData (std::ostream& out) const;
 
       void clear ();
 
-      /* Will need for the PDS
+      // Will need for the PDS
 
        //! Serialize the object for reading
-      virtual StreamBuffer& serialize( StreamBuffer& s );
+/*      virtual StreamBuffer& serialize( StreamBuffer& s );
       //! Serialize the object for writing
       virtual StreamBuffer& serialize( StreamBuffer& s ) const;
       //! Fill the ASCII output stream
       virtual std::ostream& fillStream( std::ostream& s ) const;
-      */
+ */     
 
 
   protected:
@@ -146,28 +153,28 @@ class CsIData : virtual public DataObject
 
 /*
 inline StreamBuffer& CsIData::serialize( StreamBuffer& s ) const                 {
-  ContainedObject::serialize(s);
-  return s
+  DataObject::serialize(s);
+  return s;
 //    << m_cellID
-    << calorList ;
+//    << calorList ;
 //    << m_mcTracks(this);
 }
 
 
 //! Serialize the object for reading
 inline StreamBuffer& CsIData::serialize( StreamBuffer& s )                       {
-  ContainedObject::serialize(s);
-  return s
+  DataObject::serialize(s);
+  return s;
 //    >> m_cellID
-    >> calorList;
+ //   >> calorList;
 //    >> m_mcTracks(this);
 }
 
 
 //! Fill the ASCII output stream
 inline std::ostream& CsIData::fillStream( std::ostream& s ) const                {
-  return s
-    << "class CsIData :"
+  return s;
+ //   << "class CsIData :"
 }
 */
   
