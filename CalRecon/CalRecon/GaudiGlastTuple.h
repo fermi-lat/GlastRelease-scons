@@ -7,8 +7,8 @@
 
 #include <vector>
 
-#include "Gaudi/interfaces/INTupleSvc.h"
-#include "Gaudi/interfaces/INTuple.h"
+#include "Gaudi/Interfaces/INTupleSvc.h"
+#include "Gaudi/Interfaces/INTuple.h"
 #include "Gaudi/NTupleSvc/NTuple.h"
 #include "Gaudi/DataSvc/SmartDataPtr.h"
 #include "Gaudi/Kernel/StatusCode.h"
