@@ -1,6 +1,6 @@
 
 #include "CalRecon/CalClustersAlg.h"
-#include "CalRecon/CsIClusters.h"
+#include "GlastEvent/Recon/CalRecon/CalCluster.h"
 #include "CalRecon/gamma.h"
 #include "CalRecon/Midnight.h"
 #include "GaudiKernel/MsgStream.h"
@@ -8,7 +8,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "CalRecon/CalXtalRecData.h"
+#include "GlastEvent/Recon/CalRecon/CalXtalRecData.h"
 
 /// Glast specific includes
 #include "GlastEvent/TopLevel/EventModel.h"
@@ -27,6 +27,7 @@ double xtalWidth;  //!< xtal width  in cm
 //! function to compute the true energy deposited in a layer
 /*! Uses the incomplete gamma function: gamma(double,double) implemented in gamma.cxx
 */ 
+using namespace GlastEvent;
 
 static const AlgFactory<CalClustersAlg>  Factory;
 const IAlgFactory& CalClustersAlgFactory = Factory;
@@ -191,18 +192,14 @@ E_i = E_{tot}(\Gamma_{inc}(z_i/\lambda,\alpha)-\Gamma_{inc}(z_{i+1}/\lambda,\alp
 * - 05/00       RT    first implementation
 */
 //################################################
-void CalClustersAlg::Profile(double eTotal, CsICluster* cl)
+void CalClustersAlg::Profile(double eTotal, GlastEvent::CalCluster* cl)
 //################################################
 {
 
   if( eTotal<2000. || slope == 0) //algorithm is useless under several GeV
 
 	{
- 	 cl->setFitEnergy(0);    // Conversion to MeV
- 	 cl->setProfChisq(0);
-  	 cl->setCsiStart(0);
-  	 cl->setCsiAlpha(0);
-  	 cl->setCsiLambda(0);
+	 cl->initProfile(0,0,0,0,0);
  	}
   else
 {
@@ -310,13 +307,8 @@ void CalClustersAlg::Profile(double eTotal, CsICluster* cl)
   minuit->mnstat(ki2,edm,errdef,nvpar,nparx,icstat);
 
   // Fills data
-  cl->setFitEnergy(1000*fit_energy);    // Conversion to MeV
-  cl->setProfChisq(ki2);
-  cl->setCsiStart(fit_start);
-  cl->setCsiAlpha(fit_alpha);
-  cl->setCsiLambda(fit_lambda); 
 
-  
+  cl->initProfile(1000*fit_energy,ki2,fit_start,fit_alpha,fit_lambda);
   // Clear minuit
   arglist[0] = 1;
   minuit->mnexcm("CLEAR", arglist ,1,ierflg);
@@ -502,16 +494,16 @@ StatusCode CalClustersAlg::retrieve()
             return sc;
         }
     }
-    m_CsIClusterList = SmartDataPtr<CsIClusterList> (eventSvc(),"/Event/CalRecon/CsIClusterList");
-    if (!m_CsIClusterList ){
-	    m_CsIClusterList = 0;
-	    m_CsIClusterList = new CsIClusterList();
-     	sc = eventSvc()->registerObject("/Event/CalRecon/CsIClusterList",m_CsIClusterList);
+    m_calClusterCol = SmartDataPtr<CalClusterCol> (eventSvc(),"/Event/CalRecon/CalClusterCol");
+    if (!m_calClusterCol ){
+	    m_calClusterCol = 0;
+	    m_calClusterCol = new CalClusterCol();
+     	sc = eventSvc()->registerObject("/Event/CalRecon/CalClusterCol",m_calClusterCol);
     } else {
-        m_CsIClusterList->clear();
+        m_calClusterCol->clear();
     }
 
-	m_CalXtalRecCol = SmartDataPtr<CalXtalRecCol>(eventSvc(),"/Event/CalRecon/CalXtalRecCol"); 
+	m_calXtalRecCol = SmartDataPtr<CalXtalRecCol>(eventSvc(),"/Event/CalRecon/CalXtalRecCol"); 
 
 
 	return sc;
@@ -572,8 +564,8 @@ StatusCode CalClustersAlg::execute()
 	// Compute barycenter and various moments
 
 
-	for (CalXtalRecCol::const_iterator it = m_CalXtalRecCol->begin();
-	it != m_CalXtalRecCol->end(); it++){
+	for (CalXtalRecCol::const_iterator it = m_calXtalRecCol->begin();
+	it != m_calXtalRecCol->end(); it++){
 		CalXtalRecData* recData = *it;
 
 		double eneXtal = recData->getEnergy();
@@ -663,14 +655,8 @@ StatusCode CalClustersAlg::execute()
 //	rms_long = sqrt(rms_long);
 
 	// Fill CsICluster data
-	CsICluster* cl = new CsICluster(ene,pCluster+p0);
-	m_CsIClusterList->add(cl);
-	cl->setEneLayer(eneLayer);
-	cl->setPosLayer(pLayer);
-	cl->setRmsLayer(rmsLayer);
-	cl->setRmsLong(rms_long);
-	cl->setRmsTrans(rms_trans);
-	cl->setDirection(caldir);
+	CalCluster* cl = new CalCluster(ene,pCluster+p0);
+	m_calClusterCol->add(cl);
 
 	// Leakage correction
 	double eleak = Leak(ene,eneLayer[nLayers-1])+ene;
@@ -679,7 +665,6 @@ StatusCode CalClustersAlg::execute()
     eleak = Leak(eleak,eneLayer[nLayers-1])+ene;	
 
 
-	cl->setEneLeak(eleak);
 
 	// defines global variable to be used for fcn
 	g_elayer.resize(nLayers);
@@ -689,22 +674,20 @@ StatusCode CalClustersAlg::execute()
 		g_elayer[i] = eneLayer[i]/1000.;
 	}
 	nbins = nLayers;
-//	slope = 1;  // temporary
 
 	// Do profile fitting
 	Profile(ene,cl);
-
+	double calTransvOffset = 0.;
     if(ngammas>0){
         Vector calOffset = (p0+pCluster) - gammaVertex;
         double calLongOffset = gammaDirection*calOffset;
-        double calTransvOffset =sqrt(calOffset.mag2() - calLongOffset*calLongOffset);
-        cl->setTransvOffset(calTransvOffset);
-        
-
+        calTransvOffset =sqrt(calOffset.mag2() - calLongOffset*calLongOffset);
 
     }
+	cl->initialize(eleak,eneLayer,pLayer,rmsLayer,rms_long,rms_trans,
+		           caldir,calTransvOffset);
 
-	m_CsIClusterList->writeOut();
+	m_calClusterCol->writeOut();
 
 	return sc;
 }
