@@ -78,7 +78,7 @@ public:
     const McParticle* getMother();
 
 	/// add a daughter particle to the list
-	void addDaugther(McParticle* part) { m_daughters.Add(part); };
+	void addDaughter(McParticle* part) { m_daughters.Add(part); };
 
     /// return a daughter McParticle corresponding to index
     const McParticle* getDaughter(Int_t index) const;
