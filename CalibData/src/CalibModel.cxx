@@ -107,6 +107,8 @@ public:
                                               CLID_Calib_CAL_ElecGain));
     CalibData::pairs.push_back(std::make_pair(CalibData::CAL_MuSlope,
                                               CLID_Calib_CAL_MuSlope));
+    CalibData::pairs.push_back(std::make_pair(CalibData::CAL_LightAtt,
+                                              CLID_Calib_CAL_LightAtt));
     CalibData::pairs.push_back(std::make_pair(CalibData::Test_1,
                                               CLID_Calib_CalibTest1));
 
