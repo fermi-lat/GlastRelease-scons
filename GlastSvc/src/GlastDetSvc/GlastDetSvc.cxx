@@ -89,6 +89,7 @@ StatusCode GlastDetSvc::initialize ()
     // bind all of the properties for this service
     if ( (status = setProperties()).isFailure() ) {
         log << MSG::ERROR << "Failed to set properties" << endreq;
+        return status;
     }
         
     // setup the detModel geometry, so can be visited below
@@ -99,9 +100,9 @@ StatusCode GlastDetSvc::initialize ()
     log << endreq;
 
     if( (status = SiliconPlaneGeometry::init(this)).isFailure() ) {
-        log << MSG::ERROR << "Failed to initialize SiliconPlane Geometry " << endreq;
+        log << MSG::WARNING << "Failed to initialize SiliconPlane Geometry " << endreq;
     }
-    return status;
+    return StatusCode::SUCCESS;
 }
 
 
