@@ -112,11 +112,10 @@ StatusCode EventCnvSvc::updateServiceState(IOpaqueAddress* pAddress)    {
     
     MsgStream log(msgSvc(), name());
     StatusCode status = INVALID_ADDRESS;
-    
     IRegistry* ent = pAddress->registry();
     if ( 0 != ent )   {
         SmartIF<IDataManagerSvc> iaddrReg(IID_IDataManagerSvc, dataProvider());
-        if ( 0 != iaddrReg )   {
+ //       if ( 0 != iaddrReg )   {
             status = StatusCode::SUCCESS;
             std::string path = ent->identifier();
             LeafMap::iterator itm = m_leaves.find(path);
@@ -144,10 +143,10 @@ StatusCode EventCnvSvc::updateServiceState(IOpaqueAddress* pAddress)    {
                     }
                 }
             }
-        }
-        else  {
-            status = NO_INTERFACE;
-        }
+//     }
+//    else  {
+//        status = NO_INTERFACE;
+//    }
     }
     return status;
 }
