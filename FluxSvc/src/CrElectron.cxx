@@ -67,7 +67,7 @@ CrSpectrum* CrElectron::selectComponent(HepRandomEngine* engine)
   double                             total_flux = 0;
   std::vector<CrSpectrum*>::iterator i;
   for (i = m_subComponents.begin(); i != m_subComponents.end(); i++){
-    total_flux += (*i)->flux();
+    total_flux += (*i)->flux(0.);
     integ_flux[*i] = total_flux;
   }
 
@@ -105,12 +105,12 @@ CrSpectrum* CrElectron::component() const
   return m_component;
 }
 
-double CrElectron::flux ( ) const
+double CrElectron::flux (double time ) const
 {
   double          total_flux = 0;
   std::vector<CrSpectrum*>::const_iterator i;
   for (i = m_subComponents.begin(); i != m_subComponents.end(); i++){
-    total_flux += (*i)->flux();
+    total_flux += (*i)->flux(0.);
   }
   return total_flux;
 }

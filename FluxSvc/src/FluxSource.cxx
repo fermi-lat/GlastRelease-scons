@@ -282,9 +282,9 @@ void FluxSource::randomLaunchPoint()
 
 
 
-double FluxSource::flux() const
+double FluxSource::flux(double time) const
 {
-    return enabled() ? std::max(m_spectrum->flux(), EventSource::flux()) : 0;
+    return enabled() ? std::max(m_spectrum->flux(time),0./* EventSource::flux()*/) : 0;
 }
 
 #if 1
@@ -942,7 +942,7 @@ std::string FluxSource::title () const
             << ',' << patchYmax << ',' << patchTop << ',' << patchBottom 
             << ") theta(" << _theta << "), phi(" << _phi << "), ";
     }
-    t << "flux("<< flux() << ")" << '\0';    
+    t << "flux("<< flux(0.) << ")" << '\0';    
     std::string s(t.str());
 #ifdef WIN32
     t.freeze(false);

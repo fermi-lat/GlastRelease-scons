@@ -41,7 +41,7 @@ Spectrum::~Spectrum(){}
 //    return rtb; // fail
 //}
 
-double Spectrum::flux ( ) const {
+double Spectrum::flux (double time ) const {
   return 0.; // flag that we don't have a flux
 }
 

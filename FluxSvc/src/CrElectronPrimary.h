@@ -22,7 +22,7 @@ public:
   double energySrc(HepRandomEngine* engine) const;
   /// flux returns the value integrated over whole energy and direction
   /// and devided by 4pi Sr: then the unit is [s**-1 m**-2 Sr**-1]
-  double flux() const;
+  double flux(double) const;
   double solidAngle() const;
   const char* particleName() const;
 

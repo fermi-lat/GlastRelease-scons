@@ -1,5 +1,12 @@
 
 <source_library>
+
+   <!-- the TimeDep spectrum -->
+    <source name="timedep" >
+        <spectrum> <SpectrumClass name="TimeDepSpectrum" params="10.00, 144.37"/> 
+		<direction/> </spectrum>
+    </source>
+
    <!-- standard particle generater used as a default -->
     <source name="default_test" flux="1.0">
           <spectrum>

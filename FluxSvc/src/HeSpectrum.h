@@ -50,7 +50,7 @@ class HeSpectrum : public Spectrum
     virtual double calculate_rate(double old_rate);
 
     /// calculate flux for the current cutoff
-    virtual double flux() const;
+    virtual double flux(double) const;
 
     /// calcualte effective solid angle for the given energy 
     virtual double solidAngle()const;

@@ -41,7 +41,7 @@ public:
     virtual const char * particleName()const=0;
     
     /// calculate the flux, particles/m^2/sr. (default zero)
-    virtual double    flux ( ) const;
+    virtual double    flux (double time ) const;
     
     
     /// calcualte effective solid angle  (default zero)

@@ -70,7 +70,7 @@ void AlbedoPSpectrum::setParticleName(std::string name)
 //-------------------------- flux() (current position)
 
 /// calculate flux for the current position
-double AlbedoPSpectrum::flux() const {
+double AlbedoPSpectrum::flux(double) const {
     return m_flux;
 }
 

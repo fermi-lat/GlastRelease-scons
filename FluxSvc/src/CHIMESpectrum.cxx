@@ -146,7 +146,7 @@ float CHIMESpectrum::flux(float cut) const {
 
 //-------------------------- flux() (current cutoff value)
 
-double CHIMESpectrum::flux() const {
+double CHIMESpectrum::flux(double) const {
     // calculate flux for the current cutoff
     return m_flux;
 }

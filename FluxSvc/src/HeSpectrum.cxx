@@ -147,7 +147,7 @@ float HeSpectrum::flux(float cut) const {
 
 //-------------------------- flux() (current cutoff value)
 
-double HeSpectrum::flux() const {
+double HeSpectrum::flux(double) const {
     // calculate flux for the current cutoff
     return m_flux;
 }

@@ -37,7 +37,7 @@ double GalElSpectrum::calculate_rate(double old_rate) {
     return flux(GPS::instance()->lat(), GPS::instance()->lon());
 }
 
-double GalElSpectrum::flux() const {
+double GalElSpectrum::flux(double) const {
     return -m_normfact * (m_norm / m_expo) * pow(m_cutoff, m_expo);
 }
 

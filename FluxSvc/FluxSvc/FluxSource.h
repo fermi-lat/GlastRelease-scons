@@ -39,7 +39,7 @@ class FluxSource : public EventSource
       ///    getLaunch - compute launch point, direction, & energy
       virtual void computeLaunch ();
 
-      virtual double flux()const; // calculate flux for attached specturm
+      virtual double flux(double time)const; // calculate flux for attached specturm
 
       /// return effective solid angle
       double solidAngle()const;

@@ -285,7 +285,7 @@ double CrElectronPrimary::energySrc(HepRandomEngine* engine) const
 }
 
 
-double CrElectronPrimary::flux() const
+double CrElectronPrimary::flux(double) const
 {
   /*****
   // Integrated over the upper (sky-side) hemisphere.
@@ -326,13 +326,13 @@ double CrElectronPrimary::calculate_rate(double old_rate)
 
 float CrElectronPrimary::flux(float latitude, float longitude) const
 {
-  return  flux();
+  return  flux(0.);
 }
 
 
 float CrElectronPrimary::flux(std::pair<double,double> coords) const
 {
-  return  flux();
+  return  flux(0.);
 }
 
 

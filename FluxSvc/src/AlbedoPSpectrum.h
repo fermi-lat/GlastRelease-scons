@@ -43,7 +43,7 @@ class AlbedoPSpectrum : public Spectrum
     virtual double calculate_rate(double old_rate);
 
     /// calculate flux for the current position
-    virtual double flux() const;
+    virtual double flux(double) const;
 
     /// effective solid angle for the given energy
     virtual double solidAngle()const;

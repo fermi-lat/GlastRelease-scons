@@ -31,7 +31,7 @@ public:
   CrSpectrum* component() const;
 
 	//! calculate the flux, particles/m^2/sr.
-  	virtual double    flux ( ) const;
+  	virtual double    flux (double time ) const;
 
 	virtual const char * particleName()const{ return "p";}
   virtual std::string title()const{return "CrProton";}
