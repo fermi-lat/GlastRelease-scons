@@ -20,7 +20,7 @@ GPS::GPS()
 m_earthOrbit(new astro::EarthOrbit),
 m_expansion(1.),    // default expansion:regular orbit for now
 m_time(0.), 
-m_sampleintvl(0.001),
+m_sampleintvl(30.), // update position every 30 seconds
 m_rockDegrees(35.),
 m_rockType(NONE)
 {}
@@ -42,23 +42,19 @@ void GPS::synch ()
 {
     static bool first=true;
     bool changed=  false;
+    static GPStime  last_time = time();
     
-    if (Scheduler::instance()->running()) {
+	if (Scheduler::instance()->running()) {
         time( Scheduler::instance()->elapsed_time() );
         changed = true; // maybe have threshold before nofitying?
     }
-    if (expansion() < 0.) {
-        static GPStime  last_time = time();
-        if ((time() - last_time) > m_sampleintvl) {
-            last_time = time();
-            changed = true;
-            
-        }
-    }
-    else if( expansion()>0 ) {
-        changed=true; 
-    }
-    
+
+	// If elapsed time exceeds interval then update
+    if ((time() - last_time) > m_sampleintvl) {
+       last_time = time();
+       changed = true;    
+	}
+
     // notify observers if changed (or first time thru)
     if( changed || first) notifyObservers();
     first=false;
