@@ -61,7 +61,7 @@ StatusCode XmlTest1Cnv::i_createObj(const DOM_Element& element,
   // Fetch quantities we need: name, value
   DOM_Element child = Dom::findFirstChildByName(element, "data");
   if (child == DOM_Element()) return StatusCode::FAILURE;
-  child = Dom::findFirstChildByName(element, "leaf");
+  child = Dom::findFirstChildByName(child, "leaf");
   if (child == DOM_Element()) return StatusCode::FAILURE;
 
   std::string name = Dom::getAttribute(child, "name");

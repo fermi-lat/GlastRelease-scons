@@ -18,6 +18,7 @@ class ISvcLocator;
 class GenericAddress;
 class ICalibXmlSvc;
 class ICalibMetaCnvSvc;
+class ITime;
 
 namespace CalibData {
   class CalibTime;
@@ -100,8 +101,10 @@ protected:
   ICalibMetaCnvSvc* m_metaSvc;
 
   int m_serNo;
-  CalibData::CalibTime*  m_vstart;
-  CalibData::CalibTime*  m_vend;
+  ITime*  m_vstart;
+  ITime*  m_vend;
+  //  CalibData::CalibTime*  m_vstart;
+  //  CalibData::CalibTime*  m_vend;
 };
 
 #endif

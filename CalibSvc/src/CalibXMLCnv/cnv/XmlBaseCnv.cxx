@@ -139,13 +139,12 @@ StatusCode XmlBaseCnv::internalCreateObj(const DOM_Element& elt,
   }
 
   unsigned int serNo = *(address->ipar());
-  // Make start and end times available to the specific converter
-  ITime* i_vstart = m_vstart;
-  ITime* i_vend = m_vend;
+
   StatusCode sc = m_metaSvc->getValidInterval(serNo, 
-                                              i_vstart, 
-                                              i_vend);
-  
+                                              &m_vstart, 
+                                              &m_vend );
+
+
   // creates an object for the node found
   if (sc.isSuccess()) sc = converter->i_createObj (elt, refpObject);
   if (sc.isFailure()) {
@@ -153,7 +152,11 @@ StatusCode XmlBaseCnv::internalCreateObj(const DOM_Element& elt,
   }
 
   // ends up the object construction
-  return converter->i_processObj(refpObject, address);
+  sc = converter->i_processObj(refpObject, address);
+  if (sc.isSuccess()) {
+    log << MSG::DEBUG << "Successfully created calib. object " << endreq;
+  }
+  return sc;
 } 
 
 
