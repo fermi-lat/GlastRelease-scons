@@ -55,6 +55,7 @@ private:
   const char** _typeNames;
   int _nLayers;
   const char** _layers;
+  std::vector<std::string> m_layers;
   char* _lastException;
 
   CorbaBuilder* m_builder;

@@ -139,17 +139,6 @@ void CorbaBuilder::addPoint(float x, float y, float z)
 void CorbaBuilder::addInstance(std::string father, 
                                std::string type)
 {
-  /*
-  unsigned int num;
-  if (type == "ParticleCol")
-    num = 3000;
-  else
-    num = 0;
-
-  HepRepInstance::_tao_seq_HepRepInstance in(num);
-  in.length(0);
-  */
-
   if (father == "")
     {
       int iType = m_instanceTree->instances.length()+1;
@@ -178,11 +167,14 @@ void CorbaBuilder::addInstance(std::string father,
 
       if (instance)
         {
+          // Let build the full qualified name
+          std::string temp(instance->typeName);
+          
           int jType = instance->instances.length()+1;
           instance->instances.length(jType);
 
 
-          instance->instances[jType-1].typeName = CORBA::string_dup(type.c_str());
+          instance->instances[jType-1].typeName = CORBA::string_dup((temp + "/" + type).c_str());
           instance->instances[jType-1].points.length(0);
           instance->instances[jType-1].attValues.length(0);
           instance->instances[jType-1].instances.length(0);

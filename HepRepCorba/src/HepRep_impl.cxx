@@ -7,7 +7,10 @@
 HepRep_impl::HepRep_impl ()
 {
   m_builder = new CorbaBuilder();
-  
+
+  _nLayers = 0;
+  addLayer("Geometry");
+  addLayer("Event");
 }
 
 
@@ -158,7 +161,9 @@ HepRepInstanceTree* HepRep_impl::getInstances(const char* instanceTreeName,
 
   std::vector<std::string> names;
   for(unsigned int i=0;i<typeNames.length();i++)
+  {
     names.push_back(CORBA::string_dup(typeNames[i]));
+  }
 
   m_builder->setInstanceTree(instanceTree);  
   for(j=temp.begin(); j!=temp.end();j++)
@@ -177,7 +182,7 @@ HepRepInstanceTree* HepRep_impl::getInstancesAfterAction(const char* instanceTre
                                                          CORBA::Boolean getPoints,
                                                          CORBA::Boolean getDrawAtts,
                                                          CORBA::Boolean getNonDrawAtts,
-							 const StringArray& invertAtt)
+                                                         const StringArray& invertAtt)
 {
   return getInstances(instanceTreeName, instanceTreeVersion, typeNames);
 }
@@ -186,10 +191,10 @@ HepRepInstanceTree* HepRep_impl::getInstancesAfterAction(const char* instanceTre
 StringArray* HepRep_impl::getLayerOrder()
 {
   StringArray* layerOrder = new StringArray;
-  layerOrder->length(_nLayers);
+  layerOrder->length(m_layers.size());
     
-  for (int iLayer=0; iLayer < _nLayers; iLayer++)
-      (*layerOrder)[iLayer] = CORBA::string_dup(_layers[iLayer]);
+  for (int iLayer=0; iLayer < m_layers.size(); iLayer++)
+      (*layerOrder)[iLayer] = CORBA::string_dup(m_layers[iLayer].c_str());
 
   return layerOrder;
 }
@@ -204,5 +209,7 @@ char* HepRep_impl::checkForException()
 void HepRep_impl::addLayer(const char* layer)
 {
 // Called from HesHepRepReg to add layers in desired order.
-  _layers[_nLayers++] = layer;
+//  _layers[_nLayers++] = layer;
+
+  m_layers.push_back(layer);
 }

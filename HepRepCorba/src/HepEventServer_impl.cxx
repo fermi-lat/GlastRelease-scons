@@ -110,6 +110,10 @@ char* HepEventServer_impl::setEvent(const char* command)
 				nextEventMsg = "error";
 			}
     }
+  else if (cmd == "getEventId")
+  {
+    nextEventMsg = m_svcAdapter->getEventId();
+  }
   else if (cmd == "commands")
   {
     nextEventMsg = m_svcAdapter->getCommands();
@@ -119,18 +123,18 @@ char* HepEventServer_impl::setEvent(const char* command)
     int run, event;
     sscanf(cmd.c_str(), "eventId:%d-%d", &run, &event);
     if (m_svcAdapter->setEventId(run, event))
-      nextEventMsg = "Event set to the requested ID";
+      nextEventMsg = "ok:Event set to the requested ID";
     else
-      nextEventMsg = "The requested Event ID seems to non exist";      
+      nextEventMsg = "error:The requested Event ID seems to non exist";      
   }
   else if (cmd.substr(0,9) == "eventIdx:")
   {
     int idx;
     sscanf(cmd.c_str(), "eventIdx:%d", &idx);
     if (m_svcAdapter->setEventIndex(idx))
-      nextEventMsg = "Event set to the requested index";
+      nextEventMsg = "ok:Event set to the requested index";
     else
-      nextEventMsg = "The requested Event index seems to non exist";      
+      nextEventMsg = "error:The requested Event index seems to non exist";      
   }  
 	else if (cmd == "fluxes")
     {
@@ -139,15 +143,51 @@ char* HepEventServer_impl::setEvent(const char* command)
   else if (cmd.substr(0,7) == "source:")
     {
       std::string source = cmd.substr(7,cmd.size());
-      std::cout << "Set the source to " << source << std::endl;
 
       m_svcAdapter->setSource(source);
-      nextEventMsg = "Source changed";      
+      nextEventMsg = "ok:Source changed to " + source;      
     }
   else if (cmd == "eventName")
     {
       nextEventMsg = m_eventID.c_str();
     }
+  else if (cmd.substr(0,8) == "algProp:")
+  {
+    std::string temp = cmd.substr(8,cmd.size());   
+    std::string temp2;
+    std::string alg;
+    std::string prop;
+    std::string value;
+
+    int i = temp.find(":");
+    if(i >=0 )
+    {
+      alg=temp.substr(0,i);
+      temp2 = temp.substr(i+1,temp.size());
+      i = temp2.find(":");
+      prop=temp2.substr(0,i);
+      value = temp2.substr(i+1,temp2.size());
+    }  
+
+    
+    if (m_svcAdapter->setAlgProperty(alg, prop, value))
+    {
+      nextEventMsg = "ok: managed to set the propery";
+    }
+    else
+    {
+      nextEventMsg = "error: not managed to set the propery";          
+    }
+  }
+  else if (cmd.substr(0,10) == "algReplay:")
+    {
+      std::string algName = cmd.substr(10,cmd.size());
+
+      if (m_svcAdapter->replayAlgorithm(algName))
+        nextEventMsg = "ok:Aglrotithm " + algName + " replayed";      
+      else
+        nextEventMsg = "error:Aglrotithm " + algName + " not replayed";      
+    } 
 	else if (cmd == "stop")
 		{
 			m_svcAdapter->shutDown();
@@ -155,7 +195,7 @@ char* HepEventServer_impl::setEvent(const char* command)
 		}
   else
     {
-      nextEventMsg = "Nope, don't know the message ..\n";      
+      nextEventMsg = "error:don't know the message ..\n";      
     }
 
   return CORBA::string_dup(nextEventMsg.c_str());
@@ -191,10 +231,4 @@ CORBA::Any* HepEventServer_impl::getEventData (const char* dataFormat)
   return _dupEventData_var;
 }
 
-/// Return the HepRep object
-//HepRep_ptr HepEventServer_impl::getEventData (const char* dataFormat)
-//{
-//  std::cout << "I've just given to " << _clientDesc << " an HepRep object" << std::endl;
-//
-//  return HepRep::_duplicate (_hepRep_var);
-//}
+
