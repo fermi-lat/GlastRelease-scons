@@ -1,13 +1,17 @@
-// $Header$
+/** 
+* @file ExposureAlg.cxx
+* @brief Definition and implementation of class ExposureAlg
+*
+*  $Header$
+*/
 
 // Include files
 // Gaudi system includes
+#include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/SmartRefVector.h"
 
 #include "astro/SkyDir.h"
@@ -23,22 +27,47 @@
 //flux
 #include "FluxSvc.h"
 #include "FluxSvc/IFlux.h"
-#include "Spectrum.h"
-#include "SpectrumFactory.h"
 #include "GPS.h"
-
-//for instantiation of the new spectrum.
-#include "FluxSvc/ISpectrum.h"
-#include "FluxSvc/ISpectrumFactory.h" 
-
-#include "astro/EarthOrbit.h"
-
-#include "CLHEP/Vector/LorentzVector.h"
 
 #include <cassert>
 #include <vector>
+#include <fstream>
 
-#include "ExposureAlg.h"
+/** 
+* \class ExposureAlg
+*
+* \brief This is an Algorithm designed to get information about LAT
+* position, exposure and livetime from FluxSvc and use it to put information onto the TDS about
+* LAT pointing and location characteristics, effectively generating the D2 database.  The "TimeCandle" 
+* Spectrum is included (and can be used in jobOptions with this algorithm) in order to provide a constant time reference.
+*
+* \author Sean Robinson
+* 
+* $Header$
+*/
+class ExposureAlg : public Algorithm {
+public:
+    ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator);
+    
+    //stuff that an Algorithm needs.
+    StatusCode initialize();
+    StatusCode execute();
+    StatusCode finalize();
+    
+private: 
+    
+    double m_lasttime; //time value to hold time between events;
+    StringProperty m_source_name;
+    StringProperty m_file_name;
+
+    IFluxSvc*   m_fluxSvc;
+    IFlux *     m_flux;
+
+    std::ostream* m_out;  //for output that looks like the stuff from the astro orbit model test.
+    int         m_tickCount; // number of ticks processed
+        
+    
+};
 //------------------------------------------------------------------------
 
 static const AlgFactory<ExposureAlg>  Factory;
@@ -47,10 +76,11 @@ const IAlgFactory& ExposureAlgFactory = Factory;
 //------------------------------------------------------------------------
 //! ctor
 ExposureAlg::ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator)
-:Algorithm(name, pSvcLocator), m_out(0)
+:Algorithm(name, pSvcLocator), m_out(0), m_tickCount(0)
 {
     // declare properties with setProperties calls
     declareProperty("source_name",  m_source_name="default");
+    declareProperty("file_name",  m_file_name="");
     
 }
 
@@ -69,9 +99,9 @@ StatusCode ExposureAlg::initialize(){
         return StatusCode::FAILURE;
     }
 
-    //TODO: set the file name from a property
-    m_out = new std::ofstream("orbitFromAlg.out");
-    m_fluxSvc->setRockType(GPS::SLEWING);
+    if(! m_file_name.value().empty() ){
+        m_out = new std::ofstream(m_file_name.value().c_str());
+    }
 
     return sc;
 }
@@ -171,6 +201,7 @@ StatusCode ExposureAlg::execute()
     
     DataObject *mc = new Event::D2EntryCol;
     sc=eventSvc()->registerObject(EventModel::MC::Event , mc);
+    // THB: why is this commented out?
     //if(sc.isFailure()) {
     //    log << MSG::ERROR << EventModel::MC::Event  <<" could not be registered on data store" << endreq;
     //    return sc;
@@ -209,7 +240,8 @@ StatusCode ExposureAlg::execute()
     sunDir()=(m_fluxSvc->transformGlastToGalactic(currentTime).inverse())*sunDir();
      
     //and here's the file output.
-    std::ostream& out = *m_out;
+    if( m_out !=0) {
+        std::ostream& out = *m_out;
         out<<intrvalstart <<'\t';
         out<<intrvalend <<'\t';
         out<< posx<<'\t';
@@ -234,12 +266,13 @@ StatusCode ExposureAlg::execute()
         out<< rasun <<"\t"<<decsun  <<'\t';
         out<< sunDir().x() <<"\t"<< sunDir().y()  <<"\t"<< sunDir().z()  <<'\t';
         out<<ramoon <<"\t"<<decmoon   <<std::endl;
-                                
-
-
+        
+        
+    }
         setFilterPassed( false );
     log << MSG::DEBUG << "ExposureAlg found a TimeTick particle, ended this execution after making a record, filterpassed = " << filterPassed() << endreq;
 
+    m_tickCount++;
     return sc;
 }
 
@@ -248,6 +281,7 @@ StatusCode ExposureAlg::execute()
 StatusCode ExposureAlg::finalize(){
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
+    log << MSG::INFO << "Processed " << m_tickCount << " ticks" << endreq;
     delete m_out;
     
     return sc;
