@@ -936,7 +936,7 @@ ComboFindTrackTool::Candidate::Candidate(double e, Point x, Vector t, double chi
         pln_pointer++;
     }
 	int top_plane     = geometry->getPlane(x.z());
-    int first_layer   = geometry->getLayer(top_plane);
+    int first_layer   = 17 - geometry->getLayer(top_plane);
 
     // Initial setting of constrained energies
     // This originally in the SetEnergies method, moved here to initialize con energy

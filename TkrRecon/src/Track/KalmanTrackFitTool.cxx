@@ -419,6 +419,7 @@ void KalmanTrackFitTool::doFinalFitCalculations(Event::TkrTrack& track)
 
         //Add the track to the collection in the TDS
         Event::TkrTrackCol* pFitTracks = SmartDataPtr<Event::TkrTrackCol>(m_dataSvc,EventModel::TkrRecon::TkrTrackCol); 
+		if(!pFitTracks) return;
 
         //Flag the hits
         trackUtils.flagAllHits(track);
