@@ -31,7 +31,7 @@ public:
     ~ClassificationTree();
 
 private:
-    double backgroundRejection();
+    int backgroundRejection();
 
     classification::Tree * m_classifier;
     const TupleItem*  m_firstLayer; /// access to the first layer in the tuple
