@@ -9,6 +9,9 @@ apply_pattern packageShr
 # this because reconRootData needs the LogId extraction operator
 apply_pattern  package_linkopts
 
+# temporarily re-introduce this patter to be sure bfemApp will run on linux
+apply_pattern ld_library_path
+
 #-------------------------------------------------------
 private
 
