@@ -22,7 +22,7 @@
 #include "Event/Recon/TkrRecon/TkrPatCandCol.h"
 #include "src/TrackFit/KalFitTrack/KalFitTrack.h"
 #include "src/PatRec/NeuralNet/TkrNeuron.h"
-#include "src/PatRec/NeuralNet/TkrBase.h"
+#include "src/PatRec/Utilities/TkrBase.h"
 #include <vector>
 
 using namespace Event;
