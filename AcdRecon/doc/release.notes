@@ -2,6 +2,7 @@
 package AcdRecon
 package manager:H.Kelly
 
+v0r3p1      13-Jun-2002 HMK Negate direction vector for active distance\n
 v0r2p1    13-Jun-2002 HMK Fix DOCA calculation - setting track direction incorrectly\n
 v0r2      11-Jun-2002 HMK Really works and stores data on TDS\n
 v0r1      08-Jun-2002 HMK initial import\n
