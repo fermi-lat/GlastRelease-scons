@@ -11,11 +11,11 @@
 second.OutputLevel=4; // too much info from second CalClustersAlg
 CalClustersAlg.OutputLevel=4; // too much info from second CalClustersAlg
 TkrVertexAlg.OutputLevel=4; // supress INFO message "Vertexing performed with: TkrComboVtxRecon(not a tool)"
-//Output.Members={}; // turn off any root ouptut
+Output.Members={}; // turn off any root ouptut
 
 // Number of events to process
-ApplicationMgr.EvtMax = 10000;
-MeritAlg.generated = 10000; // for estimation of Aeff--must be the same
+ApplicationMgr.EvtMax = 1000;
+MeritAlg.generated = 1000; // for estimation of Aeff--must be the same
 // set root output from merit with following
 MeritAlg.RootFilename="merit.root"; 
 //==============================================================
