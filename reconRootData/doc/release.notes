@@ -1,4 +1,5 @@
 /** @file release.notes  package reconRootData  package manager:H.Kelly @verbatim
+v5r3p4    02-Mar-05  : HMK Propagate a bug fix to TkrTrack.h ... no change to interface
 v5r3p3    02-Mar-05  : HMK Increment ID for TkrRecon
 v5r3p2    28-Feb-05  : LSR add 2 new bit definitions
 v5r3p1    11-Feb-05  : LSR fix test program, again

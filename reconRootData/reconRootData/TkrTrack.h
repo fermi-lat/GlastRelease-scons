@@ -105,7 +105,7 @@ public:
                                            const {return m_chisqSegment + penaltyGap*getNumGaps();}
     inline UInt_t       getNumXHits()            const {return m_nxHits;}
     inline UInt_t       getNumYHits()            const {return m_nyHits;}
-	inline UInt_t       getNumFitHits()          const {return m_nyHits + m_nyHits;}
+	inline UInt_t       getNumFitHits()          const {return m_nxHits + m_nyHits;}
     /// JCT: THE FOLLOWING SHOULD BE COMMENTED
     inline Double_t     getTkrCalRadlen()        const {return m_TkrCal_radlen;}
 
