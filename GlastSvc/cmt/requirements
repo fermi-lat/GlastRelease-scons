@@ -3,7 +3,7 @@ version v8r0
 branches src cmt doc
 
 use Event v8r*
-use xmlGeoDbs  v1r* 
+use xmlGeoDbs  v1r*
 use detModel   v2r*
 
 apply_pattern packageShr

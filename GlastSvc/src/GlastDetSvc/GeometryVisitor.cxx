@@ -144,8 +144,8 @@ void  GeometryVisitor::visitAxisMPos(detModel::AxisMPos* pos)
 {
     
     IdVector& ids = pos->getIdFields();
-    // get the rotation angle, transform as necessary!
-    double rot = -pos->getRotation();
+    // get the rotation angle
+    double rot = pos->getRotation();
     
     for( unsigned int i = 0; i< pos->getNcopy(); ++i) {
         

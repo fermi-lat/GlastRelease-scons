@@ -61,6 +61,12 @@ public:
 
     /// retrive the 3D transformation of a volume given a valid ID
     virtual StatusCode getTransform3DByID(idents::VolumeIdentifier,HepTransform3D*);
+
+    /// retrive the type and dimensions of a volume given a valid ID
+    virtual StatusCode  getShapeByID(idents::VolumeIdentifier id,
+                                     std::string*, 
+                                     std::vector<double>*);
+
     
     /// compute strip id from local coordinate for a tkr plane
     virtual unsigned int stripId (double x);

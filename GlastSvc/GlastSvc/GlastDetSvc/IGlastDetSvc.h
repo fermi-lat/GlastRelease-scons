@@ -8,6 +8,7 @@
 
 // includes
 #include "GaudiKernel/IInterface.h"
+#include <vector>
 #include <string>
 //forward declarations
 class DMmanager;
@@ -17,6 +18,8 @@ class IGeometry;
 class IMedia;
 class HepTransform3D;
 class HepPoint3D;
+class IDmapBuilder;
+
 namespace idents{class VolumeIdentifier;}
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
@@ -37,6 +40,12 @@ public:
 
     /// retrieve the 3D transformation of a volume given a valid ID
     virtual StatusCode getTransform3DByID(idents::VolumeIdentifier,HepTransform3D*)=0;
+
+    /// retrive the type and dimensions of a volume given a valid ID
+    virtual StatusCode  getShapeByID(idents::VolumeIdentifier id,
+                                     std::string*, 
+                                     std::vector<double>*) = 0;
+
 
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IGlastDetSvc; }

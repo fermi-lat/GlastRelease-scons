@@ -161,6 +161,16 @@ StatusCode GlastDetSvc::getTransform3DByID(idents::VolumeIdentifier id,HepTransf
   else return StatusCode::FAILURE;
 }
 
+StatusCode  GlastDetSvc::getShapeByID(idents::VolumeIdentifier id,
+                                      std::string* st, 
+                                      std::vector<double>* dv)
+{
+  if (m_dm->getShapeByID(id, st, dv))
+    return StatusCode::SUCCESS;
+  else return StatusCode::FAILURE;
+}
+
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //            SiliconPlaneGeometry interface calls
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
