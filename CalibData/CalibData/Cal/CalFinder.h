@@ -45,6 +45,12 @@ namespace CalibData {
       return face + m_c0*range + m_c1*xtal + m_c2*layer + m_c3*iTower;
     }
 
+    /**
+       Find index for channel within the calibration corresponding to 
+       specified arguments.
+       If range, face fields are valid in the id, ignore separate range and
+       face arguments
+     */
     unsigned findIx(idents::CalXtalId id, unsigned range, unsigned face=0) 
       const;
 
@@ -53,6 +59,12 @@ namespace CalibData {
       return ((towerRow <m_towerRow) && (towerCol <= m_towerCol) &&
               (layer <= m_layer) && (xtal < m_xtal) &&
               (range < m_range) && (face < m_face)); }
+
+    /**
+       See if arguments translate to usable index for this calibration.
+       If range, face fields are valid in the id, ignore separate range and
+       face arguments
+     */
     bool checkIx(idents::CalXtalId id, unsigned range, unsigned face=0);
 
     unsigned getSize() const {return m_c3*m_tower;}

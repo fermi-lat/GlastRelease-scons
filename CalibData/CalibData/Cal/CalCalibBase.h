@@ -43,8 +43,13 @@ namespace CalibData {
                                 unsigned layer, unsigned xtal,
                                 unsigned range=0, unsigned face=0);
 
-    bool putRange(idents::CalXtalId id, unsigned range, unsigned face, 
-                  RangeBase* data);
+    // **NEW** 
+    bool putRange(idents::CalXtalId id, RangeBase* data) {
+      return putRange(id, 0, 0, data);
+    }
+
+    bool putRange(idents::CalXtalId id, 
+                  unsigned range, unsigned face, RangeBase* data);
 
     bool putRange(unsigned towerRow, unsigned towerCol, 
                   unsigned layer, unsigned xtal, unsigned range,
