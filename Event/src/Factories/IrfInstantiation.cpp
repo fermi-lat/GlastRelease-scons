@@ -51,7 +51,7 @@ _ImplementHitContainedFactories(IrfTkrHit)
 #include "GlastEvent/Irf/IrfTkrLayer.h"
 _ImplementHitContainedFactories(IrfTkrLayer)
 
-void IrfInstanciation()  {
+void IrfInstantiation()  {
     DLL_DECL_CONTAINEDOBJECTFACTORY( IrfAcdHit );
     DLL_DECL_CONTAINEDOBJECTFACTORY( IrfCalHit );
     DLL_DECL_CONTAINEDOBJECTFACTORY( IrfTkrHit );
