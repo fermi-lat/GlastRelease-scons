@@ -563,7 +563,7 @@ StatusCode TkrValsTool::calculate()
             double countThreshold = 15; // counts
             double normFactor  =  1./53.;
 
-            double rawToT = cluster->getRawToT();
+            //double rawToT = cluster->getRawToT();
             double mips = cluster->getMips();
 
             double tot = cluster->ToT();

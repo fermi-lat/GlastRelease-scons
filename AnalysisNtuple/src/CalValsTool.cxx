@@ -377,7 +377,7 @@ StatusCode CalValsTool::calculate()
     //Make sure we have valid cluster data
     if (!pCals) return sc;
 
-    double z0 = 0.0; // placeholder for offset
+    //double z0 = 0.0; // placeholder for offset
     
     Event::CalCluster* calCluster = pCals->front();
     
