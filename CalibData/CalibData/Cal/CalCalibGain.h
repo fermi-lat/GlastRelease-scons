@@ -11,15 +11,20 @@ namespace CalibData {
   class CalCalibGain : public CalCalibBase {
 
   public:
-    CalCalibGain(unsigned nTower=16, unsigned nLayer=8, unsigned nXtal=12,
-                unsigned nFace=2, unsigned nRange=4) :
-      CalCalibBase(nTower, nLayer, nXtal, nFace, nRange) {}
+    CalCalibGain(unsigned nTowerRow=4, unsigned nTowerCol=4, 
+                 unsigned nLayer=8, 
+                 unsigned nXtal=12, unsigned nFace=2, unsigned nRange=4) :
+      CalCalibBase(nTowerRow, nTowerCol, nLayer, nXtal, nFace, nRange) {}
 
     ~CalCalibGain() {}
 
     /// Override putRange implementation in order to add consistency
     /// check
     bool putRange(idents::CalXtalId id, unsigned range, 
+                  unsigned face, RangeBase* data);
+
+    bool putRange(unsigned towerRow, unsigned towerCol, 
+                  unsigned layer, unsigned xtal, unsigned range,
                   unsigned face, RangeBase* data);
 
     virtual const CLID& clID() const {return classID(); }

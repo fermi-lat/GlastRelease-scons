@@ -14,5 +14,14 @@ namespace CalibData {
     // Otherwise go ahead and let base class handle it
     return CalCalibBase::putRange(id, range, face, data);
   }
+  bool CalCalibGain::putRange(unsigned towerRow, unsigned towerCol, 
+                              unsigned layer, unsigned xtal, unsigned range,
+                              unsigned face, RangeBase* data) {
+    if (!dynamic_cast<Gain* >(data)) return false;
+
+    // Otherwise go ahead and let base class handle it
+    return CalCalibBase::putRange(towerRow, towerCol, layer, xtal,
+                                  range, face, data);
+  }
 
 }
