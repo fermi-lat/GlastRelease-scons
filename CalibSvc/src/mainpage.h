@@ -43,8 +43,8 @@
     </ul> 
 
   
-  The package will also contain CalibROOTCnvSvc and CalibXMLCnvSvc
-  classes and their converters, to be written.
+  The package also contains CalibXMLCnvSvc and and a single test converter.
+  Real XML converters plus CalibROOTCnvSvc and its converters are TBW.
 
   @section requirements requirements
   @include requirements
@@ -52,6 +52,26 @@
   @section notes release.notes
   release.notes
   <hr> 
+  @section jobOptions jobOptions
+
+  CalibDataSvc has the following job options properties:
+  <ul>
+  <li> CalibStorageType, defaults to MYSQL_StorageType</li>
+  <li> CalibNameList,   list of knwon calibration types (not sure
+       this is needed; may be no reason to make this list so
+       dynamic)</li>
+  <li> CalibRootName,  defaults to "Calib", top node in TCDS</li>
+  <li> CalibInstrumentName, defaults to "LAT"</li>
+  </ul>
+
+  The class EvtClock, used in the test program to generate fake event
+  times and store them with CalibDataSvc, has job options properties
+
+  <ul>
+  <li>  startTime, defaults to current time. Time assigned to first event </li>
+  <li>  delayTime, defaults to 2 seconds. Difference in timestamps between
+        adjacent events</li>
+  </ul>
 
   @todo    Figure out what other information from the metadata needs to
            be acquired and saved, and where it should go.
