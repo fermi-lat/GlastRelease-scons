@@ -130,10 +130,7 @@ Point TkrQueryClusters::nearestHitOutside(Event::TkrCluster::view v, int iplane,
 
         // Kludge to prevent crashes when z plane incorrect
         double zDistance   = fabs(Pini.z() - Pcenter.z());
-        if (zDistance > .1) 
-        {
-            if (zDistance > .6) continue;
-        }
+        if (zDistance > .3) continue;
 		
         double hitDistance = fabs(Pini.x() - Pcenter.x());
         double twrDistance = fabs(Pini.y() - Pcenter.y());
