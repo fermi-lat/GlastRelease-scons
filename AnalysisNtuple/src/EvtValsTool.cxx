@@ -283,7 +283,7 @@ StatusCode EvtValsTool::calculate()
         }
     }
     
-	EvtPSFModel = sqrt(pow((6.1/EvtEnergySumOpt),2) + (.001745*.001745));
+	EvtPSFModel = sqrt(pow((.061/pow((EvtEnergySumOpt/100),.8)),2) + (.001745*.001745));
     EvtLogESum = log10(std::min(std::max(EvtEnergySumOpt,20.),50000.));
 	double logE = EvtLogESum;
     double logE2 = logE*logE; 
