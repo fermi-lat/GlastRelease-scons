@@ -319,7 +319,7 @@ int write(char* fileName, UInt_t numEvents) {
     randNum = randGen.Rndm();
     for (ievent = 0; ievent < numEvents; ievent++) {
         
-        ev->initialize(ievent, runNum, sourceId, sequence);
+        ev->initialize(ievent, runNum, sourceId, sequence, ievent*1.0);
         
         for (ipart = 0; ipart < numParticles; ipart ++) {
             McParticle *mcPart = new McParticle();
