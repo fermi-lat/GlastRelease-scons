@@ -64,9 +64,11 @@ StatusCode testRootIoSvcAlg::execute()
 	
 	if (flag % 2)
 		m_rootIoSvc->setIndex(flag);
-	else 
-		//m_rootIoSvc->setRunEventPair(std::pair<int,int>(10,5));
-        m_rootIoSvc->setIndex(flag);
+    else {
+		m_rootIoSvc->setRunEventPair(std::pair<int,int>(10,48));
+        log << MSG::INFO << "Requesting run/event (10,48) randomly" << endreq;
+    }
+        //m_rootIoSvc->setIndex(flag);
 
 	flag++;
 
