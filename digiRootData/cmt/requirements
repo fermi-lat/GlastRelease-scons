@@ -1,9 +1,9 @@
 package digiRootData
-version v3r5p7
+version v3r6
 
 use mcRootData v2r*
-use GlastPolicy v4r*
-use ROOT v3r*
+use GlastPolicy v5*
+
 
 apply_pattern package_include
 
@@ -15,9 +15,11 @@ apply_pattern ld_library_path
 
 #-------------------------------------------------------
 private
-use RootPolicy v1r*
+use RootPolicy v2r*
 apply_pattern root_package
 apply_pattern root_package2
+
+apply_pattern vsnet_rootcint
 
 
 
@@ -47,5 +49,6 @@ library  digiRootData \
       ../digiRootData/*.cxx \
       ${digiRootData_headers}
 
-macro test_digiRootDatalinkopts ${digiRootData_shlibflags}
+
+macro test_digiRootDatalinkopts ${digiRootData_shlibflags} $(ROOT_libs)
 application test_digiRootData test/testDigiClasses.cxx
