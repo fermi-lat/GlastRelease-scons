@@ -83,8 +83,9 @@ StatusCode CalDigiLogsAlg::execute()
 		
 	  //		CalADCLog* ADCLog = m_CalRawLogs->Log(jlog);
                idents::CalLogId ADCLog = (*it)->getPackedId();
-	   int ilayer          = ADCLog.getLayer();
-       int viewKludge = ilayer%2;
+	   int lyr = ADCLog.getLayer();
+	   int  ilayer=lyr/2; 
+       int viewKludge = lyr%2;
        CalDetGeo::axis view   = CalDetGeo::makeAxis(viewKludge);
 	   int icol            = ADCLog.getColumn();
 
@@ -97,7 +98,7 @@ StatusCode CalDigiLogsAlg::execute()
 
 	   CalRecLog* recLog = m_CalRecLogs->getLogID(CalLogID::ID(ilayer,view,icol));
 	   computeEnergy(recLog, (*it), pedLog, calibLog);
-	   computePosition(recLog,&geoLog, calibLog);
+//	   computePosition(recLog,&geoLog, calibLog);
 	   //		std::cout << " ilayer = " << ilayer << " view=" << view << " icol=" << icol << std::endl;
 	}
 //	m_CalRecLogs->writeOut();
@@ -124,7 +125,14 @@ StatusCode CalDigiLogsAlg::retrieve()
     StatusCode sc = StatusCode::SUCCESS;
 
 	m_CalRecLogs = 0;
-	m_CalRecLogs = new CalRecLogs();
+
+	int nModX = m_CalGeo->numModulesX();   
+	int nModY = m_CalGeo->numModulesY();   
+	int nLogs = m_CalGeo->numLogs();
+	int nLayers = m_CalGeo->numLayers();
+	int nViews = m_CalGeo->numViews();
+ 
+	m_CalRecLogs = new CalRecLogs(nModX,nModY,nLogs,nLayers,nViews);
 
 DataObject* pnode=0;
 
@@ -154,46 +162,55 @@ void CalDigiLogsAlg::computeEnergy(CalRecLog* recLog, const CalDigi* ADCLog,
 								  const CalADCLog* pedLog, const CalCalibLog* calibLog)
 //################################################
 {
+	MsgStream log(msgSvc(), name());
 	
-	double MAXPED = 4095.;
-	double ADCSATURATION = 3850;
-	bool eneSet = false;
-	for (int irange = 0; irange < CALNRANGES ; irange++) {
-		CalBase::RANGE r = (irange == 0? CalBase::LEX : CalBase::LE);
+		double ped=100.;
+		double maxadc=4095;
+		double maxEnergy[]={200.,1600.,12800.,102400.};
 		double eneNeg = 0.;
     	double enePos = 0.;
 		double adcNeg = 0.;
 		double adcPos = 0.;
-		double adcSatNeg = 0.;
-		double adcSatPos = 0.;
+
 		for (int iside = 0; iside < CALNSIDES; iside++) {
 			CalLogReadout::LogFace s = (iside == 0? CalLogReadout::NEG : CalLogReadout::POS);
+			double adc = ADCLog->getAdc(0,s);	
+			int irange = ADCLog->getRange(0,s); 
+			CalBase::RANGE r = (irange == 0? CalBase::LEX : CalBase::LE);
 			if (irange > 1) r = (irange == 2? CalBase::HEX : CalBase::HE);
-			double adc = ADCLog->getAdc(r,s);
-            double ped = pedLog->ADC(static_cast<CalBase::SIDE>(s),r);
+//            double ped = pedLog->ADC(static_cast<CalBase::SIDE>(s),r);
+
+			log << MSG::DEBUG << " adc=" << adc << " irange=" << irange
+				<< " iside=" << iside << endreq;
+			
 			double adc_ped = adc - ped;
-			//if (s== CalBase::NEG) recLog->setNegADC(r,(adc-ped)/(MAXPED-ped));
-			//else recLog->setPosADC(r,(adc-ped)/(MAXPED-ped));
 			if (s== CalLogReadout::NEG) recLog->setNegADC(r,adc_ped);
 			else recLog->setPosADC(r,adc_ped);
 
-			double adcSat = 0.6*(calibLog->getRail(iside,irange));
-			double ene = calibLog->adc_to_MeV(adc_ped,iside,irange);
-			iside == 0? eneNeg = ene: enePos = ene;
-			iside == 0? adcNeg = adc_ped: adcPos = adc_ped;
-			iside == 0? adcSatNeg = adcSat: adcSatPos = adcSat;
-		}
-		recLog->setNegEnergy(r,eneNeg);
-		recLog->setPosEnergy(r,enePos);
-		if(adcNeg<50 || adcPos<50)eneNeg=enePos=0;
+//			double adcSat = 0.6*(calibLog->getRail(iside,irange));
+//			double ene = calibLog->adc_to_MeV(adc_ped,iside,irange);
 
-		if (!eneSet && (adcNeg < adcSatNeg && adcPos < adcSatPos)) {
-			eneSet = true;
-			recLog->setNegEnergy(eneNeg);
-			recLog->setPosEnergy(enePos);
-            recLog->setBestRange(r);
+			double ene = maxEnergy[irange]*adc_ped/(maxadc-ped);
+
+			if (iside == 0){
+				eneNeg=ene;
+				adcNeg = adc_ped;
+				recLog->setNegEnergy(r,eneNeg);
+		 		recLog->setNegEnergy(eneNeg);
+			} else {
+				enePos = ene;
+				adcPos = adc_ped;
+				recLog->setPosEnergy(r,enePos);
+				recLog->setPosEnergy(enePos);
+			}
+	        recLog->setBestRange(r);
+
 		}
-	}
+		
+		recLog->writeOut();		
+
+		
+	
 }
 //################################################
 void CalDigiLogsAlg::computePosition(CalRecLog* recLog, const CalDetGeo* geoLog,
@@ -206,8 +223,8 @@ void CalDigiLogsAlg::computePosition(CalRecLog* recLog, const CalDetGeo* geoLog,
 	CalDetGeo::axis view = recLog->view();
 	double xdir = 0.;
 	double ydir = 0.;
-	ydir = (view == CalDetGeo::X? 1. : 0);
-	xdir = (view == CalDetGeo::Y? 1. : 0);
+	ydir = (view == CalDetGeo::X? pSize.y() : 0);
+	xdir = (view == CalDetGeo::Y? pSize.x() : 0);
 
 	Vector dirLog(xdir,ydir,0.); 
 	
@@ -215,7 +232,9 @@ void CalDigiLogsAlg::computePosition(CalRecLog* recLog, const CalDetGeo* geoLog,
 	double eneNeg = recLog->negEnergy();
 	double enePos = recLog->posEnergy();
 	double asym = recLog->asymmetry();
-	double slope = calibLog->getSlope(recLog->bestRange());
+//	double slope = calibLog->getSlope(recLog->bestRange());
+	double latt = 0.65;
+	double slope = (1+latt)/(1-latt);
 
 	Point pLog = pCenter+dirLog*asym*slope;
 
