@@ -32,8 +32,8 @@ public:
                          const double& eStart, const double& zStop, bool forward = true);
 
     // Remaining methods return a zero matrix 
-    KFmatrix& operator()(const double &deltaZ)        {return m_none;}
-    KFmatrix& operator()(const idents::TkrId &id)     {return m_none;}
+    KFmatrix& operator()(const double& /* deltaZ */)        {return m_none;}
+    KFmatrix& operator()(const idents::TkrId& /* id */)     {return m_none;}
 
     const double    getLastStepRadLen()  {return m_LastStepRadLen;}
     const double    getLastStepActDist() {return m_LastStepActDist;}

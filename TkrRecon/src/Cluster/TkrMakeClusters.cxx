@@ -62,7 +62,6 @@ TkrMakeClusters::TkrMakeClusters(TkrClusterCol* pClus, Event::TkrIdClusterMap* c
         m_tkrGeom->layerToTray(layer, view, tray, botTop);
 
         idents::TkrId hitId(towerX, towerY, tray, (botTop==1), measure);
-
                
         // debug: std::cout << "digi t/l/v " << tower << " " << layer << " " << view << std::endl;
         // copy the hits, and make them into TaggedStrips

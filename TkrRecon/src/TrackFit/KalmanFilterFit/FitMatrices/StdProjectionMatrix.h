@@ -29,9 +29,9 @@ public:
     KFmatrix& operator()(const idents::TkrId &id);
 
     // For the remaining methods return "none" 
-    KFmatrix& operator()(const double &deltaZ)  {return m_none;}
-    KFmatrix& operator()(const KFvector& stateVec, const double& zStart, 
-                         const double& eStart, const double& zStop, bool forward = true)
+    KFmatrix& operator()(const double& /* deltaZ */)  {return m_none;}
+    KFmatrix& operator()(const KFvector& /* stateVec */, const double& /* zStart*/, 
+                         const double& /* eStart */, const double& /* zStop */, bool /* forward = true */)
                                                 {return m_none;}
 
 private:

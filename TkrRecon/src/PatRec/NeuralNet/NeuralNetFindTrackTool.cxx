@@ -230,8 +230,8 @@ void NeuralNetFindTrackTool::buildCand(Event::TkrTrackCol& /*TkrCands*/,
       
         while(iter != tracks.end())
         {
-	        Event::TkrTrack* pTrack = *iter++;
-///	        pTrack->unFlagAllHits();
+//	        Event::TkrTrack* pTrack = *iter++;
+//          pTrack->unFlagAllHits();
         }
     }
   

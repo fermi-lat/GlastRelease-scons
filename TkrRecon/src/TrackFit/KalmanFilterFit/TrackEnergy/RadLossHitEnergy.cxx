@@ -17,8 +17,8 @@ RadLossHitEnergy::RadLossHitEnergy(double mass) :
     return;
 }
 
-double RadLossHitEnergy::initialHitEnergy(const Event::TkrTrack& patCand, 
-                                          const Event::TkrTrackHit& candHit, 
+double RadLossHitEnergy::initialHitEnergy(const Event::TkrTrack& /*patCand*/, 
+                                          const Event::TkrTrackHit& /*candHit*/, 
                                           const double trkEnergy)
 {
     return trkEnergy;

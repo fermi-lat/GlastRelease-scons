@@ -474,7 +474,7 @@ int KalmanTrackFitTool::doSmootherMemory(Event::TkrTrack* track)
 
     myTrack->clear();
 
-    int numHits = 0;
+    //int numHits = 0;
 
     Event::TkrTrackParams& trackPrms = (*track)[0]->getTrackParams(Event::TkrTrackHit::SMOOTHED);
     TkrTrkParams           trackVec  = TkrTrkParams(trackPrms);
@@ -493,7 +493,7 @@ int KalmanTrackFitTool::doSmootherMemory(Event::TkrTrack* track)
         if (++numSegmentHits > m_MinSegmentHits)
         {
             // Run the smoother
-            double chiSq = doSmoother(*myTrack);
+            /* double chiSq = */ doSmoother(*myTrack);
             
             Event::TkrTrackParams myParams = (*myTrack)[0]->getTrackParams(Event::TkrTrackHit::SMOOTHED);
             TkrTrkParams          myTrkVec = TkrTrkParams(myParams);

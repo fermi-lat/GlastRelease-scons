@@ -20,7 +20,7 @@ NoProcNoiseMatrix::NoProcNoiseMatrix(IPropagator* propagator) :
 
 KFmatrix& NoProcNoiseMatrix::operator()(const KFvector& stateVec, 
                                          const double&   zStart, 
-                                         const double&   eStart, 
+                                         const double&   /* eStart */, 
                                          const double&   zStop, 
                                          bool            forward)
 {

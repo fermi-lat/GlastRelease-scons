@@ -147,7 +147,7 @@ StatusCode MonteCarloFindTrackTool::findTracks()
     // If the primary is charged then it is the first track
     if (mcEvent->getClassificationBits() & Event::McEventStructure::CHARGED) 
     {
-        Event::TkrTrack* candTrack = buildTrack(mcEvent->getPrimaryParticle());
+        /*Event::TkrTrack* candTrack = */ buildTrack(mcEvent->getPrimaryParticle());
     }
 
     // Now build the secondaries
@@ -155,13 +155,13 @@ StatusCode MonteCarloFindTrackTool::findTracks()
 
     for(partIter = mcEvent->beginSecondaries(); partIter != mcEvent->endSecondaries(); partIter++)
     {
-        Event::TkrTrack* candTrack = buildTrack(*partIter);
+        /*Event::TkrTrack* candTrack = */ buildTrack(*partIter);
     }
 
     // Finally, any associated tracks
     for(partIter = mcEvent->beginAssociated(); partIter != mcEvent->endAssociated(); partIter++)
     {
-        Event::TkrTrack* candTrack = buildTrack(*partIter);
+        /* Event::TkrTrack* candTrack = */ buildTrack(*partIter);
     }
 
     // Complete the MC relational tables

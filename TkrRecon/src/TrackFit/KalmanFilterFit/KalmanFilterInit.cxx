@@ -21,35 +21,35 @@ KalmanFilterInit::KalmanFilterInit(std::vector<double>& zCoords, std::vector<int
     return;
 }
 
-void KalmanFilterInit::init(StdTransportMatrix& matrix) const
+void KalmanFilterInit::init(StdTransportMatrix& /* matrix */) const
 {
     //matrix.trackInit(m_zCoords);
 
     return;
 }
 
-void KalmanFilterInit::init(StdProjectionMatrix& matrix) const 
+void KalmanFilterInit::init(StdProjectionMatrix& /* matrix */) const 
 {
     //matrix.trackInit(m_projection);
 
     return;
 }
 
-void KalmanFilterInit::init(ThreeDProjectionMatrix& matrix) const 
+void KalmanFilterInit::init(ThreeDProjectionMatrix& /* matrix */) const 
 {
     //matrix.trackInit(m_projection);
 
     return;
 }
 
-void KalmanFilterInit::init(StdProcNoiseMatrix& matrix) const 
+void KalmanFilterInit::init(StdProcNoiseMatrix& /* matrix */) const 
 {
     //matrix.trackInit(m_zCoords, m_energy);
 
     return;
 }
 
-void KalmanFilterInit::init(NoProcNoiseMatrix& matrix) const
+void KalmanFilterInit::init(NoProcNoiseMatrix& /* matrix */) const
 {
     //matrix.trackInit(m_zCoords, m_energy);
 

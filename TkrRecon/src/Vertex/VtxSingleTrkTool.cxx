@@ -18,7 +18,7 @@ static ToolFactory<VtxSingleTrkTool> s_factory;
 const IToolFactory& VtxSingleTrkToolFactory = s_factory;
 
 
-StatusCode VtxSingleTrkTool::doVtxFit(Event::TkrVertexCol& theVtxCol)
+StatusCode VtxSingleTrkTool::doVtxFit(Event::TkrVertexCol& /*theVtxCol*/)
 {
 // Purpose and Method: Vertex is created for every track separately, located 
 //                     at first hit.
