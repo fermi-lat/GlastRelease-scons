@@ -58,7 +58,9 @@ CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
   m_rootCLID = CLID_DataObject;  
   m_eventTimeDefined = false;
   m_eventTime = 0;
-  m_instrumentName = std::string("");
+  declareProperty("CalibInstrumentName", m_instrumentName = "LAT" );
+  m_instrumentDefined = true;
+  //  m_instrumentName = std::string("");
 }
 
 /// Standard Destructor
