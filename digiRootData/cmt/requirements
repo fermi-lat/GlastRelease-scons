@@ -1,19 +1,15 @@
 package digiRootData
-version v2r5
+version v2r6
 
 use GlastPolicy
 use ROOT
 
+apply_pattern packageShr
 
-ignore_pattern include_none
-apply_pattern package_include
+# this because reconRootData needs the LogId extraction operator
+apply_pattern  package_linkopts
 
-apply_pattern package_linkopts
-
-apply_pattern ld_library_path
-apply_pattern package_headers
-
-
+#-------------------------------------------------------
 private
 
 # Create the Root Cint classes
@@ -35,6 +31,8 @@ make_fragment event_dorootcint -header=event_dorootcint_header
 macro digiRootData_shlibflags " -L${ROOT_PATH}/lib -lPhysics -lMatrix " \
       VisualC            " ${use_linkopts} "
 
+apply_pattern package_include
+apply_pattern package_headers
 
 library  digiRootData *.cxx \
       ../digiRootData/*.cxx \
