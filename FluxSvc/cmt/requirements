@@ -1,5 +1,5 @@
 package FluxSvc
-version v5r10p5
+version v5r10p6
 
 branches FluxSvc mgr doc
 
@@ -29,27 +29,27 @@ private
 apply_pattern package_Cshlibflags
 apply_pattern package_headers
 
+macro_append FluxSvc_headers "" WIN32 "../xml/*.xml test/*.txt test/*.xml"
+
 #static library
-library hist_lib -no_share test/flux/rootplot.cxx \
+library FluxSvc_lib -no_share *.cxx ${FluxSvc_headers} test/flux/rootplot.cxx \
  test/flux/rootEnergyHist.cxx test/flux/rootHist.cxx \
  test/flux/rootAngleHist.cxx
 
-macro libs ""   WIN32   "$(FluxSvcDir)/hist_lib.lib
+macro libs ""   WIN32   "$(FluxSvcDir)/FluxSvc_lib.lib
 
-library FluxSvc  *.cxx \
- Dll/*.cxx $(libs) \
- ${FluxSvc_headers}
+macro FluxSvc_linkopts "-L $(FluxSvcDir) -FluxSvc_lib" \
+                      WIN32 ""
 
-application testMgr test/flux/testMgr.cxx \
- *.cxx $(libs) \
-  ${FluxSvc_headers}
 
-application rootplots test/flux/roottest.cxx \
- *.cxx $(libs) \
- ${FluxSvc_headers}
+library FluxSvc  Dll/*.cxx $(libs) 
 
-macro_append FluxSvc_headers "" WIN32 "../xml/*.xml test/*.txt test/*.xml"
-# test program, using local joboptions
-public set JOBOPTIONS ${FLUXSVCROOT}/src/test/jobOptions.txt
+# enable this for non-Gaudi testing
+#application testMgr test/flux/testMgr.cxx  $(libs) 
+
+# non-Gaudi plots
+application rootplots test/flux/roottest.cxx  $(libs) 
+
+public
 apply_pattern package_test
 
