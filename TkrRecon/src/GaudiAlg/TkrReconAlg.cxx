@@ -151,7 +151,6 @@ StatusCode TkrReconAlg::initialize()
         }
     }
 
-
     // Set the property controlling the type of track fitting to perform
     m_TkrTrackFitAlg->setProperty("TrackFitType", m_TrackerReconType);
 

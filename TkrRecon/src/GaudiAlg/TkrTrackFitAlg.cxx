@@ -61,6 +61,7 @@ private:
 
     /// Type of fit to perform
     std::string  m_TrackFitType;
+    bool         m_GenericFit;
 
     /// Always use Sears Craftsmen tools for the job
     ITkrFitTool* m_FitTool;
@@ -75,7 +76,8 @@ TkrTrackFitAlg::TkrTrackFitAlg(const std::string& name, ISvcLocator* pSvcLocator
 Algorithm(name, pSvcLocator) 
 {
     // Controls which fit to use
-    declareProperty("TrackFitType", m_TrackFitType="Combo");
+    declareProperty("TrackFitType",  m_TrackFitType="Combo");
+    declareProperty("UseGenericFit", m_GenericFit=false);
 }
 
 StatusCode TkrTrackFitAlg::initialize()
@@ -94,12 +96,23 @@ StatusCode TkrTrackFitAlg::initialize()
 
     log << MSG::INFO << "TkrTrackFitAlg Initialization" << endreq;
 
+    // If Generic track fit is desired always use that over other specific fits
+    if (m_GenericFit)
+    {
+        // Set up for the track fit using Link And Tree candidate tracks as input
+        sc = toolSvc()->retrieveTool("KalmanTrackFitTool", m_FitTool);
+    }
     // Depending upon the value of the m_TrackFitType parameter, set up the 
     // Gaudi Tool for performing the track fit. 
-    if (m_TrackFitType == "Combo")
+    else if (m_TrackFitType == "Combo")
     {
         // Set up for the track fit using Combo candidate tracks as input
         sc = toolSvc()->retrieveTool("TkrComboFitTool", m_FitTool);
+    }
+    else if (m_TrackFitType == "KalmanFit")
+    {
+        // Set up for the track fit using Link And Tree candidate tracks as input
+        sc = toolSvc()->retrieveTool("KalmanTrackFitTool", m_FitTool);
     }
     else if (m_TrackFitType == "LinkAndTree" || m_TrackFitType == "MonteCarlo")
     {
