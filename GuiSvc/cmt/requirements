@@ -31,9 +31,8 @@ private
 # note redefinition of the macro to *not* include any other dependent libs
 # and to force inclusion of the loadRef
 
-
-macro use_linkopts " $(GuiSvc_lib) -u GuiSvc_loadRef  $(gui_linkopts) $(Gaudi_linkopts)  "\
-      SunOS        " $(GuiSvc_lib) -u GuiSvc_loadRef  $(gui_linkopts) $(Gaudi_linkopts) -ldl "\
+# don't know why we need the dl library - TL
+macro use_linkopts " $(GuiSvc_lib) -u GuiSvc_loadRef  $(gui_linkopts) $(Gaudi_linkopts) -ldl "\
                    VisualC "  $(Gaudi_linkopts) $(GuiSvc_lib) $(gui_linkopts) /include:_GuiSvc_loadRef "
 
 macro WinJobOptions ""  VisualC  test/jobOptions.txt
