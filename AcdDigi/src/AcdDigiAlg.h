@@ -73,6 +73,9 @@ private:
     
     /// MeV per MIP
     float m_mev_per_mip;
+
+    /// Distance (mm) cutoff for applying edge effects
+    float m_max_edge_dist;
     
     /// JobOptions parameter denoting whether or not to perform auto 
     /// calibration to determine the number of MIPs for full scale PHA
