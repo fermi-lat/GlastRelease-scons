@@ -2,7 +2,6 @@
 
 // Include files
 #include <iostream>
-//#include "geometry/Hep3Vector.h"
 #include "Event/Utilities/SkyDir.h"
 #include "geometry/CoordTransform.h"
 
@@ -14,8 +13,8 @@ SkyDir::SkyDir(double param1, double param2, coordSystem inputType){
         if (m_l==0.){m_l+=0.000000000001;}  //to fix divide-by-zero errors
         
         //here we construct the cartesian galactic vector
-        Hep3Vector gamgal(sin(m_l*M_2PI/360.)*cos(m_b*M_2PI/360.) , sin(m_b * M_2PI/360.) , cos(m_l*M_2PI/360.)*cos(m_b*M_2PI/360.));
-        
+       Hep3Vector gamgal( cos(m_l*M_2PI/360.)*cos(m_b*M_2PI/360.) , sin(m_l*M_2PI/360.)*cos(m_b*M_2PI/360.) , sin(m_b * M_2PI/360.) );
+
         //get the transformation matrix from galactic to celestial coordinates.
         Rotation galToCel=celToGal().inverse();
         
@@ -29,8 +28,8 @@ SkyDir::SkyDir(double param1, double param2, coordSystem inputType){
         if (m_ra==0.){m_ra+=0.000000000001;}  //to fix divide-by-zero errors
         
         //here we construct the cartesian celestial vector
-        m_dir = Hep3Vector(sin(m_ra*M_2PI/360.)*cos(m_dec*M_2PI/360.) , sin(m_dec*M_2PI/360.) , cos(m_ra*M_2PI/360.)*cos(m_dec*M_2PI/360.));        
-        
+        m_dir = Hep3Vector( cos(m_ra*M_2PI/360.)*cos(m_dec*M_2PI/360.), sin(m_ra*M_2PI/360.)*cos(m_dec*M_2PI/360.) , sin(m_dec*M_2PI/360.) );        
+    
     }else{
         //improper coordinate system declaration - default things and say so.
         std::cout << "Improper coordinate System declaration in SkyDir" << std::endl;
@@ -60,21 +59,21 @@ std::pair<double,double> SkyDir::setGalCoordsFromDir() const{
     
     //and do the transform to get the galactic celestial vector
     Hep3Vector pointingin(celToGal*m_dir);
-    
+     
     // pointingin is the galactic cartesian pointing vector,
+    //where yhat points at the galactic origin.
     // we want to make this into l and b now.
-    l = atan(pointingin.x()/pointingin.z());
-    //b = atan(pointingin.y()/pointingin.z());
-    b = asin(pointingin.y());
+    l = atan(pointingin.y()/pointingin.x());
+    b = asin(pointingin.z());
     
     l *= 360./M_2PI;
     b *= 360./M_2PI;
     
     //a serious kluge - this part needs further examination
-    if(pointingin.z()<0){
-        if(pointingin.x()>=0){
+    if(pointingin.x()<0){
+        if(pointingin.y()>=0){
             l=180.+l;
-        }else if(pointingin.x()<=0){
+        }else if(pointingin.y()<=0){
             l=-180.+l;
         }
     }
@@ -85,12 +84,20 @@ std::pair<double,double> SkyDir::setCelCoordsFromDir() const{
     double ra,dec;
 
     //we now want to use the cartesian vector to get (ra, dec).
-    ra = atan(m_dir.x()/m_dir.z());
-    //m_dec = atan(m_dir.y()/m_dir.z());
-    dec = asin(m_dir.y());
-    
+    ra = atan(m_dir.y()/m_dir.x());
+    dec = asin(m_dir.z());
+
     ra *= 360./M_2PI;
     dec *= 360./M_2PI;
+
+        //a serious kluge - this part needs further examination
+    if(m_dir.x()<0){
+            ra=180.+ra;
+    }
+    //fold RA into the range (0,360)
+    while(ra < 0) ra+=360.;
+    while(ra > 360) ra -= 360.;
+
     return std::make_pair<double,double>(ra,dec);
 }
 
