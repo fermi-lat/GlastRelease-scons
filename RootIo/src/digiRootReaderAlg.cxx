@@ -223,15 +223,15 @@ StatusCode digiRootReaderAlg::execute()
 	}
 
     if (readInd >= m_numEvents) {
-        log << MSG::WARNING << "Requested index is out of bounds" << endreq;
-        return StatusCode::FAILURE;
+        log << MSG::WARNING << "Requested index is out of bounds - no digi data loaded" << endreq;
+        return StatusCode::SUCCESS;
     }
 
     numBytes = m_digiTree->GetEvent(readInd);
 	
 	if ((numBytes <= 0) || (!m_digiEvt)) {
-		log << MSG::WARNING << "Failed to load digi event" << endreq;
-		return StatusCode::SUCCESS;
+            log << MSG::WARNING << "Failed to load digi event" << endreq;
+            return StatusCode::SUCCESS;
 	}
 
 

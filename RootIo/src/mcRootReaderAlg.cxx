@@ -226,14 +226,14 @@ StatusCode mcRootReaderAlg::execute()
 	}
 
 	if (readInd >= m_numEvents) {
-		log << MSG::WARNING << "Requested index is out of bounds" << endreq;
-		return StatusCode::FAILURE;
+            log << MSG::WARNING << "Requested index is out of bounds - no MC data loaded" << endreq;
+            return StatusCode::SUCCESS;
 	}
 
 	numBytes = m_mcTree->GetEntry(readInd); 
 	if ((numBytes <= 0) || (!m_mcEvt)) {
-		log << MSG::ERROR << "Failed to Load Mc Event" << endreq;
-		return StatusCode::FAILURE;
+            log << MSG::WARNING << "Failed to Load Mc Event" << endreq;
+            return StatusCode::SUCCESS;
 	}
 
     sc = readMcEvent();

@@ -233,15 +233,15 @@ StatusCode relationRootReaderAlg::execute()
 	}
 
     if (readInd >= m_numEvents) {
-        log << MSG::WARNING << "Requested index is out of bounds" << endreq;
-        return StatusCode::FAILURE;
+        log << MSG::WARNING << "Requested index is out of bounds - no relation data retrieved" << endreq;
+        return StatusCode::SUCCESS;
     }
 
     numBytes = m_relTree->GetEvent(readInd);
 	
 	if ((numBytes <= 0) || (!m_relTab)) {
-		log << MSG::WARNING << "Failed to Relational Table" << endreq;
-		return StatusCode::SUCCESS;
+            log << MSG::WARNING << "Failed to Relational Table" << endreq;
+            return StatusCode::SUCCESS;
 	}
 
 

@@ -241,14 +241,14 @@ StatusCode reconRootReaderAlg::execute()
 	}
 
 	if (readInd >= m_numEvents) {
-		log << MSG::WARNING << "Requested index is out of bounds" << endreq;
-		return StatusCode::FAILURE;
+            log << MSG::WARNING << "Requested index is out of bounds - no recon data loaded" << endreq;
+            return StatusCode::SUCCESS;
 	}
 	numBytes = m_reconTree->GetEvent(readInd);
 
 	if ((numBytes <= 0) || (!m_reconEvt)) {
-		log << MSG::ERROR << "Failed to Load Recon Event" << endreq;
-		return StatusCode::FAILURE;
+            log << MSG::WARNING << "Failed to Load Recon Event" << endreq;
+            return StatusCode::SUCCESS;
 	}
     
     sc = readReconEvent();
