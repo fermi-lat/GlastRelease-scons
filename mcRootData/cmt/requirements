@@ -6,7 +6,7 @@ use GlastPolicy v*
 
 
 apply_pattern package_include
-apply_pattern package_linkopts
+apply_pattern ld_library_path
 
 #-------------------------------------------------------
 private
