@@ -64,11 +64,11 @@ public:
                      HASFILTERED  = 0x0008,  // Hit has valid filtered parameters
                      HASSMOOTHED  = 0x0010,  // Hit has valid smoothed parameters
                      HASMATERIAL  = 0x0020,  // Hit has valid material matrix
-					 UPWARDS      = 0x0040,  // Track direction is upwards (tz > 0)
-					 HITISSSD     = 0x0100,  // Hit comes from a SSD
-					 HITISDEADST  = 0x0200,  // Hit coresponds to a dead SSD Strip
-					 HITISGAP     = 0x0400,  // Hit comes from gap between SSDs
-					 HITISTWR     = 0x0800,  // Hit comes outside live SSD plane
+                     UPWARDS      = 0x0040,  // Track direction is upwards (tz > 0)
+                     HITISSSD     = 0x0100,  // Hit comes from a SSD
+                     HITISDEADST  = 0x0200,  // Hit coresponds to a dead SSD Strip
+                     HITISGAP     = 0x0400,  // Hit comes from gap between SSDs
+                     HITISTWR     = 0x0800,  // Hit comes outside live SSD plane
                      MEASURESX    = 0x1000,  // Plane measures in X direction
                      MEASURESY    = 0x2000,  // Plane measures in Y direction
                      HASVALIDTKR  = 0x8000}; // Valid track volume identifier
@@ -108,7 +108,7 @@ public:
 
     /// Answer quick questions based on status bits
     inline const bool validCluster()      const {return  m_cluster != 0;}
-	inline const bool hitUsedOnFit()      const {return (m_statusBits & HITONFIT    ) == HITONFIT;}
+    inline const bool hitUsedOnFit()      const {return (m_statusBits & HITONFIT    ) == HITONFIT;}
     inline const bool validMeasuredHit()  const {return (m_statusBits & HASMEASURED ) == HASMEASURED;}
     inline const bool validPredictedHit() const {return (m_statusBits & HASPREDICTED) == HASPREDICTED;}
     inline const bool validFilteredHit()  const {return (m_statusBits & HASFILTERED ) == HASFILTERED;}

@@ -53,13 +53,13 @@ namespace Event { //Namespace
     class TkrVertex : virtual public ContainedObject 
     {   
     public:
-		TkrVertex(): m_statusBits(0), m_energy(0.),  m_position(), m_direction(),
-			         m_chiSquare(0.), m_quality(0.), m_arcLen1(0.), m_arcLen2(0.),
-					 m_doca(0.), m_radlen(0.), m_vtxID(0,0,0,false)  {}
+        TkrVertex(): m_statusBits(0), m_energy(0.),  m_position(), m_direction(),
+                     m_chiSquare(0.), m_quality(0.), m_arcLen1(0.), m_arcLen2(0.),
+                     m_doca(0.), m_radlen(0.), m_vtxID(0,0,0,false)  {}
 
-		TkrVertex(idents::TkrId tkrID, double energy, double quality, double chisq, 
-			       double rad_len, double doca, double s1, double s2, double z,
-				   TkrTrackParams params);
+        TkrVertex(idents::TkrId tkrID, double energy, double quality, double chisq, 
+                   double rad_len, double doca, double s1, double s2, double z,
+                   TkrTrackParams params);
         ~TkrVertex() {}
 
         //! Retrieve pointer to class defininition structure
@@ -70,7 +70,7 @@ namespace Event { //Namespace
         ///        |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
         ///                                             <Track Topology > <Track composition>
         enum StatusBits {
-			ONETKRVTX = 0x0001,  //Set if single track vertex
+            ONETKRVTX = 0x0001,  //Set if single track vertex
             TWOTKRVTX = 0x0002,  //Set if 2 track vertex
             MULTKRVTX = 0x0004,  //Set if >2 track vertex
             DOCAVTX   = 0x0010,  //Set if vertex location set by DOCA point
@@ -91,14 +91,14 @@ namespace Event { //Namespace
         inline Point        getPosition()            const {return m_position;}
         inline Vector       getDirection()           const {return m_direction;}
         inline double       getEnergy()              const {return m_energy;}
-		TkrTrackParams      getVertexParams()        const {return m_params;} 
+        TkrTrackParams      getVertexParams()        const {return m_params;} 
 
         /// Access to other Geometry Information
-		inline const idents::TkrId getTkrId()        const {return m_vtxID;}
+        inline const idents::TkrId getTkrId()        const {return m_vtxID;}
         inline double       getAddedRadLen()         const {return m_radlen;}
-		inline double       getTkr1ArcLen()          const {return m_arcLen1;}
-		inline double       getTkr2ArcLen()          const {return m_arcLen2;}
-		inline double       getDOCA()                const {return m_doca;}
+        inline double       getTkr1ArcLen()          const {return m_arcLen1;}
+        inline double       getTkr2ArcLen()          const {return m_arcLen2;}
+        inline double       getDOCA()                const {return m_doca;}
 
         /// Set functions for initializing the data members
         inline void   setPosition(const Point x)          {m_position   = x;}
@@ -110,15 +110,15 @@ namespace Event { //Namespace
         inline void   setTkr1ArcLen(double x)             {m_arcLen1    = x;}
         inline void   setTkr2ArcLen(double x)             {m_arcLen2    = x;}
         inline void   setDOCA(double x)                   {m_doca       = x;}
-		inline void   setTkrID(idents::TkrId& tkrID)      {m_vtxID      = tkrID;}
-		inline void   setParams(TkrTrackParams& params)   {m_params     = params;}
+        inline void   setTkrID(idents::TkrId& tkrID)      {m_vtxID      = tkrID;}
+        inline void   setParams(TkrTrackParams& params)   {m_params     = params;}
         inline void   setStatusBit(unsigned int status)   {m_statusBits |= status;}
         inline void   clearStatusBits()                   {m_statusBits = 0;}
 
         // Add tracks to the list
         void addTrack(const Event::TkrTrack* pTrack)      {m_tracks.push_back(pTrack);}
 
-		// delete last track in the list
+        // delete last track in the list
         void deleteTrack() {m_tracks.pop_back();}
 
         // How many tracks in the vertex?
@@ -148,9 +148,9 @@ namespace Event { //Namespace
         double       m_doca;                // Distance between tracks at VTX location
         double       m_radlen;              // Integrated radiation lengths from end of track 1
                                             // to vertex location
-		idents::TkrId  m_vtxID;             // Complete TkrId identifying the details of this vertex
-		                                    // (This is the TkrId of the first hit after the vertex)
-		TkrTrackParams m_params;            // Parameter structure for vertex (includes cov. matrix)
+        idents::TkrId  m_vtxID;             // Complete TkrId identifying the details of this vertex
+                                            // (This is the TkrId of the first hit after the vertex)
+        TkrTrackParams m_params;            // Parameter structure for vertex (includes cov. matrix)
    
         SmartRefVector<TkrTrack> m_tracks;  // List of tracks associated with vertex
     };

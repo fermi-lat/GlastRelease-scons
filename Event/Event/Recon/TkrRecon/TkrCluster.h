@@ -32,7 +32,7 @@
 
 #include "GaudiKernel/IInterface.h"
 
-static const CLID& CLID_TkrCluster = InterfaceID("TkrCluster", 3, 0);
+static const CLID& CLID_TkrCluster = InterfaceID("TkrCluster", 4, 0);
 
 namespace Event {
 
@@ -43,7 +43,7 @@ namespace Event {
         // once we have an official release, the version number can be used
         //  to allow backward compatibility
 
-        enum {VERSION = 3};
+        //enum {VERSION = 3};
 
         // fields and shifts of the status word, which together make a mask
         //  
@@ -51,26 +51,20 @@ namespace Event {
         enum { 
             fieldUSED        = 1,    // tells whether cluster is used on a track
             fieldEND         = 3,    // identifies controller, 0, 1, 2=mixed
-            fieldRAWTOT      = 0xff, // raw ToT
             fieldPLANEOFFSET = 1,    // to calculate Plane number from Tray/Face (1 for LAT)
-            fieldLAYEROFFSET = 1,    // to calculate Layer number from Plane (0 for LAT)
-            fieldVERSION     = 0xf   // version of class, room for 15!
+            fieldLAYEROFFSET = 1     // to calculate Layer number from Plane (0 for LAT)
         };
         enum {    
             shiftUSED        =  0,
             shiftEND         =  1,
-            shiftRAWTOT      =  8,
-            shiftPLANEOFFSET = 26,
-            shiftLAYEROFFSET = 27,
-            shiftVERSION     = 28 
+            shiftPLANEOFFSET = 29,
+            shiftLAYEROFFSET = 30 
         };
         enum {
             maskUSED        = fieldUSED<<shiftUSED,
             maskEND         = fieldEND<<shiftEND,
-            maskRAWTOT      = fieldRAWTOT<<shiftRAWTOT,
             maskPLANEOFFSET = fieldPLANEOFFSET<<shiftPLANEOFFSET,
-            maskLAYEROFFSET = fieldLAYEROFFSET<<shiftLAYEROFFSET,
-            maskVERSION     = fieldVERSION<<shiftVERSION
+            maskLAYEROFFSET = fieldLAYEROFFSET<<shiftLAYEROFFSET
         };
 
         TkrCluster(): m_tkrId(0,0,0,false) {}
@@ -85,13 +79,11 @@ namespace Event {
         * @param ToT corrected ToT
         */
         TkrCluster(idents::TkrId tkrId, int istrip0, int istripf, 
-            Point position, float ToT, unsigned int status, int nBad)
-            : m_tkrId(tkrId),m_strip0(istrip0),m_stripf(istripf),
-            m_position(position), m_ToT(ToT), m_status(status), m_nBad(nBad)
+            Point position, int rawToT, float ToT, unsigned int status, int nBad)
+            : m_tkrId(tkrId),m_strip0(istrip0),m_stripf(istripf), m_nBad(nBad),
+            m_position(position), m_rawToT(rawToT), m_ToT(ToT), m_status(status) 
+            
         { }
-
-        static unsigned int setStatus(int rawToT, int end) {
-            return   maskRAWTOT&(rawToT<<shiftRAWTOT) | maskEND&(end<<shiftEND);}
 
         virtual ~TkrCluster() {}
 
@@ -112,12 +104,12 @@ namespace Event {
             if (flag==0) {
                 unflag();
             } else {
-                m_status = ( (m_status&maskVERSION)!=0 ? ((m_status&~maskUSED) | (1<<shiftUSED)) : 1);
+                m_status = ((m_status&~maskUSED) | (1<<shiftUSED));
             }
         }
         /// clears the flag of a cluster
         inline void unflag() {
-            m_status = ( (m_status&maskVERSION)!=0 ? m_status&~maskUSED : 0);
+            m_status = (m_status&~maskUSED);
         }
 
         inline int    firstStrip() const {return m_strip0;}
@@ -133,14 +125,13 @@ namespace Event {
 
         /// construct plane from tray/face
         inline int getPlane() const {
-            return m_tkrId.getTray()*2 + m_tkrId.getBotTop() - getPlaneOffset(); 
+            return m_tkrId.getTray()*2 + m_tkrId.getBotTop() - 1 + getPlaneOffset(); 
         }
         // construct layer from Plane
         inline int getLayer() const { 
             return (getPlane() + getLayerOffset())/2 ; }
         // cluster used on a track
-        bool hitFlagged()     const { 
-            return ((maskVERSION&m_status)!=0 ? ((m_status&maskUSED)>0) : m_status!=0);}
+        bool hitFlagged()     const { return ((m_status&maskUSED)>0);}
         // returns chip number, hardwired strips/chip = 64
         inline int    chip()  const { return m_strip0/64;}
 
@@ -149,29 +140,23 @@ namespace Event {
 
         /// retrieves raw ToT (will be raw or corrected depending on the version)
         inline double getRawToT() const { 
-            return ( (m_status&maskVERSION)>2 ? (m_status&maskRAWTOT)>>shiftRAWTOT : m_ToT );
+            return ( m_rawToT);
         }
         /// retrieve corrected ToT (zero for old-style records)
         inline double getMips() const {
-            return ( (m_status&maskVERSION)>2 ? m_ToT : 0.0 );
+            return  m_ToT ;
         }
         /// retrieve end
         inline int getEnd() const {
-            return ( (m_status&maskVERSION)>2 ? (m_status&maskEND)>>shiftEND : 2 );
+            return ((m_status&maskEND)>>shiftEND);
         }
-        /// retrieve version number (old-style is zero)
-        inline int getVersion() const {
-            return m_status&maskVERSION>>shiftVERSION;
-        }
-        /// Everything below here is a candidate for removal
-        //inline int    id()         const {return m_id;}
 
     private:
 
         inline int getPlaneOffset() const { 
-            return ((maskVERSION & m_status)!=0 ? ((m_status&maskPLANEOFFSET)>>shiftPLANEOFFSET) : 1); }
+            return  ((m_status&maskPLANEOFFSET)>>shiftPLANEOFFSET);}
         inline int getLayerOffset() const { 
-            return ((maskVERSION & m_status)!=0 ?((m_status&maskLAYEROFFSET)>>shiftLAYEROFFSET) : 0); }
+            return ((m_status&maskLAYEROFFSET)>>shiftLAYEROFFSET); }
 
         /// tracker volume id
         idents::TkrId m_tkrId;  
@@ -179,14 +164,16 @@ namespace Event {
         int    m_strip0;
         /// final strip address of the cluster
         int    m_stripf;
+        /// number of bad strips in this cluster
+        int m_nBad;
         /// space position of the cluster
         Point  m_position;
-        /// ToT value of the cluster
+        /// raw ToT
+        int m_rawToT;
+        /// Corrected ToT value of the cluster
         float m_ToT;    
         /// various odds and ends
         unsigned int   m_status;
-        /// number of bad strips in this cluster
-        int m_nBad;
     };
 
     std::ostream& TkrCluster::fillStream( std::ostream& s ) const
@@ -201,7 +188,8 @@ namespace Event {
             << " pos (" << m_position.x() << ", " << m_position.y()
             << ", " << m_position.z() << ") "
             << " i0-if " << m_strip0 <<"-"<< m_stripf
-            << " ToT " << m_ToT;
+            << " rawToT " << m_rawToT
+            << " Mips " << m_ToT;
         //<< " status " << m_status; // std::hex << m_status << std::dec;
         return s;
     }
