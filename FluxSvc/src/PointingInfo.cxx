@@ -44,10 +44,12 @@ void PointingInfo::set(double time)
     lat_geo = gps->lat(); 
     lon_geo = gps->lon(); 
 
+    
     // override altitude by using shape of earth.
-    EarthCoordinate loc(pos_km, JulianDate(time));
+    EarthCoordinate loc = gps->earthpos();
     rad_geo = loc.altitude(); 
-
+    L=loc.L();
+    B=loc.B();
 
 }
 Event::Exposure* PointingInfo::forTDS()const
@@ -77,6 +79,8 @@ void PointingInfo::setFT2Tuple(INTupleWriterSvc* tuple, const std::string& tname
     tuple->addItem(tname, "rad_geo",   &rad_geo);
     tuple->addItem(tname, "ra_zenith", &ra_zenith);
     tuple->addItem(tname, "dec_zenith",&dec_zenith);
+    tuple->addItem(tname, "B_McIlwain",&B);
+    tuple->addItem(tname, "L_McIlwain",&L);
     tuple->addItem(tname, "ra_scz",    &ra_scz);
     tuple->addItem(tname, "dec_scz",   &dec_scz);
     tuple->addItem(tname, "ra_scx",    &ra_scx);

@@ -47,6 +47,8 @@ private:
     float ra_scz, dec_scz;
     float ra_scx, dec_scx;
     float livetime;
+    float L; ///< McIllwain L parameter
+    float B; ///< magnetic field
 
 };
 
