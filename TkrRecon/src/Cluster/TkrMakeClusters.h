@@ -62,9 +62,12 @@ public:
                                  std::set<idents::TkrId>* tkrIds);
     
     ~TkrMakeClusters() { }
+           
+private:
     
     /// gets the position of a cluster
-    Point position(int ilayer, Event::TkrCluster::view v, 
+    //Point position(int ilayer, Event::TkrCluster::view v, 
+    Point position(int ilayer, int v, 
         int strip0, int stripf, int tower = 0) const;
     /// returns true if the two hits have a gap between them
     bool isGapBetween(const TaggedStrip &lowHit, const TaggedStrip &highHit) const;
@@ -76,7 +79,7 @@ public:
     const stripCol* getBadStrips(int tower, int digiLayer, 
         int view) const;
            
-private:
+//private:
     
     /// Keep pointer to the geometry service
     ITkrGeometrySvc*  m_pTkrGeo;

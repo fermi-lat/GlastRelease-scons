@@ -61,7 +61,7 @@ public:
     void          findHits();
     void          doFit();
     void          addMeasHit(const TkrPatCandHit& candHit);
-    void          addMeasHit(int clusIdx, int planeID, TkrCluster::view proj, double zPlane,
+    void          addMeasHit(int clusIdx, int planeID, int proj, double zPlane,
                              int before_hit);  
     int           addLeadingHits(int start_layer); 
         
@@ -113,7 +113,7 @@ private:
     const Ray m_ray; 
 
     /// Axis information: First hit orientation
-    TkrCluster::view m_axis;
+    int    m_axis;
 
     /// KalTrack data
     int    m_iLayer;

@@ -200,10 +200,10 @@ StatusCode TkrComboFitTool::doTrackFit(Event::TkrPatCand* patCand)
                 }
                 // For the rest - unflag according to Cluster size and Trajectory
                 Event::TkrFitPlane plane = *pln_pointer;
-                Event::TkrCluster::view hit_proj = plane.getProjection();
+                int hit_proj = plane.getProjection();
                 Event::TkrFitPar tkr_par = plane.getHit(Event::TkrFitHit::FIT).getPar();
                 double slope = tkr_par.getYSlope();
-                if(hit_proj == Event::TkrCluster::X) {
+                if(hit_proj == idents::TkrId::eMeasureX) {
                     slope = tkr_par.getXSlope();
                 }        
                 int hit_Id = plane.getIDHit();;

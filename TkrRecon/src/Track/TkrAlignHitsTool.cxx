@@ -75,9 +75,8 @@ StatusCode TkrAlignHitsTool::alignHits(const Event::TkrKalFitTrack* track,
         Event::TkrCluster* pClus = (*m_clusCol)[plane.getIDHit()];
 
         // get the cluster info
-        Event::TkrCluster::view v = pClus->v();
-        int view = (v==Event::TkrCluster::X ? 0 : 1);
-        int layer = pClus->plane();
+        int view = (pClus->getTkrId().getView() == idents::TkrId::eMeasureX ? 0 : 1);
+        int layer = pClus->getTkrId().getPlane();
         int tower = pClus->tower();
         HepPoint3D pos = pClus->position();
 

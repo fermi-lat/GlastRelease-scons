@@ -97,7 +97,8 @@ int TkrMakeClusterTable::digiOrder ( const TkrCluster* pClust) {
 //    TkrCluster clust = *pClust;
 //    return clust.v() + 2*(m_pTkrGeo->reverseLayerNumber(clust.plane()))
 //        + 64*clust.tower();
-    return pClust->v() + 2*pClust->layer() + 64*pClust->tower();
+    return     pClust->getTkrId().getView() 
+           + 2*pClust->getTkrId().getLayer() + 64*pClust->tower();
 }
     
 

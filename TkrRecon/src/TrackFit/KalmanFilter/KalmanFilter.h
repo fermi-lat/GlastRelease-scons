@@ -30,7 +30,7 @@ public:
     KalmanFilter(TkrClusterCol* clusters, ITkrGeometrySvc* geo);
    ~KalmanFilter() {};
 
-    typedef TkrCluster::view AXIS;
+    typedef int AXIS;
    
     /// Utility functions for Kalman Filter
     TkrFitHit predicted(TkrFitPlane& start, TkrFitPlane& kpnext);
