@@ -45,5 +45,5 @@ use GlastSvc           v7r1
 use G4Generator        v3r4
 use GlastDigi          v2r5
 
-use Recon              v1r0
+use Recon              v1r1
 
