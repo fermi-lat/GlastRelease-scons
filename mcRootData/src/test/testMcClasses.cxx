@@ -30,8 +30,10 @@ bool floatInRange(Double_t actual, Double_t desired) {
 
 }
 
-/// Check the contents of the McEvent read in from the ROOT file.
 int checkMcEvent(const McEvent* mcEvt, UInt_t ievent) {
+    // Purpose and Method: Check the contents of the McEvent read in from the 
+    //    ROOT file.
+
     if (mcEvt->getEventId() != ievent) {
         std::cout << "EventId does not match!!" << std::endl;
         return -1;
@@ -44,8 +46,9 @@ int checkMcEvent(const McEvent* mcEvt, UInt_t ievent) {
     return 0;
 }
 
-/// Check the contents of the McParticle read in from the ROOT file
 int checkMcParticle(McParticle* mcPart, Int_t ipart, UInt_t ievent) {
+    // Purpose and Method: Check the contents of the McParticle read in from 
+    //   the ROOT file
     Float_t f = Float_t(ipart);
     Float_t fr = f*randNum;
     
@@ -92,9 +95,9 @@ int checkMcParticle(McParticle* mcPart, Int_t ipart, UInt_t ievent) {
     return 0;
 }
 
-/// Check the contents of the McPositionHit read in from the ROOT file
 int checkMcPositionHit(const McPositionHit* mcPosHit, Int_t ipart, UInt_t ievent) {
-    
+    // Purpose and Method: Check the contents of the McPositionHit read in from 
+    //   the ROOT file
     Float_t f = Float_t(ipart);
     Float_t fr = f*randNum;
     
@@ -143,33 +146,16 @@ int checkMcPositionHit(const McPositionHit* mcPosHit, Int_t ipart, UInt_t ievent
     return 0;
 }
 
-/// Check the contents of the McIntegratingHit read in from the ROOT file
-int checkMcIntegratingHit(McIntegratingHit* mcIntHit, UInt_t ipart, UInt_t ievent) {
-    
+int checkMcIntegratingHit(McIntegratingHit* mcIntHit, UInt_t ipart, 
+                          UInt_t ievent) {
+    // Purpose and Method: Check the contents of the McIntegratingHit read in 
+    //    from the ROOT file
     VolumeIdentifier id = mcIntHit->getVolumeId();
     std::cout << "McIntHit volumeId: " << id.name() << std::endl;
     if ( (id.size() != 1) || (id.getBits0to31() != 0) || (id.getBits32to63() != 0) ) {
         std::cout << "McIntHit VolId is incorrect" << std::endl;
         return -1;
     }
-
-   // const McIntegratingHit::energyDepositMap mcPartMap = mcIntHit->getItemizedEnergy();
-    //if (mcPartMap.size() != 1) {
-    //    std::cout << "McIntHit map size is: " << mcPartMap.size();
-    //    if (mcPartMap.size() == 0) {
-    //        std::cout << "No Error cannot read map which stores TRefs using compiled" 
-    //            << " code and ROOT 3.02.07" << std::endl;
-    //        return 0;
-    //    }
-    //    return -1;
-   // }
-   // McIntegratingHit::energyDepositMap::const_iterator it;
-   // for (it = mcPartMap.begin(); it != mcPartMap.end(); it++) {
-   //     if (!floatInRange(it->second, 1.5)) {
-   //         std::cout << "McInt map energy is incorrect" << std::endl;
-    //        return -1;
-   //     }
-   // }
 
     mcIntHit->mapReset();
     const McParticle *myPart;
@@ -188,16 +174,18 @@ int checkMcIntegratingHit(McIntegratingHit* mcIntHit, UInt_t ipart, UInt_t ieven
     }
     
     if (count == 0) {
-        std::cout << "No Error cannot read map which stores TRefs using compiled" 
-            << " code and ROOT 3.02.07" << std::endl;
+        std::cout << "No Error cannot read map which stores TRefs using" 
+            << " compiled code and ROOT 3.02.07" << std::endl;
     }
     
     return 0;
 }
 
 
-/// Read in the ROOT file just generated via the write method
 int read(char* fileName, unsigned int numEvents) {
+    // Purpose and Method: Read in the ROOT file just generated via the 
+    //   write method
+
     TFile *f = new TFile(fileName, "READ");
     TTree *t = (TTree*)f->Get("Mc");
     McEvent *evt = 0;
@@ -234,8 +222,9 @@ int read(char* fileName, unsigned int numEvents) {
     return(0);
 }
 
-/// Create a new Monte Carlo ROOT file
 int write(char* fileName, int numEvents) {
+    // Purpose and Method: Create a new Monte Carlo ROOT file
+
     Int_t buffer = 64000;
     Int_t splitLevel = 1;
     
@@ -299,10 +288,10 @@ int write(char* fileName, int numEvents) {
 }
 
 
-/// Main program
-/// Return 0 for success.
-/// Returns -1 for failure.
 int main(int argc, char **argv) {
+    // Purpose and Method: Main program
+    // Output:  Return 0 for success. Returns -1 for failure.
+
     char *fileName = "mc.root";
     int n = 1;
     unsigned int numEvents = 10;

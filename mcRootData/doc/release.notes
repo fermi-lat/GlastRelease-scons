@@ -2,6 +2,7 @@
  package mcRootData
  package manager: H. Kelly
 
+v2r1p3    13-May-2002 THB&HMK Clean up doc and tidy up reqs file \n
 v2r1p2    09-May-2002 HMK Add iterator methods to McIntegratingHit \n
           and remove the transient vector<pair<>> - this was not \n
           working in CINT.  Rather we will rely upon the 2 separate
