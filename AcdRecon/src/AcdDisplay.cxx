@@ -1,3 +1,7 @@
+// File and Version Information:
+// $Header$
+// Description:
+// Handles the display of the ACD DOCA values on the GUI.
 
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/MsgStream.h"

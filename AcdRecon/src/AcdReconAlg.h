@@ -17,10 +17,21 @@
 #include <map>
 
 /** @class AcdReconAlg
- * @brief ACD reconstruction
+ * @brief ACD reconstruction using the AcdDigi collection from the TDS.
  *
- * Migration of old VetoRecon code in glastsim to a Gaudi algorithm.
- * DOCA stands for Distance of Closest Approach
+ * Computes a number of quantities that are then stored in the AcdRecon object
+ * and put on the TDS.  Those quantities that are computed includes:
+ * - Minimum Distance of Closest Approach (DOCA)
+ * - List of DOCA values containing the min DOCA for each row and top ACD tiles.
+ * - Minimum Active Distance quantity for all hit ACD tiles
+ * - List of Active Distance values containing min. Active Distance for each 
+ * row and the top tiles.
+ *
+ * The DOCA and Active Distance quantities are computed using the ACD detector hits
+ * and the TkrRecon reconstructed track collection.  DOCA is calculated by finding
+ * the minimum distance between the center of hit ACD tiles and all found tracks.
+ * Active Distance is calculated by finding the minimum distance between the edge
+ * of hit ACD tiles and all found tracks.
  *
  * @author Heather Kelly
  *
@@ -46,8 +57,8 @@ class AcdReconAlg : public Algorithm
       /// routine called by execute that performs the reconstruction 
       StatusCode reconstruct (const Event::AcdDigiCol& digiCol);
 
-      /// retrieves tracks and calls the DOCA routines
-      StatusCode acdDoca();
+      /// retrieves tracks and calls the DOCA and Active Distance routines
+      StatusCode trackDistances();
 
       /// Old style - distance of closest approach calculation
       /// Finds minimum perpendicular distance from tracks to the center of the tiles

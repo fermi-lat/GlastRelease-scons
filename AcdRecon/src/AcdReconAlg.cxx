@@ -3,6 +3,8 @@
 //
 // Description:
 //      AcdReconAlg is a Gaudi algorithm which performs the ACD reconstruction.
+//      Using the AcdDigi collection available on the TDS to compute a number
+//      of reconstruction quantities.
 //          
 // Author(s):
 //      Heather Kelly			
@@ -104,6 +106,8 @@ StatusCode AcdReconAlg::finalize() {
 
 
 void AcdReconAlg::getParameters () {
+    // Purpose and Method:  Retrieves constans using the GlastDetSvc.
+
     MsgStream   log( msgSvc(), name() );
     StatusCode sc;
 
@@ -178,7 +182,7 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     log << MSG::DEBUG << "num Tiles = " << m_tileCount << endreq;
     log << MSG::DEBUG << "total energy = " << m_totEnergy << endreq;
 
-    acdDoca();
+    trackDistances();
 
     log << MSG::DEBUG << "DOCA: " << m_doca << " "
         << "ActDist: " << m_act_dist << endreq;
@@ -190,7 +194,11 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
 }
 
 
-StatusCode AcdReconAlg::acdDoca() {
+StatusCode AcdReconAlg::trackDistances() {
+    // Purpose and Method:  Retrieves the TkrFitTrackCol from the TDS and 
+    //  calculates the DOCA and Active Distance quantities.  Updates the
+    // local data members m_doca, m_rowDocaCol, m_act_dist, m_rowActDistCol
+    // TDS Input: EventModel::TkrRecon::TkrFitTrackCol
 
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
@@ -217,7 +225,7 @@ StatusCode AcdReconAlg::acdDoca() {
 
 }
 
-double AcdReconAlg::doca (const HepPoint3D &x0, const HepVector3D &t0, 
+double AcdReconAlg::doca(const HepPoint3D &x0, const HepVector3D &t0, 
                           std::vector<double> &doca_values) {
     // Purpose and Method:  This method looks for close-by hits to the ACD tiles
     //        Calculates the minimum distance between the track and the center
@@ -290,8 +298,7 @@ double AcdReconAlg::hitTileDist(const HepPoint3D &x0, const HepVector3D &t0,
     //       tiles above veto threshold.
     // Inputs:  (x0, t0) defines a track
     // Outputs: Returns minimum distance
-    // Dependencies: None
-    // Restrictions and Caveats:  None
+
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
 
@@ -377,8 +384,5 @@ double AcdReconAlg::hitTileDist(const HepPoint3D &x0, const HepVector3D &t0,
 
     }
 
-    return return_dist;
-    
+    return return_dist;    
 }
-
-
