@@ -100,6 +100,9 @@ class RunManager
   /// This method return the vector of points of a trajectory
   std::auto_ptr<std::vector<Hep3Vector> > getTrajectoryPoints(unsigned int);
 
+  /// This method return the id (an integer) of the track associated to a
+  /// trajectory
+  int getTrajectoryTrackId(unsigned int i);
   
  protected: 
 

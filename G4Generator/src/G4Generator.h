@@ -46,6 +46,13 @@ class G4Generator : public Algorithm {
 
   /// the geometry level of details
   std::string m_geometryMode;
+  
+  /// flag to save trajectories in the TDS
+  bool m_saveTrajectories;
+
+  /// the McParticle tree mode
+  /// It can be "full" or "minimal"
+  std::string m_mcTreeMode;
 };
 
 #endif

@@ -14,6 +14,7 @@
 #include <iostream>
 #include "Event/TopLevel/EventModel.h"
 #include "Event/MonteCarlo/McIntegratingHit.h"
+#include "Event/MonteCarlo/McParticle.h"
 #include "idents/VolumeIdentifier.h"
 
 #include "CLHEP/Geometry/Transform3D.h"
@@ -45,6 +46,8 @@ void IntDetectorManager::Initialize(G4HCofThisEvent*)
   m_detectorList.clear();
   // At the start of the event we create a new container for the TDS
   m_intHit = new Event::McIntegratingHitVector;    
+
+  //  m_table.init();
 }
 
 G4bool IntDetectorManager::ProcessHits(G4Step* aStep,
@@ -101,11 +104,28 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,
 
   prePos = local * (prePos-center);
   postPos = local * (postPos-center);
-  
+
+  Event::McIntegratingHit::Particle p;
+
+  McParticleManager* partMan = McParticleManager::getPointer();
+
+  // Retrieve the kind of origin particle
+  if (partMan->getOriginParticle()->mother().primaryParticle())
+    p = Event::McIntegratingHit::primary;
+  else
+    if (partMan->getOriginParticle()->particleProperty() == 11)
+      p = Event::McIntegratingHit::electron;
+    else p = Event::McIntegratingHit::positron;
+
+#if 0
   // fill the energy and position    
   hit->addEnergyItem(edep, 
-                     McParticleManager::getPointer()->getLastParticle(),
+                     partMan->getLastParticle(),
                      (prePos+postPos)/2);
+#else
+  hit->addEnergyItem(edep, p, (prePos+postPos)/2);
+#endif
+
   return true;
 }
 
@@ -123,6 +143,7 @@ void IntDetectorManager::EndOfEvent(G4HCofThisEvent*)
 
   // store the hits in the TDS
   m_esv->registerObject(EventModel::MC::McIntegratingHitCol , m_intHit);    
+
 #if 0
   // This message is for debug purpouses .. it should be eliminated or converted
   // to a true GAUDI log message

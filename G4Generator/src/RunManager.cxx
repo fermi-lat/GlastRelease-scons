@@ -427,6 +427,25 @@ std::auto_ptr<std::vector<Hep3Vector> > RunManager::getTrajectoryPoints(unsigned
   else return std::auto_ptr<std::vector<Hep3Vector> >(0);
 }
 
+int RunManager::getTrajectoryTrackId(unsigned int i)
+{
+  if (i > getNumberOfTrajectories())
+    return -1;
+  
+  G4Event* event = getCurrentEvent();
+  if (event->GetTrajectoryContainer())
+    {
+      G4Trajectory* trajectory =
+        static_cast<G4Trajectory*>((*((event)->GetTrajectoryContainer()))[i]);
+      
+      return trajectory->GetTrackID();
+    }
+  else return -1;
+}
+
+
+
+
 
 
 

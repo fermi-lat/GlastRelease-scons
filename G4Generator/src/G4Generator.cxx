@@ -41,7 +41,8 @@
 
 //montecarlo data structures 
 #include "Event/MonteCarlo/McParticle.h"
-
+#include "Event/MonteCarlo/McIntegratingHit.h"
+#include "Event/MonteCarlo/McTrajectory.h"
 
 //gui
 #include "GuiSvc/GuiSvc.h"
@@ -63,6 +64,8 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
   // set defined properties
   declareProperty("UIcommands", m_uiCommands);
   declareProperty("geometryMode", m_geometryMode="");
+  declareProperty("saveTrajectories", m_saveTrajectories=0);
+  declareProperty("mcTreeMode", m_mcTreeMode="full");
 }
     
 ////////////////////////////////////////////////////////////////////////////
@@ -122,6 +125,10 @@ StatusCode G4Generator::initialize()
   // Initialize Geant4
   m_runManager->Initialize();
 
+  // set the mode for the McParticle tree
+  if (m_mcTreeMode == "minimal")
+    McParticleManager::getPointer()->setMode(0);
+ 
   log << endreq;
   return StatusCode::SUCCESS;
 
@@ -230,6 +237,33 @@ StatusCode G4Generator::execute()
       dm->addTrack(*(points.get()), m_runManager->getTrajectoryCharge(i));
     }
   }
+
+  if (m_saveTrajectories)
+    {
+      Event::McTrajectoryList* traj = new Event::McTrajectoryList();  
+      eventSvc()->registerObject("Event/MC/TrajectoryCol",traj);
+
+      for( int j = 0; j< m_runManager->getNumberOfTrajectories(); ++j){
+        std::auto_ptr<std::vector<Hep3Vector> > points = 
+          m_runManager->getTrajectoryPoints(j);
+
+        Event::McParticle* part = 0;
+      
+        if (McParticleManager::getPointer()->size() > m_runManager->getTrajectoryTrackId(j))
+          {
+            part = 
+              McParticleManager::getPointer()->getMcParticle(m_runManager->getTrajectoryTrackId(j));
+          }
+        
+        Event::McTrajectory* tr = new Event::McTrajectory();
+        tr->addPoints(*(points.get()));
+        tr->setMcParticle(part);
+        
+        traj->push_back(tr);
+      }
+
+    }
+
   return StatusCode::SUCCESS;
 }
 

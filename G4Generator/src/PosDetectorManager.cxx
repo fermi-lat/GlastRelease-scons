@@ -88,12 +88,17 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
   McParticleManager* partMan =  McParticleManager::getPointer();
   
   hit->init(edep, id, local*(prePos-center), local*(postPos-center) );
-  // Retrieve the id of the particle causing the hit and set the corresponding
-  // attribute of the McPositionHit
-  hit->setMcParticleId(partMan->getLastParticle()->particleProperty());
-  // Retrieve the primary particle and set the corresponding pointer of the
-  // McPositionHit
-  hit->setOriginMcParticle(partMan->getMcParticle(1));
+  // Retrieve the particle causing the hit and the ancestor and set the corresponding
+  // attributes of the McPositionHit
+  if (partMan->getMode() == 1)
+    {
+      hit->setMcParticle(partMan->getLastParticle());
+      hit->setOriginMcParticle(partMan->getOriginParticle());
+    }
+
+  hit->setMcParticleId(aStep->GetTrack()->GetDefinition()->GetPDGEncoding());
+  hit->setOriginMcParticleId(partMan->getOriginParticle()->particleProperty());
+
   m_posHit->push_back(hit);
 
   display(theTouchable, id, prePos, postPos);

@@ -48,7 +48,7 @@
 
     <source name="muon_patch">
        <spectrum> 
-         <particle name="mu+"><energy e="10"/> </particle>
+         <particle name="mu+"><energy e="2"/> </particle>
            <direction theta="0" phi="0" />
            <patch xmin="-700" xmax="700" ymin="-700" ymax="700" />
        </spectrum>

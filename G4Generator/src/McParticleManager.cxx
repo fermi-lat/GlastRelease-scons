@@ -19,6 +19,21 @@
 // This is the singleton static pointer
 McParticleManager* McParticleManager::m_pointer = 0;
 
+Event::McParticle* McParticleManager::getMcParticle(unsigned int id)
+{
+  Event::McParticle* particle = 0;
+  std::map<unsigned int, Event::McParticle*>::iterator it;
+  
+  for(it=m_particles.begin();it != m_particles.end() ; it++){
+    if (it->first == id) 
+      {
+        particle = it->second;
+        break;
+      }
+  }
+
+  return particle;
+}
 void McParticleManager::addMcParticle(unsigned int id, 
                                       Event::McParticle *particle){
   // Purpose and Method: with that method we add a new McParticle to the map of
@@ -60,6 +75,7 @@ void McParticleManager::save()
   for(it=m_particles.begin();it != m_particles.end() ; it++){
     pcol->push_back(it->second);
   }
+
 }
 
 

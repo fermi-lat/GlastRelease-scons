@@ -12,7 +12,7 @@
 #include "DetectorManager.h"
 #include <map>
 
-
+class McParticle;
 class DetectorConstruction;
 class IDataProviderSvc;
 
@@ -56,5 +56,6 @@ public:
   /// A map of McIntegratingHit indicized by volume id to pile up energy
   /// deposited
   std::map<idents::VolumeIdentifier,Event::McIntegratingHit*> m_detectorList;
+
 };
 #endif
