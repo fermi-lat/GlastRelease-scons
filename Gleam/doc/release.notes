@@ -3,6 +3,8 @@
  * package manager:T.Burnett
  * $Id$
 
+* v3r4  HMK 19-Nov-02
+     use RootIo            v4r21
 * v3r3  THB 19-Nov-02
      use Trigger           v3r4
      use RootIo            v4r20p4
