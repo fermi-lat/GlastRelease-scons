@@ -28,6 +28,8 @@ $Header$
 #include "CLHEP/Matrix/Matrix.h"
 #include "CLHEP/Matrix/SymMatrix.h"
 
+#include "enums/TriggerBits.h"
+
 /*! @class GltValsTool
 @brief calculates trigger values
 
@@ -37,18 +39,6 @@ $Header$
 namespace {
     const int _nTowers = 16; // maximum possible number of towers
     const int _nLayers = 18; // maximum possible number of layers
-
-    //Replace these with official enum when it exists
-    enum { 
-        ACDLO = 0, 
-        ACDHI = 1, 
-        TRACK = 2, 
-        CALLO = 3, 
-        CALHI = 4, 
-        THROTTLE = 5
-    }; 
-    enum { SHIFTGem = 8 };
-    enum { MASKGlt = 0xff, MASKGem = 0xff } ;
 }
 
 class GltValsTool : public ValBase
@@ -178,20 +168,21 @@ StatusCode GltValsTool::calculate()
     if(!pEvent || !pClusters) return StatusCode::FAILURE;
 
     unsigned int word = pEvent->trigger();
-    // Waiting for official Trigger enum list
+
+    // construct the bit mask, this should prob. be in the enums
+    unsigned bitMask = 0;
+    int ibit = enums::number_of_trigger_bits;
+    while(ibit--) { bitMask |= 1<<ibit; }
 
     // This is the same as the old GltWord
-    Trig_word = word & MASKGlt;
-    Trig_GemSummary = (word >> SHIFTGem) & MASKGem;
+    Trig_word = word & bitMask;
+    Trig_GemSummary = (word >> enums::GEM_offset) & bitMask;
 
     SmartDataPtr<LdfEvent::EventSummaryData> eventSummary(m_pEventSvc, "/Event/Gem"); 
 
     Trig_evtFlags = eventSummary==0 ? 0 : eventSummary->eventFlags();
 
- 
-
-
-    bool three_in_a_row = ((word & (1<<TRACK))!=0);
+    bool three_in_a_row = ((word & (1<<enums::b_Track))!=0);
 
     int tower, layer;
     // needs to be recast into an indexed vector maybe

@@ -1,5 +1,5 @@
 package AnalysisNtuple
-version v2r1p7
+version v2r2
 author Leon Rochester <lsrea@slac.stanford.edu>
 
 branches src cmt doc
@@ -11,6 +11,7 @@ use TkrUtil     v*
 use G4Propagator v*
 
 use ntupleWriterSvc v*
+use enums v*
 
 apply_pattern packageShr
 
