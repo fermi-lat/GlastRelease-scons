@@ -53,11 +53,12 @@ void IRF::open_input_file()
     }
 
     // define basic cuts
-    goodCal="CalTotRLn>2&&CalEnergySum>5.0 && IMgoodCalProb>0.5";
-    goodPSF ="IMcoreProb>0.3&&IMpsfErrPred<3.0"; // this is Bill's minimal cut
+    goodCal="CalTotRLn>2&&CalEnergySum>5.0 && IMgoodCalProb>0.2";
+    goodPSF ="IMcoreProb>0.2&&IMpsfErrPred<3.0"; // this is Bill's minimal cut
     TCut tempFix("Tkr1KalEne > 0.5* McEnergy"); // temporary fix for bad energy estimate
-    TCut zdir_cut("Tkr1ZDir<-0.2"); 
-    goodEvent=goodCal&&goodPSF&&zdir_cut;  
+    TCut zdir_cut("BestDirErr<-0.2"); 
+    TCut bk_cut("BkVeto==0.0");
+    goodEvent=goodCal&&goodPSF&&zdir_cut&&bk_cut;
 
     std::cout << "good event definition: " << goodEvent.GetTitle() << std::endl;
 

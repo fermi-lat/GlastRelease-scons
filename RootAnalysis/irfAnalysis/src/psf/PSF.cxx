@@ -4,8 +4,6 @@ $Header$
 */
 #include "PSF.h"
 
-#include "SumOfGaussians.h"
-#include "MakeDists.h"
 #include "TProfile.h"
 
 
@@ -15,60 +13,97 @@ double PSF::probSum[2]={0.68, 0.95}; // for defining quantiles
 static inline double sqr(double x){return x*x;}
 
 
-PSF::PSF(std::string summary_root_filename) 
+PSF::PSF(std::string summary_root_filename)
 : IRF(summary_root_filename)
 {
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void PSF::makeFriend() 
+void PSF::open_input_file()
 {
+    std::string friend_file(output_file_root()+"psf_friend.root");
+    std::string friend_tree_name("t2");
+
     // open the input file and set the tree
-    open_input_file();
+    IRF::open_input_file();
 
-    // stuff to get from the input tuple
-    double Tkr1FirstLayer, Tkr1PhiErr, Tkr1ThetaErr, IMvertexProb, VtxAngle,McTkr1DirErr,McDirErr;
-    m_tree->SetBranchAddress("Tkr1FirstLayer",&Tkr1FirstLayer);
-    m_tree->SetBranchAddress("Tkr1ThetaErr",  &Tkr1ThetaErr);
-    m_tree->SetBranchAddress("Tkr1PhiErr",    &Tkr1PhiErr);
-    m_tree->SetBranchAddress("IMvertexProb",  &IMvertexProb);
-    m_tree->SetBranchAddress("VtxAngle",      &VtxAngle);
-    m_tree->SetBranchAddress("McTkr1DirErr",  &McTkr1DirErr);
-    m_tree->SetBranchAddress("McDirErr",      &McDirErr);
+    // check to see if the friend file exists
+    TFile fr(friend_file.c_str() );
+    if( ! fr.IsOpen() ) {
+        std::cout << "Creating friend file with derived s tuff: this takes a while" << std::endl;
 
-    // make a new file, with a tree and branches
-    TFile fr(friend_file().c_str(),"recreate");
-    TTree* friend_tree = new TTree("t2", "friend tree");
-    float dir_err, psf_scale_factor;
-    friend_tree->Branch("PSFscaleFactor", &psf_scale_factor, "PSFscaleFactor/F");
-    friend_tree->Branch("BestDirErr", &dir_err, "BestDirErr/F");
+        // stuff to get from the input tuple
+        double Tkr1FirstLayer, Tkr1PhiErr, Tkr1ThetaErr, IMvertexProb, VtxAngle,McTkr1DirErr,McDirErr;
+        double TkrNumTracks, GltWord, IMcoreProb, EvtEnergySumOpt, AcdTotalEnergy, EvtTkrComptonRatio;
+	double CalMIPDiff, CalLRmsRatio, IMgammaProb, AcdTileCount, EvtTkrEComptonRatio;
+	m_tree->SetBranchAddress("Tkr1FirstLayer",&Tkr1FirstLayer);
+        m_tree->SetBranchAddress("Tkr1ThetaErr",  &Tkr1ThetaErr);
+        m_tree->SetBranchAddress("Tkr1PhiErr",    &Tkr1PhiErr);
+        m_tree->SetBranchAddress("IMvertexProb",  &IMvertexProb);
+        m_tree->SetBranchAddress("VtxAngle",      &VtxAngle);
+        m_tree->SetBranchAddress("McTkr1DirErr",  &McTkr1DirErr);
+        m_tree->SetBranchAddress("McDirErr",      &McDirErr);
+	m_tree->SetBranchAddress("TkrNumTracks", &TkrNumTracks);
+	m_tree->SetBranchAddress("GltWord", &GltWord);
+	m_tree->SetBranchAddress("IMcoreProb", &IMcoreProb);
+	m_tree->SetBranchAddress("EvtEnergySumOpt", &EvtEnergySumOpt);
+	m_tree->SetBranchAddress("AcdTotalEnergy", &AcdTotalEnergy);
+	m_tree->SetBranchAddress("EvtTkrComptonRatio", &EvtTkrComptonRatio);
+	m_tree->SetBranchAddress("CalMIPDiff", &CalMIPDiff);
+	m_tree->SetBranchAddress("CalLRmsRatio", &CalLRmsRatio);
+	m_tree->SetBranchAddress("IMgammaProb", &IMgammaProb);
+	m_tree->SetBranchAddress("AcdTileCount", &AcdTileCount);
+	m_tree->SetBranchAddress("EvtTkrEComptonRatio", &EvtTkrEComptonRatio);
 
-    int count=m_tree->GetEntries();
-    for(int k=0; k<count; ++k){
-        m_tree->GetEntry(k);
-        psf_scale_factor=sqrt(sqr(Tkr1ThetaErr)+sqr(Tkr1PhiErr));
-        if (Tkr1FirstLayer<12.0) psf_scale_factor *= 2.5; else psf_scale_factor*=3.5;
-        if (IMvertexProb<0.5||VtxAngle==0.0){
-            dir_err=McTkr1DirErr;
-        }else{
-            dir_err=McDirErr;
+
+        // make a new file, with a tree and branches
+        TFile fr(friend_file.c_str(),"recreate");
+        TTree* friend_tree = new TTree(friend_tree_name.c_str(), "friend tree");
+        float dir_err, psf_scale_factor, veto;
+        friend_tree->Branch("PSFscaleFactor", &psf_scale_factor, "PSFscaleFactor/F");
+        friend_tree->Branch("BestDirErr", &dir_err, "BestDirErr/F");
+        friend_tree->Branch("BkVeto", &veto, "BkVeto/F");
+        int count=m_tree->GetEntries();
+        for(int k=0; k<count; ++k){
+            m_tree->GetEntry(k);
+            psf_scale_factor=sqrt(sqr(Tkr1ThetaErr)+sqr(Tkr1PhiErr));
+            if (Tkr1FirstLayer<12.0) psf_scale_factor *= 2.5; else psf_scale_factor*=3.5;
+            if (IMvertexProb<0.5||VtxAngle==0.0){
+                dir_err=McTkr1DirErr;
+            }else{
+                dir_err=McDirErr;
+            veto=1.0;
+	    if(TkrNumTracks>0.0&&GltWord>3.0&&IMcoreProb>0.2){
+	      if(IMvertexProb<0.5||VtxAngle==0.0){
+	        if(EvtEnergySumOpt>450.0&&AcdTotalEnergy<6.0&&EvtTkrComptonRatio>0.7&&CalMIPDiff>80.0&&CalLRmsRatio<20.0&&IMgammaProb>0.5)
+		  veto=0.0;
+                if(EvtEnergySumOpt<=450.0&&AcdTileCount==0.0&&EvtTkrComptonRatio>1.0&&CalLRmsRatio>5.0&&Tkr1FirstLayer!=0.0&&Tkr1FirstLayer<15.0&&IMgammaProb>0.9)
+		  veto=0.0;
+                }
+		else{
+		  if(EvtEnergySumOpt>350.0&&EvtTkrEComptonRatio>0.6&&CalMIPDiff>60.0&&IMgammaProb>0.5)
+		    veto=0.0;
+		  if(EvtEnergySumOpt<=350.0&&AcdTileCount==0.0&&CalMIPDiff>-125.0&&CalLRmsRatio<20.0&&IMgammaProb>0.9)
+		    veto=0.0;
+		  }
+               }
+            }
+            friend_tree->Fill();
         }
-        friend_tree->Fill();
+        fr.cd();
+        friend_tree->Write();
+    }else {
+        fr.Close();
+        std::cout << "Friend file " << friend_file
+            << " used for additional branches" << std::endl;
     }
-    fr.cd();
-    friend_tree->Write();
+    m_tree->AddFriend(friend_tree_name.c_str(), friend_file.c_str() );
+
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void PSF::project(double xmin, double xmax, int nbins) 
+void PSF::project(double xmin, double xmax, int nbins)
 {
-    TFile fr( friend_file().c_str() );
-    if( ! fr.IsOpen() ) {
-        std::cout << "Creating friend file with derived stuff: this takes a while" << std::endl;
-        makeFriend();
-    }else fr.Close();
-
     open_input_file();
-    m_tree->AddFriend("t2", friend_file().c_str() );
 
     TFile  psf_file(m_summary_filename.c_str(), "recreate"); // for the histograms
 
@@ -116,7 +151,7 @@ void PSF::project(double xmin, double xmax, int nbins)
         m_tree->Project(q->GetName(), "PSFscaleFactor:McLogEnergy", goodEvent&&angle);
         q->SetDirectory(&psf_file);
 
-        char ptitle[256]; sprintf(ptitle, "Profile of error ellipse asymmetry for angles %d-%d; McLogEnergy", angles[i],angles[i+1]); 
+        char ptitle[256]; sprintf(ptitle, "Profile of error ellipse asymmetry for angles %d-%d; McLogEnergy", angles[i],angles[i+1]);
         TProfile * p = new TProfile(hist_name(i,10), ptitle, nebins, emin, emax);
         printf("projecting profile %s, %s\n", p->GetName(), p->GetTitle());
         m_tree->Project(p->GetName(), "(Tkr1PhiErr-Tkr1ThetaErr)/(Tkr1ThetaErr+Tkr1PhiErr):McLogEnergy", goodEvent&&angle);
@@ -125,7 +160,7 @@ void PSF::project(double xmin, double xmax, int nbins)
     psf_file.Write();
 }
 
- 
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void PSF::draw(std::string ps_filename, double ymax, std::string title)
 {
@@ -169,9 +204,9 @@ void PSF::draw(std::string ps_filename, double ymax, std::string title)
             if(i==0){
                 char title[256]; // rewrite the title for the multiple plot
                 sprintf(title, " %6d MeV", (int)(ecenter+0.5));
-                h->SetTitle( title);   
+                h->SetTitle( title);
                 h->GetXaxis()->CenterTitle(true);
-                h->Draw(); 
+                h->Draw();
             } else h->Draw("same");
             char entry[64]; sprintf(entry," %2d - %2d   %5.1f  %5.1f", angles[i], angles[i+1], quant[0],quant[1]);
             leg->AddEntry( h, entry, "l");
@@ -200,7 +235,7 @@ void PSF::drawError(std::string ps)
         if( h==0) { std::cerr << "Could not find hist " << hist_name(i,9) << std::endl;
         return;
         }
-        h->SetLineColor(i+1);        
+        h->SetLineColor(i+1);
         h->SetLineWidth(2);
         h->SetMinimum(1e-3);
         h->SetStats(false);
@@ -266,7 +301,7 @@ void PSF::drawAeff(std::string ps)
      leg->SetTextSize(0.04);
 
     for(int i=0; i<4; ++i){
-            TH1F* h =(TH1F*)hist_file.Get(hist_name(i,8)) ; 
+            TH1F* h =(TH1F*)hist_file.Get(hist_name(i,8)) ;
             if(h==0){
                 std::cerr << "could not find "<< hist_name(i,8) << " in summary file " << hist_file.GetName() <<std::endl;
                 return;
