@@ -16,8 +16,8 @@ namespace CalibData {
   CalibBase::CalibBase(const ITime& since, const ITime& till, int serNo) :
     m_validSince(0), m_validTill(0), m_serNo(serNo), m_me(this)
   {
-    m_validSince = new CalibTime::CalibTime(since);
-    m_validTill = new CalibTime::CalibTime(till);
+    m_validSince = new CalibData::CalibTime(since);
+    m_validTill = new CalibData::CalibTime(till);
   }
 
   CalibBase::CalibBase(const CalibBase& other) : 
@@ -38,8 +38,8 @@ namespace CalibData {
     delete m_validSince;
     delete m_validTill;
 
-    m_validTill = new CalibTime::CalibTime(obj.validTill() );
-    m_validSince = new CalibTime::CalibTime(obj.validSince() );
+    m_validTill = new CalibData::CalibTime(obj.validTill() );
+    m_validSince = new CalibData::CalibTime(obj.validSince() );
     m_serNo = obj.m_serNo;
     m_me->iUpdate(obj.m_me);
   }
