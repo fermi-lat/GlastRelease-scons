@@ -18,6 +18,7 @@
 #include "TFile.h"
 #include "TTree.h"
 #include "TDirectory.h"
+#include "TProcessID.h"
 
 #include "mcRootData/McEvent.h"
 
@@ -175,6 +176,8 @@ StatusCode mcRootWriterAlg::execute()
         return StatusCode::FAILURE;
     }
 
+    Int_t ObjectNumber = TProcessID::GetObjectCount();
+
     m_common.m_mcPartMap.clear();
     m_common.m_mcPosHitMap.clear();
     m_common.m_mcIntHitMap.clear();
@@ -192,6 +195,10 @@ StatusCode mcRootWriterAlg::execute()
     if (sc.isFailure()) return sc;
    
     writeEvent();
+
+    // reset object nr in order to avoid memleak
+    TProcessID::SetObjectCount(ObjectNumber);
+
     return sc;
 }
 
