@@ -142,7 +142,7 @@ private:
   StringProperty m_FT1TreeName;
   StringProperty m_primaryType;
   long           m_nbOfEvtsInFile;
-#if defined(__GNUC__) && (__GNUC__ != 2)
+#if defined(__GNUC__) && (__GNUC__ == 2)
   //grab Bill's tuples
   class VisitBill : virtual public IValsTool::Visitor
   {
