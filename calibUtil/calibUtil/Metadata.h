@@ -310,7 +310,8 @@ namespace calibUtil {
 
     bool addLevel(std::string& q, unsigned int *levelMask);
 
-    static bool connect(MYSQL * cxt, const std::string& user, 
+    static bool connect(MYSQL * cxt, std::string& host, 
+                        const std::string& user, 
                         const std::string& pw, eRet& err);
 
     bool connectRead(eRet& err);

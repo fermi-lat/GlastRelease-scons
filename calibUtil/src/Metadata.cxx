@@ -25,7 +25,7 @@ namespace calibUtil {
 
     int nsub = facilities::Util::expandEnvVar(&m_table);
     // If this doesn't work, use default
-    if (!nsub) m_table = std::string("metadata");
+    if (nsub < 0) m_table = std::string("metadata");
   }
 
   Metadata::~Metadata() {
@@ -127,13 +127,14 @@ namespace calibUtil {
   }
 
   // The next 5 methods concern connection to the server
-  bool Metadata::connect(MYSQL* cxt, const std::string& user, 
+  bool Metadata::connect(MYSQL* cxt, std::string& host,
+                         const std::string& user, 
                          const std::string& pw, eRet& err)  {
 
-    std::string host("$(MYSQL_HOST)");
 
     int nSub = facilities::Util::expandEnvVar(&host);
-    if (!nSub) {
+    //    if (!nSub) {
+    if (nSub < 0) {
       err = RETBadHost;
       return false;
     }
@@ -159,7 +160,7 @@ namespace calibUtil {
   bool Metadata::connectRead(eRet& err) {
     if (m_readCxt == 0) {
       m_readCxt = new MYSQL;
-      bool ok = connect(m_readCxt, std::string("glastreader"), 
+      bool ok = connect(m_readCxt, m_host, std::string("glastreader"), 
                         std::string("glastreader"), err);
       if (!ok) {
         delete m_readCxt;
@@ -173,7 +174,7 @@ namespace calibUtil {
   bool Metadata::connectWrite(eRet& err) {
     if (m_writeCxt == 0) {
       m_writeCxt = new MYSQL;
-      bool ok = connect(m_writeCxt, std::string("calibrator"), 
+      bool ok = connect(m_writeCxt, m_host, std::string("calibrator"), 
                       std::string("calibr8tor"), err);
       if (!ok) {
         delete m_readCxt;
