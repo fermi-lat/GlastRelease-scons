@@ -2,6 +2,8 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
+ * 21-Nov-2003: jrb v0r3:    Make fake event time algorithm CalibEvtClock
+ *                           publicly available; other minor clean-up
  * 17-Nov-2003: jrb v0r2p14: Various requirements file changes.  Latest
  *                           loosens use of RootIo to just v*
  * 11-Jul-2003: jrb v0r2p13: Keep up with new bad strips xml format
