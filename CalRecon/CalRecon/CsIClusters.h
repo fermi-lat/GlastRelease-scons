@@ -49,7 +49,7 @@ public:
 	//! Destructor
 	~CsICluster() {}
 
-	void setDirection(Point v)   {m_direction = v;}
+	void setDirection(Vector v)   {m_direction = v;}
 
 	//! Set energy corrected
 	/*! not used for the moment
@@ -59,6 +59,12 @@ public:
 	void setEneLayer(std::vector<double> v){m_eneLayer = v;}
 	//! Set barycenter position for each layer
 	void setPosLayer(std::vector<Vector> v){m_pLayer = v;}
+	//! Set rms of energy deposition for each layer
+	void setRmsLayer(std::vector<Vector> v){m_rmsLayer = v;}
+	//! Set Longitudinal RMS
+	void setRmsLong(double r) {m_rmslong=r;}
+	//! Set transverse RMS
+	void setRmsTrans(double r) {m_rmstrans=r;}
 	//! Set energy corrected via CalClustersAlg::Leak()
 	void setEneLeak(double e) {m_leakEnergy = e;}
 	//! Set fitted energy form CalClustersAlg::Profile()
@@ -80,6 +86,10 @@ public:
 	const Vector& getPosLayer(int i) const {return m_pLayer[i];}
 	const std::vector<double>& getEneLayer() const {return m_eneLayer;}
 	const std::vector<Vector>& getPosLayer() const {return m_pLayer;}
+	const std::vector<Vector>& getRmsLayer() const {return m_rmsLayer;}
+	double getRmsLong()		  const {return m_rmslong;}
+	double getRmsTrans()	  const {return m_rmstrans;}
+
 	Point position()          const {return m_position;}
 	Vector direction()        const {return m_direction;}
 	double getFitEnergy()	  const {return m_fitEnergy;}
@@ -100,12 +110,18 @@ private:
 	double m_energySum;
 	//! Leakage corrected energy using correlation method ( for E> several GeV)
 	double m_leakEnergy;
-	//! corrected energy not used
+	//! corrected energy not used ( yet )
 	double m_energyCorrected;
 	//! Energy per layer in MeV
 	std::vector<double> m_eneLayer;
 	//! Barycenter position in each layer
 	std::vector<Vector> m_pLayer;
+	//! RMS of energy deposition in each layer
+	std::vector<Vector> m_rmsLayer;
+	//! RMS of longitudinal position measurement
+	double m_rmslong;
+	//! RMS of transverse position measurement
+	double m_rmstrans;
 	
 	//! fitted energy ( for E>10 GeV)
 	double m_fitEnergy;
