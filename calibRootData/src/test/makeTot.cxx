@@ -17,7 +17,8 @@
 #include "calibRootData/Tkr/TkrTower.h"
 #include "calibRootData/Tkr/Tot.h"
 
-void fillTree(unsigned towerRow, unsigned towerCol, TTree* tree);
+void fillTree(unsigned towerRow, unsigned towerCol, 
+              TString& serial, TTree* tree);
 
 int main(int nArg, char** args) {
   std::string outFilename("tot.root");
@@ -39,11 +40,16 @@ int main(int nArg, char** args) {
   totFile->cd();
 
   TTree *treeTower00 = new TTree("Tower00", "Tot data for tower 0,0");
+  TString serial00("hs-tower00");
 
   // Do all the serious data fabrication here
-  fillTree(0, 0, treeTower00);
+  fillTree(0, 0, serial00, treeTower00);
 
-  // Add another tree someday
+  // Add another tree 
+  TTree *treeTower21 = new TTree("Tower21", "Tot data for tower 2,1");
+  TString serial21("hs-tower21");
+
+  fillTree(2, 1, serial21, treeTower21);
 
   // finish up
   totFile->cd();
@@ -57,20 +63,27 @@ int main(int nArg, char** args) {
   else {
     std::cout << "Wrote file " << outFilename << std::endl;
   }
+
+  delete treeTower00;
+  delete treeTower21;
+
   totFile->Close();
   delete totFile;
 
   return 0;
 }
 
-void fillTree(unsigned towerRow, unsigned towerCol, TTree* tree) {
+void fillTree(unsigned towerRow, unsigned towerCol, TString& hwserial, 
+              TTree* tree) {
   using calibRootData::TkrTower;
   using calibRootData::TotStrip;
   using calibRootData::TotUnilayer;
   using commonRootData::TkrId;
 
+
   // Make branch for TkrTower class; 
-  TkrTower tower(towerRow, towerCol, TString("hs-tower00"));
+  // TkrTower tower(towerRow, towerCol, TString("hs-tower00"));
+  TkrTower tower(towerRow, towerCol, hwserial);
   TkrTower* pTower = &tower;
   char* className = "calibRootData::TkrTower";
 
@@ -94,7 +107,7 @@ void fillTree(unsigned towerRow, unsigned towerCol, TTree* tree) {
                                     "calibRootData::TotUnilayer", &pUni);
 
   // make up a few unilayers.  First is tray 2, top
-  uni.setId(TkrId(0,0,2,true,TkrId::eMeasureX));
+  uni.setId(TkrId(towerCol,towerRow,2,true,TkrId::eMeasureX));
 
   TotStrip strip(0, 1.0, 2.0, 3.0, 1.8, 2.0);
   uni.setStrip(strip);
@@ -139,7 +152,7 @@ void fillTree(unsigned towerRow, unsigned towerCol, TTree* tree) {
   for (unsigned iTray = 3; iTray < 17; iTray++) {
     uni.Clear();
 
-    uni.setId(TkrId(0,0,iTray,false,meas));
+    uni.setId(TkrId(towerCol,towerRow,iTray,false,meas));
 
     for (unsigned iStrip = 0; iStrip < nStrips; iStrip++) {
       strip.init(iStrip, 2.1, -1.2, 1.2, 1.1, 1.0);
@@ -149,7 +162,7 @@ void fillTree(unsigned towerRow, unsigned towerCol, TTree* tree) {
 
     uni.Clear();
 
-    uni.setId(TkrId(0,0,iTray,true,meas));
+    uni.setId(TkrId(towerCol,towerRow,iTray,true,meas));
 
     for (unsigned iStrip = 0; iStrip < nStrips; iStrip++) {
       strip.init(iStrip, 2.1, -1.2, 1.2, 1.1, 1.0);
