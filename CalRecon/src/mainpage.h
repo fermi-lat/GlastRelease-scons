@@ -13,6 +13,10 @@
  *   Package contains 3 algorithms: CalXtalRecAlg, CalClustersAlg
  *   and CalDisplay.
  *
+ *   The  control flow diagram of CalRecon package, including also the CalDigi package,
+ *   is given on the following WEB page:
+ * <A HREF="http://www-glast.slac.stanford.edu/software/CAL/meetings/calrecondiagram.pdf"> CalRecon diagram </A> 
+ *
  *   CalXtalRecAlg takes the digitized calorimeter information from CalDigiCol
  *   as input, calculates the energy and position in each hitted crystal
  *   and stores this data into CalXtalRecCol.
@@ -56,6 +60,20 @@
  *
  *   CalDisplay algorithm provides the display of reconstructed data.
  *
+ * <hr>
+ *
+ * @section jobOptions jobOptions
+ * @param CalClustersAlg.callNumber
+ *        this parameter is used to distinguish multiple calls to 
+ *        CalClustersAlg (for example, before and after TkrRecon).
+ *        The default value is 0 .
+ *
+ * <hr>
+ * @section notes release notes
+ * @include release.notes
+ * @section requirements requirements
+ * @verbinclude requirements
+ * <hr>
  *  
  * @todo modify CalXtalRecAlg to use real calibration data
  *
@@ -69,12 +87,5 @@
  *        
  * @todo implement the low energy correction based on number of tracker
  *       hits 
- *      
- * <hr>
- * @section notes release notes
- * @include release.notes
- * @section requirements requirements
- * @verbinclude requirements
-
 */
 
