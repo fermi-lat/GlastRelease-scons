@@ -107,7 +107,7 @@ TkrReco.Members = {
 Reconstruction.Members += {"Sequencer/CalReco"};
 CalReco.Members = {
     "CalXtalRecAlg", 
-    "CalClusterAlg"};
+    "CalClustersAlg"};
 
 
 // ----------------------------
