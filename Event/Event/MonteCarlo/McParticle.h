@@ -94,13 +94,15 @@ class McParticle  : virtual public ContainedObject  {
         unsigned int statusBits,
         const HepLorentzVector& initialMomentum,
         const HepLorentzVector& finalMomentum,
+        const HepPoint3D& initialPosition,
         const HepPoint3D& finalPosition);
 
     //! Set the initial attributes of the McParticle
     void initialize( McParticle* mother, 
         StdHepId id, 
         unsigned int statusBits,
-        const HepLorentzVector& initialMomentum);
+        const HepLorentzVector& initialMomentum,
+        const HepPoint3D& initialPosition);
 
     //! Set the final attributes of the McParticle
     void finalize( const HepLorentzVector& finalMomentum,
@@ -145,6 +147,8 @@ class McParticle  : virtual public ContainedObject  {
     StdHepId                  m_particleID;
     /// Bit-field status flag
     unsigned long             m_statusFlags;
+    /// Initial position
+    HepPoint3D                 m_initialPosition;
     /// Final position
     HepPoint3D                 m_finalPosition;
     /// 4-momentum vectors:

@@ -25,27 +25,24 @@ void McParticle::init( McParticle* mother,
         unsigned int flags,
         const HepLorentzVector& initialMomentum,
         const HepLorentzVector& finalMomentum,
+        const HepPoint3D& initialPosition,
         const HepPoint3D& finalPosition)
 {
-    m_mother = mother;
-    m_particleID = id;
-    m_statusFlags = flags;
-    m_initialFourMomentum = initialMomentum;
-    m_finalFourMomentum = finalMomentum;
-    m_finalPosition = finalPosition;
-    if (!mother) return;
-    if( mother != this) mother->m_daughters.push_back(this);
+    initialize(mother, id, flags, initialMomentum, initialPosition);
+    finalize(finalMomentum, finalPosition);
 }
 
 void McParticle::initialize( McParticle* mother,         
                       StdHepId id, 
         unsigned int flags,
-        const HepLorentzVector& initialMomentum)
+        const HepLorentzVector& initialMomentum,
+        const HepPoint3D& initialPosition)
 {
     m_mother = mother;
     m_particleID = id;
     m_statusFlags = flags;
     m_initialFourMomentum = initialMomentum;
+    m_initialPosition = initialPosition;
     if( mother != this) mother->m_daughters.push_back(this);
 }
 
@@ -59,7 +56,7 @@ void McParticle::finalize(const HepLorentzVector& finalMomentum,
 
 const HepPoint3D& McParticle::initialPosition()const
 {
-    return m_mother->m_finalPosition;
+    return m_initialPosition;
 }
 const HepPoint3D& McParticle::finalPosition()const
 {
