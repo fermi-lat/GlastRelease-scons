@@ -2,6 +2,23 @@
  * package Gleam
  * package manager:T.Burnett
 
+
+* v2r2p10 THB 02-Sep-02
+      use facilities     v2r5
+      use astro          v0r1p1 
+      use gui            v3r3
+      use Geant4Runtime  v1r0
+      use Event          v8r15
+      use FluxSvc        v5r10p4
+      use G4Generator    v4r3p1
+      use CalDigi        v1r2p1
+      use TkrDigi        v1r5p6
+      use AcdDigi        v1r3p1
+      use Recon          v2r3p2
+      use AcdRecon       v0r5p1       
+      use RootIo         v4r11
+      use merit          v5r8p2
+
 * v2r2p9 THB 15-Aug-02
 
       use detModel      v2r13

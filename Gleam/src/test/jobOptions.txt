@@ -16,10 +16,10 @@ TkrVertexAlg.OutputLevel=4; // supress INFO message "Vertexing performed with: T
 Output.Members={}; // turn off any root ouptut
 
 // Number of events to process
-ApplicationMgr.EvtMax = 10000;
-MeritAlg.generated = 10000; // for estimation of Aeff--must be the same
+ApplicationMgr.EvtMax = 1000;
+MeritAlg.generated = 1000; // for estimation of Aeff--must be the same
 // set root output from merit with following
-MeritAlg.RootFilename="merit.root"; 
+// MeritAlg.RootFilename="merit.root"; 
 //==============================================================
 //
 // End of job options file
