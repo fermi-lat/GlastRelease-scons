@@ -1,7 +1,8 @@
 /*
 package manager:T.Burnett 
 
- * v2r11p1  4-Aug-04 jrb Modes to TkrId class
+ * v2r11p2 23-Aug-04 jrb Add optional view argument to constructor
+ * v2r11p1  4-Aug-04 jrb Mods to TkrId class
  * v2r11p0  4-Aug-04 jrb Eliminate unused class XtalId
  * v2r11   17-Jun-04 jrb Add TkrId class, methods to VolumeIdentifier,
  *                       constructor to CalXtalId
