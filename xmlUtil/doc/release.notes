@@ -2,6 +2,7 @@
  * Package xmlUtil
  * Coordinator: J. Bogart
  *
+ * 28-jun-2003: jrb - tag v2r10p0 Use ld_library_path pattern
  * 18-jun-2003: jrb - tag v2r10  Add support for new unary operator <half>
  * 17-apr-2003: jrb - tag v2r9p3 Add author line
  * 14-mar-2003: jrb - tag v2r9p2 Start path of Xerces includes with xercesc/
