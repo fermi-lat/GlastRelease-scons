@@ -28,8 +28,13 @@ Usage is primarily via the FluxAlg algorithm, which access the service to genera
     @param FluxAlg.source_name  ["default"] source name, name must be in the source_lib files
     @param FluxAlg.MCrun        [100] Initial run number
     @param FluxAlg.area         [5.0] target area in m^2
-    @param FluxAlg.pointing_mode [0]
-    @param FluxAlg.rocking_angle [0 deg]
+    @param FluxAlg.pointing_mode [0]  Corresponds to the following, from GPS
+        - 0 No rocking rotation done at all.
+        - 1 Satellite will be rocked toward the north pole in the northern hemisphere, opposite in the south.
+        - 2 (experimental) like UPDOWN, except that rotation at equator happens gradually.
+        - 3 LAT rocked northward for one orbit, southward for the next.
+        - 4 fixed.
+    @param FluxAlg.rocking_angle [0 deg] Rotation angle for Glast, about x-axis.
 
  <hr>
   @section Basic_XML_Sources Sources
@@ -37,9 +42,9 @@ Usage is primarily via the FluxAlg algorithm, which access the service to genera
   @param default
   0.1 GeV gamma-rays coming from the vertical local direction.  Used for default tests.
   @param albedo_gamma
-  Source that represents the Earth horizon albedo with Glast zenith pointing
+  Source that represents the Earth horizon albedo 
   @param albedo_electronpositron
-  Source that represents the spalsh and re-entrant albedo electrons and positrons
+  Source that represents the splash and re-entrant albedo electrons and positrons
   @param diffuse
   diffuse extraglactic from 10 MeV: from APJ 494:523
   @param diffuse-100mev
@@ -51,9 +56,57 @@ Usage is primarily via the FluxAlg algorithm, which access the service to genera
   galactic electron spectrum
   @param normal_gamma
   E^-1 spectrum from 18 MeV to 18 GeV and normal incidence
-  @param muons
+  @param cosmic_muons
   special source that mimics non-interacting cosmics
 
+ <hr>
+ The current complete list is:
+ @verbatim
+ albedo_electronpositron
+albedo_electronpositron_total
+albedo_electronpositronavg_total
+albedo_electronpositronavghi
+albedo_electronpositronavglow
+albedo_electronpositronhi
+albedo_electronpositronlow
+albedo_gamma
+albedo_proton_avg
+albedo_proton_max
+all_gamma
+backgndavgpdr
+backgndmaxpdr
+backgndmix
+chime
+chimeavg
+chimemax
+chimemin
+cosmic_muons
+crab-galactic
+crab-pulsed-pointed
+cremeavg
+default
+diffuse
+diffuse-100mev
+electron
+electronavg
+electronmax
+galcenter
+gamma_100_gev_normal
+gamma_100_gev_uniform
+gamma_100_mev_uniform
+gamma_10_gev_uniform
+gamma_1_gev_30deg
+gamma_1_gev_60deg
+gamma_1_gev_normal
+gamma_1_gev_uniform
+normal_gamma
+surface_muons
+timetick
+timetick30s
+vela
+vertical_muons
+vertical_surface_muons
+@endverbatim
   <br>
   <h2> Defining an external source </h2>
     See the interface definition IRegisterSource for information on how to link code external to this package.
