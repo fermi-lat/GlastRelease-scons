@@ -15,6 +15,7 @@ library GlastSvc ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
                  GlastDetSvc/*.h  GlastDetSvc/*.cpp \
                  EventSelector/*.h  EventSelector/*.cpp \
                  ../GlastSvc/MonteCarlo/*.h MonteCarlo/*.cpp \
+                 ../GlastSvc/Raw/*.h Raw/*.cpp \
                  Dll/*.cpp
 
 macro GlastSvcDir  "$(GLASTSVCROOT)/$(DEBUGDIR)"
