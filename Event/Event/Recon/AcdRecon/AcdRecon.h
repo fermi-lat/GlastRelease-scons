@@ -25,6 +25,7 @@ extern const CLID& CLID_AcdRecon;
 * - List of minimum Active Distance quantities for top and side rows.
 * - DOCA using the reconstructed gamma direction.
 * - Collection of reconstructed energies detected by each ACD Tile.
+* - Active Distance quantity for ribbons
 *                                 
 * @author Heather Kelly
 * $Header$          
@@ -55,9 +56,35 @@ namespace Event {
             m_rowDocaCol(rowDoca),
             m_rowActDistCol(rowActDist),
 			m_idCol(idCol),
-            m_energyCol(energyCol)
+            m_energyCol(energyCol),
+            m_ribbon_actDist(-2000.0),
+            m_ribbon_actDist_id(idents::AcdId(0,0))
             
         {};
+
+
+        AcdRecon(double e, int count, double gDoca, double doca, double actDist,
+            const idents::AcdId &minDocaId, const std::vector<double> &rowDoca,
+            const std::vector<double> &rowActDist,
+            const std::vector<idents::AcdId>& idCol, 
+            const std::vector<double>& energyCol,
+            double ribbon_actDist, const idents::AcdId ribbon_actDist_id)
+            : m_totEnergy(e),
+            m_tileCount(count),
+            m_gammaDoca(gDoca),
+            m_doca(doca),
+            m_actDist(actDist),
+            m_minDocaId(minDocaId),
+            m_rowDocaCol(rowDoca),
+            m_rowActDistCol(rowActDist),
+			m_idCol(idCol),
+            m_energyCol(energyCol),
+            m_ribbon_actDist(ribbon_actDist),
+            m_ribbon_actDist_id(ribbon_actDist_id)
+            
+        {};
+
+
         
         virtual ~AcdRecon() { };
 
@@ -65,7 +92,8 @@ namespace Event {
             const idents::AcdId &minDocaId, const std::vector<double> &rowDoca,
             const std::vector<double> &rowActDist,
             const std::vector<idents::AcdId>& idCol, 
-            const std::vector<double>& energyCol);
+            const std::vector<double>& energyCol,
+            double ribbonActDist=2000.0, const idents::AcdId &ribActDistId=idents::AcdId(0,0));
 
         void clear();
 
@@ -78,6 +106,8 @@ namespace Event {
         inline const double getGammaDoca() const { return m_gammaDoca; };
         inline const double getDoca() const { return m_doca; };
         inline const double getActiveDist() const { return m_actDist; };
+        inline const double getRibbonActiveDist() const { return m_ribbon_actDist; };
+        inline const idents::AcdId& getRibbonActiveDistId() const { return m_ribbon_actDist_id; };
         inline const idents::AcdId& getMinDocaId() const { return m_minDocaId; };
         inline const std::vector<double>& getRowDocaCol() const { return m_rowDocaCol; };
         inline const std::vector<double>& getRowActDistCol() const { return m_rowActDistCol; };
@@ -111,6 +141,10 @@ namespace Event {
         double m_doca;
         /// New Bill Atwood DOCA calculation using edge of tiles
         double m_actDist;
+        // Active Distance calculation for ribbons
+        double m_ribbon_actDist;
+        // Id of the ribbon corresponding to the Active Distance
+        idents::AcdId m_ribbon_actDist_id;
         // record of the tile with the minimum Distance of Closest Approach
         idents::AcdId m_minDocaId;
         /// Collection of distance of closest approach calculations
@@ -141,13 +175,15 @@ namespace Event {
             const idents::AcdId &minDocaId, const std::vector<double> &rowDoca,
             const std::vector<double> &rowActDist,
             const std::vector<idents::AcdId>& idCol, 
-            const std::vector<double>& energyCol)
+            const std::vector<double>& energyCol, double ribbon_actDist, const idents::AcdId &ribbonId)
     {
         m_totEnergy = e;
         m_tileCount = count;
         m_gammaDoca = gDoca;
         m_doca = doca;
         m_actDist = actDist;
+        m_ribbon_actDist = ribbon_actDist;
+        m_ribbon_actDist_id = ribbonId;
         m_minDocaId = minDocaId;
         m_rowDocaCol = rowDoca;
         m_rowActDistCol = rowActDist;
@@ -197,7 +233,10 @@ namespace Event {
             << m_gammaDoca << " )"
             << "\n        DOCA     = "
             << EventFloatFormat( EventFormat::width, EventFormat::precision )
-            << m_doca << " )";
+            << m_doca << " )"
+            << "\n        ribbon Active Distance = "
+            << EventFloatFormat( EventFormat::width, EventFormat::precision )
+            << m_ribbon_actDist << " )";
     }
     
     
