@@ -1,12 +1,29 @@
 package RootAnalysis
 version v3r0
-
-# No code.
 # This package has the Root Analysis scripts.
 
 #use these to get the env vars defined
-use digiRootData v3r*
-use reconRootData v3r*
-use mcRootData v2r*
+use mcRootData v2r2
+use digiRootData v3r5p1
+use reconRootData v3r2
+use ROOT v3r2p*
 
 set ROOTANALYSIS ${ROOTANALYSISROOT}
+
+apply_pattern package_include
+
+apply_pattern package_headers
+
+macro_append RootAnalysis_headers "" \
+                                  WIN32 "../RootTreeAnalysis/RootTreeAnalysis.h"
+
+macro_append ROOT_libs " -lHist " \
+             WIN32 " ${ROOT_PATH}/lib/libHist.lib "
+
+# Define a test program that will run RootTreeAnalysis in batch mode
+# on 3 ROOT files included with this package
+# One could also pass in their own set of ROOT files as follows:
+# testRootAnalysis.exe myMcRootfile.root myDigiRootFile.root myReconRootFile.root
+application test_RootAnalysis test/runTreeAnalysis.cxx \
+            ../RootTreeAnalysis/RootTreeAnalysis.cxx \
+            ${RootAnalysis_headers}
