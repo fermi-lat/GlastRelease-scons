@@ -1,5 +1,5 @@
 package reconRootData
-version v3r7
+version v4r0
 
 use GlastPolicy v4r*
 use digiRootData v3r*
@@ -39,6 +39,7 @@ macro root_headers "\
  ../reconRootData/TkrCovMat.h\
  ../reconRootData/TkrFitHit.h\
  ../reconRootData/TkrHitPlane.h\
+ ../reconRootData/TkrKalFitTrack.h\
  ../reconRootData/TkrParams.h\
  ../reconRootData/TkrRecon.h\
  ../reconRootData/TkrTrack.h\
@@ -53,7 +54,7 @@ macro root_linkdef "../reconRootData/ReconLinkDef.h"
 library  reconRootData \
       ReconEvent.cxx \
       TkrRecon.cxx TkrCandHit.cxx TkrCandTrack.cxx TkrFitHit.cxx \
-      TkrCovMat.cxx TkrHitPlane.cxx TkrCluster.cxx \
+      TkrCovMat.cxx TkrHitPlane.cxx TkrCluster.cxx TkrKalFitTrack.cxx \
       TkrParams.cxx TkrTrack.cxx TkrVertex.cxx \
       CalRecon.cxx CalRangeRecData.cxx CalCluster.cxx CalXtalRecData.cxx \
       AcdRecon.cxx \
