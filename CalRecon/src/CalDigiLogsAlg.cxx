@@ -241,7 +241,8 @@ void CalDigiLogsAlg::computePosition(CalRecLog* recLog, const CalDetGeo* geoLog,
 	double latt = 0.65;
 	double slope = (1+latt)/(1-latt);
 
-	Point pLog = pCenter-dirLog*asym*slope;
+	Point pLog = pCenter+dirLog*asym*slope;
+
 
 	recLog->setPosition(pLog);
 }
