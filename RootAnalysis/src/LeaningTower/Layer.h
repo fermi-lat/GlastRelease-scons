@@ -34,8 +34,7 @@ class Layer : public TNamed {
                             float az=0, float ay=0, float ax=0) const;
 
     double GetCoordinate(int stripId);
-    bool checkActiveArea(double ParallelCoordinate, double NormalCoordinate,
-                         double BorderWidth);
+    float activeAreaDist(const float x, const float y) const;
     void DrawLayer();
     void DrawGhostLayer();
     // the following 3 definitions rely on names of the structure "X7" or "Y13"
@@ -51,18 +50,24 @@ class Layer : public TNamed {
     }
     void SetTree(TFile *file);
     void GetEvent(int event) { LayerTree->GetEntry(event); }
-
-    void AddHitInActiveArea() { HitsInActiveArea++; }
-    void AddMissedHit() { MissedHits++; }
-    double GetInefficiency() {
-        if(HitsInActiveArea)
-            return (double) MissedHits/HitsInActiveArea;
-    }
-    double GetEfficiency() { return 1.0-GetInefficiency(); }
     Bool_t GetTriggerReq(Bool_t side) { return side ? TriggerReq1 :TriggerReq0;}
     const std::vector<TString>& GetPlanesForFittingCol() const {
         return planesForFittingCol; }
-  
+
+    void AddHitInActiveArea()       { ++HitsInActiveArea; }
+    void AddMissingHit()            { ++MissingHits; }
+    void SetHitsInActiveArea(int i) { HitsInActiveArea = i; }
+    void SetMissingHits(int i)      { MissingHits = i; }
+    int GetHitsInActiveArea() const { return HitsInActiveArea; }
+    int GetMissingHits()      const { return MissingHits; }
+    float GetInefficiency()   const {
+        if ( HitsInActiveArea )
+            return static_cast<float>(MissingHits) / HitsInActiveArea;
+        else
+            return -1.;
+    }
+    float GetEfficiency() const { return 1. - GetInefficiency(); }
+
  private:
     float X, Y, Z;
     float rotX, rotY, rotZ;
@@ -74,8 +79,14 @@ class Layer : public TNamed {
     int TkrNumHits;
     int TkrHits[128];
 
-    double EDGE_WIDTH,WAFER_WIDTH,STRIP_PITCH,LADDER_SEPARATION;
-    int HitsInActiveArea,MissedHits;
+    float SIWAFERSIDE;
+    float SIWAFERACTIVESIDE;
+    float STRIPPITCH;
+    float LADDERGAP;
+    float SSDGAP;
+    float INACTIVEBORDERWIDTH;
+
+    int HitsInActiveArea, MissingHits;
     Bool_t TriggerReq0;
     Bool_t TriggerReq1;
     std::vector<TString> planesForFittingCol;

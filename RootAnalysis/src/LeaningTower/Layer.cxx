@@ -15,12 +15,17 @@ Layer::Layer(TString name, float pz, float py, float px,
     rotY = ry;
     rotX = rx;
 
-    EDGE_WIDTH        =  1.000;
-    STRIP_PITCH       =  0.228;
-    LADDER_SEPARATION =  0.200; 
-    WAFER_WIDTH       = 89.500;
-    MissedHits=0;
-    HitsInActiveArea=0;
+    // the constants should go into the geometry
+    SIWAFERSIDE       = 89.5;
+    SIWAFERACTIVESIDE = 87.552;
+    STRIPPITCH        =  0.228;
+    LADDERGAP         =  0.2; 
+    SSDGAP            =  0.025;
+
+    INACTIVEBORDERWIDTH = ( SIWAFERSIDE - SIWAFERACTIVESIDE ) * 0.5;
+
+    MissingHits = 0;
+    HitsInActiveArea = 0;
 
     for ( int i=0; i<4; i++ ) {
         double xcoord1 = GetCoordinate(i*384);
@@ -43,41 +48,43 @@ Layer::~Layer() {
 }
 
 //////////////////////////////////////////////////
-double Layer::GetCoordinate(int StripNumber)
-{
-  bool DEBUG = false;
-  // Check that the strip number is within the allowed range.
-  if ((StripNumber < 0) || (StripNumber > 1535)){
-    std::cout << "WARNING: the strip number must be included in the range "
-              << "[0:1535]." << std::endl;
-    std::cout << "GetCoordinate() returning -1.0" << std::endl;
-    return -1.0;
-  }
-  // Define some constants (to be moved out of the function?)
-  double Coordinate = EDGE_WIDTH + STRIP_PITCH*StripNumber +
-    (LADDER_SEPARATION + 2*EDGE_WIDTH - STRIP_PITCH)*(int)(StripNumber/384);
-  if (DEBUG)
-    {
-      std::cout << "GetCoordinate() returning " << Coordinate <<
-	"(strip number = " << StripNumber << ")" << std::endl;
+double Layer::GetCoordinate(int StripNumber) {
+    bool DEBUG = false;
+    // Check that the strip number is within the allowed range.
+    if ( StripNumber < 0 ||  StripNumber > 1535 ) {
+        std::cout << "WARNING: the strip number must be in the range "
+                  << "[0:1535]." << std::endl;
+        std::cout << "GetCoordinate() returning -1.0" << std::endl;
+        return -1.0;
     }
-  return Coordinate;
+
+    double pos = INACTIVEBORDERWIDTH + STRIPPITCH * (StripNumber+0.5)
+        + ( LADDERGAP + 2 * INACTIVEBORDERWIDTH )
+        * static_cast<float>(StripNumber/384);
+    if ( DEBUG )
+        std::cout << "GetCoordinate() returning " << pos <<
+            "(strip number = " << StripNumber << ")" << std::endl;
+    return pos;
 }
 
+/*
 bool Layer::checkActiveArea(double ParallelCoordinate, double NormalCoordinate,
                             double BorderWidth) {
   bool DEBUG = false;
   // Define some constants (to be moved out of the function?)
-  // All dimension in cm.
+  // All dimension in mm.
   // Loop over the ladders.
+
+  // THIS HERE IS NOT PRECISE, BUT I DON'T WANT TO MESS WITH IT!
   for (int i=0; i<4; i++){
-    if ((NormalCoordinate > (EDGE_WIDTH + (WAFER_WIDTH + LADDER_SEPARATION)*i
+    if ((NormalCoordinate > (INACTIVEBORDERWIDTH + (SIWAFERSIDE + LADDERGAP)*i
                              + BorderWidth)) &&
-	(NormalCoordinate < (WAFER_WIDTH*(i+1) + LADDER_SEPARATION*i
+	(NormalCoordinate < (SIWAFERSIDE*(i+1) + LADDERGAP*i
                              - BorderWidth))){
       for (int j=0; j<4; j++){
-	if ((ParallelCoordinate > (EDGE_WIDTH + WAFER_WIDTH*j + BorderWidth)) &&
-	    (ParallelCoordinate < (WAFER_WIDTH*(j+1) - BorderWidth))){
+	if ((ParallelCoordinate > (INACTIVEBORDERWIDTH + SIWAFERSIDE*j
+        + BorderWidth)) &&
+	    (ParallelCoordinate < (SIWAFERSIDE*(j+1) - BorderWidth))){
 	  if (DEBUG){
 	    std::cout << "checkActiveArea(): ladder " << i << ", wafer " << j
                       << " hit." << std::endl;
@@ -91,6 +98,36 @@ bool Layer::checkActiveArea(double ParallelCoordinate, double NormalCoordinate,
     std::cout << "checkActiveArea(): no hit on any of the wafers." << std::endl;
   }
   return 0;
+}
+*/
+
+float Layer::activeAreaDist(const float x, const float y) const {
+    // returns the distance of the hit to an active area.
+    // if negative, the hit lies in an active area.
+    // Translations of the planes are accounted for in Recon::TkrAlignmentSvc.
+    // ToDo:
+    //   Also correct for rotations!
+
+    float dx = 1E15;
+    for ( int i=0; i<4; ++i ) {
+        // x dist to wafer center
+        const float dist = std::abs((i+0.5) * SIWAFERSIDE + i * LADDERGAP - x);
+        if ( dist < dx )
+            dx = dist;
+    }
+    float dy = 1E15;
+    for ( int i=0; i<4; ++i ) {
+        // y dist to wafer center
+        const float dist = std::abs((i+0.5) * SIWAFERSIDE + i * SSDGAP - y);
+        if ( dist < dy )
+            dy = dist;
+    }
+
+    const float SIWAFERACTIVEHALF = SIWAFERACTIVESIDE * 0.5;
+    dx -= SIWAFERACTIVEHALF;
+    dy -= SIWAFERACTIVEHALF;
+
+    return ( ( dx<0 && dy<0 ) ? -1. : 1. ) * std::sqrt(dx*dx + dy*dy);
 }
 
 void Layer::DrawLayer() {
@@ -119,11 +156,15 @@ void Layer::SetTree(TFile *file) {
 
 std::string Layer::GetGeometry(float dz, float dy, float dx,
                                float az, float ay, float ax) const {
+    // the alignment determines the shifts with respect to the input geometry:
+    //     add the shift to the geometry
+    // the alignment determines the absolute value of the rotations:
+    //     replace the rotations in the geometry file
     std::stringstream s;
     s.setf(std::ios_base::fixed);
     s.precision(3);
     s << fName << ' ' << Z+dz << ' ' << Y+dy << ' ' << X+dx
-      << ' ' << rotZ+az << ' ' << rotY+ay << ' ' << rotX+ax;
+      << ' ' << az << ' ' << ay << ' ' << ax;
     return s.str();
 }
 

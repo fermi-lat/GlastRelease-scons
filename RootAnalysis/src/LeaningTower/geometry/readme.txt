@@ -23,9 +23,16 @@ TowerGeometrySaggini.txt:  numbers were extracted by Nicola Saggini (engineer
 Tower0Geometry.txt:  contains the plane positions (center of material) of Tower0
  after alignment.
 
+TowerAgeometry357.txt:  contains the plane positions (center of material) of
+                        TowerA before mounting of the side walls, in upside-down
+                        position (alignment not yet done).   Run #306000357
+
+TowerAgeometry384.txt:  contains the plane positions (center of material) of
+                        TowerA after mounting of the side walls, in upside-down
+                        position.   Run #306000384
+
 TowerAgeometry.txt:  contains the plane positions (center of material) of TowerA
                      (alignment not yet done).
-
 
 fitting files:
 

@@ -29,6 +29,7 @@ public:
 
     void Go(int lastEntry=-1);
     // general for DrawXxx: residual is h_abs - h_abs_ext
+    // ***********
     // draws the residual, top without fitting, bottom with gauss fit
     void DrawResidual(TString plane, TCut="");
     // draws top the slope vs. residual, bottom the profile with pol1 fit
@@ -47,12 +48,12 @@ public:
 
 Residual::Residual(TString filename, TString resFileName) {
     myTracker = new Tracker;
-    myTracker->loadGeometry(gSystem->ExpandPathName(
-             "$ROOTANALYSISROOT/src/LeaningTower/geometry/TowerAGeometry.txt"
-//             "$ROOTANALYSISROOT/src/LeaningTowery/geometry/TowerGeometryGleamv5r8.txt"
-                 ));
-    //    myTracker->loadFitting(gSystem->ExpandPathName(
-    //        "$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0FittingPlanes.txt"));
+    myTracker->loadGeometry(gSystem->ExpandPathName
+     (
+      //"$ROOTANALYSISROOT/src/LeaningTower/geometry/TowerGeometryGleamv5r8.txt"
+      //"$ROOTANALYSISROOT/src/LeaningTower/geometry/TowerAgeometry357.txt"
+      "$ROOTANALYSISROOT/src/LeaningTower/geometry/TowerAgeometry384.txt"
+        ));
     myTracker->SetTower(true);
     myEvent = new Event(filename, myTracker->GetGeometry());
     myResFileName = resFileName;
@@ -95,6 +96,8 @@ void Residual::Go(int lastEntry) {
     }
 
     const TList* myGeometry = myTracker->GetGeometry();
+    const std::vector<TString> planeCols[2] = {
+        myTracker->GetPlaneNameCol(0), myTracker->GetPlaneNameCol(1) };
 
     Recon* recon = myEvent->GetRecon();
     Progress progress;
@@ -133,12 +136,9 @@ void Residual::Go(int lastEntry) {
         // would matter, the Chi2 would be bad anyway!
         TLine refTrack[2];
         for ( int i=0; i<2; ++i ) {
-            // make a list of "good" planes only!
-            const std::vector<TString> planeCol =
-                myTracker->GetPlaneNameCol(i, true);
-            // adding all clusters on the planeCol planes to TGclus
-            const TGraph TGclus = recon->GetClusterGraph(planeCol);
-            refTrack[i] = Reconstruct(&TGclus, false);
+            // adding all clusters on planeCols[i] planes to TGclus
+            const TGraph TGclus = recon->GetClusterGraph(planeCols[i]);
+            refTrack[i] = Reconstruct(&TGclus);
         }
 
         // helper for the statistics
@@ -151,22 +151,15 @@ void Residual::Go(int lastEntry) {
             const int iReconLayer = TkrClusLayer[i];
             const int iLayer = 17 - iReconLayer;
             const TString planeName = GetPlaneName(iLayer, iView);
-            std::vector<TString>planeCol=myTracker->GetPlaneNameCol(iView,true);
+            std::vector<TString> planeCol = planeCols[iView];
             // remove all hits on tray to which the plane to be studied belongs
             planeCol.erase(find(planeCol.begin(), planeCol.end(), planeName));
             planeCol.erase(find(planeCol.begin(), planeCol.end(),
                                 GetTrayTwinPlaneName(iLayer, iView)));
-            bool exactlyOne;
-            const TGraph TGclus = recon->GetClusterGraph(planeCol, &exactlyOne);
 
-            if ( !planeCol.size() || !exactlyOne )
-                continue;
-            // rejects if a bad plane (empty refCol), and if not each plane has
-            // exactly one cluster
+            const TGraph TGclus = recon->GetClusterGraph(planeCol);
+            const TLine track = Reconstruct(&TGclus);
 
-            const TLine track = Reconstruct(&TGclus, false);
-
-            //            if ( !IsValid(track) ) // no track fitted
             if ( track.GetLineStyle() != 1 ) // no "good" Chi2
                 continue;
 
@@ -341,7 +334,7 @@ void Residual::DrawResSlopeAll(TCut cut) {
         dx = dy = dz = 0.;
         if ( htemp ) { // histogram might be empty
             htemp->SetTitle(planeName);
-            htemp->Fit("pol1", "q", "", -0.6, 0.6);
+            htemp->Fit("pol1", "q", "", -1.0, 1.0);
             gPad->Update();
             TF1* f = htemp->GetFunction("pol1");
             // if I define the residual as h_abs_ext-h_abs, the horizontal shift
@@ -379,6 +372,12 @@ void Residual::DrawResOrdAll(TCut cut) {
     TTree* t = (TTree*)f.Get("residualTree");
 
     gStyle->SetTitleFontSize(0.1);
+    gStyle->SetOptStat(0);
+    gStyle->SetOptFit(11);
+    //    gStyle->SetStatFontSize(0.1);
+    gStyle->SetStatBorderSize(1);
+    gStyle->SetStatH(0.25);
+    gStyle->SetStatW(0.35);
     gStyle->SetFitFormat(".3g");
     int i=0;
     std::ofstream fout("newGeometry.txt");
@@ -398,7 +397,7 @@ void Residual::DrawResOrdAll(TCut cut) {
         dx = dy = dz = dangZ = 0.;
         if ( htemp ) { // histogram might be empty
             htemp->SetTitle(planeName);
-            htemp->Fit("pol1", "q");
+            htemp->Fit("pol1", "q", "", 0, 350);
             gPad->Update();
             TF1* f = htemp->GetFunction("pol1");
             // dangZ is the rotation around z (check the sign)

@@ -277,8 +277,8 @@ void PlotHitMap(TString myCuts, TString title) {
 
 
 void Plot2Dmap(TString LV, TString myCuts="", TString title="") {
-  gDirectory->Delete("hit2d");
-  TCanvas* map2d = new TCanvas("hit2d", "HitMap2D", 800, 800);
+  gDirectory->Delete("HitMap2D");
+  TCanvas* map2d = new TCanvas("HitMap2D", "HitMap2D", 800, 800);
   AddLayer("X"+LV);
   AddLayer("Y"+LV);
   myTree->Draw("LayerY"+LV+".TkrHits:LayerX"+LV+".TkrHits", myCuts);
@@ -594,27 +594,23 @@ void PlotHitsVsTime(TString VL1)
 TCanvas *Report(TString LV,TString myCuts)
 {
   //////////////////////////////////////////////////
-  //  gDirectory->Delete("ReportCanvas");
   AddLayer(LV);
-  TString Name="Off_line_Report ";
-  TString Title="Off line Report ";
-  Name+=myCuts;
-  Title+=myCuts;
-  TCanvas *ReportCanvas = new TCanvas("ReportCanvas","ReportCanvas",700,950);
-  ReportCanvas->SetName(Name);
-  ReportCanvas->SetTitle(Title);
+  const TString Name  = "Off_line_Report " + LV + " " + myCuts;
+  const TString Title = Name;
+  //  gDirectory->Delete(Title);
+  TCanvas *ReportCanvas = new TCanvas(Name, Title, 700, 950);
   ReportCanvas->Divide(1,4);
   ReportCanvas->cd(1);
-  TPad *top = (TPad*) gPad;
+  TPad* top = (TPad*)gPad;
 
   ReportCanvas->cd(2);
-  TPad *middleUp = (TPad*) gPad;
+  TPad* middleUp = (TPad*)gPad;
 
   ReportCanvas->cd(3);
-  TPad *middleDown = (TPad*) gPad;
+  TPad* middleDown = (TPad*)gPad;
 
   ReportCanvas->cd(4);
-  TPad *bottom = (TPad*) gPad;
+  TPad* bottom = (TPad*)gPad;
   
   //  middleUp->Divide(2,1);
   middleDown->Divide(2,1);
@@ -749,7 +745,7 @@ TCanvas *Report(TString LV,TString myCuts)
   gPad->SetLogy();
   TH1D *TOT1  = ToT_1(myCuts);
   
-  //ReportCanvas->cd();
+  ReportCanvas->cd();
   return ReportCanvas;
   //////////////////////////////////////////////////
 }

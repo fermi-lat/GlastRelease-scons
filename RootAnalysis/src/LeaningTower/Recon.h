@@ -33,9 +33,14 @@ class Recon : public TObject {
     TGraph GetAllClustersGraph(const int view, const int notLayer=-1) const;
     TGraph GetClusterGraph(const std::vector<TString> planeCol,
                            bool* exactlyOne) const;
-    TGraph GetClusterGraph(const std::vector<TString> planeCol) {
+    TGraph GetClusterGraph(const std::vector<TString> planeCol) const {
         bool dummy;
         return GetClusterGraph(planeCol, &dummy);
+    }
+    TGraph GetClusterGraph(const TString plane) const {
+        std::vector<TString> planeCol;
+        planeCol.push_back(plane);
+        return GetClusterGraph(planeCol);
     }
     TGraph GetTrk1ClustersGraph(const TString view, const int notLayer=-1)const;
     TGraph GetTrk1ClustersGraph(const int view, const int notLayer=-1) const;
@@ -76,7 +81,7 @@ class Recon : public TObject {
     ClassDef(Recon, 1)
 };
 
-TLine Reconstruct(const TGraph*, const bool verbose=true);
+TLine Reconstruct(const TGraph*);
 bool IsValid(const TLine& l) { return l.GetLineStyle(); }
 //bool IsInvalid(const TLine& l) { return l.GetX1() == 0.0 && l.GetX2() == 0.0
 //                                    && l.GetY1() == 0.0 && l.GetY2() == 0.0; }

@@ -54,8 +54,6 @@ EventDisplay::EventDisplay(TString filename) {
     if ( TOWER ) {  
         myTracker->loadGeometry(
               "$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0Geometry.txt");
-        myTracker->loadFitting(
-         "$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0FittingPlanes.txt");
         myTracker->SetTower(TOWER);
     }
     else

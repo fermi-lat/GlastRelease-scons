@@ -6,5 +6,6 @@ gROOT->LoadMacro("Tracker.cxx+");
 gROOT->LoadMacro("Event.cxx+");
 gROOT->LoadMacro("EventDisplay.cxx+");
 gROOT->LoadMacro("Residual.cxx+");
+gROOT->LoadMacro("Efficiency.cxx+");
 //gROOT->LoadMacro("PlotMacros.C+");
 }

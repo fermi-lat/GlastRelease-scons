@@ -62,43 +62,15 @@ void Tracker::loadGeometry(TString filename) {
     }
 
     fin.close();
-    myGeometry->Print();
+    //    myGeometry->Print();
+    std::cout << "Number of planes: " << myGeometry->GetSize() << std::endl;
 }
 
-void Tracker::loadFitting(TString filename) {
-    gSystem->ExpandPathName(filename);
-    if ( myGeometry->IsEmpty() ) {
-        std::cout << "WARNING: Geometry is empty!" << std::endl;
-        return;
-    }
-    std::ifstream fin(filename);
-    if ( !fin ) {
-        std::cout << "File " << filename << " could not be opened!" <<std::endl;
-        return;
-    }
-    TString name;
-    double value;
-    while ( 1 ) {
-        fin >> name >> value;
-        if ( !fin.good() ) break;
-        std::vector<TString> v;
-        for ( int i=0; i<value; ++i ) {
-            TString dummy;
-            fin >> dummy;
-            v.push_back(dummy);
-        }
-        Layer* l = (Layer*)myGeometry->FindObject(name);
-        l->SetPlanesForFittingCol(v);
-    }
-    fin.close();
-}
-
-std::vector<TString> Tracker::GetPlaneNameCol(const TString view,
-                                              const bool onlyTheGood) const {
+std::vector<TString> Tracker::GetPlaneNameCol(const TString view) const {
     if ( view == "X" )
-        return GetPlaneNameCol(0, onlyTheGood);
+        return GetPlaneNameCol(0);
     else if ( view == "Y" )
-        return GetPlaneNameCol(1, onlyTheGood);
+        return GetPlaneNameCol(1);
     else
         std::cerr << "Tracker::GetPlaneNameCol: view = " << view << std::endl;
 
@@ -106,14 +78,11 @@ std::vector<TString> Tracker::GetPlaneNameCol(const TString view,
     return std::vector<TString>();
 }
 
-std::vector<TString> Tracker::GetPlaneNameCol(const int view,
-                                              const bool onlyTheGood) const {
+std::vector<TString> Tracker::GetPlaneNameCol(const int view) const {
     TIter next(myGeometry);
     std::vector<TString> v;
     while ( Layer* l = (Layer*)next() ) {
         if ( view != l->GetView() )
-            continue;
-        if ( onlyTheGood && l->GetPlanesForFittingCol().size() == 0 )
             continue;
         v.push_back(l->GetName());
     }

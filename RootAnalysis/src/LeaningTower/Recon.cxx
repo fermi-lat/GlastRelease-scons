@@ -26,8 +26,8 @@ void Recon::GetEvent(int event) {
     // We would like to have to origin at 0,0 (equivalent to tower 10).
     // There is also a non-understood not-cared-for shift in z.
     for ( int i=0; i<TkrNumClus; ++i ) {
-        TkrClusX[i] = TkrClusX[i] + 740;
-        TkrClusY[i] = TkrClusY[i] + 740;
+        TkrClusX[i] = TkrClusX[i] + 741.09;
+        TkrClusY[i] = TkrClusY[i] + 741.09;
         TkrClusZ[i] = TkrClusZ[i] +  18;
     }
 }
@@ -102,7 +102,7 @@ TGraph Recon::GetAllClustersGraph(const int view, const int notLayer) const {
 TGraph Recon::GetClusterGraph(const std::vector<TString> planeCol,
                               bool* exactlyOne) const {
     TGraph tg;
-    if ( planeCol.size() == 0 )  // this is a bad plane
+    if ( planeCol.size() == 0 )  // shouldn't happen
         return tg;
 
     *exactlyOne = true;
@@ -168,7 +168,7 @@ TGraph Recon::GetTrk1ClustersGraph(const int view, const int notLayer) const {
 }
 
 
-TLine Reconstruct(const TGraph* XY, const bool verbose) {
+TLine Reconstruct(const TGraph* XY) {
     // LineStyle 0: less than two points
     // LineStyle 1: fit with good chi2
     // LineStyle 2: fit with bad chi2
@@ -226,8 +226,7 @@ TLine Reconstruct(const TGraph* XY, const bool verbose) {
     track.SetLineColor(2);
 
     static const double MaxChi2 = 1;
-    if ( verbose )
-        std::cout << "chisqr " << MinChi2 << std::endl;
+    //    std::cout << "chisqr " << MinChi2 << std::endl;
     if ( MinChi2 > MaxChi2 )
         track.SetLineStyle(2);
 

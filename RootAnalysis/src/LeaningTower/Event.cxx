@@ -16,7 +16,7 @@ Event::Event(TString filename, TList* geometry) {
     myTree->SetBranchAddress("EbfTime",&EbfTime);
 
     NumberOfEvents = (int)myTree->GetEntries();
-    std::cout << "Number of Events: " << NumberOfEvents << std::endl;
+    std::cout << "Number of events: " << NumberOfEvents << std::endl;
   
     TIter next(myGeometry);
     while ( Layer* aPlane = (Layer*)next() )
