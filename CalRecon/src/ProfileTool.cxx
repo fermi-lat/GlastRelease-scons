@@ -200,11 +200,11 @@ StatusCode ProfileTool::doEnergyCorr(double eTotal, Event::CalCluster* cluster)
     for (int i =0;i<getNLayers();i++)
     {
         // We are working in GeV
-        m_g_elayer[i] = eTotal/1000.;
+        m_g_elayer[i] = cluster->getEneLayer(i)/1000.;
     }
     m_nbins = getNLayers();
     
-    if( eTotal<2000. || getTrackSlope() == 0) //algorithm is useless under several GeV
+    if( eTotal<2000. || getStaticSlope() == 0) //algorithm is useless under several GeV
     {
         cluster->initProfile(0,0,0,0,0);
     }

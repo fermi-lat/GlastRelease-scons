@@ -120,7 +120,7 @@ StatusCode CalClustersAlg::initialize()
     m_lastLayerTool = dynamic_cast<EnergyCorr*>(ilast);
 
     IEnergyCorr* iprof;
-    sc = toolSvc()->retrieveTool(m_lastLayerToolName,iprof);
+    sc = toolSvc()->retrieveTool(m_profileToolName,iprof);
     if (sc.isFailure() ) {
         log << MSG::ERROR << "  Unable to create " << m_profileToolName << endreq;
         return sc;
