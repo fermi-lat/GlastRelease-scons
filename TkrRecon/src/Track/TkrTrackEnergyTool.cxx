@@ -16,6 +16,8 @@
 #include "TkrRecon/Cluster/TkrQueryClusters.h"
 #include "TkrRecon/GaudiAlg/TkrTrackFitAlg.h"
 
+#include <algorithm>
+
 static ToolFactory<TkrTrackEnergyTool> s_factory;
 const IToolFactory& TkrTrackEnergyToolFactory = s_factory;
 

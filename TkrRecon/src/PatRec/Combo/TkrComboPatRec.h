@@ -25,6 +25,7 @@
 #include "Event/Recon/TkrRecon/TkrClusterCol.h"
 #include "src/Track/TkrControl.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
+#include "TkrUtil/ITkrFailureModeSvc.h"
 #include "src/TrackFit/KalFitTrack/KalFitTrack.h"
 #include "geometry/Ray.h"
 
@@ -37,7 +38,9 @@ using namespace Event;
 class TkrComboPatRec : public TkrPatCandCol
 {
 public:
-    TkrComboPatRec(ITkrGeometrySvc* pTkrGeo, TkrClusterCol* pClusters, double CalEnergy, Point CalPosition);
+    TkrComboPatRec(ITkrGeometrySvc* pTkrGeo, 
+        ITkrFailureModeSvc* pTkrFail,
+        TkrClusterCol* pClusters, double CalEnergy, Point CalPosition);
         ~TkrComboPatRec() {};
 
 private:
@@ -46,6 +49,7 @@ private:
     public:
         Candidate(TkrClusterCol* clusters,
                   ITkrGeometrySvc* geometry,
+                  ITkrFailureModeSvc* failure,
                   int layer, int twr, double e, 
                   Point x, Vector t, float d, float s, int g, int top);
         ~Candidate();
@@ -110,6 +114,7 @@ private:
 
     /// Pointers to clusters, geometry, and control parameters
     ITkrGeometrySvc* m_tkrGeo;
+    ITkrFailureModeSvc* m_tkrFail;
     TkrClusterCol*   m_clusters;
     TkrControl*      m_control; 
 

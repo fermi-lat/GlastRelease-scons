@@ -18,8 +18,6 @@ using namespace Event;
 
 TkrMakeClusters::TkrMakeClusters(TkrClusterCol* pClus,
                                  ITkrGeometrySvc* pTkrGeoSvc, 
-                                 ITkrBadStripsSvc* pBadStripsSvc, 
-                                 ITkrAlignmentSvc* pAlignmentSvc,
                                  TkrDigiCol* pTkrDigiCol)
 {
     // Purpose: Makes Clusters from TkrDigis
@@ -31,9 +29,9 @@ TkrMakeClusters::TkrMakeClusters(TkrClusterCol* pClus,
 
     m_pTkrGeo    = pTkrGeoSvc;
     
-    m_pBadStrips = pBadStripsSvc;
+    m_pBadStrips = m_pTkrGeo->getTkrBadStripsSvc();
 
-    m_pAlignment = pAlignmentSvc;
+    m_pAlignment = m_pTkrGeo->getTkrAlignmentSvc();
     
     //Initialize the cluster lists...
     pClus->ini();

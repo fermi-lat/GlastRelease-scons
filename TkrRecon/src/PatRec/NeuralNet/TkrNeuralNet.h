@@ -154,6 +154,7 @@ private:
 
     // pointers to clusters and geometry
     ITkrGeometrySvc* m_tkrGeo;
+    ITkrFailureModeSvc* m_tkrFail;
     TkrClusterCol*   m_clusters;
 };
 

@@ -54,8 +54,6 @@ public:
     
     TkrMakeClusters(Event::TkrClusterCol* pClus, 
         ITkrGeometrySvc* m_pTkrGeo, 
-        ITkrBadStripsSvc* m_pBadStrips,
-        ITkrAlignmentSvc* m_pAlignment,
         Event::TkrDigiCol* pTkrDigiCol);
     
     ~TkrMakeClusters() { }

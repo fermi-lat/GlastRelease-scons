@@ -61,8 +61,9 @@ StatusCode TkrNeuralNetFitTool::doTrackFit(Event::TkrPatCand* patCand)
     double energy   = patCand->getEnergy();
         
     Event::TkrKalFitTrack* track  = new Event::TkrKalFitTrack();
-    Event::KalFitter*      fitter = new Event::KalFitter(pTkrClus, pTkrGeoSvc, track, iniLayer, iniTower, 
-                                               control->getSigmaCut(), energy, testRay);                 
+    Event::KalFitter*      fitter = new Event::KalFitter(
+        pTkrClus, pTkrGeoSvc, track, iniLayer, iniTower, 
+        control->getSigmaCut(), energy, testRay);                 
         
     //track->findHits(); Using PR Solution to save time
         

@@ -38,6 +38,12 @@ ComboFindTrackTool::ComboFindTrackTool(const std::string& type, const std::strin
 
     m_tkrGeo  = dynamic_cast<ITkrGeometrySvc*>(iService);
 
+    //Locate and store a pointer to the geometry service
+    iService = 0;
+    sc       = serviceLocator()->getService("TkrFailureModeSvc", iService, true);
+
+    m_tkrFail  = dynamic_cast<ITkrFailureModeSvc*>(iService);
+
     //Locate and store a pointer to the data service
     sc        = serviceLocator()->getService("EventDataSvc", iService);
     m_dataSvc = dynamic_cast<DataSvc*>(iService);
@@ -76,7 +82,9 @@ StatusCode ComboFindTrackTool::findTracks()
     }
 
     //Create the TkrCandidates TDS object
-    Event::TkrPatCandCol* pTkrCands = new TkrComboPatRec(m_tkrGeo, pTkrClus, CalEnergy, CalPosition);
+    Event::TkrPatCandCol* pTkrCands = new TkrComboPatRec(
+        m_tkrGeo, m_tkrFail, pTkrClus, 
+        CalEnergy, CalPosition);
 
     //Register this object in the TDS
     sc = m_dataSvc->registerObject(EventModel::TkrRecon::TkrPatCandCol,pTkrCands);

@@ -17,6 +17,7 @@
 #include "GaudiKernel/DataSvc.h"
 #include "TkrRecon/Track/ITkrFitTool.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
+#include "TkrUtil/ITkrFailureModeSvc.h"
 
 class TkrComboFitTool : public AlgTool, virtual public ITkrFitTool
 {
@@ -34,6 +35,8 @@ public:
 private:
     /// Pointer to the local Tracker geometry service
     ITkrGeometrySvc* pTkrGeoSvc;
+    /// Pointer to the failure service
+    ITkrFailureModeSvc* pTkrFailSvc;
 
     /// Pointer to the Gaudi data provider service
     DataSvc*        pDataSvc;
