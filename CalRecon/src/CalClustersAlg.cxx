@@ -27,10 +27,11 @@ double xtalWidth;  //!< xtal width  in cm
 //! function to compute the true energy deposited in a layer
 /*! Uses the incomplete gamma function: gamma(double,double) implemented in gamma.cxx
 */ 
-using namespace Event;
 
 static const AlgFactory<CalClustersAlg>  Factory;
 const IAlgFactory& CalClustersAlgFactory = Factory;
+
+using namespace Event;
 
 static double gam_prof(double *par, int i)
 {
@@ -484,26 +485,26 @@ StatusCode CalClustersAlg::retrieve()
 
 	DataObject* pnode=0;
 
-    sc = eventSvc()->retrieveObject( "/Event/CalRecon", pnode );
+    sc = eventSvc()->retrieveObject(EventModel::CalRecon::Event /* "/Event/CalRecon"*/, pnode );
     
     if( sc.isFailure() ) {
-        sc = eventSvc()->registerObject("/Event/CalRecon",new DataObject);
+        sc = eventSvc()->registerObject(EventModel::CalRecon::Event /*"/Event/CalRecon"*/,new DataObject);
         if( sc.isFailure() ) {
             
             log << MSG::ERROR << "Could not create CalRecon directory" << endreq;
             return sc;
         }
     }
-    m_calClusterCol = SmartDataPtr<CalClusterCol> (eventSvc(),"/Event/CalRecon/CalClusterCol");
+    m_calClusterCol = SmartDataPtr<CalClusterCol> (eventSvc(),EventModel::CalRecon::CalClusterCol /*"/Event/CalRecon/CalClusterCol"*/);
     if (!m_calClusterCol ){
 	    m_calClusterCol = 0;
 	    m_calClusterCol = new CalClusterCol();
-     	sc = eventSvc()->registerObject("/Event/CalRecon/CalClusterCol",m_calClusterCol);
+     	sc = eventSvc()->registerObject(EventModel::CalRecon::CalClusterCol /*"/Event/CalRecon/CalClusterCol"*/,m_calClusterCol);
     } else {
         m_calClusterCol->clear();
     }
 
-	m_calXtalRecCol = SmartDataPtr<CalXtalRecCol>(eventSvc(),"/Event/CalRecon/CalXtalRecCol"); 
+	m_calXtalRecCol = SmartDataPtr<CalXtalRecCol>(eventSvc(),EventModel::CalRecon::CalXtalRecCol /*"/Event/CalRecon/CalXtalRecCol"*/); 
 
 
 	return sc;
@@ -572,11 +573,11 @@ StatusCode CalClustersAlg::execute()
 		Vector pXtal = recData->getPosition() - p0;
 		int layer = (recData->getPackedId()).getLayer();
 
-		
+/*		
 		log << MSG::DEBUG << " ene=" << eneXtal << " x=" << pXtal.x() 
 			<<" y=" << pXtal.y() << " z=" << pXtal.z()
 			<< " layer=" << layer << endreq;
-
+*/
 		eneLayer[layer]+=eneXtal;
 
 		Vector ptmp = eneXtal*pXtal;
@@ -687,14 +688,13 @@ StatusCode CalClustersAlg::execute()
 	cl->initialize(eleak,eneLayer,pLayer,rmsLayer,rms_long,rms_trans,
 		           caldir,calTransvOffset);
 
-	m_calClusterCol->writeOut();
+	m_calClusterCol->writeOut(log << MSG::DEBUG);
 
 	return sc;
 }
 
 /*! Finalization of algorithm 
  *  - minuit deleted
- *  -  CsIClusterList written
  */
 //################################################
 StatusCode CalClustersAlg::finalize()
@@ -707,7 +707,6 @@ StatusCode CalClustersAlg::finalize()
   delete minuit;
 
 
-//	m_CsIClusterList->writeOut();
 
 	return sc;
 }

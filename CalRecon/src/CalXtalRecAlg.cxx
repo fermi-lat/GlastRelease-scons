@@ -7,11 +7,13 @@
 #include "idents/VolumeIdentifier.h"
 #include "CLHEP/Geometry/Transform3D.h"
 #include "geometry/Point.h"
+#include "Event/Digi/CalDigi.h"
+#include "Event/TopLevel/EventModel.h"
+#include <map>
+
 
 static const AlgFactory<CalXtalRecAlg>  Factory;
 const IAlgFactory& CalXtalRecAlgFactory = Factory;
-#include "Event/Digi/CalDigi.h"
-#include <map>
 
 using namespace Event;
 
@@ -104,23 +106,18 @@ StatusCode CalXtalRecAlg::execute()
 	sc = retrieve();
 
 
-	for (cal::CalDigiCol::const_iterator it = m_CalDigiCol->begin(); 
+	for (Event::CalDigiCol::const_iterator it = m_CalDigiCol->begin(); 
            it != m_CalDigiCol->end(); it++) {
                idents::CalXtalId xtalId = (*it)->getPackedId();
 	   int lyr = xtalId.getLayer();
 	   int towid = xtalId.getTower();
 	   int icol  = xtalId.getColumn();
 		
-	   log << MSG::DEBUG << " tower=" << towid << " layer=" << lyr
-		   << " col=" << icol  << endreq;
-
-
 	   Event::CalXtalRecData* recData = new Event::CalXtalRecData((*it)->getMode(),xtalId);
 	   
 	   computeEnergy(recData, *it);
 	   computePosition(recData);
 	   m_CalXtalRecCol->push_back(recData);
-	   //		std::cout << " ilayer = " << ilayer << " view=" << view << " icol=" << icol << std::endl;
 	}
 
 	return sc;
@@ -151,10 +148,10 @@ StatusCode CalXtalRecAlg::retrieve()
 
 DataObject* pnode=0;
 
-    sc = eventSvc()->retrieveObject( "/Event/CalRecon", pnode );
+    sc = eventSvc()->retrieveObject( EventModel::CalRecon::Event /*"/Event/CalRecon"*/, pnode );
     
     if( sc.isFailure() ) {
-        sc = eventSvc()->registerObject("/Event/CalRecon",new DataObject);
+        sc = eventSvc()->registerObject( EventModel::CalRecon::Event /*"/Event/CalRecon"*/,new DataObject);
         if( sc.isFailure() ) {
             
             log << MSG::ERROR << "Could not create CalRecon directory" << endreq;
@@ -164,28 +161,24 @@ DataObject* pnode=0;
 
     
 
-	m_CalDigiCol = SmartDataPtr<cal::CalDigiCol>(eventSvc(),"/Event/Digi/CalDigis"); 
+	m_CalDigiCol = SmartDataPtr<Event::CalDigiCol>(eventSvc(),EventModel::Digi::CalDigiCol /*"/Event/Digi/CalDigis"*/); 
 
 
-	 sc = eventSvc()->registerObject("/Event/CalRecon/CalXtalRecCol",m_CalXtalRecCol);
+	 sc = eventSvc()->registerObject(EventModel::CalRecon::CalXtalRecCol /*"/Event/CalRecon/CalXtalRecCol"*/,m_CalXtalRecCol);
 	return sc;
 }
 
 //----------------- private ----------------------
 //################################################
-void CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const cal::CalDigi* digi)
+void CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi* digi)
 //################################################
 {
 	MsgStream log(msgSvc(), name());
-	
-//		double ped=100.;
-//		double maxadc=4095;
-//		double maxEnergy[]={200.,1600.,12800.,102400.};
 
 
-	const cal::CalDigi::CalXtalReadoutCol& readoutCol = digi->getReadoutCol();
+	const Event::CalDigi::CalXtalReadoutCol& readoutCol = digi->getReadoutCol();
 		
-	for ( cal::CalDigi::CalXtalReadoutCol::const_iterator it = readoutCol.begin();
+	for ( Event::CalDigi::CalXtalReadoutCol::const_iterator it = readoutCol.begin();
 		      it !=readoutCol.end(); it++){
 				int rangeP = it->getRange(idents::CalXtalId::POS); 
 				int rangeM = it->getRange(idents::CalXtalId::NEG); 
@@ -229,8 +222,6 @@ void CalXtalRecAlg::computePosition(CalXtalRecData* recData)
             HepTransform3D transf;
 			detSvc->getTransform3DByID(segm0Id,&transf);
 			Vector vect0 = transf.getTranslation();
-//			log << MSG::DEBUG << " first segment position x=" << vect0.x()
-//				<< " y=" << vect0.y() << " z="<< vect0.z() << endreq;
 
 			
 			idents::VolumeIdentifier segm11Id;
@@ -239,8 +230,6 @@ void CalXtalRecAlg::computePosition(CalXtalRecData* recData)
 
 			detSvc->getTransform3DByID(segm11Id,&transf);
 			Vector vect11 = transf.getTranslation();
-//			log << MSG::DEBUG << " last segment position x=" << vect11.x()
-//				<< " y=" << vect11.y() << " z="<< vect11.z() << endreq;
 
 
 
@@ -258,15 +247,6 @@ void CalXtalRecAlg::computePosition(CalXtalRecData* recData)
 	double slope = (1+m_lightAtt)/(1-m_lightAtt);
 
 	Point pLog = pCenter+dirLog*asym*slope;
-
-	log << MSG::DEBUG << " crystal center x=" << pCenter.x()
-		<< " y=" <<pCenter.y() << " z=" <<pCenter.z() << endreq;
-
-	log << MSG::DEBUG << " crystal direction x=" << dirLog.x()
-		<< " y=" <<dirLog.y() << " z=" <<dirLog.z() << endreq;
-
-	log << MSG::DEBUG << " particle position x=" << pLog.x()
-		<< " y=" <<pLog.y() << " z=" <<pLog.z() << endreq;
 	
 	(recData->getRangeRecData(0))->setPosition(pLog);
 
