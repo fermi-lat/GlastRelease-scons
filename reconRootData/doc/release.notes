@@ -1,5 +1,7 @@
-Package reconRootData
-Coordinator: H. Kelly
+/** @file release.notes
+ package reconRootData
+ package manager: H. Kelly
 
-28-jun-2001: HMK: renamed LogID to LogId
-28-jun-2001: HMK tagged v1r3
+          20-may-2002: HMK new TKR and CAL classes \n
+v1r3      28-jun-2001: HMK renamed LogID to LogId \n
+*/
