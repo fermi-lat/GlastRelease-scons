@@ -2,6 +2,7 @@
  * @file release.notes
  * @brief Package EbfWriter
  * @verbatim
+ * v0r0p6 05-Nov-2003  NG  Added option to write Ebf data to file
  * v0r0p5 27-Sep-2003  THB disable warning message
  * v0r0p4 06-Sep-2003  THB use -no_auto_imports to simplify building
  * v0r0p2 17-Aug-2003  THB move rest of Ebf to header to avoid need for additional lib 
