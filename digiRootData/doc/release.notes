@@ -3,6 +3,7 @@ Package digiRootData
 Coordinator:H.Kelly
 @verbatim
 
+v7r0      27-May-2004 HMK Move to use LDF Online library rather than EBF
 v6r0p0    27-Apr-2004 HMK Update for new GlastPolicy version
 v6r0      09-Mar-2004 HMK Merge EM digiRootData with mainline
 v5r0p3    27-Jan-2003 HMK fix up caldigicol for reading
