@@ -389,8 +389,7 @@ StatusCode digiRootReaderAlg::readEventSummary() {
 
     // Only update the eventflags on the TDS if the /Event/EventSummary
     // does not yet exist (digiRootReader may fill this for us)
-    SmartDataPtr<LdfEvent::EventSummaryData> evtSumTds(eventSvc(), "/Event/Even
-tSummary");
+    SmartDataPtr<LdfEvent::EventSummaryData> evtSumTds(eventSvc(), "/Event/EventSummary");
     if (!evtSumTds) {
       evtSumTds = new LdfEvent::EventSummaryData();
       sc = eventSvc()->registerObject("/Event/EventSummary", evtSumTds);
@@ -408,9 +407,9 @@ tSummary");
     //unsigned int tem[nTem];
     //for (iTem = 0; iTem < nTem; iTem++) 
     //    tem[iTem] = evtSummary.temLength(iTem);
-    evtSumTds->initContribLen(evtSummary.temLength(), evtSummary.gemLength(), 
-                              evtSummary.oswLength(), evtSummary.errLength(), 
-                              evtSummary.diagLength(), evtSummary.aemLength());
+    evtSumTds->initContribLen((unsigned int*)evtSummary.temLength(), evtSummary.gemLength(), 
+                              evtSummary.oswLength(), (unsigned int*)evtSummary.errLength(), 
+                              (unsigned int*)evtSummary.diagLength(), evtSummary.aemLength());
     return sc;
 }
 

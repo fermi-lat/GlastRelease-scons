@@ -330,9 +330,9 @@ StatusCode digiRootWriterAlg::writeEventSummary() {
     //for (iTem = 0; iTem < nTem; iTem++) {
     //    tem[iTem] = summaryTds->temLength(iTem);
     //}
-    m_digiEvt->getEventSummaryData().initContribLen(summaryTds->temLength(), 
+    m_digiEvt->getEventSummaryData().initContribLen((unsigned int*)summaryTds->temLength(), 
         summaryTds->gemLength(), summaryTds->oswLength(), 
-        summaryTds->errorLength(), summaryTds->diagnosticLength(), 
+        (unsigned int*)summaryTds->errorLength(), (unsigned int*)summaryTds->diagnosticLength(), 
         summaryTds->aemLength());
     return sc;
 }
