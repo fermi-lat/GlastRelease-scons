@@ -88,7 +88,6 @@ void McParticleManager::pruneCal()
   // start and end position of an McParticle) and that does not interact with the
   // TKR itself (producing an McPositionHit).
 
-  SmartRefVector<Event::McParticle>::const_iterator d; 
   std::map <unsigned int, Event::McParticle*>::iterator it;
 
   for(it=m_particles.begin();it != m_particles.end() ; it++)
