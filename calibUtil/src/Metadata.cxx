@@ -8,25 +8,16 @@
 #include <cstdio>
 
 namespace calibUtil {
-  // Initialize static members
-  // Consider changing all this staticness to avoid chance of difficulty
-  // when building calibUtil shareable (for now it's just a static library).
-  //  MYSQL* Metadata::readCxt = 0;
-  //  MYSQL* Metadata::writeCxt = 0;
-  //  bool Metadata::writeConnect = false;
-  //  bool Metadata::readConnect = false;
-  //  MYSQL     Metadata::readCxt;
-  //  MYSQL     Metadata::writeCxt;
 
-  const unsigned int Metadata::rowReady = Metadata::eOpened | Metadata::eValid 
-  | Metadata::eInputDesc | Metadata::eComment;
+  const unsigned int Metadata::s_rowReady = Metadata::eOpened 
+  | Metadata::eValid  | Metadata::eInputDesc | Metadata::eComment;
 
 
-  Metadata::Metadata() : readCxt(0), writeCxt(0), row(""), rowStatus(0), 
-    table("$(MYSQL_METATABLE)") {
-    int nsub = facilities::Util::expandEnvVar(&table);
+  Metadata::Metadata() : m_readCxt(0), m_writeCxt(0), m_row(""), 
+    m_rowStatus(0), m_table("$(MYSQL_METATABLE)") {
+    int nsub = facilities::Util::expandEnvVar(&m_table);
     // IF this doesn't work, use default
-    if (!nsub) table = std::string("metadata");
+    if (!nsub) m_table = std::string("metadata");
   }
 
   Metadata::~Metadata() {
@@ -36,11 +27,11 @@ namespace calibUtil {
 
 
   Metadata::eRet Metadata::addCreator(std::string creator) {
-    if (!(rowStatus & eOpened) ) return RETWrongState;
-    if (rowStatus & eCreator) return RETWrongState;
+    if (!(m_rowStatus & eOpened) ) return RETWrongState;
+    if (m_rowStatus & eCreator) return RETWrongState;
 
-    row += ",creator='"; row += creator; row += "'";
-    rowStatus |= eCreator;
+    m_row += ",creator='"; m_row += creator; m_row += "'";
+    m_rowStatus |= eCreator;
     return RETOk;
   }
 
@@ -51,20 +42,20 @@ namespace calibUtil {
   //  }
 
   Metadata::eRet Metadata::addInputDesc(std::string desc) {
-    if (!(rowStatus & eOpened) ) return RETWrongState;
-    if (rowStatus & eInputDesc) return RETWrongState;
+    if (!(m_rowStatus & eOpened) ) return RETWrongState;
+    if (m_rowStatus & eInputDesc) return RETWrongState;
 
-    row += ",input_desc='"; row += desc; row+="'";
-    rowStatus |= eInputDesc;
+    m_row += ",input_desc='"; m_row += desc; m_row+="'";
+    m_rowStatus |= eInputDesc;
     return RETOk;
   }
 
   Metadata::eRet Metadata::addNotes(std::string comment) {
-    if (!(rowStatus & eOpened) ) return RETWrongState;
-    if (rowStatus & eComment) return RETWrongState;
+    if (!(m_rowStatus & eOpened) ) return RETWrongState;
+    if (m_rowStatus & eComment) return RETWrongState;
 
-    row += ",notes='"; row += comment; row += "'";
-    rowStatus |= eComment;
+    m_row += ",notes='"; m_row += comment; m_row += "'";
+    m_rowStatus |= eComment;
     return RETOk;
   }
 
@@ -77,36 +68,36 @@ namespace calibUtil {
 #else
     std::string user("$(USERNAME)");
 #endif
-    row +=",uid='"; 
+    m_row +=",uid='"; 
 
     int nsub = facilities::Util::expandEnvVar(&user);
     if (nsub == 1) {
-      row += user; row+="'";
+      m_row += user; m_row+="'";
       return RETOk;
     }
     else {
-      row += "'unkown'";
+      m_row += "'unkown'";
       return RETBadValue;
     }
   }
 
   Metadata::eRet Metadata::addValidInterval(Timestamp startTime, 
                                             Timestamp endTime) {
-    if (!(rowStatus & eOpened) ) return RETWrongState;
+    if (!(m_rowStatus & eOpened) ) return RETWrongState;
 
-    if (rowStatus & eValid) return RETWrongState;
+    if (m_rowStatus & eValid) return RETWrongState;
     
-    row += ", vstart='"; row += startTime.timeString();
-    row += "', vend='"; row += endTime.timeString();
-    row += "'";
-    rowStatus |=  eValid;
+    m_row += ", vstart='"; m_row += startTime.timeString();
+    m_row += "', vend='"; m_row += endTime.timeString();
+    m_row += "'";
+    m_rowStatus |=  eValid;
     return RETOk;   // or something else
   }
 
   // Explicit clear of in-progress record building
   void Metadata::clearRecord() {
-    row.resize(0);
-    rowStatus = 0;
+    m_row.resize(0);
+    m_rowStatus = 0;
   }
 
   // The next 5 methods concern connection to the server
@@ -137,18 +128,18 @@ namespace calibUtil {
   }
 
   bool Metadata::connectRead(eRet& err) {
-    if (readCxt == 0) {
-      readCxt = new MYSQL;
-      return connect(readCxt, std::string("glastreader"), 
+    if (m_readCxt == 0) {
+      m_readCxt = new MYSQL;
+      return connect(m_readCxt, std::string("glastreader"), 
                       std::string("glastreader"), err);
     }
     else return true;
   }
 
   bool Metadata::connectWrite(eRet& err) {
-    if (writeCxt == 0) {
-      writeCxt = new MYSQL;
-      return connect(writeCxt, std::string("calibrator"), 
+    if (m_writeCxt == 0) {
+      m_writeCxt = new MYSQL;
+      return connect(m_writeCxt, std::string("calibrator"), 
                       std::string("calibr8tor"), err);
     }
     else return true;
@@ -156,18 +147,18 @@ namespace calibUtil {
 
 
   void Metadata::disconnectRead() {
-    if (readCxt) {
-      mysql_close(readCxt);
-      delete readCxt;
-      readCxt = 0;
+    if (m_readCxt) {
+      mysql_close(m_readCxt);
+      delete m_readCxt;
+      m_readCxt = 0;
     }
   }
 
   void Metadata::disconnectWrite() {
-    if (writeCxt) {
-      mysql_close(writeCxt);
-      delete writeCxt;
-      writeCxt = 0;
+    if (m_writeCxt) {
+      mysql_close(m_writeCxt);
+      delete m_writeCxt;
+      m_writeCxt = 0;
     }
   }
 
@@ -193,7 +184,7 @@ namespace calibUtil {
   {
     eRet ret;
     *ser = 0;
-    if (!readCxt) {
+    if (!m_readCxt) {
       connectRead(ret);
       if (ret != RETOk) return ret;
     }
@@ -201,7 +192,7 @@ namespace calibUtil {
     // Sort rows by timestamp, most recent first
     std::string 
       query("select ser_no,vstart,vend, enter_time,completion from ");
-    query += table;
+    query += m_table;
     query += " where ";
     query += "completion = 'OK' and instrument ='"; query += instrument;
     query += "' and calib_type ='";
@@ -223,7 +214,7 @@ namespace calibUtil {
       }
       q += " order by enter_time desc ";
 
-      int ret = mysql_query(readCxt, q.c_str());
+      int ret = mysql_query(m_readCxt, q.c_str());
       if (ret) {
         std::cerr << "MySQL error during SELECT, code " << ret << std::endl;
         std::cerr << "query was: " << std::endl;
@@ -231,7 +222,7 @@ namespace calibUtil {
         return RETMySQLError;
       }
       
-      MYSQL_RES *myres = mysql_store_result(readCxt);
+      MYSQL_RES *myres = mysql_store_result(m_readCxt);
 
       // Since we're doing a query, a result set should be returned
       // even if there are no rows in the result.  A null pointer 
@@ -319,12 +310,12 @@ namespace calibUtil {
                              std::string& fmtVersion,
                              std::string& filename) {
     eRet ret;
-    if (!readCxt) {
+    if (!m_readCxt) {
       connectRead(ret);
       if (ret != RETOk) return ret;
     }
     std::string q("select data_fmt, fmt_version, data_ident from ");
-    q += table;
+    q += m_table;
     q += " where ser_no=";
 
     char serBuf[20];
@@ -332,13 +323,13 @@ namespace calibUtil {
 
     q += serBuf;
 
-    int myRet = mysql_query(readCxt, q.c_str());
+    int myRet = mysql_query(m_readCxt, q.c_str());
     if (myRet) {
       std::cerr << "MySQL error during SELECT, code " << ret << std::endl;
       return RETMySQLError;
     }
       
-    MYSQL_RES *myres = mysql_store_result(readCxt);
+    MYSQL_RES *myres = mysql_store_result(m_readCxt);
     
     if (mysql_num_rows(myres) ) {  // must have been a good serial number
       MYSQL_ROW myRow = mysql_fetch_row(myres);
@@ -393,14 +384,14 @@ namespace calibUtil {
     // Send it off (To be written)
 
     if (serialNo) *serialNo = 0;
-    if ((!(rowStatus & rowReady)) == rowReady) return RETWrongState;
+    if ((!(m_rowStatus & s_rowReady)) == s_rowReady) return RETWrongState;
 
-    if (!(rowStatus & eCreator)) {
+    if (!(m_rowStatus & eCreator)) {
       addCreator("calibUtil::Metadata::insertRecord");
     }
     addUser();
     // Actually write it...
-    int ret = mysql_query(writeCxt, row.c_str());
+    int ret = mysql_query(m_writeCxt, m_row.c_str());
     clearRecord();
 
     if (ret) {
@@ -408,7 +399,7 @@ namespace calibUtil {
       return RETMySQLError;
     }
     if (serialNo) {
-      *serialNo = mysql_insert_id(writeCxt);
+      *serialNo = mysql_insert_id(m_writeCxt);
     }
     return RETOk;   // or something else if we failed 
   }
@@ -421,7 +412,7 @@ namespace calibUtil {
                                       const std::string& dataIdent, 
                                       eCompletion        completion,
                                       eLevel             procLevel){
-    if (row.size() > 0) {
+    if (m_row.size() > 0) {
       std::cerr << 
         "calibration metadata record build already in progress" << std::endl;
       return RETWrongState;
@@ -451,29 +442,29 @@ namespace calibUtil {
                                       const std::string& completion,
                                       const std::string& level) {
 
-    if (row.size() > 0) {
+    if (m_row.size() > 0) {
       std::cerr << 
         "calibration metadata record build already in progress" << std::endl;
       return RETWrongState;
     }
 
-    if (!writeCxt) {
+    if (!m_writeCxt) {
       eRet ret;
       connectWrite(ret);
       if (ret != RETOk) return ret;
     }
 
     //    += is a synonym for row.append(..)
-    row += "insert into "; row += table;
-    row += " set instrument='";    row += inst;
-    row += "', calib_type='";  row += calibType;
-    row += "', data_fmt='"; row += dataFmt;
+    m_row += "insert into "; m_row += m_table;
+    m_row += " set instrument='";    m_row += inst;
+    m_row += "', calib_type='";  m_row += calibType;
+    m_row += "', data_fmt='"; m_row += dataFmt;
     
-    row += "', fmt_version='"; row += fmtVersion;
-    row += "', completion='"; row += completion;
-    row += "', data_ident='"; row += dataIdent;
-    row += "', proc_level='"; row += level; row+="'";
-    rowStatus = eOpened;
+    m_row += "', fmt_version='"; m_row += fmtVersion;
+    m_row += "', completion='"; m_row += completion;
+    m_row += "', data_ident='"; m_row += dataIdent;
+    m_row += "', proc_level='"; m_row += level; m_row+="'";
+    m_rowStatus = eOpened;
     return RETOk;
     }
   /*               Private utilities                           */
