@@ -11,7 +11,7 @@
 
 #include "globals.hh"
 #include "G4ios.hh"
-#include "g4std/iomanip"   
+#include <iomanip>   
 
 GeneralPhysics::GeneralPhysics(const G4String& name)
                      :  G4VPhysicsConstructor(name)

@@ -1,40 +1,3 @@
-#ifndef RunManager_h
-#define RunManager_h 1
-
-// userAction classes
-class UIsession;
-
-//class G4VUserDetectorConstruction;
-class G4VUserPhysicsList;
-class G4VModularPhysicsList;
-class G4VUserPrimaryGeneratorAction;
-
-class G4VPhysicalVolume;
-class G4Timer;
-class G4RunMessenger;
-class G4DCtable;
-class G4Run;
-
-class Hep3Vector;
-
-class IG4GeometrySvc;
-
-#include "G4Event.hh"
-
-#include "G4EventManager.hh"
-#include "globals.hh"
-#include "g4std/vector"
-
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-
-#include "G4LogicalVolume.hh"
-#include "G4Region.hh"
-
-#include <memory>
-
-namespace GlastMS { class MultipleScatteringFactory; }
-
 
 /** 
  * @class RunManager
@@ -56,194 +19,255 @@ namespace GlastMS { class MultipleScatteringFactory; }
  *    
  * $Header$
  */
+//
+//
+// 
 
+// class description:
+//
+//      This is a class for run control in GEANT4
+// 
+//     User must provide his own classes derived from the following
+//     three abstract classes and register them to the RunManager. 
+//        G4VUserPhysicsList                - Particle types and Processes 
+//        G4VUserPrimaryGeneratorAction     - Event Generator selection
+// 
+//     In addition to the above mandatory classes, user can easily 
+//     customize of the default functionality of GEANT4 simulation
+//     by making his own classes derived from the following 5 user
+//     action classes. 
+//         G4UserEventAction                 - Actions for each Event
+//         G4UserStackingAction              - Tracks Stacking selection
+//         G4UserTrackingAction              - Actions for each Track
+//         G4UserSteppingAction              - Actions for each Step
+//     
+//     RunManager is the only manager class in Geant4 kernel which 
+//     the user MUST construct an object by him/herself in the main(). 
+//     Also, RunManager is the only manager class in Geant4 kernel
+//     which the user CAN derive it to costomize the behavior of the
+//     run control. For this case, user should use protected methods
+//     provided in this class for procedures he/she does not want to
+//     change.
+//
+//     RunManager or the derived class of it MUST be a singleton.
+//     The user MUST NOT construct more than one object even if there
+//     are two different concrete implementations.
+//
+//     RunManager controls all of state changes. See G4ApplicationState.hh
+//     in intercoms category for the meanings of each state.
+//
+
+#ifndef RunManager_h
+#define RunManager_h 1
+
+// userAction classes
+class UIsession;
+
+class G4VUserPhysicsList;
+class G4VModularPhysicsList;
+class G4VUserPrimaryGeneratorAction;
+
+class G4VPhysicalVolume;
+class G4Region;
+class G4Timer;
+class G4DCtable;
+class G4Run;
+
+class Hep3Vector;
+class IG4GeometrySvc;
+
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+
+#include "G4RunManagerKernel.hh"
+#include "G4Event.hh"
+#include "G4EventManager.hh"
+#include "globals.hh"
+
+#include <vector>
+#include <memory>
+
+namespace GlastMS { class MultipleScatteringFactory; }
 
 class RunManager
 {
- public: 
-  ///  Static method which returns the singleton pointer of RunManager
-  static RunManager* GetRunManager();
-  
- private:
-  /// This is the pointer to the RunManager
-  static RunManager* fRunManager;
-  /// This is the top volume used for geometry
-  std::string m_topvol;
-  /// mode to apply to start the visitor, like "fastmc"
-  std::string m_visitorMode;
+  public: // with description
+    ///  Static method which returns the singleton pointer of RunManager
+    static RunManager* GetRunManager();
 
-  /// log for summary output
-  std::ostream& m_log;
-  
- public: 
-  /** 
-     The constructor needs a pointer to the abstract interface of the
-     GlastDetSvc and to the DataProviderSvc. It gets also the mode for the
-     geometry level of details
-  */
-  RunManager(std::ostream& log, 
+  private:
+    /// This is the pointer to the RunManager
+    static RunManager* fRunManager;
+
+    /// log for summary output
+    std::ostream& m_log;
+
+  public: 
+    /** 
+       The constructor needs a pointer to the abstract interface of the
+       GlastDetSvc and to the DataProviderSvc. It gets also the mode for the
+       geometry level of details
+    */
+    RunManager(std::ostream& log, 
              double defaultCutValue, 
              double defaultTkrCutValue,
              double defaultCalCutValue,
-             const std::string& physics_choice, 
-             const std::string& physics_table,
-             const std::string&  physics_dir,
+             std::string& physics_choice, 
+             std::string& physics_table,
+             std::string&  physics_dir,
              GlastMS::MultipleScatteringFactory& msfactory,
 			 IG4GeometrySvc*);
+
+    virtual ~RunManager();
+
+  public: 
+    /// This is the method to be invoked to start the simulation
+    virtual void BeamOn();
+
+    /// Set up the G4 stuff
+	virtual void Initialize();
+
+    /// Not used
+	virtual void AbortRun();
   
-  virtual ~RunManager();
+    /// This method return the number of trajectories stored in the currentEvent
+    unsigned int getNumberOfTrajectories();
 
- public: 
-  /// This is the method to be invoked to start the simulation
-  virtual void BeamOn();
+    /// This method return the vector of points of a trajectory
+    int getTrajectoryCharge(unsigned int);
 
-  /// Set up the G4 stuff
-  virtual void Initialize();
+    /// This method return the vector of points of a trajectory
+    std::auto_ptr<std::vector<Hep3Vector> > getTrajectoryPoints(unsigned int);
 
-  /// Not used
-  virtual void AbortRun();
+    /// This method return the id (an integer) of the track associated to a
+    /// trajectory
+    int getTrajectoryTrackId(unsigned int i);
 
-  /// This method return a pointer to the current G4Event
-  G4Event* getCurrentEvent() const;
-  
-  /// This method return the number of trajectories stored in the currentEvent
-  unsigned int getNumberOfTrajectories();
+  protected: 
 
-  /// This method return the vector of points of a trajectory
-  int getTrajectoryCharge(unsigned int);
+    ///  These three protected methods are invoked from Initialize() method
+    virtual void InitializeGeometry();
+    virtual void InitializePhysics();
+    virtual void InitializeCutOff();
 
-  /// This method return the vector of points of a trajectory
-  std::auto_ptr<std::vector<Hep3Vector> > getTrajectoryPoints(unsigned int);
+    /// Confirm that G4 is in the right state to start an Event
+    virtual G4bool ConfirmBeamOnCondition();
+    /// Init and termination of a RUN .. to be eliminated?
+    virtual void RunInitialization();
+    virtual void RunTermination();
 
-  /// This method return the id (an integer) of the track associated to a
-  /// trajectory
-  int getTrajectoryTrackId(unsigned int i);
-  
- protected: 
+	// Method to generate the event
+    virtual G4Event* GenerateEvent(G4int i_event);
 
-  ///  These three protected methods are invoked from Initialize() method
-  virtual void InitializeGeometry();
-  virtual void InitializePhysics();
-  virtual void InitializeCutOff();
+  public: 
 
-  /// Confirm that G4 is in the right state to start an Event
-  virtual G4bool ConfirmBeamOnCondition();
-  /// Init and termination of a RUN .. to be eliminated?
-  virtual void RunInitialization();
-  virtual void RunTermination();
+    void DumpRegion(G4String rname) const;
+    // Dump information of a region.
 
-  /// Method to generate the Event .. the argument must be eliminated
-  virtual G4Event* GenerateEvent(G4int i_event);
-
-  /// Method to update the production cuts tables
-  virtual void BuildPhysicsTables();
+    void DumpRegion(G4Region* region=0) const;
+    // Dump information of a region.
+    // If the pointer is NULL, all regions are shown.
 
   protected:
-  /// The Event manager of G4
-  G4EventManager * eventManager;
-  /// The physics list class
+    G4RunManagerKernel * kernel;
+    G4EventManager * eventManager;
 
-  //  G4VUserPhysicsList * physicsList;
+    G4VModularPhysicsList * physicsList;
+    G4VUserPrimaryGeneratorAction * userPrimaryGeneratorAction;
 
-  G4VModularPhysicsList * physicsList;
+  protected:
+    G4bool geometryInitialized;
+    G4bool physicsInitialized;
+    G4bool cutoffInitialized;
+    G4bool geometryNeedsToBeClosed;
+    G4bool runAborted;
+    G4bool initializedAtLeastOnce;
+    G4bool geometryToBeOptimized;
 
-  /// The primary generator class
-  G4VUserPrimaryGeneratorAction * userPrimaryGeneratorAction;
+    G4int runIDCounter;
+    G4int verboseLevel;
+    G4Timer * timer;
+    G4DCtable* DCtable;
 
- protected:
+    G4Run*   currentRun;
+    G4Event* currentEvent;
 
+    G4int    storeRandomNumberStatus;
+    G4String randomNumberStatusDir;
 
-  G4bool geometryInitialized;
-  G4bool physicsInitialized;
-  G4bool cutoffInitialized;
-  G4bool geometryNeedsToBeClosed;
-  G4bool runAborted;
-  G4bool initializedAtLeastOnce;
-  G4bool geometryToBeOptimized;
+    /// This is a dummy session to be used to silent G4
+    UIsession* session;
 
-  G4int runIDCounter;
-  G4int verboseLevel;
-  G4Timer * timer;
-  G4DCtable* DCtable;
+    /// Range cutoff values for regions
+    G4double defaultCut;
+    G4double TkrCutValue;
+    G4double CalCutValue;
 
-  G4Run* currentRun;
-  G4Event* currentEvent;
-
-  G4int storeRandomNumberStatus;
-  G4String randomNumberStatusDir;
-
-  /// This is a dummy session to be used to silent G4
-  UIsession* session;
-
-  /// Range cutoff values for regions
-  G4double defaultCut;
-  G4double TkrCutValue;
-  G4double CalCutValue;
-
- public:
-  virtual void StoreRandomNumberStatus(G4int eventID=-1);
-  virtual void RestoreRandomNumberStatus(G4String fileN);
-
-  /// Return methods for the 3 user classes
-  inline const G4VModularPhysicsList* GetUserPhysicsList() const
-    { return physicsList; }
-  inline const G4VUserPrimaryGeneratorAction* GetUserPrimaryGeneratorAction() 
-    const { return userPrimaryGeneratorAction; }
-  
   public:
+    virtual void StoreRandomNumberStatus(G4int eventID=-1);
+    virtual void RestoreRandomNumberStatus(G4String fileN);
 
-  /// Stuff for random distributions ... ???
-  inline void SetRandomNumberStore(G4int i)
+  public: // with description
+    //  These methods store respective user initialization and action classes.
+    inline const G4VModularPhysicsList* GetUserPhysicsList() const
+    { return physicsList; }
+    inline const G4VUserPrimaryGeneratorAction* GetUserPrimaryGeneratorAction() const
+    { return userPrimaryGeneratorAction; }
+
+  public:
+    inline void SetRandomNumberStore(G4int i)
     { storeRandomNumberStatus = i; }
-  inline G4int GetRandomNumberStore() const
+    inline G4int GetRandomNumberStore() const
     { return storeRandomNumberStatus; }
-  inline void SetRandomNumberStoreDir(G4String dir)
+    inline void SetRandomNumberStoreDir(G4String dir)
     { 
       G4String dirStr = dir;
       if( dirStr(dirStr.length()-1) != '/' ) dirStr += "/";
       randomNumberStatusDir = dirStr;
     }
-  inline G4String GetRandomNumberStoreDir() const
+    inline G4String GetRandomNumberStoreDir() const
     { return randomNumberStatusDir; }
-  
- public: 
-  /// This methods are necessary ???
-  inline void GeometryHasBeenModified()
+
+  public: // with description
+    inline void GeometryHasBeenModified()
     { geometryNeedsToBeClosed = true; }
-  inline void CutOffHasBeenModified()
-    { cutoffInitialized = false; }
-  
+    //  This method must be invoked (or equivalent UI command can be used)
+    // in case the user changes his/her detector geometry after
+    // Initialize() metho has been invoked. Then, at the begining of the next BeamOn(),
+    // all necessary re-initialization will be done.
 
   public:
-  inline void SetVerboseLevel(G4int vl)
-    { verboseLevel = vl; }
-  inline G4int GetVerboseLevel() const
+    inline void SetVerboseLevel(G4int vl)
+    { verboseLevel = vl; 
+      kernel->SetVerboseLevel(vl); }
+    inline G4int GetVerboseLevel() const
     { return verboseLevel; }
 
-  inline void SetGeometryToBeOptimized(G4bool vl)
+    inline void SetGeometryToBeOptimized(G4bool vl)
     { 
       if(geometryToBeOptimized != vl)
-        {
-          geometryToBeOptimized = vl;
-          geometryNeedsToBeClosed = true;
-        }
+      {
+        geometryToBeOptimized = vl;
+        geometryNeedsToBeClosed = true;
+        kernel->SetGeometryToBeOptimized(vl);
+      }
     }
-  inline G4bool GetGeometryToBeOptimized()
+    inline G4bool GetGeometryToBeOptimized()
     { return geometryToBeOptimized; }
-  
- public: 
-  inline const G4Run* GetCurrentRun() const
+
+  public: // with description
+    inline const G4Run* GetCurrentRun() const
     { return currentRun; }
-  /// Returns the pointer to the current run. This method is available for
-  /// Geant4 states of GeomClosed and EventProc.
-  inline const G4Event* GetCurrentEvent() const
+    //  Returns the pointer to the current run. This method is available for Geant4
+    // states of GeomClosed and EventProc.
+    inline const G4Event* GetCurrentEvent() const
     { return currentEvent; }
-  /// Returns the pointer to the current event. This method is available for
-  /// EventProc state.
-  inline void SetRunIDCounter(G4int i)
+    //  Returns the pointer to the current event. This method is available for EventProc
+    // state.
+    inline void SetRunIDCounter(G4int i)
     { runIDCounter = i; }
-  /// Set the run number counter. Initially, the counter is initialized to zero
-  /// and incremented by one for every BeamOn().
+    //  Set the run number counter. Initially, the counter is initialized to zero and
+    // incremented by one for every BeamOn().
 
   public:
     inline void SetDCtable(G4DCtable* DCtbl)
@@ -251,16 +275,4 @@ class RunManager
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -64,8 +64,11 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
   // Energy Deposition & Step Length
   G4double edep = aStep->GetTotalEnergyDeposit()/MeV;
   G4double stepl = aStep->GetStepLength()/mm;
-    
-  if ((edep==0.)) return false;          
+
+  //if ((edep==0.)) return false;
+  if (edep > 0. || aStep->GetTrack()->GetDynamicParticle()->GetCharge() != 0.)
+  {
+  if (edep == 0.) edep = 0.155;
   // Physical Volume
     
   G4TouchableHistory* theTouchable
@@ -125,6 +128,8 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
 
   m_posHit->push_back(hit);
   return true;
+  }
+  return false;
 }
 
 void PosDetectorManager::EndOfEvent(G4HCofThisEvent*)

@@ -13,7 +13,7 @@
 
 #include "globals.hh"
 #include "G4ios.hh"
-#include "g4std/iomanip"   
+#include <iomanip>
 
 HadronPhysics::HadronPhysics(const G4String& name, std::string& physicsChoice,
                              GlastMS::MultipleScatteringFactory& msFactory)

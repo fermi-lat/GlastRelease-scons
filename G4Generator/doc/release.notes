@@ -2,6 +2,7 @@
     @brief package G4Generator 
 @verbatim
     $Id$
+ v5r8p0  8-Sep-04 TU  Updates required for Geant4 v6.2
  v5r7p2 20-apr-04 THB correct use to allow new GlastPolicy 
  v5r7p1 16-jan-04 THB small correction to req. 
  v5r7   15-jan-04 THB moved MS calculation to new package

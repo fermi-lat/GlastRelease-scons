@@ -28,6 +28,7 @@
 
 #include "G4UniformMagField.hh"
 #include "G4FieldManager.hh"
+#include "G4ChordFinder.hh"
 #include "G4TransportationManager.hh"
 
 // visitors interfaces

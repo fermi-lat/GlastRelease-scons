@@ -50,11 +50,10 @@ idents::VolumeIdentifier DetectorManager::constructId(G4Step * aStep)
   // Inputs: the G4Step pointer aStep
   using  idents::VolumeIdentifier;
   VolumeIdentifier ret;
-  G4TouchableHistory* theTouchable
-    = (G4TouchableHistory*)(aStep->GetPreStepPoint()->GetTouchable());
+  G4TouchableHistory* theTouchable = (G4TouchableHistory*)(aStep->GetPreStepPoint()->GetTouchable());
   for( int i = 0; i<theTouchable->GetHistoryDepth() ; ++i) {
     const G4VPhysicalVolume* physVol = theTouchable->GetVolume(i); 
-    if( physVol->GetMother()==0) break;
+//**    if( physVol->GetMother()==0) break;
     VolumeIdentifier id = (*m_idMap)[physVol];
     ret.prepend(id);
   }
