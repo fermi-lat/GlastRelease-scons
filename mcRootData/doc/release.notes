@@ -2,6 +2,12 @@
  package mcRootData
  package manager: H. Kelly
 
+v2r1p2    09-May-2002 HMK Add iterator methods to McIntegratingHit \n
+          and remove the transient vector<pair<>> - this was not \n
+          working in CINT.  Rather we will rely upon the 2 separate
+          arrays.
+v2r1p1                ALS Update requirements file to link to the \n
+          to Root libs Physics and Matrix.\n
 v2r1      01-May-2002 HMK Modify McIntegratingHit to store 2 arrays \n
           One for McParticle* and the other for energies - produce \n
           a vector of pairs to mimic the TDS class on the fly.  The \n
