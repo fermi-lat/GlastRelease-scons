@@ -42,7 +42,7 @@ const ISvcFactory& GuiSvcFactory = a_factory;
 GuiSvc::GuiSvc(const std::string& name,ISvcLocator* svc)
 : Service(name,svc), m_guiMgr(0)
 {
-    
+
     // declare the properties and set defaults
 
     declareProperty ("size", m_size=-300);
@@ -68,20 +68,20 @@ StatusCode GuiSvc::initialize ()
     using namespace gui;
     StatusCode  status =  Service::initialize ();
 
-        
+
     // bind all of the properties for this service
     setProperties ();
-    
+
     // open the message log
     MsgStream log( msgSvc(), name() );
- 
+
     // create and start the gui manager
     m_guiMgr = new gui::GuiMgr(m_size, 2, m_pause_interval); 
 
     // use the incident service to register begin, end events
     IIncidentSvc* incsvc = 0;
     StatusCode sc = service ("IncidentSvc", incsvc, true);
-    
+
     if( status.isFailure() ) return status;
 
     incsvc->addListener(this, "BeginEvent", 100);
@@ -117,14 +117,14 @@ StatusCode GuiSvc::initialize ()
             log << MSG::ERROR << "Unable to locate PropertyManager Service" << endreq;
             return status;
         }
-                
+
         IntegerProperty evtMax("EvtMax",0);
         status = propMgr->getProperty( &evtMax );
         if (status.isFailure()) return status;
-        
+
         setProperty(evtMax);
     }
-    
+
     //----------------------------------------------------------------
     // most of  the following cribbed from ToolSvc and ObjManager
 
@@ -141,19 +141,19 @@ StatusCode GuiSvc::initialize ()
         return status;
     }
 
-    
+
     IToolSvc* tsvc  =0;
     status = service( "ToolSvc", tsvc, true );
     if( status.isFailure() ) {
-         log << MSG::ERROR << "Unable to locate Tool Service" << endreq;
+        log << MSG::ERROR << "Unable to locate Tool Service" << endreq;
         return status;
     }
 
     IToolFactory* toolfactory = 0;
-    
+
     // search through all object factories for tool factories
     for(IObjManager::ObjIterator it = objManager->objBegin(); it !=objManager->objEnd(); ++ it){
-        
+
         std::string tooltype= (*it)->ident();
         // is it a tool factory?
         const IFactory* factory = objManager->objFactory( tooltype );
@@ -162,21 +162,16 @@ StatusCode GuiSvc::initialize ()
         if( status.isSuccess() ) {
 
             // found a tool factory: have it create a tool, and check its interface
-            IAlgTool* itool;
-            status = tsvc->retrieveTool(tooltype, itool);
-            if( status.isSuccess()) { 
-                status =itool->queryInterface( IGuiTool::interfaceID(), (void**)&itool);
-                if( status.isSuccess() ){
-                    log << MSG::DEBUG << "Initializing gui stuff in " << tooltype << endreq;
-                    dynamic_cast<IGuiTool*>(itool)->initialize(m_guiMgr);
-                }else {
-                    itool->release();
-                    tsvc->releaseTool(itool);
-                }
+            std::string fullname = "ToolSvc."+tooltype;
+            IAlgTool* itool = toolfactory->instantiate(fullname,  tsvc );
+            status =itool->queryInterface( IGuiTool::interfaceID(), (void**)&itool);
+            if( status.isSuccess() ){
+                log << MSG::DEBUG << "Initializing gui stuff in " << tooltype << endreq;
+                dynamic_cast<IGuiTool*>(itool)->initialize(m_guiMgr);
             }
+            itool->release();
         }
     }
-        //
 
     return StatusCode::SUCCESS;
 }
@@ -193,7 +188,7 @@ void GuiSvc::queryOutputLevel()
     IProperty* glastPropMgr=0;
     StatusCode status = service("MessageSvc", glastPropMgr, true);
     if( status.isFailure() ) return;
-      
+
     IntegerProperty levelProp("OutputLevel",0);
     status = glastPropMgr->getProperty( &levelProp );
     if (status.isFailure()) return;
@@ -229,13 +224,13 @@ void GuiSvc::beginEvent() // should be called at the beginning of an event
     static bool first=true;
     if( first) { first=false;
 
-        // start of first event: startup the GUI
-        m_guiMgr->setState( m_paused?  GuiMgr::PAUSED : GuiMgr::RUNNING);
-        MsgStream log( msgSvc(), name() );
+    // start of first event: startup the GUI
+    m_guiMgr->setState( m_paused?  GuiMgr::PAUSED : GuiMgr::RUNNING);
+    MsgStream log( msgSvc(), name() );
 
-        log << MSG::INFO << "starting GuiSvc GUI in " 
-            << (m_guiMgr->state()==GuiMgr::PAUSED? "PAUSED": "RUNNING" ) << " state" << endreq;
-        m_guiMgr->menu().run();
+    log << MSG::INFO << "starting GuiSvc GUI in " 
+        << (m_guiMgr->state()==GuiMgr::PAUSED? "PAUSED": "RUNNING" ) << " state" << endreq;
+    m_guiMgr->menu().run();
     }
     m_guiMgr->begin_event();
 }
@@ -260,7 +255,7 @@ StatusCode GuiSvc::run(){
     IAlgorithm* theIAlg;
     Algorithm*  theAlgorithm=0;
     IntegerProperty errorProperty("ErrorCount",0);
-    
+
     status = theAlgMgr->getAlgorithm( "Top", theIAlg );
     if ( status.isSuccess( ) ) {
         try{
@@ -272,21 +267,21 @@ StatusCode GuiSvc::run(){
     if ( status.isFailure( ) ) {
         log << MSG::WARNING << "Could not find algorithm 'Top'; will not monitor errors" << endreq;
     }
-    
-    
+
+
     // loop over the events
     int event= 0;
     while(event++ < m_evtMax) {
         beginEvent();
         status =  m_appMgrUI->nextEvent(1); // currently, always success
-        
+
         // the single event may have created a failure. Check the ErrorCount propery of the Top alg.
         if( theAlgorithm !=0) theAlgorithm->getProperty(&errorProperty);
         if( status.isFailure() || errorProperty.value() > 0){
             status = StatusCode::FAILURE;
             m_guiMgr->gui().inform("Event failed: terminating job after current display");
         }
-        
+
         endEvent();
         if( status.isFailure()){
             log << MSG::ERROR << "Terminating Gui loop due to error" << endreq;
@@ -294,29 +289,29 @@ StatusCode GuiSvc::run(){
         }
     }
     return status;
-    
+
 }
 
 // finalize
 StatusCode GuiSvc::finalize ()
 {
     StatusCode  status = StatusCode::SUCCESS;
-       
+
     delete m_guiMgr;
     return status;
 }
 /// Query interface
 StatusCode GuiSvc::queryInterface(const IID& riid, void** ppvInterface)  {
-  if ( IID_IGuiSvc.versionMatch(riid) )  {
-    *ppvInterface = (IGuiSvc*)this;
-  }
-  else if (IID_IRunable.versionMatch(riid) ) {
-      *ppvInterface = (IRunable*)this;
-  }
-  else  {
-    return Service::queryInterface(riid, ppvInterface);
-  }
-  addRef();
-  return SUCCESS;
+    if ( IID_IGuiSvc.versionMatch(riid) )  {
+        *ppvInterface = (IGuiSvc*)this;
+    }
+    else if (IID_IRunable.versionMatch(riid) ) {
+        *ppvInterface = (IRunable*)this;
+    }
+    else  {
+        return Service::queryInterface(riid, ppvInterface);
+    }
+    addRef();
+    return SUCCESS;
 }
 
