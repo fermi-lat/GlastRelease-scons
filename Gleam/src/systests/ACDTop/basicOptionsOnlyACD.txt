@@ -1,0 +1,146 @@
+//##############################################################
+//
+// basic Job options file for a Gleam execution
+// $Header$
+
+// primary DLLs, including auditor 
+
+ApplicationMgr.DLLs+= { "GaudiAlg", "GaudiAud"};
+ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
+AuditorSvc.Auditors = {"ChronoAuditor"};
+
+// ----------------------------
+// setup basic event loop stuff
+//
+ApplicationMgr.ExtSvc = { 
+    "GlastEventSelector/EventSelector" , 
+    "EventCnvSvc"
+    };
+
+EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+EventSelector.Input = "NONE";
+
+
+// ----------------------------
+//  a structure for the topalg, using sequencer steps
+
+ApplicationMgr.TopAlg = {
+      "Sequencer/Top" };
+
+//the top sequence loop
+Top.Members={
+    "Sequencer/Generator",
+    "Sequencer/Digitization",
+    "TriggerAlg",
+    "Sequencer/EventDisplay",
+    "Sequencer/Output" };
+
+
+// the sequence that is triggered
+Triggered.Members={
+    "TriggerAlg",
+    "Sequencer/Reconstruction",
+    "Sequencer/RecoDisplay",
+    "Sequencer/Output" };
+
+// ----------------------------
+//  Geometry definition
+//
+ApplicationMgr.DLLs += {"GlastSvc"};
+ApplicationMgr.ExtSvc += { "GlastDetSvc"};
+GlastDetSvc.topVolume="ACDTop"; 
+
+GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+
+// ----------------------------
+//  Randoms definition
+//
+ApplicationMgr.ExtSvc += { "GlastRandomSvc"};
+
+// ----------------------------
+//  Generation or input
+//
+ApplicationMgr.DLLs +={ "G4Generator"};
+Generator.Members = {"FluxAlg", "G4Generator"};
+G4Generator.defaultCutValue=0.7; // instead of 0.1 default
+
+#include "$FLUXSVCROOT/src/defaultOptions.txt"
+
+// Append (or replace) the list of source library documents
+FluxSvc.source_lib += {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
+FluxAlg.source_name="muon_pencil_angle";
+
+
+// ----------------------------
+//  Digitization
+//
+ApplicationMgr.DLLs +={ "TkrDigi", "CalDigi", "AcdDigi"  };
+Digitization.Members = { "AcdDigiAlg"};
+
+
+// ----------------------------
+//  Trigger calculation
+//
+ApplicationMgr.DLLs +={ "Trigger"};
+Trigger.Members = {"TriggerAlg"};
+TriggerAlg.mask = -1; // all bits on by default
+
+
+// ----------------------------
+//   Reconstruction
+//
+ApplicationMgr.DLLs +={ 
+    "Recon",
+    "CalRecon",
+    "TkrRecon"
+    };
+Reconstruction.Members={ 
+      "Sequencer/Cal1", 
+      "Sequencer/Tkr"
+      };
+         
+ApplicationMgr.ExtSvc += {"RecoSvc"};
+
+//          tracker
+// -------------------------------------------
+ApplicationMgr.ExtSvc   += { "TkrGeometrySvc"};
+ApplicationMgr.ExtSvc   += { "TkrInitSvc"};
+
+Cal1.Members = { 
+      "CalXtalRecAlg", 
+      "CalClustersAlg/first"
+      };
+Tkr.Members = {
+      "TkrReconAlg"
+      };
+Cal2.Members = {
+      "CalClustersAlg/second"
+      };
+
+// ----------------------------
+//   ACD recon
+//
+ApplicationMgr.DLLs += {"AcdRecon"};
+Acd.Members = {"AcdReconAlg"};
+
+// ----------------------------
+//   Output
+//
+ApplicationMgr.DLLs +={ 
+    "RootIo"
+}; 
+Output.Members += {"mcRootWriterAlg", "digiRootWriterAlg"};
+mcRootWriterAlg.OutputLevel=3;
+digiRootWriterAlg.OutputLevel=3;
+reconRootWriterAlg.OutputLevel=3;
+     
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel = 3;
+ToolSvc.OutputLevel=4;    // too verbose in debug
+
+//==============================================================
+//
+// End of job options file
+//
+//##############################################################
+
