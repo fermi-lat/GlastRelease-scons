@@ -44,50 +44,44 @@
         Float_t f = Float_t (ievent);
 
         CalRecon *calRec = new CalRecon();
+        calRec->initialize();
 
         UInt_t icluster;
         for (icluster = 0; icluster < numClusters; icluster++ ) {
-            CalCluster cluster;
-            //vector<Double_t> eLayer;
-            //eLayer.push_back(15.0);
-            //eLayer.push_back(22.0);
-            cluster.addEnergy(15.0);
-            cluster.addEnergy(22.0);
-            //vector<TVector3> pLayer;
-            //pLayer.push_back(TVector3(f, f, f));
-            //pLayer.push_back(TVector3(randNum*f, randNum*2.*f, randNum*3.*f));
-            //std::vector<TVector3> rmsLayer;
-            //rmsLayer.push_back(TVector3(randNum, randNum*5, randNum*10));
-            //rmsLayer.push_back(TVector3(f+1., f+2., f+3.));
-            //rmsLayer.push_back(TVector3(14., 22., 44.));
+            CalCluster *cluster = new CalCluster();
+            cluster->addEnergy(15.0);
+            cluster->addEnergy(22.0);
+            cluster->addPos(TVector3(f, f, f));
+            cluster->addPos(TVector3(randNum*f, randNum*2.*f, randNum*3.*f));
+            cluster->addRms(TVector3(randNum, randNum*5., randNum*10.));
+            cluster->addRms(TVector3(f+1., f+2., f+3.));
+            cluster->addRms(TVector3(14., 22., 44.));
             TVector3 calDir(randNum, randNum*3, randNum*5);
             Double_t eLeak = randNum;
             Double_t rmsLong = randNum*f;
             Double_t rmsTrans = randNum*2.*f;
             Double_t transOffset = randNum*3.*f;
-           // cluster.initialize(eLeak, eLayer, pLayer, rmsLayer, rmsLong, 
-           //     rmsTrans, calDir, transOffset);
-            cluster.initialize(eLeak, rmsLong, rmsTrans, calDir, transOffset);
+            cluster->initialize(eLeak, rmsLong, rmsTrans, calDir, transOffset);
             
             Double_t fitEnergy = f;
             Double_t chi2 = f*randNum;
             Double_t fStart = randNum*randNum;
             Double_t fitAlpha = f*f;
             Double_t fitLambda = f+f;
-            cluster.initProfile(fitEnergy, chi2, fStart, fitAlpha, fitLambda);
+            cluster->initProfile(fitEnergy, chi2, fStart, fitAlpha, fitLambda);
             
             calRec->addCalCluster(cluster);
         }
         
         for (ixtal = 0; ixtal < numXtals; ixtal ++) {
-            CalXtalRecData xtal;
+            CalXtalRecData* xtal = new CalXtalRecData();
             CalXtalId id;
             id.init(1, 2, 3);
-            xtal.initialize(CalXtalId::BESTRANGE, id);
+            xtal->initialize(CalXtalId::BESTRANGE, id);
             CalRangeRecData rec(CalXtalId::LEX8, randNum*f, CalXtalId::HEX8, randNum*4.0);
             TVector3 pos(4.5, 7.5, 8.5);
             rec.initialize(pos);
-            xtal.addRangeRecData(rec);
+            xtal->addRangeRecData(rec);
             calRec->addXtalRecData(xtal);
         }
 

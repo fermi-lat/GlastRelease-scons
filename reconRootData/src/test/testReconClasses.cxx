@@ -290,26 +290,27 @@ int checkCalRecon(CalRecon *cal, UInt_t ievent) {
     Float_t f = (Float_t)ievent;
     Float_t fr = f*randNum;
     
-    std::vector<CalCluster> clusterCol = cal->getCalClusterCol();
-    if (clusterCol.size() != numClusters) {
+    TObjArray *clusterCol = cal->getCalClusterCol();
+    if (clusterCol->GetEntries() != numClusters) {
         std::cout << "Number of clusters in collection is wrong" << std::endl;
         return -1;
     }
-    std::vector<CalCluster>::const_iterator clusterIt;
-    for (clusterIt = clusterCol.begin(); clusterIt != clusterCol.end(); clusterIt++) {
-        if (checkCalCluster(clusterIt, ievent) < 0) return -1;
+    TIter clusterIt(clusterCol);
+    CalCluster *cluster;
+    while ( (cluster = (CalCluster*)clusterIt.Next()) ) {
+        if (checkCalCluster(cluster, ievent) < 0) return -1;
     }
     
-    std::vector<CalXtalRecData> rec = cal->getCalXtalRecCol();
-    if (rec.size() != numXtals) {
+    TObjArray *recCol = cal->getCalXtalRecCol();
+    if (recCol->GetEntries() != numXtals) {
         std::cout << "Number of CalXtalRecData objects is wrong" << std::endl;
         return -1;
     }
     
-    std::vector<CalXtalRecData> recCol = cal->getCalXtalRecCol();
-    std::vector<CalXtalRecData>::const_iterator recIt;
-    for (recIt = recCol.begin(); recIt != recCol.end(); recIt++) {
-        if (checkCalXtalRec(recIt, ievent) < 0) return -1;
+    TIter recIt(recCol);
+    CalXtalRecData *rec;
+    while ( (rec = (CalXtalRecData*) recIt.Next()) ) {
+        if (checkCalXtalRec(rec, ievent) < 0) return -1;
     }
     
     return 0;
@@ -656,9 +657,10 @@ int write(char* fileName, int numEvents) {
 
         // Create CalRecon object
         CalRecon *calRec = new CalRecon();
+        calRec->initialize();
         UInt_t icluster;
         for (icluster = 0; icluster < numClusters; icluster++ ) {
-            CalCluster cluster;
+            CalCluster *cluster = new CalCluster();
             std::vector<Double_t> eLayer;
             eLayer.push_back(15.0);
             eLayer.push_back(22.0);
@@ -674,7 +676,7 @@ int write(char* fileName, int numEvents) {
             Double_t rmsLong = randNum*f;
             Double_t rmsTrans = randNum*2.*f;
             Double_t transOffset = randNum*3.*f;
-            cluster.initialize(eLeak, eLayer, pLayer, rmsLayer, rmsLong, 
+            cluster->initialize(eLeak, eLayer, pLayer, rmsLayer, rmsLong, 
                 rmsTrans, calDir, transOffset);
             
             Double_t fitEnergy = f;
@@ -682,20 +684,20 @@ int write(char* fileName, int numEvents) {
             Double_t fStart = randNum*randNum;
             Double_t fitAlpha = f*f;
             Double_t fitLambda = f+f;
-            cluster.initProfile(fitEnergy, chi2, fStart, fitAlpha, fitLambda);
+            cluster->initProfile(fitEnergy, chi2, fStart, fitAlpha, fitLambda);
             
             calRec->addCalCluster(cluster);
         }
         
         for (ixtal = 0; ixtal < numXtals; ixtal ++) {
-            CalXtalRecData xtal;
+            CalXtalRecData *xtal = new CalXtalRecData();
             CalXtalId id;
             id.init(1, 2, 3);
-            xtal.initialize(CalXtalId::BESTRANGE, id);
+            xtal->initialize(CalXtalId::BESTRANGE, id);
             CalRangeRecData rec(CalXtalId::LEX8, randNum*f, CalXtalId::HEX8, randNum*4.0);
             TVector3 pos(4.5, 7.5, 8.5);
             rec.initialize(pos);
-            xtal.addRangeRecData(rec);
+            xtal->addRangeRecData(rec);
             calRec->addXtalRecData(xtal);
         }
 
