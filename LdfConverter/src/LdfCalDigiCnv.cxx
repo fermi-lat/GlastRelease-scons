@@ -14,7 +14,6 @@
 
 #include "ldfReader/data/LatData.h"
 
-#include "Event/Digi/CalDigi.h"
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service

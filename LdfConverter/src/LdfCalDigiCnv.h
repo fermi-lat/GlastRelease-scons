@@ -4,7 +4,8 @@
 #include "LdfBaseCnv.h"
 
 namespace Event{ class EventHeader; }
-extern const CLID& CLID_CalDigi;
+#include "Event/Digi/CalDigi.h"
+//extern const CLID& CLID_CalDigi;
 
 // Abstract factory to create the converter
 template <class TYPE> class CnvFactory;

@@ -12,7 +12,6 @@
 #include "LdfEventCnv.h"
 #include "GaudiKernel/MsgStream.h"
 
-#include "Event/TopLevel/Event.h"
 #include "ldfReader/data/LatData.h"
 #include "facilities/Timestamp.h"
 #include "astro/JulianDate.h"
