@@ -4,7 +4,7 @@
 
 namespace CalibData {
 
-  DacCol::DacCol(std::vector<unsigned>* vals=0) {
+  DacCol::DacCol(std::vector<unsigned>* vals) {
     if (vals) {
       m_dacs.clear();
       for (unsigned int iDac = 0; iDac < vals->size(); iDac++) {
@@ -12,7 +12,7 @@ namespace CalibData {
       }
     }
   }
-  DacCol::DacCol(std::vector<int>* vals=0) {
+  DacCol::DacCol(std::vector<int>* vals) {
     if (vals) {
       m_dacs.clear();
       for (unsigned int iDac = 0; iDac < vals->size(); iDac++) {
