@@ -60,7 +60,7 @@ use RootIo               v4r3p1
 
 
 #reconstruction
-use Trigger              v3r3p1
+use Trigger              v3r3p2
 use Recon       v2r2p3
 
 use TkrRecon    v6r3p3
