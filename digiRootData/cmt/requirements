@@ -12,6 +12,10 @@ apply_pattern  package_linkopts
 # temporarily re-introduce this patter to be sure bfemApp will run on linux
 apply_pattern ld_library_path
 
+# For some reason, I was getting errors when loading the digiRootData shareable
+# in root.  Linking the Root Physics library in avoids this.
+macro digiRootData_shlibflags " -L${ROOT_PATH}/lib -lPhysics -lMatrix " \
+      VisualC            " ${use_linkopts} "
 #-------------------------------------------------------
 private
 
@@ -29,10 +33,7 @@ make_fragment event_dorootcint -header=event_dorootcint_header
 
 
 
-# For some reason, I was getting errors when loading the digiRootData shareable
-# in root.  Linking the Root Physics library in avoids this.
-macro digiRootData_shlibflags " -L${ROOT_PATH}/lib -lPhysics -lMatrix " \
-      VisualC            " ${use_linkopts} "
+
 
 apply_pattern package_include
 apply_pattern package_headers
