@@ -1,9 +1,6 @@
 # $Header$
 package xmlUtil
 
-## use glast_settings
-## use XMLEXT
-##  do we want to specify a version of xml?  Would be v3 if we do.
 use xml 
 
 include_dirs "${XMLUTILROOT}"
@@ -33,7 +30,6 @@ library xmlUtil ${xmlUtil_headers} -no_share \
      id/IdOpTruncate.cxx     \
      id/IdOperation.cxx       \
      id/NamedId.cxx          \
-     docMan/DocMan.cxx       \
      docMan/GDDDocMan.cxx    \
      ${xmlUtil_xmlfiles} 
 
@@ -47,4 +43,5 @@ application forDoc makeXmlForDoc.cxx Arith.cxx  Constants.cxx Source.cxx
 
 application testId id/*.cxx
 application testDocMan docMan/*.cxx
+
 

@@ -6,7 +6,7 @@
     using GDDDocMan.
 */
 #include "xmlUtil/docMan/GDDDocMan.h"
-#include "xmlUtil/docMan/DocClient.h"
+#include "xml/docMan/DocClient.h"
 #include "dom/DOM_Element.hpp"
 #include "dom/DOMString.hpp"
 #include "xml/Dom.h"
@@ -15,7 +15,7 @@
 #include <iostream>
 using namespace xmlUtil;
 
-class MiniClient : public DocClient {
+class MiniClient : public xml::DocClient {
 public:
   MiniClient() {m_name = "miniClient";}
   MiniClient(std::string name) : m_name(name) {}
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 
   // First the standard DocMan
   std::cout << "Output from DocMan parsing " << std::endl;
-  DocMan* pMan = DocMan::getPointer();
+  xml::DocMan* pMan = xml::DocMan::getPointer();
   pMan->regClient("constants", myClient);
   pMan->regClient("section", myClient);
   pMan->regClient("section", myClient2);
