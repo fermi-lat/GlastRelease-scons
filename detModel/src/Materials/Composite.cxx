@@ -46,9 +46,7 @@ namespace detModel{
 
     if (fractions.size())
       {    
-	detAbort("Attention: 
-                  you are mixing fractions and atoms number in a composite 
-                  material");
+	detAbort("Attention: you are mixing fractions and atoms number in a composite material");
       }
     
     if(components.size() < nComponents)
@@ -59,8 +57,7 @@ namespace detModel{
       }
     else
       {
-	detAbort("Attention:
-                  you are adding too many components to a composite");
+	detAbort("Attention: you are adding too many components to a composite");
       }
 
   }
@@ -69,18 +66,14 @@ namespace detModel{
 
     if (atoms.size())
       {    
-	detAbort("Attention: 
-                  you are mixing fractions and atoms number in a composite 
-                  material");
+	detAbort("Attention: you are mixing fractions and atoms number in a composite material");
       }
     
     if(components.size() < nComponents)
       {
 	if((d<0.0) || (d>1.0))
 	  {
-	    detAbort("Attention:
-                      fractions in composite materials must be comprised between
-                      0.0 and 1.0");
+	    detAbort("Attention:  fractions in composite materials must be comprised between 0.0 and 1.0");
 	  }
 
 	components.push_back(m);
@@ -89,8 +82,7 @@ namespace detModel{
       }
     else
       {
-	detAbort("Attention:
-                  you are adding too many components to a composite");
+	detAbort("Attention: you are adding too many components to a composite");
       }
 
     if(components.size() == nComponents)
@@ -102,8 +94,7 @@ namespace detModel{
 	  temp += fractions[i];
 
 	if (temp != 1.0)
-	  detAbort("Attention:
-                    the fractions of a composite material does not add to 1.0");
+	  detAbort("Attention:  the fractions of a composite material does not add to 1.0");
       }
 
   }

@@ -19,7 +19,7 @@ namespace detModel{
     
   public:
     
-    DawnSectionsVisitor(string);
+    DawnSectionsVisitor(std::string);
     virtual ~DawnSectionsVisitor();
     
     /**
@@ -62,9 +62,9 @@ namespace detModel{
      */
     virtual void visitSeg(Seg*);
     
-    string actualVolume;
+    std::string actualVolume;
     
-    ofstream out;
+    std::ofstream out;
     
     Vector* actualPos;
     Vector* actualXAxis;

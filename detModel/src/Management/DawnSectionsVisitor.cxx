@@ -22,9 +22,9 @@
 
 namespace detModel{
 
-DawnSectionsVisitor::DawnSectionsVisitor(string nvol)
+DawnSectionsVisitor::DawnSectionsVisitor(std::string nvol)
 {
-  typedef map<string,Color*>M1;
+  //  typedef map<std::string,Color*>M1;
 
   setRecursive(0);
   actualVolume = nvol;

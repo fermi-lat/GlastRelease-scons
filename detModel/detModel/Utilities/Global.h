@@ -1,6 +1,8 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+#include <iostream>
+
 namespace detModel{
 
   inline void detAbort(std::string s){

@@ -1,4 +1,5 @@
 #include <map>
+#include <iostream>
 
 #include "detModel/Materials/Material.h"
 #include "detModel/Materials/MatCollection.h"
@@ -74,7 +75,7 @@ namespace detModel{
     M::iterator i; 
 
     i = materialColors.find(name);
-    if(i == materials.end())
+    if(i == materialColors.end())
       return 0;
     else return i->second;
   }
@@ -87,8 +88,9 @@ namespace detModel{
     
     i = materialColors.find(name);
     /// Search for name matching and set color if found
-    if(i == materials.end())
-      return 0;
+    if(i == materialColors.end())
+      //      return 0;
+      return;
     else (i->second)->setColor(r,g,b,t);
   }
 
@@ -100,8 +102,9 @@ namespace detModel{
     
     i = materialColors.find(name);
     /// Search for name matching and set color if found
-    if(i == materials.end())
-      return 0;
+    if (i == materialColors.end())
+      //      return 0;
+      return;
     else (i->second)->setColor(c->getRed(),c->getGreen(),c->getBlue(),c->getTra());
   }
 
@@ -114,8 +117,9 @@ namespace detModel{
     
     i = materialColors.find(name);
     /// Search for name matching and set transparency if found
-    if(i == materials.end())
-      return 0;
+    if (i == materialColors.end())
+       //      return 0;
+       return;
     else (i->second)->setTra(t);
   }
 
