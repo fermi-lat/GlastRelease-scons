@@ -200,6 +200,8 @@ namespace rdbModel {
     case TYPEvarchar:
     case TYPEchar:
       if (m_restrict == RESTRICTnone) return true;
+      // for now, don't attempt to parse file path
+      if (m_restrict == RESTRICTfile) return true;  
       if (!m_enum->choicesRequired()) return true;
     case TYPEenum: {
       unsigned nChoice = m_enum->getChoices().size();
@@ -214,7 +216,7 @@ namespace rdbModel {
         facilities::Timestamp aTime(val);
         if (m_restrict == RESTRICTinterval) {
           facilities::Timestamp min(m_min);
-          facilities::Timestamp max(m_min);
+          facilities::Timestamp max(m_max);
           return ((min <= aTime) && (aTime <= max));
         }
         return true;
