@@ -317,9 +317,14 @@ StatusCode digiRootReaderAlg::readDigiEvent() {
         bool fromMc = m_digiEvt->getFromMc();
         digiEventTds->initialize(fromMc);
     }
-    SmartDataPtr<LdfEvent::LdfTime> timeTds(eventSvc(), "/Event/Time");
-    if (timeTds) {
-        timeTds->initialize(m_digiEvt->getEbfTimeSec(), m_digiEvt->getEbfTimeNanoSec(), m_digiEvt->getEbfUpperPpcTimeBase(), m_digiEvt->getEbfLowerPpcTimeBase());
+    LdfEvent::LdfTime *ldfTimeTds = new LdfEvent::LdfTime();
+    if (ldfTimeTds) {
+        ldfTimeTds->initialize(m_digiEvt->getEbfTimeSec(), m_digiEvt->getEbfTimeNanoSec(), m_digiEvt->getEbfUpperPpcTimeBase(), m_digiEvt->getEbfLowerPpcTimeBase());
+        sc = eventSvc()->registerObject("/Event/Time", ldfTimeTds);
+        if( sc.isFailure() ) {
+            log << MSG::ERROR << "could not register /Event/Time " << endreq;
+            return sc;
+        }
     }
     return sc;
 }
