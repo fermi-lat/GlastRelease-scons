@@ -32,7 +32,6 @@ namespace CalibData {
     
     /// Following is intended for deep copy
     virtual void update(CalibBase& obj);
-    
     virtual ~CalibBase();
     
     // Re-implemented from DataObject
@@ -85,12 +84,8 @@ namespace CalibData {
     /// End of validity
     ITime* m_validTill;
 
-    virtual void iUpdate(CalibBase* ) {}    
-
     /// Serial number of corresponding metadata row. 
     int m_serNo;
-
-    CalibBase* m_me;   // will be pointer to derived class where appropriate
 
     // Other possible things to keep here:  flavor, calibration type
     

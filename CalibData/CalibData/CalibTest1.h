@@ -30,13 +30,14 @@ namespace CalibData {
     
     inline static  const CLID& classID() { return CLID_Calib_CalibTest1; };
 
+
     // Re-implemented from CalibBase
-    virtual void    update(CalibTest1& other);
+    virtual void    update(CalibBase& other);
+
     std::string getValueName() const;
     int         getValue() const {return m_value;}
 
   protected:
-    virtual void iUpdate(CalibBase* pOther);
 
   private:
     std::string m_name;

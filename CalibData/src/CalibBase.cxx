@@ -5,16 +5,15 @@
  */
 
 #include "CalibData/CalibBase.h"
-//#include "GaudiKernel/TimePoint.h" 
 #include "CalibData/CalibTime.h"
 #include "GaudiKernel/StatusCode.h"
 
 namespace CalibData {
-  CalibBase::CalibBase() : m_validSince(0), m_validTill(0), m_serNo(-1),
-  m_me(this) {}
+  CalibBase::CalibBase() : m_validSince(0), m_validTill(0), m_serNo(-1)
+  {}
 
   CalibBase::CalibBase(const ITime& since, const ITime& till, int serNo) :
-    m_validSince(0), m_validTill(0), m_serNo(serNo), m_me(this)
+    m_validSince(0), m_validTill(0), m_serNo(serNo) 
   {
     m_validSince = new CalibData::CalibTime(since);
     m_validTill = new CalibData::CalibTime(till);
@@ -25,7 +24,6 @@ namespace CalibData {
     m_validSince = other.m_validSince;
     m_validTill = other.m_validTill;
     m_serNo     = other.m_serNo;
-    m_me = this;
   }
 
   CalibBase::~CalibBase() {
@@ -33,15 +31,14 @@ namespace CalibData {
     delete m_validTill;
   }
 
-  // Should be overridden by derived classes
+
   void CalibBase::update(CalibBase& obj) {
     delete m_validSince;
     delete m_validTill;
 
     m_validTill = new CalibData::CalibTime(obj.validTill() );
     m_validSince = new CalibData::CalibTime(obj.validSince() );
-    m_serNo = obj.m_serNo;
-    m_me->iUpdate(obj.m_me);
+    m_serNo = obj.m_serNo;  
   }
 
   bool CalibBase::isValid() {
