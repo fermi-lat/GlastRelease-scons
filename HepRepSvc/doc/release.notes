@@ -8,4 +8,5 @@
  * v0r6     20-07-04 RG Updated to support random access to root files
  * v0r6p1   02-08-04 RG Fixed a bug that crash test.
  * v0r7     26-08-04 RG Added an Header Fillers with EventHeader info
+ * v0r8     29-09-04 RG Lot of changes to support full name Type and new commands
 */
