@@ -28,11 +28,11 @@
 #include <cstdio>
 #include <stdlib.h>
 
-double AcdReconAlg::s_thresholdEnergy;
+double AcdReconAlg::s_vetoThresholdMeV;
 
 unsigned int AcdReconAlg::s_numSideRows;
 
-static float maxDoca = 2000.0;
+static double maxDoca = 2000.0;
 
 // Define the factory for this algorithm
 static const AlgFactory<AcdReconAlg>  Factory;
@@ -42,32 +42,32 @@ const IAlgFactory& AcdReconAlgFactory = Factory;
 // This should be done in the constructor.
 AcdReconAlg::AcdReconAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator) {
-
+	
 }
 
 StatusCode AcdReconAlg::initialize ( ) {
     StatusCode sc = StatusCode::SUCCESS;
-
+	
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "initialize" << endreq;
     
     // Use the Job options service to set the Algorithm's parameters
     // This will retrieve parameters set in the job options file
     setProperties();
-
+	
     m_glastDetSvc = 0;
     sc = service("GlastDetSvc", m_glastDetSvc, true);
     if (sc.isSuccess() ) {
         sc = m_glastDetSvc->queryInterface(IID_IGlastDetSvc, (void**)&m_glastDetSvc);
     }
-   
+	
     if( sc.isFailure() ) {
         log << MSG::ERROR << "AcdReconAlg failed to get the GlastDetSvc" << endreq;
         return sc;
     }
-
+	
     getParameters();
-
+	
     return sc;
 }
 
@@ -84,18 +84,18 @@ StatusCode AcdReconAlg::execute() {
     
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
-
+	
     SmartDataPtr<Event::AcdDigiCol> acdDigiCol(eventSvc(), EventModel::Digi::AcdDigiCol);
     if (!acdDigiCol) {
         log << MSG::INFO << "No AcdDigiCol found on the TDS" << endreq;
         return sc;
     }
-
+	
     m_acdDigiCol = acdDigiCol;
-
+	
     // run the reconstruction
     reconstruct(m_acdDigiCol);
-
+	
     return sc;
 }
 
@@ -107,16 +107,16 @@ StatusCode AcdReconAlg::finalize() {
 
 void AcdReconAlg::getParameters () {
     // Purpose and Method:  Retrieves constans using the GlastDetSvc.
-
+	
     MsgStream   log( msgSvc(), name() );
     StatusCode sc;
-
-    sc = m_glastDetSvc->getNumericConstByName("threshold", &s_thresholdEnergy);
+	
+    sc = m_glastDetSvc->getNumericConstByName("vetoThreshold", &s_vetoThresholdMeV);
     if (sc.isFailure()) {
-        log << MSG::INFO << "Unable to retrieve threshold, setting the value to 0.0004" << endreq;
-        s_thresholdEnergy = 0.0004;
+        log << MSG::INFO << "Unable to retrieve threshold, setting the value to 0.4 MeV" << endreq;
+        s_vetoThresholdMeV = 0.4;
     }
-
+	
     double temp;
     sc = m_glastDetSvc->getNumericConstByName("numSideRows", &temp);
     if (sc.isFailure()) {
@@ -140,7 +140,7 @@ void AcdReconAlg::clear() {
     // one for each side, plus one for the top
     m_rowActDistCol.resize(s_numSideRows+1, maxDoca);
     m_energyCol.clear();
-    m_act_dist = -2000.0;
+    m_act_dist = -maxDoca;
 }
 
 StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
@@ -152,44 +152,49 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     // TDS Output:  EventModel::AcdRecon
     // Dependencies: None
     // Restrictions and Caveats:  None
-
+	
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
-
+	
     // reset all member variables to their defaults
     clear();
-
-    // create the TDS location for the AcdRecon
-    m_acdRecon = new Event::AcdRecon;
+	
+	
+    Event::AcdDigiCol::const_iterator acdDigiIt;
+    
+    for (acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
+        
+		// toss out hits below threshold
+        if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue; 
+		
+        m_tileCount++;
+        double tileEnergy = (*acdDigiIt)->getEnergy();
+        m_totEnergy += tileEnergy;
+        idents::AcdId id = (*acdDigiIt)->getId();
+		
+		// Temporarily populate reconstructed energy collection with digi energy
+		m_energyCol[id] = tileEnergy;
+    }
+	
+    log << MSG::DEBUG << "num Tiles = " << m_tileCount << endreq;
+    log << MSG::DEBUG << "total energy = " << m_totEnergy << endreq;
+	
+    trackDistances();
+	
+    log << MSG::DEBUG << "DOCA: " << m_doca << " "
+        << "ActDist: " << m_act_dist << endreq;
+	
+	
+	// create the TDS location for the AcdRecon
+    m_acdRecon = new Event::AcdRecon(m_totEnergy, m_tileCount, m_gammaDoca, m_doca, 
+        m_act_dist, m_minDocaId, m_rowDocaCol, m_rowActDistCol, m_energyCol);
+	
     sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, m_acdRecon);
     if (sc.isFailure()) {
         log << "Failed to register AcdRecon" << endreq;
         return StatusCode::FAILURE;
     }
-
-    Event::AcdDigiCol::const_iterator acdDigiIt;
-    
-    for (acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
-        
-        if ((*acdDigiIt)->getEnergy() < s_thresholdEnergy) continue; // toss out hits below threshold
-
-        m_tileCount++;
-        double tileEnergy = (*acdDigiIt)->getEnergy();
-        m_totEnergy += tileEnergy;
-        idents::AcdId id = (*acdDigiIt)->getId();
-    }
-
-    log << MSG::DEBUG << "num Tiles = " << m_tileCount << endreq;
-    log << MSG::DEBUG << "total energy = " << m_totEnergy << endreq;
-
-    trackDistances();
-
-    log << MSG::DEBUG << "DOCA: " << m_doca << " "
-        << "ActDist: " << m_act_dist << endreq;
-
-    m_acdRecon->initialize(m_totEnergy, m_tileCount, m_gammaDoca, m_doca, 
-        m_act_dist, m_minDocaId, m_rowDocaCol, m_rowActDistCol, m_energyCol);
-
+	
     return sc;
 }
 
@@ -199,34 +204,34 @@ StatusCode AcdReconAlg::trackDistances() {
     //  calculates the DOCA and Active Distance quantities.  Updates the
     // local data members m_doca, m_rowDocaCol, m_act_dist, m_rowActDistCol
     // TDS Input: EventModel::TkrRecon::TkrFitTrackCol
-
+	
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
     
     // Retrieve the information on fit tracks
     SmartDataPtr<Event::TkrFitTrackCol> tracksTds(eventSvc(), EventModel::TkrRecon::TkrFitTrackCol);
-
+	
     if (!tracksTds) {
         log << MSG::INFO << "No reconstructed tracks found on the TDS" << endreq;
         return StatusCode::SUCCESS;
     }
-
+	
     Event::TkrFitColPtr trkPtr = tracksTds->begin();
     while(trkPtr != tracksTds->end())
     {
         const Event::TkrFitTrack* trackTds  = *trkPtr++;       // The TDS track
-        float testDoca = doca(trackTds->getPosition(), trackTds->getDirection(), m_rowDocaCol);
+        double testDoca = doca(trackTds->getPosition(), trackTds->getDirection(), m_rowDocaCol);
         if(testDoca < m_doca) m_doca = testDoca;
-        float test_dist= hitTileDist(trackTds->getPosition(), -(trackTds->getDirection()), m_rowActDistCol);
+        double test_dist= hitTileDist(trackTds->getPosition(), -(trackTds->getDirection()), m_rowActDistCol);
         if(test_dist > m_act_dist) m_act_dist = test_dist;
     }
-
+	
     return sc;
-
+	
 }
 
 double AcdReconAlg::doca(const HepPoint3D &x0, const HepVector3D &t0, 
-                          std::vector<double> &doca_values) {
+						 std::vector<double> &doca_values) {
     // Purpose and Method:  This method looks for close-by hits to the ACD tiles
     //        Calculates the minimum distance between the track and the center
     //        of all ACD tiles above veto threshold.
@@ -235,18 +240,19 @@ double AcdReconAlg::doca(const HepPoint3D &x0, const HepVector3D &t0,
     //          returns minimum DOCA value
     // Dependencies: None
     // Restrictions and Caveats:  None
-
-    float minDoca = maxDoca;
-    float dist;
+	
+    double minDoca = maxDoca;
+    double dist;
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
-
+	
     Event::AcdDigiCol::const_iterator acdDigiIt;
     
     for (acdDigiIt = m_acdDigiCol.begin(); acdDigiIt != m_acdDigiCol.end(); acdDigiIt++) {
-        
-        if ((*acdDigiIt)->getEnergy() < s_thresholdEnergy) continue; // toss out hits below threshold
-
+		
+		// toss out hits below threshold
+		if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue;
+		
         idents::AcdId acdId = (*acdDigiIt)->getId();
         idents::VolumeIdentifier volId = (*acdDigiIt)->getVolId();
         std::string str;
@@ -262,32 +268,32 @@ double AcdReconAlg::doca(const HepPoint3D &x0, const HepVector3D &t0,
             log << MSG::DEBUG << "Failed to get transformation" << endreq;
             return sc;
         }
-
+		
         HepPoint3D center(0., 0., 0.);
         HepPoint3D acdCenter = transform * center;
-
+		
         HepVector3D dX = acdCenter - x0;
-
-        float prod = dX * t0;
+		
+        double prod = dX * t0;
         dist = sqrt(dX.mag2() - prod*prod);
         if(dist < minDoca){
             minDoca = dist;
             m_minDocaId = acdId;
         }
-
+		
         // Pick up the min. distance from each type of tile
         // i.e. top, and each type of side row tile
         if (acdId.top() && dist < doca_values[0]) doca_values[0] = dist;
         if (acdId.side()) {
-	  unsigned int k = acdId.row()+1;
-	  if( k >= doca_values.size()){
-	    log << MSG::WARNING << "rejecting bad ACD id, row = " << k-1 << endreq;
-	  }else
-            if (dist < doca_values[k]) doca_values[k] = dist;
+			unsigned int k = acdId.row()+1;
+			if( k >= doca_values.size()){
+				log << MSG::WARNING << "rejecting bad ACD id, row = " << k-1 << endreq;
+			}else
+				if (dist < doca_values[k]) doca_values[k] = dist;
         }
-
+		
     }
-
+	
     return minDoca;
 }
 
@@ -298,17 +304,18 @@ double AcdReconAlg::hitTileDist(const HepPoint3D &x0, const HepVector3D &t0,
     //       tiles above veto threshold.
     // Inputs:  (x0, t0) defines a track
     // Outputs: Returns minimum distance
-
+	
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
-
+	
     double return_dist = -200.;
-        
+	
     // iterate over all tiles
     Event::AcdDigiCol::const_iterator acdDigiIt;
     for (acdDigiIt = m_acdDigiCol.begin(); acdDigiIt != m_acdDigiCol.end(); acdDigiIt++) {
         
-        if ((*acdDigiIt)->getEnergy() < s_thresholdEnergy) continue; // toss out hits below threshold
+        // toss out hits below threshold
+		if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue; 
         idents::AcdId acdId = (*acdDigiIt)->getId();
         idents::VolumeIdentifier volId = (*acdDigiIt)->getVolId();
         std::string str;
@@ -324,15 +331,15 @@ double AcdReconAlg::hitTileDist(const HepPoint3D &x0, const HepVector3D &t0,
             log << MSG::DEBUG << "Failed to get trasnformation" << endreq;
             return sc;
         }
-
+		
         HepPoint3D center(0., 0., 0.);
         HepPoint3D xT = transform * center;
         
         int iFace = acdId.face();
-
-        float dX = dim[0];
-        float dY = dim[1];
-        float dZ = dim[2];
+		
+        double dX = dim[0];
+        double dY = dim[1];
+        double dZ = dim[2];
         
         // Figure out where in the plane of this face the trajectory hits
         double arc_dist = -1.; 
@@ -370,19 +377,19 @@ double AcdReconAlg::hitTileDist(const HepPoint3D &x0, const HepVector3D &t0,
             test_dist = (dist_z < dist_x) ? dist_z : dist_x;
             if(test_dist > return_dist) return_dist = test_dist;
         }
-
+		
         // Pick up the min. distance from each type of tile
         // i.e. top, and each type of side row tile
         if (acdId.top() && test_dist < row_values[0]) row_values[0] = test_dist;
         if (acdId.side()) {
-	  unsigned int k = acdId.row()+1;
-	  if( k >= row_values.size()){
-	    log << MSG::WARNING << "rejecting bad ACD id, row = " << k-1 << endreq;
-	  }else
-            if (test_dist < row_values[k]) row_values[k] = test_dist;
+			unsigned int k = acdId.row()+1;
+			if( k >= row_values.size()){
+				log << MSG::WARNING << "rejecting bad ACD id, row = " << k-1 << endreq;
+			}else
+				if (test_dist < row_values[k]) row_values[k] = test_dist;
         }
-
+		
     }
-
+	
     return return_dist;    
 }

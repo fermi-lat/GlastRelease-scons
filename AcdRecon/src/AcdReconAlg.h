@@ -68,7 +68,7 @@ class AcdReconAlg : public Algorithm
       double hitTileDist(const HepPoint3D &x0, const HepVector3D &dir, std::vector<double> &row_values);
 
       /// variables to store instrument parameters
-      static double s_thresholdEnergy;
+      static double s_vetoThresholdMeV;
       static unsigned int s_numSideRows;
 
       // record of the tile with the minimum Distance of Closest Approach
