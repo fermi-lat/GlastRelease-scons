@@ -15,6 +15,7 @@
 #include "Event/TopLevel/Definitions.h"
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/ObjectList.h"
+#include "GaudiKernel/IInterface.h"
 
 #include "idents/TowerId.h"
 #include "idents/GlastAxis.h"
@@ -29,7 +30,7 @@
 * The digis are produced either from MC hit output or from the actual data
 */
 
-extern const CLID& CLID_TkrDigi;
+static const CLID& CLID_TkrDigi = InterfaceID("TkrDigi", 1, 0);
 
 namespace Event {
     class TkrDigi : virtual public ContainedObject {

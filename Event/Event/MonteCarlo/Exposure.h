@@ -8,8 +8,9 @@
 // to simplify inlude statements in algorithms
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/ObjectList.h"
+#include "GaudiKernel/IInterface.h"
 
-extern const CLID& CLID_Exposure;
+static const CLID& CLID_Exposure = InterfaceID("Exposure", 1, 0);
 
 namespace Event { //Namespace
     

@@ -36,7 +36,9 @@
  *
  * $Header$
  */
-extern const CLID& CLID_McParticle;
+#include "GaudiKernel/IInterface.h"
+
+static const CLID& CLID_McParticle = InterfaceID("McParticle", 1, 0);
 
 namespace Event {  // NameSpace
 

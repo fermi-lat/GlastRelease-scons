@@ -11,8 +11,8 @@
 #include "Event/TopLevel/Definitions.h"
 #include "Event/Utilities/TimeStamp.h"
 
+static const CLID& CLID_McEvent = InterfaceID("McEvent", 1, 0);
 
-extern const CLID& CLID_McEvent;
 namespace Event {
 
 /** @class MCEvent

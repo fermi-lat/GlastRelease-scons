@@ -31,7 +31,9 @@
 *
 * $Header$
 */
-extern const CLID& CLID_TkrFitTrackBase;
+#include "GaudiKernel/IInterface.h"
+
+static const CLID& CLID_TkrFitTrackBase = InterfaceID("TkrFitTrackBase", 1, 0);
 
 namespace Event { // Namespace
 

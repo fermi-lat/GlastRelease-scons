@@ -14,7 +14,9 @@
 #include "Event/TopLevel/Definitions.h"
 #include "geometry/Point.h"
 
-extern const CLID& CLID_CalXtalRecData;
+#include "GaudiKernel/IInterface.h"
+
+static const CLID& CLID_CalXtalRecData = InterfaceID("CalXtalRecData", 1, 0);
 
 /**
 * @class   CalXtalRecData        

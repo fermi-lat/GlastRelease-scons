@@ -27,7 +27,9 @@
 *  Intermediate class for TkrDigi process.
 */
 
-extern const CLID& CLID_McTkrStrip;
+#include "GaudiKernel/IInterface.h"
+
+static const CLID& CLID_McTkrStrip = InterfaceID("McTkrStrip", 1, 0);
 
 namespace Event {
 
@@ -40,7 +42,7 @@ namespace Event {
     
     //! Constructors
     //! Null constructor
-    //McTkrStrip() {};
+    McTkrStrip() {};
     
     //! constructor with plane id.
     McTkrStrip(idents::VolumeIdentifier id, unsigned int strip,  double e=0,

@@ -8,7 +8,9 @@
 #include "Event/Utilities/TimeStamp.h"
 #include "Event/TopLevel/Definitions.h"
 
-extern const CLID& CLID_Event;
+//static const CLID& CLID_Event = InterfaceID("Event", 1, 0);
+//The following number is currently hardwired into Gaudi (v12r0)!!
+static const CLID& CLID_Event = 110;
 
 /** @class EventHeader
 * @brief Essential header information of the event.

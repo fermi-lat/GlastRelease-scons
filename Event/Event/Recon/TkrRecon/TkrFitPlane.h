@@ -11,7 +11,7 @@
 #ifndef _TkrFitPlane_H
 #define _TkrFitPlane_H 1
 
-#include "Event/Recon/TkrRecon/TkrClusterCol.h"
+#include "Event/Recon/TkrRecon/TkrCluster.h"
 #include "Event/Recon/TkrRecon/TkrFitHit.h"
 
 /** 

@@ -17,7 +17,9 @@
 * $Header$
 */
 
-extern const CLID& CLID_TkrPatCandHit;
+#include "GaudiKernel/IInterface.h"
+
+static const CLID& CLID_TkrPatCandHit = InterfaceID("TkrPatCandHit", 1, 0);
 
 namespace Event { //Namespace
 
@@ -25,6 +27,7 @@ class TkrPatCandHit : virtual public ContainedObject
 {    
 public:
     
+    TkrPatCandHit() {}
     TkrPatCandHit(TkrCluster* pCluster);
     TkrPatCandHit(unsigned int hitId, const Point& pos, unsigned int tower, 
         unsigned int layer, TkrCluster::view v);

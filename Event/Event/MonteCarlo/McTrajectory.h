@@ -12,6 +12,7 @@
 #include "idents/VolumeIdentifier.h"
 #include "Event/Utilities/CLHEPStreams.h"
 #include "Event/Utilities/IDStreams.h"
+#include "Event/MonteCarlo/McParticle.h"
 // Include all Glast container types here
 //   to simplify inlude statements in algorithms
 #include "GaudiKernel/ObjectVector.h"
@@ -26,9 +27,9 @@
  * $Header$
  */
 
-#include "Event/MonteCarlo/McParticle.h"
+#include "GaudiKernel/IInterface.h"
 
-extern const CLID& CLID_McTrajectory;
+static const CLID& CLID_McTrajectory = InterfaceID("McTrajectory", 1, 0);
 
 namespace Event {  // NameSpace
 

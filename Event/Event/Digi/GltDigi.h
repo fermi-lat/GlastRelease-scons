@@ -2,6 +2,7 @@
 #define Event_GltDigi_H 1
 
 #include "GaudiKernel/ContainedObject.h"
+#include "GaudiKernel/IInterface.h"
 #include <vector>
 
 /*!
@@ -14,7 +15,7 @@
 * $Header$
 */
 
-extern const CLID& CLID_GltDigi;
+static const CLID& CLID_GltDigi = InterfaceID("GltDigi", 1, 0);
 
 namespace Event {
 

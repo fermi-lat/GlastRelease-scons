@@ -18,7 +18,9 @@
 #include "Event/Recon/TkrRecon/TkrRecInfo.h"
 #include "Event/Recon/TkrRecon/TkrPatCandHit.h"
 
-extern const CLID& CLID_TkrPatCand;
+#include "GaudiKernel/IInterface.h"
+
+static const CLID& CLID_TkrPatCand = InterfaceID("TkrPatCand", 1, 0);
 
 namespace Event { //Namespace
 
@@ -26,6 +28,7 @@ class TkrPatCand: public TkrRecInfo, virtual public ContainedObject
 {    
 public:
     
+    TkrPatCand() {}
     TkrPatCand(int layer, int tower, double energy, double energyErr, double quality, const Ray& testRay);
     TkrPatCand(int layer, int tower, double energy, double quality, const Ray& testRay) 
                     {TkrPatCand(layer,tower,energy,1.,quality,testRay);}

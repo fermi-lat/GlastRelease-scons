@@ -18,10 +18,7 @@
 
 #include "idents/VolumeIdentifier.h"
 
-
 #include "Event/MonteCarlo/McParticle.h"
-
-class McParticle;
 
 
 /** @class McPositionHit
@@ -43,7 +40,9 @@ class McParticle;
  * $Header
  */
 
-extern const CLID& CLID_McPositionHit;
+#include "GaudiKernel/IInterface.h"
+
+static const CLID& CLID_McPositionHit = InterfaceID("McPositionHit", 1, 0);
 
 namespace Event { // NameSpace
 

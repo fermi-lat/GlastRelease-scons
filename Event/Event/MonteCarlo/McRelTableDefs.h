@@ -27,6 +27,8 @@ class McCandTrack;
 
 // Forward declarations for recon information
 class TkrCluster;
+class TkrTrack;
+class TkrTrackHit;
 class TkrPatCandHit;
 class TkrPatCand;
 
@@ -65,6 +67,18 @@ typedef Event::RelTable<Event::McParticle, Event::TkrPatCand>      McPartToTkrPa
 typedef Event::Relation<Event::McParticle, Event::TkrPatCand>      McPartToTkrPatCandRel;
 typedef ObjectList<Event::McPartToTkrPatCandRel>                   McPartToTkrPatCandTabList;
 typedef std::vector<Event::McPartToTkrPatCandRel*>                 McPartToTkrPatCandVec;
+
+// typedefs for relating TkrTrackHits to McParticles
+typedef Event::RelTable<Event::McParticle, Event::TkrTrackHit>     McPartToTkrTrackHitTab;
+typedef Event::Relation<Event::McParticle, Event::TkrTrackHit>     McPartToTkrTrackHitRel;
+typedef ObjectList<McPartToTkrTrackHitRel>                         McPartToTkrTrackHitTabList;
+typedef std::vector<McPartToTkrTrackHitRel*>                       McPartToTkrTrackHitVec;
+
+// typedefs for relating TkrTracks to McParticles
+typedef Event::RelTable<Event::McParticle, Event::TkrTrack>        McPartToTkrTrackTab;
+typedef Event::Relation<Event::McParticle, Event::TkrTrack>        McPartToTkrTrackRel;
+typedef ObjectList<Event::McPartToTkrTrackRel>                     McPartToTkrTrackTabList;
+typedef std::vector<Event::McPartToTkrTrackRel*>                   McPartToTkrTrackVec;
 };
 
 #endif

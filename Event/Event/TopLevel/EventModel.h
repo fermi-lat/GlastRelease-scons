@@ -21,66 +21,119 @@
  * @author   S. Gillespie
  * @author   T. H.-Kozanecka
  */ 
-
 #include <string>
 
-#if defined(_Event_EventModel_CPP_)
-#define  _EXTERN_ 
+// The following is a snippet taken from the libApiExports.h file that 
+// was authored by Matt Langston.
+// The intent is to define for windows those classes we would like 
+// to export (or import) from the EventLib dll. 
+#if (defined(_WIN32) && defined(_MSC_VER))
+# ifdef EVT_DLL_EXPORTS
+#  undef  DLL_EXPORT_EVT
+#  define DLL_EXPORT_EVT __declspec(dllexport)
+# else
+#  undef  DLL_EXPORT_EVT
+#  define DLL_EXPORT_EVT __declspec(dllimport)
+# endif
 #else
-#define  _EXTERN_ extern
+// The gcc compiler (i.e. the Linux/Unix compiler) exports the Universe
+// of symbols from a shared library, meaning that we can't control the
+// EVT of our shared libraries. We therefore just define the Symbol
+// Export Macro to expand to nothing.
+# undef  DLL_EXPORT_EVT
+# define DLL_EXPORT_EVT
 #endif
 
-    namespace EventModel {
-        _EXTERN_ std::string   EventHeader;
+// Define a class to hold all of our definitions
+class DLL_EXPORT_EVT EventModel
+{
+public:
+    class DLL_EXPORT_EVT MC 
+    {
+    public:
+        MC() {}
+       ~MC() {}
 
-        namespace MC {
-            _EXTERN_ std::string Event;
-            _EXTERN_ std::string McParticleCol;
-            _EXTERN_ std::string McPositionHitCol;
-            _EXTERN_ std::string McIntegratingHitCol;
-            _EXTERN_ std::string McTkrStripCol;
-            _EXTERN_ std::string D2EntryCol;
-            _EXTERN_ std::string ExposureCol;
-            _EXTERN_ std::string McEventStructure;
-            _EXTERN_ std::string McPartToPosHitTab;
-            _EXTERN_ std::string McPartToClusTab;
-            _EXTERN_ std::string McPartToClusHitTab;
-            _EXTERN_ std::string McPartToTkrCandHitTab;
-            _EXTERN_ std::string McPartToTkrPatCandTab;
-        }
+        static std::string Event;
+        static std::string McParticleCol;
+        static std::string McPositionHitCol;
+        static std::string McIntegratingHitCol;
+        static std::string McTkrStripCol;
+        static std::string D2EntryCol;
+        static std::string ExposureCol;
+        static std::string McEventStructure;
+        static std::string McPartToPosHitTab;
+        static std::string McPartToClusTab;
+        static std::string McPartToClusHitTab;
+        static std::string McPartToTkrCandHitTab;
+        static std::string McPartToTkrPatCandTab;
+        static std::string McPartToTkrTrackHitTab;
+        static std::string McPartToTkrTrackTab;
+    };
 
-        namespace Digi {
-            _EXTERN_ std::string Event;
-            _EXTERN_ std::string AcdDigiCol;
-            _EXTERN_ std::string TkrDigiCol;
-            _EXTERN_ std::string CalDigiCol;
-            _EXTERN_ std::string CalDigiHitTab;
-            _EXTERN_ std::string TkrDigiHitTab;
-            _EXTERN_ std::string TkrClusterHitTab;
-        }
+    class DLL_EXPORT_EVT Digi
+    {
+    public:
+        Digi() {}
+       ~Digi() {}
 
-        namespace TkrRecon {
-            _EXTERN_ std::string Event;
-            _EXTERN_ std::string SiLayers;
-            _EXTERN_ std::string TkrClusterCol;
-            _EXTERN_ std::string TkrPatCandCol;
-            _EXTERN_ std::string SiRecObjs;
-            _EXTERN_ std::string TkrFitTrackCol;
-            _EXTERN_ std::string TkrTrackTab;
-            _EXTERN_ std::string TkrVertexCol;
-            _EXTERN_ std::string TkrVertexTab;
-        }
+        static std::string Event;
+        static std::string AcdDigiCol;
+        static std::string TkrDigiCol;
+        static std::string CalDigiCol;
+        static std::string CalDigiHitTab;
+        static std::string TkrDigiHitTab;
+        static std::string TkrClusterHitTab;
+    };
 
-        namespace CalRecon {
-            _EXTERN_ std::string Event;
-            _EXTERN_ std::string CalXtalRecCol;
-            _EXTERN_ std::string CalClusterCol;
-		}
 
-        namespace AcdRecon {
-            _EXTERN_ std::string Event;
-        }
-    }
+    class DLL_EXPORT_EVT TkrRecon
+    {
+    public:
+        TkrRecon() {}
+       ~TkrRecon() {}
 
-#undef _EXTERN_
-#endif // GLASTEVENT_EVENTMODEL_H
+        static std::string Event;
+        static std::string SiLayers;
+        static std::string TkrIdClusterMMap;
+        static std::string TkrIdClusterMap;
+        static std::string TkrClusterCol;
+        static std::string TkrPatCandCol;
+        static std::string TkrFitTrackCol;
+        static std::string TkrTrackCol;
+        static std::string TkrTrackHitCol;
+        static std::string TkrTrackTab;
+        static std::string TkrVertexCol;
+        static std::string TkrVertexTab;
+        static std::string TkrVertexTrackTab;
+    };
+
+
+    class DLL_EXPORT_EVT CalRecon
+    {
+    public:
+       CalRecon() {}
+      ~CalRecon() {}
+
+       static std::string Event;
+       static std::string CalXtalRecCol;
+       static std::string CalClusterCol;
+    };
+
+
+    class DLL_EXPORT_EVT AcdRecon
+    {
+    public:
+        AcdRecon() {}
+       ~AcdRecon() {}
+
+        static std::string Event;
+    };
+
+    EventModel() {}
+   ~EventModel() {}
+
+    static std::string EventHeader;
+};
+
+#endif // _H_GlastEvent_EventModel_

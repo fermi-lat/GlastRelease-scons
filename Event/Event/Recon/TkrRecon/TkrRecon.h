@@ -6,7 +6,9 @@
 #include "GaudiKernel/DataObject.h"
 #include "Event/TopLevel/Definitions.h"
 
-extern const CLID& CLID_TkrRecon;
+#include "GaudiKernel/IInterface.h"
+
+static const CLID& CLID_TkrRecon = InterfaceID("TkrRecon", 1, 0);
 
 /** @class TkrRecon
 * @brief Defines the top level object for digitization data.

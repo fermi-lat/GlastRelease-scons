@@ -8,6 +8,7 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/IInterface.h"
 
 #include "Event/TopLevel/Definitions.h"
 
@@ -35,7 +36,7 @@
 * $Header$
 */
 
-extern const CLID& CLID_AcdDigi;
+static const CLID& CLID_AcdDigi = InterfaceID("AcdDigi", 1, 0);
 
 namespace Event {
     class AcdDigi : virtual public ContainedObject  { 
@@ -56,6 +57,9 @@ namespace Event {
             NOERROR = 0,
             ERROR = 1
         } ParityError;
+
+        // This keeps Gaudi happy
+        AcdDigi() {}
                 
         AcdDigi(const idents::AcdId &id, const idents::VolumeIdentifier &volId,
             double energy, unsigned short *pha, 

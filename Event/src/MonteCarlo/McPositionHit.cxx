@@ -5,7 +5,6 @@
 #include "Event/MonteCarlo/McPositionHit.h"
 #include "Event/Utilities/CLHEPStreams.h"
 
-
 namespace Event{
 
 /// Retrieve hit's direction cosine

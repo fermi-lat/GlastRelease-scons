@@ -6,7 +6,9 @@
 #include "GaudiKernel/DataObject.h"
 #include "Event/TopLevel/Definitions.h"
 
-extern const CLID& CLID_CalRecon;
+#include "GaudiKernel/IInterface.h"
+
+static const CLID& CLID_CalRecon = InterfaceID("CalRecon", 1, 0);
 
 /** @class CalRecon
 * @brief Defines the top level object for digitization data.

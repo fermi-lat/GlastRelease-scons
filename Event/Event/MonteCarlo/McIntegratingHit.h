@@ -33,7 +33,9 @@
 
 #include "Event/MonteCarlo/McParticle.h"
 
-extern const CLID& CLID_McIntegratingHit;
+#include "GaudiKernel/IInterface.h"
+
+static const CLID& CLID_McIntegratingHit = InterfaceID("McIntegratingHit", 1, 0);
 
 namespace Event {  // NameSpace
 

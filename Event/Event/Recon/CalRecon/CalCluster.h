@@ -7,7 +7,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/MsgStream.h"
 
-extern const CLID& CLID_CalClusterCol;
+static const CLID& CLID_CalClusterCol = InterfaceID("CalClusterCol", 1, 0);
 
 /**
 *  @class CalCluster

@@ -11,7 +11,9 @@
 
 #include <vector>
 
-extern const CLID& CLID_AcdRecon;
+#include "GaudiKernel/IInterface.h"
+
+static const CLID& CLID_AcdRecon = InterfaceID("AcdRecon", 1, 0);
 
 /** @class AcdRecon        
 * @brief Reconstruction data for ACD

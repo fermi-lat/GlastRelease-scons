@@ -26,6 +26,9 @@
 #include "Event/MonteCarlo/McParticle.h"
 #include "Event/MonteCarlo/McPositionHit.h"
 #include "Event/RelTable/RelTable.h"
+#include "GaudiKernel/IInterface.h"
+
+static const CLID& CLID_McEventStructure = InterfaceID("McEventStructure", 1, 0);
 
 namespace Event {
 

@@ -1,5 +1,5 @@
 package Event
-version v9r13
+version v10r2p0
 
 branches Event cmt doc src
 
@@ -10,10 +10,10 @@ use geometry  v3r*
 use idents    v2r*
 
 apply_pattern package_include
-apply_pattern package_linkopts
-
-
 apply_pattern package_headers
+
+apply_pattern package_Llinkopts
+apply_pattern package_Lshlibflags
 
 macro_append Event_headers "" WIN32 " \
         ../Event/*.h \ 
@@ -26,7 +26,7 @@ macro_append Event_headers "" WIN32 " \
         ../Event/Recon/CalRecon/*.h\
         ../Event/RelTable/*.h
 
-library Event -no_share\
+library EventLib Dll/*.cxx \
         MonteCarlo/*.cxx \
         Recon/TkrRecon/*.cxx \
         Recon/CalRecon/*.cxx \

@@ -10,10 +10,11 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/IInterface.h"
+
 #include "Event/TopLevel/Definitions.h"
 
-
-extern const CLID& CLID_CalDigi;
+static const CLID& CLID_CalDigi = InterfaceID("CalDigi", 1, 0);
 
 /** @class CalDigi
  * @brief Transient Data Store class for CAL Digitizations.Actual readout data

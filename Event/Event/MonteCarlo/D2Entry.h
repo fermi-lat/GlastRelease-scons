@@ -11,8 +11,9 @@
 // to simplify inlude statements in algorithms
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/ObjectList.h"
+#include "GaudiKernel/IInterface.h"
 
-extern const CLID& CLID_D2Entry;
+static const CLID& CLID_D2Entry = InterfaceID("D2Entry", 1, 0);
 
 namespace Event { //Namespace
     

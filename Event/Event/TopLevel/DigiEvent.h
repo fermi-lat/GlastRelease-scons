@@ -7,7 +7,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "Event/TopLevel/Definitions.h"
 
-extern const CLID& CLID_DigiEvent;
+static const CLID& CLID_DigiEvent = InterfaceID("DigiEvent", 1, 0);
 
 /** @class DigiEvent
 * @brief Defines the top level object for digitization data.
