@@ -89,7 +89,7 @@ class CalibMySQLCnvSvc : public ConversionSvc,
 				     IOpaqueAddress*& refpAddress );
   
  public:
-  // Implementation of IConditionsDBCnvSvc.
+  // Implementation of ICalibMetaCnvSvc.
   // Create/update condition DataObject not necessarily registered in the TDS.
   
   /// Create a condition DataObject by calib type name, flavor and time.
@@ -97,40 +97,45 @@ class CalibMySQLCnvSvc : public ConversionSvc,
   /// but may register TDS addresses for its children if needed (e.g. Catalog).
   /// The string storage type is discovered at runtime in the Metadata dbs.
   /// The entry name identifies a condition amongst the many in the string.
-  StatusCode createCalibMetadata(DataObject*& refpObject,
-                                 const std::string& calibType,
-                                 const std::string& flavor,
-                                 const ITime&       time,
-                                 const std::string& instrument,
-                                 const CLID&        classID,
-                                 IRegistry*         entry=0) = 0;
+  StatusCode createCalib(DataObject*& refpObject,
+                         const std::string& calibType,
+                         const std::string& flavor,
+                         const ITime&       time,
+                         const std::string& instrument,
+                         const CLID&        classID,
+                         IRegistry*         entry=0) = 0;
   
   /// Update a condition DataObject by 
   /// This method does not register DataObject in the transient data store,
   /// but may register TDS addresses for its children if needed (e.g. Catalog).
   /// The string storage type is discovered at runtime in the CondDB.
   /// The entry name identifies a condition amongst the many in the string.
-  StatusCode updateCalibMetadata (DataObject*          pObject,
-                                 const std::string& calibType,
-                                 const std::string& flavor,
-                                 const ITime&       time,
-                                 const CLID&        classID,
-                                 IRegistry*         entry=0) = 0;
+  StatusCode updateCalib(DataObject*          pObject,
+                         const std::string& calibType,
+                         const std::string& flavor,
+                         const ITime&       time,
+                         const CLID&        classID,
+                         IRegistry*         entry=0) = 0;
   
-  /// Decode, decode the string storage type from/to the folder descrip string
-  //  StatusCode decodeDescription     ( const std::string&   description,
-  //				     unsigned char&       type);
+  /// Decode the string storage type to enumerated storage type
+  StatusCode decodeDescription(unsigned int   description,
+                               unsigned char&       type);
+
+  //  Only need this if we support TDDS --> PDS, which is so far
+  //  not the case
   //  StatusCode encodeDescription     ( const unsigned char& type,
   //			     std::string&         description);
-  // Above just used ascii rep. of storage type in dbs; our dbs has strings
-  // so need a way to associate them with the storage types.  
-  /// Handle to metadata connection
-  calibUtil::Metadata* meta();
+
+  calibUtil::Metadata* getMeta();
 
  private:
 
   /// Handle for metadata access
   calibUtil::Metadata*    m_meta;
+
+  /// How official does a calibration have to be in order to be acceptable
+  /// Should default to calibUtil::Metadata::LEVELProd
+  unsigned int m_calibLevelMask;
 
   /// Handle to the IConversionSvc interface of the DetectorPersistencySvc
   IConversionSvc*      m_detPersSvc;
@@ -140,6 +145,8 @@ class CalibMySQLCnvSvc : public ConversionSvc,
 
   // Maybe also handle to IInstrumentName interface? Or do we really
   // need all these different handles to the same class??
+  // Keep them separate for now to preserve possibility of putting
+  // CalibDataSvc in a separate package.
   IInstrumentNameSvc*  m_instrSvc;
 };
 #endif   
