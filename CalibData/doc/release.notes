@@ -4,6 +4,8 @@
 
                     EOH
 
+   v0r11p1   02-Jan-2005  jrb Use idents::TkrId::getTray() rather than 
+                              obsolete getPlane()
    v0r11p0   29-Dec-2004  jrb More stuff for ToT..maybe ok now
  * 17-Dec-2004 jrb - v0r11    Rearrange, add stuff for ToT calibration
  * 15-Oct-2004 jrb - v0r10    Enhanced putRange, getRange involving
