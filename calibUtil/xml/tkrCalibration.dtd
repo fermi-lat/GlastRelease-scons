@@ -40,6 +40,7 @@
    col      NMTOKEN #REQUIRED
    hwserial NMTOKEN #IMPLIED 
    maxStripId NMTOKEN "1535"
+   maxGtfeId NMTOKEN  "23"
 >
 
 <!ELEMENT uniplane ((stripTot+) | (stripCharge+) | 
