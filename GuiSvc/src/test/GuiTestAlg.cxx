@@ -6,6 +6,7 @@
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IService.h"
 
 #include "src/test/Demo.h"
 #include "gui/GuiMgr.h"
@@ -44,6 +45,11 @@ StatusCode GuiTestAlg::initialize() {
     }
     // now get the gui manager and set up the demo from gui.
     m_guiMgr = gsvc->guiMgr();
+    if( m_guiMgr==0){ 
+        gsvc->initialize();
+     //   dynamic_cast<IService*>(gsvc)->initialize();
+        m_guiMgr = gsvc->guiMgr();
+    }
 
     m_demo = new Demo(m_guiMgr->display());
 

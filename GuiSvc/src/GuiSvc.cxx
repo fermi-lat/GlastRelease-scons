@@ -65,6 +65,7 @@ void GuiSvc::pause()
 StatusCode GuiSvc::initialize () 
 {
     using namespace gui;
+    if(state()==INITIALIZED) return StatusCode::SUCCESS;
     StatusCode  status =  Service::initialize ();
 
 

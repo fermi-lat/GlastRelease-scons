@@ -1,8 +1,9 @@
 /** @file release.notes
  * @brief Package GuiSvc release notes
  * Manager T Burnett
- * <pre>
+ * @verbatim
  *
+ * v3r4p4 20-jul-2003  THB req change needed by CMT v1r14; guard against multiple initialize
  * v3r4p3 20-jan-2003  THB fix to tool release
  * v3r4p1 20-jan-2003  THB release tools
  * --------------------GlastRelease-----------------------------------
@@ -15,6 +16,6 @@
  * v3r1   22-jul-2002  THB use the IRunable interface to control event loop 
  * v1r2   20-Mar-01 THB: tag v1r2
  
- </pre>
+ @endverbatim
 */ 
  

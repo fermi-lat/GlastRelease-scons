@@ -1,5 +1,5 @@
 package GuiSvc
-version v3r4p3
+version v3r4p4
 
 branches GuiSvc cmt doc src
 
@@ -33,14 +33,19 @@ private
 
 
 # don't know why we need the dl library - TL
-pattern guiapp \
-  macro use_linkopts " $(GaudiKernel_linkopts) $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
-               WIN32 " $(GaudiKernel_linkopts) $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) /include:_GuiSvc_loadRef "
+#pattern guiapp \
+#  macro use_linkopts " $(GaudiKernel_linkopts) $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
+#               WIN32 " $(GaudiKernel_linkopts) $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) /include:_GuiSvc_loadRef "
 
-apply_pattern guiapp
+#apply_pattern guiapp
 
 macro WinJobOptions ""  WIN32  test/jobOptions.txt
 
+pattern gui_application \
+  macro <app>linkopts " $(GaudiKernel_linkopts) $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
+               WIN32 " $(GuiSvc_lib) $(guiapp_linkopts) /include:_GuiSvc_loadRef "
+
+apply_pattern gui_application app=GuiTest
 
 application GuiTest test/*.cxx ${WinJobOptions}  ${GlastMain} ${Win32Resource}
 
