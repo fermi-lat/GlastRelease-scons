@@ -1,11 +1,11 @@
 //  Simple main to test some features of the GUI interface
 
 #include <string> // make sure gets loaded first
-#include "control/EventLoop.h"
-#include "control/CompoundCommand.h"
-#include "control/GUI.h"
-#include "control/SimpleCommand.h"
-#include "control/PrintControl.h"
+#include "graphics/EventLoop.h"
+#include "graphics/CompoundCommand.h"
+#include "graphics/GUI.h"
+#include "graphics/SimpleCommand.h"
+#include "graphics/PrintControl.h"
 
 #include "geometry/Box.h"
 #include "geometry/Cone.h"
