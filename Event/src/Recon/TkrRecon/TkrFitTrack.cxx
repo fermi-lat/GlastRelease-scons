@@ -104,8 +104,8 @@ TkrFitPlane TkrFitTrack::getFoLPlane(TrackEnd end) const
     }
     else
     {
-        if (end == TkrRecInfo::Start) return m_hits.front();
-        else                          return m_hits.back();
+        if (end == TkrFitTrackBase::Start) return m_hits.front();
+        else                               return m_hits.back();
     }
 }
 

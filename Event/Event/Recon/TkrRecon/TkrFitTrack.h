@@ -6,7 +6,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/ContainedObject.h"
-#include "Event/Recon/TkrRecon/TkrRecInfo.h"
+#include "Event/Recon/TkrRecon/TkrFitTrackBase.h"
 #include "Event/Recon/TkrRecon/TkrFitPlane.h"
 #include "Event/Recon/TkrRecon/TkrCluster.h"
 
@@ -27,7 +27,8 @@
 */
 namespace Event {  // NameSpace
 
-  class TkrFitTrack: public TkrRecInfo, virtual public ContainedObject
+//  class TkrFitTrack: public TkrRecInfo, virtual public ContainedObject
+class TkrFitTrack: public TkrFitTrackBase
 {    
 public:
     /// Constructor/destructor for the class
@@ -123,9 +124,9 @@ protected:
 };
 
 //typedef for the Container
-  typedef ObjectVector<TkrFitTrack>      TkrFitTrackCol;
-  typedef TkrFitTrackCol::const_iterator TkrFitConPtr;
-  typedef TkrFitTrackCol::iterator       TkrFitColPtr;
+//  typedef ObjectVector<TkrFitTrack>      TkrFitTrackCol;
+//  typedef TkrFitTrackCol::const_iterator TkrFitConPtr;
+//  typedef TkrFitTrackCol::iterator       TkrFitColPtr;
 
 }; //Namespace
 

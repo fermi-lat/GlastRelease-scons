@@ -83,6 +83,7 @@ public:
 
     /// Classes allowed access for filling the information
     friend class KalFitTrack;
+    friend class KalFitter;
     friend class TkrKalFitTrack;
     friend class KalmanFilter;
 

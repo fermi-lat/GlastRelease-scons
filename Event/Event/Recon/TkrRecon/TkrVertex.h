@@ -20,7 +20,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartRefVector.h"
 #include "Event/Recon/TkrRecon/TkrRecInfo.h"
-#include "Event/Recon/TkrRecon/TkrFitTrack.h"
+#include "Event/Recon/TkrRecon/TkrFitTrackBase.h"
 /** 
 * @class TkrVertex
 *
@@ -54,14 +54,14 @@ public:
     bool          empty(int numHits)                 const; 
 
     // Add tracks to the list
-    void addTrack(TkrFitTrack* pTrack) {m_tracks.push_back(pTrack);}
+    void addTrack(TkrFitTrackBase* pTrack) {m_tracks.push_back(pTrack);}
     
     // How many tracks in the vertex?
     int  getNumTracks() const {return m_tracks.size();}
 
     // Pointers to track info
-    SmartRefVector<TkrFitTrack>::const_iterator getTrackIterBegin() const {return m_tracks.begin();}
-    SmartRefVector<TkrFitTrack>::const_iterator getTrackIterEnd()   const {return m_tracks.end();}
+    SmartRefVector<TkrFitTrackBase>::const_iterator getTrackIterBegin() const {return m_tracks.begin();}
+    SmartRefVector<TkrFitTrackBase>::const_iterator getTrackIterEnd()   const {return m_tracks.end();}
 
     /// Utilities 
     void writeOut(MsgStream& log) const; 
@@ -76,7 +76,7 @@ private:
     int            m_firstLayer;
     int            m_itower; 
     
-    SmartRefVector<TkrFitTrack> m_tracks;
+    SmartRefVector<TkrFitTrackBase> m_tracks;
 };
 
 //typedef for the Container
