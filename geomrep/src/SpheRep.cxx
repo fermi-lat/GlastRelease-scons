@@ -1,13 +1,12 @@
 // $Header$
 //  Author: T. Burnett
-// Project: Arve graphics
 //
 // Representation of a Sphe with ArveScene
 
 #include "geomrep/SpheRep.h"
 #include "geometry/Sphe.h"
 
-static void createCircle(GraphicsRep& view, const Point& p, double r, const Vector& xhat,
+static void createCircle(gui::DisplayRep& view, const Point& p, double r, const Vector& xhat,
 const Vector& yhat)
 {
     static const int ns=100;

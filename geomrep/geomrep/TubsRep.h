@@ -6,11 +6,11 @@
 
 #ifndef TUBSREP_H
 #define TUBSREP_H
-#include "graphics/GraphicsRep.h"
+#include "gui/DisplayRep.h"
 
 class Tubs;
 
-class TubsRep : public GraphicsRep {
+class TubsRep : public gui::DisplayRep {
 
 public:
     TubsRep(const Tubs& tubs):m_tubs(tubs){};

@@ -1,6 +1,5 @@
 // $Header$
 //  Author: Toby Burnett
-// Project: Arve graphics
 //
 // Display of a Tubs
 
@@ -8,7 +7,7 @@
 #include "geometry/Tubs.h"
 
 
-static void createPolyLine(GraphicsRep* v, Vector a[], unsigned n)
+static void createPolyLine(gui::DisplayRep* v, Vector a[], unsigned n)
 {
   v->move_to(a[0]);
   for(unsigned i=1;i<n;i++)

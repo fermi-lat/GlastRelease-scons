@@ -7,12 +7,12 @@
 #ifndef TUBEREP_H
 #define TUBEREP_H
 
-#include "graphics/GraphicsRep.h"
+#include "gui/DisplayRep.h"
 #include "geometry/Tube.h"
 
 class Shape;
 
-class TubeRep : public GraphicsRep {
+class TubeRep : public gui::DisplayRep {
     
 public:
     TubeRep(const Tube& tube):m_tube(tube){};

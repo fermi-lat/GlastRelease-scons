@@ -7,11 +7,11 @@
 #ifndef BOXREP_H
 #define BOXREP_H
 
-#include "graphics/GraphicsRep.h"
+#include "gui/DisplayRep.h"
 class Hexahedron;
 class Shape;
 
-class BoxRep : public GraphicsRep {
+class BoxRep : public gui::DisplayRep {
     // Represent a Hexahedron with Arve graphics
 public:
     BoxRep(const Hexahedron& box) 

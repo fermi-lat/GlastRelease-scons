@@ -1,13 +1,12 @@
 // $Heading: ConeRep.cxx $
 //   Author: T. Burnett
-//  Project: Arve graphics
 
 #include "geomrep/ConeRep.h"
 
 #include "geometry/Cone.h"
 
 
-inline static void createPolyLine(GraphicsRep* v, Vector a[], unsigned n)
+inline static void createPolyLine(gui::DisplayRep* v, Vector a[], unsigned n)
 {
     v->move_to(a[0]);
     for(unsigned i=1;i<n;i++)

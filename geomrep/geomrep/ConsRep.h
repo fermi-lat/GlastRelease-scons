@@ -5,11 +5,11 @@
 
 #ifndef CONSREP_H
 #define CONSREP_H
-#include "graphics/GraphicsRep.h"
+#include "gui/DisplayRep.h"
 
 class Cons;
 
-class ConsRep : public GraphicsRep {
+class ConsRep : public gui::DisplayRep {
 
 public:
     ConsRep(const Cons& cons):m_cons(cons){};

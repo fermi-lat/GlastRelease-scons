@@ -7,11 +7,11 @@
 #ifndef TUBEREP_H
 #define TUBEREP_H
 
-#include "graphics/GraphicsRep.h"
+#include "gui/DisplayRep.h"
 
 class Sphe;
 
-class SpheRep : public GraphicsRep {
+class SpheRep : public gui::DisplayRep {
 
 public:
     SpheRep(const Sphe& s):m_sphe(s){};

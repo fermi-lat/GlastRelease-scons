@@ -6,11 +6,11 @@
 
 #ifndef CONEREP_H
 #define CONEREP_H
-#include "graphics/GraphicsRep.h"
+#include "gui/DisplayRep.h"
 
 class Cone;
 
-class ConeRep : public GraphicsRep {
+class ConeRep : public gui::DisplayRep {
 
 public:
     ConeRep(const Cone& cone):m_cone(cone){};

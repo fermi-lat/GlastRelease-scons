@@ -4,11 +4,11 @@
 
 #ifndef ARCREP_H
 #define ARCREP_H
-#include "graphics/GraphicsRep.h"
+#include "gui/DisplayRep.h"
 #include "geometry/Point.h"
 #include "geometry/Vector.h"
 
-class ArcRep : public GraphicsRep {
+class ArcRep : public gui::DisplayRep {
 public:
     ArcRep( const Point& center, double radius, const Vector& xhat,
 	const Vector& yhat, double phi0);

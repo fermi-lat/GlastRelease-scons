@@ -1,17 +1,17 @@
 //  Simple main to test some features of the GUI interface
 
 #include <string> // make sure gets loaded first
-#include "graphics/EventLoop.h"
-#include "graphics/CompoundCommand.h"
-#include "graphics/GUI.h"
-#include "graphics/SimpleCommand.h"
-#include "graphics/PrintControl.h"
+#include "gui/EventLoop.h"
+#include "gui/CompoundCommand.h"
+#include "gui/GUI.h"
+#include "gui/SimpleCommand.h"
+#include "gui/PrintControl.h"
 
 #include "geometry/Box.h"
 #include "geometry/Cone.h"
 #include "geometry/Ray.h"
 
-#include "graphics/DisplayControl.h"
+#include "gui/DisplayControl.h"
 #include "geomrep/ConeRep.h"
 
 # include <strstream>
@@ -20,7 +20,7 @@ GUI* theGUI;   // make the theGUI available below
 DisplayControl* g_display;
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class Lines : public GraphicsRep {
+class Lines : public gui::DisplayRep {
 public:
 
     Lines( const Hep3Vector& p, const Volume& v )

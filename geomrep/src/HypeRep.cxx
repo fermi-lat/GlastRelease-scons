@@ -1,6 +1,5 @@
 // $Header$
 //  Author: Toby Burnett
-// Project: Arve graphics
 //
 // Display of a Hype with Arve Visualization
 

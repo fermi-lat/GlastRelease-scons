@@ -6,11 +6,11 @@
 
 #ifndef TUBSREP_H
 #define HYPEREP_H
-#include "graphics/GraphicsRep.h"
+#include "gui/DisplayRep.h"
 
 class Hype;
 
-class HypeRep : public GraphicsRep {
+class HypeRep : public gui::DisplayRep {
 
 public:
     HypeRep(const Hype& hype):m_hype(hype){};

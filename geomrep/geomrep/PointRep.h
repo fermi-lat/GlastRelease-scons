@@ -4,11 +4,11 @@
 #ifndef POINTREP_H
 #define POINTREP_H
 
-#include "graphics/GraphicsRep.h"
+#include "gui/DisplayRep.h"
 
 class Hep3Vector;
 
-class PointRep : public GraphicsRep 
+class PointRep : public gui::DisplayRep 
 // class that represents a single point in ArveGraphics
 {
 

@@ -4,10 +4,10 @@
 #ifndef TRACKREP_H
 #define TRACKREP_H
 
-#include "graphics/GraphicsRep.h"
+#include "gui/DisplayRep.h"
 #include "geometry/Track.h"
 
-class TrackRep : public GraphicsRep {
+class TrackRep : public gui::DisplayRep {
 public:
     TrackRep(const Track& t):m_track(t){}
 
