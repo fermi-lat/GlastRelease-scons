@@ -127,14 +127,6 @@
       </axisMPos>
     </stackY>
 
-<!-- DON'T need to define spacer box between layers
-    <box name="CALSpace"
-         XREF="CALLayerTrans"
-         YREF="CALLayerTrans"
-         ZREF="CALInterLayer"
-         materialREF="CALSpaceMat"
-         />
--->
 
 <!-- define boxes for top and bottom plates -->
     <box name="CALBottomPlate"
@@ -239,11 +231,11 @@
         <idField name="fLayer" value="0" />
         <idField name="fMeasure" valueREF="eMeasureX" />
       </axisPos>
-      <axisPos volume="CALTopFrame" >
-        <idField name="fCALStructural" valueREF="eTopFrame" />
-      </axisPos>
       <axisPos volume="CALTopPlate" >
         <idField name="fCALStructural" valueREF="eTopPlate" />
+      </axisPos>
+      <axisPos volume="CALTopFrame" >
+        <idField name="fCALStructural" valueREF="eTopFrame" />
       </axisPos>
     </stackZ>
 
@@ -254,17 +246,6 @@
          and layers in a composition 
        -->
 
-<!--
-    <box name="oneCALFrameBox"
-         XREF="CALFrameWidth"
-         YREF="CALFrameWidth"
-         ZREF="CALFrameHeight"
-         materialREF="CALFrameMat"
-         />
-    <composition name="oneCALFrame" envelope="oneCALFrameBox" >
-      <posXYZ volume="CALLayers" />  
-    </composition>
-  -->
 <!-- CALLayers centered in envelope -->
 
     <!-- Then position the whole thing inside a stay-clear volume -->
