@@ -64,6 +64,13 @@ namespace idents {
                 ALLRANGE = 2
         } CalTrigMode;
         
+        /// diode type  -  Large or Small
+        typedef enum
+        {
+            LARGE = 0,
+            SMALL = 1
+        } DiodeType;
+		
         /// constructor from packed Id
         CalXtalId(int packedId=0) :
         m_packedId(packedId) {};
@@ -90,6 +97,9 @@ namespace idents {
         
         /// get column
         inline short getColumn() const {return m_packedId & 0xf;}
+            
+        /// get measurement direction
+        inline bool isX() {return (getLayer()%2 == 0);};
             
         /// conversion to int
         operator int() const {return m_packedId;}
