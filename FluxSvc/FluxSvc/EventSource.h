@@ -1,15 +1,11 @@
 // $Header$
-
-
 #ifndef EventSource_h
 #define EventSource_h 1
 
 /** 
 * \class EventSource
 *
-* \brief  Interface to the EventSource class. Provides a generic interface to 
-* what Glastsim uses as a data source.  This can constitute GISMO based 
-* event generation, reading in from a file, etc...
+* \brief  Base class for managing  sources.
 * 
 * $Header$
 */
@@ -17,7 +13,7 @@
 
 #include <string>
 
-#include "../src/GPS.h"
+#include "GPS.h"
 
 
 class DOM_Element;
@@ -58,7 +54,6 @@ public:
     
     ///    integral of solid angle over which flux is incident
     virtual double	solidAngle () const;
-    void      solidAngle ( double );
     
     ///	name of this flux source - for UI
     const std::string& name () const;
@@ -104,7 +99,6 @@ private:
     
     bool m_enabled;           // toggle that it is enabled
     double m_flux;		// representative flux for this event source...
-    double m_solid_angle;     // solid angle over which the rate is computed	(in steradians)
     std::string m_name;       // name of the event source (UI)
     unsigned  m_code;         // code id for this event source - for identification in the tuple.
     
@@ -114,8 +108,6 @@ private:
 
 // inline function declarations:
 
-inline	double EventSource::solidAngle () const { return m_solid_angle; }
-inline	void EventSource::solidAngle ( double value ) { m_solid_angle = value; }
 
 inline const std::string& EventSource::name () const	{   return m_name;  }
 inline void EventSource::name (const std::string& value)    { m_name = value;   }

@@ -50,42 +50,7 @@ public:
     
     /// return effective solid angle
     double solidAngle()const;
-    
-    /// set parameters solid angle coverage and generation area
-    void setPhiRange(double min_phi, double max_phi);
-    void setCosThetaRange(double min_cos, double max_cos);
-    
-    /// set the mode for calculating direction to use the spectrum object. 
-    /// it then must implement a solidAngle(double)const to return the effective
-    /// solid angle 
-    void useSpectrumDirection();
-    
-    void setAcceptance ();
-    
-    /// provide posibility of overriding box for specific launch direction and point.
-    /// if only dir specified, will coose randomly
-    void setLaunch(const Vector& dir, const Point& pos);
-    void setLaunch(const Vector& dir);
-    void setLaunch(double theta, double phi);
-    void setLaunch(double xMax, double xMin, double yMax, double yMin, 
-        double zTop, double zBot, bool fan);
-    void FluxSource::setLaunch(double theta, double phi, double xMax, 
-        double xMin, double yMax, double yMin, 
-        double zTop, double zBot);
-    
-    void unSetLaunch();
-    
-    // return of angle & solid angle parameters
-    double minPhi() const      {return _minPhi;}
-    double maxPhi() const      {return _maxPhi;}
-    double minCosTheta() const {return _minCos;}
-    double maxCosTheta() const {return _maxCos;}
-    double phi() const         {return _phi;}
-    double theta() const       {return _theta;}
-    
-    
-    void getSurfacePosDir(); // setup position & direction for Surface illumination
-    
+
     /// return a title describing the spectrum and angles
     std::string title()const;
     
@@ -94,121 +59,73 @@ public:
     
     /// set spectrum, with optional parameter to set the maximum energy?
     void spectrum(ISpectrum* s, double emax=-1);
+    
     ISpectrum* spectrum() const{ return m_spectrum; }
-    
-    
-    double calculateInterval (double time);
-    double interval(double ){return m_interval;}
-    
-    void FluxSource::getGalacticDir(double l,double b);
-    
-    /// acess to the maximum energy (kinetic)
-    double maxEnergy()const { return m_maxEnergy;}
-    void setMaxEnergy(double e) { m_maxEnergy = e; }
-    
-    
-    ///use GPS to correct m_launchDir for the rocking of the spacecraft.
-    void FluxSource::correctForTiltAngle();
 
-    /// for the SPREAD Launch Type, spread the vector direction randomly, with a cutoff of m_degreespread.
-    void spreadTheDirection();
-    
-    //! choices for generating incoming particle trajectory
-    enum LaunchType { 
-        NONE,         //! random direction
-            POINT,        //! fixed pointand direction(unused)
-            DIRECTION ,   //! fixed direction
-            SURFACE,      //! random point and direction within a fixed surface
-            SPECTRUM, //! direction calculated by the spectrum object
-            SPECGAL,   //! direction coming from the spectrum object, in the form (l,b) - galactic coordinates
-            PATCHFIXED,   //! fixed direction, fixed surface (unused)
-            GALACTIC,  //!  fixed direction with respect to the galactic coordinate system (l,b)
-            SPREAD   //!  galactic direction declared with a uniform diffuse distribution of flux around it.
-    } m_launch;
-    
-    enum PointType { 
-        NOPOINT,         //! random point
-            SINGLE,        //! fixed point
-            PATCH   //! , fixed surface
-    } m_pointtype;
-    
+    double interval(double ){return m_interval;}
+
     //! Denotes what Energy Units the energy
     //! of incoming particles are in
     enum EnergyScale { 
         MeV,        //! MeV
-            GeV         //! GeV
+        GeV         //! GeV
     } m_energyscale;
-    
-    //! whether or not the current particle is occluded by the earth
-    bool occluded();
-    
     virtual int eventNumber()const;
     
     double energy()const { return m_energy;}
-    const Vector& rawDir()const {return m_launchDir;}
-    const Vector& launchDir()const {return m_correctedDir;}//m_correctForTilt*m_launchDir;}
-    const Point&  launchPoint()const { return m_launchPoint;}
+    const HepVector3D& launchDir()const {return m_correctedDir;}//m_correctForTilt*m_launchDir;}
+    const HepPoint3D&  launchPoint()const { return m_launchPoint;}
     
-    void refLaunch(LaunchType launch);
-    void refPoint(PointType point);
-    int refLaunch()const {return m_launch;}
-    int refPoint()const {return m_pointtype;}
-    
+    static	double	s_radius;
+
   private:
-      
-      static	double	s_radius, s_backoff;
+  
+      // base class for direction and position strategy
+      class LaunchStrategy;
+
+      // forward declaration of classes that handle the lauch direction
+      class LaunchDirection;  // base class
+      class RandomDirection;  // choose randomly from range 
+      class SourceDirection;  // choose from an external source class
+   
+      // forward declaration of classes that handle launch point
+      class LaunchPoint;  // base class
+      class RandomPoint; // random strategy
+      class FixedPoint;  // fixed, or pencil
+      class Patch;  // a box
+
+ 
+      LaunchPoint* m_launch_pt; // pointer to actual point stategy: must be set
+      LaunchDirection* m_launch_dir;
       
       ISpectrum*         m_spectrum;	    // spectrum to generate
-      
-      double m_maxEnergy; // max kinetic energy allowed when running a spectrum
-      
-      double _minCos, _maxCos, _minPhi, _maxPhi;
-      // solid angle, with respect to z-axis
-      
-      double m_rmin, m_rmax;
-      // minimum, maxumum value for random number (fraction of spectrum)
-      
-      double  _phi, _theta;
-      //  angles, with respect to z-axis
-      
-      // galactic position of source - for use with GALACTIC
-      double m_galb, m_gall;
-      // dimensions of patch to be illuminated  -- for use with SURFACE
-      double patchHeight, patchBottom, patchTop, patchXmax, patchXmin;
-      double patchYmax, patchYmin, patchWidX, patchWidY, Fratio;
-      double patchRange, patchOffset;
-      // for use with SURFACE -- sidePatch means illumination of ONE side
-      // fanBeam == false means polar beam
-      bool sidePatch, fanBeam;
-      Box* illumBox;
-      double m_interval; //the current value of the interval in time to the next particle.
-      
-      //! transform the current m_launchDir into GLAST-relative coordinates
-      //! to give to the client
-      //void transformDirection();
-      
-      Vector m_launchDir;
-      
-      //Vector m_transformDir;
-      Point  m_launchPoint;
+
       double m_energy;
       // associated with a specific launch
 
-      /// degrees to spread the diffuse source by.
-      double m_degreespread;
+      ///use GPS to correct m_launchDir for the rocking of the spacecraft.
+      void correctForTiltAngle();
       
-      /// rotation associated with the "tilting" angles.
-      Rotation m_correctForTilt;
-      
+      /// result of strategy
+      HepVector3D m_launchDir;
+
       ///direction after being corrected for the "tilt" angles.
-      Vector m_correctedDir;
+      HepVector3D m_correctedDir;
+      
+      HepPoint3D  m_launchPoint;
+
       //!the "extra time" a source needs to come out of occlusion.
       double m_extime;
-      
-      void randomLaunchPoint(); 
-      // calculate a random launch point in a plane perpendicular to _launchDir
-      
+      double m_interval; //the current value of the interval in time to the next particle.
+
+      //! whether or not the current particle is occluded by the earth
+      bool occluded();    
+      double calculateInterval (double time);
+
       ///interval function to be used by non-spectrum sources
-      double FluxSource::explicitInterval (double time);
+      double explicitInterval (double time);
+
+//      double m_maxEnergy; // max kinetic energy allowed when running a spectrum
+
 };
 #endif

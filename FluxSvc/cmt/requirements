@@ -34,11 +34,13 @@ private
 apply_pattern package_Cshlibflags
 apply_pattern package_headers
 
-macro_append FluxSvc_headers "" WIN32 "../xml/*.xml test/*.txt test/*.xml"
+macro test_headers "" WIN32 " test/*.txt test/*.xml"
 macro rootplot_headers "" WIN32 "rootplot/*.h"
+macro xml_files "" WIN32 "-s=../xml *.xml *.dtd"
 
 #static library
-library FluxSvc_lib -no_share ${FluxSvc_headers} *.cxx rootplot/*.cxx $(rootplot_headers)    
+library FluxSvc_lib -no_share ${FluxSvc_headers} *.cxx \
+   $(rootplot_headers) rootplot/*.cxx  $(xml_files) 
 
 macro libs ""   WIN32   "$(FluxSvcDir)/FluxSvc_lib.lib
 
@@ -49,11 +51,11 @@ macro FluxSvc_linkopts "-L $(FluxSvcDir) -lFluxSvc_lib" \
 library FluxSvc  Dll/*.cxx $(libs) 
 
 # enable this for non-Gaudi testing
-#application testMgr test/flux/testMgr.cxx  $(libs) 
+application testMgr test/flux/testMgr.cxx  $(libs) 
 
 # non-Gaudi plots
-application rootplots test/flux/roottest.cxx  $(libs) 
+application rootplots test/flux/roottest.cxx  $(libs) $(rootplot_headers) 
 
 public
 apply_pattern package_test
-
+macro_append test_FluxSvc_files "" WIN32 "test/*.xml"

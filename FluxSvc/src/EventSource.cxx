@@ -1,11 +1,10 @@
 //  $Header$
 
-#include "../FluxSvc/EventSource.h"
+#include "FluxSvc/EventSource.h"
 
 #include "dom/DOM_Element.hpp"
 #include "xml/Dom.h"
 #include "GPS.h"
-//#include "Orbit.h"
 #include "CLHEP/Random/RandExponential.h"
 
 #include <strstream>

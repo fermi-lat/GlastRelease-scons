@@ -37,24 +37,36 @@
 <!ELEMENT power_law EMPTY>
 <!ATTLIST power_law emin CDATA "0.1"  emax CDATA "100.0"  gamma CDATA "2" >
 
-<!-- for a specific direction -->
+<!-- for a specific direction: 
+     theta and phi in degrees, interpreted according to frame (polar angles if GLAST)
+     beam_radius [0] is the radius in mm of the of beam 
+ -->
 <!ELEMENT direction EMPTY>
-<!ATTLIST direction theta CDATA "0" phi CDATA "0">
+<!ATTLIST direction theta CDATA "0" 
+          phi CDATA "0" 
+          frame CDATA "GLAST" >
 
 <!-- for specifying a range of angles -->
 <!ELEMENT solid_angle EMPTY>
 <!ATTLIST solid_angle mincos CDATA "-0.4"  maxcos CDATA "1.0"
                       theta  CDATA "0" phi CDATA "0">
 
-<!-- if this element exists, the Spectrum object will generate the angles - "earth" means we expect the spectrum to send an earth-based
-direction (costh,phi), and "galaxy" means we expect galactic coordinates (l,b) -->
+<!-- if this element exists, the Spectrum object will generate the angles 
+     - "earth" means we expect the spectrum to send an earth-based direction (costh,phi), 
+     and "galaxy" means we expect galactic coordinates (l,b) -->
 <!ELEMENT use_spectrum EMPTY>
 <!ATTLIST use_spectrum frame CDATA "earth">
 
 
-<!-- optional launch point description - factors given in millimeters -->
+<!-- optional launch point description - dimensions in millimeters 
+    beam_radius defines a launch "disk": points will be uniformly distributed
+    on this disk perpendicular to the direction
+-->
 <!ELEMENT launch_point EMPTY>
-<!ATTLIST launch_point x CDATA "0" y CDATA "0" z CDATA "1000.0">
+<!ATTLIST launch_point 
+        x CDATA "0" y CDATA "0" z CDATA "1000.0"
+        beam_radius CDATA "0" 
+>
 
 <!-- optional patch  description - factors given in millimeters -->
 <!ELEMENT patch EMPTY>
@@ -63,11 +75,11 @@ direction (costh,phi), and "galaxy" means we expect galactic coordinates (l,b) -
                 zmin CDATA "1000" zmax CDATA "1000" >
 
 
-<!-- for a specific galactic direction -->
+<!-- for a specific galactic direction (l and b in degrees -->
 <!ELEMENT galactic_dir EMPTY>
 <!ATTLIST galactic_dir l CDATA "0" b CDATA "0">
 
-<!-- for a specific celestial direction -->
+<!-- for a specific celestial direction (ra and dec in degrees) -->
 <!ELEMENT celestial_dir EMPTY>
 <!ATTLIST celestial_dir ra CDATA "0" dec CDATA "0">
 

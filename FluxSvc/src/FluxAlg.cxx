@@ -138,6 +138,7 @@ StatusCode FluxAlg::execute()
     SmartDataPtr<Event::MCEvent> mcheader(eventSvc(), EventModel::MC::Event);
     if (mcheader == 0) {
         sc=eventSvc()->registerObject(EventModel::MC::Event , mch= new Event::MCEvent);
+        mch->initialize(0,0,m_sequence);
         if(sc.isFailure()) {
             log << MSG::WARNING << EventModel::MC::Event  <<" could not be registered on data store" << endreq;
             return sc;
@@ -188,7 +189,7 @@ StatusCode FluxAlg::execute()
 
     h->setTime(m_flux->time());
 
-    int numEvents = mch->getSequence();
+    int numEvents = ++m_sequence;
     m_currentRate=numEvents/(m_flux->time());
     return StatusCode::SUCCESS;
 }
