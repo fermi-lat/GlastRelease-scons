@@ -1,9 +1,13 @@
 
 #ifndef _H_ITkrQueryClustersTool
-#define _H_ITkrQueryCLustersTool
+#define _H_ITkrQueryClustersTool
 
 #include "GaudiKernel/IAlgTool.h"
 
+#include "geometry/Point.h"
+
+#include "Event/Recon/TkrRecon/TkrCluster.h"
+#include "Event/Recon/TkrRecon/TkrClusterCol.h"
 
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
