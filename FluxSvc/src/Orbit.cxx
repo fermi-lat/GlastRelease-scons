@@ -87,10 +87,9 @@ Rotation Orbit::CELtransform(double time){
     
     //and here we construct the rotation matrices
     gal.rotateZ(-282.25/m_degsPerRad).rotateX(-62.6/m_degsPerRad).rotateZ(33./m_degsPerRad);
-    //cel.rotateZ(phase(time)).rotateX(m_inclination/m_degsPerRad).rotateZ(/*(time/m_precessPeriod)*M_2PI*/0.);
-
-    //cel.rotateZ(phase(time)).rotateX(m_inclination*M_2PI/360.).rotateZ((time/m_precessPeriod)*M_2PI);
-    cel.rotateZ((time/m_precessPeriod)*M_2PI).rotateX(m_inclination*M_2PI/360.).rotateZ(phase(time));
+    
+    cel.rotateY((time/m_precessPeriod)*M_2PI).rotateZ(-m_inclination*M_2PI/360.).rotateY(phase(time));
+    //cel.rotateZ(phase(time)).rotateX(m_inclination*M_2PI/360.);
     Rotation glstToGal = gal*cel;
 
     //displayRotation(glstToGal);
