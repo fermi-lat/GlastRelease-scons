@@ -3,6 +3,8 @@
  Coordinator:H.Kelly
   
  @verbatim
+ v4r3p0   03-Oct-2003: HMK: fix linux compile with include_dirs
+ v4r3     08-Sep-2003: HMK: reorganization
  v4r2p1   05-Sep-2003: HMK: Cheap fix for VC7 compile before mega-reorganization
  v4r2p0
  v4r2     15-Aug-2003: HMK: Add new app for event peeling
