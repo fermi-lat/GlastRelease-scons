@@ -1,5 +1,6 @@
 /** @file release.notes
  * Package CalUtil
+ * v1r3p1     18-Jun-2004 BG Bug fix
  * v1r3p0     20-Apr-2004 Adding CalibData objects for pedestal and gain values
  * v1r2p2     03-Apr-2003 AC  calibration classes removed from CalUtil
  * v1r0       28-Oct-2002 RXD initial version
