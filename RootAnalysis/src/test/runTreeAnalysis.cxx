@@ -33,10 +33,14 @@ int main(int argn, char** argc) {
     if (argn > 1) mcFileName = argc[1];
     if (argn > 2) digiFileName = argc[2];
     if (argn > 3) reconFileName = argc[3];
-    std::cout << "Setup for Processing" << std::endl;
-    RootTreeAnalysis r(digiFileName.c_str(), reconFileName.c_str(), mcFileName.c_str());
+    std::string histFileName = "";
     if (argn > 4 && strlen(argc[4]) > 0)
-        r.SetHistFileName(argc[4]);
+        histFileName = argc[4];
+    std::cout << "Setup for Processing" << std::endl;
+    RootTreeAnalysis r(digiFileName.c_str(), reconFileName.c_str(),
+                       mcFileName.c_str(),
+                       const_cast<char*>(histFileName.c_str()));
+    std::cout << "        histogram: " << r.m_histFileName << std::endl;
     r.Go(numEvents);
     std::cout << "Done Processing " << numEvents << " Events" << std::endl;
     r.WriteHist();
