@@ -1,3 +1,7 @@
+/** file checkSeeds.cxx
+
+$Header$
+*/
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -7,15 +11,15 @@ int main() {
 
   std::ifstream f("end_seed.dat");
 
-  int nEvents = 10;
+  const int nEvents = 10;
   std::string seeds[nEvents];
  
   for(int i = 0; i != nEvents; ++i) {
 
     std::string temp;
-    getline(f, temp);
+    std::getline(f, temp);
 
-    getline(f, seeds[i]);
+    std::getline(f, seeds[i]);
   }
 
   if(seeds[0] != seeds[7] || seeds[1] != seeds[5] || seeds[2] != seeds[9] ||
