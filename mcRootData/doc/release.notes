@@ -2,6 +2,7 @@
  package mcRootData
  package manager: H. Kelly
 
+v2r0      26-Apr-2002 HMK Simplify VolumeIdentifier and add Print methods \n
 v2        22-Apr-2002 HMK Update classes for new TDS MC classes and
           new version of ROOT 3.02.07\n
 v1r1      24-Aug-2001 IG Fix constructor realted bugs that would cause
