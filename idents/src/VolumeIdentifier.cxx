@@ -1,4 +1,19 @@
-// $Header$
+// File and Version Information:
+//      \$Header\$
+//
+// Description:
+//      The class VolumeIdentifier encapsulates volume identifiers defined in the xml
+//      file describing the detector geometry. It rappresent the identifier through
+//      a 64 integer to enable an efficient sorting of objects which use this identifier.
+//      Every single identifier which constitute the volume identifier is code into a 
+//      binary string of 6 bits and these bit strings are packed into a 64 bit integer.
+//      So, every single id can be an integer beteween 0 and 64 and each volume identifier
+//      can be built by a maximum number of 10 ids.  
+//
+// Author(s):
+//      Toby Burnett		
+//      Marco Frailis		
+
 
 #include "idents/VolumeIdentifier.h"
 
@@ -11,8 +26,17 @@
 
 using namespace idents;
 
-VolumeIdentifier::VolumeIdentifier():  m_value(0){}
 
+VolumeIdentifier::VolumeIdentifier():  m_value(0), m_size(0){}
+
+VolumeIdentifier::init(int64 value, unsigned int size)
+{
+  m_value = value;
+  m_size = size;
+}
+
+// Return the equivalent string of the volume identifier, that is the single
+// ids separated by a '/' character
 std::string VolumeIdentifier::name(const char* delimiter) const
 {
 #ifndef WIN32    
@@ -20,47 +44,59 @@ std::string VolumeIdentifier::name(const char* delimiter) const
 #else
     std::stringstream s;
 #endif
+
+    unsigned int bufIds = 0;
+
+    // this is a 64 bit mask with the first 6 bits set to 1 and the others to 0
+	  int64 mask = 63;
+
+    // shift the 1's to bit 54
+    mask = mask << 54;
+    int64 copyValue = m_value;
+
+	  int i;
     s << delimiter;
-    std::copy(begin(),end(), std::ostream_iterator<unsigned int>(s,delimiter));
+	  for (i = 0; i < m_size; i++)
+    {
+      bufIds = (copyValue & mask) >> 54;
+      s << bufIds << delimiter;
+      copyValue = copyValue << 6;
+    }
+    
 #ifndef WIN32
     s << '\0';
 #endif
     std::string tmp=s.str();
     return tmp.substr(0,tmp.size()-1);
 }
+
+
+unsigned int VolumeIdentifier::operator[](unsigned int index)
+{
+	int64 mask = 63;
+	int64 copyShifted = m_value >> (54 - 6*index);
+  return (copyShifted & mask);
+}
+ 
 void VolumeIdentifier::prepend( const VolumeIdentifier& id)
 {
-    std::copy(id.rbegin(),id.rend(), std::front_inserter(*this));
-    update();
+    m_value = (m_value >> (6*id.size())) | id;
+    m_size += id.size();
 }
 
 void VolumeIdentifier::append( const VolumeIdentifier& id)
 {
-    std::copy(id.begin(), id.end(), std::back_inserter(*this));
-    update();
+    m_value = m_value | (id >> (6*m_size));
+    m_size += id.size();
 }
 
 void VolumeIdentifier::append( unsigned int id)
 {
-    push_back(id);
-    update();
-}
-
-/*
-std::ostream& operator<<(std::ostream& out, const VolumeIdentifier& vol)
-{
-std::copy(vol.begin(),vol.end(), std::ostream_iterator<unsigned int>(out,"/"));
-return out;
-}
-*/
-void VolumeIdentifier::update()
-{
-    m_value= 0;
-    assert(size()<11); 
-    for(VolumeIdentifier::iterator i = begin(); i!=end(); ++i){
-        assert ((*i)<32);
-	int64 t = *i;
-        m_value =(m_value >> 6) | (t << 54);
-    }
-    
+    // the first id appended becomes the most significant number in the internal
+    // rappresentation. In this way I can obtain an equivalent of the lexicographic order
+    // between volume identifiers
+    int64 t = id;
+    t = t << 54;
+    m_value = m_value | (t >> 6*m_size);
+    m_size++;
 }
