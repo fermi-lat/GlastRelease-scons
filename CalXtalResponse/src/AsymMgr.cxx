@@ -109,7 +109,7 @@ StatusCode AsymMgr::getAsym(const CalXtalId &xtalId,
 
 /** return p3 such that p3 - p2 = p2 - p1
 */
-inline double lin_interp(double p1, double p2) {
+inline double extrap(double p1, double p2) {
    return 2*p2 - p1;
 }
 
@@ -169,32 +169,46 @@ StatusCode AsymMgr::genSplines() {
 
     //-- LINEAR EXTRAPOLATION --//
     // point 1
-    dblAsymLrg [1] = lin_interp(dblAsymLrg [2], dblAsymLrg [3]);
-    dblAsymSm  [1] = lin_interp(dblAsymSm  [2], dblAsymSm  [3]);
-    dblAsymNSPB[1] = lin_interp(dblAsymNSPB[2], dblAsymNSPB[3]);
-    dblAsymPSNB[1] = lin_interp(dblAsymPSNB[2], dblAsymPSNB[3]);
-    dblXpos    [1] = lin_interp(dblXpos    [2], dblXpos    [3]);
+    dblAsymLrg [1] = extrap(dblAsymLrg [3], dblAsymLrg [2]);
+    dblAsymSm  [1] = extrap(dblAsymSm  [3], dblAsymSm  [2]);
+    dblAsymNSPB[1] = extrap(dblAsymNSPB[3], dblAsymNSPB[2]);
+    dblAsymPSNB[1] = extrap(dblAsymPSNB[3], dblAsymPSNB[2]);
+    dblXpos    [1] = extrap(dblXpos    [3], dblXpos    [2]);
 
     // point 0
-    dblAsymLrg [0] = lin_interp(dblAsymLrg [1], dblAsymLrg [2]);
-    dblAsymSm  [0] = lin_interp(dblAsymSm  [1], dblAsymSm  [2]);
-    dblAsymNSPB[0] = lin_interp(dblAsymNSPB[1], dblAsymNSPB[2]);
-    dblAsymPSNB[0] = lin_interp(dblAsymPSNB[1], dblAsymPSNB[2]);
-    dblXpos    [0] = lin_interp(dblXpos    [1], dblXpos    [2]);
+    dblAsymLrg [0] = extrap(dblAsymLrg [2], dblAsymLrg [1]);
+    dblAsymSm  [0] = extrap(dblAsymSm  [2], dblAsymSm  [1]);
+    dblAsymNSPB[0] = extrap(dblAsymNSPB[2], dblAsymNSPB[1]);
+    dblAsymPSNB[0] = extrap(dblAsymPSNB[2], dblAsymPSNB[1]);
+    dblXpos    [0] = extrap(dblXpos    [2], dblXpos    [1]);
 
     // 2nd last point
-    dblAsymLrg [n+2] = lin_interp(dblAsymLrg [n+1], dblAsymLrg [n]);
-    dblAsymSm  [n+2] = lin_interp(dblAsymSm  [n+1], dblAsymSm  [n]);
-    dblAsymNSPB[n+2] = lin_interp(dblAsymNSPB[n+1], dblAsymNSPB[n]);
-    dblAsymPSNB[n+2] = lin_interp(dblAsymPSNB[n+1], dblAsymPSNB[n]);
-    dblXpos    [n+2] = lin_interp(dblXpos    [n+1], dblXpos    [n]);
+    dblAsymLrg [n+2] = extrap(dblAsymLrg [n], dblAsymLrg [n+1]);
+    dblAsymSm  [n+2] = extrap(dblAsymSm  [n], dblAsymSm  [n+1]);
+    dblAsymNSPB[n+2] = extrap(dblAsymNSPB[n], dblAsymNSPB[n+1]);
+    dblAsymPSNB[n+2] = extrap(dblAsymPSNB[n], dblAsymPSNB[n+1]);
+    dblXpos    [n+2] = extrap(dblXpos    [n], dblXpos    [n+1]);
     
     // last point
-    dblAsymLrg [n+3] = lin_interp(dblAsymLrg [n+2], dblAsymLrg [n+1]);
-    dblAsymSm  [n+3] = lin_interp(dblAsymSm  [n+2], dblAsymSm  [n+1]);
-    dblAsymNSPB[n+3] = lin_interp(dblAsymNSPB[n+2], dblAsymNSPB[n+1]);
-    dblAsymPSNB[n+3] = lin_interp(dblAsymPSNB[n+2], dblAsymPSNB[n+1]);
-    dblXpos    [n+3] = lin_interp(dblXpos    [n+2], dblXpos    [n+1]);
+    dblAsymLrg [n+3] = extrap(dblAsymLrg [n+1], dblAsymLrg [n+2]);
+    dblAsymSm  [n+3] = extrap(dblAsymSm  [n+1], dblAsymSm  [n+2]);
+    dblAsymNSPB[n+3] = extrap(dblAsymNSPB[n+1], dblAsymNSPB[n+2]);
+    dblAsymPSNB[n+3] = extrap(dblAsymPSNB[n+1], dblAsymPSNB[n+2]);
+    dblXpos    [n+3] = extrap(dblXpos    [n+1], dblXpos    [n+2]);
+
+    if (owner->m_superVerbose) {
+      // create MsgStream only when needed for performance
+      MsgStream msglog(owner->msgSvc(), owner->name()); 
+      msglog << MSG::VERBOSE << "xpos ";
+      for (unsigned i = 0; i < dblXpos.size(); i++) 
+        msglog << dblXpos[i] << " ";
+      msglog << endreq;
+
+      msglog << MSG::VERBOSE << "asymLL ";
+      for (unsigned i = 0; i < dblAsymLrg.size(); i++) 
+        msglog << dblAsymLrg[i] << " ";
+      msglog << endreq;
+    }
 
     // put xtal id string into spline name
     ostringstream xtalStr;

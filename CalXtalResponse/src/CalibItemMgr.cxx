@@ -157,30 +157,30 @@ StatusCode CalibItemMgr::genSpline(int calibType, LATWideIndex idx, const string
                                     xp,yp,n);
   mySpline->SetName(name.c_str());
 
-  // clear heap variables
-  delete xp;
-  delete yp;
-
   // put spline in list
   m_splineLists[calibType][idx] = mySpline;
   // populate x-axis boundaries
   m_splineXMin[calibType][idx] = xp[0];
   m_splineXMax[calibType][idx] = xp[n-1];
 
-#if 0
   if (owner->m_superVerbose) {
     // create MsgStream only when needed for performance
     MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::VERBOSE << "Generated spline " << spl_name.str() 
+    msglog << MSG::VERBOSE << "Generated spline " << name.c_str() 
            << " t="  << calibType 
            << " i="  << idx.getInt()
-           << " nx=" << x.size() 
-           << " ("   << min_val(xp) << "->" << max_val(xp) << ")"
-           << " ny=" << y.size() 
-           << " ("   << min_val(yp) << "->" << max_val(yp) << ")"
-           << endreq;
+           << " nx=" << n
+           << " ("   << m_splineXMin[calibType][idx] 
+           << "->"   << m_splineXMax[calibType][idx] << ")"
+           << " ny=" << n
+           << " ("   << yp[0]
+           << "->"   << yp[n-1]
+           << ")"    << endreq;
+
+    // clear heap variables
+    delete xp;
+    delete yp;
   }
-#endif
 
   return StatusCode::SUCCESS;
 }

@@ -91,6 +91,16 @@ StatusCode CalCalibSvc::initialize ()
     return sc;
   }
 
+  // Query the IDataProvider interface of the CalibDataService
+  sc = m_calibDataSvc->queryInterface(IID_IDataProviderSvc, 
+                                      (void**) &m_dataProviderSvc);
+  if ( !sc.isSuccess() ) {
+    msglog << MSG::ERROR 
+           << "Could not query IDataProviderSvc interface of CalibDataSvc" 
+           << endreq;
+    return sc;
+  }
+
   // Load ideal flavor values from xml file
   sc = loadIdealCalib();
   if (sc.isFailure()) return sc;
