@@ -268,6 +268,7 @@ void meritAlg::copyPointingInfo(){
 
         Event::ExposureCol* elist = 0;
         eventSvc()->retrieveObject("/Event/MC/ExposureCol",(DataObject *&)elist);
+        if( elist==0) return; // should not happen, but make sure ok.
         //Event::ExposureCol::iterator curEntry = (*elist).begin();
         const Event::Exposure& exp = **(*elist).begin();
         int n= 0;
