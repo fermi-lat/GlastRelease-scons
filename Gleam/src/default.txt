@@ -18,7 +18,7 @@ FluxAlg.source_name="default";
 ApplicationMgr.EvtMax = 1000;
 
 
-Output.Members += {"mcRootWriterAlg", "digiRootWriterAlg", "reconRootWriterAlg"};
+//Output.Members += {"mcRootWriterAlg", "digiRootWriterAlg", "reconRootWriterAlg"};
 
 mcRootWriterAlg.mcRootFile = "mc.root";
 mcRootWriterAlg.splitMode = 1;

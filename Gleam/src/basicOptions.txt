@@ -66,7 +66,7 @@ FluxAlg.source_name="muon_pencil_angle";
 // ----------------------------
 //  Digitization
 //
-ApplicationMgr.DLLs +={ "GlastDigi", "CalDigi", "AcdDigi"  };
+ApplicationMgr.DLLs +={ "TkrDigi", "CalDigi", "AcdDigi"  };
 Digitization.Members = { 
     "TkrSimpleDigiAlg", 
     "CalDigiAlg", 

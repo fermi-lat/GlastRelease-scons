@@ -17,7 +17,7 @@ use RootHistCnv v5r0p1
 use XMLEXT      v2r2 
 use GlastPolicy v4r4 
 use facilities  v2r4p1
-use xml         v4r1p3 
+use xml                  v4r1p4 
 use xmlUtil     v2r8p1
 
 use geometry    v3
@@ -29,8 +29,8 @@ use geomrep     v4r1
 
 # the geometry data base
 use idents      v2r8
-use detModel    v2r10
-use xmlGeoDbs   v1r4
+use detModel             v2r11
+use xmlGeoDbs            v1r5p2
 
 # interface to G4 - make private to avoid so many libs
 private 
@@ -42,24 +42,24 @@ public
 use GuiSvc      v3
 
 use Event       v8r5p1
-use GlastSvc    v8r0
+use GlastSvc             v8r1
 
 # simulation
 
 use FluxSvc     v5r6p2
 use FluxDisplay v2r0p1
-use G4Generator v4r1p1
+use G4Generator          v4r1p2
 
 #digitization
 use CalDigi     v1r0p1
-use GlastDigi   v4r2
+use TkrDigi              v1r0
 use AcdDigi     v0r1
 
 #reconstruction
 use Trigger              v3r2
-use Recon       v2r2p1
+use Recon                v2r2p2
 
-use TkrRecon             v6r2p1
+use TkrRecon             v6r2
 use CalRecon    v5r2       
 
 
