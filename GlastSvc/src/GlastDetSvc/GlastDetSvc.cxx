@@ -181,7 +181,12 @@ double GlastDetSvc::insideActiveArea (const HepPoint3D& p)
 }
 
     /// location of strip ix in local coords
-double GlastDetSvc::stripLocalX ( unsigned int ix)
+double GlastDetSvc::stripLocalX ( unsigned int istrip)
 {
-    return SiliconPlaneGeometry::localX(ix);
+    return SiliconPlaneGeometry::localX(istrip);
+}
+
+double GlastDetSvc::stripLocalXDouble( double strip)
+{
+    return SiliconPlaneGeometry::localXDouble(strip);
 }

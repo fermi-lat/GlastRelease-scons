@@ -69,7 +69,10 @@ public:
     virtual double insideActiveArea (const HepPoint3D& p);  
 
     /// location of strip ix in local coords
-    virtual double stripLocalX ( unsigned int ix);    
+    virtual double stripLocalX ( unsigned int istrip); 
+	
+    /// location of strip ix in local coords
+    virtual double stripLocalXDouble ( double strip);    
 
 
 private:

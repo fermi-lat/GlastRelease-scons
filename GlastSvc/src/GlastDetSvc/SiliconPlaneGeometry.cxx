@@ -101,8 +101,23 @@ unsigned int SiliconPlaneGeometry::stripId (double x) {
     } else return 65535;
 }
 
+/// localX - convert a non-integer strip ID to local coordinates
+double SiliconPlaneGeometry::localXDouble (double x) {
+    double  nstrips = strips_per_die();
+    double  i = fmod(x,nstrips);
+    // strip relative to wafer
+    double  n = (die_width() + ladder_gap()) * 
+        floor(x/nstrips);
+    // die number
+    
+    return  n + (i + 0.5) * si_strip_pitch() - panel_width()/2. + guard_ring();
+}
+
 /// localX - convert a strip ID to local coordinates
 double SiliconPlaneGeometry::localX (unsigned ix) {
+    double x = ix;
+	return localXDouble(x);
+	/*
     double  nstrips = static_cast<double>(strips_per_die());
     double  i = fmod(static_cast<double>(ix),nstrips);
     // strip relative to wafer
@@ -111,7 +126,9 @@ double SiliconPlaneGeometry::localX (unsigned ix) {
     // die number
     
     return  n + (i + 0.5) * si_strip_pitch() - panel_width()/2. + guard_ring();
+	*/
 }
+
 
 
 /// n_si_strips - return the number of Si strips in a single layer

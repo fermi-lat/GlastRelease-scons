@@ -15,10 +15,13 @@ public:
       
     /// compute strip id from local coordinate
     static unsigned int stripId (double x);
-    
+
+   /// location of strip ix in local coords, allows for non-integer strip number
+    static double localXDouble ( double x);    
+     
     /// location of strip ix in local coords
-    static double localX ( unsigned int ix);    
-    
+    static double localX ( unsigned int ix); 
+	  
     /// insideActiveArea for local coords
     static double insideActiveArea(double x, double y); 
     

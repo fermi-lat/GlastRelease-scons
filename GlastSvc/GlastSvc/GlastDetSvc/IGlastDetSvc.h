@@ -49,7 +49,10 @@ public:
     virtual unsigned int stripId (double x)=0;
 
     /// location of strip ix in local coords
-    virtual double stripLocalX( unsigned int stripid)=0;    
+    virtual double stripLocalX( unsigned int stripid)=0; 
+	
+    /// location of strip ix in local coords
+    virtual double stripLocalXDouble( double stripid)=0;    
 
     /// (-) if non-active or gap (P is in local system)    
     virtual double insideActiveArea (const HepPoint3D& p)=0;  
