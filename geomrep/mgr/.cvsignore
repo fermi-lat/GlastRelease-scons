@@ -1,5 +1,8 @@
-*.make
-*.makesav
+fincludes
+nt_settings.h
+*.make*
 *.sh
 *.csh
 cleanup
+*.dsp*
+*.dsw*

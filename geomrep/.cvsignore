@@ -1,7 +1,4 @@
 i686
-Win32*
-VisualC
-msdev
 Linux
 aclocal.m4
 config
