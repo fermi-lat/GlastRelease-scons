@@ -1,5 +1,5 @@
 package userAlg
-version v6r0
+version v5r1p0
 
 # --------------------------
 # run a job with a user algorithm
