@@ -1,0 +1,28 @@
+<!-- $Header$ -->
+<primCategory name="CuPrim">
+  <overview>Fundamental dimensions of solids and offsets,
+            materials definition for single cu.</overview>
+
+  <prim name="cuDumpMat" value="CarbonStd" type="string" uType="mat">
+    Material for the cu positron dump.   </prim>
+
+  <prim name="cuDumpX" value="1000.">cu dump x dimension</prim>
+  <prim name="cuDumpY" value="1000.">cu dump y dimension</prim>
+
+  <!-- 0.03 radiation length -->
+
+  <!-- if using CarbonFiber with density of 1.6 
+    <prim name="cuDumpZ" value="8.01"> cu dump z dimension</prim>
+  -->   
+
+  <prim name="cuDumpZ" value="5.64"> cu dump z dimension</prim>
+
+  <prim name="cuDumpZGap" value="22000.0">Distance above cu</prim>
+
+  <prim name="cuFieldBoxX" value="1000.">cu field x dimension</prim>
+  <prim name="cuFieldBoxY" value="1000.">cu field y dimension</prim>
+  <prim name="cuFieldBoxZ" value="1000"> cu field z dimension</prim>
+     
+  <prim name="cuFieldBoxZGap" value="20000.0">Distance above cu</prim>
+
+</primCategory>
