@@ -17,23 +17,23 @@ private:
     UInt_t m_l1tCount;  
 
     /// 50 ns FPGA clock pulses without interruption to provide absolute uptime
-    ULong_t m_l1tTime;
+    UInt_t m_l1tTime;
     UShort_t m_l1tTimeOverFlow;
 
     /// number of GPS receiver pulse per second pulses since power on
     UInt_t m_ppsCount;  
 
     /// value of L1tTime latched at the rising edge of the GPS receiver PPS signal
-    ULong_t m_ppsTime;
+    UInt_t m_ppsTime;
     UShort_t m_ppsTimeOverFlow;
     
     /// counts 50 ns FPGA clock pulses while L1t enable is high AND L1T is high
     /// This indicates that a run is in progress and the instrument is ready for a trigger
-    ULong_t m_liveTime;
+    UInt_t m_liveTime;
     UShort_t m_liveTimeOverFlow;
 
     /// counts 50ns FPGA close pulses continously while L1t enable is high
-    ULong_t m_runTime;
+    UInt_t m_runTime;
     UShort_t m_runTimeOverFlow;
 
     /// increments each time L1tCount Reset is given - at start of new run
