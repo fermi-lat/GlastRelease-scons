@@ -2,6 +2,11 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 13-nov-2002: jrb - tag v1r9   - 1. Substantial changes to ACD geometry top,
+ *                                   addition of ACD support structure.
+ *                                 2. minor reorganization to lessen number
+ *                                   of distinct files needed for segmented
+ *                                   CAL model
  * 06-nov-2002: jrb - tag v1r8p0 - Fix identifier field for ACD side to
  *                                 conform with convention 
  * 30-oct-2002: jrb - tag v1r8   - (jrb)slightly modify a couple ACD primary
