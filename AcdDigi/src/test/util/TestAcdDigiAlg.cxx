@@ -118,9 +118,9 @@ StatusCode TestAcdDigiAlg::execute() {
     log << MSG::DEBUG << "pmtA_pha " << pmtA_pha << endreq;
     log << MSG::DEBUG << "pmtB_pha " << pmtB_pha << endreq;
 
-    m_poisson.push_back(m_util.calcPoisson(5));
+    m_poisson.push_back(m_util.shootPoisson(5));
 
-    m_gauss.push_back(m_util.calcGaussianNoise(1.0));
+    m_gauss.push_back(m_util.shootGaussian(1.0));
 
     return sc;
 }
