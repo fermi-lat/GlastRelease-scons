@@ -1,11 +1,11 @@
 #ifndef __TKRRECONALG_H
 #define __TKRRECONALG_H 1
-
+/*
 #include "GaudiKernel/Algorithm.h"
 
 #include "Event/Recon/TkrRecon/TkrFitTrack.h"
 #include "Event/Recon/TkrRecon/TkrPatCand.h"
-
+*/
 /** 
  * @class TkrReconAlg
  *
@@ -18,7 +18,7 @@
  *
  * $Header$
  */
-
+/*
 class TkrReconAlg : public Algorithm
 {
 public:
@@ -47,5 +47,5 @@ private:
     Algorithm*  m_TkrTrackFitAlg;
     Algorithm*  m_TkrVertexAlg;
 };
-
+*/
 #endif // __TKRRECONALG_H

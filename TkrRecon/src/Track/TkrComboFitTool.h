@@ -12,7 +12,7 @@
 
 #ifndef TKRCOMBOFITTOOL_H
 #define TKRCOMBOFITTOOL_H
-
+/*
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/DataSvc.h"
 #include "TkrRecon/Track/ITkrFitTool.h"
@@ -41,5 +41,5 @@ private:
     /// Pointer to the Gaudi data provider service
     DataSvc*        pDataSvc;
 };
-
+*/
 #endif

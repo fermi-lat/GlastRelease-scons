@@ -1,13 +1,13 @@
 #ifndef __TKRTRACKFITALG_H
 #define __TKRTRACKFITALG_H 1
-
+/*
 #include "GaudiKernel/Algorithm.h"
 
 #include "Event/Recon/TkrRecon/TkrClusterCol.h"
 #include "TkrRecon/Track/ITkrFitTool.h"
 
 #include "GlastSvc/Reco/IKalmanParticle.h"
-
+*/
 /** 
  * @class TkrTrackFitAlg
  *
@@ -22,7 +22,7 @@
  *
  * $Header$
  */
-
+/*
 class TkrTrackFitAlg : public Algorithm
 {
 public:
@@ -46,5 +46,5 @@ private:
     /// Always use Sears Craftsmen tools for the job
     ITkrFitTool* m_FitTool;
 };
-
+*/
 #endif

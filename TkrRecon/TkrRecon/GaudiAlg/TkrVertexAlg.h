@@ -1,9 +1,9 @@
 #ifndef __TKRVERTEXALG_H
 #define __TKRVERTEXALG_H 1
-
+/*
 #include "GaudiKernel/Algorithm.h"
 #include "src/Vertex/IVtxBaseTool.h"
-
+*/
 /** 
  * @class TkrVertexAlg
  *
@@ -22,7 +22,7 @@
  *
  * $Header$
  */
-
+/*
 class TkrVertexAlg : public Algorithm
 {
 public:
@@ -42,5 +42,5 @@ private:
     // Yet another fine tool from Sears
     IVtxBaseTool* m_VtxTool;
 };
-
+*/
 #endif // __TKRVERTEXALG_H
