@@ -27,25 +27,20 @@ static CnvFactory<MCEventCnv> s_factory;
 const ICnvFactory& MCEventCnvFactory = s_factory;
 
 
-/// Standard Constructor
 MCEventCnv::MCEventCnv(ISvcLocator* svc)
 : BaseCnv(classID(), svc)
 {
   declareObject("/Event/MC", objType(), "PASS");
 }
 
+
 StatusCode MCEventCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObject)
 {
 
-    refpObject = new MCEvent;
-
+    refpObject = new MCEvent();
     StatusCode sc=StatusCode::SUCCESS;
-
     return sc;
 }
 
 
 const CLID& MCEventCnv::classID(){ return MCEvent::classID();}
-
-/// Standard Destructor
-MCEventCnv::~MCEventCnv()   { }

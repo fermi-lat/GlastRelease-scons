@@ -32,6 +32,8 @@ protected:
 
   virtual ~EventCnv() { };
 
+  virtual StatusCode createObj(IOpaqueAddress* pAddress, DataObject*& refpObject);
+
   virtual StatusCode updateObj(int* data, Event* pObject);
 
 

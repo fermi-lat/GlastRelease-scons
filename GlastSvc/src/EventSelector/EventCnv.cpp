@@ -19,19 +19,23 @@
 static CnvFactory<EventCnv> s_factory;
 const ICnvFactory& EventCnvFactory = s_factory;
 
-
-StatusCode EventCnv::updateObj(int* iarray, Event* pEvent)             {
-  MsgStream log(msgSvc(), "EventCnv");
-  log << MSG::DEBUG << "EventCnv::updateObj" << endreq;
-  return StatusCode::SUCCESS;
-}
-
-
 EventCnv::EventCnv(ISvcLocator* svc)
 : BaseCnv(classID(), svc)
-//  : ItemCnv<Event>(svc)                                  
 {
-      declareObject("/Event", objType(), "PASS");
+    declareObject("/Event", objType(), "PASS");
 }
+
+
+StatusCode EventCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObject) {
+    refpObject = new Event();
+    return StatusCode::SUCCESS;
+};
+
+StatusCode EventCnv::updateObj(int* iarray, Event* pEvent)             {
+    MsgStream log(msgSvc(), "EventCnv");
+    log << MSG::DEBUG << "EventCnv::updateObj" << endreq;
+    return StatusCode::SUCCESS;
+}
+
 
 

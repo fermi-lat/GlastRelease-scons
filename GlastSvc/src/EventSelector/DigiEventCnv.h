@@ -30,6 +30,7 @@ public:
 protected:
   DigiEventCnv(ISvcLocator* svc);
   virtual ~DigiEventCnv() { };
+  virtual StatusCode createObj(IOpaqueAddress* pAddress, DataObject*& refpObject);
   virtual StatusCode updateObj(int* data, DigiEvent* pObject);
 };
 #endif // CNV_DIGIEVENTCNV_H

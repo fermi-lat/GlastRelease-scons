@@ -21,7 +21,7 @@ public:
     
     MCEventCnv(ISvcLocator* svc);
     
-    virtual ~MCEventCnv();
+    virtual ~MCEventCnv() { };
     static const CLID& classID();
     
     /// Create object
