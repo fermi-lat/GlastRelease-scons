@@ -51,7 +51,7 @@ use FluxDisplay v2r1
 use G4Generator v4r3
 
 #digitization
-use CalDigi     v1r1p2 
+use CalDigi             v1r2
 use TkrDigi             v1r5p6
 use AcdDigi     v1r3
 
@@ -69,7 +69,7 @@ use AcdRecon    v0r4p1
 use RootIo      v4r9p2
 
 #diagnostic and summary of bottom line
-use merit       v5r6
+use merit                v5r7
 
 ### define a simple executable with GUI
 
