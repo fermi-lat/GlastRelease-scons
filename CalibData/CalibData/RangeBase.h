@@ -30,9 +30,9 @@ namespace CalibData {
   public:
     ValSig(float val=-1, float sig=-1) : m_val(val), m_sig(sig) {} 
     ValSig(const ValSig& other) {m_val = other.m_val; m_sig = other.m_sig;}
-    bool isDefined( ) {return (m_sig >= 0.0); }
-    float getVal() {return m_val;}
-    float getSig() {return m_sig;}
+    bool isDefined( ) const {return (m_sig >= 0.0); }
+    float getVal() const {return m_val;}
+    float getSig() const {return m_sig;}
 
     void setUndefined() {m_val= -1.0; m_sig = -1;}
     float m_val;
