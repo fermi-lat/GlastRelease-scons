@@ -109,18 +109,31 @@ StatusCode RootTkrTotCnv::readUnis(TTree* tree, int iTow,
       return StatusCode::FAILURE; 
     }
 
+    int nStrips = rootUni->getNStrips();
     unsigned uniIx = 2*id.getTray() + id.getBotTop();
     /*
     TkrTotUni* dest = dynamic_cast<TkrTotUni* > (&tdsTow->m_unis[uniIx]);
     */
-    const std::vector<UniBase*> unis = col->getUnis(iTow);
-    CalibData::TkrTotUni* dest = 
-      dynamic_cast<CalibData::TkrTotUni*>(unis[uniIx]);
+    std::vector<UniBase*> unis = col->getUnis(iTow);
+    CalibData::TkrTotUni* dest;
+    if (!unis[uniIx]) {
+      // have to make one
+      unis[uniIx]= makeUni(col);
+    }
+  
+    dest = dynamic_cast<CalibData::TkrTotUni*>(unis[uniIx]);
     if (!dest) {
       // tilt!
       return StatusCode::FAILURE;
-    }
-    int nStrips = rootUni->getNStrips();
+    }  
+    // For now, check if nstrips match.  If not, delete old 
+    // (if exists) and allocate new.
+    // But this isn't really quite right.  Can find out how
+    // many strip objects are in ROOT object, but really what
+    // we need to know is max strip id occurring.
+    // Could add a "maxId"  field to calibRootData::TotUnilayer
+    dest->resize(nStrips);
+
     if (nStrips > 0) {   // copy strip info
       for (unsigned iStrip = 0;  iStrip < nStrips; iStrip++) {
         const calibRootData::TotStrip* rStrip = rootUni->getStrip(iStrip);
