@@ -487,7 +487,7 @@ int TkrQueryClustersTool::numberOfUUHitsNear( int layer, double dX, double dY,
     return getNumNearHitsInLayer(layer, dX, dY, x0, dir, checkFlag);
 }
 
-int TkrQueryClustersTool::numberOfHitsNear( int view, int layer, double inDistance, 
+int TkrQueryClustersTool::numberOfHitsNear( int /*view*/, int layer, double inDistance, 
                                            const Point& x0, const Vector dir) const
 {
     // Purpose and Method: counts the number of hits within a distance 

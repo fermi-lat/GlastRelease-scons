@@ -12,6 +12,10 @@ $Header$
 #include "GaudiKernel/IInterface.h"
 #include "idents/VolumeIdentifier.h"
 
+#include "CalibData/CalibModel.h"
+#include "CalibData/Tkr/TkrTot.h"
+
+
 // Declaration of the interface ID ( interface id, major version,
 // minor version)
 
@@ -41,8 +45,13 @@ public:
     virtual int    getMaxToT() const = 0;
     
     virtual double getCharge(double ToT, int tower, int layer, int view, int strip) const = 0;
+    virtual int    getRawToT(double eDep, int tower, int layer, int view, int strip) const = 0;
     virtual double getMipsFromToT(double ToT, int tower, int layer, int view, int strip) const = 0;
     virtual double getMipsFromCharge(double charge, int tower, int layer, int view, int strip) const = 0;
+
+        /// update to latest pointer when calibration changes
+    virtual void update(CalibData::TkrTotCol* pToT) = 0;
+
 };
 
 #endif // ITkrToTSvc_H

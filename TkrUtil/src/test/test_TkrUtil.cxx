@@ -46,7 +46,7 @@ private:
 
 static const AlgFactory<test_TkrUtil>  Factory;
 const IAlgFactory& test_TkrUtilFactory = Factory;
-
+h
 //------------------------------------------------------------------------
 //! ctor
 
@@ -99,7 +99,7 @@ StatusCode test_TkrUtil::execute()
 
     Event::McParticle* mcPart = new Event::McParticle();
 
-    Event::McParticle::StdHepId hepId = mcPart->particleProperty();
+    //Event::McParticle::StdHepId hepId = mcPart->particleProperty();
 
     Event::McEventStructure* mcEvent = new Event::McEventStructure();
 
