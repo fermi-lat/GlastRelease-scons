@@ -10,7 +10,7 @@
 #include "facilities/Observer.h"
 
 #include "flux/rootplot.h"
-#include "flux/orbitavg.h"
+
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
