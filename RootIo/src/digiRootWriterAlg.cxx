@@ -17,6 +17,8 @@
 #include "LdfEvent/LdfTime.h"
 #include "LdfEvent/Gem.h"
 
+#include "Trigger/TriRowBits.h"
+
 #include "idents/CalXtalId.h"
 #include "idents/TowerId.h"
 
@@ -280,7 +282,17 @@ StatusCode digiRootWriterAlg::writeDigiEvent() {
     if( log.isActive()) evtTds->fillStream(log.stream());
     log << endreq;
 
-    L1T levelOne(evtTds->trigger());
+    SmartDataPtr<TriRowBitsTds::TriRowBits> triRowBitsTds(eventSvc(), "/Event/
+Digi/TriRowBits");
+    UInt_t rowBits[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    if (triRowBitsTds) {
+        unsigned int iTower;
+        for(iTower = 0; iTower < 16; iTower++)
+            rowBits[iTower] = triRowBitsTds->getTriRowBits(iTower);
+    }
+
+    L1T levelOne(evtTds->trigger(), rowBits);
+
     m_digiEvt->initialize(evtId, runId, timeObj.time(), levelOne, fromMc);
 
     SmartDataPtr<LdfEvent::LdfTime> timeTds(eventSvc(), "/Event/Time");
