@@ -1,5 +1,5 @@
 package AcdDigi
-version v0r1
+version v1r0
 
 use GlastSvc v8r*
 use Event v8r*
@@ -22,5 +22,4 @@ library AcdDigi *.cxx \
 
 apply_pattern package_Cshlibflags
 
-
-#application test_AcdDigi
+apply_pattern package_test
