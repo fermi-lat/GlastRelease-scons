@@ -387,35 +387,4 @@
           </minus>
         </const>
 
-        <const name="xPosPb">
-          <notes>x coordinate of Pb plate in front of VDG</notes>
-          <minus>
-	    <quo>
-	      <refer refTo="faceWidth" />
-	      <const value="2" uType="count"/>
-	    </quo>      
-            <refer refTo="xEdgePb" />
-          </minus>
-        </const>
-       
-        <const name="yPosPb">
-          <notes>y coordinate of Pb plate in front of VDG</notes>
-          <minus>
-            <refer refTo="yEdgePb" />
-	    <quo>
-	      <refer refTo="faceWidth" />
-	      <const value="2" uType="count"/>
-	    </quo>      
-          </minus>
-        </const>
-
-        <const name="zPosPb">
-          <notes>z coordinate of Pb plate in front of VDG</notes>
-          <add>
-            <refer refTo="gapPb" />
-            <refer refTo="TKRVertStayClear" />
-            <refer refTo="calTrackerGap" /> 
-          </add>
-        </const>
-
       </derCategory>

@@ -75,10 +75,10 @@ verter tray for EM in mm</prim>
             Last modified 2aug02</prim>
 
       <!--  following prims are for materials in front of VDG -->
-      <prim name = "rOutPb" value = "31.75"> Radius of Pb plate </prim>
-      <prim name = "lenPb" value = "1.5875"> Thickness of Pb plate </prim>
-      <prim name = "yEdgePb" value = "60.325"> Distance between edge of the tracker and center of the Pb plate along y axis</prim>
-      <prim name = "xEdgePb" value = "104.775"> Distance between edge of the tracker and center of the Pb plate along x axis</prim>
-      <prim name = "gapPb" value = "76.2"> Gap between the Pb plate and top face of the EM </prim> 
+      <prim name = "rShield" value = "26."> Radius of Shield plate </prim>
+      <prim name = "thickShield" value = "1.25"> Thickness of Shield plate </prim>
+      <prim name = "yShield" value = "-12.75"> y coordinate of the shield </prim>
+      <prim name = "xShield" value = "0">x coordinate of the shield </prim>
+      <prim name = "zShield" value = "189"> z coordinate of the shield</prim> 
 
 </primCategory>

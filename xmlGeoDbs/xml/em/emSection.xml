@@ -60,8 +60,8 @@
 &ACDAcd;
 
 <!-- lead plate in front of VDG -->
-    <tubs name="PbMat"
-      ROutREF="rOutPb" ZREF="lenPb" material="Lead" />
+    <tubs name="Shield"
+      ROutREF="rShield" ZREF="thickShield" material="ShieldMat" />
 
 
 <!-- Make a LAT.  Still need an idField for tape components -->
@@ -70,12 +70,13 @@
       <!--posXYZ volume="allTowers" 
               ZREF="allTowers_d" -->
 <!--
-      <posXYZ volume="PbMat" 
-              XREF="xPosPb"
-              YREF="yPosPb"
-              ZREF="zPosPb" >
+      <posXYZ volume="Shield" 
+              XREF="xShield"
+              YREF="yShield"
+              ZREF="zShield" >
       </posXYZ>
 -->
+
       <posXYZ volume="allTowers" 
               ZREF="towers_dz" >
         <idField name="fLATObjects" valueREF="eLATTowers" />

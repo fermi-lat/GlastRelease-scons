@@ -127,6 +127,12 @@
   </addmaterial>
 </composite>
 
+<composite name="ShieldMat" density="7.87">
+   <addmaterial material="Iron">
+     <natoms n="1" />
+   </addmaterial>
+</composite>
+
 <!--
 <composite name="Lead" density="11.34">
   <addmaterial material="Pb">
