@@ -6,6 +6,7 @@
  
 @verbatim
  
+ *   v0r2p0 20-jul-04 HMK Fix handling of clicking on cancel for setting the index or run/event id pair
  *   v0r2   05-jul-04 HMK use the bool returned by RootIoSvc's setRunEventPair
  *          and setIndex - if the request was invalid, prompt the user again
  *   v0r1p0 18-jun-04 HMK Wildcard RootIo revision
