@@ -338,7 +338,7 @@ bool totCalib::parseRcReport( const char* reportFile )
 #ifdef OLD_RECON
   using namespace xml;
 #else
-  using namespce xmlBase;
+  using namespace xmlBase;
 #endif
 
   XmlParser* parsercReport = new XmlParser(true);
