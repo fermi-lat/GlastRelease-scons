@@ -5,6 +5,7 @@ AC_REVISION($Revision$)
 AC_INIT(src/TrackRep.cxx)
 AC_CONFIG_AUX_DIR(config)
 AM_INIT_AUTOMAKE(geomrep, 1.0)
+AM_CONFIG_HEADER(config.h)
 
 dnl Checks for programs.
 AC_PROG_CC

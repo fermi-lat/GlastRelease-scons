@@ -8,7 +8,7 @@
 # The following set,  else would follow GNU conventions
 AUTOMAKE_OPTIONS = foreign
 
-lib_LTLIBRARIES = libgeomrep.la
+noinst_LTLIBRARIES = libgeomrep.la
 
 libgeomrep_la_SOURCES = \
 	ArcRep.cxx      \
@@ -21,8 +21,6 @@ libgeomrep_la_SOURCES = \
 	TrackRep.cxx    \
 	TubeRep.cxx     \
 	TubsRep.cxx
-
-libgeomrep_la_LDFLAGS = -version-info 1
 
 INCLUDES = -I$(top_srcdir) \
 	-I$(top_srcdir)/../CLHEP    \

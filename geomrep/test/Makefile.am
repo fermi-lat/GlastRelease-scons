@@ -27,7 +27,7 @@ INCLUDES = -I$(top_srcdir) \
 	-I$(glast_prefix)/include
 
 test_LDADDS = \
-	$(top_builddir)/src/libgeomrep.la \
+	$(top_builddir)/libgeomrep.la \
 	@LIB_MOTIF@	\
 	@LIB_BATCH@	\
 	@LIB_GRAPHICS@	\

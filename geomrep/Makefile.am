@@ -8,4 +8,15 @@
 # The following set,  else would follow GNU conventions
 AUTOMAKE_OPTIONS = foreign
 
-SUBDIRS = geomrep src test
+EXTRA_DIST = config
+
+SUBDIRS = geomrep src . test
+
+lib_LTLIBRARIES = libgeomrep.la
+
+libgeomrep_la_SOURCES = version.cxx
+
+libgeomrep_la_LIBADD = src/libgeomrep.la
+
+libgeomrep_la_LDFLAGS = -version-info 1
+
