@@ -62,7 +62,6 @@ CalibDataSvc::~CalibDataSvc()  {
   clearStore();
 }
 
-
 // Service initialization
 StatusCode CalibDataSvc::initialize()   {
 
