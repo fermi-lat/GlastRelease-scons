@@ -26,12 +26,33 @@ Event::TkrTrackParams::TkrTrackParams(ITkrTrackParamsAccess& access)
 }
 
 
-//Event::TkrTrackParams::TkrTrackParams(ParamType t,
-//                   double xPosition, double xSlope, double yPosition, double ySlope,
-//                   double xPosxPos, double xPosxSlp, double xPosyPos, double xPosySlp,
-//                   double xSlpxSlp, double xSlpyPos, double xSlpySlp,
-//                   double yPosyPos, double yPosySlp,
-//                   double ySlpySlp);
+Event::TkrTrackParams::TkrTrackParams(
+                   double xPosition, double xSlope, double yPosition, double ySlope,
+                   double xPosxPos, double xPosxSlp, double xPosyPos, double xPosySlp,
+                   double xSlpxSlp, double xSlpyPos, double xSlpySlp,
+                   double yPosyPos, double yPosySlp,
+                   double ySlpySlp)
+{
+   /// Track parameters
+    m_xPosition  = xPosition;
+    m_xSlope     = xSlope;
+    m_yPosition  = yPosition;
+    m_ySlope     = ySlope;
+
+    /// Track parameter error matrix elements
+    m_xPos_xPos  = xPosxPos;     // Cov(1,1) = xPositionErr * xPositionErr
+    m_xPos_xSlp  = xPosxSlp;     // Cov(1,2) = Cov(2,1) = xPositionErr * xSlopeErr
+    m_xPos_yPos  = xPosyPos;     // Cov(1,3) = Cov(3,1) = xPositionErr * yPositionErr
+    m_xPos_ySlp  = xPosySlp;     // Cov(1,4) = Cov(4,1) = xPositionERr * ySlopeErr
+    m_xSlp_xSlp  = xSlpxSlp;     // Cov(2,2) = xSlopeErr * xSlopeErr
+    m_xSlp_yPos  = xSlpyPos;     // Cov(2,3) = Cov(3,2) = xSlopeErr * yPositionErr
+    m_xSlp_ySlp  = xSlpySlp;     // Cov(2,4) = Cov(4,2) = xSlopeErr * ySlopeErr
+    m_yPos_yPos  = yPosyPos;     // Cov(3,3) = yPositionErr * yPositionErr
+    m_yPos_ySlp  = yPosySlp;     // Cov(3,4) = Cov(4,3) = yPositionErr * ySlopeErr
+    m_ySlp_ySlp  = ySlpySlp;     // Cov(4,4) = ySlopeErr * ySlopeErr
+
+	return;
+}
 
 //Event::TkrTrackParams::TkrTrackParams (const TkrTrackParams& right);
 
