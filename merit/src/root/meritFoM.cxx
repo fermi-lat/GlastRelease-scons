@@ -7,8 +7,6 @@
 #include "TROOT.h"
 #include "TFrame.h"
 #include "TPaveLabel.h"
-#include "app/RootTuple.h"
-#include "FigureOfMerit.h"
 
 ClassImp(meritFoM)
 
@@ -136,6 +134,15 @@ void meritFoM::report()
     //std::cerr << "\nElapsed time: "<< t_final.time-t_init.time << " sec" << std::endl;
 
     return;
+}
+
+bool meritFoM::cutEvent(int idx)
+{
+    bool eventCut = false;
+
+    if (m_tuple->getEvent(idx)) eventCut = m_FoM->execute();
+
+    return eventCut;
 }
 
 Analyze* meritFoM::getAnalysisListItem(int  i)

@@ -148,3 +148,14 @@ bool RootTuple::nextEvent(){
     }
     return false;
 }
+
+    
+bool RootTuple::getEvent(int idx)
+{
+    if (idx >= 0 && idx < m_numEvents)
+    {
+        m_tree->GetEvent(idx);
+        return true;
+    }
+    return false;
+}

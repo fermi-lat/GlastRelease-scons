@@ -31,7 +31,7 @@ public:
     void            setCuts(std::string);
     // associate a sequence of cuts, identifed by characters in the string
 
-    void            execute();
+    bool            execute();
     // analyze the current tuple row
 
     void            report(std::ostream&);

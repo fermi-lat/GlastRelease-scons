@@ -24,6 +24,9 @@ public:
     //! return false when no more events
     bool nextEvent();
 
+    //! return false if event idx does not exist
+    bool getEvent(int idx);
+
     int numEvents(){return m_numEvents;}
 private:
     TTree * m_tree;
