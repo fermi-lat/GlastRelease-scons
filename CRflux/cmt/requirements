@@ -1,11 +1,14 @@
-package CRflux
+package ExGalflux
+version v1
 
-use FluxSvc v5r*
+use FluxSvc v6*
 
-use CLHEP v2* IExternal
+#use CLHEP v2* IExternal
 
 apply_pattern packageShr
 
+apply_pattern package_include
+#apply_pattern package_linkopts
 #=============================================================
 
 private
@@ -14,17 +17,12 @@ private
 apply_pattern package_Cshlibflags
 apply_pattern package_headers
 
-library CRflux *.cxx test/CRTestAlg.cxx\
- Dll/*.cxx\
-$(CRflux_headers)
+library ExGalflux *.cxx *.h ../xml/*.xml Dll/*.cxx test/ExGalTestAlg.cxx\
+ $(ExGalflux_headers)
 
 
-macro_append CRflux_headers "" WIN32 "../xml/*.xml test/*.txt test/*.xml Dll/*.cxx"
+#macro_append ExGalflux_headers "" WIN32 "../xml/*.xml test/*.txt test/*.xml Dll/*.cxx"
 # test program, using local joboptions
-public set JOBOPTIONS ${CRFLUXROOT}/src/test/jobOptions.txt
+public set JOBOPTIONS ${EXGALFLUXROOT}/src/test/jobOptions.txt
 apply_pattern package_test
-
-#application CRfluxTest test/CRTestAlg.cxx *.cxx  ${FluxDisplay_headers} ${GlastMain} ${Win32Resource}
-
-#macro libs ""   WIN32   "$(FluxSvcDir)/FluxSvc_lib.lib
-#application crplot test/plot/crplot.cxx $(CRfluxDir)/CRflux.lib $(libs) 
+ 
