@@ -1,41 +1,44 @@
 /** @file release.notes
  package mcRootData
  package manager:H.Kelly
+ @verbatim
 
-v2r9p0    05-Feb-2003 HMK Apply pattern vsnet_rootcint \n
-v2r9      15-Jan-2003 ALS Updates to requiremests for new CMT and GlastRelease\n
-v2r8p1    01-Nov-2002 HMK make McParticle::getMother const\n
-v2r8p0    21-Oct-2002 HMK replace std::string with TString in McParticle\n
-v2r8      25-Sep-2002 HMK Add in sourceId and sequence into McEvent\n
-v2r7      24-Sep-2002 HMK Modify McParticle StatusFlags to match those used in TDS version\n
-v2r6p1    24-Sep-2002 HMK Use //-> to speed up reading/writing and to fix \n
-          segmentation fault when reading an MC file twice in one session\n
-v2r6      23-Sep-2002 HMK Clean up dtor and make static arrays transient\n
-v2r5p4    26-Aug-2002 HMK update version of RootPolicy to v1r*\n
-v2r5p3    26-Aug-2002 THB Use RootPolicy to generate rootcint files\n
-v2r5p1    07-Aug-2002 HMK Fix up access methods in McIntegratingHit for energies\n
-v2r5      30-Jul-2002 HMK update McPositionHit to include global coordinates\n
-          Update McIntegratingHit to store energies for primary, e-/e+ minimal tree \n
-          or full tree. \n
-v2r4      08-Jul-2002 HMK remove McParticle* from McPostionHit\n
-v2r3      17-Jun-2002 HMK add in Int_t particleId into McPositionHit\n
-v2r2      14-May-2002 HMK Add initialPosition to McParticle\n
-v2r1p4    14-May-2002 THB Fix dorootcint.bat to test for cint files\n
-v2r1p3    13-May-2002 THB&HMK Clean up doc and tidy up reqs file \n
-v2r1p2    09-May-2002 HMK Add iterator methods to McIntegratingHit \n
-          and remove the transient vector<pair<>> - this was not \n
+v2r10     06-Jun-2003 UB  Fix clearing the event by buffering 
+v2r9p0    05-Feb-2003 HMK Apply pattern vsnet_rootcint 
+v2r9      15-Jan-2003 ALS Updates to requiremests for new CMT and GlastRelease
+v2r8p1    01-Nov-2002 HMK make McParticle::getMother const
+v2r8p0    21-Oct-2002 HMK replace std::string with TString in McParticle
+v2r8      25-Sep-2002 HMK Add in sourceId and sequence into McEvent
+v2r7      24-Sep-2002 HMK Modify McParticle StatusFlags to match those used in TDS version
+v2r6p1    24-Sep-2002 HMK Use //-> to speed up reading/writing and to fix 
+          segmentation fault when reading an MC file twice in one session
+v2r6      23-Sep-2002 HMK Clean up dtor and make static arrays transient
+v2r5p4    26-Aug-2002 HMK update version of RootPolicy to v1r*
+v2r5p3    26-Aug-2002 THB Use RootPolicy to generate rootcint files
+v2r5p1    07-Aug-2002 HMK Fix up access methods in McIntegratingHit for energies
+v2r5      30-Jul-2002 HMK update McPositionHit to include global coordinates
+          Update McIntegratingHit to store energies for primary, e-/e+ minimal 
+          tree or full tree. 
+v2r4      08-Jul-2002 HMK remove McParticle* from McPostionHit
+v2r3      17-Jun-2002 HMK add in Int_t particleId into McPositionHit
+v2r2      14-May-2002 HMK Add initialPosition to McParticle
+v2r1p4    14-May-2002 THB Fix dorootcint.bat to test for cint files
+v2r1p3    13-May-2002 THB&HMK Clean up doc and tidy up reqs file 
+v2r1p2    09-May-2002 HMK Add iterator methods to McIntegratingHit
+          and remove the transient vector<pair<>> - this was not 
           working in CINT.  Rather we will rely upon the 2 separate
           arrays.
-v2r1p1                ALS Update requirements file to link to the \n
-          to Root libs Physics and Matrix.\n
-v2r1      01-May-2002 HMK Modify McIntegratingHit to store 2 arrays \n
-          One for McParticle* and the other for energies - produce \n
-          a vector of pairs to mimic the TDS class on the fly.  The \n
+v2r1p1                ALS Update requirements file to link to the 
+          to Root libs Physics and Matrix.
+v2r1      01-May-2002 HMK Modify McIntegratingHit to store 2 arrays 
+          One for McParticle* and the other for energies - produce 
+          a vector of pairs to mimic the TDS class on the fly.  The
           vector of pairs is only transient.
-v2r0      26-Apr-2002 HMK Simplify VolumeIdentifier and add Print methods \n
+v2r0      26-Apr-2002 HMK Simplify VolumeIdentifier and add Print methods 
 v2        22-Apr-2002 HMK Update classes for new TDS MC classes and
-          new version of ROOT 3.02.07\n
+          new version of ROOT 3.02.07
 v1r1      24-Aug-2001 IG Fix constructor realted bugs that would cause
           blow up when doing tree->Fill().  Modify to be more
-          compatible with TDS classes.\n
+          compatible with TDS classes.
+@endverbatim
 */
