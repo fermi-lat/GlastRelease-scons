@@ -9,6 +9,7 @@
 #include "CLHEP/Random/RandomEngine.h"
 #include "CLHEP/Random/RandGeneral.h"
 #include "CLHEP/Random/RandExponential.h"
+#include "CLHEP/Random/RandFlat.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -98,13 +99,12 @@ void Spectrum::parseParamList(std::string input, std::vector<float>& output) con
 double Spectrum::interval (double time)
 {
     double  r = (solidAngle()*flux(time)*6.);
+
     if (r == 0){ return -1.;
-    }else{
-        
-        double p = RandExponential::shoot(1.);
+    }else{  
+        double p = RandFlat::shoot(1.);
         return (-1.)*(log(1.-p))/r;
     }
-
 
    /* //FIX THIS - MAKE IT AN EXPONENTIAL!
 

@@ -41,7 +41,7 @@ m_launch(NONE),m_frametype(EARTH), illumBox(0)
     spectrum(aSpec);
     useSpectrumDirection(); // and will use its direction generation
     setAcceptance();
-  //  transformDirection();
+    //  transformDirection();
 }
 
 FluxSource::FluxSource(const DOM_Element& xelem )
@@ -82,12 +82,12 @@ m_rmin(0), m_rmax(1), _phi(0.0f), _theta(0.0f), m_pointtype(NOPOINT), m_launch(N
         DOMString   typeTagName = specType.getTagName();
         std::string spectrum_name = spec.getAttribute("name").transcode();
         std::string spectrum_frametype = spec.getAttribute("frame").transcode();
-
+        
         if(spectrum_frametype == "galactic"){ m_frametype=GALAXY;
         }else if(spectrum_frametype == "glast"){ m_frametype=GLAST;
         }else if(spectrum_frametype == "earth"){ m_frametype=EARTH;
         }
-
+        
         if (typeTagName.equals("particle")) s = new SimpleSpectrum(specType);
         else if (typeTagName.equals("SpectrumClass")) {
             // attribute "name" is the class name
@@ -191,7 +191,7 @@ m_rmin(0), m_rmax(1), _phi(0.0f), _theta(0.0f), m_pointtype(NOPOINT), m_launch(N
     
     s_backoff = 0.;
     setAcceptance();
-
+    
     //transformDirection();
     
 }
@@ -245,9 +245,10 @@ void FluxSource::spectrum(Spectrum* s, double emax)
     //const char* name = s->particleName();
 }
 
-FluxSource* FluxSource::event(double) 
+FluxSource* FluxSource::event(double time) 
 {
     computeLaunch();
+    m_time=time;
     return this;
     // could be a call-back
 }
@@ -284,7 +285,7 @@ void FluxSource::randomLaunchPoint()
 
 double FluxSource::flux(double time) const
 {
-    return enabled() ? std::max(m_spectrum->flux(time),0./* EventSource::flux()*/) : 0;
+    return enabled() ? std::max(m_spectrum->flux(time),/*0.*/ EventSource::flux(time)) : 0;
 }
 
 #if 1
@@ -436,7 +437,7 @@ void FluxSource::computeLaunch ()
             break;
         }
     }
-//   transformDirection(); 
+    //   transformDirection(); 
     
 }
 
@@ -892,21 +893,21 @@ void FluxSource::getGalacticDir(double l,double b){
     double phi=acos(l/theta);
     //here we construct the cartesian galactic matrix
     Vector gamgal(sin(theta)*cos(phi) , sin(theta)*sin(phi) , cos(theta));
-
+    
     //get the transformation matrix..
     Rotation galtoglast=GPS::instance()->orbit()->CELtransform(GPS::instance()->time());
-
+    
     //and do the transform:
     setLaunch(galtoglast*gamgal);
-  
+    
     /*  old way to do it - the galToGlast function is depreciated
     std::pair<double,double> v;
     v=GPS::instance()->galToGlast(std::make_pair<double,double>(l,b));
     
-    double theta=v.first;
-    double phi=v.second;
-    //std::cout << "getting galactic direction..." << std::endl;
-    setLaunch(theta,phi);
+      double theta=v.first;
+      double phi=v.second;
+      //std::cout << "getting galactic direction..." << std::endl;
+      setLaunch(theta,phi);
     */
     m_launch = GALACTIC;
 }
@@ -953,23 +954,42 @@ std::string FluxSource::title () const
 /*
 void FluxSource::transformDirection(){
 
- switch (m_frametype) {
-    case GLAST:
-        m_transformDir=m_launchDir;
-        break;
-    case EARTH:
-        m_transformDir=GPS::instance()->earthToGlast(m_launchDir);
-        break;
-    case GALAXY:
-        m_transformDir=GPS::instance()->galaxyToGlast(m_launchDir);
-        break;
- }
- 
+  switch (m_frametype) {
+  case GLAST:
+  m_transformDir=m_launchDir;
+  break;
+  case EARTH:
+  m_transformDir=GPS::instance()->earthToGlast(m_launchDir);
+  break;
+  case GALAXY:
+  m_transformDir=GPS::instance()->galaxyToGlast(m_launchDir);
+  break;
+  }
+  
 }*/
 
 void FluxSource::refLaunch(LaunchType launch) {m_launch=launch;}
 void FluxSource::refPoint(PointType point) {m_pointtype=point;}
 
 double FluxSource::interval (double time){
-return m_spectrum->interval(time);
+    //return m_spectrum->interval(time);
+    
+    //return std::max(m_spectrum->interval(time),/*0.*/ EventSource::interval(time));
+    double intrval=m_spectrum->interval(time);
+    if(intrval!=-1){return intrval;
+    }else{
+        return explicitInterval(time);
+    }
+}
+
+
+double FluxSource::explicitInterval (double time)
+{
+    double  r = (solidAngle()*flux(time)*6.);
+    
+    if (r == 0){ return -1.;
+    }else{  
+        double p = RandFlat::shoot(1.);
+        return (-1.)*(log(1.-p))/r;
+    }
 }

@@ -67,10 +67,11 @@ void   EventSource::setFlux (double value) {
   m_flux = value;
 }
 
+/*
 double EventSource::interval (double)
 {
   return -1.; //flag that there is no proper function working
-}
+}*/
 
 /*double  EventSource::rate ( double solid_angle, double fluxval )
 {

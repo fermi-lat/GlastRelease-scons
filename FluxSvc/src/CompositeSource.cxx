@@ -62,13 +62,24 @@ FluxSource* CompositeSource::event (double time)
 
         // more than one:: choose on basis of relative rates
         double  x = RandFlat::shoot(mr), y = 0;
-        std::vector<EventSource*>::iterator  it = m_sourceList.begin();
-        for (; it != m_sourceList.end(); ++it) {
-            y += fabs((*it)->rate(m_time));
-            if (x <= y) {
-                m_recent = (*it);
-                break;
+        std::vector<EventSource*>::iterator  now = m_sourceList.begin();
+        std::vector<EventSource*>::iterator  it = now;
+ 
+        double intrval=0.,intrmin=100000.;
+        for (; now != m_sourceList.end(); ++now) {
+            intrval=(*now)->interval(m_time);
+
+            if(intrval < intrmin){
+                it=now;
+                intrmin=intrval;
             }
+            //y += fabs((*it)->rate(m_time));
+            //if (x <= y) {
+            //    m_recent = (*it);
+            //    break;
+            //}
+
+            m_recent = (*it);
             m_numofiters++;
         }
     }
@@ -155,4 +166,17 @@ int CompositeSource::numSource()const
 {
     return m_numofiters;
 }
+
+
+/// interval to the next event
+//double interval (double){
+//    return m_interval;
+//}
+
+    /// set the interval to the next event
+//double setInterval (double interval){
+//m_interval = interval;
+//}
+
+
 	  

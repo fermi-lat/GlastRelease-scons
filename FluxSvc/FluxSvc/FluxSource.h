@@ -28,7 +28,7 @@ class FluxSource : public EventSource
       virtual ~FluxSource();
           
       ///    generate an event from a Flux object ??//.
-      virtual FluxSource* event(double);
+      virtual FluxSource* event(double time);
       
       ///    full-length title description of this EventSource.
       virtual std::string fullTitle () const;
@@ -180,5 +180,7 @@ class FluxSource : public EventSource
     void randomLaunchPoint(); 
     // calculate a random launch point in a plane perpendicular to _launchDir
 
+    ///interval function to be used by non-spectrum sources
+    double FluxSource::explicitInterval (double time);
 };
 #endif

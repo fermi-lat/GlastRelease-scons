@@ -101,6 +101,7 @@ int main(int argc, char** argv)
    int current_arg = 1;
    int longtime=1;
    int longtimemax=20;
+   double time=0.;  //time to use for flux and rate functions
    double energy_min = ENERGY_MIN;
    double energy_max = ENERGY_MAX;
    bool use_trueflux = false;
@@ -233,8 +234,10 @@ int main(int argc, char** argv)
      
      EventSource *e = fm.source(sources[i]);
      
-     if(longterm)
+     if(longterm){
         fm.pass(2.);
+        time+=2.;
+     }
 
      std::pair<double,double> loc=fm.location();
      std::cout << loc.first << "   " << loc.second << std::endl;
@@ -281,20 +284,20 @@ int main(int argc, char** argv)
 
      if(false == use_trueflux)
      {
-        double rate = e->rate()/e->totalArea();
+        double rate = e->rate(time)/e->totalArea();
         scale_factor = rate/loop*num_bins/log(energy_max/energy_min);
         std::cout << "RATE IS: " << rate << std::endl;
      }
      else
      {
-        double flux = e->flux();
+        double flux = e->flux(time);
         scale_factor = flux/loop*num_bins/log(energy_max/energy_min);
         std::cout << "FLUX IS: " << flux << std::endl;
      }
 
      for(j = 0; j < loop; j++) 
      {
-        FluxSource *f = e->event();
+        FluxSource *f = e->event(time);
         double energy = f->energy();
         Vector dir = f->launchDir();
         double cos_theta = dir.z();

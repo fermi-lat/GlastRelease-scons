@@ -57,7 +57,14 @@ public:
     const std::vector< EventSource* >& sourceList () const;
     void sourceList (const std::vector< EventSource* >& value);
 
+    /// interval to the next event
+    double interval (double){return m_interval;}
+
+    /// set the interval to the next event
+    double setInterval (double interval){m_interval = interval;}
+
    // double m_time; 
+    double m_interval;
 
 protected:
     virtual void setupXML (const DOM_Element&);

@@ -201,7 +201,7 @@ void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
     double time=0.;
 
     cout << "running source: " << e->fullTitle() << std::endl;
-    cout << " Total rate is: " << e->rate(0.) << " Hz into " << e->totalArea() << " m^2" << std::endl;
+    cout << " Total rate is: " << e->rate(time) << " Hz into " << e->totalArea() << " m^2" << std::endl;
     //cout << "LaunchType" << f->retLaunch() << "Pointtype" << f->retPoint() <<std::endl;
     cout << "    Generating " << count << " trials " << std::endl;
     cout << " --------------------------------" << std::endl;
