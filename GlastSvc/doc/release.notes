@@ -5,6 +5,7 @@
  package manager:T.Burnett
            EOH
 
+  1-Mar-05  TU  tag v9r12p3 Fix GlastRandomSvc to delete all instantiated tools
   v9r12p2   3-Jan-2005  jrb Use xmlBase rather than xml package
  16-Dec-04  TU  tag v9r12p1 Update requirements to look for correct Event package
  16-Dec-04  TU  tag v9r12p0 Updated IPropagator.h to use new Tracker TDS classes
