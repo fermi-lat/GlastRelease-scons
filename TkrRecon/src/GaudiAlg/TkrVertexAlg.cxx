@@ -26,7 +26,6 @@
 #include "gui/GuiMgr.h"
 
 #include "TkrRecon/GaudiAlg/TkrVertexAlg.h"
-#include "TkrRecon/Services/TkrInitSvc.h"
 
 // Used by Gaudi for identifying this algorithm
 static const AlgFactory<TkrVertexAlg>  Factory;
@@ -53,14 +52,6 @@ StatusCode TkrVertexAlg::initialize()
     setProperties();
     
     log << MSG::DEBUG << "Initializing TkrVertexAlg"<<endreq;
-
-    // Look for the geometry service
-    TkrInitSvc* pTkrInitSvc = 0;
-    StatusCode sc = service("TkrInitSvc", pTkrInitSvc, true);
-    if (sc.isFailure()) {
-        log << MSG::ERROR << "TkrInitSvc is required for this algorithm." << endreq;
-        return sc;
-    }    
 
     return StatusCode::SUCCESS;
 }
@@ -113,8 +104,7 @@ StatusCode TkrVertexAlg::execute()
         }
         else
         {
-            //For now....
-            VtxToolName = std::string("TkrComboVtxRecon(not a tool)");
+            VtxToolName = std::string("DEFAULT");
         }
 
         log << MSG::INFO << "Vertexing performed with: "<< VtxToolName.c_str() <<endreq;
