@@ -882,6 +882,7 @@
 <!ELEMENT const (notes?, (refer | (%operator;)? )) >
 <!ATTLIST const name ID #IMPLIED
                 value NMTOKEN #IMPLIED
+                type (int | float | double) "double" 
                 uType (length | angle | count | none) "length"
                 %units; >
 
