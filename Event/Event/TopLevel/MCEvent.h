@@ -9,6 +9,8 @@
 #include "GaudiKernel/StreamBuffer.h"
 //#include "GlastEvent/TopLevel/SubMCEvent.h"
 #include "Event/TopLevel/Definitions.h"
+#include "Event/Utilities/TimeStamp.h"
+
 
 extern const CLID& CLID_McEvent;
 namespace Event {
@@ -47,8 +49,13 @@ public:
     int getSequence() const { return m_sequence; }
 
     /// initialize
-    void initialize(int run, int source, long int seq) {
-        m_run = run; m_sourceId = source; m_sequence = seq;}
+    void initialize(int run, int source, long int seq, TimeStamp time) {
+        m_run = run; m_sourceId = source; m_sequence = seq; m_time=time;}
+
+    /// Retrieve reference to event time stamp
+    const TimeStamp& time () const                              { return m_time; }
+    /// Update reference to event time stamp
+    void setTime (const TimeStamp& value)                      { m_time = value; }
     
     /// Serialize the object for writing
     virtual StreamBuffer& serialize( StreamBuffer& s ) const;
@@ -70,6 +77,9 @@ private:
     /// sequence number
     unsigned int m_sequence;
     
+    /// Time stamp: use special class to encapsulate type
+    TimeStamp           m_time;
+
 };
 
 //
@@ -79,7 +89,7 @@ private:
 /// Serialize the object for writing
 inline StreamBuffer& MCEvent::serialize( StreamBuffer& s ) const               {
     DataObject::serialize(s);
-    s << m_sourceId << m_sequence << m_run;
+    s << m_sourceId << m_sequence << m_run << m_time;
     return s;
 }
 
@@ -87,7 +97,7 @@ inline StreamBuffer& MCEvent::serialize( StreamBuffer& s ) const               {
 /// Serialize the object for reading
 inline StreamBuffer& MCEvent::serialize( StreamBuffer& s )                     {
     DataObject::serialize(s);
-    s >> m_run >> m_sequence >> m_sourceId;
+    s >> m_time >> m_run >> m_sequence >> m_sourceId;
     
     return s;
 }
@@ -102,6 +112,8 @@ inline std::ostream& MCEvent::fillStream( std::ostream& s ) const              {
         << EventField( EventFormat::field12 )  << m_run
         << "    Sequence = "
         << EventField( EventFormat::field12 )  << m_sequence
+        << "    TimeStamp = "
+        << EventField( EventFormat::field12 )  << m_time
         ;
     return s;
 }
