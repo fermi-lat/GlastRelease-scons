@@ -16,9 +16,9 @@ use RootHistCnv v5r0p1
 
 use XMLEXT      v2r2 
 use GlastPolicy v4r8 
-use facilities  v2r5
+use facilities            v2r6
 use xml         v4r1p4 
-use xmlUtil     v2r8p1
+use xmlUtil               v2r8p3
 
 use geometry    v3
 
@@ -31,8 +31,8 @@ use geomrep     v4r1
 
 # the geometry data base
 use idents      v2r8p4 
-use detModel    v2r13
-use xmlGeoDbs             v1r6p2
+use detModel              v2r13p0
+use xmlGeoDbs             v1r7p2
 
 # interface to G4 - make private to avoid so many libs
 private 
@@ -64,7 +64,7 @@ use AcdDigi     v1r4
 
 #reconstruction
 use Trigger     v3r3p4
-use Recon       v2r3p4
+use Recon                 v2r3p5
 
 use TkrRecon    v8r1
 use CalRecon    v5r7p3 
