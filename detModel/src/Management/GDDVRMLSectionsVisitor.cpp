@@ -16,22 +16,29 @@
 #include "detModel/Sections/GDDidField.h"
 #include "detModel/Sections/GDDanyPosition.h"
 
-GDDVRMLSectionsVisitor::GDDVRMLSectionsVisitor()
-{
-  setRecursive(0);
-  setType(sectionsVisitor);
-  actualVolume = "";
-  
-  out.open("sections.wrl");
-};
-
 GDDVRMLSectionsVisitor::GDDVRMLSectionsVisitor(string nvol)
 {
+  unsigned int i;
+  typedef map<string,float>M1;
+  typedef map<string,int>M2;
+  typedef map<string,GDDvolume*>M3;
+  M3::const_iterator j;
+
   setRecursive(0);
   setType(sectionsVisitor);
   actualVolume = nvol;
 
   out.open("sections.wrl");
+
+  GDDmanager* manager = GDDmanager::getPointer();
+  GDD* g = manager->getGDD();
+  
+  /// We initialize the opacity map
+  for(i=0;i<g->getMaterialNames().size();i++)
+    opacityMap.insert(M1::value_type(g->getMaterialNames()[i]->getName(),1.0));  
+  /// We initialize the depth map
+  for(j=g->getVolumesMap().begin();j!=g->getVolumesMap().end();j++)
+    depthMap.insert(M1::value_type(j.first(),200));  
 };
 
 GDDVRMLSectionsVisitor::~GDDVRMLSectionsVisitor()

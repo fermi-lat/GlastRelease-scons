@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
   // will build the vrml file for the specified volume. The output is
   // placed in sections.vrml
   if (argc == 2)
-    manager->startVisitor(new GDDVRMLSectionsVisitor()); 
+    manager->startVisitor(new GDDVRMLSectionsVisitor("")); 
   else
     manager->startVisitor(new GDDVRMLSectionsVisitor(argv[2])); 
 

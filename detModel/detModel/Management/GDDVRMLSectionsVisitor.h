@@ -2,6 +2,8 @@
 #define GDDVRMLSECTIONSVISITOR_H
 #include "detModel/Management/GDDsectionsVisitor.h"
 #include <fstream>
+#include <vector>
+#include <map>
 
 class GDD;
 
@@ -13,7 +15,6 @@ class GDDVRMLSectionsVisitor : public GDDsectionsVisitor {
 
  public:
 
-  GDDVRMLSectionsVisitor();
   GDDVRMLSectionsVisitor(string);
   virtual ~GDDVRMLSectionsVisitor();
   
@@ -71,6 +72,10 @@ class GDDVRMLSectionsVisitor : public GDDsectionsVisitor {
 
   ofstream out;
 
+  /// This map holds the opacity information of the material colors
+  map <string, float> opacityMap;
+  /// This map holds information on the recursion depth of volumes
+  map <string, int> depthMap;
 };
 #endif //GDDVRMLSECTIONSVISITOR_H
 

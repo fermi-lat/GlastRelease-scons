@@ -182,8 +182,7 @@ void GDD::buildVolumeMap()
   buildChoiceMap();
 }
 
-/* This method build the volume map and it should be automatically 
- * called by the builder 
+/* This method build the choices map and it is called by the buildVolumeMap
  */
 void GDD::buildChoiceMap()
 {
@@ -194,6 +193,11 @@ void GDD::buildChoiceMap()
     for(j=0;j<sections[i]->getChoices().size();j++)
       choiceMap.insert(M::value_type(sections[i]->getChoices()[j]->getName(),
 				     sections[i]->getChoices()[j]));
+
+  /// We fill the modeNames vector
+  for(j=0;j<sections[0]->getChoices().size();j++)
+    modeNames.push_back(sections[0]->getChoices()[j]->getName());
+
 }
 
 /* This method gives back a GDDconst* given a name
@@ -275,6 +279,9 @@ void GDD::buildConstantsMap()
       case s:{
 	GDDstringConst* tmp1=static_cast<GDDstringConst*>(temp);
 	constCharMap.insert(M2::value_type(temp->getName(),tmp1->getValue()));
+	/// Here we fill the materialNames vector
+	if (temp->getConstMeaning() == mat)
+	  materialNames.push_back(temp->getName());
 	break;
       }
       }//end switch
@@ -332,6 +339,7 @@ void GDD::visitMap(){
     std::cout<<"constant "<<j->first<<" value: "<<j->second<<std::endl;
   }
 }
+
 
 
 
