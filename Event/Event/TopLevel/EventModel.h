@@ -38,6 +38,7 @@
             _EXTERN_ std::string McParticleCol;
             _EXTERN_ std::string McPositionHitCol;
             _EXTERN_ std::string McIntegratingHitCol;
+            _EXTERN_ std::string McTkrStripCol;
         }
 
         namespace Digi {

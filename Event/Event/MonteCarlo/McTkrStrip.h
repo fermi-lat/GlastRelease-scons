@@ -6,16 +6,13 @@
 #include <iostream>
 #include <vector>
 
-#include "GaudiKernel/Kernel.h"
+//#include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/SmartRefVector.h"
 
 #include "Event/TopLevel/Definitions.h"
 #include "GaudiKernel/ObjectVector.h"
-#include "GaudiKernel/ObjectList.h"
-
-#include "idents/TowerId.h"
-#include "idents/GlastAxis.h"
+#include "idents/VolumeIdentifier.h"
 
 /*!
 * \class McTkrStrip
@@ -38,23 +35,26 @@ namespace Event {
     //McTkrStrip() {};
     
     //! constructor with plane id.
-    McTkrStrip(idents::VolumeIdentifier id(m_planeId), 
-               unsigned int strip(m_strip)) {};
+    McTkrStrip(idents::VolumeIdentifier id, unsigned int strip,  double e=0 )
+        : m_planeId(id)
+        , m_strip(strip)
+        , m_energy(e) {};
     //! Destructor
     virtual ~McTkrStrip() {};
         
     //! Retrieve pointer to class defininition structure
-    virtual const CLID& clID() const   { return TkrStrip::classID(); }
-    static const CLID& classID()       { return CLID_TkrStrip; }
+    virtual const CLID& clID() const   { return McTkrStrip::classID(); }
+    static const CLID& classID()       { return CLID_McTkrStrip; }
     
     //! access to the energy
     double getEnergy()const { return m_energy; }
+    double energy()const { return m_energy; }
     
     //! increase the energy
-    void operator+=(double de){m_energy += de);
+    void operator+=(double de){m_energy += de;}
 
     //! access to the id
-    double getId()const { return m_planeId; }
+    idents::VolumeIdentifier getId()const { return m_planeId; }
 
     //! access to the strip number
     unsigned int getStripNumber()const { return m_strip; }
@@ -71,7 +71,7 @@ namespace Event {
     idents::VolumeIdentifier m_planeId;
     
     //! strip number
-    unsigned in m_strip;
+    unsigned int m_strip;
     
     //! total energy deposited
     double m_energy;
@@ -81,29 +81,29 @@ namespace Event {
   //! Serialize the object for writing
   inline StreamBuffer& McTkrStrip::serialize( StreamBuffer& s ) const {
     ContainedObject::serialize(s);  
+#if 0
     s   << m_planeId
         << m_strip
         << m_energy;
-    
+#endif 
     return s;
   }
   
   //! Serialize the object for reading
   inline StreamBuffer& McTkrStrip::serialize( StreamBuffer& s )       {
     ContainedObject::serialize(s);
+#if 0
     s   >> m_planeId
         >> m_strip
         >> tower
         >> m_energy;
-    
+#endif
     return s;
   }
   
   //! Fill the ASCII output stream
   
   inline std::ostream& McTkrStrip::fillStream( std::ostream& s ) const {
-    int j;
-    int size = m_hits.size();
     s   << "class TkrStrip :" << std::endl
         << "Plane Id: " << m_planeId.name() 
         << "   strip: " << m_strip

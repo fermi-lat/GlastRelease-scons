@@ -27,6 +27,7 @@ public:
 
         EventModel::MC::McPositionHitCol     = EventModel::MC::Event  + "/PositionHitsCol";
         EventModel::MC::McIntegratingHitCol  = EventModel::MC::Event  + "/IntegratingHitsCol";
+        EventModel::MC::McTkrStripCol        = EventModel::MC::Event  + "/StripCol";
 
         // Digi event
         EventModel::Digi::Event              = EventModel::EventHeader + "/Digi";

@@ -2,6 +2,7 @@
  * package Event
  * package manager:T.Burnett (original author: H. Gillespie)
  *
+ * v8r13 22-jul-02 THB  New McTkrStrip.
  * v8r12 15-jul-02 THB  Brian's new Tkr classes (at W.Atwood request)
  * v8r11 03-jul-02 MF  Add RelTable template classes
  *       03-jul-02 HMK Add init methods to some TkrRecon classes
