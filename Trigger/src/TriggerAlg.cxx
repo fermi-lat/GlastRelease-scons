@@ -327,7 +327,7 @@ unsigned int TriggerAlg::calorimeter(const Event::CalDigiCol& calDigi)
         
     }
     
-    for(j=0; j<16; ++j) m_hical = m_hical || three_in_a_row(m_hical_bits[j]);
+    for(int j=0; j<16; ++j) m_hical = m_hical || three_in_a_row(m_hical_bits[j]);
     
     
     return (m_local ? b_LO_CAL:0) | (m_hical ? b_HI_CAL:0);
