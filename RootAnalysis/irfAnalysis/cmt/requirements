@@ -32,6 +32,12 @@ application aeff     -s=aeff $(source)
 # where to save/get all files
 
 set file_root "$(IRFANALYSISROOT)/root_files"
-set input_file "$(IRFANALYSISROOT)/root_files/ag-v3r3p7-merituple-prune20031102-fulltup.root"
+
+# adjust the following for your special path by adding and commenting out, not changing
+#Perugia version
+#set input_file "$(IRFANALYSISROOT)/root_files/ag-v3r3p7-merituple-prune20031102-fulltup.root"
+
+#USA version
+set input_file "$(IRFANALYSISROOT)/../../root_files/ag-v3r3p7-merituple-prune20031102-fulltup.root"
 
 set output_file_root "$(IRFANALYSISROOT)/data"
