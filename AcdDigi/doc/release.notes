@@ -2,6 +2,8 @@
  Package AcdDigi\n
  Coordinator:H.Kelly
 
+ v1r7p1 15-jan-2003 THB remove const in map definition to appease vc7\n
+ --------------------------GlastRelease-----------------------------------
         30-Dec-2002 HMK prepare to process ribbons in AcdDigiAlg\n
  v1r7   09-Dec-2002 HMK Retrieve all ACD tiles in existance for a particular run\n
         using the GlastSvc/detModel interface and modify the mechanism to apply  \n

@@ -6,3 +6,4 @@ Linux*
 setup.*
 *.mak*
 *.root
+"VC7*" 
