@@ -60,12 +60,12 @@ namespace LdfEvent{
 
         void initialize(unsigned int summary){m_summary=summary;};
         void initEventFlags(unsigned int flags) { m_flags = flags; };
-        void initTemContribLen(unsigned long *len) {
+        void initTemContribLen(unsigned int *len) {
             unsigned int i;
             for (i = 0; i < 16; i++) { m_temLen[i] = len[i]; }
         }
-        void initContribLen(unsigned long *tem, unsigned long gemLen, unsigned long oswLen,
-            unsigned long errLen, unsigned long diagLen, unsigned long aemLen) {
+        void initContribLen(unsigned int *tem, unsigned int gemLen, unsigned int oswLen,
+            unsigned int errLen, unsigned int diagLen, unsigned int aemLen) {
 
             m_otherContribLen[GEM] = gemLen;
             m_otherContribLen[OSW] = oswLen;
@@ -75,12 +75,12 @@ namespace LdfEvent{
             initTemContribLen(tem);
         }
         
-        unsigned long temLength(unsigned int tem) { m_temLen[tem]; }
-        unsigned long gemLength() const { return m_otherContribLen[GEM]; }
-        unsigned long oswLength() const { return m_otherContribLen[OSW]; }
-        unsigned long aemLength() const { return m_otherContribLen[AEM]; }
-        unsigned long errLength() const { return m_otherContribLen[ERR]; }
-        unsigned long diagLength() const { return m_otherContribLen[DIAG]; }
+        unsigned int temLength(unsigned int tem) { return m_temLen[tem]; }
+        unsigned int gemLength() const { return m_otherContribLen[GEM]; }
+        unsigned int oswLength() const { return m_otherContribLen[OSW]; }
+        unsigned int aemLength() const { return m_otherContribLen[AEM]; }
+        unsigned int errLength() const { return m_otherContribLen[ERR]; }
+        unsigned int diagLength() const { return m_otherContribLen[DIAG]; }
 
         unsigned int eventFlags() const { return m_flags; };
         bool goodEvent() const { return (m_flags == 0); };
@@ -110,8 +110,8 @@ namespace LdfEvent{
     /// Event Flags - used to denote bad events
     /// flags = 0 is "good"
     unsigned int m_flags;
-    unsigned long m_temLen[16];
-    unsigned long m_otherContribLen[5];
+    unsigned int m_temLen[16];
+    unsigned int m_otherContribLen[5];
     };
 
     inline EventSummaryData::~EventSummaryData(){

@@ -34,21 +34,23 @@ StatusCode LdfEventSummaryCnv::createObj(IOpaqueAddress* ,
     // Purpose and Method:  This converter will create an empty EventHeader on
     //   the TDS.
     // Retrieve the LAT data for this event 
+    MsgStream log(msgSvc(), "LdfEventSummaryCnv");
     unsigned int ebfSummary = ldfReader::LatData::instance()->summaryData().summary();
     LdfEvent::EventSummaryData *summary = new LdfEvent::EventSummaryData(ebfSummary);
     summary->initEventFlags(ldfReader::LatData::instance()->getEventFlags());
 
 
     // Retrieve the contribution lengths and store them in the EventSummaryData
-    unsigned long gemLen = ldfReader::LatData::instance()->getGem().lenInBytes();
-    unsigned long oswLen = ldfReader::LatData::instance()->getOsw().lenInBytes();
-    unsigned long errLen = ldfReader::LatData::instance()->getErr().lenInBytes();
-    unsigned long diagLen = ldfReader::LatData::instance()->diagnostic()->lenInBytes();
-    unsigned long aemLen = ldfReader::LatData::instance()->getAem().lenInBytes();
-    unsigned long temLen[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    unsigned int gemLen = ldfReader::LatData::instance()->getGem().lenInBytes();
+    unsigned int oswLen = ldfReader::LatData::instance()->getOsw().lenInBytes();
+    unsigned int errLen = ldfReader::LatData::instance()->getErr().lenInBytes();
+    unsigned int diagLen = ldfReader::LatData::instance()->diagnostic()->lenInBytes();
+    unsigned int aemLen = ldfReader::LatData::instance()->getAem().lenInBytes();
+    unsigned int temLen[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     unsigned int i;
     for (i = 0; i < 16; i++) {
         if(ldfReader::LatData::instance()->getTower(i)) {
+            if (!ldfReader::LatData::instance()->getTower(i)->getTem().exist()) continue;
             temLen[i] = ldfReader::LatData::instance()->getTower(i)->getTem().lenInBytes();
         }
     }

@@ -3,6 +3,7 @@ Package LdfEvent
 Coordinator:H.Kelly
 @verbatim
 
+v2r2p0  04-Oct-2004 HMK Use unsigned ints consistently
 v2r2    21-Sep-2004 HMK Add storage for the event contribution lengths
 v2r1    14-Sep-2004 HMK Add enum to unpack the ConditionSummary in GEM
 v2r0p0  26-Aug-2004 HMK add eventsequence method to EventSummaryData
