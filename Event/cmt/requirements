@@ -4,7 +4,7 @@ version v9r0
 branches Event cmt doc src
 use idents v2r*
 
-use GaudiKernel v11r0p*
+use GaudiKernel v11r*
 use geometry    v3*
 use CLHEP v1r7p*
 
