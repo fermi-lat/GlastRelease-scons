@@ -18,7 +18,7 @@
 #include "GaudiKernel/ToolFactory.h"
 
 #include "Event/Recon/TkrRecon/TkrCluster.h"
-#include "Event/Recon/TkrRecon/TkrClusterCol.h"
+#include "Event/Recon/TkrRecon/TkrCluster.h"
 
 #include "Event/Recon/TkrRecon/TkrFitPar.h"
 #include "Event/Recon/TkrRecon/TkrFitMatrix.h"
@@ -72,7 +72,7 @@ StatusCode TkrAlignHitsTool::alignHits(const Event::TkrKalFitTrack* track,
     int planeNumber = 0;
     for (; pPlane<track->end(); ++pPlane) {
         Event::TkrFitPlane plane = *pPlane;
-        Event::TkrCluster* pClus = m_clusCol->getHit(plane.getIDHit());
+        Event::TkrCluster* pClus = (*m_clusCol)[plane.getIDHit()];
 
         // get the cluster info
         Event::TkrCluster::view v = pClus->v();
@@ -182,7 +182,7 @@ StatusCode TkrAlignHitsTool::alignHits(const Event::TkrKalFitTrack* track,
 
         HepVector3D deltaPos;
         //bool rotate = false;
-        deltaPos = m_alignSvc->deltaReconPoint(hitPoint, hitSlope, digiLayer, view, tower);
+        deltaPos = m_alignSvc->deltaReconPoint(hitPoint, hitSlope, digiLayer, view);
 
         // store the delta
         alignVec.push_back(deltaPos[view]);

@@ -308,7 +308,8 @@ StatusCode VtxKalFitTool::doVtxFit(Event::TkrVertexCol& VtxCol)
                                   );
 
   usedIter = usedTracks.begin();
-  while(usedIter != usedTracks.end()) vertex->addTrack(*usedIter++);
+  // Comment out for now (changing from TkrFitTrackBase to TkrTrack - 8/26/04 TU)
+  //while(usedIter != usedTracks.end()) vertex->addTrack(*usedIter++);
 
   vertex->writeOut(log);
 

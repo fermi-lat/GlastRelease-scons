@@ -18,17 +18,17 @@
 #include "gui/GuiMgr.h"
 
 #include "TkrRecon/GaudiAlg/TkrDisplayAlg.h"
-#include "TkrRecon/Display/TkrClustersRep.h"
-#include "TkrRecon/Display/TkrTracksRep.h"
+#include "src/Display/TkrClustersRep.h"
+#include "src/Display/TkrTracksRep.h"
 
 #include "src/Display/TkrPatCandRep.h"
-#include "TkrRecon/Display/TkrCandidatesRep.h"
-#include "TkrRecon/Display/TkrBestCandRep.h"
-#include "TkrRecon/Display/TkrCandidate3DRep.h"
+#include "src/Display/TkrCandidatesRep.h"
+#include "src/Display/TkrBestCandRep.h"
+#include "src/Display/TkrCandidate3DRep.h"
 
 // Display stuff for NeuralNet PatRec Alg
-#include "TkrRecon/Display/TkrDispCompleteNet.h"
-#include "TkrRecon/Display/TkrDispActiveNet.h"
+#include "src/Display/TkrDispCompleteNet.h"
+#include "src/Display/TkrDispActiveNet.h"
 
 #include "src/Vertex/Combo/TkrComboVtxRep.h"
 #include "src/Vertex/TkrGammaRep.h"

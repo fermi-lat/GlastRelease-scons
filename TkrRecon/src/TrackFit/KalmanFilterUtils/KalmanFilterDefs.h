@@ -15,13 +15,17 @@
 #define KalmanFilterDefs_h
 
 
-#include "src/TrackFit/KalmanFilterFit/GlastVector.h"
-#include "src/TrackFit/KalmanFilterFit/GlastMatrix.h"
-//#include "CLHEP/Matrix/Vector.h"
-//#include "CLHEP/Matrix/Matrix.h"
+#include "TkrUtil/TkrTrkParams.h"
+#include "TkrUtil/TkrCovMatrix.h"
+//#include "src/TrackFit/KalmanFilterFit/GlastVector.h"
+//#include "src/TrackFit/KalmanFilterFit/GlastMatrix.h"
+////#include "CLHEP/Matrix/Vector.h"
+////#include "CLHEP/Matrix/Matrix.h"
 
-typedef GlastMatrix KFmatrix;
-typedef GlastVector KFvector;
+//typedef GlastMatrix KFmatrix;
+//typedef GlastVector KFvector;
+typedef TkrCovMatrix KFmatrix;
+typedef TkrTrkParams KFvector;
 
 //#include "Event/Recon/TkrRecon/TkrFitPar.h"
 //#include "Event/Recon/TkrRecon/TkrFitMatrix.h"

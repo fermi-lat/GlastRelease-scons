@@ -47,7 +47,8 @@ StatusCode VtxSingleTrkTool::doVtxFit(Event::TkrVertexCol& theVtxCol)
                                       Ray(theTrack->getPosition(),
                                           theTrack->getDirection())
                                       );
-      vertex->addTrack(theTrack);
+      // Comment out for now (changing from TkrFitTrackBase to TkrTrack - 8/26/04 TU)
+      //vertex->addTrack(theTrack);
       
       theVtxCol.push_back(vertex); 
     }

@@ -38,10 +38,14 @@
 #include "gui/DisplayRep.h"
 #include "Event/Digi/TkrDigi.h"
 #include "Event/Recon/TkrRecon/TkrCluster.h"
-#include "Event/Recon/TkrRecon/TkrClusterCol.h"
+#include "Event/Recon/TkrRecon/TkrCluster.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
 #include "TkrUtil/ITkrBadStripsSvc.h"
 #include "TkrUtil/ITkrAlignmentSvc.h"
+
+#include <map>
+#include <set>
+
 
 class TkrMakeClusters
 {
@@ -52,9 +56,10 @@ public:
     /// This constructor actually makes the clusters
     /// the pointers to services and data are passed through the constructor
     
-    TkrMakeClusters(Event::TkrClusterCol* pClus, 
+    TkrMakeClusters(Event::TkrClusterCol* pClus, Event::TkrIdClusterMap* clusMap,
         ITkrGeometrySvc* m_pTkrGeo, 
-        Event::TkrDigiCol* pTkrDigiCol);
+        Event::TkrDigiCol* pTkrDigiCol,
+                                 std::set<idents::TkrId>* tkrIds);
     
     ~TkrMakeClusters() { }
     

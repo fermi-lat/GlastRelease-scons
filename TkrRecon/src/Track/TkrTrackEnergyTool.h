@@ -11,13 +11,19 @@
 
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/DataSvc.h"
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/GaudiException.h" 
 
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Recon/TkrRecon/TkrPatCand.h"
 #include "Event/Recon/TkrRecon/TkrFitTrackBase.h"
 
+//#include "TkrRecon/GaudiAlg/TkrTrackFitAlg.h"
 #include "src/Track/TkrControl.h"
+#include "src/TrackFit/KalFitTrack/KalFitter.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
+#include "TkrUtil/ITkrQueryClustersTool.h"
 
 static const InterfaceID IID_TkrTrackEnergyTool("TkrTrackEnergyTool", 1 , 0);
 
@@ -51,9 +57,12 @@ private:
     double getTotalEnergy(Event::TkrPatCand* track, double CalEnergy);
 
     /// Pointer to the local Tracker geometry service
-    ITkrGeometrySvc* m_tkrGeo;
+    ITkrGeometrySvc*       m_tkrGeo;
 
-    TkrControl*      m_control;
+    /// Pointer to the cluster tool
+    ITkrQueryClustersTool* m_clusTool;
+
+    TkrControl*            m_control;
 
     /// Pointer to the Gaudi data provider service
     DataSvc*         m_dataSvc;

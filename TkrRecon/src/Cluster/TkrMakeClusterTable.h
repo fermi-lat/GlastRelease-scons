@@ -12,7 +12,7 @@
 */
 
 #include "Event/Recon/TkrRecon/TkrCluster.h"
-#include "Event/Recon/TkrRecon/TkrClusterCol.h"
+#include "Event/Recon/TkrRecon/TkrCluster.h"
 #include "Event/Digi/TkrDigi.h"
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/Event.h"

@@ -31,11 +31,11 @@ TkrMakeClusterTable::TkrMakeClusterTable(const TkrClusterCol* pClus,
 
     TkrDigiCol::const_iterator itD = pDigi->begin();
 
-    int clsSize = pClus->nHits();
+    int clsSize = pClus->size();
 
     // go through all the clusters: these are in the same order as the digis
     for (int iclu=0; iclu<clsSize; iclu++) {
-        TkrCluster* p_clu = pClus->getHit(iclu);
+        TkrCluster* p_clu = (*pClus)[iclu];
         int firstStrip = p_clu->firstStrip();
         int lastStrip  = p_clu->lastStrip();
         // turn into strings for comparison
@@ -94,9 +94,10 @@ TkrMakeClusterTable::TkrMakeClusterTable(const TkrClusterCol* pClus,
 }
 
 int TkrMakeClusterTable::digiOrder ( const TkrCluster* pClust) {
-    TkrCluster clust = *pClust;
-    return clust.v() + 2*(m_pTkrGeo->reverseLayerNumber(clust.plane()))
-        + 64*clust.tower();
+//    TkrCluster clust = *pClust;
+//    return clust.v() + 2*(m_pTkrGeo->reverseLayerNumber(clust.plane()))
+//        + 64*clust.tower();
+    return pClust->v() + 2*pClust->layer() + 64*pClust->tower();
 }
     
 

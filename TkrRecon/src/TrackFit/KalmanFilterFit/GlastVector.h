@@ -11,8 +11,8 @@
 #ifndef GlastVector_h
 #define GlastVector_h
 
-#include "CLHEP/Matrix/Matrix.h"
-#include "Event/Recon/TkrRecon/TkrFitPar.h"
+#include "CLHEP/Matrix/Vector.h"
+#include "Event/Recon/TkrRecon/TkrTrackParams.h"
 
 class GlastVector : public HepVector
 {
@@ -34,10 +34,10 @@ public:
     GlastVector(const HepVector &v) : HepVector(v) {}
     GlastVector(const HepMatrix &m) : HepVector(m) {}
 
-    inline GlastVector(const Event::TkrFitPar& m1);
+    inline GlastVector(Event::TkrTrackParams& m1);
 };
 
-GlastVector::GlastVector(const Event::TkrFitPar& m1) : HepVector(4)
+GlastVector::GlastVector(Event::TkrTrackParams& m1) : HepVector(4)
 {
     (*this)(1) = m1(1);
     (*this)(2) = m1(2);

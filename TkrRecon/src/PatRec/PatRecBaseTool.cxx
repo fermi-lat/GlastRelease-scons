@@ -51,6 +51,12 @@ StatusCode PatRecBaseTool::initialize()
           log << MSG::ERROR << "Could not find EventDataSvc" << endreq;
           return fail;
       }
+      if ((toolSvc()->retrieveTool("TkrQueryClustersTool", m_clusTool)).isFailure())
+      {
+          log << MSG::ERROR << "Could not find EventDataSvc" << endreq;
+          return fail;
+      }
+
   }
   log << MSG::INFO << "PatRecBaseTool successfully initialized" << endreq;
   return sc;

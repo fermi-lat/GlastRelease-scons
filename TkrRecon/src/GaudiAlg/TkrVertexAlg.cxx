@@ -30,6 +30,7 @@
 #include "GaudiKernel/DataObject.h"
 
 #include "Event/TopLevel/EventModel.h"
+#include "Event/Recon/TkrRecon/TkrTrack.h"
 #include "Event/Recon/TkrRecon/TkrVertexTab.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
@@ -108,7 +109,7 @@ StatusCode TkrVertexAlg::execute()
     MsgStream log(msgSvc(), name());
   
     // Recover the collection of Fit tracks
-    Event::TkrFitTrackCol* pTkrTracks = SmartDataPtr<Event::TkrFitTrackCol>(eventSvc(),EventModel::TkrRecon::TkrFitTrackCol);
+    Event::TkrTrackCol* pTkrTracks = SmartDataPtr<Event::TkrTrackCol>(eventSvc(),EventModel::TkrRecon::TkrTrackCol);
     
     // Retrieve the information on vertices
     SmartDataPtr<Event::TkrVertexCol> pVtxCol(eventSvc(), EventModel::TkrRecon::TkrVertexCol);
@@ -145,10 +146,10 @@ StatusCode TkrVertexAlg::execute()
         if (sc.isSuccess())
         {
             // Create a new relational table for pattern recognition and fit tracks
-            Event::TkrVertexTab vertexRelTab;
+            Event::TkrVertexTrackTab vertexRelTab;
             vertexRelTab.init();
 
-            sc = eventSvc()->registerObject(EventModel::TkrRecon::TkrVertexTab, vertexRelTab.getAllRelations());
+            sc = eventSvc()->registerObject(EventModel::TkrRecon::TkrVertexTrackTab, vertexRelTab.getAllRelations());
         }
     }
 

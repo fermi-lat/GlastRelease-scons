@@ -13,30 +13,4 @@
 #ifndef COMBOFINDTRACKTOOL_H
 #define COMBOFINDTRACKTOOL_H
 
-#include "GaudiKernel/AlgTool.h"
-#include "GaudiKernel/DataSvc.h"
-#include "TkrRecon/PatRec/ITkrFindTrackTool.h"
-#include "TkrUtil/ITkrGeometrySvc.h"
-#include "TkrUtil/ITkrFailureModeSvc.h"
-#include "src/PatRec/PatRecBaseTool.h"
-
-class ComboFindTrackTool : public PatRecBaseTool //public AlgTool, virtual public ITkrFindTrackTool
-{
-public:
-    /// Standard Gaudi Tool interface constructor
-    ComboFindTrackTool(const std::string& type, const std::string& name, const IInterface* parent);
-    virtual ~ComboFindTrackTool() {}
-
-    /// @brief Method to find candidate tracks. Will retrieve the necessary information from
-    ///        the TDS, including calorimeter energy, and then use TkrComboPatRec to find all
-    ///        possible track candidates. The resulting track candidate collection is then 
-    ///        stored in the TDS for the next stage.
-	
-    /// put actual init stuff here
-    StatusCode initialize();
-    /// does the work
-    StatusCode findTracks();
-
-};
-
 #endif

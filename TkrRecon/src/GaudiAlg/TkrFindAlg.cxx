@@ -7,6 +7,7 @@
 // Author:
 //      Tracy Usher       
 
+#include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -19,11 +20,46 @@
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
-
-#include "TkrRecon/GaudiAlg/TkrFindAlg.h"
 #include "TkrRecon/Services/TkrInitSvc.h"
-#include "Event/Recon/TkrRecon/TkrClusterCol.h"
+#include "Event/Recon/TkrRecon/TkrCluster.h"
 #include "src/Track/TkrControl.h"
+#include "TkrRecon/PatRec/ITkrFindTrackTool.h"
+
+/** 
+ * @class TkrFindAlg
+ *
+ * @brief TkrRecon Gaudi Algorithm for controlling the track finding. 
+ *        Gaudi Tools are used to implement a particular type of pattern 
+ *        recognition, this algorithm controls their creation and use.
+ *        Candidate tracks are output to the TDS class TkrPatCand. 
+ * 
+ * Created 08-Nov-2001
+ * 
+ * @author Tracy Usher
+ *
+ * $Header$
+ */
+
+class TkrFindAlg : public Algorithm
+{
+public:
+    // Standard Gaudi Algorithm constructor format
+    TkrFindAlg(const std::string& name, ISvcLocator* pSvcLocator); 
+    virtual ~TkrFindAlg() {}
+
+    // The thee phases in the life of a Gaudi Algorithm
+    StatusCode initialize();
+    StatusCode execute();
+    StatusCode finalize();
+    
+private:
+
+    /// Type of fit to perform
+    std::string        m_TrackFindType;
+
+    /// Always use the right tool for the job
+    ITkrFindTrackTool* m_findTool;
+};
 
 static const AlgFactory<TkrFindAlg>  Factory;
 const IAlgFactory& TkrFindAlgFactory = Factory;
