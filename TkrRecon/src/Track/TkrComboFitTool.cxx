@@ -16,7 +16,7 @@
 
 #include "Event/Recon/TkrRecon/TkrKalFitTrack.h"
 #include "src/TrackFit/KalFitTrack/KalFitter.h"
-#include "TkrRecon/ITkrGeometrySvc.h"
+#include "TkrUtil/ITkrGeometrySvc.h"
 #include "src/Track/TkrControl.h"
 
 static ToolFactory<TkrComboFitTool> s_factory;
