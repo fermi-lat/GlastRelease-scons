@@ -6,7 +6,9 @@
 #include "TObject.h"
 
 /*! \class LogId
-\brief
+\brief Log Id class
+ This class identifies the CAL logs using the Tower, Layer and Column.
+
  Jun 2001 HK:  not using pipeline, sequence anymore..
  access and set functions for calorimeter log ids
  Jun 2001 Heather Kelly renamed LogID to LogId
@@ -86,26 +88,26 @@ private:
         BOUNDS_COLUMN = 9,
         BOUNDS_PIPE = 4
     };
-    UInt_t m_tag;   // Packed word containing log data
+    UInt_t m_tag;   // Packed word containing log id
 
     static Bool_t isValidTagStruct(LogId::TAG_STRUCT ts);
     static Bool_t isValidTagWord(UInt_t tagWord);
     static Bool_t isValidColumn(UInt_t columnVal);
     static Bool_t isValidLayer(UInt_t layerVal);
-    //static Bool_t isValidPipeLine(UInt_t pipeVal);
 
-    static UInt_t getTower(UInt_t tagWord);
-    static UInt_t getColumn(UInt_t tagWord);
-    static UInt_t getLayer(UInt_t tagWord);
+    static UShort_t getTower(UInt_t tagWord);
+    static UShort_t getColumn(UInt_t tagWord);
+    static UShort_t getLayer(UInt_t tagWord);
 
     static UInt_t getId(UInt_t tagWord);
-    //static UInt_t getPipeline(UInt_t tagWord);
-    //static UInt_t getSequence(UInt_t tagWord);
-    static UInt_t getXY(UInt_t tagWord);
+    static UShort_t getXY(UInt_t tagWord);
+
+
 public:
-    // orientation of the layer
-    // X logs are oriented along the X axis, measures Y
-    // Y logs are oriented along the Y axis, measures X
+    /*! orientation of the layer
+        X logs are oriented along the X axis, measures Y
+        Y logs are oriented along the Y axis, measures X
+        */
     typedef enum {
         X = 0,
         Y
@@ -113,29 +115,28 @@ public:
 
     LogId();            
     LogId(UInt_t tag);
+    LogId(UShort_t tower, UShort_t layer, UShort_t column);
     virtual ~LogId();
 
-    //static Bool_t fillIdFromGeom(LogId::TAG_STRUCT *ts);
-    //static Bool_t fillGeomFromId(LogId::TAG_STRUCT *ts);
     static UInt_t fillTagWord(LogId::TAG_STRUCT *ts);
     static void fillTagStruct(UInt_t tagVal, LogId::TAG_STRUCT *ts);
 
     UInt_t getTag()         const;
-    UInt_t getColumn()      const;
-    UInt_t getLayer()       const;
+    UShort_t getColumn()      const;
+    UShort_t getLayer()       const;
+    UShort_t getTower()       const;
 
     UInt_t getId()          const;
     CALAxes getXY()         const;
-    //UInt_t getPipeline()    const;
-    //UInt_t getSequence()    const;
 
     Bool_t setTag(UInt_t tagVal);
     Bool_t setTag(TAG_STRUCT *ts);
     Bool_t setColumn(UInt_t columnVal);
     Bool_t setLayer(UInt_t layerVal);
+    Bool_t setTower(UInt_t towerVal);
     Bool_t setXY(CALAxes xyVal);
-//    Bool_t setID(UInt_t idVal);
+    Bool_t setId(UShort_t tower, UShort_t layer, UShort_t column);
 
-ClassDef(LogId,3)       // CsI log identification and readout information
+ClassDef(LogId,3)       // Cal log identification and readout information
 };
 #endif

@@ -9,45 +9,49 @@
 
 ClassImp(AcdTile)
 
-///________________________________________________________________________
 AcdTile::AcdTile() : m_tag(0){
     // Default constructor
-    m_tileId.setId(0);
+    m_tileId.setId(0, 1, 2);
 }
-///________________________________________________________________________
-AcdTile::AcdTile(UShort_t i) : m_tag(0){//, m_tileId(i) {
-    m_tileId.setId(i);
+
+AcdTile::AcdTile(UInt_t i, short base, short used) : m_tag(0){
+    m_tileId.setId(i, used, base);
 }
-//_________________________________________________________________________
+
+AcdTile::AcdTile(AcdId &id) : m_tag(0) {
+    m_tileId = id;
+}
+
 AcdTile::~AcdTile(){
     // Destructor 
 }
-//_________________________________________________________________________
+
 Int_t AcdTile::Compare(const TObject *obj) const {
+    const short base = 2;
     if (this == obj) return 0;
     if (AcdTile::Class() != obj->IsA()) return -1;
-    UInt_t id_this = m_tileId.getId();
-    UInt_t id_tile = ((AcdTile*)obj)->getId()->getId();
+    UInt_t id_this = m_tileId.getId(base);
+    UInt_t id_tile = ((AcdTile*)obj)->getId()->getId(base);
     if (id_this == id_tile)
 	return 0;
     else
 	return (id_this > id_tile) ? 1 : -1; 
 }
-//_________________________________________________________________________
+
 Bool_t AcdTile::IsSortable() const {
   return kTRUE;
 }
-//_________________________________________________________________________
+
 UChar_t AcdTile::getVeto() {
     // Returns 1 if tile above thresh, 0 otherwise
     return ((m_tag >> ACD_V_HIT) & ACD_M_HIT);
 }
-//_________________________________________________________________________
+
 UShort_t AcdTile::getPulseHeight() {
     // Returns the PMT value for this tile
     return ((m_tag >> ACD_V_PMT) & ACD_M_PMT);
 }
-//_________________________________________________________________________
+
 Bool_t AcdTile::setPulseHeight(UShort_t pmtVal)
 {
     // Set the PMT/PHA value for this tile
@@ -60,7 +64,7 @@ Bool_t AcdTile::setPulseHeight(UShort_t pmtVal)
 	return kTRUE;
     }
 }
-//_________________________________________________________________________
+
 Bool_t AcdTile::setVeto(UChar_t hitVal)
 {
     // Set the 'hit' status of this tile

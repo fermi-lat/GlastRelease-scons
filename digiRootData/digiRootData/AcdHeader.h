@@ -27,12 +27,12 @@ public:
 
     virtual void Clean(Option_t *option="");
 
-    bool isL1tWait() { return (getDeadTimeCause() & L1T_Wait_Bit); };
-    bool isCpuBusy() { return (getDeadTimeCause() & Cpu_Busy_Bit); };
-    bool isFifoFullTrap() { return (getDeadTimeCause() & Fifo_Full_Trap_Bit); };
-    bool isFifoFull() { return (getDeadTimeCause() & Fifo_Full_Bit); };
-    bool isFifoHalfTrap() { return (getDeadTimeCause() & Fifo_Half_Trap_Bit); };
-    bool isAcdBusy() { return (getDeadTimeCause() & Acd_Busy_Bit); };
+    bool isL1tWait() { return (m_deadtime_and_cause & L1T_Wait_Bit); };
+    bool isCpuBusy() { return (m_deadtime_and_cause & Cpu_Busy_Bit); };
+    bool isFifoFullTrap() { return (m_deadtime_and_cause & Fifo_Full_Trap_Bit); };
+    bool isFifoFull() { return (m_deadtime_and_cause & Fifo_Full_Bit); };
+    bool isFifoHalfTrap() { return (m_deadtime_and_cause & Fifo_Half_Trap_Bit); };
+    bool isAcdBusy() { return (m_deadtime_and_cause & Acd_Busy_Bit); };
 
 
 private:

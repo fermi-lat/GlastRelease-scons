@@ -67,6 +67,7 @@ extern G__linked_taginfo G__EventCintLN_CalLogcLcLCalTrigMode;
 extern G__linked_taginfo G__EventCintLN_CalLogcLcLdA;
 extern G__linked_taginfo G__EventCintLN_ESAPID;
 extern G__linked_taginfo G__EventCintLN_L1T;
+extern G__linked_taginfo G__EventCintLN_L1TcLcLdA;
 extern G__linked_taginfo G__EventCintLN_TClonesArray;
 extern G__linked_taginfo G__EventCintLN_TkrHeader;
 extern G__linked_taginfo G__EventCintLN_TkrHeadercLcLdA;

@@ -83,16 +83,22 @@ public:
     /// retrieve the whole TClonesArray of Acd Digi data
     TClonesArray* getAcdDigi() { return m_AcdDigiVec; };
     /// Add a new AcdTile entry into the ACD digi array
-    AcdTile* addAcdTile(Short_t id);
+    AcdTile* addAcdTile(UInt_t id, short base=10, short used=1);
     /// retrieve a specific AcdTile - if not found, returns null
-    const AcdTile* getAcdTile(UShort_t id);
+    /// User should provide a valid (Ritz) Acd id, in base 10 - where 010 == 10
+    const AcdTile* getAcdTile(UInt_t id);
+    /// retrieve a specific AcdTile, based upon the layer, face, row, col, if not found returns null
+    const AcdTile* getAcdTile(short l, short f, short r, short c);
+    /// retrieve a specific AcdTile, based upon a valid AcdId, if not found returns null
+    const AcdTile* getAcdTile(AcdId &id);
 
     /// retrieve the whole TClonesArray of XGT Digi data
     TClonesArray* getXgtDigi() { return m_XgtDigiVec; };
     /// add a new AcdTile to store XGT data into the XGT digi array
-    AcdTile* addXgt(Short_t id);
+    AcdTile* addXgt(UInt_t id, short base = 10);
     /// retrieve a specific XGT (AcdTile), if not found, returns null
-    const AcdTile* getXgt(UShort_t id);
+    /// User should provide valid (Ritz) XGT id in base 10: 2000, 2001, 2010, 2011
+    const AcdTile* getXgt(UInt_t id);
 
     /// Access CAL data
     CalHeader* getCalHeader() { return &m_CalHeader; };
@@ -100,6 +106,10 @@ public:
     TClonesArray* getCalDigi() { return m_CalDigiVec; };
     /// Add a new CalLog entry into the CAL digi array
     CalLog* addCalLog();
+    /// retrieve a specific CalLog based on LogId, if not found returns null
+    const CalLog* getCalLog(LogId &id);
+    /// retrieve a specific CalLog based on tower, layer, column, if not found returns null.
+    const CalLog* getCalLog(UShort_t tower, UShort_t layer, UShort_t column);
 
     /// Access TKR data
     TkrHeader* getTkrHeader() { return &m_TkrHeader; };

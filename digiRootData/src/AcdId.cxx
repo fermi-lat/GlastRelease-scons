@@ -14,7 +14,7 @@
 
 ClassImp(AcdId)
 
-UShort_t AcdId::badId = 9999;
+UShort_t AcdId::badId = 3799;
 
 ///________________________________________________________________________
 AcdId::AcdId() : m_id(0), m_used(1) {
@@ -33,23 +33,40 @@ AcdId::AcdId(short l, short f, short r, short c) {
     setColumn(c);
 };
 
+AcdId::AcdId(UInt_t i, short base, short used) {
+    setId(i, used, base);
+}
 
 ///________________________________________________________________________
-UInt_t AcdId::getId() const { 
+UInt_t AcdId::getId(short base) const { 
     // Returns the tile ID number
-    
-    return m_id;
+    if (base == 2) return m_id; 
+    return (getLayer() * 1000 + getFace() * 100 + getRow() * 10 + getColumn());
 }
+
 ///________________________________________________________________________
-void AcdId::setId(Short_t newVal) { 
+void AcdId::setId(UInt_t newVal, short used, short base) { 
 // Sets the ACD ID number to newVal
 // If this is an unused PMT, store that information
-    if (newVal < 0) {
+    if (used <= 0) {
         m_used = 0;
-        m_id = badId;
+        m_id = 0;
+        setLayer(3);
+        setFace(7);
+        setRow(9);
+        setColumn(9);
     } else {
         m_used = 1;
-        m_id = UInt_t(newVal);
+        if (base == 2) {
+            m_id = newVal;
+        } else if (base == 10) {
+            short lay, face, row, col;
+            base10ToAcdId(newVal, lay, face, row, col);
+            setLayer(lay);
+            setFace(face);
+            setRow(row);
+            setColumn(col);
+        }
     }
 }
 
@@ -66,7 +83,7 @@ bool AcdId::isSide () const
 
 short AcdId::getLayer () const 
 { 
-    return ((m_id & _layermask) ? 1 : 0); 
+    return ((m_id & _layermask) >> layerShift); 
 }
 
 short AcdId::getFace () const
@@ -86,10 +103,12 @@ short AcdId::getColumn () const
 
 void AcdId::setLayer( unsigned int val)
 { 
-    short two = 2;
+    m_id &= ~_layermask;
+    m_id |= (val << layerShift);
+    //short two = 2;
     
-    set_word( two, m_id, 
-        ((val == 0) ? 0 : 8) | ((_facemask & m_id) >> 8) );
+   // set_word( two, m_id, 
+   //     ((val == 0) ? 0 : 8) | ((_facemask & m_id) >> 8) );
 }
 
 void AcdId::setFace( unsigned int f )
@@ -118,4 +137,14 @@ bool AcdId::wasConnected() const
 
 void AcdId::setConnected(Char_t c) {
     m_used = c;
+}
+
+void AcdId::base10ToAcdId(UInt_t val, short &lay, short &face, short &row, short &col) {
+    lay = val / 1000;
+    val -= lay*1000;
+    face = val / 100;
+    val -= face*100;
+    row = val / 10;
+    val -= row*10;
+    col = val;
 }

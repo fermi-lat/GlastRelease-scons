@@ -5,17 +5,22 @@ ClassImp(CalLog)
 
 CalLog::CalTrigMode CalLog::m_mode;
 
-///________________________________________________________________________
 CalLog::CalLog() {
     // Default constructor
     m_mode = ALLRANGE;
     m_log.setTag(UInt_t(0));
 }
-///________________________________________________________________________
+
+CalLog::CalLog(LogId &id) {
+    m_mode = ALLRANGE;
+    m_log.setTag(UInt_t(0));
+    m_log = id;
+}
+
 CalLog::~CalLog() {
     // Destructor
 }
-//_________________________________________________________________________
+
 Int_t CalLog::Compare(const TObject *obj) const {
     if (this == obj) return 0;
     if (CalLog::Class() != obj->IsA()) return -1;
@@ -26,11 +31,11 @@ Int_t CalLog::Compare(const TObject *obj) const {
     else
         return (id_this > id_hit) ? 1 : -1;
 }
-//_________________________________________________________________________
+
 Bool_t CalLog::IsSortable() const {
     return kTRUE; 
 }
-//_________________________________________________________________________
+
 Bool_t CalLog::setAdcValue(UShort_t newVal, LogFace face, AdcRange range) {
     // Allows user to set the ADC Value for a particular log end and 
     // digitization.  Returns kTRUE if successful, kFALSE if not.
@@ -45,7 +50,7 @@ Bool_t CalLog::setAdcValue(UShort_t newVal, LogFace face, AdcRange range) {
         return kTRUE;
     }
 }
-//_________________________________________________________________________
+
 Bool_t CalLog::setAdcId(UShort_t newVal, LogFace face, AdcRange range) {
     // Allows user to set the ADC ID for a particular log end and 
     // digitization.  Returns kTRUE if successful, kFALSE if not.
@@ -60,7 +65,7 @@ Bool_t CalLog::setAdcId(UShort_t newVal, LogFace face, AdcRange range) {
         return kTRUE;
     }
 }
-//_________________________________________________________________________
+
 Bool_t CalLog::setAdcPinId(UShort_t newVal, LogFace face, AdcRange range) {
     // Allows user to set the ADC Pin ID for a particular log end and 
     // digitization.  Returns kTRUE if successful, kFALSE if not.
@@ -75,7 +80,7 @@ Bool_t CalLog::setAdcPinId(UShort_t newVal, LogFace face, AdcRange range) {
         return kTRUE;
     }
 }
-//_________________________________________________________________________
+
 Bool_t CalLog::setAdcRangeScale(UShort_t newVal, LogFace face, AdcRange range) {
     // Allows user to set the ADC Range Scale for a particular log end and 
     // digitization.  Returns kTRUE if successful, kFALSE if not.

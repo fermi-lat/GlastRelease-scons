@@ -85,36 +85,56 @@ void Event::Clean(Option_t *option) {
 }
 
 
-AcdTile* Event::addAcdTile(Short_t id) {
+AcdTile* Event::addAcdTile(UInt_t id, short base, short used) {
     // Add a new AcdTile entry, note that
     // TClonesArrays can only be filled via
     // a new with placement call
     ++m_numTiles;
     TClonesArray &tiles = *m_AcdDigiVec;
-    new(tiles[m_numTiles]) AcdTile(id);
+    new(tiles[m_numTiles]) AcdTile(id, base, used);
     return ((AcdTile*)(tiles[m_numTiles]));
 }
 
-const AcdTile* Event::getAcdTile(UShort_t id) {
+const AcdTile* Event::getAcdTile(UInt_t id) {
     // Find a specific AcdTile in the TClonesArray
-    // User supplies a valid AcdTile id
+    // User supplies a valid AcdTile id, in base 10 or base 2
+    // default is base 10
     AcdTile tempTile = AcdTile(id);
     int index = m_AcdDigiVec->BinarySearch(&tempTile);
     if (index >= 0) return ((AcdTile*)m_AcdDigiVec->At(index));
     return 0;
 }
 
-AcdTile* Event::addXgt(Short_t id) {
+const AcdTile* Event::getAcdTile(short l, short f, short r, short c) {
+    // Find a specific AcdTile in the TClonesArray
+    // User supplies a valid AcdTile identified by layer, face, row, column
+    AcdId tempId(l, f, r, c);
+    AcdTile tempTile = AcdTile(tempId.getId());
+    int index = m_AcdDigiVec->BinarySearch(&tempTile);
+    if (index >= 0) return ((AcdTile*)m_AcdDigiVec->At(index));
+    return 0;
+}
+
+const AcdTile* Event::getAcdTile(AcdId &id) {
+    // Find a specific AcdTile in the TClonesArray
+    // User supplies a valid AcdId
+    AcdTile tempTile = AcdTile(id.getId());
+    int index = m_AcdDigiVec->BinarySearch(&tempTile);
+    if (index >= 0) return ((AcdTile*)m_AcdDigiVec->At(index));
+    return 0;
+}
+
+AcdTile* Event::addXgt(UInt_t id, short base) {
     // Add a new XGT(AcdTile) entry, note that
     // TClonesArrays can only be filled via
     // a new with placement call
     ++m_numXgts;
     TClonesArray &xgts = *m_XgtDigiVec;
-    new(xgts[m_numXgts]) AcdTile(id);
+    new(xgts[m_numXgts]) AcdTile(id, base);
     return ((AcdTile*)(xgts[m_numXgts]));
 }
 
-const AcdTile* Event::getXgt(UShort_t id) {
+const AcdTile* Event::getXgt(UInt_t id) {
     // Find a specific XGT(AcdTile) in the TClonesArray
     // User supplies a valid AcdTile id
     AcdTile tempTile = AcdTile(id);
@@ -133,6 +153,27 @@ CalLog* Event::addCalLog() {
     new(logs[m_numLogs]) CalLog();
     return ((CalLog*)(logs[m_numLogs]));
 }
+
+const CalLog* Event::getCalLog(LogId &id) {
+    // Find a specific CalLog in the TClonesArray
+    // User supplies a valid CalLog
+    CalLog tempLog = CalLog(id);
+    int index = m_CalDigiVec->BinarySearch(&tempLog);
+    if (index >= 0) return ((CalLog*)m_CalDigiVec->At(index));
+    return 0;
+
+}
+
+const CalLog* Event::getCalLog(UShort_t tower, UShort_t layer, UShort_t column) {
+    // Find a specific CalLog in the TClonesArray
+    // User supplies a valid CalLog
+    CalLog tempLog = CalLog();
+    tempLog.getLogId()->setId(tower, layer, column);
+    int index = m_CalDigiVec->BinarySearch(&tempLog);
+    if (index >= 0) return ((CalLog*)m_CalDigiVec->At(index));
+    return 0;
+}
+
 
 void Event::addTkrLayer(TkrLayer *layer) {
     m_TkrDigiVec->Add(layer);

@@ -24,6 +24,7 @@ class CalLog: public TObject {
 public:
     
     CalLog();
+    CalLog(LogId &id);
     virtual ~CalLog();
     /// Root >= 3.0 is now const correct for the Compare function
     Int_t Compare(const TObject *obj) const;

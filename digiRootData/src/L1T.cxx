@@ -11,14 +11,14 @@ ClassImp(L1T)
 
 ///________________________________________________________________________
 L1T::L1T( Int_t trigCount, Int_t trigTimeValue, Int_t xCapture, Int_t yCapture,
-		 UShort_t vetoCapture, UChar_t deadTimeReason, UShort_t deadTime) :
+		 UShort_t vetoCapture, UChar_t deadTimeCause, UShort_t deadTime) :
 	m_trigCount(trigCount), m_trigTimeValue(trigTimeValue), 
 	m_xCapture(xCapture), m_yCapture(yCapture), m_vetoCapture(vetoCapture),
-	m_deadTimeReason(deadTimeReason), m_deadTime(deadTime) {
+	m_deadTimeCause(deadTimeCause), m_deadTime(deadTime) {
 }
 //_________________________________________________________________________
 L1T::L1T() : m_trigCount(0), m_trigTimeValue(0), m_xCapture(0), m_yCapture(0),
-m_vetoCapture(0), m_deadTimeReason(0), m_deadTime(0)
+m_vetoCapture(0), m_deadTimeCause(0), m_deadTime(0)
 {
   // Default constructor
 }
@@ -33,6 +33,6 @@ void L1T::Clean() {
     m_xCapture = 0;
     m_yCapture = 0; 
     m_vetoCapture = 0;  
-    m_deadTimeReason = 0; 
+    m_deadTimeCause = 0; 
     m_deadTime = 0;     
 }

@@ -8,6 +8,8 @@
 /*! \class AcdTile
 \brief 
  The digitization for a single ACD tile.
+ Stores the pulse height and a bit to denote whether or not
+ the tile is above veto threshold.
  Jun 2001 Heather Kelly renamed to AcdTile
  Jun 2001 Heather Kelly - Remove pointer to TileID
  Feb 2000 Daniel Flath - Rewrite to facilitate standardization of
@@ -38,11 +40,14 @@ private:
 	ACD_V_HIT = (ACD_K_PMT + ACD_V_PMT),
 	ACD_M_HIT = ((1 << ACD_K_HIT) - 1)
     };
-    UShort_t m_tag;	// Packed word containing tile data
-    AcdId m_tileId;   // Tile identity info class
+    /// packed word containing ACD tile data
+    UShort_t m_tag;	
+    /// Tile Id
+    AcdId m_tileId; 
 public:
     AcdTile();
-    AcdTile(UShort_t id);
+    AcdTile(UInt_t id, short base=10, short used=1);
+    AcdTile(AcdId &id);
     virtual ~AcdTile();
     AcdId* getId() { return &m_tileId; };
     UShort_t getPulseHeight();

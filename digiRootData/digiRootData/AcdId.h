@@ -8,7 +8,7 @@
 \brief encapsulate the id for an ACD tile.
 
  ACD tile numbering
- Layer 0 or 1, where 0 corresponds to the inner layer
+ Layer 0 - 3, where 0 corresponds to the inner layer
  Face 0 - 4 
           Face 0 == top  (hat)
           Face 1 == -X side 
@@ -22,12 +22,17 @@
  Column 0 - 9
           On the sides, columns are numbered along +x (or +y) axis
 
- One could imagine that an ACD id could be represented by 12 bits.
+ One could imagine that an ACD id could be represented by 13 bits.
  
-  __       __ __ __     __ __ __ __      __ __ __ __
+ __  __       __ __ __     __ __ __ __      __ __ __ __
  LAYER       FACE           ROW            COLUMN
- where the layer is the most significant bit
+ where the layer bits are the most significant bits
 
+Some routines in this class have a default parameter denoted as "base"
+This refers to those instances where an input parameter could be in 
+base 10 or base 2.  In all cases, the default is base 10.  If a user
+desires to use base 2, the parameter called "base" should be supplied
+and set equal to 2.
 
 Jun 2001 Heather Kelly - renamed from TileID to AcdId
 Apr 2000 Daniel Flath - Minor changes to function names, etc.
@@ -54,21 +59,26 @@ private:
     /// set the column
     void setColumn( unsigned int c );
     
+    // extend the notion of a layer to allow for more than 2 layers - for XGTs for example
     enum {
-        _layermask = 0x0800,
+        _layermask = 0x1800,
         _facemask  = 0x0700,
         _rowmask   = 0x00F0,
-        _colmask   = 0x000F
+        _colmask   = 0x000F,
+        layerShift = 11
     };
     
 public:
     AcdId();
     AcdId(const AcdId& id);
     AcdId(short l, short f, short r, short c);
+    AcdId(UInt_t i, short base=10, short used=1);
     virtual ~AcdId() { };
     
-    UInt_t getId() const;
-    void setId(Short_t newVal);
+    /// retrieve the id, either in base 2, or in base 10, denoting the matrix number
+    UInt_t getId(short base = 10) const;
+    /// set the id, specifying whether this is in base 10 or base 2
+    void setId(UInt_t newVal, short used = 1, short base=10);
     /// is this a top tile?
     bool isTop () const;  
     /// is this a side tile?
@@ -89,6 +99,8 @@ public:
     UShort_t getReadoutIndex() const { return m_readoutIndex; };
     /// set the readout index for this tile
     void setReadoutIndex(UShort_t i) { m_readoutIndex = i; };
+    /// convert a value in base 10, to the appropriate layer, face, row, column
+    void base10ToAcdId(UInt_t val, short &lay, short &face, short &row, short &col);
     
     static UShort_t badId;
     
