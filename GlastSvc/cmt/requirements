@@ -12,8 +12,8 @@ apply_pattern package_include
 #=============================================================
 private
 
-use GaudiSvc 
-use GaudiAud 
+use GaudiSvc v7r*
+use GaudiAud v5r*
 
 apply_pattern package_headers
 
