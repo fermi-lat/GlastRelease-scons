@@ -108,19 +108,21 @@ double MonteCarloHitEnergy::updateHitEnergy(const double /*curEnergy*/, const do
 double MonteCarloHitEnergy::kinETopBeta(const double energy)
 {
     // The input energy is the kinetic energy of the particle in question
-    double hitEnergy = energy;
+    // Default is to set pBeta to this value...
+    double pBeta = energy;
 
     Event::McParticle::StdHepId hepid= m_mcParticle->particleProperty();
     ParticleProperty* ppty = m_partPropSvc->findByStdHepID( hepid );
     if (ppty) 
     {
-        double partMass = ppty->mass();
+        double partMass  = ppty->mass();
+        double totEnergy = energy + partMass;
 
         // This is used in fitting when particle mass is known
-        hitEnergy = (energy * energy - partMass * partMass) / energy; 
+        pBeta = (totEnergy * totEnergy - partMass * partMass) / totEnergy; 
     }
 
-    return hitEnergy;
+    return pBeta;
 }
 
 double MonteCarloHitEnergy::pBetaToKinE(const double pBeta)
