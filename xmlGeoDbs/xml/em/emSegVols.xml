@@ -56,7 +56,7 @@
 
     <!ENTITY idDict         SYSTEM "../flight/flightIdDictSegVols.xml">
 
-    <!ENTITY Materials         SYSTEM "../emMaterials.xml">
+    <!ENTITY Materials         SYSTEM "../em/emMaterials.xml">
   ]
 >
 <gdd CVSid="$Id$" 
