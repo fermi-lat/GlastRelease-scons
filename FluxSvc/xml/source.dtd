@@ -17,12 +17,10 @@
 <!ELEMENT spectrum ( (particle | SpectrumClass ) ,
                      (direction | solid_angle | use_spectrum |                          			    galactic_dir ),
 			   (launch_point | patch)* ) >
-<!--Included is the "frame" attribute, which can be "galactic," "glast," and "earth",
-			corresponding to which frame the declared coordinates are relative to, and also the "escale," or energy-scale attribute, which can be either MeV or GeV, and defaults to GeV.-->
+<!--Included is the "escale," or energy-scale attribute, which can be either MeV or GeV, and defaults to GeV.-->
 <!ATTLIST spectrum  flux CDATA "40"
                     name CDATA "default"
-				escale CDATA "GeV"
-					frame CDATA "GLAST">
+				escale CDATA "GeV">
 
 <!--- special generic spectrum: name is the name of a Spectrum, params an optional comma-delimited list -->
 <!ELEMENT SpectrumClass EMPTY>

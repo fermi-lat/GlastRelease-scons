@@ -35,7 +35,7 @@ FluxSource::FluxSource(ISpectrum* aSpec, double aFlux)
 m_maxEnergy(100.),  // note defualt maximum kinetic energy
 _minCos(-0.4f), _maxCos(1.0f), _minPhi(0.0f), _maxPhi(2*M_PI),
 m_rmin(0), m_rmax(1), _phi(0.0f), _theta(0.0f), m_pointtype(NOPOINT),
-m_launch(NONE),m_frametype(EARTH), illumBox(0), m_energyscale(GeV)
+m_launch(NONE), illumBox(0), m_energyscale(GeV)
 {
     s_backoff = 0.;
     spectrum(aSpec);
@@ -50,7 +50,7 @@ FluxSource::FluxSource(double aFlux, ISpectrum* aSpec,  double l, double b)
 m_maxEnergy(100.),  // note defualt maximum kinetic energy
 _minCos(-0.4f), _maxCos(1.0f), _minPhi(0.0f), _maxPhi(2*M_PI),
 m_rmin(0), m_rmax(1), _phi(0.0f), _theta(0.0f), m_pointtype(NOPOINT),
-m_launch(NONE),m_frametype(EARTH), illumBox(0),m_gall(l),m_galb(b)
+m_launch(NONE), illumBox(0),m_gall(l),m_galb(b)
 {
     s_backoff = 0.;
     spectrum(aSpec);
@@ -70,7 +70,7 @@ FluxSource::FluxSource(const DOM_Element& xelem )
 m_maxEnergy(100.),  // note defualt maximum kinetic energy
 _minCos(-0.4f), _maxCos(1.0f), _minPhi(0.0f), _maxPhi(2*M_PI),
 m_rmin(0), m_rmax(1), _phi(0.0f), _theta(0.0f), m_pointtype(NOPOINT), m_launch(NONE),
-m_frametype(EARTH), illumBox(0), m_energyscale(GeV)
+illumBox(0), m_energyscale(GeV)
 {
     static double d2r = M_PI/180.;
     
@@ -102,13 +102,13 @@ m_frametype(EARTH), illumBox(0), m_energyscale(GeV)
         
         DOMString   typeTagName = specType.getTagName();
         std::string spectrum_name = spec.getAttribute("name").transcode();
-        std::string spectrum_frametype = spec.getAttribute("frame").transcode();
+        //std::string spectrum_frametype = spec.getAttribute("frame").transcode();
         std::string spectrum_energyscale = spec.getAttribute("escale").transcode();
         
-        if(spectrum_frametype == "galactic"){ m_frametype=GALAXY;
-        }else if(spectrum_frametype == "glast"){ m_frametype=GLAST;
-        }else if(spectrum_frametype == "earth"){ m_frametype=EARTH;
-        }
+        //if(spectrum_frametype == "galactic"){ m_frametype=GALAXY;
+        //}else if(spectrum_frametype == "glast"){ m_frametype=GLAST;
+        //}else if(spectrum_frametype == "earth"){ m_frametype=EARTH;
+        //}
         
         if(spectrum_energyscale == "GeV"){ m_energyscale=GeV;
         }else if(spectrum_energyscale == "MeV"){ m_energyscale=MeV;
@@ -1086,7 +1086,7 @@ bool FluxSource::occluded(){
     current=asin( fabs(this->/*launchDir*/rawDir().z()) / 1.);//(this->launchDir().magnitude()) is always 1. 
     max = acos(-0.4)-(M_PI/2.);
     
-    return (m_launch == GALACTIC || m_frametype == GALAXY) && ( (current > max) && (z > 0) );
+    return (m_launch == GALACTIC || m_launch == SPECGAL) && ( (current > max) && (z > 0) );
     
 }
 
