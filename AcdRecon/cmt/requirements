@@ -5,7 +5,7 @@ branches src doc
 
 use GlastPolicy v*
 use GlastSvc v9r*
-use Event    v9r*
+use Event    v*
 use GuiSvc   v3*
 
 # no use of default_include_path (no public headers)
