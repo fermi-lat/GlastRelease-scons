@@ -630,7 +630,7 @@ StatusCode CalValsTool::calculate()
 
     // Cal constants, from detModel
     //double cal_top_z = m_calZTop;
-    double cal_depth = -m_calZBot;
+    //double cal_depth = -m_calZBot;
     double cal_half_width = 0.5*std::max(m_calXWidth, m_calYWidth);
     
     // Now do the leakage correction  
