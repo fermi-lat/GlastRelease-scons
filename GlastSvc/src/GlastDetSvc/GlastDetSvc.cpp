@@ -46,7 +46,6 @@ GlastDetSvc::GlastDetSvc(const std::string& name,ISvcLocator* svc)
     declareProperty ("IniFile", m_iniFile);
     
 }
-
 /// Standard Destructor
 GlastDetSvc::~GlastDetSvc()  
 {
@@ -97,6 +96,10 @@ StatusCode GlastDetSvc::initialize ()
     if (m_instrument->initialize(m_iniFile, m_xmlFile) ) status=StatusCode::FAILURE;
     log << MSG::DEBUG << "done. Loaded "<< m_instrument->detector_count() << " detectors." << endreq;
     return status;
+}
+void GlastDetSvc::setDetector(GlastDetector* d)
+{ 
+    m_instrument->setDetector(d);    
 }
 
 // finalize
