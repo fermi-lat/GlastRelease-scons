@@ -9,6 +9,8 @@ class GDDchoice;
 class GDDvolume;
 class GDDbuilder;
 
+enum buildType{all,constants,sections};
+
 /**
  * This class implement the manager for the sections part of the XML file. 
  * It is a singleton.
@@ -29,12 +31,11 @@ public:
 /** This method is used to specify a builder to be used by the manager. */
   void setBuilder(GDDbuilder * b);
 
-  /** This method start the parse of the xml file by the builder. 
-      \todo It
-      is temporary, we have still to implement a mechanism for the
-      building of only some part of the GDD (for now it starts only
-      the sections part) */
-  void build();
+  /** This method start the parse of the xml file by the builder.
+      \todo It is temporary, we have still to implement a mechanism
+      for the building of only some part of the GDD (for now it starts
+      only the sections part) */
+  void build(buildType);
 
   /// This method gives back the actual mode for choice elements
   string getMode(){return manMode;};
@@ -43,7 +44,7 @@ public:
   void setMode(string pmode){manMode = pmode;};
 
   /// This method starts the visit of a hierarchy with a specified visitor
-  void startVisitor(GDDvisitor* v);
+  void startVisitor(GDDvisitor*);
 
   /** This method gives back the pointer to the GDD object. It coule be
      used by expert clients to access information without the need of
@@ -58,12 +59,13 @@ public:
 
  private:
 
-  /** This is a private pointer to the GDDsectionsContainer that
+  /** 
+      This is a private pointer to the GDDsectionsContainer that
       provide the entry point to all the generic model hierarchy of
-      sections*/
+      sections */
   GDD * manGDD;  
   /**
-   * This is the pointer to the only manager that can be istanciated */
+     This is the pointer to the only manager that can be istanciated */
   static GDDmanager* pointer;
   /** This is a private pointer to the builder used by the manager to
       build the hierarchy from the XML file */

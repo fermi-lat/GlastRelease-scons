@@ -30,10 +30,21 @@ void GDDmanager::setBuilder(GDDbuilder* b)
   manGDD = b->getGDD();
 }
 
-void GDDmanager::build() 
+void GDDmanager::build(buildType b) 
 { 
-  manBuilder->buildSections(); 
-  manBuilder->buildConstants(); 
+  switch(b)
+    {
+    case all:
+      manBuilder->buildConstants(); 
+      manBuilder->buildSections(); 
+      break;
+    case constants:
+      manBuilder->buildConstants(); 
+      break;
+    case sections:
+      manBuilder->buildSections(); 
+      break;
+    }
 }
 
 void GDDmanager::startVisitor(GDDvisitor* v)

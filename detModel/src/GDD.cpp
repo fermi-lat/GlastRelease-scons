@@ -8,6 +8,8 @@
 #include "detModel/Sections/GDDcomposition.h"
 #include "detModel/Sections/GDDstack.h"
 #include "detModel/Management/GDDmanager.h"
+#include "detModel/Management/GDDsectionsVisitor.h"
+#include "detModel/Management/GDDconstantsVisitor.h"
 #include "detModel/Constants/GDDconstants.h"
 #include "detModel/Constants/GDDintConst.h"
 #include "detModel/Constants/GDDfloatConst.h"
@@ -268,12 +270,23 @@ void GDD::buildConstantsMap()
  * This method start the visit on the GDD and than recursively
  * start the visit of all the sections it contains
  */
-void GDD::Accept(GDDsectionsVisitor* v){
+void GDD::Accept(GDDvisitor* v){
   unsigned int i;
 
-  v->visitGDD(this);
-  for(i=0; i<sections.size();i++){
-    sections[i]->Accept(v);
+  switch(v->getType()){
+  case sectionsVisitor:
+    {
+      GDDsectionsVisitor* vsec = static_cast<GDDsectionsVisitor*>(v);
+      vsec->visitGDD(this);
+      for(i=0; i<sections.size();i++){
+	sections[i]->Accept(vsec);
+      }
+      break;
+    }
+  case constantsVisitor:
+    //    v->visitGDD(this);
+    // constants->Accept(v);
+    break;
   }
 }
 
@@ -281,7 +294,7 @@ void GDD::Accept(GDDsectionsVisitor* v){
  * This method only start the visit on the GDD and leave to the visitor
  * the option to recurse on its contained elements
  */
-void GDD::AcceptNotRec(GDDsectionsVisitor* v){
+void GDD::AcceptNotRec(GDDvisitor* v){
   v->visitGDD(this);
 }
 

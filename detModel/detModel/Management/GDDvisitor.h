@@ -2,6 +2,8 @@
 #define GDDVISITOR_H
 #include <string>
 
+class GDD;
+
 /// This enumerative represent the type of visitor
 enum typeVisitor{sectionsVisitor, constantsVisitor};
 
@@ -25,6 +27,8 @@ class GDDvisitor {
   bool getRecursive(){return recursive;}
   /// This method sets if the visitor is recursive or not
   void setRecursive(bool prec){recursive = prec;};
+
+  virtual void visitGDD(GDD*){};
 
  protected:
   GDDvisitor(){};

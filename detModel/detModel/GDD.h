@@ -6,7 +6,7 @@
 
 class GDDvolume;
 class GDDconstants;
-class GDDsectionsVisitor;
+class GDDvisitor;
 class GDDsection;
 class GDDchoice;
 
@@ -42,9 +42,9 @@ public:
   ///This method gives back the contants
   GDDconstants* getConstants()const{return constants;}
   /// This is the recursive accept for the visitor pattern
-  void Accept(GDDsectionsVisitor* v);
+  void Accept(GDDvisitor* v);
   /// This is the non recursive accept for the visitor pattern
-  void AcceptNotRec(GDDsectionsVisitor* v);
+  void AcceptNotRec(GDDvisitor* v);
 
   /// This method build a global choices map for all the sections 
   void buildChoiceMap();

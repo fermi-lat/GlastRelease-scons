@@ -19,7 +19,7 @@ int main(int argc, char* argv[]) {
   
   manager->setBuilder(new GDDXercesBuilder(argv[1]));
   manager->setMode("digi recon");
-  manager->build();
+  manager->build(all);
 
   GDD* g = manager->getGDD();
 
