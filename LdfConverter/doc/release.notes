@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v1r1p3  24-Nov-2004 hmk init EventHeader::trigger word to -1, not zero
 v1r1p2  28-Oct-2004 hmk Store veto discrim and low discrim
 v1r1p1  15-Oct-2004 hmk Initialize EventHeader::m_trigger to zero
 v1r1p0  04-Oct-2004 hmk use unsigned int consistenly for lengths

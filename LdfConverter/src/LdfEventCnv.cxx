@@ -70,7 +70,7 @@ StatusCode LdfEventCnv::createObj(IOpaqueAddress* ,
 
     // initialize the trigger to zero to promote processing if TriggerAlg is
     // run
-    header->setTrigger(0);
+    header->setTrigger(-1);
 
     return StatusCode::SUCCESS;
 }
