@@ -30,10 +30,10 @@ public:
         EventModel::MC::McIntegratingHitCol   = EventModel::MC::Event  + "/IntegratingHitsCol";
 
         // Digi event
-        EventModel::Digi::Event              = EventModel::Event + "/Digi";
-        EventModel::Digi::AcdDigis           = EventModel::Digi::Event + "/AcdDigis";
-        EventModel::Digi::TkrDigis           = EventModel::Digi::Event + "/TkrDigis";
-
+        EventModel::Digi::Event             = EventModel::Event + "/Digi";
+        EventModel::Digi::AcdDigis          = EventModel::Digi::Event + "/AcdDigis";
+        EventModel::Digi::TkrDigis          = EventModel::Digi::Event + "/TkrDigis";
+        EventModel::Digi::CalDigiCol          = EventModel::Digi::Event + "/CalDigis";
 
         // Data Data
         EventModel::Data::Event              = EventModel::Event + "/Data";
