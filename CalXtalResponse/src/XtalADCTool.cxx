@@ -165,7 +165,7 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
   // loop over hits.
   for (vector<const Event::McIntegratingHit*>::const_iterator it = hitList.begin();
        it != hitList.end(); it++) {
-    const Event::McIntegratingHit &hit = *(*it); // use ref to avoid '->'
+    const Event::McIntegratingHit &hit = *(*it); // use ref to avoid ugly '->' operator
 
     // get volume identifier.
     VolumeIdentifier volId = ((VolumeIdentifier)hit.volumeID());
@@ -221,16 +221,16 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
       //   p=exp(asym/2)*mean
       //   n=exp(-asym/2)*mean
 
-      double dacSP = exp(asymS/2)*meanDacS;
-      double dacSN = exp(-1*asymS/2)*meanDacS;
-      double dacLP = exp(asymL/2)*meanDacL;
-      double dacLN = exp(-1*asymL/2)*meanDacL;
+      double dacSP = exp(   asymS/2) * meanDacS;
+      double dacSN = exp(-1*asymS/2) * meanDacS;
+      double dacLP = exp(   asymL/2) * meanDacL;
+      double dacLN = exp(-1*asymL/2) * meanDacL;
 
       // sum energy to each diode
       diodeDAC[XtalDiode(POS_FACE,LRG_DIODE)] += dacLP;
-      diodeDAC[XtalDiode(POS_FACE,SM_DIODE)] += dacSP;
+      diodeDAC[XtalDiode(POS_FACE,SM_DIODE)]  += dacSP;
       diodeDAC[XtalDiode(NEG_FACE,LRG_DIODE)] += dacLN;
-      diodeDAC[XtalDiode(NEG_FACE,SM_DIODE)] += dacSN;
+      diodeDAC[XtalDiode(NEG_FACE,SM_DIODE)]  += dacSN;
     } else {
     
       //--DIRECT DIODE DEPOSIT--//
@@ -241,22 +241,24 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
       FaceNum face;
       if((int)volId[fCellCmp]      == m_eDiodePLarge)  face = POS_FACE, diode = LRG_DIODE;
       else if((int)volId[fCellCmp] == m_eDiodeMLarge)  face = NEG_FACE, diode = LRG_DIODE;
-      else if((int)volId[fCellCmp] == m_eDiodePSm)  face = POS_FACE, diode = SM_DIODE;
-      else if((int)volId[fCellCmp] ==  m_eDiodeMSm) face = NEG_FACE, diode = SM_DIODE;
-      else throw invalid_argument("VolId is not in xtal diode.  Programmer error.");
+      else if((int)volId[fCellCmp] == m_eDiodePSm)     face = POS_FACE, diode = SM_DIODE;
+      else if((int)volId[fCellCmp] == m_eDiodeMSm)     face = NEG_FACE, diode = SM_DIODE;
+      else throw invalid_argument("VolId is not in xtal or diode.  Programmer error.");
       
-      double MeVXtal = eDiode/m_ePerMeV[diode]; // convert e-in-diode to MeV-in-xtal
+      // convert e-in-diode to MeV-in-xtal-center
+      double meVXtal = eDiode/m_ePerMeV[diode]; 
 
       // convert MeV deposition to Dac value.
       // use asymmetry to determine how much of mean dac to apply to diode in question
+      // remember we are treating mevXtal as at the xtal center (pos=0.0)
       double meanDAC;
       double asym;
       if (diode == LRG_DIODE) {
-        meanDAC = MeVXtal/mpdLrg.getVal();
-        sc = m_calCalibSvc->evalAsymLrg(xtalId,0.5,asym);
+        meanDAC = meVXtal/mpdLrg.getVal();
+        sc = m_calCalibSvc->evalAsymLrg(xtalId,0.0,asym);
       } else {
-        meanDAC = MeVXtal/mpdSm.getVal();
-        sc = m_calCalibSvc->evalAsymSm(xtalId,0.5,asym);
+        meanDAC = meVXtal/mpdSm.getVal();
+        sc = m_calCalibSvc->evalAsymSm(xtalId,0.0,asym);
       }
       if (sc.isFailure()) return sc;
 
@@ -278,12 +280,12 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
       DiodeNum diode = xDiode.getDiode();
 
       // convert dac in diode to MeV in xtal
-      double MeVXtal = (diode == LRG_DIODE) ?
+      double meVXtal = (diode == LRG_DIODE) ?
         diodeDAC[xDiode]*mpdLrg.getVal() : // case LRG_DIODE:
         diodeDAC[xDiode]*mpdSm.getVal();   // case SM_DIODE:
 
       // MeV in xtal -> electrons in diode
-      double eDiode = MeVXtal * m_ePerMeV[diode];
+      double eDiode = meVXtal * m_ePerMeV[diode];
 
       // apply poissonic fluctuation to # of electrons.
       double noise = sqrt(eDiode)*RandGauss::shoot();
@@ -292,10 +294,10 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
       eDiode += noise;
 
       // convert back to dac in diode
-      MeVXtal = eDiode/m_ePerMeV[diode];
+      meVXtal = eDiode/m_ePerMeV[diode];
       diodeDAC[xDiode] = (diode == LRG_DIODE) ?
-        MeVXtal/mpdLrg.getVal() : // case LRG_DIODE:
-        MeVXtal/mpdSm.getVal();  // case SM_DIODE:
+        meVXtal/mpdLrg.getVal() : // case LRG_DIODE:
+        meVXtal/mpdSm.getVal();  // case SM_DIODE:
     }     // for xDiode
 
   
@@ -318,17 +320,17 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
                                cos);
     if (sc.isFailure()) return sc;
     
-    double adc;
+    // calcuate adc val from dac
     sc = m_calCalibSvc->evalADC(rngXtalId, 
-                                diodeDAC[xDiode], adc);
-    if (sc.isFailure()) return sc;
-
-    tmpADC[xRng] = adc;
+                                diodeDAC[xDiode], 
+                                tmpADC[xRng]);
+    if (sc.isFailure()) return sc;   
   } // for xRng
 
   // STAGE 4: electronic noise
   // electronic noise is calculated on a per-diode basis
   // uses sigmas from ADC pedestal data
+  // adc values need not include pedestals for this calculation
   for (XtalDiode xDiode; xDiode.isValid(); xDiode++) {
     DiodeNum diode = xDiode.getDiode();
 
@@ -371,19 +373,20 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
   if (sc.isFailure()) return sc;
 
   // set log-accept flags
-  lacN = tmpADC[XtalRng(NEG_FACE,LEX8)] > lacThreshN.getVal();
-  lacP = tmpADC[XtalRng(NEG_FACE,LEX8)] > lacThreshP.getVal();
+  lacN = tmpADC[XtalRng(NEG_FACE,LEX8)] >= lacThreshN.getVal();
+  lacP = tmpADC[XtalRng(NEG_FACE,LEX8)] >= lacThreshP.getVal();
   
   if (hitList.size() > 0) {
-    lacN = tmpADC[XtalRng(NEG_FACE,LEX8)] > lacThreshN.getVal();
-    lacP = tmpADC[XtalRng(NEG_FACE,LEX8)] > lacThreshP.getVal();
+    lacN = tmpADC[XtalRng(NEG_FACE,LEX8)] >= lacThreshN.getVal();
+    lacP = tmpADC[XtalRng(NEG_FACE,LEX8)] >= lacThreshP.getVal();
   }
 
   //-- ADD PEDS, HARDWARE RANGE CONSTRAINTS --//
   // double check that ADC vals are all >= 0
-  // double check that ADC vals are all < maxadc
+  // double check that ADC vals are all < maxadc(4095)
   for (XtalRng xRng; xRng.isValid(); xRng++) {
-    tmpADC[xRng] = max<double>(0,tmpADC[xRng] + pedVals[xRng]);
+    tmpADC[xRng] += pedVals[xRng];
+    tmpADC[xRng] = max<double>(0,tmpADC[xRng]);
     tmpADC[xRng] = min<double>(m_maxAdc,tmpADC[xRng]);
   }
     

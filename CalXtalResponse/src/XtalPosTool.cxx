@@ -101,30 +101,65 @@ StatusCode XtalPosTool::calculate(const CalXtalId &xtalId,
                                   int adcN, 
                                   float &position                // output
                                   ) {
+  MsgStream msglog(msgSvc(), name());
   StatusCode sc;
+
+  position = 0;
 
   // used for index manipulation
   XtalIdx xtalIdx(xtalId);
 
-  // retrieve pedestals
-  RngIdx rngIdxP(xtalIdx, POS_FACE, rngP);
-  RngIdx rngIdxN(xtalIdx, NEG_FACE, rngN);
-
+    //-- RETRIEVE PEDESTAL (POS_FACE) --//
   float pedP, pedN, sig, cos;
+  RngIdx rngIdxP(xtalIdx, POS_FACE, rngP);
   sc = m_calCalibSvc->getPed(rngIdxP.getCalXtalId(), pedP, sig, cos);
   if (sc.isFailure()) return sc;
+  int adcPedP = adcP - pedP;   // ped subtracted ADC
+  
+  //-- THROW OUT LOW ADC VALS (POS_FACE) --/
+  CalibData::ValSig fle,fhe,lacP, lacN;
+  CalXtalId tmpIdP(xtalId.getTower(),
+                   xtalId.getLayer(),
+                   xtalId.getColumn(),
+                   POS_FACE);
+  sc = m_calCalibSvc->getTholdCI(tmpIdP,fle,fhe,lacP);
+  if (adcPedP < lacP.getVal()*0.5) {
+    msglog << MSG::WARNING << "DAC value <= 0, can't calculate position" << endl;
+    // this case should have been weeded out in CalXtalRecAlg after the energy calculation
+    // so I will throw a failure here as opposed to XtalEneTool where
+    // I set belowThresh to true & return SUCCESS
+    return StatusCode::FAILURE;
+  }
+
+  //-- RETRIEVE PEDESTAL (NEG_FACE) --//
+  RngIdx rngIdxN(xtalIdx, NEG_FACE, rngN);
   sc = m_calCalibSvc->getPed(rngIdxN.getCalXtalId(), pedN, sig, cos);
   if (sc.isFailure()) return sc;
+  int adcPedN = adcN - pedN;
 
+  //-- THROW OUT LOW ADC VALS (NEG_FACE) --/
+  CalXtalId tmpIdN(xtalId.getTower(),
+                   xtalId.getLayer(),
+                   xtalId.getColumn(),
+                   NEG_FACE);
+  sc = m_calCalibSvc->getTholdCI(tmpIdN,fle,fhe,lacN);
+  if (adcPedN < lacN.getVal()*0.5) {
+    msglog << MSG::WARNING << "DAC value <= 0, can't calculate position" << endl;
+    return StatusCode::FAILURE;
+  }
+    
   // convert adc->dac units
   double dacP, dacN;
-  sc = m_calCalibSvc->evalDAC(rngIdxP.getCalXtalId(), adcP-pedP, dacP);
+  sc = m_calCalibSvc->evalDAC(rngIdxP.getCalXtalId(), adcPedP, dacP);
   if (sc.isFailure()) return sc;
-  sc = m_calCalibSvc->evalDAC(rngIdxN.getCalXtalId(), adcN-pedN, dacN);
+  sc = m_calCalibSvc->evalDAC(rngIdxN.getCalXtalId(), adcPedN, dacN);
   if (sc.isFailure()) return sc;
 
   // check for invalid dac values (i need to take the logarithm)
-  if (dacP <= 0 || dacN <= 0) return StatusCode::FAILURE;
+  if (dacP <= 0 || dacN <=0) {
+    msglog << MSG::WARNING << "DAC value <= 0, can't calculate position" << endl;
+    return StatusCode::FAILURE;
+  }
   double asym = log(dacP/dacN);
 
   // select proper asymmetry function & find position
@@ -148,11 +183,8 @@ StatusCode XtalPosTool::calculate(const CalXtalId &xtalId,
   // as on the edge of the xtal
   
   double halfXtalLen = m_CsILength/2;
-
-  if (pos < -1*halfXtalLen) 
-    pos = -1*halfXtalLen;
-  else if (pos > halfXtalLen) 
-    pos = halfXtalLen;
+  pos = min(halfXtalLen,pos);
+  pos = max(-1*halfXtalLen,pos);
 
   position = pos;
 

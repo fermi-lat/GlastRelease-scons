@@ -95,33 +95,68 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
                                   bool &belowThresh
                                   ) {
   StatusCode sc;
+  XtalIdx xtalIdx(xtalId); // used for array indexing
 
+  // initial return vals
   energy = 0;
+  belowThresh = false;
+ 
 
-  // used for index manipulation
-  XtalIdx xtalIdx(xtalId);
-
-  // retrieve pedestals
-  RngIdx rngIdxP(xtalIdx, POS_FACE, rngP);
-  RngIdx rngIdxN(xtalIdx, NEG_FACE, rngN);
-  
+  //-- RETRIEVE PEDESTAL (POS_FACE) --//
   float pedP, pedN, sig, cos;
+  RngIdx rngIdxP(xtalIdx, POS_FACE, rngP);
   sc = m_calCalibSvc->getPed(rngIdxP.getCalXtalId(), pedP, sig, cos);
   if (sc.isFailure()) return sc;
+  int adcPedP = adcP - pedP;   // ped subtracted ADC
+  
+  //-- THROW OUT LOW ADC VALS (POS_FACE) --/
+  CalibData::ValSig fle,fhe,lacP, lacN;
+  CalXtalId tmpIdP(xtalId.getTower(),
+                   xtalId.getLayer(),
+                   xtalId.getColumn(),
+                   POS_FACE);
+  sc = m_calCalibSvc->getTholdCI(tmpIdP,fle,fhe,lacP);
+  if (adcPedP < lacP.getVal()*0.5) {
+    belowThresh = true;
+    return StatusCode::SUCCESS;
+  }
+
+  //-- RETRIEVE PEDESTAL (NEG_FACE) --//
+  RngIdx rngIdxN(xtalIdx, NEG_FACE, rngN);
   sc = m_calCalibSvc->getPed(rngIdxN.getCalXtalId(), pedN, sig, cos);
   if (sc.isFailure()) return sc;
+  int adcPedN = adcN - pedN;
 
-  // convert adc->dac units
+  //-- THROW OUT LOW ADC VALS (NEG_FACE) --/
+  CalXtalId tmpIdN(xtalId.getTower(),
+                   xtalId.getLayer(),
+                   xtalId.getColumn(),
+                   NEG_FACE);
+  sc = m_calCalibSvc->getTholdCI(tmpIdN,fle,fhe,lacN);
+  if (adcPedN < lacN.getVal()*0.5) {
+    belowThresh = true;
+    return StatusCode::SUCCESS;
+  }
+  
+
+  //-- CONVERT ADCs -> DAC --//
   double dacP, dacN;
-  sc = m_calCalibSvc->evalDAC(rngIdxP.getCalXtalId(), adcP-pedP, dacP);
+  sc = m_calCalibSvc->evalDAC(rngIdxP.getCalXtalId(), adcPedP, dacP);
   if (sc.isFailure()) return sc;
-  sc = m_calCalibSvc->evalDAC(rngIdxN.getCalXtalId(), adcN-pedN, dacN);
+  sc = m_calCalibSvc->evalDAC(rngIdxN.getCalXtalId(), adcPedN, dacN);
   if (sc.isFailure()) return sc;
 
+  
+  //-- CONVERT DIODE SIZE (IF NEEDED) --//
   // if diodes are different, then I need to convert them both to sm diode
   DiodeNum diodeP = RngNum(rngP).getDiode();
   DiodeNum diodeN = RngNum(rngN).getDiode();
-  if (diodeP != diodeN) {
+  if (diodeP != diodeN) { 
+    // get small diode asymetry at center of xtal (used for both conversions)
+    // NOTE:
+    // using center of xtal for position since the lrg/sm ratio is 
+    // effectively constant throughout the xtal length and this keeps the
+    // energy calculation independent of the position calculation.
     double asymSm;
     sc = m_calCalibSvc->evalAsymSm(xtalId, 0.0, asymSm);
     if (sc.isFailure()) return sc;
@@ -133,19 +168,15 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
       // AsymSm = log(PS / NS)
       // exp(sm)/exp(nspb) = (PS/NS)/(PL/NS) = PS/PL
       // exp(nspb-sm) = PS/PL
-
-      // NOTE:
-      // using center of xtal for position since the lrg/sm ratio is 
-      // effectively constant throughout the xtal length and this keeps the
-      // energy calculation independent of the position calculation.
-
+      
       double asymNSPB;
       sc = m_calCalibSvc->evalAsymNSPB(xtalId, 0.0, asymNSPB);
       if (sc.isFailure()) return sc;
 
       dacP /= exp(asymSm - asymNSPB);
       diodeP = SM_DIODE;
-    } else { // diodeN == LRG
+    } else { // case: diodeN == LRG
+      // STRATEGY:
       // convert NL -> NS
       // asymPSNB = log(PS/NL)
       // asymSm = log(PS/NS)
@@ -162,50 +193,17 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
   }
   // now both dac values are for the same diode size
 
-  // retrieve MeVPerDac ratios
+  //-- RETRIEVE MEVPERDAC --//
   CalibData::ValSig mpdLrg, mpdSm;
   sc = m_calCalibSvc->getMeVPerDac(xtalId, mpdLrg, mpdSm);
   if (sc.isFailure()) return sc;
-
+  
+  //-- CALC MEAN DAC & ENERGY --//
   double meanDAC = sqrt(dacP*dacN);
   if (diodeP == SM_DIODE)
     energy = meanDAC*mpdSm.getVal();
   else
     energy = meanDAC*mpdLrg.getVal();
-
-  //-- NOISE REDUCTION LAC TEST --/
-  // Check that LEX8 ADC values are above 0.5 *'s respective LAC threshold
-  belowThresh = false;
-  // POS_FACE
-  if (rngP == LEX8) {
-    CalibData::ValSig fle,fhe,lac;
-    // generate tmp xtalid's face specified
-    CalXtalId tmpId(xtalId.getTower(),
-                    xtalId.getLayer(),
-                    xtalId.getColumn(),
-                    POS_FACE);
-     
-    // retreive threshold
-    sc = m_calCalibSvc->getTholdCI(tmpId,fle,fhe,lac);
-
-    // set flag
-    if (adcP < lac.getVal()*0.5) belowThresh = true;
-  }
-  // POS_FACE
-  if (rngN == LEX8 && !belowThresh) {
-    CalibData::ValSig fle,fhe,lac;
-    // generate tmp xtalid's face specified
-    CalXtalId tmpId(xtalId.getTower(),
-                    xtalId.getLayer(),
-                    xtalId.getColumn(),
-                    NEG_FACE);
-     
-    // retreive threshold
-    sc = m_calCalibSvc->getTholdCI(tmpId,fle,fhe,lac);
-
-    // set flag
-    if (adcN < lac.getVal()*0.5) belowThresh = true;
-  }
 
   return StatusCode::SUCCESS;
 }
@@ -219,6 +217,7 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
   StatusCode sc;
 
   energy = 0;
+  belowThresh = false;
 
   // check that CalXtalId has face & range fields enabled
   if (!xtalId.validFace() || !xtalId.validRange())
@@ -229,6 +228,18 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
   float ped, sig, cos;
   sc = m_calCalibSvc->getPed(xtalId, ped, sig, cos);
   if (sc.isFailure()) return sc;
+
+  //-- THROW OUT LOW ADCS --/
+  CalibData::ValSig fle,fhe,lac;
+
+  // retreive threshold
+  sc = m_calCalibSvc->getTholdCI(xtalId,fle,fhe,lac);
+
+  // set flag
+  if (adc < lac.getVal()*0.5) {
+    belowThresh = true;
+    return StatusCode::SUCCESS;
+  }
 
   // convert adc->dac units
   double dac;
@@ -266,18 +277,6 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
   else
     energy = meanDAC*mpdLrg.getVal();
 
-  //-- NOISE REDUCTION LAC TEST --/
-  // Check that LEX8 ADC values are above 0.5 *'s respective LAC threshold
-  belowThresh = false;
-  if (rng == LEX8) {
-    CalibData::ValSig fle,fhe,lac;
-
-    // retreive threshold
-    sc = m_calCalibSvc->getTholdCI(xtalId,fle,fhe,lac);
-
-    // set flag
-    if (adc < lac.getVal()*0.5) belowThresh = true;
-  }
   
   return StatusCode::SUCCESS;
 }
