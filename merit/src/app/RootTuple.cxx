@@ -65,10 +65,10 @@ RootTuple::RootTuple(std::string title, std::string file, std::string treeName)
     // Initialize Root
     if ( 0 == gROOT )   {
         static TROOT meritRoot("root","ROOT I/O");
-#ifdef WIN32
-        gSystem->Load("libTree.dll");
-#endif
     } 
+#ifdef WIN32
+    gSystem->Load("libTree.dll");
+#endif
     
     // Open the file, and get at the  TTree containing the data
     TFile* tfile =  new TFile(file.c_str(), "read");

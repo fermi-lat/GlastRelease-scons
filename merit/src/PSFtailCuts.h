@@ -3,8 +3,8 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_PSFTAILCUTS_H__D65E62E1_2A00_4F86_8067_192F4F821C66__INCLUDED_)
-#define AFX_PSFTAILCUTS_H__D65E62E1_2A00_4F86_8067_192F4F821C66__INCLUDED_
+#ifndef PSFTAILCUTS_H
+#define PSFTAILCUTS_H
 
 #if _MSC_VER > 1000
 #pragma once
@@ -19,4 +19,4 @@ public:
 
 };
 
-#endif // !defined(AFX_PSFTAILCUTS_H__D65E62E1_2A00_4F86_8067_192F4F821C66__INCLUDED_)
+#endif 

@@ -9,11 +9,15 @@
 class PSFanalysis;
 // Analyzed multiple bins in generated energy for PSF analysis
 
-class MultiPSF : public Analyze , std::vector<PSFanalysis*>{
+class MultiPSF : public Analyze , public std::vector<PSFanalysis*>{
 public:
     MultiPSF(const Tuple& t, char code);
 
     void report(std::ostream& out);
+
+    //Put these in for use with root
+    int          getListSize()        {return size();}
+    PSFanalysis* getListItem(int idx) {return (*this)[idx];}
 private:
     bool apply();
     double   m_bin_size; 
