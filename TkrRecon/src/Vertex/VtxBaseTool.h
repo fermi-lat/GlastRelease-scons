@@ -16,7 +16,8 @@ class VtxBaseTool : public AlgTool, virtual public IVtxBaseTool
 {
  public:
   // Constructor
-  VtxBaseTool( const std::string& type, const std::string& name, const IInterface* parent);
+  VtxBaseTool( const std::string& type, const std::string& name, 
+               const IInterface* parent);
   // Standard Destructor
   virtual ~VtxBaseTool() {;}
   

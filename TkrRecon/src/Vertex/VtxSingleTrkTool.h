@@ -21,8 +21,8 @@ class VtxSingleTrkTool : public VtxBaseTool
  public:
   // Constructor
   VtxSingleTrkTool( const std::string& type, 
-		    const std::string& name, 
-		    const IInterface* parent)
+                    const std::string& name, 
+                    const IInterface* parent)
     : VtxBaseTool(type, name, parent) {}
   
   // Standard Destructor
