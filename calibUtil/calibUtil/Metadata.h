@@ -112,7 +112,8 @@ namespace calibUtil {
       CTYPE_CALHotChan,
       CTYPE_CALDeadChan,
       CTYPE_CALDiscrLO,
-      CTYPE_CALDiscrHI
+      CTYPE_CALDiscrHI,
+      CTYPE_TestGen
     };
       
     /// Constructor keeps track of table of interest

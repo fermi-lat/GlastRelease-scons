@@ -300,6 +300,7 @@ namespace calibUtil {
     static std::string calDeadChan("CAL_DeadChan");
     static std::string calDiscrLO("CAL_DiscrLO");
     static std::string calDiscrHI("CAL_DiscrHI");
+    static std::string testGen("Test_Gen");
     switch(cType) {
     case CTYPE_ACDEff:
       return &acdEff;
@@ -350,6 +351,8 @@ namespace calibUtil {
     case CTYPE_CALDiscrHI:
       return &calDiscrHI;
 
+    case CTYPE_TestGen:
+      return &testGen;
 
     default:
       return 0;
