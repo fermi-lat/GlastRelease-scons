@@ -3,10 +3,11 @@
 // Job options file for CalRecon test
 //
 
+// List of Services that are required for this run
+ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
 
-ApplicationMgr.ExtSvc   = { "GlastDetSvc", "EventSelector" , "EventCnvSvc" };
-
-ApplicationMgr.DLLs   = { "GlastSvc", "CalRecon" };
+// List of DLLs required
+ApplicationMgr.DLLs   = { "GlastSvc", "CalRecon", "RootHistCnv" };
 
 //--------------------------------------------------------------
 // Private Application Configuration options
@@ -16,7 +17,6 @@ GlastDetSvc.IRFFile = "/packages/reconstruction_v3/instrument/v2/src/test/muonte
 ApplicationMgr.TopAlg = { "CalRecoAlg" };
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-
 MessageSvc.OutputLevel      = 2;
 
 //=========================================================================
@@ -26,18 +26,22 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 //--------------------------------------------------------------
 // Algorithms Private Options
 //--------------------------------------------------------------
-// Number of events to be processed (default is 10)
+// Number of events to be processed (default is 10), 
+// No such property is available in our EventSelector, use ApplicationMgr.EvtMax instead
 //EventSelector.EvtMax = 20;
 
-// Print event number every event
-EventSelector.PrintFreq = 1;
+// Print event number every event - there is no such property in our EventSelector
+//EventSelector.PrintFreq = 1;
 
-ApplicationMgr.EvtSel = "IRFFILE /packages/reconstruction_v3/instrument/v2/src/test/muontest.irf";
+// Input IRF file
+// May need to change the path....
+EventSelector.Input = "IRFFILE /packages/reconstruction_v2/instrument/v2/src/test/muontest.irf";
 
 // Selection file - must be included - or else Gaudi will search for its file by default
 //ApplicationMgr.EvtSel = "NONE";
-ApplicationMgr.EvtMax = 20;
 
+// Number of Events to Process
+ApplicationMgr.EvtMax = 10;
 
 
 //==============================================================
