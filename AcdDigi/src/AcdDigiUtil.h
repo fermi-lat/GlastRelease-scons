@@ -89,6 +89,7 @@ private:
     
     /// Global ratio of photoelectrons to mips
     static unsigned short m_mean_pe_per_mip;
+    static unsigned short m_mean_pe_per_mip_ribbon;
     
     /// number of MIPs tha correspond to full scale PHA
     static double m_mips_full_scale;

@@ -27,6 +27,7 @@ double AcdDigiUtil::m_noise_std_dev_veto;
 double AcdDigiUtil::m_noise_std_dev_cno;
 unsigned short AcdDigiUtil::m_full_scale;
 unsigned short AcdDigiUtil::m_mean_pe_per_mip;
+unsigned short AcdDigiUtil::m_mean_pe_per_mip_ribbon;
 double AcdDigiUtil::m_mips_full_scale;
 double AcdDigiUtil::m_mev_per_mip;
 std::map< unsigned int, std::pair<int, int> > AcdDigiUtil::m_pePerMipMap;
@@ -50,6 +51,7 @@ void AcdDigiUtil::getParameters(const std::string &xmlFile) {
     m_ifile = new xml::IFile(xmlFile.c_str());
         
     m_mean_pe_per_mip = m_ifile->getInt("global_constants", "mean_pe_per_mip");
+    m_mean_pe_per_mip_ribbon = m_ifile->getInt("global_constants", "mean_pe_per_mip_ribbon");
     
     m_noise_std_dev_pha = m_ifile->getDouble("global_constants", "noise_std_dev_pha");
     m_noise_std_dev_veto = m_ifile->getDouble("global_constants", "noise_std_dev_veto");
@@ -99,8 +101,13 @@ void AcdDigiUtil::convertMipsToPhotoElectrons(const idents::AcdId &id,
         return;
     }
     // Now use the global mean_pe_per_mip
-    pmtA_pe = (unsigned int) floor(pmtA_mips * m_mean_pe_per_mip * 2.);
-    pmtB_pe = (unsigned int) floor(pmtB_mips * m_mean_pe_per_mip * 2.);
+    if (id.tile()) {
+        pmtA_pe = (unsigned int) floor(pmtA_mips * m_mean_pe_per_mip * 2.);
+        pmtB_pe = (unsigned int) floor(pmtB_mips * m_mean_pe_per_mip * 2.);
+    } else if (id.ribbon()) {
+        pmtA_pe = (unsigned int) floor(pmtA_mips * m_mean_pe_per_mip_ribbon * 2.);
+        pmtB_pe = (unsigned int) floor(pmtB_mips * m_mean_pe_per_mip_ribbon * 2.);
+    }
     return;
 }
 
@@ -134,8 +141,14 @@ void AcdDigiUtil::convertPhotoElectronsToMips(const idents::AcdId &id,
         return;
     }
     // Now use the global mean_pe_per_mip
-    pmtA_mips = ((double) pmtA_pe) / (2. * m_mean_pe_per_mip);
-    pmtB_mips = ((double) pmtB_pe) / (2. * m_mean_pe_per_mip);
+    if (id.tile()) {
+        pmtA_mips = ((double) pmtA_pe) / (2. * m_mean_pe_per_mip);
+        pmtB_mips = ((double) pmtB_pe) / (2. * m_mean_pe_per_mip);
+    } else if (id.ribbon()) {
+        pmtA_mips = ((double) pmtA_pe) / (2. * m_mean_pe_per_mip_ribbon);
+        pmtB_mips = ((double) pmtB_pe) / (2. * m_mean_pe_per_mip_ribbon);
+    }
+
     return;
     
 }
@@ -158,12 +171,18 @@ double AcdDigiUtil::shootGaussian(double std_dev) {
     return RandGauss::shoot(0.0, std_dev);
 }
 
-void AcdDigiUtil::calcMipsToFullScale(const idents::AcdId&, 
+void AcdDigiUtil::calcMipsToFullScale(const idents::AcdId& id, 
                                      double pmtA_mips, unsigned int pmtA_pe, double &pmtA_mipsToFullScale, 
                                      double pmtB_mips, unsigned int pmtB_pe, double &pmtB_mipsToFullScale) {
     
-    pmtA_mipsToFullScale = m_mips_full_scale * ((2. * m_mean_pe_per_mip) / (pmtA_pe / pmtA_mips) );
-    pmtB_mipsToFullScale = m_mips_full_scale * ((2. * m_mean_pe_per_mip) / (pmtB_pe / pmtB_mips) );
+    if (id.tile()) {
+        pmtA_mipsToFullScale = m_mips_full_scale * ((2. * m_mean_pe_per_mip) / (pmtA_pe / pmtA_mips) );
+        pmtB_mipsToFullScale = m_mips_full_scale * ((2. * m_mean_pe_per_mip) / (pmtB_pe / pmtB_mips) );
+    } else if (id.ribbon()) {
+        pmtA_mipsToFullScale = m_mips_full_scale * ((2. * m_mean_pe_per_mip_ribbon) / (pmtA_pe / pmtA_mips) );
+        pmtB_mipsToFullScale = m_mips_full_scale * ((2. * m_mean_pe_per_mip_ribbon) / (pmtB_pe / pmtB_mips) );
+
+    }
     
     return;
 }

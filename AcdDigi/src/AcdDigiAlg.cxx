@@ -118,7 +118,8 @@ StatusCode AcdDigiAlg::execute() {
         }
     }
 
-    std::map<idents::VolumeIdentifier, double> energyVolIdMap;
+   // std::map<idents::VolumeIdentifier, double> energyVolIdMap;
+    std::map<idents::AcdId, double> energyIdMap;
     
     // Create the new AcdDigi collection for the TDS
     Event::AcdDigiCol* digiCol = new Event::AcdDigiCol;
@@ -131,29 +132,31 @@ StatusCode AcdDigiAlg::execute() {
         // Check to see if this is an ACD volume
         if(volId[0] != 1 ) continue; 
 
-        double energy = (m_edge_effect) ? edgeEffect(*hit) : (*hit)->depositedEnergy();
-
-        if (energyVolIdMap.find(volId) != energyVolIdMap.end()) {
-            energyVolIdMap[volId] += energy;
+        idents::AcdId id(volId);
+        double energy;
+        // No edge effects for ribbons, tiles only
+        energy = (m_edge_effect && id.tile()) ? edgeEffect(*hit) : (*hit)->depositedEnergy();
+        if (energyIdMap.find(id) != energyIdMap.end()) {
+            energyIdMap[id] += energy;
         } else {
-            energyVolIdMap[volId] = energy;
+            energyIdMap[id] = energy;
         }
+        
     }
-
 
     if (m_apply_noise) addNoise();
 
-    // Now loop over the map of ACD VolId and their corresponding energies deposited
-    std::map<idents::VolumeIdentifier, double>::const_iterator acdIt;
-    for (acdIt = energyVolIdMap.begin(); acdIt != energyVolIdMap.end(); acdIt++) {
+    // Now loop over the map of AcdId and their corresponding energies deposited
+    std::map<idents::AcdId, double>::const_iterator acdIt;
+    for (acdIt = energyIdMap.begin(); acdIt != energyIdMap.end(); acdIt++) {
 
-        idents::VolumeIdentifier volId = acdIt->first;
-        idents::AcdId id(volId);
-        
+        //idents::VolumeIdentifier volId = acdIt->first;
+        idents::AcdId id = acdIt->first; //(volId);
+
         double energyMevDeposited = acdIt->second;
         m_energyDepMap[id] = energyMevDeposited;
 
-        log << MSG::DEBUG << "tile volId found: " << volId.name() 
+        log << MSG::DEBUG << "tile id found: " << id.id() 
             << ", energy deposited: "<< energyMevDeposited<< " MeV" << endreq;
         
         double mips = util.convertMevToMips(energyMevDeposited);
@@ -258,16 +261,23 @@ StatusCode AcdDigiAlg::execute() {
         
     } // end loop over MC hits
 
+
+    std::map<idents::AcdId, bool> doneMap;
+
     // Now fill the TDS with AcdDigis
     for(AcdTileList::const_iterator it=m_tiles.begin(); it!=m_tiles.end(); ++it){
         idents::VolumeIdentifier volId = *it;
         idents::AcdId tileId(volId);
+
+        // Check to see if we have already processed this AcdId - necessary since we also have
+        // ribbons in the mix.
+        if (doneMap.find(tileId) != doneMap.end()) continue;
         
         // First check to see if this tile Id has a PHA value associated with PMT A
         // If not, we do not need add an AcdDigi in the TDS for this tile
         if (m_pmtA_phaMipsMap.find(tileId) == m_pmtA_phaMipsMap.end()) continue;
 
-        // Next check that the PHA values from both PMTs combined results in a value above low 
+        // Next check that the PHA values from both PMTs combined results is a value above low 
         // threshold
         if ((m_pmtA_phaMipsMap[tileId] + m_pmtB_phaMipsMap[tileId]) < m_low_threshold_mips) continue;
 
@@ -280,8 +290,6 @@ StatusCode AcdDigiAlg::execute() {
         if (m_pmtA_vetoMipsMap[tileId] > m_veto_threshold_mips) vetoArr[0] = true;
         if (m_pmtB_vetoMipsMap[tileId] > m_veto_threshold_mips) vetoArr[1] = true;
         
-        //if ((vetoArr[0] == false) && (vetoArr[1] == false)) continue;
-
         if (m_pmtA_cnoMipsMap[tileId] > m_high_threshold_mips) highArr[0] = true;
         if (m_pmtB_cnoMipsMap[tileId] > m_high_threshold_mips) highArr[1] = true;
 
@@ -290,6 +298,8 @@ StatusCode AcdDigiAlg::execute() {
         unsigned short pmtB_pha = util.convertMipsToPha(m_pmtB_phaMipsMap[tileId], m_pmtB_toFullScaleMap[tileId]);
 
         unsigned short phaArr[2] = { pmtA_pha, pmtB_pha };
+
+        doneMap[tileId] = true;
 
         digiCol->push_back(
             new AcdDigi(
@@ -379,18 +389,27 @@ void AcdDigiAlg::addNoise()  {
     // Dependencies: None
     // Restrictions and Caveats:  None
         
+    std::map<idents::AcdId, bool> doneMap;
+
     // loop over list of possible tile ids
     for(AcdTileList::const_iterator it=m_tiles.begin(); it!=m_tiles.end(); ++it){
         idents::VolumeIdentifier volId = *it;
         idents::AcdId tileId(volId);
-       
+        
+        // Check to see if we have processed this AcdId already
+        // due to presence of ribbons
+        if (doneMap.find(tileId) != doneMap.end()) continue;
+        
+        
         m_pmtA_phaMipsMap[tileId] = util.shootGaussian(m_noise_std_dev_pha);
         m_pmtA_vetoMipsMap[tileId] = util.shootGaussian(m_noise_std_dev_veto);
         m_pmtA_cnoMipsMap[tileId] = util.shootGaussian(m_noise_std_dev_cno);
-
+        
         m_pmtB_phaMipsMap[tileId] = util.shootGaussian(m_noise_std_dev_pha);
         m_pmtB_vetoMipsMap[tileId] = util.shootGaussian(m_noise_std_dev_veto);
         m_pmtB_cnoMipsMap[tileId] = util.shootGaussian(m_noise_std_dev_cno);
+
+        doneMap[tileId] = true;
 
     }
 
