@@ -20,16 +20,15 @@
 
 DetectorConstruction::DetectorConstruction()
 {
-    std::string filename;
+  std::string filename;
 
   detModel::Manager* gddManager = detModel::Manager::getPointer();
   
   gddManager->setBuilder(new detModel::XercesBuilder);  
 
   filename = std::string(::getenv("XMLUTILROOT"))+"/xml/flight.xml" ;
-  static char name[256];
-  ::strncpy(name, filename.c_str(), sizeof(name));
-  gddManager->setNameFile(name);
+
+  gddManager->setNameFile(filename);
 
   gddManager->setMode("fastmc");
 
