@@ -6,9 +6,8 @@
 
 #include "$GLEAMROOT/src/basicOptions.txt"
 
-// choose one or the other below for standard Gui or FRED
-// for FRED, it must be running, and you must open the file hepeventserver.ior,
-in the default directory
+// choose one or the other below for old Gui or FRED
+// note that FRED should start up automatically
 //#include "$GLEAMROOT/src/guiOptions.txt"
 //#include "$GLEAMROOT/src/fredOptions.txt"
 
@@ -18,7 +17,7 @@ FluxSvc.source_lib += {"$(USERALGROOT)/xml/user_sources.xml"};
 //FluxAlg.source_name = "userspectrum";
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-MessageSvc.OutputLevel      = 2;
+MessageSvc.OutputLevel      = 3;
 
 Triggered.Members={
     "Sequencer/Trigger",
@@ -51,6 +50,8 @@ Output.Members={}; // turn off rootwriter.
 
 // define tree to insert user stuff into: could be MeritTuple or Exposure for current trees.
 UserAlg.treeName="user";
+ApplicationMgr.EvtMax =1000;
+
 
 //==============================================================
 //
