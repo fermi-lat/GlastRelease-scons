@@ -95,45 +95,45 @@ namespace Event { //Namespace
     TkrFitMatrix(int one);
 		   
     // Access to elements of the covariance matrix
-    inline double TkrFitMatrix::getcovX0X0() const {return m_11;}
-    inline double TkrFitMatrix::getcovSxSx() const {return m_22;}
-    inline double TkrFitMatrix::getcovX0Sx() const {return m_12;}
-    inline double TkrFitMatrix::getcovSxX0() const {return m_21;}
+    inline double getcovX0X0() const {return m_11;}
+    inline double getcovSxSx() const {return m_22;}
+    inline double getcovX0Sx() const {return m_12;}
+    inline double getcovSxX0() const {return m_21;}
 			   
-    inline double TkrFitMatrix::getcovY0Y0() const {return m_33;}
-    inline double TkrFitMatrix::getcovSySy() const {return m_44;}
-    inline double TkrFitMatrix::getcovY0Sy() const {return m_34;}
-    inline double TkrFitMatrix::getcovSyY0() const {return m_43;}
+    inline double getcovY0Y0() const {return m_33;}
+    inline double getcovSySy() const {return m_44;}
+    inline double getcovY0Sy() const {return m_34;}
+    inline double getcovSyY0() const {return m_43;}
 				   
-    inline double TkrFitMatrix::getcovX0Y0() const {return m_13;}
-    inline double TkrFitMatrix::getcovX0Sy() const {return m_14;}
-    inline double TkrFitMatrix::getcovSyX0() const {return m_41;}
+    inline double getcovX0Y0() const {return m_13;}
+    inline double getcovX0Sy() const {return m_14;}
+    inline double getcovSyX0() const {return m_41;}
 						
-    inline double TkrFitMatrix::getcovY0X0() const {return m_31;}
-    inline double TkrFitMatrix::getcovY0Sx() const {return m_32;}
-    inline double TkrFitMatrix::getcovSxY0() const {return m_23;}
+    inline double getcovY0X0() const {return m_31;}
+    inline double getcovY0Sx() const {return m_32;}
+    inline double getcovSxY0() const {return m_23;}
 					     
-    inline double TkrFitMatrix::getcovSxSy() const {return m_24;}
-    inline double TkrFitMatrix::getcovSySx() const {return m_42;}
+    inline double getcovSxSy() const {return m_24;}
+    inline double getcovSySx() const {return m_42;}
 						 
 
     // function for calculating the transpose of the TkrFitMatrix in question
-    TkrFitMatrix TkrFitMatrix::T() const;
+    TkrFitMatrix T() const;
 		 
     // function for calculating the inverse of the TkrFitMatrix in question
     // NOTE: ierr = 0 is clean run else is NOT inverted
-    TkrFitMatrix TkrFitMatrix::inverse(int &ierr) const;
+    TkrFitMatrix inverse(int &ierr) const;
 		   
     // function for calculating the inverse of TkrFitMatrix REDEFINES object
     // NOTE: ierr = 0 is clean run else is NOT inverted
-    void TkrFitMatrix::invert(int &ierr);
+    void invert(int &ierr);
 
     //operator overload for access/definition TkrFitMatrix(row,column)
     //!NOTE index starts with (1,1)
-    const double & TkrFitMatrix::operator() 
+    const double & operator() 
       (const int &row, const int &column) const;
 
-    double & TkrFitMatrix::operator() (const int &row, const int &column);
+    double & operator() (const int &row, const int &column);
     
     //operator overload for TkrFitMatrix+TkrFitMatrix
     const TkrFitMatrix operator +(const TkrFitMatrix& A) const;

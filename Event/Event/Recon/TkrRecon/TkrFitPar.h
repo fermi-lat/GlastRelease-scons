@@ -67,28 +67,28 @@ namespace Event { // Namespace
 
        
     // Access methods for individual fit parameters
-    double TkrFitPar::getXPosition() const;
+    double getXPosition() const;
     double TkrFitPar::getXSlope()    const;
 	   
-    double TkrFitPar::getYPosition() const;
+    double getYPosition() const;
     double TkrFitPar::getYSlope()    const;
 	       
 	       
     //operator overload for element access TkrFitPar(element)
     //!NOTE index starts with (1). In case of index error returns (1)
-    const double & TkrFitPar::operator() (const int &element) const;
+    const double & operator() (const int &element) const;
 		 
 		 
     //!NOTE index starts with (1). In case of index error returns (1)
-    double & TkrFitPar::operator() (const int &element);
+    double & operator() (const int &element);
 	    
     //operator overload for element access TkrFitPar(element)
     //!NOTE index starts with [0]. In case of index error returns [0]
-    const double & TkrFitPar::operator[] (const int &element) const;
+    const double & operator[] (const int &element) const;
 		 
 		 
     //!NOTE index starts with [0]. In case of index error returns [0]
-    double & TkrFitPar::operator[] (const int &element);
+    double & operator[] (const int &element);
 
 
     //operator overload for TkrFitPar+TkrFitPar
