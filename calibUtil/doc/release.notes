@@ -2,6 +2,7 @@
  * Package calibUtil
  * Coordinator: J. Bogart
  *
+ * v0r2p1 17-Mar-2003 jrb  Support for Calorimeter mu slope calibration
  * v0r2p0 17-Mar-2003 jrb  New include path spec. for Xerces includes
  * v0r2   26-Feb-2003 jrb  Support CAL ped, gain (XML persistent format)
  * v0r1    7-Feb-2003 jrb  Ready to be used with GlastRelease, IExternal.

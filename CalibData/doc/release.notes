@@ -1,6 +1,7 @@
 /** @file release.notes
  * Package CalibData
  * Coordinator:  J. Bogart
+ * 21-Mar-2003 jrb - v0r2p2 - Support for Calorimeter mu slope calibration
  *  6-Mar-2003 jrb - v0r2p1 - Fix for VC7 compile
  *  3-Mar-2003 jrb - v0r2p0 - Incorporate and use check for identical
  *                            dimensions when updating CAL data
