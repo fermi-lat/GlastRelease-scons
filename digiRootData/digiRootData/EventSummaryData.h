@@ -94,6 +94,7 @@ public:
     Bool_t badTkrRecon() const { return (m_flags & enums::TKRRECON); };
     Bool_t packetError() const { return (m_flags & enums::PACKETERROR); };
     Bool_t errorEventSummary() const { return (m_flags & enums::SUMMARYERROR); };
+    Bool_t trgParityErrorSummary() const { return (m_flags & enums::TRGPARITYERROR); };
     
     /// Returns the length in bytes of the TEM contribution identified by a value in [0,15]
     UInt_t temLength(unsigned int tem) { return m_temLen[tem]; }

@@ -1,5 +1,5 @@
 package enums
-version v0
+version v0r1
 
 use GlastPolicy v*
 

@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v7r17     13-Mar-2005 HMK Add method for trgParityError across contributions
 v7r16p1   23-Feb-2005 HMK make number of trigger bits available through L1T
           again for systemtests
 v7r16p0   23-Feb-2005 HMK use any enums

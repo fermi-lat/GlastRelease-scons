@@ -37,7 +37,8 @@ namespace LdfEvent{
             EVTSEQ = 1,
             TKRRECON = 2,
             PACKETERROR = 4,
-            SUMMARYERROR = 8
+            SUMMARYERROR = 8,
+            TRGPARITYERROR =16
         } EventFlags ;
 
 
@@ -105,6 +106,7 @@ namespace LdfEvent{
         bool badEvent() const { return (m_flags != 0); } ;
         bool packetError() const { return (m_flags & PACKETERROR); };
         bool summaryError() const { return (m_flags & SUMMARYERROR); };
+        bool trgParityErrorSummary() const { return (m_flags & TRGPARITYERROR); };
 
         unsigned long eventSequence() const {
             unsigned eventNumber = EventSummary::eventNumber(m_summary);
