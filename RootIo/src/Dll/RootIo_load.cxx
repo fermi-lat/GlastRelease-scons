@@ -13,5 +13,8 @@ DECLARE_FACTORY_ENTRIES(RootIo) {
     DECLARE_ALGORITHM( mcRootReaderAlg );
     DECLARE_ALGORITHM( digiRootWriterAlg );
     DECLARE_ALGORITHM( digiRootReaderAlg );
+    DECLARE_ALGORITHM( reconRootWriterAlg );
+    DECLARE_ALGORITHM( reconRootReaderAlg );
+
 }
   
