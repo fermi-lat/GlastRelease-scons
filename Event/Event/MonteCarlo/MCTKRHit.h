@@ -11,28 +11,13 @@
 // Externals 
 extern const CLID& CLID_MCTKRHit;
 
-
-//------------------------------------------------------------------------------
-//
-// ClassName:   MCTKRHit
-//  
-// Description: Essential information of the MCTKRHit
-//
-//              It contains:
-//                  - id
-//                  - energy
-//                  - noise
-//
-//
-//------------------------------------------------------------------------------
-
-/*!
-Essential information of the MCTKRHit.
+/*! \class MCTKRHit
+\brief MC class for the TKR  - currently filled with IRF data
 
   It contains:
-  - id
-  - energy
-  - noise
+  - strip id
+  - energy deposited
+  - noise, denotes whether (1) or not (0) this hit was caused by noise
 */
 
 
@@ -57,12 +42,14 @@ public:
     unsigned int id () const           { return m_id; }
     void setId (long value)            { m_id = value; }
     
-    //! energy deposited
+    //! get energy deposited in this strip
     float energy () const              { return m_energy; }
+    //! set the energy deposited in this strip
     void setEnergy (float value)        { m_energy = value; }
 
-    /// noise
+    /// get noise value for this strip, where 1 == caused by noise, and 0 == not caused by noise
     int noise () const           { return m_noise; }
+    //! set the noise for this strip, where 1 == caused by noise, and 0 == not caused by noise
     void setNoise (int value)   { m_noise = value; }
     
     //! used to convert container of objects
