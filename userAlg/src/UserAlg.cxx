@@ -165,7 +165,7 @@ StatusCode UserAlg::execute()
     log << MSG::DEBUG << "Event time: " << t << endreq;;
 
     
-    // lop over the monte carlo particle collection
+    // loop over the monte carlo particle collection
     if (particles) {
         
         Event::McParticleCol::const_iterator piter;
@@ -176,8 +176,37 @@ StatusCode UserAlg::execute()
         }
     }
 
+     
     // *************************************************************************
-    // exercise:
+    // exercise 1:
+    // Apply cuts using the TDS data to determine we want this event to be
+    // written to output or not
+    // For example we could use the number of vertices (yes the vertices 
+    // collection is called tracks in this example) to determine if we 
+    // want this event written to output.  
+    // If not, we setFilterPassed false and return - 
+    // and in addition we must set up the
+    // jobOptions such that this algorithm is used to filter - which means
+    // it determines what algorithms are run after it    
+    // One should redefine the Triggered sequence such that UserAlg appears
+    // before either meritAlg or the Output sequence.
+    //  Triggered.Members={
+    //    "Sequencer/Trigger",
+    //    "Sequencer/Reconstruction",
+    //    "Sequencer/RecoDisplay",
+    //    "UserAlg",
+    //    "Sequencer/Output",
+    //    "FilterTracks","FilterAlg",
+    //    "meritAlg" };
+
+    //if ((!tracks) || (tracks.size() <= 0)) {
+    //    setFilterPassed( false );
+    //    return sc;
+    //}
+
+
+    // *************************************************************************
+    // exercise 2:
     // 1) get the first vertex of the TkrVertexCol.
     //    We need a pointer to Event::TkrVertexCol in the TDS.  No new code, was
     //    here anyway.
