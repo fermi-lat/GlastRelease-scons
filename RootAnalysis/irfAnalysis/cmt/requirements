@@ -13,7 +13,7 @@ macro irfAnalysis_cppflags  ""\
 
 macro_append ROOT_libs ""\
   Linux " -lTreePlayer -lProof -lGX11 "\
-  WIN32 "  libHist.lib libGraf.lib libGpad.lib"
+  WIN32 "  libHist.lib libGraf.lib libGpad.lib libPostScript.lib"
 
 macro source "*.cxx" WIN32 "*.cxx *.h"
 
