@@ -1,0 +1,21 @@
+//##############################################################
+//
+// Job options file gleamOptions.txt
+//
+//==============================================================
+
+#include "$GLEAMROOT/src/default.txt"
+
+CalClustersAlg.OutputLevel = 2;
+first.OutputLevel = 2;
+second.OutputLevel = 2;
+ApplicationMgr.EvtMax = 10 ;
+Output.Members={} ; // turn off any root ouptut
+
+
+//==============================================================
+//
+// End of gleamOptions.txt
+//
+//##############################################################
+

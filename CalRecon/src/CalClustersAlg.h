@@ -129,7 +129,7 @@ private:
     /// name of Tool for calling CalVals tool
     StringProperty m_calValsCorrToolName;
 
-    /// pointer to actual tool for last layer energy correlation
+    /// pointer to actual tool for calling CalVals tool
     IEnergyCorr* m_calValsCorrTool;
 };
 

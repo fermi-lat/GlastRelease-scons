@@ -1,0 +1,524 @@
+JobOptionsSvc        INFO 
+
+//##############################################################
+//
+//  Job options file for CalRecon test 
+
+// primary DLLs
+
+ApplicationMgr.DLLs+= {"RootIo","CalRecon","CalUtil","CalibSvc"};
+
+// ----------------------------
+// setup basic event loop stuff
+//
+ApplicationMgr.ExtSvc = { 
+    "GlastEventSelector/EventSelector" , 
+    "EventCnvSvc"
+    };
+EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+EventSelector.Input = "NONE";
+
+// Start up a CalibDataSvc 
+ApplicationMgr.ExtSvc += {"CalibDataSvc"};
+
+ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
+
+DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
+DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
+
+// CalibDataSvc properties below are explicitly set to the
+// default values as established in CalibDataSvc.cxx.  
+// They're listed below in order of likelihood of need to override, 
+// from most to least likely.
+// Storage type of 14 corresponds to MYSQL
+CalibDataSvc.CalibInstrumentName = "LAT";
+CalibDataSvc.CalibStorageType = 14;
+CalibDataSvc.CalibRootName = "Calib";
+CalibDataSvc.CalibFlavorList = {"ideal"};
+
+// ----------------------------
+//  topalg
+//
+ApplicationMgr.TopAlg = {
+	"digiRootReaderAlg",      
+    "CalXtalRecAlg", 
+    "CalClustersAlg",
+	"test_CalRecon"
+    };
+
+
+// ----------------------------
+//  Geometry definition
+//
+ApplicationMgr.DLLs += {"GlastSvc", "G4Propagator", "G4Generator","TkrUtil"};
+ApplicationMgr.ExtSvc += { "GlastDetSvc" };
+GlastDetSvc.topVolume="LAT"; 
+
+GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.visitorMode="recon";
+
+// specific for this test
+ApplicationMgr.DLLs += {"AnalysisNtuple"};
+
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel = 2;
+ApplicationMgr.EvtMax = 10;
+digiRootReaderAlg.digiRootFile="$(CALRECONROOT)/src/test/muon_digi.root";
+
+//    use the following lines to perform fuzzy clustering:
+ApplicationMgr.DLLs += {"FuzzyCluster"};
+CalClustersAlg.clusterToolName="FuzzyClusterTool";
+//
+//    the command param is mandatory for the FuzzyCluster Gaudi tool
+//    which is retrieved as a private tool by FuzzyClusterTool, that
+//    in its turn is a shared tool.
+ToolSvc.FuzzyClusterTool.FuzzyCluster.command="cini -r2:4 | fcm | pick";
+//
+//    clusterSetNo is a param of FuzzyClusterTool that specifies
+//    the index of the partition that should be considered; its default
+//    value is zero.
+ToolSvc.FuzzyClusterTool.clusterSetNo=0;
+
+
+//==============================================================
+//
+// End of job options file
+//
+//##############################################################
+
+
+Job options successfully read in from ../src/test/fuzzyOptions.txt
+ApplicationMgr      DEBUG Getting my own properties
+DllClassManager     DEBUG Found factory Algorithm testFileHeadersSetAlg
+DllClassManager     DEBUG Found factory Algorithm testCaloFileHeadersSetAlg
+DllClassManager     DEBUG Found factory Service RootIoSvc
+DllClassManager     DEBUG Found factory RootIoRandom
+ObjectManager       DEBUG Added object factory for class:RootIoRandom
+DllClassManager     DEBUG Found factory Algorithm relationRootWriterAlg
+DllClassManager     DEBUG Found factory Algorithm relationRootReaderAlg
+DllClassManager     DEBUG Found factory Algorithm reconRootWriterAlg
+DllClassManager     DEBUG Found factory Algorithm reconRootReaderAlg
+DllClassManager     DEBUG Found factory Algorithm mcRootWriterAlg
+DllClassManager     DEBUG Found factory Algorithm mcRootReaderAlg
+DllClassManager     DEBUG Found factory FileHeadersTool
+ObjectManager       DEBUG Added object factory for class:FileHeadersTool
+DllClassManager     DEBUG Found factory Algorithm FileHeadersSetAlg
+DllClassManager     DEBUG Found factory Algorithm digiRootWriterAlg
+DllClassManager     DEBUG Found factory Algorithm digiRootReaderAlg
+DllClassManager     DEBUG Loaded 14 factories from module RootIo
+DllClassManager     DEBUG Found factory SingleClusterTool
+ObjectManager       DEBUG Added object factory for class:SingleClusterTool
+DllClassManager     DEBUG Found factory SimpleClusterTool
+ObjectManager       DEBUG Added object factory for class:SimpleClusterTool
+DllClassManager     DEBUG Found factory ProfileTool
+ObjectManager       DEBUG Added object factory for class:ProfileTool
+DllClassManager     DEBUG Found factory LastLayerCorrTool
+ObjectManager       DEBUG Added object factory for class:LastLayerCorrTool
+DllClassManager     DEBUG Found factory FuzzyClusterTool
+ObjectManager       DEBUG Added object factory for class:FuzzyClusterTool
+DllClassManager     DEBUG Found factory Algorithm CalXtalRecAlg
+DllClassManager     DEBUG Found factory CalValsCorrTool
+ObjectManager       DEBUG Added object factory for class:CalValsCorrTool
+DllClassManager     DEBUG Found factory Algorithm CalDisplay
+DllClassManager     DEBUG Found factory Algorithm CalClustersAlg
+DllClassManager     DEBUG Loaded 9 factories from module CalRecon
+DllClassManager     DEBUG Found factory LinearConvertAdc
+ObjectManager       DEBUG Added object factory for class:LinearConvertAdc
+DllClassManager     DEBUG Found factory Service CalFailureModeSvc
+DllClassManager     DEBUG Loaded 2 factories from module CalUtil
+DllClassManager     DEBUG Found factory XmlTkrSplitsCnv
+ConverterFactory    DEBUG Added converter for class:XmlTkrSplitsCnv Storage id:7 clID:6106
+DllClassManager     DEBUG Found factory XmlTest1Cnv
+ConverterFactory    DEBUG Added converter for class:XmlTest1Cnv Storage id:7 clID:6500
+DllClassManager     DEBUG Found factory XmlCalTholdMuonCnv
+ConverterFactory    DEBUG Added converter for class:XmlCalTholdMuonCnv Storage id:7 clID:6214
+DllClassManager     DEBUG Found factory XmlCalTholdCICnv
+ConverterFactory    DEBUG Added converter for class:XmlCalTholdCICnv Storage id:7 clID:6213
+DllClassManager     DEBUG Found factory XmlCalPedCnv
+ConverterFactory    DEBUG Added converter for class:XmlCalPedCnv Storage id:7 clID:6203
+DllClassManager     DEBUG Found factory XmlCalMuSlopeCnv
+ConverterFactory    DEBUG Added converter for class:XmlCalMuSlopeCnv Storage id:7 clID:6211
+DllClassManager     DEBUG Found factory XmlCalMevPerDacCnv
+ConverterFactory    DEBUG Added converter for class:XmlCalMevPerDacCnv Storage id:7 clID:6212
+DllClassManager     DEBUG Found factory XmlCalLightAttCnv
+ConverterFactory    DEBUG Added converter for class:XmlCalLightAttCnv Storage id:7 clID:6200
+DllClassManager     DEBUG Found factory XmlCalLightAsymCnv
+ConverterFactory    DEBUG Added converter for class:XmlCalLightAsymCnv Storage id:7 clID:6201
+DllClassManager     DEBUG Found factory XmlCalIntNonlinCnv
+ConverterFactory    DEBUG Added converter for class:XmlCalIntNonlinCnv Storage id:7 clID:6205
+DllClassManager     DEBUG Found factory XmlCalGainCnv
+ConverterFactory    DEBUG Added converter for class:XmlCalGainCnv Storage id:7 clID:6204
+DllClassManager     DEBUG Found factory XmlCalAsymCnv
+ConverterFactory    DEBUG Added converter for class:XmlCalAsymCnv Storage id:7 clID:6215
+DllClassManager     DEBUG Found factory XmlBadStripsCnv
+ConverterFactory    DEBUG Added converter for class:XmlBadStripsCnv Storage id:7 clID:6102
+DllClassManager     DEBUG Found factory XmlAcdPedCnv
+ConverterFactory    DEBUG Added converter for class:XmlAcdPedCnv Storage id:7 clID:6304
+DllClassManager     DEBUG Found factory XmlAcdGainCnv
+ConverterFactory    DEBUG Added converter for class:XmlAcdGainCnv Storage id:7 clID:6305
+DllClassManager     DEBUG Found factory RootCalGainCnv
+ConverterFactory    DEBUG Added converter for class:RootCalGainCnv Storage id:5 clID:6204
+DllClassManager     DEBUG Found factory Service CalibXmlCnvSvc
+DllClassManager     DEBUG Found factory Service CalibRootCnvSvc
+DllClassManager     DEBUG Found factory Service CalibMySQLCnvSvc
+DllClassManager     DEBUG Found factory Algorithm CalibEvtClock
+DllClassManager     DEBUG Found factory Service CalibDataSvc
+DllClassManager     DEBUG Loaded 21 factories from module CalibSvc
+DllClassManager     DEBUG Found factory Algorithm SetSeeds
+DllClassManager     DEBUG Found factory MCEventCnv
+ConverterFactory    DEBUG Added converter for class:MCEventCnv Storage id:1 clID:1100
+DllClassManager     DEBUG Found factory Service GlastRandomSvc
+DllClassManager     DEBUG Found factory Service GlastPropagatorSvc
+DllClassManager     DEBUG Found factory Service GlastEventSelector
+DllClassManager     DEBUG Found factory Service GlastDetSvc
+DllClassManager     DEBUG Found factory Service EventCnvSvc
+DllClassManager     DEBUG Found factory EventCnv
+ConverterFactory    DEBUG Added converter for class:EventCnv Storage id:1 clID:110
+DllClassManager     DEBUG Loaded 8 factories from module GlastSvc
+DllClassManager     DEBUG Found factory G4PropagatorTool
+ObjectManager       DEBUG Added object factory for class:G4PropagatorTool
+DllClassManager     DEBUG Found factory G4PropagationTool
+ObjectManager       DEBUG Added object factory for class:G4PropagationTool
+DllClassManager     DEBUG Loaded 2 factories from module G4Propagator
+DllClassManager     DEBUG Found factory Service G4GeometrySvc
+DllClassManager     DEBUG Found factory G4GeneratorRandom
+ObjectManager       DEBUG Added object factory for class:G4GeneratorRandom
+DllClassManager     DEBUG Found factory Algorithm G4Generator
+DllClassManager     DEBUG Loaded 3 factories from module G4Generator
+DllClassManager     DEBUG Found factory Service TkrToTSvc
+DllClassManager     DEBUG Found factory Service TkrSplitsSvc
+DllClassManager     DEBUG Found factory TkrQueryClustersTool
+ObjectManager       DEBUG Added object factory for class:TkrQueryClustersTool
+DllClassManager     DEBUG Found factory Service TkrGeometrySvc
+DllClassManager     DEBUG Found factory Service TkrFailureModeSvc
+DllClassManager     DEBUG Found factory Algorithm TkrCalibAlg
+DllClassManager     DEBUG Found factory Service TkrBadStripsSvc
+DllClassManager     DEBUG Found factory Service TkrAlignmentSvc
+DllClassManager     DEBUG Loaded 8 factories from module TkrUtil
+DllClassManager     DEBUG Found factory VtxValsTool
+ObjectManager       DEBUG Added object factory for class:VtxValsTool
+DllClassManager     DEBUG Found factory TkrValsTool
+ObjectManager       DEBUG Added object factory for class:TkrValsTool
+DllClassManager     DEBUG Found factory TkrHitValsTool
+ObjectManager       DEBUG Added object factory for class:TkrHitValsTool
+DllClassManager     DEBUG Found factory McValsTool
+ObjectManager       DEBUG Added object factory for class:McValsTool
+DllClassManager     DEBUG Found factory McAnalValsTool
+ObjectManager       DEBUG Added object factory for class:McAnalValsTool
+DllClassManager     DEBUG Found factory GltValsTool
+ObjectManager       DEBUG Added object factory for class:GltValsTool
+DllClassManager     DEBUG Found factory EvtValsTool
+ObjectManager       DEBUG Added object factory for class:EvtValsTool
+DllClassManager     DEBUG Found factory CalValsTool
+ObjectManager       DEBUG Added object factory for class:CalValsTool
+DllClassManager     DEBUG Found factory Algorithm AnalysisNtupleAlg
+DllClassManager     DEBUG Found factory AcdValsTool
+ObjectManager       DEBUG Added object factory for class:AcdValsTool
+DllClassManager     DEBUG Loaded 10 factories from module AnalysisNtuple
+DllClassManager     DEBUG Found factory FuzzyCluster
+ObjectManager       DEBUG Added object factory for class:FuzzyCluster
+DllClassManager     DEBUG Loaded 1 factories from module FuzzyCluster
+ApplicationMgr       INFO Successfully loaded modules: RootIo, CalRecon, CalUtil, CalibSvc, GlastSvc, G4Propagator, G4Generator, TkrUtil, AnalysisNtuple, FuzzyCluster
+ApplicationMgr       INFO Application Manager Configured successfully
+ServiceManager      DEBUG Initializing service EventSelector
+EventSelector       DEBUG Service base class initialized successfully
+EventSelector        INFO GlastEventSelector input has been set to NONE
+EventDataSvc        DEBUG Service base class initialized successfully
+EventPersistenc...   INFO "CnvServices": ["EventCnvSvc"]
+EventPersistenc...  DEBUG Service base class initialized successfully
+ServiceManager      DEBUG Initializing service EventCnvSvc
+EventCnvSvc         DEBUG Service base class initialized successfully
+ServiceManager      DEBUG Initializing service CalibDataSvc
+CalibDataSvc        DEBUG Service base class initialized successfully
+DetectorPersist...   INFO "CnvServices": ["CalibMySQLCnvSvc", "CalibXmlCnvSvc"]
+DetectorPersist...  DEBUG Service base class initialized successfully
+CalibDataSvc        DEBUG Storage type used is: 14
+DetectorPersist...   INFO Added successfully Conversion service:CalibMySQLCnvSvc
+ServiceManager      DEBUG Initializing service CalibMySQLCnvSvc
+CalibMySQLCnvSvc    DEBUG Service base class initialized successfully
+CalibMySQLCnvSvc     INFO Specific initialization starting
+CalibMySQLCnvSvc    DEBUG Retrieved IDetDataSvc interface of CalibDataSvc
+CalibMySQLCnvSvc    DEBUG Retrieved IInstrumentNameSvc interface of CalibDataSvc
+CalibMySQLCnvSvc    DEBUG Retrieved IConversionSvc interface of DetectorPersistencySvc
+CalibMySQLCnvSvc    DEBUG Retrieved IAddressCreator interface of DetectorPersistencySvc
+CalibMySQLCnvSvc    DEBUG Properties were read from jobOptions
+CalibMySQLCnvSvc     INFO Specific initialization completed
+ServiceManager      DEBUG Initializing service CalibXmlCnvSvc
+CalibXmlCnvSvc      DEBUG Service base class initialized successfully
+CalibXmlCnvSvc      DEBUG Retrieved IConversionSvc interface of DetectorPersistencySvc
+CalibXmlCnvSvc      DEBUG Retrieved IAddressCreator interface of DetectorPersistencySvc
+CalibXmlCnvSvc      DEBUG Set it as the address creator of the CalibXmlCnvSvc
+ServiceManager      DEBUG Initializing service GlastDetSvc
+GlastDetSvc         DEBUG Service base class initialized successfully
+detModel Doc Client: registered the constants!
+detModel Doc Client: registered the materials!
+detModel Doc Client: registered the id dictionary!
+detModel Doc Client: registered the sections!
+GlastDetSvc          INFO  geometry setup: 
+    document = /home/chamont/Glast/GlastRelease/v5r0p1/xmlGeoDbs/v1r21/xml/flight/flightSegVols.xml
+        mode = recon
+      topvol = LAT
+Summary of IDmap contents:
+       Detector name     count
+       -------------     -----
+              CsISeg     18432
+       SiWaferActive      9216
+              diodeL      3072
+              diodeS      3072
+          sideRibbon        16
+sideTileR0EdgeGreater         4
+sideTileR0EdgeLesser         4
+       sideTileR0Mid        12
+sideTileR1EdgeGreater         4
+sideTileR1EdgeLesser         4
+       sideTileR1Mid        12
+sideTileR2EdgeGreater         4
+sideTileR2EdgeLesser         4
+       sideTileR2Mid        12
+          sideTileR3         4
+   topTileRcentCcent         3
+   topTileRcentCedge         6
+    topTileRcentCmid         6
+   topTileRedgeCcent         2
+   topTileRedgeCedge         4
+    topTileRedgeCmid         4
+          xRibbonTop         4
+      yRibbonTopCent         4
+      yRibbonTopEdge         8
+       yRibbonTopMid         8
+              total:     33921
+
+ServiceManager      DEBUG Service EventPersistencySvc already initialized
+ServiceManager      DEBUG Service EventDataSvc already initialized
+ServiceManager      DEBUG Service DetectorPersistencySvc already initialized
+ServiceManager      DEBUG Initializing service AppMgrRunable
+AppMgrRunable       DEBUG Service base class initialized successfully
+ServiceManager      DEBUG Initializing service EventLoopMgr
+EventLoopMgr        DEBUG Service base class initialized successfully
+EventLoopMgr        DEBUG Creating Top Algorithm digiRootReaderAlg with name digiRootReaderAlg
+EventLoopMgr        DEBUG Creating Top Algorithm CalXtalRecAlg with name CalXtalRecAlg
+EventLoopMgr        DEBUG Creating Top Algorithm CalClustersAlg with name CalClustersAlg
+EventLoopMgr        DEBUG Creating Top Algorithm test_CalRecon with name test_CalRecon
+ToolSvc             DEBUG Service base class initialized successfully
+RootIoSvc           DEBUG Service base class initialized successfully
+IncidentSvc         DEBUG Service base class initialized successfully
+digiRootReaderAlg    INFO Opened file: /home/chamont/Glast/GlastRelease/v5r0p1/CalRecon/v5r16p2/src/test/muon_digi.root
+CalXtalRecAlg       DEBUG Retrieved IDetDataSvc interface of CalibDataSvc
+CalXtalRecAlg       DEBUG Properties were read from jobOptions
+CalXtalRecAlg        INFO Time of first event: (ascii) 2003-1-10 00:20
+CalXtalRecAlg        INFO Time of first event: (seconds since 1970) 1042158000
+CalClustersAlg       INFO CalClustersAlg: callNumber = 0
+ToolSvc.FuzzyCl...   INFO Initializing FuzzyClusterTool
+ToolSvc.FuzzyCl...   INFO initialize
+ToolSvc.LastLay...   INFO Initializing LastLayerCorrTool
+ToolSvc.LastLay...   INFO  value for c0 -35.3747
+ToolSvc.LastLay...   INFO  value for c1 68.1653
+ToolSvc.LastLay...   INFO  value for c0 -32.4386
+ToolSvc.LastLay...   INFO  value for c3 0.9933
+ToolSvc.LastLay...   INFO  value for b0 0.793
+ToolSvc.LastLay...   INFO  value for b1 0.045
+ToolSvc.LastLay...   INFO  value for k0 -2778
+ToolSvc.LastLay...   INFO  value for k1 6576
+ToolSvc.LastLay...   INFO  value for k2 -3797
+ToolSvc.Profile...   INFO Initializing ProfileTool
+ToolSvc.CalVals...   INFO Initializing CalValsCorrTool
+ToolSvc.G4Propa...   INFO G4 Propagation Tool initializing now
+G4GeometrySvc        INFO G4GeometrySvc Initialization started
+G4GeometrySvc       DEBUG Service base class initialized successfully
+	DetectorConstruction created 407, 137 physical, logical volumes, using  mode from G4Generator job options: recon
+G4GeometrySvc        INFO G4GeometrySvc Initialization completed successfully
+ToolSvc.G4Propa...   INFO G4 Propagation Tool ready
+TkrGeometrySvc       INFO Retrieved G4PropagationTool
+TkrGeometrySvc      DEBUG Propagator goes from 682.315 to -57.685
+ digiLayer 0 Conv 0 Rest 0.0215344
+TkrGeometrySvc      DEBUG  digiLayer 1 Conv 0 Rest 0.015397
+TkrGeometrySvc      DEBUG  digiLayer 2 Conv 0.181349 Rest 0.015397
+TkrGeometrySvc      DEBUG  digiLayer 3 Conv 0.181349 Rest 0.0201581
+TkrGeometrySvc      DEBUG  digiLayer 4 Conv 0.181349 Rest 0.0201581
+TkrGeometrySvc      DEBUG  digiLayer 5 Conv 0.181349 Rest 0.0201581
+TkrGeometrySvc      DEBUG  digiLayer 6 Conv 0.0299628 Rest 0.0201581
+TkrGeometrySvc      DEBUG  digiLayer 7 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 8 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 9 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 10 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 11 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 12 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 13 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 14 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 15 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 16 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 17 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG 
+TkrGeometrySvc       INFO 
+TkrGeometrySvc       INFO Type 0 numLayers 2 aveConv 0 aveRest 0.0184657
+TkrGeometrySvc       INFO Type 1 numLayers 12 aveConv 0.0299628 aveRest 0.0161194
+TkrGeometrySvc       INFO Type 2 numLayers 4 aveConv 0.181349 aveRest 0.0189678
+TkrGeometrySvc       INFO Type 3 numLayers 18 aveConv 0.060275 aveRest 0.0170131
+TkrGeometrySvc       INFO 
+GlastPropagatorSvc  DEBUG Service base class initialized successfully
+ToolSvc.G4Propa...   INFO G4 Propagator Tool initializing now
+ToolSvc             DEBUG Retrieved toolG4PropagationTool
+ToolSvc.G4Propa...   INFO G4 Propagator Tool ready
+GlastPropagatorSvc   INFO Using Geant4 Particle Propagator
+TkrAlignmentSvc     DEBUG Service base class initialized successfully
+tray 0 z: 23.5075 -19.0075 18.8075
+tray 1 z: 59.55 -14.785 14.785
+tray 2 z: 91.65 -14.785 14.785
+tray 3 z: 124.251 -15.2865 15.2865
+tray 4 z: 157.352 -15.2865 15.2865
+tray 5 z: 190.452 -15.2865 15.2865
+tray 6 z: 223.552 -15.2865 15.2865
+tray 7 z: 256.253 -14.8875 14.8875
+tray 8 z: 288.553 -14.8875 14.8875
+tray 9 z: 320.853 -14.8875 14.8875
+tray 10 z: 353.153 -14.8875 14.8875
+tray 11 z: 385.453 -14.8875 14.8875
+tray 12 z: 417.753 -14.8875 14.8875
+tray 13 z: 450.053 -14.8875 14.8875
+tray 14 z: 482.353 -14.8875 14.8875
+tray 15 z: 514.653 -14.8875 14.8875
+tray 16 z: 546.953 -14.8875 14.8875
+tray 17 z: 579.253 -14.8875 14.8875
+tray 18 z: 614.215 -17.55 17.75
+
+rlayer/view z 0 0 44.765
+rlayer/view z 0 1 42.315
+rlayer/view z 1 0 74.335
+rlayer/view z 1 1 76.865
+rlayer/view z 2 0 108.965
+rlayer/view z 2 1 106.435
+rlayer/view z 3 0 139.538
+rlayer/view z 3 1 142.065
+rlayer/view z 4 0 175.165
+rlayer/view z 4 1 172.638
+rlayer/view z 5 0 205.738
+rlayer/view z 5 1 208.265
+rlayer/view z 6 0 241.365
+rlayer/view z 6 1 238.838
+rlayer/view z 7 0 271.14
+rlayer/view z 7 1 273.665
+rlayer/view z 8 0 305.965
+rlayer/view z 8 1 303.44
+rlayer/view z 9 0 335.74
+rlayer/view z 9 1 338.265
+rlayer/view z 10 0 370.565
+rlayer/view z 10 1 368.04
+rlayer/view z 11 0 400.34
+rlayer/view z 11 1 402.865
+rlayer/view z 12 0 435.165
+rlayer/view z 12 1 432.64
+rlayer/view z 13 0 464.94
+rlayer/view z 13 1 467.465
+rlayer/view z 14 0 499.765
+rlayer/view z 14 1 497.24
+rlayer/view z 15 0 529.54
+rlayer/view z 15 1 532.065
+rlayer/view z 16 0 564.365
+rlayer/view z 16 1 561.84
+rlayer/view z 17 0 594.14
+rlayer/view z 17 1 596.665
+TkrAlignmentSvc     DEBUG 
+TkrAlignmentSvc      INFO No alignment was requested.
+TkrAlignmentSvc      INFO   No alignment will be done.
+TkrBadStripsSvc      INFO No bad strips file was requested.
+TkrToTSvc           DEBUG Service base class initialized successfully
+TkrGeometrySvc       INFO TkrGeometrySvc successfully initialized
+ToolSvc             DEBUG Retrieved toolG4PropagationTool
+test_CalRecon        INFO initialize
+EventSelector       DEBUG Using Simple counter GlastEventSelector
+EventSelector        INFO No input file selected for GlastEventSelector
+EventSelector       DEBUG Reading Event 0
+HistogramDataSvc    DEBUG Service base class initialized successfully
+HistogramPersis...   INFO "CnvServices": ["HbookHistSvc", "RootHistSvc"]
+HistogramPersis...  DEBUG Service base class initialized successfully
+HistogramPersis...WARNING Histograms saving not required.
+ApplicationMgr       INFO Application Manager Initialized successfully
+EventPersistenc...   INFO Added successfully Conversion service:EventCnvSvc
+AuditorSvc          DEBUG Service base class initialized successfully
+ToolSvc.FileHea...WARNING No file header found
+CalClustersAlg      DEBUG No TKR Reconstruction available 
+ToolSvc.FuzzyCl...   INFO FuzzyCluster: performing command: cini -r2:4 | fcm | pick
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 2
+CalClustersAlg      DEBUG Energy 68.786 Corrected 68.786 62.011 -171.582 -164.874 3.16466e-13 0.54616 0.837681
+CalClustersAlg      DEBUG Energy 38.2979 Corrected 68.786 60.3837 -107.637 -80.4108 -1000 -1000 -1000
+test_CalRecon        INFO executing 1 time
+EventSelector       DEBUG Reading Event 1
+CalClustersAlg      DEBUG No TKR Reconstruction available 
+ToolSvc.FuzzyCl...   INFO FuzzyCluster: performing command: cini -r2:4 | fcm | pick
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 2
+CalClustersAlg      DEBUG Energy 25.6821 Corrected 25.6821 67.9436 -158.732 -163.78 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 26.1577 Corrected 25.6821 34.5067 -110.057 -78.8275 -1000 -1000 -1000
+test_CalRecon        INFO executing 2 time
+EventSelector       DEBUG Reading Event 2
+CalClustersAlg      DEBUG No TKR Reconstruction available 
+ToolSvc.FuzzyCl...   INFO FuzzyCluster: performing command: cini -r2:4 | fcm | pick
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 2
+CalClustersAlg      DEBUG Energy 76.6208 Corrected 76.6208 30.0856 -154.488 -162.065 -7.06096e-13 0.54616 0.837681
+CalClustersAlg      DEBUG Energy 53.8173 Corrected 76.6208 42.7035 -108.153 -78.6554 -1000 -1000 -1000
+test_CalRecon        INFO executing 3 time
+EventSelector       DEBUG Reading Event 3
+CalClustersAlg      DEBUG No TKR Reconstruction available 
+ToolSvc.FuzzyCl...   INFO FuzzyCluster: performing command: cini -r2:4 | fcm | pick
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 2
+CalClustersAlg      DEBUG Energy 57.2966 Corrected 57.2966 33.0666 -172.937 -173.103 -2.38571e-12 0.54616 0.837681
+CalClustersAlg      DEBUG Energy 52.9912 Corrected 57.2966 42.9906 -114.153 -93.6701 -1.98607e-12 0.54616 0.837681
+test_CalRecon        INFO executing 4 time
+EventSelector       DEBUG Reading Event 4
+CalClustersAlg      DEBUG No TKR Reconstruction available 
+ToolSvc.FuzzyCl...   INFO FuzzyCluster: performing command: cini -r2:4 | fcm | pick
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 2
+CalClustersAlg      DEBUG Energy 43.4293 Corrected 43.4293 30.8397 -171.112 -168.721 -0.55851 0.453038 0.694854
+CalClustersAlg      DEBUG Energy 62.0275 Corrected 43.4293 51.2052 -102.795 -76.6285 -1000 -1000 -1000
+test_CalRecon        INFO executing 5 time
+EventSelector       DEBUG Reading Event 5
+CalClustersAlg      DEBUG No TKR Reconstruction available 
+ToolSvc.FuzzyCl...   INFO FuzzyCluster: performing command: cini -r2:4 | fcm | pick
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 2
+CalClustersAlg      DEBUG Energy 61.627 Corrected 61.627 54.3346 -153.692 -171.506 -2.55887e-12 0.54616 0.837681
+CalClustersAlg      DEBUG Energy 68.2353 Corrected 61.627 60.1364 -107.142 -97.2691 -0.115157 0.542527 0.832108
+test_CalRecon        INFO executing 6 time
+EventSelector       DEBUG Reading Event 6
+CalClustersAlg      DEBUG No TKR Reconstruction available 
+ToolSvc.FuzzyCl...   INFO FuzzyCluster: performing command: cini -r2:4 | fcm | pick
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 2
+CalClustersAlg      DEBUG Energy 63.5795 Corrected 63.5795 59.5861 -164.686 -171.166 -1.93522e-12 0.54616 0.837681
+CalClustersAlg      DEBUG Energy 57.9224 Corrected 63.5795 57.2074 -117.44 -94.3115 -1.46773e-12 0.434342 0.900748
+test_CalRecon        INFO executing 7 time
+EventSelector       DEBUG Reading Event 7
+CalClustersAlg      DEBUG No TKR Reconstruction available 
+ToolSvc.FuzzyCl...   INFO FuzzyCluster: performing command: cini -r2:4 | fcm | pick
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 2
+CalClustersAlg      DEBUG Energy 56.9212 Corrected 56.9212 54.0415 -162.374 -173.89 -2.17147e-12 0.54616 0.837681
+CalClustersAlg      DEBUG Energy 57.3467 Corrected 56.9212 56.8783 -118.246 -92.1033 -7.01379e-13 0.54616 0.837681
+test_CalRecon        INFO executing 8 time
+EventSelector       DEBUG Reading Event 8
+CalClustersAlg      DEBUG No TKR Reconstruction available 
+ToolSvc.FuzzyCl...   INFO FuzzyCluster: performing command: cini -r2:4 | fcm | pick
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 2
+CalClustersAlg      DEBUG Energy 50.5382 Corrected 50.5382 54.418 -157.769 -174.845 3.51685e-13 0.54616 0.837681
+CalClustersAlg      DEBUG Energy 62.378 Corrected 50.5382 52.3752 -108.469 -92.5281 -2.11471e-12 0.54616 0.837681
+test_CalRecon        INFO executing 9 time
+EventSelector       DEBUG Reading Event 9
+CalClustersAlg      DEBUG No TKR Reconstruction available 
+ToolSvc.FuzzyCl...   INFO FuzzyCluster: performing command: cini -r2:4 | fcm | pick
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 2
+CalClustersAlg      DEBUG Energy 59.2991 Corrected 59.2991 51.0657 -187.678 -188.198 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 112.516 Corrected 59.2991 56.8305 -129.291 -110.212 -6.38054e-13 0.54616 0.837681
+test_CalRecon        INFO executing 10 time
+EventSelector       DEBUG Reading Event 10
+test_CalRecon        INFO finalize after 10 calls.
+EventLoopMgr         INFO Histograms converted successfully according to request.
+TkrGeometrySvc       INFO TkrGeometrySvc finalize called
+ToolSvc              INFO Removing all tools created by ToolSvc
+ToolSvc             DEBUG Removing tool ToolSvc.G4PropagatorTool
+ToolSvc             DEBUG Removing tool ToolSvc.G4PropagationTool
+ToolSvc             DEBUG Removing tool ToolSvc.CalValsCorrTool
+ToolSvc             DEBUG Removing tool ToolSvc.ProfileTool
+ToolSvc             DEBUG Removing tool ToolSvc.LastLayerCorrTool
+ToolSvc             DEBUG Removing tool ToolSvc.FuzzyClusterTool.FuzzyCluster
+ToolSvc             DEBUG Removing tool ToolSvc.FuzzyClusterTool
+ToolSvc             DEBUG Removing tool ToolSvc.FileHeadersTool
+CalibMySQLCnvSvc    DEBUG Finalizing
+CalibDataSvc        DEBUG Finalizing
+ApplicationMgr       INFO Application Manager Finalized successfully

@@ -13,11 +13,16 @@ use CalUtil v1r*
 use geometry v3*
 use CalibSvc v*
 use TkrUtil *
-use xmlBase *
+use xml *
 
-# The following two lines are needed to use the FuzzyCluster package
-#use FuzzyCluster v*
-#use CLHEP * IExternal
+# The following is needed so that ParticlePropertySvc,
+# which is needed by SimpleClusterTool, find out particle.cdf
+use FluxSvc v*
+
+# The following lines are needed to use the FuzzyCluster package
+use AnalysisNtuple v*
+use FuzzyCluster v*
+use CLHEP * IExternal
 
 apply_pattern packageShr
 

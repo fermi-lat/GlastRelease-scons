@@ -16,6 +16,7 @@
 #include "GaudiKernel/GaudiException.h" 
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "ICluster.h"
@@ -82,8 +83,9 @@ private:
 	Event::CalClusterCol* m_calClusterCol;
 };
 
-static ToolFactory<SimpleClusterTool> s_factory;
-const IToolFactory& SimpleClusterToolFactory = s_factory;
+//static ToolFactory<SimpleClusterTool> s_factory;
+//const IToolFactory& SimpleClusterToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(SimpleClusterTool) ;
 
 //
 // Feeds Combo pattern recognition tracks to Kalman Filter
@@ -113,7 +115,7 @@ StatusCode SimpleClusterTool::initialize()
 {	
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
-	log << MSG::INFO << "Initializing FuzzyClusterTool" <<endreq;
+	log << MSG::INFO << "BEGIN initialize()" <<endreq;
 
     //Set the properties
     setProperties();
@@ -125,7 +127,7 @@ StatusCode SimpleClusterTool::initialize()
     }
 
     IParticlePropertySvc*  partPropSvc;
-    if( (sc = service("ParticlePropertySvc", partPropSvc)).isFailure() ) 
+    if( (sc = service("ParticlePropertySvc", partPropSvc,true)).isFailure() ) 
     {
         throw GaudiException("Service [ParticlePropertySvc] not found", name(), sc);
     }
@@ -162,6 +164,7 @@ StatusCode SimpleClusterTool::initialize()
         return StatusCode::FAILURE;
     } 
 
+	log << MSG::INFO << "END initialize()" <<endreq;
     return sc;
 }
 

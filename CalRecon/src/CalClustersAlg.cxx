@@ -7,6 +7,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
@@ -17,8 +18,7 @@
 
 #include "EnergyCorr.h"   // for special downcast
 
-static const AlgFactory<CalClustersAlg>  Factory;
-const IAlgFactory& CalClustersAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(CalClustersAlg) ;
 
 using namespace Event;
 
