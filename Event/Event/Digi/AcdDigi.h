@@ -44,7 +44,7 @@ as follows:
 
 extern const CLID& CLID_AcdDigi;
 
-
+namespace Event {
 class AcdDigi : virtual public ContainedObject  { 
 
 public:
@@ -129,8 +129,9 @@ private:
 
 
 //! Definition of all container types of AcdDigi
-template <class TYPE> class ObjectVector;
+//template <class TYPE> class ObjectVector;
 typedef ObjectVector<AcdDigi>     AcdDigiVector;
+typedef ObjectVector<AcdDigi>     AcdDigiCol;
 
 template <class TYPE> class ObjectList;
 typedef ObjectList<AcdDigi> AcdDigiList;
@@ -192,7 +193,7 @@ inline std::ostream& AcdDigi::fillStream( std::ostream& s ) const
 }
 
 
-
+}// namespace Event
 
 #endif    // GlastEvent_AcdDigi_H
 

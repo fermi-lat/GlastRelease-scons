@@ -32,7 +32,7 @@
 
 extern const CLID& CLID_CalDigi;
 
-namespace cal {
+namespace Event {
 
 class CalDigi : virtual public ContainedObject { 
     
