@@ -21,6 +21,7 @@ namespace xmlUtil {
       ETAG_quo,
       ETAG_uminus,
       ETAG_max,
+      ETAG_half,
       ETAG_n 
     } ;
 
@@ -70,6 +71,7 @@ namespace xmlUtil {
     static  ptrDOMString lengthString;
     static  ptrDOMString cmString;
     static  ptrDOMString mString;
+    static  ptrDOMString halfString;
   };
 
 }
