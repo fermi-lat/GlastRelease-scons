@@ -135,6 +135,7 @@ TkrMakeClusters::TkrMakeClusters(TkrClusterCol* pClus, Event::TkrIdClusterMap* c
 
                     TkrCluster* cl = new TkrCluster(hitId, strip0, stripf, 
                         pos, rawToT, ToT, status, nBad);
+                    //if(m_type == ITkrBadStripsSvc::BADCLUSTERS) std::cout << *cl << std::endl;
                     //cl->setMips(ToT);
                     pClus->push_back(cl);
                     nclusters++;

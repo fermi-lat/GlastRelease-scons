@@ -58,7 +58,7 @@ public:
     /// the pointers to services and data are passed through the constructor
     
     TkrMakeClusters(Event::TkrClusterCol* pClus, Event::TkrIdClusterMap* clusMap,
-        ITkrGeometrySvc* m_tkrGeom, 
+        ITkrGeometrySvc* tkrGeom,
         Event::TkrDigiCol* pTkrDigiCol,
 
         ITkrBadStripsSvc::clusterType clType=ITkrBadStripsSvc::STANDARDCLUSTERS);

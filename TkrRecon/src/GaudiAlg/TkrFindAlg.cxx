@@ -25,6 +25,8 @@
 #include "src/Track/TkrControl.h"
 #include "TkrRecon/PatRec/ITkrFindTrackTool.h"
 
+//#include "Event/Recon/TkrRecon/TkrTrack.h"
+
 /** 
  * @class TkrFindAlg
  *
@@ -140,7 +142,41 @@ StatusCode TkrFindAlg::execute()
 
     // Call the tool defined in the intialization
     sc = m_findTool->findTracks();
-        
+
+    // leave this in for now, may need it later!
+    /*
+    log << MSG::DEBUG;
+    if (log.isActive()) {
+        //print out list of tracks (and hits)
+        IDataProviderSvc* dataSvc = 0;
+        if(service( "EventDataSvc", dataSvc, true ).isFailure()) 
+        {
+            log << MSG::ERROR << "Could not find EventDataSvc" << endreq;
+            return StatusCode::FAILURE;
+        }
+        Event::TkrTrackCol* trackCol =
+            SmartDataPtr<Event::TkrTrackCol>(dataSvc,EventModel::TkrRecon::TkrTrackCol);
+
+        Event::TkrTrackColConPtr iptr = trackCol->begin();
+        log << trackCol->size() << " tracks found" << endreq;
+        int count = 0;
+        for (; iptr!=trackCol->end(); ++iptr,++count) {
+            const Event::TkrTrack* track = *iptr;
+            log << track->size() << " hits in track " << count << endreq;
+            Event::TkrTrackHitVecConItr phit = track->begin();
+            int hitCount = 0;
+            for (; phit!=track->end(); ++phit, ++hitCount) {
+                const Event::TkrTrackHit* hit = *phit;
+                const Event::TkrTrackParams params = hit->getTrackParams(Event::TkrTrackHit::FILTERED);
+                const Event::TkrCluster* pClus = hit->getClusterPtr();
+                log << "hit " << hitCount << ": xPos " << params.getxPosition() 
+                    << ", pClus " << pClus<< endreq;
+            }
+        }
+    }
+    log << endreq;
+    */
+
     return sc;
 }
 

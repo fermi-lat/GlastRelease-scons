@@ -156,10 +156,9 @@ StatusCode TkrTrackEnergyTool::SetTrackEnergies()
         {
             // Recover pointer to Cal Cluster info  
             Event::CalClusterCol* pCalClusters = SmartDataPtr<Event::CalClusterCol>(m_dataSvc,EventModel::CalRecon::CalClusterCol);
-
             double CalEnergy   = pCalClusters->front()->getEnergyCorrected(); 
             double CalSumEne   = pCalClusters->front()->getEnergySum();
-            double totalEnergy = std::max(CalEnergy, CalSumEne); 
+            double totalEnergy = std::max(CalEnergy, CalSumEne);  
 
             if (totalEnergy > 0.)
             {
