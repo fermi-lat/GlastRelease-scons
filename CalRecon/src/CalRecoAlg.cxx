@@ -19,6 +19,10 @@
 
 #include "GlastEvent/Raw/TdCsIData.h"
 
+#include "gui/DisplayControl.h"
+#include "GuiSvc/GuiSvc.h"
+#include "gui/GuiMgr.h"
+
 static const AlgFactory<CalRecoAlg>  Factory;
 const IAlgFactory& CalRecoAlgFactory = Factory;
 
@@ -46,39 +50,41 @@ StatusCode CalRecoAlg::initialize() {
     setProperties();
     
     // now try to find the GlastDevSvc service
-#if 1  // old way, Gaudi v5.  
-    IGlastDetSvc* detSvc = 0;
-    const IID&  IID_IGlastDetSvc  =  401; // wired it for now!
-    StatusCode sc = serviceLocator()->getService ("GlastDetSvc",
-        IID_IGlastDetSvc, reinterpret_cast<IInterface*&>( detSvc ));
-    
-    m_detSvc = detSvc;
-
-#else //this is the new way in v6, 
     StatusCode sc = service("GlastDetSvc", m_detSvc);
-#endif
-
-
+    
+    
     if (!sc.isSuccess ()){
         log << MSG::ERROR << "Couldn't find the GlastDetSvc!" << endreq;
     }
-
+    
     // test: get a constant from the ini file
     m_ini = const_cast<xml::IFile*>(m_detSvc->iniFile()); //OOPS!
     int nx = m_ini->getInt("glast", "xNum");
-
+    
     m_recon=new CalRecon;
+    
+    // get the Gui service
+    GuiSvc* guiSvc=0;
+    sc = service("GuiSvc", guiSvc);
+
+    if (!sc.isSuccess ()){
+        log << MSG::ERROR << "Couldn't find the GuiSvc!" << endreq;
+        return sc;
+    }
+
+    guiSvc->guiMgr()->display().add(m_recon->displayRep(), "Cal reco");
 
     // define the tuple
-//    m_summary = new  SummaryData<GlastTuple>(*new GlastTuple("test cal tuple")) ;
-//    m_recon->accept(*m_summary);
+    //    m_summary = new  SummaryData<GlastTuple>(*new GlastTuple("test cal tuple")) ;
+    //    m_recon->accept(*m_summary);
     //testout new Tuple
 
+#ifdef TUPLE    
     m_gsummary = new SummaryData<GaudiGlastTuple>(*new GaudiGlastTuple("Gaudi Test Tuple", ntupleSvc()));
     m_recon->accept(*m_gsummary);
-
-//    m_summary->tuple()->writeHeader(std::cout);
-
+    
+    //    m_summary->tuple()->writeHeader(std::cout);
+#endif
     return sc;
 }
 
@@ -89,33 +95,34 @@ StatusCode CalRecoAlg::execute() {
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
     log << MSG::INFO << "execute" << endreq;
-        
+    
     // get the CsiData object from the TDS by a converter
     SmartDataPtr<TdCsIData> csi(eventSvc(), "/Event/Raw/TdCsIDatas");
-
+    
     // see what is there
     csi->printOn(std::cout);
-
+    
     // create the CalRecon object from the reconstrution package and pass data to it.
-
+    
     m_recon->clear();
     m_recon->reconstruct(csi);
-
+    
     // print out the  tuple
     m_recon->accept(PrintReconData(std::cout));
-
-   
-
+    
+#ifdef TUPLE
+    
+    
     // fill the tuple and print the line
-//    m_summary->tuple()->fill();
-//    std::cout << *(m_summary->tuple());
+    //    m_summary->tuple()->fill();
+    //    std::cout << *(m_summary->tuple());
     m_gsummary->tuple()->fill();
     
     // Here we check a value in the New NTuple
     sc = printNewNTuple();
-
+    
     sc = ntupleSvc()->writeRecord("/NTUPLES/FILE1/1");
-
+#endif
     return sc;
 }
 
@@ -126,7 +133,7 @@ StatusCode CalRecoAlg::finalize() {
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "finalize" << endreq;
     delete m_recon;
-//    delete m_summary;
+    //    delete m_summary;
     
     return StatusCode::SUCCESS;
 }
@@ -136,13 +143,13 @@ StatusCode CalRecoAlg::finalize() {
 StatusCode CalRecoAlg::printNewNTuple() {
     StatusCode status;
     MsgStream log(msgSvc(), name());
-
+    
     NTuplePtr nt = m_gsummary->tuple()->getNTuple();
     if(nt)
     {
         NTuple::Item<float> data;
         status = nt->item("CsI_eLayer1" ,data);
-    
+        
         if(status.isSuccess())
         {
             log << MSG::INFO << "Test Value of New Ntuple :\n"  

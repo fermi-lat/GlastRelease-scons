@@ -1,7 +1,7 @@
 // $Header$
 // Mainpage for doxygen
 
-/*! \mainpage package CalREcon
+/*! \mainpage package CalRecon
 
 
   <hr>

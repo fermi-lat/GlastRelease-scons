@@ -1,11 +1,12 @@
 package CalRecon
-version v1
+version v1r3
 
 branches src mgr doc
 
 use GlastSvc
+use GuiSvc
 
-use reconstruction v3r1
+use reconstruction v4
 
 library CalRecon  *.cxx ../CalRecon/*.h  Dll/*.cpp
 
@@ -37,7 +38,7 @@ macro CalRecon_shlibflags   "$(libraryshr_linkopts) $(use_linkopts)"\
 
 
 macro WinJobOption  "" \
-      VisualC       "test/*.txt"
+      VisualC       "test/jobOptions.txt"
 
 
 
