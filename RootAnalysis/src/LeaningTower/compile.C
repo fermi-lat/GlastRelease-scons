@@ -7,5 +7,6 @@ gROOT->LoadMacro("Event.cxx+");
 gROOT->LoadMacro("EventDisplay.cxx+");
 gROOT->LoadMacro("Residual.cxx+");
 gROOT->LoadMacro("Efficiency.cxx+");
+gROOT->LoadMacro("TriggerEfficiency.cxx+");
 //gROOT->LoadMacro("PlotMacros.C+");
 }
