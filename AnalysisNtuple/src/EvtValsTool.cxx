@@ -268,8 +268,9 @@ StatusCode EvtValsTool::calculate()
 
     double tkrEdge, calEdge, tkr1ZDir = -1., tkr1ZDir2 = 1.; ;
     if(m_pTkrTool->getVal("Tkr1ZDir",tkr1ZDir, nextCheck).isSuccess()) {
-        tkr1ZDir2 = tkr1ZDir*tkr1ZDir; 
-        double sTkr = sqrt(1.-tkr1ZDir2);
+        tkr1ZDir2 = tkr1ZDir*tkr1ZDir;
+        const double minSTkr = 0.001;
+        double sTkr = std::max(minSTkr,sqrt(std::max(0.0, 1.-tkr1ZDir2)));
         if (m_pTkrTool->getVal("TkrTwrEdge", tkrEdge, nextCheck).isSuccess()) {
             EvtTkrEdgeAngle = (30.-tkrEdge)/sTkr;
         }

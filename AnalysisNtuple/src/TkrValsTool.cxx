@@ -846,6 +846,10 @@ StatusCode TkrValsTool::calculate()
 
     }          
 
+    std::cout << "Tkr_KalEne: " << Tkr_1_KalEne << " " << Tkr_2_KalEne << std::endl 
+                 <<" Tkr_KalThetaMS " <<  Tkr_1_KalThetaMS << " " << Tkr_2_KalThetaMS << std::endl;
+
+
     return sc;
 }
 
