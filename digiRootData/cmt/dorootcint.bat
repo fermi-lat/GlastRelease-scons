@@ -15,3 +15,4 @@ cd %DIGIROOTDATAROOT%\digiRootData
 REM Return to the original directory
 call %DIGIROOTDATAROOT%\changeDir.bat
 del %DIGIROOTDATAROOT%\changeDir.bat
+:exit
