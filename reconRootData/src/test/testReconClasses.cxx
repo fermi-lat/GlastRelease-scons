@@ -702,6 +702,33 @@ int checkAcdRecon(AcdRecon *acd, UInt_t ievent) {
         return -1;
     }
 
+	std::vector<AcdId> idCol = acd->getIdCol();
+	if (idCol.size() != 2) {
+		std::cout << "AcdRecon number of ids is wrong: " << acd->getIdCol().size() << std::endl;
+		return -1;
+	}
+	if ( !(idCol[0] == AcdId(0, 0, 3, 2)) ) {
+
+	}
+
+	if ( !(idCol[1] == AcdId(0, 2, 2, 1))) {
+
+	}
+
+	std::vector<Double_t> energyCol = acd->getEnergyCol();
+	if (energyCol.size() != 2) {
+		std::cout << "AcdRecon number of energies is wrong: " << acd->getEnergyCol().size() << std::endl;
+		return -1;
+	}
+	if (!floatInRange(energyCol[0], f) ) {
+		std::cout << "AcdRecon first energy is wrong: " << energyCol[0] << std::endl;
+		return -1;
+	}
+
+	if (!floatInRange(energyCol[1], f*2.) ) {
+		std::cout << "AcdRecon 2nd energy is wrong: " << energyCol[1] << std::endl;
+		return -1;
+	}
 
     return 0;
 }
@@ -776,8 +803,15 @@ int write(char* fileName, int numEvents) {
         std::vector<Double_t> rowActDistCol;
         rowActDistCol.push_back(randNum);
         rowActDistCol.push_back(f);
+		std::vector<AcdId> idCol;
+		idCol.push_back(AcdId(0, 0, 3, 2));
+		idCol.push_back(AcdId(0, 2, 2, 1));
+		std::vector<Double_t> energyCol;
+		energyCol.push_back(f);
+		energyCol.push_back(2.*f);
         acdRec->initialize(energy, count, gDoca, doca, 
-            actDist, minDocaId, rowDocaCol, rowActDistCol);
+            actDist, minDocaId, rowDocaCol, rowActDistCol,
+			idCol, energyCol);
 
         // Create CalRecon object
         CalRecon *calRec = new CalRecon();
@@ -939,8 +973,7 @@ int main(int argc, char **argv) {
     } 
     
     int sc = 0;
-    sc = write(fileName, numEvents);
-    sc = read(fileName, numEvents);
+    sc = write(fileName, numEvents);    sc = read(fileName, numEvents);
     
     if (sc == 0) {
         std::cout << "RECON ROOT file writing and reading succeeded!" << std::endl;
