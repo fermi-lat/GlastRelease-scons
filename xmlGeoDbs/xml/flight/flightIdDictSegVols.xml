@@ -132,6 +132,8 @@
         <vEnumVal  valueREF="eTop"  />
         <vEnumVal  valueREF="eLeft"  />
         <vEnumVal  valueREF="eBottom" />
+        <vEnumVal  valueREF="eFarTop" />
+        <vEnumVal  valueREF="eFarBottom" />
       </vList>
     </field>
 

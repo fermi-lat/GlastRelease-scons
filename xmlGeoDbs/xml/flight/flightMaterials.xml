@@ -255,8 +255,6 @@
 </composite>
 
 
-<!-- From Leon, 25 April 2002 -->
-
 <composite name="Tkr_MCM_board" density = "1.8">
 <addmaterial material="Copper">
 <fractionmass fraction="6.2" />
@@ -274,7 +272,6 @@
 <fractionmass fraction="0.43" />
 </addmaterial>
 </composite>
-
 
 <composite name="Tkr_wall" density = "2.54">
 <addmaterial material="Carbon">

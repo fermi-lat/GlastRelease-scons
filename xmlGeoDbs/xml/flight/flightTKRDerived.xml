@@ -92,10 +92,80 @@
           </mul>
         </const>
 
+        <const name="MCMLength" >
+          <notes>Long transverse dimension of MCM board</notes>
+          <refer refTo="faceWidth" />
+        </const>
+
         <const name="TKRCloseout_dtn" >
           <notes>Negative transverse offset of closeout pieces</notes>
           <uminus>
             <refer refTo="TKRCloseout_dt" />
+          </uminus>
+        </const>
+
+        <const name="TKRMCMint_dz" >
+          <notes>Offset of MCM board on + side w.r.t. enclosing envelope
+                 for interior (not top or bottom) boards
+          </notes>
+          <quo>
+            <minus>
+              <refer refTo="coreThick" />
+              <refer refTo="MCMHeight" />
+            </minus>
+            <const value="2.0" uType="count" />
+          </quo>
+        </const>
+          
+        <const name="TKRMCMint_dzn" >
+          <notes>Offset of MCM board on - side w.r.t. enclosing envelope
+                 for interior (not top or bottom) boards
+          </notes>
+          <uminus>
+            <refer refTo="TKRMCMint_dz" />
+          </uminus>
+        </const>
+
+        <const name="TKRMCMext_dz" >
+          <notes>Offset of MCM board on + side w.r.t. enclosing envelope
+                 for exterior (top or bottom) boards
+          </notes>
+          <quo>
+            <minus>
+              <refer refTo="coreThickOuter" />
+              <refer refTo="MCMHeight" />
+            </minus>
+            <const value="2.0" uType="count" />
+          </quo>
+        </const>
+
+        <const name="TKRMCMext_dzn" >
+          <notes>Offset of MCM board on - side w.r.t. enclosing envelope
+                 for exterior (top or bottom) boards
+          </notes>
+          <uminus>
+            <refer refTo="TKRMCMext_dz" />
+          </uminus>
+        </const>
+
+        <const name="TKRMCM_dt" >
+          <notes>Transverse (x or y) offset of MCM board</notes>
+          <add>
+            <quo>
+              <add>
+                <refer refTo="faceWidth" />
+                <refer refTo="MCMThick" />
+              </add>
+              <const value="2.0" uType="count" />
+            </quo>
+            <refer refTo="MCMGap" />
+          </add>
+        </const>           
+
+        <const name="TKRMCM_dtn" >
+          <notes>Negative transverse (x or y) offset of MCM board</notes>
+          <uminus>
+            <refer refTo="TKRMCM_dt" />
           </uminus>
         </const>
 
@@ -162,25 +232,6 @@
         </const>
 
 
-<!--
-        <const name="faceGlueRegThick" >
-          <notes>Thickness of face sheet and glue attaching it to
-                 core/closeout for regular layers  **OBSOLETE** </notes>
-          <add>
-            <refer refTo="faceThick" />
-            <refer refTo="glueCoreThick" />
-          </add>
-        </const>
-
-        <const name="faceGlueSupThick" >
-          <notes>Thickness of face sheet and glue attaching it to
-                 core/closeout for superGLAST layers  **OBSOLETE** </notes>
-          <add>
-            <refer refTo="faceSupThick" />
-            <refer refTo="glueCoreThick" />
-          </add>
-        </const>
- -->
 
 
         <const name="TKRMaxNoCnv" uType="count">

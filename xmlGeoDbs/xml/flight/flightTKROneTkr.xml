@@ -92,22 +92,6 @@
 
 
 <!-- Now make all the other elements we need for TKR:
-               OLD SCHEME
-     * Core composition for inner layers, including  TKRCoreReg
-       core and surrounding closeout              
-     * Core comp. for outer (top and bottom) layers  TKRCoreOuter
-     * bias board box (include glue to attach Si)    TKRBiasBox
-     * face sheet for regular layers, includes glue  TKRFaceReg
-       attaching to closeout/core
-     * face sheet for superGLAST layers, includes    TKRFaceSup
-       glue attaching to closeout/core
-     * glue box of "default" thickness (.100 mm);    TKRGlueDef
-       that is, glue not touching Si or core.
-     * SiLayer (Actually a choice element.  Most applications want
-       a detailed view with individual wafers, but someone might
-       be happy with just a slab of silicon.)
-                
-                   NEW SCHEME
      * TKRCoreReg, TKRCoreOuter and SiLayer as above except materials
             changed somewhat.  Core material depends on whether tray
             is superGLAST or not.
@@ -123,6 +107,7 @@
                           material="TKRBotFaceMat"
      * TKRFaceMin         Just glue+face,   material="TKRBotFaceMat"
      * TKRBiasBox         glue+bias board + glue, material="TKRBotBiasMat"
+     * TKRMCM             MCM board
  -->
     <box name="TKRCoreRegEnv"
 	 XREF="TKRTrayWidth" 
@@ -182,22 +167,100 @@
          ZREF="TKRCloseoutThickOuter"
          materialREF="TKRCloseoutMat" />
 
+<!-- Make a box for MCM board. Long transverse dimension is in X since
+     this is what's needed for an x-measuring tray -->
+   <box name="TKRMCM"
+        XREF="MCMLength"
+        YREF="MCMThick"
+        ZREF="MCMHeight"
+        materialREF="TKRMCMMat" />
 
-<!-- Now make the three compositions needed for core+closeout -->
+<!-- Now make the compositions needed for core+closeout. We need
+     bottom tray version (y-measuring, top Si only)
+     super-GLAST x-measuring
+     super-GLAST y-measuring
+     regular x-measuring
+     regular y-measuring
+     top tray verison (y-measuring, bottom Si only)
+        -->
 
     <composition name="TKRCoreReg" envelope="TKRCoreRegEnv">
-      <posXYZ volume="TKRCoreRegBox" />
+      <posXYZ volume="TKRCoreRegBox">
+        <idField name="fBorderCmp" value="eCenter" />
+      </posXYZ>
       <posXYZ volume="TKRCloseoutRegLong"
-              YREF="TKRCloseout_dt" />
+              YREF="TKRCloseout_dt">
+        <idField name="fBorderCmp" value="eTop" />
+      </posXYZ>
       <posXYZ volume="TKRCloseoutRegLong"
-              YREF="TKRCloseout_dtn" />
+              YREF="TKRCloseout_dtn">
+        <idField name="fBorderCmp" value="eBottom" />
+      </posXYZ>
       <posXYZ volume="TKRCloseoutRegShort"
               zrot="90"
-              XREF="TKRCloseout_dt" />
+              XREF="TKRCloseout_dt">
+        <idField name="fBorderCmp" value="eRight" />
+      </posXYZ>
       <posXYZ volume="TKRCloseoutRegShort"
               zrot="90"
-              XREF="TKRCloseout_dtn" />
+              XREF="TKRCloseout_dtn" >
+        <idField name="fBorderCmp" value="eLeft" />
+      </posXYZ>
+
+      <posXYZ volume="TKRMCM"
+              YREF="TKRMCM_dtn"
+              ZREF="TKRMCMint_dzn" >
+        <idField name="fBorderCmp" value="efarBottom" />
+      </posXYZ>
+      <posXYZ volume="TKRMCM"
+              YREF="TKRMCM_dt"
+              ZREF="TKRMCMint_dz">
+        <idField name="fBorderCmp" value="efarTop" />
+      </posXYZ>
+
     </composition>
+
+<!-- same as above but with positions of MCM boards reversed so that
+     they come out right after rotation of +90 -->
+    <composition name="TKRCoreRegYMeas" envelope="TKRCoreRegEnv">
+      <posXYZ volume="TKRCoreRegBox">
+        <idField name="fBorderCmp" value="eCenter" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutRegLong"
+              YREF="TKRCloseout_dt">
+        <idField name="fBorderCmp" value="eTop" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutRegLong"
+              YREF="TKRCloseout_dtn">
+        <idField name="fBorderCmp" value="eBottom" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutRegShort"
+              zrot="90"
+              XREF="TKRCloseout_dt">
+        <idField name="fBorderCmp" value="eRight" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutRegShort"
+              zrot="90"
+              XREF="TKRCloseout_dtn" >
+        <idField name="fBorderCmp" value="eLeft" />
+      </posXYZ>
+
+      <posXYZ volume="TKRMCM"
+              YREF="TKRMCM_dtn"
+              ZREF="TKRMCMint_dz" >
+        <idField name="fBorderCmp" value="efarBottom" />
+      </posXYZ>
+      <posXYZ volume="TKRMCM"
+              YREF="TKRMCM_dt"
+              ZREF="TKRMCMint_dzn">
+        <idField name="fBorderCmp" value="efarTop" />
+      </posXYZ>
+
+    </composition>
+
+
+
+
 
 <!-- Dimensions of core+closeout for super-GLAST are the same as
     above, but core box is a different material  -->
@@ -223,10 +286,61 @@
               XREF="TKRCloseout_dtn" >
         <idField name="fBorderCmp" value="eLeft" />
       </posXYZ>
+      <posXYZ volume="TKRMCM"
+              YREF="TKRMCM_dtn"
+              ZREF="TKRMCMint_dzn" >
+        <idField name="fBorderCmp" value="efarBottom" />
+      </posXYZ>
+      <posXYZ volume="TKRMCM"
+              YREF="TKRMCM_dt"
+              ZREF="TKRMCMint_dz">
+        <idField name="fBorderCmp" value="efarTop" />
+      </posXYZ>
     </composition>
 
-<!-- Now same thing for outer tray cores (regular core material only) -->
-    <composition name="TKRCoreOuter" envelope="TKRCoreOuterEnv">
+<!-- Same as TKRCoreSup but with MCM offsets set to values which will
+    "come out right" after rotation by +90 -->
+    <composition name="TKRCoreSupYMeas" envelope="TKRCoreRegEnv">
+      <posXYZ volume="TKRCoreSupBox" >
+        <idField name="fBorderCmp" value="eCenter" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutRegLong"
+              YREF="TKRCloseout_dt" >
+        <idField name="fBorderCmp" value="eTop" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutRegLong"
+              YREF="TKRCloseout_dtn" >
+        <idField name="fBorderCmp" value="eBottom" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutRegShort"
+              zrot="90"
+              XREF="TKRCloseout_dt" >
+        <idField name="fBorderCmp" value="eRight" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutRegShort"
+              zrot="90"
+              XREF="TKRCloseout_dtn" >
+        <idField name="fBorderCmp" value="eLeft" />
+      </posXYZ>
+      <posXYZ volume="TKRMCM"
+              YREF="TKRMCM_dtn"
+              ZREF="TKRMCMint_dz" >
+        <idField name="fBorderCmp" value="efarBottom" />
+      </posXYZ>
+      <posXYZ volume="TKRMCM"
+              YREF="TKRMCM_dt"
+              ZREF="TKRMCMint_dzn">
+        <idField name="fBorderCmp" value="efarTop" />
+      </posXYZ>
+    </composition>
+
+
+
+
+<!-- Now same thing for outer tray cores (regular core material only) 
+    They're both rotated.  Each has only one MCM board but not
+     the same one!  -->
+    <composition name="TKRCoreOuterTop" envelope="TKRCoreOuterEnv">
       <posXYZ volume="TKRCoreOuterBox" >
         <idField name="fBorderCmp" value="eCenter" />
       </posXYZ>
@@ -247,6 +361,42 @@
               zrot="90"
               XREF="TKRCloseout_dtn" >
         <idField name="fBorderCmp" value="eLeft" />
+      </posXYZ>
+      <!-- top tray has Si on bottom only -->
+      <posXYZ volume="TKRMCM"
+              YREF="TKRMCM_dt"
+              ZREF="TKRMCMext_dzn">
+        <idField name="fBorderCmp" value="efarTop" />
+      </posXYZ>
+    </composition>
+
+    <composition name="TKRCoreOuterBottom" envelope="TKRCoreOuterEnv">
+      <posXYZ volume="TKRCoreOuterBox" >
+        <idField name="fBorderCmp" value="eCenter" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutOuterLong"
+              YREF="TKRCloseout_dt" >
+        <idField name="fBorderCmp" value="eTop" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutOuterLong"
+              YREF="TKRCloseout_dtn" >
+        <idField name="fBorderCmp" value="eBottom" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutOuterShort"
+              zrot="90"
+              XREF="TKRCloseout_dt" >
+        <idField name="fBorderCmp" value="eRight" />
+      </posXYZ>
+      <posXYZ volume="TKRCloseoutOuterShort"
+              zrot="90"
+              XREF="TKRCloseout_dtn" >
+        <idField name="fBorderCmp" value="eLeft" />
+      </posXYZ>
+      <!-- top tray has Si on bottom only -->
+      <posXYZ volume="TKRMCM"
+              YREF="TKRMCM_dtn"
+              ZREF="TKRMCMext_dz">
+        <idField name="fBorderCmp" value="efarBottom" />
       </posXYZ>
     </composition>
 
@@ -400,7 +550,7 @@
       <axisPos volume="TKRFaceMin" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
       </axisPos>
-      <axisPos volume="TKRCoreOuter" >
+      <axisPos volume="TKRCoreOuterBottom" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
       </axisPos>
       <axisPos volume="TKRTopFaceReg" >
@@ -445,7 +595,7 @@
       <axisPos volume="TKRFaceMin" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
       </axisPos>
-      <axisPos volume="TKRCoreReg" >
+      <axisPos volume="TKRCoreRegYMeas" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
       </axisPos>
       <axisPos volume="TKRTopFaceReg" >
@@ -494,7 +644,7 @@
       <axisPos volume="TKRBotFaceSup" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
       </axisPos>
-      <axisPos volume="TKRCoreSup" >
+      <axisPos volume="TKRCoreSupYMeas" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
       </axisPos>
       <axisPos volume="TKRTopFaceSup" >
@@ -570,7 +720,7 @@
       <axisPos volume="TKRBotFaceReg" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
       </axisPos>
-      <axisPos volume="TKRCoreOuter" >
+      <axisPos volume="TKRCoreOuterTop" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
       </axisPos>
       <axisPos volume="TKRFaceMin" >

@@ -116,7 +116,8 @@
     </field>
 
     <!-- field for subcomponents of anything which consists of
-         a subset of 4 border pieces and a center.  Used for
+         a subset of 4 border pieces and a center, possibly
+         also extra components to left and right.  Used for
          Core/closeout. Note in case the
          orientation is in the XY plane, "bottom" is to be
          interpreted as negative Y; otherwise "bottom"
@@ -128,6 +129,8 @@
         <vEnumVal  valueREF="eTop"  />
         <vEnumVal  valueREF="eLeft"  />
         <vEnumVal  valueREF="eBottom" />
+        <vEnumVal  valueREF="eFarTop" />
+        <vEnumVal  valueREF="eFarBottom" />
       </vList>
     </field>
 

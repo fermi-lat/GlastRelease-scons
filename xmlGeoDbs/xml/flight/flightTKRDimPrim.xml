@@ -53,9 +53,11 @@ area on a wafer</prim>
            and panel edge (each edge)</prim>
         <prim name="ladderGap" value="0.20">gap between ladders</prim>
         <prim name="MCMHeight" value="23.0">Height of tracker MCM boards</prim>
-        <prim name="MCMThickness" value="1.1">Thickness of tracker MCM
+        <prim name="MCMThick" value="1.1">Thickness of tracker MCM
                boards</prim>
-        <prim name="TKRWallThickness" value="1.5">Thickness of tracker 
+        <prim name="MCMGap" value="0.1">Gap between MCM board and closeout
+               </prim>
+        <prim name="TKRWallThick" value="1.5">Thickness of tracker 
             walls</prim>
         <prim name="TKRWallLength" value="372.0">Outer dimension of square
         formed by tracker walls (Z cross-section)</prim>
