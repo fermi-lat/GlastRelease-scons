@@ -410,8 +410,8 @@ StatusCode TkrValsTool::calculate()
     //Make sure we have valid reconstructed data
 
 
-    int nNoConv = m_tkrGeom->numNoConverter();
-    int nThick  = m_tkrGeom->numSuperGlast();
+    //int nNoConv = m_tkrGeom->numNoConverter();
+    //int nThick  = m_tkrGeom->numSuperGlast();
     //int nThin   = m_tkrGeom->numLayers() - nThick - nNoConv;
 
     double die_width = m_tkrGeom->ladderPitch();
@@ -546,7 +546,7 @@ StatusCode TkrValsTool::calculate()
             plane--;
             if (!(bits & Event::TkrTrackHit::HITONFIT)) continue;
             const Event::TkrCluster* cluster = hit->getClusterPtr();
-            int size =  const_cast<Event::TkrCluster*>(cluster)->size();
+            int size =  (int) (const_cast<Event::TkrCluster*>(cluster))->size();
             // get the local slopes
             double slope  = fabs(hit->getMeasuredSlope(Event::TkrTrackHit::SMOOTHED));
             double slope1 = fabs(hit->getNonMeasuredSlope(Event::TkrTrackHit::SMOOTHED));

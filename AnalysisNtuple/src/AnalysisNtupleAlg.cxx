@@ -235,7 +235,7 @@ StatusCode AnalysisNtupleAlg::initialize(){
 StatusCode AnalysisNtupleAlg::execute()
 {
     StatusCode   sc = StatusCode::SUCCESS;
-    StatusCode fail = StatusCode::FAILURE;
+    //StatusCode fail = StatusCode::FAILURE;
     
     MsgStream   log( msgSvc(), name() );
 

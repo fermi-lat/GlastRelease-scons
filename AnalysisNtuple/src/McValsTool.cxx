@@ -317,7 +317,7 @@ double McValsTool::getEnergyExitingTkr(Event::McParticle* mcPart)
     double partEnergy = 0.;
     double partLostE  = 0.;
 
-    idents::VolumeIdentifier initial = mcPart->getInitialId();
+    //idents::VolumeIdentifier initial = mcPart->getInitialId();
     idents::VolumeIdentifier final   = mcPart->getFinalId();
 
     //This should check that the initial point of the particle is in the tracker
