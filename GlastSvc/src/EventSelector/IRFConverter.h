@@ -13,6 +13,7 @@
 #include "GlastEvent/MonteCarlo/MCTrack.h"
 #include "GlastEvent/MonteCarlo/MCCalorimeterHit.h"
 #include "GlastEvent/MonteCarlo/MCSiLayer.h"
+#include "GlastEvent/Raw/CsIData.h"
 
 /*! 
 Derived from DetectorConverter, this class
@@ -31,6 +32,10 @@ public:
         MCACDcontainer = new MCACDHitVector;
         MCCalorimeterHitContainer = new MCCalorimeterHitVector;
         MCSiLayerContainer = new MCSiLayerVector;
+
+        // Added because not sure as of yet how to make the
+        // converter without using object vectors
+        allcsiData =  new CsIData(9);
     }
 
     //! destructor - delete all object containers
@@ -56,13 +61,20 @@ public:
     virtual void forward ( const CsIDetector& csi) {
         // CAL CsI log data
         if ( !(csi.empty()) ) {
+
+            // Do the MCInformation
             MCCalorimeterHit* mcCal = new MCCalorimeterHit();
             mcCal->setEnergy(csi.energy());
             mcCal->setLeftResponse(csi.Lresp());
             mcCal->setRightResponse(csi.Rresp());
             MCCalorimeterHitContainer->push_back(mcCal);
 
+            //Do the Raw information
+            allcsiData->load(csi);
+            
+
         }
+
     }
     
     //! not implemented
@@ -116,13 +128,17 @@ public:
     MCCalorimeterHitVector* getMCCalHits() { return MCCalorimeterHitContainer; }
     //! provide access to the TKR strip data
     MCSiLayerVector* getMCTKRHits() { return MCSiLayerContainer; }
+    //! provide access to the Raw CsI  Data geometry included as well
+    CsIData* getCsIData() { return allcsiData; }
 
 private:
     // one of Gaudi's ObjectContainers
+        CsIData* allcsiData;
+
 	MCACDHitVector* MCACDcontainer;
 	MCTrackVector* MCTrackContainer;
 	MCCalorimeterHitVector* MCCalorimeterHitContainer;
-        MCSiLayerVector* MCSiLayerContainer;
+        MCSiLayerVector* MCSiLayerContainer;  
     
 };
 
