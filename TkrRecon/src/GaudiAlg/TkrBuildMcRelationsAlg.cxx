@@ -29,7 +29,7 @@
 #include "TkrRecon/MonteCarlo/McPatCand.h"
 #include "src/MonteCarlo/McBuildTracks.h"
 
-#include "TkrRecon/MonteCarlo/ITkrMcTracksTool.h"
+#include "TkrUtil/ITkrMcTracksTool.h"
 
 class TkrBuildMcRelationsAlg : public Algorithm
 {
@@ -145,7 +145,7 @@ void TkrBuildMcRelationsAlg::buildPatCandRelations()
     SmartDataPtr<Event::ClusToLyrHitTabList> tkrTable(eventSvc(),EventModel::MC::McClusToLyrHitTab);
     Event::ClusToLyrHitTab clusToLyrHitTab(tkrTable);
     SmartDataPtr<Event::McPartToHitTabList> partTable(eventSvc(),EventModel::MC::McPartToHitTab);
-    Event::McPartToHitTab mcPartToHitTab(partTable);
+    //Event::McPartToHitTab mcPartToHitTab(partTable);
 
     //Create the pattern track relational tables
     Event::PatHitToLyrHitTab  patHitToLyrHitTab;
