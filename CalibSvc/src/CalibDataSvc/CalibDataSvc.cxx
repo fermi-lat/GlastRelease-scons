@@ -3,6 +3,7 @@
 // Include files
 #include "CalibDataSvc.h"
 #include "CalibCLIDNode.h"
+#include "CalibData/CalibTime.h"
 // #include "CalibData/CalibModel.h"
 #include "GaudiKernel/IAddressCreator.h"
 #include "GaudiKernel/IConversionSvc.h"
@@ -92,7 +93,7 @@ StatusCode CalibDataSvc::initialize()   {
 
 
   sc = setDataLoader(cnv_svc);
-  if (sc .isFailure() ) {
+  if (sc.isFailure() ) {
     // put something here
   }
 
@@ -245,17 +246,17 @@ StatusCode CalibDataSvc::clearStore()   {
 
 
 /// Set the new event time 
-void CalibDataSvc::setEventTime ( const ITime& time ) {
+void CalibDataSvc::setEventTime(const ITime& time) {
   m_eventTimeDefined = true;
-  if( 0 != m_eventTime ) delete m_eventTime; 
-  m_eventTime = new TimePoint( time );   
-  MsgStream log( msgSvc(), name() );
+  if (0 != m_eventTime ) delete m_eventTime; 
+  m_eventTime = new CalibData::CalibTime(time);   
+  MsgStream log(msgSvc(), name() );
   log << MSG::DEBUG 
       << "Event Time set to " << eventTime().absoluteTime() << endreq;
 }
 
 /// Check if the event time has been set
-const bool CalibDataSvc::validEventTime ( ) const { 
+const bool CalibDataSvc::validEventTime() const { 
   return m_eventTimeDefined; 
 }
 

@@ -74,7 +74,7 @@ public:
   virtual const ITime& eventTime() const ;
 
   /// Set the new event time  
-  virtual void setEventTime( const ITime& time );
+  virtual void setEventTime(const ITime& time);
 
 public:
   //Implementation of IInstrumentName interface
@@ -114,7 +114,7 @@ public:
   bool             m_eventTimeDefined;
 
   /// Current event time
-  ITime*           m_eventTime;  // why ITIme* rather than just ITime?
+  ITime*           m_eventTime; 
 
   bool             m_instrumentDefined;
   std::string      m_instrumentName;
