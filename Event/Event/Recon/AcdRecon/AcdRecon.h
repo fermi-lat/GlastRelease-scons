@@ -105,6 +105,8 @@ namespace Event {
         double m_doca;
         /// New Bill Atwood DOCA calculation using edge of tiles
         double m_actDist;
+        // record of the tile with the minimum Distance of Closest Approach
+        idents::AcdId m_minDocaId;
         /// Collection of distance of closest approach calculations
         /// for each side row of the ACD
         /// zeroth element corresponds to the top, and index one corresponds to
@@ -114,9 +116,6 @@ namespace Event {
         /// zeroth element corresponds to the top, and index one corresponds to
         /// the first row closest to the top, etc.
         std::vector<double> m_rowActDistCol;
-        
-        // record of the tile with the minimum Distance of Closest Approach
-        idents::AcdId m_minDocaId;
         
         /// Stores reconstructed energy per ACD digi
         std::map<idents::AcdId, double> m_energyCol;

@@ -153,7 +153,7 @@ float AcdDigiUtil::shootGaussian(float std_dev) {
     return RandGauss::shoot(0.0, std_dev);
 }
 
-void AcdDigiUtil::calcMipsToFullScale(const idents::AcdId &id, 
+void AcdDigiUtil::calcMipsToFullScale(const idents::AcdId&, 
                                      float pmtA_mips, unsigned int pmtA_pe, float &pmtA_mipsToFullScale, 
                                      float pmtB_mips, unsigned int pmtB_pe, float &pmtB_mipsToFullScale) {
     
