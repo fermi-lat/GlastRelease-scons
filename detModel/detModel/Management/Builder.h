@@ -19,7 +19,8 @@ namespace detModel{
     Builder(){};
     
     /** This method initialize the parser (implemented in a concrete
-     *  subclass of this class) 
+     *  subclass of this class) and parses the file into in-memory
+     *  DOM form
      */
     virtual bool parseFile(std::string) = 0;
 

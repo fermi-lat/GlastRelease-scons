@@ -5,8 +5,8 @@
 
 #include "xml/XmlParser.h"
 #include "xml/Dom.h"
-#include <xercesc/dom/DOM_Element.hpp>
-#include <xercesc/dom/DOM_Node.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMNode.hpp>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -35,6 +35,8 @@
 #include "detModel/Materials/Composite.h"
 
 namespace detModel{
+
+  XERCES_CPP_NAMESPACE_USE
 
   XercesBuilder::XercesBuilder()
   {
@@ -76,7 +78,7 @@ namespace detModel{
   /*
    *  This method build a constant
    */
-  Const* XercesBuilder::buildConst(DomElement e){
+  Const* XercesBuilder::buildConst(DOMElement* e){
     using xml::Dom;
 
     std::string name;
@@ -127,7 +129,7 @@ namespace detModel{
       c->setName(name);
       c->setConstMeaning(ut);
       try {
-        c->setNote(Dom::getText(e.getFirstChild()));
+        c->setNote(Dom::getText(e->getFirstChild()));
       }
       catch (xml::DomException ex) {
         // this isn't terribly fatal, so don't rethrow
@@ -173,9 +175,9 @@ namespace detModel{
       c->setName(name);
       c->setConstMeaning(ut);
     
-      DomElement notes = Dom::findFirstChildByName(e, "notes");
-      if (notes != DomElement()) {
-        c->setNote(Dom::getText(notes.getFirstChild()));
+      DOMElement* notes = Dom::findFirstChildByName(e, "notes");
+      if (notes != 0) {
+        c->setNote(Dom::getText(notes->getFirstChild()));
       }
       return c;
     }//end else (const, not prim)
@@ -185,16 +187,16 @@ namespace detModel{
   void XercesBuilder::buildConstants(){
     using xml::Dom;
 
-    if (m_docClient->getConstants() != DOM_Node()){
+    if (m_docClient->getConstants() != 0){
       Constants* constantsBranch = new Constants();
 
-      DOM_Node node = m_docClient->getConstants();
-      DomElement const constants = 
-        static_cast<const DomElement&>(node);
+      const DOMNode* node = m_docClient->getConstants();
+      const DOMElement* constants = 
+        static_cast<const DOMElement*>(node);
       // Content model for <constants> is (version, primary, derived?)
 
       {
-        DomElement version = Dom::findFirstChildByName(constants, "version");
+        DOMElement* version = Dom::findFirstChildByName(constants, "version");
         std::string majorVersion = Dom::getAttribute(version, "major");
         std::string minorVersion = Dom::getAttribute(version, "minor");
         constantsBranch->setVersion(majorVersion, minorVersion);
@@ -213,13 +215,13 @@ namespace detModel{
   }
 
   void XercesBuilder::buildCategories(Constants* constantsBranch, 
-                                      DomElement parent, bool primary) {
-    std::vector<DomElement> cats;
+                                      DOMElement* parent, bool primary) {
+    std::vector<DOMElement*> cats;
 
     using xml::Dom;
 
     // Could be called with null arg if no derived
-    if (parent == DomElement()) return;  
+    if (parent == 0) return;  
     
     Dom::getChildrenByTagName(parent, "*", cats);
     unsigned nCat = cats.size();
@@ -234,12 +236,12 @@ namespace detModel{
         cat->setSave(save == "true");
       }
 
-      DomElement overview = Dom::findFirstChildByName(cats[iCat], "overview");
-      cat->setOverview(Dom::getText(overview.getFirstChild()));
+      DOMElement* overview = Dom::findFirstChildByName(cats[iCat], "overview");
+      cat->setOverview(Dom::getText(overview->getFirstChild()));
 
       // loop over remaining children, the constants
-      DomElement constElt = Dom::getSiblingElement(overview);
-      while (constElt != DomElement()) {
+      DOMElement* constElt = Dom::getSiblingElement(overview);
+      while (constElt != 0) {
         cat->addConstant(buildConst(constElt));
         constElt = Dom::getSiblingElement(constElt);
       }
@@ -251,20 +253,20 @@ namespace detModel{
   void XercesBuilder::buildMaterials(){
     using xml::Dom;
 
-    if (m_docClient->getMaterials() == DomNode()) return;
+    if (m_docClient->getMaterials() == 0) return;
 
     MatCollection* materials = currentGdd->getMaterials();
 
-    DOM_Node node = m_docClient->getMaterials();
-    const DomElement matsElt = 
-      static_cast<const DomElement&>(node);
+    const DOMNode* node = m_docClient->getMaterials();
+    const DOMElement* matsElt = 
+      static_cast<const DOMElement*>(node);
       
     materials->setVersion(Dom::getAttribute(matsElt, "version"));
     materials->setDate(Dom::getAttribute(matsElt, "date"));
     materials->setAuthor(Dom::getAttribute(matsElt, "author"));
 
 
-    std::vector<DomElement> children;
+    std::vector<DOMElement*> children;
     Dom::getChildrenByTagName(matsElt, "*", children);
 
     unsigned nChild = children.size();
@@ -280,10 +282,10 @@ namespace detModel{
   }
 
   void XercesBuilder::buildIdDictionary() {
-    if (m_docClient->getIdDictionary() != DOM_Node()){
-      DOM_Node    dictNode = m_docClient->getIdDictionary();
-      DOM_Element& idDictElt = 
-	static_cast<DOM_Element&>(dictNode);
+    if (m_docClient->getIdDictionary() != 0){
+      DOMNode*    dictNode = m_docClient->getIdDictionary();
+      DOMElement* idDictElt = 
+	static_cast<DOMElement*>(dictNode);
 
       xmlUtil::IdDict *dict = new xmlUtil::IdDict(idDictElt);
 
@@ -293,7 +295,7 @@ namespace detModel{
     }
   }
 
-  Element* XercesBuilder::buildElement(DomElement e)
+  Element* XercesBuilder::buildElement(DOMElement* e)
   {
     using xml::Dom;
 
@@ -320,10 +322,10 @@ namespace detModel{
 
 
   /// Method that build a composite from the relative DOM node
-  Composite* XercesBuilder::buildComposite(DomElement e){
+  Composite* XercesBuilder::buildComposite(DOMElement* e){
     using xml::Dom;
 
-    std::vector<DomElement> addMats;
+    std::vector<DOMElement*> addMats;
 
     Dom::getChildrenByTagName(e, "addmaterial", addMats);
     unsigned int n = addMats.size();
@@ -362,7 +364,7 @@ namespace detModel{
         detAbort("Error in materials: composite uses an undefined material");
       else mat = mIt->second; 
 
-      DomElement child = Dom::getFirstChildElement(addMats[i]);
+      DOMElement* child = Dom::getFirstChildElement(addMats[i]);
       std::string type = Dom::getTagName(child);
       
       try {
@@ -388,7 +390,7 @@ namespace detModel{
 
 
   void XercesBuilder::buildSections()   {
-    if (m_docClient->getSections() != DOM_Node()){
+    if (m_docClient->getSections() != 0){
       currentGdd->addSection
         (buildSection((m_docClient->getSections())));
     }
@@ -401,11 +403,11 @@ namespace detModel{
     
   }
   
-  Section* XercesBuilder::buildSection(DomNode e)
+  Section* XercesBuilder::buildSection(const DOMNode* e)
   {
     using xml::Dom;
 
-    DomElement el = DomElement(static_cast<DomElement &>(e));
+    const DOMElement* el = static_cast<const DOMElement *>(e);
     Section* s = new Section(
 			     Dom::getAttribute(el, "name"),
 			     Dom::getAttribute(el, "version"),
@@ -414,7 +416,7 @@ namespace detModel{
 			     Dom::getAttribute(el, "fineChoice"),
 			     Dom::getAttribute(el, "topVolume")
 			     );
-    std::vector<DomElement> children;
+    std::vector<DOMElement*> children;
 
     Dom::getChildrenByTagName(el, "*", children);
     
@@ -439,7 +441,7 @@ namespace detModel{
   }
 
 
-  Choice* XercesBuilder::buildChoice(DOM_Element e)
+  Choice* XercesBuilder::buildChoice(DOMElement* e)
   {
     using xml::Dom;
 
@@ -450,7 +452,7 @@ namespace detModel{
     //    Manager* Manager = Manager::getPointer();
 
     //    DOM_NodeList childs = e.getChildNodes();
-    std::vector<DomElement> children;
+    std::vector<DOMElement*> children;
     Dom::getChildrenByTagName(e, "*", children);
     unsigned int n = children.size();
 
@@ -467,7 +469,7 @@ namespace detModel{
 
 
   /// \doit Add parameters
-  Box* XercesBuilder::buildBox(DOM_Element e)
+  Box* XercesBuilder::buildBox(DOMElement* e)
   {
     using xml::Dom;
     Box* b = new Box(Dom::getAttribute(e, "name"));
@@ -502,8 +504,8 @@ namespace detModel{
     else b->setSensitive(0);
 
     // A box may be segmented
-    DomElement segElt = Dom::getFirstChildElement(e);
-    if (segElt != DomElement()) {
+    DOMElement* segElt = Dom::getFirstChildElement(e);
+    if (segElt != 0) {
       Seg* s = new Seg;
 
       // axis and reason attributes are required by dtd
@@ -529,7 +531,7 @@ namespace detModel{
 
 
   /// \doit Add parameters
-  Tube* XercesBuilder::buildTube(DomElement e)
+  Tube* XercesBuilder::buildTube(DOMElement* e)
   {
     using xml::Dom;
 
@@ -561,7 +563,7 @@ namespace detModel{
 
 
     
-  Composition* XercesBuilder::buildComposition(DomElement e)  {
+  Composition* XercesBuilder::buildComposition(DOMElement* e)  {
     using xml::Dom;
 
     Composition* b = new Composition();
@@ -573,7 +575,7 @@ namespace detModel{
       b->setParameters(Dom::getAttribute(e, "parameters"));
     }
      
-    std::vector<DomElement> posElts;
+    std::vector<DOMElement*> posElts;
     Dom::getChildrenByTagName(e, "*", posElts);
     unsigned int n = posElts.size();
     
@@ -585,7 +587,7 @@ namespace detModel{
   }
 
 
-  Stack* XercesBuilder::buildStack(DomElement e) {
+  Stack* XercesBuilder::buildStack(DOMElement* e) {
 
     using xml::Dom;
 
@@ -609,7 +611,7 @@ namespace detModel{
       s->setParameters(Dom::getAttribute(e, "parameters"));
     }
 
-    std::vector<DomElement> posElts;
+    std::vector<DOMElement*> posElts;
     
     Dom::getChildrenByTagName(e, "*", posElts);
 
@@ -625,7 +627,7 @@ namespace detModel{
 
 
 
-  SinglePos* XercesBuilder::buildPosition(DomElement e) {
+  SinglePos* XercesBuilder::buildPosition(DOMElement* e) {
     using xml::Dom;
 
     std::string posType =  Dom::getTagName(e);
@@ -661,7 +663,7 @@ namespace detModel{
     else  return 0; // default
   }
 
-  StackedPos* XercesBuilder::buildRelativePosition(DomElement e) {
+  StackedPos* XercesBuilder::buildRelativePosition(DOMElement* e) {
 
     using xml::Dom;
     std::string posType = Dom::getTagName(e);
@@ -710,7 +712,7 @@ namespace detModel{
   }
 
 
-  void XercesBuilder::setAttributePosition(SinglePos* pos, DomElement e)
+  void XercesBuilder::setAttributePosition(SinglePos* pos, DOMElement* e)
   {
     using xml::Dom;
 
@@ -733,7 +735,7 @@ namespace detModel{
   }
 
   void XercesBuilder::setAttributeRelativePosition(StackedPos* pos, 
-                                                   DomElement e)  {
+                                                   DOMElement* e)  {
     using xml::Dom;
     pos->setVolumeRef(Dom::getAttribute(e, "volume"));
 
@@ -755,10 +757,10 @@ namespace detModel{
 
   }     // end setAttributeRelativePosition
 
-  void XercesBuilder::setIdFields(Position* pos, DomElement e) {
+  void XercesBuilder::setIdFields(Position* pos, DOMElement* e) {
     using xml::Dom;
 
-    std::vector<DomElement> fields;
+    std::vector<DOMElement*> fields;
     Dom::getChildrenByTagName(e, "idField", fields);
 
     unsigned int n = fields.size();
@@ -766,7 +768,7 @@ namespace detModel{
     for (unsigned int i = 0; i < n; i++) {
       IdField* field = new IdField;
       
-      DomElement curField = fields[i];
+      DOMElement* curField = fields[i];
       field->setName(Dom::getAttribute(curField, "name"));
       try {
         field->setStep(Dom::getIntAttribute(curField, "step"));

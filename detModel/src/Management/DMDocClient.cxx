@@ -1,15 +1,15 @@
 #include "detModel/Management/DMDocClient.h"
 #include "detModel/Utilities/Global.h"
 
-#include <xercesc/dom/DOM_Element.hpp>
+#include <xercesc/dom/DOMElement.hpp>
 #include "xml/Dom.h"
 
 #include <string>
 #include <iostream>
 
 namespace detModel{
-
-  void DMDocClient::handleChild(DOM_Node node) {
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMNode;
+  void DMDocClient::handleChild(DOMNode* node) {
     
     //    DOMString eltName = node.getNodeName();
     //    std::string name(xml::Dom::transToChar(eltName));

@@ -4,8 +4,8 @@
 #include <iostream>
 
 #include "xml/docMan/DocClient.h"
-#include <xercesc/dom/DOM_Node.hpp>
-#include <xercesc/dom/DOMString.hpp>
+#include <xercesc/dom/DOMNode.hpp>
+// #include <xercesc/dom/DOMString.hpp>
 #include "xml/Dom.h"
 
 namespace detModel{
@@ -22,15 +22,19 @@ namespace detModel{
     
     const std::string& getName() { return m_name;}
     
-    void handleChild(DOM_Node node);
+    void handleChild(XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* node);
     
     //    const DOM_Node* getConstants() {return &m_constants;}
     //    const DOM_Node* getSections() {return &m_sections;}
     //    const DOM_Node* getMaterials() {return &m_materials;}
-    const DOM_Node getConstants() {return m_constants;}
-    const DOM_Node getSections() {return m_sections;}
-    const DOM_Node getMaterials() {return m_materials;}
-    const DOM_Node getIdDictionary() {return m_idDict;}
+    const XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* getConstants() 
+    {return m_constants;}
+    const XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* getSections() 
+    {return m_sections;}
+    const XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* getMaterials() 
+    {return m_materials;}
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* getIdDictionary() 
+    {return m_idDict;}
 
     ~DMDocClient() {};
 
@@ -38,13 +42,13 @@ namespace detModel{
     /// This is the name of the client
     std::string m_name;
     /// This is the DOM_Node for constants
-    DOM_Node m_constants;
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* m_constants;
     /// This is the DOM_Node for sections
-    DOM_Node m_sections;
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* m_sections;
     /// This is the DOM_Node for materials
-    DOM_Node m_materials;
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* m_materials;
     /// This is the DOM_Node for id dictionary
-    DOM_Node m_idDict;
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* m_idDict;
   };
   
 }

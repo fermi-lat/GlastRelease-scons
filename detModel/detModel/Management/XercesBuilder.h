@@ -18,6 +18,10 @@ namespace detModel{
   class Choice;
   class Const;
   class DMDocClient;
+
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMNode;
+  using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
+
   /**
    * This class is a concrete Builder that use the Xerces parser and the
    * DOM functionalities to parse the xml file and build the generic model
@@ -67,57 +71,57 @@ namespace detModel{
     /**
      * This method build the Section object and return a pointer to it
      */
-    Section* buildSection(DOM_Node e);
+    Section* buildSection(const DOMNode* e);
 
     /**
      *   Helper method for buildConstants.  Handles all primary or all
      *   derived categories
      */
     void  buildCategories(Constants* constants, 
-                          DOM_Element parent, bool primary);
+                          DOMElement* parent, bool primary);
 
     /** 
      *   Helper methods for setAttributePosition and 
      *   setAttributeRelative to deal with id field children
      */
-    void setIdFields(Position* pos, DOM_Element e);
+    void setIdFields(Position* pos, DOMElement* e);
     /**
      * This method build the Const object and return a pointer to it
      */
-    Const* buildConst(DOM_Element e);
+    Const* buildConst(DOMElement* e);
     /// This method builds the Element object and return a pointer to it
-    Element* buildElement(DOM_Element e);
+    Element* buildElement(DOMElement* e);
     /// This method builds the Composite object and return a pointer to it
-    Composite* buildComposite(DOM_Element e);
+    Composite* buildComposite(DOMElement* e);
     /**
      * This method build a Choice object and return a pointer to it
      */
-    Choice* buildChoice(DOM_Element e);
+    Choice* buildChoice(DOMElement* e);
     //    Choice* buildChoice(DOM_Node e);
     /**
      * This method build a Composition object and return a pointer to it
      */
-    Composition* buildComposition(DOM_Element e);
+    Composition* buildComposition(DOMElement* e);
     /**
      * This method build a Stack object and return a pointer to it
      */
-    Stack* buildStack(DOM_Element e);
+    Stack* buildStack(DOMElement* e);
     /**
      * This method build a Box object and return a pointer to it
      */
-    Box* buildBox(DOM_Element e);
+    Box* buildBox(DOMElement* e);
     /**
      * This method build a Box object and return a pointer to it
      */
-    Tube* buildTube(DOM_Element e);
+    Tube* buildTube(DOMElement* e);
     /**
      * This method build a Position object and return a pointer to it
      */
-    SinglePos* buildPosition(DOM_Element e);
-    StackedPos* buildRelativePosition(DOM_Element e);
+    SinglePos* buildPosition(DOMElement* e);
+    StackedPos* buildRelativePosition(DOMElement* e);
 
-    void setAttributePosition(SinglePos* pos, DOM_Element e);
-    void setAttributeRelativePosition(StackedPos* pos, DOM_Element e);
+    void setAttributePosition(SinglePos* pos, DOMElement* e);
+    void setAttributeRelativePosition(StackedPos* pos, DOMElement* e);
 
   private:
     DMDocClient* m_docClient;
