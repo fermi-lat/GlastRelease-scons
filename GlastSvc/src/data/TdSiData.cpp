@@ -108,7 +108,7 @@ void TdSiData::load (const SiDetector& plane, idents::ModuleId moduleId)
         int wire_num = (*it3).index();
         int wire_typ = (*it3).noise();
         //************** remove noise  *********************
-        if( wire_typ !=0 ) continue; 
+        //if( wire_typ !=0 ) continue; 
         // *************************************************
         Point p = Point(SiDetector::localX(wire_num),0,0);
         p.transform(T);
