@@ -39,7 +39,7 @@ std::string Flux::title()const
 void Flux::generate()
 {
     m_flux = m_event->event();
-	m_time+= m_event->interval();
+    m_time+= m_event->interval();
 }
 
 // the particle generated 
@@ -61,7 +61,7 @@ HepPoint3D Flux::launchPoint()const
 
 double Flux::time()const 
 {
-	return m_time ;
+    return m_time ;
 }
 // direction
 HepVector3D Flux::launchDir()const
@@ -75,10 +75,10 @@ double Flux::rate()const
     return m_event->rate();
 }
 
-    /// set the area of the target
+/// set the area of the target
 void Flux::setTargetArea( double area)
 {
-   m_event->totalArea(area);
+    m_event->totalArea(area);
 }
 
 double Flux::targetArea()const
@@ -90,22 +90,22 @@ double Flux::targetArea()const
 /// find which spectrum created the current particle
 std::string Flux::findSource()const
 {
-	return m_event->findSource();
+    return m_event->findSource();
 }
 
 /// return a unique number correcponding to that spectrum
 int Flux::numSource()const
 {
     return m_event->numSource();
-
+    
 }
 
 
 void Flux::addFactory( const IFactory* factory ) {
     FactoryTable::instance()->addFactory( factory );
-    }
+}
 
 
 void Flux::addFactory(std::string name, const ISpectrumFactory* factory ) {
     SpectrumFactoryTable::instance()->addFactory(name,factory);
-    }
+}

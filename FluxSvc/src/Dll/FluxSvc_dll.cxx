@@ -26,12 +26,12 @@ extern void FluxSvc_load();
 #include "GaudiKernel/FactoryTable.h"
 
 extern "C" FactoryTable::EntryList* getFactoryEntries() {
-  static bool first = true;
-  if ( first ) {
-    FluxSvc_load();
-    first = false;
-  }
-  return FactoryTable::instance()->getEntries();
+    static bool first = true;
+    if ( first ) {
+        FluxSvc_load();
+        first = false;
+    }
+    return FactoryTable::instance()->getEntries();
 } 
 
 

@@ -79,8 +79,8 @@ FluxSvc::~FluxSvc()
 // initialize
 StatusCode FluxSvc::initialize () 
 {
-	//std::vector<std::string> fileList;
-
+    //std::vector<std::string> fileList;
+    
     StatusCode  status =  Service::initialize ();
     
     // bind all of the properties for this service
@@ -88,12 +88,12 @@ StatusCode FluxSvc::initialize ()
     
     // open the message log
     MsgStream log( msgSvc(), name() );
-
-	 //build the constructor argument for FluxMgr
-	//fileList.push_back(m_source_library);
-	//fileList.push_back(m_user_library);
+    
+    //build the constructor argument for FluxMgr
+    //fileList.push_back(m_source_library);
+    //fileList.push_back(m_user_library);
     m_source_lib.push_back(m_source_lib_default);
-
+    
     // create a FluxMgr object which will then be available.
     m_fluxMgr = new FluxMgr(m_source_lib/*fileList*/);
     

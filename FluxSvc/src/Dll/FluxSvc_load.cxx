@@ -21,10 +21,10 @@
 
 
 void FluxSvc_load() {
-  DLL_DECL_SERVICE( FluxSvc );
-
+    DLL_DECL_SERVICE( FluxSvc );
+    
 }
 
 extern "C" void FluxSvc_loadRef() {
-  FluxSvc_load();
+    FluxSvc_load();
 }
