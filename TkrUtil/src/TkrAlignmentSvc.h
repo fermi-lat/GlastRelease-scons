@@ -214,7 +214,7 @@ private:
     /// reads the alignment items from a file
     StatusCode readFromFile();
     /// generate the per-wafer alignment constants
-    StatusCode processFile();
+    StatusCode processConstants();
     /// does some logic on the next item in the read-in list
     bool getNextItem(aType type, AlignmentItem& item);
     
