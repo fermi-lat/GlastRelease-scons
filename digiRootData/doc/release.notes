@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v7r7      14-sep-2004 HMK Add enum to Gem class to unpack condition summary
 v7r6      27-aug-2004 HMK Add Event Flags in EventSummaryData
 v7r5p1    22-aug-2004 HMK Fix DigiEvent::Print for number of Acd and Cal digis
 v7r5p0    18-aug-2004 HMK clean up Gem and prepare for actual usage
