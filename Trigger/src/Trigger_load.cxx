@@ -20,6 +20,8 @@
 //! Load all  services: 
 void trigger_load() {
     DLL_DECL_ALGORITHM( Level1 );
+    DLL_DECL_ALGORITHM( ACDthrottle );
+
 } 
 
 extern "C" void trigger_loadRef()    {
