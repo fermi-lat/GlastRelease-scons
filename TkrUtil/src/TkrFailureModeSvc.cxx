@@ -135,7 +135,11 @@ StatusCode TkrFailureModeSvc::update(CalibData::BadStrips* pDead, CalibData::Bad
 }
 
 
-StatusCode TkrFailureModeSvc::finalize () {return StatusCode::SUCCESS;}
+StatusCode TkrFailureModeSvc::finalize () 
+{
+    delete m_visitor;
+    return StatusCode::SUCCESS;
+}
 
 void TkrFailureModeSvc::processLayerList() {
     // Purpose and Method: process the jobOptions input lists of (tower,layer) pairs

@@ -118,6 +118,7 @@ StatusCode TkrBadStripsSvc::doInit()
 
 StatusCode TkrBadStripsSvc::finalize()
 {
+    delete m_visitor;
     return StatusCode::SUCCESS;
 }
 
