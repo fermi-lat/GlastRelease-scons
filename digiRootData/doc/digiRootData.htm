@@ -417,35 +417,50 @@ from the Live Time counters are stored in a class called <i>LiveTime</i>.</P>
   </tr>
   <tr>
     <td width="33%"><i>getTrigCount( )</i></td>
-    <td width="33%">event number - counts number of triggers seen</td>
-    <td width="34%">a number, 0 -&nbsp;</td>
+    <td width="33%">Event Id - counts number of triggers seen</td>
+    <td width="34%">32 bit unsigned integer</td>
   </tr>
   <tr>
     <td width="33%"><i>getTrigTime( )</i></td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">&nbsp;</td>
+    <td width="33%">L1T time - time the event occurred in 50 ns increments since
+      the last counter reset.</td>
+    <td width="34%">32 bit unsigned integer</td>
   </tr>
   <tr>
     <td width="33%"><i>getXCapture( )</i></td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">&nbsp;</td>
+    <td width="33%">X TKR layers causing triggers</td>
+    <td width="34%">32 bit integer</td>
   </tr>
   <tr>
     <td width="33%"><i>getYCapture( )</i></td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">&nbsp;</td>
+    <td width="33%">Y TKR layers causing triggers</td>
+    <td width="34%">32 bit integer</td>
   </tr>
   <tr>
     <td width="33%"><i>getDeadTime( )</i></td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">&nbsp;</td>
+    <td width="33%">amount of time the TKR is dead due to readout or busy
+      conditions</td>
+    <td width="34%">16 bit unsigned short - where the first 13 bits represent
+      the dead time</td>
   </tr>
   <tr>
     <td width="33%"><i>getDeadTimeCause( )</i></td>
-    <td width="33%">&nbsp;</td>
-    <td width="34%">&nbsp;</td>
+    <td width="33%">Notes which conditions led to the dead time</td>
+    <td width="34%">unsigned character</td>
+  </tr>
+  <tr>
+    <td width="33%"><i>getDeadTimeAndCause( )</i></td>
+    <td width="33%">Returns a word containing the dead time, dead time cause and
+      MISC capture values.<br>
+      Organized as:<br>
+      MISC&nbsp;&nbsp;&nbsp;&nbsp; Dead&nbsp;&nbsp; Dead<br>
+      Capture&nbsp; Cause&nbsp; Time<br>
+      8 bits&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8 bits&nbsp;&nbsp;&nbsp; 16 bits</td>
+    <td width="34%">32 bit unsigned integer</td>
   </tr>
 </table>
+<p ALIGN="JUSTIFY">For additional information about the l1te subpacket <a href="http://www-glast.slac.stanford.edu/software/balloon/analysis/L1T/l1te_subpacket.htm">see
+this page</a>.</p>
 <p ALIGN="JUSTIFY"><b><a name="LiveTime">LiveTime</a></b></p>
 <table border="1" width="100%">
   <tr>
