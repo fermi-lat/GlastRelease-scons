@@ -23,8 +23,10 @@ MeritAlg.IM_filename=""; // disable IM variable
 MeritAlg.cuts="LnA";     // no test for tail suppression
 
 // need these so support Calorimeter default 
-CalibDataSvc.CalibFlavorList     += {"cal_gleam_default"};
 CalCalibSvc.DefaultFlavor = "cal_gleam_default";
+CalibDataSvc.CalibFlavorList += {"cal_gleam_default"};
+CalibDataSvc.CalibTimeSource  = "clock";
+
 
 //==============================================================
 //
