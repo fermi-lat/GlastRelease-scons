@@ -39,5 +39,5 @@ macro libs ""   WIN32   "$(meritDir)/merit_lib.lib
 application merit_app app/*.cxx $(libs)
 
 public
-set MERIT_INPUT_FILE "$(MERITROOT)/src/test/tuple50k.root"
+set MERIT_INPUT_FILE "$(MERITROOT)/src/test/merit100.root"
 application test_merit app/*.cxx $(libs)
