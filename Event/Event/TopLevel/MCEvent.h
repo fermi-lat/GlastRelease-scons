@@ -15,7 +15,7 @@
 
 
 // Externals
-extern const CLID& CLID_MCEvent;
+extern const CLID& CLID_McEvent;
 
 
 //------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ public:
 
   /// Retrieve reference to class definition structure
   virtual const CLID& clID() const                { return MCEvent::classID(); }
-  static const CLID& classID()                          { return CLID_MCEvent; }
+  static const CLID& classID()                          { return CLID_McEvent; }
 
   /// Clone operator
   MCEvent& operator=(const MCEvent& copy)                                      {
