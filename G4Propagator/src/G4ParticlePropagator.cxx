@@ -195,20 +195,7 @@ HepMatrix G4ParticlePropagator::mScat_Covr(double momentum, double arcLen) const
   // Dependencies: To get any answer, must have already stepped
   // Restrictions and Caveats: None
 
-  Event::TkrFitMatrix trackCov = m_propagator->getMscatCov(momentum,arcLen);
-    
-  HepMatrix cov(4,4,0);
-  cov(1,1) = trackCov.getcovX0X0();
-  cov(2,2) = trackCov.getcovSxSx(); 
-  cov(3,3) = trackCov.getcovY0Y0();
-  cov(4,4) = trackCov.getcovSySy();
-  cov(1,2) = cov(2,1) = trackCov.getcovX0Sx();
-  cov(1,3) = cov(3,1) = trackCov.getcovX0Y0();
-  cov(1,4) = cov(2,3) = cov(3,2) = cov(4,1) = trackCov.getcovX0Sy();
-  cov(2,4) = cov(4,2) = trackCov.getcovSxSy();
-  cov(3,4) = cov(4,3) = trackCov.getcovY0Sy(); 
-
-  return cov;
+  return m_propagator->getMscatCov(arcLen,momentum,true);
 }
 
 

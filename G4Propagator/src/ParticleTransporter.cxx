@@ -12,6 +12,7 @@
 #include "CLHEP/Vector/ThreeVector.h"
 #include "globals.hh"
 
+#include <stdexcept>
 #include <string>
 #include <algorithm>
 
@@ -66,6 +67,13 @@ void ParticleTransporter::setInitStep(const Point& start,  const Vector& dir)
   //Set the start point at the beginning of our list of volumes
   G4Navigator*       navigator = m_TransportationManager->GetNavigatorForTracking();
   G4VPhysicalVolume* pVolume   = navigator->LocateGlobalPointAndSetup(startPoint, 0, false);
+
+  //Let's be sure that we are inside a valid volume (ie inside of GLAST - it can happen!)
+  if (!pVolume ) 
+  {
+      throw std::domain_error("ParticleTransporter given invalid initial position");
+  }
+
 
   //Record our starting point
   stepInfo.push_back(TransportStepInfo(startPoint, 0.));
