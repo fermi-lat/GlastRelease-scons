@@ -38,15 +38,42 @@ Tower0Geometry.txt
 Tower A: **********************************************************************
 
 TowerAgeometry306000357.txt
-    TowerA upside-down, before mounting of the side walls.
+    upside-down, before mounting of the side walls.
 
+TowerAgeometry306000382.txt
 TowerAgeometry306000384.txt
-    TowerA upside-down, after mounting of the side walls.
+TowerAgeometry306000385.txt
+    upside-down, after mounting of the side walls.
+
+TowerAgeometry303002054.txt
+TowerAgeometry308000281.txt
+TowerAgeometry308000326.txt
+TowerAgeometry308000333.txt
+TowerAgeometry308000448.txt
+TowerAgeometry308000449.txt
+TowerAgeometry308000576.txt
+TowerAgeometry308000583.txt
+    runs taken at Alenia.  The conditions can be retrieved from
+    http://www.pi.infn.it/~kuss/public/aleniaHistory.html.
+
+TowerAgeometry306000445.txt
+    upright, after being back from Alenia
+
+TowerAgeometry306000475.txt
+    upright, after removing and remounting one side-wall to fix cable 6.
 
 Tower B: **********************************************************************
 
+TowerBgeometry306000483.txt
+    upside-down, before mounting of the side walls, with 3 cables still not
+    connected.
+
 TowerBgeometry306000510.txt
-    TowerB upside-down, after mounting of the side walls.
+TowerBgeometry306000517.txt
+    upside-down, after mounting of the side walls.
+
+
+
 
 fitting files: *****************************************************************
 
