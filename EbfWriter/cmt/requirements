@@ -1,7 +1,7 @@
 package EbfWriter
 version v0
 
-use GlastPolicy 	v5*
+use GlastPolicy 	*
 use Event 		*
 use ebfReader		*
 use IExternal		*
@@ -10,8 +10,16 @@ use GlastSvc		*
 use FluxSvc		*
 use reconRootData	*
 use commonRootData	*
-use Gleam		*
 use GuiSvc		*
+use AcdRecon		*
+use AnalysisNtuple	*
+use TkrDigi		*
+use AcdDigi		*
+use CalDigi		*
+use Trigger		*
+use CalUtil		*
+use CalRecon		*
+
 # Use this pattern for shareable libraries that Gaudi must load
 apply_pattern packageShr
 apply_pattern package_include
