@@ -1,0 +1,34 @@
+//##############################################################
+//
+// Job options file for Gleam job to run detault source for 10K events
+
+//$Header$
+
+// start with the basic program defined in Gleam
+#include "$GLEAMROOT/src/basicOptions.txt"
+
+// following, if uncommented, will run the GUI
+//#include "$GLEAMROOT/src/guiOptions.txt"
+
+FluxAlg.source_name="vertical_surface_muons";
+
+// set root output from merit with following
+MeritAlg.EventTreeName="MeritTuple";
+MeritAlg.PointingTreeName="Exposure";
+
+RootTupleSvc.filename="merit.root";
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+CalClustersAlg.OutputLevel=4; // too much info
+
+// Number of events to process
+MeritAlg.generated = 10; // for estimation of Aeff
+ApplicationMgr.EvtMax = 10;
+
+MessageSvc.OutputLevel      =3;
+
+//==============================================================
+//
+// End of job options file
+//
+//##############################################################
