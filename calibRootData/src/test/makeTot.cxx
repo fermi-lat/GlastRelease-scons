@@ -79,9 +79,16 @@ void fillTree(unsigned towerRow, unsigned towerCol, TTree* tree) {
   towerBranch->Fill();  // returns #bytes
 
   // Make branch for UniLayer class
-  UInt_t nStrips = 10;  // too lazy to make up 1536 strips
+  //  UInt_t nStrips = 10;  // too lazy to make up 1536 strips
+  UInt_t nStrips = 1536;
   TkrId nullId;
   TotUnilayer uni(nullId, nStrips);
+  bool sizeOk = uni.consistent();
+  if (!sizeOk) {
+    std::cout << "Inconsistent sizes.\n  Input size = " << nStrips 
+              << std::endl;
+    std::cout << "Returned size = " << uni.getNStrips() << std::endl;
+  }
   TotUnilayer* pUni = &uni;
   TBranch* uniBranch = tree->Branch("calibRootData::TotUnilayer", 
                                     "calibRootData::TotUnilayer", &pUni);
@@ -119,18 +126,37 @@ void fillTree(unsigned towerRow, unsigned towerCol, TTree* tree) {
 
   strip.init(9, 1.8, 2.8, 3.8, 1.0, 2.0);
   uni.setStrip(strip);
+
+  for (unsigned iStrip=10; iStrip < nStrips; iStrip++) {
+    strip.init(iStrip, 1.0, 2.0, 3.0, 1.1, 3.0);
+    uni.setStrip(strip);
+  }
   
   uniBranch->Fill();
 
-  uni.Clear();
+  unsigned meas = TkrId::eMeasureY;
 
-  uni.setId(TkrId(0,0,3,false,TkrId::eMeasureY));
+  for (unsigned iTray = 3; iTray < 17; iTray++) {
+    uni.Clear();
 
-  for (unsigned iStrip = 0; iStrip < nStrips; iStrip++) {
-    strip.init(iStrip, 2.1, -1.2, 1.2, 1.1, 1.0);
-    uni.setStrip(strip);
+    uni.setId(TkrId(0,0,iTray,false,meas));
+
+    for (unsigned iStrip = 0; iStrip < nStrips; iStrip++) {
+      strip.init(iStrip, 2.1, -1.2, 1.2, 1.1, 1.0);
+      uni.setStrip(strip);
+    }
+    uniBranch->Fill();
+
+    uni.Clear();
+
+    uni.setId(TkrId(0,0,iTray,true,meas));
+
+    for (unsigned iStrip = 0; iStrip < nStrips; iStrip++) {
+      strip.init(iStrip, 2.1, -1.2, 1.2, 1.1, 1.0);
+      uni.setStrip(strip);
+    }
+    uniBranch->Fill();
+    meas = 1 - meas;
   }
-  uniBranch->Fill();
-
 
 }
