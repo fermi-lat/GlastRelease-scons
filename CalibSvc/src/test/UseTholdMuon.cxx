@@ -168,6 +168,12 @@ void UseTholdMuon::processNew(CalibData::CalTholdMuonCol* pNew,
     log << MSG::INFO << "Retrieving TholdMuon values and uncertainties:"  
         << endreq;
 
+    if (!pTholdMuon) {
+      log << MSG::INFO << "No calibration data found for this channel" 
+          << endreq;
+      return;
+    }
+
     const ValSig* pFLE = pTholdMuon->getFLE();
     const ValSig* pFHE = pTholdMuon->getFHE();
 

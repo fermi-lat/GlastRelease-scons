@@ -152,10 +152,24 @@ void UseAsym::processNew(CalibData::CalAsymCol* pNew,
     short iTower = 0;
     short iLayer = 0;
     short iXtal = 2;
-    //    unsigned range = 2;
-    unsigned range = idents::CalXtalId::HEX8;
+
+    // Range isn't applicable to Asym
+    unsigned range = 0;
     unsigned face = 0;
     CalXtalId id(iTower, iLayer, iXtal);
+    
+    const std::vector<float>* positions = pNew->getXpos()->getVals();
+    unsigned nVal = positions->size();
+    
+    unsigned nD = positions->size();
+    log << MSG::INFO << "Xpos values are: " << endreq;    
+    for (unsigned iD = 0; iD < nD; iD++) {
+      log << MSG::INFO << (*positions)[iD] << " ";
+    }
+    log << endreq;
+    
+    log << MSG::INFO << "Retrieving " << nVal
+        << " asym values and uncertainties:"  << std::endl;
     
     CalibData::RangeBase* pRange = pNew->getRange(id, range, face);
     
@@ -163,32 +177,23 @@ void UseAsym::processNew(CalibData::CalAsymCol* pNew,
     log << MSG::INFO << "For tower = " << iTower << " layer = " << iLayer
         << " xtal = " << iXtal << endreq;
 
-    const std::vector<float>* positions = pNew->getXpos()->getVals();
-    unsigned nVal = positions->size();
-
-    unsigned nD = positions->size();
-    log << MSG::INFO << "Xpos values are: " << endreq;    
-    for (unsigned iD = 0; iD < nD; iD++) {
-      log << MSG::INFO << (*positions)[iD] << " ";
+    if (pAsym == 0) {
+      log << MSG::INFO << "No calibration data for this channel" << endreq;
     }
-    log << endreq;
-
-    log << MSG::INFO << "Retrieving " << nVal
-        << " asym values and uncertainties:"  << std::endl;
-
-
-    const std::vector<ValSig>* pV = pAsym->getBig();
-    printValSigs(&log, pV, "Big:");
-
-    pV = pAsym->getSmall();
-    printValSigs(&log, pV, "Small:");
-
-    pV = pAsym->getNSmallPBig();
-    printValSigs(&log, pV, "NSmallPBig:");
-
-    pV = pAsym->getPSmallNBig();
-    printValSigs(&log, pV, "PSmallNBig:");
+    else {
     
+      const std::vector<ValSig>* pV = pAsym->getBig();
+      printValSigs(&log, pV, "Big:");
+      
+      pV = pAsym->getSmall();
+      printValSigs(&log, pV, "Small:");
+      
+      pV = pAsym->getNSmallPBig();
+      printValSigs(&log, pV, "NSmallPBig:");
+      
+      pV = pAsym->getPSmallNBig();
+      printValSigs(&log, pV, "PSmallNBig:");
+    }
   }
 }
 
