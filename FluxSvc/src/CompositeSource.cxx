@@ -73,7 +73,8 @@ FluxSource* CompositeSource::event (double time)
         std::vector<EventSource*>::iterator  it = now;
         
         double intrval=0.,intrmin=100000.;
-        for (int q=0 ; now != m_sourceList.end(); ++now) {
+	int q;
+        for (q=0 ; now != m_sourceList.end(); ++now) {
             if(m_unusedSource[i]==1){
                 intrval=m_sourceInterval[i];
                 //std::cout << i << " is unused, interval is "<< intrval << std::endl;
