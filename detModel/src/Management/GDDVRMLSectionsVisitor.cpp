@@ -319,30 +319,57 @@ void GDDVRMLSectionsVisitor::setOpacity(string name, float op)
     }  
 }
 
+void HSVtoRGB(double *r, double *g, double *b, double h, double s, double v)
+{
+  double f,p,q,t;
+  int i;
+  
+  if (h==360.0)
+    h = 0.0;
+  
+  h /= 60.0;
+  i = (int)h;
+  f = h - i;
+  p = v*(1.0-s);
+  q = v*(1.0 - (s*f));
+  t = v*(1.0 - (s*(1.0-f)));
+
+  switch(i){
+  case 0: *r = v; *g = t; *b = p; break;
+  case 1: *r = q; *g = v; *b = p; break;
+  case 2: *r = p; *g = v; *b = t; break;
+  case 3: *r = p; *g = q; *b = v; break;
+  case 4: *r = t; *g = p; *b = v; break;
+  case 5: *r = v; *g = p; *b = q; break;
+  }
+}
+
 void GDDVRMLSectionsVisitor::makeColor()
 {
   unsigned int i;
   unsigned int ncol;
+  double r, g, b;
+
   typedef map<string, float> M;
   M::const_iterator j; 
   GDDmanager* manager = GDDmanager::getPointer();
-  GDD* g = manager->getGDD();
+  GDD* gdd = manager->getGDD();
 
-  ncol = g->getMaterialNames().size();
+  ncol = gdd->getMaterialNames().size();
 
   for(i=0;i<ncol;i++)
     {
-      j = opacityMap.find(g->getMaterialNames()[i]);
-      out << " DEF " << g->getMaterialNames()[i] << std::endl;
+      j = opacityMap.find(gdd->getMaterialNames()[i]);
+      out << " DEF " << gdd->getMaterialNames()[i] << std::endl;
       out << " Appearance { " <<  std::endl;
       out << " material Material { " <<  std::endl;
 
       /// Automatic coloring scheme \todo To be done better
+      HSVtoRGB(&r, &g, &b, 360.0*(ncol-i)/ncol, 1.0, 1.0);
       out << "       diffuseColor  " 
-	  << (float)i/ncol << " " 
-	  << (float)i/ncol << " "
-	  << (float)i/ncol <<  std::endl;
-
+	  << r << " " 
+	  << g << " "
+	  << b <<  std::endl;
 
       if (j == opacityMap.end())
 	out << "     transparency    0.0" << std::endl;          

@@ -46,21 +46,30 @@ public:
     /**
      *
      */
-    virtual double getBBX();
+    void constructBB();
     /**
      *
      */
-    virtual double getBBY();
+    virtual double getBBX(){return bbx;};
     /**
      *
      */
-    virtual double getBBZ();
+    virtual double getBBY(){return bby;};
+    /**
+     *
+     */
+    virtual double getBBZ(){return bbz;};
     /**
      *
      */
     vector<GDDanyPosition*> getPositions(){return anyPosition;};
 
  private:
+
+    /// Bounding box
+    double bbx;
+    double bby;
+    double bbz;
 
     /** @link aggregation
      *  @supplierCardinality 1..n */

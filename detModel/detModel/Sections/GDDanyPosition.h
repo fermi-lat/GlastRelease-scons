@@ -37,10 +37,10 @@ public:
    */  
   void setUnitLength(char* punitLength){
     if (punitLength== "mm")
-      unitLength = mm;
+      unitLength = GDDmm;
     else if (punitLength== "cm")
-      unitLength = cm;
-    else unitLength = m;
+      unitLength = GDDcm;
+    else unitLength = GDDm;
   };
 
   vector <GDDidField*> getIdFields(){return idFields;}
@@ -49,8 +49,8 @@ public:
    */  
   void setUnitAngle(char* punitAngle){
     if (punitAngle== "deg")
-      unitAngle = deg;
-    else unitAngle = mrad;
+      unitAngle = GDDdeg;
+    else unitAngle = GDDmrad;
   };
    /**
    *
@@ -116,6 +116,8 @@ public:
    *
    */ 
   unitAngletype getUnitAngle()const{return unitAngle;}
+
+  positiontype getPosType(){return typePosition;};
 
  protected:
   GDDanyPosition(positiontype ptypePosition):

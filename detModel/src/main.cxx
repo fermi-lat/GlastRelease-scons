@@ -47,7 +47,9 @@ int main(int argc, char* argv[]) {
   else
     visitor = new GDDVRMLSectionsVisitor(argv[2]);  
 
-  visitor->setOpacity("FOAM05",0.5);
+  visitor->setOpacity("FOAM05",0.0);
+  visitor->setDepth("oneTKR", 0);
+  //  visitor->setDepth("oneCAL", 0);
   manager->startVisitor(visitor);
  
 
@@ -62,12 +64,12 @@ int main(int argc, char* argv[]) {
   // for example the value for a constant or the dimension for a volume.
   // In this example we extract the value for the char constant convMat
   // and the material and X dimension for the volume (a box) CsIElementEnv
+
   std::cout << "The convMat value is " << g->getCharConstByName("convMat") << std::endl;
   std::cout << "The material of the CsIElementEnv is " 
 	    << (static_cast<GDDshape*>(g->getVolumeByName("CsIElementEnv")))->getMaterial() << std::endl;
   std::cout << "and its X dimension (in mm) is " 
 	    << (static_cast<GDDbox*>(g->getVolumeByName("CsIElementEnv")))->getX() << std::endl;
-
 
   delete manager;
   return(0);

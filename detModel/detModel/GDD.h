@@ -59,7 +59,8 @@ public:
   void buildVolumeMap();
   /// This method build the global constants maps for all the constants
   void buildConstantsMap();
-  
+
+  void buildBoundingBoxes(); 
   /// This method gives back the modes names vector
   vector <string> getModeNames(){return modeNames;};
   /// This method gives back the materials names vector

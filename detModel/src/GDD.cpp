@@ -178,8 +178,23 @@ void GDD::buildVolumeMap()
     for(j=0;j<sections[i]->getVolumes().size();j++)
       volumeMap.insert(M::value_type(sections[i]->getVolumes()[j]->getName(),
 				     sections[i]->getVolumes()[j]));
-
   buildChoiceMap();
+}
+
+void GDD::buildBoundingBoxes()
+{
+  unsigned int j;
+  int i;
+
+  for(i=0;i<getSectionsNumber();i++)
+    for(j=0;j<sections[i]->getVolumes().size();j++)
+      {
+	if ((sections[i]->getVolumes()[j])->getVolumeType() == composition)
+	  { 
+	    GDDcomposition* comp = static_cast<GDDcomposition*>(sections[i]->getVolumes()[j]);
+	    comp->constructBB();
+	  }
+      }
 }
 
 /* This method build the choices map and it is called by the buildVolumeMap

@@ -55,20 +55,25 @@ GDDXercesBuilder::GDDXercesBuilder(char* nameFile)
   }
   
   tmp = xml::Dom::findFirstChildByName(docElt, "constants" );
-  tmp = xml::Dom::findFirstChildByName(tmp, "derived" );
-  tmp = xml::Dom::findFirstChildByName(tmp, "derCategory" );
-  
-  while(tmp != DOM_Element())
-    {
-      curConst = xml::Dom::findFirstChildByName(tmp, "const" );
 
-      while (curConst != DOM_Element()) {
-	xml::Arith curArith(curConst);
-	double evalValue = curArith.evaluate();
-	curArith.saveValue();
-	curConst = xml::Dom::getSiblingElement(curConst);
-      }
-      tmp = xml::Dom::getSiblingElement(tmp);
+  tmp = xml::Dom::findFirstChildByName(tmp, "derived" );
+
+  if (tmp != DOM_Element())
+    {
+      tmp = xml::Dom::findFirstChildByName(tmp, "derCategory" );
+  
+      while(tmp != DOM_Element())
+	{
+	  curConst = xml::Dom::findFirstChildByName(tmp, "const" );
+	  
+	  while (curConst != DOM_Element()) {
+	    xml::Arith curArith(curConst);
+	    double evalValue = curArith.evaluate();
+	    curArith.saveValue();
+	    curConst = xml::Dom::getSiblingElement(curConst);
+	  }
+	  tmp = xml::Dom::getSiblingElement(tmp);
+	}
     }
       
 
@@ -222,7 +227,7 @@ void GDDXercesBuilder::buildConstants(){
 
 void GDDXercesBuilder::buildSections()
 {
-  unsigned int i;
+  unsigned int i, j;
   DOM_Element docElt = domfile.getDocumentElement();
   DOM_NodeList childs = docElt.getChildNodes();
 
@@ -233,10 +238,11 @@ void GDDXercesBuilder::buildSections()
 	currentGDD->getSections()->push_back( buildSection( &(childs.item(i) )  ));
       }
     }
-
   currentGDD->buildVolumeMap();
 
   currentGDD->ResolveReferences();
+
+  currentGDD->buildBoundingBoxes();
 
 }
 

@@ -5,8 +5,8 @@
 class GDDsectionsVisitor;
 
 /// All the enumeratives that are needed in the volumes hierarchy
-enum unitLengthtype{mm,cm,m};
-enum unitAngletype{deg,mrad};
+enum unitLengthtype{GDDmm,GDDcm,GDDm};
+enum unitAngletype{GDDdeg,GDDmrad};
 enum stacktype{sx,sy,sz};
 enum stackorigin{atStart,atCentre};
 enum typeVolume{shape,composition,stack,logical};
