@@ -1,9 +1,9 @@
 package GlastSvc
-version v1r3
+version v1r4
 
 branches src mgr doc
 
-use instrument v2r3
+use instrument v2r4
 use Gaudi v8
 use data 
 use GlastEvent
@@ -40,9 +40,6 @@ private
 
 include_path $(GLASTSVCROOT)
 
-# this for MSVCC, to fix incompatibilities, turn off warnings
-macro_append cppflags ""\
-       VisualC " /FI$(ntconfigfile)" 
 
 # note that the debug versions of the used libraries are inserted below
 
@@ -59,7 +56,6 @@ macro WinInclude1 "" VisualC "test/CreateEvent.h"
 macro WinInclude2 "" VisualC "test/jobOptions.txt"'
 
 # build this for non-shareable testing
-# note the addition of Raw. Take out shortly.
 application test  test/*.cpp \
                   $(WinInclude1) $(WinInclude2) 
 
