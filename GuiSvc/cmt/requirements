@@ -3,9 +3,9 @@ version v3r3
 
 branches GuiSvc cmt doc src
 
-use GlastPolicy v4*
+use GlastPolicy v5*
 use gui 
-use GaudiSvc
+use GaudiInterface * IExternal
 
 # library is not shareable since it is expected to be linked into the executable
 
