@@ -16,13 +16,17 @@ namespace ldfReader {
 
         virtual int UDFcomponent(EBFevent* event, EBFcontribution* contribution);
         virtual int OSWcomponent(EBFevent* event, OSWcontribution* contribution);
-        virtual int GLTcomponent(EBFevent* event, GEMcontribution* contribution);
+        virtual int GLTcomponent(EBFevent* event, GLTcontribution* contribution);
+        virtual int GEMcomponent(EBFevent* event, GEMcontribution* contribution);
         virtual int ACDcomponent(EBFevent* event, AEMcontribution* contribution);
         virtual int CALcomponent(EBFevent* event, CALcontribution* contribution);
         virtual int TKRcomponent(EBFevent* event, TKRcontribution* contribution);
         virtual int diagnostic  (EBFevent* event, TEMcontribution* contribution);
         virtual int error       (EBFevent* event, TEMcontribution* contribution);
-        virtual int cleanup     (EBFevent* event, TEMcontribution* contribution);
+        virtual int cleanup     (EBFevent* event, TEMcontribution* contribution); 
+
+        int commonComponentData(EBFcontribution *contribution);
+        void dumpLATPcellheader(const unsigned header, const char* pfx="  ");
 
     private:
         unsigned _calSrc;
