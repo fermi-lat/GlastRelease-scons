@@ -19,22 +19,22 @@
 extern const CLID& CLID_LdfGem;
 namespace LdfEvent {
 
-class GemDataTileList
+class GemTileList
 {
 public:
-  GemDataTileList()  {}
-  GemDataTileList (unsigned short xzm, unsigned short xzp, unsigned short yzm,
+  GemTileList()  {}
+  GemTileList (unsigned short xzm, unsigned short xzp, unsigned short yzm,
                unsigned short yzp, unsigned xy, unsigned short rbn, 
                unsigned short na) :
                m_xzp(xzp), m_xzm(xzm), m_yzp(yzp), m_yzm(yzm), m_xy(xy),
                m_rbn(rbn), m_na(na) { };
 
-  GemDataTileList(const GemDataTileList &tileList) : 
+  GemTileList(const GemTileList &tileList) : 
                m_xzp(tileList.m_xzp), m_xzm(tileList.m_xzm), m_yzp(tileList.m_yzp), 
                m_yzm(tileList.m_yzm), m_xy(tileList.m_xy), m_rbn(tileList.m_rbn), 
                m_na(tileList.m_na) { };
                
-  ~GemDataTileList() {}
+  ~GemTileList() {}
 
   void init (unsigned short xzm, unsigned short xzp, unsigned short yzm,
                unsigned short yzp, unsigned xy, unsigned short rbn, 
@@ -87,21 +87,21 @@ private:
 };
 
 
-/** @class GemDataOnePpsTime
+/** @class GemOnePpsTime
  *  @brief This is a helper class for parsing the One PPS time structure.
  */
-class GemDataOnePpsTime
+class GemOnePpsTime
 {
 public:
-  GemDataOnePpsTime()  {}
-  GemDataOnePpsTime(unsigned time, unsigned sec) { 
+  GemOnePpsTime()  {}
+  GemOnePpsTime(unsigned time, unsigned sec) { 
      m_timebase = time; 
      m_seconds = sec;
   };
-  GemDataOnePpsTime(const GemDataOnePpsTime &time) : 
+  GemOnePpsTime(const GemOnePpsTime &time) : 
               m_timebase(time.m_timebase), m_seconds(time.m_seconds) {};
 
-  ~GemDataOnePpsTime() {}
+  ~GemOnePpsTime() {}
 
   void init(unsigned timebase, unsigned sec) { 
        m_timebase = timebase; 
@@ -147,11 +147,11 @@ private:
                          unsigned short calLE,
                          unsigned short calHE, unsigned short cno, 
                          unsigned short conditionSummary, 
-                         const GemDataTileList &tileList);
+                         const GemTileList &tileList);
 
         void initSummary(unsigned liveTime, unsigned prescaled, 
                          unsigned discarded, unsigned sent, 
-                         unsigned triggerTime, const GemDataOnePpsTime &time, 
+                         unsigned triggerTime, const GemOnePpsTime &time, 
                          unsigned deltaEvtTime);
 
 
@@ -161,13 +161,13 @@ private:
         unsigned short calHEvector() const { return m_cal_HE_Vector;};
         unsigned short cnoVector() const { return m_cno_Vector;};
         unsigned short conditionSummary() const { return m_conditionSummary;};
-        const GemDataTileList& tileList() const { return m_tileList; };
+        const GemTileList& tileList() const { return m_tileList; };
         unsigned liveTime() const {return m_liveTime; };
         unsigned prescaled() const { return m_prescaled;};
         unsigned discarded() const { return m_discarded;};
         unsigned sent() const { return m_sent; };
         unsigned triggerTime() const { return m_triggerTime; };
-        const GemDataOnePpsTime& onePpsTime() const { return m_onePpsTime; };
+        const GemOnePpsTime& onePpsTime() const { return m_onePpsTime; };
         unsigned deltaEventTime() const { return m_deltaEventTime; };
 
 
@@ -179,13 +179,13 @@ private:
         unsigned short m_cal_HE_Vector;
         unsigned short m_cno_Vector;
         unsigned short m_conditionSummary;
-        GemDataTileList m_tileList;
+        GemTileList m_tileList;
         unsigned  m_liveTime;
         unsigned  m_prescaled;
         unsigned  m_discarded;
         unsigned  m_sent;
         unsigned  m_triggerTime;
-        GemDataOnePpsTime m_onePpsTime;
+        GemOnePpsTime m_onePpsTime;
         unsigned  m_deltaEventTime;
 
     };
@@ -194,7 +194,7 @@ private:
    inline void Gem::initTrigger(unsigned short tkr, unsigned short roi,
                   unsigned short calLE, unsigned short calHE, 
                   unsigned short cno, unsigned short conditionSummary, 
-                  const GemDataTileList &tileList) {
+                  const GemTileList &tileList) {
         m_tkrVector = tkr;
         m_roiVector = roi;
         m_cal_LE_Vector = calLE;
@@ -206,7 +206,7 @@ private:
 
     inline void Gem::initSummary(unsigned liveTime, unsigned prescaled, 
                   unsigned discarded, unsigned sent, unsigned triggerTime,
-                  const GemDataOnePpsTime &time, unsigned deltaEvtTime) {
+                  const GemOnePpsTime &time, unsigned deltaEvtTime) {
         m_liveTime = liveTime;
         m_prescaled = prescaled;
         m_discarded = discarded;  
