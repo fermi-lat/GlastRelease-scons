@@ -1,36 +1,17 @@
 // $Id$
 //
 // Implement access to Silicon strip data
+#define numTrays 19
+#include "GlastEvent/data/TdSiData.h"
 
-#include "GlastEvent/Raw/TdSiData.h"
-
-#include "instrument/SiTracker.h"
+//#include "instrument/SiTracker.h"
 #include <algorithm>
 using namespace std;
 
-/*
-class TdSiData::Strip {
-private:
-    friend class TdSiData;
-    
-public:
-    Strip () {}
-    
-private:
-    Strip (Point p, Id m, unsigned int n, unsigned int t = 0)
-        : stripIndex(n), stripType(t), pos(p), module(m)
-    {}
-    
-    unsigned int stripIndex;
-    unsigned int stripType; 
-    Point pos;
-    Id module;
-};
-*/
 
 TdSiData::TdSiData ()
 {
-    for(int i = 0; i < SiTracker::numTrays(); i++) {
+    for(int i = 0; i < numTrays; i++) {
         xhitList.push_back(new vector<Strip>);
         yhitList.push_back(new vector<Strip>);
     }
@@ -45,15 +26,7 @@ TdSiData::TdSiData (unsigned int n)
     }
 }
 
-/*! This is the copy constructor. It's used in the converter for the class.
-    This is because we need to make a copy of the object which is a member
-    of the IRFConverter. Otherwise we lose the object when the destructor
-    of IRFConverter is called.
-*/
-TdSiData::TdSiData ( TdSiData* copy, unsigned int n)
-{
 
-}
 
 TdSiData::~TdSiData ()
 {

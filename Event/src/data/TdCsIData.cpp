@@ -2,7 +2,7 @@
 
 // Implementatio of the TdCsIData class for the TDS
 
-#include "GlastEvent/Raw/TdCsIData.h"
+#include "GlastEvent/data/TdCsIData.h"
 //#include "instrument/Calorimeter.h"
 
 //! Default constructor

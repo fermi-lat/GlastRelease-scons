@@ -22,10 +22,10 @@
 
 extern const CLID& CLID_TdSiData;
 
-    class TdSiData : virtual public SiData , virtual public DataObject {
+class TdSiData : virtual public SiData , virtual public DataObject {
         public:
     
-        class Strip {
+    class Strip {
         private:
             friend class TdSiData;
         
@@ -50,10 +50,7 @@ extern const CLID& CLID_TdSiData;
     TdSiData ();
     
     TdSiData (unsigned int n);
-    
-    //copy constructor
-    TdSiData (TdSiData*,unsigned int n);
-    
+        
     virtual ~TdSiData ();
     
     //	access to module id if desired

@@ -34,14 +34,14 @@ _ImplementHitContainedFactories(AcdDigi)
 // ====================================================================
 // Object factory implementation for objects of class TdCsIData
 // ====================================================================
-#include "GlastEvent/Raw/TdCsiData.h"
+#include "GlastEvent/data/TdCsIData.h"
 _ImplementDataObjectFactory(TdCsIData)
 
 
 // ====================================================================
 // Object factory implementation for objects of class TdSiData
 // ====================================================================
-#include "GlastEvent/Raw/TdSiData.h"
+#include "GlastEvent/data/TdSiData.h"
 _ImplementDataObjectFactory(TdSiData)
 
 
