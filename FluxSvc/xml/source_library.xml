@@ -252,9 +252,17 @@
 		<nestedSource sourceRef="cremeavg" /> 
 		<nestedSource sourceRef="albedo_proton_avg" /> 
 		<nestedSource sourceRef="albedo_gamma" /> 
-		<!-- TODO: restore nestedSource sourceRef="electronavg" /  --> 
-		<nestedSource sourceRef="albedo_electronpositronavglow"/>
-        <nestedSource sourceRef="albedo_electronpositronavghi"/> 
+		<!-- TODO: restore nestedSource sourceRef="electronavg" / --> <!-- will be implemented soon --> 
+		<nestedSource sourceRef="albedo_electronpositronavg_total"/> 
+    </source>
+
+    <!-- background mixture - maximum for PDR studies-->
+    <source name="backgndmaxpdr">
+        <nestedSource sourceRef="chimemax"/>
+		<nestedSource sourceRef="albedo_proton_max"/>
+		<nestedSource sourceRef="albedo_gamma"/>
+		<!-- nestedSource sourceRef="electronmax"/ --> <!-- will be implemented soon -->
+		<nestedSource sourceRef="albedo_electronpositron_total"/>
     </source>
 
     <!-- 'standard' background mixture -->
