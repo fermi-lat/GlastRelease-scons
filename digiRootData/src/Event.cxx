@@ -57,11 +57,11 @@ Event::~Event() {
 //_________________________________________________________________________
 void Event::Clean(Option_t *option) {
     m_AcdHeader.Clean();
-    m_AcdData->Delete();
+    m_AcdData->Clear();
     m_numTiles = -1;
 
     m_CalHeader.Clean();
-    m_CalData->Delete();
+    m_CalData->Clear();
     m_numLogs = -1;
 
     m_TkrHeader.Clean();

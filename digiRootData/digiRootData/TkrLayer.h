@@ -3,7 +3,7 @@
 #define TKRLAYER_H
 
 #include "TObject.h"
-#include "TClonesArray.h"
+#include "TObjArray.h"
 #include "StripID.h"
 
 /*! \class TkrHit
@@ -20,7 +20,7 @@ class TkrLayer : public TObject
   UChar_t m_xy; 	  // Is this an x or y tile?
   UInt_t m_TOT[2];	  // TOT values for each of the 2 readout boards
   UInt_t m_errf[2];	  // ERRF values for each of the 2 readout boards
-  TClonesArray *m_strips; //->
+  TObjArray *m_strips; //->
   
   Int_t m_numStrips;
 
@@ -31,11 +31,11 @@ class TkrLayer : public TObject
   } TKRAxes;
   
   TkrLayer();
-  TkrLayer(TClonesArray *strips);
+  TkrLayer(TObjArray *strips);
   virtual ~TkrLayer();
   void Clean(Option_t *option="");
 
-  TClonesArray* getStrips() { return m_strips; };
+  TObjArray* getStrips() { return m_strips; };
   void setTOT(UInt_t right, UInt_t left);
   void setErrf(UInt_t right, UInt_t left);
   void setLayer(UChar_t layerVal) { m_layer = layerVal; };
@@ -46,8 +46,6 @@ class TkrLayer : public TObject
   inline UChar_t getLayer() const { return m_layer; };
   TKRAxes getXY() const { return (m_xy ? Y : X); };
       
-  StripID* AddStrip();
-
   /// Root >= 3.0 is now const correct for the Compare function
   Int_t Compare(const TObject *obj) const;
   Bool_t IsSortable() const;

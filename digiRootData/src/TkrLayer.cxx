@@ -23,16 +23,16 @@ TkrLayer::TkrLayer() {
 }
 // -------------------------------------------------------------------
 
-TkrLayer::TkrLayer(TClonesArray *strips = 0) {
-  // Creates a new TkrLayer object with the specified TClonesArray of Si
+TkrLayer::TkrLayer(TObjArray *strips = 0) {
+  // Creates a new TkrLayer object with the specified TObjArray of Si
   // Si strips.  
   // (The array pointer defaults to 0 {NULL}, in which case a new
-  // TClonesArray is created.)
+  // TObjArray is created.)
   m_numStrips = -1;
   if (strips)
     m_strips = strips;
   else
-    m_strips = new TClonesArray("StripID");
+    m_strips = new TObjArray();
 }
 
 // -------------------------------------------------------------------
@@ -91,10 +91,3 @@ void TkrLayer::Clean(Option_t *option) {
  //   m_strips = 0;
 }
 
-
-StripID* TkrLayer::AddStrip() {
-    ++m_numStrips;
-    TClonesArray &strips = *m_strips;
-    new(strips[m_numStrips]) StripID();
-    return ((StripID*)(strips[m_numStrips]));
-}
