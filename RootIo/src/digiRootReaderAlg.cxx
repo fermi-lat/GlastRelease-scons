@@ -369,7 +369,7 @@ StatusCode digiRootReaderAlg::readEventSummary() {
     evtSumTds->initEventFlags(eventFlags);
     const unsigned int nTem = 16;
     unsigned int iTem;
-    unsigned long tem[nTem];
+    unsigned int tem[nTem];
     for (iTem = 0; iTem < nTem; iTem++) 
         tem[iTem] = evtSummary.temLength(iTem);
     evtSumTds->initContribLen(tem, evtSummary.gemLength(), evtSummary.oswLength(),

@@ -309,10 +309,11 @@ StatusCode digiRootWriterAlg::writeEventSummary() {
     m_digiEvt->getEventSummaryData().initialize(summaryTds->summary());
     m_digiEvt->getEventSummaryData().initEventFlags(summaryTds->eventFlags());
     const unsigned int nTem = 16;
-    unsigned long tem[nTem];
+    unsigned int tem[nTem];
     unsigned int iTem;
-    for (iTem = 0; iTem < nTem; iTem++) 
-        summaryTds->temLength(iTem);
+    for (iTem = 0; iTem < nTem; iTem++) {
+        tem[iTem] = summaryTds->temLength(iTem);
+    }
     m_digiEvt->getEventSummaryData().initContribLen(tem, 
         summaryTds->gemLength(), summaryTds->oswLength(), 
         summaryTds->errLength(), summaryTds->diagLength(), 
