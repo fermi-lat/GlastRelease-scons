@@ -1,7 +1,8 @@
 /** @file release.notes
- * package GlastEvent
+ * package Event
  * package manager:T.Burnett (original author: H. Gillespie)
  *
+ * v8r1  00-may-02 THB First post-name chage release
  * v7r3  08-may-02 THB Ready for name change: new Tkr and Cal included
  *       08-may-02 HMK Add namespace for DigiEvent and new CalDigiCol\n
  *       string for the EventModel.\n
