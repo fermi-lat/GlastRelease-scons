@@ -55,7 +55,7 @@ DisplayControl::DisplayControl(Menu& menu, SceneControl* control)
 
 
     // this is to force link to include the Projector
-    Projector p((Draw2D*)0); 
+    Projector p((Draw2D*)0); p.canvas(); //fool warning?
 
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -468,7 +468,7 @@ void DisplayControl::DisplaySubMenu::show(){
 void DisplayControl::DisplaySubMenu::hide(){
    _display->set_running(false); hide(true); _display->set_running(true); _display->redisplay();}
 
-void DisplayControl::DisplaySubMenu::show(bool update)
+void DisplayControl::DisplaySubMenu::show(bool /* update*/)
 {
     if(_rep) _rep->show();
     for(std::vector<GUI::Toggle*>::iterator itt=_rep_list.begin(); itt!=_rep_list.end(); ++itt)
@@ -476,7 +476,7 @@ void DisplayControl::DisplaySubMenu::show(bool update)
     for(std::vector<DisplaySubMenu*>::iterator it = _submenus.begin(); it!=_submenus.end(); ++it)
         (*it)->show(false);
 }
-void DisplayControl::DisplaySubMenu::hide(bool update)
+void DisplayControl::DisplaySubMenu::hide(bool /*update */)
 {
     if(_rep) _rep->hide();
     

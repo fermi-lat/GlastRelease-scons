@@ -144,8 +144,8 @@ ViewPort::rotateZ(float theta)
     class ViewPortDummy : public ViewPort { public:
     virtual void drawPL(const GraphicsVector*,int){};
     virtual void draw_markers(const GraphicsVector*,int){};
-    virtual void coordinate3(const GraphicsVector *points, int n){};
-    virtual void indexedLineSet(const int* a, int n){};
+    virtual void coordinate3(const GraphicsVector *, int ){};
+    virtual void indexedLineSet(const int*, int ){};
     };
  
 ViewPort& ViewPort::copy(const GraphicsVector*, 	float, const float *,const char*)

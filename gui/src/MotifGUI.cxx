@@ -220,7 +220,7 @@ void MotifGUI::endPullDownMenu()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //                     commands
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-static void TimerCallback (  XtPointer a_data, XtIntervalId* timer )
+static void TimerCallback (  XtPointer /* a_data */, XtIntervalId* /*timer */ )
 {
 	GUI::running = false; //
 }

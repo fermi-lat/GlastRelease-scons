@@ -107,7 +107,7 @@ inline GUI::GUI(const char* title):_winTitle(title){}  // abstract class
 inline GUI::~GUI(){}
 inline void    GUI::addToMenu(const char* , Command* ){}
 inline GUI::Toggle*   GUI::addToggleToMenu(const char*, bool, Command*, Command* ){return 0;}
-inline GUI::Menu*   GUI::beginPullDownMenu(const char*, GUI::Menu* m){return 0;}
+inline GUI::Menu*   GUI::beginPullDownMenu(const char*, GUI::Menu*){return 0;}
 inline void    GUI::restorePullDownMenu(GUI::Menu* ){}
 inline void    GUI::endPullDownMenu(){}
 inline void    GUI::menuSeparator(){}

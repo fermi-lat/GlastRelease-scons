@@ -9,6 +9,7 @@
 #include "gui/SimpleCommand.h"
 #include <strstream>
 #include <string>
+#include <cstdio> // for sprintf
 
 namespace gui {
 

@@ -12,7 +12,7 @@
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //         demo main 
-int main(int argc, char** argv)
+int main(int /*argc */, char** /*argv*/)
 {
   //force into link  
     if(0)gui::GUI::createGUI();

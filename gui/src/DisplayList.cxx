@@ -315,9 +315,10 @@ void DisplayList::draw(ViewPort* vw)
     if( hidden() || (m_nodelist==0) || (m_nodelist->size()==0) ) return;
 
     DispList::iterator diter = m_nodelist->begin();
-    DisplayList::Node* disp = *diter;
+
 
 #if 0 //THB disable this turkey!
+    DisplayList::Node* disp = *diter;
     // exit if scale is too small: first DisplayList::Node object does it
     if( ! (m_flags & noCheckDetailFlag)  ){
         float size = ((Limits*)disp)->checkScale(vw);

@@ -115,6 +115,7 @@ void GuiMgr::pause() // called by GUI message (space bar or button)
     switch  (m_state) {
     case RUNNING: m_state=PAUSED;  stop_loop(); break;
     case PAUSED:  stop_loop(); break;
+    case INITIAL: case DONE: break;
     }
 }
 
@@ -123,6 +124,7 @@ void GuiMgr::resume() // called by GUI message (CR key or button )
     switch  (m_state) {
     case RUNNING: m_state=PAUSED;  stop_loop(); break;
     case PAUSED:  m_state=RUNNING; stop_loop(); break;
+    case INITIAL: case DONE: break;
     }
 }
 void GuiMgr::stop_loop() // stop the loop in the end_event method

@@ -84,7 +84,7 @@ void Xdraw::move_to(float x, float y)
     lastx = x;
     lasty = y;
 }
-static bool inline inside(float x, float y){return fabs(x)<1.01 && fabs(y)<1.01;}
+inline static bool inside(float x, float y){return fabs(x)<1.01 && fabs(y)<1.01;}
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Special clipping routine since X seems to mess up with high magnification
 bool Xdraw::clip(float x, float y,
@@ -133,7 +133,7 @@ void Xdraw::line_to(float x, float y)
   lastx = x;
   lasty = y;
 }
-void Xdraw::fill_polygon(const float* xy, int npoints, Shading pattern)
+void Xdraw::fill_polygon(const float* xy, int npoints, Shading /*pattern*/)
 {
   // fill a single polygon
   XPoint * points = new XPoint[npoints];
