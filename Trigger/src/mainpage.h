@@ -3,7 +3,7 @@
 
 /*! @mainpage  package Trigger
 
-
+See TriggerAlg documentation.
 
   <hr>
   \section jobOptions src/jobOptions.txt
