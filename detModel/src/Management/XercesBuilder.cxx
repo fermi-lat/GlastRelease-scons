@@ -670,8 +670,8 @@ namespace detModel{
     node = attributelistPos.getNamedItem(DOMString("zrot"));
     pos->setZRot(atof(xml::Dom::transToChar(node.getNodeValue())));
 
-    node = attributelistPos.getNamedItem(DOMString("S"));
-    pos->setS(atof(xml::Dom::transToChar(node.getNodeValue())));
+    //    node = attributelistPos.getNamedItem(DOMString("S"));
+    //    pos->setS(atof(xml::Dom::transToChar(node.getNodeValue())));
 
     //  node = attributelistPos.getNamedItem(DOMString("unitLength"));
     // pos->setUnitLength(xml::Dom::transToChar(node.getNodeValue()));
