@@ -28,6 +28,10 @@ extern const CLID& CLID_TkrDigi;
 class TkrDigi : virtual public ContainedObject {
     
 public:
+    //! typedefs
+    typedef std::vector<int> HitList;
+    typedef HitList::const_iterator const_iterator;
+
     //! Constructors
     //! Null constructor
     TkrDigi() {};
@@ -79,13 +83,18 @@ public:
     //! Fill the ASCII output stream
     virtual std::ostream& fillStream( std::ostream& s ) const;
     
+    //! begin iterator
+    const_iterator begin()const {return m_hits.begin();}
+    //! end iterator
+    const_iterator end()const {return m_hits.end();}
+
 private:
     
     int m_layer;
     int m_view;
     int m_tower;
     int m_tot[2];
-    std::vector<int>  m_hits;
+    Hitlist  m_hits;
 };
 
 //! Typedefs to make iterators available (to be added)
@@ -168,9 +177,10 @@ inline std::ostream& TkrDigi::fillStream( std::ostream& s ) const {
 */
     
     template <class TYPE> class ObjectVector;
-    typedef ObjectVector<TkrDigi>     TkrDigiVec;
+   // typedef ObjectVector<TkrDigi>     TkrDigiVec;
     template <class TYPE> class ObjectList;
-    typedef ObjectList<TkrDigi>       TkrDigiList;
-   
+    // typedef ObjectList<TkrDigi>       TkrDigiList;
+     
+    typedef ObjectVector<TkrDigi> TkrDigiCol;
     
 #endif
