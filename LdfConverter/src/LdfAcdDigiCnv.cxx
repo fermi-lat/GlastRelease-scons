@@ -27,7 +27,7 @@ const ICnvFactory& LdfAcdDigiCnvFactory = s_factory;
 LdfAcdDigiCnv::LdfAcdDigiCnv(ISvcLocator* svc)
 : LdfBaseCnv(classID(), svc)
 {
-    // Here we associate this converter with the /Event path on the TDS.
+    // Here we associate this converter with the /Event/Digi/AcdDigiCol path on the TDS.
     declareObject("/Event/Digi/AcdDigiCol", objType(), "PASS");
 }
 
@@ -35,7 +35,6 @@ LdfAcdDigiCnv::LdfAcdDigiCnv(ISvcLocator* svc)
 StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
     // Purpose and Method:  This converter will create an empty EventHeader on
     //   the TDS.
-    //refpObject = new Event::EventHeader();
     MsgStream log(msgSvc(), "LdfAcdDigiCnv");
     Event::AcdDigiCol *digiCol = new Event::AcdDigiCol;
     refpObject = digiCol;
