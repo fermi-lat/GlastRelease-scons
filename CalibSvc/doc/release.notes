@@ -2,6 +2,7 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
+ * 12-Aug-2004: hmk v0r13p3: Pick up newer LdfEvent again
  * 11-Aug-2004: hmk v0r13p2: Roll back to old LdfEvent and add Toby fixes for 
  *                           Windows.  Big fix due to rootcint propagation to
  *                           those packages that use CalibSvc - we'll clean this
