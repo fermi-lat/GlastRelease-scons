@@ -2,7 +2,7 @@
 /// Module implements methods for clients to get generic services.
 
 #include "xml/Dom.h"
-#include "dom/DOM_Element.hpp"
+#include <xercesc/dom/DOM_Element.hpp>
 
 #include <string>
 #include <iostream>

@@ -5,7 +5,7 @@
 
 #include "xml/XmlParser.h"
 #include "xml/Dom.h"
-#include "dom/DOM_Element.hpp"
+#include <xercesc/dom/DOM_Element.hpp>
 
 #include <string>
 #include <iostream>

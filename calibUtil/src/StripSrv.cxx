@@ -3,9 +3,9 @@
 
 #include "xml/XmlParser.h"
 #include "xml/Dom.h"
-#include "dom/DOM_Element.hpp"
-#include "dom/DOM_NodeList.hpp"
-#include "dom/DOM_TreeWalker.hpp"
+#include <xercesc/dom/DOM_Element.hpp>
+#include <xercesc/dom/DOM_NodeList.hpp>
+#include <xercesc/dom/DOM_TreeWalker.hpp>
 
 #include <string>
 #include <iostream>

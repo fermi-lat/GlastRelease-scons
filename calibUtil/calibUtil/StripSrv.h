@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include "dom/DOM_Element.hpp"
+#include <xercesc/dom/DOM_Element.hpp>
 
 namespace calibUtil {
 
