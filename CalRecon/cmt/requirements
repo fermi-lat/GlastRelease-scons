@@ -1,5 +1,5 @@
 package CalRecon
-version v5r10p1
+version v5r11p2
 
 branches src cmt doc
 
@@ -8,7 +8,7 @@ use Event *
 use GlastSvc *
 use CalUtil v1r*
 use geometry v3*
-use AnalysisNtuple v0*
+use AnalysisNtuple v*
 use Recon v*
 
 apply_pattern packageShr
