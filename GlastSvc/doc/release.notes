@@ -2,6 +2,7 @@
  * package GlastSvc
  * package manager:T.Burnett
  *
+ *  9-oct-02  THB tag v9r3 new code for handling randoms from KY
  * 24-sep-02  THB tag v9r2p1 do not require SiliconPlaneGeometry init success
  * 13-sep-02  THB tag v9r1 change to MCEvent converter
  * 07-sep-02  LSR tag v9r0 for changes to SiliconPlaneGeometry etc.
