@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v5r3p2 THB 02-sep-03   explicit G4 cut value sets 
 * v5r3p1 THB 25-aug-03   mod to write out merit tuple with ntupleWriteSvc in test 
 * v5r3   THB 17-aug-03   add filter stuff (EbfWriter and OnboardFilter)
 * v5r2p4 THB 15-aug-03   fix spelling (grin)
