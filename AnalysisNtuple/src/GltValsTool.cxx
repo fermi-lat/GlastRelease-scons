@@ -178,7 +178,7 @@ StatusCode GltValsTool::calculate()
     Trig_word = word & bitMask;
     Trig_GemSummary = (word >> enums::GEM_offset) & bitMask;
 
-    SmartDataPtr<LdfEvent::EventSummaryData> eventSummary(m_pEventSvc, "/Event/Gem"); 
+    SmartDataPtr<LdfEvent::EventSummaryData> eventSummary(m_pEventSvc, "/Event/EventSummary"); 
 
     Trig_evtFlags = eventSummary==0 ? 0 : eventSummary->eventFlags();
 
