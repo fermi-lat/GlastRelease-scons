@@ -36,12 +36,18 @@ protected:
     StatusCode retrieve();
     
 private:
-    /// method to calculate energy deposited in a crystal
-    void computeEnergy(Event::CalXtalRecData* recLog,
-                       const Event::CalDigi* adcLog);
+    /** method to calculate energy deposited in a crystal
+     * @param recData pointer to CalXtalRecData object to store reconstructed energy
+     * @param digi pointer to CalDigi object with input data
+     */
+    void computeEnergy(Event::CalXtalRecData* recData,
+                       const Event::CalDigi* digi);
     
-    /// method to calculate longitudinal position in a crystal 
-    void computePosition(Event::CalXtalRecData* recLog);
+    /** method to calculate longitudinal position in a crystal 
+     * @param recData pointer to CalXtalRecData object used as a source of input
+     *        information on energy and to store the calculated position
+     */
+    void computePosition(Event::CalXtalRecData* recData);
     
 private:
     /// pointer to input data collection in TDS
