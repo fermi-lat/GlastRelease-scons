@@ -13,11 +13,10 @@ template <class TYPE> class CnvFactory;
 
 
 //------------------------------------------------------------------------------
-//
-// ClassName:   ACDhitCnv
-//  
-// Description:
-//
+//ClassName:   MCACDhitCnv
+/*!
+A converter class that handles ACD data from the IRF file
+*/
 // Author:   
 //
 //------------------------------------------------------------------------------
@@ -25,15 +24,15 @@ class MCACDHitCnv : public BaseCnv   {
   friend class CnvFactory<BaseCnv>;
 
 public:
-  /// Standard Constructor
+  //! Standard Constructor
   MCACDHitCnv( ISvcLocator* svc );
-  /// Standard Destructor
+  //! Standard Destructor
   virtual ~MCACDHitCnv();
-  /// class ID
+  //! access class ID
   static const CLID& classID();
-  /// Update complete object
+  //! Update complete object
   virtual StatusCode updateObj(IOpaqueAddress* pAddress, DataObject* pObject);
-  /// Create object
+  //! Create object
   virtual StatusCode createObj(IOpaqueAddress* pAddress, DataObject*& refpObject);
 
 protected:
