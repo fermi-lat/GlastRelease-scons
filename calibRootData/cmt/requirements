@@ -12,9 +12,16 @@ apply_pattern root_package headers="\
  ../calibRootData/Cal/CalDimension.h\
  ../calibRootData/Cal/CalSerial.h\
  ../calibRootData/Cal/CalGain.h\
- ../calibRootData/Cal/CalGainCol.h"\
- includes="-I${COMMONROOTDATAROOT} -ICal -IAcd -ITkr"
+ ../calibRootData/Cal/CalGainCol.h\
+ ../calibRootData/Tkr/TkrTower.h\
+ ../calibRootData/Tkr/Tot.h"\
+ includes="-I${COMMONROOTDATAROOT} -ICal -IAcd -ITkr"\
+ extra_source="Cal/*.cxx Tkr/*.cxx"
 
 # ..and all other include files, once I figure out what they are
+
+private
+use facilities v2r*
+application makeTot test/makeTot.cxx 
 
 
