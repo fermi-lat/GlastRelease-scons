@@ -26,6 +26,8 @@ namespace ldfReader {
 
         void clear();
 
+        void print() const;
+
         unsigned short getTowerId() const { return m_towerId; };
 
         const std::map<unsigned int, TkrLayer*>* getTkrLayerMap() const { return &m_tkrMap; };
@@ -41,6 +43,7 @@ namespace ldfReader {
         CalDigi* getCalDigi(unsigned int layer, unsigned int col);
 
         void setTem(const TemData &tem) { m_tem = tem; };
+        TemData& getTem() { return m_tem; };
         const TemData& getTem() const { return m_tem; };
 
     private:

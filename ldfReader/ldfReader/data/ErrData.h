@@ -15,20 +15,28 @@ namespace ldfReader {
     public:
 
         ErrData() { clear(); };
-        ErrData(const ErrData& error) { m_summary = error.m_summary; };
+        ErrData(const ErrData& error) { 
+            m_summary = error.m_summary; 
+            m_lenInBytes = error.m_lenInBytes; };
         ErrData(const EventSummaryCommon &summary) { m_summary = summary; }
         ~ErrData() { clear(); };
 
-        void clear() { m_summary.setSummary(0); };
+        void clear() { 
+            m_summary.setSummary(0); 
+            m_lenInBytes = 0; };
 
         const EventSummaryCommon& summary() const { return m_summary; };
         void setSummary(unsigned summary) { m_summary.setSummary(summary);};
+
+        void initLength(unsigned long length) { m_lenInBytes = length; };
+        unsigned long lenInBytes() const { return m_lenInBytes; };
 
     private:
 
         // Store the event sequence number for this contribution
         EventSummaryCommon m_summary;
 
+        unsigned long m_lenInBytes;
     };
 } // end namespace
 #endif

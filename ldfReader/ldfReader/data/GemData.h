@@ -158,6 +158,9 @@ private:
         const EventSummaryCommon& summary() const { return m_summary; };
         void setSummary(const EventSummaryCommon &summary) { m_summary = summary; };
 
+        void initLength(unsigned long length) { m_lenInBytes = length; };
+        unsigned long lenInBytes() const { return m_lenInBytes; };
+
     private:
 
         unsigned short m_tkrVector;
@@ -178,6 +181,7 @@ private:
         // Store the event sequence number for this contribution
         EventSummaryCommon m_summary;
 
+        unsigned long m_lenInBytes;
     };
 } // end namespace
 #endif
