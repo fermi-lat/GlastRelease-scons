@@ -105,7 +105,8 @@ protected:
                            unsigned& nRow, unsigned& nCol, 
                            unsigned& nLayer,
                            unsigned& nXtal, unsigned& nFace,
-                           unsigned& nRange);
+                           unsigned& nRange,
+                           unsigned* nDacCol=0);
 
   /// Another one to find first range element
   DOM_Element findFirstRange(const DOM_Element& docElt);

@@ -32,7 +32,14 @@ namespace {
     using idents::CalXtalId;
 
     std::string att = Dom::getAttribute(rangeElt, "range");
-    if (att.size() == 0) {  // range not applicable
+    if (att.size() == 0) {    // Try diode next
+      att = Dom::getAttribute(rangeElt, "diode");
+      if (att.size() == 0)      return 0;      // no sort of range
+
+      // else process value of diode attribute;
+      //   a little bit of sleight of hand here
+      if (att.compare(std::string("LE")) == 0) return CalXtalId::LEX8;
+      if (att.compare(std::string("HE")) == 0) return CalXtalId::HEX8;
       return 0;
     }
     if (att.compare(std::string("LEX8")) == 0) return CalXtalId::LEX8;
@@ -238,9 +245,11 @@ StatusCode XmlBaseCnv::readDimension(const DOM_Element& docElt,
                                      unsigned& nRow, unsigned& nCol, 
                                      unsigned& nLayer,
                                      unsigned& nXtal, unsigned& nFace,
-                                     unsigned& nRange) {
+                                     unsigned& nRange,
+                                     unsigned* nDacCol) {
   using xml::Dom;
 
+  MsgStream log(msgSvc(), "XmlBaseCnv" );
   DOM_Element dimElt = Dom::findFirstChildByName(docElt, "dimension");
   if (dimElt == DOM_Element()) return StatusCode::FAILURE;
 
@@ -251,6 +260,7 @@ StatusCode XmlBaseCnv::readDimension(const DOM_Element& docElt,
     nXtal = Dom::getIntAttribute(dimElt, "nXtal");
     nFace = Dom::getIntAttribute(dimElt, "nFace");
     nRange = Dom::getIntAttribute(dimElt, "nRange");
+    if (nDacCol) *nDacCol = Dom::getIntAttribute(dimElt, "nDacCol");
   }
   catch (xml::DomException ex) {
     std::cerr << "From CalibSvc::XmlBaseCnv::readDimension" << std::endl;
@@ -260,20 +270,6 @@ StatusCode XmlBaseCnv::readDimension(const DOM_Element& docElt,
 
 
 
-  /*
-  std::string att = Dom::getAttribute(dimElt, "nRow");
-  nRow = (unsigned) atoi(att.c_str());
-  att = Dom::getAttribute(dimElt, "nCol");
-  nCol = (unsigned) atoi(att.c_str());
-  att = Dom::getAttribute(dimElt, "nLayer");
-  nLayer = (unsigned) atoi(att.c_str());
-  att = Dom::getAttribute(dimElt, "nXtal");
-  nXtal = (unsigned) atoi(att.c_str());
-  att = Dom::getAttribute(dimElt, "nFace");
-  nFace = (unsigned) atoi(att.c_str());
-  att = Dom::getAttribute(dimElt, "nRange");
-  nRange = (unsigned) atoi(att.c_str());
-  */
 
   unsigned expected = nRow * nCol;
   // Make some consistency checks.  # tower elements should be nRow*nCol
@@ -284,12 +280,14 @@ StatusCode XmlBaseCnv::readDimension(const DOM_Element& docElt,
   Dom::getDescendantsByTagName(docElt, "tower", nlist);
   
   if (nlist.size() != expected) {
+    log << MSG::ERROR << "Expected tower dimension <> actual  " << endreq;
     // put out a message and...
     return StatusCode::FAILURE;
   }
   expected *= nLayer;
   Dom::getDescendantsByTagName(docElt, "layer", nlist);
   if (nlist.size() != expected) {
+    log << MSG::ERROR << "Expected layer dimension <> actual  " << endreq;
     // put out a message and...
     return StatusCode::FAILURE;
   }
@@ -297,6 +295,7 @@ StatusCode XmlBaseCnv::readDimension(const DOM_Element& docElt,
   expected *= nXtal;
   Dom::getDescendantsByTagName(docElt, "xtal", nlist);
   if (nlist.size() != expected) {
+    log << MSG::ERROR << "Expected xtal dimension <> actual  " << endreq;
     // put out a message and...
     return StatusCode::FAILURE;
   }
@@ -304,6 +303,7 @@ StatusCode XmlBaseCnv::readDimension(const DOM_Element& docElt,
   expected *= nFace;
   Dom::getDescendantsByTagName(docElt, "face", nlist);
   if (nlist.size() != expected) {
+    log << MSG::ERROR << "Expected face dimension <> actual  " << endreq;
     // put out a message and...
     return StatusCode::FAILURE;
   }
@@ -319,6 +319,8 @@ StatusCode XmlBaseCnv::readDimension(const DOM_Element& docElt,
   Dom::getDescendantsByTagName(docElt, tagName, nlist);
   //  nlist = docElt.getElementsByTagName(child.getTagName());
   if (nlist.size() != expected) {
+    log << MSG::ERROR << "Expected calib type elements " << expected 
+        << " <> actual  " << nlist.size() << endreq;
     // put out a message and...
     return StatusCode::FAILURE;
   }
