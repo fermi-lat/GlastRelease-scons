@@ -1,11 +1,11 @@
 package Gleam
 
-version  v2r2p2
+version  v2r2p3
 # This is a checkout package
 # $Id$
 
 # gaudi system files: this would checkout all of the Gaudi packages
-use EXTLIB             v2r4p3
+use EXTLIB      v2r4p3
 use GaudiSys    v9r0p6
 
 # ROOT add-on
@@ -41,12 +41,12 @@ public
 
 use GuiSvc      v3
 
-use Event                v8r10
+use Event       v8r10
 use GlastSvc    v8r1p2
 
 # simulation
 
-use FluxSvc              v5r7p1
+use FluxSvc     v5r7p1
 use FluxDisplay v2r0p1
 use G4Generator v4r1p6
 
@@ -61,9 +61,9 @@ use AcdDigi     v1r2
 use Trigger     v3r3p3
 use Recon       v2r2p3
 
-use TkrRecon              v6r4
-use CalRecon              v5r6  
-use AcdRecon              v0r4p1       
+use TkrRecon    v6r4
+use CalRecon              v5r7p1  
+use AcdRecon    v0r4p1       
 
 #ROOT persistence: RootIo specifies the data packages
 use RootIo      v4r7p1
