@@ -12,6 +12,7 @@
 //forward declarations
 
 class DetectorConverter;
+class GlastDetector;
 namespace xml {class IFile; }
 
 //!  Access to the Glast detector geometry and IRF I/O
@@ -35,6 +36,10 @@ public:
 
     //! access to the IFile containing detector constants
     virtual const xml::IFile* iniFile()const=0;
+
+    //! set new root detector
+    virtual void setDetector(GlastDetector* d)=0;
+
 };
 
 // IID declaration
