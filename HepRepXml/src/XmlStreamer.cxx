@@ -6,6 +6,7 @@
 #include <sstream>
 #include <map>
 #include <vector>
+#include <iostream>
 
 #include "XmlStreamer.h"
 
@@ -29,7 +30,10 @@ void XmlStreamer::saveHepRep(std::string nameFile)
   typedef std::vector<IFiller*> fillerCol;
   std::vector<std::string>::const_iterator i; 
 
-  gzprintf(file,"<heprep>\n");
+  gzprintf(file,"<?xml version=\"1.0\" ?>\n");  
+  gzprintf(file,"<heprep xmlns:heprep=\"http://www.freehep.org/HepRep\"\n");
+  gzprintf(file,"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n");
+  gzprintf(file, "xsi:schemaLocation=\"HepRep.xsd\">\n\n");
   
   const std::vector<std::string>& types = m_registry->getTypeTrees();
   
@@ -40,6 +44,7 @@ void XmlStreamer::saveHepRep(std::string nameFile)
                "<typetree name=\"%s\" version=\"1.0\">\n",  
                (*i).c_str());
       
+
       fillerCol temp = m_registry->getFillersByType((*i));
       
       for(j=temp.begin();j!=temp.end();j++)
@@ -66,7 +71,7 @@ void XmlStreamer::saveHepRep(std::string nameFile)
               "<instancetree name=\"%s\" version=\"1.0\" reqtypetree=\"\" ",  
               it->first.c_str()); 
       gzprintf(file,"typetreename=\"%s\" typetreeversion=\"1.0\">\n" ,it->second.c_str());
-
+      
       for(jt=temp.begin();jt!=temp.end();jt++)
         {
           (*jt)->fillInstances(typesList);          
