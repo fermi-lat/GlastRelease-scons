@@ -52,7 +52,7 @@ use G4Generator v4r2
 
 #digitization
 use CalDigi     v1r1p2 
-use TkrDigi     v1r5p2
+use TkrDigi               v1r5p5
 use AcdDigi     v1r2
 
 

@@ -1,6 +1,11 @@
 /** @file release.notes
  * package Gleam
  * package manager:T.Burnett
+* v2r2p8 THB 08-Aug-02
+     use GuiSvc                v3r1p3
+     use FluxSvc               v5r10
+     use TkrDigi               v1r5p5
+
 * v2r2p7 THB 08-Aug-02
       use RootIo         v4r9p2
 
