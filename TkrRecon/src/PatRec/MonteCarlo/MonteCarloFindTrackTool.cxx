@@ -231,7 +231,7 @@ Event::TkrPatCand* MonteCarloFindTrackTool::buildTrack(const Event::McParticle* 
             int planeDelta = curPlane - lastPlane;
 
             // Load up the next cluster, if it exists and is in one of the next two planes
-            if (-3 < planeDelta && planeDelta < 0 && cluster)
+            if (-4 < planeDelta && planeDelta < 0 && cluster)
             {
                 patCand->addCandHit(const_cast<Event::TkrCluster*>(cluster));
 
