@@ -162,7 +162,7 @@ idents::CalXtalId::AdcRange LinearConvertAdc::calculateAdcAndNoise(
     float cosAngle;
 
     // convert to adc in LARGE diode and add pedestal average
-    for( short int range=1; range!=-1; range-- ){
+    for( short int range=1; range!=-1; --range ){
       pRangeGain = gains->getRange( id, range, face );
       pGain = dynamic_cast<CalibData::Gain * >(pRangeGain);
       depositedEnergy[range] /= pGain->getGain();
@@ -197,15 +197,15 @@ idents::CalXtalId::AdcRange LinearConvertAdc::calculateAdcAndNoise(
     }
 
     // look for potential best range  for LARGE diode
-    for( short int range=0; range<2; range++ ){
+    for( short int range=0; range<2; ++range ){
       depositedEnergy[range]= (int) depositedEnergy[range];
-      if( depositedEnergy[range]<m_maxAdc ) 
+      if( depositedEnergy[range]<m_maxAdc )
         return (idents::CalXtalId::AdcRange) range;
       //if( depositedEnergy[range]>m_maxAdc ) depositedEnergy[range]= m_maxAdc;
     }    
     
     // convert to adc in SMALL diode and add pedestal average
-    for( short int range=3; range!=1; range-- ){
+    for( short int range=3; range!=1; --range ){
       CalibData::RangeBase* pRangeGain = gains->getRange( id, range, face );
       CalibData::Gain* pGain = dynamic_cast<CalibData::Gain * >(pRangeGain);
       depositedEnergy[range] /= pGain->getGain();
@@ -242,18 +242,16 @@ idents::CalXtalId::AdcRange LinearConvertAdc::calculateAdcAndNoise(
   
   // default adc value
   // range/2 is diode-type [0] is Large diode; [1] is small
-  for( short int diode=0; diode<2; diode++ ){
-    float noise= RandGauss::shoot();
-    for( short int range=2*diode; range<2+2*diode; range++ ){
-      depositedEnergy[range]+= noise*m_noise[diode]/m_ePerMeV[diode];
+  for( short int diode=0; diode<2; ++diode ){
+    depositedEnergy[2*diode+1]+=  RandGauss::shoot()*m_noise[diode]/m_ePerMeV[diode];
+    //zero suppression 
+    if( diode==0 && depositedEnergy[1]<m_thresh  ){
+      depositedEnergy[0]=0.;
+      return idents::CalXtalId::LEX8;
+    }
       
-      //zero suppression 
-      if( (diode+range)==0 && depositedEnergy[0]<m_thresh  ){
-        depositedEnergy[0]=0;
-        return idents::CalXtalId::LEX8;
-      }
-      
-      depositedEnergy[range]=(int)(depositedEnergy[range]+m_gain[face][range]);
+    for( short int range=2*diode; range<2+2*diode; ++range ){
+      depositedEnergy[range]=(int)depositedEnergy[2*diode+1]*m_gain[face][range];
       depositedEnergy[range]+=m_pedestal;
       if( depositedEnergy[range]<m_maxAdc ) 
         return (idents::CalXtalId::AdcRange) range;
