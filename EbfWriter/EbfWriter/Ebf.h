@@ -12,9 +12,9 @@
 #include "Event/TopLevel/EventModel.h"
 
 /**
- * @class Event
+ * @class Ebf
  *
- * @brief TDS for storing ebf format of an event
+ * @brief TDS for storing an event in a format similar to ebf
  *
  * The data is stored as one continuos string of bytes
  * No attempt is made to verify that the data stored is correctly
@@ -31,8 +31,6 @@ namespace EbfWriterTds{
     Ebf();
     Ebf(char *newData,unsigned int dataLength);
     virtual ~Ebf();
-//    static const CLID& classID() {return CLID_Ebf;}
-//    virtual const CLID& clID() const {return classID();}
 
     ///Retrieve pointer to the ebf data.
     char *get(unsigned int &dataLength) const;
