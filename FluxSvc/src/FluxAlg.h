@@ -16,11 +16,11 @@
 // Include files
 // Gaudi system includes
 #include "GaudiKernel/Algorithm.h"
+#include "GaudiKernel/Property.h"
 
 class IFlux;
 class IFluxSvc;
 class IparticlePropertySvc;
-class McVertex;
 
 
 class FluxAlg : public Algorithm {
@@ -35,17 +35,16 @@ public:
 private: 
     
     StringProperty m_source_name;
+
     IFluxSvc*   m_fluxSvc;
     IFlux *     m_flux;
     
     
-    unsigned long m_run;      // run number
-    unsigned long m_event;    // event number
+    UnsignedIntegerProperty m_run;      // run number
+    unsigned int m_sequence;  // sequence number
     
-    McVertex*       m_root; // 
     
     IDataProviderSvc* m_eds;
-    //    mc::McParticleCol* m_plist;
     
     IParticlePropertySvc * m_partSvc;
     

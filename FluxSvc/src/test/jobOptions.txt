@@ -26,6 +26,7 @@ FluxSvc.source_lib += {"$(FLUXSVCROOT)/xml/composite_library.xml"};
 
 FluxTestAlg.source_name="default";
 
+
 ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 10;
 

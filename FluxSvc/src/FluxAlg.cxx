@@ -37,10 +37,11 @@ const IAlgFactory& FluxAlgFactory = Factory;
 //------------------------------------------------------------------------
 //! ctor
 FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
-:Algorithm(name, pSvcLocator)
+:Algorithm(name, pSvcLocator) , m_sequence(0)
 {
     // declare properties with setProperties calls
     declareProperty("source_name",  m_source_name="default");
+    declareProperty("MCrun",        m_run=100);
     
 }
 //------------------------------------------------------------------------
@@ -98,7 +99,6 @@ StatusCode FluxAlg::execute()
         m_flux = m_fluxSvc->currentFlux();
         m_flux->generate();
     }
-    
     HepPoint3D p = m_flux->launchPoint();
     HepPoint3D d = m_flux->launchDir();
     double ke = m_flux->energy(); // kinetic energy in MeV
@@ -135,11 +135,10 @@ StatusCode FluxAlg::execute()
     // Check for the MC branch - it will be created if it is not available
     
     DataObject *mc = new Event::McParticleCol;
-    //eventSvc()->retrieveObject("/Event/MC", mc);
     sc=eventSvc()->registerObject(EventModel::MC::Event , mc);
     if(sc.isFailure()) {
         log << MSG::WARNING << EventModel::MC::Event  <<" could not be registered on data store" << endreq;
-        //return sc;
+        return sc;
     }
     
     
@@ -173,7 +172,15 @@ StatusCode FluxAlg::execute()
         
     } else { 
         log << MSG::WARNING << " could not find the event header" << endreq;
-        return StatusCode::SUCCESS;//FAILURE;
+    }
+
+    SmartDataPtr<Event::MCEvent> mcheader(eventSvc(), EventModel::MC::Event);
+    if(mcheader) {
+        Event::MCEvent& h = mcheader;
+        h.initialize(m_run, m_flux->numSource(), m_sequence++);
+        
+    } else { 
+        log << MSG::WARNING << " could not find the mc event header" << endreq;
     }
     return sc;
 }
