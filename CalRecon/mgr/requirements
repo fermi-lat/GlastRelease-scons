@@ -6,8 +6,11 @@ branches src mgr doc
 use TkrRecon 
 use GuiSvc
 use GlastEvent
+use reconstruction
+
 
 macro CalReconDir  "$(CALRECONROOT)/$(DEBUGDIR)"
+
 
 # have a seperate library to export the calorimeter recon data classes 
 library CalReconData -no_share CalLogID.cpp calorimeterGeo.cpp \
@@ -29,6 +32,7 @@ path_append LD_LIBRARY_PATH "${CALRECONROOT}/${DEBUGDIR}/"
 
 include_path $(CALRECONROOT)
 
+
 private
 
 # note that the debug versions of the used libraries are inserted below
@@ -47,5 +51,5 @@ macro WinJobOptions  ""  VisualC   "test/jobOptions.txt"
 
 macro_append use_linkopts $(console_linkopts)
 
-application test_CalRecon test/*.cxx *.cxx *.cpp  Dll/*.cpp ${WinJobOptions}
+application test_CalRecon test/*.cxx *.cxx *.cpp Dll/*.cpp ${WinJobOptions}
 
