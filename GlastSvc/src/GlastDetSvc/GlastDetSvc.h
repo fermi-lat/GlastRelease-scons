@@ -78,8 +78,11 @@ public:
     virtual StatusCode  getShapeByID(idents::VolumeIdentifier id,
         std::string*, 
         std::vector<double>*);
+
+    /// retrieve the name of the top volume
+    virtual std::string getTopVolume() {return m_topvol;}
     
-    
+
     /// compute strip id from local coordinate for a tkr plane
     virtual unsigned int stripId (double x);
     virtual unsigned int stripId (const HepPoint3D&  x);

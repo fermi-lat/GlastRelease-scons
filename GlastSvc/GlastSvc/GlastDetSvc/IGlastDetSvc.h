@@ -27,7 +27,7 @@ class IDmapBuilder;
 namespace idents{class VolumeIdentifier;}
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_IGlastDetSvc(901, 2 , 0); 
+static const InterfaceID IID_IGlastDetSvc(901, 3 , 0); 
 ///  Access to the Glast detector geometry
 
 /** @class IGlastDetSvc
@@ -61,10 +61,12 @@ public:
     /// Return transform of top volume relative to world
     virtual const HepTransform3D& getTransform3DPrefix()=0;    
 
-    /// retrive the type and dimensions of a volume given a valid ID
+    /// retrieve the type and dimensions of a volume given a valid ID
     virtual StatusCode  getShapeByID(idents::VolumeIdentifier id,
                                      std::string*, 
                                      std::vector<double>*) = 0;
+    /// retrieve name of top volume
+    virtual std::string getTopVolume() = 0;
 
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IGlastDetSvc; }
