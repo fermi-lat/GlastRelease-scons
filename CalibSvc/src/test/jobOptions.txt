@@ -37,8 +37,6 @@ ApplicationMgr.EvtMax = 10;
 // Start up a CalibDataSvc 
 ApplicationMgr.ExtSvc += {"CalibDataSvc"};
 
-
-ApplicationsMgr.ExtSvc += {"CalibDataSvc"};
 ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
 
 DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
