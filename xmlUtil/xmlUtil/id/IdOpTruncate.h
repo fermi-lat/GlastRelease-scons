@@ -11,7 +11,7 @@ namespace xmlUtil {
   //! 
   class IdOpTruncate : public IdOperation {
   public:
-    IdOpTruncate(DOM_Element trunc);
+    IdOpTruncate(DomElement trunc);
     ~IdOpTruncate() {}
 
     virtual NamedId * convert(const NamedId& inputId);

@@ -12,7 +12,7 @@ namespace xmlUtil {
   //! "from" and "to" fields themselves alone.
   class IdOpCompress : public IdOperation {
   public:
-    IdOpCompress(DOM_Element cmprss);
+    IdOpCompress(DomElement cmprss);
     ~IdOpCompress() {}
 
     virtual NamedId * convert(const NamedId& inputId);

@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 
+typedef DOM_Element DomElement;
 namespace xmlUtil {
 
 
@@ -55,7 +56,7 @@ namespace xmlUtil {
     // the Identifier, then invoke the above version of convert.
 
     //! Will be overridden by derived classes to actually do something
-    IdOperation(DOM_Element);
+    IdOperation(DomElement);
 
     // Default constructor produces an operation which acts on any NamedId 
     // and does nothing to it.  
