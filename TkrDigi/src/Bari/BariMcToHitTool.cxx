@@ -136,7 +136,7 @@ StatusCode BariMcToHitTool::execute()
     //    CurrOr* CurrentOr = new CurrOr();
     CurrOr CurrentOr;
     TkrDigitizer Digit;
-
+    Digit.Clean();
     int kk = 0;
 
     static const double ladder_pitch = SiStripList::die_width()

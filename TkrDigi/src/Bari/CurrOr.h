@@ -32,7 +32,7 @@ class CurrOr {
 
     /// adds a DigiElem
     void add(const DigiElem*);
-
+    void addnew(const DigiElem*);
     /**
      * adds a DigiElem via it's components
      * @param 1  volume identifier

@@ -22,7 +22,7 @@ class DigiElem {
 
  public:
 
-    DigiElem(){}
+  DigiElem();
     /**
      * Constructor for a DigiElem
      * @param 1  volume identifier

@@ -11,6 +11,11 @@
 #include "DigiElem.h"
 
 
+DigiElem::DigiElem(){
+    for ( int i=0; i<100; ++i )
+	m_Ic[i] = 0;
+}
+
 DigiElem::DigiElem(const idents::VolumeIdentifier volId, const int strip,
                    const double* Ic,
 		   Event::McPositionHit* hit) {
