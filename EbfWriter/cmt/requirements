@@ -19,16 +19,16 @@ library EbfWriter $(headers) *.cxx Dll/*.cxx
 
 
 private
-use TkrRecon       *
-use FluxSvc        *
-use TkrDigi        *
-use AcdDigi        *
-use CalDigi        *
-use Trigger        *
-use CalUtil        *
-use CalRecon       *
-use RootIo         *
-use AcdRecon       *
+use TkrRecon       * -no_auto_imports
+use FluxSvc        * -no_auto_imports
+use TkrDigi        * -no_auto_imports
+use AcdDigi        * -no_auto_imports
+use CalDigi        * -no_auto_imports
+use Trigger        * -no_auto_imports
+use CalUtil        * -no_auto_imports
+use CalRecon       * -no_auto_imports
+use RootIo         * -no_auto_imports
+use AcdRecon       * -no_auto_imports
 
 public
 
