@@ -3,6 +3,7 @@
 @verbatim
  * package manager:T.Burnett
  *
+ * v9r11p1 06-NOV-03 LSR add a removeHit() method to TkrDigi.h
  * v9r11   20-oct-03 HMK Add ACD ribbon items to AcdRecon
  * v9r10p1 07-aug-03 LSR Tracy's mods for MC-patrec stuff (TkrPatCandHit now a contained object)
  * v9r9    17-jul-03 THB  New Exposure 
