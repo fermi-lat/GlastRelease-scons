@@ -117,7 +117,7 @@ StatusCode DigiHitsTestAlg::execute() {
   Event::CalDigiCol::const_iterator itDigis;
 
   // The iterator for the vector of Relations returned by each query
-  vector<DigiHitsRel*>::const_iterator itRels;
+  std::vector<DigiHitsRel*>::const_iterator itRels;
 
   // The iterator for the particle-energy map returned by each McIntegratingHit
   EnergyDepositMapId::const_iterator itEn;
@@ -129,7 +129,7 @@ StatusCode DigiHitsTestAlg::execute() {
   // each primary particle to its total energy
 
   for (itDigis = digiCol->begin(); itDigis != digiCol->end(); itDigis++) {
-    vector<DigiHitsRel*> relations = digiHitsTab.getRelByFirst(*itDigis);
+      std::vector<DigiHitsRel*> relations = digiHitsTab.getRelByFirst(*itDigis);
     for (itRels = relations.begin(); itRels != relations.end(); itRels++) {
       EnergyDepositMapId& energyItemId = (*itRels)->getSecond()->itemizedEnergyId();
       for (itEn = energyItemId.begin(); itEn != energyItemId.end(); itEn++) {
