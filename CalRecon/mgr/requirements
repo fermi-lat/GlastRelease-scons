@@ -10,13 +10,19 @@ use GlastEvent
 
 library CalRecon  *.cxx *.cpp *.h ../CalRecon/*.h  Dll/*.cpp
 
-macro CalRecon Dir  "$(CALRECONROOT)/$(DEBUGDIR)"
+macro CalReconDir  "$(CALRECONROOT)/$(DEBUGDIR)"
 
 macro CalRecon_linkopts   " " 
 macro CalRecon_stamps     
 
 set   CalReconShr           "${CALRECONROOT}/${DEBUGDIR}/libCalRecon"
 
+
+# have a seperate library to export the calorimeter recon data classes 
+library CalReconData -no_share CalLogID.cpp calorimeterGeo.cpp CalBase.cpp CalADCLogs.cpp
+
+macro CalRecon_linkopts   "$(CalReconDir)/libCalReconData.a  " \
+      VisualC             "$(CalReconDir)/libCalReconData.lib  " 
 
 private
 
