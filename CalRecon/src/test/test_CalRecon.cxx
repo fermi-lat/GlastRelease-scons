@@ -1,26 +1,12 @@
-// $Header$
 
-// Include files
-
+#include "Event/TopLevel/EventModel.h"
+#include "Event/Recon/CalRecon/CalCluster.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Algorithm.h"
 
-// TDS class declarations: input data, and McParticle tree
-
-#include "Event/TopLevel/EventModel.h"
-
-#include "Event/Recon/CalRecon/CalCluster.h"
-
-// Define the class here instead of in a header file: not needed anywhere but here!
-//------------------------------------------------------------------------------
-/** 
-A simple algorithm.
-
-  
-*/
 class test_CalRecon : public Algorithm {
 public:
     test_CalRecon(const std::string& name, ISvcLocator* pSvcLocator);
@@ -30,8 +16,8 @@ public:
     
 private: 
     //! number of times called
-    int m_count; 
-    //! the GlastDetSvc used for access to detector info
+    int m_count;
+    
 };
 //------------------------------------------------------------------------
 
@@ -56,30 +42,38 @@ StatusCode test_CalRecon::initialize(){
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "initialize" << endreq;
-    
     return sc;
 }
 
 //------------------------------------------------------------------------
 //! process an event
-StatusCode test_CalRecon::execute()
-{
-    StatusCode  sc = StatusCode::SUCCESS;
+StatusCode test_CalRecon::execute() {
+    
     MsgStream   log( msgSvc(), name() );
     log << MSG::INFO << "executing " << ++m_count << " time" << endreq;
 
 
- // First, the collection of CalRecons is retrieved from the TDS
-  SmartDataPtr<Event::CalClusterCol> clusCol(eventSvc(),EventModel::CalRecon::CalClusterCol );
+    // First, the collection of CalRecons is retrieved from the TDS
+    SmartDataPtr<Event::CalClusterCol> clusCol(eventSvc(),EventModel::CalRecon::CalClusterCol) ;
 
-  if ((clusCol == 0) || (clusCol->size()) == 0) {
-    log << MSG::FATAL << "no/incorrect number calorimeter clusters found" << endreq;
-    sc = StatusCode::FAILURE;
-    return sc;
-  }
+    if ((clusCol == 0) || (clusCol->size()) == 0) {
+        log << MSG::FATAL << "no/incorrect number calorimeter clusters found" << endreq;
+        return StatusCode::FAILURE ;
+    }
+    
+    // David: I display here what is not already displayed
+    // by the CalClustersAlg
+    Event::CalClusterCol::const_iterator cluster ;
+    for ( cluster = clusCol->begin() ;
+          cluster != clusCol->end() ;
+          ++cluster )
+     {    
+      (*cluster)->writeOut(log<<MSG::INFO) ; 
+      log<<MSG::INFO<<"Profile Corr Energy "<<(*cluster)->getFitEnergy()<<endreq ; 
+      log<<MSG::INFO<<"Last Layer Corr Energy "<<(*cluster)->getEnergyLeak()<<endreq ; 
+     }
 
-
-    return sc;
+    return StatusCode::SUCCESS ;
 }
 
 //------------------------------------------------------------------------
@@ -91,6 +85,5 @@ StatusCode test_CalRecon::finalize(){
     
     return sc;
 }
-
 
 

@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 import sys, string, os, re ;
 
-# Depends on Gleam package !
+# This script depends on Gleam package
+# It must be run whenever the generation
+# process or the digis format change.
+# The result is gamma_5_gev_normal.root,
+# which is used by validate.py.
 
 #=================================================
 # globals
@@ -18,10 +22,6 @@ release_expr = re.compile('^v[0-9]+r[0-9]+')
 
 def root_dir(package) :
 
-  # check if it is the original package
- # if original_dir.rfind(os.path.join('',package,'')) != -1  :
- #   return os.path.join('..','..')
-  
   # ask cmt
   packages_pipe = os.popen('cd '+original_dir+' ; cmt show packages')
   for line in packages_pipe :
@@ -36,7 +36,7 @@ def root_dir(package) :
   packages_pipe.close()
 
   # not found
-  print 'VALIDATION ERROR: package',package,'NOT FOUND'
+  print 'PREPARATION ERROR: package',package,'NOT FOUND'
   sys.exit(1)
       
 
@@ -55,11 +55,12 @@ def build_application_test(package) :
     if os.system(build_command) != 0 :
       print 'VALIDATION ERROR: test_'+package+'.exe BUILD FAILED'
       sys.exit(1)
+      
 # David: Windows nmake compilation fails for some reason,
 # so one will need to compile interactively with MRvcmt
 # before launching this validation script
 #
-#  if os.name == 'nt':
+#  elif os.name == 'nt':
 #    build_command += ' & cmt bro -local nmake /f nmake'
 #    build_command += ' & nmake /f nmake test'
 #    if os.system(build_command) != 0 :
@@ -67,54 +68,6 @@ def build_application_test(package) :
 #      sys.exit(1)
 
   os.chdir(original_dir)
-
-
-#=================================================
-# help output analysis
-#=================================================
-
-def key_values(filename) :
-
-  # lines of interest
-  regexp = re.compile('^(test_CalRecon).*Energy')
-
-  # accumulate the values
-  nb_clusters = 0
-  nb_profiles = 0
-  nb_ll = 0
-  raw_energy = 0
-  corrected_energy = 0
-  ll_energy = 0
-  fit_energy = 0
-  hashed_posdir = 0
-  file = open(filename)
-  for line in file.readlines() :
-    if regexp.search(line) :
-      words = line.split()
-      if words[2] == 'Profile' :
-        if words[5] != '0' :
-          nb_profiles += 1
-          fit_energy += string.atof(words[5])
-      elif words[2] == 'Last' :
-        energy = string.atof(words[6])
-        if energy > 0 :
-          nb_ll += 1
-          ll_energy += energy
-      elif words[3] != '0' :
-        nb_clusters += 1
-        raw_energy += string.atof(words[3])
-        corrected_energy += string.atof(words[5])
-        hashed_posdir += string.atof(words[6]) + string.atof(words[7]) + string.atof(words[8])
-        hashed_posdir += string.atof(words[9]) + string.atof(words[9]) + string.atof(words[11])
-      
-  # result
-  raw_energy = raw_energy/nb_clusters
-  corrected_energy = corrected_energy/nb_clusters
-  hashed_posdir = hashed_posdir/nb_clusters
-  fit_energy = fit_energy/nb_profiles
-  ll_energy = ll_energy/nb_ll
-  format = '%g'
-  return [ nb_clusters, format % raw_energy, format % ll_energy, format % fit_energy, format % corrected_energy, format % hashed_posdir ]
    
 
 #=================================================
@@ -154,35 +107,17 @@ def run_job(setup_package,binary_package,options,cmtbin_depend) :
     log_file.write(line)
   log_file.close()
   if log_pipe.close() != None :
-    print 'VALIDATION ERROR: '+binary_package+' '+options+' EXECUTION FAILED'
+    print 'PREPARATION ERROR: '+binary_package+' '+options+' EXECUTION FAILED'
     sys.exit(1)
 
-  # compute energies
-  log_key_values = key_values(log_name)
-  ref_key_values = key_values(ref_name)
-
-  # compare
-  if log_key_values != ref_key_values :
-    print 'VALIDATION ERROR: '+binary_package+' '+options+' COMPARISON FAILED\n  ',log_key_values,'!=\n  ',ref_key_values
-    #sys.exit(1)
-  else :
-    print 'validation: '+binary_package+' '+options+' ok',log_key_values
-    
   # back to original dir
   os.chdir(original_dir)
 
 
 #=================================
-#  jobs
+#  job
 #=================================
 
-# build the application
 build_application_test('CalRecon')
-
-# pure CaloRecon jobs 
-run_job('CalRecon','CalRecon','jobOptions',False)
-run_job('CalRecon','CalRecon','simpleOptions',False)
-
-# needs TkrRecon so to trigger the various energy corrections.
-run_job('Gleam','CalRecon','gleamOptions',True)
+run_job('Gleam','CalRecon','gamma_5_gev_normal',True)
 

@@ -1,0 +1,13 @@
+
+<source_library title="calrecon">
+
+    <!--5 gev -->
+    <source name="gamma_5_gev_normal" flux="1.0">
+        <spectrum escale="GeV">
+            <particle name="gamma"> <energy e="5"/> </particle>
+            <solid_angle mincos="0.99" maxcos="1.0"/>
+        </spectrum>
+    </source>
+
+</source_library>
+

@@ -325,7 +325,7 @@ StatusCode CalClustersAlg::execute()
     }   // close loop on clusters
     
     // print the reconstruction results for debugging
-    m_calClusterCol->writeOut(log << MSG::DEBUG);
+    m_calClusterCol->writeOut(log<<MSG::DEBUG);     
     
     return sc;
 }

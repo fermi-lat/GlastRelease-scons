@@ -1,0 +1,13 @@
+
+// Reconstruction
+ApplicationMgr.DLLs += { "CalRecon", "TkrRecon" } ;
+ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" };
+Reconstruction.Members += { "CalXtalRecAlg", "CalClustersAlg/first" } ;
+Reconstruction.Members += { "TkrReconAlg/FirstPass" } ;
+Reconstruction.Members += { "CalClustersAlg/second" } ;
+Reconstruction.Members += { "TkrReconAlg/Iteration" } ;
+PropertiesCheckAlg.targets += { "CalXtalRecAlg" } ;
+PropertiesCheckAlg.targets += { "first", "FirstPass", "second", "Iteration" } ;
+
+
+

@@ -1,0 +1,27 @@
+
+// flux svc
+ApplicationMgr.DLLs   += { "FluxSvc" } ; 
+ApplicationMgr.ExtSvc += { "FluxSvc" } ;
+ApplicationMgr.ExtSvc += { "ParticlePropertySvc" } ;
+FluxSvc.source_lib = { "$(FLUXROOT)/xml/source_library.xml" } ;
+FluxSvc.source_lib += { "$(G4GENERATORROOT)/src/test/test_sources.xml"};
+FluxSvc.source_lib += { "$CALRECONROOT/xml/source_library.xml" } ;
+ApplicationMgr.Runable = "FluxSvc" ;
+
+// generation
+ApplicationMgr.ExtSvc += { "GlastRandomSvc" } ;
+Simulation.Members += { "FluxAlg", "G4Generator", "ExposureAlg" } ;
+PropertiesCheckAlg.targets += { "FluxAlg", "G4Generator", "ExposureAlg" } ;
+FluxAlg.source_name = "gamma_5_gev_normal" ;
+G4Generator.defaultCutValue = 0.7 ; 
+G4Generator.defaultTkrCutValue = 0.1 ;
+G4Generator.defaultCalCutValue = 0.7 ;
+
+// digitization
+ApplicationMgr.Dlls += {"CalXtalResponse"} ;
+ApplicationMgr.ExtSvc += {"CalCalibSvc"} ;
+CalCalibSvc.DefaultFlavor  = "ideal" ;
+ApplicationMgr.DLLs += { "TkrDigi", "CalDigi", "AcdDigi" } ;
+Simulation.Members += { "TkrDigiAlg", "CalDigiAlg", "AcdDigiAlg" } ;
+PropertiesCheckAlg.targets += { "TkrDigiAlg", "CalDigiAlg", "AcdDigiAlg" } ;
+
