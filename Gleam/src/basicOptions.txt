@@ -24,11 +24,22 @@ ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
 // ----------------------------
 //  a structure for the topalg, using sequencer steps
 //
+//ApplicationMgr.TopAlg = {
+//    "Sequencer/Generator",
+//    "Sequencer/Digitization",
+//    "Sequencer/EventDisplay",
+//    "Sequencer/Triggered" };
+
 ApplicationMgr.TopAlg = {
+      "Sequencer/Top" };
+
+	//the top sequence loop
+	Top.Members={
     "Sequencer/Generator",
     "Sequencer/Digitization",
     "Sequencer/EventDisplay",
     "Sequencer/Triggered" };
+
 
 // the sequence that is triggered
 Triggered.Members={
@@ -59,6 +70,7 @@ GlastDetSvc.visitorMode="recon";
 //
 ApplicationMgr.DLLs +={ "G4Generator"};
 Generator.Members = {"FluxAlg", "G4Generator"};
+Generator.BranchMembers = {"FluxAlg","ExposureAlg"};
 #include "$FLUXSVCROOT/src/defaultOptions.txt"
 
 // Append (or replace) the list of source library documents

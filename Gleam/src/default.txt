@@ -13,7 +13,7 @@
 // make sure we have the default 100 MeV gamma source
 FluxSvc.source_lib = {"$(FLUXSVCROOT)/xml/source_library.xml"};
 FluxAlg.source_name="default";
-
+//ExposureAlg.source_name="d2tester";
 
 Output.Members += {"mcRootWriterAlg", "digiRootWriterAlg", "reconRootWriterAlg"};
 //Output.Members = {}; // turn off root for this
