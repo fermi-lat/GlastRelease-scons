@@ -148,9 +148,11 @@ public:
     //! Raw event and Digi IDs
     const CLID& CLID_DigiEvent          = 1300; 
     const CLID& CLID_TkrDigi            = 1310;  // indicative only, use 1310, 1311,.. for Tkr
+    const CLID& CLID_TkrDigiCol         = CLID_TkrDigi+CLID_ObjectVector;
     const CLID& CLID_CalDigi            = 1320;  // indicative only, use 1320, 1321,.. for Cal
-    const CLID& CLID_CalDigiCol         =CLID_CalDigi+CLID_ObjectVector;
+    const CLID& CLID_CalDigiCol         = CLID_CalDigi+CLID_ObjectVector;
     const CLID& CLID_AcdDigi            = 1330;
+    const CLID& CLID_AcdDigiCol         = CLID_AcdDigi+CLID_ObjectVector;
     
     // clarify where these are used 
     const CLID& CLID_RawEvent           = 1400;  // temporary...will be replaced by DataEvent
