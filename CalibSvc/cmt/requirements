@@ -27,7 +27,7 @@ apply_pattern package_Cshlibflags
 private
 macro WinInclude "" WIN32 "test/*.h test/*.txt"
 use GlastSvc v9r*
-use RootIo   v6r*
+use RootIo   v7r*
 
 
 public
