@@ -25,6 +25,7 @@
 #include "src/Utilities/TkrPoint.h"
 #include <vector>
 #include <assert.h>
+#include <iostream>
 
 // global definitions
 /// top is defined as being the end of the neuron with the lower layer number.
@@ -154,6 +155,9 @@ public:
      */
     void update(float, double, double, double);
 
+
+    friend std::ostream & operator<<(std::ostream& os, const TkrNeuron& n);
+
 private:
 
     /**
@@ -192,5 +196,28 @@ private:
 
 typedef std::vector<TkrNeuron> TkrNeuronList;
 typedef std::vector<TkrNeuron>::const_iterator neuron_const_iterator;
+
+class TopToBottom
+{
+public:
+  bool operator()(const TkrNeuron& N0, const TkrNeuron& N1)
+    {
+      double z0 = N0.getPnt(top).z();
+      double z1 = N1.getPnt(top).z();
+      return (z0>z1);
+    }
+};
+
+class BottomToTop
+{
+public:
+  bool operator()(const TkrNeuron& N0, const TkrNeuron& N1)
+    {
+      double z0 = N0.getPnt(bottom).z();
+      double z1 = N1.getPnt(bottom).z();
+      return (z0<z1);
+    }
+};
+
 
 #endif // __TKRNEURON_H
