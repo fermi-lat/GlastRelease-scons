@@ -22,6 +22,8 @@ public:
       datum=x;
 
     }
+     float & value(){ return *m_pdatum;}
+
     // assign value to the tuple element
     
     float operator()()const{
