@@ -91,7 +91,7 @@ public:
 
     ///this sets the rocking mode in GPS.
     void setRockType(GPS::RockType rockType);
-
+    void setRockType(int rockType);
 private:
     
     /// source library lookup.  Each source is uniquely identified

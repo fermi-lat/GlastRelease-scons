@@ -247,3 +247,8 @@ std::pair<double,double> FluxSvc::location(){
 void FluxSvc::setRockType(GPS::RockType rockType){
    m_fluxMgr->setRockType(rockType);
 }
+
+/// this sets the rocking mode in GPS.
+void FluxSvc::setRockType(int rockType){
+   m_fluxMgr->setRockType(rockType);
+}

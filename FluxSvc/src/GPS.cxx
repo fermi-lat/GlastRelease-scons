@@ -427,3 +427,10 @@ void GPS::getPointingCharacteristics(double seconds){
     //std::cout << " degrees between xhat and zhat directions: " <<
     //    dirZ.difference(dirX)*180./M_PI << std::endl;
 }
+
+void GPS::setRockType(int rockType){
+    m_rockType = NONE;
+    if(rockType == 1) m_rockType = UPDOWN;
+    if(rockType == 2) m_rockType = SLEWING;
+    if(rockType == 3) m_rockType = ONEPERORBIT;
+}

@@ -75,6 +75,7 @@ public:
 
     /// this sets the rocking mode in GPS.
     virtual void setRockType(GPS::RockType rockType)=0;
+    virtual void setRockType(int rockType)=0;
     
     
 };

@@ -344,6 +344,11 @@ void FluxMgr::setRockType(GPS::RockType rockType){
    GPS::instance()->setRockType(rockType);
 }
 
+///this sets the rocking mode in GPS.
+void FluxMgr::setRockType(int rockType){
+   GPS::instance()->setRockType(rockType);
+}
+
 std::string FluxMgr::writeXmlFile(const std::vector<std::string>& fileList) {
 /** purpose: creates a document of the form
 

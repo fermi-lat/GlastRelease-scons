@@ -68,6 +68,8 @@ public:
 
     /// this sets the rocking mode in GPS.
     void setRockType(GPS::RockType rockType);
+    ///0=NONE, 1=UPDOWN, 2=SLEWING, 3=ONEPERORBIT
+    void setRockType(int rockType);
     
     //------------------------------------------------------------------
     //  stuff required by a Service

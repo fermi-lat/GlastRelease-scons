@@ -147,7 +147,8 @@ public:
     Orbit*  orbit ();               // access the orbit (for manipulation)
 
     void setRockType(RockType rockType){m_rockType = rockType;}
-    
+    void setRockType(int rockType);//{m_rockType = rockType;}
+
     double RAX()const{return m_RAX;}
     double RAZ()const{return m_RAZ;}
     double DECX()const{return m_DECX;}
