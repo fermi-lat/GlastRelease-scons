@@ -11,11 +11,12 @@ $Header$
 // Include files
 #include "GaudiKernel/IInterface.h"
 #include "idents/VolumeIdentifier.h"
+#include "Event/Recon/TkrRecon/TkrCluster.h"
 
 // Declaration of the interface ID ( interface id, major version,
 // minor version)
 
-static const InterfaceID IID_ITkrToTSvc("ITkrToTSvc", 2 , 0);
+static const InterfaceID IID_ITkrToTSvc("ITkrToTSvc", 3 , 0);
 
 /** @class ITkrToTSvc
 * @brief Interface class for TkrSplitsSvc
@@ -39,7 +40,13 @@ public:
     virtual double getQuality   (const int tower, const int layer, const int view,
         const int strip) const = 0;
     virtual double getCountsPerMicrosecond () const = 0;
+    virtual double getMevPerMip() const = 0;
+    virtual double getFCPerMip() const = 0;
+    virtual int    getMaxToT() const = 0;
+    
+    virtual double getCharge(double ToT, int tower, int layer, int view, int strip) const = 0;
+    virtual double getMipsFromToT(double ToT, int tower, int layer, int view, int strip) const = 0;
+    virtual double getMipsFromCharge(double charge, int tower, int layer, int view, int strip) const = 0;
 };
 
 #endif // ITkrToTSvc_H
-
