@@ -438,7 +438,8 @@ StatusCode reconRootReaderAlg::storeTkrClusterCol(TkrRecon *tkrRecRoot) {
         
         Event::TkrCluster *clusterTds = new Event::TkrCluster(clusterRoot->getId(),
             clusterRoot->getPlane(), viewTds, clusterRoot->getFirstStrip(),
-            clusterRoot->getLastStrip(), posTds, clusterRoot->getToT(), clusterRoot->getTower());
+            clusterRoot->getLastStrip(), posTds, clusterRoot->getToT(), 
+            clusterRoot->getTower(), clusterRoot->getStatusWord());
         
         clusterTdsCol->addCluster(clusterTds);
     }

@@ -328,8 +328,8 @@ void reconRootWriterAlg::fillTkrClusterCol(TkrRecon* recon, Event::TkrClusterCol
        
         TkrCluster *clusterRoot = new TkrCluster(clusterTds->id(), 
             clusterTds->plane(), viewRoot, clusterTds->firstStrip(), 
-            clusterTds->lastStrip(), posRoot, clusterTds->ToT(), 
-            clusterTds->hitFlagged(), clusterTds->tower());
+            clusterTds->lastStrip(), posRoot, clusterTds->getMips(), 
+            clusterTds->getStatusWord(), clusterTds->tower());
         
         recon->addCluster(clusterRoot);
     }

@@ -44,7 +44,6 @@
  *
  * @author Heather Kelly
  * $Header$
- * $Header$
  */
 
 class digiRootWriterAlg : public Algorithm
