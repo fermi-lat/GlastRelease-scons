@@ -5,12 +5,14 @@ branches src cmt doc
 use Event v9r*
 use xmlGeoDbs  v1r*
 use detModel   v2r*
+use CLHEP
 
 apply_pattern packageShr
 apply_pattern package_include
 
 #=============================================================
-private
+
+# private
 
 use GaudiSvc v7r*
 use GaudiAud v5r*
@@ -18,10 +20,12 @@ use GaudiAud v5r*
 apply_pattern package_headers
 
 macro_append GlastSvc_headers "" WIN32 " ..\GlastSvc\Reco\*.h \
-                 ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
-                 GlastDetSvc/*.h EventSelector/*.h 
+                 ../GlastSvc/GlastDetSvc/*.h \
+                 ../GlastSvc/GlastRandomSvc/*.h ../GlastSvc/*.h \
+                 GlastDetSvc/*.h GlastRandomSvc/*.h EventSelector/*.h 
 
 library GlastSvc GlastDetSvc/*.cxx\
+	         GlastRandomSvc/*.cxx\
                  EventSelector/*.cpp \
                   MonteCarlo/*.cpp\
 		 Dll/*.cpp \
