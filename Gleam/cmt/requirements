@@ -62,8 +62,8 @@ use Trigger     v3r3p3
 use Recon       v2r2p3
 
 use TkrRecon    v6r3p5
-use CalRecon    v5r5p2  
-use AcdRecon    v0r4       
+use CalRecon              v5r6  
+use AcdRecon              v0r4p1       
 
 #ROOT persistence: RootIo specifies the data packages
 use RootIo      v4r7p1
