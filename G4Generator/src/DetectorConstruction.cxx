@@ -40,25 +40,32 @@ DetectorConstruction::DetectorConstruction(std::string topvol, std::string visit
 
   gddManager->build(detModel::Manager::all);
 
-  // now create the GlastDetector manager, to pass in the id map
-  m_glastdet = new GlastDetectorManager(this);
   
   detModel::IDmapBuilder idmap(topvol);
   
   gddManager->startVisitor(&idmap);
   idmap.summary(std::cout);
 
-  DisplayManager* dm = DisplayManager::instance();
-  if (dm !=0){
-      for( detModel::IDmapBuilder::PVmap::const_iterator id = idmap.begin(); id!=idmap.end(); ++id){
-          const detModel::PositionedVolume * pv = (*id).second;
-          const detModel::Volume* vol = pv->getVolume();
-          const detModel::Box* b = dynamic_cast<const detModel::Box*>(pv->getVolume());
-          if (b !=0) {
-              dm->addDetectorBox(HepTransform3D( pv->getRotation(),pv->getTranslation()), b->getX(), b->getY(), b->getZ());
-          }
-      }
-  }
+  // now create the GlastDetector manager, and pass in the id map
+  m_glastdet = new GlastDetectorManager(this, idmap);
+
+
+    // setup display of detector volumes
+    DisplayManager* dm = DisplayManager::instance();
+    if (dm !=0){
+        for( detModel::IDmapBuilder::PVmap::const_iterator id = idmap.begin(); id!=idmap.end(); ++id){
+            const detModel::PositionedVolume * pv = (*id).second;
+            const detModel::Volume* vol = pv->getVolume();
+            const detModel::Box* b = dynamic_cast<const detModel::Box*>(pv->getVolume());
+            if (b !=0) {
+                dm->addDetectorBox(vol->getName(), 
+                    HepTransform3D( pv->getRotation(),pv->getTranslation()), 
+                    b->getX(), b->getY(), b->getZ());
+            }
+        }
+    }
+
+
 
 }
 

@@ -34,6 +34,8 @@ public:
   
   //! access to the map of physical volume /id pairs.
   IdMap* idMap(){return &m_idMap;}
+
+  const std::string & topVolumeName()const {return m_topvol;}
   
 private:
   
