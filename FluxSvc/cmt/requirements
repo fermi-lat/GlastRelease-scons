@@ -1,5 +1,5 @@
 package FluxSvc
-version v6r16p2
+version v6r16p3
 
 # $Id$
 author  T. Kozanecki <hansl$slac.stanford.edu> T. Burnett
@@ -29,8 +29,8 @@ private
 use Event       v9r*
 use GlastSvc    v9r*
 use astro       v1r*
-use genericSources * celestialSources
-use Pulsar  * celestialSources
+#use genericSources * celestialSources
+#use Pulsar  * celestialSources
 
 use ntupleWriterSvc v3r*
 use XMLEXT * IExternal
@@ -43,6 +43,9 @@ macro_append includes  ' $(ppcmd)"$(FLUXROOT)" '
 apply_pattern package_Cshlibflags
 
 private
+macro_append ROOT_libs " -lHist -lGraf "\
+                 WIN32 " libHist.lib libGraf.lib " 
+
 library  FluxSvc   -import=flux -import=GRB \
      -s=../FluxSvc $(source) \
      -s=Dll *.cxx\

@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   08-sep-04  v6r16p3 thb Fix for windows build
    27-aug-04  v6r16p2 jrb Get RM to use main trunk again in LATEST build
    27-aug-04  v6r13p6 jrb this is a mistake; will make another correct tag
                           shortly ("tags are cheap")
