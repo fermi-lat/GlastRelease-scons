@@ -2,7 +2,7 @@
  * package Event
  * package manager:T.Burnett (original author: H. Gillespie)
  *
- *       03-jul-02 MF  Add RelTable template classes
+ * v8r11 03-jul-02 MF  Add RelTable template classes
  *       03-jul-02 HMK Add init methods to some TkrRecon classes
  * v8r10 27-jun-02 THB TkrRecon additions
  * v8r9  12-jun-02 THB  AcdRecon added.
