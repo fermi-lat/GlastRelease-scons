@@ -13,6 +13,7 @@
 #include "astro/SkyDir.h"
 #include "astro/EarthCoordinate.h"
 #include "astro/SolarSystem.h"
+#include "astro/EarthOrbit.h"
 // Event for creating the McEvent stuff
 #include "Event/TopLevel/MCEvent.h"
 #include "Event/MonteCarlo/McParticle.h"
@@ -53,11 +54,6 @@ ExposureAlg::ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator)
     
 }
 
-//! set this spectrum up to be used.
-//void ExposureAlg::makeTimeCandle(IFluxSvc* fsvc){
-    //static RemoteSpectrumFactory<TimeCandle> timecandle(fsvc);
-//}
-
 //------------------------------------------------------------------------
 //! set parameters and attach to various perhaps useful services.
 StatusCode ExposureAlg::initialize(){
@@ -72,27 +68,6 @@ StatusCode ExposureAlg::initialize(){
         log << MSG::ERROR << "Couldn't find the FluxSvc!" << endreq;
         return StatusCode::FAILURE;
     }
-    
-    // set up the standard time candle spectrum
-    //makeTimeCandle(m_fluxSvc);
-    
-    //log << MSG::INFO << "loading source..." << endreq;
-    
-    //sc =  m_fluxSvc->source(m_source_name, m_flux);
-    //if( sc.isFailure()) {
-    //    log << MSG::ERROR << "Could not find flux " << m_source_name << endreq;
-    //    return sc;
-    //}
-    //log << MSG::INFO << "Source: "<< m_flux->title() << endreq;
-    
-    //log << MSG::INFO << "Source title: " << m_flux->title() << endreq;
-    //log << MSG::INFO << "        area: " << m_flux->targetArea() << endreq;
-    //log << MSG::INFO << "        rate: " << m_flux->rate() << endreq;
-    
-    //if ( service("ParticlePropertySvc", m_partSvc).isFailure() ){
-    //    log << MSG::ERROR << "Couldn't find the ParticlePropertySvc!" << endreq;
-    //    return StatusCode::FAILURE;
-    //}
 
     //TODO: set the file name from a property
     m_out = new std::ofstream("orbitFromAlg.out");
@@ -131,9 +106,6 @@ StatusCode ExposureAlg::execute()
         //FluxAlg is taking care of the particle, so do nothing but get the current time.
         currentTime = m_fluxSvc->currentFlux()->time();
     }   
-    
-    //a test line, only for comparing with perugia code
-    //currentTime+=17107230.;
 
     //now, only do the rest of this algorithm if we have a timetick particle.
     std::string particleName = m_fluxSvc->currentFlux()->particleName();
@@ -147,6 +119,10 @@ StatusCode ExposureAlg::execute()
 
     // here we get the time characteristics
 
+    
+    EarthOrbit orb; //for the following line - this should have a better implementation.
+    double julianDate = orb.dateFromSeconds(currentTime);
+
     //NOTE: this gets an interval from the last time that a TimeTick particle came to this one.
     //in other words, the timeTick particles define the beginning and ends of intervals.
     double intrvalstart = m_lasttime;
@@ -157,11 +133,13 @@ StatusCode ExposureAlg::execute()
     //..and reset the time of this event to be the "last time" for next time.
     m_lasttime = intrvalend;
 
-    
+    intrvalstart = orb.dateFromSeconds(intrvalstart);
+    intrvalend = orb.dateFromSeconds(intrvalend);
+
     //and here the pointing characteristics of the LAT.
-    GPS::instance()->getPointingCharacteristics(/*location,20*/currentTime/*/secondsperday*/);
+    GPS::instance()->getPointingCharacteristics(currentTime);
     //EarthOrbit orbt;
-    Hep3Vector location = GPS::instance()->position();//( orbt.position(currentTime/secondsperday) );
+    Hep3Vector location = GPS::instance()->position(currentTime);
     
     // hold onto the cartesian location of the LAT
     double posx = location.x(); 
@@ -175,7 +153,7 @@ StatusCode ExposureAlg::execute()
     double razenith = GPS::instance()->RAZenith();
     double deczenith = GPS::instance()->DECZenith();
     
-    EarthCoordinate earthpos(location,currentTime/secondsperday);
+    EarthCoordinate earthpos(location,julianDate);
     double lat = earthpos.latitude();
     double lon = earthpos.longitude();
     double alt = earthpos.altitude();
@@ -183,16 +161,15 @@ StatusCode ExposureAlg::execute()
     
     SolarSystem sstm;
     
-    double ramoon = sstm.direction(astro::SolarSystem::Moon,currentTime/secondsperday).ra();
-    double decmoon = sstm.direction(astro::SolarSystem::Moon,currentTime/secondsperday).dec();
-    double rasun = sstm.direction(astro::SolarSystem::Sun,currentTime/secondsperday).ra();
-    double decsun = sstm.direction(astro::SolarSystem::Sun,currentTime/secondsperday).dec();
+    double ramoon = sstm.direction(astro::SolarSystem::Moon,julianDate).ra();
+    double decmoon = sstm.direction(astro::SolarSystem::Moon,julianDate).dec();
+    double rasun = sstm.direction(astro::SolarSystem::Sun,julianDate).ra();
+    double decsun = sstm.direction(astro::SolarSystem::Sun,julianDate).dec();
     
     // Here the TDS is prepared to receive hits vectors
     // Check for the MC branch - it will be created if it is not available
     
     DataObject *mc = new Event::D2EntryCol;
-    //eventSvc()->retrieveObject("/Event/MC", mc);
     sc=eventSvc()->registerObject(EventModel::MC::Event , mc);
     //if(sc.isFailure()) {
     //    log << MSG::ERROR << EventModel::MC::Event  <<" could not be registered on data store" << endreq;

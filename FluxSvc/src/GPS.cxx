@@ -289,34 +289,11 @@ Rotation GPS::rockingAngleTransform(double seconds){
         //this needs an implementation - it only rocks one way now!
     }
     // now, we want to find the proper transformation for the rocking angles:
-    //HepRotation rockRot(dirZ.dir() , -inclination*cos(orbitPhase));
-    //HepRotation rockRot2(dirX.dir() , rockNorth);
     HepRotation rockRot;
     rockRot./*rotateZ(inclination*cos(orbitPhase)).*/rotateX(rockNorth);
 
     return rockRot;
 }
-
-/*Rotation GPS::CELTransform(double seconds){
-    // Purpose:  Return the 3x3 matrix which transforms a vector from a local 
-    // coordinate system to a galactic coordinate system.
-    double time = m_earthOrbit->dateFromSeconds(seconds);
-    double degsPerRad = 180./M_PI;
-    Rotation gal;//,cel;
-    //gal is the matrix which rotates (cartesian)celestial coordiantes into (cartesian)galactic ones
-    gal.rotateZ(-282.25/degsPerRad).rotateX(-62.6/degsPerRad).rotateZ(33./degsPerRad);
-    
-    //cel is the rotation matrix from astro which rotates local coordinates to celestial ones.
-    Rotation cel = m_earthOrbit->CelestialToLocal(time).inverse();
-    
-    //std::cout << "time is " << seconds << std::endl;
-    //m_orbit->displayRotation(cel);
-
-    //so gal*cel should be the matrix that makes local coordiates into galactic ones.
-    Rotation glstToGal=gal*cel;
-    return glstToGal.inverse();
-
-}*/
 
 Rotation GPS::CELTransform(double seconds){
     // Purpose:  Return the 3x3 matrix which transforms a vector from a galactic 
@@ -326,17 +303,12 @@ Rotation GPS::CELTransform(double seconds){
     Rotation gal;//,cel;
     double time = m_earthOrbit->dateFromSeconds(seconds);
     
-    //double inclination = m_earthOrbit->inclination();
-    //double orbitPhase = m_earthOrbit->phase(time);
     m_position = m_earthOrbit->position(time);
     
     //first make the directions for the x and Z axes, as well as the zenith direction.
     //before rotation, the z axis points along the zenith:
     SkyDir dirZ(m_position.unit());
     SkyDir dirX(dirZ.ra()-90., 0.0);
-    
-    //rotate the x direction so that the x direction points along the orbital direction.
-    //dirX().rotate(dirZ.dir() , inclination*cos(orbitPhase));
 
     //so now we know where the x and z axes of the zenith-pointing frame point in the celestial frame.
     //what we want now is to make cel, where
@@ -362,17 +334,12 @@ Rotation GPS::transformCelToGlast(double seconds){
 
     double time = m_earthOrbit->dateFromSeconds(seconds);
     
-    //double inclination = m_earthOrbit->inclination();
-    //double orbitPhase = m_earthOrbit->phase(time);
     m_position = m_earthOrbit->position(time);
     
     //first make the directions for the x and Z axes, as well as the zenith direction.
     //before rotation, the z axis points along the zenith:
     SkyDir dirZ(m_position.unit());
     SkyDir dirX(dirZ.ra()-90., 0.0);
-    
-    //rotate the x direction so that the x direction points along the orbital direction.
-    //dirX().rotate(dirZ.dir() , inclination*cos(orbitPhase));
 
     //so now we know where the x and z axes of the zenith-pointing frame point in the celestial frame.
     //what we want now is to make cel, where
@@ -413,7 +380,7 @@ void GPS::getPointingCharacteristics(double seconds){
     //HepRotation rockRot(Hep3Vector(0,0,1).cross(dirZ.dir()) , rockNorth);    
     //and apply the transformation to dirZ and dirX:
     double rockNorth = m_rockDegrees*M_PI/180;
-        //here's where we decide how much to rock about the x axis.  this depends on the 
+    //here's where we decide how much to rock about the x axis.  this depends on the 
     //rocking mode.
     if(m_rockType == NONE){
         rockNorth = 0.;
@@ -430,7 +397,6 @@ void GPS::getPointingCharacteristics(double seconds){
     }
     
     dirZ().rotate(dirX.dir() , rockNorth);
-    //dirX().rotate(dirX.dir() , rockNorth*M_PI/180.);//unnecessary
     
     m_RAX = dirX.ra();
     m_RAZ = dirZ.ra();
