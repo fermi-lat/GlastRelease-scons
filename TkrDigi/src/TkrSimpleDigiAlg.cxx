@@ -313,7 +313,7 @@ StatusCode TkrSimpleDigiAlg::execute()
         idents::GlastAxis::axis iview = (view==0 ? idents::GlastAxis::X : idents::GlastAxis::Y);
         int theTower = tower.id();
 
-        if (m_fsv && m_fsv->isFailed(theTower, layer, view)) continue;
+        if (m_fsv && m_fsv->getFailureModes() && m_fsv->isFailed(theTower, layer, view)) continue;
         
         TkrDigi* pDigi  = new TkrDigi(layer, iview, tower, ToT);
         
@@ -326,7 +326,7 @@ StatusCode TkrSimpleDigiAlg::execute()
             const SiStripList::Strip & strip = *i;
             int stripId = strip.index();
             // kill bad strips
-            if(m_bsv && m_bsv->isBadStrip(theTower, layer, iview, stripId)) continue;
+            if(m_bsv && !m_bsv->empty() && m_bsv->isBadStrip(theTower, layer, iview, stripId)) continue;
             nStrips++;
             float e = strip.energy();
             bool noise  = strip.noise();
