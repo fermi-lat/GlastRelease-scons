@@ -24,7 +24,7 @@ const ISvcFactory& CalibDataSvcFactory = s_factory;
 
 /// Standard Constructor
 CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
-  DataSvc(name,svc)   {
+  DataSvc(name,svc), m_useEventTime(true)   {
   // might also support alternative for no-network case
   declareProperty("CalibStorageType",  
                   m_calibStorageType = MYSQL_StorageType );
@@ -34,8 +34,8 @@ CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
   // User can add others.
   declareProperty("CalibNameList", m_calibList);
   declareProperty("CalibFlavorList", m_flavorList);
-
   declareProperty("CalibRootName",   m_calibRootName  = "Calib" ); 
+  declareProperty("UseEventTime", m_useEventTime = true);
 
   // m_rootName and m_rootCLID are declared in base class DataSvc
   m_rootName = "/" + m_calibRootName;
@@ -58,35 +58,29 @@ StatusCode CalibDataSvc::initialize()   {
 
   StatusCode sc;
 
-  // Call base class initialisation
-  sc  = DataSvc::initialize();
+  sc  = DataSvc::initialize();     // Call base class initialisation
   if (sc.isFailure() )  return sc;
 
-  // Set up MsgSvc
+  // Set up MsgSvc, Data Loader
   MsgStream log(msgSvc(), name());
-
-  // Set Data Loader
   IConversionSvc* cnv_svc;
   sc = serviceLocator()->service("DetectorPersistencySvc", cnv_svc, true);
   if (sc .isFailure() ) {
-    // put something here
+    log << MSG::ERROR << "Unable to find DetectorPersistencySvc " << endreq;
+    return sc;
   }
 
-  // Maybe...
   sc = setProperties();   
-  // not sure what we'll need for properties.
-  // perhaps list of known calibrations?
-
 
   sc = setDataLoader(cnv_svc);
   if (sc.isFailure() ) {
-    // put something here
+    log << MSG::ERROR << "Unable to set data loader " << endreq;
+    return sc;
   }
 
   // Initialize the calibration data transient store
   log << MSG::DEBUG << "Storage type used is: " 
       << m_calibStorageType << endreq;
-  //  log << MSG::DEBUG << "Setting CalibDataSvc root node... " << endreq;
 
   IAddressCreator*     calibCreator = 0;
 
@@ -98,7 +92,6 @@ StatusCode CalibDataSvc::initialize()   {
     log << MSG::ERROR << "Unable to locate DetectorPersistencySvc." << endreq;
     return StatusCode::FAILURE; 
   }
-
   
   //   Make the root for the TDDS data
   DataObject* rootObj = new DataObject();
@@ -109,14 +102,22 @@ StatusCode CalibDataSvc::initialize()   {
     return sc;
   }
 
-  // Create and register the next level of nodes.
-  // Have one per calibration type. They are of a class trivially 
-  // derived from DataObject, CalibCLIDNode.  Only additional 
-  // information is CLID of child nodes.  List comes from CalibData 
-  // namespace
+  // Make flavor nodes in the calibration TDS
+  return makeFlavorNodes(calibCreator, &log);
+}
+
+
+// Create and register the next level of nodes.
+// Have one per calibration type. They are of a class trivially 
+// derived from DataObject, CalibCLIDNode.  Only additional 
+// information is CLID of child nodes.  List comes from CalibData 
+// namespace
+StatusCode CalibDataSvc::makeFlavorNodes(IAddressCreator*  calibCreator,
+                                         MsgStream* log) {
   typedef std::vector<CalibData::CalibModelSvc::CalibPair>::const_iterator 
     PairIt;
   PairIt  pairIt;
+  StatusCode sc;
   CalibData::CalibModelSvc svc;
   const std::vector<CalibData::CalibModelSvc::CalibPair>& pairs = 
     svc.getPairs();
@@ -127,12 +128,9 @@ StatusCode CalibDataSvc::initialize()   {
     std::string calibTypePath(pairIt->first);
     sc = registerObject(calibTypePath, node);
 
-    // Use address creator service obtained above
-
-    IOpaqueAddress* pAddress;
-
     // Still have to figure out what to do about args, iargs
     unsigned long iargs[]={0, 0};
+    IOpaqueAddress* pAddress;
 
     // Set up nodes for each calibration type, default flavor
     // Create and register addresses suitable for the metadata
@@ -157,36 +155,38 @@ StatusCode CalibDataSvc::initialize()   {
                                      pairIt->second,   // class id
                                      args, iargs, pAddress); 
     if (!sc.isSuccess()) {
-      log << MSG::ERROR << "Unable to create Calib address" << endreq;
-      }
+      (*log) << MSG::ERROR 
+          << "Unable to create Calib address with path " << fullpath << endreq;
+    }
 
     // A node of a specific flavor is a child of the per-calibration type
     // node for which an object was registered above.
     sc = registerAddress(fullpath, pAddress);
     if (!sc.isSuccess()) {
-      log << MSG::ERROR << "Unable to register Calib address" << endreq;
+      (*log) << MSG::ERROR << "Unable to register Calib address with path" 
+          << fullpath << endreq;
     }
-
     // Now do the same for any requested flavors
     unsigned int ix;
+
     for (ix = 0; ix < m_flavorList.size(); ix++) {
       fullpath = calibTypePath + "/" + m_flavorList[ix];
       args[0] = fullpath;
 
       sc = calibCreator->createAddress(m_calibStorageType, 
-                                       pairIt->second,
-                                       args, iargs, pAddress); 
+                                       pairIt->second, args, iargs, pAddress); 
       if (!sc.isSuccess()) {
-        log << MSG::ERROR << "Unable to create Calib address" << endreq;
+        (*log) << MSG::ERROR << "Unable to create Calib address with path " 
+            << fullpath << endreq;
       }
-
       sc = registerAddress(fullpath, pAddress);
       if (!sc.isSuccess()) {
-        log << MSG::ERROR << "Unable to register Calib address" << endreq;
+        (*log) << MSG::ERROR << "Unable to register Calib address with path " 
+            << fullpath << endreq;
       }
     }    // end flavor loop 
-  }      // end calibType loop
 
+  }      // end calibType loop
   return StatusCode::SUCCESS;
 }
 
@@ -204,8 +204,7 @@ StatusCode CalibDataSvc::finalize()
   return DataSvc::finalize();
 }
 
-StatusCode CalibDataSvc::queryInterface(const IID& riid, 
-				      void** ppvInterface)
+StatusCode CalibDataSvc::queryInterface(const IID& riid, void** ppvInterface)
 {
   // With the highest priority return the specific interfaces
   // If interfaces are not directly available, try out a base class
@@ -224,10 +223,9 @@ StatusCode CalibDataSvc::queryInterface(const IID& riid,
 
 /// Remove all data objects in the data store.
 StatusCode CalibDataSvc::clearStore()   {
-
   MsgStream log(msgSvc(), name());
-  DataSvc::clearStore();
 
+  DataSvc::clearStore();
   return StatusCode::SUCCESS;
 }
 
@@ -277,8 +275,6 @@ void CalibDataSvc::setInstrumentName(const std::string& name) {
 StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
 
   MsgStream log( msgSvc(), name() );
-  //  log << MSG::DEBUG << "Method updateObject starting" << endreq;
-
   // Check that object to update exists
   if ( 0 == toUpdate ) { 
     log << MSG::ERROR
@@ -295,27 +291,29 @@ StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
     return StatusCode::SUCCESS;
   }
 
-  // Check that the event time has been defined
-  if ( !validEventTime() ) {
-    log << MSG::WARNING
-	<< "Cannot update DataObject: event time undefined"
-	<< endreq; 
-    return StatusCode::SUCCESS;
-  }
+  if (m_useEventTime) {
+    // Check that the event time has been defined
+    if ( !validEventTime() ) {
+      log << MSG::WARNING
+          << "Cannot update DataObject: event time undefined"
+          << endreq; 
+      return StatusCode::SUCCESS;
+    }
 
-  // No need to update if condition is valid
-  if ( condition->isValid( eventTime() ) ) {
-    log << MSG::DEBUG 
-	<< "DataObject is valid: no need to update" << endreq;
-    return StatusCode::SUCCESS;
-  } else {
-    log << MSG::DEBUG 
-	<< "DataObject is invalid: update it" << endreq;
+    // No need to update if condition is valid
+    if ( condition->isValid( eventTime() ) ) {
+      log << MSG::DEBUG 
+          << "DataObject is valid: no need to update" << endreq;
+      return StatusCode::SUCCESS;
+    } else {
+      log << MSG::DEBUG 
+          << "DataObject is invalid: update it" << endreq;
+    }
   }
+  // *** May want to check for analogous condition for not-using-event-time
+  // case as well
 
   // Now delegate update to the conversion service by calling the base class
-  //  log << MSG::DEBUG 
-  //      << "Delegate update to relevant conversion service" << endreq;
   StatusCode status = DataSvc::updateObject(toUpdate);
   if ( !status.isSuccess() ) {
     log << MSG::ERROR 
@@ -341,6 +339,5 @@ StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
   } 
 
   // DataObject was successfully updated
-  //  log << MSG::DEBUG << "Method updateObject exiting successfully" << endreq;
   return StatusCode::SUCCESS;
 }
