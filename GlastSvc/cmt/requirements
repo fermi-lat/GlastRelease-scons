@@ -1,8 +1,9 @@
 package GlastSvc
-version v4
+version v4r1
 branches src cmt doc
-use GlastEvent
 
+use GlastEvent
+use xmlGeoDbs
 
 apply_pattern packageShr
 apply_pattern package_include

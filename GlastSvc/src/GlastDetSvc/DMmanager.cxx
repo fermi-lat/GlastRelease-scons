@@ -7,6 +7,7 @@
 #include "detModel/Sections/Volume.h"
 #include "detModel/Management/MaterialsVisitor.h"
 
+#include "xml/IFile.h" //for extractEnvVar
 #include <string>
 #include <cassert>
 #include <iomanip>
@@ -31,9 +32,9 @@ void DMmanager::init(int argc, char* argv[] )
 void DMmanager::init(std::string filename, std::string mode, std::string topvol) 
 {
     m_dm->setBuilder(new detModel::XercesBuilder);
-    if( filename.empty() || filename == "-" ) filename = std::string(::getenv("XMLUTILROOT"))+"/xml/flight.xml" ;
-    ::strncpy(nameBuffer, filename.c_str(), sizeof(nameBuffer));
-    m_dm->setNameFile( nameBuffer);
+    if( filename.empty() || filename == "-" ) filename = "$(XMLGEODBSROOT)/xml/flight.xml" ;
+    xml::IFile::extractEnvVar(&filename);
+    m_dm->setNameFile( filename);
     m_dm->setMode(m_mode=mode);
     m_dm->build(detModel::Manager::all);
     m_vol = m_dm->getGdd()->getVolumeByName(topvol);

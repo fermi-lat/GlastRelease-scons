@@ -22,7 +22,7 @@ public:
     //! initialize with command-line args, supplying defaults
     void init(int argc, char* argv[] ) ;
 
-    //! Note that if filename is "-" or blank, use xmlUtil default
+    //! Note that if filename is "-" or blank, use xmlGeoDbs default
     void init(std::string filename, std::string mode, std::string topvol);
 
     //! start a visitor from the top volume
@@ -38,7 +38,6 @@ public:
     std::string topvol()const;
 
 private:
-    char nameBuffer[256]; // needed to hold char buf that detModel::Manager requires
     detModel::Manager* m_dm;
     detModel::Volume * m_vol;
     std::string m_mode;
