@@ -44,6 +44,15 @@ public:
 
    virtual void writeFitPars();
 
+   /// This method delegates to the TF1 class's numerical integrator.
+   /// Subclasses may wish to overload with an analytic expression.
+   /// @param a Lower limit.
+   /// @param a Upper limit.
+   /// @param eps Accuracy parameter giving the desired relative error 
+   ///        in the result, I if abs(I) > 1 and the absolute error
+   ///        if abs(I) < 1.
+   virtual double integral(double a, double b, double eps=1e-5);
+
 protected:
 
    TFile * m_file;

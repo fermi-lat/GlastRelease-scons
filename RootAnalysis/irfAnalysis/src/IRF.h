@@ -26,7 +26,7 @@
 class IRF{
 public:
     IRF(std::string summary_root_filename="irf.root");
-   // ~IRF();
+    ~IRF();
 
     /// open the input root file(s)
     void open_input_file();

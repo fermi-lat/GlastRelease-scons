@@ -77,3 +77,10 @@ void Fitter::writeFitPars() {
    }
 }
 
+double Fitter::integral(double a, double b, double eps) {
+// Use TF1's numerical integrator (dgauss).  The third argument is an
+// array of function parameters; the null pointer indicates that the
+// current set will be used.
+   Double_t *params(0);
+   return m_func->Integral(a, b, params, eps);
+}
