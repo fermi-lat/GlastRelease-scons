@@ -3,7 +3,7 @@
 @verbatim
  * package manager:T.Burnett
  *
- * v9r10   07-aug-03 LSR Tracy's mods for MC-patrec stuff (TkrPatCandHit now a contained object)
+ * v9r10p1 07-aug-03 LSR Tracy's mods for MC-patrec stuff (TkrPatCandHit now a contained object)
  * v9r9    17-jul-03 THB  New Exposure 
  * v9r8p2  04-jUl-03 THB  Add charge to McTrajectory
  * v9r8p1  20-Mar-03 TU  Modify TkrFitPlane constructor to include tower id
