@@ -24,6 +24,7 @@
 * @class RootTupleSvc
 * @brief Special service that directly writes ROOT tuples
 *
+* It also allows multiple TTree's in the root file: see the addItem (by pointer) member function.
 * $Header$
 */
 class RootTupleSvc :  public Service, virtual public IIncidentListener,
@@ -65,10 +66,18 @@ public:
     /// force writing of the ntuple to disk -- not suppored, but harmless since it happens anyway
     virtual StatusCode saveNTuples(){return StatusCode::SUCCESS;};
 
-    /// Set a flag to denote whether or not to store a row at the end of this event
-    virtual void storeRowFlag(bool flag) { m_storeFlag = flag; };
+    /// Set a flag to denote whether or not to store a row at the end of this event,
+    virtual void storeRowFlag(bool flag) { m_storeAll = flag; };
     /// retrieve the flag that denotes whether or not to store a row
-    virtual bool storeRowFlag() { return m_storeFlag; };
+    virtual bool storeRowFlag() { return m_storeAll; };
+
+    /** store row flag by tuple Name option, retrive currrent
+    @param tupleName Name of the tuple (TTree for RootTupleSvc implemetation)
+    @param flag new value
+    @return previous value
+    If service does not implement, it is ignored (return false)
+    */
+    virtual bool storeRowFlag(const std::string& tupleName, bool flag);;
 
 private:
     /// Allow only SvcFactory to instantiate the service.
@@ -76,7 +85,6 @@ private:
 
     RootTupleSvc ( const std::string& name, ISvcLocator* al );    
 
-    bool m_storeFlag;
 
     /// routine to be called at the beginning of an event
     void beginEvent();
@@ -91,6 +99,12 @@ private:
     TFile * m_tf;
 
     std::map<std::string, TTree *> m_tree;
+
+    /// the flags, one per tree, for storing at the end of an event
+    std::map<std::string, bool> m_storeTree;
+
+    /// if set, store all ttrees 
+    bool m_storeAll;
 
     int m_trials; /// total number of calls
     bool m_defaultStoreFlag;
@@ -185,15 +199,19 @@ void RootTupleSvc::beginEvent()
 {
     /// Assume that we will NOT write out the row
     storeRowFlag(m_defaultStoreFlag);
+    for(std::map<std::string, bool>::iterator it=m_storeTree.begin(); it!=m_storeTree.end(); ++it){
+        it->second=false;
+    }
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void RootTupleSvc::endEvent()  // must be called at the end of an event to update, allow pause
 {         
     ++m_trials;
-    if (m_storeFlag == false) return;
     for( std::map<std::string, TTree*>::iterator it = m_tree.begin(); it!=m_tree.end(); ++it){
-        TTree* t = it->second;
-        t->Fill();
+        if( m_storeAll || m_storeTree[it->first]  ) {
+            TTree* t = it->second;
+            t->Fill();
+        }
     }
 
 }
@@ -239,4 +257,12 @@ StatusCode RootTupleSvc::finalize ()
 
 
     return StatusCode::SUCCESS;;
+}
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+bool RootTupleSvc::storeRowFlag(const std::string& tupleName, bool flag)
+{
+    bool t = m_storeTree[tupleName];
+    m_storeTree[tupleName] = flag;
+    return t;
 }

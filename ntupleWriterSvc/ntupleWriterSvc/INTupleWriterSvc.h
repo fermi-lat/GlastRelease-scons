@@ -5,7 +5,7 @@
 #include "GaudiKernel/NTuple.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_INTupleWriterSvc("INTupleWriterSvc",  1 , 0); 
+static const InterfaceID IID_INTupleWriterSvc("INTupleWriterSvc",  1 , 1 ); 
 
 /*! @class INTupleWriterSvc
  @brief Proper Gaudi abstract interface class for the ntupleWriterSvc 
@@ -35,6 +35,14 @@ public:
     virtual void storeRowFlag(bool flag)=0;
 
     virtual bool storeRowFlag()=0;
+
+    /** store row flag by tuple Name option, retrive currrent
+    @param tupleName Name of the tuple (TTree for RootTupleSvc implemetation)
+    @param flag new value
+    @return previous value
+    If service does not implement, it is ignored (return false)
+    */
+    virtual bool storeRowFlag(const std::string& tupleName, bool flag)=0;
 
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_INTupleWriterSvc; }

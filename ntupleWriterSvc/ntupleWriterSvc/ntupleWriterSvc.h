@@ -68,6 +68,14 @@ public:
    /// check for NaN and infinity
    int isFinite(float val);
 
+       /** store row flag by tuple Name option, retrive currrent
+    @param tupleName Name of the tuple (TTree for RootTupleSvc implemetation)
+    @param flag new value
+    @return previous value
+    This service  does not implement, it is ignored (return false)
+    */
+   virtual bool storeRowFlag(const std::string& tupleName, bool flag){ return false;}
+
 protected: 
 
     ntupleWriterSvc ( const std::string& name, ISvcLocator* al );    

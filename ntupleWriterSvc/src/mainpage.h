@@ -10,7 +10,8 @@
  * standard GLAST ntuple.
  * For more information see the <a href=../ntupleWriterSvc.htm>manual</a>.
 
- * <br>An additional posibility for ROOT tuples is the service RootTupleSvc
+ * <br>(T. Burnett) An additional posibility for ROOT tuples is the service RootTupleSvc. It allows for multiple trees, and has only a setup phase:
+ one defines the tuple at initialization time, with pointers to the tuple values.
  * <hr>
  * @section notes release notes
  * release.notes
