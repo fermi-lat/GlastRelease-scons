@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
  *
+ *  v6r7p1  THB  17-aug-03 project against TDS info not present
  *  v6r7    THB  16-aug-03 add OnboardFilter info 
  *  v6r6p2  THB  13-aug-03 change tree name back to MeritTuple 
  *  v6r6p1  THB  04-aug-03 add run number to the tuple 
