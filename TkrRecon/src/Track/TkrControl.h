@@ -39,6 +39,7 @@ public:
     const double getIniErrPosition()     {return m_iniErrorPosition;  }
     const bool   getPlaneEnergies()      {return m_planeEnergies;     }
     const int    getErrorType()          {return m_errorType;         }
+    const int    trackAcrossTowers()     {return m_trackAcrossTowers; }
 
 
     /// Allow for control variables to be set at initialization
@@ -54,6 +55,7 @@ public:
     void setIniErrPos(      double errPos)    {m_iniErrorPosition  = errPos;  }
     void setPlaneEnergies(  bool   enePlane)  {m_planeEnergies     = enePlane;}
     void setErrorType    (  int    eType)     {m_errorType         = eType;   }
+    void setTrackAcrossTowers ( bool type)    {m_trackAcrossTowers = type;    }
 
 private:
     /// private Constructor
@@ -80,6 +82,7 @@ private:
 
     bool   m_planeEnergies;      // Decrease particle energies by exp(-rad_len)
     int    m_errorType;          // determines type of error calculation
+    bool   m_trackAcrossTowers;  // false means break track at tower boundaries
 };
 
 #endif

@@ -66,6 +66,7 @@ private:
 
     bool             m_planeEnergies;
     int              m_errorType;
+    bool             m_trackAcrossTowers;
 };
 
 #endif // __TKRINITSVC_H

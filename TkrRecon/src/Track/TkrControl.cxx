@@ -33,6 +33,7 @@ TkrControl::TkrControl()
 
     m_errorType          = 0;    // 0 -> sigma = siResolution
                                  // 1 -> sigma = first iteration of new errors
+    m_trackAcrossTowers  = true; // false means break tracks at tower boundaries
 
     return;
 }
