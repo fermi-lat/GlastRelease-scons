@@ -1,18 +1,14 @@
 package CalRecon
-version v1r5
+version v2
 
 branches src mgr doc
 
 use GuiSvc
 use GlastEvent
 use GlastSvc
-use reconstruction
-use GaudiKernel
 
+include_dirs $(CALRECONROOT)
 
-#macro CalReconDir  "$(CALRECONROOT)/$(DEBUGDIR)"
-ignore_pattern include_none
-apply_pattern package_include
 
 # have a seperate library to export the calorimeter recon data classes 
 library CalReconData -no_share CalLogID.cpp CalGeometrySvc.cpp\
@@ -27,25 +23,14 @@ library CalRecon  *.cxx *.cpp ../CalRecon/*.h  Dll/*.cpp
 
 macro CalRecon_stamps     
 
-#set   CalReconShr           "${CALRECONROOT}/${DEBUGDIR}/libCalRecon"
+#apply_pattern ld_library_path 
 
-#path_append LD_LIBRARY_PATH "${CALRECONROOT}/${DEBUGDIR}/"
-apply_pattern ld_library_path 
-
-#include_path $(CALRECONROOT)
 
 
 private
 
 apply_pattern packageShr
 
-# note that the debug versions of the used libraries are inserted below
-
-
-# for the moment, use libraryshr_linkopts to fix red hat 6.2 linking problem
-#macro CalRecon_shlibflags   "$(componentshr_linkopts) $(use_linkopts)"\
-#macro CalRecon_shlibflags   "$(libraryshr_linkopts) $(use_linkopts)"\
-#      VisualC               "$(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
 
 apply_pattern package_Cshlibflags 
 
