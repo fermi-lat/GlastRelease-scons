@@ -104,9 +104,9 @@ StatusCode TkrClusterAlg::initialize()
             TkrMakeClusters maker(
                 pClusters, pMap, m_tkrGeom, pDigis, ITkrBadStripsSvc::BADCLUSTERS);
             pBadStrips->setBadClusterCol(pClusters);
-            int clustSize = pClusters->size();
+            //int clustSize = pClusters->size();
             pBadStrips->setBadIdClusterMap(pMap);
-            int mapSize = pMap->size();
+            //int mapSize = pMap->size();
         }
     }
     

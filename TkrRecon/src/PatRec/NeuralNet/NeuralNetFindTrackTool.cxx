@@ -152,8 +152,8 @@ StatusCode NeuralNetFindTrackTool::findTracks()
 // This funciton takes all neurons with an activity above 0.9 and places
 // them in candidates.  It then proceed to do some preliminary fitting
 // of the track.  This will be changed soon.
-void NeuralNetFindTrackTool::buildCand(Event::TkrTrackCol& TkrCands, 
-			     const TkrNeuronList& neuronList,Event::TkrClusterCol* pTkrClusters)
+void NeuralNetFindTrackTool::buildCand(Event::TkrTrackCol& /*TkrCands*/, 
+			     const TkrNeuronList& neuronList,Event::TkrClusterCol* /*pTkrClusters*/)
 {
     std::vector<TkrBase> candList;
 
@@ -171,18 +171,18 @@ void NeuralNetFindTrackTool::buildCand(Event::TkrTrackCol& TkrCands,
     // list of tracks to be used with Kalman fit.
     Event::TkrTrackCol tracks;
   
-    TkrControl * control = TkrControl::getPtr(); 
+    //TkrControl * control = TkrControl::getPtr(); 
     if (candList.size() > 0) 
     {
         std::vector<TkrBase>::const_iterator hypo;
         for(hypo  = candList.begin(); hypo != candList.end();   hypo++)
         {
-	        int   iniLayer = (*hypo).firstLayer();
-	        int   iniTower = (*hypo).tower();
+	        //int   iniLayer = (*hypo).firstLayer();
+	        //int   iniTower = (*hypo).tower();
 	        Ray   testRay  = Ray((*hypo).ray().position(),-(*hypo).ray().direction());
-	        float energy   = (*hypo).energy();
+	        //float energy   = (*hypo).energy();
 	
-	        Event::TkrTrack* _track = new Event::TkrTrack(); //pTkrClusters, m_tkrGeom, m_clusTool,
+	        //Event::TkrTrack* _track = new Event::TkrTrack(); //pTkrClusters, m_tkrGeom, m_clusTool,
 							    //iniLayer, iniTower, 
 							    //control->getSigmaCut(), energy, testRay); 
 	

@@ -229,16 +229,16 @@ double TkrTrackEnergyTool::getTotalEnergy(Event::TkrTrack* track, double CalEner
     // Use hit counting + CsI energies to compute Event Energy 
 
     // these come from the actual geometry
-    int nThick = m_tkrGeom->getNumType(SUPER);
-    int nNoCnv = m_tkrGeom->getNumType(NOCONV);
-    int nThin  = m_tkrGeom->getNumType(STANDARD);
+    //int nThick = m_tkrGeom->getNumType(SUPER);
+    //int nNoCnv = m_tkrGeom->getNumType(NOCONV);
+    //int nThin  = m_tkrGeom->getNumType(STANDARD);
 
     double thinConvRadLen  = m_tkrGeom->getAveConv(STANDARD);
     double thickConvRadLen = m_tkrGeom->getAveConv(SUPER);
     double trayRadLen      = m_tkrGeom->getAveRest(ALL);
 
     //Retrieve the pointer to the reconstructed clusters
-    Event::TkrClusterCol* pTkrClus = SmartDataPtr<Event::TkrClusterCol>(m_dataSvc,EventModel::TkrRecon::TkrClusterCol); 
+    //Event::TkrClusterCol* pTkrClus = SmartDataPtr<Event::TkrClusterCol>(m_dataSvc,EventModel::TkrRecon::TkrClusterCol); 
     
     // Set up parameters for KalParticle swim through entire tracker
     Point x_ini    = getPosAtZ(track, -2.); // Backup to catch first Radiator
@@ -256,7 +256,7 @@ double TkrTrackEnergyTool::getTotalEnergy(Event::TkrTrack* track, double CalEner
     double arc_len    = 5./fabs(dir_ini.z()); 
     
 	int top_layer       = m_tkrGeom->getLayer(track->front()->getTkrId()); 
-    int max_layers  = m_tkrGeom->numLayers();
+    //int max_layers  = m_tkrGeom->numLayers();
 
     int thin_layers  = 0;
     int thick_layers = 0;
