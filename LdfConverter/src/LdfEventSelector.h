@@ -60,6 +60,8 @@ public:
     
 private:
   enum CriteriaType { 
+    EBFFILE,
+    EBFFITS,
     LDFFILE, //When the input is a raw file
     LDFFITS, //When the input is fitsified raw ldf
     NONE     //When there is no input

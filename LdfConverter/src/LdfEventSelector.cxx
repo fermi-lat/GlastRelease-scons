@@ -100,7 +100,7 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
     StatusCode sc;
     MsgStream log(msgSvc(), name());
 
-    if (storageType == "LDFFILE") {
+    if ( (storageType == "LDFFILE") || (storageType == "EBFFILE") ) {
       m_criteriaType = LDFFILE;
 
       m_fileName = (m_inputList.value())[0];
@@ -120,7 +120,7 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
       }
       m_ebfParser->setDebug((m_ebfDebugLevel != 0) );
 
-    } else if (storageType == "LDFFITS") {
+    } else if ((storageType == "LDFFITS") || (storageType == "EBFFITS")) {
       m_criteriaType = LDFFITS;
 
       m_fileName = (m_inputList.value())[0];
