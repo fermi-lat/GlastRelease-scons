@@ -198,7 +198,7 @@ public:
     }
 
     private:
-    std::string m_ps_filename
+    std::string m_ps_filename;
     double m_binsize;
     double m_emin, m_emax;
     int    m_ngen;
