@@ -38,9 +38,9 @@ StatusCode EventCnv::createObj(IOpaqueAddress* pAddress,
 StatusCode EventCnv::updateObj(int* iarray, Event::EventHeader* pEvent) {
     // Purpose and Method:  This method does nothing other than announce it has
     //   been called.
+
     MsgStream log(msgSvc(), "EventCnv");
     log << MSG::DEBUG << "EventCnv::updateObj" << endreq;
     return StatusCode::SUCCESS;
 }
-
 

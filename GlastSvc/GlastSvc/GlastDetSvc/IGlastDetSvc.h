@@ -74,16 +74,27 @@ public:
     virtual unsigned int stripId (double x)=0;
 
     /// location of strip ix in local coords
-    virtual double stripLocalX( unsigned int stripid)=0; 
-	
-    /// location of strip ix in local coords
-    virtual double stripLocalXDouble( double stripid)=0;    
-
-	/// returns plane coord given ladder coord
-	virtual HepPoint3D siPlaneCoord( const HepPoint3D& p, idents::VolumeIdentifier id)=0;
+    virtual double stripLocalX( double stripid)=0; 
+    
+    /// returns plane coord given ladder coord
+    virtual HepPoint3D siPlaneCoord( const HepPoint3D& p, idents::VolumeIdentifier id)=0;
 
     /// (-) if non-active or gap (P is in local system)    
-    virtual double insideActiveArea (const HepPoint3D& p)=0;  
+    virtual double insideActiveArea (const HepPoint3D& p)=0; 
+    
+    /// return the global position of a strip in the plane, will accept int or double
+    virtual HepPoint3D getStripPosition(idents::VolumeIdentifier volId, double stripid)=0;
+
+    /// calculate the tray number, botTop from layer, view
+    virtual void layerToTray (int layer, int view, int& tray, int& botTop)=0;
+
+    /// calculate layer, view from tray, botTop
+    virtual void trayToLayer (int tray, int botTop, int& layer, int& view)=0;
+    
+    /// calculate layer (digi format) and view from plane
+    virtual void planeToLayer (int plane, int& layer, int& view)=0;
+    
+
 
 };
 

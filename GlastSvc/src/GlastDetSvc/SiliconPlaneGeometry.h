@@ -18,22 +18,31 @@ public:
     
     /// compute strip id from local coordinate
     static unsigned int stripId (double x);
-    
-    /// location of strip ix in local coords, allows for non-integer strip number
-    static double localXDouble ( double x);    
-    
-    /// location of strip ix in local coords
-    static double localX ( unsigned int ix); 
-    
-    // Returns the coordinate in the plane from the ladder coordinate
-    static HepPoint3D siPlaneCoord( const HepPoint3D& p, idents::VolumeIdentifier id);
-    
+
+   /// location of strip ix in local coords, allows for non-integer strip number
+    static double localX ( double x);    
+     
+	// Returns the coordinate in the plane from the ladder coordinate
+	static HepPoint3D siPlaneCoord( const HepPoint3D& p, idents::VolumeIdentifier id);
+	  
     /// insideActiveArea for local coords
-    static double insideActiveArea(double x, double y); 
+    static double insideActiveArea(double x, double y);
     
     /// insideActiveArea for local coord (one-D)
     /// allows for different spacing in X and Y
     static double insideActiveArea1D(double x, double spacing);
+
+    /// return the local position of a strip in the plane, will accept int or double
+    static HepPoint3D getLocalStripPosition( idents::VolumeIdentifier &volId, double stripid);
+
+    /// calculate the tray number, botTop from layer, view
+    static void layerToTray (int layer, int view, int& tray, int& botTop);
+
+    /// calculate layer, view from tray, botTop
+    static void trayToLayer (int tray, int botTop, int& layer, int& view);
+    
+    /// calculate layer (digi format) and view from plane
+    static void planeToLayer (int plane, int& layer, int& view);
     
     /// number of silicon dies across a single layer
     static unsigned int n_si_dies ();
@@ -66,9 +75,9 @@ public:
     /// width of dead area, aka guarg_ring
     static double guard_ring ();
     static double panel_width(); 
-    
-    static void init(IGlastDetSvc * p_detSvc);
-    
+
+	static StatusCode init(IGlastDetSvc * p_detSvc);
+
 private:
     
     static double s_dice_width;
@@ -76,12 +85,10 @@ private:
     static double s_ladder_gap;
     static double s_guard_ring;
     static double s_panel_width;
-    static unsigned int s_stripPerWafer;
-    static unsigned int s_n_si_dies;
-    
+    static int s_stripPerWafer;
+    static int s_n_si_dies;
     static double s_waferSide;
     static double s_waferActive;
-    
 };
 
 #endif

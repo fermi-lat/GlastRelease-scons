@@ -33,10 +33,6 @@
 static SvcFactory<GlastDetSvc> a_factory;
 const ISvcFactory& GlastDetSvcFactory = a_factory;
 
-
-// file scope for WARNING and ERROR
-static MsgStream * s_log;
-
 // external declarations of the service identifiers
 // HSG - not necessary from the Gaudi example - extern const IID& IID_IGlastDetSvc;
 
@@ -81,20 +77,20 @@ StatusCode  GlastDetSvc::queryInterface (const IID& riid, void **ppvIF)
 
 StatusCode GlastDetSvc::initialize () 
 {
+    
+        // open the message log
+    MsgStream log( msgSvc(), name() );
+
     StatusCode  status = StatusCode::SUCCESS;
     
     // call super-class
     Service::initialize ();
     
     // bind all of the properties for this service
-    status = setProperties ();
-    
-    
-    // open the message log
-    MsgStream log( msgSvc(), name() );
-    s_log = & log;  // make available globally while executing the following
-    
-    
+    if ( (status = setProperties()).isFailure() ) {
+        log << MSG::ERROR << "Failed to set properties" << endreq;
+    }
+        
     // setup the detModel geometry, so can be visited below
     m_dm = new DMmanager;
     m_dm->init(m_xmlfile,m_visitorMode,m_topvol);
@@ -102,8 +98,9 @@ StatusCode GlastDetSvc::initialize ()
     m_dm->printSetup(log.stream());
     log << endreq;
 
-	SiliconPlaneGeometry::init(this);
-
+    if( (status = SiliconPlaneGeometry::init(this)).isFailure() ) {
+        log << MSG::ERROR << "Failed to initialize SiliconPlane Geometry " << endreq;
+    }
     return status;
 }
 
@@ -199,18 +196,50 @@ double GlastDetSvc::insideActiveArea (const HepPoint3D& p)
     return SiliconPlaneGeometry::insideActiveArea(p);
 }
 
-    /// location of strip ix in local coords
-double GlastDetSvc::stripLocalX ( unsigned int istrip)
+double GlastDetSvc::stripLocalX( double strip)
 {
-    return SiliconPlaneGeometry::localX(istrip);
-}
-
-double GlastDetSvc::stripLocalXDouble( double strip)
-{
-    return SiliconPlaneGeometry::localXDouble(strip);
+    return SiliconPlaneGeometry::localX(strip);
 }
 
 HepPoint3D GlastDetSvc::siPlaneCoord( const HepPoint3D &p, idents::VolumeIdentifier id)
 {   
 	return SiliconPlaneGeometry::siPlaneCoord( p, id);
 }
+
+HepPoint3D GlastDetSvc::getStripPosition(idents::VolumeIdentifier volId, double stripid)
+{
+    // Purpose: calculate the global position of a strip
+    // Method:  apply the transform to the local position from SiliconPlaneGeometry
+    // Inputs:  volId and strip
+    // Output:  global position
+
+    MsgStream log( msgSvc(), name() );
+
+    HepTransform3D volTransform;
+    StatusCode sc = getTransform3DByID(volId, &volTransform);
+    if( sc.isFailure()) {
+        log << MSG::INFO << "SiliconPlaneGeometry: Failed to obtain transform for id " 
+           << volId.name() << endreq;
+    }
+
+    HepPoint3D localPos = SiliconPlaneGeometry::getLocalStripPosition(volId, stripid);
+
+    return volTransform*localPos;
+
+}
+
+void GlastDetSvc::layerToTray (int layer, int view, int& tray, int& botTop)
+{
+    SiliconPlaneGeometry::layerToTray (layer, view, tray, botTop);
+}
+
+void GlastDetSvc::trayToLayer(int tray, int botTop, int& layer, int& view)
+{
+    SiliconPlaneGeometry::trayToLayer (layer, view, tray, botTop);
+}
+
+void GlastDetSvc::planeToLayer(int plane, int& layer, int& view)
+{
+    SiliconPlaneGeometry::planeToLayer (plane, layer, view);
+}
+
