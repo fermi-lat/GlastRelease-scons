@@ -119,9 +119,6 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
   hit->setOriginMcParticleId(partMan->getOriginParticle()->particleProperty());
 
   m_posHit->push_back(hit);
-
-  display(theTouchable, id, prePos, postPos);
-
   return true;
 }
 

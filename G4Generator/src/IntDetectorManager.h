@@ -1,9 +1,6 @@
 #ifndef INTEGRATINGDETECTORMANAGER_H
 #define INTEGRATINGDETECTORMANAGER_H
 
-
-#include "DisplayManager.h"
-
 #include "idents/VolumeIdentifier.h"
 
 

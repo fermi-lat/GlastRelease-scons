@@ -48,13 +48,6 @@
 #include "Event/MonteCarlo/McIntegratingHit.h"
 #include "Event/MonteCarlo/McTrajectory.h"
 
-//gui
-#include "GuiSvc/GuiSvc.h"
-#include "gui/DisplayControl.h"
-#include "gui/GuiMgr.h"
-#include "gui/SimpleCommand.h"
-#include "DisplayManager.h"
-
 #include "G4Generator/IG4GeometrySvc.h"
 
 //vectors
@@ -95,10 +88,6 @@ StatusCode G4Generator::initialize()
 
   // Use the Job options service to set the Algorithm's parameters
   setProperties();
-
-  // setup the GuiSvc, if available
-  setupGui();
-
   // user jobOtions on cuts and physics 
 
   log << MSG::INFO << "DefaultCutValue="    << m_defaultCutValue    << " mm" << endreq;
@@ -174,21 +163,6 @@ StatusCode G4Generator::initialize()
 
 }
 
-void G4Generator::setupGui()
-{
-  // Purpose and Method:  This routine setup the (optional) Gui service
-
-  MsgStream log(msgSvc(), name());
-
-  IGuiSvc* guiSvc=0;
-    
-  if ( service("GuiSvc", guiSvc).isFailure() ){
-    log << MSG::WARNING << "No GuiSvc: so, no event display " << endreq;
-    return;
-  } 
-  new DisplayManager(&(guiSvc->guiMgr()->display()));
-   
-}
 
 StatusCode G4Generator::execute() 
 {
@@ -252,44 +226,33 @@ StatusCode G4Generator::execute()
 
   // Save the McParticle hierarchy in the TDS
   McParticleManager::getPointer()->save();
-    
-  // set up display of trajectories
-  DisplayManager* dm = DisplayManager::instance();
-  if(dm !=0) {   
-    for(unsigned int i = 0; i< m_runManager->getNumberOfTrajectories(); ++i){
-      std::auto_ptr<std::vector<Hep3Vector> > points = 
-        m_runManager->getTrajectoryPoints(i);
-      dm->addTrack(*(points.get()), m_runManager->getTrajectoryCharge(i), i==0);
-    }
-  }
 
   // we save the trajectories if the m_saveTrajectories is true
   if (m_saveTrajectories)
     {
-      Event::McTrajectoryList* traj = new Event::McTrajectoryList();  
-      eventSvc()->registerObject("Event/MC/TrajectoryCol",traj);
+      Event::McTrajectoryCol* traj = new Event::McTrajectoryCol();  
+      eventSvc()->registerObject("/Event/MC/TrajectoryCol",traj);
 
       for(unsigned int j = 0; j< m_runManager->getNumberOfTrajectories(); ++j){
-        std::auto_ptr<std::vector<Hep3Vector> > points = 
-          m_runManager->getTrajectoryPoints(j);
+          std::auto_ptr<std::vector<Hep3Vector> > points = 
+              m_runManager->getTrajectoryPoints(j);
+          Event::McTrajectory* tr = new Event::McTrajectory();
+          tr->addPoints(*(points.get()));
+          tr->setCharge(m_runManager->getTrajectoryCharge(j));
 
-        Event::McParticle* part = 0;
-      
-        if (McParticleManager::getPointer()->size() > 
-            static_cast<unsigned int>( m_runManager->getTrajectoryTrackId(j)))
+        // note that even if we can't find an associated particle, we store the trajectory and its sign
+          Event::McParticle* part = 0;
+
+          if (McParticleManager::getPointer()->size() > 
+              static_cast<unsigned int>( m_runManager->getTrajectoryTrackId(j)))
           {
-            part = 
-              McParticleManager::getPointer()->getMcParticle(m_runManager->getTrajectoryTrackId(j));
+              part = 
+                  McParticleManager::getPointer()->getMcParticle(m_runManager->getTrajectoryTrackId(j));
           }
-        
-        if(part)
-          {
-            Event::McTrajectory* tr = new Event::McTrajectory();
-            tr->addPoints(*(points.get()));
-            tr->setMcParticle(part);
-            
-            traj->push_back(tr);
-          }
+
+          tr->setMcParticle(part); //may be zero.
+
+          traj->push_back(tr);
       }
 
     }

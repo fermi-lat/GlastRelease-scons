@@ -94,8 +94,6 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,
   // create a new one
   if( !(hit = m_detectorList[id]))
     {
-      // This draw the volume
-      makeDisplayBox( theTouchable, id );        
       // A new object is needed
       hit = new Event::McIntegratingHit;
       // Set its volume identifier

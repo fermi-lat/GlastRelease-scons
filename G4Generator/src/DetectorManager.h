@@ -7,7 +7,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4VSensitiveDetector.hh"
 
-#include "DisplayManager.h"
+//#include "DisplayManager.h"
 
 #include "idents/VolumeIdentifier.h"
 #include "DetectorConstruction.h"
@@ -61,19 +61,8 @@ class DetectorManager : public G4VSensitiveDetector {
   /// This method build the volume identifier from information contained 
   /// in a G4step.
   idents::VolumeIdentifier constructId(G4Step * aStep);
-  
-  /// generate the box parameters to display
-  void makeDisplayBox(G4TouchableHistory* touched,
-                      idents::VolumeIdentifier id,
-                      bool hitBox=false);
-  
-  /// display a G4Step, showing the enclosing volume (if a box).
-  void display(G4TouchableHistory* touched, idents::VolumeIdentifier id, 
-               const HepPoint3D& entry, const HepPoint3D& exit);
-  
-  /// @return Return the display manager ponter
-  DisplayManager* displayMgr(){return DisplayManager::instance();} 
-  
+
+
   typedef std::map<idents::VolumeIdentifier, unsigned int> DetectorList;
 
   /// A map to keep track of hit detectors for display
