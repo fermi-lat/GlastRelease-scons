@@ -49,6 +49,8 @@
            }
            gSystem->Load( path.Data() ); 
         }
+        // apparently this is now required on all systems
+        gSystem->Load("libPhysics.dll");
        
     } else {  // UNIX
         gSystem->Load("libPhysics.so");
