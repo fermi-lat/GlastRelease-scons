@@ -1,5 +1,5 @@
 package userAlg
-version v4r0
+version v5r0p1
 
 # --------------------------
 # run a job with a user algorithm
@@ -8,7 +8,8 @@ version v4r0
 # get everything we need from here
 use Gleam *
 use ntupleWriterSvc v2r0p0
-use GuiSvc v3r2
+
+
 
 #apply_pattern userjobopts
 set JOBOPTIONS $(USERALGROOT)/src/jobOptions.txt
