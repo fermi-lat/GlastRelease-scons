@@ -16,7 +16,7 @@ use RootHistCnv v5r0p1
 
 use XMLEXT      v2r2 
 use GlastPolicy v4r3 
-use facilities        v2r4 
+use facilities  v2r4 
 use xml         v4r1p3 
 use xmlUtil     v2r8p1
 
@@ -41,7 +41,7 @@ use GuiSvc      v3
 use GlastEvent  v7r0
 use FluxSvc     v5r2
 
-use GlastSvc    v6r0
+use GlastSvc           v7r0
 use G4Generator v3r3p2
 use GlastDigi   v2r4
 
