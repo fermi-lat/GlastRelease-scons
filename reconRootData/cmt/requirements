@@ -5,15 +5,10 @@ use GlastPolicy
 use digiRootData
 use ROOT
 
-
-ignore_pattern include_none
-apply_pattern package_include
-
-apply_pattern package_linkopts
-
-apply_pattern ld_library_path
+apply_pattern packageShr
 
 
+#--------------------------------------------------------------
 private
 
 #define the list of header files to be used in rootcint
@@ -36,6 +31,7 @@ macro reconRootData_shlibflags "" \
       VisualC            " ${use_linkopts} "
 
 apply_pattern package_headers
+apply_pattern package_include
 
 library  reconRootData *.cxx \
      ../reconRootData/ReconCint.cxx\
