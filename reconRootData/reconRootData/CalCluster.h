@@ -33,12 +33,12 @@ public:
 
     void Print(Option_t *option="") const;
     
-    void initialize(Double_t eLeak, std::vector<Double_t> eneLayer, 
+    void initialize(Double_t eLeak, Double_t eCorrect, std::vector<Double_t> eneLayer, 
         std::vector<TVector3> pLayer, std::vector<TVector3> rmsLayer, 
         Double_t rmsLong, Double_t rmsTrans, 
         const TVector3 &caldir, Double_t calTransvOffset);
 
-    void initialize(Double_t eLeak, Double_t rmsLong, Double_t rmsTrans, 
+    void initialize(Double_t eLeak, Double_t eCorrect, Double_t rmsLong, Double_t rmsTrans, 
         const TVector3 &caldir, Double_t calTransvOffset);
 
     void initProfile(Double_t fitEnergy, Double_t ki2, Double_t fitStart,

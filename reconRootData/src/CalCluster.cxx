@@ -16,22 +16,24 @@ CalCluster::CalCluster(Double_t e, TVector3 p)
 }
 
 
-void CalCluster::initialize(Double_t eLeak, Double_t rmsLong, Double_t rmsTrans, 
+void CalCluster::initialize(Double_t eLeak, Double_t eCorrect, Double_t rmsLong, Double_t rmsTrans, 
         const TVector3 &caldir, Double_t calTransvOffset) {
     
     m_leakEnergy = eLeak;
+    m_energyCorrected = eCorrect;
     m_rmsLong = rmsLong;
     m_rmsTrans= rmsTrans;
     m_transvOffset = calTransvOffset;  
     m_direction = caldir;
 }
 
-void CalCluster::initialize(Double_t eLeak, std::vector<Double_t> eneLayer, 
+void CalCluster::initialize(Double_t eLeak, Double_t eCorrect, std::vector<Double_t> eneLayer, 
         std::vector<TVector3> pLayer, std::vector<TVector3> rmsLayer, 
         Double_t rmsLong, Double_t rmsTrans, 
         const TVector3 &caldir, Double_t calTransvOffset) {
     
     m_leakEnergy = eLeak;
+    m_energyCorrected = eCorrect;
     m_eneLayer = eneLayer;
     m_pLayer = pLayer;
     m_rmsLayer = rmsLayer;	
