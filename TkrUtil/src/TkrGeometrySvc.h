@@ -98,6 +98,19 @@ public:
     ///    counting down from the bottom of the converter
     double getAveRest(convType type) const {return m_aveRadLenRest[(int) type];}
 
+    ///does the tower exist?
+    bool isTower(int tower)     const {return m_towerType[tower]>-1;}
+    /// get the tower Type
+    int getTowerType(int tower) const {return m_towerType[tower];}
+    /// get limiting tower
+    int getLimitingTower(int view, limitType type) const {
+        if (view<0 || view> 1) return -1;
+        return (view==0 ? m_xLim[type] : m_yLim[type]);
+    }
+    /// get the limits of the LAT as implemented
+    double getLATLimit (int view, limitType type) const;
+    /// are we in the "active" LAT?
+    bool isInActiveLAT (Point pos) const;
 
     /// Provide access to the old propagator
     IKalmanParticle* getPropagator()     const {return m_KalParticle;}
@@ -208,6 +221,11 @@ private:
     /// pointer to the detector service
     IGlastDetSvc * m_pDetSvc;
 
+    /// array of tower types; type is number of exposed edges, -1 means no tower
+    int  m_towerType[NTOWERS];
+    /// lowest and highest actual tower in x and y
+    int  m_xLim[2];
+    int  m_yLim[2];
     /// array to hold the tower part of the volumeIds of the silicon planes
     idents::VolumeIdentifier m_volId_tower[NTOWERS];
     /// array to hold the tray part of the volumeIds of the silicon planes

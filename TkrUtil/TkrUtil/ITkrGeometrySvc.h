@@ -33,6 +33,7 @@ static const InterfaceID IID_ITkrGeometrySvc("ITkrGeometrySvc", 8 , 0);
 
 namespace {
     enum convType { ABSENT = -1, NOCONV = 0, STANDARD, SUPER, ALL, NTYPES};
+    enum limitType { LOW, HIGH };
 }
 
 class ITkrSplitsSvc;
@@ -126,6 +127,17 @@ public:
     virtual void trayToLayer (int tray, int botTop, int& layer, int& view) const = 0;    
     /// calculate layer (digi format) and view from plane
     virtual void planeToLayer (int plane, int& layer, int& view) const = 0;
+
+    /// does the tower exist?
+    virtual bool isTower(int tower)      const = 0;
+    /// get tower type
+    virtual int  getTowerType(int tower) const = 0;
+    /// get lowest and highest tower in either direction
+    virtual int  getLimitingTower(int view, enum limitType) const = 0;
+    /// get the actual limits in either direction
+    virtual double getLATLimit   (int view, enum limitType) const = 0;
+    /// are we in the "active" LAT?
+    virtual bool   isInActiveLAT (Point pos) const = 0;
 };
 
 #endif
