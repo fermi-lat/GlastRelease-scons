@@ -282,10 +282,9 @@ StatusCode EvtValsTool::calculate()
             EvtCalEdgeAngle = (30. -calEdge)/sTkr;
         }
     }
-
     EvtPSFModel = sqrt(pow((.061/pow((std::max(EvtEnergySumOpt,1.)/100),.8)),2) + (.001745*.001745));
-    EvtLogESum = log10(std::min(std::max(EvtEnergySumOpt,20.),50000.));
-	double logE = EvtLogESum;
+    EvtLogESum = log10(std::min(std::max(EvtEnergySumOpt,10.),1000000.));
+	double logE = std::min(std::max(EvtLogESum,1.3), 4.7);
     double logE2 = logE*logE; 
     
 	double tkr1CovDet;
