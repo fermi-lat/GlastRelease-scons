@@ -79,12 +79,12 @@ TkrMakeClusterTable::TkrMakeClusterTable(const TkrClusterCol* pClus,
         std::vector<McPositionHit*>::const_iterator itH;
         for(itH=mcHits.begin(); itH!=mcHits.end();itH++) {
             McPositionHit* theHit = *itH;
-            std::cout << theHit << " " ;
+            //std::cout << theHit << " " ;
             Relation<TkrCluster, McPositionHit>* rel 
                 = new Relation<TkrCluster, McPositionHit>(p_clu, theHit);
             clustHitsTab.addRelation(rel);
         }
-        std::cout << std::endl;
+        //std::cout << std::endl;
     }   
 }
 
