@@ -23,15 +23,20 @@
 
 class VolumeID {
 public:
+    typedef unsigned long  ID;
     /// Constructor
     VolumeID(){};
+    VolumeID( ID value ){ m_volumeID = value; };
     /// Destructor
     ~VolumeID(){};
 
+    VolumeID operator= ( ID value );
+
     /// Retrieve volume ID
-    long volumeID() const;
+    ID volumeID() const;
     /// Update volume ID
-    void setVolumeID( long value );
+    void setVolumeID( unsigned long value );
+
 
     /// Serialize the object for writing
     friend StreamBuffer& operator<< ( StreamBuffer& s, const VolumeID& obj ){
@@ -55,25 +60,32 @@ public:
 
 
 private:
-    long  m_volumeID;
+    ID  m_volumeID;
 };
 
 //} // NameSpace GlastEvent
+
 
 
 // Inline codes
 
 //namespace GlastEvent { // NameSpace
 
+
+inline VolumeID VolumeID::operator= ( VolumeID::ID value ){
+    return VolumeID(value);
+}
+
+
 /// Retrieve volume ID
-inline long VolumeID::volumeID() const
+inline VolumeID::ID VolumeID::volumeID() const
 {
     return m_volumeID;
 }
 
 
 /// Update volume ID
-inline void VolumeID::setVolumeID( long value )
+inline void VolumeID::setVolumeID( VolumeID::ID value )
 {
     m_volumeID = value;
 }
