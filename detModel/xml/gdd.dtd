@@ -14,6 +14,10 @@
             clients.  For example, simulation propagation only
             wants to know about a layer of silicon; digitization
             needs to know more detail.
+          * identifier stuff: 
+             - change element name <identifier> to <idField>
+             - get rid of <layer> element and %anyIdentifier entity
+             - allow only 0 or 1 identifiers with a positioning elt.
 
      Wonderful AGDD comments can be found in geotest.dtd
 
@@ -332,8 +336,8 @@
 
      member elements :
 
-        identifiers : a set of identifier specifications (see paragraph on 
-                      identifiers for details)
+        idField : an (optional) identifier specifications (see paragraph on 
+                      identifiers/idFields for details)
 
 
    Single positions and Multiple positions may provide a local rotation (specified as
@@ -388,7 +392,7 @@
      attributes R0, X0, Y0 or Z0. 
 -->
 <!--
-1.6) Identifiers
+1.6) Identifiers/IdFields
 ================
 
     Identifiers provide for a generalized identification scheme of
@@ -402,7 +406,7 @@
     The meaning of each field is conventional and reflects the local
     hierarchy of volumes.
 
-    The identifier elements permit to freely specify which field(s)
+    The idField elements permit to freely specify which field(s)
     will be affected by the positioning operation. When single
     positioning is used, a single value of one or several fields will
     be affected by the operation. When a multiple positioning
@@ -413,14 +417,8 @@
 
     Attributes :
 
-    field      : a symbolic name characterizing the affected field. Legal names
-                 should be conventionally specified. Currently three symbols have 
-                 been introduced :
-
-                 layer  (typically R in barrels and Z in end-caps)
-                 ring   (typically Z in barrels and R in end-caps)
-                 sector (typically Phi)
-
+    name      : a symbolic name characterizing the affected field. Legal names
+                 should be conventionally specified.
     value        the exact value to be entered in single positioning or
                  the first value in multiple positiong.
 
@@ -429,7 +427,7 @@
 -->
 
 <!-- to keep changes to a mininum, temporarily nullify DTD_constraint -->
-<!ENTITY % DTDconstraint ' DTDversion CDATA  #IMPLIED' >
+<!ENTITY % DTDconstraint ' DTDversion CDATA  "1.1"' >
 
 <!-- See definition of constants and its children at the end of this file -->
 <!ELEMENT  gdd  (source*, constants?,  section+) >
@@ -445,12 +443,20 @@
      (jrb) as of 22 feb 2001 add back in tubs, cons
  -->
 
-<!-- Pre-processing programs should add a <source> element to the output -->
+<!-- Pre-processing programs should add a <source> element to the output. 
+     Normally, inputId should be the value of the  CVSid attribute of
+     the <gdd> element of the input file (which, in turn, should be
+     the evaluation of the CVS macro $Id$ for that file) but without
+     the surrounding "$" and creatorId should be the translation of the 
+     CVS macro $Id$ for the pre-processing program, also without the
+     "$", but other information could be used instead for less formal 
+     circumstances. (Note surrounding "$" should be omitted so that further
+     check-ins to CVS will not cause substitutions).
+ -->
+     
 <!ELEMENT  source  (#PCDATA) >
-<!ATTLIST  source  file           CDATA #IMPLIED
-                   fileVersion    CDATA #IMPLIED
-                   creator        CDATA #IMPLIED
-                   creatorVersion CDATA #IMPLIED >
+<!ATTLIST  source  inputId          CDATA #IMPLIED
+                   creatorId        CDATA #IMPLIED >
 
 <!ELEMENT  section  ( box | tubs | cons |
                       union | intersection | subtraction |
@@ -471,30 +477,15 @@
 <!ENTITY % units 'unitLength  ( mm  | m | cm)    "mm"
                   unitAngle   ( deg | mrad ) "deg"'>
 
-<!ELEMENT identifier EMPTY>
+<!ELEMENT idField EMPTY>
 <!--
     "orient" is x or y
-    "end"     is negative end (0) or positive end (1)
-    "dsize"   is small (0) or large (1)  
+    "diode"   ranges from 0-3, specifies size and end
       -->
-<!ATTLIST identifier field
-   (layer|tower|tray|row|col|topside|xtal|orient|nsew|end|dsize|wafer|SiPosition) #REQUIRED
+<!ATTLIST idField name
+   (layer|tower|tray|row|col|topside|xtal|orient|nsew|diode|wafer|SiPosition) #REQUIRED
    value   NMTOKEN  "0"
    step    NMTOKEN  "0" >
-
-<!--
-    The "layer", "ring" and "sector" entities are short cuts for identifiers
-with corresponding field names.
--->
-
-<!ELEMENT layer EMPTY>
-
-<!ATTLIST layer field  (layer) "layer"
-                value  NMTOKEN  "0"
-                step   NMTOKEN  "0">
-
-
-<!ENTITY % anyIdentifier 'layer   | identifier'>
 
 <!-- do we want the generic parameters?? -->
 <!ENTITY % volumeProperties 'name        ID               #REQUIRED
@@ -674,7 +665,7 @@ with corresponding field names.
         X_Y_Z CDATA "0 0 0"
  (jrb) -->
 
-<!ELEMENT  posXYZ ( %anyIdentifier; )* >
+<!ELEMENT  posXYZ (idField?) >
 <!ATTLIST  posXYZ
            X     NMTOKEN "0"
            Y     NMTOKEN "0"
@@ -684,7 +675,7 @@ with corresponding field names.
            ZREF IDREF   #IMPLIED
            %positionProperties;>
 
-<!ELEMENT  posRPhiZ ( %anyIdentifier; )* >
+<!ELEMENT  posRPhiZ (idField?) >
 <!ATTLIST  posRPhiZ
            R   NMTOKEN "0"
            Phi NMTOKEN "0"
@@ -695,7 +686,7 @@ with corresponding field names.
            impliedRot (true | false) "true"
            %positionProperties;>
 
-<!ELEMENT  mposPhi ( %anyIdentifier; )* >
+<!ELEMENT  mposPhi (idField?) >
 <!ATTLIST  mposPhi
            ncopy     NMTOKEN    "0"
            Phi0      NMTOKEN    "0"
@@ -710,7 +701,7 @@ with corresponding field names.
            impliedRot (true | false) "true"
            %positionProperties;>
 
-<!ELEMENT  mposR ( %anyIdentifier; )* >
+<!ELEMENT  mposR (idField?) >
 <!ATTLIST  mposR
            ncopy     NMTOKEN    "0"
            R0        NMTOKEN    "0"
@@ -724,7 +715,7 @@ with corresponding field names.
            PhiREF    IDREF      #IMPLIED
            %positionProperties;>
 
-<!ELEMENT  mposX ( %anyIdentifier; )* >
+<!ELEMENT  mposX (idField?) >
 <!ATTLIST  mposX
            ncopy     NMTOKEN    "0"
            X0        NMTOKEN    "0"
@@ -738,7 +729,7 @@ with corresponding field names.
            ZREF      IDREF      #IMPLIED
            %positionProperties;>
 
-<!ELEMENT  mposY ( %anyIdentifier; )* >
+<!ELEMENT  mposY (idField?) >
 <!ATTLIST  mposY
            ncopy     NMTOKEN    "0"
            Y0        NMTOKEN    "0"
@@ -752,7 +743,7 @@ with corresponding field names.
            XREF      IDREF      #IMPLIED
            %positionProperties;>
 
-<!ELEMENT  mposZ ( %anyIdentifier; )* >
+<!ELEMENT  mposZ (idField?) >
 <!ATTLIST  mposZ
            ncopy     NMTOKEN    "0"
            Z0        NMTOKEN    "0"
@@ -781,7 +772,7 @@ with corresponding field names.
                                          rotation  NMTOKEN    "0"
                                          %units; '>
 
-<!ELEMENT  axisPos ( %anyIdentifier; )* >
+<!ELEMENT  axisPos (idField?) >
 <!ATTLIST  axisPos
            shift     NMTOKEN    "0"
            shiftREF  IDREF    #IMPLIED
@@ -789,7 +780,7 @@ with corresponding field names.
            gapREF    IDREF    #IMPLIED
            %relativePositionProperties;>
            
-<!ELEMENT  axisMPos ( %anyIdentifier; )* >
+<!ELEMENT  axisMPos (idField?) >
 <!ATTLIST  axisMPos
            ncopy     NMTOKEN    "0"
            ncopyREF  IDREF    #IMPLIED

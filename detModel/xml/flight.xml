@@ -3,15 +3,19 @@
 <!--  $Header$        -->
 <!-- 1 Feb 2001   Default length unit is now mm.  Change constants
                    accordingly.                             (jrb) 
-    22 Feb 2001   Add CVS macros, CVSid attribute for gdd        -->
+    22 Feb 2001   Add CVS macros, CVSid attribute for gdd     
+     1 Mar 2001   Changes for <identifier> to <idField> change in dtd.
+                  Includes combining old pair of diode identifier fields
+                  into just one and ( *sigh* ) eliminating "orient" field.
+-->
 
 <!DOCTYPE gdd SYSTEM "gdd.dtd"
   [
 <!-- Following 4 definitions are used to identify diodes -->
-    <!ENTITY dminus    "0" >
-    <!ENTITY dplus     "1" >
-    <!ENTITY dsmall    "0" >
-    <!ENTITY dlarge    "1" >
+    <!ENTITY dminusSmall    "0" >
+    <!ENTITY dplusSmall     "1" >
+    <!ENTITY dminusLarge    "2" >
+    <!ENTITY dplusLarge     "3" >
   ]
 >
 <gdd CVSid="$Id$" >
@@ -442,6 +446,11 @@ too, but not required.</overview>
     with a tray (i.e., front side and back side, if the tray 
     is one that has both) have the same orientation.  Even-numbered
     trays have Y-strips and odd-numbered trays have X-strips.
+
+    (As of March 1, 2001, had to eliminate the convenience idField
+     for orientation of trays and cal layers.  This information can
+     still be deduced from the rotation attribute of the positioning
+     element
     -->
     
     <box name="towers" 
@@ -489,32 +498,28 @@ too, but not required.</overview>
               YREF="diodeYOffset"
               ZREF="diodeSZOffset"
         >
-        <identifier field="end" value="&dminus;" />
-        <identifier field="dsize" value="&dsmall;" />
+        <idField name="diode" value="&dminusSmall;" />
       </posXYZ>
       <posXYZ volume="diodeS" 
               XREF="diodePosXOffset"
               YREF="diodeYOffset"
               ZREF="diodeSZOffset"
         >
-        <identifier field="end" value="&dplus;" />
-        <identifier field="dsize" value="&dsmall;" />
+        <idField name="diode" value="&dplusSmall;" />
       </posXYZ>
       <posXYZ volume="diodeL" 
               XREF="diodeNegXOffset"
               YREF="diodeYOffset"
               ZREF="diodeLZOffset"
         >
-        <identifier field="end" value="&dminus;" />
-        <identifier field="dsize" value="&dlarge;" />
+        <idField name="diode" value="&dminusLarge;" />
       </posXYZ>
       <posXYZ volume="diodeL" 
               XREF="diodePosXOffset"
               YREF="diodeYOffset"
               ZREF="diodeLZOffset"
         >
-        <identifier field="end" value="&dplus;" />
-        <identifier field="dsize" value="&dlarge;" />
+        <idField name="diode" value="&dplusLarge;" />
       </posXYZ>
     </composition>
 
@@ -522,7 +527,7 @@ too, but not required.</overview>
     <stackY name="CALLayer" >
       <axisMPos volume="CsIElement" ncopyREF="nEltPerLayer"
                 gapREF="CALGap" >
-        <identifier field="xtal" value="0" step="1" />
+        <idField name="xtal" value="0" step="1" />
       </axisMPos>
     </stackY>
 
@@ -540,43 +545,35 @@ too, but not required.</overview>
      layer 0, an X layer.  The Y-layers must be rotated -->
     <stackZ name="CALLayers"  >
       <axisPos volume="CALLayer" rotation="90" >
-        <identifier field="layer" value="7" />
-        <identifier field="orient" value="1" /> <!-- 0 is X, 1 is Y -->
+        <idField name="layer" value="7" />
       </axisPos>
       <axisPos volume="CALSpace" />
       <axisPos volume="CALLayer"  >
-        <identifier field="layer" value="6" />
-        <identifier field="orient" value="0" />
+        <idField name="layer" value="6" />
       </axisPos>
       <axisPos volume="CALSpace" />
       <axisPos volume="CALLayer" rotation="90" >
-        <identifier field="layer" value="5" />
-        <identifier field="orient" value="1" />
+        <idField name="layer" value="5" />
       </axisPos>
       <axisPos volume="CALSpace" />
       <axisPos volume="CALLayer"  >
-        <identifier field="layer" value="4" />
-        <identifier field="orient" value="0" />
+        <idField name="layer" value="4" />
       </axisPos>
       <axisPos volume="CALSpace" />
       <axisPos volume="CALLayer" rotation="90" >
-        <identifier field="layer" value="3" />
-        <identifier field="orient" value="1" />
+        <idField name="layer" value="3" />
       </axisPos>
       <axisPos volume="CALSpace" />
       <axisPos volume="CALLayer"  >
-        <identifier field="layer" value="2" />
-        <identifier field="orient" value="0" />
+        <idField name="layer" value="2" />
       </axisPos>
       <axisPos volume="CALSpace" />
       <axisPos volume="CALLayer" rotation="90" >
-        <identifier field="layer" value="1" />
-        <identifier field="orient" value="1" />
+        <idField name="layer" value="1" />
       </axisPos>
       <axisPos volume="CALSpace" />
       <axisPos volume="CALLayer"  >
-        <identifier field="layer" value="0" />
-        <identifier field="orient" value="0" />
+        <idField name="layer" value="0" />
       </axisPos>
     </stackZ>
 
@@ -678,7 +675,7 @@ too, but not required.</overview>
  -->
     <stackX name="waferRow" origin="atCentre" >
       <axisMPos volume="SiWaferNest" ncopyREF="nWaferAcross">
-        <identifier field="wafer" value="0" step="1" />
+        <idField name="wafer" value="0" step="1" />
       </axisMPos>
     </stackX>
 
@@ -702,55 +699,55 @@ too, but not required.</overview>
       <axisPos volume="TKRCoreNoConv" />
       <axisPos volume="TKRFaceSheet" />
       <axisPos volume="SiLayer" >
-	<identifier field="SiPosition" value="1" /> <!-- 1 means top -->
+	<idField name="SiPosition" value="1" /> <!-- 1 means top -->
       </axisPos>
     </stackZ>
 
     <!-- Stack for middle no-lead trays -->
     <stackZ name="trayNoConv" >
       <axisPos volume="SiLayer" >
-	<identifier field="SiPosition" value="0" /> <!-- 0 means bottom -->
+	<idField name="SiPosition" value="0" /> <!-- 0 means bottom -->
       </axisPos>
       <axisPos volume="TKRFaceSheet" />
       <axisPos volume="TKRCoreNoConv" />
       <axisPos volume="TKRFaceSheet" />
       <axisPos volume="SiLayer" >
-	<identifier field="SiPosition" value="1" /> <!-- 1 means top -->
+	<idField name="SiPosition" value="1" /> <!-- 1 means top -->
       </axisPos>
     </stackZ>
 
     <!-- stack for super-GLAST layers -->
     <stackZ name="traySuper" >
       <axisPos volume="SiLayer" >
-	<identifier field="SiPosition" value="0" /> <!-- 0 means bottom -->
+	<idField name="SiPosition" value="0" /> <!-- 0 means bottom -->
       </axisPos>
       <axisPos volume="convSuper" />
       <axisPos volume="TKRFaceSheet" />
       <axisPos volume="TKRCoreSuper" />
       <axisPos volume="TKRFaceSheet" />
       <axisPos volume="SiLayer" >
-	<identifier field="SiPosition" value="1" /> <!-- 1 means top -->
+	<idField name="SiPosition" value="1" /> <!-- 1 means top -->
       </axisPos>
     </stackZ>
 
     <!-- Regular trays other than top -->
     <stackZ name="trayReg" >
       <axisPos volume="SiLayer" >
-	<identifier field="SiPosition" value="0" /> <!-- 0 means bottom -->
+	<idField name="SiPosition" value="0" /> <!-- 0 means bottom -->
       </axisPos>
       <axisPos volume="convReg" />
       <axisPos volume="TKRFaceSheet" />
       <axisPos volume="TKRCoreReg" />
       <axisPos volume="TKRFaceSheet" />
       <axisPos volume="SiLayer" >
-	<identifier field="SiPosition" value="1" /> <!-- 1 means top -->
+	<idField name="SiPosition" value="1" /> <!-- 1 means top -->
       </axisPos>
     </stackZ>
 
     <!-- top tray -->
     <stackZ name="trayTop" >
       <axisPos volume="SiLayer" >
-	<identifier field="SiPosition" value="0" /> <!-- 0 means bottom -->
+	<idField name="SiPosition" value="0" /> <!-- 0 means bottom -->
       </axisPos>
       <axisPos volume="convReg" />
       <axisPos volume="TKRFaceSheet" />
@@ -761,80 +758,61 @@ too, but not required.</overview>
     <!-- make a tracker by stacking up the trays -->
     <stackZ name="oneTKR" >
       <axisPos volume="trayBot" rotation="90" >
-	<identifier field="tray" value="0" />
-        <identifier field="orient" value="1" /> <!-- 0 is X, 1 is Y -->
+	<idField name="tray" value="0" />
       </axisPos>
       <axisPos volume="trayNoConv" gapREF="outerInterTrayGap" >
-	<identifier field="tray" value="1" />
-        <identifier field="orient" value="0" />
+	<idField name="tray" value="1" />
       </axisPos>
       <axisPos volume="trayNoConv" rotation="90" gapREF="innerInterTrayGap" >
-	<identifier field="tray" value="2" />
-        <identifier field="orient" value="1" />
+	<idField name="tray" value="2" />
       </axisPos>
       <axisPos volume="traySuper" gapREF="innerInterTrayGap" >
-	<identifier field="tray" value="3" />
-        <identifier field="orient" value="0" />
+	<idField name="tray" value="3" />
       </axisPos>
       <axisPos volume="traySuper" rotation="90" gapREF="innerInterTrayGap" >
-	<identifier field="tray" value="4" />
-        <identifier field="orient" value="1" />
+	<idField name="tray" value="4" />
       </axisPos>
       <axisPos volume="traySuper" gapREF="innerInterTrayGap" >
-	<identifier field="tray" value="5" />
-        <identifier field="orient" value="0" />
+	<idField name="tray" value="5" />
       </axisPos>
       <axisPos volume="traySuper" rotation="90" gapREF="innerInterTrayGap" >
-	<identifier field="tray" value="6" />
-        <identifier field="orient" value="1" />
+	<idField name="tray" value="6" />
       </axisPos>
       <axisPos volume="trayReg" gapREF="innerInterTrayGap" >
-	<identifier field="tray" value="7" />
-        <identifier field="orient" value="0" />
+	<idField name="tray" value="7" />
       </axisPos>
       <axisPos volume="trayReg" rotation="90" gapREF="innerInterTrayGap" >
-	<identifier field="tray" value="8" />
-        <identifier field="orient" value="1" />
+	<idField name="tray" value="8" />
       </axisPos>
       <axisPos volume="trayReg" gapREF="innerInterTrayGap" >
-	<identifier field="tray" value="9" />
-        <identifier field="orient" value="0" />
+	<idField name="tray" value="9" />
       </axisPos>
       <axisPos volume="trayReg" rotation="90" gapREF="innerInterTrayGap" >
-	<identifier field="tray" value="10" />
-        <identifier field="orient" value="1" />
+	<idField name="tray" value="10" />
       </axisPos>
       <axisPos volume="trayReg" gapREF="innerInterTrayGap" >
-	<identifier field="tray" value="11" />
-        <identifier field="orient" value="0" />
+	<idField name="tray" value="11" />
       </axisPos>
       <axisPos volume="trayReg" rotation="90" gapREF="innerInterTrayGap" >
-	<identifier field="tray" value="12" />
-        <identifier field="orient" value="1" />
+	<idField name="tray" value="12" />
       </axisPos>
       <axisPos volume="trayReg" gapREF="innerInterTrayGap" >
-	<identifier field="tray" value="13" />
-        <identifier field="orient" value="0" />
+	<idField name="tray" value="13" />
       </axisPos>
       <axisPos volume="trayReg" rotation="90" gapREF="innerInterTrayGap" >
-	<identifier field="tray" value="14" />
-        <identifier field="orient" value="1" />
+	<idField name="tray" value="14" />
       </axisPos>
       <axisPos volume="trayReg" gapREF="innerInterTrayGap" >
-	<identifier field="tray" value="15" />
-        <identifier field="orient" value="0" />
+	<idField name="tray" value="15" />
       </axisPos>
       <axisPos volume="trayReg" rotation="90" gapREF="innerInterTrayGap" >
-	<identifier field="tray" value="16" />
-        <identifier field="orient" value="1" />
+	<idField name="tray" value="16" />
       </axisPos>
       <axisPos volume="trayReg" gapREF="innerInterTrayGap" >
-	<identifier field="tray" value="17" />
-        <identifier field="orient" value="0" />
+	<idField name="tray" value="17" />
       </axisPos>
       <axisPos volume="trayTop" rotation="90" gapREF="innerInterTrayGap" >
-	<identifier field="tray" value="18" />
-        <identifier field="orient" value="1" />
+	<idField name="tray" value="18" />
       </axisPos>
 
     </stackZ>
