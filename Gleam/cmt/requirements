@@ -60,7 +60,7 @@ use AcdDigi     v1r3
 
 #reconstruction
 use Trigger     v3r3p3
-use Recon               v2r3p1
+use Recon               v2r3p2
 
 use TkrRecon    v6r4p4
 use CalRecon    v5r7p2  
