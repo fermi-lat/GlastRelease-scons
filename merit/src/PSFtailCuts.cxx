@@ -5,7 +5,7 @@
 
 #include "PSFtailCuts.h"
 #include "Cut.h"
-#include <strstream>
+#include <sstream>
 #include <cmath>
 //=============================================================================
 class AbsValueCut : public Analyze {
@@ -14,9 +14,9 @@ class AbsValueCut : public Analyze {
         : Analyze(t,name)
         , m_value(value)
     {
-        std::strstream label;
-        label << "abs(" << name << ")<" << value << '\0';
-        set_name(std::string(label.str()));
+        std::stringstream label;
+        label << "abs(" << name << ")<" << value;
+        set_name(label.str());
     }
 
     virtual bool apply() {
