@@ -1,6 +1,7 @@
 /*
 package manager:T.Burnett 
  *         EOH
+ * v2r13   10-Feb-05 lsr Modified TkrId; also fixed tower test
  * v2r12p2 02-Jan-05 lsr back to version of v2r12, after Joanne's mods     
  * v2r12p1 02-Jan-05 lsr revert to previous version until CalibData is straightened out
  * v2r12   01-Jan-05 lsr remove getPlane() and getLayer()

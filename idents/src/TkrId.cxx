@@ -78,7 +78,7 @@ void TkrId::constructorGuts(const VolumeIdentifier& vId)   {
       (vId[fTowerObjects] != eTowerTKR)) {
     throw std::invalid_argument("VolumeIdentifier");
   }
-  if ((vId[fTowerY] > 4) || (vId[fTowerX] > 4)) 
+  if ((vId[fTowerY] > 3) || (vId[fTowerX] > 3)) 
     throw std::invalid_argument("VolumeIdentifier");
   m_packedId = (vId[fTowerY] << SHIFTTowerY) + (vId[fTowerX] << SHIFTTowerX);
   m_packedId |= VALIDTowerY + VALIDTowerX;

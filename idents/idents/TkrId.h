@@ -2,6 +2,7 @@
 #define idents_TKRID_H 1
 
 #include <stdexcept>
+#include <iostream>
 
 namespace idents {
     
@@ -71,7 +72,7 @@ namespace idents {
     enum {
       MASKTowerY = 0x3,
       MASKTowerX = 0x3,
-      MASKTray   = 0x1f,
+      MASKTray   = 0x3f,
       MASKMeas   = 0x1,
       MASKBotTop = 0x1,
       MASKLadder = 0x3,
@@ -82,10 +83,10 @@ namespace idents {
       SHIFTTowerY = 0,
       SHIFTTowerX = 2,
       SHIFTTray   = 4,
-      SHIFTMeas   = 9,
-      SHIFTBotTop = 10,
-      SHIFTLadder = 11,
-      SHIFTWafer  = 13
+      SHIFTMeas   = 10,
+      SHIFTBotTop = 11,
+      SHIFTLadder = 12,
+      SHIFTWafer  = 14
     };
 
     /*
@@ -150,7 +151,10 @@ namespace idents {
     bool hasView() const {return ((m_packedId & VALIDMeas) != 0);}
     unsigned int getView() const {
       if (!(hasView())) throw std::domain_error("No View field");
-      return (m_packedId & SHMASKMeas) >> SHIFTMeas;
+      //std::cout << "from TkrId: " << m_packedId << " " << SHMASKMeas << std::endl;
+      //std::cout << (m_packedId & SHMASKMeas) << " " 
+      //    <<((m_packedId & SHMASKMeas) >> SHIFTMeas) << std::endl;
+     return (m_packedId & SHMASKMeas) >> SHIFTMeas;
     }
 
 
