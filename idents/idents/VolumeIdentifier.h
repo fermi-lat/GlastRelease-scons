@@ -55,7 +55,7 @@ public:
     int size() const { return m_size;}
 
     /// return a name made up with slash delimiters
-    std::string name(const char* delimiter="/")const ;
+    std::string name(const char * delimiter="/")const ;
  
     /// access single ids which constitute the volume identifier
     unsigned int operator[](unsigned int);

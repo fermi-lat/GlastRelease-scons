@@ -44,7 +44,7 @@ class TowerId
       */
       /* don't know why the above was done, but add this comparison to allow sorting */
       //! comparison operator to allow sorting. 
-      operator<(const idents::TowerId& other)const{ return m_id< other.m_id;}
+      bool operator<(const idents::TowerId& other)const{ return m_id< other.m_id;}
 
 
 
