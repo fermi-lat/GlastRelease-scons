@@ -1,6 +1,8 @@
 
 #include "ResultTable.h"
 
+#include <vector>
+
 
 ResultTable::ResultTable(FXComposite *p, FXObject* tgt,
                          FXSelector sel, FXuint opts,FXint x,FXint y,FXint w,
@@ -15,21 +17,29 @@ void ResultTable::format()
 {
   int i,j;
 
-  // Return if table is empty, otherwise store column and row boundary
-  if (ncols < 1 || nrows < 1)
-    return;
+  // for each column, find the maximum width
   
-  //  setLeadingColumns(1);
-  //  setLeadingRows(1);
+  std::vector<int> colWidth(ncols,0);
   
-  for(j = 0; j < ncols; j++)
+  int rowWidth = 0;
+  for (i = 0; i < nrows; i++)
     {
-      //getItem(0,i)->setButton(true);
-      getItem(0,i)->setJustify(FXTableItem::TOP); 
+      int currWidth = getRowText(i).length()*getFont()->getFontWidth();
+      rowWidth = (rowWidth < currWidth) ? currWidth : rowWidth;
     }
-    
-//   for(i = 0; i < nrows; i++)
-//     {
-//       getItem(i,0)->setButton(true);
-//     }
+  setRowHeaderWidth(rowWidth);
+      
+  for (j = 0; j < ncols; j++)
+    colWidth[j] = getColumnWidth(j);
+  
+  for (i = 0; i < nrows; i++)
+    for (j = 0; j < ncols; j++)
+      {
+        setItemJustify(i,j, FXTableItem::LEFT);
+        int currWidth = getItem(i,j)->getWidth(this);
+        colWidth[j] = (colWidth[j] < currWidth) ? currWidth : colWidth[j];
+      }
+
+  for (j = 0; j < ncols; j++)
+    setColumnWidth(j, colWidth[j]);
 }  

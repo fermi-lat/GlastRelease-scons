@@ -332,6 +332,7 @@ long RdbGUIWindow::onSendQuery(FXObject*,FXSelector, void*)
           uiTable->setItemText(i, j, rowValues[j].c_str());
         }
     }
+  uiTable->format();
   return 1;
 }
 
