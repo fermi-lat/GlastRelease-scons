@@ -14,12 +14,12 @@ namespace CalibData {
     Xpos(std::vector<float>* vals=0);
     ~Xpos() {}
 
-    const std::vector<float>* getXpos() const {return &m_xpos;}
+    const std::vector<float>* getVals() const {return &m_vals;}
     /// Deep copy.
     void update(const Xpos* other);
 
   private:
-    std::vector<float> m_xpos;
+    std::vector<float> m_vals;
     
   };
 

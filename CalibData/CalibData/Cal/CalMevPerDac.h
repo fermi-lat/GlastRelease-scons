@@ -41,7 +41,7 @@ namespace CalibData {
 
   private:
 
-    /// Gain and uncertainty for sqrt (P*M), big diode
+    /// Gain and uncertainty for sqrt (P*N), big diode
     ValSig m_big;
     /// Gain and uncertainty for sqrt (P*N), small diode
     ValSig m_small;
