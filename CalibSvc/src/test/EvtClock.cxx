@@ -82,10 +82,6 @@ StatusCode EvtClock::initialize() {
 StatusCode EvtClock::execute( ) {
 
   MsgStream log(msgSvc(), name());
-  log << MSG::INFO 
-      << "------------- NEW EVENT! -------------------------------------------"
-      << endreq;
-  log << MSG::INFO << "Execute()" << endreq;
 
   // Increment the event counter
   m_eventNumber++;
@@ -116,8 +112,6 @@ StatusCode EvtClock::finalize( ) {
   return StatusCode::SUCCESS;
 }
 
-
-//longlong EvtClock::i_evtTime( ) {
 facilities::Timestamp EvtClock::i_evtTime( ) {
 
   return facilities::Timestamp(m_startTime + 

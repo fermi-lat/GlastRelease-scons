@@ -97,10 +97,6 @@ StatusCode UseCalib::initialize() {
 StatusCode UseCalib::execute( ) {
 
   MsgStream log(msgSvc(), name());
-  log << MSG::INFO 
-      << "------------- NEW EVENT! -------------------------------------------"
-      << endreq;
-  log << MSG::INFO << "Execute()" << endreq;
 
   //  SmartDataPtr<CalibData::CalibTest1> test1(m_pCalibDataSvc,
   //                                        CalibData::Test_Gen);
@@ -109,9 +105,23 @@ StatusCode UseCalib::execute( ) {
   
   
   std::string fullPath = CalibData::Test_1 + "/vanilla";
-  CalibData::CalibTest1* test1Copy;
-  m_pCalibDataSvc->retrieveObject(fullPath, test1Copy);
+  DataObject *pObject;
+
+  m_pCalibDataSvc->retrieveObject(fullPath, pObject);
   //  m_pCalibDataSvc->retrieveObject(CalibData::Test_1, test1Copy);
+
+  CalibData::CalibTest1* test1Copy = 0;
+  try {
+    test1Copy = dynamic_cast<CalibData::CalibTest1 *> (pObject);
+  }
+  catch (...) {
+    log << MSG::ERROR << "Dynamic cast to CalibTest1 failed" << endreq;
+    return StatusCode::FAILURE;
+  }
+  log << MSG::INFO 
+      << "Test_1 object, serial #" <<  test1Copy->getSerNo() 
+      << " has value name of "  << test1Copy->getValueName() 
+      << " and value = " << test1Copy->getValue() << endreq;
 
   return StatusCode::SUCCESS;
 }
