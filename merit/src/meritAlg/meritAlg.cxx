@@ -243,6 +243,7 @@ void meritAlg::printOn(std::ostream& out)const{
 StatusCode meritAlg::execute() {
     
     StatusCode  sc = StatusCode::SUCCESS;
+    MsgStream log(msgSvc(), name());
   
     calculate(); // setup Bill's tuple items
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
@@ -255,8 +256,13 @@ StatusCode meritAlg::execute() {
     m_event = header->event();
 
     SmartDataPtr<OnboardFilterTds::FilterStatus> filterStatus(eventSvc(), "/Event/Filter/FilterStatus");
-    m_statusHi=filterStatus->getHigh();
-    m_statusLo=filterStatus->getLow();
+    if( filterStatus ){
+        m_statusHi=filterStatus->getHigh();
+        m_statusLo=filterStatus->getLow();
+    }else{
+        m_statusHi=m_statusLo=0;
+        log << MSG::ERROR << "did not find the filterstatus" << endreq;
+    }
 
     if(m_root_tuple)m_root_tuple->fill();
 
