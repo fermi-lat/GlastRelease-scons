@@ -47,23 +47,31 @@ public:
                      QMATERIAL,              // For access to the contribution from scattering
                      UNKNOWN};               // Unknown
 
-    /// @enum Status word bits organized like:
-    ///        |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
+    /// Status word bits organized like:
+    /// low:   |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
     ///         < volume info  >  <   hit type    > <    track fitting status          >
+    /// high:  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
+    ///                                                                < more hit type >
     enum StatusBits {HITONFIT     = 0x0001,  // Hit is used in the fit
                      HASMEASURED  = 0x0002,  // Hit has valid measured parameters
                      HASPREDICTED = 0x0004,  // Hit has valid predicted parameters
                      HASFILTERED  = 0x0008,  // Hit has valid filtered parameters
                      HASSMOOTHED  = 0x0010,  // Hit has valid smoothed parameters
                      HASMATERIAL  = 0x0020,  // Hit has valid material matrix
-					 UPWARDS      = 0x0040,  // Track direction is upwards (tz > 0)
-					 HITISSSD     = 0x0100,  // Hit comes from a SSD
-					 HITISDEADST  = 0x0200,  // Hit coresponds to a dead SSD Strip
-					 HITISGAP     = 0x0400,  // Hit comes from gap between SSDs
-					 HITISTWR     = 0x0800,  // Hit comes outside live SSD plane
+                     UPWARDS      = 0x0040,  // Track direction is upwards (tz > 0)
+
+                     HITISSSD     = 0x0100,  // Hit comes from a SSD
+                     HITISDEADST  = 0x0200,  // Hit coresponds to a dead SSD Strip
+                     HITISGAP     = 0x0400,  // Hit comes from gap between SSDs
+                     HITISTWR     = 0x0800,  // Hit comes outside live SSD plane
+
                      MEASURESX    = 0x1000,  // Plane measures in X direction
                      MEASURESY    = 0x2000,  // Plane measures in Y direction
-                     HASVALIDTKR  = 0x8000}; // Valid track volume identifier
+                     HASVALIDTKR  = 0x8000,  // Valid track volume identifier
+
+                     HITISUNKNOWN = 0x10000, // Missing cluster, but fails all tests
+                     HITISDEADPLN = 0x20000  // Entire plane is dead
+    };
 
     /// Default (null) constructor (just in case...)
     TkrTrackHit();
