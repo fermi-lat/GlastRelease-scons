@@ -72,6 +72,8 @@ public:
 	double Leak(double sum,double elast);
 	//! Leakage corrections with profile fitting
 	void Profile(double sum, CsICluster* cl);
+	//! Direction reconstruction
+	Vector Fit_Direction(std::vector<Vector> pos,std::vector<Vector> sigma2,int nlayers);
 
 protected:
 
