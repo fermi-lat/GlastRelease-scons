@@ -1,14 +1,13 @@
 #  $Header$
-package calibUtil
 
+package calibUtil
 version v0r0
 
-use xml v4r*
+use xml v4r* 
 use MYSQLEXT v0r*
 # use ROOT
 
 set MYSQL_HOST centaurusa.slac.stanford.edu
-
 
 ## when we've written an actual public header file, uncomment the following:
 apply_pattern package_include
@@ -16,9 +15,26 @@ apply_pattern package_headers
 
 ## Start with static library, but ultimately should be shareable
 ## when there is some c or c++ source, uncomment the following
-library calibUtil -no_share  $(calibUtil_headers) *.cxx *.c
+## library calibUtil -no_share  $(calibUtil_headers) *.cxx *.c
 
-## when there is some sort of a test program
-## application calibUtil_test main.cxx
+
+## library calibUtil -no_share $(headers) \
+##          test/*.cxx \
+##          client.cxx
+
+application client main.cxx StripSrv.cxx GenericSrv.cxx
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
