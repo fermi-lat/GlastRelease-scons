@@ -1,33 +1,34 @@
 // $Id$
-
-
 // File: AlbedoPSpectrum.h
-
-
-//! Calculate the earth albedo proton spectrum in low earth orbit.
-//! Uses data produced by AMS detector, preliminary graphs from web
-//! page.  No angular or geographic dependence included.
-
-//  Patrick Nolan, Stanford University, 1999
-
-/*!Interface:
-The constructor arguments specify the satellite position
-(latitude, longitude) in degrees.
-The position can be changed by use of the setPosition() member.
-The total flux in protons/(m^2 sec ster) is returned by the
-flux() member.  There are 3 ways to call flux(): With no arguments
-it uses the current cutoff energy.  If there is one argument, it
-is assumed to be a cutoff.  Two arguments are assumed to be latitude
-and longitude, and the corresponding cutoff is looked up.  The
-stored current value is not changed.
-The operator() function returns a sampled energy value.  The argument
-must be a float value between 0 and 1.
-The dir() member returns a sampled particle's direction.  The 
-argument is the particle energy, as produced by ().
-*/
-
 #ifndef ALBEDO_P_SPECTRUM_H
 #define ALBEDO_P_SPECTRUM_H
+
+/** 
+* \class AlbedoPSpectrum
+*
+* \brief Calculate the earth albedo proton spectrum in low earth orbit.
+* Uses data produced by AMS detector, preliminary graphs from web
+* page.  No angular or geographic dependence included.  
+*
+* Interface:
+* The constructor arguments specify the satellite position
+* (latitude, longitude) in degrees.
+* The position can be changed by use of the setPosition() member.
+* The total flux in protons/(m^2 sec ster) is returned by the
+* flux() member.  There are 3 ways to call flux(): With no arguments
+* it uses the current cutoff energy.  If there is one argument, it
+* is assumed to be a cutoff.  Two arguments are assumed to be latitude
+* and longitude, and the corresponding cutoff is looked up.  The
+* stored current value is not changed.
+* The operator() function returns a sampled energy value.  The argument
+* must be a float value between 0 and 1.
+* The dir() member returns a sampled particle's direction.  The 
+* argument is the particle energy, as produced by ().
+
+* \author Patrick Nolan, Stanford University, 1999
+* 
+* $Header $
+*/
 
 #include "Spectrum.h"
 #include "facilities/Observer.h"

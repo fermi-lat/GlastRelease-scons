@@ -1,9 +1,17 @@
-// ISpectrum.h: interface for the ISpectrum class.
-//
-//////////////////////////////////////////////////////////////////////
-
 #if !defined(AFX_ISPECTRUM_H__9D00078B_7121_473C_813A_827B2F4126A5__INCLUDED_)
 #define AFX_ISPECTRUM_H__9D00078B_7121_473C_813A_827B2F4126A5__INCLUDED_
+
+/** 
+* \class ISpectrum
+*
+* \brief The virtual interface for Spectrum-type objects.
+*
+* Class for holding function definitions of Spectrums...
+* an abstract base class
+* \author Sean Robinson
+*
+* $Header $
+*/
 
 #if _MSC_VER > 1000
 #pragma once
@@ -25,9 +33,6 @@ class HepRandomEngine;
 class ISpectrum  
 {
     
-    
-    //!  Class for holding function definitions of Spectrums...
-    //!  an abstract base class
 public:
     
     

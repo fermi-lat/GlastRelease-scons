@@ -1,10 +1,15 @@
 // $Header$
-// 
-//!  \author: T. Burnett
-//
-
 #ifndef _H_IFluxSvc
 #define _H_IFluxSvc
+/** 
+* \class IFluxSvc
+*
+* \brief The virtual interface for FluxSvc-type objects.
+*
+* \author Toby Burnett tburnett@u.washington.edu
+* 
+* $Header $
+*/
 
 // includes
 #include "GaudiKernel/IInterface.h"

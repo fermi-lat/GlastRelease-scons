@@ -1,12 +1,15 @@
 // $Header$
-//
-//
-// Spectrum: base class for energy spectrum objects
-// SimpleSpectrum: define a particle and spectral index
-//
-
 #ifndef SIMPLESPECTRUM_H
 #define SIMPLESPECTRUM_H
+/** 
+* \class SimpleSpectrum
+*
+* Spectrum: base class for energy spectrum objects
+* SimpleSpectrum: define a particle and spectral index
+* 
+* $Header $
+*/
+
 #include "Spectrum.h"
 #include <string>
 

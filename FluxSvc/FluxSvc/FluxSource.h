@@ -1,9 +1,15 @@
 //	$Header$
-//	EventSource subclass to take over the functionality of the old Flux class, which implemented
-//	a GISMO based event generation scheme.
 
 #ifndef FluxSource_h
 #define FluxSource_h 1
+/** 
+* \class FluxSource
+*
+* \brief EventSource subclass to take over the functionality of the old Flux class, 
+* which implemented a GISMO based event generation scheme.
+* 
+* $Header $
+*/
 
 #include "FluxSvc/EventSource.h"
 #include "FluxSvc/ISpectrum.h"

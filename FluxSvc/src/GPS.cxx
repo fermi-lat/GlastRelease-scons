@@ -327,8 +327,8 @@ Rotation GPS::rockingAngleTransform(double time){
     //and here we construct the rotation matrix
     double zenithPhase = m_rotangles.first;
     double offZenith = m_rotangles.second;
-    //gal.rotateZ(zenithPhase).rotateX(offZenith);
-    gal.rotateX(offZenith).rotateZ(zenithPhase);
+    gal.rotateZ(zenithPhase).rotateX(offZenith);
+    //gal.rotateX(offZenith).rotateZ(zenithPhase);
     
     return gal;
 }

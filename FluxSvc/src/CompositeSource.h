@@ -2,13 +2,22 @@
 
 #ifndef CompositeSource_h
 #define CompositeSource_h 1
+/** 
+* \class CompositeSource
+*
+* \brief  holds multiple Eventsource objects ; acts as a container for them.
+* Each time an event() is called, CompositeSource goes through a process of deciding 
+* "which source" it is representing this time.  Old particles are held, along with the
+* time of their arrival, until use.
+* 
+* $Header $
+*/
 
 #include "FluxSvc/EventSource.h"
 #include <vector>
 
 class FluxSource;
 
-//! holds multiple Eventsource objects ; acts as a container for them.
 class CompositeSource : public EventSource { 
 public:
     ///    constructor/destructor

@@ -1,10 +1,13 @@
-// SpectrumFactoryTable.h: interface for the SpectrumFactoryTable class.
-//
-//////////////////////////////////////////////////////////////////////
-
 #if !defined(AFX_SPECTRUMFACTORYTABLE_H__E3EDA893_F360_4B4D_9537_0831B21DD02F__INCLUDED_)
 #define AFX_SPECTRUMFACTORYTABLE_H__E3EDA893_F360_4B4D_9537_0831B21DD02F__INCLUDED_
-
+/** 
+* \class [NAME]
+*
+* \brief singleton table holding references to all the spectrum classes.  
+* serves to instantiate new classes based on a name.
+*
+* $Header $
+*/
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
@@ -15,8 +18,6 @@
 #include <list>
 #include "FluxSvc/ISpectrumFactory.h"
 
-//! singleton table holding references to all the spectrum classes.  
-//! serves to instantiate new classes based on a name.
 class SpectrumFactoryTable : public std::map<std::string, const ISpectrumFactory* > 
 {
 public:

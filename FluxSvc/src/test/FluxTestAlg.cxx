@@ -27,7 +27,9 @@
 //#include "FluxAlg.h"
 /*! \class FluxTestAlg
 \brief 
-
+In addition to the normal Gaudi JobOptions requirements, there are:
+FluxSvc.source_lib, which should contain the relevant xml files to be used. and
+FluxTestAlg.source_name, which holds the name of the desired spectrum.
 */
 //class ParticleProperty;
 

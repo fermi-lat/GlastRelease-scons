@@ -1,7 +1,13 @@
 #ifndef FILESpectrum_H
 #define FILESpectrum_H
-// $Heading:$
-// Initial author: Theodore Hierath
+/** 
+* \class FILESpectrum
+*
+* \brief Spectrum that reads its differential spectrum from a table
+* \author Theodore Hierath
+* 
+* $Header $
+*/
 //
 #include "Spectrum.h"
 #include "facilities/Observer.h"
@@ -10,7 +16,6 @@
 #include <map>
 
 
-//!  Spectrum that reads its differential spectrum from a table
 class FILESpectrum : public Spectrum
 {
 public:

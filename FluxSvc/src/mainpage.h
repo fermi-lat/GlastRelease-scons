@@ -3,6 +3,9 @@
 
 /*! \mainpage package FluxSvc
 
+   \authors Toby Burnett, Sean Robinson, Theodore Hierath, and others.
+
+ \section intro Introduction
   This package implements a Gaudi service, encapsulating the flux package. Its only
   function is to return an IFlux object, whose methods are implemented by the flux package.
   <br>
@@ -16,11 +19,12 @@
 
   <hr>
   \section notes release notes
-  \include release.notes
+  release.notes
   \section requirements requirements
   \include requirements
-  \section ChangeLog ChangeLog
-  \include ChangeLog
+  <hr> 
+  \todo Complete and recalibrate the CompositeDiffuse structure
+  \todo Overhaul time handling to use the TimeStamp class.
 
 */
 

@@ -3,6 +3,16 @@
 #ifndef FLUXSVC_FLUX_H
 #define FLUXSVC_FLUX_H
 
+/** 
+* \class Flux
+*
+* \brief The class holding the interface with FluxMgr, EventSource, and FluxSource of the flux package. 
+* Flux is used to get the actual information(energy, name, etc) about the current particle, and to generate new ones,
+* through this interface.
+* \author Toby Burnett
+* 
+* $Header $
+*/
 
 #include "FluxSvc/IFlux.h"
 #include "geometry/CoordTransform.h"
@@ -13,9 +23,6 @@ class EventSource;
 class FluxSource;
 
 
-//!  The class holding the interface with FluxMgr, EventSource, and FluxSource of the flux package.
-//!  Flux is used to get the actual information(energy, name, etc) about the current particle, and to generate
-//!  new ones, through this interface.
 class Flux : public IFlux {
 public:
     /// ctor, select the name

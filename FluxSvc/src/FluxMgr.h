@@ -3,6 +3,18 @@
 #ifndef FLUX_MGR_H
 #define FLUX_MGR_H
 
+/** 
+* \class FluxMgr
+*
+* \brief The point of entry for interfacing with the flux package.
+* holds methods for creating sources and sending new particles, 
+* and methods for interfacing with the satellite position, and 
+* setting the position variables. It is instantiated with
+* the names of the xml files to be used as input to the xml parser.
+* 
+* $Header $
+*/
+
 #include "CompositeSource.h"
 
 #include "FluxSvc/FluxSource.h"
@@ -14,15 +26,8 @@
 #include <map>
 #include <list>
 #include <string>
-//#include "geometry/Point.h"
 #include "geometry/CoordTransform.h"
 
-//! The point of entry for interfacing with the flux package.
-/*! holds methods for creating sources and sending new particles, 
-and methods for interfacing with the satellite position, and 
-setting the position variables. It is instantiated with
-the names of the xml files to be used as input to the xml parser.
-*/
 class FluxMgr 
 {
     
@@ -82,8 +87,8 @@ public:
     Rotation FluxMgr::transformGlastToGalactic(double time);
 private:
     
-    // source library lookup.  Each source is uniquely identified
-    // by its "name" attribute because "name" is of type ID
+    /// source library lookup.  Each source is uniquely identified
+    /// by its "name" attribute because "name" is of type ID
     DOM_Element  getLibrarySource(const DOMString& id);
     
     
@@ -101,7 +106,7 @@ private:
     
     std::vector<DOM_Element>     s_librarylist;
     
-    // list of sources for easy lookup
+    /// list of sources for easy lookup
     std::map<std::string, DOM_Element > m_sources;
     
     /// internal routine that creates the document

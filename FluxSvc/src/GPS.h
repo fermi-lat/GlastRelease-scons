@@ -1,12 +1,16 @@
 // $Header$
-// GPS.h: interface for the GPS class.
-//
-//	Models the Global Positoning System for a spacecraft. Handles time
-//	position, and orientation for the instrument as a whole.
-//////////////////////////////////////////////////////////////////////
 
 #if !defined(_H_GPS_CLASS)
 #define _H_GPS_CLASS
+
+/** 
+* \class GPS
+*
+* \brief Models the Global Positoning System for a spacecraft. Handles time, position, and orientation for the instrument as a whole.
+* 
+* $Header $
+*/
+
 
 #if _MSC_VER > 1000
 #pragma once

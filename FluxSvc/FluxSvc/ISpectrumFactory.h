@@ -1,7 +1,14 @@
-// ISpectrumFactory.h: interface for the ISpectrumFactory class.
-//
-//////////////////////////////////////////////////////////////////////
-
+/** 
+* \class ISpectrumFactory
+*
+* \brief This is an abstract base class for the SpectrumFactory template classes.
+* 
+* \class RemoteSpectrumFactory
+*
+* \brief Template class designed to hold method by which to polymorphically instantiate new Spectrum objects
+*
+* $Header $
+*/
 #if !defined(AFX_ISPECTRUMFACTORY_H__10BF6F57_E416_4B69_A7CF_220E55281676__INCLUDED_)
 #define AFX_ISPECTRUMFACTORY_H__10BF6F57_E416_4B69_A7CF_220E55281676__INCLUDED_
 
@@ -14,7 +21,6 @@
 #include <typeinfo>
 #include <vector>
 
-//!   This is an abstract base class for the SpectrumFactory template classes.
 class ISpectrumFactory
 {
 public:
@@ -28,7 +34,6 @@ public:
 };
 
 
-//!  Template class designed to hold method by which to polymorphically instantiate new Spectrum objects
 template <class T> class RemoteSpectrumFactory : public ISpectrumFactory 
 {
 public:

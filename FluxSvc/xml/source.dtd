@@ -25,8 +25,9 @@
 <!--- special generic spectrum: name is the name of a Spectrum, params an optional comma-delimited list -->
 <!ELEMENT SpectrumClass EMPTY>
 <!ATTLIST SpectrumClass name CDATA #REQUIRED
-                        params CDATA "">
+                        params CDATA " ">
 
+<!--- Here, the particle is declared, along with the name of the particle (we have assumed the name will not come from a Spectrum class).  See EXTLIB/LHCBDBASE/cdf/particle.cdf for a list of accepted names and their associated HEPID numbers.-->
 <!ELEMENT particle (energy | power_law)>
 <!ATTLIST particle name CDATA "gamma" >
 

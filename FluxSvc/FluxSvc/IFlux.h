@@ -1,10 +1,16 @@
 // $Header$
-// 
-//  Original author: Toby Burnett tburnett@u.washington.edu
 
 #ifndef _H_IFlux_
 #define _H_IFlux_
-
+/** 
+* \class IFlux
+*
+* \brief The virtual interface for Flux-type objects.
+*
+* \author Toby Burnett tburnett@u.washington.edu
+* 
+* $Header $
+*/
 
 // includes
 #include <string>

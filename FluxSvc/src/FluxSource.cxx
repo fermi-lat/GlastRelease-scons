@@ -83,7 +83,8 @@ illumBox(0), m_energyscale(GeV)
     if (spec == DOM_Element()) {
         
         // source has no imbedded spectrum element: expect a name
-        class_name = xelem.getAttribute("name").transcode();
+        //class_name = xelem.getAttribute("name").transcode();
+        class_name = xml::Dom::transToChar(xelem.getAttribute("name"));
         useSpectrumDirection(); // and will use its direction generation
         
     } else {
@@ -101,9 +102,9 @@ illumBox(0), m_energyscale(GeV)
         else specType = xml::Dom::getSiblingElement(childNode);
         
         DOMString   typeTagName = specType.getTagName();
-        std::string spectrum_name = spec.getAttribute("name").transcode();
+        std::string spectrum_name = xml::Dom::transToChar(spec.getAttribute("name"));//.transcode();
         //std::string spectrum_frametype = spec.getAttribute("frame").transcode();
-        std::string spectrum_energyscale = spec.getAttribute("escale").transcode();
+        std::string spectrum_energyscale = xml::Dom::transToChar(spec.getAttribute("escale"));//.transcode();
         
         //if(spectrum_frametype == "galactic"){ m_frametype=GALAXY;
         //}else if(spectrum_frametype == "glast"){ m_frametype=GLAST;
@@ -118,12 +119,12 @@ illumBox(0), m_energyscale(GeV)
         if (typeTagName.equals("particle")) s = new SimpleSpectrum(specType);
         else if (typeTagName.equals("SpectrumClass")) {
             // attribute "name" is the class name
-            class_name = specType.getAttribute("name").transcode();
-            source_params= specType.getAttribute("params").transcode();
+            class_name = xml::Dom::transToChar(specType.getAttribute("name"));//.transcode();
+            source_params= xml::Dom::transToChar(specType.getAttribute("params"));//.transcode();
         }
         else {
             // no, the tag itself
-            class_name = typeTagName.transcode();
+            class_name = xml::Dom::transToChar(typeTagName);//.transcode();
         }
         // second child element is angle
         DOM_Element angles = xml::Dom::getSiblingElement(specType);
@@ -131,17 +132,17 @@ illumBox(0), m_energyscale(GeV)
         DOMString anglesTag = angles.getTagName();
         
         if (anglesTag.equals("solid_angle") ) {
-            setLaunch(atof(angles.getAttribute("theta").transcode()) * d2r, 
-                atof(angles.getAttribute("phi").transcode()) *d2r);
-            setCosThetaRange(atof(angles.getAttribute("mincos").transcode()),
-                atof(angles.getAttribute("maxcos").transcode())  );
+            setLaunch(atof(xml::Dom::transToChar(angles.getAttribute("theta"))) * d2r, 
+                atof(xml::Dom::transToChar(angles.getAttribute("phi"))) *d2r);
+            setCosThetaRange(atof(xml::Dom::transToChar(angles.getAttribute("mincos"))),
+                atof(xml::Dom::transToChar(angles.getAttribute("maxcos")))  );
         }
         else if (anglesTag.equals("direction") ) {
-            setLaunch(atof(angles.getAttribute("theta").transcode()) * d2r, 
-                atof(angles.getAttribute("phi").transcode()) *d2r);
+            setLaunch(atof(xml::Dom::transToChar(angles.getAttribute("theta"))) * d2r, 
+                atof(xml::Dom::transToChar(angles.getAttribute("phi"))) *d2r);
         }
         else if (anglesTag.equals("use_spectrum") ) {
-            std::string frame = angles.getAttribute("frame").transcode();
+            std::string frame = xml::Dom::transToChar(angles.getAttribute("frame"));
             //if(angles.getAttribute("frame")/*.transcode()*/ == "galaxy"){          
             if(frame == "galaxy"){
                 m_launch=SPECGAL;
@@ -150,15 +151,15 @@ illumBox(0), m_energyscale(GeV)
             }
         }
         else if(anglesTag.equals("galactic_dir")){
-            m_galb=atof(angles.getAttribute("b").transcode());
-            m_gall=atof(angles.getAttribute("l").transcode());
-            getGalacticDir(atof(angles.getAttribute("l").transcode()),
-                atof(angles.getAttribute("b").transcode()) );
+            m_galb=atof(xml::Dom::transToChar(angles.getAttribute("b")));
+            m_gall=atof(xml::Dom::transToChar(angles.getAttribute("l")));
+            getGalacticDir(atof(xml::Dom::transToChar(angles.getAttribute("l"))),
+                atof(xml::Dom::transToChar(angles.getAttribute("b"))) );
             m_launch=GALACTIC;
         }
         else {
             FATAL_MACRO("Unknown angle specification in Flux::Flux \""
-                << anglesTag.transcode() << "\"" );
+                << xml::Dom::transToChar(anglesTag) << "\"" );
         }
         
         // third child element is optional launch spec
@@ -172,9 +173,9 @@ illumBox(0), m_energyscale(GeV)
                 LaunchType templaunch=m_launch;
                 // assume that the launch direction was set by a direction!
                 setLaunch(/*launchDir()*/m_launchDir, 
-                    Point(atof(launch.getAttribute("x").transcode()),
-                    atof(launch.getAttribute("y").transcode()),
-                    atof(launch.getAttribute("z").transcode()) ) );
+                    Point(atof(xml::Dom::transToChar(launch.getAttribute("x"))),
+                    atof(xml::Dom::transToChar(launch.getAttribute("y"))),
+                    atof(xml::Dom::transToChar(launch.getAttribute("z"))) ) );
                 m_launch=templaunch;
                 
             }else if(launchTag.equals("patch")){
@@ -185,12 +186,12 @@ illumBox(0), m_energyscale(GeV)
                 //setLaunch(launchDir().theta(), launchDir().phi(),
                 
                 setLaunch( /*m_launchDir*/(-launchDir()).theta(), /*m_launchDir*/(-launchDir()).phi(),
-                    atof(launch.getAttribute("xmax").transcode()),
-                    atof(launch.getAttribute("xmin").transcode()),
-                    atof(launch.getAttribute("ymax").transcode()),
-                    atof(launch.getAttribute("ymin").transcode()), 
-                    atof(launch.getAttribute("zmax").transcode()),
-                    atof(launch.getAttribute("zmin").transcode()) 
+                    atof(xml::Dom::transToChar(launch.getAttribute("xmax"))),
+                    atof(xml::Dom::transToChar(launch.getAttribute("xmin"))),
+                    atof(xml::Dom::transToChar(launch.getAttribute("ymax"))),
+                    atof(xml::Dom::transToChar(launch.getAttribute("ymin"))), 
+                    atof(xml::Dom::transToChar(launch.getAttribute("zmax"))),
+                    atof(xml::Dom::transToChar(launch.getAttribute("zmin"))) 
                     );
                 
                 m_launch=templaunch;
@@ -198,7 +199,7 @@ illumBox(0), m_energyscale(GeV)
                 
             }else {
                 FATAL_MACRO("Unknown launch specification in Flux::Flux \""
-                    << launchTag.transcode() << "\"" );
+                    << xml::Dom::transToChar(launchTag) << "\"" );
             }
         } 
         

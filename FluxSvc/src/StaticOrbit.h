@@ -1,13 +1,20 @@
 // $Id$
-// Specification for the static orbit class
-// Author: Sawyer Gillespie - hgillesp@u.washington.edu
+/** 
+* \class StaticOrbit
+*
+* \brief Child-class of the Orbit class which defines a static - specifiable
+* orbit designed for situations in which the orbit is specified by some
+* external data source.
+*
+* \author Sawyer Gillespie - hgillesp@u.washington.edu
+* 
+* $Header $
+*/
+
 
 #include "flux/Orbit.h"
 
 
-//! Child-class of the Orbit class which defines a static - specifiable
-//! orbit designed for situations in which the orbit is specified by some
-//! external data source.
 class StaticOrbit : public Orbit {
 public:
     StaticOrbit (double lt = 0., double ln = 0.) : m_lat(lt), m_lon(ln) {}

@@ -1,39 +1,42 @@
 // $Id$
-
-// File: HeSpectrum.h
-//
-//! Calculate the cosmic ray 4He spectrum in low earth orbit.
-//! Uses data produced by CHIME, assuming 600 km circular orbit
-//!  at solar minimum (worst case).
-//!  Patrick Nolan, Stanford University, 1998
-//
-/*! Interface:
-The constructor arguments specify the satellite position
-(latitude, longitude) in degrees.
-The position can be changed by use of the setPosition() member.
-The total flux in nuclei/(m^2 sec ster) is returned by the
-flux() member.  There are 3 ways to call flux(): With no arguments
-it uses the current cutoff energy.  If there is one argument, it
-is assumed to be a cutoff.  Two arguments are assumed to be latitude
-and longitude, and the corresponding cutoff is looked up.  The
-stored current value is not changed.
-Cutoff energies are returned by FindCutoff().  With no arguments,
-it returns the stored current value.  Two arguments are assumed
-to be latitude and longitude, and the corresponding cutoff is
-looked up.
-The operator() function returns a sampled energy value.  The argument
-must be a float value between 0 and 1.
-The dir() member returns a sampled particle's energy and direction.
-The argument is a value between 0 and 1, which is used to produce
-the energy, as in operator().  The direction is based on simple
-Stormer cone theory.  The first component of the direction is the
-zenith direction cosine: +1 for particles moving downward.  The 
-second component of the direction is the earth azimuth angle: 0
-from the east, +pi/2 from the north, -pi/2 from the south.  At
-energies near the cutoff, particles come mainly from the west.
-*/
 #ifndef HE_SPECTRUM_H
 #define HE_SPECTRUM_H
+/** 
+* \class HeSpectrum
+*
+* \brief Calculate the cosmic ray 4He spectrum in low earth orbit.
+*
+* Uses data produced by CHIME, assuming 600 km circular orbit
+* at solar minimum (worst case).
+* <hr>
+* Interface:
+* The constructor arguments specify the satellite position
+* (latitude, longitude) in degrees.
+* The position can be changed by use of the setPosition() member.
+* The total flux in nuclei/(m^2 sec ster) is returned by the
+* flux() member.  There are 3 ways to call flux(): With no arguments
+* it uses the current cutoff energy.  If there is one argument, it
+* is assumed to be a cutoff.  Two arguments are assumed to be latitude
+* and longitude, and the corresponding cutoff is looked up.  The
+* stored current value is not changed.
+* Cutoff energies are returned by FindCutoff().  With no arguments,
+* it returns the stored current value.  Two arguments are assumed
+* to be latitude and longitude, and the corresponding cutoff is
+* looked up.
+* The operator() function returns a sampled energy value.  The argument
+* must be a float value between 0 and 1.
+* The dir() member returns a sampled particle's energy and direction.
+* The argument is a value between 0 and 1, which is used to produce
+* the energy, as in operator().  The direction is based on simple
+* Stormer cone theory.  The first component of the direction is the
+* zenith direction cosine: +1 for particles moving downward.  The 
+* second component of the direction is the earth azimuth angle: 0
+* from the east, +pi/2 from the north, -pi/2 from the south.  At
+* energies near the cutoff, particles come mainly from the west.
+* \author Patrick Nolan, Stanford University, 1998
+* 
+* $Header $
+*/
 
 #include "Spectrum.h"
 #include "facilities/Observer.h"

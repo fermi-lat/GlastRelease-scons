@@ -1,33 +1,38 @@
 // $Header$
 // Original author: P. L. Nolan, pln@egret1.Stanford.EDU
-//
-//! A quick and dirty implementation of the high-energy (galactic) cosmic
-//! ray spectrum.
-/*! The spectrum is the power law found in Barwick et al., ApJ 498, 779 (1998).
-The low-energy rollover is ignored.
-Also ignored are the east-west effect and the gradual nature of the
-geomagnetic cutoff.  The power law is cut off sharply at the cutoff
-energy and directions are isotropic above the  horizon.
-The cutoff energy is obtained by querying a CHIMESpectrum object and
-adjusting for the smaller mass of the electron.  (Actually the electron
-mass is assumed to be zero.)
 
-  As with CHIMESpectrum, the flux normalization is handled in a screwy
-  way.  We should come up with a better way to handle this.
-  The value returned is in electrons/(m^2 sec ster), as if it was
-  isotropic.  This value is obtained by taking the observed isotropic
-  flux and multiplying by a correction factor for the fraction of the
-  sky blocked by the earth.  Thus the total integrated flux in
-  electrons/(m^2 sec) can be obtained by multiplying by 4*pi.
-*/
 /*
 Notation: probably one of those things is called "flux" and the other
 is something else.  Can someone look it up?
 */
-// P. L. Nolan, April 1999
 
 #ifndef GAL_EL_SPECTRUM_H
 #define GAL_EL_SPECTRUM_H
+
+/** 
+* \class GalElSpectrum
+*
+* \brief A quick and dirty implementation of the high-energy (galactic) cosmic ray spectrum.
+* The spectrum is the power law found in Barwick et al., ApJ 498, 779 (1998).
+* The low-energy rollover is ignored.
+* Also ignored are the east-west effect and the gradual nature of the
+* geomagnetic cutoff.  The power law is cut off sharply at the cutoff
+* energy and directions are isotropic above the  horizon.
+* The cutoff energy is obtained by querying a CHIMESpectrum object and
+* adjusting for the smaller mass of the electron.  (Actually the electron
+* mass is assumed to be zero.)
+
+*  As with CHIMESpectrum, the flux normalization is handled in a screwy
+*  way.  We should come up with a better way to handle this.
+*  The value returned is in electrons/(m^2 sec ster), as if it was
+*  isotropic.  This value is obtained by taking the observed isotropic
+*  flux and multiplying by a correction factor for the fraction of the
+*  sky blocked by the earth.  Thus the total integrated flux in
+*  electrons/(m^2 sec) can be obtained by multiplying by 4*pi.
+* \author P. L. Nolan, April 1999
+* 
+* $Header $
+*/
 
 
 #include "Spectrum.h"

@@ -1,11 +1,14 @@
-// SpectrumFactory.h: interface for the SpectrumFactory class.
-//
-//////////////////////////////////////////////////////////////////////
 // $Header$
 
 #if !defined(AFX_SPECTRUMFACTORY_H__211C2F25_9111_44B9_B357_0762789222AF__INCLUDED_)
 #define AFX_SPECTRUMFACTORY_H__211C2F25_9111_44B9_B357_0762789222AF__INCLUDED_
-
+/** 
+* \class SpectrumFactory
+*
+* \brief Template class designed to hold method by which to polymorphically instantiate new Spectrum objects 
+* 
+* $Header $
+*/
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
@@ -15,8 +18,6 @@
 #include <typeinfo>
 #include <vector>
 
-
-//!  Template class designed to hold method by which to polymorphically instantiate new Spectrum objects
 
 template <class T> class SpectrumFactory : public ISpectrumFactory 
 {

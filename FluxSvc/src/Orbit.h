@@ -3,33 +3,36 @@
 
 #ifndef ORBIT_H
 #define ORBIT_H
-
-// Orbit
-//
-//! Calculates the position of a satellite in a low, circular orbit.
-//! The path is assumed to go to the east, with the rotation of the earth,
-//! as is the case for most satellite orbits.
-//! All angles are expressed in degrees.  Longitude increases to the east.
-//
-/*! Constructor:
-The three arguments are
-1.  Longitude of the ascending node (where the orbit crosses
-the equator, moving northward) in degrees
-2.  Altitude in kilometers.  Defaults to 600.
-3.  Orbital inclination in degrees.  Defaults to 28.5.
-
-  Member functions:
-  latitude(time) and longitude(time) give the position of the
-  satellite (in degrees) when "time" minutes have elapsed since 
-  the ascending node passage.  longitude is between 0 and 360.
-  coords(time) returns the latitude and longitude as a pair<double,double>.
-  period() returns the period of the orbit (in minutes).
-  inclination(), altitude(), and ascendingLon() return the parameters
-  used in the constructor, in case you forget.
-  
-    There is no need for an explicit destructor, copy constructor,
-    or assignment operator.
+/** 
+* \class Orbit
+*
+* \brief Calculates the position of a satellite in a low, circular orbit.
+*
+* The path is assumed to go to the east, with the rotation of the earth,
+* as is the case for most satellite orbits.
+* All angles are expressed in degrees.  Longitude increases to the east.
+* <hr>
+* Constructor:
+* The three arguments are
+* 1.  Longitude of the ascending node (where the orbit crosses
+* the equator, moving northward) in degrees
+* 2.  Altitude in kilometers.  Defaults to 600.
+* 3.  Orbital inclination in degrees.  Defaults to 28.5.
+* <hr>
+* Member functions:
+* latitude(time) and longitude(time) give the position of the
+* satellite (in degrees) when "time" minutes have elapsed since 
+* the ascending node passage.  longitude is between 0 and 360.
+* coords(time) returns the latitude and longitude as a pair<double,double>.
+* period() returns the period of the orbit (in minutes).
+* inclination(), altitude(), and ascendingLon() return the parameters
+* used in the constructor, in case you forget.
+* There is no need for an explicit destructor, copy constructor,
+* or assignment operator.
+* 
+* $Header $
 */
+
 #include <utility>        // for STL pairs
 #include "geometry/CoordTransform.h"
 

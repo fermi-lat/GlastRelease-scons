@@ -1,12 +1,19 @@
 // $Header$
-//
-//
-// Spectrum: base class for energy spectrum objects
-// SimpleSpectrum: define a particle and spectral index
-//
+
 
 #ifndef GLAST_SPECTRUM_H
 #define GLAST_SPECTRUM_H
+
+/** 
+* \class Spectrum
+*
+* \brief base class for energy spectrum objects
+*
+* Spectrum is the base class for all of the particle sources 
+* internal to FluxSvc.
+* 
+* $Header $
+*/
 
 #include <string>
 #include <utility>

@@ -1,6 +1,16 @@
 // CompositeDiffuse.h: interface for the CompositeDiffuse class.
-//
-//////////////////////////////////////////////////////////////////////
+/** 
+* \class CompositeDiffuse
+*
+* \brief CompositeDiffuse functions like CompositeSource, with added point sources
+* CompositeDiffuse takes not only a list of initial sources, but also a total flux 
+* over the whole sky.  It then attempts to fill in the remaining flux by generating point sources according
+* to a logN/logS characteristic.
+* \author Sean Robinson, University of Washington, 2002
+* 
+* $Header $
+*/
+
 #include "FluxSvc/EventSource.h"
 #include "CompositeSource.h"
 #include <vector>

@@ -4,6 +4,17 @@
 #ifndef EventSource_h
 #define EventSource_h 1
 
+/** 
+* \class EventSource
+*
+* \brief  Interface to the EventSource class. Provides a generic interface to 
+* what Glastsim uses as a data source.  This can constitute GISMO based 
+* event generation, reading in from a file, etc...
+* 
+* $Header $
+*/
+
+
 #include <string>
 
 #include "../src/GPS.h"
@@ -13,9 +24,6 @@ class DOM_Element;
 class FluxSource;
 
 
-//! Interface to the EventSource class. Provides a generic interface to 
-//! what Glastsim uses as a data source.  This can constitute GISMO based 
-//! event generation, reading in from a file, etc...
 class EventSource
 {
 public:
