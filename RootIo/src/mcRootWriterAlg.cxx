@@ -531,7 +531,8 @@ void mcRootWriterAlg::writeEvent()
 
     static int eventCounter = 0;
     TDirectory *saveDir = gDirectory;
-    m_mcFile->cd();
+    m_mcTree->GetCurrentFile()->cd();
+    //m_mcFile->cd();
     m_mcTree->Fill();
     //m_mcEvt->Clear();
     saveDir->cd();
@@ -544,15 +545,18 @@ void mcRootWriterAlg::writeEvent()
 void mcRootWriterAlg::close() 
 {
     // Purpose and Method:  Writes the ROOT file at the end of the run.
-    //    The TObject::kOverWrite parameter is used in the Write method
+    //    The TObject::kWriteDelete parameter is used in the Write method
+    //    Used rather than TObject::kOverwrite - supposed to be safer but slower
     //    since ROOT will periodically write to the ROOT file when the bufSize
     //    is filled.  Writing would create 2 copies of the same tree to be
     //    stored in the ROOT file, if we did not specify kOverwrite.
 
     TDirectory *saveDir = gDirectory;
-    m_mcFile->cd();
-    m_mcFile->Write(0, TObject::kOverwrite);
-    m_mcFile->Close();
+    TFile *f = m_mcTree->GetCurrentFile();
+    f->cd();
+    //m_mcFile->cd();
+    f->Write(0, TObject::kWriteDelete);
+    f->Close();
     saveDir->cd();
     return;
 }
