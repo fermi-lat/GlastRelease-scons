@@ -7,22 +7,22 @@
 // Include files
 #include "GlastEventSelector.h"
 
-#include "Gaudi/MessageSvc/MsgStream.h"
+#include "GaudiKernel/MsgStream.h"
 
-#include "Gaudi/Kernel/StatusCode.h"
-#include "Gaudi/Kernel/SvcFactory.h"
-#include "Gaudi/Kernel/AddrFactory.h"
+#include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/AddrFactory.h"
 
-#include "Gaudi/Interfaces/IDataProviderSvc.h"
-#include "Gaudi/JobOptionsSvc/Property.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/Property.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "instrument/DetectorConverter.h"
 #include "instrument/Scintillator.h"
 
-#include "GlastEvent/TopLevel/ObjectVector.h"
+#include "GaudiKernel/ObjectVector.h"
 
-extern const CLID& CLID_Event;
+extern const CLID CLID_Event;
 
 // Glast address factory
 extern unsigned char GLAST_StorageType;

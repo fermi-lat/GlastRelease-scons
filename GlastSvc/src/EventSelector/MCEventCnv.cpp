@@ -9,7 +9,7 @@
 #define CNV_MCEVENTCNV_CPP 
 
 // Include files
-#include "Gaudi/Kernel/CnvFactory.h"
+#include "GaudiKernel/CnvFactory.h"
 #include "MCEventCnv.h"
 #include "GlastEvent/TopLevel/MCEvent.h"
 

@@ -7,11 +7,11 @@
 #define IrfTkrLayerCnv_CPP 
 
 // Include files
-#include "Gaudi/Kernel/CnvFactory.h"
-#include "Gaudi/Interfaces/IDataProviderSvc.h"
+#include "GaudiKernel/CnvFactory.h"
+#include "GaudiKernel/IDataProviderSvc.h"
 #include "GlastEvent/TopLevel/ObjectVector.h"
 #include "GlastEvent/Irf/IrfTkrLayer.h"
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+#include "GaudiKernel/IGlastDetSvc.h"
 
 #include "src/EventSelector/IRFConverter.h"
 

@@ -9,7 +9,7 @@
 
 
 #include "idents/ModuleId.h"
-#include "GlastEvent/TopLevel/ObjectVector.h"
+#include "GaudiKernel/ObjectVector.h"
 
 #include "src/data/TdSiData.h"
 #include "src/data/TdCsIData.h"

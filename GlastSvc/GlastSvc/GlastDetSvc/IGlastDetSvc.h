@@ -7,7 +7,7 @@
 #define _H_IGlastDetSvc_
 
 // includes
-#include "Gaudi/Interfaces/IInterface.h"
+#include "GaudiKernel/IInterface.h"
 
 //forward declarations
 
@@ -15,6 +15,8 @@ class DetectorConverter;
 class GlastDetector;
 namespace xml {class IFile; }
 
+// Declaration of the interface ID ( interface id, major version, minor version) 
+static const InterfaceID IID_IGlastDetSvc(901, 1 , 0); 
 //!  Access to the Glast detector geometry and IRF I/O
 
 class   IGlastDetSvc : virtual public IInterface {
@@ -40,10 +42,12 @@ public:
     //! set new root detector
     virtual void setDetector(GlastDetector* d)=0;
 
+	    /// Retrieve interface ID
+    static const InterfaceID& interfaceID() { return IID_IGlastDetSvc; }
+
 
 };
 
-// IID declaration
-extern const IID&   IID_IGlastDetSvc;
+
 
 #endif  // _H_IGlastDetSvc_

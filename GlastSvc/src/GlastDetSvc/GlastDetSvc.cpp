@@ -7,8 +7,8 @@
 #include "GlastDetSvc.h"
 
 #include <fstream>
-#include "Gaudi/Kernel/SvcFactory.h"
-#include "Gaudi/MessageSvc/MsgStream.h"
+#include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/MsgStream.h"
 #include "instrument/Instrument.h"
 #include "xml/IFile.h"
 
@@ -169,4 +169,5 @@ extern void WARNING ( const char* msg )
 {
     (*s_log) << MSG::WARNING << msg << endreq;
 }
+
 

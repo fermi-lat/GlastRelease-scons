@@ -8,15 +8,15 @@
 // Include files
 #include "CreateEvent.h"
 
-#include "Gaudi/MessageSvc/MsgStream.h"
-#include "Gaudi/Kernel/AlgFactory.h"
-#include "Gaudi/Interfaces/IDataProviderSvc.h"
-#include "Gaudi/DataSvc/SmartDataPtr.h"
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/SmartDataPtr.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "GlastEvent/TopLevel/EventModel.h"
 #include "GlastEvent/TopLevel/Event.h"
-#include "GlastEvent/TopLevel/ObjectVector.h"
+#include "GaudiKernel/ObjectVector.h"
 
 
 #include "GlastEvent/TopLevel/IrfEvent.h"

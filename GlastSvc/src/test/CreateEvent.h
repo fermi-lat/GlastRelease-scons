@@ -4,7 +4,7 @@
 
 
 // Include files
-#include "Gaudi/Algorithm/Algorithm.h"
+#include "GaudiKernel/Algorithm.h"
 
 
 // forward declarations

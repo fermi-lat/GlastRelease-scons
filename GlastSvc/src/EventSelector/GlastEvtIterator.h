@@ -11,9 +11,9 @@
 #define GLASTCNV_GLASTEVENTSELECTORITERATOR_H 1
 
 // Include files
-#include "Gaudi/Interfaces/IEvtSelector.h"
-#include "Gaudi/Interfaces/ISvcLocator.h"
-#include "Gaudi/Kernel/Service.h"
+#include "GaudiKernel/IEvtSelector.h"
+#include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/Service.h"
 
 #include <list>
 #include <string>

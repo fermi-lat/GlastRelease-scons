@@ -5,7 +5,7 @@
 #include <map>
 
 // Include files
-#include "Gaudi/PersistencySvc/ConversionSvc.h"
+#include "GaudiKernel/ConversionSvc.h"
 #include "IEventCnvSvc.h"
 
 

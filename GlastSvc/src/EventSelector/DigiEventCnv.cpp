@@ -6,7 +6,7 @@
 #define CNV_DIGIEVENTCNV_CPP 
 
 // Include files
-#include "Gaudi/Kernel/CnvFactory.h"
+#include "GaudiKernel/CnvFactory.h"
 #include "DigiEventCnv.h"
 #include "GlastEvent/TopLevel/DigiEvent.h"
 

@@ -3,7 +3,7 @@
 #define GLASTCNV_GLASTADDRESS_H 1
 
 // Include files
-#include "Gaudi/Kernel/GenericAddress.h"
+#include "GaudiKernel/GenericAddress.h"
 //typedef GenericAddress GlastIRFAddress;
 
 //------------------------------------------------------------------------------

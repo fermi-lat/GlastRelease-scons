@@ -2,7 +2,7 @@
 #define GLASTCNV_GLASTADDRESS_CPP 
 
 // Include files
-#include "Gaudi/Kernel/AddrFactory.h"
+#include "GaudiKernel/AddrFactory.h"
 #include "GlastSvc/TopLevel/GlastIRFAddress.h"
 
 // RCS Id for identification of object version

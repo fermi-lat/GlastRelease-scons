@@ -12,7 +12,7 @@
 
 // Include files
 #include <string>
-#include "Gaudi/Interfaces/IInterface.h"
+#include "GaudiKernel/IInterface.h"
 
 /**
 

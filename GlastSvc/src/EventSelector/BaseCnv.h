@@ -12,7 +12,7 @@
 // Include files
 #include <vector>
 #include <string>
-#include "Gaudi/Kernel/Converter.h"
+#include "GaudiKernel/Converter.h"
 #include "IEventCnvSvc.h"
 
 // HMA:  Took SicbBaseCnv and just renamed the class...
@@ -22,7 +22,7 @@ class IEventCnvSvc;
 class IGlastDetSvc;
 
 // external declarations
-extern unsigned char SICB_StorageType;
+extern unsigned const char SICB_StorageType;
 
 /**
 

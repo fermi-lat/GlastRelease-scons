@@ -6,13 +6,13 @@
 #include "idents/ModuleId.h"
 #include "data/SiData.h"
 
-#include "Gaudi/Kernel/Kernel.h"
-#include "Gaudi/Kernel/DataObject.h"
-#include "Gaudi/Kernel/SmartRefVector.h"
+#include "GaudiKernel/Kernel.h"
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/SmartRefVector.h"
 #include "GlastEvent/TopLevel/Definitions.h"
 #include "GlastEvent/Utilities/CellID.h"
-#include "GlastEvent/TopLevel/ObjectVector.h"
-#include "GlastEvent/TopLevel/ObjectList.h"
+#include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/ObjectList.h"
 
 
 #include <iostream>

@@ -4,7 +4,7 @@
 
 // Include files
 #include <iostream>
-#include "Gaudi/Kernel/AddrFactory.h"
+#include "GaudiKernel/AddrFactory.h"
 #include "Address.h"
 
 // RCS Id for identification of object version

@@ -6,8 +6,8 @@
 // Include files
 #include <string>
 #include <vector>
-#include "Gaudi/Kernel/StatusCode.h"
-#include "Gaudi/Kernel/GenericAddress.h"
+#include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/GenericAddress.h"
 
 
 // Forward declarations
@@ -15,7 +15,7 @@ class IDataDirectory;
 
 
 // Externals
-extern unsigned char SICB_StorageType;
+extern unsigned const char SICB_StorageType;
 
 
 //------------------------------------------------------------------------------

@@ -3,10 +3,10 @@
 
 
 // Include files
-#include "Gaudi/Kernel/CnvFactory.h"
-#include "Gaudi/DataSvc/RegistryEntry.h"
+#include "GaudiKernel/CnvFactory.h"
+#include "GaudiKernel/RegistryEntry.h"
 #include "EventCnv.h"
-#include "Gaudi/MessageSvc/MsgStream.h"
+#include "GaudiKernel/MsgStream.h"
 
 #include "GlastEvent/TopLevel/Event.h"
 

@@ -3,10 +3,10 @@
 
 
 // Include files
-#include "Gaudi/Interfaces/IDataProviderSvc.h"
-#include "Gaudi/Interfaces/IDataDirectory.h"
-#include "Gaudi/Kernel/DataObject.h"
-#include "Gaudi/DataSvc/RegistryEntry.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IDataDirectory.h"
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/RegistryEntry.h"
 #include "Address.h"
 #include "ItemCnv.h"
 

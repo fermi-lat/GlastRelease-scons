@@ -8,8 +8,8 @@
 #define _H_GlastDetSvc_
 
 // includes
-#include "Gaudi/Kernel/Service.h"
-#include "Gaudi/Interfaces/IEvtSelector.h"
+#include "GaudiKernel/Service.h"
+#include "GaudiKernel/IEvtSelector.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 // forward declarations
@@ -72,6 +72,10 @@ public:
   
     //! set new root detector
     void setDetector(GlastDetector* d);
+
+	/// Query interface
+//    virtual StatusCode queryInterface( const IID& riid, void** ppvUnknown );
+
 
     
 private:

@@ -4,13 +4,16 @@ version v1r4
 branches src mgr doc
 
 use instrument 
-use Gaudi v8
 use data 
 use GlastEvent
 
-use GaudiSvc v4
-use Auditors v1
-use RootHistCnv v1r1
+#use GaudiSvc v4
+#use Auditors v1
+#use RootHistCnv v1r1
+
+use GaudiSvc 
+use GaudiAud 
+use RootHistCnv 
 
 
 library GlastSvc ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
@@ -31,8 +34,10 @@ macro GlastSvc_stamps     ""                              \
       LinuxStaticdbx      "$(GlastSvcDir)/GlastSvc.stamp" \
       VisualCStatic       "$(GlastSvcDir)/GlastSvc.stamp"
 
+ignore_pattern include_none
+apply_pattern package_include
 
-set   GlastSvcShr           "${GLASTSVCROOT}/${DEBUGDIR}/libGlastSvc"
+#set   GlastSvcShr           "${GLASTSVCROOT}/${DEBUGDIR}/libGlastSvc"
 
 
 private
@@ -45,7 +50,7 @@ include_path $(GLASTSVCROOT)
 # for the moment, use libraryshr_linkopts to fix red hat 6.2 linking problem
 #macro GlastSvc_shlibflags   "$(componentshr_linkopts) $(use_linkopts)" \
 macro GlastSvc_shlibflags   "$(libraryshr_linkopts) $(use_linkopts)" \
-                 VisualC  "Service.obj Converter.obj DataObject.obj $(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
+                 VisualC  "$(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
 
 
 # WinIncludes is to allow header files to be added to the 

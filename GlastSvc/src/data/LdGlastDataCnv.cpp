@@ -4,9 +4,9 @@
 
 #define LdGlastDataCnv_CPP
 
-#include "Gaudi/Kernel/CnvFactory.h"
-#include "Gaudi/Interfaces/IDataProviderSvc.h"
-#include "GlastEvent/TopLevel/ObjectVector.h"
+#include "GaudiKernel/CnvFactory.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/ObjectVector.h"
 #include "GlastSvc/../src/data/TdCsIData.h"
 #include "GlastSvc/../src/data/TdSiData.h"
 #include "GlastSvc/../src/data/TdVetoData.h"

@@ -8,7 +8,7 @@
 
 
 // Externals
-extern unsigned char SICB_StorageType;
+extern unsigned const char SICB_StorageType;
 
 
 //------------------------------------------------------------------------------
