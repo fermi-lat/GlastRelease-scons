@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <vector>
+#include <functional>
 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ContainedObject.h"
@@ -16,6 +17,7 @@
 
 #include "idents/TowerId.h"
 #include "idents/GlastAxis.h"
+
 
 /*!
 * \class TkrDigi
@@ -85,7 +87,19 @@ namespace Event {
         void addC1Hit( int strip ) {
             m_hits.push_back(strip);
         }
-        
+
+        //! returns integer for sorting order
+        operator int() const {
+            return m_view + 2*m_bilayer + 64*m_tower.id();
+        }
+
+        //! predicate for sort
+        struct digiLess : public std::binary_function <TkrDigi*, TkrDigi*, bool> {
+            bool operator() (const TkrDigi* left, const TkrDigi* right) const {
+                return (*left)<(*right);
+            } 
+        };        
+    
         //! begin iterator
         const_iterator begin()const {return m_hits.begin();}
         //! end iterator
@@ -178,5 +192,6 @@ namespace Event {
     //! Definition of all container type of TkrDigi
     
     typedef ObjectVector<TkrDigi> TkrDigiCol;
+
 } //Namespace Event
 #endif

@@ -5,12 +5,15 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 //#include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/SmartRefVector.h"
 
 #include "Event/TopLevel/Definitions.h"
+#include "Event/MonteCarlo/McPositionHit.h"
+#include "Event/Digi/TkrDigi.h"
 #include "GaudiKernel/ObjectVector.h"
 #include "idents/VolumeIdentifier.h"
 
@@ -25,20 +28,26 @@
 extern const CLID& CLID_McTkrStrip;
 
 namespace Event {
+
+
   class McTkrStrip : virtual public ContainedObject {
     
   public:
     //! typedefs
+  typedef std::vector<McPositionHit*> hitList;
     
     //! Constructors
     //! Null constructor
     //McTkrStrip() {};
     
     //! constructor with plane id.
-    McTkrStrip(idents::VolumeIdentifier id, unsigned int strip,  double e=0 )
+    McTkrStrip(idents::VolumeIdentifier id, unsigned int strip,  double e=0,
+        bool noise=0, hitList hits = hitList(0) )
         : m_planeId(id)
         , m_strip(strip)
-        , m_energy(e) {};
+        , m_energy(e)
+        , m_noise(noise)
+        , m_hits(hits) {};
     //! Destructor
     virtual ~McTkrStrip() {};
         
@@ -46,11 +55,28 @@ namespace Event {
     virtual const CLID& clID() const   { return McTkrStrip::classID(); }
     static const CLID& classID()       { return CLID_McTkrStrip; }
     
-    //! access to the energy
-    double getEnergy()const { return m_energy; }
-    double energy()const { return m_energy; }
+    //! access to the energy, new form
+    double getEnergy() const { return m_energy; }
+    //! access to energy
+    double energy() const { return m_energy; }
+    bool noise() const { return getNoise();}
+    bool getNoise() const {return m_noise;}
+
+    // get list of hits
+    const hitList& getHits() const {return m_hits;}
+    // iterators for hitList
+    const hitList::const_iterator begin() const { return m_hits.begin();}
+    const hitList::const_iterator end() const { return m_hits.end();}
+
+    //! add a hit to the list if it's not already there
+    void addHit(McPositionHit* hit) {   
+        hitList::iterator it = std::find(m_hits.begin(), m_hits.end(), hit);
+        if (it==m_hits.end()) {
+            m_hits.push_back(hit);
+        }
+    }
     
-    //! increase the energy
+    //! add to the energy
     void operator+=(double de){m_energy += de;}
 
     //! access to the id
@@ -75,6 +101,12 @@ namespace Event {
     
     //! total energy deposited
     double m_energy;
+
+    //! noise bit
+    bool m_noise;
+
+    //! list of pointers to hits constributing to this strip
+    hitList m_hits;
   };
     
     

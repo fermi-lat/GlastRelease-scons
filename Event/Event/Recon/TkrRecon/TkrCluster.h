@@ -8,6 +8,8 @@
 #include <vector>
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/ContainedObject.h"
+
 #include "geometry/Point.h"
 
 /** 
@@ -25,7 +27,7 @@
 
 namespace Event { //Namespace
 
-class TkrCluster
+    class TkrCluster : virtual public ContainedObject
 {
 public:
     
@@ -36,6 +38,7 @@ public:
             Y, /**< cluster measures Y */ 
             XY /**< not valid for clusters */
     };
+    enum {NPLANES=18};
     
     friend class TkrClusters;
     
