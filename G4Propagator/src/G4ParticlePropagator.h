@@ -50,7 +50,7 @@ public:
     virtual double    insideActLocalY() const;
     virtual bool      stripIsLive() const {return true;} //Not implemented
     virtual Point     position()  const;
-    virtual Point     position(double arcLen) const;
+    virtual Point     position(double arcLen) const {return position() + s * getStartDir();}
     virtual double    arcLength() const;
     virtual double    radLength() const;
     virtual double    radLength(double arcLen) const;

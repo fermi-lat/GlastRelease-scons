@@ -141,28 +141,6 @@ Point G4ParticlePropagator::position() const
   return final;
 }
 
-//Return the position at the end of tracking
-Point G4ParticlePropagator::position(double s) const
-{
-  // Purpose and Method: Returns the position of the track at the end of
-  //                     tracking
-  // Inputs:  None
-  // Outputs:  a Point representing the final position
-  // Dependencies: None
-  // Restrictions and Caveats: None
-
-  Point final(0.,0.,0.);
-
-  if (getNumberSteps() > 0)
-    {
-      G4ThreeVector  stopPoint = getLastStep()->GetCoords();
-
-      final = Point(stopPoint.x(),stopPoint.y(),stopPoint.z());
-    }
-
-  return final;
-}
-
 //How far did we go?
 double G4ParticlePropagator::arcLength() const
 {
