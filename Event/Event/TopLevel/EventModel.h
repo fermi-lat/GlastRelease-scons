@@ -24,7 +24,7 @@
 
 #include <string>
 
-#if defined(_GlastEvent_EventModel_CPP_)
+#if defined(_Event_EventModel_CPP_)
 #define  _EXTERN_ 
 #else
 #define  _EXTERN_ extern
