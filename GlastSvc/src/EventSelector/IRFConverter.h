@@ -23,9 +23,13 @@ class IRFConverter : public DetectorConverter {
 public:
 	IRFConverter() {
 		ACDcontainer = new ACDhitVector;
+        MCCalorimeterHitContainer = new MCCalorimeterHitVector;
 	}
 
-    ~IRFConverter() { if (ACDhitVector)  delete ACDcontainer;}
+    ~IRFConverter() { 
+        if (ACDcontainer)  delete ACDcontainer;
+        if (MCCalorimeterHitContainer) delete MCCalorimeterHitContainer;
+    }
 
     // called due to a GlastDetector::accept(DetectorConverter) call
     virtual void forward (const Scintillator& s) {
@@ -42,6 +46,7 @@ public:
     virtual void forward ( const CsIDetector& csi) {
         // CAL CsI log data
         if ( !(csi.empty()) ) {
+            
 			MCCalorimeterHit* mcCal = new MCCalorimeterHit();
 			mcCal->setEnergy(csi.energy());
 			mcCal->setLayer(csi.layer());
