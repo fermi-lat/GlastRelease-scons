@@ -80,10 +80,10 @@ void McEvent::Clear(Option_t *option) {
       //      m_particleCol->Delete();
       Int_t n = m_particleCol->GetEntries();
       if (n>limit) {
-        //cout <<"!!!Warning: particle nr entries more than limit!!!Limit was increased "<<n<<endl;
+        //std::cout <<"!!!Warning: particle nr entries more than limit!!!Limit was increased "<<n<<std::endl;
 	limit=n+10;
         if (limit > nd)
-          cout << "!!!Warning:  limit for mcParticles is greater than " << nd << endl;
+          std::cout << "!!!Warning:  limit for mcParticles is greater than " << nd << std::endl;
 	for (Int_t j=0;j<indpart;j++) delete keeppart[j];
 	indpart = 0;
       }
@@ -100,10 +100,10 @@ void McEvent::Clear(Option_t *option) {
       //      m_positionHitCol->Delete();
       Int_t n = m_positionHitCol->GetEntries();
       if (n>limit) {
-        //cout <<"!!!Warning: positionhit nr entries more than limit!!!Limit was increased "<<n<<endl;
+        //std::cout <<"!!!Warning: positionhit nr entries more than limit!!!Limit was increased "<<n<<std::endl;
 	limit=n+10;
         if (limit > ndpos)
-          cout << "!!!Warning:  limit for posHits is greater than " << ndpos << endl;
+          std::cout << "!!!Warning:  limit for posHits is greater than " << ndpos << std::endl;
         for (Int_t j=0;j<indpos;j++) delete keeppos[j];
 	indpos = 0;
       }
@@ -122,10 +122,10 @@ void McEvent::Clear(Option_t *option) {
       //      m_integratingHitCol->Delete();
       Int_t n = m_integratingHitCol->GetEntries();
       if (n>limit) {
-        //cout <<"!!!Warning: integratinghit nr entries more than limit!!!Limit was increased "<<n<<endl;
+        //std::cout <<"!!!Warning: integratinghit nr entries more than limit!!!Limit was increased "<<n<<std::endl;
 	limit=n+10;
         if (limit > nd)
-          cout << "!!!Warning:  limit for intHits is greater than " << nd << endl;
+          std::cout << "!!!Warning:  limit for intHits is greater than " << nd << std::endl;
 	for (Int_t j=0;j<indint;j++) delete keepint[j];
 	indint = 0;
       }
@@ -142,12 +142,12 @@ void McEvent::Clear(Option_t *option) {
 void McEvent::Print(Option_t *option) const {
     using namespace std;
     TObject::Print(option);
-    cout.precision(2);
-    cout << "Run: " << m_runId << " Event: " << m_eventId << endl;
-    cout << m_particleCol->GetEntries() << " McParticles" << endl;
-    cout << m_positionHitCol->GetEntries() << " McPositionHits" << endl;
-    cout << m_integratingHitCol->GetEntries() 
-        << " McIntegratingHits" << endl;
+    std::cout.precision(2);
+    std::cout << "Run: " << m_runId << " Event: " << m_eventId << std::endl;
+    std::cout << m_particleCol->GetEntries() << " McParticles" << std::endl;
+    std::cout << m_positionHitCol->GetEntries() << " McPositionHits" << std::endl;
+    std::cout << m_integratingHitCol->GetEntries() 
+        << " McIntegratingHits" << std::endl;
 }
 
 
