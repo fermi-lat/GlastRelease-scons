@@ -5,12 +5,12 @@
 
 #include "FluxSvc/FluxSvc.h"
 
-#include "Gaudi/Kernel/SvcFactory.h"
-#include "Gaudi/MessageSvc/MsgStream.h"
+#include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/MsgStream.h"
 
-#include "Gaudi/Kernel/Incident.h"
-#include "Gaudi/Interfaces/IIncidentSvc.h"
-#include "Gaudi/JobOptionsSvc/Property.h"
+#include "GaudiKernel/Incident.h"
+#include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/Property.h"
 
 #include "Flux.h"
 

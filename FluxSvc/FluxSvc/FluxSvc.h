@@ -6,7 +6,7 @@
 #define _H_FluxSvc_
 
 // includes
-#include "Gaudi/Kernel/Service.h"
+#include "GaudiKernel/Service.h"
 #include "FluxSvc/IFluxSvc.h"
 #include <list>
 

@@ -1,40 +1,34 @@
 package FluxSvc
-version v1
+version v2
 
 branches FluxSvc mgr doc
 
-use flux
+use flux v3
 use GaudiSvc
 
+include_dirs $(FLUXSVCROOT)
 
 library FluxSvc  *.cxx *.h\
  Dll/*.cxx\
  ../FluxSvc/*.h 
 
-include_path $(FLUXSVCROOT)
+# define link options
+apply_pattern package_Clinkopts
+apply_pattern packageShr
 
-macro FluxSvc_lib " -L ${FLUXSVCROOT}/${CMTCONFIG} -lFluxSvc "\
-    VisualC "Service.obj ${FLUXSVCROOT}/${BINDIR}/libFluxSvc.lib "
+#=============================================================
+private
 
-set   FluxSvcShr           "${FLUXSVCROOT}/${DEBUGDIR}/libFluxSvc"
+# get flags to build shared library
 
+apply_pattern package_Cshlibflags
 
 private
 
 # need to use this only to make the dll available for the test program (which does not use it!)
 use RootHistCnv
 
-# note that the debug versions of the used libraries are inserted below
 
-
-# for the moment, use libraryshr_linkopts to fix red hat 6.2 linking problem
-macro FluxSvc_shlibflags   "$(libraryshr_linkopts) $(use_linkopts)"\
-      VisualC               "Service.obj $(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
-
-
-
-private
-
-macro WinJobOptions ""  VisualC   "test/jobOptions.txt"
+macro WinJobOptions ""  WIN32 "test/jobOptions.txt"
 
 application testFluxSvc test/TestMain.cxx test/FluxTestAlg.cxx ${WinJobOptions} 

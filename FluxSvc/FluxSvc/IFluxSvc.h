@@ -7,7 +7,7 @@
 #define _H_IFluxSvc
 
 // includes
-#include "Gaudi/Interfaces/IInterface.h"
+#include "GaudiKernel/IInterface.h"
 #include <string>
 #include <list>
 

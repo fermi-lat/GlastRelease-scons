@@ -13,7 +13,7 @@
 //====================================================================
 
 // DllMain entry point
-#include "Gaudi/System/DllMain.icpp"
+#include "GaudiKernel/DllMain.icpp"
 
 void GaudiDll::initialize(void* /* hinstDLL */ )    {
 }
@@ -22,7 +22,9 @@ void GaudiDll::finalize(void* /* hinstDLL */ )      {
 }
 
 extern void FluxSvc_load();
-#include "Gaudi/Kernel/FactoryTable.cpp"
+
+#include "GaudiKernel/FactoryTable.h"
+
 extern "C" FactoryTable::EntryList* getFactoryEntries() {
   static bool first = true;
   if ( first ) {

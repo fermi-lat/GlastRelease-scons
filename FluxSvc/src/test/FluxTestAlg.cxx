@@ -4,9 +4,9 @@
 #include "FluxSvc/IFluxSvc.h"
 #include "FluxSvc/IFlux.h"
 
-#include "Gaudi/MessageSvc/MsgStream.h"
-#include "Gaudi/Kernel/AlgFactory.h"
-#include "Gaudi/Algorithm/Algorithm.h"
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/Algorithm.h"
 
 /*! \class FluxTestAlg
 \brief 
