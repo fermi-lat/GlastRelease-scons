@@ -467,13 +467,18 @@ double KalmanTrackFitTool::doFilterStep(Event::TkrTrack& track)
         nextPlane.setTrackParams(measPar, Event::TkrTrackHit::MEASURED);
         nextPlane.setTrackParams(measCov, Event::TkrTrackHit::MEASURED);
 
-        nextPlane.setTrackParams(m_KalmanFit->StateVecExtrap(), Event::TkrTrackHit::PREDICTED);
-        nextPlane.setTrackParams(m_KalmanFit->CovMatExtrap(), Event::TkrTrackHit::PREDICTED);
+        KFvector stateVec = m_KalmanFit->StateVecExtrap();
+        KFmatrix stateCov = m_KalmanFit->CovMatExtrap();
+
+        nextPlane.setTrackParams(stateVec, Event::TkrTrackHit::PREDICTED);
+        nextPlane.setTrackParams(stateCov, Event::TkrTrackHit::PREDICTED);
 
         nextPlane.setTrackParams(curStateVec, Event::TkrTrackHit::FILTERED);
         nextPlane.setTrackParams(curCovMat, Event::TkrTrackHit::FILTERED);
 
-        nextPlane.setTrackParams(TkrCovMatrix(m_Qmat->getLastStepQ()),Event::TkrTrackHit::QMATERIAL);
+        KFmatrix qMat = m_Qmat->getLastStepQ();
+
+        nextPlane.setTrackParams(qMat, Event::TkrTrackHit::QMATERIAL);
 
         nextPlane.setRadLen(m_Qmat->getLastStepRadLen());
         nextPlane.setActiveDist(m_Qmat->getLastStepActDist());
