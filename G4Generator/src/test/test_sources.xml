@@ -9,7 +9,7 @@
        <spectrum> 
          <particle name="mu+"><energy e="2"/> </particle>
            <direction theta="90" phi="45" />
-           <launch_point x="50" y="50" z="0" />
+           <launch_point x="500" y="500" z="0" />
        </spectrum>
      </source>
 
@@ -17,7 +17,7 @@
        <spectrum> 
          <particle name="mu+"><energy e="2"/> </particle>
            <direction theta="90" phi="90" />
-           <launch_point x="0" y="50" z="0" />
+           <launch_point x="0" y="500" z="0" />
        </spectrum>
      </source>
 
@@ -25,7 +25,7 @@
        <spectrum> 
          <particle name="mu+"><energy e="2"/> </particle>
            <direction theta="90" phi="0" />
-           <launch_point x="50" y="5" z="0" />
+           <launch_point x="500" y="50" z="0" />
        </spectrum>
      </source>
 
@@ -33,15 +33,16 @@
        <spectrum> 
          <particle name="mu+"><energy e="2"/> </particle>
            <direction theta="0" phi="0" />
-           <launch_point x="2" y="2" z="80" />
+           <launch_point x="20" y="20" z="800" />
        </spectrum>
      </source>
+
 
     <source name="muon_patch">
        <spectrum> 
          <particle name="mu+"><energy e="10"/> </particle>
            <direction theta="0" phi="0" />
-           <patch xmin="-70" xmax="70" ymin="-70" ymax="70" />
+           <patch xmin="-700" xmax="700" ymin="-700" ymax="700" />
        </spectrum>
      </source>
 
@@ -49,7 +50,7 @@
        <spectrum> 
          <particle name="alpha"><energy e="20"/> </particle>
            <direction theta="0" phi="0" />
-           <patch xmin="-70" xmax="70" ymin="-70" ymax="70" />
+           <patch xmin="-700" xmax="700" ymin="-700" ymax="700" />
        </spectrum>
      </source>
 
@@ -57,7 +58,7 @@
        <spectrum> 
          <particle name="pi0"><energy e="20"/> </particle>
            <direction theta="0" phi="0" />
-           <patch xmin="-70" xmax="70" ymin="-70" ymax="70" />
+           <patch xmin="-700" xmax="700" ymin="-700" ymax="700" />
        </spectrum>
      </source>
 
@@ -65,7 +66,7 @@
        <spectrum> 
          <particle name="lambda"><energy e="20"/> </particle>
            <direction theta="0" phi="0" />
-           <patch xmin="-70" xmax="70" ymin="-70" ymax="70" />
+           <patch xmin="-700" xmax="700" ymin="-700" ymax="700" />
        </spectrum>
      </source>
 
@@ -73,7 +74,7 @@
        <spectrum> 
          <particle name="gamma"><energy e="1.0"/> </particle>
            <direction theta="0" phi="0" />
-           <launch_point x="5" y="5" z="100" />
+           <launch_point x="50" y="50" z="1000" />
        </spectrum>
      </source>
 

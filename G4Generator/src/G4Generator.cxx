@@ -34,15 +34,14 @@
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
+
 //special to setup the TdGlastData structure
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+
 
 //montecarlo data structures 
 #include "GlastEvent/MonteCarlo/McParticle.h"
 
-//flux
-#include "FluxSvc/IFluxSvc.h"
-#include "FluxSvc/IFlux.h"
 
 //gui
 #include "GuiSvc/GuiSvc.h"
@@ -62,7 +61,6 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
   :Algorithm(name, pSvcLocator) 
 {
   // set defined properties
-  declareProperty("source_name",  m_source_name);
   declareProperty("UIcommands", m_uiCommands);
   declareProperty("geometryMode", m_geometryMode="propagate");
 }
@@ -79,20 +77,6 @@ StatusCode G4Generator::initialize()
 
   // Use the Job options service to set the Algorithm's parameters
   setProperties();
-  if(! m_source_name.empty()){
-
-    if ( service("FluxSvc", m_fluxSvc).isFailure() ){
-      log << MSG::ERROR << "Couldn't find the FluxSvc!" << endreq;
-      return StatusCode::FAILURE;
-    }
-        
-    if ( m_fluxSvc->source(m_source_name, m_flux).isFailure() ){
-      log << MSG::ERROR << "Couldn't find the source \"" 
-          << m_source_name << "\"" << endreq;
-      return StatusCode::FAILURE;
-    }
-    log << MSG::INFO << "Source: "<< m_flux->title() << endreq;
-  }
 
   // setup the GuiSvc, if available
   setupGui();
@@ -119,9 +103,10 @@ StatusCode G4Generator::initialize()
   McParticleManager::getPointer()->initialize(eventSvc());
 
   if( service( "ParticlePropertySvc", m_ppsvc).isFailure() ) {
-    log << MSG::ERROR << "Couldn't set up ParticlePropertySvc!" << endreq;
-    return StatusCode::FAILURE;
+      log << MSG::ERROR << "Couldn't set up ParticlePropertySvc!" << endreq;
+      return StatusCode::FAILURE;
   }
+
 
   // The geant4 manager
   if (!(m_runManager = RunManager::GetRunManager()))
@@ -189,48 +174,27 @@ StatusCode G4Generator::execute()
     }
   }  
 
-  //
-  // have the flux service create parameters of an incoming particle, 
-  // and define it as a MCParticle
-  //
-  // is there a particle already in the TDS??
   mc::McParticleCol*  pcol=  
     SmartDataPtr<mc::McParticleCol>(eventSvc(), "/Event/MC/McParticleCol");
 
-  HepVector3D dir;
-  double ke;
-  HepPoint3D p;
-  std::string name;
-
   if( pcol==0){ 
-      //no: get from the flux service (remove this soon!)
-      m_flux->generate();
-      
-      // these are the particle properties
-      name = m_flux->particleName();
-      dir =  m_flux->launchDir(); 
-      ke=    m_flux->energy() ;
-      p =    m_flux->launchPoint();
-      
-      /// Starting position
-      p = 10*p;
-      /// Energy in MeV
-      ke = ke;
-  } else {
-      // yes: get it from the TDS
-      assert(pcol->size()==1); // something wrong: must be only one
-      mc::McParticle* primary = pcol->front();
-      mc::McParticle::StdHepId hepid= primary->particleProperty();
-      ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
-      name = ppty->particle(); 
-      const HepLorentzVector& pfinal = primary->finalFourMomentum();
-      dir=    pfinal.vect().unit();
-      p =   primary->finalPosition();
-      
-      // note possibility of truncation error here! especially with MeV.
-      ke =   pfinal.e() - pfinal.m(); 
-      
-  }
+      log<< MSG::ERROR << "No source of particles!" << endreq;
+      return StatusCode::FAILURE;
+  
+  }  
+
+  assert(pcol->size()==1); // something wrong: must be only one
+  mc::McParticle* primary = pcol->front();
+  mc::McParticle::StdHepId hepid= primary->particleProperty();
+  ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
+  std::string name = ppty->particle(); 
+  const HepLorentzVector& pfinal = primary->finalFourMomentum();
+  Hep3Vector dir=    pfinal.vect().unit();
+  HepPoint3D p =   primary->finalPosition();
+  
+  // note possibility of truncation error here! especially with MeV.
+  double ke =   pfinal.e() - pfinal.m(); 
+  
     
   PrimaryGeneratorAction* primaryGenerator = 
     (PrimaryGeneratorAction*)m_runManager->GetUserPrimaryGeneratorAction();
