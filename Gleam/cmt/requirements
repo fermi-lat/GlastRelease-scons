@@ -24,7 +24,7 @@ use geometry    v3
 
 # low-level graphics
 
-use gui         v3r2
+use gui                  v3r3
 use geomrep     v4r1
 
 # the geometry data base
@@ -41,7 +41,7 @@ public
 
 use GuiSvc      v3r1p3
 
-use Event       v8r14
+use Event               v8r15
 use GlastSvc    v8r2
 
 # simulation
@@ -63,13 +63,13 @@ use Recon               v2r3p1
 
 use TkrRecon    v6r4p4
 use CalRecon    v5r7p2  
-use AcdRecon    v0r4p1       
+use AcdRecon            v0r5       
 
 #ROOT persistence: RootIo specifies the data packages
 use RootIo              v4r10p1
 
 #diagnostic and summary of bottom line
-use merit                v5r7
+use merit                v5r8
 
 ### define a simple executable with GUI
 
