@@ -67,11 +67,11 @@ public:
     }
 
     //! add a IrfTkrHit to the list of hit strips for this SiLayer
-    void addHit (IrfTkrHit *hit) { m_hitVector.push_back(hit); }
+   void addHit (IrfTkrHit *hit) { m_hitVector.push_back(hit); }
 
     //! retrieve the vector of hit strips
     IrfTkrHitVector* getHits() { return &m_hitVector; }
-    
+
     //! used to convert container of objects
     virtual StreamBuffer& serialize( StreamBuffer& s );
     virtual StreamBuffer& serialize( StreamBuffer& s ) const;
@@ -85,20 +85,31 @@ private:
 
 inline StreamBuffer& IrfTkrLayer::serialize( StreamBuffer& s ) const                 {
     ContainedObject::serialize(s);
-    return s
-	<< m_id
-	<< m_energy;
-        //<< m_hitVector;
+    s
+        << m_id
+	<< m_energy
+        << m_hitVector.size();
+    for (IrfTkrHitVector::const_iterator hit = m_hitVector.begin(); hit != m_hitVector.end(); hit++) {
+        static_cast<const IrfTkrHit*>(*hit)->serialize(s);
+    }
+    return s;
 }
 
 
 inline StreamBuffer& IrfTkrLayer::serialize( StreamBuffer& s )                       {
     ContainedObject::serialize(s);
-    return s
+    int nSize;
+    s
 	>> m_id
 	>> m_energy
-        //>> m_hitVector
-	;
+        >> nSize;
+    for (int iHit = 0; iHit < nSize; iHit++){
+        IrfTkrHit* curHit = new IrfTkrHit();
+        curHit->serialize(s);
+        this->addHit(curHit);
+    }
+
+    return s;
 }
 
 
@@ -110,7 +121,6 @@ inline std::ostream& IrfTkrLayer::fillStream( std::ostream& s ) const           
 	<< "\n    Si Layer id   = " << m_id
         << "\n    hit strips    = " << m_hitVector;
 }
-
 
 // Definition of all container types of IrfTkrLayer
 template <class TYPE> class ObjectVector;
