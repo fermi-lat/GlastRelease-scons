@@ -116,6 +116,8 @@ private:
     double m_mevPerMip;
     /// threshold for ToT (in Mips)
     double m_totThreshold;
+    /// saturation for ToT; ToT's above this are truncated to this value
+    int m_totSaturation;
     /// if true, kill bad strips in digi
     bool   m_killBadStrips;
     /// if true, kill failed layers and towers in digi
@@ -134,6 +136,7 @@ TkrSimpleDigiAlg::TkrSimpleDigiAlg(const std::string& name, ISvcLocator* pSvcLoc
     declareProperty("totAt1Mip"     , m_totAt1Mip     = 52.5  );
     declareProperty("mevPerMip"     , m_mevPerMip     = 0.155 );
     declareProperty("totThreshold"  , m_totThreshold  = 0.1   );
+    declareProperty("totSaturation" , m_totSaturation = 250.  );
     declareProperty("killBadStrips" , m_killBadStrips = false );
     declareProperty("killFailed"    , m_killFailed    = true  );
 }
@@ -344,6 +347,8 @@ StatusCode TkrSimpleDigiAlg::execute()
             // add the strip with the correct controller number
             // and do the ToT
             int thisToT = static_cast<int>( (e/m_mevPerMip - m_totThreshold)*totFactor );
+            // apply saturation and threshold
+            thisToT = std::max(std::min(thisToT, m_totSaturation), 0);
             int breakPoint = SiStripList::n_si_strips()/2;
             if (stripId<breakPoint) {
                 pDigi->addC0Hit(stripId, thisToT);
