@@ -1,5 +1,5 @@
 package CalRecon
-version v5r11p5
+version v5r12
 
 branches src cmt doc
 
@@ -10,6 +10,7 @@ use CalUtil v1r*
 use geometry v3*
 use AnalysisNtuple v*
 use Recon v*
+use CalibSvc v*
 
 apply_pattern packageShr
 
