@@ -2,6 +2,10 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 08-may-2002: jrb - tag v1r5 - Reorganize file structure for derived consts,
+ *                               Add TKR MCM boards and walls
+ *                               Fix wafer id assignment for Y trays
+ *                               Use correct wildcard form of "use" statements
  * 09-apr-2002: jrb - tag v1r4 - Fix crystal ordering in Y layers;
  *                               add new fineChoice attribute to <section>
  * 28-mar-2002: jrb - tag v1r3 - Include enough p's in 
