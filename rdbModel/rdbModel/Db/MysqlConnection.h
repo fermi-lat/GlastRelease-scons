@@ -39,8 +39,8 @@ namespace rdbModel{
     virtual ~MysqlConnection();
     virtual bool open(const std::string& host, const std::string& userid,
                       const std::string& password,
-                      const std::string& dbName,
-                      unsigned int       port=0);
+                      const std::string& dbName);
+                      //                      ,unsigned int       port=0);
 
     /** Parameter is normally path for an xml file descrbing the 
         connection parameters */

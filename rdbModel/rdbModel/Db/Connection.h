@@ -61,8 +61,8 @@ namespace rdbModel{
     virtual ~Connection() {};
     virtual bool open(const std::string& host, const std::string& userid,
                       const std::string& password,
-                      const std::string& dbName,
-                      unsigned int       port) = 0;
+                      const std::string& dbName) = 0;
+                      //,                      unsigned int       port) = 0;
     /** Close the current open connection , if any.  Return true if there
      was a connection to close and it was closed successfully */
     virtual bool close() = 0;
