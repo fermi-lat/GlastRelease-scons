@@ -55,7 +55,11 @@ public:
                                Event::TkrTrackHit::ParamType typ = Event::TkrTrackHit::SMOOTHED);
 
 	/// Finds the number of shared TkrClusters on the two given tracks
-    int compareTracks(Event::TkrTrack& track1, Event::TkrTrack& track2);
+    //    if 3rd argument is present, bails after that number (saving some time!)
+    int compareTracks(Event::TkrTrack& track1, Event::TkrTrack& track2, 
+        int stopAfter = 1000000) const;
+    int numUniqueHits(Event::TkrTrack& track1, Event::TkrTrack& track2,
+        int minUnique = 1000000) const;
 
 	/// Conpute the first first normalize track kink angle
 	double firstKinkNorm(Event::TkrTrack& track);
@@ -72,6 +76,9 @@ private:
     ITkrFailureModeSvc*   m_tkrFail;
     TkrControl*           m_control;
     IFitHitEnergy*        m_hitEnergy;
+    // for track compare
+    mutable std::vector<Event::TkrTrackHit*> m_hitVec;
+
 };
 
 
