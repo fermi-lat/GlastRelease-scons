@@ -5,4 +5,4 @@ use glast_settings
 
 include_path $(IDENTSROOT)
 
-library idents -no_share *.cxx ../idents/*.h
+library idents -no_share ../idents/blank.cxx ../idents/*.h
