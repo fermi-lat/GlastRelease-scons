@@ -13,7 +13,7 @@
 #include <vector>
 #include "TkrRecon/GaudiAlg/TkrReconAlg.h"
 #include "TkrRecon/Services/TkrInitSvc.h"
-#include "Event/Recon/TkrRecon/TkrFitTrackCol.h"
+#include "Event/Recon/TkrRecon/TkrFitTrack.h"
 #include "src/Track/TkrLinkAndTreeTrackFit.h"
 #include "TkrRecon/Track/GFcontrol.h"
 
@@ -123,7 +123,8 @@ StatusCode TkrReconAlg::execute()
 
     sc = eventSvc()->registerObject(EventModel::TkrRecon::TkrFitTrackCol, tracks);
 
-    tracks->writeOut(log);
+    //JCT I need to fix that
+    //    tracks->writeOut(log);
 
 	return sc;
 }
