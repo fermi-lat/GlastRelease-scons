@@ -45,6 +45,7 @@ namespace ldfReader {
         }
 
         m_calDigiCol.clear();
+        m_tem.clear();
     }
 
 

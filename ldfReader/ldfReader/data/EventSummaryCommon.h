@@ -17,6 +17,8 @@ namespace ldfReader {
         EventSummaryCommon() { m_summary =0; };
         EventSummaryCommon(unsigned summary) : m_summary(summary) { };
         ~EventSummaryCommon() {}
+          
+        void clear() { m_summary = 0; }
 
         void print(const char *pfx="") const {
             printf("Summary         = 0x%08x\n", m_summary);

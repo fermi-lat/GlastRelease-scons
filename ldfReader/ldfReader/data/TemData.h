@@ -41,8 +41,8 @@ namespace ldfReader {
         void initLength(unsigned long length) { m_lenInBytes = length; };
         unsigned long lenInBytes() const { return m_lenInBytes; };
 
-   		void initPacketError(unsigned packetError) { m_packetError=packetError; };
-		unsigned packetError() const { return m_packetError; };
+        void initPacketError(unsigned packetError) { m_packetError=packetError; };
+        unsigned packetError() const { return m_packetError; };
 
     private:
 
