@@ -28,7 +28,7 @@ macro GlastEventDir     "$(GLASTEVENTROOT)/$(DEBUGDIR)"
 
 macro GlastEvent_stamps   "$(GlastEventDir)/GlastEvent.stamp"
 
-macro GlastEvent_linkopts "$(GlastEventDir)/libGlastEvent.so" \
+macro GlastEvent_linkopts "$(GlastEventDir)/libGlastEvent.a" \
  LinuxStatic             "$(GlastEventDir)/libGlastEventFactories.a $(GlastEventDir)/libGlastEvent.a -u GlastEventFactories_loadRef" \
  VisualC                 "$(GlastEventDir)/libGlastEvent.lib" \
  VisualCStatic           "$(GlastEventDir)/libGlastEventFactories.lib $(GlastEventDir)/libGlastEvent.lib /include:GlastEventFactories_loadRef"
