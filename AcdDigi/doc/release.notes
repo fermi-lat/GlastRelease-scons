@@ -1,28 +1,32 @@
 /** @file release.notes
  Package AcdDigi\n
  Coordinator:H.Kelly
+ @verbatim
 
- v1r7p1 15-jan-2003 THB remove const in map definition to appease vc7\n
+ v1r7p2 18-Mar-2003 HMK Small patch to avoid seg fault if there are no ACD tiles in the
+        geometry - for example EM.
+ v1r7p1 15-jan-2003 THB remove const in map definition to appease vc7
  --------------------------GlastRelease-----------------------------------
-        30-Dec-2002 HMK prepare to process ribbons in AcdDigiAlg\n
- v1r7   09-Dec-2002 HMK Retrieve all ACD tiles in existance for a particular run\n
-        using the GlastSvc/detModel interface and modify the mechanism to apply  \n
-        Gaussian noise to the PMTs - to allow for non-hit tiles to fire as well\n
- v1r6   30-Oct-2002 HMK Fix usage of mean_pe_per_mip\n
- v1r5   21-Oct-2002 HMK Set Edge Effect function via XML file\n
- v1r4p0 27-Sep-2002 HMK Use double rather than float consistently\n
-        add diagram to documentation\n
- v1r4   09-Sep-2002 HMK Update version of Event and GlastSvc\n
- v1r3p4 09-Sep-2002 HMK Fix up documentation\n
- v1r3p3 05-Sep-2002 HMK Fix some gcc warnings\n
- v1r3p2 04-Sep-2002 HMK Use AcdId ctor to unpack VolId\n
- v1r3p1 02-Sep-2002 THB Fix requirements file to get test routine to run\n
+        30-Dec-2002 HMK prepare to process ribbons in AcdDigiAlg
+ v1r7   09-Dec-2002 HMK Retrieve all ACD tiles in existance for a particular run
+        using the GlastSvc/detModel interface and modify the mechanism to apply  
+        Gaussian noise to the PMTs - to allow for non-hit tiles to fire as well
+ v1r6   30-Oct-2002 HMK Fix usage of mean_pe_per_mip
+ v1r5   21-Oct-2002 HMK Set Edge Effect function via XML file
+ v1r4p0 27-Sep-2002 HMK Use double rather than float consistently
+        add diagram to documentation
+ v1r4   09-Sep-2002 HMK Update version of Event and GlastSvc
+ v1r3p4 09-Sep-2002 HMK Fix up documentation
+ v1r3p3 05-Sep-2002 HMK Fix some gcc warnings
+ v1r3p2 04-Sep-2002 HMK Use AcdId ctor to unpack VolId
+ v1r3p1 02-Sep-2002 THB Fix requirements file to get test routine to run
  v1r3   09-Aug-2002 HMK Use McPositionHits - rather than McIntegratingHits
-        Introduce code for edge effects.\n
-        26-Jul-2002 HMK Add new algorithm for digitization\n
+        Introduce code for edge effects.
+        26-Jul-2002 HMK Add new algorithm for digitization
  v1r2   12-Jun-2002 HMK Fix up volId interpretation - switching row
-        and column \n
- v1r1   07-Jun-2002 HMK Store volId to AcdDigi\n
- v1r0   05-Jun-2002 HMK Update for new version of AcdDigi class \n
- v0r0   23-May-2002 HMK initial import \n
+        and column 
+ v1r1   07-Jun-2002 HMK Store volId to AcdDigi
+ v1r0   05-Jun-2002 HMK Update for new version of AcdDigi class 
+ v0r0   23-May-2002 HMK initial import 
+ @endverbatim
 */
