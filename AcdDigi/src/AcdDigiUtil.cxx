@@ -1,6 +1,6 @@
 #define AcdDigi_AcdDigiUtil_CPP 
 
-#include "AcdDigi/AcdDigiUtil.h"
+#include "AcdDigiUtil.h"
 
 #include "CLHEP/Random/RandPoisson.h"
 #include "CLHEP/Random/RandGauss.h"

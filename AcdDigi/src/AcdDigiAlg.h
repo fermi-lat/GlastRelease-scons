@@ -7,7 +7,7 @@
 #include <map>
 #include <utility>
 
-#include "AcdDigi/AcdDigiUtil.h"
+#include "AcdDigiUtil.h"
 
 #include "idents/AcdId.h"
 
