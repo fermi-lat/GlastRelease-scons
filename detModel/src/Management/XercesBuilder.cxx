@@ -54,12 +54,12 @@ namespace detModel{
     delete m_docClient;
   }
 
-  void XercesBuilder::parseFile(char* nameFile){
+  void XercesBuilder::parseFile(std::string nameFile){
     unsigned int iSec;
     xmlUtil::GDDDocMan* pGDDMan = xmlUtil::GDDDocMan::getPointer();
     
     pGDDMan->parse(nameFile);
-
+    
     /// We start detModel stuff retriving the manager
     Manager* man = Manager::getPointer();
 

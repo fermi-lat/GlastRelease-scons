@@ -21,7 +21,7 @@ namespace detModel{
     /** This method initialize the parser (implemented in a concrete
      *  subclass of this class) 
      */
-    virtual void parseFile(char*) = 0;
+    virtual void parseFile(std::string) = 0;
 
     /** This method start the parser (implemented in a concrete
      *  subclass of this class) for the sections part and put the

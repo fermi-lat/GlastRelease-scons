@@ -54,8 +54,8 @@ namespace detModel{
 
     MatCollection* getMatCollection(){return manGdd->getMaterials();};
 
-    void setNameFile(char* pname){nameFile = pname;};
-    char* getNameFile(){return nameFile;};
+    void setNameFile(std::string pname){nameFile = pname;};
+    std::string getNameFile(){return nameFile;};
 
   protected:
     /** The constructor is protected; in such a way it is forbidden to *
@@ -79,7 +79,7 @@ namespace detModel{
     /// This string represent the mode for choices elements
     std::string manMode;
 
-    char* nameFile;
+    std::string nameFile;
   };
 
 }

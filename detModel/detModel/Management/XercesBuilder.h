@@ -37,7 +37,7 @@ namespace detModel{
   
     /** This method initialize the parser 
      */
-    virtual void parseFile(char* nameFile);
+    virtual void parseFile(std::string nameFile);
     /**
      * This method implement the virutal method of Builder and builds the
      * sections part of the hierarchy, putting it in the private pointer currentSections
