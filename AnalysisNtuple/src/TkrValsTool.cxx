@@ -592,8 +592,8 @@ StatusCode TkrValsTool::calculate()
         //for the ToT path correction; use the directions of each hit
         double slopeX; // = fabs(t1.x()/t1.z());
         double slopeY; // = fabs(t1.y()/t1.z());
-        double pathFactorX; // = 1./sqrt(1. + slopeX*slopeX);
-        double pathFactorY; // = 1./sqrt(1. + slopeY*slopeY);
+        //double pathFactorX; // = 1./sqrt(1. + slopeX*slopeX);
+        //double pathFactorY; // = 1./sqrt(1. + slopeY*slopeY);
 
         while(pln_pointer != track_1->end()) {
             Event::TkrFitPlane plane = *pln_pointer;

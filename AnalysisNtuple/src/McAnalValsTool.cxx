@@ -23,7 +23,7 @@
 #include "Event/MonteCarlo/McParticle.h"
 #include "Event/MonteCarlo/McIntegratingHit.h"
 #include "Event/MonteCarlo/McPositionHit.h"
-#include "TkrRecon/MonteCarlo/ITkrMcTracksTool.h"
+#include "TkrUtil/ITkrMcTracksTool.h"
 
 #include <algorithm>
 
@@ -178,6 +178,10 @@ StatusCode McAnalValsTool::initialize()
     }
 
     sc = toolSvc()->retrieveTool("TkrMcTracksTool", m_mcTracks);
+    if (sc.isFailure()) {
+        log << MSG::ERROR << " TkrMcTracksTool not found!" << endreq;
+        return sc;
+    }
     
     // load up the map
 
