@@ -6,7 +6,7 @@ version v14r1
 branches src doc
 
 use Event v10r*
-use ROOT v2r* IExternal
+use ROOT v3r* IExternal
 
 apply_pattern packageShr
 apply_pattern package_include
