@@ -350,6 +350,8 @@ Vector CalClustersAlg::Fit_Direction(std::vector<Vector> pos,std::vector<Vector>
 	double norm2=0;
 	double var_z1=0;		// variance of z	
 	double var_z2=0;
+    int nlx=0,nly=0;
+    Vector nodir(-1000.,-1000.,-1000.);
 	for(int il=0;il<nlayers;il++)
 	{
 
@@ -359,6 +361,7 @@ Vector CalClustersAlg::Fit_Direction(std::vector<Vector> pos,std::vector<Vector>
 		{
 			if (sigma2[il].x()>0.)
 			{
+                nlx++;
 				double err = 1/sigma2[il].x();
                 cov_xz += pos[il].x()*pos[il].z()*err;
 				var_z1 += pos[il].z()*pos[il].z()*err;
@@ -371,6 +374,8 @@ Vector CalClustersAlg::Fit_Direction(std::vector<Vector> pos,std::vector<Vector>
 		{
 			if(sigma2[il].y()>0.)
 			{
+
+                nly++;
                 double err = 1/sigma2[il].y();
                 cov_yz += pos[il].y()*pos[il].z()*err;
 				var_z2 += pos[il].z()*pos[il].z()*err;
@@ -381,24 +386,32 @@ Vector CalClustersAlg::Fit_Direction(std::vector<Vector> pos,std::vector<Vector>
 		}
 	}		
 
+
+    if(nlx <2 || nly < 2 )return nodir;
+
     
 
-	mx /= norm1;
-	my /= norm2;
+    
+    mx /= norm1;
 	mz1 /= norm1;
-	mz2 /= norm2;
 	cov_xz /= norm1;
 	cov_xz -= mx*mx;
-	cov_yz /= norm2;
-	cov_yz -= my*my;
 	var_z1 /= norm1;
 	var_z1 -= mz1*mz1;
+    if(var_z1 == 0) return nodir;
+	double tgthx = cov_xz/var_z1;
+    
+
+	my /= norm2;
+	mz2 /= norm2;
+	cov_yz /= norm2;
+	cov_yz -= my*my;
 	var_z2 /= norm2;
 	var_z2 -= mz2*mz2;
 
 // Now we have cov(x,z) and var(z) we can deduce slope
-	double tgthx = cov_xz/var_z1;
-	double tgthy = cov_yz/var_z2;
+    if(var_z2 == 0) return nodir;
+    double tgthy = cov_yz/var_z2;
     
 
 	double tgtheta_sqr = tgthx*tgthx+tgthy*tgthy;
@@ -554,7 +567,7 @@ StatusCode CalClustersAlg::execute()
 		}
 
 	// Now take the means
-	pCluster *= (1./ene);
+	if(ene>0.)pCluster *= (1./ene); else pCluster=Vector(-1000., -1000., -1000.);
 	int i = 0;
 	for( ;i<nLayers;i++){
 			if(eneLayer[i]>0)
@@ -606,8 +619,8 @@ StatusCode CalClustersAlg::execute()
     //slope=1;  // Temporary whilst the algorith appplies to slope=1 showers only.
 
 	// Take square roots of RMS
-	rms_trans = sqrt(rms_trans);
-	rms_long = sqrt(rms_long);
+//	rms_trans = sqrt(rms_trans);
+//	rms_long = sqrt(rms_long);
 
 	// Fill CsICluster data
 	CsICluster* cl = new CsICluster(ene,pCluster+p0);
