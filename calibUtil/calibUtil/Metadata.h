@@ -137,9 +137,9 @@ namespace calibUtil {
                       non-null value; else false.
     */
     static bool getReadInfo(unsigned int serialNo, 
-                            const std::string* dataFormat, 
-                            const std::string* fmtVersion,
-                            const std::string* filename);
+                            std::string* dataFormat, 
+                            std::string* fmtVersion,
+                            std::string* filename);
                         
   /** 
     // Additional services will probably be needed to
