@@ -1,6 +1,6 @@
 package Gleam
 
-version v0r7
+version v0r9
 
 # This is a G4 development check-out package, that does not yet define an executable 
 # $Id$
@@ -16,21 +16,21 @@ use RootHistCnv v5r0p1
 
 use XMLEXT      v2r2 
 use GlastPolicy v4r3 
-use facilities  v2r2p1 
-use xml              v4r1p3 
-use xmlUtil          v2r8p1
+use facilities        v2r3 
+use xml         v4r1p3 
+use xmlUtil     v2r8p1
 
 use geometry    v3
 
 # low-level graphics
 
-use gui              v3 
+use gui         v3 
 use geomrep     v4r1
 
 # the geometry data base
-use idents           v2r5 
-use detModel         v2r9
-use xmlGeoDbs        v1r3
+use idents      v2r5 
+use detModel    v2r9
+use xmlGeoDbs   v1r3
 
 # interface to G4
 use Geant4      v1r1
@@ -38,12 +38,12 @@ use Geant4      v1r1
 # Gaudi component packages
 
 use GuiSvc      v3
-use GlastEvent      v6r3
+use GlastEvent  v6r3
 use FluxSvc     v5r2
 
-use GlastSvc        v6r0
-use G4Generator     v3r3p1
-use GlastDigi       v2r3
+use GlastSvc    v6r0
+use G4Generator v3r3p1
+use GlastDigi   v2r3
 
-use Recon           v0r8
+use Recon       v0r8
 
