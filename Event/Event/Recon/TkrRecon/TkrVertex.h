@@ -80,7 +80,9 @@ private:
 };
 
 //typedef for the Container
-typedef ObjectVector<TkrVertex>     TkrVertexCol;
+typedef ObjectVector<TkrVertex>      TkrVertexCol;
+typedef TkrVertexCol::const_iterator TkrVertexConPtr;
+typedef TkrVertexCol::iterator       TkrVertexColPtr;
 
 }; //Namespace
 
