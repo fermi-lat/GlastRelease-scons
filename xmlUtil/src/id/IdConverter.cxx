@@ -85,13 +85,13 @@ namespace xmlUtil {
           // not the reverse
           if (m_convCol[ix]->subpathOf(*(m_convCol[jx]))) {
             m_consistent = NO;
-            return m_consistent;
+            return false;
           }
         }
       }
       m_consistent = YES;
     }
-    return m_consistent;
+    return m_consistent==YES;
   }
 
   NamedId *IdConverter::convert(const NamedId *in) const {
