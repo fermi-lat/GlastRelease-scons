@@ -50,7 +50,7 @@ library guisystem -no_share \
  WinGUIostream.cxx    Xostream.cxx\
  WinGUIostream.h      Xostream.h  \
  WinMain.cxx          resource.h  \
- MotifGUI.h           WinScene.cxx \
+ MotifGUI.cxx         MotifGUI.h           WinScene.cxx \
  WinScene.h           WinDraw.cxx          XScene.cxx\
  WinDraw.h            XScene.h \
  WinGUI.cxx           Xdraw.cxx\
