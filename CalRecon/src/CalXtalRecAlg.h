@@ -125,6 +125,8 @@ private:
     double m_maxEnergy[4];  ///< highest energy for each energy range
     double m_lightAtt;  ///< light attenuation factor
     double m_CsILength;  ///< Xtal length
+    double m_CsIWidth;  ///< Xtal width
+    double m_CsIHeight;  ///< Xtal height
     IGlastDetSvc* detSvc; ///< pointer to the Glast Detector Service
 
 };
