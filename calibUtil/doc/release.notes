@@ -2,6 +2,7 @@
  * Package calibUtil
  * Coordinator: J. Bogart
  *
+ * v0r5p1 22-Mar-2004 jrb Fix little memory leak
  * v0r5p0 17-Feb-2004 jrb New version of LAT pedestals ideal file sets "cos"
  * v0r5   17-Feb-2004 jrb Support for cosAngle field in Cal pedestals
  * v0r4p0 30-Jan-2004 jrb Replace some Xerces calls with xml::Dom methods
