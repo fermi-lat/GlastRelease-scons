@@ -219,10 +219,15 @@ void InitializeED(TString filename = "MyRootFile.root")
   
 }
 
-void DisplayEvent(int NumEvent=0)
+void DisplayEvent(int NumEvent=-1)
 {
+  static int realEvent = -1;
+  if ( NumEvent < 0 )
+      ++realEvent;
+  else
+      realEvent = NumEvent;
 
-  myEvent->Go(NumEvent);
+  myEvent->Go(realEvent);
   
   int TkrTotalNumHits = myEvent->GetTkrTotalNumHits();
 
