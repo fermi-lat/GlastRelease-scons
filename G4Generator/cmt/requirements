@@ -13,27 +13,25 @@ apply_pattern packageShr
 apply_pattern package_headers
 apply_pattern package_include
 
-use Event *
+use Event     v*
+use GlastSvc  v*
+use geometry  v3*
+use geomrep   v4r*
 
-use GlastSvc  *
-
-use geometry v3*
-use geomrep  v4r*
-
-#for linux execution clients to get the LD_LIBRARY_PATH set.
+# for linux execution clients to get the LD_LIBRARY_PATH set.
 use Geant4Runtime v2r* IExternal
 
 #=============================================================
 private
-#this is private to avoid passing on build info to clients
-use Geant4   v2r5* IExternal
+# this is private to avoid passing on build info to clients
+use Geant4   v2r*  IExternal
 
 
 # special code to replace the standared multiple scattering 
 use GlastMS
 
-# only needed by test program
-use FluxSvc *
+# only needed by test program 
+use FluxSvc v*
 
 # get flags to build shared library
 
