@@ -14,7 +14,8 @@ apply_pattern component_library library=CalibSvc
 
 # the runtime public interface to this package must expose sharables from 
 # calibUtil, CalibData, calibRootData and astro
-use calibUtil v1r* -no_auto_imports
+## use calibUtil v1r* -no_auto_imports
+use calibUtil v1r*
 use CalibData v0r* 
 use calibRootData v1r* -no_auto_imports
 use astro         v1r* -no_auto_imports
