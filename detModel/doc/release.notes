@@ -2,6 +2,7 @@
  * Package detModel
  * Coordinator: R.Giannitrapani
  *
+ * v2r16   thb 14-aug-04   make rest of requirements consistent with being a static library
  * v2r15p5 jrb 14-May-04   Minor changes to eliminate benign warnings
  * v2r15p4 jrb 18-Mar-04   Make it possible for client to determine if
  *                         parse has succeeded

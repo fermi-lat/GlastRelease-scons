@@ -1,20 +1,23 @@
 package detModel
 
 # $Header$
-version v2r15p5
+version v2r16
 
 author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
 author Joanne Bogart <jrb@slac.stanford.edu>
 
-use CLHEP   v2* IExternal
-use xmlUtil v2*
-use idents
+use GlastPolicy
 
-apply_pattern shared_library
-
+# static libraray
+apply_pattern package_linkopts
+apply_pattern package_stamps
+apply_pattern package_include
 
 private
 #__________________________________________________________
+use CLHEP   v2* IExternal
+use xmlUtil v2*
+use idents
 
 macro headers "" WIN32 "\
      ../detModel/Management/*.h \
