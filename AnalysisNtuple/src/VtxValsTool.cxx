@@ -201,12 +201,13 @@ StatusCode VtxValsTool::calculate()
         VTX_ydir      = t0.y();
         VTX_zdir      = t0.z();
 
-        VTX_Phi       = (fabs(t0.x())<1.e-7) ? 0.5*M_PI : atan(-t0.y()/t0.x());
-        // maybe should be: ??
-        //VTX_Phi       = (-t0).phi();
-        //if (VTX_Phi<0.0) VTX_Phi += 2*M_PI;
-		VTX_Theta     = acos(t0.z());
-        //VTX_Theta     = (-t0).theta();
+        // we give theta, phi of the direction of the source
+        //VTX_Phi       = (fabs(t0.x())<1.e-7) ? 0.5*M_PI : atan(-t0.y()/t0.x());
+        // better!
+        VTX_Phi       = (-t0).phi();
+        if (VTX_Phi<0.0) VTX_Phi += 2*M_PI;
+		//VTX_Theta     = acos(t0.z());
+        VTX_Theta     = (-t0).theta();
 
         VTX_x0        = x0.x();
         VTX_y0        = x0.y();
