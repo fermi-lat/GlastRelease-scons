@@ -3,26 +3,70 @@
 
 #include "TreeMaker.h"
 #include <vector>
+#include <bitset>
+#include <iomanip>
+#include <map>
+#include <utility>
 
 UInt_t digiEventId, reconEventId, mcEventId;
 UInt_t digiRunNum, reconRunNum, mcRunNum;
 
 const TString TS = "";
+const int MaxNumLayers=36;
+const Int_t NumGTCC = 8;
+const Int_t NumGTRC = 9;
 
+/*
+ * The order of read-out of the GTCC's (LAT-TD-00605 p.106
+ * http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/TEM.pdf):
+ * 6, 3, 7, 2, 5, 0, 4, 1
+ */
+const int positionOfGTCC[8] /* in the TCloneArray */ = { 5, 7, 3, 1, 6, 4, 0, 2 };
 
 #define DEBUG 0
+
+// returns the position of GTCC i in the TCloneArray m_TkrDiagnostics of the digi file
+int indexToGTCC ( int i ) { return positionOfGTCC[i]; }
+
+// returns the index of a GTCC/GTRC pair in the TkrDiagnostics array
+int getIndex ( int GTCC, int GTRC ) { return GTCC*NumGTRC+GTRC; }
+
+// returns the index of a layer/ROC pair in the TkrDiagnostics array. Left is 0, right is 1.
+int getIndex ( const TString layerName, const bool side ) {
+    // assume e.g. "LayerX12"
+    static const int first = 5;
+    char view = layerName[first];
+    int num = atoi(layerName(first+1,layerName.Length()-first-1).Data());
+    int GTRC = num / 2;
+    int GTCC = 42;
+    if ( view == 'X' )
+        if ( num % 2 )            // odd
+            GTCC = 6 + side;
+        else                      // even
+            GTCC = 3 - side;
+    else                      // 'Y'
+        if ( num % 2 )            // odd
+            GTCC = 5 - side;
+        else                      // even
+            GTCC = 0 + side;
+    
+    //    std::cout << std::setw(8) << layerName << ' ' << view << num << " side=" << side << ' ' << GTCC << ' ' << GTRC << std::endl;
+
+    return getIndex(GTCC, GTRC);
+}
 
 void TreeMaker::McData() 
 {
 }
 
+/*
 void TreeMaker::CreateDigiTree(Int_t numEvents)
 {
 }
+*/
 
 void TreeMaker::CreateTree(Int_t numEvents)
 {    
-  static const int MaxNumLayers=36;
   Int_t TrueToT0[MaxNumLayers];
   Int_t TrueToT1[MaxNumLayers];
   Int_t TrueTkrNumHits[MaxNumLayers];
@@ -30,10 +74,15 @@ void TreeMaker::CreateTree(Int_t numEvents)
   
   Int_t ToT0;//[MaxNumLayers];
   Int_t ToT1;//[MaxNumLayers];
+  Bool_t TriggerReq0;
+  Bool_t TriggerReq1;
   Int_t TkrNumHits;
   Int_t TkrHits[128];
   Int_t EventId;
   Int_t RunId;
+  Int_t LevelOneTrigger;
+  Double_t EbfTime;
+  Int_t TkrDiagnostics[NumGTCC*NumGTRC]; // this should be sorted into the "layers", but right now we don't know the order
   Int_t TkrTotalNumHits;  
   ////////// clusters
   int TkrNumClus;
@@ -70,14 +119,14 @@ void TreeMaker::CreateTree(Int_t numEvents)
   }
   
   if (digiTree) {
-    digiTree->SetBranchStatus("*",0);  // disable all branches
+    digiTree->SetBranchStatus("*", 0);  // disable all branches
     // activate desired brances
-    digiTree->SetBranchStatus("m_cal*",1);  
-    digiTree->SetBranchStatus("m_tkr*",1);  
-    digiTree->SetBranchStatus("m_acd*",1);
+    digiTree->SetBranchStatus("m_tkr*", 1);
     digiTree->SetBranchStatus("m_eventId", 1); 
     digiTree->SetBranchStatus("m_runId", 1);
-    
+    digiTree->SetBranchStatus("m_levelOneTrigger", 1);
+    digiTree->SetBranchStatus("m_ebfTime*", 1);
+    digiTree->SetBranchStatus("m_numTkrDiagnostics", 1);
     
     for(int i=0;i<MaxNumLayers;i++)
       {
@@ -87,10 +136,12 @@ void TreeMaker::CreateTree(Int_t numEvents)
 	else 
 	  TS+="Y";
 	TS+=i/2; 
-	std::cout<<TS<<std::endl;
+	if ( DEBUG ) std::cout<<TS<<std::endl;
 	TTree *Layer = new TTree(TS,TS);
 	Layer->Branch("ToT0",&ToT0,"ToT0/I");
 	Layer->Branch("ToT1",&ToT1,"ToT1/I");
+	Layer->Branch("TriggerReq0",&TriggerReq0,"TriggerReq0/B");
+	Layer->Branch("TriggerReq1",&TriggerReq1,"TriggerReq1/B");
 	Layer->Branch("TkrNumHits",&TkrNumHits,"TkrNumHits/I");
 	Layer->Branch("TkrHits",TkrHits,"TkrHits[TkrNumHits]/I");
 	TreeCollection->Add((TObject*) Layer);
@@ -98,11 +149,17 @@ void TreeMaker::CreateTree(Int_t numEvents)
     TTree *Header = new TTree("Header","Header");
     Header->Branch("EventId",&EventId,"EventId/I");
     Header->Branch("TkrTotalNumHits",&TkrTotalNumHits,"TkrTotalNumHits/I");
-    Header->Branch("RunId",&RunId,"RunId/I");      
+    Header->Branch("RunId",&RunId,"RunId/I");
+    Header->Branch("LevelOneTrigger",&LevelOneTrigger,"LevelOneTrigger/I");
+    TString tag("TkrDiagnostics[");
+    tag += NumGTCC * NumGTRC;
+    tag += "]/I";
+    Header->Branch("TkrDiagnostics", TkrDiagnostics, tag);
+    Header->Branch("EbfTime",&EbfTime,"EbfTime/D");
     TreeCollection->Add(Header);
     
   }
-  std::cout<<TreeCollection->GetEntries()<<std::endl;
+  if ( DEBUG ) std::cout<<TreeCollection->GetEntries()<<std::endl;
   
   if (reconTree) {
     reconTree->SetBranchStatus("*",0);  // disable all branches
@@ -144,7 +201,7 @@ void TreeMaker::CreateTree(Int_t numEvents)
   // determine how many events to process
   Int_t nentries = GetEntries();
   std::cout << "\nNum Events in File is: " << nentries << std::endl;
-  Int_t curI;
+  Int_t curI = 0;
   Int_t nMax = TMath::Min(numEvents+m_StartEvent,nentries);
   if (m_StartEvent == nentries) {
     std::cout << " all events in file read" << std::endl;
@@ -209,10 +266,29 @@ void TreeMaker::CreateTree(Int_t numEvents)
       if (evt) {
 	  digiEventId = evt->getEventId(); 
 	  digiRunNum = evt->getRunId();
-	  if ( DEBUG ) std::cout << "DIGI: run number: " << digiRunNum << "  event id: " << digiEventId <<std::endl;
+          if ( DEBUG ) std::cout << "DIGI: run number: " << digiRunNum << "  event id: " << digiEventId <<std::endl;
 	  EventId = ievent+1;
 	  RunId   = digiRunNum;
-	  if ( DEBUG ) std::cout << "run number: " << RunId << "  event id: " << EventId << std::endl;
+          if ( DEBUG ) std::cout << "run number: " << RunId << "  event id: " << EventId << std::endl;
+          LevelOneTrigger = evt->getL1T().getTriggerWord() & 0x1f; // there are more bits set, but why?
+          if ( DEBUG ) std::cout << "LevelOneTrigger: " << LevelOneTrigger << std::endl;
+          static Double_t EbfTimeStart = evt->getEbfTimeSec();
+          EbfTime = ( evt->getEbfTimeSec() - EbfTimeStart ) + evt->getEbfTimeNanoSec() * 1E-9;
+          if ( DEBUG ) std::cout << "EbfTime: " << EbfTime << std::endl;
+          // and now, for the TkrDiagnostics
+          if ( NumGTCC != evt->getTkrDiagnosticCol()->GetEntries() )
+              std::cerr << "NumGTCC=" << NumGTCC << " != evt->getTkrDiagnosticCol()->GetEntries()=" << evt->getTkrDiagnosticCol()->GetEntries() << std::endl;
+          for ( int GTCC=0; GTCC<NumGTCC; ++GTCC ) {
+              UInt_t dataWord = evt->getTkrDiagnostic(indexToGTCC(GTCC))->getDataWord();
+              std::bitset<NumGTRC> word = dataWord;
+              if ( DEBUG ) std::cout << "TkrDiagnosticData[" << GTCC << "] " << word << ' ';
+              for ( int GTRC=NumGTRC-1; GTRC>=0; --GTRC ) {
+                  TkrDiagnostics[getIndex(GTCC,GTRC)] = word[GTRC];
+                  if ( DEBUG ) std::cout << ( TkrDiagnostics[getIndex(GTCC,GTRC)] > 0 ) ? 1 : 0;
+              }
+              if ( DEBUG ) std::cout << std::endl;
+          }
+
 	  //////////////////////////////////////////////////
 	  // digitkr:
 	  const TObjArray* tkrDigiCol = 0;
@@ -227,7 +303,7 @@ void TreeMaker::CreateTree(Int_t numEvents)
 	      TkrDigi* pTkrDigi = 0;
 	      
 	      
-	      while ( pTkrDigi = (TkrDigi*)tkrDigiIter.Next() ) {
+	      while ( (pTkrDigi=(TkrDigi*)tkrDigiIter.Next()) ) {
 		
 		int Tower = pTkrDigi->getTower().id();
 		int Layer = pTkrDigi->getBilayer();
@@ -282,7 +358,7 @@ void TreeMaker::CreateTree(Int_t numEvents)
 	    TIter tkrClusIter(clusCol);
 	    TkrCluster* pTkrClus = 0;
 	    int clusIdx=0;
-	    while ( pTkrClus = (TkrCluster*) tkrClusIter.Next() ) 
+	    while ( (pTkrClus=(TkrCluster*)tkrClusIter.Next()) ) 
 	      {
 		TkrClusX[clusIdx]     = pTkrClus->getPosition().X();
 		TkrClusY[clusIdx]     = pTkrClus->getPosition().Y();
@@ -341,19 +417,26 @@ void TreeMaker::CreateTree(Int_t numEvents)
       TTree* aTree = 0;
       int i=0;
       
-      while (aTree = (TTree*)TreeIter.Next())
+      while ( (aTree=(TTree*)TreeIter.Next()) )
 	{
 	  TkrNumHits = TrueTkrNumHits[i];
 	  ToT0       = TrueToT0[i];
 	  ToT1       = TrueToT1[i];
 	  //	  TkrHits    = TrueTkrHits[i];
-	  
+
+          const char* name = aTree->GetName();
+          const int index0 = getIndex(name, false);
+          const int index1 = getIndex(name, true);
+          TriggerReq0 = TkrDiagnostics[index0];
+          TriggerReq1 = TkrDiagnostics[index1];
+          if ( DEBUG ) std::cout << "loop " << std::setw(8) << name << std::setw(3) << index0 << std::setw(3) << index1 << ' '
+                    << TriggerReq0 << ' ' << TriggerReq1 << ' ' << TkrNumHits << std::endl;
+
 	  if (TkrNumHits > 0 || i==0 ) 
 	    {
 	      for ( int h=0; h<TkrNumHits; h++ ) 
 		TkrHits[h] = TrueTkrHits[i][h];
-	      if ( DEBUG )	  
-		std::cout<<"fill "<<i<<" "<<TkrNumHits<<std::endl;
+	      if ( DEBUG ) std::cout<<"fill "<<i<<" "<<TkrNumHits<<std::endl;
 	    }
 	  aTree->Fill();
 	  i++;

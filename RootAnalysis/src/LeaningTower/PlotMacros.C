@@ -11,6 +11,9 @@
 #include "TStyle.h"
 #include "TPaveText.h"
 
+const int NumGTCC = 8;
+const int NumGTRC = 9;
+
 TFile *myFile;
 TTree *myTree;
 TString TID;
@@ -1124,4 +1127,25 @@ void AllLayers01(int cut)
       if(i>0) h0->Add(NumHitsLayer(myCut)); 
     }
   h0->Draw();
+}
+
+void PrintTkrDiagnostics(TString myCuts="") {
+    const int width = 7;
+    TH1I* h = new TH1I("h", "h", 2, -0.5, 1.5);
+ 
+    std::cout << "GTRC\\GTCC";
+    for ( UInt_t GTCC=0; GTCC<NumGTCC; ++GTCC )
+        std::cout << std::setw(width) << GTCC;
+    std::cout << std::endl;
+    for ( UInt_t GTRC=0; GTRC<NumGTRC; ++GTRC ) {
+        std::cout << std::setw(9) << GTRC;
+        for ( UInt_t GTCC=0; GTCC<NumGTCC; ++GTCC ) {
+            TString varexp = TString("TkrDiagnostics[")+(GTCC*NumGTRC+GTRC)+"]";
+            myTree->Project("h", varexp, myCuts);
+            Int_t value = (Int_t)h->GetBinContent(h->GetBin(2)); // underflow:0, false:1, true:2
+            std::cout << std::setw(width) << value;
+        }
+        std::cout << std::endl;
+    }
+    delete h;
 }
