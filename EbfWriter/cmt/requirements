@@ -1,6 +1,6 @@
 package EbfWriter
-version v0r0p0
-
+version v0r0p1
+# $Header$
 use Event          *
 use GlastSvc       *
 
