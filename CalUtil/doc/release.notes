@@ -1,5 +1,6 @@
 /** @file release.notes
  * Package CalUtil
+ * v1r4p3      3-Jan-2005 jrb Eliminate unnecessary #include in TestAdcTools.cxx
  * v1r4p2     24-Sep-2004 ZF Made some slight modifications to TestAdcTool.cxx in order to make alg as close as possible to orig CalDigi algorithm
  * v1r4p1     27-Aug-2004 ZF CalCalibSvc and TestResponseTools (aka CalResponseSvc) are now online.
  * v1r4       06-Aug-2004 BG Modified CalUtil to reproduce the state of v1r2p2 for RespSvc development	
