@@ -17,13 +17,21 @@
 *
 * $Header$
 */
-const int runNum = 1;
-const int numParticles = 5;
+const UInt_t runNum = 1;
+const UInt_t numParticles = 5;
 Float_t randNum;
 
+bool floatInRange(Double_t actual, Double_t desired) {
+  const Double_t fudge=0.00001;
+  if ( (actual >= (desired - fudge)) && (actual <= (desired+fudge)) ){
+    return true;
+  }
+  return false;
+
+}
+
 /// Check the contents of the McEvent read in from the ROOT file.
-int checkMcEvent(const McEvent* mcEvt, Int_t ievent) {
-    int sc = 0;
+int checkMcEvent(const McEvent* mcEvt, UInt_t ievent) {
     if (mcEvt->getEventId() != ievent) {
         std::cout << "EventId does not match!!" << std::endl;
         return -1;
@@ -37,7 +45,7 @@ int checkMcEvent(const McEvent* mcEvt, Int_t ievent) {
 }
 
 /// Check the contents of the McParticle read in from the ROOT file
-int checkMcParticle(McParticle* mcPart, Int_t ipart, Int_t ievent) {
+int checkMcParticle(McParticle* mcPart, Int_t ipart, UInt_t ievent) {
     Float_t f = Float_t(ipart);
     Float_t fr = f*randNum;
     
@@ -50,21 +58,24 @@ int checkMcParticle(McParticle* mcPart, Int_t ipart, Int_t ievent) {
         return -1;
     }
     TLorentzVector initMom = mcPart->getInitialFourMomentum();
-    if ( (initMom.X() != f) || (initMom.Y() != f) || 
-        (initMom.Z() != f) || (initMom.T() != f) ) {
+    if ( !floatInRange(initMom.X(), f) || !floatInRange(initMom.Y(), f) || 
+        !floatInRange(initMom.Z(), f) || !floatInRange(initMom.T(), f) ) {
         std::cout << "McParticle initial momentum does not match" << std::endl;
         return -1;
     }
     TLorentzVector finalMom = mcPart->getFinalFourMomentum();
-    if ( (finalMom.X() != fr+ievent) || (finalMom.Y() != fr+ievent) || 
-        (finalMom.Z() != fr+ievent) || (finalMom.T() != fr+ievent) ) {
+    if ( !floatInRange(finalMom.X(), fr+ievent) || 
+         !floatInRange(finalMom.Y(), fr+ievent) || 
+        !floatInRange(finalMom.Z(), fr+ievent) || 
+        !floatInRange(finalMom.T(), fr+ievent) ) {
         std::cout << "McParticle final momentum: (" << finalMom.X() << ","
             << finalMom.Y() << "," << finalMom.Z() << "," << finalMom.T() << ")" << std::endl;
         return -1;
     }
     TVector3 finalPos = mcPart->getFinalPosition();
-    if ( (finalPos.X() != fr) || (finalPos.Y() != fr) || 
-        (finalPos.Z() != fr) ) {
+    if ( !floatInRange(finalPos.X(), fr) || 
+         !floatInRange(finalPos.Y(), fr) || 
+        !floatInRange(finalPos.Z(), fr) ) {
         std::cout << "McParticle final position does not match" << std::endl;
         return -1;
     }
@@ -82,7 +93,7 @@ int checkMcParticle(McParticle* mcPart, Int_t ipart, Int_t ievent) {
 }
 
 /// Check the contents of the McPositionHit read in from the ROOT file
-int checkMcPositionHit(const McPositionHit* mcPosHit, Int_t ipart, Int_t ievent) {
+int checkMcPositionHit(const McPositionHit* mcPosHit, Int_t ipart, UInt_t ievent) {
     
     Float_t f = Float_t(ipart);
     Float_t fr = f*randNum;
@@ -95,35 +106,37 @@ int checkMcPositionHit(const McPositionHit* mcPosHit, Int_t ipart, Int_t ievent)
     }
     
     TVector3 entry = mcPosHit->getEntryPosition();
-    if  ( (entry.X() != 1.) || (entry.Y() != 1.) ||
-        (entry.Z() != 1.) ) {
+    if  ( !floatInRange(entry.X(), 1.) || 
+          !floatInRange(entry.Y(), 1.) ||
+          !floatInRange(entry.Z(), 1.) ) {
         std::cout << "McPosHit entry is (" << entry.X() << "," << entry.Y() << ","
             << entry.Z() << ")" << std::endl;
         return -1;
     }
     
     TVector3 exit = mcPosHit->getExitPosition();
-    if ( (exit.X() != fr) || (exit.Y() != fr) || (exit.Z() != fr) ) {
+    if ( !floatInRange(exit.X(), fr) || !floatInRange(exit.Y(), fr) || 
+         !floatInRange(exit.Z(), fr) ) {
         std::cout << "McPosHit exit is (" << exit.X() << "," << exit.Y() 
             << "," << exit.Z() << std::endl;
         return -1;
     }
     
-    if (mcPosHit->getDepositedEnergy() != randNum) {
-        std::cout << "McPosHit dep Energy = " << mcPosHit->getDepositedEnergy() 
+    if (!floatInRange(mcPosHit->getDepositedEnergy(), randNum)) {
+        std::cout << "Error:  McPosHit dep Energy: " << mcPosHit->getDepositedEnergy() 
             << std::endl;
         return -1;
     }
     
-    if (mcPosHit->getParticleEnergy() != randNum*0.1) {
-        std::cout << "McPosHit particle Energy = " << mcPosHit->getParticleEnergy() 
+    if (!floatInRange(mcPosHit->getParticleEnergy(), randNum*0.1)) {
+        std::cout << "Error: McPosHit particle Energy = " << mcPosHit->getParticleEnergy() 
             << std::endl;
         
         return -1;
     }
     
-    if (mcPosHit->getTimeOfFlight() != randNum*0.4) {
-        std::cout << "McPosHit TOF: " << mcPosHit->getTimeOfFlight() << std::endl;
+    if (!floatInRange(mcPosHit->getTimeOfFlight(), randNum*0.4)) {
+        std::cout << "Error: McPosHit TOF: " << mcPosHit->getTimeOfFlight() << std::endl;
         return -1;
     }
     
@@ -131,11 +144,8 @@ int checkMcPositionHit(const McPositionHit* mcPosHit, Int_t ipart, Int_t ievent)
 }
 
 /// Check the contents of the McIntegratingHit read in from the ROOT file
-int checkMcIntegratingHit(McIntegratingHit* mcIntHit, Int_t ipart, Int_t ievent) {
+int checkMcIntegratingHit(McIntegratingHit* mcIntHit, UInt_t ipart, UInt_t ievent) {
     
-    Float_t f = Float_t(ipart);
-    Float_t fr = f*randNum;
-
     VolumeIdentifier id = mcIntHit->getVolumeId();
     std::cout << "McIntHit volumeId: " << id.name() << std::endl;
     if ( (id.size() != 1) || (id.getBits0to31() != 0) || (id.getBits32to63() != 0) ) {
@@ -145,12 +155,12 @@ int checkMcIntegratingHit(McIntegratingHit* mcIntHit, Int_t ipart, Int_t ievent)
 
     const McIntegratingHit::energyDepositMap mcPartMap = mcIntHit->getItemizedEnergy();
     if (mcPartMap.size() != 1) {
-        std::cout << "McIntHit map size is: " << mcPartMap.size();
+        std::cout << "Error: McIntHit map size is: " << mcPartMap.size();
         return -1;
     }
     McIntegratingHit::energyDepositMap::const_iterator it;
     for (it = mcPartMap.begin(); it != mcPartMap.end(); it++) {
-        if (it->second != 1.5) {
+        if (!floatInRange(it->second, 1.5)) {
             std::cout << "McInt map energy is incorrect" << std::endl;
             return -1;
         }
@@ -161,7 +171,7 @@ int checkMcIntegratingHit(McIntegratingHit* mcIntHit, Int_t ipart, Int_t ievent)
 
 
 /// Read in the ROOT file just generated via the write method
-int read(char* fileName, int numEvents) {
+int read(char* fileName, unsigned int numEvents) {
     TFile *f = new TFile(fileName, "READ");
     TTree *t = (TTree*)f->Get("Mc");
     McEvent *evt = 0;
@@ -212,7 +222,7 @@ int write(char* fileName, int numEvents) {
     
     TRandom randGen;
     VolumeIdentifier id;
-    Int_t ievent, ipart;
+    UInt_t ievent, ipart;
     randNum = randGen.Rndm();
     for (ievent = 0; ievent < numEvents; ievent++) {
         
@@ -269,7 +279,7 @@ int write(char* fileName, int numEvents) {
 int main(int argc, char **argv) {
     char *fileName = "mc.root";
     int n = 1;
-    int numEvents = 10;
+    unsigned int numEvents = 10;
     if (argc > 1) {
         fileName = argv[n++];
     } 
@@ -281,7 +291,11 @@ int main(int argc, char **argv) {
     sc = write(fileName, numEvents);
     sc = read(fileName, numEvents);
     
-    if (sc == 0) std::cout << "MC ROOT file writing and reading suceeded!" << std::endl;
+    if (sc == 0) {
+      std::cout << "MC ROOT file writing and reading suceeded!" << std::endl;
+    } else {
+      std::cout << "FAILED" << std::endl;
+    }
     
     return(sc);
 }
