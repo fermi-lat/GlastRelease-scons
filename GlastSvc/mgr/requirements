@@ -52,16 +52,20 @@ macro_append cppflags ""\
 macro GlastSvc_shlibflags   "$(componentshr_linkopts) $(use_linkopts)" \
                  VisualC  "$(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
 
+
+# WinIncludes is to allow header files to be added to the 
+# VC++ workspace, without causing build problems on unix
+macro WinIncludes "" \
+      VisualC     " ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
+                    GlastDetSvc/*.h EventSelector/*.h \
+                    ../GlastSvc/MonteCarlo/*.h ../GlastSvc/Irf/*.h \
+                    DbConverters/*.h ../GlastSvc/Raw/*.h \
+                    test/*.h test/*.txt "
+
 # build this for non-shareable testing
 # note the addition of Raw. Take out shortly.
-application test ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
-                 GlastDetSvc/*.h  GlastDetSvc/*.cpp \
-                 EventSelector/*.h  EventSelector/*.cpp \
-                 ../GlastSvc/MonteCarlo/*.h MonteCarlo/*.cpp \
-                 ../GlastSvc/Irf/*.h Irf/*.cpp \
-                 DbConverters/*.h DbConverters/*.cpp \
-                 ../GlastSvc/Raw/*.h Raw/*.cpp \
-                 Dll/*.cpp \
-                 test/*.cpp test/*.h test/*.txt
+application test  GlastDetSvc/*.cpp EventSelector/*.cpp \
+                  MonteCarlo/*.cpp Irf/*.cpp DbConverters/*.cpp \
+                  Raw/*.cpp Dll/*.cpp test/*.cpp \
+                  ${WinIncludes} 
 
-		
