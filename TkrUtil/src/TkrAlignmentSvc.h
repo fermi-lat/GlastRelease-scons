@@ -148,6 +148,8 @@ private:
     int m_testMode;
     /// file flag: bit 0 means sim file exists, bit 1 means rec file exists
     int m_fileFlag;
+    /// maximum allowed delta (sqrt(deltaX**2 + sqrt(deltaY**2)
+    double m_maxDelta;
     
     /// dimension of arrays
     // the flight instrument only has (4 ladders)x(4 wafers) but to allow
