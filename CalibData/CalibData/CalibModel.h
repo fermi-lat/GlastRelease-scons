@@ -46,9 +46,16 @@ const CLID CLID_Calib_CAL_IntNonlin  = 6205;
 const CLID CLID_Calib_CAL_DiffNonlin = 6206;
 const CLID CLID_Calib_CAL_HotChan    = 6207;
 const CLID CLID_Calib_CAL_DeadChan   = 6208;
-const CLID CLID_Calib_CAL_DiscrLO    = 6209;
-const CLID CLID_Calib_CAL_DiscrHI    = 6210;
+// As of Sept 2004, CAL folk expect never to use DiscrLO and DiscrHI
+// const CLID CLID_Calib_CAL_DiscrLO    = 6209;
+// const CLID CLID_Calib_CAL_DiscrHI    = 6210;
 const CLID CLID_Calib_CAL_MuSlope    = 6211;
+
+//  Added 13 Sept. 2004
+const CLID CLID_Calib_CAL_MevPerDac  = 6212;
+const CLID CLID_Calib_CAL_TholdCI    = 6213;
+const CLID CLID_Calib_CAL_TholdMuon  = 6214;
+const CLID CLID_Calib_CAL_Asym       = 6215;
 
 const CLID CLID_Calib_ACD_Eff        = 6300;
 const CLID CLID_Calib_ACD_ThreshHigh = 6301;
@@ -99,6 +106,10 @@ const CLID CLID_Calib_CalibTest1       = 6500;
       _EXTERN_ std::string   CAL_DiscrHI;
       _EXTERN_ std::string   CAL_MuSlope;
 
+      _EXTERN_ std::string   CAL_MevPerDac;
+      _EXTERN_ std::string   CAL_TholdCI;
+      _EXTERN_ std::string   CAL_TholdMuon;
+      _EXTERN_ std::string   CAL_Asym;
       //   ... more for CAL calib types
 
       //   ... more for ACD calib types 
