@@ -8,7 +8,7 @@
   <br>
   the file /src/test/jobOptions.txt holds information used for the implementation of FluxSvc.
   it also holds the standard set of strings representing xml filenames, thus allowing multiple 
-  xml files to be used.
+  xml files to be used. <a href="../FluxSvcDoc2.htm">More Documentation</a>
   <br>
   <hr>
   \section notes release notes

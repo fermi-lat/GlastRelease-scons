@@ -1,104 +1,125 @@
-<HTML>
-<HEAD>
-<META NAME="Generator" CONTENT="Corel WordPerfect 8">
-<TITLE></TITLE>
-</HEAD>
-<BODY TEXT="#000000" LINK="#0000ff" VLINK="#551a8b" ALINK="#ff0000" BGCOLOR="#c0c0c0">
+<html>
 
-<BR WP="BR1"><BR WP="BR2">
-<P ALIGN="CENTER"><FONT FACE="Courier New" SIZE="+1"><STRONG><U>Systems of the FluxSvc Package</U></STRONG></FONT></P>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Systems of the FluxSvc Package</title>
+</head>
 
-<P><FONT SIZE="-1"></FONT><img src="FluxSvcFig1.jpg" width="550" height="423" align=bottom ></P>
+<body>
 
-<P><FONT FACE="Courier New" SIZE="-1"><STRONG>How the SpectrumFactoryTable infrastructure works:</STRONG></FONT></P>
+<b><u><font SIZE="4">
+<p ALIGN="CENTER">Systems of the FluxSvc Package</p>
+</font></u></b><font SIZE="2">
+<p><img SRC="FluxSvcFig1.jpg" WIDTH="550" HEIGHT="423"></p>
+<b>
+<p>How the SpectrumFactoryTable infrastructure works:</p>
+</b><i>
+<p>SpectrumFactoryTable:</p>
+</i>
+<p>SpectrumFactoryTable is a singleton object, which is also a map designed to
+hold connections between names of potential sources and pointers to their
+associated SpectrumFactories (see below).</p>
+<i>
+<p>SpectrumFactory:</p>
+</i>
+<p>SpectrumFactory is a template class which holds methods to instantiate the
+classes it represents. It also adds a reference to itself into
+SpectrumFactoryTable upon its creation, with the line:</p>
+<p>SpectrumFactoryTable::instance()-&gt;addFactory(classname, this);</p>
+<p>this serves to ensure that all created SpectrumFactories are represented in
+the SpectrumFactoryTable.</p>
+<i>
+<p>At run time:</p>
+</i>
+<p>In each Spectrum-type Object (i.e. HeSpectrum.cxx), lines like these are
+called:</p>
+<p>static SpectrumFactory&lt;HeSpectrum&gt; factory;</p>
+<p>const ISpectrumFactory&amp; HeSpectrumFactory = factory;</p>
+<p>This properly creates an ISpectrumFactory for each Spectrum Object, to be
+used for instantiating this class in the future (note that this also means that
+the SpectrumFactoryTable is filled with references to each Spectrum Object to do
+the instantiation).</font></p>
+<i><font SIZE="2">
+<p>also:</font></i><font SIZE="2"> in SpectrumFactoryTable.cxx, the line:</p>
+<p>SpectrumFactoryTable* SpectrumFactoryTable::s_instance = 0;</p>
+<p>forces creation of the SpectrumFactoryTable Object, and then in the
+constructor:</p>
+<p>s_instance=this;</p>
+<p>sets the object up as a singleton to be called with
+SpectrumFactoryTable::instance();</p>
+<p>After this process has been done, a Spectrum Object can be instantiated with
+the line:</p>
+<p>SpectrumFactoryTable::instance()-&gt;instantiate(name);</p>
+<p>Here, A reference to the singleton SpectrumFactoryTable is found from the
+instance() method, then the instantiate(name) method finds the entry in the
+internal map corresponding to the desired SpectrumFactory, and uses it's
+instantiate() method to make the desired Spectrum.</p>
+<p><img SRC="FluxSvcFig2.jpg" WIDTH="765" HEIGHT="352"></p>
+<b>
+<p>How FluxSvc Makes EventSource:</p>
+</b>
+<p>| FluxSvc | ===&gt; &quot;source&quot; method gets called to create the link
+to Flux.</p>
+<p>| FluxSvc | ---&gt; | Flux | ====&gt; FluxSvc::initialize() is called,
+FluxMgr is instantiated, Flux is passed a reference to it.</p>
+<p>| FluxSvc | ---&gt; | Flux | ---&gt; | FluxMgr | ===&gt; Now FluxMgr::source()
+creates some kind of EventSource (see next section), which can be addressed from
+the Flux object.</p>
+<b>
+<p>How Event/Composite/FluxSource works:</p>
+</b>
+<p>As above, FluxMgr::source(name) is responsible for creating an EventSource
+(or the appropriate object inheriting from EventSource) and returning the
+pointer. Basically, one of three things happen at this point:</p>
+<i>
+<p>(1):</i> A Spectrum is created with SpectrumFactoryTable::instance()-&gt;instantiate(name),then
+a FluxSource is created with that Spectrum as the internally-held Spectrum.</p>
+<i>
+<p>(2):</i> If the source is defined in the XML, a FluxSource is created which
+is instantiated from the relevant XML element (this basically is the same
+process, albeit being handled in FluxSource - the construction is handled
+differently if the Spectrum is to return the direction, etc.)</p>
+<i>
+<p>(3):</i> If a CompositeSource is needed (read: a &quot;nestedsource&quot;
+element is found), each contained XML element is used to create a FluxSource as
+above, then each FluxSource is added into a CompositeSource ( via
+CompositeSource-&gt;addSource(getSourceFromXML(selem)); ), which has been
+created to hold them all.</p>
+<p>From here, we can see how EventSource::rate(time), flux(time), or whatever
+else can be called and the proper information returned.</p>
+<b>
+<p>EventSource::event():</p>
+</b>
+<p>Once all this linkage is established, we must have a method of calling
+subsequent particles through the interface. EventSource::event is responsible
+for calling the &quot;next&quot; particle, and returning a
+FluxSource(EventSource) corresponding to it. As overridden by FluxSource, this
+is no more difficult than recalculating everything involved with the particle,
+and returning a pointer to itself. As overridden by CompositeSource, however,
+this method sequentially calls the interval() method of each contained
+FluxSource in order to determine which particle would have &quot;come
+first&quot;, then returns a pointer to that specific object. Thus, subsequent
+particles are called into existence tis way, and can be addressed thereafter.</p>
+</font><b><font SIZE="2">
+<p>How External Spectrum Declaration Works:</p>
+</font></b><font SIZE="2">
+<p>An ISpectrum Object can be declared ENTIRELY outside the memory space of</p>
+<p>FluxSvc (i.e.) in another package, like so:</p>
+<p>class ExternalSpectrum : public ISpectrum{</p>
+<p>....</p>
+<p>}</p>
+<p>Then, in the external code, we can create a RemoteSpectrumFactory object
+(which works essentially like SpectrumFactory, but uses world-accessible code to
+insert the new spectrum), and add our new Spectrum to the Service:</p>
+<p>static RemoteSpectrumFactory&lt;ExternalSpectrum&gt; testFactory(m_fluxSvc);</p>
+<p>where m_fluxSvc is a pointer to the FluxSvc object that the external package
+has created. NOte that the include files ISPectrum.h and ISpectrumFactory.h from
+FluxSvc must be included, as the class RemoteSpectrumFactory resides in
+ISpectrumFactory.h.</p>
+</font>
 
-<P><FONT FACE="Courier New" SIZE="-1"><EM>SpectrumFactoryTable:</EM></FONT></P>
+</body>
 
-<P><FONT FACE="Courier New" SIZE="-1">SpectrumFactoryTable is a singleton object, which is also a map designed to hold connections between
-names of potential sources and pointers to their associated SpectrumFactories (see below).</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1"><EM>SpectrumFactory: </EM></FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">SpectrumFactory is a template class which holds methods to instantiate the classes it represents. It
-also adds a reference to itself into SpectrumFactoryTable upon its creation, with the line:</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">SpectrumFactoryTable::instance()-&gt;addFactory(classname, this);</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">this serves to ensure that all created SpectrumFactories are represented in the SpectrumFactoryTable.</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1"><EM>At run time:</EM></FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">In each Spectrum-type Object (i.e. HeSpectrum.cxx), lines like these are called:</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">static SpectrumFactory&lt;HeSpectrum&gt; factory;</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">const ISpectrumFactory&amp; HeSpectrumFactory = factory;</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">This properly creates an ISpectrumFactory for each Spectrum Object, to be used for instantiating this
-class in the future (note that this also means that the SpectrumFactoryTable is filled with references
-to each Spectrum Object to do the instantiation).</FONT></P>
-
-<BR WP="BR1"><BR WP="BR2">
-<P><FONT FACE="Courier New" SIZE="-1"><EM>also:</EM> in SpectrumFactoryTable.cxx, the line: </FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">SpectrumFactoryTable* SpectrumFactoryTable::s_instance = 0;</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">forces creation of the SpectrumFactoryTable Object, and then in the constructor:</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">s_instance=this;</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">sets the object up as a singleton to be called with SpectrumFactoryTable::instance();</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">After this process has been done, a Spectrum Object can be instantiated with the line:</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">SpectrumFactoryTable::instance()-&gt;instantiate(name);</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">Here, A reference to the singleton SpectrumFactoryTable is found from the instance() method, then the
-instantiate(name) method finds the entry in the internal map corresponding to the desired
-SpectrumFactory, and uses it's instantiate() method to make the desired Spectrum.</FONT></P>
-
-<P><FONT SIZE="-1"></FONT><img src="FluxSvcFig2.jpg" width="765" height="352" align=bottom ></P>
-
-<P><FONT FACE="Courier New" SIZE="-1"><STRONG>How FluxSvc Makes EventSource:</STRONG></FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">| FluxSvc | ===&gt; "source" method gets called to create the link to Flux.</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">| FluxSvc | ---&gt; | Flux | ====&gt; FluxSvc::initialize() is called, FluxMgr is instantiated, Flux is
-passed a reference to it.</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">| FluxSvc | ---&gt; | Flux | ---&gt; | FluxMgr | ===&gt; Now FluxMgr::source() creates some kind of EventSource
-(see next section), which can be addressed from the Flux object.</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1"><STRONG>How Event/Composite/FluxSource works:</STRONG></FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">As above, FluxMgr::source(name) is responsible for creating an EventSource (or the appropriate object
-inheriting from EventSource) and returning the pointer. Basically, one of three things happen at this
-point:</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1"><EM>(1):</EM> A Spectrum is created with SpectrumFactoryTable::instance()-&gt;instantiate(name),then a FluxSource
-is created with that Spectrum as the internally-held Spectrum.</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1"><EM>(2):</EM> If the source is defined in the XML, a FluxSource is created which is instantiated from the
-relevant XML element (this basically is the same process, albeit being handled in FluxSource - the
-construction is handled differently if the Spectrum is to return the direction, etc.)</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1"><EM>(3):</EM> If a CompositeSource is needed (read: a "nestedsource" element is found), each contained XML
-element is used to create a FluxSource as above, then each FluxSource is added into a CompositeSource (
-via CompositeSource-&gt;addSource(getSourceFromXML(selem)); ), which has been created to hold them all.</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">From here, we can see how EventSource::rate(time), flux(time), or whatever else can be called and the
-proper information returned.</FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1"><STRONG>EventSource::event():</STRONG></FONT></P>
-
-<P><FONT FACE="Courier New" SIZE="-1">Once all this linkage is established, we must have a method of calling subsequent particles through the
-interface. EventSource::event is responsible for calling the "next" particle, and returning a
-FluxSource(EventSource) corresponding to it. As overridden by FluxSource, this is no more difficult
-than recalculating everything involved with the particle, and returning a pointer to itself. As
-overridden by CompositeSource, however, this method sequentially calls the interval() method of each
-contained FluxSource in order to determine which particle would have "come first", then returns a
-pointer to that specific object. Thus, subsequent particles are called into existence tis way, and can
-be addressed thereafter.</FONT></P>
-
-</BODY>
-</HTML>
+</html>
