@@ -24,7 +24,8 @@ macro_append Event_headers "" WIN32 " \
         ../Event/Digi/*.h \
         ../Event/Recon/*.h \
         ../Event/Recon/TkrRecon/*.h\
-        ../Event/Recon/CalRecon/*.h
+        ../Event/Recon/CalRecon/*.h\
+        ../Event/RelTable/*.h
 
 library Event -no_share\
         MonteCarlo/*.cxx \
@@ -42,3 +43,4 @@ macro GlastEvent_stamps   "${EventDir)/Event.stamp"
 
 application test_Event test/testmain.cxx
 
+#application test_Tables test/test_RelTabs.cxx
