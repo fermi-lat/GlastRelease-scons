@@ -1,15 +1,15 @@
 package HepRepCorba
-version v0r5
+version v0r6
 author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
 
 use GlastPolicy
+use OmniOrb
 
 apply_pattern packageShr
 apply_pattern package_include
 
 private
 
-use ACETAO
 use HepRepSvc
 
 

@@ -1,6 +1,5 @@
 #include <iostream>
 
-#include "HepRepS.h"
 #include "HepRep_impl.hh"
 #include "HepRepSvc/IFiller.h"
 
@@ -85,12 +84,13 @@ void HepRep_impl::setRegistry(IRegistry* r)
       typeTree->id.name = CORBA::string_dup((*i).c_str());
       typeTree->id.version = CORBA::string_dup("1.0");
       typeTree->types.length(0);
-      
+           
       m_builder->setTypeTree(typeTree);
       fillerCol temp = m_registry->getFillersByType(*i);
+
       for(j=temp.begin(); j!=temp.end();j++)
         {
-        (*j)->buildTypes();
+          (*j)->buildTypes();
         }
       
       m_typeTrees[(*i)]= typeTree;
@@ -135,7 +135,7 @@ HepRepInstanceTree* HepRep_impl::getInstances(const char* instanceTreeName,
 
   if (temp.size())
     {
-      HepRepInstanceList tmp(5000);
+      HepRepInstanceList tmp;
       tmp.length(0);
       instanceTree->id.name = CORBA::string_dup(instanceTreeName);
       instanceTree->id.version = CORBA::string_dup(instanceTreeVersion);
@@ -143,7 +143,7 @@ HepRepInstanceTree* HepRep_impl::getInstances(const char* instanceTreeName,
       instanceTree->typeTreeID.version = CORBA::string_dup("1.0");
       instanceTree->instances = tmp;
     }
-
+    
 
   std::vector<std::string> names;
   for(unsigned int i=0;i<typeNames.length();i++)

@@ -6,8 +6,7 @@
 #include <map>
 #include "HepRepSvc/IBuilder.h"
 
-#include "HepRepS.h"
-#include "HepRepC.h"
+#include "HepRep.hh"
 
 /** 
  *  @class CorbaBuilder

@@ -150,6 +150,7 @@ void CorbaBuilder::addInstance(std::string father,
   in.length(0);
   */
 
+
   if (father == "")
     {
       int iType = m_instanceTree->instances.length()+1;
@@ -202,6 +203,7 @@ void CorbaBuilder::addType(std::string father,
                            std::string desc, 
                            std::string info)
 {
+    
   if (father == "")
     {
       int iType = m_typeTree->types.length()+1;
@@ -213,12 +215,14 @@ void CorbaBuilder::addType(std::string father,
       m_typeTree->types[iType-1].attValues.length(0);
       m_typeTree->types[iType-1].types.length(0);
 
+      
       std::vector<int> temp(1,iType-1);
       m_types[name] = temp;
       m_actualType = temp;
     }
   else
     {
+
       std::vector<int> temp2 = m_types[father];
 
       HepRepType* type;
@@ -228,6 +232,7 @@ void CorbaBuilder::addType(std::string father,
           type = getTypeBySequence(temp2);
         }
 
+      
       if (type)
         {
           int jType = type->types.length()+1;
@@ -239,7 +244,7 @@ void CorbaBuilder::addType(std::string father,
           type->types[jType-1].attDefs.length(0);
           type->types[jType-1].attValues.length(0);
           type->types[jType-1].types.length(0);
-
+                      
           temp2.push_back(jType-1);
           m_types[name] = temp2;
           m_actualType = temp2;
@@ -287,11 +292,14 @@ void CorbaBuilder::setSubinstancesNumber(std::string name, unsigned int i)
   std::vector<int> temp = m_instances[name];
   HepRepInstance* instance = getInstanceBySequence(temp);
 
+  
   if (instance)
     {
-      HepRepInstance::_tao_seq_HepRepInstance in(i);
+//      HepRepInstanceList in(i);
+
+//      instance->instances = in;
       
-      instance->instances = in;
+      instance->instances.replace(i,0,0,FALSE);
     }
 }
 

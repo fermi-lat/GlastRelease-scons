@@ -1,6 +1,7 @@
 /// An HepEvent server; mainly derived from Joseph Perl one .. adapted for GLAST and
 /// GAUDI framework
-
+/// This is a test server; needs lot of work
+//
 #include "HepRep_impl.hh"
 #include "HepEventServer_impl.h"
 #include <iostream>
@@ -95,7 +96,6 @@ char* HepEventServer_impl::setEvent(const char* command)
   
   if (cmd == "next")
     {
-      // Usare l'heprepsvc
       m_svcAdapter->nextEvent(1);
       sName << "Event-" << temp;
       temp++;
@@ -145,7 +145,7 @@ char* HepEventServer_impl::setEvent(const char* command)
 
 
 /// Return the number of events (if known); disabled for now
-int HepEventServer_impl::getNumberOfEvents()
+CORBA::Long HepEventServer_impl::getNumberOfEvents()
 {
 
   return 0;

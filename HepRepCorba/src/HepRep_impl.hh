@@ -5,8 +5,7 @@
 
 #include "HepRepSvc/IRegistry.h"
 
-#include "HepRepS.h"
-#include "HepRepC.h"
+#include "HepRep.hh"
 #include "CorbaBuilder.h"
 
 class HepRep_impl : virtual public POA_HepRep

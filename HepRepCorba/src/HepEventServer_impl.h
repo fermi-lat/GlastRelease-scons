@@ -1,14 +1,15 @@
 #ifndef HepEventServer_impl_hh
 #define HepEventServer_impl_hh
 
-#include "HepRepC.h"
-#include "HepEventServerS.h"
+#include "HepEventServer.hh"
+#include "HepRep.hh"
 #include "HepRepSvc/ISvcAdapter.h"
 #include "HepRepSvc/IRegistry.h"
 
 class HepRep_impl;
 
-class HepEventServer_impl : public POA_HepEventServer
+class HepEventServer_impl : public POA_HepEventServer, 
+                            public PortableServer::RefCountServantBase
 {
 
 public:
@@ -21,7 +22,7 @@ public:
   
   char* setEvent (const char* eventID);
 
-  int getNumberOfEvents();
+  CORBA::Long getNumberOfEvents();
 
   char* getEventTitle();
 
