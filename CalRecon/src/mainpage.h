@@ -3,7 +3,7 @@
 
 /** @mainpage package CalRecon
  *
- * @authors A.Chekhtman, R.Terrier, J.A.Hernando, G. Musat
+ * @authors A.Chekhtman, R.Terrier, J.A.Hernando, G. Musat, B. Giebels
  *
  * @section intro Introduction
  *
