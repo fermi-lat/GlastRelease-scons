@@ -2,6 +2,7 @@
  Package AcdDigi
  Coordinator: H. Kelly
 
+ v1r3p4 09-Sep-2002 HMK Fix up documentation\n
  v1r3p3 05-Sep-2002 HMK Fix some gcc warnings\n
  v1r3p2 04-Sep-2002 HMK Use AcdId ctor to unpack VolId\n
  v1r3p1 02-Sep-2002 THB Fix requirements file to get test routine to run\n
