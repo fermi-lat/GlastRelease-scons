@@ -12,11 +12,11 @@ class GDDsinglePos :public GDDposition {
   /**
    *  This methods sets and gets the xRot,yRot,zRot,S
    */ 
-  double getXRot()const{ return XRot; }
+  double getXRot()const{ return xRot; }
   void setXRot(double XRot){xRot = XRot; }
-  double getYRot()const{ return YRot; }
+  double getYRot()const{ return yRot; }
   void setYRot(double YRot){yRot = YRot; }
-  double getZRot()const{ return yRot; }
+  double getZRot()const{ return zRot; }
   void setZRot(double ZRot){zRot = ZRot; }
   double getS()const{ return S; }
   void setS(double s){ S = s; }
