@@ -13,10 +13,14 @@ namespace calibUtil {
   | Metadata::eValid  | Metadata::eInputDesc | Metadata::eComment;
 
 
-  Metadata::Metadata() : m_readCxt(0), m_writeCxt(0), m_row(""), 
-    m_rowStatus(0), m_table("$(MYSQL_METATABLE)") {
+  Metadata::Metadata(std::string host, std::string table)  : m_readCxt(0), 
+    m_writeCxt(0), m_row(""), 
+    m_rowStatus(0), m_host(host), m_table(table) {
+    if (table.compare("*") == 0) m_table = std::string("$(MYSQL_METATABLE)");
+    if (host.compare("*") == 0) m_host = std::string("$(MYSQL_HOST)");
+
     int nsub = facilities::Util::expandEnvVar(&m_table);
-    // IF this doesn't work, use default
+    // If this doesn't work, use default
     if (!nsub) m_table = std::string("metadata");
   }
 
@@ -26,7 +30,7 @@ namespace calibUtil {
   }
 
 
-  Metadata::eRet Metadata::addCreator(std::string creator) {
+  Metadata::eRet Metadata::addCreator(const std::string& creator) {
     if (!(m_rowStatus & eOpened) ) return RETWrongState;
     if (m_rowStatus & eCreator) return RETWrongState;
 
@@ -41,7 +45,7 @@ namespace calibUtil {
   //                       or maybe not
   //  }
 
-  Metadata::eRet Metadata::addInputDesc(std::string desc) {
+  Metadata::eRet Metadata::addInputDesc(const std::string& desc) {
     if (!(m_rowStatus & eOpened) ) return RETWrongState;
     if (m_rowStatus & eInputDesc) return RETWrongState;
 
@@ -50,12 +54,21 @@ namespace calibUtil {
     return RETOk;
   }
 
-  Metadata::eRet Metadata::addNotes(std::string comment) {
+  Metadata::eRet Metadata::addNotes(const std::string& comment) {
     if (!(m_rowStatus & eOpened) ) return RETWrongState;
     if (m_rowStatus & eComment) return RETWrongState;
 
     m_row += ",notes='"; m_row += comment; m_row += "'";
     m_rowStatus |= eComment;
+    return RETOk;
+  }
+
+  Metadata::eRet Metadata::addFlavor(const std::string& flavor) {
+    if (!(m_rowStatus & eOpened) ) return RETWrongState;
+    if (m_rowStatus & eFlavor) return RETWrongState;
+
+    m_row += ",flavor='"; m_row += flavor; m_row += "'";
+    m_rowStatus |= eFlavor;
     return RETOk;
   }
 
@@ -166,12 +179,13 @@ namespace calibUtil {
                                     eCalibType calibType, 
                                     const facilities::Timestamp& timestamp,
                                     unsigned int levelMask, 
-                                    eInstrument instrument) {
+                                    eInstrument instrument,
+                                    const std::string& flavor) {
     const std::string* const ctypeStr = getCalibTypeStr(calibType);
     const std::string* const instStr = getInstrumentStr(instrument);
     if ((ctypeStr != 0) && (instStr !=0)) {
       return findBest(ser, *ctypeStr, timestamp, levelMask,
-                      *instStr);
+                      *instStr, flavor);
     }
     else return RETBadValue;
   }
@@ -180,7 +194,8 @@ namespace calibUtil {
                           const std::string& calibType, 
                           const facilities::Timestamp& timestamp, 
                           unsigned int levelMask,    // could have default
-                          const std::string& instrument) // could have default
+                          const std::string& instrument, // could have default
+                          const std::string& flavor)
   {
     eRet ret;
     *ser = 0;
@@ -197,6 +212,8 @@ namespace calibUtil {
     query += "completion = 'OK' and instrument ='"; query += instrument;
     query += "' and calib_type ='";
     query += calibType;
+    query += "' and flavor ='";
+    query += flavor;
     query += "' and '";
     query += timestamp.getString();
     query += "'> vstart and vend > '";
@@ -325,7 +342,8 @@ namespace calibUtil {
 
     int myRet = mysql_query(m_readCxt, q.c_str());
     if (myRet) {
-      std::cerr << "MySQL error during SELECT, code " << ret << std::endl;
+      std::cerr << "MySQL error during SELECT, code " << (int) ret 
+                << std::endl;
       return RETMySQLError;
     }
       
