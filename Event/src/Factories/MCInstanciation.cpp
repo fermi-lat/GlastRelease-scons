@@ -1,12 +1,12 @@
-// 
-//  Original author: Sawyer Gillespie
-//                   hgillesp@u.washington.edu
-//
 
-// *********
-//  This file instanciates concretely the implementation of all of these
-//  classes so that they may be included within factories in the DLL.
-//
+/*! \file MCInstanciation.cpp
+\brief based upon mcInstanciation.cpp by Markus Frank available within the LHCbEvent package
+
+This file instanciates concretely the implementation of all of these
+classes so that they may be included within factories in the DLL.
+
+Original author: Sawyer Gillespie, hgillesp@u.washington.edu
+*/
 
 // Include files
 #include "Gaudi/Kernel/ObjectFactory.h"

@@ -1,17 +1,10 @@
-//====================================================================
-// TopInstantiation.cpp
-//--------------------------------------------------------------------
-//
-//	Package   : LHCbEvent
-//
-//	Author    : Markus Frank
-//  History   :
-// +---------+----------------------------------------------+---------
-// |    Date |                 Comment                      | Who     
-// +---------+----------------------------------------------+---------
-// | 21/07/99| Initial version                              | MF
-// +---------+----------------------------------------------+---------
-//====================================================================
+/*! \file TopInstanciation.cpp
+\brief based upon topInstanciation.cpp by Markus Frank available within the LHCbEvent package
+This file instanciates concretely the implementation of all of these
+classes so that they may be included within factories in the DLL.
+
+*/
+
 #define EVENT_FACTORIES_TOPINSTANTIATION_CPP  1
 
 // Include files

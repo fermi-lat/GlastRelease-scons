@@ -1,17 +1,8 @@
-//====================================================================
-// GlastEvent_load.cpp
-//--------------------------------------------------------------------
-//
-//	Package   : GlastEvent
-//
-//	Author    : Markus Frank
-//  History   :
-// +---------+----------------------------------------------+---------
-// |    Date |                 Comment                      | Who     
-// +---------+----------------------------------------------+---------
-// | 21/07/99| Initial version                              | MF
-// +---------+----------------------------------------------+---------
-//====================================================================
+
+/*! \file GlastEvent_load.cpp
+\brief based upon LHCbEvent_load.cpp by Markus Frank
+*/
+
 #define GLASTEVENT_FACTORIES_GLASTEVENT_LOAD_CPP  1
 
 extern void   HitInstanciation();
