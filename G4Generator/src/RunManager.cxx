@@ -101,7 +101,7 @@ RunManager::RunManager(std::ostream& log, double defaultCutValue)
 RunManager::~RunManager()
 {
   G4StateManager* pStateManager = G4StateManager::GetStateManager();
-  pStateManager->SetNewState(Quit);
+  pStateManager->SetNewState(G4State_Quit);
 
   delete session;
 
@@ -143,10 +143,10 @@ void RunManager::BeamOn()
     {    
       G4StateManager* stateManager = G4StateManager::GetStateManager();
       RunInitialization();
-      stateManager->SetNewState(EventProc);
+      stateManager->SetNewState(G4State_EventProc);
       currentEvent = GenerateEvent(0);
       eventManager->ProcessOneEvent(currentEvent);
-      stateManager->SetNewState(GeomClosed);
+      stateManager->SetNewState(G4State_GeomClosed);
       RunTermination();
     }
 }
@@ -161,7 +161,7 @@ G4bool RunManager::ConfirmBeamOnCondition()
   G4StateManager* stateManager = G4StateManager::GetStateManager();
 
   G4ApplicationState currentState = stateManager->GetCurrentState();
-  if(currentState!=PreInit && currentState!=Idle)
+  if(currentState!=G4State_PreInit && currentState!=G4State_Idle)
     {
       G4cerr << "Illegal application state - BeamOn() ignored." << G4endl;
       return false;
@@ -210,7 +210,7 @@ void RunManager::RunInitialization()
       geometryNeedsToBeClosed = false;
     }
   G4StateManager* stateManager = G4StateManager::GetStateManager();
-  stateManager->SetNewState(GeomClosed);
+  stateManager->SetNewState(G4State_GeomClosed);
 
   runAborted = false;
 
@@ -244,14 +244,14 @@ void RunManager::RunTermination()
   delete currentRun;
   currentRun = NULL;
 
-  stateManager->SetNewState(Idle);
+  stateManager->SetNewState(G4State_Idle);
 }
 
 void RunManager::Initialize()
 {
   G4StateManager* stateManager = G4StateManager::GetStateManager();
   G4ApplicationState currentState = stateManager->GetCurrentState();
-  if(currentState!=PreInit && currentState!=Idle)
+  if(currentState!=G4State_PreInit && currentState!=G4State_Idle)
     {
       G4cerr << "Illegal application state - "
              << "RunManager::Initialize() ignored." << G4endl;
@@ -262,11 +262,11 @@ void RunManager::Initialize()
   G4UImanager* pUImanager = G4UImanager::GetUIpointer();
   pUImanager->SetCoutDestination(session);
 
-  stateManager->SetNewState(Init);
+  stateManager->SetNewState(G4State_Init);
   if(!geometryInitialized) InitializeGeometry();
   if(!physicsInitialized) InitializePhysics();
   if(!cutoffInitialized) InitializeCutOff();
-  stateManager->SetNewState(Idle);
+  stateManager->SetNewState(G4State_Idle);
   if(!initializedAtLeastOnce) initializedAtLeastOnce = true;
 
   pUImanager->SetCoutDestination(new G4UIsession);
@@ -318,10 +318,10 @@ void RunManager::AbortRun()
   // This method is valid only for GeomClosed or EventProc state
   G4ApplicationState currentState = 
     G4StateManager::GetStateManager()->GetCurrentState();
-  if(currentState==GeomClosed || currentState==EventProc)
+  if(currentState==G4State_GeomClosed || currentState==G4State_EventProc)
     {
       runAborted = true;
-      if(currentState==EventProc) eventManager->AbortCurrentEvent();
+      if(currentState==G4State_EventProc) eventManager->AbortCurrentEvent();
     }
   else
     {
