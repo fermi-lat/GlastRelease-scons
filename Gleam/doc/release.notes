@@ -3,6 +3,13 @@
  * package manager:T.Burnett
  * $Id$
 
+* v2r4 THB 09-oct-02  GUI fixes; get GlastSvc tagged to avoid FluxSvc compilation errors
+     use GuiSvc            v3r2
+     use GlastSvc          v9r3
+     use FluxSvc           v5r13
+     use FluxDisplay       v2r3
+     use CalDigi           v1r2p7
+
 * v2r3p3 THB 06-oct-02  Reorder detModel and xmlUtil due to changed dependence
 
 * v2r3p2 THB 03-oct-02
