@@ -1,0 +1,82 @@
+// One might want to include Gleam/basicoptions and update accordingly..but 
+// this works for now
+
+ApplicationMgr.DLLs+= { "GaudiAlg", "GaudiAud"};
+ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
+AuditorSvc.Auditors = {"ChronoAuditor"};
+ApplicationMgr.DLLs += {"LdfConverter"};
+
+EventSelector.Instrument = "EM";
+
+// ----------------------------
+// setup basic event loop stuff
+//
+ApplicationMgr.ExtSvc += { 
+    "LdfEventSelector/EventSelector" , 
+    "LdfCnvSvc/EventCnvSvc"
+    };
+
+EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+
+// Input EBF File
+// EventSelector.StorageType = "EBFFILE";
+EventSelector.StorageType = "EBFFITS";
+EventSelector.InputList = {"ebf030613205322.fits"};
+
+EventSelector.OutputLevel = 4;
+
+// ----------------------------
+//  a structure for the topalg, using sequencer steps
+
+
+ApplicationMgr.TopAlg = {
+      "Sequencer/Top" };
+
+
+Generator.Members = {};
+Digitization.Members = {};
+
+EventDisplay.Members = {
+   "TkrDisplayAlg"
+   };
+
+//the top sequence loop
+Top.Members={
+  // "Sequencer/Generator",
+  //  "Sequencer/Digitization",
+  //  "Sequencer/EventDisplay",
+      "Sequencer/Output" 
+};
+
+
+// ----------------------------
+//  Geometry definition
+//
+ApplicationMgr.DLLs += {"GlastSvc"};
+ApplicationMgr.ExtSvc += { "GlastDetSvc"};
+GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/em/emSegVols.xml";
+GlastDetSvc.visitorMode="recon";
+
+
+ApplicationMgr.DLLs +={ 
+    "RootIo"
+}; 
+
+digiRootWriterAlg.OutputLevel=3;
+reconRootWriterAlg.OutputLevel=3;
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel = 3;
+ApplicationMgr.EvtMax  = 1000000000;
+
+Output.Members = {
+    "digiRootWriterAlg"
+//  , "reconRootWriterAlg"
+};
+
+
+// Output DIGI file name
+digiRootWriterAlg.digiRootFile = "ebf030613205322_digi.root";
+
+
+

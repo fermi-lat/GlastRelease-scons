@@ -1,0 +1,32 @@
+package LdfConverter
+version v0
+
+author Heather Kelly <heather@lheapop.gsfc.nasa.gov>
+author Joanne Bogart <jrb@slac.stanford.edu>
+author Tracy Usher   <usher@slac.stanford.edu>
+
+public
+use GlastPolicy v*
+use GlastSvc v9r*
+use Event v9r*
+use ldfReader v*
+use LdfEvent v*
+#use ldfExt  v0r*  IExternal
+
+apply_pattern packageShr
+apply_pattern package_include
+
+private
+apply_pattern package_Cshlibflags
+apply_pattern package_headers
+
+macro_append cppflags  "" \
+      WIN32Debug ' /D "__i386" '\
+      WIN32      ' /D "__i386" '\
+      vsnet      ' /D__i386 ' 
+
+
+
+library LdfConverter  *.cxx Dll/*.cxx ${LdfConverter_headers}
+
+apply_pattern package_test

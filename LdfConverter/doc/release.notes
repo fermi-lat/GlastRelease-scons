@@ -1,0 +1,42 @@
+/** @file release.notes
+Package LdfConverter
+Coordinator:H.Kelly
+@verbatim
+
+v0      11-May-2004 hmk Rename to LdfConverter
+---------------------------------------------------------------------------
+v1r0    25-Mar-2004 hmk Use new EbfEvent package to separate TDS stuff 
+v0r10p2 24-Mar-2004 hmk Fix up requirements to make sure things build and run
+v0r10p1 03-Mar-2004 hmk Fix conversion of tag/eventNumber from eventSummary
+                        into a useable eventId
+v0r10p0 05-Feb-2004 hmk Update for new ebfReader interface for diagnostic
+v0r10   27-Jan-2004 hmk Handle PPC timebase
+v0r9    18-Dec-2003 hmk Handle time
+v0r8    18-Dec-2003 hmk Handle diagnostic data using EBF Online interface
+v0r7p0  26-Nov-2003 hmk really make the summary word stuff work
+v0r7    24-Nov-2003 hmk handle full event summary word
+v0r6p3  20-Nov-2003 hmk handle tkr layers in diagnostic data
+v0r6p2  18-Nov-2003 hmk add in missing EbfDiagnosticCnv.h file
+v0r6p1  13-Nov-2003 hmk Remove label from CalDiagnostic and set fromMc flag in DigiEvent
+v0r6p0  11-Nov-2003 hmk set CLID for diagnostic data in new temp file
+v0r6    11-Nov-2003 hmk Handle EM diagnostic data (trigger primitives)
+v0r5    31-Oct-2003 hmk read event Ids and run numbers
+v0r4    29-Oct-2003 hmk catch exceptions creating EbfParser in EbfEventSelector
+v0r3p2  06-Sep-2003 hmk add some example joboptions files
+v0r3p1  18-Aug-2003 hmk update to use ebfReader namespace
+v0r3p0  18-Aug-2003 hmk Make use ebfReader private
+v0r3    06-Aug-2003 hmk Add Cal converter
+v0r2p3  28-Jun-2003 jrb Get rid of unnecessary path_append to LD_LIBRARY_PATH
+v0r2p2   4-Jun-2003 jrb Pass instrument to EbfParser in all cases
+v0r2p1   4-Jun-2003 jrb Correctly handle and report exhaustion of evt source
+v0r2p0  20-May-2003 jrb New job options parm EbfDebugLevel (default = 0)
+v0r2    14-May-2003 jrb Compatible with new version of ebfReader package,
+                        in which instrument may be specified
+v0r1p0  10-May-2003 jrb Modify job options for current code (only can handle
+                        data from minitower for the time being)
+v0r1    28-Apr-2003 jrb Can handle FITSified or raw ebf
+v0r0p0  17-Apr-2003 jrb Add diagnostics (Leon), fix gcc warnings, add authors
+v0r0    11-Apr-2003 jrb Fix up job options input, other minor stuff
+v0      18-Mar-2003 HMK initial import
+@endverbatim
+*/
