@@ -11,7 +11,7 @@
 //////////////////////////////////////////////////////////////////////
 
 LayerGroup::LayerGroup(const Tuple& t, int min_layer, int max_layer)
-:  Analyze(t, "TKR_First_XHit", "Events used")
+:  Analyze(t, "Tkr1_1stLayer", "Events used")
 ,  m_psf(t,0,0)
 ,  m_energy(t)
 ,  m_minlayer(min_layer), m_maxlayer(max_layer)

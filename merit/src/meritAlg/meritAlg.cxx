@@ -161,21 +161,6 @@ StatusCode meritAlg::initialize() {
             return StatusCode::FAILURE;
         }
     }
-
-    // define some aliases to start, for the transition
-    //                 Atwood             old
-    m_tuple->add_alias("McEnergy",        "MC_Energy");
-    m_tuple->add_alias("McDirErr",        "MC_Gamma_Err");
-    m_tuple->add_alias("TkrEnergyCorr",   "REC_CsI_Corr_Energy");
-    m_tuple->add_alias("TkrNumTracks",    "TKR_No_Tracks");
-    m_tuple->add_alias("GltWord",         "trig_bits");
-
-    m_tuple->add_alias("Tkr1_1stLayer",    "TKR_First_XHit");
-
-    m_tuple->add_alias("VtxXDir",         "TKR_Gamma_xdir");
-    m_tuple->add_alias("VtxYDir",         "TKR_Gamma_ydir");
-    m_tuple->add_alias("VtxZDir",         "TKR_Gamma_zdir");
-
     static double dummy = -99; // flag for defined, not implemented
 
      //now make the parallel ROOT tuple

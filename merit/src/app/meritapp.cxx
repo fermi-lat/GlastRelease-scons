@@ -14,7 +14,7 @@
 #include <sys/types.h>
 #include <sys/timeb.h>
 #include <string>
-#include <strstream>
+#include <sstream>
 
 #include <assert.h>
 
@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
     // now assign input stream, either the file name or std input
         // Determine the # of events stored in ntuple
 
-    std::strstream title; 
+    std::stringstream title; 
     title << "gen(" << tuple->numEvents() << ")" << '\0';
     tuple->setTitle(title.str());
 
