@@ -111,11 +111,25 @@ G4VPhysicalVolume* DetectorConstruction::GeometryConstruct()
   g4ID = visitor->g4Identifiers;
 
   res = visitor->worldphys;
-  visitor->summary(std::cout);
+  // visitor->summary(std::cout);
   
   delete visitor;
 
   return res;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

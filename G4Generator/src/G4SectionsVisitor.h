@@ -43,6 +43,11 @@ class G4SectionsVisitor : public detModel::SectionsVisitor {
   virtual void visitBox(detModel::Box*);
 
   /**
+   * This is the visitor for the Tube 
+   */
+  virtual void visitTube(detModel::Tube*){};
+
+  /**
    * This is the visitor for the GDDposXYZ 
    */
   virtual void visitPosXYZ(detModel::PosXYZ*);

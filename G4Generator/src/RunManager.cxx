@@ -50,25 +50,26 @@ RunManager::RunManager(std::string topvol, std::string visitorMode)
 {
   if(fRunManager)
   { G4Exception("RunManager constructed twice."); }
-  //G4UnitDefinition::BuildUnitsTable();
+
   fRunManager = this;
 
+  /// This dummy session is needed later to silent G4
   session = new UIsession;
 
+  /// The event manager of G4
   eventManager = new G4EventManager();
+  /// The timer of G4
   timer = new G4Timer();
 
+  /// Various G4 messenger needed
   G4ParticleTable::GetParticleTable()->CreateMessenger();
   G4ProcessTable::GetProcessTable()->CreateMessenger();
   randomNumberStatusDir = "./";
 
-  // The user stuff
+  /// The user stuff
   userDetector = new DetectorConstruction(m_topvol, m_visitorMode);
   physicsList = new PhysicsList;
   userPrimaryGeneratorAction = new PrimaryGeneratorAction;
-
-  G4UImanager* pUImanager = G4UImanager::GetUIpointer();
-  pUImanager->SetCoutDestination(session);
 }
 
 RunManager::~RunManager()
@@ -79,6 +80,7 @@ RunManager::~RunManager()
   delete session;
 
   delete timer;
+
   physicsList->RemoveProcessManager();
   G4ParticleTable::GetParticleTable()->DeleteMessenger();
   G4ProcessTable::GetProcessTable()->DeleteMessenger();
@@ -116,7 +118,7 @@ void RunManager::BeamOn()
 {
   G4bool cond = ConfirmBeamOnCondition();
   if(cond)
-  {
+  {    
     G4StateManager* stateManager = G4StateManager::GetStateManager();
 
     RunInitialization();
@@ -196,31 +198,6 @@ void RunManager::RunInitialization()
   if(verboseLevel>0) G4cout << "Start Run processing." << G4endl;
 }
 
-void RunManager::DoEventLoop(G4int n_event,const char* macroFile,G4int n_select)
-{
-  G4StateManager* stateManager = G4StateManager::GetStateManager();
-
-  if(verboseLevel>0) 
-  { timer->Start(); }
-
-  G4String msg;
-  if(macroFile!=NULL)
-  { 
-    if(n_select<0) n_select = n_event;
-    msg = "/control/execute ";
-    msg += macroFile;
-  }
-  else
-  { n_select = -1; }
-
-  G4int i_event;
-  for( i_event=0; i_event<n_event; i_event++ )
-  {
-
-  }
-
-}
-
 G4Event* RunManager::GenerateEvent(G4int i_event)
 {
   if(!userPrimaryGeneratorAction)
@@ -238,10 +215,6 @@ G4Event* RunManager::GenerateEvent(G4int i_event)
   return anEvent;
 }
 
-void RunManager::AnalyzeEvent(G4Event* anEvent)
-{
-}
-
 void RunManager::RunTermination()
 {
   G4StateManager* stateManager = G4StateManager::GetStateManager();
@@ -250,10 +223,6 @@ void RunManager::RunTermination()
   currentRun = NULL;
 
   stateManager->SetNewState(Idle);
-}
-
-void RunManager::StackPreviousEvent(G4Event* anEvent)
-{
 }
 
 void RunManager::Initialize()
@@ -267,12 +236,18 @@ void RunManager::Initialize()
     return;
   }
 
+  /// Set a dummy session to silent G4 intitialization messages on screen
+  G4UImanager* pUImanager = G4UImanager::GetUIpointer();
+  pUImanager->SetCoutDestination(session);
+
   stateManager->SetNewState(Init);
   if(!geometryInitialized) InitializeGeometry();
   if(!physicsInitialized) InitializePhysics();
   if(!cutoffInitialized) InitializeCutOff();
   stateManager->SetNewState(Idle);
   if(!initializedAtLeastOnce) initializedAtLeastOnce = true;
+
+  pUImanager->SetCoutDestination(new G4UIsession);
 }
 
 void RunManager::InitializeGeometry()

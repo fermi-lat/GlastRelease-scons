@@ -42,8 +42,8 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
 
   // Energy Deposition & Step Lenght
 
-  G4double edep = aStep->GetTotalEnergyDeposit();
-  G4double stepl = aStep->GetStepLength();
+  G4double edep = aStep->GetTotalEnergyDeposit()/MeV;
+  G4double stepl = aStep->GetStepLength()/mm;
 
   if ((edep==0.)) return false;      
 
@@ -77,12 +77,12 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
   G4ThreeVector FinPos = aStep->GetPostStepPoint()->GetPosition();
 #if 1
   std::cout << "Hit -> " 
-     << std::setw(8) << aStep->GetTrack()->GetDefinition()->GetParticleName()  
-     << std::setw(8) << std::setprecision(3) << edep 
-     << std::setw(8) << std::setprecision(3) <<stepl 
-     << std::setw(18) << name << " " 
-     << std::setw(12) << nameVolume << " " << material
-     << std::endl;
+	    << std::setw(8) << aStep->GetTrack()->GetDefinition()->GetParticleName()  
+	    << std::setw(8) << std::setprecision(3) << edep  
+	    << std::setw(8) << std::setprecision(3) <<stepl 
+	    << std::setw(18) << name << " " 
+	    << std::setw(12) << nameVolume << " " << material
+	    << std::endl;
 #endif
   m_energySummary[logVol->GetName()] += edep;
   return true;
