@@ -9,9 +9,9 @@
 
 
 #include "GlastEvent/TopLevel/ObjectVector.h"
-#include "GlastEvent/Hits/ACDhit.h"
-#include "GlastEvent/Hits/MCTrack.h"
-#include "GlastEvent/Hits/MCCalorimeterHit.h"
+#include "GlastEvent/MonteCarlo/MCACDhit.h"
+#include "GlastEvent/MonteCarlo/MCTrack.h"
+#include "GlastEvent/MonteCarlo/MCCalorimeterHit.h"
 
 /* ! 
 Derived from DetectorConverter, this class
@@ -22,12 +22,12 @@ Currently implmented is the ACD (Scintillator) into an ACDhitVector.
 class IRFConverter : public DetectorConverter {
 public:
 	IRFConverter() {
-		ACDcontainer = new ACDhitVector;
+		MCACDcontainer = new MCACDHitVector;
         MCCalorimeterHitContainer = new MCCalorimeterHitVector;
 	}
 
     ~IRFConverter() { 
-        if (ACDcontainer)  delete ACDcontainer;
+        if (MCACDcontainer)  delete MCACDcontainer;
         if (MCCalorimeterHitContainer) delete MCCalorimeterHitContainer;
     }
 
@@ -36,10 +36,10 @@ public:
         // ACD tile data
         // retrieve data only if this detector has data
         if ( !(s.empty()) ) {
-            ACDhit* tile = new ACDhit(); // Ian Note: this is the only place where this is done.
+            MCACDHit* tile = new MCACDHit(); 
             tile->setEnergy(s.energy());
             tile->setId(s.id());
-            ACDcontainer->push_back(tile);
+            MCACDcontainer->push_back(tile);
         } 
     }
 
@@ -88,12 +88,12 @@ public:
     }
 
  // provide access to the list of ACD tile data
-    ACDhitVector* getACDTiles() { return ACDcontainer; }
+    MCACDHitVector* getACDTiles() { return MCACDcontainer; }
 	MCCalorimeterHitVector* getMCCalHits() { return MCCalorimeterHitContainer; }
 
 private:
     // one of Gaudi's ObjectContainers
-	ACDhitVector* ACDcontainer;
+	MCACDHitVector* MCACDcontainer;
 	MCTrackVector* MCTrackContainer;
 	MCCalorimeterHitVector* MCCalorimeterHitContainer;
     
