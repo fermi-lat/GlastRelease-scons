@@ -3,6 +3,7 @@
  * Coordinator: J. Bogart
  *       *  EOH *
 
+   v1r2   3-Jan-2005  jrb Use xmlBase package rather than xml
  * v1r1   15-Dec-2004 jrb Add TkrCalibration dtd for new types; add optional
  *                        fields for creator, tower serial number to old dtd's
  * v0r11p1 7-Oct-2004 jrb Add last sample calibration file for new CAL types
