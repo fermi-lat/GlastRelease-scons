@@ -15,7 +15,7 @@ $Header$
 #include "idents/VolumeIdentifier.h"
 #include "CLHEP/Geometry/Point3D.h"
 #include "Event/Recon/TkrRecon/TkrCluster.h"
-#include "Event/Recon/TkrRecon/TkrClusterCol.h"
+#include "Event/Recon/TkrRecon/TkrCluster.h"
 
 #include <string>
 #include <vector>

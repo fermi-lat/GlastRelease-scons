@@ -46,6 +46,8 @@ StatusCode TkrBadStripsSvc::initialize()
 {
     StatusCode sc = StatusCode::SUCCESS;
     
+    Service::initialize();
+    
     MsgStream log(msgSvc(), name());
 
     Service::initialize();

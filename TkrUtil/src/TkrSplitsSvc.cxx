@@ -77,6 +77,8 @@ StatusCode TkrSplitsSvc::initialize ()
     
     StatusCode  sc = StatusCode::SUCCESS;
 
+    Service::initialize();
+
     // Open the message log
     MsgStream log( msgSvc(), name() );
 
