@@ -16,8 +16,7 @@ class GlastDetector;
 class IGeometry;
 class IMedia;
 class HepTransform3D;
-class SiliconPlaneGeometry;
-namespace xml {class IFile; }
+class HepPoint3D;
 namespace idents{class VolumeIdentifier;}
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
@@ -42,8 +41,19 @@ public:
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IGlastDetSvc; }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//            SiliconPlaneGeometry interface calls
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     /// compute strip id from local coordinate for a tkr plane
     virtual unsigned int stripId (double x)=0;
+
+    /// location of strip ix in local coords
+    virtual double stripLocalX( unsigned int stripid)=0;    
+
+    /// (-) if non-active or gap (P is in local system)    
+    virtual double insideActiveArea (const HepPoint3D& p)=0;  
+
 };
 
 
