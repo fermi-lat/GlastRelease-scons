@@ -12,4 +12,6 @@
  * v1r4     08-03-05 RG Improved support to let Gleam start automatically FRED
  * v1r5     22-03-05 RG Fixed bugs that prevent FRED starting on Linux
  * v1r5p1   31-03-05 RG Fixed a bug that prevent FRED to start on Windows.
+ * v1r5p2   03-04-05 THB set TMP to %TEMP% on windows
+
 */
