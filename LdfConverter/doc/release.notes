@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v1r1p2  28-Oct-2004 hmk Store veto discrim and low discrim
 v1r1p1  15-Oct-2004 hmk Initialize EventHeader::m_trigger to zero
 v1r1p0  04-Oct-2004 hmk use unsigned int consistenly for lengths
 v1r1    21-Sep-2004 hmk Add handling of event contribution lengths

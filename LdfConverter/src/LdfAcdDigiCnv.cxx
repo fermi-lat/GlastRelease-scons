@@ -63,6 +63,8 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
         for (curReadout = readoutCol.begin(); curReadout != readoutCol.end(); curReadout++) {
             int index = (curReadout->getSide() == ldfReader::AcdDigi::A) ? 0 : 1;
             pha[index] = (unsigned short) curReadout->getPha();
+            vetoArr[index] = curReadout->getHit();
+            lowArr[index] = curReadout->getAccept();
         }
         Event::AcdDigi *newDigi = new Event::AcdDigi(
             identsId, identsId.volId(), 0.0, pha, vetoArr, lowArr, cnoArr);
