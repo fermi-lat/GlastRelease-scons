@@ -16,7 +16,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/DataObject.h"
 
-#include "GlastEvent/Recon/ICsIClusters.h"
+#include "Event/Recon/ICsIClusters.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 

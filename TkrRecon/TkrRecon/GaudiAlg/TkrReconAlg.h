@@ -5,7 +5,7 @@
 #include "GaudiKernel/Algorithm.h"
 
 #include "TkrRecon/Track/TkrTrackFit.h"
-#include "GlastEvent/Recon/TkrRecon/TkrClusterCol.h"
+#include "Event/Recon/TkrRecon/TkrClusterCol.h"
 
 #include "GlastSvc/Reco/IKalmanParticle.h"
 

@@ -5,8 +5,8 @@
 #include "GaudiKernel/MsgStream.h"
 #include "geometry/Point.h"
 #include "gui/DisplayRep.h"
-#include "GlastEvent/Recon/TkrRecon/TkrCluster.h"
-#include "GlastEvent/Recon/TkrRecon/TkrClusterCol.h"
+#include "Event/Recon/TkrRecon/TkrCluster.h"
+#include "Event/Recon/TkrRecon/TkrClusterCol.h"
 
 /** 
 * @class TkrQueryClusters

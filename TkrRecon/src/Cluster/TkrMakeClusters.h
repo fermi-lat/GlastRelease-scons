@@ -6,9 +6,9 @@
 #include "GaudiKernel/DataObject.h"
 #include "geometry/Point.h"
 #include "gui/DisplayRep.h"
-#include "GlastEvent/Digi/TkrDigi.h"
-#include "GlastEvent/Recon/TkrRecon/TkrCluster.h"
-#include "GlastEvent/Recon/TkrRecon/TkrClusterCol.h"
+#include "Event/Digi/TkrDigi.h"
+#include "Event/Recon/TkrRecon/TkrCluster.h"
+#include "Event/Recon/TkrRecon/TkrClusterCol.h"
 #include "TkrRecon/ITkrGeometrySvc.h"
 #include "TkrRecon/ITkrBadStripsSvc.h"
 

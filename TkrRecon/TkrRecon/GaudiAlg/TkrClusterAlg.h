@@ -4,12 +4,12 @@
 
 #include <vector>
 #include "geometry/Point.h"
-#include "GlastEvent/Hits/SiLayers.h"
-#include "GlastEvent/Recon/TkrRecon/TkrClusterCol.h"
+#include "Event/Hits/SiLayers.h"
+#include "Event/Recon/TkrRecon/TkrClusterCol.h"
 #include "TkrRecon/ITkrGeometrySvc.h"
 #include "TkrRecon/ITkrBadStripsSvc.h"
 
-#include "GlastEvent/Digi/TkrDigi.h"
+#include "Event/Digi/TkrDigi.h"
 
 #include "GaudiKernel/Algorithm.h"
 
