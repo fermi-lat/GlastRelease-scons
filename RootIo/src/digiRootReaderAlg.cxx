@@ -347,14 +347,14 @@ StatusCode digiRootReaderAlg::readDiagnostic() {
     EbfConverterTds::DiagnosticData *diagTds = new EbfConverterTds::DiagnosticData();
     TIter calIt(calCol);
     CalDiagnosticData *cDiagRoot;
-    while (cDiagRoot = (CalDiagnosticData*)calIt.Next()) {
+    while ((cDiagRoot = (CalDiagnosticData*)calIt.Next())!=0) {
         EbfConverterTds::CalDiagnosticData cDiagTds(cDiagRoot->getDataWord());
         diagTds->addCalDiagnostic(cDiagTds);
     }
 
     TIter tkrIt(tkrCol);
     TkrDiagnosticData *tDiagRoot;
-    while(tDiagRoot = (TkrDiagnosticData*)tkrIt.Next()) {
+    while((tDiagRoot = (TkrDiagnosticData*)tkrIt.Next())!=0) {
         EbfConverterTds::TkrDiagnosticData tDiagTds(tDiagRoot->getDataWord());
         diagTds->addTkrDiagnostic(tDiagTds);
     }
