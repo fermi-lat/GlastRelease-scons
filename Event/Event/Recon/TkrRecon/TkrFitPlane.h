@@ -86,6 +86,7 @@ public:
     friend class KalFitter;
     friend class TkrKalFitTrack;
     friend class KalmanFilter;
+    friend class TrackFitUtils;
 
 protected:
     // These methods are only accessible to friend classes for filling 
