@@ -6,13 +6,15 @@
 
 namespace rdbModel{
 
+  class MYSQL_RES;
   /** 
       Concrete implementation of ResultHandle, to accompany MysqlConnection.
   */
   class MysqlResults : virtual public ResultHandle {
+    friend class rdbModel::MysqlConnection;
 
-    MysqlResults() {};
-    virtual ~MysqlResults() {};
+  public:
+    virtual ~MysqlResults();
 
     /// Return number of rows in results
     int getNRows() const;
@@ -30,6 +32,11 @@ namespace rdbModel{
     bool getRowStrings(std::vector<std::string>& rows, unsigned int iRow=0,
                        unsigned int maxRow=0, bool clear=true) const;
 
+  private:
+    // Only MysqlConnection calls constructor
+    MysqlResults(MYSQL_RES* results = 0); 
+
+    MYSQL_RES* m_myres;
   };
 }
 #endif
