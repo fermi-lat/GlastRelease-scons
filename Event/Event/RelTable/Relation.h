@@ -48,17 +48,15 @@ public:
     Relation(T1* obj1, T2* obj2, std::string info);
     Relation(T1* obj1, T2* obj2, std::vector<std::string> infos);
 
-    void setFirst(T1* obj1) { m_first.setData(obj1);}
     const T1* getFirst() const {return m_first.getData();} 
     T1* getFirst() { return m_first.getData();}
 
-    void setSecond(T2* obj2) { m_second.setData(obj2);}
     const T2* getSecond() const {return m_second.getData();} 
     T2* getSecond() { return m_second.getData();}    
 
     /// Add additional information (as a string) to the relation
     void addInfo(std::string inf);
-    std::vector<std::string> getInfos();
+    std::vector<std::string> getInfos() const;
 
     /// Fill the ASCII output stream
     std::ostream& fillStream( std::ostream& s ) const;
@@ -73,6 +71,9 @@ private:
     RelKey<T2,T1,T2> m_second;
     /// Additional information associated to the relation
     std::vector<std::string> m_infos;
+
+    void setFirst(T1* obj) {m_first.setData(obj);}
+    void setSecond(T2 *obj) {m_second.setData(obj);}
         
 };
 
@@ -99,7 +100,7 @@ void Relation<T1,T2>::addInfo(std::string inf) {
 }
 
 template <class T1, class T2>
-std::vector<std::string> Relation<T1,T2>::getInfos() {
+std::vector<std::string> Relation<T1,T2>::getInfos() const {
     // Purpose and Method: This routine get the additional information
     // associated to the relation. 
     // Outputs: a vector of strings

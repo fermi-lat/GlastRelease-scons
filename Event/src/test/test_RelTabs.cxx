@@ -126,7 +126,7 @@ int main()
  
   for (i = locs.begin(); i != locs.end(); i++)
     {
-      (*i)->setFirst(0);
+      tab.changeFirst(*i,0);
     }
   
   std::cout << std::endl << "Jack Tripper set to null"  << std::endl;  
@@ -147,6 +147,17 @@ int main()
                   << "     ssn: " << (*i)->getFirst()->ssn   << std::endl;
     }
   
+  std::cout << std::endl << "Now, let's remove relations with location 1" << std::endl;
+
+  locs.clear();
+  locs = tab.getRelBySecond(location1);
+  for (i = locs.begin(); i != locs.end(); i++)
+  {
+    tab.erase(*i);
+  }
+
+  std::cout << "Number of relations = " << tab.size() << std::endl;   
+ 
 
   // Using the TDS, one can finally register the collection of relations:
   // SomeSvc()->registerObject("/Event/MC/RelFakeOneFakeTwo",
