@@ -1,89 +1,45 @@
 #ifndef GDDSHAPE_H
 #define GDDSHAPE_H
 #include "detModel/Sections/GDDvolume.h"
-
-class GDDsectionsVisitor;
-
-/// Enumerative for the identification of the type of shape 
-enum shapeType{box, tube, cone};
+#include "detModel/Sections/GDDunits.h"
 
 /**
  * This class contains all the common properties and 
  * functionalities of shapes. Concrete shapes must 
- * hinerith from it.
+ * sublcass this one.
  * @author D.Favretto & R.Giannitrapani 
  */
 class GDDshape : public GDDvolume {
  public:
   /** Some constructors; since this is an abstract class, these
-   * constructors are useful only in its concrete subclass
+   * constructors are useful only in its concrete subclasses
    */
-  GDDshape(std::string pname, shapeType pstype):GDDvolume(pname,shape),stype(pstype){;}
-  GDDshape(){};
-  virtual ~GDDshape(){};
+  GDDshape(std::string pname):GDDvolume(pname),sensitive(0){units = new GDDunits;}
+  GDDshape():GDDvolume(),sensitive(0){units = new GDDunits;}
 
-
+  virtual ~GDDshape(){delete units;};
 
   /**
    * With this method it is possible to set the shape
    * sensitive for simulations purpouses
    */
   void setSensitive(bool psensitive){sensitive = psensitive;};
-
   bool getSensitive(){return sensitive;};
-
   /**
    * This method set the material (a string) of the shape
    */  
   void setMaterial(std::string pmaterial){material = pmaterial;};
-
   /**
    * This method gives back the material (a string) of the shape
    */  
   std::string getMaterial(){return material;};
 
-
-  /**
-   * This method set the units for the lenghts of the shape
-   */  
-  void setUnitLength(char* punitLength){
-
-    if (punitLength== "mm")
-      unitLength = GDDmm;
-    else if (punitLength== "cm")
-      unitLength = GDDcm;
-    else unitLength = GDDm;
-  };
-
-  /**
-   * This method set the units for the angles of the shape
-   */  
-  void setUnitAngle(char* punitAngle){
-    if (punitAngle== "deg")
-      unitAngle = GDDdeg;
-    else unitAngle = GDDmrad;
-  };
-
-  /**
-   * This method get the units for the lenghts of the shape
-   */  
-  unitLengthtype getUnitLength(){return unitLength;};
-
-  /**
-   * This method get the units for the angles of the shape
-   */  
-  unitAngletype getUnitAngle(){return unitAngle;};
-  /**
-   * This method gives the type of the shape
-   */  
-  shapeType getShapeType(){return stype;};
+  GDDunits* getUnits(){return units;};
 
  private:
-  shapeType stype;
   std::string material;
-  bool sensitive;          ///default false
-  unitLengthtype unitLength; ///dufault mm
-  unitAngletype unitAngle; ///default deg
+  bool sensitive;          
+  GDDunits* units;
 };
 #endif //GDDSHAPE_H
 

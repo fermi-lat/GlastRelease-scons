@@ -6,6 +6,7 @@
 #include "detModel/Sections/GDDsection.h"
 #include "detModel/Sections/GDDbox.h"
 #include "detModel/Sections/GDDcomposition.h"
+#include "detModel/Sections/GDDensamble.h"
 #include "detModel/Sections/GDDposXYZ.h"
 #include "detModel/Sections/GDDstack.h"
 #include "detModel/Sections/GDDaxisPos.h"
@@ -16,7 +17,6 @@
 
 GDDprinterSectionsVisitor::GDDprinterSectionsVisitor()
 {
-  setType(sectionsVisitor);
   setRecursive(1);
 };
 
@@ -42,30 +42,31 @@ void  GDDprinterSectionsVisitor::visitSection(GDDsection* section)
   std::cout << " " << std::endl;
 }
 
-void  GDDprinterSectionsVisitor::visitComposition(GDDcomposition* composition)
+void  GDDprinterSectionsVisitor::visitEnsamble(GDDensamble* ensamble)
 {
-  std::cout << "\t\t Starting the visit of composition " << composition->getName() << std::endl;  
-  std::cout << "\t\t whose envelope is " << composition->getEnvelope()->getName() << std::endl;  
-  std::cout << "\t\t -----------------------------------" << std::endl;
-}
+  if(GDDcomposition* comp = dynamic_cast<GDDcomposition*>(ensamble))
+    {
+      std::cout << "\t\t Starting the visit of composition " << comp->getName() << std::endl;  
+      std::cout << "\t\t whose envelope is " << comp->getEnvelope()->getName() << std::endl;  
+      std::cout << "\t\t -----------------------------------" << std::endl;
+    }
+  else if(GDDstack* st = dynamic_cast<GDDstack*>(ensamble))
+    {
+      std::cout << "\t\t Starting the visit of stack " << st->getName() << std::endl;  
+      std::cout << "\t\t that is oriented along ";
+      switch(st->getAxisDir()){
+      case (GDDstack::xDir):
+	std::cout << "the X axis";
+	break;
+      case (GDDstack::yDir):
+	std::cout << "the Y axis";
+	break;
+      case (GDDstack::zDir):
+	std::cout << "the Z axis";
+	break;    
+      }   
+    }
 
-void  GDDprinterSectionsVisitor::visitStack(GDDstack* st)
-{
-  
-  
-  std::cout << "\t\t Starting the visit of stack " << st->getName() << std::endl;  
-  std::cout << "\t\t that is oriented along ";
-  switch(st->getStackType()){
-  case sx:
-    std::cout << "the X axis";
-    break;
-  case sy:
-    std::cout << "the Y axis";
-    break;
-  case sz:
-    std::cout << "the Z axis";
-    break;    
-  }
   std::cout << " " << std::endl;
   std::cout << "\t\t -----------------------------------" << std::endl;
 }

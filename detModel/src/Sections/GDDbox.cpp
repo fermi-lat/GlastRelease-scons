@@ -1,5 +1,6 @@
 #include "detModel/Management/GDDsectionsVisitor.h"
 #include "detModel/Sections/GDDbox.h"
+#include "detModel/Sections/GDDboundingBox.h"
 
 
 void GDDbox::Accept(GDDsectionsVisitor* v){
@@ -8,8 +9,8 @@ void GDDbox::Accept(GDDsectionsVisitor* v){
 }
 
 
-void GDDbox::constructBB(){
-  setBBX(getX());
-  setBBY(getY());
-  setBBZ(getZ());
+void GDDbox::buildBB(){
+  getBBox()->setXDim(getX());
+  getBBox()->setYDim(getY());
+  getBBox()->setZDim(getZ());
 }

@@ -1,12 +1,12 @@
 #ifndef GDDSECTION_H
 #define GDDSECTION_H
 #include <vector>
-#include "detModel/Sections/GDDvolume.h"
+
 #include "detModel/Management/GDDsectionsVisitor.h"
 
 class GDDchoice;
-
-enum logicaltpe{unions,intersection,subtraction};
+class GDDvolume;
+class GDDshape;
 
 /**
  * @author D.Favretto & R.Giannitrapani
@@ -21,75 +21,32 @@ public:
     author(pauthor),topVolumeRef(ptopVolumeRef),
     topVolume(0){};
   
-  virtual ~GDDsection();
-  /**
-   *
-   */ 
+  
+  ~GDDsection();
+
   void addVolume(GDDvolume* nextVolume){volumes.push_back(nextVolume);}
-  /**
-   *
-   */ 
   void addChoice(GDDchoice* nextChoice){choices.push_back(nextChoice);}
-  /**
-   *
-   */ 
   void Accept(GDDsectionsVisitor* v);
-  /**
-   *
-   */ 
   void AcceptNotRec(GDDsectionsVisitor* v);
-  /**
-   *
-   */ 
+
   std::string getName(){return name;}    
-  /**
-   *
-   */ 
   std::string getVersion()const{return version;};
-  /**
-   *
-   */ 
   std::string getDate()const{return date;};
-  /**
-   *
-   */ 
   std::string getAuthor()const{return author;};
-  /**
-   *
-   */ 
   GDDvolume* getTopVolume()const{return topVolume;};
-  /**
-   *
-   */ 
   std::string getTopVolumeRef()const{return topVolumeRef;};
-  /**
-   *
-   */ 
+
   void setTopVolume(GDDvolume* pvolume){topVolume = pvolume;};
-  /**
-   *
-   */ 
   void setVersion(std::string pver){version = pver;};
-  /**
-   *
-   */ 
   void setDate(std::string pdate){date = pdate;};
-  /**
-   *
-   */ 
   void setAuthor(std::string pauth){author = pauth;};
-  /**
-   *
-   */ 
   void setTopVolumeRef(std::string pref){topVolumeRef = pref;}
-  /**
-   *
-   */
+
   std::vector< GDDvolume * > getVolumes()const{return volumes;}
-  /**
-   *
-   */
   std::vector < GDDchoice * > getChoices()const{return choices;}
+
+
+
  private:
   /** @link aggregation
    *  @supplierCardinality 1..n */

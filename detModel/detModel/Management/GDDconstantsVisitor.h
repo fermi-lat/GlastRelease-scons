@@ -5,7 +5,10 @@
 class GDD;
 class GDDconstants;
 class GDDconstCategory;
-class GDDconst;
+class GDDintConst;
+class GDDfloatConst;
+class GDDdoubleConst;
+class GDDstringConst;
 
 /**
  * This is the abstract class for constants visitors, i.e. visitors that have to traverse the constants of the XML file 
@@ -25,8 +28,21 @@ class GDDconstantsVisitor : public GDDvisitor {
    */
   virtual void visitConstCategory(GDDconstCategory*) = 0;
   /**
-   * This is the visitor for the GDDconst 
+   * This is the visitor for the GDDintConst 
    */
-  virtual void visitConst(GDDconst*) = 0;
+  virtual void visitIntConst(GDDintConst*) = 0;
+  /**
+   * This is the visitor for the GDDfloatConst 
+   */
+  virtual void visitFloatConst(GDDfloatConst*) = 0;
+  /**
+   * This is the visitor for the GDDdoubleConst 
+   */
+  virtual void visitDoubleConst(GDDdoubleConst*) = 0;
+  /**
+   * This is the visitor for the GDDstringConst 
+   */
+  virtual void visitStringConst(GDDstringConst*) = 0;
 };
 #endif //GDDCONSTANTSVISITOR_H
+

@@ -10,16 +10,16 @@ class GDDchoice;
 class GDDvolume;
 class GDDbuilder;
 
-enum buildType{all,constants,sections};
-
 /**
  * This class implement the manager for the sections part of the XML file. 
  * It is a singleton.
  * @author D.Favretto & R.Giannitrapani
  */
 class GDDmanager {
+ public:
+  enum buildType{all,constants,sections};
 
-public:
+ public:
   
   /** The destructor must be invoched by the client before leaving the
      application. It will destroy explicitely the GDD object and this
@@ -44,7 +44,7 @@ public:
 
   /// This method starts the visit of a hierarchy with a specified visitor
   void startVisitor(GDDvisitor*);
-
+  
   void cleanGDD();
 
   /** This method gives back the pointer to the GDD object. It coule be
@@ -59,7 +59,7 @@ public:
   /** The constructor is protected; in such a way it is forbidden to *
       build directely a manager. Here the new GDD object is explicitely
    built */
-  GDDmanager(){manGDD = new GDD;};
+  GDDmanager():manMode(""),manBuilder(0){manGDD = new GDD;};
 
  private:
 

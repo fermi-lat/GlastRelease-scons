@@ -1,6 +1,8 @@
 #include "detModel/Management/GDDsectionsVisitor.h"
 #include "detModel/Sections/GDDaxisPos.h"
-#include "detModel/Sections/GDDidField.h"
+#include "detModel/Sections/GDDvolume.h"
+#include "detModel/Sections/GDDboundingBox.h"
+
 
 void GDDaxisPos::Accept(GDDsectionsVisitor* v){
   unsigned int i;
@@ -10,15 +12,29 @@ void GDDaxisPos::Accept(GDDsectionsVisitor* v){
     getIdFields()[i]->Accept(v);
 }
 
-double GDDaxisPos::getBBX(){
-  return getVolume()->getBBX(); 
-}
 
-double GDDaxisPos::getBBY(){
-  return getVolume()->getBBY(); 
-}
-
-double GDDaxisPos::getBBZ(){
-  return getVolume()->getBBZ(); 
+void GDDaxisPos::buildBB(){
+  if (getVolume())
+    {
+      GDDboundingBox *b = getVolume()->getBBox();
+      if((b->getXDim())*(b->getYDim())*(b->getZDim()) == 0)
+	getVolume()->buildBB();
+      
+      getBBox()->setXDim(b->getXDim()); 
+      getBBox()->setYDim(b->getYDim()); 
+      getBBox()->setZDim(b->getZDim()); 
+      
+      switch(getAxisDir()){
+      case xDir:
+	getBBox()->rotate(getRotation(),0,0);
+	break;
+      case yDir:
+	getBBox()->rotate(0,getRotation(),0);
+	break;
+      case zDir:
+	getBBox()->rotate(0,0,getRotation());
+	break;
+      }
+    }
 }
 

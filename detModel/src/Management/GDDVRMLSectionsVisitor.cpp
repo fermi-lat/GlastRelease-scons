@@ -6,15 +6,17 @@
 #include "detModel/Management/GDDVRMLSectionsVisitor.h"
 #include "detModel/Management/GDDmanager.h"
 #include "detModel/Sections/GDDsection.h"
+#include "detModel/Sections/GDDvolume.h"
 #include "detModel/GDD.h"
 #include "detModel/Sections/GDDbox.h"
 #include "detModel/Sections/GDDcomposition.h"
+#include "detModel/Sections/GDDensamble.h"
 #include "detModel/Sections/GDDposXYZ.h"
 #include "detModel/Sections/GDDstack.h"
 #include "detModel/Sections/GDDaxisPos.h"
 #include "detModel/Sections/GDDaxisMPos.h"
 #include "detModel/Sections/GDDidField.h"
-#include "detModel/Sections/GDDanyPosition.h"
+#include "detModel/Sections/GDDposition.h"
 
 GDDVRMLSectionsVisitor::GDDVRMLSectionsVisitor(std::string nvol)
 {
@@ -25,7 +27,6 @@ GDDVRMLSectionsVisitor::GDDVRMLSectionsVisitor(std::string nvol)
   std::vector <std::string>::const_iterator n;
 
   setRecursive(0);
-  setType(sectionsVisitor);
   actualVolume = nvol;
   depth = 0;
 
@@ -81,11 +82,10 @@ void  GDDVRMLSectionsVisitor::visitSection(GDDsection* section)
       std::vector<GDDvolume*> volumes = section->getVolumes();
       
       for(v=volumes.begin(); v!=volumes.end(); v++){
-	if((*v)->getVolumeType() == composition)
+	if(GDDensamble* ens = dynamic_cast<GDDensamble*>(*v))
 	  {
-	    GDDcomposition* comp = static_cast<GDDcomposition*>(*v);
-	    if (comp == section->getTopVolume())
-	      vol = *v;
+	    if (ens == section->getTopVolume())
+	      vol = ens;
 	  }
       }
     }
@@ -99,9 +99,9 @@ void  GDDVRMLSectionsVisitor::visitSection(GDDsection* section)
     }
   
   /// We calulate the dimensions for the projected views
-  dimX = 2*vol->getBBX()/0.005;
-  dimY = 2*vol->getBBY()/0.005;
-  dimZ = 2*vol->getBBZ()/0.005;
+  dimX = 2*vol->getBBox()->getXDim()/0.005;
+  dimY = 2*vol->getBBox()->getYDim()/0.005;
+  dimZ = 2*vol->getBBox()->getZDim()/0.005;
 
   /** 
    * We setup three standard view on the three coordinates planes;
@@ -134,132 +134,56 @@ void  GDDVRMLSectionsVisitor::visitSection(GDDsection* section)
 }
 
 
-/** \todo In this way we assume that the bb of the composition is equal to the
-    envelope .. is it true? */
-void  GDDVRMLSectionsVisitor::visitComposition(GDDcomposition* composition)
+void  GDDVRMLSectionsVisitor::visitEnsamble(GDDensamble* ensamble)
 {
-  std::vector <GDDanyPosition*>::iterator i;
-  typedef std::vector<GDDanyPosition*> pos;
+  std::vector <GDDposition*>::iterator i;
+  typedef std::vector<GDDposition*> pos;
   
   typedef std::map<std::string, int> M;
   M::const_iterator j; 
 
-  j = depthMap.find(composition->getName());
-
+  j = depthMap.find(ensamble->getName());
+  
+  /// If we have not reached the depth limit we draw the full ensamble
   if(j->second > depth) 
     {
       depth++;
-
-      out << "# " << composition->getName() << std::endl;
+      
+      out << "# " << ensamble->getName() << std::endl;
       
       /// Here the positioned volumes are visited
-      pos p = composition->getPositions();
+      pos p = ensamble->getPositions();
       for(i=p.begin(); i!=p.end();i++)
 	(*i)->AcceptNotRec(this);
-
-      /// Here the envelope is visited
-      (composition->getEnvelope())->AcceptNotRec(this);
-
+      
+      /// Here the envelope is visited if the ensamble is a composition
+      if (GDDcomposition* comp = dynamic_cast<GDDcomposition*>(ensamble))
+	comp->getEnvelope()->AcceptNotRec(this);
+      
       /// The depth level is decreased
       depth--;
     }
-  else
+  else /// Else we draw only the bounding box
     {
-      out << "Shape {   #" << composition->getName() << std::endl;
+      out << "Shape {   #" << ensamble->getName() << std::endl;
       out << "  geometry Box { " << std::endl;
       out << "                     size " 
-	  << composition->getBBX() << " " 
-	  << composition->getBBY() << " " 
-	  << composition->getBBZ() << std::endl; 
+	  << ensamble->getBBox()->getXDim() << " " 
+	  << ensamble->getBBox()->getXDim() << " " 
+	  << ensamble->getBBox()->getXDim() << std::endl; 
       out << "                    }" << std::endl;  
       out << "   }" << std::endl;
     }
 }
-
-/** \todo The visitStack mechanism is undergoing a big redesign .. 
- *  too much duplicated code in different visitors
- */
-void  GDDVRMLSectionsVisitor::visitStack(GDDstack* st)
-{
-  unsigned int j;
-  double deltap, delta;
-  GDDanyRelativePosition* apos;
-  typedef std::map<std::string, int> M;
-  M::const_iterator k; 
-
-  k = depthMap.find(st->getName());
-
-  deltap = 0;
-  if(k->second > depth) 
-    {
-      depth++;
-      out << "Transform {  # " << st->getName() << std::endl;
-      switch(st->getStackType()){
-      case sx:
-	out << "translation " << -(st->getBBX())*0.5 << " 0 " << " 0 " << std::endl;
-	break;	
-      case sy:
-	out << "translation " << " 0 " << -(st->getBBY())*0.5 << " 0 " << std::endl;
-	break;	
-      case sz:
-	out << "translation " << " 0 " << " 0 " << -(st->getBBZ())*0.5 << std::endl;
-	break;	
-      }
-      out << "children [ " << std::endl;
-      for(j=0;j<st->getPositions().size();j++)
-	{
-	  apos = st->getPositions()[j];
-	  out << "Transform {  #" << apos->getVolume()->getName() << std::endl;
-	  switch(st->getStackType()){
-	  case sx:
-	    delta = (apos->getBBX()/2+apos->getGap()) + deltap;
-	    out << "translation " << delta << " 0 " << " 0 " << std::endl;
-	    deltap += apos->getBBX()+apos->getGap();;
-	    break;	
-	  case sy:
-	    delta = (apos->getBBY()/2+apos->getGap()) + deltap;
-	    out << "translation " << " 0 " << delta << " 0 " << std::endl;
-	    deltap += apos->getBBY()+apos->getGap();
-	    break;	
-	  case sz:
-	    delta = (apos->getBBZ()/2+apos->getGap()) + deltap;
-	    out << "translation " << " 0 " << " 0 " << delta << std::endl;
-	    deltap += apos->getBBZ()+apos->getGap();
-	    break;	
-	  }
-	  out << "children [ " << std::endl;
-	  apos->AcceptNotRec(this);
-	  out << "] " << std::endl; 
-	  out << "} " << std::endl;
-	}  
-      
-      out << "] " << std::endl; 
-      out << "} " << std::endl;
-      depth --;
-    }
-  else
-    {
-      out << "Shape {   #" << st->getName() << std::endl;
-      out << "  geometry Box { " << std::endl;
-      out << "                     size " 
-	  << st->getBBX() << " " 
-	  << st->getBBY() << " " 
-	  << st->getBBZ() << std::endl; 
-      out << "                    }" << std::endl;  
-      out << "   }" << std::endl;
-    }
-}
-
-
 
 void  GDDVRMLSectionsVisitor::visitBox(GDDbox* box)
 {
   out << "Shape {   #" << box->getName() << std::endl;
   out << "appearance USE " << box->getMaterial() << std::endl;
-
+  
   out << "  geometry Box { " << std::endl;
   out << "                     size " 
-	    << box->getX() << " " << box->getY() << " " << box->getZ() << std::endl; 
+      << box->getX() << " " << box->getY() << " " << box->getZ() << std::endl; 
   out << "                    }" << std::endl;  
   out << "   }" << std::endl;
 }
@@ -267,11 +191,11 @@ void  GDDVRMLSectionsVisitor::visitBox(GDDbox* box)
 void  GDDVRMLSectionsVisitor::visitPosXYZ(GDDposXYZ* pos)
 {
   out << "Transform { " << std::endl;
-
+  
   out << "translation " << pos->getX() << " " << pos->getY() << " " << pos->getZ() << std::endl;
-  out << "rotation " << " 1 0 0 " <<  pos->getXrot()*3.141927/180 << std::endl;  
-  out << "rotation " << " 0 1 0 " <<  pos->getYrot()*3.141927/180 << std::endl;  
-  out << "rotation " << " 0 0 1 " <<  pos->getZrot()*3.141927/180 << std::endl;  
+  out << "rotation " << " 1 0 0 " <<  pos->getXRot()*3.141927/180 << std::endl;  
+  out << "rotation " << " 0 1 0 " <<  pos->getYRot()*3.141927/180 << std::endl;  
+  out << "rotation " << " 0 0 1 " <<  pos->getZRot()*3.141927/180 << std::endl;  
   out << "children [ " << std::endl;
   pos->getVolume()->AcceptNotRec(this);
   out << "] " << std::endl; 
@@ -285,18 +209,23 @@ void  GDDVRMLSectionsVisitor::visitPosXYZ(GDDposXYZ* pos)
 void  GDDVRMLSectionsVisitor::visitAxisPos(GDDaxisPos* pos)
 {
   out << "Transform { " << std::endl;
-  switch(pos->getPosDir()){
-  case sx:
+  switch(pos->getAxisDir()){
+  case (GDDaxisPos::xDir):
     out << "rotation " << " 1 0 0 " <<  pos->getRotation()*3.141927/180 << std::endl;  
+    out << "translation " << 
+      pos->getDx()+pos->getDisp() << " " << pos->getDy() << " " << pos->getDz() << std::endl;
     break;
-  case sy:
+  case (GDDaxisPos::yDir):
     out << "rotation " << " 0 1 0 " <<  pos->getRotation()*3.141927/180 << std::endl;  
+    out << "translation " << 
+      pos->getDx() << " " << pos->getDy()+pos->getDisp() << " " << pos->getDz() << std::endl;
     break;
-  case sz:
+  case (GDDaxisPos::zDir):
     out << "rotation " << " 0 0 1 " <<  pos->getRotation()*3.141927/180  << std::endl;  
+    out << "translation " << 
+      pos->getDx() << " " << pos->getDy() << " " << pos->getDz()+pos->getDisp() << std::endl;
     break;
   }
-  out << "translation " << pos->getDx() << " " << pos->getDy() << " " << pos->getDz() << std::endl;
   out << "children [ " << std::endl;
   pos->getVolume()->AcceptNotRec(this);
   out << "] " << std::endl; 
@@ -315,22 +244,24 @@ void  GDDVRMLSectionsVisitor::visitAxisMPos(GDDaxisMPos* pos)
 
 
   n = pos->getNcopy();
-  g = pos->getGap();
-	  
+
   for(i=0;i<n;i++){
     out << "Transform { " << std::endl;
-    switch(pos->getPosDir()){
-    case sx:
-      w = pos->getVolume()->getBBX();	
-      out << "translation " << i*(w+g)-(n-1)*(w+g)*0.5  << " 0 " << " 0 " << std::endl;  
+    switch(pos->getAxisDir()){
+    case (GDDaxisMPos::xDir):
+      out << "rotation " << " 1 0 0 " <<  pos->getRotation()*3.141927/180 << std::endl;  
+      out << "translation " << 
+	pos->getDx()+pos->getDisp(i) << " " << pos->getDy() << " " << pos->getDz() << std::endl;
       break;
-    case sy:
-      w = pos->getVolume()->getBBY();
-      out << "translation " << " 0 " << i*(w+g)-(n-1)*(w+g)*0.5  << " 0 " << std::endl;  
+    case (GDDaxisMPos::yDir):
+      out << "rotation " << " 0 1 0 " <<  pos->getRotation()*3.141927/180 << std::endl;  
+      out << "translation " << 
+	pos->getDx() << " " << pos->getDy()+pos->getDisp(i) << " " << pos->getDz() << std::endl;
       break;
-    case sz:
-      w = pos->getVolume()->getBBZ();
-      out << "translation " << " 0 " << " 0 " << i*(w+g)-(n-1)*(w+g)*0.5  << std::endl;  
+    case (GDDaxisMPos::zDir):
+      out << "rotation " << " 0 0 1 " <<  pos->getRotation()*3.141927/180 << std::endl;  
+      out << "translation " << 
+	pos->getDx() << " " << pos->getDy() << " " << pos->getDz()+pos->getDisp(i) << std::endl;
       break;
     }
     out << "children [ " << std::endl;

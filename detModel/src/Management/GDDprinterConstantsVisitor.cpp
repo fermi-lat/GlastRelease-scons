@@ -15,7 +15,6 @@
 
 GDDprinterConstantsVisitor::GDDprinterConstantsVisitor()
 {
-  setType(constantsVisitor);
   setRecursive(1);
 };
 
@@ -48,34 +47,36 @@ void  GDDprinterConstantsVisitor::visitConstCategory(GDDconstCategory* category)
   std::cout << "\t\t -----------------------------------" << std::endl;
 }
 
-void  GDDprinterConstantsVisitor::visitConst(GDDconst* c)
-{
-  
-  std::cout << "\t\t\t Starting the visit of const " << c->getName() << std::endl;  
-  std::cout << "\t\t\t " << c->getNote() << std::endl; 
-  std::cout << "\t\t\t whose type is ";
 
-  switch(c->getConstType()){
-  case i:
-    std::cout << " integer" << std::endl;
-    std::cout << "\t\t\t whose value is " << (static_cast<GDDintConst*>(c))->getValue()
-	      << std::endl;
-    break;
-  case f:
-    std::cout << " float" << std::endl;
-    std::cout << "\t\t\t whose value is " << (static_cast<GDDfloatConst*>(c))->getValue()
-	      << std::endl;
-    break;
-  case d:
-    std::cout << " double" << std::endl;
-    std::cout << "\t\t\t whose value is " << (static_cast<GDDdoubleConst*>(c))->getValue()
-	      << std::endl;
-    break;
-  case s:
-    std::cout << " string" << std::endl;
-    std::cout << "\t\t\t whose value is " << (static_cast<GDDstringConst*>(c))->getValue()
-	      << std::endl;    
-  }
+void  GDDprinterConstantsVisitor::visitIntConst(GDDintConst* c)
+{
+  std::cout << "\t\t\t Starting the visit of the int const " << c->getName() << std::endl;  
+  std::cout << "\t\t\t " << c->getNote() << std::endl; 
+  std::cout << "\t\t\t whose value is " << c->getValue() << std::endl;
+  std::cout << "\t\t\t -----------------------------------" << std::endl;
+}
+
+void  GDDprinterConstantsVisitor::visitFloatConst(GDDfloatConst* c)
+{
+  std::cout << "\t\t\t Starting the visit of the float const " << c->getName() << std::endl;  
+  std::cout << "\t\t\t " << c->getNote() << std::endl; 
+  std::cout << "\t\t\t whose value is " << c->getValue() << std::endl;
+  std::cout << "\t\t\t -----------------------------------" << std::endl;
+}
+
+void  GDDprinterConstantsVisitor::visitDoubleConst(GDDdoubleConst* c)
+{
+  std::cout << "\t\t\t Starting the visit of the double const " << c->getName() << std::endl;  
+  std::cout << "\t\t\t " << c->getNote() << std::endl; 
+  std::cout << "\t\t\t whose value is " << c->getValue() << std::endl;
+  std::cout << "\t\t\t -----------------------------------" << std::endl;
+}
+
+void  GDDprinterConstantsVisitor::visitStringConst(GDDstringConst* c)
+{
+  std::cout << "\t\t\t Starting the visit of the string const " << c->getName() << std::endl;  
+  std::cout << "\t\t\t " << c->getNote() << std::endl; 
+  std::cout << "\t\t\t whose value is " << c->getValue() << std::endl;
   std::cout << "\t\t\t -----------------------------------" << std::endl;
 }
 

@@ -5,9 +5,7 @@
 class GDD;
 class GDDsection;
 class GDDbox;
-class GDDcomposition;
-class GDDstack;
-class GDDstack;
+class GDDensamble;
 class GDDposXYZ;
 class GDDaxisPos;
 class GDDaxisMPos;
@@ -15,8 +13,8 @@ class GDDidField;
 class GDDseg;
 
 /**
- * This is the abstract class for sections visitors, i.e. visitors that have to traverse the sections of the XML file 
- */
+ * This is the abstract class for sections visitors, i.e. visitors
+ * that have to traverse the sections of the XML file */
 class GDDsectionsVisitor : public GDDvisitor {
 
  public:
@@ -30,13 +28,9 @@ class GDDsectionsVisitor : public GDDvisitor {
    */
   virtual void visitSection(GDDsection*) = 0;
   /**
-   * This is the visitor for the GDDcomposition 
+   * This is the visitor for a generic GDDensamble
    */
-  virtual void visitComposition(GDDcomposition*) = 0;
-  /**
-   * This is the visitor for the GDDstack 
-   */
-  virtual void visitStack(GDDstack*) = 0;
+  virtual void visitEnsamble(GDDensamble*) = 0;
   /**
    * This is the visitor for the GDDbox 
    */

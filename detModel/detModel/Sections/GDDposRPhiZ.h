@@ -1,11 +1,12 @@
 #ifndef GDDRPHIZ_H
 #define GDDRPHIZ_H
 #include "detModel/Sections/GDDanySinglePosition.h"
+#include "GDDsinglePos.h"
 
 /**
  * @author D.Favretto & R.Giannitrapani
  */
-class GDDposRPhiZ :public GDDanySinglePosition {
+class GDDposRPhiZ : public GDDsinglePos {
 public:
 
   GDDRPhiZ(positiontype ptypePosition);

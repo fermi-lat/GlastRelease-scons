@@ -6,7 +6,6 @@
 #include "detModel/Management/GDDmanager.h"
 #include "detModel/Management/GDDFakeBuilder.h"
 
-
 #include "detModel/Sections/GDDsection.h"
 #include "detModel/Sections/GDDbox.h"
 #include "detModel/Sections/GDDcomposition.h"
@@ -49,7 +48,7 @@ void GDDFakeBuilder::parseFile(char* nameFile){
 void GDDFakeBuilder::buildConstants(){
 
   std::cout << "Fake building of constants" << std::endl; 
-
+  
   GDDconstants* ConstantsBranch = new GDDconstants();
   ConstantsBranch->setVersion("fakeMajor","fakeMinor");
 
@@ -60,35 +59,30 @@ void GDDFakeBuilder::buildConstants(){
   GDDstringConst* c1 = new GDDstringConst;
   c1->setName("BoxAMaterial");
   c1->setConstMeaning("mat");
-  c1->setConstType(s);
   c1->setValue("Silicon");
   c1->setNote("I need this fake material");
 
   GDDstringConst* c2 = new GDDstringConst;
   c2->setName("BoxBMaterial");
   c2->setConstMeaning("mat");
-  c2->setConstType(s);
   c2->setValue("W");
   c2->setNote("I need this fake material");
 
   GDDstringConst* c3 = new GDDstringConst;
   c3->setName("BoxCMaterial");
   c3->setConstMeaning("mat");
-  c3->setConstType(s);
   c3->setValue("CsI");
   c3->setNote("I need this fake material");
 
   GDDstringConst* c4 = new GDDstringConst;
   c4->setName("BoxDMaterial");
   c4->setConstMeaning("mat");
-  c4->setConstType(s);
   c4->setValue("C");
   c4->setNote("I need this fake material");
 
   GDDstringConst* c5 = new GDDstringConst;
   c5->setName("WorldMaterial");
   c5->setConstMeaning("mat");
-  c5->setConstType(s);
   c5->setValue("Vacuum");
   c5->setNote("I need this fake material");
 
@@ -116,8 +110,8 @@ void GDDFakeBuilder::buildSections()
   // We build some boxes to fill the section
   GDDbox* w = new GDDbox("world");
 
-  w->setUnitLength("mm");
-  w->setUnitAngle("deg");
+  w->getUnits()->setUnitLength("mm");
+  w->getUnits()->setUnitAngle("deg");
 
   w->setX(500);
   w->setY(500);
@@ -127,8 +121,8 @@ void GDDFakeBuilder::buildSections()
 
   GDDbox* b1 = new GDDbox("boxA");
 
-  b1->setUnitLength("mm");
-  b1->setUnitAngle("deg");
+  b1->getUnits()->setUnitLength("mm");
+  b1->getUnits()->setUnitAngle("deg");
 
   b1->setX(40);
   b1->setY(40);
@@ -138,8 +132,8 @@ void GDDFakeBuilder::buildSections()
 
   GDDbox* b2 = new GDDbox("boxB");
 
-  b2->setUnitLength("mm");
-  b2->setUnitAngle("deg");
+  b2->getUnits()->setUnitLength("mm");
+  b2->getUnits()->setUnitAngle("deg");
 
   b2->setX(70);
   b2->setY(70);
@@ -149,8 +143,8 @@ void GDDFakeBuilder::buildSections()
 
   GDDbox* b3 = new GDDbox("boxC");
 
-  b3->setUnitLength("mm");
-  b3->setUnitAngle("deg");
+  b3->getUnits()->setUnitLength("mm");
+  b3->getUnits()->setUnitAngle("deg");
 
   b3->setX(70);
   b3->setY(70);
@@ -160,8 +154,8 @@ void GDDFakeBuilder::buildSections()
 
   GDDbox* b4 = new GDDbox("boxD");
 
-  b4->setUnitLength("mm");
-  b4->setUnitAngle("deg");
+  b4->getUnits()->setUnitLength("mm");
+  b4->getUnits()->setUnitAngle("deg");
 
   b4->setX(70);
   b4->setY(70);
@@ -170,48 +164,36 @@ void GDDFakeBuilder::buildSections()
   b4->setSensitive(0);
 
 
-  // We build a composition to positionate this box
-  GDDcomposition* c = new GDDcomposition();  
-
+  // We build a composition to positionate some boxes
+  GDDcomposition* c = new GDDcomposition();    
   c->setName("Comp");
   c->setEnvelope(w);
 
-  GDDposXYZ* pos1 = new GDDposXYZ(posXYZ);
+  // We build a stack to positionate some boxes
+  GDDstack* st = new GDDstack(GDDstack::zDir);  
+  st->setName("Stack");
 
-  pos1->setX(0);
-  pos1->setY(0);
-  pos1->setZ(0);
+  GDDstack* st2 = new GDDstack(GDDstack::xDir);  
+  st2->setName("Stack2");
 
-  pos1->setVolume(b1);
+  GDDaxisMPos* ampos1 = new GDDaxisMPos(GDDaxisPos::zDir);
+  ampos1->setVolume(b1);
+  ampos1->setNcopy(3);
+  ampos1->setGap(20);
 
-  GDDposXYZ* pos2 = new GDDposXYZ(posXYZ);
+  st->addPosition(ampos1);
 
-  pos2->setX(100);
-  pos2->setY(0);
-  pos2->setZ(0);
+  GDDaxisMPos* ampos2 = new GDDaxisMPos(GDDaxisPos::xDir);
+  ampos2->setVolume(st);
+  ampos2->setNcopy(3);
+  ampos2->setGap(40);
+  st2->addPosition(ampos2);  
 
-  pos2->setVolume(b2);
 
-  GDDposXYZ* pos3 = new GDDposXYZ(posXYZ);
-
-  pos3->setX(0);
-  pos3->setY(100);
-  pos3->setZ(0);
-
-  pos3->setVolume(b3);
-
-  GDDposXYZ* pos4 = new GDDposXYZ(posXYZ);
-
-  pos4->setX(0);
-  pos4->setY(0);
-  pos4->setZ(100);
-
-  pos4->setVolume(b4);
-
+  GDDposXYZ* pos1 = new GDDposXYZ(0,0,0);
+  pos1->setVolume(st2);
+  
   c->addPosition(pos1);
-  c->addPosition(pos2);
-  c->addPosition(pos3);
-  c->addPosition(pos4);
 
   s->setTopVolume(c);
   s->setTopVolumeRef(w->getName());
@@ -221,6 +203,8 @@ void GDDFakeBuilder::buildSections()
   s->addVolume(b3);
   s->addVolume(b4);
   s->addVolume(c);
+  s->addVolume(st);
+  s->addVolume(st2);
 
   // We push the section in the currentGDD sections list
   currentGDD->addSection(s);

@@ -1,21 +1,26 @@
 #ifndef GDDBOX_H
 #define GDDBOX_H
 #include <string>
+#include "detModel/Management/GDDsectionsVisitor.h"
 #include "detModel/Sections/GDDshape.h"
 #include "detModel/Sections/GDDseg.h"
 
 class GDDsectionsVisitor;
+class GDDboundingBox;
+
 /**
  * This class represent a simple box
  * @author D.Favretto & R.Giannitrapani 
  */
 class GDDbox : public GDDshape {
 public:
- 
-    GDDbox(std::string pname):GDDshape(pname, box),
-    x(0),y(0),z(0),seg(0){;}
+  
+    GDDbox(std::string pname):GDDshape(pname),x(0),y(0),z(0),seg(0){;}
+    GDDbox(std::string pname, double x, double y, double z):
+      GDDshape(pname),x(x), y(y), z(z), seg(0){;}
 
     ~GDDbox(){if(seg) delete(seg);}
+
     /**
      * This method set the pointer to seg 
      */
@@ -52,7 +57,7 @@ public:
     /**
      * This method build the bounding box information
      */
-    virtual void constructBB();
+    virtual void buildBB();
     
     /**
      * This is the standard Accept method for the visitor mechanism
@@ -62,7 +67,8 @@ public:
      *  This method is the non recursive Accept for the visitor pattern
      */
     void AcceptNotRec(GDDsectionsVisitor* v){v->visitBox(this);};
-private:    
+
+ private:    
     double x; ///default 0
     double y; ///default 0
     double z; ///default 0

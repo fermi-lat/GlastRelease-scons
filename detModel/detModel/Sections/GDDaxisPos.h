@@ -1,38 +1,24 @@
 #ifndef GDDAXISPOS_H
 #define GDDAXISPOS_H
-#include "detModel/Sections/GDDanyRelativePosition.h"
+#include "detModel/Sections/GDDstackedPos.h"
 #include "detModel/Management/GDDsectionsVisitor.h"
 
 /**
  * @author D.Favretto & R.Giannitrapani
  */
-class GDDaxisPos :public GDDanyRelativePosition {
+class GDDaxisPos :public GDDstackedPos {
  public:
 
-  GDDaxisPos():
-    GDDanyRelativePosition(AxisPos){};
+  GDDaxisPos(axisDir dir):GDDstackedPos(dir),disp(0){};
   
   virtual ~GDDaxisPos(){};
-  /**
-   *
-   */   
   virtual void Accept(GDDsectionsVisitor* v);
-  /**
-   *
-   */ 
   virtual void AcceptNotRec(GDDsectionsVisitor* v){v->visitAxisPos(this);};
-  /**
-   *
-   */ 
-  virtual double getBBX();
-  /**
-   *
-   */ 
-  virtual double getBBY();
-  /**
-   *
-   */ 
-  virtual double getBBZ();  
+
+  void setDisp(double d){disp = d;};
+  double getDisp(){return disp;};
+
+  virtual void buildBB();
 
  private:
   

@@ -1,11 +1,12 @@
 #ifndef GDDSEG_H
 #define GDDSEG_H
-enum axisType{X,Y,Z};
-
 /**
  * @author D.Favretto & R.Giannitrapani
  */
 class GDDseg {
+ public:
+  enum axisDir{xDir,yDir,zDir};
+
  public:
   
   GDDseg():nSeg(1){;};
@@ -28,17 +29,17 @@ class GDDseg {
   /**
    *This method sets the value of the attribute axis 
    */ 
-  void setAxis(std::string paxis){if (paxis=="X")axis=X;
-  else if(paxis=="Y")axis=Y;
-  else axis=Z;
+  void setAxis(std::string paxis){if (paxis=="X")axis=xDir;
+  else if(paxis=="Y")axis=yDir;
+  else axis=zDir;
   }
   /**
    *This method returns the value of the attribute axis
    */ 
-  axisType getAxis()const{return axis;}
+  axisDir getAxis()const{return axis;}
   
   private:    
-  axisType axis;
+  axisDir axis;
   std::string reason;
   int nSeg; ///default value 1
   };

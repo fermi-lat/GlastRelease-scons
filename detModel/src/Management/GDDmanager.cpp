@@ -60,26 +60,26 @@ void GDDmanager::build(buildType b)
 
 void GDDmanager::startVisitor(GDDvisitor* v)
 {
+  /*
   switch(v->getType()){
-  case sectionsVisitor:
+  case GDDsectionsVisitor:
+  */
+  if (GDDsectionsVisitor* sv = dynamic_cast<GDDsectionsVisitor*>(v))
     {
-      GDDsectionsVisitor* sv = static_cast<GDDsectionsVisitor*>(v);
+      
       if (v->getRecursive())
 	manGDD->Accept(sv);
       else
 	manGDD->AcceptNotRec(sv);
-      break;
     }
-  case constantsVisitor:
+  else if(GDDconstantsVisitor* cv = dynamic_cast<GDDconstantsVisitor*>(v))
     {
-      GDDconstantsVisitor* cv = static_cast<GDDconstantsVisitor*>(v);
       if (v->getRecursive())
 	manGDD->Accept(cv);
       else
 	manGDD->AcceptNotRec(cv);
-      break;
     }
-  }
 }
+
 
 

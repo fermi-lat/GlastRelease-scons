@@ -15,9 +15,7 @@
 
 GDDHTMLConstantsVisitor::GDDHTMLConstantsVisitor()
 {
-  setType(constantsVisitor);
   setRecursive(0);
-
   out.open("constants.html");
 }
 
@@ -76,44 +74,45 @@ void  GDDHTMLConstantsVisitor::visitConstCategory(GDDconstCategory* category)
   out << "<th>Name</th><th>Value</th><th>Description</th> </tr>" << std::endl;
 
   for(i=0; i<category->getConsts().size();i++){
-    ((category->getConsts() )[i])->AcceptNotRec(this);}
+    GDDconst* c = (category->getConsts() )[i];
+
+    out << "<tr>" << std::endl;
+    out << "<td><b>" << c->getName() << "</b></td>" << std::endl;    
+    c->AcceptNotRec(this);
+    
+    if(c->getConstMeaning() == GDDconst::length)
+      out <<  " " << c->getUnitLength();
+
+    out << "</td>" << std::endl;
+    out << "<td>" << c->getNote() << "</td>" << std::endl;     
+    out << "</tr>" << std::endl;
+  }
   
   out << "</table> <br> &nbsp;<br>" << std::endl;
   
 
 }
 
-void  GDDHTMLConstantsVisitor::visitConst(GDDconst* c)
+void  GDDHTMLConstantsVisitor::visitIntConst(GDDintConst* c)
 {
-  
-  out << "<tr>" << std::endl;
-
-  out << "<td><b>" << c->getName() << "</b></td>" << std::endl;
-  switch(c->getConstType()){
-  case i:
-    out << "<td>" << (static_cast<GDDintConst*>(c))->getValue();
-    break;
-  case f:
-    out << "<td>" << (static_cast<GDDfloatConst*>(c))->getValue();
-    break;
-  case d:
-    out << "<td>" << (static_cast<GDDdoubleConst*>(c))->getValue();
-    break;
-  case s:
-    out << "<td>" << (static_cast<GDDstringConst*>(c))->getValue();
-    break;
-  }
-
-  if(c->getConstMeaning() == length)
-    out <<  " " << c->getUnitLength();
-
-  out << "</td>" << std::endl;
-
-
-  out << "<td>" << c->getNote() << "</td>" << std::endl;    
-  
-  out << "</tr>" << std::endl;
+  out << "<td>" << c->getValue();
 }
+
+void  GDDHTMLConstantsVisitor::visitFloatConst(GDDfloatConst* c)
+{
+  out << "<td>" << c->getValue();
+}
+
+void  GDDHTMLConstantsVisitor::visitDoubleConst(GDDdoubleConst* c)
+{
+  out << "<td>" << c->getValue();
+}
+
+void  GDDHTMLConstantsVisitor::visitStringConst(GDDstringConst* c)
+{
+  out << "<td>" << c->getValue();
+}
+
 
 
 

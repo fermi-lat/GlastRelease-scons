@@ -23,6 +23,7 @@ class GDDshape;
  * @author D.Favretto & R.Giannitrapani
  */
 class GDD {
+
 public:
   /** This is the destructor; it should be called only by the manager
    * destructor. It starts the destruction of all the objects created
@@ -42,13 +43,15 @@ public:
   ///This method sets the constants 
   void setConstants(GDDconstants* pconstants){constants=pconstants;}
   ///This method gives back the constants
-  GDDconstants* getConstants()const{return constants;}
+  GDDconstants* getConstants(){return constants;}
   /// This method gives back a pointer to the sections vector
   std::vector <GDDsection*>  getSections(){return sections;};  
+  /// This method adds a section to the sections vector
+  void addSection(GDDsection* s){sections.push_back(s);};
+
   ///This method gives back the GDDvolume map  
   std::map < std::string, GDDvolume * > getVolumesMap(){return volumeMap;};
 
-  void addSection(GDDsection* s){sections.push_back(s);};
   /// This is the recursive accept for the visitor pattern
   void Accept(GDDvisitor* v);
   /// This is the non recursive accept for the visitor pattern
@@ -61,7 +64,9 @@ public:
   /// This method build the global constants maps for all the constants
   void buildConstantsMap();
 
+  /// This method builds the bounding boxes of all the boundable objects
   void buildBoundingBoxes(); 
+
   /// This method gives back the modes names vector
   std::vector <std::string> getModeNames(){return modeNames;};
   /// This method gives back the materials names vector
@@ -75,9 +80,18 @@ public:
    */
   GDDvolume * getVolumeByName(std::string vname);
 
-
+  /**
+   * This method search the volumes map with the name string and return 
+   * a pointer to the GDDshape if it exists, otherwise it returns a null 
+   * pointer. 
+   */
   GDDshape * getShapeByName(std::string vname);
-
+  
+  /**
+   * This method search the constants categories with the name string and return 
+   * a pointer to the GDDconstCategory if it exists, otherwise it returns a null 
+   * pointer. 
+   */
   GDDconstCategory* getConstCategoryByName(std::string vname);
 
   /**
@@ -110,16 +124,15 @@ public:
   /** This method return the total number of constants in the XML file */
   int getConstantsNumber();
 
+  /// This methods return the ith constant in the constants map
   GDDconst* getOrderedConst(int i);
+  /// This methods return the ith volume in the volumes map
   GDDvolume* getOrderedVolume(int i);
 
   /** This method resolve the symbolic volumes references in the XML file 
    *  and it is automatically called by the builder.
    */
   void ResolveReferences();
-
-  
-  void visitMap();
 
  private:
   /** @link aggregation */
@@ -140,7 +153,6 @@ public:
   std::map < std::string, double > constNumMap;
   /** This is a private map of string constants values indicized by names */
   std::map < std::string, std::string > constCharMap;
-
   /// This is a vector of strings containing the possible modes
   std::vector <std::string> modeNames;
   /// This is a vector of strings containing the material names

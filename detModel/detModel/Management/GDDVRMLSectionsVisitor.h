@@ -35,14 +35,9 @@ class GDDVRMLSectionsVisitor : public GDDsectionsVisitor {
   virtual void visitSection(GDDsection*);
 
   /**
-   * This is the visitor for the GDDcomposition 
+   * This is the visitor for the GDDensamble 
    */
-  virtual void visitComposition(GDDcomposition*);
-
-  /**
-   * This is the visitor for the GDDstack 
-   */
-  virtual void visitStack(GDDstack*);
+  virtual void visitEnsamble(GDDensamble*);
 
   /**
    * This is the visitor for the GDDbox 

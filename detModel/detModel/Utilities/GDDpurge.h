@@ -8,7 +8,7 @@ template<class Seq> void purge(Seq & c){
   for(i = c.begin(); i != c.end(); i++)
     {
       delete *i;
-      *i = 0;
+      (*i) = 0;
     }
 }
 

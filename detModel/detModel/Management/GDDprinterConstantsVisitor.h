@@ -27,10 +27,21 @@ class GDDprinterConstantsVisitor : public GDDconstantsVisitor {
    */
   virtual void visitConstCategory(GDDconstCategory*);
   /**
-   * This is the visitor for the GDDconst 
+   * This is the visitor for the GDDintConst 
    */
-  virtual void visitConst(GDDconst*);
-
+  virtual void visitIntConst(GDDintConst*);
+  /**
+   * This is the visitor for the GDDfloatConst 
+   */
+  virtual void visitFloatConst(GDDfloatConst*);
+  /**
+   * This is the visitor for the GDDdoubleConst 
+   */
+  virtual void visitDoubleConst(GDDdoubleConst*);
+  /**
+   * This is the visitor for the GDDstringConst 
+   */
+  virtual void visitStringConst(GDDstringConst*);
 };
 #endif // GDDPRINTERCONSTANTSVISITOR_H
 

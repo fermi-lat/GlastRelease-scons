@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "detModel/GDD.h"
+#include "detModel/Sections/GDDensamble.h"
 #include "detModel/Utilities/GDDpurge.h"
 #include "detModel/Sections/GDDshape.h"
 #include "detModel/Sections/GDDsection.h"
@@ -30,9 +31,8 @@ GDD::~GDD(){
 void GDD::ResolveReferences(){
   typedef std::map<std::string, GDDvolume*> M;
   M::const_iterator i;
-  typeVolume voltype;
   GDDvolume* actualVolume;
-
+  
   /// This part resolves the topVolumes
   for(unsigned int j=0;j<sections.size();j++)
     {
@@ -44,70 +44,34 @@ void GDD::ResolveReferences(){
   /// This part resolves the envelopes and positions volumes
   for(i=volumeMap.begin();i!=volumeMap.end();i++){
     actualVolume=i->second;
-    voltype=actualVolume->getVolumeType();
 
-    switch(voltype){
-    case shape:
-      break;
-    case composition:
+    if (GDDensamble* actualEns = dynamic_cast<GDDensamble*>(actualVolume))
       {
 	///number of positions of the current composition
 	int numPosition;
 	int k;
-	   
-	/// Static cast of volume to composition
-	GDDcomposition* actualComposition=
-	  static_cast<GDDcomposition*>(actualVolume);
-	GDDvolume* refEnvelope=
-	  getVolumeByName(actualComposition->getEnvelopeRef());
-	   
-	/// Check that the envelope is a simple shape
-	if (refEnvelope->getVolumeType() ==shape)
+	
+	GDDposition* currentPos;
+	
+	numPosition=actualEns->getPositions().size();
+	for(k=0;k<numPosition;k++)
 	  {
-	    actualComposition->setEnvelope(refEnvelope);
-	    numPosition=actualComposition->getPositions().size();
-	    GDDanyPosition* currentPos;
-	    for(k=0;k<numPosition;k++)
-	      {
-		currentPos=actualComposition->getPositions()[k];
-		GDDvolume* refvol=getVolumeByName(currentPos->getVolumeRef());
-		if (refvol!=0){
-		  currentPos->setVolume(refvol);
-		}
-	      }
+	    currentPos=actualEns->getPositions()[k];
+	    GDDvolume* refvol=getVolumeByName(currentPos->getVolumeRef());
+	    if (refvol!=0){
+	      currentPos->setVolume(refvol);
+	    }
 	  }
-	else{
-	  //error: envelope must be a shape! We have to put something here 
-	}
-	break;
-      };
-    case stack:
-      {
-	///number of positions of the current stack
-	int numPosition;
-	int k;
-	   
-	/// Static cast of volume to stack
-	GDDstack* actualStack = static_cast<GDDstack*>(actualVolume);
-	   
-	numPosition=actualStack->getPositions().size();
-	GDDanyRelativePosition* currentRelPos;
-	for(k=0;k<numPosition;k++){
-	  currentRelPos=actualStack->getPositions()[k];
-	  GDDvolume* refvol=getVolumeByName(currentRelPos->getVolumeRef());
-	  if (refvol!=0){
-	    currentRelPos->setVolume(refvol);
+	
+	if(GDDcomposition* actualComp = dynamic_cast<GDDcomposition*>(actualEns))
+	  {
+	    GDDshape* refEnvelope=
+	      getShapeByName(actualComp->getEnvelopeRef());	  
+	    if (refEnvelope)
+	      actualComp->setEnvelope(refEnvelope);	  
 	  }
-	}//end for
-	break;
-      };
-    case logical:
-      {
-	//logicalResolution
-	break;
-      };
-    }//end swich
-  }//end for
+      }
+  }
 }
 
 /// This method gives back the total number of volumes in all the sections 
@@ -211,8 +175,9 @@ GDDvolume* GDD::getVolumeByName(std::string vname)
  */
 GDDshape* GDD::getShapeByName(std::string vname)
 {
-  if( getVolumeByName(vname)  && (getVolumeByName(vname)->getVolumeType() == shape) )
-    return static_cast<GDDshape*>(getVolumeByName(vname));
+  
+  if( getVolumeByName(vname))
+    return dynamic_cast<GDDshape*>(getVolumeByName(vname));
   else return 0;
 }
 
@@ -239,7 +204,7 @@ void GDD::buildBoundingBoxes()
 
   for(i=0;i<getSectionsNumber();i++)
     for(j=0;j<sections[i]->getVolumes().size();j++)
-      sections[i]->getVolumes()[j]->constructBB();
+      sections[i]->getVolumes()[j]->buildBB();
 }
 
 /* This method build the choices map and it is called by the buildVolumeMap
@@ -330,39 +295,29 @@ void GDD::buildConstantsMap()
 
       constMap.insert(M3::value_type(temp->getName(),temp));
 
-      switch(temp->getConstType()){
-      case i:{
-	GDDintConst* tmp1=static_cast<GDDintConst*>(temp);
+      if (GDDintConst* tmp1 = dynamic_cast<GDDintConst*>(temp)){ 
 	double val=(double)tmp1->getValue();
 	constNumMap.insert(M1::value_type(temp->getName(),val));
-	break;
       }
-      case f:{
-	GDDfloatConst* tmp1=static_cast<GDDfloatConst*>(temp);
+      else if (GDDfloatConst* tmp1 = dynamic_cast<GDDfloatConst*>(temp)){ 
 	double val=(double)tmp1->getValue();
 	constNumMap.insert(M1::value_type(temp->getName(),val));
-	break;
       }
-      case d:{
-	GDDdoubleConst* tmp1=static_cast<GDDdoubleConst*>(temp);
+      else if (GDDdoubleConst* tmp1 = dynamic_cast<GDDdoubleConst*>(temp)){       
 	double val=(double)tmp1->getValue();
 	constNumMap.insert(M1::value_type(temp->getName(),val));
-	break;
       }
-      case s:{
-	GDDstringConst* tmp1=static_cast<GDDstringConst*>(temp);
+      else if (GDDstringConst* tmp1 = dynamic_cast<GDDstringConst*>(temp)){       
 	constCharMap.insert(M2::value_type(temp->getName(),tmp1->getValue()));
 	/// Here we fill the materialNames vector
-	if (temp->getConstMeaning() == mat)
+	if (temp->getConstMeaning() == GDDconst::mat)
 	  {
 	    bool flag=1;
 	    for(m=0;m<materialNames.size();m++)
 	      if (materialNames[m]==tmp1->getValue()) flag = 0;
 	    if (flag) materialNames.push_back(tmp1->getValue());
 	  }
-	break;
       }
-      }//end switch
     }
   }
 }
@@ -374,25 +329,20 @@ void GDD::buildConstantsMap()
 void GDD::Accept(GDDvisitor* v){
   unsigned int i;
 
-  switch(v->getType()){
-  case sectionsVisitor:
+  if(GDDsectionsVisitor* vsec = dynamic_cast<GDDsectionsVisitor*>(v))
     {
-      GDDsectionsVisitor* vsec = static_cast<GDDsectionsVisitor*>(v);
       vsec->visitGDD(this);
       for(i=0; i<sections.size();i++){
 	sections[i]->Accept(vsec);
       }
-      break;
     }
-  case constantsVisitor:
+  else if(GDDconstantsVisitor* vcon = dynamic_cast<GDDconstantsVisitor*>(v))
     {
-      GDDconstantsVisitor* vcon = static_cast<GDDconstantsVisitor*>(v);
       vcon->visitGDD(this);
       constants->Accept(vcon);
-      break;
     }
-  }
 }
+
 
 /* This is the non recursive Accept function for the sections visitor
  * This method only start the visit on the GDD and leave to the visitor
@@ -402,21 +352,6 @@ void GDD::AcceptNotRec(GDDvisitor* v){
   v->visitGDD(this);
 }
 
-
-void GDD::visitMap(){
-  typedef std::map<std::string,std::string>M;
-  M::const_iterator i;
-  std::cout << "Char constants List"<<std::endl;
-  for (i=constCharMap.begin(); i!=constCharMap.end(); i++){
-    std::cout << "constant "<<i->first<<" value: "<<i->second<<std::endl;
-  };
-  typedef std::map<std::string,double>M1;
-  M1::const_iterator j;
-  std::cout << "Numeric constants list"<<std::endl;
-  for (j=constNumMap.begin(); j!=constNumMap.end(); j++){
-    std::cout << "constant "<<j->first<<" value: "<<j->second<<std::endl;
-  }
-}
 
 
 

@@ -2,63 +2,36 @@
 #define GDDSTACK_H
 #include <vector>
 
-#include "detModel/Sections/GDDvolume.h"
-#include "detModel/Sections/GDDanyRelativePosition.h"
-
-enum stackorigin{atStart,atCentre};
-
-class GDDsectionsVisitor;
+#include "detModel/Sections/GDDensamble.h"
 
 /**
  * @author D.Favretto & R.Giannitrapani
  */
 
-class GDDstack :public GDDvolume {
+class GDDstack :public GDDensamble {
  public:
-  GDDstack(stacktype pStype):
-    GDDvolume(stack),Stype(pStype),origin(atStart){}
-  virtual ~GDDstack();
-  /**
-   *
-   */ 
-  virtual void Accept(GDDsectionsVisitor*);
-  /**
-   *
-   */ 
-  virtual void AcceptNotRec(GDDsectionsVisitor* v){v->visitStack(this);};
-  /**
-   *
-   */ 
-  void addPosition(GDDanyRelativePosition *pPosition){anyRelativePosition.push_back(pPosition);}
-  /**
-   *
-   */ 
-  void setOrigin(stackorigin porigin){origin=porigin;}
-  /**
-   *
-   */ 
-  stackorigin getOrigin()const{return origin;}
-  /**
-   *
-   */ 
-  stacktype getStackType()const{return Stype;}
-  /**
-   *
-   */ 
-  std::vector <GDDanyRelativePosition*> getPositions()
-  {return anyRelativePosition;};
-  /**
-   *
-   */
-  virtual void constructBB();
+  enum stackOrigin{atStart,atCentre};
+  enum axisDir{xDir, yDir, zDir};
+  
+ public:
+  GDDstack(std::string pName,axisDir dir):GDDensamble(pName),aDir(dir),origin(atStart){;}
+  GDDstack(axisDir dir):GDDensamble(),aDir(dir),origin(atStart){;}
+  virtual ~GDDstack(){;}
 
+  void setOrigin(stackOrigin porigin){origin=porigin;}
+  stackOrigin getOrigin()const{return origin;}
+  
+  void setAxisDir(axisDir dir){aDir = dir;};
+  axisDir getAxisDir()const{return aDir;}
+
+  virtual void buildBB();
+
+  /// This method build the displacement list of its positioning
+  void buildDisp();
 
  private:
-  stacktype Stype;
-  stackorigin origin; ///default atStart
-  /** @link aggregation
-   *  @supplierCardinality 1..n */
-  std::vector < GDDanyRelativePosition * > anyRelativePosition;
+  axisDir aDir;
+  stackOrigin origin; ///default atStart
 };
 #endif //GDDSTACK_H
 
