@@ -51,19 +51,55 @@ public:
     // First few are just for convenience in assembling the    
     // the rest; no need for them to be public.
     std::string root = "/Calib";
-    std::string acd = root + "/Acd";
-    std::string cal = root + "/Cal";
-    std::string tkr = root + "/Tkr";
+    std::string acd = root + "/ACD";
+    std::string cal = root + "/CAL";
+    std::string tkr = root + "/TKR";
     std::string test = root + "/Test";
 
-    CalibData::TkrBadStrips = tkr + ".BadStrips";
-    CalibData::TestMetadataInfo = test + ".MetadataInfo";
+    // Practically all of these don't exist in any shape or form,
+    // but go ahead an reserve names anyway.
 
-    CalibData::CalibPairCol.push_back(std::pair(CalibData::TkrBadStrips,
-                                                CLID_Calib_TkrBadStrips));
+    // An alternative way to do this would be to have some appropriate
+    // service (CalibDataSvc?  ICalibMetadataCnvSvc?) look up all
+    // possible names known to calibUtil.
+    CalibData::ACD_Eff = acd +"_Eff";
+    CalibData::ACD_ThreshHigh = acd +"_ThreshHigh";
+    CalibData::ACD_ThreshVeto = acd +"_ThreshVeto";
+    CalibData::ACD_Ped = acd +"_Ped";
+    CalibData::ACD_ElecGain = acd +"_ElecGain";
+    CalibData::TKR_BadChan = tkr + "_BadChan";
+    CalibData::TKR_HotChan = tkr + "_HotChan";
+    CalibData::TKR_DeadChan = tkr + "_DeadChan";
+
+    CalibData::TKR_TOTSignal = tkr +"_TOTSignal";
+    CalibData::TKR_TOTDist = tkr + "_TOTDist";
+
+    CalibData::TKR_MIPEfficiency = tkr + "_MIPEff";
+
+    CalibData::CAL_LightAtt = cal + "LightAtt";
+    CalibData::CAL_LightAsym = cal + "LightAsym";
+    CalibData::CAL_LightYield = cal + "LightYield";
+    CalibData::CAL_Ped = cal + "Ped";
+    CalibData::CAL_ElecGain = cal + "ElectGain";
+    CalibData::CAL_IntNonlin = cal + "IntNonlin";
+    CalibData::CAL_DiffNonlin = cal + "DiffNonlin";
+    CalibData::CAL_HotChan = cal + "HotChan";
+    CalibData::CAL_DeadChan = cal + "DeadChan";
+    CalibData::CAL_DiscrLO = cal + "DiscrLO";
+    CalibData::CAL_DiscrHI = cal + "DiscrHI";
+
+    CalibData::TestMetadataInfo = test + "_MetadataInfo";
+
+    CalibData::CalibPairCol.push_back(std::pair(CalibData::TKR_BadChan,
+                                                CLID_Calib_TKR_BadChan));
+    // Use same class for hot strips, dead strips or (merged) bad strips,
+    // but different path in TDDS
+    CalibData::CalibPairCol.push_back(std::pair(CalibData::TKR_HotChan,
+                                                CLID_Calib_TKR_BadChan));
+    CalibData::CalibPairCol.push_back(std::pair(CalibData::TKR_DeadChan,
+                                                CLID_Calib_TKR_BadChan));
     CalibData::CalibPairCol.push_back(std::pair(CalibData::TestMetadataInfo,
                                                 CLID_Calib_MetadataInfo));
-
     /* or maybe..
     CalibData::CalibPairCol.push_back(std::make_pair(CalibData::TkrBadStrips,
                                                 CLID_Calib_TkrBadStrips));

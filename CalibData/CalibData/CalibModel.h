@@ -24,8 +24,33 @@
 #endif
 
     namespace CalibData {
-      _EXTERN_ std::string   TkrBadStrips;
-      //   ... more TKR calib types
+      // ACD calib types
+      _EXTERN_ std::string   ACD_Eff;
+      _EXTERN_ std::string   ACD_ThreshHigh;
+      _EXTERN_ std::string   ACD_ThreshVeto;
+      _EXTERN_ std::string   ACD_Ped;
+      _EXTERN_ std::string   ACD_Eff;
+      _EXTERN_ std::string   ACD_ElecGain;
+
+      // TKR calib types
+      _EXTERN_ std::string   TKR_BadChan;
+      _EXTERN_ std::string   TKR_HotChan;
+      _EXTERN_ std::string   TKR_DeadChan;
+      _EXTERN_ std::string   TKR_TOTSignal;
+      _EXTERN_ std::string   TKR_TOTDist;
+      _EXTERN_ std::string   TKR_MIPEff;
+
+      _EXTERN_ std::string   CAL_LightAtt;
+      _EXTERN_ std::string   CAL_LightAsym;
+      _EXTERN_ std::string   CAL_LightYield;
+      _EXTERN_ std::string   CAL_Ped;
+      _EXTERN_ std::string   CAL_ElecGain;
+      _EXTERN_ std::string   CAL_IntNonlin;
+      _EXTERN_ std::string   CAL_DiffNonlin;
+      _EXTERN_ std::string   CAL_HotChan;
+      _EXTERN_ std::string   CAL_DeadChan;
+      _EXTERN_ std::string   CAL_DiscrLO;
+      _EXTERN_ std::string   CAL_DiscrHI;
 
       //   ... more for CAL calib types
 
