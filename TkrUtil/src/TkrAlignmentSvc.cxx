@@ -750,10 +750,10 @@ HepVector3D TkrAlignmentSvc::getDelta(int view, const HepPoint3D& point,
         alphaX = alpha1;
         alphaY = alpha2;
     } else {
-        pointX = point2;
-        pointY = -point1;
-        alphaX = alpha2;
-        alphaY = -alpha1;
+        pointX = -point2;
+        pointY = point1;
+        alphaX = -alpha2;
+        alphaY = alpha1;
     }
   
     double rotTerm = deltaZ + rotX*pointY - rotY*pointX; 
