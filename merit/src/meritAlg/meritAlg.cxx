@@ -77,7 +77,7 @@ private:
     IToolSvc* m_pToolSvc;
 
     // places to put stuff found in the TDS
-    double m_event, m_mc_src_id;
+    double m_run, m_event, m_mc_src_id;
     double m_time;
 
     int m_generated;
@@ -172,6 +172,7 @@ StatusCode meritAlg::initialize() {
     m_tuple = new Tuple(title.str());
 
    // define tuple items
+    new TupleItem("Run",            &m_run);
     new TupleItem("Event_ID",       &m_event);
     new TupleItem("MC_src_Id",      &m_mc_src_id);
     new TupleItem("elapsed_time",   &m_time);
@@ -245,6 +246,7 @@ StatusCode meritAlg::execute() {
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
     SmartDataPtr<Event::MCEvent>     mcheader(eventSvc(),    EventModel::MC::Event);
 
+    m_run = header->run();
     m_mc_src_id = mcheader->getSourceId();
     m_event = mcheader->getSequence();
     m_time = header->time();
