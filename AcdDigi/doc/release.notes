@@ -3,6 +3,7 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v1r10  09-Jun-2004 HMK Allow lowthreshold to be set as jobOptions param as well as in XML
  v1r9   10-Oct-2003 HMK Handle noise for ribbons
  v1r8   23-Sep-2003 HMK Fix up AcdDigiAlg to check thresholds for low, veto, and cno
                         Also continues processing even if there are no McPositionHits - in case there is noise
