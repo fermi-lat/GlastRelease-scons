@@ -7,9 +7,6 @@
 #include "geometry/Point.h"
 #include "Event/Recon/TkrRecon/TkrCluster.h"
 
-/// constants for the array of cluster lists
-enum {NVIEWS=2, NPLANES=18};
-
 extern const CLID& CLID_TkrClusterCol;
 
 /** 
@@ -25,7 +22,10 @@ namespace Event { //Namespace
 class TkrClusterCol : public DataObject
 {
 public:
-	
+
+	/// constants for the array of cluster lists
+    enum {NVIEWS=2, NPLANES=18};
+
     TkrClusterCol();
 	/// destructor: also deletes the clusters in the list
 	virtual ~TkrClusterCol();
