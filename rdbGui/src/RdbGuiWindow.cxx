@@ -66,8 +66,6 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   // Toolbar buttons
   new FXVerticalSeparator(uiToolbar, SEPARATOR_GROOVE|LAYOUT_FILL_Y);
   
-  
-
 
   // Horizontal splitter
   FXSplitter *uiHsplitter = new FXSplitter(uiContent, LAYOUT_FILL_X|
