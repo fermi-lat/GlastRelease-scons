@@ -342,7 +342,7 @@ StatusCode TkrSimpleDigiAlg::execute()
             
             // add the strip with the correct controller number
             // and do the ToT
-            int thisToT = (int) (e/m_mevPerMip - m_totThreshold)*totFactor;
+            int thisToT = static_cast<int>( (e/m_mevPerMip - m_totThreshold)*totFactor );
             int breakPoint = SiStripList::n_si_strips()/2;
             if (stripId<breakPoint) {
                 pDigi->addC0Hit(stripId, thisToT);

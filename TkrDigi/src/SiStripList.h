@@ -125,7 +125,7 @@ public:
     static double die_width ();
     
     /// number of silicon strips in a single layer
-    static unsigned int n_si_strips ();
+    static int n_si_strips ();
     
     /// number of front-end chips on a single si die
     static unsigned int n_fe_chips ();
