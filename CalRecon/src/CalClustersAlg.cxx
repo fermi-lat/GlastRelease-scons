@@ -31,6 +31,9 @@ CalClustersAlg::CalClustersAlg
   declareProperty ("lastLayerToolName", m_lastLayerToolName="LastLayerCorrTool") ;
   declareProperty ("profileToolName", m_profileToolName="ProfileTool") ;
   declareProperty ("calValsCorrToolName", m_calValsCorrToolName="CalValsCorrTool") ;
+  // disabled for now
+  //declareProperty ("calTkrLikelihoodToolName", m_tkrLikelihoodToolName="CalTkrLikelihoodTool") ;
+  declareProperty ("calTkrLikelihoodToolName", m_tkrLikelihoodToolName="") ;
  }
 
 
@@ -101,6 +104,17 @@ StatusCode CalClustersAlg::initialize()
         m_calValsCorrTool = 0 ;
     }
 
+    if ( m_tkrLikelihoodToolName.value() != "" ) {
+      printf("\033[32;41;1mhello \033[0m\n");
+        sc = toolSvc()->retrieveTool(m_tkrLikelihoodToolName,m_tkrLikelihoodTool);
+        if (sc.isFailure() ) {
+            log << MSG::ERROR << "  Unable to create " << m_tkrLikelihoodToolName << endreq;
+            return sc;
+        }
+    }
+    else {
+        m_calValsCorrTool = 0 ;
+    }
     return sc;
 }
 
@@ -223,7 +237,7 @@ StatusCode CalClustersAlg::execute()
         }
         
         
-        // [Pol&?] Do profile fitting - use StaticSlope because of static functions
+        // [Phillipe&?] Do profile fitting - use StaticSlope because of static functions
         // passed to minuit fitter
         if (m_profileTool) {
 //            dynamic_cast<EnergyCorr*>(m_profileTool)->setStaticSlope(slope);
@@ -232,6 +246,11 @@ StatusCode CalClustersAlg::execute()
         }
         
         // [Bill Atwood] get corrections from CalValsTool... self contained
+        if (m_tkrLikelihoodTool) {       
+            m_tkrLikelihoodTool->doEnergyCorr(m_data,*it);
+        }
+
+        // [Pol] get corrections from CalValsTool... self contained
         if (m_calValsCorrTool) {       
             m_calValsCorrTool->doEnergyCorr(m_data,*it);
         }

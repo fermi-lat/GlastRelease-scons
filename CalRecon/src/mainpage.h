@@ -51,7 +51,8 @@
  * The clustering tools currently available are CalSingleClusteringTool and
  * CalSimpleClusteringTool (FuzzyClusteringTool needs additional tuning). The last
  * layer leakage tool is LastLayerCorrTool, and the profile tool is
- * ProfileTool.
+ * ProfileTool. The tool using energy correlation with the number of hits in the
+ * tracker is CalTkrLikelihoodTool
  *
  * The calo FuzzyClusteringTool retrieves the generic FuzzyCluster Gaudi
  * tool to perform fuzzy clustering on all cal hits. However, if there are
@@ -86,6 +87,8 @@
  *
  * @param CalClustersAlg.lastLayerToolName
  *        name of tool performing last layer energy correction
+ * @param CalClustersAlg.calTkrLikelihoodToolName
+ *        name of tool performing tracker hits energy correction
  * @param CalClustersAlg.profileToolName
  *        name of tool performing profile fitting energy correction
  *
@@ -109,8 +112,5 @@
  * @todo move out hardwired constants describing the energy correction fit
  *       from CalClustersAlg::Leak function into a data file;
  *       update this constants to reflect the actual detector geometry
- *        
- * @todo implement the low energy correction based on number of tracker
- *       hits 
 */
 

@@ -121,6 +121,12 @@ private:
 
     /// pointer to actual tool for calling CalVals tool
     IEnergyCorr* m_calValsCorrTool;
+
+    /// name of Tool for calling CalTkrLikelihood tool
+    StringProperty m_tkrLikelihoodToolName;
+
+    /// pointer to actual tool for calling CalTkrLikelihood tool
+    IEnergyCorr* m_tkrLikelihoodTool;
 };
 
 #endif
