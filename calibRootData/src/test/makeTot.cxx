@@ -64,8 +64,8 @@ int main(int nArg, char** args) {
     std::cout << "Wrote file " << outFilename << std::endl;
   }
 
-  delete treeTower00;
-  delete treeTower21;
+  // delete treeTower00;   delete of file takes care of this.
+  //  delete treeTower21;
 
   totFile->Close();
   delete totFile;
