@@ -8,6 +8,8 @@
 
 ClassImp(L1T)
 
+Int_t L1T::number_of_trigger_bits = enums::number_of_trigger_bits;
+
 L1T::L1T() : m_trigger(0)
 {
     Clear();

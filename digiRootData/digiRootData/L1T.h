@@ -47,11 +47,15 @@ public:
 
     UInt_t getTriRowBits(const Int_t tower) const;
 
+    /// for system tests
+    static Int_t number_of_trigger_bits; //!
+
 private:
     /// packed word containing trigger bits
     UInt_t    m_trigger;    
 
     UInt_t m_triRowBits[16];
+
 
     ClassDef(L1T,5) // Level 1 Trigger information
 };

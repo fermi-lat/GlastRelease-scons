@@ -6,6 +6,8 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v7r16p1   23-Feb-2005 HMK make number of trigger bits available through L1T
+          again for systemtests
 v7r16p0   23-Feb-2005 HMK use any enums
 v7r16     22-Feb-2005 HMK Prepare for new GEM
 v7r15p0   17-Feb-2005 HMK try updating the unit test too
