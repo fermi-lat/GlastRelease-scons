@@ -4,6 +4,9 @@
  * package manager:T.Burnett
  * $Id$
  *
+ *  v6r14p9 NG   02-aug-04 Writes out Angular Separation and FilterAlg status code from
+                           new OnboardFilter
+ *  v6r14p8
  *  v6r14p7 THB  06-jan-04 remove "CELESTIAL"
  *  v6r14p7 TRK  18-dec-03 New code for fastFilter: PruneTree.cxx, .h, app/fastFilter
  * 
