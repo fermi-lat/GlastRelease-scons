@@ -69,9 +69,9 @@ void PrimaryGeneratorAction::init(Event::McParticle* part, IParticlePropertySvc*
   // the position has to be expressed in mm
   // while the energy in MeV
 
-  // note the conversion from mass in Gev/c^2 to AMU in case of the ion.
+  // note the conversion from mass in Mev/c^2 to AMU in case of the ion.
   if (isIon(hepid))
-    setIon((int)ppty->charge() , (int)ppty->mass()/0.93149);
+    setIon((int)ppty->charge() , (int)ppty->mass()/931.49);
   else
     setParticle(ppty->particle());
   
