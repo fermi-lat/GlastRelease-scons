@@ -11,7 +11,7 @@ use GlastEvent v1r1
 use GaudiSvc v3r1
 
 # this package is needed to write out to Root
-use DbCnv v2r1
+#use DbCnv v2r1
 
 
 library GlastSvc ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
@@ -20,8 +20,7 @@ library GlastSvc ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
                  ../GlastSvc/MonteCarlo/*.h MonteCarlo/*.cpp \
                  ../GlastSvc/Irf/*.h Irf/*.cpp \
 		../GlastSvc/Raw/*.h Raw/*.cpp \
-		DbConverters/*.cpp DbConverters/*.h \
-                 Dll/*.cpp 
+		Dll/*.cpp 
             
 
 macro GlastSvcDir  "$(GLASTSVCROOT)/$(DEBUGDIR)"
@@ -59,13 +58,11 @@ macro WinIncludes "" \
       VisualC     " ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
                     GlastDetSvc/*.h EventSelector/*.h \
                     ../GlastSvc/MonteCarlo/*.h ../GlastSvc/Irf/*.h \
-                    DbConverters/*.h ../GlastSvc/Raw/*.h \
+                    ../GlastSvc/Raw/*.h \
                     test/*.h test/*.txt "
 
 # build this for non-shareable testing
 # note the addition of Raw. Take out shortly.
-application test  GlastDetSvc/*.cpp EventSelector/*.cpp \
-                  MonteCarlo/*.cpp Irf/*.cpp DbConverters/*.cpp \
-                  Raw/*.cpp Dll/*.cpp test/*.cpp \
+application test  test/*.cpp \
                   ${WinIncludes} 
 

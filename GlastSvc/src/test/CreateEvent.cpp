@@ -30,14 +30,14 @@
 static const AlgFactory<CreateEvent>  Factory;
 const IAlgFactory& CreateEventFactory = Factory;
 
-extern void GlastSvc_load();
+//extern void GlastSvc_load();
 
 //------------------------------------------------------------------------------
 /// Algorithm parameters which can be set at run time must be declared.
 /// This should be done in the constructor.
 CreateEvent::CreateEvent(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator), m_detSvc(0), m_irfLoadSvc(0) {
-    GlastSvc_load();
+    //GlastSvc_load();
 }
 
 
@@ -58,7 +58,8 @@ StatusCode CreateEvent::initialize() {
     
     // now try to find the GlastDevSvc service
     IGlastDetSvc* detSvc = 0;
-    
+    const IID&  IID_IGlastDetSvc  =  401; // wired it for now!
+
     StatusCode sc = serviceLocator()->getService ("GlastDetSvc",
         IID_IGlastDetSvc, reinterpret_cast<IInterface*&>( detSvc ));
     

@@ -5,7 +5,7 @@
 ApplicationMgr.ExtSvc   = { "GlastDetSvc", "EventSelector" , "EventCnvSvc" };
 
 // do not need the following for debug
-//ApplicationMgr.DLLs   = { "GlastSvc" };
+ApplicationMgr.DLLs   = { "GlastSvc" };
 
 //--------------------------------------------------------------
 // Private Application Configuration options
