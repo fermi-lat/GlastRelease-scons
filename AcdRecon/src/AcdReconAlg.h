@@ -11,6 +11,7 @@
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "idents/AcdId.h"
+#include "idents/VolumeIdentifier.h"
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 
@@ -69,32 +70,39 @@ class AcdReconAlg : public Algorithm
       StatusCode hitTileDist(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, 
           const HepVector3D &dir, std::vector<double> &row_values, double &dist);
 
+      /// Bill Atwood's new calculation for Active Distance - applied to ribbons
+      StatusCode hitRibbonDist(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, 
+          const HepVector3D &dir, double &dist);
+
+      StatusCode getDetectorDimensions(const idents::VolumeIdentifier &volIId, std::vector<double> &dims, HepPoint3D &xT);
+
+
       /// variables to store instrument parameters
       static double s_vetoThresholdMeV;
       static unsigned int s_numSideRows;
 
       // record of the tile with the minimum Distance of Closest Approach
-      idents::AcdId m_minDocaId;
+      idents::AcdId m_minDocaId, m_ribbon_act_dist_id;
 
       /// access to the Glast Detector Service to read in geometry constants from XML files
       IGlastDetSvc *m_glastDetSvc;
 
       /// Number of Acd Tiles above threshold
-      unsigned int m_tileCount;
+      unsigned int m_tileCount, m_ribbonCount;
       /// Total Energy deposited in the ACD system
-      double m_totEnergy, m_gammaDoca;
+      double m_totEnergy, m_gammaDoca, m_totRibbonEnergy;
       /// Minimun Distance of Closest Approach
       double m_doca;
       /// Minimum Active Distance
-      double m_act_dist;
+      double m_act_dist, m_ribbon_act_dist;
       /// list of DOCA values for top and each side row
       std::vector<double> m_rowDocaCol;
       /// list of active distance values for top and each side row
       std::vector<double> m_rowActDistCol;
       /// map of AcdId and their corresponding energies
       //std::map<idents::AcdId, double> m_energyCol;
-	  std::vector<idents::AcdId> m_idCol;
-	  std::vector<double> m_energyCol;
+	  std::vector<idents::AcdId> m_idCol, m_idRibbonCol;
+	  std::vector<double> m_energyCol, m_energyRibbonCol;
 };
 
 #endif

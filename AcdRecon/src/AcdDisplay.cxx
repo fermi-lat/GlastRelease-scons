@@ -59,7 +59,31 @@ public:
     void update(){
         SmartDataPtr<Event::AcdRecon> acdRec(m_dps, EventModel::AcdRecon::Event);
         if (!acdRec) return;
+/*
+        if (acdRec->getRibbonActiveDist() < 500 ) {
+        idents::AcdId ribbonId = acdRec->getRibbonActiveDistId();
+        const idents::VolumeIdentifier ribbonVolid = ribbonId.volId();
+        idents::VolumeIdentifier topRibbonId;
+        topRibbonId.append(ribbonVolid[0]);
+        topRibbonId.append(0);
+        topRibbonId.append(ribbonVolid[2]);
+        topRibbonId.append(ribbonVolid[3]);
+        topRibbonId.append(ribbonVolid[4]);
+        topRibbonId.append(1);
+        HepPoint3D ribboncenter;
+        HepTransform3D transform;
 
+        StatusCode sc = m_detsvc->getTransform3DByID(topRibbonId, &transform);
+        if(sc.isSuccess()) ribboncenter = transform*ribboncenter;
+
+	set_color("red");
+	markerAt(ribboncenter);
+	move_to(ribboncenter); 
+	char text[10]; sprintf(text, "%8g", acdRec->getRibbonActiveDist());
+	drawText(text);
+	set_color("black");
+        }
+*/
 	// loop thru the tiles with DOCA's and show marker and value
         // no, only show the closest one for now
 	if( acdRec->getDoca()>1000. ) return;
