@@ -120,7 +120,12 @@ StatusCode FluxAlg::execute()
     // Check for the MC branch - it will be created if it is not available
     DataObject *mc=0;
     eventSvc()->retrieveObject("/Event/MC", mc);
-    if( mc==0) sc=eventSvc()->registerObject("/Event/MC", mc);
+    if( mc==0){
+        mc=new DataObject; sc=eventSvc()->registerObject("/Event/MC", mc);
+        if( sc.isFailure()){
+        log << MSG::ERROR << "Coule not register /Event/MC" << endreq;
+        return sc;
+    }}
 
     //log << MSG::DEBUG << "TDS ready" << endreq;
 
@@ -130,7 +135,7 @@ StatusCode FluxAlg::execute()
     
     StatusCode sc2 = temp->registerObject("/Event/MC/McParticleCol", pcol);
     if( sc2.isFailure()) {
-        log << MSG::ERROR << "Could not Register pcol" << endreq;
+        log << MSG::ERROR << "Could not Register /Event/MC/McParticleCol" << endreq;
         return sc2;
     }
     mc::McParticle * parent= new mc::McParticle;
