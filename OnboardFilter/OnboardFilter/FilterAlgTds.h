@@ -25,44 +25,44 @@
 //extern const CLID& CLID_FilterAlgTds;
 
 namespace FilterAlgTds{
-    class FilterAlgData : public DataObject{
-    public:
-        FilterAlgData();
-        virtual ~FilterAlgData();
-
-        int getVetoWord() const;
-        void setVetoWord(const int vetoword);
-       
-        virtual std::ostream& fillStream(std::ostream &s) const;
-        friend std::ostream& operator << (std::ostream &s, const FilterAlgData& obj);
-    private:   
-        int m_vetoword;
-	};
-    //inline stuff for client
-    inline FilterAlgData::FilterAlgData(){ /*m_data=0; m_length=0;*/}
-
-    inline int FilterAlgData::getVetoWord() const{
-        return m_vetoword;
-    }
-
-    inline void FilterAlgData::setVetoWord(const int vetoword){
-        m_vetoword=vetoword;
-    }
-
-    inline std::ostream& FilterAlgData::fillStream( std::ostream &s) const{
-      //if(m_length>0)
-      //  s.write(m_data,m_length);
-      return s;
-    }
-
-	inline FilterAlgData::~FilterAlgData(){
-      //if(m_data!=NULL)
-        //delete[] m_data;
-    }
-
-    inline std::ostream& operator << (std::ostream& s, const FilterAlgData& obj){
-      return obj.fillStream(s);
-    }
-
+  class FilterAlgData : public DataObject{
+  public:
+    FilterAlgData();
+    virtual ~FilterAlgData();
+    
+    int getVetoWord() const;
+    void setVetoWord(const int vetoword);
+    
+    virtual std::ostream& fillStream(std::ostream &s) const;
+    friend std::ostream& operator << (std::ostream &s, const FilterAlgData& obj);
+  private:   
+    int m_vetoword;
+  };
+  //inline stuff for client
+  inline FilterAlgData::FilterAlgData(){ /*m_data=0; m_length=0;*/}
+  
+  inline int FilterAlgData::getVetoWord() const{
+    return m_vetoword;
+  }
+  
+  inline void FilterAlgData::setVetoWord(const int vetoword){
+    m_vetoword=vetoword;
+  }
+  
+  inline std::ostream& FilterAlgData::fillStream( std::ostream &s) const{
+    //if(m_length>0)
+    //  s.write(m_data,m_length);
+    return s;
+  }
+  
+  inline FilterAlgData::~FilterAlgData(){
+    //if(m_data!=NULL)
+    //delete[] m_data;
+  }
+  
+  inline std::ostream& operator << (std::ostream& s, const FilterAlgData& obj){
+    return obj.fillStream(s);
+  }
+  
 }// namespace
 #endif
