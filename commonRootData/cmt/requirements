@@ -1,5 +1,5 @@
 package commonRootData
-version v0r2p6
+version v0r3
 
 use GlastPolicy v*
 
