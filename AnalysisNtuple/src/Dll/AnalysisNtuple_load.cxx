@@ -21,6 +21,7 @@ DECLARE_FACTORY_ENTRIES(AnalysisNtuple) {
     DECLARE_TOOL(      TkrHitValsTool   );
     DECLARE_TOOL(      VtxValsTool      );
     DECLARE_TOOL(      EvtValsTool      );
+	DECLARE_TOOL(      EGRETValsTool    );
 
 } 
 

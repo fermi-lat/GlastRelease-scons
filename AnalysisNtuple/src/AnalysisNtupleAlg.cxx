@@ -123,8 +123,8 @@ StatusCode AnalysisNtupleAlg::initialize(){
 
     //probably a better way to do this!
     // default set:
-    std::string toolnames [] = {"Mc", "Glt", "TkrHit", "Tkr", "Vtx",  "Cal", "Acd", "Evt", "", "", "", ""};
-
+    //std::string toolnames [] = {"Mc", "Glt", "TkrHit", "Tkr", "Vtx",  "Cal", "Acd", "Evt", "", "", "", ""};
+	std::string toolnames [] = {"TkrHit", "Tkr", "Vtx",  "Cal", "Evt", "EGRET", "", "", ""};
     int i;
     int namesSize;
 
@@ -287,6 +287,7 @@ StatusCode AnalysisNtupleAlg::execute()
             else if (toolname=="AcdValsTool"    ) {varname = "AcdTileCount";}
             else if (toolname=="EvtValsTool"    ) {varname = "EvtLogESum";}
             else if (toolname=="McAnalValsTool" ) {varname = "McPrmEnegy";}
+			else if (toolname=="EGRETValsTool"  ) {varname = "EGRET";}
             else                                  {varname = "";}
             varnames.push_back(varname);
         }
