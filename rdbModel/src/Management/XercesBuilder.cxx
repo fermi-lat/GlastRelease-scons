@@ -337,6 +337,7 @@ namespace rdbModel {
         delete newOp;
         return 0;
       }
+      return newOp;
     } 
 
     // All other cases have other operators as children
