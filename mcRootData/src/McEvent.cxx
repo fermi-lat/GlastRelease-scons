@@ -67,7 +67,7 @@ void McEvent::Clear(Option_t *option) {
 
     m_eventId = 0;
     m_runId = 0;
-    const Int_t ndpos = 50000;
+    const Int_t ndpos = 75000;
     const Int_t nd = 150000;
     static Int_t limit=100;
     static Int_t indpart=0;
