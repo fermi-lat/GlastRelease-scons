@@ -15,6 +15,8 @@
 #include "G4MuIonisation52.hh"
 #include "G4MuBremsstrahlung.hh"
 #include "G4MuBremsstrahlung52.hh"
+#include "G4MuPairProduction.hh"
+#include "G4MuPairProduction52.hh"
 
 G4VContinuousDiscreteProcess* GlastMS::EnergyLossFactory::operator()(Particle part, ELossType type)
 {
@@ -34,8 +36,9 @@ G4VContinuousDiscreteProcess* GlastMS::EnergyLossFactory::operator()(Particle pa
         else  // assume Muon
         {
             // Now look at what type of Energy Loss we are creating. 
-            if   (type == IONIZATION) process = new G4MuIonisation();
-            else                      process = new G4MuBremsstrahlung();
+            if      (type == IONIZATION)     process = new G4MuIonisation();
+            else if (type == BREMSSTRAHLUNG) process = new G4MuBremsstrahlung();
+            else                             process = new G4MuPairProduction();
         }
     }
     else if (m_release == RELEASE52)
@@ -49,8 +52,9 @@ G4VContinuousDiscreteProcess* GlastMS::EnergyLossFactory::operator()(Particle pa
         else  // assume Muon
         {
             // Now look at what type of Energy Loss we are creating. 
-            if   (type == IONIZATION) process = new G4MuIonisation52();
-            else                      process = new G4MuBremsstrahlung52();
+            if      (type == IONIZATION)     process = new G4MuIonisation52();
+            else if (type == BREMSSTRAHLUNG) process = new G4MuBremsstrahlung52();
+            else                             process = new G4MuPairProduction52();
         }
     }
     else
