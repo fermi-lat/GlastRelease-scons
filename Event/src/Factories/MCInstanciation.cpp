@@ -51,9 +51,6 @@ _ImplementHitContainedFactories(McVertex)
 #include "GlastEvent/MonteCarlo/McIntegratingHit.h"
 _ImplementHitContainedFactories(McIntegratingHit)
 
-// ====================================================================
-// Object factory implementation for objects of class CsIData 
-// ====================================================================
 void MCInstantiation()  {
     DLL_DECL_CONTAINEDOBJECTFACTORY( McParticle );
     DLL_DECL_CONTAINEDOBJECTFACTORY( McPositionHit );

@@ -145,29 +145,29 @@ public:
 
 
 inline StreamBuffer& TdCsIData::serialize( StreamBuffer& s ) const                 {
-DataObject::serialize(s);
-return s;
-//    << m_cellID
-//    << calorList ;
-//    << m_mcTracks(this);
+    DataObject::serialize(s);
+    return s;
+    //    << m_cellID
+    //    << calorList ;
+    //    << m_mcTracks(this);
 }
 
-  
-    //! Serialize the object for reading
-    inline StreamBuffer& TdCsIData::serialize( StreamBuffer& s )                       {
+
+//! Serialize the object for reading
+inline StreamBuffer& TdCsIData::serialize( StreamBuffer& s )                       {
     DataObject::serialize(s);
     return s;
     //    >> m_cellID
     //   >> calorList;
     //    >> m_mcTracks(this);
-    }
-    
-      
-        //! Fill the ASCII output stream
-        inline std::ostream& TdCsIData::fillStream( std::ostream& s ) const                {
-        return s;
-        //   << "class TdCsIData :"
-        }
-        
+}
+
+
+//! Fill the ASCII output stream
+inline std::ostream& TdCsIData::fillStream( std::ostream& s ) const                {
+    return s;
+    //   << "class TdCsIData :"
+}
+
         
 #endif

@@ -41,6 +41,13 @@
             _EXTERN_ std::string AcdDigi;
             _EXTERN_ std::string TdCsIDatas;
             _EXTERN_ std::string TdSiDatas;
+        }
+
+        namespace TkrRecon{
+            _EXTERN_ std::string Event;
+            _EXTERN_ std::string SiLayers;
+            _EXTERN_ std::string SiClusters;
+            _EXTERN_ std::string SiRecObjs;
         };
 
 
