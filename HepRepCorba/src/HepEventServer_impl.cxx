@@ -103,7 +103,7 @@ char* HepEventServer_impl::setEvent(const char* command)
       m_eventID = sName.str();
       nextEventMsg = "Event set to next";      
     }
-  else if (cmd == "fluxes")
+)
     {
       nextEventMsg = m_svcAdapter->getSources();
     }
