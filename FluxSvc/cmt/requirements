@@ -1,5 +1,5 @@
 package FluxSvc
-version v6r16
+version v6r16p1
 
 # $Id$
 author  T. Kozanecki <hansl$slac.stanford.edu> T. Burnett

@@ -7,7 +7,7 @@
 */
 
 #include "FluxSvc/IRegisterSource.h"
-#include "facilities/TimeStamp.h"
+#include "facilities/Timestamp.h"
 
 #include "flux/rootplot.h"
 
