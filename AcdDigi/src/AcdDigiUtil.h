@@ -71,7 +71,7 @@ public:
 
     /// Returns a value sampled from a Poisson distribution
     /// @param pmtPhotoElectrons is the mean of the Poisson distribution
-    static long shootPoisson(long pmtPhotoElectrons);
+    static long shootPoisson(double pmtPhotoElectrons);
 
     /// Returns a value sampled from a Gaussian distribution
     /// @param std_dev Standard Deviation to be  used when sampling

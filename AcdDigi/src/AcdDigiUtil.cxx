@@ -99,8 +99,8 @@ void AcdDigiUtil::convertMipsToPhotoElectrons(const idents::AcdId &id,
         return;
     }
     // Now use the global mean_pe_per_mip
-    pmtA_pe = (unsigned int) floor(pmtA_mips * m_mean_pe_per_mip);
-    pmtB_pe = (unsigned int) floor(pmtB_mips * m_mean_pe_per_mip);
+    pmtA_pe = (unsigned int) floor(pmtA_mips * m_mean_pe_per_mip * 2.);
+    pmtB_pe = (unsigned int) floor(pmtB_mips * m_mean_pe_per_mip * 2.);
     return;
 }
 
@@ -134,13 +134,13 @@ void AcdDigiUtil::convertPhotoElectronsToMips(const idents::AcdId &id,
         return;
     }
     // Now use the global mean_pe_per_mip
-    pmtA_mips = ((double) pmtA_pe) / m_mean_pe_per_mip;
-    pmtB_mips = ((double) pmtB_pe) / m_mean_pe_per_mip;
+    pmtA_mips = ((double) pmtA_pe) / (2. * m_mean_pe_per_mip);
+    pmtB_mips = ((double) pmtB_pe) / (2. * m_mean_pe_per_mip);
     return;
     
 }
 
-long AcdDigiUtil::shootPoisson(long pmtPhotoElectrons) {
+long AcdDigiUtil::shootPoisson(double pmtPhotoElectrons) {
     // Pupose and Method:  Returns a value from a Poisson distribution,
     //   using the input number of photoelectrons as the mean
     // Input:
@@ -162,8 +162,8 @@ void AcdDigiUtil::calcMipsToFullScale(const idents::AcdId&,
                                      double pmtA_mips, unsigned int pmtA_pe, double &pmtA_mipsToFullScale, 
                                      double pmtB_mips, unsigned int pmtB_pe, double &pmtB_mipsToFullScale) {
     
-    pmtA_mipsToFullScale = m_mips_full_scale * (m_mean_pe_per_mip / (pmtA_pe / pmtA_mips) );
-    pmtB_mipsToFullScale = m_mips_full_scale * (m_mean_pe_per_mip / (pmtB_pe / pmtB_mips) );
+    pmtA_mipsToFullScale = m_mips_full_scale * ((2. * m_mean_pe_per_mip) / (pmtA_pe / pmtA_mips) );
+    pmtB_mipsToFullScale = m_mips_full_scale * ((2. * m_mean_pe_per_mip) / (pmtB_pe / pmtB_mips) );
     
     return;
 }
