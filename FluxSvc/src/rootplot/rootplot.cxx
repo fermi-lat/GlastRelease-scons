@@ -185,10 +185,6 @@ void rootplot::init(std::vector<const char*> argv)
             time+=2.;
         }else{time=0;}
         
-        std::pair<double,double> loc=fm.location();
-        std::cout << loc.first << "   " << loc.second << std::endl;
-        //	  std::cout << "orbit angle=" << GPS::instance()-> << "orbit phase=" << << std::endl;
-        
 		
 
         if( 0==e ) {std::cerr << "Source \"" << sources[i] << "\" not found: -list for a list" << std::endl;
@@ -231,6 +227,12 @@ void rootplot::init(std::vector<const char*> argv)
 
         
 		GPS::instance()->synch();
+		std::cout << sources[i] << std::endl;
+
+        std::pair<double,double> loc=fm.location();
+		std::cout << "Lat/Lon:  " << loc.first << "   " << loc.second << std::endl;
+        //	  std::cout << "orbit angle=" << GPS::instance()-> << "orbit phase=" << << std::endl;
+
         std::cout << "Initial (p/s/m^2): " << e->rate(time)/e->totalArea() << std::endl;
         std::cout << "Initial (p/s/m^2/sr): " << e->flux(time) << std::endl;
                 
@@ -330,6 +332,8 @@ void rootplot::init(std::vector<const char*> argv)
             longtime=1; 
             
         }
+
+		std::cout << std::endl;
         
    } // for all sources   
    
