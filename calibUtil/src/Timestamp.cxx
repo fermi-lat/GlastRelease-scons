@@ -115,15 +115,15 @@ namespace calibUtil {
     char* bufPtr = &buf[0];
     sprintf(buf, "%i", fields->tm_year + 1900);
     strTime += bufPtr; strTime +=  "-";
-    sprintf(buf, "%i", fields->tm_mon +1);
+    sprintf(buf, "%02i", fields->tm_mon +1);
     strTime += bufPtr; strTime +=  "-";
-    sprintf(buf, "%i", fields->tm_mday);
+    sprintf(buf, "%02i", fields->tm_mday);
     strTime += bufPtr; strTime +=  " ";
-    sprintf(buf, "%i", fields->tm_hour);
+    sprintf(buf, "%02i", fields->tm_hour);
     strTime += bufPtr; strTime +=  ":";
-    sprintf(buf, "%i", fields->tm_min);
+    sprintf(buf, "%02i", fields->tm_min);
     strTime += bufPtr; strTime +=  ":";
-    sprintf(buf, "%i", fields->tm_sec);
+    sprintf(buf, "%02i", fields->tm_sec);
     strTime += bufPtr;
   }
 
