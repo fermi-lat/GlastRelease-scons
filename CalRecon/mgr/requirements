@@ -6,6 +6,7 @@ branches src mgr doc
 use GuiSvc
 use GlastEvent
 use GlastSvc
+use ntupleWriterSvc
 
 include_dirs $(CALRECONROOT)
 
