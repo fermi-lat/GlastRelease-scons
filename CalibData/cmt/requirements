@@ -1,7 +1,7 @@
 # $Header$
 
 package CalibData
-version v0r2
+version v0r2p0
 
 use facilities v2r*
 use idents     v2r*
