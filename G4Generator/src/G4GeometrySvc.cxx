@@ -12,11 +12,19 @@
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 
+// needed to supress warning messages, same as in DetectorConstruction.h 
+#ifdef WIN32  
+# include <float.h>
+#endif
+
 #include "G4VUserDetectorConstruction.hh"
 #include "G4TransportationManager.hh"
+
+
+
 #include "DetectorConstruction.h"
 
-#include <cassert>
+//#include <cassert>
 
 /** 
  * @class G4GeometrySvc
