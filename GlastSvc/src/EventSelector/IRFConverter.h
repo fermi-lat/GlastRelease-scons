@@ -13,7 +13,7 @@
 #include "GlastEvent/MonteCarlo/MCTrack.h"
 #include "GlastEvent/MonteCarlo/MCCalorimeterHit.h"
 #include "GlastEvent/MonteCarlo/MCSiLayer.h"
-#include "GlastEvent/Raw/CsIData.h"
+#include "GlastEvent/Raw/TdCsIData.h"
 
 /*! 
 Derived from DetectorConverter, this class
@@ -35,7 +35,7 @@ public:
 
         // Added because not sure as of yet how to make the
         // converter without using object vectors
-        allcsiData =  new CsIData(9);
+        allcsiData =  new TdCsIData(9);
     }
 
     //! destructor - delete all object containers
@@ -129,11 +129,11 @@ public:
     //! provide access to the TKR strip data
     MCSiLayerVector* getMCTKRHits() { return MCSiLayerContainer; }
     //! provide access to the Raw CsI  Data geometry included as well
-    CsIData* getCsIData() { return allcsiData; }
+    TdCsIData* getTdCsIData() { return allcsiData; }
 
 private:
     // one of Gaudi's ObjectContainers
-        CsIData* allcsiData;
+        TdCsIData* allcsiData;
 
 	MCACDHitVector* MCACDcontainer;
 	MCTrackVector* MCTrackContainer;
