@@ -449,7 +449,7 @@ void FluxTestAlg::findExposed(double l,double b,double deltat, Rotation glastToG
             // Calculate the shift from the point spread function
             double lshift=0,bshift=0,theta,phi;
             if(m_pointSpread){
-                theta=m_pointSpread*log10(10.0/(RandFlat::shoot(1.0)));
+                theta=m_pointSpread*log10(1.0/(RandFlat::shoot(1.0)));
                 phi=RandFlat::shoot(1.0)*M_2PI;
                 lshift=theta*sin(phi);
                 bshift=theta*cos(phi);
@@ -467,7 +467,14 @@ void FluxTestAlg::findExposed(double l,double b,double deltat, Rotation glastToG
                 point.y = correctedb+bshift;
                 point.amount = exposure*deltat;
             }
-            if(validpoint)m_exposedArea[point.x][point.y] += point.amount;
+            //now make sure we've properly folded the values into the appropriate range:
+            if(validpoint){
+                while(point.x<0){point.x += 360.;}                
+                while(point.x>=360){point.x -= 360.;}
+                while(point.y<0){point.y += 180.;}                                                
+                while(point.y>=180){point.y -= 180.;}
+                m_exposedArea[point.x][point.y] += point.amount;
+            }
         }
     }
     return;

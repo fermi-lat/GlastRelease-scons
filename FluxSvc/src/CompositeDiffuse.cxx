@@ -77,14 +77,16 @@ void CompositeDiffuse::addNewSource(){
     Spectrum * spec=new SimpleSpectrum("gamma", 100.0);
     
     // Now make the random vector correesponding to random galactic direction
-    //double  costh = -RandFlat::shoot(-1.,1./*_minCos, _maxCos*/);
-    //double  sinth = sqrt(1.-costh*costh);
-    //double  phi = RandFlat::shoot(0.0, 2*M_PI);
+    double  costh = -RandFlat::shoot(-1.,1./*_minCos, _maxCos*/);
+    double  sinth = sqrt(1.-costh*costh);
+    double  l = RandFlat::shoot(-180, 180);       
+    double b = (acos(costh)*180/M_PI)-90.;
     
     //Vector launchDir = Vector(cos(phi)*sinth, sin(phi)*sinth, costh);
     
-    double l = RandFlat::shoot(-180.,180.);
-    double b = RandFlat::shoot(-90.,90.);
+    //double l = RandFlat::shoot(-180.,180.);
+    //double b = RandFlat::shoot(-90.,90.);
+
     //std::cout << "z was " << costh <<std::endl;
     //Then call the FluxSource Constructor to use the galactic direction specified by launchDir.
 //    EventSource* aSource=new FluxSource(flux,spec,&launchDir);
@@ -128,7 +130,7 @@ double CompositeDiffuse::getRandomFlux(){
         i+=dx;
         //	printf("\nin the findandaddnew loop; i=%12.10e, prob=%12.10e, dx=%12.10e , logi=%lf\n",i,prob,dx,log10(i));
     }
-    return i;
+    return i*10000000.;
 }
 
 

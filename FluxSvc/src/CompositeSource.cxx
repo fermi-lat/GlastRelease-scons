@@ -69,7 +69,7 @@ FluxSource* CompositeSource::event (double time)
         double intrval=0.,intrmin=100000.;
         for (int q=0 ; now != m_sourceList.end(); ++now) {
             (*now)->event(time); // to initialize particles, so that the real interval for the particle is gotten.
-            intrval=(*now)->interval(EventSource::time());
+            intrval=(*now)->interval(EventSource::time()); //this picks out the interval of each source
             
             if(intrval < intrmin){
                 it=now;
