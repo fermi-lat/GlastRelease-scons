@@ -53,6 +53,9 @@ $Header$
 * $Header$
 */
 
+ISpectrumFactory & GRBmanagerFactory();
+ISpectrumFactory & GRBobsFactory();
+
 class FluxAlg : public Algorithm {
 public:
 	FluxAlg(const std::string& name, ISvcLocator* pSvcLocator);
@@ -170,8 +173,14 @@ StatusCode FluxAlg::initialize(){
 		log << MSG::INFO << "no rocking mode called, rocking disabled for this run." << endreq;
 	}
 
+	//////////////////////////////////////////////////
+	// Adding GRB Factory!
+	log << MSG::INFO << "Register GRB models!" << endreq;
+	GRBmanagerFactory();
+	GRBobsFactory();
+	//////////////////////////////////////////////////
 
-
+	
 	if( !m_source_list.value().empty()){
 		log << MSG::INFO << "loading sources " << endreq;
 		std::vector<std::string> sources=m_source_list.value();

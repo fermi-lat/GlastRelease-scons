@@ -16,6 +16,7 @@ use astro       v0r*
 use ntupleWriterSvc v3r*
 
 use flux        v8r*  -no_auto_imports
+use GRB v4*
 # _____________________________________________________________
 
 apply_pattern  package_include
@@ -25,6 +26,8 @@ apply_pattern  package_headers
 macro  source  "*.cxx"  WIN32 "*.h *.cxx *.txt"
 
 public
+
+macro_append ROOT_linkopts " -lHist"
 
 #  linker library ..Lib
 library FluxSvcLib  -import=flux \ 
@@ -49,5 +52,6 @@ set LHCBDBASE  "${FLUXSVCROOT}"
 #  build the test 
 apply_pattern  package_test  import=flux 
 macro_append   test_FluxSvc_files ""    WIN32 "test/*.xml"
+
 
 
