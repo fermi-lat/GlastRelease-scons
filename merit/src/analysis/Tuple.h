@@ -13,30 +13,23 @@ private:
    friend class Tuple;
 public:
 
-    TupleItem(){}
+    TupleItem():m_isFloat(false){}
     TupleItem(const std::string& name, double x=0);
 
     //! alternate constructor uses pointer to other buffer
     TupleItem(const std::string& name, double* x);
 
-    //! alternate constructor uses pointer to other buffer
+    //! alternate constructor uses pointer to float buffer
     TupleItem(const std::string& name, float* x);
 
-    void operator=(double x){
-      datum=x;
-
-    }
-     double & value(){ return *m_pdatum;}
-
-    // assign value to the tuple element
+    double value() const{ return m_isFloat? *(const float*)(m_pdatum) : *m_pdatum;}
     
-    double operator()()const{
-      return *m_pdatum;
-}
+    // for making a root output tuple: must be  double?
+    double & value() { return * m_pdatum;}
 
-    operator double()const{
-      return *m_pdatum;
-    }
+    double operator()()const{      return value(); }
+
+    operator double()const{     return value();    }
 
 public:
     std::string name()const{return m_name;}
@@ -49,10 +42,11 @@ public:
 
    private:
 
-    double& operator()();
+    //double& operator()();
     std::string m_name;
     double datum;
-    double* m_pdatum;
+    double* m_pdatum; // this might point to a float. Klugy
+    bool m_isFloat; // flag for pointer: if float, have to cast.
 };
 
 

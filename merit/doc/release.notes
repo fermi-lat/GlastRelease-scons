@@ -4,6 +4,7 @@
  * $Id$
  *
 
+ *  v6r1p1  THB  10-mar-03 adjust to use either float or double input
  *  v6r1    THB  8-mar-03 Use AnalysisTuple for all values
  *  v5r13p1 THB  15-jan-02 Fixes for vsnet
  *  ------------------ new GlastRelease --------------------------
