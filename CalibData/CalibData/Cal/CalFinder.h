@@ -49,6 +49,8 @@ namespace CalibData {
 
     unsigned getSize() const {return m_c3*m_tower;}
 
+    unsigned getNRange() const {return m_range;}
+
     bool equals(const CalFinder& other) const;
 
   private:

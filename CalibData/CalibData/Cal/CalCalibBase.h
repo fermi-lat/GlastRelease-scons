@@ -28,8 +28,14 @@ namespace CalibData {
                  unsigned nXtal=12, unsigned nFace=2, unsigned nRange=4);
     virtual ~CalCalibBase();
 
-    RangeBase* getRange(idents::CalXtalId id, 
-                        unsigned range=0, unsigned face=0);
+    /** 
+        Pick out calibration data associated with a particular crystal,
+        face, range.
+        May need to be overridden in case same data should be associated
+        with more than one range (e.g., light asym)
+     */
+    virtual RangeBase* getRange(idents::CalXtalId id, 
+                                unsigned range=0, unsigned face=0);
 
     bool putRange(idents::CalXtalId id, unsigned range, unsigned face, 
                   RangeBase* data);
