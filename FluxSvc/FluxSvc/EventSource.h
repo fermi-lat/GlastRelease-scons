@@ -80,6 +80,10 @@ class EventSource
       virtual double time()const{return m_time;}
       virtual void setTime(double time){m_time=time;}
 
+
+      //return how many sources are in the sourcelist (defaults to 1 if only a single FluxSource)
+      virtual int howManySources(){return 1;}
+
       //double m_time;    // elapsed time, really only needed for EventSource
   private:
       double m_time;    // elapsed time, really only needed for EventSource

@@ -98,20 +98,27 @@ void Spectrum::parseParamList(std::string input, std::vector<float>& output) con
 
 double Spectrum::interval (double time)
 {
-    double  r = (solidAngle()*flux(time)*6.);
-
-    if (r == 0){ return -1.;
-    }else{  
-        double p = RandFlat::shoot(1.);
-        return (-1.)*(log(1.-p))/r;
-    }
-
-   /* //FIX THIS - MAKE IT AN EXPONENTIAL!
-
-    double  r = (solidAngle()*flux(time)*6.);
-    if (r > 0) {
+    //if we have already calculated an interval for this
+    //particle, don't do it again!
+    //if(!m_currentInterval){
+        
+        double  r = (solidAngle()*flux(time)*6.);
+        
+        if (r == 0){ return -1.;
+        }else{  
+            double p = RandFlat::shoot(1.);
+            return (-1.)*(log(1.-p))/r;
+        }
+    //}
+    
+    //return m_currentInterval;
+    
+    /* //FIX THIS - MAKE IT AN EXPONENTIAL!
+    
+      double  r = (solidAngle()*flux(time)*6.);
+      if (r > 0) {
       return  RandExponential::shoot(1./r);
-    } else if (r < 0) {
+      } else if (r < 0) {
       return 1./r;
-    } else return -1.;*/
+} else return -1.;*/
 }

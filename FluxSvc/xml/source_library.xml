@@ -408,4 +408,11 @@
     </source>
 
 
+	<!-- background mixture 4 -  averages-->
+    <source name="comptest">
+        <nestedSource sourceRef="chime"/>
+        <nestedSource sourceRef="all_gamma"/>
+    </source>
+
+
 </source_library>

@@ -67,12 +67,13 @@ FluxSource* CompositeSource::event (double time)
         std::vector<EventSource*>::iterator  it = now;
         
         double intrval=0.,intrmin=100000.;
-        for (; now != m_sourceList.end(); ++now) {
+        for (int q=0 ; now != m_sourceList.end(); ++now) {
             intrval=(*now)->interval(EventSource::time());
             
             if(intrval < intrmin){
                 it=now;
                 intrmin=intrval;
+                m_numofiters=q;
             }
             //y += fabs((*it)->rate(m_time));
             //if (x <= y) {
@@ -81,8 +82,9 @@ FluxSource* CompositeSource::event (double time)
             //}
             
             m_recent = (*it);
-            m_numofiters++;
+            q++;
         }
+        setInterval(intrmin);
     }
     //update the time
     //m_time += interval(m_time);

@@ -75,6 +75,7 @@ protected:
     virtual void parseParamList(std::string input, std::vector<float>& output) const;
     
     double    m_lat, m_lon;   // latitude and longitudinal coordinates
+    double m_currentInterval; // so we only find the interval for each particle once.
 
 };
 

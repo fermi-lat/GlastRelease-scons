@@ -66,6 +66,9 @@ public:
    // double m_time; 
     double m_interval;
 
+    //return how many sources are in the sourcelist
+    int howManySources(){return m_sourceList.size();}
+
 protected:
     virtual void setupXML (const DOM_Element&);
     

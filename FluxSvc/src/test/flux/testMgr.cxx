@@ -10,7 +10,7 @@
 #include "../../Orbit.h"
 
 
-static int default_count = 10;
+static int default_count = 200 ;
 //Testing
 static const char * default_source="default";
 //Default
