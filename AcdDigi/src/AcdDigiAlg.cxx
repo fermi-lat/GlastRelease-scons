@@ -348,7 +348,7 @@ void AcdDigiAlg::getParameters() {
     
     m_noise_std_dev_pha = xmlFilePtr.getDouble("global_constants", "noise_std_dev_pha", 0.02);
     m_noise_std_dev_veto = xmlFilePtr.getDouble("global_constants", "noise_std_dev_veto", 0.02);
-    m_noise_std_dev_veto = xmlFilePtr.getDouble("global_constants", "noise_std_dev_cno", 0.02);
+    m_noise_std_dev_cno = xmlFilePtr.getDouble("global_constants", "noise_std_dev_cno", 0.02);
     
     m_full_scale = xmlFilePtr.getInt("global_constants", "full_scale", 4095);
     
