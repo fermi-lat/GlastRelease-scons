@@ -3,7 +3,8 @@ Package LdfEvent
 Coordinator:H.Kelly
 @verbatim
 
-v2r9    17-Mar-2005 HMK add missed method to Gem, as LDF v05-05-00 does
+v2r9p0  16-Mar-2005 HMK fix typo in Gem
+v2r9    15-Mar-2005 HMK add missed method to Gem, as LDF v05-05-00 does
 v2r8    15-Mar-2005 HMK store all diagnostic and error lengths
 v2r7    13-Mar-2005 HMK Add method for trgParityError
 v2r6    21-Feb-2005 HMK Prepare for new GEM
