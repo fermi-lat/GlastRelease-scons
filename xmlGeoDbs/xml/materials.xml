@@ -109,7 +109,7 @@
 <element name="Vacuum" 
          z="1" 
          aweight="1.01" 
-         density="10e-26"
+         density="10e-25"
          />
 
 <!-- Single-element materials -->
