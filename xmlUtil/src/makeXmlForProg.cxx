@@ -187,26 +187,65 @@ void outProlog(const DOM_DocumentType& doctype, std::ostream& out) {
 
   out << "<?xml version=" << dquote << "1.0" << dquote << "?>" << std::endl;
   if (doctype != DOM_DocumentType()) {
-
-    out << "<!DOCTYPE " << xml::Dom::transToChar(doctype.getName()) << " ";
+    char* transcoded = xml::Dom::transToChar(doctype.getName());
+    if (transcoded != 0) {
+      //    out << "<!DOCTYPE " << xml::Dom::transToChar(doctype.getName()) << " ";
+      out << "<!DOCTYPE " << transcoded << " ";
+    }
+    else 
+    {
+      std::cout << "Failed to transcode doctype " << std::endl;
+      return;
+    }
 
     DOMString id = doctype.getPublicId();
     if (id != 0)   {
-      out << " PUBLIC " << dquote << xml::Dom::transToChar(id) << dquote;
+      transcoded = xml::Dom::transToChar(id);
+      //      out << " PUBLIC " << dquote << xml::Dom::transToChar(id) << dquote;
+      if (transcoded != 0) {
+        out << " PUBLIC " << dquote << transcoded << dquote;
+      }
+      else  {
+        std::cout << "Failed to transcode public id " << std::endl;
+        return;
+      }
       id = doctype.getSystemId();
       if (id != 0) {
-        out << " " << dquote << xml::Dom::transToChar(id) << dquote;
+        transcoded = xml::Dom::transToChar(id);
+        if (transcoded != 0) {
+          out << " " << dquote << transcoded << dquote;
+        }
+        else  {
+          std::cout << "Failed to transcode system id " << std::endl;
+          return;
+        }
       }
     }
     else {
       id = doctype.getSystemId();
       if (id != 0)   {
-        out << " SYSTEM " << dquote << xml::Dom::transToChar(id) << dquote;
+        //        out << " SYSTEM " << dquote << xml::Dom::transToChar(id) << dquote;
+        transcoded = xml::Dom::transToChar(id);
+        if (transcoded != 0) {
+          out << " " << dquote << transcoded << dquote;
+        }
+        else  {
+          std::cout << "Failed to transcode system id " << std::endl;
+          return;
+        }
       }
     }
     id = doctype.getInternalSubset(); 
     if (id !=0) {
-      out << "[" << xml::Dom::transToChar(id) << "]";
+      transcoded = xml::Dom::transToChar(id);
+      if (transcoded != 0) {
+        //        out << "[" << xml::Dom::transToChar(id) << "]";
+        out << "[" << transcoded << "]";
+      }
+      else {
+        std::cout << "Failed to transcode internal subset" << std::endl;
+        return;
+      }
     }
     out << ">" << std::endl;
   }
