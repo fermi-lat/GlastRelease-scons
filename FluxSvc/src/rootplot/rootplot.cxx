@@ -73,7 +73,7 @@ void rootplot::init(std::vector<const char*> argv)
     
     std::cout << "------------------------------------------------------" << std::endl;
     std::cout << " Flux test program: type 'rootplot -help' for help" << std::endl;
-    std::cout << ( ( argc == 1)?  " No command line args, using defaults"
+    std::cout << ( ( argc == 0)?  " No command line args, using defaults"
         :  "") << std::endl;
     
     
