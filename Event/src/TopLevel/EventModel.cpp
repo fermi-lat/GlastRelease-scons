@@ -109,7 +109,8 @@ public:
                                      Typically not written to persistent store.
     Note:
     Detector description and calibrations have their own trees, not connected
-    to the EventModel tree.  
+    to the EventModel tree.   Calibration CLID's will be contained within
+    the range 6000 - 6999.
  */
     
     // Declaration of Identifiers
