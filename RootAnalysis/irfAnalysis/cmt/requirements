@@ -6,7 +6,8 @@ use GlastPolicy *
 macro irfAnalysis_cppflags  "" WIN32 " /wd4800 /wd4305"
 
 macro ROOT_libs "L$(ROOT_PATH)/lib  -lCore -lTree -lMatrix -lPhysics -lHist -lGraf -lGpad"\
-  WIN32 "/libpath:"$(ROOT_PATH)/lib libCore.lib libTree.lib libMatrix.lib libPhysics.lib libHist.lib libGraf.lib libGpad.lib"
+  WIN32 '/libpath:"$(ROOT_PATH)/lib" libCore.lib libTree.lib libMatrix.lib libPhysics.lib libHist.lib libGraf.lib libGpad.lib'
+
 
 macro source "*.cxx" WIN32 "*.cxx *.h"
 macro_prepend includes "-I ../src "  WIN32 "/I ..\src"
