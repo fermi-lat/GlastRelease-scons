@@ -19,6 +19,8 @@ Output.Members={}; // turn off any root ouptut
 // Number of events to process
 ApplicationMgr.EvtMax = 1000;
 MeritAlg.generated = 1000; // for estimation of Aeff--must be the same
+MeritAlg.IM_filename=""; // disable IM variable
+MeritAlg.cuts="LnA";     // no test for tail suppression
 
 
 //==============================================================
