@@ -10,18 +10,12 @@
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 Output.Members={}; // turn off any root ouptut
 
-// how to set a different source
-//FluxAlg.source_name="gamma_1_gev_normal";
-
-//FluxAlg.sources+={"default","timetick30s"};
-//FluxAlg.sources+={"default"};
-FluxAlg.sources+={"timetick30s"};
-ExposureAlg.root_tree="pointing";
+// mix in ticks to generate pointing and livetime tree
+FluxAlg.sources={"default","timetick30s"};
 
 // Number of events to process
 ApplicationMgr.EvtMax = 100;
-MeritAlg.generated = 100; // for estimation of Aeff--must be the same
-MeritAlg.IM_filename=""; // disable IM variable
+MeritAlg.generated = 100; // for estima/ IM variable
 MeritAlg.cuts="LnA";     // no test for tail suppression
 
 
