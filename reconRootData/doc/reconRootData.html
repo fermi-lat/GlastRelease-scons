@@ -1,0 +1,428 @@
+<html>
+    <head>
+        <title>Workbook : reconRootData</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            Workbook : reconRootData
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Oct 13, 2004 by <font color="#0050B2">heather</font>.
+				    </div>
+
+				    <p class="paragraph"><a name="reconRootData-top"></a>All Gleam output is in ROOT format. To read and analyze these files you will need to use an application capable of reading in ROOT files. The easiest path is to use the ROOT analysis environment. For more general information about ROOT and how we use it in GLAST, please see the GLAST ROOT home page: <a href="http://www-glast.slac.stanford.edu/software/root" title="Visit page outside Confluence">&#104;ttp://www-glast.slac.stanford.edu/software/root</a></p>The top-level class for the reconstruction data is ReconEvent.  This class contains the recon data for one event:<br/>
+
+<ul class="star">
+<li> Event ID and Run ID</li>
+</ul>
+<ul class="star">
+<li> Acd Reconstruction</li>
+</ul>
+<ul class="star">
+<li> CAL Reconstruction</li>
+</ul>
+<ul class="star">
+<li> TKR Reconstruction</li>
+</ul>
+<ul class="star">
+<li> Event flags</li>
+</ul>
+<h2 class="heading2"><a name="reconRootData-Recon+Tree%3A+ReconEvent+Branch"> Recon Tree: ReconEvent Branch</a></h2><p class="paragraph">The Recon tree has <em class="emphasis">one</em> branch, <a href="reconRootData.html#WB-reconRootData-ReconEvent" title="ReconEvent on reconRootData">ReconEvent</a>. All of the reconstruction data is contained within this single branch.</p><div align="center"><img src="images/reconTree.gif" border="0"  /></div>
+<p class="paragraph"><h3 class="heading3"><a name="reconRootData-ReconEvent+%3Ca+name%3D%22reconRootDataReconEvent%22%3E%3C%2Fa%3E"> ReconEvent <a name="reconRootData-ReconEvent"></a></a></h3></p><table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>UInt_t getEventId( )</td><td>Returns the Event Id</td><td>UInt_t</td>
+</tr><tr>
+<td>UInt_t getRunId( )</td><td>Returns the Run Id</td><td>UInt_t</td>
+</tr><tr>
+<td>AcdRecon* getAcdRecon( )</td><td>Returns a pointer to the AcdRecon</td><td><a href="reconRootData.html#WB-reconRootData-AcdRecon" title="AcdRecon on reconRootData">AcdRecon</a>*</td>
+</tr><tr>
+<td>CalRecon* getCalRecon( )</td><td>Returns a pointer to the CalRecon</td><td><a href="reconRootData.html#WB-reconRootData-CalRecon" title="CalRecon on reconRootData">CalRecon</a>*</td>
+</tr><tr>
+<td>TkrRecon* getTkrRecon( )</td><td>Returns a pointer to the TkrRecon</td><td><a href="reconRootData.html#WB-reconRootData-TkrRecon" title="TkrRecon on reconRootData">TkrRecon</a>*</td>
+</tr><tr>
+<td>UInt_t getEventFlags( )</td><td>Returns the event flags associated with this event.  O (zero) denotes a good event, non-zero a bad event.  Currently the only type of bad event recognized is a bad event Sequence denoted by eventFlags == 1</td><td>UInt_t</td>
+</tr><tr>
+<td>Bool_t goodEvent( )</td><td>Returns kTRUE if the event flag is zero, kFALSE otherwise</td><td>Bool_t</td>
+</tr><tr>
+<td>Bool_t badEvent( )</td><td>Returns kTRUE if the event flag is non-zero, kFALSE otherwise</td><td>Bool_t</td>
+</tr><tr>
+<td>Bool_t badEventSeq( )</td><td>Returns kTRUE if the event sequence bit is high in event flag</td><td>Bool_t</td>
+</tr>
+</table>
+<h3 class="heading3"><a name="reconRootData-AcdRecon+%3Ca+name%3D%22reconRootDataAcdRecon%22%3E%3C%2Fa%3E"> AcdRecon <a name="reconRootData-AcdRecon"></a></a></h3>
+
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>Double_t getEnergy()</td><td>Returns total energy deposited in the ACD system</td><td>Double_t</td>
+</tr><tr>
+<td>Int_t getTileCount()</td><td>Returns total number of ACD tiles above veto threshold</td><td>Int_t</td>
+</tr><tr>
+<td>Double_t getGammaDoca()</td><td>Returns the gamma DOCA (Distance of Closest Approach)</td><td>Double_t</td>
+</tr><tr>
+<td>Double_t getDoca()</td><td>Returns the min DOCA</td><td>Double_t</td>
+</tr><tr>
+<td>Double_t getActiveDist()</td><td>Returns minimum Active Distance for all tracks and ACD tiles above veto threshold</td><td>Double_t</td>
+</tr><tr>
+<td>AcdId&amp; getMinDocaId()</td><td>Returns the Id of the Acd Tile associated with the minimum DOCA</td><td>AcdId&amp;</td>
+</tr><tr>
+<td>std::vector&lt;Double_t&gt;&amp; getRowDocaCol()</td><td>Returns a vector of doubles, containing the minimum DOCA associated with regions of the ACD (top, row0, row1, row2, row3)</td><td>std::vector&lt;Double_t&gt;&amp;</td>
+</tr><tr>
+<td>Double_t getRowDoca(UInt_t i)</td><td>Returns the ith DOCA associated with a region</td><td>Double_t</td>
+</tr><tr>
+<td>std::vector&lt;Double_t&gt;&amp; getRowActDistCol()</td><td>Returns a vector of doubles, containing the minimum Active Distance values associated with regions of the ACD (top, row0, row1, row2, row3</td><td>std::vector&lt;Double_t&gt;&amp;</td>
+</tr><tr>
+<td>Double_t getRowActDist(UInt_t i)</td><td>Returns the ith Active Distance associated with a region</td><td>Double_t</td>
+</tr>
+</table>
+<h3 class="heading3"><a name="reconRootData-CalRecon+%3Ca+name%3D%22reconRootDataCalRecon%22%3E%3C%2Fa%3E"> CalRecon <a name="reconRootData-CalRecon"></a></a></h3>
+
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>TObjArray* getCalClusterCol( )</td><th></th><td>TObjArray* of CalCluster</td>
+</tr><tr>
+<td>TObjArray* getCalXtalRecCol( )</td><th></th><td>TObjArray* of CalXtalRecData</td>
+</tr>
+</table>
+<h3 class="heading3"><a name="reconRootData-CalXtalRecData+%3Ca+name%3D%22reconRootDataCalXtalRecData%22%3E%3C%2Fa%3E"> CalXtalRecData <a name="reconRootData-CalXtalRecData"></a></a></h3>
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>const CalXtalId::CalTrigMode getMode( )</td><td>Returns the readout mode associated with this crystal</td><td>const CalXtalId::CalTrigMode</td>
+</tr><tr>
+<td>const CalXtalId getPackedId( )</td><td>Returns the crystal identifier</td><td>const CalXtalId</td>
+</tr><tr>
+<td>Char_t getRange(Short_t readoutIndex, CalXtalId::XtalFace face)</td><td>Returns the range for a particular face and readout</td><td>Char_t</td>
+</tr><tr>
+<td>Double_t getEnergy(Short_t readoutIndex, CalXtalId::XtalFace face)</td><td>Returns the reconstructed energy associated with a particular face and readout of the crystal</td><td>Double_t</td>
+</tr><tr>
+<td>Double_t getEnergy( )</td><td>Returns average energy of two faces for the best range</td><td>Double_t</td>
+</tr><tr>
+<td>const TVector3&amp; getPosition( )</td><td>Returns the position for the best range</td><td>const TVector&amp;</td>
+</tr><tr>
+<td>const CalRangeRecData* getRangeRecData(Short_t readoutIndex)</td><td>Returns reconstructed data from both ends of selected readout</td><td>const <a href="reconRootData.html#WB-reconRootData-CalRangeRecData" title="CalRangeRecData on reconRootData">CalRangeRecData</a>*</td>
+</tr><tr>
+<td>Double_t getEnergySelectedRange(CalXtalId::AdcRange range, CalXtalId::XtalFace face)</td><td>Returns pulse height from selected range</td><td>Double_t</td>
+</tr>
+</table>
+<h3 class="heading3"><a name="reconRootData-CalRangeRecData+%3Ca+name%3D%22reconRootDataCalRangeRecData%22%3E%3C%2Fa%3E"> CalRangeRecData <a name="reconRootData-CalRangeRecData"></a></a></h3>
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>const TVector3&amp; getPosition()</td><th></th><td>const TVector3&amp;</td>
+</tr><tr>
+<td>Double_t getEnergy(CalXtalId::XtalFace face)</td><td>Return energy associated with specified face</td><td>Double_t</td>
+</tr><tr>
+<td>Char_t getRange(CalXtalId::XtalFace face)</td><td>Returns range associated with specified face</td><td>Char_t</td>
+</tr>
+</table>
+<h3 class="heading3"><a name="reconRootData-CalCluster+%3Ca+name%3D%22reconRootDataCalCluster%22%3E%3C%2Fa%3E"> CalCluster <a name="reconRootData-CalCluster"></a></a></h3>
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>Double_t getEnergyLeak( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>Double_t getEnergyCorrected( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>Double_t getEneLayer(int i)</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>UInt_t getNumEneLayer( )</td><th></th><td>UInt_t</td>
+</tr><tr>
+<td>const TVector3&amp; getPosLayer(int i)</td><th></th><td>const TVector3&amp;</td>
+</tr><tr>
+<td>UInt_t getNumPosLayer( )</td><th></th><td>UInt_t</td>
+</tr><tr>
+<td>const TVector3&amp; getRmsLayer(int i)</td><th></th><td>const TVector3&amp;</td>
+</tr><tr>
+<td>UInt_t getNumRmsLayer( )</td><th></th><td>UInt_t</td>
+</tr><tr>
+<td>const std::vector&lt;Double_t&gt;&amp; getEneLayer( )</td><th></th><td>const std::vector&lt;Double_t&gt;&amp;</td>
+</tr><tr>
+<td>const std::vector&lt;TVector3&gt;&amp; getPosLayer( )</td><th></th><td>const std::vector&lt;TVector3&gt;&amp;</td>
+</tr><tr>
+<td>const std::vector&lt;TVector3&gt;&amp; getRmsLayer( )</td><th></th><td>const std::vector&lt;TVector3&gt;&amp;</td>
+</tr><tr>
+<td>Double_t getRmsLong( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>Double_t getRmsTrans( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>Double_t getTransvOffset( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>const TVector3&amp; getPosition( )</td><th></th><td>const TVector3&amp;</td>
+</tr><tr>
+<td>const TVector3&amp; getDirection( )</td><th></th><td>const TVector3&amp;</td>
+</tr><tr>
+<td>Double_t getFitEnergy( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>Double_t getProfChisq( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>Double_t getCsiAlpha( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>Double_t getCsiLambda( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>Double_t getCsiStart( )</td><th></th><td>Double_t</td>
+</tr>
+</table>
+<h3 class="heading3"><a name="reconRootData-TkrRecon+%3Ca+name%3D%22reconRootDataTkrRecon%22%3E%3C%2Fa%3E"> TkrRecon <a name="reconRootData-TkrRecon"></a></a></h3>
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>TObjArray <b class="strong">getClusterCol()</td><td>Returns the collection of clusters</td><td>TObjArray</b> of <a href="reconRootData.html#WB-reconRootData-TkrCluster" title="TkrCluster on reconRootData">TkrCluster</a></td>
+</tr><tr>
+<td>TObjArray <b class="strong">getTrackCandCol()</td><td>Returns the collection of candidate tracks</td><td>TObjArray</b> of <a href="reconRootData.html#WB-reconRootData-TkrCandTrack" title="TkrCandTrack on reconRootData">TkrCandTrack</a></td>
+</tr><tr>
+<td>TObjArray <b class="strong">getTrackCol()</td><td>Returns the collection of reconstructed tracks</td><td>TObjArray</b> of <a href="reconRootData.html#WB-reconRootData-TkrTrack" title="TkrTrack on reconRootData">TkrTrack</a></td>
+</tr><tr>
+<td>TObjArray <b class="strong">getVertexCol()</td><td>Returns the collection of vertices</td><td>TObjArray</b> of <a href="reconRootData.html#WB-reconRootData-TkrVertex" title="TkrVertex on reconRootData">TkrVertex</a></td>
+</tr>
+</table>
+<h3 class="heading3"><a name="reconRootData-TkrCluster+%3Ca+name%3D%22reconRootDataTkrCluster%22%3E%3C%2Fa%3E"> TkrCluster <a name="reconRootData-TkrCluster"></a></a></h3>
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getTower( )</td><td>Returns the tower number containing this cluster</td><td>UInt_t</td>
+</tr><tr>
+<td>getId( )</td><td>Returns id of the cluster, sequential in order of construction</td><td>UInt_t</td>
+</tr><tr>
+<td>getPlane( )</td><td>plane id: this is the bi-layer number, but ordered backwards (0 at front)</td><td>UInt_t</td>
+</tr><tr>
+<td>getView( )</td><td>Returns orientation of cluster:<br/>
+X = 0 measures X<br/>
+Y = 1 measures Y</td><td>view</td>
+</tr><tr>
+<td>getFirstStrip( )</td><td>Returns the initial strip address of the cluster</td><td>UInt_t</td>
+</tr><tr>
+<td>getLastStrip( )</td><td>Returns the final strip address of the cluster</td><td>UInt_t</td>
+</tr><tr>
+<td>getToT( )</td><td>Returns Time Over Threshold for the cluster</td><td>UInt_t</td>
+</tr><tr>
+<td>getChip( )</td><td>Returns the chip number, which is calculated using the strip id</td><td>Int_t</td>
+</tr><tr>
+<td>getStrip( )</td><td>Returns center strip id in this cluster</td><td>Double_t</td>
+</tr><tr>
+<td>getSize( )</td><td>Returns the size of this cluster</td><td>Double_t</td>
+</tr><tr>
+<td>getPosition( )</td><td>Returns the position of the cluster</td><td>const TVector3&amp;</td>
+</tr><tr>
+<td>hitFlagged( )</td><td>returns true if the cluster has been flagged</td><td>bool</td>
+</tr>
+</table>
+<h3 class="heading3"><a name="reconRootData-TkrCandTrack+%3Ca+name%3D%22reconRootDataTkrCandTrack%22%3E%3C%2Fa%3E"> TkrCandTrack <a name="reconRootData-TkrCandTrack"></a></a></h3>
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getId( )</td><th></th><td>UInt_t</td>
+</tr><tr>
+<td>getQuality( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getEnergy( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getLayer( )</td><th></th><td>UInt_t</td>
+</tr><tr>
+<td>getTower( )</td><th></th><td>UInt_t</td>
+</tr><tr>
+<td>getPosition( )</td><th></th><td>TVector3</td>
+</tr><tr>
+<td>getDirection( )</td><th></th><td>TVector3</td>
+</tr><tr>
+<td>getNumHits( )</td><th></th><td>UInt_t</td>
+</tr>
+</table>
+<h3 class="heading3"><a name="reconRootData-TkrCovMat+%3Ca+name%3D%22reconRootDataTkrCovMat%22%3E%3C%2Fa%3E"> TkrCovMat <a name="reconRootData-TkrCovMat"></a></a></h3>
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getCovX0X0( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getCovSxSx( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getCovX0Sx( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getCovY0Y0( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getCovSySy( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getCovY0Sy( )</td><th></th><td>Double_t</td>
+</tr>
+</table>
+<h3 class="heading3"><a name="reconRootData-TkrFitHit+%3Ca+name%3D%22reconRootDataTkrFitHit%22%3E%3C%2Fa%3E"> TkrFitHit <a name="reconRootData-TkrFitHit"></a></a></h3>
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getHitType( )</td><th></th><td>TYPE<br/>
+enum TYPE<div class="error">Unknown macro: {MEAS, FIT, PRED, SMOOTH, UNKNOWN}</div></td>
+</tr><tr>
+<td>getTkrParams( )</td><th></th><td>const <a href="reconRootData.html#WB-reconRootData-TkrParams" title="TkrParams on reconRootData">TkrParams</a>&amp;</td>
+</tr><tr>
+<td>getTkrCovMat( )</td><th></th><td>const <a href="reconRootData.html#WB-reconRootData-TkrCovMat" title="TkrCovMat on reconRootData">TkrCovMat</a>&amp;</td>
+</tr>
+</table>
+<h3 class="heading3"><a name="reconRootData-TkrHitPlane+%3Ca+name%3D%22reconRootDataTkrHitPlane%22%3E%3C%2Fa%3E"> TkrHitPlane <a name="reconRootData-TkrHitPlane"></a></a></h3>
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getIdHit( )</td><th></th><td>UInt_t</td>
+</tr><tr>
+<td>getIdTower( )</td><th></th><td>UInt_t</td>
+</tr><tr>
+<td>getIdPlane( )</td><th></th><td>UInt_t</td>
+</tr><tr>
+<td>getProjection( )</td><th></th><td>AXIS</td>
+</tr><tr>
+<td>getProjPlus( )</td><th></th><td>AXIS</td>
+</tr><tr>
+<td>getZplane( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getEnePlane( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getRadLen( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getActiveDist( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getHitMeas( )</td><th></th><td>const <a href="reconRootData.html#WB-reconRootData-TkrFitHit" title="TkrFitHit on reconRootData">TkrFitHit</a>&amp;</td>
+</tr><tr>
+<td>getHitPred( )</td><th></th><td>const <a href="reconRootData.html#WB-reconRootData-TkrFitHit" title="TkrFitHit on reconRootData">TkrFitHit</a>&amp;</td>
+</tr><tr>
+<td>getHitFit( )</td><th></th><td>const <a href="reconRootData.html#WB-reconRootData-TkrFitHit" title="TkrFitHit on reconRootData">TkrFitHit</a>&amp;</td>
+</tr><tr>
+<td>getHitSmooth( )</td><th></th><td>const <a href="reconRootData.html#WB-reconRootData-TkrFitHit" title="TkrFitHit on reconRootData">TkrFitHit</a>&amp;</td>
+</tr><tr>
+<td>getQmaterial( )</td><th></th><td>const <a href="reconRootData.html#WB-reconRootData-TkrCovMat" title="TkrCovMat on reconRootData">TkrCovMat</a>&amp;</td>
+</tr>
+</table>
+<h3 class="heading3"><a name="reconRootData-TkrParams+%3Ca+name%3D%22reconRootDataTkrParams%22%3E%3C%2Fa%3E"> TkrParams <a name="reconRootData-TkrParams"></a></a></h3>
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getXPos( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getYPos( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getXSlope( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getYSlope( )</td><th></th><td>Double_t</td>
+</tr>
+</table>
+<h3 class="heading3"><a name="reconRootData-TkrTrack+%3Ca+name%3D%22reconRootDataTkrTrack%22%3E%3C%2Fa%3E"> TkrTrack <a name="reconRootData-TkrTrack"></a></a></h3>
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getQuality( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getEnergy(TKREND end)</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getLayer(TKREND end)</td><th></th><td>UInt_t</td>
+</tr><tr>
+<td>getTower(TKREND end)</td><th></th><td>UInt_t</td>
+</tr><tr>
+<td>getTrackPar(TKREND end)</td><th></th><td>const <a href="reconRootData.html#WB-reconRootData-TkrParams" title="TkrParams on reconRootData">TkrParams</a>*</td>
+</tr><tr>
+<td>getTrackParZ(TKREND end)</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getTrackCov(TKREND end)</td><th></th><td>const <a href="reconRootData.html#WB-reconRootData-TkrCovMat" title="TkrCovMat on reconRootData">TkrCovMat</a>*</td>
+</tr><tr>
+<td>getId( )</td><th></th><td>Int_t</td>
+</tr><tr>
+<td>getChiSq( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getChiSqSmooth( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getRmsResid( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getKalEnergy( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getKalThetaMS( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getXgaps( )</td><th></th><td>UInt_t</td>
+</tr><tr>
+<td>getYgaps()</td><th></th><td>UInt_t</td>
+</tr><tr>
+<td>getXistGaps()</td><th></th><td>UInt_t</td>
+</tr><tr>
+<td>getYistGaps()</td><th></th><td>UInt_t</td>
+</tr><tr>
+<td>getEndHit(TKREND end)</td><th></th><td>const <a href="reconRootData.html#WB-reconRootData-TkrHitPlane" title="TkrHitPlane on reconRootData">TkrHitPlane</a>*</td>
+</tr><tr>
+<td>getNumHits( )</td><th></th><td>UInt_t</td>
+</tr>
+</table>
+<h3 class="heading3"><a name="reconRootData-TkrVertex+%3Ca+name%3D%22reconRootDataTkrVertex%22%3E%3C%2Fa%3E"> TkrVertex <a name="reconRootData-TkrVertex"></a> </a></h3>
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getId( )</td><th></th><td>Int_t</td>
+</tr><tr>
+<td>getQuality( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getEnergy( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getLayer( )</td><th></th><td>Int_t</td>
+</tr><tr>
+<td>getTower( )</td><th></th><td>Int_t</td>
+</tr><tr>
+<td>getPosition( )</td><th></th><td>const TVector3&amp;</td>
+</tr><tr>
+<td>getDirection( )</td><th></th><td>const TVector3&amp;</td>
+</tr><tr>
+<td>getTrackPar( )</td><th></th><td>const <a href="reconRootData.html#WB-reconRootData-TkrParams" title="TkrParams on reconRootData">TkrParams</a>&amp;</td>
+</tr><tr>
+<td>getTrackParZ( )</td><th></th><td>Double_t</td>
+</tr><tr>
+<td>getTrackCov( )</td><th></th><td>const <a href="reconRootData.html#WB-reconRootData-TkrCovMat" title="TkrCovMat on reconRootData">TkrCovMat</a>&amp;</td>
+</tr><tr>
+<td>getNumTracks( )</td><th></th><td>UInt_t</td>
+</tr><tr>
+<td>getTrackId(UInt_t idx)</td><th></th><td>UInt_t</td>
+</tr>
+</table><br/>
+<a href="reconRootData.html#WB-reconRootData-top" title="top on reconRootData">Back to Top</a>&#160;<p class="paragraph">H. Kelly Last Modified: 2004-08-19 08:36:51 -0700</p>
+
+				    					    <br/>
+                        <div class="tabletitle">
+                            <a name="attachments">Attachments:</a>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="reconRootData_attachments/reconRootDataTree.gif">reconRootDataTree.gif</a> (image/gif)
+                                <br/>
+                                                    </div>
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Oct 13, 2004 22:02</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>
