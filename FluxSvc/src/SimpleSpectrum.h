@@ -22,7 +22,7 @@ class SimpleSpectrum : public Spectrum {
 public: 
     SimpleSpectrum(const char* name,float E0, float index=0.0);
     SimpleSpectrum(const char* name,float Emin, float Emax, float index);
-    SimpleSpectrum(const DOM_Element& xelem);
+    SimpleSpectrum(const DOM_Element& xelem, bool useGeV=true);
     SimpleSpectrum(const std::string& params);
     
     SimpleSpectrum();
@@ -37,6 +37,7 @@ private:
     std::string m_name;	// particle name to generate ("P", "gamma", ...)
     float m_index;	// spectral index: <=1 is delta function at E0
     float m_emax;
+    bool m_useGeV;  // true if using GeV units, MeV otherwise
 };
 
 #endif

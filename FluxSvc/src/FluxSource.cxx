@@ -417,7 +417,7 @@ FluxSource::FluxSource(const DOM_Element& xelem )
             return;} //this line "just in case"
         
         
-        if (typeTagName.equals("particle")) s = new SimpleSpectrum(specType);
+        if (typeTagName.equals("particle")) s = new SimpleSpectrum(specType,  m_energyscale==GeV );
         else if (typeTagName.equals("SpectrumClass")) {
             // attribute "name" is the class name
             class_name = xml::Dom::transToChar(specType.getAttribute("name"));

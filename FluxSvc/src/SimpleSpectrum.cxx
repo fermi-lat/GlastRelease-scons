@@ -32,6 +32,7 @@ SimpleSpectrum::SimpleSpectrum(const char* name, float E0, float index)
 ,m_name(name)
 ,m_index( index)
 ,m_emax(100.)
+,m_useGeV(true)
 {}
 
 SimpleSpectrum::SimpleSpectrum(const char* name, float Emin, float Emax, float index)
@@ -39,9 +40,12 @@ SimpleSpectrum::SimpleSpectrum(const char* name, float Emin, float Emax, float i
 ,m_name(name)
 ,m_index(index)
 ,m_emax(Emax)
+,m_useGeV(true)
 {}
 
-SimpleSpectrum::SimpleSpectrum(const DOM_Element& xelem){
+SimpleSpectrum::SimpleSpectrum(const DOM_Element& xelem, bool useGeV)
+: m_useGeV(useGeV)
+{
     m_name = xml::Dom::getAttribute(xelem, "name").c_str();
     
     const DOM_Element spectrum = xml::Dom::findFirstChildByName(xelem, "*");
@@ -65,7 +69,7 @@ SimpleSpectrum::SimpleSpectrum(const DOM_Element& xelem){
 std::string SimpleSpectrum::title()const
 {
     std::stringstream s;
-    s << particleName() << '(' << m_E0/1000. << " GeV";
+    s << particleName() << '(' << m_E0 <<  (m_useGeV? " GeV" : " MeV") ;
     if( m_index >=1 ) s << ',' << m_index ;
     s << ")";
     return s.str();
