@@ -11,7 +11,6 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 DECLARE_FACTORY_ENTRIES(ntupleWriterSvc) {
-    DECLARE_SERVICE(ntupleWriterSvc);
     DECLARE_SERVICE(RootTupleSvc);
 
     DECLARE_ALGORITHM(WriteTupleAlg);

@@ -8,9 +8,6 @@
 #include "GaudiKernel/Algorithm.h"
 
 
-#include "GaudiKernel/INTupleSvc.h"
-#include "GaudiKernel/INTuple.h"
-#include "GaudiKernel/NTuple.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/StatusCode.h"
 
@@ -41,7 +38,6 @@ private:
     double m_count; // special value to put into tuples
     double m_square; // another
 
-    INTupleWriterSvc *m_ntupleWriteSvc;
     INTupleWriterSvc *m_rootTupleSvc;
 
 };
@@ -64,16 +60,7 @@ StatusCode writeJunkAlg::initialize() {
     
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
-    // get a pointer to our ntupleWriterSvc
-    sc = service("ntupleWriterSvc", m_ntupleWriteSvc);
 
-    if( sc.isFailure() ) {
-        log << MSG::ERROR << "writeJunkAlg failed to get the ntupleWriterSvc" << endreq;
-        return sc;
-    }
-
-    // test indirect interface
-    sc = m_ntupleWriteSvc->addItem(m_tupleName, "Indirect", &m_count);
       // get a pointer to RootTupleSvc as well
     sc = service("RootTupleSvc", m_rootTupleSvc);
 
@@ -101,25 +88,9 @@ StatusCode writeJunkAlg::execute() {
     // note that setting these variables is all that is necessary to have it changed in the tuple itself
     ++m_count;
     m_square= m_count*m_count;
-    // also set it directly (original interface)
-    sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "CallCount", callCount);
-
-    m_float = 700.05f;
-    sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "MyFirstItem", m_float);
-
-    
-    float zero = 0.0;
-    // Let's try to add an undefined float
-    float bad = 100.0/zero;
-    sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "BadValue", bad);
-
     // Test the ability to turn off a row
-    if (callCount == 5) m_ntupleWriteSvc->storeRowFlag(false);
-    else { m_rootTupleSvc->storeRowFlag(true);}
-    // test call to store ntuples to disk during execution
-   // if (callCount%10 == 0) 
-        ///m_ntupleWriteSvc->saveNTuples();
 
+    if (callCount != 5)  { m_rootTupleSvc->storeRowFlag(true);}
     ++callCount;
 
 

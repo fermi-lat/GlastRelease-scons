@@ -4,10 +4,10 @@
 //
 
 // List of Services that are required for this run
-ApplicationMgr.ExtSvc   = {"ntupleWriterSvc", "RootTupleSvc"};
+ApplicationMgr.ExtSvc   = { "RootTupleSvc"};
 
 // List of DLLs required
-ApplicationMgr.DLLs   = { "ntupleWriterSvc",  "RootHistCnv"};
+ApplicationMgr.DLLs   = { "ntupleWriterSvc" };
 
 ApplicationMgr.TopAlg = { "writeJunkAlg" };
 
@@ -20,14 +20,7 @@ MessageSvc.OutputLevel      = 2;
 //--------------------------------------------------------------
 ApplicationMgr.EvtSel  = "NONE";
 
-ApplicationMgr.HistogramPersistency = "ROOT";
-
-ntupleWriterSvc.tuple_name = { "TESTALG" };
-
 writeJunkAlg.tupleName = "TESTALG";
-
-// Output root ntuple file, specify by logical variable
-NTupleSvc.Output = {"TESTALG DATAFILE='testAlg.root' OPT='NEW'"};
 
 // Number of Events to Process
 ApplicationMgr.EvtMax = 20;

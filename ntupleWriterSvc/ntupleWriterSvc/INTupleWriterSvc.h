@@ -5,7 +5,7 @@
 #include "GaudiKernel/NTuple.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_INTupleWriterSvc("INTupleWriterSvc",  1 , 1 ); 
+static const InterfaceID IID_INTupleWriterSvc("INTupleWriterSvc",  2 , 1 ); 
 
 /*! @class INTupleWriterSvc
  @brief Proper Gaudi abstract interface class for the ntupleWriterSvc 
@@ -20,12 +20,6 @@ public:
     
     /// cleanup after event processing - required for all Gaudi services
     virtual StatusCode finalize ()=0;
-
-    /// return the Gaudi tuple
-    virtual SmartDataPtr<NTuple::Tuple> getNTuple(const char *tupleName)=0;
-
-    /// add an item by value
-    virtual StatusCode addItem(const char *tupleName, const char *item, double val)=0;
 
     /// special version that adds a <EM>pointer</EM> to an item
     virtual StatusCode addItem(const std::string & tupleName, const std::string& itemName, const double* val)=0;

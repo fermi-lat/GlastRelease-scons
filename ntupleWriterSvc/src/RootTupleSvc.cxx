@@ -9,8 +9,6 @@
 
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IIncidentListener.h"
-#include "GaudiKernel/INTupleSvc.h"
-#include "GaudiKernel/NTuple.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -31,7 +29,8 @@
 
 
 class RootTupleSvc :  public Service, virtual public IIncidentListener,
-    virtual public INTupleWriterSvc
+        virtual public INTupleWriterSvc
+
 {  
 
 public:
@@ -48,11 +47,6 @@ public:
     /// Query interface - required of all Gaudi services
     virtual StatusCode queryInterface( const IID& riid, void** ppvUnknown );
 
-    /// Provide the named ntuple Ptr from the data store -- dummy since we are not using this
-    virtual SmartDataPtr<NTuple::Tuple> getNTuple(const char* /* tupleName */) {
-        INTupleSvc *ntupleSvc=0;
-        return SmartDataPtr<NTuple::Tuple> (ntupleSvc, "");
-    }
 
     /// add a new item to an ntuple -- not supported
     virtual StatusCode addItem(const char* /* tupleName */, 
@@ -194,6 +188,7 @@ StatusCode RootTupleSvc::initialize ()
 
     return status;
 }
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
                                  const std::string& itemName, const double* pval)
@@ -257,6 +252,8 @@ void RootTupleSvc::endEvent()
     }
 
 }
+
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::queryInterface(const IID& riid, void** ppvInterface)  {
     if ( IID_INTupleWriterSvc.versionMatch(riid) )  {
@@ -315,7 +312,6 @@ bool RootTupleSvc::storeRowFlag(const std::string& tupleName, bool flag)
     return t;
 }
 
-
 void RootTupleSvc::checkSum(TTree* t) {
     MsgStream log( msgSvc(), name() );
 
@@ -337,10 +333,9 @@ void RootTupleSvc::checkSum(TTree* t) {
 
         if ( c == "TLeafD" ) {
             const Double_t v = dynamic_cast<TLeafD*>(l)->GetValue();
-            if ( log.isActive() )
-                log << " " << std::setprecision(25) << v << std::setprecision(0)
-                    << endreq;
-
+            if ( log.isActive() ) {
+    //THB: problem with windows??           log << " " << std::setprecision(25) << v << std::setprecision(0)  << endreq;
+            }
             const unsigned int s = sizeof(v);
             unsigned char p[s];
             for ( unsigned int ip=0; ip<s; ++ip )
@@ -364,8 +359,8 @@ void RootTupleSvc::checkSum(TTree* t) {
             log<<MSG::WARNING<< "class " << c << " is not implemented!"<<endreq;
         }
     }
-
     const unsigned long theSum = checkSumSimple(&charCol);
+# if 0
     log << MSG::DEBUG << "checksum: "
         << std::setprecision(25)
         << std::resetiosflags(std::ios::scientific) << eventId << " "
@@ -373,6 +368,7 @@ void RootTupleSvc::checkSum(TTree* t) {
         << theSum << " "
         << charCol.size()
         << endreq;
+#endif
     m_csout.precision(25);
     m_csout << std::setw(10)
             << std::resetiosflags(std::ios::scientific) << eventId << "     "
@@ -381,6 +377,7 @@ void RootTupleSvc::checkSum(TTree* t) {
             << std::setw(25) << theSum
             << std::endl;
 }
+
 
 
 unsigned long RootTupleSvc::checkSumSimple(std::vector<unsigned char>* v) {
