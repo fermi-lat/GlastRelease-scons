@@ -18,6 +18,15 @@ public:
 
     void clear();
 
+    /// add noise and remove hits below threshold
+    /**
+      *  @param noise_sigma noise rms in MeV
+      *  @param occupancy  fraction of time a cell is occupied
+      *  @param theshold   minimium energy deposit (MeV) that results in a latch
+      */
+
+    void addNoise(double noise_sigma, double occupancy, double threshold);
+
     /// Strip data declaration
     class Strip 
     {
