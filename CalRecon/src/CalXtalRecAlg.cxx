@@ -15,6 +15,12 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/IDetDataSvc.h"
+#include "CalibData/CalibTime.h"
+#include "CalibData/CalibModel.h"
+#include "CalibData/Cal/CalCalibPed.h"
+#include "CalibData/Cal/CalCalibGain.h"
+#include "CalibData/Cal/CalCalibMuSlope.h"
 #include "idents/VolumeIdentifier.h"
 #include "CLHEP/Geometry/Transform3D.h"
 #include "geometry/Point.h"
@@ -30,7 +36,16 @@ using namespace Event;
 
 // constructor
 CalXtalRecAlg::CalXtalRecAlg(const std::string& name, ISvcLocator* pSvcLocator):
-Algorithm(name, pSvcLocator) { 
+    Algorithm(name, pSvcLocator)
+  , m_detDataSvc  ( 0 )
+
+{ 
+
+
+  declareProperty( "startTime",  
+                   m_startTimeAsc = "2003-1-10_00:20");
+  declareProperty( "calibFlavor", m_calibFlavor = "ideal");
+
 
 }
 
@@ -129,30 +144,51 @@ StatusCode CalXtalRecAlg::initialize()
         } 
     }
 
-    // conversion from GeV to MeV
-//    for (int r=0; r<4;r++) m_maxEnergy[r] *= 1000.; 
 	
-        m_pedMap = new CALPEDMAP();
-        m_gainMap = new CALGAINMAP();
-        const unsigned int nranges = 4, ntowers=m_xNum*m_yNum;
-        m_pedMap->generateCalib(ntowers,m_CALnLayer,m_nCsIPerLayer,nranges);
-        m_gainMap->generateCalib(ntowers,m_CALnLayer,m_nCsIPerLayer,nranges);
-        
-        std::ofstream opedfile("CalPedCalib.txt");
-        m_pedMap->writeFile(opedfile);
-        opedfile.close();
+    // get pointer to CalibDataSvc
+    sc = service("CalibDataSvc", m_pCalibDataSvc, true);
 
-        std::ofstream ogainfile("CalGainCalib.txt");
-        m_gainMap->writeFile(ogainfile);
-        ogainfile.close();
+    if ( !sc.isSuccess() ) {
+        log << MSG::ERROR 
+	    << "Could not get IDataProviderSvc interface of CalibDataSvc" 
+	    << endreq;
+        return sc;
+    }
+ 
+    // Query the IDetDataSvc interface of the calib data service
+    sc = m_pCalibDataSvc->queryInterface(IID_IDetDataSvc, 
+                                (void**) &m_detDataSvc);
+    if ( !sc.isSuccess() ) {
+        log << MSG::ERROR 
+	    << "Could not query IDetDataSvc interface of CalibDataSvc" 
+	    << endreq;
+        return sc;
+    } else {
+        log << MSG::DEBUG 
+	    << "Retrieved IDetDataSvc interface of CalibDataSvc" 
+	    << endreq;
+    }
         
-        
-        
-//        std::ifstream ifile("CalPedCalib.txt");
-//        m_pedMap->readFile(ifile);
-//        ifile.close();
-        
-	return sc;
+    // Get properties from the JobOptionsSvc
+    sc = setProperties();
+    if ( !sc.isSuccess() ) {
+        log << MSG::ERROR << "Could not set jobOptions properties" << endreq;
+        return sc;
+    }
+
+    unsigned int underpos = m_startTimeAsc.find("_");
+    if (underpos < m_startTimeAsc.size()) {
+         m_startTimeAsc.replace(underpos, 1, " ");
+    }
+    m_startTime = facilities::Timestamp(m_startTimeAsc).getClibTime();
+
+    log << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
+    log << MSG::INFO << "Time of first event: (ascii) "
+        << m_startTimeAsc       << endreq; 
+    log << MSG::INFO << "Time of first event: (seconds since 1970) "
+        << m_startTime       << endreq; 
+
+    return sc;
 }
 
 
@@ -180,6 +216,54 @@ StatusCode CalXtalRecAlg::execute()
         MsgStream log(msgSvc(), name());
 
         sc = retrieve(); //get access to TDS data collections
+
+
+        // Set the event time
+        facilities::Timestamp time = facilities::Timestamp(m_startTime);
+        log << MSG::DEBUG << "Event time: "
+            << time.getString()
+            << endreq; 
+        CalibData::CalibTime ctime(time);
+        log << MSG::DEBUG << "Event time (hours) " << ctime.hours() << endreq;
+        m_detDataSvc->setEventTime(ctime);
+
+
+  
+        std::string fullPedPath = "/Calib/CAL_Ped/"+m_calibFlavor;
+        std::string fullGainPath = "/Calib/CAL_ElecGain/"+m_calibFlavor;
+        std::string fullMuSlopePath = "/Calib/CAL_MuSlope/"+m_calibFlavor;
+  
+
+        DataObject *pObject;
+        
+        //getting pointers to the calibration data of each type
+        m_pCalibDataSvc->retrieveObject(fullPedPath, pObject);
+
+        pPeds = 0;
+        pPeds = dynamic_cast<CalibData::CalCalibPed *> (pObject);
+        if (!pPeds) {
+            log << MSG::ERROR << "Dynamic cast to CalCalibPed failed" << endreq;
+            return StatusCode::FAILURE;
+        }
+
+        m_pCalibDataSvc->retrieveObject(fullGainPath, pObject);
+
+        pGains = 0;
+        pGains = dynamic_cast<CalibData::CalCalibGain *> (pObject);
+        if (!pGains) {
+            log << MSG::ERROR << "Dynamic cast to CalCalibGain failed" << endreq;
+            return StatusCode::FAILURE;
+        }
+
+
+        m_pCalibDataSvc->retrieveObject(fullMuSlopePath, pObject);
+
+        pMuSlopes = 0;
+        pMuSlopes = dynamic_cast<CalibData::CalCalibMuSlope *> (pObject);
+        if (!pMuSlopes) {
+            log << MSG::ERROR << "Dynamic cast to CalCalibMuSlope failed" << endreq;
+            return StatusCode::FAILURE;
+        }
 
         // loop over all calorimeter digis in CalDigiCol
 	for (Event::CalDigiCol::const_iterator it = m_CalDigiCol->begin(); 
@@ -292,8 +376,6 @@ void CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi*
 
 
         idents::CalXtalId xtalId = digi->getPackedId();
-        const XTALPEDCALIB *xtalPedCalib = m_pedMap->getXtalCalib(xtalId);
-        const XTALGAINCALIB *xtalGainCalib = m_gainMap->getXtalCalib(xtalId);
 
         const Event::CalDigi::CalXtalReadoutCol& readoutCol = digi->getReadoutCol();
 		
@@ -305,16 +387,27 @@ void CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi*
             int rangeP = it->getRange(idents::CalXtalId::POS); 
             int rangeM = it->getRange(idents::CalXtalId::NEG); 
 
+            //extraction of pedestals
+            CalibData::RangeBase* pRangeP = pPeds->getRange(xtalId, rangeP,idents::CalXtalId::POS);
+            CalibData::RangeBase* pRangeM = pPeds->getRange(xtalId, rangeM,idents::CalXtalId::NEG);
+    
+            CalibData::Ped* pPedP = dynamic_cast<CalibData::Ped * >(pRangeP);
+            CalibData::Ped* pPedM = dynamic_cast<CalibData::Ped * >(pRangeM);
+            float pedP = pPedP->getAvr();
+            float pedM = pPedM->getAvr();
 
-            const CalPedCalib* pedCalibP = xtalPedCalib->getRangeCalib(rangeP,idents::CalXtalId::POS);
-                float pedP = pedCalibP -> getAvr();
-            const CalPedCalib* pedCalibM = xtalPedCalib->getRangeCalib(rangeM,idents::CalXtalId::NEG);
-                float pedM = pedCalibM -> getAvr();
 
-            const CalGainCalib* gainCalibP = xtalGainCalib->getRangeCalib(rangeP,idents::CalXtalId::POS);
-            float gainP = gainCalibP -> getGain();
-            const CalGainCalib* gainCalibM = xtalGainCalib->getRangeCalib(rangeM,idents::CalXtalId::NEG);
-            float gainM = gainCalibM -> getGain();
+            
+            // extraction of gains
+            pRangeP = pGains->getRange(xtalId, rangeP,idents::CalXtalId::POS);
+            pRangeM = pGains->getRange(xtalId, rangeM,idents::CalXtalId::NEG);
+
+            CalibData::Gain* pGainP = dynamic_cast<CalibData::Gain * >(pRangeP);
+            CalibData::Gain* pGainM = dynamic_cast<CalibData::Gain * >(pRangeM);
+
+            float gainP = pGainP->getGain();
+            float gainM = pGainM->getGain();
+
 
             // get adc values 
             double adcP = it->getAdc(idents::CalXtalId::POS);	
@@ -349,7 +442,7 @@ void CalXtalRecAlg::computePosition(CalXtalRecData* recData)
 
 
 {
-	MsgStream log(msgSvc(), name());
+	MsgStream msg(msgSvc(), name());
 
         // get crystal identification 
         idents::CalXtalId xtalId = recData->getPackedId();	
@@ -405,14 +498,34 @@ void CalXtalRecAlg::computePosition(CalXtalRecData* recData)
         //extract energy for the best range for both crystal faces 	
 	double eneNeg = recData->getEnergy(0,idents::CalXtalId::NEG);
 	double enePos = recData->getEnergy(0,idents::CalXtalId::POS);
-	double asym=0;
+
+	int rangeM = recData->getRange(0,idents::CalXtalId::NEG);
+	int rangeP = recData->getRange(0,idents::CalXtalId::POS);
+
+    
+        // extract mu slopes for selected ranges from calibration objects
+        CalibData::RangeBase* pRangeP = pMuSlopes->getRange(xtalId, rangeP,idents::CalXtalId::POS);
+        CalibData::RangeBase* pRangeM = pMuSlopes->getRange(xtalId, rangeM,idents::CalXtalId::NEG);
+    
+        CalibData::MuSlope* pMuSlopeP = dynamic_cast<CalibData::MuSlope * >(pRangeP);
+        CalibData::MuSlope* pMuSlopeM = dynamic_cast<CalibData::MuSlope * >(pRangeM);
+
+        float slopeP = pMuSlopeP->getSlope();
+        float slopeM = pMuSlopeM->getSlope();
+
+        float slope = 0.5*(slopeP+slopeM)/m_CsILength;
+
+        double asym=0;
 
         //calculate light asymmetry
-        if(enePos>0 && eneNeg>0)asym = (enePos-eneNeg)/(enePos+eneNeg);
+        if(enePos>0 && eneNeg>0)
+
+              asym =  log(enePos/eneNeg);
+//            asym = (enePos-eneNeg)/(enePos+eneNeg);
 
         // calculate slope - coefficient to convert light asymmetry into the 
         // deviation from crystal center
-	double slope = (1+m_lightAtt)/(1-m_lightAtt);
+//	double slope = (1+m_lightAtt)/(1-m_lightAtt);
 
         // longitudinal position in relative units (this value equal to +1 or -1
         // at the end of a crystal
