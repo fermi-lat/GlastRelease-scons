@@ -2,6 +2,8 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 23-may-2002: jrb - tag v1r5p2 - Make core-closeout envelope bigger to
+ *                                 accommodate MCM boards
  * 13-may-2002: jrb - tag v1r5p1 - Fix typo in positioning one piece of grid
  * 08-may-2002: jrb - tag v1r5 - Reorganize file structure for derived consts,
  *                               Add TKR MCM boards and walls
