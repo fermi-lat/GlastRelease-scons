@@ -6,7 +6,7 @@ branches src mgr doc
 use instrument v2r3
 use Gaudi v8
 use data 
-use GlastEvent v1r2
+use GlastEvent
 
 use GaudiSvc v4
 use Auditors v1
