@@ -616,8 +616,9 @@ void reconRootWriterAlg::fillCalXtalRec(CalRecon *calRec, Event::CalXtalRecCol* 
                 recRoot.initialize(posRoot);   
                 xtalRoot->addRangeRecData(recRoot);   
             }   
-            calRec->addXtalRecData(xtalRoot);   
         }   
+        
+        calRec->addXtalRecData(xtalRoot);   
     }   
     
     return;   
