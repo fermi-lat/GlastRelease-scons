@@ -19,7 +19,7 @@
 
 //! Load all  services: 
 void trigger_load() {
-    DLL_DECL_ALGORITHM( TriggerAlg );
+    DLL_DECL_ALGORITHM( Level1 );
 } 
 
 extern "C" void trigger_loadRef()    {
