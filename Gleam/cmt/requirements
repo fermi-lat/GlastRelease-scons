@@ -1,6 +1,6 @@
 package Gleam
 
-version  v5
+version  v5r0p4
 
 # $Id$
 
@@ -34,7 +34,7 @@ use RootIo      v*
 #diagnostic and summary of bottom line
 use merit       v*
 
-### define a simple executable with GUI
+### define a simple executable wth GUI
 
 set JOBOPTIONS "${GLEAMROOT}/src/jobOptions.txt"
 
