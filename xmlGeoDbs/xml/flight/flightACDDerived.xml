@@ -851,7 +851,13 @@
                 </quo>
               </add>
             </minus>
-            <refer refTo="ACDTransInnerSCflange" />
+             <quo>
+               <add>
+                 <refer refTo="ACDTransInnerSCflange" />
+                 <refer refTo="ACDSideSupportThick" />
+               </add>
+               <const value="2" uType="count" />
+             </quo>
           </max>
         </const>
           
