@@ -2,6 +2,7 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
+ *  1-May-2003: jrb v0r2p10:New job options parameter for MySQL host
  * 17-Apr-2003: jrb v0r2p9: Add author line
  * 28-Mar-2003: jrb v0r2p8: 1. Bug fix for towers > 0.  
  *                          2. Update doc.
