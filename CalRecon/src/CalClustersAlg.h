@@ -111,8 +111,8 @@ public:
 * To improve the result, we make one iteration using the new energy estimator to determine
 * the  correct value of \f$\alpha\f$.  
 *
-*\par The methods takes 2 arguments:
-*\param eTotal Total energy measured in the calorimeter in MeV
+*\par The method takes 2 arguments:
+*\param sum Total energy measured in the calorimeter in MeV
 *\param elast  Total energy measured in the last layer in MeV
 *
 *\return Corrected energy in MeV
@@ -169,7 +169,7 @@ E_i = E_{tot}(\Gamma_{inc}
 *
 *
 * The input is:
-* \param eTotal total energy measured in the calorimeter in MeV
+* \param sum total energy measured in the calorimeter in MeV
 * \param cl     the CalCluster in which the results are saved
 *
 * The output ( the 4 fitting parameters and the chi square) of this method is
