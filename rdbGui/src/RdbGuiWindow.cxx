@@ -406,8 +406,6 @@ long RdbGUIWindow::onInsert(FXObject*,FXSelector, void*)
   m_dgInsert->resize(m_dgInsert->getDefaultWidth(),m_dgInsert->getDefaultHeight());
   m_dgInsert->recalc();
   
-  // TODO this does not work: the insert dialog does not start properly.
-
   
   return 1;
 }

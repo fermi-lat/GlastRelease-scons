@@ -25,7 +25,7 @@ FXIMPLEMENT(InsertDialog,FXDialogBox,InsertDialogMap,ARRAYNUMBER(InsertDialogMap
 
 
 InsertDialog::InsertDialog(FXApp *owner):
-  FXDialogBox(owner, "Insert",DECOR_TITLE|DECOR_BORDER)
+  FXDialogBox(owner, "Insert",DECOR_TITLE|DECOR_BORDER|DECOR_RESIZE)
 { 
   m_matrix = 0;
   
