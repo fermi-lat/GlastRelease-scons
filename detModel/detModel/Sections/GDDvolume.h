@@ -20,6 +20,8 @@ class GDDvolume: public GDDboundable {
   /** A constructors with only type */
   GDDvolume():name(""),parameters(""){;}
 
+  ~GDDvolume(){;};
+
   /**
    * This method sets and gets the parameters associated with the
    * volume.  Parameters can be any string, representing a way to

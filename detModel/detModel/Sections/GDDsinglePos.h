@@ -13,13 +13,13 @@ class GDDsinglePos :public GDDposition {
    *  This methods sets and gets the xRot,yRot,zRot,S
    */ 
   double getXRot()const{ return 0; }
-  void setXRot(double XRot){ }
+  void setXRot(double XRot){xRot = XRot; }
   double getYRot()const{ return 0; }
-  void setYRot(double YRot){ }
+  void setYRot(double YRot){yRot = YRot; }
   double getZRot()const{ return 0; }
-  void setZRot(double ZRot){ }
+  void setZRot(double ZRot){zRot = ZRot; }
   double getS()const{ return 0; }
-  void setS(double s){ }
+  void setS(double s){ S = s; }
 
 private:  
   double xRot;

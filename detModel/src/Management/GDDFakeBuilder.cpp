@@ -38,8 +38,8 @@ GDDFakeBuilder::GDDFakeBuilder()
 
 
 void GDDFakeBuilder::parseFile(char* nameFile){
-
-  std::cout << "Fake parsing of the file" << std::endl; 
+  
+  std::cout << "Fake parsing of the file " << nameFile << std::endl; 
 
 }  
 

@@ -32,6 +32,7 @@ double GDDboundingBox::getDirDim(axisDir dir){
     return getZDim();
     break;
   }
+  return 0;
 }
 
 

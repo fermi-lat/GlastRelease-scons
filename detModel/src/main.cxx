@@ -10,8 +10,8 @@
 #include "detModel/Management/GDDVRMLSectionsVisitor.h"
 #include "detModel/Management/GDDprinterSectionsVisitor.h"
 #include "detModel/Management/GDDHTMLConstantsVisitor.h"
-#include "detModel/Management/GDDXercesBuilder.h"
-//#include "detModel/Management/GDDFakeBuilder.h"
+//#include "detModel/Management/GDDXercesBuilder.h"
+#include "detModel/Management/GDDFakeBuilder.h"
 
 #include "detModel/Sections/GDDvolume.h"
 #include "detModel/Sections/GDDshape.h"
@@ -44,9 +44,9 @@ int main(int argc, char* argv[]) {
   // We set the builder; the XercesBuilder needs the name of the XML file
   // in the constructor
 
-  //////////  manager->setBuilder(new GDDFakeBuilder);
+  manager->setBuilder(new GDDFakeBuilder);
 
-  manager->setBuilder(new GDDXercesBuilder);
+  //manager->setBuilder(new GDDXercesBuilder);
   manager->setNameFile(argv[1]);
   
 
@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
 
   // We build the hierarchy; in that case we build all, i.e. both the constants
   // and the sections
-  manager->build(all);
+  manager->build(GDDmanager::all);
 
   // We start the VRMLSectionsVisitor to build the vrml file
   // If we don't specify a string in the constructor, it will build the
@@ -68,10 +68,10 @@ int main(int argc, char* argv[]) {
   else
     visitor = new GDDVRMLSectionsVisitor(argv[2]);  
 
-  visitor->setOpacity("FOAM05",0.5);
+  //  visitor->setOpacity("FOAM05",0.5);
 
   // (Joanne) Added following line so I can see inside vacuum envelopes
-  visitor->setOpacity("Vacuum",0.6);
+  //visitor->setOpacity("Vacuum",0.6);
 
   // Put these back if you want to keep down size of .wrl files, 
   // visitor->setDepth("oneTKR", 0);

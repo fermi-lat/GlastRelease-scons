@@ -240,8 +240,6 @@ void  GDDVRMLSectionsVisitor::visitAxisMPos(GDDaxisMPos* pos)
 {
   int i;
   int n;
-  float g, w;
-
 
   n = pos->getNcopy();
 

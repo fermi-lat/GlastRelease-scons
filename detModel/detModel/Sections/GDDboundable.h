@@ -12,7 +12,7 @@
 class GDDboundable {
  public:
   GDDboundable(){bBox = new GDDboundingBox();}
-  ~GDDboundable(){delete bBox;};
+  virtual ~GDDboundable(){delete bBox;};
   /**
    * This abstract method build the bounding box.
    * It has to be concretely implemented in sublcass

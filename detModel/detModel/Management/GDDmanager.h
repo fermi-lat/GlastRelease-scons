@@ -59,7 +59,7 @@ class GDDmanager {
   /** The constructor is protected; in such a way it is forbidden to *
       build directely a manager. Here the new GDD object is explicitely
    built */
-  GDDmanager():manMode(""),manBuilder(0){manGDD = new GDD;};
+  GDDmanager():manBuilder(0),manMode(""){manGDD = new GDD;};
 
  private:
 
