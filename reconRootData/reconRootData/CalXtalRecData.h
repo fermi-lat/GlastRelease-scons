@@ -6,8 +6,10 @@
 #include "CalRangeRecData.h"
 #include "TObject.h"
 #include "TVector3.h"
-#include <iostream>
 #include <vector>
+#ifdef WIN32
+using namespace std;
+#endif
 
 #include "digiRootData/CalXtalId.h"
 
@@ -32,7 +34,7 @@ public:
 
     void Clear(Option_t *option="");
 
-    void Print(Option_t *option="");
+    void Print(Option_t *option="") const;
 
     /// Retrieve readout mode
     const CalXtalId::CalTrigMode getMode() const { return m_mode; };
@@ -51,16 +53,16 @@ public:
     
     
     /// Retrieve average energy of two faces for the best range
-    Double_t getEnergy();
+    Double_t getEnergy() const;
     
     /// Retrieve the position for the best range
-    TVector3 getPosition()
+    const TVector3& getPosition() const
     {
         return getRangeRecData(0)->getPosition();
     }
     
     /// Retrieve reconstructed data from both ends of selected readout
-    CalRangeRecData* getRangeRecData(Short_t readoutIndex);
+    const CalRangeRecData* getRangeRecData(Short_t readoutIndex) const;
     
     /// Retrieve pulse height from selected range
     Double_t getEnergySelectedRange(CalXtalId::AdcRange range, CalXtalId::XtalFace face) const;

@@ -28,13 +28,13 @@ public:
     
     void Clear(Option_t *option="");
 
-    void Print(Option_t *option="");
+    void Print(Option_t *option="") const;
 
     void initialize(const TVector3 &pos) {
         m_pos = pos;
     }
     
-    TVector3 getPosition() const { return m_pos;}
+    const TVector3& getPosition() const { return m_pos;}
     
     /// retrieve energy from specified face
     Double_t getEnergy(CalXtalId::XtalFace face) const;

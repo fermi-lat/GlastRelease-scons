@@ -1,10 +1,13 @@
-#ifndef CALRECON_H
-#define CALRECON_H
+#ifndef ROOT_CALRECON_H
+#define ROOT_CALRECON_H
 
 #include "TObject.h"
 #include "TObjArray.h"
 
 #include <vector>
+#ifdef WIN32
+using namespace std;
+#endif
 
 #include "CalXtalRecData.h"
 #include "CalCluster.h"
@@ -28,26 +31,25 @@ public:
 
     void Clear(Option_t *option="");
 
-    void Print(Option_t *option="");
+    void Print(Option_t *option="") const;
 
     /// provide access to list of CalClusters
-    TObjArray* getCalClusters() { return m_clusterCol; };
+    std::vector<CalCluster> getCalClusterCol() { return m_clusterCol; };
 
     /// provide access to the list of CalXtalRecData
     std::vector<CalXtalRecData> getCalXtalRecCol() { return m_xtalRecCol; };
 
-    void addCalCluster(CalCluster *cluster) { m_clusterCol->Add(cluster); };
+  //  void addCalCluster(CalCluster *cluster) { m_clusterCol->Add(cluster); };
+    void addCalCluster(const CalCluster &cluster) { m_clusterCol.push_back(cluster); };
 
     void addXtalRecData(const CalXtalRecData& xtal) { m_xtalRecCol.push_back(xtal); };
 
 private:
     /// list of CalXtalRecData
-//    TObjArray *m_xtalRecCol;      
     std::vector<CalXtalRecData> m_xtalRecCol;
 
     /// list of CalClusters
-    TObjArray *m_clusterCol;  
-
+    std::vector<CalCluster> m_clusterCol;
   
     ClassDef(CalRecon,2)
 };

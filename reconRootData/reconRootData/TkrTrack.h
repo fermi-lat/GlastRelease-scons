@@ -1,5 +1,5 @@
-#ifndef TKRTRACK_H
-#define TKRTRACK_H
+#ifndef ROOT_TKRTRACK_H
+#define ROOT_TKRTRACK_H
 
 #include "TObject.h"
 #include "TObjArray.h"

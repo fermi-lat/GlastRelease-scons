@@ -1,5 +1,5 @@
-#ifndef TKRPARAMS_H
-#define TKRPARAMS_H
+#ifndef ROOT_TKRPARAMS_H
+#define ROOT_TKRPARAMS_H
 
 #include "TObject.h"
 #include "TVectorD.h"

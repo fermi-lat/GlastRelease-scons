@@ -1,13 +1,16 @@
-#ifndef TKRRECON_H
-#define TKRRECON_H
+#ifndef ROOT_TKRRECON_H
+#define ROOT_TKRRECON_H
 
 #include "TObject.h"
-#include "TObjArray.h"
+#include <vector>
+#ifdef WIN32
+using namespace std;
+#endif
 
 #include "TkrCandTrack.h"
 #include "TkrSiCluster.h"
-#include "TkrTrack.h"
-#include "TkrVertex.h"
+//#include "TkrTrack.h"
+//#include "TkrVertex.h"
 /** 
  * @class TkrRecon
  *
@@ -37,43 +40,31 @@ public:
     void Print(Option_t *option="") const;
 
     /// provide access to the list of clusters
-    /// Clients must cast the objects to TkrSiCluster
-    TObjArray* getSiClusterCol() {return m_siClusterCol;};
-    void addSiCluster(TkrSiCluster* cluster) { m_siClusterCol->Add(cluster); };
+    vector<TkrSiCluster> getSiClusterCol() { return m_siClusterCol; };
+    void addSiCluster(const TkrSiCluster &cluster) { m_siClusterCol.push_back(cluster); };
 
     /// provide access to the list of pattern recognized tracks
-    /// Clients must cast the objects to TkrTrackCand
-    TObjArray* getTrackCandCol() {return m_trackCandCol;};
-    void addTrackCand(TkrCandTrack *track) { m_trackCandCol->Add(track); };
-
-    /// provide access to the list of tracks
-    /// Clients must cast the objects to TkrTrack
-    TObjArray* getTrackCol() {return m_trackCol;};
-    void addTrack(TkrTrack *track) { m_trackCol->Add(track); };
+    vector<TkrCandTrack> getTrackCandCol() { return m_trackCandCol; };
+    void addTrackCand(const TkrCandTrack &track) { m_trackCandCol.push_back(track);};
+    //// provide access to the list of tracks
+    //vector<TkrTrack> getTrackCol() { return m_trackCol; };
+    //void addTrack(const TkrTrack &track) { m_trackCol.push_back(track); };
 
     /// provide access to the list of vertices
-    /// Clients must cast the objects to TkrVertex
-    TObjArray* getVertexCol() {return m_vertexCol;};
-    void addVertex(TkrVertex *vertex) { m_vertexCol->Add(vertex); };
-
+    //vector<TkrVertex> getVertexCol() { m_vertexCol; };
+    //void addVertex(const TkrVertex &vertex) { m_vertexCol.push_back(vertex); };
 
 private:
     //! list of TkrSiClusters
-    TObjArray* m_siClusterCol;
-    static TObjArray *s_siClusterStaticCol; //! Collection of TkrSiCluster objects
-
+    vector<TkrSiCluster> m_siClusterCol;
     //! list of TkrTrackCands
-    TObjArray* m_trackCandCol;
-    static TObjArray *s_trackCandStaticCol; //! Collection of TkrCandTrack objects
+    vector<TkrCandTrack> m_trackCandCol;
 
     //! list of TkrTracks
-    TObjArray* m_trackCol;
-    static TObjArray *s_trackStaticCol; //! Collection of TkrTrack objects
+    //vector<TkrTrack> m_trackCol;
 
     //! list of TkrVertices
-    TObjArray* m_vertexCol;
-    static TObjArray *s_vertexStaticCol; //! Collection of TkrVertex objects
-
+    //vector<TkrVertex> m_vertexCol;
 
     ClassDef(TkrRecon,3)
 };

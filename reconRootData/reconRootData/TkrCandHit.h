@@ -1,9 +1,13 @@
-#ifndef TKRCANDHIT_H
-#define TKRCANDHIT_H
+#ifndef ROOT_TKRCANDHIT_H
+#define ROOT_TKRCANDHIT_H
 
 #include "TObject.h"
 #include "TVectorD.h"
 #include <vector>
+#ifdef WIN32
+using namespace std;
+#endif
+
 /** 
  * @class TkrCandHit
  *

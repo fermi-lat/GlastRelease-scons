@@ -1,5 +1,5 @@
-#ifndef TkrSiCluster_H
-#define TkrSiCluster_H
+#ifndef ROOT_TkrSiCluster_H
+#define ROOT_TkrSiCluster_H
 
 #include "TObject.h"
 
@@ -33,10 +33,7 @@ public:
     virtual ~TkrSiCluster();
 
     //! resets all member variables to default values
-    void Clean();
-    // Create isn't necessary since there are no pointers
-    // in this class
-
+    void Clear();
     //! access the ID # associated with this TkrSiCluster
     UInt_t getId() { return m_id; };
     void setId(UInt_t id) { m_id = id; };
@@ -86,6 +83,6 @@ private :
   Float_t m_z;              
 
   
-  ClassDef(TkrSiCluster,1) 
+  ClassDef(TkrSiCluster,2) 
 };
 #endif

@@ -1,5 +1,5 @@
-#ifndef CALCLUSTER_H
-#define CALCLUSTER_H
+#ifndef ROOT_CALCLUSTER_H
+#define ROOT_CALCLUSTER_H
 
 #include "TObject.h"
 #include "TVector3.h"

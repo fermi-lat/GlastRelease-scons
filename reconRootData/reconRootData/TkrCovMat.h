@@ -1,5 +1,5 @@
-#ifndef TKRCOVMAT_H
-#define TKRCOVMAT_H
+#ifndef ROOT_TKRCOVMAT_H
+#define ROOT_TKRCOVMAT_H
 
 #include "TMatrixD.h"
 /** 

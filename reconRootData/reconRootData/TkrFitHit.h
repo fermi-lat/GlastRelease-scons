@@ -1,5 +1,5 @@
-#ifndef TKRFITHIT_H
-#define TKRFITHIT_H
+#ifndef ROOT_TKRFITHIT_H
+#define ROOT_TKRFITHIT_H
 
 #include "TObject.h"
 #include "TkrParams.h"

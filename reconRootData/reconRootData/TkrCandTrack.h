@@ -1,5 +1,5 @@
-#ifndef TKRCANDTRACK_H
-#define TKRCANDTRACK_H
+#ifndef ROOT_TKRCANDTRACK_H
+#define ROOT_TKRCANDTRACK_H
 
 #include "TObject.h"
 #include "TkrCandHit.h"

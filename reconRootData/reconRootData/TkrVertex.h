@@ -1,10 +1,15 @@
-#ifndef TKRVERTEX_H
-#define TKRVERTEX_H
+#ifndef ROOT_TKRVERTEX_H
+#define ROOT_TKRVERTEX_H
 
 #include "TObject.h"
 #include "TkrParams.h"
 #include "TkrCovMat.h"
 #include <vector>
+
+#ifdef WIN32
+using namespace std;
+#endif
+
 /** 
  * @class TkrVertex
  *

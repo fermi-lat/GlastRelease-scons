@@ -24,23 +24,21 @@ public:
 
     virtual ~ReconEvent();
 
-    void initialize(UInt_t eventId, UInt_t runId);
+    void initialize(UInt_t eventId, UInt_t runId, TkrRecon *tkr, CalRecon *cal);
 
     void Clear(Option_t *option="");
 
-    void Print(Option_t *option="");
+    void Print(Option_t *option="") const;
 
     UInt_t getEventId() { return m_eventId; };
 
     UInt_t getRunId() { return m_runId; };
 
-    //! provide access to the CAL recon data
-    const CalRecon* getCalRecon() const { return &m_cal; };
-    CalRecon* getCalRecon() { return &m_cal; };
+    /// provide access to the CAL recon data
+    CalRecon* getCalRecon() { return m_cal; };
 
     ///  Access the TKR recon data
-    const TkrRecon* getTkrRecon() const { return &m_tkr; };
-    TkrRecon* getTkrRecon() { return &m_tkr; };
+    TkrRecon* getTkrRecon() { return m_tkr; };
 
     //! Access the Recon Header Flags
    // ReconHeader* getReconFlags() { return &m_recFlags; };
@@ -51,9 +49,9 @@ private:
     UInt_t m_eventId;
     UInt_t m_runId;
     /// CAL reconstruction data
-    CalRecon m_cal;    
+    CalRecon *m_cal; 
     /// TKR reconstruction data
-    TkrRecon m_tkr;    
+    TkrRecon *m_tkr;    
     /// pointer to Recon Header data
     //ReconHeader m_recFlags;
 

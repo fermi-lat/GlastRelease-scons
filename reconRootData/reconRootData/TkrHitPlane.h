@@ -1,10 +1,14 @@
-#ifndef TKRHITPLANE_H
-#define TKRHITPLANE_H
+#ifndef ROOT_TKRHITPLANE_H
+#define ROOT_TKRHITPLANE_H
 
 #include "TObject.h"
 #include "TkrFitHit.h"
 #include "TkrCovMat.h"
 #include <vector>
+#ifdef WIN32
+using namespace std;
+#endif
+
 /** 
  * @class TkrHitPlane
  *
