@@ -29,7 +29,8 @@ void DbConverters_load()     {
   DLL_DECL_CONVERTER( EventCnv );
   DLL_DECL_CONVERTER( MCEventCnv );
   DLL_DECL_CONVERTER( MCACDHitVectorCnv );
-  DLL_DECL_CONVERTER( MCTKRHitVectorCnv );
+   //DLL_DECL_CONVERTER( MCTKRHitVectorCnv );
+  DLL_DECL_CONVERTER( MCSiLayerVectorCnv );
   DLL_DECL_CONVERTER( MCCalorimeterHitVectorCnv );
   //DLL_DECL_CONVERTER( AxPartCandidateVectorCnv );
   //DLL_DECL_CONVERTER( ExportConverter );

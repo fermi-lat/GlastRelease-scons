@@ -34,10 +34,10 @@ _ImplementContainerConverters(MCACDHit)
 //const ICnvFactory& DbMCACDHitConverterFactory = s_MCACDHitConverterFactory;
 
 // ====================================================================
-// Converter implementation for objects of class MCRichPhotoDetectorHit
+// Converter implementation for objects of class MCSiLayerHit
 // ====================================================================
-#include "GlastEvent/MonteCarlo/MCTKRHit.h"
-_ImplementContainerConverters(MCTKRHit)
+#include "GlastEvent/MonteCarlo/MCSiLayer.h"
+_ImplementContainerConverters(MCSiLayer)
 
 
 // ====================================================================
