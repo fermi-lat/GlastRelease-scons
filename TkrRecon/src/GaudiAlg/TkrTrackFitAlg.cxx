@@ -215,6 +215,9 @@ StatusCode TkrTrackFitAlg::doTrackReFit()
     Event::TkrTrackCol* trackCol = SmartDataPtr<Event::TkrTrackCol>(eventSvc(),EventModel::TkrRecon::TkrTrackCol);
     //std::cout << "TkrTrackFitAlg::doTrackFit: " << trackCol->size() << " tracks to refit" << std::endl;
 
+	// Check that there are tracks to fit
+	if(trackCol->size() < 1) return sc;
+
 	// Get the first track to find out the energy option used and execute default (LATENERGY)
 	Event::TkrTrack* firstTrack = *trackCol->begin();
 	if(firstTrack->getStatusBits() & Event::TkrTrack::LATENERGY) {
