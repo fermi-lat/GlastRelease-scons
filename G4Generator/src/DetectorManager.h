@@ -12,13 +12,12 @@
 #include "idents/VolumeIdentifier.h"
 #include "DetectorConstruction.h"
 
-#include "GlastEvent/MonteCarlo/McPositionHit.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 
 #include <map>
 class G4TouchableHistory;
 class DisplayManager;
-namespace mc {class McPositionHit;}
+namespace Event {class McPositionHit;}
 
 /** 
  * @class DetectorManager

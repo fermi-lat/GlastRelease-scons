@@ -1,5 +1,5 @@
 package G4Generator
-version v3r5
+version v4r0
 #$Header$
 
 use GlastPolicy v4r*
@@ -24,9 +24,9 @@ use xmlUtil  v2*
 
 use idents   v2*
 
-use GlastEvent v7*
+use Event v8*
 
-use GlastSvc  v7*
+use GlastSvc  v8*
 
 # flux determination
 use FluxSvc  v5*
