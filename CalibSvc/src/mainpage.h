@@ -26,7 +26,7 @@
   handles these methods itself.  It does not register any data objects
   in the calibration TDS.  Instead, its createObj method
 
-    <ul>
+    <ol>
       <li>Finds the best-match row in the MySQL database for the calibration
           requested</li>
       <li>Fetches information from that row needed to access the bulk data
@@ -40,7 +40,25 @@
           (ROOT or XML) to be invoked, which should in turn delegate
           conversion to an appropriate converter, which will form and
           register the object.</li>
-    </ul> 
+    </ol> 
+
+  Several different modes of operation regarding use of event timestamps
+  to select calibrations are supported:
+
+    <ul>
+      <li>Use event time from event; calibration validity interval must
+          include this time.  Currently implemented only for data read out
+          from a physical instrument, but support Monte Carlo data 
+          expected soon.  </li>
+      <li>Generate fake event time for each event and compare to validity
+          interval as above. </li>
+      <li>Don't use event time or validity interval at all.  Base calibration
+          selection on the time at which the calibration was entered into
+          the database.</li>
+     </ul>
+
+  See job options description below to learn how to select one of these
+  modes.
 
   
   The package also contains CalibXMLCnvSvc and several converters for
@@ -68,8 +86,14 @@
        to create a node.</dd>
   <dt> CalibRootName</dt>  <dd>defaults to "Calib", top node in TCDS</dd>
   <dt> CalibInstrumentName</dt>  <dd>defaults to "LAT"</dd>
-  <dt> UseEventTime</dt>         <dd>defaults to "true". If set to "false", 
+  <dt> UseEventTime</dt>         <dd>defaults to "true", corresponding
+       to modes 1 and 2 above. If set to "false", 
        must also set CalibMySQLCnvSvc.UseEventTime to "false"</dd>
+  <dt> CalibTimeSource</dt> <dd> Use value "data" for actual instrument
+       data, "mc" (when implemented) for Monte Carlo, "clock" for fake
+       event time.  Default is "none", also the correct value for mode 3.
+       Currently it is not strictly necessary to specify "clock" for
+       fake event time, but this implementation is expected to change.</dd>
   <dt> DbName</dt>         <dd>defaults to "calib", the production dbs for
        calibration metadata.  Algorithm developers, etc., may need to
        use the development database, "calib_user", instead.
@@ -108,6 +132,9 @@ Ignored unless UseEventTime is false.  </dd>
   @todo    Write CalibROOTCnvSvc
   @todo    Define remaining calibration TDS classes in detail; 
            write converters.
-           
+  @todo    implement CalibDataSvc.CalibTimeSource = "mc" 
+  @todo    do fake event clock implementation as "data" is done (and "mc"
+           will be done), without requiring user to configure a 
+           separate algorithm in job options
  */
 
