@@ -41,9 +41,9 @@ CalibDataSvc.delayTime = 10000;
 // Start up a CalCalibSvc
 ApplicationMgr.ExtSvc += {"CalCalibSvc"};
 
-
 // CalCalibSvc properties
 CalCalibSvc.DefaultFlavor = "zachtest";
+
 // ----------------------------
 //  topalg
 //

@@ -12,6 +12,14 @@ second.OutputLevel = 2;
 ApplicationMgr.EvtMax = 10 ;
 Output.Members={} ; // turn off any root ouptut
 
+ApplicationMgr.DLLs+= { "CalXtalResponse" } ;
+CalibMySQLCnvSvc.DbName = "calib_user";
+CalibDataSvc.CalibFlavorList = {"ideal", "zachtest"};
+CalibDataSvc.CalibTimeSource = "clock";
+CalibDataSvc.startTime = "2003-2-28 23:59:59";
+CalibDataSvc.delayTime = 10000;
+ApplicationMgr.ExtSvc += {"CalCalibSvc"};
+CalCalibSvc.DefaultFlavor = "zachtest";
 
 //==============================================================
 //

@@ -288,6 +288,14 @@ second.OutputLevel = 2;
 ApplicationMgr.EvtMax = 10 ;
 Output.Members={} ; // turn off any root ouptut
 
+ApplicationMgr.DLLs+= { "CalXtalResponse" } ;
+CalibMySQLCnvSvc.DbName = "calib_user";
+CalibDataSvc.CalibFlavorList = {"ideal", "zachtest"};
+CalibDataSvc.CalibTimeSource = "clock";
+CalibDataSvc.startTime = "2003-2-28 23:59:59";
+CalibDataSvc.delayTime = 10000;
+ApplicationMgr.ExtSvc += {"CalCalibSvc"};
+CalCalibSvc.DefaultFlavor = "zachtest";
 
 //==============================================================
 //
@@ -297,7 +305,7 @@ Output.Members={} ; // turn off any root ouptut
 
 
 Job options successfully read in from /home/chamont/Glast/CalReconDev/CalRecon/src/test/gleamOptions.txt
-ApplicationMgr       INFO Successfully loaded modules: GaudiAlg, GaudiAud, GlastSvc, G4Generator, G4Propagator, FluxSvc, CRflux, TkrDigi, CalDigi, AcdDigi, Trigger, EbfWriter, OnboardFilter, CalibSvc, CalRecon, CalUtil, TkrUtil, TkrRecon, AcdRecon, AnalysisNtuple, ntupleWriterSvc, merit, RootIo
+ApplicationMgr       INFO Successfully loaded modules: GaudiAlg, GaudiAud, GlastSvc, G4Generator, G4Propagator, FluxSvc, CRflux, TkrDigi, CalDigi, AcdDigi, Trigger, EbfWriter, OnboardFilter, CalibSvc, CalRecon, CalUtil, TkrUtil, TkrRecon, AcdRecon, AnalysisNtuple, ntupleWriterSvc, merit, RootIo, CalXtalResponse
 ApplicationMgr       INFO Application Manager Configured successfully
 EventSelector        INFO GlastEventSelector input has been set to NONE
 EventPersistenc...   INFO "CnvServices": ["EventCnvSvc"]
@@ -306,7 +314,7 @@ detModel Doc Client: registered the materials!
 detModel Doc Client: registered the id dictionary!
 detModel Doc Client: registered the sections!
 GlastDetSvc          INFO  geometry setup: 
-    document = /home/chamont/Glast/GlastRelease/head/xmlGeoDbs/v1r22p0/xml/flight/flightSegVols.xml
+    document = /home/chamont/Glast/GlastRelease/v6r0/xmlGeoDbs/v1r22p0/xml/flight/flightSegVols.xml
         mode = recon
       topvol = LAT
 Summary of IDmap contents:
@@ -339,30 +347,32 @@ sideTileR2EdgeLesser         4
        yRibbonTopMid         8
               total:     33921
 
-GlastRandomSvc       INFO Setting CLHEP Engine TripleRand for G4GeneratorRandom at 0x8e31238
-GlastRandomSvc       INFO Setting CLHEP Engine TripleRand for FluxSvcRandom at 0x92947f8
-GlastRandomSvc    WARNING  Previous engine (0x8e31238) for FluxSvcRandom was also set for G4GeneratorRandom
-GlastRandomSvc       INFO Setting CLHEP Engine TripleRand for TkrDigiRandom at 0x92949a0
-GlastRandomSvc    WARNING  Previous engine (0x92947f8) for TkrDigiRandom was also set for FluxSvcRandom
-GlastRandomSvc       INFO Setting CLHEP Engine TripleRand for CalDigiRandom at 0x9295008
-GlastRandomSvc    WARNING  Previous engine (0x92949a0) for CalDigiRandom was also set for TkrDigiRandom
-GlastRandomSvc       INFO Setting CLHEP Engine TripleRand for AcdDigiRandom at 0x92a9ab0
-GlastRandomSvc    WARNING  Previous engine (0x9295008) for AcdDigiRandom was also set for CalDigiRandom
-GlastRandomSvc       INFO Setting CLHEP Engine TripleRand for RootIoRandom at 0x92ac998
-GlastRandomSvc    WARNING  Previous engine (0x92a9ab0) for RootIoRandom was also set for AcdDigiRandom
+GlastRandomSvc       INFO Setting CLHEP Engine TripleRand for G4GeneratorRandom at 0x8e30b18
+GlastRandomSvc       INFO Setting CLHEP Engine TripleRand for FluxSvcRandom at 0x929a4c8
+GlastRandomSvc    WARNING  Previous engine (0x8e30b18) for FluxSvcRandom was also set for G4GeneratorRandom
+GlastRandomSvc       INFO Setting CLHEP Engine TripleRand for TkrDigiRandom at 0x929a670
+GlastRandomSvc    WARNING  Previous engine (0x929a4c8) for TkrDigiRandom was also set for FluxSvcRandom
+GlastRandomSvc       INFO Setting CLHEP Engine TripleRand for CalDigiRandom at 0x929acd8
+GlastRandomSvc    WARNING  Previous engine (0x929a670) for CalDigiRandom was also set for TkrDigiRandom
+GlastRandomSvc       INFO Setting CLHEP Engine TripleRand for AcdDigiRandom at 0x929ade8
+GlastRandomSvc    WARNING  Previous engine (0x929acd8) for AcdDigiRandom was also set for CalDigiRandom
+GlastRandomSvc       INFO Setting CLHEP Engine TripleRand for RootIoRandom at 0x929d808
+GlastRandomSvc    WARNING  Previous engine (0x929ade8) for RootIoRandom was also set for AcdDigiRandom
 G4GeometrySvc        INFO G4GeometrySvc Initialization started
 	DetectorConstruction created 407, 137 physical, logical volumes, using  mode from G4Generator job options: recon
 G4GeometrySvc        INFO G4GeometrySvc Initialization completed successfully
-ParticlePropert...   INFO Opened particle properties file : /home/chamont/Glast/GlastRelease/head/FluxSvc/v6r17p0/cdf/particle.cdf
+ParticlePropert...   INFO Opened particle properties file : /home/chamont/Glast/GlastRelease/v6r0/FluxSvc/v6r17p0/cdf/particle.cdf
 GlastPropagatorSvc   INFO Using Geant4 Particle Propagator
 TkrAlignmentSvc      INFO No alignment was requested.
 TkrAlignmentSvc      INFO   No alignment will be done.
 TkrBadStripsSvc      INFO No bad strips file was requested.
 TkrSplitsSvc      WARNING Service already initialized
+TkrToTSvc            INFO TkrToTSvc initialized with mode: ideal
 DetectorPersist...   INFO "CnvServices": ["CalibMySQLCnvSvc", "CalibXmlCnvSvc"]
 DetectorPersist...   INFO Added successfully Conversion service:CalibMySQLCnvSvc
 CalibMySQLCnvSvc     INFO Specific initialization starting
 CalibMySQLCnvSvc     INFO Specific initialization completed
+CalCalibSvc          INFO initialize
 FluxSvc              INFO Registering factories external to flux
 FluxSvc              INFO Registering sources in RegisterCRflux
 FluxSvc.Registe...   INFO Register CRflux Spectrum(s)...
@@ -371,7 +381,7 @@ Generator            INFO Member list: FluxAlg, G4Generator, ExposureAlg
 FluxAlg              INFO initialize
 FluxAlg              INFO no rocking mode called, rocking disabled for this run.
 FluxAlg              INFO loading source default
-FluxAlg              INFO Source title: gamma(0.1 GeV,1.24716e-43,2.21405e-33), radius(1381.98),  dir(-0,-0,-1)
+FluxAlg              INFO Source title: gamma(0.1 GeV,3.67841e-42,2.21885e-33), radius(1381.98),  dir(-0,-0,-1)
 FluxAlg              INFO         area: 6
 FluxAlg              INFO         rate: 2.4
 G4Generator          INFO initialize
@@ -519,16 +529,32 @@ MuPairProd:   tables are built for  mu-
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
       Parametrised model 
+CalibDataSvc         INFO Fake Clock Event number: 0
+CalibDataSvc         INFO Event time: 2003-02-28 23:59:59
+Successfully connected to MySQL host centaurusa.slac.stanford.edu database calib_user
+DetectorPersist...   INFO Added successfully Conversion service:CalibXmlCnvSvc
+XmlBaseCnv           INFO successfully parsed document $(CALXTALRESPONSEROOT)/src/test/mc_mevperdac.041022230030_FM101_Pshp_calu_collect_ext.xml aka /home/chamont/Glast/CalReconDev/CalXtalResponse/v0r0p3/src/test/mc_mevperdac.041022230030_FM101_Pshp_calu_collect_ext.xml
+CalCalibSvc          INFO Updating /Calib/CAL_MevPerDac/zachtest
+XmlBaseCnv           INFO successfully parsed document $(CALXTALRESPONSEROOT)/src/test/mc_peds.041022230030_FM101_Pshp_calu_collect_ext.xml aka /home/chamont/Glast/CalReconDev/CalXtalResponse/v0r0p3/src/test/mc_peds.041022230030_FM101_Pshp_calu_collect_ext.xml
+CalCalibSvc          INFO Updating /Calib/CAL_Ped/zachtest
+XmlBaseCnv           INFO successfully parsed document $(CALXTALRESPONSEROOT)/src/test/ci_intnonlin.041111143546_FM101_PSHP_CALU_COLLECT_CI_SINGLEX16.xml aka /home/chamont/Glast/CalReconDev/CalXtalResponse/v0r0p3/src/test/ci_intnonlin.041111143546_FM101_PSHP_CALU_COLLECT_CI_SINGLEX16.xml
+CalCalibSvc          INFO Updating /Calib/CAL_IntNonlin/zachtest
+XmlBaseCnv           INFO successfully parsed document $(CALXTALRESPONSEROOT)/src/test/fake_tholdci.xml aka /home/chamont/Glast/CalReconDev/CalXtalResponse/v0r0p3/src/test/fake_tholdci.xml
+CalCalibSvc          INFO Updating /Calib/CAL_TholdCI/zachtest
 FluxSvc              INFO 10% complete:  event 1,  time 0.0563373
+CalibDataSvc         INFO Fake Clock Event number: 1
+CalibDataSvc         INFO Event time: 2003-03-01 00:00:09
+XmlBaseCnv           INFO successfully parsed document $(CALXTALRESPONSEROOT)/src/test/mc_asym.041022230030_FM101_Pshp_calu_collect_ext.xml aka /home/chamont/Glast/CalReconDev/CalXtalResponse/v0r0p3/src/test/mc_asym.041022230030_FM101_Pshp_calu_collect_ext.xml
+CalCalibSvc          INFO Updating /Calib/CAL_Asym/zachtest
 FluxSvc              INFO 20% complete:  event 2,  time 0.206836
 FluxSvc              INFO 30% complete:  event 3,  time 0.567658
 first               DEBUG No TKR Reconstruction available 
 first               DEBUG  --- CalClusterCol  --- 1
-first               DEBUG Energy 59.4493 Corrected 59.4493 512.638 -302.229 -76.5164 0.531686 -0.228691 0.815482
+first               DEBUG Energy 59.1691 Corrected 59.1691 530.161 -284.837 -76.4857 0.531619 -0.229212 0.815379
 second              DEBUG number of tracks = 1
-second              DEBUG track direction = 0.996503
+second              DEBUG track direction = 0.996475
 second              DEBUG  --- CalClusterCol  --- 1
-second              DEBUG Energy 59.4493 Corrected 72.2645 512.638 -302.229 -76.5164 0.531686 -0.228691 0.815482
+second              DEBUG Energy 59.1691 Corrected 68.0489 530.161 -284.837 -76.4857 0.531619 -0.229212 0.815379
 FluxSvc              INFO 40% complete:  event 4,  time 1.06878
 FluxSvc              INFO 50% complete:  event 5,  time 1.20325
 FluxSvc              INFO 60% complete:  event 6,  time 1.392
@@ -580,6 +606,12 @@ OnboardFilter        INFO Veto Bit Summary
    DFC_M_STATUS_NOCALLO_FILTER_TILE         0
                 DFC_M_STATUS_VETOED         0
 
+FirstPass            INFO 
+FirstPass            INFO ====>> 0 events failed in this run
+FirstPass            INFO 
+Iteration            INFO 
+Iteration            INFO ====>> 0 events failed in this run
+Iteration            INFO 
 meritAlg             INFO 
         Generated events :   1000
 =======================================================
@@ -596,14 +628,14 @@ Analysis cuts: LnA
 -------------------------------------------------------
  Layers 0-11  All
              Events used :      1
-        eff. proj. sigma :  0.479 deg = 28.8 arc-min
-           68% contained :   4.79 deg = 6.62*(1.51*sigma)
-           95% contained :   4.79 deg = 4.09*(2.45*sigma)
-        Energy: meas/gen :  0.868
+        eff. proj. sigma :  0.481 deg = 28.9 arc-min
+           68% contained :   4.81 deg = 6.62*(1.51*sigma)
+           95% contained :   4.81 deg = 4.09*(2.45*sigma)
+        Energy: meas/gen :  0.828
                      std :      0
        events w/ no data :      0
           effective area :     60 cm^2
-         Figure of merit :    926 cm
+         Figure of merit :    922 cm
 -------------------------------------------------------
  Layers 12-15  All
              Events used :      0
@@ -629,32 +661,32 @@ FilterAlg:execute    INFO Time User   : Tot=    0 [us]                          
 AcdReconAlg:exe...   INFO Time User   : Tot=    0 [us]                                             #=  1
 Acd:execute          INFO Time User   : Tot=    0 [us]                                             #=  1
 ExposureAlg:exe...   INFO Time User   : Tot=    0 [us] Ave/Min/Max=    0(+-    0)/    0/    0 [us] #= 10
-EbfWriter:execute    INFO Time User   : Tot=    0 [us]                                             #=  1
-FluxAlg:execute      INFO Time User   : Tot=    0 [us] Ave/Min/Max=    0(+-    0)/    0/    0 [us] #= 10
+CalXtalRecAlg:e...   INFO Time User   : Tot=    0 [us]                                             #=  1
 FilterTracks:ex...   INFO Time User   : Tot=   10 [ms]                                             #=  1
+EbfWriter:execute    INFO Time User   : Tot=   10 [ms]                                             #=  1
 first:execute        INFO Time User   : Tot=   10 [ms]                                             #=  1
-CalXtalRecAlg:e...   INFO Time User   : Tot=   10 [ms]                                             #=  1
-Iteration:execute    INFO Time User   : Tot=   10 [ms]                                             #=  1
-TkrIter:execute      INFO Time User   : Tot=   10 [ms]                                             #=  1
 OnboardFilter:e...   INFO Time User   : Tot=   10 [ms]                                             #=  1
 TriggerAlg:execute   INFO Time User   : Tot=   10 [ms] Ave/Min/Max=    1(+-    3)/    0/   10 [ms] #= 10
+Cal1:execute         INFO Time User   : Tot=   10 [ms]                                             #=  1
 second:execute       INFO Time User   : Tot=   10 [ms]                                             #=  1
 Cal2:execute         INFO Time User   : Tot=   10 [ms]                                             #=  1
-Cal1:execute         INFO Time User   : Tot=   20 [ms]                                             #=  1
-Trigger:execute      INFO Time User   : Tot=   20 [ms] Ave/Min/Max=    2(+-    4)/    0/   10 [ms] #= 10
-meritAlg:execute     INFO Time User   : Tot=   40 [ms]                                             #=  1
-AcdDigiAlg:execute   INFO Time User   : Tot=   90 [ms] Ave/Min/Max=    9(+- 5.39)/    0/   20 [ms] #= 10
+Iteration:execute    INFO Time User   : Tot=   20 [ms]                                             #=  1
+TkrIter:execute      INFO Time User   : Tot=   20 [ms]                                             #=  1
+FluxAlg:execute      INFO Time User   : Tot=   30 [ms] Ave/Min/Max=    3(+- 4.58)/    0/   10 [ms] #= 10
+Trigger:execute      INFO Time User   : Tot=   30 [ms] Ave/Min/Max=    3(+-  6.4)/    0/   20 [ms] #= 10
+meritAlg:execute     INFO Time User   : Tot=   50 [ms]                                             #=  1
+AcdDigiAlg:execute   INFO Time User   : Tot=   60 [ms] Ave/Min/Max=    6(+-  4.9)/    0/   10 [ms] #= 10
 TkrDigiAlg:execute   INFO Time User   : Tot=  130 [ms] Ave/Min/Max=   13(+-  6.4)/   10/   30 [ms] #= 10
-FirstPass:execute    INFO Time User   : Tot=  210 [ms]                                             #=  1
-Tkr:execute          INFO Time User   : Tot=  210 [ms]                                             #=  1
-Reconstruction:...   INFO Time User   : Tot=  260 [ms]                                             #=  1
-Triggered:execute    INFO Time User   : Tot=  330 [ms] Ave/Min/Max=   33(+- 95.7)/    0/  320 [ms] #= 10
-CalDigiAlg:execute   INFO Time User   : Tot= 0.53  [s] Ave/Min/Max=   53(+- 4.58)/   50/   60 [ms] #= 10
-Digitization:ex...   INFO Time User   : Tot= 0.75  [s] Ave/Min/Max=   75(+- 12.8)/   60/  110 [ms] #= 10
-G4Generator:exe...   INFO Time User   : Tot= 12.5  [s] Ave/Min/Max= 1.25(+- 3.68)/    0/ 12.3  [s] #= 10
-Generator:execute    INFO Time User   : Tot= 12.5  [s] Ave/Min/Max= 1.25(+- 3.68)/    0/ 12.3  [s] #= 10
-Top:execute          INFO Time User   : Tot= 13.6  [s] Ave/Min/Max= 1.36(+- 3.69)/ 0.07/ 12.4  [s] #= 10
-ChronoStatSvc        INFO Time User   : Tot= 13.6  [s]                                             #=  1
+FirstPass:execute    INFO Time User   : Tot=  230 [ms]                                             #=  1
+Tkr:execute          INFO Time User   : Tot=  230 [ms]                                             #=  1
+Reconstruction:...   INFO Time User   : Tot=  270 [ms]                                             #=  1
+Triggered:execute    INFO Time User   : Tot=  360 [ms] Ave/Min/Max=   36(+-  105)/    0/  350 [ms] #= 10
+CalDigiAlg:execute   INFO Time User   : Tot= 4.46  [s] Ave/Min/Max=  446(+-  210)/  350/1.06e+03 [ms] #= 10
+Digitization:ex...   INFO Time User   : Tot= 4.65  [s] Ave/Min/Max=  465(+-  217)/  360/1.1e+03 [ms] #= 10
+G4Generator:exe...   INFO Time User   : Tot= 13.3  [s] Ave/Min/Max= 1.33(+- 3.91)/    0/ 13.1  [s] #= 10
+Generator:execute    INFO Time User   : Tot= 13.3  [s] Ave/Min/Max= 1.33(+- 3.91)/    0/ 13.1  [s] #= 10
+Top:execute          INFO Time User   : Tot= 18.3  [s] Ave/Min/Max= 1.83(+- 4.11)/ 0.37/ 14.2  [s] #= 10
+ChronoStatSvc        INFO Time User   : Tot= 18.4  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized succesfully 
 RootTupleSvc         INFO Writing the TTree "Exposure" in file merit.root with 1 rows (10 total events)
