@@ -4,6 +4,7 @@
 ///
 #include "GRBSpectrum.h"
 #include "CLHEP/Random/RandFlat.h"
+#include <iostream>
 #include <math.h>
 
 // define a factory for anonymous instantiation
@@ -15,7 +16,20 @@ const ISpectrumFactory& GRBSpectrumFactory = factory;
 GRBSpectrum::GRBSpectrum(const std::string& params) 
 {
   m_grbsim = new GRBSim(char("../src/test/Parameters.txt"));
-  m_grbsim->Start();
+  int flag=0;
+  while(flag==0)
+    {
+      try 
+	{ 
+	  m_grbsim->Start();
+	  flag=1;
+	}
+      catch (char * s)
+	{
+	  std::cout<<"Restarting GRBSim...\n";
+	  flag=0;
+	}
+    }
 }
 
 GRBSpectrum::~GRBSpectrum() 

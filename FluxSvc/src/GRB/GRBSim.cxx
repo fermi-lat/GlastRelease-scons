@@ -9,7 +9,7 @@
 #include "GRBSim.h"
 
 //for windows to know about exit()
-#include <cstdlib>
+//#include <cstdlib>
 
 /*------------------------------------------------------*/
 using namespace cst;
@@ -75,14 +75,17 @@ void GRBSim::Start()
     iShell->setThickness(myParam->T0());
     iShell->setRadius(i*(myParam->R0())+myParam->T0());
    
-    cout << " Shell n: "<<myParam->Nshell()-(i-1)<<" Gamma= "<<iShell->Gamma()<<" Initiaml Radius "<<iShell->Radius()<< " Initial Thickness= " <<iShell->Thickness()<< endl;
+    cout << " Shell n: "<<myParam->Nshell()-(i-1)
+	 <<" Gamma= "<<iShell->Gamma()
+	 <<" Initiaml Radius "<<iShell->Radius()
+	 << " Initial Thickness= " <<iShell->Thickness()<< endl;
     theShells.push_back(iShell);
   }
   double ssum;
   double tmax = dt1*nstep; 
   double time = 0.0;
   int nshock=0;
-
+  
   //! Step 2: Calculation of the evolution
   while(time<tmax)
     {
@@ -106,11 +109,11 @@ void GRBSim::Start()
       time+=dt1;
     }
   cout<< "Number of Shocks = " <<nshock<< endl;
-  if (nshock==0)
-    {
-      cout<< "Sorry no shocks events!! "<< endl;
-      std::exit(1);
-    }
+  if (nshock==0) throw "No shock event created!";
+  //    {
+  //      cout<< "Sorry no shocks events!! "<< endl;
+  //      exit(1);
+  //    }
   
   /*------------------------------------------------------*/
   /// Step 3: Sorting the shocks and setting t min=0
@@ -253,12 +256,13 @@ float GRBSim::DrawPhotonFromSpectrum(std::vector<double> spctrmVec, float u, dou
   std::vector<double> Integral(nbins-minbin,0.0);
   
   std::copy(spctrmVec.begin()+minbin, spctrmVec.end(), Integral.begin());
-  
-  for(int i=1;i<nbins-minbin;i++) 
+
+  int i;
+  for(i=1;i<nbins-minbin;i++) 
     {
       Integral[i] += Integral[i-1]; //Computing cumulative sum
     }
-  for(int i=0;i<nbins-minbin;i++)
+  for(i=0;i<nbins-minbin;i++)
     {
       Integral[i] /= Integral.back(); //Normalizing to 1
     }
