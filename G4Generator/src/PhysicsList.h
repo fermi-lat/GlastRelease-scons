@@ -18,12 +18,12 @@
  *  
  * @author F.Longo 
  *    
- * \$Header\$
+ * $Header$
  */
 class PhysicsList: public G4VModularPhysicsList
 {
  public:
-  PhysicsList();
+  PhysicsList(double cutValue);
   ~PhysicsList();
   
  public:

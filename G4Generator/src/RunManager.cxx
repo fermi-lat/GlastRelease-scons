@@ -60,7 +60,7 @@ RunManager* RunManager::GetRunManager()
 { return fRunManager; }
 
 RunManager::RunManager(IGlastDetSvc* gds, IDataProviderSvc* esv,
-                       std::string geometryMode, std::ostream& log)
+                       std::string geometryMode, std::ostream& log, double defaultCutValue)
   :m_log(log),
    userDetector(NULL),physicsList(NULL),
    userPrimaryGeneratorAction(NULL),
@@ -96,7 +96,7 @@ RunManager::RunManager(IGlastDetSvc* gds, IDataProviderSvc* esv,
 
   // The user stuff
   userDetector = new DetectorConstruction(gds,esv, geometryMode, m_log);
-  physicsList = new PhysicsList;
+  physicsList = new PhysicsList(defaultCutValue);
   userPrimaryGeneratorAction = new PrimaryGeneratorAction;
 }
 

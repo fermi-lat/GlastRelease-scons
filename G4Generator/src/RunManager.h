@@ -72,7 +72,7 @@ class RunManager
      geometry level of details
   */
   RunManager(IGlastDetSvc* gds, IDataProviderSvc* esv, 
-      std::string geometryMode, std::ostream& log);
+      std::string geometryMode, std::ostream& log, double defaultCutValue);
   virtual ~RunManager();
 
  public: 

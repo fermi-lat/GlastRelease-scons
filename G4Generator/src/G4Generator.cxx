@@ -66,6 +66,7 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("geometryMode", m_geometryMode="");
   declareProperty("saveTrajectories", m_saveTrajectories=0);
   declareProperty("mcTreeMode", m_mcTreeMode="minimal");
+  declareProperty("defaultCutValue", m_defaultCutValue=0.1*mm);
 }
     
 ////////////////////////////////////////////////////////////////////////////
@@ -83,6 +84,7 @@ StatusCode G4Generator::initialize()
 
   // setup the GuiSvc, if available
   setupGui();
+  log << MSG::INFO << "DefaultCutValue=" << m_defaultCutValue << " mm" << endreq;
 
   // Apply Geant4 specific commands throught the ui
   if( !m_uiCommands.value().empty() ) {
@@ -114,7 +116,7 @@ StatusCode G4Generator::initialize()
   // The geant4 manager
   if (!(m_runManager = RunManager::GetRunManager()))
     {
-      m_runManager = new RunManager(gsv,eventSvc(), m_geometryMode,  log.stream());
+      m_runManager = new RunManager(gsv,eventSvc(), m_geometryMode,  log.stream(), m_defaultCutValue);
 
       // Initialize Geant4
       m_runManager->Initialize();

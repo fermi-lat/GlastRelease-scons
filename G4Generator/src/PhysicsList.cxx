@@ -27,10 +27,10 @@
 #include "IonPhysics.h"
 
 
-PhysicsList::PhysicsList():  G4VModularPhysicsList()
+PhysicsList::PhysicsList(double cutValue):  G4VModularPhysicsList()
 {
   // The default cut value for all particles
-  defaultCutValue = 0.1*mm;
+  defaultCutValue = cutValue;
   
   // General Physics
   RegisterPhysics( new GeneralPhysics("general") );
