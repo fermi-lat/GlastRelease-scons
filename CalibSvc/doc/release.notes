@@ -2,6 +2,9 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
+ * 28-Mar-2003: jrb v0r2p8: 1. Bug fix for towers > 0.  
+ *                          2. Update doc.
+ *                          3. Modify test to exercise ideal flavor, tower > 0
  * 25-Mar-2003: jrb v0r2p7: Private use of RootIo updated  (to v7r*)
  * 24-Mar-2003: jrb v0r2p6: Bug fix for mu slope calibration conversion
  * 24-Mar-2003: jrb v0r2p5: Bug fix for gain calibration conversion
