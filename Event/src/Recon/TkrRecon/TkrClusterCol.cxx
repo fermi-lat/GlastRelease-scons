@@ -12,7 +12,7 @@
 
 #include "Event/Recon/TkrRecon/TkrClusterCol.h"
 
-using namespace TkrRecon;
+using namespace Event;
 
 TkrClusterCol::TkrClusterCol()
 {

@@ -6,7 +6,7 @@
 #include <algorithm>
 #include "Event/Recon/TkrRecon/TkrPatCand.h"
 
-using namespace TkrRecon;
+using namespace Event;
 
 TkrPatCand::TkrPatCand(int layer, int tower, double energy, double quality, const Ray& testRay)
 {

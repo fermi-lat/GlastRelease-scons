@@ -10,7 +10,7 @@
 
 #include "Event/Recon/TkrRecon/TkrFitPlane.h"
 
-using namespace TkrRecon;
+using namespace Event;
 
 void TkrFitPlane::removeHit()
 {

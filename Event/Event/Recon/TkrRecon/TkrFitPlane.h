@@ -26,7 +26,7 @@
 * $Header$
 */
 
-namespace TkrRecon { // Namespace
+namespace Event { // Namespace
 
 class TkrFitPlane
 {   // Class to link together the various hit types associated with 

@@ -20,7 +20,7 @@ extern const CLID& CLID_TkrClusterCol;
 * $Header$
 */
 
-namespace TkrRecon { //Namespace
+namespace Event { //Namespace
 
 class TkrClusterCol : public DataObject
 {

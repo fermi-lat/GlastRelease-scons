@@ -5,7 +5,7 @@
 
 #include "Event/Recon/TkrRecon/TkrPatCandCol.h"
 
-using namespace TkrRecon;
+using namespace Event;
 
 TkrPatCandCol::TkrPatCandCol()
 {

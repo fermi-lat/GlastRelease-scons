@@ -15,7 +15,7 @@
 * $Header$
 */
 
-namespace TkrRecon { //Namespace
+namespace Event { //Namespace
 
 class TkrFitHit
 {   // Class to link a parameter vector and a covariance matrix together

@@ -21,7 +21,7 @@ extern const CLID& CLID_TkrFitTrackCol;
 * $Header$
 */
 
-namespace TkrRecon { //Namespace
+namespace Event { //Namespace
 
 class TkrFitTrackCol : public DataObject
 {

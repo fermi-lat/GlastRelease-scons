@@ -5,7 +5,7 @@
 
 #include "Event/Recon/TkrRecon/TkrVertexCol.h"
 
-using namespace TkrRecon;
+using namespace Event;
 
 TkrVertexCol::~TkrVertexCol()
 {

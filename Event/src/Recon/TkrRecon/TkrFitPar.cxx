@@ -14,7 +14,7 @@
 #include "Event/Recon/TkrRecon/TkrFitPar.h"
 #include "geometry/Ray.h"
 
-using namespace TkrRecon;
+using namespace Event;
 
 TkrFitPar::TkrFitPar(const Ray &ray) : HepVector(4)
 {

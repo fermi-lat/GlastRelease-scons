@@ -17,7 +17,7 @@
 
 extern const CLID& CLID_TkrPatCandCol;
 
-namespace TkrRecon { //Namespace
+namespace Event { //Namespace
 
 class TkrPatCandCol : public DataObject
 {

@@ -15,7 +15,7 @@
 * $Header$
 */
 
-namespace TkrRecon { //Namespace
+namespace Event { //Namespace
 
 class TkrPatCandHit
 {    

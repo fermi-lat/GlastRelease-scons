@@ -5,7 +5,7 @@
 
 #include "Event/Recon/TkrRecon/TkrFitTrackCol.h"
 
-using namespace TkrRecon;
+using namespace Event;
 
 TkrFitTrackCol::~TkrFitTrackCol()
 {

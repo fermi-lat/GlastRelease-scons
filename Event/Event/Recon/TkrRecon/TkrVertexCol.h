@@ -31,7 +31,7 @@
 
 extern const CLID& CLID_TkrVertexCol;
 
-namespace TkrRecon { //Namespace
+namespace Event { //Namespace
 
 class TkrVertexCol : public DataObject
 {

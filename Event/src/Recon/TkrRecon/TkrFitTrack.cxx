@@ -9,7 +9,7 @@
 
 #include "Event/Recon/TkrRecon/TkrFitTrack.h"
 
-using namespace TkrRecon;
+using namespace Event;
 
 // Constructor takes no arguments and basically just initializes to
 // a null state. In the class' current incarnation, it is expected to

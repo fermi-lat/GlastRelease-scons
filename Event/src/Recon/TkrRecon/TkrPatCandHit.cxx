@@ -5,7 +5,7 @@
 
 #include "Event/Recon/TkrRecon/TkrPatCandHit.h"
 
-using namespace TkrRecon;
+using namespace Event;
 
 TkrPatCandHit::TkrPatCandHit(TkrCluster* pCluster)
 {

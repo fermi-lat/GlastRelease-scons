@@ -1,7 +1,7 @@
 
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 
-using namespace TkrRecon;
+using namespace Event;
 
 TkrVertex::TkrVertex(int ilyr, int itwr, double energy, double quality, const Ray& testRay)
 {

@@ -4,7 +4,7 @@
 //       TkrCluster
 //---------------------------------------------------
 
-using namespace TkrRecon;
+using namespace Event;
 
 TkrCluster::TkrCluster(int id, int ilayer, int v,
                        int istrip0, int istripf, Point position, double ToT, int tower)

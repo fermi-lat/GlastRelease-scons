@@ -9,7 +9,7 @@
 
 #include "Event/Recon/TkrRecon/TkrFitHit.h"
 
-using namespace TkrRecon;
+using namespace Event;
 
 TkrFitHit TkrFitHit::changeType(TYPE typ)
 {

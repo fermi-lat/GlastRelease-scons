@@ -16,7 +16,7 @@
 #include "Event/Recon/TkrRecon/TkrRecInfo.h"
 #include "Event/Recon/TkrRecon/TkrPatCandHit.h"
 
-namespace TkrRecon { //Namespace
+namespace Event { //Namespace
 
 class TkrPatCand: public TkrRecInfo
 {    

@@ -24,7 +24,7 @@
 
 class Ray; 
 
-namespace TkrRecon { // Namespace
+namespace Event { // Namespace
 
 class TkrFitPar : public HepVector
 {

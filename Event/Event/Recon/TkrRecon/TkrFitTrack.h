@@ -23,7 +23,7 @@
 *
 * $Header$
 */
-namespace TkrRecon {  // NameSpace
+namespace Event {  // NameSpace
 
 class TkrFitTrack: public TkrRecInfo
 {    
