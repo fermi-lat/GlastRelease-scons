@@ -1,7 +1,7 @@
 //##############################################################
 //
 // List of Dlls
-ApplicationMgr.DLLs   = { "GlastSvc" };
+ApplicationMgr.DLLs   = { "GlastSvc", "AcdDigi" };
 
 // List of required services
 ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
