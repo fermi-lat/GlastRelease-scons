@@ -45,17 +45,15 @@ int main(){
 
     MakeDists irf("energy_fit.root");
 
-   if ( !irf.fileExists() )
-        irf.project("EvtEnergySumOpt/McEnergy", 0, 2, 100 );
+    if ( !irf.fileExists() )
+       irf.project("EvtEnergySumOpt/McEnergy", 0, 2, 100 );
     irf.set_ymin(1e-3);
     irf.set_ymax(0.2);
     irf.draw("energy_fit.ps",  true , myfit);
     delete myfit;
     irf.addCutInfo("energy_fit_parameters.root", "fitParams");
 
-   EnergyModel * myfit = new EnergyModel("energy_fit_parameters_thick.root");
-
-    EnergyModel * myfit = new EnergyModel("edisp_thick_parameters.root");
+    myfit = new EnergyModel("edisp_thick_parameters.root");
     MakeDists irf_thick("energy_fit_thick.root");
     irf_thick.set_user_cut(TCut("Tkr1FirstLayer>=12.0"));
     if(!irf_thick.fileExists())

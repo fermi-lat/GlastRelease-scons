@@ -103,12 +103,17 @@ PsfModel(const std::string &outputFile, int maxTrys=5)
 //Total fit
       m_func->SetParameters(par0gaus[0],par0gaus[1]*2.,par0expo[0],par0expo[1],par0expo[2]);
       m_func->SetParLimits(0,0.001,histo_max*10.);  //forced to be positive
+      m_func->SetParLimits(2, 0, 10. );  //ditto
       m_func->SetParLimits(4,0.,1.5); 
 
 	  h->Fit("myModel","","",0.,Fitmax);
     }
 private:
-    int m_maxTrys;
+   int m_maxTrys;
+   TF1 * m_gauss;
+   TF1 * m_expo;
+   TF1 * m_stgaus;
+
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

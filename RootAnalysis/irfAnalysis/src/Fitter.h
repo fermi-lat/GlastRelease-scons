@@ -58,10 +58,7 @@ protected:
    TFile * m_file;
    TTree * m_tree;
    TF1 * m_func;
-   TF1 * m_gauss;
-   TF1 * m_expo;
-   TF1 * m_stgaus;
-std::vector<Double_t> m_params;
+   std::vector<Double_t> m_params;
 
 };
 
