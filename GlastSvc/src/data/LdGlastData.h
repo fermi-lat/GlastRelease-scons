@@ -62,6 +62,7 @@ public:
     virtual void printOn(std::ostream)const;
 
 
+    void setMCTruth(const MCTruth* t){ m_truth =t;}
 private:
     const CsIData* m_csiData;
     const SiData* m_siData;
