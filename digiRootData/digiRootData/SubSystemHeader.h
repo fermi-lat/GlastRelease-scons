@@ -4,7 +4,7 @@
 #include "TObject.h"
 
 /*! \class SubSystemHeader
-\brief Root class to contain the TKR header data for
+\brief ROOT base class to contain the header data for
 one event. 
 */
 class SubSystemHeader: public TObject {

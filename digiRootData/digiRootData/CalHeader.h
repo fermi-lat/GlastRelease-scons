@@ -4,7 +4,7 @@
 #include "SubSystemHeader.h"
 
 /*! \class CalHeader
-\brief Root class to contain the CAL header subpacket data for
+\brief ROOT class to contain the CAL header subpacket data for
 one event. 
 */
 class CalHeader: public SubSystemHeader {

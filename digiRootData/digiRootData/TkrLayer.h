@@ -12,9 +12,10 @@
  where a layer may cross tower boundaries.
  Layer is defined as in the UCSC BFEM User's Guide - where a layer is
  a single X or Y
- Apr 2000 Daniel Flath - Cleaned up to look like other files in package
- Jan 1999 Daniel Flath - ROOT HTML Documentation added
- Dec 1999 Daniel Flath - Creation
+
+\li Apr 2000 Daniel Flath - Cleaned up to look like other files in package
+\li Jan 1999 Daniel Flath - ROOT HTML Documentation added
+\li Dec 1999 Daniel Flath - Creation
 */
 
 class TkrLayer : public TObject

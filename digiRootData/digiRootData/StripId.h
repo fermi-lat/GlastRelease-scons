@@ -9,11 +9,11 @@
  controller used to read it out - determines which ToT value this
  strip corresponds to.
 
- Jul 2001 Heather Kelly - provide storage for cable number as a 
+ \li Jul 2001 Heather Kelly - provide storage for cable number as a 
           double-check for controller (left or right)
- Jun 2001 Heather Kelly - renamed StripID to StripId
- Jan 1999 Daniel Flath - ROOT HTML Documentation added
- Dec 1999 Daniel Flath - Creation
+ \li Jun 2001 Heather Kelly - renamed StripID to StripId
+ \li Jan 1999 Daniel Flath - ROOT HTML Documentation added
+ \li Dec 1999 Daniel Flath - Creation
 */
 
 class StripId : public TObject  
@@ -22,11 +22,13 @@ private:
     /*
     StripId tag word layout
     (defined in following enum):
+    \verbatim
      _______________________________________________
     |15|  |  |12|11|10|  |  |  |  |  |  |  |  |  |00|
     |__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|
     |   Tower   |CT|        Strip Number            |
     |___________|__|________________________________|
+    \endverbatim
 
     ***** NOTES: *****
 

@@ -10,13 +10,14 @@
  The digitization for a single ACD tile.
  Stores the pulse height and a bit to denote whether or not
  the tile is above veto threshold.
- Jun 2001 Heather Kelly renamed to AcdTile
- Jun 2001 Heather Kelly - Remove pointer to TileID
- Feb 2000 Daniel Flath - Rewrite to facilitate standardization of
+
+\li Jun 2001 Heather Kelly renamed to AcdTile
+\li Jun 2001 Heather Kelly - Remove pointer to TileID
+\li Feb 2000 Daniel Flath - Rewrite to facilitate standardization of
 			 code & interface across all classes.
- Jan 2000 Daniel Flath - ROOT HTML comments added
- Dec 1999 Daniel Flath - Rewritten for GLAST
- Oct 25,1999 Richard Dubois Clone from LCD version
+\li Jan 2000 Daniel Flath - ROOT HTML comments added
+\li Dec 1999 Daniel Flath - Rewritten for GLAST
+\li Oct 25,1999 Richard Dubois Clone from LCD version
 */
 
 class AcdTile: public TObject {
@@ -24,11 +25,13 @@ private:
     /*!
     AcdTile tag word layout
     (defined in following enum):
+  \verbatim
      _______________________________________________
     |15|  |13|12|11|  |  |  |  |  |  |	|  |  |  |00|
     |__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|
     |      CNOVe|	      PHA Value 	    |
     |___________|___________________________________| 
+    \endverbatim
 
     */
 

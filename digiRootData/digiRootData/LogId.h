@@ -9,11 +9,11 @@
 \brief Log Id class
  This class identifies the CAL logs using the Tower, Layer and Column.
 
- Jun 2001 HK:  not using pipeline, sequence anymore..
+\li Jun 2001 HK:  not using pipeline, sequence anymore..
  access and set functions for calorimeter log ids
- Jun 2001 Heather Kelly renamed LogID to LogId
- Version 1.0 21 Oct 1998 Richard creation
- Version 1.1 25 Oct 1999 R.Dubois Clone from LCD towerID
+\li Jun 2001 Heather Kelly renamed LogID to LogId
+\li Version 1.0 21 Oct 1998 Richard creation
+\li Version 1.1 25 Oct 1999 R.Dubois Clone from LCD towerID
 */
 
 class LogId : public TObject {

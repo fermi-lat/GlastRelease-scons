@@ -7,6 +7,7 @@
 /*! \class AcdId
 \brief encapsulate the id for an ACD tile.
 
+\verbatim
  ACD tile numbering
  Layer 0 - 3, where 0 corresponds to the inner layer
  Face 0 - 4 
@@ -27,6 +28,7 @@
  __  __       __ __ __     __ __ __ __      __ __ __ __
  LAYER       FACE           ROW            COLUMN
  where the layer bits are the most significant bits
+\endverbatim
 
 Some routines in this class have a default parameter denoted as "base"
 This refers to those instances where an input parameter could be in 
@@ -34,11 +36,11 @@ base 10 or base 2.  In all cases, the default is base 10.  If a user
 desires to use base 2, the parameter called "base" should be supplied
 and set equal to 2.
 
-Jun 2001 Heather Kelly - renamed from TileID to AcdId
-Apr 2000 Daniel Flath - Minor changes to function names, etc.
-Jan 1999 Daniel Flath - ROOT HTML Documentation added
-Dec 1999 Daniel Flath - Rewrite for GLAST
-Version 1.1 25 Oct 1999 R.Dubois Clone from LCD towerID
+\li Jun 2001 Heather Kelly - renamed from TileID to AcdId
+\li Apr 2000 Daniel Flath - Minor changes to function names, etc.
+\li Jan 1999 Daniel Flath - ROOT HTML Documentation added
+\li Dec 1999 Daniel Flath - Rewrite for GLAST
+\li Version 1.1 25 Oct 1999 R.Dubois Clone from LCD towerID
 */
 
 class AcdId : public TObject {

@@ -4,7 +4,7 @@
 #include "SubSystemHeader.h"
 
 /*! \class AcdHeader
-\brief Root class to contain the ACD header data for
+\brief ROOT class to contain the ACD header data for
 one event. 
 */
 class AcdHeader: public SubSystemHeader {

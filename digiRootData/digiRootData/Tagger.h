@@ -6,9 +6,10 @@
 
 /*! \class Tagger
 \brief
- Jan 1999 Daniel Flath - ROOT HTML Documentation added
- Dec 1999 Daniel Flath - Rewrite for GLAST
- Dec 04,1999 Richard Dubois Clone from CalHit
+ 
+\li Jan 1999 Daniel Flath - ROOT HTML Documentation added
+\li Dec 1999 Daniel Flath - Rewrite for GLAST
+\li Dec 04,1999 Richard Dubois Clone from CalHit
 */
 
 class Tagger : public TObject {		// so far it does not contain the raw data

@@ -6,9 +6,9 @@
 
 /*! \class ESAPID
 \brief
- Jan 1999 Daniel Flath - ROOT HTML comments added
- Jan 1999 Daniel Flath - new glast_pid info added
- Dec 05,1999 Richard Dubois Clone from CalHit
+\li Jan 1999 Daniel Flath - ROOT HTML comments added
+\li Jan 1999 Daniel Flath - new glast_pid info added
+\li Dec 05,1999 Richard Dubois Clone from CalHit
  */
 
 class ESAPID : public TObject{

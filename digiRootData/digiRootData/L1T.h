@@ -6,7 +6,8 @@
 
 /*! \class L1T
 \brief Store the Level One Trigger information
- Dec 05,1999 Richard Dubois Clone from CalHit
+ 
+\li Dec 05,1999 Richard Dubois Clone from CalHit
 */
 
 class L1T : public TObject {

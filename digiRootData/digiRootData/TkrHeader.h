@@ -4,7 +4,7 @@
 #include "SubSystemHeader.h"
 
 /*! \class TkrHeader
-\brief Root class to contain the TKR header data for
+\brief ROOT class to contain the TKR header data for
 one event. 
 */
 class TkrHeader: public SubSystemHeader {

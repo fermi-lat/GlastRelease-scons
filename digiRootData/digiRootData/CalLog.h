@@ -13,11 +13,11 @@ a readout that has one "best" range.
 This class implements a LogId member which provides access to information
 on the position of the log within the calorimeter.
 
-  Jun 2001 Heather Kelly - renamed from CalHit to CalLog
-  Jun 2001 Heather Kelly - remove pointer to LogId
-  Jan 2000 Daniel Flath - ROOT HTML comments added
-  Dec 1999 Daniel Flath - Rewritten for GLAST
-  Oct 25,1999 Richard Dubois Clone from LCD version
+  \li Jun 2001 Heather Kelly - renamed from CalHit to CalLog
+  \li Jun 2001 Heather Kelly - remove pointer to LogId
+  \li Jan 2000 Daniel Flath - ROOT HTML comments added
+  \li Dec 1999 Daniel Flath - Rewritten for GLAST
+  \li Oct 25,1999 Richard Dubois Clone from LCD version
 */
 
 class CalLog: public TObject {
@@ -54,18 +54,20 @@ private:
 /*!
 ADC word layout
 (defined in following enum):
+\verbatim
 _____________________________________________________
 |15|  |  |	|  |  |  |  |  |  |  |04|03|02|01|00|
 |__|__|__|__|___|__|__|__|__|__|__|__|__|__|__|__|
 |		ADC Value 	        |  ID |PN|RS|
 |_______________________________________|_____|__|__|
+\endverbatim
 
   ***** NOTES: *****
   
     PN == Pin
     RS == Range Scale
     
-      PN & RS = Range
+    PN & RS = Range
     */
     enum {
         ADC_K_RS = 1,

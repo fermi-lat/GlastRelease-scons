@@ -21,10 +21,11 @@
 /*! \class DigiEvent
 \brief This is the top-level event class to store the
 raw (digi) data.
- Jun 2001 Heather Kelly - revised to use TClonesArray
- Jan 2000 Daniel Flath - ROOT HTML comments added
- Dec 1999 Daniel Flath - Rewritten for GLAST
- Oct 25,1999 Richard Dubois - Clone from LCD version
+ 
+ \li Jun 2001 Heather Kelly - revised to use TClonesArray
+ \li Jan 2000 Daniel Flath - ROOT HTML comments added
+ \li Dec 1999 Daniel Flath - Rewritten for GLAST
+ \li Oct 25,1999 Richard Dubois - Clone from LCD version
  */
 
 
