@@ -528,7 +528,7 @@ void RootCI::Go(Int_t numEvents)
 
   if (numEvents+m_startEvent >  nentries) {
     ostringstream temp;
-    temp << " not enough entries in file to proceed, we need " << nentries;
+    temp << " not enough entries in file to proceed, we need " << numEvents;
     throw temp.str();
   }
 
