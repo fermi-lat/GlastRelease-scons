@@ -1,0 +1,54 @@
+package digiRootData
+version v0
+
+use glast_settings 
+use ROOT v3r0p6
+
+include_path ${DIGIROOTDATAROOT}
+
+macro   digiRootData_linkopts "-L${DIGIROOTDATAROOT}/${CMTCONFIG} -ldigiRootData"\
+        VisualC         ""
+
+
+macro_append Win32Debug " ${DIGIROOTDATAROOT}/${DebugDir}/digiRootDatalib.lib"
+macro_append Win32Release " ${DIGIROOTDATAROOT}/${ReleaseDir}/digiRootDatalib.lib"
+
+
+path_append LD_LIBRARY_PATH "${DIGIROOTDATAROOT}/${CMTCONFIG}"
+
+private
+
+# makes a dll or lib that can be used by root
+
+macro root_headers "ACDTile.h CalHit.h ESAPID.h Event.h L1T.h LogID.h StripID.h Tagger.h TileID.h TkrLayer.h EventLinkDef.h"
+
+# try to build this by adding to compilation for requirements
+macro digiRootData_custom_build ""\
+      VisualC "call $(DIGIROOTDATAROOT)/digiRootData/dorootcint.bat"
+
+# on unix use a document to make rootcint part of the build process
+make_fragment event_dorootcint_header
+make_fragment event_dorootcint -header=event_dorootcint_header
+document event_dorootcint EventRootCint CINTFILE=../digiRootData/EventCint.cxx
+
+# For some reason, I was getting errors when loading the TBEvent shareable
+# in root.  Linking the Root Physics library in avoids this.
+macro digiRootData_shlibflags " -L${ROOT_PATH}/lib -lPhysics " \
+      VisualC            ""
+
+
+library  digiRootData *.cxx \
+     ../digiRootData/EventCint.cxx\
+     ../digiRootData/EventCint.h\
+     ../digiRootData/ACDTile.h\
+     ../digiRootData/CalHit.h\
+     ../digiRootData/ESAPID.h\
+     ../digiRootData/Event.h\
+     ../digiRootData/EventLinkDef.h\
+     ../digiRootData/L1T.h\
+     ../digiRootData/LogID.h\
+     ../digiRootData/StripID.h\
+     ../digiRootData/Tagger.h\
+     ../digiRootData/TileID.h\
+     ../digiRootData/TkrLayer.h
+
