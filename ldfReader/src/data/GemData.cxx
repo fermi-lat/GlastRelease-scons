@@ -27,7 +27,7 @@ namespace ldfReader {
         m_triggerTime = gem.m_triggerTime;
         m_onePpsTime = gem.m_onePpsTime;
         m_deltaEventTime = gem.m_deltaEventTime;
-
+        m_exist = gem.m_exist;
         m_lenInBytes = gem.m_lenInBytes;
     }
 
@@ -71,6 +71,7 @@ namespace ldfReader {
         m_triggerTime = 0;
         m_onePpsTime.clear();
         m_deltaEventTime = 0;
+        m_exist = false;
         m_lenInBytes = 0;
     }
 
