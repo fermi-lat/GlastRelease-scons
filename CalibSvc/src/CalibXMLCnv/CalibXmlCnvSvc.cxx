@@ -43,11 +43,73 @@ StatusCode CalibXmlCnvSvc::queryInterface(const IID& riid,
 }
 
 StatusCode CalibXmlCnvSvc::initialize() {
-  StatusCode status = ConversionSvc::initialize();
+  StatusCode sc = ConversionSvc::initialize();
 
   MsgStream log(msgSvc(), "CalibXmlCnvSvc");
 
-  if (!status.isSuccess()) return status;
+  if (!sc.isSuccess()) return sc;
+
+  /* Paste in a bit of CalibMySQLCnvSvc::initialize */
+
+  // Locate the Calib Data Service.  Since it inherits from DataSvc
+  // it has to implement IDataProviderSvc
+  IDataProviderSvc* pCDS = 0;
+  sc = serviceLocator()->getService 
+    ("CalibDataSvc",  IID_IDataProviderSvc, (IInterface*&)pCDS);
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR << "Could not locate CalibDataSvc" << endreq;
+    return sc;
+  }
+
+  // Set the CalibDataSvc as data provider service
+  sc = setDataProvider(pCDS);
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR << "Could not set data provider" << endreq;
+    return sc;
+  }
+
+  /*   End of pasted bit */
+
+
+  /* Paste in more of CalibMySQLCnvSvc::initialize  */
+  // Locate IConversionSvc interface of the DetectorPersistencySvc
+  sc = serviceLocator()->service 
+    ("DetectorPersistencySvc", m_detPersSvc, true);
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Cannot locate IConversionSvc interface of DetectorPersistencySvc"
+	<< endreq;
+    return sc;
+  } else {
+    log << MSG::DEBUG 
+	<< "Retrieved IConversionSvc interface of DetectorPersistencySvc"
+	<< endreq;
+  }
+  
+  // Query the IAddressCreator interface of the detector persistency service
+  IAddressCreator* iAddrCreator;
+  sc = m_detPersSvc->queryInterface(IID_IAddressCreator, 
+				    (void**) &iAddrCreator);
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Cannot query IAddressCreator interface of DetectorPersistencySvc" 
+	<< endreq;
+    return sc;
+  } else {
+    log << MSG::DEBUG 
+	<< "Retrieved IAddressCreator interface of DetectorPersistencySvc" 
+	<< endreq;
+  }
+  log << MSG::DEBUG 
+      << "Set it as the address creator of the CalibXmlCnvSvc" << endreq;
+  sc = setAddressCreator(iAddrCreator);
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 	<< "Cannot set the address creator" << endreq;
+    return sc;
+  }
+
+  // end of second pasted piece
+
 
   m_parser = new xml::XmlParser();
 
@@ -58,7 +120,7 @@ StatusCode CalibXmlCnvSvc::initialize() {
 
   // set properties if there are any??
 
-  return status;
+  return sc;
 }
 
 StatusCode CalibXmlCnvSvc::finalize() {
