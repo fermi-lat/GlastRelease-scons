@@ -1,5 +1,5 @@
 package AcdDigi
-version v0r0
+version v0r1
 
 use GlastSvc v8r*
 use Event v8r*
