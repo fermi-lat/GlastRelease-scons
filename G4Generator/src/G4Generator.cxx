@@ -5,9 +5,6 @@
 // Geant4
 #include "G4Generator.h"
 #include "G4UImanager.hh"
-#include "G4Event.hh"
-#include "G4TrajectoryContainer.hh"
-#include "G4Trajectory.hh"
 
 #include "RunManager.h"
 #include "PrimaryGeneratorAction.h"
@@ -129,9 +126,13 @@ StatusCode G4Generator::execute()
     // Run geant4
     m_runManager->BeamOn();  
 
-    G4Event* currentEvent = m_runManager->getCurrentEvent();
-    std::cout << (*((currentEvent)->GetTrajectoryContainer())).entries() << std::endl;
+    std::cout << "Trajectories  " << m_runManager->getNumberOfTrajectories()<< std::endl;
     
+    std::auto_ptr<std::vector<Hep3Vector> > test = (m_runManager->getTrajectoryPoints(0));
+    for(unsigned int k = 0; k<test->size(); k++)
+      std::cout << (*test)[k] << std::endl;
+
+    std::cout << "Charge " << m_runManager->getTrajectoryCharge(0) << std::endl; 
     return StatusCode::SUCCESS;
 }
 

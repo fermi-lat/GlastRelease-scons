@@ -15,11 +15,16 @@ class G4Timer;
 class G4RunMessenger;
 class G4DCtable;
 class G4Run;
+
+class Hep3Vector;
+
 #include "G4Event.hh"
 
 #include "G4EventManager.hh"
 #include "globals.hh"
 #include "g4std/vector"
+
+#include <memory>
 
 /** Very draft version of a customized G4RunManager for Glast;
     It will override the normal eventloop of G4, letting Gaudi
@@ -61,7 +66,18 @@ class RunManager
   /// Not used
   virtual void AbortRun();
 
+  /// This method return a pointer to the current G4Event
   G4Event* getCurrentEvent() const;
+  
+  /// This method return the number of trajectories stored in the currentEvent
+  unsigned int getNumberOfTrajectories();
+
+  /// This method return the vector of points of a trajectory
+  int getTrajectoryCharge(unsigned int);
+
+  /// This method return the vector of points of a trajectory
+  std::auto_ptr<std::vector<Hep3Vector> > getTrajectoryPoints(unsigned int);
+
   
  protected: 
 
@@ -90,6 +106,8 @@ class RunManager
   G4VUserPrimaryGeneratorAction * userPrimaryGeneratorAction;
 
  protected:
+
+
   G4bool geometryInitialized;
   G4bool physicsInitialized;
   G4bool cutoffInitialized;
