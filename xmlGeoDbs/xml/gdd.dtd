@@ -186,6 +186,8 @@
             author      : last modification author
             top_volume  : envelope volume corresponding to the
                           section
+            fineChoice  : typically the choice mode which gives the 
+                          finest (most detailed) geometry.
 -->
 
 <!--
@@ -615,6 +617,7 @@
            date       CDATA  #REQUIRED
            author     CDATA  #REQUIRED
            topVolume  IDREF  #REQUIRED
+           fineChoice NMTOKEN "0"
            %didSub;
            %DTDconstraint;>
          
