@@ -28,8 +28,8 @@ FluxSvc.source_lib ={"$(FLUXSVCROOT)/xml/source_library.xml"};
 FluxSvc.source_lib +={"$(FLUXSVCROOT)/src/test/test_source.xml"};
 
 Top.area= 0.1;
-Top.pointing_mode=4;
-Top.rocking_angle=90;
+Top.pointing_mode=0;
+Top.rocking_angle=35;
 Top.source_name="surface_vertical_muons";
 
 // ask for a source that is in the user_library (must use the name assigned to FluxAlg)
@@ -37,6 +37,7 @@ Top.source_name="surface_vertical_muons";
 //Top.source_name="random_position";
 //Top.source_name="testpatch";
 Top.source_name="TestSpectrum";
+
 ApplicationMgr.EvtMax = 10;
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;

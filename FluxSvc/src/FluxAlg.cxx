@@ -125,9 +125,9 @@ StatusCode FluxAlg::initialize(){
         return StatusCode::FAILURE;
     }
     
-    m_fluxSvc->setExplicitRockingAngles(m_rocking_angle*M_PI/180,0);
-//    m_fluxSvc->setRockingAngle(m_rocking_angle);
-    m_fluxSvc->setRockType(m_pointing_mode);
+    //m_fluxSvc->setExplicitRockingAngles(m_rocking_angle*M_PI/180,0);
+    //m_fluxSvc->setRockingAngle(m_rocking_angle);
+    m_fluxSvc->setRockType(m_pointing_mode,m_rocking_angle);
 
     log << MSG::INFO << "loading source..." << endreq;
     

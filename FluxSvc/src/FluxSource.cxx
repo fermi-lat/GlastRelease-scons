@@ -341,7 +341,7 @@ public:
             astro::SkyDir unrotated(l,b,astro::SkyDir::GALACTIC);
             //get the transformation matrix..
             HepRotation celtoglast
-                =GPS::instance()->transformCelToGlast(GPS::instance()->time() + time);
+                =GPS::instance()->transformCelToGlast(time);
 
             //and do the transform:
             setDir(celtoglast*unrotated());

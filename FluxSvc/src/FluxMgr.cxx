@@ -358,13 +358,15 @@ HepRotation FluxMgr::transformGlastToGalactic(double time){
 }
 
 ///this sets the rocking mode in GPS.
-void FluxMgr::setRockType(GPS::RockType rockType){
+void FluxMgr::setRockType(GPS::RockType rockType, double rockAngle){
    GPS::instance()->setRockType(rockType);
+   GPS::instance()->rockingDegrees(rockAngle);
 }
 
 ///this sets the rocking mode in GPS.
-void FluxMgr::setRockType(int rockType){
+void FluxMgr::setRockType(int rockType, double rockAngle){
    GPS::instance()->setRockType(rockType);
+   GPS::instance()->rockingDegrees(rockAngle);
 }
 
 std::string FluxMgr::writeXmlFile(const std::vector<std::string>& fileList) {
