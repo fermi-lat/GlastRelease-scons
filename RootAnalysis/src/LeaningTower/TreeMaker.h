@@ -33,10 +33,8 @@ class McEvent;
 
 class TreeMaker {
 public :
-    /// Histogram file
-    //TH1F        phaArr_A[500];
-    //TH1F        phaArr_B[500];
-    TFile       *histFile;
+
+    TFile       *TreeFile;
     /// Input digitization file
     TFile       *digiFile;   
     /// Input reconstruction file
@@ -57,59 +55,48 @@ public :
     ReconEvent  *rec;
     /// Pointer to a McEvent
     McEvent     *mc;
-    /// name of the output histogram ROOT file
-    char        *m_histFileName; 
+    /// name of the output Tree ROOT file
+    char        *m_TreeFileName; 
     /// Arrays that contain pointers to the TFile, TTree, and TChains
     TObjArray   *fileArr, *treeArr, *chainArr;
-    
-	/// Default ctor, requires that that user calls TreeMaker::Init
-	/// to setup access to specific ROOT files.
+
+    TObjArray *TreeCollection;
+    /// Default ctor, requires that that user calls TreeMaker::Init
+    /// to setup access to specific ROOT files.
     TreeMaker(); 
-    
+        
 	/// Standard ctor, where user provides the names of the input root files
-	/// and optionally the name of the output ROOT histogram file
+	/// and optionally the name of the output ROOT Tree file
     TreeMaker( 
         const char* digiFileName, 
         const char* reconFileName="", 
         const char* mcFileName="", 
-        char *histFileName="Histograms.root"); 
+        char* TreeFileName="MyRootFile.root"); 
 
 	/// Special ctor which accepts TChains for input files
     TreeMaker( 
         TChain *digiChain, 
         TChain *recChain = 0, 
         TChain *mcChain = 0, 
-        char *histFileName="Histograms.root");
+        char* TreeFileName="MyRootFile.root"); 
+
 
     ~TreeMaker();  
-    void AcdDigiHistDefine();
-    void TkrDigiHistDefine();
-    void CalDigiHistDefine();
     /// start next Go with this event
     void StartWithEvent(Int_t event) { m_StartEvent = event; };  
     /// reset for next Go to start at beginning of file 
     void Rewind() { m_StartEvent = 0; }; 
     /// allow the user to specify their own file name for the output ROOT file
-    void SetHistFileName(char *histFileName) { m_histFileName = histFileName; }
+    void SetTreeFileName(char *TreeFileName) { m_TreeFileName = TreeFileName; }
     /// re-init with these input Root files
     void Init(  const char* digiFileName="", 
 		const char* reconFileName="", 
 		const char* mcFileName=""); 
-    /// define user histograms, ntuples and other output objects that will be saved to output
-    void HistDefine();   
-    /// make list of user histograms and all objects created for output
-    void MakeHistList(); 
-    /// write the existing histograms and ntuples out to file
-    void WriteHist() { if (histFile) histFile->Write(); }; 
-    /// Reset() all user histograms
-    void HistClear(); 
-    /// Retrieve a pointer to an object stored in our output ROOT file
-    TObject* GetObjectPtr(const char *tag) { return (m_histList->FindObject(tag)); };
+    
     /// process events
-    void Go(Int_t numEvents=100000); 
     void CreateTree(Int_t numEvents=100000); 
-   
-    void Analyze();
+    void CreateDigiTree(Int_t numEvents=100000); 
+    
     /// returns number of events in all open files
     UInt_t GetEntries() const;
     /// retrieve a pointer to event number.
@@ -118,36 +105,13 @@ public :
 private:
     /// starting event number
     Int_t m_StartEvent;
-    /// list of user histograms
-    THashList *m_histList;
         
     /// reset all member variables
     void Clear(); 
 
-    /// Setup the Monte Calro output histograms
-    void McHistDefine();
-	/// Setup the Digitization output histograms
-    void DigiHistDefine();
-	/// Setup the Reconstruction output histograms
-    void ReconHistDefine();
-    
     /// event processing for the monte carlo data
     void McData();
 
-    /// event processing for the digi TKR data
-    void DigiTkr();
-	/// event processing for digi CAL data
-    void DigiCal();
-	/// event processing for digi ACD data
-    void DigiAcd();
-    
-    /// event processing for the recon TKR data
-    void ReconTkr();
-	/// event processing for the recon CAL data
-    void ReconCal();
-	/// event processing for the recon ACD data
-    void ReconAcd();
-    
 };
 
 
@@ -157,35 +121,32 @@ inline TreeMaker::TreeMaker()
 }
 
 inline TreeMaker::TreeMaker(const char* digiFileName, 
-                                   const char* reconFileName, 
-                                   const char* mcFileName, 
-                                   char* histFileName)
+			    const char* reconFileName, 
+			    const char* mcFileName, 
+			    char* TreeFileName)
 {
-	// Purpose and Method:  Standard constructor where the user provides the 
-	//  names of input ROOT files and optionally the name of the output ROOT
-	//  histogram file.
+  // Purpose and Method:  Standard constructor where the user provides the 
+  //  names of input ROOT files and optionally the name of the output ROOT
+  // file
     printf(" opening files:\n\tdigi:\t%s\n\trecon:\t%s\n\tmc:\t%s\n",
-		digiFileName, reconFileName, mcFileName);
+	   digiFileName, reconFileName, mcFileName);
     
     Clear();
     
-    SetHistFileName(histFileName);
-    HistDefine();
-    MakeHistList();
+    SetTreeFileName(TreeFileName);
     
     Init(digiFileName, reconFileName, mcFileName);
-
+    
 }
 
 inline TreeMaker::TreeMaker(TChain *digiChain, 
-                                   TChain *recChain, 
-                                   TChain *mcChain, 
-                                   char *histFileName) {
+			    TChain *recChain, 
+			    TChain *mcChain, 
+			    char* TreeFileName)
+{
     Clear();
     
-    SetHistFileName(histFileName);
-    HistDefine();
-    MakeHistList();
+    SetTreeFileName(TreeFileName);
     
     if (chainArr) delete chainArr;
     chainArr = new TObjArray();
@@ -215,11 +176,9 @@ inline TreeMaker::TreeMaker(TChain *digiChain,
 
 
 inline TreeMaker::~TreeMaker() {
-    histFile->Close();
+  //    TreeFile->Close();
     
-    //if (m_histList) delete m_histList;
-    
-    if (histFile) delete histFile;
+    if (TreeFile) delete TreeFile;
     
     if (digiFile) delete digiFile;
     if (reconFile) delete reconFile;
@@ -254,7 +213,6 @@ inline TreeMaker::~TreeMaker() {
 inline void TreeMaker::Init(const char* digiFileName, const char* reconFileName, const char* mcFileName)
 {
     // Purpose and Method:  Re-initialize file, tree, event pointers, using the 
-	//   input ROOT files.  Histograms are *not* cleared.
     
     if (fileArr) delete fileArr;
     fileArr = new TObjArray();
@@ -388,41 +346,8 @@ inline UInt_t TreeMaker::GetEntries() const {
 }
 
 
-inline void TreeMaker::MakeHistList() {
-    // Purpose and Method:  Make a THashList of histograms
-    //   This avoids the need to refresh the histogram pointers
-    
-    if (m_histList) delete m_histList;
-    
-    m_histList = new THashList(30, 5);
-    
-    TList* list = histFile->GetList();
-    TIter iter(list);
-    
-    TObject* obj = 0;
-    
-    while (obj=iter.Next()) {
-        m_histList->Add(obj);
-    }
-}
-
-inline void TreeMaker::HistClear() {
-    // Purpose and Method:  Clear histograms by iterating over the THashList
-    
-    if (!m_histList) return;
-    
-    TIter iter(m_histList);
-    
-    TObject* obj = 0;
-    
-    while ( obj=(TObject*)iter.Next() ) {
-        ((TH1*)obj)->Reset();        
-    }
-}
-
 inline void TreeMaker::Clear() {
-    histFile = 0; 
-    m_histList = 0;
+    TreeFile = 0; 
     
     digiFile = 0; 
     reconFile = 0;
