@@ -108,11 +108,16 @@ StatusCode testFileHeadersSetAlg::finalize_common(
 
     if (!header) return StatusCode::SUCCESS ;
     
-//    better stored event by event  
-//    log << MSG::INFO << prefix << " RunId: " << header->getString("runId") << endreq ;
+    std::string word, word2 ;
+    
+    std::istringstream unixEnv(header->getString("unixEnv").Data()) ;
+    while (unixEnv>>word) {
+    	if (word.find("RootIoShr=")==0) {
+            log << MSG::INFO << prefix << " Unix Env: " << word << endreq ;
+    	}
+    }
 
     std::istringstream cmtUses(header->getString("cmtUses").Data()) ;
-    std::string word, word2 ;
     while ((cmtUses>>word)&&(word!="Selection")) ;
     while (cmtUses>>word) {
     	if (word=="Event") {
