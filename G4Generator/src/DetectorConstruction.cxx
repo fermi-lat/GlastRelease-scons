@@ -49,33 +49,27 @@ DetectorConstruction::~DetectorConstruction()
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {  
-  // This method build the material -- MUST be implemented with a MaterialVisitor
-  detModel::Manager::getPointer()->startVisitor(&G4MaterialsVisitor());
-  
-  // This method build the geometry with a visitor
-  return GeometryConstruct();
-}
-
-
-G4VPhysicalVolume* DetectorConstruction::GeometryConstruct()
-{
- 
-
   detModel::Manager* gddManager = detModel::Manager::getPointer();
-  detModel::Gdd* gdd = gddManager->getGdd();
+
+  //  build the material  with a MaterialVisitor
+  gddManager->startVisitor(&G4MaterialsVisitor());
+  
+  //  build the geometry with a visitor
+ 
   
   // create the visitor as with the topvolume, with a pointer to the map to fill
   G4SectionsVisitor visitor (m_topvol, &m_idMap);
   
 
   gddManager->startVisitor(&visitor);
-  
+
+  detModel::Gdd* gdd = gddManager->getGdd();
+
   for( std::vector<G4LogicalVolume*>::iterator it = visitor.g4Logicals.begin(); 
   it != visitor.g4Logicals.end(); ++it){
       G4LogicalVolume * lv = *it;
       detModel::Shape* sh = gdd->getShapeByName(lv->GetName());
       if( sh  && sh->getSensitive() ){
-          std::cout << "Found sensitive: " << sh->getName() << std::endl;
           m_glastdet->process(lv);
       }
   }

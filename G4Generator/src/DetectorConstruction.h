@@ -4,7 +4,7 @@
 class G4VPhysicalVolume;
 class SensitiveDetector;
 #ifdef WIN32
-#include <float.h>
+# include <float.h>
 #endif
 #include <string>
 #include <vector>
@@ -22,30 +22,29 @@ class GlastDetectorManager;
 */
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
- public:
-     //! @param topvol Name of the topvolume, e.g. "LAT"
-     //! @param mode   Visitor mode
-     DetectorConstruction(std::string topvol, std::string mode);
+public:
+  //! @param topvol Name of the topvolume, e.g. "LAT"
+  //! @param mode   Visitor mode
+  DetectorConstruction(std::string topvol, std::string mode);
   ~DetectorConstruction();
   
-  //! actuall call to construct things.
+  //! actual call to construct things.
   G4VPhysicalVolume* Construct();
-
+  
   typedef std::map<const G4VPhysicalVolume*, idents::VolumeIdentifier > IdMap;
-
+  
   //! access to the map of physical volume /id pairs.
   IdMap* idMap(){return &m_idMap;}
-
- private:
-  G4VPhysicalVolume* GeometryConstruct();
+  
+private:
   
   std::string m_topvol;
-
-  //! map with integer id's instead of string
-   IdMap m_idMap;
-
-   // delegate creation of detectors.
-   GlastDetectorManager* m_glastdet;
+  
+  //! map with integer id's
+  IdMap m_idMap;
+  
+  // delegate creation of detectors.
+  GlastDetectorManager* m_glastdet;
 };
 
 #endif
