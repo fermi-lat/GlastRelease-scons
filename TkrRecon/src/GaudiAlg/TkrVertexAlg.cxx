@@ -90,12 +90,6 @@ StatusCode TkrVertexAlg::execute()
             // Use the "Combo" vertexing
             VtxToolName = std::string("ComboVtxTool");
         }
-        else if(m_VertexerType == std::string("COMBO"))
-        { 
-            // Alternate implementation of the "Combo" vertexing
-            if(pTkrTracks->size() == 1) { VtxToolName = std::string("VtxSingleTrkTool");}
-            else                        { VtxToolName = std::string("VtxComboTrkTool");}
-        }
         else if(m_VertexerType == std::string("KALMAN"))
         {
             // Kalman Filter vertexing, tool depends upon the number of tracks
