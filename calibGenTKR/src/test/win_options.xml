@@ -10,7 +10,9 @@
     
     <item name="detectorType" value="EM1"> 
     valid types are EM1, EM2, LAT_2Towers and LAT_Full </item>
-    
+        
+    <item name="maxOccupancy" value = "0.01"> occupancy above ambient to qualify as hot</item>
+
     <item name="sourceFilePath" value= "c:/Glast/files/em/" > 
           common part of the path to the digi.root files (may be blank) </item>
     <!-- the original files are found at: 
