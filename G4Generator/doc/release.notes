@@ -3,6 +3,7 @@
 @verbatim
     $Id$
 
+ v5r6p1 08-aug-03 LSR fix for picky unix compiler; apparently SmartRef!=pointer in delete statement?
  v5r6   07-aug-03 LSR updates to pruning; check for z offset
  v5r5   04-jul-03 THB Remove all GUI code (moved to DetDisplay or Recon); fix McTraj code for track display
  v5r4   05-jun-03 THB Implemnt flexible multiplescattering selection

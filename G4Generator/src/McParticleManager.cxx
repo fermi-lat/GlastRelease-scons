@@ -128,7 +128,7 @@ void McParticleManager::pruneCal()
               mother->addDaughter(part);
             }
 
-          delete mcPart;
+          delete &(*mcPart); // unix expects a real pointer
           it->second = 0;
         }
       
