@@ -1,12 +1,10 @@
-
 #ifndef GLAST_TOWERID_H
 #define GLAST_TOWERID_H 1
 
 /** define the tower id following the Ritz specs
-
   */
-namespace idents {
 
+namespace idents {
 
 class TowerId
 {
@@ -26,6 +24,9 @@ class TowerId
       //! create from x, y indices (each 0..3)
       TowerId (unsigned int ix, unsigned int iy):m_id(ix+xNum*iy){}
 
+      //! access the id itself
+      int id () const {return m_id; }
+
       //! access to the x index (0..3)
       int ix () const {return (m_id % xNum);}
 
@@ -38,12 +39,15 @@ class TowerId
           return dx<2 && dx>-2 && dy<2 && dy>-2; 
       }
 
-      //! dereference operator
+      /* dereference operator -- replace with explicit method above
       operator unsigned int () const { return m_id; }
+      */
 
 private:
       unsigned int m_id;
 };
 
 } //namespace idents
+
 #endif
+
