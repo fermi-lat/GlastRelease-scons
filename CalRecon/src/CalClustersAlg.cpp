@@ -17,7 +17,7 @@
 #include "GlastEvent/TopLevel/EventModel.h"
 #include "GlastEvent/TopLevel/Event.h"
 #include "GaudiKernel/ObjectVector.h"
-#include "GlastEvent/data/TdGlastData.h"
+//#include "GlastEvent/data/TdGlastData.h"
 
 /// TkrRecon classes
 #include "GlastEvent/Recon/ISiRecObjs.h"
