@@ -3,7 +3,8 @@
     $Id$
  @verbatim
 
- v2r0p0 24-Feb-05 TU   Revamp to reduce calls to G4 Locate and Global setup
+ v2r1p1 27-Feb-05 TU   Further attempts are improving performance, fix active distance bug
+ v2r1p0 24-Feb-05 TU   Revamp to reduce calls to G4 Locate and Global setup
  v2r0p2 20-Feb-05 TU   Fix ParticlePropagator for "stuck" particles
  v2r0p1 28-Jan-05 LSR  More info on exception
  v2r0p0 16-Dec-04 TU   Upgrade to new Tracker TDS classes
