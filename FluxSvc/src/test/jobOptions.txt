@@ -20,10 +20,6 @@ ApplicationMgr.Runable = "FluxSvc";
 // Set the default for a source library document
 FluxSvc.source_lib ={"$(FLUXSVCROOT)/xml/source_library.xml"};
 
-// Append to a list of source library documents
-FluxSvc.source_lib += {"$(FLUXSVCROOT)/xml/user_library.xml"};
-FluxSvc.source_lib += {"$(FLUXSVCROOT)/xml/composite_library.xml"};
-
 // ask for a source that is in the user_library
 
 FluxTestAlg.source_name="default";
