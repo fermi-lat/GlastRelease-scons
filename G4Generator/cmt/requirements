@@ -25,7 +25,7 @@ use Geant4   v1
 use facilities v2r1
 use XMLEXT   v2r2
 use xml      v4
-use xmlUtil  v2r6
+use xmlUtil  v2r7p1
 
 use idents   v2r3p1
 use detModel v2r6
@@ -36,8 +36,7 @@ use GlastEvent v4
 use GlastSvc        v3r1
 
 # flux determination
-use flux     v6
-use FluxSvc  v4
+use FluxSvc  v5
 
 
 #to make standard display available
