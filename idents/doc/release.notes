@@ -1,6 +1,8 @@
 /*
 package manager:T.Burnett 
  *         EOH      *
+
+ * v2r11p6 15-Dec-04 jrb Make it easy to copy TkrId object
  * v2r11p5 21-Oct-04 hmk throw exception if volId passed to AcdId ctor is not
  *                        a valid ACD detector
  * v2r11p4 18-Oct-04 hmk Add AcdId::checkVolId
