@@ -1,12 +1,12 @@
 package AcdRecon
-version v0r5p2
+version v1r0
 
 branches src doc
 
 use GlastSvc v8r*
 use Event v8r*
 use AcdDigi v1r*
-use TkrRecon v6r*
+use TkrRecon v7r*
 use GlastPolicy v4r*
 
 apply_pattern package_headers
@@ -22,9 +22,8 @@ apply_pattern packageShr
 
 #=============================================================
 private
-use G4Generator v4r*
+use Recon v2r*
 use RootIo v4r*
-# for TkrRecon??
 
 public
 apply_pattern package_test
