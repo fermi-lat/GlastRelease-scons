@@ -5,7 +5,7 @@
 // List of DLLs, services
 // $Header$
 ApplicationMgr.DLLs+= { "GaudiAlg", "GaudiAud"};
-ApplicationMgr.DLLs+= { "GlastSvc", "FluxSvc"};
+ApplicationMgr.DLLs+= { "GlastSvc"};
 ApplicationMgr.ExtSvc = { "GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "NONE";
@@ -14,18 +14,15 @@ EventSelector.Input = "NONE";
 ApplicationMgr.DLLs += {"ntupleWriterSvc"};
 ApplicationMgr.ExtSvc += {"RootTupleSvc"};
 
-
-ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
-
-
 // put this in to test that the random engine gets set properly
 ApplicationMgr.ExtSvc += { "GlastRandomSvc" };
 
-// Declare this after!
-ApplicationMgr.ExtSvc += { "FluxSvc"};
+// default stuff gets tested by being here
+#include "$FLUXSVCROOT/src/defaultOptions.txt"
 
-ApplicationMgr.TopAlg = {
-      "Sequencer/Top" };
+
+// --------- define the program -----------------
+ApplicationMgr.TopAlg = {"Sequencer/Top" };
 
 //the top sequence loop
 Top.Members={"Sequencer/Generator"};
@@ -35,16 +32,20 @@ Generator.Members = {"FluxAlg", "FluxTestAlg" };
 // FluxAlg branch for "TimeTicks"
 Generator.BranchMembers = {"FluxAlg", "ExposureAlg"};
 
-
+// -----------------------------------------------
 
 // Set the default for a source library document
 FluxSvc.source_lib ={"$(FLUXROOT)/xml/source_library.xml"};
 FluxSvc.source_lib +={"$(FLUXSVCROOT)/src/test/test_source.xml"};
 
-FluxSvc.StartDate = "2004-09-03 18:00:01.1";
-
-// test generating a 
+// test generating a history root tree
 ExposureAlg.root_tree="pointing_history";
+
+// this to set up the DC2 standard.
+//FluxSvc.StartDate=""; // actually 1-may-07 00:00??
+//FluxSvc.startTime=7200;
+//FluxSvc.EndTime=4838400;
+//ExposureAlg.pointing_history_input_file="D:\common\DC2\history\Gleam42.txt";
 
 // test the various FluxAlg properties
 FluxAlg.area= 6.0;
@@ -53,14 +54,11 @@ FluxAlg.area= 6.0;
 //FluxAlg.rocking_angle_z=90; // degrees about z-axis   
 //FluxAlg.source_name="backgndavgpdr";
 FluxAlg.sources={"timetick30s","default"};
-//FluxAlg.source_name="GRB_DC1";
-//FluxAlg.source_name="isotropic";
-
-
-ApplicationMgr.EvtMax = 200;
+FluxSvc.EndTime= 200;
+ApplicationMgr.EvtMax = 1000000; // needs to be set, 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 3;
-
+ExposureAlg.OutputLevel=2;
 
 //==============================================================
 //

@@ -6,19 +6,17 @@
    \authors Toby Burnett, Sean Robinson, Theodore Hierath, and others.
 
  \section intro Introduction
-  This package implements a Gaudi service, FluxSVc, and an algorithm, FluxAlg
+  This package implements the Gaudi objects:
+  
+  - FluxSvc: mangages (using the package flux) the sources. Also implements the Runnable interface
+  - FluxAlg: generates the current incoming particl
+  - ExposureAlg: if a Clock (or "TimeTick") pseudo-particle was geneated, puts the info into the exposure history
   <br>
-
-  The FluxSvc package is designed to manage: 
-  - the orbital characteristics of GLAST,
-  - the Emissive characteristics of various sources, and
-  - the 'Current' time and orbital position, and instrument orientaiton.
-
 <br>
 Usage is primarily via the FluxAlg algorithm, which access the service to generate a particle and place it in the TDS.
     
   <hr>
-  @section jobOptions jobOptions
+  @section fluxalg_jobOptions FluxAlg jobOptions
     @param FluxSvc.source_lib   [\$(FLUXSVCROOT)/xml/source_library.xml] list of file names containing source_lib elements
     @param FluxSvc.dtd_file     [\$(FLUXSVCROOT)/xml/source.dtd]  DTD file used to parse the XML files
     @param FluxSvc.EvtMax       [0]  If non-zero, used as a maximum in the FluxSvc loop
@@ -28,6 +26,7 @@ Usage is primarily via the FluxAlg algorithm, which access the service to genera
     @param FluxSvc.StartDate    [""] Date, in form "2004-07-25 18:00" 
 
     @param FluxAlg.source_name  ["default"] source name, name must be in the source_lib files
+    @param FluxAlg.sources      [{}] if used, can specify multiple sources. Overrides source_name
     @param FluxAlg.MCrun        [100] Initial run number
     @param FluxAlg.area         [6.0] target area in m^2
     @param FluxAlg.pointing_mode [0]  Corresponds to the following, from GPS
@@ -39,7 +38,13 @@ Usage is primarily via the FluxAlg algorithm, which access the service to genera
     @param FluxAlg.rocking_angle [0 deg] Rotation angle for Glast, about x-axis. 
     @param FluxAlg.rocking_angle_z [0 deg] Rotation angle for Glast, about z-axis.
 
- <hr>
+  @section exposurealg_jobOptions ExposureAlg jobOptions
+    @param ExposureAlg.root_tree ["pointing_history"] name for the root tree to be filled if there are clock ticks
+    @param ExposureAlg.pointing_history_input_file [""] name for file to give to astro::GPS do define an input pointing history.
+
+
+    
+    <hr>
   @section Basic_XML_Sources Sources
   This is a limited selection of sources. See the contents of the source library file for a complete list.
   @param default
