@@ -11,8 +11,8 @@
 */
 
 #include "CalibData/CalibBase.h"
-
-extern const CLID& CLID_Calib_CalibTest1;
+#include "CalibData/CalibModel.h"
+// extern const CLID& CLID_Calib_CalibTest1;
 
 
 namespace CalibData {

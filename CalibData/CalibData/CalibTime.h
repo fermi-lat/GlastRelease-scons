@@ -11,7 +11,9 @@
 #include "GaudiKernel/ITime.h" 
 
 namespace CalibData {
-  class CalibTime : public facilities::Timestamp, public ITime {
+  class CalibTime : public ITime,
+                    public facilities::Timestamp
+{
 
   public:
     CalibTime();

@@ -18,8 +18,8 @@
 #include "GaudiKernel/IValidity.h"
 #include "GaudiKernel/ITime.h"
 
-
-extern const CLID& CLID_Calib_CalibBase;
+#include "CalibData/CalibModel.h"
+// extern const CLID& CLID_Calib_CalibBase;
 
 namespace CalibData {
   class CalibBase : public DataObject,
