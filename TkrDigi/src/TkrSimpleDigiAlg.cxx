@@ -313,7 +313,7 @@ StatusCode TkrSimpleDigiAlg::execute()
         idents::GlastAxis::axis iview = (view==0 ? idents::GlastAxis::X : idents::GlastAxis::Y);
         int theTower = tower.id();
 
-        if (m_fsv && m_fsv->getFailureModes() && m_fsv->isFailed(theTower, layer, view)) continue;
+        if (m_fsv && !m_fsv->empty() && m_fsv->isFailed(theTower, layer, view)) continue;
         
         TkrDigi* pDigi  = new TkrDigi(layer, iview, tower, ToT);
         
