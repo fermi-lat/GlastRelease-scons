@@ -16,15 +16,12 @@ library GuiSvc -no_share\
 
 include_path $(GUISVCROOT)
 
-
-macro GuiSvc_linkopts " "\
-  VisualC ' service.obj ${GUISVCROOT}/${BINDIR}/libGuiSvc.lib ' 
-
-
+macro GuiSvc_lib " "\
+    VisualC "Service.obj ${GUISVCROOT}/${BINDIR}/libGuiSvc.lib "
 
 private
 # note redefinition of the macro to *not* include any other dependent libs
-macro use_linkopts " $(Gaudi_linkopts) $(GuiSvc_linkopts) $(gui_linkopts) "
+macro use_linkopts " $(Gaudi_linkopts) ${GuiSvc_lib) $(gui_linkopts)"
 
 
 application GuiTest test/*.h test/*.cxx test/*.txt  $(GUIROOT)/src/test/Demo.cxx $(Win32Resource)
