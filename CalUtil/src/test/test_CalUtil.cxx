@@ -320,7 +320,6 @@ StatusCode test_CalUtil::test_testPosTool() {
   MsgStream log(msgSvc(), name());
 
   // pick one xtal/range combo
-  idents::CalXtalId::XtalFace face = idents::CalXtalId::POS;
   idents::CalXtalId::AdcRange range = idents::CalXtalId::LEX1;
   idents::CalXtalId xtalId(0,2,3);
   float pos;
@@ -338,7 +337,6 @@ StatusCode test_CalUtil::test_testPosTool() {
 /// do single mc->digi calculation, 
 /// I'm too lazy to build my own hits, so i'm just sending empty list for now.
 StatusCode test_CalUtil::test_testAdcTool() {
-  StatusCode  sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
 
   idents::CalXtalId xtalId(0,2,3);
