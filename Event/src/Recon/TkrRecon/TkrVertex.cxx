@@ -12,7 +12,12 @@ TkrVertex::TkrVertex(int ilyr, int itwr, double energy, double quality, const Ra
     m_firstLayer = ilyr;
     m_itower     = itwr;
 
-    m_vertexPar  = TkrFitPar(m_position.x(),m_direction.x(),m_position.y(),m_direction.y());
+    if (m_direction.mag() != 1.) 
+    {
+        m_direction = m_direction.unit();
+    }
+
+    m_vertexPar  = TkrFitPar(m_position.x(),m_direction.x()/m_direction.z(),m_position.y(),m_direction.y()/m_direction.z());
     m_vertexCov  = TkrFitMatrix();
 
     m_vertexCov(1,1) = 1.;
