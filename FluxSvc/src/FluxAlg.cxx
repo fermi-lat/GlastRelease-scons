@@ -8,12 +8,14 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/SmartRefVector.h"
 
 // GlastEvent for creating the McEvent stuff
 #include "GlastEvent/TopLevel/Event.h"
 #include "GlastEvent/TopLevel/MCEvent.h"
 #include "GlastEvent/MonteCarlo/McParticle.h"
-
+#include "GlastEvent/MonteCarlo/McVertex.h"
+#include "GlastEvent/TopLevel/EventModel.h"
 
 //flux
 #include "FluxSvc.h"
@@ -43,7 +45,7 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
 {
     // declare properties with setProperties calls
     declareProperty("source_name",  m_source_name="default");
-   
+    
 }
 //------------------------------------------------------------------------
 //! set parameters and attach to various perhaps useful services.
@@ -91,20 +93,26 @@ StatusCode FluxAlg::execute()
 {
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
-#if 0 // TODO: make this work
+#if 1 // TODO: make this work
     
     //
     // have the flux service create parameters of an incoming particle 
     //
+    //using namespace mc;
+    
     m_flux->generate();
     
     HepPoint3D p = m_flux->launchPoint();
     HepPoint3D d = m_flux->launchDir();
     double ke = m_flux->energy(); // kinetic energy
     std::string particleName = m_flux->particleName();
+    
 
+    //here's where we get the particleID for later.
     ParticleProperty* prop = m_partSvc->find(particleName);
 
+    int partID = prop->type();
+    
     
     log << MSG::DEBUG << particleName
         << "(" << m_flux->energy()
@@ -128,15 +136,18 @@ StatusCode FluxAlg::execute()
     
     
     // first expect to have converter create this (but empty)
-    m_vlist = SmartDataPtr<McVertexCol>(eventSvc(), "/Event/MC/McVertexCol");
+    SmartDataPtr<McVertexCol/*std::string*/> m_vlist(eventSvc(), "/Event/MC/McVertexCol");
+    //m_vlist = SmartDataPtr<McVertexCol>(eventSvc(), "/Event/MC/McVertexCol");
     if(m_vlist==0) return StatusCode::FAILURE;
     
     // the converter will make this (also empty)
     DataObject* plist;
+    McParticleCol* m_plist;
     if( (eventSvc()->retrieveObject( "/Event/MC/McParticleCol", plist)).isFailure() ){ 
         return StatusCode::FAILURE;
     }
     try{
+        //m_plist = dynamic_cast<McParticleCol*>(plist);
         m_plist = dynamic_cast<McParticleCol*>(plist);
     }catch(...) { 
         return StatusCode::FAILURE;
@@ -156,32 +167,40 @@ StatusCode FluxAlg::execute()
         energy = mass+ke, 
         momentum= sqrt(energy*energy+mass*mass);
     v1->setInitialFourMomentum( HepLorentzVector( momentum*d.unit(),energy ) );
-
+    
     
     // choose among primaryOrigin, daughterOrigin, decayProduct, showerContents, showerBacksplash
     v1->setVertexType(McVertex::primaryOrigin); 
     
     v1->setMotherMcParticle( 0);
 
-    p1->setParticleID(p->idCode()); //TODO: is this right?
-    p1->setParticleProperty(p->idCode());//TODO: is this right?
+    p1->setParticleID(partID);
+   // p1->setParticleID(p->idCode()); //TODO: is this right?
+    p1->setParticleProperty(partID);//TODO: is this right?
     p1->setPrimaryParticleFlag(true);
     p1->setMcVertex(v1);
-
     
-    p1->setParticleID(p->idCode()); //TODO: is this right?
-    p1->setParticleProperty(p->idCode());//TODO: is this right?
-    p1->setPrimaryParticleFlag(p->status()==MCParticle::PRIMARY);
+    
+    p1->setParticleID(partID); //TODO: is this right?
+    p1->setParticleProperty(partID);//TODO: is this right?
+    //we want to set the particle as primary, IF 
+    p1->setPrimaryParticleFlag(p1->primaryParticle()/*status()==McParticle::PRIMARY*/);
     p1->setMcVertex(v1);
-    if( mother !=0) {
-        mother->addDaughterMcParticle(p1);
+    //if( mother !=0) {
+    //    mother->addDaughterMcParticle(p1);
+    if( v1->parent !=0) {
+        v1->addDaughterMcParticle(p1);
     } else  m_root = v1;  // make root available for display, etc.
     
     
     HepLorentzVector final;
-    for( int i=0; i< p->numChildren(); ++i){
-        addParticle(v1, p->child(i));
-        final +=  *(p->child(i));
+    const SmartRefVector<McParticle>& daughters = v1->daughterMcParticles();
+    int numchildren = daughters.size();
+    for( int i=0; i< numchildren/*p1->numChildren()*/; ++i){
+        //addParticle(v1, p1->child(i));//p1 does not know what it's children are!
+        //final += daughters[i]/* *(p1->child(i))*/;
+
+        //final.push_back(daughters[i]);
     }
     v1->setFinalFourMomentum(final);
     
@@ -198,3 +217,16 @@ StatusCode FluxAlg::finalize(){
     return sc;
 }
 
+/*
+mc::McParticleCol* pcol = new mc::McParticleCol;
+    eventSvc()->registerObject("/Event/MC/McParticleCol", pcol);
+    mc::McParticle * parent= new mc::McParticle;
+    pcol->push_back(parent);
+
+    // This parent particle decay at the start in the first particle, 
+    // so initial momentum and final one are the same
+    parent->initialize(parent, pdef->GetPDGEncoding(), 
+        mc::McParticle::PRIMARY,
+        pin);
+    parent->finalize(pin, p);
+*/
