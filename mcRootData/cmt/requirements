@@ -41,4 +41,5 @@ library  mcRootData *.cxx \
      ../mcRootData/*.cxx \
      ${mcRootData_headers}
 
+macro test_mcRootDatalinkopts ${mcRootData_shlibflags}
 application test_mcRootData test/testMcClasses.cxx
