@@ -16,6 +16,9 @@ use HepRepSvc
 apply_pattern package_headers
 apply_pattern package_Cshlibflags
 
+macro_append HepRepCorba_linkopts   ""\
+       WIN32     " oldnames.lib"
+
 library HepRepCorba *.cxx *.cpp \
  ${HepRepCorba_headers}
 
