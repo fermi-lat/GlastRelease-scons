@@ -4,12 +4,8 @@
 #include "rootplot.h"
 
 
-int main(int argc, char** argv)
+int main(int argc, char* argv[])
 {
-    std::vector<char*> arguments;
-    arguments.push_back("chime");
-    arguments.push_back("-min");
-    arguments.push_back("10");
-    rootplot abc(arguments);
+    rootplot abc(argc, argv);
     return 0;
 }

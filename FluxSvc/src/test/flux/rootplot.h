@@ -12,7 +12,6 @@ package.
 
 #include "../../FluxMgr.h"
 #include "FluxSvc/EventSource.h"
-//#include "FluxSvc/ISpectrumFactory.h"
 #include "../../SpectrumFactoryTable.h"
 #include "rootEnergyHist.h"
 #include "rootAngleHist.h"
@@ -22,7 +21,11 @@ package.
 class rootplot
 {
 public:
-    
+    /// ctor
+    rootplot(std::vector<const char*> argv, FluxMgr*);
+
+    rootplot(int argc, char* argv[]);
+
     const int NUM_BINS;
     const int LOOP;
     
@@ -70,24 +73,19 @@ public:
         }
     }
     
-#define DLL_DECL_SPECTRUM(x)   extern const ISpectrumFactory& x##Factory; x##Factory.addRef();
+// TODO: use FluxMgr for this
+//#define DLL_DECL_SPECTRUM(x)   extern const ISpectrumFactory& x##Factory; x##Factory.addRef();
     
     void flux_load() {
         
         // these are the spectra that we want to make available
-        DLL_DECL_SPECTRUM( CHIMESpectrum);
-        DLL_DECL_SPECTRUM( AlbedoPSpectrum);
-        DLL_DECL_SPECTRUM( HeSpectrum);
-        DLL_DECL_SPECTRUM( GalElSpectrum);   
-//        DLL_DECL_SPECTRUM( CrElectron);
-//        DLL_DECL_SPECTRUM( CrProton);
-        DLL_DECL_SPECTRUM( FILESpectrum);
-        //   DLL_DECL_SPECTRUM( GRBSpectrum);
+  //      DLL_DECL_SPECTRUM( FILESpectrum);
         
     }
       
-    
-    /// ctor
-    rootplot(std::vector<char*> argv);
+private:
+    void init(std::vector<const char*> argv);
+
+    FluxMgr* m_fm;
 
 };

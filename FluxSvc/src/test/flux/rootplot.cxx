@@ -1,9 +1,30 @@
 
 #include "rootplot.h"
 
+rootplot::rootplot(int argc, char* argv[])
+: NUM_BINS(30),LOOP(30000),
+  TIME(0.01), 
+  ENERGY_MIN(0.01*1000.), 
+  ENERGY_MAX(100.0*1000.), m_fm(0)
+{
+    std::vector<const char*> args;
+    for( int i =1; i< argc; ++i) 
+        args.push_back(argv[i]);
+    init(args);
 
-rootplot::rootplot(std::vector<char*> argv): NUM_BINS(30),LOOP(30000),
-TIME(0.01), ENERGY_MIN(0.01*1000.), ENERGY_MAX(100.0*1000.)
+}
+
+
+
+rootplot::rootplot(std::vector<const char*> argv, FluxMgr* fm)
+: NUM_BINS(30),LOOP(30000),
+ TIME(0.01), ENERGY_MIN(0.01*1000.), ENERGY_MAX(100.0*1000.)
+ ,m_fm(fm)
+{
+    init(argv);
+}
+
+void rootplot::init(std::vector<const char*> argv)
 {
     
     int argc = argv.size();
@@ -41,7 +62,8 @@ TIME(0.01), ENERGY_MIN(0.01*1000.), ENERGY_MAX(100.0*1000.)
     
     flux_load();
     
-    FluxMgr fm(sources); 
+    //FluxMgr fm(sources); 
+    FluxMgr & fm = *m_fm;
     
     
     // Process Command Line Arguments
@@ -169,7 +191,7 @@ TIME(0.01), ENERGY_MIN(0.01*1000.), ENERGY_MAX(100.0*1000.)
         energy_hist.setGraphType(default_graph);
         energy_hist.setTitle( sources[i] );
         
-        energy_hist.setXLabel("Kinetic Energy (GeV)");
+        energy_hist.setXLabel("Kinetic Energy (MeV)");
         
         if(true == use_flux)
         {
