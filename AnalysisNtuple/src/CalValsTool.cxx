@@ -211,7 +211,7 @@ namespace {
       double CAL_EdgeSum_Corr;     
       //double CAL_Total_Corr; 
       double CAL_TotSum_Corr; 
-	  //double CAL_Energy_LLCorr; 
+	  double CAL_Energy_LLCorr; 
 
 	  double CAL_CsI_RLn;
       double CAL_Tot_RLn;
@@ -336,7 +336,7 @@ namespace {
       addItem("CalEnergySum",  &CAL_EnergySum);
       addItem("CalEnergyCorr", &CAL_Energy_Corr);
       addItem("CalEneSumCorr", &CAL_EneSum_Corr);
-	  //addItem("Cal_Energy_LLCorr", &CAL_Energy_LLCorr);
+	  addItem("Cal_Energy_LLCorr", &CAL_Energy_LLCorr);
    
       //addItem("CalLeakCorr",   &CAL_Leak_Corr);
       addItem("CalLeakCorr2",  &CAL_Leak_Corr2);
@@ -437,7 +437,7 @@ StatusCode CalValsTool::calculate()
 	CAL_Trans_Rms     = calCluster->getRmsTrans();
 	CAL_LRms_Ratio    = CAL_Long_Rms / CAL_EnergySum;
 	
-	//CAL_Energy_LLCorr = calCluster->getEnergyCorrected();
+	CAL_Energy_LLCorr = calCluster->getEnergyLeak();
 
 	//Code from meritAlg
 	int no_xtals=0;
