@@ -8,7 +8,7 @@ Ray::Ray( const Point& p, const Vector& d )
 }
 
 Ray::Ray( const Ray& r )
-:pos(r.pos), dir(r.dir), arclength(r.arclength)
+:pos(r.pos),GeomObject(), dir(r.dir), arclength(r.arclength)
 {  // copy constructor
 }
 
