@@ -8,7 +8,7 @@
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/SmartDataPtr.h"
 // to access an XML containing Digi parameters file
-#include "xml/IFile.h"
+#include "xmlBase/IFile.h"
 
 static const ToolFactory<LastLayerCorrTool>  s_factory;
 const IToolFactory& LastLayerCorrToolFactory = s_factory;
@@ -57,7 +57,7 @@ StatusCode LastLayerCorrTool::initialize()
     } else setNLayers(int(value));
    
  // Read in the parameters from the XML file
-    xml::IFile m_ifile(m_xmlFile.c_str());
+    xmlBase::IFile m_ifile(m_xmlFile.c_str());
     if (m_ifile.contains("lastlayer","c0") && m_ifile.contains("lastlayer","c1") && m_ifile.contains("lastlayer","c2") && m_ifile.contains("lastlayer","c3") && m_ifile.contains("lastlayer","b0") && m_ifile.contains("lastlayer","b1") ) {
         m_c0 = m_ifile.getDouble("lastlayer", "c0");
 	    log << MSG::INFO << " value for c0 " << m_c0 << endreq;

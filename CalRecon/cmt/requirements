@@ -1,7 +1,8 @@
 package CalRecon
-version v5r17
+version v5r17p1
 
 author Alexandre Chekhtman <chehtman@gamma.nrl.navy.mil>
+# $Id$
 
 branches src cmt doc
 
@@ -12,6 +13,7 @@ use CalUtil v1r*
 use geometry v3*
 use CalibSvc v*
 use TkrUtil *
+use xmlBase *
 
 # The following two lines are needed to use the FuzzyCluster package
 #use FuzzyCluster v*
@@ -24,17 +26,9 @@ private
 use RootPolicy
 use RootIo v*
 
-
-#the following prepend makes the includes folder available locally only: avoid the package_include
-#apply_pattern package_include
-
 macro_append ROOT_linkopts " $(ROOT_GUI_libs)"
 macro_append ROOT_linkopts " -L${ROOT_PATH}/lib -lMinuit " \ 
                  VisualC " ${ROOT_PATH}/lib/libMinuit.lib " 
-
-#apply_pattern package_include
-
-
 
 apply_pattern package_headers
 
@@ -43,17 +37,10 @@ library CalRecon  *.cxx *.cpp Dll/*.cpp ${CalRecon_headers}
 
 macro CalRecon_stamps     
 
-
-
-
-
 private
-
-
 
 apply_pattern package_Cshlibflags 
 set JOBOPTIONS ${CALRECONROOT}/src/test/jobOptions.txt
-
 
 # build this for testing, console only. Load all objects directly. 
 

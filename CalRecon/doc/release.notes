@@ -2,11 +2,13 @@
  
  @brief Package CalRecon
  @verbatim
+ $Id$
 
 package CalRecon
 
 package manager: Alexandre Chekhtman
 
+  v5r17p1 07-jan-05   THB Change from xml to xmlBase for JRB
   v5r17   07-jan-05   THB Tag the previous change
           22-sep-04   THB Modify CalValsCorrTool to invoke a local copy of code from AnalysisNtuple::CalvalsTool
   v5r15               BG  Temporarily move Fuzzies to Attic
