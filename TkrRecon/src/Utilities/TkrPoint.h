@@ -40,7 +40,7 @@ public:
     Event::TkrCluster*   getClusterX()   const {return m_pClusterX;}
     Event::TkrCluster*   getClusterY()   const {return m_pClusterY;}
     bool  sameTower(const TkrPoint& point) const;
-    int   layerSeperation(const TkrPoint& point) const;
+    int   layerSeparation(const TkrPoint& point) const;
     //@}
 
     /** @name other methods
