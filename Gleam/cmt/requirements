@@ -70,7 +70,7 @@ use AcdRecon            v0r5
 use RootIo              v4r11
 
 #diagnostic and summary of bottom line
-use merit                v5r8p1
+use merit               v5r8
 
 ### define a simple executable with GUI
 
