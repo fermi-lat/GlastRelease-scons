@@ -107,6 +107,8 @@ RunManager::~RunManager()
 
   delete timer;
 
+  G4GeometryManager::GetInstance()->OpenGeometry();
+
   physicsList->RemoveProcessManager();
   G4ParticleTable::GetParticleTable()->DeleteMessenger();
   G4ProcessTable::GetProcessTable()->DeleteMessenger();
