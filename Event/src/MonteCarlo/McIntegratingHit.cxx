@@ -13,6 +13,7 @@
 // function definition should have the namespace identifier.
 using namespace GlastEvent;
 
+namespace mc{
 /// Update all energyInfos
 void McIntegratingHit::setEnergyItems( const energyDepositMap& value )
 {
@@ -42,18 +43,15 @@ void McIntegratingHit::clearEnergyItems()
 }
 
 
-
-
-
 /// Retrieve volume identifier
-const VolumeID McIntegratingHit::volumeID() const
+const idents::VolumeIdentifier McIntegratingHit::volumeID() const
 {
   return m_volumeID;
 }
 
 
 /// Update volume identifier
-void McIntegratingHit::setVolumeID( VolumeID value )
+void McIntegratingHit::setVolumeID( idents::VolumeIdentifier value )
 {
   m_volumeID = value;
 }
@@ -161,4 +159,6 @@ void McIntegratingHit::setNeedDigi( bool value )
     } else {
         m_packedFlags &= ~NEED_DIGI;
     }
+}
+
 }

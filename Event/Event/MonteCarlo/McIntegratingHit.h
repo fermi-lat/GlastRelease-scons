@@ -14,8 +14,9 @@
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/SmartRefVector.h"
 #include "GlastEvent/TopLevel/Definitions.h"
-#include "GlastEvent/Utilities/VolumeID.h"
+#include "idents/VolumeIdentifier.h"
 #include "GlastEvent/Utilities/CLHEPStreams.h"
+#include "GlastEvent/Utilities/IDStreams.h"
 // Include all Glast container types here
 //   to simplify inlude statements in algorithms
 #include "GaudiKernel/ObjectVector.h"
@@ -41,8 +42,6 @@
 //------------------------------------------------------------------------------
  */
 
-//namespace GlastEvent {  // NameSpace
-
 // Posible rehash Ian
 // Forward declarations
 //class McParticle;
@@ -50,6 +49,7 @@
 
 extern const CLID& CLID_McIntegratingHit;
 
+namespace mc {  // NameSpace
 
 class McIntegratingHit : virtual public ContainedObject {
   public:
@@ -69,9 +69,9 @@ class McIntegratingHit : virtual public ContainedObject {
 
 
     /// Retrieve cell identifier
-    const VolumeID volumeID() const;
+    const idents::VolumeIdentifier volumeID() const;
     /// Update cell identifier
-    void setVolumeID( VolumeID value );
+    void setVolumeID( idents::VolumeIdentifier value );
 
     /// Retrieve energy
     double totalEnergy() const;
@@ -112,7 +112,7 @@ class McIntegratingHit : virtual public ContainedObject {
        
   private:
       /// Cell identifier
-      VolumeID                      m_volumeID;
+      idents::VolumeIdentifier      m_volumeID;
       /// Vector of Energy information that consists of deposited energy and the mother McParticle
       energyDepositMap              m_energyItem;
       /// total deposited energy: set automatically when m_energyInfo is modified.
@@ -124,13 +124,6 @@ class McIntegratingHit : virtual public ContainedObject {
       /// Packed flags for particle property
       unsigned long                 m_packedFlags;
 };
-
-  
-// Definition of all container types of McIntegratingHit
-template <class TYPE> class ObjectVector;
-typedef ObjectVector<McIntegratingHit>     McIntegratingHitVector;
-template <class TYPE> class ObjectList;
-typedef ObjectList<McIntegratingHit>       McIntegratingHitList;
 
 /// Serialize the object for writing
 inline StreamBuffer& McIntegratingHit::serialize( StreamBuffer& s ) const
@@ -178,9 +171,11 @@ inline StreamBuffer& McIntegratingHit::serialize( StreamBuffer& s )
       >> m_packedFlags;
 }
 
+}
+  
 
 /// Fill the ASCII output stream
-inline std::ostream& McIntegratingHit::fillStream( std::ostream& s ) const
+inline std::ostream& mc::McIntegratingHit::fillStream( std::ostream& s ) const
 {
     s << "class McCaloHitBase :"
       << "\n    Deposited Energy        = "
@@ -200,8 +195,15 @@ inline std::ostream& McIntegratingHit::fillStream( std::ostream& s ) const
       << m_moment2seed.y() / m_totalEnergy << ", "
       << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
       << m_moment2seed.z() / m_totalEnergy << " )"
-      << "\n    Volume ID               = " << m_volumeID;
+      << "\n    Volume ID               = " << m_volumeID.name();
     return s;
 }
+
+// Definition of all container types of McIntegratingHit
+template <class TYPE> class ObjectVector;
+typedef ObjectVector<mc::McIntegratingHit>     McIntegratingHitVector;
+template <class TYPE> class ObjectList;
+typedef ObjectList<mc::McIntegratingHit>       McIntegratingHitList;
+
 
 #endif // GlastEvent_McIntegratingHit_H

@@ -62,7 +62,7 @@ public:
   /// Fill the output stream (ASCII)
   std::ostream& fillStream( std::ostream& s ) const                            {
     return s << "class ParticleID : "
-      << GlastEventField( GlastEvent::field4 )
+	     << GlastEventField( GlastEvent::field4 )
       << m_id;
   }
 
