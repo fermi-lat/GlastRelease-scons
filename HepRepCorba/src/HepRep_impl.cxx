@@ -58,9 +58,26 @@ HepRepInstanceTree* HepRep_impl::getInstanceTreeTop(const char* instanceTreeName
 {
   // To be done
   HepRepInstanceTree* instanceTreeTop = new HepRepInstanceTree;
+  std::string type = m_registry->getTypeByInstance(instanceTreeName);  
+  
+  instanceTreeTop->id.name = CORBA::string_dup(instanceTreeName);
+  instanceTreeTop->id.version = CORBA::string_dup(instanceTreeVersion);
+  instanceTreeTop->typeTreeID.name = CORBA::string_dup(type.c_str());
+  instanceTreeTop->typeTreeID.version = CORBA::string_dup("1.0");
+  
   instanceTreeTop->instanceTreeIDs.length(0);
   instanceTreeTop->instances.length(0);
 
+
+  for(unsigned int i=0;i < (m_registry->getDependencies(instanceTreeName)).size(); i++)
+  {
+    std::string temp = (m_registry->getDependencies(instanceTreeName))[i];
+    int iType = instanceTreeTop->instanceTreeIDs.length()+1;
+    instanceTreeTop->instanceTreeIDs.length(iType);
+    instanceTreeTop->instanceTreeIDs[iType-1].name = CORBA::string_dup(temp.c_str());
+    instanceTreeTop->instanceTreeIDs[iType-1].version = CORBA::string_dup("1.0");
+  }
+  
   return instanceTreeTop;
 }
 
@@ -139,7 +156,7 @@ HepRepInstanceTree* HepRep_impl::getInstances(const char* instanceTreeName,
       tmp.length(0);
       instanceTree->id.name = CORBA::string_dup(instanceTreeName);
       instanceTree->id.version = CORBA::string_dup(instanceTreeVersion);
-      instanceTree->typeTreeID.name = CORBA::string_dup(m_instanceTrees[instanceTreeName].c_str());
+      instanceTree->typeTreeID.name = CORBA::string_dup((m_registry->getTypeByInstance(instanceTreeName)).c_str());
       instanceTree->typeTreeID.version = CORBA::string_dup("1.0");
       instanceTree->instances = tmp;
     }

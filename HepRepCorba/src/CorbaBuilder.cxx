@@ -150,7 +150,6 @@ void CorbaBuilder::addInstance(std::string father,
   in.length(0);
   */
 
-
   if (father == "")
     {
       int iType = m_instanceTree->instances.length()+1;
@@ -181,7 +180,8 @@ void CorbaBuilder::addInstance(std::string father,
         {
           int jType = instance->instances.length()+1;
           instance->instances.length(jType);
-          
+
+
           instance->instances[jType-1].typeName = CORBA::string_dup(type.c_str());
           instance->instances[jType-1].points.length(0);
           instance->instances[jType-1].attValues.length(0);

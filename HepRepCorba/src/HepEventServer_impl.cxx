@@ -103,34 +103,18 @@ char* HepEventServer_impl::setEvent(const char* command)
       m_eventID = sName.str();
       nextEventMsg = "Event set to next";      
     }
-  /*
   else if (cmd == "fluxes")
     {
-#ifdef  DEFECT_NO_STRINGSTREAM
-  std::strstream sNames;
-#else
-  std::stringstream sNames;
-#endif
-      
-      std::list<std::string>::const_iterator s;
-      std::list<std::string> names = m_fluxSvc->fluxNames();
-
-      for(s=names.begin(); s!=names.end(); s++)
-        sNames << (*s) << ";";
-      
-	  sNames << '\0';
-      nextEventMsg = sNames.str();
+      nextEventMsg = m_svcAdapter->getSources();
     }
   else if (cmd.substr(0,7) == "source:")
     {
       std::string source = cmd.substr(7,cmd.size());
       std::cout << "Set the source to " << source << std::endl;
 
-      IFlux *   iflux;
-      m_fluxSvc->source(source, iflux);
+      m_svcAdapter->setSource(source);
       nextEventMsg = "Surce changed";      
     }
-  */
   else if (cmd == "eventName")
     {
       nextEventMsg = m_eventID.c_str();

@@ -13,8 +13,10 @@ void CorbaServer::run()
   int orb_argc = 1 ;
   char* orb_argv[] = {""};
 
+  const char* options[][2] = { { "giopMaxMsgSize", "20097152" }, { 0, 0 } }; 
+
   try {
-  CORBA::ORB_var orb = CORBA::ORB_init(orb_argc, orb_argv);
+  CORBA::ORB_var orb = CORBA::ORB_init(orb_argc, orb_argv, "omniORB4",options);
   // Activate the Portable Object Adapter.
   CORBA::Object_var obj = orb->resolve_initial_references("RootPOA");
   PortableServer::POA_var poa = PortableServer::POA::_narrow(obj);
