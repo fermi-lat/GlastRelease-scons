@@ -8,7 +8,8 @@
 #include "G4SteppingManager.hh"
 #include "DetectorConstruction.h"
 #include "TransportStepInfo.h"
-
+#include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Geometry/Vector3D.h"
 
 #include "globals.hh"
 #include "g4std/vector"
@@ -57,25 +58,28 @@ public:
     //for now
     TransportStepInfo* getPrevBoundary() const {return stepInfo.back();} 
 
-    Point              getStartPoint()   const {return startPoint;}
-    Vector             getStartDir()     const {return startDir;}
+    HepPoint3D         getStartPoint()   const {return startPoint;}
+    HepVector3D        getStartDir()     const {return startDir;}
     double             getMaxArcLen()    const {return maxArcLen;}
-  
+
+    void printStepInfo(std::ostream& str=std::cout ) const;  
 private:
     //Private methods
     //Determines the distance along the track to the edge of start volume
     double     minStepSize(G4SteppingManager* stepManager);
     //Make sure list is cleared when tracking started
     void       clearStepInfo();
+    //Use this to in printStepInfo to print volume list name
+    G4String   printVolName(const G4VPhysicalVolume* pCurVolume) const;
 
     //Private Data
     //Vector keeping track of the individual step information
     StepVector stepInfo;
 
     //Initial start point, direction and desired step size
-    Point      startPoint;
-    Vector     startDir;
-    double     maxArcLen;
+    HepPoint3D  startPoint;
+    HepVector3D startDir;
+    double      maxArcLen;
 };
 
 #endif

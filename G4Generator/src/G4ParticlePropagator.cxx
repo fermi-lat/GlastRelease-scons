@@ -196,7 +196,8 @@ double G4ParticlePropagator::radLength() const
   // Dependencies: None
   // Restrictions and Caveats: None
 
-  double radLen = 0.;
+  double radLen  = 0.;
+  double totDist = 0.;
 
   //Set up iterator for stepping through all the layers
   ConstStepPtr stepPtr = getStepStart();
@@ -215,14 +216,16 @@ double G4ParticlePropagator::radLength() const
 
       if (matRadLen > 0.) x0s = s_dist / matRadLen;
 
-//      if(dist+s_dist > s) 
-//      { 
-//        // pro-rate the last step: s_distp
-//        if(s_dist > 0) x0s *= (s - dist)/s_dist;
-//        s_distp = s - dist; 
-//      }
+      if(totDist+s_dist > s) 
+      { 
+        // pro-rate the last step: s_distp
+        if(s_dist > 0) x0s *= (s - totDist)/s_dist;
+        s_dist = s - totDist; 
+      }
 
       if (matRadLen > 0.) radLen += x0s;
+
+      totDist += s_dist;
     }
 
   return radLen;
@@ -345,26 +348,8 @@ HepMatrix G4ParticlePropagator::mScat_Covr(float momentum, float s) const
 
 void G4ParticlePropagator::printOn(std::ostream& str )const
 {
-  /*
-    GParticle::printOn(str);
-    str << " status: ";
-    switch( m_status ) {
-    case ALIVE:      str << "alive";    break;
-    case LEFT:       str << "left";     break;
-    case LOST:       str << "lost";     break;
-    case STUCK:      str << "stuck";    break;
-    case DONE:       str << "done";     break;
-    default:         str << "unknown";  break;
-    }
-    str <<'\n';
-    str <<" Total Step length: "<<m_arcLength<<"  Proper Time: "
-    << m_properTime<<'\n';
-    str <<" Step Count: "<<m_stepcount<<'\n';
-    
-    int num_step = m_stepList.size();
-    for(int i=0; i<num_step; i++){
-    m_stepList[i].printOn(str);
-    }
-  */
-  return;
+	str << '\n';
+    printStepInfo(str);
+
+    return;
 }

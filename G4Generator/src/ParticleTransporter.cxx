@@ -7,6 +7,7 @@
 //      T.Usher
 
 #include "ParticleTransporter.h"
+//#include "globals.hh"
 #include "G4Geantino.hh"
 #include "G4StepStatus.hh"
 #include "G4VSensitiveDetector.hh"
@@ -158,7 +159,7 @@ bool ParticleTransporter::transport()
       {
           G4ThreeVector hitPos  = stepInfo.back()->GetCoords();
           G4double      stepLen = stepInfo.back()->GetArcLen();
-          G4double      corLen  = maxArcLen - arcLen;
+          G4double      corLen  = arcLen - maxArcLen;
 
           hitPos -= corLen * startDir;
 
@@ -195,12 +196,32 @@ double ParticleTransporter::minStepSize(G4SteppingManager* stepManager)
   // Dependencies: None
   // Restrictions and Caveats: None
 
+  G4String waferNest("SiWaferNest");
   double minStep = 0.;
 
   //If we are starting out in a sensitive volume then the presumption
   //is that we want to step past the edge of this volume to the next volume.
-  G4VPhysicalVolume* pCurVolume = stepManager->GetfCurrentVolume();
-  if (pCurVolume->GetLogicalVolume()->GetSensitiveDetector())
+  G4VPhysicalVolume*    pCurVolume = stepManager->GetfCurrentVolume();
+  G4LogicalVolume*      pLogVolume = pCurVolume->GetLogicalVolume();
+  G4VSensitiveDetector* pSensitive = pLogVolume->GetSensitiveDetector();
+
+  // It may be that we are in an "enveloping" volume like SiWaferNest...
+  if (!pSensitive && waferNest == pCurVolume->GetName())
+  {
+      int numDaughterVolumes = pLogVolume->GetNoDaughters();
+
+      while(numDaughterVolumes--)
+      {
+          G4VPhysicalVolume*    pDaughterVolume = pLogVolume->GetDaughter(numDaughterVolumes);
+          G4VSensitiveDetector* pDaughterSens   = pDaughterVolume->GetLogicalVolume()->GetSensitiveDetector();
+
+          if (pDaughterSens) pSensitive = pDaughterSens;
+      }
+  }
+
+  //If dealing with a sensitive volume directly, or embedded in this volume
+  //then calculate the distance to leave the volume
+  if (pSensitive)
     {
       const G4VTouchable* touchable = stepManager->GetfTouchable1();
 
@@ -214,13 +235,16 @@ double ParticleTransporter::minStepSize(G4SteppingManager* stepManager)
       //touchable->GetTranslation();
       G4ThreeVector  trackPos = stepManager->GetfTrack()->GetPosition();
       G4ThreeVector  trackDir = stepManager->GetfTrack()->GetMomentumDirection();
+      double         fudge    = 0.00001;  // .01 um
+
+      //Transform these to the local coordinate system
       trackPos = local * (HepPoint3D)trackPos;
+      trackDir = local * (HepVector3D)trackDir;
 
       //This calculates the distance along the direction of the track to the 
       //boundary of the current volume
-      //But here we are only concerned with the distance to the z plane exit
-      Vector zDir(0.,0.,trackDir.z());
-      minStep = pCurVolume->GetLogicalVolume()->GetSolid()->DistanceToOut(trackPos,zDir);
+      minStep  = pCurVolume->GetLogicalVolume()->GetSolid()->DistanceToOut(trackPos,trackDir);
+      minStep += fudge;
     }
 
   return minStep;
@@ -243,4 +267,52 @@ void ParticleTransporter::clearStepInfo()
   stepInfo.clear();
 
   return;
+}
+ 
+void ParticleTransporter::printStepInfo(std::ostream& str) const
+{
+  // Purpose and Method: Provides method for formatted outputting of tracking results
+  // Inputs:  a reference to a standard output stream
+  // Outputs:  None
+  // Dependencies: None
+  // Restrictions and Caveats: None
+  str << "** Particle at: " << startPoint << ", dir: " << startDir << "\n";
+  str << "   Step Count:  "  <<getNumberSteps() <<'\n';
+
+  ConstStepPtr iter    = getStepStart();
+  double       arcLen  = 0.;
+  int          stepCnt = 0;
+
+  while(iter < getStepEnd())
+  {
+      TransportStepInfo* stepInfo   = *iter++;
+      G4VPhysicalVolume* pCurVolume = stepInfo->GetVolume();
+      G4ThreeVector      position   = stepInfo->GetCoords();
+      G4Material*        pMaterial  = pCurVolume->GetLogicalVolume()->GetMaterial();
+      double             matRadLen  = pMaterial->GetRadlen();
+      double             x0s        = 0.;
+      double             stepDist   = stepInfo->GetArcLen();
+
+      if (matRadLen > 0.) x0s = stepDist / matRadLen;
+
+      arcLen += stepDist;
+
+      G4String           volName = printVolName(pCurVolume);
+
+      str << "   Step " << ++stepCnt << ", Volume: " << volName << "\n" 
+          << ", position: " << position << ", step: " << stepDist << ", radlens: " << x0s << "\n";
+                
+  }
+  str <<"   Total Step length: "<< arcLen <<"\n";
+
+  return;
+}
+
+G4String ParticleTransporter::printVolName(const G4VPhysicalVolume* pCurVolume) const
+{
+    if (pCurVolume)
+    {
+        return "(" + pCurVolume->GetName() + printVolName(pCurVolume->GetMother()) + ")";
+    }
+    else return " ";
 }
