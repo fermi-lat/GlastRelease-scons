@@ -1,5 +1,5 @@
 package FluxSvc
-version v6r14p1
+version v6r15
 
 # $Id$
 author  T. Kozanecki <hansl$slac.stanford.edu> T. Burnett
@@ -9,9 +9,9 @@ branches FluxSvc cmt doc cdf
 # _____________________________________________________________
 
 use GlastPolicy v*
-use Event       v9r*
-use GlastSvc    v9r*
-use astro       v1r*
+use GaudiInterface * IExternal
+use CLHEP * IExternal
+use facilities *
 
 #  set  path to particle properties (used by Gaudi ParticlePropertySvc) 
 #  $(FlUXSVCROOT)/cdf/particleproperty.cdf
@@ -23,11 +23,14 @@ apply_pattern package_include
 # _____________________________________________________________
 
 private
+use Event       v9r*
+use GlastSvc    v9r*
+use astro       v1r*
+
 use ntupleWriterSvc v3r*
 use XMLEXT * IExternal
 # libraries that are only linked locally
 use flux        v8*  -no_auto_imports
-use GRB         v4*  -no_auto_imports
 
 macro  source  "*.cxx"  WIN32 "*.h *.cxx *.txt"
 macro_append includes  ' $(ppcmd)"$(FLUXROOT)" '
