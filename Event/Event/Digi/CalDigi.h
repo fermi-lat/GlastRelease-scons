@@ -40,6 +40,10 @@ public:
  * Author:  E.Grove
  *
 */
+        /// Retrieve reference to class definition structure
+        virtual const CLID& clID() const   { return CalDigi::classID(); }
+        static const CLID& classID()       { return CLID_CalDigi; }
+          
 
     class CalXtalReadout {  // : virtual public ContainedObject  { 
         
@@ -59,11 +63,10 @@ public:
 	  m_adcM(adcM),
           m_rangeP(rangeP), 
 	  m_rangeM(rangeM){
-	m_status = 0;
+	  m_status = 0;
 	};
           
           ~CalXtalReadout() {};
-          
           
           /// retrieve pulse height from specified face
           inline unsigned short getAdc(idents::CalXtalId::XtalFace face) const {return face == idents::CalXtalId::POS ? m_adcP : m_adcM;};
