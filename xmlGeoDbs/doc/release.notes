@@ -2,6 +2,11 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 18-mar-2003: jrb - tag v1r10p0  1. Modify vacuum for G4. 
+ *                                 2. Adjust density of tray bottom face
+ *                                 3. Fix superGLAST converter density
+ *                                 4. EM changes
+ * ??-???-????: ??  - tag v1r10
  * 13-nov-2002: jrb - tag v1r9   - 1. Substantial changes to ACD geometry top,
  *                                   addition of ACD support structure.
  *                                 2. minor reorganization to lessen number
