@@ -141,6 +141,14 @@ namespace rdbModel {
       }
       else if (agent == "service") {
         newCol->m_from = Column::FROMprogram;
+        std::string contents = xml::Dom::getAttribute(child, "contents");
+        if (contents == "service_name") {
+          newCol->m_contents = Column::CONTENTSserviceName;
+        }
+        else if (contents == "username") {
+          newCol->m_contents = Column::CONTENTSusername;
+        }
+        // otherwise just stick with default value of CONTENTSunspecified
       }
       // shouldn't be anything else
     } 
