@@ -1,0 +1,164 @@
+// $Header$
+//##############################################################
+//
+// Job options file for user algorithm development
+//
+//#include "$GLEAMROOT/src/basicOptions.txt"
+
+//##############################################################
+//
+// basic Job options file for a Gleam execution
+// $Header$
+
+// primary DLLs
+
+ApplicationMgr.DLLs+= { "GaudiAlg"};
+
+// ----------------------------
+// setup basic event loop stuff
+//
+ApplicationMgr.ExtSvc = { 
+    "GlastEventSelector/EventSelector" , 
+    "EventCnvSvc"
+    };
+
+EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+EventSelector.Input = "NONE";
+
+ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
+
+
+// ----------------------------
+//  a structure for the topalg, using sequencer steps
+//
+ApplicationMgr.TopAlg = {
+    "Sequencer/Generator",
+    "Sequencer/Digitization",
+    "Sequencer/EventDisplay",
+    "Sequencer/Triggered" };
+
+// the sequence that is triggered
+Triggered.Members={
+    "TriggerAlg",
+    "Sequencer/Output" };
+
+// ----------------------------
+//  Geometry definition
+//
+ApplicationMgr.DLLs += {"GlastSvc"};
+ApplicationMgr.ExtSvc += { "GlastDetSvc"};
+GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+
+GlastDetSvc.visitorMode="recon";
+
+// ----------------------------
+//  Generation or input
+//
+ApplicationMgr.DLLs +={ "G4Generator"};
+Generator.Members = {"FluxAlg", "G4Generator"};
+#include "$FLUXSVCROOT/src/defaultOptions.txt"
+
+
+
+// ----------------------------
+//  Digitization
+//
+ApplicationMgr.DLLs +={ "TkrDigi", "CalDigi", "AcdDigi"  };
+Digitization.Members = { 
+    "CalDigiAlg"};
+
+
+// ----------------------------
+//  Trigger calculation
+//
+ApplicationMgr.DLLs +={ "Trigger"};
+Trigger.Members = {"TriggerAlg"};
+TriggerAlg.mask = -1; // all bits on by default
+
+
+         
+//ApplicationMgr.ExtSvc += {"RecoSvc"};
+
+
+//Cal1.Members = { 
+//      "CalXtalRecAlg", 
+//      "CalClustersAlg/first"
+//     };
+
+// ----------------------------
+//   ACD recon
+//
+
+// ----------------------------
+//   Output
+//
+ApplicationMgr.DLLs +={ 
+    "RootIo"
+}; 
+Output.Members += {"mcRootWriterAlg", "digiRootWriterAlg", "reconRootWriterAlg"};
+mcRootWriterAlg.OutputLevel=3;
+digiRootWriterAlg.OutputLevel=3;
+reconRootWriterAlg.OutputLevel=3;
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel = 4;
+
+// for setting the run number
+TriggerAlg.run=100;
+
+//==============================================================
+//
+// End of job options file
+//
+//##############################################################
+
+
+
+CalDigiAlg.taperToolName = "OnePlusExpTaper";
+
+
+TriggerAlg.mask = 0; // all bits on by default
+
+
+ApplicationMgr.HistogramPersistency = "ROOT";
+
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+
+#include "$GLEAMROOT/src/guiOptions.txt"
+
+
+// select one of the following 
+GlastDetSvc.topVolume="CsIElement";  // to look at a single full crystal
+
+//##############################################################
+//
+// Job options file for RootIo test
+//
+mcRootWriterAlg.mcRootFile = "mc.root";
+
+//##############################################################
+//
+// Job options file for writing a ROOT file
+//
+digiRootWriterAlg.digiRootFile = "digi.root";
+
+//##############################################################
+//
+// Job options file for writing a ROOT file
+//
+
+reconRootWriterAlg.reconRootFile = "recon.root";
+
+
+FluxSvc.source_lib = {"$(USERALGROOT)/src/test_sources.xml"};
+FluxAlg.source_name="electron_patch_SingleCDE";
+ApplicationMgr.EvtMax = 5000;
+
+
+//==============================================================
+//
+// End of job options file
+//
+//##############################################################
+
