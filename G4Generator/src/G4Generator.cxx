@@ -80,13 +80,15 @@ StatusCode G4Generator::execute()
     double ke= m_flux->energy() ;
     HepPoint3D p(m_flux->launchPoint());
     
-    p = 10*p*mm;
-    ke = ke*1000*MeV;
+    p = 10*p;
+    ke = ke*1000;
     
     PrimaryGeneratorAction* primaryGenerator = 
       (PrimaryGeneratorAction*)m_runManager->GetUserPrimaryGeneratorAction();
     
     // Set the G4 primary generator
+    // the position has to be expressed in mm
+    // while the energy in MeV
     primaryGenerator->setParticle(name);
     primaryGenerator->setMomentum(dir);
     primaryGenerator->setPosition(p);

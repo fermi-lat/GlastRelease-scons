@@ -1,3 +1,4 @@
+// $Header$
 #ifndef PrimaryGeneratorAction_h
 #define PrimaryGeneratorAction_h 1
 
@@ -17,7 +18,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 
     void setParticle(std::string pname);
     void setMomentum(G4ThreeVector pmom){particleGun->SetParticleMomentumDirection(pmom);}
-    void setPosition(G4ThreeVector ppos){particleGun->SetParticlePosition(ppos);}
+    void setPosition(G4ThreeVector ppos){particleGun->SetParticlePosition(ppos*mm);}
     // Set energy in MeV
     void setEnergy(G4double pen){particleGun->SetParticleEnergy(pen*MeV);}
 

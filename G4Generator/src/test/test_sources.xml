@@ -15,7 +15,7 @@
 
     <source name="gamma_patch_for_G4">
        <spectrum> 
-         <particle name="gamma"><energy e="0.1"/> </particle>
+         <particle name="gamma"><energy e="10"/> </particle>
            <direction theta="0" phi="0" />
            <patch />
        </spectrum>

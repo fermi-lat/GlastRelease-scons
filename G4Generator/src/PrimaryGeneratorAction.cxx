@@ -1,3 +1,4 @@
+// $Header$
 #include "PrimaryGeneratorAction.h"
 
 #include "G4Event.hh"
@@ -19,7 +20,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   particleGun->SetParticleDefinition(particle);
   particleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,-1.));
   particleGun->SetParticleEnergy(30.*MeV);
-  particleGun->SetParticlePosition(G4ThreeVector(0.*cm,0.*cm,0.*cm));
+  particleGun->SetParticlePosition(G4ThreeVector(0.*mm,0.*mm,0.*mm));
 }
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
