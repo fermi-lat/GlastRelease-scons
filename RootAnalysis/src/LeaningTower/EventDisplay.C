@@ -26,11 +26,8 @@ double getGeometry(TString layer);
 bool isGeometry() { return myGeometry && !myGeometry->IsEmpty(); }
 
 void loadGeometry(TString filename) {
-    if ( isGeometry() ) {
-        cout << myGeometry->GetSize() << endl;
+    if ( isGeometry() )
         myGeometry->DeleteAll();
-        cout << myGeometry->GetSize() << endl;
-    }
     if ( !myGeometry ) {
         std::cout << "making NEW geometry map" << std::endl;
         myGeometry = new TMap();
@@ -129,7 +126,7 @@ void EventDisplay(TString filename, int firstEvent, int lastEvent)
   int numEvents = myTree->GetEntries();
   std::cout << "Number of Events: " << numEvents << std::endl;
 
-  TCanvas *evDisp = new TCanvas("c1","Event Display", 700, 800);
+  TCanvas *myCanvas = new TCanvas("c1","Event Display", 700, 800);
 
   Int_t EventId;
   Int_t RunId;
@@ -411,7 +408,7 @@ void EventDisplay(TString filename, int firstEvent, int lastEvent)
       
       //////////////////////////////////////////////////
       
-      if(DISPLAY)  evDisp->Update();
+      if(DISPLAY)  myCanvas->Update();
 
       if(recon)
 	{
