@@ -20,6 +20,7 @@
 */
 const UInt_t runNum = 1;
 const UInt_t numXtals = 10;
+const UInt_t numDigi = 12;
 const Bool_t fromMc = true;
 Float_t randNum;
 
@@ -119,6 +120,74 @@ int checkCalDigi(CalDigi *digi, UInt_t ievent) {
     return 0;
 }
 
+int checkTkrDigi(TkrDigi *digi, UInt_t ievent, UInt_t idigi) {
+
+    TowerId id = digi->getTower();
+    if ((id.ix() != 3) || (id.iy() != 2) ) {
+        std::cout << "TkrDigi id is wrong (x,y): (" << id.ix() << "," 
+            << id.iy() << ")" << std::endl;
+        return -1;
+    }
+
+    if (id.id() != 3+4*2)  {
+        std::cout << "TkrDigi id is computer wrong: " << id.id() << std::endl;
+        return -1;
+    }
+
+    UShort_t bilayer = digi->getBilayer();
+    if (bilayer != idigi) {
+        std::cout << "TkrDigi bilayer is wrong:  " << bilayer << std::endl;
+        return -1;
+    }
+
+    GlastAxis::axis a = digi->getView();
+    if (a != GlastAxis::Y) {
+        std::cout << "TkrDigi Axis is wrong: " << a << std::endl;
+        return -1;
+    }
+
+    if (digi->getNumHits() != idigi+1) {
+        std::cout << "TkrDigi number of hit strip is wrong: " << digi->getNumHits() << std::endl;
+        return -1;
+    }
+    UInt_t istrip;
+    for (istrip = 0; istrip < idigi; istrip++) {
+        Int_t strip = digi->getHit(istrip);
+        if (strip != istrip) {
+            std::cout << "TkrDigi strip is wrong: " << strip << std::endl;
+            return -1;
+        }
+    }
+    Int_t strip = digi->getHit(idigi);
+    if (strip != idigi*2) {
+        std::cout << "TkrDigi strip is wrong: " << strip << std::endl;
+        return -1;
+    }
+
+    strip = digi->getHit(idigi+1);
+    if (strip != -1) {
+        std::cout << "TkrDigi non-existant strip is defined: " << digi->getHit(idigi+1) << std::endl;
+        return -1;
+    }
+    
+    if (digi->getToT(0) != idigi) {
+        std::cout << "TkrDigi ToT 0 is wrong: " << digi->getToT(0) << std::endl;
+        return -1;
+    }
+    
+    if (digi->getToT(1) != idigi+1) {
+        std::cout << "TkrDigi ToT 1 is wrong: " << digi->getToT(1) << std::endl;
+        return -1;
+    }
+    
+    if (digi->getToT(2) != -1) {
+        std::cout << "TkrDigi non-existant ToT is defined: " << digi->getToT(2) << std::endl;
+        return -1;
+    }
+    
+}
+
+
 /// Read in the ROOT file just generated via the write method
 int read(char* fileName, int numEvents) {
     TFile *f = new TFile(fileName, "READ");
@@ -142,7 +211,16 @@ int read(char* fileName, int numEvents) {
             digi->Print();
             if (checkCalDigi(digi, ievent) < 0) return -1;
         }
-   }
+        const TObjArray *tkrDigiCol = evt->getTkrDigiCol();
+        TIter tkrDigiIt(tkrDigiCol);
+        TkrDigi *tDigi = 0;
+        UInt_t idigi = 0;
+        while (tDigi = (TkrDigi*)tkrDigiIt.Next()) {
+            if (checkTkrDigi(tDigi, ievent, idigi) < 0) return -1;
+            idigi++;
+        }
+
+ }
     
     f->Close();
     delete f;
@@ -183,6 +261,20 @@ int write(char* fileName, int numEvents) {
             UShort_t adcP = 4095;
             cal->addReadout(rangeP, adcP, rangeM, adcM);
             ev->addCalDigi(cal);
+        }
+
+        UInt_t idigi;
+        for (idigi = 0; idigi < numDigi; idigi++) {
+            TkrDigi *tkr = new TkrDigi();
+            Int_t tot[2] = {idigi, idigi+1};
+            TowerId id(3, 2);
+            tkr->initialize(idigi, GlastAxis::Y, id, tot);
+            UInt_t istrip;
+            for (istrip = 0; istrip < idigi; istrip++) {
+                tkr->addC0Hit(istrip);
+            }
+            tkr->addC1Hit(idigi*2);
+            ev->addTkrDigi(tkr);
         }
         t->Fill();
         ev->Clear();

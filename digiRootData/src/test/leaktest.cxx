@@ -17,6 +17,7 @@
 {
     UInt_t numEvents = 500;
     UInt_t numXtals = 100;
+    UInt_t numDigi = 150;
     UInt_t runNum = 1;
 
     gObjectTable->Print();
@@ -50,6 +51,21 @@
             UShort_t adcP = 4095;
             cal->addReadout(rangeP, adcP, rangeM, adcM);
        }
+
+        UInt_t idigi;
+        for (idigi = 0; idigi < numDigi; idigi++) {
+            TkrDigi *tkr = new TkrDigi();
+            Int_t tot[2] = {idigi, idigi+1};
+            TowerId id(3, 2);
+            tkr->initialize(idigi, GlastAxis::Y, id, tot);
+            UInt_t istrip;
+            for (istrip = 0; istrip < idigi; istrip++) {
+                tkr->addC0Hit(istrip);
+            }
+            tkr->addC1Hit(idigi*2);
+            ev->addTkrDigi(tkr);
+        }
+
         t->Fill();
         ev->Clear();
     }
