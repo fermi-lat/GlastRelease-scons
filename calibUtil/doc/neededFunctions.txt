@@ -1,0 +1,133 @@
+Not-to-be-trusted first attempt to lay out functionality of calibUtil.
+
+J. Bogart        16 May 2002
+-------------------------------
+
+
+                         Concerning metadata
+
+1. read-only connect (user = glastreader) -- static method with static
+                                         data member to hold the connection
+2. read/write connect (user = calibrator) -- similarly here
+
+3. Write new row.  User has to supply practically everything.  Just
+omits sequence numbers and timestamp.  Probably should return 
+at least the global (not specific to calibration type) serial
+number as well as status.
+
+Should this be done with a single call or would something more like
+a circuit protocol
+     open row
+       add field..
+       add field..
+       add field..
+       add field..
+       add field..
+          .
+          .
+          .
+       add field..
+     close and write row
+
+be better?
+
+In any case, the write should take care of the connection internally;
+caller should not have to explicitly make connection.
+
+4. Read & Search services
+
+  [a. Given cal type, timestamp, disposition restrictions (e.g., must
+  be production) return global serial numbers, if any, of calibrations
+  satisfying the constraints.]
+         For now, decided against implementing this one.
+     
+  
+  b. Same as above, but return "best" match, where
+       - production is better than development which is better than test
+       - if have different calibrations with overlapping validity intervals
+         of same disposition, choose the one such that timestamp is
+         closest to center
+       - if have different calib. with identical validity intervals 
+         and dispositions, prefer the one which was written most recently.
+     
+
+  c. Given global serial number, return sufficient information to 
+  allow client to find and read in the data:
+
+         Physical type of data (XML or ROOT)
+         Format version
+         File or other specification
+
+  d. Given global serial number and field name, return field value
+  (converted from string to numeric type if appropriate?)
+
+
+--------------------------------------------------------------------------
+                   Concerning bad strips
+
+1.   file --> calibUtil objects
+
+Constructor, taking (filespec, formatVersion) to a BadStrips object
+
+2. Query methods to get information from <generic> element.
+
+3. Various get and query routines specific to BadStrips
+
+   a. Distinguish between hot and dead
+
+   b. Return list of all towers with bad strips
+
+   c. For a given tower return count of 
+                       - very bad strips
+                       - bad strips (including the very bad)
+
+   d. Same as c. but for (tower,tray)
+
+   e. Same as c. but for (tower, tray, unilayer)
+
+   f. For (tower, tray, unilayer) return list of
+                       - very bad strips
+                       - bad strips (including the very bad)
+
+4. Quasi-visitor?  e.g., call back client for each 
+   (tower, tray, unilayer) with bad strips, so client doesn't have
+   to deal with intermediate internal structure.  Probably only need
+   public classes for the whole data set (BadStrips) and for
+   a unilayer.
+   
+
+Because of 2., might want to have a base class which implements
+the query methods for the <generic> part of a calibration.
+Then BadStrips would inherit from it, as would the various 
+top-level CAL calibration classes.
+
+Or, maybe better, define a separate class for the <generic> part and 
+let objects of the BadStrips class (and objects of other calib. types)
+"own" one of these objects.
+
+-------------------------------------------------------------------------
+
+          Concerning CAL Calib data (ROOT)
+
+1. Same class to represent generic stuff as for BadStrips
+
+2. calibUtil class probably just reads in ROOT file; not clear we
+   even need any sort of customized streamer function.
+
+
+
+
+
+
+-------------------------------------------------------------------------
+
+                Concerning Gaudi classes -- BadStrips
+                
+These classes won't live in calibUtil.
+
+-------------------------------------------------------------------------
+
+        Concerning Gaudi classes -- calorimeter calibration data
+                
+These classes won't live in calibUtil.
+
