@@ -99,11 +99,11 @@ namespace LdfEvent{
         void setTkrReconBit() { m_flags |= TKRRECON; };
         unsigned int eventFlags() const { return m_flags; };
         bool goodEvent() const { return (m_flags == 0); };
-        bool badEventSeq() const { return (m_flags && EVTSEQ); };
-        bool badTkrRecon() const { return (m_flags && TKRRECON); };
+        bool badEventSeq() const { return (m_flags & EVTSEQ); };
+        bool badTkrRecon() const { return (m_flags & TKRRECON); };
         bool badEvent() const { return (m_flags != 0); } ;
-        bool packetError() const { return (m_flags && PACKETERROR); };
-        bool summaryError() const { return (m_flags && SUMMARYERROR); };
+        bool packetError() const { return (m_flags & PACKETERROR); };
+        bool summaryError() const { return (m_flags & SUMMARYERROR); };
 
         unsigned long eventSequence() const {
             unsigned eventNumber = EventSummary::eventNumber(m_summary);

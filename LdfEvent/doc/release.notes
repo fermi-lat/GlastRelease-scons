@@ -3,6 +3,7 @@ Package LdfEvent
 Coordinator:H.Kelly
 @verbatim
 
+v2r5p1  04-Jan-2005 HMK Fix up use of && versus &
 v2r5    22-Dec-2004 HMK Set up CLIDs as is now down in Event package
 v2r4    24-Nov-2004 HMK Store tower and layer/gtcc for CAL/TKR diagnostic
 v2r3    19-Nov-2004 HMK Define new TKRRECON bit in event flag

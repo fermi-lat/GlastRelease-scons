@@ -1,5 +1,5 @@
 package LdfEvent
-version v2r5
+version v2r5p1
 
 use GaudiInterface * IExternal
 use GlastPolicy v*
