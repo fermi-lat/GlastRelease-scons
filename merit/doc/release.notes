@@ -4,7 +4,7 @@
  * package manager:T.Burnett
  * $Id$
  *
-
+ *  v6r5    THB  30-may-03 Classification integrated--4 new variables, logic to set them
  *  v6r4    THB  15-may-03 Sets up classification (not run yet)
  *  v6r3p2  THB  10-may-03 fix test program with new names
  *  v6r3p1  THB  09-may-03 added clasification  code
