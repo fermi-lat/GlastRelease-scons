@@ -157,7 +157,7 @@ StatusCode RootTupleSvc::addItem(const std::string & tupleName,
     if( m_tree.find(treename)==m_tree.end()){
         // create new tree
         m_tree[treename]=new TTree(treename.c_str(), m_title.value().c_str());
-        log << "Creating new tree " << treename << endreq;
+        log << MSG::INFO << "Creating new tree " << treename << endreq;
     }
     m_tree[treename]->Branch(itemName.c_str(), &m_floats.back(), itemName.c_str());
     m_pdoubles.push_back(val);
