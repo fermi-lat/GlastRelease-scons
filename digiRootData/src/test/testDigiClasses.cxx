@@ -51,6 +51,10 @@ int checkDigiEvent(DigiEvent *evt, UInt_t ievent) {
         return -1;
     }
 
+    if (!floatInRange(evt->getLiveTime(), randNum*ievent) ) {
+        std::cout << "LiveTime is wrong: " << evt->getLiveTime() << std::endl;
+        return -1;
+    }
     if (evt->getFromMc() != fromMc) {
         std::cout << "From MC flag is wrong" << std::endl;
         return -1;
@@ -507,7 +511,7 @@ int write(char* fileName, int numEvents) {
         L1T level1(13, triRowBits);
         EventSummaryData summary(0);
         summary.initEventFlags(1);
-        ev->initialize(ievent, runNum, randNum*ievent, level1, summary, fromMc);
+        ev->initialize(ievent, runNum, randNum*ievent, randNum*ievent, level1, summary, fromMc);
         Gem myGem;
         GemTileList tileList(20, 21, 22, 23, 24, 25, 26);
         myGem.initTrigger(1, 2, 3, 4, 5, 6, tileList);

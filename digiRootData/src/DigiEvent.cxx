@@ -83,10 +83,12 @@ DigiEvent::~DigiEvent() {
 }
 
 void DigiEvent::initialize(UInt_t eventId, UInt_t runId, Double_t time, 
-                           const L1T& level1, const EventSummaryData &summary, Bool_t fromMc) {
+                          Double_t liveTime, const L1T& level1, 
+                          const EventSummaryData &summary, Bool_t fromMc) {
     m_eventId = eventId;
     m_runId = runId;
     m_timeStamp = time;
+    m_liveTime = liveTime;
     m_fromMc = fromMc;
     m_levelOneTrigger = level1;
     m_summary = summary;
@@ -103,6 +105,7 @@ void DigiEvent::Clear(Option_t *option) {
     m_eventId = 0;
     m_runId = 0;
     m_timeStamp = 0.0;
+    m_liveTime = 0.0;
     m_ebfTimeSec = 0;
     m_ebfTimeNanoSec = 0;
     m_ebfUpperPpcTimeBase = 0;
@@ -152,7 +155,7 @@ void DigiEvent::Print(Option_t *option) const {
     TObject::Print(option);
     cout.precision(2);
     cout << "Run, Event: " << m_runId << ", " << m_eventId
-        << " Time: " << m_timeStamp << endl;
+        << " Time: " << m_timeStamp << " LiveTime: " << m_liveTime << endl;
     m_levelOneTrigger.Print();
     m_summary.Print();
     if ( (m_calDigiCol) && (m_calDigiCol->GetEntries() > 0)) {

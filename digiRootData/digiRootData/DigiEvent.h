@@ -22,6 +22,7 @@
  * - Run Id
  * - Event Id
  * - Time stamp
+ * - Live Time
  * - Flag denoting if this data was simulated or not
  * - Level One Trigger
  * - Collection of AcdDigi objects
@@ -47,7 +48,8 @@ public:
     virtual ~DigiEvent();
 
     void initialize(UInt_t eventId, UInt_t runId, Double_t time, 
-        const L1T& level1, const EventSummaryData &summary, Bool_t fromMc=true);
+        Double_t liveTime, const L1T& level1, const EventSummaryData &summary, 
+        Bool_t fromMc=true);
 
     void Clear(Option_t *option="");
  
@@ -60,7 +62,8 @@ public:
     /// Access the run number
     inline UInt_t getRunId() { return m_runId; };
 
-   inline Double_t getTimeStamp() { return m_timeStamp; };
+    inline Double_t getTimeStamp() { return m_timeStamp; };
+    inline Double_t getLiveTime() { return m_liveTime; };
 
     inline UInt_t getEbfTimeSec() const { return m_ebfTimeSec; };
     inline UInt_t getEbfTimeNanoSec() const { return m_ebfTimeNanoSec; };
@@ -196,8 +199,9 @@ private:
     UInt_t m_ebfLowerPpcTimeBase;
 
     Gem m_gem;
+    Double_t m_liveTime;
 
-    ClassDef(DigiEvent,12) // Storage for Raw(Digi) event and subsystem data
+    ClassDef(DigiEvent,13) // Storage for Raw(Digi) event and subsystem data
 }; 
  
 #endif
