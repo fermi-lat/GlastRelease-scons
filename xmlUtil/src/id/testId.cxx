@@ -26,7 +26,7 @@ void testQuery(xmlUtil::IdDict* dict);
 int testConverter(xmlUtil::IdConverter* converter);
 
 /*!
-    Main program for the eval application.
+    Main program for the testId application.
     \param arg1 is the input xml file, defaults to ../xml/test-dict.xml
 */
 int main(int argc, char* argv[]) {
@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
   std::cout << "Dictionary is " << ( (valid) ? "VALID" : "INVALID" );
   std::cout << std::endl;
 
-  // Test query functions
+  // Test query and translation functions
   testQuery(dict);
 
   // Register dictionary
@@ -142,6 +142,9 @@ void testQuery(xmlUtil::IdDict* dict) {
   std::cout << "Original: " << okId << std::endl;
   std::cout << "Reconstituted: " << std::endl << (*(dict->getNamedId(okId)));
 
+  std::cout << std::endl << "Just the names: " << std::endl << 
+    dict->getNameSeqString(okId) << std::endl;
+
   valid = dict->idOk(badId);
   std::cout << "badId is " <<  ( (valid) ? "VALID" : "INVALID" );
   std::cout << std::endl;
@@ -175,6 +178,10 @@ void testQuery(xmlUtil::IdDict* dict) {
   std::cout << "..stripped: " << (*stripped);
   std::cout << "..reconstitued: " << std::endl 
             << (*(dict->getNamedId(*stripped)));
+
+  std::cout << std::endl << "Just the names from stripped: " << std::endl << 
+    dict->getNameSeqString(*stripped) << std::endl;
+
 
   valid = dict->idOk(nIdBadName);
   std::cout << "nIdBadName is " <<  ( (valid) ? "VALID" : "INVALID" );
