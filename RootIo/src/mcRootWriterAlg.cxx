@@ -179,7 +179,7 @@ StatusCode mcRootWriterAlg::writeMcEvent() {
     StatusCode sc = StatusCode::SUCCESS;
 
     // Retrieve the Event data for this event
-    SmartDataPtr<Event> evt(eventSvc(), EventModel::Event);
+    SmartDataPtr<Event::EventHeader> evt(eventSvc(), EventModel::EventHeader);
 
     if (!evt) return sc;
 
@@ -277,7 +277,7 @@ StatusCode mcRootWriterAlg::writeMcPositionHits() {
     
     log << MSG::DEBUG << "Number of McPositionHits in the event = " << posHits->size() << endreq;
     
-    McPositionHitVector::const_iterator hit;
+    Event::McPositionHitVector::const_iterator hit;
     for (hit = posHits->begin(); hit != posHits->end(); hit++ ) {
     
         log << MSG::DEBUG << (*hit)->fillStream(log.stream()) << endreq;
@@ -349,7 +349,7 @@ StatusCode mcRootWriterAlg::writeMcIntegratingHits() {
     log << MSG::DEBUG << "Number of McIntegratingHits in the event = " 
         << intHits->size() << endreq;
     
-    McIntegratingHitVector::const_iterator hit;
+    Event::McIntegratingHitVector::const_iterator hit;
     for (hit = intHits->begin(); hit != intHits->end(); hit++ ) {
 
         log << MSG::DEBUG << (*hit)->fillStream(log.stream()) << endreq;
