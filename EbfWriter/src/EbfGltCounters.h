@@ -1,6 +1,7 @@
 #ifndef EBF_GLTCOUNTERS_H
 #define EBF_GLTCOUNTERS_H
 
+#include <math.h>
 
 /**
  *  @class EbfGltCounters
