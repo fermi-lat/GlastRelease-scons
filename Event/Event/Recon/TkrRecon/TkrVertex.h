@@ -59,8 +59,8 @@ public:
     int  getNumTracks()                {return m_tracks.size();}
 
     // Pointers to track info
-    TkrFitColPtr getTrackIterBegin()   {return m_tracks.begin();}
-    TkrFitColPtr getTrackIterEnd()     {return m_tracks.end();}
+    TkrFitTrackCol::iterator getTrackIterBegin()   {return m_tracks.begin();}
+    TkrFitTrackCol::iterator getTrackIterEnd()     {return m_tracks.end();}
 
     /// Utilities 
     void writeOut(MsgStream& log) const; 
@@ -75,7 +75,7 @@ private:
     int          m_firstLayer;
     int          m_itower;        
     
-    TkrFitCol    m_tracks;
+    TkrFitTrackCol    m_tracks;
 };
 
 //typedef for the Container

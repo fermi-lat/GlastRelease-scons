@@ -4,6 +4,8 @@
 
 #include <vector>
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/ContainedObject.h"
 #include "Event/Recon/TkrRecon/TkrRecInfo.h"
 #include "Event/Recon/TkrRecon/TkrFitPlane.h"
 #include "Event/Recon/TkrRecon/TkrCluster.h"
@@ -25,7 +27,7 @@
 */
 namespace Event {  // NameSpace
 
-class TkrFitTrack: public TkrRecInfo
+  class TkrFitTrack: public TkrRecInfo, virtual public ContainedObject
 {    
 public:
     /// Constructor/destructor for the class
@@ -97,9 +99,8 @@ protected:
     TkrFitPlaneCol m_hits;
 };
 
-//Following typedefs for containing fit track objects
-typedef std::vector<TkrFitTrack*>            TkrFitCol;
-typedef std::vector<TkrFitTrack*>::iterator  TkrFitColPtr;
+//typedef for the Container
+  typedef ObjectVector<TkrFitTrack>     TkrFitTrackCol;
 
 }; //Namespace
 
