@@ -29,4 +29,13 @@
   <prim name="eTKRSiTop" value="1" uType="count">Field value for Si field
 (top of tray) </prim>
   <prim name="eTKRCnv" value="2" uType="count">Field value for converter</prim>
+  <prim name="eTKRCoreClose" value="3" uType="count">Field value for 
+core-closeout layer</prim>
+  <prim name="eTKRBotFace" value="4" uType="count">Field value for 
+bottom face sheet and surrounding inactive materials</prim>
+  <prim name="eTKRTopFace" value="5" uType="count">Field value for 
+top face sheet and surrounding inactive materials</prim>
+  <prim name="eTKRBias" value="6" uType="count">Field value for 
+bias board.</prim>
 </primCategory>
+

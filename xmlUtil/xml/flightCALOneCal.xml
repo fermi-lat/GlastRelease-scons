@@ -98,22 +98,22 @@
       <!-- top cell wall -->
       <posXYZ volume="cellHorWall"
               ZREF="cellHorWall_dz" >
-        <idField name="fCALCellCmp" valueREF="eCellWall" />
+        <idField name="fCALCellCmp" valueREF="eCellTop" />
       </posXYZ>
       <!-- bottom cell wall -->
       <posXYZ volume="cellHorWall"
               ZREF="cellHorWall_dzn" >
-        <idField name="fCALCellCmp" valueREF="eCellWall" />
+        <idField name="fCALCellCmp" valueREF="eCellBot" />
       </posXYZ>
       <!-- pos side cell wall -->
       <posXYZ volume="cellVertWall"
               YREF="cellVertWall_dy" >
-        <idField name="fCALCellCmp" valueREF="eCellWall" />
+        <idField name="fCALCellCmp" valueREF="eCellRight" />
       </posXYZ>
       <!-- neg side cell wall -->
       <posXYZ volume="cellVertWall"
               YREF="cellVertWall_dyn" >
-        <idField name="fCALCellCmp" valueREF="eCellWall" />
+        <idField name="fCALCellCmp" valueREF="eCellLeft" />
       </posXYZ>
 
 

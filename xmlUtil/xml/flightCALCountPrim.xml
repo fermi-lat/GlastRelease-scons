@@ -17,6 +17,12 @@ cell cmp field diode(plus, small)</prim>
 cell cmp field diode(minus, large)</prim>
   <prim name="eDiodePLarge" value="4" uType="count">idField value for CAL
 cell cmp diode(plus, large)</prim>
-  <prim name="eCellWall" value="5" uType="count">idField value for CAL
-cell component for cell wall. </prim>
+  <prim name="eCellRight" value="5" uType="count">one of 4 idField values
+ for CAL cell wall in fCALCellCmp field. </prim>
+  <prim name="eCellTop" value="6" uType="count">one of 4 idField values
+ for CAL cell wall in fCALCellCmp field. </prim>
+  <prim name="eCellLeft" value="7" uType="count">one of 4 idField values
+ for CAL cell wall in fCALCellCmp field. </prim>
+  <prim name="eCellBot" value="8" uType="count">one of 4 idField values
+ for CAL cell wall in fCALCellCmp field. </prim>
 </primCategory>

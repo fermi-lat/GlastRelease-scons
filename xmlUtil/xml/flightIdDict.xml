@@ -69,7 +69,10 @@
         <vEnumVal valueREF="eDiodePSmall" />
         <vEnumVal valueREF="eDiodeMLarge" />
         <vEnumVal valueREF="eDiodePLarge" />
-        <vEnumVal valueREF="eCellWall" />
+        <vEnumVal valueREF="eCellRight" />
+        <vEnumVal valueREF="eCellTop" />
+        <vEnumVal valueREF="eCellLeft" />
+        <vEnumVal valueREF="eCellBot" />
       </vList>
     </field>
 
@@ -86,14 +89,35 @@
       <vMinMax min="0" maxREF="maxTray" />
     </field>
 
+    <!-- fields for all the boxes which might appear in a tray -->
     <field name="fTKRTrayCmp" >
       <vList>
         <vEnumVal valueREF="eTKRSiBottom" />
         <vEnumVal valueREF="eTKRSiTop" />
         <vEnumVal valueREF="eTKRCnv" />
+        <vEnumVal valueREF="eTKRCoreClose" />
+        <vEnumVal valueREF="eTKRBotFace"  />
+        <vEnumVal valueREF="eTKRTopFace" />
+        <vEnumVal valueREF="eTKRBias" />
       </vList>
     </field>
 
+    <!-- field for subcomponents of anything which consists of
+         a subset of 4 border pieces and a center.  Used for
+         Core/closeout. Note in case the
+         orientation is in the XY plane, "bottom" is to be
+         interpreted as negative Y; otherwise "bottom"
+         means negative Z.  Go around counterclockwise.-->
+    <field name="fBorderCmp" >
+      <vList>
+        <vEnumVal  valueREF="eCenter" />
+        <vEnumVal  valueREF="eRight" />
+        <vEnumVal  valueREF="eTop"  />
+        <vEnumVal  valueREF="eLeft"  />
+        <vEnumVal  valueREF="eBottom" />
+      </vList>
+    </field>
+     
     <field name="fTopObjects" >
       <vList>
         <vEnumVal valueREF="eRootLAT" />
@@ -115,12 +139,6 @@
           <dictNode fieldName="fTowerX" >
             <dictNode fieldName="fTowerObjects" >
 
-              <!-- CAL non-detector  -->
-              <dictNode fieldName="fCALStructural" >
-                <pValues>
-                  <vEnumVal valueREF="eTowerCAL" />
-                </pValues>
-              </dictNode>
 
               <!-- CAL detector  -->
               <dictNode fieldName="fLayer" >
@@ -135,6 +153,19 @@
                 </dictNode> 
               </dictNode>
 
+              <!-- CAL non-detector  -->
+              <dictNode fieldName="fCALStructural" >
+                <pValues>
+                  <vEnumVal valueREF="eTowerCAL" />
+                </pValues>
+                <vList>
+                  <vEnumVal valueREF="eBottomFrame" />
+                  <vEnumVal valueREF="eBottomPlate" />
+                  <vEnumVal valueREF="eTopFrame" />
+                  <vEnumVal valueREF="eTopPlate" />
+                </vList> 
+              </dictNode>
+
               <!-- TKR  -->
               <!-- Simplify by lumping all tray identifiers together.
                   Could constrain things a bit further by keeping
@@ -142,10 +173,21 @@
                   don't bother (see version 1.8 or earlier of this 
                   file for details on how this is done) -->
               <dictNode fieldName="fTKRTray">
+                <pValues>
+                  <vEnumVal valueREF="eTowerTKR" />
+                </pValues>
                 <dictNode fieldName="fMeasure">
                   <dictNode fieldName="fTKRTrayCmp" >
                     <dictNode fieldName="fLadder" >
+                      <pValues>
+                        <vMinMax minREF="eTKRSiBottom" maxREF="eTKRSiTop" />
+                      </pValues>
                       <dictNode fieldName="fWafer" />
+                    </dictNode>
+                    <dictNode fieldName="fBorderCmp" >
+                      <pValues>
+                        <vEnumVal valueREF="eTKRCoreClose" />
+                      </pValues>
                     </dictNode>
                   </dictNode>
                 </dictNode>

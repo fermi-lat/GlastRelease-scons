@@ -169,32 +169,52 @@
 <!-- Dimensions of core+closeout for super-GLAST are the same as
     above, but core box is a different material  -->
     <composition name="TKRCoreSup" envelope="TKRCoreRegEnv">
-      <posXYZ volume="TKRCoreSupBox" />
+      <posXYZ volume="TKRCoreSupBox" >
+        <idField name="fBorderCmp" value="eCenter" />
+      </posXYZ>
       <posXYZ volume="TKRCloseoutRegLong"
-              YREF="TKRCloseout_dt" />
+              YREF="TKRCloseout_dt" >
+        <idField name="fBorderCmp" value="eTop" />
+      </posXYZ>
       <posXYZ volume="TKRCloseoutRegLong"
-              YREF="TKRCloseout_dtn" />
+              YREF="TKRCloseout_dtn" >
+        <idField name="fBorderCmp" value="eBottom" />
+      </posXYZ>
       <posXYZ volume="TKRCloseoutRegShort"
               zrot="90"
-              XREF="TKRCloseout_dt" />
+              XREF="TKRCloseout_dt" >
+        <idField name="fBorderCmp" value="eRight" />
+      </posXYZ>
       <posXYZ volume="TKRCloseoutRegShort"
               zrot="90"
-              XREF="TKRCloseout_dtn" />
+              XREF="TKRCloseout_dtn" >
+        <idField name="fBorderCmp" value="eLeft" />
+      </posXYZ>
     </composition>
 
 <!-- Now same thing for outer tray cores (regular core material only) -->
     <composition name="TKRCoreOuter" envelope="TKRCoreOuterEnv">
-      <posXYZ volume="TKRCoreOuterBox" />
+      <posXYZ volume="TKRCoreOuterBox" >
+        <idField name="fBorderCmp" value="eCenter" />
+      </posXYZ>
       <posXYZ volume="TKRCloseoutOuterLong"
-              YREF="TKRCloseout_dt" />
+              YREF="TKRCloseout_dt" >
+        <idField name="fBorderCmp" value="eTop" />
+      </posXYZ>
       <posXYZ volume="TKRCloseoutOuterLong"
-              YREF="TKRCloseout_dtn" />
+              YREF="TKRCloseout_dtn" >
+        <idField name="fBorderCmp" value="eBottom" />
+      </posXYZ>
       <posXYZ volume="TKRCloseoutOuterShort"
               zrot="90"
-              XREF="TKRCloseout_dt" />
+              XREF="TKRCloseout_dt" >
+        <idField name="fBorderCmp" value="eRight" />
+      </posXYZ>
       <posXYZ volume="TKRCloseoutOuterShort"
               zrot="90"
-              XREF="TKRCloseout_dtn" />
+              XREF="TKRCloseout_dtn" >
+        <idField name="fBorderCmp" value="eLeft" />
+      </posXYZ>
     </composition>
 
 
@@ -214,8 +234,6 @@
          YREF="TKRBiasWidth"
          ZREF="biasGlueThick"
          materialREF="TKRBotBiasMat" />
-
-  <!-- ****** I am here in update **** -->
 
     <box name="TKRTopFaceReg"
          XREF="faceWidth"
@@ -319,9 +337,15 @@
 
     <!-- Make a stack for the bottom tray -->
     <stackZ name="trayBot" >
-      <axisPos volume="TKRFaceMin" />
-      <axisPos volume="TKRCoreOuter" />
-      <axisPos volume="TKRTopFaceReg" />
+      <axisPos volume="TKRFaceMin" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
+      </axisPos>
+      <axisPos volume="TKRCoreOuter" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
+      </axisPos>
+      <axisPos volume="TKRTopFaceReg" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRTopFace" />
+      </axisPos>
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" />
       </axisPos>
@@ -332,10 +356,18 @@
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" />
       </axisPos>
-      <axisPos volume="TKRBiasBox" />
-      <axisPos volume="TKRFaceMin" />
-      <axisPos volume="TKRCoreReg" />
-      <axisPos volume="TKRTopFaceReg" />
+      <axisPos volume="TKRBiasBox" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBias" />
+      </axisPos>
+      <axisPos volume="TKRFaceMin" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
+      </axisPos>
+      <axisPos volume="TKRCoreReg" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
+      </axisPos>
+      <axisPos volume="TKRTopFaceReg" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRTopFace" />
+      </axisPos>
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" /> 
       </axisPos>
@@ -346,13 +378,21 @@
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" />
       </axisPos>
-      <axisPos volume="TKRBiasBox" />
+      <axisPos volume="TKRBiasBox" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBias" />
+      </axisPos>
       <axisPos volume="convSuperArray" >
         <idField name="fTKRTrayCmp" valueREF="eTKRCnv" />
       </axisPos>
-      <axisPos volume="TKRBotFaceSup" />
-      <axisPos volume="TKRCoreSup" />
-      <axisPos volume="TKRTopFaceSup" />
+      <axisPos volume="TKRBotFaceSup" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
+      </axisPos>
+      <axisPos volume="TKRCoreSup" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
+      </axisPos>
+      <axisPos volume="TKRTopFaceSup" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
+      </axisPos>
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" />
       </axisPos>
@@ -363,13 +403,21 @@
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" />
       </axisPos>
-      <axisPos volume="TKRBiasBox" />
+      <axisPos volume="TKRBiasBox" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBias" />
+      </axisPos>
       <axisPos volume="convRegArray"  >
         <idField name="fTKRTrayCmp" valueREF="eTKRCnv" />
       </axisPos>
-      <axisPos volume="TKRBotFaceReg" />
-      <axisPos volume="TKRCoreReg" />
-      <axisPos volume="TKRTopFaceReg" />
+      <axisPos volume="TKRBotFaceReg" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
+      </axisPos>
+      <axisPos volume="TKRCoreReg" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
+      </axisPos>
+      <axisPos volume="TKRTopFaceReg" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRTopFace" />
+      </axisPos>
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" />
       </axisPos>
@@ -380,13 +428,22 @@
       <axisPos volume="SiLayer" >
 	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" /> 
       </axisPos>
-      <axisPos volume="TKRBiasBox" />
+      <axisPos volume="TKRBiasBox" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBias" />
+      </axisPos>
       <axisPos volume="convRegArray" >
         <idField name="fTKRTrayCmp" valueREF="eTKRCnv" />
       </axisPos> 
-      <axisPos volume="TKRBotFaceReg" />
-      <axisPos volume="TKRCoreOuter" />
-      <axisPos volume="TKRFaceMin" />
+      <axisPos volume="TKRBotFaceReg" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRBotFace" />
+      </axisPos>
+      <axisPos volume="TKRCoreOuter" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRCoreClose" />
+      </axisPos>
+      <axisPos volume="TKRFaceMin" >
+	<idField name="fTKRTrayCmp" valueREF="eTKRTopFace" />
+      </axisPos>
+
     </stackZ>
 
     <!-- make a tracker by stacking up the trays -->
