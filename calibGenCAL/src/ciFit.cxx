@@ -95,7 +95,7 @@ int ciFitData::FitData(void) {
 	 int nPtsMin = SPL_NPTSMIN[rng];
 
 	 // configure output stream format for rest of function
-	 std::cout.setf(ios_base::fixed);
+	 std::cout.setf(std::ios_base::fixed);
 	 std::cout.precision(2);
 
 	 for (int xtal = 0; xtal < N_XTALS; xtal++)
@@ -204,7 +204,7 @@ int ciFitData::WriteSplinesTXT(const char *fileName) {
 	 return -1;
   }
   outFile.precision(2);
-  outFile.setf(ios_base::fixed);
+  outFile.setf(std::ios_base::fixed);
 
   for (int xtal = 0; xtal < N_XTALS; xtal++) 
 	 for (int lyr = 0; lyr < N_LYRS; lyr++)
@@ -315,7 +315,7 @@ int ciFitData::WriteSplinesXML(const char *fileName) {
   // main data loop
   //
   
-  xmlFile.setf(ios_base::fixed);
+  xmlFile.setf(std::ios_base::fixed);
   xmlFile.precision(2);
   // TOWER // currently only using 1 tower.
   xmlFile << std::endl;
@@ -328,7 +328,7 @@ int ciFitData::WriteSplinesXML(const char *fileName) {
 		xmlFile << "   <xtal iXtal=\"" << xtal << "\">" << std::endl;
 		// FACE //
 		for (int face = 0; face < N_FACES; face++) {
-		  char *facestr = (face == CalXtalId::NEG) ? "NEG" : "POS";
+		  const char *facestr = (face == CalXtalId::NEG) ? "NEG" : "POS";
 		  xmlFile << "    <face end=\"" << facestr << "\">" << std::endl;
 		  // RANGE //
 		  for (int rng = 0; rng < N_RNGS; rng++) {
@@ -398,7 +398,6 @@ RootCI::RootCI(const char *digiFileName, ciFitData  *cfData) :
 
 // default dstor
 RootCI::~RootCI(void) {
-  muonCalib::~muonCalib();
 }
 
 // right now we're presuming we know the DAC settings
