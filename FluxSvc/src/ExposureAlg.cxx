@@ -58,7 +58,8 @@ private:
 
     double m_lasttime; //time value to hold time between events;
     StringProperty m_source_name;
-    StringProperty m_file_name;
+    StringProperty m_pointing_history_output_file;
+	StringProperty m_pointing_history_input_file;
 
     IFluxSvc*   m_fluxSvc;
     IFlux *     m_flux;
@@ -80,7 +81,8 @@ ExposureAlg::ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator)
 {
     // declare properties with setProperties calls
     declareProperty("source_name",  m_source_name="default");
-    declareProperty("file_name",  m_file_name="");
+    declareProperty("pointing_history_output_file",  m_pointing_history_output_file="");
+	declareProperty("pointing_history_input_file",  m_pointing_history_input_file="");
 
 }
 
@@ -99,8 +101,14 @@ StatusCode ExposureAlg::initialize(){
         return StatusCode::FAILURE;
     }
 
-    if(! m_file_name.value().empty() ){
-        m_out = new std::ofstream(m_file_name.value().c_str());
+	//set the input file to be used as the pointing database
+	if(! m_pointing_history_input_file.value().empty() ){
+		m_fluxSvc->setPointingHistoryFile(m_pointing_history_output_file.value().c_str());
+    }
+
+	//set the output file (pointing information) to be written.
+    if(! m_pointing_history_output_file.value().empty() ){
+        m_out = new std::ofstream(m_pointing_history_output_file.value().c_str());
     }
 
     return sc;
@@ -249,8 +257,7 @@ StatusCode ExposureAlg::execute()
     if( m_out !=0) {
         std::ostream& out = *m_out;
         out << std::setw(14) << std::setprecision(14) 
-            <<intrvalstart <<'\t'
-            <<intrvalend <<'\t';
+            <<intrvalstart <<'\t';
         out << std::setw(9) << std::setprecision(7)
             << posx<<'\t';
         out<< posy<<'\t';
@@ -261,20 +268,9 @@ StatusCode ExposureAlg::execute()
         out<<decx<<'\t';
         out<<razenith<<"\t";
         out<<deczenith <<'\t';
-        out<<"1"<<'\t';
-        out<<livetime <<'\t';
-        out<<SAA<<'\t';
         out<<lon <<'\t';
         out<<lat <<'\t';
-        out<<alt <<'\t';
-        out<<curDir.l() <<'\t';
-        out<<curDir.b()<<'\t';
-        out<<xDir.l() <<'\t';
-        out<<xDir.b()<<'\t';
-        out<< rasun <<"\t"<<decsun  <<'\t';
-        out<< sunDir().x() <<"\t"<< sunDir().y()  <<"\t"<< sunDir().z()  <<'\t';
-        out<<ramoon <<"\t"<<decmoon   <<std::endl;
-
+        out<<alt <<'\t' << std::endl;
 
     }
     setFilterPassed( false );
