@@ -953,8 +953,9 @@ static int nominateTowers (const EBF_directory *dir)
                */
                xy11 = xy00 >> 9;
                xy22 = xy00 << 1;
-               if       (xy00 & xy11  & xy22) tcids = 0x80000000 >> cid;
-               else if ((xy00 | xy22) & xy11) tcids = 0x00008000 >> cid;
+               /* Fix recommended by David to catch all towers */
+               if       (xy00 & xy11  & xy22) tcids |= 0x80000000 >> cid;
+               else if ((xy00 | xy22) & xy11) tcids |= 0x00008000 >> cid;
            }
        }
    }
