@@ -32,6 +32,7 @@ library RootIo  $(root_packages_import) -s=../RootIo $(source) -s=../src $(sourc
 apply_pattern package_test
 apply_pattern package_Cshlibflags
 
+public
 #specify these to disable rootcint portion of vcproj_library_header set by RootPolicy
 
 macro rootcint_begin "" vsnet "<!--"
