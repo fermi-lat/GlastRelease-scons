@@ -239,7 +239,7 @@
     </source>
 
 	<!-- The constructed diffuse source-->
-    <source name="totaldiffuse" flux = "10000.">
+    <source name="totaldiffuse" flux = "1000.">
         <nestedSource sourceRef="truediffusebackground"/>
     </source>
 

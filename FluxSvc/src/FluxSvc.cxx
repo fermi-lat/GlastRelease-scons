@@ -63,7 +63,7 @@ StatusCode FluxSvc::source(std::string name, IFlux*& flux) {
     
     flux =  new Flux(name);
     m_currentFlux = flux;
-    std::cout << "currentFluxPointer = " << flux << std::endl;
+    //std::cout << "currentFluxPointer = " << flux << std::endl;
     
     return StatusCode::SUCCESS;
 }

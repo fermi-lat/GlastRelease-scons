@@ -30,7 +30,7 @@ FluxTestAlg.source_name="default";
 //FluxAlg.source_name="chime";
 
 ApplicationMgr.EvtSel = "NONE";
-ApplicationMgr.EvtMax = 15000;
+ApplicationMgr.EvtMax = 1500;
 
 //==============================================================
 //

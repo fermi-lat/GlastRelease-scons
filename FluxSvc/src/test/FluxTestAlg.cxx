@@ -56,7 +56,7 @@ private:
     IFlux* m_flux;
     std::string m_source_name;
     IParticlePropertySvc * m_partSvc;
-    double m_exposedArea[180][90];
+    double m_exposedArea[360][180];
     double m_currentTime;
     double m_passedTime;  //time passed during this event
     std::vector<exposureSet> findExposed(double l,double b, double deltat);
@@ -226,14 +226,14 @@ StatusCode FluxTestAlg::finalize() {
 std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b,double deltat){
     std::vector<exposureSet> returned;
     double angularRadius = 15;
-    for(int i= l-angularRadius ; i<=l+angularRadius ; i+=2){
-        for(int j= b-angularRadius ; j<=b+angularRadius ; j+=2){
+    for(int i= l-angularRadius ; i<=l+angularRadius ; i++){
+        for(int j= b-angularRadius ; j<=b+angularRadius ; j++){
             
             if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
                 //set up the point, and stick it into the vector
                 exposureSet point;
-                point.x = i/2; //yes, this is doing an implicit cast.
-                point.y = j/2;  //these should be divided by two, but they're being shrunk for the current display.
+                point.x = i; //yes, this is doing an implicit cast.
+                point.y = j;
                 point.amount = deltat;
                 returned.push_back(point);
             }
@@ -265,14 +265,14 @@ void FluxTestAlg::displayExposure(){
     std::ofstream out_file("data.dat", std::ios::ate);
 
     int i,j;
-    for(i=0 ; i<180 ; i++){
-        std::strstream out;
-        for(j=0 ; j<90 ; j++){
-            out << m_exposedArea[i][j] << " ";
-            out_file << i << "  " << j << "  " << m_exposedArea[i][j] << std::endl;
+    for(i=0 ; i<360 ; i++){
+        //std::strstream out;
+        for(j=0 ; j<180 ; j++){
+            //out << m_exposedArea[i][j] << " ";
+            out_file << i << "  " << j-90 << "  " << m_exposedArea[i][j] << std::endl;
         }
-        out << std::endl;
-        std::cout << out.str();
+        //out << std::endl;
+        //std::cout << out.str();
     }
     out_file.close();
     //then use galacticHist to display the stuf in the file
