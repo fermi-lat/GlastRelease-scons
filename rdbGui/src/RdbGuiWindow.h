@@ -16,20 +16,22 @@
 
 #include <cstdio>
 
-
+class InsertDialog;
 
 
 // Main Window
 class RdbGUIWindow : public FXMainWindow {
   FXDECLARE(RdbGUIWindow)
 private:
+  FXMenuBar                      *uiMenuBar;               // The menubar
   FXComboBox                     *m_uiDBSelection;         // Showing current connection
   TableColumnList                *uiTblColList;            // List of tables and columns
   SQLBuffer                      *uiEditor;                // SQL editor
   FXbool                          m_shactive;              // Syntax Highlighting set or not
   LogText                        *uiLog;                   // Result log
   ResultTable                    *uiTable;                 // Result Table
-  ConnectionDialog               *m_dgNewCon;                   // Connection Dialog
+  ConnectionDialog               *m_dgNewCon;              // Connection Dialog
+  InsertDialog                   *m_dgInsert;              // Insert Dialog
   
   rdbModel::Manager              *m_rdbManager;            // Manager for the rdb
   rdbModel::XercesBuilder        *m_rdbBuilder;            // Builder of the rdb from the xml file
@@ -55,7 +57,8 @@ public:
     ID_TOGGLEAUTOCOMMIT,
     ID_COMMIT,
     ID_ABOUT,
-    ID_ROLLBACK 
+    ID_ROLLBACK, 
+    ID_INSERT
     };
 
   // Message handlers
@@ -66,6 +69,7 @@ public:
   long onQuit(FXObject*,FXSelector,void*);
   long onOpenConnection(FXObject*,FXSelector, void*);  
   long onCloseConnection(FXObject*,FXSelector, void*);
+  long onInsert(FXObject*,FXSelector, void*);
   // ..eccetera
   
 public:

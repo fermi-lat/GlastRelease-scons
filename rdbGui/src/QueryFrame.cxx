@@ -25,7 +25,7 @@ QueryFrame::QueryFrame(FXComposite *owner):
   // Matrix of FXComboBox 
   m_searchFrame = new FXMatrix(srcScrollWindow, 4, MATRIX_BY_COLUMNS|LAYOUT_FILL_X|
       LAYOUT_FILL_Y|FRAME_SUNKEN|FRAME_THICK);
-  m_searchFrame->setBackColor(FXRGB(255,255,255));
+  m_searchFrame->setBackColor(getApp()->getBackColor());
   
   new FXComboBox(m_searchFrame, 0, NULL, 0, FRAME_SUNKEN|FRAME_THICK|COMBOBOX_NORMAL|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);
   new FXComboBox(m_searchFrame, 0, NULL, 0, FRAME_SUNKEN|FRAME_THICK|COMBOBOX_NORMAL|LAYOUT_FILL_X|LAYOUT_FILL_COLUMN);

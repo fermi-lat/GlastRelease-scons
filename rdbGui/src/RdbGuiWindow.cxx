@@ -1,5 +1,6 @@
 
 #include "RdbGuiWindow.h"
+#include "InsertDialog.h"
 #include <vector>
 
 // Message Map RdbGUIWindow class
@@ -14,8 +15,9 @@ FXDEFMAP(RdbGUIWindow) RdbGUIWindowMap[]={
   FXMAPFUNC(SEL_SIGNAL,   RdbGUIWindow::ID_QUIT,               RdbGUIWindow::onQuit),
   FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_QUIT,               RdbGUIWindow::onQuit),
   FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_OPENCONNECTION,     RdbGUIWindow::onOpenConnection),
-  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_CLOSECONNECTION,    RdbGUIWindow::onCloseConnection) 
-  };
+  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_CLOSECONNECTION,    RdbGUIWindow::onCloseConnection), 
+  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_INSERT,             RdbGUIWindow::onInsert)
+};
 
 
 
@@ -34,7 +36,7 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   setSelector(ID_TITLE);
 
   // Menubar
-  FXMenuBar *uiMenuBar = new FXMenuBar(this, LAYOUT_SIDE_TOP|LAYOUT_FILL_X);
+  uiMenuBar = new FXMenuBar(this, LAYOUT_SIDE_TOP|LAYOUT_FILL_X);
 
   // Statusbar
   FXStatusBar *uiStatusBar = new FXStatusBar(this,
@@ -121,6 +123,11 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   new FXMenuCommand(uiSessmenu, "&Close connection\tCtl-]\tClose current database connection",
       NULL, this, ID_CLOSECONNECTION);
 
+  // Action menu
+  FXMenuPane *uiActionmenu = new FXMenuPane(this);
+  new FXMenuTitle(uiMenuBar, "&Action", NULL, uiActionmenu);
+  new FXMenuCommand(uiActionmenu, "&Insert\tCtl-I\tInsert a new row\tInsert a new row",
+    NULL, this, ID_INSERT);
 
   // Force some reasonable sizes to the layout manager
   uiTblColframe->setWidth(150);
@@ -141,6 +148,10 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   // Initialize connection dialog and mysql connection
   m_dgNewCon = new ConnectionDialog(this);
   m_connect = new rdbModel::MysqlConnection(uiLog->getOutStream(), uiLog->getErrStream());
+
+  // Initialize insert dialog 
+  m_dgInsert = new InsertDialog(this);
+
   
   // Initialize the rdb manager and it's builder
   m_rdbBuilder = new rdbModel::XercesBuilder();
@@ -153,6 +164,7 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
 // Destructor
 RdbGUIWindow::~RdbGUIWindow()
 {
+  delete uiMenuBar;
   delete m_uiDBSelection;
 }
 
@@ -278,6 +290,20 @@ long RdbGUIWindow::onCloseConnection(FXObject*,FXSelector, void*)
       m_uiDBSelection->removeItem(m_uiDBSelection->getCurrentItem());
     }
   return 1;  
+}
+
+long RdbGUIWindow::onInsert(FXObject*,FXSelector, void*)
+{
+  m_rdbManager->startVisitor(m_dgInsert);
+  m_dgInsert->show();
+  m_dgInsert->update();
+
+  if (m_dgInsert->execute(PLACEMENT_OWNER) != 0)
+  {
+    return 1; 
+  }
+
+  return 0;
 }
 
 void RdbGUIWindow::closeConnection()
