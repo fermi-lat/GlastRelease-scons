@@ -13,6 +13,9 @@
 #include "xml/IFile.h"
 #include "facilities/Util.h"
 
+#include "AcdTileList.h"
+
+#include <map>
 
 /** @class AcdDigiAlg
 * @brief Algorithm to convert from hit data stored as McPositionHits into digitization data 
@@ -34,8 +37,14 @@ public:
     StatusCode finalize();
         
 private:
+
+    void clear();
+
     /// Read data from the input XML file
     void getParameters();
+
+    /// add noise to all PMTs that exist (currently for tiles only)
+    void addNoise();
 
     /// Adjusts the deposited energy recorded in an ACD volume 
     /// based on the location of the hit
@@ -57,6 +66,8 @@ private:
     /// access to the Glast Detector Service to read in geometry 
     /// constants from XML files
     IGlastDetSvc *m_glastDetSvc;
+
+    AcdTileList m_tiles;
     
     /// standard deviation for gaussian noise for PHA, 
     /// veto and CNO discriminators
@@ -96,6 +107,20 @@ private:
     double m_edge_slope;
     /// y-intercept of the linear function used to estimate the edge effect
     double m_edge_intercept;
+
+    std::map<const idents::AcdId, double> m_energyDepMap;
+
+    std::map<const idents::AcdId, double> m_pmtA_toFullScaleMap;
+    std::map<const idents::AcdId, double> m_pmtA_phaMipsMap;
+    std::map<const idents::AcdId, double> m_pmtA_vetoMipsMap;
+    std::map<const idents::AcdId, double> m_pmtA_cnoMipsMap;
+
+    std::map<const idents::AcdId, double> m_pmtB_toFullScaleMap;
+    std::map<const idents::AcdId, double> m_pmtB_phaMipsMap;
+    std::map<const idents::AcdId, double> m_pmtB_vetoMipsMap;
+    std::map<const idents::AcdId, double> m_pmtB_cnoMipsMap;
+
+
 };
 
 #endif

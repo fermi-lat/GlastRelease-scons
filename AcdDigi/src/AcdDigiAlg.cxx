@@ -75,6 +75,13 @@ StatusCode AcdDigiAlg::initialize() {
         return sc;
     }
 
+    // get the list of layers, to be used to add noise to otherwise empty layers
+    m_tiles.setPrefix(m_glastDetSvc->getIDPrefix());
+    
+    m_glastDetSvc->accept(m_tiles);
+    log << MSG::INFO << "will add noise to "<< m_tiles.size() << " ACD tiles, ids from "
+        << m_tiles.front().name() << " to " << m_tiles.back().name() << endreq;
+
     return StatusCode::SUCCESS;
 }
 
@@ -89,6 +96,8 @@ StatusCode AcdDigiAlg::execute() {
     MsgStream   log( msgSvc(), name() );
     
     using namespace Event;
+
+    clear();
     
     SmartDataPtr<Event::McPositionHitCol> allhits(eventSvc(),EventModel::MC::McPositionHitCol );
 
@@ -132,6 +141,8 @@ StatusCode AcdDigiAlg::execute() {
     }
 
 
+    if (m_apply_noise) addNoise();
+
     // Now loop over the map of ACD VolId and their corresponding energies deposited
     std::map<idents::VolumeIdentifier, double>::const_iterator acdIt;
     for (acdIt = energyVolIdMap.begin(); acdIt != energyVolIdMap.end(); acdIt++) {
@@ -140,12 +151,13 @@ StatusCode AcdDigiAlg::execute() {
         idents::AcdId id(volId);
         
         double energyMevDeposited = acdIt->second;
+        m_energyDepMap[id] = energyMevDeposited;
+
         log << MSG::DEBUG << "tile volId found: " << volId.name() 
             << ", energy deposited: "<< energyMevDeposited<< " MeV" << endreq;
         
         double mips = util.convertMevToMips(energyMevDeposited);
-        
-        
+                
         // split the signal evenly between the 2 PMTs (A and B)
         double pmtA_mips = mips * 0.5;
         double pmtB_mips = mips - pmtA_mips;
@@ -173,6 +185,9 @@ StatusCode AcdDigiAlg::execute() {
             util.applyGains(id, pmtA_mipsToFullScale, pmtB_mipsToFullScale);
         }
         
+        m_pmtA_toFullScaleMap[id] = pmtA_mipsToFullScale;
+        m_pmtB_toFullScaleMap[id] = pmtB_mipsToFullScale;
+
         double pmtA_observedMips_pha = pmtA_mips;
         double pmtA_observedMips_veto = pmtA_mips;
         double pmtA_observedMips_cno = pmtA_mips;
@@ -183,55 +198,108 @@ StatusCode AcdDigiAlg::execute() {
         
         // If Gaussian noise is requested it, apply it here.
         // Noise is applied separately for pha, veto and CNO discriminators
-        if (m_apply_noise) {
-            pmtA_observedMips_pha += util.shootGaussian(m_noise_std_dev_pha);
+        if (m_apply_noise) { 
+            pmtA_observedMips_pha += m_pmtA_phaMipsMap[id];
             if (pmtA_observedMips_pha < 0.) pmtA_observedMips_pha = 0.;
-            pmtA_observedMips_veto += util.shootGaussian(m_noise_std_dev_veto);
+            pmtA_observedMips_veto += m_pmtA_vetoMipsMap[id];
             if (pmtA_observedMips_veto < 0.) pmtA_observedMips_veto = 0.;
-            pmtA_observedMips_cno += util.shootGaussian(m_noise_std_dev_cno);
+            pmtA_observedMips_cno += m_pmtA_cnoMipsMap[id];
             if (pmtA_observedMips_cno < 0.) pmtA_observedMips_cno = 0.;
             
-            pmtB_observedMips_pha += util.shootGaussian(m_noise_std_dev_pha);
+            pmtB_observedMips_pha += m_pmtB_phaMipsMap[id];
             if (pmtB_observedMips_pha < 0.) pmtB_observedMips_pha = 0.;
-            pmtB_observedMips_veto += util.shootGaussian(m_noise_std_dev_veto);
+            pmtB_observedMips_veto += m_pmtB_vetoMipsMap[id];
             if (pmtB_observedMips_veto < 0.) pmtB_observedMips_veto = 0.;
-            pmtB_observedMips_cno += util.shootGaussian(m_noise_std_dev_cno);
+            pmtB_observedMips_cno += m_pmtB_cnoMipsMap[id];
             if (pmtB_observedMips_cno < 0.) pmtB_observedMips_cno = 0.;
         }
         
+        // Save pha, veto, and CNO MIPs for use later
+        m_pmtA_phaMipsMap[id] = pmtA_observedMips_pha;
+        m_pmtB_phaMipsMap[id] = pmtB_observedMips_pha;
+
+        m_pmtA_vetoMipsMap[id] = pmtA_observedMips_veto;
+        m_pmtB_vetoMipsMap[id] = pmtB_observedMips_veto;
+
+        m_pmtA_cnoMipsMap[id] = pmtA_observedMips_cno;
+        m_pmtA_cnoMipsMap[id] = pmtB_observedMips_cno;
+
         // check that we're above low threshold, otherwise skip
-        if ((pmtA_observedMips_pha + pmtB_observedMips_pha) < m_low_threshold_mips) continue;
+        //if ((pmtA_observedMips_pha + pmtB_observedMips_pha) < m_low_threshold_mips) continue;
 
 
         // Now convert MIPs into PHA values for each PMT
-        unsigned short pmtA_pha = util.convertMipsToPha(pmtA_observedMips_pha, pmtA_mipsToFullScale);
-        unsigned short pmtB_pha = util.convertMipsToPha(pmtB_observedMips_pha, pmtB_mipsToFullScale);
+        //unsigned short pmtA_pha = util.convertMipsToPha(pmtA_observedMips_pha, pmtA_mipsToFullScale);
+        //unsigned short pmtB_pha = util.convertMipsToPha(pmtB_observedMips_pha, pmtB_mipsToFullScale);
         
+        // Initialize discriminators
+        //bool lowArr[2] = { true, true };
+        //bool vetoArr[2] = { false, false };
+        //bool highArr[2] = { false, false };
+        
+        // Set the discriminators if above threshold
+        //if (pmtA_observedMips_veto > m_veto_threshold_mips) vetoArr[0] = true;
+        //if (pmtB_observedMips_veto > m_veto_threshold_mips) vetoArr[1] = true;
+        
+      //  if (pmtA_observedMips_cno > m_high_threshold_mips) highArr[0] = true;
+        //if (pmtB_observedMips_cno > m_high_threshold_mips) highArr[1] = true;
+
+        //unsigned short phaArr[2] = { pmtA_pha, pmtB_pha };
+        
+        log << MSG::DEBUG << "AcdId: " << id.id() <<endreq;
+        
+
+        // Add this AcdDigi to the TDS collection
+        //digiCol->push_back(
+        //    new AcdDigi(
+        //    id, volId,
+        //    energyMevDeposited, phaArr, 
+        //    vetoArr, lowArr, highArr) );   
+        
+    } // end loop over MC hits
+
+    // Now fill the TDS with AcdDigis
+    for(AcdTileList::const_iterator it=m_tiles.begin(); it!=m_tiles.end(); ++it){
+        idents::VolumeIdentifier volId = *it;
+        idents::AcdId tileId(volId);
+        
+        // First check to see if this tile Id has a PHA value associated with PMT A
+        // If not, we do not need add an AcdDigi in the TDS for this tile
+        if (m_pmtA_phaMipsMap.find(tileId) == m_pmtA_phaMipsMap.end()) continue;
+
+        // Next check that the PHA values from both PMTs combined results in a value above low 
+        // threshold
+        if ((m_pmtA_phaMipsMap[tileId] + m_pmtB_phaMipsMap[tileId]) < m_low_threshold_mips) continue;
+
         // Initialize discriminators
         bool lowArr[2] = { true, true };
         bool vetoArr[2] = { false, false };
         bool highArr[2] = { false, false };
         
         // Set the discriminators if above threshold
-        if (pmtA_observedMips_veto > m_veto_threshold_mips) vetoArr[0] = true;
-        if (pmtB_observedMips_veto > m_veto_threshold_mips) vetoArr[1] = true;
+        if (m_pmtA_vetoMipsMap[tileId] > m_veto_threshold_mips) vetoArr[0] = true;
+        if (m_pmtB_vetoMipsMap[tileId] > m_veto_threshold_mips) vetoArr[1] = true;
         
-        if (pmtA_observedMips_cno > m_high_threshold_mips) highArr[0] = true;
-        if (pmtB_observedMips_cno > m_high_threshold_mips) highArr[1] = true;
-        
+        //if ((vetoArr[0] == false) && (vetoArr[1] == false)) continue;
+
+        if (m_pmtA_cnoMipsMap[tileId] > m_high_threshold_mips) highArr[0] = true;
+        if (m_pmtB_cnoMipsMap[tileId] > m_high_threshold_mips) highArr[1] = true;
+
+        // Now convert MIPs into PHA values for each PMT
+        unsigned short pmtA_pha = util.convertMipsToPha(m_pmtA_phaMipsMap[tileId], m_pmtA_toFullScaleMap[tileId]);
+        unsigned short pmtB_pha = util.convertMipsToPha(m_pmtB_phaMipsMap[tileId], m_pmtB_toFullScaleMap[tileId]);
+
         unsigned short phaArr[2] = { pmtA_pha, pmtB_pha };
-        
-        log << MSG::DEBUG << "AcdId: " << id.id() <<endreq;
-        
-        // Add this AcdDigi to the TDS collection
+
         digiCol->push_back(
             new AcdDigi(
-            id, volId,
-            energyMevDeposited, phaArr, 
+            tileId, volId,
+            m_energyDepMap[tileId], phaArr, 
             vetoArr, lowArr, highArr) );   
-        
-    } // end loop over MC hits
-    
+    }
+
+    clear();
+
     // Put the AcdDigi collection on the TDS
     return eventSvc()->registerObject(EventModel::Digi::AcdDigiCol, digiCol);    
 }
@@ -239,6 +307,20 @@ StatusCode AcdDigiAlg::execute() {
 
 StatusCode AcdDigiAlg::finalize() {
     return StatusCode::SUCCESS;
+}
+
+void AcdDigiAlg::clear() {
+
+    m_energyDepMap.clear();
+    m_pmtA_toFullScaleMap.clear();
+    m_pmtA_phaMipsMap.clear();
+    m_pmtA_vetoMipsMap.clear();
+    m_pmtA_cnoMipsMap.clear();
+    m_pmtB_toFullScaleMap.clear();
+    m_pmtB_phaMipsMap.clear();
+    m_pmtB_vetoMipsMap.clear();
+    m_pmtB_cnoMipsMap.clear();
+
 }
 
 
@@ -283,6 +365,34 @@ void AcdDigiAlg::getParameters() {
     m_edge_slope = xmlFilePtr.getDouble("edge_effects", "edge_slope", 0.01);
 
     m_edge_intercept = xmlFilePtr.getDouble("edge_effects", "edge_intercept", 0.8);
+
+    return;
+}
+
+
+void AcdDigiAlg::addNoise()  {
+    // Purpose and Method:  add noise to PMTs
+    // Inputs:  AcdDigiAlg::m_tiles
+    // Outputs: additional hits in the ACD subsystem
+    // TDS Inputs:  None 
+    // TDS Outputs:  None
+    // Dependencies: None
+    // Restrictions and Caveats:  None
+        
+    // loop over list of possible tile ids
+    for(AcdTileList::const_iterator it=m_tiles.begin(); it!=m_tiles.end(); ++it){
+        idents::VolumeIdentifier volId = *it;
+        idents::AcdId tileId(volId);
+       
+        m_pmtA_phaMipsMap[tileId] = util.shootGaussian(m_noise_std_dev_pha);
+        m_pmtA_vetoMipsMap[tileId] = util.shootGaussian(m_noise_std_dev_veto);
+        m_pmtA_cnoMipsMap[tileId] = util.shootGaussian(m_noise_std_dev_cno);
+
+        m_pmtB_phaMipsMap[tileId] = util.shootGaussian(m_noise_std_dev_pha);
+        m_pmtB_vetoMipsMap[tileId] = util.shootGaussian(m_noise_std_dev_veto);
+        m_pmtB_cnoMipsMap[tileId] = util.shootGaussian(m_noise_std_dev_cno);
+
+    }
 
     return;
 }
