@@ -1,5 +1,5 @@
 package CalRecon
-version v5r9
+version v5r10p1
 
 apply_pattern packageShr
 
@@ -8,14 +8,14 @@ branches src cmt doc
 use GuiSvc v3*
 use Event *
 use GlastSvc *
-
+use CalUtil v1r*
 use geometry v3*
 
 ### hide the packages used only for test program
 private
 use RootPolicy
 use RootIo v6*
-use CalUtil v1r*
+
 
 #the following prepend makes the includes folder available locally only: avoid the package_include
 #apply_pattern package_include
