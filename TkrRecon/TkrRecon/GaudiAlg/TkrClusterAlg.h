@@ -20,7 +20,7 @@
 #include "geometry/Point.h"
 #include "Event/Recon/TkrRecon/TkrClusterCol.h"
 #include "TkrRecon/ITkrGeometrySvc.h"
-#include "TkrRecon/ITkrBadStripsSvc.h"
+#include "TkrUtil/ITkrBadStripsSvc.h"
 
 #include "Event/Digi/TkrDigi.h"
 
