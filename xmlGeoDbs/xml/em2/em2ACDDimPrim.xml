@@ -102,11 +102,11 @@ dimension of side tiles in columns 1,2 and 3.  From
 
 <prim name="em2ACDTopTile_x" value="-130.794">EM2 top ACD tile absolute x</prim>
 <prim name="em2ACDTopTile_y" value="0.0">EM2 top ACD tile absolute y</prim>
-<prim name="em2ACDTopTile_z" value="385.494">EM2 top ACD tile absolute z</prim>
+<prim name="em2ACDTopTile_z" value="359.631">EM2 top ACD tile absolute z</prim>
 
 <prim name="em2ACDSideTile_x" value="-306.324">EM2 side ACD tile absolute x</prim>
 <prim name="em2ACDSideTile_y" value="0.0">EM2 side ACD tile absolute y</prim>
-<prim name="em2ACDSideTile_z" value="223.072">EM2 side ACD tile absolute z</prim>
+<prim name="em2ACDSideTile_z" value="196.30">EM2 side ACD tile absolute z</prim>
 <!-- End EM2 ACD -->
 
 

@@ -4,7 +4,7 @@
 <!-- Fundamental Z dimensions in tracker -->
     <prim name="TKRTransverseStayClear" value="372.0">Tranverse dimension of
             TKR Stay Clear envelope from LAT-DS-00038-2</prim>
-    <prim name="TKRVertStayClear" value="173.0">Z dimension of
+    <prim name="TKRVertStayClear" value="205.98">Z dimension of
             TKR Stay Clear envelope </prim>
     <prim name= "SiThick" value= "0.4" >Si thickness</prim>
     <prim name= "emSiThick" value= "0.001" > em Si thickness</prim>
@@ -46,7 +46,7 @@ verter tray for EM in mm</prim>
         trays</prim>
     <prim name="trayRegGap" value="2.125">Gap above regular trays. Last
         modified 2aug02</prim>
-    <prim name="TKRTraysTotalZ" value="164.18">Height of a tracker tower.
+    <prim name="TKRTraysTotalZ" value="197.016">Height of a tracker tower.
         </prim>
     <prim name="TKRFootZ" value="4.5"> Height of foot between bottom of bottom tray 
        and grid </prim>
@@ -79,6 +79,6 @@ verter tray for EM in mm</prim>
       <prim name = "thickShield" value = "1.25"> Thickness of Shield plate </prim>
       <prim name = "yShield" value = "-12.75"> y coordinate of the shield </prim>
       <prim name = "xShield" value = "0">x coordinate of the shield </prim>
-      <prim name = "zShield" value = "189"> z coordinate of the shield</prim> 
+      <prim name = "zShield" value = "400.0"> z coordinate of the shield</prim> 
 
 </primCategory>

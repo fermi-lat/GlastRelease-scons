@@ -45,8 +45,8 @@
     <!ENTITY NADDimPrim     SYSTEM "../flight/flightNADDimPrim.xml">
     <!ENTITY NADGeo         SYSTEM "../flight/flightNADGeo.xml">
 
-    <!ENTITY oneTower         SYSTEM "../em2/em2OneTower.xml">
-    <!ENTITY section         SYSTEM "../em/emSection.xml">
+    <!ENTITY oneTower         SYSTEM "../em/emOneTower.xml">
+    <!ENTITY section         SYSTEM "../em2/em2Section.xml">
 
     <!ENTITY Trigger        SYSTEM "../flight/flightTrigger.xml">
 
