@@ -16,8 +16,6 @@ $Header$
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/MCEvent.h"
 #include "Event/MonteCarlo/Exposure.h"
-#include "Event/Recon/TkrRecon/TkrVertex.h"
-#include "Event/Recon/TkrRecon/TkrFitTrack.h"
 #include "LdfEvent/Gem.h"
 #include "LdfEvent/EventSummaryData.h"
 
