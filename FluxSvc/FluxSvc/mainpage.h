@@ -10,7 +10,6 @@
   it also holds the standard set of strings representing xml filenames, thus allowing multiple 
   xml files to be used.
   <br>
-  <A HREF="../FluxSvc_doc.html">More Information</A>
   <hr>
   \section notes release notes
   \include release.notes
