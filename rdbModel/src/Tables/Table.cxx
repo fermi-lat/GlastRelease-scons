@@ -53,7 +53,8 @@ namespace rdbModel {
   Visitor::VisitorState Table::accept(Visitor* v) {
     
     Visitor::VisitorState state = v->visitTable(this);
-    if (state != Visitor::CONTINUE) return state;
+    if (state == Visitor::BRANCHDONE) return Visitor::CONTINUE;
+    if (state != Visitor::CONTINUE)       return state;
 
     unsigned n = m_cols.size();
 

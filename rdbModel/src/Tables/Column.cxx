@@ -26,9 +26,15 @@ namespace rdbModel {
     return m_type->isCompatible(otherCol->m_type);
   }
 
+  bool Column::isAutoIncrement() const {
+    return (getSource()->m_from == ColumnSource::FROMautoIncrement);
+  }
+
   Visitor::VisitorState Column::accept(Visitor* v) {
 
-    return v->visitColumn(this);
+    Visitor::VisitorState state = v->visitColumn(this);
+    if (state == Visitor::BRANCHDONE) return Visitor::CONTINUE;
+    return state;
   }
 
 }

@@ -116,7 +116,9 @@ namespace rdbModel {
   }
 
   Visitor::VisitorState  Assertion::accept(Visitor* v) {
-    return v->visitAssertion(this);
+    Visitor::VisitorState state = v->visitAssertion(this);
+    if (state == Visitor::BRANCHDONE) return Visitor::CONTINUE;
+    return state;
   }
 
 }

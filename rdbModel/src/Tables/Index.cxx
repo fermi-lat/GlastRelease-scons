@@ -5,7 +5,9 @@
 namespace rdbModel {
 
   Visitor::VisitorState  Index::accept(Visitor * v) {
-    return v->visitIndex(this);
+    Visitor::VisitorState state = v->visitIndex(this);
+    if (state == Visitor::BRANCHDONE) return Visitor::CONTINUE;
+    return state;
   }
 
   const std::vector<std::string>& Index::getColumnNames() {

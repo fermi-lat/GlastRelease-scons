@@ -56,6 +56,8 @@ namespace rdbModel{
     /// is in accord with restriction, if any
     bool okValue(const std::string& val) const;
     bool isCompatible(const Datatype* other) const;
+    TYPES getType() const {return m_type;}
+    int   getOuputSize() const {return m_outputSize;}
 
     /// Return pointer to Enum object owned by datatype (if none, return
     /// null pointer).
