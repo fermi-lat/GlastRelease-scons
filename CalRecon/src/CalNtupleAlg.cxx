@@ -15,7 +15,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/StatusCode.h"
 
-#include "ntupleWriterSvc/INtupleWriterSvc.h"
+#include "ntupleWriterSvc/INTupleWriterSvc.h"
 #include "CalRecon/CsIClusters.h"
 #include "CalRecon/CalRecLogs.h"
 
