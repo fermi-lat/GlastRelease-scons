@@ -181,13 +181,10 @@ class SiStripList {
      * @param controller  controller
      * @return            ToT in units of 200ns
      */
- private:
-    int getToT(const int sep, const int controller) const;
  public:
-    /// ToT for controller 0
-    int getToT0(const int sep)   const { return getToT(sep, 0); }
-    /// ToT for controller 1
-    int getToT1(const int sep=0) const { return getToT(sep, 1); }
+    ///
+    static const int sepSentinel=100000;
+    void getToT(int* ToT, const int sep=sepSentinel) const;
 
     /**
      * noise member functions.  The parameters denote:

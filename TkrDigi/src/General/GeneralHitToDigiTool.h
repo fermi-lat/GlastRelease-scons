@@ -59,6 +59,8 @@ private:
     ITkrBadStripsSvc*   m_tbsSvc;
     /// Pointer to the tracker alignment service
     ITkrAlignmentSvc*   m_taSvc;
+    /// Pointer to the tracker splits service
+    ITkrSplitsSvc*      m_tspSvc;
 
     /// if true, kill bad strips in digi
     bool   m_killBadStrips;
