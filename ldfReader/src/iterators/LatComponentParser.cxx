@@ -207,7 +207,6 @@ namespace ldfReader {
        
         //ldfReader::LatData::instance()->diagnostic()->setSummary(contribution->summary());
         //ldfReader::LatData::instance()->diagnostic()->initPacketError(contribution->packetError());
-        ldfReader::LatData::instance()->diagnostic()->initLength(((EBFcontribution*)contribution)->length());
         if ( EventSummary::diagnostic(contribution->summary())) {
             //   Process the trigger primitives in the diagnostic data
             ldfReader::LatData::instance()->diagnostic()->setExist();
