@@ -108,6 +108,7 @@
      * TKRFaceMin         Just glue+face,   material="TKRBotFaceMat"
      * TKRBiasBox         glue+bias board + glue, material="TKRBotBiasMat"
      * TKRMCM             MCM board
+     * TKRWallLong, TKRWallShort
  -->
     <box name="TKRCoreRegEnv"
 	 XREF="TKRTrayWidth" 
@@ -174,6 +175,21 @@
         YREF="MCMThick"
         ZREF="MCMHeight"
         materialREF="TKRMCMMat" />
+
+<!-- Two boxes for TKR wall.  Long sides will extend in X.  Short
+     sides will be rotated 90 degrees to extend in Y   -->
+   <box name="TKRWallLong"
+        XREF="TKRWallLength"
+        YREF="TKRWallThick"
+        ZREF="TKRTotalZ" 
+        materialREF="TKRWallMat" />
+
+   <box name="TKRWallShort"
+        XREF="TKRWallLengthShort"
+        YREF="TKRWallThick"
+        ZREF="TKRTotalZ" 
+        materialREF="TKRWallMat" />
+ 
 
 <!-- Now make the compositions needed for core+closeout. We need
      bottom tray version (y-measuring, top Si only)
@@ -812,5 +828,15 @@
 
     <composition name="oneTKR" envelope="TKRStayClearBox">
       <posXYZ volume="oneTKRStack" />
+      <posXYZ volume="TKRWallLong"
+              YREF="TKRWall_dt" />
+      <posXYZ volume="TKRWallLong"
+              YREF="TKRWall_dtn" />
+      <posXYZ volume="TKRWallShort" 
+              zrot="90"
+              XREF="TKRWall_dt" />
+      <posXYZ volume="TKRWallShort" 
+              zrot="90"
+              XREF="TKRWall_dtn" />
     </composition>
 

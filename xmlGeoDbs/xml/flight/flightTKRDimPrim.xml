@@ -45,8 +45,6 @@ TKR Stay Clear envelope from LAT-DS-00038-2</prim>
         <prim name="SiWaferActiveSide" value="87.552">Length and width of active
 area on a wafer</prim>
 <!-- widths -->           
-        <prim name= "TKRWidth" value= "371.5">**Is this just a replacement 
-           for wallWidth?</prim>  
         <prim name="faceWidth" value="360.6">X and y width of face sheet
  (15oct01)</prim>
         <prim name= "TKRElectGap" value= "4.2">Distance between wall
@@ -62,7 +60,12 @@ area on a wafer</prim>
         <prim name="TKRWallLength" value="372.0">Outer dimension of square
         formed by tracker walls (Z cross-section)</prim>
 
-      <!--
+      <!--        probably-obsolete quantities
+        <prim name= "TKRWidth" value= "371.5">**Is this just a replacement 
+           for wallWidth?</prim>  
+
+
+
         <prim name="guardRing" value="0.745">guard ring size. Probably 
          irrelevant.</prim>
        -->

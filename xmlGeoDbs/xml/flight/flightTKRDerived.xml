@@ -1,7 +1,6 @@
 <!-- $Header$ -->
-      <derCategory name="derTKR"  save="true" >
-        <overview>Derived constants specific to tracker</overview>
-	<const name="TKRTrayWidth" >
+
+         <!-- was definition of TKRTrayWidth 
 	  <minus>
 	    <refer refTo="TKRWidth" />
 	    <mul>
@@ -9,7 +8,17 @@
 	      <refer refTo="TKRElectGap" />
 	    </mul>
 	  </minus>
+         -->
+
+      <derCategory name="derTKR"  save="true" >
+        <overview>Derived constants specific to tracker</overview>
+	<const name="TKRTrayWidth" >
+          <notes>Transverse dimension of the business part of the
+                 tray, large enough to include all silicon, closeout,
+                 etc. but no larger (Revised 3May02) </notes>
+          <refer refTo="faceWidth" />
 	</const>
+
 
         <const name="waferPitch" >
           <notes> Distance between centers of adjacent wafers in 
@@ -95,6 +104,40 @@
         <const name="MCMLength" >
           <notes>Long transverse dimension of MCM board</notes>
           <refer refTo="faceWidth" />
+        </const>
+
+        <const name="TKRWallLengthShort" >
+          <notes>For the XML description, tracker wall is broken up
+            into 4 pieces: 2 long ones extending in X and two slightly
+            shorter ones extending in Y.  This is the length of the
+            shorter ones.</notes>
+          <minus>
+            <refer refTo="TKRWallLength" />
+            <mul>
+              <const value="2" uType="count"/>
+              <refer refTo="TKRWallThick" />
+            </mul>
+          </minus>
+        </const>
+
+        <const name="TKRWall_dt">
+          <notes>Positive transverse offset of TKR wall, relative to
+                 center of a tower</notes>
+          <quo>
+            <minus>
+               <refer refTo="TKRWallLength" />
+               <refer refTo="TKRWallThick" />
+            </minus>
+            <const value="2" uType="count" />
+          </quo>
+        </const>
+
+        <const name="TKRWall_dtn">
+          <notes>Negative transverse offset of TKR wall, relative to
+                 center of a tower</notes>
+          <uminus>
+            <refer refTo="TKRWall_dt" />
+          </uminus>
         </const>
 
         <const name="TKRCloseout_dtn" >
