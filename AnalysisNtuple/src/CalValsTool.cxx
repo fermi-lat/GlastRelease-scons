@@ -543,7 +543,7 @@ StatusCode CalValsTool::calculate()
     CAL_x0_corr = pos_corr.x();
     CAL_y0_corr = pos_corr.y();
     CAL_EdgeSum_Corr = ene_sum_corr/CAL_EnergySum;
-    edge_corr /= good_layers;
+    if (good_layers>0) edge_corr /= good_layers;
     CAL_Edge_Corr = edge_corr; 
     
     // Set some Calorimeter constants - should come from detModel
