@@ -115,10 +115,7 @@ Cal1.Members = {
       "CalClustersAlg/first"
       };
 Tkr.Members = {
-      "TkrClusterAlg", 
-      "TkrFindAlg", 
-      "TkrReconAlg", 
-      "TkrVertexAlg"
+      "TkrReconAlg"
       };
 Cal2.Members = {
       "CalClustersAlg/second"
