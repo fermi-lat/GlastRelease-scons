@@ -16,11 +16,20 @@
     <tr>
       <td align="right" valign="top" width="20%">&nbsp;</td>
       <td width="15"></td>
-      <td valign="bottom" width="80%"><font size="5">RootAnalysis</font></td>
+      <td valign="bottom" width="80%"><font size="5"><b>RootAnalysis</b></font></td>
     </tr>
     <tr>
       <td valign="top" width="20%"><font size="2"><strong><a href="#Introduction">Introduction</a></strong></font>
         <p><font size="2"><strong><a href="#Setup">Setup</a></strong></font></p>
+        <p><font size="2"><strong><a href="#Ancillary Data files">Ancillary Data
+        files</a><br>
+        </strong><a href="#Calibration">Calibration</a></font>
+        </p>
+        <p><font size="2"><strong><a href="#Event Loop processing">Event Loop
+        Processing</a></strong></font><font size="3"><br>
+        </font><font size="2"><a href="#RootTreeAnalysis">RootTreeAnalysis</a><br>
+        <a href="#RawValidate">RawValidate<br>
+        </a><a href="#NtupleAnalysis">NtupleAnalysis</a></font></p>
         <p><font size="2"><strong><a href="#Low level macros">Low Level Utilties</a></strong></font><font size="4"><br>
         </font><font size="2"><a href="#chainTrees">chainTrees.cxx<br>
         </a><a href="#createEventList.cxx">createEventList.cxx</a><br>
@@ -28,15 +37,7 @@
         <p><font size="2">
         <a href="#plotMacros"><b>plotMacros<br>
         </b></a><a href="#HistBatch.h">HistBatch</a></font></p>
-        <p><font size="2"><strong><a href="#Event Loop processing">Event Loop
-        Processing</a></strong></font><font size="3"><br>
-        </font><font size="2"><a href="#RootTreeAnalysis">RootTreeAnalysis</a><br>
-        <a href="#RawValidate">RawValidate<br>
-        </a><a href="#NtupleAnalysis">NtupleAnalysis</a></font></p>
-        <p><font size="2"><strong><a href="#Ancillary Data files">Ancillary Data
-        files</a><br>
-        </strong><a href="#Calibration">Calibration</a></font>
-        <p>&nbsp;</td>
+      </td>
       <td width="15"></td>
       <td valign="top" width="80%">
         <h3><a name="Introduction">Introduction</a></h3>
@@ -45,24 +46,29 @@
         provided, are meant to provide some basic, general, functions that most
         GLAST ROOT users may find useful.&nbsp; To process GLAST ROOT data,
         it is not necessary to use this package, but it may make it easier.</font></p>
+        <p><font size="3">Also note, that this package is generic, in that, any
+        GLAST ROOT file, either PDR or BFEM can be processing using these
+        routines and libraries.&nbsp; (BTEM files generated using the latest
+        version of the digiRootData classes can also be handled).&nbsp; The key
+        is that all GLAST ROOT data has the same internal structure.</font></p>
         <h3><font size="3"><a name="Setup">Setup the ROOT environment for GLAST</a></font></h3>
         <p><font size="3">RootAnalysis now comes with a simple .rootrc.&nbsp;
         This is the file used by ROOT to setup your ROOT environment upon
         startup.&nbsp;&nbsp;</font></p>
-        <p><font size="3"> First, setup a <b> ROOTANALYSIS</b> environment variable that is
+        <p><font size="3"> First, setup a <b> <i> ROOTANALYSIS</i></b> environment variable that is
         set to the directory path, where you have the RootAnalysis package
         installed.&nbsp;</font></p>
-        <p><font size="3">On UNIX:&nbsp; setenv ROOTANALYSIS $HOME/RootAnalysis</font></p>
+        <p><font size="3">On UNIX:&nbsp; <i><b>setenv ROOTANALYSIS $HOME/RootAnalysis</b></i></font></p>
         <p><font size="3">On Windows:&nbsp;</font></p>
         <ol>
           <li><font size="3">In Control Panel, Click on System,&nbsp;</font></li>
           <li><font size="3">Then Click on the Environment tab</font></li>
-          <li><font size="3">Then define a new variable called ROOTANALYSIS<br>
+          <li><font size="3">Then define a new variable called <i><b> ROOTANALYSIS</b></i><br>
             Set its value equal to the RootAnalysis directory on your system,
             i.e. D:/glast/RootAnalysis</font></li>
         </ol>
-        <p><font size="3">To be used, the .rootrc file must be in the directory
-        from where you launch ROOT.</font>&nbsp; <font size="3">Next do one of
+        <p><font size="3">To be use the RootAnalysis package, <b> the .rootrc file must be in the directory
+        from where you launch ROOT.</b></font>&nbsp; <font size="3">Next do one of
         the following:</font></p>
         <ol>
           <li><font size="3">Startup ROOT from within the RootAnalysis directory<br>
@@ -86,6 +92,87 @@
             Windows - you can change this by editing the RootAnalysis/setup/rootalias.C
             macro.</font></li>
         </ol>
+        <h3><a name="Ancillary Data files">Ancillary Data files</a></h3>
+        <p><font size="3"><b><a name="Calibration">Calibration</a></b></font></p>
+        <p>This directory contains pedestal files from both the 1999-2000 SLAC
+        test beam and the 2001 Balloon Flight.&nbsp; Be aware of the type of
+        data you are processing.&nbsp; </p>
+        <p>Run208Ped.h is pedestal data for the CAL from the 1999-2000 SLAC test
+        beam.</p>
+        <p>The other pedestal files are for the 2001 Balloon Flight:<br>
+        bfem_peds_cal.dat, bfem_peds_acd.dat, bfem_peds_xgt.dat<br>
+        These files have been updated as of 08/23/01 - according to the data
+        provided by the subsystems.</p>
+        <p>Currently by default, the RootTreeAnalysis and RawValidate macros
+        will read in and use the Balloon pedestal files.&nbsp; You may modify
+        this behavior if desired.</p>
+        <h3><a name="Event Loop processing">Event Loop processing</a></h3>
+        <p><font size="3"><b><a name="RootTreeAnalysis">RootTreeAnalysis</a></b></font></p>
+        <p><font size="3">Our generic event loop macro.&nbsp; Handles raw,
+        reconstruction, and/or monte carlo ROOT files.&nbsp; Output is a new
+        ROOT file, named Histograms.root, which contains a series of user
+        defined histograms.&nbsp; Users can provide
+        either file names, or TChains of files for multi-file processing.</font></p>
+        <p><font size="3">Use the RootTreeAnalysis constructor to pass in file
+        names or a TChain of files.</font></p>
+        <p><font size="3">Event Processing is done by calling <i>RootTreeAnalysis::Go(Int_t</i>
+        <i>numEvents);</i>&nbsp; This causes the next numEvents events to be
+        processed - filling the defined histograms.&nbsp; Note:&nbsp; this does
+        not cause the histograms to be saved!!!&nbsp; One must call <i>RootTreeAnalysis::WriteHist(
+        )</i>.</font></p>
+        <p><font size="3">You may use the pre-defined histograms provided or
+        modify/add/remove histograms.&nbsp; Users define their histograms in the <i>HistDefine</i>
+        routine, located in the RootTreeAnalysis.cxx file.&nbsp; Note that there
+        are separate functions for Raw, Recon, and MC ntuples.</font></p>
+        <p><font size="3">Example usage:<br>
+        </font><i><font size="2">RootTreeAnalysis m(&quot;myRawFile.root&quot;,
+        &quot;myReconFile.root&quot;); // opens our files<br>
+        m.Go(500);      // loop over 500 events. Go contains your analysis code<br>
+        m.StartWithEvent(1001); // set the file pointer to eventNum = 1001<br>
+        m.Go(50); // process the next 50 events starting from eventNum 1001<br>
+        m.HistClear(); // clear all histograms<br>
+        m.Go(1000); // Process the next 1000 events, starting from eventNum
+        1052<br>
+        m.WriteHist(); // Write out all hisgtograms to the Histograms.root file</font></i></p>
+        <p><font size="3"><b><a name="RawValidate">RawValidate</a></b></font></p>
+        <p><font size="3">Handles only raw ROOT files.&nbsp; Behaves just as
+        RootTreeAnalysis does, but it contains some additional default
+        histograms that are useful for making sure that the raw data looks
+        reasonable.</font></p>
+        <p><font size="3">Event Processing is done by calling <i>RawValidate::Go(Int_t</i>
+        <i>numEvents);</i>&nbsp; This causes the next numEvents events to be
+        processed - filling the defined histograms.&nbsp; Note:&nbsp; this does
+        not cause the histograms to be saved!!!</font></p>
+        <p><font size="3">You may use the pre-defined histograms provided or
+        modify/add histograms.&nbsp; Users define their histograms in the <i>HistDefine</i>
+        routine, located in the RawValidate.cxx file.&nbsp;&nbsp;</font></p>
+        <p>Example usage:<font size="2"><i><br>
+        </i></font><i><font size="2">RawValidate m(&quot;MyRootFile.root&quot;); //
+        open our Raw root file<br>
+        m.Go(500);      // loop over 500 events. Go contains your analysis code<br>
+        m.StartWithEvent(2001); // set the file pointer to eventNum = 2001<br>
+        m.Go(50); // process the next 50 events<br>
+        m.HistClear(); // clear all histograms<br>
+        m.Go(1000);<br>
+        m.WriteHist(); // write out all histograms to the Histograms.root file</font></i></p>
+        <p><font size="3"><b><a name="NtupleAnalysis">NtupleAnalysis</a></b></font></p>
+        <p><font size="3">Please <a href="http://www-glast.slac.stanford.edu/software/root/howto/pdr.html">see
+        this page</a> for a description... But here is a summary:</font></p>
+        <p><font size="3">This class handles any ntuple file (PDR or BFEM), and produces an
+        output PostScript file containing plots of any and all entries in the
+        ntuple - and can apply an optional cut to the data as well before
+        creating the plots.&nbsp; One can pre-set the number of columns and rows
+        of the PS pages as well - to determine how many plots to display per
+        page.</font></p>
+        <p><font size="3"><b>USAGE:</b><br>
+        </font><i><font size="2">NtupleAnalysis m( );<br>
+        m.openRootFile(&quot;myNtupleFile.root&quot;, &quot;PDR/t1&quot;);
+        // you supply a file name, and the name (and path if necessary) of the
+        TTree in the file.<br>
+        m.setNumRows(4);<br>
+        m.setNumCols(4);</font></i><font size="2"><i><br>
+        m.drawAllPlots(&quot;myNewPSFile.ps&quot;, &quot;TKR_NO_TRACKS &gt;
+        0&quot;); // creates the PS file - and applies the cut to the data</i></font></p>
         <h3><a name="Low level macros">Low level Utilities</a></h3>
         <p>Some low level utilities are made available in the RootAnalysis/utilityMacro
         directory.&nbsp; Each macro file contains some description of the
@@ -99,8 +186,7 @@
         <p><font size="3">A TChain is useful if you want to analyze multiple
         files at once.&nbsp; The TChain created can then be passed to
         RootTreeAnalysis for event loop processing.</font></p>
-        <p><font size="3">To run the macro, do the following:<br>
-        <i>.L chainTrees.cxx<br>
+        <p><font size="3">Here is an example:<i><br>
      char * list[] = {<br>
        "backgndmaxpdr100000TUP0000.root",<br>
        "backgndmaxpdr100000TUP0001.root",<br>
@@ -119,7 +205,7 @@
         </font></p>
         <p><font size="3"><b><a name="createEventList.cxx">createEventList.cxx</a></b>
         </font></p>
-        <p>This macro provides a generic mechanism to create a TEventList.&nbsp;
+        <p>This macro provides a generic mechanism to create a ROOT TEventList.&nbsp;
         Event lists are useful, in that they restrict the entries in a TTree
         that will be processed.&nbsp;&nbsp; A TEventList is created, by applying
         a cut on the data.&nbsp; There are 2 versions of this macro contained in
@@ -139,7 +225,7 @@
         <p><font size="2"><i>void pruneTree (char *orgFileName, char *treePath, TEventList *elist, char
         *newFileName)&nbsp;<br>
         </i><b>USAGE:</b><i><br>
-    pruneTree("myOrgFile.root", "PDR/t1", elist, "myNewFile.root");<br>
+    pruneTree("myOrgFile.root", "PDR/t1", elist, &quot;myNewFile.root&quot;);
         </i></font></p>
         <p><i><font size="2">void pruneTree (int numFiles, char* list[], char* treePath. TCut cut, char
         *newFileName)&nbsp;</font></i></p>
@@ -192,80 +278,6 @@
         and creates a single ps file in several pages</p>
         <p><b>totmap</b> loops over all layers plotting tot and creating a ps file with
         the result (Raw data).</p>
-        <h3><a name="Event Loop processing">Event Loop processing</a></h3>
-        <p><font size="3"><b><a name="RootTreeAnalysis">RootTreeAnalysis</a></b></font></p>
-        <p><font size="3">Our generic event loop macro.&nbsp; Handles raw,
-        reconstruction, and/or monte carlo ROOT files.&nbsp; Output is a new
-        ROOT file, named Histograms.root, which contains a series of user
-        defined histograms.&nbsp; Users can provide
-        either file names, or TChains of files for multi-file processing.</font></p>
-        <p><font size="3">Use the RootTreeAnalysis constructor to pass in file
-        names or a TChain of files.</font></p>
-        <p><font size="3">Event Processing is done by calling <i>RootTreeAnalysis::Go(Int_t</i>
-        <i>numEvents);</i>&nbsp; This causes the next numEvents events to be
-        processed - filling the defined histograms.&nbsp; Note:&nbsp; this does
-        not cause the histograms to be saved!!!</font></p>
-        <p><font size="3">You may use the pre-defined histograms provided or
-        modify/add histograms.&nbsp; Users define their histograms in the <i>HistDefine</i>
-        routine, located in the RootTreeAnalysis.cxx file.&nbsp; Note that there
-        are separate functions for Raw, Recon, and MC ntuples.</font></p>
-        <p><font size="3">Example usage:<br>
-        </font><i><font size="2">RootTreeAnalysis m(&quot;myRawFile.root&quot;,
-        &quot;myReconFile.root&quot;); // create RootTreeAnalysis object<br>
-        m.Go(500);      // loop over 500 events. Go contains your analysis code<br>
-        m.StartWithEvent(1001); // set the file pointer to eventNum = 1001<br>
-        m.Go(50); // process the next 50 events starting from eventNum 1001<br>
-        m.HistClear(); // clear all histograms<br>
-        m.Go(1000); // Process the next 1000 events, starting from eventNum
-        1052</font></i></p>
-        <p><font size="3"><b><a name="RawValidate">RawValidate</a></b></font></p>
-        <p><font size="3">Handles only raw ROOT files.&nbsp; Behaves just as
-        RootTreeAnalysis does, but it contains some additional default
-        histograms that are useful for making sure that the raw data looks
-        reasonable.</font></p>
-        <p><font size="3">Event Processing is done by calling <i>RawValidate::Go(Int_t</i>
-        <i>numEvents);</i>&nbsp; This causes the next numEvents events to be
-        processed - filling the defined histograms.&nbsp; Note:&nbsp; this does
-        not cause the histograms to be saved!!!</font></p>
-        <p><font size="3">You may use the pre-defined histograms provided or
-        modify/add histograms.&nbsp; Users define their histograms in the <i>HistDefine</i>
-        routine, located in the RawValidate.cxx file.&nbsp;&nbsp;</font></p>
-        <p>Example usage:<font size="2"><i><br>
-        </i></font><i><font size="2">RawValidate m(&quot;MyRootFile.root&quot;); // create RawValidate object<br>
-        m.Go(500);      // loop over 500 events. Go contains your analysis code<br>
-        m.StartWithEvent(2001); // set the file pointer to eventNum = 2001<br>
-        m.Go(50); // process the next 50 events<br>
-        m.HistClear(); // clear all histograms<br>
-        m.Go(1000);</font></i></p>
-        <p><font size="3"><b><a name="NtupleAnalysis">NtupleAnalysis</a></b></font></p>
-        <p><font size="3">Please <a href="http://www-glast.slac.stanford.edu/software/root/howto/pdr.html">see
-        this page</a> for a description... But here is a summary:</font></p>
-        <p><font size="3">This class handles any ntuple file, and produces an
-        output PostScript file containing plots of any and all entries in the
-        ntuple - and can apply an optional cut to the data as well before
-        creating the plots.&nbsp; One can pre-set the number of columns and rows
-        of the PS pages as well - to determine how many plots to display per
-        page.</font></p>
-        <p><font size="3"><b>USAGE:</b><br>
-        </font><i><font size="2">NtupleAnalysis m( );<br>
-        m.openRootFile(&quot;myNtupleFile.root&quot;, &quot;PDR/t1&quot;);
-        // you supply a file name, and the name (and path if necessary) of the
-        TTree in the file.<br>
-        m.setNumRows(4);<br>
-        m.setNumCols(4);</font></i><font size="2"><i><br>
-        m.drawAllPlots(&quot;myNewPSFile.ps&quot;, &quot;TKR_NO_TRACKS &gt;
-        0&quot;); // creates the PS file - and applies the cut to the data</i></font></p>
-        <h3><a name="Ancillary Data files">Ancillary Data files</a></h3>
-        <p><font size="3"><b><a name="Calibration">Calibration</a></b></font></p>
-        <p>This directory contains pedestal files from both the 1999-2000 SLAC
-        test beam and the 2001 Balloon Flight.&nbsp; Be aware of the type of
-        data you are processing.&nbsp; </p>
-        <p>Run208Ped.h is pedestal data for the CAL from the 1999-2000 SLAC test
-        beam.</p>
-        <p>The other pedestal files are for the 2001 Balloon Flight:<br>
-        bfem_peds_cal.dat, bfem_peds_acd.dat, bfem_peds_xgt.dat</p>
-        <p>Currently by default, the RootTreeAnalysis and RawValidate macros
-        will read in and use the Balloon pedestal files.</p>
       </td>
     </tr>
   </table>
