@@ -13,6 +13,7 @@
 
 #include "ntupleWriterSvc/ntupleWriterSvc.h"
 
+#include <string>
 #include <vector>
 #include <stdlib.h>
 
@@ -81,6 +82,23 @@ StatusCode ntupleWriterSvc::initialize ()
         return status;
     }
 
+    // Storing the number of events to be generated in the TNtuple title
+    IProperty* glastPropMgr=0;
+    status = serviceLocator()->getService("EventSelector", IID_IProperty,
+                         reinterpret_cast<IInterface*&>( glastPropMgr ));
+    if( status.isFailure() ) return status;
+      
+    IntegerProperty evtMax("EvtMax",0);
+    status = glastPropMgr->getProperty( &evtMax );
+    if (status.isFailure()) return status;
+    
+    // setup the title
+    std::string title("gen(");
+    char numEventsStr[20];
+    _itoa(evtMax, numEventsStr, 10);
+    title += numEventsStr;
+    title += ")";
+
     // Setup the ntuples asked for in the job options file
     int index = 0;
     for (index = 0; index < m_tuple_name.size(); index++) {
@@ -97,7 +115,7 @@ StatusCode ntupleWriterSvc::initialize ()
             // add this path into the map
             m_tuples[m_tuple_name[index]] = (tupleRoot+m_tuple_name[index]+m_TDS_tuple_name[index]);
             // create the ntuple
-            status = bookNTuple(index);
+            status = bookNTuple(index, title.c_str());
         } else {
             log << MSG::INFO << "No tuple name supplied, no ntuple created "<< endreq;
         }
@@ -109,7 +127,7 @@ StatusCode ntupleWriterSvc::initialize ()
 }
 
 
-StatusCode ntupleWriterSvc::bookNTuple(int index) {
+StatusCode ntupleWriterSvc::bookNTuple(int index, const char* title) {
 
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
@@ -121,7 +139,7 @@ StatusCode ntupleWriterSvc::bookNTuple(int index) {
         if( dir ) {
             NTuplePtr *m_nt = new NTuplePtr( dir, m_TDS_tuple_name[index].c_str()); 
             if(!(*m_nt)){
-                (*m_nt) = ntupleSvc->book(m_fileName[index],(index+1),CLID_RowWiseTuple, "The new Ntuple");
+                (*m_nt) = ntupleSvc->book(m_fileName[index],(index+1),CLID_RowWiseTuple, title);
             } else {
                 log << MSG::ERROR  << "could not book Ntuple" << endreq;
             }
