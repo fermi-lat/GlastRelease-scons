@@ -1,7 +1,7 @@
-//$Header:
+//$Header$
 /*
 
-
+v3r1 21-Mar-02 THB All hits done, saving local coordinates
 v2r1 THB cleaned up colors, improved digi handling. (Still no integrating hits)
 v2  removed dependence on instrument and converted to use GlastDetSvc for geometry and materials
 Inital version by T. Burnett 
