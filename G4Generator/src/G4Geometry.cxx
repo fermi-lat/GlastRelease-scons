@@ -63,9 +63,9 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
           if( s==Box) {
              double dx=params[6], dy=params[7], dz=params[8];
              // if there is no actualMother, it means this is the world volume
-             // we use at the moment a box of 10m*10m*10m
+             // we use at the moment a box of 30m*30m*30m
              if (!actualMother())
-                 { dx = 10000; dy = 10000; dz = 10000;}
+                 { dx = 30000; dy = 30000; dz = 30000;}
              shape = new G4Box(name,
 		        dx*mm/2,
 		        dy*mm/2,
