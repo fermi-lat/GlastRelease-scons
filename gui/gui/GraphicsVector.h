@@ -11,6 +11,7 @@ class SpacePoint;
 class SpaceVector;
 class Hep3Vector;
 class HepPoint3D;
+class BasicVector3D;
 namespace gui {
 
 
@@ -32,6 +33,7 @@ public:
 #endif
     GraphicsVector(const Hep3Vector & v);
     GraphicsVector(const HepPoint3D & v);
+    GraphicsVector(const BasicVector3D & v);
 
     float x()const{return m_x;}
     float y()const{return m_y;}
