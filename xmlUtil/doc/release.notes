@@ -2,6 +2,7 @@
  * Package xmlUtil
  * Coordinator: J. Bogart
  *
+ * 07-Oct-2003  jrb v2r11p0 Bug fix to IdDict::getNameSeqString
  * 02-Oct-2003  jrb v2r11 Add support to recover field names from 
  *              (integer list) id
  * 13-Aug-2003  jrb for tk more  requirements updates
