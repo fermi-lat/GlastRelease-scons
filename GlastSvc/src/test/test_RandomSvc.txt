@@ -1,0 +1,11 @@
+#include "$GLEAMROOT/src/basicOptions.txt"
+
+FluxSvc.source_lib += {"$(GLASTSVCROOT)/src/test/test_sources.xml"};
+FluxAlg.source_name="e_pencil";
+ApplicationMgr.EvtMax  = 1000000;
+
+GlastRandomSvc.SeedFile = "begin_seed.dat";
+GlastRandomSvc.EndSeedFile = "end_seed.dat";
+
+G4Generator.defaultCutValue=0.1;  //mm
+

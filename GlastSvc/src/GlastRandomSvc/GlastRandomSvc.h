@@ -71,6 +71,11 @@ public:
   // if m_seedFile is empty, procceed to normal running of Gleam
   StringProperty m_seedFile;
 
+  // Output seeds at the end of event, only used in testing whether event can
+  // be regenerated
+  StringProperty m_endSeedFile;
+  std::ofstream m_output;
+
   // seeds read from the file
   std::vector<GlastRandomSeed> m_seeds;
 };
