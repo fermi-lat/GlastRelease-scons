@@ -36,21 +36,15 @@ rootHist::rootHist(const rootHist &oldHist) : num_bins(oldHist.num_bins)
 // Update a specific bin by replacing its contents
 void rootHist::updateBin(int binNumber, double data)
 {
-    if(binNumber < 0 || binNumber >= num_bins)
-    {
-        std::cerr << "Error:  bin number is out of range" << std::endl;
-        exit(0);
-    }
+    if(binNumber < 0) binNumber=0;
+    else if(binNumber>=num_bins) binNumber= num_bins-1;
     hist[binNumber] = data;
 }
 
 // Retrieve the contents of a bin
 double rootHist::retrieveBin(int binNumber)
 {
-    if(binNumber < 0 || binNumber >= num_bins)
-    {
-        std::cerr << "Error:  bin number is out of range" << std::endl;
-        exit(0);
-    }
+    if(binNumber < 0) binNumber=0;
+    else if(binNumber>=num_bins) binNumber= num_bins-1;
     return hist[binNumber];
 }
