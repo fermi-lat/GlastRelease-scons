@@ -38,6 +38,7 @@
 
         namespace Raw {
             _EXTERN_ std::string Event;
+            _EXTERN_ std::string AcdDigi;
             _EXTERN_ std::string TdCsIDatas;
             _EXTERN_ std::string TdSiDatas;
         };
