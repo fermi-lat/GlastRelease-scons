@@ -1,5 +1,5 @@
 package GlastEvent
-version v1r2
+version v1r6
 
 branches GlastEvent mgr doc src
 use idents
@@ -13,6 +13,8 @@ library GlastEvent -no_share\
         MonteCarlo/*.cxx \
         ../GlastEvent/Irf/*.h \
         ../GlastEvent/data/*.h  \
+        ../GlastEvent/Hits/*.h \
+        Hits/*.cpp \
         ../GlastEvent/Digi/*.h \
         TopLevel/*.cpp
 
