@@ -285,11 +285,12 @@ StatusCode CalClustersAlg::execute()
         m_lastLayerTool->doEnergyCorr((*it)->getEnergySum(),(*it));
 
         // eleak is observed + estimated leakage energy
-        double eleak = m_lastLayerTool->getEnergyCorr() + (*it)->getEnergySum();
+        //double eleak = m_lastLayerTool->getEnergyCorr() + (*it)->getEnergySum();
+	double eleak = m_lastLayerTool->getEnergyCorr();
 
-        // iteration
-        m_lastLayerTool->doEnergyCorr(eleak,(*it));       
-        eleak = m_lastLayerTool->getEnergyCorr() + (*it)->getEnergySum();
+        // iteration commented out, now done in LastLayerTool.cxx
+        //m_lastLayerTool->doEnergyCorr(eleak,(*it));       
+        //eleak = m_lastLayerTool->getEnergyCorr() + (*it)->getEnergySum();
 
         
         // Do profile fitting - use StaticSlope because of static functions
