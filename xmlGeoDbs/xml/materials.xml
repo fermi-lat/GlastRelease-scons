@@ -251,7 +251,7 @@
 </addmaterial>
 </composite>
 
-<composite name="Tray_bot_face" density = "1.264">
+<composite name="Tray_bot_face" density = "1.504">
 <addmaterial material ="Oxygen">
 <fractionmass fraction="1.42" />
 </addmaterial>
