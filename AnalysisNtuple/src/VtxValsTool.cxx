@@ -220,7 +220,7 @@ StatusCode VtxValsTool::calculate()
             
             double dist = VTX_DOCA;
             double s1   = VTX_S1;
-            double s2   = VTX_S2; 
+            //double s2   = VTX_S2; 
             double root2 = sqrt(2.);
             double q2    = track_2->getQuality();   
             VTX_DOCA_Wgt = thrshold((dist-50./gamEne)/root2);  

@@ -162,7 +162,8 @@ StatusCode AnalysisNtupleAlg::execute()
         }
         ++m_count;
 
-        for( int i =0; i< m_toolvec.size(); ++i){
+        int size = m_toolvec.size();
+        for( int i =0; i<size; ++i){
             if(m_toolvec[i]->traverse(m_visitor)==ValsVisitor::ERROR) {
                 log << MSG::ERROR << m_toolvec[i] << " traversal failed" << endreq;
                 return fail;

@@ -10,8 +10,8 @@
 // Declaration of the interface ID ( interface id, major version, minor version) 
 static const InterfaceID IID_IValsTool("IValsTool", 2 , 3); 
 
-/** @class ITkrValsTool
-* @brief Abstract interface for tracker ntuple values 
+/** @class IValsTool
+* @brief Abstract interface for the XxxValsTools
 *
 * @author Leon Rochester
 * $Header$
@@ -55,4 +55,4 @@ public:
     virtual void handle(const Incident& inc) = 0;    
 };
 
-#endif  // _H_ITkrValsTool
+#endif  // _H_IValsTool
