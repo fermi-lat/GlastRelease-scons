@@ -25,7 +25,7 @@ use Geant4   v1
 use facilities v2r1
 use XMLEXT   v2r2
 use xml      v4*
-use xmlUtil  v2r8
+use xmlUtil  v2*
 
 use idents   v2*
 

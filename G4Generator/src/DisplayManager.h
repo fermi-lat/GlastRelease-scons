@@ -27,6 +27,11 @@ public:
     //! @param x,y,z dimensions of the box
     void addHitBox(const HepTransform3D& T, double x, double y, double z);
 
+    //! add a integrating detector box to the display
+    //! @param T global to local transformation
+    //! @param x,y,z dimensions of the box
+    void addIntegratingBox(const HepTransform3D& T, double x, double y, double z);
+
     //! add to the static display of all detector boxes
     //! @param detname The name of the logical volume
     //! @param T global to local transformation

@@ -15,7 +15,7 @@
 
 IntDetectorManager::IntDetectorManager(DetectorConstruction *det,
                                            IDataProviderSvc* esv)
-:DetectorManager(det, esv,"IntegratingDetectorManager")
+:DetectorManager(det->idMap(), esv,"IntegratingDetectorManager")
 {
 }
 
@@ -55,7 +55,7 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
     //    DisplayManager::instance()->addHit(InitPos, FinPos);
     
     if( !m_detectorList[id]) {
-        makeBox( theTouchable );        
+        makeIntegratingBox( theTouchable );        
     }
 
     

@@ -12,13 +12,10 @@
 #include "G4Box.hh"
 #include "G4SDManager.hh"
 
-DetectorManager::DetectorManager(DetectorConstruction *det,
+DetectorManager::DetectorManager(DetectorConstruction::IdMap *map,
                                  IDataProviderSvc* esv, std::string name)
-:m_esv(esv),G4VSensitiveDetector(name)
+:m_idMap(map), m_esv(esv),G4VSensitiveDetector(name)
 {
-    // Recover the physicals-id map from the detectorconstruction
-    m_idMap = det->idMap();
-
     // and tell G4 about us
     G4SDManager::GetSDMpointer()->AddNewDetector( this );
 
@@ -50,7 +47,7 @@ void DetectorManager::process(G4LogicalVolume* lvol)
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void DetectorManager::makeBox(G4TouchableHistory* touched)
+void DetectorManager::makeHitBox(G4TouchableHistory* touched)
 {
     G4VPhysicalVolume* pvol = touched->GetVolume(); 
     
@@ -72,13 +69,37 @@ void DetectorManager::makeBox(G4TouchableHistory* touched)
     }
     
 }
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void DetectorManager::makeIntegratingBox(G4TouchableHistory* touched)
+{
+    G4VPhysicalVolume* pvol = touched->GetVolume(); 
+    
+    HepTransform3D 
+        global(*(touched->GetRotation()), 
+        touched->GetTranslation());
+    
+    
+    const G4LogicalVolume* lvol = pvol->GetLogicalVolume();
+    const G4VSolid * solid = lvol->GetSolid();
+    const G4Box* box = dynamic_cast<const G4Box*>(solid);
+    if( box !=0){
+        double 
+            x = 2*box->GetXHalfLength(), 
+            y = 2*box->GetYHalfLength(), 
+            z = 2*box->GetZHalfLength();
+        
+        DisplayManager::instance()->addIntegratingBox(global, x,y,z);
+    }
+    
+}
+
 void DetectorManager::display(G4TouchableHistory* touched, mc::McPositionHit * hit)
 {
     
     DisplayManager::instance()->addHit(hit->entryPoint(), hit->exitPoint());
 
     if( m_detectorList[hit->volumeID()]==0) {
-        makeBox( touched );        
+        makeHitBox( touched );        
     }
     ++ m_detectorList[hit->volumeID()]; 
 

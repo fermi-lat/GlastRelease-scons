@@ -35,7 +35,7 @@ public:
     //! constructor called with pointer to DetectorConstruction, for map of (partial) ids
     //! needed for constructing the from the list of physical volumes in the touchable history
     //! @param idmap map of volume ids for all sensitive detectors
-    DetectorManager( DetectorConstruction*, IDataProviderSvc* , std::string name);
+    DetectorManager( DetectorConstruction::IdMap* idMap, IDataProviderSvc* , std::string name);
     
     ~DetectorManager();
     //! Called from DetectorConstruction to set the sensitive detector propery
@@ -44,7 +44,8 @@ protected:
 
     idents::VolumeIdentifier constructId(G4Step * aStep);
 
-    void makeBox(G4TouchableHistory* touched);
+    void makeHitBox(G4TouchableHistory* touched);
+    void makeIntegratingBox(G4TouchableHistory* touched);
 
     /// The pointer to the IdataProviderSvc
     IDataProviderSvc* m_esv;
@@ -59,14 +60,6 @@ private:
     DetectorConstruction::IdMap* m_idMap;
 
 
-#if 0
-    
-    typedef std::map<idents::VolumeIdentifier, double>DetectorEnergyTotal;
-    DetectorEnergyTotal m_detectorEnergy;
-    /// The collection of McPositionHit to save in the TDS
-    McPositionHitVector *m_posHit;  
-    
-#endif
 };
 
 #endif

@@ -22,18 +22,13 @@ DisplayManager::DisplayManager( gui::DisplayControl* d)
     s_instance = this;
     
 
-    class AllBoxes : public gui::DisplayRep {
-    public:
-        AllBoxes(){setColor("grey");}
-        void update(){}
-        void clear(){}
-    };
-
     class Boxes : public gui::DisplayRep {
     public:
-        Boxes(){}
+        Boxes(std::string color="blue"):m_color(color){}
         void update(){}
-        void clear(){DisplayRep::clear(); setColor("blue");}
+        void clear(){DisplayRep::clear(); setColor(m_color);}
+    private: 
+        std::string m_color;
     };
     class HitsRep : public gui::DisplayRep {
     public:
@@ -49,17 +44,11 @@ DisplayManager::DisplayManager( gui::DisplayControl* d)
         void update(){}
         void clear(){DisplayRep::clear(); setColor("black"); }
     };
-#if 0
-    // key detector type with first 3 characters of name
-    d->add(m_detmap["sid"]=m_detmap["top"]= new AllBoxes, "ACD");
-    d->add(m_detmap["SiL"]= new AllBoxes, "TKR");
-    d->add(m_detmap["CsI"]= new AllBoxes, "CAL");
-    d->add(m_detmap["dio"]=new AllBoxes, "diodes", false);
-    d->menu().addSeparator();
-#endif
     d->add(m_detmap["steps"] = new HitsRep, "hits", false);
     
-    d->add(m_detmap["hit_boxes"] = new Boxes, "hit detectors");
+    d->add(m_detmap["hit_boxes"] = new Boxes("blue"), "hit detectors");
+
+    d->add(m_detmap["integrating_boxes"] = new Boxes("orange"), "hit integrating detectors");
 
     d->add(m_detmap["tracks"]= new TracksRep, "tracks");
 }
@@ -81,6 +70,15 @@ void DisplayManager::addHitBox(const HepTransform3D& T,
     b.transform(CoordTransform(T.getRotation(), T.getTranslation()));
     //b.transform(T); 
     m_detmap["hit_boxes"]->append(BoxRep(b));
+    
+}
+void DisplayManager::addIntegratingBox(const HepTransform3D& T,
+                               double x, double y, double z)
+{
+    Box b(x,y,z);
+    b.transform(CoordTransform(T.getRotation(), T.getTranslation()));
+    //b.transform(T); 
+    m_detmap["integrating_boxes"]->append(BoxRep(b));
     
 }
 void DisplayManager::addHit( const Hep3Vector& a, const Hep3Vector& b)
