@@ -34,8 +34,15 @@ public:
         Double_t rmsLong, Double_t rmsTrans, 
         const TVector3 &caldir, Double_t calTransvOffset);
 
+    void initialize(Double_t eLeak, Double_t rmsLong, Double_t rmsTrans, 
+        const TVector3 &caldir, Double_t calTransvOffset);
+
     void initProfile(Double_t fitEnergy, Double_t ki2, Double_t fitStart,
         Double_t fitAlpha, Double_t fitLambda);
+
+    void addEnergy(Double_t e) { m_eneLayer.push_back(e); };
+    void addPos(const TVector3& pos) { m_pLayer.push_back(pos); };
+    void addRms(const TVector3& rms) { m_rmsLayer.push_back(rms); };
     
     Double_t getEnergySum() const {return m_energySum;}
     Double_t getEnergyLeak() const {return m_leakEnergy;}

@@ -12,13 +12,13 @@ TkrRecon::TkrRecon() {
 
 TkrRecon::~TkrRecon() {
     Clear();
-    delete m_siClusterCol;
+    if (m_siClusterCol) delete m_siClusterCol;
     m_siClusterCol = 0;
-    delete m_trackCandCol;
+    if (m_trackCandCol) delete m_trackCandCol;
     m_trackCandCol = 0;
-    delete m_trackCol;
+    if (m_trackCol) delete m_trackCol;
     m_trackCol = 0;
-    delete m_vertexCol;
+    if (m_vertexCol) delete m_vertexCol;
     m_vertexCol = 0;
 }
 
