@@ -3,6 +3,7 @@
  package manager:H.Kelly
  @verbatim
 
+v2r10p0   12-Jun-2003 HMK Comment out debuggin messages
 v2r10     06-Jun-2003 UB  Fix clearing the event by buffering 
 v2r9p0    05-Feb-2003 HMK Apply pattern vsnet_rootcint 
 v2r9      15-Jan-2003 ALS Updates to requiremests for new CMT and GlastRelease
