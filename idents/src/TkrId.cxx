@@ -39,7 +39,7 @@ TkrId::TkrId(const VolumeIdentifier& vId) : m_packedId(0) {
  argument, analysis code.
 */
 TkrId::TkrId(unsigned towerX, unsigned towerY, unsigned tray, bool top,
-             int view,bool botTray) {
+             int view) {
   m_packedId = (towerX << SHIFTTowerX) + (towerY << SHIFTTowerY) +
     (tray << SHIFTTray);
   if (top) m_packedId |= (1 << SHIFTBotTop);
@@ -48,7 +48,6 @@ TkrId::TkrId(unsigned towerX, unsigned towerY, unsigned tray, bool top,
   if ((view == eMeasureX) || (view == eMeasureY) ) {
     m_packedId |= ( (view << SHIFTMeas) | VALIDMeas);
   }
-  m_packedId |= (botTray << SHIFTBottom) | VALIDBottom;
 }
 
 // the inserter; expect at most diagnostic use
