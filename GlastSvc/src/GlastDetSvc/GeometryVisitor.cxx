@@ -36,6 +36,7 @@ void  GeometryVisitor::visitEnsemble(detModel::Ensemble* ensemble)
     using namespace detModel;
     typedef std::vector<detModel::Position*> PosVector;
 //    IGeometry::DoubleVector params;
+
     
     IGeometry::VolumeType type = IGeometry::Composite;
     std::string material;

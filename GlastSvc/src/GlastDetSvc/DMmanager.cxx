@@ -5,6 +5,7 @@
 #include "detModel/Management/Manager.h"
 #include "detModel/Management/XercesBuilder.h"
 #include "detModel/Sections/Volume.h"
+#include "detModel/Management/MaterialsVisitor.h"
 
 #include <string>
 #include <cassert>
@@ -44,6 +45,8 @@ void DMmanager::init(std::string filename, std::string mode, std::string topvol)
 }
 
 void DMmanager::accept( detModel::SectionsVisitor* v){ m_vol->AcceptNotRec(v);  }
+
+void DMmanager::accept( detModel::MaterialsVisitor* v){ m_dm->startVisitor(v);  }
 
 void DMmanager::printSetup(std::ostream& out) { 
     out << " geometry setup: "<< std::endl

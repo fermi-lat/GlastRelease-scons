@@ -1,6 +1,5 @@
 package GlastSvc
-version v3
-
+version v4
 branches src mgr doc
 
 use instrument 
@@ -14,7 +13,7 @@ apply_pattern package_include
 #=============================================================
 private
 
-use detModel
+use detModel v2r6p1
 use GaudiSvc 
 use GaudiAud 
 

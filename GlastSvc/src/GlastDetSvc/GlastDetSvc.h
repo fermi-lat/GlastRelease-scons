@@ -74,10 +74,11 @@ public:
     //! set new root detector
     void setDetector(GlastDetector* d);
 
+    //! new detModel interface, will call back. 
+    virtual void accept(IMedia& media);
 
     //! start a visitor of the detModel geometry description (implements IGlastDetSvc)
     virtual void accept(IGeometry& geom);
-
     
 private:
     

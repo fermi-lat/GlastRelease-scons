@@ -10,10 +10,11 @@
 #include "GaudiKernel/IInterface.h"
 
 //forward declarations
-
+class DMmanager;
 class DetectorConverter;
 class GlastDetector;
 class IGeometry;
+class IMedia;
 namespace xml {class IFile; }
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
@@ -25,6 +26,9 @@ public:
   
     //! new detModel interface, will call back. 
     virtual void accept(IGeometry& geom)=0;
+
+    //! new detModel interface, will call back. 
+    virtual void accept(IMedia& media)=0;
 
     //! open an IRF file
     virtual StatusCode openIRF(std::string filename)=0;
@@ -47,7 +51,6 @@ public:
 
 	    /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IGlastDetSvc; }
-
 
 };
 

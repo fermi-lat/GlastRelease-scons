@@ -7,6 +7,7 @@ namespace detModel{
     class Manager;
     class Volume;
     class SectionsVisitor;
+    class MaterialsVisitor;
 }
 #include <string>
 
@@ -26,6 +27,9 @@ public:
 
     //! start a visitor from the top volume
     void accept( detModel::SectionsVisitor* v);
+
+    //! start a materials visitor
+    void accept( detModel::MaterialsVisitor* v);
 
     //! summarize setup.
     void printSetup(std::ostream& out);

@@ -13,8 +13,10 @@
 #include "xml/IFile.h"
 
 #include "GlastSvc/GlastDetSvc/IGeometry.h"
+#include "GlastSvc/GlastDetSvc/IMedia.h"
 
 #include "DMmanager.h"
+#include "MediaVisitor.h"
 #include "GeometryVisitor.h"
 
 // define the class-id (unique) for the GlastDetSvc
@@ -202,6 +204,9 @@ extern void WARNING ( const char* msg )
 void GlastDetSvc::accept(IGeometry& geom)
 {
     m_dm->accept(&GeometryVisitor(geom));
+}
 
-
+void GlastDetSvc::accept(IMedia& media)
+{
+    m_dm->accept(&MediaVisitor(media));
 }
