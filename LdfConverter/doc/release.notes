@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v1r8    05-Apr-2005 HMK Retrieve new 32 bit event sequence number 
 v1r7    31-Mar-2005 HMK Add JO paramater to control application of first 
         sweep even search...ssssshhhh...
 v1r6p1  19-Mar-2005 HMK use the number of CAL and TKR diagnostics to control

@@ -39,6 +39,7 @@ StatusCode LdfEventSummaryCnv::createObj(IOpaqueAddress* ,
     LdfEvent::EventSummaryData *summary = new LdfEvent::EventSummaryData(ebfSummary);
     summary->initEventFlags(ldfReader::LatData::instance()->getEventFlags());
 
+    summary->initOswEvtSequence(ldfReader::LatData::instance()->getOsw().evtSequence());
 
     // Retrieve the contribution lengths and store them in the EventSummaryData
     unsigned int gemLen = ldfReader::LatData::instance()->getGem().lenInBytes();
