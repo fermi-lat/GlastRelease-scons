@@ -3,7 +3,8 @@ Package digiRootData
 Coordinator:H.Kelly
 @verbatim
 
-v4r0      06-Mar-2003 AC  Modify CalDigi to store a fixed length array (4 elements) of
+v4r0      24-Mar-2003 HMK Update CalDigi classes to allow for backward compatibility
+          06-Mar-2003 AC  Modify CalDigi to store a fixed length array (4 elements) of
                       CalReadouts.  This allows the use of TClonesArray which speeds up reading
 v3r7      05-Feb-2003 HMK Fix DigiEvent::Clear for ACD TClonesArray
 v3r6      15-Jan-2003 ALS Update to requirements for new CMT and GlastRelease
