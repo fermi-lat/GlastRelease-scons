@@ -153,17 +153,43 @@ int checkMcIntegratingHit(McIntegratingHit* mcIntHit, UInt_t ipart, UInt_t ieven
         return -1;
     }
 
-    const McIntegratingHit::energyDepositMap mcPartMap = mcIntHit->getItemizedEnergy();
-    if (mcPartMap.size() != 1) {
-        std::cout << "Error: McIntHit map size is: " << mcPartMap.size();
+   // const McIntegratingHit::energyDepositMap mcPartMap = mcIntHit->getItemizedEnergy();
+    //if (mcPartMap.size() != 1) {
+    //    std::cout << "McIntHit map size is: " << mcPartMap.size();
+    //    if (mcPartMap.size() == 0) {
+    //        std::cout << "No Error cannot read map which stores TRefs using compiled" 
+    //            << " code and ROOT 3.02.07" << std::endl;
+    //        return 0;
+    //    }
+    //    return -1;
+   // }
+   // McIntegratingHit::energyDepositMap::const_iterator it;
+   // for (it = mcPartMap.begin(); it != mcPartMap.end(); it++) {
+   //     if (!floatInRange(it->second, 1.5)) {
+   //         std::cout << "McInt map energy is incorrect" << std::endl;
+    //        return -1;
+   //     }
+   // }
+
+    mcIntHit->mapReset();
+    const McParticle *myPart;
+    double energy;
+    if (mcIntHit->mapSize() != 1) {
+        std::cout << "McIntHit map size: " << mcIntHit->mapSize() << std::endl;
         return -1;
     }
-    McIntegratingHit::energyDepositMap::const_iterator it;
-    for (it = mcPartMap.begin(); it != mcPartMap.end(); it++) {
-        if (!floatInRange(it->second, 1.5)) {
-            std::cout << "McInt map energy is incorrect" << std::endl;
+    int count = 0;
+    while ( (myPart = mcIntHit->mapNext(energy)) ) {
+        ++count;
+        if (!floatInRange(energy, 1.5)) {
+            std::cout << "McInt map energy is incorrect: " << energy << std::endl;
             return -1;
         }
+    }
+    
+    if (count == 0) {
+        std::cout << "No Error cannot read map which stores TRefs using compiled" 
+            << " code and ROOT 3.02.07" << std::endl;
     }
     
     return 0;
