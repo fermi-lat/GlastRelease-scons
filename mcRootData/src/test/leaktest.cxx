@@ -7,8 +7,12 @@
 //       WinNT.*.Root.DynamicPath:   $(ROOTANALYSIS)/lib
 //   OR
 //    b) Copy mcRootData.so (or .dll) into the directory from where you start ROOT.
-// 2) Start ROOT
-// 3) At the ROOT prompt, type:  ".x leaktest.cxx" 
+// 2) You want to make sure that memory statistics are kept in ROOT by modifying your
+//    local .rootrc file, and setting:
+//    Root.MemStat:            1
+//    Root.ObjectStat:         1
+// 3) Start ROOT
+// 4) At the ROOT prompt, type:  ".x leaktest.cxx" 
 
 {
     UInt_t numEvents = 500;
@@ -49,10 +53,9 @@
                 ev->addMcPositionHit(posHit);
             } else {
                 McIntegratingHit *intHit = new McIntegratingHit();
-                TVector3 mom1(rand*0.1, rand*0.2, rand*0.3);
-                TVector3 mom2(2., 2., 2.);
                 id.initialize(0, 0, 0);
-                intHit->initialize(id, rand, mom1, mom2);
+                intHit->initialize(id);
+                intHit->addEnergyItem(1.5, mcPart, TVector3(0.5, 0.5, 0.5));
                 ev->addMcIntegratingHit(intHit);
             }
         }

@@ -131,7 +131,7 @@ int checkMcPositionHit(const McPositionHit* mcPosHit, Int_t ipart, Int_t ievent)
 }
 
 /// Check the contents of the McIntegratingHit read in from the ROOT file
-int checkMcIntegratingHit(const McIntegratingHit* mcIntHit, Int_t ipart, Int_t ievent) {
+int checkMcIntegratingHit(McIntegratingHit* mcIntHit, Int_t ipart, Int_t ievent) {
     
     Float_t f = Float_t(ipart);
     
@@ -140,6 +140,19 @@ int checkMcIntegratingHit(const McIntegratingHit* mcIntHit, Int_t ipart, Int_t i
     if ( (id.size() != 1) || (id.getBits0to31() != 0) || (id.getBits32to63() != 0) ) {
         std::cout << "McIntHit VolId is incorrect" << std::endl;
         return -1;
+    }
+
+    const McIntegratingHit::energyDepositMap mcPartMap = mcIntHit->getItemizedEnergy();
+    if (mcPartMap.size() != 1) {
+        std::cout << "McIntHit map size is: " << mcPartMap.size();
+        return -1;
+    }
+    McIntegratingHit::energyDepositMap::const_iterator it;
+    for (it = mcPartMap.begin(); it != mcPartMap.end(); it++) {
+        if (it->second != 1.5) {
+            std::cout << "McInt map energy is incorrect" << std::endl;
+            return -1;
+        }
     }
     
     return 0;
@@ -231,6 +244,7 @@ int write(char* fileName, int numEvents) {
             id.Clear();
             id.append(0);
             intHit->initialize(id);
+            intHit->addEnergyItem(1.5, mcPart, TVector3(randNum, randNum, randNum));
             ev->addMcIntegratingHit(intHit);
         }
         t->Fill();
