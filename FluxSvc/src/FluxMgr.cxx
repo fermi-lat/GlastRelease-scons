@@ -12,8 +12,6 @@
 #include "xml/Dom.h"
 #include "xml/IFile.h"
 
-//#include "Orbit.h"
-
 
 #define DLL_DECL_SPECTRUM(x)   extern const ISpectrumFactory& x##Factory; x##Factory.addRef();
 
@@ -314,11 +312,6 @@ void FluxMgr::setOrientation(std::pair<double,double> ang){
 
 std::pair<double,double> FluxMgr::getOrientation(){
     return GPS::instance()->rotateAngles();
-}
-
-void FluxMgr::setGlastPosition(std::pair<double,double> pos){
-    GPS::instance()->ascendingLon(pos.first);
-    GPS::instance()->ascendingLon(pos.second);
 }
 
 void FluxMgr::setExpansion (double p){

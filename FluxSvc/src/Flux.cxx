@@ -41,7 +41,6 @@ void Flux::generate()
     // Purpose and Method: generate a new entry trajectory, set FluxSource, increment local time
     // Inputs  - none
     // Outputs - none
-    
     m_flux = m_event->event(time());
     double timepass = m_event->interval(time());
     m_time+= timepass;

@@ -75,7 +75,8 @@ int main(int argn, char * argc[]) {
 
     //TESTING MULTIPLE XML INPUT
     std::vector<std::string> fileList;
-    fileList.push_back("$(FLUXSVCROOT)/src/test/flux/test_library.xml");	
+    //fileList.push_back("$(FLUXSVCROOT)/src/test/flux/test_library.xml");
+    fileList.push_back("$(FLUXSVCROOT)/xml/source_library.xml");
     FluxMgr fm(fileList);
 
     //FluxMgr fm;

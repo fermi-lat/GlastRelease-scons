@@ -539,7 +539,6 @@ FluxSource* FluxSource::event(double time)
     // Outputs - pointer to the "current" fluxSource object.
     m_interval = calculateInterval(time);
     computeLaunch(time+m_interval);
-
     //now set the actual interval to be what FluxMgr will get
     EventSource::setTime(time+m_interval);
 

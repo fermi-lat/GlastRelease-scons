@@ -59,9 +59,6 @@ public:
     ///this should return the source file names, along with the contained sources.
     std::vector<std::pair< std::string ,std::list<std::string> > > sourceOriginList() const;
     
-    /// set the orbital (position) values of the GLAST satellite
-    void setGlastPosition(std::pair<double,double> pos);
-    
     void addFactory(std::string name, const ISpectrumFactory* factory );
     
     /// set the expansion factor for the orbit (-1) = random

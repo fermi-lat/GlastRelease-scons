@@ -4,7 +4,7 @@
 
 #include "GPS.h"
 
-#include "Orbit.h"
+//#include "Orbit.h"
 #include "CLHEP/Random/RandFlat.h"
 #include "astro/EarthCoordinate.h"
 
@@ -16,13 +16,11 @@
 GPS*	GPS::s_instance = 0;
 
 GPS::GPS() 
-: m_orbit(new Orbit),
-m_rockDegrees(35.),
+:m_rockDegrees(35.),
 m_rockType(NONE),
 m_earthOrbit(new astro::EarthOrbit),
 m_expansion(1.),    // default expansion:regular orbit for now
 m_time(0.), 
-m_orbittime(m_time),
 m_sampleintvl(0.001),
 m_rotangles(std::make_pair<double,double>(0.,0.))
 {}
@@ -37,18 +35,8 @@ GPS::Coords::Coords(){}
 
 
 GPS::~GPS ()
-{ delete m_orbit; }
+{ }//delete m_orbit; }
 
-
-const Orbit*   GPS::orbit () const 
-{
-    return m_orbit;
-}
-
-Orbit*   GPS::orbit () 
-{
-    return m_orbit;
-}
 
 void GPS::synch ()
 {
@@ -62,15 +50,12 @@ void GPS::synch ()
     if (expansion() < 0.) {
         static GPStime  last_time = time();
         if ((time() - last_time) > m_sampleintvl) {
-            orbittime( RandFlat::shoot(orbit()->period()) );
-            orbit()->ascendingLon(RandFlat::shoot(360.));
             last_time = time();
             changed = true;
             
         }
     }
     else if( expansion()>0 ) {
-        orbittime( time()*expansion() );
         changed=true; 
     }
     
@@ -82,8 +67,7 @@ void GPS::synch ()
 
 double GPS::lat () const
 {
-    double currentTime = time();
-    //return orbit()->latitude( orbittime() ); 
+    double currentTime = time(); 
     double julianDate = m_earthOrbit->dateFromSeconds(currentTime);
 
     //and here the pointing characteristics of the LAT.
@@ -96,7 +80,6 @@ double GPS::lat () const
 
 double	GPS::lon () const
 { 
-    //return orbit()->longitude( orbittime() ); 
     double currentTime = time();
     double julianDate = m_earthOrbit->dateFromSeconds(currentTime);
 
@@ -113,24 +96,11 @@ GPStime	GPS::time ()  const
     return m_time;
 }
 
-double   GPS::phase () const
-{
-    // compute orbital phase based upon current time
-    return orbit()->phase( orbittime() );
-}
 
 double   GPS::expansion () const
 {
     return m_expansion;
 }
-
-void	GPS::orbit ( Orbit* o )
-{
-    if (o == 0) return;
-    delete m_orbit;
-    m_orbit = o;
-}
-
 
 void GPS::pass ( double t )
 { 
@@ -139,27 +109,10 @@ void GPS::pass ( double t )
     }   // cannot pass when scheduler is in control!
 }
 
-void GPS::phase ( double p )
-{
-    // jump to a particular point in the orbit
-    double  pd = orbit()->period();
-    if (pd != 0.) orbit()->startphase(p - 2.*M_PI*time()/pd);
-}
-
 void GPS::expansion ( double e )
 {
     m_expansion = e; 
 }
-
-//void GPS::lat ( double l )
-//{
-//    m_orbit->setLatitude(l);
-//}
-
-//void GPS::lon ( double l )
-//{
-//    m_orbit->setLongitude(l);
-//}
 
 void GPS::time ( GPStime t )
 {
@@ -175,16 +128,6 @@ void GPS::kill()
     s_instance = 0;
 }
 
-void GPS::orbittime ( GPStime t ) 
-{
-    m_orbittime = t;
-}
-
-GPStime GPS::orbittime () const
-{
-    return m_orbittime;
-}
-
 void    GPS::sampleintvl ( GPStime s )
 {
     m_sampleintvl = s;
@@ -196,14 +139,6 @@ GPStime  GPS::sampleintvl () const
 }
 
 
-void GPS::ascendingLon(double lon)
-{
-    m_orbit->ascendingLon(lon);
-}
-double GPS::ascendingLon()const
-{
-    return m_orbit->ascendingLon();
-}
 void    GPS::printOn(std::ostream& out) const
 {
     out << "GPS: time=" << time() 
@@ -226,9 +161,9 @@ void GPS::rotateAngles(std::pair<double,double> coords){
 
 
 Rotation GPS::rockingAngleTransform(double seconds){
-    //Purpose:  return the rotation to correct for satellite rocking.
-    //Input:  Current time
-    //Output:  3x3 rocking-angle transformation matrix.
+    ///Purpose:  return the rotation to correct for satellite rocking.
+    ///Input:  Current time
+    ///Output:  3x3 rocking-angle transformation matrix.
     using namespace astro;
     
     double time = m_earthOrbit->dateFromSeconds(seconds);
@@ -273,8 +208,8 @@ Rotation GPS::rockingAngleTransform(double seconds){
 }
 
 Rotation GPS::CELTransform(double seconds){
-    // Purpose:  Return the 3x3 matrix which transforms a vector from a galactic 
-    // coordinate system to a local coordinate system.
+    /// Purpose:  Return the 3x3 matrix which transforms a vector from a galactic 
+    /// coordinate system to a local coordinate system.
     using namespace astro;
     double degsPerRad = 180./M_PI;
     Rotation gal;//,cel;
@@ -304,8 +239,8 @@ Rotation GPS::CELTransform(double seconds){
 }
 
 Rotation GPS::transformCelToGlast(double seconds){
-    // Purpose:  Return the 3x3 matrix which transforms a vector from a celestial 
-    // coordinate system (like a SkyDir vector) to a local coordinate system (like the FluxSvc output).
+    /// Purpose:  Return the 3x3 matrix which transforms a vector from a celestial 
+    /// coordinate system (like a SkyDir vector) to a local coordinate system (like the FluxSvc output).
     using namespace astro;
     double degsPerRad = 180./M_PI;
 

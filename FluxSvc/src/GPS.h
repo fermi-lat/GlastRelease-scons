@@ -75,11 +75,7 @@ public:
     /// present latitude
     double	lat () const; 
     /// present longitude
-    double	lon () const; 
-    /// get the current phase of the orbit
-    double      phase () const;
-    /// access to the orbit (for computation only)
-    const Orbit* orbit () const;  
+    double	lon () const;  
     /// expansion of the current orbit
     double      expansion () const; 
     /// sample interval for random orbit distribution
@@ -88,17 +84,15 @@ public:
     double     ascendingLon()const; 
     /// access m_rotangles
     std::pair<double,double> rotateAngles(); 
+
+ 
     // set data
     
     /// get the pointing characteristics of the satellite, given a location and rocking angle.
     void getPointingCharacteristics(double seconds);
     
-    /// set a specific Orbit object for lat/lon calculations
-    void    orbit ( Orbit* );
     /// pass a specific amount of time
     void    pass ( double );
-    /// set the current phase of the orbit
-    void    phase ( double );
     /// set the expansion factor for the orbit (-1) = random
     void    expansion ( double );
     /// synchronize w. scheduler
@@ -159,9 +153,6 @@ public:
         //void    lat ( double );         // set latitude
         //void    lon ( double );         // set longitude
         void    time ( GPStime );       // set time
-        GPStime orbittime () const;     // access to orbit time
-        void    orbittime ( GPStime );  // set orbit time
-        //void    setState ( const GPS::Coords& ); // set the orbital parameters
         std::pair<double,double> m_rotangles;  //angles for coordinate rotation (rocking angle)
         
         // friends
@@ -170,11 +161,9 @@ public:
     private:
         static GPS* s_instance;
         astro::EarthOrbit* m_earthOrbit; //orbital position object, from the astro package.
-        
-        Orbit*  m_orbit;        // orbital position object 
+         
         double  m_expansion;    // orbit expansion factor
         GPStime m_time;	    // global time
-        GPStime m_orbittime;    // time in orbit (depends on expansion)
         double  m_sampleintvl;  // interval to sample for each pt. in the orbit - to normalize spectra
         double m_RAX,m_RAZ,m_DECX,m_DECZ; //pointing characteristics.
         double m_RAZenith,m_DECZenith;  //pointing characteristic of the zenith direction.
