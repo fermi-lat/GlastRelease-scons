@@ -143,7 +143,8 @@ double SlopeCorrectedMeasErrs::getError(double strips, double slope) const
     }
     if (factor==0) 
     {
-        factor = std::max((clusterWidth - projectedWidth - 1), sqrt(0.5));
+        double delta = clusterWidth - projectedWidth - 1.;
+        factor = std::max(fabs(delta), 1.);
     } 
 
     error = factor*minErr;
