@@ -88,10 +88,15 @@ namespace calibUtil {
     }
 
     if (row.size() > 0) {
-      std::cout << 
+      std::cerr << 
         "calibration metadata record build already in progress" << std::endl;
       return RETWrongState;
     }
+    // Do checking in advance of column values which come from an
+    // enumerated sets.
+    if (!(checkCalibStatusInput(calibStatus) || 
+          checkProcLevelInput(procLevel)) )
+      return RETBadValue;
 
     //    += is a synonym for row.append(..)
     row += "insert into metadata set instrument=";    row += instr;
@@ -221,12 +226,13 @@ namespace calibUtil {
     //       - calib_status
   
     eRet ret;
-    ser = 0;
+    *ser = 0;
     if (!readCxt) {
       connectRead(ret);
       if (ret != RETOk) return ret;
     }
 
+    // Sort rows by timestamp, most recent first
     std::string query("select serial_num, validity_start_time, validity_end_time, proc_time,");
     query += "calib_status from metadata order by proc_time desc where ";
     query += "(calib_status = 'OK') and instrument ="; query += instrument;
@@ -240,20 +246,38 @@ namespace calibUtil {
       // clause onto query.  Return false if no known bits found
       std::string q = query;
       bool ok = addLevel(q, &levelMask);  
+      if (!ok) {
+        std::cerr << "In Metadata::findBest(..) bad levelMask arg" 
+                  << std::endl;
+        return RETBadValue;
+      }
+
       int ret = mysql_query(readCxt, q.c_str());
       if (ret) {
         std::cerr << "MySQL error during SELECT, code " << ret << std::endl;
         return RETMySQLError;
       }
       
-      
+      MYSQL_RES *myres = mysql_store_result(readCxt);
 
-      // If got some rows back, process and return; else 
-      // stay in this loop
+      // Since we're doing a query, a result set should be returned
+      // even if there are no rows in the result.  A null pointer 
+      // indicates an error.
+      if (!myres) {
+        return RETMySQLError;
+      }
+      else if (mysql_num_rows(myres) ) {       // Get serial # of first row
+        MYSQL_ROW myRow = mysql_fetch_row(myres);
+        // serial number is pointed to by myRow[0]
+        *ser = atoi(myRow[0]);
+        return RETOk;
+      }
+      // otherwise there was no error, but also no rows returned
+      // which matched the query, so keep going.
     }
 
 
-    return 0;
+    return RETOk;
 
   }
 
@@ -295,5 +319,14 @@ namespace calibUtil {
     return ret;
   }
 
-           
+  bool Metadata::checkCalibStatusInput(const std::string& stat) {
+    return ((stat.compare("OK") == 0 ) || (stat.compare("INCOMPLETE") == 0) 
+            || (stat.compare("ABORTED") == 0) );
+  }
+  bool Metadata::checkProcLevelInput(const std::string& level) {
+    return ((level.compare("TEST") == 0) || 
+            (level.compare("DEVELOPMENT") == 0) ||
+            (level.compare("PRODUCTION") == 0) || 
+            (level.compare("SUPERSEDED") == 0 )    );
+  }
 }
