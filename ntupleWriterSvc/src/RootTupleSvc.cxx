@@ -16,6 +16,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
+#include "checkSum.h"
 #include "facilities/Util.h"
 #include <map>
 
@@ -105,12 +106,6 @@ private:
     /// routine that is called when we reach the end of an event
     void endEvent();
 
-    /// a general routine that prepares the computation of the checksum
-    void checkSum(TTree*);
-
-    /// computes a simple checksum
-    unsigned long checkSumSimple(std::vector<unsigned char>*);
-
     StringProperty m_filename;
     StringProperty m_checksumfilename;
     StringProperty m_treename;
@@ -119,8 +114,8 @@ private:
     /// the ROOT stuff: a file and a a set of trees to put into it
     TFile * m_tf;
 
-    /// ofstream used for storing the check sum
-    std::ofstream m_csout;
+    /// the checksum object
+    checkSum::checkSum* m_checkSum;
 
     std::map<std::string, TTree *> m_tree;
 
@@ -190,16 +185,12 @@ StatusCode RootTupleSvc::initialize ()
     //t->SetAutoSave(m_autoSave); 
 
     // set up the check sum ofstream
-    std::string fn(m_checksumfilename);
-    facilities::Util::expandEnvVar(&fn);
-    if ( fn.size() ) {
-        m_csout.open(fn.c_str());
-        if ( m_csout.is_open() )
-            log<<MSG::INFO<< "using " << fn << " for storing checksum" <<endreq;
-        else {
-            log << MSG::ERROR << "cannot open checksum file " << fn << endreq;
-            return StatusCode::FAILURE;
-        }
+    m_checkSum = new checkSum::checkSum(m_checksumfilename);
+    if ( m_checkSum->bad() ) {
+        log << MSG::ERROR
+            << "cannot open checksum file " << m_checksumfilename << endreq;
+        delete m_checkSum;
+        return StatusCode::FAILURE;
     }
 
     return status;
@@ -278,10 +269,11 @@ void RootTupleSvc::endEvent()
         if( m_storeAll || m_storeTree[it->first]  ) {
             TTree* t = it->second;
             t->Fill();
-            if ( m_csout.is_open() && (std::string)t->GetName()=="MeritTuple" ){
+            std::string treeName = t->GetName();
+            if ( m_checkSum->is_open() && treeName == "MeritTuple" ) {
                 log << MSG::VERBOSE << "calculating checksum for "
-                    << t->GetName() << endreq;
-                checkSum(t);
+                    << treeName << endreq;
+                m_checkSum->write(t);
             }
         }
     }
@@ -332,9 +324,9 @@ StatusCode RootTupleSvc::finalize ()
     m_tf->Close(); 
     saveDir->cd();
 
-    // closing the (optional) check sum stream
-    if ( m_csout.is_open() )
-        m_csout.close();
+    // deleting the checksum object
+    if ( m_checkSum )
+        delete m_checkSum;
 
     return StatusCode::SUCCESS;
 }
@@ -345,79 +337,4 @@ bool RootTupleSvc::storeRowFlag(const std::string& tupleName, bool flag)
     bool t = m_storeTree[tupleName];
     m_storeTree[tupleName] = flag;
     return t;
-}
-
-void RootTupleSvc::checkSum(TTree* t) {
-    MsgStream log( msgSvc(), name() );
-
-    TObjArray* lcol = t->GetListOfLeaves();
-    const int lsize = lcol->GetEntries();
-    log << MSG::DEBUG << "TTree " << t->GetName()
-        << " has " << lsize << " leaves " << endreq;
-    std::vector<unsigned char> charCol;
-    Double_t eventId = -1;     // initialize with something unreasonable
-    Double_t elapsedTime = -1;
-
-    for ( int i=0; i<lsize; ++i ) {
-        // there exists a TTreeFriendLeafIter, but how to use it?
-
-        TObject* l = lcol->At(i);
-        const std::string c = l->ClassName();
-        const std::string n = l->GetName();
-        log << MSG::VERBOSE << i << " " << n << " " << c;
-
-        if ( c == "TLeafD" ) {
-            const Double_t v = dynamic_cast<TLeafD*>(l)->GetValue();
-            if ( log.isActive() ) {
-    //THB: problem with windows??           log << " " << std::setprecision(25) << v << std::setprecision(0)  << endreq;
-            }
-            const unsigned int s = sizeof(v);
-            unsigned char p[s];
-            for ( unsigned int ip=0; ip<s; ++ip )
-                p[ip] = 255;
-            memcpy(p, &v, s);
-            for ( unsigned int ip=0; ip<s; ++ip ) {
-                log << MSG::VERBOSE << "   " << i << " " << ip << " "
-                    << (unsigned short)p[ip] << endreq;
-                charCol.push_back(p[ip]);
-            }
-
-            if ( n == "Event_ID" )
-                eventId = v;
-            else if ( n == "elapsed_time" ) {
-                elapsedTime = v;
-            }
-        }
-        else {
-            if ( log.isActive() )
-                log << endreq;
-            log<<MSG::WARNING<< "class " << c << " is not implemented!"<<endreq;
-        }
-    }
-    const unsigned long theSum = checkSumSimple(&charCol);
-# if 0
-    log << MSG::DEBUG << "checksum: "
-        << std::setprecision(25)
-        << std::resetiosflags(std::ios::scientific) << eventId << " "
-        << std::setiosflags(std::ios::scientific)   << elapsedTime << " "
-        << theSum << " "
-        << charCol.size()
-        << endreq;
-#endif
-    m_csout.precision(25);
-    m_csout << std::setw(10)
-            << std::resetiosflags(std::ios::scientific) << eventId << "     "
-            << std::setw(25)
-            << std::setiosflags(std::ios::scientific) << elapsedTime << "     "
-            << std::setw(25) << theSum
-            << std::endl;
-}
-
-
-
-unsigned long RootTupleSvc::checkSumSimple(std::vector<unsigned char>* v) {
-    unsigned long sum = 0;
-    for( std::vector<unsigned char>::iterator it=v->begin(); it<v->end(); ++it )
-        sum += *it;
-    return sum;
 }
