@@ -4,16 +4,16 @@
   @section intro Introduction
 
   This package contains all GLAST ROOT macros that are supported by the GLAST 
-  ground software group.  The routines provided, are meant to provide some basic,
-  general, functions that most GLAST ROOT users may find useful.  To process 
-  GLAST ROOT data, it is not necessary to use this package, but it may make it 
-  easier.
+  ground software group.  The routines provided, are meant to provide some 
+  basic, general, functions that most GLAST ROOT users may find useful.  
+  To process GLAST ROOT data, it is not necessary to use this package, but it 
+  may make it easier.
 
   @section setup Setup the ROOT environment for GLAST
 
   RootAnalysis now comes with a simple .rootrc.  This is the file used by ROOT
   to setup your ROOT environment upon startup.  
-  First, setup a ROOTANALYSIS environment variable that is set to the directory 
+  First, creat a ROOTANALYSIS environment variable that is set to the directory 
   path, where you have the RootAnalysis package installed. 
 
   On UNIX:  setenv ROOTANALYSIS $HOME/RootAnalysis/vnrm
@@ -25,20 +25,25 @@
   Set its value equal to the RootAnalysis directory on your system, 
   i.e. D:/glast/RootAnalysis/v2r2 
 
-  To be use the RootAnalysis package, the .rootrc file must be in the directory 
+  To use the RootAnalysis package, the .rootrc file must be in the directory 
   from where you launch ROOT.  Next do one of the following:
 
-  Startup ROOT from within the RootAnalysis directory
+  Start ROOT from within the RootAnalysis directory
   OR
-  Copy the .rootrc file to your local area, where you will startup ROOT. 
+  Copy the .rootrc file to your local area, where you will start ROOT. 
 
   @section cmt Using RootAnalysis as a regular CMT package
   It is also possible to download RootAnalysis directly from the CVS 
   repository.  In this case, you must make sure to also install the 
-  digiRootData and reconRootData packages on your system, as the compiled 
-  libraries will not be downloaded when using CVS.  In this case, the 
-  RootAnalysis environment variable will be set up for you.  Follow the 
-  typical directions for setup using CMT.
+  mcRootData, digiRootData, and reconRootData packages on your system.
+  In this case, the RootAnalysis environment variable will be set up for you.
+  Follow the typical directions for setup using CMT.
+
+  Note that RootAnalysis now contains a test routine that runs RootTreeAnalysis
+  from a standalone main program.  By default, RootTreeAnalysis reads in 3
+  ROOT files that come with the standard RootAnalysis distribution.  This test
+  routine, can be run on other ROOT files, by providing input parameters:
+  test_RootAnalysis.exe myMcRootFile.root myDigiRootFile.root myReconRootFile.root
 
   @section loop Event Loop Processing
 
