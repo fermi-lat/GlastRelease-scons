@@ -37,10 +37,12 @@ extern const CLID& CLID_TdGlastData;
 
 
 class TdGlastData : virtual public GlastData , virtual public DataObject {
-
+    
 public:
-
-
+    
+    //! allow set new truth guy
+    virtual void setMCTruth(const MCTruth*)=0;
+    
 };
 
 #endif
