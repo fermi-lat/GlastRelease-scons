@@ -86,6 +86,8 @@ BaseCnv::BaseCnv(const CLID& clid, ISvcLocator* svc)
     StatusCode sc;
     MsgStream log(msgSvc(), "BaseCnv");
 
+    // provide access to the Glast Detector Service, so that we may call the accept method
+    // from within our converters
     sc = serviceLocator()->getService ("GlastDetSvc",
         IID_IGlastDetSvc, reinterpret_cast<IInterface*&>( m_detSvc ));
     

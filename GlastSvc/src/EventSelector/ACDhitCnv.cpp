@@ -3,7 +3,6 @@
 //
 // Implementation of class :  ACDhitCnv
 //
-// Author :                   Markus Frank
 //
 //------------------------------------------------------------------------------
 #define ACDhitCnv_CPP 
@@ -70,7 +69,6 @@ ACDhitCnv::ACDhitCnv(ISvcLocator* svc)
 : BaseCnv(classID(), svc)
 {
 
-  // For Sicb it is necessary to declare the part the object will be put
   declareObject("/Event/ACDTile", objType(), "PASS");
 }
 

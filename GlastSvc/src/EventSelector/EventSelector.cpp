@@ -150,6 +150,7 @@ StatusCode EventSelector::setCriteria( const SelectionCriteria& criteria ) {
 
 // IEvtSelector::begin()
 // Event Selector Iterator begin
+// Called by the ApplicationMgr::intialize() method
 IEvtSelector::Iterator* EventSelector::begin() const {
     MsgStream log(messageService(), name());
     StatusCode sc;
@@ -201,28 +202,6 @@ IEvtSelector::Iterator* EventSelector::end() const {
 }
 
 
-class IRFConverter : public DetectorConverter {
-public:
-	IRFConverter(IDataProviderSvc *evtDataSvc) {
-		ACDcontainer = new ACDhitVector;
-	}
-
- virtual void forward (const Scintillator& s) {
-	 if ( !(s.empty()) ) {
-        ACDhit* tile = new ACDhit();
-        tile->setEnergy(s.energy());
-        tile->setId(s.id());
-        ACDcontainer->push_back(tile);
-	 } else { // let's make a dummy one...
-        ACDhit* tile = new ACDhit();
-        tile->setEnergy(10.5);
-        tile->setId(5);
-        ACDcontainer->push_back(tile);
-	 }
- }
-private:
-	ACDhitVector* ACDcontainer;    
-};
 
 // IEvtSelector::next
 // Event Selector iterator next(it)
@@ -231,16 +210,18 @@ IEvtSelector::Iterator& EventSelector::next(IEvtSelector::Iterator& it) const {
     GlastEvtIterator* irfIt = dynamic_cast<GlastEvtIterator*>(&it);
     (irfIt->m_recId)++;
     log << MSG::DEBUG << "Reading Event " <<  irfIt->m_recId << endreq;
+    
+    // causes data from the current event in the IRF file to be loaded into the GlastDetector
+    // objects
     StatusCode sc = m_detSvc->readIRF();
+
     if (sc.isFailure()){
         log << MSG::ERROR << " Failed to get Event " << irfIt->m_recId << endreq;
         log << MSG::ERROR << "The job will STOP normally after reading : " 
             << --(irfIt->m_recId) << " Events" << endreq;
         *(irfIt) = m_evtEnd;
     }
-    // now send a visitor to fill in the event
 
-    m_detSvc->accept(IRFConverter(m_eventDataSvc));
     return *irfIt;
 }
 // IEvtSelector::previous

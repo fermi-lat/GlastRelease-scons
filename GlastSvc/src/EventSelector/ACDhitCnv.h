@@ -37,8 +37,6 @@ public:
   virtual StatusCode createObj(IOpaqueAddress* pAddress, DataObject*& refpObject);
 
 protected:
-    /// Storage type and class ID
-  //static const unsigned char storageType()     { return SICB_StorageType; }
 
 };
 #endif // ACDhitCnv_H
