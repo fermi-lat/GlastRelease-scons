@@ -136,7 +136,7 @@
     <stackY name="CALLayerYMeas" >
       <axisMPos volume="CsIElement" ncopyREF="nCsIPerLayer"
                 shiftREF="cellHorPitch" >
-        <idField name="fCALLog" value="maxLog" step="-1" />
+        <idField name="fCALLog" valueREF="maxLog" step="-1" />
       </axisMPos>
     </stackY>
 
