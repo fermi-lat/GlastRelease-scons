@@ -4,6 +4,7 @@
 
  package manager:T.Burnett
 
+ 16-Dec-04  TU  tag v9r12p1 Update requirements to look for correct Event package
  16-Dec-04  TU  tag v9r12p0 Updated IPropagator.h to use new Tracker TDS classes
  14-sep-04  THB tag v9r11p2 removed trigger bit initialization in random svc (!)
  14-aug-04  THB tag v9r11p1 try with just xml completely public, for fussy linux

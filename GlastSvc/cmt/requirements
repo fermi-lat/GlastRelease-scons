@@ -16,7 +16,7 @@ use xml *
 
 #=============================================================
 # private
-use Event v9r*
+use Event v10r*
 use detModel   v2r* -no_auto_imports
 use xmlGeoDbs  v1r* -no_auto_imports
 use CLHEP v2* IExternal -no_auto_imports
