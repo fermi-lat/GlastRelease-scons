@@ -1,8 +1,8 @@
 package gui
-version v3r3p2
+version v3r4
 
-use GlastPolicy
-use CLHEP
+use GlastPolicy v5*
+use CLHEP v2* IExternal
 
 apply_pattern package_include
 
