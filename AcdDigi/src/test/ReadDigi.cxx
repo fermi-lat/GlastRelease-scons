@@ -1,4 +1,4 @@
-#define AcdDigi_ReadDigi_CPP 
+#define AcdDigi_ReadDigi_CXX
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
@@ -12,7 +12,7 @@
 
 #include "GaudiKernel/Algorithm.h"
 
-/** @class ReadDigi.cpp
+/** @class ReadDigi.cxx
  * @brief AcdDigi Test algorithm
  * $Header$
  */

@@ -1,4 +1,4 @@
-/** @file AcdDigi_dll.cpp
+/** @file AcdDigi_dll.cxx
 
   $Header$
 */

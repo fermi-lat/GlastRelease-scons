@@ -1,5 +1,11 @@
 #define AcdDigi_AcdDigiOrgAlg_CPP 
 
+// File and Version Information:
+// $Header$
+// Description:
+// Initial version of ACD digitization used for the PDR studies.
+// ACD Monte Carlo hit data are assumed to be stored in McIntegratingHits.
+
 #include "AcdDigiOrgAlg.h"
 
 #include "GaudiKernel/MsgStream.h"

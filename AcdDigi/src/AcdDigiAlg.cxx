@@ -1,5 +1,11 @@
 #define AcdDigi_AcdDigiAlg_CPP 
 
+// File and Version Information:
+// $Header$
+// Description:
+// Implementation of the latest digitization algorithm for the ACD where
+// the Monte Carlo hit information is assumed to be stored in McPositionHits.
+
 #include "AcdDigiAlg.h"
 
 #include "GaudiKernel/MsgStream.h"

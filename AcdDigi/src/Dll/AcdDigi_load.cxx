@@ -1,5 +1,5 @@
 /** 
-* @file AcdDigi_load.cpp
+* @file AcdDigi_load.cxx
 * @brief This is needed for forcing the linker to load all components
 * of the library.
 *

@@ -1,5 +1,10 @@
 #define AcdDigi_AcdDigiUtil_CPP 
 
+// File and Version Information:
+// $Header$
+// Description
+// Some utility methods helpful for performing the ACD digitization.
+
 #include "AcdDigiUtil.h"
 
 #include "CLHEP/Random/RandPoisson.h"

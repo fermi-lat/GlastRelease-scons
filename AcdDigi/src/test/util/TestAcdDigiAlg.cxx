@@ -1,4 +1,9 @@
-#define AcdDigi_TestAcdDigiAlg_CPP 
+#define AcdDigi_TestAcdDigiAlg_CXX
+
+// File and Version Information
+// $Header$
+// Description:
+// Test for AcdUtil class. 
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"

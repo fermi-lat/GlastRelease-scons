@@ -1,5 +1,12 @@
 #define AcdDigi_AcdDigiMcIntHitAlg_CPP 
 
+// File and Version Information
+// $Header$
+// Description
+// Algorithm to convert from hit data into digitization data 
+// for the ACD.  This version assumes the Monte Carlo hit data is stored
+// as McIntegratingHits
+
 #include "AcdDigiMcIntHitAlg.h"
 
 #include "GaudiKernel/MsgStream.h"
@@ -33,6 +40,12 @@ AcdDigiMcIntHitAlg::AcdDigiMcIntHitAlg(const std::string& name, ISvcLocator* pSv
 Algorithm(name, pSvcLocator) {
     
     declareProperty ("xmlFile", m_xmlFile="$(ACDDIGIROOT)/xml/acdDigi.xml");
+
+    declareProperty("autoCalibrate", m_auto_calibrate=true);
+
+    declareProperty("applyPoisson", m_apply_poisson=true);
+
+    declareProperty("applyGaussianNoise", m_apply_noise=false);
 }
 
 
@@ -226,11 +239,6 @@ void AcdDigiMcIntHitAlg::getParameters() {
     m_mips_full_scale = xmlFilePtr.getDouble("global_constants", "mips_full_scale", 20.0);
     
     m_mev_per_mip = xmlFilePtr.getDouble("global_constants", "mev_per_mip", 1.9);
-
-    m_auto_calibrate = xmlFilePtr.getBool("processing", "auto_calibrate", true);
-    
-    m_apply_poisson = xmlFilePtr.getBool("processing", "apply_poisson", true);
-
     
     return;
 }

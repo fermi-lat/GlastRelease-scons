@@ -49,7 +49,8 @@ private:
     /// Access the methods in the AcdDigiUtil class
     AcdDigiUtil util;
     
-    /// standard deviation for gaussian noise for PHA, veto and CNO discriminators
+    /// standard deviation for gaussian noise for PHA, veto and CNO 
+    /// discriminators
     double m_noise_std_dev_pha, m_noise_std_dev_veto, m_noise_std_dev_cno;
     
     /// full scale for PHA
@@ -58,18 +59,19 @@ private:
     /// Global ratio of photoelectrons to mips
     unsigned short m_mean_pe_per_mip;
     
-    /// number of MIPs tha correspond to full scale PHA
+    /// number of MIPs that correspond to full scale PHA
     float m_mips_full_scale;
     
     /// MeV per MIP
     float m_mev_per_mip;
     
-    /// Flag denoting whether or not to perform auto calibration to determine
-    /// the number of MIPs for full scale PHA
+    /// jobOptions parameter denoting whether or not to perform auto 
+    /// calibration to determine the number of MIPs for full scale PHA
     bool m_auto_calibrate;
     
     /// jobOptions parameter denoting whether or not to apply Poisson fluctuations
     bool m_apply_poisson;
+
     /// jobOptions parameter denoting whether or not to apply Gaussian noise 
     /// before determining PHA and discriminators
     bool m_apply_noise;
