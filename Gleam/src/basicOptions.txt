@@ -113,7 +113,6 @@ Reconstruction.Members={
       "Sequencer/Acd"
       };
          
-ApplicationMgr.ExtSvc += {"RecoSvc"};
 
 //          tracker
 // -------------------------------------------
