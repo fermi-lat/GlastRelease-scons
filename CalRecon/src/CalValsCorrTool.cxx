@@ -11,7 +11,7 @@ const IToolFactory& CalValsCorrToolFactory = s_factory;
 CalValsCorrTool::CalValsCorrTool( const std::string& type, 
                                      const std::string& name, 
                                      const IInterface* parent)
-                                     : AlgTool(type,name,parent)
+                                     : EnergyCorr(type,name,parent)
 {
 	// declare base interface for all consecutive concrete classes
 	declareInterface<IEnergyCorr>(this);

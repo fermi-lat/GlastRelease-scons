@@ -97,7 +97,7 @@ void ProfileTool::fcn(int & , double *, double &f, double *par, int )
 ProfileTool::ProfileTool( const std::string& type, 
                          const std::string& name, 
                          const IInterface* parent)
-                         : AlgTool(type,name,parent)
+                         : EnergyCorr(type,name,parent)
 {
     // declare base interface for all consecutive concrete classes
     declareInterface<IEnergyCorr>(this);

@@ -20,13 +20,15 @@
 */
 
 
-class Cluster : virtual public ICluster {
+class Cluster : public ICluster,  public AlgTool {
 	
 public:
     
     //! constructor
 	
-    Cluster() {};
+    Cluster(const std::string& type, 
+        const std::string& name, 
+        const IInterface* parent);
     //! destructor
     virtual ~Cluster() {}; 
     
@@ -67,6 +69,14 @@ private:
 		
 	Event::CalClusterCol* m_calClusterCol;
 	};
+
+inline Cluster::Cluster(const std::string& type, 
+                        const std::string& name, 
+                        const IInterface* parent)
+                        : AlgTool( type, name, parent ) { 
+                            declareInterface<ICluster>(this);
+                        }
+
 
 
 #endif

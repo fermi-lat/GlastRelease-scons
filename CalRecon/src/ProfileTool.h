@@ -19,7 +19,7 @@
 */
 
 
-class ProfileTool : public AlgTool, public EnergyCorr {
+class ProfileTool :  public EnergyCorr {
 
 public:
     

@@ -16,7 +16,7 @@
 */
 
 
-class LastLayerCorrTool : public AlgTool, public EnergyCorr {
+class LastLayerCorrTool :  public EnergyCorr {
 
 public:
     

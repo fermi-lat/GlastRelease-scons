@@ -10,15 +10,14 @@ static const ToolFactory<SingleClusterTool>  s_factory;
 const IToolFactory& SingleClusterToolFactory = s_factory;
 
 
-SingleClusterTool::SingleClusterTool( const std::string& type, 
-								   const std::string& name, 
-								   const IInterface* parent)
-								   : AlgTool(type,name,parent)
-{
-	// declare base interface for all consecutive concrete classes
-	declareInterface<ICluster>(this);
-    // Declare the properties that may be set in the job options file
-	
+SingleClusterTool::SingleClusterTool(
+                                     const std::string& type, 
+                                     const std::string& name, 
+                                     const IInterface* parent)
+                                     : Cluster( type, name, parent )
+{    
+    // Declare additional interface
+    declareInterface<ICluster>(this); 
 }
 
 

@@ -1,17 +1,21 @@
+/** @file CalClustersAlg.cxx
+    @brief Implementation of CalClustersAlg
 
+*/
 #include "CalClustersAlg.h"
-#include "Event/Recon/CalRecon/CalCluster.h"
+
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "Event/Recon/CalRecon/CalXtalRecData.h"
-#include "Event/Recon/TkrRecon/TkrVertex.h"
-#include "SingleClusterTool.h"
 
-/// Glast specific includes
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+
+#include "Event/Recon/TkrRecon/TkrVertex.h"
+#include "Event/Recon/CalRecon/CalXtalRecData.h"
+#include "Event/Recon/CalRecon/CalCluster.h"
 #include "Event/TopLevel/EventModel.h"
-#include "GaudiKernel/ObjectVector.h"
+
+#include "EnergyCorr.h"   // for special downcast
 
 static const AlgFactory<CalClustersAlg>  Factory;
 const IAlgFactory& CalClustersAlgFactory = Factory;
@@ -99,43 +103,29 @@ StatusCode CalClustersAlg::initialize()
     // set global constants with geometry parameters (in cm)
     // used by Profile() function
     
-    
-    // it appears that retrieveTool cannot store a Cluster* pointer. Will need
-    // to find ICluster* and downcast it to Cluster*
-    ICluster* iclus;
-    sc = toolSvc()->retrieveTool(m_clusterToolName,iclus);
+    sc = toolSvc()->retrieveTool(m_clusterToolName,  m_clusterTool);
     if (sc.isFailure() ) {
         log << MSG::ERROR << "  Unable to create " << m_clusterToolName << endreq;
         return sc;
     }
-    m_clusterTool = dynamic_cast<Cluster*>(iclus);
     
-    // it appears that retrieveTool cannot store a EnergyCorr* pointer. Will need
-    // to find IEnergyCorr* and downcast it to EnergyCorr*
-    IEnergyCorr* ilast;
-    sc = toolSvc()->retrieveTool(m_lastLayerToolName,ilast);
+    sc = toolSvc()->retrieveTool(m_lastLayerToolName, m_lastLayerTool);
     if (sc.isFailure() ) {
         log << MSG::ERROR << "  Unable to create " << m_lastLayerToolName << endreq;
         return sc;
     }
-    m_lastLayerTool = dynamic_cast<EnergyCorr*>(ilast);
 
-    IEnergyCorr* iprof;
-    sc = toolSvc()->retrieveTool(m_profileToolName,iprof);
+    sc = toolSvc()->retrieveTool(m_profileToolName, m_profileTool);
     if (sc.isFailure() ) {
         log << MSG::ERROR << "  Unable to create " << m_profileToolName << endreq;
         return sc;
     }
-    m_profileTool = dynamic_cast<EnergyCorr*>(iprof);
 
-    IEnergyCorr* ivals;
-    sc = toolSvc()->retrieveTool(m_calValsCorrToolName,ivals);
+    sc = toolSvc()->retrieveTool(m_calValsCorrToolName,m_calValsCorrTool);
     if (sc.isFailure() ) {
         log << MSG::ERROR << "  Unable to create " << m_calValsCorrToolName << endreq;
         return sc;
     }
-    m_calValsCorrTool = dynamic_cast<EnergyCorr*>(ivals);
-
     return sc;
 }
 
@@ -233,7 +223,7 @@ StatusCode CalClustersAlg::execute()
     //get pointers to the TDS data structures
     sc = retrieve();
     
-    const Point p0(0.,0.,0.);
+//    const Point p0(0.,0.,0.);
     
     // variable indicating ( if >0) the presence of tracker
     // reconstruction output
@@ -306,13 +296,13 @@ StatusCode CalClustersAlg::execute()
         // Do profile fitting - use StaticSlope because of static functions
         // passed to minuit fitter
 
-        m_profileTool->setStaticSlope(slope);
+        dynamic_cast<EnergyCorr*>(m_profileTool)->setStaticSlope(slope);
         m_profileTool->doEnergyCorr((*it)->getEnergySum(),(*it));
         
          // get corrections from CalValsTool... self contained
 
         m_calValsCorrTool->doEnergyCorr((*it)->getEnergySum(),(*it));
- 
+
         // calculating the transverse offset of average position in the calorimeter
         // with respect to the position predicted from tracker information
         double calTransvOffset = 0.;

@@ -18,13 +18,16 @@
 */
 
 
-class EnergyCorr : virtual public IEnergyCorr {
+class EnergyCorr :  public IEnergyCorr, public AlgTool {
 	
 public:
     
     //! constructor
 	
-    EnergyCorr() {};
+    EnergyCorr(const std::string& type, 
+                         const std::string& name, 
+                         const IInterface* parent)
+  : AlgTool( type, name, parent ) { }
     //! destructor
     virtual ~EnergyCorr() {}; 
     

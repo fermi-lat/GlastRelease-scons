@@ -15,13 +15,16 @@
 */
 
 
-class SingleClusterTool : public AlgTool, public Cluster {
+class SingleClusterTool : public Cluster {
 
 public:
     
     //! destructor
-    SingleClusterTool( const std::string& type, const std::string& name, const IInterface* parent);
-     ~SingleClusterTool() {}; 
+    SingleClusterTool
+        (const std::string& type, 
+        const std::string& name, 
+        const IInterface* parent);
+    ~SingleClusterTool() {}; 
     
      StatusCode initialize();
 

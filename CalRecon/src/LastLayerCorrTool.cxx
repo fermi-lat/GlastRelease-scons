@@ -7,18 +7,13 @@
 static const ToolFactory<LastLayerCorrTool>  s_factory;
 const IToolFactory& LastLayerCorrToolFactory = s_factory;
 
+LastLayerCorrTool::LastLayerCorrTool( const std::string& type, const std::string& name, const IInterface* parent)
+:EnergyCorr(type,name,parent){
 
-LastLayerCorrTool::LastLayerCorrTool( const std::string& type, 
-                                     const std::string& name, 
-                                     const IInterface* parent)
-                                     : AlgTool(type,name,parent)
-{
-	// declare base interface for all consecutive concrete classes
-	declareInterface<IEnergyCorr>(this);
-    // Declare the properties that may be set in the job options file
-	
-}
+    // declare base interface for all consecutive concrete classes
+    declareInterface<IEnergyCorr>(this);
 
+};
 
 
 StatusCode LastLayerCorrTool::initialize()

@@ -18,7 +18,7 @@ class IValsTool;
 */
 
 
-class CalValsCorrTool : public AlgTool, public EnergyCorr {
+class CalValsCorrTool :  public EnergyCorr {
 
 public:
     

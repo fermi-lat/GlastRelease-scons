@@ -28,8 +28,13 @@ public:
     virtual ~IEnergyCorr() {}; 
     
     virtual StatusCode initialize()=0;
+    virtual double getEnergyCorr()=0;;
 
-        
+    virtual double getTrackSlope()=0;
+
+    virtual void setTrackSlope(double slope)=0;
+
+
     // worker function for calculating corrections
     virtual StatusCode doEnergyCorr(double eTotal, Event::CalCluster* cluster)=0;
     virtual StatusCode execute()=0;
