@@ -22,12 +22,6 @@
       <td valign="top" width="20%"><font size="2"><strong><a href="#Introduction">Introduction</a></strong></font>
         <p><font size="2"><strong><a href="#Setup">Setup</a>&nbsp;<br>
         <a href="#CMT">Using CMT</a></strong></font></p>
-        <p><font size="2"><strong><a href="#Ancillary Data files">Ancillary Data
-        files</a><br>
-        </strong><a href="#Calibration">Calibration</a></font>
-        </p>
-        <p><font size="2"><a href="#EventDisplay"><b>EventDisplay</b></a></font>
-        </p>
         <p><font size="2"><strong><a href="#Event Loop processing">Event Loop
         Processing</a></strong></font><font size="3"><br>
         </font><font size="2"><a href="#RootTreeAnalysis">RootTreeAnalysis</a>
@@ -51,16 +45,10 @@
         provided, are meant to provide some basic, general, functions that most
         GLAST ROOT users may find useful.&nbsp; To process GLAST ROOT data,
         it is not necessary to use this package, but it may make it easier.</font></p>
-        <p><font size="3">Also note, that this package is generic, in that, any
-        GLAST ROOT file, either PDR or BFEM can be processing using these
-        routines and libraries.&nbsp; (BTEM files generated using the latest
-        version of the digiRootData classes can also be handled).&nbsp; The key
-        is that all GLAST ROOT data has the same internal structure.</font></p>
         <h3><font size="3"><a name="Setup">Setup the ROOT environment for GLAST</a></font></h3>
         <p><font size="3">RootAnalysis now comes with a simple .rootrc.&nbsp;
         This is the file used by ROOT to setup your ROOT environment upon
-        startup.&nbsp;&nbsp;</font></p>
-        <p><font size="3"> First, setup a <b> <i> ROOTANALYSIS</i></b> environment variable that is
+        startup.&nbsp;&nbsp;But first you must setup a <b> <i> ROOTANALYSIS</i></b> environment variable that is
         set to the directory path, where you have the RootAnalysis package
         installed.&nbsp;</font></p>
         <p><font size="3">On UNIX:&nbsp; <i><b>setenv ROOTANALYSIS $HOME/RootAnalysis/v<sub>n</sub>r<sub>m</sub></b></i></font></p>
@@ -76,18 +64,18 @@
         from where you launch ROOT.</b></font>&nbsp; <font size="3">Next do one of
         the following:</font></p>
         <ol>
-          <li><font size="3">Startup ROOT from within the RootAnalysis directory<br>
+          <li><font size="3">Startup ROOT from within the RootAnalysis/v<sub>n</sub>r<sub>m</sub> directory<br>
             OR</font></li>
           <li><font size="3">Copy the .rootrc file to your local area, where you
             will startup ROOT.</font></li>
         </ol>
         <p><font size="3">Currently, our .rootrc file, does 3 important things:</font></p>
         <ol>
-          <li><font size="3">Loads our current digiRootData and reconRootData
+          <li><font size="3">Loads our current mcRootData, digiRootData, reconRootData
             libraries, using the rootlogon.C macro located in the RootAnalysis/setup
             directory.&nbsp; By default, the macro expects that the libraries
             are located in the RootAnalysis/lib directory.&nbsp; This behavior
-            can be changed by modify the rootlogon.C macro.</font></li>
+            can be changed by modifying the rootlogon.C macro.</font></li>
           <li><font size="3">Loads the macros defined in the RootAnalysis
             package, using the rootlogon.C macro located in the RootAnalysis/setup
             directory.</font></li>
@@ -100,64 +88,18 @@
         <h3><a name="CMT">Using RootAnalysis as a regular CMT package</a></h3>
         <p>It is also possible to download RootAnalysis directly from the CVS
         repository.&nbsp; In this case, you must make sure to also install the
-        digiRootData and reconRootData packages on your system, as the compiled
+        mcRootData, digiRootData, and reconRootData packages on your system, as the compiled
         libraries will not be downloaded when using CVS.&nbsp; In this case, the
         RootAnalysis environment variable will be set up for you.&nbsp; Follow
         the typical directions for setup using CMT:<br>
         <a href="http://www-glast.slac.stanford.edu/software/CodeHowTo/">http://www-glast.slac.stanford.edu/software/CodeHowTo/</a></p>
-        <h3><a name="Ancillary Data files">Ancillary Data files</a></h3>
-        <p><font size="3"><b><a name="Calibration">Calibration</a></b></font></p>
-        <p>This directory contains pedestal files from both the 1999-2000 SLAC
-        test beam and the 2001 Balloon Flight.&nbsp; <font color="#FF0000">Be aware of the type of
-        data you are processing.&nbsp;</font> </p>
-        <p><i><b>Run208Ped.h</b></i> is pedestal data for the CAL from the 1999-2000 SLAC test
-        beam.</p>
-        <p>The other pedestal files are for the 2001 Balloon Flight:<br>
-        <b><i>
-        bfem_peds_cal.dat, bfem_peds_acd.dat, bfem_peds_xgt.dat</i></b><br>
-        These files have been updated as of 08/23/01 - according to the data
-        provided by the subsystems.</p>
-        <p>Currently by default, the RootTreeAnalysis and RawValidate macros
-        will read in and use the Balloon pedestal files.&nbsp; You may modify
-        this behavior if desired.</p>
-        <p>The file <b><i>bfem_vetotresh_acd.dat </i></b>contains the veto
-        thresholds for the ACD tiles from the 2001 Balloon Flight.&nbsp; Here is
-        the documentation included in the veto threshold file:</p>
-        <p><font face="Courier New" size="1"># ACD thresholds for raw PHA data<br>
-        # These thresholds correspond to 0.2 MIP + pedestal<br>
-        # To choose a different threshold, subtract the<br>
-        # acd pedestal (can be found in<br>
-        # RootAnalysis/calibration/bfem_peds_acd.dat) and scale<br>
-        # the resulting number linearly. For example, to get<br>
-        # 0.1 MIP to be more certain of getting all particles,<br>
-        # take the threshold, subtract the pedestal, scale the<br>
-        # resulting number (by 0.1/0.2) then add the pedestal<br>
-        # back in. For Tile 1000 this would be done as follows<br>
-        # 272.1 - 197.1 = 75 = 0.2 MIP<br>
-        # 0.1 MIP = (0.1/0.2) * 0.2 MIP = 75/2 = 37.5<br>
-        # 0.1 MIP threshold = ped + 0.1 MIP = 197.1 + 37.5 = 234.6</font></p>
-        <h3><a name="EventDisplay">EventDisplay</a></h3>
-        <p>You may also be interested in the ROOT event display.&nbsp;
-        Currently, this event display works with the balloon instrument.&nbsp; The Event Display
-        documentation is available at: <a href="http://www.pi.infn.it/glast/docs/BfemV2r4.html">http://www.pi.infn.it/glast/docs/BfemV2r4.html</a>&nbsp;
-        The Event Display now uses CMT to construct the necessary makefiles to
-        compile the code.&nbsp;&nbsp;</p>
-        <p>To obtain bfemDisplay and compile using CMT, please see the above
-        Event Display web page.</p>
-        <p>Please note that the EventDisplay expects that reconstruction ROOT
-        files are named *-recon.root.&nbsp; If you try to load a reconstruction
-        ROOT file that does not contain &quot;-recon&quot; in the name, the file
-        will not be loaded.&nbsp; Please rename any reconstruction ROOT files so
-        that &quot;-recon&quot; appears in the file name.</p>
         <h3><a name="Event Loop processing">Event Loop processing</a></h3>
         <p><font size="3"><b><a name="RootTreeAnalysis">RootTreeAnalysis</a></b></font></p>
         <p><font size="3">Our generic event loop macro.&nbsp; Handles digi,
         reconstruction, and/or monte carlo ROOT files.&nbsp; Output is a new
         ROOT file, named Histograms.root, which contains a series of user
         defined histograms.&nbsp; Users can provide
-        either file names, or TChains of files for multi-file processing.&nbsp;
-        Here is a <a href="http://www-glast.slac.stanford.edu/software/root/RootTreeAnalysis/RootTreeAnalysis.htm">detailed
-        description of the RootTreeAnalysis class</a>.</font></p>
+        either file names, or TChains of files for multi-file processing.</font></p>
         <p><font size="3">Event Processing is done by calling <i>RootTreeAnalysis::Go(Int_t</i>
         <i>numEvents);</i>&nbsp; This causes the next <i> numEvents</i> events to be
         processed - filling the defined histograms.&nbsp; Note:&nbsp; this does
@@ -188,7 +130,7 @@
         <p><font size="3"><b><a name="NtupleAnalysis">NtupleAnalysis</a></b></font></p>
         <p><font size="3">Please <a href="http://www-glast.slac.stanford.edu/software/root/howto/pdr.html">see
         this page</a> for a description... But here is a summary:</font></p>
-        <p><font size="3">This class handles any ntuple file (PDR or BFEM), and produces an
+        <p><font size="3">This class handles any ntuple file, and produces an
         output PostScript file containing plots of any and all entries in the
         ntuple - and can apply an optional cut to the data as well before
         creating the plots.&nbsp; One can pre-set the number of columns and rows
@@ -223,18 +165,12 @@
        "backgndmaxpdr100000TUP0001.root",<br>
        "backgndmaxpdr100000TUP0004.root"};<br>
      int numbFiles = sizeof(list)/sizeof(char*);<br>
-     TChain* myChain = chainTrees(numbFiles,list, &quot;PDR/t1&quot;);</i></font></p>
+     TChain* myChain = chainTrees(numbFiles,list, &quot;t1&quot;);</i></font></p>
         <p><font size="3">Where we pass into the chainTrees macro the number of
         files to process, the list of files names and the name of the Tree in
         the files.</font></p>
         <p><font size="3">The name of the Tree is determined by the type of file
-        you are processing.&nbsp; If it is an ntuple file, the name will be
-        &quot;PDR/t1&quot; or &quot;BFEM/t1&quot;, depending upon whether it is
-        a PDR (full flight instrument) ntuple or a balloon ntuple.</font></p>
-        <p><font size="3">Raw, Recon and Monte Carlo ROOT files currently
-        contain a tree
-        named &quot;T&quot;.
-        </font></p>
+        you are processing.&nbsp;</font></p>
         <p><font size="3"><b><a name="chainAll">chainAll.cxx</a></b></font></p>
         <p><font size="3">Similar to chainTrees, this macro chains all Trees
         located in ROOT files in a specified directory.&nbsp; ROOT files are
@@ -246,9 +182,9 @@
         The name of a directory containing ROOT files<br>
         The path and name of the TTree in those ROOT files.</p>
         <p><font size="3">Here is an example:<br>
-        <i>TChain *myChain = chainAll(&quot;C:/rootfiles/&quot;, &quot;PDR/t1&quot;);</i></font></p>
+        <i>TChain *myChain = chainAll(&quot;C:/rootfiles/&quot;, &quot;t1&quot;);</i></font></p>
         <p><font size="3">Remember that all chained TTrees must be of the same
-        type:&nbsp; ntuple, raw, recon, monte carlo, etc...</font></p>
+        type:&nbsp; ntuple, digi, recon, monte carlo, etc...</font></p>
         <p><font size="3"><b><a name="copyTree">copyTree.cxx</a></b></font></p>
         <p><font size="3">Copies a TTree from one file into a new file, allowing
         for a new directory to be created to store the TTree in the new file.</font></p>
@@ -266,7 +202,7 @@
         <p><font size="3"><b><a name="createEventList.cxx">createEventList.cxx</a></b>
         </font></p>
         <p>This macro provides a generic mechanism to create a ROOT TEventList.&nbsp;
-        Event lists are useful, in that they restrict the entries in a TTree
+        Event lists are useful, in that they can be used to restrict the entries in a TTree
         that will be processed.&nbsp;&nbsp; A TEventList is created, by applying
         a cut on the data.&nbsp; There are 2 versions of this macro contained in
         the same file, one for a regular TFile and the other for a TChain (a
