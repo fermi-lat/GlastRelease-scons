@@ -51,12 +51,17 @@ namespace detModel{
     const std::map<idents::VolumeIdentifier, const PositionedVolume*>* getVolMap() const;
 
     /// Retrive the HepTransform3D from an ID 
+    /// Returns false if fails to find the id
     bool getTransform3DByID(idents::VolumeIdentifier, HepTransform3D*);
 
+    /// Retrieve the shape parameters and type from an ID
+    /// Returns false if fails to find the id
+    bool getShapeByID(idents::VolumeIdentifier, 
+                      std::string* s, std::vector<double>* params);
 
     /** 
-	This method return a PositionedVolume pointer from an ID (a null pointer if
-	the ID does not exist
+	This method return a PositionedVolume pointer from an ID (a null pointer
+	if the ID does not exist
     */
     const PositionedVolume* getPositionedVolumeByID(idents::VolumeIdentifier) const ;
     typedef std::map<idents::VolumeIdentifier, const PositionedVolume*> PVmap;

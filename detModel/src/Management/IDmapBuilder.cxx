@@ -17,6 +17,9 @@
 #include "detModel/Sections/AxisMPos.h"
 #include "detModel/Sections/IdField.h"
 #include "detModel/Sections/Position.h"
+#include "detModel/Sections/Volume.h"
+#include "detModel/Sections/Shape.h"
+
 #include "detModel/Utilities/PositionedVolume.h"
 #include "detModel/Utilities/Vector.h"
 
@@ -256,6 +259,29 @@ bool IDmapBuilder::getTransform3DByID(idents::VolumeIdentifier id, HepTransform3
     }
   else return false;
 }
+
+bool IDmapBuilder::getShapeByID(idents::VolumeIdentifier id,
+                                std::string* s, std::vector<double>* params)
+{
+  const PositionedVolume* pv = getPositionedVolumeByID(id);
+  if (pv)
+    {
+      Volume* volume = pv->getVolume();
+      if (Box* box = dynamic_cast<Box*>(volume))
+        {
+          *s = "box";
+          params->push_back(box->getX());
+          params->push_back(box->getY());
+          params->push_back(box->getZ());
+        }
+      else
+        return false;
+      return true;
+    }
+  else return false;
+}
+
+
 
 void IDmapBuilder::summary(std::ostream & out) 
 {
