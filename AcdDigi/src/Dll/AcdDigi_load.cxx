@@ -10,5 +10,6 @@
 
 DECLARE_FACTORY_ENTRIES(AcdDigi) {
     DECLARE_ALGORITHM( AcdDigiAlg );
+    DECLARE_ALGORITHM( AcdDigiOrgAlg );
 } 
 
