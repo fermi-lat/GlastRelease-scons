@@ -105,25 +105,30 @@ void McParticleManager::pruneCal()
 
   for(it=m_particles.begin();it != m_particles.end() ; it++)
     {
+      SmartRef<Event::McParticle> mcPart = it->second;
 
-      if (((it->second)->getInitialId().size() > 3) && 
-	  ((it->second)->getInitialId()[0] == towersId) && 
-	  ((it->second)->getInitialId()[3] == calId) &&
-	  ((it->second)->getFinalId().size() > 3) &&
-	  ((it->second)->getFinalId()[0] == 0) && 
-	  ((it->second)->getFinalId()[3] == 0) && 
-	  !((it->second)->statusFlags()&Event::McParticle::POSHIT) && 
-	  !((it->second)->statusFlags()&Event::McParticle::PRIMARY))
+      if ((mcPart->getInitialId().size() > 3) && 
+	      (mcPart->getInitialId()[0] == towersId) && 
+	      (mcPart->getInitialId()[3] == calId) &&
+	      (mcPart->getFinalId().size() > 3) &&
+	      (mcPart->getFinalId()[0] == 0) && 
+	      (mcPart->getFinalId()[3] == 0) && 
+	     !(mcPart->statusFlags()&Event::McParticle::POSHIT) && 
+	     !(mcPart->statusFlags()&Event::McParticle::PRIMARY))
         {
-          for(unsigned int i=0;i<(it->second)->daughterList().size();i++)
+          SmartRef<Event::McParticle> mother = &mcPart->mother();
+
+          mother->removeDaughter(mcPart);
+
+          for(unsigned int i=0;i<mcPart->daughterList().size();i++)
             {
-              SmartRef<Event::McParticle> part = (it->second)->daughterList()[i];
-              SmartRef<Event::McParticle> mother = &(it->second)->mother();
+              SmartRef<Event::McParticle> part = mcPart->daughterList()[i];
               part->setMother(mother);
               part->addStatusFlag(Event::McParticle::BCKSPL);
               mother->addDaughter(part);
             }
-	  delete it->second;
+
+          delete mcPart;
           it->second = 0;
         }
       
