@@ -1,3 +1,12 @@
+/** @file RootInterface.cxx
+    @brief Implementation of a low-level interface to ROOT files.
+
+    @author Heather Kelly
+
+    $Header$
+
+  */
+
 #ifndef ROOTINTERFACE_CXX 
 #define ROOTINTERFACE_CXX 1
 
@@ -26,11 +35,16 @@ RootInterface::~RootInterface() {
 }
 
 int RootInterface::loadDynamicLibrary(std::string libName) {
+    // Purpose and Method:  Calls ROOT's TSystem::Load routine
     return (gSystem->Load(libName.c_str()));
 }
 
 
 TObject* RootInterface::retrieveObjByName(std::string objName) {
+    // Purpose and Method:  Searches a TFile for an object having the name, objName
+    // Input:  objName - the name of the object being searched for
+    // Output: A pointer to the TObject if found, NULL otherwise
+
     TIter nextkey(m_rootFile->GetListOfKeys());
     bool done = false;
 
@@ -39,6 +53,10 @@ TObject* RootInterface::retrieveObjByName(std::string objName) {
 
 
 TObject* RootInterface::retrieveObjByType(std::string objType) {
+    // Purpose and Method:  Searches a TFile for the first occurance of a particular type.
+    // Input:  objType - the name of the type being searched for
+    // Output:  A pointer to a TObject or NULL if not such object is found.
+
     TIter nextkey(m_rootFile->GetListOfKeys());
     TKey *key;
 
@@ -52,6 +70,11 @@ TObject* RootInterface::retrieveObjByType(std::string objType) {
 }
 
 TObject* RootInterface::searchKeys(TIter &listofkeys, std::string name, bool &done) {
+    // Purpose and Method:  A recursive routine used to search for a particular name
+    // Inputs:  listofkeys - A list of TKeys; name - name of the object being searched for
+    //          done - a boolean flag denoting we're finished
+    // Output:  A TObject pointer or NULL if no such object was found.
+
     TKey *key;
     
     while( (key = (TKey*)listofkeys()) && !done ) {
