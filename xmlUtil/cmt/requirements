@@ -1,5 +1,6 @@
 # $Header$
 package xmlUtil
+version v2r8p1
 
 use facilities
 use xml 
