@@ -85,10 +85,18 @@ void GDDFakeBuilder::buildConstants(){
   c4->setValue("C");
   c4->setNote("I need this fake material");
 
+  GDDstringConst* c5 = new GDDstringConst;
+  c5->setName("WorldMaterial");
+  c5->setConstMeaning("mat");
+  c5->setConstType(s);
+  c5->setValue("Vacuum");
+  c5->setNote("I need this fake material");
+
   cat->addConstant(c1);
   cat->addConstant(c2);
   cat->addConstant(c3);
   cat->addConstant(c4);
+  cat->addConstant(c5);
 
   ConstantsBranch->addConstantCategory(cat);
 
@@ -104,8 +112,7 @@ void GDDFakeBuilder::buildSections()
 
   // We build a new section
   GDDsection* s = new GDDsection("sec","1.0","17-07-01","RG","world");
-
-
+  
   // We build some boxes to fill the section
   GDDbox* w = new GDDbox("world");
 
@@ -206,7 +213,8 @@ void GDDFakeBuilder::buildSections()
   c->addPosition(pos3);
   c->addPosition(pos4);
 
-  s->setTopVolume(w);
+  s->setTopVolume(c);
+  s->setTopVolumeRef(w->getName());
   s->addVolume(w);
   s->addVolume(b1);
   s->addVolume(b2);
@@ -215,11 +223,12 @@ void GDDFakeBuilder::buildSections()
   s->addVolume(c);
 
   // We push the section in the currentGDD sections list
-  currentGDD->getSections()->push_back(s);
+  currentGDD->addSection(s);
 
   currentGDD->buildVolumeMap();
 
   currentGDD->buildBoundingBoxes();
+
 }
 
 

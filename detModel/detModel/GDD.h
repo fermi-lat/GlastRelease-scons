@@ -13,8 +13,6 @@ class GDDsection;
 class GDDchoice;
 class GDDshape;
 
-typedef std::vector <GDDsection*> vec;
-
 /**
  * This is the main container of all the geometry.
  * Responsability of its creation and destruction is of the manager.
@@ -45,10 +43,11 @@ public:
   ///This method gives back the constants
   GDDconstants* getConstants()const{return constants;}
   /// This method gives back a pointer to the sections vector
-  vec* getSections(){return &sections;};  
+  std::vector <GDDsection*>  getSections(){return sections;};  
   ///This method gives back the GDDvolume map  
   std::map < std::string, GDDvolume * > getVolumesMap(){return volumeMap;};
 
+  void addSection(GDDsection* s){sections.push_back(s);};
   /// This is the recursive accept for the visitor pattern
   void Accept(GDDvisitor* v);
   /// This is the non recursive accept for the visitor pattern

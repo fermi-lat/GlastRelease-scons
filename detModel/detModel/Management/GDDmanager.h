@@ -29,13 +29,11 @@ public:
   /** This method is used to access the pointer to the singleton */
   static GDDmanager* getPointer();
   
-/** This method is used to specify a builder to be used by the manager. */
+  /** This method is used to specify a builder to be used by the manager. */
   void setBuilder(GDDbuilder * b);
 
   /** This method start the parse of the xml file by the builder.
-      \todo It is temporary, we have still to implement a mechanism
-      for the building of only some part of the GDD (for now it starts
-      only the sections part) */
+   */
   void build(buildType);
 
   /// This method gives back the actual mode for choice elements
