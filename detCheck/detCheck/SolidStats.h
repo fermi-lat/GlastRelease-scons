@@ -108,12 +108,12 @@ namespace detCheck {
       double      cuVol;       /**< in mm**3 */
     }   Material;
       
-    typedef map<std::string, Material*> MatMap;
+    typedef std::map<std::string, Material*> MatMap;
     typedef MatMap::iterator MatMapIt;
     
     MatMap m_mats;
 
-    typedef map<std::string, LogVol*> LogVolMap;
+    typedef std::map<std::string, LogVol*> LogVolMap;
     typedef LogVolMap::iterator  LogVolMapIt;
 
     LogVolMap m_logVols;

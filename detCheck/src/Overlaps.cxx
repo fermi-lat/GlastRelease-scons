@@ -31,7 +31,7 @@ namespace detCheck {
       m_out = &std::cout;  // or out = new ostream(std::out);  ?
     }
     else {
-      m_out = new ofstream(errfileName.c_str());
+      m_out = new std::ofstream(errfileName.c_str());
       allocStream = true;
     }
     
