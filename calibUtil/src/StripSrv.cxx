@@ -15,6 +15,7 @@
 
 #include "calibUtil/GenericSrv.h"
 #include "calibUtil/StripSrv.h"
+#include "calibUtil/ChannelStatusDef.h"
 
 namespace calibUtil {
   
@@ -59,14 +60,27 @@ namespace calibUtil {
       tower.m_uniplanes.clear();
       tower.m_row = atoi((Dom::getAttribute(towerElt,"row")).c_str());
       tower.m_col = atoi((Dom::getAttribute(towerElt,"col")).c_str());
-      std::string attValue = Dom::getAttribute(towerElt,"allBad");
+      //      std::string attValue = Dom::getAttribute(towerElt,"allBad");
       
-      tower.m_allBad = (attValue.compare("true") == 0);
+      //      tower.m_allBad = (attValue.compare("true") == 0);
 
       tower.m_howBad = 0;
-      if (tower.m_allBad) {
-        attValue = Dom::getAttribute(towerElt, "howBad");
-        tower.m_howBad = atoi(attValue.c_str());
+      tower.m_allBad = 0;
+
+      std::string attValue = Dom::getAttribute(towerElt, "nECalib");
+      if (attValue.compare("true") == 0) {
+        tower.m_howBad |= vCALIBUTIL_nECalib;
+      }
+      attValue = Dom::getAttribute(towerElt, "nTrig");
+      if (attValue.compare("true") == 0) {
+        tower.m_howBad |= vCALIBUTIL_nTrig;
+      }
+      attValue = Dom::getAttribute(towerElt, "nData");
+      if (attValue.compare("true") == 0) {
+        tower.m_howBad |= vCALIBUTIL_nData;
+      }
+      if (tower.m_howBad) {
+        tower.m_allBad = 1;
         goto NEXT;
       }    // otherwise have to process individual uniplane elements
 
@@ -75,6 +89,7 @@ namespace calibUtil {
 
         while (uniElt != DOM_Element()) {
           Uniplane uni;
+          uni.m_howBad = 0;
           fillUni(uniElt, &uni);
           // if bad status, complain and return
 
@@ -179,9 +194,19 @@ namespace calibUtil {
 
     attValue = Dom::getAttribute(uniElt, "allBad");
     uni->m_allBad = (attValue.compare("true") == 0);
-    
-    attValue = Dom::getAttribute(uniElt, "howBad");
-    uni->m_howBad = atoi(attValue.c_str());
+
+    attValue = Dom::getAttribute(uniElt, "nECalib");
+    if (attValue.compare("true") == 0) {
+      uni->m_howBad |= vCALIBUTIL_nECalib;
+    }
+    attValue = Dom::getAttribute(uniElt, "nTrig");
+    if (attValue.compare("true") == 0) {
+      uni->m_howBad |= vCALIBUTIL_nTrig;
+      }
+    attValue = Dom::getAttribute(uniElt, "nData");
+    if (attValue.compare("true") == 0) {
+      uni->m_howBad |= vCALIBUTIL_nData;
+    }
     
     attValue = Dom::getAttribute(uniElt, "tray");
     uni->m_tray = atoi(attValue.c_str());
