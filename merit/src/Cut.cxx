@@ -61,7 +61,7 @@ void Cut::parse(const Tuple&t, std::string::const_iterator& it, std::string::con
                 case '=': m_op=EQ; if(*(it+1)=='=')++it; break;
                 case '!': m_op=NE; ++it; break; // assume followed by =
                 default: std::cerr << "Unexpected character '" << *it << "' found" << std::endl;
-                    exit(-1);
+                    throw("Cut::parse: unexpected character");
                 }
                 first = false;
             }
