@@ -11,7 +11,8 @@ ApplicationMgr.DLLs   += {"CalibSvc"};
  ApplicationMgr.ExtSvc   = {"GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
 
 
-ApplicationMgr.TopAlg = {"digiRootReaderAlg", "EvtClock", "UseCalib" };
+ApplicationMgr.TopAlg = {"digiRootReaderAlg", "EvtClock", "UseCalib",
+		      "UseBadStrips" };
 digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
 
 
@@ -43,7 +44,7 @@ DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 
 // not used yet
-CalibDataSvc.CalibNameList = {"TKR_DeadChan/chocolate",
+CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
 			   "Test_1/mocha"};
 
 EvtClock.delayTime = 36000;
