@@ -5,7 +5,7 @@ version v13r1
 
 branches src doc
 
-use Event v9r*
+use Event v10r*
 use ROOT v2r* IExternal
 
 apply_pattern packageShr
@@ -13,7 +13,7 @@ apply_pattern package_include
 
 use mcRootData v2r* -no_auto_imports
 use digiRootData v7r* -no_auto_imports
-use reconRootData v4r* -no_auto_imports
+use reconRootData v5r* -no_auto_imports
 use commonRootData v1r* -no_auto_imports
 
 use rootTestData v*
