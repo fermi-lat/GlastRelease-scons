@@ -87,7 +87,7 @@ public:
 //    UInt_t             getNumHits() const         {return m_hits->GetEntries();}
 //    TkrHitPlane*       getHitPlane(int idx) const {return (TkrHitPlane*)m_hits->At(idx);}
     UInt_t             getNumHits() const         {return m_hits.size();}
-    const TkrHitPlane*       getHitPlane(int idx) const {return &m_hits.at(idx);}
+    const TkrHitPlane*       getHitPlane(int idx) const {return &m_hits[idx];}
 
 private:
     /// Status

@@ -40,13 +40,13 @@ public:
             const std::vector<Double_t> &rowActDist,
 			const std::vector<AcdId> &idCol, const std::vector<Double_t> &energyCol)       
             : m_totEnergy(e),
-            m_tileCount(count),
             m_gammaDoca(gDoca),
             m_doca(doca),
             m_actDist(actDist),
-            m_minDocaId(minDocaId),
+            m_tileCount(count),
             m_rowDocaCol(rowDoca),
             m_rowActDistCol(rowActDist),
+            m_minDocaId(minDocaId),
 			m_idCol(idCol),
 			m_energyCol(energyCol)
         {};
@@ -59,8 +59,7 @@ public:
 		const std::vector<Double_t> &energyCol);
 
     /// overload initialize for interactive root where we cannot use std::vector
-    void initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist,
-            const AcdId &minDocaId);
+    void initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist, const AcdId &minDocaId);
     
     void Clear(Option_t *option="");
     

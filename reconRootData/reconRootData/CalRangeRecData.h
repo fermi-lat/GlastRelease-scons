@@ -19,11 +19,11 @@ public:
     CalRangeRecData() {};
     
     CalRangeRecData(Char_t rangeP, Double_t eneP, Char_t rangeM, Double_t eneM) :
+    m_eneP(eneP), 
+    m_eneM(eneM),
+    m_pos(TVector3(0.,0.,0.)),
     m_rangeP(rangeP), 
-        m_eneP(eneP), 
-        m_rangeM(rangeM), 
-        m_eneM(eneM),
-        m_pos(TVector3(0.,0.,0.))
+    m_rangeM(rangeM)
     {};
     
     ~CalRangeRecData() {};
@@ -50,13 +50,13 @@ private:
 	/// Energy associated with the plus end of the crystal
     Double_t m_eneP;
 	/// Energy associated with the minus end of the crystal
-	Double_t m_eneM;
+    Double_t m_eneM;
 	/// Position of the crystal
     TVector3 m_pos;
 	/// Range associated with the plus end of the crystal
     Char_t  m_rangeP;
 	/// Range associated with the minus end of the crystal
-	Char_t m_rangeM;
+    Char_t m_rangeM;
     
     ClassDef(CalRangeRecData,1)  // Reconstructed CAL xtals
 };
