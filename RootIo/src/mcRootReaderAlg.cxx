@@ -194,8 +194,8 @@ StatusCode mcRootReaderAlg::execute()
 
     m_particleMap.clear();
 
-    MCEvent* mcEventObj = 
-        SmartDataPtr<MCEvent>(eventSvc(), EventModel::MC::Event);
+    Event::MCEvent* mcEventObj = 
+        SmartDataPtr<Event::MCEvent>(eventSvc(), EventModel::MC::Event);
     if (!mcEventObj) {
         log << "Failed to retrieve McEvent" << endreq;
         return sc;
