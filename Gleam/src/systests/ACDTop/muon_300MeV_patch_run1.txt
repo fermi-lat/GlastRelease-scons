@@ -1,0 +1,29 @@
+//##############################################################
+//
+// Job options file for Gleam job
+
+#include "$GLEAMROOT/src/systests/ACDTop/basicOptionsOnlyACD.txt"
+
+FluxSvc.source_lib = {"$GLEAMROOT/src/systests/test_sources.xml"};
+FluxAlg.source_name="muon_patch_300MeV_centerTile0022_acdtop";
+ApplicationMgr.EvtMax  = 50000;
+MessageSvc.OutputLevel = 4;
+
+GlastRandomSvc.RunNumber = 1;
+TriggerAlg.mask = 0;
+
+mcRootWriterAlg.mcRootFile =
+"$GLEAMROOT/src/systests/ACDTop/muon_pencil_300MeV_centerTile0022_acdtop-run1-mc.root";
+digiRootWriterAlg.digiRootFile =
+"$GLEAMROOT/src/systests/ACDTop/muon_pencil_300MeV_centerTile0022_acdtop-run1-digi.root";
+
+AcdDigiAlg.applyPoisson = true;
+AcdDigiAlg.applyGaussianNoise = true;
+AcdDigiAlg.edgeEffect = true;
+
+//==============================================================
+//
+// End of job options file
+//
+//##############################################################
+
