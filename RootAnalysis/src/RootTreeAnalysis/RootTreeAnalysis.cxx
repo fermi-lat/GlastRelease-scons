@@ -10,8 +10,8 @@ UInt_t digiRunNum, reconRunNum, mcRunNum;
 void RootTreeAnalysis::McHistDefine() {
     // Purpose and Method:  Monte Carlo histogram definitions
     
-	// Must cd into the histFile to be sure the histograms are created within
-	// this histogram file.
+    // Must cd into the histFile to be sure the histograms are created within
+    // this histogram file.
     histFile->cd();
     
     TH1F *EVENTMC = new TH1F("EVENTMC", "MC Event Id",
@@ -51,9 +51,8 @@ void RootTreeAnalysis::McHistDefine() {
 
 void RootTreeAnalysis::DigiHistDefine() {
     // Purpose and Method:  Digitization histogram definitions
-
-	// Must cd into the histFile to be sure these new histograms are created in
-	// this histogram ROOT file
+    // Must cd into the histFile to be sure these new histograms are created in
+    // this histogram ROOT file
     histFile->cd();
     
     TH1F *CALDIGICOUNT = new TH1F("CALDIGICOUNT", "Cal Digi multiplicity",
@@ -121,9 +120,8 @@ void RootTreeAnalysis::DigiHistDefine() {
 
 void RootTreeAnalysis::ReconHistDefine() {
     // Purpose and Method:  Reconstruction histogram defintions
-    
-	// Must cd into the histFile to be sure these new histograms are created
-	// within this histogram ROOT file.
+    // Must cd into the histFile to be sure these new histograms are created
+    // within this histogram ROOT file.
     histFile->cd();
 
     TH1F *TKRNUMFITTRACKS = new TH1F("TKRNUMFITTRACKS", "Number of Fit Tracks",
@@ -145,7 +143,6 @@ void RootTreeAnalysis::ReconHistDefine() {
 void RootTreeAnalysis::McData() {
     // Purpose and Method:  Process on Monte Carlo event
     
-
     // Update histograms which keep simple counts
     ((TH1F*)GetObjectPtr("EVENTMC"))->Fill((Float_t)mcEventId);
     ((TH1F*)GetObjectPtr("RUNMC"))->Fill((Float_t)mcRunNum);
@@ -280,14 +277,13 @@ void RootTreeAnalysis::DigiAcd() {
 
     Double_t totE = 0.0;
     UShort_t pha0 = 0;
-    // Create an id for tile 0000
+    // Create an id for tile 0041
     AcdId id41(0, 0, 4, 1);
 
     TIter acdDigiIter(acdDigiCol);
     AcdDigi *acdDigiItem = 0;
     
     while (acdDigiItem = (AcdDigi*)acdDigiIter.Next()) {
-        totE = acdDigiItem->getEnergy();
         AcdId id = acdDigiItem->getId();
         if (id.getId() == id41.getId()) {
             pha0 = acdDigiItem->getPulseHeight(AcdDigi::A) + 

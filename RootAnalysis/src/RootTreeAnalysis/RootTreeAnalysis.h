@@ -157,9 +157,9 @@ private:
 
     /// Setup the Monte Calro output histograms
     void McHistDefine();
-	/// Setup the Digitization output histograms
+    /// Setup the Digitization output histograms
     void DigiHistDefine();
-	/// Setup the Reconstruction output histograms
+    /// Setup the Reconstruction output histograms
     void ReconHistDefine();
     
     /// event processing for the monte carlo data
@@ -167,16 +167,16 @@ private:
 
     /// event processing for the digi TKR data
     void DigiTkr();
-	/// event processing for digi CAL data
+    /// event processing for digi CAL data
     void DigiCal();
-	/// event processing for digi ACD data
+    /// event processing for digi ACD data
     void DigiAcd();
     
     /// event processing for the recon TKR data
     void ReconTkr();
-	/// event processing for the recon CAL data
+    /// event processing for the recon CAL data
     void ReconCal();
-	/// event processing for the recon ACD data
+    /// event processing for the recon ACD data
     void ReconAcd();
     
 };
@@ -256,17 +256,17 @@ inline RootTreeAnalysis::~RootTreeAnalysis() {
     if (mcFile) delete mcFile;
     
     if (evt) { 
-		evt->Clear(); 
-		delete evt;
-	}
+        evt->Clear(); 
+        delete evt;
+    }
     if (rec) {
-		rec->Clear();
-		delete rec;
-	}
+        rec->Clear();
+        delete rec;
+    }
     if (mc) {
-		mc->Clear();
-		delete mc;
-	}
+        mc->Clear();
+        delete mc;
+    }
     
     digiTree = 0;
     reconTree = 0;
@@ -284,7 +284,7 @@ inline RootTreeAnalysis::~RootTreeAnalysis() {
 inline void RootTreeAnalysis::Init(const char* digiFileName, const char* reconFileName, const char* mcFileName)
 {
     // Purpose and Method:  Re-initialize file, tree, event pointers, using the 
-	//   input ROOT files.  Histograms are *not* cleared.
+    //   input ROOT files.  Histograms are *not* cleared.
     
     if (fileArr) delete fileArr;
     fileArr = new TObjArray();
@@ -366,7 +366,7 @@ inline void RootTreeAnalysis::Init(const char* digiFileName, const char* reconFi
 inline UInt_t RootTreeAnalysis::GetEvent(UInt_t ievt) {
     // Purpose and Method:  Get the event, ievt, for all trees
     //    We could be processing single files or chains, 
-	//    This routine handles both casees.
+    //    This routine handles both casees.
 
     // if using regular trees - we check the array of open trees and
     // move the event pointer to the requested event
@@ -450,6 +450,7 @@ inline void RootTreeAnalysis::HistClear() {
 }
 
 inline void RootTreeAnalysis::Clear() {
+    m_StartEvent = 0;
     histFile = 0; 
     m_histList = 0;
     
