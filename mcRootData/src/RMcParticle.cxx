@@ -34,6 +34,7 @@ RMcVertex* RMcParticle::mcVertex() {
 	return m_mcVertex;
 }
 
+
 void RMcParticle::setMcVertex(RMcVertex* value){
 	m_mcVertex = value;
 }

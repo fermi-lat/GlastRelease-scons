@@ -60,13 +60,13 @@ public:
     //void setParticleProperty( StdHepId value );
 
     /// Retrieve whether this is a primary particle
-    Bool_t primaryParticle() const;
+    //Bool_t primaryParticle() const;
     /// Set whether this is a primary particle
-    void setPrimaryParticleFlag( Bool_t value );
+    //void setPrimaryParticleFlag( Bool_t value );
 
 
 	    /// Retrieve pointer to the vertex (const or non-const)
-    const RMcVertex* mcVertex() const;
+    //const RMcVertex* mcVertex() const;
           RMcVertex* mcVertex();
     /// Update pointer to origin vertex (by a C++ pointer or a smart reference)
     void setMcVertex( RMcVertex* value );

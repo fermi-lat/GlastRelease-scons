@@ -58,3 +58,22 @@ void  RMcVertex::setMotherMcParticle(RMcParticle* mother)
 	m_motherParticle = mother;
 }
 
+RMcParticle* RMcVertex::mcParticle()
+{
+    return m_mainParticle;
+}
+
+void RMcVertex::setMcParticle(RMcParticle* value)
+{
+    m_mainParticle = value;
+}
+
+RMcParticle* RMcVertex::motherMcParticle()
+{
+    return m_motherParticle;
+}
+
+const TObjArray* RMcVertex::daughterMcParticles() const
+{
+    return m_mcDaugterParticles;
+}

@@ -42,6 +42,8 @@ private:
 	TObjArray* m_mcDaugterParticles;
 	
 	RMcParticle* m_motherParticle;
+
+    RMcParticle* m_mainParticle;
 	
 public:
     ////////////////////// construction/destruction: ///////////////////////
@@ -85,13 +87,14 @@ public:
     void setTimeOfFlight (double value) {m_timeOfFlight = value;};
 	
     /// Retrieve pointer to the pair particle (const or non-const)
-    const RMcParticle* mcParticle() const;
+    //const RMcParticle* mcParticle() const;
 	RMcParticle* mcParticle();
     /// Update pointer to the pair particle (by a C++ pointer or a smart reference)
     void setMcParticle( RMcParticle* value );
 	
     /// Retrieve pointer to mother particle (const or non-const)
-    const RMcParticle* motherMcParticle() const;
+    RMcParticle* motherMcParticle();
+    //const RMcParticle* motherMcParticle() const;
 	
     /// Update pointer to mother particle (by a C++ pointer or a smart reference)
     void setMotherMcParticle( RMcParticle* value );
