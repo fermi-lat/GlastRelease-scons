@@ -1,5 +1,5 @@
 package G4Generator
-version v4r1p4
+version v4r1p5
 #$Header$
 
 use GlastPolicy v4r*
@@ -40,6 +40,5 @@ library G4Generator ${G4Generator_headers} *.cxx   Dll/*.cxx
 # test program 
 public 
 apply_pattern package_test
-
 
 
