@@ -3,11 +3,23 @@ Package digiRootData
 Coordinator:H.Kelly
 @verbatim
 
+v6r0      09-Mar-2004 HMK Merge EM digiRootData with mainline
 v5r0p3    27-Jan-2003 HMK fix up caldigicol for reading
 v5r0p2    16-Jan-2004 HMK re-introduce std::vector for linux
 v5r0p1    14-Jan-2004 HMK Remove std:: from vector data members in TkrDigi - causes reading problems
 v5r0p0    09-Jan-2004 HMK Fix up signed/unsigned warnings
 v5r0                  HMK Increment version fo fool RM - due to EM branch tag
+v4r2p0em10 28-Jan-2004 HMK Add method to return PPC time in seconds
+v4r2p0em9 27-Jan-2004 HMK Add PPC registers for proper event sequencing
+v4r2p0em8 26-Jan-2004 HMK fix old TObjArray usage for CalDigis
+v4r2p0em7 19-Jan-2004 HMK use std::vector namespace for both Win and Linux
+v4r2p0em6 18-Dec-2003 HMK handle EBF time
+v4r2p0em5 18-Dec-2003 HMK access diagnostic EM data using EBF Online interface
+v4r2p0em4 26-Nov-2003 HMK provide summary access method in EventSummaryData
+v4r2p0em3 26-Nov-2003 HMK handle event summary word
+v4r2p0em2 24-Nov-2003 HMK shut off diagnostic data for now
+v4r2p0em1 18-Nov-2003 HMK fixes for diagnostic data
+v4r2p0em0 17-Nov-2003 HMK inital EM branch with Diagnostic data
 v4r2p0    13-Oct-2003 HMK Add initialize routines to AcdId
 v4r2      09-Oct-2003 HMK Update AcdId to handle ribbons
 v4r1p2    27-Jun-2003 HMK Comment out another debug statement
