@@ -4,6 +4,8 @@
  * package manager:T.Burnett
  * $Id$
  *
+ *  v6r14p7 TRK  18-dec-03 New code for fastFilter: PruneTree.cxx, .h, app/fastFilter
+ * 
  *  v6r14p6 JCT  12-dec-03 fix the FT1Energy entry which now uses EvtEnergySumOpt
  *  v6r14p5 THB  07-dec-03 implement post-Rome background cut calculation for gammas only
  *  v6r14p4 THB  02-dec-03 required by obsolete gcc
