@@ -99,7 +99,8 @@ StatusCode EventIntegrityAlg::execute()
     // dump the event if any bit in the mask is set
     if( (m_mask!=0) && ( flags & m_mask) ) {
         setFilterPassed( false );
-        log << MSG::DEBUG << "Event Flag is Bad" << endreq;
+        log << MSG::DEBUG << "Event Flag is Bad for event: " 
+                           summary->eventSequence() << endreq;
     } 
 
     return sc;
