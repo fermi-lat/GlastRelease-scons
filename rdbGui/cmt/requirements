@@ -24,4 +24,4 @@ application rdbGUI RdbGuiWindow.cxx FXCheckList.cxx TableColumnList.cxx \
                    QueryFrame.cxx SQLBuffer.cxx LogText.cxx ResultTable.cxx \
 		   ConnectionDialog.cxx InsertDialog.cxx StringWidget.cxx \
                    ColWidgetFactory.cxx DateWidget.cxx EnumWidget.cxx \
-                   RealWidget.cxx IntWidget.cxx
+                   RealWidget.cxx IntWidget.cxx FXDate.cxx FXDatePicker.cxx

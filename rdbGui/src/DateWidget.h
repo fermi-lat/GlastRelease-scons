@@ -3,8 +3,10 @@
 
 #include "ColWidget.h"
 
+class DateField;
+
 class DateWidget : public ColWidget{
- public:
+  public:
   DateWidget(FXComposite*, rdbModel::Column*);
   virtual std::string getValue();
   virtual void setValue(std::string);  
@@ -12,9 +14,7 @@ class DateWidget : public ColWidget{
   
  private:
   FXHorizontalFrame* m_widget;  
-  FXComboBox* m_year;
-  FXComboBox* m_month;
-  FXComboBox* m_day;
+  DateField* m_dateField;
 };
 
 #endif

@@ -4,6 +4,7 @@
 
 #include "rdbModel/Db/ResultHandle.h"
 
+
 #include <vector>
 
 // Message Map RdbGUIWindow class
@@ -80,8 +81,7 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   // tables and columns frame left
   FXHorizontalFrame *uiTblColframe = new FXHorizontalFrame(uiHsplitter,
                                       LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_THICK);
-
-
+ 
   // Treelist
   uiTblColList = new TableColumnList(uiTblColframe, this);
 
