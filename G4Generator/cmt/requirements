@@ -1,5 +1,5 @@
 package G4Generator
-version v4r3
+version v4r3p1
 #$Header$
 
 use GlastPolicy v4r*
@@ -20,10 +20,12 @@ use GuiSvc   v3*
 use geometry v3*
 use geomrep  v4r*
 
+#for linux execution clients to get the LD_LIBRARY_PATH set.
+use Geant4Runtime v1r*
 #=============================================================
 private
 
-#if this if private, maybe all those libs are not passed on!
+#this is private to avoid passing on build info to clients
 use Geant4   v1r*
 
 
