@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v5r8p1 THB 05-jan-05   Disable IM dependence in merit until new set of trees
 * v5r8   THB 12-sep-04   Add uses for HepRep, clean up jopoptions for it a bit
 * v5r7p2 NG  08-aug-04   FilterAlg belongs in Triggered.members. Also added FilterTracks
 * v5r7p1 NG  08-aug-04   Added FilterAlg
