@@ -13,14 +13,8 @@
 /**   
 * @class Cluster
 *
-* Algorithm for reconstruction of energy and direction of incident particle
+* Base class for clustering tools, containing member data
 *
-*
-* Performs high level energy corrections
-*
-* The reconstruction here uses CalXtalRecCol to produce a CalClusterCol.
-*  It evaluates the barycenter for each layer using the coordinates stored in
-*  the CalXtalRecCol,
 *
 * $Header$
 */
@@ -41,11 +35,7 @@ public:
 	};
 	
 	
-	/*!Performs the reconstruction, creates one CalCluster object and stores
-	* there the following results: 
-	* - Energy per layer is computed and stored in CalCluster in MeV
-	* - Barycenter per layer is also computed and stored in CalCluster
-	*/        
+    // workder function for finding clusters
     virtual StatusCode findClusters(Event::CalXtalRecCol* calXtalRecCol) 
 	{return StatusCode::SUCCESS;};
 	
@@ -62,6 +52,7 @@ public:
 
 protected:
     
+    // calculate the direction of the shower from the hits
     virtual Vector Fit_Direction(std::vector<Vector> pos,
                                      std::vector<Vector> sigma2,
                                      int nlayers) {

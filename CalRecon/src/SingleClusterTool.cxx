@@ -85,10 +85,6 @@ StatusCode SingleClusterTool::findClusters(Event::CalXtalRecCol* calXtalRecCol)
 //                  average position per layer
 //                  quadratic spread per layer
 //      - fit the particle direction using Fit_Direction() function
-//      - calculate particle energy by profile fitting method
-//          using Profile() function
-//      - calculate particle energy by last layer correction method
-//          using Leak() function
 //      - store all calculated quantities in CalCluster object
 // 
 // TDS input: CalXtalRecCol

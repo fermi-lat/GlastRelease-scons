@@ -8,14 +8,9 @@
 /**   
 * @class LastLayerCorrTool
 *
-* Algorithm for reconstruction of energy and direction of incident particle
+* Algorithm for calculation of energy leakage correction by correlating
+* the energy in the last CAL layer with the total.  
 *
-*
-* Performs high level energy corrections
-*
-* The reconstruction here uses CalXtalRecCol to produce a CalClusterCol.
-*  It evaluates the barycenter for each layer using the coordinates stored in
-*  the CalXtalRecCol,
 *
 * $Header$
 */
@@ -81,6 +76,7 @@ public:
 * - 08/20/00    RT    first implementation
 */
            
+     // worker function to calculate energy correction 
      StatusCode doEnergyCorr(double eTotal, Event::CalCluster* cluster);
 
      StatusCode finalize();

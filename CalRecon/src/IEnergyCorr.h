@@ -9,14 +9,8 @@
 /**   
 * @class IEnergyCorr
 *
-* base 
+* base class for energy leakage corrections 
 *
-*
-* Performs high level energy corrections
-*
-* The reconstruction here uses CalXtalRecCol to produce a CalEnergyCorrCol.
-*  It evaluates the barycenter for each layer using the coordinates stored in
-*  the CalXtalRecCol,
 *
 * $Header$
 */
@@ -36,12 +30,7 @@ public:
     virtual StatusCode initialize()=0;
 
         
-/*!Performs the reconstruction, creates one CalEnergyCorr object and stores
- * there the following results: 
- * - Energy per layer is computed and stored in CalEnergyCorr in MeV
- * - Barycenter per layer is also computed and stored in CalEnergyCorr
- */        
-
+    // worker function for calculating corrections
     virtual StatusCode doEnergyCorr(double eTotal, Event::CalCluster* cluster)=0;
     virtual StatusCode execute()=0;
 

@@ -8,14 +8,8 @@
 /**   
 * @class SingleClusterTool
 *
-* Algorithm for reconstruction of energy and direction of incident particle
+* Find single cluster from all CAL hits
 *
-*
-* Performs high level energy corrections
-*
-* The reconstruction here uses CalXtalRecCol to produce a CalClusterCol.
-*  It evaluates the barycenter for each layer using the coordinates stored in
-*  the CalXtalRecCol,
 *
 * $Header$
 */
@@ -44,6 +38,7 @@ public:
      StatusCode execute();
 
 protected:
+     // calculate the shower direction from the CAL hits
     Vector Fit_Direction(std::vector<Vector> pos,
                                      std::vector<Vector> sigma2,
                                      int nlayers);

@@ -32,8 +32,6 @@ StatusCode CalValsCorrTool::initialize()
     StatusCode sc = StatusCode::SUCCESS;
 	log << MSG::INFO << "Initializing CalValsCorrTool" <<endreq;
 
-    // it appears that retrieveTool cannot store a EnergyCorr* pointer. Will need
-    // to find IEnergyCorr* and downcast it to EnergyCorr*
 
     sc = toolSvc()->retrieveTool(m_calValsToolName,m_calValsTool);
     if (sc.isFailure() ) {
@@ -45,33 +43,22 @@ StatusCode CalValsCorrTool::initialize()
 }
 
 
-StatusCode CalValsCorrTool::doEnergyCorr(double eTotal, Event::CalCluster* cluster)
+StatusCode CalValsCorrTool::doEnergyCorr(double, Event::CalCluster* cluster)
 
 //Purpose and method:
 //
-//   This function performs the calorimeter cluster reconstruction.
-//   The main actions are:
-//      - calculate energy sum
-//                  energy per layer
-//                  average position per layer
-//                  quadratic spread per layer
-//      - fit the particle direction using Fit_Direction() function
-//      - calculate particle energy by profile fitting method
-//          using Profile() function
-//      - calculate particle energy by last layer correction method
-//          using Leak() function
-//      - store all calculated quantities in CalCluster object
+//   This function calls CalValsTool and extracts the crack/leakage corrected
+//   energy, storing it in CalCluster.
 // 
-// TDS input: CalXtalRecCol
-// TDS output: CalClustersCol
+// TDS input: none
+// TDS output: CalClusters
 
 
 {
     MsgStream lm(msgSvc(), name());
-    StatusCode sc = m_calValsTool->calculate();
     
     double correctedEnergy;
-    sc = m_calValsTool->getVal("CAL_Energy_Corr",correctedEnergy);
+    StatusCode sc = m_calValsTool->getVal("CAL_Energy_Corr",correctedEnergy);
     if (sc == StatusCode::SUCCESS) cluster->setEnergyCorrected(correctedEnergy);
 
     return sc;

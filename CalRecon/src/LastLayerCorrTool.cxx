@@ -64,21 +64,13 @@ StatusCode LastLayerCorrTool::doEnergyCorr(double eTotal, Event::CalCluster* clu
 
 //Purpose and method:
 //
-//   This function performs the calorimeter cluster reconstruction.
+//   This function performs 
 //   The main actions are:
-//      - calculate energy sum
-//                  energy per layer
-//                  average position per layer
-//                  quadratic spread per layer
-//      - fit the particle direction using Fit_Direction() function
-//      - calculate particle energy by profile fitting method
-//          using Profile() function
 //      - calculate particle energy by last layer correction method
 //          using Leak() function
-//      - store all calculated quantities in CalCluster object
 // 
-// TDS input: CalXtalRecCol
-// TDS output: CalClustersCol
+// TDS input: CalCluster
+// TDS output: CalClusters
 
 
 {

@@ -12,14 +12,7 @@
 /**   
 * @class EnergyCorr
 *
-* Algorithm for reconstruction of energy and direction of incident particle
-*
-*
-* Performs high level energy corrections
-*
-* The reconstruction here uses CalXtalRecCol to produce a CalEnergyCorrCol.
-*  It evaluates the barycenter for each layer using the coordinates stored in
-*  the CalXtalRecCol,
+* Base class for energy corrections, containing common member data
 *
 * $Header$
 */
@@ -60,6 +53,7 @@ public:
 
     virtual int getNLayers() {return m_nLayers;};
 
+    // sets static version of the slope. Needed for fcn/gam_prof 
     static void setStaticSlope(double slope) {m_static_slope=slope;};
 
 protected:

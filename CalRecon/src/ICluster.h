@@ -9,14 +9,8 @@
 /**   
 * @class ICluster
 *
-* Algorithm for reconstruction of energy and direction of incident particle
+* Base class for clustering tools
 *
-*
-* Performs high level energy corrections
-*
-* The reconstruction here uses CalXtalRecCol to produce a CalClusterCol.
-*  It evaluates the barycenter for each layer using the coordinates stored in
-*  the CalXtalRecCol,
 *
 * $Header$
 */
@@ -36,12 +30,7 @@ public:
     virtual StatusCode initialize()=0;
 
         
-/*!Performs the reconstruction, creates one CalCluster object and stores
- * there the following results: 
- * - Energy per layer is computed and stored in CalCluster in MeV
- * - Barycenter per layer is also computed and stored in CalCluster
- */        
-
+    // worker function for finding clusters
     virtual StatusCode findClusters(Event::CalXtalRecCol* calXtalRecCol)=0;
     
 	virtual StatusCode execute()=0;
