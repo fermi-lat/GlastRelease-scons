@@ -2,6 +2,7 @@
  package mcRootData
  package manager: H. Kelly
 
+v2r7      24-Sep-2002 HMK Modify McParticle StatusFlags to match those used in TDS version\n
 v2r6p1    24-Sep-2002 HMK Use //-> to speed up reading/writing and to fix \n
           segmentation fault when reading an MC file twice in one session\n
 v2r6      23-Sep-2002 HMK Clean up dtor and make static arrays transient\n
