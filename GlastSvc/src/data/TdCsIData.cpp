@@ -132,3 +132,8 @@ void TdCsIData::printOn (std::ostream& cout) const
   }
 
 }
+int TdCsIData::count()const{
+    int n = 0;
+    for( int i=0; i<8; ++i) n+=nHits(i);
+    return n;
+}

@@ -58,6 +58,7 @@ public:
     
     void clear ();
 
+    int count()const;
 
 private:
     

@@ -57,7 +57,6 @@ public:
         {}
         
         
-        
     private:
         
         //! Data Members for Class Attributes
@@ -114,7 +113,9 @@ public:
         
              
         void printOn (std::ostream& cout) const ;
-        
+
+        int count()const;
+       
     private:
         
         

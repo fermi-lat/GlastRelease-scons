@@ -48,3 +48,4 @@ void TdVetoData::clear ()
     tileList.clear();
 }
 
+int TdVetoData::count()const { return tileList.size();}
