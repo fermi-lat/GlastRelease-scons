@@ -22,12 +22,12 @@ $Header$
 #include "Event/TopLevel/EventModel.h"
 
 //flux
-#include "FluxSvc.h"
-#include "FluxSvc/IFlux.h"
-#include "Spectrum.h"
-#include "SpectrumFactory.h"
+#include "FluxSvc/IFluxSvc.h"
+#include "flux/IFlux.h"
+#include "flux/Spectrum.h"
+#include "flux/SpectrumFactory.h"
 
-#include "EventSource.h"
+#include "flux/EventSource.h"
 
 #include "CLHEP/Vector/LorentzVector.h"
 
@@ -41,9 +41,9 @@ $Header$
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/Property.h"
 
-class IFlux;
-class IFluxSvc;
-class IparticlePropertySvc;
+// class IFlux;
+// class IFluxSvc;
+// class IparticlePropertySvc;
 
 
 /** 

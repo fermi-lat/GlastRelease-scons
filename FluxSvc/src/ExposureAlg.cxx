@@ -27,7 +27,7 @@
 //flux
 #include "FluxSvc/IFluxSvc.h"
 #include "FluxSvc/IFlux.h"
-#include "GPS.h"
+#include "flux/GPS.h"
 
 #include <cassert>
 #include <vector>

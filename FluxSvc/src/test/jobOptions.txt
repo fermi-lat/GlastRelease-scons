@@ -25,7 +25,7 @@ ApplicationMgr.Runable = "FluxSvc";
 ApplicationMgr.TopAlg = {"FluxAlg/Top","ExposureAlg","FluxTestAlg"};
 
 // Set the default for a source library document
-FluxSvc.source_lib ={"$(FLUXSVCROOT)/xml/source_library.xml"};
+FluxSvc.source_lib ={"$(FLUXROOT)/xml/source_library.xml"};
 FluxSvc.source_lib +={"$(FLUXSVCROOT)/src/test/test_source.xml"};
 
 // test the various FluxAlg properties

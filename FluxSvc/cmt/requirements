@@ -1,5 +1,5 @@
 package FluxSvc
-version v6r5p3
+version v7r0
 
 # $Id$
 
@@ -10,11 +10,8 @@ use GlastPolicy *
 use Event   *
 
 use GlastSvc *
-
-use xml
-use CLHEP v2* IExternal
 use astro v0r*
-
+use flux v7*
 
 apply_pattern packageShr
 apply_pattern package_include
@@ -25,60 +22,22 @@ set LHCBDBASE "${FLUXSVCROOT}"
 
 
 #=============================================================
-use facilities v2*
-
 private
 
 
 # get flags to build shared library
 apply_pattern package_Cshlibflags
 
-macro xml_files    "" WIN32 "-s=../xml *.xml *.dtd"
 macro headers      "" WIN32 "*.h"
+macro source "*.cxx" WIN32 "*.h *.cxx *.txt"
 
-#static non-Gaudi library
-library flux -no_share\
- $(headers) \
- AlbedoPSpectrum.cxx\
- CHIMESpectrum.cxx\
- CompositeSource.cxx\
- EventSource.cxx\
- FILESpectrum.cxx\
- Flux.cxx\
- FluxMgr.cxx\
- FluxSource.cxx\
- GalElSpectrum.cxx\
- Geomag.cxx\
- GPS.cxx\
- SimpleSpectrum.cxx\
- Spectrum.cxx\
- SpectrumFactoryTable.cxx\
- SurfaceMuons.cxx\
- TimeCandle.cxx \
- -s=rootplot $(headers) *.cxx\
- $(xml_files) 
-
-macro libs ""   WIN32   "$(FluxSvcDir)/flux.lib
-
-macro FluxSvc_linkopts "-L $(FluxSvcDir) -lflux" \
-                      WIN32 ""
-
-macro interface_headers "" WIN32 "../FluxSvc/*.h"
+macro interface_headers "" WIN32 "-s=../FluxSvc/ *.h"
 
 library FluxSvc \
  $(interface_headers)\
- Dll/*.cxx\
- ExposureAlg.cxx\
- FluxAlg.cxx\
- FluxSvc.cxx\
- FluxSvcRandom.cxx\
- $(libs) 
+ -s=Dll *.cxx\
+ -s=../src $(source)
 
-# enable this for non-Gaudi testing
-application testMgr test/flux/testMgr.cxx  $(libs) 
-
-# non-Gaudi plots
-application rootplots test/flux/roottest.cxx  $(libs) 
 
 public
 apply_pattern package_test

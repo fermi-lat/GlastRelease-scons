@@ -2,10 +2,9 @@
 
 //#include "FluxSvc/ISpectrumFactory.h"
 
-//TODO: set proper path for these
-#include "../../EventSource.h"
-#include "../../SpectrumFactoryTable.h"
-#include "../../FluxMgr.h"
+#include "flux/EventSource.h"
+#include "flux/SpectrumFactoryTable.h"
+#include "flux/FluxMgr.h"
 
 #include <iostream>
 #include <fstream>
