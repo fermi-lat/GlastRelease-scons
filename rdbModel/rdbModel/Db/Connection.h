@@ -73,9 +73,10 @@ namespace rdbModel{
 
     /**
        Check to what degree local schema definition is compatible with
-       remote db accessed via this connection
+       remote db accessed via this connection.  By default check db names
+       match, but this may be disabled.
      */
-    virtual MATCH matchSchema(Rdb *rdb) = 0;
+    virtual MATCH matchSchema(Rdb *rdb, bool matchDbName=true) = 0;
 
     /** Typical derived class will form a syntactically correct 
         INSERT statement from the input arguments and issue it to
