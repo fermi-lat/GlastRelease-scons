@@ -31,8 +31,14 @@ namespace ldfReader {
         };
 
         void print() const { 
+             if (!exist()) {
+                 printf("No TEM\n");  
+                 return;
+             }
              printf("TemData:\n");
-             printf("contribution length = %d Bytes", m_lenInBytes);
+             printf("contribution length = %lu Bytes\n", m_lenInBytes);
+             m_summary.print();
+             printf("\n");
         };
 
         const EventSummaryCommon& summary() const { return m_summary; };

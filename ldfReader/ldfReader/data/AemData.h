@@ -29,6 +29,16 @@ namespace ldfReader {
             m_exist = false;
             m_packetError=0; };
 
+        void print() const {
+            if (!exist()) {
+                printf("No AEM\n");
+                return;
+            }
+            printf("AEM: \n");
+            m_summary.print();
+            printf("Len:  %lu", m_lenInBytes);
+         }
+
         const EventSummaryCommon& summary() const { return m_summary; };
         void initSummary(unsigned summary) { m_summary.setSummary(summary);};
 

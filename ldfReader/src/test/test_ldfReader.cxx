@@ -49,10 +49,19 @@ int main(int argn, char** argc) {
         printf("   Event GMT timestamp   = %ld.%09ld seconds after 1/1/1970\n",
           summary.timeSec(), summary.timeNanoSec());
 
+        OswData osw = myLatData->getOsw();
+        osw.print();
 
         // Check GEM data
         GemData gem = myLatData->getGem();
         gem.print();
+
+        myLatData->diagnostic()->print();
+        myLatData->getErr().print();
+
+        AemData aem = myLatData->getAem(); 
+        aem.print();
+
 
         // Check the ACD data
         printf("ACD Data\n");

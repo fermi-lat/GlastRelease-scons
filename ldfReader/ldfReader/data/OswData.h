@@ -29,6 +29,16 @@ namespace ldfReader {
             m_packetError = 0;
             m_exist = false;};
 
+        void print() const {
+            if(!exist()) {
+                printf("No OSW\n");
+                return;
+            }
+            printf("OSW: \n");
+            m_summary.print();
+            printf("Len: %lu", m_lenInBytes);
+        }
+
         const EventSummaryCommon& summary() const { return m_summary; };
         void initSummary(unsigned summary) { m_summary.setSummary(summary);};
 
@@ -48,7 +58,7 @@ namespace ldfReader {
         EventSummaryCommon m_summary;
         bool m_exist;
 
-		unsigned m_packetError;
+        unsigned m_packetError;
         unsigned long m_lenInBytes;
 
     };

@@ -27,6 +27,15 @@ namespace ldfReader {
             m_lenInBytes = 0; 
             m_exist = false; };
 
+       void print() const {
+           if (!exist()) {
+               printf("No Error Data\n");
+               return;
+           }
+           printf("Error Data:\n");
+           printf("Len: %lu\n\n", m_lenInBytes);
+        }
+
         //const EventSummaryCommon& summary() const { return m_summary; };
         //void setSummary(unsigned summary) { m_summary.setSummary(summary);};
 

@@ -27,7 +27,7 @@ namespace ldfReader {
 
     LdfParser::LdfParser(std::string fileName, bool fitsWrap, 
         const std::string& instrument) :
-    m_fileName(fileName), m_fitsWrap(fitsWrap), m_fitsfile(0), m_ebf(0),
+    m_fileName(fileName), m_fitsWrap(fitsWrap), m_ebf(0), m_fitsfile(0), 
         m_maxRow(0), m_currentRow(0), m_maxHdu(0), m_currentHdu(0),
         m_rowBuf(0), m_maxSize(0), m_evtCount(0), m_instrument(instrument),
         m_runId(0)
@@ -295,7 +295,7 @@ namespace ldfReader {
                 // Now check to see that the event sequences are monotonically increasing
                 if (ldfReader::LatData::instance()->summaryData().eventSequence() < eventSeqNum) {
                     printf("Event Seq # is not monotonically increasing ");
-                    printf("Last EventSeqNum %d, current %d\n", eventSeqNum,
+                    printf("Last EventSeqNum %lu, current %lu\n", eventSeqNum,
                         ldfReader::LatData::instance()->summaryData().eventSequence());
                     printf("Setting Bad Event Flag\n");
                     ldfReader::LatData::instance()->setBadEventSeqFlag();

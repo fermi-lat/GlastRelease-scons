@@ -14,9 +14,15 @@ namespace ldfReader {
     {
     public:
 
-        EventSummaryCommon() { m_summary =0; };
-        EventSummaryCommon(unsigned summary) : m_summary(summary) { };
-        ~EventSummaryCommon() {}
+        EventSummaryCommon():EventSummary(0) { m_summary =0; };
+        EventSummaryCommon(unsigned summary) : EventSummary(0) {
+            m_summary = summary;  };
+
+        EventSummaryCommon(const EventSummaryCommon& summary):EventSummary(0) {
+            m_summary = summary.m_summary;
+        }
+
+        virtual ~EventSummaryCommon() {}
           
         void clear() { m_summary = 0; }
 

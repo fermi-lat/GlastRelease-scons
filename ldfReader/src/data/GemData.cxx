@@ -78,8 +78,12 @@ namespace ldfReader {
     }
 
    void GemData::print() const {
+       if (!exist()) {
+           printf("No GEM\n");
+           return;
+       }
        printf("GEM:\n");
-       printf("Contribution length = %d Bytes\n", m_lenInBytes);
+       printf("Contribution length = %lu Bytes\n", m_lenInBytes);
        printf("ROI vector = 0x%04x\n", roiVector());
        printf("TKR vector = 0x%04x\n", tkrVector());
        printf("CAL HE vector = 0x%04x\n", m_cal_HE_Vector);
