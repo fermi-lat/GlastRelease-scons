@@ -312,7 +312,7 @@ StatusCode digiRootReaderAlg::readCalDigi() {
     MsgStream log(msgSvc(), name());
 
     StatusCode sc = StatusCode::SUCCESS;
-    const TObjArray *calDigiRootCol = m_digiEvt->getCalDigiCol();
+    const TClonesArray *calDigiRootCol = m_digiEvt->getCalDigiCol();
     if (!calDigiRootCol) return sc;
     TIter calDigiIter(calDigiRootCol);
 
