@@ -221,6 +221,8 @@
           </half>
         </const>
 -->
+<!--
+       Don't actually use these
         <const name="cellHorGap">
           <notes>New from Eric/Sacha.  Horizontal gap between xtal
                  and cell wall.</notes>
@@ -249,6 +251,7 @@
           </half>
         </const>
 
+-->
 <!-- Following comes from CAL docs of 31 May, 2001 
      As of 18 june, 2003, this isn't used in the model
 -->

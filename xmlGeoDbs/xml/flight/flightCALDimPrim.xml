@@ -30,14 +30,6 @@ large diode relative to crystal. Changed from -2.55 mm on 18 June, 2003</prim>
   <prim name= "diodeSYOffset" value= "8.025">Y offset of small diode relative 
 to crystal.  Changed from 8.6 mm on 18 June, 2003.</prim>
 
-   <!-- trans. distance between logs now obsolete.  Use cellVertPitch,
-        cellHorPitch -->
-<!--
-  <prim name= "CALGap" value= "0.84">Transverse distance between logs
-</prim> 
-  <prim name="CALInterLayer" value="2.62" >Gap between CAL layers
-</prim>
--->
 
   <prim name="cellVertPitch" value="21.35" >Vertical pitch of CsI and
 cells</prim>
@@ -49,13 +41,8 @@ and cells.  Changed from 27.844 mm on 18 June, 2003.</prim>
 composite cell vertical walls (C) [only.  Before 18 June, 2003, also
  includedreflector]
 </prim>
-  <prim name="cellHorWallThick" value="0.85"> Thickness of reflector 
-and composite cell horizontal walls (C)</prim>
-<!--
-  <prim name="cellSideReinfThick" value="1.4"> **not understood**
- Horizontal thickness of
-reinforcement on side of outermost cells (C)</prim>
--->
+  <prim name="cellHorWallThick" value="0.85"> Thickness of 
+composite cell horizontal walls (C)</prim>
   <prim name="cellSideWallThick" value="1.685">Thickness of vertical cell
 wall for outermost cells in each layer. New constant, first defined
  18 June, 2003</prim>

@@ -10,7 +10,8 @@
          materialREF="crystalMat"  >
       <seg axis="X" nSegREF="nCsISeg" reason="energyAcct" />
     </box>
- -->
+-->
+
     <box name="CsISeg" 
          sensitive="intHit"  detectorTypeREF="eDTypeCALXtal"
          XREF="CsISegLength" YREF="CsIWidth" ZREF="CsIHeight"
@@ -25,7 +26,7 @@
 
 <!-- there are two kinds of diodes: large and small. See diode section of
      instrument.xml.   These
-     diode boxes or oriented the same way as the unrotated CsIDetector
+     diode boxes are oriented the same way as the unrotated CsIDetector
      above.  Old names for x,y,z dimensions were respectively
      thickness,x_width,y_width   -->
     <box name="diodeL"
@@ -55,6 +56,21 @@
           YREF="CsIEnvY"
           ZREF="cellHorWallHalfThick"
           />
+
+     <box name="CsIWrapVertWall"
+          materialREF="CALWrapMat"
+          XREF="CsILength"
+          YREF="CsIWrapThick" 
+          ZREF="CsIHeight"
+          />
+
+     <box name="CsIWrapHorWall"
+          materialREF="CALWrapMat"
+          XREF="CsILength"
+          YREF="CsIWrapTranvLen" 
+          ZREF="CsIWrapThick"
+          />
+
 
 <!-- The (new) idea here will be to make a composition with vacuum
      envelope whose dimensions are such that it contains the CsI,
@@ -107,6 +123,28 @@
         <idField name="fCALCellCmp" valueREF="eDiodePLarge" />
       </posXYZ>
 
+<!-- 4 boxes of crystal wrap go immediately up against CsI -->
+      <!-- top wrap  -->
+      <posXYZ volume="CsIWrapHorWall"
+              ZREF="wrapHorWall_dz" >
+        <idField name="fCALCellCmp" valueREF="eWrapTop" />
+      </posXYZ>
+      <!-- bottom wrap -->
+      <posXYZ volume="CsIWrapHorWall"
+              ZREF="wrapHorWall_dzn" >
+        <idField name="fCALCellCmp" valueREF="eWrapBot" />
+      </posXYZ>
+      <!-- pos side wrap -->
+      <posXYZ volume="CsIWrapVertWall"
+              YREF="wrapVertWall_dy" >
+        <idField name="fCALCellCmp" valueREF="eWrapRight" />
+      </posXYZ>
+      <!-- neg side wrap -->
+      <posXYZ volume="CsIWrapVertWall"
+              YREF="wrapVertWall_dyn" >
+        <idField name="fCALCellCmp" valueREF="eWrapLeft" />
+      </posXYZ>
+
 <!-- Also need to position cell walls -->
       <!-- top cell wall -->
       <posXYZ volume="cellHorWall"
@@ -133,6 +171,7 @@
     </composition>
 
     <!-- make a layer out of some evenly-spaced CsIElements -->
+    <!-- Crystals in this layer measure X -->
     <stackY name="CALLayer" >
       <axisMPos volume="CsIElement" ncopyREF="nCsIPerLayer"
                 shiftREF="cellHorPitch" >
@@ -150,7 +189,6 @@
         <idField name="fCALLog" valueREF="maxLog" step="-1" />
       </axisMPos>
     </stackY>
-
 
 <!-- define boxes for top and bottom plates -->
     <box name="CALBottomPlate"
@@ -328,10 +366,11 @@
        ZREF="CALVertStayClear"
        materialREF="vacuumMat" />
 
-    <!-- As of 30 April 2003, CALLayers is positioned at top of
-         stay-clear rather than in the middle -->    
+<!-- As of 30 April, CALLayers at the top of the stay clear envelope (used
+     to be centered)                                           -->
+    
     <composition name="oneCAL" envelope="oneCALStayClearBox" >
-      <posXYZ volume="CALLayers" 
+      <posXYZ volume="CALLayers"
           ZREF="CALLayers_dz" />
     </composition>
 
