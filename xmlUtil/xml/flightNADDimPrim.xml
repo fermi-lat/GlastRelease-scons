@@ -19,6 +19,7 @@ grid flange</prim>
   <prim name="NADBlanketThick" value="32.7">Blanket thickness (12/6/01)
   This is the PDR value.  </prim>
   <prim name="NADSpacecraftZ" value="1400.0">Height of spacecraft</prim>
-  <prim name="NADSpacecraftR" value="800.0">Radius of spacecraft</prim>
+  <prim name="NADSpacecraftR" value="817.775">Radius of spacecraft
+(800.0 * sqrt(1/(0.957)) to make mass equal to about 1000 kg</prim>
   <prim name="NADSpacecraftGap" value="0.0">Gap between LAT and spacecraft</prim>
 </primCategory>
