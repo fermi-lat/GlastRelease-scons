@@ -23,7 +23,6 @@
 #include "GaudiKernel/ObjectList.h"
 
 
-
 /*!
 //------------------------------------------------------------------------------
 //
@@ -204,6 +203,14 @@ template <class TYPE> class ObjectVector;
 typedef ObjectVector<mc::McIntegratingHit>     McIntegratingHitVector;
 template <class TYPE> class ObjectList;
 typedef ObjectList<mc::McIntegratingHit>       McIntegratingHitList;
+
+/*! A small class to use the sort algorithm */
+class CompareIntHits {
+  public:
+    bool operator()(mc::McIntegratingHit *left, mc::McIntegratingHit *right)
+    {return left->volumeID() < right->volumeID();}
+
+    };
 
 
 #endif // GlastEvent_McIntegratingHit_H

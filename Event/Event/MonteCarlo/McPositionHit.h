@@ -28,7 +28,6 @@
 class McParticle;
 
 
-
 /*!
 //------------------------------------------------------------------------------
 //
@@ -232,6 +231,15 @@ inline std::ostream& mc::McPositionHit::fillStream( std::ostream& s ) const
 
 typedef ObjectVector<mc::McPositionHit> McPositionHitVector;
 typedef ObjectList<mc::McPositionHit>   McPositionHitList;
+
+/*! A small class to use the sort algorithm */
+class ComparePosHits {
+  public:
+    bool operator()(mc::McPositionHit *left, mc::McPositionHit *right)
+    {return left->volumeID() < right->volumeID();}
+
+    };
+
 
 #endif    // GlastEvent_McPositionHit_H
 
