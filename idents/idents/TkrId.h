@@ -33,7 +33,7 @@ namespace idents {
         silicon plane (view optional)
     */
     TkrId(unsigned towerX, unsigned towerY, unsigned tray, bool top, 
-          int view=eMeasureNone);
+          int view=eMeasureNone,bool botTray=1);
             
     ~TkrId() {};
 
@@ -70,7 +70,8 @@ namespace idents {
       MASKMeas   = 0x1,
       MASKBotTop = 0x1,
       MASKLadder = 0x3,
-      MASKWafer  = 0x3
+      MASKWafer  = 0x3,
+      MASKBottom = 0x1
     };
 
     enum {
@@ -80,7 +81,8 @@ namespace idents {
       SHIFTMeas   = 9,
       SHIFTBotTop = 10,
       SHIFTLadder = 11,
-      SHIFTWafer  = 13
+      SHIFTWafer  = 13,
+      SHIFTBottom = 15
     };
 
     /*
@@ -99,7 +101,8 @@ namespace idents {
       VALIDMeas =   0x08000000,
       VALIDBotTop = 0x04000000,
       VALIDLadder =  0x02000000,
-      VALIDWafer =   0x01000000
+      VALIDWafer =   0x01000000,
+      VALIDBottom = 0x80000000
     };
 
 
@@ -110,7 +113,8 @@ namespace idents {
       SHMASKMeas = MASKMeas << SHIFTMeas,
       SHMASKBotTop = MASKBotTop << SHIFTBotTop,
       SHMASKLadder = MASKLadder << SHIFTLadder,
-      SHMASKWafer = MASKWafer << SHIFTWafer
+      SHMASKWafer = MASKWafer << SHIFTWafer,
+      SHMASKBottom = MASKBottom << SHIFTBottom
     };
   public:
 
@@ -162,6 +166,16 @@ namespace idents {
       return (m_packedId & SHMASKWafer) >> SHIFTWafer;
     }
 
+    bool hasBottomTray() const {return ((m_packedId & VALIDBottom) != 0);}
+    unsigned int getBottomTray() const {
+      if (!(hasBottomTray())) throw std::domain_error("No BottomTray field");
+      return (m_packedId & SHMASKBottom) >> SHIFTBottom;
+    }
+
+    //Access Methods for Tkr reconstruction semantics:
+    unsigned int getLayer() const {return ( getPlane() + 1 - getBottomTray() )/2;}
+    unsigned int getPlane() const {return 2*getTray() + getBotTop() - getBottomTray();}
+
 
     /// Number of valid fields, never more than 7
     //    unsigned int getSize();
@@ -186,6 +200,7 @@ namespace idents {
         void read( std::istream& stream);
     */      
     void write(std::ostream &stream) const;
+
 
   private:
     /// Unuseful default constructor
