@@ -1,12 +1,21 @@
 //##############################################################
 //
-//   simple test of Trigger.    
+//   simple test of EventIntegrity    
 //=========================================================================
 
 // basic glast dlls
 ApplicationMgr.DLLs += { "GlastSvc", "EventIntegrity"};
 
-ApplicationMgr.TopAlg = {"EventIntegrityAlg"};
+ApplicationMgr.ExtSvc = {
+    "GlastEventSelector/EventSelector" ,
+    "EventCnvSvc"
+    };
+
+EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+EventSelector.Input = "NONE";
+
+ApplicationMgr.TopAlg = {"test_EventIntegrityAlg", 
+                         "EventIntegrityAlg"};
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
 
