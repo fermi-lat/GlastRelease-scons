@@ -6,6 +6,7 @@
 
 class GDDvolume;
 class GDDconstants;
+class GDDconst;
 class GDDvisitor;
 class GDDsection;
 class GDDchoice;

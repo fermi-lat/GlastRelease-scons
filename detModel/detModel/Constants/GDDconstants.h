@@ -10,6 +10,8 @@
 #include "detModel/GDDpurge.h"
 #include "detModel/Constants/GDDconstCategory.h"
 
+class GDDconstantsVisitor;
+
 class GDDconstants{
  public:
   
@@ -22,7 +24,16 @@ class GDDconstants{
   
   void addConstantCategory(GDDconstCategory* c){constCategories.push_back(c);};
   int getConstantCategoryNumber()const{return constCategories.size();};
-  vector< GDDconstCategory* > getConstantCategories()const{return constCategories;};
+  vector< GDDconstCategory* > getCategories()const{return constCategories;};
+
+  /**
+   * This is the standard Accept method for the visitor mechanism
+   */
+  void Accept(GDDconstantsVisitor*);
+  /**
+   *  This method is the non recursive Accept for the visitor pattern
+   */
+  void AcceptNotRec(GDDconstantsVisitor*);
   
  private:    
   /** @link aggregation */

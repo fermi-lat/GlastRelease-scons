@@ -60,6 +60,7 @@ public:
      * This method return the z dimension of the bounding box
      */
     virtual double getBBZ(){return z;}
+
     /**
      * This is the standard Accept method for the visitor mechanism
      */

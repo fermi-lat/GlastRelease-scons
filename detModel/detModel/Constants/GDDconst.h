@@ -7,6 +7,8 @@
  * @author D.Favretto & R.Giannitrapani 
  */
 
+class GDDconstantsVisitor;
+
 enum constType{i,f,d,s};///int float double string
 enum constMeaning{length,angle,coun,mat,none};
 
@@ -27,6 +29,15 @@ class GDDconst {
   string getNote()const{return note;}
   string getUnitLength()const{return unitLength;}
   string getUnitAngle()const{return unitAngle;}
+
+  /**
+   * This is the standard Accept method for the visitor mechanism
+   */
+  void Accept(GDDconstantsVisitor*);
+  /**
+   *  This method is the non recursive Accept for the visitor pattern
+   */
+  void AcceptNotRec(GDDconstantsVisitor*);
 
  private:
   string name;

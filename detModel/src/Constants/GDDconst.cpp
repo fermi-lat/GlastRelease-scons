@@ -1,4 +1,14 @@
 #include "detModel/Constants/GDDconst.h"
+#include "detModel/Management/GDDconstantsVisitor.h"
+
+
+void GDDconst::Accept(GDDconstantsVisitor* v){
+  v->visitConst(this);
+}
+
+void GDDconst::AcceptNotRec(GDDconstantsVisitor* v){
+  v->visitConst(this);
+}
 
 
 void GDDconst::setConstMeaning(string puType){

@@ -5,6 +5,7 @@
 
 #include "detModel/Management/GDDvisitor.h"
 #include "detModel/Management/GDDsectionsVisitor.h"
+#include "detModel/Management/GDDconstantsVisitor.h"
 #include "detModel/Management/GDDmanager.h"
 #include "detModel/Management/GDDbuilder.h"
 
@@ -49,14 +50,26 @@ void GDDmanager::build(buildType b)
 
 void GDDmanager::startVisitor(GDDvisitor* v)
 {
-  if (v->getType() == sectionsVisitor)
+  switch(v->getType()){
+  case sectionsVisitor:
     {
       GDDsectionsVisitor* sv = static_cast<GDDsectionsVisitor*>(v);
       if (v->getRecursive())
 	manGDD->Accept(sv);
       else
 	manGDD->AcceptNotRec(sv);
+      break;
     }
+  case constantsVisitor:
+    {
+      GDDconstantsVisitor* cv = static_cast<GDDconstantsVisitor*>(v);
+      if (v->getRecursive())
+	manGDD->Accept(cv);
+      else
+	manGDD->AcceptNotRec(cv);
+      break;
+    }
+  }
 }
 
 

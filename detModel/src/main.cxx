@@ -8,7 +8,7 @@
 
 #include "detModel/Management/GDDmanager.h"
 #include "detModel/Management/GDDVRMLSectionsVisitor.h"
-#include "detModel/Management/GDDprinterSectionsVisitor.h"
+#include "detModel/Management/GDDprinterConstantsVisitor.h"
 #include "detModel/Management/GDDXercesBuilder.h"
 
 int main(int argc, char* argv[]) {
@@ -27,7 +27,8 @@ int main(int argc, char* argv[]) {
     manager->startVisitor(new GDDVRMLSectionsVisitor()); 
   else
     manager->startVisitor(new GDDVRMLSectionsVisitor(argv[2])); 
-  // manager->startVisitor(new GDDprinterSectionsVisitor);
+
+  manager->startVisitor(new GDDprinterConstantsVisitor());
 
   delete manager;
   return(0);

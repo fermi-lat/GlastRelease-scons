@@ -186,7 +186,7 @@ void GDDXercesBuilder::buildConstants(){
 		string s1;
 		DOM_NamedNodeMap attrCat=child.item(j).getAttributes();
 		s1=std::string(xml::Dom::transToChar(attrCat.getNamedItem(DOMString("name")).getNodeValue()));
-		cat->setCategoryName(s1);
+		cat->setName(s1);
 		if(attrCat.getLength()>1){ //if the actual category has more than one attribute it is derived
 		  string s2;
 		  s2=std::string(xml::Dom::transToChar(attrCat.getNamedItem(DOMString("save")).getNodeValue()));

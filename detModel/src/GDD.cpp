@@ -196,12 +196,12 @@ void GDD::buildChoiceMap()
 				     sections[i]->getChoices()[j]));
 }
 
-/* This method gives back a double given a name
+/* This method gives back a GDDconst* given a name
  * If it does not exist, it returns a null pointer
  */
-double GDD::getConstantByName(string cname)
+GDDconst* GDD::getConstByName(string cname)
 {
-  typedef map<string, double> M;
+  typedef map<string, GDDconst*> M;
   M::const_iterator i; 
 
   i = constMap.find(cname);
@@ -209,16 +209,29 @@ double GDD::getConstantByName(string cname)
   else return i->second;
 }
 
+/* This method gives back a double given a name
+ * If it does not exist, it returns a null pointer
+ */
+double GDD::getNumConstByName(string cname)
+{
+  typedef map<string, double> M;
+  M::const_iterator i; 
+
+  i = constNumMap.find(cname);
+  if(i == constNumMap.end()) return 0;
+  else return i->second;
+}
+
 /* This method gives back a string given a name
  * If it does not exist, it returns a null pointer
  */
-string GDD::getMaterialByConstantName(string cname)
+string GDD::getCharConstByName(string cname)
 {
   typedef map<string, string> M;
   M::const_iterator i; 
   
-  i = materialMap.find(cname);
-  if(i == materialMap.end()) return 0;
+  i = constCharMap.find(cname);
+  if(i == constCharMap.end()) return 0;
   else return i->second;
 }
 
@@ -233,8 +246,8 @@ void GDD::buildConstantsMap()
   typedef map<string, string> M2;
   typedef map<string, GDDconst *> M3;
 
-  for(k=0;k<constants->getConstantCategories().size();k++){
-    GDDconstCategory* tmp=constants->getConstantCategories()[k];
+  for(k=0;k<constants->getCategories().size();k++){
+    GDDconstCategory* tmp=constants->getCategories()[k];
     for(j=0;j<tmp->getConsts().size();j++){
       GDDconst* temp = tmp->getConsts()[j];
 
@@ -287,9 +300,12 @@ void GDD::Accept(GDDvisitor* v){
       break;
     }
   case constantsVisitor:
-    //    v->visitGDD(this);
-    // constants->Accept(v);
-    break;
+    {
+      GDDconstantsVisitor* vcon = static_cast<GDDconstantsVisitor*>(v);
+      vcon->visitGDD(this);
+      constants->Accept(vcon);
+      break;
+    }
   }
 }
 
