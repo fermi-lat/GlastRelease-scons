@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <list>
+#include "detModel/Sections/Section.h"
 
 namespace detModel{
   
@@ -12,7 +13,6 @@ namespace detModel{
   class Const;
   class ConstCategory;
   class Visitor;
-  class Section;
   class Choice;
   class Shape;
   class MatCollection;
@@ -140,6 +140,9 @@ namespace detModel{
     Const* getOrderedConst(int i);
     /// This methods return the ith volume in the volumes map
     Volume* getOrderedVolume(int i);
+
+    /// Method to retrive the finest mode string from the section
+    std::string getFineChoice(){return (sections[0])->getFineChoice();}
 
     /** This method resolve the symbolic volumes references in the XML file 
      *  and it is automatically called by the builder.

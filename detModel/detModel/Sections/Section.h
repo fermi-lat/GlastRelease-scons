@@ -16,8 +16,9 @@ namespace detModel{
 	    std::string pversion,
 	    std::string pdate,
 	    std::string pauthor,
+	    std::string pfineChoice,
 	    std::string ptopVolumeRef):name(pname),version(pversion),date(pdate),
-      author(pauthor),topVolumeRef(ptopVolumeRef),
+      author(pauthor),topVolumeRef(ptopVolumeRef),m_fineChoice(pfineChoice),
       topVolume(0){};
   
   
@@ -32,6 +33,7 @@ namespace detModel{
     std::string getVersion()const{return version;};
     std::string getDate()const{return date;};
     std::string getAuthor()const{return author;};
+    std::string getFineChoice()const{return m_fineChoice;};
     Volume* getTopVolume()const{return topVolume;};
     std::string getTopVolumeRef()const{return topVolumeRef;};
 
@@ -39,6 +41,7 @@ namespace detModel{
     void setVersion(std::string pver){version = pver;};
     void setDate(std::string pdate){date = pdate;};
     void setAuthor(std::string pauth){author = pauth;};
+    void setFineChoice(std::string choice){m_fineChoice = choice;};
     void setTopVolumeRef(std::string pref){topVolumeRef = pref;}
 
     std::vector< Volume * > getVolumes()const{return volumes;}
@@ -58,6 +61,7 @@ namespace detModel{
     std::string author;
     std::string DTDVersion;
     std::string topVolumeRef;
+    std::string m_fineChoice;
     Volume* topVolume;
   };
 }

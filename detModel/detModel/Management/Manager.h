@@ -42,6 +42,9 @@ namespace detModel{
     /// This method sets the actual mode for choice elements
     void setMode(std::string pmode){manMode = pmode;};
 
+    /// Method to retrive the finest mode name for IDmap building
+    std::string getFineChoice(){return manGdd->getFineChoice();};
+
     /// This method starts the visit of a hierarchy with a specified visitor
     void startVisitor(Visitor*);
   

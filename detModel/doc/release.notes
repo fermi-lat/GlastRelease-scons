@@ -2,6 +2,7 @@
  * Package detModel
  * Coordinator: R.Giannitrapani
  *
+ * v2r9 RG  fixed a rotation bug in idMapBuilder
  * v2r8 THB new sensitive flags, idMapBuilder access 
  * 
  */

@@ -97,7 +97,7 @@ namespace detModel{
     std::cout << "Fake building of sections" << std::endl; 
 
     // We build a new section
-    Section* s = new Section("sec","1.0","17-07-01","RG","world");
+    Section* s = new Section("sec","1.0","17-07-01","RG","","world");
   
     // We build some boxes to fill the section
     Box* w = new Box("world");

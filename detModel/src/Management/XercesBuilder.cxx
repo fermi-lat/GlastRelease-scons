@@ -356,6 +356,7 @@ namespace detModel{
 			     xml::Dom::getAttribute(el, "version"),
 			     xml::Dom::getAttribute(el, "date"),
 			     xml::Dom::getAttribute(el, "author"),
+			     xml::Dom::getAttribute(el, "fineChoice"),
 			     xml::Dom::getAttribute(el, "topVolume")
 			     );
     DOM_NodeList childs = e->getChildNodes();
