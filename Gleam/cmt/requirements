@@ -1,6 +1,6 @@
 package Gleam
 
-version  v5r2p1
+version  v5r2p2
 
 # $Id$
 
@@ -12,6 +12,9 @@ use GlastSvc    v*
 # simulation
 
 use FluxSvc     v*
+use CRflux      v*
+use GRB         v*
+
 use FluxDisplay v*
 use G4Generator v*
 use G4Propagator v*

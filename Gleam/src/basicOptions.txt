@@ -79,6 +79,11 @@ G4Generator.defaultCutValue=0.7; // instead of 0.1 default
 FluxSvc.source_lib += {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
 FluxAlg.source_name="muon_pencil_angle";
 
+// add in CRflux, GRB options
+ApplicationMgr.DLLs +={ "CRFlux", "GRB" };
+FluxSvc.source_lib += {
+   "$(CRFLUXROOT)/xml/source_library.xml",
+   "$(GRBROOT)/xml/grb_user_library.xml"};
 
 // ----------------------------
 //  Digitization

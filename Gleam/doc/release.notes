@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v5r2p2 THB 14-aug-03   Add GRB and CRflux
 * v5r2p1 THB 20-jul-03   Take TkrDisplayAlg out of guiOptions. (it is a sub-alg)
 * v5r2   THB 04-jul-03   Remove Recon (with gismo remnant); add DetDisplay
 * v5r1p3 THB 15-jun-03   Have merit write out tuple in test_Gleam   
