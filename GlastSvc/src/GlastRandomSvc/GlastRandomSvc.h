@@ -36,6 +36,8 @@
 
 #include "GlastSvc/GlastRandomSvc/IGlastRandomSvc.h"
 
+#include "GlastRandomSeed.h"
+
 class GlastRandomSvc : public Service,
 virtual public IIncidentListener,
 virtual public IGlastRandomSvc
@@ -75,21 +77,11 @@ public:
 
   // file name of seeds to be read in
   // if m_seedFile is empty, procceed to normal running of Gleam
-  string m_seedFile;
-
-  struct Seed {
-    long m_run;
-    long m_seqNo;
-  };
-  friend istream& operator >> (istream& in, Seed& seed);
-  friend ostream& operator << (ostream& in, const Seed& seed);
+  std::string m_seedFile;
 
   // seeds read from the file
-  std::vector<Seed> m_seeds;
+  std::vector<GlastRandomSeed> m_seeds;
 };
-
-extern istream& operator >> (istream& in, GlastRandomSvc::Seed& seed);
-extern ostream& operator << (ostream& in, const GlastRandomSvc::Seed& seed);
 
 #endif // _GlastRandomSvc_H
 

@@ -118,10 +118,18 @@ StatusCode GlastRandomSvc::initialize ()
     
   // read seeds from file
   if(m_seedFile != "") {
-    ifstream input(m_seedFile.c_str());
-    istream_iterator<Seed> begin(input);
-    istream_iterator<Seed> end;
-    copy(begin, end, back_inserter(m_seeds));
+
+    std::ifstream input(m_seedFile.c_str());
+    if(!input) {
+      log << MSG::ERROR << "Unable to find seed file: " << m_seedFile.c_str()
+	  << endreq;
+      status = StatusCode::FAILURE;
+      return status;
+    }
+
+    std::istream_iterator<GlastRandomSeed> begin(input);
+    std::istream_iterator<GlastRandomSeed> end;
+    std::copy(begin, end, std::back_inserter(m_seeds));
 
     // set no of events
     IProperty* propMgr=0;
@@ -259,14 +267,3 @@ void GlastRandomSvc::handle(const Incident &inc)
     }
 }
 
-istream& operator >> (istream& in, GlastRandomSvc::Seed& seed)
-{
-  in >> seed.m_run >> seed.m_seqNo;
-  return in;
-}
-
-ostream& operator << (ostream& out, const GlastRandomSvc::Seed& seed)
-{
-  out << seed.m_run << " " << seed.m_seqNo;
-  return out;
-}
