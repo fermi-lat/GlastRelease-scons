@@ -136,8 +136,12 @@ void  IDmapBuilder::visitPosXYZ(PosXYZ* pos)
   if (!(m_topSeen)) {
     if (vol->getName() == m_actualVolume) {
       m_topSeen = true;
-      m_IDPrefix = tempID;
-      m_transformPrefix = HepTransform3D(tempRotation, tempPos);
+      //      m_IDPrefix = tempID;
+      //      m_transformPrefix = HepTransform3D(tempRotation, tempPos);
+      //  Try including identifier(s) & transform for top volume as
+      //  part of "prefix"
+      m_IDPrefix = m_actualID;
+      m_transformPrefix = HepTransform3D(m_actualRot, m_actualPos);
       m_inverseTransformPrefix = m_transformPrefix.inverse();
     }
   }
@@ -201,8 +205,8 @@ void  IDmapBuilder::visitAxisMPos(AxisMPos* pos)
       if (!(m_topSeen)) {
         if (vol->getName() == m_actualVolume) {
           m_topSeen = true;
-          m_IDPrefix = tempID;
-          m_transformPrefix = HepTransform3D(tempRotation, tempPos);
+          m_IDPrefix = m_actualID;
+          m_transformPrefix = HepTransform3D(m_actualRot, m_actualPos);
           m_inverseTransformPrefix = m_transformPrefix.inverse();
         }
       }
