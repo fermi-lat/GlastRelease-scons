@@ -1,13 +1,13 @@
 echo off
 IF .%1==. (set CMTCONFIG=VisualC) ELSE set CMTCONFIG=%1
-set CMTROOT=c:\packages\CMT\v1r5p1
-set GLAST_SETTINGSROOT=c:\packages\external\glast_settings\v3
-set GLAST_SETTINGSCONFIG=%CMTCONFIG%
-set EXTLIBROOT=c:\packages\external\EXTLIB\v2r2
-set EXTLIBCONFIG=%CMTCONFIG%
-set IDENTSROOT=c:\packages\gaudi_dev\idents\v1r1
-set IDENTSCONFIG=%CMTCONFIG%
-set EXT_DIR=C:\extlib
-set LHCXX_DIR=%EXT_DIR%
-set ROOT_DIR=%EXT_DIR%\ROOT
-set CLASSPATH=%CMTROOT%\java
+set CMTROOT=d:\packages\CMT\v1r7
+set GLASTPOLICYROOT=d:\packages\gismosys_v4\GlastPolicy\v1
+set GLASTPOLICYCONFIG=Win32Debug
+set GAUDIPOLICYROOT=d:\packages\gaudi_v7\GaudiPolicy\v4r3
+set GAUDIPOLICYCONFIG=Win32Debug
+set IDENTSROOT=d:\packages\pdr_dev\idents\v2
+set IDENTSCONFIG=Win32Debug
+set BINDIR=Win32Debug
+set CLASSPATH=c:\Program Files\Java Analysis Studio\lib\jas.jar;c:\Program Files\Java Analysis Studio\lib\xml4j.jar;%CMTROOT%\java
+set include=C:\Program Files\Microsoft Visual Studio\VC98\atl\include;C:\Program Files\Microsoft Visual Studio\VC98\include;c:\program files\devstudio\vc\include;c:\program files\devstudio\vc\atl\include;c:\program files\devstudio\vc\mfc\include;%include%
+set lib=C:\Program Files\Microsoft Visual Studio\VC98\lib;c:\program files\devstudio\vc\lib;c:\program files\devstudio\vc\mfc\lib;%lib%

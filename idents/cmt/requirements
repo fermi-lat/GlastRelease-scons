@@ -1,9 +1,10 @@
 package idents
 
-version v1
-use glast_settings
+version v2
+use GlastPolicy
 
-include_path $(IDENTSROOT)
+ignore_pattern include_none
+apply_pattern  package_include
 
 #since this package has only inline code, no library is needed.
 # we define one for the convenience of Dev Studio users, to be able 
