@@ -15,18 +15,17 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/StatusCode.h"
-#include "GaudiKernel/ObjectVector.h"
 
 
 // TkrRecon classes
-//#include "TkrRecon/GaudiAlg/TkrReconAlg.h"
-//#include "TkrRecon/Track/SiRecObjs.h"
-//#include "TkrRecon/Track/GFgamma.h"
+#include "Event/Recon/TkrRecon/TkrFitTrack.h"
+#include "Event/Recon/TkrRecon/TkrPatCandCol.h"
 
 
 #include "geometry/Point.h"
 #include "geometry/Vector.h"
 #include "geometry/Box.h"
+#include "CLHEP/Geometry/Transform3D.h"
 
 #include "xml/IFile.h"
 
@@ -36,11 +35,11 @@
 #include <cstdio>
 #include <stdlib.h>
 
-double AcdReconAlg::s_threshold_energy;
+double AcdReconAlg::s_thresholdEnergy;
 
 unsigned int AcdReconAlg::s_numSideRows;
 
-static float maxDOCA = 200.0;
+static float maxDoca = 200.0;
 
 // Define the factory for this algorithm
 static const AlgFactory<AcdReconAlg>  Factory;
@@ -94,11 +93,14 @@ StatusCode AcdReconAlg::execute() {
     MsgStream   log( msgSvc(), name() );
     log << MSG::DEBUG << "execute" << endreq;
 
-    SmartDataPtr<Event::AcdDigiCol> acdDigiColTds(eventSvc(), EventModel::Digi::AcdDigiCol);
-    if (!acdDigiColTds) return sc;
+    SmartDataPtr<Event::AcdDigiCol> acdDigiCol(eventSvc(), EventModel::Digi::AcdDigiCol);
+    if (!acdDigiCol) return sc;
+
+    m_acdDigiCol = acdDigiCol;
+
 
     // run the reconstruction
-    reconstruct(acdDigiColTds);
+    reconstruct(m_acdDigiCol);
 
     // We are now ready to end the routine.
     // Do not delete any allocated memory that has been registered with the TDS - that memory now
@@ -121,7 +123,7 @@ void AcdReconAlg::getParameters ()
     MsgStream   log( msgSvc(), name() );
     StatusCode sc;
 
-    sc = m_glastDetSvc->getNumericConstByName("threshold", &s_threshold_energy);
+    sc = m_glastDetSvc->getNumericConstByName("threshold", &s_thresholdEnergy);
 
     double temp;
     sc = m_glastDetSvc->getNumericConstByName("numSideRows", &temp);
@@ -129,12 +131,14 @@ void AcdReconAlg::getParameters ()
 }
 
 void AcdReconAlg::clear() {
+    m_acdRecon = 0;
     m_totEnergy = 0.0;
     m_tileCount = 0;
-    m_gammaDOCA = maxDOCA;
-    m_DOCA = maxDOCA;
-    m_rowDOCA_vec.clear();
-    m_rowDOCA_vec.resize(s_numSideRows+1, maxDOCA);  // one for each side, plus one for the top
+    m_gammaDoca = maxDoca;
+    m_doca = maxDoca;
+    m_rowDocaCol.clear();
+    m_rowDocaCol.resize(s_numSideRows+1, maxDoca);  // one for each side, plus one for the top
+    m_energyCol.clear();
     m_act_dist = -200.0;
 }
 
@@ -154,11 +158,19 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol)
     // reset all member variables to their defaults
     clear();
 
+    // create the TDS location for the AcdRecon
+    m_acdRecon = new Event::AcdRecon;
+    sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, m_acdRecon);
+    if (sc.isFailure()) {
+        log << "Failed to register AcdRecon" << endreq;
+        return StatusCode::FAILURE;
+    }
+
     Event::AcdDigiCol::const_iterator acdDigiIt;
     
     for (acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
         
-        if ((*acdDigiIt)->getEnergy() < s_threshold_energy) continue; // toss out hits below threshold
+        if ((*acdDigiIt)->getEnergy() < s_thresholdEnergy) continue; // toss out hits below threshold
 
         m_tileCount++;
         double tileEnergy = (*acdDigiIt)->getEnergy();
@@ -169,109 +181,45 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol)
     log << MSG::DEBUG << "num Tiles = " << m_tileCount << endreq;
     log << MSG::DEBUG << "total energy = " << m_totEnergy << endreq;
 
-    acdTileDoca();
+    acdDoca();
+
+    m_acdRecon->initialize(m_totEnergy, m_tileCount, m_gammaDoca, m_doca, 
+        m_act_dist, m_minDocaId, m_rowDocaCol, m_energyCol);
 
     return sc;
 }
 
 
-StatusCode AcdReconAlg::acdTileDoca() {
+StatusCode AcdReconAlg::acdDoca() {
 
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
-/*
-    // Retrieve the TKR Reconstruction data
-    SmartDataPtr<SiRecObjs> tkrRecData(eventSvc(),"/Event/TkrRecon/SiRecObjs");
-    if (tkrRecData == 0) {
-        log << MSG::DEBUG << "No TKR Reconstruction available " << endreq;
-        return sc;
+    
+    // Retrieve the information on fit tracks
+    SmartDataPtr<Event::TkrFitTrackCol> tracksTds(eventSvc(), EventModel::TkrRecon::TkrFitTrackCol);
+
+    if (!tracksTds) return StatusCode::SUCCESS;
+
+    Event::TkrFitColPtr trkPtr = tracksTds->begin();
+    while(trkPtr != tracksTds->end())
+    {
+        Event::TkrFitTrack* trackTds  = *trkPtr++;       // The TDS track
+
+        double x = trackTds->getPosition().x();
+        double y = trackTds->getPosition().y();
+        double z = trackTds->getPosition().z();
+        Point pos(x,y,z);
+        Vector dir(trackTds->getDirection().x(),trackTds->getDirection().z(),trackTds->getDirection().z());
+           
+        float testDoca = doca(pos, dir, m_rowDocaCol);
+        if(testDoca < m_doca) m_doca = testDoca;
+            
+        float test_dist= hitTileDist(pos, dir);
+        if(test_dist > m_act_dist) m_act_dist = test_dist;
+
     }
 
-    std::vector<const GFtrack*> xtracks;
-    std::vector<const GFtrack*> ytracks;
 
-    // Now retrieve all of the tracks
-
-    int nparticles = tkrRecData->numParticles();
-    if (nparticles > 0) {
-
-        log << MSG::DEBUG << "Number of particles " << nparticles << endreq;
-
-        unsigned int iParticle;
-        for (iParticle = 0; iParticle < nparticles; iParticle++) {
-            GFparticle *particle = tkrRecData->Particle(iParticle);
-            xtracks.push_back(particle->getXGFtrack());
-            ytracks.push_back(particle->getYGFtrack());
-        }
-    } else {
-        log << MSG::DEBUG << "No reconstructed particles " << endreq;
-    }
-
-    int ngammas = tkrRecData->numGammas();
-    log << MSG::DEBUG << "number of gammas = " << ngammas << endreq;
-
-    if (ngammas > 0) {
-        unsigned int iGamma;
-        // Create a temporary vector to store the DOCA's for the 
-        // top and side tiles - we don't want to use the reconstructed
-        // gamma direction & vector for these DOCAs...
-        std::vector<double> temprowDOCA_vec;
-        temprowDOCA_vec.resize(numSideRows+1, maxDOCA); 
-        for (iGamma = 0; iGamma < ngammas; iGamma++) {
-            GFgamma *gamma = tkrRecData->Gamma(iGamma);
-            Point gammaVertex = gamma->vertex();
-            Vector gammaDirection = gamma->baseDirection();
-            double tempDOCA = DOCA(gammaVertex, gammaDirection, m_rowDOCA_vec);
-            if (tempDOCA < m_gammaDOCA) m_gammaDOCA = tempDOCA;
-            
-            // Store the tracks associated with the gamma
-            if (!gamma->getPair(TkrCluster::X)->empty()) 
-                xtracks.push_back(gamma->getPair(TkrCluster::X));
-            if (!gamma->getBest(TkrCluster::X)->empty()) 
-                xtracks.push_back(gamma->getBest(TkrCluster::X));
-            if (!gamma->getPair(TkrCluster::Y)->empty())
-                ytracks.push_back(gamma->getPair(TkrCluster::Y)); 
-            if (!gamma->getBest(TkrCluster::X)->empty())
-                ytracks.push_back(gamma->getBest(TkrCluster::Y));
-        }
-    } else {
-        log << MSG::DEBUG << "No reconstructed gammas " << endreq;
-    }
-
-    // Now we should have a list of x and y tracks
-    // iterate through the list of tracks, and combine to create all possible
-    // pairings of X and Y tracks.  The min DOCA is then reported as ACD_DOCA in
-    // the ntuple
-
-    for (std::vector<const GFtrack*>::const_iterator xtrk = xtracks.begin(); xtrk != xtracks.end(); xtrk++) {
-        for(std::vector<const GFtrack*>::const_iterator ytrk = ytracks.begin(); ytrk != ytracks.end(); ytrk++) {
-
-            const GFtrack* pTrkX = *xtrk;
-            const GFtrack* pTrkY = *ytrk;
-            
-            
-            //Vector dir = Vector((*xtrk)->slope(), (*ytrk)->slope(), 1.).unit();
-	        //Point x0((*xtrk)->positionAtZ(0), (*ytrk)->positionAtZ(0), 0.);
-            Vector xDir   = pTrkX->direction();
-            double slopeX = xDir.x();
-            Vector yDir   = pTrkY->direction();
-            double slopeY = yDir.y();
-
-            Vector dir = Vector(slopeX, slopeY, 1.).unit();
-	        Point x0(((*xtrk)->positionAtZ(0)).x(), ((*ytrk)->positionAtZ(0)).y(), 0.);
-
-            float testDOCA = DOCA(x0, dir, m_rowDOCA_vec);
-	    if(testDOCA < m_DOCA) m_DOCA = testDOCA;
-            
-            float test_dist= hitTileDist(x0, dir);
-            if(test_dist > m_act_dist) m_act_dist = test_dist;
-
-	}
-    }
-   
-    log << MSG::DEBUG << "ACD_DOCA = " << m_DOCA << endreq;
-    log << MSG::DEBUG << "ACD_Act_dist = " << m_act_dist << endreq;
-*/
     return sc;
 
 }
@@ -287,36 +235,56 @@ double AcdReconAlg::doca (const Point &x0, const Vector &t0, std::vector<double>
     // Dependencies: None
     // Restrictions and Caveats:  None
 
-    float minDOCA = maxDOCA;
+    float minDoca = maxDoca;
     float dist;
-/*
-    // iterate over all tiles
-    for( IVetoData::const_iterator it= m_AcdData->begin(); it != m_AcdData->end(); ++it) {
+    StatusCode sc = StatusCode::SUCCESS;
+    MsgStream   log( msgSvc(), name() );
 
-        float tile_energy = (*it).energy();
-	if(tile_energy < threshold_energy) continue;
+    Event::AcdDigiCol::const_iterator acdDigiIt;
+    
+    for (acdDigiIt = m_acdDigiCol.begin(); acdDigiIt != m_acdDigiCol.end(); acdDigiIt++) {
+        
+        if ((*acdDigiIt)->getEnergy() < s_thresholdEnergy) continue; // toss out hits below threshold
 
-        Vector dX = (*it).position() - x0;
+        idents::AcdId acdId = (*acdDigiIt)->getId();
+        idents::VolumeIdentifier volId = (*acdDigiIt)->getVolId();
+        std::string str;
+        std::vector<double> dim;
+        sc = m_glastDetSvc->getShapeByID(volId, &str, &dim);
+        if ( sc.isFailure() ) {
+            log << MSG::DEBUG << "Failed to retrieve Shape by Id" << endreq;
+            return sc;
+        }
+        HepTransform3D transform;
+        sc = m_glastDetSvc->getTransform3DByID(volId, &transform);
+        if (sc.isFailure() ) {
+            log << MSG::DEBUG << "Failed to get trasnformation" << endreq;
+            return sc;
+        }
+
+        HepPoint3D center(0., 0., 0.);
+        HepPoint3D acdCenter = transform * center;
+
+        Vector dX = acdCenter - x0;
 
         float prod = dX * t0;
         dist = sqrt(dX.mag2() - prod*prod);
-        if(dist < minDOCA){
-            minDOCA = dist;
-            m_hit_tile = *it;
+        if(dist < minDoca){
+            minDoca = dist;
+            m_minDocaId = acdId;
         }
-        
-        idents::AcdId type = (*it).type();
 
         // Pick up the min. distance from each type of tile
         // i.e. top, and each type of side row tile
-        if (type.top() && dist < doca_values[0]) doca_values[0] = dist;
-        if (type.side()) {
-            if (dist < doca_values[type.row()+1]) doca_values[type.row()+1] = dist;
+        if (acdId.top() && dist < doca_values[0]) doca_values[0] = dist;
+        if (acdId.side()) {
+            if (dist < doca_values[acdId.row()+1]) doca_values[acdId.row()+1] = dist;
         }
-    }
 
-    return minDOCA;
-    */
+        return minDoca;
+
+
+    }
 
     return 0;
 }
@@ -330,24 +298,41 @@ double AcdReconAlg::hitTileDist(const Point &x0, const Vector &t0)
     // Outputs: Returns minimum distance
     // Dependencies: None
     // Restrictions and Caveats:  None
-/*
-    double return_dist = -200.;
-    
-    if(!m_AcdData) return return_dist;
-    
-    // iterate over all tiles
-    for( IVetoData::const_iterator it= m_AcdData->begin(); it != m_AcdData->end(); ++it) {
-        
-        float eT = (*it).energy();
-        if(eT < threshold_energy) continue;
-        
-        Point xT = (*it).position();
-        idents::AcdId tileType((*it).type());
-        int iFace = tileType.face();
+    StatusCode sc = StatusCode::SUCCESS;
+    MsgStream   log( msgSvc(), name() );
 
-        float dX = m_tileParams->length((*it).type());
-        float dY = m_tileParams->width((*it).type());
-        float dZ = m_tileParams->height((*it).type());
+    double return_dist = -200.;
+        
+    // iterate over all tiles
+    Event::AcdDigiCol::const_iterator acdDigiIt;
+    
+    for (acdDigiIt = m_acdDigiCol.begin(); acdDigiIt != m_acdDigiCol.end(); acdDigiIt++) {
+        
+        if ((*acdDigiIt)->getEnergy() < s_thresholdEnergy) continue; // toss out hits below threshold
+        idents::AcdId acdId = (*acdDigiIt)->getId();
+        idents::VolumeIdentifier volId = (*acdDigiIt)->getVolId();
+        std::string str;
+        std::vector<double> dim;
+        sc = m_glastDetSvc->getShapeByID(volId, &str, &dim);
+        if ( sc.isFailure() ) {
+            log << MSG::DEBUG << "Failed to retrieve Shape by Id" << endreq;
+            return sc;
+        }
+        HepTransform3D transform;
+        sc = m_glastDetSvc->getTransform3DByID(volId, &transform);
+        if (sc.isFailure() ) {
+            log << MSG::DEBUG << "Failed to get trasnformation" << endreq;
+            return sc;
+        }
+
+        HepPoint3D center(0., 0., 0.);
+        HepPoint3D xT = transform * center;
+        
+        int iFace = acdId.face();
+
+        float dX = dim[0];
+        float dY = dim[1];
+        float dZ = dim[2];
         
         // Figure out where in the plane of this face the trajectory hits
         double arc_dist = -1.; 
@@ -386,9 +371,7 @@ double AcdReconAlg::hitTileDist(const Point &x0, const Vector &t0)
         }
     }
     return return_dist;
-    */
-
-    return 0;
+    
 }
 
 

@@ -6,6 +6,9 @@
 #include "Event/TopLevel/Event.h"
 #include "Event/Digi/AcdDigi.h"
 #include "Event/TopLevel/EventModel.h"
+#include "Event/Recon/AcdRecon.h"
+
+#include "GaudiKernel/ObjectVector.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "idents/AcdId.h"
@@ -46,7 +49,7 @@ class AcdReconAlg : public Algorithm
       StatusCode reconstruct (const Event::AcdDigiCol& digiCol);
 
       /// retrieves tracks and calls the DOCA routines
-      StatusCode acdTileDoca();
+      StatusCode acdDoca();
 
       /// Old style - distance of closest approach calculation
       /// Finds minimum perpendicular distance from tracks to the center of the tiles
@@ -56,19 +59,24 @@ class AcdReconAlg : public Algorithm
       double hitTileDist(const Point &x0, const Vector &dir);
 
       /// variables to store instrument parameters
-      static double s_threshold_energy;
+      static double s_thresholdEnergy;
       static unsigned int s_numSideRows;
 
       // record of the tile with the minimum Distance of Closest Approach
-      idents::AcdId m_minDocaTile;
+      idents::AcdId m_minDocaId;
 
       /// access to the Glast Detector Service to read in geometry constants from XML files
       IGlastDetSvc *m_glastDetSvc;
 
+      Event::AcdDigiCol m_acdDigiCol;
+
+      Event::AcdRecon *m_acdRecon;
+
       /// Items that will be output to the ntuple
       unsigned int m_tileCount;
-      double m_totEnergy, m_gammaDOCA, m_DOCA, m_act_dist;
-      std::vector<double> m_rowDOCA_vec;
+      double m_totEnergy, m_gammaDoca, m_doca, m_act_dist;
+      std::vector<double> m_rowDocaCol;
+      std::map<idents::AcdId, double> m_energyCol;
 
 
 };
