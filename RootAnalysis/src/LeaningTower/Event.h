@@ -37,6 +37,7 @@ class Event
       myTree->GetEntry(SelectedEvent);
       return EventId;
     }
+  Double_t GetEbfTime() { return EbfTime; }
   
   int GetLayerNumHits(TString LayerName);
   int *GetLayerHits(TString LayerName);
@@ -47,6 +48,7 @@ class Event
 
   int SelectedEvent;
   int TkrTotalNumHits, RunId, EventId;
+  Double_t EbfTime;
   //  int TkrNumHits;
   int *TkrHits;
 

@@ -104,7 +104,7 @@ void Layer::DrawLayer()
       //      LadderLine[i]->SetLineStyle(0);
       LadderLine[i]->Draw();
     }
-  LayerLabel = new TText(36, Z, Name);
+  LayerLabel = new TText(38, Z, Name);
   LayerLabel->SetTextAlign(02);
   LayerLabel->SetTextSize(0.02);
   LayerLabel->Draw();
@@ -123,6 +123,8 @@ void Layer::SetTree(TFile *file)
   LayerTree = (TTree*) file->Get(LayerTreeName);
   LayerTree->SetBranchAddress("TkrNumHits",&TkrNumHits);
   LayerTree->SetBranchAddress("TkrHits",TkrHits);
+  LayerTree->SetBranchAddress("TriggerReq0",&TriggerReq0);
+  LayerTree->SetBranchAddress("TriggerReq1",&TriggerReq1);
 }
 
 void Layer::GetEvent(int event)

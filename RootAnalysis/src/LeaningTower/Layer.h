@@ -56,9 +56,13 @@ class Layer : public TObject
     {
       return 1.0-GetInefficiency();
     }
+
+  Bool_t GetTriggerReq(Bool_t side) { return side ? TriggerReq1 : TriggerReq0; }
   
  private:
   double EDGE_WIDTH,WAFER_WIDTH,STRIP_PITCH,LADDER_SEPARATION;
   int HitsInActiveArea,MissedHits;
+  Bool_t TriggerReq0;
+  Bool_t TriggerReq1;
 
 };

@@ -23,6 +23,7 @@ Tracker *tracker;
 TCanvas *EventDisplayC;
 
 TText LabelNumHits[36];
+TText TriggerReqText[36][2];
 
 TGraph *XTrack;
 TGraph *YTrack;
@@ -72,6 +73,7 @@ void DisplayEvent(int NumEvent=0)
   std::cout<<" TkrTotalNumHits = "<<TkrTotalNumHits<<std::endl;
   std::cout<<" EventId         = "<<myEvent->GetEventId()<<std::endl;
   std::cout<<" RunId           = "<<myEvent->GetRunId()<<std::endl;
+  std::cout<<" EbfTime         = "<<myEvent->GetEbfTime()<<std::endl;
 
   
   TMap *myGeometry = tracker->GetGeometry();
@@ -93,6 +95,10 @@ void DisplayEvent(int NumEvent=0)
   std::vector<double> XClusterYlayer;
   std::vector<double> ZClusterYlayer;
   
+  TText base;
+  base.SetTextAlign(02);
+  base.SetTextSize(0.02);
+
   while ( ( key = (TObjString*)ti.Next() ) ) 
     {
       Layer *aLayer = ((Layer*) myGeometry->GetValue(key));
@@ -109,12 +115,16 @@ void DisplayEvent(int NumEvent=0)
       title        += LayerNumHits;
       title        += ")";
 
-      LabelNumHits[i].SetText(40.0, height, title);
-      LabelNumHits[i].SetTextSize(0.02);
       if(aLayer->IsX()) 
 	EventDisplayC->cd(1);      
       else
 	EventDisplayC->cd(2);
+      LabelNumHits[i] = TriggerReqText[i][0] = TriggerReqText[i][1] = base;
+      TriggerReqText[i][0].SetText(-0.8, height, aLayer->GetTriggerReq(false) ? "x" : "");
+      TriggerReqText[i][1].SetText(36, height, aLayer->GetTriggerReq(true) ? "x" : "");
+      LabelNumHits[i].SetText(41.0, height, title);
+      TriggerReqText[i][0].Draw();
+      TriggerReqText[i][1].Draw();
       LabelNumHits[i].Draw();
       i++;      
 

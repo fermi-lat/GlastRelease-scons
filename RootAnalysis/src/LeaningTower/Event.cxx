@@ -17,14 +17,15 @@ Event::Event(TString filename, TMap *geometry)
   myTree->SetBranchAddress("EventId",&EventId);
   myTree->SetBranchAddress("RunId",&RunId);
   myTree->SetBranchAddress("TkrTotalNumHits",&TkrTotalNumHits);
+  myTree->SetBranchAddress("EbfTime",&EbfTime);
   
-  NumberOfEvents = myTree->GetEntries();
+  NumberOfEvents = (int)myTree->GetEntries();
   std::cout << "Number of Events: " << NumberOfEvents << std::endl;
   //////////////////////////////////////////////////
   
   TMapIter ti(myGeometry);
   TObjString *key;
-  while (key = (TObjString*)ti.Next())
+  while ( ( key = (TObjString*)ti.Next() ) )
     {
       Layer *aLayer = ((Layer*) myGeometry->GetValue(key));
       aLayer->SetTree(myFile);
