@@ -38,5 +38,14 @@ namespace CalibData {
         findIx(iRow, iCol, id.getLayer(), id.getColumn(), range, face);
     }
 
+  bool CalFinder::equals(const CalFinder& other) const {
+    return
+      ((m_towerRow == other.m_towerRow) &&
+       (m_towerCol == other.m_towerCol) &&
+       (m_layer    == other.m_layer)    &&
+       (m_xtal     == other.m_xtal)     &&
+       (m_face     == other.m_face)     &&
+       (m_range    == other.m_range)      );
+  }
 }
 

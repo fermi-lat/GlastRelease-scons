@@ -62,11 +62,10 @@ namespace CalibData {
 
     unsigned n = m_finder->getSize();
 
-    // Make a simple but insufficient check that the new data is
-    // structured like the old
-    if (n != other1.m_finder->getSize() ) {  // tilt!  
+    // Check that new data is dimensioned the same as old
+    if (!(m_finder->equals(*(other1.m_finder)) ) ) {  // tilt!  
       (*log) << MSG::ERROR 
-             << "CalCalibBase::update failure: sizes unequal" << endreq;
+             << "CalCalibBase::update failure: dimensioning unequal" << endreq;
       return StatusCode::FAILURE;
     }
 
