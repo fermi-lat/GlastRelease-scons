@@ -39,6 +39,7 @@
 /// Glast specific includes
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/Event.h"
+#include "Event/TopLevel/DigiEvent.h"
 #include "Event/Digi/TkrDigi.h"
 #include "Event/MonteCarlo/McTkrStrip.h"
 #include "Event/RelTable/RelTable.h"
@@ -269,7 +270,7 @@ StatusCode TkrSimpleDigiAlg::execute()
 	sc = eventSvc()->retrieveObject( EventModel::Digi::Event, pNode);
 
 	if (sc.isFailure()) {
-		sc = eventSvc()->registerObject(EventModel::Digi::Event,new DataObject);
+		sc = eventSvc()->registerObject(EventModel::Digi::Event,new Event::DigiEvent);
 		if( sc.isFailure() ) {
 			log << MSG::ERROR << "could not register "<< EventModel::Digi::Event << endreq;
 			return sc;

@@ -14,6 +14,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 #include "Event/TopLevel/EventModel.h"
+#include "Event/TopLevel/DigiEvent.h"
 #include "Event/TopLevel/Event.h"
 #include "GaudiKernel/ObjectVector.h"
 #include "Event/Digi/AcdDigi.h"
@@ -81,7 +82,7 @@ StatusCode AcdDigiOrgAlg::execute() {
     sc = eventSvc()->retrieveObject( EventModel::Digi::Event , pNode);
     
     if (sc.isFailure()) {
-        sc = eventSvc()->registerObject(EventModel::Digi::Event ,new DataObject);
+        sc = eventSvc()->registerObject(EventModel::Digi::Event ,new Event::DigiEvent);
         if( sc.isFailure() ) {
             log << MSG::ERROR << "could not register " << EventModel::Digi::Event << endreq;
             return sc;

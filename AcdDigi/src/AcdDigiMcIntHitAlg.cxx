@@ -16,6 +16,7 @@
 #include "GaudiKernel/ObjectVector.h"
 
 #include "Event/TopLevel/EventModel.h"
+#include "Event/TopLevel/DigiEvent.h"
 #include "Event/TopLevel/Event.h"
 #include "Event/Digi/AcdDigi.h"
 #include "Event/MonteCarlo/McIntegratingHit.h"
@@ -89,7 +90,7 @@ StatusCode AcdDigiMcIntHitAlg::execute() {
     sc = eventSvc()->retrieveObject( EventModel::Digi::Event , pNode);
     
     if (sc.isFailure()) {
-        sc = eventSvc()->registerObject(EventModel::Digi::Event, new DataObject);
+        sc = eventSvc()->registerObject(EventModel::Digi::Event, new Event::DigiEvent);
         if( sc.isFailure() ) {
             log << MSG::ERROR << "could not register " << EventModel::Digi::Event << endreq;
             return sc;
