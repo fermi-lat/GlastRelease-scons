@@ -1,12 +1,12 @@
 package Gleam
 
-version v0r6
+version v0r7
 
 # This is a G4 development check-out package, that does not yet define an executable 
 # $Id$
 
 # gaudi system files: this would checkout all of the Gaudi packages
-use GaudiSys           v9r0p4
+use GaudiSys    v9r0p4
 
 # ROOT add-on
 use ROOT        v3r2p7
@@ -27,7 +27,7 @@ use gui         v2r7
 use geomrep     v4r1
 
 # the geometry data base
-use idents      v2r4p2 
+use idents           v2r5 
 use detModel    v2r8
 use xmlGeoDbs   v1r2
 
@@ -37,12 +37,12 @@ use Geant4      v1r1
 # Gaudi component packages
 
 use GuiSvc      v3
-use GlastEvent  v6r1
+use GlastEvent      v6r2
 use FluxSvc     v5r2
 
-use GlastSvc          v5r2
+use GlastSvc    v5r2
 use G4Generator v3r2
-use GlastDigi   v2r2p1
+use GlastDigi       v2r3
 
 use Recon       v0r6
 

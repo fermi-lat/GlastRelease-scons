@@ -2,6 +2,7 @@
  * package Gleam
  * package manager:T.Burnett
  *
+ * v0r7   02-apr-02 THB mods to idents, GlastEvent, GlastDigi
  * v0r6   29-mar-02 THB Fixes to GlastSvc.
  * v0r5   27-mar-02 THB make into a "real" checkout package; fix Recon
  * v0r4   27-mar-02 THB Recon, GlastEvent, G4Generator new McParticle class
