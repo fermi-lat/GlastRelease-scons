@@ -2,13 +2,11 @@
 
 #include "AcdDigiOrgAlg.h"
 
-// Gaudi specific include files
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
-// Glast specific includes
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/Event.h"
 #include "GaudiKernel/ObjectVector.h"
@@ -47,17 +45,24 @@ StatusCode AcdDigiOrgAlg::initialize() {
     
     // Read in the parameters from the XML file
     xml::IFile m_ifile(m_xmlFile.c_str());
-    m_lowThreshold = m_ifile.getDouble("acd", "lowThreshold");
-    m_vetoThreshold = m_ifile.getDouble("acd", "vetoThreshold");
-    m_highThreshold = m_ifile.getDouble("acd", "highThreshold");
-    m_adcChannelsPerMeV = m_ifile.getDouble("acd", "adcChannelsPerMeV");
+    m_lowThreshold = m_ifile.getDouble("acd", "lowThreshold", 0.2);
+    m_vetoThreshold = m_ifile.getDouble("acd", "vetoThreshold", 0.4);
+    m_highThreshold = m_ifile.getDouble("acd", "highThreshold", 20.0);
+    m_adcChannelsPerMeV = m_ifile.getDouble("acd", "adcChannelsPerMeV", 203.0793);
     
     return StatusCode::SUCCESS;
 }
 
 
 StatusCode AcdDigiOrgAlg::execute() {
-    
+    // Purpose and Method:  Using the McIntegratingHitCol find all integrating hits corresponding
+    //   to an ACD volume.  For each integrating hit above lowTreshold, create an AcdDigi object
+    //   and add it to the AcdDigiCol to be stored on the TDS.  
+    //   This version of the ACD digitization uses the original conversion factor from ROOTWriter
+    //   to convert from energy into a PHA value.
+    // TDS Input:  Event::McIntegratingHitCol
+    // TDS Ouput:  Event::Digi::AcdDigiCol
+
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
     
@@ -90,9 +95,6 @@ StatusCode AcdDigiOrgAlg::execute() {
         
         /// check that we're above low threshold, otherwise skip
         if (energyDeposited < m_lowThreshold) continue;
-
-        // unpack from volume id. (Should be put into AcdId) 
-        int layer=0, face=volId[1], column=volId[2], row=volId[3];
                 
         bool overLow  = true,
              overVeto = energyDeposited > m_vetoThreshold,
@@ -106,12 +108,9 @@ StatusCode AcdDigiOrgAlg::execute() {
         bool lowArr[2] = { overLow, false };
         bool highArr[2] = { overHigh, false };
         
-        log << MSG::DEBUG << "AcdId: " << layer << " " << face << " " 
-            << row << " " << column <<endreq;
-
         digiCol->push_back(
             new AcdDigi(
-                idents::AcdId(layer, face, row, column), volId,
+                idents::AcdId(volId), volId,
                 energyDeposited, phaArr, 
                 vetoArr, lowArr, highArr) );   
         
@@ -123,10 +122,7 @@ StatusCode AcdDigiOrgAlg::execute() {
 
 
 StatusCode AcdDigiOrgAlg::finalize() {
-    
-    MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "finalize" << endreq;
-    
+        
     return StatusCode::SUCCESS;
 }
 

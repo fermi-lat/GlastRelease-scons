@@ -7,17 +7,13 @@
 
 #include "idents/AcdId.h"
 
-// to access an XML containing Digi parameters file
 #include "facilities/Util.h"
-
-//namespace xml { class IFile; }
 #include "xml/IFile.h"
 
 /** @class AcdDigiUtil
-* @brief Utility class that defines the methods used for ACD digitization
-* for the ACD.
+* @brief Utility class that defines the methods used for ACD digitization.
 * 
-*
+* @author Heather Kelly
 * $Header$
 */
 
@@ -75,11 +71,11 @@ public:
 
     /// Returns a value sampled from a Poisson distribution
     /// @param pmtPhotoElectrons is the mean of the Poisson distribution
-    static long calcPoisson(long pmtPhotoElectrons);
+    static long shootPoisson(long pmtPhotoElectrons);
 
     /// Returns a value sampled from a Gaussian distribution
     /// @param std_dev Standard Deviation to be  used when sampling
-    static float calcGaussianNoise(float std_dev);
+    static float shootGaussian(float std_dev);
     
 private:
             

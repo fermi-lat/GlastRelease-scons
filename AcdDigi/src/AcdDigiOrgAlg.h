@@ -6,11 +6,12 @@ namespace xml { class IFile; }
 
 /** @class AcdDigiOrgAlg
   * @brief Algorithm to convert from hit data into digitization data 
-  * for the ACD.
+  * for the ACD.  The original version used for the PDR.
   * 
   * This algorithm does the work of creating the AcdDigi objects and storing 
   * them on the TDS.
   *
+  * @author Heather Kelly
   * $Header$
   */
 

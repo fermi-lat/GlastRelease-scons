@@ -2,14 +2,12 @@
 
 #include "AcdDigiAlg.h"
 
-// Gaudi specific include files
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ObjectVector.h"
 
-// Glast specific includes
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/Event.h"
 #include "Event/Digi/AcdDigi.h"
@@ -24,10 +22,6 @@
 #include <utility>
 #include <map>
 
-// to access an XML containing Digi parameters file
-#include "xml/IFile.h"
-#include "facilities/Util.h"
-
 
 // Define the factory for this algorithm
 static const AlgFactory<AcdDigiAlg>  Factory;
@@ -39,7 +33,6 @@ const IAlgFactory& AcdDigiAlgFactory = Factory;
 AcdDigiAlg::AcdDigiAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator) {
     
-    // Declare the properties that may be set in the job options file
     declareProperty ("xmlFile", m_xmlFile="$(ACDDIGIROOT)/xml/acdDigi.xml");
 
     declareProperty("autoCalibrate", m_auto_calibrate=true);
@@ -76,7 +69,6 @@ StatusCode AcdDigiAlg::initialize() {
         return sc;
     }
 
-
     return StatusCode::SUCCESS;
 }
 
@@ -93,7 +85,12 @@ StatusCode AcdDigiAlg::execute() {
     using namespace Event;
     
     SmartDataPtr<Event::McPositionHitCol> allhits(eventSvc(),EventModel::MC::McPositionHitCol );
-    
+
+    if (!allhits) {
+        log << MSG::INFO << "No McPositionHits were found in the TDS" << endreq;
+        return sc;
+    }
+
     //Take care of insuring that data area has been created
     DataObject* pNode = 0;
     sc = eventSvc()->retrieveObject( EventModel::Digi::Event , pNode);
@@ -113,18 +110,13 @@ StatusCode AcdDigiAlg::execute() {
     
     // loop over hits, skip if hit is not in ACD
     // Accumulate the deposited energies, applying edge effects if requested
-    for (Event::McPositionHitVector::const_iterator it = allhits->begin(); it != allhits->end(); it++) {
+    for (Event::McPositionHitVector::const_iterator hit = allhits->begin(); hit != allhits->end(); hit++) {
         
-        idents::VolumeIdentifier volId = ((idents::VolumeIdentifier)(*it)->volumeID());
+        idents::VolumeIdentifier volId = ((idents::VolumeIdentifier)(*hit)->volumeID());
         // Check to see if this is an ACD volume
         if(volId[0] != 1 ) continue; 
 
-        double energy;
-        if (m_edge_effect) {
-            energy = edgeEffect(*it);
-        } else {
-            energy = (*it)->depositedEnergy();
-        }
+        double energy = (m_edge_effect) ? edgeEffect(*hit) : (*hit)->depositedEnergy();
 
         if (energyVolIdMap.find(volId) != energyVolIdMap.end()) {
             energyVolIdMap[volId] += energy;
@@ -139,9 +131,7 @@ StatusCode AcdDigiAlg::execute() {
     for (acdIt = energyVolIdMap.begin(); acdIt != energyVolIdMap.end(); acdIt++) {
 
         idents::VolumeIdentifier volId = acdIt->first;
-        // unpack from volume id
-        int layer=0, face=volId[1], column=volId[2], row=volId[3];
-        idents::AcdId id(layer, face, row, column);
+        idents::AcdId id(volId);
         
         double energyMevDeposited = acdIt->second;
         log << MSG::DEBUG << "tile volId found: " << volId.name() 
@@ -162,8 +152,8 @@ StatusCode AcdDigiAlg::execute() {
         
         // Apply Poisson fluctuations to the number of pe's for each PMT
         if (m_apply_poisson) {
-            pmtA_pe = util.calcPoisson(pmtA_pe);
-            pmtB_pe = util.calcPoisson(pmtB_pe);
+            pmtA_pe = util.shootPoisson(pmtA_pe);
+            pmtB_pe = util.shootPoisson(pmtB_pe);
         }
         
         util.convertPhotoElectronsToMips(id, pmtA_pe, pmtA_mips, pmtB_pe, pmtB_mips);
@@ -179,7 +169,6 @@ StatusCode AcdDigiAlg::execute() {
             util.applyGains(id, pmtA_mipsToFullScale, pmtB_mipsToFullScale);
         }
         
-        // Apply Gaussian Noise separately for PHA, veto discim and CNO discrim
         float pmtA_observedMips_pha = pmtA_mips;
         float pmtA_observedMips_veto = pmtA_mips;
         float pmtA_observedMips_cno = pmtA_mips;
@@ -188,19 +177,21 @@ StatusCode AcdDigiAlg::execute() {
         float pmtB_observedMips_veto = pmtB_mips;
         float pmtB_observedMips_cno = pmtB_mips;
         
+        // If Gaussian noise is requested it, apply it here.
+        // Noise is applied separately for pha, veto and CNO discriminators
         if (m_apply_noise) {
-            pmtA_observedMips_pha += util.calcGaussianNoise(m_noise_std_dev_pha);
+            pmtA_observedMips_pha += util.shootGaussian(m_noise_std_dev_pha);
             if (pmtA_observedMips_pha < 0.) pmtA_observedMips_pha = 0.;
-            pmtA_observedMips_veto += util.calcGaussianNoise(m_noise_std_dev_veto);
+            pmtA_observedMips_veto += util.shootGaussian(m_noise_std_dev_veto);
             if (pmtA_observedMips_veto < 0.) pmtA_observedMips_veto = 0.;
-            pmtA_observedMips_cno += util.calcGaussianNoise(m_noise_std_dev_cno);
+            pmtA_observedMips_cno += util.shootGaussian(m_noise_std_dev_cno);
             if (pmtA_observedMips_cno < 0.) pmtA_observedMips_cno = 0.;
             
-            pmtB_observedMips_pha += util.calcGaussianNoise(m_noise_std_dev_pha);
+            pmtB_observedMips_pha += util.shootGaussian(m_noise_std_dev_pha);
             if (pmtB_observedMips_pha < 0.) pmtB_observedMips_pha = 0.;
-            pmtB_observedMips_veto += util.calcGaussianNoise(m_noise_std_dev_veto);
+            pmtB_observedMips_veto += util.shootGaussian(m_noise_std_dev_veto);
             if (pmtB_observedMips_veto < 0.) pmtB_observedMips_veto = 0.;
-            pmtB_observedMips_cno += util.calcGaussianNoise(m_noise_std_dev_cno);
+            pmtB_observedMips_cno += util.shootGaussian(m_noise_std_dev_cno);
             if (pmtB_observedMips_cno < 0.) pmtB_observedMips_cno = 0.;
         }
         
@@ -208,6 +199,7 @@ StatusCode AcdDigiAlg::execute() {
         unsigned short pmtA_pha = util.convertMipsToPha(pmtA_observedMips_pha, pmtA_mipsToFullScale);
         unsigned short pmtB_pha = util.convertMipsToPha(pmtB_observedMips_pha, pmtB_mipsToFullScale);
         
+        // Initialize discriminators
         bool lowArr[2] = { true, true };
         bool vetoArr[2] = { false, false };
         bool highArr[2] = { false, false };
@@ -221,8 +213,7 @@ StatusCode AcdDigiAlg::execute() {
         
         unsigned short phaArr[2] = { pmtA_pha, pmtB_pha };
         
-        log << MSG::DEBUG << "AcdId: " << layer << " " << face << " " 
-            << row << " " << column <<endreq;
+        log << MSG::DEBUG << "AcdId: " << id.id() <<endreq;
         
         // Add this AcdDigi to the TDS collection
         digiCol->push_back(
@@ -239,39 +230,56 @@ StatusCode AcdDigiAlg::execute() {
 
 
 StatusCode AcdDigiAlg::finalize() {
-    
-    MsgStream log(msgSvc(), name());    
     return StatusCode::SUCCESS;
 }
 
 
 void AcdDigiAlg::getParameters() {    
-    // Purpose and Method:  Read in the parameters from the XML file using IFile
+    // Purpose and Method:  Read in the parameters from the XML file using IFile.
+    //   Perform some spot checking to see if the parameters exist in the input 
+    //   XML file - if not provide an informational message.
+
+    MsgStream log(msgSvc(), name());
+ 
+    xml::IFile xmlFilePtr(m_xmlFile.c_str());
     
-    xml::IFile ifile(m_xmlFile.c_str());
+        // Perform some spot checking to see if our XML file contains our constants
+    if (!xmlFilePtr.contains("thresholds", "low_threshold_mips")) {
+        log << MSG::INFO << "XML file " << m_xmlFile
+            << " does not contain low_threshold_mips using default" << endreq;
+    }
+
+    m_low_threshold_mips = xmlFilePtr.getDouble("thresholds", "low_threshold_mips", 0.1);
+    m_veto_threshold_mips = xmlFilePtr.getDouble("thresholds", "veto_threshold_mips", 0.3);
+    m_high_threshold_mips = xmlFilePtr.getDouble("thresholds", "high_threshold_mips", 10.5);
     
-    m_low_threshold_mips = ifile.getDouble("thresholds", "low_threshold_mips");
-    m_veto_threshold_mips = ifile.getDouble("thresholds", "veto_threshold_mips");
-    m_high_threshold_mips = ifile.getDouble("thresholds", "high_threshold_mips");
+    if (!xmlFilePtr.contains("global_constants", "mean_pe_per_mip")) {
+        log << MSG::INFO << "XML file " << m_xmlFile
+            << "does not contain mean_pe_per_mip using default" << endreq;
+    }
+
+    m_mean_pe_per_mip = xmlFilePtr.getInt("global_constants", "mean_pe_per_mip", 18);
     
-    m_mean_pe_per_mip = ifile.getInt("global_constants", "mean_pe_per_mip");
+    m_noise_std_dev_pha = xmlFilePtr.getDouble("global_constants", "noise_std_dev_pha", 0.02);
+    m_noise_std_dev_veto = xmlFilePtr.getDouble("global_constants", "noise_std_dev_veto", 0.02);
+    m_noise_std_dev_veto = xmlFilePtr.getDouble("global_constants", "noise_std_dev_cno", 0.02);
     
-    m_noise_std_dev_pha = ifile.getDouble("global_constants", "noise_std_dev_pha");
-    m_noise_std_dev_veto = ifile.getDouble("global_constants", "noise_std_dev_veto");
-    m_noise_std_dev_veto = ifile.getDouble("global_constants", "noise_std_dev_cno");
+    m_full_scale = xmlFilePtr.getInt("global_constants", "full_scale", 4095);
     
-    m_full_scale = ifile.getInt("global_constants", "full_scale");
+    m_mips_full_scale = xmlFilePtr.getDouble("global_constants", "mips_full_scale", 20.0);
     
-    m_mips_full_scale = ifile.getDouble("global_constants", "mips_full_scale");
-    
-    
-    m_mev_per_mip = ifile.getDouble("global_constants", "mev_per_mip");
+    m_mev_per_mip = xmlFilePtr.getDouble("global_constants", "mev_per_mip", 1.9);
     
     return;
 }
 
 
 double AcdDigiAlg::edgeEffect(const Event::McPositionHit *hit)  {
+    // Purpose and Method:  Compute a modified energy deposit depending upon the
+    //   distance the hit is from the center of the tile.
+    // Input: Event::McPositionHit pointer
+    // Output: The energy associated with this hit
+
     MsgStream log(msgSvc(), name());
     StatusCode  sc = StatusCode::SUCCESS;
 
@@ -281,6 +289,7 @@ double AcdDigiAlg::edgeEffect(const Event::McPositionHit *hit)  {
     idents::VolumeIdentifier volId = hit->volumeID();
     int iFace = volId[1];
 
+    // retrieve the dimensions of this volume from the GlastDetSvc
     sc = m_glastDetSvc->getShapeByID(volId, &str, &dim);
     if ( sc.isFailure() ) {
         log << MSG::DEBUG << "Failed to retrieve Shape by Id" << endreq;

@@ -1,14 +1,9 @@
 #ifndef _AcdDigi_AcdDigiMcIntHitAlg_H
 #define _AcdDigi_AcdDigiMcIntHitAlg_H 1
 
-// Gaudi specific include files
 #include "GaudiKernel/Algorithm.h"
 
-#include <map>
-#include <utility>
-
 #include "AcdDigiUtil.h"
-
 #include "idents/AcdId.h"
 
 // to access an XML containing Digi parameters file
@@ -21,8 +16,9 @@
 * for the ACD.
 * 
 * This algorithm does the work of creating the AcdDigi objects and storing 
-* them on the TDS.
+* them on the TDS, using the McIntegratingHit collection.
 *
+* @author Heather Kelly
 * $Header$
 */
 
@@ -72,10 +68,10 @@ private:
     /// the number of MIPs for full scale PHA
     bool m_auto_calibrate;
     
-    /// Input parameter denoting whether or not to apply Poisson fluctuations
+    /// jobOptions parameter denoting whether or not to apply Poisson fluctuations
     bool m_apply_poisson;
-    /// Input parameter denoting whether or not to apply Gaussian noise before 
-    /// determining PHA and discriminators
+    /// jobOptions parameter denoting whether or not to apply Gaussian noise 
+    /// before determining PHA and discriminators
     bool m_apply_noise;
 };
 

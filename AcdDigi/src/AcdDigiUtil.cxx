@@ -135,7 +135,7 @@ void AcdDigiUtil::convertPhotoElectronsToMips(const idents::AcdId &id,
     
 }
 
-long AcdDigiUtil::calcPoisson(long pmtPhotoElectrons) {
+long AcdDigiUtil::shootPoisson(long pmtPhotoElectrons) {
     // Pupose and Method:  Returns a value from a Poisson distribution,
     //   using the input number of photoelectrons as the mean
     // Input:
@@ -144,7 +144,7 @@ long AcdDigiUtil::calcPoisson(long pmtPhotoElectrons) {
     return RandPoisson::shoot(pmtPhotoElectrons);
 }
 
-float AcdDigiUtil::calcGaussianNoise(float std_dev) {
+float AcdDigiUtil::shootGaussian(float std_dev) {
     // Purpose and Method:  Returns a value from a gaussian distribution, with mean
     //   zero and standard deviation determined by the one input parameter.
     // Input:  Standard Deviation

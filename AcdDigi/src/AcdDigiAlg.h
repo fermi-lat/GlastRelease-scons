@@ -1,11 +1,7 @@
 #ifndef _AcdDigi_AcdDigiAlg_H
 #define _AcdDigi_AcdDigiAlg_H 1
 
-// Gaudi specific include files
 #include "GaudiKernel/Algorithm.h"
-
-#include <map>
-#include <utility>
 
 #include "AcdDigiUtil.h"
 
@@ -19,11 +15,10 @@
 
 
 /** @class AcdDigiAlg
-* @brief Algorithm to convert from hit data into digitization data 
+* @brief Algorithm to convert from hit data stored as McPositionHits into digitization data 
 * for the ACD.
 * 
-* This algorithm does the work of creating the AcdDigi objects and storing 
-* them on the TDS.
+* @author Heather Kelly
 *
 * $Header$
 */
@@ -42,6 +37,8 @@ private:
     /// Read data from the input XML file
     void getParameters();
 
+    /// Adjusts the deposited energy recorded in an ACD volume 
+    /// based on the location of the hit
     double edgeEffect(const Event::McPositionHit *hit);
     
     /// Low discrim threshold which activates PHA
@@ -57,10 +54,12 @@ private:
     /// Access the methods in the AcdDigiUtil class
     AcdDigiUtil util;
 
-    /// access to the Glast Detector Service to read in geometry constants from XML files
+    /// access to the Glast Detector Service to read in geometry 
+    /// constants from XML files
     IGlastDetSvc *m_glastDetSvc;
     
-    /// standard deviation for gaussian noise for PHA, veto and CNO discriminators
+    /// standard deviation for gaussian noise for PHA, 
+    /// veto and CNO discriminators
     double m_noise_std_dev_pha, m_noise_std_dev_veto, m_noise_std_dev_cno;
     
     /// full scale for PHA
@@ -75,19 +74,19 @@ private:
     /// MeV per MIP
     float m_mev_per_mip;
     
-    /// Flag denoting whether or not to perform auto calibration to determine
-    /// the number of MIPs for full scale PHA
+    /// JobOptions parameter denoting whether or not to perform auto 
+    /// calibration to determine the number of MIPs for full scale PHA
     bool m_auto_calibrate;
     
-    /// Input parameter denoting whether or not to apply Poisson fluctuations
+    /// JobOptions parameter denoting whether or not to apply Poisson fluctuations
     bool m_apply_poisson;
 
-    /// Input parameter denoting whether or not to apply Gaussian noise before 
-    /// determining PHA and discriminators
+    /// JobOptions parameter denoting whether or not to apply Gaussian noise 
+    /// before determining PHA and discriminators
     bool m_apply_noise;
 
-    /// Input parameter denoting whether or not to apply edge effects according to
-    /// the position of MC hits.
+    /// JobOptions parameter denoting whether or not to apply edge effects
+    /// according to the position of MC hits.
     bool m_edge_effect;
 };
 

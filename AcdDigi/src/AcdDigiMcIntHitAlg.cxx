@@ -2,14 +2,12 @@
 
 #include "AcdDigiMcIntHitAlg.h"
 
-// Gaudi specific include files
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ObjectVector.h"
 
-// Glast specific includes
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/Event.h"
 #include "Event/Digi/AcdDigi.h"
@@ -21,13 +19,8 @@
 // for min and floor functions
 #include <algorithm>
 #include <cmath>
-
+#include <map>
 #include <utility>
-
-// to access an XML containing Digi parameters file
-#include "xml/IFile.h"
-#include "facilities/Util.h"
-
 
 // Define the factory for this algorithm
 static const AlgFactory<AcdDigiMcIntHitAlg>  Factory;
@@ -39,7 +32,6 @@ const IAlgFactory& AcdDigiMcIntHitAlgFactory = Factory;
 AcdDigiMcIntHitAlg::AcdDigiMcIntHitAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator) {
     
-    // Declare the properties that may be set in the job options file
     declareProperty ("xmlFile", m_xmlFile="$(ACDDIGIROOT)/xml/acdDigi.xml");
 }
 
@@ -74,12 +66,17 @@ StatusCode AcdDigiMcIntHitAlg::execute() {
     
     SmartDataPtr<Event::McIntegratingHitCol> allhits(eventSvc(),EventModel::MC::McIntegratingHitCol );
     
+    if (!allhits) {
+        log << MSG::INFO << "No McIntegratingHits for this event" << endreq;
+        return sc;
+    }
+
     //Take care of insuring that data area has been created
     DataObject* pNode = 0;
     sc = eventSvc()->retrieveObject( EventModel::Digi::Event , pNode);
     
     if (sc.isFailure()) {
-        sc = eventSvc()->registerObject(EventModel::Digi::Event ,new DataObject);
+        sc = eventSvc()->registerObject(EventModel::Digi::Event, new DataObject);
         if( sc.isFailure() ) {
             log << MSG::ERROR << "could not register " << EventModel::Digi::Event << endreq;
             return sc;
@@ -98,8 +95,7 @@ StatusCode AcdDigiMcIntHitAlg::execute() {
         if(volId[0] != 1 ) continue; 
         
         // unpack from volume id
-        int layer=0, face=volId[1], column=volId[2], row=volId[3];
-        idents::AcdId id(layer, face, row, column);
+        idents::AcdId id(volId);
         
         double energyMevDeposited = (*it)->totalEnergy();
         log << MSG::DEBUG << "tile volId found: " << volId.name() 
@@ -120,8 +116,8 @@ StatusCode AcdDigiMcIntHitAlg::execute() {
         
         // Apply Poisson fluctuations to the number of pe's for each PMT
         if (m_apply_poisson) {
-            pmtA_pe = util.calcPoisson(pmtA_pe);
-            pmtB_pe = util.calcPoisson(pmtB_pe);
+            pmtA_pe = util.shootPoisson(pmtA_pe);
+            pmtB_pe = util.shootPoisson(pmtB_pe);
         }
         
         util.convertPhotoElectronsToMips(id, pmtA_pe, pmtA_mips, pmtB_pe, pmtB_mips);
@@ -137,7 +133,6 @@ StatusCode AcdDigiMcIntHitAlg::execute() {
             util.applyGains(id, pmtA_mipsToFullScale, pmtB_mipsToFullScale);
         }
         
-        // Apply Gaussian Noise separately for PHA, veto discim and CNO discrim
         float pmtA_observedMips_pha = pmtA_mips;
         float pmtA_observedMips_veto = pmtA_mips;
         float pmtA_observedMips_cno = pmtA_mips;
@@ -146,20 +141,23 @@ StatusCode AcdDigiMcIntHitAlg::execute() {
         float pmtB_observedMips_veto = pmtB_mips;
         float pmtB_observedMips_cno = pmtB_mips;
         
+        // Apply Gaussian noise if requested
+        // where the noise is applied separately for pha, veto and CNO discrim
         if (m_apply_noise) {
-            pmtA_observedMips_pha += util.calcGaussianNoise(m_noise_std_dev_pha);
-            pmtA_observedMips_veto += util.calcGaussianNoise(m_noise_std_dev_veto);
-            pmtA_observedMips_cno += util.calcGaussianNoise(m_noise_std_dev_cno);
+            pmtA_observedMips_pha += util.shootGaussian(m_noise_std_dev_pha);
+            pmtA_observedMips_veto += util.shootGaussian(m_noise_std_dev_veto);
+            pmtA_observedMips_cno += util.shootGaussian(m_noise_std_dev_cno);
             
-            pmtB_observedMips_pha += util.calcGaussianNoise(m_noise_std_dev_pha);
-            pmtB_observedMips_veto += util.calcGaussianNoise(m_noise_std_dev_veto);
-            pmtB_observedMips_cno += util.calcGaussianNoise(m_noise_std_dev_cno);
+            pmtB_observedMips_pha += util.shootGaussian(m_noise_std_dev_pha);
+            pmtB_observedMips_veto += util.shootGaussian(m_noise_std_dev_veto);
+            pmtB_observedMips_cno += util.shootGaussian(m_noise_std_dev_cno);
         }
         
         // Now convert MIPs into PHA values for each PMT
         unsigned short pmtA_pha = util.convertMipsToPha(pmtA_observedMips_pha, pmtA_mipsToFullScale);
         unsigned short pmtB_pha = util.convertMipsToPha(pmtB_observedMips_pha, pmtB_mipsToFullScale);
         
+        // initialize the discriminators
         bool lowArr[2] = { true, true };
         bool vetoArr[2] = { false, false };
         bool highArr[2] = { false, false };
@@ -173,8 +171,7 @@ StatusCode AcdDigiMcIntHitAlg::execute() {
         
         unsigned short phaArr[2] = { pmtA_pha, pmtB_pha };
         
-        log << MSG::DEBUG << "AcdId: " << layer << " " << face << " " 
-            << row << " " << column <<endreq;
+        log << MSG::DEBUG << "AcdId: " << id.id() << endreq;
         
         // Add this AcdDigi to the TDS collection
         digiCol->push_back(
@@ -190,37 +187,50 @@ StatusCode AcdDigiMcIntHitAlg::execute() {
 }
 
 
-StatusCode AcdDigiMcIntHitAlg::finalize() {
-    
-    MsgStream log(msgSvc(), name());    
+StatusCode AcdDigiMcIntHitAlg::finalize() {    
     return StatusCode::SUCCESS;
 }
 
 
 void AcdDigiMcIntHitAlg::getParameters() {    
     // Purpose and Method:  Read in the parameters from the XML file using IFile
+    //   Performs some checks to see if the XML file contains some of the expected
+    //   parameters, if not, an information message is provided as output.
     
-    xml::IFile ifile(m_xmlFile.c_str());
+    MsgStream log(msgSvc(), name());
+    xml::IFile xmlFilePtr(m_xmlFile.c_str());
     
-    m_low_threshold_mips = ifile.getDouble("thresholds", "low_threshold_mips");
-    m_veto_threshold_mips = ifile.getDouble("thresholds", "veto_threshold_mips");
-    m_high_threshold_mips = ifile.getDouble("thresholds", "high_threshold_mips");
+    // Perform some spot checking to see if our XML file contains our constants
+    if (!xmlFilePtr.contains("thresholds", "low_threshold_mips")) {
+        log << MSG::INFO << "XML file " << m_xmlFile
+            << " does not contain low_threshold_mips using default" << endreq;
+    }
+
+    m_low_threshold_mips = xmlFilePtr.getDouble("thresholds", "low_threshold_mips", 0.1);
+    m_veto_threshold_mips = xmlFilePtr.getDouble("thresholds", "veto_threshold_mips", 0.3);
+    m_high_threshold_mips = xmlFilePtr.getDouble("thresholds", "high_threshold_mips", 10.5);
     
-    m_mean_pe_per_mip = ifile.getInt("global_constants", "mean_pe_per_mip");
+    if (!xmlFilePtr.contains("global_constants", "mean_pe_per_mip")) {
+        log << MSG::INFO << "XML file " << m_xmlFile
+            << "does not contain mean_pe_per_mip using default" << endreq;
+    }
     
-    m_noise_std_dev_pha = ifile.getDouble("global_constants", "noise_std_dev_pha");
-    m_noise_std_dev_veto = ifile.getDouble("global_constants", "noise_std_dev_veto");
-    m_noise_std_dev_veto = ifile.getDouble("global_constants", "noise_std_dev_cno");
+    m_mean_pe_per_mip = xmlFilePtr.getInt("global_constants", "mean_pe_per_mip", 18);
     
-    m_full_scale = ifile.getInt("global_constants", "full_scale");
+    m_noise_std_dev_pha = xmlFilePtr.getDouble("global_constants", "noise_std_dev_pha", 0.02);
+    m_noise_std_dev_veto = xmlFilePtr.getDouble("global_constants", "noise_std_dev_veto", 0.02);
+    m_noise_std_dev_veto = xmlFilePtr.getDouble("global_constants", "noise_std_dev_cno", 0.02);
     
-    m_mips_full_scale = ifile.getDouble("global_constants", "mips_full_scale");
+    m_full_scale = xmlFilePtr.getInt("global_constants", "full_scale", 4095);
     
-    m_auto_calibrate = ifile.getBool("processing", "auto_calibrate");
+    m_mips_full_scale = xmlFilePtr.getDouble("global_constants", "mips_full_scale", 20.0);
     
-    m_apply_poisson = ifile.getBool("processing", "apply_poisson");
+    m_mev_per_mip = xmlFilePtr.getDouble("global_constants", "mev_per_mip", 1.9);
+
+    m_auto_calibrate = xmlFilePtr.getBool("processing", "auto_calibrate", true);
     
-    m_mev_per_mip = ifile.getDouble("global_constants", "mev_per_mip");
+    m_apply_poisson = xmlFilePtr.getBool("processing", "apply_poisson", true);
+
     
     return;
 }
