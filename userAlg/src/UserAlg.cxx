@@ -10,11 +10,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Algorithm.h"
 
-// ntuple interface
-#define NTUPLE
-#ifdef NTUPLE
-#include "ntupleWriterSvc/INTupleWriterSvc.h"
-#endif
+
 // if using the gui
 #include "GuiSvc/IGuiSvc.h"
 #include "gui/GuiMgr.h"
@@ -105,21 +101,6 @@ StatusCode UserAlg::initialize(){
         //m_guiSvc->guiMgr()->display().add(new Rep, "User rep");
     }
     
-#ifdef NTUPLE
-    // get a pointer to our ntupleWriterSvc
-    if (!m_tupleName.empty()) {
-        if (service("ntupleWriterSvc", m_ntupleWriteSvc, true).isFailure()) {
-            log << MSG::ERROR << "UserAlg failed to get the ntupleWriterSvc" << endreq;
-            return StatusCode::FAILURE;
-        }
-    }
-#endif
-
-#ifdef NTUPLE
-    // Here we are adding to our ROOT ntuple all of the columns for initialization
-    if (!m_tupleName.empty())
-        sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "NumCalls", 0.0);
-#endif
 
 
     return sc;
@@ -165,12 +146,6 @@ StatusCode UserAlg::execute()
         log << MSG::INFO << "Pausing at event " << m_count <<  endreq;
         m_guiSvc->guiMgr()->pause();
     } 
-#endif
-#ifdef NTUPLE
-    // Here we are adding to our ROOT ntuple
-    if (!m_tupleName.empty())
-        sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "NumCalls", m_count);
-    
 #endif
 #if 0
     log << MSG::FATAL << "test of a fatal error " << endreq;
