@@ -24,20 +24,24 @@ macro guiapp_linkopts "-l${guiDir}/guisystem.o ${gui_X_linkopts}"\
 macro Win32Resource ""\
       WIN32 "${GUIROOT}/src/wingui.rc"
 
+#pattern for library constituents that puts header files into Win32 version only
+pattern package_headers \
+  macro <package>_headers "" WIN32 "../<package>/*.h *.h"
+
+apply_pattern package_headers
 
 private
 macro_append cppflags " -I ${X11_DIR}/include "\
              WIN32 ""
 
 # the basic gui interface needed by clients
-macro gui_h "" WIN32 "../gui/*.h PSdraw.h "
 
 library  gui -no_share \
   LoopCommand.cxx      SceneControl.cxx  Menu.cxx             SubMenu.cxx   \
   CompoundCommand.cxx  ViewPort.cxx      DisplayControl.cxx   Vrml.cxx        \
   DisplayList.cxx      PSdraw.cxx        DisplayRep.cxx       GraphicsVector.cxx\
   PrintControl.cxx     GuiMgr.cxx        Projector.cxx        Scene.cxx \
-  GUI.cxx  ${gui_h}
+  GUI.cxx  ${gui_headers}
 
 # these are system-dependent (windows/motif) and are only needed for an executable
 macro gui_system_files "MotifGUI.cxx XScene.cxx Xdraw.cxx Xostream.cxx"\
