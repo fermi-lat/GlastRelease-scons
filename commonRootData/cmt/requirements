@@ -31,5 +31,7 @@ macro root_linkdef "../commonRootData/commonRootDataLinkDef.h"
 library  commonRootData *.cxx ../commonRootData/*.cxx\
      ${commonRootData_headers}
 
+apply_pattern vsnet_rootcint
+
 macro test_commonRootDatalinkopts ${commonRootData_shlibflags}
 #application test_commonRootData test/testCommonClasses.cxx
