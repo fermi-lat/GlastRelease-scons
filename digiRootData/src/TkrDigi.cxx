@@ -73,7 +73,7 @@ void TkrDigi::addC0Hit( UInt_t strip )
     // Purpose and Method:  Add a controller 0 strip to the hit list
     //   and keeps track of highest strip associated with controller 0
     m_hitCol.push_back(strip);  
-    if (m_lastController0Strip < strip) m_lastController0Strip = strip;
+    if (m_lastController0Strip < (Short_t) strip) m_lastController0Strip = strip;  
 }
 
 //! Add a controller 1 hit to the hit list
