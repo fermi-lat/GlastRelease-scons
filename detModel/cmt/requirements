@@ -1,7 +1,7 @@
 package detModel
 
 # $Header$
-version v2r16
+version v3r0
 
 author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
 author Joanne Bogart <jrb@slac.stanford.edu>
@@ -15,9 +15,9 @@ apply_pattern package_include
 
 private
 #__________________________________________________________
-use CLHEP   v2* IExternal
-use xmlUtil v2*
-use idents
+use CLHEP   v2r* IExternal
+use xmlUtil v3r*
+use idents  v2r*
 
 macro headers "" WIN32 "\
      ../detModel/Management/*.h \
