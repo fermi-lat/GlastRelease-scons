@@ -19,12 +19,19 @@
     namespace EventModel {
         _EXTERN_ std::string   Event;
 
+
         namespace MC {
             _EXTERN_ std::string Event;
             _EXTERN_ std::string MCTKRHits;
             _EXTERN_ std::string MCCalorimeterHits;
             _EXTERN_ std::string MCACDHits;
         };
+
+        namespace Raw {
+            _EXTERN_ std::string Event;
+            _EXTERN_ std::string CsIDatas;
+        };
+
 
     };
 #undef _EXTERN_
