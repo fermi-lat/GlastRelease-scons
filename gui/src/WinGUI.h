@@ -25,6 +25,7 @@ using namespace gui;
 
 
 class WinScene;
+class WinGUIostream;
 
 class WinGUI : public GUI {
     // Windows 95/NT implementation of GUI functions
@@ -70,7 +71,9 @@ public:
     static HWND s_hwnd;     // windows handle to the main window
     static WinScene* s_graphics_window; // primary (3d display) window
     static WinScene* s_2d_window; // secondary (for plots) window
-    
+    static bool s_quitting;
+    static WinGUIostream* s_text_window;
+
 private:
     enum{ cmdOffset=100}; // constant for command indeces
 
