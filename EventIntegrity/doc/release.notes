@@ -2,6 +2,8 @@
  * @brief package EventIntegrity 
  * package manager:H.Kelly 
   <pre>
+ * v0r3   2005-Mar-15  HMK Updated for modification to LdfEvent for retrieving
+          the tem error 
  * v0r2   2005-Jan-17  HMK Handle Trigger Parity Error in EventIntegrityAlg
  * v0r1   2005-Jan-14  HMK Handle error bits 
  * v0r0p1 2004-Oct-18  HMK Add setFinalized to EventIntegrityAlg::finalize

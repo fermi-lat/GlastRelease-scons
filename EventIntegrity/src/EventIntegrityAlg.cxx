@@ -99,7 +99,7 @@ StatusCode EventIntegrityAlg::execute()
     // dump the event if any bit in the mask is set
     if( (m_mask!=0) && ( flags & m_mask) ) {
         // Ignoring TkrRecon Error bit
-        if ( (summary->packetError()) || (summary->summaryError()) ) {
+        if ( (summary->packetError()) || (summary->temError()) ) {
             setFilterPassed( false );
             log << MSG::INFO << "Event Flag contains Error bits - skipping " 
                              << summary->eventSequence() << endreq;
