@@ -9,6 +9,8 @@ AM_INIT_AUTOMAKE(geomrep, 1.0)
 dnl Checks for programs.
 AC_PROG_CXX
 
+AC_PATH_XTRA
+
 AM_DISABLE_STATIC
 AM_PROG_LIBTOOL
 
@@ -24,7 +26,7 @@ if test "$MERIT" = no; then
    AC_MSG_ERROR(GLAST installation not found in $glast_prefx)
 fi
 
-AC_OUTPUT(Makefile geomrep/Makefile src/Makefile)
+AC_OUTPUT(Makefile geomrep/Makefile src/Makefile test/Makefile)
 
 
 AC_MSG_RESULT([]

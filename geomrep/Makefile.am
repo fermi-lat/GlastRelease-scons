@@ -8,4 +8,4 @@
 # The following set,  else would follow GNU conventions
 AUTOMAKE_OPTIONS = foreign
 
-SUBDIRS = geomrep src
+SUBDIRS = geomrep src test

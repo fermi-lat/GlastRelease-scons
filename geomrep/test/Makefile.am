@@ -12,6 +12,14 @@ noinst_PROGRAMS = testgeom
 
 testgeom_SOURCES = testgeom.cxx
 
+# X11 options
+# the following should be added to files including X headers
+X_CFLAGS = @X_CFLAGS@
+
+# the path and X libraries needed
+X_LIBS   = @X_LIBS@ -lXm -lXt -lX11
+X_EXTRA_LIBS = @X_EXTRA_LIBS@
+
 INCLUDES = -I$(top_srcdir) \
 	-I$(top_srcdir)/../geometry \
 	-I$(top_srcdir)/../graphics \
@@ -19,7 +27,13 @@ INCLUDES = -I$(top_srcdir) \
 
 
 test_LDADDS = \
-	$(top_builddir)/src/libgeomrep.la
+	$(top_builddir)/src/libgeomrep.la              \
+	$(top_builddir)/../graphics/motif/libmotif.la  \
+	$(top_builddir)/../graphics/batch/libbatch.la  \
+	$(top_builddir)/../graphics/src/libgraphics.la \
+	$(top_builddir)/../geometry/src/libgeometry.la \
+	$(top_builddir)/../CLHEP/CLHEP/libCLHEP.a      \
+	$(X_LIBS)
 
 testgeom_LDADD = $(test_LDADDS)
 

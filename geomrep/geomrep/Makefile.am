@@ -10,7 +10,7 @@ AUTOMAKE_OPTIONS = foreign
 
 geomrepincludedir = $(includedir)/geomrep
 
-fluxinclude_HEADERS = \
+geomrepinclude_HEADERS = \
 	ArcRep.h      \
 	BoxRep.h      \
 	ConeRep.h     \
