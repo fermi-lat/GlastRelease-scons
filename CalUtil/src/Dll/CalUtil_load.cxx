@@ -15,8 +15,11 @@
 
 
 DECLARE_FACTORY_ENTRIES(CalUtil) {
-    DECLARE_SERVICE( CalFailureModeSvc);
+    DECLARE_SERVICE( CalFailureModeSvc );
     DLL_DECL_TOOL( LinearConvertAdc   );
+
+    DECLARE_SERVICE( CalCalibSvc );
+    DLL_DECL_TOOL( TestEnergyTool );
+    DLL_DECL_TOOL( TestAdcTool );
+    DLL_DECL_TOOL( TestPosTool );
 } 
-
-

@@ -5,8 +5,13 @@ version v1r2p1
 branches src cmt doc
 
 use GlastSvc v*
-#use CalibSvc v*
+use CalibSvc v*
+use CalibData
 use facilities
+
+use RootPolicy v*
+macro_append ROOT_libs " -lHist -lGraf -lGpad " \
+             WIN32 " ${ROOT_PATH}/lib/libHist.lib ${ROOT_PATH}/lib/libGraf.lib ${ROOT_PATH}/lib/libGpad.lib "
 
 apply_pattern packageShr
 
@@ -17,6 +22,7 @@ apply_pattern package_include
 #private
 
 apply_pattern package_headers
+apply_pattern use_CalibData_symbols
 
 library CalUtil *.cxx Dll/*.cxx ${CalUtil_headers}
 
