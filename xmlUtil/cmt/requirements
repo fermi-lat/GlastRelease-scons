@@ -26,6 +26,7 @@ library xmlUtil ${xmlUtil_headers} -no_share \
      id/IdConverter.cxx      \
      id/IdDict.cxx           \
      id/IdDictMan.cxx        \
+     id/Identifier.cxx       \
      id/IdOpCompress.cxx     \
      id/IdOpTruncate.cxx     \
      id/IdOperation.cxx       \
