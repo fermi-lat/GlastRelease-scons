@@ -1,0 +1,34 @@
+{
+  // Not sure why root can't find libPhysics.so
+  // but it can't and libreconRootData.so needs
+  // the TVector3d class in it so we grab it explicitly
+  gSystem->Load("libPhysics.so");
+
+  gSystem->Load("libmcRootData.so");
+  gSystem->Load("libdigiRootData.so");
+  gSystem->Load("libreconRootData.so");
+
+  gROOT->Reset();
+  gROOT->LoadMacro("systest_Gleam.cxx");
+  gROOT->LoadMacro("chainTrees.cxx");
+
+  char *list[] = {"muon_pencil_300MeV_center_0deg-mc.root", "muon_pencil_300MeV_center_15deg-mc.root", "muon_pencil_300MeV_center_30deg-mc.root", "muon_pencil_300MeV_center_45deg-mc.root", "muon_pencil_300MeV_center_60deg-mc.root", "muon_pencil_300MeV_center_75deg-mc.root"};
+
+  TChain *chain = chainTrees(6, list, "Mc");
+
+  RootTreeAnalysis* m= new RootTreeAnalysis(0,0,chain);
+
+  m->Go(300000);
+  m->histFile->Write();
+  TFile f("Histograms.root")
+
+  // Create nice plot of the angular dependence on the energy deposition 
+  TProfile *prof = (TProfile*)f.Get("PROFDEP");
+  T1F *f1 = new TF1("user", "[0]/cos(x*[1]/[2])", 0, 80);
+  f1->SetParameter(0, prof->GetBinContent(1))
+  f1->SetParameter(1, 3.14159);
+  f1->SetParameter(2, 180.0);
+  gStyle->SetOptFit(1011);
+  prof->Fit("user");
+
+}
