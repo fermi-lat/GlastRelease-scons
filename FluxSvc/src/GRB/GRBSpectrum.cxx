@@ -32,14 +32,18 @@ double GRBSpectrum::solidAngle() const
 ///return flux, given a time
 double GRBSpectrum::flux(double time) const
 {
+  double rateout;
   m_grbsim->ComputeFlux(time);
+  if (m_grbsim->IRate()<=0.1?rateout=0.1:rateout=m_grbsim->IRate());
   return m_grbsim->IRate(); // in ph/(m^2 s) 
 }
 
 ///testing rate return flux, given a time
 double GRBSpectrum::rate(double time) const
 {
+  double rateout;
   m_grbsim->ComputeFlux(time);
+  if (m_grbsim->IRate()<=0.1?rateout=0.1:rateout=m_grbsim->IRate());
   return m_grbsim->IRate(); // in ph/(m^2 s) 
 }
 
