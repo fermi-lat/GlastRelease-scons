@@ -1,5 +1,5 @@
 package FluxSvc
-version v2r2
+version v2r5
 
 branches FluxSvc mgr doc
 
@@ -16,6 +16,8 @@ library FluxSvc  *.cxx \
 
 
 apply_pattern packageShr
+
+apply_pattern ld_library_path
 
 #=============================================================
 private
