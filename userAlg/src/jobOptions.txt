@@ -4,26 +4,13 @@
 // Job options file for user algorithm development
 //
 #include "$USERALGROOT/src/g4Options.txt"
+#include "$USERALGROOT/src/ntuple.txt"
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
 
-ApplicationMgr.DLLs   += { "ntupleWriterSvc"};
-
-ApplicationMgr.ExtSvc += { "ntupleWriterSvc" };
-
 // include algorithms in this package to append to GismoGenerator, and pdr recon
 ApplicationMgr.TopAlg += { "UserAlg"};
-
-// DISABLE NTUPLE FOR NOW
-// add this guy the the general n-tuple
-//UserAlg.tupleName="G4";
-// and redefine the tuple output file.
-//NTupleSvc.Output = {"G4 DATAFILE='userAlg.root' OPT='NEW'"};
-
-// source name from flux/xml/source_library.xml, and number of events.
-//GismoGenerator.source_name="default"; 
-//ApplicationMgr.EvtMax = 10000;
 
 // How to pause the GUI with a list of events of interest
 //   You can also pause the GUI on any calculable condition. (See userAlg.)

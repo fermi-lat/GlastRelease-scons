@@ -1,0 +1,24 @@
+// $Header$
+//##############################################################
+//
+// Job options file for ntuple writing
+//
+
+ApplicationMgr.DLLs   += { "RootHistCnv", "ntupleWriterSvc"};
+
+ApplicationMgr.ExtSvc += { "NTupleSvc", "IncidentSvc", "ntupleWriterSvc" };
+
+// DISABLE NTUPLE FOR NOW
+// add this guy the the general n-tuple
+ApplicationMgr.HistogramPersistency = "ROOT";
+ntupleWriterSvc.tuple_name = { "GLEAM" };
+UserAlg.tupleName="GLEAM";
+// and redefine the tuple output file.
+NTupleSvc.Output = {"GLEAM DATAFILE='userAlg.root' OPT='NEW'"};
+
+//==============================================================
+//
+// End of job options file
+//
+//##############################################################
+
