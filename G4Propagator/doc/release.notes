@@ -3,6 +3,7 @@
     $Id$
  @verbatim
 
+ v2r1p3 28-Feb-05 TU   Fix an apparant pathology in distanceToEdge where arclen can be unreasonable
  v2r1p2 27-Feb-05 TU   Ok, "really" fix bug affecting cal energy determination now
  v2r1p1 27-Feb-05 TU   Further attempts are improving performance, fix active distance bug
  v2r1p0 24-Feb-05 TU   Revamp to reduce calls to G4 Locate and Global setup
