@@ -19,6 +19,8 @@
 */
 const UInt_t runNum = 1;
 const UInt_t numParticles = 5;
+const Int_t sourceId = 7;
+const UInt_t sequence = 4;
 Float_t randNum;
 
 bool floatInRange(Double_t actual, Double_t desired) {
@@ -42,6 +44,14 @@ int checkMcEvent(const McEvent* mcEvt, UInt_t ievent) {
         std::cout << "Run Number does not match!!" << std::endl;
         return -1;
     }
+	if (mcEvt->getSourceId() != sourceId) {
+		std::cout << "Source Id does not match!!" << std::endl;
+		return -1;
+	}
+	if (mcEvt->getSequence() != sequence) {
+		std::cout << "Sequence does not match!!" << std::endl;
+		return -1;
+	}
     
     return 0;
 }
@@ -309,7 +319,7 @@ int write(char* fileName, UInt_t numEvents) {
     randNum = randGen.Rndm();
     for (ievent = 0; ievent < numEvents; ievent++) {
         
-        ev->initialize(ievent, runNum);
+        ev->initialize(ievent, runNum, sourceId, sequence);
         
         for (ipart = 0; ipart < numParticles; ipart ++) {
             McParticle *mcPart = new McParticle();

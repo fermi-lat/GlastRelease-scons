@@ -18,6 +18,8 @@
     UInt_t numEvents = 500;
     UInt_t numParticles = 100;
     UInt_t runNum = 1;
+	Int_t sourceId = 7;
+	UInt_t sequence = 4;
 
     gObjectTable->Print();
     
@@ -38,7 +40,7 @@
     Int_t ievent, ipart;
     for (ievent = 0; ievent < numEvents; ievent++) {
 
-        ev->initialize(ievent, runNum);
+        ev->initialize(ievent, runNum, sourceId, sequence);
 
         for (ipart = 0; ipart < numParticles; ipart ++) {
             McParticle *mcPart = new McParticle();
