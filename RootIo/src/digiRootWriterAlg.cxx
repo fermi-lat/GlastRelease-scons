@@ -261,7 +261,11 @@ StatusCode digiRootWriterAlg::writeAcdDigi() {
         Bool_t highRoot[2] = { (*acdDigiTds)->getHighDiscrim(Event::AcdDigi::A),
             (*acdDigiTds)->getHighDiscrim(Event::AcdDigi::B) };
         idents::AcdId idTds = (*acdDigiTds)->getId();
-        AcdId idRoot(idTds.layer(), idTds.face(), idTds.row(), idTds.column());
+        AcdId idRoot;
+        if (idTds.tile())
+            idRoot.initialize(idTds.layer(), idTds.face(), idTds.row(), idTds.column());
+        else
+            idRoot.initialize(idTds.ribbonOrientation(), idTds.ribbonNum());
 
         const idents::VolumeIdentifier volIdTds = (*acdDigiTds)->getVolId();
         VolumeIdentifier volIdRoot;
