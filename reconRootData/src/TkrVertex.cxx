@@ -39,7 +39,7 @@ void TkrVertex::Clear(Option_t *option) {
     m_itower      = -1;
 
     m_vertexPar.Clear();
-    m_vertexCov.Clear();
+    //m_vertexCov.Clear();
     m_position = TVector3(0.,0.,0.);
     m_direction = TVector3(0., 0., 0.);
 
