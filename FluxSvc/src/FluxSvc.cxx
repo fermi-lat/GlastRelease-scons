@@ -145,14 +145,17 @@ StatusCode FluxSvc::initialize ()
         IFactory* fact = const_cast<IFactory*>(factory);
         status = fact->queryInterface( IID_IToolFactory, (void**)&toolfactory );
         if( status.isSuccess() ) {
-            
-            // yes: now see if the tool implements the IRegisterSource interface
-            IRegisterSource* ireg;
-            status = tsvc->retrieveTool(tooltype, ireg);
-            if( status.isSuccess() ){
-                log << MSG::DEBUG << "Registering sources in " << tooltype << endreq;
-                ireg->registerMe(this);
-                tsvc->releaseTool(ireg);
+
+            IAlgTool* itool;
+            status = tsvc->retrieveTool(tooltype, itool);
+            if( status.isSuccess()) { 
+                status =itool->queryInterface( IRegisterSource::interfaceID(), (void**)&itool);
+                if( status.isSuccess() ){
+                    log << MSG::INFO << "Registering sources in " << tooltype << endreq;
+                    dynamic_cast<IRegisterSource*>(itool)->registerMe(this);
+                }
+                tsvc->releaseTool(itool);
+
             }
             
         }
@@ -239,6 +242,3 @@ Rotation FluxSvc::transformGlastToGalactic(double time)const{
 std::pair<double,double> FluxSvc::location(){
     return m_fluxMgr->location();
 }
-
-void WARNING (const char * text ){  std::cerr << "WARNING: " << text << '\n';}
-void FATAL(const char* s){std::cerr << "\nERROR: "<< s;}
