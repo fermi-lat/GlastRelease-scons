@@ -17,7 +17,9 @@
 #include "TkrRecon/GaudiAlg/TkrReconAlg.h"
 #include "GlastSvc/Reco/IKalmanParticle.h"
 #include <cmath>
-
+#ifndef WIN32
+# include <ieeefp.h>
+#endif
 bool CONTROL_setDeltaEne = false;
 double CONTROL_MaxEne = 2.;
 int CONTROL_maxPlanesEne = 8;

@@ -14,7 +14,7 @@
 #include "TkrRecon/TrackFit/KalPar.h"
 #include "geometry/Ray.h"
 
-KalPar::KalPar(Ray &ray) : HepVector(4)
+KalPar::KalPar(const Ray &ray) : HepVector(4)
 {
     Vector dir = ray.direction();
     Point  x0  = ray.position();
@@ -28,7 +28,7 @@ KalPar::KalPar(Ray &ray) : HepVector(4)
     operator[](3) = y_slope;
 }
 
-KalPar::KalPar(Ray *ray) : HepVector(4)
+KalPar::KalPar(const Ray *ray) : HepVector(4)
 {
     Vector dir = ray->direction();
     Point  x0  = ray->position();

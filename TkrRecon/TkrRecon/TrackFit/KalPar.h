@@ -35,8 +35,8 @@ public:
       operator[](2) = ay; operator[](3) = sy;}
 
     // Create from a 3D trajectory
-    KalPar (Ray &); 
-    KalPar (Ray *); 
+    KalPar (const Ray &); 
+    KalPar (const Ray *); 
     
     // Access methods for individual fit parameters
     inline double getXPosition() const {return operator[](0);}

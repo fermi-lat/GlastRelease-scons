@@ -25,7 +25,7 @@ public:
     KalMatrix() : HepMatrix(4, 4, 0) {}
 
     // Init from a CLHEP matrix 
-    KalMatrix(HepMatrix &A) : HepMatrix(A) {}
+    KalMatrix(const HepMatrix &A) : HepMatrix(A) {}
 
     // Special constructor to produce propagation matrix F
     KalMatrix(double step) : HepMatrix(4, 4, 1){
