@@ -152,8 +152,9 @@ StatusCode FluxSvc::initialize ()
                 if( status.isSuccess() ){
                     log << MSG::INFO << "Registering sources in " << tooltype << endreq;
                     dynamic_cast<IRegisterSource*>(itool)->registerMe(this);
-                }
-                tsvc->releaseTool(itool);
+                }else{
+		  tsvc->releaseTool(itool);
+		}
 
             }
             

@@ -8,7 +8,7 @@
 * \brief EventSource subclass to take over the functionality of the old Flux class, 
 * which implemented a GISMO based event generation scheme.
 * 
-* $Header $
+* $Header$
 */
 
 #include "FluxSvc/EventSource.h"
@@ -27,14 +27,14 @@ class FluxSource : public EventSource
 {
 public:      
     ///  constructor
-    FluxSource ( ISpectrum* aSpec = 0, double aFlux = /*1*/0 );
+    FluxSource ( ISpectrum* aSpec = 0, double aFlux = 0 );
     FluxSource ( const DOM_Element& xelem );
     FluxSource::FluxSource(double aFlux, ISpectrum* aSpec,  double l, double b);
     
     ///    destructor
     virtual ~FluxSource();
     
-    ///    generate an event from a Flux object ??//.
+    ///    generate an event from a Flux object ??
     virtual FluxSource* event(double time);
     
     ///    full-length title description of this EventSource.
@@ -90,7 +90,7 @@ public:
     std::string title()const;
     
     /// print facility
-    void  printOn ( std::ostream& out ) {}
+    void  printOn ( std::ostream&  ) {}
     
     /// set spectrum, with optional parameter to set the maximum energy?
     void spectrum(ISpectrum* s, double emax=-1);
@@ -98,7 +98,7 @@ public:
     
     
     double calculateInterval (double time);
-    double interval(double time){return m_interval;}
+    double interval(double ){return m_interval;}
     
     void FluxSource::getGalacticDir(double l,double b);
     
