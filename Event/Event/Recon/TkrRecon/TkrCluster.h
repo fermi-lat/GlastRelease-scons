@@ -73,6 +73,7 @@ public:
     inline view v()          const {return m_view;}
     inline int  firstStrip() const {return m_strip0;}
     inline int  lastStrip()  const {return m_stripf;}
+    inline double ToT()      const {return m_ToT;}
 
 	int chip();
 	double strip();
