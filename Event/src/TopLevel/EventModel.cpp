@@ -150,8 +150,9 @@ public:
     const CLID& CLID_TkrTracks          = 3105;  // or rather Layer, Cluster, RecObj objects?
     const CLID& CLID_TkrVertexCol       = 3106;  // or rather Layer, Cluster, RecObj objects?
 
-    //! Reconstruction: Tkr class IDs
+    //! Reconstruction: Cal class IDs
     const CLID& CLID_CalRecon           = 3200;
+    const CLID& CLID_CalXtalRecData     = 3201;
 
     //! Reconstruction: Acd class IDs
     const CLID& CLID_AcdRecon           = 3300;
