@@ -2,6 +2,7 @@
 #define HTMLCONSTANTSVISITOR_H
 #include "detModel/Management/ConstantsVisitor.h"
 #include <fstream>
+#include <string>
 
 namespace detModel{
 
@@ -15,7 +16,7 @@ class HtmlConstantsVisitor : public ConstantsVisitor {
 
  public:
   /// This is the constructor
-  HtmlConstantsVisitor();
+  HtmlConstantsVisitor(std::string outname = std::string("constants.html"));
   /// This is the destructor
   virtual ~HtmlConstantsVisitor();
   

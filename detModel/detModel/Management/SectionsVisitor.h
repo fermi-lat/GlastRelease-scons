@@ -67,6 +67,11 @@ namespace detModel{
     /// Allow client to set the mode for Choice elements
     virtual void setMode(std::string pmode) {m_mode = pmode;}
     virtual std::string getMode() {return m_mode;}
+
+    // Need virtual destructor since we have some virtual functions
+    // which are not pure virutal
+
+    virtual SectionsVisitor::~SectionsVisitor() {};
     
   protected:       
     SectionsVisitor::SectionsVisitor() : m_mode(""){};
