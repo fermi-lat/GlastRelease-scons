@@ -35,6 +35,8 @@ public:
 	virtual void setRunEventPair(std::pair<int,int> ids) = 0;
 	virtual std::pair<int,int> runEventPair() = 0;
 
+    virtual int getAutoSaveInterval() = 0;
+
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IRootIoSvc; }
   
