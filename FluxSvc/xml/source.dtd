@@ -15,8 +15,8 @@
 
 <!-- a spectrum: generator and angular generation instructions , followed by optional launch point-->
 <!ELEMENT spectrum ( (particle | SpectrumClass ) ,
-                     (direction | solid_angle | use_spectrum | galactic_dir ), 
-                     (launch_point | patch)* ) >
+                     (direction | solid_angle | use_spectrum |                          			    galactic_dir ),
+			   (launch_point | patch)* ) >
 <!--Included is the "frame" attribute, which can be "galactic," "glast," and "earth",
 			corresponding to which frame the declared coordinates are relative to, and also the "escale," or energy-scale attribute, which can be either MeV or GeV, and defaults to GeV.-->
 <!ATTLIST spectrum  flux CDATA "40"
@@ -50,11 +50,11 @@
 <!-- if this element exists, the Spectrum object will generate the angles -->
 <!ELEMENT use_spectrum EMPTY>
 
-<!-- optional launch point description -->
+<!-- optional launch point description - factors given in millimeters -->
 <!ELEMENT launch_point EMPTY>
-<!ATTLIST launch_point x CDATA "0" y CDATA "0" z CDATA "100.0">
+<!ATTLIST launch_point x CDATA "0" y CDATA "0" z CDATA "1000.0">
 
-<!-- optional patch  description -->
+<!-- optional patch  description - factors given in millimeters -->
 <!ELEMENT patch EMPTY>
 <!ATTLIST patch xmin CDATA "-10" xmax CDATA "10" 
                 ymin CDATA "-10" ymax CDATA "10" 

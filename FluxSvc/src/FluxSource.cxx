@@ -234,7 +234,7 @@ inline static double    sqr(double x) {return x*x; }
 
 void FluxSource::setAcceptance()
 {
-    s_radius = sqrt(totalArea() / M_PI ) * 100;    // radius in cm
+    s_radius = sqrt(totalArea() / M_PI ) * 1000;    // radius in mm
     if(!s_backoff) s_backoff = s_radius;
     
     switch (m_launch) {
@@ -288,16 +288,6 @@ FluxSource* FluxSource::event(double time)
     //go through the "veto" loop only if galactic coordinates are given for the source - otherwise,
     //the particles originate close to GLAST, and can still be incident.
     // loop through until you get a particle which is not occluded by the earth.
-/*    if(occluded()){
-    do{
-        computeLaunch(time);
-        m_extime+=5;
-    }while(occluded());
-}else{
-    //just do this once, source is not occluded
-    computeLaunch(time);
-    m_extime+=5;
-}*/
 computeLaunch(time);
     m_extime+=5;
     while(occluded()){
