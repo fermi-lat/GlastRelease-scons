@@ -1,4 +1,3 @@
-
 #include "RdbGuiWindow.h"
 #include "InsertDialog.h"
 
@@ -169,7 +168,7 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   m_connect = new rdbModel::MysqlConnection(uiLog->getOutStream(), uiLog->getErrStream());
 
   // Initialize insert dialog 
-  m_dgInsert = new InsertDialog(this);
+  m_dgInsert = new InsertDialog(getApp());
 
   
   // Initialize the rdb manager and it's builder
@@ -384,20 +383,20 @@ long RdbGUIWindow::onSendQuery(FXObject*,FXSelector, void*)
 long RdbGUIWindow::onInsert(FXObject*,FXSelector, void*)
 {
   m_dgInsert->setConnection(m_connect);
-  m_dgInsert->setTableName("metadata_v2r1");
-  
+  if ((uiTblColList->getTableList()->getNumItems() == 0 )
+      || (m_connect == 0))
+    return 1;
+
+  int index = uiTblColList->getTableList()->getCurrentItem(); 
+  /// TODO This is an hard coded table name; to be removed
+  m_dgInsert->setTableName((uiTblColList->getTableList()->getItemText(index)).text());
+  m_dgInsert->create();
+  m_dgInsert->show(PLACEMENT_OWNER);
+  m_dgInsert->setUiLog(uiLog);
   m_rdbManager->startVisitor(m_dgInsert);
-  m_dgInsert->show();
-  m_dgInsert->update();
-
-  if (m_dgInsert->execute(PLACEMENT_OWNER) != 0)
-  {
-		uiLog->update();
-		return 1; 
-  }
 
   
-  return 0;
+  return 1;
 }
 
 void RdbGUIWindow::closeConnection()

@@ -12,6 +12,7 @@
 
 class ColWidgetFactory;
 class ColWidget;
+class LogText;
 
 class InsertDialog: public FXDialogBox,public rdbModel::Visitor
 {
@@ -24,11 +25,11 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
    };
 
  
-  InsertDialog(FXWindow *owner);
+  InsertDialog(FXApp *owner);
  
   void setConnection(rdbModel::Connection* con){m_connection = con;}
-  void setTableName(std::string name){m_tableName = name;}
-  
+  void setTableName(std::string name){m_tableName = name;} 
+  void setUiLog(LogText* log){m_uiLog = log;};
   long onGoPress(FXObject*,FXSelector,void*);
   
  protected:
@@ -57,6 +58,8 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
   rdbModel::Connection* m_connection;
   /// The vector of widgets for the insert operation
   std::vector<ColWidget*> m_widgets;
+  /// The ui log text, to be updated after insertion
+  LogText *m_uiLog;
 };
 
 

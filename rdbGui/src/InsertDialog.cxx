@@ -1,4 +1,12 @@
+/** @file InsertDialog.cxx
+* @brief InsertDialog is a non-modal dialog to insert new row in the calib
+* database.
+* @author Riccardo Giannitrapani
+* $Header$
+*/
+
 #include "InsertDialog.h"
+#include "LogText.h"
 #include "Icons.h"
 #include "fxkeys.h"
 #include "rdbModel/Tables/Datatype.h"
@@ -16,15 +24,12 @@ FXDEFMAP(InsertDialog) InsertDialogMap[]={
 FXIMPLEMENT(InsertDialog,FXDialogBox,InsertDialogMap,ARRAYNUMBER(InsertDialogMap))
 
 
-InsertDialog::InsertDialog(FXWindow *owner):
-  FXDialogBox(owner, "Insert", DECOR_TITLE|DECOR_BORDER, 0, 0, 0, 0, 0,
-      0, 0, 0, 4, 4)
-{
-  FXHorizontalFrame *uiContent = new FXHorizontalFrame(this, LAYOUT_FILL_X|LAYOUT_FILL_Y);
- 
+InsertDialog::InsertDialog(FXApp *owner):
+  FXDialogBox(owner, "Insert", DECOR_TITLE|DECOR_BORDER)
+{ 
   m_matrix = 0;
   
-  m_uiRpanel = new FXVerticalFrame(uiContent, LAYOUT_FILL_X|LAYOUT_FILL_Y);
+  m_uiRpanel = new FXVerticalFrame(this, LAYOUT_FILL_X|LAYOUT_FILL_Y);
   // Bottom part
   FXHorizontalFrame *uiClosebox = new FXHorizontalFrame(m_uiRpanel, LAYOUT_BOTTOM
       |LAYOUT_FILL_X|PACK_UNIFORM_WIDTH);
@@ -68,6 +73,8 @@ long InsertDialog::onGoPress(FXObject *sender,FXSelector sel, void* ptr)
   if (m_connection)
     m_connection->insertRow(m_tableName, colNames, values, 0, &nullValues);  
   
+
+  m_uiLog->update();
   this->handle(this, MKUINT(ID_ACCEPT, SEL_COMMAND),NULL);
   return 1;
 }
@@ -93,7 +100,6 @@ rdbModel::Visitor::VisitorState InsertDialog::visitRdb(rdbModel::Rdb *rdb)
     m_widgets.clear();      
   }
     
-  
   return rdbModel::Visitor::VCONTINUE;
 }
 
@@ -117,6 +123,7 @@ rdbModel::Visitor::VisitorState InsertDialog::visitColumn(rdbModel::Column *colu
     //      std::cout << column->getName() << " " << min << " " << max << std::endl;
   
     FXLabel* label = new FXLabel(m_matrix,column->getName().c_str());
+    label->create();
     label->setTipText(column->getComment().c_str());
     
     ColWidget* colWidget;
@@ -171,7 +178,10 @@ rdbModel::Visitor::VisitorState InsertDialog::visitColumn(rdbModel::Column *colu
 
       
     m_widgets.push_back(colWidget);
-  }  
+  } 
+
+  m_matrix->recalc();
+  m_matrix->repaint();
   return rdbModel::Visitor::VCONTINUE;
 }
 
