@@ -14,6 +14,9 @@
 
 #include "Event/TopLevel/Event.h"
 #include "ldfReader/data/LatData.h"
+#include "facilities/TimeStamp.h"
+#include "astro/JulianDate.h"
+#include "Event/Utilities/TimeStamp.h"
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
@@ -45,6 +48,17 @@ StatusCode LdfEventCnv::createObj(IOpaqueAddress* ,
     long actualEventNum = (eventNumber << 2) | tag;
     header->setEvent(actualEventNum);
     header->setRun(ldfReader::LatData::instance()->runId());
+	
+	// Also set the time in the Event::EventHeader
+	facilities::Timestamp facTimeStamp(
+		ldfReader::LatData::instance()->summaryData().timeSec(), 
+        ldfReader::LatData::instance()->summaryData().timeNanoSec());
+	double julTimeStamp = facTimeStamp.getJulian();
+	astro::JulianDate julDate(julTimeStamp);
+	// Find number of seconds since missionStart
+	double tdsTimeInSeconds = julDate.seconds() - astro::JulianDate::missionStart().seconds();
+	TimeStamp tdsTimeStamp(tdsTimeInSeconds);
+	header->setTime(tdsTimeStamp);
 
     return StatusCode::SUCCESS;
 }

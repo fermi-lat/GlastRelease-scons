@@ -49,7 +49,9 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
         const char *tileName = thisAcdDigi->second->getTileName();
         int tileNumber = thisAcdDigi->second->getTileNumber();
         unsigned int tileId = thisAcdDigi->second->getTileId();
-        idents::AcdId identsId(tileId);
+		short layer, face, row, col;
+		base10ToAcdId(tileId, layer, face, row, col);
+        idents::AcdId identsId(layer, face, row, col);
         const std::vector<ldfReader::AcdDigi::AcdPmt> readoutCol = thisAcdDigi->second->getReadout();
         std::vector<ldfReader::AcdDigi::AcdPmt>::const_iterator curReadout;
         if (readoutCol.size() > 2) log << MSG::DEBUG << "Too many readouts associated with this tile " << tileName << endreq;
@@ -86,3 +88,13 @@ StatusCode LdfAcdDigiCnv::updateObj(int* , Event::EventHeader* ) {
     return StatusCode::SUCCESS;
 }
 
+void LdfAcdDigiCnv::base10ToAcdId(unsigned int val, short &lay, short &face, 
+                          short &row, short &col) {
+    lay = val / 1000;
+    val -= lay*1000;
+    face = val / 100;
+    val -= face*100;
+    row = val / 10;
+    val -= row*10;
+    col = val;
+}

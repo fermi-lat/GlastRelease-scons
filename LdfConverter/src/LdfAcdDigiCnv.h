@@ -38,6 +38,9 @@ protected:
   /// override the LdfBaseCnv version
   virtual StatusCode updateObj(int* data, Event::EventHeader* pObject);
 
+  void LdfAcdDigiCnv::base10ToAcdId(unsigned int val, short &lay, short &face, 
+                          short &row, short &col);
+
 
 };
 

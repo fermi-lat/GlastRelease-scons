@@ -92,6 +92,8 @@ StatusCode test_LdfConverterAlg::execute()
     int eventId = evt->event();
     int run = evt->run();
     log << MSG::INFO << "runId: " << run << " eventId: " << eventId << endreq;
+	double time = evt->time();
+	log << MSG::INFO << "Time (Seconds since Mission Start): " << time << endreq;
 
     SmartDataPtr<LdfEvent::Gem> gem(eventSvc(), "/Event/Gem");
     if (!gem) {
