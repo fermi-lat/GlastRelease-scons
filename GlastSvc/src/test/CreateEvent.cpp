@@ -20,9 +20,6 @@
 
 
 #include "GlastEvent/TopLevel/IrfEvent.h"
-#include "GlastEvent/Irf/IrfAcdHit.h"
-#include "GlastEvent/Irf/IrfCalHit.h"
-#include "GlastEvent/Irf/IrfTkrLayer.h"
 
 #include "GlastEvent/MonteCarlo/McIntegratingHit.h"
                                 
@@ -78,100 +75,7 @@ StatusCode CreateEvent::execute() {
     MsgStream   log( msgSvc(), name() );
     log << MSG::INFO << "execute" << endreq;
 
-    DataObject* pObject;
-
-    /*! Causes the TDS to be searched, if the data is unavailable, the appropriate
-    converter is called to retrieve the data. */
-
-    sc = eventSvc()->retrieveObject("/Event/Irf/IrfAcdHits", pObject);
-
-    if( sc.isFailure() ){
-        log << MSG::INFO << "Failed to get IrfAcdHits from TDS!" << endreq;
-        return sc; 
-    }
-    
-        log << MSG::INFO << "Successfully retrieved ACD Container!!!" << endreq;
-
-    ObjectVector<IrfAcdHit>* acdList;
-    try {
-        acdList  = dynamic_cast<ObjectVector<IrfAcdHit>*>(pObject);
-    } catch(...) {
-        log << MSG::INFO << "Failed to convert object to IrfAcdHitVector" << endreq;
-        return StatusCode::FAILURE;
-    }
-
-    
-	// Decrease the amount of output
-#if 0
-    //! print out the ACD data
-    for (ObjectVector<IrfAcdHit>::const_iterator it = acdList->begin(); it != acdList->end(); it++) {
-        log << MSG::INFO << " ACD Tile Hit " 
-            << (*it)->id() << " "
-            << (*it)->energy() << endreq;
-    }
-#endif
-
-    /*! Causes the TDS to be searched, if the data is unavailable, the appropriate
-    converter is called to retrieve the data.  */
-    sc = eventSvc()->retrieveObject("/Event/Irf/IrfCalHits", pObject);
-    if( sc.isFailure() ) {
-        log << MSG::INFO << "Failed to get IrfCalHits" << endreq;
-        return sc;                                                             
-    } 
-    
-    log << MSG::INFO << "Retrieved IrfCalHit Vector!" << endreq;
-
-    ObjectVector<IrfCalHit>* calList;
-    try {
-        calList  = dynamic_cast<ObjectVector<IrfCalHit>*>(pObject);
-    } catch(...) {
-        log << MSG::INFO << "Failed to convert object to IrfCalHitVector" << endreq;
-        return StatusCode::FAILURE;
-    }
-
-	// Decrease amount of output
-#if 0
-    //! print out the CAL data
-    for (ObjectVector<IrfCalHit>::const_iterator xtal = calList->begin(); xtal != calList->end(); xtal++) {
-        log << MSG::INFO << "Csi Log Hit: " << endreq;
-        log <<MSG::INFO << "       " 
-                        << (*xtal)->minusResponse() << " " 
-                        << (*xtal)->plusResponse() << " "
-                        << (*xtal)->energy() << " " << endreq;
-    }
-#endif
-
-    /*! Causes the TDS to be seached, if the TKR data is unavailable, then the
-        converter is called to retrieve the data */
-    sc = eventSvc()->retrieveObject("/Event/Irf/IrfTkrHits", pObject);
-    if( sc.isFailure() ) return sc;                                                             
-    
-        log << MSG::INFO << "Successfully retrieved TKR Container!!!" << endreq;
-
-    ObjectVector<IrfTkrLayer>* tkrList;
-    try {
-        tkrList  = dynamic_cast<ObjectVector<IrfTkrLayer>*>(pObject);
-    } catch(...) {
-        log << MSG::INFO << "Failed to convert object to IrfTkrLayerVector" << endreq;
-        return StatusCode::FAILURE;
-    }
-    
-	// Decrease amount of output
-#if 0
-    //! print out the TKR data
-    for (ObjectVector<IrfTkrLayer>::const_iterator silayer = tkrList->begin(); silayer != tkrList->end(); silayer++) {
-        log << MSG::INFO << "TkrLayer " << (*silayer)->id() << " "
-            << (*silayer)->MaxEnergy() << endreq;
-
-        for (ObjectVector<IrfTkrHit>::const_iterator hit = ((*silayer)->getHits())->begin(); hit != ((*silayer)->getHits())->end(); hit++) {
-            log << MSG::INFO << "Hit SSD Strip " 
-                << (*hit)->id() << " "
-                << (*hit)->energy() << " "
-                << (*hit)->noise() << endreq;
-        }
-      }
-#endif // End of decreased output comment.
-
+    //TODO: put something in here to get data???
 
 
     return sc;

@@ -18,10 +18,7 @@ MessageSvc.OutputLevel      = 2;
 // Persistency service setup:
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 
-
-// Input IRF file
-EventSelector.Input = "IRFFILE $(INSTRUMENTROOT)/src/test/test_muons.irf";
-
+    
 ApplicationMgr.EvtMax = 20;
 
 //==============================================================
