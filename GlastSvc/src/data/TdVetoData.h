@@ -55,11 +55,6 @@ public:
     //! formatted dump
     void printOn (std::ostream& cout) const;
     
-    //! old read
-    void readData (std::istream& in);
-    
-    //        Data I/O
-    void writeData (std::ostream& out);
     
     void clear ();
 

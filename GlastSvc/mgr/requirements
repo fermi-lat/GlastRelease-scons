@@ -16,7 +16,6 @@ use RootHistCnv v1
 library GlastSvc ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
                  GlastDetSvc/*.h  GlastDetSvc/*.cpp \
                  EventSelector/*.h  EventSelector/*.cpp \
-                 ../GlastSvc/Irf/*.h Irf/*.cpp \
                  ../GlastSvc/data/*.h data/*.h data/*.cpp \
 		Dll/*.cpp 
             

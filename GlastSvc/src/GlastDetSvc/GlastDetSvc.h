@@ -11,7 +11,6 @@
 #include "Gaudi/Kernel/Service.h"
 #include "Gaudi/Interfaces/IEvtSelector.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "GlastSvc/GlastDetSvc/IGlastIRFLoadSvc.h"
 
 // forward declarations
 class Instrument;

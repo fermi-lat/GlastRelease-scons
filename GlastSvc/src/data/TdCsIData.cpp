@@ -95,51 +95,22 @@ const std::vector<double>& TdCsIData::Diodes_Energy (unsigned int layer, unsigne
 void TdCsIData::load (const CsIDetector& xtal, idents::ModuleId tower)
 {
     
-    // The moduleId was taken out and replaced with a zero for now    
     if (xtal.hit()) {
-
-        Xtal* george = new Xtal(xtal.xtalPos(), xtal.energy(),0/*moduleId*/,
+        calorList[xtal.layer()]->push_back(Xtal(xtal.xtalPos(), xtal.energy(),tower ,
             xtal.xtalId(), xtal.Lresp(), xtal.Rresp(),
-                                xtal.getDiodesEnergy());
-
-        calorList[xtal.layer()]->push_back(Xtal(xtal.xtalPos(), xtal.energy(),tower,
-            xtal.xtalId(), xtal.Lresp(), xtal.Rresp(),
-                                xtal.getDiodesEnergy()));
+				xtal.getDiodesEnergy()));
 
         // put the "raw" information into the basic list
-        idents::XtalId id(tower, xtal.layer(), xtal.xtalId());
-        int     left =  static_cast<int>(xtal.Lresp()*1e6),
+        idents::XtalId id( tower, xtal.layer(), xtal.xtalId());
+        int	left =  static_cast<int>(xtal.Lresp()*1e6),
             right = static_cast<int>(xtal.Rresp()*1e6);
-            m_xtals[id]=std::pair<int,int>(left,right);
+        m_xtals[id]=std::pair<int,int>(left,right);
     }
 
-
 }
 
 
 
-
-
-void TdCsIData::writeData (std::ostream& out) const
-{
-   int numLayers = calorList.size();
-
-   out<<numLayers<<'\n';
-   if(out.eof() ) return;  // happens to be the first
-   for(int i=0; i<numLayers; i++) {
-       int numX = nHits(i);
-       out<<numX<<'\n';
-       for(int j=0; j<numX; j++) {
-            out<</*moduleId(i, j)<<*/' '<<xtalId(i, j)<<' '
-               <<int(1e6*energy(i,j))       <<' '
-               <<int(1e3*xtalPos(i, j).x())<<' '
-               <<int(1e3*xtalPos(i, j).y())<<' '
-               <<int(1e3*xtalPos(i, j).z())<<' '
-                           <<int(1e6*Lresp(i, j))<<' '
-                           <<int(1e6*Rresp(i, j))<<'\n';
-       }
-   }
-}
 
 void TdCsIData::clear ()
 {

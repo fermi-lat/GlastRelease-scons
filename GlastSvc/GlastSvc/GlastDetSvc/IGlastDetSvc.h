@@ -40,6 +40,7 @@ public:
     //! set new root detector
     virtual void setDetector(GlastDetector* d)=0;
 
+
 };
 
 // IID declaration

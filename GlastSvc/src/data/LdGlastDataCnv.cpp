@@ -23,26 +23,27 @@
 static CnvFactory<LdGlastDataCnv> s_factory;
 const ICnvFactory& LdGlastDataCnvFactory = s_factory;
 
+// local static copy.
+static IRFConverter myConverter;
+
 //! Create the transient representation of an object.
 StatusCode LdGlastDataCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObject)   {
+
+    myConverter.clear();
     
-    IRFConverter* myConverter = new IRFConverter();
-    
-    m_detSvc->accept(*myConverter);
+    m_detSvc->accept(myConverter);
     
     // Make sure that the IRFConverter copy of the TdSiData is
     // not being deleted
     
-    TdSiData* si = myConverter->getTdSiData();
-    TdCsIData* csi = myConverter->getTdCsIData();
-    TdVetoData* veto = myConverter->getTdVetoData();
+    const SiData* si = myConverter.getSiData();
+    const CsIData* csi = myConverter.getCsIData();
+    const IVetoData* veto = myConverter.getVetoData();
     
     LdGlastData* glastData = new LdGlastData(csi,si,veto);
     
     refpObject =  glastData;
     
-    delete myConverter;   
-    myConverter = 0;
     
     // Check to see if all is well with the IRFCOnverter copy of
     // TdSiData
@@ -98,7 +99,7 @@ LdGlastDataCnv::LdGlastDataCnv(ISvcLocator* svc)
 : BaseCnv(classID(), svc)
 {
 
-  declareObject("/Event/Data/TdGlastData", objType(), "PASS");
+  declareObject("/Event/TdGlastData", objType(), "PASS");
 }
 
 //! Standard Destructor

@@ -62,12 +62,6 @@ StatusCode  GlastDetSvc::queryInterface (const IID& riid, void **ppvIF)
         *ppvIF = dynamic_cast<IGlastDetSvc*> (this);
         return StatusCode::SUCCESS;
     }
-#if 0
-    else if (IID_IGlastIRFLoadSvc == riid) {
-        *ppvIF = dynamic_cast<IGlastIRFLoadSvc*> (this);
-        return StatusCode::SUCCESS;
-    }
-#endif
     else {
         return Service::queryInterface (riid, ppvIF);
     }

@@ -5,7 +5,6 @@
 #include "TdVetoData.h"
 #include "instrument/Scintillator.h"
 
-//#include "instrument/ScintillatorId.h"
 
 using namespace std;
 #include <iomanip>
@@ -43,37 +42,6 @@ void TdVetoData::load (const Scintillator& tile)
     
 }
 
-
-void TdVetoData::readData (istream& in)
-{
-    int X, Y, Z, E;
-    
-    int numV;
-    Id type;
-    in>> numV ;
-    
-    for(int i=0; i<numV; i++) {
-        //      ModuleId mod;
-        in >> type >> E >> X >> Y >> Z;
-        tileList.push_back( Tile(Point(X/1e3, Y/1e3, Z/1e3), type, E/1e6));
-    }
-}
-
-void TdVetoData::writeData (ostream& out)
-{
-    int numV = tileList.size();
-    
-    out<<numV<<'\n';
-    
-    for( const_iterator it = begin(); it != end(); ++it) {
-        const Tile& v = *it;
-        out << v.type()          << ' '
-            << static_cast<int>(1e6*v.energy())     << ' '
-            << static_cast<int>(1e3*v.position().x())<< ' '
-            << static_cast<int>(1e3*v.position().y())<< ' '
-            << static_cast<int>(1e3*v.position().z())<< '\n';
-    }
-}
 
 void TdVetoData::clear ()
 {

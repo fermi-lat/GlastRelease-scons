@@ -156,66 +156,6 @@ int TdSiData::totalHits () const
     return m_total_hits;
 }
 
-void TdSiData::readData (istream& in)
-{
-    int x, y, Z;
-    
-    int numLayers;
-    in>> numLayers;
-    if( in.eof() )  // this is the first one
-        return;
-    
-    for(int i=0; i<numLayers; i++) {
-        int numX;
-        in>>numX;
-        unsigned int mod;
-        unsigned st, type;
-        int j;
-        for( j=0; j<numX; j++) {
-            in>>mod>>st>>type>>x>>y>>Z;
-            xhitList[i]->push_back(
-                Strip(Point(x/1e3, y/1e3, Z/1e3), idents::ModuleId(mod), st, type));
-        }
-        int numY;
-        in>>numY;
-        for(j=0; j<numY; j++) {
-            in>>mod>>st>>type>>x>>y>>Z;
-            yhitList[i]->push_back(
-                Strip(Point(x/1e3, y/1e3, Z/1e3), idents::ModuleId(mod), st, type));
-        }
-    }
-}
-
-void TdSiData::writeData (ostream& out)
-{
-    int numLayers = xhitList.size();
-    
-    out<<numLayers<<'\n';
-    
-    for(int i=0; i<numLayers; i++) {
-        int numX = nHits(X, i);
-        out<<numX<<'\n';
-        int j;
-        for(j=0; j<numX; j++) {
-            out<<moduleId(X, i, j)
-                <<' '<<hitId(X, i, j) <<' '
-//                <<hitType(X, i, j)<<' '
-                <<int(1e3*hit(X, i, j).x())<<' '
-                <<int(1e3*hit(X, i, j).y())<<' '
-                <<int(1e3*hit(X, i, j).z())<<'\n';
-        }
-        int numY = nHits(Y, i);
-        out<<numY<<'\n';
-        for(j=0; j<numY; j++) {
-            out<<moduleId(Y, i, j) 
-                <<' '<<hitId(Y, i, j)<<' '
-//                <<hitType(Y, i, j)<<' '
-                <<int(1e3*hit(Y, i, j).x())<<' '
-                <<int(1e3*hit(Y, i, j).y())<<' '
-                <<int(1e3*hit(Y, i, j).z())<<'\n';
-        }
-    }
-}
 
 void TdSiData::printOn (ostream& cout) const
 {

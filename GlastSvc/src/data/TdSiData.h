@@ -62,21 +62,8 @@ public:
     //    unsigned int tray, unsigned int n) const;
     
     //  total number of Si strips hit
-    //  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     int totalHits () const;
     
-    //  largest number of hits on an individual readout
-    //  controller
-    //  (determines readout time)
-    //  ----- I/O Functions -----------------------
-    //  total number of Si strips hit
-    //int maxControllerHits () const;
-    
-    void readData (std::istream& in);
-    
-    //  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    //  Data I/O
-    void writeData (std::ostream& out);
     
     //  ---------------------------------------------------------
     void printOn (std::ostream& cout = std::cout) const;

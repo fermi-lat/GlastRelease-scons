@@ -108,24 +108,13 @@ public:
         
         //     const std::vector<double>& Diodes_Energy(unsigned int layer, unsigned int n);
         
-        
-        //!write data to an open stream
-        void writeData (std::ostream& out) const;
-        
+                
         void clear ();
         
-        // Will need for the PDS
         
-        //! Serialize the object for reading
-        virtual StreamBuffer& serialize( StreamBuffer& s );
-        //! Serialize the object for writing
-        virtual StreamBuffer& serialize( StreamBuffer& s ) const;
-        //! Fill the ASCII output stream
-        virtual std::ostream& fillStream( std::ostream& s ) const;
              
         void printOn (std::ostream& cout) const ;
         
-    protected:
     private:
         
         
@@ -135,42 +124,10 @@ public:
         //!     storage is a list of lists (deprecated)
         std::vector< std::vector< class Xtal >* > calorList;
         
-        
-        
+       
         
 };
 
-//################################################################
-//                  TdCsIDataSerializeFunctions
-//################################################################
-//! Serialize the object for writing
-
-
-inline StreamBuffer& TdCsIData::serialize( StreamBuffer& s ) const                 {
-DataObject::serialize(s);
-return s;
-//    << m_cellID
-//    << calorList ;
-//    << m_mcTracks(this);
-}
-
-  
-    //! Serialize the object for reading
-    inline StreamBuffer& TdCsIData::serialize( StreamBuffer& s )                       {
-    DataObject::serialize(s);
-    return s;
-    //    >> m_cellID
-    //   >> calorList;
-    //    >> m_mcTracks(this);
-    }
-    
-      
-        //! Fill the ASCII output stream
-        inline std::ostream& TdCsIData::fillStream( std::ostream& s ) const                {
-        return s;
-        //   << "class TdCsIData :"
-        }
-        
         
 #endif
 
