@@ -4,7 +4,8 @@
  * package manager:T.Burnett
  * $Id$
 
-* v6r6   THB 29-jan-03   Turning on the Tracker Iterative Recon (Tracy)
+* v5r6p1 THB 28-feb-04   Switch to TrkDigiAlg
+* vrr6   THB 29-jan-04   Turning on the Tracker Iterative Recon (Tracy)
 * v5r5p1 THB 15-nov-03   put stopping alg into the gui options 
 * v5r4   THB 20-oct-03   move merit and OnboardFilter into default 
 * v5r4   THB 28-sep-03   new merit, ExposureAlg 
