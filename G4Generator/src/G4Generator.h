@@ -53,9 +53,9 @@ class G4Generator : public Algorithm {
   bool m_saveTrajectories;
 
   /// the McParticle tree mode
-  /// It can be "full" or "minimal"
+  /// It can be "full" or "minimal" or "pruneCal"
   std::string m_mcTreeMode;
-
+  
   /// The default cutoff value (in mm)
   DoubleProperty m_defaultCutValue;
 };

@@ -86,9 +86,12 @@ void TrackingAction::PreUserTrackingAction(const G4Track* aTrack)
   // if the particle is an e+ or an e- coming from the conversion of a gamma,
   // than set it as the origin particle, otherwise the primary is the origin
   // particle
-  if ((parent == man->getMcParticle(1)) && (parent->particleProperty() == 22) && (process == "conv"))
+  if ((parent == man->getMcParticle(1)) && 
+      (parent->particleProperty() == 22) && 
+      (process == "conv"))
     man->setOriginParticle(particle);
   else man->setOriginParticle(man->getMcParticle(1));
+
 }
 
 void TrackingAction::PostUserTrackingAction(const G4Track* aTrack)
@@ -114,6 +117,7 @@ void TrackingAction::PostUserTrackingAction(const G4Track* aTrack)
       // we finalize the particle by giving the final momentum and position
       particle->finalize(pfin, aTrack->GetPosition());
     }
+
 }
 
 

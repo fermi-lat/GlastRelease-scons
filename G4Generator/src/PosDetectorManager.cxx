@@ -101,6 +101,8 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
   
   hit->init(edep, id, local*(prePos-center), local*(postPos-center), global*prePos, global*postPos );
 
+  partMan->getLastParticle()->addStatusFlag(Event::McParticle::POSHIT);
+
   // Track energy at this point
   G4double trkEnergy = aStep->GetTrack()->GetTotalEnergy();
   hit->setParticleEnergy(trkEnergy);

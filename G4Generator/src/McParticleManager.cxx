@@ -13,6 +13,8 @@
 
 // Gaudi
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/SmartRef.h"
+#include "GaudiKernel/SmartRefVector.h"
 
 #include "Event/TopLevel/EventModel.h"
 
@@ -73,12 +75,42 @@ void McParticleManager::save()
   std::map <unsigned int, Event::McParticle*>::iterator it;
   
   for(it=m_particles.begin();it != m_particles.end() ; it++){
-    pcol->push_back(it->second);
+    if(it->second)
+      pcol->push_back(it->second);
   }
 
 }
 
+void McParticleManager::pruneCal()
+{
+  // Purpose and Method: with that method we prune all the McParticle that does
+  // not belong to the TKR region (very LAT speicific, we check z<0 for both
+  // start and end position of an McParticle) and that does not interact with the
+  // TKR itself (producing an McPositionHit).
 
+  SmartRefVector<Event::McParticle>::const_iterator d; 
+  std::map <unsigned int, Event::McParticle*>::iterator it;
+
+  for(it=m_particles.begin();it != m_particles.end() ; it++)
+    {
+      if (((it->second)->initialPosition().z() < 0) && ((it->second)->finalPosition().z()<0)
+          && !((it->second)->statusFlags()&Event::McParticle::POSHIT))
+        {
+          for(unsigned int i=0;i<(it->second)->daughterList().size();i++)
+            {
+              SmartRef<Event::McParticle> part = (it->second)->daughterList()[i];
+              SmartRef<Event::McParticle> mother = &(it->second)->mother();
+              part->setMother(mother);
+              part->addStatusFlag(Event::McParticle::BCKSPL);
+              mother->addDaughter(part);
+            }
+
+          delete it->second;
+          it->second = 0;
+        }
+      
+    }
+}
 
 
 

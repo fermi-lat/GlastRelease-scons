@@ -79,6 +79,9 @@ class McParticleManager {
   /// Return the number of McParticle saved
   unsigned int size(){return m_particles.size();};
 
+  /// Prune the tree in the CAL part
+  void pruneCal();
+
  private:
   /// The constructor is private since this is a singleton
   McParticleManager():m_lastParticle(0),m_currentOrigin(0),m_mode(1){clear();}; 
