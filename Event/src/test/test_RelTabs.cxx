@@ -4,6 +4,7 @@
 #include "Event/RelTable/Relation.h"
 #include "Event/RelTable/RelTable.h"
 #include "GaudiKernel/ContainedObject.h"
+#include "GaudiKernel/ObjectList.h"
 #include <vector>
 #include <iostream>
 #include <string>
@@ -119,8 +120,25 @@ int main()
 
 
   // Now we change a relation already inserted
+ 
+
+  locs = tab.getRelByFirst(person3);
+  for (i = locs.begin(); i != locs.end(); i++)
+    {
+      tab.changeSecond(*i,location1);
+    }
   
-  locs.clear();
+  std::cout << std::endl << "persion3 location changed" << std::endl;
+  std::cout << std::endl << location2->address << std::endl;
+
+  pers = tab.getRelBySecond(location1);
+  for (i = pers.begin(); i != pers.end(); i++)
+    {
+      std::cout << "Name: "     << (*i)->getFirst()->name 
+                << "     ssn: " << (*i)->getFirst()->ssn   << std::endl;
+    }
+
+
   
   locs = tab.getRelByFirst(person1);
  
@@ -134,10 +152,9 @@ int main()
   // Let's see the result oh the previous query after this change. We have to
   // take care about null pointers now.
 
-  pers.clear();
   pers = tab.getRelBySecond(location2);
 
-  std::cout << "Number of relations = " << pers.size() << std::endl;   
+  std::cout << "Number of relations with location2 = " << pers.size() << std::endl;   
 
   std::cout << std::endl << location2->address << std::endl;
   for (i = pers.begin(); i != pers.end(); i++)
@@ -147,16 +164,26 @@ int main()
                   << "     ssn: " << (*i)->getFirst()->ssn   << std::endl;
     }
   
-  std::cout << std::endl << "Now, let's remove relations with location 1" << std::endl;
 
-  locs.clear();
-  locs = tab.getRelBySecond(location1);
-  for (i = locs.begin(); i != locs.end(); i++)
+  // Now let's remove the two relations with the null pointer
+
+  pers = tab.getRelByFirst(0);
+  for (i = pers.begin(); i != pers.end(); i++)
   {
     tab.erase(*i);
   }
 
+  std::cout << std::endl << "Removed relations with null pointer" << std::endl;   
   std::cout << "Number of relations = " << tab.size() << std::endl;   
+  std::cout << std::endl << location2->address << std::endl;
+
+  pers = tab.getRelBySecond(location1);
+  for (i = pers.begin(); i != pers.end(); i++)
+    {
+      std::cout << "Name: "     << (*i)->getFirst()->name 
+                << "     ssn: " << (*i)->getFirst()->ssn   << std::endl;
+    }
+
  
 
   // Using the TDS, one can finally register the collection of relations:

@@ -194,9 +194,11 @@ private:
     // Purpose: This method change the first data pointer of a relation with the
     // one given by the user
 
-    removeFirst(rel);    
+    removeFirst(rel);
+    removeSecond(rel);
+    m_relations->remove(rel);
     rel->setFirst(pobj);
-    bindRelationFirst(rel);
+    addRelation(rel);
   }
 
 
@@ -205,9 +207,11 @@ private:
     // Purpose: This method change the second data pointer of a relation with the
     // one given by the user
 
-    removeSecond(rel);    
+    removeFirst(rel);
+    removeSecond(rel);
+    m_relations->remove(rel);
     rel->setSecond(pobj);
-    bindRelationSecond(rel);
+    addRelation(rel);
   }
 
 
@@ -306,41 +310,51 @@ private:
   template <class T1,class T2>
     inline void RelTable<T1,T2>::removeFirst(Relation<T1,T2> *rel) {
 
-    Relation<T1,T2> *temp;
+    Relation<T1,T2> *prev, *next, *first;
 
-    temp = rel->m_first.getSame();
-    if (temp)
-      temp->m_first.setPrev(rel->m_first.getPrev());
-    temp = rel->m_first.getPrev();
-    if (temp)
+    prev = rel->m_first.getPrev();
+    next = rel->m_first.getSame();
+    if (next)
+      next->m_first.setPrev(prev);
+    if (prev)
     {
-      if (temp->m_first.getFirst())
-        temp->m_first.setFirst(rel->m_first.getSame());
+      if (prev->m_first.getFirst())
+        prev->m_first.setFirst(next);
       else
-        temp->m_first.setSame(rel->m_first.getSame());
+        prev->m_first.setSame(next);
     }
+    first = rel->m_first.getFirst();
+    if (first)
+      first->m_first.setPrev(next);
+    rel->m_first.setPrev(0);
+    rel->m_first.setSame(0);
+    rel->m_first.setFirst(0);
   }
 
 
   template <class T1,class T2>
     inline void RelTable<T1,T2>::removeSecond(Relation<T1,T2> *rel) {
 
-    Relation<T1,T2> *temp;
+    Relation<T1,T2> *prev, *next, *first;
 
-    temp = rel->m_second.getSame();
-    if (temp)
-      temp->m_second.setPrev(rel->m_second.getPrev());
-    temp = rel->m_second.getPrev();
-    if (temp)
+    prev = rel->m_second.getPrev();
+    next = rel->m_second.getSame();
+    if (next)
+      next->m_second.setPrev(prev);
+    if (prev)
     {
-      if (temp->m_second.getFirst())
-        temp->m_second.setFirst(rel->m_second.getSame());
+      if (prev->m_second.getFirst())
+        prev->m_second.setFirst(next);
       else
-        temp->m_second.setSame(rel->m_second.getSame());
+        prev->m_second.setSame(next);
     }
+    first = rel->m_second.getFirst();
+    if (first)
+      first->m_second.setPrev(next);
+    rel->m_second.setPrev(0);
+    rel->m_second.setSame(0);
+    rel->m_second.setFirst(0);
   }
-
-
 
 }
 
