@@ -55,7 +55,7 @@
    timestamp   NMTOKEN #REQUIRED
    calibType (CAL_LightAtt | CAL_LightAsym | CAL_LightYield |
               CAL_Ped | CAL_ElecGain | CAL_IntNonlin | CALDiffNonlin |
-              CAL_DiscrLO | CAL_DiscrHI )    #REQUIRED
+              CAL_DiscrLO | CAL_DiscrHI | CAL_MuSlope)    #REQUIRED
    DTDVersion  NMTOKEN "v2r0"       
    fmtVersion  NMTOKEN #REQUIRED >
 
@@ -117,7 +117,7 @@
 <!ATTLIST xtal iXtal NMTOKEN #REQUIRED>
 
 <!-- each face has data for all four ranges, ordered by range number -->
-<!ELEMENT face (calPed* | calGain*) >
+<!ELEMENT face (calPed* | calGain* | muSlope*) >
 <!ATTLIST face end (NEG | POS | NA) #REQUIRED >
 
 <!ENTITY  % ranges  'range (LEX8 | LEX1 | HEX8 | HEX1) #REQUIRED ' >
@@ -130,3 +130,8 @@
 <!ELEMENT calGain EMPTY>
 <!ATTLIST calGain %ranges;
                   gain NMTOKEN #REQUIRED>
+
+<!ELEMENT muSlope EMPTY>
+<!ATTLIST muSlope %ranges;
+                  slope NMTOKEN #REQUIRED>
+
