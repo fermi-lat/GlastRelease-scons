@@ -11,6 +11,7 @@ ApplicationMgr.DLLs   += {"FluxDisplay" };
 
 // these are algorithms, but are for initialize only
 EventDisplay.Members = {
+    "FluxDisplay",
    "TkrDisplayAlg",
    "CalDisplay",
    "AcdDisplay", 
