@@ -1,5 +1,5 @@
 package digiRootData
-version v3r3
+version v3r4
 
 use GlastPolicy v4r*
 use ROOT v3r*
@@ -21,7 +21,7 @@ setup_script dorootcint
 
 # Create the Root Cint classes on UNIX
 #macro root_headers "AcdHeader.h AcdId.h AcdTile.h CalDigi.h CalHeader.h CalXtalId.h CalXtalReadout.h DigiEvent.h L1T.h LiveTime.h StripId.h SubSystemHeader.h TkrHeader.h TkrLayer.h EventLinkDef.h"
-macro root_headers "AcdDigi.h AcdId.h CalDigi.h CalXtalId.h CalXtalReadout.h DigiEvent.h GlastAxis.h TkrDigi.h TowerId.h EventLinkDef.h"
+macro root_headers "AcdDigi.h AcdId.h CalDigi.h CalXtalId.h CalXtalReadout.h DigiEvent.h GlastAxis.h L1T.h TkrDigi.h TowerId.h EventLinkDef.h"
 
 # on unix use a document to make rootcint part of the build process
 make_fragment event_dorootcint_header
@@ -38,6 +38,7 @@ library  digiRootData \
       TkrDigi.cxx TowerId.cxx \
       CalDigi.cxx CalXtalReadout.cxx CalXtalId.cxx \
       AcdDigi.cxx AcdId.cxx \
+      L1T.cxx \
       ../digiRootData/*.cxx \
       ${digiRootData_headers}
 
