@@ -75,14 +75,14 @@ public:
     /// swap the possibly tagged strip for the merged sort (toggle)
     int swapForSort(const int strip);
     /// sort the merged data and bad strips
-    void sortMergedHits (std::vector<int> * list);
+    void sortTaggedHits (std::vector<int> * list);
     
     // bool less_than(const int strip1, const int strip2);
     
-    /// tag a strip "good"  (see BadStripsSvc)
-    int untag(const int strip);
     /// check if strip is bad (see BadStripSvc)
     bool isTaggedBad( const int strip);
+    /// retrieve strip number  (see BadStripsSvc)
+    int stripNumber(const int strip);
     /// retrieve tag field from strip
     int tagField(const int strip);
     
