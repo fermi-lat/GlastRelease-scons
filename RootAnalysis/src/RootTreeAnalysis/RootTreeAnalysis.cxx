@@ -353,7 +353,7 @@ void RootTreeAnalysis::HistDefine() {
     
 }
 
-void RootTreeAnalysis::Go(Int_t numEvents)
+void RootTreeAnalysis::Go(Long64_t numEvents)
 {    
     // Purpose and Method:  Event Loop
     //   All analysis goes here
@@ -393,7 +393,7 @@ void RootTreeAnalysis::Go(Int_t numEvents)
     }
         
     // determine how many events to process
-    Int_t nentries = GetEntries();
+    Long64_t nentries = GetEntries();
     std::cout << "\nNum Events in File is: " << nentries << std::endl;
     Int_t curI;
     Int_t nMax = TMath::Min(numEvents+m_StartEvent,nentries);
@@ -407,7 +407,7 @@ void RootTreeAnalysis::Go(Int_t numEvents)
     Int_t nbytes = 0, nb = 0;
     
     // BEGINNING OF EVENT LOOP
-    for (Int_t ievent=m_StartEvent; ievent<nMax; ievent++, curI=ievent) {
+    for (Long64_t ievent=m_StartEvent; ievent<nMax; ievent++, curI=ievent) {
         
         if (mc) mc->Clear();
         if (evt) evt->Clear();

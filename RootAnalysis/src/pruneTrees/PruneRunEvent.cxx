@@ -364,7 +364,7 @@ void RootTreeAnalysis::HistDefine() {
     
 }
 
-void RootTreeAnalysis::Go(Int_t numEvents)
+void RootTreeAnalysis::Go(Long64_t numEvents)
 {    
     // Purpose and Method:  Event Loop
     //   All analysis goes here
@@ -410,10 +410,10 @@ void RootTreeAnalysis::Go(Int_t numEvents)
     }
         
     // determine how many events to process
-    Int_t nentries = GetEntries();
+    Long64_t nentries = GetEntries();
     std::cout << "\nNum Events in File is: " << nentries << std::endl;
-    Int_t curI;
-    Int_t nMax = TMath::Min(numEvents+m_StartEvent,nentries);
+    Long64_t curI;
+    Long64_t nMax = TMath::Min(numEvents+m_StartEvent,nentries);
     if (m_StartEvent == nentries) {
         std::cout << " all events in file read" << std::endl;
         return;
@@ -424,7 +424,7 @@ void RootTreeAnalysis::Go(Int_t numEvents)
     Int_t nbytes = 0, nb = 0;
     
     // BEGINNING OF EVENT LOOP
-    for (Int_t ievent=m_StartEvent; ievent<nMax; ievent++, curI=ievent) {
+    for (Long64_t ievent=m_StartEvent; ievent<nMax; ievent++, curI=ievent) {
         
       pruneEvent = true;
 
@@ -480,7 +480,7 @@ void RootTreeAnalysis::Go(Int_t numEvents)
 }
 
 
-void RootTreeAnalysis::Peel(Int_t numEvents) {
+void RootTreeAnalysis::Peel(Long64_t numEvents) {
 
     mcEventIdBranch = m_mcChain->GetBranch("m_eventId");
     mcRunIdBranch =   m_mcChain->GetBranch("m_runId");
@@ -529,10 +529,10 @@ void RootTreeAnalysis::Peel(Int_t numEvents) {
 */
         
     // determine how many events to process
-    Int_t nentries = GetEntries();
+    Long64_t nentries = GetEntries();
     std::cout << "\nNum Events in File is: " << nentries << std::endl;
-    Int_t curI;
-    Int_t nMax = TMath::Min(numEvents+m_StartEvent,nentries);
+    Long64_t curI;
+    Long64_t nMax = TMath::Min(numEvents+m_StartEvent,nentries);
     if (m_StartEvent == nentries) {
         std::cout << " all events in file read" << std::endl;
         return;
@@ -543,7 +543,7 @@ void RootTreeAnalysis::Peel(Int_t numEvents) {
     Int_t nbytes = 0, nb = 0;
     
     // BEGINNING OF EVENT LOOP
-    for (Int_t ievent=m_StartEvent; ievent<nMax; ievent++, curI=ievent) {
+    for (Long64_t ievent=m_StartEvent; ievent<nMax; ievent++, curI=ievent) {
         
       pruneEvent = true;
 
@@ -600,7 +600,7 @@ void RootTreeAnalysis::Peel(Int_t numEvents) {
 }
 
 
- UInt_t RootTreeAnalysis::CopyEntry(UInt_t ievt) {
+ UInt_t RootTreeAnalysis::CopyEntry(Long64_t ievt) {
     // Purpose and Method:  Get the event, ievt, for all trees
     //    We could be processing single files or chains, 
 	//    This routine handles both casees.
@@ -609,7 +609,7 @@ void RootTreeAnalysis::Peel(Int_t numEvents) {
     // move the event pointer to the requested event
     UInt_t nb = 0;
     if (treeArrCopy) {
-        for (Int_t i = 0; i < treeArrCopy->GetEntries(); i++) {
+        for (Long64_t i = 0; i < treeArrCopy->GetEntries(); i++) {
             ((TTree*)treeArrCopy->At(i))->Fill();
         }
         return nb;
@@ -618,7 +618,7 @@ void RootTreeAnalysis::Peel(Int_t numEvents) {
     // if using chains, check the array of chains and move
     // the event pointer to the requested event
     if (chainArrCopy) {
-        for (Int_t i = 0; i < chainArrCopy->GetEntries(); i++) {
+        for (Long64_t i = 0; i < chainArrCopy->GetEntries(); i++) {
 	  //	  std::cout << " event " << ievt << " chain index " << i << std::endl; 
             //((TFile*)fileArrCopy->At(i))->cd();
             TFile *f = ((TChain*)chainArrCopy->At(i))->GetCurrentFile();
@@ -646,7 +646,7 @@ void RootTreeAnalysis::Peel(Int_t numEvents) {
     if (treeArr) {
         fileArrCopy = new TObjArray();
         treeArrCopy = new TObjArray();
-        for (Int_t i = 0; i < treeArr->GetEntries(); i++) {
+        for (Long64_t i = 0; i < treeArr->GetEntries(); i++) {
 	  const char* fNameC = (((TFile*)(fileArr->At(i)))->GetName());
 	  std::string fName(fNameC);
 	  std::string fNameP = fName + "-prune";
@@ -664,7 +664,7 @@ void RootTreeAnalysis::Peel(Int_t numEvents) {
     if (chainArr) {
         chainArrCopy = new TObjArray();
         fileArrCopy = new TObjArray();
-        for (Int_t i = 0; i < chainArr->GetEntries(); i++) {
+        for (Long64_t i = 0; i < chainArr->GetEntries(); i++) {
 	  TFile* cArr = ((TTree*)(chainArr->At(i)))->GetCurrentFile();
 	  const char* fNameC = (((TFile*)(chainArr->At(i)))->GetName());
 	  std::string fName(fNameC);

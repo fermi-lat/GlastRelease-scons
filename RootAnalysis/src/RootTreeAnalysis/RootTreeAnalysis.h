@@ -120,7 +120,7 @@ public :
     ~RootTreeAnalysis();  
 
     /// start next Go with this event
-    void StartWithEvent(Int_t event) { m_StartEvent = event; };  
+    void StartWithEvent(Long64_t event) { m_StartEvent = event; };  
     /// reset for next Go to start at beginning of file 
     void Rewind() { m_StartEvent = 0; }; 
     /// allow the user to specify their own file name for the output ROOT file
@@ -140,15 +140,15 @@ public :
     /// Retrieve a pointer to an object stored in our output ROOT file
     TObject* GetObjectPtr(const char *tag) { return (m_histList->FindObject(tag)); };
     /// process events
-    void Go(Int_t numEvents=100000); 
+    void Go(Long64_t numEvents=100000); 
     /// returns number of events in all open files
-    UInt_t GetEntries() const;
+    Long64_t GetEntries() const;
     /// retrieve a pointer to event number.
-    UInt_t GetEvent(UInt_t ievt);
+    UInt_t GetEvent(Long64_t ievt);
     
 private:
     /// starting event number
-    Int_t m_StartEvent;
+    Long64_t m_StartEvent;
     /// list of user histograms
     THashList *m_histList;
         
@@ -276,7 +276,7 @@ inline RootTreeAnalysis::~RootTreeAnalysis() {
     if (treeArr) delete treeArr;
     if (chainArr) delete chainArr;
 
-	Clear();
+    Clear();
 }
 
 
@@ -301,7 +301,7 @@ inline void RootTreeAnalysis::Init(const char* digiFileName, const char* reconFi
     }
     
     if (mcFileName != "") {
-        mcFile = new TFile(mcFileName);
+        mcFile = new TFile(mcFileName,"READ");
         if (mcFile->IsOpen() == kTRUE) {
             mcTree = (TTree*)gDirectory->Get("Mc");
             mc = 0;
@@ -323,7 +323,7 @@ inline void RootTreeAnalysis::Init(const char* digiFileName, const char* reconFi
     }
     
     if (digiFileName != "") {
-        digiFile = new TFile(digiFileName);
+        digiFile = new TFile(digiFileName, "READ");
         if (digiFile->IsOpen() == kTRUE) {
             digiTree = (TTree*)gDirectory->Get("Digi");
             evt = 0;
@@ -345,7 +345,7 @@ inline void RootTreeAnalysis::Init(const char* digiFileName, const char* reconFi
     }
     
     if (reconFileName != "") {
-        reconFile = new TFile(reconFileName);
+        reconFile = new TFile(reconFileName,"READ");
         if (reconFile->IsOpen() == kTRUE) {
             reconTree = (TTree*)gDirectory->Get("Recon");
             rec = 0;
@@ -363,7 +363,7 @@ inline void RootTreeAnalysis::Init(const char* digiFileName, const char* reconFi
 }
 
 
-inline UInt_t RootTreeAnalysis::GetEvent(UInt_t ievt) {
+inline UInt_t RootTreeAnalysis::GetEvent(Long64_t ievt) {
     // Purpose and Method:  Get the event, ievt, for all trees
     //    We could be processing single files or chains, 
     //    This routine handles both casees.
@@ -372,7 +372,7 @@ inline UInt_t RootTreeAnalysis::GetEvent(UInt_t ievt) {
     // move the event pointer to the requested event
     UInt_t nb = 0;
     if (treeArr) {
-        for (Int_t i = 0; i < treeArr->GetEntries(); i++) {
+        for (Long64_t i = 0; i < treeArr->GetEntries(); i++) {
             nb += ((TTree*)treeArr->At(i))->GetEvent(ievt);
         }
         return nb;
@@ -381,7 +381,7 @@ inline UInt_t RootTreeAnalysis::GetEvent(UInt_t ievt) {
     // if using chains, check the array of chains and move
     // the event pointer to the requested event
     if (chainArr) {
-        for (Int_t i = 0; i < chainArr->GetEntries(); i++) {
+        for (Long64_t i = 0; i < chainArr->GetEntries(); i++) {
             nb += ((TChain*)chainArr->At(i))->GetEvent(ievt);
         }
         return nb;
@@ -391,24 +391,24 @@ inline UInt_t RootTreeAnalysis::GetEvent(UInt_t ievt) {
 }
 
 
-inline UInt_t RootTreeAnalysis::GetEntries() const {    
+inline Long64_t RootTreeAnalysis::GetEntries() const {    
     // Purpose and Method:  Determine the number of events to iterate over
     //   checking to be sure that the requested number of events is less than
     //   the min number of events in all files
 
-    UInt_t nentries = 0;
+    Long64_t nentries = 0;
     if (treeArr) {
         nentries = ((TTree*)treeArr->At(0))->GetEntries();
-        for (Int_t i = 1; i < treeArr->GetEntries(); i++) {
-            nentries = TMath::Min(nentries, (UInt_t)((TTree*)treeArr->At(i))->GetEntries());
+        for (Long64_t i = 1; i < treeArr->GetEntries(); i++) {
+            nentries = TMath::Min(nentries, ((TTree*)(treeArr->At(i)))->GetEntries());
         }
         return nentries;
     }
     
     if (chainArr) {
         nentries = ((TChain*)chainArr->At(0))->GetEntries();
-        for (Int_t i = 1; i < chainArr->GetEntries(); i++) {
-            nentries = TMath::Min(nentries, (UInt_t)((TChain*)chainArr->At(i))->GetEntries());
+        for (Long64_t i = 1; i < chainArr->GetEntries(); i++) {
+            nentries = TMath::Min(nentries, ((TChain*)(chainArr->At(i)))->GetEntries());
         }
         return nentries;
     }

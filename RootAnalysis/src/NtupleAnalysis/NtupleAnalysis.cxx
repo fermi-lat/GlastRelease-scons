@@ -119,7 +119,7 @@ Bool_t NtupleAnalysis::drawAllPlots(const char *szPsFileName, const TCut cut) {
     beginDraw(szPsFileName);
     
     TObjArray *pArr = m_pRootTree->GetListOfBranches();
-    for (int i = 0; i < pArr->GetEntries(); i++) {
+    for (Long64_t i = 0; i < pArr->GetEntries(); i++) {
         drawHist(((TNamed*)pArr->At(i))->GetName(), cut);
     }
 
@@ -227,7 +227,7 @@ Bool_t NtupleAnalysis::makePlotFile(const char *szPlotFileName) {
 
     TObjArray *pArr = m_pRootTree->GetListOfBranches();
     
-    for (int i = 0; i < pArr->GetEntries(); i++)
+    for (Long64_t i = 0; i < pArr->GetEntries(); i++)
         fprintf(pFile, "#PLOT %s\n", ((TNamed*)pArr->At(i))->GetName());
     
     fclose(pFile);
