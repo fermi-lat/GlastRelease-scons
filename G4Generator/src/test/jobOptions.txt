@@ -41,7 +41,8 @@ G4Generator.source_name="muon_pencil";
 // commands to run before each event. (doesn't work?)
 //G4Generator.UIcommands+={"/run/verbose 3"};
 //G4Generator.UIcommands+={"/event/verbose 3"};
-//G4Generator.UIcommands+={"/tracking/verbose 3"};
+G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
+G4Generator.UIcommands+={"/tracking/verbose 0"};
 
 ApplicationMgr.EvtMax = 1;
 

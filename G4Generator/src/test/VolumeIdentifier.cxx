@@ -2,14 +2,14 @@
 
 #include "VolumeIdentifier.h"
 
-#include <sstream>
+#include <strstream>
 #include <cassert>
 
 VolumeIdentifier::VolumeIdentifier():  m_value(0){}
 
 std::string VolumeIdentifier::name(const char* delimiter) const
 {
-    std::stringstream s;
+    std::strstream s;
     s << delimiter;
     std::copy(begin(),end(), std::ostream_iterator<unsigned int>(s,delimiter));
     std::string tmp=s.str();

@@ -128,12 +128,18 @@ void RunManager::BeamOn()
     currentEvent = GenerateEvent(0);
 
     eventManager->ProcessOneEvent(currentEvent);
-
+    
     stateManager->SetNewState(GeomClosed);
-    currentEvent = NULL;
+    
+    /// currentEvent = NULL;
 
     RunTermination();
   }
+}
+
+G4Event* RunManager::getCurrentEvent()const
+{
+  return currentEvent;
 }
 
 G4bool RunManager::ConfirmBeamOnCondition()

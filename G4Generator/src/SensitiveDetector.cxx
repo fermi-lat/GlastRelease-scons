@@ -25,6 +25,11 @@
 #include "G4SDManager.hh"
 #include "G4ios.hh"
 
+#include "G4Event.hh"
+#include "G4EventManager.hh"
+#include "G4TrajectoryContainer.hh"
+#include "G4Trajectory.hh"
+
 /**
     This class is used by G4 to retrive hits information during the simulation.
     When a hit occurs in a sensitive detector, the method ProcessHits is called.
@@ -239,7 +244,6 @@ void SensitiveDetector::EndOfEvent(G4HCofThisEvent* HCE)
 	vertex = rot*G4ThreeVector(-x,y,z) + trans;
 	m_hepRepXMLWriter->addPoint(vertex.x(),vertex.y(),vertex.z());
       }
-
 
 
 }

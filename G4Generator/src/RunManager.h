@@ -60,6 +60,8 @@ class RunManager
 
   /// Not used
   virtual void AbortRun();
+
+  G4Event* getCurrentEvent() const;
   
  protected: 
 
