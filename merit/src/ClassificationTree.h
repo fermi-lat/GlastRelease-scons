@@ -34,10 +34,13 @@ private:
 
     classification::Tree * m_classifier;
     const TupleItem*  m_firstLayer; /// access to the first layer in the tuple
+    const TupleItem*  m_calTotRLn; 
+    const TupleItem*  m_calEnergySum;
     double m_goodCalProb;
     double m_coreProb; 
     double m_vtxProb ;
     double m_psfErrPred; 
+    
 
     std::ostream& m_log;
 };
