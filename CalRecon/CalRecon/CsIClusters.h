@@ -77,6 +77,8 @@ public:
 	void setCsiLambda(double l) { m_CsiLambda = l;}
 	//! Set the fitted starting point
 	void setCsiStart(double s) { m_start = s;}
+    //! Set the transverse offset of calorimeter position measurement
+    void setTransvOffset (double offset) {m_transvOffset = offset;}
 
 	// access
 	double energySum()        const {return m_energySum;}
@@ -89,6 +91,7 @@ public:
 	const std::vector<Vector>& getRmsLayer() const {return m_rmsLayer;}
 	double getRmsLong()		  const {return m_rmslong;}
 	double getRmsTrans()	  const {return m_rmstrans;}
+    double getTransvOffset()  const {return m_transvOffset;}
 
 	Point position()          const {return m_position;}
 	Vector direction()        const {return m_direction;}
@@ -122,6 +125,8 @@ private:
 	double m_rmslong;
 	//! RMS of transverse position measurement
 	double m_rmstrans;
+    //! Transvers offset of calorimeter position measurement
+    double m_transvOffset;
 	
 	//! fitted energy ( for E>10 GeV)
 	double m_fitEnergy;
