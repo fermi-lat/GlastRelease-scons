@@ -195,7 +195,7 @@ public:
     double   getSigma(KalHit::TYPE type) const;
     KalMatrix getQmaterial() const {return m_Qmaterial;} 
 
-    void writeOut(std::ostream& out = std::cout) const;
+//    void writeOut(std::ostream& out = std::cout) const;
 
 public:
 

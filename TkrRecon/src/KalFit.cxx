@@ -550,7 +550,7 @@ double KalTrack::kinkNorma(int iplane) const
 //-------------------------------------
 //   Kalman Plane
 //-------------------------------------
-
+/*
 //#####################################
 void KalPlane::writeOut(std::ostream& out) const
 //#####################################
@@ -573,6 +573,7 @@ void KalPlane::writeOut(std::ostream& out) const
 	out << " chiSqEne " << getDeltaChiEne(KalHit::PRED)<< "\n";
 
 }
+*/
 //#####################################
 void KalPlane::removeHit()
 //#####################################
