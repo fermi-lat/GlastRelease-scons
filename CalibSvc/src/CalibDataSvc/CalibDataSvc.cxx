@@ -289,7 +289,7 @@ StatusCode CalibDataSvc::queryInterface(const IID& riid, void** ppvInterface)
 
 /// Remove all data objects in the data store.
 StatusCode CalibDataSvc::clearStore()   {
-  MsgStream log(msgSvc(), name());
+  //  MsgStream log(msgSvc(), name());
 
   DataSvc::clearStore();
   return StatusCode::SUCCESS;
@@ -302,11 +302,14 @@ void CalibDataSvc::setEventTime(const ITime& time) {
   if (0 != m_eventTime ) delete m_eventTime; 
   CalibData::CalibTime *pTime = new CalibData::CalibTime(time);   
   m_eventTime = pTime;
-  MsgStream log(msgSvc(), name() );
-  log << MSG::DEBUG 
-      << "Event Time set to " 
-      << pTime->getString() << endreq;
-  //      << "Event Time set to " << eventTime().hours() << endreq;
+
+  if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) ) ) {
+    MsgStream log(msgSvc(), name() );
+    log << MSG::DEBUG 
+        << "Event Time set to " 
+        << pTime->getString() << endreq;
+  }
+
 }
 
 /// Check if the event time has been set
@@ -327,17 +330,18 @@ const ITime& CalibDataSvc::eventTime ( )  const {
 
 /// Inform that a new incident has occured
 void CalibDataSvc::handle ( const Incident& inc ) { 
-  MsgStream log( msgSvc(), name() );
 
   if ((inc.type() == "BeginEvent") && 
       ((m_timeSourceEnum == TIMESOURCEdata) ||
        (m_timeSourceEnum == TIMESOURCEmc) ||
        (m_timeSourceEnum == TIMESOURCEdigi) ||
        (m_timeSourceEnum == TIMESOURCEclock) ) ) {
-    log << MSG::DEBUG << "New incident received" << endreq;
-    log << MSG::DEBUG << "Incident source: " << inc.source() << endreq;
-    log << MSG::DEBUG << "Incident type: " << inc.type() << endreq;
-
+    if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) ) ) {
+      MsgStream log( msgSvc(), name() );
+      log << MSG::DEBUG << "New incident received" << endreq;
+      log << MSG::DEBUG << "Incident source: " << inc.source() << endreq;
+      log << MSG::DEBUG << "Incident type: " << inc.type() << endreq;
+    }
     
     m_nEvent++;
     m_newEvent = true;
@@ -392,8 +396,10 @@ StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
 
     // No need to update if condition is valid
     if ( condition->isValid( eventTime() ) ) {
-      log << MSG::DEBUG 
-          << "DataObject is valid: no need to update" << endreq;
+      if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) ) ) {
+        log << MSG::DEBUG 
+            << "DataObject is valid: no need to update" << endreq;
+      }
       return StatusCode::SUCCESS;
     } else {
       log << MSG::DEBUG 
@@ -449,7 +455,7 @@ StatusCode CalibDataSvc::loadObject(IConversionSvc* pLoader,
 StatusCode  CalibDataSvc::updateTime() {
   using CalibData::CalibTime;
 
-  MsgStream log( msgSvc(), name() );
+  //  MsgStream log( msgSvc(), name() );
 
 
   if (!m_useEventTime) return StatusCode::SUCCESS;
@@ -504,8 +510,10 @@ StatusCode CalibDataSvc::fetchDataTime() {
   
   m_time = CalibData::CalibTime(facilities::Timestamp(secs,nano));
   
-  log << MSG::DEBUG << "Processing event " << m_nEvent 
-      << " found time " << m_time.getString() << endreq;
+  if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) )) {
+    log << MSG::DEBUG << "Processing event " << m_nEvent 
+        << " found time " << m_time.getString() << endreq;
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -530,8 +538,12 @@ StatusCode CalibDataSvc::fetchMcTime() {
   double fromMissionStart = (mcHeader->time()).time();
   unsigned fromSec = (unsigned) fromMissionStart;
   unsigned fromNano = (unsigned) ((fromMissionStart - fromSec) * 1000000000);
-  log << MSG::DEBUG << "(mc) seconds/nano from mission start: " << fromSec 
-      << "/" << fromNano << endreq;
+
+  if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) ) ) {
+    log << MSG::DEBUG << "(mc) seconds/nano from mission start: " << fromSec 
+        << "/" << fromNano << endreq;
+  }
+
   facilities::Timestamp absTime(missionSec + fromSec, missionNano + fromNano);
   m_time = CalibData::CalibTime(absTime);
 
@@ -556,8 +568,12 @@ StatusCode CalibDataSvc::fetchDigiTime() {
   double fromMissionStart = (eventHeader->time()).time();
   unsigned fromSec = (unsigned) fromMissionStart;
   unsigned fromNano = (unsigned) ((fromMissionStart - fromSec) * 1000000000);
-  log << MSG::DEBUG << "(digi) seconds/nano from mission start: " << fromSec 
-      << "/" << fromNano << endreq;
+
+  if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) ) ) {
+
+    log << MSG::DEBUG << "(digi) seconds/nano from mission start: " << fromSec 
+        << "/" << fromNano << endreq;
+  }
   facilities::Timestamp absTime(missionSec + fromSec, missionNano + fromNano);
   m_time = CalibData::CalibTime(absTime);
 
@@ -565,31 +581,26 @@ StatusCode CalibDataSvc::fetchDigiTime() {
 }
 
 StatusCode CalibDataSvc::fetchFakeClockTime() {
-  MsgStream log(msgSvc(), name());
 
   static unsigned int eventNumber = 0;
-
-  log << MSG::INFO << "Fake Clock Event number: " 
-      << eventNumber << endreq;
-
 
   // Set the event time.  m_delay has been specified in milliseconds
   double incr = eventNumber*m_delayTime;
   long   seconds_incr = (long) (incr / 1000);
   long   nano_incr = (long) ((incr - (1000*seconds_incr)) * 1000000);
-  //  facilities::Timestamp time(m_startTime + (eventNumber)*m_delayTime, 0);
+
   facilities::Timestamp time(m_startTime + seconds_incr, nano_incr);
-  //  facilities::Timestamp time = 
-  //    facilities::Timestamp(m_startTime + (eventNumber)*m_delayTime);
-  log << MSG::INFO << "Event time: "
-      << time.getString()
-      << endreq; 
-    //      << " Julian day number "
-    //      << time.getJulian()
   m_time = CalibData::CalibTime(time);
 
-  log << MSG::DEBUG << "Event time (hours) " << m_time.hours() << endreq;
-
+  if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) ) ) {
+    MsgStream log(msgSvc(), name());
+    log << MSG::DEBUG << "Fake Clock Event number: " 
+        << eventNumber << endreq;
+    log << MSG::DEBUG << "Event time: "
+        << time.getString()
+        << endreq; 
+    log << MSG::DEBUG << "Event time (hours) " << m_time.hours() << endreq;
+  }
   eventNumber++;
 
   return StatusCode::SUCCESS; 
