@@ -15,7 +15,7 @@
 #include "geometry/Ray.h"
 #include "TkrRecon/Track/GFcontrol.h"
 #include "TkrRecon/GaudiAlg/TkrReconAlg.h"
-#include "GismoGenerator/IKalmanParticle.h"
+#include "GlastSvc/Reco/IKalmanParticle.h"
 #include <cmath>
 
 bool CONTROL_setDeltaEne = false;

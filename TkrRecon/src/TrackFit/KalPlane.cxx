@@ -13,7 +13,7 @@
 
 #include "TkrRecon/TrackFit/KalPlane.h"
 #include "TkrRecon/GaudiAlg/TkrReconAlg.h"
-#include "GismoGenerator/IKalmanParticle.h"
+#include "GlastSvc/Reco/IKalmanParticle.h"
 
 void KalPlane::removeHit()
 {
