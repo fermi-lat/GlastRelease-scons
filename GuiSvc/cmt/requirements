@@ -32,8 +32,9 @@ private
 # and to force inclusion of the loadRef
 
 
-macro use_linkopts " $(Gaudi_linkopts) $(GuiSvc_lib) $(gui_linkopts) -u GuiSvc_loadRef"\
-                   VisualC " $(Gaudi_linkopts) $(GuiSvc_lib) $(gui_linkopts) /include:_GuiSvc_loadRef "
+macro use_linkopts " $(Gaudi_linkopts) $(GuiSvc_lib) $(gui_linkopts) -u GuiSvc_loadRef "\
+      SunOS        " $(Gaudi_linkopts) $(GuiSvc_lib) $(gui_linkopts) -u GuiSvc_loadRef -ldl "\
+                   VisualC "  $(Gaudi_linkopts) $(GuiSvc_lib) $(gui_linkopts) /include:_GuiSvc_loadRef "
 
 macro WinJobOptions ""  VisualC  test/jobOptions.txt
 
