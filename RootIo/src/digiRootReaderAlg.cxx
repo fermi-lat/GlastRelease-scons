@@ -216,7 +216,7 @@ StatusCode digiRootReaderAlg::execute()
 	} else if ((m_rootIoSvc) && (runEventPair.first != -1) && (runEventPair.second != -1)) {
 		int run = runEventPair.first;
 		int evt = runEventPair.second;
-		readInd = m_digiTree->GetEntryWithIndex(run, evt);
+		readInd = m_digiTree->GetEntryNumberWithIndex(run, evt);
 	} else {
 		readInd = evtId;
 	}
