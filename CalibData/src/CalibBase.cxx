@@ -79,7 +79,7 @@ namespace CalibData {
   }
 
   void CalibBase::setValidityTill(const ITime& till) {
-    delete m_validSince;
+    delete m_validTill;
     m_validTill = new CalibTime(till);
   }
 
