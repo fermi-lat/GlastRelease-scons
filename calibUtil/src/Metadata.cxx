@@ -96,8 +96,8 @@ namespace calibUtil {
 
     if (rowStatus & eValid) return RETWrongState;
     
-    row += ", validity_start_time='"; row += startTime.timeString();
-    row += "', validity_end_time='"; row += endTime.timeString();
+    row += ", vstart='"; row += startTime.timeString();
+    row += "', vend='"; row += endTime.timeString();
     row += "'";
     rowStatus |=  eValid;
     return RETOk;   // or something else
@@ -149,7 +149,7 @@ namespace calibUtil {
     if (writeCxt == 0) {
       writeCxt = new MYSQL;
       return connect(writeCxt, std::string("calibrator"), 
-                      std::string("calibr8or"), err);
+                      std::string("calibr8tor"), err);
     }
     else return true;
   }
@@ -389,9 +389,10 @@ namespace calibUtil {
 +-------------+--------------------+------+-----+---------+------------------+
 
   */
-  Metadata::eRet Metadata::insertRecord() {
+  Metadata::eRet Metadata::insertRecord(unsigned int* serialNo) {
     // Send it off (To be written)
 
+    if (serialNo) *serialNo = 0;
     if ((!(rowStatus & rowReady)) == rowReady) return RETWrongState;
 
     if (!(rowStatus & eCreator)) {
@@ -405,6 +406,9 @@ namespace calibUtil {
     if (ret) {
       std::cerr << "MySQL error during INSERT, code " << ret << std::endl;
       return RETMySQLError;
+    }
+    if (serialNo) {
+      *serialNo = mysql_insert_id(writeCxt);
     }
     return RETOk;   // or something else if we failed 
   }
@@ -431,7 +435,7 @@ namespace calibUtil {
     const std::string* const  levelString = getProcLevelStr(procLevel);
 
     if (!fmtString || !instString || !calibTypeStr ||
-        !completion || !procLevel) return RETBadValue;
+        !cmpString || !levelString) return RETBadValue;
 
     return openRecord(*instString, *calibTypeStr, *fmtString, fmtVersion,
                       dataIdent, *cmpString, *levelString);
