@@ -223,7 +223,8 @@ double TkrTrackEnergyTool::getTotalEnergy(Event::TkrPatCand* track, double CalEn
 
         // Assume location of shower center in given by 1st track
         Point x_hit = getPosAtZ(track, arc_len);
-        int numHits = m_clusTool->numberOfHitsNear(iplane, xSprd, ySprd, x_hit);
+        int numHits = m_clusTool->numberOfHitsNear(m_tkrGeo->reverseLayerNumber(iplane), 
+            xSprd, ySprd, x_hit);
          
         convType type = m_tkrGeo->getReconLayerType(iplane);
         switch(type) {
