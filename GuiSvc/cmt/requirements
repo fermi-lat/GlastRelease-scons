@@ -20,7 +20,7 @@ macro GuiSvc_lib " -L ${GUISVCROOT}/${CMTCONFIG} -lGuiSvc "\
 # *No* linkopts.
 
 # make this available to build (identical) GUi client applications
-macro GuiMain ${GUISVCROOT}/src/GuiMain.cxx
+macro GuiMain "${GUISVCROOT}/src/GuiMain.cxx ${GUISVCROOT}/src/setPriority.cxx"
 
 
 private
