@@ -1,6 +1,6 @@
 package AcdDigi
-version v1r3
-
+version v1r3p1
+# $Id$
 
 use GaudiSvc v7r*
 
@@ -25,17 +25,11 @@ library AcdDigi *.cxx \
 
 apply_pattern package_Cshlibflags
 
-macro AcdDigi_lib " -L ${ACDDIGIROOT}/${CMTCONFIG} -lAcdDigi " \
-                   WIN32 " ${ACDDIGIROOT}/${BINDIR}/AcdDigi.lib "
-
-macro_append test_AcdDigilinkopts " ${AcdDigi_lib} " \
-                   WIN32 " ${AcdDigi_lib} "
 
 application test_AcdUtil AcdDigiUtil.cxx test/util/*.cxx \
                          ${GLASTPOLICYROOT}/src/GlastMain.cxx ${GLASTPOLICYROOT}/src/setPriority.cxx \
                          ${AcdDigi_headers}
 
 public
-set JOBOPTIONS ${ACDDIGIROOT}/src/test/jobOptions.txt
 
 apply_pattern package_test
