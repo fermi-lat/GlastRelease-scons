@@ -223,6 +223,8 @@ private:
     ITkrBadStripsSvc*   m_badStrips;
     /// pointer to splits service
     ITkrSplitsSvc*      m_tkrSplits;
+    /// number of the test tower (used to find zLayer, etc.)
+    int m_testTower;
 
 };
 

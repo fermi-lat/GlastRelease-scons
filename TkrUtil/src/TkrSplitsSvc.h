@@ -8,10 +8,11 @@ $Header$
 
 */
 #ifndef TkrSplitsSvc_H
-#define TkrSplitsSvc_H 1
+//#define TkrSplitsSvc_H 1
 
 // Include files
 #include "TkrUtil/ITkrSplitsSvc.h"
+#include "TkrUtil/ITkrGeometrySvc.h"
 #include "GaudiKernel/Service.h"
 
 /** @class TkrSplitsSvc
@@ -64,6 +65,8 @@ private:
     std::string m_splitsFile;
     /// array of splits
     int m_splits[NTOWERS][NLAYERS][NVIEWS];
+    /// pointer to the geometry
+    ITkrGeometrySvc* m_geoSvc;
 
 };
 
