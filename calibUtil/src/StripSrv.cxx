@@ -260,7 +260,7 @@ namespace calibUtil {
     std::vector<Tower>::iterator it = m_towers.begin();
     while(it != m_towers.end() ) {
       if ((it->m_row == towerId.row) && (it->m_col == towerId.col)) {
-        return (it);
+        return (&(*it));
       }
       ++it;
     }
@@ -271,7 +271,7 @@ namespace calibUtil {
     std::vector<Tower>::const_iterator it = m_towers.begin();
     while(it != m_towers.end() ) {
       if ((it->m_row == towerId.row) && (it->m_col == towerId.col)) {
-        return (it);
+        return (&(*it));
       }
       ++it;
     }
