@@ -45,6 +45,7 @@ class TableColumnList: public FXVerticalFrame, public rdbModel::Visitor
   FXList *m_tblList;                                // List of database tables
   FXCheckList *m_colList;                           // List of comlumns for the selected table
   FXMenuPane *m_colListPop;                         // Pop-up menù to select or deselect multiple columns
+  FXGIFIcon *m_primKeyIcon;                         // Icon for the primary key
   bool m_tableSelected;                             // True if a table has been selected 
   
   

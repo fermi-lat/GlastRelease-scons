@@ -52,6 +52,9 @@ TableColumnList::TableColumnList(FXComposite *owner, FXObject *target, FXSelecto
       
   m_tableSelected = false;
   
+  m_primKeyIcon = new FXGIFIcon(getApp(),primkey);
+  m_primKeyIcon->create();
+  
 //   m_checkIcon = new FXICOIcon(getApp(),checkedImg);
 //   m_checkIcon->create();
 //   m_uncheckIcon = new FXICOIcon(getApp(),uncheckedImg);
@@ -116,6 +119,8 @@ rdbModel::Visitor::VisitorState TableColumnList::visitTable(rdbModel::Table *tab
 rdbModel::Visitor::VisitorState TableColumnList::visitColumn(rdbModel::Column *column)
 {
   FXCheckListItem *item = new FXCheckListItem(column->getName().c_str(), NULL, column);
+  if (column->isPrimaryKey())
+    item->setIcon(m_primKeyIcon);    
   item->setChecked(true);
   item->setTipText(column->getComment().c_str());
   m_colList->appendItem(item);

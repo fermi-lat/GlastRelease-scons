@@ -105,11 +105,10 @@ void FXCheckListItem::draw(const FXCheckList* list,FXDC& dc,FXint x,FXint y,FXin
     drawFocus(list,dc,x,y,w,h);
     }
   x+=SIDE_SPACING/2;
-  if(icon){
-    dc.drawIcon(icon,x,y+(h-ih)/2);
-    x+=ICON_SPACING+icon->getWidth();
-    }
-
+//   if(icon){
+//     dc.drawIcon(icon,x,y+(h-ih)/2);
+//     x+=ICON_SPACING+icon->getWidth();
+//     }
   ////////////////////////////
   FXint ix,iy;
   FXbool check=(state&CHECKED)!=0;
@@ -168,6 +167,10 @@ void FXCheckListItem::draw(const FXCheckList* list,FXDC& dc,FXint x,FXint y,FXin
 
   x+=13+SIDE_SPACING/2;
   ///////////////////////
+  if(icon){
+    dc.drawIcon(icon,x,y+(h-ih)/2);
+    x+=ICON_SPACING+icon->getWidth();
+    }
 
   if(!label.empty()){
     dc.setFont(list->getFont());
@@ -196,8 +199,40 @@ void FXCheckListItem::drawFocus(const FXCheckList* list,FXDC& dc,FXint x,FXint y
 
 // See if item got hit, and where: 0 is outside, 1 is icon, 2 is text
 // 3 is check
+// FXint FXCheckListItem::hitItem(const FXCheckList* list,FXint x,FXint y) const {
+//   register FXint iw=0,ih=0,tw=0,th=0,ix,iy,tx,ty,h;
+//   register FXFont *font=list->getFont();
+//   if(icon){
+//     iw=icon->getWidth();
+//     ih=icon->getHeight();
+//     }
+//   if(!label.empty()){
+//     tw=4+font->getTextWidth(label.text(),label.length());
+//     th=4+font->getFontHeight();
+//     }
+//   h=LINE_SPACING+FXMAX(th,ih);
+//   ix=SIDE_SPACING/2;
+//   tx=SIDE_SPACING/2;
+//   if(iw) tx+=iw+ICON_SPACING;
+//   iy=(h-ih)/2;
+//   ty=(h-th)/2;
+// 
+//   // In icon?
+//   if(ix<=x && iy<=y && x<ix+iw && y<iy+ih) return 1;
+// 
+//   // In check?
+//   if(tx<=x && ty<=y && x<tx+13 && y<ty+th) return 3;
+// 
+//   // In text?
+//   if(tx<=x && ty<=y && x<tx+tw && y<ty+th) return 2;
+// 
+//   // Outside
+//   return 0;
+//   }
+
+
 FXint FXCheckListItem::hitItem(const FXCheckList* list,FXint x,FXint y) const {
-  register FXint iw=0,ih=0,tw=0,th=0,ix,iy,tx,ty,h;
+  register FXint iw=0,ih=0,tw=0,th=0,ix,iy,cx,tx,ty,h;
   register FXFont *font=list->getFont();
   if(icon){
     iw=icon->getWidth();
@@ -209,25 +244,25 @@ FXint FXCheckListItem::hitItem(const FXCheckList* list,FXint x,FXint y) const {
     }
   h=LINE_SPACING+FXMAX(th,ih);
   ix=SIDE_SPACING/2;
-  tx=SIDE_SPACING/2;
+  cx=2*ix+13;
+  tx=0;
   if(iw) tx+=iw+ICON_SPACING;
   iy=(h-ih)/2;
   ty=(h-th)/2;
 
-  // In icon?
-  if(ix<=x && iy<=y && x<ix+iw && y<iy+ih) return 1;
-
   // In check?
-  if(tx<=x && ty<=y && x<tx+13 && y<ty+th) return 3;
+  if(ix<=x && ty<=y && x<cx && y<ty+th) return 3;  
+  
+  // In icon?
+  if(cx<=x && iy<=y && x<cx+tx && y<iy+ih) return 1;
 
   // In text?
-  if(tx<=x && ty<=y && x<tx+tw && y<ty+th) return 2;
+  if(cx<=x && ty<=y && x<cx+tx+tw && y<ty+th) return 2;
 
   // Outside
   return 0;
-  }
-
-
+  }  
+  
 // Set or kill focus
 void FXCheckListItem::setFocus(FXbool focus){
   if(focus) state|=FOCUS; else state&=~FOCUS;

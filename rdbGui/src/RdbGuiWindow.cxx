@@ -378,13 +378,16 @@ long RdbGUIWindow::onSendQuery(FXObject*,FXSelector, void*)
 
   int i,j;
   for (j = 0; j < uiTable->getNumColumns(); j++)
-    uiTable->setColumnText(j, columns->getItemText(j));
+    {
+      uiTable->setColumnText(j, columns->getItemText(j));
+      uiTable->getColumnHeader()->getItem(j)->setIcon(columns->getItemIcon(j));
+    }
     
   for (i = 0; i < uiTable->getNumRows(); i++)
     uiTable->setRowText(i, FXStringVal(i+1));
 
 
-	std::vector<std::string> rowValues;
+  std::vector<std::string> rowValues;
   for (i=0; i < uiTable->getNumRows(); i++)
     {
       queryResult->getRow(rowValues, i, 1);

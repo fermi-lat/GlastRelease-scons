@@ -4,6 +4,8 @@
 
    Coordinators: M. Frailis and R. Giannitrapani
  
+   v1r2    29-Jul-2004  frailis  Added update on single row and primary key
+                                 icon
    v1r1p0   9-Jul-2004  frailis  Loosen dependency on GlastPolicy to just v*
    v1r1     1-Jul-2004  frailis  First release version  
 
