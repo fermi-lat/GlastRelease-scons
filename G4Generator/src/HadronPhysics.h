@@ -8,7 +8,7 @@
 #include "g4std/vector"
 
 #include "G4VPhysicsConstructor.hh"
-#include "Geant4/MultipleScatteringFactory.h"
+#include "GlastMS/MultipleScatteringFactory.h"
 
 /** 
  * @class HadronPhysics 
@@ -34,7 +34,7 @@ class HadronPhysics : public G4VPhysicsConstructor
   //  HadronPhysics(const G4String& name ="hadron");
   
       HadronPhysics(const G4String& name, std::string& physicsChoice, 
-          Geant4::MultipleScatteringFactory& msFactory);
+          GlastMS::MultipleScatteringFactory& msFactory);
   virtual ~HadronPhysics();
   
  public: 
@@ -53,7 +53,7 @@ class HadronPhysics : public G4VPhysicsConstructor
   
   std::string m_physicsChoice;
  
-  Geant4::MultipleScatteringFactory& m_msFactory;
+  GlastMS::MultipleScatteringFactory& m_msFactory;
  
 };
 

@@ -13,7 +13,7 @@
 #include "g4std/iomanip"   
 
 IonPhysics::IonPhysics(const G4String& name, std::string& physicsChoice
-                       , Geant4::MultipleScatteringFactory& msfactory)
+                       , GlastMS::MultipleScatteringFactory& msfactory)
   :  G4VPhysicsConstructor(name), m_physicsChoice(physicsChoice), m_msFactory(msfactory)
 {
 }

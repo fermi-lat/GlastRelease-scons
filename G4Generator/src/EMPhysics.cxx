@@ -14,7 +14,7 @@
 #include "g4std/iomanip"   
 
 
-EMPhysics::EMPhysics(const G4String& name, Geant4::MultipleScatteringFactory& msFactory)
+EMPhysics::EMPhysics(const G4String& name, GlastMS::MultipleScatteringFactory& msFactory)
                :  G4VPhysicsConstructor(name), m_msFactory(msFactory)
 {
 }

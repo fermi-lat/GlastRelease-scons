@@ -5,7 +5,7 @@
 #include "G4ios.hh"
 
 #include "G4VPhysicsConstructor.hh"
-#include "Geant4/MultipleScatteringFactory.h"
+#include "GlastMS/MultipleScatteringFactory.h"
 
 
 /** 
@@ -27,7 +27,7 @@
 class EMPhysics : public G4VPhysicsConstructor
 {
   public: 
-      EMPhysics(const G4String& name , Geant4::MultipleScatteringFactory& msfactory);
+      EMPhysics(const G4String& name , GlastMS::MultipleScatteringFactory& msfactory);
     virtual ~EMPhysics();
 
   public: 
@@ -41,7 +41,7 @@ class EMPhysics : public G4VPhysicsConstructor
     virtual void ConstructProcess();
 
 private:
-    Geant4::MultipleScatteringFactory& m_msFactory;
+    GlastMS::MultipleScatteringFactory& m_msFactory;
 };
 
 

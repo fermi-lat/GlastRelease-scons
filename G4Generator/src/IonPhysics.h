@@ -7,7 +7,7 @@
 #include "G4ios.hh"
 
 #include "G4VPhysicsConstructor.hh"
-#include "Geant4/MultipleScatteringFactory.h"
+#include "GlastMS/MultipleScatteringFactory.h"
 
 /** 
  * @class IonPhysics 
@@ -30,7 +30,7 @@ class IonPhysics : public G4VPhysicsConstructor
  public: 
   
   IonPhysics(const G4String& name, std::string& physicsChoice, 
-      Geant4::MultipleScatteringFactory& msfactory);
+      GlastMS::MultipleScatteringFactory& msfactory);
   virtual ~IonPhysics();
   
  public: 
@@ -48,7 +48,7 @@ class IonPhysics : public G4VPhysicsConstructor
   // Allow to select full hadronic physics
   
   std::string m_physicsChoice;
-    Geant4::MultipleScatteringFactory& m_msFactory;
+    GlastMS::MultipleScatteringFactory& m_msFactory;
 
 };
 

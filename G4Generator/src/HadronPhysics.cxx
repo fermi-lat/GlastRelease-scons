@@ -16,7 +16,7 @@
 #include "g4std/iomanip"   
 
 HadronPhysics::HadronPhysics(const G4String& name, std::string& physicsChoice,
-                             Geant4::MultipleScatteringFactory& msFactory)
+                             GlastMS::MultipleScatteringFactory& msFactory)
   :  G4VPhysicsConstructor(name),  m_physicsChoice(physicsChoice), m_msFactory(msFactory)
 {
 }

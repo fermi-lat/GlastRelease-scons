@@ -13,7 +13,7 @@
 #include "g4std/iomanip"   
 
 MuonPhysics::MuonPhysics(const G4String& name, 
-                         Geant4::MultipleScatteringFactory& msfactory)
+                         GlastMS::MultipleScatteringFactory& msfactory)
                    :  G4VPhysicsConstructor(name), m_msFactory(msfactory)
 {
 }
