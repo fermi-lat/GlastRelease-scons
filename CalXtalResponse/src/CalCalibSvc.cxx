@@ -28,7 +28,7 @@ CalCalibSvc::CalCalibSvc(const string& name, ISvcLocator* Svc)
 
   // declare the properties
   declareProperty("CalibDataSvc",    m_calibDataSvcName = "CalibDataSvc");
-  declareProperty("DefaultFlavor",   m_defaultFlavor    = "vanilla");
+  declareProperty("DefaultFlavor",   m_defaultFlavor    = "ideal");
   declareProperty("FlavorIntNonlin", m_flavorIntNonlin  = "");
   declareProperty("FlavorAsym",      m_flavorAsym       = "");
   declareProperty("FlavorPed",       m_flavorPed        = "");

@@ -42,7 +42,8 @@ class IXtalEneTool : virtual public IAlgTool {
                                int adcP, 
                                int adcN,
                                float &energy,    //output
-                               bool &belowThresh //output
+                               bool &rngBelowThresh,
+                               bool &xtalBelowThresh //output
                                ) = 0;
 
   /// estimate total deposited energy given the digital response for one face and a centroid-position 
@@ -55,7 +56,8 @@ class IXtalEneTool : virtual public IAlgTool {
                                int adc, 
                                float position,
                                float &energy,    // output
-                               bool &belowThresh // output
+                               bool &rngBelowThresh,
+                               bool &xtalBelowThresh // output
                                ) = 0;
 
 };

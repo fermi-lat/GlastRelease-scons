@@ -116,37 +116,11 @@ StatusCode XtalPosTool::calculate(const CalXtalId &xtalId,
   if (sc.isFailure()) return sc;
   float adcPedP = adcP - pedP;   // ped subtracted ADC
   
-  //-- THROW OUT LOW ADC VALS (POS_FACE) --/
-  CalibData::ValSig fle,fhe,lacP, lacN;
-  CalXtalId tmpIdP(xtalId.getTower(),
-                   xtalId.getLayer(),
-                   xtalId.getColumn(),
-                   POS_FACE);
-  sc = m_calCalibSvc->getTholdCI(tmpIdP,fle,fhe,lacP);
-  if (adcPedP < lacP.getVal()*0.5) {
-    msglog << MSG::WARNING << "DAC value <= 0, can't calculate position" << endl;
-    // this case should have been weeded out in CalXtalRecAlg after the energy calculation
-    // so I will throw a failure here as opposed to XtalEneTool where
-    // I set belowThresh to true & return SUCCESS
-    return StatusCode::FAILURE;
-  }
-
   //-- RETRIEVE PEDESTAL (NEG_FACE) --//
   RngIdx rngIdxN(xtalIdx, NEG_FACE, rngN);
   sc = m_calCalibSvc->getPed(rngIdxN.getCalXtalId(), pedN, sig, cos);
   if (sc.isFailure()) return sc;
   float adcPedN = adcN - pedN;
-
-  //-- THROW OUT LOW ADC VALS (NEG_FACE) --/
-  CalXtalId tmpIdN(xtalId.getTower(),
-                   xtalId.getLayer(),
-                   xtalId.getColumn(),
-                   NEG_FACE);
-  sc = m_calCalibSvc->getTholdCI(tmpIdN,fle,fhe,lacN);
-  if (adcPedN < lacN.getVal()*0.5) {
-    msglog << MSG::WARNING << "DAC value <= 0, can't calculate position" << endl;
-    return StatusCode::FAILURE;
-  }
     
   // convert adc->dac units
   double dacP, dacN;
@@ -157,7 +131,7 @@ StatusCode XtalPosTool::calculate(const CalXtalId &xtalId,
 
   // check for invalid dac values (i need to take the logarithm)
   if (dacP <= 0 || dacN <=0) {
-    msglog << MSG::WARNING << "DAC value <= 0, can't calculate position" << endl;
+    msglog << MSG::WARNING << "DAC value <= 0, can't calculate position.  This shouldn't happen." << endl;
     return StatusCode::FAILURE;
   }
   double asym = log(dacP/dacN);
@@ -183,8 +157,8 @@ StatusCode XtalPosTool::calculate(const CalXtalId &xtalId,
   // as on the edge of the xtal
   
   double halfXtalLen = m_CsILength/2;
-  pos = min(halfXtalLen,pos);
-  pos = max(-1*halfXtalLen,pos);
+  pos = min(halfXtalLen, pos);
+  pos = max(-1*halfXtalLen, pos);
 
   position = pos;
 

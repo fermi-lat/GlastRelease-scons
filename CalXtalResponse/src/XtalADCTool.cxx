@@ -95,15 +95,15 @@ StatusCode XtalADCTool::initialize() {
 
   //-- Retrieve GlastDetSvc constants --//
   PARAMAP param;
-  param[&m_nCsISeg]     = string("nCsISeg");
-  param[&m_eXtal]       = string("eXtal");
-  param[&m_eDiodeMSm]= string("eDiodeMSmall");
-  param[&m_eDiodePSm]= string("eDiodePSmall");
-  param[&m_eDiodeMLarge]= string("eDiodeMLarge");
-  param[&m_eDiodePLarge]= string("eDiodePLarge");
-  param[m_ePerMeV+1]    = string("cal.ePerMeVSmall");
-  param[m_ePerMeV]      = string("cal.ePerMevLarge");
-  param[&m_maxAdc]      = string("cal.maxAdcValue");
+  param[&m_nCsISeg]      = string("nCsISeg");
+  param[&m_eXtal]        = string("eXtal");
+  param[&m_eDiodeMSm]    = string("eDiodeMSmall");
+  param[&m_eDiodePSm]    = string("eDiodePSmall");
+  param[&m_eDiodeMLarge] = string("eDiodeMLarge");
+  param[&m_eDiodePLarge] = string("eDiodePLarge");
+  param[m_ePerMeV+1]     = string("cal.ePerMeVSmall");
+  param[m_ePerMeV]       = string("cal.ePerMevLarge");
+  param[&m_maxAdc]       = string("cal.maxAdcValue");
 
   for(PARAMAP::iterator it=param.begin(); it!=param.end();it++)
     if(!detSvc->getNumericConstByName((*it).second, &value)) {

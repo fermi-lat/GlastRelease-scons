@@ -12,6 +12,7 @@
 
 // STD
 #include <cmath>
+#include <algorithm>
 
 using namespace CalDefs;
 
@@ -41,7 +42,8 @@ public:
                        int adcP, 
                        int adcN,
                        float &energy,     
-                       bool  &belowThresh 
+                       bool  &rngBelowThresh,
+                       bool  &xtalBelowThresh
                        );
 
   /// calculate energy deposition given the digi response for one xtal face
@@ -49,7 +51,8 @@ public:
                        int adc, 
                        float position,
                        float &energy,     
-                       bool  &belowThresh 
+                       bool  &rngBelowThresh,
+                       bool  &xtalBelowThresh
                        );
 private:
 
@@ -92,60 +95,71 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
                                   int adcP, 
                                   int adcN,
                                   float &energy,
-                                  bool &belowThresh
+                                  bool &rngBelowThresh,
+                                  bool &xtalBelowThresh
                                   ) {
   StatusCode sc;
   XtalIdx xtalIdx(xtalId); // used for array indexing
 
   // initial return vals
   energy = 0;
-  belowThresh = false;
+  rngBelowThresh  = false;
  
-
-  //-- RETRIEVE PEDESTAL (POS_FACE) --//
-  float pedP, pedN, sig, cos;
+  //-- RETRIEVE PEDESTAL && LAC (POS_FACE) --//
+  float pedP, pedN, sigP, sigN, cos;
   RngIdx rngIdxP(xtalIdx, POS_FACE, rngP);
-  sc = m_calCalibSvc->getPed(rngIdxP.getCalXtalId(), pedP, sig, cos);
+  sc = m_calCalibSvc->getPed(rngIdxP.getCalXtalId(), pedP, sigP, cos);
   if (sc.isFailure()) return sc;
   float adcPedP = adcP - pedP;   // ped subtracted ADC
   
-  //-- THROW OUT LOW ADC VALS (POS_FACE) --/
   CalibData::ValSig fle,fhe,lacP, lacN;
   CalXtalId tmpIdP(xtalId.getTower(),
                    xtalId.getLayer(),
                    xtalId.getColumn(),
                    POS_FACE);
   sc = m_calCalibSvc->getTholdCI(tmpIdP,fle,fhe,lacP);
-  if (adcPedP < lacP.getVal()*0.5) {
-    belowThresh = true;
-    return StatusCode::SUCCESS;
-  }
-
-  //-- RETRIEVE PEDESTAL (NEG_FACE) --//
+  
+  //-- RETRIEVE PEDESTAL && LAC (NEG_FACE) --//
   RngIdx rngIdxN(xtalIdx, NEG_FACE, rngN);
-  sc = m_calCalibSvc->getPed(rngIdxN.getCalXtalId(), pedN, sig, cos);
+  sc = m_calCalibSvc->getPed(rngIdxN.getCalXtalId(), pedN, sigN, cos);
   if (sc.isFailure()) return sc;
-  float adcPedN = adcN - pedN;
+  float adcPedN = adcN - pedN; // ped subtracted ADC
 
-  //-- THROW OUT LOW ADC VALS (NEG_FACE) --/
   CalXtalId tmpIdN(xtalId.getTower(),
                    xtalId.getLayer(),
                    xtalId.getColumn(),
                    NEG_FACE);
   sc = m_calCalibSvc->getTholdCI(tmpIdN,fle,fhe,lacN);
-  if (adcPedN < lacN.getVal()*0.5) {
-    belowThresh = true;
+  
+  //-- THROW OUT LOW ADC VALS --/
+  // LEX8 range is compared against 0.5 * lac threshold
+  // we throw out entire xtal if adc is too low 
+  if ((rngP == LEX8 && adcPedP < lacP.getVal()*0.5) ||
+      (rngN == LEX8 && adcPedN < lacN.getVal()*0.5)) {
+    xtalBelowThresh = true;
+    rngBelowThresh  = true;
     return StatusCode::SUCCESS;
   }
-  
+
+  // other ranges are compared against 5 sigma.
+  // energy estimate for this range is thrown out
+  // but overall xtal estimate may still be valid.
+  // ene = 0, below thresh = false
+  if ((rngP != LEX8 && adcPedP < sigP*5.0) ||
+      (rngN != LEX8 && adcPedN < sigN*5.0)) {
+    rngBelowThresh = true;
+    return StatusCode::SUCCESS;
+  }
 
   //-- CONVERT ADCs -> DAC --//
+  // shouldn't happen, but just in case
+  adcPedP = max(adcPedP, (float)0.0);
+  adcPedN = max(adcPedN, (float)0.0);
   double dacP, dacN;
   sc = m_calCalibSvc->evalDAC(rngIdxP.getCalXtalId(), adcPedP, dacP);
   if (sc.isFailure()) return sc;
   sc = m_calCalibSvc->evalDAC(rngIdxN.getCalXtalId(), adcPedN, dacN);
   if (sc.isFailure()) return sc;
-
   
   //-- CONVERT DIODE SIZE (IF NEEDED) --//
   // if diodes are different, then I need to convert them both to sm diode
@@ -212,41 +226,59 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
                                   int adc, 
                                   float position,
                                   float &energy,  
-                                  bool &belowThresh
+                                  bool &rngBelowThresh,
+                                  bool &xtalBelowThresh
                                   ) {
   StatusCode sc;
 
   energy = 0;
-  belowThresh = false;
-
+  rngBelowThresh  = false;
+  
   // check that CalXtalId has face & range fields enabled
   if (!xtalId.validFace() || !xtalId.validRange())
     throw invalid_argument("XtalEneTool: CalXtalId requires valid"
                            " face & range fields");
 
+  RngNum rng(xtalId.getRange());
+  
   // retrieve pedestal
   float ped, sig, cos;
   sc = m_calCalibSvc->getPed(xtalId, ped, sig, cos);
   if (sc.isFailure()) return sc;
+  float adcPed = adc - ped;
 
-  //-- THROW OUT LOW ADCS --/
-  CalibData::ValSig fle,fhe,lac;
-
-  // retreive threshold
-  sc = m_calCalibSvc->getTholdCI(xtalId,fle,fhe,lac);
-
-  // set flag
-  if (adc < lac.getVal()*0.5) {
-    belowThresh = true;
-    return StatusCode::SUCCESS;
+  // LEX8 range is compared against 0.5 * lac threshold
+  // we throw out entire xtal if adc is too low (belowThresh = true)
+  if (rng == LEX8) {
+    //-- THROW OUT LOW ADCS --/
+    CalibData::ValSig fle,fhe,lac;
+    
+    // retreive threshold
+    sc = m_calCalibSvc->getTholdCI(xtalId,fle,fhe,lac);
+    
+    // set flag if adc val is too low
+    if (adcPed < lac.getVal()*0.5) {
+      rngBelowThresh  = true;
+      xtalBelowThresh = true;
+      return StatusCode::SUCCESS;
+    }
+  } else {
+    // other ranges are compared against 5 sigma.
+    // energy estimate for this range is thrown out
+    // but overall xtal estimate may still be valid.
+    // ene = 0, below thresh = false
+    if (adcPed < 5.0*sig) {
+      rngBelowThresh = true;
+      return StatusCode::SUCCESS;
+    }
   }
 
   // convert adc->dac units
   double dac;
-  sc = m_calCalibSvc->evalDAC(xtalId, adc-ped, dac);
+  adcPed = max((float)0.0,adcPed);  // just in case
+  sc = m_calCalibSvc->evalDAC(xtalId, adcPed, dac);
   if (sc.isFailure()) return sc;
 
-  RngNum rng(xtalId.getRange());
   DiodeNum diode(rng.getDiode());
 
   // use appropriate asymmetry to calc position based on
@@ -276,7 +308,6 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
     energy = meanDAC*mpdSm.getVal();
   else
     energy = meanDAC*mpdLrg.getVal();
-
   
   return StatusCode::SUCCESS;
 }
