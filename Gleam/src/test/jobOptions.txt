@@ -3,7 +3,7 @@
 // Job options file for Gleam test
 // $Header$
 
-// just run the "default" job
+// just run the "default" job with mods below
 #include "$GLEAMROOT/src/default.txt"
 ApplicationMgr.DLLs += {"GaudiAud"};
 AuditorSvc.Auditors = {"ChronoAuditor"};
@@ -13,6 +13,7 @@ MeritAlg.generated = 1000; // for estimation of Aeff
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 second.OutputLevel=4; // too much info from second CalClustersAlg
 CalClustersAlg.OutputLevel=4; // too much info from second CalClustersAlg
+Output.Members={}; // turn off any root ouptut
 
 // Number of events to process
 ApplicationMgr.EvtMax = 1000;
