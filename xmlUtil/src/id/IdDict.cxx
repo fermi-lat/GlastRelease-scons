@@ -100,6 +100,19 @@ namespace xmlUtil {
     return named;
   }
 
+  NameSeq*   IdDict::getNameSeq(const Identifier& id) const {
+    NameSeq *seq = new NameSeq;
+    m_root->allowIdentifier(id, seq);
+    return seq;
+  }
+
+  std::string IdDict::getNameSeqString(const Identifier& id) const {
+    NameSeq* seq = getNameSeq(id);
+    std::string s = nameSeqString(*seq);
+    delete seq;
+    return s;
+  }
+
   bool IdDict::addChild(DictNode* parent, DictNode* newNode) {
     /* Started to write something to add field if not already
        registered, but whoever has created newNode should

@@ -7,7 +7,7 @@ namespace xmlUtil {
 
   //  typedef Fields::iterator  FieldIt;
 
-  NamedId::NamedId(const int len) {
+  NamedId::NamedId(const int /* len */ ) {
     /* For now -- until I understand how to change
        addField to make use of pre-allocation, always
        allocate 0-length vector.
@@ -101,12 +101,32 @@ namespace xmlUtil {
     return s;
   }
 
+  std::string nameSeqString(const NameSeq& seq) {
+    std::string s;
+    if (seq.size() == 0) {
+      s +="()";
+      return s;
+    }
+    std::vector<const std::string *>::const_iterator it = seq.begin();
+    s += "(";
+    s += (**it);
+    ++it;
+    while (it != seq.end()) {
+      s += ", ";
+      s +=  (**it);
+      ++it;
+    }
+    s += ")";
+    return s;
+  }
+
+
   std::ostream& operator<<(std::ostream& s, const NameSeq& seq) {
     if (seq.size() == 0) {
       s << "()" << std::endl;
       return s;
     }
-    std::vector<std::string *>::const_iterator it = seq.begin();
+    std::vector<const std::string *>::const_iterator it = seq.begin();
     s << "(" << (**it);
     ++it;
     while (it != seq.end()) {

@@ -11,7 +11,7 @@ namespace xmlUtil {
 
   typedef Registry::iterator RegIterator;
 
-  DictFieldMan::DictFieldMan(int size) {
+  DictFieldMan::DictFieldMan(int /* size */) {
     m_reg = new Registry();
   }
 

@@ -14,13 +14,25 @@ namespace xmlUtil {
 
   //! Another convenience typedef for a list of strings (the
   //! id field names which may be extracted from a \b NamedId )
-  typedef std::vector<std::string * > NameSeq;
+  //  typedef std::vector<std::string * > NameSeq;
+  // experiment -- see if we can make this work with the const
+  typedef std::vector<const std::string * > NameSeq;
 
   class NamedId;
 
   std::ostream& operator<<(std::ostream& s, const NameSeq& seq);
   std::ostream& operator<<(std::ostream& s, const Identifier& seq);
   std::ostream& operator<<(std::ostream& s, const NamedId& nId);
+
+  /** Given a NameSeq object, return a string of the form 
+      (name0,name1,name2,..)  where all punctuation except the ellipsis
+                            is literally in the result.  That is,
+      concatenate the individual string fields in the NameSeq, separated
+      by commas and enclosed in parantheses.
+  */
+  std::string nameSeqString(const NameSeq& seq);
+
+
 
   class NamedId {
   public:
