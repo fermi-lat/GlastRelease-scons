@@ -1,19 +1,19 @@
 
 
-#ifndef CalLogId_H
-#define CalLogId_H
+#ifndef LogId_H
+#define LogId_H
 
 #include "TObject.h"
 
-/*! \class CalLogId
+/*! \class LogId
 \brief
  access and set functions for calorimeter log ids
- Jun 2001 Heather Kelly renamed LogID to CalLogId
+ Jun 2001 Heather Kelly renamed LogID to LogId
  Version 1.0 21 Oct 1998 Richard creation
  Version 1.1 25 Oct 1999 R.Dubois Clone from LCD towerID
 */
 
-class CalLogId : public TObject {
+class LogId : public TObject {
 public: 
     typedef struct TAG_STRUCT {
         UInt_t xy, 
@@ -25,7 +25,7 @@ public:
     };
 private:
     /*
-    CalLogId tag word layout
+    LogId tag word layout
     (defined in following enum):
      ________________________________________________________________
     |31| ... |17||16|  |  |13|12|  |  |09|08|07||06|  |04|03|  |01|00|
@@ -82,7 +82,7 @@ private:
     };
     UInt_t m_tag;   // Packed word containing log data
 
-    static Bool_t isValidTagStruct(CalLogId::TAG_STRUCT ts);
+    static Bool_t isValidTagStruct(LogId::TAG_STRUCT ts);
     static Bool_t isValidTagWord(UInt_t tagWord);
     static Bool_t isValidColumn(UInt_t columnVal);
     static Bool_t isValidPipeLine(UInt_t pipeVal);
@@ -104,14 +104,14 @@ public:
         Y
     } CALAxes;
 
-    CalLogId();            
-    CalLogId(UInt_t tag);
-    virtual ~CalLogId();
+    LogId();            
+    LogId(UInt_t tag);
+    virtual ~LogId();
 
-    static Bool_t fillIdFromGeom(CalLogId::TAG_STRUCT *ts);
-    static Bool_t fillGeomFromId(CalLogId::TAG_STRUCT *ts);
-    static UInt_t fillTagWord(CalLogId::TAG_STRUCT *ts);
-    static void fillTagStruct(UInt_t tagVal, CalLogId::TAG_STRUCT *ts);
+    static Bool_t fillIdFromGeom(LogId::TAG_STRUCT *ts);
+    static Bool_t fillGeomFromId(LogId::TAG_STRUCT *ts);
+    static UInt_t fillTagWord(LogId::TAG_STRUCT *ts);
+    static void fillTagStruct(UInt_t tagVal, LogId::TAG_STRUCT *ts);
 
     UInt_t getTag()         const;
     UInt_t getColumn()      const;
@@ -129,6 +129,6 @@ public:
     Bool_t setXY(CALAxes xyVal);
 //    Bool_t setID(UInt_t idVal);
 
-ClassDef(CalLogId,3)       // CsI log identification and readout information
+ClassDef(LogId,3)       // CsI log identification and readout information
 };
 #endif
