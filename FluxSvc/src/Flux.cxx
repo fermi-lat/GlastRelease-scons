@@ -92,3 +92,13 @@ int Flux::numSource()const
     return m_event->numSource();
 
 }
+
+
+void Flux::addFactory( const IFactory* factory ) {
+    FactoryTable::instance()->addFactory( factory );
+    }
+
+
+void Flux::addFactory(std::string name, const ISpectrumFactory* factory ) {
+    SpectrumFactoryTable::instance()->addFactory(name,factory);
+    }

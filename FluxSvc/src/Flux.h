@@ -57,6 +57,12 @@ public:
     /// return a unique number correcponding to that spectrum
     virtual int numSource()const;
 
+    virtual void addFactory( const IFactory* factory );
+
+    virtual void addFactory(std::string name, const ISpectrumFactory* factory );/* {
+        insert(std::make_pair<std::string, const ISpectrumFactory*>(name, factory));
+    }*/
+
 private:
 
     EventSource* m_event;  

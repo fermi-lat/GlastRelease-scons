@@ -28,6 +28,10 @@ public:
     /// return a list of possible names
     std::list<std::string> fluxNames()const;
 
+    /// add a new source
+    virtual void addFactory(std::string name, const ISpectrumFactory* factory );
+
+
     //------------------------------------------------------------------
     //  stuff required by a Service
     
