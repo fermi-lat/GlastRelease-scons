@@ -2,6 +2,9 @@
  * Package calibUtil
  * Coordinator: J. Bogart
  *
+ * v0r7p0 27-May-2004 jrb Fix up comments
+ * v0r7   27-May-2004 jrb New dtd for CAL includes spec. for light asym &
+ *                        integral non-linearity
  * v0r6   14-Apr-2004 jrb  New method Metadata::findSoonAfter
  * v0r5p1 22-Mar-2004 jrb Fix little memory leak
  * v0r5p0 17-Feb-2004 jrb New version of LAT pedestals ideal file sets "cos"
