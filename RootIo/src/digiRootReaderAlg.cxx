@@ -362,10 +362,18 @@ StatusCode digiRootReaderAlg::readEventSummary() {
     StatusCode sc = StatusCode::SUCCESS;
     unsigned summaryWord = m_digiEvt->getEventSummaryData().summary();
     unsigned eventFlags = m_digiEvt->getEventSummaryData().eventFlags();
+    EventSummaryData evtSummary = m_digiEvt->getEventSummaryData();
 
     LdfEvent::EventSummaryData *evtSumTds = new LdfEvent::EventSummaryData();
     evtSumTds->initialize(summaryWord);
     evtSumTds->initEventFlags(eventFlags);
+    const unsigned int nTem = 16;
+    unsigned int iTem;
+    unsigned long tem[nTem];
+    for (iTem = 0; iTem < nTem; iTem++) 
+        tem[iTem] = evtSummary.temLength(iTem);
+    evtSumTds->initContribLen(tem, evtSummary.gemLength(), evtSummary.oswLength(),
+        evtSummary.errLength(), evtSummary.diagLength(), evtSummary.aemLength());
     sc = eventSvc()->registerObject("/Event/EventSummary", evtSumTds);
     if( sc.isFailure() ) {
         log << MSG::ERROR << "could not register /Event/EventSummary " << endreq;
