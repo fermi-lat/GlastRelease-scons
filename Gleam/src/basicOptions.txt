@@ -14,8 +14,11 @@ ApplicationMgr.ExtSvc = {
     "GlastEventSelector/EventSelector" , 
     "EventCnvSvc"
     };
+
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "NONE";
+
+ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
 
 
 // ----------------------------

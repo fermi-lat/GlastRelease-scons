@@ -55,16 +55,12 @@ use TkrDigi     v1r0
 use AcdDigi     v1r0
 
 
-#ROOT persistence
-use mcRootData     v2r2
-use digiRootData   v3r2
-use reconRootData  v3r0p2
-
-use RootIo               v4r2
+#ROOT persistence: RootIo specifies the data packages
+use RootIo               v4r3
 
 
 #reconstruction
-use Trigger     v3r3
+use Trigger              v3r3p1
 use Recon       v2r2p3
 
 use TkrRecon    v6r3p3
