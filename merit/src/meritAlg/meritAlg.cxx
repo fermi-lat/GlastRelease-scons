@@ -177,11 +177,6 @@ StatusCode meritAlg::initialize() {
 
     if( setupTools().isFailure()) return StatusCode::FAILURE;
 
-     //now make the parallel ROOT tuple
-    if(!m_root_filename.value().empty() ){
-        log << MSG::INFO << "Opening " << m_root_filename << " to write ROOT tuple" << endreq;
-        m_root_tuple=new MeritRootTuple(m_tuple, m_root_filename);
-    }
     // the tuple is made: create the classification object 
     try { 
         const char * pkgpath = ::getenv("CLASSIFICATIONROOT");
@@ -194,6 +189,12 @@ StatusCode meritAlg::initialize() {
               << e.what() <<endreq;
     }catch (...)  {
         log << MSG::ERROR << "Unexpected exception creating classification trees" << endreq;
+    }
+
+     //now make the parallel ROOT tuple
+    if(!m_root_filename.value().empty() ){
+        log << MSG::INFO << "Opening " << m_root_filename << " to write ROOT tuple" << endreq;
+        m_root_tuple=new MeritRootTuple(m_tuple, m_root_filename);
     }
 
     m_fm= new FigureOfMerit(*m_tuple, m_cuts);
