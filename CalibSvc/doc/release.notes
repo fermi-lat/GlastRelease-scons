@@ -2,6 +2,7 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
+ *  9-Jul-2004: jrb v0r9p1:  Get rid of -no_auto_imports in requirements
  *  8-Jul-2004: jrb v0r9p0:  Bug fix.  Don't complain if "vanilla" specified
  *                           an extra time; just quietly ignore.
  * 21-Jun-2004: jrb v0r9:    Job options parameter for non-standard metadata
