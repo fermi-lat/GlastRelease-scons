@@ -28,4 +28,12 @@ one of 4 idField values for CAL cell wall in fCALCellCmp field. </prim>
 one of 4 idField values for CAL cell wall in fCALCellCmp field. </prim>
   <prim name="eCellBot" value="8" uType="count" type="int">
 one of 4 idField values for CAL cell wall in fCALCellCmp field. </prim>
+  <prim name="eWrapRight" value="9" uType="count" type="int">
+one of 4 idField values for CAL wrap in fCALCellCmp field. </prim>
+  <prim name="eWrapTop" value="10" uType="count" type="int">
+one of 4 idField values for CAL wrap in fCALCellCmp field. </prim>
+  <prim name="eWrapLeft" value="11" uType="count" type="int">
+one of 4 idField values for CAL wrap in fCALCellCmp field. </prim>
+  <prim name="eWrapBot" value="12" uType="count" type="int">
+one of 4 idField values for CAL wrap in fCALCellCmp field. </prim>
 </primCategory>

@@ -19,10 +19,12 @@ Material for CAL cylindrical supports.</prim>
 
 <prim name="CALCellWallMat" value="C" type="string" uType="mat">
 Material for cell walls, reinforcement</prim>
+  <prim name= "CALWrapMat" value= "Polystyrene" type="string" uType="mat">
+Wrap material for CsI logs. Value is temporary until the correct
+material has been defined in materials.xml.</prim>
+
 
 <!-- Everything below this comment is of doubtful value -->
-  <prim name= "CALWrapMat" value= "Polystyrene" type="string" uType="mat">
-Wrap material for CsI logs [obsolete??]</prim>
   <prim name= "CALGridMat" value= "Al" type="string" uType="mat">Material 
 for CAL grid [obsolete??]</prim>
   <prim name= "CALFlangeMat" value= "Al50" type="string" uType="mat">

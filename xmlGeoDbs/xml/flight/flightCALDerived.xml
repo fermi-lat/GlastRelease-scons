@@ -47,18 +47,16 @@
 
         <const name="cellVertWallHalfThick">
           <notes>convenience</notes>
-          <mul> 
+          <half>
             <refer refTo="cellVertWallThick" /> 
-            <const value="0.5" uType="count" /> 
-          </mul>
+          </half>
         </const>
 
         <const name="cellHorWallHalfThick">
           <notes>convenience</notes>
-          <mul> 
+          <half> 
             <refer refTo="cellHorWallThick" /> 
-            <const value="0.5" uType="count" /> 
-          </mul>
+          </half>
         </const>
 
 
@@ -97,16 +95,25 @@
           </minus>
         </const>
 
+        <const name="CsIWrapTranvLen">
+          <notes>Extent (in Y or X, perp. to main axis of crystal)
+                of crystal wrap</notes>
+          <add>
+             <refer refTo="CsIWidth" />
+             <refer refTo="CsIWrapThick" />
+             <refer refTo="CsIWrapThick" />
+          </add>
+        </const>
+
 <!-- offsets for positioning cell walls inside the cel -->
         <const name="cellHorWall_dz">
           <notes>Z position rel. to cell of upper horiz. wall</notes>
-          <mul>
-            <const value="0.5" />
+          <half>
             <minus>
               <refer refTo="cellVertPitch" />
               <refer refTo="cellHorWallHalfThick" />
             </minus>
-          </mul>
+          </half>
         </const>
 
         <const name="cellHorWall_dzn">
@@ -119,13 +126,12 @@
         <const name="cellVertWall_dy">
           <notes>Y displacement rel. to cell of vertical cell wall
 (here Y means perp. to height and length directions)</notes>
-          <mul>
-            <const value="0.5" />
+          <half>
             <minus>
               <refer refTo="cellHorPitch" />
               <refer refTo="cellVertWallHalfThick" />
             </minus>
-          </mul>
+          </half>
         </const>
 
         <const name="cellVertWall_dyn" >
@@ -136,6 +142,41 @@
           </uminus>
         </const>
         
+<!-- offsets for positioning crystal wrap inside the cell -->
+        <const name="wrapHorWall_dz">
+          <notes>Z positionrel. to cell of upper crystal wrap box</notes>
+          <half>
+            <add>
+              <refer refTo="CsIHeight" />
+              <refer refTo="CsIWrapThick" />
+            </add>
+          </half>
+        </const>
+
+        <const name="wrapHorWall_dzn">
+          <notes>Z position rel. to cell of lower crystal wrap box</notes>
+          <uminus>
+            <refer refTo="wrapHorWall_dz" />
+          </uminus>
+        </const>
+
+        <const name="wrapVertWall_dy">
+          <notes>Z position rel. to cell of +y side crystal wrap box</notes>
+          <half>
+            <add>
+              <refer refTo="CsIWidth" />
+              <refer refTo="CsIWrapThick" />
+            </add>
+          </half>
+        </const>
+
+        <const name="wrapVertWall_dyn">
+          <notes>Z position rel. to cell of -y side crystal wrap box</notes>
+          <uminus>
+            <refer refTo="wrapVertWall_dy" />
+          </uminus>
+        </const>
+
 <!-- the following should be the maximum of the length of a single
      CsIElement and the transverse distance across the whole 
      collection of CsIElements in a layer, so
@@ -153,11 +194,14 @@
           </max>
 	</const>
 
+<!--
         <const name="CALTransvGap">
-          <notes>New from Eric/Sacha.  Gap between side of log + C-cell 
-                [composite cell??] and CAL side wall</notes>
-          <mul>
-            <const value="0.5" />
+          <notes>New from Eric/Sasha.  Gap between side of log + C-cell 
+                [composite cell??] and CAL side wall
+                 As of 18 June, 2003, still not used in the model
+                (used only in definition of CALCylLength, itself unused).
+                                                   </notes>
+          <half>
             <minus>
               <refer refTo="CALModuleWidth" />
               <add>
@@ -174,14 +218,13 @@
                 </mul>
               </add>
             </minus>
-          </mul>
+          </half>
         </const>
-
+-->
         <const name="cellHorGap">
           <notes>New from Eric/Sacha.  Horizontal gap between xtal
                  and cell wall.</notes>
-          <mul>
-            <const value="0.5" />
+          <half>
             <minus>
               <minus>
                 <refer refTo="cellHorPitch" />
@@ -189,14 +232,13 @@
               </minus>
               <refer refTo="cellVertWallThick" />
             </minus>
-          </mul>
+          </half>
         </const>
 
         <const name="cellVertGap" >
           <notes>New from Eric/Sacha.  Vertical gap between xtal
                  and cell wall.</notes>
-          <mul>
-            <const value="0.5" />
+          <half>
             <minus>
               <minus>
                 <refer refTo="cellVertPitch" />
@@ -204,10 +246,13 @@
               </minus>
               <refer refTo="cellHorWallThick" />
             </minus>
-          </mul>
+          </half>
         </const>
 
-<!-- Following comes from CAL docs of 31 May, 2001 -->
+<!-- Following comes from CAL docs of 31 May, 2001 
+     As of 18 june, 2003, this isn't used in the model
+-->
+<!--
         <const name="CALCylLength">
           <notes>Length of cylindrical supports for side walls</notes>
           <add>
@@ -218,7 +263,7 @@
             </uminus>
           </add>
         </const>
-
+-->
 <!-- the following includes cal layers and inter-layer spacers, but
      not frame, grid between cal and tkr, etc. 
      Hence it's just nlayer*cellVertPitch 
@@ -259,13 +304,12 @@ grid, etc. (may be superseded by info from Eric)</notes>
 
 	<const name = "CALFrameSide_d"> 
           <notes>Displacement of a side frame relative to tower</notes>
-	  <mul>
+	  <half>
 	    <add>
 	      <refer refTo="CALFrameSideThick" />
 	      <refer refTo= "CALFrameWidth" />
 	    </add>
-	    <const value="0.5" uType="count" />
-	  </mul>
+	  </half>
 	</const>
 
 	<const name ="CALFrameSide_dN" >
@@ -280,13 +324,12 @@ grid, etc. (may be superseded by info from Eric)</notes>
 	<const name="CALFrameTB_d" > 
           <notes>Displacement of top and bottom of frame, relative to 
                 the whole.</notes>
-	  <mul>
+	  <half>
 	    <add>
 	      <refer refTo= "CALFrameTBThick" />
 	      <refer refTo="CALTotalZ" />
 	    </add>
-	    <const value="0.5" uType="count"/>
-	  </mul>
+	  </half>
 	</const>
 	    
 	<const name="CALFrameTB_dN" >
@@ -404,13 +447,12 @@ grid, etc. (may be superseded by info from Eric)</notes>
           <notes>Offset of CALLayers relative to stay-clear box.
                  CALLayers should be at top of box.
                  Constant instituted 30 April 2003</notes>
-          <mul>
+          <half>
             <minus>
               <refer refTo="CALVertStayClear" />
               <refer refTo="CALLayersZ" />
             </minus>
-            <const value="0.5" uType = "count"/>
-          </mul>
+          </half>
         </const>
  
 <!-- Make sure values for CALStructural field are distinct from layer #'s -->

@@ -90,6 +90,10 @@
         <vEnumVal valueREF="eCellTop" />
         <vEnumVal valueREF="eCellLeft" />
         <vEnumVal valueREF="eCellBot" />
+        <vEnumVal valueREF="eWrapRight" />
+        <vEnumVal valueREF="eWrapTop" />
+        <vEnumVal valueREF="eWrapLeft" />
+        <vEnumVal valueREF="eWrapBot" />
       </vList>
     </field>
 

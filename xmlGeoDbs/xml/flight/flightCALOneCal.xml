@@ -13,7 +13,7 @@
 
 <!-- there are two kinds of diodes: large and small. See diode section of
      instrument.xml.   These
-     diode boxes or oriented the same way as the unrotated CsIDetector
+     diode boxes are oriented the same way as the unrotated CsIDetector
      above.  Old names for x,y,z dimensions were respectively
      thickness,x_width,y_width   -->
     <box name="diodeL"
@@ -43,6 +43,21 @@
           YREF="CsIEnvY"
           ZREF="cellHorWallHalfThick"
           />
+
+     <box name="CsIWrapVertWall"
+          materialREF="CALWrapMat"
+          XREF="CsILength"
+          YREF="CsIWrapThick" 
+          ZREF="CsIHeight"
+          />
+
+     <box name="CsIWrapHorWall"
+          materialREF="CALWrapMat"
+          XREF="CsILength"
+          YREF="CsIWrapTranvLen" 
+          ZREF="CsIWrapThick"
+          />
+
 
 <!-- The (new) idea here will be to make a composition with vacuum
      envelope whose dimensions are such that it contains the CsI,
@@ -93,6 +108,28 @@
               ZREF="diodeZOffset"
         >
         <idField name="fCALCellCmp" valueREF="eDiodePLarge" />
+      </posXYZ>
+
+<!-- 4 boxes of crystal wrap go immediately up against CsI -->
+      <!-- top wrap  -->
+      <posXYZ volume="CsIWrapHorWall"
+              ZREF="wrapHorWall_dz" >
+        <idField name="fCALCellCmp" valueREF="eWrapTop" />
+      </posXYZ>
+      <!-- bottom wrap -->
+      <posXYZ volume="CsIWrapHorWall"
+              ZREF="wrapHorWall_dzn" >
+        <idField name="fCALCellCmp" valueREF="eWrapBot" />
+      </posXYZ>
+      <!-- pos side wrap -->
+      <posXYZ volume="CsIWrapVertWall"
+              YREF="wrapVertWall_dy" >
+        <idField name="fCALCellCmp" valueREF="eWrapRight" />
+      </posXYZ>
+      <!-- neg side wrap -->
+      <posXYZ volume="CsIWrapVertWall"
+              YREF="wrapVertWall_dyn" >
+        <idField name="fCALCellCmp" valueREF="eWrapLeft" />
       </posXYZ>
 
 <!-- Also need to position cell walls -->
