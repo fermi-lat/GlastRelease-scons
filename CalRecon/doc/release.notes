@@ -2,6 +2,8 @@ package CalRecon
 
 package manager: Alexandre Chekhtman
 
+  v5r7p2 22-jul-2002 AC  unphysical longitudinal positions fixed
+  v5r7p1 13-jun-2002 AC  minor corrections in documentation and comments - submitted for code review
   v5r7   13-jun-2002 AC  headers moved to src folder, requirements moved to cmt folder
   v5r6   13-jun-2002 AC  documentation updated before the code review
   v5r5p2 05-jun-2002 THB make RootIo use private, try to break dependency loop
