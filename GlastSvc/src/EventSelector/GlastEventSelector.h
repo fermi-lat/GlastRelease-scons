@@ -40,7 +40,7 @@ class IDataProviderSvc;
  * Copied from SicBEvent.
 
 */
-class EventSelector : virtual public Service, 
+class GlastEventSelector : virtual public Service, 
                       virtual public IEvtSelector,
                       virtual public IProperty {
 public:
@@ -57,15 +57,15 @@ public:
   IOpaqueAddress* reference(const IEvtSelector::Iterator& it) const;
 
   // IProperty implementation
-   virtual StatusCode setProperty(const Property& property);
-   virtual StatusCode getProperty( Property* property ) const;
+   //virtual StatusCode setProperty(const Property& property);
+   //virtual StatusCode getProperty( Property* property ) const;
 
   // IInterface implementation
   virtual StatusCode queryInterface(const IID& riid, void** ppvInterface);
 
   // Constructors & Destructors
-  EventSelector(  const std::string& name, ISvcLocator* svcloc );
-  ~EventSelector();
+  GlastEventSelector(  const std::string& name, ISvcLocator* svcloc );
+  ~GlastEventSelector();
 
 private:
   // New types
@@ -73,8 +73,8 @@ private:
   typedef std::list<std::string>   ListName;
   
 
-  StatusCode EventSelector::parseStringInList(const std::string& namelist, ListName* flist );
-  StatusCode EventSelector::getFileName(ListName::const_iterator* inputIt, std::string& fName) const;
+  StatusCode GlastEventSelector::parseStringInList(const std::string& namelist, ListName* flist );
+  StatusCode GlastEventSelector::getFileName(ListName::const_iterator* inputIt, std::string& fName) const;
 
   std::string                 m_criteria;
   std::string                 m_jobInput;

@@ -22,7 +22,7 @@
 
 class GlastEvtIterator: public IEvtSelector::Iterator {
 public:
-  friend class EventSelector;
+  friend class GlastEventSelector;
   GlastEvtIterator() {}
   GlastEvtIterator( const IEvtSelector* glastEvtSel): m_glastEvtSel(glastEvtSel),
     m_recId(0) { }

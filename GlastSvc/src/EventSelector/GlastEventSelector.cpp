@@ -1,15 +1,15 @@
 // $Header$
 //====================================================================
-//  EventSelector.cpp
+//  GlastEventSelector.cpp
 //--------------------------------------------------------------------
 //
-//  Package    : EventSelector  (The Glast IRF Event Selector Package)
+//  Package    : GlastEventSelector  (The Glast IRF Event Selector Package)
 //
 //
 //====================================================================
 
 // Include files
-#include "EventSelector.h"
+#include "GlastEventSelector.h"
 
 #include "Gaudi/MessageSvc/MsgStream.h"
 
@@ -33,10 +33,10 @@ extern const IAddrFactory& DummyAddressFactory;
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
-static const SvcFactory<EventSelector> s_factory;
+static const SvcFactory<GlastEventSelector> s_factory;
 const ISvcFactory& GlastEventSelectorFactory = s_factory;
 
-StatusCode EventSelector::initialize()     {
+StatusCode GlastEventSelector::initialize()     {
     MsgStream log(msgSvc(), name());
     StatusCode sc = Service::initialize();
     if( sc.isSuccess() ) {
@@ -66,23 +66,24 @@ StatusCode EventSelector::initialize()     {
 }
 
 
-EventSelector::EventSelector( const std::string& name, ISvcLocator* svcloc ) 
+GlastEventSelector::GlastEventSelector( const std::string& name, ISvcLocator* svcloc ) 
 : Service( name, svcloc)
 , m_evtEnd(this,-1, 0) 
 {
-    declareProperty( "JobInput", m_jobInput=" ");
+    //declareProperty( "JobInput", m_jobInput=" ");
+    declareProperty( "Input", m_jobInput=" ");
     m_inputDataList = new ListName; 
     // GlastEvtIterator m_evtEnd(this, -1, m_inputDataList->end());
 }
 
 
-EventSelector::~EventSelector() {
+GlastEventSelector::~GlastEventSelector() {
     delete m_inputDataList;
 }
 
 // IEvtSelector::setCriteria
 // Create list of input files/Job Id's
-StatusCode EventSelector::setCriteria( const std::string& criteria ) {
+StatusCode GlastEventSelector::setCriteria( const std::string& criteria ) {
     
     StatusCode sc;
     MsgStream log(msgSvc(), name());
@@ -122,7 +123,7 @@ StatusCode EventSelector::setCriteria( const std::string& criteria ) {
 
 
 // Parse criteria string: Fill in the list of input files or Job Id's
-StatusCode EventSelector::parseStringInList( const std::string& namelist, ListName* inputDataList ) {
+StatusCode GlastEventSelector::parseStringInList( const std::string& namelist, ListName* inputDataList ) {
     std::string rest = namelist;
     while(true) {
         int ipos = rest.find_first_not_of(" ,");
@@ -141,7 +142,7 @@ StatusCode EventSelector::parseStringInList( const std::string& namelist, ListNa
 }
 
 // IEvtSelector::setCriteria
-StatusCode EventSelector::setCriteria( const SelectionCriteria& criteria ) {
+StatusCode GlastEventSelector::setCriteria( const SelectionCriteria& criteria ) {
     return StatusCode::SUCCESS;
 }
 
@@ -150,7 +151,7 @@ StatusCode EventSelector::setCriteria( const SelectionCriteria& criteria ) {
 // IEvtSelector::begin()
 // Event Selector Iterator begin
 // Called by the ApplicationMgr::intialize() method
-IEvtSelector::Iterator* EventSelector::begin() const {
+IEvtSelector::Iterator* GlastEventSelector::begin() const {
     MsgStream log(messageService(), name());
     StatusCode sc;
     // Ian Note Here is the problem I need to step through right here
@@ -182,7 +183,7 @@ IEvtSelector::Iterator* EventSelector::begin() const {
 }
 
 //  Find out the name of the file from list of files or Jobs.
-StatusCode EventSelector::getFileName(ListName::const_iterator* inputIt, std::string& fName) const {
+StatusCode GlastEventSelector::getFileName(ListName::const_iterator* inputIt, std::string& fName) const {
     
     MsgStream log(messageService(), name());
     if( m_criteriaType == IRFFILE){                 // If CRITERIA = FILE Get File name
@@ -197,7 +198,7 @@ StatusCode EventSelector::getFileName(ListName::const_iterator* inputIt, std::st
 
 // IEvtSelector::end()
 // Event Selector Iterator end() function
-IEvtSelector::Iterator* EventSelector::end() const {
+IEvtSelector::Iterator* GlastEventSelector::end() const {
     IEvtSelector::Iterator* it = (IEvtSelector::Iterator*)(&m_evtEnd);
     return it; 
 }
@@ -206,7 +207,7 @@ IEvtSelector::Iterator* EventSelector::end() const {
 
 // IEvtSelector::next
 // Event Selector iterator next(it)
-IEvtSelector::Iterator& EventSelector::next(IEvtSelector::Iterator& it) const {
+IEvtSelector::Iterator& GlastEventSelector::next(IEvtSelector::Iterator& it) const {
     MsgStream log(messageService(), name());
     GlastEvtIterator* irfIt = dynamic_cast<GlastEvtIterator*>(&it);
     (irfIt->m_recId)++;
@@ -226,9 +227,9 @@ IEvtSelector::Iterator& EventSelector::next(IEvtSelector::Iterator& it) const {
     return *irfIt;
 }
 // IEvtSelector::previous
-IEvtSelector::Iterator& EventSelector::previous(IEvtSelector::Iterator& it) const {
+IEvtSelector::Iterator& GlastEventSelector::previous(IEvtSelector::Iterator& it) const {
     MsgStream log(msgSvc(), name());
-    log << MSG::FATAL << " EventSelector Iterator, operator -- not supported " << endreq;
+    log << MSG::FATAL << " GlastEventSelector Iterator, operator -- not supported " << endreq;
     
     return it;
 }
@@ -240,7 +241,7 @@ IEvtSelector::Iterator& EventSelector::previous(IEvtSelector::Iterator& it) cons
 Create root address and assign address to data service
 IOpaqueAddress* addr = **m_evtIterator;
 */
-IOpaqueAddress* EventSelector::reference(const IEvtSelector::Iterator& it) const 
+IOpaqueAddress* GlastEventSelector::reference(const IEvtSelector::Iterator& it) const 
 {
     MsgStream log(msgSvc(), name());
     
@@ -253,26 +254,26 @@ IOpaqueAddress* EventSelector::reference(const IEvtSelector::Iterator& it) const
     recId++;
     
     ListName::const_iterator* inputDataIt = (ListName::const_iterator*)(&irfIt->m_inputDataIt);
-    log << MSG::DEBUG << "EventSelector::reference: File name is " << fName << endreq;
+    log << MSG::DEBUG << "GlastEventSelector::reference: File name is " << fName << endreq;
     
     // finally create an opaque address to pass back
     IOpaqueAddress* addr = DummyAddressFactory.instantiate(CLID_Event, fName, "PASS", recId);
-    log << MSG::DEBUG << "EventSelector::reference: Created address:" << (void*)addr << endreq;
+    log << MSG::DEBUG << "GlastEventSelector::reference: Created address:" << (void*)addr << endreq;
     return addr;
 }
 
 // IProperty::setProperty
-StatusCode EventSelector::setProperty(const Property& property) {
-    return StatusCode::SUCCESS;
-}
+//StatusCode GlastEventSelector::setProperty(const Property& property) {
+//    return StatusCode::SUCCESS;
+//}
 
 // IProperty::getProperty
-StatusCode EventSelector::getProperty(Property* property) const {
-    return StatusCode::SUCCESS;
-}
+//StatusCode GlastEventSelector::getProperty(Property* property) const {
+//    return StatusCode::SUCCESS;
+//}
 
 // IInterface::queryInterface
-StatusCode EventSelector::queryInterface(const IID& riid, void** ppvInterface)  {
+StatusCode GlastEventSelector::queryInterface(const IID& riid, void** ppvInterface)  {
     if ( riid == IID_IEvtSelector )  {
         *ppvInterface = (IEvtSelector*)this;
     }
