@@ -144,7 +144,7 @@ void AcdReconAlg::clear() {
     m_energyRibbonCol.clear();
     m_idRibbonCol.clear();
     m_act_dist = -maxDoca;
-    m_ribbon_act_dist = -maxDoca;
+    m_ribbon_act_dist = maxDoca;
 }
 
 StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
@@ -262,7 +262,7 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol) {
 
         sc = hitRibbonDist(digiCol, trackTds->getPosition(), trackTds->getDirection(),
             ribDist);
-        if (ribDist > m_ribbon_act_dist) m_ribbon_act_dist = ribDist;
+        if (ribDist < m_ribbon_act_dist) m_ribbon_act_dist = ribDist;
         if (sc.isFailure()) return sc;
     }
 	
@@ -453,7 +453,6 @@ StatusCode AcdReconAlg::hitRibbonDist(const Event::AcdDigiCol& digiCol, const He
 
     return_dist = maxDoca;
     int ribbonX = 5, ribbonY = 6;
-//    int ribbonX = 6, ribbonY = 5;
 
     // iterate over all digis and search for ribbons
     Event::AcdDigiCol::const_iterator acdDigiIt;
