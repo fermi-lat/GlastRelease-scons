@@ -1,4 +1,5 @@
 package G4Generator
+#$Header$
 
 use Geant4
 use GaudiSvc
@@ -8,7 +9,11 @@ use detModel
 use FluxSvc
 use GlastSvc
 
-# define link options
+#to make standard display available
+use GuiSvc
+use geomrep
+
+# this is only a shareable package
 apply_pattern packageShr
 
 
@@ -31,8 +36,12 @@ public
 apply_pattern package_test
 
 # alternative test program that links stuff into the exe
+
+#apply_pattern guiapp
+macro_append gui_linkopts " ${guiapp_linkopts} $(GuiSvc_lib)  /include:_GuiSvc_loadRef "
+
 macro other_source "" WIN32 "test/*.txt test/*.xml *.h test/*.h" 
-application G4Test ${GlastMain} test/*.cxx *.cxx  Dll/*.cxx ${other_source}
+application G4Test ${GlastMain} test/*.cxx *.cxx  Dll/*.cxx ${other_source} ${Win32Resource}
 
 
 
