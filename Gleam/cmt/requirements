@@ -72,7 +72,7 @@ use CalRecon    v5r7p5
 use AcdRecon    v1r4p1       
 
 #ROOT persistence: RootIo specifies the data packages
-use RootIo      v4r20p3
+use RootIo              v4r20p4
 
 #diagnostic and summary of bottom line
 use merit       v5r12p2
