@@ -1,6 +1,10 @@
 /** @file release.notes
  * package Gleam
  * package manager:T.Burnett
+
+ * v1r0   21-apr-02 THB  started adding cal, tkr recons 
+    use TkrRecon          v5r4
+
  * v0r9   20-apr-02 THB new versions:
     use detModel           v2r10
     use GlastEvent         v7r1
