@@ -286,13 +286,16 @@ StatusCode CalXtalRecAlg::execute()
 	   
            
            // calculate energy in the crystal
-	   computeEnergy(recData, *it);      
+           if(computeEnergy(recData, *it)){      
 
-           // calculate position in the crystal
-	   computePosition(recData);   
+                // calculate position in the crystal
+	        computePosition(recData);   
 
-           // add new reconstructed data to the collection
-           m_CalXtalRecCol->push_back(recData); 
+                // add new reconstructed data to the collection
+                m_CalXtalRecCol->push_back(recData);
+           }else{
+                delete recData;
+           }
 	}
 
 	return sc;
@@ -362,7 +365,7 @@ StatusCode CalXtalRecAlg::retrieve()
 
 
 
-void CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi* digi)
+bool CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi* digi)
 
 //   Purpose and method:
 //                 This function calculates the energy for one crystal.
@@ -388,7 +391,7 @@ void CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi*
         idents::CalXtalId xtalId = digi->getPackedId();
 
         const Event::CalDigi::CalXtalReadoutCol& readoutCol = digi->getReadoutCol();
-		
+	bool above_thresh = false;	
         // loop over readout ranges
         for ( Event::CalDigi::CalXtalReadoutCol::const_iterator it = readoutCol.begin();
 		      it !=readoutCol.end(); it++){
@@ -438,16 +441,17 @@ void CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi*
             // convert adc values into energy
             double eneP = gainP*(adcP-pedP);
             double eneM = gainM*(adcM-pedM);
-				
 
-            // create output object
-            CalXtalRecData::CalRangeRecData* rangeRec =
-                new CalXtalRecData::CalRangeRecData(rangeP,eneP,rangeM,eneM);
+            above_thresh = above_thresh || ((eneP > m_thresh) && (eneM > m_thresh));
+                // create output object
+                CalXtalRecData::CalRangeRecData* rangeRec =
+                    new CalXtalRecData::CalRangeRecData(rangeP,eneP,rangeM,eneM);
 
-            // add output object to output collection
-            recData->addRangeRecData(*rangeRec);
+                // add output object to output collection
+                recData->addRangeRecData(*rangeRec);
+            
         }		
-	
+	return above_thresh;
 }
 
 

@@ -60,7 +60,7 @@ private:
     * @param recData pointer to CalXtalRecData object to store reconstructed energy
     * @param digi pointer to CalDigi object with input data
     */
-    void computeEnergy(Event::CalXtalRecData* recData,
+    bool computeEnergy(Event::CalXtalRecData* recData,
                        const Event::CalDigi* digi);
     
     /** @brief method to calculate longitudinal position in a crystal
