@@ -1,6 +1,6 @@
 # $Header$
 package xmlUtil
-version v2r10
+version v2r10p0
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
