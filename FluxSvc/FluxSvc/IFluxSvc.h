@@ -76,6 +76,9 @@ public:
     /// this sets the rocking mode in GPS.
     virtual void setRockType(GPS::RockType rockType)=0;
     virtual void setRockType(int rockType)=0;
+
+    ///this should return the source file names, along with the contained sources.
+    std::vector<std::pair< std::string ,std::list<std::string> > > sourceOriginList() const;
     
     
 };
