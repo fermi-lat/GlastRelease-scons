@@ -1,8 +1,7 @@
-package GlastSvc
+package CalRecon
 
-package manager:T.Burnett
+package manager:?? Eric Grove?
 
-! 20000829 THB: use new class instrument/Instrument for GlastDetector stuff.
-! 20000701  Created by HSG.
+07-may-2001; THB tag v1r9
 
 !======================================================================
