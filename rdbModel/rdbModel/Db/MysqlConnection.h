@@ -117,7 +117,7 @@ namespace rdbModel{
     static bool compileOperator(Assertion::Operator* op, 
                                 std::string &sqlString);
 
-    static bool checkDType(Datatype* dtype, const std::string& sqlType);
+    bool checkDType(Datatype* dtype, const std::string& sqlType);
 
     // Following collection of data members is only of interest while 
     // visit is in progress.
