@@ -1,7 +1,7 @@
 // McVertex.h
 //
 // The McVertex class is intended to contain monte carlo particle position data for the 
-// GLAST mc.  Designed initially to meet the simple needs of the GLAST balloon test.
+// GLAST MC.  Designed initially to meet the simple needs of the GLAST balloon flight sim.
 //
 // May 3 2001 Daniel Flath - Creation
 
@@ -12,7 +12,7 @@
 #include "TLorentzVector.h"
 
 /*! GLAST Monte Carlo vertex class.  Designed originally for 2001 balloon flight.
- *  Gives position information for MCParticle which keeps a pointer to a vertex.
+ *  Gives position information for McParticle which keeps a pointer to a vertex.
  *  
  *  \author Daniel Flath
  *  
@@ -20,59 +20,47 @@
  *  - 03 May 2001   Daniel Flath    Creation, "get" functions added
  *  - 11 May 2001   Daniel Flath    "set" functions added
  *  - 14 May 2001   Daniel Flath    DOxygen style comments added
+ *  - 06 Jun 2001   Daniel Flath    Final rewrite for integration with ROOTWriter
+ *  - 14 Jun 2001   Daniel Flath    DOxygen style comments updated for checkin with ROOTWriter
  */
-class MCVertex: public TObject {
+class McVertex: public TObject {
 
   private:
+    //! momentum/energy 4-vector
+    TLorentzVector *m_pMomI, *m_pMomF;
+
     //! position/time 4-vector
-    TLorentzVector *m_pPos;
+    TLorentzVector *m_pPosI, *m_pPosF;
 
   public:
     ////////////////////// construction/destruction: ///////////////////////
 
     //! default constructor. DO NOT USE -- see details.
-    MCVertex();
+    McVertex();
 
     //! constructor
-    MCVertex(TLorentzVector *pos);
-
-    //! constructor
-    MCVertex(Double_t posX, Double_t posY, Double_t posZ, Double_t time);
+    McVertex(TLorentzVector *pPosI, TLorentzVector *pPosF, 
+             TLorentzVector *pMomI, TLorentzVector *pMomF);
 
     //! destructor
-    ~MCVertex();
+    ~McVertex();
 
     //////////////////////   data access functions:  ///////////////////////
+    
+    //! get initial position/time 4-vector
+    const TLorentzVector *getPosInitial() const { return m_pPosI; };
 
-    //! get position x-component
-    Double_t getPosX();
+    //! get final position/time 4-vector
+    const TLorentzVector *getPosFinal()   const { return m_pPosF; };
 
-    //! get position y-component
-    Double_t getPosY();
+    //! get initial momentum/energy 4-vector
+    const TLorentzVector *getMomInitial() const { return m_pMomI; };
 
-    //! get position z-component
-    Double_t getPosZ();
-
-    //! get time
-    Double_t getTime();
-
-    //! get position/time 4-vector
-    TLorentzVector *getPosLV();
+    //! get final momentum/energy 4-vector
+    const TLorentzVector *getMomFinal()   const { return m_pMomF; };
 
 
-    //! set position x-component
-    void setPosX(Double_t posX);
-
-    //! set position y-component
-    void setPosY(Double_t posY);
-
-    //! set position z-component
-    void setPosZ(Double_t posZ);
-
-    //! set time
-    void setTime(Double_t time);
-
-    ClassDef(MCVertex,1)
+    ClassDef(McVertex,1)
 };
 
 #endif

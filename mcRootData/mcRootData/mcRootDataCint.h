@@ -25,16 +25,19 @@ extern void G__set_cpp_environmentmcRootDataCint();
 
 #include "TROOT.h"
 #include "TMemberInspector.h"
-#include "MCVertex.h"
-#include "MCParticle.h"
+#include "McVertex.h"
+#include "McParticle.h"
+#include "McEvent.h"
 
 #ifndef G__MEMFUNCBODY
 #endif
 
 extern G__linked_taginfo G__mcRootDataCintLN_TClass;
+extern G__linked_taginfo G__mcRootDataCintLN_TObjArray;
 extern G__linked_taginfo G__mcRootDataCintLN_TObject;
 extern G__linked_taginfo G__mcRootDataCintLN_TLorentzVector;
-extern G__linked_taginfo G__mcRootDataCintLN_MCVertex;
-extern G__linked_taginfo G__mcRootDataCintLN_MCParticle;
+extern G__linked_taginfo G__mcRootDataCintLN_McVertex;
+extern G__linked_taginfo G__mcRootDataCintLN_McParticle;
+extern G__linked_taginfo G__mcRootDataCintLN_McEvent;
 
 /* STUB derived class for protected member access */

@@ -1,69 +1,40 @@
 ///////////////////////////////////////////////////////////////////////////
 //                                                                       
-// The MCVertex class provides a 4-Space (x,y,z,t) position for the
-// MCParticle class to use
+// The McVertex class provides a position and momentum information for
+// inclusion in the McParticle class.
 //                                                                       
 ///////////////////////////////////////////////////////////////////////////
 
-#include "TClass.h"
+#include "mcRootData/McVertex.h"
 
-#include "mcRootData/MCVertex.h"
-
-ClassImp(MCVertex)
-
+ClassImp(McVertex)
+//________________________________________________________________________
 /*! Default Constructor
  *  Reserved for use by ROOT I/O.  Do not use this constructor, as no
  *  initialization is performed.
  */
-MCVertex::MCVertex() {
+McVertex::McVertex() :
+    m_pPosI(0), m_pPosF(0), m_pMomI(0), m_pMomF(0)
+{
 }
 //________________________________________________________________________
-MCVertex::MCVertex(TLorentzVector *pos) {
-  m_pPos = pos;
+McVertex::McVertex(TLorentzVector *pPosI, TLorentzVector *pPosF, 
+                   TLorentzVector *pMomI, TLorentzVector *pMomF) :
+    m_pPosI(pPosI), m_pPosF(pPosF), m_pMomI(pMomI), m_pMomF(pMomF)
+{
 }
 //________________________________________________________________________
-MCVertex::MCVertex(Double_t posX, Double_t posY, Double_t posZ, Double_t time) {
-  m_pPos = new TLorentzVector(posX, posY, posZ, time);
-}
-//________________________________________________________________________
-MCVertex::~MCVertex() {
-  if (m_pPos)
-    delete m_pPos;
-}
-//________________________________________________________________________
-Double_t MCVertex::getPosX() {
-  return m_pPos->X();
-}
-//________________________________________________________________________
-Double_t MCVertex::getPosY() {
-  return m_pPos->Y();
-}
-//________________________________________________________________________
-Double_t MCVertex::getPosZ() {
-  return m_pPos->Z();
-}
-//________________________________________________________________________
-Double_t MCVertex::getTime() {
-  return m_pPos->T();
-}
-//________________________________________________________________________
-TLorentzVector *MCVertex::getPosLV() {
-  return m_pPos;
-}
-//________________________________________________________________________
-void MCVertex::setPosX(Double_t posX) {
-  m_pPos->SetX(posX);
-}
-//________________________________________________________________________
-void MCVertex::setPosY(Double_t posY) {
-  m_pPos->SetY(posY);
-}
-//________________________________________________________________________
-void MCVertex::setPosZ(Double_t posZ) {
-  m_pPos->SetZ(posZ);
-}
-//________________________________________________________________________
-void MCVertex::setTime(Double_t time) {
-  m_pPos->SetT(time);
+McVertex::~McVertex() {
+    if (m_pPosI)
+      delete m_pPosI;
+
+    if (m_pPosF)
+      delete m_pPosF;
+
+    if (m_pMomI)
+      delete m_pMomI;
+
+    if (m_pMomF)
+      delete m_pMomF;
 }
 //________________________________________________________________________

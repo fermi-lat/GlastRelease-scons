@@ -4,7 +4,8 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ class MCVertex;
-#pragma link C++ class MCParticle;
+#pragma link C++ class McVertex;
+#pragma link C++ class McParticle;
+#pragma link C++ class McEvent;
 
 #endif

@@ -1,100 +1,55 @@
 ///////////////////////////////////////////////////////////////////////////
 //                                                                       
-// The MCParticle class provides an interface to a particle for use in
+// The McParticle class provides an interface to a particle for use in
 // GLAST Monte Carlo applications
 //                                                                       
 ///////////////////////////////////////////////////////////////////////////
 
-#include "TClass.h"
+#include "mcRootData/McParticle.h"
 
-#include "mcRootData/MCParticle.h"
-#include "mcRootData/MCVertex.h"
-
-ClassImp(MCParticle)
-
+ClassImp(McParticle)
+//________________________________________________________________________
 /*! Default Constructor
  *  Reserved for use by ROOT I/O.  Do not use this constructor, as no
  *  initialization is performed.
  */
-MCParticle::MCParticle() {
+McParticle::McParticle() :
+    m_nPDGId(0), m_pParent(0), m_pVert(0) 
+{
 }
 //________________________________________________________________________
-MCParticle::MCParticle(TLorentzVector *pMom, Int_t id, MCParticle *pParent, MCVertex *pVertex) {
-  m_pMom = pMom;
-  m_nPDGId = id;
-  m_pParent = pParent;
-  m_pVert = pVertex;
+McParticle::McParticle(Int_t id, McParticle *pParent, McVertex *pVertex) :
+  m_nPDGId(id), m_pParent(pParent), m_pVert(pVertex)    
+{
+    m_pChildList = new TObjArray();
+    m_pChildList->SetOwner();
 }
 //________________________________________________________________________
-MCParticle::MCParticle(Double_t momX, Double_t momY, Double_t momZ, Double_t energy,
-                       Int_t id, MCParticle *pParent, MCVertex *pVertex) {
-  m_pMom = new TLorentzVector(momX, momY, momZ, energy);
-  m_nPDGId = id;
-  m_pParent = pParent;
-  m_pVert = pVertex;
-}
-//________________________________________________________________________
-MCParticle::~MCParticle() {
-  // destructor
-  if (m_pMom)
-    delete m_pMom;
+McParticle::~McParticle() {
   if (m_pVert)
     delete m_pVert;
-}
-//________________________________________________________________________
-Double_t MCParticle::getMomX() {
-  return m_pMom->X();
-}
-//________________________________________________________________________
-Double_t MCParticle::getMomY() {
-  return m_pMom->Y();
-}
-//________________________________________________________________________
-Double_t MCParticle::getMomZ() {
-  return m_pMom->Z();
-}
-//________________________________________________________________________
-Double_t MCParticle::getMom() {
-  Double_t  x = m_pMom->X(),
-            y = m_pMom->Y(),
-            z = m_pMom->Z();
 
-  return (Double_t)sqrt(x*x + y*y + z*z);
+  if (m_pChildList)
+      delete m_pChildList;
 }
 //________________________________________________________________________
-Double_t MCParticle::getEnergy() {
-  return m_pMom->T();
+/*! Returns requested child if it exists.  Else returns NULL.
+ */
+McParticle *McParticle::getChild(Int_t nIndex) const {
+    McParticle *pChild = 0;
+    if ((nIndex >= 0) && (nIndex < m_nChildCount))
+        pChild = (McParticle*)m_pChildList->At(nIndex);
+    return pChild;
 }
 //________________________________________________________________________
-TLorentzVector *MCParticle::getMomLV() {
-  return m_pMom;
-}
-//________________________________________________________________________
-MCVertex *MCParticle::getVertex() {
-  return m_pVert;
-}
-//________________________________________________________________________
-MCParticle *MCParticle::getParent() {
-  return m_pParent;
-}
-//________________________________________________________________________
-Int_t MCParticle::getPDGId() {
-  return m_nPDGId;
-}
-//________________________________________________________________________
-void MCParticle::setMomX(Double_t momX) {
-  m_pMom->SetX(momX);
-}
-//________________________________________________________________________
-void MCParticle::setMomY(Double_t momY) {
-  m_pMom->SetY(momY);
-}
-//________________________________________________________________________
-void MCParticle::setMomZ(Double_t momZ) {
-  m_pMom->SetZ(momZ);
-}
-//________________________________________________________________________
-void MCParticle::setEnergy(Double_t energy) {
-  m_pMom->SetT(energy);
+/*! Adds child (if non-NULL) to list of children
+ *  This function, and ALL functions which modify the child list
+ *  MUST also update the m_nChildCount member.
+ */
+void McParticle::addChild(McParticle *pChild) {
+    if (pChild) {
+        m_pChildList->Add(pChild);
+        m_nChildCount++;
+    }
 }
 //________________________________________________________________________
