@@ -817,6 +817,8 @@ StatusCode reconRootReaderAlg::storeCalClusterCol(CalRecon *calRecRoot) {
             calClusterRoot->getCsiStart(),
             calClusterRoot->getCsiAlpha(),
             calClusterRoot->getCsiLambda());
+
+        calClusterTds->setEnergyCorrected(calClusterRoot->getEnergyCorrected());
         
         calClusterColTds->push_back(calClusterTds);
     }

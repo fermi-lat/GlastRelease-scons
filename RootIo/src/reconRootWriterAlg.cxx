@@ -662,7 +662,8 @@ void reconRootWriterAlg::fillCalCluster(CalRecon *calRec, Event::CalClusterCol* 
             rmsLayerRoot.push_back(curVec);   
         }   
         
-        clusterRoot->initialize(clusterTds->getEnergyLeak(),    
+        clusterRoot->initialize(clusterTds->getEnergyLeak(), 
+            clusterTds->getEnergyCorrected(),
             clusterTds->getEneLayer(),   
             posLayerRoot, rmsLayerRoot,    
             clusterTds->getRmsLong(), clusterTds->getRmsTrans(),    
