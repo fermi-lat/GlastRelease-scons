@@ -115,11 +115,10 @@ int checkCalDigi(CalDigi *digi, UInt_t ievent) {
             << numEntries << std::endl;
         return -1;
     }
-//    TIter readoutIt(readoutCol);
     const CalXtalReadout *calReadout;
 
-    for (int iReadout = 0; iReadout<numEntries; iReadout++){
-//    while(calReadout = (CalXtalReadout*) readoutIt.Next()) {
+    int iReadout;
+    for (iReadout = 0; iReadout<numEntries; iReadout++){
         calReadout = &(readoutCol[iReadout]);
         calReadout->Print();
         UShort_t adcP = calReadout->getAdc(CalXtalId::POS);

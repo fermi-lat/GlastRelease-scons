@@ -103,9 +103,8 @@
         ev->Clear();
     }
 
-    printf("object table before deleteing\n");
+    printf("object table before deleting\n");
     gObjectTable->Print();
-
 
     delete ev;
     
