@@ -35,6 +35,9 @@ namespace CalibData {
     std::string getValueName() const;
     int         getValue() const {return m_value;}
 
+  protected:
+    virtual void iUpdate(CalibBase* pOther);
+
   private:
     std::string m_name;
     int         m_value;

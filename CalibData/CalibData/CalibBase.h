@@ -85,8 +85,12 @@ namespace CalibData {
     /// End of validity
     ITime* m_validTill;
 
+    virtual void iUpdate(CalibBase* ) {}    
+
     /// Serial number of corresponding metadata row. 
     int m_serNo;
+
+    CalibBase* m_me;   // will be pointer to derived class where appropriate
 
     // Other possible things to keep here:  flavor, calibration type
     

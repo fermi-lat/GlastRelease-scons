@@ -10,10 +10,11 @@
 #include "GaudiKernel/StatusCode.h"
 
 namespace CalibData {
-  CalibBase::CalibBase() : m_validSince(0), m_validTill(0), m_serNo(-1) {}
+  CalibBase::CalibBase() : m_validSince(0), m_validTill(0), m_serNo(-1),
+  m_me(this) {}
 
   CalibBase::CalibBase(const ITime& since, const ITime& till, int serNo) :
-    m_validSince(0), m_validTill(0), m_serNo(serNo)
+    m_validSince(0), m_validTill(0), m_serNo(serNo), m_me(this)
   {
     m_validSince = new CalibTime::CalibTime(since);
     m_validTill = new CalibTime::CalibTime(till);
@@ -24,6 +25,7 @@ namespace CalibData {
     m_validSince = other.m_validSince;
     m_validTill = other.m_validTill;
     m_serNo     = other.m_serNo;
+    m_me = this;
   }
 
   CalibBase::~CalibBase() {
@@ -38,6 +40,8 @@ namespace CalibData {
 
     m_validTill = new CalibTime::CalibTime(obj.validTill() );
     m_validSince = new CalibTime::CalibTime(obj.validSince() );
+    m_serNo = obj.m_serNo;
+    m_me->iUpdate(obj.m_me);
   }
 
   bool CalibBase::isValid() {
