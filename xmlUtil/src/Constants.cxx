@@ -103,7 +103,7 @@ namespace {
       DOM_Element  prim = doc.createElement("prim");
       prim.setAttribute("name", elt.getAttribute("name"));
       prim.setAttribute("type", "double");
-      prim.setAttribute("utype", "energy");
+      prim.setAttribute("uType", "energy");
       prim.setAttribute("unitEnergy", "MeV");
       double energy = atof(xml::Dom::transToChar(elt.getAttribute("value")));
       if ((DOMString("GeV")).equals(elt.getAttribute("units")) ) {
