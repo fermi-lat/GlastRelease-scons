@@ -2,6 +2,10 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
+ * 14-Jul-2004: jrb v0r10:   Support new mode to use timestamp from real 
+ *                           (i.e., not mc) instrument data to select 
+ *                           calibrations.
+ *                           Clean up fake event clock mode as well.
  * 12-Jul-2004: jrb v0r9p2:  Exercise new CalibData vstart, vend access methods
  *                           in test algorithm UsePeds
  *  9-Jul-2004: jrb v0r9p1:  Get rid of -no_auto_imports in requirements
