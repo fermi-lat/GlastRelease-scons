@@ -1,7 +1,7 @@
 /*
 package manager:T.Burnett 
- *         EOH      
- * v2r12p2 02-Jan-05 lsr back to v2r12 (Joanne has "fixed" CalibData)
+ *         EOH
+ * v2r12p2 02-Jan-05 lsr back to version of v2r12, after Joanne's mods     
  * v2r12p1 02-Jan-05 lsr revert to previous version until CalibData is straightened out
  * v2r12   01-Jan-05 lsr remove getPlane() and getLayer()
  * v2r11p6 15-Dec-04 jrb Make it easy to copy TkrId object
