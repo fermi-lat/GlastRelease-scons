@@ -1,0 +1,129 @@
+
+<source_library>
+   <!--
+       $Header$
+       Some simple test flux definitions for debugging
+    -->
+
+    <source name="muon_pencil_side">
+       <spectrum> 
+         <particle name="mu+"><energy e="2"/> </particle>
+           <direction theta="90" phi="45" />
+           <launch_point x="500" y="500" z="0" />
+       </spectrum>
+     </source>
+
+    <source name="muon_pencil_side_x">
+       <spectrum> 
+         <particle name="mu+"><energy e="2"/> </particle>
+           <direction theta="90" phi="90" />
+           <launch_point x="0" y="500" z="0" />
+       </spectrum>
+     </source>
+
+    <source name="muon_pencil_side_y">
+       <spectrum> 
+         <particle name="mu+"><energy e="2"/> </particle>
+           <direction theta="90" phi="0" />
+           <launch_point x="500" y="50" z="0" />
+       </spectrum>
+     </source>
+
+    <source name="muon_pencil">
+       <spectrum> 
+         <particle name="mu+"><energy e="2"/> </particle>
+           <direction theta="0" phi="0" />
+           <launch_point x="40" y="40" z="800" />
+       </spectrum>
+     </source>
+
+    <source name="muon_pencil_angle">
+       <spectrum> 
+         <particle name="mu+"><energy e="2"/> </particle>
+           <direction theta="30" phi="90" />
+           <launch_point x="50" y="500" z="1000" />
+       </spectrum>
+     </source>
+
+
+    <source name="muon_patch_CALLayers">
+       <spectrum> 
+         <particle name="mu+"><energy e="2"/> </particle>
+           <direction theta="0" phi="0" />
+           <patch xmin="45.01" xmax="45.02" ymin="-163." ymax="163" />
+       </spectrum>
+     </source>
+
+    <source name="electron_patch_SingleCDE">
+       <spectrum> 
+         <particle name="e-"><energy e="10"/> </particle>
+           <direction theta="0" phi="0" />
+           <patch xmin="-163." xmax="163." ymin="-.001" ymax="0.001" />
+       </spectrum>
+     </source>
+
+    <source name="gamma_patch_SingleCDE">
+       <spectrum> 
+         <particle name="gamma"><energy e="0.02"/> </particle>
+           <direction theta="0" phi="0" />
+           <patch xmin="-163." xmax="163." ymin="-.001" ymax="0.001" />
+       </spectrum>
+     </source>
+
+    <source name="muon_patch_SingleCDE">
+       <spectrum> 
+         <particle name="mu+"><energy e="2"/> </particle>
+           <direction theta="0" phi="0" />
+           <patch xmin="-163." xmax="163." ymin="-.001" ymax="0.001" />
+       </spectrum>
+     </source>
+
+    <source name="alpha_test">
+       <spectrum> 
+         <particle name="alpha"><energy e="20"/> </particle>
+           <direction theta="0" phi="0" />
+           <patch xmin="-700" xmax="700" ymin="-700" ymax="700" />
+       </spectrum>
+     </source>
+
+    <source name="pi0_test">
+       <spectrum> 
+         <particle name="pi0"><energy e="20"/> </particle>
+           <direction theta="0" phi="0" />
+           <patch xmin="-700" xmax="700" ymin="-700" ymax="700" />
+       </spectrum>
+     </source>
+
+    <source name="lambda_test">
+       <spectrum> 
+         <particle name="lambda"><energy e="20"/> </particle>
+           <direction theta="0" phi="0" />
+           <patch xmin="-700" xmax="700" ymin="-700" ymax="700" />
+       </spectrum>
+     </source>
+
+    <source name="gamma_test">
+       <spectrum> 
+         <particle name="gamma"><energy e="10.0"/> </particle>
+           <direction theta="0" phi="0" />
+           <launch_point x="45" y="45" z="1000" />
+       </spectrum>
+     </source>
+
+    <source name="gamma_vdg">
+       <spectrum> 
+         <particle name="gamma"><energy e=".0176"/> </particle>
+           <direction theta="0" phi="0" />
+           <launch_point x="50" y="50" z="1000" />
+       </spectrum>
+     </source>
+
+    <source name="gamma_patch_for_G4">
+       <spectrum> 
+         <particle name="gamma"><energy e="10"/> </particle>
+           <direction theta="0" phi="0" />
+           <patch />
+       </spectrum>
+     </source>
+
+</source_library>
