@@ -9,6 +9,7 @@ macro   geometry_linkopts "-L ${GEOMETRYROOT}/${CMTCONFIG} -lgeometry"\
 macro_append Win32Debug   " ${GEOMETRYROOT}/${DebugDir}/geometrylib.lib"
 macro_append Win32Release " ${GEOMETRYROOT}/${ReleaseDir}/geometrylib.lib"
 
+path_append LD_LIBRARY_PATH "${GEOMETRYROOT}/${CMTCONFIG}"
 
 private
 library  geometry -no_share \
@@ -19,6 +20,6 @@ library  geometry -no_share \
     Plane.cxx           Point.cxx           Ray.cxx\
     Shape.cxx           Sphe.cxx\
     Sphere.cxx          Surface.cxx         Track.cxx\
-    Tube.cxx            Vector.cxx \
+    Tube.cxx            Tubs.cxx            Vector.cxx \
     Volume.cxx          Wedge.cxx \
     ../geometry/*.h
