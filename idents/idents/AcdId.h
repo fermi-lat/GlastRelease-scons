@@ -6,11 +6,6 @@
 
 #include "facilities/bitmanip.h"
 #include "idents/ModuleId.h"
-#include "instrument/Tower.h"
-#include "instrument/Glast.h"
-
-#include <vector>
-
 /*!
 \class AcdId 
 \brief encapsulate the id for an ACD tile.
@@ -42,7 +37,8 @@ class   AcdId {
 public:
     AcdId ();
     AcdId ( const AcdId& );
-    AcdId ( unsigned int id ) : m_id (id) { m_towers.clear(); }
+    AcdId ( unsigned int id ) : m_id (id) { }
+    AcdId (short l, short f, short r, short c);
     virtual ~AcdId ();
 
     // access
@@ -59,44 +55,31 @@ public:
     }
 
     // all tile access methods
-    inline unsigned int id ();
-    inline bool    top () const;       // is this a top tile?
-    inline bool    side () const;      // is this a side tile?
-    inline short   layer () const;     // which layer is this tile in (0-1)
-
+    /// access the id in matrix format LayerFaceRowColumn
+    inline unsigned int id () const;
+    /// is this a top tile?
+    inline bool    top () const;  
+    /// is this a side tile?
+    inline bool    side () const;   
+    /// which layer is this tile in (1st(0 - closer to center of GLAST) or 2nd (1))
+    inline short   layer () const;     
+    /// which face number?
     inline short   face() const;
+    /// which row number?
     inline short   row() const;     
+    /// which column?
     inline short   column () const;   
-    std::vector<idents::ModuleId> getAssociatedTowers() { return m_towers; }
-
-    /// add a new ModId to the list of associated towers
-    inline void addTower(const idents::ModuleId &m); 
-
-    /// is this tile assoicated to a particular tower module ?
-    /// returns a bit pattern with the bit set representing the position of the ACD tile as follows:
-    /// [4 bits = top] [4 bits = W] [4 bits = S] [4 bits = E] [4 bits = N] 
-    /// where the bit that is set within a particular group of 4 corresponds to the position
-    /// of the tile starting in the upper left and moving clockwise while looking either straight down,
-    /// due north or due west through the instrument.
-    int association ( const idents::ModuleId &m ) const;
-
-    /// determines whether two tile are adjacent
-    bool neighbor( const AcdId& ) const;
-
-protected:
-
-    inline void layer( unsigned int val ); // set layer
-    inline void face (unsigned int f);   // set face 
-    inline void row( unsigned int r );   // set row 
-    inline void column( unsigned int c ); // set column
-    
-    // friends
-    friend class ACDTopMed;
-    friend class ACDSideMed;
-    friend class Scintillator;
 
 private:
-
+    /// set layer
+    inline void layer( unsigned int val );
+    /// set the face number
+    inline void face (unsigned int f);
+    /// set the row
+    inline void row( unsigned int r );
+    /// set the column
+    inline void column( unsigned int c );
+    
     enum {
         _layermask = 0x0800,
         _facemask  = 0x0700,
@@ -106,17 +89,22 @@ private:
 
     unsigned int    m_id;   // id value (4 byte word)
 
-    // list of modules Ids associated with this AcdId
-    std::vector<idents::ModuleId> m_towers;
 };
 
 // inline declarations
 
-inline AcdId::AcdId () : m_id (0) {m_towers.clear();}
-inline AcdId::AcdId ( const AcdId& r ) : m_id (r.m_id), m_towers(r.m_towers) {}
-inline AcdId::~AcdId () {m_towers.clear();}
+inline AcdId::AcdId () : m_id (0) {}
+inline AcdId::AcdId ( const AcdId& r ) : m_id (r.m_id) {}
+inline AcdId::AcdId (short l, short f, short r, short c)  {
+    m_id = 0;
+    layer(l);
+    face(f);
+    row(r);
+    column(c);
+}
+inline AcdId::~AcdId () {}
 
-inline unsigned int AcdId::id() 
+inline unsigned int AcdId::id() const 
 { return (layer() * 1000 + face() * 100 + row() * 10 + column()); }
 
 inline bool AcdId::top () const 
@@ -166,38 +154,6 @@ inline void AcdId::column( unsigned int c )
   bitmanip::set_word<unsigned int>( zero, m_id, c ); 
 }
 
-inline void AcdId::addTower(const idents::ModuleId &m) {
-    m_towers.push_back(m);
-}
-
-inline int  AcdId::association ( const idents::ModuleId& m ) const
-{
-    typedef std::vector < idents::ModuleId >::const_iterator const_iterator;
-
-    for( const_iterator it = m_towers.begin(); it != m_towers.end(); ++it) {
-        const idents::ModuleId& modId = *it;
-	if (modId == m) return 1;
-    }
-    
-    return 0;
-}
-
-inline bool AcdId::neighbor( const AcdId& id) const
-{
-    // tiles are on the same face
-    if (id.face() == face()) {
-        if ( (fabs(id.row() - row()) <= 1) && (fabs(id.column() - column()) <= 1) )
-            return true; 
-    } else {
-        // otherwise tiles are on different faces
-       // if (column() == 0) || (column() == 4) {
-
-        //}
-
-    }
-
-    return false;
-}
 
 inline std::ostream& operator<<(std::ostream& out,const AcdId& id){id.write(out); return out;}
 inline std::istream& operator>>(std::istream&  in, AcdId& id){id.read(in); return in;}
