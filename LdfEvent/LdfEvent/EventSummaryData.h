@@ -27,9 +27,11 @@ namespace LdfEvent{
         /// constructed from the eventNumber and tag in the EventSummary
         /// are either inconsistent across contributions in the evnet
         /// or the event sequence across events is not monotonically increasing
+       /// TKRRECON set means there was some error condition during TkrRecon
         typedef enum {
             GOOD = 0,
-            EVTSEQ = 1
+            EVTSEQ = 1,
+            TKRRECON = 2
         } EventFlags ;
 
 
@@ -88,9 +90,12 @@ namespace LdfEvent{
         unsigned int errLength() const { return m_otherContribLen[ERR]; }
         unsigned int diagLength() const { return m_otherContribLen[DIAG]; }
 
+        void setEvtSeqBit()  { m_flags |= EVTSEQ; };
+        void setTkrReconBit() { m_flags |= TKRRECON; };
         unsigned int eventFlags() const { return m_flags; };
         bool goodEvent() const { return (m_flags == 0); };
         bool badEventSeq() const { return (m_flags && EVTSEQ); };
+        bool badTkrRecon() const { return (m_flags && TKRRECON); };
         bool badEvent() const { return (m_flags != 0); } ;
         unsigned long eventSequence() const {
             unsigned eventNumber = EventSummary::eventNumber(m_summary);
