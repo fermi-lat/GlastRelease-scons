@@ -280,7 +280,10 @@ const Event::TkrClusterVec TkrQueryClustersTool::getClustersX(
         idClusMap = SmartDataPtr<Event::TkrIdClusterMap>(m_pEventSvc, 
                                                          EventModel::TkrRecon::TkrIdClusterMap);
     }
-    else idClusMap = m_badIdClusMap;
+    else {
+        if(!m_badIdClusMap) return clusVec;
+        idClusMap = m_badIdClusMap;
+    }
 
     TkrViewLayerIdMap::const_iterator clusIdIter = clusIdRange.first;
     for(; clusIdIter != clusIdRange.second; clusIdIter++)
