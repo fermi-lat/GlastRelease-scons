@@ -41,7 +41,7 @@ Top.area= 6.0;
 //Top.pointing_mode=4;  // this is the fixed angle 
 //Top.rocking_angle=90; // degrees about x-axis   
 //Top.rocking_angle_z=90; // degrees about z-axis   
-Top.source_name="vertical_surface_muons";
+Top.source_name="backgndavgpdr";
 //Top.source_name="GRB_DC1";
 //Top.source_name="isotropic";
 

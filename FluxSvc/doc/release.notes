@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   26-Feb-05  v6r17p1 THB  Have test program run backgndavgpdr for composite source, different particles
    16-Dec-04  v6r17p0 TU  Update requirements to pick up new Event
    08-sep-04  v6r16p3 thb Fix for windows build
    27-aug-04  v6r16p2 jrb Get RM to use main trunk again in LATEST build
