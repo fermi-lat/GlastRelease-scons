@@ -2,6 +2,7 @@
  * package GlastSvc
  * package manager:T.Burnett
  *
+ * 06-sep-02  HMK          Update documentation
  * 15-aug-02  THB Tag v8r2  GlastDetSvc changes
  * 09-jun-02  THB Tag v8r1p2 after fix to const in GeometryVisitor 
  * 26-may-02  THB Tag v8r1p1 geometry changes+ a little more output 
