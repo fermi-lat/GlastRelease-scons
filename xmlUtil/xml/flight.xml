@@ -19,14 +19,17 @@
     <!ENTITY CALMatPrim     SYSTEM "flightCALMatPrim.xml">
     <!ENTITY CALCountPrim   SYSTEM "flightCALCountPrim.xml">
     <!ENTITY CALDimPrim     SYSTEM "flightCALDimPrim.xml">
+    <!ENTITY CALOneCal      SYSTEM "flightCALOneCal.xml">
 
     <!ENTITY TKRMatPrim     SYSTEM "flightTKRMatPrim.xml">
     <!ENTITY TKRCountPrim   SYSTEM "flightTKRCountPrim.xml">
     <!ENTITY TKRDimPrim     SYSTEM "flightTKRDimPrim.xml">
+    <!ENTITY TKROneTkr      SYSTEM "flightTKROneTkr.xml">
 
     <!ENTITY ACDMatPrim     SYSTEM "flightACDMatPrim.xml">
     <!ENTITY ACDCountPrim   SYSTEM "flightACDCountPrim.xml">
     <!ENTITY ACDDimPrim     SYSTEM "flightACDDimPrim.xml">
+    <!ENTITY ACDAcd         SYSTEM "flightACDAcd.xml">
 
     <!ENTITY idDict         SYSTEM "flightIdDict.xml">
   ]
@@ -79,14 +82,33 @@
           <uminus><refer refTo="diodePosXOffset" /> </uminus>
         </const>
 
+<!--
         <const name= "CALHalfGap">
-          <notes>convenience</notes>
+          <notes>was convenience  -- now OBSOLETE</notes>
           <mul> 
             <refer refTo="CALGap" /> 
             <const value="0.5" uType="count" /> 
           </mul>
         </const>
+-->
+        <const name="cellVertWallHalfThick">
+          <notes>convenience</notes>
+          <mul> 
+            <refer refTo="cellVertWallThick" /> 
+            <const value="0.5" uType="count" /> 
+          </mul>
+        </const>
 
+        <const name="cellHorWallHalfThick">
+          <notes>convenience</notes>
+          <mul> 
+            <refer refTo="cellHorWallThick" /> 
+            <const value="0.5" uType="count" /> 
+          </mul>
+        </const>
+
+
+        
 
 <!-- dimensions for log envelope volume -->
         <const name="CsIEnvX">  
@@ -101,19 +123,35 @@
         </const>
 
         <const name="CsIEnvY">  
-          <notes>Transverse dimension of envelope containing a CsI crystal and its diodes</notes>
+          <notes>Transverse dimension of envelope containing a CsI 
+crystal and its diodes</notes>
+          <refer refTo="cellHorPitch" />
+<!--
           <add>
             <refer refTo="CsIWidth" />
             <refer refTo="CALGap" />
           </add>
+ -->
         </const>
 
         <const name = "CsIEnvZ" >
           <notes>Height of the envelope containing a CsI crystal and its diodes</notes>
+          <refer refTo="cellVertPitch" />
+<!--
           <add>
             <refer refTo="CsIHeight" />
             <refer refTo="CALGap" />
           </add>
+ -->
+        </const>
+
+        <const name="cellIntWallZ">
+          <notes>Height of vertical wall, up to but not including 
+               horizontal walls</notes>
+          <minus>
+            <refer refTo="CsIEnvZ" />
+            <refer refTo="cellHorWallThick" />
+          </minus>
         </const>
 
 <!-- the following should be the maximum of the length of a single
@@ -131,22 +169,72 @@
           </max>
 	</const>
 
+        <const name="CALTransvGap"><notes>New from Eric/Sacha.  Gap between
+side of log + C-cell [composite cell??] and CAL side wall</notes>
+          <mul>
+            <const value="0.5" />
+            <add>
+              <refer refTo="CALModuleWidth" />
+              <uminus>
+                <mul>
+                  <refer refTo="nCsIPerLayer" />
+                  <refer refTo="cellHorPitch" />
+                </mul>
+              </uminus>
+              <mul>
+                <const value="2.0" />
+                <minus>
+                  <refer refTo="CALSideWallThick" />
+                  <refer refTo="cellSideReinfThick" />
+                </minus>
+              </mul>
+            </add>
+          </mul>
+        </const>
+
+        <const name="cellHorGap">
+          <notes>New from Eric/Sacha.  Horizontal gap between xtal
+                 and cell wall.</notes>
+          <mul>
+            <const value="0.5" />
+            <minus>
+              <minus>
+                <refer refTo="cellHorPitch" />
+                <refer refTo="CsIWidth" />
+              </minus>
+              <refer refTo="cellVertWallThick" />
+            </minus>
+          </mul>
+        </const>
+
+        <const name="cellVertGap" />
+          <notes>New from Eric/Sacha.  Vertical gap between xtal
+                 and cell wall.</notes>
+          <mul>
+            <const value="0.5" />
+            <minus>
+              <minus>
+                <refer refTo="cellVertPitch" />
+                <refer refTo="CsIHeight" />
+              </minus>
+              <refer refTo="cellHorWallThick" />
+            </minus>
+          </mul>
+        </const>
+
+
+
 <!-- the following includes cal layers and inter-layer spacers, but
      not frame, grid between cal and tkr, etc. 
-     Hence it's nlayer*CsIEnvZ + (nlayer - 1)*CALInterLayer or
-     nLayer*(CsIEnvZ + CALInterLayer) - CALInterLayer = 19.306 -->
+     Hence it's just nlayer*cellVertPitch 
+-->
         <const name="CALTotalZ">
-<notes>Includes cal layers and inter-layer spacers, but not frame, grid, etc.</notes>
-          <minus>
-            <mul>
-              <refer refTo="CALnLayer" />
-              <add>
-                <refer refTo="CsIEnvZ" />
-                <refer refTo="CALInterLayer" />
-              </add>
-            </mul>
-            <refer refTo="CALInterLayer" />
-          </minus>
+<notes>Includes cal layers and inter-layer walls but not frame, 
+grid, etc. (may be superseded by info from Eric)</notes>
+          <mul>
+            <refer refTo="CALnLayer" />
+            <refer refTo="cellVertPitch" />
+          </mul>
         </const>
 
     <!-- additional (derived) dimensions for frame -->
@@ -1266,432 +1354,9 @@ row of side tiles</notes>
          XREF="towersTotalX" YREF="towersTotalY" ZREF="towersTotalZ"
          materialREF = "vacuumMat" />
     -->
-    <!-- According to conventions above, an unrotated CsIDetector would
-    be an X-log -->
-    <box name="CsIDetector" 
-         sensitive="true"
-         XREF="CsILength" YREF="CsIWidth" ZREF="CsIHeight"
-         materialREF="crystalMat"  >
-      <seg axis="X" nSeg="10" reason="energyAcct" />
-    </box>
 
-<!-- there are two kinds of diodes: large and small. See diode section of
-     instrument.xml.   These
-     diode boxes or oriented the same way as the unrotated CsIDetector
-     above.  Old names for x,y,z dimensions were respectively
-     thickness,x_width,y_width   -->
-    <box name="diodeL"
-         sensitive="true"
-         XREF="diodeX"     
-         YREF="diodeY"
-         ZREF="diodeLZ"          
-         materialREF="diodeMat" />
-    <box name="diodeS"
-         sensitive="true"
-         XREF="diodeX"     
-         YREF="diodeY"
-         ZREF="diodeSZ"          
-         materialREF="diodeMat" />
-
-    <box name="CsIElementEnv"
-         materialREF="CALWrapMat"
-         XREF="CsIEnvX"
-         YREF="CsIEnvY"
-         ZREF="CsIEnvZ"/>
-
-    <!-- This name comes from GlastSim code. -->
-    <composition name="CsIElement"  envelope="CsIElementEnv">
-      <posXYZ volume="CsIDetector">  <!-- centered in envelope -->
-        <idField name="fCALLogCmp" value="eLogXtal" />
-      </posXYZ>
-      <posXYZ volume="diodeS" 
-              XREF="diodeNegXOffset"
-              YREF="diodeYOffset"
-              ZREF="diodeSZOffset"
-        >
-        <idField name="fCALLogCmp" valueREF="eDiodeMSmall" />
-      </posXYZ>
-      <posXYZ volume="diodeS" 
-              XREF="diodePosXOffset"
-              YREF="diodeYOffset"
-              ZREF="diodeSZOffset"
-        >
-        <idField name="fCALLogCmp" valueREF="eDiodePSmall" />
-      </posXYZ>
-      <posXYZ volume="diodeL" 
-              XREF="diodeNegXOffset"
-              YREF="diodeYOffset"
-              ZREF="diodeLZOffset"
-        >
-        <idField name="fCALLogCmp" valueREF="eDiodeMLarge" />
-      </posXYZ>
-      <posXYZ volume="diodeL" 
-              XREF="diodePosXOffset"
-              YREF="diodeYOffset"
-              ZREF="diodeLZOffset"
-        >
-        <idField name="fCALLogCmp" valueREF="eDiodePLarge" />
-      </posXYZ>
-    </composition>
-
-    <!-- make a layer out of some evenly-spaced CsIElements -->
-    <stackY name="CALLayer" >
-      <axisMPos volume="CsIElement" ncopyREF="nCsIPerLayer"
-                gapREF="CALGap" >
-        <idField name="fCALLog" value="0" step="1" />
-      </axisMPos>
-    </stackY>
-
-<!-- Need to define spacer box between layers -->
-    <box name="CALSpace"
-         XREF="CALLayerTrans"
-         YREF="CALLayerTrans"
-         ZREF="CALInterLayer"
-         materialREF="CALSpaceMat"
-         />
-
-<!-- intersperse log layers with calSpace boxes.  Volumes get
-     added with increasing Z, so we're starting at the back
-     with layer 7 (a Y-layer) and working our way forward to
-     layer 0, an X layer.  The Y-layers must be rotated -->
-    <stackZ name="CALLayers"  >
-      <axisPos volume="CALLayer" rotation="90" >
-        <idField name="fLayer" value="7" />
-        <idField name="fMeasure" valueREF="eMeasureY" />
-      </axisPos>
-      <axisPos volume="CALSpace" />
-      <axisPos volume="CALLayer"  >
-        <idField name="fLayer" value="6" />
-        <idField name="fMeasure" valueREF="eMeasureX" />
-      </axisPos>
-      <axisPos volume="CALSpace" />
-      <axisPos volume="CALLayer" rotation="90" >
-        <idField name="fLayer" value="5" />
-        <idField name="fMeasure" valueREF="eMeasureY" />
-      </axisPos>
-      <axisPos volume="CALSpace" />
-      <axisPos volume="CALLayer"  >
-        <idField name="fLayer" value="4" />
-        <idField name="fMeasure" valueREF="eMeasureX" />
-      </axisPos>
-      <axisPos volume="CALSpace" />
-      <axisPos volume="CALLayer" rotation="90" >
-        <idField name="fLayer" value="3" />
-        <idField name="fMeasure" valueREF="eMeasureY" />
-      </axisPos>
-      <axisPos volume="CALSpace" />
-      <axisPos volume="CALLayer"  >
-        <idField name="fLayer" value="2" />
-        <idField name="fMeasure" valueREF="eMeasureX" />
-      </axisPos>
-      <axisPos volume="CALSpace" />
-      <axisPos volume="CALLayer" rotation="90" >
-        <idField name="fLayer" value="1" />
-        <idField name="fMeasure" valueREF="eMeasureY" />
-      </axisPos>
-      <axisPos volume="CALSpace" />
-      <axisPos volume="CALLayer"  >
-        <idField name="fLayer" value="0" />
-        <idField name="fMeasure" valueREF="eMeasureX" />
-      </axisPos>
-    </stackZ>
-
-    <!-- Calorimeter for a tower consists of layers plus frame pieces -->
-    <!-- Can just embed layers stack into box of frame material -->
-    <box name="oneCALEnv"
-         XREF="CALFrameWidth"
-         YREF="CALFrameWidth"
-         ZREF="CALFrameHeight"
-         materialREF="CALFrameMat"
-         />
-    <composition name="oneCAL" envelope="oneCALEnv" >
-      <posXYZ volume="CALLayers" />  <!-- centered in envelope -->
-    </composition>
-
-
-<!-- Tracker stuff.  The tracker consists of trays.  Alternate trays
-     are rotated by 90 degrees with just vacuum inbetween.  But
-     the rotation is not apparent to the simulator since it
-     doesn't know about individual strips  -->
-<!-- Trays come in 3 flavors: top tray, bottom tray and middle tray.
-     These are further subdivided by thickness of converter layer which
-     may be any of 
-          no converter (bottom and middle trays only)
-          super-GLAST thickness (middle only)
-          "normal" thickness (middle and top only)  -->
-    <box name="convReg" 
-	 XREF="TKRTrayWidth" 
-	 YREF="TKRTrayWidth" 
-	 ZREF="convThickReg"
-	 materialREF="convMat" />
-    <box name="convSuper" 
-	 XREF="TKRTrayWidth" 
-	 YREF="TKRTrayWidth"
-	 ZREF="convThickSup" 
-	 materialREF="convMat" />
-    <box name="TKRCoreReg"
-	 XREF="TKRTrayWidth" 
-	 YREF="TKRTrayWidth" 
-	 ZREF="coreThick" 
-	 materialREF="coreMat" />
-    <box name="TKRCoreBottom" 
-	 XREF="TKRTrayWidth" 
-	 YREF="TKRTrayWidth"
-	 ZREF="coreThickBottom" materialREF="coreMat" />
-    <!-- box name="TKRCoreNoConv" 
-	 XREF="TKRTrayWidth" 
-	 YREF="TKRTrayWidth"
-	 ZREF="panelThick" materialREF="coreMat" /   -->
-
-<!-- Instead of defining a silicon box, should perhaps make
-     a composition or stack(s) defining internal structure
-     of ladders and strips.
-  -->
-    <box name="SiLayerBox"
-         sensitive="true"  
-	 XREF="TKRTrayWidth" 
-	 YREF="TKRTrayWidth"
-	 ZREF="SiThick" materialREF="TKRDetMat" />
-
-    <choice name="SiLayer" >  
-      <case mode="propagate" volume="SiLayerBox" />
-      <case mode="digi recon" volume="SiLayerComp" />
-    </choice>
-
-  <!-- No explicit material, so vacuum -->
-    <box name="SiLayerEnv"    
-      XREF="TKRTrayWidth"
-      YREF="TKRTrayWidth"
-      ZREF="SiThick" 
-      materialREF="vacuumMat"/>
-
-<!-- The unrotated wafer is segmented along the x axis, hence measures X,
-     hence is an X layer -->
-    <box name="SiWaferActive"
-         sensitive="true"
-	 XREF="SiWaferActiveSide"
-	 YREF="SiWaferActiveSide"
-	 ZREF="SiThick"
-	 materialREF="TKRDetMat">
-      <seg axis="X" reason="readout" nSegREF="stripPerWafer" />
-    </box>
-
-    <box name="SiWafer"
-	 XREF="SiWaferSide"
-	 YREF="SiWaferSide"
-	 ZREF="SiThick"
-	 materialREF="TKRDetMat">
-    </box>
-
-    <composition name="SiWaferNest" envelope="SiWafer">
-      <posXYZ volume="SiWaferActive" />
-    </composition>
-    
-<!-- identify wafers by their position along stack in direction
-     of measurement.                                          
-     strip id in glastsim style is then 
-           local(in wafer)-strip# + strips-per-wafer * wafer-id
- -->
-    <stackX name="waferRow" origin="atCentre" >
-      <axisMPos volume="SiWaferNest" ncopyREF="nWaferAcross">
-        <idField name="fLadder" value="0" step="1" />
-      </axisMPos>
-    </stackX>
-
-    <stackY name="towerLayerWafers" origin="atCentre" >
-      <axisMPos volume="waferRow" ncopyREF="nWaferAcross"/>
-    </stackY>
-
-<!-- The collection of wafers is centered in the volume -->
-    <composition name="SiLayerComp" envelope="SiLayerEnv">
-      <posXYZ volume="towerLayerWafers" />
-    </composition>
-
-<!-- actually includes all inactive materials except core, conv -->
-    <box name="TKRFaceUpperReg"  
-	 XREF="faceWidth" 
-	 YREF="faceWidth" 
-	 ZREF="inactiveThickUpperReg" materialREF="TKRFaceMat" />
-    <box name="TKRFaceUpperSuper"  
-	 XREF="faceWidth" 
-	 YREF="faceWidth" 
-	 ZREF="inactiveThickUpperSuper" materialREF="TKRFaceMat" />
-
-    <box name="TKRFaceLowerNoCnv"  
-	 XREF="faceWidth" 
-	 YREF="faceWidth" 
-	 ZREF="inactiveThickLowerNoCnv" materialREF="TKRFaceMat" />
-
-    <box name="TKRBelowCnv"  
-	 XREF="faceWidth" 
-	 YREF="faceWidth" 
-	 ZREF="inactiveThickBelowCnv" materialREF="TKRFaceMat" />
-
-    <box name="TKRFaceToCnvSuper"  
-	 XREF="faceWidth" 
-	 YREF="faceWidth" 
-	 ZREF="inactiveThickToCnvSuper" materialREF="TKRFaceMat" />
-
-    <box name="TKRFaceToCnvReg"  
-	 XREF="faceWidth" 
-	 YREF="faceWidth" 
-	 ZREF="inactiveThickToCnvReg" materialREF="TKRFaceMat" />
-    <box name="TKRFaceOutside"  
-	 XREF="faceWidth" 
-	 YREF="faceWidth" 
-	 ZREF="inactiveThickOutside" materialREF="TKRFaceMat" />
-
-    <!-- Make a stack for the bottom tray -->
-    <stackZ name="trayBot" >
-      <axisPos volume="TKRFaceOutside" />
-      <axisPos volume="TKRCoreBottom" />
-      <axisPos volume="TKRFaceUpperReg" />
-      <axisPos volume="SiLayer" >
-	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" />
-      </axisPos>
-    </stackZ>
-
-    <!-- Stack for middle no-lead trays -->
-    <stackZ name="trayNoConv" >
-      <axisPos volume="SiLayer" >
-	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" />
-      </axisPos>
-      <axisPos volume="TKRFaceLowerNoCnv" />
-      <axisPos volume="TKRCoreReg" />
-      <axisPos volume="TKRFaceUpperReg" />
-      <axisPos volume="SiLayer" >
-	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" /> 
-      </axisPos>
-    </stackZ>
-
-    <!-- stack for super-GLAST layers -->
-    <stackZ name="traySuper" >
-      <axisPos volume="SiLayer" >
-	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" />
-      </axisPos>
-      <axisPos volume="TKRBelowCnv" />
-      <axisPos volume="convSuper" >
-        <idField name="fTKRTrayCmp" valueREF="eTKRCnv" />
-      </axisPos>
-      <axisPos volume="TKRFaceToCnvSuper" />
-      <axisPos volume="TKRCoreReg" />
-      <axisPos volume="TKRFaceUpperSuper" />
-      <axisPos volume="SiLayer" >
-	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" />
-      </axisPos>
-    </stackZ>
-
-    <!-- Regular trays other than top -->
-    <stackZ name="trayReg" >
-      <axisPos volume="SiLayer" >
-	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" />
-      </axisPos>
-      <axisPos volume="TKRBelowCnv" />
-      <axisPos volume="convReg"  >
-        <idField name="fTKRTrayCmp" valueREF="eTKRCnv" />
-      </axisPos>
-      <axisPos volume="TKRFaceToCnvReg" />
-      <axisPos volume="TKRCoreReg" />
-      <axisPos volume="TKRFaceUpperReg" />
-      <axisPos volume="SiLayer" >
-	<idField name="fTKRTrayCmp" valueREF="eTKRSiTop" />
-      </axisPos>
-    </stackZ>
-
-    <!-- top tray -->
-    <stackZ name="trayTop" >
-      <axisPos volume="SiLayer" >
-	<idField name="fTKRTrayCmp" valueREF="eTKRSiBottom" /> 
-      </axisPos>
-      <axisPos volume="TKRBelowCnv" />
-      <axisPos volume="convReg" >
-        <idField name="fTKRTrayCmp" valueREF="eTKRCnv" />
-      </axisPos> 
-      <axisPos volume="TKRFaceToCnvReg" />
-      <axisPos volume="TKRCoreReg" />
-      <axisPos volume="TKRFaceOutside" />
-    </stackZ>
-
-    <!-- make a tracker by stacking up the trays -->
-    <stackZ name="oneTKR" >
-      <axisPos volume="trayBot" rotation="90" >
-	<idField name="fTKRTray" value="0" />
-        <idField name="fMeasure" valueREF="eMeasureY" />
-      </axisPos>
-      <axisPos volume="trayNoConv" gapREF="intertrayGap" >
-	<idField name="fTKRTray" value="1" />
-        <idField name="fMeasure" valueREF="eMeasureX" />
-      </axisPos>
-      <axisPos volume="trayNoConv" rotation="90" gapREF="intertrayGap" >
-	<idField name="fTKRTray" value="2" />
-        <idField name="fMeasure" valueREF="eMeasureY" />
-      </axisPos>
-      <axisPos volume="traySuper" gapREF="intertrayGap" >
-	<idField name="fTKRTray" value="3" />
-        <idField name="fMeasure" valueREF="eMeasureX" />
-      </axisPos>
-      <axisPos volume="traySuper" rotation="90" gapREF="intertrayGap" >
-	<idField name="fTKRTray" value="4" />
-        <idField name="fMeasure" valueREF="eMeasureY" />
-      </axisPos>
-      <axisPos volume="traySuper" gapREF="intertrayGap" >
-	<idField name="fTKRTray" value="5" />
-        <idField name="fMeasure" valueREF="eMeasureX" />
-      </axisPos>
-      <axisPos volume="traySuper" rotation="90" gapREF="intertrayGap" >
-	<idField name="fTKRTray" value="6" />
-        <idField name="fMeasure" valueREF="eMeasureY" />
-      </axisPos>
-      <axisPos volume="trayReg" gapREF="intertrayGap" >
-	<idField name="fTKRTray" value="7" />
-        <idField name="fMeasure" valueREF="eMeasureX" />
-      </axisPos>
-      <axisPos volume="trayReg" rotation="90" gapREF="intertrayGap" >
-	<idField name="fTKRTray" value="8" />
-        <idField name="fMeasure" valueREF="eMeasureY" />
-      </axisPos>
-      <axisPos volume="trayReg" gapREF="intertrayGap" >
-	<idField name="fTKRTray" value="9" />
-        <idField name="fMeasure" valueREF="eMeasureX" />
-      </axisPos>
-      <axisPos volume="trayReg" rotation="90" gapREF="intertrayGap" >
-	<idField name="fTKRTray" value="10" />
-        <idField name="fMeasure" valueREF="eMeasureY" />
-      </axisPos>
-      <axisPos volume="trayReg" gapREF="intertrayGap" >
-	<idField name="fTKRTray" value="11" />
-        <idField name="fMeasure" valueREF="eMeasureX" />
-      </axisPos>
-      <axisPos volume="trayReg" rotation="90" gapREF="intertrayGap" >
-	<idField name="fTKRTray" value="12" />
-        <idField name="fMeasure" valueREF="eMeasureY" />
-      </axisPos>
-      <axisPos volume="trayReg" gapREF="intertrayGap" >
-	<idField name="fTKRTray" value="13" />
-        <idField name="fMeasure" valueREF="eMeasureX" />
-      </axisPos>
-      <axisPos volume="trayReg" rotation="90" gapREF="intertrayGap" >
-	<idField name="fTKRTray" value="14" />
-        <idField name="fMeasure" valueREF="eMeasureY" />
-      </axisPos>
-      <axisPos volume="trayReg" gapREF="intertrayGap" >
-	<idField name="fTKRTray" value="15" />
-        <idField name="fMeasure" valueREF="eMeasureX" />
-      </axisPos>
-      <axisPos volume="trayReg" rotation="90" gapREF="intertrayGap" >
-	<idField name="fTKRTray" value="16" />
-        <idField name="fMeasure" valueREF="eMeasureY" />
-      </axisPos>
-      <axisPos volume="trayReg" gapREF="intertrayGap" >
-	<idField name="fTKRTray" value="17" />
-        <idField name="fMeasure" valueREF="eMeasureX" />
-      </axisPos>
-      <axisPos volume="trayTop" rotation="90" gapREF="intertrayGap" >
-	<idField name="fTKRTray" value="18" />
-        <idField name="fMeasure" valueREF="eMeasureY" />
-      </axisPos>
-
-    </stackZ>
+&CALOneCal;
+&TKROneTkr;
 
 <!-- next need to put together oneCAL and oneTKR with necessary
      structural stuff to make a tower.  Front plane of grid
@@ -1726,477 +1391,8 @@ row of side tiles</notes>
       </axisMPos>
     </stackY>
 
-    <box name="topTile" 
-         XREF="ACDTopXWidth"
-         YREF="ACDTopYWidth"
-         ZREF="tileThickness"
-         materialREF="tileMat"
-         sensitive="true" />
+&ACDAcd;
 
-<!-- different box needed for each of the 4 rows of side tiles on X sides 
-     and Y sides (X and Y sides happen to have same dimensions now,
-      but allow for difference -->
-    <box name="sideTileX0" 
-         XREF="sideTileWidthShortXRow"
-         YREF="tileThickness"
-         ZREF="sideTileHeight0"
-         materialREF="tileMat"
-         sensitive="true" />
-    <box name="sideTileX1" 
-         XREF="sideTileWidthShortXRow"
-         YREF="tileThickness"
-         ZREF="sideTileHeight1"
-         materialREF="tileMat"
-         sensitive="true" />
-    <box name="sideTileX2" 
-         XREF="sideTileWidthLongXRow"
-         YREF="tileThickness"
-         ZREF="sideTileHeight2"
-         materialREF="tileMat"
-         sensitive="true" />
-    <box name="sideTileX3" 
-         XREF="sideTileWidthLongXRow"
-         YREF="tileThickness"
-         ZREF="sideTileHeight3"
-         materialREF="tileMat"
-         sensitive="true" />
-
-   <!--   ..and Y sides (X and Y sides happen to have same dimensions now,
-      but allow for difference.  Also do "rotation" here by putting tile
-      thickness in X-dimension (it's in  Y  for sideTileX.. -->
-    <box name="sideTileY0" 
-         XREF="tileThickness"
-         YREF="sideTileWidthShortYRow"
-         ZREF="sideTileHeight0"
-         materialREF="tileMat"
-         sensitive="true" />
-    <box name="sideTileY1" 
-         XREF="tileThickness"
-         YREF="sideTileWidthShortYRow"
-         ZREF="sideTileHeight1"
-         materialREF="tileMat"
-         sensitive="true" />
-    <box name="sideTileY2" 
-         XREF="tileThickness"
-         YREF="sideTileWidthLongYRow"
-         ZREF="sideTileHeight2"
-         materialREF="tileMat"
-         sensitive="true" />
-    <box name="sideTileY3" 
-         XREF="tileThickness"
-         YREF="sideTileWidthLongYRow"
-         ZREF="sideTileHeight3"
-         materialREF="tileMat"
-         sensitive="true" />
-
-<!-- boxes for tape on the top.  Long dimension of tape is 
-     parallel to X-axis -->
-    <box name="topTapeLong"
-         XREF="topTapeLenLong"
-         YREF="tapeWidth"
-         ZREF="tapeThickness"
-         materialREF="tapeMat"
-         sensitive="true" />
-    <box name="topTapeMedium"
-         XREF="topTapeLenMedium"
-         YREF="tapeWidth"
-         ZREF="tapeThickness"
-         materialREF="tapeMat"
-         sensitive="true" />
-    <box name="topTapeShort"
-         XREF="topTapeLenShort"
-         YREF="tapeWidth"
-         ZREF="tapeThickness"
-         materialREF="tapeMat"
-         sensitive="true" />
-
-<!-- Boxes for tape on sides.  Definition is for a side parallel to
-     X-axis.  Rotate 90 deg. about Z for Y-side  -->
-    <box name="sideTapeX"
-         XREF="tapeWidth"
-         YREF="tapeThickness"
-         ZREF="tapeSideLength"
-         materialREF="tapeMat"
-         sensitive="true" />
-
-    <box name="sideTapeY"
-         XREF="tapeThickness"
-         YREF="tapeWidth"
-         ZREF="tapeSideLength"
-         materialREF="tapeMat"
-         sensitive="true" />
-
-<!-- Make a row of top tiles.  They're all the same.  Since this
-     represents a row of tiles, ids of individual tiles in the row
-     differ by which column they're in; hence we have idField "col"
-     set here.
-     The long axis of the top rows (tape or tiles) is || to the
-     Y axis -->
-    <stackY name="topTileRow" >
-      <axisMPos volume="topTile"
-                ncopyREF="numYTopTiles"
-                gapREF="topTileGap" >
-        <idField name="fCol" value="0" step="1" />
-      </axisMPos>
-    </stackY>
-
-<!-- Make rows for X sides -->
-    <stackX name="sideTileRowX0" >
-      <axisMPos volume="sideTileX0"
-                ncopyREF="numPerSideRowShort"
-                gapREF="sideHorizontalGap" >
-        <idField name="fCol" value="0" step="1" />
-      </axisMPos>
-    </stackX>
-
-    <stackX name="sideTileRowX1" >
-      <axisMPos volume="sideTileX1"
-                ncopyREF="numPerSideRowShort"
-                gapREF="sideHorizontalGap" >
-        <idField name="fCol" value="0" step="1" />
-      </axisMPos>
-    </stackX>
-
-<!-- have to do bottom side rows tile by tile since gaps are not uniform -->
-    <stackX name="sideTileRowX2" >
-      <axisPos volume="sideTileX2">
-        <idField name="fCol" value="0" />
-      </axisPos>
-      <axisPos volume="sideTileX2">
-        <idField name="fCol" value="1" />
-      </axisPos>
-      <axisPos volume="sideTileX2"
-               gapREF="sideHorizontalGap">
-        <idField name="fCol" value="2" />
-      </axisPos>
-      <axisPos volume="sideTileX2">
-        <idField name="fCol" value="3" />
-      </axisPos>
-      <axisPos volume="sideTileX2"
-               gapREF="sideHorizontalGap">
-        <idField name="fCol" value="4" />
-      </axisPos>
-      <axisPos volume="sideTileX2">
-        <idField name="fCol" value="5" />
-      </axisPos>
-      <axisPos volume="sideTileX2"
-               gapREF="sideHorizontalGap">
-        <idField name="fCol" value="6" />
-      </axisPos>
-      <axisPos volume="sideTileX2">
-        <idField name="fCol" value="7" />
-      </axisPos>
-      <axisPos volume="sideTileX2"
-               gapREF="sideHorizontalGap">
-        <idField name="fCol" value="8" />
-      </axisPos>
-      <axisPos volume="sideTileX2">
-        <idField name="fCol" value="9" />
-      </axisPos>
-    </stackX>
-
-    <stackX name="sideTileRowX3" >
-      <axisPos volume="sideTileX3">
-        <idField name="fCol" value="0" />
-      </axisPos>
-      <axisPos volume="sideTileX3">
-        <idField name="fCol" value="1" />
-      </axisPos>
-      <axisPos volume="sideTileX3"
-               gapREF="sideHorizontalGap">
-        <idField name="fCol" value="2" />
-      </axisPos>
-      <axisPos volume="sideTileX3">
-        <idField name="fCol" value="3" />
-      </axisPos>
-      <axisPos volume="sideTileX3"
-               gapREF="sideHorizontalGap">
-        <idField name="fCol" value="4" />
-      </axisPos>
-      <axisPos volume="sideTileX3">
-        <idField name="fCol" value="5" />
-      </axisPos>
-      <axisPos volume="sideTileX3"
-               gapREF="sideHorizontalGap">
-        <idField name="fCol" value="6" />
-      </axisPos>
-      <axisPos volume="sideTileX3">
-        <idField name="fCol" value="7" />
-      </axisPos>
-      <axisPos volume="sideTileX3"
-               gapREF="sideHorizontalGap">
-        <idField name="fCol" value="8" />
-      </axisPos>
-      <axisPos volume="sideTileX3">
-        <idField name="fCol" value="9" />
-      </axisPos>
-    </stackX>
-
-<!-- Do same for Y sides -->
-    <stackY name="sideTileRowY0" >
-      <axisMPos volume="sideTileY0"
-                ncopyREF="numPerSideRowShort"
-                gapREF="sideHorizontalGap" >
-        <idField name="fCol" value="0" step="1" />
-      </axisMPos>
-    </stackY>
-
-    <stackY name="sideTileRowY1" >
-      <axisMPos volume="sideTileY1"
-                ncopyREF="numPerSideRowShort"
-                gapREF="sideHorizontalGap" >
-        <idField name="fCol" value="0" step="1" />
-      </axisMPos>
-    </stackY>
-
-<!-- have to do bottom side rows tile by tile since gaps are not uniform -->
-    <stackY name="sideTileRowY2" >
-      <axisPos volume="sideTileY2">
-        <idField name="fCol" value="0" />
-      </axisPos>
-      <axisPos volume="sideTileY2">
-        <idField name="fCol" value="1" />
-      </axisPos>
-      <axisPos volume="sideTileY2"
-               gapREF="sideHorizontalGap">
-        <idField name="fCol" value="2" />
-      </axisPos>
-      <axisPos volume="sideTileY2">
-        <idField name="fCol" value="3" />
-      </axisPos>
-      <axisPos volume="sideTileY2"
-               gapREF="sideHorizontalGap">
-        <idField name="fCol" value="4" />
-      </axisPos>
-      <axisPos volume="sideTileY2">
-        <idField name="fCol" value="5" />
-      </axisPos>
-      <axisPos volume="sideTileY2"
-               gapREF="sideHorizontalGap">
-        <idField name="fCol" value="6" />
-      </axisPos>
-      <axisPos volume="sideTileY2">
-        <idField name="fCol" value="7" />
-      </axisPos>
-      <axisPos volume="sideTileY2"
-               gapREF="sideHorizontalGap">
-        <idField name="fCol" value="8" />
-      </axisPos>
-      <axisPos volume="sideTileY2">
-        <idField name="fCol" value="9" />
-      </axisPos>
-    </stackY>
-
-    <stackY name="sideTileRowY3" >
-      <axisPos volume="sideTileY3">
-        <idField name="fCol" value="0" />
-      </axisPos>
-      <axisPos volume="sideTileY3">
-        <idField name="fCol" value="1" />
-      </axisPos>
-      <axisPos volume="sideTileY3"
-               gapREF="sideHorizontalGap">
-        <idField name="fCol" value="2" />
-      </axisPos>
-      <axisPos volume="sideTileY3">
-        <idField name="fCol" value="3" />
-      </axisPos>
-      <axisPos volume="sideTileY3"
-               gapREF="sideHorizontalGap">
-        <idField name="fCol" value="4" />
-      </axisPos>
-      <axisPos volume="sideTileY3">
-        <idField name="fCol" value="5" />
-      </axisPos>
-      <axisPos volume="sideTileY3"
-               gapREF="sideHorizontalGap">
-        <idField name="fCol" value="6" />
-      </axisPos>
-      <axisPos volume="sideTileY3">
-        <idField name="fCol" value="7" />
-      </axisPos>
-      <axisPos volume="sideTileY3"
-               gapREF="sideHorizontalGap">
-        <idField name="fCol" value="8" />
-      </axisPos>
-      <axisPos volume="sideTileY3">
-        <idField name="fCol" value="9" />
-      </axisPos>
-    </stackY>    <!-- stop sub here!! -->
-
-
-<!-- we have a row of (widely separated) pieces of tape for each
-     row of top tiles.  There are three flavors of such rows, made
-     of the 3 different lengths of top tapes.              -->
-
-    <stackY name="topTapeRowLong" >
-      <axisMPos volume="topTapeLong"
-                ncopyREF="topTapesPerRow"
-                gapREF="topTapeGap" >
-        <idField name="fCol" value="0" step="1" />
-      </axisMPos>
-    </stackY>
-
-    <stackY name="topTapeRowMedium" >
-      <axisMPos volume="topTapeMedium"
-                ncopyREF="topTapesPerRow"
-                gapREF="topTapeGap" >
-        <idField name="fCol" value="0" step="1" />
-      </axisMPos>
-    </stackY>
-
-    <stackY name="topTapeRowShort" >
-      <axisMPos volume="topTapeShort"
-                ncopyREF="topTapesPerRow"
-                gapREF="topTapeGap" >
-        <idField name="fCol" value="0" step="1" />
-      </axisMPos>
-    </stackY>
-
-    <!-- next assemble these pieces (five rows of top tiles,
-         two long-tape rows, two medium-tape rows and one
-         short-tape row) into the acd top, but first make
-         an envelope volume for it                       -->
-    <box name="ACDTopEnv" 
-         XREF="ACDTopTotalX"
-         YREF="ACDTopTotalY"
-         ZREF="ACDTopZwidth"
-         materialREF="vacuumMat"
-         />
-
-<!-- all components are centered w.r.t. Y, so only supply X and Z -->
-    <composition name="ACDTop" 
-                 envelope="ACDTopEnv">
-      <posXYZ volume="topTapeRowLong"
-              XREF="topTapeX0_d"
-              ZREF="topTapeZLong_d">
-        <idField name="fRow" value="0" />
-      </posXYZ>
-      <posXYZ volume="topTapeRowMedium"
-              XREF="topTapeX1_d "
-              ZREF="topTapeZMedium_d">
-        <idField name="fRow" value="1" />
-      </posXYZ>
-      <posXYZ volume="topTapeRowShort"
-              XREF="topTapeX2_d "
-              ZREF="topTapeZShort_d">
-        <idField name="fRow" value="2" />
-      </posXYZ>
-
-      <posXYZ volume="topTapeRowMedium"
-              XREF="topTapeX3_d "
-              ZREF="topTapeZMedium_d">
-        <idField name="fRow" value="3" />
-      </posXYZ>
-
-      <posXYZ volume="topTapeRowLong"
-              XREF="topTapeX4_d"
-              ZREF="topTapeZLong_d">
-        <idField name="fRow" value="4" />
-      </posXYZ>
-
-      <posXYZ volume="topTileRow"
-              XREF="topTileX0_d"
-              ZREF="topTileZEdge_d" >
-        <idField name="fRow" value="0" />
-      </posXYZ>
-
-      <posXYZ volume="topTileRow"
-              XREF="topTileX1_d"
-              ZREF="topTileZMedium_d" >
-        <idField name="fRow" value="1" />
-      </posXYZ>
-      <posXYZ volume="topTileRow"
-              XREF="topTileX2_d"
-              ZREF="topTileZCenter_d" >
-        <idField name="fRow" value="2" />
-      </posXYZ>
-      <posXYZ volume="topTileRow"
-              XREF="topTileX3_d"
-              ZREF="topTileZMedium_d" >
-        <idField name="fRow" value="3" />
-      </posXYZ>
-      <posXYZ volume="topTileRow"
-              XREF="topTileX4_d"
-              ZREF="topTileZEdge_d" >
-        <idField name="fRow" value="4" />
-      </posXYZ>
-
-    </composition>
-
-    <!-- Make the envelope for an X side of tiles -->
-    <box name="TileXSideEnv"
-         XREF="ACDTotalXSide"
-         YREF="tileThickness"
-         ZREF="ACDSideHeight" 
-         materialREF="vacuumMat"
-         />
-
-    <composition name="TileXSide" 
-                 envelope="TileXSideEnv" >
-      <!-- consists of 4 rows of tiles (long dimension of rows in X) 
-         The positioning in Y will be done at the next stage. -->
-      <posXYZ volume="sideTileRowX0"
-              ZREF="sideTileRow0_d" >
-        <idField name="fRow" value="0" />
-      </posXYZ>
-      <posXYZ volume="sideTileRowX1"
-              ZREF="sideTileRow1_d">
-        <idField name="fRow" value="1" />
-      </posXYZ>
-      <posXYZ volume="sideTileRowX2"
-              ZREF="sideTileRow2_d">
-        <idField name="fRow" value="2" />
-      </posXYZ>
-      <posXYZ volume="sideTileRowX3"
-              ZREF="sideTileRow3_d">
-        <idField name="fRow" value="3" />
-      </posXYZ>
-    </composition>
-
-    <!-- do the same for Y-side rows of tiles -->
-    <box name="TileYSideEnv"
-         XREF="tileThickness"
-         YREF="ACDTotalYSide"
-         ZREF="ACDSideHeight" 
-         />
-
-    <composition name="TileYSide" 
-                 envelope="TileYSideEnv" >
-      <!-- consists of 4 rows of tiles (long dimension of rows in Y) 
-         The positioning in X will be done at the next stage. -->
-      <posXYZ volume="sideTileRowY0"
-              ZREF="sideTileRow0_d">
-        <idField name="fRow" value="0" />
-      </posXYZ>
-      <posXYZ volume="sideTileRowY1"
-              ZREF="sideTileRow1_d">
-        <idField name="fRow" value="1" />
-      </posXYZ>
-      <posXYZ volume="sideTileRowY2"
-              ZREF="sideTileRow2_d">
-        <idField name="fRow" value="2" />
-      </posXYZ>
-      <posXYZ volume="sideTileRowY3"
-              ZREF="sideTileRow3_d">
-        <idField name="fRow" value="3" />
-      </posXYZ>
-    </composition>
-
-    <!-- stack up tape for X and Y sides -->
-    <stackX name="sideTapeRowX" >
-      <axisMPos volume="sideTapeX" ncopyREF="numSideTapes"
-                gapREF="betweenSideTapesX">
-        <idField name="fCol" value="0" step="1" />
-      </axisMPos>
-    </stackX>
-
-    <stackY name="sideTapeRowY" >
-      <axisMPos volume="sideTapeY" ncopyREF="numSideTapes"
-                gapREF="betweenSideTapesY">
-        <idField name="fCol" value="0" step="1" />
-      </axisMPos>
-    </stackY>
 
 <!-- Make a LAT.  Still need an idField for tape components -->
     <composition name="LAT" envelope="LATenv" >

@@ -1,5 +1,15 @@
 
-  <idDict major="1" minor="0" patch="0" name="GDD_IDENTIFIER_DICTIONARY">
+  <idDict major="1" minor="0" patch="0" name="TEST_IDENTIFIER_DICTIONARY">
+
+    <field name="fLayer" />
+
+    <field name="fTopObjects" >
+      <vList>
+        <vEnumVal valueREF="eRootLAT" />
+        <vEnumVal valueREF="eRootPanels" />
+        <vEnumVal valueREF="eRootSC" />
+      </vList>
+    </field>
 
     <field name="fLATObjects" >
       <vList>
@@ -29,8 +39,6 @@
         <vEnumVal valueREF="eMeasureY" />
       </vList>
     </field>
-
-    <field name="fLayer" />
 
     <field name="fCALLog" >
       <vMinMax min="0" maxREF="maxLog" />
@@ -69,13 +77,6 @@
       </vList>
     </field>
 
-    <field name="fTopObjects" >
-      <vList>
-        <vEnumVal valueREF="eRootLAT" />
-        <vEnumVal valueREF="eRootPanels" />
-        <vEnumVal valueREF="eRootSC" />
-      </vList>
-    </field>
  
     <dictRoot fieldName="fTopObjects" >
       <dictNode fieldName="fLATObjects">

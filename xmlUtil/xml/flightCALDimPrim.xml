@@ -1,14 +1,14 @@
 <primCategory name="CALDimPrim" >
   <overview>Fundamental dimensions of solids and offsets for the Calorimeter
 </overview>
-  <prim name="diodeX" value="0.18">Thickness of diodes
+  <prim name="diodeX" value="0.30"> **NEW** Depletion depth of diode Si
 </prim>
-  <prim name= "diodeY" value= "12.0">Width of diodes
+  <prim name= "diodeLY" value= "14.5"> **NEW** Width of large diode Si
 </prim>
-  <prim name= "diodeLZ" value= "8.0">Height of large diode
+  <prim name= "diodeSY" value= "2.4"> **NEW** Width of small diode Si
+</prim>
+  <prim name= "diodeZ" value= "10.5">**NEW** Height of diode Si
 </prim >
-  <prim name= "diodeSZ" value= "2.0">Height of a small diode
-</prim>
   <prim name= "CsILength" value= "333.0">**NEW VALUE** Length of a CsI crystal.
 </prim>
 
@@ -18,18 +18,54 @@ a CsI crytal</prim>
    <!-- this used to be called width -->
   <prim name= "CsIHeight" value= "19.9">**NEW VALUE** Height of a CsI crystal
 </prim> 
-  <prim name= "diodeYOffset" value= "0.0">Y (transverse) offset of diode 
-relative to crystal</prim>
-  <prim name= "diodeLZOffset" value= "-2.6">Z offset of large diode relative 
-to crystal</prim>
-  <prim name= "diodeSZOffset" value= "5.6">Z offset of small diode relative 
+  <prim name="diodeZOffset" value= "0.9">Z offset of diodes relative to
+crystal</prim>
+  <prim name= "diodeLYOffset" value= "-2.55">Y (transverse) offset of 
+large diode relative to crystal</prim>
+  <prim name= "diodeSYOffset" value= "8.6">Y offset of small diode relative 
 to crystal</prim>
 
-   <!-- trans. distance between logs -->
+   <!-- trans. distance between logs now obsolete.  Use cellVertPitch,
+        cellHorPitch -->
+<!--
   <prim name= "CALGap" value= "0.84">Transverse distance between logs
 </prim> 
   <prim name="CALInterLayer" value="2.62" >Gap between CAL layers
 </prim>
+-->
+
+  <prim name="cellVertPitch" value="21.35" >**NEW** Vertical pitch of CsI and
+cells</prim>
+  <prim name="cellHorPitch" value="27.844" > **NEW** Horizontal pitch of CsI 
+and cells</prim>
+  <prim name="cellVertWallThick" value="0.49"> **NEW** Thickness of reflector 
+and composite cell vertical walls (C)</prim>
+  <prim name="cellHorWallThick" value="0.85"> **NEW** Thickness of reflector 
+and composite cell horizontal walls (C)</prim>
+  <prim name="cellSideReinfThick" value="1.4"> **NEW and not understood**
+ Horizontal thickness of
+reinforcement on side of outermost cells (C)</prim>
+  <prim name="CALSideWallThick" value="11.60" >**NEW** Horizontal thickness
+of side compartment with electronics</prim>
+
+  <prim name="CALSideWallInnerThick" value="1.0">**NEW** Horizontal thickness
+of inner wall within (largely hollow) side wall</prim>
+  <prim name="CALSideWallOuterThick" value="1.0">**NEW** Horizontal thickness
+of outer wall within (largely hollow) side wall</prim>
+  <prim name="CALSideWallPCBThick" value="1.6">**NEW** Horizontal thickness
+of PCB  within (largely hollow) side wall</prim>
+
+  <prim name="CALModuleWidth" value="363.0">**NEW** Horizontal, face-to-face
+dimension of CAL module (presumably both X and Y)</prim>
+
+<prim nmae=CALModuleHeight" value="223.80">**NEW** Vertical, top-to-bottom
+dimention of CAL module</prim>
+
+  <prim name="CALcylSupportDiameter" value="10.00">**NEW** Diameter of
+cylindrical supports (Al)</prim>
+  <prim name="CALcylSupportCellDelta" value="4" uType="count"> **NEW** 
+Number of
+cells between adjacent (in the same layer) cylindrical supports</prim>
 
   <prim name= "CALFrameSideThick" value= "8.0">Thickness of CAL frame sides
 </prim>
@@ -40,7 +76,8 @@ to crystal</prim>
   <prim name= "CALFrameTBThick" value= "20.0">Thickness of top and bottom of 
 CAL frame</prim>
 
-    <!-- Cal grid stuff -->
+    <!-- Cal grid stuff.  Should be replaced with information 
+         from Eduardo's document -->
   <prim name= "CALGridInner" value= "3.0">Thickness of CAL grid between towers
 </prim>
   <prim name= "CALGridOuter" value= "12.0">Thickness of CAL grid on outside 

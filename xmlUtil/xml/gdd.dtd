@@ -910,6 +910,7 @@
 <!ELEMENT idDict (field*, dictRoot) >
 <!ATTLIST idDict
                   %didSub;  
+                  name       NMTOKEN #REQUIRED
                   major      NMTOKEN #REQUIRED 
                   minor      NMTOKEN #REQUIRED
                   patch      NMTOKEN #IMPLIED  >
@@ -979,8 +980,11 @@
 <!ATTLIST dictNode fieldName IDREF #REQUIRED >
 
 <!-- This element labels a value constraint as applying to values
-     for its parent node -->
-<!ELEMENT pValues (%vConstraints;) >
+     for its parent node.  Try disallowing lists.  Practically
+     speaking, should not be a significant restriction -->
+<!-- !ELEMENT pValues (%vConstraints;) -->
+
+<!ELEMENT pValues (vMinMax | vEnumVal) >
 <!-- ATTLIST pValues field IDREF #REQUIRED -->
 
 <!--
@@ -997,7 +1001,6 @@ each specifying
       - eliminate a field
       - replace a field with another (specify how to calculate new value)
 -->
-
 <!ELEMENT idConverter (constants?, idDict*, idConv*) >
 <!-- might want to require at least fromDict; perhaps also toDict -->
 <!-- conceivably might want to make one or both of type IDREF also -->
@@ -1005,11 +1008,17 @@ each specifying
                       toDict   NMTOKEN #IMPLIED >
 
 <!ENTITY % convOp "delField | setField | replaceField" >
-<!ELEMENT idConv (subTree, ((%convOp;)* | nullId | sameId) ) >
+<!ELEMENT idConv (path, ((%convOp;)* | nullId | sameId) ) >
 <!ELEMENT nullId (EMPTY) >
 <!ELEMENT sameId (EMPTY) >
 
-<!ELEMENT subTree (theIdRoot, field*) >
+<!-- If fromDict has been specified, code will want to check that 
+     "subTree" is really just that by invoking service which 
+     given a list of fields, looks to see if there is a path through
+     tree with that list of fields.  Assume here that "subTree" must
+     start from root of full tree.
+ -->
+<!ELEMENT path (field+) >
 
 <!ELEMENT delField (EMPTY) >
 <!ATTLIST delField field NMTOKEN #REQUIRED>
@@ -1041,3 +1050,8 @@ each specifying
                      colField NMTOKEN #REQUIRED 
                      newField NMTOKEN #REQUIRED 
                      nPerRow  NMTOKEN #IMPLIED >
+
+<!-- and maybe also.. -->
+<!ELEMENT swapFields (EMPTY)>
+<!ATTLIST swapFields field1 NMTOKEN #REQUIRED
+                     field2 NMTOKEN #REQUIRED >

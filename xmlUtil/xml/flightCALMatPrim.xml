@@ -6,10 +6,6 @@
 </prim>
 <prim name="CALCellMat" value="CarbonFiber" type="string" uType="mat">**NEW** 
 CAL composite cell material</prim>
-<prim name="CALCloseoutMat" value="C20" type="string" uType="mat">**NEW** 
-CAL composite cell closeout material</prim>
-<prim name="sideWallMat" value="A120" type="string" uType="mat">**NEW** 
-Material for CAL EMI side walls and PCBs</prim>
 <prim name="PCBMat" value="Fiberglass" type="string" uType="mat">**NEW** 
 Material for printed circuit boards</prim>
   <prim name= "CALWrapMat" value= "Polystyrene" type="string" uType="mat">
