@@ -46,8 +46,10 @@ public:
     virtual void addItem(std::string varName, double* pValue);
     /// do calculation if not already done for this event
     virtual StatusCode doCalcIfNotDone();
-    /// get a particular value, using ntuple name
-    virtual StatusCode getVal(std::string varName, double& value);
+    /// get a particular value, using ntuple name default forces calculation
+    virtual StatusCode getVal(std::string varName, double& value, bool check = false);
+    /// get a particular value, using ntuple name, with calc checking (called by AnaTup)
+    virtual StatusCode getValCheck(std::string varName, double& value);
     /// output the list of names
     virtual void announceBadName(std::string varName);
     /// output the names and values, either all (default) or just one;
@@ -57,6 +59,7 @@ public:
     /// callback for visitor
     virtual IValsTool::Visitor::eVisitorRet traverse(IValsTool::Visitor * v,
         const bool checkCalc);
+    virtual int getCalcCount() { return m_calcCount;}
     
     /// calculate all values; implemented by each XxxValsTool
     virtual StatusCode calculate();
@@ -74,7 +77,10 @@ protected:
     IDataProviderSvc* m_pEventSvc;
     /// flag to signal new event
     bool m_newEvent;
-    // flag to signal that handle is set
-    //bool m_handleSet;
+    /// flag to allow an always-calculate call if false; if true checks and sets m_newEvent
+    bool m_check;
+
+    /// count calls to tools
+    static int m_calcCount;
 };
 #endif

@@ -11,7 +11,7 @@ $Header$
 #include "GaudiKernel/IAlgTool.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_IValsTool("IValsTool", 2 , 3); 
+static const InterfaceID IID_IValsTool("IValsTool", 3 , 0); 
 
 /** @class IValsTool
 * @brief Abstract interface for the XxxValsTools, including visitor
@@ -28,11 +28,15 @@ public:
     static const InterfaceID& interfaceID() { return IID_IValsTool; }
     
     /// get a particular value, using ntuple name
-    virtual StatusCode getVal(std::string varName, double& value) =0;
+    virtual StatusCode getVal(std::string varName, double& value, bool check = false) =0;
+    /// get a particular value, using ntuple name, with calc checking
+    virtual StatusCode getValCheck(std::string varName, double& value) =0;
     /// output the names and values, either all (default) or just one;
     virtual StatusCode browse(std::string varName = "") =0;
     /// let the user trigger her own calculation
     virtual StatusCode doCalcIfNotDone() = 0;
+    /// number of times a tool did its calculation for this event
+    virtual int getCalcCount() = 0;
     
     /** @class Visitor 
     @brief calls the client successively with the names and (ref to) values
