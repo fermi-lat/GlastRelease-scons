@@ -1,5 +1,5 @@
 package AcdDigi
-version v1r8
+version v1r9
 # $Id$
 
 use GlastSvc v9r*
