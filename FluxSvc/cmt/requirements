@@ -30,20 +30,20 @@ apply_pattern package_headers
 
 library FluxSvc  *.cxx \
  test/flux/rootplot.cxx test/flux/rootEnergyHist.cxx\
- test/flux/rootHist.cxx test/flux/rootplot.h test/flux/rootAngleHist.cxx\
+ test/flux/rootHist.cxx  test/flux/rootAngleHist.cxx\
  Dll/*.cxx\
  ${FluxSvc_headers}
 
 application testMgr test/flux/testMgr.cxx \
  test/flux/rootplot.cxx test/flux/rootEnergyHist.cxx\
- test/flux/rootHist.cxx test/flux/rootplot.h test/flux/rootAngleHist.cxx\
+ test/flux/rootHist.cxx  test/flux/rootAngleHist.cxx\
  *.cxx \
  Dll/*.cxx\
  ${FluxSvc_headers}
 
 application rootplots test/flux/roottest.cxx \
  test/flux/rootplot.cxx test/flux/rootEnergyHist.cxx\
- test/flux/rootHist.cxx test/flux/rootplot.h test/flux/rootAngleHist.cxx\
+ test/flux/rootHist.cxx test/flux/rootAngleHist.cxx\
  *.cxx Dll/*.cxx\
  ${FluxSvc_headers}
 
