@@ -84,16 +84,30 @@
     trays have Y-strips and odd-numbered trays have X-strips.
 
     -->
+<!--
     <box name="LATenv"
          XREF="LATX" YREF="LATY" ZREF="LATZ" />
+ -->
+    <box name="LATenv" 
+         XREF="bigDim" YREF="bigDim" ZREF="bigDim" />
 
-<!--    <box name="towers16" 
-         XREF="towersTotalX" YREF="towersTotalY" ZREF="towersTotalZ"
-         materialREF = "vacuumMat" />
-    -->
 
 &CALOneCal;
 &TKROneTkr;
+
+<!-- Define boxes for blanket:  top, X-side and Y-side -->
+    <box name="blanketTop" 
+         XREF="NADBlanketTopX" YREF="NADBlanketTopY" 
+         ZREF="NADBlanketThick" materialREF="blanketMat" />
+      
+    <box name="blanketXSide" 
+         XREF="NADBlanketSideX" YREF="NADBlanketThick" 
+         ZREF="NADBlanketSideZ" materialREF="blanketMat" />
+      
+    <box name="blanketYSide" 
+         XREF="NADBlanketThick" YREF="NADBlanketSideY" 
+         ZREF="NADBlanketSideZ" materialREF="blanketMat" />
+      
 
 <!-- next need to put together oneCAL and oneTKR with necessary
      structural stuff to make a tower.  Front plane of grid
@@ -279,8 +293,10 @@
         <idField name="fLATObjects" valueREF="eLATACD" />
         <idField name="fACDFace" valueREF="eACDTopFace" />
       </posXYZ>
+      <!--posXYZ volume="allTowers" 
+              ZREF="allTowers_d" -->
       <posXYZ volume="allTowers" 
-              ZREF="allTowers_d" >
+              ZREF="towers_dz" >
         <idField name="fLATObjects" valueREF="eLATTowers" />
       </posXYZ>
 
@@ -294,7 +310,7 @@
 
       <posXYZ volume="LATGridFlangeLong" 
               YREF="LATGridFlange_dtn"
-              ZREF="NADGridFlangeZ" >
+              ZREF="NADGridFlange_dz" >
         <idField name="fLATObjects" valueREF="eLATGrid" />
         <idField name="fGridObjects" value="1" />
       </posXYZ>
@@ -302,7 +318,7 @@
       <posXYZ volume="LATGridFlangeShort" 
               zrot="90"
               XREF="LATGridFlange_dt"
-              ZREF="NADGridFlangeZ" >
+              ZREF="NADGridFlange_dz" >
         <idField name="fLATObjects" valueREF="eLATGrid" />
         <idField name="fGridObjects" value="2" />
       </posXYZ>
@@ -310,7 +326,7 @@
       <posXYZ volume="LATGridFlangeShort" 
               zrot="90"
               XREF="LATGridFlange_dtn"
-              ZREF="NADGridFlangeZ" >
+              ZREF="NADGridFlange_dz" >
         <idField name="fLATObjects" valueREF="eLATGrid" />
         <idField name="fGridObjects" value="3" />
       </posXYZ>
@@ -318,14 +334,14 @@
 <!--  now for big web pieces -->
       <posXYZ volume="LATGridWebLong" 
               YREF="LATGridWeb_dt"
-              ZREF="NADGridWebZ" >
+              ZREF="NADGridWeb_dz" >
         <idField name="fLATObjects" valueREF="eLATGrid" />
         <idField name="fGridObjects" value="4" />
       </posXYZ>
 
       <posXYZ volume="LATGridWebLong" 
               YREF="LATGridWeb_dtn"
-              ZREF="NADGridWebZ" >
+              ZREF="NADGridWeb_dz" >
         <idField name="fLATObjects" valueREF="eLATGrid" />
         <idField name="fGridObjects" value="5" />
       </posXYZ>
@@ -333,7 +349,7 @@
       <posXYZ volume="LATGridWebShort" 
               zrot="90"
               XREF="LATGridWeb_dt"
-              ZREF="NADGridWebZ" >
+              ZREF="NADGridWeb_dz" >
         <idField name="fLATObjects" valueREF="eLATGrid" />
         <idField name="fGridObjects" value="6" />
       </posXYZ>
@@ -341,7 +357,7 @@
       <posXYZ volume="LATGridWebShort" 
               zrot="90"
               XREF="LATGridWeb_dtn"
-              ZREF="NADGridWebZ" >
+              ZREF="NADGridWeb_dz" >
         <idField name="fLATObjects" valueREF="eLATGrid" />
         <idField name="fGridObjects" value="7" />
       </posXYZ>
@@ -391,6 +407,40 @@
               XREF="tapeYSide_dxN"
               YREF="ACDSideDovetail_d"
               ZREF="tapeSide_dz" />
+
+      <!-- Finally position blanket pieces -->
+      <posXYZ volume="blanketTop"
+              ZREF="NADBlanketTop_dz" >
+        <idField name="fLATObjects" valueREF="eLATBlanket" />
+        <idField name="fBorderCmp" valueREF="eCenter" />
+      </posXYZ>
+
+      <posXYZ volume="blanketXSide"
+              YREF="NADBlanket_dy"
+              ZREF="NADBlanketSides_dz" >
+        <idField name="fLATObjects" valueREF="eLATBlanket" />
+        <idField name="fBorderCmp" valueREF="eRight" />
+      </posXYZ>
+      <posXYZ volume="blanketXSide"
+              YREF="NADBlanket_dyn"
+              ZREF="NADBlanketSides_dz" >
+        <idField name="fLATObjects" valueREF="eLATBlanket" />
+        <idField name="fBorderCmp" valueREF="eLeft" />
+      </posXYZ>
+
+      <posXYZ volume="blanketYSide"
+              XREF="NADBlanket_dx"
+              ZREF="NADBlanketSides_dz" >
+        <idField name="fLATObjects" valueREF="eLATBlanket" />
+        <idField name="fBorderCmp" valueREF="eTop" />
+      </posXYZ>
+      <posXYZ volume="blanketYSide"
+              XREF="NADBlanket_dxn"
+              ZREF="NADBlanketSides_dz" >
+        <idField name="fLATObjects" valueREF="eLATBlanket" />
+        <idField name="fBorderCmp" valueREF="eBottom" />
+      </posXYZ>
+
     </composition>
   </section>
 </gdd>

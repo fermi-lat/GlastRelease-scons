@@ -18,6 +18,10 @@ grid (within towers)</prim>
 (within LAT)</prim>
   <prim name="eLATGrid" value="2" uType="count">id field for pieces of grid
 not within tower envelopes</prim>
+  <prim name="eLATBlanket" value="3" uType="count">id field value for 
+pieces of blanket</prim>
+  <prim name="eLATSpacecraft" value="4" uType="count">id field value for
+spacecraft</prim>
   <prim name="eMeasureX" value="0" uType="count">id field used for TKR
 Si and CAL layers</prim>
   <prim name="eMeasureY" value="1" uType="count">id field used for TKR

@@ -1389,16 +1389,19 @@ grid, etc. (may be superseded by info from Eric)</notes>
         <overview>A few more constants needed for the outermost 
                  LAT compositions</overview>
         <const name="LATX" >
-          <notes>X-dimension of an envelope for the LAT</notes>
+          <notes>X-dimension of an envelope for the LAT,
+                not including thermal blanket</notes>
           <refer refTo="ACDTotalX" />
         </const>
         <const name="LATY" >
-          <notes>Y-dimension of an envelope for the LAT</notes>
+          <notes>Y-dimension of an envelope for the LAT,
+                 not including thermal blanket</notes>
           <refer refTo="ACDTotalY" />
         </const>
 
         <const name="LATZ" >
-          <notes>Z-dimension of an envelope for the LAT</notes>
+          <notes>Z-dimension of an envelope for the LAT,
+                 not including thermal blanket</notes>
           <max>
             <refer refTo="ACDSideHeight" />
             <add>
@@ -1409,6 +1412,19 @@ grid, etc. (may be superseded by info from Eric)</notes>
           </max>
         </const>
 
+        <const name="bigDim" >
+          <notes>Something big enough to position everything inside,
+                 with origin where it should be, at the very front
+                 of the grid.</notes>
+          <mul>
+            <const value="3" uType="count" />
+            <max>
+              <refer refTo = "towersTotalZ" />
+              <refer refTo = "ACDTotalXSide" />
+            </max>
+          </mul>
+        </const>
+
         <const name="LATZHalf" >
           <notes>convenience</notes>
           <quo>
@@ -1417,45 +1433,35 @@ grid, etc. (may be superseded by info from Eric)</notes>
           </quo>
         </const>
 
-        <const name="ACDTop_d" >
-          <notes>Z displacement of top ACD relative to LATenv, the envelope
-                 volume containing them + ACD</notes>
+        <const name="towers_dz" >
+          <notes>Displacement necessary to get towers origin in the
+                 right place</notes>
           <minus>
-            <refer refTo="LATZHalf" />
-            <add>
-              <refer refTo="sideOverlapToTopTape" />
-              <refer refTo="ACDTopZHalfWidth" />
-            </add>
+            <refer refTo="towersTotalHalfZ" />
+            <refer refTo="CALVertStayClear" />
           </minus>
         </const>
-              
-        <const name="allTowers_d" >
-          <notes>Z displacement of towers relative to LATenv</notes>
-          <minus>
-            <refer refTo="LATZHalf" />
-            <add>
-              <refer refTo="ACDTopZwidth" />
-              <refer refTo="sideOverlapToTopTape" />
-              <quo>
-                <refer refTo="towersTotalZ" />
-                <const value="2" uType="count" />
-              </quo>
-            </add>
-          </minus>
+
+        <const name="ACDTop_d" >
+          <notes>Z displacement of top ACD relative to Ritz origin</notes>
+          <add>
+            <refer refTo="TKRVertStayClear" />
+            <refer refTo="calTrackerGap" />
+            <refer refTo="topStandoff" />
+            <refer refTo="ACDTopZHalfWidth" />
+          </add>
         </const>
 
 <!-- have to do analogous 5 constants for side tile locations -->
 
         <const name="tileSide_dz">
-          <notes>displacement in z of side tiles rel. to LATenv</notes>
-          <minus>
-            <refer refTo="LATZHalf" />
-            <quo>
-              <refer refTo="ACDSideHeight" />
-              <const value="2" uType="count" />
-            </quo>
-          </minus>
+          <notes>displacement in z of side tiles rel. to Ritz origin</notes>
+          <quo>
+            <refer refTo="ACDSideHeight" />
+            <const value="2" uType="count" />
+          </quo>
         </const>
+
 
         <const name="tileXSide_dy" >
           <notes>Displacement in y of tiles along a side || to X axis,
@@ -1503,20 +1509,14 @@ grid, etc. (may be superseded by info from Eric)</notes>
           </uminus>
         </const>
 
-
         <const name="tapeSide_dz">
-          <notes>displacement in z of side tapes rel. to LATenv</notes>
-          <minus>
-            <refer refTo="LATZHalf" />
-            <add>
-              <refer refTo="sideOverlapToTopTape" />
-              <quo>
-                <refer refTo="tapeSideLength" />
-                <const value="2" uType="count" />
-              </quo>
-            </add>
-          </minus>
+          <notes>displacement in z of side tapes rel. to Ritz origin</notes>
+          <quo>
+             <refer refTo="tapeSideLength" />
+            <const value="2" uType="count" />
+          </quo>
         </const>
+
 
         <const name="tapeXSide_dy" >
           <notes>Displacement in y of tapes along a side || to X axis,
@@ -1706,6 +1706,30 @@ grid, etc. (may be superseded by info from Eric)</notes>
           </minus>
         </const>
 
+        <const name = "NADGridFlange_dz" >
+          <notes>Displacement of flange w.r.t. Ritz origin, which is
+                 at its top face</notes>
+          <quo>
+            <refer refTo="NADGridFlangeZ" />
+            <const value="2" uType="count" />
+          </quo>
+        </const>
+
+        <const name = "NADGridWeb_dz" >          
+          <notes>Displacement of grid  w.r.t. Ritz origin. Web is
+                 immediately below flange.</notes>
+          <uminus>
+            <add>
+               <refer refTo="NADGridFlangeZ" />
+               <quo>
+                 <refer refTo="NADGridWebZ" />
+                 <const value="2" uType="count" />
+               </quo>
+             </add>
+          </uminus>
+        </const>
+           
+
         <const name="NADGridFlangeOutsideLenShort" >
           <notes>Length of short outside piece of grid web</notes>
           <minus>
@@ -1717,6 +1741,107 @@ grid, etc. (may be superseded by info from Eric)</notes>
           </minus>
         </const>
 
-                
+        <const name="NADBlanketTopX" >
+          <notes>X dimension of top of thermal blanket</notes>
+          <add>
+            <refer refTo="ACDTotalX" />
+            <mul>
+              <const value="2" uType="count" />
+              <refer refTo="NADBlanketThick" />
+            </mul>
+          </add>
+        </const>
+
+        <const name="NADBlanketTopY" >
+          <notes>Y dimension of top of thermal blanket</notes>
+          <add>
+            <refer refTo="ACDTotalY" />
+            <mul>
+              <const value="2" uType="count" />
+              <refer refTo="NADBlanketThick" />
+            </mul>
+          </add>
+        </const>
+
+        <const name="NADBlanketSideX" >
+          <notes>length in long dimension of X-sides of blanket</notes>
+          <refer refTo="NADBlanketTopX" />
+        </const>
+
+        <const name="NADBlanketSideY" >
+          <notes>length in long dimension of Y-sides of blanket, shorter
+            than X-sides because X-sides cover corners</notes>
+          <refer refTo="ACDTotalY" />
+        </const>
+
+        <const name="NADBlanketSideZ" >
+          <notes>height of a side piece of the blanket:  approx.
+             height of ACD side tiles + height of cal</notes>
+          <add>
+            <refer refTo="ACDSideHeight" />
+            <refer refTo="CALVertStayClear"/>
+          </add>
+        </const>
+               
+
+        <const name="NADBlanket_dx">
+          <notes>x displacement of pos. x side of blanket</notes>
+          <quo>
+            <add>
+              <refer refTo = "ACDTotalX" />
+              <refer refTo = "NADBlanketThick" />
+            </add>
+            <const value="2" uType="count" />
+          </quo>
+        </const>             
+
+        <const name="NADBlanket_dxn">
+          <notes>x displacement of neg. x side of blanket</notes>
+          <uminus>
+            <refer refTo = "NADBlanket_dx" />
+          </uminus>
+        </const>
+ 
+
+        <const name="NADBlanket_dy">
+          <notes>y displacement of pos. y side of blanket</notes>
+          <quo>
+            <add>
+              <refer refTo = "ACDTotalY" />
+              <refer refTo = "NADBlanketThick" />
+            </add>
+            <const value="2" uType="count" />
+          </quo>
+        </const>             
+
+        <const name="NADBlanket_dyn">
+          <notes>y displacement of neg. y side of blanket</notes>
+          <uminus>
+            <refer refTo = "NADBlanket_dy" />
+          </uminus>
+        </const>
+ 
+        <const name="NADBlanketTop_dz">
+          <notes>z displacement of top of blanket</notes>
+          <add>
+            <refer refTo="ACDSideHeight" />
+            <quo> 
+              <refer refTo="NADBlanketThick" />
+              <const value="2" uType="count" />
+            </quo>
+          </add>
+        </const>
+
+        <const name="NADBlanketSides_dz">
+          <notes>z displacement of sides of blanket</notes>
+            <minus>
+              <quo>
+                <refer refTo="NADBlanketSideZ" />
+                <const value="2" uType="count" />
+              </quo>
+              <refer refTo="CALVertStayClear" />
+            </minus>
+          </const>
+              
       </derCategory>
     </derived>

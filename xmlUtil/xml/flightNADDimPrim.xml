@@ -16,4 +16,6 @@ towers</prim>
   <prim name="NADGridFlangeInner" value="27.9">Thickness of inner parts of
 grid flange</prim>
   <prim name="NADGridFlangeOverhang" value="25.0">Flange overhangs web</prim>
+  <prim name="NADBlanketThick" value="32.7">Blanket thickness (12/6/01)
+  This is the PDR value.  </prim>
 </primCategory>

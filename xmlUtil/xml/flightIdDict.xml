@@ -6,6 +6,8 @@
         <vEnumVal valueREF="eLATTowers" />
         <vEnumVal valueREF="eLATACD" />
         <vEnumVal valueREF="eLATGrid" />
+        <vEnumVal valueREF="eLATBlanket" />
+        <vEnumVal valueREF="eLATSpacecraft" />
       </vList>
     </field>
 
@@ -245,6 +247,13 @@
             <vEnumVal valueREF="eLATGrid" />
           </pValues>
         </dictNode>
+
+        <dictNode fieldName="fBorderCmp" >
+          <pValues>
+            <vEnumVal valueREF="eLATBlanket" />
+          </pValues>
+        </dictNode>
+
 
       </dictNode>
     </dictRoot>
