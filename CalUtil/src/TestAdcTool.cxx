@@ -8,7 +8,7 @@
 #include "TestAdcTool.h"
 
 // to access an XML containing Digi parameters file
-#include "xml/IFile.h"
+// #include "xml/IFile.h"
 
 static ToolFactory<TestAdcTool> s_factory;
 const IToolFactory& TestAdcToolFactory = s_factory;
