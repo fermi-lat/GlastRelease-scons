@@ -381,11 +381,7 @@ StatusCode TkrValsTool::initialize()
 }
 
 namespace {
-    
-    double radThin   = .03; 
-    double radThick  = .18; 
-    double radTray   = .015;
-    
+
     // coefs from Miner
     double cfThin    = 0.722;
     double cfThick   = 1.864;
@@ -410,6 +406,15 @@ StatusCode TkrValsTool::calculate()
 
     //placeholder for offset
     double z0 = 0.0;
+
+    //double radThin   = .03; 
+    //double radThick  = .18; 
+    //double radTray   = .015;
+    double radThin  = pTkrGeoSvc->getAveConv(STANDARD); // was 0.03
+    double radThick = pTkrGeoSvc->getAveConv(SUPER);    // was 0.18
+    double radTray  = pTkrGeoSvc->getAveRest(ALL);      // was 0.015
+
+
     
     //Recover EventHeader Pointer
     //SmartDataPtr<Event::EventHeader> pEvent(m_pEventSvc, EventModel::EventHeader);
