@@ -69,8 +69,8 @@ void DigiEvent::initialize(UInt_t eventId, UInt_t runId, Double_t time,
 
 void DigiEvent::Clear(Option_t *option) {
 
-    const Int_t nd = 10000;
-    const Int_t limit = 100;
+    const Int_t nd = 20000;
+    static Int_t limit = 100;
     static Int_t ind=0;
     static TkrDigi* keep[nd];
 
@@ -93,8 +93,12 @@ void DigiEvent::Clear(Option_t *option) {
    //these few lines emulates what TClonesArray is doing
 
     Int_t n = m_tkrDigiCol->GetEntries();
-    if (n>limit) 
-      cout <<"!!!Warning: tkrDigi nr entries more than limit!!! "<<n<<endl;
+    if (n>limit) {
+      cout <<"!!!Warning: tkrDigi nr entries more than limit!!!Limit was increased "<<n<<endl;
+      limit=n+10;
+      for (Int_t j=0;j<ind;j++) delete keep[j];
+      ind = 0;
+    }
     for (Int_t i=0;i<n;i++) keep[ind+i] = (TkrDigi*)m_tkrDigiCol->At(i);
     ind += n;
     if (ind > nd-limit) {
