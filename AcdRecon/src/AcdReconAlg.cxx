@@ -178,9 +178,13 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
         idents::AcdId id = (*acdDigiIt)->getId();
 
         if (id.tile()) {
-        // toss out hits below threshold
-        if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue; 
-        
+        // toss out hits below threshold -- OLD
+        //if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue; 
+        // Use Veto Discrim instead
+        // Skip this ACD detector if neither PMT has veto discrim set
+        if ( (!(*acdDigiIt)->getVeto(Event::AcdDigi::A)) && (!(*acdDigiIt)->getV
+eto(Event::AcdDigi::B)) ) continue; 
+
         m_tileCount++;
         double tileEnergy = (*acdDigiIt)->getEnergy();
         m_totEnergy += tileEnergy;
@@ -304,8 +308,11 @@ StatusCode AcdReconAlg::doca(const Event::AcdDigiCol& digiCol, const HepPoint3D 
          idents::AcdId acdId = (*acdDigiIt)->getId();
          if (acdId.ribbon()) continue;
 
-        // toss out hits below threshold
-        if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue;
+        // toss out hits below threshold -- OLD
+        // if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue;
+        // Use Veto Discrim instead
+        // Skip this ACD detector if neither PMT has veto discrim set
+        if ( (!(*acdDigiIt)->getVeto(Event::AcdDigi::A)) && (!(*acdDigiIt)->getV
 		
         idents::VolumeIdentifier volId = (*acdDigiIt)->getVolId();
         std::string str;
@@ -371,8 +378,13 @@ StatusCode AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol, const HepP
         idents::AcdId acdId = (*acdDigiIt)->getId();
         if (acdId.ribbon()) continue;
 
-        // toss out hits below threshold
-        if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue; 
+        // toss out hits below threshold -- OLD
+        // if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue; 
+        // Use Veto Discrim instead
+        // Skip this ACD detector if neither PMT has veto discrim set
+        if ( (!(*acdDigiIt)->getVeto(Event::AcdDigi::A)) && (!(*acdDigiIt)->getV
+
+
         idents::VolumeIdentifier volId = (*acdDigiIt)->getVolId();
         std::string str;
         std::vector<double> dim;
