@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v1r5    21-Feb-2005 HMK Prepare for new GEM
 v1r4p0  09-Feb-2005 HMK Fix up catch in EventSelector
 v1r4    02-Feb-2005 HMK Seach for first sweep event and provide warnings
         if first and last event are not sweep events

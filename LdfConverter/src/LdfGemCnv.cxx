@@ -43,8 +43,14 @@ StatusCode LdfGemCnv::createObj(IOpaqueAddress* ,
         ldfGem.calHEvector(), ldfGem.cnoVector(), ldfGem.conditionSummary(), tdsTileList);
     LdfEvent::GemOnePpsTime ppsTime(ldfGem.onePpsTime().timebase(),
         ldfGem.onePpsTime().seconds());
-    gem->initSummary(ldfGem.liveTime(), ldfGem.prescaled(), ldfGem.discarded(),
-        ldfGem.sent(), ldfGem.triggerTime(), ppsTime, ldfGem.deltaEventTime());
+
+    LdfEvent::GemDataCondArrivalTime condArr;
+    condArr.init(ldfGem.condArrTime().condArr());
+    gem->initSummary(ldfGem.liveTime(), ldfGem.prescaled(),
+            ldfGem.discarded(), condArr,
+            ldfGem.triggerTime(), ppsTime, ldfGem.deltaEventTime(), ldfGem.deltaWindowOpenTime());
+   
+
     return StatusCode::SUCCESS;
 }
 

@@ -129,6 +129,25 @@ private:
 };
 
 
+class GemDataCondArrivalTime 
+{
+public:
+
+  void init(unsigned val) { m_condArr = val; };
+  unsigned short external()  const;
+  unsigned short cno()       const;
+  unsigned short calLE()     const;
+  unsigned short calHE()     const;
+  unsigned short tkr()       const;
+  unsigned short roi()       const;
+  unsigned condArr() const { return m_condArr; };
+
+private:
+  unsigned m_condArr;
+  
+};
+
+
 
 
     /** @class Gem
@@ -158,6 +177,15 @@ private:
         virtual std::ostream& fillStream(std::ostream &s) const;
         friend std::ostream& operator << (std::ostream &s, const Gem &obj);
 
+
+       // GEM doc v2.5 redefined sent() field as condition_arrival_times
+        // We keep both accessors to this field for backward compatibility,
+        // but overload the memory location with a union.
+        union sent_condArr {
+            unsigned sent;
+            GemDataCondArrivalTime condArr;
+        };
+
         /// Retrieve reference to class definition structure
         virtual const CLID& clID() const   { return Gem::classID(); }
         static const CLID& classID()       { return CLID_LdfGem; }
@@ -171,9 +199,14 @@ private:
                          const GemTileList &tileList);
 
         void initSummary(unsigned liveTime, unsigned prescaled, 
+                         unsigned discarded, GemDataCondArrivalTime condArr,
+                         unsigned triggerTime, const GemOnePpsTime &time, 
+                         unsigned short deltaEvtTime, unsigned short deltaWindOpenTime);
+/*
+        void initSummary(unsigned liveTime, unsigned prescaled, 
                          unsigned discarded, unsigned sent, 
                          unsigned triggerTime, const GemOnePpsTime &time, 
-                         unsigned deltaEvtTime);
+                         unsigned short deltaEvtTime, unsigned short deltaWindOpenTime); */
 
 
         unsigned short tkrVector() const { return m_tkrVector;};
@@ -186,10 +219,12 @@ private:
         unsigned liveTime() const {return m_liveTime; };
         unsigned prescaled() const { return m_prescaled;};
         unsigned discarded() const { return m_discarded;};
-        unsigned sent() const { return m_sent; };
+        unsigned sent() const { return m_sent_condArr.sent; };
+        GemDataCondArrivalTime condArrTime()   const { return m_sent_condArr.condArr; };
         unsigned triggerTime() const { return m_triggerTime; };
         const GemOnePpsTime& onePpsTime() const { return m_onePpsTime; };
-        unsigned deltaEventTime() const { return m_deltaEventTime; };
+        unsigned short deltaEventTime() const { return m_deltaEventTime; };
+        unsigned short deltaWindowOpenTime() const { return m_deltaWindOpenTime; };
 
         /// Methods to query bits in the condition summary word
         bool roiSet() const { return( (m_conditionSummary & ROI) != 0); };
@@ -213,10 +248,11 @@ private:
         unsigned  m_liveTime;
         unsigned  m_prescaled;
         unsigned  m_discarded;
-        unsigned  m_sent;
+        sent_condArr  m_sent_condArr;
         unsigned  m_triggerTime;
         GemOnePpsTime m_onePpsTime;
-        unsigned  m_deltaEventTime;
+        unsigned short m_deltaEventTime;
+        unsigned short m_deltaWindOpenTime;
 
     };
 
@@ -234,16 +270,32 @@ private:
         m_tileList = tileList;
     }
 
+/*
     inline void Gem::initSummary(unsigned liveTime, unsigned prescaled, 
                   unsigned discarded, unsigned sent, unsigned triggerTime,
-                  const GemOnePpsTime &time, unsigned deltaEvtTime) {
+                  const GemOnePpsTime &time, unsigned short deltaEvtTime, unsigned short deltaWindOpenTime) {
         m_liveTime = liveTime;
         m_prescaled = prescaled;
         m_discarded = discarded;  
-        m_sent = sent;
+        m_sent_condArr.sent = sent;
         m_triggerTime = triggerTime;
         m_onePpsTime = time;
         m_deltaEventTime = deltaEvtTime;
+        m_deltaWindOpenTime = deltaWindOpenTime;
+    }
+*/
+
+    inline void Gem::initSummary(unsigned liveTime, unsigned prescaled, 
+                  unsigned discarded, GemDataCondArrivalTime condArr, unsigned triggerTime,
+                  const GemOnePpsTime &time, unsigned short deltaEvtTime, unsigned short deltaWindOpenTime) {
+        m_liveTime = liveTime;
+        m_prescaled = prescaled;
+        m_discarded = discarded;  
+        m_sent_condArr.condArr.init(condArr.condArr());
+        m_triggerTime = triggerTime;
+        m_onePpsTime = time;
+        m_deltaEventTime = deltaEvtTime;
+        m_deltaWindOpenTime = deltaWindOpenTime;
     }
 
     inline void Gem::clear() {
@@ -257,10 +309,12 @@ private:
         m_liveTime = 0;
         m_prescaled = 0;
         m_discarded = 0;
-        m_sent = 0;
+        m_sent_condArr.sent = 0;
+        m_sent_condArr.condArr.init(0);
         m_triggerTime = 0;
         m_onePpsTime.clear();
         m_deltaEventTime = 0;
+        m_deltaWindOpenTime = 0;
     }
 
 
@@ -280,8 +334,8 @@ private:
         s << m_prescaled << std::endl;
 		s << "Discarded         = 0x" << std::hex << std::setw(8) << m_discarded << std::dec << " = ";
         s << m_discarded << std::endl;
-		s << "Sent              = 0x" << std::hex << std::setw(8) << m_sent << std::dec << " = " ;
-        s << m_sent << std::endl;
+		//s << "Sent              = 0x" << std::hex << std::setw(8) << m_sent << std::dec << " = " ;
+        //s << m_sent << std::endl;
 		s << "Trigger Time      = 0x" << std::hex << std::setw(8) << m_triggerTime << std::dec << " = " ;
         s << m_triggerTime << std::endl;
         m_onePpsTime.fillStream(s);
@@ -294,6 +348,63 @@ private:
 inline std::ostream& operator<<(std::ostream &s, const Gem &obj){
     return obj.fillStream(s);
 }
+
+
+/*!
+* \brief  Return the condition arrival time in 50 ns ticks of the external trigger bit
+* \return The condition arrival time in 50 ns ticks of the external trigger bit
+*/
+inline unsigned short  GemDataCondArrivalTime::external() const
+{ 
+  return (m_condArr >> 25) & ((1 << 5) -1);
+}
+
+/*!
+* \brief  Return the condition arrival time in 50 ns ticks of the cno trigger bit
+* \return The condition arrival time in 50 ns ticks of the cno trigger bit
+*/
+inline unsigned short  GemDataCondArrivalTime::cno()      const
+{ 
+  return (m_condArr >> 20) & ((1 << 5) -1);
+}
+
+/*!
+* \brief  Return the condition arrival time in 50 ns ticks of the calHE trigger bit
+* \return The condition arrival time in 50 ns ticks of the calHE trigger bit
+*/
+inline unsigned short  GemDataCondArrivalTime::calHE()    const
+{ 
+  return (m_condArr >> 15) & ((1 << 5) -1);
+}
+
+/*!
+* \brief  Return the condition arrival time in 50 ns ticks of the calLE trigger bit
+* \return The condition arrival time in 50 ns ticks of the calLE trigger bit
+*/
+inline unsigned short  GemDataCondArrivalTime::calLE()    const
+{ 
+  return (m_condArr >> 10) & ((1 << 5) -1);
+}
+
+/*!
+* \brief  Return the condition arrival time in 50 ns ticks of the tkr trigger bit
+* \return The condition arrival time in 50 ns ticks of the tkr trigger bit
+*/
+inline unsigned short  GemDataCondArrivalTime::tkr()      const
+{ 
+  return (m_condArr >>  5) & ((1 << 5) -1);
+}
+
+/*!
+* \brief  Return the condition arrival time in 50 ns ticks of the roi trigger bit
+* \return The condition arrival time in 50 ns ticks of the roi trigger bit
+*/
+inline unsigned short  GemDataCondArrivalTime::roi()      const
+{ 
+  return (m_condArr     ) & ((1 << 5) -1);
+}
+
+
 
 }//namespace LdfEvent
 
