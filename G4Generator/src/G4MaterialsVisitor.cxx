@@ -33,14 +33,14 @@ void G4MaterialsVisitor::visitElement(detModel::Element* element)
   name = (G4String) element->getName();
   symbol = (G4String) element->getSymbol();
   z = (G4double) element->getZ();
-  a = (G4double) element->getAweight();
-  density = (G4double) element->getDensity();
+  a = (G4double) element->getAweight()*g/mole;
+  density = (G4double) element->getDensity()*g/cm3;
 
   std::cout << name << " " << z << " " << a << " " << density << std::endl;
   if (symbol != "")
-    G4Element* el = new G4Element(name, symbol, z, a*g/mole);
+    G4Element* el = new G4Element(name, symbol, z, a);
   else
-    G4Material* el = new G4Material(name, z, a*g/mole, density*g/cm3);
+    G4Material* el = new G4Material(name, z, a, density);
 }
 
 
