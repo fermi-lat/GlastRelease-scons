@@ -5,9 +5,6 @@
 // Include files
 #include "GaudiKernel/IAlgTool.h"
 #include "idents/CalXtalId.h"
-#include "CalibData/CalibModel.h"
-#include "CalibData/Cal/CalCalibPed.h"
-#include "CalibData/Cal/CalCalibGain.h"
 #include <string>
 #include <vector>
 
@@ -31,26 +28,18 @@ public:
     static const InterfaceID& interfaceID() { return IID_ConvertAdc; }
 
     virtual short unsigned int calculateAdc(idents::CalXtalId id,
-        idents::CalXtalId::XtalFace face,
-        idents::CalXtalId::AdcRange range,
-        double* depositedEnergy,
-        CalibData::CalCalibPed *peds=0, CalibData::CalCalibGain *gains=0 ) = 0;
+		idents::CalXtalId::XtalFace face,
+		idents::CalXtalId::AdcRange range,
+        double* depositedEnergy) = 0;
     
-    virtual idents::CalXtalId::AdcRange calculateAdcAndNoise(idents::CalXtalId id,
-        idents::CalXtalId::XtalFace face,
-        double* depositedEnergy,
-        CalibData::CalCalibPed *peds=0, CalibData::CalCalibGain *gains=0 ) = 0;
-
     virtual float calculateEnergy(idents::CalXtalId id,
         idents::CalXtalId::XtalFace face,
-        idents::CalXtalId::AdcRange range,
-        short unsigned int adc,
-        CalibData::CalCalibPed *peds=0, CalibData::CalCalibGain *gains=0 ) = 0;
+		idents::CalXtalId::AdcRange range,
+        short unsigned int adc) = 0;
 
-    virtual idents::CalXtalId::AdcRange findRange(idents::CalXtalId id,
-        idents::CalXtalId::XtalFace face,
-        double* depositedEnergy,
-        CalibData::CalCalibPed *peds=0, CalibData::CalCalibGain *gains=0 ) = 0;
+	virtual idents::CalXtalId::AdcRange findRange(idents::CalXtalId id,
+		idents::CalXtalId::XtalFace face,
+        double* depositedEnergy) = 0;
 };
 
 

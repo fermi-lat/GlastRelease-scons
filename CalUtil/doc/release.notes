@@ -1,5 +1,6 @@
 /** @file release.notes
  * Package CalUtil
+ * v1r4       06-Aug-2004 BG Modified CalUtil to reproduce the state of v1r2p2 for RespSvc development	
  * v1r3p1     18-Jun-2004 BG Bug fix
  * v1r3p0     20-Apr-2004 Adding CalibData objects for pedestal and gain values
  * v1r2p2     03-Apr-2003 AC  calibration classes removed from CalUtil
