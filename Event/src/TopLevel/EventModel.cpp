@@ -26,8 +26,8 @@ public:
         EventModel::MC::McVertexCol         = EventModel::MC::Event  + "/McVertexCol";
         EventModel::MC::McParticleCol       = EventModel::MC::Event  + "/McParticleCol";
 
-        EventModel::MC::McPositionHits      = EventModel::MC::Event  + "/McPositionHits";
-        EventModel::MC::McIntegratingHits   = EventModel::MC::Event  + "/McIntegratingHits";
+        EventModel::MC::McPositionHitCol      = EventModel::MC::Event  + "/PositionHitCol";
+        EventModel::MC::McIntegratingHitCol   = EventModel::MC::Event  + "/IntegratingHitCol";
 
         // Digi event
         EventModel::Digi::Event             = EventModel::Event + "/Digi";
@@ -63,7 +63,7 @@ public:
 /*  Class ID definitions for the Glast Event Model
     Maximum CLID is 65536 = 2^16 - 1
 
-    Categorie          ID range      Comment
+    Category           ID range      Comment
     ---------          --------      -------
     Gaudi Kernel          0 -  99    see Gaudi/Kernel/Kernel.cpp
                         100 - 199    general classes (Run, Event, EventTag, ContainedObject)
@@ -73,7 +73,7 @@ public:
 
     GLAST class Categories and ID ranges (proposal)
     
-    Categorie          ID range      Comment
+    Category           ID range      Comment
     ---------          --------      -------
     EventSelection     200  -  299   High level event information used for event selection
                                      (Run and EventTag are at present in Kernel.cpp)

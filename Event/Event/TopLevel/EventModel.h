@@ -42,8 +42,8 @@
             _EXTERN_ std::string Event;
             _EXTERN_ std::string McVertexCol;
             _EXTERN_ std::string McParticleCol;
-            _EXTERN_ std::string McPositionHits;
-            _EXTERN_ std::string McIntegratingHits;
+            _EXTERN_ std::string McPositionHitCol;
+            _EXTERN_ std::string McIntegratingHitCol;
         }
 
         namespace Digi {
