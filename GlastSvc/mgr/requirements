@@ -6,9 +6,8 @@ branches src mgr doc
 use instrument v2r1
 use Gaudi
 use data 
+use GlastEvent v1
 
-# these only needed for the test executable: comment out otherwise
-use GlastEvent v1r1
 use GaudiSvc v3r1
 
 # this package is needed to write out to Root
@@ -38,9 +37,9 @@ macro GlastSvc_stamps     ""                              \
 
 set   GlastSvcShr           "${GLASTSVCROOT}/${DEBUGDIR}/libGlastSvc"
 
-path_append LD_LIBRARY_PATH "${GLASTSVCROOT}/${DEBUGDIR}"
 
 private
+
 include_path $(GLASTSVCROOT)
 
 # this for MSVCC, to fix incompatibilities, turn off warnings
@@ -49,7 +48,8 @@ macro_append cppflags ""\
 
 # note that the debug versions of the used libraries are inserted below
 
-macro GlastSvc_shlibflags   "$(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
+macro GlastSvc_shlibflags   "$(componentshr_linkopts) $(use_linkopts)" \
+                 VisualC  "$(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
 
 # build this for non-shareable testing
 # note the addition of Raw. Take out shortly.

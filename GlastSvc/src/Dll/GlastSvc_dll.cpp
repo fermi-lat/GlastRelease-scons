@@ -8,10 +8,6 @@
 //               The DLL initialisation must be done seperately for 
 //               each DLL. 
 //
-//  Author     : H. Gillespie
-//  Created    : 1 Aug 00
-//  Changes    : 
-//               Version copied from Glast, and addopted for GlastSvc
 //
 //====================================================================
 
@@ -36,6 +32,5 @@ extern "C" FactoryTable::EntryList* getFactoryEntries() {
   }
   return FactoryTable::instance()->getEntries();
 } 
-
 
 
