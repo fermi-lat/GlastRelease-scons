@@ -47,14 +47,21 @@ public:
    virtual const CLID& clID() const   { return TkrTrack::classID(); }
    static const CLID& classID()       { return CLID_TkrTrack; }
 
-    enum StatusBits {Found    = 0x0001,  // Set if track has been "found" by pat rec
-                     Filtered = 0x0002,  // Set if track fit filter stage has been run
-                     Smoothed = 0x0004,  // Set if track fit smoother has been run
-                     OnePass  = 0x0100,  // Set if the full first pass track fit finished
-                     TwoPass  = 0x0200}; // Set if an iteration of the first fit finished
+   /** The StatusBits enum has the following 5 elements:
+    *  - Found    : Set if track has been "found" by pat rec
+    *  - Filtered : Set if track fit filter stage has been run
+    *  - Smoothed : Set if track fit smoother has been run
+    *  - OnePass  : Set if the full first pass track fit finished
+    *  - TwoPass  : Set if an iteration of the first fit finished
+    */
+    enum StatusBits {Found    = 0x0001,  
+                     Filtered = 0x0002,  
+                     Smoothed = 0x0004,  
+                     OnePass  = 0x0100,  
+                     TwoPass  = 0x0200}; 
     
     /// Utility 
-    void   writeOut(MsgStream& log) const; 
+    std::ostream& fillStream( std::ostream& s ) const;
 
     /// Access to primary quantities on track quality and scattering info
     inline unsigned int getStatusBits()          const {return m_statusBits;}
@@ -62,8 +69,11 @@ public:
     inline double       getChiSquareSmooth()     const {return m_chiSquareSmooth;}
     inline int          getNDegreesOfFreedom()   const {return m_nDegreesOfFreedom;}
     inline double       getQuality()             const {return m_Quality;}
+    ///returns the rms of the residuals between the track hits and their fitted position
     inline double       getScatter()             const {return m_rmsResid;}
+    ///returns the rms of the scattering deviations of the track
     inline double       getKalThetaMS()          const {return m_KalmanThetaMS;}
+    ///returns the energy estimate from Kalman Filter Fitter
     inline double       getKalEnergy()           const {return m_KalmanEnergy;}
     inline double       getKalEnergyError()      const {return m_KalmanEnergyErr;}
 
@@ -78,11 +88,13 @@ public:
     inline Point        getInitialPosition()     const {return m_initialPosition;}
     inline Vector       getInitialDirection()    const {return m_initialDirection;}
     inline double       getInitialEnergy()       const {return m_initialEnergy;}
+    /// JCT: THE FOLLOWING SHOULD BE COMMENTED
     inline int          getNumSegmentPoints()    const {return m_numSegmentPoints;}
     inline double       chiSquareSegment(double penaltyGap = 0.)  
                                            const {return m_chisqSegment + penaltyGap*getNumGaps();}
     inline int          getNumXHits()            const {return m_nxHits;}
     inline int          getNumYHits()            const {return m_nyHits;}
+    /// JCT: THE FOLLOWING SHOULD BE COMMENTED
     inline double       getTkrCalRadlen()        const {return m_TkrCal_radlen;}
 
     // Access to the hit information (why must I do it this way???)
@@ -110,6 +122,8 @@ public:
     inline void   setNumYHits(int i)                  {m_nyHits            = i;}
     inline void   setTkrCalRadLen(double x)           {m_TkrCal_radlen     = x;}
     inline void   setStatusBit(unsigned int status)   {m_statusBits       |= status;}
+
+
 private:	
     /// Status
     unsigned int m_statusBits;

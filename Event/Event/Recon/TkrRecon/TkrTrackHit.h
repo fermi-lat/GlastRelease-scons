@@ -24,7 +24,7 @@
 *        FILTERED    The "filtered" values from the Kalman Filter fit
 *        SMOOTHED    The "smoothed" values from the Kalman Filter fit
 *
-* @author Bill Atwood, Leon Rochester, Johann Cohen, Tracy Usher
+* @author Bill Atwood, Leon Rochester, Johann Cohen-Tanugi, Tracy Usher
 *
 * $Header$
 */
@@ -39,8 +39,14 @@ typedef SmartRef<Event::TkrCluster> TkrClusterPtr;
 class TkrTrackHit : virtual public ContainedObject
 {
 public:
-    /// Enumerate the possible "types" of track parameters contained here
-
+  /** The ParamType enum defines the possible "types" of track parameters:
+   * - MEASURED  = Measured values from the tracker Si planes
+   * - PREDICTED = Projected estimated values from previous plane
+   * - FILTERED  = Parameters from track fit (KF filter stage)
+   * - SMOOTHED  = Parameters from Kalman Filter smoothing stage
+   * - QMATERIAL = For access to the contribution from scattering
+   * - UNKNOWN}  = Unknown
+   */
     enum ParamType  {MEASURED,               // Measured values from the tracker Si planes
                      PREDICTED,              // Projected estimated values from previous plane
                      FILTERED,               // Parameters from track fit (KF filter stage)
@@ -48,18 +54,29 @@ public:
                      QMATERIAL,              // For access to the contribution from scattering
                      UNKNOWN};               // Unknown
 
-    /// Status word bits organized like:
-    ///        |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
-    ///         < volume info  >                    <    track fitting status          >
-    enum StatusBits {HASCLUSTER   = 0x0001,  // Hit is associated to a valid cluster
-                     HASMEASURED  = 0x0002,  // Hit has valid measured parameters
-                     HASPREDICTED = 0x0004,  // Hit has valid predicted parameters
-                     HASFILTERED  = 0x0008,  // Hit has valid filtered parameters
-                     HASSMOOTHED  = 0x0010,  // Hit has valid smoothed parameters
-                     HASMATERIAL  = 0x0020,  // Hit has valid material matrix
-                     MEASURESX    = 0x1000,  // Plane measures in X direction
-                     MEASURESY    = 0x2000,  // Plane measures in Y direction
-                     HASVALIDTKR  = 0x8000}; // Valid track volume identifier
+    /** Status word bits organized like:
+     *        |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
+     *         < volume info  >                    <    track fitting status          >
+     * The elements in the StatusBits enum are the following:
+     * - HASCLUSTER   = Hit is associated to a valid cluster
+     * - HASMEASURED  = Hit has valid measured parameters
+     * - HASPREDICTED = Hit has valid predicted parameters
+     * - HASFILTERED  = Hit has valid filtered parameters
+     * - HASSMOOTHED  = Hit has valid smoothed parameters
+     * - HASMATERIAL  = Hit has valid material matrix
+     * - MEASURESX    = Plane measures in X direction
+     * - MEASURESY    = Plane measures in Y direction
+     * - HASVALIDTKR  = Valid track volume identifier
+     **/
+     enum StatusBits {HASCLUSTER   = 0x0001,
+                     HASMEASURED  = 0x0002,
+                     HASPREDICTED = 0x0004,
+                     HASFILTERED  = 0x0008,
+                     HASSMOOTHED  = 0x0010,
+                     HASMATERIAL  = 0x0020,
+                     MEASURESX    = 0x1000,
+                     MEASURESY    = 0x2000,
+                     HASVALIDTKR  = 0x8000};
 
 
     /// Default (null) constructor (just in case...)
@@ -148,7 +165,8 @@ public:
     /// Methods used in reconstruction?? Are they necessary?
     void clean();   // clean the PRED - FIT - SMOOTH values but not the MEAS
     void clear();   // clean everything
-   
+    std::ostream& fillStream( std::ostream& s ) const;
+    
 private:
     inline const double getCoordinate(const TkrTrackParams& params, int coord) const;
     inline double       getCoordinate(const TkrTrackParams& params, int coord);

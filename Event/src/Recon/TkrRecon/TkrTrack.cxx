@@ -65,22 +65,13 @@ TkrTrack::~TkrTrack()
     clear();
 }
 
-void TkrTrack::writeOut(MsgStream& log) const
-{
-    
-    log << MSG::DEBUG;
-    if (log.isActive() ) {
-//        log << " --- TkrTrack::writeOut --- "            << endreq
-//            << " Position      = " << getPosition().x()  << " " 
-//            << getPosition().y()  << " " << getPosition().z()  << endreq
-//            << " Direction     = " << getDirection().x() << " " 
-//            << getDirection().y() << " " << getDirection().z() << endreq
-//            << " Energy        = " << getEnergy() << endreq
-//            << " first Layer   = " << getLayer() << endreq
-//            << " Tower         = " << getTower() << endreq
-//            << " quality       = " << getQuality()       << endreq
-//            << " num m_hits    = " << getNumHits();
-    }
-    log << endreq;
+std::ostream& TkrTrack::fillStream( std::ostream& s ) const 
+{ 
+  s << " Position      = " << getInitialPosition().x()  << " " << getInitialPosition().y()  << " " << getInitialPosition().z()  << "\n"
+    << " Direction     = " << getInitialDirection().x() << " " << getInitialDirection().y() << " " << getInitialDirection().z() << "\n"
+    << " Energy        = " << getInitialEnergy() << "\n"
+    << " quality       = " << getQuality()       << "\n"
+    << " num m_hits    = " << getNumHits();
+  
+  return s; 
 }
-

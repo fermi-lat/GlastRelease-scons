@@ -214,3 +214,15 @@ const double Event::TkrTrackHit::getNonMeasuredSlope(Event::TkrTrackHit::ParamTy
 {
     return getCoordinate(getTrackParams(type), getParamIndex(false, false));
 }
+
+std::ostream& Event::TkrTrackHit::fillStream( std::ostream& s ) const 
+{ 
+  s << "StatusBit   : "<< getStatusBits()<<"\n"
+    << "Z Plane     : "<< getZPlane()<<"\n"
+    <<" Energy      : "<< getEnergy() <<"\n"
+    <<" Energy      : "<< getRadLen()
+    <<" Active Dist : "<< getActiveDist()
+    <<" Filter Chi2 : "<< getChiSquareFilter()
+    <<" Smooth Chi2 : "<< getChiSquareSmooth();
+  return s; 
+}

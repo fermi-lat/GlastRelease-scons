@@ -125,3 +125,16 @@ const double& Event::TkrTrackParams::operator()(const int &i, const int &j) cons
 
     return m_ySlp_ySlp;
 }
+
+
+std::ostream& Event::TkrTrackParams::fillStream( std::ostream& s ) const 
+{ 
+  s << getxPosition() <<" "<<getxSlope()<<" "<<getyPosition() <<" "<<getySlope()<<"\n"
+    << getxPosxPos() <<" "<<getxPosxSlp()<<" "<<getxPosyPos()<<" "<<getxPosySlp()<<"\n"
+    <<"          "<<getxSlpxSlp()<<" "<<getxSlpyPos()<<" "<<getxSlpySlp()<<"\n"
+    <<"          "<<"          "<<getyPosyPos()<<" "<<getyPosySlp()<<"\n"
+    <<"          "<<"          "<<"          "<<getySlpySlp();
+  return s; 
+}
+
+

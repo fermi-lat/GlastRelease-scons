@@ -22,7 +22,7 @@
 * - TkrRecon
 *   -# TkrCluster Collection
 *   -# TkrPatCand Collection
-*   -# TkrFitTrack Collection
+*   -# TkrTrack Collection
 *   -# TkrVertex Collection
 *
 * Note that all inherit from DataObject, and correspond to transient 
@@ -73,7 +73,7 @@
 * - /Event/TkrRecon
 *    -# TkrCluster Collection
 *    -# TkrPatCand Collection
-*    -# TkrFitTrack Collection
+*    -# TkrTrack Collection
 *    -# TkrVertex Collection
 *
 * @section reference Reference Document

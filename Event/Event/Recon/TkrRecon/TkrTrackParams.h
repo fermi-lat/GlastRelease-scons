@@ -16,6 +16,7 @@
 * $Header$
 */
 
+#include <iostream>
 
 namespace Event { //Namespace Event
 
@@ -92,7 +93,13 @@ public:
     inline void setyPosyPos(const double& val)   {m_yPos_yPos = val; }
     inline void setyPosySlp(const double& val)   {m_yPos_ySlp = val; }
     inline void setySlpySlp(const double& val)   {m_ySlp_ySlp = val; }
-    
+
+    std::ostream& fillStream( std::ostream& s ) const;
+    friend std::ostream& operator<< ( std::ostream& s, const TkrTrackParams& obj ) 
+      {
+	return obj.fillStream(s);
+      }
+
 private:
     /// Private intialization method
     void initDataMembers();
