@@ -41,16 +41,16 @@ public:
     StatusCode       finalize();
 
     /// This for initializing the pattern reconstruction
-    TkrPatRecon*     setPatRecon();
+    TkrRecon::TkrPatRecon*     setPatRecon();
 
     /// This for initializing the particular display routines
     void             setDisplayRtns(gui::DisplayControl& display, IDataProviderSvc* dps);
 
     /// This for initializing the track fit algorithm
-    TkrTrackFit*     setTrackFit();
+    TkrRecon::TkrTrackFit*     setTrackFit();
 
     /// This for initializing the vertex finding algorithm
-    TkrFindVertex*   setVertexing();
+    TkrRecon::TkrFindVertex*   setVertexing();
 
     /// This for returning the pointer to the geometry service
     ITkrGeometrySvc* getGeometrySvc() {return pTkrGeo;}

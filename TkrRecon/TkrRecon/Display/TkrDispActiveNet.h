@@ -17,7 +17,7 @@
 #define __TKRDISPACTIVENET_H
 
 #include "src/PatRec/NeuralNet/TkrNeuralNet.h"
-#include "TkrRecon/PatRec/TkrCandidates.h"
+#include "GlastEvent/Recon/TkrRecon/TkrPatCandCol.h"
 #include "TkrRecon/ITkrGeometrySvc.h"
 #include "gui/DisplayRep.h"
 #include "GaudiKernel/IDataProviderSvc.h"
