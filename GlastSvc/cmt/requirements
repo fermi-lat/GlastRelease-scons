@@ -7,9 +7,16 @@ use instrument
 use data 
 use GlastEvent
 
+
+apply_pattern packageShr
+apply_pattern package_include
+
+#=============================================================
+private
+
+use detModel
 use GaudiSvc 
 use GaudiAud 
-
 
 apply_pattern package_headers
 
@@ -19,7 +26,7 @@ macro_append GlastSvc_headers "" WIN32 " ..\GlastSvc\Reco\*.h \
                  ../GlastSvc/data/*.h data/*.h
 
 
-library GlastSvc GlastDetSvc/*.cpp \
+library GlastSvc GlastDetSvc/*.cxx\
                  EventSelector/*.cpp \
                  data/*.cpp \
                  MonteCarlo/*.cpp\
@@ -27,14 +34,10 @@ library GlastSvc GlastDetSvc/*.cpp \
                  ${GlastSvc_headers}
             
 
-apply_pattern package_include
-
 # define link options
 apply_pattern package_Clinkopts
-apply_pattern packageShr
 
-#=============================================================
-private
+
 
 # get flags to build shared library
 
@@ -42,15 +45,11 @@ apply_pattern package_Cshlibflags
 
 private
 
-
-
-# WinIncludes is to allow header files to be added to the 
+# WinInclude is to allow header files to be added to the 
 # VC++ workspace, without causing build problems on unix
 
-macro WinInclude1 "" VisualC "test/CreateEvent.h" 
-macro WinInclude2 "" VisualC "test/jobOptions.txt"'
+macro WinInclude "" WIN32 "test/*.h  test/*.txt test/*.xml" 
 
 # build this for non-shareable testing
-application test  test/*.cpp \
-                  $(WinInclude1) $(WinInclude2) 
+application test  test/*.cpp   $(WinInclude) 
 

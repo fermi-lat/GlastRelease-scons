@@ -56,11 +56,8 @@ StatusCode CreateEvent::initialize() {
     setProperties();
     
     // now try to find the GlastDevSvc service
-    IGlastDetSvc* detSvc = 0;
-    const IID&  IID_IGlastDetSvc  =  401; // wired it for now!
 
-    StatusCode sc = serviceLocator()->getService ("GlastDetSvc",
-        IID_IGlastDetSvc, reinterpret_cast<IInterface*&>( detSvc ));
+    StatusCode sc = service("GlastDetSvc", m_detSvc);
     
     if (sc.isSuccess ())
         log << MSG::INFO << "Succeeded in accessing the GlastDetSvc!" << endreq;
@@ -68,7 +65,6 @@ StatusCode CreateEvent::initialize() {
         log << MSG::ERROR << "Couldn't find the GlastDetSvc!" << endreq;
         return StatusCode::FAILURE;
     }
-    m_detSvc = detSvc;
 
 
     return StatusCode::SUCCESS;

@@ -16,6 +16,7 @@
 class Instrument;
 class GlastDetector;
 namespace xml { class IFile; }
+class DMmanager;
 
 /*!  This Gaudi service provides access to a tree of GlastDetector objects.
 */
@@ -73,9 +74,9 @@ public:
     //! set new root detector
     void setDetector(GlastDetector* d);
 
-	/// Query interface
-//    virtual StatusCode queryInterface( const IID& riid, void** ppvUnknown );
 
+    //! start a visitor of the detModel geometry description (implements IGlastDetSvc)
+    virtual void accept(IGeometry& geom);
 
     
 private:
@@ -84,6 +85,10 @@ private:
     Instrument*		m_instrument;
     std::string		m_xmlFile;
     std::string		m_iniFile;
+    DMmanager*          m_dm;
+    std::string         m_xmlfile;
+    std::string         m_topvol;
+    std::string         m_visitorMode;
     
 };
 

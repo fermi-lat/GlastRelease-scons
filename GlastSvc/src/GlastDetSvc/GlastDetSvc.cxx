@@ -12,6 +12,11 @@
 #include "instrument/Instrument.h"
 #include "xml/IFile.h"
 
+#include "GlastSvc/GlastDetSvc/IGeometry.h"
+
+#include "DMmanager.h"
+#include "GeometryVisitor.h"
+
 // define the class-id (unique) for the GlastDetSvc
 // moved to Kernel! const IID&  IID_IGlastDetSvc  =  401;   // Unique to GLAST 
 
@@ -39,11 +44,19 @@ GlastDetSvc::GlastDetSvc(const std::string& name,ISvcLocator* svc)
 , m_instrument (0)
 , m_xmlFile ("")
 , m_iniFile ("")
+, m_dm(0)
 {
     
     // declare the properties
     declareProperty ("PersistencyFile", m_xmlFile);
     declareProperty ("IniFile", m_iniFile);
+
+    // for DetModel visitor
+    declareProperty("xmlfile",     m_xmlfile="-");
+    declareProperty("topVolume",   m_topvol="LAT");
+    declareProperty("visitorMode", m_visitorMode="propagate");
+
+
     
 }
 /// Standard Destructor
@@ -85,10 +98,19 @@ StatusCode GlastDetSvc::initialize ()
     s_log = & log;  // make available globally while executing the following
     
     log << MSG::DEBUG << "Loading instrument ...";
-    // now create and initialize the instruemtn
+    // now create and initialize the instrurment
     m_instrument = new Instrument;
     if (m_instrument->initialize(m_iniFile, m_xmlFile) ) status=StatusCode::FAILURE;
     log << MSG::DEBUG << "done. Loaded "<< m_instrument->detector_count() << " detectors." << endreq;
+
+    
+    // setup the detModel geometry, so can be visited below
+    m_dm = new DMmanager;
+    m_dm->init("-",m_visitorMode,m_topvol);
+    log << MSG::INFO;
+    m_dm->printSetup(log.stream());
+    log << endreq;
+
     return status;
 }
 void GlastDetSvc::setDetector(GlastDetector* d)
@@ -105,6 +127,9 @@ StatusCode GlastDetSvc::finalize ()
     delete m_instrument;
     m_instrument = 0;
     
+    // remove the detModel interface.
+    delete m_dm;
+    m_dm=0;
     return status;
 }
 
@@ -171,3 +196,12 @@ extern void WARNING ( const char* msg )
 }
 
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//            the new detModel interface calls
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void GlastDetSvc::accept(IGeometry& geom)
+{
+    m_dm->accept(&GeometryVisitor(geom));
+
+
+}

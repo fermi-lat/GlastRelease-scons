@@ -6,7 +6,7 @@
 ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
 
 // List of Dlls
-ApplicationMgr.DLLs   = { "GlastSvc", "RootHistCnv" };
+ApplicationMgr.DLLs   = { "GlastSvc" };
 
 
 ApplicationMgr.TopAlg = { "CreateEvent" };
@@ -20,7 +20,7 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 
 
 // Input IRF file
-EventSelector.Input = "IRFFILE $(INSTRUMENTROOT)/src/test/muontest.irf";
+EventSelector.Input = "IRFFILE $(INSTRUMENTROOT)/src/test/test_muons.irf";
 
 ApplicationMgr.EvtMax = 20;
 
