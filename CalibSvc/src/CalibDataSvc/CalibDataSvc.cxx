@@ -168,7 +168,7 @@ StatusCode CalibDataSvc::initialize()   {
     }
 
     // Now do the same for any requested flavors
-    int ix;
+    unsigned int ix;
     for (ix = 0; ix < m_flavorList.size(); ix++) {
       fullpath = calibTypePath + "/" + m_flavorList[ix];
       args[0] = fullpath;

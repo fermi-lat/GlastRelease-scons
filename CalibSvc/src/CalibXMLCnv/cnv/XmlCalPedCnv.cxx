@@ -55,13 +55,24 @@ namespace {
     using xml::Dom;
 
     // Could check here to make sure it really is a <calPed>
+    float avg, sig;
+    try {
+      avg = xml::Dom::getDoubleAttribute(pedElt, "avg");
+      sig = xml::Dom::getDoubleAttribute(pedElt, "sig");
+    }
+    catch (xml::DomException ex) {
+      std::cerr << "From CalibSvc::XmlCalPedCnv::processRange" << std::endl;
+      std::cerr << ex.getMsg() << std::endl;
+      throw ex;
+    }
 
+    /*
     std::string att = Dom::getAttribute(pedElt, "avg");
     float avg = atof(att.c_str());
 
     att = Dom::getAttribute(pedElt, "sig");
     float sig = atof(att.c_str());
-    
+    */
     return new CalibData::Ped(avg, sig);
   }
 }

@@ -39,6 +39,8 @@ namespace {
     if (att.compare(std::string("LEX1")) == 0) return CalXtalId::LEX1;
     if (att.compare(std::string("HEX8")) == 0) return CalXtalId::HEX8;
     if (att.compare(std::string("HEX1")) == 0) return CalXtalId::HEX1; 
+    // anything else is illegal.  Should be caught by parser, but
+    // maybe should also throw exception here.
   }
 
   unsigned findFace(const DOM_Element& faceElt) {
@@ -241,6 +243,23 @@ StatusCode XmlBaseCnv::readDimension(const DOM_Element& docElt,
   DOM_Element dimElt = Dom::findFirstChildByName(docElt, "dimension");
   if (dimElt == DOM_Element()) return StatusCode::FAILURE;
 
+  try {
+    nRow = Dom::getIntAttribute(dimElt, "nRow");
+    nCol = Dom::getIntAttribute(dimElt, "nCol");
+    nLayer = Dom::getIntAttribute(dimElt, "nLayer");
+    nXtal = Dom::getIntAttribute(dimElt, "nXtal");
+    nFace = Dom::getIntAttribute(dimElt, "nFace");
+    nRange = Dom::getIntAttribute(dimElt, "nRange");
+  }
+  catch (xml::DomException ex) {
+    std::cerr << "From CalibSvc::XmlBaseCnv::readDimension" << std::endl;
+    std::cerr << ex.getMsg() << std::endl;
+    throw ex;
+  }
+
+
+
+  /*
   std::string att = Dom::getAttribute(dimElt, "nRow");
   nRow = (unsigned) atoi(att.c_str());
   att = Dom::getAttribute(dimElt, "nCol");
@@ -253,32 +272,37 @@ StatusCode XmlBaseCnv::readDimension(const DOM_Element& docElt,
   nFace = (unsigned) atoi(att.c_str());
   att = Dom::getAttribute(dimElt, "nRange");
   nRange = (unsigned) atoi(att.c_str());
+  */
 
   unsigned expected = nRow * nCol;
   // Make some consistency checks.  # tower elements should be nRow*nCol
   // # layer elements should be nRow*nCol*nLayer, etc.
-  DOM_NodeList nlist = docElt.getElementsByTagName("tower");
-  if (nlist.getLength() != expected) {
+  //  DOM_NodeList nlist = docElt.getElementsByTagName("tower");
+  std::vector<DOM_Element> nlist;
+
+  Dom::getDescendantsByTagName(docElt, "tower", nlist);
+  
+  if (nlist.size() != expected) {
     // put out a message and...
     return StatusCode::FAILURE;
   }
   expected *= nLayer;
-  nlist = docElt.getElementsByTagName("layer");
-  if (nlist.getLength() != expected) {
+  Dom::getDescendantsByTagName(docElt, "layer", nlist);
+  if (nlist.size() != expected) {
     // put out a message and...
     return StatusCode::FAILURE;
   }
 
   expected *= nXtal;
-  nlist = docElt.getElementsByTagName("xtal");
-  if (nlist.getLength() != expected) {
+  Dom::getDescendantsByTagName(docElt, "xtal", nlist);
+  if (nlist.size() != expected) {
     // put out a message and...
     return StatusCode::FAILURE;
   }
   
   expected *= nFace;
-  nlist = docElt.getElementsByTagName("face");
-  if (nlist.getLength() != expected) {
+  Dom::getDescendantsByTagName(docElt, "face", nlist);
+  if (nlist.size() != expected) {
     // put out a message and...
     return StatusCode::FAILURE;
   }
@@ -289,9 +313,11 @@ StatusCode XmlBaseCnv::readDimension(const DOM_Element& docElt,
   // this is.  However they all have the same name, so just find first
   // child of a face element, then count all similarly-named elements
 
-  DOM_Element child = Dom::getFirstChildElement(nlist.item(0));
-  nlist = docElt.getElementsByTagName(child.getTagName());
-  if (nlist.getLength() != expected) {
+  DOM_Element child = Dom::getFirstChildElement(nlist[0]);
+  std::string tagName = Dom::getTagName(child);
+  Dom::getDescendantsByTagName(docElt, tagName, nlist);
+  //  nlist = docElt.getElementsByTagName(child.getTagName());
+  if (nlist.size() != expected) {
     // put out a message and...
     return StatusCode::FAILURE;
   }
@@ -311,26 +337,35 @@ DOM_Element XmlBaseCnv::findFirstRange(const DOM_Element& docElt) {
   DOM_Element elt = Dom::findFirstChildByName(docElt, "tower");
   if (elt == DOM_Element()) return elt;
 
-  std::string att = Dom::getAttribute(elt, "nRow");
-  m_nRow = atoi(att.c_str());
+  //  std::string att = Dom::getAttribute(elt, "nRow");
+  //  m_nRow = atoi(att.c_str());
+  try {
+    m_nRow = Dom::getIntAttribute(elt, "iRow");
+    m_nCol = Dom::getIntAttribute(elt, "iCol");
 
-  att = Dom::getAttribute(elt, "nCol");
-  m_nCol = atoi(att.c_str());
 
-  // All child elements of a tower are layer elements
-  elt = Dom::getFirstChildElement(elt);
-  att = Dom::getAttribute(elt, "iLayer");
-  m_nLayer = atoi(att.c_str());
+    // All child elements of a tower are layer elements
+    elt = Dom::getFirstChildElement(elt);
+    //  att = Dom::getAttribute(elt, "iLayer");
+    //  m_nLayer = atoi(att.c_str());
+    m_nLayer = Dom::getIntAttribute(elt, "iLayer");
 
-  // All child elements of layers are xtal elements
-  elt = Dom::getFirstChildElement(elt);
-  att = Dom::getAttribute(elt, "iXtal");
-  m_nXtal = atoi(att.c_str());
+    // All child elements of layers are xtal elements
+    elt = Dom::getFirstChildElement(elt);
+    //    att = Dom::getAttribute(elt, "iXtal");
+    //    m_nXtal = atoi(att.c_str());
+    m_nXtal = Dom::getIntAttribute(elt, "iXtal");
+  }
+  catch (xml::DomException ex) {
+    std::cerr << "From CalibSvc::XmlBaseCnv::findFirstRange" << std::endl;
+    std::cerr << ex.getMsg() << std::endl;
+    throw ex;
+  }
 
   // All child elements of xtal are face elements
   elt = Dom::getFirstChildElement(elt); 
   m_nFace = findFace(elt);
-
+  
   elt = Dom::getFirstChildElement(elt);
   m_nRange = findRangeAtt(elt);
   return elt;
@@ -365,8 +400,17 @@ DOM_Element XmlBaseCnv::findNextRange(const DOM_Element& rangeElt) {
   elt = Dom::getSiblingElement(elt);         // next xtal
 
   if (elt != DOM_Element()) {
-    std::string att = Dom::getAttribute(elt, "iXtal");
-    m_nXtal = atoi(att.c_str());
+    try {
+      m_nXtal = Dom::getIntAttribute(elt, "iXtal");
+    }
+    catch (xml::DomException ex) {
+      std::cerr << "From CalibSvc::XmlBaseCnv::findNextRange" << std::endl;
+      std::cerr << ex.getMsg() << std::endl;
+      throw ex;
+    }
+
+    //    std::string att = Dom::getAttribute(elt, "iXtal");
+    //    m_nXtal = atoi(att.c_str());
 
     // All child elements of xtal are face elements
     elt = Dom::getFirstChildElement(elt);
@@ -383,14 +427,32 @@ DOM_Element XmlBaseCnv::findNextRange(const DOM_Element& rangeElt) {
   elt = Dom::getSiblingElement(elt);         // next layer
 
   if (elt != DOM_Element()) {
-    std::string att = Dom::getAttribute(elt, "iLayer");
-    m_nLayer = atoi(att.c_str());
+    //    std::string att = Dom::getAttribute(elt, "iLayer");
+    //    m_nLayer = atoi(att.c_str());
+    try {
+      m_nLayer = Dom::getIntAttribute(elt, "iLayer");
+    }
+    catch (xml::DomException ex) {
+      std::cerr << "From CalibSvc::XmlBaseCnv::findNextRange" << std::endl;
+      std::cerr << ex.getMsg() << std::endl;
+      throw ex;
+    }
+    
 
     // All child elements of layers are xtal elements
     elt = Dom::getFirstChildElement(elt);
-    att = Dom::getAttribute(elt, "iXtal");
-    m_nXtal = atoi(att.c_str());
-    
+    //    att = Dom::getAttribute(elt, "iXtal");
+    //    m_nXtal = atoi(att.c_str());
+
+    try {
+      m_nXtal = Dom::getIntAttribute(elt, "iXtal");
+    }
+    catch (xml::DomException ex) {
+      std::cerr << "From CalibSvc::XmlBaseCnv::findNextRange" << std::endl;
+      std::cerr << ex.getMsg() << std::endl;
+      throw ex;
+    }
+
     // All child elements of xtal are face elements
     elt = Dom::getFirstChildElement(elt);
     m_nFace = findFace(elt);
@@ -409,6 +471,33 @@ DOM_Element XmlBaseCnv::findNextRange(const DOM_Element& rangeElt) {
 
   // otherwise we've got a new tower; go through the whole
   // rigamarole
+
+
+  try {
+    m_nRow = Dom::getIntAttribute(elt, "iRow");
+    m_nCol = Dom::getIntAttribute(elt, "iCol");
+
+
+    // All child elements of a tower are layer elements
+    elt = Dom::getFirstChildElement(elt);
+    //  att = Dom::getAttribute(elt, "iLayer");
+    //  m_nLayer = atoi(att.c_str());
+    m_nLayer = Dom::getIntAttribute(elt, "iLayer");
+
+    // All child elements of layers are xtal elements
+    elt = Dom::getFirstChildElement(elt);
+    //    att = Dom::getAttribute(elt, "iXtal");
+    //    m_nXtal = atoi(att.c_str());
+    m_nXtal = Dom::getIntAttribute(elt, "iXtal");
+  }
+  catch (xml::DomException ex) {
+    std::cerr << "From CalibSvc::XmlBaseCnv::findFirstRange" << std::endl;
+    std::cerr << ex.getMsg() << std::endl;
+    throw ex;
+  }
+
+
+  /*
   std::string att = Dom::getAttribute(elt, "iRow");
   m_nRow = atoi(att.c_str());
 
@@ -424,12 +513,13 @@ DOM_Element XmlBaseCnv::findNextRange(const DOM_Element& rangeElt) {
   elt = Dom::getFirstChildElement(elt);
   att = Dom::getAttribute(elt, "iXtal");
   m_nXtal = atoi(att.c_str());
-
+  */
   // All child elements of xtal are face elements
   elt = Dom::getFirstChildElement(elt);
   m_nFace = findFace(elt);
 
   elt = Dom::getFirstChildElement(elt);
   m_nRange = findRangeAtt(elt);
+
   return elt;
 }

@@ -55,11 +55,22 @@ namespace {
     using xml::Dom;
 
     // Could check here to make sure it really is a <calGain>
-
+    /*
     std::string att = Dom::getAttribute(gainElt, "avg");
     float gain = atof(att.c_str());
     att = Dom::getAttribute(gainElt, "sig");
     float sig = atof(att.c_str());
+    */
+    float gain, sig;
+    try {
+      gain = xml::Dom::getDoubleAttribute(gainElt, "avg");
+      sig = xml::Dom::getDoubleAttribute(gainElt, "sig");
+    }
+    catch (xml::DomException ex) {
+      std::cerr << "From CalibSvc::XmlCalGainCnv::processRange" << std::endl;
+      std::cerr << ex.getMsg() << std::endl;
+      throw ex;
+    }
 
     return new CalibData::Gain(gain, sig);
   }

@@ -122,15 +122,21 @@ StatusCode XmlBadStripsCnv::processTower(const DOM_Element& towerElt,
                                          CalibData::BadStrips *pBad) {
   using xml::Dom;
 
-  std::string attValue;
-  attValue = Dom::getAttribute(towerElt, "row");
-  unsigned row = (unsigned) atoi(attValue.c_str());
-
-  attValue = Dom::getAttribute(towerElt, "col");
-  unsigned col = (unsigned) atoi(attValue.c_str());
+  //  std::string attValue;
+  unsigned row, col;
+  try {
+    row = Dom::getIntAttribute(towerElt, "row");
+    col = Dom::getIntAttribute(towerElt, "col");
+  }
+  catch (xml::DomException ex) {
+    std::cerr << "From CalibSvc::XmlBadStripsCnv::processTower" << std::endl;
+    std::cerr << ex.getMsg() << std::endl;
+    throw ex;
+  }
 
   bool allBad = 0;
   int howBad = 0;
+  std::string attValue;
 
   attValue = Dom::getAttribute(towerElt, "nOnbdCalib");
   if (attValue.compare("true") == 0) {
@@ -145,19 +151,6 @@ StatusCode XmlBadStripsCnv::processTower(const DOM_Element& towerElt,
     howBad |= vCALIBUTIL_nOnbdData;
   }
   allBad = (howBad != 0);
-
-  /*
-  attValue = Dom::getAttribute(towerElt, "allBad");
-  bool allBad = (attValue.compare("true") == 0);
-
-  int howBad = 0;
-  if (allBad) {
-    attValue = Dom::getAttribute(towerElt, "howBad");
-    howBad = atoi(attValue.c_str());
-
-  } 
-  */
-
 
   StatusCode sc = 
     pBad->addBadTower(allBad, howBad, row, col);
@@ -190,11 +183,6 @@ StatusCode XmlBadStripsCnv::processUni(const DOM_Element& uniElt,
   attValue = Dom::getAttribute(uniElt, "allBad");
   bool allBad = (attValue.compare("true") == 0);
 
-  /*
-  attValue = Dom::getAttribute(uniElt, "howBad");
-  int howBad = atoi(attValue.c_str());
-  */
-
   int howBad = 0;
 
   attValue = Dom::getAttribute(uniElt, "nOnbdCalib");
@@ -209,9 +197,18 @@ StatusCode XmlBadStripsCnv::processUni(const DOM_Element& uniElt,
   if (attValue.compare("true") == 0) {
     howBad |= vCALIBUTIL_nOnbdData;
   }
-    
-  attValue = Dom::getAttribute(uniElt, "tray");
-  unsigned int tray = (unsigned int)atoi(attValue.c_str());
+
+  unsigned int tray;
+  try {    
+    //  attValue = Dom::getAttribute(uniElt, "tray");
+    //  unsigned int tray = (unsigned int)atoi(attValue.c_str());
+    tray = Dom::getIntAttribute(uniElt, "tray");
+  }
+  catch (xml::DomException ex) {
+    std::cerr << "From CalibSvc::XmlBadStripsCnv::processUni" << std::endl;
+    std::cerr << ex.getMsg() << std::endl;
+    throw ex;
+  }
 
   attValue = Dom::getAttribute(uniElt, "which");
   bool top;
@@ -239,17 +236,24 @@ StatusCode XmlBadStripsCnv::addStrips(const DOM_Element& uniElt,
 
   while (childElt != DOM_Element() ) {
     // must be list or span
-    if ((childElt.getTagName()).equals("stripList") ) {
-
+    //    if ((childElt.getTagName()).equals("stripList") ) {
+    if (Dom::checkTagName(childElt, "stripList")) {
       std::string xmlList = Dom::getAttribute(childElt, "strips");
       strToNum(xmlList, strips);
     }
-    else if ((childElt.getTagName()).equals("stripSpan") ) {
-      std::string firstStr = Dom::getAttribute(childElt, "first");
-      unsigned short first = (unsigned short) atoi(firstStr.c_str());
-      std::string lastStr = Dom::getAttribute(childElt, "last");
-      unsigned short last = (unsigned short) atoi(lastStr.c_str());
-      
+    else if (Dom::checkTagName(childElt, "stripSpan")) {
+        //    else if ((childElt.getTagName()).equals("stripSpan") ) {
+      unsigned short first, last;
+      try {
+        first = Dom::getIntAttribute(childElt, "first");
+        last = Dom::getIntAttribute(childElt, "last");
+      }
+      catch  (xml::DomException ex) {
+        std::cerr << "From CalibSvc::XmlBadStripsCnv::addStrips" << std::endl;
+        std::cerr << ex.getMsg() << std::endl;
+        throw ex;
+      }
+
       if (last >= first) {
         // Might as well reserve memory all at once
         strips->reserve(strips->size() + last + 1 - first);  

@@ -61,9 +61,18 @@ StatusCode XmlTest1Cnv::i_createObj(const DOM_Element& element,
   if (child == DOM_Element()) return StatusCode::FAILURE;
 
   std::string name = Dom::getAttribute(child, "name");
-  std::string valueString = Dom::getAttribute(child, "value");
 
-  int value = atoi(valueString.c_str());
+  //  std::string valueString = Dom::getAttribute(child, "value");
+
+  //  int value = atoi(valueString.c_str());
+  int value;
+  try {
+    value = Dom::getIntAttribute(child, "value");
+  }
+  catch (xml::DomException ex) {
+    std::cerr << "From CalibSvc::XmlTest1Cnv::i_crateObj " << std::endl;
+    std::cerr << ex.getMsg() << std::endl;
+  }
 
   refpObject = new  
     CalibData::CalibTest1(name, value, *m_vstart, *m_vend, m_serNo);
