@@ -17,7 +17,7 @@
 #include "reconstruction/SummaryData.h"
 #include "reconstruction/GlastTuple.h"
 
-#include "GlastEvent/Raw/TdCsIData.h"
+#include "GlastEvent/data/TdCsIData.h"
 
 #include "gui/DisplayControl.h"
 #include "GuiSvc/IGuiSvc.h"
