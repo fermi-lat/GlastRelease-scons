@@ -1,4 +1,4 @@
- //Header: /cvs/glastsim/flux/FluxSource.cxx,v 1.20 1998/12/18 23:42:02 hsg Exp $
+//Header: /cvs/glastsim/flux/FluxSource.cxx,v 1.20 1998/12/18 23:42:02 hsg Exp $
 
 #include "FluxSvc/FluxSource.h"
 
@@ -74,7 +74,7 @@ m_rmin(0), m_rmax(1), _phi(0.0f), _theta(0.0f), m_pointtype(NOPOINT), m_launch(N
 illumBox(0), m_energyscale(GeV)
 {
     static double d2r = M_PI/180.;
-        
+    
     ISpectrum*   s = 0;
     std::string class_name;
     std::string source_params; 
@@ -89,7 +89,7 @@ illumBox(0), m_energyscale(GeV)
         useSpectrumDirection(); // and will use its direction generation
         
     } else {
-         
+        
         // process spectrum element
         DOM_NodeList children = spec.getChildNodes();
         
@@ -114,7 +114,10 @@ illumBox(0), m_energyscale(GeV)
         
         if(spectrum_energyscale == "GeV"){ m_energyscale=GeV;
         }else if(spectrum_energyscale == "MeV"){ m_energyscale=MeV;
-        }else{m_energyscale=MeV;} //this line "just in case"
+        }else{
+            std::cout << "bad energy scale declaration on spectrum:"
+                << spectrum_energyscale << " , exiting.";
+            return;} //this line "just in case"
         
         
         if (typeTagName.equals("particle")) s = new SimpleSpectrum(specType);
@@ -156,6 +159,18 @@ illumBox(0), m_energyscale(GeV)
             m_gall=atof(xml::Dom::transToChar(angles.getAttribute("l")));
             getGalacticDir(atof(xml::Dom::transToChar(angles.getAttribute("l"))),
                 atof(xml::Dom::transToChar(angles.getAttribute("b"))) );
+            m_launch=GALACTIC;
+        }
+        else if(anglesTag.equals("celestial_dir")){
+            //just like galactic direction, but we'll need to get l and b first:
+            double ra=atof(xml::Dom::transToChar(angles.getAttribute("ra")));
+            double dec=atof(xml::Dom::transToChar(angles.getAttribute("dec")));
+            astro::SkyDir tempdir(ra,dec);
+            m_galb=tempdir.b();
+            m_gall=tempdir.l();
+            //std::cout << "l = " << m_gall << " , b = " << m_galb << " , ra = " <<
+            //    ra << " , dec = " << dec << std::endl;
+            getGalacticDir(m_gall,m_galb);
             m_launch=GALACTIC;
         }
         else {
@@ -298,9 +313,9 @@ FluxSource* FluxSource::event(double time)
         //std::cout << "occluded? " << occluded() << std::endl;
         m_extime+=m_interval;
     }while(occluded() || m_interval == -1);
-        m_extime -= m_interval;
-
-
+    m_extime -= m_interval;
+    
+    
     //now set the actual interval to be what FluxMgr will get
     m_interval += m_extime;
     EventSource::setTime(time+m_interval+m_extime);
@@ -365,13 +380,13 @@ void FluxSource::computeLaunch (double time)
     // be limited
     const double fudge=1.001; // in ncase max is only energy, round-off error
     double kinetic_energy;
-    do {
-        // kinetic_energy= (*spectrum())(RandFlat::shoot(m_rmin, m_rmax));
-        //FIXME: make this a class variable
-        kinetic_energy = spectrum()->energySrc( HepRandom::getTheEngine(), time /*+ m_extime*/ );
-        //std::cout << "kinetic energy=" << kinetic_energy << " , max=" << m_maxEnergy* fudge << std::endl;
-        //kinetic_energy = spectrum()->operator ()(HepRandom::getTheEngine()->flat());// time + m_extime );
-    }    while (kinetic_energy > m_maxEnergy* fudge);
+    //do {
+    // kinetic_energy= (*spectrum())(RandFlat::shoot(m_rmin, m_rmax));
+    //FIXME: make this a class variable
+    kinetic_energy = spectrum()->energySrc( HepRandom::getTheEngine(), time /*+ m_extime*/ );
+    //std::cout << "kinetic energy=" << kinetic_energy << " , max=" << m_maxEnergy* fudge << std::endl;
+    //kinetic_energy = spectrum()->operator ()(HepRandom::getTheEngine()->flat());// time + m_extime );
+    //}    while (kinetic_energy > m_maxEnergy* fudge);
     
     // get the launch point and direction, according to the various strategies
     switch (m_launch) {
@@ -975,7 +990,7 @@ void FluxSource::getGalacticDir(double l,double b){
     //here we construct the cartesian galactic vector
     //OLDVector gamgal(sin(l*M_2PI/360.)*cos(b*M_2PI/360.) , sin(b*M_2PI/360.) , cos(l*M_2PI/360.)*cos(b*M_2PI/360.));
     //Vector gamgal(cos(l*M_2PI/360.)*cos(b*M_2PI/360.) , sin(l*M_2PI/360.)*cos(b*M_2PI/360.) , sin(b*M_2PI/360.) );
-
+    
     //get the transformation matrix..
     Rotation celtoglast=GPS::instance()->transformCelToGlast(GPS::instance()->time() + m_interval + m_extime);
     

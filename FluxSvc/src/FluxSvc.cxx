@@ -7,7 +7,7 @@
 #include "FluxSvc/IRegisterSource.h"
 
 
-#include "./test/flux/rootplot.h"
+#include "FluxSvc/../src/test/flux/rootplot.h"
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"

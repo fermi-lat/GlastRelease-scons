@@ -292,7 +292,7 @@ Rotation GPS::rockingAngleTransform(double seconds){
     //HepRotation rockRot(dirZ.dir() , -inclination*cos(orbitPhase));
     //HepRotation rockRot2(dirX.dir() , rockNorth);
     HepRotation rockRot;
-    rockRot/*.rotateZ(inclination*cos(orbitPhase))*/.rotateX(rockNorth);
+    rockRot./*rotateZ(inclination*cos(orbitPhase)).*/rotateX(rockNorth);
 
     return rockRot;
 }
@@ -382,7 +382,7 @@ Rotation GPS::transformCelToGlast(double seconds){
 }
 
 Rotation GPS::transformGlastToGalactic(double seconds){
-    return (/*m_orbit->*/CELTransform(seconds).inverse())*(rockingAngleTransform(seconds).inverse());
+    return (CELTransform(seconds).inverse())*(rockingAngleTransform(seconds).inverse());
 }
 
 void GPS::getPointingCharacteristics(double seconds){
@@ -413,7 +413,21 @@ void GPS::getPointingCharacteristics(double seconds){
     //HepRotation rockRot(Hep3Vector(0,0,1).cross(dirZ.dir()) , rockNorth);    
     //and apply the transformation to dirZ and dirX:
     double rockNorth = m_rockDegrees*M_PI/180;
-    if(m_DECZenith <= 0) rockNorth *= -1.;
+        //here's where we decide how much to rock about the x axis.  this depends on the 
+    //rocking mode.
+    if(m_rockType == NONE){
+        rockNorth = 0.;
+    }else if(m_rockType == UPDOWN){
+        if(m_DECZenith <= 0) rockNorth *= -1.;
+    }else if(m_rockType == SLEWING){
+        //slewing is experimental
+        if(m_DECZenith <= 0) rockNorth *= -1.;
+        if(m_DECZenith <= 10 || m_DECZenith <= 10){
+            rockNorth -= rockNorth*(m_DECZenith/10.);
+        }
+    }else if(m_rockType == ONEPERORBIT){
+        //this needs an implementation - it only rocks one way now!
+    }
     
     dirZ().rotate(dirX.dir() , rockNorth);
     //dirX().rotate(dirX.dir() , rockNorth*M_PI/180.);//unnecessary

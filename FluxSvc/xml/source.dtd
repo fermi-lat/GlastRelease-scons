@@ -15,12 +15,12 @@
 
 <!-- a spectrum: generator and angular generation instructions , followed by optional launch point-->
 <!ELEMENT spectrum ( (particle | SpectrumClass ) ,
-                     (direction | solid_angle | use_spectrum |                          			    galactic_dir ),
+                     (direction | solid_angle | use_spectrum |                          			    galactic_dir | celestial_dir ),
 			   (launch_point | patch)* ) >
 <!--Included is the "escale," or energy-scale attribute, which can be either MeV or GeV, and defaults to GeV.-->
 <!ATTLIST spectrum  flux CDATA "40"
                     name CDATA "default"
-				escale CDATA "GeV">
+				escale CDATA "">
 
 <!--- special generic spectrum: name is the name of a Spectrum, params an optional comma-delimited list -->
 <!ELEMENT SpectrumClass EMPTY>
@@ -66,3 +66,7 @@ direction (costh,phi), and "galaxy" means we expect galactic coordinates (l,b) -
 <!-- for a specific galactic direction -->
 <!ELEMENT galactic_dir EMPTY>
 <!ATTLIST galactic_dir l CDATA "0" b CDATA "0">
+
+<!-- for a specific celestial direction -->
+<!ELEMENT celestial_dir EMPTY>
+<!ATTLIST celestial_dir ra CDATA "0" dec CDATA "0">

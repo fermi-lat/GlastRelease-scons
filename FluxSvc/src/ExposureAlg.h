@@ -46,7 +46,7 @@ private:
     IFlux *     m_flux;
 
     //! Create the TimeCandle Spectrum.
-    void ExposureAlg::makeTimeCandle(IFluxSvc* fsvc);
+    //void ExposureAlg::makeTimeCandle(IFluxSvc* fsvc);
     
     unsigned long m_run;      // run number
     unsigned long m_event;    // event number

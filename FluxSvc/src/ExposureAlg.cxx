@@ -54,9 +54,9 @@ ExposureAlg::ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator)
 }
 
 //! set this spectrum up to be used.
-void ExposureAlg::makeTimeCandle(IFluxSvc* fsvc){
+//void ExposureAlg::makeTimeCandle(IFluxSvc* fsvc){
     //static RemoteSpectrumFactory<TimeCandle> timecandle(fsvc);
-}
+//}
 
 //------------------------------------------------------------------------
 //! set parameters and attach to various perhaps useful services.
@@ -74,25 +74,25 @@ StatusCode ExposureAlg::initialize(){
     }
     
     // set up the standard time candle spectrum
-    makeTimeCandle(m_fluxSvc);
+    //makeTimeCandle(m_fluxSvc);
     
-    log << MSG::INFO << "loading source..." << endreq;
+    //log << MSG::INFO << "loading source..." << endreq;
     
-    sc =  m_fluxSvc->source(m_source_name, m_flux);
-    if( sc.isFailure()) {
-        log << MSG::ERROR << "Could not find flux " << m_source_name << endreq;
-        return sc;
-    }
-    log << MSG::INFO << "Source: "<< m_flux->title() << endreq;
+    //sc =  m_fluxSvc->source(m_source_name, m_flux);
+    //if( sc.isFailure()) {
+    //    log << MSG::ERROR << "Could not find flux " << m_source_name << endreq;
+    //    return sc;
+    //}
+    //log << MSG::INFO << "Source: "<< m_flux->title() << endreq;
     
-    log << MSG::INFO << "Source title: " << m_flux->title() << endreq;
-    log << MSG::INFO << "        area: " << m_flux->targetArea() << endreq;
-    log << MSG::INFO << "        rate: " << m_flux->rate() << endreq;
+    //log << MSG::INFO << "Source title: " << m_flux->title() << endreq;
+    //log << MSG::INFO << "        area: " << m_flux->targetArea() << endreq;
+    //log << MSG::INFO << "        rate: " << m_flux->rate() << endreq;
     
-    if ( service("ParticlePropertySvc", m_partSvc).isFailure() ){
-        log << MSG::ERROR << "Couldn't find the ParticlePropertySvc!" << endreq;
-        return StatusCode::FAILURE;
-    }
+    //if ( service("ParticlePropertySvc", m_partSvc).isFailure() ){
+    //    log << MSG::ERROR << "Couldn't find the ParticlePropertySvc!" << endreq;
+    //    return StatusCode::FAILURE;
+    //}
 
     //TODO: set the file name from a property
     m_out = new std::ofstream("orbitFromAlg.out");
@@ -133,7 +133,7 @@ StatusCode ExposureAlg::execute()
     }   
     
     //a test line, only for comparing with perugia code
-    currentTime+=17107230.;
+    //currentTime+=17107230.;
 
     //now, only do the rest of this algorithm if we have a timetick particle.
     std::string particleName = m_fluxSvc->currentFlux()->particleName();
@@ -209,12 +209,12 @@ StatusCode ExposureAlg::execute()
     
     Event::D2Entry* entry = new Event::D2Entry;
     
+    exposureDBase->push_back(entry);
+
     entry->init(posx, posy, posz,rax,raz,decx,decz,razenith,deczenith,lat,
         lon,alt,intrvalstart,intrvalend,
         livetime,ramoon,decmoon,rasun,decsun,
         SAA);
-    
-    exposureDBase->push_back(entry);
     
     // now we'll retreive the data from the TDS as a check.
     Event::D2EntryCol* elist = new Event::D2EntryCol;
