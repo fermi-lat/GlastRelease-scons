@@ -143,8 +143,8 @@ StatusCode TkrHitValsTool::calculate()
         int layerIdx = _nLayers;
         while(layerIdx--)
         {
-            int hitCount = m_clusTool->getClustersReverseLayer(Event::TkrCluster::X,layerIdx).size()
-                         + m_clusTool->getClustersReverseLayer(Event::TkrCluster::Y,layerIdx).size();
+            int hitCount = m_clusTool->getClustersReverseLayer(idents::TkrId::eMeasureX,layerIdx).size()
+                         + m_clusTool->getClustersReverseLayer(idents::TkrId::eMeasureY,layerIdx).size();
             
             if (hitCount > 0)
             {

@@ -199,16 +199,12 @@ StatusCode GltValsTool::calculate()
         layer = nLayers;
         while(layer--)
         {
-            Event::TkrClusterVec xHitList = m_clusTool->getClustersReverseLayer(Event::TkrCluster::X,layer);
-            Event::TkrClusterVec yHitList = m_clusTool->getClustersReverseLayer(Event::TkrCluster::Y,layer);
+            Event::TkrClusterVec xHitList = m_clusTool->getClustersReverseLayer(idents::TkrId::eMeasureX,layer);
+            Event::TkrClusterVec yHitList = m_clusTool->getClustersReverseLayer(idents::TkrId::eMeasureY,layer);
 
             int x_hitCount = xHitList.size(); 
             int y_hitCount = yHitList.size();
             if(x_hitCount > 0 && y_hitCount > 0) {
-                std::vector<Event::TkrCluster*> xHitList;
-                std::vector<Event::TkrCluster*> yHitList;
-                xHitList = pClusters->getHits(Event::TkrCluster::X,layer);
-                yHitList = pClusters->getHits(Event::TkrCluster::Y,layer);
 
                 int hit;
                 // x hits

@@ -563,7 +563,7 @@ StatusCode CalValsTool::calculate()
     // First: get the rad.lens. in the tracker 
     double t_tracker = track_1->getTkrCalRadlen();
     // Patch for error in KalFitTrack: 1/2 of first radiator left out
-    int layer = track_1->getLayer();
+    int layer = track_1->front()->getTkrId().getLayer();
     t_tracker += 0.5*m_geoSvc->getReconRadLenConv(layer)/costh;
 	// Need to fix a problem here.  There can be large fluctuations on single
 	// trajectories.  This should be fixed in TkrValsTool probably by averaging
