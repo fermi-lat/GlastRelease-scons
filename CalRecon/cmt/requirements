@@ -6,44 +6,34 @@ author Alexandre Chekhtman <chehtman@gamma.nrl.navy.mil>
 
 branches src cmt doc
 
-use GuiSvc v3*
-use Event *
-use GlastSvc *
-use CalUtil v1r*
-use geometry v3*
-use CalibSvc v*
-use TkrUtil *
-use xmlBase *
-use xml *
+use GlastPolicy
+use CalUtil
+use CalXtalResponse
+use GaudiInterface * IExternal
+use GlastSvc
+use GuiSvc
+use Event
+use TkrUtil
+use xml
+use xmlBase
 
-# The following is needed so that ParticlePropertySvc,
-# which is needed by CalSimpleClusteringTool, find out particle.cdf
-use FluxSvc v*
+macro_append ROOT_linkopts " -L${ROOT_PATH}/lib -lMinuit " \ 
+                 VisualC " ${ROOT_PATH}/lib/libMinuit.lib " 
 
 apply_pattern packageShr
 
-### hide the packages used only for test program
+#========================================================
 private
-use RootIo v*
 
-macro_append ROOT_linkopts " $(ROOT_GUI_libs)"
-macro_append ROOT_linkopts " -L${ROOT_PATH}/lib -lMinuit " \ 
-                 VisualC " ${ROOT_PATH}/lib/libMinuit.lib " 
+# needed only for test app
+use RootIo   
 
 apply_pattern package_headers
 
 library CalRecon  *.cxx *.cpp Dll/*.cpp ${CalRecon_headers}
 
-
 macro CalRecon_stamps     
 
-private
-
 apply_pattern package_Cshlibflags 
-set JOBOPTIONS ${CALRECONROOT}/src/test/jobOptions.txt
 
-# build this for testing, console only. Load all objects directly. 
-
-macro testOptions  ""  VisualC   "test/jobOptions.txt"
-
-application test_CalRecon $(GlastMain) test/*.cxx $(testOptions)
+apply_pattern package_test
