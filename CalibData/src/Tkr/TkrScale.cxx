@@ -123,6 +123,7 @@ namespace CalibData {
       m_nObjs = n;
     }
     m_perStrip = perStrip;
+    m_nStrips = (perStrip) ? m_nObjs : (n * N_STRIPS_PER_GTFE);
   }
 
   //  TkrScaleCol
