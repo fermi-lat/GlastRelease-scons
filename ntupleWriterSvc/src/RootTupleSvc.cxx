@@ -139,7 +139,7 @@ StatusCode RootTupleSvc::initialize ()
     m_tf = new TFile(m_filename.value().c_str(),"RECREATE");
     m_tree = new TTree( m_treename.value().c_str(),  m_title.value().c_str() );
 
-    m_floats.reserve(200); // a little weakness: if larger than this, trouble
+    m_floats.reserve(250); // a little weakness: if larger than this, trouble
     return status;
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -206,8 +206,14 @@ StatusCode RootTupleSvc::finalize ()
         log << MSG::INFO << "Writing the tuple " << m_filename.value() << " with " 
             << m_tree->GetEntries() << " rows (" << m_trials << " total events)"<< endreq;
         m_tree->Print(); // make a summary
-
         m_tree->Write();
+
+        TDirectory *saveDir = gDirectory; 
+        m_tf->cd(); 
+        m_tf->Write(0,TObject::kOverwrite); 
+        m_tf->Close(); 
+        saveDir->cd();
+
     }
     return StatusCode::SUCCESS;;
 }
