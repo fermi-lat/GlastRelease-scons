@@ -111,7 +111,6 @@ private:
     void          eneDetermination();
     
     /// Segment Part: First portion that influences direction
-    int           computeNumSegmentPoints(TkrFitHit::TYPE typ = TkrFitHit::SMOOTH);
     double        computeChiSqSegment(int nhits, TkrFitHit::TYPE typ = TkrFitHit::SMOOTH);
      
     /// Input Data: a position and a direction
