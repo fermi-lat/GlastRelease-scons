@@ -41,7 +41,7 @@ library  gui -no_share \
 
 # these are system-dependent (windows/motif) and are only needed for an executable
 macro gui_system_files "MotifGUI.cxx XScene.cxx Xdraw.cxx Xostream.cxx"\
-      Win32  "WinGUIostream.h WinScene.h  WinDraw.h  WinGUI.h  WinScene.h \
+      WIN32  "WinGUIostream.h WinScene.h  WinDraw.h  WinGUI.h  WinScene.h \
               WinGUI.cxx  WinGUIostream.cxx  WinMain.cxx WinScene.cxx WinDraw.cxx" 
 library guisystem -no_share ${gui_system_files}
 
