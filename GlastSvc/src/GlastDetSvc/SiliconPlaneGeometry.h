@@ -67,6 +67,9 @@ private:
     static unsigned int s_stripPerWafer;
     static unsigned int s_n_si_dies;
 
+	static double s_waferSide;
+	static double s_waferActive;
+
 };
 
 #endif

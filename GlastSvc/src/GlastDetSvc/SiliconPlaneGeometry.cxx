@@ -1,5 +1,6 @@
 //$Header$
 #include "SiliconPlaneGeometry.h"
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 #include <cmath>
 #include <algorithm>
@@ -29,7 +30,7 @@ double       SiliconPlaneGeometry::s_dice_width     =89.500; // width of a singl
 double       SiliconPlaneGeometry::s_guard_ring     = 0.974;
 
 // width of the gap between SSD dies (glue & wirebonds, etc.) (cm)
-double       SiliconPlaneGeometry::s_ssd_gap        = 0.025;            
+double       SiliconPlaneGeometry::s_ssd_gap        = 0.025;
 double       SiliconPlaneGeometry::s_ladder_gap     = 0.200;
 
 
@@ -57,8 +58,6 @@ double   SiliconPlaneGeometry::ssd_gap () {       return s_ssd_gap;}
 double   SiliconPlaneGeometry::ladder_gap () {    return s_ladder_gap;}
 unsigned int SiliconPlaneGeometry::strips_per_die () {return s_stripPerWafer;}
 unsigned int SiliconPlaneGeometry::n_si_dies() {return s_n_si_dies;}
-
-
 
 /// insideActiveArea - does a point fall on (in local coords) an 
 /// active part of the detector? (-) if no
@@ -101,7 +100,6 @@ unsigned int SiliconPlaneGeometry::stripId (double x) {
             die*strips_per_die());
     } else return 65535;
 }
-
 
 /// localX - convert a strip ID to local coordinates
 double SiliconPlaneGeometry::localX (unsigned ix) {
