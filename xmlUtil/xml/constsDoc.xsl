@@ -12,6 +12,8 @@
         <title>Detector Constants</title>
       </head>
       <body>
+      <h1 align="center">Primary and Derived Constants</h1>
+     <xsl:call-template name="catList" />
      <xsl:apply-templates select="constants" />
      <xsl:apply-templates select="section" />
 <!-- add our own source information -->
@@ -29,6 +31,29 @@
      <xsl:apply-templates select="source" />
       </body>
     </html>
+  </xsl:template>
+
+  <xsl:template name="catList">
+    <xsl:for-each select="constants/primary">
+      <h3>Primary Constants</h3>
+      <ul>
+      <xsl:for-each select="primCategory">
+        <xsl:call-template name="listCat" />
+      </xsl:for-each>
+      </ul>
+    </xsl:for-each>
+    <xsl:for-each select="constants/derived">
+      <h3>Derived Constants</h3>
+      <ul>
+      <xsl:for-each select="derCategory">
+        <xsl:call-template name="listCat" />
+      </xsl:for-each>
+      </ul>
+    </xsl:for-each>
+  </xsl:template>
+
+  <xsl:template name="listCat" >
+    <li><a href="#{@name}" > <xsl:value-of select="@name" /> </a> </li>
   </xsl:template>
 
   <xsl:template match="source">
@@ -57,8 +82,13 @@
   </xsl:template>
 
 <xsl:template match="primCategory">
-<h2>Primary Category <font color="#f08000"><xsl:value-of select="@name" />
-</font> </h2>
+<h2>Primary Category 
+  <font color="#f08000">
+    <a name="{@name}">
+      <xsl:value-of select="@name" />
+    </a>
+  </font> 
+</h2>
    <xsl:call-template name="overview" />
      <table border="1" cellpadding="3">
      <tr align="left" bgcolor="#c0ffc0">
@@ -97,7 +127,10 @@
 
 <xsl:template match="derCategory" >
 <h2>Derived category
-<font color="#f08000"><xsl:value-of select="@name" />
+<font color="#f08000">
+  <a name="{@name}">
+    <xsl:value-of select="@name" />
+  </a>
 </font> </h2>
    <xsl:call-template name="overview" />
      <table border="1" cellpadding="3">

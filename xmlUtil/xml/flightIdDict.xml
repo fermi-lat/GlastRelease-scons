@@ -1,16 +1,16 @@
   <idDict major="1" minor="0" patch="0">
     <idRoot name="topObjects" >
       <vList>
-        <enumVal valueREF="rootLAT" />
-        <enumVal valueREF="rootPanels" />
-        <enumVal valueREF="rootSC" />
+        <enumVal valueREF="eRootLAT" />
+        <enumVal valueREF="eRootPanels" />
+        <enumVal valueREF="eRootSC" />
       </vList>
     </idRoot>
 
     <field name="fLATObjects" >
       <vList>
-        <enumVal valueREF="LATTowers" />
-        <enumVal valueREF="LATACD" />
+        <enumVal valueREF="eLATTowers" />
+        <enumVal valueREF="eLATACD" />
       </vList>
     </field>
 
@@ -24,15 +24,15 @@
 
     <field name="fTowerObjects" >
       <vList>
-        <enumVal valueREF="towerTKR" />
-        <enumVal valueREF="towerCAL" />
+        <enumVal valueREF="eTowerTKR" />
+        <enumVal valueREF="eTowerCAL" />
       </vList>
     </field>
 
     <field name="fMeasure" >
       <vList>
-        <enumVal valueREF="measureX" />
-        <enumVal valueREF="measureY" />
+        <enumVal valueREF="eMeasureX" />
+        <enumVal valueREF="eMeasureY" />
       </vList>
     </field>
 
@@ -44,22 +44,16 @@
 
     <field name="fCALLogCmp" >
       <vList>
-        <enumVal valueREF="logXtal" />
-        <enumVal valueREF="logDiode" />
-      </vList>
-    </field>
-
-    <field name="fCALLogDiode" >
-      <vList>
-        <enumVal valueREF="diodeMSmall" />
-        <enumVal valueREF="diodePSmall" />
-        <enumVal valueREF="diodeMLarge" />
-        <enumVal valueREF="diodePLarge" />
+        <enumVal valueREF="eLogXtal" />
+        <enumVal valueREF="eDiodeMSmall" />
+        <enumVal valueREF="eDiodePSmall" />
+        <enumVal valueREF="eDiodeMLarge" />
+        <enumVal valueREF="eDiodePLarge" />
       </vList>
     </field>
 
     <field name="fACDFace" >
-      <vMinMax minREF="ACDTopFace" maxREF="ACDYPosFace" /> 
+      <vMinMax minREF="eACDTopFace" maxREF="eACDYPosFace" /> 
     </field>
 
     <field name="fLadder" >
@@ -74,10 +68,10 @@
       <vMinMax min="0" maxREF="maxTray" />
     </field>
 
-    <field name="fTKRSi" >
+    <field name="fTKRTrayCmp" >
       <vList>
-        <enumVal valueREF="TKRSiBottom" />
-        <enumVal valueREF="TKRSiTop" />
+        <enumVal valueREF="eTKRSiBottom" />
+        <enumVal valueREF="eTKRSiTop" />
       </vList>
     </field>
 
@@ -87,12 +81,12 @@
         <enumVal valueREF="LAT" />
       </theIdRoot>
       <fieldRef refTo="fLATObjects" >
-         <enumVal valueREF="LATTowers" />
+         <enumVal valueREF="eLATTowers" />
       </fieldRef>
       <fieldRef refTo="fTowerY" />
       <fieldRef refTo="fTowerX" />
       <fieldRef refTo="fTowerObjects" >
-        <enumVal valueREF="towerCAL" />
+        <enumVal valueREF="eTowerCAL" />
       </fieldRef>
     </absSubseq>
 
@@ -101,12 +95,12 @@
         <enumVal valueREF="LAT" />
       </theIdRoot>
       <fieldRef refTo="fLATObjects" >
-         <enumVal valueREF="LATTowers" />
+         <enumVal valueREF="eLATTowers" />
       </fieldRef>
       <fieldRef refTo="fTowerY" />
       <fieldRef refTo="fTowerX" />
       <fieldRef refTo="fTowerObjects" >
-        <enumVal valueREF="towerTKR" />
+        <enumVal valueREF="eTowerTKR" />
       </fieldRef>
     </absSubseq>
 
@@ -115,7 +109,7 @@
         <enumVal valueREF="LAT" />
       </theIdRoot>
       <fieldRef refTo="fLATObjects" >
-         <enumVal valueREF="LATACD" />
+         <enumVal valueREF="eLATACD" />
       </fieldRef>
     </absSubseq>
 
@@ -129,7 +123,7 @@
       <fieldRef refTo="fMeasure" />
       <fieldRef refTo="fCALLog" />
       <fieldRef refTo="fCALLogCmp" >
-        <enumVal valueREF="logXtal" />
+        <enumVal valueREF="eLogXtal" />
       </fieldRef>
     </seq>
 
@@ -142,9 +136,8 @@
       <fieldRef refTo="fMeasure" />
       <fieldRef refTo="fCALLog" />
       <fieldRef refTo="fCALLogCmp" >
-        <enumVal valueREF="logDiode" />
+        <vMinMax minREF="eDiodeMSmall" maxREF="eDiodePLarge" />
       </fieldRef>
-      <fieldRef refTo="fCALLogDiode" />
     </seq>
 
 <!-- Sequences to represent top or bottom Si on a tray -->
@@ -154,8 +147,8 @@
         <enumVal valueREF="maxTray" />
       </fieldRef >
       <fieldRef refTo="fMeasure" />
-      <fieldRef refTo="fTKRSi">
-        <enumVal valueREF="TKRSiBottom" />
+      <fieldRef refTo="fTKRTrayCmp">
+        <enumVal valueREF="eTKRSiBottom" />
       </fieldRef >
     </seq>
 
@@ -165,8 +158,8 @@
         <enumVal value="0" />
       </fieldRef >
       <fieldRef refTo="fMeasure" />
-      <fieldRef refTo="fTKRSi">
-        <enumVal valueREF="TKRSiTop" />
+      <fieldRef refTo="fTKRTrayCmp">
+        <enumVal valueREF="eTKRSiTop" />
       </fieldRef >
     </seq>
 
@@ -176,14 +169,14 @@
         <vMinMax min="1" maxREF="maxTrayM1" />
       </fieldRef >
       <fieldRef refTo="fMeasure" />
-      <fieldRef refTo="fTKRSi" />
+      <fieldRef refTo="fTKRTrayCmp" />
     </seq>
 
 <!-- sequences for top face -->
     <seq name="seqACDTopTile" >
       <absSubRef refTo="absSubACD" />
       <fieldRef refTo="fACDFace" >
-        <enumVal valueREF="ACDTopFace" />
+        <enumVal valueREF="eACDTopFace" />
       </fieldRef>
       <fieldRef refTo="fRow" >
         <vMinMax min="0" maxREF="XTopTileMax" />
@@ -197,7 +190,7 @@
     <seq name="seqACDSideShortTile" >
       <absSubRef refTo="absSubACD" />
       <fieldRef refTo="fACDFace" >
-        <vMinMax minREF="ACDXNegFace" maxREF="ACDYPosFace" />
+        <vMinMax minREF="eACDXNegFace" maxREF="eACDYPosFace" />
       </fieldRef>
       <fieldRef refTo="fRow" >
         <vMinMax minREF="ACDShortRowMin" maxREF="ACDShortRowMax" />
@@ -211,7 +204,7 @@
     <seq name="seqACDSideShortTile" >
       <absSubRef refTo="absSubACD" />
       <fieldRef refTo="fACDFace" >
-        <vMinMax minREF="ACDXNegFace" maxREF="ACDYPosFace" />
+        <vMinMax minREF="eACDXNegFace" maxREF="eACDYPosFace" />
       </fieldRef>
       <fieldRef refTo="fRow" >
         <vMinMax minREF="ACDLongRowMin" maxREF="ACDLongRowMax" />

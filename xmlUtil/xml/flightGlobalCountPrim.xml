@@ -3,19 +3,19 @@
   also other integer constants used in identifiers.</overview>
   <prim name="xNum" value="4" uType="count">Number of towers in x.</prim>
   <prim name="yNum" value="4" uType="count">Number of towers in y.</prim>
-  <prim name="towerCAL" value="0" uType="count">Id field value for CAL
+  <prim name="eTowerCAL" value="0" uType="count">Id field value for CAL
 (within towers)</prim>
-  <prim name="towerTKR" value="1" uType="count">Id field value for TKR 
+  <prim name="eTowerTKR" value="1" uType="count">Id field value for TKR 
 (within towers)</prim>
-  <prim name="rootLAT" value="0" uType="count">Id field value for LAT</prim>
-  <prim name="rootPanels" value="1" uType="count">Id field value for solar panels</prim>
-  <prim name="rootSC" value="2" uType="count">Id field value for spacecraft</prim>
-  <prim name="LATTowers" value="0" uType="count">id field for towers
+  <prim name="eRootLAT" value="0" uType="count">Id field value for LAT</prim>
+  <prim name="eRootPanels" value="1" uType="count">Id field value for solar panels</prim>
+  <prim name="eRootSC" value="2" uType="count">Id field value for spacecraft</prim>
+  <prim name="eLATTowers" value="0" uType="count">id field for towers
 (within LAT)</prim>
-  <prim name="LATACD" value="1" uType="count">id field for ACD
+  <prim name="eLATACD" value="1" uType="count">id field for ACD
 (within LAT)</prim>
-  <prim name="measureX" value="0" uType="count">id field used for TKR
+  <prim name="eMeasureX" value="0" uType="count">id field used for TKR
 Si and CAL layers</prim>
-  <prim name="measureY" value="1" uType="count">id field used for TKR
+  <prim name="eMeasureY" value="1" uType="count">id field used for TKR
 Si and CAL layers</prim>
 </primCategory>

@@ -24,8 +24,9 @@
   <prim name="nFeChips" value="7" uType="count">Number of front-end readout strips per die
 (determines number of Si strips)
   </prim>
-  <prim name="TKRSiBottom" value="0" uType="count">Field value for Si field
+  <prim name="eTKRSiBottom" value="0" uType="count">Field value for Si field
 (bottom of tray) </prim>
-  <prim name="TKRSiTop" value="1" uType="count">Field value for Si field
+  <prim name="eTKRSiTop" value="1" uType="count">Field value for Si field
 (top of tray) </prim>
+  <prim name="eTKRCnv" value="2" uType="count">Field value for converter</prim>
 </primCategory>

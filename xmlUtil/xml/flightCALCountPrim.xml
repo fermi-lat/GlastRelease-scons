@@ -1,19 +1,18 @@
 <primCategory name="CALCountPrim" >
   <overview>Counts for replicated objects in the Calorimeter; other
             integer constants used to keep track of identifiers.</overview>
-  <prim name="CALnLayer" value="8" uType="count"> Number of layers of CAL CsI crystals</prim>
-  <prim name= "nCsIPerLayer" value= "12" uType="count">Number of crystals per layer within a tower
-</prim>
-  <prim name="logXtal" value="0" uType="count">idField value for CAL log field
-(the CsI crystal)</prim>
-  <prim name="logDiode" value="1" uType="count">idField value for CAL log field
-(a diode)</prim>
-  <prim name="diodeMSmall" value="1" uType="count">idField value for diode 
-field (minus, small)</prim>
-  <prim name="diodePSmall" value="2" uType="count">idField value for diode 
-field (plus, small)</prim>
-  <prim name="diodeMLarge" value="3" uType="count">idField value for diode 
-field (minus, large)</prim>
-  <prim name="diodePLarge" value="4" uType="count">idField value for diode
-field (plus, large)</prim>
+  <prim name="CALnLayer" value="8" uType="count"> Number of layers of CAL 
+CsI crystals</prim>
+  <prim name= "nCsIPerLayer" value= "12" uType="count">Number of crystals per
+ layer within a tower</prim>
+  <prim name="eLogXtal" value="0" uType="count">idField value for CAL log cmp
+field (the CsI crystal)</prim>
+  <prim name="eDiodeMSmall" value="1" uType="count">idField value for CAL
+log cmp field diode(minus, small)</prim>
+  <prim name="eDiodePSmall" value="2" uType="count">idField value for CAL
+log cmp field diode(plus, small)</prim>
+  <prim name="eDiodeMLarge" value="3" uType="count">idField value for CAL 
+log cmp field diode(minus, large)</prim>
+  <prim name="eDiodePLarge" value="4" uType="count">idField value for CAL
+log cmp diode(plus, large)</prim>
 </primCategory>
