@@ -8,6 +8,33 @@
 #include <TFile.h>
 #include <iostream>
 
+/*!
+
+ @class IFileHeadersTool        
+ @brief Interface for the tool managing the instances of FileHeader
+
+ Interface for FileHeadersTool, the tool which manage the instances
+ of FileHeader. Using a Gaudi tool for such task permits any piece
+ of client code to access the shared headers, provided it can retrieve
+ the tool.
+ 
+ At any given time, the tool can keep simultaneously six header
+ objects in memory : for each kind of file (mc, digi and recon),
+ there can be one non-const header (useful for the write jobs) and
+ one const header (useful for the read jobs). This should be enough
+ for any of our use-cases.
+ 
+ The tool do not systematically create the headers, nor write or
+ read them the ROOT files. This should be asked by the classes which
+ are driving the IO tasks, such as mcRootReaderAlg or reconRootWriterAlg.
+ This is why, when any other client ask for a given header, it must
+ check of the result is not 0 before using it. A 0 is not necessarily
+ an error. For example, it is perfectly valid that there is no recon header
+ in a job which is reading mc files and producing digi files.
+
+ @author David Chamont - CNRS IN2P3 LLR Ecole Polytechnique
+
+*/
 /** @class IFileHeadersTool
  * @brief Interface for FileHeadersTool.
  *
