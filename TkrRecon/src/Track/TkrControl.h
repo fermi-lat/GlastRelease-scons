@@ -52,9 +52,9 @@ public:
     void setPlaneEnergies(  bool   enePlane)  {m_PlaneEnergies      = enePlane; }
 
 private:
-    /// Constructor and destructor are private
+    /// private Constructor
     TkrControl();
-   ~TkrControl() {}
+ 
 
     /// Pointer to the singleton object
     static TkrControl* m_this;
