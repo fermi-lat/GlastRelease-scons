@@ -13,12 +13,13 @@ DECLARE_FACTORY_ENTRIES(CalibSvc) {
 
 
   DECLARE_SERVICE(CalibMySQLCnvSvc);
+  DECLARE_SERVICE(CalibXmlCnvSvc);
+
+  DECLARE_CONVERTER(XmlBaseCnv);  
 
   // Following don't exist yet.
-  //  DECLARE_SERVICE(CalibXmlCnvSvc);
   //  DECLARE_SERVICE(CalibRootCnvSvc);
-
-  DECLARE_CONVERTER(MetadataCnv);   // to convert MetadataEntryCol. NYW.
+  // DECLARE_CONVERTER(XmlTest1Cnv);
 
 
 } 
