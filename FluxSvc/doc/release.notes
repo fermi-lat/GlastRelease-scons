@@ -2,6 +2,7 @@
  * Package detModel
  * Coordinator: T.Burnett, S. Robinson
  *
+ * v5r13   SR  * New IFluxSvc entry to suport source menus
  * v5r12   SR  * energy scale required in source declaration
  * v5r11  THB  *  Set MCEvent properly
  * v5r10p6  THB  * 
