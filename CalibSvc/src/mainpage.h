@@ -66,7 +66,26 @@
        to create a node.</dd>
   <dt> CalibRootName</dt>  <dd>defaults to "Calib", top node in TCDS</dd>
   <dt> CalibInstrumentName</dt>  <dd>defaults to "LAT"</dd>
+  <dt> UseEventTime</dt>         <dd>defaults to "true". If set to "false", 
+       must also set CalibMySQLCnvSvc.UseEventTime to "false"</dd>
   </dl>
+
+  The service CalibMySQLCnvSvc has the following job options properties:
+  <dl>
+  <dt> Host </dt>        <dd>defaults to "*", meaning "use default MySQL
+                             host" </dd>
+  <dt> UseEventTime</dt>         <dd>defaults to "true". If set to "false", 
+       must also set CalibDataSvc.UseEventTime to "false". In this case,
+       calibrations will be selected according to enter_time (see further
+       job options) rather than by validity interval compared with event time.
+       </dd>
+  <dt> EnterTimeStart</dt> <dd> Lower bound on calibration enter_time
+Ignored unless UseEventTime is false.  </dd>
+  <dt> EnterTimeEnd</dt> <dd> Upper bound on calibration enter_time.
+       Default is "no upper bound". Ignored unless UseEventTime 
+       is false.  </dd>
+  </dl>
+
 
   The algorithm CalibEvtClock, used in the test program to generate fake event
   times and store them with CalibDataSvc, may also be scheduled by user
