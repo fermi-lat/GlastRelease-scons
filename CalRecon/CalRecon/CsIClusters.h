@@ -7,6 +7,8 @@
 // #include "Event/trsDataVI.h"
 #include "GaudiKernel/DataObject.h"
 
+#include "GlastEvent/Recon/ICsiClusters.h"
+
 #include "CalRecon/CalDisplay.h"
 
 extern const CLID& CLID_CalClusterList;
@@ -40,7 +42,7 @@ extern const CLID& CLID_CalClusterList;
 
 
 //#####################################
-class CsICluster
+class CsICluster : public ICsICluster
 //#####################################
 {
 public:
@@ -161,7 +163,7 @@ private:
  */
 
 //#####################################
-class CsIClusterList : public DataObject
+class CsIClusterList : public ICsIClusterList
 //#####################################
 {
 public:
@@ -179,7 +181,7 @@ public:
 
 	// access
 	int num()                  const {return m_CsIClustersList.size();}
-	CsICluster* Cluster(int i) const {return m_CsIClustersList[i];}
+	ICsICluster* Cluster(int i) const {return m_CsIClustersList[i];}
 
 	//operations
 	virtual void clear();
