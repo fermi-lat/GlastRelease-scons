@@ -17,6 +17,7 @@
 int nbins;  //!< Number of bins used for the fit
 std::vector<double> g_elayer;  //!< Energy per layer in GeV
 double slope;   //!< slope of the shower direction
+double logheight; //!< log height
 
 //! function to compute the true energy deposited in a layer
 /*! Uses the incomplete gamma function: gamma(double,double) implemented in gamma.cxx
@@ -29,7 +30,7 @@ static double gam_prof(double *par, int i)
 {
 	double result =0; 
 
-	double length = ((2.3*i+par[2])/1.85)/slope;
+	double length = ((logheight*i+par[2])/1.85)/slope;
 
 	// Evaluation of the parameters of CsI at this energy	
 
@@ -42,7 +43,7 @@ static double gam_prof(double *par, int i)
 
 
 	double x=length/lambda;
-	double dx = 2.3 / (1.85 *lambda)/slope;
+	double dx = logheight / (1.85 *lambda)/slope;
 	
 	double gamma1 =0;
 	double gamma2 = 0;
@@ -324,6 +325,7 @@ StatusCode CalClustersAlg::initialize()
 {
 	StatusCode sc = StatusCode::SUCCESS;
      sc = service("CalGeometrySvc", m_CalGeo);
+	 logheight = m_CalGeo->logHeight();
 	
 //	m_CsIClusterList = dataManager::instance()->getData("CsIClusterList",m_CsIClusterList);
 //	m_CalRecLogs  = dataManager::instance()->getData("CalRecLogs",m_CalRecLogs);
@@ -451,7 +453,7 @@ StatusCode CalClustersAlg::execute()
 
 	Profile(ene,cl);
 
-//	m_CsIClusterList->writeOut();
+	m_CsIClusterList->writeOut();
 
 	return sc;
 }
