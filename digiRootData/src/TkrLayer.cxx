@@ -46,10 +46,18 @@ TkrLayer::~TkrLayer() {
 }
 // -------------------------------------------------------------------
 Int_t TkrLayer::Compare(const TObject *obj) const {
+    // Ritz numbering convention:  Layer Number 0 is the bottom most layer - closest to the CAL
     if (this == obj) return 0;
     if (TkrLayer::Class() != obj->IsA()) return -1;
-    UInt_t id_this = (getLayerNum() << 1) | (getXY() ? 0 : 1);
-    UInt_t id_layer = (((TkrLayer*)obj)->getLayerNum() << 1) | (((TkrLayer*)obj)->getXY() ? 0 : 1);
+
+    // Even numbered planes have the layer measuring Y on the bottom - closer to CAL
+    // Odd numbered planes have the layer measuring X on the bottom - closer to CAL
+    UInt_t id_this = getLayerNum();
+    UInt_t id_layer = ((TkrLayer*)obj)->getLayerNum();
+
+    //id_this = (getPlaneNum() << 1) | (getXY() ? 0 : 1);    
+    //id_layer = (((TkrLayer*)obj)->getPlaneNum() << 1) | (((TkrLayer*)obj)->getXY() ? 0 : 1);
+    
     if (id_this == id_layer)
 	return 0;
     else
@@ -82,6 +90,18 @@ Int_t TkrLayer::getErrf(UChar_t ctrlNum) {
 	return m_errf[ctrlNum];
     else
 	return -1;
+}
+
+UShort_t TkrLayer::getLayerNum() const {
+    // Even numbered planes have the layer measuring Y on the bottom - closer to CAL
+    // Odd numbered planes have the layer measuring X on the bottom - closer to CAL
+    if ( (getPlaneNum() % 2) == 0 ) {   // even plane
+        // So in this case, we want the layer measuring Y to have the smaller id
+        return ( (getPlaneNum() << 1) | (getXY() ? 0 : 1) );
+    } else  {                           // odd plane
+        // here we want the layer measuring X to have the smaller id
+        return ( (getPlaneNum() << 1) | (getXY() ? 1 : 0) );
+    }
 }
 
 void TkrLayer::Clean(Option_t *option) {

@@ -18,7 +18,7 @@
 class TkrLayer : public TObject
 {
  private:
-  UChar_t m_layer;	  // Tracker layer number
+  UChar_t m_plane;	  // Tracker plane number
   UChar_t m_xy; 	  // does this layer measure x or y?
   UInt_t m_ToT[2];	  // ToT values for each of the 2 readout boards
   UInt_t m_errf[2];	  // ERRF values for each of the 2 readout boards
@@ -42,12 +42,13 @@ class TkrLayer : public TObject
   TObjArray* getStrips() { return m_strips; };
   void setToT(UInt_t right, UInt_t left);
   void setErrf(UInt_t right, UInt_t left);
-  void setLayerNum(UChar_t layerVal) { m_layer = layerVal; };
+  void setPlaneNum(UChar_t planeVal) { m_plane = planeVal; };
   void setXY(TKRAxes xyVal) { m_xy = (xyVal == X ? 0 : 1); };
   
   Int_t getToT(UChar_t ctrlNum);
   Int_t getErrf(UChar_t ctrlNum);
-  inline UChar_t getLayerNum() const { return m_layer; };
+  inline UShort_t getPlaneNum() const { return UShort_t(m_plane); };
+  UShort_t getLayerNum() const;
   TKRAxes getXY() const { return (m_xy ? Y : X); };
   UInt_t getNumHits() { return m_strips->GetEntries(); };
   StripId* getHit(int i) { return ( (i < m_strips->GetEntries()) ? (StripId*)(m_strips->At(i)) : 0); };
