@@ -13,9 +13,8 @@
 #include "Event/Digi/CalDigi.h"
 #include "idents/CalXtalId.h"
 #include "Event/Recon/AcdRecon/AcdRecon.h"
-#include "Event/Recon/TkrRecon/TkrClusterCol.h"
-#include "Event/Recon/TkrRecon/TkrPatCand.h"
-#include "Event/Recon/TkrRecon/TkrFitTrack.h"
+#include "Event/Recon/TkrRecon/TkrCluster.h"
+#include "Event/Recon/TkrRecon/TkrTrack.h"
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 #include "Event/Recon/CalRecon/CalCluster.h"   
 #include "Event/Recon/CalRecon/CalXtalRecData.h"   
@@ -217,13 +216,7 @@ StatusCode testReadAlg::readReconData() {
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
 
-    SmartDataPtr<Event::TkrPatCandCol> candidatesColTds(eventSvc(), EventModel::TkrRecon::TkrPatCandCol);
-    if (!candidatesColTds) 
-        log << MSG::INFO << "No TKR candidate tracks on the TDS" << endreq;
-    else 
-        log << MSG::DEBUG << candidatesColTds->size() << " TKR candidate tracks on TDS" << endreq;
-
-    SmartDataPtr<Event::TkrFitTrackCol> trackColTds(eventSvc(), EventModel::TkrRecon::TkrFitTrackCol);
+    SmartDataPtr<Event::TkrTrackCol> trackColTds(eventSvc(), EventModel::TkrRecon::TkrTrackCol);
     if (!trackColTds)
         log << MSG::INFO << "No TKR track collection on the TDS" << endreq;
     else
