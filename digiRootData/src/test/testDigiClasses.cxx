@@ -110,6 +110,16 @@ int checkL1T(const L1T &level1) {
         return -1;
     }
 
+
+    unsigned int iTower;
+    for (iTower = 0; iTower < 16; iTower++) {
+        if (level1.getTriRowBits(iTower) != (iTower%2)) {
+            std::cout << "TriRowBits is wrong for tower: " << iTower << std::endl;
+            return -1;
+        }
+   
+    }
+
     return 0;
 }
 
@@ -476,7 +486,8 @@ int write(char* fileName, int numEvents) {
 
     for (ievent = 0; ievent < numEvents; ievent++) {
         
-        L1T level1(13);
+        UInt_t triRowBits[16] = {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1};
+        L1T level1(13, triRowBits);
         EventSummaryData summary(0);
         summary.initEventFlags(1);
         ev->initialize(ievent, runNum, randNum*ievent, level1, summary, fromMc);

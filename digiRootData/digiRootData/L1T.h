@@ -26,18 +26,19 @@ public:
 	/*@}*/
             
     L1T();
-    L1T(UInt_t trigger);
+    L1T(UInt_t trigger, UInt_t *triRowBits);
     L1T(const L1T& level1);
     virtual ~L1T();
 
-    void initialize(UInt_t trigger);
+    void initialize(UInt_t trigger, UInt_t *triRowBits);
+    void setTriRowBits(UInt_t tower, UInt_t bits);
 
     void Clear(Option_t *option ="");
 
     void Print(Option_t *option="") const;
 
-	/** @ingroup L1TGroup */
-	/*@{*/
+    /** @ingroup L1TGroup */
+    /*@{*/
     UInt_t getTriggerWord() const { return m_trigger; };
 
     /// kTRUE indicates that ACD LOW occurred
@@ -52,11 +53,15 @@ public:
     bool getCalHigh() const { return m_trigger & b_HI_CAL; };
 	/*@}*/
 
+    UInt_t getTriRowBits(const Int_t tower) const;
+
 private:
     /// packed word containing trigger bits
     UInt_t    m_trigger;    
 
-    ClassDef(L1T,4) // Level 1 Trigger information
+    UInt_t m_triRowBits[16];
+
+    ClassDef(L1T,5) // Level 1 Trigger information
 };
 
 #endif
