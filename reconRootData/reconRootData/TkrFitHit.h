@@ -33,7 +33,7 @@ public:
     TkrFitHit& operator=(const TkrFitHit& old);
 
     //! Provide an initialize method (in the case of the default constructor)
-    void     initialize(TYPE type, const TkrParams& params, const TkrCovMat& covMat);
+    void initialize(TYPE type, const TkrParams& params, const TkrCovMat& covMat);
 
     //! Group the methods for returning info here
     TYPE             getHitType()   const {return m_HitType;}
