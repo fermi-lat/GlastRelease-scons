@@ -28,6 +28,9 @@
 #include "FluxSvc/IFluxSvc.h"
 #include "FluxSvc/IFlux.h"
 #include "flux/GPS.h"
+
+// to write a Tree with entryosure info
+#include "ntupleWriterSvc/INTupleWriterSvc.h"
 #include "facilities/Util.h"
 
 #include <cassert>
@@ -55,18 +58,55 @@ public:
     StatusCode execute();
     StatusCode finalize();
 
+        /** nested class to manage extra TTrees 
+    */
+    class TTree { 
+    public:
+        /**
+        */
+        TTree(     INTupleWriterSvc* rootTupleSvc, 
+            std::string treeName,  
+            std::vector<const char* >leaf_names)
+            :m_name(treeName), m_leafNames(leaf_names)
+        {
+            m_values.resize(leaf_names.size());
+            int i=0;
+            for( std::vector<const char*>::const_iterator  it = leaf_names.begin();
+                it!=leaf_names.end(); 
+                ++it){
+                    rootTupleSvc->addItem(treeName,  *it,  &m_values[i++]);
+                }
+        }
+        void fill(int n, double value){ m_values[n]=value;};
+        /** called from gui printer */
+        void printOn(std::ostream& out)const {
+            out << "Tree "<< m_name << std::endl;
+            std::vector<double>::const_iterator dit=m_values.begin();
+            for( std::vector<const char*> ::const_iterator nit=m_leafNames.begin(); nit!=m_leafNames.end(); ++nit,++dit){
+                out << std::setw(15) << *nit << "  " <<  *dit << std::endl;
+            }
+        }
+        /// data values: name of tree, leaves, and the values
+        std::string m_name;
+        std::vector<const char*> m_leafNames;
+        std::vector< double> m_values;
+    };
 private: 
+    TTree* m_pointing_tree;;
+
 
     double m_lasttime; //time value to hold time between events;
     StringProperty m_source_name;
     StringProperty m_pointing_history_output_file;
     StringProperty m_pointing_history_input_file;
+    StringProperty m_root_tree;
 
     IFluxSvc*   m_fluxSvc;
     IFlux *     m_flux;
 
     std::ostream* m_out;  //for output that looks like the stuff from the astro orbit model test.
     int         m_tickCount; // number of ticks processed
+    INTupleWriterSvc* m_rootTupleSvc;;
 
 
 };
@@ -84,6 +124,7 @@ ExposureAlg::ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("source_name",  m_source_name="default");
     declareProperty("pointing_history_output_file",  m_pointing_history_output_file="");
     declareProperty("pointing_history_input_file",  m_pointing_history_input_file="");
+    declareProperty("root_tree",  m_root_tree="");
 
 }
 
@@ -128,6 +169,21 @@ StatusCode ExposureAlg::initialize(){
         std::string fileName(m_pointing_history_output_file.value());
         facilities::Util::expandEnvVar(&fileName);
         m_out = new std::ofstream(fileName.c_str());
+    }
+    if(!m_root_tree.value().empty() ){
+        // get a pointer to RootTupleSvc 
+        if( (sc = service("RootTupleSvc", m_rootTupleSvc, true) ). isFailure() ) {
+            log << MSG::ERROR << " failed to get the RootTupleSvc" << endreq;
+            return sc;
+        }
+        // now define the root tuple
+        std::vector<const char* > names;
+        const char * point_info_name[] = {"time","lat","lon","alt","posx","posy","posz","rax","decx","raz","decz"};
+        for( int i = 0; i< (int)(sizeof(point_info_name)/sizeof(void*)); ++i){ 
+            names.push_back(point_info_name[i]); }
+
+        m_pointing_tree = new TTree( m_rootTupleSvc,  std::string(m_root_tree),  names);
+
     }
 
     return sc;
@@ -281,6 +337,23 @@ StatusCode ExposureAlg::execute()
         out<<alt << std::endl;
 
     }
+    //-----------------------------------------------
+    if( m_pointing_tree !=0 ) {
+    int n= 0;
+        m_pointing_tree->fill(n++,entry->intrvalstart());
+        m_pointing_tree->fill(n++,entry->lat());
+        m_pointing_tree->fill(n++,entry->lon());
+        m_pointing_tree->fill(n++,entry->alt());
+        m_pointing_tree->fill(n++,entry->posX());
+        m_pointing_tree->fill(n++,entry->posY());
+        m_pointing_tree->fill(n++,entry->posZ());
+        m_pointing_tree->fill(n++,entry->RAX());
+        m_pointing_tree->fill(n++,entry->DECX());
+        m_pointing_tree->fill(n++,entry->RAZ());
+        m_pointing_tree->fill(n++,entry->DECZ());
+        m_rootTupleSvc->storeRowFlag(true);
+    }
+    //----------------------------------------------
     setFilterPassed( false );
     log << MSG::DEBUG << "ExposureAlg found a TimeTick particle, ended this execution after making a record, filterpassed = " << filterPassed() << endreq;
 
