@@ -16,7 +16,6 @@
 #ifndef __TKRDISPCOMPLETENET_H
 #define __TKRDISPCOMPLETENET_H
 
-#include "src/PatRec/NeuralNet/TkrNeuralNet.h"
 #include "Event/Recon/TkrRecon/TkrPatCand.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
 #include "gui/DisplayRep.h"
