@@ -3,13 +3,6 @@
 #if !defined(_H_GPS_CLASS)
 #define _H_GPS_CLASS
 
-/** 
-* \class GPS
-*
-* \brief Models the Global Positoning System for a spacecraft. Handles time, position, and orientation for the instrument as a whole.
-* 
-* $Header $
-*/
 
 
 #if _MSC_VER > 1000
@@ -18,28 +11,28 @@
 
 #include "facilities/Scheduler.h"
 #include "facilities/Observer.h"
-#include "geometry/Point.h"
-#include "geometry/Vector.h"
-#include "geometry/CoordTransform.h"
 
 #include "astro/SkyDir.h"
 #include "astro/EarthOrbit.h"
-
+#include "CLHEP/Vector/Rotation.h"
 
 #include <iostream>
 
-class Orbit;
-// 
-//  class GPS
-//
-//!  Represents the Global Positioning System on-board the spacecraft. An Orbit
-/*!  object is used to compute the spacecraft's position and pointing characteristics.
+
+/** 
+* \class GPS
+* \brief Models the Global Positoning System for a spacecraft. Handles time, position, and orientation for the instrument as a whole.
+* 
+* $Header$
+ Represents the Global Positioning System on-board the spacecraft. An Orbit
+  object is used to compute the spacecraft's position and pointing characteristics.
 Time is tracked through this object, and synchronized with the Scheduler for 
 discrete event simulation. An expansion factor is provided to allow for acceleration
 or randomization of the orbit. If the expansion factor is negative, then the position
 of the spacecraft is chosen as a random distribution over an orbit. Otherwise, the expansion
 factor represents an acceleration of the spacecraft's orbit. Ie. an expansion factor
 of 2 would reduce the orbit period of the spacecraft by 1/2.
+
 */
 class GPS  
 {
@@ -68,7 +61,7 @@ public:
         GPStime m_time;
         double m_lat, m_lon, m_pitch, m_yaw, m_roll, m_phase;
     };
-    
+
     // const access
     
     /// GPS synchronized time for the satellite
@@ -117,18 +110,17 @@ public:
     static void     kill ();
     
     /// return the rotation for compensation for the rocking angles.
-    Rotation rockingAngleTransform(double seconds);
+    HepRotation rockingAngleTransform(double seconds);
     
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
-    Rotation transformGlastToGalactic(double seconds);
+    HepRotation transformGlastToGalactic(double seconds);
 
-    Rotation GPS::CELTransform(double seconds);
+    HepRotation GPS::CELTransform(double seconds);
 
-    Rotation GPS::transformCelToGlast(double seconds);
+    HepRotation GPS::transformCelToGlast(double seconds);
 
     void rockingDegrees(double rockDegrees){m_rockDegrees = rockDegrees;}
     
-    Orbit*  orbit ();               // access the orbit (for manipulation)
 
     void setRockType(RockType rockType){m_rockType = rockType;}
     void setRockType(int rockType);//{m_rockType = rockType;}
@@ -150,9 +142,6 @@ public:
         GPS();
         virtual ~GPS();
         
-        // only class/subclasses have access
-        //void    lat ( double );         // set latitude
-        //void    lon ( double );         // set longitude
         void    time ( GPStime );       // set time
         std::pair<double,double> m_rotangles;  //angles for coordinate rotation (rocking angle)
         

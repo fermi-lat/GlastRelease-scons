@@ -161,7 +161,7 @@ void GPS::rotateAngles(std::pair<double,double> coords){
 }
 
 
-Rotation GPS::rockingAngleTransform(double seconds){
+HepRotation GPS::rockingAngleTransform(double seconds){
     ///Purpose:  return the rotation to correct for satellite rocking.
     ///Input:  Current time
     ///Output:  3x3 rocking-angle transformation matrix.
@@ -216,12 +216,12 @@ Rotation GPS::rockingAngleTransform(double seconds){
     return rockRot;
 }
 
-Rotation GPS::CELTransform(double seconds){
+HepRotation GPS::CELTransform(double seconds){
     /// Purpose:  Return the 3x3 matrix which transforms a vector from a galactic 
     /// coordinate system to a local coordinate system.
     using namespace astro;
     double degsPerRad = 180./M_PI;
-    Rotation gal;//,cel;
+    HepRotation gal;//,cel;
     double time = m_earthOrbit->dateFromSeconds(seconds);
     
     m_position = m_earthOrbit->position(time);
@@ -234,7 +234,7 @@ Rotation GPS::CELTransform(double seconds){
     //so now we know where the x and z axes of the zenith-pointing frame point in the celestial frame.
     //what we want now is to make cel, where
     //cel is the matrix which rotates (cartesian)local coordinates into (cartesian)celestial ones
-    Rotation cel(dirX() , dirZ().cross(dirX()) , dirZ());
+    HepRotation cel(dirX() , dirZ().cross(dirX()) , dirZ());
 
     //std::cout << "time is " << seconds << std::endl;
     //m_orbit->displayRotation(cel);
@@ -242,12 +242,12 @@ Rotation GPS::CELTransform(double seconds){
     //gal is the matrix which rotates (cartesian)celestial coordiantes into (cartesian)galactic ones
     gal.rotateZ(-282.25/degsPerRad).rotateX(-62.6/degsPerRad).rotateZ(33./degsPerRad);
     //so gal*cel should be the matrix that makes local coordiates into galactic ones.
-    Rotation glstToGal=gal*cel;
+    HepRotation glstToGal=gal*cel;
     return glstToGal.inverse();
 
 }
 
-Rotation GPS::transformCelToGlast(double seconds){
+HepRotation GPS::transformCelToGlast(double seconds){
     /// Purpose:  Return the 3x3 matrix which transforms a vector from a celestial 
     /// coordinate system (like a SkyDir vector) to a local coordinate system (like the FluxSvc output).
     using namespace astro;
@@ -265,11 +265,11 @@ Rotation GPS::transformCelToGlast(double seconds){
     //so now we know where the x and z axes of the zenith-pointing frame point in the celestial frame.
     //what we want now is to make cel, where
     //cel is the matrix which rotates (cartesian)local coordinates into (cartesian)celestial ones
-    Rotation cel(dirX() , dirZ().cross(dirX()) , dirZ());
+    HepRotation cel(dirX() , dirZ().cross(dirX()) , dirZ());
     return cel.inverse();
 }
 
-Rotation GPS::transformGlastToGalactic(double seconds){
+HepRotation GPS::transformGlastToGalactic(double seconds){
     return (CELTransform(seconds).inverse())*(rockingAngleTransform(seconds).inverse());
 }
 

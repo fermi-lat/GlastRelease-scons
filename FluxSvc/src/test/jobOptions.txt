@@ -27,6 +27,10 @@ ApplicationMgr.TopAlg = {"FluxAlg/Top","ExposureAlg","FluxTestAlg"};
 FluxSvc.source_lib ={"$(FLUXSVCROOT)/xml/source_library.xml"};
 FluxSvc.source_lib +={"$(FLUXSVCROOT)/src/test/test_source.xml"};
 
+Top.area= 0.1;
+Top.pointing_mode=4;
+Top.rocking_angle=90;
+Top.source_name="surface_vertical_muons";
 
 // ask for a source that is in the user_library (must use the name assigned to FluxAlg)
 //Top.source_name="fat_pencil";

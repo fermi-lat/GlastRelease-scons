@@ -85,10 +85,10 @@ public:
     virtual void addFactory(std::string name, const ISpectrumFactory* factory );
     
     ///get the transformation matrix due to orientation of the Galaxy 
-    virtual Rotation CELTransform(double time)const;
+    virtual HepRotation CELTransform(double time)const;
     
     ///get the transformation matrix due to orientation of the spacecraft.
-    virtual Rotation orientTransform(double time)const;
+    virtual HepRotation orientTransform(double time)const;
     
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
     HepRotation Flux::transformGlastToGalactic(double time)const;

@@ -3,9 +3,6 @@
 
 #include "TimeCandle.h"
 
-#include "dom/DOM_Element.hpp"
-#include "xml/Dom.h"
-
 #include "FluxException.h" // for FATAL_MACRO
 #include <utility>
 #include <strstream>
@@ -13,7 +10,6 @@
 #include "SpectrumFactory.h"
 
 static SpectrumFactory<TimeCandle> factory;
-//static SpectrumFactory<FILESpectrum> factory;
 const ISpectrumFactory& TimeCandleFactory = factory;
 
 TimeCandle::TimeCandle()
@@ -31,7 +27,6 @@ std::string TimeCandle::title()const
 {
     std::strstream s;
     s << particleName() << '(' << 1 << " GeV";
-    //if( m_index >=1 ) s << ',' << m_index ;
     s << ")" << '\0';
     std::string t(s.str()); s.freeze(false);
     return t;
@@ -48,11 +43,6 @@ TimeCandle::particleName() const
 {
     return m_name.c_str();
 }
-
-//double TimeCandle::calculate_rate(double old_rate)
-//{
-//    return old_rate;
-//}
 
 float TimeCandle::parseParamList(std::string input, int index)
 {

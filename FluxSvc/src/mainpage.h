@@ -6,45 +6,34 @@
    \authors Toby Burnett, Sean Robinson, Theodore Hierath, and others.
 
  \section intro Introduction
-  This package implements a Gaudi service, encapsulating the flux package. Its only
-  function is to return an IFlux object, whose methods are implemented by the flux package.
+  This package implements a Gaudi service, FluxSVc, and an algorithm, FluxAlg
   <br>
 
-  The FluxSvc package is designed to hold information on : 
-  the orbital characteristics of GLAST,
-  the Emissive characteristics of various sources, and
-  the 'Current' time and a model for particle emission from desired sources.
+  The FluxSvc package is designed to manage: 
+  - the orbital characteristics of GLAST,
+  - the Emissive characteristics of various sources, and
+  - the 'Current' time and orbital position, and instrument orientaiton.
 
-  Through implementing a Gaudi Service (FluxSvc.h), it:
-  Takes user specifications on desired source/sources,
-  Provides a user interface to produce additional incoming particles, and
-  Provides the current time, particle energy, direction, and type of particle. 
-
-  <br>
-  the file /src/test/jobOptions.txt holds information used for the implementation of FluxSvc.
-  it also holds the standard set of strings representing xml filenames, thus allowing multiple 
-  xml files to be used.
-  <a href="http://d0.phys.washington.edu/~srobinsn/FluxSvc/">See here for an explanation of how Gaudi was introduced to flux to make FluxSvc, and further documentation:</a>
-  <br>
-  <h2> Defining an external source </h2>
-    See the interface definition IRegisterSource.
+<br>
+Usage is primarily via the FluxAlg algorithm, which access the service to generate a particle and place it in the TDS.
     
-
-  <hr>
-  \section notes release notes
-  release.notes
-  \section requirements requirements
-  \include requirements
   <hr>
   @section jobOptions jobOptions
-  @param FluxAlg.source_name
-  This is the source name (defined in the XML) that is to be used as
-  a source in the simulation.
-  @param FluxSvc.source_lib
-  this is a list of the XML files that will make their declared sources available to the 
-  simulation.
-  <hr>
-  @section Basic_XML_Sources Basic_XML_Sources
+    @param FluxSvc.source_lib   [\$(FLUXSVCROOT)/xml/source_library.xml] list of file names containing source_lib elements
+    @param FluxSvc.dtd_file     [\$(FLUXSVCROOT)/xml/source.dtd]  DTD file used to parse the XML files
+    @param FluxSvc.EvtMax       [0]  If non-zero, used as a maximum in the FluxSvc loop
+    @param FluxSvc.StartTime    [0]  Mission elapsed time start
+    @param FluxSvc.EndTime      [0]  Mission elapsed time end--if non-zero, will be the end.
+
+    @param FluxAlg.source_name  ["default"] source name, name must be in the source_lib files
+    @param FluxAlg.MCrun        [100] Initial run number
+    @param FluxAlg.area         [5.0] target area in m^2
+    @param FluxAlg.pointing_mode [0]
+    @param FluxAlg.rocking_angle [0 deg]
+
+ <hr>
+  @section Basic_XML_Sources Sources
+  This is a limited selection of sources. See the contents of the source library file for a complete list.
   @param default
   0.1 GeV gamma-rays coming from the vertical local direction.  Used for default tests.
   @param albedo_gamma
@@ -65,7 +54,18 @@
   @param muons
   special source that mimics non-interacting cosmics
 
+  <br>
+  <h2> Defining an external source </h2>
+    See the interface definition IRegisterSource for information on how to link code external to this package.
+
+
   <hr>
+  \section notes release notes
+  release.notes
+  \section requirements requirements
+  \include  requirements
+  <hr>
+   <hr>
   \todo Complete and recalibrate the CompositeDiffuse structure
 
 */

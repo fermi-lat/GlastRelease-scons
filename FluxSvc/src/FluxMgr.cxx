@@ -6,6 +6,7 @@
 #include "SpectrumFactoryTable.h"
 #include "GPS.h"
 #include "FluxException.h" // defines FATAL_MACRO
+#include "CompositeSource.h"
 
 #include "dom/DOM_Document.hpp"
 #include "dom/DOM_Element.hpp"
@@ -346,12 +347,12 @@ std::pair<double,double> FluxMgr::location(){
 }
 
 //get the transformation matrix.
-Rotation FluxMgr::CELTransform(double time){
+HepRotation FluxMgr::CELTransform(double time){
     return GPS::instance()->CELTransform(time);
 }
 
 //get the transformation matrix.
-Rotation FluxMgr::orientTransform(double time){
+HepRotation FluxMgr::orientTransform(double time){
     return GPS::instance()->rockingAngleTransform(time);
 }
 

@@ -1,4 +1,8 @@
-// $Header$
+/** @file FluxAlg.cxx
+@brief declaration and definition of the class FluxAlg
+$Header$
+
+*/
 
 // Include files
 // Gaudi system includes
@@ -22,12 +26,67 @@
 #include "Spectrum.h"
 #include "SpectrumFactory.h"
 
+#include "FluxSvc/EventSource.h"
+
 #include "CLHEP/Vector/LorentzVector.h"
 
 #include <cassert>
 #include <vector>
 
-#include "FluxAlg.h"
+
+
+// Include files
+// Gaudi system includes
+#include "GaudiKernel/Algorithm.h"
+#include "GaudiKernel/Property.h"
+
+class IFlux;
+class IFluxSvc;
+class IparticlePropertySvc;
+
+
+/** 
+* \class FluxAlg
+*
+* \brief This is an Algorithm designed to get particle information 
+* from FluxSvc and put it onto the TDS for later retrieval
+* \author Toby Burnett
+* 
+* $Header$
+*/
+
+class FluxAlg : public Algorithm {
+public:
+    FluxAlg(const std::string& name, ISvcLocator* pSvcLocator);
+    double currentRate(){return m_currentRate;}
+    
+    StatusCode initialize();
+    StatusCode execute();
+    StatusCode finalize();
+    
+    
+private: 
+    double m_currentRate;
+    StringProperty m_source_name;
+
+    IFluxSvc*   m_fluxSvc;
+    IFlux *     m_flux;
+    
+    
+    UnsignedIntegerProperty m_run;      // run number
+    unsigned int m_sequence;  // sequence number
+    
+    
+    IDataProviderSvc* m_eds;
+    
+    IParticlePropertySvc * m_partSvc;
+
+    // the target area
+    DoubleProperty m_area;
+    IntegerProperty m_pointing_mode;
+    DoubleProperty m_rocking_angle;
+    
+};
 //------------------------------------------------------------------------
 
 
@@ -42,6 +101,9 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
     // declare properties with setProperties calls
     declareProperty("source_name",  m_source_name="default");
     declareProperty("MCrun",        m_run=100);
+    declareProperty("area",        m_area=5.0); // target area in m^2
+    declareProperty("pointing_mode", m_pointing_mode=0);
+    declareProperty("rocking_angle", m_rocking_angle=0); // in degrees
     
 }
 //------------------------------------------------------------------------
@@ -53,12 +115,19 @@ StatusCode FluxAlg::initialize(){
     
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
+    // set target area for random point generation
+    EventSource::totalArea(m_area);
     
+    // set pointing mode and associated rocking angle 
     if ( service("FluxSvc", m_fluxSvc).isFailure() ){
         log << MSG::ERROR << "Couldn't find the FluxSvc!" << endreq;
         return StatusCode::FAILURE;
     }
     
+    m_fluxSvc->setExplicitRockingAngles(m_rocking_angle*M_PI/180,0);
+//    m_fluxSvc->setRockingAngle(m_rocking_angle);
+    m_fluxSvc->setRockType(m_pointing_mode);
+
     log << MSG::INFO << "loading source..." << endreq;
     
     sc =  m_fluxSvc->source(m_source_name, m_flux);
@@ -66,8 +135,7 @@ StatusCode FluxAlg::initialize(){
         log << MSG::ERROR << "Could not find flux " << m_source_name << endreq;
         return sc;
     }
-    log << MSG::INFO << "Source: "<< m_flux->title() << endreq;
-    
+   
     log << MSG::INFO << "Source title: " << m_flux->title() << endreq;
     log << MSG::INFO << "        area: " << m_flux->targetArea() << endreq;
     log << MSG::INFO << "        rate: " << m_flux->rate() << endreq;
@@ -100,7 +168,7 @@ StatusCode FluxAlg::execute()
         m_flux->generate();
     }
     HepPoint3D p = m_flux->launchPoint();
-    HepPoint3D d = m_flux->launchDir();
+    HepVector3D d = m_flux->launchDir();
     double ke = m_flux->energy(); // kinetic energy in MeV
     std::string particleName = m_flux->particleName();
     //if it's a "timeTick, then ExposureAlg should take care of it, and no othe algorithms should care about it.

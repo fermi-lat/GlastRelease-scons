@@ -9,8 +9,6 @@
 
 #include "astro/SkyDir.h"
 
-#include "geometry/CoordTransform.h"
-
 #include "SpectrumFactoryTable.h"
 #include "SimpleSpectrum.h"
 
@@ -233,7 +231,7 @@ public:
     }
 
 private:
-    Rotation m_celtoglast;
+    HepRotation m_celtoglast;
     HepVector3D m_dir;
     bool  m_skydir;
     HepVector3D m_t;

@@ -1,24 +1,21 @@
 // $Header$
 #ifndef TimeCandle_H
 #define TimeCandle_H
-/** 
-* \class TimeCandle
-*
-* Spectrum: base class for energy spectrum objects
-* TimeCandle: define a particle with a constant time of arrival.
-* 
-* $Header$
-*/
 
 #include "Spectrum.h"
 #include <string>
 
-class DOM_Element;
+/** 
+* \class TimeCandle
+*
+* @brief Spectrum: base class for energy spectrum objects
+* TimeCandle: define a particle with a constant time of arrival.
 
+  a convenient Spectrum : a single particle at a constant incremental time, 
+* 
+* $Header$
+*/
 
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//!  a convenient Spectrum : a single particle at a constant incremental time, 
 
 class TimeCandle : public Spectrum {
 public: 
@@ -45,11 +42,8 @@ public:
     }
 private:
     float parseParamList(std::string input, int index);
-    //float m_E0;
     double m_T0; //how many seconds pass before each next incoming particle
     std::string m_name;	// particle name to generate ("P", "gamma", ...)
-    //float m_index;	// spectral index: <=1 is delta function at E0
-    //float m_emax;
 };
 
 #endif

@@ -1,4 +1,8 @@
-// $Header$
+/** @file SimpleSpectrum.cxx
+    @brief definition of SimpleSpectrum
+
+   $Header$
+*/
 
 
 #include "SimpleSpectrum.h"
