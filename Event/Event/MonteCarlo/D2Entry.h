@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "GaudiKernel/MsgStream.h"
-#include "Event/Recon/TkrRecon/TkrPatCand.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ContainedObject.h"
 

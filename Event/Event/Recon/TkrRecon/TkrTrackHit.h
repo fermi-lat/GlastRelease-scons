@@ -50,6 +50,7 @@ public:
     enum ParamType  {MEASURED,               // Measured values from the tracker Si planes
                      PREDICTED,              // Projected estimated values from previous plane
                      FILTERED,               // Parameters from track fit (KF filter stage)
+                     REVFIT,                 // Parameters from track fit (KF filter stage)
                      SMOOTHED,               // Parameters from Kalman Filter smoothing stage
                      QMATERIAL,              // For access to the contribution from scattering
                      UNKNOWN};               // Unknown
@@ -122,6 +123,7 @@ public:
     inline const double        getRadLen()          const {return m_radLen;    }
     inline const double        getActiveDist()      const {return m_activeDist;}
     inline const double        getChiSquareFilter() const {return m_chiSquareFilter;}
+    inline const double        getChiSquareRevFit() const {return m_chiSquareRevFit;}
     inline const double        getChiSquareSmooth() const {return m_chiSquareSmooth;}
     inline const idents::TkrId getTkrId()           const {return m_hitID;          }
 
@@ -152,9 +154,10 @@ public:
     inline void setRadLen(const double rl)                  {m_radLen          = rl;}
     inline void setActiveDist(const double d)               {m_activeDist      = d;}
     inline void setChiSquareFilter(const double c)          {m_chiSquareFilter = c;}
+    inline void setChiSquareRevFit(const double c)          {m_chiSquareRevFit = c;}
     inline void setChiSquareSmooth(const double c)          {m_chiSquareSmooth = c;}
 
-    inline void setStatusBit(StatusBits bitToSet)           {m_statusBits      |=  bitToSet;}
+    inline void setStatusBit(unsigned int bitToSet)         {m_statusBits      |=  bitToSet;}
     inline void clearStatusBit(StatusBits bitToClear)       {m_statusBits      &= ~bitToClear;}
 
     /// These methods provide direct "helper" class access to track parameters
@@ -178,11 +181,13 @@ private:
     double          m_radLen;          // Radiation Lengths encountered from the previous hit
     double          m_activeDist;      // The distance inside (positive) hit SSD (neg. if outside)
     double          m_chiSquareFilter; // hit chi-square at filter stage of fit
+    double          m_chiSquareRevFit; // hit chi-square at filter stage of fit
     double          m_chiSquareSmooth; // hit chi-square at smooth stage of fit
         
     TkrTrackParams m_hitMeas;
     TkrTrackParams m_hitPred;
     TkrTrackParams m_hitFit;
+    TkrTrackParams m_hitRevFit;
     TkrTrackParams m_hitSmooth;
     TkrTrackParams m_Qmaterial;  // holds the covariance matrix of the material effects 
 };

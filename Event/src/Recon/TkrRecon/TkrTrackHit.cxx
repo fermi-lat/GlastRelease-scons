@@ -88,6 +88,11 @@ const Event::TkrTrackParams& Event::TkrTrackHit::getTrackParams(TkrTrackHit::Par
             if (!validFilteredHit()) throw std::invalid_argument("Invalid Filtered TkrTrackParams requested");
             return m_hitFit;
         }
+        case REVFIT:  
+        {
+            if (!validFilteredHit()) throw std::invalid_argument("Invalid Filtered TkrTrackParams requested");
+            return m_hitRevFit;
+        }
         case SMOOTHED:  
         {
             if (!validSmoothedHit()) throw std::invalid_argument("Invalid Smoothed TkrTrackParams requested");
@@ -116,6 +121,7 @@ Event::TkrTrackParams& Event::TkrTrackHit::getTrackParams(TkrTrackHit::ParamType
         case MEASURED:  return m_hitMeas;
         case PREDICTED: return m_hitPred;
         case FILTERED:  return m_hitFit;
+        case REVFIT:    return m_hitRevFit;
         case SMOOTHED:  return m_hitSmooth;
         case QMATERIAL: return m_Qmaterial;
 
@@ -149,6 +155,12 @@ void Event::TkrTrackHit::setTrackParams(ITkrTrackParamsAccess& access, TkrTrackH
         case FILTERED:  
         {
             access.setParams(&m_hitFit);
+            statusBits = HASFILTERED;
+            break;
+        }
+        case REVFIT:  
+        {
+            access.setParams(&m_hitRevFit);
             statusBits = HASFILTERED;
             break;
         }
