@@ -11,6 +11,8 @@ macro   geomrep_linkopts "-L ${GEOMREPROOT}/${CMTCONFIG} -lgeomrep"\
 macro_append Win32Debug   " ${GEOMREPROOT}/${DebugDir}/geomreplib.lib"
 macro_append Win32Release " ${GEOMREPROOT}/${ReleaseDir}/geomreplib.lib"
 
+path_append LD_LIBRARY_PATH "${GEOMREPROOT}/${CMTCONFIG}"
+
 private
 
 library geomrep -no_share *.cxx\
