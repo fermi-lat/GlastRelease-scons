@@ -14,4 +14,5 @@
  * v0r11    11-01-05 RG imported changes in EM branch to support back button in FRED
  * v0r12    18-01-05 RG Fixed a bug about previousEvent missing method
  * v0r12p1  18-01-05 LR Improved TrackFiller and VtxFiller
+ * v0r12p2  26-01-05 LR Improved TrackFiller and ClusterFiller
 */
