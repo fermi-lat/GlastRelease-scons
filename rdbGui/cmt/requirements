@@ -14,5 +14,5 @@ private
 
 macro rdbGui_pp_cppflags "-g"
 
-application rdbGUI RdbGuiWindow.cxx DbTreeList.cxx SQLBuffer.cxx LogText.cxx \
-                   ResultTable.cxx ConnectionDialog.cxx
+application rdbGUI RdbGuiWindow.cxx FXCheckList.cxx TableColumnList.cxx \
+                   SQLBuffer.cxx LogText.cxx ResultTable.cxx ConnectionDialog.cxx

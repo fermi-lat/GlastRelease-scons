@@ -3,7 +3,7 @@
 #define RDBGUIWINDOW_H
 
 #include "fx.h"
-#include "DbTreeList.h"
+#include "TableColumnList.h"
 #include "SQLBuffer.h"
 #include "LogText.h"
 #include "ResultTable.h"
@@ -23,7 +23,7 @@ class RdbGUIWindow : public FXMainWindow {
   FXDECLARE(RdbGUIWindow)
 private:
   FXComboBox                     *m_uiDBSelection;         // Showing current connection
-  DbTreeList                     *uiTree;                  // Tree representation of the databases
+  TableColumnList                *uiTblColList;            // List of tables and columns
   SQLBuffer                      *uiEditor;                // SQL editor
   FXbool                          m_shactive;              // Syntax Highlighting set or not
   LogText                        *uiLog;                   // Result log

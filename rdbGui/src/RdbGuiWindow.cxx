@@ -73,15 +73,13 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   FXSplitter *uiHsplitter = new FXSplitter(uiContent, LAYOUT_FILL_X|
                                            LAYOUT_FILL_Y|SPLITTER_TRACKING|SPLITTER_HORIZONTAL);
 
-  // Treelist frame left
-  FXHorizontalFrame *uiTreeframe = new FXHorizontalFrame(uiHsplitter,
+  // tables and columns frame left
+  FXHorizontalFrame *uiTblColframe = new FXHorizontalFrame(uiHsplitter,
                                       LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_THICK);
 
 
   // Treelist
-  uiTree = new DbTreeList(uiTreeframe, this, ID_TREE,
-                           TREELIST_SHOWS_LINES|TREELIST_SHOWS_BOXES|FRAME_SUNKEN|FRAME_THICK|
-                           LAYOUT_FILL_X|LAYOUT_FILL_Y, 0, 0, 0, 0);
+  uiTblColList = new TableColumnList(uiTblColframe);
 
   // Vertical splitter right
   FXSplitter *uiVsplitter = new FXSplitter(uiHsplitter, (LAYOUT_FILL_X|LAYOUT_FILL_Y|
@@ -125,7 +123,7 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
 
 
   // Force some reasonable sizes to the layout manager
-  uiTreeframe->setWidth(150);
+  uiTblColframe->setWidth(150);
   uiEditorframe->setHeight(300);
 
   // Editor initialization
@@ -138,6 +136,8 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   uiEditor->initSyntaxHighlighting();
   m_shactive = getApp()->reg().readStringEntry("SETTINGS", "HighLightSyntax", "Y") == "Y";
   
+  
+  // Initialize the rdb manager and it's builder
   m_rdbBuilder = new rdbModel::XercesBuilder();
   m_rdbManager = rdbModel::Manager::getManager();
   m_rdbManager->setBuilder(m_rdbBuilder);
@@ -192,7 +192,6 @@ long RdbGUIWindow::onOpenXMLFile(FXObject* sender,FXSelector sel, void* ptr)
   onCloseConnection(NULL,0,NULL);
   if (m_rdbManager->getRdb())
     m_rdbManager->cleanRdb();
-  uiTree->init();
   FXFileDialog *opendialog = new FXFileDialog(this, "Open File");
   opendialog->setSelectMode(SELECTFILE_EXISTING);
   opendialog->setPatternList("XML files (*.xml)\nAll files (*)");
@@ -210,7 +209,7 @@ void RdbGUIWindow::loadXMLFile(FXString fileName)
       if (m_rdbManager->build())
         FXMessageBox::error(this, MBOX_OK, "Error: rdbModel building", 
                             "an error as occurred during the construction of the rdb model");
-      m_rdbManager->startVisitor(uiTree);
+      m_rdbManager->startVisitor(uiTblColList);
     }  
 }
 
