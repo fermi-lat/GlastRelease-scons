@@ -1,4 +1,4 @@
-// $Header :$
+// $Header$
 #ifndef GlastEvent_McConstants_H
 #define GlastEvent_McConstants_H 1
 

@@ -6,7 +6,7 @@ use idents
 use data 
 use Gaudi 
 
-library GlastEvent \
+library GlastEvent -no_share\
         ../GlastEvent/*.h \ 
         ../GlastEvent/TopLevel/*.h \
         ../GlastEvent/MonteCarlo/*.h \
@@ -16,9 +16,9 @@ library GlastEvent \
         ../GlastEvent/Digi/*.h \
         TopLevel/*.cpp
 
-library GlastEventFactories \
-        ../src/TopLevel/EventModel.cpp \
-        ../src/Factories/*.cpp
+#library GlastEventFactories \
+#        ../src/TopLevel/EventModel.cpp \
+#        ../src/Factories/*.cpp
 
 include_path ${GLASTEVENTROOT}
 
