@@ -71,6 +71,8 @@ GRBSim::GRBSim()
 /*------------------------------------------------------*/
 GRBSim::~GRBSim()
 {
+  //  delete theShells;
+  //  delete theShocks;
   cout<<"*******Exiting The GRB Simulation ******"<<endl;
 }
 /*------------------------------------------------------*/
@@ -159,7 +161,7 @@ void GRBSim::Start()
 /*------------------------------------------------------*/
 void GRBSim::ComputeFlux(double time)
 {
-  time+=1.0e-6;
+  if (time<=1.0e-6) time=1.0e-6;
   double nshock=theShocks.size();
   double norma;
   double sum;

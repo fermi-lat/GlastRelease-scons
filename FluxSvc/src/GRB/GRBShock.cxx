@@ -70,6 +70,7 @@ GRBShock::GRBShock(GRBShell* Sh1, GRBShell* Sh2)
   m_gemax = 2.36e+8*1/sqrt(1.0+X+Y)*pow(eb,-1/4)*pow(m_gf,-1/2)*np;
   m_gecoo = 5.24e+4/((1+X+Y)*eb)*pow(m_gf,-1/3)*pow(np,-2/3)/pow(E52,1/3);
   
+  //  m_riset=(dr1+dr2)/(cst::c);
   m_riset=(dr1+dr2)/(cst::c);
 }
 
@@ -99,7 +100,8 @@ double GRBShock::fred(double ee,double tt)
 {
   double decayt;
   double riset;
-  riset=m_riset*sqrt(1.0e+5/ee);
+  riset=(m_riset*sqrt(1.0e+10/pow(ee,2.0)));
+  //riset=m_riset;
   double tp=m_tobs+riset;
   
   if (tsyn(ee)>riset){
@@ -110,9 +112,12 @@ double GRBShock::fred(double ee,double tt)
   
   double norma=decayt+riset-(riset*exp((m_tobs-tp)/riset));
   
-  //  cout<< decayt<<riset<<tp<<norma<<endl;
-  
-  if (tt<=m_tobs)
+  //  cout<<" "<<decayt<<" "<<riset<<" "<<tp<<" "<<norma<<endl;
+  if (norma <=0) 
+    {
+      return 0.0;
+    }  
+  else if (tt<=m_tobs)
     {
       return 0.0;
     } else if (tt<=tp)
@@ -152,7 +157,7 @@ double GRBShock::Fsyn(double ee,double tt)
 	else 
 	  flux = 0.0;
       }
-  //  cout<<fmax<<flux<<fred(ee,tt);
+  //  cout<<"  "<<fmax<<" "<<flux<<"  "<<fred(ee,tt)<<"  "<<tt<<endl;
   return fmax*flux*fred(ee,tt);
 }
 
@@ -211,12 +216,13 @@ void GRBShock::Write()
   cout<< "--------------------Shock's parameters --------------" << endl;
   //  cout<< "Gamma 1    = "<< Sh1->Gamma() << " Gamma 2 = " << Sh2->Gamma() << " Mass 1   = " << Sh1->Mass() <<  " Mass 1   = " << Sh2->Mass() << endl;
   //  cout<< "Gamma fin. = "<< m_gf << " Mass f. = "<< (Sh1->Mass())+(Sh2->Mass()) << " G Shock = " << m_gsh <<  endl;
-  cout<< "Eint = "<< m_Eint << " Beq = " << m_Beq   <<endl;
+  cout<< "Eint = "<< m_Eint <<"E_rad ="<<m_sum<< " Beq = " << m_Beq   <<endl;
   cout<< "G.E. min " << m_gemin << " G.E.max " << m_gemax << " G.E. Cooling " << m_gecoo << endl;
   cout<< "Esyn. min " << Esyn(m_gemin) << " Esyn.max " << Esyn(m_gemax) << " Esyn. Cooling " << Esyn(m_gecoo) << endl;
   cout<< "E IC min " << Eic(m_gemin) << " EIC max " << Eic(m_gemax) << " EIC Cooling " << Eic(m_gecoo) << endl;
   cout<< "Vol Com = "<< m_VolCom <<" num ele "<<m_npart<< " n el = "<< m_npart/m_VolCom << endl;
   cout<<" ******* " <<m_radius<< "** T obs = "<<m_tobs<<endl; 
+  cout<<m_riset<<endl;
 }
 
 

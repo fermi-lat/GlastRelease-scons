@@ -10,7 +10,7 @@ apply_pattern package_include
 
 
 #=============================================================
-public use facilities
+use facilities
 
 private
 
