@@ -41,8 +41,10 @@ namespace Event {
         TkrDigi() {};
         
         //! constructor with layer, tower and ToT, but with an empty list of strips
-        TkrDigi(int l, idents::GlastAxis::axis v, idents::TowerId t, int* tot)
-            : m_bilayer (l), m_view (v), m_tower (t) {
+        TkrDigi(int l, idents::GlastAxis::axis v, idents::TowerId t, int* tot) {
+            m_bilayer = l;
+            m_view = v;
+            m_tower = t;
             m_tot[0] = *tot;
             m_tot[1] = *(++tot);
             
