@@ -113,6 +113,10 @@ public:
                                               CLID_Calib_CAL_LightAsym));
     CalibData::pairs.push_back(std::make_pair(CalibData::CAL_IntNonlin,
                                               CLID_Calib_CAL_IntNonlin));
+    CalibData::pairs.push_back(std::make_pair(CalibData::ACD_Ped,
+                                              CLID_Calib_ACD_Ped));
+    CalibData::pairs.push_back(std::make_pair(CalibData::ACD_ElecGain,
+                                              CLID_Calib_ACD_ElecGain));
     CalibData::pairs.push_back(std::make_pair(CalibData::Test_1,
                                               CLID_Calib_CalibTest1));
 
