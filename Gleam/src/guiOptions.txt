@@ -5,12 +5,16 @@ G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
 
 ApplicationMgr.ExtSvc += {"GuiSvc"};
 GuiSvc.size=-3000;
+
 ApplicationMgr.DLLs   += {"FluxDisplay" };
 ApplicationMgr.ExtSvc += {"FluxMenuSvc", 
         "DetectorDisplay" };
 
 
-EventDisplay.Members = {"TkrDisplayAlg"};
-EventDisplay.Members +={"HitDisplay" };
+EventDisplay.Members = {
+   "TkrDisplayAlg",
+   "CalDisplay", 
+   "HitDisplay" 
+   };
 
 // ----------end display-specific
