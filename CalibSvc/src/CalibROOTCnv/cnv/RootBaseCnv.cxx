@@ -89,6 +89,15 @@ StatusCode RootBaseCnv::finalize() {
 
             /******      ROOT services     *****/
 
+StatusCode RootBaseCnv::createRoot(const std::string& /* fname */, 
+                                   CalibData::CalibBase* /* pTDSObj */) {
+  MsgStream log(msgSvc(), "RootBaseCnv");
+  log << MSG::ERROR 
+      << "createRoot method not implemented for this calibration type" 
+      << endreq;
+  return StatusCode::FAILURE;
+}
+
 StatusCode RootBaseCnv::openRead(const std::string& fname, 
                                  const std::string& branch,
                                  TObject*& pCalib) {
@@ -314,8 +323,8 @@ StatusCode RootBaseCnv::internalCreateObj(const std::string& fname,
    Base class version of this routine shouldn't really be called
    since it doesn't correspond to a TDS object.
 */
-  StatusCode RootBaseCnv::i_createObj (const std::string& fname,
-                          DataObject*& refpObject) {
+StatusCode RootBaseCnv::i_createObj (const std::string& /* fname */,
+                                     DataObject*& /* refpObject */) {
   return StatusCode::FAILURE;  // shouldn't ever get here
 }
   

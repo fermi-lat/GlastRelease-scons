@@ -70,14 +70,16 @@ public:
   // End standard public converter stuff
 
   /**
-     Create ROOT file corresponding to TDS object input.  Real 
-     implementations only exist for non-base class converters.
+     Create ROOT file corresponding to TDS object input.  
+     Default implementation is to return an error.  Must be separately
+     implemented for each calibration type.
+     
 
      @param fname     Filename for output file
      @param pTDSObj   Pointer to tds object to be converted
    */
   virtual StatusCode createRoot(const std::string& fname, 
-                                CalibData::CalibBase* pTDSObj)=0;
+                                CalibData::CalibBase* pTDSObj);
 
 protected:
   /** This creates the transient representation of an object from the

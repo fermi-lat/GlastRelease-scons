@@ -142,17 +142,25 @@ StatusCode RootCalGainCnv::i_createObj(const std::string& fname,
   calibRootData::CalGainCol* pCol = new calibRootData::CalGainCol;
   TObject* pTObj = pCol;
   StatusCode sc = openRead(fname, "calibRootData::CalGainCol", pTObj);
-  if (!sc.isSuccess() ) return sc;
+  if (!sc.isSuccess() ) {
+    delete pCol;
+    return sc;
+  }
 
   // Must have dimensions even before we call constructor for TDS obj
   calibRootData::CalDimension* pDim = pCol->getDimension();
-  if (!pDim) return StatusCode::FAILURE;
-
+  if (!pDim) {
+    delete pCol;
+    return StatusCode::FAILURE;
+  }
   CalibData::CalCalibGain* pObj = 
     new CalibData::CalCalibGain(pDim->getNRow(), pDim->getNCol(), 
                                 pDim->getNLayer(), pDim->getNXtal(),
                                 pDim->getNFace(), pDim->getNRange());
-  if (!pObj) return StatusCode::FAILURE;
+  if (!pObj) {
+    delete pCol;
+    return StatusCode::FAILURE;
+  }
   refpObject = pObj;
 
   setBaseInfo(pObj);
@@ -168,7 +176,8 @@ StatusCode RootCalGainCnv::i_createObj(const std::string& fname,
     idents::CalXtalId identsId(id.getTower(), id.getLayer(), id.getColumn());
     pObj->putRange(identsId, id.getRange(), id.getFace(), pGain);
   }
-
+  // All done with ROOT object.
+  delete pCol;
   return StatusCode::SUCCESS;
 }
 
