@@ -32,6 +32,9 @@ namespace ldfReader {
 
 void AcdParser::header(unsigned cable, AEMheader hdr)
 {
+    // Store this header for use when parsing each PMT 
+    setCurHeader(hdr);
+
     if (EbfDebug::getDebug()) {
 
         printf("%s  Cable %d = FREE board %s header:\n", m_prefix, cable,
@@ -55,6 +58,16 @@ void AcdParser::header(unsigned cable, AEMheader hdr)
 
 void AcdParser::pha(unsigned cable, unsigned channel, ACDpha p)
 {
+  // making an assumption that header is set before the pha calls
+  AEMheader curHeader = getCurHeader();
+  if (cable != curHeader.cableNumber()) {
+      printf("cable for PHA doesn't match cable for header\n");
+  }
+  unsigned hitMap = curHeader.hitMap();
+  bool veto = (hitMap >> channel) & 1;
+  unsigned acceptMap = curHeader.acceptMap();
+  bool accept = (acceptMap >> channel) & 1;
+
   LATtypeId id   = event()->identity();
   // Tile number in [0,107]
   const ACDtileSide *pmt = map()->lookup(id, cable, channel);
@@ -78,7 +91,7 @@ void AcdParser::pha(unsigned cable, unsigned channel, ACDpha p)
       acd = curLatData->getAcd(pmt->name());
   } 
   AcdDigi::ParityError err = (p.parityError() == 0) ? AcdDigi::NOERROR : AcdDigi::ERROR;
-  acd->addPmt(ldfReader::AcdDigi::AcdPmt(p.ADCvalue(), p.ADCrange(), digiSide, channel, p.more(), err));
+  acd->addPmt(ldfReader::AcdDigi::AcdPmt(p.ADCvalue(), p.ADCrange(), digiSide, channel, p.more(), veto, accept, err));
 
 }
 
