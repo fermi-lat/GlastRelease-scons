@@ -1,3 +1,4 @@
+v0r2p6 tweaked ideal mode #'s to avoid ULD > intNonlin spline, screwing up range selection.
 v0r2p5 fixed 'bump' bug in different diode size ene calc.  fixed asym splie generation.  improved printouts.  added norandomnoise mode.  range checking before all spline evals
 v0r2p4 fixed bug in ADC tool where LAC logic only checked POS face
 v0r2p3 fixed bug in ADC tool where range selection could run out-of-bounds on rare occasions
