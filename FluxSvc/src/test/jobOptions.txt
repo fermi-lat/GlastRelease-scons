@@ -27,10 +27,10 @@ FluxSvc.source_lib += {"$(FLUXSVCROOT)/xml/user_library.xml"};
 // ask for a source that is in the user_library
 FluxTestAlg.source_name="TimeCandle";
 //FluxTestAlg.source_name="totaldiffuse";
-//FluxTestAlg.source_name="default";
+//FluxTestAlg.source_name="gal10020";
 
 //the angular size of GLAST's exposure, if needed (see below)
-FluxTestAlg.glastExposureAngle = 4.;
+FluxTestAlg.glastExposureAngle = 2.;
 
 //selecting the kind of exposure GLAST gets,
 //to be appropriate for exposure maps or sky maps.
@@ -66,7 +66,7 @@ FluxTestAlg.pointSpread = 0;
 FluxTestAlg.projectionType = 0;
 
 ApplicationMgr.EvtSel = "NONE";
-ApplicationMgr.EvtMax = 30000;
+ApplicationMgr.EvtMax = 20000;
 
 //==============================================================
 //

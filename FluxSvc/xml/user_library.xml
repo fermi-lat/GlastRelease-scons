@@ -43,10 +43,10 @@
      </source>
 
 <!-- Test source at some other galactic origin -->
-     <source name="gal10020" flux="0.01">
+     <source name="gal10020" flux="100.">
           <spectrum>
               <particle name="gamma"> <energy e="0.1"/> </particle>
-               <galactic_dir l="100" b="20"/>
+               <galactic_dir l="50" b="80"/>
           </spectrum>
      </source>
 
