@@ -3,6 +3,7 @@ package AcdRecon\n
 package manager:H.Kelly
 @verbatim
 
+v1r6p2    13-Jul-2003 WBA Fix AcdActDist
 v1r6p1    25-Mar-2003 HMK Update use of RootIo to use any version
 v1r6p0    28-Feb-2003 HMK Make sure to check StatusCode from doca and hitTileDist methods
 v1r6      31-Dec-2002 HMK Remove member variables for m_acdDigi and m_acdRecon
