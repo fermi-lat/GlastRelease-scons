@@ -48,7 +48,7 @@ GUI* GUI::createGUI(const char* nameOfApp, const char* title)
     theGUI =new MotifGUI(nameOfApp, title);
     GUI::instance(theGUI);
     GUI::s_instance = theGUI; //(don't know if needed)
-    return theGUI:
+    return theGUI;
 }
 bool GUI::running=false;
 
