@@ -1,9 +1,7 @@
 package mcRootData
-version v0r2p1
-
+version v2
 use GlastPolicy
 use ROOT
-
 
 ignore_pattern include_none
 apply_pattern package_include
@@ -14,15 +12,14 @@ apply_pattern ld_library_path
 apply_pattern package_headers
 
 
-
 private
 
-# Create the Root Cint classes
-macro root_headers "RMcVertex.h RMcParticle.h RMcEvent.h mcRootDataLinkDef.h"
+# For Windows, use a setup script to run rootcint automatically
+# Still using document generator for UNIX
+setup_script dorootcint
 
-# try to build this by adding to compilation for requirements
-macro mcRootData_customBuild ""\
-      VisualC "call $(MCROOTDATAROOT)/mcRootData/dorootcint.bat"
+# Create the Root Cint classes
+macro root_headers "VolumeIdentifier.h McIntegratingHit.h McParticle.h McPositionHit.h McEvent.h mcRootDataLinkDef.h"
 
 # on unix use a document to make rootcint part of the build process
 make_fragment mcrootdata_dorootcint_header
