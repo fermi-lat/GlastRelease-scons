@@ -1,9 +1,9 @@
 package reconRootData
-version v0
+version v1r4
 
 use GlastPolicy
 use digiRootData
-use ROOT v3r0p7
+use ROOT
 
 
 ignore_pattern include_none
