@@ -182,7 +182,7 @@ namespace ldfReader {
         return 0;
     }
 
-    LatComponentParser::commonComponentData(EBFcontribution *contribution) {
+int LatComponentParser::commonComponentData(EBFcontribution *contribution) {
         int len = contribution->length();
         // printed in hex
         int error = contribution->packetError();
