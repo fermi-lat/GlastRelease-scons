@@ -64,7 +64,8 @@ public:
         && m_rotX==0. &&m_rotY==0. && m_rotZ==0.);} 
 
     //! Fill the ASCII output stream
-    std::ostream& fillStream( std::ostream& s ) const;  
+    //std::ostream& fillStream( std::ostream& s ) const;  
+    friend std::ostream& operator<<( std::ostream& s , AlignmentConsts consts);  
         
     //! Serialize the object for reading
     StreamBuffer& serialize( StreamBuffer& s );

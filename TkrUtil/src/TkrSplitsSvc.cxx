@@ -106,7 +106,7 @@ StatusCode TkrSplitsSvc::doInit()
     StatusCode sc = StatusCode::SUCCESS;
 
     // test of getting TkrGeometrySvc from inside TkrSplitsSvc... It works!
-    int stripsPerLadder  = m_geoSvc->ladderNStrips();
+    //int stripsPerLadder  = m_geoSvc->ladderNStrips();
 
     // can be removed when geometry is iterfaced here
     const int NSTRIPS = 64;

@@ -306,6 +306,20 @@ inline StreamBuffer& AlignmentConsts::serialize( StreamBuffer& s )       {
 
 //! Fill the ASCII output stream
 
+std::ostream& operator<<(std::ostream &s, AlignmentConsts consts) {
+        s << "AlignmentConsts: "
+            << "delta(" 
+        << consts.getDeltaX() << ", "
+        << consts.getDeltaY() << ", "
+        << consts.getDeltaZ() << ") "
+        << " rot("
+        << consts.getRotX() << ", "
+        << consts.getRotY() << ", "
+        << consts.getRotZ() << ")" ; 
+    return s;
+}
+
+/*
 inline std::ostream& AlignmentConsts::fillStream( std::ostream& s ) const {
     s << "class AlignmentConsts: "
         << "delta(X,Y,Z) (" 
@@ -319,6 +333,7 @@ inline std::ostream& AlignmentConsts::fillStream( std::ostream& s ) const {
         << std::endl;
     return s;
 }
+*/
 
 #endif // TKRALIGNMENTSVC_H
 
