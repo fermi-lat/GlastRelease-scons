@@ -56,7 +56,7 @@ void TrackingAction::PreUserTrackingAction(const G4Track* aTrack)
   // we initialize the particle by giving the parent, the PDG encoding, a flag
   // (in that case Swum, and the initial momentum of the particle
   particle->initialize(parent, aTrack->GetDefinition()->GetPDGEncoding(),
-                       Event::McParticle::Swum,pin);
+                       Event::McParticle::Swum,pin,aTrack->GetPosition());
   
   // we add this particle to our collection for subsequent saving in the TDS
   man->addMcParticle(aTrack->GetTrackID(),particle);  

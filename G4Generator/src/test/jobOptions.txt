@@ -61,8 +61,8 @@ G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
 ApplicationMgr.EvtMax =100;
 
 // needed to have the gui available
-//ApplicationMgr.ExtSvc +={"GuiSvc"};
-//GuiSvc.size = -2000; 
+ApplicationMgr.ExtSvc +={"GuiSvc"};
+GuiSvc.size = -2000; 
 
 //==============================================================
 //

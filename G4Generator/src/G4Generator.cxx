@@ -191,7 +191,6 @@ StatusCode G4Generator::execute()
   const HepLorentzVector& pfinal = primary->finalFourMomentum();
   Hep3Vector dir=    pfinal.vect().unit();
   HepPoint3D p =   primary->finalPosition();
-  
   // note possibility of truncation error here! especially with MeV.
   double ke =   pfinal.e() - pfinal.m(); 
   
@@ -220,7 +219,7 @@ StatusCode G4Generator::execute()
   // so initial momentum and final one are the same
   parent->initialize(parent, pdef->GetPDGEncoding(), 
                      Event::McParticle::PRIMARY,
-                     pin);
+                     pin,p);
   parent->finalize(pin, p);
     
   McParticleManager::getPointer()->addMcParticle(0,parent);
