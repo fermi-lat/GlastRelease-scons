@@ -178,14 +178,14 @@ public:
 
 
     /// Methods to query bits in the condition summary word
-    Bool_t getRoiSet() const { return (m_conditionSummary & ROI); };
-    Bool_t getTkrSet() const { return (m_conditionSummary & TKR); };
-    Bool_t getCalLeSet() const { return (m_conditionSummary & CALLE); };
-    Bool_t getCalHeSet() const { return (m_conditionSummary & CALHE); };
-    Bool_t getCnoSet() const { return (m_conditionSummary & CNO); };
-    Bool_t getPeriodicSet() const { return (m_conditionSummary & PERIODIC); };
-    Bool_t getSolicitedSet() const { return (m_conditionSummary & SOLICITED); };
-    Bool_t getExternalSet() const { return (m_conditionSummary & EXTERNAL); };
+    Bool_t getRoiSet() const { return( (m_conditionSummary & ROI) != 0); };
+    Bool_t getTkrSet() const { return( (m_conditionSummary & TKR) != 0); };
+    Bool_t getCalLeSet() const { return( (m_conditionSummary & CALLE) != 0); };
+    Bool_t getCalHeSet() const { return( (m_conditionSummary & CALHE) != 0); };
+    Bool_t getCnoSet() const { return( (m_conditionSummary & CNO) != 0); };
+    Bool_t getPeriodicSet() const { return( (m_conditionSummary & PERIODIC) != 0); };
+    Bool_t getSolicitedSet() const { return( (m_conditionSummary & SOLICITED) != 0); };
+    Bool_t getExternalSet() const { return( (m_conditionSummary & EXTERNAL) != 0); };
 
     private:
 
