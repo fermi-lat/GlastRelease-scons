@@ -4,7 +4,7 @@
 // userAction classes
 class UIsession;
 
-class G4VUserDetectorConstruction;
+//class G4VUserDetectorConstruction;
 class G4VUserPhysicsList;
 class G4VModularPhysicsList;
 class G4VUserPrimaryGeneratorAction;
@@ -71,8 +71,8 @@ class RunManager
      GlastDetSvc and to the DataProviderSvc. It gets also the mode for the
      geometry level of details
   */
-  RunManager(IGlastDetSvc* gds, IDataProviderSvc* esv, 
-      std::string geometryMode, std::ostream& log, double defaultCutValue);
+  RunManager(std::ostream& log, double defaultCutValue);
+  
   virtual ~RunManager();
 
  public: 
@@ -81,9 +81,6 @@ class RunManager
 
   /// Set up the G4 stuff
   virtual void Initialize();
-
-  /// Not used
-  virtual void DefineWorldVolume(G4VPhysicalVolume * worldVol);
 
   /// Not used
   virtual void AbortRun();
@@ -123,8 +120,6 @@ class RunManager
   protected:
   /// The Event manager of G4
   G4EventManager * eventManager;
-  /// The detector construction class
-  G4VUserDetectorConstruction * userDetector;
   /// The physics list class
 
   //  G4VUserPhysicsList * physicsList;
@@ -164,8 +159,6 @@ class RunManager
   virtual void RestoreRandomNumberStatus(G4String fileN);
 
   /// Return methods for the 3 user classes
-  inline const G4VUserDetectorConstruction* GetUserDetectorConstruction() const
-    { return userDetector; }
   inline const G4VModularPhysicsList* GetUserPhysicsList() const
     { return physicsList; }
   inline const G4VUserPrimaryGeneratorAction* GetUserPrimaryGeneratorAction() 

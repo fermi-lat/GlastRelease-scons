@@ -16,7 +16,6 @@
 
 #include "G4Timer.hh"
 
-#include "DetectorConstruction.h"
 #include "RunManager.h"
 #include "UIsession.h"
 #include "PhysicsList.h"
@@ -26,7 +25,7 @@
 #include "Randomize.hh"
 #include "G4Run.hh"
 #include "G4RunMessenger.hh"
-#include "G4VUserDetectorConstruction.hh"
+//#include "G4VUserDetectorConstruction.hh"
 #include "G4VUserPhysicsList.hh"
 #include "G4VModularPhysicsList.hh"
 
@@ -59,10 +58,9 @@ RunManager* RunManager::fRunManager = NULL;
 RunManager* RunManager::GetRunManager()
 { return fRunManager; }
 
-RunManager::RunManager(IGlastDetSvc* gds, IDataProviderSvc* esv,
-                       std::string geometryMode, std::ostream& log, double defaultCutValue)
+RunManager::RunManager(std::ostream& log, double defaultCutValue)
   :m_log(log),
-   userDetector(NULL),physicsList(NULL),
+   physicsList(NULL),
    userPrimaryGeneratorAction(NULL),
    currentEvent(NULL),
    geometryInitialized(false),physicsInitialized(false),
@@ -72,6 +70,7 @@ RunManager::RunManager(IGlastDetSvc* gds, IDataProviderSvc* esv,
    geometryToBeOptimized(true),runIDCounter(0),verboseLevel(0),DCtable(NULL),
    currentRun(NULL),
    storeRandomNumberStatus(0)
+   
 {
   if(fRunManager)
     { G4Exception("RunManager constructed twice."); }
@@ -95,7 +94,6 @@ RunManager::RunManager(IGlastDetSvc* gds, IDataProviderSvc* esv,
   randomNumberStatusDir = "./";
 
   // The user stuff
-  userDetector = new DetectorConstruction(gds,esv, geometryMode, m_log);
   physicsList = new PhysicsList(defaultCutValue);
   userPrimaryGeneratorAction = new PrimaryGeneratorAction;
 }
@@ -113,10 +111,6 @@ RunManager::~RunManager()
   G4ParticleTable::GetParticleTable()->DeleteMessenger();
   G4ProcessTable::GetProcessTable()->DeleteMessenger();
 
-  if(userDetector)
-    {
-      delete userDetector;
-    }
   if(physicsList)
     {
       delete physicsList;
@@ -280,14 +274,17 @@ void RunManager::Initialize()
 
 void RunManager::InitializeGeometry()
 {
-  if(!userDetector)
-    {
-      G4Exception
-        ("G4VUserDetectorConstruction is not defined.");
-    }
+  // Check the world volume to the Navigator
+  if (G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking()
+    ->GetWorldVolume())
+  {
 
-  if(verboseLevel>1) G4cout << "userDetector->Construct() start." << G4endl;
-  DefineWorldVolume(userDetector->Construct());
+	// Let VisManager know it
+	G4VVisManager* pVVisManager = G4VVisManager::GetConcreteInstance();
+	if(pVVisManager) pVVisManager->GeometryHasChanged();
+
+	geometryNeedsToBeClosed = true;
+  }
   geometryInitialized = true;
 }
 
@@ -330,20 +327,6 @@ void RunManager::AbortRun()
     {
       G4cerr << "Run is not in progress. AbortRun() ignored." << G4endl;
     }
-}
-
-void RunManager::DefineWorldVolume(G4VPhysicalVolume* worldVol)
-{
-  // set the world volume to the Navigator
-  G4TransportationManager::GetTransportationManager()
-    ->GetNavigatorForTracking()
-    ->SetWorldVolume(worldVol);
-
-  // Let VisManager know it
-  G4VVisManager* pVVisManager = G4VVisManager::GetConcreteInstance();
-  if(pVVisManager) pVVisManager->GeometryHasChanged();
-
-  geometryNeedsToBeClosed = true;
 }
 
 void RunManager::StoreRandomNumberStatus(G4int eventID)
