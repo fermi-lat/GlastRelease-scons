@@ -76,7 +76,6 @@ private:
     Instrument*		m_instrument;
     std::string		m_xmlFile;
     std::string		m_iniFile;
-    std::string		m_irfFile;
     
 };
 
