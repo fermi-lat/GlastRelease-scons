@@ -9,7 +9,7 @@
        <spectrum> 
          <particle name="mu+"><energy e="10"/> </particle>
            <direction theta="0" phi="0" />
-           <launch_point x="5" y="5" z="60" />
+           <launch_point x="5" y="5" z="80" />
        </spectrum>
      </source>
 

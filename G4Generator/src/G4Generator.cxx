@@ -106,8 +106,10 @@ StatusCode G4Generator::execute()
     HepVector3D dir(m_flux->launchDir());
     double ke= m_flux->energy() ;
     HepPoint3D p(m_flux->launchPoint());
-    
+
+    /// Starting position, in mm
     p = 10*p;
+    /// Energy in MeV
     ke = ke*1000;
     
     PrimaryGeneratorAction* primaryGenerator = 

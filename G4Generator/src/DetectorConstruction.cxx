@@ -39,8 +39,7 @@ DetectorConstruction::DetectorConstruction(std::string topvol, std::string visit
 
 DetectorConstruction::~DetectorConstruction()
 { 
-  detModel::Manager* gddManager = detModel::Manager::getPointer();
-  gddManager->cleanGdd(); 
+  delete sDetector;
 }
 
 G4VPhysicalVolume* DetectorConstruction::Construct()

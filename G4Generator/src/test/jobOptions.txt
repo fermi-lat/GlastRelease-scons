@@ -29,14 +29,14 @@ MessageSvc.OutputLevel      = 2;
 FluxSvc.source_lib += {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
 
 // ask for a source that is in the library
-G4Generator.source_name="gamma_patch_for_G4";
-//G4Generator.source_name="muon_pencil";
+//G4Generator.source_name="gamma_patch_for_G4";
+G4Generator.source_name="muon_pencil";
 //G4Generator.source_name="gamma_test";
 
 // optionally specify a top volume to create
 //G4Generator.topVolume="CALLayer";
 //G4Generator.topVolume="CALLayers";
-G4Generator.topVolume="oneTower";
+//G4Generator.topVolume="oneTower";
 
 // commands to run before each event. (doesn't work?)
 //G4Generator.UIcommands+={"/run/verbose 3"};
