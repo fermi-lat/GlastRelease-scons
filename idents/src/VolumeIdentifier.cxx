@@ -74,6 +74,14 @@ unsigned int VolumeIdentifier::operator[](unsigned int index)
     return (copyShifted & mask2);
 }
 
+unsigned int VolumeIdentifier::operator[](unsigned int index) const
+{
+    static int64 mask2 = 63;
+    int64 copyShifted = m_value >> (54 - 6*index);
+    return (copyShifted & mask2);
+}
+
+
 void VolumeIdentifier::prepend( const VolumeIdentifier& id)
 {
     m_value = (m_value >> (6*id.size())) | id.getValue();
