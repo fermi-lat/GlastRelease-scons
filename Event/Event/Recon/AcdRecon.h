@@ -1,11 +1,8 @@
-#ifndef GlastEvent_AcdRecon_H
-#define GlastEvent_AcdRecon_H 1
+#ifndef Event_AcdRecon_H
+#define Event_AcdRecon_H 1
 
-
-// Include files
 #include <iostream>
 #include "idents/AcdId.h"
-#include "data/IVetoData.h"
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/DataObject.h"
@@ -15,128 +12,148 @@
 #include <vector>
 #include <map>
 
-/*!
-//------------------------------------------------------------------------------
-//
-\class   AcdRecon        
-  
-\brief Reconstruction data for ACD                                
-              
-
-//------------------------------------------------------------------------------
- */
+/** @class   AcdRecon        
+* @brief Reconstruction data for ACD                                
+* $Header$          
+*/
 
 extern const CLID& CLID_AcdRecon;
 
+namespace Event {
+    
+    class AcdRecon : virtual public DataObject  { 
+        
+    public:
+        AcdRecon()
+            : m_totEnergy(0.0),
+            m_tileCount(0),
+            m_gammaDoca(-99999.0),
+            m_doca(-99999.0)
+        {};
+        
+        AcdRecon(double e, int count, double gDoca, double doca,
+            idents::AcdId &minDocaId, std::vector<double> &rowDoca, 
+            std::map<idents::AcdId,double> &energies)       
+            : m_totEnergy(e),
+            m_tileCount(count),
+            m_gammaDoca(gDoca),
+            m_doca(doca),
+            m_minDocaId(minDocaId),
+            m_rowDocaCol(rowDoca),
+            m_energyCol(energies)
+            
+        {};
+        
+        virtual ~AcdRecon() { };
 
-class AcdRecon : virtual public DataObject  { 
-
-public:
-    AcdRecon()
-        : m_totEnergy(0.0),
-        m_tileCount(0),
-        m_gammaDOCA(-99999.0),
-        m_DOCA(-99999.0)
-    {};
-
-    AcdRecon(double e, int count, double gDoca, double doca,
-        IVetoData::Tile hitTile, std::vector<double> &rowDOCA, 
-        std::map<idents::AcdId,double> &energies)       
-        : m_totEnergy(e),
-        m_tileCount(count),
-        m_gammaDOCA(gDoca),
-        m_DOCA(doca),
-        m_hitTile(hitTile),
-        m_rowDOCA_vec(rowDOCA),
-        m_energies(energies)
-
-    {};
-
-    /// Destructor
-    virtual ~AcdRecon() { };
-
-    //! Retrieve reference to class definition structure
-    virtual const CLID& clID() const   { return AcdRecon::classID(); }
-    static const CLID& classID()       { return CLID_AcdRecon; }
-
-    inline const double energy() const { return m_totEnergy; };
-    inline const int tileCount() const { return m_tileCount; };
-    inline const double gammaDOCA() const { return m_gammaDOCA; };
-    inline const double DOCA() const { return m_DOCA; };
-
-
-
+        void initialize (double e, int count, double gDoca, double doca,
+            idents::AcdId minDocaId, std::vector<double> &rowDoca,
+            std::map<idents::AcdId, double> &energyCol) {
+            m_totEnergy = e;
+            m_tileCount = count;
+            m_gammaDoca = gDoca;
+            m_doca = doca;
+            m_minDocaId = minDocaId;
+            m_rowDocaCol = rowDoca;
+            m_energyCol = energyCol;
+        };
+        
+        //! Retrieve reference to class definition structure
+        virtual const CLID& clID() const   { return AcdRecon::classID(); }
+        static const CLID& classID()       { return CLID_AcdRecon; }
+        
+        inline const double getEnergy() const { return m_totEnergy; };
+        inline const int getTileCount() const { return m_tileCount; };
+        inline const double getGammaDoca() const { return m_gammaDoca; };
+        inline const double getDoca() const { return m_doca; };
+        inline const idents::AcdId& getMinDocaId() const { return m_minDocaId; };
+        inline const std::vector<double>& getRowDoca() const { return m_rowDocaCol; };
+        inline const std::map<idents::AcdId, double>& getEnergyCol() const { return m_energyCol; };
+        
+        /// Serialize the object for writing
+        virtual StreamBuffer& serialize( StreamBuffer& s ) const;
+        /// Serialize the object for reading
+        virtual StreamBuffer& serialize( StreamBuffer& s );
+        
+        
+        friend std::ostream& operator << (std::ostream& s, const AcdRecon& obj)
+        {
+            return obj.fillStream(s);
+        };
+        
+        /// Fill the ASCII output stream
+        virtual std::ostream& fillStream( std::ostream& s ) const;
+        
+    private:
+        
+        /// Total energy in MeV deposited in the whole ACD system
+        double m_totEnergy;
+        /// Total number of ACD tiles above threshold
+        int m_tileCount;
+        /// Distance of Closest Approach for the reconstructed gamme, 
+        /// if there is one
+        double m_gammaDoca;
+        /// Minimum Distance of Closest Approach for all tracks and all ACD tiles
+        double m_doca;
+        /// Collection of distance of closest approach calculations
+        /// for each side row of the ACD
+        std::vector<double> m_rowDocaCol;
+        
+        // record of the tile with the minimum Distance of Closest Approach
+        idents::AcdId m_minDocaId;
+        
+        /// Stores reconstructed energy per ACD digi
+        std::map<idents::AcdId, double> m_energyCol;
+        
+    };
+    
+    
     /// Serialize the object for writing
-    virtual StreamBuffer& serialize( StreamBuffer& s ) const;
+    inline StreamBuffer& AcdRecon::serialize( StreamBuffer& s ) const
+    {
+        DataObject::serialize(s);
+        return s
+            << m_totEnergy
+            << m_tileCount
+            << m_gammaDoca
+            << m_doca;
+    }
+    
+    
     /// Serialize the object for reading
-    virtual StreamBuffer& serialize( StreamBuffer& s );
+    inline StreamBuffer& AcdRecon::serialize( StreamBuffer& s )
+    {
+        DataObject::serialize(s);
+        
+        s >> m_totEnergy
+            >> m_tileCount
+            >> m_gammaDoca
+            >> m_doca;
+        
+        return s;
+    }
+    
+    
     /// Fill the ASCII output stream
-    virtual std::ostream& fillStream( std::ostream& s ) const;
+    inline std::ostream& AcdRecon::fillStream( std::ostream& s ) const
+    {
+        return s
+            << "    base class AcdRecon :"
+            << "\n        total energy      = "
+            << EventFloatFormat( GlastEvent::width, GlastEvent::precision )
+            << m_totEnergy << ", "
+            << "\n        tile Count              = "
+            << EventFloatFormat( GlastEvent::width, GlastEvent::precision )
+            << m_tileCount   << " )"
+            << "\n        gamma DOCA     = "
+            << m_gammaDoca << " )"
+            << "\n        DOCA     = "
+            << EventFloatFormat( GlastEvent::width, GlastEvent::precision )
+            << m_doca << " )";
+    }
+    
+    
+} // namespace Event
 
-
-
-private:
-
-    double m_totEnergy;
-    int m_tileCount;
-    double m_gammaDOCA;
-    double m_DOCA;
-    std::vector<double> m_rowDOCA_vec;
-
-    // record of the tile with the minimum Distance of Closest Approach
-    IVetoData::Tile m_hitTile;
-
-    std::map<idents::AcdId,double> m_energies;
-
-};
-
-
-/// Serialize the object for writing
-inline StreamBuffer& AcdRecon::serialize( StreamBuffer& s ) const
-{
-  DataObject::serialize(s);
-  return s
-    << m_totEnergy
-    << m_tileCount
-    << m_gammaDOCA
-    << m_DOCA;
-}
-
-
-/// Serialize the object for reading
-inline StreamBuffer& AcdRecon::serialize( StreamBuffer& s )
-{
-  DataObject::serialize(s);
-  
-  s >> m_totEnergy
-    >> m_tileCount
-    >> m_gammaDOCA
-    >> m_DOCA;
-
-  return s;
-}
-
-
-/// Fill the ASCII output stream
-inline std::ostream& AcdRecon::fillStream( std::ostream& s ) const
-{
-  return s
-    << "    base class AcdRecon :"
-    << "\n        total energy      = "
-    << EventFloatFormat( GlastEvent::width, GlastEvent::precision )
-    << m_totEnergy << ", "
-    << "\n        tile Count              = "
-    << EventFloatFormat( GlastEvent::width, GlastEvent::precision )
-    << m_tileCount   << " )"
-    << "\n        gamma DOCA     = "
-    << m_gammaDOCA << " )"
-    << "\n        DOCA     = "
-    << EventFloatFormat( GlastEvent::width, GlastEvent::precision )
-    << m_DOCA << " )";
-}
-
-
-
-
-#endif    // GlastEvent_AcdRecon_H
+#endif    // Event_AcdRecon_H
 
