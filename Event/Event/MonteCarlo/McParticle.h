@@ -17,12 +17,14 @@
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/SmartRefVector.h"
-#include "GlastEvent/MonteCarlo/McVertex.h"
+
 #include "GlastEvent/MonteCarlo/McConstants.h"
 #include "GlastEvent/TopLevel/Definitions.h"
 #include "GlastEvent/Utilities/ParticleID.h"
+
 #include "CLHEP/Vector/LorentzVector.h"
 #include "GlastEvent/Utilities/CLHEPStreams.h"
+
 // Include all Glast container types here
 //   to simplify inlude statements in algorithms
 #include "GaudiKernel/ObjectVector.h"
