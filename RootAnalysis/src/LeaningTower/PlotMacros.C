@@ -10,7 +10,7 @@ TString TID;
 const int NUM_ROC = 2;
 const int NUM_LAYER = 18;
 const int NUM_VIEW = 2;
-
+void help();
 void Init(char *filename="MyRootFile.root", char* f="MyAnalysisFile.root")
 {
   gStyle->SetCanvasColor(10);
@@ -19,8 +19,26 @@ void Init(char *filename="MyRootFile.root", char* f="MyAnalysisFile.root")
   TFile myFile(filename);
   myTree = (TTree*) myFile.Get("myTree");
   myTree->StartViewer();
-  TrayId(1,0);
+  std::cout<<TrayId(1,0)<<std::endl;
   TFile myOutFile(f, "recreate");
+  help();
+}
+
+void help()
+{
+  std::cout<<" ******************** Analysis Program for Tray data ********************"<<std::endl;
+  std::cout<<" ---------- DIGI ANALYSIS:     "<<std::endl;
+  std::cout<<" TrayId(l , v) "<<std::endl;
+  std::cout<<" PlotToT(TString myCuts='')  "<<std::endl;
+  std::cout<<" PlotTotTot(TString myCuts='')"<<std::endl;
+  std::cout<<" PlotHitMap(TString myCuts='') "<<std::endl;
+  std::cout<<" PlotNumHitsLayer(TString myCuts='') "<<std::endl;
+  std::cout<<" FindEvents(TString myCuts='') "<<std::endl;
+  std::cout<<""<<std::endl;
+  std::cout<<" ---------- RECON ANALYSIS (only if available):     "<<std::endl;
+  std::cout<<" PlotVtx(TString myCuts='')"<<std::endl;
+  std::cout<<" PlotClusHit(TString myCuts='')"<<std::endl;
+  std::cout<<" PlotAllDigi()"<<std::endl;
 }
 
 //////////////////////////////////////////////////
@@ -28,8 +46,8 @@ void Init(char *filename="MyRootFile.root", char* f="MyAnalysisFile.root")
 //////////////////////////////////////////////////
 TString TrayId(long int l, long int v)
 {
-    //  std::cout<<"---------- Layer = "<<l<<" ; view = "<<v<<std::endl;
-
+  //  std::cout<<"---------- Layer = "<<l<<" ; view = "<<v<<std::endl;
+  
   TString ts="[";
   //  TString *trayid;
   ts +=l ;
@@ -45,8 +63,10 @@ void PlotToT_0(TString myCuts="")
 {
   TString var="ToT[0]";
   var+=TID;
-  TH1D *ToT = new TH1D("ToT",var,255,0,255);
-  var+=">>ToT";
+
+  gDirectory->Delete("ToT0");
+  TH1D *ToT0 = new TH1D("ToT0",var,255,0,255);
+  var+=">>ToT0";
   myTree->Draw(var,myCuts);
 }
 
@@ -54,9 +74,22 @@ void PlotToT_1(TString myCuts="")
 {
   TString var="ToT[1]";
   var+=TID;
-  TH1D *ToT = new TH1D("ToT",var,255,0,255);
-  var+=">>ToT";
+
+  gDirectory->Delete("ToT1");
+  TH1D *ToT1 = new TH1D("ToT1",var,255,0,255);
+  var+=">>ToT1";
   myTree->Draw(var,myCuts);
+}
+
+void PlotToT(TString myCuts="")
+{
+  gDirectory->Delete("ToTC");
+  TCanvas *ToTC = new TCanvas("ToTC","ToTC",800,400);
+  ToTC->Divide(2,1);
+  ToTC->cd(1);
+  PlotToT_0(myCuts);
+  ToTC->cd(2);
+  PlotToT_1(myCuts);
 }
 
 void PlotHitMap(TString myCuts="")
@@ -65,6 +98,7 @@ void PlotHitMap(TString myCuts="")
   TCanvas *HitCan = new TCanvas("HitCan","Hit Map",1200,500);
   TString var="TkrHits";
   var+=TID;
+  gDirectory->Delete("HitMap");
   TH1D *HitMap = new TH1D("HitMap",var,1536,0,1536);
   HitMap->SetLineColor(4);
   var+=">>HitMap";
@@ -75,10 +109,16 @@ void PlotHitMap(TString myCuts="")
 
 void PlotNumHitsLayer(TString myCuts="")
 {
-
+  gDirectory->Delete("NumHitsCan");
+  TCanvas *NumHitsCan = new TCanvas("NumHitsCan","Num Hits",500,500);
   TString var="TkrNumHits";
   var+=TID;
+  gDirectory->Delete("TkrNumHits");
+  //  TH1D *TkrNumHits = new TH1D("TkrNumHits",var,1536,0,1536);
+  var+=">>TkrNumHits";
   myTree->Draw(var,myCuts);
+  TkrNumHits->SetFillColor(3);
+
 }
 
 void FindEvents(TString myCuts="")
@@ -86,8 +126,10 @@ void FindEvents(TString myCuts="")
   myTree->Scan("EventId",myCuts);
 }
 
-void TotTot(TString myCuts="")
-{  
+void PlotTotTot(TString myCuts="")
+{ 
+  gDirectory->Delete("ToTToTCan");
+  TCanvas *ToTToTCan = new TCanvas("ToTToTCan","ToT vs ToT",500,500);
   TString var0="ToT[0]";
   TString var1="ToT[1]";
   var0+=TID;
@@ -106,11 +148,18 @@ void TotTot(TString myCuts="")
   
 }
 
+void PlotAllDigi(TString myCuts="")
+{
+  PlotToT(myCuts);
+  PlotTotTot(myCuts);
+  PlotHitMap(myCuts);
+  PlotNumHitsLayer(myCuts);
+}
 //////////////////////////////////////////////////
 // RECON
 //////////////////////////////////////////////////
 
-PlotVtx(TString myCuts="")
+void PlotVtx(TString myCuts="")
 {
   //  TString vtxX="TkrVtxX";
   
@@ -142,6 +191,7 @@ void PlotClusHit(TString myCuts="")
   TString var=var0;
   var+=":";
   var+=var1;
+  gDirectory->Delete("NumClus_NumHits");
   TH2D *Histo = new TH2D("NumClus_NumHits","Clusters vs Hits",30,0,15,30,0,15);
   Histo->SetXTitle("Number of Hits");
   Histo->SetYTitle("Number of Clusters");
