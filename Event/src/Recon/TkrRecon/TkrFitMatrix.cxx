@@ -497,4 +497,33 @@ const TkrFitPar TkrFitMatrix::operator *(const TkrFitPar &A) const
 }
 
 
+const TkrFitMatrix TkrFitMatrix::operator *(const double &x) const
+{
+  double e_11 = x*m_11;
+  double e_12 = x*m_12;
+  double e_13 = x*m_13;
+  double e_14 = x*m_14;
+
+  double e_21 = x*m_11;
+  double e_22 = x*m_12;
+  double e_23 = x*m_13;
+  double e_24 = x*m_14;
+
+  double e_31 = x*m_11;
+  double e_32 = x*m_12;
+  double e_33 = x*m_13;
+  double e_34 = x*m_14;
+
+  double e_41 = x*m_11;
+  double e_42 = x*m_12;
+  double e_43 = x*m_13;
+  double e_44 = x*m_14;
+
+ 
+  return TkrFitMatrix(
+		      e_11,e_12,e_13,e_14,
+		      e_21,e_22,e_23,e_24,
+		      e_31,e_32,e_33,e_34,
+		      e_41,e_42,e_43,e_44);
+}
 
