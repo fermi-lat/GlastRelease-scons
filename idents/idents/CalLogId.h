@@ -4,10 +4,6 @@
 
 // Include files
 #include <iostream>
-using namespace std;
-
-#include "GaudiKernel/Kernel.h"
-#include "GaudiKernel/ContainedObject.h"
 
 
 /*!
