@@ -6,29 +6,13 @@
 #include <algorithm>
 
 
-// g++ has hash_map; Visual Studio doesn't
-//#ifdef __GNUG__
-//#  include <hash_map>
-//#  define Registry hash_map<const char *, DictField*, hash<const char *>, eqstr>
-// otherwise might not have hash_map available, so use map, which
-// is overkill for our situation since we don't need sorting
-//#else        
-//#  include <Map>
-//#  define Registry  map<const char *, DictField*>
-//#endif
-
-
 namespace xmlUtil {
   typedef std::pair<const char *, DictField*> RegPair;
 
   typedef Registry::iterator RegIterator;
 
   DictFieldMan::DictFieldMan(int size) {
-#ifdef __GNUG__
-    m_reg = new Registry(size);   //, hash<const char *>)  , eqstr);
-#else
     m_reg = new Registry();
-#endif
   }
 
   DictFieldMan::~DictFieldMan() {

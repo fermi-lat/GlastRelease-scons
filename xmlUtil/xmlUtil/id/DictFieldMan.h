@@ -4,16 +4,10 @@
 #define XMLUTIL_DICTFIELDMAN_H
 
 #include <string>
-#ifdef __GNUG__
-# if (__GNUC__ >= 3 )
-#   include <ext/hash_map>
-# else
-#   include <hash_map>
-# endif
-
-#else
+// hash_map is causing more trouble than it's worth, so just use map
+// everywhere
 #include <map>
-#endif
+
 
 #include "xmlUtil/id/DictObject.h"
 
@@ -24,16 +18,6 @@ namespace xmlUtil {
   class DictVisitor;
 
 
-#ifdef __GNUG__
-  struct eqstr {
-    bool operator()(const char* s1, const char* s2) const
-    {
-      return strcmp(s1, s2) == 0;
-    }
-  };
-  typedef std::hash_map<const char *, DictField*, std::hash<const char *>, eqstr> 
-  Registry;
-#else
   struct ltstr {
     bool operator()(const char* s1, const char* s2) const
     {
@@ -41,7 +25,6 @@ namespace xmlUtil {
     }
   };
   typedef std::map<const char *, DictField*, ltstr> Registry;
-#endif
 
   class DictFieldMan : public DictObject {
   public:
