@@ -3,140 +3,92 @@
 
 #include "TObject.h"
 #include "TObjArray.h"
-
-// ===================================
-//          TkrTrack
-// ===================================
-//  
-//! Root object representing a reconstructed particle track.
-/*! Represents a reconstructed particle track. It 
-could be a charged particle track or a photon that is 
-reconstructed due to it's conversion into an 
-electron-positron pair. 
-
-A track contains two lists:
-
-1.) A list of TkrLocator objects which contain the position and angle of the 
-    track at different interesting positions  (e.g.: initial point, exit point 
-    of the tracker).
-
-2.) A list of TkrHit objects which point to the TkrSiCluster objects that are associated with this track.
-
-*/
+#include "TkrHitPlane.h"
+/** 
+ * @class TkrTrack
+ *
+ * @brief Root object representing a reconstructed track
+ *        Includes base summary information about the track
+ *        and an object array of information for each hit plane
+ *        This class should duplicate TkrFitTrack
+ * 
+ * Created 13-May-2002
+ * 
+ * @author Tracy Usher
+ *
+ */
 
 class TkrTrack : public TObject
 {
 public:
-
-    //! our set of particles types
-    typedef enum {
-        NONE = -1,
-        GAMMA = 0,
-        ELECTRON,
-        POSITRON,
-        HADRON,
-        OTHER
-    } ParticleType;
-
-private:
-    //! list of hits associated with this track
-    TObjArray *m_hits;          
-
-    //! list of TkrLocators
-    TObjArray *m_locator;       
-    
-    //! track id - probably the position in a TObjArray?
-    UShort_t m_id;        
-    
-    //! type of the track (gamma, e+, e-, hadron ...)
-    ParticleType m_type;        
-
-    //! id of the mother particle (-1 if none)
-    ParticleType m_motherId;    
-
-    //! residual  
-    Float_t m_residual;         
-
-    //! chi**2 of the fit
-    Float_t m_chi2;             
-
-    //! quality measure of the track
-    Float_t m_quality;          
-
-    //! layer where the particle starts
-    UInt_t m_firstLayer;         
-
-    //! energy input from the cal
-    Float_t m_energyInput;    
-    
-    //! energy determined using the tracker + cal
-    Float_t m_energyDetermined;    
-
-public:
+    //! Define the two interesting ends of the track
+    enum TKREND{FIRSTHIT,LASTHIT,NOHIT};
 
     //! constructors
     TkrTrack();
-    TkrTrack(UShort_t id);
 
     //! destructor
-    virtual ~TkrTrack();
+    virtual ~TkrTrack() {m_hits.clear();}
 
-    //! frees all dynamically allocated memory
-    /*!  Clients should call Clean() before calling Create() */
-    void Clean(); 
+    //! Define two initialization methods
+    void     initializeInfo(UInt_t id, UInt_t xgaps, UInt_t ygaps, UInt_t x1st, UInt_t y1st);
+    void     initializeQaul(Double_t chiSq, Double_t ChiSqSmooth, Double_t rms, Double_t quality, Double_t e, Double_t ms);
 
-    //! allocates memory - if necessary
-    /*! if the objects are already allocated, 
-    no further memory is allocated */
-    void Create();
+    //! Allow hits to be added to the list
+    void     addHit(const TkrHitPlane& hit) {m_hits.push_back(hit);}
 
-    //! provide access to the list of hits
-    /*! allows the caller to modify the TObjArray */
-    TObjArray *getHits() { return m_hits; };
+    //! Implement methods parallel to TkrRecInfo here
+    const Double_t   getQuality()             {return m_Q;                 }
+    const Double_t   getEnergy(TKREND end)    {getEndHit(end).getEnePlane(); }
+    const UInt_t     getLayer(TKREND end)     {getEndHit(end).getIdPlane();}
+    const UInt_t     getTower(TKREND end)     {getEndHit(end).getIdTower();}
+    const TkrParams& getTrackPar(TKREND end)  {getEndHit(end).getHitSmooth().getTkrParams();}
+    const Double_t   getTrackParZ(TKREND end) {getEndHit(end).getZplane();}
+    const TkrCovMat& getTrackCov(TKREND end)  {getEndHit(end).getHitSmooth().getTkrCovMat();}
 
-    //! provide access to the list of locators
-    /*! allow the caller to modify the TObjArray */
-    TObjArray *getLocator() { return m_locator; };
+    //! Group together the access methods here
+    UInt_t    getId()                         {return m_id;            }
+    Double_t  getChiSq()                      {return m_ChiSq;         }
+    Double_t  getChiSqSmooth()                {return m_ChiSqSmooth;   }
+    Double_t  getRmsResid()                   {return m_rmsResid;      }
+    Double_t  getQ()                          {return m_Q;             }
+    Double_t  getKalEnergy()                  {return m_KalEnergy;     }
+    Double_t  getKalThetaMS()                 {return m_KalThetaMS;    }
+    UInt_t    getXgaps()                      {return m_Xgaps;         }
+    UInt_t    getYgaps()                      {return m_Ygaps;         }
+    UInt_t    getXistGaps()                   {return m_XistGaps;      }
+    UInt_t    getYistGaps()                   {return m_YistGaps;      }
 
-    //! access the ID # of this track
-    UShort_t getId() { return m_id; };
-    void setId(UShort_t id) { m_id = id; };
+    //! provide access to info at one end of the track or the other
+    const TkrHitPlane& getEndHit(TKREND end);
 
-    //! access the track type
-    ParticleType getTrackType() { return m_type; };
-    void setTrackType(ParticleType type) { m_type = type; };
-
-    //! access the mother id
-    ParticleType getMother() { return m_motherId; };
-    void setMother(ParticleType mom) { m_motherId = mom; };
-
-    //! access the residual associated with this track
-    Float_t getResidual() { return m_residual; };
-    void setResidual(Float_t resid) { m_residual = resid; };
-
-    //! access Chi2
-    Float_t getChi2() { return m_chi2; };
-    void setChi2(Float_t chi) { m_chi2 = chi; };
-
-    //! access the quality parameter
-    Float_t getQuality() { return m_quality; };
-    void setQuality(Float_t q) { m_quality = q; };
-
-    //! access the first layer in the TKR associated with this track
-    UInt_t getFirstLayer() { return m_firstLayer; };
-    void setFirstLayer(UInt_t first) { m_firstLayer = first; };
-    
-    //! access the number of TkrSiClusters associated with this track
-    UInt_t getNumClusters() { return m_hits->GetEntries(); };
-
-    //! access the input energy
-    Float_t getEnergyInput() { return m_energyInput; };
-    void setEnergyInput(Float_t ene) { m_energyInput = ene; };
-
-    //! access the determined energy
-    Float_t getEnergyDet() { return m_energyDetermined; };
-    void setEnergyDet(Float_t ene) { m_energyDetermined = ene; };
+    //! Provide info to any hit on the track
+    UInt_t             getNumHits()           {return m_hits.size();}
+    TkrHitPlaneIter    getHitIterBegin()      {return m_hits.begin();  }
+    TkrHitPlaneIter    getHitIterEnd()        {return m_hits.end();    }
 
     ClassDef(TkrTrack,1)
+private:
+    //! Track ID 
+    UInt_t     m_id;
+
+    //! Summary track quality information
+    Double_t   m_ChiSq;
+    Double_t   m_ChiSqSmooth;
+    Double_t   m_rmsResid;
+    Double_t   m_Q;
+
+    //! Information from the Kalman Fitter
+    Double_t   m_KalEnergy;
+    Double_t   m_KalThetaMS;
+
+    //! Hit Gap information
+    UInt_t     m_Xgaps;
+    UInt_t     m_Ygaps;
+    UInt_t     m_XistGaps;
+    UInt_t     m_YistGaps;
+
+    //! Object array of hit planes
+    TkrHitPlaneVector m_hits;
 };
 #endif
