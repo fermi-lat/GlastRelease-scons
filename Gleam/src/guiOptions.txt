@@ -17,6 +17,6 @@ EventDisplay.Members = {
    "CalDisplay",
    "AcdDisplay"  
    };
-
+Triggered.Members += {"GuiPause"};  // allow pause when triggered
 // -------end display-specific-------
 // ----------------------------------
