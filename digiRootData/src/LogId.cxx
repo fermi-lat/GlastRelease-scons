@@ -44,6 +44,16 @@ Bool_t LogId::isValidColumn(UInt_t columnVal) {
            );
 }
 ///________________________________________________________________________
+Bool_t LogId::isValidLayer(UInt_t layerVal) {
+    // Check if given value is a valid Layer number:
+
+    return (
+            ((layerVal <= BOUNDS_LAYER) && !(layerVal & ~CAL_M_LAYER)) ?
+            kTRUE : kFALSE
+           );
+}
+///________________________________________________________________________
+/*
 Bool_t LogId::isValidPipeLine(UInt_t pipeVal) {
     // Check if given value is a valid pipe number:
 
@@ -52,6 +62,7 @@ Bool_t LogId::isValidPipeLine(UInt_t pipeVal) {
             kTRUE : kFALSE
            );
 }
+*/
 ///________________________________________________________________________
 /*
 Bool_t LogId::isValidID(UInt_t idVal) {
@@ -65,13 +76,14 @@ Bool_t LogId::isValidID(UInt_t idVal) {
 }
 */
 ///________________________________________________________________________
+/*
 Bool_t LogId::fillGeomFromId(LogId::TAG_STRUCT *ts) {
     // fill Layer, Column fields from ID fields:
     
-    if (!isValidPipeLine(ts->pipeline))
-        return kFALSE;
-    if (ts->sequence & ~CAL_M_SEQ)
-        return kFALSE;
+  //  if (!isValidPipeLine(ts->pipeline))
+  //      return kFALSE;
+  //  if (ts->sequence & ~CAL_M_SEQ)
+  //      return kFALSE;
     if (ts->xy & ~CAL_M_XY)
         return kFALSE;
     if (ts->tower & ~CAL_M_TOWER)
@@ -91,7 +103,9 @@ Bool_t LogId::fillGeomFromId(LogId::TAG_STRUCT *ts) {
     // If we got this far, everything must be ok...
     return kTRUE;
 }
+*/
 ///________________________________________________________________________
+/*
 Bool_t LogId::fillIdFromGeom(LogId::TAG_STRUCT *ts) {
     // fill Pipeline, ADC Sequence, etc. from Geometry fields: 
 
@@ -105,17 +119,18 @@ Bool_t LogId::fillIdFromGeom(LogId::TAG_STRUCT *ts) {
 
     // Calculate XY, PIPELINE, ADC SEQUENCE from layer and column...
     UInt_t xyVal = ts->layer & CAL_M_XY;
-    UInt_t pipeVal = ts->column / ((BOUNDS_COLUMN + 1) / (BOUNDS_PIPE + 1));
-    UInt_t seqVal = (ts->column % 2) * (1 << (CAL_K_SEQ - 1)) + 
-                    (ts->layer >> CAL_K_XY);
+    //UInt_t pipeVal = ts->column / ((BOUNDS_COLUMN + 1) / (BOUNDS_PIPE + 1));
+    //UInt_t seqVal = (ts->column % 2) * (1 << (CAL_K_SEQ - 1)) + 
+    //                (ts->layer >> CAL_K_XY);
 
     ts->xy = xyVal;
-    ts->pipeline = pipeVal;
-    ts->sequence = seqVal;
+    ts->pipeline = 0; //pipeVal;
+    ts->sequence = 0; //seqVal;
 
     // If we got this far, everything must be ok...
     return kTRUE;
 }
+*/
 ///________________________________________________________________________
 Bool_t LogId::isValidTagStruct(TAG_STRUCT ts) {
     // Test the validity of a particular tag structure.
@@ -124,24 +139,27 @@ Bool_t LogId::isValidTagStruct(TAG_STRUCT ts) {
     // and ensure that they are equivalent.
 
     // Test fields that don't use all possible values for correct range...
-    if ((!isValidColumn(ts.column))     ||
-        (!isValidPipeLine(ts.pipeline))
-       )
-        return kFALSE;
+    //if ((!isValidColumn(ts.column))     ||
+    //    (!isValidPipeLine(ts.pipeline))
+     //  )
+     //   return kFALSE;
+
+    if (!isValidColumn(ts.column)) return kFALSE;
+    if (!isValidLayer(ts.layer)) return kFALSE;
     
     // Calculate the column and layer from the Pipeline, Sequence and XY
     // fields.  Then compare...
 
     // seq_divisor is 1/2 the number of possible sequence values:
-    UInt_t seq_divisor = 1 << (CAL_K_SEQ - 1);
+//    UInt_t seq_divisor = 1 << (CAL_K_SEQ - 1);
 
-    UInt_t layerVal = ((ts.sequence % seq_divisor) << CAL_K_XY) | ts.xy;
-    if (layerVal != ts.layer) 
-        return kFALSE;
+//    UInt_t layerVal = ((ts.sequence % seq_divisor) << CAL_K_XY) | ts.xy;
+//    if (layerVal != ts.layer) 
+//        return kFALSE;
 
-    UInt_t columnVal = ts.pipeline * 2 + (ts.sequence / seq_divisor);
-    if (columnVal != ts.column)
-        return kFALSE;
+//    UInt_t columnVal = ts.pipeline * 2 + (ts.sequence / seq_divisor);
+//    if (columnVal != ts.column)
+//        return kFALSE;
 
     // If we got this far, everything must be ok...
     return kTRUE;
@@ -195,10 +213,12 @@ UInt_t LogId::getLayer(UInt_t tagWord) {
 UInt_t LogId::getId(UInt_t tagWord) {
     // Returns the id of this log.  Each log in the calorimeter has a unique
     // id value based upon it's position in the cal.
-    
-    return static_cast<UInt_t>((tagWord >> CAL_V_ID) & CAL_M_ID);
+    // Now using Layer,Column,Tower to determine unique id
+   // return static_cast<UInt_t>((tagWord >> CAL_V_ID) & CAL_M_ID);
+    return static_cast<UInt_t>((tagWord >> CAL_V_NEWID) & CAL_M_NEWID);
 }
 ///________________________________________________________________________
+/*
 UInt_t LogId::getPipeline(UInt_t tagWord) {
     // Returns the electronics pipeline the log is read out through
 
@@ -210,12 +230,14 @@ UInt_t LogId::getSequence(UInt_t tagWord) {
 
     return static_cast<UInt_t>((tagWord >> CAL_V_SEQ) & CAL_M_SEQ);
 }
+*/
 ///________________________________________________________________________
 UInt_t LogId::getXY(UInt_t tagWord) {
     // Returns whether the log is in an x or y plane of the cal.
     
     return static_cast<UInt_t>((tagWord >> CAL_V_XY) & CAL_M_XY);
 }
+
 ///________________________________________________________________________
 // Fill a TAG_STRUCT with data from tagVal.
 // *** NOTE: There is no assertion that user supplied tagword contains
@@ -223,8 +245,8 @@ UInt_t LogId::getXY(UInt_t tagWord) {
 void LogId::fillTagStruct(UInt_t tagVal, LogId::TAG_STRUCT *ts) {
     ts->column = getColumn(tagVal);
     ts->layer = getLayer(tagVal);
-    ts->pipeline = getPipeline(tagVal);
-    ts->sequence = getSequence(tagVal);
+    ts->pipeline = 0;//getPipeline(tagVal);
+    ts->sequence = 0;//getSequence(tagVal);
     ts->tower = getTower(tagVal);
     ts->xy = getXY(tagVal);
 }
@@ -235,8 +257,8 @@ void LogId::fillTagStruct(UInt_t tagVal, LogId::TAG_STRUCT *ts) {
 UInt_t LogId::fillTagWord(LogId::TAG_STRUCT *ts) {
     UInt_t tagWord = 0;
     tagWord += (ts->xy & CAL_M_XY) << CAL_V_XY;
-    tagWord += (ts->sequence & CAL_M_SEQ) << CAL_V_SEQ;
-    tagWord += (ts->pipeline & CAL_M_PIPE) << CAL_V_PIPE;
+    //tagWord += (ts->sequence & CAL_M_SEQ) << CAL_V_SEQ;
+    //tagWord += (ts->pipeline & CAL_M_PIPE) << CAL_V_PIPE;
     // When setting layer bits, shed common XY bit from layer value...
     tagWord += ((ts->layer >> CAL_K_XY) & CAL_M_LAYER) << CAL_V_LAYER;
     tagWord += (ts->column & CAL_M_COLUMN) << CAL_V_COLUMN;
@@ -311,6 +333,7 @@ UInt_t LogId::getLayer() const {
     return getLayer(m_tag);
 }
 ///________________________________________________________________________
+/*
 UInt_t LogId::getPipeline() const {
     // return layer value from tag word:
 
@@ -322,6 +345,7 @@ UInt_t LogId::getSequence() const {
 
     return getSequence(m_tag);
 }
+*/
 ///________________________________________________________________________
 Bool_t LogId::setLayer(UInt_t layerVal) {
     // Sets the layer field in the tag word

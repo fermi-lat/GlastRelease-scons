@@ -40,6 +40,7 @@ class AcdId : public TObject {
 
 private:
     UInt_t m_id;   // ACD Tile ID number
+    Char_t m_used;
     /// set layer
     void setLayer( unsigned int val );
     /// set the face number
@@ -76,9 +77,13 @@ public:
     short getRow() const;     
     /// which column?
     short getColumn () const;   
+    /// was this PMT actually connected to a tile?
+    bool wasConnected() const;
+    /// set the bit to denote whether this PMT was connected 0 == not connected,1 is connected
+    void setConnected(Char_t c);
     
     
-    void setId(UShort_t newVal);
+    void setId(Short_t newVal);
     
 private:
     inline short int word ( short i, const UInt_t& v ) const

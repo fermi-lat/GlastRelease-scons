@@ -7,6 +7,7 @@
 
 /*! \class LogId
 \brief
+ Jun 2001 HK:  not using pipeline, sequence anymore..
  access and set functions for calorimeter log ids
  Jun 2001 Heather Kelly renamed LogID to LogId
  Version 1.0 21 Oct 1998 Richard creation
@@ -75,8 +76,13 @@ private:
         CAL_V_TOWER = (CAL_V_COLUMN + CAL_K_COLUMN),
         CAL_M_TOWER = ((1 << CAL_K_TOWER) - 1),
 
+        CAL_K_NEWID = (CAL_K_LAYER + CAL_K_COLUMN + CAL_K_TOWER),
+        CAL_V_NEWID = CAL_V_LAYER,
+        CAL_M_NEWID = ((1 << CAL_K_ID) - 1),
+
         // Upper Bounds values for bounded fields:
         // NOTE: no bounds limits for fields which use all possible values.
+        BOUNDS_LAYER = 7,
         BOUNDS_COLUMN = 9,
         BOUNDS_PIPE = 4
     };
@@ -85,15 +91,16 @@ private:
     static Bool_t isValidTagStruct(LogId::TAG_STRUCT ts);
     static Bool_t isValidTagWord(UInt_t tagWord);
     static Bool_t isValidColumn(UInt_t columnVal);
-    static Bool_t isValidPipeLine(UInt_t pipeVal);
+    static Bool_t isValidLayer(UInt_t layerVal);
+    //static Bool_t isValidPipeLine(UInt_t pipeVal);
 
     static UInt_t getTower(UInt_t tagWord);
     static UInt_t getColumn(UInt_t tagWord);
     static UInt_t getLayer(UInt_t tagWord);
 
     static UInt_t getId(UInt_t tagWord);
-    static UInt_t getPipeline(UInt_t tagWord);
-    static UInt_t getSequence(UInt_t tagWord);
+    //static UInt_t getPipeline(UInt_t tagWord);
+    //static UInt_t getSequence(UInt_t tagWord);
     static UInt_t getXY(UInt_t tagWord);
 public:
     // orientation of the layer
@@ -108,8 +115,8 @@ public:
     LogId(UInt_t tag);
     virtual ~LogId();
 
-    static Bool_t fillIdFromGeom(LogId::TAG_STRUCT *ts);
-    static Bool_t fillGeomFromId(LogId::TAG_STRUCT *ts);
+    //static Bool_t fillIdFromGeom(LogId::TAG_STRUCT *ts);
+    //static Bool_t fillGeomFromId(LogId::TAG_STRUCT *ts);
     static UInt_t fillTagWord(LogId::TAG_STRUCT *ts);
     static void fillTagStruct(UInt_t tagVal, LogId::TAG_STRUCT *ts);
 
@@ -119,8 +126,8 @@ public:
 
     UInt_t getId()          const;
     CALAxes getXY()         const;
-    UInt_t getPipeline()    const;
-    UInt_t getSequence()    const;
+    //UInt_t getPipeline()    const;
+    //UInt_t getSequence()    const;
 
     Bool_t setTag(UInt_t tagVal);
     Bool_t setTag(TAG_STRUCT *ts);

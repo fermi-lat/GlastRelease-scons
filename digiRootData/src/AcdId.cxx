@@ -17,14 +17,15 @@ ClassImp(AcdId)
 
 
 ///________________________________________________________________________
-AcdId::AcdId() : m_id(0) {
+AcdId::AcdId() : m_id(0), m_used(1) {
 }
 
-AcdId::AcdId(const AcdId& id) : m_id(id.m_id) 
+AcdId::AcdId(const AcdId& id) : m_id(id.m_id), m_used(id.m_used) 
 { 
 };
 
 AcdId::AcdId(short l, short f, short r, short c) {
+    m_used = 1;
     m_id = 0;
     setLayer(l);
     setFace(f);
@@ -40,10 +41,16 @@ UShort_t AcdId::getId() const {
     return m_id;
 }
 ///________________________________________________________________________
-void AcdId::setId(UShort_t newVal) { 
+void AcdId::setId(Short_t newVal) { 
 // Sets the ACD ID number to newVal
-
-  m_id = newVal;
+// If this is an unused PMT, store that information
+    if (newVal < 0) {
+        m_used = 0;
+        m_id = 0;
+    } else {
+        m_used = 1;
+        m_id = UShort_t(newVal);
+    }
 }
 
 
@@ -102,4 +109,13 @@ void AcdId::setColumn( unsigned int c )
 { 
     short zero = 0;
     set_word( zero, m_id, c ); 
+}
+
+bool AcdId::wasConnected() const
+{
+    return ( (m_used == 1) ? true : false);
+}
+
+void AcdId::setConnected(Char_t c) {
+    m_used = c;
 }
