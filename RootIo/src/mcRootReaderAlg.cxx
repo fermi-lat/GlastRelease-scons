@@ -378,14 +378,7 @@ StatusCode mcRootReaderAlg::readMcPositionHits() {
         
         double tofTds = posHitRoot->getTimeOfFlight();
         posHitTds->setTimeOfFlight(tofTds);
-        
-        const McParticle *mcRoot = posHitRoot->getMcParticle();
-        Event::McParticle *mcTds = 0;
-        if (mcRoot != 0) {
-            mcTds = m_particleMap[mcRoot->GetUniqueID()];
-            posHitTds->setMcParticle(mcTds);
-        }
-      
+              
         const McParticle *originRoot = posHitRoot->getOriginMcParticle();
         Event::McParticle *originTds = 0;
         if (originRoot != 0) {

@@ -339,13 +339,7 @@ StatusCode mcRootWriterAlg::writeMcPositionHits() {
         //log << MSG::INFO << "need Digi " << needDigi << endreq;
                 
         Double_t tofRoot = (*hit)->timeOfFlight();
-        
-        const Event::McParticle *mcTds = (*hit)->mcParticle();
-        McParticle *mcRoot = 0;
-        if (mcTds != 0) {
-            mcRoot = m_particleMap[mcTds];
-        }
-      
+              
         const Event::McParticle *originTds = (*hit)->originMcParticle();
         McParticle *originRoot = 0;
         if (originTds != 0) {
@@ -357,7 +351,7 @@ StatusCode mcRootWriterAlg::writeMcPositionHits() {
         McPositionHit *mcPosHit = new McPositionHit();
         // Setup the ROOT McPositionHit
         mcPosHit->initialize(particleId, edepRoot, volIdRoot, entryRoot, 
-            exitRoot, mcRoot, originRoot, epartRoot, tofRoot, flagsRoot);
+            exitRoot, originRoot, epartRoot, tofRoot, flagsRoot);
         // Add the ROOT McPositionHit to the ROOT collection of McPositionHits
         m_mcEvt->addMcPositionHit(mcPosHit);
     }
