@@ -94,8 +94,10 @@ void DigiEvent::Clear(Option_t *option) {
 
     Int_t n = m_tkrDigiCol->GetEntries();
     if (n>limit) {
-      cout <<"!!!Warning: tkrDigi nr entries more than limit!!!Limit was increased "<<n<<endl;
+      //cout <<"!!!Warning: tkrDigi nr entries more than limit!!!Limit was increased "<<n<<endl;
       limit=n+10;
+      if (limit > nd)
+        cout << "!!!Warning: limit for tkrDigi is greater than " << nd << endl;
       for (Int_t j=0;j<ind;j++) delete keep[j];
       ind = 0;
     }
