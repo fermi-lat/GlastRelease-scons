@@ -104,6 +104,8 @@ public:
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
     HepRotation transformGlastToGalactic(double time)const;
 
+    HepRotation transformToGlast(double seconds,GPS::CoordSystem index)const;
+
     /// get the current satellite location
     std::pair<double,double> location();
 
@@ -392,6 +394,10 @@ std::pair<double,double> FluxSvc::getExplicitRockingAngles(){
 
 void FluxSvc::setPointingHistoryFile(std::string fileName){
     m_fluxMgr->setPointingHistoryFile(fileName);
+}
+
+HepRotation FluxSvc::transformToGlast(double seconds,GPS::CoordSystem index)const{
+    return m_fluxMgr->transformToGlast(seconds,index);
 }
 
 HepRotation FluxSvc::transformGlastToGalactic(double time)const{

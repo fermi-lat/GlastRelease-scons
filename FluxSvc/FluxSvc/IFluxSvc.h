@@ -11,6 +11,7 @@
 #include "GaudiKernel/IInterface.h"
 #include "CLHEP/Vector/Rotation.h"
 #include "facilities/Observer.h"
+#include "flux/GPS.h"
 
 #include <string>
 #include <list>
@@ -78,6 +79,8 @@ public:
 
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
     virtual HepRotation transformGlastToGalactic(double time)const=0;
+
+    virtual HepRotation transformToGlast(double seconds,GPS::CoordSystem index)const=0;
 
     /// get the current satellite location
     virtual std::pair<double,double> location()=0;
