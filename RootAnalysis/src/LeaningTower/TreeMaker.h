@@ -227,8 +227,8 @@ inline void TreeMaker::Init(const char* digiFileName, const char* reconFileName,
         delete mcFile; 
         mcFile = 0;
     }
-    
-    if (mcFileName != "") {
+
+    if ( strlen(mcFileName) ) {
         mcFile = new TFile(mcFileName);
         if (mcFile->IsOpen() == kTRUE) {
             mcTree = (TTree*)gDirectory->Get("Mc");
@@ -250,7 +250,7 @@ inline void TreeMaker::Init(const char* digiFileName, const char* reconFileName,
         digiFile = 0;
     }
     
-    if (digiFileName != "") {
+    if ( strlen(digiFileName) ) {
         digiFile = new TFile(digiFileName);
         if (digiFile->IsOpen() == kTRUE) {
             digiTree = (TTree*)gDirectory->Get("Digi");
@@ -272,7 +272,7 @@ inline void TreeMaker::Init(const char* digiFileName, const char* reconFileName,
         reconFile = 0;
     }
     
-    if (reconFileName != "") {
+    if ( strlen(reconFileName) ) {
         reconFile = new TFile(reconFileName);
         if (reconFile->IsOpen() == kTRUE) {
             reconTree = (TTree*)gDirectory->Get("Recon");

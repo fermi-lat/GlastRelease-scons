@@ -10,7 +10,7 @@
  *
  */
 
-#include "LeaningTower/TreeMaker.h"
+#include "TreeMaker.h"
 #include "TSystem.h"
 #include <iostream>
 #include <string>
@@ -48,8 +48,11 @@ int main(int argn, char** argc) {
 		mcFileName.c_str(), (char*)TreeFileName.c_str());
     
     std::cout << "Setup for Processing" << std::endl;
-    std::cout << digiFileName.c_str() << " " << reconFileName.c_str() << " "
-              << mcFileName.c_str() << " " << TreeFileName.c_str() << std::endl;
+    std::cout << "\"" << digiFileName.c_str()
+              << "\" \"" << reconFileName.c_str()
+              << "\" \"" << mcFileName.c_str()
+              << "\" \"" << TreeFileName.c_str() << "\""
+              << std::endl;
     r.CreateTree(numEvents);
     std::cout << "Done Processing " << numEvents << " Events" << std::endl;
     return 0;

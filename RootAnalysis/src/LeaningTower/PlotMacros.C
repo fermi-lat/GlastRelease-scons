@@ -29,7 +29,8 @@ TH1D *HitMap(TString myCuts="");
 TH1D *ProjectHitMap(TString myCuts="");
 TH1D *NumHitsLayer(TString myCuts="");
 TGraph *Correlation(TString var, TString VL1, TString VL2, TString myCuts="");
-TGraph *Graph(TString varX, TString varY, TString myCuts="");
+TGraph *Graph(TString VL1,  TString varA, TString varB, TString myCuts="");
+TGraph *TimeHistory(TString VL1);
 
 ////////// CANVASES ////////////
 void PlotToT(TString myCuts="");
@@ -38,7 +39,8 @@ void PlotProjectHitMap(TString myCuts="");
 void PlotNumHitsLayer(TString myCuts="");
 
 void PlotCorrelation(TString var, TString VL1, TString VL2, TString myCuts="");
-void PlotGraph(TString varX, TString varY, TString myCuts="");
+void PlotGraph(TString VL1,  TString varA, TString varB, TString myCuts="");
+void PlotHitsVsTime(TString VL1);
 //--------------------------------------------------//
 long FindEvents(TString myCuts="");
 void  PlotVtx(TString myCuts="");
@@ -48,6 +50,7 @@ void PlotRecon(TString myCuts="");
 //--------------------------------------------------//
 void PlotAllDigi(TString LV="X0",TString myCuts="");
 TCanvas *Report(TString LV="X0",TString myCuts="");
+void ReportAll(TString="", TString="gif");
 void DumpReport(TString LV="X0",char *filename="MyRootFile.root");
 ////////////////// Implementation: ////////////////////
 void AddLayer(TString VL)
@@ -100,8 +103,10 @@ void help()
   std::cout<<" FindEvents(TString myCuts=\"\") "<<std::endl;
   std::cout<<" PlotCorrelation(TString var, TString VL1, TString VL2, TString myCuts=\"\");            "<<std::endl;  
   std::cout<<"                    Plot a scatter plot of var of the layer LV1 vs var of the Layer LV2  "<<std::endl;  
-  std::cout<<" PlotGraph(TString varX, TString varY, TString myCuts=\"\")                "<<std::endl;  
-  std::cout<<"         Plot a scatter plot of varA  vs varB (ex.: PlotGraph(\"LayerX3.NumTkrHits\",\"EventId\")"<<std::endl;  
+  std::cout<<" PlotGraph(TString VL1,  TString varA, TString varB, TString myCuts=\"\")                "<<std::endl;  
+  std::cout<<"                    Plot a scatter plot of varA of the layer VL1 vs varB of the Layer VL1"<<std::endl;  
+  std::cout<<" PlotHitsVsTime(TString VL1);                                               "<<std::endl;                       
+  std::cout<<"                    Plot Hits of the layer VL1 vs EventId                                 "<<std::endl;                          
   std::cout<<" --------------------"<<std::endl;
   std::cout<<" \"myCuts\" can be of the form:  "<<std::endl;
   std::cout<<" \"ToT0>0\" ,\"ToT0>0 && TkrNumHits >10\", \"EventId == 265\"..."<<std::endl;
@@ -141,11 +146,9 @@ void help()
   std::cout<<" 1) Initialize(char* filename=\"MyRootFile.root\") Load the file"<<std::endl; 
   std::cout<<" 2) AddLayer(\"X0\") Add the layer 0X to the stak of layers... ready to be analyzed"<<std::endl; 
   std::cout<<" 3) PlotAllDigi(TString myCuts=\"\") Execute all the Plot macros for digi root file..."<<std::endl;
-  std::cout<<" 4) Report(TString LV, TString myCuts=\"\") Makes a report page with some plots and infos. "<<std::endl;
-  std::cout<<" 5) DumpReport(TString LV, char *filename=\"MyRootFile.root\") "<<std::endl;
-  std::cout<<"          Execute different Report(LV) with different set of cuts (see code)"<<std::endl;
-  std::cout<<"          It saves all the plot in a ps file (Report_[layer].ps)            "<<std::endl;
-  std::cout<<"          Do: DumpReport(\"X0\",\"MyRootFile.root\")  It saves all the plot in a ps file (Report_[layer].ps)            "<<std::endl;
+  std::cout<<" 4) Report(TString myCuts=\"\") Makes a report page with some plots and infos. "<<std::endl;
+  std::cout<<" 5) DumpReport(char *filename=\"MyRootFile.root\")   Execute different Report() with different set of cuts (see code)"<<std::endl;
+  std::cout<<"                                                     It saves all the plot in a ps file (Report_[layer].ps)"<<std::endl;
   
 }
 
@@ -389,12 +392,39 @@ TGraph *Correlation(TString var, TString VL1, TString VL2, TString myCuts)
 }
 
 
-TGraph *Graph(TString varX, TString varY, TString myCuts)
+TGraph *TimeHistory(TString VL1)
+{
+
+  AddLayer(VL1);
+  TString var0="Layer";
+
+  var0+=VL1;
+  var0+=".TkrNumHits";
+  var0+=":Header.EventId";
+  myTree->Draw(var0);
+  TGraph *graph= (TGraph*) gPad->GetPrimitive("Graph");
+  graph->SetMarkerColor(2);
+  graph->Draw("P");
+  return graph;
+  }
+
+TGraph *Graph(TString VL1,  TString varA, TString varB, TString myCuts)
 { 
-  varY+=":";
-  varY+=varX;
+  AddLayer(VL1);
+  TString var0="Layer";
+  TString var1="Layer";
   
-  myTree->Draw(varY,myCuts);
+  var0+=VL1;
+  var1+=VL1;
+
+  var0+=".";
+  var1+=".";
+  var0+=varA;
+  var1+=varB;
+  var0+=":";
+  var0+=var1;
+  
+  myTree->Draw(var0,myCuts);
   TGraph *graph = (TGraph*) gPad->GetPrimitive("Graph");
   graph->SetMarkerStyle(4);
   graph->SetMarkerSize(0.3);
@@ -411,6 +441,7 @@ void PlotAllDigi(TString LV,TString myCuts)
   PlotHitMap(myCuts);
   PlotProjectHitMap(myCuts);
   PlotToT(myCuts);
+  PlotGraph(LV,"ToT0","ToT1",myCuts);
 }
 
 void PlotCorrelation(TString var, TString VL1, TString VL2, TString myCuts)
@@ -421,14 +452,21 @@ void PlotCorrelation(TString var, TString VL1, TString VL2, TString myCuts)
   Correlation(var,VL1,VL2,myCuts);
 }
 
-void PlotGraph(TString varX, TString varY, TString myCuts)
+void PlotGraph(TString VL1,  TString varA, TString varB, TString myCuts)
 { 
   gDirectory->Delete("GraphCan");
   TCanvas *GraphCan;
   GraphCan = new TCanvas("GraphCan","Correlation between two variables",500,500);
-  Graph(varX,varY,myCuts);
+  Graph(VL1,varA,varB,myCuts);
 }
 
+void PlotHitsVsTime(TString VL1)
+{
+  gDirectory->Delete("HistoryCan");
+  TCanvas *HistoryCan;
+  HistoryCan = new TCanvas("HistoryCan", "Hits vs Time",500,500);
+  TimeHistory(VL1);
+}
 
 TCanvas *Report(TString LV,TString myCuts)
 {
@@ -527,6 +565,25 @@ TCanvas *Report(TString LV,TString myCuts)
   HitMap(myCuts);
   
   TH1D *HM = HitMap(myCuts);
+
+  int nBins = HM->GetNbinsX();
+  const TString sDeadBase = "dead strips:";
+  TString sDead = sDeadBase;
+  int nDead = 0;
+  for ( int i=0; i<nBins; ++i ) {
+      //      int value = (int)HM->GetBinContent(i+1);
+      if ( (int)HM->GetBinContent(i+1) == 0 ) {
+          sDead += " ";
+          sDead += i;
+          ++nDead;
+      }
+  }
+  if ( nDead == 0 )
+      sDead += " none";
+  if ( sDead.Length() > 90 )
+      sDead = sDeadBase + " " + nDead + " strips";
+  pt->AddText(sDead);
+
   //HM->SetName("HM");
   
   middleDown->cd(2);
@@ -549,9 +606,11 @@ TCanvas *Report(TString LV,TString myCuts)
   std::cout<<text3<<std::endl;  
   
   middleDown->cd(1);
-  TH1D *PHM  = ProjectHitMap(myCuts);
-  middleDown->cd(1);
-  PHM->Draw();
+  //TH1D *PHM  = ProjectHitMap(myCuts);
+  //middleDown->cd(1);
+  //PHM->Draw();
+  TGraph *TIMEGraph = TimeHistory(LV);
+  
   
   bottom->cd(1);  
   gPad->SetLogy();
@@ -567,9 +626,19 @@ TCanvas *Report(TString LV,TString myCuts)
   //////////////////////////////////////////////////
 }
 
+void ReportAll(TString myCuts, TString opt) { 
+    TString axis[2] = { "X", "Y" };
+    for ( int i=0; i<18; ++i ) {
+        for ( int iaxis=0; iaxis<2; ++iaxis ) {
+            TString LV = axis[iaxis] + i;
+            TString fileName = LV + "." + opt;
+            Report(LV, myCuts)->Print(fileName);
+        }
+    }
+}
+
 void DumpReport(TString LV,char *filename)
 { 
-  Initialize(filename);
   AddLayer(LV);
   TString PSFileName = "Report_";
   PSFileName+=LayerName;
@@ -590,7 +659,7 @@ void DumpReport(TString LV,char *filename)
   Report(LV,"TkrNumHits >= 30")->Print(PSFileName);
   //  Report(LV,"TkrNumHits >= 60")->Print(PSFileName);
   //   Report(LV,"TkrNumHits >= 120")->Print(PSFileName);
-  /*
+  
   TCanvas *CorrCan = new TCanvas("CorrCan","CorrelationsBetween Layer",700,700);
   CorrCan->Divide(2,3);
   CorrCan->cd(1);
@@ -605,19 +674,19 @@ void DumpReport(TString LV,char *filename)
   Correlation("TkrNumHits","X1","X3","LayerX1.TkrNumHits>0");
   CorrCan->cd(6);
   Correlation("TkrNumHits","X2","X3","LayerX2.TkrNumHits>0");
-  */
-  Correlation("TkrNumHits","X0","X1","LayerX0.TkrNumHits>20");
+  /*
+  Correlation("TkrNumHits","X0","X1","LayerX0.TkrNumHits>32");
   CorrCan->cd(2);
-  Correlation("TkrNumHits","X0","X2","LayerX0.TkrNumHits>20");
+  Correlation("TkrNumHits","X0","X2","LayerX0.TkrNumHits>32");
   CorrCan->cd(3);
-  Correlation("TkrNumHits","X0","X3","LayerX0.TkrNumHits>20");
+  Correlation("TkrNumHits","X0","X3","LayerX0.TkrNumHits>32");
   CorrCan->cd(4);
-  Correlation("TkrNumHits","X1","X2","LayerX1.TkrNumHits>20");
+  Correlation("TkrNumHits","X1","X2","LayerX1.TkrNumHits>32");
   CorrCan->cd(5);
-  Correlation("TkrNumHits","X1","X3","LayerX1.TkrNumHits>20");
+  Correlation("TkrNumHits","X1","X3","LayerX1.TkrNumHits>32");
   CorrCan->cd(6);
-  Correlation("TkrNumHits","X2","X3","LayerX2.TkrNumHits>20");
-  
+  Correlation("TkrNumHits","X2","X3","LayerX2.TkrNumHits>32");
+  */
   CorrCan->Print(PSFileClose);
 }
 

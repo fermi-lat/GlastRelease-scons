@@ -160,6 +160,7 @@ void TreeMaker::CreateTree(Int_t numEvents)
   // BEGINNING OF EVENT LOOP
   for (Int_t ievent=m_StartEvent; ievent<nMax; ievent++, curI=ievent) 
     {
+      if ( DEBUG ) std::cout << "event loop counter: " << ievent << std::endl;
       int nTkrDigi = 0;
       // Reset some arrays and variables
       TkrTotalNumHits=0;
@@ -198,19 +199,20 @@ void TreeMaker::CreateTree(Int_t numEvents)
       //////////////////////////////////////////////////
       // Monte Carlo ONLY analysis
       if (mc) {  // if we have mc data process it
-	mcEventId = mc->getEventId();
-	mcRunNum  = mc->getRunId();
-	//      McData();
-      } 
+          mcEventId = mc->getEventId();
+          mcRunNum  = mc->getRunId();
+          if ( DEBUG ) std::cout << "MC: run number: " << mcRunNum << "  event id: " << mcEventId << std::endl;
+          //      McData();
+      }
       
       // Digi ONLY analysis
-      if (evt) 
-	{
+      if (evt) {
 	  digiEventId = evt->getEventId(); 
 	  digiRunNum = evt->getRunId();
-	  if ( DEBUG ) std::cout << "run number: " << digiRunNum << "  event Id: " << digiEventId <<" ievent ="<< ievent <<std::endl;
+	  if ( DEBUG ) std::cout << "DIGI: run number: " << digiRunNum << "  event id: " << digiEventId <<std::endl;
 	  EventId = ievent+1;
 	  RunId   = digiRunNum;
+	  if ( DEBUG ) std::cout << "run number: " << RunId << "  event id: " << EventId << std::endl;
 	  //////////////////////////////////////////////////
 	  // digitkr:
 	  const TObjArray* tkrDigiCol = 0;
