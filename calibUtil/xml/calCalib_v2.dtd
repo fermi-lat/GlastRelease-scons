@@ -129,9 +129,11 @@
 
 <!ELEMENT calGain EMPTY>
 <!ATTLIST calGain %ranges;
-                  gain NMTOKEN #REQUIRED>
+                  avg NMTOKEN #REQUIRED
+                  sig NMTOKEN #REQUIRED>
 
 <!ELEMENT muSlope EMPTY>
 <!ATTLIST muSlope %ranges;
-                  slope NMTOKEN #REQUIRED>
+                  slope NMTOKEN #REQUIRED
+                  error NMTOKEN "0.0" >
 
