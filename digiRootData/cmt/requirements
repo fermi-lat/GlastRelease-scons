@@ -4,12 +4,12 @@ version v3r0
 use GlastPolicy v4r*
 use ROOT v3r*
 
-apply_pattern packageShr
+apply_pattern package_include
 
-# this because reconRootData needs the LogId extraction operator
+apply_pattern package_headers
+
 apply_pattern  package_linkopts
 
-# temporarily re-introduce this patter to be sure bfemApp will run on linux
 apply_pattern ld_library_path
 
 #-------------------------------------------------------
@@ -29,11 +29,7 @@ make_fragment event_dorootcint -header=event_dorootcint_header
 document event_dorootcint EventRootCint CINTFILE=../digiRootData/digiRootDataCint.cxx
 
 
-apply_pattern package_include
-apply_pattern package_headers
-
-
-macro digiRootData_shlibflags " -L${ROOT_PATH}/lib -lPhysics -lMatrix " \
+macro digiRootData_shlibflags " " \
       VisualC            " ${use_linkopts} "
 
 
