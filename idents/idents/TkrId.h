@@ -29,12 +29,12 @@ namespace idents {
         and nesting of volumes in xml geometry description
     */
     TkrId(const VolumeIdentifier& vId);
+    TkrId(unsigned towerX, unsigned towerY, unsigned tray, bool top);
             
     ~TkrId() {};
 
     bool isEqual(const TkrId& other) {
-      return ((m_packedId == other.m_packedId) && 
-              (m_validFields == other.m_validFields));
+      return ((m_packedId == other.m_packedId));
     }
     
     /** Identify top or bottom Silicon layer.
@@ -78,6 +78,26 @@ namespace idents {
       SHIFTWafer  = 13
     };
 
+    /*
+#define TKRID_VALIDTowerY (unsigned) 0x40000000
+#define TKRID_VALIDTowerX (unsigned) 0x20000000
+#define TKRID_VALIDTray  (unsigned) 0x10000000
+#define TKRID_VALIDMeas   (unsigned) 0x8000000
+#define TKRID_VALIDBotTop (unsigned) 0x4000000
+#define TKRID_VALIDLadder (unsigned) 0x2000000
+#define TKRID_VALIDWafer  (unsigned) 0x1000000
+    */
+    enum {
+      VALIDTowerY =  0x40000000,
+      VALIDTowerX =  0x20000000,
+      VALIDTray =    0x10000000,
+      VALIDMeas =   0x08000000,
+      VALIDBotTop = 0x04000000,
+      VALIDLadder =  0x02000000,
+      VALIDWafer =   0x01000000
+    };
+
+
     enum {
       SHMASKTowerY = MASKTowerY << SHIFTTowerY,
       SHMASKTowerX = MASKTowerX << SHIFTTowerX,
@@ -90,49 +110,49 @@ namespace idents {
   public:
 
                         
-    bool hasTowerX() {return ((m_validFields & SHMASKTowerX) != 0);}
-    unsigned int getTowerX() {
+    bool hasTowerX() const {return ((m_packedId & VALIDTowerX) != 0);}
+    unsigned int getTowerX() const {
       if (!(hasTowerX())) throw std::domain_error("No TowerX field");
       return (m_packedId & SHMASKTowerX) >> SHIFTTowerX;
     }
 
-    bool hasTowerY() {return ((m_validFields & SHMASKTowerY) != 0);}
-    unsigned int getTowerY()  {
+    bool hasTowerY() const {return ((m_packedId & VALIDTowerY) != 0);}
+    unsigned int getTowerY() const  {
       if (!(hasTowerY())) throw std::domain_error("No TowerY field");
       return (m_packedId & SHMASKTowerY) >> SHIFTTowerY;
     }
 
 
-    bool hasTray() {return ((m_validFields & SHMASKTray) != 0);}
-    unsigned int getTray() {
+    bool hasTray() const {return ((m_packedId & VALIDTray) != 0);}
+    unsigned int getTray() const {
       if (!(hasTray())) throw std::domain_error("No Tray field");
       return (m_packedId & SHMASKTray) >> SHIFTTray;
     }
 
 
-    bool hasBotTop() {return ((m_validFields & SHMASKBotTop) != 0);}
-    unsigned int getBotTop() {
+    bool hasBotTop() const {return ((m_packedId & VALIDBotTop) != 0);}
+    unsigned int getBotTop() const {
       if (!(hasBotTop())) throw std::domain_error("No BotTop field");
       return (m_packedId & SHMASKBotTop) >> SHIFTBotTop;
     }
 
 
-    bool hasView() {return ((m_validFields & SHMASKMeas) != 0);}
-    unsigned int getView() {
+    bool hasView() const {return ((m_packedId & VALIDMeas) != 0);}
+    unsigned int getView() const {
       if (!(hasView())) throw std::domain_error("No View field");
       return (m_packedId & SHMASKMeas) >> SHIFTMeas;
     }
 
 
-    bool hasLadder() {return ((m_validFields & SHMASKLadder) != 0);}
-    unsigned int getLadder() {
+    bool hasLadder() const {return ((m_packedId & VALIDLadder) != 0);}
+    unsigned int getLadder() const {
       if (!(hasLadder())) throw std::domain_error("No Ladder field");
       return (m_packedId & SHMASKLadder) >> SHIFTLadder;
     }
 
     
-    bool hasWafer() {return ((m_validFields & SHMASKWafer) != 0);}
-    unsigned int getWafer() {
+    bool hasWafer() const {return ((m_packedId & VALIDWafer) != 0);}
+    unsigned int getWafer() const {
       if (!(hasWafer())) throw std::domain_error("No Wafer field");
       return (m_packedId & SHMASKWafer) >> SHIFTWafer;
     }
@@ -164,17 +184,18 @@ namespace idents {
 
   private:
     /// Unuseful default constructor
-    TkrId() : m_packedId(0), m_validFields(0) {};
+    TkrId() : m_packedId(0) {};
 
     /// Does the actual work; extracted here since gcc doesn't let
     /// debugger see symbols
     void constructorGuts(const VolumeIdentifier& vId);      
 
     /// Bitmask containing tracker information
-    unsigned short int m_packedId;
+    //    unsigned short int m_packedId;
+    unsigned long m_packedId;
 
     /// Parallel bitmask indicating which fields in m_packedId have been set
-    unsigned short int m_validFields;
+    //    unsigned short int m_validFields;
 
   };
     
