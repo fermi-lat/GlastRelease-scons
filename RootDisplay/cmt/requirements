@@ -1,11 +1,11 @@
 package RootDisplay
-version v0r1
+version v0r1p0
 
 # $Header$
 
 
 #use FluxSvc 
-use RootIo v12r1
+use RootIo v12r*
 use GuiSvc v*
 
 use geomrep 
