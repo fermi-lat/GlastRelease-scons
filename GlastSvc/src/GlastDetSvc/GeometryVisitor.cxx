@@ -27,6 +27,7 @@ GeometryVisitor::GeometryVisitor( IGeometry& geom )
 {
     setRecursive(0);
     cacheTransform(); // set initial tranformation
+    setMode(geom.getMode()); // Get choice mode from the client
 }
 
 
@@ -62,12 +63,20 @@ void  GeometryVisitor::visitEnsemble(detModel::Ensemble* ensemble)
         
         material = comp->getEnvelope()->getMaterial();
     }
-    m_geom.pushShape(IGeometry::Box, m_idvec, ensemble->getName(), material, m_params,  type);
+    IGeometry::VisitorRet vret = 
+      m_geom.pushShape(IGeometry::Box, m_idvec, ensemble->getName(), material,
+                       m_params,  type);
+
+    // Do these belong in the "if" or not?  Probably only really need
+    // to be done inside, but are harmless outside.
     m_params.clear();
     m_idvec.clear();
-    PosVector p = ensemble->getPositions();
-    for(PosVector::iterator i=p.begin(); i!=p.end();i++)
+
+    if (vret == IGeometry::More) {   // traverse subtree
+      PosVector p = ensemble->getPositions();
+      for(PosVector::iterator i=p.begin(); i!=p.end();i++)
         (*i)->AcceptNotRec(this);
+    }
     
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -81,8 +90,10 @@ void  GeometryVisitor::visitBox(detModel::Box* b)
   if (b->getSensitive() == 0) type = IGeometry::Simple;
   else if (b->getSensitive() == 1) type = IGeometry::posSensitive;
   else type = IGeometry::intSensitive;
-  m_geom.pushShape(IGeometry::Box, m_idvec, b->getName(), b->getMaterial(), m_params, 
-		   type);
+  // No possibility of subtree here so can ignore return
+  IGeometry::VisitorRet vRet =
+    m_geom.pushShape(IGeometry::Box, m_idvec, b->getName(), b->getMaterial(), 
+                     m_params, type);
   m_params.clear();
   m_idvec.clear();
 
@@ -97,8 +108,10 @@ void  GeometryVisitor::visitTube(detModel::Tube* t)
   if (t->getSensitive() == 0) type = IGeometry::Simple;
   else if (t->getSensitive() == 1) type = IGeometry::posSensitive;
   else type = IGeometry::intSensitive;
-  m_geom.pushShape(IGeometry::Tube, m_idvec, t->getName(), t->getMaterial(), m_params,
-		   type);
+  // No possibility of subtree here so can ignore return
+  IGeometry::VisitorRet vRet =
+    m_geom.pushShape(IGeometry::Tube, m_idvec, t->getName(), t->getMaterial(),
+                     m_params, type);
   m_params.clear();
   m_idvec.clear();
 }
