@@ -15,7 +15,6 @@
 
 // for access to instrument.ini
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "xml/IFile.h"
 
 #include <cassert>
 #include <algorithm>

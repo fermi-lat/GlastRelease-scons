@@ -15,7 +15,7 @@ in the default directory
 // add the local source library definitions and specify our test source
 FluxSvc.source_lib += {"$(USERALGROOT)/xml/user_sources.xml"};
 
-FluxAlg.source_name = "userspectrum";
+//FluxAlg.source_name = "userspectrum";
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
@@ -28,7 +28,9 @@ Triggered.Members={
     "Sequencer/Output",
     "FilterTracks","FilterAlg",
     "meritAlg" };
-
+    
+meritAlg.IM_filename=""; // disable IM decision tree processing
+meritAlg.cuts="LnA";     // remove or set to "LntA" to reenable tree-based tail cuts
 
 // How to pause the GUI with a list of events of interest
 //   You can also pause the GUI on any calculable condition. (See userAlg.)

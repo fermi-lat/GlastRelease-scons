@@ -23,6 +23,9 @@ Output.Members={}; // turn off rootwriter.
 // run a few events
 ApplicationMgr.EvtMax = 1000;
 
+meritAlg.IM_filename=""; // disable IM decision tree processing
+meritAlg.cuts="LnA";     // remove or set to "LntA" to reenable tree-based tail cuts
+
 
 // define tree to insert user stuff into: could be MeritTuple or Exposure for current trees.
 UserAlg.treeName="user";
