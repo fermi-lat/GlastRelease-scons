@@ -2,6 +2,7 @@
  package reconRootData
  package manager:H.Kelly
 @verbatim
+v4r8      22-jul-04  : HMK move all idents classes to commonRootData
 v4r7      20-jun-04  : THB convert to comprehensive pattern
 v4r6      16-jun-04  : THB Use new RootPolicy pattern for rootcint building
 v4r5      27-may-04  : HMK Pick up latest digiRootData tag v7r0

@@ -1,8 +1,8 @@
 package reconRootData
 # $Id$
-version v4r7
+version v4r8
 
-use digiRootData v7r*
+use commonRootData v1r*
 
 use RootPolicy v4r*
 
@@ -25,5 +25,5 @@ apply_pattern root_package headers="\
  ../reconRootData/TkrRecon.h\
  ../reconRootData/TkrTrack.h\
  ../reconRootData/TkrVertex.h"\
- includes="-I$(DIGIROOTDATAROOT)"\
+ includes="-I$(COMMONROOTDATAROOT)"\
  test_source="test/testReconClasses.cxx"
