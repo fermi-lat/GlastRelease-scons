@@ -1,6 +1,6 @@
 package geometry
 
-use glast_settings dev glast
+use glast_settings v0 glast
 use CLHEP prod
 
 macro geometry_linkopts "-L ${GEOMETRYROOT}/${CMTCONFIG} -lgeometry"\

@@ -1,7 +1,7 @@
 package geomrep
 
-use geometry dev glast
-use graphics dev glast
+use geometry v0 glast
+use graphics v0 glast
 
 
 macro geomrep_linkopts "-L ${GEOMREPROOT}/${CMTCONFIG} -lgeomrep"\
