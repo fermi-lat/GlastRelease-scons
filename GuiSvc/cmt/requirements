@@ -32,9 +32,13 @@ private
 # note redefinition of the macro to *not* include any other dependent libs
 # and to force inclusion of the loadRef
 
+
 # don't know why we need the dl library - TL
-macro use_linkopts " $(GuiSvc_lib) -u GuiSvc_loadRef  $(gui_linkopts) $(GaudiKernel_linkopts) -ldl "\
-                   WIN32 "  $(GaudiKernel_linkopts) $(GuiSvc_lib) $(gui_linkopts) /include:_GuiSvc_loadRef "
+pattern guiapp \
+  macro use_linkopts " $(GuiSvc_lib) -u GuiSvc_loadRef  $(gui_linkopts) $(GaudiKernel_linkopts) -ldl "\
+               WIN32 " $(GaudiKernel_linkopts) $(GuiSvc_lib) $(gui_linkopts) /include:_GuiSvc_loadRef "
+
+apply_pattern guiapp
 
 macro WinJobOptions ""  VisualC  test/jobOptions.txt
 
