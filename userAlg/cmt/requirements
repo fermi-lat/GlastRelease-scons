@@ -1,5 +1,5 @@
 package userAlg
-version v6r1
+version v6r2
 # $Id$
 
 # --------------------------
@@ -9,6 +9,7 @@ version v6r1
 # get everything we need from here
 use Gleam *
 use ntupleWriterSvc *
+
 
 
 set JOBOPTIONS $(USERALGROOT)/src/jobOptions.txt
