@@ -16,14 +16,11 @@ namespace ldfReader {
 
         ErrData() { clear(); };
         ErrData(const ErrData& error) { 
-            //m_summary = error.m_summary; 
             m_lenInBytes = error.m_lenInBytes; 
             m_exist = error.m_exist; };
-        //ErrData(const EventSummaryCommon &summary) { clear();  }
         ~ErrData() { clear(); };
 
         void clear() { 
-            //m_summary.setSummary(0); 
             m_lenInBytes = 0; 
             m_exist = false; };
 
@@ -32,12 +29,9 @@ namespace ldfReader {
                printf("No Error Data\n");
                return;
            }
-           printf("Error Data:\n");
-           printf("Len: %lu\n\n", m_lenInBytes);
+           printf("Error Data:\n\n");
         }
 
-        //const EventSummaryCommon& summary() const { return m_summary; };
-        //void setSummary(unsigned summary) { m_summary.setSummary(summary);};
 
         void setExist() { m_exist = true; };
         bool exist() const { return m_exist; };
@@ -50,8 +44,6 @@ namespace ldfReader {
 
     private:
 
-        // Store the event sequence number for this contribution
-        //EventSummaryCommon m_summary;
         // denotes if this contribution exists for this event
         bool m_exist;
 
