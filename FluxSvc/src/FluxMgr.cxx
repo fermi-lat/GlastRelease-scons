@@ -257,7 +257,7 @@ void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
         << "Average rate = " << count/totalinterval <<std::endl;
 
     cout << "Source Statistics: " << std::endl;
-    for(q=0 ; q<howMany ; q++){
+    for(int q=0 ; q<howMany ; q++){
         cout << "source #" << q+1 << ": " << counts[q] << " events counted." << std::endl;
       //  countIter++;
     }
