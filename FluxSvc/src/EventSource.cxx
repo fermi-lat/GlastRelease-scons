@@ -4,11 +4,9 @@
 
 #include "dom/DOM_Element.hpp"
 #include "xml/Dom.h"
-#include "GPS.h"
-#include "CLHEP/Random/RandExponential.h"
 #include "FluxException.h"
 
-#include <strstream>
+#include <sstream>
 
 unsigned int  EventSource::s_id = 0;
 double  EventSource::s_total_area = 6.; // area in m^2
@@ -16,13 +14,12 @@ double  EventSource::s_total_area = 6.; // area in m^2
 EventSource::EventSource (double aFlux, unsigned acode)
 :  m_enabled(true), m_flux(aFlux),  m_code(acode)
 {
-    std::strstream  s;
+    std::stringstream  s;
     
     s << "Source_" << (++s_id) << '\0';
     if (acode == 0) code(s_id); // automatically assign event codes...
     
     m_name = s.str();
-    s.freeze(false);
 }
 
 EventSource::EventSource (const DOM_Element& xelem)
@@ -38,21 +35,6 @@ EventSource::EventSource (const DOM_Element& xelem)
     else  {
         m_code = ++s_id;
     }
-#if 0  // do not believe we need this - THB  
-    // this is set by default to be overriden when the solid_angle 
-    // element is present...
-    DOM_Element   angles = 
-        xml::Dom::findFirstChildByName(xelem, "solid_angle");
-    
-    if (angles != DOM_Element()) {
-        double  mincos = atof(xml::Dom::getAttribute(angles, "mincos").c_str());
-        double  maxcos = atof(xml::Dom::getAttribute(angles, "maxcos").c_str());
-        
-        m_solid_angle = (maxcos - mincos)*2*M_PI;
-    }
-    else if (xml::Dom::findFirstChildByName(xelem, "direction") != DOM_Element())
-        m_solid_angle = 1.;
-#endif
 }
 
 
@@ -87,10 +69,6 @@ void    EventSource::setRate ( double rate )
     FATAL_MACRO("Should not be setting the rate");
 #endif
 }
-//Orbit*  EventSource::makeOrbit () const
-//{
-//    return new Orbit;
-//}
 
 double	EventSource::solidAngle () const{
     return m_solid_angle;

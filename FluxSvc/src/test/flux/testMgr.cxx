@@ -66,9 +66,6 @@ int main(int argn, char * argc[]) {
     using std::cout;
     using std::endl;
     flux_load();
-    //testing 
-    std::string test("23class");
-    int ss = test.find_first_not_of("0123456789");
     
     int count = default_count;
     std::string source_name(default_source);

@@ -3,11 +3,7 @@
 
 #include "CompositeSource.h"  
 
-#include "facilities/Scheduler.h"
-#include "facilities/SimpleEvent.h"
 #include "FluxSvc/FluxSource.h"
-
-// see coment below: #include "control/EventLoop.h"
 
 
 #include <strstream>
@@ -65,7 +61,6 @@ FluxSource* CompositeSource::event (double time)
     }else {
         
         // more than one:: choose on basis of relative rates
-        // NOT used? THB  double  x = RandFlat::shoot(mr), y = 0;
         std::vector<EventSource*>::iterator  now = m_sourceList.begin();
         std::vector<EventSource*>::iterator  it = now;
         

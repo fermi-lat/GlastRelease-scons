@@ -280,16 +280,15 @@ void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
         }else{counts[sourceNumber]++;}
         
         totalinterval+=interval;
-#if 0 //TODO: provide info
-        cout << "LaunchType = " << f->refLaunch() << " , Pointtype = " << f->refPoint() <<std::endl;
-#endif
-        cout << f->spectrum()->particleName();
-        cout << "(" << f->energy();
-        cout << " GeV), Launch: " << f->launchPoint() 
-            << " Dir " << f->launchDir() << " ,Flux="
-            << f->flux(time) << " ,Interval="
-            << interval << "   Event ID number: "<< sourceNumber <<std::endl
-            << "elapsed time = " << totalinterval << std::endl;
+        cout << f->spectrum()->particleName()
+            << "(" << f->energy()<< " GeV)"
+            << ", Launch: "  << f->launchPoint() 
+            << ", Dir "      << f->launchDir() 
+            << ", Flux="     << f->flux(time) 
+            << ", Interval=" << interval ;
+        if(sourceNumber!=-1) cout <<", SourceID: "<< sourceNumber ;
+        cout << "\nElapsed time= " << totalinterval 
+            << std::endl;
     }
     cout << "------------------------------------------------------" << std::endl;
     
@@ -299,10 +298,8 @@ void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
     cout << "Source Statistics: " << std::endl;
     for(q=0 ; q<howMany ; q++){
         cout << "source #" << q+1 << ": " << counts[q] << " events counted." << std::endl;
-        //  countIter++;
     }
     
-    //delete e;
     
 }
 

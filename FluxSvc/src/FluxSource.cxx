@@ -12,26 +12,18 @@
 #include "SpectrumFactoryTable.h"
 #include "SimpleSpectrum.h"
 
-
 #include "FluxException.h" // for FATAL_MACRO
 #include <algorithm>
+#include <sstream>
 
 double  FluxSource::s_radius=1.0;
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/** @class LaunchStrategy
-    Common base class to provide a default title
-*/
-class FluxSource::LaunchStrategy {
-public:
-    virtual std::string title() const{return std::string("(?)");}
-};
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /** @class LaunchPoint
     @brief nested launch strategy base class for point determination
     
-    The virtual base class manages the point
+    The virtual base class manages the point itself
 */
-class FluxSource::LaunchPoint : public LaunchStrategy { 
+class FluxSource::LaunchPoint  { 
 public:
     LaunchPoint(){}
     LaunchPoint(const HepPoint3D& pt):m_pt(pt){}
@@ -48,7 +40,7 @@ public:
     void setPoint(const HepPoint3D& pt){ m_pt = pt;}
 
     /// return info, default if not overriden
-    std::string title()const{
+    virtual std::string title()const{
         std::stringstream t;
         t << "point" << m_pt;
         return t.str();
@@ -187,7 +179,7 @@ private:
 /** @class LaunchDirection
     @brief nested launch strategy base class
 */
-class FluxSource::LaunchDirection : public FluxSource::LaunchStrategy {
+class FluxSource::LaunchDirection  {
 public:
     LaunchDirection():m_skydir(false){}
 
@@ -203,7 +195,11 @@ public:
     {
         m_dir = sky.dir();
     }
-    virtual void execute(){
+    /** @brief choose a direction
+        @param KE kinetic energy
+        @parem time mission time
+        */
+    virtual void execute(double KE, double time){
         //TODO: account for transformation?
     }
 
@@ -213,13 +209,13 @@ public:
     void setDir(const HepVector3D& dir){m_dir=dir;}
 
 
-    //! solid angle
+    //! solid angle: default of 1. for a point source
     virtual double solidAngle()const {
-        return 0.;
+        return 1.;
     }
 
     /// return info, default if not overriden
-    std::string title()const{
+    virtual std::string title()const{
         std::stringstream t;
         t << " dir" << m_dir ;
         return t.str();
@@ -258,7 +254,7 @@ public:
 
     }
 
-    virtual void execute(){
+    virtual void execute(double, double){
             double  costh = -RandFlat::shoot(m_minCos, m_maxCos),
                     sinth = sqrt(1.-costh*costh),
                     phi = RandFlat::shoot(m_minPhi, m_maxPhi);
@@ -309,14 +305,11 @@ public:
         : m_spectrum(spectrum)
         , m_galactic(galactic){}
 
-        void execute(){
+        void execute(double ke, double time){
 
-            //TODO: get the energy and time
-            double kinetic_energy = 1.0;
-            double time = 0;
 
             std::pair<float,float> direction 
-                    = m_spectrum->dir(kinetic_energy,HepRandom::getTheEngine());
+                    = m_spectrum->dir(ke,HepRandom::getTheEngine());
 
             if( !m_galactic) {
                 // special option that gets direction from the spectrum object
@@ -355,6 +348,8 @@ private:
     ISpectrum* m_spectrum;
     bool   m_galactic;
 };
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//                   FluxSource constructor
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 FluxSource::FluxSource(const DOM_Element& xelem )
 : EventSource (xelem)
@@ -544,73 +539,61 @@ FluxSource* FluxSource::event(double time)
     // Purpose and Method: generate a new incoming particle
     // Inputs  - current time
     // Outputs - pointer to the "current" fluxSource object.
-    m_extime = 0;
-    //iterate through the "veto" loop only if galactic coordinates are given for the source - otherwise,
-    //the particles originate close to GLAST, and can still be incident.
-    // loop through until you get a particle which is not occluded by the earth.
-    
-//THB    do{
-        calculateInterval(time+m_extime);
-        //std::cout << "now interal is " << m_interval << std::endl;
-        computeLaunch(time+m_extime+m_interval);
-        //std::cout << "Testing at time = " << time+m_extime+m_interval << " , interval = " << m_interval << std::endl;
-        //std::cout << "occluded? " << occluded() << std::endl;
-        m_extime+=m_interval;
-//THB    }while(occluded() || m_interval == -1);
-    m_extime -= m_interval;
-    
-    
+    m_interval = calculateInterval(time);
+    computeLaunch(time+m_interval);
+
     //now set the actual interval to be what FluxMgr will get
-    m_interval += m_extime;
-    EventSource::setTime(time+m_interval+m_extime);
-    correctForTiltAngle();
+    EventSource::setTime(time+m_interval);
+
+    // Finally rock it.
+    HepRotation correctForTilt =GPS::instance()->rockingAngleTransform(GPS::instance()->time());
+    m_correctedDir = correctForTilt*m_launchDir;
+
     return this;
-    // could be a call-back
+}
+
+double FluxSource::calculateInterval (double time)
+{   
+    double interval=m_spectrum->interval(time);
+    if( interval>0 ){
+        // the spectum computed an interval: use it
+        return interval;
+    }
+
+    // otherwise do a Poison from the the flux, solid angle, and area factor
+    return -log(1.-RandFlat::shoot(1.))/rate(time);
 }
 
 double FluxSource::flux(double time) const
 {
-    //return enabled() ? std::max(m_spectrum->flux(time),/*0.*/ EventSource::flux(time)) : 0;
     if(!enabled()){ return 0;}
     if(m_spectrum->flux(time)){ return m_spectrum->flux(time);}
     else{return EventSource::flux(time);}
 }
 
-double FluxSource::solidAngle() const
+double FluxSource::rate(double time) const
 {
-    return m_launch_dir->solidAngle();
+    //TODO: area is only relevant for RandomPoint, and flux per unit area
+    return m_launch_dir->solidAngle() * flux(time) * totalArea();
 }
 
 void FluxSource::computeLaunch (double time)
 {
-    // Purpose: set energy using the Spectrum object (scales momentum)
-    // Note: since PEGS files crap out at some energ, the max energy must
-    // be limited
-    const double fudge=1.001; // in ncase max is only energy, round-off error
-    double kinetic_energy;
-    //do {
-    // kinetic_energy= (*spectrum())(RandFlat::shoot(m_rmin, m_rmax));
-    //FIXME: make this a class variable
-    kinetic_energy = spectrum()->energySrc( HepRandom::getTheEngine(), time /*+ m_extime*/ );
-    //std::cout << "kinetic energy=" << kinetic_energy << " , max=" << m_maxEnergy* fudge << std::endl;
-    //kinetic_energy = spectrum()->operator ()(HepRandom::getTheEngine()->flat());// time + m_extime );
-    //}    while (kinetic_energy > m_maxEnergy* fudge);
+    // get the KE from the spectrum object
+    m_energy = spectrum()->energySrc( HepRandom::getTheEngine(), time );
 
-    // the service needs to return energy in MeV, so do a conversion if necessary:
-    if(m_energyscale==MeV){
-        m_energy = kinetic_energy;
-    }else if(m_energyscale==GeV){
-        m_energy = kinetic_energy*1000.;
+    // convert to MeV if necessary
+    if(m_energyscale==GeV){
+        m_energy *= 1000.;
     }
     
-    // perform the calculation
-    m_launch_dir->execute();
+    // set launch direction , position (perhaps depending on direction)
+    m_launch_dir->execute(m_energy, time);
     m_launch_pt->execute((*m_launch_dir)());
     
     m_launchPoint = (*m_launch_pt)();
     m_launchDir  = (*m_launch_dir)();
 
-    //   transformDirection(); 
     //correctForTiltAngle();
 }
 
@@ -637,61 +620,8 @@ int FluxSource::eventNumber()const
 
 std::string FluxSource::title () const
 {
-    
     return m_spectrum->title() + ", "
         +  m_launch_pt->title() +", "
         +  m_launch_dir->title();
-}
-
-
-double FluxSource::calculateInterval (double time){   
-    //return std::max(m_spectrum->interval(time),/*0.*/ EventSource::interval(time));
-    double intrval=m_spectrum->interval(time/* + m_extime*/);
-    if(intrval!=-1){m_interval = intrval/* + m_extime*/;
-    }else{
-        m_interval = explicitInterval(time/*+m_extime*/);
-    }
-    return m_interval;
-}
-
-
-double FluxSource::explicitInterval (double time)
-{
-    double  r = (solidAngle()*flux(time)* /*6.*/ totalArea());
-    if (r == 0){ return -1.;// - m_extime; //the minus is for ensuring that interval() returns a -1 flag.
-    }else{  
-        double p = RandFlat::shoot(1.);
-        return ((-1.)*(log(1.-p))/r) /*+m_extime*/;
-    }
-}
-
-bool FluxSource::occluded(){
-    //Purpose:  to determine whether or not the current incoming particle will be blocked by the earth.
-    //Output:  "yes" or "no"
-    //REMEMBER:  the earth is directly below the satellite, so, to determine occlusion,
-    // we must assume the frame to be checked against is zenith-pointing, and hence, we want 
-    //the direction of the particle BEFORE it is compensated for tilt angles.
-#if 0   
-    double current,max,z;
-    z=this->rawDir().z();
-    //std::cout << "z = " << z << std::endl;
-    current=asin( fabs(this->/*launchDir*/rawDir().z()) / 1.);//(this->launchDir().magnitude()) is always 1. 
-    max = acos(-0.4)-(M_PI/2.);
-    
-    return (m_launch == GALACTIC || m_launch == SPECGAL) && ( (current > max) && (z > 0) );
-#else
-    return false;
-#endif
-    
-}
-
-void FluxSource::correctForTiltAngle(){
-    //Purpose: transform the incoming particle direction, correcting for the rocking angles of the satellite
-    
-    //get the transformation matrix..
-    HepRotation correctForTilt =GPS::instance()->rockingAngleTransform(GPS::instance()->time());
-    m_correctedDir = correctForTilt*m_launchDir;
-    //and return it.
-    //return rockingAngles;
 }
 

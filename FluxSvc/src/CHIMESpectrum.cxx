@@ -99,8 +99,8 @@ void CHIMESpectrum::init(std::string paramstring) {
     // if there are parameters passed to chime, it shouldn't move.
     m_allowMove = params.size()>1? false: true;
     // set the initial location
-    /*float*/double lat =  params.size()>0? params[0]: 0.0f;
-    /*float*/double lon =  params.size()>1? params[1]: 0.0f;
+    double lat =  params.size()>0? params[0]: 0.0f;
+    double lon =  params.size()>1? params[1]: 0.0f;
     
     setPosition(lat, lon);
     
@@ -164,9 +164,10 @@ double CHIMESpectrum::solidAngle() const
 
 //-------------------------- flux() (specified position)
 
-float CHIMESpectrum::flux(float lat, float lon) const {
+float CHIMESpectrum::flux() const {
     // Flux as a function of latitude and longitude in a 600 km orbit.
     // Linear interpolate in a table with a 5 degree sampling grid.
+    double lat = m_lat, lon=m_lon;
     int ilat = static_cast<int>(lat/5.+6.);
     double/*float*/ a = fmod(lat+30., 5.)/5.;
     int ilon = static_cast<int>(lon/5.);
@@ -177,12 +178,6 @@ float CHIMESpectrum::flux(float lat, float lon) const {
         m_fluxTbl[ilon+1][ilat+1] * a * b;
 }
 
-//-------------------------- flux() (position given in a pair)
-
-float CHIMESpectrum::flux(std::pair<double,double> coords) const {
-    // Flux as a function of latitude and longitude
-    return flux(coords.first, coords.second);
-}
 
 //-------------------------- operator()  sample an energy value
 
@@ -214,7 +209,7 @@ void CHIMESpectrum::setPosition(double lat, double lon) {
     m_upper = -0.115*1000.*m_en.back()*m_normfact*fluxes[74]
         * pow(1.+.5*0.115,m_expo)/(0.115*m_expo);
     
-    m_cutoff = findCutoff(lat,lon);
+    m_cutoff = findCutoff();
     
     // Populate table of integral fluxes modified by geomagnetic cutoff.
     float tfl = 0.;
@@ -233,6 +228,12 @@ void CHIMESpectrum::setPosition(double lat, double lon) {
 void CHIMESpectrum::setPosition(std::pair<double,double> coords) {
     CHIMESpectrum::setPosition(coords.first, coords.second);
 }
+//-------------------------- findCutoff (from the current position)
+
+float CHIMESpectrum::findCutoff() const {
+    // determine the cutoff value at the geographical location
+    return findCutoff(flux());
+}
 
 //-------------------------- findCutoff (from a flux)
 
@@ -241,26 +242,6 @@ float CHIMESpectrum::findCutoff(float rflux) const {
     return m_en.interpolate(m_fluxes.search(rflux-m_upper));
 }
 
-//-------------------------- findCutoff (from a position)
-
-float CHIMESpectrum::findCutoff(float lat, float lon) const {
-    // determine the cutoff value at a geographical location
-    return findCutoff(flux(lat,lon));
-}
-
-//------------------------- findCutoff (position given as a pair)
-
-float CHIMESpectrum::findCutoff(std::pair<double,double> coords) const {
-    // determine the cutoff value at a geographical location
-    return findCutoff(flux(coords));
-}
-
-//------------------------- calculate_rate()
-
-double CHIMESpectrum::calculate_rate(double old_rate)
-{
-    return flux(GPS::instance()->lat(), GPS::instance()->lon());
-}
 
 //------------------------- rad2()
 

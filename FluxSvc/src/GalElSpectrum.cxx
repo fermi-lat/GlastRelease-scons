@@ -85,12 +85,14 @@ int GalElSpectrum::askGPS() {
 float GalElSpectrum::findCutoff(float rflux) const {
     return pow(-m_expo*rflux/m_norm, 1./m_expo);
 }
-
 float GalElSpectrum::findCutoff(float lat, float lon) const {
+#if 0
     float ProtonCut = m_pspec.findCutoff(lat,lon);
+#else
+    float ProtonCut = m_pspec.findCutoff(); // from current
+#endif
     return sqrt(ProtonCut*(ProtonCut+2.*0.938));
 }
-
 float GalElSpectrum::findCutoff(std::pair<double,double> coords) const {
     return findCutoff(coords.first, coords.second);
 }
