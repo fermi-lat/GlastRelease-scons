@@ -6,7 +6,7 @@
 
 //  -------------- basic Glast/Gaudi run enviornment -----------
 ApplicationMgr.DLLs   = { "GaudiAlg",  "GlastSvc", 
-                          "GlastDigi", "CalRecon"};
+                          "GlastDigi", "CalDigi", "CalRecon"};
 
 ApplicationMgr.ExtSvc = { 
     "GlastEventSelector/EventSelector" , 
