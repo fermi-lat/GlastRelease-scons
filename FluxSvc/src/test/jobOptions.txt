@@ -44,12 +44,18 @@ FluxTestAlg.exposureFunction = 0;
 FluxTestAlg.pointSpread = 0;
 
 //the angular size of GLAST's exposure, if needed (see below)
-FluxTestAlg.glastExposureAngle = 20.;
+FluxTestAlg.glastExposureAngle = 25.;
 
 // type of map projection to use
 //0: none - l and b are cartesian
 //1: hammer-aitoff equal-area projection
-FluxTestAlg.projectionType = 0;
+FluxTestAlg.projectionType = 1;
+
+//rocking angle mode
+//0: none - no rocking
+//1: up for an orbit, down for an orbit
+//2: up for half an orbit, down for half an orbit
+FluxTestAlg.rockingMode = 0;
 
 ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 20000;

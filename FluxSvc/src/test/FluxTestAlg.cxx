@@ -64,6 +64,7 @@ private:
     int m_exposureFunction;
     double m_pointSpread;
     int m_projectionType;
+    int m_rockingMode;
     
     double m_exposedArea[360][180];
     double m_currentTime;
@@ -97,6 +98,7 @@ Algorithm(name, pSvcLocator){
     declareProperty("exposureFunction", m_exposureFunction=0);
     declareProperty("pointSpread", m_pointSpread=0.);
     declareProperty("projectionType", m_projectionType=0);
+    declareProperty("rockingMode", m_rockingMode=0);
     
 }
 
@@ -141,10 +143,9 @@ StatusCode FluxTestAlg::initialize() {
     log << MSG::INFO << "       area: " << m_flux->targetArea() << endreq;
     log << MSG::INFO << "       rate: " << m_flux->rate() << endreq;
     
-    
-    
     return sc;
 }
+
 
 //! simple prototype of a spectrum class definition - this implememts all of the necessary methods in an ISpectrum
 class TimeCandle : public ISpectrum {
@@ -185,6 +186,7 @@ public:
 void FluxTestAlg::makeTimeCandle(IFluxSvc* fsvc){
     static RemoteSpectrumFactory<TimeCandle> timecandle(fsvc);
 }
+
 //------------------------------------------------------------------------------
 StatusCode FluxTestAlg::execute() {
     
@@ -204,9 +206,6 @@ StatusCode FluxTestAlg::execute() {
         log << MSG::ERROR << "Could not find FluxSvc" << endreq;
         return sc;
     }
-
-    //fsvc->setOrientation(std::make_pair<double,double>(0.0,30.*M_PI/180.));
-
     
     HepVector3D p,d;
     double energy;
@@ -232,28 +231,42 @@ StatusCode FluxTestAlg::execute() {
         partName = m_partSvc->findByStdHepID(pID)->particle();
     }
     
-    /*
-    log << MSG::INFO << partName
+    
+   /* log << MSG::INFO << partName
     << "(" << energy
     << " GeV), Launch: " 
     << "(" << p.x() <<", "<< p.y() <<", "<<p.z()<<")" 
     << " Dir " 
     << "(" << d.x() <<", "<< d.y() <<", "<<d.z()<<")"
     // << ",  Elapsed Time = " << m_flux->time()
-    << endreq;   */
+    << endreq;   
+    */
     
-    
-    /// FOR ROCKING UP AND DOWN ON EACH ORBIT.
-    if((int)m_flux->gpsTime()%180 <= 97){
-        // Set Rocking angles (zenith rotation, off-zenith)
-        fsvc->setOrientation(std::make_pair<double,double>(0.0,30.*M_PI/180.));
+    HepVector3D pointingin(0,0,-1);
+    if(m_rockingMode==1){
+        /// FOR ROCKING ONE DIRECTION ON EACH ORBIT
+        //this needs to be fixed - no hardwired periods!.
+        if((int)m_flux->gpsTime()%180 <= 97){
+            // Set Rocking angles (zenith rotation, off-zenith)
+            fsvc->setOrientation(std::make_pair<double,double>(0.0,30.*M_PI/180.));
+        }else{
+            fsvc->setOrientation(std::make_pair<double,double>(0.0,-30.*M_PI/180.));
+        }
+    }else if(m_rockingMode==2){
+        /// FOR ROCKING BOTH DIRECTIONS ON EACH ORBIT
+        //this needs to be fixed - no hardwired periods!.
+        if((int)m_flux->gpsTime()%90 <= 48){
+            // Set Rocking angles (zenith rotation, off-zenith)
+            fsvc->setOrientation(std::make_pair<double,double>(0.0,30.*M_PI/180.));
+        }else{
+            fsvc->setOrientation(std::make_pair<double,double>(0.0,-30.*M_PI/180.));
+        }
     }else{
-        fsvc->setOrientation(std::make_pair<double,double>(0.0,-30.*M_PI/180.));
+        //if we're not using rocking, it makes sense we may be sky mapping:
+        pointingin = d;
     }
-        
     
-    //HepVector3D pointingin = d;
-    HepVector3D pointingin(0,0,1);
+    
     pointingin = (fsvc->transformGlastToGalactic(m_flux->gpsTime()))*pointingin;
     
     //log << MSG::INFO
@@ -395,7 +408,7 @@ std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b
                 std::pair<double,double> abc = hammerAitoff(correctedl-180.,correctedb-90.);
                 point.x = abc.first+lshift; //yes, this is doing an implicit cast.
                 point.y = abc.second+bshift;
-                point.amount = exposure*deltat*pow(cos((point.y-90.)*M_PI/180.),2);
+                point.amount = exposure*deltat*pow(cos((point.y-90.)*M_PI/180.),0.75);
             }else{
                 point.x = correctedl+lshift; //yes, this is doing an implicit cast.
                 point.y = correctedb+bshift;
