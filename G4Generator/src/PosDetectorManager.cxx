@@ -78,10 +78,6 @@ void PosDetectorManager::EndOfEvent(G4HCofThisEvent* HCE)
 {
     // Let's sort the hits
     std::sort(m_posHit->begin(),m_posHit->end(), ComparePosHits());
-    
-    // Check for the MC branch - it will be created if it is not available
-    DataObject *mc;
-    m_esv->retrieveObject("/Event/MC", mc);
 
     // store the hits in the TDS
     m_esv->registerObject("/Event/MC/PositionHitsCol", m_posHit);    

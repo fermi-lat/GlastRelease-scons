@@ -141,6 +141,15 @@ StatusCode G4Generator::execute()
 {
     MsgStream   log( msgSvc(), name() );
 
+    // Here the TDS is prepared to receive hits vectors
+    // Check for the MC branch - it will be created if it is not available
+    DataObject *mc;
+    eventSvc()->retrieveObject("/Event/MC", mc);
+
+    log << MSG::DEBUG << "TDS ready" << endreq;
+
+
+
     // following model from previous version, allow property "UIcommands" to generate
     // UI commands here. (but does not seem to work??)
     //

@@ -68,7 +68,7 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
     	m_detectorList[id] = hit;
       }
 
-#if 1 // this transforms it to local coordinates
+    // this transforms it to local coordinates
     HepTransform3D 
         global(*(theTouchable->GetRotation()), 
         theTouchable->GetTranslation());
@@ -76,7 +76,6 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
     HepTransform3D local = global.inverse();
     prePos = local * (HepVector3D)prePos;
     postPos = local * (HepVector3D)postPos;
-#endif
 
     // fill the energy and position    
     hit->addEnergyItem(edep,0,(prePos+postPos)/2);
