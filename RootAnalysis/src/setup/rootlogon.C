@@ -8,6 +8,7 @@
         "createEventList.cxx",
         "pruneTree.cxx"};
     char* libs[]={
+        "commonRootData",
         "mcRootData",
         "digiRootData",
         "reconRootData"};
@@ -54,6 +55,7 @@
        
     } else {  // UNIX
         gSystem->Load("libPhysics.so");
+        gSystem->Load("libcommonRootData.so");
         gSystem->Load("libmcRootData.so");
         gSystem->Load("libdigiRootData.so");
         gSystem->Load("libreconRootData.so");
