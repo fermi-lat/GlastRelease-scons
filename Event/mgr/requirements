@@ -3,7 +3,7 @@ version v1
 
 branches GlastEvent mgr doc src
 
-use instrument v2
+use instrument v2r1
 use data 
 use Gaudi 
 
