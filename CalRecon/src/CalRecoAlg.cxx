@@ -15,6 +15,7 @@
 #include "reconstruction/ReconData.h"
 #include "reconstruction/GlastTuple.h"
 #include "reconstruction/PrintReconData.h"
+#include "GlastEvent/Raw/TdCsIData.h"
 
 static const AlgFactory<CalRecoAlg>  Factory;
 const IAlgFactory& CalRecoAlgFactory = Factory;
@@ -71,8 +72,35 @@ StatusCode CalRecoAlg::execute() {
     GlastData data;
 
     // fill it from the IRF (FAILS)
-    m_detSvc->accept(data);
+    //m_detSvc->accept(data);
+    
+    /*! Goin to try the Dynamic cast and see what happens
+    */ 
+    DataObject* pObject;
 
+    /*! Currently the retrieval from the TDS is no operational in
+        the CalRecon package.
+    */
+    sc = eventSvc()->retrieveObject("/Event/Raw/TdCsIDatas", pObject);
+
+    if( sc.isFailure() ) {
+        log << MSG::INFO << "TdCsIData not retrieved from the the TDS" << endreq;
+    
+        return sc;
+    }
+    
+    log << MSG::INFO << "Successfully retrieved TdCsIData object from the TDS!!!" << endreq;
+
+    TdCsIData* newData;
+    try {
+        newData  = dynamic_cast<TdCsIData*>(pObject);
+    } catch(...) {
+        log << MSG::INFO << "Failed to convert object to MCACDHitVector" << endreq;
+        return StatusCode::FAILURE;
+    }
+    
+
+    
     // see what is there
     data.printOn(std::cout);
 
