@@ -3,6 +3,8 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v1r7    31-Mar-2005 HMK Add JO paramater to control application of first 
+        sweep even search...ssssshhhh...
 v1r6p1  19-Mar-2005 HMK use the number of CAL and TKR diagnostics to control
         reading 
 v1r6p0  19-Mar-2005 AB  Fix Heather's mess

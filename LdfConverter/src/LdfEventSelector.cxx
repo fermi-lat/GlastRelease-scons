@@ -78,6 +78,7 @@ LdfEventSelector::LdfEventSelector( const std::string& name, ISvcLocator* svcloc
     declareProperty( "EvtMax", m_evtMax);
     declareProperty("Instrument", m_instrument="LAT");
     declareProperty("EbfDebugLevel", m_ebfDebugLevel = 0);
+    declareProperty("SweepEventSearch", m_sweepSearch = 1);
 
     m_inputDataList = new ListName; 
     m_it = new LdfEvtIterator(this, -1, m_inputDataList->begin());
@@ -288,6 +289,11 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
         
         irfIt->m_evtCount++;
         static bool findFirstMarkerFive = false;
+        // Allows JO to skip the search for the sweep events
+        if (m_sweepSearch == 0) {
+            log << MSG::WARNING << "Skipping check for first Sweep Event - ARE YOU SURE YOU WANT TO DO THIS???" << endreq;
+            findFirstMarkerFive = true;
+        }
         
         bool DONE=false;
         while ((!DONE) || (!findFirstMarkerFive)) {

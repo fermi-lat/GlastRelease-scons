@@ -26,6 +26,9 @@ xx/** @mainpage package LdfConverter
   @param EbfDebugLevel
   Integer.  Defaults to 0 (no debug output).  Anything else enables 
   debug output
+  @param SweepEventSearch
+  Integer.  Defaults to 1 (search for first sweep event).  Setting to zero
+  skips this search.
   <hr>
   @section notes release notes
   release.notes

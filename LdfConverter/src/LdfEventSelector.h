@@ -90,6 +90,7 @@ private:
   std::string           m_fileName;
   ldfReader::LdfParser*            m_ebfParser;
   IntegerProperty       m_ebfDebugLevel;  // If 0 (the default) no debug.
+  IntegerProperty       m_sweepSearch; // If 0, skip search
   IAddressCreator*      m_addrCreator;
   CLID                  m_rootCLID;
 };
