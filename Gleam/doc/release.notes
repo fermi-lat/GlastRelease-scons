@@ -1,6 +1,24 @@
 /** @file release.notes
  * package Gleam
  * package manager:T.Burnett
+ * $Id$
+
+* v2r3    Thb 16-sep-03 (changes since v2r2p10)
+       use GlastPolicy  v4r8 
+       use Event        v9r1
+       use GlastSvc     v9r1
+       use FluxSvc      v5r11
+       use G4Generator  v4r3p3
+       use CalDigi      v1r2p5
+       use TkrDigi      v1r6
+       use AcdDigi      v1r4
+       use Trigger      v3r3p4
+       use Recon        v2r3p4
+       use TkrRecon     v8r1
+       use CalRecon     v5r7p3 
+       use AcdRecon     v1r2p1       
+       use RootIo       v4r13
+       use merit        v5r9
 
 * v2r2p11 LSR 12-Sep-02  provisional tag before v2r3
 
