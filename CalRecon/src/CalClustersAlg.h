@@ -7,7 +7,7 @@
 #include "geometry/Vector.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
-class Midnight;
+class TMinuit;
 
 /**   
 * @class CalClustersAlg
@@ -211,7 +211,7 @@ private:
     //! the clusters list, the output of the reconstruction
     Event::CalClusterCol* m_calClusterCol;
     //! the minimizer for Profile()
-    Midnight* minuit;
+    TMinuit* minuit;
 
     //! this parameter permits to distinguish multiple calls
     //! to calorimeter reconstruction for the same event

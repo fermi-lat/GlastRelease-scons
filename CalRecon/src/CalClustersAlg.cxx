@@ -1,8 +1,6 @@
 
 #include "CalClustersAlg.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
-#include "gamma.h"
-#include "Midnight.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -16,6 +14,9 @@
 #include "Event/TopLevel/EventModel.h"
 #include "GaudiKernel/ObjectVector.h"
 
+//Gamma function and Minuit
+#include "TMath.h"
+#include "TMinuit.h"
 
 int nbins;  //!< Number of bins used for the fit
 std::vector<double> g_elayer;  //!< Energy per layer in GeV
@@ -70,11 +71,11 @@ static double gam_prof(double *par, int i)
 	// Now we will calculate the gamma incomplete function
 
 	// gamma1 = integration from 0 to x	
-	gamma1 = Gamma(alpha,x);
+	gamma1 = TMath::Gamma(alpha,x);
 	x += dx;
 
 	// gamma2 = integration from 0 to x+dx	
-	gamma2 = Gamma(alpha,x);
+	gamma2 = TMath::Gamma(alpha,x);
 	
 	// the result of integration over Xtal pathlength is E*(gamma2-gamma1)
 	result = par[0]*(gamma2 - gamma1);
@@ -532,7 +533,7 @@ StatusCode CalClustersAlg::initialize()
     
     
     // Minuit object
-    minuit = new Midnight(5);
+    minuit = new TMinuit(5);
     
     //Sets the function to be minimized
     minuit->SetFCN(fcn);
