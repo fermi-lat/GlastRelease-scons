@@ -1,9 +1,11 @@
 /** @file release.notes
  * package Gleam
  * package manager:T.Burnett
+* v2r1p12 THB 10-jun-02
+      use RootIo              v4r4p1
 * v2r1p11 THB 10-jun-02
       use Event               v8r8
-      use AcdDigi   	        v1r1
+      use AcdDigi   	  v1r1
       use RootIo              v4r4
 * v2r1p9 10-jun-02 THB remove some gcc warnings (or errors?)
      use idents              v2r8p1
