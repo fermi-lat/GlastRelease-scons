@@ -305,11 +305,10 @@ StatusCode CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const CalDigi* 
   CalXtalRecData::CalRangeRecData* rangeRec =
     new CalXtalRecData::CalRangeRecData(rangeP,ene,rangeM,ene);
 
-  if (msgSvc()->outputLevel(name()) <= MSG::DEBUG) {
+  if (msgSvc()->outputLevel(name()) <= MSG::VERBOSE) {
     MsgStream msglog(msgSvc(), name());
-    msglog << MSG::DEBUG
-           << "XtalRangeRec created:"
-           << " id=" << xtalId
+    msglog << MSG::VERBOSE
+           << " xtalId=" << xtalId
            << " ene=" << ene
            << endreq;
   }
@@ -395,6 +394,14 @@ StatusCode CalXtalRecAlg::computePosition(CalXtalRecData* recData, const CalDigi
   float pos;
   sc = m_xtalPosTool->calculate(xtalId,rngP,rngN,adcP,adcN,pos);
   if (sc.isFailure()) return sc;
+
+  if (msgSvc()->outputLevel(name()) <= MSG::VERBOSE) {
+    MsgStream msglog(msgSvc(), name());
+    msglog << MSG::VERBOSE
+           << " xtalId=" << xtalId
+           << " pos=" << pos
+           << endreq;
+  }
 
 
   // put 1D position info into 3D vector
