@@ -22,7 +22,7 @@ GDDVRMLSectionsVisitor::GDDVRMLSectionsVisitor()
   setType(sectionsVisitor);
   actualVolume = "";
   
-  out.open("p.wrl");
+  out.open("sections.wrl");
 };
 
 GDDVRMLSectionsVisitor::GDDVRMLSectionsVisitor(string nvol)
@@ -31,7 +31,7 @@ GDDVRMLSectionsVisitor::GDDVRMLSectionsVisitor(string nvol)
   setType(sectionsVisitor);
   actualVolume = nvol;
 
-  out.open("p.wrl");
+  out.open("sections.wrl");
 };
 
 GDDVRMLSectionsVisitor::~GDDVRMLSectionsVisitor()
