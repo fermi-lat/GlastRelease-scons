@@ -2,6 +2,7 @@
  * package Event\n
  * package manager:T.Burnett
  *
+ * v9r1    13-sep-02 THB MCEvent now has sequence and run numbers
  * v9r0p0  09-sep-02 HMK update documentation for review \n
  * v9r0    07-sep-02 LSR tag for removal of obsolete and confusing methods\n
  * v8r15   27-aug-02 HMK update and move AcdRecon to AcdRecon subdirectory\n
