@@ -2,6 +2,7 @@
     @brief package G4Generator 
 @verbatim
     $Id$
+ v5r9p1 10-Dec-04 TU  This fixes a problem with switching muon energy loss between 5.2 and 6.2
  v5r9p0  7-Dec-04 TU  Switch to using an EnergyLossFactory for electrons, positrons and muons
  v5r8p1  2-Dec-04 TU  Patch to fix problem with artificial energy in McPositionHits
  v5r8p0  8-Sep-04 TU  Updates required for Geant4 v6.2
