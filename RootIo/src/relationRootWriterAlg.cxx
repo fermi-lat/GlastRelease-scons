@@ -296,7 +296,8 @@ StatusCode relationRootWriterAlg::writeTkrTrackRelations() {
     StatusCode sc = StatusCode::SUCCESS;
 
     // Recover the pat track - fit track relational table
-    SmartDataPtr<Event::TkrFitTrackTabList> tkrTable(SmartDataPtr<Event::TkrFitTrackTabList >(eventSvc(),EventModel::TkrRecon::TkrTrackTab));
+    SmartDataPtr<Event::TkrFitTrackTabList> tkrTable(eventSvc(),EventModel::TkrRecon::TkrTrackTab);
+    //SmartDataPtr<Event::TkrFitTrackTabList> tkrTable(SmartDataPtr<Event::TkrFitTrackTabList >(eventSvc(),EventModel::TkrRecon::TkrTrackTab));
 
     Event::TkrFitTrackTabList::const_iterator relation;
 
@@ -344,7 +345,7 @@ StatusCode relationRootWriterAlg::writeTkrVertexRelations() {
     StatusCode sc = StatusCode::SUCCESS;
 
     // Recover the fit track - vertex relational table
-    SmartDataPtr<Event::TkrVertexTabList> tkrTable(SmartDataPtr<Event::TkrVertexTabList >(eventSvc(),EventModel::TkrRecon::TkrVertexTab));
+    SmartDataPtr<Event::TkrVertexTabList> tkrTable(eventSvc(),EventModel::TkrRecon::TkrVertexTab);
 
     Event::TkrVertexTabList::const_iterator relation;
 
