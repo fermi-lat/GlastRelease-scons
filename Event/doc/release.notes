@@ -2,6 +2,7 @@
  * package Event
  * package manager:T.Burnett (original author: H. Gillespie)
  *
+ * v8r6p1 1-jun-02 THB Fix to TimeStamp  now double.
  * v8r6  31-may-02 THB EventHeader with time, trigger bits.
  * v8r5  14-may-02 THB McParticle update.
  * v8r4  13-may-02 THB CalRecon classes updated by Sasha
