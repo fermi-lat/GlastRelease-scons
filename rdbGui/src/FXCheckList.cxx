@@ -903,6 +903,8 @@ long FXCheckList::onCheckSel(FXObject*,FXSelector,void*){
     if (isItemSelected(i))
       checkItem(i, true);  
     }
+
+  return 1;
   }
   
 // Uncheck selected items  
@@ -911,13 +913,17 @@ long FXCheckList::onUncheckSel(FXObject*,FXSelector,void*){
     if (isItemSelected(i))
       uncheckItem(i, true);  
     }
-  }
+
+  return 1;
+}
 
 // Check all items
 long FXCheckList::onCheckAll(FXObject*,FXSelector,void*){
   for (FXint i = 0; i < nitems; i++){
     checkItem(i, true);
     }
+
+  return 1;
 }
 
 // Uncheck all items
@@ -925,6 +931,8 @@ long FXCheckList::onUncheckAll(FXObject*,FXSelector,void*){
   for (FXint i = 0; i < nitems; i++){
     uncheckItem(i, true);
     }
+
+  return 1;
 }
 
 // We were asked about tip text
