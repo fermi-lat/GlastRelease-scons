@@ -45,5 +45,11 @@ namespace EbfWriterTds{
         ///Number of bytes that are stored in data pointer
         unsigned int m_length;
     };
+
+   inline  char *Ebf::get(unsigned int &dataLength) const{
+    dataLength=m_length;
+    return m_data;
+}
+
 };
 #endif

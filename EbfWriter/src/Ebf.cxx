@@ -18,10 +18,6 @@ Ebf::~Ebf(){
         delete[] m_data;
 }
 
-char *Ebf::get(unsigned int &dataLength) const{
-    dataLength=m_length;
-    return m_data;
-}
 
 inline std::ostream& Ebf::fillStream( std::ostream &s) const{
     if(m_length>0)
