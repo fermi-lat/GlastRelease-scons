@@ -18,7 +18,6 @@
 #include "GaudiKernel/StatusCode.h"
 
 #include "Event/Recon/TkrRecon/TkrFitTrack.h"
-#include "Event/Recon/TkrRecon/TkrPatCandCol.h"
 
 #include "CLHEP/Geometry/Transform3D.h"
 
