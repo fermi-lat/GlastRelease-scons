@@ -626,25 +626,16 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
 	<< endreq;
     return StatusCode::FAILURE;
   }
+
   // Deep copy the new calib into the old DataObject.  To copy the *whole*
   // object, not just the CalibBase part, classes derived from CalibBase
-  // must override update method.
+  // must override update method.  
+  // NOTE:  classes directly derived from CalibBase must call
+  //        CalibBase::update in their own update method.
   pBase->update(*pNewBase, &log);  
+
   delete pNewBase;
 
-  // Set validity of updated object
-  IValidity* pValidity = dynamic_cast<IValidity*>(pObject);
-  if ( 0 == pValidity ) {
-    log << MSG::ERROR 
-	<< "Updated object does not implement IValidity" << endreq;
-    return StatusCode::FAILURE;
-  }  else {
-    facilities::Timestamp* since;
-    facilities::Timestamp* till;
-    m_meta->getInterval(ser, since, till);
-    pValidity->setValidity(CalibData::CalibTime(*since), 
-                           CalibData::CalibTime(*till));
-  }
   return StatusCode::SUCCESS;
 }
 
