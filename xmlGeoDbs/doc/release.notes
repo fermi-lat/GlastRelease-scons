@@ -2,6 +2,8 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 31-jul-2002: jrb - tag v1r6p0 - Tiles will now produce position hits
+ *                                 rather than integrating hits
  * 23-jul-2002: jrb - tag v1r6   - Add and use new "type" attribute
  *                                 for derived constants to label integers
  * 27-jun-2002: jrb - tag v1r5p3 - New (shorter) CsI crystal length
