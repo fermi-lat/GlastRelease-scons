@@ -42,7 +42,7 @@ namespace detModel{
 	      getBBox()->setYDim(b->getYDim()); 
 	      getBBox()->setZDim(b->getZDim()); 
 	      getBBox()->rotate(getRotation(),0,0);
-	      std::cout << "Orpo" << std::endl;
+              //	      std::cout << "Orpo" << std::endl;
 	    }
 	  else 	  /// If uses gap
 	    {
@@ -68,7 +68,7 @@ namespace detModel{
 	      getBBox()->setXDim(b->getXDim()); 
 	      getBBox()->setZDim(b->getZDim()); 
 	      getBBox()->rotate(getRotation(),0,0);
-	      std::cout << "Orpo" << std::endl;
+              //	      std::cout << "Orpo" << std::endl;
 	    }
 	  else 	  /// If uses gap
 	    {  
@@ -94,7 +94,7 @@ namespace detModel{
 	      getBBox()->setXDim(b->getXDim()); 
 	      getBBox()->setYDim(b->getYDim()); 
 	      getBBox()->rotate(getRotation(),0,0);
-	      std::cout << "Orpo" << std::endl;
+              //	      std::cout << "Orpo" << std::endl;
 	    }
 	  else 	  /// If uses gap
 	    {  
