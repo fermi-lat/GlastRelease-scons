@@ -240,8 +240,8 @@ inline std::ostream& McPositionHit::fillStream( std::ostream& s ) const
 }
 
 typedef ObjectVector<McPositionHit> McPositionHitVector;
+typedef ObjectVector<McPositionHit> McPositionHitCol;
 typedef ObjectList<McPositionHit>   McPositionHitList;
-
 }
 
 /*! A small class to use the sort algorithm */
