@@ -3,11 +3,25 @@
 //
 //  TkrVertex
 //
-//  Class definition for a found vertex 
-//  ** Test Version **
-//
-//  Adapted from TkrFitTrack.h
-//  Tracy Usher March 1, 2002
+/* @class TkrVertex
+*
+* @brief TDS Data Object defining a Tracker reconstructred vertices
+*
+* This class defines the basic TkrRecon structure containing output information
+* for a vertex reconstructed in the LAT Tracker from TkrTracks. This class 
+* has been modelled after TkrTrack. 
+* Information included is:
+* 1) Reconstruction Status information (see StatusBits)
+* 2) Summary reconstruction information including:
+*    a) Vertex ordering information
+*    b) estimated energy, ...
+*    c) Variables to help estimate vertex quality
+*    d) etc.
+* 3) Also created is a TkrVertexTab to establish the relationship (ownership)
+*    of tracks by vertices and visa-versa
+*
+* @author The Tracking Software Group
+*/
 //
 //-----------------------------------------------------------------
 //
@@ -20,8 +34,8 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartRefVector.h"
 #include "GaudiKernel/IInterface.h"
-#include "Event/Recon/TkrRecon/TkrRecInfo.h"
 #include "Event/Recon/TkrRecon/TkrTrack.h"
+
 /** 
 * @class TkrVertex
 *
@@ -35,63 +49,113 @@
 static const CLID& CLID_TkrVertex = InterfaceID("TkrVertex", 1, 0);
 
 namespace Event { //Namespace
-  
-class TkrVertex : public TkrRecInfo, virtual public ContainedObject 
-  {    
-public:
-    
-    TkrVertex() {}
-    TkrVertex( int layer, int tower, double energy, double quality, const Ray& testRay);
-   ~TkrVertex() {}
 
-   //! Retrieve pointer to class defininition structure
-   virtual const CLID& clID() const   { return TkrVertex::classID(); }
-   static const CLID& classID()       { return CLID_TkrVertex; }
+    class TkrVertex : virtual public ContainedObject 
+    {   
+    public:
+		TkrVertex(): m_statusBits(0), m_energy(0.),  m_position(), m_direction(),
+			         m_chiSquare(0.), m_quality(0.), m_arcLen1(0.), m_arcLen2(0.),
+					 m_doca(0.), m_radlen(0.), m_vtxID(0,0,0,false)  {}
+
+		TkrVertex(idents::TkrId tkrID, double energy, double quality, double chisq, 
+			       double rad_len, double doca, double s1, double s2, double z,
+				   TkrTrackParams params);
+        ~TkrVertex() {}
+
+        //! Retrieve pointer to class defininition structure
+        virtual const CLID& clID() const   { return TkrVertex::classID(); }
+        static const CLID& classID()       { return CLID_TkrVertex; }
+
+        /// Status word bits organized like:
+        ///        |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
+        ///                                             <Track Topology > <Track composition>
+        enum StatusBits {
+			ONETKRVTX = 0x0001,  //Set if single track vertex
+            TWOTKRVTX = 0x0002,  //Set if 2 track vertex
+            MULTKRVTX = 0x0004,  //Set if >2 track vertex
+            DOCAVTX   = 0x0010,  //Set if vertex location set by DOCA point
+            FIRSTHIT  = 0x0020,  //Set if two tracks share first hit
+            STAGVTX   = 0x0040,  //Set if tracks don't start in same plane (staggered)
+            CROSSTKR  = 0x0080}; //Set if DOCA location lies inside track hits
+
+        /// Utility 
+        std::ostream& fillStream( std::ostream& s ) const;
+
+        /// Access to primary quantities on track quality and scattering info
+        inline unsigned int getStatusBits()          const {return m_statusBits;}
+        inline double       getChiSquare()           const {return m_chiSquare;}
+        inline double       getQuality()             const {return m_quality;}
 
 
-    /// Define the TkrBase routines
-    double        getQuality() const;                    
-    double        getEnergy(TrackEnd end = Start)    const;   
-    int           getLayer(TrackEnd end = Start)     const; 
-    int           getTower(TrackEnd end = Start)     const; 
-    Point         getPosition(TrackEnd end = Start)  const; 
-    Vector        getDirection(TrackEnd end = Start) const; 
-    Ray           getRay(TrackEnd end = Start)       const; 
-    TkrFitPar     getTrackPar(TrackEnd end = Start)  const; 
-    double        getTrackParZ(TrackEnd end = Start) const; 
-    TkrFitMatrix  getTrackCov(TrackEnd end = Start)  const; 
-    bool          empty(int numHits)                 const; 
+        /// Access to fit specific information
+        inline Point        getPosition()            const {return m_position;}
+        inline Vector       getDirection()           const {return m_direction;}
+        inline double       getEnergy()              const {return m_energy;}
+		TkrTrackParams      getVertexParams()        const {return m_params;} 
 
-    // Add tracks to the list
-    void addTrack(TkrTrack* pTrack) {m_tracks.push_back(pTrack);}
-    
-    // How many tracks in the vertex?
-    int  getNumTracks() const {return m_tracks.size();}
+        /// Access to other Geometry Information
+		inline const idents::TkrId getTkrId()        const {return m_vtxID;}
+        inline double       getAddedRadLen()         const {return m_radlen;}
+		inline double       getTkr1ArcLen()          const {return m_arcLen1;}
+		inline double       getTkr2ArcLen()          const {return m_arcLen2;}
+		inline double       getDOCA()                const {return m_doca;}
 
-    // Pointers to track info
-    SmartRefVector<TkrTrack>::const_iterator getTrackIterBegin() const {return m_tracks.begin();}
-    SmartRefVector<TkrTrack>::const_iterator getTrackIterEnd()   const {return m_tracks.end();}
+        /// Set functions for initializing the data members
+        inline void   setPosition(const Point x)          {m_position   = x;}
+        inline void   setDirection(const Vector x)        {m_direction  = x;}
+        inline void   setEnergy(double x)                 {m_energy     = x;}
+        inline void   setChiSquare(double x)              {m_chiSquare  = x;}
+        inline void   setQuality(double x)                {m_quality    = x;}
+        inline void   setAddedRadLen(double x)            {m_radlen     = x;}
+		inline void   setTkrID(idents::TkrId& tkrID)      {m_vtxID      = tkrID;}
+		inline void   setParams(TkrTrackParams& params)   {m_params     = params;}
+        inline void   setStatusBit(unsigned int status)   {m_statusBits |= status;}
+        inline void   clearStatusBits()                   {m_statusBits = 0;}
+		
+        // Add tracks to the list
+        void addTrack(TkrTrack* pTrack) {m_tracks.push_back(pTrack);}
 
-    /// Utilities 
-    void writeOut(MsgStream& log) const; 
-    
-private:
-    TkrFitPar      m_vertexPar;
-    TkrFitMatrix   m_vertexCov;
-    Point          m_position;
-    Vector         m_direction;
-    double         m_energy;
-    double         m_quality;
-    int            m_firstLayer;
-    int            m_itower; 
-    
-    SmartRefVector<TkrTrack> m_tracks;
-};
+		// delete last track in the list
+        void deleteTrack() {m_tracks.pop_back();}
 
-//typedef for the Container
-typedef ObjectVector<TkrVertex>      TkrVertexCol;
-typedef TkrVertexCol::const_iterator TkrVertexConPtr;
-typedef TkrVertexCol::iterator       TkrVertexColPtr;
+        // How many tracks in the vertex?
+        int  getNumTracks() const {return m_tracks.size();}
+
+        // Pointers to track info
+        SmartRefVector<TkrTrack>::const_iterator getTrackIterBegin() const {return m_tracks.begin();}
+        SmartRefVector<TkrTrack>::const_iterator getTrackIterEnd()   const {return m_tracks.end();}
+
+        /// Utilities 
+        void writeOut(MsgStream& log) const; 
+
+    private:    
+        /// Status
+        unsigned int m_statusBits;
+
+        /// The energy, position and direction
+        double       m_energy;              // energy associated with vertex
+        Point        m_position;            // position of vertex
+        Vector       m_direction;           // direction of gamma causing pair conversion vertex
+
+        // Vertex quality information
+        double       m_chiSquare;           // Spacial chi-square for combining tracks
+        double       m_quality;             // Vertex "Quality" derived from topology & chisq.
+        double       m_arcLen1;             // Signed distance from head of track 1 to VTX
+        double       m_arcLen2;             // Signed distance from head of track 1 to VTX
+        double       m_doca;                // Distance between tracks at VTX location
+        double       m_radlen;              // Integrated radiation lengths from end of track 1
+                                            // to vertex location
+		idents::TkrId  m_vtxID;             // Complete TkrId identifying the details of this vertex
+		                                    // (This is the TkrId of the first hit after the vertex)
+		TkrTrackParams m_params;            // Parameter structure for vertex (includes cov. matrix)
+   
+        SmartRefVector<TkrTrack> m_tracks;  // List of tracks associated with vertex
+    };
+
+    //typedef for the Container
+    typedef ObjectVector<TkrVertex>      TkrVertexCol;
+    typedef TkrVertexCol::const_iterator TkrVertexConPtr;
+    typedef TkrVertexCol::iterator       TkrVertexColPtr;
 
 }; //Namespace
 
