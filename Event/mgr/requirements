@@ -7,14 +7,10 @@ use instrument v1r2
 use Gaudi 
 
 library GlastEvent \
-        Hits/*.cpp \
         ../GlastEvent/*.h \ 
-        ../GlastEvent/Hits/*.h \
         ../GlastEvent/TopLevel/*.h \
         ../GlastEvent/MonteCarlo/*.h \
-        ../GlastEvent/GsimImp/*.h \
-        TopLevel/*.cpp \
-        GsimImp/*.cpp
+        TopLevel/*.cpp
 
 library GlastEventFactories \
         ../src/TopLevel/EventModel.cpp \
