@@ -385,7 +385,7 @@ Vector CalClustersAlg::Fit_Direction(std::vector<Vector> pos,std::vector<Vector>
     mx /= norm1;
 	mz1 /= norm1;
 	cov_xz /= norm1;
-	cov_xz -= mx*mx;
+	cov_xz -= mx*mz1;
 	var_z1 /= norm1;
 	var_z1 -= mz1*mz1;
     if(var_z1 == 0) return nodir;
@@ -395,7 +395,7 @@ Vector CalClustersAlg::Fit_Direction(std::vector<Vector> pos,std::vector<Vector>
 	my /= norm2;
 	mz2 /= norm2;
 	cov_yz /= norm2;
-	cov_yz -= my*my;
+	cov_yz -= my*mz2;
 	var_z2 /= norm2;
 	var_z2 -= mz2*mz2;
 
@@ -603,8 +603,8 @@ StatusCode CalClustersAlg::execute()
                                 
                                 
                                 Vector d; 
-                                if(i%2 == 1) d = Vector(xtalWidth*xtalWidth/12.,0.,0.);
-                                else d = Vector(0.,xtalWidth*xtalWidth/12.,0.);
+                                if(i%2 == 1) d = Vector(m_CsIWidth*m_CsIWidth/12.,0.,0.);
+                                else d = Vector(0.,m_CsIWidth*m_CsIWidth/12.,0.);
 
                                 rmsLayer[i] += d-sqrLayer;
                                 
@@ -627,7 +627,7 @@ StatusCode CalClustersAlg::execute()
 	{
 
     posrel[ilayer]=pLayer[ilayer]-pCluster;
-
+	
 		// Sum alternatively the rms
 		if(ilayer%2)
 		{
