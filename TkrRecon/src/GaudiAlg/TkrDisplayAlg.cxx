@@ -21,6 +21,7 @@
 #include "TkrRecon/Display/TkrClustersRep.h"
 #include "TkrRecon/Display/TkrTracksRep.h"
 
+#include "../src/Display/TkrPatCandRep.h"
 #include "TkrRecon/Display/TkrCandidatesRep.h"
 #include "TkrRecon/Display/TkrBestCandRep.h"
 #include "TkrRecon/Display/TkrCandidate3DRep.h"
@@ -102,6 +103,7 @@ StatusCode TkrDisplayAlg::initialize()
         //TkrCombo display routines
         else if (m_TrackerReconType == "Combo")
         {
+            tkrmenu.add(new TkrPatCandRep(eventSvc()), "PatRec: Monte Carlo");
         }
         //Neural Net display routines
         else if (m_TrackerReconType == "NeuralNet")
@@ -112,11 +114,10 @@ StatusCode TkrDisplayAlg::initialize()
             tkrmenu.add(new TkrDispActiveNet(eventSvc(), pTkrGeo), "PatRec: Active NN");
         
         }
-        //Neural Net display routines
+        //Monte Carlo Pat Rec display routines
         else if (m_TrackerReconType == "MonteCarlo")
         {
-            //Set up the display rep for the complete Neural Network
-            tkrmenu.add(new TkrMcTracksRep(eventSvc()), "PatRec: Monte Carlo");
+            tkrmenu.add(new TkrPatCandRep(eventSvc()), "PatRec: Monte Carlo");
         }
         
         //Set up the display rep for the reconstructed tracks
@@ -125,6 +126,9 @@ StatusCode TkrDisplayAlg::initialize()
         //Vertex display routines
         tkrmenu.add(new TkrGammaRep(eventSvc(), pTkrGeo), "Gamma Vertex");
         tkrmenu.add(new TkrComboVtxRep(eventSvc(), pTkrGeo), "All Vertices");
+
+        //Monte Carlo if it exists
+        tkrmenu.add(new TkrMcTracksRep(eventSvc()), "Monte Carlo Tracks");
     }
     
     return sc;
