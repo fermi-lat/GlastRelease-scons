@@ -58,8 +58,10 @@ namespace {
 
     std::string att = Dom::getAttribute(slopeElt, "slope");
     float slope = atof(att.c_str());
+    att = Dom::getAttribute(slopeElt, "error");
+    float error = atof(att.c_str());
 
-    return new CalibData::MuSlope(slope);
+    return new CalibData::MuSlope(slope, error);
   }
 }
 
