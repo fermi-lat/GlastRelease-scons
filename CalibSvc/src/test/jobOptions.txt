@@ -45,6 +45,7 @@ ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
 DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 
+CalibDataSvc.CalibFlavorList = {"ideal"};
 // not used yet
 CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
 			   "Test_1/mocha"};
@@ -54,7 +55,7 @@ CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
 // They're listed below in order of likelihood of need to override, 
 // from most to least likely.
 // Storage type of 14 corresponds to MYSQL
-CalibDataSvc.CalibInstrumentName = "EM";
+CalibDataSvc.CalibInstrumentName = "LAT";
 CalibDataSvc.CalibStorageType = 14;
 CalibDataSvc.CalibRootName = "Calib";
 

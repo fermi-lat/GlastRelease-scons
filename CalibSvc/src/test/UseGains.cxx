@@ -7,26 +7,26 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "CalibData/CalibModel.h"
-#include "CalibData/Cal/CalCalibPed.h"
+#include "CalibData/Cal/CalCalibGain.h"
 #include "idents/CalXtalId.h"                // shouldn't be necessary
 
 /**
-   @file UsePeds.cxx
-   Simple algorithm to test functioning of "the other" TDS, Cal pedestals data
+   @file UseGains.cxx                         
+   Simple algorithm to test functioning of "the other" TDS, Cal gains data
 */
 
 
 
   /** 
-   @class UsePeds
+   @class UseGains
 
-   Algorithm exemplifying retrieval and use of Calorimeter pedestal calibration
+   Algorithm exemplifying retrieval and use of Calorimeter gain calibration
 */
-class UsePeds : public Algorithm {
+class UseGains : public Algorithm {
 
 
 public:
-  UsePeds(const std::string& name, ISvcLocator* pSvcLocator); 
+  UseGains(const std::string& name, ISvcLocator* pSvcLocator); 
 
   StatusCode initialize();
 
@@ -36,7 +36,7 @@ public:
 
 private:
   /// Helper function called by execute
-  void processNew(CalibData::CalCalibPed* pNew, const std::string& path);
+  void processNew(CalibData::CalCalibGain* pNew, const std::string& path);
 
   IDataProviderSvc* m_pCalibDataSvc;
   int               m_ser;
@@ -44,11 +44,11 @@ private:
 
 
 /// Instantiation of a static factory to create instances of this algorithm
-static const AlgFactory<UsePeds> Factory;
-const IAlgFactory& UsePedsFactory = Factory;
+static const AlgFactory<UseGains> Factory;
+const IAlgFactory& UseGainsFactory = Factory;
 
 
-UsePeds::UsePeds(const std::string&  name, 
+UseGains::UseGains(const std::string&  name, 
                  ISvcLocator*        pSvcLocator )
   : Algorithm(name, pSvcLocator), m_pCalibDataSvc(0), 
   m_ser(-1)
@@ -58,7 +58,7 @@ UsePeds::UsePeds(const std::string&  name,
 }
 
 
-StatusCode UsePeds::initialize() {
+StatusCode UseGains::initialize() {
   StatusCode sc;
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Initialize()" << endreq;
@@ -83,7 +83,7 @@ StatusCode UsePeds::initialize() {
 }
 
 
-StatusCode UsePeds::execute( ) {
+StatusCode UseGains::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
@@ -92,53 +92,53 @@ StatusCode UsePeds::execute( ) {
   //  CalibData::CalibTest1* test1 = 
   //    SmartDataPtr<CalibData::CalibTest1>(m_pCalibDataSvc, CalibData::Test_Gen);
   
-  std::string fullPath = "/Calib/CAL_Ped/ideal";
+  std::string fullPath = "/Calib/CAL_ElecGain/vanilla";
   DataObject *pObject;
   
 
   m_pCalibDataSvc->retrieveObject(fullPath, pObject);
 
-  CalibData::CalCalibPed* pPeds = 0;
-  pPeds = dynamic_cast<CalibData::CalCalibPed *> (pObject);
-  if (!pPeds) {
-    log << MSG::ERROR << "Dynamic cast to CalCalibPed failed" << endreq;
+  CalibData::CalCalibGain* pGains = 0;
+  pGains = dynamic_cast<CalibData::CalCalibGain *> (pObject);
+  if (!pGains) {
+    log << MSG::ERROR << "Dynamic cast to CalCalibGain failed" << endreq;
     return StatusCode::FAILURE;
   }
 
-  int newSerNo = pPeds->getSerNo();
+  int newSerNo = pGains->getSerNo();
   if (newSerNo != m_ser) {
-    log << MSG::INFO << "Processing new pedestals after retrieveObject" 
+    log << MSG::INFO << "Processing new gains after retrieveObject" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pPeds, fullPath);
+    processNew(pGains, fullPath);
   }
   m_pCalibDataSvc->updateObject(pObject);
 
-  pPeds = 0;
+  pGains = 0;
   try {
-    pPeds = dynamic_cast<CalibData::CalCalibPed *> (pObject);
+    pGains = dynamic_cast<CalibData::CalCalibGain *> (pObject);
   }
   catch (...) {
     log << MSG::ERROR 
-        << "Dynamic cast to CalCalibPed after update failed" << endreq;
+        << "Dynamic cast to CalCalibGain after update failed" << endreq;
     return StatusCode::FAILURE;
   }
-  newSerNo = pPeds->getSerNo();
+  newSerNo = pGains->getSerNo();
   if (newSerNo != m_ser) {
-    log << MSG::INFO << "Processing new pedestals after update" 
+    log << MSG::INFO << "Processing new gains after update" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pPeds, fullPath);
+    processNew(pGains, fullPath);
   }
 
   return StatusCode::SUCCESS;
 }
 
 
-void UsePeds::processNew(CalibData::CalCalibPed* pNew, 
+void UseGains::processNew(CalibData::CalCalibGain* pNew, 
                               const std::string& path) {
   using idents::CalXtalId;
-  using CalibData::Ped;
+  using CalibData::Gain;
   bool  done = false;
 
   MsgStream log(msgSvc(), name());
@@ -158,38 +158,22 @@ void UsePeds::processNew(CalibData::CalCalibPed* pNew,
     
     CalibData::RangeBase* pRange = pNew->getRange(id, range, face);
     
-    Ped* pPed = dynamic_cast<Ped * >(pRange);
+    Gain* pGain = dynamic_cast<Gain * >(pRange);
     log << MSG::INFO << "For tower = " << iTower << " layer = " << iLayer
         << " xtal = " << iXtal << endreq;
     log << MSG::INFO << "    range = " << range 
         << " face = " << face << endreq;
     
-    log << MSG::INFO << "Averaged ped = " << pPed->getAvr() << endreq;
-    log << MSG::INFO << "       sigma = " << pPed->getSig() << endreq;
-
-    /*      Try another tower */
-    iTower++;
-    id = CalXtalId(iTower, iLayer, iXtal);
-    
-    pRange = pNew->getRange(id, range, face);
-    
-    pPed = dynamic_cast<Ped * >(pRange);
-    log << MSG::INFO << "For tower = " << iTower << " layer = " << iLayer
-        << " xtal = " << iXtal << endreq;
-    log << MSG::INFO << "    range = " << range 
-        << " face = " << face << endreq;
-    
-    log << MSG::INFO << "Averaged ped = " << pPed->getAvr() << endreq;
-    log << MSG::INFO << "       sigma = " << pPed->getSig() << endreq;
-
+    log << MSG::INFO << "Averaged gain = " << pGain->getGain() << endreq;
+    log << MSG::INFO << "       sigma = " << pGain->getSig() << endreq;
   }
 }
 
-StatusCode UsePeds::finalize( ) {
+StatusCode UseGains::finalize( ) {
 
   MsgStream log(msgSvc(), name());
   log << MSG::INFO 
-      << "          Finalize UsePeds "
+      << "          Finalize UseGains "
       << endreq;
   
   return StatusCode::SUCCESS;
