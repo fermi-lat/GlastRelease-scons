@@ -3,3 +3,4 @@ cleanup.*
 *.make
 *.bak
 NMake
+Makefile
