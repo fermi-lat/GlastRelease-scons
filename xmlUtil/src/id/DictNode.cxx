@@ -7,6 +7,7 @@
 #include <assert.h>
 
 namespace xmlUtil {
+  std::ostream* DictNode::m_err = &(std::cout);
   DictNode::DictNode(DOM_Element elt, DictNode *parent,
                      DictFieldMan *fieldMan) : 
     m_children(0), m_parent(parent), m_parConstraints(0), 
@@ -47,6 +48,7 @@ namespace xmlUtil {
         }
       }
       child = xml::Dom::getSiblingElement(child);
+      if (child == DOM_Element()) return;    // new Dec. 4
     }
     
     // Next up we might have our own constraint
@@ -72,6 +74,8 @@ namespace xmlUtil {
     }
     // Finally, how about checking for consistency among children?
     if (!consistentChildren()) {
+      std::cout << "Inconsistent children, fieldname " <<
+        m_field->getName();
       // make a fuss
     }
   }
@@ -94,7 +98,13 @@ namespace xmlUtil {
     bool childMode = ((*it)->m_parConstraints != 0);
     ++it;
     for (; it < m_children.end(); ++it) {
-      if (((*it)->m_parConstraints != 0) != childMode) return false;
+      if (((*it)->m_parConstraints != 0) != childMode) {
+        (*m_err) << "Mixed parent-constraint mode among children " 
+                 << std::endl;
+        (*m_err) << "Current node has field name " << this->m_field->getName()
+                 << std::endl;
+        return false;
+      }
     }
     if (!childMode) { // no parent constraints
       return valuesDisjoint(m_children.begin(), m_children.end());
@@ -110,7 +120,13 @@ namespace xmlUtil {
       DictConstraints *par2 = (*(it + 1))->m_parConstraints;
       
       if (  (!par1->equals(*par2)) &&
-            (!par1->disjoint(*par2))  ) return false;
+            (!par1->disjoint(*par2))  ) {
+        (*m_err) << "Non-disjoint parent constraints among children" 
+                 << std::endl;
+        (*m_err) << "Current node has field name " << this->m_field->getName()
+                 << std::endl;
+        return false;
+      }
     }
     
     // Finally need to check that child values are disjoint
@@ -130,11 +146,19 @@ namespace xmlUtil {
           --follow;
           break;
         }
+        ++follow;
         
       }
       // If we got here, it's time to check out a collection of children
       bool ok = valuesDisjoint(it, follow);
-      if (!ok) return false;
+      if (!ok) {
+        (*m_err) << 
+          "Non-disjoint values for children with same parent constraints" 
+                 << std::endl;
+        (*m_err) << "Current node has field name " << this->m_field->getName()
+                 << std::endl;
+        return false;
+      }
       
       // Otherwise see if there is another bunch left
       it = ++follow;
@@ -146,13 +170,30 @@ namespace xmlUtil {
     if (!m_parConstraints) return true;
 
     if (DictConstraints *parConstraints = m_parent->m_myConstraints) {
-      return parConstraints->allowed(*m_parConstraints);
+      bool ok = parConstraints->allowed(*m_parConstraints);
+      if (!ok) { 
+        (*m_err) << 
+          "Parent value constraints and local parent constraints inconsistent"
+                 << std::endl;
+        (*m_err) << "Current node has field name " << this->m_field->getName()
+                 << std::endl;
+        
+        return ok;
+      }
     }
     else if (DictConstraints *parConstraints = 
              m_parent->m_field->getConstraints()) {
-      return parConstraints->allowed(*m_parConstraints);
+      bool ok = parConstraints->allowed(*m_parConstraints);
+      if (!ok) { 
+        (*m_err) << 
+          "Global value constraints on parent, local parent constraints clash"
+                 << std::endl;
+        (*m_err) << "Current node has field name " << this->m_field->getName()
+                 << std::endl;
+      }
+      return ok;
     }
-    else return true;
+    return true;
   }
 
   bool DictNode::consistentValues() {
@@ -161,8 +202,15 @@ namespace xmlUtil {
     DictConstraints *fieldConstraints = m_field->getConstraints();
     
     if (!fieldConstraints) return true;
-
-    return fieldConstraints->allowed(*m_myConstraints);
+    
+    bool ok= fieldConstraints->allowed(*m_myConstraints);
+    if (!ok) {
+      (*m_err) << "local value constraints and global field constraints clash"
+               << std::endl;
+      (*m_err) << "Current node has field name " << this->m_field->getName()
+                 << std::endl;
+    }
+    return ok;
   }
   
   bool DictNode::valuesDisjoint(ConstNodeIterator start, 
