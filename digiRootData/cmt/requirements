@@ -1,5 +1,5 @@
 package digiRootData
-version v7r5
+version v7r5p0
 # $Id$
 
 use RootcintPolicy v4r* GlastPolicy
