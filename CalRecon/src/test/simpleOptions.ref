@@ -15,7 +15,7 @@ ApplicationMgr.ExtSvc = { "GlastEventSelector/EventSelector" } ;
 EventSelector.Input = "NONE" ;
 ApplicationMgr.ExtSvc += { "EventCnvSvc" } ;
 EventPersistencySvc.CnvServices = { "EventCnvSvc" } ;
-ApplicationMgr.EvtMax = 20 ;
+ApplicationMgr.EvtMax = 10 ;
 
 // geometry
 ApplicationMgr.DLLs += { "G4Generator","G4Propagator", "TkrUtil", "CalUtil" } ;
@@ -179,177 +179,278 @@ HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 EventPersistenc...   INFO Added successfully Conversion service:EventCnvSvc
 test_CalRecon        INFO executing 1 time
-test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
+test_CalRecon        INFO Energy 3854.78 Corrected 4877.35 91.4653 143.115 -133.271 0.0271267 0.0526307 0.998246
+test_CalRecon        INFO Profile Corr Energy 5519.15
+test_CalRecon        INFO Last Layer Corr Energy 5318.51
+test_CalRecon        INFO Energy 11.0166 Corrected 4877.35 -37.1874 85.7895 -174.803 6.64536e-12 0.890383 0.455212
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 3.83179 Corrected 4877.35 -34.13 -150.032 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 7.42521 Corrected 4877.35 221.224 140.911 -148.637 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 2.48966 Corrected 4877.35 -145.49 85.5714 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.5746 Corrected 4877.35 56.775 436.47 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 0.981701 Corrected 4877.35 -117.65 24.2498 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 0.925557 Corrected 4877.35 84.6886 -61.97 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 0.882272 Corrected 4877.35 24.2498 34.13 -100.77 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 2 time
-test_CalRecon        INFO Energy 2691.01 Corrected 4038.17 -684.135 -410.456 -137.51 -0.0400505 -0.00182971 0.999196
-test_CalRecon        INFO Profile Corr Energy 3888.04
+test_CalRecon        INFO Energy 2897.28 Corrected 2897.28 224.287 196.755 -159.792 0.0246678 0.0215784 0.999463
+test_CalRecon        INFO Profile Corr Energy 5285.44
 test_CalRecon        INFO Last Layer Corr Energy -4
-test_CalRecon        INFO Energy 60.2084 Corrected 4038.17 -651.601 -333.873 -153.389 -0.0612865 0.0626875 0.99615
+test_CalRecon        INFO Energy 4.65264 Corrected 2897.28 -61.97 180.437 -164.82 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 3.45836 Corrected 4038.17 -464.31 -301.569 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 3.04818 Corrected 2897.28 312.53 176.851 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.95682 Corrected 4038.17 -585.534 -509.356 -79.42 -1000 -1000 -1000
+test_CalRecon        INFO Energy 3.9183 Corrected 2897.28 304.228 398.75 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.50377 Corrected 4038.17 -625.565 -585.734 -129.266 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.70278 Corrected 2897.28 145.49 -24.2498 -164.82 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.52409 Corrected 4038.17 -714.87 -197.649 -207.52 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.29443 Corrected 4038.17 -648.367 -292.836 -92.5441 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.18552 Corrected 4038.17 -615.201 -61.97 -100.77 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.11572 Corrected 4038.17 -464.31 -675.146 -79.42 -1000 -1000 -1000
+test_CalRecon        INFO Energy 0.724647 Corrected 2897.28 398.75 408.63 -186.17 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 3 time
-test_CalRecon        INFO Energy 3209.55 Corrected 4658.03 -710.38 -448.869 -133.659 -0.0181812 0.167783 0.985656
-test_CalRecon        INFO Profile Corr Energy 4516.73
-test_CalRecon        INFO Last Layer Corr Energy -4
-test_CalRecon        INFO Energy 14.7384 Corrected 4658.03 -631.925 -226.959 -122.604 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2335.5 Corrected 2939.02 152.93 75.1215 -140.06 -0.0218125 0.16706 0.985705
+test_CalRecon        INFO Profile Corr Energy 3106.42
+test_CalRecon        INFO Last Layer Corr Energy 3420.57
+test_CalRecon        INFO Energy 9.40856 Corrected 2939.02 218.892 -44.0187 -187.478 -0.171773 -1.4819e-15 0.985137
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 4.12479 Corrected 4658.03 -643.636 -323.312 -192.272 -1000 -1000 -1000
+test_CalRecon        INFO Energy 4.89114 Corrected 2939.02 239.877 173.057 -62.6216 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.88845 Corrected 4658.03 -519.99 -350.25 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.12363 Corrected 2939.02 61.97 90.381 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 6.51676 Corrected 4658.03 -621.479 -590.023 -75.0837 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.45567 Corrected 2939.02 -61.97 -263.391 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.13901 Corrected 4658.03 -398.75 -340.37 -58.07 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.31404 Corrected 2939.02 139.022 -34.13 -100.77 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.04668 Corrected 2939.02 312.53 36.4098 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 0.967971 Corrected 2939.02 117.65 -40.4256 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 4 time
-test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
+test_CalRecon        INFO Energy 3319.16 Corrected 3319.16 131.505 310.865 -149.304 0.173364 -0.0184115 0.984686
+test_CalRecon        INFO Profile Corr Energy 5198.31
+test_CalRecon        INFO Last Layer Corr Energy -4
+test_CalRecon        INFO Energy 14.5552 Corrected 3319.16 -229.01 -228.617 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 26.756 Corrected 3319.16 135.654 420.624 -156.949 0.251701 -0.0719558 0.965126
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 2.589 Corrected 3319.16 284.69 421.42 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 3.55454 Corrected 3319.16 96.1319 210.713 -94.8988 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.60407 Corrected 3319.16 173.33 541.99 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.45815 Corrected 3319.16 117.65 398.75 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.42566 Corrected 3319.16 -131.693 519.99 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.26371 Corrected 3319.16 398.75 284.69 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.84611 Corrected 3319.16 -116.634 284.923 -176.324 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 0.89329 Corrected 3319.16 256.85 668.002 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 0.877591 Corrected 3319.16 350.25 201.17 -58.07 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 5 time
-test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
+test_CalRecon        INFO Energy 3813.27 Corrected 4873.28 55.7111 193.261 -126.71 0.148768 0.0936761 0.984425
+test_CalRecon        INFO Profile Corr Energy 5112.58
+test_CalRecon        INFO Last Layer Corr Energy 4930.98
+test_CalRecon        INFO Energy 39.8283 Corrected 4873.28 -64.9584 194.318 -156.954 0.0468321 -0.618514 0.784377
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 4.47336 Corrected 4873.28 -24.2498 229.01 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 4.18019 Corrected 4873.28 198.15 311.138 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 2.5662 Corrected 4873.28 -85.5386 181.847 -200.18 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.28271 Corrected 4873.28 -27.3186 34.13 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 2.19774 Corrected 4873.28 -24.2498 102.715 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.06036 Corrected 4873.28 24.2498 312.53 -58.07 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.04273 Corrected 4873.28 -256.85 202.449 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 0.960496 Corrected 4873.28 229.01 121.294 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 0.877591 Corrected 4873.28 350.25 -34.13 -186.17 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 6 time
-test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2742.27 Corrected 2742.27 69.5093 262.854 -156.291 0.1886 -0.0320615 0.981531
+test_CalRecon        INFO Profile Corr Energy 4411.48
+test_CalRecon        INFO Last Layer Corr Energy -4
+test_CalRecon        INFO Energy 6.37054 Corrected 2742.27 -88.3047 230.648 -185.24 -0.765654 0.510436 0.391444
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 2.48883 Corrected 2742.27 24.2498 117.65 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.92527 Corrected 2742.27 145.49 398.75 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 2.74134 Corrected 2742.27 -161.428 457.396 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.47045 Corrected 2742.27 -117.65 273.37 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.35607 Corrected 2742.27 82.2574 340.37 -100.77 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.13312 Corrected 2742.27 201.17 24.2498 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.10692 Corrected 2742.27 -61.97 201.568 -79.42 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.05841 Corrected 2742.27 -229.01 217.195 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.02631 Corrected 2742.27 34.13 530.869 -79.42 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 7 time
-test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2908.51 Corrected 2908.51 118.573 57.3243 -161.688 0.0635984 0.0592659 0.996214
+test_CalRecon        INFO Profile Corr Energy 5524.5
+test_CalRecon        INFO Last Layer Corr Energy -4
+test_CalRecon        INFO Energy 20.0559 Corrected 2908.51 119.106 -51.7149 -182.601 -0.309942 -1.19074e-15 0.950756
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 6.25488 Corrected 2908.51 166.105 -89.2122 -125.618 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 2.11683 Corrected 2908.51 173.33 -157.305 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.85999 Corrected 2908.51 -153.172 34.13 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.17899 Corrected 2908.51 -24.2498 -34.13 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.04125 Corrected 2908.51 350.25 61.97 -58.07 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.03679 Corrected 2908.51 34.13 -80.4488 -164.82 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 8 time
-test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
+test_CalRecon        INFO Energy 4044.34 Corrected 5217.13 162.603 206.247 -127.069 0.0752279 0.00556248 0.997151
+test_CalRecon        INFO Profile Corr Energy 5362.71
+test_CalRecon        INFO Last Layer Corr Energy 5307.53
+test_CalRecon        INFO Energy 9.44759 Corrected 5217.13 -165.443 492.15 -100.77 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 8.45917 Corrected 5217.13 201.17 481.272 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 4.6304 Corrected 5217.13 235.275 456.332 -152.1 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 2.03322 Corrected 5217.13 -34.13 421.903 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.86552 Corrected 5217.13 61.97 451.53 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 3.87906 Corrected 5217.13 -161.018 -236.484 -92.1234 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.17154 Corrected 5217.13 519.99 25.6265 -79.42 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.10599 Corrected 5217.13 604.728 201.17 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.04125 Corrected 5217.13 117.65 398.75 -79.42 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 9 time
-test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2975.22 Corrected 2975.22 95.697 95.242 -169.254 0.172152 -0.0339866 0.984484
+test_CalRecon        INFO Profile Corr Energy 6434.03
+test_CalRecon        INFO Last Layer Corr Energy -4
+test_CalRecon        INFO Energy 2.10903 Corrected 2975.22 -97.1941 145.49 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 2.63584 Corrected 2975.22 171.609 134.059 -114.245 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 1.00194 Corrected 2975.22 89.81 -24.2498 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Last Layer Corr Energy -1
+test_CalRecon        INFO Energy 0.791213 Corrected 2975.22 -117.65 350.25 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 test_CalRecon        INFO executing 10 time
-test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO executing 11 time
-test_CalRecon        INFO Energy 673.738 Corrected 1151.73 123.598 -32.4539 -138.493 -0.0471131 0.0151466 0.998775
-test_CalRecon        INFO Profile Corr Energy 0
+test_CalRecon        INFO Energy 3744.03 Corrected 3744.03 231.794 256.432 -136.486 -0.015944 -0.0311023 0.999389
+test_CalRecon        INFO Profile Corr Energy 5079.31
 test_CalRecon        INFO Last Layer Corr Energy -4
-test_CalRecon        INFO Energy 22.6029 Corrected 1151.73 134.763 33.2528 -182.734 0.882639 1.01207e-16 0.470051
+test_CalRecon        INFO Energy 3.81251 Corrected 3744.03 158.344 427.365 -192.256 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.93008 Corrected 1151.73 293.797 34.13 -100.77 -1000 -1000 -1000
+test_CalRecon        INFO Energy 3.10369 Corrected 3744.03 126.208 217.768 -79.42 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.15784 Corrected 1151.73 337.251 145.49 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.81119 Corrected 3744.03 436.47 230.99 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.09758 Corrected 1151.73 57.6578 229.01 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.79233 Corrected 3744.03 411.994 -34.13 -186.17 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 0.951881 Corrected 1151.73 -34.13 -24.2498 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.14424 Corrected 3744.03 468.959 104.569 -198.805 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO executing 12 time
-test_CalRecon        INFO Energy 2300.2 Corrected 3313.78 -670.745 413.995 -119.748 0.00124697 -0.0251825 0.999682
-test_CalRecon        INFO Profile Corr Energy 2752.58
-test_CalRecon        INFO Last Layer Corr Energy -4
-test_CalRecon        INFO Energy 27.976 Corrected 3313.78 -693.707 329.489 -170.693 0.351521 -8.1827e-15 0.93618
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.83774 Corrected 3313.78 -673.218 519.99 -100.77 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.11172 Corrected 3313.78 -714.87 262.233 -122.12 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.88883 Corrected 3313.78 -628.828 340.37 -58.07 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 0.975916 Corrected 3313.78 -603.51 350.25 -207.52 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 0.889246 Corrected 3313.78 -703.848 547.83 -58.07 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO executing 13 time
-test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO executing 14 time
-test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO executing 15 time
-test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO executing 16 time
-test_CalRecon        INFO Energy 3682.45 Corrected 3682.45 -150.07 -501.972 -146.983 0.0161712 0.0748634 0.997063
-test_CalRecon        INFO Profile Corr Energy 5849.14
-test_CalRecon        INFO Last Layer Corr Energy -4
-test_CalRecon        INFO Energy 3.14248 Corrected 3682.45 85.2259 -547.715 -172.219 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.74607 Corrected 3682.45 -331.968 -340.37 -186.17 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 0.766088 Corrected 3682.45 -408.63 -398.75 -207.52 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO executing 17 time
-test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO executing 18 time
-test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO executing 19 time
-test_CalRecon        INFO Energy 2997.22 Corrected 3911.4 667.316 -292.676 -169.674 -0.112716 -0.174683 0.978152
-test_CalRecon        INFO Profile Corr Energy 7138.7
-test_CalRecon        INFO Last Layer Corr Energy 5027.04
-test_CalRecon        INFO Energy 1.88638 Corrected 3911.4 714.87 -398.75 -207.52 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.53888 Corrected 3911.4 520.564 -436.47 -58.07 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.45991 Corrected 3911.4 492.15 -550.894 -207.52 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO executing 20 time
-test_CalRecon        INFO Energy 0 Corrected 0 -1000 -1000 -1000 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.04154 Corrected 3744.03 204.02 404.569 -134.694 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 TkrCalibAlg          INFO           Finalize TkrCalibAlg 
-test_CalRecon        INFO finalize after 20 calls.
+test_CalRecon        INFO finalize after 10 calls.
 EventLoopMgr         INFO Histograms converted successfully according to request.
 TkrGeometrySvc       INFO TkrGeometrySvc finalize called
 ToolSvc              INFO Removing all tools created by ToolSvc

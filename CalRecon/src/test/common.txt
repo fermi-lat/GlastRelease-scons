@@ -5,7 +5,7 @@ ApplicationMgr.ExtSvc = { "GlastEventSelector/EventSelector" } ;
 EventSelector.Input = "NONE" ;
 ApplicationMgr.ExtSvc += { "EventCnvSvc" } ;
 EventPersistencySvc.CnvServices = { "EventCnvSvc" } ;
-ApplicationMgr.EvtMax = 20 ;
+ApplicationMgr.EvtMax = 10 ;
 
 // geometry
 ApplicationMgr.DLLs += { "G4Generator","G4Propagator", "TkrUtil", "CalUtil" } ;
