@@ -26,7 +26,7 @@ using namespace std;
 //------------------------------------------------------------------------------
  */
 namespace idents {
-class CalLogId : public ContainedObject {
+class CalLogId {
 
 private:
 
@@ -45,7 +45,7 @@ private:
 
 public:
 
-        CalLogId(int packedId=0) :
+      CalLogId(int packedId=0) :
 	        m_packedId(packedId)
 	{
 		unpackId();
@@ -59,7 +59,7 @@ public:
 		m_column = column;
 	};
     
-	~CalLogId();
+    ~CalLogId() {};
 
 	void init();
 
@@ -72,34 +72,11 @@ public:
         inline short getLayer() const {return (m_packedId >> 0x4) & 0x7;};
         inline short getColumn() const {return m_packedId & 0xf;};
 
-	friend ostream& operator<< (ostream &stream, CalLogId logId);
-	friend istream& operator>> (istream &stream, CalLogId &logId);
-
-        /// Serialize the object for writing
-        virtual StreamBuffer& serialize( StreamBuffer& s ) const;
-        /// Serialize the object for reading
-        virtual StreamBuffer& serialize( StreamBuffer& s );
+        operator int() const {return m_packedId;};
 
 };
 
 
-// overload the inserter to stream unpacked tower, layer and column
-ostream& operator<<(ostream &stream, CalLogId logId)
-{
-        stream << logId.m_tower << " ";
-	stream << logId.m_layer << " ";
-	stream << logId.m_column << " ";
-	return stream;
-}
-
-
-// extract unpacked ID, and stuff packed ID from unpacked info
-istream& operator>> (istream &stream, CalLogId &logId)
-{
-	stream >> logId.m_tower >> logId.m_layer >> logId.m_column;
-	logId.packId(logId.m_tower, logId.m_layer, logId.m_column);		// ensure m_packedId is synced
-	return stream;
-}
 
 
 /// retrieve unpacked ID, tower, layer, and column
@@ -111,22 +88,7 @@ void CalLogId::getUnpackedId(short& tower, short& layer, short& column)
 }
 
 
-/// Serialize the packed ID for writing
-inline StreamBuffer& CalLogId::serialize( StreamBuffer& s ) const
-{
-	ContainedObject::serialize(s);	
-	return s << m_packedId;
-}
 
-
-/// Serialize the ID for reading packed IDs, and stuff unpacked info from packed
-inline StreamBuffer& CalLogId::serialize( StreamBuffer& s )
-{
-	ContainedObject::serialize(s);
-	s >> m_packedId;
-        unpackId();		// ensure m_tower,m_layer,m_column are synced
-	return s;
-}
 
 } // namespace idents
 #endif    // GlastEvent_LOGID_H
