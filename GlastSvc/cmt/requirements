@@ -25,6 +25,7 @@ library GlastSvc \
      -s="GlastRandomSvc" $(headers) *.cxx\
      -s="../GlastSvc\Reco" $(headers)\
      -s="Reco" $(headers) *.cxx\
+     -s="../GlastSvc\MonteCarlo" $(headers)\
      -s="../GlastSvc\EventSelector" $(headers) \
      -s="EventSelector" $(headers) *.cpp 
             
