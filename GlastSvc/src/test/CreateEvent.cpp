@@ -17,6 +17,7 @@
 #include "GlastEvent/TopLevel/Event.h"
 #include "GlastEvent/MonteCarlo/MCACDHit.h"
 #include "GlastEvent/MonteCarlo/MCCalorimeterHit.h"
+#include "GlastEvent/MonteCarlo/MCSiLayer.h"
 #include "GlastEvent/TopLevel/ObjectVector.h"
 
 //--------------------------------------------------------------------
@@ -47,11 +48,12 @@ Algorithm(name, pSvcLocator), m_detSvc(0), m_irfLoadSvc(0) {
 
 
 //------------------------------------------------------------------------------
-/// The "functional" part of the class: For the EmptyAlgorithm example they do
-///  nothing apart from print out info messages.
-/// NB in the initialize method: you must explicitly initialize the base class
-/// before using any services (message service, event data service etc.) otherwise 
-/// the behaviour will be unpredictable at best.
+/*! The "functional" part of the class: For the EmptyAlgorithm example they do
+nothing apart from print out info messages.
+NB in the initialize method: you must explicitly initialize the base class
+before using any services (message service, event data service etc.) otherwise 
+the behaviour will be unpredictable at best.
+*/
 StatusCode CreateEvent::initialize() {
     
     MsgStream log(msgSvc(), name());
@@ -89,7 +91,10 @@ StatusCode CreateEvent::execute() {
     DataObject* pObject;
 
     //! This method call does the bulk of the work
+    /*! Causes the data store to be searched, if the data is unavailable, the appropriate
+    converter is called to retrieve the data. */
     sc = eventSvc()->retrieveObject("/Event/MC/MCACDHits", pObject);
+
     if( sc.isFailure() ) return sc;                                                             
     
         log << MSG::INFO << "Successfully retrieved ACD Container!!!" << endreq;
@@ -102,9 +107,10 @@ StatusCode CreateEvent::execute() {
         return StatusCode::FAILURE;
     }
     
+    //! print out the contents of the data
     for (ObjectVector<MCACDHit>::const_iterator it = acdList->begin(); it != acdList->end(); it++) {
         log << MSG::INFO << " tile Energy = " << (*it)->energy() << " Id = " << (*it)->id() << endreq;
-      }
+    }
 
     sc = eventSvc()->retrieveObject("/Event/MC/MCCalorimeterHits", pObject);
     if( sc.isFailure() ) {
@@ -131,6 +137,32 @@ StatusCode CreateEvent::execute() {
                         << (*xtal)->rightResponse() << " "
                         << (*xtal)->energy() << " " << endreq;
     }
+
+
+    /*! this method causes the TDS to be seached, if the TKR data is unavailable, then the
+    converter is called to retrive the data */
+    sc = eventSvc()->retrieveObject("/Event/MC/MCTKRHits", pObject);
+    if( sc.isFailure() ) return sc;                                                             
+    
+        log << MSG::INFO << "Successfully retrieved TKR Container!!!" << endreq;
+
+    ObjectVector<MCSiLayer>* tkrList;
+    try {
+        tkrList  = dynamic_cast<ObjectVector<MCSiLayer>*>(pObject);
+    } catch(...) {
+        log << MSG::INFO << "Failed to convert object to MCSiLayerVector" << endreq;
+        return StatusCode::FAILURE;
+    }
+    
+    //! print out the TKR data
+    for (ObjectVector<MCSiLayer>::const_iterator silayer = tkrList->begin(); silayer != tkrList->end(); silayer++) {
+        log << MSG::INFO << "SiLayer Id = " << (*silayer)->id() << " max Energy = " << (*silayer)->MaxEnergy() << endreq;
+
+        for (ObjectVector<MCTKRHit>::const_iterator hit = ((*silayer)->getHits())->begin(); hit != ((*silayer)->getHits())->end(); hit++) {
+            log << MSG::INFO << " strip id = " << (*hit)->id() << " energy = " << (*hit)->energy() << " noise = " << (*hit)->noise() << endreq;
+        }
+      }
+
     return sc;
 }
 
