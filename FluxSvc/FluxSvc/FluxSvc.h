@@ -16,9 +16,8 @@ template <class TYPE> class SvcFactory;
 class IFlux;  // interface
 class FluxMgr;  // actual manager
 
-/*! Service that implements the IFluxSvc interface, to return an IFlux object.
-FluxSvc handles the creation and interfacing with Flux objects.  
-*/
+//!  Service that implements the IFluxSvc interface, to return an IFlux object.
+//!  FluxSvc handles the creation and interfacing with Flux objects.  
 class FluxSvc : virtual public Service, virtual public IFluxSvc
 {  
 public:

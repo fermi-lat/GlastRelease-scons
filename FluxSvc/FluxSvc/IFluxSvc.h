@@ -19,9 +19,7 @@ static const InterfaceID IID_IFluxSvc(910, 1 , 0);
 class IFlux;
 class HepRandomEngine;
 
-/*! Abstract interface for the flux service, FluxSvc.
-*/
-
+//! Abstract interface for the flux service, FluxSvc.
 class  IFluxSvc : virtual public IInterface {
 public:
     

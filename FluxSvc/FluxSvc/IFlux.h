@@ -14,8 +14,7 @@
 #include "flux/SpectrumFactoryTable.h"
 
 
-/*!  Abstract interface for an object that generates particles, Flux
-*/
+//!  Abstract interface for an object that generates particles, Flux
 class IFlux {
 public:
     // ctor, select the name
