@@ -1,0 +1,36 @@
+package commonRootData
+version v0
+
+use GlastPolicy v4r*
+use ROOT v3r2p*
+
+
+apply_pattern package_include
+
+apply_pattern package_linkopts
+
+apply_pattern ld_library_path
+apply_pattern package_headers
+
+
+private
+
+use RootPolicy v1r*
+apply_pattern root_package
+apply_pattern root_package2
+
+macro root_headers "\
+ ../commonRootData/RelTable.h\
+ ../commonRootData/Relation.h\
+ ../commonRootData/Exception.h\
+ ../commonRootData/RootDataUtil.h\
+ ../commonRootData/commonRootDataLinkDef.h"
+
+macro root_linkdef "../commonRootData/commonRootDataLinkDef.h"
+
+
+library  commonRootData *.cxx ../commonRootData/*.cxx\
+     ${commonRootData_headers}
+
+macro test_commonRootDatalinkopts ${commonRootData_shlibflags}
+#application test_commonRootData test/testCommonClasses.cxx
