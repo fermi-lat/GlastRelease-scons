@@ -49,6 +49,7 @@
                             determine if it supports this version. 
                             [Might get rid of this here and just keep
                             it in the MySQL metadata table]
+            creator       - script or program creating calibration data
  -->
 <!ELEMENT  generic  (inputSample?) >
 <!ATTLIST generic  
@@ -58,8 +59,9 @@
               CAL_Ped | CAL_ElecGain | CAL_IntNonlin | CAL_DiffNonlin |
               CAL_MuSlope | CAL_Asym | CAL_MevPerDac | CAL_TholdCI |
               CAL_TholdMuon)    #REQUIRED
-   DTDVersion  NMTOKEN "v2r2"       
-   fmtVersion  NMTOKEN #REQUIRED >
+   DTDVersion  NMTOKEN "v2r2p1"       
+   fmtVersion  NMTOKEN #REQUIRED
+   creator     NMTOKEN #IMPLIED >
 
 <!-- Description of events used as input to the procedure 
      Start- and stop-times should be timestamps of earliest and
@@ -144,7 +146,8 @@
 
 <!ELEMENT tower (layer*) >
 <!ATTLIST tower iRow NMTOKEN #REQUIRED
-                iCol NMTOKEN #REQUIRED >
+                iCol NMTOKEN #REQUIRED 
+                hwserial NMTOKEN "-1" >
 
 <!ELEMENT layer (xtal*) >
 <!ATTLIST layer iLayer NMTOKEN #REQUIRED>
@@ -252,7 +255,7 @@
 
 ]>
 <calCalib>
- <generic instrument="LAT" timestamp="2004-07-31-06:50" calibType="CAL_TholdCI" fmtVersion="v2r2">
+ <generic instrument="LAT" timestamp="2004-07-31-06:50" calibType="CAL_TholdCI" fmtVersion="v2r2" creator="$Name$">
  </generic>
  <dimension nRow="1" nCol="1" nLayer="8" nXtal="12" nFace="2" nRange="1"/>
  <tower iRow="0" iCol="0">

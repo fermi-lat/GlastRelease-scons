@@ -304,7 +304,9 @@ void CfData::WriteSplinesXML(const string &filename, const string &dtdFilename) 
   xmlFile << "<calCalib>" << endl;
   xmlFile << "  <generic instrument=\"" << m_cfg.instrument
           << "\" timestamp=\"" << m_cfg.startTime << "\"" << endl;
-  xmlFile << "           calibType=\"CAL_IntNonlin\" fmtVersion=\"v2r1\">" << endl;
+  xmlFile << "           calibType=\"CAL_IntNonlin\" fmtVersion=\"v2r1\"" << endl;
+  xmlFile << "           creator=\"" << CGCUtil::CVS_TAG << "\">" << endl;
+
   xmlFile << endl;
   xmlFile << "    <inputSample startTime=\"" << m_cfg.startTime
           << "\" stopTime=\"" << m_cfg.stopTime << "\"" << endl;
