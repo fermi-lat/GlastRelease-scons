@@ -2,7 +2,8 @@
     @brief for rootcint
  $Header$
 
-*/#ifdef __CINT__
+*/
+#ifdef __CINT__
 
 #pragma link off all globals;
 #pragma link off all classes;
