@@ -1,4 +1,4 @@
-/** @file UserAlg.cxx
+/** @file McAnalValsTool.cxx
     @brief declartion, implementaion of the class UserAlg
 
     $Header$

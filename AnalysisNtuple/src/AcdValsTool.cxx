@@ -25,7 +25,7 @@ $Header$
 #include <algorithm>
 #include <numeric>
 
-/** @class AcdValsTool.cxx 
+/** @class AcdValsTool
 @brief Calculates Acd Values
 */
 

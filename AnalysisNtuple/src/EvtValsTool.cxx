@@ -25,7 +25,7 @@ $Header$
 //#include "Event/Recon/AcdRecon/AcdRecon.h"
 
 #include <algorithm>
-/** @class EvtValsTool.cxx 
+/** @class EvtValsTool
 @brief Calculates Event Values from the other ntuple variables
 */
 

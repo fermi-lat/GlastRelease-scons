@@ -88,7 +88,7 @@ private:
 };
 
 /** 
-  @class ITkrAligmentSvc 
+  @class ITkrAlignmentSvc 
   @brief Abstract interface to TkrAlignmentSvc (q.v.)  
   @author Leon Rochester 23-Jan-2003
  */
