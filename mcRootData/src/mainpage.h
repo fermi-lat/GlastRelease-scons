@@ -1,8 +1,11 @@
 /** @mainpage package mcRootData
 
   This package defines the ROOT classes which mirror the GlastEvent MonteCarlo
-  TDS classes.  The primary ROOT Monte Carlo class is McEvent.  Each McEvent 
-  contains:
+  TDS classes.  The primary ROOT Monte Carlo class is McEvent.  
+  
+  @image html mcTree.gif
+    
+  Each McEvent contains:
 
   - Event Id
   - Run Number
