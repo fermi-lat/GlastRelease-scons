@@ -89,7 +89,7 @@ StatusCode GlastPropagatorSvc::initialize()
 
     // Instantiate the concrete tool we want for the propagator
     IToolSvc* toolSvc = 0;
-    if (service("ToolSvc",toolSvc).isSuccess())
+    if (sc = service("ToolSvc",toolSvc, true).isSuccess() )
     {
         // Which propagator to use?
         if (m_PropagatorType == "G4Propagator")
@@ -104,8 +104,10 @@ StatusCode GlastPropagatorSvc::initialize()
             sc = toolSvc->retrieveTool("RecoTool", m_PropagatorTool);
             log << MSG::INFO << "Using Gismo Particle Propagator" << endreq;
         }
-    }
-    
+    } else { 
+        log << MSG::INFO << "ToolSvc not found" << endreq;
+        return sc; 
+    }   
     return sc;
 }
 
