@@ -1,5 +1,5 @@
 package rootUtil
-version v0
+version v0r0
 
 use GlastPolicy v*
 
@@ -11,13 +11,12 @@ private
 use facilities v*
 use RootPolicy v2r*
 
-apply_pattern package_Cshlibflags
+apply_pattern package_shlibflags
 
 library rootUtil *.cxx ${rootUtil_headers}
 
 macro_append cppflags "" \
        Win32Debug ' /D "VISUAL_CPLUSPLUS" ' \
        Win32      ' /D "VISUAL_CPLUSPLUS" '
-
 
 application test_rootUtil test/*.cxx
