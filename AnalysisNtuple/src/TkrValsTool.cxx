@@ -766,7 +766,11 @@ StatusCode TkrValsTool::calculate()
 
             Tkr_2TkrAngle = acos(t1*t2);  
             Point x2p  = x2 + ((x1.z()-x2.z())/t2.z())*t2;
-            double doca_plane = (x2p-x1).mag();
+            Point x20  = x2 - (x2.z()/t2.z())*t2;
+            Point x10  = x1 - (x1.z()/t1.z())*t1;
+			double doca_plane = (x2p-x1).mag();
+            double doca_0     = (x20-x10).mag();
+            if(doca_plane > doca_0) Tkr_2TkrAngle *= -1.; 
             Tkr_2TkrHDoca = -doca_plane*t1.z();
         }
 
