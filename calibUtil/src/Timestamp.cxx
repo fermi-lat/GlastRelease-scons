@@ -2,7 +2,7 @@
 
 #include <ctime>
 #include <cstdlib>
-#include <strstream>
+#include <cstdio>
 #include "calibUtil/Timestamp.h"
 
 namespace calibUtil {
@@ -54,7 +54,7 @@ namespace calibUtil {
     pos = strTime.find(delim, oldPos);
 
     // Must have two occurrences of hyphen delimiter
-    if (pos == strTime.size()) return 0;
+    if (pos >= strTime.size()) return 0;
 
     fields.tm_year = atoi((strTime.substr(oldPos, pos)).c_str()) - 1900;
 
@@ -63,7 +63,7 @@ namespace calibUtil {
     pos = strTime.find(delim, oldPos);
 
     // Should have at least two occurrences of delim
-    if (pos == strTime.size()) return 0;
+    if (pos >= strTime.size()) return 0;
 
     fields.tm_mon = atoi((strTime.substr(oldPos, pos)).c_str()) - 1;
 
@@ -79,7 +79,7 @@ namespace calibUtil {
     // Remaining fields in string representation default to 0.
     fields.tm_hour = fields.tm_min = fields.tm_sec = 0;
 
-    if (pos != strTime.size() ) {   // more fields to process
+    if (pos < strTime.size() ) {   // more fields to process
       delim = ':';
       oldPos = pos + 1;
 
@@ -87,12 +87,12 @@ namespace calibUtil {
 
       fields.tm_hour = atoi((strTime.substr(oldPos, pos)).c_str());
       
-      if (pos != strTime.size() ) {
+      if (pos < strTime.size() ) {
         oldPos = pos + 1;
         pos = strTime.find(delim, oldPos);
         fields.tm_min = atoi((strTime.substr(oldPos, pos)).c_str());
         
-        if (pos != strTime.size() ) {
+        if (pos < strTime.size() ) {
           oldPos = pos + 1;
           pos = strTime.find(delim, oldPos);
           fields.tm_sec = atoi((strTime.substr(oldPos, pos)).c_str());
@@ -110,12 +110,21 @@ namespace calibUtil {
     struct tm * fields = gmtime(&bin);
 
     strTime.resize(0);
-    std::strstream s;
-    s << (fields->tm_year + 1900) << "-" << (fields->tm_mon + 1) << "-";
-    s << fields->tm_mday << " " << fields->tm_hour << ":";
-    s << fields->tm_min << ":" << fields->tm_sec;
-    strTime += s.str();
-
+    
+    char buf[20];
+    char* bufPtr = &buf[0];
+    sprintf(buf, "%i", fields->tm_year + 1900);
+    strTime += bufPtr; strTime +=  "-";
+    sprintf(buf, "%i", fields->tm_mon +1);
+    strTime += bufPtr; strTime +=  "-";
+    sprintf(buf, "%i", fields->tm_mday);
+    strTime += bufPtr; strTime +=  " ";
+    sprintf(buf, "%i", fields->tm_hour);
+    strTime += bufPtr; strTime +=  ":";
+    sprintf(buf, "%i", fields->tm_min);
+    strTime += bufPtr; strTime +=  ":";
+    sprintf(buf, "%i", fields->tm_sec);
+    strTime += bufPtr;
   }
 
 
