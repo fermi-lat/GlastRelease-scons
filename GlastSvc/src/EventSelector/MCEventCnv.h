@@ -3,12 +3,14 @@
 #define CNV_MCEVENTCNV_H 1
 
 // Include files
-#include "ItemCnv.h"
+#include "BaseCnv.h"
 
 // Forward declarations
 class IDataDirectory;
 class ISvcLocator;
 class MCEvent;
+
+
 // Abstract factory to create the converter
 template <class T> class CnvFactory;
 
@@ -18,17 +20,21 @@ template <class T> class CnvFactory;
 //  
 // Description :  GLAST converter of Monte Carlo event header
 //
-// Author :       Markus Frank
+// Author :      
 //
 //------------------------------------------------------------------------------
-class MCEventCnv : public ItemCnv<MCEvent>      {
+class MCEventCnv : public BaseCnv { // ItemCnv<MCEvent>      {
   friend class CnvFactory<MCEventCnv>;
-protected:
+public:
   /// Standard Constructor
   MCEventCnv(ISvcLocator* svc);
   /// Standard Destructor
   virtual ~MCEventCnv();
-  /// Update object from somewhere
-  virtual StatusCode updateObj(int* data, MCEvent* pObject);
+  static const CLID& classID();
+
+  /// Create object
+  virtual StatusCode createObj(IOpaqueAddress* pAddress, DataObject*& refpObject);
+
+private:
 };
 #endif // CNV_MCEVENTCNV_H
