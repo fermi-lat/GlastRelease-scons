@@ -1,5 +1,8 @@
 #ifndef G4ParticlePropagator_h
 #define G4ParticlePropagator_h 
+#ifdef WIN32 // for G4 
+#include <float.h>
+#endif
 
 #include "RunManager.h"
 #include "DetectorConstruction.h"
