@@ -8,8 +8,8 @@ macro   geomrep_linkopts "-L ${GEOMREPROOT}/${CMTCONFIG} -lgeomrep"\
         VisualC ""
 
 
-macro_append Win32Debug   " ${GEOMREPROOT}/Win32/Debug/geomreplib.lib"
-macro_append Win32Release " ${GEOMREPROOT}/Win32/Release/geomreplib.lib"
+macro_append Win32Debug   " ${GEOMREPROOT}/${DebugDir}/geomreplib.lib"
+macro_append Win32Release " ${GEOMREPROOT}/${ReleaseDir}/geomreplib.lib"
 
 private
 

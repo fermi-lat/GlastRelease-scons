@@ -6,8 +6,8 @@ use CLHEP v1r4
 macro   geometry_linkopts "-L ${GEOMETRYROOT}/${CMTCONFIG} -lgeometry"\
         VisualC         ""
 
-macro_append Win32Debug   " ${GEOMETRYROOT}/Win32/Debug/geometrylib.lib"
-macro_append Win32Release " ${GEOMETRYROOT}/Win32/Release/geometrylib.lib"
+macro_append Win32Debug   " ${GEOMETRYROOT}/${DebugDir}/geometrylib.lib"
+macro_append Win32Release " ${GEOMETRYROOT}/${ReleaseDir}/geometrylib.lib"
 
 
 private
