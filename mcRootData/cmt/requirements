@@ -14,25 +14,25 @@ apply_pattern package_headers
 
 
 private
+use RootPolicy
 
-# For Windows, use a setup script to run rootcint automatically
-# Still using document generator for UNIX
-setup_script dorootcint
+macro root_headers "\
+ ../mcRootData/VolumeIdentifier.h\
+ ../mcRootData/McIntegratingHit.h\
+ ../mcRootData/McParticle.h\
+ ../mcRootData/McPositionHit.h\
+ ../mcRootData/McEvent.h\
+ ../mcRootData/mcRootDataLinkDef.h"
 
-# Create the Root Cint classes
-macro root_headers "VolumeIdentifier.h McIntegratingHit.h McParticle.h McPositionHit.h McEvent.h mcRootDataLinkDef.h"
+macro root_linkdef "../mcRootData/mcRootDataLinkDef.h"
 
-# on unix use a document to make rootcint part of the build process
-make_fragment mcrootdata_dorootcint_header
-make_fragment mcrootdata_dorootcint -header=mcrootdata_dorootcint_header
-document mcrootdata_dorootcint mcRootDataRootCint CINTFILE=../mcRootData/mcRootDataCint.cxx
+apply_pattern root_package
 
 macro mcRootData_shlibflags " " \
       VisualC            " ${use_linkopts} "
 
 
-library  mcRootData *.cxx \
-     ../mcRootData/*.cxx \
+library  mcRootData *.cxx ../mcRootData/*.cxx\
      ${mcRootData_headers}
 
 macro test_mcRootDatalinkopts ${mcRootData_shlibflags}
