@@ -14,7 +14,7 @@
 namespace calibUtil {
  
   /// Constructor that fills in values of generic data from XML file
-  GenericSrv::GenericSrv(DOM_Element docElt) : m_sample(0) {
+  GenericSrv::GenericSrv(const DOM_Element& docElt) : m_sample(0) {
     
     DOM_Element child  = xml::Dom::findFirstChildByName(docElt,"generic");
     m_instName  = xml::Dom::getAttribute(child,"instrument");
