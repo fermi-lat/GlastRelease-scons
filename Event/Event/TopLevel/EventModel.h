@@ -29,7 +29,7 @@
 
         namespace Raw {
             _EXTERN_ std::string Event;
-            _EXTERN_ std::string CsIDatas;
+            _EXTERN_ std::string TdCsIDatas;
         };
 
 
