@@ -55,7 +55,7 @@ public:
 
 	
     /// @brief This method will attempt to find the hits prior to the first hit on track
-	int FindTrackHitsTool::addLeadingHits(Event::TkrTrack track);
+	int FindTrackHitsTool::addLeadingHits(Event::TkrTrack* track);
 
 private:
 
@@ -585,7 +585,7 @@ Event::TkrCluster* FindTrackHitsTool::findNearestCluster(int plane, Event::TkrTr
     return found_cluster;
 }
 
-int FindTrackHitsTool::addLeadingHits(Event::TkrTrack track)
+int FindTrackHitsTool::addLeadingHits(Event::TkrTrack* track)
 {
   // Purpose and Method: This method projects backwards from 
   //             the start of the track to pick-up possible un-paired x & y hits. 
