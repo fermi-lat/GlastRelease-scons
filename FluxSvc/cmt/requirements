@@ -1,9 +1,9 @@
 package FluxSvc
-version v2
+version v2r1
 
 branches FluxSvc mgr doc
 
-use flux v3
+use flux v4
 use GaudiSvc
 
 include_dirs $(FLUXSVCROOT)
@@ -23,12 +23,10 @@ private
 
 apply_pattern package_Cshlibflags
 
-private
 
-# need to use this only to make the dll available for the test program (which does not use it!)
-use RootHistCnv
+# test program, using local joboptions
 
+macro JobOptions  "src/test/jobOptions.txt"
+set JOBOPTIONS ${FLUXSVCROOT}/$(jobOptions)
 
-macro WinJobOptions ""  WIN32 "test/jobOptions.txt"
-
-application testFluxSvc test/TestMain.cxx test/FluxTestAlg.cxx ${WinJobOptions} 
+application testFluxSvc test/TestMain.cxx test/FluxTestAlg.cxx ${jobOptions} 

@@ -47,6 +47,8 @@ Algorithm(name, pSvcLocator){
 /*! */
 StatusCode FluxTestAlg::initialize() {
     
+	static std::string source_name="backgndmix";
+
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "initializing..." << endreq;
     
@@ -66,9 +68,9 @@ StatusCode FluxTestAlg::initialize() {
     log << MSG::INFO << "loading source..." << endreq;
 
 
-    sc =  fsvc->source("default", m_flux);
+    sc =  fsvc->source(source_name, m_flux);
     if( sc.isFailure()) {
-        log << MSG::ERROR << "Could not find flux" << "default" << endreq;
+        log << MSG::ERROR << "Could not find flux " << source_name << endreq;
         return sc;
     }
 

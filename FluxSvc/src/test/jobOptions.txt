@@ -1,12 +1,12 @@
 //##############################################################
 //
-// Job options file for Gui test program
+// Job options file for FluxSvc test program
 //
 
 
 ApplicationMgr.ExtSvc   = { "FluxSvc" };
 
-ApplicationMgr.DLLs   = { "RootHistCnv", "FluxSvc" }; 
+ApplicationMgr.DLLs   = { "FluxSvc" }; 
 
 //--------------------------------------------------------------
 // Private Application Configuration options
