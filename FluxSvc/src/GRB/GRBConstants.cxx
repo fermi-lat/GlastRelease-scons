@@ -1,27 +1,35 @@
-#include <iostream.h>
-#include <fstream.h>
+//#include <iostream.h>
+//#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <stdio.h>
 #include <string>
 #include <math.h>
+#include "src/FluxException.h" // defines FATAL_MACRO
 #include "FluxSvc/mainpage.h"
 #include "GRBConstants.h"
 
-GRBConstants::GRBConstants(char filen)
+#include "facilities/Util.h"
+
+using namespace std;
+
+GRBConstants::GRBConstants()
 {
-  ReadParam(filen);
+  ReadParam();
 }
 
-void GRBConstants::ReadParam(char filen){
+void GRBConstants::ReadParam(){
   char buf[100];
-  ifstream f1("../src/test/GRBParam.txt");
+  std::string paramFile = "$(FLUXSVCROOT)/src/test/GRBParam.txt";
+  facilities::Util::expandEnvVar(&paramFile);
+  ifstream f1(paramFile.c_str());
   if (! f1.is_open()) 
     {
-      cout<<" Error Opening Parmas File!!"<<endl;
-      cout<<"The file must be placed in:"<<endl;
-      cout<<"../src/test/GRBParam.txt"<<endl;
+      cout<<"Error Opening $(FLUXSVCROOT)/src/test/GRBParam.txt\n";
+      //TODO LIST: still need to remove this exit, without gwtting a core dump!
       exit(1);
     }
-  cout<<"Read the file: "<<filen<<endl;
+  cout<<"Read the file: "<<paramFile.c_str()<<endl;
   
   f1.getline(buf,100);
   sscanf(buf,"%d",&nshell);

@@ -13,6 +13,8 @@
 #include "CLHEP/Random/RandFlat.h"
 #include "CLHEP/Random/RanluxEngine.h"
 
+using namespace std;
+
 GRBShell::GRBShell(double E) 
 { 
   m_gamma = generateGamma(cst::gamma0,cst::dgamma);

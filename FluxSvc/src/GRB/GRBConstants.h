@@ -6,8 +6,6 @@
  * \autor Nicola Omodei nicola.omodei@pi.infn.it
  * \author Johann Cohen-Tanugi johann.cohen@pi.infn.it
  */
-#include <iostream.h>
-#include <fstream.h>
 
 #ifndef GRBCONSTANTS_HH
 #define GRBCONSTANTS_HH 1
@@ -61,13 +59,13 @@ class GRBConstants
 { 
   
  public:
-  //! \brief Constructor calls method readParam with the file as argument
-  GRBConstants(char filen);
+  //! \brief Constructor calls method readParam wich gets an external file
+  GRBConstants();
 
   ~GRBConstants() { }
   
-  //! A parameter file to be read is a temporary solution for changing parameters without recompiling.
-  void ReadParam(char filen);
+  //! Parameters are read from a file using facilities::Util::expandEnvVar ethod
+  void ReadParam();
   
   inline int Nshell() {return nshell;}
   inline void setNshell(int value=10){nshell=value;}

@@ -21,9 +21,7 @@ class GRBSim
   //! Gathers all relevant constants for the simulation 
   GRBConstants *myParam;
 
-  //! Constructor takes a parameter file as argument.
-  GRBSim(char);
-  //! Destructor
+  GRBSim();
   ~GRBSim();
 
   /*!

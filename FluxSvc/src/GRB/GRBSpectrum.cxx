@@ -15,7 +15,8 @@ const ISpectrumFactory& GRBSpectrumFactory = factory;
 
 GRBSpectrum::GRBSpectrum(const std::string& params) 
 {
-  m_grbsim = new GRBSim(char("../src/test/Parameters.txt"));
+  m_grbsim = new GRBSim();
+  
   int flag=0;
   while(flag==0)
     {

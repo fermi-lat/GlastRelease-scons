@@ -3,8 +3,11 @@
 //    Authors: Nicola Omodei & Johann Cohen Tanugi 
 //
 
+#include <iostream>
 #include <math.h>
 #include "GRBShock.h"
+
+using namespace std;
 
 GRBShock::GRBShock(GRBShell* Sh1, GRBShell* Sh2) 
 { 
@@ -17,11 +20,12 @@ GRBShock::GRBShock(GRBShell* Sh1, GRBShell* Sh2)
   double dr1=Sh1->Thickness();
   double dr2=Sh2->Thickness();
   
-  double b1=sqrt(1.-1./pow(g1,2));
-  double b2=sqrt(1.-1./pow(g2,2));
-  double m11=pow(m1,2);
-  double m22=pow(m2,2);
-  double m12=m1*m2;
+  //  double b1=sqrt(1.-1./pow(g1,2));
+  //  double b2=sqrt(1.-1./pow(g2,2));
+  //  double m11=pow(m1,2);
+  //  double m22=pow(m2,2);
+  //  double m12=m1*m2;
+
   double eb=cst::alphab/0.01;
     
   //Calculated by Nich

@@ -1,6 +1,6 @@
 #include <iterator>
 #include <iostream>
-#include <stdio.h>
+//#include <stdio.h>
 #include <algorithm>
 #include <vector>
 #include <math.h>
@@ -13,6 +13,7 @@
 
 /*------------------------------------------------------*/
 using namespace cst;
+using namespace std;
 /*------------------------------------------------------*/
 
 /*!
@@ -29,11 +30,20 @@ public:
 /*------------------------------------------------------*/
 
 
-GRBSim::GRBSim(char ParameterFile)
+GRBSim::GRBSim()
 {
   cout<<"******Staring The GRB Simulation******"<<endl;
-  myParam=new GRBConstants(ParameterFile);
-  
+  try
+    {
+      myParam=new GRBConstants();
+    }
+      catch (char * s)
+	{
+	  std::cout<< "Failure initializing the GRB constants \n";
+	  //TODO LIST: still need to remove this, without getting a core dump!
+	  exit(1);
+	}  
+
   m_grbdir=std::make_pair(((RandFlat::shoot(1.0))*1.4)-0.4,(RandFlat::shoot(1.0))*2*M_PI);
   
   double qo=(1.0+3.0*cst::wzel)/2.0;
