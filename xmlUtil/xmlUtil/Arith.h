@@ -4,9 +4,18 @@
 
 #include <string>
 #include <xercesc/dom/DOM_Element.hpp>
-// #include <xercesc/dom/DOMString.hpp>
+#include "xmlUtil/XmlUtilException.h"
 
 namespace xmlUtil {
+      
+  class BadTag : public XmlUtilException {
+  public:
+    BadTag(std::string reason = "") : XmlUtilException() {
+      m_name = std::string("BadTag");
+      makeMsg(reason);
+    }
+  };
+
   //! The Arith class handles the xml arithmetic elements, allowing
   //! derived constants to be computed and their values put into
   //! the DOM representation of the XML file.
