@@ -22,8 +22,10 @@ class IServer;
 class IAppMgrUI;
 class SvcAdapter;
 
-class HepRepSvc : virtual public Service,  virtual public IIncidentListener,
-                  virtual public IHepRepSvc, virtual public IRunable
+class HepRepSvc : virtual public Service,  
+                  virtual public IIncidentListener, 
+                  virtual public IHepRepSvc, 
+                  virtual public IRunable 
 {  
  public:
 
