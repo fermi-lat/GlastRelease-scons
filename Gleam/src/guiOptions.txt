@@ -9,4 +9,8 @@ ApplicationMgr.DLLs   += {"FluxDisplay" };
 ApplicationMgr.ExtSvc += {"FluxMenuSvc", 
         "DetectorDisplay" };
 
+
+EventDisplay.Members = {"TkrDisplayAlg"};
+EventDisplay.Members +={"HitDisplay" };
+
 // ----------end display-specific
