@@ -5,6 +5,7 @@ version v1r2p1
 branches src cmt doc
 
 use GlastSvc v*
+use CalibSvc v*
 use facilities
 
 apply_pattern packageShr
