@@ -1,6 +1,6 @@
 package AnalysisNtuple
 
-version v1r1
+version v1r2
 
 branches src cmt doc
 use GlastSvc        v*
