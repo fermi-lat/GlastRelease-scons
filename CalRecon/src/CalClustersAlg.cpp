@@ -21,8 +21,8 @@
 int nbins;  //!< Number of bins used for the fit
 std::vector<double> g_elayer;  //!< Energy per layer in GeV
 double slope;   //!< slope of the shower direction
-double xtalHeight; //!< xtal height
-double xtalWidth;  //!< xtal width
+double xtalHeight; //!< xtal height in cm
+double xtalWidth;  //!< xtal width  in cm
 
 //! function to compute the true energy deposited in a layer
 /*! Uses the incomplete gamma function: gamma(double,double) implemented in gamma.cxx
@@ -465,8 +465,8 @@ StatusCode CalClustersAlg::initialize()
     setProperties();
     log << MSG::INFO << "CalClustersAlg: callNumber = " << m_callNumber << endreq;
 
-    xtalHeight = m_CsIHeight;
-	xtalWidth = m_CsIWidth;
+    xtalHeight = m_CsIHeight/10.;  // crystal height in cm
+	xtalWidth = m_CsIWidth/10.;    // crystal width in cm
     
     
     // Minuit object
