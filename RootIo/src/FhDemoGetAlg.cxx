@@ -121,7 +121,10 @@ StatusCode FhDemoGetAlg::finalize_common(
     
     FhSystemEnv systemEnv ;
     systemEnv.init(header) ;
-    log << MSG::INFO << prefix << " SystemEnv.RootIoShr: " << systemEnv.getValue("RootIoShr") << endreq ;
+    TString cmtPath(systemEnv.getValue("CMTPATH")) ;
+    TString rootIoShr(systemEnv.getValue("RootIoShr")) ;
+    rootIoShr.Remove(0,cmtPath.Length()) ;
+    log << MSG::INFO << prefix << " SystemEnv.RootIoShr: $CMTPATH" << rootIoShr << endreq ;
 
     FhCmtConfig cmtConfig ;
     cmtConfig.init(header) ;
