@@ -25,6 +25,7 @@ DECLARE_FACTORY_ENTRIES(CalibSvc) {
   DECLARE_CONVERTER(XmlCalMuSlopeCnv);
   DECLARE_CONVERTER(XmlCalLightAttCnv);
   DECLARE_CONVERTER(XmlCalLightAsymCnv);
+  DECLARE_CONVERTER(XmlCalIntNonlinCnv);
 
 
   // Following doesn't exist yet.
