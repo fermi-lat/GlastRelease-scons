@@ -2,6 +2,8 @@
  * package GlastSvc
  * package manager:T.Burnett
  *
+ * 13-jan-03  THB tag v9r4p1  adjust requirement file for vsnet
+  *-------------------new GlastRelease---------------------------------
  * 10-oct-02  LSR tag v9r3p1 fix bug in GlastDetSvc
  *  9-oct-02  THB tag v9r3   new code for handling randoms from KY
  * 24-sep-02  THB tag v9r2p1 do not require SiliconPlaneGeometry init success

@@ -1,5 +1,5 @@
 package GlastSvc
-version v9r4
+version v9r4p1
 branches src cmt doc
 
 use Event v9r*
@@ -14,36 +14,24 @@ apply_pattern package_include
 
 # private
 
+macro GlastDetSvc_h    "" WIN32 "..\GlastSvc\GlastDetSvc\*.h GlastDetSVc\*.h"
+macro GlastRandomSvc_h "" WIN32 "..\GlastSvc\GlastRandomSvc\*.h GlastRandomSvc\*.h"
+macro EventSelector_h  "" WIN32 "..\GlastSvc\EventSelector\*.h EventSelector\*.h"
 
-
-
-apply_pattern package_headers
-
-macro_append GlastSvc_headers "" WIN32 " ..\GlastSvc\Reco\*.h \
-                 ../GlastSvc/GlastDetSvc/*.h \
-                 ../GlastSvc/GlastRandomSvc/*.h ../GlastSvc/*.h \
-                 GlastDetSvc/*.h GlastRandomSvc/*.h EventSelector/*.h 
-
-library GlastSvc GlastDetSvc/*.cxx\
-	         GlastRandomSvc/*.cxx\
-                 EventSelector/*.cpp \
-                  MonteCarlo/*.cpp\
-		 Dll/*.cpp \
-                 ${GlastSvc_headers}
+library GlastSvc ${GlastDetSvc_h}     GlastDetSvc/*.cxx\
+	        ${GlastRandomSvc_h}  GlastRandomSvc/*.cxx\
+                 ${EventSelector_h}   EventSelector/*.cpp \
+	        Dll/*.cpp
             
 
 # get flags to build shared library
 
 apply_pattern package_Cshlibflags
 
-private
-
-# WinInclude is to allow header files to be added to the 
-# VC++ workspace, without causing build problems on unix
 
 macro WinInclude "" WIN32 "test/*.h  test/*.txt test/*.xml" 
-public 
+
 # build this for non-shareable testing
-set JOBOPTIONS  "${GLASTSVCROOT}/src/test/jobOptions.txt"
+set TESTJOBOPTIONS  "${GLASTSVCROOT}/src/test/jobOptions.txt"
 application test_GlastSvc  ${GlastMain} test/*.cpp   $(WinInclude) 
 
