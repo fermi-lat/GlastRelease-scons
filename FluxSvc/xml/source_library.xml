@@ -322,6 +322,14 @@
         </spectrum>
     </source>
 
+	 <!-- Test source at the galactic origin -->
+     <source name="galcenter" flux="0.05">
+          <spectrum escale="GeV">
+              <particle name="gamma"> <energy e="0.1"/> </particle>
+               <galactic_dir l="0" b="0"/>
+          </spectrum>
+     </source>
+
     <!-- diffuse extraglactic from 100 MeV: see above for numbers-->
     <source name="diffuse-100mev" flux="0.145">
         <spectrum escale="GeV">
