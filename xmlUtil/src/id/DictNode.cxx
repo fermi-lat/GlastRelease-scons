@@ -239,8 +239,6 @@ namespace xmlUtil {
   bool DictNode::valuesDisjoint(ConstNodeIterator start, 
                                 ConstNodeIterator last) {
     if (*start == *last) return true;
-    //    if (start == last) return true;
-    //    if (start + 1 == last) return true;
     
     ConstNodeIterator pCurrentNode = start;
     std::set<unsigned> values;
