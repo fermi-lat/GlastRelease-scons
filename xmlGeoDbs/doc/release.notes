@@ -2,6 +2,10 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 20-nov-2003: jrb v1r15    Several fixes to ACD geometry:
+ *     1. Adjust positions of side ribbons and top X-ribbons
+ *     2. Reverse sense of dovetail for tile sides
+ *     3. Correct top tile Y dimension for tiles in rows 1 and 3
  * 18-nov-2003: jrb v1r14    (for Xin) Shield volume given updated material,
  *                           dimensions
  * 20-oct-2003: jrb v1r13p5  Form id for side ribbons properly
