@@ -74,6 +74,10 @@ class HepRepSvc : virtual public Service,
   /// sent the valid setEvent command accepted by this server
   std::string getCommands();  
 
+
+  /// The method tries to go back to a previous event
+  bool previousEvent(int);
+  
   /// This method set the Event ID to a pair Run/Event
   bool setEventId(int run, int event);
 

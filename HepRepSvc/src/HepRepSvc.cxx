@@ -320,7 +320,7 @@ std::string HepRepSvc::getCommands()
     sNames << ",fluxes,source";
   
   if (m_rootIoSvc)
-    sNames << ",eventId,eventIdx";
+    sNames << ",back,eventId,eventIdx";
   
   return sNames.str();     
 }
@@ -353,6 +353,16 @@ bool HepRepSvc::setEventId(int run, int event)
   // Make sure Index is set to -1
   m_rootIoSvc->setIndex(-1);
   return m_rootIoSvc->setRunEventPair(std::pair<int, int>(run, event));
+}
+
+
+bool HepRepSvc::previousEvent(int i)
+{
+  if (m_rootIoSvc)
+  {
+    return m_rootIoSvc->setIndex(m_rootIoSvc->index() - i);
+  }
+  else return 0;
 }
 
 
