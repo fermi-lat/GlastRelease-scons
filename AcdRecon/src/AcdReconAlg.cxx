@@ -207,17 +207,9 @@ StatusCode AcdReconAlg::acdDoca() {
     while(trkPtr != tracksTds->end())
     {
         Event::TkrFitTrack* trackTds  = *trkPtr++;       // The TDS track
-
-        double x = trackTds->getPosition().x();
-        double y = trackTds->getPosition().y();
-        double z = trackTds->getPosition().z();
-        Point pos(x,y,z);
-        Vector dir(trackTds->getDirection().x(),trackTds->getDirection().y(),trackTds->getDirection().z());
-           
-        float testDoca = doca(pos, dir, m_rowDocaCol);
+        float testDoca = doca(trackTds->getPosition(), trackTds->getDirection(), m_rowDocaCol);
         if(testDoca < m_doca) m_doca = testDoca;
-            
-        float test_dist= hitTileDist(pos, dir);
+        float test_dist= hitTileDist(trackTds->getPosition(), trackTds->getDirection());
         if(test_dist > m_act_dist) m_act_dist = test_dist;
 
     }
