@@ -2,6 +2,7 @@
  * package Event
  * package manager:T.Burnett (original author: H. Gillespie)
  *
+ * v8r5  14-may-02 THB McParticle update.
  * v8r4  13-may-02 THB CalRecon classes updated by Sasha
  * v8r3  13-may-02 THB TkrRecon classes updated by Tracy
  * v8r2  11-may-02 THB fixes to namespaces and EventModel
