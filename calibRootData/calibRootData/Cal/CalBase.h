@@ -39,7 +39,7 @@ namespace calibRootData {
   protected:
 
     CalDimension m_dim;
-    bool_t m_exact;                       // true iff dimension info is exact
+    Bool_t m_exact;                       // true iff dimension info is exact
     ClassDef(calibRootData::CalBase, 1)
   };
 }
