@@ -2,11 +2,9 @@
 
 #include <string>
 #include <algorithm>
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 #include "xmlUtil/id/DictConstraints.h"
-//#include <xercesc/dom/DOMString.hpp>
 #include <xercesc/dom/DOMElement.hpp>
-// #include <xercesc/dom/DOMNodeList.hpp>
 
 
 namespace xmlUtil {
@@ -18,7 +16,7 @@ namespace xmlUtil {
   DictConstraints::DictConstraints(DOMElement* elt) : 
     m_style(ESTYLE_uninit), m_valList(0), m_minVal(0), m_maxVal(0)
   {
-    using xml::Dom;
+    using xmlBase::Dom;
     int   minVal, maxVal;
 
     std::string vType = Dom::getTagName(elt);
@@ -55,8 +53,8 @@ namespace xmlUtil {
           if (temp < 0) {
             delete m_valList;
             std::string msg =
-              "From xml::DictConstraints::DictConstraints. vEnumVal has value < 0";
-            throw xml::WrongAttributeType(msg);
+              "From xmlUtil::DictConstraints::DictConstraints. vEnumVal has value < 0";
+            throw xmlBase::WrongAttributeType(msg);
           }
           else {
             unsigned newVal = temp;
@@ -65,9 +63,9 @@ namespace xmlUtil {
             if (temp > maxVal) maxVal = temp;
           }
         }
-        catch (xml::DomException ex) {
+        catch (xmlBase::DomException ex) {
           delete m_valList;
-          std::cerr << "From xml::DictConstraints::DictConstraints " <<
+          std::cerr << "From xmlUtil::DictConstraints::DictConstraints " <<
             ex.getMsg();
           throw ex;
         }
@@ -76,9 +74,9 @@ namespace xmlUtil {
 
     if ((minVal < 0 ) || (maxVal < minVal)) {
       if (m_valList) delete m_valList;
-      std::string msg = "From xml::DictConstraints::DictConstraints ";
+      std::string msg = "From xmlUtil::DictConstraints::DictConstraints ";
       msg += "illegal min and max ";
-      throw xml::WrongAttributeType(msg);
+      throw xmlBase::WrongAttributeType(msg);
     }
     else {
       m_minVal = minVal;

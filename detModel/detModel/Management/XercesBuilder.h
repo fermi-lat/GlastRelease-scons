@@ -1,7 +1,9 @@
 #ifndef XERCESBUILDER_H
 #define XERCESBUILDER_H
 #include "detModel/Management/Builder.h"
-#include "xml/XmlParser.h"
+
+// Should replace with suitable Xerces includes
+#include "xmlBase/XmlParser.h"
 
 namespace detModel{
 

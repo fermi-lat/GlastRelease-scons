@@ -6,7 +6,7 @@
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/util/XMLString.hpp>
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 
 namespace { 
@@ -55,7 +55,7 @@ namespace xmlUtil {
     XMLString::release(&xmlchSource);
 
     // Document element should have a CVSid attribute
-    std::string idAtt = xml::Dom::getAttribute(docElt, "CVSid");
+    std::string idAtt = xmlBase::Dom::getAttribute(docElt, "CVSid");
 
     char * strippedRaw;
     char * myRaw = 0;
@@ -69,10 +69,10 @@ namespace xmlUtil {
     }
     else strippedRaw = unknownId;
 
-    xml::Dom::addAttribute(source, "inputId", std::string(strippedRaw));
+    xmlBase::Dom::addAttribute(source, "inputId", std::string(strippedRaw));
 
     // Already have creator ID as std::string
-    xml::Dom::addAttribute(source, "creatorId", m_myCVSID);
+    xmlBase::Dom::addAttribute(source, "creatorId", m_myCVSID);
     
     std::string theText = 
       std::string("Do not edit! This file automatically created by ");

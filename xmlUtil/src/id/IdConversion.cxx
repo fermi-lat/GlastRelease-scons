@@ -2,7 +2,7 @@
 
 #include "xmlUtil/id/IdConversion.h"
 #include "xmlUtil/id/IdOperation.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 #include "xmlUtil/id/IdOpTruncate.h"
 #include "xmlUtil/id/IdOpDisappear.h"
 #include "xmlUtil/id/IdOpCompress.h"
@@ -16,15 +16,15 @@ namespace xmlUtil {
   IdConversion::IdConversion(const DOMElement* conversion) {
 
     // Get first child; invoke private function to build path
-    DOMElement* child = xml::Dom::getFirstChildElement(conversion);
+    DOMElement* child = xmlBase::Dom::getFirstChildElement(conversion);
     makePath(child);
 
     // Get next child; save field name in condition component
-    child = xml::Dom::getSiblingElement(child);
-    m_condition = new std::string(xml::Dom::getAttribute(child, "name"));
+    child = xmlBase::Dom::getSiblingElement(child);
+    m_condition = new std::string(xmlBase::Dom::getAttribute(child, "name"));
 
     // Get next child;  build new op component.
-    child = xml::Dom::getSiblingElement(child);
+    child = xmlBase::Dom::getSiblingElement(child);
     buildOp(child);
   }
 
@@ -57,11 +57,11 @@ namespace xmlUtil {
     // "path" consists of a list of fields.  Fields have 
     // a required attribute "name".  Save its value.
     m_path = new NameSeq;
-    DOMElement* child = xml::Dom::getFirstChildElement(pathElt);
+    DOMElement* child = xmlBase::Dom::getFirstChildElement(pathElt);
 
     while (child != 0) {
-      m_path->push_back(new std::string(xml::Dom::getAttribute(child, "name")));
-      child = xml::Dom::getSiblingElement(child);
+      m_path->push_back(new std::string(xmlBase::Dom::getAttribute(child, "name")));
+      child = xmlBase::Dom::getSiblingElement(child);
     }
 
   }
@@ -71,7 +71,7 @@ namespace xmlUtil {
   // the set of ops was expected to change often.
   void IdConversion::buildOp(const DOMElement* opElt) {
 
-    std::string opType = xml::Dom::getTagName(opElt);
+    std::string opType = xmlBase::Dom::getTagName(opElt);
 
     if (opType == std::string("truncate"))
     {

@@ -2,8 +2,8 @@
 
 /*! \file Stand-alone test program for id dictionary code */
 
-#include "xml/XmlParser.h"
-#include "xml/Dom.h"
+#include "xmlBase/XmlParser.h"
+#include "xmlBase/Dom.h"
 #include "xmlUtil/Substitute.h"
 #include "xmlUtil/id/DictValidVisitor.h"
 #include "xmlUtil/id/IdDict.h"
@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  xml::XmlParser* parser = new xml::XmlParser();
+  xmlBase::XmlParser* parser = new xmlBase::XmlParser();
   DOMDocument* doc = parser->parse(xmlInput);
   DOMElement*  docElt = doc->getDocumentElement();
 
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
   xmlUtil::Substitute* sub = new xmlUtil::Substitute(doc);
 
   // Look for IdDict element
-  DOMElement* dictElt = xml::Dom::findFirstChildByName(docElt, "idDict");
+  DOMElement* dictElt = xmlBase::Dom::findFirstChildByName(docElt, "idDict");
   if (dictElt == 0) {
     std::cout << "No identifier dictionary found " << std::endl;
     exit(0);
@@ -103,7 +103,7 @@ int main(int argc, char* argv[]) {
 
   // Look for IdConverter
   DOMElement* converterElt = 
-    xml::Dom::findFirstChildByName(docElt, "idConverter");
+    xmlBase::Dom::findFirstChildByName(docElt, "idConverter");
   if (converterElt == 0) {
     std::cout << "No id converter found " << std::endl;
     exit(0);

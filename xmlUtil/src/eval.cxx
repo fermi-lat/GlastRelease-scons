@@ -14,8 +14,8 @@
         output
  */
 
-#include "xml/XmlParser.h"
-#include "xml/Dom.h"
+#include "xmlBase/XmlParser.h"
+#include "xmlBase/Dom.h"
 #include "xmlUtil/Arith.h"
 #include "xmlUtil/Substitute.h"
 #include "xmlUtil/Constants.h"
@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
     exit(0);
   }
 
-  xml::XmlParser* parser = new xml::XmlParser();
+  xmlBase::XmlParser* parser = new xmlBase::XmlParser();
   DOMDocument* doc = parser->parse(argv[1], "gdd");
 
   if (doc == 0) {
@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
   // value of referenced element.
 
   std::vector<DOMElement*> sections;
-  xml::Dom::getChildrenByTagName(docElt, "section", sections);
+  xmlBase::Dom::getChildrenByTagName(docElt, "section", sections);
   int nSec = sections.size();
   int iSec;
 
@@ -107,7 +107,7 @@ int main(int argc, char* argv[]) {
 
   // Finally output the elements
   // May want option to exclude comments here
-  xml::Dom::prettyPrintElement(docElt, *out, "");
+  xmlBase::Dom::prettyPrintElement(docElt, *out, "");
 
   delete parser;
   return(0);

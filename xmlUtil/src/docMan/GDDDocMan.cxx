@@ -2,7 +2,7 @@
 #include "xmlUtil/docMan/GDDDocMan.h"
 #include <xercesc/dom/DOMElement.hpp>
 #include "xmlUtil/Constants.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 namespace xmlUtil {
   XERCES_CPP_NAMESPACE_USE
@@ -17,7 +17,7 @@ namespace xmlUtil {
 
   bool GDDDocMan::parse(const std::string& filename, bool saveNotes,
                         const std::string& docType) {
-    using namespace xml;
+    using namespace xmlBase;
 
     m_constsClient->m_saveNotes = saveNotes;
     return DocMan::parse(filename, docType);
@@ -48,8 +48,8 @@ namespace xmlUtil {
       // Evaluate constants
       //      DOMDocument* doc = static_cast<DOMDocument *>(node);
       DOMDocument* doc = static_cast<DOMDocument *>(node);
-      CVSid = xml::Dom::getAttribute(doc->getDocumentElement(), "CVSid");
-      DTDversion = xml::Dom::getAttribute(doc->getDocumentElement(), 
+      CVSid = xmlBase::Dom::getAttribute(doc->getDocumentElement(), "CVSid");
+      DTDversion = xmlBase::Dom::getAttribute(doc->getDocumentElement(), 
                                           "DTDversion");
       Constants constants(doc);
       constants.normalizePrimary();
@@ -61,7 +61,7 @@ namespace xmlUtil {
     }  else {  // Child element of root; substitute
       DOMElement* elt = static_cast<DOMElement *>(node);
       //      if (elt->getAttributeNode("substituted") != 0) {
-      if (xml::Dom::hasAttribute(elt, "substituted")) {
+      if (xmlBase::Dom::hasAttribute(elt, "substituted")) {
         m_sub->execute(elt);
       }
     }

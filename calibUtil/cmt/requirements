@@ -7,7 +7,7 @@ version v1r1
 author Joanne Bogart <jrb@slac.stanford.edu>
 
 use facilities v2r*
-use xml        v5r* 
+use xmlBase    v5r* 
 
 use MYSQLEXT * IExternal
 

@@ -1,8 +1,8 @@
 // $Header$
 /// Module provides methods for clients to get strip services.
 
-#include "xml/XmlParser.h"
-#include "xml/Dom.h"
+#include "xmlBase/XmlParser.h"
+#include "xmlBase/Dom.h"
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/DOMNodeList.hpp>
 #include <xercesc/dom/DOMTreeWalker.hpp>
@@ -31,10 +31,10 @@ namespace calibUtil {
                                                 m_state(FROM_PERS), 
                                                 m_genSrv(0)            
   {
-    using xml::Dom;
+    using xmlBase::Dom;
     using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument;
 
-    xml::XmlParser* parser = new xml::XmlParser();
+    xmlBase::XmlParser* parser = new xmlBase::XmlParser();
     DOMDocument* doc = parser->parse(xmlFileName.c_str());
 
     if (doc == 0) {
@@ -65,7 +65,7 @@ namespace calibUtil {
         tower.m_row = Dom::getIntAttribute(towers[iTower], "row");
         tower.m_col = Dom::getIntAttribute(towers[iTower], "col");
       }
-      catch (xml::DomException ex) {
+      catch (xmlBase::DomException ex) {
         std::cerr << "From calibUtil::StripSrv::StripSrv" << std::endl
                   << ex.getMsg() << std::endl;
         throw ex;
@@ -195,7 +195,7 @@ namespace calibUtil {
   // Private utilities
 
   void StripSrv::fillUni(const DOMElement* uniElt, Uniplane *uni) {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     std::string attValue;
 
@@ -230,7 +230,7 @@ namespace calibUtil {
 
 
   void StripSrv::fillStrips(const DOMElement* badElt, StripCol& list) {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     DOMElement* childElt = Dom::getFirstChildElement(badElt);
 
@@ -247,7 +247,7 @@ namespace calibUtil {
           first = Dom::getIntAttribute(childElt, "first");
           last = Dom::getIntAttribute(childElt, "last");
         }
-        catch (xml::DomException ex) {
+        catch (xmlBase::DomException ex) {
           std::cerr << "From calibUtil::StripSrv::fillStrips" << std::endl
                     << ex.getMsg() << std::endl;
           throw ex;

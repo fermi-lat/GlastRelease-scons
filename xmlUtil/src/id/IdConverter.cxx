@@ -5,7 +5,7 @@
 #include "xmlUtil/id/IdDictMan.h"
 #include "xmlUtil/id/IdDict.h"
 #include <xercesc/dom/DOMElement.hpp>
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 #include <algorithm>
 #include "xmlUtil/id/IdConverterLessThan.h"
 
@@ -23,25 +23,25 @@ XERCES_CPP_NAMESPACE_USE
     // on it, if necessary.
     // Assume that any constant evaluations and substitutions have
     // already been dealt with 
-    DOMElement* child = xml::Dom::getFirstChildElement(elt);
+    DOMElement* child = xmlBase::Dom::getFirstChildElement(elt);
 
-    if ( xml::Dom::getTagName(child) == std::string("constants") ) { // move on
-      child = xml::Dom::getSiblingElement(child);
+    if ( xmlBase::Dom::getTagName(child) == std::string("constants") ) { // move on
+      child = xmlBase::Dom::getSiblingElement(child);
     }
-    while (xml::Dom::getTagName(child) == std::string("idDict") )  {
+    while (xmlBase::Dom::getTagName(child) == std::string("idDict") )  {
       IdDict* dict = new IdDict(child);
       dictMan->registerDict(dict);
-      child = xml::Dom::getSiblingElement(child);
+      child = xmlBase::Dom::getSiblingElement(child);
     }
 
     // Now that all id dictionaries we need should have been defined,
     // handle attributes
-    std::string dictName = xml::Dom::getAttribute(elt, "fromDict");
+    std::string dictName = xmlBase::Dom::getAttribute(elt, "fromDict");
     if (dictName.size() > 0 ) {  // then it's not just an empty string
       inputDictName = new std::string(dictName);
       inputDict = dictMan->findDict(dictName);
     }
-    dictName = xml::Dom::getAttribute(elt, "toDict");
+    dictName = xmlBase::Dom::getAttribute(elt, "toDict");
     if (dictName.size() > 0 ) {
       outputDictName = new std::string(dictName);
       outputDict = dictMan->findDict(dictName);
@@ -51,7 +51,7 @@ XERCES_CPP_NAMESPACE_USE
     while (child != 0 ) {
       IdConversion *conv = new IdConversion(child);
       m_convCol.push_back(conv);
-      child = xml::Dom::getSiblingElement(child);
+      child = xmlBase::Dom::getSiblingElement(child);
     }
 
     // check for consistency before unleashing this object

@@ -17,8 +17,8 @@
       - output the resulting xml document.
  */
 
-#include "xml/XmlParser.h"
-#include "xml/Dom.h"
+#include "xmlBase/XmlParser.h"
+#include "xmlBase/Dom.h"
 #include "xmlUtil/Source.h"
 #include "xmlUtil/Arith.h"
 #include "xmlUtil/Constants.h"
@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
     exit(0);
   }
 
-  xml::XmlParser* parser = new xml::XmlParser();
+  xmlBase::XmlParser* parser = new xmlBase::XmlParser();
   DOMDocument* doc = parser->parse(argv[1], "gdd");
 
   if (doc == 0) {
@@ -83,37 +83,37 @@ int main(int argc, char* argv[]) {
   // Delete any id dictionaries
 
   std::vector<DOMElement*> dicts;
-  xml::Dom::getDescendantsByTagName(docElt, "idDict", dicts);
+  xmlBase::Dom::getDescendantsByTagName(docElt, "idDict", dicts);
 
   unsigned nDict = dicts.size();
   for (unsigned iDict = 0; iDict < nDict; iDict++) {
     DOMElement* dictElt = dicts[iDict];
 
-    xml::Dom::prune(dictElt);
+    xmlBase::Dom::prune(dictElt);
     (dictElt->getParentNode())->removeChild(dictElt);
   }
 
   // Delete all sections
   std::vector<DOMElement*> sections;
-  xml::Dom::getDescendantsByTagName(docElt, "section", sections);
+  xmlBase::Dom::getDescendantsByTagName(docElt, "section", sections);
 
   unsigned nSec = sections.size();
   for (unsigned iSec = 0; iSec < nSec; iSec++) {
 
     DOMElement* secElt = sections[iSec];
-    xml::Dom::prune(secElt);
+    xmlBase::Dom::prune(secElt);
     (secElt->getParentNode())->removeChild(secElt);
   }
 
   // Delete materials
   std::vector<DOMElement*> materials;
-  xml::Dom::getDescendantsByTagName(docElt, "materials", materials);
+  xmlBase::Dom::getDescendantsByTagName(docElt, "materials", materials);
 
   unsigned nM = materials.size();
   for (unsigned iM = 0; iM < nM; iM++) {
 
     DOMElement* matElt = materials[iM];
-    xml::Dom::prune(matElt);
+    xmlBase::Dom::prune(matElt);
     (matElt->getParentNode())->removeChild(matElt);
     //    secNode = toCome;
   }
@@ -128,15 +128,15 @@ int main(int argc, char* argv[]) {
 
   // If have gdd element with CVSid attribute, null it out.  Don't have
   // a real CVS id until the file has been committed
-  std::string cvsId = xml::Dom::getAttribute(docElt, "CVSid");
+  std::string cvsId = xmlBase::Dom::getAttribute(docElt, "CVSid");
   if (cvsId.size() > 0) {
     std::string noId(idTemplate);
     noId.replace(0, 1, "$");
-    xml::Dom::addAttribute(docElt, "CVSid", noId);
+    xmlBase::Dom::addAttribute(docElt, "CVSid", noId);
   }
   // Finally output the elements
   // May want option to exclude comments here
-  xml::Dom::prettyPrintElement(docElt, *out, "");
+  xmlBase::Dom::prettyPrintElement(docElt, *out, "");
 
   delete parser;
   return(0);

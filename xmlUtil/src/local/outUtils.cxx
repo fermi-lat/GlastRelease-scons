@@ -2,8 +2,7 @@
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMDocumentType.hpp>
 #include <xercesc/util/XMLString.hpp>
-// #include <xercesc/dom/DOMString.hpp>
-#include "xml/Dom.h"
+#include <iostream>
 #include <fstream>
 
 
@@ -21,7 +20,6 @@ void outProlog(const XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentType* doctype,
 
   out << "<?xml version=" << dquote << "1.0" << dquote << "?>" << std::endl;
   if (doctype != 0) {
-    //    char* transcoded = xml::Dom::transToChar(doctype->getName());
     char* transcoded = XMLString::transcode(doctype->getName());
     if (transcoded != 0) {
 
@@ -34,7 +32,6 @@ void outProlog(const XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentType* doctype,
       return;
     }
 
-    //    DOMString id = doctype.getPublicId();
     const XMLCh* id = doctype->getPublicId();
     if (id != 0)   {
 
@@ -79,7 +76,6 @@ void outProlog(const XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentType* doctype,
     if (id !=0) {
       transcoded = XMLString::transcode(id);
       if (transcoded != 0) {
-        //        out << "[" << xml::Dom::transToChar(id) << "]";
         out << "[" << transcoded << "]";
         XMLString::release(&transcoded);
       }

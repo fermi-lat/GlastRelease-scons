@@ -1,7 +1,6 @@
 // $Header$
 #include <xercesc/dom/DOMElement.hpp>
-// #include <xercesc/dom/DOMString.hpp>
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 #include "xmlUtil/id/DictNode.h"
 #include "xmlUtil/id/DictFieldMan.h"
 #include <assert.h>
@@ -13,13 +12,13 @@ namespace xmlUtil {
                      DictFieldMan *fieldMan) : 
     m_children(0), m_parent(parent), m_parConstraints(0), 
     m_myConstraints(0)   {
-    using xml::Dom;
+    using xmlBase::Dom;
     // check element type is OK.  Shouldn't be a problem if
     // the xml file validates.  Note sense of assert is:
     //   abort program if assertion is *false*
     if (!( Dom::checkTagName(elt, "dictNode") ||
            Dom::checkTagName(elt, "dictRoot") )  ) {
-      throw xml::DomException("Invalidly constructed id dictionary ");
+      throw xmlBase::DomException("Invalidly constructed id dictionary ");
     }
 
     // Field name stuff:
@@ -30,7 +29,7 @@ namespace xmlUtil {
     // Do something if it doesn't exist?? Shouldn't be terribly
     // necessary by ID/IDREF mechanism
 
-    DOMElement* child = xml::Dom::getFirstChildElement(elt);
+    DOMElement* child = xmlBase::Dom::getFirstChildElement(elt);
     // Could be a leaf with no children
     if (child == 0) {
       return;
@@ -38,7 +37,7 @@ namespace xmlUtil {
 
     if (Dom::getTagName(child) == std::string("pValues")) {
       // parent constraints
-      DOMElement* gChild = xml::Dom::getFirstChildElement(child);
+      DOMElement* gChild = xmlBase::Dom::getFirstChildElement(child);
       m_parConstraints = new DictConstraints(gChild);
       
       // check for compatibility
@@ -53,7 +52,7 @@ namespace xmlUtil {
           assert(allowed);
         }
       }
-      child = xml::Dom::getSiblingElement(child);
+      child = xmlBase::Dom::getSiblingElement(child);
       if (child == 0) {
         return;    // new Dec. 4
       }
@@ -74,7 +73,7 @@ namespace xmlUtil {
         if (fCon != 0) {
           assert(fCon->allowed(m_myConstraints));
         }
-        child = xml::Dom::getSiblingElement(child);
+        child = xmlBase::Dom::getSiblingElement(child);
       }
       else {
         std::cerr << "Expecting constraints element; found  " << childName
@@ -85,7 +84,7 @@ namespace xmlUtil {
     // All that's left are child nodes, if any
     
     while (child != 0) {
-      std::string childName = xml::Dom::getTagName(child);
+      std::string childName = xmlBase::Dom::getTagName(child);
       if (childName != std::string("dictNode")) {
         std::cerr << "odd child:  " << childName << std::endl;
       }
@@ -93,7 +92,7 @@ namespace xmlUtil {
       DictNode *nextChild = new DictNode(child, this, fieldMan);
       
       m_children.push_back(nextChild);
-      child = xml::Dom::getSiblingElement(child);
+      child = xmlBase::Dom::getSiblingElement(child);
     }
     // Finally, how about checking for consistency among children?
     if (!consistentChildren()) {
@@ -254,8 +253,6 @@ namespace xmlUtil {
     (*start)->m_myConstraints->insertValues(values);
 
     while (pCurrentNode != last) {
-    //    while ((pCurrentNode + 1) != last) {
-
       ++pCurrentNode;
       
       // Make a new set containing values for current node
@@ -356,7 +353,6 @@ namespace xmlUtil {
                                  Identifier::const_iterator end,
                                  NameSeq *seq) {
     if (!allowed(*idIt)) return false;
-    //    std::string fieldName = new std::string(
     seq->push_back(&(m_field->getName()));
 
     Identifier::const_iterator tmp = idIt;
@@ -377,12 +373,6 @@ namespace xmlUtil {
 
     return false;
   }
-
-
-
-  /* end to-be-edited   */
-
-
 
   bool DictNode::allowIdentifier(const Identifier& id, NamedId* named) {
     Identifier::const_iterator idIt = id.begin();
@@ -448,8 +438,6 @@ namespace xmlUtil {
       if (child->allowNameSeq(++seqIt, end) ) return true;
     }
     return false;
-
-    /* TO DO */
   }
 
 

@@ -3,8 +3,8 @@
 #include "xmlUtil/docMan/GDDDocMan.h"
 #include "xmlUtil/id/IdDict.h"
 
-#include "xml/XmlParser.h"
-#include "xml/Dom.h"
+#include "xmlBase/XmlParser.h"
+#include "xmlBase/Dom.h"
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/DOMNode.hpp>
 #include <string>
@@ -79,7 +79,7 @@ namespace detModel{
    *  This method build a constant
    */
   Const* XercesBuilder::buildConst(DOMElement* e){
-    using xml::Dom;
+    using xmlBase::Dom;
 
     std::string name;
     std::string typeOfConst;
@@ -120,7 +120,7 @@ namespace detModel{
         }
         else return 0;
       }  // end try
-      catch (xml::DomException ex) {
+      catch (xmlBase::DomException ex) {
         std::cerr << "from detModel::XercesBuild::BuildConst" << std::endl
                   << ex.getMsg() << std::endl;
         throw (ex);
@@ -131,7 +131,7 @@ namespace detModel{
       try {
         c->setNote(Dom::getText(e->getFirstChild()));
       }
-      catch (xml::DomException ex) {
+      catch (xmlBase::DomException ex) {
         // this isn't terribly fatal, so don't rethrow
         std::cerr << "From detModel::XercesBuilder::getConst " << std::endl
                   << ex.getMsg() << std::endl;
@@ -166,7 +166,7 @@ namespace detModel{
         }  
         else return 0;  // or, better, maybe throw exception?
       }                     // end try
-      catch (xml::DomException ex) {
+      catch (xmlBase::DomException ex) {
         std::cerr << "From detModel::XercesBuilder::buildConst" << std::endl
                   << ex.getMsg() << std::endl;
         throw ex;
@@ -185,7 +185,7 @@ namespace detModel{
 
   /// This methods build the constants part of detModel
   void XercesBuilder::buildConstants(){
-    using xml::Dom;
+    using xmlBase::Dom;
 
     if (m_docClient->getConstants() != 0){
       Constants* constantsBranch = new Constants();
@@ -218,7 +218,7 @@ namespace detModel{
                                       DOMElement* parent, bool primary) {
     std::vector<DOMElement*> cats;
 
-    using xml::Dom;
+    using xmlBase::Dom;
 
     // Could be called with null arg if no derived
     if (parent == 0) return;  
@@ -251,7 +251,7 @@ namespace detModel{
   } 
 
   void XercesBuilder::buildMaterials(){
-    using xml::Dom;
+    using xmlBase::Dom;
 
     if (m_docClient->getMaterials() == 0) return;
 
@@ -297,7 +297,7 @@ namespace detModel{
 
   Element* XercesBuilder::buildElement(DOMElement* e)
   {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     Element* element = new Element();
     
@@ -306,13 +306,13 @@ namespace detModel{
     std::string symbol = Dom::getAttribute(e, "symbol");
     if (symbol.size() > 0) element->setSymbol(symbol);
     try {
-      element->setZ(Dom::getDoubleAttribute(e, ("z")));
+      element->setZ((int) Dom::getDoubleAttribute(e, ("z")));
       element->setAweight(Dom::getDoubleAttribute(e, ("aweight")));
       if (Dom::hasAttribute(e, "density")) {
         element->setDensity(Dom::getDoubleAttribute(e, ("density")));
       }
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From detModel::XercesBuilder::buildElement" << std::endl
                 << ex.getMsg() << std::endl;
       throw ex;
@@ -323,7 +323,7 @@ namespace detModel{
 
   /// Method that build a composite from the relative DOM node
   Composite* XercesBuilder::buildComposite(DOMElement* e){
-    using xml::Dom;
+    using xmlBase::Dom;
 
     std::vector<DOMElement*> addMats;
 
@@ -340,7 +340,7 @@ namespace detModel{
     try {
       comp->setDensity(Dom::getDoubleAttribute(e, "density"));
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From detModel::XercesBuilder::buildComposite" 
                 << std::endl << ex.getMsg() << std::endl;
       throw ex;
@@ -377,7 +377,7 @@ namespace detModel{
                              (unsigned int) Dom::getIntAttribute(child, "n"));
         }
       }
-      catch (xml::DomException ex) {
+      catch (xmlBase::DomException ex) {
         std::cerr << "From detModel::XercesBuilder::buildComposite" 
                   << std::endl << ex.getMsg() << std::endl;
         throw ex;
@@ -405,7 +405,7 @@ namespace detModel{
   
   Section* XercesBuilder::buildSection(const DOMNode* e)
   {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     const DOMElement* el = static_cast<const DOMElement *>(e);
     Section* s = new Section(
@@ -443,7 +443,7 @@ namespace detModel{
 
   Choice* XercesBuilder::buildChoice(DOMElement* e)
   {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     //    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(e));
     Choice* b = new Choice(Dom::getAttribute(e, "name"),
@@ -471,7 +471,7 @@ namespace detModel{
   /// \doit Add parameters
   Box* XercesBuilder::buildBox(DOMElement* e)
   {
-    using xml::Dom;
+    using xmlBase::Dom;
     Box* b = new Box(Dom::getAttribute(e, "name"));
 
     std::string Xatt = Dom::getAttribute(e, "X"); 
@@ -488,7 +488,7 @@ namespace detModel{
         b->setZ(Dom::getDoubleAttribute(e, "Z"));
       }
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From detModel::XercesBuilder::buildBox  " << std::endl
                   << ex.getMsg() << std::endl;
         throw ex;
@@ -517,7 +517,7 @@ namespace detModel{
       try {
         s->setnSeg(Dom::getIntAttribute(segElt, "nSeg"));
       }
-      catch (xml::DomException ex) {
+      catch (xmlBase::DomException ex) {
         std::cerr << "From detModel::XercesBuilder::buildBox  " << std::endl
                   << ex.getMsg() << std::endl;
         throw ex;
@@ -533,7 +533,7 @@ namespace detModel{
   /// \doit Add parameters
   Tube* XercesBuilder::buildTube(DOMElement* e)
   {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     Tube* t = new Tube(Dom::getAttribute(e, "name"));
 
@@ -546,7 +546,7 @@ namespace detModel{
       attVal = Dom::getDoubleAttribute(e, "Z");
       if (attVal != 0) t->setZ(attVal);
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From detModel::XercesBuilder::buildTube" << std::endl
                 << ex.getMsg() << std::endl;
       throw ex;
@@ -564,7 +564,7 @@ namespace detModel{
 
     
   Composition* XercesBuilder::buildComposition(DOMElement* e)  {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     Composition* b = new Composition();
 
@@ -589,7 +589,7 @@ namespace detModel{
 
   Stack* XercesBuilder::buildStack(DOMElement* e) {
 
-    using xml::Dom;
+    using xmlBase::Dom;
 
     Stack::axisDir st;
 
@@ -628,7 +628,7 @@ namespace detModel{
 
 
   SinglePos* XercesBuilder::buildPosition(DOMElement* e) {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     std::string posType =  Dom::getTagName(e);
   
@@ -648,7 +648,7 @@ namespace detModel{
           pos->setZ(Dom::getDoubleAttribute(e, "Z"));
         }
       }
-      catch (xml::DomException ex) {
+      catch (xmlBase::DomException ex) {
         std::cerr << "From detModel::XercesBuilder::buildPosition" << std::endl
                   << ex.getMsg() << std::endl;
         throw ex;
@@ -665,7 +665,7 @@ namespace detModel{
 
   StackedPos* XercesBuilder::buildRelativePosition(DOMElement* e) {
 
-    using xml::Dom;
+    using xmlBase::Dom;
     std::string posType = Dom::getTagName(e);
 
     //AxisPos,AxisMpos
@@ -700,10 +700,10 @@ namespace detModel{
           pos->setGap0(Dom::getDoubleAttribute(e, "gap0"));
         }
         if (Dom::hasAttribute(e, "ncopy")) {
-          pos->setNcopy(Dom::getDoubleAttribute(e, "ncopy"));
+          pos->setNcopy((int)Dom::getDoubleAttribute(e, "ncopy"));
         }
       }
-      catch (xml::DomException ex) {
+      catch (xmlBase::DomException ex) {
         std::cerr << "From detModel::XercesBuilder::buildRelativePosition"
                   << std::endl << ex.getMsg() << std::endl;
       }
@@ -714,7 +714,7 @@ namespace detModel{
 
   void XercesBuilder::setAttributePosition(SinglePos* pos, DOMElement* e)
   {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     pos->setVolumeRef(Dom::getAttribute(e, "volume"));
 
@@ -723,7 +723,7 @@ namespace detModel{
       pos->setYRot(Dom::getDoubleAttribute(e, "yrot"));
       pos->setZRot(Dom::getDoubleAttribute(e, "zrot"));
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From detModel::XercesBuilder::setAttributePosition"
                 << std::endl << ex.getMsg() << std::endl;
     }
@@ -736,7 +736,7 @@ namespace detModel{
 
   void XercesBuilder::setAttributeRelativePosition(StackedPos* pos, 
                                                    DOMElement* e)  {
-    using xml::Dom;
+    using xmlBase::Dom;
     pos->setVolumeRef(Dom::getAttribute(e, "volume"));
 
     try {
@@ -747,7 +747,7 @@ namespace detModel{
       pos->setGap(Dom::getDoubleAttribute(e, "gap"));
       pos->setShift(Dom::getDoubleAttribute(e, "shift"));
     }
-    catch (xml::DomException ex) {
+    catch (xmlBase::DomException ex) {
       std::cerr << "From detModel::XercesBuild::setAttributeRelativePosition"
                 << std::endl << ex.getMsg() << std::endl;
       throw ex;
@@ -758,7 +758,7 @@ namespace detModel{
   }     // end setAttributeRelativePosition
 
   void XercesBuilder::setIdFields(Position* pos, DOMElement* e) {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     std::vector<DOMElement*> fields;
     Dom::getChildrenByTagName(e, "idField", fields);
@@ -774,7 +774,7 @@ namespace detModel{
         field->setStep(Dom::getIntAttribute(curField, "step"));
         field->setValue(Dom::getIntAttribute(curField, "value"));
       }
-      catch (xml::DomException ex) {
+      catch (xmlBase::DomException ex) {
         std::cerr << "From detModel::XercesBuild::setIdFields: " 
                   << std::endl << ex.getMsg() << std::endl;
         throw ex;

@@ -1,7 +1,7 @@
 // $Header$
 
 // #include <string>
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 #include "xmlUtil/Arith.h"
 #include <xercesc/dom/DOMDocument.hpp>
 // #include <xercesc/dom/DOMElement.hpp>
@@ -54,7 +54,7 @@ namespace xmlUtil {
     //    m_tag = -1;
     if (elt) {
 
-      tagNameStr = xml::Dom::getTagName(elt);
+      tagNameStr = xmlBase::Dom::getTagName(elt);
 
       while ((notFound) && (i < ETAG_n)) {
         ptrString p = typeNames[i];
@@ -77,12 +77,12 @@ namespace xmlUtil {
       DOMElement* curElt;
       switch(m_tag) {
       case ETAG_const: {
-        if (xml::Dom::hasAttribute(m_elt, valString->c_str())) {
+        if (xmlBase::Dom::hasAttribute(m_elt, valString->c_str())) {
           try {
             m_number = 
-              xml::Dom::getDoubleAttribute(m_elt, std::string(*valString) );
+              xmlBase::Dom::getDoubleAttribute(m_elt, std::string(*valString));
           }
-          catch(xml::WrongAttributeType ex) {
+          catch(xmlBase::WrongAttributeType ex) {
             std::cerr << std::endl << ex.getMsg() << std::endl;
             throw ex;
           }
@@ -91,10 +91,10 @@ namespace xmlUtil {
         else  { // must have a single operator child or refer child
           // either of which can be evaluated, optionally preceded
           // by a <notes> child, which we ignore
-          curElt = xml::Dom::getFirstChildElement(m_elt);
+          curElt = xmlBase::Dom::getFirstChildElement(m_elt);
 
-          if (*notesString == xml::Dom::getTagName(curElt)) {
-            curElt = xml::Dom::getSiblingElement(curElt);
+          if (*notesString == xmlBase::Dom::getTagName(curElt)) {
+            curElt = xmlBase::Dom::getSiblingElement(curElt);
           }
           m_number = Arith(curElt).evaluate();
         }
@@ -102,17 +102,17 @@ namespace xmlUtil {
       }
       case ETAG_refer: {
         // Find the element pointed to and evaluate it
-        std::string ref = xml::Dom::getAttribute(m_elt, *refToString);
+        std::string ref = xmlBase::Dom::getAttribute(m_elt, *refToString);
         DOMDocument *doc = m_elt->getOwnerDocument();
-        curElt = xml::Dom::getElementById(doc, ref);
+        curElt = xmlBase::Dom::getElementById(doc, ref);
 
-        if (std::string("prim") == xml::Dom::getTagName(curElt) ) {
+        if (std::string("prim") == xmlBase::Dom::getTagName(curElt) ) {
 
           try {
             m_number = 
-              xml::Dom::getDoubleAttribute(curElt, *valString );
+              xmlBase::Dom::getDoubleAttribute(curElt, *valString );
           }
-          catch(xml::WrongAttributeType ex) {
+          catch(xmlBase::WrongAttributeType ex) {
             std::cerr << std::endl << ex.getMsg() << std::endl;
             throw ex;
           }
@@ -126,13 +126,13 @@ namespace xmlUtil {
       }
       case ETAG_uminus: {
         // Have a single child
-        curElt = xml::Dom::getFirstChildElement(m_elt);
+        curElt = xmlBase::Dom::getFirstChildElement(m_elt);
         m_number = -(Arith(curElt).evaluate());
         break;
       }
       case ETAG_half: {
         // Have a single child
-        curElt = xml::Dom::getFirstChildElement(m_elt);
+        curElt = xmlBase::Dom::getFirstChildElement(m_elt);
         m_number = 0.5 * (Arith(curElt).evaluate());
         break;
       }
@@ -174,44 +174,44 @@ namespace xmlUtil {
 
   double Arith::add() {
     double  ans = 0.0;
-    DOMElement* elt = xml::Dom::getFirstChildElement(m_elt);
+    DOMElement* elt = xmlBase::Dom::getFirstChildElement(m_elt);
     ans += Arith(elt).evaluate();
-    elt = xml::Dom::getSiblingElement(elt);
+    elt = xmlBase::Dom::getSiblingElement(elt);
     while (elt != 0) {
       ans += Arith(elt).evaluate();
-      elt = xml::Dom::getSiblingElement(elt);
+      elt = xmlBase::Dom::getSiblingElement(elt);
     }
     return ans;
   }
 
   double Arith::mul() {
     double  ans = 1.0;
-    DOMElement* elt = xml::Dom::getFirstChildElement(m_elt);
+    DOMElement* elt = xmlBase::Dom::getFirstChildElement(m_elt);
     ans *= Arith(elt).evaluate();
-    elt = xml::Dom::getSiblingElement(elt);
+    elt = xmlBase::Dom::getSiblingElement(elt);
     while (elt != 0) {
       ans *= Arith(elt).evaluate();
-      elt = xml::Dom::getSiblingElement(elt);
+      elt = xmlBase::Dom::getSiblingElement(elt);
     }
     return ans;
   }
 
   double Arith::myMax() {
-    DOMElement* elt = xml::Dom::getFirstChildElement(m_elt);
+    DOMElement* elt = xmlBase::Dom::getFirstChildElement(m_elt);
     double  ans = Arith(elt).evaluate();
-    elt = xml::Dom::getSiblingElement(elt);
+    elt = xmlBase::Dom::getSiblingElement(elt);
     while (elt != 0) {
       double newAns = Arith(elt).evaluate();
       if (newAns > ans) ans = newAns;
-      elt = xml::Dom::getSiblingElement(elt);
+      elt = xmlBase::Dom::getSiblingElement(elt);
     }
     return ans;
   }
   double Arith::minus() {
     double  ans;
-    DOMElement* elt = xml::Dom::getFirstChildElement(m_elt);
+    DOMElement* elt = xmlBase::Dom::getFirstChildElement(m_elt);
     ans = Arith(elt).evaluate();
-    elt = xml::Dom::getSiblingElement(elt);
+    elt = xmlBase::Dom::getSiblingElement(elt);
     ans -= Arith(elt).evaluate();
     return ans;
   }
@@ -219,9 +219,9 @@ namespace xmlUtil {
   double Arith::quo() {
     double  ans;
     double  divisor;
-    DOMElement* elt = xml::Dom::getFirstChildElement(m_elt);
+    DOMElement* elt = xmlBase::Dom::getFirstChildElement(m_elt);
     ans = Arith(elt).evaluate();
-    elt = xml::Dom::getSiblingElement(elt);
+    elt = xmlBase::Dom::getSiblingElement(elt);
     divisor = Arith(elt).evaluate();  // check for 0?
     ans /= divisor;
     return ans;
@@ -239,18 +239,18 @@ namespace xmlUtil {
     // set to "mm".  If we're not a length-type constant,
     // setting this attribute is harmless.
 
-    xml::Dom::addAttribute(m_elt, *valString, m_number);
-    xml::Dom::addAttribute(m_elt, std::string("unitLength"), 
+    xmlBase::Dom::addAttribute(m_elt, *valString, m_number);
+    xmlBase::Dom::addAttribute(m_elt, std::string("unitLength"), 
                            std::string("mm"));
   }
 
   double Arith::getUnitsScale(const DOMElement* elt) {
-    if (xml::Dom::getAttribute(elt, "uType") != *lengthString) {
+    if (xmlBase::Dom::getAttribute(elt, "uType") != *lengthString) {
       return 1.0;
     }
 
     
-    std::string unitLength = xml::Dom::getAttribute(elt, "unitLength");
+    std::string unitLength = xmlBase::Dom::getAttribute(elt, "unitLength");
     if (unitLength == *cmString) return 10.0;
     else if (unitLength == *mString) return 1000.0;
     else return 1.0;

@@ -1,18 +1,17 @@
 // $Header
 
 #include "xmlUtil/id/DictField.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 namespace xmlUtil {
   XERCES_CPP_NAMESPACE_USE
   DictField::DictField(DOMElement* elt) {
-    DOMElement* child = xml::Dom::getFirstChildElement(elt);
+    DOMElement* child = xmlBase::Dom::getFirstChildElement(elt);
 
     if (child != 0) m_constraints = new DictConstraints(child);
     else m_constraints = 0;
 
-    m_name = xml::Dom::getAttribute(elt, "name");
-      //std::string(xml::Dom::transToChar(elt->getAttribute("name")));
+    m_name = xmlBase::Dom::getAttribute(elt, "name");
   }
 
   bool DictField::allowed(unsigned value) const {

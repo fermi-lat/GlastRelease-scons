@@ -2,10 +2,6 @@
 #ifndef XMLUTIL_SUBSTITUTE_H 
 #define XMLUTIL_SUBSTITUTE_H
 
-//#include <xercesc/dom/DOMDocument.hpp>
-
-// #include <xercesc/dom/DOMString.hpp>
-//#include <xercesc/dom/DOMTreeWalker.hpp>
 #include <string>
 
 #include <xercesc/util/XercesDefs.hpp>

@@ -3,8 +3,8 @@
 
  */
 
-#include "xml/XmlParser.h"
-#include "xml/Dom.h"
+#include "xmlBase/XmlParser.h"
+#include "xmlBase/Dom.h"
 #include "xmlUtil/Arith.h"
 #include "xmlUtil/Substitute.h"
 #include "xmlUtil/Constants.h"
@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
     exit(0);
   }
 
-  xml::XmlParser* parser = new xml::XmlParser();
+  xmlBase::XmlParser* parser = new xmlBase::XmlParser();
   DOMDocument* doc = parser->parse(argv[1], "gdd");
 
   if (doc == 0) {
@@ -97,21 +97,21 @@ int main(int argc, char* argv[]) {
 
   /*
   // prim processing
-  DOMElement* bigXZDimElt = xml::Dom::getElementById(doc, "bigXZDim");
+  DOMElement* bigXZDimElt = xmlBase::Dom::getElementById(doc, "bigXZDim");
   std::cout << "address of const bigXZDim " <<  bigXZDimElt << std::endl;
 
-  std::string XZval = xml::Dom::getAttribute(bigXZDimElt, "value");
+  std::string XZval = xmlBase::Dom::getAttribute(bigXZDimElt, "value");
   std::cout << "..and its value attr (not expected at this stage " 
             << XZval << std::endl;
 
   xmlUtil::Constants *constants = new xmlUtil::Constants(doc);
   constants->evalConstants();
   // constants->normalizePrimary();
-  bigXZDimElt = xml::Dom::getElementById(doc, "bigXZDim");
+  bigXZDimElt = xmlBase::Dom::getElementById(doc, "bigXZDim");
   std::cout << "address after eval of const bigXZDim " 
             <<  bigXZDimElt << std::endl;
 
-  XZval = xml::Dom::getAttribute(bigXZDimElt, "value");
+  XZval = xmlBase::Dom::getAttribute(bigXZDimElt, "value");
   std::cout << "..and its value attr after having done evalConstants "
             << XZval << std::endl;
 
@@ -123,7 +123,7 @@ int main(int argc, char* argv[]) {
   // value of referenced element.
 
   std::vector<DOMElement*> sections;
-  xml::Dom::getChildrenByTagName(docElt, "section", sections);
+  xmlBase::Dom::getChildrenByTagName(docElt, "section", sections);
   int nSec = sections.size();
   int iSec;
 
@@ -152,7 +152,7 @@ int main(int argc, char* argv[]) {
 
   // Finally output the elements
   // May want option to exclude comments here
-  xml::Dom::prettyPrintElement(docElt, *out, "");
+  xmlBase::Dom::prettyPrintElement(docElt, *out, "");
   */
   delete parser;
   return(0);

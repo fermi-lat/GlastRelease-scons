@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include "xmlUtil/Substitute.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 #include "xmlUtil/Arith.h"
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
@@ -15,13 +15,7 @@
 
 namespace xmlUtil {
   XERCES_CPP_NAMESPACE_USE
-  //  using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
-  //  using XERCES_CPP_NAMESPACE_QUALIFIER DOMNode;
-  //  using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument;
-  //  using XERCES_CPP_NAMESPACE_QUALIFIER DOMTreeWalker;
-  //  using XERCES_CPP_NAMESPACE_QUALIFIER DOMAttr;
-  //  using XERCES_CPP_NAMESPACE_QUALIFIER XMLString;
-  //  using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
+
   Substitute::Substitute(DOMDocument* doc, std::string suffix) :
     m_doc(doc), m_count(0), m_suffix(suffix) {
     m_suffixLen = suffix.size();
@@ -48,10 +42,10 @@ namespace xmlUtil {
     //   
     DOMElement* docElt = m_doc->getDocumentElement();
 
-    if (std::string("true") == xml::Dom::getAttribute(docElt, "substituted"))
-      return 0;
+    if (std::string("true") == 
+        xmlBase::Dom::getAttribute(docElt,"substituted")) return 0;
     
-    if (std::string("true") == xml::Dom::getAttribute(top, "substituted"))
+    if (std::string("true") == xmlBase::Dom::getAttribute(top, "substituted"))
       return 0;
 
     DOMNode* curNode = top;
@@ -61,16 +55,8 @@ namespace xmlUtil {
     // this would seem to be the right value for whatToShow
     //    unsigned long whatToShow = 1 << (DOMNode::ELEMENT_NODE -1);
 
-    /*
-    DOMTreeWalker* walker = m_doc->createTreeWalker(top, whatToShow, 0, true);
-    m_count = 0;
-    while (curNode != 0 ) {
-      sub(dynamic_cast<DOMElement* > (curNode));
-      curNode = walker->nextNode();
-    }
-    */
     std::vector<DOMElement*> allElts;
-    xml::Dom::getDescendantsByTagName(top, "*", allElts);
+    xmlBase::Dom::getDescendantsByTagName(top, "*", allElts);
 
     unsigned int nElt = allElts.size();
 
@@ -90,7 +76,7 @@ namespace xmlUtil {
   }
 
   void Substitute::sub(DOMElement* elt) {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     DOMNamedNodeMap* attMap = elt->getAttributes();
     int   nAtt = attMap->getLength();
@@ -118,8 +104,6 @@ namespace xmlUtil {
       toProcessPos.pop_back();
       std::string eltId = Dom::getAttribute(elt, oldAttName);
       DOMElement* constElt =  Dom::getElementById(m_doc, eltId);
-        //  Dom::getElementById(m_doc, Dom::getAttribute(elt, oldAttName));
-
 
       if (constElt == 0 ) { // shouldn't happen
         m_notFound++;

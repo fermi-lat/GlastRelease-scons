@@ -6,17 +6,17 @@
     using GDDDocMan.
 */
 #include "xmlUtil/docMan/GDDDocMan.h"
-#include "xml/docMan/DocClient.h"
+#include "xmlBase/docMan/DocClient.h"
 #include <xercesc/dom/DOMElement.hpp>
 //#include <xercesc/dom/DOMString.hpp>
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 #include <string>
 #include <iostream>
 using namespace xmlUtil;
 XERCES_CPP_NAMESPACE_USE
 
-class MiniClient : public xml::DocClient {
+class MiniClient : public xmlBase::DocClient {
 public:
   MiniClient() {m_name = "miniClient";}
   MiniClient(std::string name) : m_name(name) {}
@@ -31,11 +31,11 @@ void MiniClient::handleChild(DOMNode* node) {
   if (node->getNodeType() == DOMNode::ELEMENT_NODE) {
     DOMElement* elt = static_cast<DOMElement*>(node);
     //    DOMString eltName = node.getNodeName();
-    std::string eltName = xml::Dom::getTagName(elt);
+    std::string eltName = xmlBase::Dom::getTagName(elt);
     std::cout << m_name 
               << " found element <" << eltName << ">" 
               << std::endl;
-    std::string att = xml::Dom::getAttribute(elt,"substituted");
+    std::string att = xmlBase::Dom::getAttribute(elt,"substituted");
     if (att.size() > 0) {
       std::cout << "substituted = " << att << std::endl;
     }
@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
 
   // First the standard DocMan
   std::cout << "Output from DocMan parsing " << std::endl;
-  xml::DocMan* pMan = xml::DocMan::getPointer();
+  xmlBase::DocMan* pMan = xmlBase::DocMan::getPointer();
   pMan->regClient("constants", myClient);
   pMan->regClient("section", myClient);
   pMan->regClient("section", myClient2);

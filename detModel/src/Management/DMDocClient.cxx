@@ -2,7 +2,7 @@
 #include "detModel/Utilities/Global.h"
 
 #include <xercesc/dom/DOMElement.hpp>
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 #include <string>
 #include <iostream>
@@ -11,9 +11,7 @@ namespace detModel{
   using XERCES_CPP_NAMESPACE_QUALIFIER DOMNode;
   void DMDocClient::handleChild(DOMNode* node) {
     
-    //    DOMString eltName = node.getNodeName();
-    //    std::string name(xml::Dom::transToChar(eltName));
-    std::string name = xml::Dom::getNodeName(node);
+    std::string name = xmlBase::Dom::getNodeName(node);
 
     if(name == "constants")
       {

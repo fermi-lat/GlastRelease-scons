@@ -18,8 +18,8 @@
         <const> (except for notes?).
  */
 
-#include "xml/XmlParser.h"
-#include "xml/Dom.h"
+#include "xmlBase/XmlParser.h"
+#include "xmlBase/Dom.h"
 #include "xmlUtil/Source.h"
 #include "xmlUtil/Constants.h"
 #include "xmlUtil/Arith.h"
@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
     exit(0);
   }
 
-  xml::XmlParser* parser = new xml::XmlParser();
+  xmlBase::XmlParser* parser = new xmlBase::XmlParser();
   DOMDocument* doc = parser->parse(argv[1], "gdd");
 
   if (doc == 0) {
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
   xmlUtil::Substitute* sub = new xmlUtil::Substitute(doc);
 
   std::vector<DOMElement*> dicts;
-  xml::Dom::getDescendantsByTagName(docElt, "idDict", dicts);
+  xmlBase::Dom::getDescendantsByTagName(docElt, "idDict", dicts);
 
   //  There is only one dictionary
   DOMElement* dictElt = dicts[0];
@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
   // Search for all dimension and position references, substitute
   // value of referenced element.
   std::vector<DOMElement*> sections;
-  xml::Dom::getDescendantsByTagName(docElt, "section", sections);
+  xmlBase::Dom::getDescendantsByTagName(docElt, "section", sections);
 
   unsigned int nSec = sections.size();
   unsigned int iSec;
@@ -116,14 +116,14 @@ int main(int argc, char* argv[]) {
   // Get rid of any <derCategory> without the save attribute set to "true".
   // For the rest, prune element content from all <const> children;
   // it's no longer needed.
-  DOMElement* derived = xml::Dom::findFirstChildByName(docElt, "constants");
+  DOMElement* derived = xmlBase::Dom::findFirstChildByName(docElt, "constants");
   if (derived != 0 ) {
-    derived = xml::Dom::findFirstChildByName(derived, "derived");
+    derived = xmlBase::Dom::findFirstChildByName(derived, "derived");
     
     if (derived != 0) {
 
       std::vector<DOMElement*> cats;
-      xml::Dom::getDescendantsByTagName(docElt, "derCategory", cats);
+      xmlBase::Dom::getDescendantsByTagName(docElt, "derCategory", cats);
 
       unsigned nCat = cats.size();
 
@@ -131,10 +131,10 @@ int main(int argc, char* argv[]) {
       std::vector<DOMElement*> toRemove;
       for (iCat=0; iCat < nCat; iCat++) {
         DOMElement* elt = cats[iCat];
-        if (std::string("false") ==  xml::Dom::getAttribute(elt, "save") ) {
+        if (std::string("false") ==  xmlBase::Dom::getAttribute(elt, "save") ) {
           //remove
         
-          xml::Dom::prune(elt);
+          xmlBase::Dom::prune(elt);
           toRemove.push_back(elt);
         }
       }
@@ -162,16 +162,16 @@ int main(int argc, char* argv[]) {
   // If have gdd element with CVSid attribute, null it out.  Don't have
   // a real CVS id until the file has been committed
   //  if (docElt->getAttribute("CVSid") != 0 ) {
-  if (xml::Dom::hasAttribute(docElt, "CVSid")) {
+  if (xmlBase::Dom::hasAttribute(docElt, "CVSid")) {
     std::string noId(idTemplate);
     noId.replace(0, 1, "$");
-    xml::Dom::addAttribute(docElt, "CVSid", noId);
+    xmlBase::Dom::addAttribute(docElt, "CVSid", noId);
     //    docElt.setAttribute("CVSid", noId.c_str());
   }
 
   // Finally output the elements
   // May want option to exclude comments here
-  xml::Dom::prettyPrintElement(docElt, *out, "");
+  xmlBase::Dom::prettyPrintElement(docElt, *out, "");
 
   delete parser;
   return(0);

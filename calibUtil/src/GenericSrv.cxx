@@ -1,7 +1,7 @@
 //$ Header: $
 /// Module implements methods for clients to get generic services.
 
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 #include <string>
 #include <iostream>
@@ -16,11 +16,11 @@ namespace calibUtil {
   /// Constructor that fills in values of generic data from XML file
   GenericSrv::GenericSrv(const DOMElement* docElt) : m_sample(0) {
     
-    DOMElement* child  = xml::Dom::findFirstChildByName(docElt,"generic");
-    m_instName  = xml::Dom::getAttribute(child,"instrument");
-    m_timestamp = xml::Dom::getAttribute(child,"timestamp");
-    m_calType   = xml::Dom::getAttribute(child,"calType");
-    m_fmtVer    = xml::Dom::getAttribute(child,"fmtVersion");
+    DOMElement* child  = xmlBase::Dom::findFirstChildByName(docElt,"generic");
+    m_instName  = xmlBase::Dom::getAttribute(child,"instrument");
+    m_timestamp = xmlBase::Dom::getAttribute(child,"timestamp");
+    m_calType   = xmlBase::Dom::getAttribute(child,"calType");
+    m_fmtVer    = xmlBase::Dom::getAttribute(child,"fmtVersion");
 
   }
   

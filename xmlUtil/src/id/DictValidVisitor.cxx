@@ -1,7 +1,6 @@
 // $Header$
 
 #include "xmlUtil/id/DictValidVisitor.h"
-// #include "xmlUtil/IdDict.h"
 #include "xmlUtil/id/DictNode.h"
 
 namespace xmlUtil {

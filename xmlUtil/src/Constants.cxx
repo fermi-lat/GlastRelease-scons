@@ -9,7 +9,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include "xmlUtil/Constants.h"
 #include "xmlUtil/Arith.h"
-#include "xml/Dom.h"
+#include "xmlBase/Dom.h"
 
 namespace {
   using XERCES_CPP_NAMESPACE_QUALIFIER DOMNode;
@@ -36,7 +36,7 @@ namespace {
 */
 
   int normPrim(DOMElement* elt, std::vector<DOMElement*>& save) {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     int ret = 0;
     if (Dom::checkTagName(elt, "prim") ) {
@@ -53,8 +53,8 @@ namespace {
         try {
           int intVal = Dom::getIntAttribute(elt, "value");
         }
-        catch (xml::DomException ex) {
-          std::cerr << "from xml::Constants::normPrim " << ex.getMsg() 
+        catch (xmlBase::DomException ex) {
+          std::cerr << "from xmlBase::Constants::normPrim " << ex.getMsg() 
                     << std::endl;
           throw ex;
         }
@@ -62,7 +62,7 @@ namespace {
 
       // Found a prim, but we don't have to convert since it's not a length
       // if (!(elt.getAttribute(DOMString("uType"))).equals("length")) return ret;
-      if (!(xml::Dom::getAttribute(elt, "uType") == "length" ) ) return ret;
+      if (!(xmlBase::Dom::getAttribute(elt, "uType") == "length" ) ) return ret;
 
       if (isInt) {   // mistake.  Don't use type=int for length
 
@@ -86,8 +86,8 @@ namespace {
       try {
         value = Dom::getDoubleAttribute(elt, "value");
       }
-      catch (xml::DomException ex) {
-        std::cerr << "from xml::Constants::normPrim " << ex.getMsg() 
+      catch (xmlBase::DomException ex) {
+        std::cerr << "from xmlBase::Constants::normPrim " << ex.getMsg() 
                   << std::endl;
         throw ex;
       }
@@ -117,7 +117,7 @@ namespace xmlUtil {
                                            m_walker(0) {
     // There is at most 1 <constants> element
     m_constants = 
-      xml::Dom::findFirstChildByName(doc->getDocumentElement(), "constants");
+      xmlBase::Dom::findFirstChildByName(doc->getDocumentElement(), "constants");
     if (m_constants) {
       m_walker = doc->createTreeWalker(m_constants, 
                                        DOMNodeFilter::SHOW_ELEMENT,
@@ -132,7 +132,7 @@ namespace xmlUtil {
   void Constants::handleEnergies(std::vector<DOMElement*> saved) {
     // Make a new <prim> node to replace it; meanwhile convert
     // GeV to MeV if necessary
-    using xml::Dom;
+    using xmlBase::Dom;
 
     std::vector<DOMElement*>::const_iterator eltIt;
     for (eltIt = saved.begin(); eltIt != saved.end(); eltIt++) {
@@ -150,7 +150,7 @@ namespace xmlUtil {
       try {
         energy = Dom::getDoubleAttribute(elt, "value");
       }
-      catch (xml::DomException ex) {
+      catch (xmlBase::DomException ex) {
         std::cerr << "From Constants;handleEnergies " << ex.getMsg() 
                   << std::endl;
         throw ex;
@@ -174,7 +174,7 @@ namespace xmlUtil {
 
   void Constants::normalizePrimary()
   {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     if (m_constants == 0) return;
 
@@ -209,7 +209,7 @@ namespace xmlUtil {
  
   // Remove children of evaluated constants
   void Constants::pruneConstants(bool keepNotes) { 
-    using xml::Dom;
+    using xmlBase::Dom;
 
     if (m_constants == 0) return;
 
@@ -254,7 +254,7 @@ namespace xmlUtil {
   /*! For each derCategory, evaluate each const child, writing
       value back to "value" attribute in the DOM */
   void Constants::evalConstants() {
-    using xml::Dom;
+    using xmlBase::Dom;
 
     if (m_constants == 0) return;
     DOMElement* derived = 
@@ -308,7 +308,7 @@ namespace xmlUtil {
           std::cerr << ex.getMsg();
           throw(ex);
         }
-        curConst = xml::Dom::getSiblingElement(curConst);
+        curConst = xmlBase::Dom::getSiblingElement(curConst);
       }
     }
     Dom::addAttribute(derived, "evaluated", "true");
