@@ -1,15 +1,11 @@
 package GlastSvc
-version v1r4
+version v2
 
 branches src mgr doc
 
 use instrument 
 use data 
 use GlastEvent
-
-#use GaudiSvc v4
-#use Auditors v1
-#use RootHistCnv v1r1
 
 use GaudiSvc 
 use GaudiAud 
@@ -22,35 +18,22 @@ library GlastSvc ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
                  ../GlastSvc/data/*.h data/*.h data/*.cpp \
 		Dll/*.cpp 
             
-
-macro GlastSvcDir  "$(GLASTSVCROOT)/$(DEBUGDIR)"
-
-macro GlastSvc_linkopts   " " \
-      LinuxStatic         "$(GlastSvcDir)/libGlastSvc.a -u GlastSvc_loadRef" \
-      VisualCStatic       "$(GlastSvcDir)/libGlastSvc.lib /include:_GlastSvc_loadRef"
-
-macro GlastSvc_stamps     ""                              \
-      LinuxStatic         "$(GlastSvcDir)/GlastSvc.stamp" \
-      LinuxStaticdbx      "$(GlastSvcDir)/GlastSvc.stamp" \
-      VisualCStatic       "$(GlastSvcDir)/GlastSvc.stamp"
-
 ignore_pattern include_none
 apply_pattern package_include
 
-#set   GlastSvcShr           "${GLASTSVCROOT}/${DEBUGDIR}/libGlastSvc"
+# define link options
+apply_pattern package_Clinkopts
+apply_pattern packageShr
 
+#=============================================================
+private
+
+# get flags to build shared library
+
+apply_pattern package_Cshlibflags
 
 private
 
-include_path $(GLASTSVCROOT)
-
-
-# note that the debug versions of the used libraries are inserted below
-
-# for the moment, use libraryshr_linkopts to fix red hat 6.2 linking problem
-#macro GlastSvc_shlibflags   "$(componentshr_linkopts) $(use_linkopts)" \
-macro GlastSvc_shlibflags   "$(libraryshr_linkopts) $(use_linkopts)" \
-                 VisualC  "$(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
 
 
 # WinIncludes is to allow header files to be added to the 
