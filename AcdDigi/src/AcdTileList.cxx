@@ -24,6 +24,15 @@ AcdTileList::pushShape(ShapeType s, const UintVector& idvec,
         if (name.substr(0,11) == "sideTileRow") return More;
         this->push_back(getId());
         return AbortSubtree;
+    } else if (name.substr(0,10) == "sideRibbon" ) {
+        if (name.substr(0,11) == "sideRibbons" ) return More;
+        // ignore top ribbons - we just want a count of whole ribbons not the segments
+        // since there are 2 SideRibbons per ribbon - 
+        // will need to check to see if we found this guy already
+
+        // Also check to see if the ribbons are position detectors or not
+        if (type == posSensitive) this->push_back(getId());
+        return AbortSubtree;
     }
 
     // otherwise continue
