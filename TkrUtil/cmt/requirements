@@ -1,0 +1,28 @@
+package TkrUtil
+
+version v0r0
+
+branches src cmt doc
+
+use GlastSvc v*
+use facilities
+use GuiSvc                v3*
+
+apply_pattern packageShr
+
+set JOBOPTIONS ${TKRUTILROOT}/src/test/jobOptions.txt
+
+macro_prepend includes "-I $(TKRUTILROOT) " WIN32 "/I $(TKRUTILROOT) "
+
+apply_pattern package_headers
+
+library TkrUtil *.cxx Dll/*.cxx ${TkrUtil_headers}
+
+#=============================================================
+private
+
+apply_pattern package_Cshlibflags 
+
+# build this for testing, console only. Load all objects directly. 
+
+application test_TkrUtil ${GuiMain} test/*.cxx  ${Win32Resource}
