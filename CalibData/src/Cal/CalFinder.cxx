@@ -35,15 +35,19 @@ namespace CalibData {
     unsigned iTow = id.getTower();
     unsigned iRow = iTow / m_towerCol;
     unsigned iCol = iTow - iRow*m_towerCol;
-    return 
-      findIx(iRow, iCol, id.getLayer(), id.getColumn(), range, face);
-    }
+    if (id.validFace()) face = id.getFace();
+
+    if (id.validRange()) range = id.getRange();
+    return findIx(iRow, iCol, id.getLayer(), id.getColumn(), range, face);
+  }
 
   bool CalFinder::checkIx(idents::CalXtalId id, unsigned range, 
                           unsigned face) {
     unsigned iTow = id.getTower();
     unsigned iRow = iTow / m_towerCol;
     unsigned iCol = iTow - iRow*m_towerCol;
+    if (id.validFace()) face = id.getFace();
+    if (id.validRange()) range = id.getRange();
     return 
       checkIx(iRow, iCol, id.getLayer(), id.getColumn(), range, face);
   }
