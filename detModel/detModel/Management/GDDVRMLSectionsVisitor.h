@@ -15,12 +15,18 @@ class GDDVRMLSectionsVisitor : public GDDsectionsVisitor {
 
  public:
 
-  GDDVRMLSectionsVisitor(string);
+  /**
+   * The constructor has a string parameter; it is the name of the
+   * root volume in GDD to represent along with all the volumes
+   * contained in it. If it is the empty string the root volume is the
+   * topVolume of the section.  */
+  GDDVRMLSectionsVisitor(string); 
+  
+  /// A standard destructor
   virtual ~GDDVRMLSectionsVisitor();
   
   /**
-   * This is the visitor for the GDDsectionsContainer 
-   */
+   * This is the visitor for the GDDsectionsContainer */
   virtual void visitGDD(GDD*);
   
   /**
@@ -79,6 +85,8 @@ class GDDVRMLSectionsVisitor : public GDDsectionsVisitor {
 
   ofstream out;
 
+  /** This variables keep the actual depth or recursivness of the
+      visit in the hierarchy */
   int depth;
   /// This map holds the opacity information of the material colors
   map <string, float> opacityMap;
