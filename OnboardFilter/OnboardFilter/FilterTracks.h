@@ -46,6 +46,13 @@ private:
      */
     void computeExtension();
 
+    /**
+     * Find out the position of a strip after converting Filter's strip
+     * numbering into numbering consistent with getStripPosition()
+     */
+    HepPoint3D findStripPosition(ITkrGeometrySvc *tkrGeoSvc, int tower, 
+                                 int layer, int view, double stripId);
+
     std::vector<double> m_x;
     std::vector<double> m_y;
     std::vector<double> m_xz;
