@@ -1,8 +1,9 @@
 package idents
 # $Header$
-version v2r7
+version v2r8
 
 use GlastPolicy
+use facilities v2*
 
 apply_pattern  package_include
 apply_pattern package_headers
