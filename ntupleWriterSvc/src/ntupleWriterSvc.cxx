@@ -53,6 +53,7 @@ ntupleWriterSvc::ntupleWriterSvc(const std::string& name,ISvcLocator* svc)
     // declare the properties and set defaults
     declareProperty("tuple_name",  m_tuple_name);
 
+    ntupleSvc = 0;
     m_tupleCounter = 0;  // initialize the count to 0;
 }
 
@@ -69,8 +70,7 @@ StatusCode ntupleWriterSvc::initialize ()
  
     // use the incident service to register "end" events
     IIncidentSvc* incsvc = 0;
-    status = serviceLocator()->getService ("IncidentSvc",
-        IID_IIncidentSvc, reinterpret_cast<IInterface*&>( incsvc ));
+    status = service("IncidentSvc", incsvc, true);
     
     if( status.isFailure() ) return status;
 
@@ -78,9 +78,7 @@ StatusCode ntupleWriterSvc::initialize ()
     incsvc->addListener(this, "EndEvent", 0);
 
     // get a pointer to the Gaudi NTupleSvc
-    status = serviceLocator()->getService("NTupleSvc", 
-        IID_INTupleSvc, reinterpret_cast<IInterface*&>( ntupleSvc));
-
+    status = service("NTupleSvc", ntupleSvc, true);
     if( status.isFailure() ) {
         log << MSG::ERROR << "ntupleWriterSvc failed to get the NTupleSvc" << endreq;
         return status;
@@ -132,7 +130,8 @@ StatusCode ntupleWriterSvc::initialize ()
 
 
 StatusCode ntupleWriterSvc::bookNTuple(int index, const char* title) {
-
+// Purpose and Method:  Create a new ntuple using the NTupleSvc
+//
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
 
@@ -157,11 +156,13 @@ StatusCode ntupleWriterSvc::bookNTuple(int index, const char* title) {
 }
 
 
-
-
-// handle "incidents"
 void ntupleWriterSvc::handle(const Incident &inc)
 {
+    // Purpose and Method:  This routine is called when an "incident"
+    //   occurs.  This method determines what action the ntupleWriterSvc
+    //   will take in response to a particular event.  Currently, we handle
+    //   BeginEvent and EndEvent events.
+
     if(inc.type()=="BeginEvent") beginEvent();
     if(inc.type()=="EndEvent") endEvent();
 }
@@ -190,6 +191,7 @@ void ntupleWriterSvc::endEvent()  // must be called at the end of an event to up
 }
 
 StatusCode ntupleWriterSvc::writeNTuple(int index) {
+    // Purpose and Method:  Write the data for this event via the NTupleSvc.
     StatusCode  sc = StatusCode::SUCCESS;
     
     MsgStream log(msgSvc(), name());

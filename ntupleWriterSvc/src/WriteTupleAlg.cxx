@@ -1,4 +1,3 @@
-// Gaudi 
 #include "GaudiKernel/Algorithm.h"
 
 #include "GaudiKernel/MsgStream.h"
@@ -10,12 +9,10 @@
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
 
 
-
-//------------------------------------------------------------------------------
-/*! \class WriteTupleAlg
-Save the status of the HepRandomEngine used.
-<br>
-
+/** @class WriteTupleAlg
+ * @brief Test routine for the ntupleWriterSvc
+ * 
+ * $Header$
 */
 class WriteTupleAlg : public Algorithm
 {   
@@ -31,12 +28,10 @@ private:
     
 };
 
-//------------------------------------------------------------------------------
 //  factory stuff
 static const AlgFactory<WriteTupleAlg>  Factory;
 const IAlgFactory& WriteTupleAlgFactory = Factory;
 
-//------------------------------------------------------------------------------
 
 WriteTupleAlg::WriteTupleAlg(const std::string& name, ISvcLocator* pSvcLocator) 
 :Algorithm(name, pSvcLocator) 
@@ -90,7 +85,6 @@ StatusCode WriteTupleAlg::execute() {
 }
 
 
-//------------------------------------------------------------------------------
 StatusCode WriteTupleAlg::finalize() {
     
     MsgStream log(msgSvc(), name());
