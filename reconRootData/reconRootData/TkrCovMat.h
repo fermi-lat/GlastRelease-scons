@@ -18,7 +18,7 @@ class TkrCovMat : public TMatrixD
 {
 public:
 
-    TkrCovMat() {Zero();};
+    TkrCovMat() : TMatrixD(4,4) { Zero(); };
 
     TkrCovMat(const TkrCovMat& covMat);
 
@@ -26,6 +26,8 @@ public:
               Double_t sigYpos, Double_t sigYslp, Double_t sigYps); 
 
     virtual ~TkrCovMat() {}
+
+    void Print(Option_t *option="") const;
 
     TkrCovMat& operator=(const TkrCovMat& covMat);
 

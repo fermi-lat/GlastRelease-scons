@@ -2,7 +2,7 @@
 #define ROOT_TKRRECON_H
 
 #include "TObject.h"
-#include <vector>
+#include "TObjArray.h"
 
 #include "TkrSiCluster.h"
 #include "TkrCandTrack.h"
@@ -31,39 +31,35 @@ public:
     TkrRecon();
 
     virtual ~TkrRecon();
+
+    void initialize();
     
     void Clear(Option_t *option="");
 
     void Print(Option_t *option="") const;
 
     /// provide access to the list of clusters
-    std::vector<TkrSiCluster> getSiClusterCol() { return m_siClusterCol; };
-    void addSiCluster(const TkrSiCluster &cluster) { m_siClusterCol.push_back(cluster); };
+    TObjArray *getSiClusterCol() { return m_siClusterCol; };
+    void addSiCluster(TkrSiCluster *cluster) { m_siClusterCol->Add(cluster); };
 
-    /// provide access to the list of pattern recognized tracks
-    std::vector<TkrCandTrack> getTrackCandCol() { return m_trackCandCol; };
-    void addTrackCand(const TkrCandTrack &track) { m_trackCandCol.push_back(track);};
+    TObjArray *getTrackCandCol() { return m_trackCandCol; };
+    void addTrackCand(TkrCandTrack *track) { m_trackCandCol->Add(track); };
 
-    //// provide access to the list of tracks
-    std::vector<TkrTrack> getTrackCol() { return m_trackCol; };
-    void addTrack(const TkrTrack &track) { m_trackCol.push_back(track); };
+    TObjArray *getTrackCol() { return m_trackCol; };
+    void addTrack(TkrTrack* track) { m_trackCol->Add(track); };
 
-    /// provide access to the list of vertices
-    vector<TkrVertex> getVertexCol() { m_vertexCol; };
-    void addVertex(const TkrVertex &vertex) { m_vertexCol.push_back(vertex); };
+    TObjArray *getVertexCol() { return m_vertexCol; };
+    void addVertex(TkrVertex* vertex) { m_vertexCol->Add(vertex); };
 
 private:
-    //! list of TkrSiClusters
-    std::vector<TkrSiCluster> m_siClusterCol;
-
-    //! list of TkrTrackCands
-    std::vector<TkrCandTrack> m_trackCandCol;
-
-    //! list of TkrTracks
-    std::vector<TkrTrack> m_trackCol;
-
-    //! list of TkrVertices
-    std::vector<TkrVertex> m_vertexCol;
+    /// collection of TkrSiCluster
+    TObjArray *m_siClusterCol;
+    /// collection of TkrCandTrack
+    TObjArray *m_trackCandCol;
+    /// collection of TkrTrack
+    TObjArray *m_trackCol;
+    /// collection of TkrVertex
+    TObjArray *m_vertexCol;
 
     ClassDef(TkrRecon,3)
 };

@@ -34,6 +34,10 @@ public:
 
     virtual ~TkrHitPlane() {}
 
+    void Clear(Option_t *option="");
+
+    void Print(Option_t *option="") const;
+
     //! Two initialize methods needed for this class
     void     initializeInfo(UInt_t hit, UInt_t tower, UInt_t plane, AXIS proj,
                             AXIS nextProj, Double_t z, Double_t energy, Double_t radLen);
@@ -57,15 +61,15 @@ public:
     const TkrCovMat& getQmaterial()          const {return m_Qmaterial;     }
 
 private:
+    Double_t   m_Zplane;      // Z coordinate of this plane
+    Double_t   m_EnePlane;    // Fitter energy at this plane
+    Double_t   m_RadLen;      // Radiation lengths to this plane
+
     UInt_t     m_IdHit;       // Index of cluster hit in the TkrSiClusters 
     UInt_t     m_IdTower;     // Tower ID
     UInt_t     m_IdPlane;     // Plane ID (TkrRecon convention)
     AXIS       m_Projection;  // X or Y measuring SSD plane
     AXIS       m_ProjPlus;    // same but for "next" plane
-
-    Double_t   m_Zplane;      // Z coordinate of this plane
-    Double_t   m_EnePlane;    // Fitter energy at this plane
-    Double_t   m_RadLen;      // Radiation lengths to this plane
 
     TkrFitHit  m_HitMeas;     // Measured track parameters
     TkrFitHit  m_HitPred;     // Predicted track parameters

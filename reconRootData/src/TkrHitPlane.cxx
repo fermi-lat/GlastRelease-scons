@@ -2,18 +2,8 @@
 
 ClassImp(TkrHitPlane)
 
-// Default constructor
-TkrHitPlane::TkrHitPlane() 
-{
-    // Make sure everything is properly zeroed
-    m_IdHit      = 0;
-    m_IdTower    = 0.;
-    m_IdPlane    = 0.;
-    m_Projection = AXIS::NONE;
-    m_ProjPlus   = AXIS::NONE;
-    m_Zplane     = 0.;
-    m_EnePlane   = 0.;
-    m_RadLen     = 0.;
+TkrHitPlane::TkrHitPlane() {
+    Clear();
 }
 
 void TkrHitPlane::initializeInfo(UInt_t hit, UInt_t tower, UInt_t plane, AXIS proj,
@@ -38,4 +28,20 @@ void TkrHitPlane::initializeHits(const TkrFitHit& meas, const TkrFitHit& pred, c
     m_HitSmooth = smooth;
 
     m_Qmaterial = material;
+}
+
+void TkrHitPlane::Clear(Option_t *option) {
+    // Make sure everything is properly zeroed
+    m_IdHit      = 0;
+    m_IdTower    = 0.;
+    m_IdPlane    = 0.;
+    m_Projection = AXIS::NONE;
+    m_ProjPlus   = AXIS::NONE;
+    m_Zplane     = 0.;
+    m_EnePlane   = 0.;
+    m_RadLen     = 0.;
+}
+
+void TkrHitPlane::Print(Option_t *option) const {
+    TObject::Print(option);
 }

@@ -18,15 +18,14 @@
 class TkrParams : public TVectorD
 {
 public:
-    //! constructors
-    TkrParams() {Zero();};
+
+    TkrParams() {};
 
     TkrParams(Double_t ax, Double_t sx, Double_t ay, Double_t sy) : TVectorD(0,3,ax,sx,ay,sy) 
     {}
 
     TkrParams(const TkrParams& params);
 
-    //! destructor
     virtual ~TkrParams() {};
 
     TkrParams& operator=(const TkrParams& old);

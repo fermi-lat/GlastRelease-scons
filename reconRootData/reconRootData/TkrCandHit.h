@@ -2,7 +2,7 @@
 #define ROOT_TKRCANDHIT_H
 
 #include "TObject.h"
-#include "TVectorD.h"
+#include "TVector3.h"
 #include <vector>
 
 /** 
@@ -25,26 +25,30 @@ public:
 
     TkrCandHit();
 
-    TkrCandhit(const TVectorD& pos, UInt_t hitId, UInt_t tower, UInt_t layer, AXIS view);
+    TkrCandhit(const TVector3& pos, UInt_t hitId, UInt_t tower, UInt_t layer, AXIS view);
 
     virtual ~TkrCandHit() {}
 
+    void Clear(Option_t *option="");
+     
+    void Print(Option_t *option="") const;
+
     //! Provide an initialize method (in the case of the default constructor)
-    void     initialize(const TVectorD& pos, UInt_t hitId, UInt_t tower, UInt_t layer, AXIS view);
+    void     initialize(const TVector3& pos, UInt_t hitId, UInt_t tower, UInt_t layer, AXIS view);
 
     //! Group the methods for returning info here
-    TVectorD         getPosition()  const {return m_position; }
+    const TVector3&  getPosition()  const {return m_position; }
     UInt_t           getHitIndex()  const {return m_hitIndex; }
     UInt_t           getTower()     const {return m_tower;    }
     UInt_t           getPlane()     const {return m_plane;    }
     AXIS             getView()      const {return m_view;     }
 
 private:
-    TVectorD m_position;          //xyz coordinates of this hit
     UInt_t   m_hitIndex;          //Index into TkrSiClusters list of this hit
     UInt_t   m_tower;             //Index of the tower containing this hit
     UInt_t   m_plane;             //Plane (layer) - TkrRecon convention
     AXIS     m_view;              //Primary measurement projection (x or y)};
+    TVector3 m_position;          //xyz coordinates of this hit
 
     ClassDef(TkrCandHit,1)
 };

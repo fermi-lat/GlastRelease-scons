@@ -1,4 +1,5 @@
 #include "reconRootData/TkrCovMat.h"
+#include <iostream>
 
 ClassImp(TkrCovMat)
 
@@ -54,4 +55,18 @@ void TkrCovMat::initialize(const TkrCovMat& covMat)
     operator()(1,1) = covMat.getCovSySy();
     operator()(0,1) = covMat.getCovY0Sy();
     operator()(1,0) = covMat.getCovY0Sy();
+}
+
+void TkrCovMat::Print(Option_t *option) const {
+    TObject::Print(option);
+    using namespace std;
+    cout << operator()(0,0) << " " <<  operator()(0,1) << " "
+        << operator()(0,2) << " " << operator()(0,3) << std::endl;
+    cout << operator()(1,0) << " " << operator()(1,1) << " "
+        << operator()(1,2) << " " << operator()(1,3) << std::endl;
+    cout << operator()(2,0) << " " << operator()(2,1) << " "
+        << operator()(2,2) << " " << operator()(2,3) << std::endl;
+    cout << operator()(3,0) << " " << operator()(3,1) << " "
+        << operator()(3,2) << " " << operator()(3,3) << std::endl;
+
 }

@@ -28,39 +28,37 @@ public:
     // in this case there are no pointers in the class, so
     // users may utilize either constructor
     TkrSiCluster();
-    TkrSiCluster(UInt_t id);
 
     virtual ~TkrSiCluster();
 
     //! resets all member variables to default values
-    void Clear();
+    void Clear(Option_t *option="");
+
+    void Print(Option_t *option="") const;
+
+    void initialize(UInt_t id, UInt_t layer, TKRAxes xy, UShort_t center, 
+        UShort_t numStrips, Float_t pos, Float_t zpos);
+
     //! access the ID # associated with this TkrSiCluster
-    UInt_t getId() { return m_id; };
-    void setId(UInt_t id) { m_id = id; };
+    UInt_t getId() const { return m_id; };
 
     //! access the layer number
-    UInt_t getLayer() { return m_layer; };
-    void setLayer(UInt_t layer) { m_layer = layer; };
+    UInt_t getLayer() const { return m_layer; };
     
     //! access to the type of layer - is it an X or a Y?
-    TKRAxes getXY() { return (m_xy ? Y : X); };
-    void setXY(TKRAxes xyVal) { m_xy = xyVal; };
+    TKRAxes getXY() const { return (m_xy ? Y : X); };
 
     //! access the Center strip number
-    UShort_t getCenterStrip() { return m_centerStrip; };
-    void setCenterStrip(UShort_t center) { m_centerStrip = center; };
+    UShort_t getCenterStrip() const { return m_centerStrip; };
 
     //! access number of strips in this cluster
-    UShort_t getNumStrips() { return m_numStrips; };
-    void setNumStrips(UShort_t num) { m_numStrips = num; };
+    UShort_t getNumStrips() const { return m_numStrips; };
 
     //! access the position
-    Float_t getPosition() { return m_position; };
-    void setPosition(Float_t pos) { m_position = pos; };
+    Float_t getPosition() const { return m_position; };
 
     //! access the z position
-    Float_t getZPosition() { return m_z; };
-    void setZPosition(Float_t z) { m_z = z; };
+    Float_t getZPosition() const { return m_z; };
 
 
 private :
@@ -68,6 +66,13 @@ private :
   UInt_t m_id;   
   //! layer number
   UInt_t m_layer;
+
+  //! strip position
+  Float_t m_position; 
+
+  //! z position   
+  Float_t m_z;              
+
   //! denotes whether this is an X or Y plane
   TKRAxes m_xy;             
   
@@ -75,13 +80,6 @@ private :
   UShort_t m_centerStrip; 
   //! number of strips in this cluster
   UShort_t m_numStrips;        
-  
-  //! strip position
-  Float_t m_position; 
-
-  //! z position   
-  Float_t m_z;              
-
   
   ClassDef(TkrSiCluster,2) 
 };

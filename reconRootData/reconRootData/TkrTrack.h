@@ -25,68 +25,73 @@ public:
 
     TkrTrack();
 
-    virtual ~TkrTrack() {m_hits.clear();}
+    virtual ~TkrTrack();
+
+    void Clear(Option_t *option="");
+
+    void Print(Option_t *option="") const;
 
     //! Define two initialization methods
-    void     initializeInfo(UInt_t id, UInt_t xgaps, UInt_t ygaps, UInt_t x1st, UInt_t y1st);
-    void     initializeQaul(Double_t chiSq, Double_t ChiSqSmooth, Double_t rms, Double_t quality, Double_t e, Double_t ms);
+    void     initializeInfo(UInt_t id, UInt_t xgaps, UInt_t ygaps, 
+        UInt_t x1st, UInt_t y1st);
+    void     initializeQual(Double_t chiSq, Double_t ChiSqSmooth, 
+        Double_t rms, Double_t quality, Double_t e, Double_t ms);
 
     //! Allow hits to be added to the list
     void     addHit(const TkrHitPlane& hit) {m_hits.push_back(hit);}
 
     //! Implement methods parallel to TkrRecInfo here
-    const Double_t   getQuality()             {return m_Q;                 }
-    const Double_t   getEnergy(TKREND end)    {getEndHit(end).getEnePlane(); }
-    const UInt_t     getLayer(TKREND end)     {getEndHit(end).getIdPlane();}
-    const UInt_t     getTower(TKREND end)     {getEndHit(end).getIdTower();}
-    const TkrParams& getTrackPar(TKREND end)  {getEndHit(end).getHitSmooth().getTkrParams();}
-    const Double_t   getTrackParZ(TKREND end) {getEndHit(end).getZplane();}
-    const TkrCovMat& getTrackCov(TKREND end)  {getEndHit(end).getHitSmooth().getTkrCovMat();}
+    Double_t   getQuality() const            {return m_q;}
+    Double_t   getEnergy(TKREND end) const;
+    UInt_t     getLayer(TKREND end) const;
+    UInt_t     getTower(TKREND end) const;
+    const TkrParams* getTrackPar(TKREND end) const;
+    Double_t   getTrackParZ(TKREND end) const;
+    const TkrCovMat* getTrackCov(TKREND end) const;
 
     //! Group together the access methods here
-    UInt_t    getId()                         {return m_id;            }
-    Double_t  getChiSq()                      {return m_ChiSq;         }
-    Double_t  getChiSqSmooth()                {return m_ChiSqSmooth;   }
-    Double_t  getRmsResid()                   {return m_rmsResid;      }
-    Double_t  getQ()                          {return m_Q;             }
-    Double_t  getKalEnergy()                  {return m_KalEnergy;     }
-    Double_t  getKalThetaMS()                 {return m_KalThetaMS;    }
-    UInt_t    getXgaps()                      {return m_Xgaps;         }
-    UInt_t    getYgaps()                      {return m_Ygaps;         }
-    UInt_t    getXistGaps()                   {return m_XistGaps;      }
-    UInt_t    getYistGaps()                   {return m_YistGaps;      }
+    Int_t    getId() const                   {return m_id;            }
+    Double_t  getChiSq() const                {return m_chiSq;         }
+    Double_t  getChiSqSmooth() const          {return m_chiSqSmooth;   }
+    Double_t  getRmsResid() const             {return m_rmsResid;      }
+    Double_t  getKalEnergy() const            {return m_kalEnergy;     }
+    Double_t  getKalThetaMS() const           {return m_kalThetaMS;    }
+    UInt_t    getXgaps() const                {return m_xGaps;         }
+    UInt_t    getYgaps() const                {return m_yGaps;         }
+    UInt_t    getXistGaps() const             {return m_XistGaps;      }
+    UInt_t    getYistGaps() const             {return m_YistGaps;      }
 
     //! provide access to info at one end of the track or the other
-    const TkrHitPlane& getEndHit(TKREND end);
+    const TkrHitPlane* getEndHit(TKREND end) const;
 
     //! Provide info to any hit on the track
-    UInt_t             getNumHits()           {return m_hits.size();}
-    TkrHitPlaneIter    getHitIterBegin()      {return m_hits.begin();  }
-    TkrHitPlaneIter    getHitIterEnd()        {return m_hits.end();    }
+    UInt_t             getNumHits() const     {return m_hits.size();}
+    TkrHitPlaneIter    getHitIterBegin() const {return m_hits.begin();  }
+    TkrHitPlaneIter    getHitIterEnd() const   {return m_hits.end();    }
 
 private:
-    //! Track ID 
-    UInt_t     m_id;
-
     //! Summary track quality information
-    Double_t   m_ChiSq;
-    Double_t   m_ChiSqSmooth;
+    Double_t   m_chiSq;
+    Double_t   m_chiSqSmooth;
     Double_t   m_rmsResid;
-    Double_t   m_Q;
+    Double_t   m_q;
 
     //! Information from the Kalman Fitter
-    Double_t   m_KalEnergy;
-    Double_t   m_KalThetaMS;
+    Double_t   m_kalEnergy;
+    Double_t   m_kalThetaMS;
+
+    //! Track ID 
+    Int_t     m_id;
 
     //! Hit Gap information
-    UInt_t     m_Xgaps;
-    UInt_t     m_Ygaps;
+    UInt_t     m_xGaps;
+    UInt_t     m_yGaps;
     UInt_t     m_XistGaps;
     UInt_t     m_YistGaps;
 
     //! Object array of hit planes
-    TkrHitPlaneVector m_hits;
-
+    //TkrHitPlaneVector m_hits;
+    std::vector<TkrHitPlane> m_hits;
     ClassDef(TkrTrack,1)
 
 };
