@@ -12,8 +12,8 @@
 #include "GaudiKernel/CnvFactory.h"
 #include "MCEventCnv.h"
 
-// GlastEvent for creating the McEvent stuff
-#include "GlastEvent/TopLevel/MCEvent.h"
+// Event for creating the McEvent stuff
+#include "Event/TopLevel/MCEvent.h"
 
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/ObjectVector.h"

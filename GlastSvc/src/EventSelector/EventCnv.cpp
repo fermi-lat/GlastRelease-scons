@@ -12,7 +12,7 @@
 #include "EventCnv.h"
 #include "GaudiKernel/MsgStream.h"
 
-#include "GlastEvent/TopLevel/Event.h"
+#include "Event/TopLevel/Event.h"
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service

@@ -11,7 +11,7 @@
 
 #include "GaudiKernel/CnvFactory.h"
 #include "DigiEventCnv.h"
-#include "GlastEvent/TopLevel/DigiEvent.h"
+#include "Event/TopLevel/DigiEvent.h"
 
 static const char* rcsid = "$Id$";
 
