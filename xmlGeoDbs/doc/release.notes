@@ -4,6 +4,8 @@
  *
  *                    **EOH**
 
+   v1r22p0 7-Dec-2004  jrb  Change path in entity definition for extraMaterials
+                            in latIntegration files for Xerces 2.6.0
    v1r22   6-Dec-2004  jrb  Add Xin's files for one tower sys test; add copies
                             of empty.xml as needed
    v1r21   10-Nov-2004   Add copy of empty.xml to "right" directory
