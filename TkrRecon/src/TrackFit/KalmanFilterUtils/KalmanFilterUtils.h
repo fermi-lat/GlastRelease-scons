@@ -12,17 +12,14 @@
 #define KalmanFilter_h
 
 #include "KalmanFilterDefs.h"
-
-class TransportMatrix;
-class ProjectionMatrix;
-class ProcNoiseMatrix;
+#include "IKalmanFilterMatrix.h"
 
 class KalmanFilterUtils 
 {
 public:
 
     // Constructor needs the matrices that transform state vector, covariance matrix
-    KalmanFilterUtils(TransportMatrix& tMat, ProjectionMatrix& pMat, ProcNoiseMatrix& qMat);
+    KalmanFilterUtils(IKalmanFilterMatrix& transportMatrix, IKalmanFilterMatrix& projectionMatrix, IKalmanFilterMatrix& processMatrix);
    ~KalmanFilterUtils() {};
 
     // Prediction Methods
@@ -60,17 +57,17 @@ private:
     double   chiSquare(const KFvector& resid, const KFmatrix& residCov);
 
     // Matrices which determine state vector/cov mat transport
-    TransportMatrix&  m_F;
-    ProjectionMatrix& m_H;
-    ProcNoiseMatrix&  m_Q;
+    IKalmanFilterMatrix& m_F;
+    IKalmanFilterMatrix& m_H;
+    IKalmanFilterMatrix& m_Q;
 
     // Internal storage of current step
-    KFvector         m_predStateVec;
-    KFmatrix         m_predCovMat;
-    KFvector         m_filterStateVec;
-    KFmatrix         m_filterCovMat;
-    KFvector         m_smoothStateVec;
-    KFmatrix         m_smoothCovMat;
+    KFvector             m_predStateVec;
+    KFmatrix             m_predCovMat;
+    KFvector             m_filterStateVec;
+    KFmatrix             m_filterCovMat;
+    KFvector             m_smoothStateVec;
+    KFmatrix             m_smoothCovMat;
 };
 
 
