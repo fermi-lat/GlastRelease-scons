@@ -1,3 +1,12 @@
+// File and Version Information:
+//      $Header$
+//
+// Description:
+//      This is a GLAST Gaudi service used as an interface to the
+//      Gaudi NTupleSvc.
+//
+// Author:
+//      Heather Kelly			
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -15,7 +24,8 @@
 
 #include <string>
 #include <vector>
-#include <stdlib.h>
+#include <sstream>
+#include <iostream>
 
 #ifdef WIN32
 #include <float.h> // used to check for NaN
@@ -36,11 +46,6 @@ unsigned int ntupleWriterSvc::m_tupleCounter;
 static SvcFactory<ntupleWriterSvc> a_factory;
 const ISvcFactory& ntupleWriterSvcFactory = a_factory;
 
-
-// ------------------------------------------------
-// Implementation of the ntupleWriterSvc class
-// ------------------------------------------------
-/// Standard Constructor
 ntupleWriterSvc::ntupleWriterSvc(const std::string& name,ISvcLocator* svc)
 : Service(name,svc)
 {
@@ -52,7 +57,6 @@ ntupleWriterSvc::ntupleWriterSvc(const std::string& name,ISvcLocator* svc)
 }
 
 
-// initialize
 StatusCode ntupleWriterSvc::initialize () 
 {
     StatusCode  status =  Service::initialize ();
@@ -93,10 +97,10 @@ StatusCode ntupleWriterSvc::initialize ()
     if (status.isFailure()) return status;
     
     // setup the title
+    std::ostringstream locStrStream;
     std::string title("gen(");
-    char numEventsStr[20];
-    _itoa(evtMax, numEventsStr, 10);
-    title += numEventsStr;
+    locStrStream << evtMax;
+    title += locStrStream.str();
     title += ")";
 
     // Setup the ntuples asked for in the job options file
@@ -106,9 +110,9 @@ StatusCode ntupleWriterSvc::initialize ()
         // store the id for this ntuple
         m_TDS_tuple_name.push_back("/");
         // convert the id number into a string and append to the path name
-        char tdsName[5];
-        _itoa(m_tupleCounter, tdsName, 10);
-        m_TDS_tuple_name[index] += tdsName;
+        locStrStream.str("");
+        locStrStream << m_tupleCounter;
+        m_TDS_tuple_name[index] += locStrStream.str();
 
         // Try to book the ntuple
         if( !m_tuple_name[index].empty() ) {
@@ -209,7 +213,6 @@ StatusCode ntupleWriterSvc::saveNTuples() {
     return sc;
 }
 
-// finalize
 StatusCode ntupleWriterSvc::finalize ()
 {
     StatusCode  status = StatusCode::SUCCESS;
@@ -217,7 +220,7 @@ StatusCode ntupleWriterSvc::finalize ()
     status = saveNTuples();
     return status;
 }
-/// Query interface
+
 StatusCode ntupleWriterSvc::queryInterface(const IID& riid, void** ppvInterface)  {
   if ( IID_INTupleWriterSvc.versionMatch(riid) )  {
     *ppvInterface = (INTupleWriterSvc*)this;
