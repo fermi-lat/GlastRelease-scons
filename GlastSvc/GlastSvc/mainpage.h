@@ -18,7 +18,7 @@ the new set of Monte Carlo classes. They all inherit from from the BaseCnv class
 Heather has made a small testing Algorithm called CreateEvent.
 
 Also working in conjuction with the MC Converters is the IRFConverter which uses 
-the IRF parsers defined in the intrument package.
+the IRF parsers defined in the instrument package.
 
 \section General General
 
