@@ -4,8 +4,10 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ class RMcVertex;
-#pragma link C++ class RMcParticle;
-#pragma link C++ class RMcEvent;
+#pragma link C++ class VolumeIdentifier+;
+#pragma link C++ class McParticle+;
+#pragma link C++ class McPositionHit+;
+#pragma link C++ class McIntegratingHit+;
+#pragma link C++ class McEvent+;
 
 #endif

@@ -1,17 +1,17 @@
-// Mainpage for doxygen
+/** @mainpage package mcRootData
 
-/*! \mainpage package mcRootData
+  This package defines the ROOT classes which mirror the GlastEvent MonteCarlo
+  classes.
 
-  This package holds the root parallels of the GlastEvent MonteCarlo classes.
-  RMcEvent holds an array of RMcVertex so that the tree of particles can be 
-  accessed through a TObjArray.
-
-  This package still needs some work.
-
+  - List of McParticles
+  - List of McPositionHits
+    -# Pointer to the McParticle
+  - List of McIntgratinghits
+    -# Pointer (TRef) to an McParticle
 
   <hr>
   \section notes release notes
-  \include release.notes
+  release.notes
   \section requirements requirements
   \include requirements
 
