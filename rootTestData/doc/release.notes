@@ -3,6 +3,9 @@ Package rootTestData
 Coordinator:H.Kelly
 @verbatim
 
+v2r2      07-Feb-05  LSR new TkrCluster, but reran everything anyway
+                           Next time consider whether we can read in
+                           existing mc.root or digi.root
 v2r1      25-Jan-05  LSR new files for main branch
                          jobOptions for both sources
 v2r0      06-Jan-05  HMK Add new vertical_surface_muons data
