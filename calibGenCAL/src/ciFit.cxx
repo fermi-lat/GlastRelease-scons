@@ -335,7 +335,7 @@ void cfData::WriteSplinesXML(const string &filename, const string &dtdFilename) 
           << "\" nXtal=\"" << N_COLS 
           << "\" nFace=\"" << N_FACES 
           << "\" nRange=\"" << N_RNGS << "\"" << endl;
-  xmlFile << "           nDACCol=\"" << N_RNGS << "\" />" << endl;
+  xmlFile << "           nDacCol=\"" << N_RNGS << "\" />" << endl;
 
   //
   // DAC values for rest of file.

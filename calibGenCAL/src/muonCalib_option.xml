@@ -9,7 +9,7 @@
   <section name="TEST_INFO"> Test configuration info.
     <item name="TIMESTAMP"    value="2004-07-31-06:50"> Timestamp for test run.</item>
 
-    <item name="INSTRUMENT"   value="FM101"> Instrument name</item>
+    <item name="INSTRUMENT"   value="LAT"> Instrument name</item>
     <item name="TOWER_LIST"   value="1"> Listof towers currently installed. </item>
   </section>
 
