@@ -1,5 +1,5 @@
 package EbfWriter
-version v0r0p8
+version v0r0p9
 # $Header$
 
 author Navid Golpayegani <golpa@milkyway.gsfc.nasa.gov>
@@ -10,11 +10,16 @@ use GlastSvc       *
 # Use this pattern for shareable libraries that Gaudi must load
 apply_pattern packageShr
 
+# declares TDS class Ebf
+apply_pattern package_include
+
 private
 #-------------------------------------------------------
 apply_pattern package_Cshlibflags
 
 apply_pattern package_header
+
+macro_prepend includes "-I.. " WIN32 "/I.. "
 
 macro headers "" WIN32 " ../EbfWriter/*.h *.h"
 library EbfWriter $(headers) *.cxx Dll/*.cxx

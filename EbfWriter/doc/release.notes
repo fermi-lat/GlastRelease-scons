@@ -2,6 +2,7 @@
  * @file release.notes
  * @brief Package EbfWriter
  * @verbatim
+ * v0r0p10 09-aug-2004  THB oops, it declares the TDS class Ebf, dummy--add a comment
  * v0r0p8 09-aug-2004  THB remove package_include--this is only an algorithm
  * v0r0p7 22-Mar-2004  NG  Added author field to requirements file
  * v0r0p6 05-Nov-2003  NG  Added option to write Ebf data to file
