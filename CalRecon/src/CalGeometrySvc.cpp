@@ -59,7 +59,7 @@ StatusCode CalGeometrySvc::initialize()
     if (m_geoType == 0 && m_balloonFlight == 1)
 //            m_Z0 = -24.346; 
 //   calorimeter - tracker distance corrected according to G.Godfrey information
-            m_Z0 = -27.416; 
+            m_Z0 = -26.876; 
 
 	if (m_geoType == 1)
 	{
