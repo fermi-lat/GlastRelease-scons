@@ -36,8 +36,6 @@ class G4PropagationTool : public ParticleTransporter, public AlgTool, virtual pu
     //! Methods to intialize propagator before stepping 
     //! Tracking from intitial point and direction
     virtual void setStepStart(const Point& startPos, const Vector& startDir);
-    //! Tracking from initial parameters
-    virtual void setStepStart(const Event::TkrTrackParams& trackPar, double z);
 	//! Tracking from initial parameters
     virtual void setStepStart(const Event::TkrTrackParams& trackPar, double z, bool upwards);
 
@@ -190,34 +188,6 @@ void G4PropagationTool::setStepStart(const Point& startPos, const Vector& startD
     return;
 }
 
-//! Tracking from initial parameters
-void G4PropagationTool::setStepStart(const Event::TkrTrackParams& trackPar, double z)
-{
-    // Purpose and Method: Initializes to the starting point and direction. This
-    //                     will serve to set the initial volume at the start point
-    // Inputs: The starting point and direction 
-    // Outputs:  None
-    // Dependencies: None
-    // Restrictions and Caveats: None
-
-    // Save parameters 
-    m_trackPar = trackPar;
-    m_zCoord   = z;
-
-    // Create initial position and direction from said parameters
-    double x_slope = trackPar.getxSlope();   
-    double y_slope = trackPar.getySlope(); 
-    Vector dir_ini = Vector(-x_slope, -y_slope, -1.).unit();
-
-    double x0      = trackPar.getxPosition();
-    double y0      = trackPar.getyPosition();
-    Point  x_ini(x0,y0,z);
-
-    // Initialize the actual propagator...
-    setInitStep(x_ini, dir_ini);
-
-    return;
-}
 //! Tracking from initial parameters
 void G4PropagationTool::setStepStart(const Event::TkrTrackParams& trackPar, double z, bool upwards)
 {
