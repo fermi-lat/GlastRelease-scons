@@ -32,6 +32,8 @@
     
 
     Int_t ievent, ixtal;
+    CalXtalId xtalId;
+
     for (ievent = 0; ievent < numEvents; ievent++) {
 
         ev->initialize(ievent, runNum, true);
@@ -42,7 +44,7 @@
             Short_t tower = 5;
             Short_t layer = 4;
             Short_t col = 3;
-            CalXtalId xtalId(tower, layer, col);
+            xtalId.init(tower, layer, col);
             cal->initialize(mode, xtalId);
             ev->addCalDigi(cal);
             Char_t rangeM = CalXtalId::LEX8;
