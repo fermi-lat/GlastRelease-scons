@@ -44,17 +44,29 @@ long InsertDialog::onGoPress(FXObject *sender,FXSelector sel, void* ptr)
   
   std::vector<std::string> colNames;
   std::vector<std::string> values;
-    
+  std::vector<std::string> nullValues;
+  std::string name;
+  std::string value;
+   
   for(i=0;i<m_widgets.size();i++)
   {
     ColWidget* temp = m_widgets[i]; 
-    colNames.push_back(temp->getColumn()->getName()); 
-    values.push_back(temp->getValue());
+    
+    name = temp->getColumn()->getName();
+    value = temp->getValue();
+    
+    if (value == "")
+      nullValues.push_back(name);
+    else
+    {
+      colNames.push_back(name); 
+      values.push_back(value);
+    }      
   }
    
 
   if (m_connection)
-    m_connection->insertRow(m_tableName, colNames, values);  
+    m_connection->insertRow(m_tableName, colNames, values, 0, &nullValues);  
   
   this->handle(this, MKUINT(ID_ACCEPT, SEL_COMMAND),NULL);
   return 1;

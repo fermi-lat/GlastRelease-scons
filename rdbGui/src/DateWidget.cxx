@@ -5,25 +5,25 @@
 /// to choose a date and time
 class CalDialog : public FXDialogBox
 {
-	FXDECLARE(CalDialog)
+  FXDECLARE(CalDialog)
 
 // Services
 public:
-	CalDialog(FXApp* app);
-	~CalDialog() { }
+  CalDialog(FXApp* app);
+  ~CalDialog() { }
 
-	long onCmdAccept(FXObject* sender,FXSelector sel,void* ptr);
+  long onCmdAccept(FXObject* sender,FXSelector sel,void* ptr);
 
   FXDate getDate(){return m_date;};
 
 private:
-	FXDatePicker * dp;	
+  FXDatePicker * dp;  
   FXDate m_date;
-  CalDialog() {}	 
+  CalDialog() {}   
 };
 
 FXDEFMAP(CalDialog) CalDialogMap[]={
-		FXMAPFUNC(SEL_COMMAND, FXDialogBox::ID_ACCEPT, CalDialog::onCmdAccept)		
+    FXMAPFUNC(SEL_COMMAND, FXDialogBox::ID_ACCEPT, CalDialog::onCmdAccept)    
 };
 
 FXIMPLEMENT(CalDialog, FXDialogBox, CalDialogMap,ARRAYNUMBER(CalDialogMap))
@@ -32,26 +32,26 @@ FXIMPLEMENT(CalDialog, FXDialogBox, CalDialogMap,ARRAYNUMBER(CalDialogMap))
 CalDialog::CalDialog(FXApp* app)
 : FXDialogBox(app, "Choose a date and time", DECOR_TITLE|DECOR_BORDER)
 {
-	// Mainframe for deco
+  // Mainframe for deco
   FXVerticalFrame *mainframe =new FXVerticalFrame(this, FRAME_GROOVE|LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_TOP|LAYOUT_LEFT);
 
 
   dp = new FXDatePicker(mainframe);
-//	dp->setMonthBkColor(FXRGB(158,234,231));
-//	dp->setYearBkColor(FXRGB(158,234,231));
+//  dp->setMonthBkColor(FXRGB(158,234,231));
+//  dp->setYearBkColor(FXRGB(158,234,231));
 
-	dp->setMonthBkColor(FXRGB(255,204,49));
-	dp->setYearBkColor(FXRGB(255,204,49));
+  dp->setMonthBkColor(FXRGB(255,204,49));
+  dp->setYearBkColor(FXRGB(255,204,49));
   
-	FXHorizontalFrame *buttonframe =new FXHorizontalFrame(mainframe,LAYOUT_FILL_Y| LAYOUT_FILL_X|LAYOUT_TOP|LAYOUT_RIGHT,0,0,0,0,0,0,0,0);
-	new FXButton(buttonframe ,"&OK",NULL,this,FXDialogBox::ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_RIGHT|LAYOUT_CENTER_Y|LAYOUT_FIX_WIDTH|LAYOUT_FIX_HEIGHT,0,0,70,25);
+  FXHorizontalFrame *buttonframe =new FXHorizontalFrame(mainframe,LAYOUT_FILL_Y| LAYOUT_FILL_X|LAYOUT_TOP|LAYOUT_RIGHT,0,0,0,0,0,0,0,0);
+  new FXButton(buttonframe ,"&OK",NULL,this,FXDialogBox::ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_RIGHT|LAYOUT_CENTER_Y|LAYOUT_FIX_WIDTH|LAYOUT_FIX_HEIGHT,0,0,70,25);
  
 }
 
 
 long  CalDialog::onCmdAccept(FXObject* sender,FXSelector sel,void* ptr)
 {
-		FXDialogBox::onCmdAccept(sender,sel,ptr);
+    FXDialogBox::onCmdAccept(sender,sel,ptr);
     m_date = dp->getSelectedDate();
 
     return 1;
@@ -61,7 +61,7 @@ long  CalDialog::onCmdAccept(FXObject* sender,FXSelector sel,void* ptr)
 
 class DateField : public FXHorizontalFrame
 {
-	FXDECLARE(DateField)
+  FXDECLARE(DateField)
 
 // Services
 public:
@@ -71,20 +71,20 @@ public:
     };
 
   DateField(FXComposite* owner);
-	~DateField() { }
+  ~DateField() { }
 
-	long onCmdSet(FXObject* sender,FXSelector sel,void* ptr);
+  long onCmdSet(FXObject* sender,FXSelector sel,void* ptr);
   void setDate(std::string d){m_dateField->setText(d.c_str());};
   std::string getDate(){return m_dateField->getText().text();};
 
 private:
-	FXTextField* m_dateField;
+  FXTextField* m_dateField;
   FXButton* m_startCal;
-	DateField() {}	 
+  DateField() {}   
 };
 
 FXDEFMAP(DateField) DateFieldMap[]={
-		FXMAPFUNC(SEL_COMMAND, DateField::ID_SET, DateField::onCmdSet)		
+    FXMAPFUNC(SEL_COMMAND, DateField::ID_SET, DateField::onCmdSet)    
 };
 
 FXIMPLEMENT(DateField, FXHorizontalFrame, DateFieldMap,ARRAYNUMBER(DateFieldMap))
@@ -110,10 +110,10 @@ long  DateField::onCmdSet(FXObject* sender,FXSelector sel,void* ptr)
     FXDate temp = test->getDate();
 
     char name[50];
-    sprintf(name,"%d-%d-%d %.2d.%.2d.%.2d", 
-	  temp.getYear(),
-	  temp.getMonth(),
-	  temp.getDay(),
+    sprintf(name,"%d-%d-%d %.2d:%.2d:%.2d", 
+    temp.getYear(),
+    temp.getMonth(),
+    temp.getDay(),
     temp.getHour(),
     temp.getMinute(),
     temp.getSecond());
