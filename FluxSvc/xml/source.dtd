@@ -34,6 +34,8 @@
 <!ELEMENT energy EMPTY>
 <!ATTLIST energy e CDATA "0.1">
 
+<!-- vdg is used as a tag to simulate photons produced by Van de Graaff accelerator at SLAC -->
+
 <!ELEMENT vdg EMPTY>
 <!ATTLIST vdg>
 
