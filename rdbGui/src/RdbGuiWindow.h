@@ -56,6 +56,8 @@ public:
     ID_OPENXML,
     ID_OPENCONNECTION,
     ID_CLOSECONNECTION,
+    ID_LOWPAN,
+    ID_TABLEOUT,
     ID_TOGGLERESULT,
     ID_PASTEFROMTABLE,
     ID_ABOUT,
@@ -71,6 +73,7 @@ public:
   long onOpenConnection(FXObject*,FXSelector, void*);  
   long onCloseConnection(FXObject*,FXSelector, void*);
   long onQueryFrameUpdate(FXObject *, FXSelector, void*);
+  long onSendQuery(FXObject*,FXSelector, void*);
   long onInsert(FXObject*,FXSelector, void*);
   // ..eccetera
   

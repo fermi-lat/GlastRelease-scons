@@ -29,4 +29,6 @@ void LogText::update()
 {
   logText(m_errStream.str().c_str());
   logText(m_outStream.str().c_str());
+  m_errStream.flush();
+  m_outStream.flush();
 }

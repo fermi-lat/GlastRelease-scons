@@ -26,8 +26,8 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
  
   InsertDialog(FXWindow *owner);
  
-  void setConnection(rdbModel::Connection* con){m_connection = con;};
-  void setTableName(std::string name){m_tableName = name;};
+  void setConnection(rdbModel::Connection* con){m_connection = con;}
+  void setTableName(std::string name){m_tableName = name;}
   
   long onGoPress(FXObject*,FXSelector,void*);
   

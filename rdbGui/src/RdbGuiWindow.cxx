@@ -1,6 +1,9 @@
 
 #include "RdbGuiWindow.h"
 #include "InsertDialog.h"
+
+#include "rdbModel/Db/ResultHandle.h"
+
 #include <vector>
 
 // Message Map RdbGUIWindow class
@@ -17,6 +20,7 @@ FXDEFMAP(RdbGUIWindow) RdbGUIWindowMap[]={
   FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_OPENCONNECTION,     RdbGUIWindow::onOpenConnection),
   FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_CLOSECONNECTION,    RdbGUIWindow::onCloseConnection), 
   FXMAPFUNC(SEL_COMMAND,  TableColumnList::ID_TBLLIST,         RdbGUIWindow::onQueryFrameUpdate), 
+  FXMAPFUNC(SEL_COMMAND,  QueryFrame::ID_QUERY,                RdbGUIWindow::onSendQuery),
   FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_INSERT,             RdbGUIWindow::onInsert)
 };
 
@@ -85,23 +89,29 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
 
 
   // Search Frame
-  searchFrame = new QueryFrame(uiVsplitter);
+  searchFrame = new QueryFrame(uiVsplitter, this);
 
 
   // Editor
   //uiEditor = new SQLBuffer(uiEditorframe, this, ID_SQLEDIT, LAYOUT_FILL_X|LAYOUT_FILL_Y);
 
-  // Log window frame
-  FXHorizontalFrame *uiLogFrame = new FXHorizontalFrame(uiVsplitter,
-      LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_THICK|FRAME_SUNKEN);
-
-  // Result log
-  uiLog = new LogText(uiLogFrame, NULL, 0, LAYOUT_FILL_X|LAYOUT_FILL_Y);
+  FXTabBook *lowerTab = new FXTabBook(uiVsplitter, this, ID_LOWPAN, TABBOOK_BOTTOMTABS|LAYOUT_FILL_X|LAYOUT_FILL_Y);  
   
-  // Result table
-//   uiTable = new ResultTable(uiResultswitch, NULL, 0, TABLE_COL_SIZABLE|
-//                             LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 2,2,2,2);
-                            
+  new FXTabItem(lowerTab, "Query output", NULL, TAB_BOTTOM_NORMAL);
+  
+  FXHorizontalFrame *tableFrame = new FXHorizontalFrame(lowerTab,
+      LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_THICK|FRAME_SUNKEN);
+    // Result table
+  uiTable = new ResultTable(tableFrame, this, ID_TABLEOUT, LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 2,2,2,2);
+      
+  new FXTabItem(lowerTab, "Log", NULL, TAB_BOTTOM_NORMAL);         
+  // Log window frame
+  FXHorizontalFrame *logFrame = new FXHorizontalFrame(lowerTab,
+      LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_THICK);
+  // Result log
+  uiLog = new LogText(logFrame, NULL, 0, LAYOUT_FILL_X|LAYOUT_FILL_Y);
+  
+                   
   // File menu
   uiFilemenu = new FXMenuPane(this);
   new FXMenuTitle(uiMenuBar, "&File", NULL, uiFilemenu);
@@ -139,6 +149,10 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   //uiEditor->setFocus();
   //uiEditor->initSyntaxHighlighting();
   //m_shactive = getApp()->reg().readStringEntry("SETTINGS", "HighLightSyntax", "Y") == "Y";
+  
+  // Result table initialization
+  uiTable->setTableSize(1, 1);
+  uiTable->setItemText(0, 0, "No data");
   
   
   // Initialize connection dialog and mysql connection
@@ -258,9 +272,11 @@ long RdbGUIWindow::onOpenConnection(FXObject*,FXSelector, void*)
           switch (match) {
           case rdbModel::MATCHequivalent:
             uiLog->logText("XML schema and MySQL database are equivalent!\n");
+            searchFrame->setConnection(m_connect);
             break;
           case rdbModel::MATCHcompatible:
             uiLog->logText("XML schema and MySQL database are compatible\n");
+            searchFrame->setConnection(m_connect);
             break;
           case rdbModel::MATCHfail:
             uiLog->logText("XML schema and MySQL database are NOT compatible\n");
@@ -269,6 +285,7 @@ long RdbGUIWindow::onOpenConnection(FXObject*,FXSelector, void*)
             uiLog->logText("Connection failed while attempting match\n");
             break;
           }
+          
         }
       getApp()->endWaitCursor();
     }
@@ -289,6 +306,31 @@ long RdbGUIWindow::onCloseConnection(FXObject*,FXSelector, void*)
       m_uiDBSelection->removeItem(m_uiDBSelection->getCurrentItem());
     }
   return 1;  
+}
+
+long RdbGUIWindow::onSendQuery(FXObject*,FXSelector, void*)
+{
+  FXCheckList *columns = (FXCheckList *) uiTblColList->getColList();
+  rdbModel::ResultHandle *queryResult = searchFrame->getQueryResult();
+  uiTable->setTableSize(queryResult->getNRows(), columns->getNumItems());
+  
+  int i,j;
+  for (j = 0; j < uiTable->getNumColumns(); j++)
+    uiTable->setColumnText(j, columns->getItemText(j));
+    
+  for (i = 0; i < uiTable->getNumRows(); i++)
+    uiTable->setRowText(i, FXStringVal(i+1));
+    
+  for (i=0; i < uiTable->getNumRows(); i++)
+    {
+      std::vector<std::string> rowValues;
+      queryResult->getRow(rowValues, i);
+      for (j = 0; j < uiTable->getNumColumns(); j++)
+        {
+          uiTable->setItemText(i, j, rowValues[j].c_str());
+        }
+    }
+  return 1;
 }
 
 long RdbGUIWindow::onInsert(FXObject*,FXSelector, void*)
@@ -319,7 +361,8 @@ void RdbGUIWindow::closeConnection()
 
 long RdbGUIWindow::onQueryFrameUpdate(FXObject *, FXSelector, void*)
 {
-  searchFrame->updateColumnSelection(uiTblColList->getColList());
+  searchFrame->updateColumnSelection(uiTblColList->getTableList(), 
+      uiTblColList->getColList());
   return 1; 
 }
 

@@ -16,7 +16,8 @@ class ResultTable: public FXTable
     void format();  
     
   protected:
-    ResultTable();
+    ResultTable() {};
+    ResultTable(ResultTable&) {};
 };
 
 

@@ -27,7 +27,8 @@ class TableColumnList: public FXVerticalFrame, public rdbModel::Visitor
   long onSelectTable(FXObject*, FXSelector, void*);
   long onSelectColumn(FXObject*, FXSelector, void*);
   
-  const FXCheckList* getColList() {return m_colList;}
+  const FXCheckList* getColList() const {return m_colList;}
+  const FXList* getTableList() const {return m_tblList;}
   
  protected:
   TableColumnList(){}

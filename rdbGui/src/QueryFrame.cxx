@@ -22,8 +22,9 @@ FXIMPLEMENT(QueryFrame,FXVerticalFrame,QueryFrameMap,ARRAYNUMBER(QueryFrameMap))
 
 
 
-QueryFrame::QueryFrame(FXComposite *owner):
-  FXVerticalFrame(owner, LAYOUT_FILL_X|LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0)
+QueryFrame::QueryFrame(FXComposite *owner, FXObject *target):
+  FXVerticalFrame(owner, LAYOUT_FILL_X|LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0),
+  m_target(target)
 {
 
   // Search frame scroll window
@@ -53,9 +54,13 @@ QueryFrame::QueryFrame(FXComposite *owner):
   
   int  numOper= 6;
   FXString relOper[] = {"<",">","=","<>","<=",">="};
-  m_operators.assign(relOper, &relOper[numOper-1]);
+  m_operators.assign(relOper, &relOper[numOper]);
   
   m_factory = new ColWidgetFactory();
+  
+  m_tableName = "";
+  m_connect = NULL;
+  m_queryResult = 0;
   
 }
 
@@ -124,10 +129,13 @@ long QueryFrame::onCmdFewer(FXObject*,FXSelector,void*)
 }
 
 
-void QueryFrame::updateColumnSelection(const FXCheckList *colList)
+void QueryFrame::updateColumnSelection(const FXList *tableList, const FXCheckList *colList)
 {
   int i;
   FXWindow *temp; 
+  
+  m_tableName = tableList->getItemText(tableList->getCurrentItem()).text();
+  
   while (m_searchFrame->getNumRows() > 1)
     {
       onCmdFewer(NULL,0,NULL);
@@ -185,9 +193,31 @@ long QueryFrame::onSelectCol(FXObject *sender, FXSelector, void*)
 long QueryFrame::onQuery(FXObject*,FXSelector,void*)
 {
 
-  rdbModel::Assertion::Operator *where = buildOperator(0);
+  rdbModel::Assertion::Operator *whereOp = buildOperator(0);
+  
+  rdbModel::Assertion *where= new rdbModel::Assertion(rdbModel::Assertion::WHENwhere,
+      whereOp);
+  
+  if (m_connect)
+    {
+      int i;
+      std::vector<std::string> getCols;
+      std::vector<std::string> orderCols;   // needed  by the select interace (I just leave it empty)
+      
+      FXComboBox *firstColSel = (FXComboBox *) m_searchFrame->getFirst();
+      for (i = 0; i < firstColSel->getNumItems(); i++)
+        getCols.push_back(firstColSel->getItemText(i).text());
+       
+      if (m_queryResult) 
+        {
+          delete m_queryResult;
+          m_queryResult = NULL;
+        }
+      m_queryResult = m_connect->select(m_tableName, getCols, orderCols, where);
+      return m_target && m_target->handle(NULL,FXSEL(SEL_COMMAND,ID_QUERY),NULL);
+    }  
 
-  return 1;
+  return 0;
 }
 
 

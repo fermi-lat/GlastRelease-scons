@@ -8,7 +8,9 @@
 #include <vector>
 #include "FXCheckList.h"
 
+#include "rdbModel/Db/Connection.h"
 #include "rdbModel/Tables/Assertion.h"
+#include "rdbModel/Db/ResultHandle.h"
 
 class ColWidget;
 class ColWidgetFactory;
@@ -28,29 +30,36 @@ class QueryFrame: public FXVerticalFrame
     ID_QUERY
   }; 
   
-  QueryFrame(FXComposite *);
+  QueryFrame(FXComposite *, FXObject *target = NULL);
   
   long onCmdMore(FXObject*,FXSelector,void*);
   long onCmdFewer(FXObject*,FXSelector,void*);
   long onSelectCol(FXObject *sender, FXSelector, void*);
   long onQuery(FXObject *sender, FXSelector, void*);
   
-  void updateColumnSelection(const FXCheckList *colList);
-  rdbModel::Assertion::Operator* QueryFrame::buildCompOperator(std::string col, 
-      std::string comp, std::string value);
-  rdbModel::Assertion::Operator* buildOperator(int row);
+  void updateColumnSelection(const FXList *tableList, const FXCheckList *colList);
+  void setConnection(rdbModel::Connection* con){m_connect = con;}
+  rdbModel::ResultHandle* getQueryResult() const {return m_queryResult;}
+
   
  protected:
   QueryFrame(){}
   QueryFrame(QueryFrame&){} 
   
  private:
+  FXObject *m_target;                    // The target of some messages sent by this widget
   FXMatrix *m_searchFrame;                  // Martix of FXComboBox containing search conditions
   std::vector<FXString> m_operators;     // vector of comparison operators
   ColWidgetFactory* m_factory;  
   std::vector<ColWidget*> m_widgets;
+  rdbModel::Connection* m_connect;    // pointer to the DB connection class
+  std::string m_tableName;               // Name of the selected table
+  rdbModel::ResultHandle *m_queryResult; // object containing the result of a query
 
-
+  rdbModel::Assertion::Operator* QueryFrame::buildCompOperator(std::string col, 
+      std::string comp, std::string value);
+  rdbModel::Assertion::Operator* buildOperator(int row);
+  
 };
 
 #endif
