@@ -191,7 +191,12 @@ StatusCode HepRepSvc::finalize ()
 {
   // @todo Need to destroy all the streamers and the server
   StatusCode  status = StatusCode::SUCCESS;
-  
+
+  if (m_server!=0)
+    m_server->shutDown();
+
+	std::cout << "Closing " << std::endl;
+
   return status;
 }
 
