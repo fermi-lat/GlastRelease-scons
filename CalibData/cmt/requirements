@@ -10,7 +10,7 @@ use GaudiInterface * IExternal
 apply_pattern package_include
 apply_pattern package_headers
 
-library CalibData *.cxx Cal/*.cxx ${CalibData_headers}
+library CalibData *.cxx Cal/*.cxx Tkr/*.cxx ${CalibData_headers}
 
 
 # For a "linker library" could try new pattern available in GaudiPolicy
