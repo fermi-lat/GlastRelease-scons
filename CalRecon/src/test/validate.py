@@ -147,7 +147,6 @@ build_application_test('CalRecon')
 build_application_test('Gleam')
 
 run_job('CalRecon','jobOptions',False)
-run_job('CalRecon','fuzzyOptions',False)
 run_job('CalRecon','simpleOptions',False)
 run_job('Gleam','gleamOptions',True)
 

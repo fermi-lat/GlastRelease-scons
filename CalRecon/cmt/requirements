@@ -19,11 +19,6 @@ use xml *
 # which is needed by SimpleClusterTool, find out particle.cdf
 use FluxSvc v*
 
-# The following lines are needed to use the FuzzyCluster package
-use AnalysisNtuple v*
-use FuzzyCluster v*
-use CLHEP * IExternal
-
 apply_pattern packageShr
 
 ### hide the packages used only for test program
