@@ -1,12 +1,11 @@
 Package digiRootData
 Coordinator: H. Kelly
 
-31-oct-2001: new tag v2r9p1
-16-oct-2001: new tag v2r9
-16-oct-2001: update EventLinkDef file to include + to use new ROOT streamers
-28-aug-2001: new tag v2r8
-28-aug-2001: update requirements file
-21-aug-2001: new tag v2r7
-21-aug-2001:  add in CNO bit for AcdTile class
-20-june-2001: update classes for the BFEM
-april-2001: tag as v1r1
+
+v3r0      03-May-2002 HMK Start update for new version of digi classes for use with Gleam\n
+v2r9p1    31-oct-2001 HMK \n
+v2r9      16-oct-2001 HMK update EventLinkDef to include + to use new ROOT streamers\n
+v2r8      28-aug-2001 HMK update requirements file \n
+v2r7      21-aug-2001 HMK  add in CNO bit for AcdTile class \n
+          20-june-2001 HMK update classes for the BFEM \n
+v1r1      april-2001 HMK \n
