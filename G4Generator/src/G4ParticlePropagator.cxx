@@ -208,11 +208,22 @@ double G4ParticlePropagator::radLength() const
       G4VPhysicalVolume* pCurVolume = curStep->GetVolume();
       G4Material* pMaterial  = pCurVolume->GetLogicalVolume()->GetMaterial();
 
-      double matRadLen = pMaterial->GetRadlen();
-      if (matRadLen > 0.) radLen += 1. / matRadLen;
-    }
 
-  if (radLen > 0.) radLen = 1. / radLen;
+      double matRadLen = pMaterial->GetRadlen();
+      double x0s       = 0.;
+      double s_dist    = curStep->GetArcLen();
+
+      if (matRadLen > 0.) x0s = s_dist / matRadLen;
+
+//      if(dist+s_dist > s) 
+//      { 
+//        // pro-rate the last step: s_distp
+//        if(s_dist > 0) x0s *= (s - dist)/s_dist;
+//        s_distp = s - dist; 
+//      }
+
+      if (matRadLen > 0.) radLen += x0s;
+    }
 
   return radLen;
 }
