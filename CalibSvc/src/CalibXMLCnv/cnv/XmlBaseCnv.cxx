@@ -32,11 +32,13 @@ namespace {
     using idents::CalXtalId;
 
     std::string att = Dom::getAttribute(rangeElt, "range");
+    if (att.size() == 0) {  // range not applicable
+      return 0;
+    }
     if (att.compare(std::string("LEX8")) == 0) return CalXtalId::LEX8;
     if (att.compare(std::string("LEX1")) == 0) return CalXtalId::LEX1;
     if (att.compare(std::string("HEX8")) == 0) return CalXtalId::HEX8;
     if (att.compare(std::string("HEX1")) == 0) return CalXtalId::HEX1; 
-    return 0;
   }
 
   unsigned findFace(const DOM_Element& faceElt) {
