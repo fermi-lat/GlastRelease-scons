@@ -25,8 +25,8 @@ public:
          m_tree->Branch(names[i], &m_params[i], 
                         (std::string(names[i])+"/D").c_str());
       }
-      m_func->SetParLimits(0, 0.1, 1);  // minimum for the gaussian component
-      m_func->SetParLimits(1, 0.2, 5);
+      m_func->SetParLimits(0, 1e-3, 3);  // minimum for the gaussian component
+      m_func->SetParLimits(1, 0.01, 5);
       m_func->SetParLimits(2, 0, 10);;
       m_func->SetParLimits(3, 0, 10);;
       m_func->SetParLimits(4, 0.5, 1.5);;
@@ -36,7 +36,7 @@ public:
 
    void applyFit(TH1 * h) {
       // These initial parameters were obtained interactively
-      double pinit[]={0.01, 1.0, 1.0, 1.0, 1.0};
+      double pinit[] = {0.01, 1.0, 1.0, 0.5, 1.};
       std::copy(pinit, pinit+sizeof(pinit)/sizeof(double), m_params.begin());
       m_func->SetParameters(&m_params[0]);
       int fitTrys = 0;
@@ -47,6 +47,10 @@ private:
     int m_maxTrys;
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+void fit_psfs();
+void fit_edisp();
+
 int main(){
 
    //-------thin --------------
@@ -79,13 +83,19 @@ int main(){
    psf_thick.setEnergyScaling("", Perugia_thick, false);
    psf_thick.addEnergyScaling("psf_thick_parameters.root", "energyScaling");
    
-   //-------energy dispersion-------
+//   fit_edisp();   
+//   fit_psfs();
+
+   return 0;
+}
+
+void fit_edisp() {
    std::string gaussian("[0]/[2]*exp(-0.5*pow((x - [1])/[2], 2.))");
    double gauss_params[] = {1., 1., 0.2};
    
    std::vector<double> gaussParams(gauss_params, gauss_params+3);
-   myfit = new GenericFitter(gaussian, gaussParams, 
-                             "edisp_thin_parameters.root");
+   Fitter * myfit = new GenericFitter(gaussian, gaussParams, 
+                                      "edisp_thin_parameters.root");
    MakeDists edisp_thin("edisp_thin.root");
    edisp_thin.set_user_cut(TCut("Tkr1FirstLayer<12"));
    if (!edisp_thin.fileExists()) 
@@ -110,7 +120,52 @@ int main(){
    edisp_thick.draw("edisp_thick.ps", true, myfit);
    delete myfit;
    edisp_thick.addCutInfo("edisp_thick_parameters.root", "fitParams");
-   
-   return 0;
 }
 
+// void fit_psfs() {
+//    std::string energyScaling("[0]*pow(1e-2/(1./McEnergy + [2]), [1])");
+
+// //-------thin--------------
+//    Fitter * myfit = new PsfModel("my_psf_thin_parameters.root");
+//    MakeDists my_psf_thin("my_psf_thin.root");
+//    my_psf_thin.set_user_cut(TCut("Tkr1FirstLayer<12"));
+
+//    std::vector<double> params(3);
+//    params[0] = 0.075;
+//    params[1] = -0.85;
+//    params[2] = 5e-4;
+//    my_psf_thin.setEnergyScaling(energyScaling, params);
+
+//    if (!my_psf_thin.fileExists()) {
+//       my_psf_thin.project("BestDirErr", 0, 10, 100);
+//    }
+//    my_psf_thin.set_ymax(0.5); 
+//    my_psf_thin.set_ymin(1e-4);
+//    my_psf_thin.draw("my_psf_thin.ps", true , myfit);
+//    delete myfit;
+
+//    my_psf_thin.addCutInfo("my_psf_thin_parameters.root", "fitParams");
+//    my_psf_thin.addEnergyScaling("my_psf_thin_parameters.root", 
+//                                 "energyScaling");
+
+// //-------thick-------------
+//    myfit = new PsfModel("my_psf_thick_parameters.root");
+//    MakeDists my_psf_thick("my_psf_thick.root");
+//    my_psf_thick.set_user_cut(TCut("Tkr1FirstLayer>11"));
+//    params[0] = 0.15;
+//    params[1] = -0.85;
+//    params[2] = 1e-4;
+//    my_psf_thick.setEnergyScaling(energyScaling, params);
+
+//    if (!my_psf_thick.fileExists()) {
+//       my_psf_thick.project("BestDirErr", 0, 10, 100);
+//    }
+//    my_psf_thick.set_ymax(0.5); 
+//    my_psf_thick.set_ymin(1e-4);
+//    my_psf_thick.draw("my_psf_thick.ps", true , myfit);
+//    delete myfit;
+
+//    my_psf_thick.addCutInfo("my_psf_thick_parameters.root", "fitParams");
+//    my_psf_thick.addEnergyScaling("my_psf_thick_parameters.root", 
+//                                  "energyScaling");
+// }
