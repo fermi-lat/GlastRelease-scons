@@ -61,8 +61,10 @@ namespace calibRootData {
     void setId(const commonRootData::TkrId& id) {m_unilayerId = id;}
     const commonRootData::TkrId& getId() const {return m_unilayerId;}
     TClonesArray* getStrips() {return m_strips;}
-    const TotStrip* getStrip(Int_t n) const 
-    {return (TotStrip*)(m_strips->At(n));}
+    Int_t getNStrips() {return (m_strips->LastIndex() + 1); }
+    const TotStrip* getStrip(Int_t n) const {
+      return (TotStrip*)(m_strips->At(n));
+    }
 
     /** Make room for nStrips worth of data.  Old data, if there is
      any, is lost.
