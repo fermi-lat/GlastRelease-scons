@@ -1,5 +1,5 @@
 package GlastSvc
-version v9r4p1
+version v9r4p2
 branches src cmt doc
 
 use Event v9r*
@@ -13,15 +13,16 @@ apply_pattern package_include
 #=============================================================
 
 # private
+macro headers "" WIN32 "*.h"
 
-macro GlastDetSvc_h    "" WIN32 "..\GlastSvc\GlastDetSvc\*.h GlastDetSVc\*.h"
-macro GlastRandomSvc_h "" WIN32 "..\GlastSvc\GlastRandomSvc\*.h GlastRandomSvc\*.h"
-macro EventSelector_h  "" WIN32 "..\GlastSvc\EventSelector\*.h EventSelector\*.h"
-
-library GlastSvc ${GlastDetSvc_h}     GlastDetSvc/*.cxx\
-	        ${GlastRandomSvc_h}  GlastRandomSvc/*.cxx\
-                 ${EventSelector_h}   EventSelector/*.cpp \
-	        Dll/*.cpp
+library GlastSvc \
+     Dll/*.cpp \
+     -s="../GlastSvc/GlastDetSvc" $(headers)\
+     -s="GlastDetSvc $(headers) *.cxx\
+     -s="..\GlastSvc\GlastRandomSvc" $(headers)\
+     -s="GlastRandomSvc" $(headers) *.cxx\
+     -s="..\GlastSvc\EventSelector" $(headers) \
+     -s="EventSelector" $(headers) *.cpp 
             
 
 # get flags to build shared library

@@ -2,6 +2,7 @@
  * package GlastSvc
  * package manager:T.Burnett
  *
+ * 15-jan-03  THB tag v9r4p2  Dll stuff now fixed
  * 13-jan-03  THB tag v9r4p1  adjust requirement file for vsnet
   *-------------------new GlastRelease---------------------------------
  * 10-oct-02  LSR tag v9r3p1 fix bug in GlastDetSvc
