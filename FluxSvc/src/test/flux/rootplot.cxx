@@ -24,6 +24,8 @@
 const int NUM_BINS = 30;
 const int LOOP    = 30000;
 
+const double TIME=0.01;
+
 const double ENERGY_MIN = 0.01;
 const double ENERGY_MAX = 100.0;
 
@@ -46,7 +48,8 @@ void help() {
       "      '-flux_min' manually set lower limit for graph\n"
       "      '-flux_max' manually set upper limit for graph\n"
       "      '-graph <log | semilogx | semilogy | linear>'\n"
-      "      '-longsrc <sourcename>' for long-term energy averaging"
+      "      '-longsrc <sourcename>' for long-term energy averaging\n"
+      "      '-time <time in seconds>' for the flux at time\n"
       "      '-help' for this help"
       << std::endl;
 }
@@ -80,6 +83,7 @@ void flux_load() {
    DLL_DECL_SPECTRUM( CrElectron);
    DLL_DECL_SPECTRUM( CrProton);
    DLL_DECL_SPECTRUM( FILESpectrum);
+   //   DLL_DECL_SPECTRUM( GRBSpectrum);
    
 }
 
@@ -95,13 +99,13 @@ void flux_load() {
 int main(int argc, char** argv)
 {
    int num_bins = NUM_BINS;  // Initialize to default number of bins
-   int loop = LOOP;        // Initialize to default number of iterations
+   int loop = LOOP; // Initialize to default number of iterations
    int num_sources = 0;
    int num_longsources = 0;
    int current_arg = 1;
    int longtime=1;
    int longtimemax=20;
-   double time=0.;  //time to use for flux and rate functions
+   double time=TIME;  //time to use for flux and rate functions
    double energy_min = ENERGY_MIN;
    double energy_max = ENERGY_MAX;
    bool use_trueflux = false;
@@ -188,6 +192,10 @@ int main(int argc, char** argv)
          //put the number of this source into the list for reference
          longsources.push_back(num_sources);
          num_sources++;
+      }
+      else if("-time" == arg_name) {
+	time = atof(argv[++current_arg]);
+	cout<<" TIME = "<<time<<endl;
       }
       else if('-' == arg_name[0]) {std::cerr << "Unrecognized option "<< arg_name << ", -help for help" << std::endl;}
       else
@@ -292,7 +300,7 @@ int main(int argc, char** argv)
      {
         double flux = e->flux(time);
         scale_factor = flux/loop*num_bins/log(energy_max/energy_min);
-        std::cout << "FLUX IS: " << flux << std::endl;
+        std::cout << "FLUX IS: " << 1.0*flux << std::endl;
      }
 
      for(j = 0; j < loop; j++) 
@@ -310,7 +318,7 @@ int main(int argc, char** argv)
         angle_hist.storeTheta(cos_theta);
         angle_hist.storePhi(phi);
         
-        if(j % 10000 == 0) std::cerr << "\r" << j << ": " << energy << "...";
+        if(j % 1000 == 0) std::cerr << "\r" << j << ": " << energy << "...";
      }
 
      std::cerr << "\n";

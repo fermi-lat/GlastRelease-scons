@@ -15,7 +15,7 @@ private
 
 use GaudiSvc
 use GlastEvent
-
+use ROOT
 use xml
 use CLHEP
 use geometry
@@ -28,19 +28,28 @@ apply_pattern package_Cshlibflags
 apply_pattern package_headers
 
 library FluxSvc  *.cxx \
+ GRB/*.cxx\
  Dll/*.cxx\
  ${FluxSvc_headers}
 
 application testMgr  test/flux/testMgr.cxx *.cxx \
+ GRB/*.cxx\
  Dll/*.cxx\
  ${FluxSvc_headers}
 
 application rootplots test/flux/rootplot.cxx test/flux/rootEnergyHist.cxx\
  test/flux/rootHist.cxx test/flux/rootAngleHist.cxx\
+ GRB/*.cxx\
  *.cxx Dll/*.cxx\
  ${FluxSvc_headers}
 
+application GRBTest  test/flux/GRBTest.cxx *.cxx \
+ GRB/*.cxx\
+ Dll/*.cxx\
+ ${FluxSvc_headers}
 
+macro_append ROOT_libs  " -lHist  -lMatrix -lGraf -lGraf3d -lGpad"
+macro_append FluxSvc_headers "" WIN32 "GRB/*.h"
 macro_append FluxSvc_headers "" WIN32 "../xml/*.xml test/*.txt test/*.xml"
 # test program, using local joboptions
 public set JOBOPTIONS ${FLUXSVCROOT}/src/test/jobOptions.txt

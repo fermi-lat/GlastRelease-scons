@@ -327,10 +327,10 @@ void FluxSource::computeLaunch (double time)
             // might be confusing)
             // keep x-axis perpendicular to zenith direction
             if (_theta != 0.0) m_launchDir.rotateX(_theta).rotateZ(_phi);
-            
-            //if(m_pointtype==NOPOINT){
-            //randomLaunchPoint();
-            //}
+            //WARNING UNCOMMENTED
+            if(m_pointtype==NOPOINT){
+            randomLaunchPoint();
+            }
             break;
         }
     case GALACTIC:
