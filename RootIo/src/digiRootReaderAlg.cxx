@@ -355,7 +355,7 @@ StatusCode digiRootReaderAlg::readDigiEvent() {
     }
 
     TriRowBitsTds::TriRowBits *rowbits= new TriRowBitsTds::TriRowBits;
-    sc = eventSvc()->registerObject("/Event/Digi/TriRowBits", rowbits);
+    sc = eventSvc()->registerObject("/Event/TriRowBits", rowbits);
     if( sc.isFailure() ) {
         log << MSG::ERROR << "Could not register TriRowBits" << endreq;
         return sc;
