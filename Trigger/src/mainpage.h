@@ -3,13 +3,12 @@
 
 /*! @mainpage  package Trigger
 
-See TriggerAlg documentation.
+Implements 
+- TriggerAlg 
+- ThrottleAlg
 
   <hr>
-  \section jobOptions src/jobOptions.txt
-  \include jobOptions.txt
   \section requirements requirements
   \include requirements
-
-
 */
+

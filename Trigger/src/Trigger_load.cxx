@@ -1,5 +1,5 @@
 /** 
-* @file Trigger_load.cpp
+* @file Trigger_load.cxx
 * @brief This is needed for forcing the linker to load all components
 * of the library.
 *

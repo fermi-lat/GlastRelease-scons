@@ -1,4 +1,4 @@
-/** @file Trigger_dll.cpp
+/** @file Trigger_dll.cxx
 
   $Header$
 */

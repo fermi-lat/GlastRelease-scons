@@ -37,7 +37,7 @@
 /*! \class TriggerAlg
 \brief  alg that sets trigger information
 
-  @Section Attributes for job options:
+  @section Attributes for job options:
   @param run [0] For setting the run number
   @param mask [-1] mask to apply to trigger word. -1 means any, 0 means all.
 
