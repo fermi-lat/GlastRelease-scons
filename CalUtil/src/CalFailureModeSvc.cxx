@@ -38,6 +38,7 @@ CalFailureModeSvc::CalFailureModeSvc(const std::string& name,ISvcLocator* svc) :
 	
     declareProperty("towerList", m_towerListProperty);
     declareProperty("towerAfeeList", m_towerAfeeListProperty);
+    declareProperty("towerControllerList", m_towerControllerListProperty);
 }
 
 
@@ -89,6 +90,7 @@ StatusCode CalFailureModeSvc::initialize ()
     m_failureModes = 0;
     processTowerList();
     processTowerAfeeList();
+    processTowerControllerList();
 	
     return StatusCode::SUCCESS;
 }
@@ -106,9 +108,9 @@ void CalFailureModeSvc::processTowerAfeeList() {
     const std::vector<std::string>& theTowers = m_towerAfeeListProperty.value( );
     if (theTowers.size() == 0) return;
 	
-    m_failureModes = m_failureModes || 1 << TOWER;
+    m_failureModes = m_failureModes || 1 << TOWERAFEE;
 	
-    log << MSG::DEBUG << "Towers and Layers to kill " << endreq;
+    log << MSG::DEBUG << "Towers and AFEEs to kill " << endreq;
 	
 	
     std::vector<std::string>::const_iterator it;
@@ -123,6 +125,36 @@ void CalFailureModeSvc::processTowerAfeeList() {
         log << MSG::DEBUG << "Tower " << tower << " AFEE " << layer << endreq;
 		
         std::vector<int>& curList = m_towerAfeeList[tower];
+        curList.push_back(layer);                
+    }
+}
+
+void CalFailureModeSvc::processTowerControllerList() {
+    // Purpose and Method: process the jobOptions input lists of (tower,layer) pairs
+    //                     
+	
+    MsgStream log(msgSvc(), name());
+	
+    const std::vector<std::string>& theTowers = m_towerControllerListProperty.value( );
+    if (theTowers.size() == 0) return;
+	
+    m_failureModes = m_failureModes || 1 << TOWERCONTROL;
+	
+    log << MSG::DEBUG << "Towers and Controllers to kill " << endreq;
+	
+	
+    std::vector<std::string>::const_iterator it;
+    std::vector<std::string>::const_iterator itend = theTowers.end( );
+	
+    for (it = theTowers.begin(); it != itend; it++) {
+        int len = (*it).size();
+        int delimPos = (*it).find_first_of('_');
+        int tower = atoi((*it).substr(0, delimPos).c_str());
+        int layer = atoi((*it).substr(delimPos+1, len-delimPos-1).c_str());
+		
+        log << MSG::DEBUG << "Tower " << tower << " Controller " << layer << endreq;
+		
+        std::vector<int>& curList = m_towerControllerList[tower];
         curList.push_back(layer);                
     }
 }
@@ -143,7 +175,7 @@ void CalFailureModeSvc::processTowerList() {
 	
     log << MSG::DEBUG << "Towers to kill " << endreq;
 	
-    m_failureModes = m_failureModes || 1 << TOWERAFEE;
+    m_failureModes = m_failureModes || 1 << TOWER;
 	
     std::vector<std::string>::const_iterator it;
     std::vector<std::string>::const_iterator itend = theTowers.end( );
@@ -190,15 +222,53 @@ bool CalFailureModeSvc::matchTowerAfee(idents::CalXtalId id, idents::CalXtalId::
 	
     int tower = id.getTower();
     int layer = id.getLayer();
-    int afee = face + 2*id.isX();
+    int afee = 2*face + (!id.isX());
 	
     std::vector<int> &afeeList = m_towerAfeeList[tower];
 	
-    // Search to see if this (tower,layer) is among the list
+    // Search to see if this (tower,AFEE) is among the list
 	
     int *loc = std::find(afeeList.begin(), afeeList.end(), afee);                
 	
     return (loc != afeeList.end());
+	
+}
+
+bool CalFailureModeSvc::matchTowerController(idents::CalXtalId id, idents::CalXtalId::XtalFace face) {
+	
+    // Purpose and Method: look for the given id in the tower/controller list
+    //                     
+	
+	
+    if (m_towerControllerList.size() == 0) return false;
+	
+    int tower = id.getTower();
+    int layer = id.getLayer();
+
+	// primary controller has same numbering as AFEE; secondary is opposite
+    int controller1 = 2*face + (!id.isX());
+	int controller2 = (controller1+2)%4;
+
+	// x+ controller takes out all + side and layers 0,1 on neg side
+	// y+ controller takes out all + side and layers 2,3 on neg side
+	bool offController2P = (face == idents::CalXtalId::POS) && (
+		(id.isX() && layer < 4) 
+			|| ( !id.isX() && layer > 2));
+	bool offController2N = (face == idents::CalXtalId::NEG) && (
+		(id.isX() && layer > 3) 
+			|| ( !id.isX() && layer < 5));
+
+    std::vector<int> &controllerList = m_towerControllerList[tower];
+	if (controllerList.size() == 0) return false;
+    
+	// Search to see if this (tower,controller) is among the list
+	
+    int *loc1 = std::find(controllerList.begin(), controllerList.end(), controller1);                
+	int *loc2 = controllerList.end();
+    if (offController2P || offController2N) loc2 = std::find(controllerList.begin(), 
+		controllerList.end(), controller2);                
+	
+    return (loc1 != controllerList.end() || loc2 != controllerList.end());
 	
 }
 
@@ -212,6 +282,7 @@ bool CalFailureModeSvc::matchChannel(idents::CalXtalId id, idents::CalXtalId::Xt
 	
     if (matchTower(id)) return true;
     if (matchTowerAfee(id,face)) return true;
+    if (matchTowerController(id,face)) return true;
 	
     return false;
 	
