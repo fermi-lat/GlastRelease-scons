@@ -66,7 +66,7 @@ void AcdParser::pha(unsigned cable, unsigned channel, ACDpha p)
   //       m_prefix, channel, map()->tileName(id, tile), side,
   //       p.ADCrange(), p.ADCvalue(), p.ADCvalue(), p.parityError(), p.more());
   char *pEnd;
-  unsigned int tileNum = strtol(pmt->name(), &pEnd, 0);
+  unsigned int tileNum = strtol(pmt->name(), &pEnd, 10);
 
   // Retrieve the tower or create a new TowerData object if necessary
   ldfReader::LatData* curLatData = ldfReader::LatData::instance();
