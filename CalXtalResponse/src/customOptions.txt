@@ -1,0 +1,37 @@
+/////////////////// CalXtalResponse - customOptions.txt ///////////////////////
+
+//////////////////// FLAVOR ///////////////////////////////////////////////////
+//-- OPTIONAL - override individual calib types:
+//CalCalibSvc.FlavorIntNonlin = "vanilla";
+//CalCalibSvc.FlavorAsym      = "vanilla";
+//CalCalibSvc.FlavorPed       = "vanilla";
+//CalCalibSvc.FlavorMevPerDac = "vanilla";
+//CalCalibSvc.FlavorTholdCI   = "vanilla";
+
+//-- OPTIONAL - custom flavors must be appended to CalibDataSvc
+//CalibDataSvc.CalibFlavorList += {"new_flavor"};
+
+//-- OPTIONAL - use 'muon mode' ideal gain instead of default 'flight mode'
+//-- NOTE: to play with various response settings, etc... simply edit/create
+//         your own idealCalib.xml file:
+//CalCalibSvc.idealCalibXMLPath = 
+//	"$(CALXTALRESPONSEROOT)/xml/idealCalib_muon.xml";
+///////////////////////////////////////////////////////////////////////////////
+
+
+////////////////////// DEBUGGING //////////////////////////////////////////////
+
+//-- OPTIONAL - uncomment lines below for more detailed logging
+//CalDigiAlg.XtalADCTool.OutputLevel = 1;
+//CalXtalRecAlg.XtalEneTool.OutputLevel = 1;
+//CalXtalRecAlg.XtalPosTool.OutputLevel = 1;
+//CalCalibSvc.OutputLevel = 1;
+
+//-- OPTIONAL - SuperVerbose!!!
+//XtalADCTool.SuperVerbose = true;
+//CalCalibSvc.SuperVerbose = true;
+///////////////////////////////////////////////////////////////////////////////
+
+/////////////////////// MISC OPTIONS //////////////////////////////////////////
+//-- OPTIONAL - turn off randomly gererated noise in digi (default = true)
+//XtalADCTool.NoRandomNoise = false;

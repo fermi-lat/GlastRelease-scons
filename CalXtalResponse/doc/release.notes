@@ -1,15 +1,16 @@
-v0r2p7 Added separate flight & muon idealMode.xml files.  also defaultOptions.txt now documents all major jobOptions.
-v0r2p6 tweaked ideal mode #'s to avoid ULD > intNonlin spline, screwing up range selection.
-v0r2p5 fixed 'bump' bug in different diode size ene calc.  fixed asym splie generation.  improved printouts.  added norandomnoise mode.  range checking before all spline evals
-v0r2p4 fixed bug in ADC tool where LAC logic only checked POS face
-v0r2p3 fixed bug in ADC tool where range selection could run out-of-bounds on rare occasions
-v0r2p1 fixed 1-line bug in CalibItemMgr evidently i broke normal mode when i built ideal mode.
-v0r2p0 builds on linux w/out warning
-v0r2   ideal flavor skips mysql. defaultOptions.txt include file.  clhep random class see CVS log.  
-v0r1p2 performance improvements:  removed uneeded msglog construcotrs
-v0r1p1 fixed test_app to work w/ last update (whoops!)
-v0r1   differentiated between range_below_thresh & xtal_below_thresh in recon.
-v0r0p3 changed int adc values to floats earlier in calculation
-v0r0p2 better checking for ADC values which are too low & cause ugly results.
-v0r0p1 got it to build w/out errors on linux
-v0r0   initial release of CalXtalResponse - uses v3 calibGenCAL calibration to do single crystal response calculation & simulation for both CalRecon & CalDigi
+v0r2p8  3/30/05 fewtrell Moved descriptions of optional JO prameters to customOptions.txt file.  this reduces logfile verbosity.
+v0r2p7          fewtrell Added separate flight & muon idealMode.xml files.  also defaultOptions.txt now documents all major jobOptions.
+v0r2p6          fewtrell tweaked ideal mode #'s to avoid ULD > intNonlin spline, screwing up range selection.
+v0r2p5          fewtrell fixed 'bump' bug in different diode size ene calc.  fixed asym splie generation.  improved printouts.  added norandomnoise mode.  range checking before all spline evals
+v0r2p4          fewtrell fixed bug in ADC tool where LAC logic only checked POS face
+v0r2p3          fewtrell fixed bug in ADC tool where range selection could run out-of-bounds on rare occasions
+v0r2p1          fewtrell fixed 1-line bug in CalibItemMgr evidently i broke normal mode when i built ideal mode.
+v0r2p0          fewtrell builds on linux w/out warning
+v0r2            fewtrell ideal flavor skips mysql. defaultOptions.txt include file.  clhep random class see CVS log.  
+v0r1p2          fewtrell performance improvements:  removed uneeded msglog construcotrs
+v0r1p1          fewtrell fixed test_app to work w/ last update (whoops!)
+v0r1            fewtrell differentiated between range_below_thresh & xtal_below_thresh in recon.
+v0r0p3          fewtrell changed int adc values to floats earlier in calculation
+v0r0p2          fewtrell better checking for ADC values which are too low & cause ugly results.
+v0r0p1          fewtrell got it to build w/out errors on linux
+v0r0            fewtrell initial release of CalXtalResponse - uses v3 calibGenCAL calibration to do single crystal response calculation & simulation for both CalRecon & CalDigi

@@ -1,56 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-//////// Standard options to be included by CalXtalResponse clients ///////////
-///////////////////////////////////////////////////////////////////////////////
+/////////////////// CalXtalResponse - defaultOptions.txt //////////////////////
+// note - see CalXtalResponse/customOptions.txt for details on all available options
 
-
-///////////////////  REQUIRED /////////////////////////////////////////////////
 // Start service needed for all Cal calibrations
 ApplicationMgr.ExtSvc += {"CalCalibSvc"};
-///////////////////////////////////////////////////////////////////////////////
 
-
-//////////////////// FLAVOR ///////////////////////////////////////////////////
 // "ideal"   - simplistic but always works & doesn't require internet or mysql
 // "vanilla" - defaults to best known calibration for given instrument & time
 CalCalibSvc.DefaultFlavor = "ideal"; // default for all calib types
-
-//-- OPTIONAL - override individual calib types:
-//CalCalibSvc.FlavorIntNonlin = "vanilla";
-//CalCalibSvc.FlavorAsym      = "vanilla";
-//CalCalibSvc.FlavorPed       = "vanilla";
-//CalCalibSvc.FlavorMevPerDac = "vanilla";
-//CalCalibSvc.FlavorTholdCI   = "vanilla";
-
-//-- OPTIONAL - custom flavors must be appended to CalibDataSvc
-//CalibDataSvc.CalibFlavorList += {"new_flavor"};
-
-//-- OPTIONAL - use 'muon mode' ideal gain instead of default 'flight mode'
-//-- NOTE: to play with various response settings, etc... simply edit/create
-//         your own idealCalib.xml file:
-//CalCalibSvc.idealCalibXMLPath = 
-//	"$(CALXTALRESPONSEROOT)/xml/idealCalib_muon.xml";
-///////////////////////////////////////////////////////////////////////////////
-
-
-////////////////////// DEBUGGING //////////////////////////////////////////////
-
-//-- OPTIONAL - uncomment lines below for more detailed logging
-//CalDigiAlg.XtalADCTool.OutputLevel = 1;
-//CalXtalRecAlg.XtalEneTool.OutputLevel = 1;
-//CalXtalRecAlg.XtalPosTool.OutputLevel = 1;
-//CalCalibSvc.OutputLevel = 1;
-
-//-- OPTIONAL - SuperVerbose!!!
-//XtalADCTool.SuperVerbose = true;
-//CalCalibSvc.SuperVerbose = true;
-///////////////////////////////////////////////////////////////////////////////
-
-/////////////////////// MISC OPTIONS //////////////////////////////////////////
-//-- OPTIONAL - turn off randomly gererated noise in digi (default = true)
-//XtalADCTool.NoRandomNoise = false;
-///////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
