@@ -162,7 +162,12 @@ void CompositeDiffuse::subtractFluxFromRemaining(double currentFlux){
         m_totalIntegratedFlux -= pow(10.0,m_currentRemainingFlux[i-1].first)*m_currentRemainingFlux[i-1].second;
         m_currentRemainingFlux[i-1].second = -10;
         //and subtract the remaining "extra" flux from the bin below..
-        subtractFluxFromRemaining(pow(10,m_currentRemainingFlux[i-2].first));
+        //subtractFluxFromRemaining(pow(10,m_currentRemainingFlux[i-2].first));
+
+        //if(pow(10.,m_currentRemainingFlux[i-2].second) > 0.5){
+        //m_currentRemainingFlux[i-2].second = log10(pow(10.0,m_currentRemainingFlux[i-2].second) - 0.5);
+        //}
+
     }
     //for debug purposes.
     //std::cout << "remaining sources in bin: " << pow(10,m_currentRemainingFlux[i-1].second) << std::endl;
@@ -249,6 +254,10 @@ double CompositeDiffuse::getRandomFlux(){
 
     //std::cout << "New Source created in CompositeDiffuse, with flux = " << currentFlux << std::endl;
     subtractFluxFromRemaining(currentFlux);
+    if(pow(10,m_currentRemainingFlux[i].second) <= 1){
+        double chance=RandFlat::shoot(1.);
+        if(chance <= pow(10,m_currentRemainingFlux[i].second)) return getRandomFlux();
+    }
     return currentFlux;
 }
 
@@ -391,7 +400,7 @@ char* CompositeDiffuse::writeLogHistogram(){
     
     std::vector<std::pair<double,double> > currentHistPoints;
     //the histogram starts at minFlux, ends at maxFlux, and holds number of events.
-    for(double curFlux = m_minFlux ; curFlux*(1.+sizeOfFifthDecade(curFlux)) <=m_maxFlux ; curFlux+=sizeOfFifthDecade(curFlux) ){
+    for(double curFlux = m_minFlux ; curFlux*(1.+sizeOfFifthDecade(curFlux)) <=m_maxFlux ; curFlux+=sizeOfFifthDecade(curFlux)/3. ){
         currentHistPoints.push_back(std::make_pair<double,double>(curFlux,0.));  
     }
     
@@ -407,19 +416,19 @@ char* CompositeDiffuse::writeLogHistogram(){
     std::vector<std::pair<double,double> >::iterator iter2;
     for(iter=currentHistPoints.begin() ; iter!=currentHistPoints.end() ; iter++){
         iter2=iter;
-        for(iter2++ ; iter2!=currentHistPoints.end() ; iter2++){
-            (*iter).second += (*iter2).second;
-        }
+        //for(iter2++ ; iter2!=currentHistPoints.end() ; iter2++){
+        //    (*iter).second += (*iter2).second;
+        //}
         (*iter).first = log10((*iter).first);
         (*iter).second = log10((*iter).second);
-        (*iter).first += 1/10.;
+        (*iter).first += (1/10.)/3.;
     }
     //now, the output:
     std::strstream out2;// = new std::strstream;
     for(iter=currentHistPoints.begin() ; iter!=currentHistPoints.end() ; iter++){
         out2 << (*iter).first << '\t' << (*iter).second << std::endl;
     }
-    //std::cout << out2.str(); //WHY IS THERE JUNK ON THE END OF IT?
+    std::cout << out2.str(); //WHY IS THERE JUNK ON THE END OF IT?
     return out2.str();
     
 }

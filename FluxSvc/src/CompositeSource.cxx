@@ -6,10 +6,11 @@
 
 #include "CompositeSource.h"  //TAKE THE /.. OUT!
 
-#include "dom/DOM_Element.hpp"
+//#include "dom/DOM_Element.hpp"
 #include "facilities/Scheduler.h"
 #include "facilities/SimpleEvent.h"
-#include "CLHEP/Random/RandFlat.h"
+#include "FluxSvc/FluxSource.h"
+//#include "CLHEP/Random/RandFlat.h"
 
 // see coment below: #include "control/EventLoop.h"
 
@@ -39,6 +40,7 @@ void CompositeSource::addSource (EventSource* aSource)
     //here, set up the associated vectors by default.
     m_unusedSource.push_back(0);
     m_sourceInterval.push_back(-1.);
+    m_eventList.push_back(0);
 }
 
 void CompositeSource::rmvSource (EventSource* aSource)
@@ -79,8 +81,9 @@ FluxSource* CompositeSource::event (double time)
                 intrval=m_sourceInterval[i];
                 //std::cout << i << " is unused, interval is "<< intrval << std::endl;
             }else{
-                (*now)->event(time); // to initialize particles, so that the real interval for the particle is gotten.
-                intrval=(*now)->interval(EventSource::time()); //this picks out the interval of each source
+                m_eventList[i] = (*now)->event(time); // to initialize particles, so that the real interval for the particle is gotten.
+                //intrval=(*now)->interval(/*EventSource::time()*/time); //this picks out the interval of each source
+                intrval=m_eventList[i]->interval(time);
                 m_unusedSource[i]=1;
                 m_sourceInterval[i]=intrval;
             }
@@ -109,7 +112,10 @@ FluxSource* CompositeSource::event (double time)
     }
     m_unusedSource[winningsourcenum]=0; //the current "winning" source is getting used..
     // now ask the chosen one to return the event.
-    return (FluxSource*)m_recent;
+
+   //std::cout << "the winning source number was: " << winningsourcenum << std::endl;
+   return m_eventList[winningsourcenum];
+
 }
 
 std::string CompositeSource::fullTitle () const

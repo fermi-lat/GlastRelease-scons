@@ -6,6 +6,7 @@
 
 #include "Orbit.h"
 #include "CLHEP/Random/RandFlat.h"
+#include "astro/EarthCoordinate.h"
 
 #include <iomanip>
 
@@ -38,21 +39,6 @@ GPS::Coords::Coords(){}
 GPS::~GPS ()
 { delete m_orbit; }
 
-
-double	GPS::pitch () const
-{ 
-    return orbit()->pitch( orbittime() ); 
-}
-
-double	GPS::yaw () const
-{ 
-    return orbit()->yaw( orbittime() );   
-}
-
-double   GPS::roll () const
-{ 
-    return orbit()->roll( orbittime() ); 
-}
 
 const Orbit*   GPS::orbit () const 
 {
@@ -94,14 +80,32 @@ void GPS::synch ()
     
 }
 
-double   GPS::lat () const
+double GPS::lat () const
 {
-    return orbit()->latitude( orbittime() ); 
+    double currentTime = time();
+    //return orbit()->latitude( orbittime() ); 
+    double julianDate = m_earthOrbit->dateFromSeconds(currentTime);
+
+    //and here the pointing characteristics of the LAT.
+    GPS::instance()->getPointingCharacteristics(currentTime);
+    Hep3Vector location = position(currentTime);
+    
+    astro::EarthCoordinate earthpos(location,julianDate);
+    return earthpos.latitude();
 }
 
 double	GPS::lon () const
 { 
-    return orbit()->longitude( orbittime() ); 
+    //return orbit()->longitude( orbittime() ); 
+    double currentTime = time();
+    double julianDate = m_earthOrbit->dateFromSeconds(currentTime);
+
+    //and here the pointing characteristics of the LAT.
+    GPS::instance()->getPointingCharacteristics(currentTime);
+    Hep3Vector location = position(currentTime);
+    
+    astro::EarthCoordinate earthpos(location,julianDate);
+    return earthpos.longitude();
 }
 
 GPStime	GPS::time ()  const
@@ -147,21 +151,6 @@ void GPS::expansion ( double e )
     m_expansion = e; 
 }
 
-void GPS::pitch ( double p )
-{
-    m_orbit->setPitch(p);
-}
-
-void GPS::yaw ( double y )
-{
-    m_orbit->setYaw(y);
-}
-
-void GPS::roll ( double r )
-{
-    m_orbit->setRoll(r);
-}
-
 void GPS::lat ( double l )
 {
     m_orbit->setLatitude(l);
@@ -186,11 +175,6 @@ void GPS::kill()
     s_instance = 0;
 }
 
-GPS::Coords GPS::state () const
-{
-    return GPS::Coords( lat(),lon(),pitch(),yaw(),roll(),time(), orbit()->phase(time()) );
-}
-
 void GPS::orbittime ( GPStime t ) 
 {
     m_orbittime = t;
@@ -211,15 +195,7 @@ GPStime  GPS::sampleintvl () const
     return m_sampleintvl;
 }
 
-void    GPS::setState ( const GPS::Coords& c )
-{
-    m_orbit->setLatitude(c.lat());
-    m_orbit->setLongitude(c.lon());
-    m_orbit->setPitch(c.pitch());
-    m_orbit->setYaw(c.yaw());
-    m_orbit->setRoll(c.roll());
-    if (c.time() > 0.) time(c.time());  // if the time is relevant, use that time
-}
+
 void GPS::ascendingLon(double lon)
 {
     m_orbit->ascendingLon(lon);
@@ -286,7 +262,8 @@ Rotation GPS::rockingAngleTransform(double seconds){
             rockNorth -= rockNorth*((5.5-fabs(m_DECZenith))/5.5);
         }
     }else if(m_rockType == ONEPERORBIT){
-        //this needs an implementation - it only rocks one way now!
+        while(orbitPhase >2.*M_2PI){ orbitPhase -= 2.*M_2PI;}
+        if(orbitPhase <= M_2PI) rockNorth *= -1.;
     }
     // now, we want to find the proper transformation for the rocking angles:
     HepRotation rockRot;
@@ -375,10 +352,6 @@ void GPS::getPointingCharacteristics(double seconds){
     //now set the zenith direction before the rocking.
     m_RAZenith = dirZ.ra();
     m_DECZenith = dirZ.dec();
-    
-
-
-
 
     // now, we want to find the proper transformation for the rocking angles:
     //HepRotation rockRot(Hep3Vector(0,0,1).cross(dirZ.dir()) , rockNorth);    
@@ -397,7 +370,8 @@ void GPS::getPointingCharacteristics(double seconds){
             rockNorth -= rockNorth*((5.5-fabs(m_DECZenith))/5.5);
         }
     }else if(m_rockType == ONEPERORBIT){
-        //this needs an implementation - it only rocks one way now!
+        while(orbitPhase >2.*M_2PI) {orbitPhase -= 2.*M_2PI;}
+        if(orbitPhase <= M_2PI) rockNorth *= -1.;
     }
     
     dirZ().rotate(dirX.dir() , rockNorth);

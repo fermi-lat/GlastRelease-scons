@@ -61,9 +61,6 @@ public:
         GPStime time () const { return m_time; }
         double  lat () const { return m_lat; }
         double  lon () const { return m_lon; }
-        double  pitch () const { return m_pitch; }
-        double  yaw () const { return m_yaw; }
-        double  roll () const { return m_roll; }
         double  phase () const { return m_phase; }
         
     private:
@@ -79,18 +76,10 @@ public:
     double	lat () const; 
     /// present longitude
     double	lon () const; 
-    /// present 'pitch' angle in N-S direction (roll around x-axis)
-    double	pitch () const; 
-    /// present 'yaw' angle - (rotate around z-axis)
-    double	yaw () const; 
-    /// present 'roll' andle in E-W direction (roll around y-axis)
-    double      roll () const; 
     /// get the current phase of the orbit
     double      phase () const;
     /// access to the orbit (for computation only)
-    const Orbit* orbit () const;
-    /// current state of the GPS system
-    Coords      state () const;  
+    const Orbit* orbit () const;  
     /// expansion of the current orbit
     double      expansion () const; 
     /// sample interval for random orbit distribution
@@ -167,15 +156,12 @@ public:
         virtual ~GPS();
         
         // only class/subclasses have access
-        void    pitch ( double );       // set pitch
-        void    yaw ( double );         // set yaw
-        void    roll ( double );        // set roll
         void    lat ( double );         // set latitude
         void    lon ( double );         // set longitude
         void    time ( GPStime );       // set time
         GPStime orbittime () const;     // access to orbit time
         void    orbittime ( GPStime );  // set orbit time
-        void    setState ( const GPS::Coords& ); // set the orbital parameters
+        //void    setState ( const GPS::Coords& ); // set the orbital parameters
         std::pair<double,double> m_rotangles;  //angles for coordinate rotation (rocking angle)
         
         // friends
@@ -207,9 +193,8 @@ inline std::istream&    operator>>(std::istream& i, GPS::Coords& c) {
 }
 
 inline std::ostream&    operator<<(std::ostream& o, const GPS::Coords& c) {
-    o << ' ' << c.lat() << ' ' << c.lon() << ' ' 
-        << c.pitch() << ' ' << c.yaw() << ' ' 
-        << c.roll() << ' ' << c.time() <<' ' << c.phase();
+    o << ' ' << c.lat() << ' ' << c.lon() << ' '  
+        << c.time() <<' ' << c.phase();
     return o;
 }
 #endif // !defined(AFX_GPS_H__F9844433_4E64_11D2_B4DD_00A0C9960210__INCLUDED_)
