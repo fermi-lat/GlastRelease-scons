@@ -12,13 +12,13 @@
   gROOT->LoadMacro("systest_Gleam.cxx");
   gROOT->LoadMacro("chainTrees.cxx");
 
-  char *list[] = {"muon_pencil_300MeV_center_0deg-mc.root", "muon_pencil_300MeV_center_15deg-mc.root", "muon_pencil_300MeV_center_30deg-mc.root", "muon_pencil_300MeV_center_45deg-mc.root", "muon_pencil_300MeV_center_60deg-mc.root", "muon_pencil_300MeV_center_75deg-mc.root"};
+  char *list[] = {"muon_pencil_300MeV_centerTile0022_acdtop-run1-mc.root", muon_pencil_300MeV_centerTile0022_acdtop-run2-mc.root", "muon_pencil_300MeV_centerTile0022_acdtop-run3-mc.root", "muon_pencil_300MeV_centerTile0022_acdtop-run4-mc.root", "muon_pencil_300MeV_centerTile0022_acdtop-run5-mc.root"};
 
-  TChain *chain = chainTrees(6, list, "Mc");
+  TChain *chain = chainTree(5, list, "Mc");
 
   RootTreeAnalysis* m= new RootTreeAnalysis(0,0,chain);
 
-  m->Go(300000);
+  m->Go(250000);
   m->histFile->Write();
   TFile f("Histograms.root")
 
