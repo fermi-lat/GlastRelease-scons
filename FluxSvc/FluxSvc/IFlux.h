@@ -17,7 +17,7 @@ class ParticleProperty;
 //!  Abstract interface for an object that generates particles, Flux
 class IFlux {
 public:
-    // ctor, select the name
+    /// ctor, select the name
     IFlux(std::string name=""){};
     virtual ~IFlux(){}
     
@@ -62,6 +62,9 @@ public:
     
     /// return a unique number correcponding to that spectrum
     virtual int numSource()const=0;
+
+    /// pass a specific amount of time
+    virtual void pass ( double t)=0;
        
     virtual void addFactory(std::string name, const ISpectrumFactory* factory )=0;
 #if 0

@@ -143,3 +143,8 @@ HepRandomEngine* FluxSvc::getEngine()
 {
     return HepRandom::getTheEngine();
 }
+
+/// pass a specific amount of time
+void FluxSvc::pass ( double t){
+m_fluxMgr->pass(t);
+}

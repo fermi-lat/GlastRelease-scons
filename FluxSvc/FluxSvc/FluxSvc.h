@@ -34,6 +34,10 @@ public:
     
     /// access to the local random engine 
     virtual HepRandomEngine* getEngine();
+
+    /// pass a specific amount of time
+    virtual void pass ( double t);
+
     
 
     

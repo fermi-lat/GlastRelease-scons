@@ -50,7 +50,7 @@ public:
     virtual double time()const;
 
     /// pass a specific amount of time
-    void pass ( double t);
+    virtual void pass ( double t);
 
     /// Get the time as held by GPS
     /*GPStime*/int gpsTime () const;

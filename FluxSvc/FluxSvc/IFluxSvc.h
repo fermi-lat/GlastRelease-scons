@@ -36,7 +36,9 @@ public:
     
     /// access to the local HepRandomEngine, to allow synchronization
     virtual HepRandomEngine* getEngine()=0;
-    
+
+    /// pass a specific amount of time
+    virtual void pass (double t)=0;    
     
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IFluxSvc; }
