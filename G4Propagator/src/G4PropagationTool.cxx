@@ -740,7 +740,7 @@ idents::VolumeIdentifier G4PropagationTool::getStepVolumeId(int stepIdx) const
 
 //    G4VPhysicalVolume* pCurVolume = getVolume(getStep(stepIdx).GetCoords(), true);
 
-    return constructId(getStep(stepIdx).GetCoords());
+    return constructId(getStep(stepIdx).GetCoords(), true);
 }
 
 
