@@ -1,8 +1,10 @@
 package CalRecon
 
-package manager:?? Eric Grove?
+package manager: Alexandre Chekhtman
 
 23-aug-2001: THB tag v2r4
 07-may-2001; THB tag v1r9
+
+08-may-2002; AC  tag v4r1 TDS classes moved to GlastEvent
 
 !======================================================================
