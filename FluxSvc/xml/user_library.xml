@@ -106,6 +106,133 @@
         <nestedSource sourceRef="albedo_proton_min"/>
     </source>
 
+    <source name="albedo_electronpositronlow" flux="146.">
+        <spectrum>
+            <particle name="e+" >
+                <power_law emin="0.010" emax="0.1" gamma="1.0"/>
+            </particle>
+            <solid_angle mincos="-1.0" maxcos="1.0"/>
+        </spectrum>
+    </source>
+    <source name="albedo_electronpositronhi" flux="28.8">
+        <spectrum>
+            <particle name="e+" >
+                <power_law emin="0.10" gamma="3.2"/>
+            </particle>
+            <solid_angle mincos="-1.0" maxcos="1.0"/>
+        </spectrum>
+    </source>
 
+	<!-- galactic electron spectrum evaluated at the CHIME  average . angular dependence and rate are from the CHIME spectrum object -->
+    <source name="electronavg" >
+        <spectrum> <SpectrumClass name="GalElSpectrum" params="13.8, 24.9"/> <use_spectrum/> </spectrum>
+    </source>
+
+	<!-- the CHIME spectrum at Maximum flux. angular dependence and rate are from the CHIME spectrum object -->
+    <source name="chimemax" >
+        <spectrum> <SpectrumClass name="CHIMESpectrum" params="-28.5,110"/> <use_spectrum/> </spectrum>
+    </source>
+
+	<!-- the CHIME spectrum at average flux. angular dependence and rate are from the CHIME spectrum object -->
+    <source name="chimeavg" >
+        <spectrum> <SpectrumClass name="CHIMESpectrum" params="13.8, 24.9"/> <use_spectrum/> </spectrum>
+    </source>
+
+	<!-- the albedo proton spectrum, measured by AMS, implemented by AlbedoPSpectrum. isotropic for now  -->
+    <source name="albedo_proton_max">
+         <spectrum> <SpectrumClass name="AlbedoPSpectrum" params="4.78,8.18"/>  <solid_angle mincos="-1.0" maxcos="1.0"/>
+         </spectrum>
+    </source>
+
+	<!-- the albedo proton spectrum, measured by AMS, implemented by AlbedoPSpectrum. isotropic for now  -->
+    <source name="albedo_proton_avg">
+         <spectrum> <SpectrumClass name="AlbedoPSpectrum" params="19.6,37.99"/>  <solid_angle mincos="-1.0" maxcos="1.0"/>
+         </spectrum>
+	</source>
+
+
+	<!-- default creme is the orbit average -->   
+    <source name="cremeavg" >
+        <spectrum> <SpectrumClass name="FILESpectrum" params="sources/glast_smin_flx.txt"/> 
+            <solid_angle mincos="-0.4" maxcos="1.0"/>
+        </spectrum>
+    </source>
+
+ 
+	<!-- galactic electron spectrum orbit max-->
+    <source name="electronmax">
+        <spectrum> <SpectrumClass name="GalElSpectrum" params="-28.5,110"/> <use_spectrum/> </spectrum>
+    </source>
+
+	<!--1 gev -->
+    <source name="gamma_1_gev_normal" flux="1.0">
+        <spectrum>
+            <particle name="gamma"> <energy e="1"/> </particle>
+            <solid_angle mincos="0.99" maxcos="1.0"/>
+        </spectrum>
+    </source>
+    <source name="gamma_1_gev_30deg" flux="1.0">
+        <spectrum>
+            <particle name="gamma"> <energy e="1"/> </particle>
+            <solid_angle mincos="0.866" maxcos="0.867"/>
+        </spectrum>
+    </source>
+    <source name="gamma_1_gev_60deg" flux="1.0">
+        <spectrum>
+            <particle name="gamma"> <energy e="1"/> </particle>
+            <solid_angle mincos="0.4995" maxcos="0.5005"/>
+        </spectrum>
+    </source>
+    <source name="gamma_1_gev_uniform" flux="1.0">
+        <spectrum>
+            <particle name="gamma"> <energy e="1"/> </particle>
+            <solid_angle mincos="0." maxcos="1.0"/>
+        </spectrum>
+    </source>
+    <!--100 gev -->
+    <source name="gamma_100_gev_normal" flux="1.0">
+        <spectrum>
+            <particle name="gamma"> <energy e="100"/> </particle>
+            <solid_angle mincos="0.99" maxcos="1.0"/>
+        </spectrum>
+    </source>
+    <!-- 100 mev -->
+    <source name="gamma_100_mev_uniform" flux="1.0">
+        <spectrum>
+            <particle name="gamma"> <energy e="0.1"/> </particle>
+            <solid_angle mincos="0" maxcos="1.0"/>
+        </spectrum>
+    </source>
+	<!-- 10 GeV uniform 0-90 degrees -->
+    <source name="gamma_10_gev_uniform" flux="1.0">
+        <spectrum>
+            <particle name="gamma"> <energy e="10."/> </particle>
+            <solid_angle mincos="0" maxcos="1.0"/>
+        </spectrum>
+    </source>
+    <!-- 100 GeV uniform 0-90 degrees -->
+    <source name="gamma_100_gev_uniform" flux="1.0">
+        <spectrum>
+            <particle name="gamma"> <energy e="100."/> </particle>
+            <solid_angle mincos="0" maxcos="1.0"/>
+        </spectrum>
+    </source>
+
+	    <source name="albedo_electronpositronavglow" flux="73.">
+        <spectrum>
+            <particle name="e+" >
+                <power_law emin="0.010" emax="0.1" gamma="1.0"/>
+            </particle>
+            <solid_angle mincos="-1.0" maxcos="1.0"/>
+        </spectrum>
+    </source>
+    <source name="albedo_electronpositronavghi" flux="14.4">
+        <spectrum>
+            <particle name="e+" >
+                <power_law emin="0.10" gamma="3.2"/>
+            </particle>
+            <solid_angle mincos="-1.0" maxcos="1.0"/>
+        </spectrum>
+    </source>
 
 </source_library>

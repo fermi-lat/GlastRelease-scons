@@ -116,6 +116,14 @@ class FluxSource : public EventSource
           PATCH   //! , fixed surface
       } m_pointtype;
 
+          //! Denotes what Energy Units the energy
+          //! of incoming particles are in
+	  enum EnergyScale { 
+          MeV,        //! MeV
+          GeV         //! GeV
+      } m_energyscale;
+
+
           //! Denotes what coordinate system the coordinates
           //! of incoming particles are in
 	  enum FrameType { 
