@@ -3,7 +3,7 @@ version v4r2
 # This package contains useful Root scripts.
 
 #use these to get the env vars defined
-use mcRootData v2r10p*
+use mcRootData v2r11p*
 use digiRootData v4r1p*
 use reconRootData v4r3p*
 use RootPolicy v2r* 
