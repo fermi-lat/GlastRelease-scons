@@ -4,9 +4,6 @@
 #include "TObject.h"
 #include "TVectorD.h"
 #include <vector>
-#ifdef WIN32
-using namespace std;
-#endif
 
 /** 
  * @class TkrCandHit

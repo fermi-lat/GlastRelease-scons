@@ -2,7 +2,6 @@
 #define ROOT_TKRTRACK_H
 
 #include "TObject.h"
-#include "TObjArray.h"
 #include "TkrHitPlane.h"
 /** 
  * @class TkrTrack

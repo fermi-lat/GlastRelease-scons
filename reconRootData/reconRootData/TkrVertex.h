@@ -6,10 +6,6 @@
 #include "TkrCovMat.h"
 #include <vector>
 
-#ifdef WIN32
-using namespace std;
-#endif
-
 /** 
  * @class TkrVertex
  *

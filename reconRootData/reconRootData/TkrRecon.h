@@ -3,14 +3,11 @@
 
 #include "TObject.h"
 #include <vector>
-#ifdef WIN32
-using namespace std;
-#endif
 
-#include "TkrCandTrack.h"
 #include "TkrSiCluster.h"
-//#include "TkrTrack.h"
-//#include "TkrVertex.h"
+#include "TkrCandTrack.h"
+#include "TkrTrack.h"
+#include "TkrVertex.h"
 /** 
  * @class TkrRecon
  *
@@ -40,31 +37,33 @@ public:
     void Print(Option_t *option="") const;
 
     /// provide access to the list of clusters
-    vector<TkrSiCluster> getSiClusterCol() { return m_siClusterCol; };
+    std::vector<TkrSiCluster> getSiClusterCol() { return m_siClusterCol; };
     void addSiCluster(const TkrSiCluster &cluster) { m_siClusterCol.push_back(cluster); };
 
     /// provide access to the list of pattern recognized tracks
-    vector<TkrCandTrack> getTrackCandCol() { return m_trackCandCol; };
+    std::vector<TkrCandTrack> getTrackCandCol() { return m_trackCandCol; };
     void addTrackCand(const TkrCandTrack &track) { m_trackCandCol.push_back(track);};
+
     //// provide access to the list of tracks
-    //vector<TkrTrack> getTrackCol() { return m_trackCol; };
-    //void addTrack(const TkrTrack &track) { m_trackCol.push_back(track); };
+    std::vector<TkrTrack> getTrackCol() { return m_trackCol; };
+    void addTrack(const TkrTrack &track) { m_trackCol.push_back(track); };
 
     /// provide access to the list of vertices
-    //vector<TkrVertex> getVertexCol() { m_vertexCol; };
-    //void addVertex(const TkrVertex &vertex) { m_vertexCol.push_back(vertex); };
+    vector<TkrVertex> getVertexCol() { m_vertexCol; };
+    void addVertex(const TkrVertex &vertex) { m_vertexCol.push_back(vertex); };
 
 private:
     //! list of TkrSiClusters
-    vector<TkrSiCluster> m_siClusterCol;
+    std::vector<TkrSiCluster> m_siClusterCol;
+
     //! list of TkrTrackCands
-    vector<TkrCandTrack> m_trackCandCol;
+    std::vector<TkrCandTrack> m_trackCandCol;
 
     //! list of TkrTracks
-    //vector<TkrTrack> m_trackCol;
+    std::vector<TkrTrack> m_trackCol;
 
     //! list of TkrVertices
-    //vector<TkrVertex> m_vertexCol;
+    std::vector<TkrVertex> m_vertexCol;
 
     ClassDef(TkrRecon,3)
 };
