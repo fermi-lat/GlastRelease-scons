@@ -73,6 +73,7 @@ public:
     // Monte Carlo class IDs
     const CLID& CLID_MCEvent            = 2012;
     const CLID& CLID_McParticle         = 2100;
-    const CLID& CLID_McIntergratingHit  = 2101;
+    const CLID& CLID_McIntegratingHit   = 2101;
     const CLID& CLID_McVertex           = 2102;
+    const CLID& CLID_McPositionHit      = 2103;
         
