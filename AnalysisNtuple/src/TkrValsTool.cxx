@@ -67,6 +67,12 @@ namespace {
     }    
 }
 
+/*! @class TkrValsTool
+@brief calculates Tkr values
+
+@authors Bill Atwood, Leon Rochester
+*/
+
 class TkrValsTool :  public ValBase 
 {
 public:

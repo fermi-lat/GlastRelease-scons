@@ -24,6 +24,12 @@
 #include "Event/Recon/TkrRecon/TkrKalFitTrack.h"
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 
+/*! @class McValsTool
+@brief calculates Monte Carlo values
+
+@authors Bill Atwood, Leon Rochester
+*/
+
 class McValsTool : public ValBase
 {
 public:

@@ -35,6 +35,12 @@ namespace {
     
 }
 
+/*! @class VtxValsTool
+@brief calculates Vtx values
+
+@authors Bill Atwood, Leon Rochester
+*/
+
 class VtxValsTool : public ValBase
 {
 public:

@@ -155,6 +155,12 @@ namespace {
     
 }
 
+/*! @class CalValsTool
+@brief calculates Cal values
+
+@authors Bill Atwood, Leon Rochester
+*/
+
 class CalValsTool :   public ValBase
 {
 public:

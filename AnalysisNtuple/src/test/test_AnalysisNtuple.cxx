@@ -19,7 +19,7 @@
 // Define the class here instead of in a header file: not needed anywhere but here!
 //------------------------------------------------------------------------------
 /** 
-A simple algorithm.
+The test program for AnalysisNtuple is AnalysisNtupleAlg
 */
 
 class test_AnalysisNtuple : public Algorithm {

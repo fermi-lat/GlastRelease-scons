@@ -1,7 +1,12 @@
-// $Header$
 
-// Include files
+/*! 
+@brief Calculates Acd Values
 
+@authors Bill Atwood, Leon Rochester
+
+$Header$
+
+*/
 
 #include "ValBase.h"
 
@@ -18,7 +23,6 @@
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 #include "Event/Recon/TkrRecon/TkrFitTrack.h"
 #include "Event/Recon/AcdRecon/AcdRecon.h"
-
 
 
 class AcdValsTool : public ValBase

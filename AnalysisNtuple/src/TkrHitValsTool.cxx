@@ -22,6 +22,12 @@ namespace {
     const int _nLayers = 18;
 }
 
+/*! @class TkrHitValsTool
+@brief calculates TkrHit values
+
+@authors Bill Atwood, Leon Rochester
+*/
+
 class TkrHitValsTool : public ValBase
 {
 public:

@@ -26,6 +26,12 @@ namespace {
     const int _nTowers = 16;
 }
 
+/*! @class GltValsTool
+@brief calculates trigger values
+
+@authors Bill Atwood, Leon Rochester
+*/
+
 class GltValsTool : public ValBase
 {
 public:
