@@ -1,7 +1,7 @@
 // $Header$
 
 #include "xmlUtil/id/IdKey.h"
-#include <assert.h>
+#include <cassert>
 
 namespace {
   static const unsigned int maxVal = 254;
@@ -9,20 +9,33 @@ namespace {
 }
 
 namespace xmlUtil {
-  IdKey::IdKey(const Identifier& id) {
-    // Compress each field to a byte.  Use the range 1-255 because
-    // 0 is reserved; it means "absent".  If any field in the
-    // input id has a value > 254 we're in trouble
-    
-    const unsigned int inSize = id.size();
+  IdKey::IdKey(const std::vector<unsigned int> id) {
+    fillFrom(id);
+  }
+
+  IdKey::IdKey(const std::deque<unsigned int> id) {
+    fillFrom<std::deque<unsigned int> >(id);
+  }
+
+  // Compress each field to a byte.  Use the range 1-255 because
+  // 0 is reserved; it means "absent".  If any field in the
+  // input id has a value > 254 we're in trouble
+  template<class Container>
+  void IdKey::fillFrom(const Container& con) {
+
+    typename Container::const_iterator start  = con.begin();
+    typename Container::const_iterator stop  = con.end();
+
+    const unsigned int inSize = con.size();
+
     m_key.reserve((inSize + 3) / 4);
     unsigned int out = 0;
     unsigned int iByte = 0;
 
-    Identifier::const_iterator inIt = id.begin();
-    unsigned int cur = *inIt + 1;
+    typename Container::const_iterator inIt = start;
 
-    for (; inIt != id.end(); ++inIt) {
+    for (; inIt != stop; ++inIt) {
+      unsigned int cur = *inIt + 1;
 
       if (cur > maxVal) {
         // not allowed
@@ -31,22 +44,27 @@ namespace xmlUtil {
       out *= moveLeft;  
       out += cur; 
       iByte++; 
-      if (iByte == 4) {
-        m_key.push_back(cur);
-        cur = 0;
+      if (iByte == 4) {  // store the word; re-init for next word
+        m_key.push_back(out);
+        out = 0;
         iByte = 0;
       }
     }
+
     if (iByte) {
       while (iByte < 4) {
         out *= moveLeft;
         iByte++;
       }
-      m_key.push_back(cur);
+      m_key.push_back(out);
     }
   }
 
-  // For sorting purposes, this must behave like < ("less than")
+  // For sorting purposes, this must behave like < (less-than)
+  // Internally keys are essentially vectors of unsigned ints.
+  // Compare them component-wise.  Return 
+  //     * when corresponding components differ       or
+  //     * when one key is shorter than the other (shorter is less-than)
   bool IdKey::ltkey::operator()(IdKey key1, IdKey key2) const {
 
     IdKey::KeyIt it1 = key1.m_key.begin();

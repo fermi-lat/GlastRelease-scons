@@ -42,7 +42,7 @@ application forProg makeXmlForProg.cxx Arith.cxx Substitute.cxx \
 
 application forDoc makeXmlForDoc.cxx Arith.cxx  Constants.cxx Source.cxx
 
-application testId id/*.cxx
+application testId id/testId.cxx
 application testDocMan docMan/*.cxx
-
+application testKey id/testKey.cxx id/IdKey.cxx
 
