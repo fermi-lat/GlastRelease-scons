@@ -10,6 +10,17 @@ ApplicationMgr.DLLs   += {"CalibSvc"};
 // List of required services
  ApplicationMgr.ExtSvc   = {"GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
 
+// Use the new RootIoSvc, implementing IRunable
+ApplicationMgr.ExtSvc += { "RootIoSvc" };
+ApplicationMgr.Runable= "RootIoSvc"; 
+
+ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UseScale" };
+digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel      = 2;
+
+//=========================================================================
 // Persistency service setup:
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 
@@ -19,42 +30,23 @@ EventSelector.Input = "NONE";
 GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
 GlastDetSvc.topVolume="LAT";
 
-// Use the new RootIoSvc, implementing IRunable
-ApplicationMgr.ExtSvc += { "RootIoSvc" };
-ApplicationMgr.Runable= "RootIoSvc"; 
-
-ApplicationMgr.TopAlg += {"digiRootReaderAlg", "UsePeds" };
-
-//digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
-// digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/muon_5_digi.root";
-digiRootReaderAlg.digiRootFile = "$ROOTTESTDATAROOT/data/default/digi.root";
-
-
-// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-MessageSvc.OutputLevel      = 2;
-
-//=========================================================================
-
 ApplicationMgr.EvtMax = 10000;
-
-// Model for immediately following lines is LHCb example.  See
-// http://lhcbsoft.web.cern.ch/LHCbSoft/Ex/DetConExamples/v2r0/options/
-//   in particular, files contDB.opts and common.opts
 
 // Start up a CalibDataSvc 
 ApplicationMgr.ExtSvc += {"CalibDataSvc"};
 
-ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
-ApplicationMgr.ExtSvc += {"CalibRootCnvSvc" };
+ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc"};
+ApplicationMgr.ExtSvc += { "CalibRootCnvSvc" };
 
 DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibRootCnvSvc"};
 
-CalibDataSvc.CalibFlavorList = {"ideal"};
+
+CalibDataSvc.CalibFlavorList = {"ideal","RootBeer"};
 // not used yet
-CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
-			   "Test_1/mocha"};
+// CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
+//			   "Test_1/mocha"};
 
 // CalibDataSvc properties below are explicitly set to the
 // default values as established in CalibDataSvc.cxx.  
@@ -64,8 +56,6 @@ CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
 CalibDataSvc.CalibInstrumentName = "LAT";
 CalibDataSvc.CalibStorageType = 14;
 CalibDataSvc.CalibRootName = "Calib";
-CalibDataSvc.CalibTimeSource = "data";
-
 
 // Value of "*" means 'use default MySQL host', so currently (May, 2003)
 // equivalent to value of "centaurusa.slac.stanford.edu".
@@ -75,8 +65,11 @@ CalibMySQLCnvSvc.Host = "*";
 // By default, use production database "calib", but user may override.
 //  calib_user is a development database for use of, e.g., calibration
 //  algorithm developers
-// CalibMySQLCnvSvc.DbName = "calib_user";
+CalibMySQLCnvSvc.DbName = "calib_test";
 
+CalibDataSvc.CalibTimeSource = "clock";
+CalibDataSvc.startTime = "2003-2-25 00:20";
+CalibDataSvc.delayTime = 3000;
 
 // In order to circumvent normal calibration-fetching mechanism, which
 // relies on event timestamp, you *must* include the first two lines

@@ -18,7 +18,8 @@ ApplicationMgr.Runable= "RootIoSvc";
 //  UseBadStrips, UseGains,...
 ApplicationMgr.TopAlg = {"mcRootReaderAlg", "UsePeds" };
 // digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi_1409.root";
-mcRootReaderAlg.mcRootFileList = {"$CALIBSVCROOT/src/test/mc_1409.root"};
+mcRootReaderAlg.mcRootFileList = {"$ROOTTESTDATAROOT/data/default/mc.root"};
+// mcRootReaderAlg.mcRootFileList = {"$CALIBSVCROOT/src/test/mc_1409.root"};
 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
@@ -74,7 +75,7 @@ CalibMySQLCnvSvc.Host = "*";
 //  calib_user is a development database for use of, e.g., calibration
 //  algorithm developers
 // CalibMySQLCnvSvc.DbName = "calib_user";
-
+//CalibDataSvc.CalibTimeSource = "data";
 CalibDataSvc.CalibTimeSource = "mc";
 /////CalibDataSvc.CalibTimeSource = "clock";
 /////CalibDataSvc.startTime = "2003-2-25 00:20";
