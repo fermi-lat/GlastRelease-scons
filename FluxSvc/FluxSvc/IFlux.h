@@ -1,0 +1,56 @@
+// $Header$
+// 
+//  Original author: Toby Burnett tburnett@u.washington.edu
+
+#ifndef _H_IFlux_
+#define _H_IFlux_
+
+
+// includes
+#include <string>
+#include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Geometry/Vector3D.h"
+
+
+/*!  Abstract interface for an object that generates particles
+*/
+class IFlux {
+public:
+    // ctor, select the name
+    IFlux(std::string name=""){};
+    virtual ~IFlux(){}
+
+    /// name of the flux
+    virtual std::string name()const=0;
+
+    /// full title of the flux
+    virtual std::string title()const = 0;
+
+    /// generate a new entry trajectory
+    virtual void generate()=0;
+
+    /// the particle name of the last particle generated 
+    virtual std::string particleName()const=0;
+
+    /// its kinetic energy
+    virtual double energy()const=0;
+
+    /// starting point 
+    virtual HepPoint3D launchPoint()const=0;
+
+    /// direction
+    virtual HepVector3D launchDir()const=0;
+
+    /// return rate ( /mm**2 /s)
+    virtual double rate()const=0;
+
+    /// set the area of the target
+    virtual void setTargetArea( double area)=0;
+
+    /// get the target area
+    virtual double targetArea()const =0;
+
+};
+
+
+#endif // _H_FluxSvc
