@@ -22,11 +22,11 @@ class TkrGeometryVisitor: public IGeometry
 {
 public:
 
-	TkrGeometryVisitor();
+    TkrGeometryVisitor();
 
-	~TkrGeometryVisitor() {}
+    ~TkrGeometryVisitor() {}
    
-	/// Standard interface to the detModel
+    /// Standard interface to the detModel
     virtual IGeometry::VisitorRet pushShape(ShapeType s, const UintVector& id, 
         std::string name, std::string material, const DoubleVector& params, 
         VolumeType type);
@@ -43,17 +43,17 @@ private:
 
     /// Store the relevant information from each call
 
-	idents::TowerId m_tower;
-	int m_towerX;
-	int m_towerY;
-	int m_tray;
-	int m_botTop;
-	int m_view;
-	int m_layer;
+    idents::TowerId m_tower;
+    int m_towerX;
+    int m_towerY;
+    int m_tray;
+    int m_botTop;
+    int m_view;
+    int m_layer;
 
-	double m_param[9];
+    double m_param[9];
 
-	/// mode for traversing geometry
+    /// mode for traversing geometry
     std::string m_mode;
 
 

@@ -33,7 +33,7 @@ Point TkrQueryClusters::meanHit(Event::TkrCluster::view v, int layer)
     
     std::vector<Event::TkrCluster*> AuxList = m_pClus->getHits(v,layer);
     for (int ihit=0; ihit<nhits; ihit++){
-        Pini += AuxList[ihit]->position();	
+        Pini += AuxList[ihit]->position();
     }
     Point Pini2(Pini.x()/nhits,Pini.y()/nhits,Pini.z()/nhits);
     return Pini2;

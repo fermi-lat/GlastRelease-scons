@@ -25,7 +25,7 @@ public:
 
     //! Constructor of this form must be provided
 
-	static const InterfaceID& interfaceID() { return IID_ITkrGeometrySvc; }
+    static const InterfaceID& interfaceID() { return IID_ITkrGeometrySvc; }
     
     //Retrieve stored information
 
@@ -53,8 +53,9 @@ public:
     virtual int ilayer(int layer)=0; // deprecated
     virtual int reverseLayerNumber(int layer)=0;
 
-	// Return the strip position (in local coordinates) given the stripId
-    virtual HepPoint3D getStripPosition( int tower, int layer, int view, double stripId) = 0;
+    // Return the strip position (in local coordinates) given the stripId
+    virtual HepPoint3D getStripPosition( int tower, int layer, int view, 
+        double stripId) = 0;
 };
 
 #endif

@@ -6,7 +6,8 @@
 *
 * @brief Contains methods that operate on the clusters and return information.
 *
-* Only one of the methods in this class is currently being used, but I'm keeping the others
+* Only one of the methods in this class is currently being used,
+* but I'm keeping the others
 * since they would be tedious to re-code.
 *
 * @authors Bill Atwood, Leon Rochester
