@@ -18,6 +18,8 @@ DECLARE_FACTORY_ENTRIES(RootIo) {
     DECLARE_ALGORITHM( relationRootWriterAlg );
     DECLARE_ALGORITHM( relationRootReaderAlg );
     DECLARE_TOOL( RootIoRandom );
+    DECLARE_SERVICE( RootIoSvc );
+
 
 }
   
