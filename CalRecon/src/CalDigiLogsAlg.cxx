@@ -75,6 +75,7 @@ StatusCode CalDigiLogsAlg::execute()
 //################################################
 {
 	StatusCode sc = StatusCode::SUCCESS;
+    MsgStream log(msgSvc(), name());
 	sc = retrieve();
 //	int nLogs = m_CalRawLogs->num();
         for (CalDigiVector::const_iterator it = m_CalRawLogs->begin(); 
@@ -83,25 +84,30 @@ StatusCode CalDigiLogsAlg::execute()
 		
 	  //		CalADCLog* ADCLog = m_CalRawLogs->Log(jlog);
                idents::CalLogId ADCLog = (*it)->getPackedId();
-	   int lyr = ADCLog.getLayer();
+	   int lyr = 7-ADCLog.getLayer();
+		int towid = ADCLog.getTower();
+	   idents::ModuleId mod(towid);
 	   int  ilayer=lyr/2; 
        int viewKludge = lyr%2;
        CalDetGeo::axis view   = CalDetGeo::makeAxis(viewKludge);
 	   int icol            = ADCLog.getColumn();
+		
+	   log << MSG::DEBUG << " tower=" << towid << " layer=" << lyr
+		   << " col=" << icol << " mod=" << mod << endreq;
 
 	   //		detGeo*    geoLog = m_CalGeoLogs->getLog(ilayer,view,icol);
-	   CalDetGeo geoLog = m_CalGeo->getLog(ilayer,view,icol);
+	   CalDetGeo geoLog = m_CalGeo->getLog(ilayer,view,icol,mod);
 
 		
-	   CalADCLog* pedLog = m_CalPedLogs->getLogID(CalLogID::ID(ilayer,view,icol));
-	   CalCalibLog* calibLog = m_CalCalibLogs->getLogID(CalLogID::ID(ilayer,view,icol));
+	   CalADCLog* pedLog = m_CalPedLogs->getLogID(CalLogID::ID(ilayer,view,icol,mod));
+	   CalCalibLog* calibLog = m_CalCalibLogs->getLogID(CalLogID::ID(ilayer,view,icol,mod));
 
-	   CalRecLog* recLog = m_CalRecLogs->getLogID(CalLogID::ID(ilayer,view,icol));
+	   CalRecLog* recLog = m_CalRecLogs->getLogID(CalLogID::ID(ilayer,view,icol,mod));
 	   computeEnergy(recLog, (*it), pedLog, calibLog);
-//	   computePosition(recLog,&geoLog, calibLog);
+	   computePosition(recLog,&geoLog, calibLog);
 	   //		std::cout << " ilayer = " << ilayer << " view=" << view << " icol=" << icol << std::endl;
 	}
-//	m_CalRecLogs->writeOut();
+	m_CalRecLogs->writeOut();
 
 	return sc;
 }
@@ -207,7 +213,6 @@ void CalDigiLogsAlg::computeEnergy(CalRecLog* recLog, const CalDigi* ADCLog,
 
 		}
 		
-		recLog->writeOut();		
 
 		
 	
@@ -236,7 +241,7 @@ void CalDigiLogsAlg::computePosition(CalRecLog* recLog, const CalDetGeo* geoLog,
 	double latt = 0.65;
 	double slope = (1+latt)/(1-latt);
 
-	Point pLog = pCenter+dirLog*asym*slope;
+	Point pLog = pCenter-dirLog*asym*slope;
 
 	recLog->setPosition(pLog);
 }
