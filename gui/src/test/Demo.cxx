@@ -84,6 +84,7 @@ Demo::Demo(gui::DisplayControl & display) : _number(0)
     DisplayControl::DisplaySubMenu& sm2 = sm1.subMenu("box 2", r11);
     sm1.add(r12, "box3");
     sm2.add(new SimpleBoxRep(_box4), "box4");
+
     
     
 }

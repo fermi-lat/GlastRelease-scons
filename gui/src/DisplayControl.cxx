@@ -456,10 +456,10 @@ DisplayControl::DisplaySubMenu& DisplayControl::DisplaySubMenu::subMenu(const st
     return *new DisplayControl::DisplaySubMenu(_display,this,rep,name);
 }
     
-void DisplayControl::DisplaySubMenu::add(DisplayRep * rep, const std::string& name)
+void DisplayControl::DisplaySubMenu::add(DisplayRep * rep, const std::string& name, bool initial_state)
 {
     _display->useMenu(_menu);
-    GUI::Toggle* display_toggle = _display->add(rep,name);
+    GUI::Toggle* display_toggle = _display->add(rep,name, initial_state);
     if( display_toggle !=0) _rep_list.push_back(display_toggle);
     _display->useMenu();
 }

@@ -2,6 +2,7 @@
  * Package gui
  * Coordinator: T.Burnett
  *
+ * v3r1  THB 06-may-2002: Allow setting initial state for DisplayMenu objects.
  * v3    THB 06-apr-2002: change GraphicsVector to accept HepPoint3D.
 22-mar-2002: tweaks for display control
 14-aug-2001: improved clipping; tag v2r6
