@@ -18,7 +18,7 @@ const ISvcFactory& CalibRootCnvSvcFactory = calibRootCnvSvc_factory;
 CalibRootCnvSvc::CalibRootCnvSvc(const std::string& name, 
                                ISvcLocator* svc) :
   ConversionSvc(name, svc, ROOT_StorageType),
-  m_detPersSvc(0), m_detDataSvc(0), m_parser(0) {
+  m_detPersSvc(0), m_detDataSvc(0)   {
 
   // Some day might have a property to declare having to do with path to
   // xml files.
