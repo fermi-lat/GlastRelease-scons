@@ -21,7 +21,7 @@ public:
 
     // Constructor needs the matrices that transform state vector, covariance matrix
     BetheBlockHitEnergy();
-    ~BetheBlockHitEnergy() {};
+    virtual ~BetheBlockHitEnergy() {};
 
     double initialHitEnergy(const Event::TkrPatCandHit& candHit, const double trkEnergy);
     double updateHitEnergy(const double curEnergy, const double radLen);

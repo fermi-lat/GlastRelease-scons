@@ -23,7 +23,7 @@ public:
 
     // Constructor needs the matrices that transform state vector, covariance matrix
     StdProcNoiseMatrix(ITkrGeometrySvc* tkrGeo);
-   ~StdProcNoiseMatrix() {};
+    virtual ~StdProcNoiseMatrix() {};
 
     void     trackInit(const std::vector<double> zCoords, const std::vector<double> energy);
     void     accept(const KalmanFilterInit& initObj);

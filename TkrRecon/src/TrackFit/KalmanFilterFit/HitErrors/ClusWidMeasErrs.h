@@ -23,7 +23,7 @@ public:
 
     // Constructor needs the matrices that transform state vector, covariance matrix
     ClusWidMeasErrs(ITkrGeometrySvc* tkrGeo);
-   ~ClusWidMeasErrs() {};
+    virtual ~ClusWidMeasErrs() {};
 
 
     Event::TkrFitMatrix computeMeasErrs(const Event::TkrFitPar& newPars, 

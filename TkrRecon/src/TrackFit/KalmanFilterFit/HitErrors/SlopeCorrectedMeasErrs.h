@@ -24,7 +24,7 @@ public:
 
     // Constructor needs the matrices that transform state vector, covariance matrix
     SlopeCorrectedMeasErrs(ITkrGeometrySvc* tkrGeo);
-   ~SlopeCorrectedMeasErrs() {};
+    virtual ~SlopeCorrectedMeasErrs() {};
 
 
     Event::TkrFitMatrix computeMeasErrs(const Event::TkrFitPar& newPars, 

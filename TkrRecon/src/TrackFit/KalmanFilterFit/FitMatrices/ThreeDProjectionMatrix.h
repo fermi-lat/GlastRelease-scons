@@ -21,7 +21,7 @@ public:
 
     // Constructor 
     ThreeDProjectionMatrix();
-    ~ThreeDProjectionMatrix() {};
+    virtual ~ThreeDProjectionMatrix() {};
 
     void     trackInit(const std::vector<int> projection);
     void     accept(const KalmanFilterInit& initObj);

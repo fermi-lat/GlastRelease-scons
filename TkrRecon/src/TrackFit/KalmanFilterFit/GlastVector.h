@@ -45,3 +45,4 @@ GlastVector::GlastVector(const Event::TkrFitPar& m1) : HepVector(4)
     (*this)(4) = m1(4);
 }
 #endif
+

@@ -55,3 +55,4 @@ GlastMatrix::GlastMatrix(const Event::TkrFitMatrix& m1) : HepMatrix(4,4)
     (*this)(4,4) = m1(4,4);
 }
 #endif
+

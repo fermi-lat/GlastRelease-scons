@@ -21,7 +21,7 @@ public:
 
     // Constructor 
     StdTransportMatrix();
-   ~StdTransportMatrix() {};
+    virtual ~StdTransportMatrix() {};
 
     void    trackInit(const std::vector<double>& zCoords);
     void    accept(const KalmanFilterInit& initObj);
