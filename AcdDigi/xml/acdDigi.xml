@@ -34,4 +34,9 @@
         <item name="mev_per_mip" value="1.9"> Mev per MIP </item>
     </section>
 
+    <section name="processing">
+        <item name="auto_calibrate" value="1"> </item>
+        <item name="apply_poisson" value="1"> </item>
+    </section>
+
 </acdDigi>
