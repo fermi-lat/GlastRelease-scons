@@ -10,6 +10,7 @@
 #include "LogText.h"
 #include "Icons.h"
 #include "fxkeys.h"
+#include "facilities/Util.h"
 #include "rdbModel/Tables/Datatype.h"
 #include "ColWidgetFactory.h"
 #include <iostream>
@@ -67,6 +68,7 @@ void InsertDialog::fillWithRowByKey(std::string primKeyVal)
     ColWidget* temp = m_widgets[i]; 
     
     name = temp->getColumn()->getName();
+    facilities::Util::trimTrailing(&name);
     colNames.push_back(name); 
   }
 
@@ -122,7 +124,9 @@ long InsertDialog::onGoPress(FXObject *,FXSelector, void*)
     ColWidget* temp = m_widgets[i]; 
     
     name = temp->getColumn()->getName();
+    facilities::Util::trimTrailing(&name);
     value = temp->getValue();
+    facilities::Util::trimTrailing(&value);
     
     if (value == "")
       nullValues.push_back(name);
