@@ -1,5 +1,5 @@
 package Trigger
-version v3r8
+version v3r9
 
 author T. Burnett <tburnett@u.washington.edu>
 # $Id$
@@ -9,18 +9,17 @@ author T. Burnett <tburnett@u.washington.edu>
 # --------------------------
 
 
-use Event *
-use GlastSvc *
-
-
 branches src cmt doc
 
 apply_pattern packageShr
 
 
-
 #=============================================================
 private
+
+use Event *
+use GlastSvc *
+use LdfEvent *
 
 # get flags to build shared library
 
