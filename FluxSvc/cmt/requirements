@@ -11,7 +11,7 @@ use geometry   v3*
 use GaudiSvc
 use xml
 use CLHEP
-use astro v0
+use astro v0r*
 
 
 apply_pattern packageShr
