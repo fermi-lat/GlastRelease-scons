@@ -4,6 +4,12 @@
        $Header$
        Some simple test flux definitions for debugging
     -->
+   <source name="test_muons">
+       <spectrum> 
+         <particle name="mu+"><energy e="1"/> </particle>
+           <direction theta="0" phi="0" />
+       </spectrum>
+     </source>
 
     <source name="muon_pencil_side">
        <spectrum> 
@@ -39,7 +45,7 @@
 
     <source name="gamma_test">
        <spectrum> 
-         <particle name="gamma"><energy e="1.0"/> </particle>
+         <particle name="gamma"><energy e=".1"/> </particle>
            <direction theta="0" phi="0" />
            <launch_point x="50" y="50" z="1000" />
        </spectrum>
