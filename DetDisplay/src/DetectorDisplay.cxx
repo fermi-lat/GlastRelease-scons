@@ -50,6 +50,22 @@ private:
     FloatProperty m_axisSize;   //! axis size to use (in mm) 0 for no axis display
     IntegerProperty m_showLevel;    //! number of show commands to reveal details
     DisplayGeometry * m_glast;
+#if defined(__GNUC__) && (__GNUC__ == 2)
+    //---------- command class to set detail level-----------------
+    class ShowDetector : public gui::Command {
+    public:
+        ShowDetector(gui::DisplayRep* rep, int level): m_rep(rep),m_level(level){}
+        void execute(){ 
+            m_rep->hide(false);    
+            for(int i =0; i< m_level; ++i) m_rep->show(false); 
+            pdisplay->redisplay();
+        }
+    private:
+        gui::DisplayRep* m_rep;
+        int m_level;
+    };
+    //------------------------------------------------
+#endif
 };
 
 
@@ -125,7 +141,7 @@ StatusCode DetectorDisplay::initialize (gui::GuiMgr* guiMgr)
 
     pdisplay->useMenu(&detmenu);
     pdisplay->add(worldRep, "detector", -1);
-
+#if !defined(__GNUC__) || (__GNUC__ != 2)
     //---------- command class to set detail level-----------------
     class ShowDetector : public gui::Command {
     public:
@@ -140,7 +156,7 @@ StatusCode DetectorDisplay::initialize (gui::GuiMgr* guiMgr)
         int m_level;
     };
     //------------------------------------------------
-
+#endif
 
     for( int level=0; level<nLevels; ++level){
         std::stringstream label; label << "detail level " << level;

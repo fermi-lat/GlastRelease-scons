@@ -115,6 +115,39 @@ private:
   
     /// A map to keep track of hit detectors for display
     DetectorList m_detectorList;
+#if defined(__GNUC__) && (__GNUC__ == 2)
+    //! minimal rep just to append stuff to. Allows default color
+    class EmptyRep : public gui::DisplayRep {
+    public:
+        EmptyRep(std::string color="black"):m_color(color){}
+        void update(){}
+        void clear(){DisplayRep::clear(); setColor(m_color);}
+    private: 
+        std::string m_color;
+    };
+
+    class TrackRep : public gui::DisplayRep {
+    public:
+        TrackRep( const MCdisplay::PointList& track, bool neutral=false, bool primary=false){
+            if( neutral) setColor("white");
+            MCdisplay::PointList::const_iterator pit = track.begin();
+            if(primary) markerAt(*pit);
+            moveTo(*pit++);
+            for(; pit !=track.end(); ++pit) lineTo(*pit);
+        }
+        void update(){}
+    };
+
+    class LineRep : public gui::DisplayRep {
+    public:
+        LineRep(const Hep3Vector& a, const Hep3Vector& b) 
+        {
+            markerAt(a); moveTo(a);  lineTo(b);
+        }
+        void update(){}
+    };
+#endif
+
 };
 
 
@@ -150,7 +183,7 @@ StatusCode MCdisplay::initialize (gui::GuiMgr* guiMgr)
     MsgStream log( msgSvc(), name() );
     gui::DisplayControl& dc = guiMgr->display();
     gui::DisplayControl::DisplaySubMenu& m = dc.subMenu("MonteCarlo");
-
+#if !defined(__GNUC__) || (__GNUC__ != 2)
     //! minimal rep just to append stuff to. Allows default color
     class EmptyRep : public gui::DisplayRep {
     public:
@@ -160,7 +193,7 @@ StatusCode MCdisplay::initialize (gui::GuiMgr* guiMgr)
     private: 
         std::string m_color;
     };
-
+#endif
     m.add(m_detmap["steps"] = new EmptyRep("red"), "hits", false);
 
     m.add(m_detmap["hit_boxes"] = new EmptyRep("orange"), 
@@ -220,6 +253,7 @@ void MCdisplay::displayBox(idents::VolumeIdentifier id, std::string category)
 //____________________________________________________________________________
 void MCdisplay::addTrack(const PointList & track, int charge, bool primary)
 {
+#if !defined(__GNUC__) || (__GNUC__ !=2)
     class TrackRep : public gui::DisplayRep {
     public:
         TrackRep( const MCdisplay::PointList& track, bool neutral=false, bool primary=false){
@@ -231,7 +265,7 @@ void MCdisplay::addTrack(const PointList & track, int charge, bool primary)
         }
         void update(){}
     };
-
+#endif
     if( primary)        m_detmap["primary"]->append(TrackRep(track, charge==0, primary));
     else  if(charge==0) m_detmap["neutrals"]->append(TrackRep(track));
     else                m_detmap["tracks"]->append(TrackRep(track));
@@ -239,6 +273,7 @@ void MCdisplay::addTrack(const PointList & track, int charge, bool primary)
 //____________________________________________________________________________
 void MCdisplay::addHit( const Hep3Vector& a, const Hep3Vector& b)
 {
+#if !defined(__GNUC__) || (__GNUC__ !=2)
     class LineRep : public gui::DisplayRep {
     public:
         LineRep(const Hep3Vector& a, const Hep3Vector& b) 
@@ -247,7 +282,7 @@ void MCdisplay::addHit( const Hep3Vector& a, const Hep3Vector& b)
         }
         void update(){}
     };
-
+#endif
     m_detmap["steps"]->append( LineRep(a,b) );
 }
 
