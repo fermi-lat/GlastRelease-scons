@@ -24,10 +24,10 @@
 #include "xmlUtil/Constants.h"
 #include "xmlUtil/Arith.h"
 #include "xmlUtil/Substitute.h"
-#include "dom/DOM_Element.hpp"
-#include "dom/DOM_NodeList.hpp"
-#include "dom/DOM_NamedNodeMap.hpp"
-#include "dom/DOM_DocumentType.hpp"
+#include <dom/DOM_Element.hpp>
+#include <dom/DOM_NodeList.hpp>
+#include <dom/DOM_NamedNodeMap.hpp>
+#include <dom/DOM_DocumentType.hpp>
 
 #include <string>
 #include <iostream>
@@ -36,8 +36,8 @@
 std::ostream *openOut(char * outfile);
 void outProlog(const DOM_DocumentType& doctype, std::ostream& out);
 
-const char chDoubleQ = 0x22;
-const std::string dquote(&chDoubleQ);
+const char chDoubleQ[2] = {0x22, 0x0};
+const std::string dquote(&chDoubleQ[0]);
 const std::string myId("$Id$");
 
 // Can't literally put in the string we want or CVS will mess it up.

@@ -1,8 +1,8 @@
 // $Header$
 
 #include "xmlUtil/Source.h"
-#include "dom/DOMString.hpp"
-#include "dom/DOM_Text.hpp"
+#include <dom/DOMString.hpp>
+#include <dom/DOM_Text.hpp>
 #include "xml/Dom.h"
 
 

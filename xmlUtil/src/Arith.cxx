@@ -3,7 +3,7 @@
 #include <string>
 #include "xmlUtil/Arith.h"
 #include "xml/Dom.h"
-#include "dom/DOM_Document.hpp"
+#include <dom/DOM_Document.hpp>
 
 namespace xmlUtil {
 

@@ -20,9 +20,9 @@
 #include "xmlUtil/Substitute.h"
 #include "xmlUtil/Constants.h"
 #include "xmlUtil/Source.h"
-#include "dom/DOM_Element.hpp"
-#include "dom/DOM_NodeList.hpp"
-#include "dom/DOM_DocumentType.hpp"
+#include <dom/DOM_Element.hpp>
+#include <dom/DOM_NodeList.hpp>
+#include <dom/DOM_DocumentType.hpp>
 
 #include <string>
 #include <iostream>

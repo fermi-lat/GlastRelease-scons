@@ -21,9 +21,9 @@
 #include "xmlUtil/Source.h"
 #include "xmlUtil/Arith.h"
 #include "xmlUtil/Constants.h"
-#include "dom/DOM_Element.hpp"
-#include "dom/DOM_NodeList.hpp"
-#include "dom/DOM_DocumentType.hpp"
+#include <dom/DOM_Element.hpp>
+#include <dom/DOM_NodeList.hpp>
+#include <dom/DOM_DocumentType.hpp>
 
 #include <string>
 #include <iostream>
@@ -35,8 +35,8 @@ void outProlog(const DOM_DocumentType& doctype, std::ostream& out);
 
 char * stripDollar(char *toStrip);
 
-const char chDoubleQ = 0x22;
-const std::string dquote(&chDoubleQ);
+const char chDoubleQ[2] = {0x22, 0x0};
+const std::string dquote(&chDoubleQ[0]);
 const std::string myId("$Id$");
 // Can't literally put in the string we want or CVS will mess it up.
 // Instead make a copy of this template, replacing the # with $
@@ -81,26 +81,26 @@ int main(int argc, char* argv[]) {
 
   // Delete any id dictionaries
   DOM_NodeList dicts = docElt.getElementsByTagName(DOMString("idDict"));
-  DOM_Node dictNode = dicts.item(0);
+  //  DOM_Node dictNode = dicts.item(0);
 
-  while (dictNode != DOM_Node() ) {
-    DOM_Node toCome = dictNode.getNextSibling();
+  unsigned nDict = dicts.getLength();
+  for (unsigned iDict = 0; iDict < nDict; iDict++) {
+    DOM_Node dictNode = dicts.item(iDict);
     DOM_Element& dictElt = static_cast<DOM_Element &> (dictNode);
+
     xml::Dom::prune(dictElt);
     (dictElt.getParentNode()).removeChild(dictElt);
-    dictNode = toCome;
   }
 
   // Delete all sections
   DOM_NodeList sections = docElt.getElementsByTagName(DOMString("section"));
-  DOM_Node secNode = sections.item(0);
-
-  while (secNode != DOM_Node() ) {
-    DOM_Node toCome = secNode.getNextSibling();
+  unsigned nSec = sections.getLength();
+  for (unsigned iSec = 0; iSec < nSec; iSec++) {
+    DOM_Node secNode = sections.item(iSec);
     DOM_Element& secElt = static_cast<DOM_Element &> (secNode);
     xml::Dom::prune(secElt);
     (secElt.getParentNode()).removeChild(secElt);
-    secNode = toCome;
+    //    secNode = toCome;
   }
 
 

@@ -5,9 +5,9 @@
 #include "xmlUtil/Substitute.h"
 #include "xml/Dom.h"
 #include "xmlUtil/Arith.h"
-#include "dom/DOM_Element.hpp"
-#include "dom/DOM_TreeWalker.hpp"
-#include "dom/DOM_NamedNodeMap.hpp"
+#include <dom/DOM_Element.hpp>
+#include <dom/DOM_TreeWalker.hpp>
+#include <dom/DOM_NamedNodeMap.hpp>
 #include <vector>
 
 namespace xmlUtil {

@@ -1,10 +1,10 @@
 // $Header$
 
 #include <string>
-#include "dom/DOMString.hpp"
-#include "dom/DOM_Node.hpp"
-#include "dom/DOM_NodeList.hpp"
-#include "dom/DOM_TreeWalker.hpp"
+#include <dom/DOMString.hpp>
+#include <dom/DOM_Node.hpp>
+#include <dom/DOM_NodeList.hpp>
+#include <dom/DOM_TreeWalker.hpp>
 #include "xmlUtil/Constants.h"
 #include "xmlUtil/Arith.h"
 #include "xml/Dom.h"
