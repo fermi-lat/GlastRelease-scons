@@ -107,6 +107,7 @@ ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" };
 //GlastPropagatorSvc.PropagatorType = "gismo";
 
 ApplicationMgr.DLLs +={ 
+	"CalibSvc",
     "Recon",
     "CalRecon", "CalUtil", "TkrUtil",
     "TkrRecon"
@@ -124,6 +125,23 @@ Reconstruction.Members={
 ApplicationMgr.ExtSvc   += { "TkrGeometrySvc"};
 ApplicationMgr.ExtSvc   += { "TkrInitSvc"};
 
+
+// Start up a CalibDataSvc 
+ApplicationMgr.ExtSvc += {"CalibDataSvc"};
+
+ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
+
+DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
+DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
+
+// CalibDataSvc properties 
+// Storage type of 14 corresponds to MYSQL
+CalibDataSvc.CalibInstrumentName = "LAT";
+CalibDataSvc.CalibStorageType = 14;
+CalibDataSvc.CalibRootName = "Calib";
+CalibDataSvc.CalibFlavorList = {"ideal"};
+
+
 Cal1.Members = { 
       "CalXtalRecAlg", 
       "CalClustersAlg/first"
@@ -135,7 +153,6 @@ Cal2.Members = {
       "CalClustersAlg/second"
       };
 second.OutputLevel=5;  // since this guy generates INFO lines
-
 // ----------------------------
 //   ACD recon
 //
