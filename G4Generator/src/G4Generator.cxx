@@ -28,7 +28,7 @@
 #include "data/SiData.h"
 
 //flux
-#include "FluxSvc/FluxSvc.h"
+#include "FluxSvc/IFluxSvc.h"
 #include "FluxSvc/IFlux.h"
 
 
