@@ -51,7 +51,7 @@ namespace detModel{
 	This method return a PositionedVolume pointer from an ID (a null pointer if
 	the ID does not exist
     */
-    const PositionedVolume* getPositionedVolumeByID(idents::VolumeIdentifier) ;
+    const PositionedVolume* getPositionedVolumeByID(idents::VolumeIdentifier) const ;
     typedef std::map<idents::VolumeIdentifier, const PositionedVolume*> PVmap;
 
     //! make a summary on the stream

@@ -232,10 +232,11 @@ const std::map<idents::VolumeIdentifier, const PositionedVolume*>* IDmapBuilder:
   return &m_volMap;
 }
 
-const PositionedVolume* IDmapBuilder::getPositionedVolumeByID(idents::VolumeIdentifier id) 
+const PositionedVolume* IDmapBuilder::getPositionedVolumeByID(idents::VolumeIdentifier id) const
 {
-  const  PositionedVolume * ret = m_volMap[id];
-    return ret;
+    PVmap::const_iterator i = m_volMap.find(id);
+    return i != end() ?  (*i).second : 0;
+
 }
 
 void IDmapBuilder::summary(std::ostream & out) 
