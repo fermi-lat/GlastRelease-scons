@@ -1,18 +1,25 @@
 package G4Generator
-version v1
+version v1r1
 #$Header$
 
-# this version has Geant4 library path
-use EXTLIB v2r4p2
-
+use GlastPolicy v4
 
 # expect these to be already in the CMTPATH!
 use GaudiSvc
 use GaudiAlg
 
+# this is only a shareable package
+apply_pattern packageShr
+
+# export nothing but the dll path
+#=============================================================
+private
+# this version has Geant4 library path
+use EXTLIB v2r4p2
+
+
 #  this is a checkout package
 # that should need only the Gaudi system stuff
-use GlastPolicy v4
 use Geant4   v1
 
 use facilities v2r1
@@ -23,11 +30,12 @@ use xmlUtil  v2r6
 use idents   v2r3p1
 use detModel v2r6
 
-use instrument v5
+use instrument      v5r1
 use data     v4r2
 use GlastEvent v4
-use GlastSvc v3
+use GlastSvc        v3r1
 
+# flux determination
 use flux     v6
 use FluxSvc  v4
 
@@ -36,14 +44,8 @@ use FluxSvc  v4
 use gui      v2r6p1
 use GuiSvc   v2r4
 use geometry v3
-use geomrep  v4
+use geomrep  v4r1
 
-# this is only a shareable package
-apply_pattern packageShr
-
-
-#=============================================================
-private
 
 # get flags to build shared library
 
@@ -58,8 +60,6 @@ library G4Generator ${G4Generator_headers} *.cxx   Dll/*.cxx
 
 # stuff for test
 public
-# THB: fails in linux apply_pattern package_test
-# then need the following instead
 set JOBOPTIONS ${G4GENERATORROOT}/src/test/jobOptions.txt
 
 # alternative test program that links stuff into the exe
@@ -70,8 +70,6 @@ macro_prepend gui_linkopts "$(GuiSvc_lib) ${guiapp_linkopts} -u GuiSvc_loadRef  
 
 macro other_source "" WIN32 "test/*.txt test/*.xml *.h test/*.h" 
 application G4Test ${GlastMain} test/*.cxx *.cxx  Dll/*.cxx ${other_source} ${Win32Resource}
-
-
 
 
 
