@@ -3,11 +3,11 @@
 #include "detModel/Sections/GDDidField.h"
 
 void GDDaxisPos::Accept(GDDsectionsVisitor* v){
-    int i;
+  unsigned int i;
     
-    v->visitAxisPos(this);
-    if(getIdField())
-      getIdField()->Accept(v);
+  v->visitAxisPos(this);
+  for(i=0;i<getIdFields().size();i++)
+    getIdFields()[i]->Accept(v);
 }
 
 double GDDaxisPos::getBBX(){
@@ -20,6 +20,7 @@ double GDDaxisPos::getBBX(){
     return (getVolume()->getBBX());
     break;
   }
+  return 0;
 }
 
 double GDDaxisPos::getBBY(){
@@ -32,6 +33,7 @@ double GDDaxisPos::getBBY(){
     return (getVolume()->getBBY());
     break;
   }
+  return 0;
 }
 
 double GDDaxisPos::getBBZ(){
@@ -44,4 +46,5 @@ double GDDaxisPos::getBBZ(){
     return (getVolume()->getBBZ());
     break;
   }
+  return 0;
 }

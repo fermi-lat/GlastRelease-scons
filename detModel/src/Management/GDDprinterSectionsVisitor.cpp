@@ -111,7 +111,7 @@ void  GDDprinterSectionsVisitor::visitIdField(GDDidField* idf)
 
 void  GDDprinterSectionsVisitor::visitSeg(GDDseg* s)
 {
-  std::cout << "\t\t\t\t Visiting seg oriented in direction  : " << s->getAxis() << std::endl;    
+  std::cout << "\t\t\t\t Visiting seg oriented in direction  : " << (int)(s->getAxis()) << std::endl;    
   std::cout << "\t\t\t\t whose reason is " << s->getReason() << "  nSeg is " <<
     s->getnSeg()  <<std::endl;
   std::cout << "\t\t\t\t -----------------------------------" << std::endl;

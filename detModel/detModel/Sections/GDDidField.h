@@ -2,7 +2,7 @@
 #define GDDIDFIELD_H
 #include "detModel/Management/GDDsectionsVisitor.h"
 
-enum typeField{layer,tower,tray,row,col,
+enum typeField{layer,tower,towerDet,tray,row,col,
 topside,xtal,orient,nsew,diode,wafer,SiPosition};
 
 

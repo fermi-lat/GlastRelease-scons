@@ -4,13 +4,12 @@
 #include "detModel/Sections/GDDidField.h"
 
 void GDDposXYZ::Accept(GDDsectionsVisitor* v){
-    int i;
+  unsigned int i;
     
-    v->visitPosXYZ(this);
-    if(getIdField())
-      getIdField()->Accept(v);
-    
-};
+  v->visitPosXYZ(this);
+  for(i=0;i<getIdFields().size();i++)
+    getIdFields()[i]->Accept(v);
+}
 
 
 double GDDposXYZ::getBBX(){

@@ -12,6 +12,7 @@ class GDDVRMLSectionsVisitor : public GDDsectionsVisitor {
 
  public:
 
+  virtual ~GDDVRMLSectionsVisitor(){};  
   GDDVRMLSectionsVisitor();
   GDDVRMLSectionsVisitor(string);
   

@@ -1,7 +1,7 @@
-# echo "Setting detModel v1 in /afs/slac.stanford.edu/u/ey/jrb/glast/jrbPack"
+# echo "Setting detModel v1r1 in /scratch/users/riccardo/glast-slac"
 
-CMTROOT=/u/ey/jrb/glast/CMT/v1r6p1; export CMTROOT
+CMTROOT=/atl2lx/users/riccardo/CMT/v1r6; export CMTROOT
 . ${CMTROOT}/mgr/setup.sh
 
 tempfile=/tmp/setup$$
-${CMTROOT}/mgr/cmt -quiet setup -sh -pack=detModel -version=v1 -path=/afs/slac.stanford.edu/u/ey/jrb/glast/jrbPack $* >${tempfile}; . ${tempfile}; /bin/rm -f ${tempfile}
+${CMTROOT}/mgr/cmt -quiet setup -sh -pack=detModel -version=v1r1 -path=/scratch/users/riccardo/glast-slac $* >${tempfile}; . ${tempfile}; /bin/rm -f ${tempfile}

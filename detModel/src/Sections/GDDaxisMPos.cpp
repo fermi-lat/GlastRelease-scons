@@ -4,11 +4,11 @@
 #include "detModel/Sections/GDDidField.h"
 
 void GDDaxisMPos::Accept(GDDsectionsVisitor* v){
-    int i;
+  unsigned int i;
     
-    v->visitAxisMPos(this);
-    if(getIdField())
-      getIdField()->Accept(v);
+  v->visitAxisMPos(this);
+  for(i=0;i<getIdFields().size();i++)
+    getIdFields()[i]->Accept(v);
 }
 
 
@@ -22,6 +22,7 @@ double GDDaxisMPos::getBBX(){
      return (getVolume()->getBBX());
     break;
   }
+  return 0;
 }
 
 double GDDaxisMPos::getBBY(){
@@ -34,6 +35,7 @@ double GDDaxisMPos::getBBY(){
      return (getVolume()->getBBY());
     break;
   }
+  return 0;
 }
 
 double GDDaxisMPos::getBBZ(){
@@ -46,6 +48,7 @@ double GDDaxisMPos::getBBZ(){
     return (getVolume()->getBBZ());
     break;
   }
+  return 0;
 }
 
 

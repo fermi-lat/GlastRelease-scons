@@ -36,6 +36,8 @@ void GDD::ResolveReferences(){
     voltype=actualVolume->getVolumeType();
 
     switch(voltype){
+    case shape:
+      break;
     case composition:
       {
 	///number of positions of the current composition

@@ -42,13 +42,13 @@ class GDDvolume {
 
   /** This method return the x dimension of the bounding box it has to
      be redefined concretely in the subclasses of GDDvolume */
-  virtual double getBBX(){}
+  virtual double getBBX(){return 0;};
   /** This method return the y dimension of the bounding box it has to
      be redefined concretely in the subclasses of GDDvolume */
-  virtual double getBBY(){};
+  virtual double getBBY(){return 0;};
   /** This method return the z dimension of the bounding box it has to
      be redefined concretely in the subclasses of GDDvolume */
-  virtual double getBBZ(){};
+  virtual double getBBZ(){return 0;};
   
   /// This method is the recursive Accept for the visitor pattern
   virtual void Accept(GDDsectionsVisitor*){};

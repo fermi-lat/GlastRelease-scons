@@ -2,7 +2,8 @@
 #define GDDANYPOSITION_H
 #include "detModel/Sections/GDDvolume.h"
 #include "detModel/Sections/GDDidField.h"
-
+#include "detModel/GDDpurge.h"
+#include <vector>
 
 class GDDsectionsVisitor;
 
@@ -14,7 +15,7 @@ enum positiontype{mposX,mposY,mposZ,mposR,mposPhi,posRPhi,posXYZ};
  */
 class GDDanyPosition {
 public:
-  virtual ~GDDanyPosition(){if (idField) delete idField;}
+  virtual ~GDDanyPosition(){purge(idFields);}
   /**
    *
    */ 
@@ -42,7 +43,7 @@ public:
     else unitLength = m;
   };
 
-  GDDidField* getIdField(){return idField;}
+  vector <GDDidField*> getIdFields(){return idFields;}
   /**
    * This method set the units for the angles of the shape
    */  
@@ -66,7 +67,7 @@ public:
   /**
    *
    */ 
-  void setIdField(GDDidField* pidField){idField=pidField;}
+  void addIdField(GDDidField* pidField){idFields.push_back(pidField);}
     /**
    *
    */ 
@@ -82,15 +83,15 @@ public:
   /**
    *
    */ 
-  virtual double getBBX(){;}
+  virtual double getBBX(){return 0;}
   /**
    *
    */ 
-  virtual double getBBY(){;}
+  virtual double getBBY(){return 0;}
   /**
    *
    */ 
-  virtual double getBBZ(){;}
+  virtual double getBBZ(){return 0;}
   /**
    *
    */   
@@ -119,7 +120,7 @@ public:
  protected:
   GDDanyPosition(positiontype ptypePosition):
     typePosition(ptypePosition),xrot(0),yrot(0),zrot(0),S(0),volume(0),
-    volumeRef(""), idField(0){;}
+    volumeRef(""){;}
   
  private:
   positiontype typePosition;
@@ -137,7 +138,7 @@ public:
   string volumeRef;
   
   /** @link aggregation */
-  GDDidField* idField;
+  vector <GDDidField*> idFields;
 };
 #endif //GDDANYPOSITION_H
 

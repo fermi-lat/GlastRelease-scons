@@ -22,6 +22,8 @@ class GDDchoice;
 class GDDXercesBuilder : public GDDbuilder {
  public:
 
+  virtual ~GDDXercesBuilder(){};
+
   /**
    * This is the constructor. It defines the dom tree (domfile), uses
    * the class Substitute to evaluate all the derived constants and substitute

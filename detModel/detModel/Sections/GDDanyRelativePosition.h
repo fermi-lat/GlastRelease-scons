@@ -2,6 +2,8 @@
 #define GDDANYRELATIVEPOSITION_H
 #include "detModel/Sections/GDDvolume.h"
 #include "detModel/Sections/GDDidField.h"
+#include "detModel/GDDpurge.h"
+#include <vector>
 
 class GDDsectionsVisitor;
 
@@ -11,8 +13,9 @@ enum axisPosType{AxisPos,AxisMpos};
  * @author D.Favretto & R.Giannitrapani
  */
 class GDDanyRelativePosition {
+
 public:
-   ~GDDanyRelativePosition(){if (idField)delete idField;}
+  virtual ~GDDanyRelativePosition(){purge(idFields);}
   /**
    *
    */ 
@@ -32,7 +35,7 @@ public:
   /**
    *
    */ 
-   void setIdField(GDDidField* pidField){idField=pidField;}
+   void addIdField(GDDidField* pidField){idFields.push_back(pidField);}
   /**
    * This method set the units for the lenghts of the shape
    */  
@@ -72,15 +75,15 @@ public:
   /**
    *
    */ 
-  virtual double getBBX(){};
+  virtual double getBBX(){return 0;};
   /**
    *
    */ 
-  virtual double getBBY(){};
+  virtual double getBBY(){return 0;};
   /**
    *
    */ 
-  virtual double getBBZ(){};
+  virtual double getBBZ(){return 0;};
   /**
    *
    */ 
@@ -129,12 +132,12 @@ public:
   /**
    *
    */ 
-  GDDidField* getIdField()const{return idField;}
+  vector <GDDidField*> getIdFields()const{return idFields;}
 
  protected:
   GDDanyRelativePosition(axisPosType ppositionType):
     positionType(ppositionType),dx(0),dy(0),dz(0),
-   rotation(0), idField(0){}
+   rotation(0){}
 
  private:    
   
@@ -153,7 +156,7 @@ public:
   stacktype posDir;
   
   /** @link aggregation */
-  GDDidField * idField;
+  vector <GDDidField *> idFields;
 };
 #endif //GDDANYRELATIVEPOSITION_H
 

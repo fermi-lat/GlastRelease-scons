@@ -48,6 +48,7 @@ GDDXercesBuilder::GDDXercesBuilder(char* nameFile)
   currentGDD = man->getGDD();
   currentGDD->setCVSid(xml::Dom::getAttribute(docElt, "CVSid"));
   currentGDD->setDTDversion(xml::Dom::getAttribute(docElt, "DTDversion"));
+  
 }
 
 
@@ -228,6 +229,7 @@ GDDanyPosition* GDDXercesBuilder::buildPosition(DOM_Node* e){
   }
   else if (posType=="posRPhiZ"){
     /// \todo Add posRPhiZ
+    return 0;
   }
 }
 
@@ -240,7 +242,7 @@ GDDanyRelativePosition* GDDXercesBuilder::buildRelativePosition(DOM_Node* e){
   //AxisPos,AxisMpos
   if (posType=="axisPos"){
       GDDaxisPos* pos=new GDDaxisPos();
-   
+      
       setAttributeRelativePosition(pos, e);
        
       DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
@@ -256,7 +258,7 @@ GDDanyRelativePosition* GDDXercesBuilder::buildRelativePosition(DOM_Node* e){
   
   else{
     GDDaxisMPos* pos=new GDDaxisMPos();
-    
+
     setAttributeRelativePosition(pos, e);
        
     DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
@@ -307,6 +309,7 @@ GDDstack* GDDXercesBuilder::buildStack(DOM_Node* e){
 
   DOM_NodeList childs = e->getChildNodes();
 
+
   for(unsigned int i=0;i<childs.getLength();i++){
     if (childs.item(i).getNodeType()!=Comment){
       GDDanyRelativePosition* p = buildRelativePosition( &(childs.item(i)));
@@ -322,89 +325,107 @@ void GDDXercesBuilder::setAttributePosition(GDDanyPosition* pos, DOM_Node* e)
 {
   DOM_NamedNodeMap attributelistPos=e->getAttributes();
 
-  for(unsigned int j=0;j<attributelistPos.getLength();j++)
-    {
-      std::string attributeName = 
-	std::string(xml::Dom::transToChar( attributelistPos.item(j).getNodeName() ));
-      char* attributeValue = xml::Dom::transToChar(attributelistPos.item(j).getNodeValue() );
-      
-      if (attributeName=="volume")
-	pos->setVolumeRef(attributeValue);
-      else if (attributeName=="xrot" && attributeValue!="0")
-	pos->setXrot(atof(attributeValue));
-      else if (attributeName=="yrot" && attributeValue!="0")
-	pos->setYrot(atof(attributeValue));
-      else if (attributeName=="zrot" && attributeValue!="0")
-	pos->setZrot(atof(attributeValue));
-      else if (attributeName=="S" && attributeValue!="0")
-	pos->setS(atof(attributeValue));
-      else if (attributeName=="unitLength")
-	pos->setUnitLength(attributeValue);
-      else if (attributeName=="unitAngle")
-	pos->setUnitAngle(attributeValue);
-   }
+  DOM_Node node;
+
+  node = attributelistPos.getNamedItem(DOMString("volume"));
+  pos->setVolumeRef(xml::Dom::transToChar(node.getNodeValue()));
+
+  node = attributelistPos.getNamedItem(DOMString("xrot"));
+  pos->setXrot(atof(xml::Dom::transToChar(node.getNodeValue())));
+
+  node = attributelistPos.getNamedItem(DOMString("yrot"));
+  pos->setYrot(atof(xml::Dom::transToChar(node.getNodeValue())));
+
+  node = attributelistPos.getNamedItem(DOMString("zrot"));
+  pos->setZrot(atof(xml::Dom::transToChar(node.getNodeValue())));
+
+  node = attributelistPos.getNamedItem(DOMString("S"));
+  pos->setS(atof(xml::Dom::transToChar(node.getNodeValue())));
+
+  node = attributelistPos.getNamedItem(DOMString("unitLength"));
+  pos->setUnitLength(xml::Dom::transToChar(node.getNodeValue()));
+
+  node = attributelistPos.getNamedItem(DOMString("unitAngle"));
+  pos->setUnitAngle(xml::Dom::transToChar(node.getNodeValue()));
+
 
   if (e->hasChildNodes()){
-    DOM_Node child=e->getFirstChild();
-    GDDidField* field = new GDDidField;
+    DOM_NodeList child=e->getChildNodes();
+    for(unsigned int k=0; k<child.getLength() ; k++)
+      {
+	if(child.item(k).getNodeType() != Comment) 
+	  {
+	    GDDidField* field = new GDDidField;
 
-    DOM_NamedNodeMap attributelist = child.getAttributes();
-      for(unsigned int k=0;k<attributelist.getLength();k++){
-   
-       std::string NameAttr=
-            std::string(xml::Dom::transToChar(attributelist.item(k).getNodeName()) );
-       char* ValueAttr=xml::Dom::transToChar( attributelist.item(k).getNodeValue() );
-       if(NameAttr=="name")field->setName(ValueAttr);
-       else if(NameAttr=="step" && ValueAttr!="0")field->setStep(atof(ValueAttr));
-       else if(NameAttr=="value" && ValueAttr!="0")field->setValue(atof(ValueAttr));
-      }//end for
-     pos->setIdField(field);
-  }//end if
-
+	    DOM_NamedNodeMap attributelist = child.item(k).getAttributes();
+	    for(unsigned int i=0;i<attributelist.getLength();i++){
+	      
+	      std::string NameAttr=
+		std::string(xml::Dom::transToChar(attributelist.item(k).getNodeName()) );
+	      char* ValueAttr=xml::Dom::transToChar( attributelist.item(k).getNodeValue() );
+	      if(NameAttr=="name")field->setName(ValueAttr);
+	      else if(NameAttr=="step" && ValueAttr!="0")field->setStep(atof(ValueAttr));
+	      else if(NameAttr=="value" && ValueAttr!="0")field->setValue(atof(ValueAttr));
+	    }//end for
+	    pos->addIdField(field);
+	  }//end if
+      }
+  }
 }
 
 void GDDXercesBuilder::setAttributeRelativePosition(GDDanyRelativePosition* pos, DOM_Node* e)
 {
   DOM_NamedNodeMap attributelistPos=e->getAttributes();
 
-  for(unsigned int j=0;j<attributelistPos.getLength();j++)
-    {
-      std::string attributeName = 
-	std::string(xml::Dom::transToChar( attributelistPos.item(j).getNodeName() ));
-      char* attributeValue = xml::Dom::transToChar(attributelistPos.item(j).getNodeValue() );
+  DOM_Node node;
 
-        if (attributeName=="volume")
-            pos->setVolumeRef(attributeValue);
-        else if (attributeName=="dX" && attributeValue!="0")
-            pos->setDx(atof(attributeValue));
-        else if (attributeName=="dY" && attributeValue!="0")
-            pos->setDy(atof(attributeValue));
-        else if (attributeName=="dZ" && attributeValue!="0")
-            pos->setDz(atof(attributeValue));
-        else if (attributeName=="rotation" && attributeValue!="0")
-            pos->setRotation(atof(attributeValue));
-        else if (attributeName=="unitLength")
-            pos->setUnitLength(attributeValue);
-	else if (attributeName=="unitAngle")
-	      pos->setUnitAngle(attributeValue);      
-    }
+  node = attributelistPos.getNamedItem(DOMString("volume"));
+  pos->setVolumeRef(xml::Dom::transToChar(node.getNodeValue()));
 
- 
+  node = attributelistPos.getNamedItem(DOMString("dX"));
+  pos->setDx(atof(xml::Dom::transToChar(node.getNodeValue())));
+
+  node = attributelistPos.getNamedItem(DOMString("dY"));
+  pos->setDy(atof(xml::Dom::transToChar(node.getNodeValue())));
+
+  node = attributelistPos.getNamedItem(DOMString("dZ"));
+  pos->setDz(atof(xml::Dom::transToChar(node.getNodeValue())));
+
+  node = attributelistPos.getNamedItem(DOMString("rotation"));
+  pos->setRotation(atof(xml::Dom::transToChar(node.getNodeValue())));
+
+  node = attributelistPos.getNamedItem(DOMString("unitLength"));
+  pos->setUnitLength(xml::Dom::transToChar(node.getNodeValue()));
+
+  node = attributelistPos.getNamedItem(DOMString("unitAngle"));
+  pos->setUnitAngle(xml::Dom::transToChar(node.getNodeValue()));
+
+
   if (e->hasChildNodes()){
-    DOM_Node child=e->getFirstChild();
-    GDDidField* field = new GDDidField;
+    DOM_NodeList child=e->getChildNodes();
+    for(unsigned int k=0; k<child.getLength() ; k++)
+      {
+	if(child.item(k).getNodeType() != Comment) 
+	  {
+	    GDDidField* field = new GDDidField;
 
-    DOM_NamedNodeMap attributelist = child.getAttributes();
-
-      for(unsigned int k=0;k<attributelist.getLength();k++){
-   
-       std::string NameAttr=
-            std::string(xml::Dom::transToChar(attributelist.item(k).getNodeName()) );
-       char* ValueAttr=xml::Dom::transToChar( attributelist.item(k).getNodeValue() );
-       if(NameAttr=="name")field->setName(ValueAttr);
-       else if(NameAttr=="step" && ValueAttr!="0")field->setStep(atof(ValueAttr));
-       else if(NameAttr=="value" && ValueAttr!="0")field->setValue(atof(ValueAttr));
-      }//end for
-     pos->setIdField(field);
-  }//end if
+	    DOM_NamedNodeMap attributelist = child.item(k).getAttributes();
+	    for(unsigned int i=0;i<attributelist.getLength();i++){
+	      
+	      std::string NameAttr=
+		std::string(xml::Dom::transToChar(attributelist.item(k).getNodeName()) );
+	      char* ValueAttr=xml::Dom::transToChar( attributelist.item(k).getNodeValue() );
+	      if(NameAttr=="name")field->setName(ValueAttr);
+	      else if(NameAttr=="step" && ValueAttr!="0")field->setStep(atof(ValueAttr));
+	      else if(NameAttr=="value" && ValueAttr!="0")field->setValue(atof(ValueAttr));
+	    }//end for
+	    pos->addIdField(field);
+	  }//end if
+      }
+  }
+ 
 }
+
+
+
+
