@@ -71,6 +71,19 @@ CalibMySQLCnvSvc.Host = "*";
 CalibEvtClock.startTime = "2003-2-25_00:20";
 CalibEvtClock.delayTime = 3;
 
+// In order to circumvent normal calibration-fetching mechanism, which
+// relies on event timestamp, you *must* include the first two lines
+// below.  The third and fourth lines have defaults of 
+//   "2003-09-01" (calibration must have been entered sept. 1 2003 or later)
+//          and 
+//   forever
+// CalibDataSvc.UseEventTime = false;
+// CalibMySQLCnvSvc.UseEventTime = false;
+
+// CalibMySQLCnvSvc.EnterTimeStart = "2003-01-01";
+// CalibMySQLCnvSvc.EnterTimeEnd = "2004-03-01";
+
+
 //==============================================================
 //
 // End of job options file
