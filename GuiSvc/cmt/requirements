@@ -42,7 +42,7 @@ apply_pattern guiapp
 macro WinJobOptions ""  WIN32  test/jobOptions.txt
 
 
-application GuiTest test/*.cxx ${GlastMain} ${WinJobOptions} ${Win32Resource}
+application GuiTest test/*.cxx ${WinJobOptions}  ${GlastMain} ${Win32Resource}
 
 # this has to be public, even for the local test app. could mess up clients
 public
