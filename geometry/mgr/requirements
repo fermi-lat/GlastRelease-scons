@@ -8,6 +8,13 @@ macro geometry_linkopts "-L ${GEOMETRYROOT}/${CMTCONFIG} -lgeometry"\
 
 
 private
-
-library  geometry -no_share *.cxx
+library  geometry -no_share \
+    Box.cxx             CoordTransform.cxx  Cylinder.cxx\
+    GeomObject.cxx      Helix.cxx           Hexahedron.cxx\
+    Hype.cxx            Hyperbolic.cxx      Intersection.cxx\
+    Plane.cxx           Point.cxx           Ray.cxx\
+    RootFinder.cxx      Shape.cxx           Sphe.cxx\
+    Sphere.cxx          Surface.cxx         Track.cxx\
+    Tube.cxx            Vector.cxx \
+    Volume.cxx          Wedge.cxx
 
