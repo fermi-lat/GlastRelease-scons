@@ -42,6 +42,11 @@ use RootDisplay v*
 use merit       v*
 use AnalysisNtuple v*
 
+# Allow FRED option -- start with fredOptions.txt
+use  HepRepSvc *
+use  HepRepXml *
+use  HepRepCorba *
+
 ### define a simple executable wth GUI
 
 set JOBOPTIONS "${GLEAMROOT}/src/jobOptions.txt"
